@@ -1,6 +1,10 @@
 import { render, screen } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
-import { describe, expect, it } from 'vitest';
+import { renderToString } from 'react-dom/server';
+import { hydrateRoot } from 'react-dom/client';
+import { act, type ReactNode } from 'react';
+import { describe, expect, it, vi } from 'vitest';
+import { Theme } from '../../theme/Theme';
 import { IconButton } from '../IconButton';
 import ListDemo from './List.demo';
 import { List, ListItem } from './index';
@@ -154,5 +158,87 @@ describe('List', () => {
     const { container } = render(<ListDemo />);
     const ids = Array.from(container.querySelectorAll('[data-demo-case]')).map((s) => s.getAttribute('data-demo-case'));
     expect(ids).toEqual(['variants', 'empty', 'one', 'many', 'too-many', 'long-text', 'long-arabic', 'disabled']);
+  });
+
+  describe('list-stagger', () => {
+    function withAnimate(run: (animate: ReturnType<typeof vi.fn>) => void | Promise<void>) {
+      const animate = vi.fn(() => ({ finished: Promise.resolve(), cancel() {} }) as unknown as Animation);
+      const proto = HTMLElement.prototype as unknown as { animate?: unknown };
+      const original = proto.animate;
+      proto.animate = animate;
+      return Promise.resolve(run(animate)).finally(() => {
+        proto.animate = original;
+      });
+    }
+
+    /** Desk plays list-stagger in full; Studio and Neutral play its reduced form. */
+    const desk = (ui: ReactNode) => <Theme style="desk">{ui}</Theme>;
+    const rows = (n: number) => Array.from({ length: n }, (_, i) => <ListItem key={i} title={`Row ${i + 1}`} />);
+
+    it('fades and rises every row in on the first paint, and never again on a re-render, an added row or a reorder', () =>
+      withAnimate((animate) => {
+        const { rerender } = render(desk(<List aria-label="Rows">{rows(12)}</List>));
+        expect(animate).toHaveBeenCalledTimes(12);
+        const timings = animate.mock.calls.map((c) => (c as unknown as [Keyframe[], KeyframeAnimationOptions])[1]);
+        for (const t of timings) expect(t.id).toBe('ds-motion:list-stagger');
+        const [frames] = animate.mock.calls[0] as unknown as [Keyframe[]];
+        expect(frames[0]?.opacity).toBe(0);
+        expect(String(frames[0]?.transform)).toContain('translateY(');
+        // Every row is in the DOM and named at once.
+        expect(screen.getAllByRole('listitem')).toHaveLength(12);
+        rerender(desk(<List aria-label="Rows">{rows(13)}</List>));
+        rerender(desk(<List aria-label="Rows">{rows(13).reverse()}</List>));
+        expect(animate).toHaveBeenCalledTimes(12);
+      }));
+
+    it('plays when rows arrive after an empty first paint', () =>
+      withAnimate((animate) => {
+        const { rerender } = render(desk(<List empty="No rows yet">{[]}</List>));
+        expect(animate).not.toHaveBeenCalled();
+        rerender(desk(<List empty="No rows yet">{rows(2)}</List>));
+        expect(animate).toHaveBeenCalledTimes(2);
+      }));
+
+    it('plays a fade with no rise under reduced motion', () =>
+      withAnimate((animate) => {
+        const original = window.matchMedia;
+        window.matchMedia = ((q: string) => ({ matches: q.includes('reduce'), media: q, addEventListener() {}, removeEventListener() {} })) as unknown as typeof window.matchMedia;
+        try {
+          render(desk(<List>{rows(3)}</List>));
+          expect(animate).toHaveBeenCalledTimes(3);
+          for (const call of animate.mock.calls) {
+            const [frames, timing] = call as unknown as [Keyframe[], KeyframeAnimationOptions];
+            expect(frames.every((f) => !('transform' in f))).toBe(true);
+            expect(timing.delay).toBe(0);
+          }
+        } finally {
+          window.matchMedia = original;
+        }
+      }));
+
+    it('plays the reduced fade in a style whose preset asks for it (Studio)', () =>
+      withAnimate((animate) => {
+        render(
+          <Theme style="studio">
+            <List>{rows(2)}</List>
+          </Theme>,
+        );
+        expect(animate).toHaveBeenCalledTimes(2);
+        for (const call of animate.mock.calls) expect((call as unknown as [Keyframe[]])[0].every((f) => !('transform' in f))).toBe(true);
+      }));
+
+    it('skips rows that come from server HTML', () =>
+      withAnimate(async (animate) => {
+        const ui = desk(<List>{rows(3)}</List>);
+        const host = document.createElement('div');
+        host.innerHTML = renderToString(ui);
+        document.body.append(host);
+        await act(async () => {
+          hydrateRoot(host, ui);
+        });
+        expect(host.querySelectorAll('[data-part="item"]')).toHaveLength(3);
+        expect(animate).not.toHaveBeenCalled();
+        host.remove();
+      }));
   });
 });

@@ -7,21 +7,21 @@ import { scale, space } from './values';
 
 export const dialog = definePattern<MotionInput>({
   id: 'dialog',
-  tokens: ['duration.base', 'ease.out', 'ease.exit', 'scale.dialog-enter', 'space.2xs'],
+  tokens: ['duration.base', 'ease.emphasized', 'ease.out', 'ease.exit', 'scale.dialog-enter', 'space.2xs'],
   spec: ({ phase }) => ({
     keyframes: byPhase(phase, [
       { transform: `translateY(${space('space.2xs')}) scale(${scale('scale.dialog-enter')})`, opacity: 0 },
       { transform: 'none', opacity: 1 },
     ]),
     duration: 'duration.base',
-    easing: phase === 'exit' ? 'ease.exit' : 'ease.out',
+    easing: phase === 'exit' ? 'ease.exit' : 'ease.emphasized',
     fill: phase === 'exit' ? 'forwards' : 'none',
     origin: '50% 50%',
   }),
   reduced: ({ phase }) => fadeSpec(phase),
   native: {
     duration: durationMs['duration.base'],
-    easing: easeBezier['ease.out'],
+    easing: easeBezier['ease.emphasized'],
     exitEasing: easeBezier['ease.exit'],
     reducedDuration: durationMs['duration.base'],
     fromScale: scaleValue['scale.dialog-enter'],

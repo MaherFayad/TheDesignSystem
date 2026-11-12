@@ -28,7 +28,7 @@ const many = [
   'New boards', 'Shared links', 'Comments', 'Exports', 'Invites sent', 'Seats used',
 ];
 
-/** A stat whose value changes on a button, to show the number roll. */
+/** A stat whose value changes on two buttons, to show the number roll up and down (stat-roll). */
 function Rolling() {
   const [value, setValue] = useState(1240);
   return (
@@ -36,6 +36,9 @@ function Rolling() {
       <Stat label="Live visitors" value={value} delta={(value - 1240) / 1240} hint="Since you opened the page" />
       <Button size="sm" onClick={() => setValue((v) => v + 37)}>
         Add visitors
+      </Button>
+      <Button size="sm" emphasis="soft" onClick={() => setValue((v) => Math.max(0, v - 37))}>
+        Remove visitors
       </Button>
     </DemoRow>
   );

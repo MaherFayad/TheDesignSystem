@@ -35,14 +35,28 @@
  *   --_dialog-enter-y, -enter-scale, -duration-in, -duration-out,
  *   --_dialog-ease-in, -ease-out       the motion (pattern "dialog")
  *   --_dialog-icon-bg, -icon-fg        AlertDialog: the icon disc
- *   --_dialog-slide                    Drawer: the slide offset, mirrored in rtl
+ *   --_dialog-slide                    Drawer and Sheet: the slide offset, mirrored in rtl for a Drawer
+ *   --_dialog-enter-opacity            Drawer and Sheet: the opacity a slide starts from and
+ *                                      leaves to, 1; 0 when a style turns the slide into a fade
  *   --_dialog-handle-color, -drag-y, -drag-duration   Sheet: the handle and the drag
  *
- * Motion, pattern "dialog": the panel rises a few px and scales up from
- * 98% while it fades in; the backdrop fades. Closing plays the reverse,
- * faster, on the exit ease. Only transform and opacity animate. Under
- * reduced motion both animations are none: Radix then removes the closed
- * dialog at once and never waits for an animationend.
+ * Motion, interaction "dialog-spring" (pattern "dialog"): the panel rises
+ * space.2xs and scales up from scale.dialog-enter while it fades in, over
+ * duration.base on ease.emphasized; the backdrop fades. Interaction
+ * "sheet-spring" (pattern "sheet"): a Drawer slides in from its side and a
+ * Sheet rises from the block end, over duration.slow on ease.emphasized,
+ * and a Sheet let go after a short drag settles back on the same ease.
+ * CSS cannot compute a spring, and there is no ease.spring-* token yet:
+ * ease.emphasized is the nearest curve, read through --_dialog-ease-in, so
+ * a later ease.spring-sheet token or a style recipe can set a linear()
+ * curve (packages/motion spring.ts) without a change here. Closing plays
+ * the reverse on duration.base and ease.exit: short, and the state change
+ * never waits for it. A style turns the travel off with
+ * --_dialog-enter-y: 0px and --_dialog-enter-scale: 1 (a dialog), or
+ * --_dialog-slide: 0% and --_dialog-enter-opacity: 0 (a drawer or a sheet),
+ * which leaves a fade. Only transform and opacity animate. Under reduced
+ * motion both animations are none: Radix then removes the closed dialog at
+ * once and never waits for an animationend.
  */
 @layer ds.base {
   /* ------------------------------------------------------------ portal layer */
@@ -77,7 +91,8 @@
     --_dialog-enter-scale: var(--ds-scale-dialog-enter);
     --_dialog-duration-in: var(--ds-duration-base);
     --_dialog-duration-out: var(--ds-duration-base);
-    --_dialog-ease-in: var(--ds-ease-out);
+    /* The nearest curve to spring.sheet until an ease.spring-sheet token exists. */
+    --_dialog-ease-in: var(--ds-ease-emphasized);
     --_dialog-ease-out: var(--ds-ease-exit);
 
     position: fixed;
@@ -414,8 +429,8 @@
   [data-ds='drawer'] {
     --_dialog-gutter: 0;
     --_dialog-slide: 100%;
+    --_dialog-enter-opacity: 1;
     --_dialog-duration-in: var(--ds-duration-slow);
-    --_dialog-ease-in: var(--ds-ease-emphasized);
 
     align-items: stretch;
     justify-content: flex-end;
@@ -536,8 +551,9 @@
     --_dialog-handle-color: var(--ds-color-border-strong);
     --_dialog-drag-y: 0px;
     --_dialog-drag-duration: var(--ds-duration-base);
+    --_dialog-slide: 100%;
+    --_dialog-enter-opacity: 1;
     --_dialog-duration-in: var(--ds-duration-slow);
-    --_dialog-ease-in: var(--ds-ease-emphasized);
 
     align-items: flex-end;
     padding-block: calc(var(--ds-space-5xl) + env(safe-area-inset-top, 0px)) 0;
@@ -639,7 +655,7 @@
     padding-block-start: 0;
   }
 
-  /* ------------------------------------------------------------ motion: pattern "dialog" */
+  /* ------------------------------------------------------------ motion: interactions "dialog-spring" and "sheet-spring" */
 
   @keyframes ds-dialog-in {
     from {
@@ -670,25 +686,29 @@
   /* Pattern "sheet": a Drawer slides in from its side, a Sheet rises from the block end. */
   @keyframes ds-sheet-in-x {
     from {
+      opacity: var(--_dialog-enter-opacity);
       transform: translateX(var(--_dialog-slide));
     }
   }
 
   @keyframes ds-sheet-out-x {
     to {
+      opacity: var(--_dialog-enter-opacity);
       transform: translateX(var(--_dialog-slide));
     }
   }
 
   @keyframes ds-sheet-in-y {
     from {
-      transform: translateY(100%);
+      opacity: var(--_dialog-enter-opacity);
+      transform: translateY(var(--_dialog-slide));
     }
   }
 
   @keyframes ds-sheet-out-y {
     to {
-      transform: translateY(100%);
+      opacity: var(--_dialog-enter-opacity);
+      transform: translateY(var(--_dialog-slide));
     }
   }
 

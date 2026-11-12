@@ -15,8 +15,12 @@
  *   --_stat-value-bg, -value-inline-size, -value-block-size
  *                             the value box; loading swaps them
  *
- * The value rolls in when it changes through the Web Animations API in the
- * React component (number-roll), so this file has no transition.
+ * stat-roll (pattern number-roll): a numeric value sits in one unnamed
+ * span inside the value part. When the number changes, Stat.tsx plays the
+ * catalog roll on that span through useMotion(): up from below when the
+ * number grows, down from above when it falls. The value part clips it on
+ * the block axis, so the roll never crosses the label or the change. This
+ * file has no transition.
  */
 @layer ds.base {
   [data-ds='stat'] {
@@ -112,6 +116,15 @@
     letter-spacing: var(--ds-font-tracking-display);
     /* Break a number only when it cannot fit its line, never at every digit group. */
     overflow-wrap: break-word;
+  }
+
+  /* stat-roll: the number's own span is the layer that rolls; the value part is its clip. */
+  [data-ds='stat'] > [data-part='value']:has(> span:not([data-loading-label], [data-empty-label])) {
+    overflow-y: clip;
+  }
+
+  [data-ds='stat'] > [data-part='value'] > span:not([data-loading-label], [data-empty-label]) {
+    display: block;
   }
 
   [data-ds='stat'] > [data-part='delta'] {

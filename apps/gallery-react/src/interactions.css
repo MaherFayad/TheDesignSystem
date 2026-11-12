@@ -1,0 +1,90 @@
+/*
+ * The /interactions page of the gallery (order 1.21). The page's own reduced
+ * motion setting puts data-motion="reduce" on <html>; this block zeroes the
+ * duration and delay tokens under it, the same list the token build zeroes
+ * under prefers-reduced-motion. The token build should emit this selector
+ * too (requested in docs/reports/interactions.md); then this block goes.
+ */
+@layer ds.overrides {
+  :root[data-motion='reduce'],
+  :root[data-motion='reduce'] [data-style] {
+    --ds-delay-reveal-step: 0ms;
+    --ds-duration-base: 0ms;
+    --ds-duration-fast: 0ms;
+    --ds-duration-instant: 0ms;
+    --ds-duration-medium: 0ms;
+    --ds-duration-moderate: 0ms;
+    --ds-duration-pulse: 0ms;
+    --ds-duration-quick: 0ms;
+    --ds-duration-reveal: 0ms;
+    --ds-duration-roll: 0ms;
+    --ds-duration-shimmer: 0ms;
+    --ds-duration-slow: 0ms;
+    --ds-duration-spin: 0ms;
+    --ds-duration-toast-enter: 0ms;
+    --ds-duration-toast-exit: 0ms;
+    --ds-duration-window-close: 0ms;
+    --ds-duration-window-minimize: 0ms;
+    --ds-duration-window-open: 0ms;
+    --ds-duration-window-zoom: 0ms;
+    --ds-duration-zoom: 0ms;
+  }
+
+  [data-gallery='interactions'] {
+    display: grid;
+    gap: var(--ds-space-2xl);
+    padding-block: var(--ds-space-2xl);
+    padding-inline: var(--ds-space-2xl);
+    max-inline-size: 72rem;
+  }
+
+  [data-gallery='interactions-bar'] {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--ds-space-l);
+  }
+
+  [data-gallery='interactions-family'] {
+    display: grid;
+    gap: var(--ds-space-l);
+  }
+
+  [data-gallery='interactions-grid'] {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 20rem), 1fr));
+    gap: var(--ds-space-l);
+  }
+
+  [data-interaction] {
+    display: grid;
+    align-content: start;
+    gap: var(--ds-space-s);
+    padding: var(--ds-space-l);
+    border: var(--ds-border-width-default) solid var(--ds-color-border-default);
+    border-radius: var(--ds-radius-card);
+    background-color: var(--ds-color-bg-surface);
+  }
+
+  [data-interaction] > h3 {
+    margin: 0;
+    font-size: var(--ds-font-size-m);
+  }
+
+  [data-interaction] > p {
+    margin: 0;
+    color: var(--ds-color-text-muted);
+    font-size: var(--ds-font-size-s);
+  }
+
+  [data-interaction-stage] {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--ds-space-s);
+    min-block-size: 6rem;
+    padding: var(--ds-space-m);
+    border-radius: var(--ds-radius-field);
+    background-color: var(--ds-color-bg-body);
+  }
+}

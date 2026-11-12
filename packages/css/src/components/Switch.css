@@ -24,8 +24,20 @@
  *   --_switch-border-style    solid, dashed while read only
  *   --_switch-ring            the focus glow and ring around the track
  *   --_switch-dir             1, or -1 in right to left text
+ *   --_switch-duration, -ease         the slide of the thumb on a toggle
+ *   --_switch-duration-in, -ease-in   the stretch while pressed
+ *   --_switch-stretch         how wide the pressed thumb grows, as a scale
+ *   --_switch-stretch-now     1 at rest, the stretch while pressed
+ *   --_switch-toward          1 while off, -1 while on: the way the thumb will travel
  *
  * The thumb moves with transform only. The ring fades its opacity.
+ *
+ * Interaction switch-stretch (order 1.21, proposed, pattern press): while
+ * the control is pressed the thumb widens toward the side it will travel
+ * to, its trailing edge still (a scaleX from the center plus a shift of half
+ * the growth, so the release blends into the slide with no jump). On the
+ * toggle it slides over duration.medium on ease.emphasized and settles back
+ * to its width. A style turns the stretch off with --_switch-stretch: 1.
  */
 @layer ds.base {
   [data-ds='switch'] {
@@ -46,7 +58,14 @@
     --_switch-on-fill: var(--ds-color-text-on-primary);
     --_switch-ring: var(--ds-elevation-input-focus), var(--ds-focus-shadow-ring);
     --_switch-dir: 1;
-    --_switch-travel: 0;
+    --_switch-travel: 0px;
+    --_switch-duration: var(--ds-duration-medium);
+    --_switch-ease: var(--ds-ease-emphasized);
+    --_switch-duration-in: var(--ds-duration-instant);
+    --_switch-ease-in: var(--ds-ease-out);
+    --_switch-stretch: calc(2 - var(--ds-scale-window-enter) * var(--ds-scale-window-enter));
+    --_switch-stretch-now: 1;
+    --_switch-toward: 1;
 
     display: inline-grid;
     grid-template-columns: auto minmax(0, auto);
@@ -131,8 +150,25 @@
     block-size: calc(var(--_switch-height) - var(--_switch-inset) * 2);
     border-radius: var(--ds-radius-pill);
     background-color: var(--_switch-thumb-bg);
-    transform: translateX(calc(var(--_switch-travel) * var(--_switch-dir)));
-    transition: transform var(--ds-duration-base) var(--ds-ease-default);
+    transform:
+      translateX(
+        calc(
+          var(--_switch-travel) * var(--_switch-dir) +
+            (var(--_switch-stretch-now) - 1) * (var(--_switch-height) - var(--_switch-inset) * 2) / 2 *
+            var(--_switch-toward) * var(--_switch-dir)
+        )
+      )
+      scaleX(var(--_switch-stretch-now));
+    transition: transform var(--_switch-duration) var(--_switch-ease);
+  }
+
+  /* Pressed: the thumb stretches toward its travel. Not while disabled or read only. */
+  [data-ds='switch']:not([data-disabled], [data-readonly]) > [data-part='control']:active {
+    --_switch-stretch-now: var(--_switch-stretch);
+  }
+
+  [data-ds='switch']:not([data-disabled], [data-readonly]) > [data-part='control']:active > [data-part='track'] > [data-part='thumb'] {
+    transition: transform var(--_switch-duration-in) var(--_switch-ease-in);
   }
 
   [data-ds='switch'] > :is([data-part='label'], [data-part='state-text']) {
@@ -172,6 +208,7 @@
     --_switch-border-color: var(--_switch-fill-border);
     --_switch-thumb-bg: var(--_switch-on-fill);
     --_switch-travel: calc(var(--_switch-width) - var(--_switch-height));
+    --_switch-toward: -1;
   }
 
   [data-ds='switch'][data-state='unchecked']:hover:not([data-disabled], [data-readonly], [data-invalid]) {
@@ -213,9 +250,15 @@
     cursor: not-allowed;
   }
 
+  /* Reduced motion: the thumb jumps and does not stretch. */
   @media (prefers-reduced-motion: reduce) {
+    [data-ds='switch'] {
+      --_switch-stretch: 1;
+    }
+
     [data-ds='switch'] > [data-part='control']::before,
-    [data-ds='switch'] > [data-part='control'] > [data-part='track'] > [data-part='thumb'] {
+    [data-ds='switch'] > [data-part='control'] > [data-part='track'] > [data-part='thumb'],
+    [data-ds='switch']:not([data-disabled], [data-readonly]) > [data-part='control']:active > [data-part='track'] > [data-part='thumb'] {
       transition: none;
     }
   }

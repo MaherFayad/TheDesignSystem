@@ -20,7 +20,14 @@
  *   --_accordion-border-color    the line under each section (divided)
  *   --_accordion-bg              a section's surface (card)
  *   --_accordion-radius          a section's corners (card)
- *   --_accordion-shift           how far the content slides as it opens (the one name outside the list in anatomy.md)
+ *   --_accordion-shift           where the content starts as it opens: -100% of its own height
+ *   --_accordion-duration, --_accordion-ease   the accordion-reveal timing
+ *
+ * accordion-reveal (pattern accordion-height): AccordionContent wraps its
+ * children in one unnamed div. The content part takes its open height at
+ * once and clips (overflow clip); the div slides down inside it from
+ * --_accordion-shift while it fades in, so the text never scales. A style
+ * turns it off with --_accordion-duration: 0s.
  */
 @layer ds.base {
   [data-ds='accordion'] {
@@ -31,7 +38,9 @@
     --_accordion-border-color: transparent;
     --_accordion-bg: transparent;
     --_accordion-radius: 0;
-    --_accordion-shift: calc(-1 * var(--ds-space-xs));
+    --_accordion-shift: -100%;
+    --_accordion-duration: var(--ds-duration-slow);
+    --_accordion-ease: var(--ds-ease-standard);
 
     display: flex;
     flex-direction: column;
@@ -123,26 +132,39 @@
   }
 
   /*
-   * accordion-height: the content fades in and slides down a step as it
-   * opens. Closing is at once. translateY is right in both directions of
-   * text: the sections always stack on the block axis. For its 140ms the
-   * faded content may pass under the header; it never animates height.
+   * accordion-reveal, on the accordion-height pattern (duration.slow,
+   * ease.standard, opaque at 60%): the content's own div slides down from
+   * above the clip and fades in. Only the div moves: the content part holds
+   * the height, which never animates, and clips the div, so nothing passes
+   * over the header. translateY is right in both directions of text: the
+   * sections always stack on the block axis. Closing is at once, so Radix
+   * unmounts the content without waiting for any animation event.
    */
-  [data-ds='accordion'] > [data-part='item'] > [data-part='content'][data-state='open'] {
-    animation: ds-accordion-open var(--ds-duration-medium) var(--ds-ease-out);
+  [data-ds='accordion'] > [data-part='item'] > [data-part='content'][data-state='open'] > div {
+    animation: ds-accordion-reveal var(--_accordion-duration) var(--_accordion-ease);
   }
 
-  @keyframes ds-accordion-open {
+  @keyframes ds-accordion-reveal {
     from {
       opacity: 0;
       transform: translateY(var(--_accordion-shift));
+    }
+
+    60% {
+      opacity: 1;
+    }
+
+    to {
+      opacity: 1;
+      transform: none;
     }
   }
 
   /* ------------------------------------------------------------ motion, forced colors */
 
   @media (prefers-reduced-motion: reduce) {
-    [data-ds='accordion'] > [data-part='item'] > [data-part='content'][data-state='open'] {
+    /* Reduced: no slide. The duration tokens are 0ms here too, so the content shows at once. */
+    [data-ds='accordion'] > [data-part='item'] > [data-part='content'][data-state='open'] > div {
       animation: none;
     }
 

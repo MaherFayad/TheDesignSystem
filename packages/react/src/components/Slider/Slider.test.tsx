@@ -1,3 +1,5 @@
+import { readFileSync } from 'node:fs';
+import { join } from 'node:path';
 import { createRef } from 'react';
 import { fireEvent, render, screen } from '@testing-library/react';
 import { beforeAll, describe, expect, it, vi } from 'vitest';
@@ -145,5 +147,137 @@ describe('Slider', () => {
     const { container } = render(<SliderDemo />);
     const ids = [...container.querySelectorAll('[data-demo-case]')].map((el) => el.getAttribute('data-demo-case'));
     expect(ids).toEqual(['variants', 'empty', 'one', 'many', 'too-many', 'long-text', 'long-arabic', 'error', 'disabled']);
+  });
+
+  describe('slider-pull and slider-nudge', () => {
+    function withAnimate(run: (animate: ReturnType<typeof vi.fn>) => void) {
+      const animate = vi.fn(
+        () =>
+          ({
+            finished: Promise.resolve(),
+            cancel() {},
+            effect: { composite: 'replace', getTiming: () => ({ duration: 0 }) },
+          }) as unknown as Animation,
+      );
+      const proto = HTMLElement.prototype as unknown as { animate?: unknown };
+      const original = proto.animate;
+      proto.animate = animate;
+      try {
+        run(animate);
+      } finally {
+        proto.animate = original;
+      }
+    }
+    const call = (animate: ReturnType<typeof vi.fn>, i = 0) => animate.mock.calls[i] as unknown as [Keyframe[], KeyframeAnimationOptions];
+
+    it('nudges the thumb toward the end once when a key pushes past the maximum', () =>
+      withAnimate((animate) => {
+        render(
+          <Theme style="desk">
+            <Slider aria-label="Volume" defaultValue={100} />
+          </Theme>,
+        );
+        const thumb = screen.getByRole('slider');
+        thumb.focus();
+        fireEvent.keyDown(thumb, { key: 'ArrowRight' });
+        expect(animate).toHaveBeenCalledTimes(1);
+        const [frames, timing] = call(animate);
+        expect(timing.id).toBe('ds-motion:shake');
+        expect(frames).toHaveLength(3);
+        expect(String(frames[1]?.transform)).toMatch(/^translateX\(calc\(1 \* /);
+        // Added on top of the lift instead of replacing it.
+        expect((animate.mock.results[0]?.value as Animation).effect).toMatchObject({ composite: 'add' });
+        // A held key nudges once.
+        fireEvent.keyDown(thumb, { key: 'ArrowRight', repeat: true });
+        expect(animate).toHaveBeenCalledTimes(1);
+        // A key that moves the value does not nudge, and the value changes at once.
+        fireEvent.keyDown(thumb, { key: 'ArrowLeft' });
+        expect(thumb.getAttribute('aria-valuenow')).toBe('99');
+        expect(animate).toHaveBeenCalledTimes(1);
+      }));
+
+    it('nudges toward the start at the minimum, with the keys of the reading direction', () =>
+      withAnimate((animate) => {
+        render(
+          <Theme style="desk" dir="rtl" lang="ar">
+            <Slider aria-label="الصوت" defaultValue={0} />
+          </Theme>,
+        );
+        const thumb = screen.getByRole('slider');
+        thumb.focus();
+        // In right to left text ArrowLeft moves toward the end, so it moves the value.
+        fireEvent.keyDown(thumb, { key: 'ArrowRight' });
+        expect(animate).toHaveBeenCalledTimes(1);
+        fireEvent.keyDown(thumb, { key: 'ArrowLeft' });
+        expect(thumb.getAttribute('aria-valuenow')).toBe('1');
+        expect(animate).toHaveBeenCalledTimes(1);
+      }));
+
+    it('plays no nudge under reduced motion and never on a vertical slider', () =>
+      withAnimate((animate) => {
+        const original = window.matchMedia;
+        window.matchMedia = ((q: string) => ({ matches: q.includes('reduce'), media: q, addEventListener() {}, removeEventListener() {} })) as unknown as typeof window.matchMedia;
+        try {
+          render(
+            <Theme style="desk">
+              <Slider aria-label="Volume" defaultValue={100} />
+              <Slider aria-label="Level" orientation="vertical" defaultValue={100} />
+            </Theme>,
+          );
+          for (const thumb of screen.getAllByRole('slider')) {
+            thumb.focus();
+            fireEvent.keyDown(thumb, { key: 'ArrowUp' });
+          }
+          expect(animate).not.toHaveBeenCalled();
+        } finally {
+          window.matchMedia = original;
+        }
+      }));
+
+    it('lifts the grabbed thumb in CSS on the catalog timing, and turns it off under reduced motion', () => {
+      const css = readFileSync(join(process.cwd(), 'packages/css/src/components/Slider.css'), 'utf8');
+      expect(css).toMatch(/--_slider-duration: var\(--ds-duration-base\);/);
+      expect(css).toMatch(/--_slider-ease: var\(--ds-ease-emphasized\);/);
+      expect(css).toMatch(/\[data-dragging\] \[data-part='thumb'\]:focus \{\s*--_slider-lift-now: var\(--_slider-lift\);/);
+      const reduced = css.slice(css.indexOf('@media (prefers-reduced-motion: reduce)'));
+      expect(reduced).toMatch(/--_slider-lift: 1;/);
+    });
+
+    it('nudges once when a drag goes past the end of the track, and again only after it comes back', () =>
+      withAnimate((animate) => {
+        const rect = vi.spyOn(Element.prototype, 'getBoundingClientRect').mockReturnValue(new DOMRect(0, 0, 100, 24));
+        const capture = vi.spyOn(Element.prototype, 'hasPointerCapture').mockReturnValue(true);
+        try {
+          render(
+            <Theme style="desk">
+              <Slider aria-label="Volume" defaultValue={40} />
+            </Theme>,
+          );
+          const control = document.querySelector<HTMLElement>('[data-part="control"]')!;
+          fireEvent.pointerDown(control, { pointerId: 1, button: 0, clientX: 40 });
+          fireEvent.pointerMove(control, { pointerId: 1, clientX: 90 });
+          expect(animate).not.toHaveBeenCalled();
+          fireEvent.pointerMove(control, { pointerId: 1, clientX: 130 });
+          fireEvent.pointerMove(control, { pointerId: 1, clientX: 140 });
+          expect(animate).toHaveBeenCalledTimes(1);
+          expect(String(call(animate)[0][1]?.transform)).toMatch(/^translateX\(calc\(1 \* /);
+          fireEvent.pointerMove(control, { pointerId: 1, clientX: 50 });
+          fireEvent.pointerMove(control, { pointerId: 1, clientX: -20 });
+          expect(animate).toHaveBeenCalledTimes(2);
+          expect(String(call(animate, 1)[0][1]?.transform)).toMatch(/^translateX\(calc\(-1 \* /);
+        } finally {
+          rect.mockRestore();
+          capture.mockRestore();
+        }
+      }));
+
+    it('marks the root while a pointer holds the thumb', () => {
+      const { container } = render(<Slider aria-label="Volume" defaultValue={40} />);
+      const control = container.querySelector<HTMLElement>('[data-part="control"]')!;
+      fireEvent.pointerDown(control, { pointerId: 1, button: 0, clientX: 10 });
+      expect(root(container).hasAttribute('data-dragging')).toBe(true);
+      fireEvent.lostPointerCapture(control, { pointerId: 1 });
+      expect(root(container).hasAttribute('data-dragging')).toBe(false);
+    });
   });
 });

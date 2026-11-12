@@ -147,19 +147,87 @@ describe('Stat', () => {
     expect(part(container, 'delta')).toBeNull();
   });
 
-  it('rolls the value in when it changes, not on the first paint', async () => {
-    const animate = vi.fn(() => ({ finished: Promise.resolve() }) as unknown as Animation);
-    const proto = HTMLElement.prototype as unknown as { animate?: unknown };
-    const original = proto.animate;
-    proto.animate = animate;
-    try {
-      const { rerender } = render(<Stat label="Users" value={10} />);
-      expect(animate).not.toHaveBeenCalled();
-      rerender(<Stat label="Users" value={11} />);
-      expect(animate).toHaveBeenCalledTimes(1);
-    } finally {
-      proto.animate = original;
+  describe('stat-roll', () => {
+    function withAnimate(run: (animate: ReturnType<typeof vi.fn>) => void) {
+      const animate = vi.fn(
+        () => ({ finished: Promise.resolve(), cancel() {}, effect: { getTiming: () => ({ duration: 300 }) } }) as unknown as Animation,
+      );
+      const proto = HTMLElement.prototype as unknown as { animate?: unknown };
+      const original = proto.animate;
+      proto.animate = animate;
+      try {
+        run(animate);
+      } finally {
+        proto.animate = original;
+      }
     }
+    const frames = (animate: ReturnType<typeof vi.fn>, i: number) => (animate.mock.calls[i] as unknown as [Keyframe[], KeyframeAnimationOptions])[0];
+    const desk = (v: number) => (
+      <Theme style="desk">
+        <Stat label="Users" value={v} />
+      </Theme>
+    );
+
+    it('rolls the number in with the catalog pattern when it changes, not on the first paint', () =>
+      withAnimate((animate) => {
+        const { rerender, container } = render(desk(10));
+        expect(animate).not.toHaveBeenCalled();
+        rerender(desk(11));
+        expect(animate).toHaveBeenCalledTimes(1);
+        const [, timing] = animate.mock.calls[0] as unknown as [Keyframe[], KeyframeAnimationOptions];
+        expect(timing.id).toBe('ds-motion:number-roll');
+        // Up: from below.
+        expect(frames(animate, 0)[0]?.transform).toBe('translateY(100%)');
+        // The number's own span rolls; the value part stays put and clips it.
+        const layer = part(container, 'value')?.firstElementChild;
+        expect(layer?.tagName).toBe('SPAN');
+        expect(layer?.textContent).toBe('11');
+      }));
+
+    it('rolls down from above when the number falls', () =>
+      withAnimate((animate) => {
+        const { rerender } = render(desk(10));
+        rerender(desk(9));
+        expect(frames(animate, 0)[0]?.transform).toBe('translateY(-100%)');
+      }));
+
+    it('changes in place when the last roll started less than one roll ago', () =>
+      withAnimate((animate) => {
+        const now = vi.spyOn(performance, 'now').mockReturnValue(1000);
+        try {
+          const { rerender } = render(desk(1));
+          rerender(desk(2));
+          now.mockReturnValue(1100);
+          rerender(desk(3));
+          expect(animate).toHaveBeenCalledTimes(1);
+          now.mockReturnValue(1400);
+          rerender(desk(4));
+          expect(animate).toHaveBeenCalledTimes(2);
+        } finally {
+          now.mockRestore();
+        }
+      }));
+
+    it('fades with no roll under reduced motion', () =>
+      withAnimate((animate) => {
+        const original = window.matchMedia;
+        window.matchMedia = ((q: string) => ({ matches: q.includes('reduce'), media: q, addEventListener() {}, removeEventListener() {} })) as unknown as typeof window.matchMedia;
+        try {
+          const { rerender } = render(desk(1));
+          rerender(desk(2));
+          expect(frames(animate, 0).every((f) => !('transform' in f))).toBe(true);
+        } finally {
+          window.matchMedia = original;
+        }
+      }));
+
+    it('does not roll a node value or the end of loading', () =>
+      withAnimate((animate) => {
+        const { rerender } = render(<Stat label="Users" loading />);
+        rerender(<Stat label="Users" value={5} />);
+        rerender(<Stat label="Users" value="Five" />);
+        expect(animate).not.toHaveBeenCalled();
+      }));
   });
 
   it('passes props and the ref to the root', () => {

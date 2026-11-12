@@ -21,7 +21,11 @@ export type EaseToken = `ease.${string}`;
 /** Any token path a pattern reads: duration, delay, ease, scale, space or spring. */
 export type TokenPath = `${'duration' | 'delay' | 'ease' | 'scale' | 'space' | 'spring'}.${string}`;
 
-/** The pattern ids of the catalog: the 18 of order 1.11, then `fade` and `press`, which the components asked for. */
+/**
+ * The pattern ids of the catalog: the 18 of order 1.11, then `fade` and
+ * `press`, which the components asked for, then `shake`, `pop` and `swap`
+ * from the interaction round (order 1.21).
+ */
 export const PATTERN_IDS = [
   'fade-rise',
   'menu-scale',
@@ -43,6 +47,9 @@ export const PATTERN_IDS = [
   'streaming-text',
   'fade',
   'press',
+  'shake',
+  'pop',
+  'swap',
 ] as const;
 
 export type PatternId = (typeof PATTERN_IDS)[number];
@@ -274,9 +281,22 @@ export function parseDuration(value: string): number {
   return (m[2] ?? 'ms').toLowerCase() === 's' ? n * 1000 : n;
 }
 
-/** True when the person asked for reduced motion. False where there is no window. */
+/**
+ * The attribute a page sets on its root element to ask for reduced motion
+ * from an in app setting: `<html data-motion="reduce">` (WCAG 2.3.3). The
+ * token CSS should zero its durations under it too (requested in order 1.21).
+ */
+export const REDUCED_MOTION_ATTRIBUTE = 'data-motion';
+
+/**
+ * True when the person asked for reduced motion, through the system setting
+ * or the page's own setting (`data-motion="reduce"` on the root element).
+ * False where there is no window.
+ */
 export function prefersReducedMotion(): boolean {
-  return typeof window !== 'undefined' && typeof window.matchMedia === 'function' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (typeof window === 'undefined') return false;
+  if (typeof document !== 'undefined' && document.documentElement?.getAttribute(REDUCED_MOTION_ATTRIBUTE) === 'reduce') return true;
+  return typeof window.matchMedia === 'function' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 }
 
 function readVar(el: Element, token: string, prefix: string): string {

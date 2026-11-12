@@ -75,8 +75,9 @@ describe('Skeleton shimmer and loading announcement', () => {
   it('plays the shimmer three times, linear, never infinite', () => {
     const decl = /animation: ds-skeleton-shimmer ([^;]+);/.exec(css)?.[1] ?? '';
     expect(decl).not.toContain('infinite');
-    expect(decl).toContain('linear');
-    expect(decl.trim().split(/\s+/).at(-1)).toBe(String(SHIMMER_ITERATIONS));
+    expect(decl).toBe('var(--_skeleton-duration) linear var(--_skeleton-loops)');
+    expect(css).toMatch(/--_skeleton-duration: var\(--ds-duration-shimmer\);/);
+    expect(/--_skeleton-loops: (\d+);/.exec(css)?.[1]).toBe(String(SHIMMER_ITERATIONS));
   });
 
   it('every busy region in the demo has a status line outside it that says what loads', () => {

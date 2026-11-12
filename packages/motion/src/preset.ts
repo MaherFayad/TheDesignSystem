@@ -3,7 +3,7 @@
 // the reduced form or nothing, and may swap the duration or ease token. A
 // style never adds behavior: a preset only tunes or turns off a pattern.
 // Under reduced motion every preset plays the reduced form.
-import { PATTERN_IDS, type PatternId, type PatternPreset } from './core';
+import { PATTERN_IDS, type PatternId, type PatternMode, type PatternPreset } from './core';
 
 /**
  * How a style moves its windows (kept for Window.tsx):
@@ -21,6 +21,13 @@ export interface StyleMotionPreset {
   window: WindowMotionMode;
   /** Per pattern choices. A pattern left out plays its full form. */
   patterns?: Partial<Record<PatternId, PatternPreset>>;
+  /**
+   * Per interaction choices (order 1.21), by interaction id from
+   * `interactions.ts`. An interaction left out follows its pattern's mode.
+   * A style may tune an interaction (through its pattern row) or turn it off
+   * here; it never adds one.
+   */
+  interactions?: Partial<Record<string, PatternMode>>;
 }
 
 /** The window mode as the preset of the three window patterns. */

@@ -10,6 +10,7 @@ export type CheckboxSize = Extract<Size, 'sm' | 'md' | 'lg'>;
 export type CheckboxTone = Extract<Tone, 'neutral' | 'accent' | 'danger'>;
 export type CheckboxCheckedState = boolean | 'indeterminate';
 export type CheckboxState = 'checked' | 'unchecked' | 'indeterminate';
+type CheckboxGlyph = 'check' | 'minus';
 
 type RadixRootProps = ComponentProps<typeof RadixCheckbox.Root>;
 
@@ -102,6 +103,13 @@ export function Checkbox({
   const [own, setOwn] = useState<CheckboxCheckedState>(defaultChecked);
   const checked: CheckboxCheckedState = group ? group.checked : (checkedProp ?? own);
   const state = checkboxState(checked);
+  // The glyph stays in the box while unchecked, hidden, so the next check can
+  // draw it in (interaction check-draw) and an uncheck can fade it out. It
+  // keeps the last glyph shown, a check before any.
+  const shown: CheckboxGlyph | undefined = state === 'checked' ? 'check' : state === 'indeterminate' ? 'minus' : undefined;
+  const [lastGlyph, setLastGlyph] = useState<CheckboxGlyph>(shown ?? 'check');
+  if (shown && shown !== lastGlyph) setLastGlyph(shown);
+  const glyph = shown ?? lastGlyph;
   const isReadOnly = Boolean(control.readOnly);
 
   const onChange = (next: CheckboxCheckedState) => {
@@ -150,8 +158,10 @@ export function Checkbox({
         data-part="control"
       >
         <RadixCheckbox.Indicator forceMount data-part="indicator">
-          {state === 'checked' && <Icon name="check" size={iconSize} />}
-          {state === 'indeterminate' && <Icon name="minus" size={iconSize} />}
+          {/* The clip of the draw (check-draw): purely visual, no part name. */}
+          <span aria-hidden="true">
+            <Icon name={glyph} size={iconSize} />
+          </span>
         </RadixCheckbox.Indicator>
       </RadixCheckbox.Root>
       {hasLabel && (

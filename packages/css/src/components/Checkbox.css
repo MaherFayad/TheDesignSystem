@@ -19,12 +19,24 @@
  *   --_checkbox-fill, -fill-border, -on-fill   the checked look of a tone
  *   --_checkbox-ring          the focus glow and ring around the box
  *   --_checkbox-border-style  solid, dashed while read only
+ *   --_checkbox-duration, -ease   the draw of the mark when checked (check-draw)
+ *   --_checkbox-duration-out      the fade of the mark when unchecked
+ *   --_checkbox-dir           1, or -1 in right to left text
  *
  * `-border-color-invalid` is a state suffix beyond the convention's list:
  * invalid needs its own color, as in Input.css.
  *
  * The focus ring sits on ::before of the control and fades its opacity.
  * Colors swap at once: only transform and opacity animate.
+ *
+ * Interaction check-draw (order 1.21, proposed): the mark sits in an unnamed
+ * aria-hidden span, the clip. While checked the clip slides in from the
+ * inline start by the box size and the mark inside slides the same distance
+ * the other way, so the mark stays still while the visible window grows from
+ * the start edge. Unchecking fades the mark out in the fill color, then the
+ * clip jumps back. A box that is checked on first paint draws nothing: the
+ * draw is a transition between states. A style turns it off with the two
+ * durations at 0s.
  */
 @layer ds.base {
   [data-ds='checkbox'] {
@@ -43,6 +55,10 @@
     --_checkbox-on-fill: var(--ds-color-bg-body);
     --_checkbox-ring: var(--ds-elevation-input-focus), var(--ds-focus-shadow-ring);
     --_checkbox-border-style: solid;
+    --_checkbox-duration: var(--ds-duration-medium);
+    --_checkbox-ease: var(--ds-ease-out);
+    --_checkbox-duration-out: var(--ds-duration-fast);
+    --_checkbox-dir: 1;
 
     display: inline-grid;
     grid-template-columns: var(--_checkbox-target) minmax(0, auto);
@@ -55,6 +71,10 @@
     font-size: var(--_checkbox-font-size);
     line-height: var(--ds-font-leading-snug);
     vertical-align: middle;
+  }
+
+  [data-ds='checkbox']:dir(rtl) {
+    --_checkbox-dir: -1;
   }
 
   [data-ds='checkbox'][data-size='sm'] {
@@ -130,6 +150,42 @@
     pointer-events: none;
   }
 
+  /*
+   * The clip of the draw: the border box of the indicator. Checked, it sits
+   * in place and the mark shows. Unchecked, it waits one box size before the
+   * inline start, with the mark one box size the other way, hidden.
+   */
+  [data-ds='checkbox'] > [data-part='control'] > [data-part='indicator'] > span {
+    position: absolute;
+    inset: calc(var(--ds-border-width-default) * -1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    transition:
+      transform var(--_checkbox-duration) var(--_checkbox-ease),
+      opacity 0s;
+  }
+
+  [data-ds='checkbox'] > [data-part='control'] > [data-part='indicator'] > span > [data-ds='icon'] {
+    transition: transform var(--_checkbox-duration) var(--_checkbox-ease);
+  }
+
+  /* Unchecked: the mark fades out in the fill color, then the clip and the mark jump back to the start. */
+  [data-ds='checkbox'][data-state='unchecked'] > [data-part='control'] > [data-part='indicator'] > span {
+    color: var(--_checkbox-fill);
+    opacity: 0;
+    transform: translateX(calc(var(--_checkbox-box) * var(--_checkbox-dir) * -1));
+    transition:
+      opacity var(--_checkbox-duration-out) var(--ds-ease-out),
+      transform 0s linear var(--_checkbox-duration-out);
+  }
+
+  [data-ds='checkbox'][data-state='unchecked'] > [data-part='control'] > [data-part='indicator'] > span > [data-ds='icon'] {
+    transform: translateX(calc(var(--_checkbox-box) * var(--_checkbox-dir)));
+    transition: transform 0s linear var(--_checkbox-duration-out);
+  }
+
   /* The label lines its first line up with the center of the target. */
   [data-ds='checkbox'] > [data-part='label'] {
     grid-column: 2;
@@ -202,8 +258,11 @@
     cursor: not-allowed;
   }
 
+  /* Reduced motion: the mark appears and leaves at once. */
   @media (prefers-reduced-motion: reduce) {
-    [data-ds='checkbox'] > [data-part='control']::before {
+    [data-ds='checkbox'] > [data-part='control']::before,
+    [data-ds='checkbox'][data-state] > [data-part='control'] > [data-part='indicator'] > span,
+    [data-ds='checkbox'][data-state] > [data-part='control'] > [data-part='indicator'] > span > [data-ds='icon'] {
       transition: none;
     }
   }
@@ -224,6 +283,10 @@
 
     [data-ds='checkbox'] > [data-part='control'] > [data-part='indicator'] {
       color: CanvasText;
+    }
+
+    [data-ds='checkbox'][data-state='unchecked'] > [data-part='control'] > [data-part='indicator'] > span {
+      color: inherit;
     }
 
     [data-ds='checkbox'][data-disabled] {

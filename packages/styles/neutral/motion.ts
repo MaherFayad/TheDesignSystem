@@ -4,6 +4,11 @@
 // duration.medium at duration.slow (180ms). Nothing grows from the trigger.
 // The rows below bring the longer patterns into 150 to 200ms on an ease out.
 // Patterns and timing: packages/motion.
+//
+// Interactions (order 1.21, proposed): the patterns they play keep to 150 to
+// 200ms on an ease out. A field error shakes over duration.slow (180ms), not
+// duration.roll; marks land on ease.out; the list stagger, which would run
+// past 200ms, is a plain fade.
 import type { StyleMotionPreset } from '@the-system/motion';
 
 const motion: StyleMotionPreset = {
@@ -17,6 +22,11 @@ const motion: StyleMotionPreset = {
     'drag-drop': { mode: 'full', easing: 'ease.out' },
     'accordion-height': { mode: 'full', enter: { easing: 'ease.out' } },
     'tab-indicator': { mode: 'full', easing: 'ease.out' },
+    dialog: { mode: 'full', enter: { easing: 'ease.out' } },
+    'list-stagger': { mode: 'reduced' },
+    swap: { mode: 'full', easing: 'ease.out' },
+    pop: { mode: 'full', easing: 'ease.out' },
+    shake: { mode: 'full', duration: 'duration.slow', easing: 'ease.out' },
   },
 };
 

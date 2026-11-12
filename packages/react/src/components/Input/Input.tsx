@@ -4,6 +4,7 @@ import { isIconName, type IconName } from '@the-system/icons';
 import { Icon } from '@the-system/icons/react';
 import type { Shape, Size } from '@the-system/shared';
 import { useFieldControl } from '../Field/Field';
+import { useErrorShake, type ShakeBox } from './useErrorShake';
 
 export type InputSize = Size;
 export type InputShape = Extract<Shape, 'default' | 'pill'>;
@@ -40,6 +41,12 @@ export interface InputProps
 }
 
 const INTERACTIVE = 'a[href], button, input, select, textarea, [tabindex], [contenteditable="true"]';
+
+/** The box that shakes: the root, unless it is the control part of another field, which shakes its own box. */
+const ownBox: ShakeBox = (input) => {
+  const root = input.parentElement;
+  return root?.hasAttribute('data-part') ? null : root;
+};
 
 function Adornment({ part, value }: { part: 'start' | 'end'; value: InputAdornment }) {
   if (value === undefined || value === null || value === false) return null;
@@ -88,6 +95,7 @@ export function Input({
 }: InputProps) {
   const control = useFieldControl({ id, 'aria-describedby': describedBy, invalid, disabled, readOnly, required });
   const inner = useRef<HTMLInputElement | null>(null);
+  useErrorShake(inner, Boolean(control['aria-invalid']), ownBox);
 
   const setRef = useCallback(
     (node: HTMLInputElement | null): (() => void) | undefined => {

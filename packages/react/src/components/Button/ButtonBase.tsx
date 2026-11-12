@@ -6,7 +6,9 @@
 import {
   cloneElement,
   isValidElement,
+  useRef,
   type ButtonHTMLAttributes,
+  type FocusEvent,
   type KeyboardEvent,
   type MouseEvent,
   type PointerEvent,
@@ -19,6 +21,7 @@ import { Icon, type IconName } from '@the-system/icons/react';
 import type { Emphasis, Shape, Size, Tone } from '@the-system/shared';
 import { useButtonGroup } from '../ButtonGroup/ButtonGroupContext';
 import { NAVIGATION_KEYS } from '../../internal/keys';
+import { useMotion } from '../../internal/motion';
 
 /** The shared axes, all of them: Button takes every value. */
 export type ButtonSize = Extract<Size, 'xs' | 'sm' | 'md' | 'lg'>;
@@ -76,6 +79,9 @@ export function ButtonLoading({ label }: { label: string }) {
   );
 }
 
+/** The components that play the press (interaction button-press). Button.css scales them on :active. */
+const PRESS_DS: ReadonlySet<ButtonDs> = new Set(['button', 'icon-button', 'toggle-button', 'copy-button']);
+
 /** The components built on ButtonRoot. */
 export type ButtonDs = 'button' | 'icon-button' | 'toggle-button' | 'close-button' | 'copy-button' | 'floating-action-button' | 'chip';
 
@@ -114,10 +120,24 @@ export function ButtonRoot({
   onAuxClick,
   onPointerDown,
   onKeyDown,
+  onKeyUp,
+  onBlur,
   ref,
   ...rest
 }: ButtonRootProps) {
   const inert = disabled || loading;
+  const motion = useMotion();
+  // The press for Enter (interaction button-press). Space and the pointer
+  // press through :active in Button.css; Enter activates on key down and the
+  // browser draws no :active for it, so the press pattern plays here. It
+  // decorates only: the click has already happened.
+  const pressable = PRESS_DS.has(ds) && !inert && rest['aria-disabled'] !== true && rest['aria-disabled'] !== 'true';
+  const pressed = useRef(false);
+  const release = (el: Element) => {
+    if (!pressed.current) return;
+    pressed.current = false;
+    motion.play(el, 'press', 'button-press', { phase: 'exit' });
+  };
   // A ButtonGroup passes size, emphasis and shape through context, so they
   // reach a child through any wrapper. The child's own prop always wins. An
   // icon only control never takes link from a group.
@@ -162,7 +182,18 @@ export function ButtonRoot({
     // reach the handler, so a roving group can move past a disabled item.
     // Every other key, activation and Delete included, is swallowed.
     onKeyDown: (event: KeyboardEvent<HTMLButtonElement>) => {
+      if (pressable && event.key === 'Enter' && !event.repeat) {
+        pressed.current = motion.play(event.currentTarget, 'press', 'button-press', { phase: 'enter' }) !== null;
+      }
       if (!inert || NAVIGATION_KEYS.has(event.key)) onKeyDown?.(event);
+    },
+    onKeyUp: (event: KeyboardEvent<HTMLButtonElement>) => {
+      if (event.key === 'Enter') release(event.currentTarget);
+      onKeyUp?.(event);
+    },
+    onBlur: (event: FocusEvent<HTMLButtonElement>) => {
+      release(event.currentTarget);
+      onBlur?.(event);
     },
   };
 

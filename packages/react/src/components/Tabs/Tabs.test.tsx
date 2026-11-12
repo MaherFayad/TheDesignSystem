@@ -185,9 +185,60 @@ describe('Tabs', () => {
     expect(css).toMatch(/border: var\(--_tabs-indicator-border-width\) solid var\(--_tabs-indicator-border-color\)/);
   });
 
-  it('plays the tab-indicator catalog ease', () => {
-    const css = readFileSync(join(process.cwd(), 'packages/css/src/components/Tabs.css'), 'utf8');
-    expect(css).toMatch(/--_tabs-indicator-ease: var\(--ds-ease-standard\)/);
+  describe('tab-slide', () => {
+    /** Triggers 100px apart, 80 by 32; the indicator is the 2px line at the block end of its trigger. */
+    function boxes() {
+      return vi.spyOn(Element.prototype, 'getBoundingClientRect').mockImplementation(function (this: Element) {
+        const trigger = this.closest('[data-part="trigger"]');
+        if (!trigger) return new DOMRect(0, 0, 400, 40);
+        const i = Array.from(trigger.parentElement?.children ?? []).indexOf(trigger);
+        return this === trigger ? new DOMRect(i * 100, 0, 80, 32) : new DOMRect(i * 100, 30, 80, 2);
+      });
+    }
+
+    function withAnimate(run: (animate: ReturnType<typeof vi.fn>) => Promise<void>) {
+      const animate = vi.fn(() => ({ finished: Promise.resolve(), cancel() {} }) as unknown as Animation);
+      const proto = HTMLElement.prototype as unknown as { animate?: unknown };
+      const original = proto.animate;
+      proto.animate = animate;
+      return run(animate).finally(() => {
+        proto.animate = original;
+      });
+    }
+
+    it('slides the indicator from the old tab with the catalog pattern, a transform only', () =>
+      withAnimate(async (animate) => {
+        const rects = boxes();
+        try {
+          render(<Example />);
+          expect(animate).not.toHaveBeenCalled();
+          await userEvent.click(screen.getByRole('tab', { name: 'Comments 12' }));
+          expect(animate).toHaveBeenCalledTimes(1);
+          const [frames, timing] = animate.mock.calls[0] as unknown as [Keyframe[], KeyframeAnimationOptions];
+          expect(timing.id).toBe('ds-motion:tab-indicator');
+          expect(frames[0]?.transform).toBe('translate(-200px, 0px) scale(1, 1)');
+          expect(frames.at(-1)?.transform).toBe('none');
+          for (const f of frames) expect(Object.keys(f).filter((k) => k !== 'offset')).toEqual(['transform']);
+        } finally {
+          rects.mockRestore();
+        }
+      }));
+
+    it('jumps under reduced motion', () =>
+      withAnimate(async (animate) => {
+        const rects = boxes();
+        const original = window.matchMedia;
+        window.matchMedia = ((q: string) => ({ matches: q.includes('reduce'), media: q, addEventListener() {}, removeEventListener() {} })) as unknown as typeof window.matchMedia;
+        try {
+          render(<Example />);
+          await userEvent.click(screen.getByRole('tab', { name: 'Comments 12' }));
+          expect(screen.getByRole('tab', { name: 'Comments 12' }).getAttribute('data-state')).toBe('active');
+          expect(animate).not.toHaveBeenCalled();
+        } finally {
+          window.matchMedia = original;
+          rects.mockRestore();
+        }
+      }));
   });
 
   it('renders the demo with every case', () => {

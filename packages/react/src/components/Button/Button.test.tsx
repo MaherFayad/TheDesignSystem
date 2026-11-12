@@ -228,3 +228,90 @@ describe('Button keys while disabled', () => {
     expect(onKeyDown.mock.calls.map(([e]) => (e as KeyboardEvent).key)).toEqual(['ArrowRight', 'Home', 'End', 'Tab']);
   });
 });
+
+describe('Button press (interaction button-press)', () => {
+  /** A stand in for Element.animate, which jsdom lacks: it records the keyframes of each call. */
+  function mockAnimate() {
+    const calls: Keyframe[][] = [];
+    const animate = vi.fn((frames: Keyframe[]) => {
+      calls.push(frames);
+      return { id: '', playState: 'running', finished: Promise.resolve(), cancel: vi.fn() } as unknown as Animation;
+    });
+    Object.defineProperty(HTMLElement.prototype, 'animate', { configurable: true, value: animate });
+    return { calls, restore: () => Reflect.deleteProperty(HTMLElement.prototype, 'animate') };
+  }
+
+  it('plays the press on Enter down and the release on Enter up, once', () => {
+    const { calls, restore } = mockAnimate();
+    try {
+      render(<Button>Save changes</Button>);
+      const el = screen.getByRole('button');
+      fireEvent.keyDown(el, { key: 'Enter' });
+      fireEvent.keyDown(el, { key: 'Enter', repeat: true });
+      expect(calls).toHaveLength(1);
+      expect(JSON.stringify(calls[0])).toContain('scale(');
+      expect(el.style.transformOrigin).toBe('50% 50%');
+      fireEvent.keyUp(el, { key: 'Enter' });
+      expect(calls).toHaveLength(2);
+      // A blur after the release plays nothing more.
+      fireEvent.blur(el);
+      expect(calls).toHaveLength(2);
+    } finally {
+      restore();
+    }
+  });
+
+  it('releases on blur when focus leaves while Enter is held', () => {
+    const { calls, restore } = mockAnimate();
+    try {
+      render(<Button>Open dialog</Button>);
+      const el = screen.getByRole('button');
+      fireEvent.keyDown(el, { key: 'Enter' });
+      fireEvent.blur(el);
+      expect(calls).toHaveLength(2);
+    } finally {
+      restore();
+    }
+  });
+
+  it('does not press while disabled, loading or aria-disabled, nor on Space (CSS :active covers Space)', () => {
+    const { calls, restore } = mockAnimate();
+    try {
+      render(
+        <>
+          <Button disabled>One</Button>
+          <Button loading>Two</Button>
+          <Button aria-disabled="true">Three</Button>
+          <Button>Four</Button>
+        </>,
+      );
+      const [one, two, three, four] = screen.getAllByRole('button');
+      for (const el of [one, two, three]) if (el) fireEvent.keyDown(el, { key: 'Enter' });
+      if (four) fireEvent.keyDown(four, { key: ' ' });
+      expect(calls).toHaveLength(0);
+    } finally {
+      restore();
+    }
+  });
+
+  it('plays nothing under reduced motion: the press has no reduced motion form', () => {
+    const { calls, restore } = mockAnimate();
+    vi.stubGlobal('matchMedia', (q: string) => ({ matches: q.includes('reduce'), media: q, addEventListener() {}, removeEventListener() {} }));
+    try {
+      render(<Button>Save changes</Button>);
+      fireEvent.keyDown(screen.getByRole('button'), { key: 'Enter' });
+      expect(calls).toHaveLength(0);
+    } finally {
+      restore();
+      vi.unstubAllGlobals();
+    }
+  });
+
+  it('works without the Web Animations API', () => {
+    render(<Button>Save changes</Button>);
+    const el = screen.getByRole('button');
+    fireEvent.keyDown(el, { key: 'Enter' });
+    fireEvent.keyUp(el, { key: 'Enter' });
+    expect(el.getAttribute('style')).toBeNull();
+  });
+});

@@ -12,8 +12,8 @@
 // "Up 12%".
 import { isValidElement, useEffect, useRef, type HTMLAttributes, type ReactElement, type ReactNode, type Ref } from 'react';
 import { Icon, type IconName } from '@the-system/icons/react';
-import { prefersReducedMotion, readDuration, readEasing } from '@the-system/motion';
 import type { Size, Tone } from '@the-system/shared';
+import { useMotion } from '../../internal/motion';
 import { useTheme } from '../../theme/hooks';
 import { breakableValue, formatStatNumber } from './formatStatNumber';
 
@@ -96,9 +96,8 @@ const toneOf: Record<StatTrend, StatTone> = { up: 'success', down: 'danger', fla
 const defaultDeltaFormat: Intl.NumberFormatOptions = { style: 'percent', maximumFractionDigits: 1 };
 
 /**
- * A KPI: label, value, change, hint. The value rolls in when it changes
- * (the number-roll pattern: a short rise and fade, opacity only under
- * reduced motion). It does not announce changes: a page of KPIs that
+ * A KPI: label, value, change, hint. A number rolls in when it changes
+ * (stat-roll on the number-roll pattern, a fade under reduced motion). It does not announce changes: a page of KPIs that
  * refresh would talk over everything.
  */
 export function Stat({
@@ -135,7 +134,8 @@ export function Stat({
   const words = { ...statTrendLabels[langKey], ...trendLabels };
   const hasDelta = !loading && delta !== undefined && delta !== null && !(typeof delta === 'number' && !Number.isFinite(delta));
 
-  const valueRef = useRollOnChange(typeof value === 'number' && !empty ? shownValue : undefined, loading);
+  const numeric = typeof value === 'number' && !empty && !loading;
+  const valueRef = useRollOnChange(numeric ? (value as number) : undefined, numeric ? (shownValue as string) : undefined);
 
   // Development only: a node change with no trend is neither colored nor named.
   const nodeDeltaWithoutTrend = hasDelta && typeof delta !== 'number' && trendProp === undefined;
@@ -161,8 +161,15 @@ export function Stat({
           {isValidElement(icon) ? icon : <Icon name={icon as IconName} size="md" />}
         </span>
       )}
-      <span data-part="value" ref={valueRef}>
-        {loading ? <span data-loading-label="">{loadingLabel ?? loadingLabels[langKey]}</span> : shownValue}
+      <span data-part="value">
+        {loading ? (
+          <span data-loading-label="">{loadingLabel ?? loadingLabels[langKey]}</span>
+        ) : numeric ? (
+          // The layer that rolls (stat-roll); the value part clips it.
+          <span ref={valueRef}>{shownValue}</span>
+        ) : (
+          shownValue
+        )}
       </span>
       {hasDelta && (
         <span data-part="delta">
@@ -177,27 +184,31 @@ export function Stat({
 }
 
 /**
- * Plays the number-roll pattern on the value when the formatted value
- * changes after the first paint: a rise from below with a fade, on
- * duration.roll and ease.reveal. Opacity only under reduced motion, where
- * the duration token is 0ms anyway. Never awaits animationend.
+ * stat-roll: plays the catalog number-roll pattern through useMotion() on
+ * the number's span when the shown number changes after the first paint:
+ * up from below when it grew, down from above when it fell. A change that
+ * comes less than one roll after the last roll started changes in place
+ * (motion catalog note N11), so a live counter never flashes the same area
+ * more than about three times a second. The reduced form is a fade, and
+ * under reduced motion the duration tokens are 0ms. Never awaits
+ * animationend.
  */
-function useRollOnChange(key: ReactNode, loading: boolean) {
+function useRollOnChange(n: number | undefined, text: string | undefined) {
   const ref = useRef<HTMLSpanElement>(null);
-  const previous = useRef<ReactNode>(key);
+  const motion = useMotion();
+  const previous = useRef({ n, text });
+  const busyUntil = useRef(0);
   useEffect(() => {
-    const el = ref.current;
     const before = previous.current;
-    previous.current = key;
-    if (!el || loading || before === key || before === undefined || typeof el.animate !== 'function') return;
-    const reduced = prefersReducedMotion();
-    const keyframes: Keyframe[] = reduced
-      ? [{ opacity: 0 }, { opacity: 1 }]
-      : [
-          { transform: 'translateY(40%)', opacity: 0 },
-          { transform: 'none', opacity: 1 },
-        ];
-    el.animate(keyframes, { duration: readDuration(el, 'duration.roll'), easing: readEasing(el, 'ease.reveal') });
-  }, [key, loading]);
+    previous.current = { n, text };
+    const el = ref.current;
+    if (!el || text === undefined || before.text === undefined || before.text === text) return;
+    const now = typeof performance === 'undefined' ? Date.now() : performance.now();
+    if (now < busyUntil.current) return;
+    const direction = n !== undefined && before.n !== undefined && n < before.n ? 'down' : 'up';
+    const roll = motion.play(el, 'number-roll', 'stat-roll', { direction });
+    const duration = roll?.effect?.getTiming().duration;
+    busyUntil.current = roll ? now + (typeof duration === 'number' ? duration : 0) : 0;
+  }, [n, text, motion]);
   return ref;
 }

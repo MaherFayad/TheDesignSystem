@@ -14,8 +14,11 @@ import {
   type Ref,
   type SyntheticEvent,
 } from 'react';
+import { POP_MAX_STEPS } from '@the-system/motion';
 import { codeInputHints, codeSeparatorIndexes, parseCode, type CodeCharset, type Shape, type Size } from '@the-system/shared';
+import { useMotion } from '../../internal/motion';
 import { useFieldControl } from '../Field/Field';
+import { useErrorShake } from '../Input/useErrorShake';
 
 export type OTPFieldSize = Size;
 export type OTPFieldShape = Extract<Shape, 'default' | 'pill'>;
@@ -94,6 +97,11 @@ function cellSelection(pos: number, valueLength: number, length: number): Select
  * move one cell, Home and End to the ends. A paste replaces the whole code.
  * Spaces, dashes and Arabic Indic digits are read (`parseCode`). A code runs
  * left to right in every language, so the root carries `dir="ltr"`.
+ *
+ * Motion (order 1.21): each new character pops into its cell, a paste in a
+ * short run over the cells (otp-fill), on an unnamed span inside the cell;
+ * the selection moves on at once. The row shakes when the code turns
+ * invalid (error-shake).
  */
 export function OTPField({
   length: lengthProp = 6,
@@ -137,6 +145,25 @@ export function OTPField({
   const lastSel = useRef<Selection>({ start: 0, end: 0 });
   // Bumped when a change is refused, so the selection effect runs although the value did not change.
   const [refused, setRefused] = useState(0);
+  const motion = useMotion();
+  // The code the cells drew last, so only the characters that changed pop.
+  const drawn = useRef(value);
+  useErrorShake(inner, Boolean(control['aria-invalid']));
+
+  // otp-fill: each character that is new in its cell pops in, in order, after React drew it.
+  useLayoutEffect(() => {
+    const before = drawn.current;
+    drawn.current = value;
+    const root = inner.current?.parentElement;
+    if (!root || value === before) return;
+    const cells = root.querySelectorAll(':scope > [data-part="cell"]');
+    let step = 0;
+    for (let i = 0; i < value.length; i++) {
+      if (value[i] === before[i]) continue;
+      motion.play(cells[i]?.firstElementChild, 'pop', 'otp-fill', { index: Math.min(step, POP_MAX_STEPS) });
+      step += 1;
+    }
+  }, [value, motion]);
 
   const setRef = useCallback(
     (node: HTMLInputElement | null): (() => void) | undefined => {
@@ -349,7 +376,7 @@ export function OTPField({
             data-active={focused && i >= activeStart && i < activeEnd ? '' : undefined}
             data-filled={i < value.length ? '' : undefined}
           >
-            {value[i] ?? ''}
+            {value[i] ? <span>{value[i]}</span> : null}
           </span>
         </Fragment>
       ))}

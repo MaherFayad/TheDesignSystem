@@ -90,6 +90,41 @@
           "target": "@components/ds/motion/index.ts"
         },
         {
+          "path": "packages/motion/src/interactions.ts",
+          "type": "registry:lib",
+          "target": "@components/ds/motion/interactions.ts"
+        },
+        {
+          "path": "packages/motion/src/interactions/buttons.ts",
+          "type": "registry:lib",
+          "target": "@components/ds/motion/interactions/buttons.ts"
+        },
+        {
+          "path": "packages/motion/src/interactions/content.ts",
+          "type": "registry:lib",
+          "target": "@components/ds/motion/interactions/content.ts"
+        },
+        {
+          "path": "packages/motion/src/interactions/fields.ts",
+          "type": "registry:lib",
+          "target": "@components/ds/motion/interactions/fields.ts"
+        },
+        {
+          "path": "packages/motion/src/interactions/overlays.ts",
+          "type": "registry:lib",
+          "target": "@components/ds/motion/interactions/overlays.ts"
+        },
+        {
+          "path": "packages/motion/src/interactions/selection.ts",
+          "type": "registry:lib",
+          "target": "@components/ds/motion/interactions/selection.ts"
+        },
+        {
+          "path": "packages/motion/src/interactions/types.ts",
+          "type": "registry:lib",
+          "target": "@components/ds/motion/interactions/types.ts"
+        },
+        {
           "path": "packages/motion/src/patterns/accordion-height.ts",
           "type": "registry:lib",
           "target": "@components/ds/motion/patterns/accordion-height.ts"
@@ -135,9 +170,19 @@
           "target": "@components/ds/motion/patterns/number-roll.ts"
         },
         {
+          "path": "packages/motion/src/patterns/pop.ts",
+          "type": "registry:lib",
+          "target": "@components/ds/motion/patterns/pop.ts"
+        },
+        {
           "path": "packages/motion/src/patterns/press.ts",
           "type": "registry:lib",
           "target": "@components/ds/motion/patterns/press.ts"
+        },
+        {
+          "path": "packages/motion/src/patterns/shake.ts",
+          "type": "registry:lib",
+          "target": "@components/ds/motion/patterns/shake.ts"
         },
         {
           "path": "packages/motion/src/patterns/sheet.ts",
@@ -158,6 +203,11 @@
           "path": "packages/motion/src/patterns/streaming-text.ts",
           "type": "registry:lib",
           "target": "@components/ds/motion/patterns/streaming-text.ts"
+        },
+        {
+          "path": "packages/motion/src/patterns/swap.ts",
+          "type": "registry:lib",
+          "target": "@components/ds/motion/patterns/swap.ts"
         },
         {
           "path": "packages/motion/src/patterns/tab-indicator.ts",
@@ -203,6 +253,11 @@
           "path": "packages/motion/src/preset.ts",
           "type": "registry:lib",
           "target": "@components/ds/motion/preset.ts"
+        },
+        {
+          "path": "packages/motion/src/spring.ts",
+          "type": "registry:lib",
+          "target": "@components/ds/motion/spring.ts"
         },
         {
           "path": "packages/motion/src/tokens.ts",
@@ -345,6 +400,11 @@
           "target": "@components/ds/styles/desk/style.json"
         },
         {
+          "path": "packages/styles/neutral/motion.ts",
+          "type": "registry:lib",
+          "target": "@components/ds/styles/neutral/motion.ts"
+        },
+        {
           "path": "packages/styles/neutral/style.json",
           "type": "registry:lib",
           "target": "@components/ds/styles/neutral/style.json"
@@ -396,6 +456,11 @@
           "path": "packages/react/src/internal/keys.ts",
           "type": "registry:ui",
           "target": "@components/ds/react/internal/keys.ts"
+        },
+        {
+          "path": "packages/react/src/internal/motion.ts",
+          "type": "registry:ui",
+          "target": "@components/ds/react/internal/motion.ts"
         },
         {
           "path": "packages/react/src/internal/useControllable.ts",
@@ -2436,6 +2501,11 @@
           "target": "@components/ds/react/components/Input/Input.tsx"
         },
         {
+          "path": "packages/react/src/components/Input/useErrorShake.ts",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/Input/useErrorShake.ts"
+        },
+        {
           "path": "packages/css/src/components/Input.css",
           "type": "registry:file",
           "target": "@components/ds/css/components/Input.css"
@@ -2963,6 +3033,7 @@
         "@ds/core",
         "@ds/field",
         "@ds/icon-button",
+        "@ds/input",
         "@ds/theme"
       ],
       "files": [
@@ -2999,6 +3070,7 @@
       "registryDependencies": [
         "@ds/core",
         "@ds/field",
+        "@ds/input",
         "@ds/theme"
       ],
       "files": [
@@ -4618,6 +4690,11 @@
           "path": "packages/react/src/components/Toast/isInsideToaster.ts",
           "type": "registry:ui",
           "target": "@components/ds/react/components/Toast/isInsideToaster.ts"
+        },
+        {
+          "path": "packages/react/src/components/Toast/stackShift.ts",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/Toast/stackShift.ts"
         },
         {
           "path": "packages/react/src/components/Toast/Toast.tsx",

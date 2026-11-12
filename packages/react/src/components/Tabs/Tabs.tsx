@@ -27,13 +27,14 @@
 // inside a Button root they would belong to Button). No `<button>` is
 // written here.
 //
-// Motion, pattern "tab-indicator": the indicator lives in the active
-// trigger. When the value changes, the new indicator plays a FLIP with the
-// Web Animations API from the box of the previous trigger to its own: a
-// translate and a scale, nothing else. The duration and ease come from the
-// tokens through the private properties in Tabs.css. Under reduced motion
-// the duration token is 0ms and no animation runs. Nothing waits for an
-// animation event.
+// Motion, interaction "tab-slide" on the catalog pattern "tab-indicator":
+// the indicator lives in the active trigger. When the value changes, the
+// new indicator plays a FLIP through useMotion().play, so the active
+// style's preset sets its timing or turns it off: from the box it would
+// have in the previous trigger to its own, a translate and a scale with
+// origin 0 0, nothing else (no width or left). Boxes are measured, so RTL
+// needs nothing. Under reduced motion the pattern plays no motion and the
+// indicator jumps. Nothing waits for an animation event.
 import {
   createContext,
   use,
@@ -46,9 +47,9 @@ import {
   type Ref,
 } from 'react';
 import { Tabs as RadixTabs } from 'radix-ui';
-import { parseDuration } from '@the-system/motion';
 import type { Emphasis, Size } from '@the-system/shared';
 import { renderSlotContent, type ButtonSlotContent } from '../Button/ButtonBase';
+import { useMotion } from '../../internal/motion';
 import { useControllable } from '../../internal/useControllable';
 
 /** sm triggers are 28px (size.control.sm), md triggers 32px (size.control.md) at default density. */
@@ -177,6 +178,7 @@ export function TabsTrigger({ value, start, count, children, ref, ...rest }: Tab
   const ctx = useTabsContext('TabsTrigger');
   const active = ctx.value === value;
   const indicatorRef = useRef<HTMLSpanElement>(null);
+  const motion = useMotion();
   const ownRef = useRef<HTMLButtonElement | null>(null);
 
   const setRef = useCallback(
@@ -215,20 +217,13 @@ export function TabsTrigger({ value, start, count, children, ref, ...rest }: Tab
     }
     const indicator = indicatorRef.current;
     const prev = from !== null && from !== value ? ctx.triggers.get(from) : undefined;
-    if (!indicator || !prev || typeof indicator.animate !== 'function') return;
-    const style = getComputedStyle(indicator);
-    const duration = parseDuration(style.getPropertyValue('--_tabs-indicator-duration'));
-    if (duration <= 0) return;
-    const a = prev.getBoundingClientRect();
-    const b = node.getBoundingClientRect();
-    if (b.width === 0 || b.height === 0) return;
-    const vertical = ctx.orientation === 'vertical';
-    const shift = vertical ? `translateY(${a.top - b.top}px) scaleY(${a.height / b.height})` : `translateX(${a.left - b.left}px) scaleX(${a.width / b.width})`;
-    indicator.animate([{ transform: shift }, { transform: 'none' }], {
-      duration,
-      easing: style.getPropertyValue('--_tabs-indicator-ease').trim() || 'ease',
-    });
-  }, [active, value, ctx.previous, ctx.triggers, ctx.orientation]);
+    if (!indicator || !prev) return;
+    // The trigger boxes stand in for the indicator's: it fills its trigger
+    // along the list (inset-inline 0 when horizontal, inset-block 0 when
+    // vertical), so the FLIP from one trigger box to the other moves it
+    // exactly, and a 2px line would be under the catalog's 4px minimum box.
+    motion.play(indicator, 'tab-indicator', 'tab-slide', { from: prev.getBoundingClientRect(), to: node.getBoundingClientRect() });
+  }, [active, value, ctx.previous, ctx.triggers, ctx.orientation, motion]);
 
   return (
     <RadixTabs.Trigger

@@ -15,7 +15,6 @@
  *   --_tabs-list-bg, -list-border-color, -list-padding
  *   --_tabs-indicator-bg, -indicator-thickness
  *   --_tabs-indicator-border-color, -indicator-border-width   the soft pill's 3:1 edge (WCAG 1.4.11)
- *   --_tabs-indicator-duration, -indicator-ease  read by Tabs.tsx for the tab-indicator FLIP
  *   --_tabs-ring                                 the focus ring, inset so a scrolling list never clips it
  *   --_tabs-count-bg, -count-fg
  *
@@ -24,7 +23,9 @@
  * to happen there. The root keeps every value a recipe overrides; the
  * trigger properties only point at them. Every selector reaches the parts
  * with child combinators, so a Tabs nested in a panel keeps its own look. Colors swap at once; only the indicator moves, with a
- * transform (Tabs.tsx, Web Animations API).
+ * transform: the tab-slide interaction, played by Tabs.tsx through
+ * useMotion() on the tab-indicator pattern, so its timing comes from the
+ * catalog tokens and the style's motion preset, not from this file.
  */
 @layer ds.base {
   [data-ds='tabs'] {
@@ -46,8 +47,6 @@
     --_tabs-indicator-thickness: var(--ds-border-width-strong);
     --_tabs-indicator-border-color: transparent;
     --_tabs-indicator-border-width: 0;
-    --_tabs-indicator-duration: var(--ds-duration-medium);
-    --_tabs-indicator-ease: var(--ds-ease-standard);
     --_tabs-ring: inset 0 0 0 var(--ds-border-width-strong) var(--ds-color-focus-ring);
     --_tabs-count-bg: var(--ds-color-bg-overlay-10);
     --_tabs-count-fg: var(--ds-color-text-default);

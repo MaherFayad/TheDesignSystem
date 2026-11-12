@@ -49,6 +49,13 @@
 //   reach the toasts. That is why a toast with an action never times out:
 //   its action is still there when the dialog closes.
 //
+// Motion (order 1.21, interaction "toast-stack"): a toast enters and leaves
+// with the CSS of Toast.css. When one joins or leaves, the toasts that stay
+// move to their new place with a transform played from where they were
+// (stackShift.ts, pattern drag-drop through useMotion, so the style's preset
+// and reduced motion apply). Layout never animates, the store never waits,
+// and the pause on hover and focus is untouched.
+//
 // Escape closes a toast only when focus is inside the toaster, so Escape in
 // a Window, a Dialog or a form never also closes a toast, a persistent
 // danger toast included. The key is not prevented, so the component that
@@ -63,7 +70,9 @@ import { Toast as RadixToast, VisuallyHidden } from 'radix-ui';
 import { toastStore, toastUrgency, type ToastItem, type ToastStore } from '@the-system/shared';
 import { Theme } from '../../theme/Theme';
 import { useTheme } from '../../theme/hooks';
+import { useMotion } from '../../internal/motion';
 import { isInsideToaster } from './isInsideToaster';
+import { watchStackShift } from './stackShift';
 import { ToastParts, toastDirFor, toastLabelsFor } from './Toast';
 
 /** Where the toasts sit. end is the inline end: right in English, left in Arabic. */
@@ -197,6 +206,19 @@ export function Toaster({ position = 'bottom-end', label, hotkey = ['F8'], toast
     window.addEventListener('keydown', onKeyDown, true);
     return () => window.removeEventListener('keydown', onKeyDown, true);
   }, []);
+
+  // The toasts that stay move to make room, with a transform (stackShift.ts).
+  const motion = useMotion();
+  useEffect(() => {
+    const viewport = layer?.querySelector<HTMLElement>('[data-ds="toaster"]');
+    if (!viewport) return;
+    return watchStackShift(viewport, (el, from, to) => {
+      const animation = motion.play(el, 'drag-drop', 'toast-stack', { step: 'drop', from, to });
+      // The shift does not scale, so its origin does not matter; the toast's own exit scales from its center.
+      el.style.removeProperty('transform-origin');
+      return animation;
+    });
+  }, [layer, motion]);
 
   // An emptied stack gives no pointerout, so the hover flag resets with it.
   const anyOpen = snapshot.visible.some((t) => t.state === 'open');
