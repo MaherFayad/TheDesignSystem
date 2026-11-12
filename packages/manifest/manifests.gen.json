@@ -1608,6 +1608,145 @@
     "since": "0.1.0"
   },
   {
+    "name": "Skeleton",
+    "kind": "component",
+    "family": "feedback",
+    "summary": "A placeholder shape that stands where content will appear while it loads: a text line, a circle or a rectangle.",
+    "useWhen": [
+      "Content with a known layout is loading, such as a card list, a profile or a table, and the wait is short",
+      "Keeping the layout still while data arrives, so nothing jumps when it lands",
+      "A first load of a section, before any content has been shown"
+    ],
+    "avoidWhen": [
+      "The layout of the coming content is not known",
+      "A short action the person started, such as saving a form",
+      "A long task with a known amount of progress",
+      "The load failed"
+    ],
+    "insteadUse": {
+      "The layout is unknown or the area is small": "Spinner",
+      "An action the person started": "Button with loading",
+      "A long task with known progress": "ProgressBar",
+      "The load failed": "ErrorState"
+    },
+    "anatomy": [
+      "root"
+    ],
+    "props": {
+      "variant": {
+        "type": [
+          "text",
+          "circle",
+          "rect"
+        ],
+        "default": "text",
+        "description": "The form. Rendered as data-variant, not data-shape: shape words are fixed for controls."
+      },
+      "size": {
+        "type": [
+          "sm",
+          "md",
+          "lg"
+        ],
+        "default": "md",
+        "description": "Text only: the type size of the line it stands for (font.size.s, m, 2xl), with half the normal leading above and below so lines stack like text. Not stamped on circle and rect."
+      },
+      "width": {
+        "type": [
+          "string",
+          "number"
+        ],
+        "description": "Inline size, a CSS length or px. Default the full line for text and rect, size.control.md (32px at the default density) for circle. Set through --_skeleton-width."
+      },
+      "height": {
+        "type": [
+          "string",
+          "number"
+        ],
+        "description": "Rect only: the block size, a CSS length or px. Default size.control.lg. A circle takes its width."
+      }
+    },
+    "states": [],
+    "a11y": {
+      "role": "None. Every skeleton is aria-hidden, whatever the caller passes.",
+      "focus": "Not focusable. Holds no controls.",
+      "keys": {},
+      "announce": "Nothing. The container that is loading carries aria-busy=\"true\" while the skeletons show and drops it when the content lands. For a wait worth saying, the consumer adds a status message such as Loading members.",
+      "native": {
+        "accessibilityRole": "none",
+        "accessibilityState": []
+      },
+      "notes": [
+        "The shimmer is a low contrast band and stops under reduced motion; the shape stays.",
+        "Forced colors draws an outline in the system text color, since the fill is not painted."
+      ]
+    },
+    "content": {
+      "en": {
+        "busy": "The container's name says what is loading: Members, Profile. No text inside a skeleton."
+      },
+      "ar": {
+        "busy": "Noun form names on the container, no diacritics: الأعضاء، الملف الشخصي."
+      }
+    },
+    "tokens": [
+      "color.bg.overlay-10",
+      "radius.xs",
+      "radius.sm",
+      "radius.pill",
+      "size.control.md",
+      "size.control.lg",
+      "font.size.s",
+      "font.size.m",
+      "font.size.2xl",
+      "font.leading.normal",
+      "border.width.default",
+      "duration.shimmer",
+      "ease.default"
+    ],
+    "motion": "skeleton-shimmer",
+    "frameworks": {
+      "react": {
+        "status": "ready",
+        "behavior": "hand built",
+        "example": "Skeleton.demo.tsx"
+      },
+      "angular": {
+        "status": "planned",
+        "behavior": "hand built"
+      },
+      "native": {
+        "status": "planned",
+        "behavior": "hand built",
+        "note": "A View with the same fill; the shimmer through Reanimated, still under reduce motion."
+      }
+    },
+    "styles": {
+      "studio": "Tokens only: an overlay-10 fill with a second overlay-10 band sweeping across.",
+      "desk": "Tokens only: the same overlays, so a skeleton on glass stays visible.",
+      "neutral": "Tokens only."
+    },
+    "mistakes": [
+      {
+        "wrong": "A skeleton for a save the person just started",
+        "right": "Button with loading"
+      },
+      {
+        "wrong": "Skeletons in a container with no aria-busy",
+        "right": "aria-busy=\"true\" on the loading container, removed when the content lands"
+      },
+      {
+        "wrong": "A skeleton left on screen after the load failed",
+        "right": "Swap it for an ErrorState with a retry action"
+      },
+      {
+        "wrong": "data-shape=\"circle\"",
+        "right": "variant=\"circle\", rendered as data-variant"
+      }
+    ],
+    "since": "0.1.0"
+  },
+  {
     "name": "StatusDot",
     "kind": "component",
     "family": "feedback",
