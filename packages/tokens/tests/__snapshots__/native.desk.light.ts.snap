@@ -3,7 +3,7 @@ import type { Theme } from './types';
 
 export const deskLight: Theme = {
   blur: {
-    backdrop: 10,
+    backdrop: 8,
     glass: 24,
     'glass-strong': 40,
     panel: 24,
@@ -179,7 +179,7 @@ export const deskLight: Theme = {
       'overlay-80': 'rgba(18, 18, 17, 0.8)',
       'overlay-90': 'rgba(18, 18, 17, 0.9)',
       'overlay-solid': '#121211',
-      scrim: 'rgba(0, 0, 0, 0.36)',
+      scrim: 'rgba(26, 29, 36, 0.28)',
       'scrim-10': 'rgba(0, 0, 0, 0.1)',
       'scrim-20': 'rgba(0, 0, 0, 0.2)',
       'scrim-30': 'rgba(0, 0, 0, 0.3)',
@@ -272,11 +272,11 @@ export const deskLight: Theme = {
       glass: 'rgba(255, 255, 255, 0.72)',
       'glass-border': 'rgba(0, 0, 0, 0.1)',
       'glass-clear': 'rgba(253, 253, 252, 0.36)',
-      'glass-edge': 'rgba(0, 0, 0, 0.06)',
+      'glass-edge': 'rgba(255, 255, 255, 0.9)',
       'glass-flat': 'rgba(246, 245, 242, 0.92)',
       'glass-hover': 'rgba(0, 0, 0, 0.045)',
       'glass-solid': '#f6f5f2',
-      'glass-strong': 'rgba(253, 253, 252, 0.88)',
+      'glass-strong': 'rgba(255, 255, 255, 0.9)',
       'glass-tinted': 'rgba(255, 244, 204, 0.66)',
       menubar: 'rgba(244, 243, 240, 0.72)',
       titlebar: 'rgba(255, 255, 255, 0.32)',
@@ -408,7 +408,7 @@ export const deskLight: Theme = {
     shimmer: 1400,
     slow: 180,
     spin: 800,
-    'spring-bouncy': 440,
+    'spring-bouncy': 380,
     'spring-snappy': 300,
     'spring-soft': 340,
     'toast-enter': 140,
@@ -426,7 +426,7 @@ export const deskLight: Theme = {
     in: [0.42, 0, 1, 1],
     out: [0, 0, 0.58, 1],
     reveal: [0.22, 1, 0.36, 1],
-    'spring-bouncy': 'linear(0, 0.146, 0.469, 0.814, 1.079, 1.222, 1.251, 1.201, 1.115, 1.031, 0.97, 0.94, 0.938, 0.953, 0.976, 0.996, 1.01, 1.016, 1.015, 1.011, 1)',
+    'spring-bouncy': 'linear(0, 0.142, 0.452, 0.78, 1.034, 1.177, 1.215, 1.182, 1.115, 1.044, 0.991, 0.961, 0.954, 0.961, 0.976, 0.991, 1.002, 1.009, 1.01, 1.008, 1)',
     'spring-snappy': 'linear(0, 0.087, 0.285, 0.516, 0.73, 0.898, 1.014, 1.079, 1.105, 1.103, 1.086, 1.062, 1.038, 1.017, 1.003, 0.994, 0.989, 0.989, 0.99, 0.992, 1)',
     'spring-soft': 'linear(0, 0.055, 0.182, 0.336, 0.49, 0.629, 0.745, 0.836, 0.904, 0.952, 0.984, 1.004, 1.015, 1.019, 1.02, 1.018, 1.016, 1.012, 1.009, 1.007, 1)',
     standard: [0.4, 0, 0.2, 1],
@@ -434,24 +434,24 @@ export const deskLight: Theme = {
   },
   elevation: {
     card: {
-      elevation: 0,
-      shadowColor: '#000000',
-      shadowOffset: {
-        height: 0,
-        width: 0,
-      },
-      shadowOpacity: 0,
-      shadowRadius: 0,
-    },
-    'card-hover': {
-      elevation: 7,
+      elevation: 8,
       shadowColor: '#1a1d24',
       shadowOffset: {
-        height: 8,
+        height: 10,
         width: 0,
       },
-      shadowOpacity: 0.1,
-      shadowRadius: 10,
+      shadowOpacity: 0.12,
+      shadowRadius: 12,
+    },
+    'card-hover': {
+      elevation: 12,
+      shadowColor: '#1a1d24',
+      shadowOffset: {
+        height: 16,
+        width: 0,
+      },
+      shadowOpacity: 0.18,
+      shadowRadius: 18,
     },
     dialog: {
       elevation: 24,
@@ -484,14 +484,14 @@ export const deskLight: Theme = {
       shadowRadius: 2.5,
     },
     menu: {
-      elevation: 11,
+      elevation: 13,
       shadowColor: '#1a1d24',
       shadowOffset: {
-        height: 12,
+        height: 16,
         width: 0,
       },
-      shadowOpacity: 0.22,
-      shadowRadius: 16,
+      shadowOpacity: 0.2,
+      shadowRadius: 20,
     },
     panel: {
       elevation: 13,
@@ -507,10 +507,10 @@ export const deskLight: Theme = {
       elevation: 5,
       shadowColor: '#1a1d24',
       shadowOffset: {
-        height: 4,
+        height: 6,
         width: 0,
       },
-      shadowOpacity: 0.14,
+      shadowOpacity: 0.16,
       shadowRadius: 8,
     },
     window: {
@@ -524,14 +524,14 @@ export const deskLight: Theme = {
       shadowRadius: 40,
     },
     'window-soft': {
-      elevation: 11,
+      elevation: 13,
       shadowColor: '#1a1d24',
       shadowOffset: {
-        height: 12,
+        height: 16,
         width: 0,
       },
-      shadowOpacity: 0.22,
-      shadowRadius: 16,
+      shadowOpacity: 0.2,
+      shadowRadius: 20,
     },
   },
   field: {
@@ -606,10 +606,10 @@ export const deskLight: Theme = {
       fixed: {
         m: 16,
       },
-      l: 14,
-      m: 13,
-      s: 12,
-      xl: 16,
+      l: 15,
+      m: 14,
+      s: 13,
+      xl: 17,
       xs: 11,
     },
     tracking: {
@@ -871,7 +871,7 @@ export const deskLight: Theme = {
   },
   radius: {
     card: 16,
-    control: 16,
+    control: 999,
     field: 8,
     panel: 12,
     pill: 999,
@@ -882,10 +882,10 @@ export const deskLight: Theme = {
   },
   scale: {
     anticipate: 0.9,
-    'dialog-enter': 0.98,
+    'dialog-enter': 0.92,
     enter: 0.9,
     lift: 1.03,
-    'menu-enter': 0.97,
+    'menu-enter': 0.92,
     morph: 0.3,
     pop: 1.14,
     press: 0.97,
@@ -984,9 +984,9 @@ export const deskLight: Theme = {
   },
   spring: {
     bouncy: {
-      damping: 21.7,
+      damping: 27.2,
       mass: 1,
-      stiffness: 733,
+      stiffness: 960,
     },
     merge: {
       damping: 24,
