@@ -23,6 +23,7 @@ import {
   DestroyRef,
   ElementRef,
   afterNextRender,
+  afterRenderEffect,
   computed,
   effect,
   forwardRef,
@@ -31,6 +32,7 @@ import {
   linkedSignal,
   model,
   signal,
+  untracked,
   viewChild,
 } from '@angular/core';
 import { NG_VALUE_ACCESSOR, type ControlValueAccessor } from '@angular/forms';
@@ -39,7 +41,7 @@ import type { Size, Tone } from '@the-system/shared';
 import { consumeHostAttributes } from '../../internal/host';
 import { DsNativeButton } from '../../internal/native-button';
 import { optionalBoolean } from '../../internal/optional-boolean';
-import { DsField } from '../field/field';
+import { DsFieldContext, fieldControl } from '../field/field-context';
 import { DS_CHECKBOX_GROUP } from './group';
 
 export type CheckboxSize = Extract<Size, 'sm' | 'md' | 'lg'>;
@@ -126,13 +128,14 @@ export class DsCheckbox implements ControlValueAccessor {
   readonly ariaLabelledby = input<string | undefined>(undefined, { alias: 'aria-labelledby' });
   readonly ariaDescribedby = input<string | undefined>(undefined, { alias: 'aria-describedby' });
 
-  private readonly field = inject(DsField, { optional: true });
+  private readonly field = inject(DsFieldContext, { optional: true });
   private readonly group = inject(DS_CHECKBOX_GROUP, { optional: true });
   private readonly host = consumeHostAttributes([
     'dsCheckbox', 'size', 'tone', 'label', 'description', 'invalid', 'disabled', 'readOnly', 'required',
     'checked', 'defaultChecked', 'value', 'name', 'id', 'aria-label', 'aria-labelledby', 'aria-describedby',
   ]);
   private readonly control = viewChild.required<ElementRef<HTMLButtonElement>>('control');
+  private readonly bubble = viewChild<ElementRef<HTMLInputElement>>('bubble');
 
   protected readonly descriptionId = `ds-checkbox-${++nextId}-description`;
   private readonly ownId = `ds-checkbox-${nextId}`;
@@ -159,17 +162,21 @@ export class DsCheckbox implements ControlValueAccessor {
   });
   protected readonly iconSize = computed<CheckboxSize>(() => this.size() ?? this.group?.size() ?? 'md');
   protected readonly itemName = computed(() => this.name() ?? this.group?.name());
-  protected readonly controlId = computed(() => this.id() ?? this.field?.controlId() ?? this.ownId);
-  readonly isInvalid = computed(() => this.invalid() ?? this.group?.invalid() ?? this.field?.invalid() ?? false);
-  readonly isDisabled = computed(
-    () => this.disabled() ?? this.formDisabled() ?? this.group?.disabled() ?? this.field?.disabled() ?? false,
-  );
-  readonly isReadOnly = computed(() => this.readOnly() ?? this.group?.readOnly() ?? this.field?.readOnly() ?? false);
-  protected readonly isRequired = computed(() => this.required() ?? this.field?.required() ?? false);
-  protected readonly describedBy = computed(() => {
-    const own = [this.description() !== undefined ? this.descriptionId : undefined, this.ariaDescribedby()].filter(Boolean).join(' ');
-    return [this.field?.describedBy(), own].filter(Boolean).join(' ') || undefined;
-  });
+  /** The Field wiring merged with the box's own values and its group, as React's useFieldControl. */
+  private readonly fieldState = fieldControl(this.field, () => ({
+    id: this.id(),
+    describedBy: [this.description() !== undefined ? this.descriptionId : undefined, this.ariaDescribedby()].filter(Boolean).join(' ') || undefined,
+    invalid: this.invalid() ?? this.group?.invalid(),
+    disabled: this.disabled() ?? this.formDisabled() ?? this.group?.disabled(),
+    readOnly: this.readOnly() ?? this.group?.readOnly(),
+    required: this.required(),
+  }));
+  protected readonly controlId = computed(() => this.fieldState().id ?? this.ownId);
+  readonly isInvalid = computed(() => this.fieldState().invalid);
+  readonly isDisabled = computed(() => this.fieldState().disabled);
+  readonly isReadOnly = computed(() => this.fieldState().readOnly);
+  protected readonly isRequired = computed(() => this.fieldState().required);
+  protected readonly describedBy = computed(() => this.fieldState().describedBy);
 
   private onChange: (value: CheckboxCheckedState) => void = () => {};
   protected onTouched: () => void = () => {};
@@ -181,6 +188,28 @@ export class DsCheckbox implements ControlValueAccessor {
       onCleanup(this.group.register(v));
     });
     const destroyRef = inject(DestroyRef);
+    // A box with its own id tells the Field, so the Field label points at it.
+    const field = this.field;
+    if (field) {
+      effect(() => {
+        const id = this.id();
+        untracked(() => field.setControlId(id));
+      });
+      destroyRef.onDestroy(() => {
+        if (untracked(this.id) !== undefined) field.setControlId(undefined);
+      });
+    }
+    // Radix dispatches a click on the hidden input after the state changes,
+    // so a form's change handling (dsForm, a native listener) sees the toggle.
+    // The first render is the starting state, not a change.
+    let seen: { el?: HTMLInputElement; value?: unknown } = {};
+    afterRenderEffect(() => {
+      const el = this.bubble()?.nativeElement;
+      const value = this.current();
+      if (!el) return;
+      if (seen.el === el && seen.value !== value) el.dispatchEvent(new Event('click', { bubbles: true }));
+      seen = { el, value };
+    });
     afterNextRender(() => {
       const button = this.control().nativeElement;
       const form = button.closest('form');
