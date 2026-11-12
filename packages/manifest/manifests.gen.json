@@ -21344,8 +21344,10 @@
         "example": "ToggleButton.demo.tsx"
       },
       "angular": {
-        "status": "planned",
-        "behavior": "button[dsToggleButton] on the shared Button.css"
+        "status": "ready",
+        "behavior": "button[dsToggleButton] on DsButtonBase, host bindings",
+        "example": "toggle-button.demo.ts",
+        "note": "aria-pressed and data-state on the host, as Radix Toggle sets them. onPressedChange is the pressedChange output of [(pressed)]; defaultPressed seeds the local state when pressed is not bound. start, end and icon take an icon name or a TemplateRef. Button.css is used as is."
       },
       "native": {
         "status": "planned",
