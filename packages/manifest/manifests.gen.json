@@ -2400,7 +2400,7 @@
       "notes": [
         "The current page is told apart by weight, the missing underline and aria-current, not by color alone (WCAG 1.4.1).",
         "Separators are chevron-forward icons, aria-hidden, mirrored in RTL.",
-        "With a hover pointer a long link step truncates with an ellipsis at menu.width.min; its full text stays in the DOM as the accessible name and shows whole on hover and keyboard focus, wrapping inside its row when it is wider than the row (320px). Without hover (touch) steps wrap. The current page never truncates. No native title.",
+        "With a hover pointer a long link step truncates with an ellipsis at menu.width.min; its full text stays in the DOM as the accessible name and shows whole on hover and keyboard focus by wrapping in place at its truncated width, so it never moves to another row and hover holds (WCAG 1.4.13, 1.4.10 at 320px). Without hover (touch) steps wrap. The current page never truncates. No native title.",
         "The overflow part is the DropdownMenu trigger, an IconButton carrying data-part overflow, with data-state open or closed for its menu; the menu items are the hidden steps in order. The breadcrumbs root itself has no state: open and closed are listed under states only because the contract suite reads data-state on every part, the overflow trigger included.",
         "Each landmark needs its own name when a page has more than one nav.",
         "Each step text has dir auto, so a Latin name inside an Arabic page keeps its own direction.",
@@ -19742,7 +19742,7 @@
     "mistakes": [
       {
         "wrong": "A bottom toast over the Sheet footer, where focus cannot reach it while the Sheet is open",
-        "right": "Nothing to do: while a Sheet is open a bottom toaster moves to the top edge (Dialog.css), and goes back when it closes"
+        "right": "Nothing to do: while a Sheet is open a bottom toaster moves to the top edge (Dialog.css), and goes back when it closes. While toasts show there, the Sheet root sets --_sheet-toast-end and its top gap grows, so an lg panel and its close control stay below them"
       },
       {
         "wrong": "A sheet that closes only by dragging",

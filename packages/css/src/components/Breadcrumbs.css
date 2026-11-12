@@ -48,10 +48,11 @@
     --_breadcrumbs-font-size: var(--ds-font-size-s);
   }
 
+  /* Start aligned: a hovered step that grows downward leaves the other steps of its row where they are. */
   [data-ds='breadcrumbs'] > [data-part='list'] {
     display: flex;
     flex-wrap: wrap;
-    align-items: center;
+    align-items: flex-start;
     min-inline-size: 0;
     margin: 0;
     padding: 0;
@@ -79,10 +80,13 @@
 
   /*
    * With a hover pointer, a long link step is one line that ends in an
-   * ellipsis; hover and keyboard focus show it whole, wrapping inside its row
-   * when it is wider than the row (WCAG 1.4.10 at 320px). No property of Link
-   * covers truncation, so these declarations are set here. Without hover
-   * (touch), steps wrap and nothing is cut off.
+   * ellipsis; hover and keyboard focus show it whole (WCAG 1.4.10 at 320px).
+   * The step wraps in place: it keeps its width, so it never moves to the next
+   * row, and only grows downward from where it is. Its top line stays under
+   * the pointer and hover holds (WCAG 1.4.13). A step that grew wider would
+   * wrap onto the next row, leave the pointer and collapse at once. No
+   * property of Link covers truncation, so these declarations are set here.
+   * Without hover (touch), steps wrap and nothing is cut off.
    *
    * The selector names [data-ds='link'] as well as the part: Link.css sets
    * max-inline-size on [data-ds='link'][data-standalone] at the same
@@ -97,7 +101,6 @@
     }
 
     [data-ds='breadcrumbs'] [data-part='link'][data-ds='link']:is(:hover, :focus-visible) {
-      max-inline-size: 100%;
       overflow: visible;
       white-space: normal;
     }

@@ -554,9 +554,19 @@
     --_dialog-slide: 100%;
     --_dialog-enter-opacity: 1;
     --_dialog-duration-in: var(--ds-duration-slow);
+    /* Where toasts on the top edge end; Sheet.tsx sets it inline while they show. */
+    --_sheet-toast-end: 0px;
 
     align-items: flex-end;
-    padding-block: calc(var(--ds-space-5xl) + env(safe-area-inset-top, 0px)) 0;
+    /*
+     * The top gap. While toasts show on the top edge, Sheet.tsx sets
+     * --_sheet-toast-end (where they end, in px) on this root, and the gap
+     * grows to clear them: the panel of any size, its close control first,
+     * stays below the toasts (WCAG 2.4.11). With no toasts the first term
+     * wins. Sheet.tsx caps the value at half the screen, so a tall stack of
+     * toasts on a short screen cannot squeeze the panel away (WCAG 1.4.10).
+     */
+    padding-block: max(calc(var(--ds-space-5xl) + env(safe-area-inset-top, 0px)), calc(var(--_sheet-toast-end) + var(--ds-space-s))) 0;
   }
 
   [data-ds='sheet'][data-size='sm'] {
@@ -606,9 +616,10 @@
    * is open the toaster moves to the top edge, at the same inline place,
    * and its toasts enter from above and stack as the top positions do.
    * Only the toaster's position and its private properties change; the
-   * toast store does not. A size lg Sheet fills the screen, so there the
-   * top toast can still cover the title and close part: the lasting fix is
-   * in the toast layer and is asked of the lead (docs/reports/fixes).
+   * toast store does not. A size lg Sheet reaches the top edge, so the
+   * Sheet root's top gap grows to clear the toasts (--_sheet-toast-end,
+   * above). The lasting fix is in the toast layer and is asked of the lead
+   * (docs/reports/fixes).
    */
   :root:has([data-ds='sheet'] > [data-part='panel'][data-state='open']) [data-ds='toaster'][data-position^='bottom'] {
     flex-direction: column-reverse;

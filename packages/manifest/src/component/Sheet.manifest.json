@@ -225,7 +225,7 @@
   "mistakes": [
     {
       "wrong": "A bottom toast over the Sheet footer, where focus cannot reach it while the Sheet is open",
-      "right": "Nothing to do: while a Sheet is open a bottom toaster moves to the top edge (Dialog.css), and goes back when it closes"
+      "right": "Nothing to do: while a Sheet is open a bottom toaster moves to the top edge (Dialog.css), and goes back when it closes. While toasts show there, the Sheet root sets --_sheet-toast-end and its top gap grows, so an lg panel and its close control stay below them"
     },
     {
       "wrong": "A sheet that closes only by dragging",

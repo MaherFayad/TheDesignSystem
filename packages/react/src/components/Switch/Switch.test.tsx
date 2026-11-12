@@ -1,3 +1,5 @@
+import { readFileSync } from 'node:fs';
+import { join } from 'node:path';
 import { createRef } from 'react';
 import { fireEvent, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
@@ -113,5 +115,16 @@ describe('Switch', () => {
     const { container } = render(<SwitchDemo />);
     const ids = [...container.querySelectorAll('[data-demo-case]')].map((el) => el.getAttribute('data-demo-case'));
     expect(ids).toEqual(['variants', 'empty', 'one', 'many', 'too-many', 'long-text', 'long-arabic', 'error', 'disabled', 'readonly']);
+  });
+
+  it('the state text is its own bidi run, so on a right to left page it keeps its gap from an English label', () => {
+    const { container } = render(<Switch label="Snap to grid" defaultChecked stateText={{ on: 'On', off: 'Off' }} />);
+    expect(container.querySelector('[data-part="label"] > [data-part="state-text"]')?.textContent).toBe('On');
+    const css = readFileSync(join(process.cwd(), 'packages/css/src/components/Switch.css'), 'utf8');
+    const at = css.indexOf("[data-ds='switch'] [data-part='state-text'] {");
+    expect(at).toBeGreaterThan(-1);
+    const rule = css.slice(at, css.indexOf('}', at));
+    // Without it, "Snap to grid" and "On" join one left to right run and read "Snap to gridOn".
+    expect(rule).toMatch(/unicode-bidi:\s*isolate;/);
   });
 });

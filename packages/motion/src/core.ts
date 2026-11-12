@@ -412,39 +412,83 @@ export function play(el: Element, spec: MotionSpec, id: string, prefix = 'ds', o
   });
 }
 
-/** The catalog loops under `root` (its own and its descendants'): animations it started with more than one loop. */
+/**
+ * The loops under `root` (its own and its descendants'): catalog animations
+ * with more than one loop, and any animation that loops forever, such as the
+ * CSS spinners the components play, which carry no catalog id.
+ */
 function loopsUnder(root: Element | Document): Animation[] {
   if (typeof root.getAnimations !== 'function') return [];
   return root.getAnimations({ subtree: true } as GetAnimationsOptions).filter((a) => {
-    if (!String(a.id).startsWith(ANIMATION_ID_PREFIX)) return false;
     const n = a.effect?.getTiming().iterations ?? 1;
-    return n > 1;
+    return n === Infinity || (String(a.id).startsWith(ANIMATION_ID_PREFIX) && n > 1);
   });
 }
 
-/**
- * Pauses every catalog loop under `root` (a spinner, the thinking dots, a
- * shimmer) and returns how many it paused. Wire it to a pause control, or
- * call it when the page asks for less motion. WCAG 2.2.2 asks for a way to
- * pause anything that moves for more than five seconds.
- */
-export function pauseLoops(root: Element | Document): number {
+/** The loops `pauseLoops` paused, so `resumeLoops` leaves alone a loop something else paused. */
+const pausedByUs = new WeakSet<Animation>();
+
+/** The roots `pauseLoops` paused and `resumeLoops` has not played again. */
+const pausedRoots = new Set<Element | Document>();
+
+/** Pauses the running loops under `root` and remembers them. Returns how many. */
+function pauseUnder(root: Element | Document): number {
   let n = 0;
   for (const a of loopsUnder(root)) {
     if (a.playState === 'running') {
       a.pause();
+      pausedByUs.add(a);
       n += 1;
     }
   }
   return n;
 }
 
-/** Plays again the catalog loops under `root` that `pauseLoops` paused. Returns how many. */
+/**
+ * A loop that starts after the pause (a spinner that mounts, or a CSS
+ * animation the stylesheet restarts) is a new Animation. While a root is
+ * paused, one listener pauses each new loop under it as it starts.
+ */
+function onLoopStart(event: Event): void {
+  const target = event.target as Element | null;
+  if (!target || typeof target.getAnimations !== 'function') return;
+  for (const root of pausedRoots) {
+    if (root === target || root.contains(target)) pauseUnder(target);
+  }
+}
+
+/**
+ * Pauses every loop under `root` (a spinner, the thinking dots, a shimmer, a
+ * component's CSS spinner, and any other endless animation under it, the
+ * system's or not) and returns how many it paused. Loops that start later
+ * under `root` are paused too, until `resumeLoops(root)`. Wire it to a pause
+ * control, or call it when the page asks for less motion. WCAG 2.2.2 asks
+ * for a way to pause anything that moves for more than five seconds. Do not
+ * await `settled()` on a paused or endless loop: it never ends.
+ */
+export function pauseLoops(root: Element | Document): number {
+  const doc = 'documentElement' in root ? root : root.ownerDocument;
+  if (pausedRoots.size === 0) doc?.addEventListener('animationstart', onLoopStart, true);
+  pausedRoots.add(root);
+  return pauseUnder(root);
+}
+
+/**
+ * Plays again the loops under `root` that `pauseLoops` paused, and stops
+ * pausing new ones. Returns how many. A loop it plays again runs even if the
+ * stylesheet has since set animation-play-state: paused on it.
+ */
 export function resumeLoops(root: Element | Document): number {
+  pausedRoots.delete(root);
+  if (pausedRoots.size === 0) {
+    const doc = 'documentElement' in root ? root : root.ownerDocument;
+    doc?.removeEventListener('animationstart', onLoopStart, true);
+  }
   let n = 0;
   for (const a of loopsUnder(root)) {
-    if (a.playState === 'paused') {
+    if (a.playState === 'paused' && pausedByUs.has(a)) {
       a.play();
+      pausedByUs.delete(a);
       n += 1;
     }
   }
@@ -455,7 +499,9 @@ export function resumeLoops(root: Element | Document): number {
  * Resolves when the animation ends or is cancelled. Resolves at once for
  * null and for an animation that is already idle: after a cancel the browser
  * puts a new `finished` promise in place that stays pending while the
- * animation is idle, so awaiting it would never end.
+ * animation is idle, so awaiting it would never end. A loop that never ends
+ * (an endless spinner, or one `pauseLoops` paused) never resolves: do not
+ * await it.
  */
 export async function settled(animation: Animation | null | undefined): Promise<void> {
   if (!animation || animation.playState === 'idle') return;

@@ -192,4 +192,60 @@ describe('Sheet', () => {
     expect(rule).toMatch(/inset-block-start: var\(--_toaster-inset-block-start\);/);
     expect(rule).toMatch(/inset-block-end: auto;/);
   });
+
+  it('keeps the panel below toasts on the top edge, so they never cover the close control (WCAG 2.4.11)', async () => {
+    const g = globalThis as unknown as { ResizeObserver?: unknown };
+    const saved = { ro: g.ResizeObserver, rect: HTMLElement.prototype.getBoundingClientRect };
+    g.ResizeObserver = class {
+      constructor(private cb: () => void) {}
+      observe() {
+        this.cb();
+      }
+      disconnect() {}
+      unobserve() {}
+    };
+    // The toaster sits on the top edge, 16px down, one 60px toast tall.
+    let top = 16;
+    HTMLElement.prototype.getBoundingClientRect = function (this: HTMLElement) {
+      const at = this.getAttribute('data-ds') === 'toaster' ? top : 0;
+      const height = this.getAttribute('data-ds') === 'toaster' ? 60 : 0;
+      return { top: at, bottom: at + height, height, left: 0, right: 0, width: 0, x: 0, y: at, toJSON: () => ({}) } as DOMRect;
+    };
+    const toaster = document.createElement('ol');
+    toaster.setAttribute('data-ds', 'toaster');
+    toaster.setAttribute('data-position', 'bottom-end');
+    document.body.append(toaster);
+    try {
+      render(<Basic size="lg" defaultOpen />);
+      // No toast yet: nothing to clear.
+      expect(rootEl()?.style.getPropertyValue('--_sheet-toast-end')).toBe('');
+      const toast = document.createElement('li');
+      toast.setAttribute('data-ds', 'toast');
+      toaster.append(toast);
+      await waitFor(() => expect(rootEl()?.style.getPropertyValue('--_sheet-toast-end')).toBe('76px'));
+      toast.remove();
+      await waitFor(() => expect(rootEl()?.style.getPropertyValue('--_sheet-toast-end')).toBe(''));
+      // A toaster on the bottom edge is not the Sheet's to clear.
+      toaster.append(toast);
+      top = 600;
+      window.dispatchEvent(new Event('resize'));
+      await new Promise((r) => requestAnimationFrame(r));
+      await waitFor(() => expect(rootEl()?.style.getPropertyValue('--_sheet-toast-end')).toBe(''));
+      // Back on the top edge, then the Sheet closes while the toast still shows: the open sheet clears.
+      top = 16;
+      window.dispatchEvent(new Event('resize'));
+      await waitFor(() => expect(rootEl()?.style.getPropertyValue('--_sheet-toast-end')).toBe('76px'));
+      await userEvent.click(screen.getByRole('button', { name: 'Close sheet' }));
+      await waitFor(() => expect(rootEl()).toBeNull());
+    } finally {
+      toaster.remove();
+      g.ResizeObserver = saved.ro;
+      HTMLElement.prototype.getBoundingClientRect = saved.rect;
+    }
+    // The root's top gap is the larger of its own gap and the toasts' end plus a gap.
+    const css = readFileSync(join(process.cwd(), 'packages/css/src/components/Dialog.css'), 'utf8');
+    const at = css.indexOf("  [data-ds='sheet'] {");
+    const rule = css.slice(at, css.indexOf('\n  }', at));
+    expect(rule).toMatch(/padding-block: max\(calc\(var\(--ds-space-5xl\) \+ env\(safe-area-inset-top, 0px\)\), calc\(var\(--_sheet-toast-end\) \+ var\(--ds-space-s\)\)\) 0;/);
+  });
 });

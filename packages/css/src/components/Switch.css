@@ -183,9 +183,16 @@
     cursor: pointer;
   }
 
+  /*
+   * The state text is its own bidi run. Without the isolate, an English
+   * label and state on a right to left page ("Snap to grid" and "On") join
+   * one left to right run: the state sits against the label with no gap
+   * ("Snap to gridOn") and its inline start margin lands on its far side.
+   */
   [data-ds='switch'] [data-part='state-text'] {
     color: var(--ds-color-text-muted);
     white-space: nowrap;
+    unicode-bidi: isolate;
   }
 
   [data-ds='switch'] > [data-part='label'] > [data-part='state-text'] {
