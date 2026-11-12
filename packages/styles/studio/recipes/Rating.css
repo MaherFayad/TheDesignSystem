@@ -1,0 +1,11 @@
+/*
+ * Studio recipe for Rating. The Studio primary is neutral: its primary
+ * border is the control border, so accent stars would fill in the same grey
+ * as a disabled control. No token says "the strongest neutral" for a
+ * primary graphic, so accent stars fill in the text color here.
+ */
+@layer ds.recipes {
+  [data-style='studio'] [data-ds='rating'][data-tone='accent'] {
+    --_rating-fg-filled: var(--ds-color-text-default);
+  }
+}

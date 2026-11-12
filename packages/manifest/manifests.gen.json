@@ -2197,6 +2197,263 @@
     "since": "0.1.0"
   },
   {
+    "name": "Rating",
+    "kind": "component",
+    "family": "forms",
+    "summary": "Pick or show a score from 1 to 5 (or 10) as stars. Interactive it is a radio group of stars; read only it is an image with a label, with half stars.",
+    "useWhen": [
+      "Asking for a score from 1 to 5 on a review, a session or a template",
+      "Showing an average score next to a count of reviews",
+      "A 10 point score where stars read better than a number field"
+    ],
+    "avoidWhen": [
+      "A yes or no answer, or a like",
+      "A score with labels for each step (Poor, Fair, Good)",
+      "A precise number, a percent or a progress",
+      "Scores above 10 steps"
+    ],
+    "insteadUse": {
+      "A yes or no answer, or a like": "ToggleButton",
+      "A score with labels for each step": "RadioGroup",
+      "A precise number": "Input with type number",
+      "A progress or a percent": "Progress",
+      "A value on a continuous range": "Slider"
+    },
+    "anatomy": [
+      "root",
+      "stars",
+      "item",
+      "icon",
+      "value"
+    ],
+    "slots": {
+      "value": {
+        "accepts": "text",
+        "max": 1
+      }
+    },
+    "props": {
+      "value": {
+        "type": "number",
+        "description": "The score, controlled. 0 means not rated. Read only accepts halves (4.5) and rounds to the nearest half."
+      },
+      "defaultValue": {
+        "type": "number",
+        "default": 0,
+        "description": "The score at first render, uncontrolled."
+      },
+      "onValueChange": {
+        "type": "function",
+        "description": "Called with the new score when a person picks a star."
+      },
+      "max": {
+        "type": [
+          "5",
+          "10"
+        ],
+        "default": "5",
+        "description": "The number of stars."
+      },
+      "readOnly": {
+        "type": "boolean",
+        "default": false,
+        "description": "Plain markup: the root is role img named \"4.5 of 5 stars\". Not focusable."
+      },
+      "disabled": {
+        "type": "boolean",
+        "default": false,
+        "description": "Disables every star."
+      },
+      "required": {
+        "type": "boolean",
+        "default": false,
+        "description": "Sets aria-required on the group and required on the hidden inputs."
+      },
+      "name": {
+        "type": "string",
+        "description": "The form field name of the hidden native inputs."
+      },
+      "size": {
+        "type": [
+          "sm",
+          "md",
+          "lg"
+        ],
+        "default": "md",
+        "description": "Stars of 16, 24 and 24 px in press areas of 24, 28 and 44 px. lg keeps the 24px star (the largest icon size) and grows the touch target."
+      },
+      "tone": {
+        "type": [
+          "accent",
+          "warning"
+        ],
+        "default": "warning",
+        "description": "The color of the filled stars. warning: amber. accent: the primary color."
+      },
+      "showValue": {
+        "type": "boolean",
+        "default": false,
+        "description": "Shows the score as text after the stars."
+      },
+      "children": {
+        "type": "node",
+        "description": "Text after the stars, such as (128 reviews). Interactive, it joins aria-describedby."
+      },
+      "getItemLabel": {
+        "type": "function",
+        "description": "The name of one star. Default \"3 of 5 stars\". Pass one for Arabic: \"3 من 5 نجوم\"."
+      },
+      "getValueLabel": {
+        "type": "function",
+        "description": "The name of a read only rating. Default \"4.5 of 5 stars\", or \"Not rated\" for 0."
+      }
+    },
+    "states": [
+      "checked",
+      "unchecked",
+      "data-readonly",
+      "data-disabled",
+      "data-filled"
+    ],
+    "a11y": {
+      "role": "Interactive: radiogroup on the root, named by aria-label or aria-labelledby, and radio on each star, named \"3 of 5 stars\". Read only: the stars part is role img, named \"4.5 of 5 stars\"; the text after it stays outside the image and is read.",
+      "focus": "One tab stop. Tab lands on the checked star, or the first star when none is checked. Focus shows a 2px ring around the star. Read only is not focusable.",
+      "keys": {
+        "Tab": "Moves focus to the checked star, and on to the next control",
+        "Shift+Tab": "Moves focus back out of the rating",
+        "ArrowRight, ArrowLeft": "Raise or lower the score by one, in the reading direction: in Arabic ArrowLeft raises it. They stop at 1 and at the highest score.",
+        "Home": "Sets the score to 1",
+        "End": "Sets the score to the highest",
+        "Space": "Picks the focused star"
+      },
+      "announce": "Each star is read as a radio with its name, \"3 of 5 stars\", its checked state and its position. The text after the stars joins aria-describedby. Read only: one image with the score as its name, then the text after it, such as (128 reviews).",
+      "native": {
+        "accessibilityRole": "adjustable",
+        "accessibilityState": [
+          "disabled"
+        ]
+      },
+      "notes": [
+        "Behavior from Radix RadioGroup, horizontal, without wrapping. Home and End are added here: Radix only moves focus on them.",
+        "Never color alone: a filled star is a filled shape (star-filled), an empty one an outline (star), a half star the star-half shape, which mirrors in right to left.",
+        "The filled colors keep 3:1 against the page (WCAG 1.4.11): warning uses the warning text color, accent the primary border color.",
+        "Interactive scores are whole stars. Half stars show only in the read only form.",
+        "A picked score cannot be cleared to 0, as in any radio group. Offer a separate action when clearing matters.",
+        "Disabled uses native disabled: the stars leave the tab order and draw with opacity.disabled; the text after them stays readable.",
+        "Source: GoBanana admin FeedbackList could not be fetched in the lane session. Designed from the dials table in PLAN.md 3.7 and RadioGroup.",
+        "The read only stars sit in a stars part with role img, so the value text after them stays readable to assistive tech. aria-labelledby on a read only rating is joined with the score."
+      ]
+    },
+    "content": {
+      "en": {
+        "label": "A visible label that says what is rated: Rate this board. It names the group through aria-labelledby.",
+        "item": "\"3 of 5 stars\", the default. Never a word scale on the stars themselves.",
+        "value": "The score with one decimal at most, and the count in brackets: 4.5 (128 reviews)."
+      },
+      "ar": {
+        "label": "عنوان ظاهر بصيغة الاسم: تقييم اللوحة",
+        "item": "3 من 5 نجوم، بالأرقام الغربية",
+        "value": "الرقم بخانة عشرية وحدة بالكثير، وعدد التقييمات بين قوسين"
+      }
+    },
+    "tokens": [
+      "size.control.sm",
+      "size.control.lg",
+      "size.target-min",
+      "space.4xs",
+      "space.xs",
+      "font.family.sans",
+      "font.size.xs",
+      "font.size.s",
+      "font.size.m",
+      "font.leading.snug",
+      "radius.sm",
+      "border.width.strong",
+      "color.text.default",
+      "color.text.muted",
+      "color.border.control-hover",
+      "color.state.warning.text",
+      "color.primary.border",
+      "color.bg.overlay-10",
+      "focus.shadow.ring",
+      "opacity.disabled",
+      "duration.base",
+      "duration.fast",
+      "ease.default"
+    ],
+    "motion": "fade",
+    "frameworks": {
+      "react": {
+        "status": "ready",
+        "behavior": "radix RadioGroup",
+        "example": "Rating.demo.tsx"
+      },
+      "angular": {
+        "status": "planned"
+      },
+      "native": {
+        "status": "planned",
+        "note": "accessibilityRole adjustable with increment and decrement actions, one element for the whole rating."
+      }
+    },
+    "styles": {
+      "studio": "Pixel stars: outline stars in the hover control border color, filled stars in amber. accent fills in the text color through the Studio recipe, since the Studio primary is neutral and its border is the control grey.",
+      "desk": "The same pixel stars; accent fills in the yellow primary in dark and the dark gold primary border in light."
+    },
+    "mistakes": [
+      {
+        "wrong": "Stars colored without changing shape",
+        "right": "Rating draws star-filled and star; keep both shapes in a recipe"
+      },
+      {
+        "wrong": "An interactive rating to show an average",
+        "right": "readOnly, which is one image with the score as its name"
+      },
+      {
+        "wrong": "Stars without a name, or a name only on the first star",
+        "right": "aria-labelledby on the Rating; each star is named \"3 of 5 stars\""
+      },
+      {
+        "wrong": "Half stars in a rating people pick",
+        "right": "Whole stars when picking; halves only when showing an average"
+      }
+    ],
+    "contract": {
+      "optionalParts": [
+        "stars",
+        "value"
+      ],
+      "keys": {
+        "ArrowRight": {
+          "focus": "[data-part='item'][data-state='checked']",
+          "case": "many",
+          "expect": "value-changes"
+        },
+        "ArrowLeft": {
+          "focus": "[data-part='item'][data-state='checked']",
+          "case": "many",
+          "expect": "value-changes"
+        },
+        "Home": {
+          "focus": "[data-part='item'][data-state='checked']",
+          "case": "many",
+          "expect": "value-changes"
+        },
+        "End": {
+          "focus": "[data-part='item'][data-state='checked']",
+          "case": "many",
+          "expect": "value-changes"
+        },
+        "Space": {
+          "focus": "[data-part='item']",
+          "case": "empty",
+          "expect": "state-changes"
+        }
+      }
+    },
+    "since": "0.1.0"
+  },
+  {
     "name": "Theme",
     "kind": "component",
     "family": "foundations",
