@@ -1,0 +1,301 @@
+{
+  "name": "Tabs",
+  "kind": "component",
+  "family": "navigation",
+  "summary": "Switches between panels of related content in place. A labelled list of tabs, one active at a time, with its panel below or beside it.",
+  "useWhen": [
+    "Two to eight panels of related content that a reader looks at one at a time, such as the settings of one board",
+    "Views of the same object that share one place on the page: General, Members, History",
+    "A small set of panels inside a dialog, a card or an inspector"
+  ],
+  "avoidWhen": [
+    "Moving between pages of a site or sections of an app",
+    "Content the reader needs to compare side by side",
+    "Steps that must be done in order",
+    "Choosing a value or a mode for a form or a canvas",
+    "Bottom navigation on a phone"
+  ],
+  "insteadUse": {
+    "Moving between pages or app sections": "Navbar or Sidebar",
+    "Bottom destinations on a phone": "TabBar",
+    "Steps done in order": "Stepper",
+    "Choosing one value or mode": "SegmentedControl or ToggleGroup",
+    "Content compared side by side": "Show it on the page, or use an Accordion",
+    "A row of commands": "Toolbar"
+  },
+  "anatomy": [
+    "root",
+    "list",
+    "trigger",
+    "indicator",
+    "start",
+    "label",
+    "count",
+    "panel"
+  ],
+  "parts": {
+    "TabsList": "list",
+    "TabsTrigger": "trigger",
+    "TabsPanel": "panel"
+  },
+  "slots": {
+    "list": {
+      "accepts": [
+        "TabsTrigger"
+      ],
+      "min": 2,
+      "max": 8
+    },
+    "label": {
+      "accepts": "text",
+      "min": 1,
+      "max": 1
+    },
+    "panel": {
+      "accepts": "any"
+    }
+  },
+  "props": {
+    "value": {
+      "type": "string",
+      "description": "Tabs: controlled value, the value of the active tab, with onValueChange."
+    },
+    "defaultValue": {
+      "type": "string",
+      "description": "Tabs: the active tab at first when uncontrolled. Always pass one, so a panel shows on load."
+    },
+    "onValueChange": {
+      "type": "function",
+      "description": "Tabs: called with the value of the tab that becomes active."
+    },
+    "size": {
+      "type": [
+        "sm",
+        "md"
+      ],
+      "default": "md",
+      "description": "Tabs: trigger height and type size. sm follows size.control.sm (28px at default density), md size.control.md (32px)."
+    },
+    "emphasis": {
+      "type": [
+        "soft",
+        "ghost"
+      ],
+      "default": "ghost",
+      "description": "Tabs: ghost draws a 2px line under the active tab on the list hairline; soft draws a filled pill behind it on a quiet track."
+    },
+    "orientation": {
+      "type": [
+        "horizontal",
+        "vertical"
+      ],
+      "default": "horizontal",
+      "description": "Tabs: horizontal puts the list above the panels; vertical puts it in a column at the inline start, and the up and down arrows move."
+    },
+    "activationMode": {
+      "type": [
+        "automatic",
+        "manual"
+      ],
+      "default": "automatic",
+      "description": "Tabs: automatic shows a panel as soon as an arrow key reaches its tab. manual moves focus only; Enter or Space shows the panel. Use manual when a panel is slow to load."
+    },
+    "loop": {
+      "type": "boolean",
+      "default": true,
+      "description": "TabsList: the arrow keys wrap from the last tab to the first."
+    },
+    "aria-label": {
+      "type": "string",
+      "description": "TabsList: required unless aria-labelledby names a visible heading. Names the set: Board settings."
+    },
+    "TabsTrigger.value": {
+      "type": "string",
+      "description": "The value the tab shows; equal to one TabsPanel value."
+    },
+    "start": {
+      "type": "node",
+      "description": "TabsTrigger: a leading system icon name or node, decorative. The label still names the tab."
+    },
+    "count": {
+      "type": "number",
+      "description": "TabsTrigger: a number after the label, in a small pill, read with the name (Comments 12). Western digits."
+    },
+    "disabled": {
+      "type": "boolean",
+      "default": false,
+      "description": "TabsTrigger: cannot be chosen and is skipped by the arrow keys. Drawn with opacity.disabled."
+    },
+    "forceMount": {
+      "type": "boolean",
+      "default": false,
+      "description": "TabsPanel: keeps an inactive panel mounted and hidden, so its state survives a switch."
+    }
+  },
+  "states": [
+    "active",
+    "inactive",
+    "data-disabled"
+  ],
+  "a11y": {
+    "role": "tablist on the list, with a name; tab on each trigger (aria-selected, aria-controls); tabpanel on each panel (aria-labelledby the tab).",
+    "focus": "One tab stop for the list: the active tab. Tab moves on to the panel, which takes focus itself (tabindex 0) so a panel with only text is still reached.",
+    "keys": {
+      "Tab": "Moves focus into the list, onto the active tab, then on to the panel",
+      "Shift+Tab": "Moves focus back out of the list",
+      "ArrowRight": "Moves to the next tab and shows its panel (automatic mode). In right to left layouts this is ArrowLeft. Wraps at the end",
+      "ArrowLeft": "Moves to the previous tab and shows its panel (automatic mode). In right to left layouts this is ArrowRight",
+      "ArrowDown, ArrowUp": "In a vertical list, move to the next and the previous tab",
+      "Home": "Moves to the first tab",
+      "End": "Moves to the last tab",
+      "Enter, Space": "In manual mode, shows the panel of the focused tab"
+    },
+    "announce": "Each tab reads its label, its count, its position (2 of 4) and whether it is selected. The panel is named by its tab.",
+    "notes": [
+      "The active tab is marked by the indicator and a heavier weight, never by color alone (WCAG 1.4.1).",
+      "The list scrolls inside itself when the tabs do not fit, so the page never scrolls sideways (WCAG 1.4.10). The active tab scrolls into view when it changes.",
+      "The focus ring is drawn inside the tab, so a scrolling list never clips it (WCAG 2.4.7).",
+      "Disabled tabs use the native disabled attribute from Radix: a tab is not an action, so it is skipped rather than kept focusable with aria-disabled. Say why on the page or in a Tooltip next to the list.",
+      "The trigger is the button Radix renders with role tab. It is not a system Button, because its indicator and count are parts of Tabs.",
+      "Contract keys: the arrows, Home and End are checked by hints; Enter and Space in manual mode are covered by the unit tests.",
+      "No native title attribute. A tab whose label is cut short by an ellipsis should get a Tooltip once Tooltip (1.6.6) is merged."
+    ]
+  },
+  "content": {
+    "en": {
+      "label": "A short noun, sentence case: General, Members, History. No verbs, no ending punctuation.",
+      "list": "Names the set as a noun phrase: Board settings.",
+      "count": "A number only, Western digits. Omit it at zero unless zero is the news.",
+      "panel": "An empty panel says what to do next: No comments yet. Select a frame and press C to leave the first one."
+    },
+    "ar": {
+      "label": "Noun form labels, white Saudi dialect, no diacritics: عام، الأعضاء، السجل.",
+      "list": "A noun phrase: إعدادات اللوحة.",
+      "count": "Western digits."
+    }
+  },
+  "tokens": [
+    "size.control.sm",
+    "size.control.md",
+    "size.target-min",
+    "size.icon.md",
+    "space.4xs",
+    "space.2xs",
+    "space.s",
+    "space.m",
+    "font.family.sans",
+    "font.size.xs",
+    "font.size.s",
+    "font.weight.medium",
+    "font.weight.bold",
+    "font.leading.tight",
+    "font.leading.snug",
+    "font.tracking.none",
+    "color.text.muted",
+    "color.text.default",
+    "color.text.bright",
+    "color.bg.overlay-5",
+    "color.bg.overlay-10",
+    "color.bg.overlay-20",
+    "color.border.default",
+    "color.focus.ring",
+    "focus.shadow.ring",
+    "radius.sm",
+    "radius.field",
+    "radius.pill",
+    "border.width.default",
+    "border.width.strong",
+    "opacity.disabled",
+    "scrollbar.thumb",
+    "duration.medium",
+    "ease.emphasized"
+  ],
+  "motion": "tab-indicator",
+  "frameworks": {
+    "react": {
+      "status": "ready",
+      "behavior": "radix:Tabs",
+      "example": "Tabs.demo.tsx",
+      "note": "The indicator lives in the active trigger and plays a FLIP from the previous trigger with the Web Animations API (translate and scale only). Under reduced motion the duration token is 0ms and nothing plays."
+    },
+    "angular": {
+      "status": "planned",
+      "behavior": "cdk:a11y (FocusKeyManager) with the same DOM"
+    },
+    "native": {
+      "status": "planned",
+      "behavior": "rn-primitives:tabs"
+    }
+  },
+  "styles": {
+    "studio": "Muted labels on the body, the active one bright and bold. ghost: a 2px bright line on the default hairline. soft: the overlay-20 pill on an overlay-5 track, 6px corners.",
+    "desk": "The same parts on Desk tokens: Instrument Sans, the Desk text steps, the overlay steps over the dark or light desk. The line and the pill take the bright text color, not the yellow primary, so the active tab never reads as a primary action.",
+    "neutral": "Token driven; applies once the Neutral pack is merged.",
+    "liquid": "Planned."
+  },
+  "mistakes": [
+    {
+      "wrong": "Tabs that link to other pages of the site",
+      "right": "Navbar or Sidebar links with aria-current page"
+    },
+    {
+      "wrong": "The active tab shown only by a color change",
+      "right": "The indicator and the heavier weight, which Tabs draws in every style"
+    },
+    {
+      "wrong": "Twelve tabs that push the page wider on a phone",
+      "right": "Up to eight; the list scrolls inside itself, and the rest can move into a Select or a menu"
+    },
+    {
+      "wrong": "A tab list with no name",
+      "right": "aria-label on TabsList: Board settings"
+    },
+    {
+      "wrong": "Tabs used to pick a value in a form",
+      "right": "SegmentedControl, RadioGroup or ToggleGroup"
+    },
+    {
+      "wrong": "A count typed into the label: Comments (12)",
+      "right": "The count prop, which draws the pill and keeps the name readable"
+    }
+  ],
+  "contract": {
+    "optionalParts": [
+      "start",
+      "count"
+    ],
+    "keys": {
+      "ArrowRight": {
+        "focus": "[data-part='trigger'][data-state='active']",
+        "case": "many",
+        "expect": "focus-moves"
+      },
+      "ArrowLeft": {
+        "focus": "[data-part='trigger'][data-state='active']",
+        "case": "many",
+        "expect": "focus-moves"
+      },
+      "Home": {
+        "focus": "[data-part='trigger'][data-state='active']",
+        "case": "too-many",
+        "expect": "focus-moves"
+      },
+      "End": {
+        "focus": "[data-part='trigger'][data-state='active']",
+        "case": "many",
+        "expect": "focus-moves"
+      },
+      "ArrowDown": {
+        "focus": "[data-orientation='vertical'] [data-part='trigger'][data-state='active']",
+        "case": "variants",
+        "expect": "focus-moves"
+      },
+      "ArrowUp": {
+        "focus": "[data-orientation='vertical'] [data-part='trigger'][data-state='active']",
+        "case": "variants",
+        "expect": "focus-moves"
+      }
+    }
+  },
+  "since": "0.1.0"
+}

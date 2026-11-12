@@ -1,0 +1,302 @@
+/*
+ * Tabs: a list of tabs and the panel of the active one. Sources:
+ * Figma-Killer-2 `Tabs.module.css` (ghost: muted labels, the active one in
+ * the default text color and heavier, a 2px line on the list hairline) and
+ * `RangeTabs.module.css` (soft: a pill behind the active label on a quiet
+ * track). Follows "One convention for component CSS and props" in
+ * docs/contracts/anatomy.md.
+ *
+ * Private properties on the root (recipes override these):
+ *
+ *   --_tabs-height, -padding-inline, -gap, -font-size, -radius
+ *   --_tabs-fg, -fg-hover, -fg-active            trigger text at rest, on hover, when active
+ *   --_tabs-bg-hover                             trigger fill on hover
+ *   --_tabs-weight, -weight-active               the active tab is heavier, never color alone
+ *   --_tabs-list-bg, -list-border-color, -list-padding
+ *   --_tabs-indicator-bg, -indicator-thickness
+ *   --_tabs-indicator-duration, -indicator-ease  read by Tabs.tsx for the tab-indicator FLIP
+ *   --_tabs-ring                                 the focus ring, inset so a scrolling list never clips it
+ *   --_tabs-count-bg, -count-fg
+ *
+ * Each trigger copies the private colors into its own --_tabs-trigger-*
+ * properties, so a state rule swaps one property and the root rule writes
+ * the declarations. Colors swap at once; only the indicator moves, with a
+ * transform (Tabs.tsx, Web Animations API).
+ */
+@layer ds.base {
+  [data-ds='tabs'] {
+    --_tabs-height: var(--ds-size-control-md);
+    --_tabs-padding-inline: var(--ds-space-m);
+    --_tabs-gap: var(--ds-space-2xs);
+    --_tabs-font-size: var(--ds-font-size-s);
+    --_tabs-radius: var(--ds-radius-field);
+    --_tabs-fg: var(--ds-color-text-muted);
+    --_tabs-fg-hover: var(--ds-color-text-default);
+    --_tabs-fg-active: var(--ds-color-text-bright);
+    --_tabs-bg-hover: var(--ds-color-bg-overlay-5);
+    --_tabs-weight: var(--ds-font-weight-medium);
+    --_tabs-weight-active: var(--ds-font-weight-bold);
+    --_tabs-list-bg: transparent;
+    --_tabs-list-border-color: var(--ds-color-border-default);
+    --_tabs-list-padding: 0;
+    --_tabs-indicator-bg: var(--ds-color-text-bright);
+    --_tabs-indicator-thickness: var(--ds-border-width-strong);
+    --_tabs-indicator-duration: var(--ds-duration-medium);
+    --_tabs-indicator-ease: var(--ds-ease-emphasized);
+    --_tabs-ring: inset 0 0 0 var(--ds-border-width-strong) var(--ds-color-focus-ring);
+    --_tabs-count-bg: var(--ds-color-bg-overlay-10);
+    --_tabs-count-fg: var(--ds-color-text-default);
+
+    display: flex;
+    flex-direction: column;
+    gap: var(--ds-space-m);
+    box-sizing: border-box;
+    min-inline-size: 0;
+    max-inline-size: 100%;
+    font-family: var(--ds-font-family-sans);
+  }
+
+  [data-ds='tabs'][data-orientation='vertical'] {
+    flex-direction: row;
+    align-items: flex-start;
+  }
+
+  [data-ds='tabs'][data-size='sm'] {
+    --_tabs-height: var(--ds-size-control-sm);
+    --_tabs-padding-inline: var(--ds-space-s);
+    --_tabs-font-size: var(--ds-font-size-xs);
+  }
+
+  /* soft: a quiet track with a filled pill behind the active label. */
+  [data-ds='tabs'][data-emphasis='soft'] {
+    --_tabs-list-bg: var(--ds-color-bg-overlay-5);
+    --_tabs-list-border-color: transparent;
+    --_tabs-list-padding: var(--ds-space-4xs);
+    --_tabs-indicator-bg: var(--ds-color-bg-overlay-20);
+    --_tabs-radius: var(--ds-radius-sm);
+  }
+
+  /* ------------------------------------------------------------ list */
+
+  /*
+   * The list scrolls inside itself, so many tabs never push the page wider
+   * (WCAG 1.4.10). The ghost line is the list's block end border; the
+   * indicator of the active tab sits on top of it.
+   */
+  [data-ds='tabs'] > [data-part='list'] {
+    display: flex;
+    flex: none;
+    gap: var(--ds-space-4xs);
+    box-sizing: border-box;
+    min-inline-size: 0;
+    max-inline-size: 100%;
+    padding: var(--_tabs-list-padding);
+    border-block-end: var(--ds-border-width-default) solid var(--_tabs-list-border-color);
+    border-radius: 0;
+    background-color: var(--_tabs-list-bg);
+    overflow-x: auto;
+    overflow-y: hidden;
+    overscroll-behavior-inline: contain;
+    scrollbar-width: thin;
+    scrollbar-color: var(--ds-scrollbar-thumb) transparent;
+  }
+
+  [data-ds='tabs'][data-emphasis='soft'] > [data-part='list'] {
+    border-block-end-width: 0;
+    border-radius: var(--ds-radius-field);
+  }
+
+  [data-ds='tabs'][data-orientation='vertical'] > [data-part='list'] {
+    flex-direction: column;
+    max-inline-size: none;
+    border-block-end-width: 0;
+    border-inline-end: var(--ds-border-width-default) solid var(--_tabs-list-border-color);
+    overflow-x: hidden;
+    overflow-y: auto;
+  }
+
+  [data-ds='tabs'][data-orientation='vertical'][data-emphasis='soft'] > [data-part='list'] {
+    border-inline-end-width: 0;
+  }
+
+  /* ------------------------------------------------------------ trigger */
+
+  [data-ds='tabs'] [data-part='trigger'] {
+    --_tabs-trigger-fg: var(--_tabs-fg);
+    --_tabs-trigger-bg: transparent;
+    --_tabs-trigger-weight: var(--_tabs-weight);
+
+    position: relative;
+    display: inline-flex;
+    flex: none;
+    align-items: center;
+    justify-content: center;
+    gap: var(--_tabs-gap);
+    box-sizing: border-box;
+    block-size: var(--_tabs-height);
+    min-block-size: var(--ds-size-target-min);
+    min-inline-size: var(--ds-size-target-min);
+    margin: 0;
+    padding-block: 0;
+    padding-inline: var(--_tabs-padding-inline);
+    border: 0;
+    border-radius: var(--_tabs-radius);
+    background-color: var(--_tabs-trigger-bg);
+    color: var(--_tabs-trigger-fg);
+    font-family: inherit;
+    font-size: var(--_tabs-font-size);
+    font-weight: var(--_tabs-trigger-weight);
+    line-height: var(--ds-font-leading-tight);
+    letter-spacing: var(--ds-font-tracking-none);
+    white-space: nowrap;
+    cursor: pointer;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  [data-ds='tabs'][data-emphasis='ghost'] [data-part='trigger'] {
+    border-end-start-radius: 0;
+    border-end-end-radius: 0;
+  }
+
+  [data-ds='tabs'][data-orientation='vertical'] [data-part='trigger'] {
+    justify-content: flex-start;
+  }
+
+  [data-ds='tabs'][data-orientation='vertical'][data-emphasis='ghost'] [data-part='trigger'] {
+    border-radius: var(--_tabs-radius);
+    border-start-end-radius: 0;
+    border-end-end-radius: 0;
+  }
+
+  /* A long label ends in an ellipsis inside the tab; the list scrolls before that happens. */
+  [data-ds='tabs'] [data-part='trigger'] > [data-part='label'] {
+    position: relative;
+    min-inline-size: 0;
+    overflow-x: clip;
+    overflow-y: visible;
+    text-overflow: ellipsis;
+  }
+
+  [data-ds='tabs'] [data-part='trigger'] > [data-part='start'] {
+    position: relative;
+    display: inline-flex;
+    flex: none;
+  }
+
+  [data-ds='tabs'] [data-part='trigger'] > [data-part='count'] {
+    position: relative;
+    display: inline-flex;
+    flex: none;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    min-inline-size: var(--ds-size-icon-md);
+    padding-block: 0;
+    padding-inline: var(--ds-space-2xs);
+    border-radius: var(--ds-radius-pill);
+    background-color: var(--_tabs-count-bg);
+    color: var(--_tabs-count-fg);
+    font-size: var(--ds-font-size-xs);
+    font-weight: var(--ds-font-weight-medium);
+    font-variant-numeric: tabular-nums;
+    line-height: var(--ds-font-leading-snug);
+    white-space: nowrap;
+  }
+
+  /* ------------------------------------------------------------ indicator */
+
+  /*
+   * The first child of the active trigger, painted under the label because
+   * the label, the icon and the count are positioned after it. ghost: a line
+   * on the block end edge, just inside the list hairline (the list clips
+   * its overflow, so the line cannot overlap the border). soft: the pill.
+   */
+  [data-ds='tabs'] [data-part='indicator'] {
+    position: absolute;
+    inset-inline: 0;
+    inset-block-end: 0;
+    block-size: var(--_tabs-indicator-thickness);
+    border-radius: var(--ds-radius-pill);
+    background-color: var(--_tabs-indicator-bg);
+    transform-origin: 0 0;
+    pointer-events: none;
+  }
+
+  [data-ds='tabs'][data-orientation='vertical'][data-emphasis='ghost'] [data-part='indicator'] {
+    inset-block: 0;
+    inset-inline: auto 0;
+    inline-size: var(--_tabs-indicator-thickness);
+    block-size: auto;
+  }
+
+  [data-ds='tabs'][data-emphasis='soft'] [data-part='indicator'] {
+    inset: 0;
+    block-size: auto;
+    border-radius: var(--_tabs-radius);
+  }
+
+  /* ------------------------------------------------------------ states: swap the private properties */
+
+  [data-ds='tabs'] [data-part='trigger']:hover:not([data-disabled]) {
+    --_tabs-trigger-fg: var(--_tabs-fg-hover);
+    --_tabs-trigger-bg: var(--_tabs-bg-hover);
+  }
+
+  [data-ds='tabs'] [data-part='trigger'][data-state='active'] {
+    --_tabs-trigger-fg: var(--_tabs-fg-active);
+    --_tabs-trigger-bg: transparent;
+    --_tabs-trigger-weight: var(--_tabs-weight-active);
+  }
+
+  /* The transparent outline is set only here, so forced colors mode draws it on focus and nowhere else. */
+  [data-ds='tabs'] [data-part='trigger']:focus-visible {
+    outline: var(--ds-border-width-strong) solid transparent;
+    outline-offset: calc(-1 * var(--ds-border-width-strong));
+    box-shadow: var(--_tabs-ring);
+  }
+
+  [data-ds='tabs'] [data-part='trigger'][data-disabled] {
+    opacity: var(--ds-opacity-disabled);
+    cursor: not-allowed;
+  }
+
+  /* ------------------------------------------------------------ panel */
+
+  /* The panel takes focus (tabindex 0), so it is a 24px target too. */
+  [data-ds='tabs'] > [data-part='panel'] {
+    flex: 1 1 auto;
+    min-inline-size: 0;
+    min-block-size: var(--ds-size-target-min);
+    border-radius: var(--ds-radius-field);
+    color: var(--ds-color-text-default);
+  }
+
+  [data-ds='tabs'] > [data-part='panel']:focus-visible {
+    outline: var(--ds-border-width-strong) solid transparent;
+    box-shadow: var(--ds-focus-shadow-ring);
+  }
+
+  /* ------------------------------------------------------------ forced colors */
+
+  /*
+   * Backgrounds are replaced in forced colors mode, so the indicator is drawn
+   * in Highlight with its own colors kept, and the soft pill becomes a
+   * Highlight frame. The heavier weight still marks the active tab.
+   */
+  @media (forced-colors: active) {
+    [data-ds='tabs'] [data-part='indicator'] {
+      background-color: Highlight;
+      forced-color-adjust: none;
+    }
+
+    [data-ds='tabs'][data-emphasis='soft'] [data-part='indicator'] {
+      border: var(--ds-border-width-strong) solid Highlight;
+      background-color: transparent;
+    }
+
+    [data-ds='tabs'] [data-part='trigger'][data-disabled] {
+      color: GrayText;
+    }
+  }
+}
