@@ -4,6 +4,7 @@ export * from './components/AlertDialog/index';
 export * from './components/Button/index';
 export * from './components/ButtonGroup/index';
 export * from './components/Dialog/index';
+export * from './components/Drawer/index';
 export * from './components/DropdownMenu/index';
 export * from './components/Field/index';
 export * from './components/Icon/index';

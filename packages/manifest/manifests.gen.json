@@ -142,19 +142,26 @@
         "Toasts sit above it and stay readable and clickable, as with Dialog.",
         "The icon is decoration and hidden from assistive tech; the title carries the meaning.",
         "No native title attribute."
-      ]
+      ],
+      "native": {
+        "accessibilityRole": "alert",
+        "accessibilityState": [
+          "expanded"
+        ]
+      }
     },
     "content": {
       "en": {
         "title": "The question, naming the action and its object, in sentence case: Delete the board Spring launch?",
-        "description": "What is lost, and that it cannot be undone: Its 12 frames and every comment are deleted for good.",
+        "description": "What is lost, and that it cannot be undone: Its 12 frames and every comment are deleted for good. An error after a failed action is added inside the description, in a role alert element that is there from the start.",
         "buttons": "The action names the consequence: Delete board, Remove member. Cancel keeps the object: Keep board. Never OK, Yes, Continue or Confirm.",
         "error": "Could not delete the team. Check your connection, then try again."
       },
       "ar": {
         "title": "The question in white Saudi dialect, no diacritics: تبي تحذف لوحة إطلاق الربيع؟",
         "description": "بتنحذف 12 إطار وكل التعليقات، وما تقدر ترجعها بعدين.",
-        "buttons": "Noun form labels: حذف اللوحة، إبقاء اللوحة. Never نعم or موافق."
+        "buttons": "Noun form labels: حذف اللوحة، إبقاء اللوحة. Never نعم or موافق.",
+        "error": "ما قدرنا نحذف الفريق. تأكد من الاتصال وجرب مرة ثانية."
       }
     },
     "tokens": [
@@ -194,7 +201,21 @@
       "duration.base",
       "ease.out",
       "ease.exit",
-      "z.dialog"
+      "z.dialog",
+      "color.material.glass-strong",
+      "color.material.glass-solid",
+      "color.border.hairline",
+      "color.focus.ring",
+      "radius.window",
+      "elevation.window",
+      "blur.window",
+      "blur.window-saturation",
+      "duration.window-open",
+      "duration.window-close",
+      "ease.window",
+      "scale.window-enter",
+      "scale.dialog-enter",
+      "space.2xs"
     ],
     "motion": "dialog",
     "frameworks": {
@@ -1159,6 +1180,271 @@
         "controls",
         "title",
         "close",
+        "description",
+        "body",
+        "footer"
+      ]
+    },
+    "since": "0.1.0"
+  },
+  {
+    "name": "Drawer",
+    "kind": "component",
+    "family": "overlays",
+    "summary": "A full height panel over the page at the inline end or start, for a secondary task such as filters or the details of a selected item. Modal by default; non modal keeps the page usable next to it.",
+    "useWhen": [
+      "Filters or settings for the list or canvas on the page",
+      "The details of a selected item, read next to the page (modal false)",
+      "A form too long for a Dialog that still belongs to the current page"
+    ],
+    "avoidWhen": [
+      "A short decision or a form of a few fields",
+      "Phone layouts where the panel should rise from the bottom",
+      "Navigation between sections of the app",
+      "A question about an action that cannot be undone"
+    ],
+    "insteadUse": {
+      "A short decision": "Dialog",
+      "Phone layouts and quick tasks": "Sheet",
+      "App navigation": "Sidebar",
+      "Cannot be undone": "AlertDialog"
+    },
+    "anatomy": [
+      "root",
+      "backdrop",
+      "panel",
+      "header",
+      "title",
+      "description",
+      "body",
+      "footer",
+      "close"
+    ],
+    "parts": {
+      "DrawerContent": "panel",
+      "DrawerTitle": "title",
+      "DrawerDescription": "description",
+      "DrawerBody": "body",
+      "DrawerFooter": "footer"
+    },
+    "slots": {
+      "title": {
+        "accepts": "text",
+        "min": 1,
+        "max": 1
+      },
+      "description": {
+        "accepts": "text",
+        "max": 1
+      },
+      "body": {
+        "accepts": "any"
+      },
+      "footer": {
+        "accepts": [
+          "Button"
+        ],
+        "max": 3
+      }
+    },
+    "props": {
+      "open": {
+        "type": "boolean",
+        "description": "Controlled open state, with onOpenChange."
+      },
+      "defaultOpen": {
+        "type": "boolean",
+        "default": false
+      },
+      "onOpenChange": {
+        "type": "function",
+        "description": "Called with false for Escape, a backdrop click, the close control and DrawerClose."
+      },
+      "size": {
+        "type": [
+          "sm",
+          "md",
+          "lg",
+          "xl"
+        ],
+        "default": "md",
+        "description": "The width from the dialog.width tokens: 360, 440, 520 and 640 px. Under breakpoint.phone it fills the width."
+      },
+      "side": {
+        "type": [
+          "start",
+          "end"
+        ],
+        "default": "end",
+        "description": "The edge it comes from, in reading order: end is the right in English and the left in Arabic."
+      },
+      "modal": {
+        "type": "boolean",
+        "default": true,
+        "description": "true: a backdrop covers the page, focus stays inside and the page does not scroll. false: no backdrop, no focus trap, and a click on the page keeps the drawer open."
+      },
+      "dismissible": {
+        "type": "boolean",
+        "default": true,
+        "description": "false: Escape and a backdrop click do nothing and the close control is aria-disabled. For short waits while an action runs."
+      },
+      "title": {
+        "type": "node",
+        "description": "DrawerContent: the title for the common case, the same as a DrawerTitle child."
+      },
+      "description": {
+        "type": "node",
+        "description": "DrawerContent: the description for the common case."
+      },
+      "closeLabel": {
+        "type": "string",
+        "default": "Close drawer",
+        "description": "DrawerContent: the accessible name of the close control. Arabic default under lang ar: إغلاق اللوحة الجانبية."
+      },
+      "rootProps": {
+        "type": "object",
+        "description": "DrawerContent: props for the root layer. className and style go to the root too; ref and every other prop go to the panel, Radix Content props included."
+      },
+      "DrawerTrigger": {
+        "type": "node",
+        "description": "One child element, a system Button, rendered as the trigger (always asChild). Focus returns to it on close."
+      },
+      "DrawerClose": {
+        "type": "node",
+        "description": "One child element, a system Button that closes the drawer (always asChild), marked data-dialog-cancel."
+      },
+      "data-autofocus": {
+        "type": "boolean",
+        "description": "Put on any focusable element inside the drawer to take focus on open."
+      }
+    },
+    "states": [
+      "open",
+      "closed"
+    ],
+    "a11y": {
+      "role": "dialog (the panel). Modal by default: Radix hides the rest of the page from assistive tech and keeps focus inside. With modal false it is not modal: the page stays reachable. Named by the title, described by the description.",
+      "focus": "The Dialog focus rule: an element marked data-autofocus, else the first field in the body, else the first footer action that is not tone danger, else the close control. On close, focus returns to the trigger, or to the element that had focus before.",
+      "keys": {
+        "Escape": "Closes the drawer, unless dismissible is false",
+        "Tab": "Modal: moves to the next control inside the drawer and wraps from the last to the first",
+        "Shift+Tab": "Modal: moves to the previous control inside the drawer and wraps from the first to the last"
+      },
+      "announce": "The title and the description are read when the drawer opens. Loading and errors in the body use role status and role alert.",
+      "notes": [
+        "data-side holds start or end; start is the right in Arabic, and the slide mirrors with the reading direction.",
+        "A body taller than the screen scrolls inside and joins the tab order while it scrolls. The header and the footer stay in view.",
+        "Toasts sit above an open drawer and stay readable and clickable, as with Dialog.",
+        "Non modal: Tab leaves the drawer for the page, as for any region. Escape still closes it.",
+        "No native title attribute."
+      ]
+    },
+    "content": {
+      "en": {
+        "title": "A noun phrase for the task: Filter boards, Board activity.",
+        "description": "One sentence about what the drawer changes or shows.",
+        "buttons": "Verb plus noun: Apply filters, Clear filters. Never OK or Continue.",
+        "close": "Close drawer"
+      },
+      "ar": {
+        "title": "Noun form, no diacritics: فلترة اللوحات",
+        "buttons": "Noun form labels: تطبيق الفلاتر، مسح الفلاتر.",
+        "close": "إغلاق اللوحة الجانبية"
+      }
+    },
+    "tokens": [
+      "dialog.width.sm",
+      "dialog.width.md",
+      "dialog.width.lg",
+      "dialog.width.xl",
+      "color.bg.surface",
+      "color.bg.surface-2",
+      "color.bg.scrim",
+      "color.bg.scrim-80",
+      "color.border.default",
+      "color.border.strong",
+      "color.text.default",
+      "color.text.bright",
+      "color.text.muted",
+      "radius.panel",
+      "elevation.dialog",
+      "blur.backdrop",
+      "focus.shadow.ring",
+      "border.width.default",
+      "border.width.strong",
+      "space.2xs",
+      "space.s",
+      "space.l",
+      "space.xl",
+      "space.2xl",
+      "size.control.sm",
+      "font.family.sans",
+      "font.size.l",
+      "font.size.xl",
+      "font.weight.semibold",
+      "font.leading.tight",
+      "font.leading.normal",
+      "duration.slow",
+      "duration.base",
+      "ease.emphasized",
+      "ease.exit",
+      "z.dialog",
+      "color.material.glass-strong",
+      "color.material.glass-solid",
+      "color.border.hairline",
+      "color.focus.ring",
+      "radius.window",
+      "elevation.window",
+      "blur.window",
+      "blur.window-saturation",
+      "duration.window-close"
+    ],
+    "motion": "sheet",
+    "frameworks": {
+      "react": {
+        "status": "ready",
+        "behavior": "radix:Dialog",
+        "example": "Drawer.demo.tsx",
+        "note": "Built on DialogBase (Dialog folder). Styled by the drawer block of Dialog.css."
+      },
+      "angular": {
+        "status": "planned",
+        "behavior": "cdk:portal, cdk:a11y InteractivityChecker",
+        "note": "On the Angular Dialog layer, with data-side and the header part."
+      },
+      "native": {
+        "status": "not-applicable",
+        "note": "Phones use Sheet; a side drawer is a web and tablet pattern."
+      }
+    },
+    "styles": {
+      "studio": "A full height surface panel with the inner corners rounded, the header band on surface-2 with the close IconButton, the footer band. It slides in from its side on duration.slow, ease.emphasized.",
+      "desk": "The Desk dialog glass, hairline and window shadow, with the window radius on the inner corners. The slide keeps duration.slow and ease.emphasized.",
+      "neutral": "Planned.",
+      "liquid": "Planned."
+    },
+    "mistakes": [
+      {
+        "wrong": "side left or right",
+        "right": "side start or end: the drawer mirrors in Arabic"
+      },
+      {
+        "wrong": "A drawer for a two button decision",
+        "right": "Dialog, or AlertDialog when it cannot be undone"
+      },
+      {
+        "wrong": "A modal drawer for details the person reads next to the page",
+        "right": "modal false"
+      },
+      {
+        "wrong": "Waiting for animationend before removing a closed drawer",
+        "right": "Dialog.css sets the animations to none under reduced motion, so Radix removes it at once"
+      }
+    ],
+    "contract": {
+      "trigger": "[data-demo-trigger]",
+      "optionalParts": [
+        "backdrop",
         "description",
         "body",
         "footer"
