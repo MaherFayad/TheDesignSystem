@@ -17,7 +17,7 @@ const shapes: OTPFieldShape[] = ['default', 'pill'];
   template: `
     <section data-demo="case" data-demo-case="variants" heading="Sizes, shapes and groups">
       @for (shape of shapes; track shape) {
-        <div data-demo="grid" style="grid-template-columns: repeat(auto-fill, minmax(22rem, 1fr));">
+        <div data-demo="grid" style="grid-template-columns: repeat(auto-fill, minmax(min(min(100%, 22rem), 100%), 1fr));">
           @for (size of sizes; track size) {
             <div dsOTPField [size]="size" [shape]="shape" value="48" [aria-label]="'Verification code, ' + size + ', ' + shape"></div>
           }
