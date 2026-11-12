@@ -231,9 +231,10 @@ describe('the patterns of order 1.21', () => {
     expect(catalog.shake.reduced()).toEqual([]);
   });
 
-  it('pop waits at most six half steps in a run', () => {
-    expect(catalog.pop.spec({ index: 2 }).delaySteps).toBe(1);
-    expect(catalog.pop.spec({ index: 40 }).delaySteps).toBe(3);
+  it('pop waits one stagger step per mark, at most six (order 1.22, note N8)', () => {
+    expect(catalog.pop.spec({ index: 2 }).delay).toBe('delay.stagger');
+    expect(catalog.pop.spec({ index: 2 }).delaySteps).toBe(2);
+    expect(catalog.pop.spec({ index: 40 }).delaySteps).toBe(6);
     expect(catalog.pop.spec().delay).toBeUndefined();
   });
 

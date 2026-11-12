@@ -30,7 +30,7 @@ const motion: StyleMotionPreset = {
     dialog: { mode: 'full', enter: { easing: 'ease.out' } },
     'list-stagger': { mode: 'reduced' },
     swap: { mode: 'full', easing: 'ease.out' },
-    pop: { mode: 'full', easing: 'ease.out' },
+    pop: { mode: 'full', duration: 'duration.base', easing: 'ease.out' },
     shake: { mode: 'full', duration: 'duration.slow', easing: 'ease.out' },
   },
 };

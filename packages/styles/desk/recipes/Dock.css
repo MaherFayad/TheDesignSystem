@@ -30,6 +30,13 @@
     }
   }
 
+  /* The page's own reduced motion setting (data-motion="reduce" on the root, WCAG 2.3.3). */
+  :root[data-motion='reduce'] [data-style='desk'] [data-ds='dock'] {
+    --_dock-scale: 1;
+    --_dock-neighbor-scale: 1;
+    --_dock-lift: 0px;
+  }
+
   /* The token build makes the glass solid in these modes; the blur goes too. */
   @media (prefers-reduced-transparency: reduce) {
     [data-style='desk'] [data-ds='dock'] {
