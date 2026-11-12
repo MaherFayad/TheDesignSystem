@@ -9,8 +9,11 @@
  * inside).
  *
  *   [data-ds='theme'][data-menu-layer]          the portal Theme, draws no box
+ *                                               (data-menu-layer="menubar" for a Menubar menu)
  *   [data-ds='dropdown-menu']                   root: role menu, Radix Content
  *   [data-ds='dropdown-menu'][data-part='sub-content']   a submenu, a root of its own
+ *   [data-ds='context-menu']                    ContextMenu: the same parts, the same rules
+ *   [data-ds='dropdown-menu'][data-part='content']       a Menubar menu (Menubar.css draws the row)
  *     [data-part='label']                       a heading over a group
  *     [data-part='item']                        role menuitem, data-tone danger
  *     [data-part='checkbox-item']               role menuitemcheckbox
@@ -134,6 +137,24 @@
     --_menu-available-width: var(--radix-dropdown-menu-content-available-width);
     --_menu-available-height: var(--radix-dropdown-menu-content-available-height);
     --_menu-origin: var(--radix-dropdown-menu-content-transform-origin);
+  }
+
+  /* ContextMenu (lane 6C): its Content and SubContent measure under the context menu names. */
+  [data-ds='context-menu'] {
+    --_menu-available-width: var(--radix-context-menu-content-available-width);
+    --_menu-available-height: var(--radix-context-menu-content-available-height);
+    --_menu-origin: var(--radix-context-menu-content-transform-origin);
+  }
+
+  /*
+   * Menubar (lane 6C): a Menubar menu is a dropdown-menu root (data-part
+   * content or sub-content) in a layer marked data-menu-layer="menubar",
+   * and its Radix primitive measures under the menubar names.
+   */
+  [data-menu-layer='menubar'] [data-ds='dropdown-menu'] {
+    --_menu-available-width: var(--radix-menubar-content-available-width);
+    --_menu-available-height: var(--radix-menubar-content-available-height);
+    --_menu-origin: var(--radix-menubar-content-transform-origin);
   }
 
   :is([data-ds='dropdown-menu'], [data-ds='context-menu'])[data-size='sm'] {
