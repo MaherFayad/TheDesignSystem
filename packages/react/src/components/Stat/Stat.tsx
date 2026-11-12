@@ -29,6 +29,9 @@ export const statTrendLabels: Record<'en' | 'ar', Record<StatTrend, string>> = {
 
 const loadingLabels: Record<'en' | 'ar', string> = { en: 'Loading', ar: 'جار التحميل' };
 
+/** What the value says when there is no number to show: missing, null, NaN or Infinity. */
+export const statEmptyLabels: Record<'en' | 'ar', string> = { en: 'No data', ar: 'لا توجد بيانات' };
+
 const trendIcons: Record<StatTrend, IconName> = { up: 'trend-up', down: 'trend-down', flat: 'minus' };
 
 export interface StatProps extends Omit<HTMLAttributes<HTMLDivElement>, 'title'> {
@@ -66,6 +69,12 @@ export interface StatProps extends Omit<HTMLAttributes<HTMLDivElement>, 'title'>
   loading?: boolean;
   /** What screen readers hear while loading. Default Loading, or جار التحميل in Arabic. */
   loadingLabel?: string;
+  /**
+   * What the value says when there is none to show: undefined, null, NaN or
+   * an infinite number. Default No data, or لا توجد بيانات in Arabic. Sets
+   * `data-empty`.
+   */
+  emptyLabel?: string;
   /** Overrides the trend words. Default from `statTrendLabels` in the Theme language. */
   trendLabels?: Partial<Record<StatTrend, string>>;
   ref?: Ref<HTMLDivElement>;
@@ -105,6 +114,7 @@ export function Stat({
   size = 'md',
   loading = false,
   loadingLabel,
+  emptyLabel,
   trendLabels,
   ...rest
 }: StatProps) {
@@ -112,12 +122,27 @@ export function Stat({
   const langKey: 'en' | 'ar' = lang.toLowerCase().startsWith('ar') ? 'ar' : 'en';
   const trend = trendOf(delta, trendProp, (n) => formatStatNumber(Math.abs(n), lang, deltaFormat) === formatStatNumber(0, lang, deltaFormat));
   const tone = toneProp ?? (trend ? toneOf[trend] : 'neutral');
-  const shownValue = typeof value === 'number' ? breakableValue(formatStatNumber(value, lang, format)) : value;
+  // A number that is not finite would draw NaN or the infinity sign: treat it as missing.
+  const empty = !loading && (value === undefined || value === null || (typeof value === 'number' && !Number.isFinite(value)));
+  const shownValue = empty ? (
+    <span data-empty-label="">{emptyLabel ?? statEmptyLabels[langKey]}</span>
+  ) : typeof value === 'number' ? (
+    breakableValue(formatStatNumber(value, lang, format))
+  ) : (
+    value
+  );
   const shownDelta = typeof delta === 'number' ? formatStatNumber(Math.abs(delta), lang, deltaFormat) : delta;
   const words = { ...statTrendLabels[langKey], ...trendLabels };
   const hasDelta = !loading && delta !== undefined && delta !== null && !(typeof delta === 'number' && !Number.isFinite(delta));
 
-  const valueRef = useRollOnChange(typeof value === 'number' ? shownValue : undefined, loading);
+  const valueRef = useRollOnChange(typeof value === 'number' && !empty ? shownValue : undefined, loading);
+
+  // Development only: a node change with no trend is neither colored nor named.
+  const nodeDeltaWithoutTrend = hasDelta && typeof delta !== 'number' && trendProp === undefined;
+  useEffect(() => {
+    if (process.env.NODE_ENV === 'production' || !nodeDeltaWithoutTrend) return;
+    console.warn('Stat: delta is a node with no trend. Pass trend up, down or flat so the change has an icon and a spoken word.');
+  }, [nodeDeltaWithoutTrend]);
 
   return (
     <div
@@ -127,6 +152,7 @@ export function Stat({
       data-tone={hasDelta ? tone : undefined}
       data-trend={hasDelta ? trend : undefined}
       data-loading={loading ? '' : undefined}
+      data-empty={empty ? '' : undefined}
       aria-busy={loading || undefined}
     >
       <span data-part="label">{label}</span>

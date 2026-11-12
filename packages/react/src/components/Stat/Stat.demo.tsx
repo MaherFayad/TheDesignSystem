@@ -64,7 +64,8 @@ export default function StatDemo() {
 
       <DemoCase id="empty" title="Empty: no data yet">
         <DemoGrid min="12rem">
-          <Stat label="Conversion rate" value="No data" hint="Shows after the first 100 visits" />
+          <Stat label="Conversion rate" hint="Shows after the first 100 visits" />
+          <Stat label="Average order" value={Number.NaN} emptyLabel="Not counted yet" />
         </DemoGrid>
       </DemoCase>
 

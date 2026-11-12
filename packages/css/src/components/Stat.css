@@ -166,6 +166,24 @@
     position: relative;
   }
 
+  /* No value: the empty label in the muted color at the meta size, on the value's line height so nothing shifts when a number arrives. */
+  [data-ds='stat'][data-empty] {
+    --_stat-value-block-size: calc(var(--_stat-font-size) * var(--ds-font-leading-tight));
+  }
+
+  [data-ds='stat'][data-empty] > [data-part='value'] {
+    display: flex;
+    align-items: center;
+    color: var(--_stat-label-fg);
+    font-size: var(--_stat-meta-font-size);
+    font-weight: var(--ds-font-weight-regular);
+    letter-spacing: var(--ds-font-tracking-none);
+  }
+
+  [data-ds='stat'][data-empty] > [data-part='value'] > [data-empty-label] {
+    line-height: var(--ds-font-leading-snug);
+  }
+
   /* Arabic: no display tracking, a taller line for the label and hint. */
   [data-ds='stat']:lang(ar) > [data-part='value'] {
     letter-spacing: var(--ds-font-tracking-none);

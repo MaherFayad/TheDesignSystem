@@ -75,6 +75,40 @@ describe('Stat', () => {
     expect(part(container, 'delta')).toBeNull();
   });
 
+  it('never draws NaN or the infinity sign: a value that is not a finite number reads as no data', () => {
+    for (const value of [Number.NaN, Number.POSITIVE_INFINITY, Number.NEGATIVE_INFINITY, undefined, null]) {
+      const { container, unmount } = render(<Stat label="Users" value={value} />);
+      expect(part(container, 'value')?.textContent, String(value)).toBe('No data');
+      expect(root(container).hasAttribute('data-empty')).toBe(true);
+      unmount();
+    }
+    const { container, rerender } = render(<Stat label="Users" value={Number.NaN} emptyLabel="Not counted yet" />);
+    expect(part(container, 'value')?.textContent).toBe('Not counted yet');
+    rerender(<Stat label="Users" value={12} />);
+    expect(root(container).hasAttribute('data-empty')).toBe(false);
+    rerender(<Stat label="Users" loading />);
+    expect(root(container).hasAttribute('data-empty')).toBe(false);
+  });
+
+  it('says no data in Arabic under an Arabic Theme', () => {
+    const { container } = render(
+      <Theme lang="ar" dir="rtl">
+        <Stat label="المستخدمين" value={Number.NaN} />
+      </Theme>,
+    );
+    expect(part(container, 'value')?.textContent).toBe('لا توجد بيانات');
+  });
+
+  it('warns in development when a node delta has no trend', () => {
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    render(<Stat label="Users" value={10} delta={<span>+3</span>} />);
+    expect(warn).toHaveBeenCalledWith(expect.stringContaining('no trend'));
+    warn.mockClear();
+    render(<Stat label="Users" value={10} delta={<span>+3</span>} trend="up" />);
+    expect(warn).not.toHaveBeenCalled();
+    warn.mockRestore();
+  });
+
   it('lets the tone and trend be set, for metrics where down is good', () => {
     const { container } = render(<Stat label="Errors" value={3} delta={-0.4} tone="success" />);
     expect(root(container).getAttribute('data-tone')).toBe('success');
