@@ -191,7 +191,7 @@ describe('ToggleGroup', () => {
     expect(Array.from(item.children).map((c) => c.getAttribute('data-part'))).toEqual(['icon']);
   });
 
-  it('a disabled item keeps aria-disabled, does not toggle and is skipped by arrows', async () => {
+  it('a disabled item keeps aria-disabled and focus, does not toggle, and the arrows pass through it', async () => {
     const user = userEvent.setup();
     const onValueChange = vi.fn();
     render(
@@ -207,14 +207,21 @@ describe('ToggleGroup', () => {
     expect(italic.getAttribute('aria-disabled')).toBe('true');
     expect(italic.getAttribute('data-disabled')).toBe('');
     expect(italic.hasAttribute('disabled')).toBe(false);
-    await user.click(italic);
-    expect(onValueChange).not.toHaveBeenCalled();
     await user.tab();
     await user.keyboard('{ArrowRight}');
+    expect(document.activeElement).toBe(italic);
+    await user.click(italic);
+    await user.keyboard(' {Enter}');
+    expect(italic.getAttribute('data-state')).toBe('off');
+    await user.keyboard('{ArrowRight}');
     expect(document.activeElement).toBe(screen.getByRole('button', { name: 'Underline' }));
+    await user.keyboard('{ArrowLeft}{ArrowLeft}');
+    expect(document.activeElement).toBe(screen.getByRole('button', { name: 'Bold' }));
+    expect(onValueChange).not.toHaveBeenCalled();
   });
 
-  it('disabled on the group marks the root and every item', () => {
+  it('disabled on the group marks the root and every item, and the group stays reachable by Tab', async () => {
+    const user = userEvent.setup();
     const { container } = render(
       <ToggleGroup type="single" aria-label="Board view" disabled>
         <ToggleGroupItem value="list">List</ToggleGroupItem>
@@ -222,7 +229,16 @@ describe('ToggleGroup', () => {
       </ToggleGroup>,
     );
     expect(root(container).getAttribute('data-disabled')).toBe('');
-    for (const item of screen.getAllByRole('radio')) expect(item.getAttribute('aria-disabled')).toBe('true');
+    const items = screen.getAllByRole('radio');
+    for (const item of items) expect(item.getAttribute('aria-disabled')).toBe('true');
+    await user.tab();
+    expect(document.activeElement).toBe(items[0]);
+    await user.keyboard('{End}');
+    expect(document.activeElement).toBe(items[1]);
+    await user.keyboard('{ArrowRight}');
+    expect(document.activeElement).toBe(items[0]);
+    await user.keyboard(' ');
+    expect(items[0]?.getAttribute('data-state')).toBe('off');
   });
 
   it('passes ref, className and data attributes to the root', () => {

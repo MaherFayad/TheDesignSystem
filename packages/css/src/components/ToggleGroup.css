@@ -109,6 +109,15 @@
       inset 0 0 0 calc(2 * var(--ds-border-width-strong)) var(--ds-color-focus-ring-on-primary-inner);
   }
 
+  /*
+   * An on item draws its 2px inner ring first, over the inset focus ring.
+   * While it has focus the ring gives way to the focus ring; the on fill
+   * still tells the state.
+   */
+  [data-ds='toggle-group'][data-attached] > [data-part='item'][data-state='on']:focus-visible {
+    --_button-shadow: 0 0 transparent;
+  }
+
   /* No motion of its own: items keep Button's. Nothing to collapse under reduced motion. */
 
   /*

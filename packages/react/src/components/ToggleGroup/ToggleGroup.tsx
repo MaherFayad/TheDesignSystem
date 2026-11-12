@@ -21,6 +21,7 @@ import { ToggleGroup as RadixToggleGroup } from 'radix-ui';
 import { ButtonGroupContext, type ButtonGroupContextValue } from '../ButtonGroup/ButtonGroupContext';
 import { ButtonRoot, renderSlotContent, type ButtonBaseProps, type ButtonSlotContent } from '../Button/ButtonBase';
 import { useTheme } from '../../theme';
+import { GroupDisabledContext, moveFromInertItem, useGroupDisabled } from './inertItems';
 import type { Emphasis, Shape, Size } from '@the-system/shared';
 
 export type ToggleGroupSize = Extract<Size, 'xs' | 'sm' | 'md' | 'lg'>;
@@ -42,7 +43,7 @@ interface ToggleGroupCommonProps
   orientation?: ToggleGroupOrientation;
   /** Joins the items into one seamed control, as an attached ButtonGroup. Default false. Sets data-attached. */
   attached?: boolean;
-  /** Every item is disabled. Items keep aria-disabled; arrow keys skip them. Default false. Sets data-disabled. */
+  /** Every item is disabled. Items keep aria-disabled and stay focusable, in the arrow order. Default false. Sets data-disabled. */
   disabled?: boolean;
   /** Arrow keys wrap from the last item to the first. Default true. */
   loop?: boolean;
@@ -88,6 +89,7 @@ export function ToggleGroup({
   disabled = false,
   loop = true,
   children,
+  onKeyDown,
   ...rest
 }: ToggleGroupProps) {
   const { dir } = useTheme();
@@ -97,17 +99,23 @@ export function ToggleGroup({
       {...(rest as RadixToggleGroup.ToggleGroupSingleProps)}
       dir={dir}
       orientation={orientation}
-      disabled={disabled}
       loop={loop}
+      onKeyDown={(event) => {
+        onKeyDown?.(event);
+        moveFromInertItem(event, { orientation, dir, loop });
+      }}
       data-ds="toggle-group"
       data-size={size}
       data-emphasis={emphasis}
       data-shape={shape}
       data-orientation={orientation}
       data-attached={attached ? '' : undefined}
+      aria-disabled={disabled ? true : undefined}
       data-disabled={disabled ? '' : undefined}
     >
-      <ButtonGroupContext value={axes}>{children}</ButtonGroupContext>
+      <GroupDisabledContext value={disabled}>
+        <ButtonGroupContext value={axes}>{children}</ButtonGroupContext>
+      </GroupDisabledContext>
     </RadixToggleGroup.Root>
   );
 }
@@ -133,12 +141,16 @@ export interface ToggleGroupItemProps
  * Radix sets `data-state` (`on`, `off`) and aria-checked (single) or
  * aria-pressed (multiple).
  */
-export function ToggleGroupItem({ value, disabled, start, end, icon, label, children, ...rest }: ToggleGroupItemProps) {
+export function ToggleGroupItem({ value, disabled = false, start, end, icon, label, children, ...rest }: ToggleGroupItemProps) {
+  const groupDisabled = useGroupDisabled();
   const iconOnly = icon !== undefined;
+  // Radix is not told about disabled: the item stays in the arrow order and
+  // focusable. ButtonRoot makes it inert: aria-disabled, no click, no toggle.
   return (
-    <RadixToggleGroup.Item asChild value={value} disabled={disabled}>
+    <RadixToggleGroup.Item asChild value={value}>
       <ButtonRoot
         {...rest}
+        disabled={disabled || groupDisabled}
         ds="toggle-button"
         data-part="item"
         iconOnly={iconOnly}

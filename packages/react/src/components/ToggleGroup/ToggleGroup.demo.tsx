@@ -139,9 +139,9 @@ export default function ToggleGroupDemo() {
 
       <DemoCase id="many" title="Several filters on">
         <DemoRow>
-          <ToggleGroup type="multiple" aria-label="Task filters" emphasis="outline" shape="pill" defaultValue={['open', 'mine', 'week']}>
-            {filters.slice(0, 5).map((label, i) => (
-              <ToggleGroupItem key={label} value={['open', 'mine', 'comments', 'week', 'blocked'][i] ?? label}>
+          <ToggleGroup type="multiple" aria-label="Task filters" emphasis="outline" shape="pill" defaultValue={['Open', 'Assigned to me', 'Due this week']}>
+            {filters.slice(0, 5).map((label) => (
+              <ToggleGroupItem key={label} value={label}>
                 {label}
               </ToggleGroupItem>
             ))}

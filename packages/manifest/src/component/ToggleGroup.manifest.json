@@ -23,20 +23,28 @@
     "One setting on its own": "ToggleButton, or Switch in a settings list",
     "Panels that switch with the choice": "Tabs"
   },
-  "anatomy": ["root", "item"],
+  "anatomy": [
+    "root",
+    "item"
+  ],
   "parts": {
     "ToggleGroupItem": "item"
   },
   "slots": {
     "root": {
-      "accepts": ["ToggleGroupItem"],
+      "accepts": [
+        "ToggleGroupItem"
+      ],
       "min": 2,
       "max": 12
     }
   },
   "props": {
     "type": {
-      "type": ["single", "multiple"],
+      "type": [
+        "single",
+        "multiple"
+      ],
       "required": true,
       "description": "single: at most one item on, Radix renders role radiogroup with radio items. multiple: any number on, role toolbar with pressed buttons."
     },
@@ -61,20 +69,37 @@
       "description": "The id of a visible heading that names the group. Required unless aria-label is set."
     },
     "size": {
-      "type": ["xs", "sm", "md", "lg"],
+      "type": [
+        "xs",
+        "sm",
+        "md",
+        "lg"
+      ],
       "default": "md",
       "description": "Passed to every item that does not set its own size. Spaced xs and sm groups use the smaller gap."
     },
     "emphasis": {
-      "type": ["solid", "soft", "outline", "ghost"],
+      "type": [
+        "solid",
+        "soft",
+        "outline",
+        "ghost"
+      ],
       "description": "Passed to every item that does not set its own. No default: items are soft, as ToggleButton."
     },
     "shape": {
-      "type": ["default", "pill", "square"],
+      "type": [
+        "default",
+        "pill",
+        "square"
+      ],
       "description": "Passed to every item that does not set its own. No default. Attached, only the outer corners take the shape."
     },
     "orientation": {
-      "type": ["horizontal", "vertical"],
+      "type": [
+        "horizontal",
+        "vertical"
+      ],
       "default": "horizontal",
       "description": "A row with ArrowLeft and ArrowRight, or a column with ArrowUp and ArrowDown. Sets data-orientation."
     },
@@ -86,7 +111,7 @@
     "disabled": {
       "type": "boolean",
       "default": false,
-      "description": "Every item is disabled (aria-disabled, does not toggle). Sets data-disabled on the root."
+      "description": "Every item is disabled: aria-disabled, does not toggle, stays focusable. Sets data-disabled on the root."
     },
     "loop": {
       "type": "boolean",
@@ -99,10 +124,16 @@
       "description": "ToggleGroupItems, each with a unique value. The item takes children (the label), start, end, icon with label for the icon only form, and disabled, as ToggleButton."
     }
   },
-  "states": ["on", "off", "data-orientation", "data-disabled", "data-attached"],
+  "states": [
+    "on",
+    "off",
+    "data-orientation",
+    "data-disabled",
+    "data-attached"
+  ],
   "a11y": {
     "role": "radiogroup of radio items with aria-checked (type single), or toolbar of buttons with aria-pressed (type multiple); named by aria-label or aria-labelledby",
-    "focus": "One tab stop: Tab enters on the on item (or the first), the arrows move between items. Focus alone does not toggle. Disabled items keep aria-disabled and the arrows skip them.",
+    "focus": "One tab stop: Tab enters on the on item (or the first), the arrows move between items. Focus alone does not toggle. Disabled items keep aria-disabled and stay focusable and in the arrow order (anatomy rule 5), so a Tooltip can say why; they do not toggle.",
     "keys": {
       "Tab": "Moves focus into the group, on the on item or the first item, then out of it",
       "Shift+Tab": "Moves focus out of the group, backward",
@@ -118,13 +149,18 @@
     "announce": "The group name when focus enters, then each item by its name with checked or not checked (single) or pressed or not pressed (multiple), and its position in the set.",
     "native": {
       "accessibilityRole": "radiogroup",
-      "accessibilityState": ["checked", "disabled"]
+      "accessibilityState": [
+        "checked",
+        "disabled"
+      ]
     },
     "notes": [
       "On is not told by color alone: an on item gets the ToggleButton inner ring, and Highlight in forced colors.",
       "Every icon only item needs its own label: the group name does not name its items.",
       "Keep each label the same in both states; the checked or pressed state carries it.",
-      "Under forced colors the focus outline of an attached item is pulled inside it, so the next item does not cover it."
+      "Under forced colors the focus outline of an attached item is pulled inside it, so the next item does not cover it.",
+      "The native role above is for type single. Type multiple is a toolbar of buttons with the selected (pressed) state.",
+      "While an on item of an attached group has keyboard focus, its inner ring gives way to the focus ring; the on fill still tells the state."
     ]
   },
   "content": {
@@ -140,7 +176,6 @@
   "tokens": [
     "space.xs",
     "space.2xs",
-    "border.width.default",
     "border.width.strong",
     "color.border.default",
     "color.focus.ring",
@@ -195,14 +230,46 @@
   ],
   "contract": {
     "keys": {
-      "ArrowRight": { "focus": "[data-part='item']", "case": "one", "expect": "focus-moves" },
-      "ArrowLeft": { "focus": "[data-part='item']", "case": "one", "expect": "focus-moves" },
-      "ArrowDown": { "focus": "[data-ds='toggle-group'][data-orientation='vertical'] > [data-part='item']", "case": "variants", "expect": "focus-moves" },
-      "ArrowUp": { "focus": "[data-ds='toggle-group'][data-orientation='vertical'] > [data-part='item']", "case": "variants", "expect": "focus-moves" },
-      "Home": { "focus": "[data-part='item']:last-child", "case": "one", "expect": "focus-moves" },
-      "End": { "focus": "[data-part='item']", "case": "one", "expect": "focus-moves" },
-      "Space": { "focus": "[data-part='item']", "case": "one", "expect": "state-changes" },
-      "Enter": { "focus": "[data-part='item']", "case": "one", "expect": "state-changes" }
+      "ArrowRight": {
+        "focus": "[data-part='item']",
+        "case": "one",
+        "expect": "focus-moves"
+      },
+      "ArrowLeft": {
+        "focus": "[data-part='item']",
+        "case": "one",
+        "expect": "focus-moves"
+      },
+      "ArrowDown": {
+        "focus": "[data-ds='toggle-group'][data-orientation='vertical'] > [data-part='item']",
+        "case": "variants",
+        "expect": "focus-moves"
+      },
+      "ArrowUp": {
+        "focus": "[data-ds='toggle-group'][data-orientation='vertical'] > [data-part='item']",
+        "case": "variants",
+        "expect": "focus-moves"
+      },
+      "Home": {
+        "focus": "[data-part='item']:last-child",
+        "case": "one",
+        "expect": "focus-moves"
+      },
+      "End": {
+        "focus": "[data-part='item']",
+        "case": "one",
+        "expect": "focus-moves"
+      },
+      "Space": {
+        "focus": "[data-part='item']",
+        "case": "one",
+        "expect": "state-changes"
+      },
+      "Enter": {
+        "focus": "[data-part='item']",
+        "case": "one",
+        "expect": "state-changes"
+      }
     }
   },
   "since": "0.2.0"
