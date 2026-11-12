@@ -167,6 +167,8 @@ Fix round sessions (round 1 of 3), reports in `docs/reports/fixes/`:
 Requests from the lanes are collected in `docs/plan/wave-1-followups.md`.
 
 ## Coverage
+Docs site with the React gallery inside it: https://the-system-docs.vercel.app (Vercel project `the-system-docs`, public, static, no git link). Redeploy: `npm run build:site -w @the-system/docs && npm run deploy:site -w @the-system/docs -- --prod`. Report: `docs/reports/docs-site-deploy.md`.
+
 Gate 1 status and evidence: `docs/reports/wave-1.md` (not passed yet: 4 React contract tests, order 1.22 running, Angular fix round 2 not rechecked).
 
 As of 2026-11-12 14:35 UTC: 111 component manifests, all built in React

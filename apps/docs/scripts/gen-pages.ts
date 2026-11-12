@@ -9,8 +9,10 @@
 // DOCS_GALLERY_URL sets where the live preview iframe points (the React
 // gallery, `npm run build -w @the-system/gallery-react` then
 // `npm run preview -w @the-system/gallery-react`). Default: its preview port.
+// See scripts/gallery.ts.
 import { existsSync, mkdirSync, readFileSync, readdirSync, rmSync, writeFileSync } from 'node:fs';
 import { dirname, join, relative } from 'node:path';
+import { galleryUrl, resolveGalleryLinks } from './gallery.ts';
 import { readManifests, sectionOf, slugOf, type Manifest } from './manifests.ts';
 import { renderIndex, renderManifest, styleIdsOnDisk, type Lang, type PreviewConfig } from './render.ts';
 
@@ -18,7 +20,7 @@ const app = join(import.meta.dirname, '..');
 const docs = join(app, 'src', 'content', 'docs');
 const pub = join(app, 'public');
 
-export const galleryUrl = process.env.DOCS_GALLERY_URL ?? 'http://localhost:4173';
+export { galleryUrl };
 
 function write(path: string, content: string): void {
   mkdirSync(dirname(path), { recursive: true });
@@ -102,7 +104,7 @@ export function generate(): { pages: number; twins: number; manifests: Manifest[
   for (const file of walk(docs)) {
     if ([...generated].some((g) => file.startsWith(`${g}/`))) continue;
     const rel = relative(docs, file).split('\\').join('/');
-    write(join(pub, twinPath(rel)), handTwin(readFileSync(file, 'utf8')));
+    write(join(pub, twinPath(rel)), resolveGalleryLinks(handTwin(readFileSync(file, 'utf8'))));
     twins++;
   }
 

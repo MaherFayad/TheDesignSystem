@@ -17,6 +17,8 @@ export const chrome = {
   en: {
     preview: 'Preview',
     previewNote: 'The preview is the React gallery page of this component. It needs the gallery running at',
+    previewBundled: 'The preview is the React gallery page of this component.',
+    previewOpen: 'Open it in the gallery',
     previewSettings: 'Preview settings',
     previewOf: (name: string) => `${name} preview`,
     useWhen: 'Use when',
@@ -102,6 +104,8 @@ export const chrome = {
   ar: {
     preview: 'المعاينة',
     previewNote: 'المعاينة هي صفحة المكون في معرض React، وتتطلب تشغيل المعرض على العنوان',
+    previewBundled: 'المعاينة هي صفحة المكون في معرض React.',
+    previewOpen: 'فتح الصفحة في المعرض',
     previewSettings: 'إعدادات المعاينة',
     previewOf: (name: string) => `معاينة ${name}`,
     useWhen: 'حالات الاستخدام',
@@ -337,6 +341,13 @@ function insteadCell(ctx: Ctx, value: string, p: PreviewConfig): string {
   return ctx.lang === 'ar' && ctx.mode === 'site' ? `<span dir="ltr" lang="en">${link}</span>` : link;
 }
 
+/** The preview query for a full gallery page: the same axes, with the gallery bar. */
+function openQuery(q: URLSearchParams): string {
+  const open = new URLSearchParams(q);
+  open.delete('chrome');
+  return open.toString();
+}
+
 function previewBlock(ctx: Ctx, m: Manifest, p: PreviewConfig): string {
   const slug = slugOf(m.name);
   const base = `${p.galleryUrl.replace(/\/+$/, '')}/c/${slug}`;
@@ -366,7 +377,9 @@ function previewBlock(ctx: Ctx, m: Manifest, p: PreviewConfig): string {
     `<div class="ds-preview not-content" data-ds-preview data-base="${html(base)}">`,
     `<form class="ds-axes" aria-label="${html(ctx.t.previewSettings)}" aria-controls="${id}">${selects}</form>`,
     `<iframe id="${id}" class="ds-frame" src="${html(`${base}?${q.toString()}`)}" aria-label="${html(ctx.t.previewOf(m.name))}" loading="lazy"></iframe>`,
-    `<p class="ds-preview-note">${html(ctx.t.previewNote)} <span dir="ltr">${html(p.galleryUrl)}</span>.</p>`,
+    p.galleryUrl.startsWith('/')
+      ? `<p class="ds-preview-note">${html(ctx.t.previewBundled)} <a data-ds-preview-open href="${html(`${base}?${openQuery(q)}`)}">${html(ctx.t.previewOpen)}</a></p>`
+      : `<p class="ds-preview-note">${html(ctx.t.previewNote)} <span dir="ltr">${html(p.galleryUrl)}</span>.</p>`,
     `</div>`,
   ].join('\n');
 }

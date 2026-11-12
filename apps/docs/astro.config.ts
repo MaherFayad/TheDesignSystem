@@ -3,6 +3,7 @@
 // build, one group per family, so a new manifest needs no change here.
 import starlight from '@astrojs/starlight';
 import { defineConfig } from 'astro/config';
+import { galleryLinks } from './scripts/gallery.ts';
 import { familyLabel, kindLabel, readManifests, sectionOf, slugOf } from './scripts/manifests.ts';
 
 type SidebarItem = Parameters<typeof starlight>[0]['sidebar'] extends (infer T)[] | undefined ? T : never;
@@ -41,6 +42,8 @@ export default defineConfig({
   // (manifests name private properties such as --_sidebar-width).
   markdown: { smartypants: false },
   integrations: [
+    // Hand pages link to the gallery as gallery:/path (scripts/gallery.ts).
+    galleryLinks(),
     starlight({
       title: { en: 'The system', ar: 'النظام' },
       description: 'Docs for a design system with one component contract, several style packs and three frameworks.',

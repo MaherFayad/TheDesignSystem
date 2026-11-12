@@ -9,7 +9,10 @@
     "dev": "npm run gen && astro dev",
     "build": "npm run gen && ASTRO_TELEMETRY_DISABLED=1 astro build",
     "links": "tsx scripts/check-links.ts",
-    "check": "npm run build && npm run links"
+    "check": "npm run build && npm run links",
+    "build:site": "tsx scripts/build-site.ts",
+    "serve:site": "tsx scripts/serve-site.ts",
+    "deploy:site": "NODE_USE_ENV_PROXY=1 tsx scripts/deploy-vercel.ts"
   },
   "devDependencies": {
     "@astrojs/starlight": "0.42.10",

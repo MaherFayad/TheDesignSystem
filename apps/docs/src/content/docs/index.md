@@ -9,6 +9,27 @@ by React and Angular, and a style function for React Native. A style pack
 changes tokens, recipes, icons and motion. It never changes markup or
 behavior.
 
+## Try it in the browser
+
+- [Open the component gallery](gallery:/): every React demo, with a bar to
+  change the style, scheme, density, direction and language.
+- [Open the interactions page](gallery:/interactions): one card per
+  interaction, such as press, focus, open and close.
+- [Open every demo on one page](gallery:/all).
+
+### What to test
+
+- Styles: switch between Neutral, Studio and Desk. Markup and behavior stay
+  the same; tokens, recipes, icons and motion change. Try a
+  [Button in Desk, dark](gallery:/c/button?style=desk&scheme=dark).
+- Scheme: light and dark, in each style.
+- Density: compact, default and comfortable.
+- Arabic, right to left: set direction to `rtl` and language to `ar`, or
+  open the [Arabic docs](/ar/). Layout mirrors, icons that point flip, and
+  the Arabic demo copy shows.
+- On a component page, the preview has the same settings above it, and a
+  link to open it as a full gallery page.
+
 ## What is in the box
 
 | Package | Holds |

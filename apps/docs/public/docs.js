@@ -17,6 +17,12 @@
       for (const select of form.querySelectorAll('select[data-axis]')) q.set(select.dataset.axis, select.value);
       const next = `${base}?${q.toString()}`;
       if (frame.getAttribute('src') !== next) frame.setAttribute('src', next);
+      // The link under a bundled preview opens the same view as a full gallery page.
+      const open = box.querySelector('[data-ds-preview-open]');
+      if (open) {
+        q.delete('chrome');
+        open.setAttribute('href', `${base}?${q.toString()}`);
+      }
     };
     form.addEventListener('change', update);
     update();

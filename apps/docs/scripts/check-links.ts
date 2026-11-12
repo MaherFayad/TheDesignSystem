@@ -7,11 +7,17 @@
 // 3. llms.txt lists every manifest, and llms-full.txt exists.
 // 4. No em dash and no en dash in any built page, twin or llms file.
 //
-// External links (another origin, the gallery iframe included) are listed in
-// the summary, not fetched. Exit code 1 on any finding.
-import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs';
+// Paths resolve as the static host serves them (scripts/static-host.ts reads
+// vercel.json): when the site build ships the gallery under /gallery/, its
+// single page routes resolve through the rewrite, and every /c/<slug> link
+// must name a gallery route. External links (another origin, the gallery
+// iframe in a plain docs build included) are listed in the summary, not
+// fetched. Exit code 1 on any finding.
+import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import { join, relative } from 'node:path';
-import { readManifests, sectionOf, slugOf } from './manifests.ts';
+import { galleryBundled, galleryUrl } from './gallery.ts';
+import { readManifests, repoRoot, sectionOf, slugOf } from './manifests.ts';
+import { readHostConfig, resolvePath } from './static-host.ts';
 
 const dist = join(import.meta.dirname, '..', 'dist');
 const ORIGIN = 'http://docs.local';
@@ -49,13 +55,26 @@ function urlOf(file: string): string {
   return `/${r}`;
 }
 
-/** The built file a URL path resolves to, as a static host would serve it. */
+const host = readHostConfig();
+
+/** The built file a URL path resolves to, as the static host would serve it. */
 function fileOf(pathname: string): string | undefined {
-  const clean = decodeURIComponent(pathname);
-  const candidates = clean.endsWith('/')
-    ? [join(dist, clean, 'index.html')]
-    : [join(dist, clean), join(dist, clean, 'index.html'), join(dist, `${clean}.html`)];
-  return candidates.find((c) => existsSync(c) && statSync(c).isFile());
+  return resolvePath(dist, pathname, host)?.file;
+}
+
+// The gallery routes, for links into a bundled gallery.
+const galleryRoutes = new Set(
+  [...readFileSync(join(repoRoot, 'apps', 'gallery-react', 'src', 'routes.gen.ts'), 'utf8').matchAll(/slug: '([^']+)'/g)].map((m) => m[1] ?? ''),
+);
+const galleryPages = new Set(['/', '/all', '/interactions']);
+
+/** A finding when a path under the bundled gallery names no gallery page. */
+function galleryRouteFinding(pathname: string): string | undefined {
+  if (!galleryBundled || !(pathname === galleryUrl || pathname.startsWith(`${galleryUrl}/`))) return undefined;
+  const inner = pathname.slice(galleryUrl.length).replace(/\/+$/, '') || '/';
+  if (inner.startsWith('/assets/') || galleryPages.has(inner)) return undefined;
+  if (inner.startsWith('/c/') && galleryRoutes.has(decodeURIComponent(inner.slice(3)))) return undefined;
+  return `no gallery page at ${pathname}`;
 }
 
 function idsOf(file: string): Set<string> {
@@ -106,6 +125,11 @@ for (const file of htmlFiles) {
       findings.push(`${rel(file)}: broken link ${raw}`);
       continue;
     }
+    const routeFinding = galleryRouteFinding(target.pathname);
+    if (routeFinding) {
+      findings.push(`${rel(file)}: ${routeFinding}`);
+      continue;
+    }
     if (target.hash.length > 1 && targetFile.endsWith('.html')) {
       const id = decodeURIComponent(target.hash.slice(1));
       if (!idsOf(targetFile).has(id)) findings.push(`${rel(file)}: missing anchor ${raw}`);
@@ -147,9 +171,11 @@ for (const file of files.filter((f) => /\.(html|md|txt)$/.test(f))) {
   });
 }
 
-const pagesEn = htmlFiles.filter((f) => !rel(f).startsWith('ar/')).length;
-const pagesAr = htmlFiles.length - pagesEn;
-console.log(`links: ${htmlFiles.length} pages (${pagesEn} en, ${pagesAr} ar), ${checked} internal links checked, ${manifests.length} manifests with pages in both languages`);
+const docPages = htmlFiles.filter((f) => !rel(f).startsWith('gallery/'));
+const pagesEn = docPages.filter((f) => !rel(f).startsWith('ar/')).length;
+const pagesAr = docPages.length - pagesEn;
+const galleryNote = galleryBundled ? `, gallery bundled at ${galleryUrl}/ (${galleryRoutes.size} routes)` : '';
+console.log(`links: ${docPages.length} pages (${pagesEn} en, ${pagesAr} ar), ${checked} internal links checked, ${manifests.length} manifests with pages in both languages${galleryNote}`);
 if (external.size > 0) console.log(`links: external origins not fetched: ${[...external].sort().join(', ')}`);
 if (findings.length > 0) {
   console.error(`links: ${findings.length} finding(s)`);
