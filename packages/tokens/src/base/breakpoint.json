@@ -1,0 +1,28 @@
+{
+  "breakpoint": {
+    "phone": {
+      "$type": "dimension",
+      "$value": {
+        "value": 30,
+        "unit": "rem"
+      },
+      "$description": "Narrow phones are under it. GB max-width 30rem. Custom properties do not work in media queries: write the literal with a /* breakpoint.phone */ comment, or use dist/css/custom-media.css."
+    },
+    "tablet": {
+      "$type": "dimension",
+      "$value": {
+        "value": 48,
+        "unit": "rem"
+      },
+      "$description": "Phones are under it (768px): GB draws the phone home screen below 767.98px."
+    },
+    "desktop": {
+      "$type": "dimension",
+      "$value": {
+        "value": 68.75,
+        "unit": "rem"
+      },
+      "$description": "Desktop layouts start here (1100px): GB stacks the hero to one column below it."
+    }
+  }
+}

@@ -22,6 +22,7 @@ describe('token build', () => {
     expect(files).toContain('types/tokens.d.ts');
     expect(files).toContain('figma/desk.light.json');
     expect(files).toContain('tailwind/theme.css');
+    expect(files).toContain('css/custom-media.css');
   });
 
   it('is deterministic: two runs give byte equal output', () => {
@@ -65,6 +66,30 @@ describe('token build', () => {
     expect(reduced).toContain('--ds-delay-reveal-step: 0ms;');
     expect(reduced).not.toContain('--ds-delay-peek-hide');
     expect(result.base.get('delay.peek-hide')!.extensions?.['ds.motion']).toBe(false);
+  });
+
+  it('emits a dynamic viewport form with the static unit as fallback', () => {
+    const css = result.files['css/tokens.css']!;
+    const fallback = css.indexOf('--ds-dialog-height-max: 80vh;');
+    const dynamic = css.indexOf('--ds-dialog-height-max: 80dvh;');
+    expect(fallback).toBeGreaterThan(-1);
+    expect(dynamic).toBeGreaterThan(fallback);
+    expect(css.slice(0, dynamic)).toContain('@supports (height: 1dvh) {');
+  });
+
+  it('emits breakpoints as custom media and literal Tailwind breakpoints', () => {
+    expect(result.files['css/custom-media.css']).toContain('@custom-media --ds-below-tablet (width < 48rem);');
+    expect(result.files['css/custom-media.css']).toContain('@custom-media --ds-tablet-up (width >= 48rem);');
+    expect(result.files['tailwind/theme.css']).toContain('--breakpoint-tablet: 48rem;');
+    expect(result.files['types/tokens.d.ts']).toContain('/* breakpoint.tablet */');
+  });
+
+  it('exports native data: em base, fluid minimums, solid materials', () => {
+    const index = result.files['native/index.ts']!;
+    expect(index).toContain('export const emBase = 16;');
+    expect(index).toContain("'space.12xl': 84,");
+    expect(index).toContain("'font.size.3xs': 8,");
+    expect(index).toMatch(/export const solidMaterials: readonly string\[\] = \['color\.material\.glass',/);
   });
 
   it('gives native plain values a consumer can use', () => {

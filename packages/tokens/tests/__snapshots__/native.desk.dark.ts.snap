@@ -8,6 +8,7 @@ export const deskDark: Theme = {
     'glass-strong': 40,
     panel: 24,
     window: 24,
+    'window-saturation': 1.3,
     'window-strong': 40,
   },
   border: {
@@ -19,6 +20,11 @@ export const deskDark: Theme = {
   brand: {
     color: '#f7df72',
     mark: '#f7df72',
+  },
+  breakpoint: {
+    desktop: 1100,
+    phone: 480,
+    tablet: 768,
   },
   button: {
     text: {
@@ -391,8 +397,12 @@ export const deskDark: Theme = {
     shimmer: 1400,
     slow: 180,
     spin: 800,
+    'toast-enter': 140,
+    'toast-exit': 120,
     'window-close': 220,
+    'window-minimize': 320,
     'window-open': 300,
+    'window-zoom': 280,
     zoom: 220,
   },
   ease: {
@@ -663,6 +673,7 @@ export const deskDark: Theme = {
   },
   opacity: {
     disabled: 0.38,
+    grain: 0.14,
   },
   palette: {
     art: {
@@ -851,6 +862,11 @@ export const deskDark: Theme = {
     window: 16,
     xs: 3,
   },
+  scale: {
+    'dialog-enter': 0.98,
+    press: 0.97,
+    'window-enter': 0.92,
+  },
   scrollbar: {
     size: 6,
     thumb: 'rgba(143, 143, 143, 0.58)',
@@ -943,6 +959,9 @@ export const deskDark: Theme = {
       stiffness: 300,
     },
   },
+  'title-bar': {
+    height: 36,
+  },
   toast: {
     inset: 16,
     width: {
@@ -957,6 +976,10 @@ export const deskDark: Theme = {
   window: {
     backdrop: {
       bg: 'rgba(0, 0, 0, 0.4)',
+    },
+    width: {
+      'finder-max': 1664,
+      settings: 896,
     },
   },
   z: {

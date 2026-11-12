@@ -104,6 +104,32 @@
       },
       "$description": "Window close and minimize."
     },
+    "window-minimize": {
+      "$type": "duration",
+      "$value": {
+        "value": 320,
+        "unit": "ms"
+      },
+      "$description": "Window minimize: it shrinks toward the dock icon. GB components/window/motion.ts MIN_MS."
+    },
+    "window-zoom": {
+      "$type": "duration",
+      "$value": {
+        "value": 280,
+        "unit": "ms"
+      },
+      "$description": "Window zoom, a FLIP to and from full screen. GB components/window/motion.ts ZOOM_MS."
+    },
+    "toast-enter": {
+      "$type": "duration",
+      "$value": "{duration.medium}",
+      "$description": "Toast enter. GB st-toast-in runs on duration.medium."
+    },
+    "toast-exit": {
+      "$type": "duration",
+      "$value": "{duration.base}",
+      "$description": "Toast exit. The source has no exit animation; the Toast CSS uses duration.base."
+    },
     "roll": {
       "$type": "duration",
       "$value": {

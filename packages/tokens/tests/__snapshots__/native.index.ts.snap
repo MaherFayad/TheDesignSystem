@@ -110,3 +110,45 @@ export const densities = {
     },
   },
 } as const;
+
+/** The px size of 1em and 1rem in these themes. em tokens (radius.control, font.tracking.*) were converted with it. */
+export const emBase = 16;
+
+/** The minimum of every fluid token, in px, keyed by token path. Themes hold the maximum. */
+export const fluidMin: Readonly<Record<string, number>> = {
+  'font.size.2xl': 16,
+  'font.size.2xs': 9,
+  'font.size.3xl': 18,
+  'font.size.3xs': 8,
+  'font.size.4xl': 20,
+  'font.size.5xl': 24,
+  'font.size.6xl': 32,
+  'font.size.7xl': 40,
+  'font.size.l': 13,
+  'font.size.m': 12,
+  'font.size.s': 11,
+  'font.size.xl': 14,
+  'font.size.xs': 10,
+  'space.2xl': 14,
+  'space.2xs': 4,
+  'space.3xl': 16,
+  'space.3xs': 3,
+  'space.4xl': 18,
+  'space.4xs': 2,
+  'space.5xl': 20,
+  'space.6xl': 24,
+  'space.7xl': 28,
+  'space.8xl': 32,
+  'space.9xl': 40,
+  'space.10xl': 48,
+  'space.11xl': 56,
+  'space.12xl': 84,
+  'space.l': 10,
+  'space.m': 8,
+  'space.s': 6,
+  'space.xl': 12,
+  'space.xs': 5,
+};
+
+/** Material token paths that become color.material.glass-solid under reduced transparency and more contrast. */
+export const solidMaterials: readonly string[] = ['color.material.glass', 'color.material.glass-strong', 'color.material.glass-clear', 'color.material.glass-tinted', 'color.material.glass-flat', 'color.material.titlebar', 'color.material.menubar', 'color.material.dock'];

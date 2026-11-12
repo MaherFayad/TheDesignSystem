@@ -294,13 +294,28 @@ function cssValue(token: Token, value: unknown, prefix: string, map: TokenMap): 
   }
 }
 
+/** Viewport units with a dynamic form (dvh, dvw) for browsers that have it. */
+const DYNAMIC_UNITS: Record<string, string> = { vh: 'dvh', vw: 'dvw' };
+
 function cssBlock(selector: string, map: TokenMap, prefix: string, scope: TokenMap, extra: string[] = [], indent = '  '): string {
   const lines = [...extra];
+  const dynamic: string[] = [];
   for (const path of sortedPaths(map)) {
     const t = map.get(path)!;
     lines.push(`${cssVar(prefix, path)}: ${cssValue(t, t.value, prefix, scope)};`);
+    const unit = t.type === 'number' ? unitOf(t) : undefined;
+    if (unit && unit in DYNAMIC_UNITS && typeof t.value === 'number') {
+      dynamic.push(`${cssVar(prefix, path)}: ${num(t.value)}${DYNAMIC_UNITS[unit]};`);
+    }
   }
-  return `${indent}${selector} {\n${lines.map((l) => `${indent}  ${l}`).join('\n')}\n${indent}}`;
+  const block = (sel: string, ls: string[], ind: string) => `${ind}${sel} {\n${ls.map((l) => `${ind}  ${l}`).join('\n')}\n${ind}}`;
+  const out = [block(selector, lines, indent)];
+  // The static unit stays as the fallback; the dynamic form wins where supported.
+  if (dynamic.length) {
+    const inner = selector.replace(/\n/g, `\n  `);
+    out.push(`${indent}@supports (height: 1dvh) {\n${block(inner, dynamic, `${indent}  `)}\n${indent}}`);
+  }
+  return out.join('\n\n');
 }
 
 // ---------------------------------------------------------------- native values
@@ -592,7 +607,7 @@ function renderCss(r: BuildResult, modes: Mode[]): string {
 
   // Reduced transparency and more contrast: every material becomes the solid glass.
   const solid = `var(${cssVar(prefix, 'color.material.glass-solid')})`;
-  const mats = MATERIALS.map((m) => `color.material.${m}`).filter((p) => modes.some((m) => m.all.has(p)));
+  const mats = solidMaterialPaths(modes);
   if (mats.length) {
     const lines = (indent: string) => mats.map((p) => `${indent}${cssVar(prefix, p)}: ${solid};`).join('\n');
     blocks.push(`  @media (prefers-reduced-transparency: reduce) {\n    [data-style][data-scheme] {\n${lines('      ')}\n    }\n  }`);
@@ -609,6 +624,19 @@ function renderCss(r: BuildResult, modes: Mode[]): string {
     '}',
     '',
   ].join('\n');
+}
+
+function fluidMinimums(r: BuildResult): Record<string, number> {
+  const out: Record<string, number> = {};
+  for (const p of sortedPaths(r.base)) {
+    const f = fluidOf(r.base.get(p)!);
+    if (f) out[p] = f.min;
+  }
+  return out;
+}
+
+function solidMaterialPaths(modes: Mode[]): string[] {
+  return MATERIALS.map((m) => `color.material.${m}`).filter((p) => modes.some((m) => m.all.has(p)));
 }
 
 function nativeTheme(mode: Mode): Record<string, unknown> {
@@ -702,6 +730,15 @@ function render(r: BuildResult): Record<string, string> {
     '/** Base token overrides per density. Merge over a theme; `default` has none. */',
     `export const densities = ${tsLiteral(Object.fromEntries(densityObjs.map((d) => [d.id, d.obj])), '')} as const;`,
     '',
+    '/** The px size of 1em and 1rem in these themes. em tokens (radius.control, font.tracking.*) were converted with it. */',
+    `export const emBase = ${ROOT_FONT_PX};`,
+    '',
+    '/** The minimum of every fluid token, in px, keyed by token path. Themes hold the maximum. */',
+    `export const fluidMin: Readonly<Record<string, number>> = ${tsLiteral(fluidMinimums(r), '')};`,
+    '',
+    '/** Material token paths that become color.material.glass-solid under reduced transparency and more contrast. */',
+    `export const solidMaterials: readonly string[] = [${solidMaterialPaths(modes).map((p) => `'${p}'`).join(', ')}];`,
+    '',
   ].join('\n');
 
   // 3. Types
@@ -710,6 +747,11 @@ function render(r: BuildResult): Record<string, string> {
   const names = [...allNames].sort(compareNames);
   files['types/tokens.d.ts'] = [
     `// ${HEADER}`,
+    '//',
+    '// Breakpoints (breakpoint.*) are emitted as custom properties for scripts, but custom',
+    '// properties do not work in media queries. Component CSS writes the literal and names the',
+    '// token in a comment, for example @media (width < 48rem) /* breakpoint.tablet */. Tooling',
+    '// that supports @custom-media can import dist/css/custom-media.css instead.',
     '',
     `export type TokenName =\n${names.map((n) => `  | '${n}'`).join('\n')};`,
     '',
@@ -735,7 +777,31 @@ function render(r: BuildResult): Record<string, string> {
     if (!hit) continue;
     tw.push(`  --${hit[1]}-${n.slice(hit[0].length).replace(/\./g, '-')}: var(${cssVar(prefix, n)});`);
   }
+  // Breakpoints feed media queries, where var() does not work: literal values.
+  for (const p of sortedPaths(base).filter((x) => x.startsWith('breakpoint.'))) {
+    const t = base.get(p)!;
+    tw.push(`  --breakpoint-${p.slice('breakpoint.'.length).replace(/\./g, '-')}: ${cssValue(t, t.value, prefix, base)};`);
+  }
   files['tailwind/theme.css'] = [`/* ${HEADER} */`, '@theme inline {', ...tw, '}', ''].join('\n');
+
+  // 6. Custom media for the breakpoints, for tooling that supports @custom-media.
+  const bps = sortedPaths(base).filter((x) => x.startsWith('breakpoint.'));
+  if (bps.length) {
+    const lines = bps.flatMap((p) => {
+      const t = base.get(p)!;
+      const v = cssValue(t, t.value, prefix, base);
+      const name = p.slice('breakpoint.'.length).replace(/\./g, '-');
+      return [`@custom-media --${prefix}-below-${name} (width < ${v});`, `@custom-media --${prefix}-${name}-up (width >= ${v});`];
+    });
+    files['css/custom-media.css'] = [
+      `/* ${HEADER} */`,
+      '/* Breakpoints as @custom-media, for tooling that supports it. Custom properties do not work',
+      '   in media queries: plain component CSS writes the literal with a comment naming the token,',
+      '   for example @media (width < 48rem) { ... } with a breakpoint.tablet comment. */',
+      ...lines,
+      '',
+    ].join('\n');
+  }
 
   return files;
 }

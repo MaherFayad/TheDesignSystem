@@ -1,5 +1,5 @@
 {
-  "$description": "Semantic names every style must fill, in every scheme. names come from section 3.6 of PLAN.md; added lists the names this contract adds. Extend only by adding here. Read by the token build, the gates and the style generator.",
+  "$description": "Semantic names every style must fill, in every scheme. names come from section 3.6 of PLAN.md; added lists the names this contract adds. A group may appear twice when one name has another type (blur.window-saturation is a number). Extend only by adding here. Read by the token build, the gates and the style generator.",
   "groups": [
     {
       "group": "color.bg",
@@ -442,6 +442,14 @@
       "added": []
     },
     {
+      "group": "blur",
+      "type": "number",
+      "names": [],
+      "added": [
+        "window-saturation"
+      ]
+    },
+    {
       "group": "duration",
       "type": "duration",
       "names": [
@@ -460,7 +468,11 @@
       "added": [
         "shimmer",
         "spin",
-        "roll"
+        "roll",
+        "window-minimize",
+        "window-zoom",
+        "toast-enter",
+        "toast-exit"
       ]
     },
     {
@@ -509,7 +521,28 @@
       "type": "number",
       "names": [],
       "added": [
-        "disabled"
+        "disabled",
+        "grain"
+      ]
+    },
+    {
+      "group": "scale",
+      "type": "number",
+      "names": [],
+      "added": [
+        "dialog-enter",
+        "window-enter",
+        "press"
+      ]
+    },
+    {
+      "group": "breakpoint",
+      "type": "dimension",
+      "names": [],
+      "added": [
+        "phone",
+        "tablet",
+        "desktop"
       ]
     },
     {

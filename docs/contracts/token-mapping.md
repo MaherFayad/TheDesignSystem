@@ -172,7 +172,7 @@ Value conversions:
 | `--st-desk-glass-strong` | `color.material.glass-strong` | `#161616e0` | GB studio-tokens.css (theme free) |  |
 | `--st-desk-glow-cool` | `palette.site.glow.cool` | `#7c9cff24` | GB studio-tokens.css (theme free) | Marketing desk picture (GoBanana landing). Fixed in every style and scheme. |
 | `--st-desk-glow-mint` | `palette.site.glow.mint` | `#5be4a024` | GB studio-tokens.css (theme free) | Marketing desk picture (GoBanana landing). Fixed in every style and scheme. |
-| `--st-desk-grain-opacity` | `palette.site.grain-opacity` | `0.14` | GB studio-tokens.css (theme free) | Marketing desk picture (GoBanana landing). Fixed in every style and scheme. |
+| `--st-desk-grain-opacity` | `palette.site.grain-opacity`, `opacity.grain` | `0.14` | GB studio-tokens.css (theme free) | Marketing desk picture (GoBanana landing). Fixed in every style and scheme. Also the semantic opacity.grain per style and scheme (Desk dark 0.14, Desk light 0.08, Studio 0). |
 | `--st-desk-grey-a` | `palette.site.grey.a` | `#9599a4` | GB studio-tokens.css (theme free) | Marketing desk picture (GoBanana landing). Fixed in every style and scheme. |
 | `--st-desk-grey-b` | `palette.site.grey.b` | `#c0c3cc` | GB studio-tokens.css (theme free) | Marketing desk picture (GoBanana landing). Fixed in every style and scheme. |
 | `--st-desk-grey-ink` | `palette.site.grey.ink` | `#0b0b0d` | GB studio-tokens.css (theme free) | Marketing desk picture (GoBanana landing). Fixed in every style and scheme. |
@@ -525,7 +525,21 @@ Values taken from source CSS that is not a token file.
 
 | Old name | New name | Value | Source | Notes |
 | --- | --- | --- | --- | --- |
+| `@keyframes st-dialog-in { scale(0.98) }` | `scale.dialog-enter` | `0.98` | GB studio-components.css |  |
+| `wl-open, motion.ts open and close { scale(0.92) }` | `scale.window-enter` | `0.92` | GB window-layer.css, components/window/motion.ts |  |
+| `@keyframes st-menu-in { scale(0.97) }` | `scale.press` | `0.97` | GB studio-components.css | No press scale in the source; the menu enter scale is the closest value. |
+| `MIN_MS = 320` | `duration.window-minimize` | `320ms` | GB components/window/motion.ts |  |
+| `ZOOM_MS = 280` | `duration.window-zoom` | `280ms` | GB components/window/motion.ts |  |
+| `.st-toast { animation: st-toast-in var(--st-duration-medium) }` | `duration.toast-enter` | `var(--st-duration-medium)` | GB studio-components.css | Alias of duration.medium. |
+| `(no toast exit animation)` | `duration.toast-exit` | `var(--st-duration-base)` | Toast CSS in this repo | Alias of duration.base, what the Toast CSS uses today. |
+| `@media (max-width: 30rem)` | `breakpoint.phone` | `30rem` | GB app/(site) CSS |  |
+| `@media (max-width: 767.98px), (min-width: 768px)` | `breakpoint.tablet` | `48rem` (768px) | GB desktop.css and site CSS | The most used split in GB (21 queries). |
+| `@media (max-width: 1099.98px), (min-width: 1100px)` | `breakpoint.desktop` | `68.75rem` (1100px) | GB story and site CSS |  |
 | `.st-btn:disabled, .st-btn[aria-disabled=true] { opacity: 0.38 }` | `opacity.disabled` | `0.38` | GB studio-components.css | Also .st-menu-item disabled. Actions use aria-disabled, text entry native disabled; both draw with it. |
+| `.wl[data-kind=settings] inline-size: min(56rem, ...)` | `window.width.settings` | `56rem` | GB window-layer.css |  |
+| `.wl[data-kind=finder] inline-size: min(104rem, ...)` | `window.width.finder-max` | `104rem` | GB window-layer.css |  |
+| `.dwin-bar min-block-size: 2.25rem` | `title-bar.height` | `36px` | GB desktop.css |  |
+| `.dwin backdrop-filter: blur() saturate(1.3)` | `blur.window-saturation` | `1.3` | GB desktop.css | Desk value. Studio fills 1. |
 
 ## Names added to the contract
 
@@ -543,7 +557,10 @@ PLAN.md, so every source token has a home:
 - `font.size`: `fixed.m`
 - `font.leading`: `display`, `arabic.tight`, `arabic.snug`, `arabic.normal`, `arabic.relaxed`
 - `font.tracking`: `display`, `none`
-- `duration`: `shimmer`, `spin`, `roll`
+- `blur`: `window-saturation`
+- `duration`: `shimmer`, `spin`, `roll`, `window-minimize`, `window-zoom`, `toast-enter`, `toast-exit`
 - `delay`: `peek-hide`, `reveal-step`
 - `ease`: `default`, `in`, `out`
-- `opacity`: `disabled`
+- `opacity`: `disabled`, `grain`
+- `scale`: `dialog-enter`, `window-enter`, `press`
+- `breakpoint`: `phone`, `tablet`, `desktop`

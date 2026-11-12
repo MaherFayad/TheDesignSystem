@@ -6,6 +6,9 @@
   [data-style] {
     --ds-border-width-default: 1px;
     --ds-border-width-strong: 2px;
+    --ds-breakpoint-desktop: 68.75rem;
+    --ds-breakpoint-phone: 30rem;
+    --ds-breakpoint-tablet: 48rem;
     --ds-canvas-comment-pin: #ffb020;
     --ds-canvas-comment-pin-resolved: #6b6b6b;
     --ds-canvas-comment-pin-ring: #ffffff;
@@ -56,8 +59,12 @@
     --ds-duration-shimmer: 1.4s;
     --ds-duration-slow: 180ms;
     --ds-duration-spin: 0.8s;
+    --ds-duration-toast-enter: var(--ds-duration-medium);
+    --ds-duration-toast-exit: var(--ds-duration-base);
     --ds-duration-window-close: 220ms;
+    --ds-duration-window-minimize: 320ms;
     --ds-duration-window-open: 300ms;
+    --ds-duration-window-zoom: 280ms;
     --ds-duration-zoom: 220ms;
     --ds-ease-default: cubic-bezier(0.25, 0.1, 0.25, 1);
     --ds-ease-emphasized: cubic-bezier(0.16, 1, 0.3, 1);
@@ -215,6 +222,9 @@
     --ds-palette-site-trail-cool: #5a8cff;
     --ds-palette-site-trail-default: #d6d6d6;
     --ds-palette-site-trail-warm: #ff5a4d;
+    --ds-scale-dialog-enter: 0.98;
+    --ds-scale-press: 0.97;
+    --ds-scale-window-enter: 0.92;
     --ds-scrollbar-size: 6px;
     --ds-shell-rail-width: 42px;
     --ds-shell-sidebar-width-end: 290px;
@@ -270,9 +280,12 @@
     --ds-spring-sheet-damping: 30;
     --ds-spring-sheet-mass: 1;
     --ds-spring-sheet-stiffness: 300;
+    --ds-title-bar-height: 36px;
     --ds-toast-inset: 16px;
     --ds-toast-width-max: 420px;
     --ds-tooltip-width-max: 240px;
+    --ds-window-width-finder-max: 104rem;
+    --ds-window-width-settings: 56rem;
     --ds-z-canvas: 0;
     --ds-z-canvas-floating-toolbar: 15;
     --ds-z-canvas-notch: 53;
@@ -288,6 +301,13 @@
     --ds-z-toolbar-popover: 201;
     --ds-z-tooltip: 10001;
     --ds-z-topbar: 30;
+  }
+
+  @supports (height: 1dvh) {
+    :root,
+    [data-style] {
+      --ds-dialog-height-max: 80dvh;
+    }
   }
 
   [data-density='comfortable'] {
@@ -355,6 +375,7 @@
     --ds-blur-glass-strong: var(--ds-blur-window-strong);
     --ds-blur-panel: 24px;
     --ds-blur-window: 24px;
+    --ds-blur-window-saturation: 1.3;
     --ds-blur-window-strong: 40px;
     --ds-brand-color: var(--ds-color-accent-7);
     --ds-brand-mark: var(--ds-brand-color);
@@ -589,6 +610,7 @@
     --ds-kbd-highlight: var(--ds-color-bg-overlay-5);
     --ds-kbd-text: #ededed;
     --ds-menu-item-radius: var(--ds-radius-panel);
+    --ds-opacity-grain: 0.14;
     --ds-radius-card: 16px;
     --ds-radius-control: 1em;
     --ds-radius-field: 8px;
@@ -611,6 +633,7 @@
     --ds-blur-glass-strong: var(--ds-blur-window-strong);
     --ds-blur-panel: 24px;
     --ds-blur-window: 24px;
+    --ds-blur-window-saturation: 1.3;
     --ds-blur-window-strong: 40px;
     --ds-brand-color: var(--ds-color-accent-7);
     --ds-brand-mark: var(--ds-color-text-bright);
@@ -845,6 +868,7 @@
     --ds-kbd-highlight: rgb(255 255 255 / 0.85);
     --ds-kbd-text: #57554f;
     --ds-menu-item-radius: var(--ds-radius-panel);
+    --ds-opacity-grain: 0.08;
     --ds-radius-card: 16px;
     --ds-radius-control: 1em;
     --ds-radius-field: 8px;
@@ -867,6 +891,7 @@
     --ds-blur-glass-strong: var(--ds-blur-window-strong);
     --ds-blur-panel: 24px;
     --ds-blur-window: var(--ds-blur-panel);
+    --ds-blur-window-saturation: 1;
     --ds-blur-window-strong: 40px;
     --ds-brand-color: var(--ds-color-accent-7);
     --ds-brand-mark: var(--ds-brand-color);
@@ -1101,6 +1126,7 @@
     --ds-kbd-highlight: var(--ds-color-bg-overlay-5);
     --ds-kbd-text: #ededed;
     --ds-menu-item-radius: var(--ds-radius-panel);
+    --ds-opacity-grain: 0;
     --ds-radius-card: 16px;
     --ds-radius-control: 1em;
     --ds-radius-field: 8px;
@@ -1123,6 +1149,7 @@
     --ds-blur-glass-strong: var(--ds-blur-window-strong);
     --ds-blur-panel: 24px;
     --ds-blur-window: var(--ds-blur-panel);
+    --ds-blur-window-saturation: 1;
     --ds-blur-window-strong: 40px;
     --ds-brand-color: var(--ds-color-accent-7);
     --ds-brand-mark: var(--ds-color-text-bright);
@@ -1357,6 +1384,7 @@
     --ds-kbd-highlight: rgb(255 255 255 / 0.85);
     --ds-kbd-text: #4b5563;
     --ds-menu-item-radius: var(--ds-radius-panel);
+    --ds-opacity-grain: 0;
     --ds-radius-card: 16px;
     --ds-radius-control: 1em;
     --ds-radius-field: 8px;
@@ -1387,8 +1415,12 @@
       --ds-duration-shimmer: 0ms;
       --ds-duration-slow: 0ms;
       --ds-duration-spin: 0ms;
+      --ds-duration-toast-enter: 0ms;
+      --ds-duration-toast-exit: 0ms;
       --ds-duration-window-close: 0ms;
+      --ds-duration-window-minimize: 0ms;
       --ds-duration-window-open: 0ms;
+      --ds-duration-window-zoom: 0ms;
       --ds-duration-zoom: 0ms;
     }
   }
