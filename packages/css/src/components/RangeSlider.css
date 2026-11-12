@@ -1,0 +1,13 @@
+/*
+ * RangeSlider: built on the Slider base, so Slider.css styles it (rule 10
+ * of docs/contracts/anatomy.md). This file keeps what differs.
+ *
+ * The value shows two numbers ("100 SAR - 500 SAR"). It is isolated, so in
+ * right to left text the pair keeps its order and does not mix with the
+ * label.
+ */
+@layer ds.base {
+  [data-ds='range-slider'] > [data-part='value'] {
+    unicode-bidi: isolate;
+  }
+}

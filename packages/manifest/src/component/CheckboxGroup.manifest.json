@@ -1,0 +1,215 @@
+{
+  "name": "CheckboxGroup",
+  "kind": "component",
+  "family": "selection",
+  "summary": "Several Checkbox items under one question, in a fieldset with a legend, with one value array.",
+  "useWhen": [
+    "One question with several answers that can all be true, such as notification channels",
+    "A list of filters where any number can be on",
+    "A set of items with a select all item that checks or clears them"
+  ],
+  "avoidWhen": [
+    "Only one answer can be picked",
+    "One yes or no choice with no question around it",
+    "More than about fifteen options, or options that need search"
+  ],
+  "insteadUse": {
+    "Only one answer can be picked": "RadioGroup",
+    "One yes or no choice": "Checkbox",
+    "A long list, or a list that needs search": "MultiSelect",
+    "Settings that take effect at once": "Switch"
+  },
+  "anatomy": [
+    "root",
+    "legend",
+    "description",
+    "items",
+    "select-all",
+    "error"
+  ],
+  "slots": {
+    "items": {
+      "accepts": [
+        "Checkbox"
+      ],
+      "min": 1
+    }
+  },
+  "props": {
+    "legend": {
+      "type": "node",
+      "description": "The question, in a legend. Required: it names the group."
+    },
+    "description": {
+      "type": "node",
+      "description": "A hint under the legend. Joins the group's aria-describedby."
+    },
+    "error": {
+      "type": "node",
+      "description": "What is wrong and how to fix it. While it shows, the group and every item are invalid."
+    },
+    "value": {
+      "type": "string[]",
+      "description": "Controlled value: the values of the checked items. Pair with onValueChange."
+    },
+    "defaultValue": {
+      "type": "string[]",
+      "default": "[]",
+      "description": "Uncontrolled starting value."
+    },
+    "onValueChange": {
+      "type": "function",
+      "description": "Called with the new array of checked values."
+    },
+    "size": {
+      "type": [
+        "sm",
+        "md",
+        "lg"
+      ],
+      "default": "md",
+      "description": "Size of every item."
+    },
+    "orientation": {
+      "type": [
+        "vertical",
+        "horizontal"
+      ],
+      "default": "vertical",
+      "description": "vertical: one item per line. horizontal: items wrap on a line."
+    },
+    "selectAll": {
+      "type": "node",
+      "description": "The label of an optional first item that checks or clears every item. It is indeterminate when some are checked."
+    },
+    "name": {
+      "type": "string",
+      "description": "The form name every item submits under."
+    },
+    "invalid": {
+      "type": "boolean",
+      "description": "When not passed, the group is invalid while it shows an error. false hides the error."
+    },
+    "disabled": {
+      "type": "boolean",
+      "default": "false",
+      "description": "Disables every item."
+    },
+    "readOnly": {
+      "type": "boolean",
+      "default": "false",
+      "description": "Every item keeps its value and focus and ignores clicks and Space."
+    }
+  },
+  "states": [
+    "checked",
+    "unchecked",
+    "indeterminate",
+    "data-orientation",
+    "data-disabled",
+    "data-invalid",
+    "data-readonly"
+  ],
+  "a11y": {
+    "role": "group, from the native fieldset, named by the legend. Each item is a checkbox.",
+    "focus": "Every item is its own tab stop, in DOM order. The select all item comes first.",
+    "keys": {
+      "Tab": "Moves focus to the next item, and out of the group after the last",
+      "Shift+Tab": "Moves focus to the item before",
+      "Space": "Toggles the focused item"
+    },
+    "announce": "The legend when focus enters the group, then the item name and state. The description and the error through the group's aria-describedby; each item also carries aria-invalid.",
+    "native": {
+      "accessibilityRole": "none",
+      "accessibilityState": [
+        "disabled"
+      ]
+    },
+    "notes": [
+      "Items are Checkbox components with a value. They read checked, size, name, disabled, invalid and read only from the group.",
+      "The error is not a live region and never role alert. A form that checks on submit moves focus to the first item of the invalid group.",
+      "Arrow keys do not move between items: that is a RadioGroup. Each checkbox is its own tab stop, as native checkboxes are.",
+      "checked, unchecked and indeterminate are on the select all part, a Checkbox root that carries the group's select-all part. The group root has no data-state."
+    ]
+  },
+  "content": {
+    "en": {
+      "legend": "The question in sentence case: Notify me about. Never a bare noun that does not say what to pick.",
+      "items": "Short statements that are true when checked, in a parallel form. A logical order, never alphabetical by accident.",
+      "selectAll": "All plus the noun: All channels. Not Select all.",
+      "error": "What to do: Pick at least one way to reach you."
+    },
+    "ar": {
+      "legend": "سؤال واضح بدون تشكيل: وش تبي يوصلك",
+      "items": "عبارات قصيرة بنفس الصيغة",
+      "selectAll": "كل مع الاسم: كل القنوات"
+    }
+  },
+  "tokens": [
+    "space.xs",
+    "space.4xs",
+    "space.3xs",
+    "space.2xs",
+    "space.l",
+    "size.target-min",
+    "size.control.lg",
+    "font.size.s",
+    "font.weight.semibold",
+    "font.leading.snug",
+    "font.leading.normal",
+    "color.text.default",
+    "color.text.muted",
+    "color.state.danger.text"
+  ],
+  "motion": "fade",
+  "frameworks": {
+    "react": {
+      "status": "ready",
+      "behavior": "native fieldset, hand built on Checkbox",
+      "example": "CheckboxGroup.demo.tsx"
+    },
+    "angular": {
+      "status": "planned"
+    },
+    "native": {
+      "status": "planned"
+    }
+  },
+  "styles": {
+    "studio": "A semibold legend over a tight list of Checkbox items, the error in the danger text color with its icon",
+    "desk": "The same layout, in Instrument Sans"
+  },
+  "mistakes": [
+    {
+      "wrong": "Checkboxes under a plain text heading in a div",
+      "right": "A CheckboxGroup, so the legend names the group for a screen reader"
+    },
+    {
+      "wrong": "Arrow keys that move between checkboxes",
+      "right": "Tab between items; arrows belong to a RadioGroup"
+    },
+    {
+      "wrong": "A select all item that is unchecked while some items are checked",
+      "right": "The selectAll prop, which shows indeterminate"
+    },
+    {
+      "wrong": "One answer only, drawn with checkboxes",
+      "right": "A RadioGroup"
+    }
+  ],
+  "contract": {
+    "optionalParts": [
+      "description",
+      "select-all",
+      "error"
+    ],
+    "keys": {
+      "Space": {
+        "focus": "[data-ds='checkbox-group'] [data-part='control']",
+        "case": "one",
+        "expect": "state-changes"
+      }
+    }
+  },
+  "since": "0.1.0"
+}

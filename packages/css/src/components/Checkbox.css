@@ -1,0 +1,235 @@
+/*
+ * Checkbox: a control (the Radix button with role checkbox, a 24px target,
+ * 44px at lg) holding the indicator (the visible box with a check or a
+ * minus glyph), then a label and a description in a second column.
+ * Source: Figma-Killer-2 `Checkbox.module.css` (16px box, a 1px control
+ * border, the 3px radius, a solid fill and a contrasting glyph when checked,
+ * the input focus glow) and GoBanana `TakedownForm.tsx` (label after the box).
+ *
+ * Private properties on the root (docs/contracts/anatomy.md, one convention).
+ * Recipes override these; states only swap them:
+ *   --_checkbox-target        the control size, never under size.target-min
+ *   --_checkbox-box           the indicator size
+ *   --_checkbox-gap           space between the target and the label
+ *   --_checkbox-font-size     label size
+ *   --_checkbox-radius        indicator radius
+ *   --_checkbox-bg, -fg, -border-color         the indicator now
+ *   --_checkbox-border-color-hover             unchecked, on hover
+ *   --_checkbox-border-color-invalid           unchecked, invalid
+ *   --_checkbox-fill, -fill-border, -on-fill   the checked look of a tone
+ *   --_checkbox-ring          the focus glow and ring around the box
+ *   --_checkbox-border-style  solid, dashed while read only
+ *
+ * `-border-color-invalid` is a state suffix beyond the convention's list:
+ * invalid needs its own color, as in Input.css.
+ *
+ * The focus ring sits on ::before of the control and fades its opacity.
+ * Colors swap at once: only transform and opacity animate.
+ */
+@layer ds.base {
+  [data-ds='checkbox'] {
+    --_checkbox-target: var(--ds-size-target-min);
+    --_checkbox-box: var(--ds-size-icon-md);
+    --_checkbox-gap: var(--ds-space-3xs);
+    --_checkbox-font-size: var(--ds-font-size-s);
+    --_checkbox-radius: var(--ds-radius-xs);
+    --_checkbox-bg: transparent;
+    --_checkbox-fg: transparent;
+    --_checkbox-border-color: var(--ds-color-border-control);
+    --_checkbox-border-color-hover: var(--ds-color-border-control-hover);
+    --_checkbox-border-color-invalid: var(--ds-color-state-danger-text);
+    --_checkbox-fill: var(--ds-color-text-default);
+    --_checkbox-fill-border: var(--ds-color-text-default);
+    --_checkbox-on-fill: var(--ds-color-bg-body);
+    --_checkbox-ring: var(--ds-elevation-input-focus), var(--ds-focus-shadow-ring);
+    --_checkbox-border-style: solid;
+
+    display: inline-grid;
+    grid-template-columns: var(--_checkbox-target) minmax(0, auto);
+    justify-content: start;
+    column-gap: var(--_checkbox-gap);
+    align-items: start;
+    max-inline-size: 100%;
+    color: var(--ds-color-text-default);
+    font-family: var(--ds-font-family-sans);
+    font-size: var(--_checkbox-font-size);
+    line-height: var(--ds-font-leading-snug);
+    vertical-align: middle;
+  }
+
+  [data-ds='checkbox'][data-size='sm'] {
+    --_checkbox-box: var(--ds-size-icon-sm);
+  }
+
+  [data-ds='checkbox'][data-size='lg'] {
+    --_checkbox-target: var(--ds-size-control-lg);
+    --_checkbox-box: var(--ds-size-icon-lg);
+    --_checkbox-radius: var(--ds-radius-sm);
+    --_checkbox-font-size: var(--ds-font-size-m);
+  }
+
+  [data-ds='checkbox'][data-tone='accent'] {
+    --_checkbox-fill: var(--ds-color-primary-fill);
+    --_checkbox-fill-border: var(--ds-color-primary-border);
+    --_checkbox-on-fill: var(--ds-color-text-on-primary);
+  }
+
+  [data-ds='checkbox'][data-tone='danger'] {
+    --_checkbox-fill: var(--ds-color-state-danger-solid);
+    --_checkbox-fill-border: var(--ds-color-state-danger-solid);
+    --_checkbox-on-fill: var(--ds-color-state-danger-on-solid);
+  }
+
+  /* The control: a transparent target that centers the box. */
+  [data-ds='checkbox'] > [data-part='control'] {
+    position: relative;
+    display: inline-flex;
+    grid-column: 1;
+    grid-row: 1;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    inline-size: var(--_checkbox-target);
+    block-size: var(--_checkbox-target);
+    margin: 0;
+    padding: 0;
+    border: 0;
+    border-radius: var(--_checkbox-radius);
+    background: transparent;
+    color: inherit;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  /* The glow and the ring, the size of the box. */
+  [data-ds='checkbox'] > [data-part='control']::before {
+    content: '';
+    position: absolute;
+    inset: calc((var(--_checkbox-target) - var(--_checkbox-box)) / 2);
+    border-radius: var(--_checkbox-radius);
+    box-shadow: var(--_checkbox-ring);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity var(--ds-duration-base) var(--ds-ease-default);
+  }
+
+  /* The box. The glyph is drawn over it at the box size, so it keeps its pixel grid. */
+  [data-ds='checkbox'] > [data-part='control'] > [data-part='indicator'] {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    inline-size: var(--_checkbox-box);
+    block-size: var(--_checkbox-box);
+    border: var(--ds-border-width-default) var(--_checkbox-border-style) var(--_checkbox-border-color);
+    border-radius: var(--_checkbox-radius);
+    background-color: var(--_checkbox-bg);
+    color: var(--_checkbox-fg);
+    overflow: visible;
+    pointer-events: none;
+  }
+
+  /* The label lines its first line up with the center of the target. */
+  [data-ds='checkbox'] > [data-part='label'] {
+    grid-column: 2;
+    grid-row: 1;
+    padding-block: calc((var(--_checkbox-target) - var(--_checkbox-font-size) * var(--ds-font-leading-snug)) / 2);
+    color: var(--ds-color-text-default);
+    overflow-wrap: anywhere;
+    cursor: pointer;
+  }
+
+  [data-ds='checkbox'] > [data-part='description'] {
+    grid-column: 2;
+    grid-row: 2;
+    margin: 0;
+    color: var(--ds-color-text-muted);
+    font-size: var(--ds-font-size-s);
+    line-height: var(--ds-font-leading-normal);
+    overflow-wrap: anywhere;
+  }
+
+  /* Checked and indeterminate: the tone fills the box, the glyph takes the contrasting color. */
+  [data-ds='checkbox']:is([data-state='checked'], [data-state='indeterminate']) {
+    --_checkbox-bg: var(--_checkbox-fill);
+    --_checkbox-fg: var(--_checkbox-on-fill);
+    --_checkbox-border-color: var(--_checkbox-fill-border);
+  }
+
+  /* Hover: a stronger border on an empty box, only while the value can change. */
+  [data-ds='checkbox'][data-state='unchecked']:hover:not([data-disabled], [data-readonly], [data-invalid]) {
+    --_checkbox-border-color: var(--_checkbox-border-color-hover);
+  }
+
+  /* Focus: the glow and the 2px ring fade in. The transparent outline shows in forced colors mode. */
+  [data-ds='checkbox'] > [data-part='control']:focus-visible {
+    outline: var(--ds-border-width-strong) solid transparent;
+    outline-offset: calc((var(--_checkbox-box) - var(--_checkbox-target)) / 2);
+  }
+
+  [data-ds='checkbox'] > [data-part='control']:focus-visible::before {
+    opacity: 1;
+  }
+
+  /* Invalid: the danger border on an empty box. A checked box keeps its fill; the error text says what to do. */
+  [data-ds='checkbox'][data-invalid][data-state='unchecked'] {
+    --_checkbox-border-color: var(--_checkbox-border-color-invalid);
+  }
+
+  /* Read only: a dashed border and a quiet fill in every tone. Still focusable and readable. */
+  [data-ds='checkbox'][data-readonly] {
+    --_checkbox-fill: var(--ds-color-bg-overlay-20);
+    --_checkbox-fill-border: var(--ds-color-border-control);
+    --_checkbox-on-fill: var(--ds-color-text-default);
+    --_checkbox-border-style: dashed;
+  }
+
+  [data-ds='checkbox'][data-readonly][data-state='unchecked'] {
+    --_checkbox-bg: var(--ds-color-bg-overlay-5);
+  }
+
+  [data-ds='checkbox'][data-readonly] > :is([data-part='control'], [data-part='label']) {
+    cursor: default;
+  }
+
+  /* Disabled: one disabled look for every control. */
+  [data-ds='checkbox'][data-disabled] {
+    opacity: var(--ds-opacity-disabled);
+  }
+
+  [data-ds='checkbox'][data-disabled] > :is([data-part='control'], [data-part='label']) {
+    cursor: not-allowed;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    [data-ds='checkbox'] > [data-part='control']::before {
+      transition: none;
+    }
+  }
+
+  /*
+   * Forced colors: box shadows drop, so the ring layer goes away and the
+   * outline in the focus rule shows focus. The box keeps its border and the
+   * glyph its color, so the state still reads. Disabled reads as GrayText.
+   */
+  @media (forced-colors: active) {
+    [data-ds='checkbox'] > [data-part='control']::before {
+      display: none;
+    }
+
+    [data-ds='checkbox'] > [data-part='control']:focus-visible {
+      outline-color: Highlight;
+    }
+
+    [data-ds='checkbox'] > [data-part='control'] > [data-part='indicator'] {
+      color: CanvasText;
+    }
+
+    [data-ds='checkbox'][data-disabled] {
+      --_checkbox-border-color: GrayText;
+
+      color: GrayText;
+    }
+  }
+}

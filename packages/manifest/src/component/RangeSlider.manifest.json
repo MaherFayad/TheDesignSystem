@@ -1,0 +1,288 @@
+{
+  "name": "RangeSlider",
+  "kind": "component",
+  "family": "selection",
+  "summary": "A low and a high value on one track, such as a price range, with two thumbs that cannot cross.",
+  "useWhen": [
+    "A filter with a low and a high bound: price, distance, dates by year",
+    "A window inside a range, such as working hours",
+    "Bounds people tune while watching results update"
+  ],
+  "avoidWhen": [
+    "One value",
+    "Exact bounds that people know and want to type",
+    "Bounds far apart on a huge scale, where a drag cannot hit a value"
+  ],
+  "insteadUse": {
+    "One value": "Slider",
+    "Exact bounds to type": "NumberField",
+    "A start and an end date": "DateRangePicker"
+  },
+  "anatomy": [
+    "root",
+    "label",
+    "value",
+    "control",
+    "track",
+    "range",
+    "thumb",
+    "marks"
+  ],
+  "props": {
+    "size": {
+      "type": [
+        "sm",
+        "md",
+        "lg"
+      ],
+      "default": "md",
+      "description": "Track 2, 4 and 6 px thick, thumb 12, 16 and 24 px in a target of 24 px, 24 px and the lg control height."
+    },
+    "tone": {
+      "type": [
+        "accent"
+      ],
+      "default": "accent",
+      "description": "The range fill and the thumb: the primary color the style uses on a surface."
+    },
+    "min": {
+      "type": "number",
+      "default": "0"
+    },
+    "max": {
+      "type": "number",
+      "default": "100"
+    },
+    "step": {
+      "type": "number",
+      "default": "1",
+      "description": "Arrows move one step; PageUp and PageDown move ten."
+    },
+    "orientation": {
+      "type": [
+        "horizontal",
+        "vertical"
+      ],
+      "default": "horizontal"
+    },
+    "label": {
+      "type": "node",
+      "description": "Visible name above the track. Each thumb is named by thumbLabels."
+    },
+    "showValue": {
+      "type": "boolean",
+      "description": "Shows the formatted value at the end of the label row. Default true when there is a label."
+    },
+    "unit": {
+      "type": "string",
+      "description": "A unit after the number, in the value text and aria-valuetext: %, px, SAR."
+    },
+    "formatOptions": {
+      "type": "object",
+      "description": "Intl.NumberFormat options for the value text. Digits are always Western."
+    },
+    "formatValue": {
+      "type": "function",
+      "description": "Full control of the value text, aria-valuetext included."
+    },
+    "marks": {
+      "type": "array",
+      "description": "Ticks under the track: numbers, or { value, label } objects."
+    },
+    "name": {
+      "type": "string",
+      "description": "The form name, submitted as name[] with two values."
+    },
+    "invalid": {
+      "type": "boolean",
+      "description": "A danger tint on the track and aria-invalid on the thumb. Inside a Field it follows the Field."
+    },
+    "disabled": {
+      "type": "boolean",
+      "description": "Inside a Field it follows the Field."
+    },
+    "rootProps": {
+      "type": "object",
+      "description": "Props for the root element. className and style also go to the root. The ref goes to the start thumb."
+    },
+    "value": {
+      "type": "[number, number]",
+      "description": "Controlled low and high values. Pair with onValueChange."
+    },
+    "defaultValue": {
+      "type": "[number, number]",
+      "description": "Uncontrolled starting values. Default [min, max]."
+    },
+    "onValueChange": {
+      "type": "function",
+      "description": "Called with the pair on every change, while dragging too."
+    },
+    "onValueCommit": {
+      "type": "function",
+      "description": "Called with the pair once when a drag ends or a key changes a value."
+    },
+    "thumbLabels": {
+      "type": "[string, string]",
+      "description": "Required. The accessible name of the start and the end thumb."
+    },
+    "minStepsBetweenThumbs": {
+      "type": "number",
+      "default": "1",
+      "description": "Steps that must stay between the thumbs."
+    }
+  },
+  "states": [
+    "data-orientation",
+    "data-disabled",
+    "data-invalid",
+    "data-dragging"
+  ],
+  "a11y": {
+    "role": "slider, on each thumb (a Radix span). Each thumb has its own name, aria-valuenow and aria-valuetext.",
+    "focus": "Each thumb is a tab stop, start then end. Focus shows the glow and a 2px ring around the drawn thumb.",
+    "keys": {
+      "Tab": "Moves focus to the start thumb, then the end thumb, then on",
+      "Shift+Tab": "Moves focus back, end thumb then start thumb",
+      "ArrowRight, ArrowUp": "Raise the value by one step. In right to left text ArrowLeft raises it.",
+      "ArrowLeft, ArrowDown": "Lower the value by one step. In right to left text ArrowRight lowers it.",
+      "PageUp, PageDown": "Raise or lower the value by ten steps",
+      "Shift+ArrowRight": "Moves by ten steps, as PageUp",
+      "Home, End": "Move the focused thumb as far as it can go: Home toward the minimum, End toward the maximum, stopping before the other thumb"
+    },
+    "announce": "The thumb's own name (Minimum price), then aria-valuetext with the unit (200 SAR). The visible pair is aria-hidden.",
+    "native": {
+      "accessibilityRole": "adjustable",
+      "accessibilityState": [
+        "disabled"
+      ]
+    },
+    "notes": [
+      "thumbLabels is required: two thumbs with one name cannot be told apart.",
+      "The keys move the focused thumb. A thumb stops minStepsBetweenThumbs steps before the other, and a drag stops at the other thumb (preserveThumbOrder), so they never cross.",
+      "Every drag has the key path (WCAG 2.5.7). Each thumb is a 24px target.",
+      "Values use Western digits in every language.",
+      "With a label, the root has role group and is named by it, so the label names the pair while each thumb keeps its own name."
+    ]
+  },
+  "content": {
+    "en": {
+      "label": "A noun in sentence case: Price.",
+      "thumbLabels": "A start and an end name with the noun: Minimum price, Maximum price; Start hour, End hour."
+    },
+    "ar": {
+      "label": "اسم بدون تشكيل: السعر",
+      "thumbLabels": "اسم للبداية واسم للنهاية مع الاسم: أقل سعر، أعلى سعر"
+    }
+  },
+  "tokens": [
+    "size.target-min",
+    "size.control.lg",
+    "size.icon.sm",
+    "size.icon.md",
+    "size.icon.lg",
+    "border.width.default",
+    "border.width.strong",
+    "space.2xs",
+    "space.m",
+    "font.size.xs",
+    "font.size.s",
+    "font.size.m",
+    "font.weight.semibold",
+    "font.leading.snug",
+    "radius.pill",
+    "color.bg.overlay-20",
+    "color.bg.surface",
+    "color.primary.on-surface",
+    "color.text.default",
+    "color.text.muted",
+    "color.border.strong",
+    "color.state.danger.tint-20",
+    "elevation.input-focus",
+    "focus.shadow.ring",
+    "duration.base",
+    "ease.default",
+    "opacity.disabled"
+  ],
+  "motion": "fade",
+  "frameworks": {
+    "react": {
+      "status": "ready",
+      "behavior": "radix:Slider with two thumbs",
+      "example": "RangeSlider.demo.tsx"
+    },
+    "angular": {
+      "status": "planned"
+    },
+    "native": {
+      "status": "planned"
+    }
+  },
+  "styles": {
+    "studio": "A thin overlay track, the range and thumb in the bright text color",
+    "desk": "The same track, the range and thumb in the yellow primary (a darker gold in Desk Light)"
+  },
+  "mistakes": [
+    {
+      "wrong": "Two Sliders for a low and a high value",
+      "right": "One RangeSlider"
+    },
+    {
+      "wrong": "Both thumbs named Price",
+      "right": "thumbLabels: Minimum price, Maximum price"
+    },
+    {
+      "wrong": "Filtering on every onValueChange while dragging",
+      "right": "Filter in onValueCommit"
+    }
+  ],
+  "contract": {
+    "optionalParts": [
+      "label",
+      "value",
+      "marks"
+    ],
+    "keys": {
+      "ArrowRight": {
+        "focus": "[data-ds='range-slider'] [data-thumb='start']",
+        "case": "one",
+        "expect": "value-changes"
+      },
+      "ArrowLeft": {
+        "focus": "[data-ds='range-slider'] [data-thumb='end']",
+        "case": "one",
+        "expect": "value-changes"
+      },
+      "ArrowUp": {
+        "focus": "[data-ds='range-slider'] [data-thumb='start']",
+        "case": "one",
+        "expect": "value-changes"
+      },
+      "ArrowDown": {
+        "focus": "[data-ds='range-slider'] [data-thumb='start']",
+        "case": "one",
+        "expect": "value-changes"
+      },
+      "PageUp": {
+        "focus": "[data-ds='range-slider'] [data-thumb='start']",
+        "case": "one",
+        "expect": "value-changes"
+      },
+      "PageDown": {
+        "focus": "[data-ds='range-slider'] [data-thumb='start']",
+        "case": "one",
+        "expect": "value-changes"
+      },
+      "Home": {
+        "focus": "[data-ds='range-slider'] [data-thumb='start']",
+        "case": "one",
+        "expect": "value-changes"
+      },
+      "End": {
+        "focus": "[data-ds='range-slider'] [data-thumb='end']",
+        "case": "one",
+        "expect": "value-changes"
+      }
+    }
+  },
+  "since": "0.1.0"
+}

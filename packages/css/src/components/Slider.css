@@ -1,0 +1,275 @@
+/*
+ * Slider, and the look RangeSlider shares with it (rule 10 of anatomy.md:
+ * RangeSlider.css keeps what differs). No source component: designed from
+ * the dials table in PLAN.md 3.7 and the Switch in this repo (the pill
+ * track, the primary fill, the round thumb, the focus glow and ring).
+ *
+ * Layout: the label at the start of the first row and the value at the
+ * end, the control (the Radix slider root: track, range, thumbs) under
+ * them, the marks under the control.
+ *
+ * Private properties on the root (docs/contracts/anatomy.md, one convention).
+ * Recipes override these; states only swap them:
+ *   --_slider-target        the thumb target, never under size.target-min
+ *   --_slider-thumb         the drawn thumb size, centered in the target
+ *   --_slider-thickness     track thickness
+ *   --_slider-gap           space between the rows
+ *   --_slider-font-size     label and value size
+ *   --_slider-bg            the track
+ *   --_slider-fill          the range and the thumb
+ *   --_slider-thumb-border  the thumb edge, so it reads on the range
+ *   --_slider-ring          the focus glow and ring around the thumb
+ *   --_slider-length        the length of a vertical slider
+ *   --_slider-mark-at       a mark's place, set inline on each mark
+ *   --_slider-label-fg, --_slider-value-fg   the label and value colors
+ *
+ * The thumb is its target: the visible circle is the content box, painted
+ * with background-clip, so the hit area stays 24px without a second layer.
+ * Radix positions the thumb; nothing here animates its place.
+ */
+@layer ds.base {
+  :is([data-ds='slider'], [data-ds='range-slider']) {
+    --_slider-target: var(--ds-size-target-min);
+    --_slider-thumb: var(--ds-size-icon-md);
+    --_slider-thickness: calc(var(--ds-border-width-strong) * 2);
+    --_slider-gap: var(--ds-space-2xs);
+    --_slider-font-size: var(--ds-font-size-s);
+    --_slider-bg: var(--ds-color-bg-overlay-20);
+    --_slider-fill: var(--ds-color-primary-on-surface);
+    --_slider-thumb-border: var(--ds-color-bg-surface);
+    --_slider-ring: var(--ds-elevation-input-focus), var(--ds-focus-shadow-ring);
+    --_slider-length: calc(var(--ds-size-control-lg) * 4);
+    --_slider-mark-at: 0%;
+    --_slider-label-fg: var(--ds-color-text-default);
+    --_slider-value-fg: var(--ds-color-text-muted);
+
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    column-gap: var(--ds-space-m);
+    row-gap: var(--_slider-gap);
+    align-items: baseline;
+    min-inline-size: 0;
+    color: var(--ds-color-text-default);
+    font-family: var(--ds-font-family-sans);
+    font-size: var(--_slider-font-size);
+    line-height: var(--ds-font-leading-snug);
+  }
+
+  :is([data-ds='slider'], [data-ds='range-slider'])[data-size='sm'] {
+    --_slider-thumb: var(--ds-size-icon-sm);
+    --_slider-thickness: var(--ds-border-width-strong);
+  }
+
+  :is([data-ds='slider'], [data-ds='range-slider'])[data-size='lg'] {
+    --_slider-target: var(--ds-size-control-lg);
+    --_slider-thumb: var(--ds-size-icon-lg);
+    --_slider-thickness: calc(var(--ds-border-width-strong) * 3);
+    --_slider-font-size: var(--ds-font-size-m);
+  }
+
+  :is([data-ds='slider'], [data-ds='range-slider']) > [data-part='label'] {
+    grid-column: 1;
+    color: var(--_slider-label-fg);
+    font-weight: var(--ds-font-weight-semibold);
+    overflow-wrap: anywhere;
+  }
+
+  /* The value keeps its width as it changes: tabular digits, no wrap. */
+  :is([data-ds='slider'], [data-ds='range-slider']) > [data-part='value'] {
+    grid-column: 2;
+    color: var(--_slider-value-fg);
+    font-variant-numeric: tabular-nums;
+    unicode-bidi: isolate;
+    white-space: nowrap;
+  }
+
+  :is([data-ds='slider'], [data-ds='range-slider']) > [data-part='control'] {
+    position: relative;
+    display: flex;
+    grid-column: 1 / -1;
+    align-items: center;
+    block-size: var(--_slider-target);
+    min-inline-size: calc(var(--_slider-target) * 3);
+    touch-action: none;
+    user-select: none;
+  }
+
+  :is([data-ds='slider'], [data-ds='range-slider']) > [data-part='control'] > [data-part='track'] {
+    position: relative;
+    flex: 1 1 auto;
+    block-size: var(--_slider-thickness);
+    /* Radix keeps each thumb center half a target from the end: the track starts and ends there, so the range meets the thumb centers. */
+    margin-inline: calc(var(--_slider-target) / 2);
+    border-radius: var(--ds-radius-pill);
+    background-color: var(--_slider-bg);
+    overflow: hidden;
+  }
+
+  :is([data-ds='slider'], [data-ds='range-slider']) > [data-part='control'] > [data-part='track'] > [data-part='range'] {
+    position: absolute;
+    block-size: 100%;
+    border-radius: inherit;
+    background-color: var(--_slider-fill);
+  }
+
+  /* The target is transparent; the circle is its content box. */
+  :is([data-ds='slider'], [data-ds='range-slider']) [data-part='thumb'] {
+    position: relative;
+    display: block;
+    box-sizing: border-box;
+    inline-size: var(--_slider-target);
+    block-size: var(--_slider-target);
+    padding: calc((var(--_slider-target) - var(--_slider-thumb)) / 2);
+    border-radius: var(--ds-radius-pill);
+    background-color: var(--_slider-fill);
+    background-clip: content-box;
+    cursor: grab;
+    outline: none;
+  }
+
+  /* The focus glow and ring, the size of the circle. */
+  :is([data-ds='slider'], [data-ds='range-slider']) [data-part='thumb']::before {
+    content: '';
+    position: absolute;
+    inset: calc((var(--_slider-target) - var(--_slider-thumb)) / 2);
+    border-radius: var(--ds-radius-pill);
+    box-shadow: var(--_slider-ring);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity var(--ds-duration-base) var(--ds-ease-default);
+  }
+
+  /*
+   * The edge of the circle, so it stands out where it sits on the range.
+   * Slider has no hover veil, so ::after carries the edge.
+   */
+  :is([data-ds='slider'], [data-ds='range-slider']) [data-part='thumb']::after {
+    content: '';
+    position: absolute;
+    inset: calc((var(--_slider-target) - var(--_slider-thumb)) / 2);
+    border-radius: var(--ds-radius-pill);
+    box-shadow: 0 0 0 var(--ds-border-width-default) var(--_slider-thumb-border);
+    pointer-events: none;
+  }
+
+  :is([data-ds='slider'], [data-ds='range-slider']) [data-part='thumb']:focus-visible {
+    outline: var(--ds-border-width-strong) solid transparent;
+    outline-offset: calc((var(--_slider-thumb) - var(--_slider-target)) / 2 + var(--ds-border-width-strong));
+  }
+
+  :is([data-ds='slider'], [data-ds='range-slider']) [data-part='thumb']:focus-visible::before {
+    opacity: 1;
+  }
+
+  :is([data-ds='slider'], [data-ds='range-slider'])[data-dragging] [data-part='thumb'] {
+    cursor: grabbing;
+  }
+
+  /*
+   * Marks: one tick (a centered background line) and an optional text per
+   * value, both centered on the value. The row is inset by
+   * half a target, the space Radix keeps between a thumb and the track end,
+   * so a mark sits under the thumb center at its value.
+   */
+  :is([data-ds='slider'], [data-ds='range-slider']) > [data-part='marks'] {
+    position: relative;
+    grid-column: 1 / -1;
+    block-size: calc(var(--_slider-font-size) * var(--ds-font-leading-snug) + var(--ds-space-2xs));
+    margin-inline: calc(var(--_slider-target) / 2);
+    color: var(--ds-color-text-muted);
+    font-size: var(--ds-font-size-xs);
+    font-variant-numeric: tabular-nums;
+  }
+
+  :is([data-ds='slider'], [data-ds='range-slider']) > [data-part='marks'] > [data-mark] {
+    position: absolute;
+    inset-block-start: 0;
+    inset-inline-start: var(--_slider-mark-at);
+    min-inline-size: var(--ds-border-width-default);
+    min-block-size: var(--ds-space-2xs);
+    padding-block-start: var(--ds-space-2xs);
+    background-image: linear-gradient(var(--ds-color-border-strong), var(--ds-color-border-strong));
+    background-position: top center;
+    background-size: var(--ds-border-width-default) var(--ds-space-2xs);
+    background-repeat: no-repeat;
+    white-space: nowrap;
+    translate: -50% 0;
+  }
+
+  :is([data-ds='slider'], [data-ds='range-slider']) > [data-part='marks'] > [data-mark]:dir(rtl) {
+    translate: 50% 0;
+  }
+
+  /* Vertical: the label row on top, the control as a column under it, no marks text crowding. */
+  :is([data-ds='slider'], [data-ds='range-slider'])[data-orientation='vertical'] > [data-part='control'] {
+    flex-direction: column;
+    justify-self: start;
+    inline-size: var(--_slider-target);
+    min-inline-size: 0;
+    block-size: var(--_slider-length);
+  }
+
+  :is([data-ds='slider'], [data-ds='range-slider'])[data-orientation='vertical'] > [data-part='control'] > [data-part='track'] {
+    inline-size: var(--_slider-thickness);
+    block-size: auto;
+    margin-inline: 0;
+    margin-block: calc(var(--_slider-target) / 2);
+  }
+
+  :is([data-ds='slider'], [data-ds='range-slider'])[data-orientation='vertical'] > [data-part='control'] > [data-part='track'] > [data-part='range'] {
+    inline-size: 100%;
+    block-size: auto;
+  }
+
+  :is([data-ds='slider'], [data-ds='range-slider'])[data-invalid] {
+    --_slider-bg: var(--ds-color-state-danger-tint-20);
+  }
+
+  /* Disabled: the control and marks dim; the words stay readable, as in Field. */
+  :is([data-ds='slider'], [data-ds='range-slider'])[data-disabled] > :is([data-part='control'], [data-part='marks']) {
+    opacity: var(--ds-opacity-disabled);
+  }
+
+  :is([data-ds='slider'], [data-ds='range-slider'])[data-disabled] {
+    --_slider-label-fg: var(--ds-color-text-muted);
+  }
+
+  :is([data-ds='slider'], [data-ds='range-slider'])[data-disabled] [data-part='thumb'] {
+    cursor: not-allowed;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    :is([data-ds='slider'], [data-ds='range-slider']) [data-part='thumb']::before {
+      transition: none;
+    }
+  }
+
+  /*
+   * Forced colors: fills and shadows drop. The track draws as a border, the
+   * range and thumb in Highlight, and the outline in the focus rule shows
+   * focus.
+   */
+  @media (forced-colors: active) {
+    :is([data-ds='slider'], [data-ds='range-slider']) > [data-part='control'] > [data-part='track'] {
+      border: var(--ds-border-width-default) solid CanvasText;
+    }
+
+    :is([data-ds='slider'], [data-ds='range-slider']) > [data-part='control'] > [data-part='track'] > [data-part='range'],
+    :is([data-ds='slider'], [data-ds='range-slider']) [data-part='thumb'] {
+      forced-color-adjust: none;
+      background-color: Highlight;
+    }
+
+    :is([data-ds='slider'], [data-ds='range-slider']) [data-part='thumb']::before {
+      display: none;
+    }
+
+    :is([data-ds='slider'], [data-ds='range-slider']) [data-part='thumb']:focus-visible {
+      outline-color: Highlight;
+    }
+
+    :is([data-ds='slider'], [data-ds='range-slider'])[data-disabled] :is([data-part='thumb'], [data-part='range']) {
+      background-color: GrayText;
+    }
+  }
+}
