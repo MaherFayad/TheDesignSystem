@@ -4,6 +4,8 @@ import { GALLERY_STYLE, axisControls, axisQuery, readAxes, readCase } from './ax
 import { Link, navigate, useUrl } from './router';
 import { routes } from './routes.gen';
 
+const InteractionsPage = lazy(() => import('./Interactions'));
+
 const demos = new Map<string, LazyExoticComponent<ComponentType>>(routes.map((r) => [r.slug, lazy(r.load)]));
 
 /** Stamps the resolved axes on <html> too, so the whole viewport is themed and lang and dir are right. */
@@ -33,12 +35,13 @@ export function App() {
   useDocumentTheme(axes);
 
   useEffect(() => {
-    document.title = route ? `${route.name}, gallery` : path === '/all' ? 'Every demo, gallery' : 'Gallery';
+    document.title = route ? `${route.name}, gallery` : path === '/all' ? 'Every demo, gallery' : path === '/interactions' ? 'Interactions, gallery' : 'Gallery';
   }, [route, path]);
 
   let page;
   if (path === '/') page = <Index query={axisQuery(params)} />;
   else if (path === '/all') page = <KitchenSink />;
+  else if (path === '/interactions') page = <InteractionsPage />;
   else if (route) page = <DemoView slug={route.slug} name={route.name} />;
   else page = <NotFound />;
 
@@ -80,6 +83,7 @@ function Shell({ params, title }: { params: URLSearchParams; title: string | und
       <nav data-gallery="nav" aria-label="Gallery">
         <Link href={`/${query}`}>Components</Link>
         <Link href={`/all${query}`}>Every demo</Link>
+        <Link href={`/interactions${query}`}>Interactions</Link>
         {title && <span data-gallery="current">{title}</span>}
       </nav>
       <form data-gallery="axes" aria-label="Theme axes" onSubmit={(e) => e.preventDefault()}>

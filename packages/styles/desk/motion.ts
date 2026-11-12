@@ -2,6 +2,10 @@
 // of the control that opened them, close back into it, zoom with a FLIP and
 // fall into the dock on minimize; numbers roll; every other pattern plays its
 // full form. Patterns and timing: packages/motion.
+//
+// Interactions (order 1.21, proposed): every one plays in full. Labels and
+// glyphs that change in answer to an action roll (swap), like the roll labels
+// of Desk controls, and numbers roll.
 import type { StyleMotionPreset } from '@the-system/motion';
 
 const motion: StyleMotionPreset = {
@@ -9,6 +13,7 @@ const motion: StyleMotionPreset = {
   window: 'grow',
   patterns: {
     'number-roll': { mode: 'full' },
+    swap: { mode: 'full' },
   },
 };
 
