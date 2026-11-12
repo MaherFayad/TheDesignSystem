@@ -5,7 +5,12 @@
 // `StyleSheet.create` call.
 //
 // Allowed: 0, percentages, and unitless layout numbers that are not sizes
-// (`flex`, `flexGrow`, `flexShrink`, `opacity`, `aspectRatio`).
+// (`flex`, `flexGrow`, `flexShrink`, `opacity`, `aspectRatio`, scale).
+//
+// In `*.styles.ts` every object literal in the file is read, and also every
+// constant: a color literal or a number other than 0 and 1 fails. Values
+// must come from the theme object argument. Keywords such as `transparent`,
+// `row` and `center` are not colors or sizes and pass.
 import ts from 'typescript';
 import { parseTs, propName, walk } from '../markup';
 import { isNativeSource } from '../scopes';
@@ -14,7 +19,7 @@ import { extname, locator, looksLikeColor } from '../util';
 
 export const NATIVE_NO_STYLE_LITERALS = 'ds/native-no-style-literals';
 
-const UNITLESS_OK = new Set(['flex', 'flexGrow', 'flexShrink', 'opacity', 'aspectRatio', 'fontWeight']);
+const UNITLESS_OK = new Set(['flex', 'flexGrow', 'flexShrink', 'opacity', 'aspectRatio', 'fontWeight', 'scale', 'scaleX', 'scaleY']);
 
 /** `style`, `contentContainerStyle`, `labelStyle` and so on. */
 const STYLE_PROP = /^(style|[a-z][A-Za-z]*Style)$/;
@@ -29,7 +34,8 @@ function numericValue(node: ts.Expression): number | undefined {
 
 export function nativeNoStyleLiterals(file: SourceFile): Finding[] {
   const ext = extname(file.path);
-  if (!['.tsx', '.ts'].includes(ext) || file.path.endsWith('.styles.ts')) return [];
+  if (!['.tsx', '.ts'].includes(ext)) return [];
+  if (file.path.endsWith('.styles.ts')) return stylesFileLiterals(file);
   const source = parseTs(file.path, file.content);
   const at = locator(file.content);
   const out: Finding[] = [];
@@ -68,9 +74,61 @@ export function nativeNoStyleLiterals(file: SourceFile): Finding[] {
   return out;
 }
 
+/** A string that names a variant (`tone === 'red'`, `case 'red':`, a type), not a value. */
+function isComparedOrTyped(n: ts.Node): boolean {
+  const p = n.parent;
+  if (ts.isImportDeclaration(p) || ts.isLiteralTypeNode(p) || ts.isCaseClause(p)) return true;
+  if (ts.isBinaryExpression(p)) {
+    const op = p.operatorToken.kind;
+    return [ts.SyntaxKind.EqualsEqualsEqualsToken, ts.SyntaxKind.ExclamationEqualsEqualsToken, ts.SyntaxKind.EqualsEqualsToken, ts.SyntaxKind.ExclamationEqualsToken].includes(op);
+  }
+  return false;
+}
+
+/** `*.styles.ts`: no color or size literal anywhere, except 0, 1 and percentages. */
+export function stylesFileLiterals(file: SourceFile): Finding[] {
+  const source = parseTs(file.path, file.content);
+  const at = locator(file.content);
+  const out: Finding[] = [];
+  const hit = (node: ts.Node, key: string, literal: string) => {
+    const pos = at(node.getStart(source));
+    out.push({
+      ruleId: NATIVE_NO_STYLE_LITERALS,
+      file: file.path,
+      line: pos.line,
+      column: pos.column,
+      message: `${key}: ${literal} is a literal in a styles file. Read it from the theme object argument (only 0, 1 and percentages may be written).`,
+    });
+  };
+  const sizeLiteral = (init: ts.Expression): string | undefined => {
+    const num = numericValue(init);
+    if (num !== undefined && num !== 0 && num !== 1) return init.getText(source);
+    if (ts.isStringLiteralLike(init) && /^-?\d*\.?\d+(px|pt|dp)$/i.test(init.text.trim())) return init.getText(source);
+    return undefined;
+  };
+  walk(source, (n) => {
+    // A color string anywhere in the file.
+    if (ts.isStringLiteralLike(n) && looksLikeColor(n.text) && !isComparedOrTyped(n)) {
+      hit(n, 'color', n.getText(source));
+      return;
+    }
+    if (ts.isPropertyAssignment(n)) {
+      const key = propName(n.name) ?? n.name.getText(source);
+      if (UNITLESS_OK.has(key)) return;
+      const literal = sizeLiteral(n.initializer);
+      if (literal) hit(n, key, literal);
+    }
+    if (ts.isVariableDeclaration(n) && n.initializer) {
+      const literal = sizeLiteral(n.initializer);
+      if (literal) hit(n, n.name.getText(source), literal);
+    }
+  });
+  return out;
+}
+
 export const nativeNoStyleLiteralsRule: Rule = {
   id: NATIVE_NO_STYLE_LITERALS,
-  description: 'No color or size literals in React Native style objects outside *.styles.ts.',
+  description: 'No color or size literals in React Native style objects, and none in *.styles.ts except 0, 1 and percentages.',
   appliesTo: isNativeSource,
   check: nativeNoStyleLiterals,
 };

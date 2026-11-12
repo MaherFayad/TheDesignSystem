@@ -7,6 +7,10 @@
 // data. HTML and Angular templates: `title`, `[title]` and `[attr.title]` on a
 // native element (no hyphen in the tag name) fail. An SVG `<title>` element is
 // fine. On an `<iframe>`, `title` is the accessible name and is required.
+// On an element that carries a `ds*` directive attribute (for example
+// `<div dsDialogContent [title]="t">`), `title` and `[title]` are the
+// directive's input, not the native attribute, and pass. `[attr.title]`
+// always writes the native attribute and still fails.
 import ts from 'typescript';
 import { boundName, jsxTag, parseTs, propName, readTags, templatesOf, walk } from '../markup';
 import { isUiSource } from '../scopes';
@@ -17,6 +21,9 @@ export const NO_NATIVE_TITLE = 'ds/no-native-title';
 
 /** Elements where `title` is not a hint but the accessible name. */
 const TITLE_IS_NAME = new Set(['iframe', 'frame']);
+
+/** A system directive attribute: `dsDialogContent`, `[dsTooltip]`, `*dsIf`. */
+const DS_DIRECTIVE = /^[[*(]?ds[A-Z][\w]*\]?\)?$/;
 
 const MESSAGE = 'native title attribute. Use the Tooltip component (WCAG 1.4.13).';
 
@@ -76,8 +83,11 @@ export function noNativeTitle(file: SourceFile): Finding[] {
   for (const t of templatesOf(file.path, file.content, source)) {
     for (const tag of readTags(t.text)) {
       if (tag.name.includes('-') || TITLE_IS_NAME.has(tag.name)) continue;
+      const directive = tag.attrs.some((a) => DS_DIRECTIVE.test(a.name));
       for (const a of tag.attrs) {
-        if (boundName(a.name) === 'title') hit(t.offset + a.index, `<${tag.name} ${a.name}>`);
+        if (boundName(a.name) !== 'title') continue;
+        if (directive && !/^\[?attr\./i.test(a.name)) continue;
+        hit(t.offset + a.index, `<${tag.name} ${a.name}>`);
       }
     }
   }

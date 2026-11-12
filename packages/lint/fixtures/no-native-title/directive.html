@@ -1,0 +1,8 @@
+<!-- Fixture for ds/no-native-title on directive hosts. Lines 6, 7 and 8 fail. -->
+<div dsDialogContent [title]="dialogTitle">x</div>
+<h2 dsDialogTitle title="Share canvas"></h2>
+<section [dsTooltip]="hint" [title]="label"></section>
+<div dsWindow [title]="t" [(open)]="open"></div>
+<div [title]="hint">x</div>
+<div dsDialogContent [attr.title]="hint">x</div>
+<div data-dsx="1" title="Open">x</div>

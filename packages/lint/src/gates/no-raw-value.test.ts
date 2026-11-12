@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { RAW_VALUE_ALLOW } from '../allowlist';
-import { noRawValue, noRawValueRule } from '../rules/no-raw-value';
+import { BREAKPOINTS, noRawValue, noRawValueRule } from '../rules/no-raw-value';
 import { applyAllowlist, staleAllowEntries } from '../util';
 import { fixture, format, lines, runRule } from './harness';
 
@@ -16,18 +16,26 @@ describe('gate ds/no-raw-value: tokens for spacing, size, radius, font size, sha
   });
 
   it('fails on the fixture', () => {
-    expect(lines(noRawValue(fixture('no-raw-value/bad.css')))).toEqual([4, 5, 6, 7, 7, 8, 9, 10, 11, 24]);
+    expect(lines(noRawValue(fixture('no-raw-value/bad.css')))).toEqual([4, 5, 6, 7, 7, 8, 9, 10, 11, 24, 27]);
   });
 
   it('lets an allow list entry through', () => {
     const file = fixture('no-raw-value/bad.css');
     const key = `${file.path}|[data-ds='sample']|padding-inline|12px`;
     const kept = applyAllowlist(noRawValue(file), [{ key, reason: 'sample' }]);
-    expect(lines(kept)).toEqual([5, 6, 7, 7, 8, 9, 10, 11, 24]);
+    expect(lines(kept)).toEqual([5, 6, 7, 7, 8, 9, 10, 11, 24, 27]);
   });
 
   it('allows env(safe-area-inset-*) with its fallback, and leaves unitless opacity alone', () => {
-    const found = noRawValue(fixture('no-raw-value/bad.css')).filter((f) => f.line >= 22);
+    const found = noRawValue(fixture('no-raw-value/bad.css')).filter((f) => f.line >= 22 && f.line <= 25);
     expect(found.map((f) => f.message)).toEqual(['padding-block-start: 12px is a raw length. Use a --ds-* token.']);
+  });
+
+  it('reads the breakpoint tokens', () => {
+    expect(BREAKPOINTS).toEqual({ phone: 480, tablet: 768, desktop: 1100 });
+  });
+
+  it('allows a condition length only as a breakpoint value with its comment on the same line', () => {
+    expect(lines(noRawValue(fixture('no-raw-value/conditions.css')))).toEqual([4, 7, 10, 13, 15, 16]);
   });
 });

@@ -1,0 +1,17 @@
+/* Fixture for ds/no-raw-value in conditions. Lines 4, 7, 10, 13, 15 and 16 fail. */
+@layer ds.base {
+  @media (width < 30rem) /* breakpoint.phone */ { [data-ds='sample'] { gap: var(--ds-space-s); } }
+  @media (width < 30rem) { [data-ds='sample'] { gap: var(--ds-space-s); } }
+  @media (width >= 768px) /* breakpoint.tablet */ { [data-ds='sample'] { gap: var(--ds-space-m); } }
+  @container (inline-size >= 68.75rem) /* breakpoint.desktop */ { [data-ds='sample'] { gap: var(--ds-space-l); } }
+  @media (width < 31rem) /* breakpoint.phone */ { [data-ds='sample'] { gap: var(--ds-space-s); } }
+  @media (width >= 48rem) and (width < 68.75rem) /* breakpoint.tablet breakpoint.desktop */ { [data-ds='sample'] { gap: 0; } }
+  /* The comment names the wrong token. */
+  @media (width < 48rem) /* breakpoint.phone */ { [data-ds='sample'] { gap: var(--ds-space-s); } }
+  @media (prefers-reduced-motion: reduce) { [data-ds='sample'] { transition: none; } }
+  /* An em length is never a token value. */
+  @media (width < 30em) /* breakpoint.phone */ { [data-ds='sample'] { gap: var(--ds-space-s); } }
+  /* A container query with a raw literal. */
+  @container sample (inline-size > 20rem) /* breakpoint.phone */ { [data-ds='sample'] { gap: var(--ds-space-s); } }
+  @media (width < 30rem) { [data-ds='sample'] { gap: var(--ds-space-s); } } /* phone, without the token name */
+}
