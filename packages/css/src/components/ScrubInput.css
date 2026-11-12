@@ -1,0 +1,217 @@
+/*
+ * ScrubInput: the Studio inspector number. A filled field (no border at
+ * rest) that holds the scrub handle (the label part), the native input (the
+ * control part) and the unit. Sources: Figma-Killer-2
+ * `ScrubInput.module.css`, the inspector tokens in
+ * packages/tokens/src/base/component.json, the focus ring of Input.css.
+ * Follows "One convention for component CSS and props" in
+ * docs/contracts/anatomy.md.
+ *
+ * Private properties on the root (recipes override these; states swap them):
+ *   --_scrub-input-height, --_scrub-input-padding-inline,
+ *   --_scrub-input-gap, --_scrub-input-font-size, --_scrub-input-radius,
+ *   --_scrub-input-bg (-hover), --_scrub-input-fg,
+ *   --_scrub-input-label-fg (the handle), --_scrub-input-border-color
+ *   (-invalid), --_scrub-input-ring (focus and drag).
+ *
+ * The ring sits on ::before and fades with opacity. The handle's cursor is
+ * ew-resize, which points both ways, so it needs no flip in RTL; the drag
+ * direction flips in the component.
+ */
+@layer ds.base {
+  [data-ds='scrub-input'] {
+    --_scrub-input-height: var(--ds-size-control-md);
+    --_scrub-input-padding-inline: var(--ds-space-s);
+    --_scrub-input-gap: var(--ds-space-2xs);
+    --_scrub-input-font-size: var(--ds-font-size-s);
+    --_scrub-input-radius: var(--ds-inspector-field-radius);
+    --_scrub-input-bg: var(--ds-inspector-field-bg);
+    --_scrub-input-bg-hover: var(--ds-inspector-field-bg-hover);
+    --_scrub-input-fg: var(--ds-color-text-default);
+    --_scrub-input-label-fg: var(--ds-color-text-muted);
+    --_scrub-input-border-color: transparent;
+    --_scrub-input-border-color-invalid: var(--ds-color-state-danger-text);
+    --_scrub-input-ring: var(--ds-focus-shadow-ring);
+
+    position: relative;
+    box-sizing: border-box;
+    display: flex;
+    align-items: stretch;
+    gap: var(--_scrub-input-gap);
+    inline-size: 100%;
+    min-inline-size: 0;
+    block-size: var(--_scrub-input-height);
+    min-block-size: var(--ds-size-target-min);
+    padding-block: 0;
+    padding-inline: 0 var(--_scrub-input-padding-inline);
+    border: var(--ds-border-width-default) solid var(--_scrub-input-border-color);
+    border-radius: var(--_scrub-input-radius);
+    background-color: var(--_scrub-input-bg);
+    color: var(--_scrub-input-fg);
+    font-family: var(--ds-font-family-sans);
+    font-size: var(--_scrub-input-font-size);
+    font-weight: var(--ds-font-weight-regular);
+    line-height: var(--ds-font-leading-snug);
+  }
+
+  [data-ds='scrub-input']::before {
+    content: '';
+    position: absolute;
+    inset: calc(var(--ds-border-width-default) * -1);
+    border-radius: inherit;
+    box-shadow: var(--_scrub-input-ring);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity var(--ds-duration-base) var(--ds-ease-default);
+  }
+
+  [data-ds='scrub-input'] > * {
+    position: relative;
+  }
+
+  [data-ds='scrub-input'][data-size='xs'] {
+    --_scrub-input-height: var(--ds-size-control-xs);
+    --_scrub-input-padding-inline: var(--ds-space-xs);
+    --_scrub-input-font-size: var(--ds-font-size-xs);
+  }
+
+  [data-ds='scrub-input'][data-size='sm'] {
+    --_scrub-input-height: var(--ds-size-control-sm);
+    --_scrub-input-font-size: var(--ds-font-size-xs);
+  }
+
+  /* The handle: a pointer target the full height of the field, never under 24px wide. */
+  [data-ds='scrub-input'] > [data-part='label'] {
+    display: inline-flex;
+    flex: none;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    min-inline-size: var(--ds-size-target-min);
+    margin-block: calc(var(--ds-border-width-default) * -1);
+    padding-inline: var(--ds-space-xs) 0;
+    color: var(--_scrub-input-label-fg);
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+    cursor: ew-resize;
+    user-select: none;
+    touch-action: none;
+  }
+
+  /* The value: Western digits left to right, in tabular figures, on the reading side. */
+  [data-ds='scrub-input'] > [data-part='control'] {
+    flex: 1 1 auto;
+    box-sizing: border-box;
+    inline-size: 100%;
+    min-inline-size: 0;
+    block-size: calc(100% + var(--ds-border-width-default) * 2);
+    margin-block: calc(var(--ds-border-width-default) * -1);
+    margin-inline: 0;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: inherit;
+    font: inherit;
+    font-variant-numeric: tabular-nums;
+    text-overflow: clip;
+    direction: ltr;
+    text-align: start;
+    outline: none;
+  }
+
+  [data-ds='scrub-input']:dir(rtl) > [data-part='control'] {
+    text-align: end;
+  }
+
+  [data-ds='scrub-input'] > [data-part='control']::placeholder {
+    color: var(--ds-color-text-placeholder);
+    opacity: 1;
+  }
+
+  /* An Arabic placeholder (the mixed word) runs right to left. */
+  [data-ds='scrub-input'] > [data-part='control']:placeholder-shown {
+    unicode-bidi: plaintext;
+  }
+
+  [data-ds='scrub-input'] > [data-part='unit'] {
+    display: inline-flex;
+    flex: none;
+    align-items: center;
+    color: var(--ds-color-text-muted);
+    white-space: nowrap;
+  }
+
+  /* Latin scripts set the mixed word in italic. Arabic has no italic, so it keeps the placeholder color only. */
+  [data-ds='scrub-input'][data-mixed]:not(:lang(ar)) > [data-part='control']::placeholder {
+    font-style: italic;
+  }
+
+  [data-ds='scrub-input']:hover:not([data-disabled], [data-readonly], :focus-within) {
+    --_scrub-input-bg: var(--_scrub-input-bg-hover);
+  }
+
+  /* Focus and drag: the 2px ring fades in. The transparent outline shows in forced colors mode. */
+  [data-ds='scrub-input']:focus-within,
+  [data-ds='scrub-input'][data-dragging] {
+    outline: var(--ds-border-width-strong) solid transparent;
+    outline-offset: var(--ds-border-width-default);
+  }
+
+  [data-ds='scrub-input']:focus-within::before,
+  [data-ds='scrub-input'][data-dragging]::before {
+    opacity: 1;
+  }
+
+  [data-ds='scrub-input'][data-dragging] > [data-part='label'] {
+    --_scrub-input-label-fg: var(--ds-color-text-default);
+  }
+
+  [data-ds='scrub-input'][data-invalid] {
+    --_scrub-input-border-color: var(--_scrub-input-border-color-invalid);
+  }
+
+  /* Read only: a dashed border, no scrub. */
+  [data-ds='scrub-input'][data-readonly] {
+    --_scrub-input-border-color: var(--ds-color-border-control);
+
+    border-style: dashed;
+  }
+
+  [data-ds='scrub-input']:is([data-readonly], [data-disabled]) > [data-part='label'] {
+    cursor: default;
+  }
+
+  [data-ds='scrub-input'][data-disabled] {
+    opacity: var(--ds-opacity-disabled);
+  }
+
+  [data-ds='scrub-input'][data-disabled] > :is([data-part='label'], [data-part='control']) {
+    cursor: not-allowed;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    [data-ds='scrub-input']::before {
+      transition: none;
+    }
+  }
+
+  @media (forced-colors: active) {
+    [data-ds='scrub-input'] {
+      --_scrub-input-border-color: CanvasText;
+    }
+
+    [data-ds='scrub-input']::before {
+      display: none;
+    }
+
+    [data-ds='scrub-input'][data-dragging] {
+      --_scrub-input-border-color: Highlight;
+    }
+
+    [data-ds='scrub-input'][data-disabled] {
+      --_scrub-input-border-color: GrayText;
+
+      color: GrayText;
+    }
+  }
+}

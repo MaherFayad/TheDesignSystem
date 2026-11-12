@@ -74,6 +74,7 @@ export const routes: DemoRoute[] = [
   { name: 'Rating', slug: 'rating', load: () => import('../../../packages/react/src/components/Rating/Rating.demo') },
   { name: 'ResizablePanels', slug: 'resizable-panels', load: () => import('../../../packages/react/src/components/ResizablePanels/ResizablePanels.demo') },
   { name: 'ScrollArea', slug: 'scroll-area', load: () => import('../../../packages/react/src/components/ScrollArea/ScrollArea.demo') },
+  { name: 'ScrubInput', slug: 'scrub-input', load: () => import('../../../packages/react/src/components/ScrubInput/ScrubInput.demo') },
   { name: 'SearchField', slug: 'search-field', load: () => import('../../../packages/react/src/components/SearchField/SearchField.demo') },
   { name: 'Section', slug: 'section', load: () => import('../../../packages/react/src/components/Section/Section.demo') },
   { name: 'Separator', slug: 'separator', load: () => import('../../../packages/react/src/components/Separator/Separator.demo') },

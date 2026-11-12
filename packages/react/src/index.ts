@@ -66,6 +66,7 @@ export * from './components/RangeSlider/index';
 export * from './components/Rating/index';
 export * from './components/ResizablePanels/index';
 export * from './components/ScrollArea/index';
+export * from './components/ScrubInput/index';
 export * from './components/SearchField/index';
 export * from './components/Section/index';
 export * from './components/Separator/index';
