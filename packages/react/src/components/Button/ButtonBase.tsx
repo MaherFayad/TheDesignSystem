@@ -18,6 +18,7 @@ import { Slot } from 'radix-ui';
 import { Icon, type IconName } from '@the-system/icons/react';
 import type { Emphasis, Shape, Size, Tone } from '@the-system/shared';
 import { useButtonGroup } from '../ButtonGroup/ButtonGroupContext';
+import { NAVIGATION_KEYS } from '../../internal/keys';
 
 /** The shared axes, all of them: Button takes every value. */
 export type ButtonSize = Extract<Size, 'xs' | 'sm' | 'md' | 'lg'>;
@@ -76,7 +77,7 @@ export function ButtonLoading({ label }: { label: string }) {
 }
 
 /** The components built on ButtonRoot. */
-export type ButtonDs = 'button' | 'icon-button' | 'toggle-button' | 'close-button' | 'copy-button' | 'floating-action-button';
+export type ButtonDs = 'button' | 'icon-button' | 'toggle-button' | 'close-button' | 'copy-button' | 'floating-action-button' | 'chip';
 
 interface ButtonRootProps extends ButtonBaseProps {
   /** The root `data-ds` value. */
@@ -157,8 +158,11 @@ export function ButtonRoot({
     onPointerDown: (event: PointerEvent<HTMLButtonElement>) => {
       if (!inert) onPointerDown?.(event);
     },
+    // While inert, navigation keys (arrows, Home, End, Page keys, Tab) still
+    // reach the handler, so a roving group can move past a disabled item.
+    // Every other key, activation and Delete included, is swallowed.
     onKeyDown: (event: KeyboardEvent<HTMLButtonElement>) => {
-      if (!inert) onKeyDown?.(event);
+      if (!inert || NAVIGATION_KEYS.has(event.key)) onKeyDown?.(event);
     },
   };
 

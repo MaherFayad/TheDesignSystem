@@ -55,7 +55,7 @@ import {
 import { Dialog as RadixDialog } from 'radix-ui';
 import { useTheme } from '../../theme/hooks';
 import { useControllable } from '../../internal/useControllable';
-import { DialogBase, assignRef, type DialogBaseState, type DialogKind } from '../Dialog/DialogBase';
+import { DialogBase, assignRef, type DialogBaseState } from '../Dialog/DialogBase';
 import { IconButton } from '../IconButton';
 import { Spinner } from '../Spinner';
 
@@ -366,8 +366,7 @@ export function Lightbox({
       {image && (
         <DialogBase
           state={state}
-          // DialogKind lists the four wave 0 roots; the lightbox is another (see the lane report).
-          kind={'lightbox' as string as DialogKind}
+          kind="lightbox"
           devName="Lightbox"
           rootAttributes={{ 'data-zoomed': zoomed, 'data-loading': loadState === 'loading', 'data-error': loadState === 'error' }}
           Backdrop={RadixDialog.Overlay}

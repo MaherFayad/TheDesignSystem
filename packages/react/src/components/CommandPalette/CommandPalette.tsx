@@ -64,7 +64,7 @@ import { Icon, type IconName } from '@the-system/icons/react';
 import { ariaKeyShortcuts, edgeEnabledIndex, matchRanges, nextEnabledIndex, type OverlaySize } from '@the-system/shared';
 import { useTheme } from '../../theme/hooks';
 import { useControllable } from '../../internal/useControllable';
-import { DialogBase, assignRef, type DialogBaseState, type DialogKind } from '../Dialog/DialogBase';
+import { DialogBase, assignRef, type DialogBaseState } from '../Dialog/DialogBase';
 import { defaultResultCount } from '../Combobox/ComboboxBase';
 import { IconButton } from '../IconButton';
 import { Kbd, useKeyboardPlatform } from '../Kbd';
@@ -510,8 +510,7 @@ export function CommandPalette({
       <PaletteContext value={state}>{children}</PaletteContext>
       <DialogBase
         state={state}
-        // DialogKind lists the four wave 0 roots; the palette is a fifth (see the lane report).
-        kind={'command-palette' as string as DialogKind}
+        kind="command-palette"
         devName="CommandPalette"
         rootAttributes={{ 'data-size': size, 'data-loading': loading }}
         Backdrop={RadixDialog.Overlay}

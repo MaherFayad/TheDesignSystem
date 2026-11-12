@@ -70,8 +70,8 @@ follows it.
      property defaults to a public component token where one exists, else
      to a semantic token. Names, in this order of preference:
      - The base list: `height`, `padding-inline`, `padding-block`, `gap`,
-       `font-size`, `font-weight`, `radius`, `bg`, `fg`, `border-color`,
-       `border-style`, `ring`, `shadow`, with the state suffixes `-hover`,
+       `padding-end`, `font-size`, `font-weight`, `radius`, `bg`, `fg`,
+       `border-color`, `border-style`, `ring`, `shadow`, with the state suffixes `-hover`,
        `-active`, `-focus`, `-disabled`, `-invalid`, `-checked`,
        `-readonly`.
      - A part name in front of a base name, for a part's own look:
@@ -116,11 +116,18 @@ follows it.
    for forced colors is set only inside the focus selector, never at rest.
    Every motion or shadow trick has a `forced-colors: active` fallback.
 5. **Disabled.** Actions use `aria-disabled` and stay focusable. Text entry
-   uses native `disabled`. Both draw disabled with `opacity.disabled`.
+   uses native `disabled`. Both draw disabled with `opacity.disabled`. One
+   exception: the options of a roving group (RadioGroup, RadioCard, Rating,
+   Tabs triggers) use native `disabled`, as Radix does, so a disabled option
+   leaves the arrow order.
 6. **Leading and trailing content** is `start` and `end` on every component:
    a system icon name or a node. No `iconStart`, `leftIcon` or `prefix`.
+   Where the anatomy has an `icon` part (Badge, Chip), `start` is drawn in
+   it.
 7. **`label`** means visible text, except on icon only components, where it
-   is the accessible name and is required.
+   is the accessible name and is required. A second exception: on a
+   landmark (Sidebar, Rail, Navbar) `label` is the required name of the
+   `nav` landmark and is never drawn.
 8. **Prop spread.** For a form control, the native element gets `ref` and the
    rest props, while `className`, `style` and `rootProps` go to the root. For
    everything else, props spread onto the root.
@@ -174,6 +181,21 @@ follows it.
     8px). A control that must meet a touch target (FloatingActionButton,
     Rail on touch platforms) takes its floor from `size.touch.*` or the
     platform axis, not from `md`.
+
+13. **Live regions.** A component that can be present at load has no live
+    role by default; a `live` prop opts in. A live root with interactive
+    children sets `aria-atomic="false"`.
+14. **Built in words** (a default label, a count) follow `lang ?? theme.lang`.
+    `lang` and `dir` are stamped only from the prop, never from the theme.
+15. **A control that removes itself** (a chip's remove, a dismiss) moves
+    focus first, to the next item or the container.
+16. **Marks.** A mark with no text on it (a dot, a bar fill, a star, a
+    check) uses `state.*.border` or `primary.border`, which meet 3:1, not
+    `state.*.solid`.
+17. **Indeterminate under reduced motion.** An indeterminate indicator takes
+    a still shape no value can take, in the full tone color.
+18. **Visually hidden text** uses `data-visually-hidden` (a rule in
+    `packages/css/src/base.css`), not an inline style.
 
 ## Theme element
 

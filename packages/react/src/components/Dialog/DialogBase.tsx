@@ -54,7 +54,7 @@ export function assignRef<T>(ref: Ref<T> | undefined, value: T | null): void {
 }
 
 /** The roots built on DialogBase. CommandPalette and Lightbox join in lane 6D. */
-export type DialogKind = 'dialog' | 'alert-dialog' | 'drawer' | 'sheet';
+export type DialogKind = 'dialog' | 'alert-dialog' | 'drawer' | 'sheet' | 'command-palette' | 'lightbox';
 
 /** What every family member keeps in its context: the open state and the trigger. */
 export interface DialogBaseState {

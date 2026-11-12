@@ -74,6 +74,43 @@ Recorded by the second consolidation pass. Report:
     `DOCS_GALLERY_URL`; plain Markdown, not MDX; smart punctuation off; the
     search shortcut chip is hidden (WCAG 2.5.3). `llms.txt` is served at
     the docs root, where `ds init` points.
+16. **Round 2 rules in the anatomy contract** (rules 5, 6, 7 and 13 to
+    18): roving group options use native `disabled`; `start` is drawn in
+    an `icon` part where one exists (Badge, Chip); a landmark's `label`
+    names the `nav` and is never drawn (Sidebar, Rail, Navbar); live roles
+    are opt in; built in words follow `lang ?? theme.lang`; a control that
+    removes itself moves focus first; marks use `state.*.border` or
+    `primary.border`; indeterminate under reduced motion is a still shape;
+    `data-visually-hidden` is a base rule. Added base name `padding-end`.
+17. **Combobox and Autocomplete run as fields in the contract suite**, with
+    no `contract.trigger`, because their popup never takes focus (lane 3C,
+    decision 2). Their `contract.keys` hints cover the popup.
+18. **The list family popup** sits on `z.menu`, its rows follow
+    `list.row.height`, and its extra private names (`-highlight`,
+    `meta-fg`, `mark-weight`, `max-height`, `separator-color`) are part of
+    the shared `--_menu-*` family.
+19. **Field anatomy** (order 1.2.1): root, `label` (a Label root carrying
+    `data-part="label"`), `description`, `error` (a FieldError root carrying
+    `data-part="error"`). The required mark is Label's part.
+20. **CheckboxGroup keeps its own `error` part.** A FieldError needs a Field
+    context; the group's error part follows the same look and wiring.
+21. **AspectRatio is one div** with the native `aspect-ratio` property, not
+    Radix AspectRatio, so `className`, `style` and `ref` reach the ratio box
+    and React and Angular render the same DOM. Overrides order 1.8.
+22. **Navigation sizes and states.** The Rail's 44px target comes from the
+    platform axis, not from `md`. Dock `md` tiles are 44px. Tabs triggers use
+    native `disabled`.
+23. **Inert controls pass navigation keys.** A disabled or loading Button,
+    and a disabled Link, still hand arrows, Home, End, Page keys and Tab to
+    `onKeyDown`, so roving groups (Toolbar, ToggleGroup, Tabs) move past
+    them. Every other key, activation and Delete included, is swallowed.
+    Toolbar may now pass the system `disabled` and drop its `inertProps`
+    helper (left to the Toolbar owner).
+24. **Contract hints for components that open another one:**
+    `contract.opens` names the opened root (`dropdown-menu` for SplitButton,
+    Menubar, Breadcrumbs and LanguageSwitch), and a key hint may `open` a
+    trigger first and expect `focus-returns`. Gallery and docs slugs use the
+    same kebab case as `data-ds` (`otp-field`).
 
 ## Environment (2026-11-12)
 

@@ -7,13 +7,19 @@ import { join } from 'node:path';
 export type Framework = 'react' | 'angular' | 'native';
 
 /** What a contract.keys entry asks the suite to check after one key press. */
-export type KeyExpect = 'focus-moves' | 'value-changes' | 'state-changes' | 'click' | 'closes' | 'moves';
+export type KeyExpect = 'focus-moves' | 'value-changes' | 'state-changes' | 'click' | 'closes' | 'moves' | 'focus-returns';
 
 export interface KeyHint {
   /** A selector inside the demo to focus first. Default: the first enabled root, or its first tab stop. */
   focus?: string;
   /** A demo case id to look in. Default: the whole demo. */
   case?: string;
+  /**
+   * A selector inside the demo to click first, to open what the key acts on
+   * (the menu trigger of a SplitButton). With `focus-returns`, focus must be
+   * back on this element after the key.
+   */
+  open?: string;
   expect: KeyExpect;
   /**
    * For `moves`: the arrow names a screen direction, not a reading one, so
@@ -25,6 +31,8 @@ export interface KeyHint {
 
 export interface ContractHints {
   trigger?: string;
+  /** The `data-ds` of the root the trigger opens, when it is another component. */
+  opens?: string;
   optionalParts?: string[];
   skipAxeRules?: string[];
   keys?: Record<string, KeyHint>;
@@ -180,6 +188,19 @@ export function optionalParts(m: Manifest, styles: StyleInfo[], styleId?: string
 }
 
 /** The selector that opens the component: contract.trigger, else [data-demo-trigger]. */
+/**
+ * The `data-ds` of the root a trigger opens: `contract.opens` for a component
+ * that opens another one (a SplitButton opens a dropdown-menu), else its own.
+ */
+export function openedKebab(m: Manifest, kebab: string): string {
+  return m.contract?.opens ?? kebab;
+}
+
+/** True when the open checks (target size, axe) run: the component opens itself or names what it opens. */
+export function hasOpenChecks(m: Manifest): boolean {
+  return opensAndCloses(m) || Boolean(m.contract?.opens);
+}
+
 export function triggerSelector(m: Manifest): string {
   return m.contract?.trigger ?? '[data-demo-trigger]';
 }

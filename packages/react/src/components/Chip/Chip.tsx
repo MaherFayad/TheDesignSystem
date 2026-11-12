@@ -109,9 +109,7 @@ function PressableChip({
     <ButtonRoot
       {...rest}
       ref={ref}
-      // ButtonRoot types its data-ds as button or icon-button; Chip is the
-      // third component on the base (see "Changes needed from the lead").
-      ds={'chip' as 'button'}
+      ds="chip"
       defaultEmphasis="soft"
       size={size}
       tone={tone}

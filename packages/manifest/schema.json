@@ -354,6 +354,10 @@
                 "type": "boolean",
                 "description": "For moves: the arrow names a screen direction, so ArrowRight moves right in rtl too. For a positioned object."
               },
+              "open": {
+                "type": "string",
+                "description": "Selector inside the demo to click first, to open what the key acts on. With expect focus-returns, focus must be back on it after the key."
+              },
               "expect": {
                 "enum": [
                   "focus-moves",
@@ -361,11 +365,16 @@
                   "state-changes",
                   "click",
                   "closes",
-                  "moves"
+                  "moves",
+                  "focus-returns"
                 ]
               }
             }
           }
+        },
+        "opens": {
+          "type": "string",
+          "description": "The data-ds of the root the trigger opens when it is another component (a SplitButton opens a dropdown-menu). The open target size and open axe checks then run on that root."
         }
       }
     },

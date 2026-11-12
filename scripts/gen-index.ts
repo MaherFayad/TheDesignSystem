@@ -126,7 +126,11 @@ for (const pkg of ['shared', 'motion']) {
     const rows: string[] = [];
     for (const name of dirs(comps)) {
       if (!existsSync(join(comps, name, `${name}.demo.tsx`))) continue;
-      const slug = name.replace(/([a-z0-9])([A-Z])/g, '$1-$2').toLowerCase();
+      // The same kebab case as data-ds and the contract suite: OTPField is otp-field.
+      const slug = name
+        .replace(/([A-Z]+)([A-Z][a-z])/g, '$1-$2')
+        .replace(/([a-z0-9])([A-Z])/g, '$1-$2')
+        .toLowerCase();
       rows.push(
         `  { name: '${name}', slug: '${slug}', load: () => import('../../../packages/react/src/components/${name}/${name}.demo') },`,
       );

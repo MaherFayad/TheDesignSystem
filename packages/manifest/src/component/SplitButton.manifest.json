@@ -151,7 +151,8 @@
       "Enter": "On the action, runs the main action. On the trigger, opens the menu with focus on the first item",
       "Space": "The same as Enter",
       "ArrowDown": "On the trigger, opens the menu with focus on the first item",
-      "ArrowUp": "On the trigger, opens the menu with focus on the last item"
+      "ArrowUp": "On the trigger, opens the menu with focus on the last item",
+      "Escape": "With the menu open, closes it and returns focus to the trigger"
     },
     "announce": "The action reads its label as a button. The trigger reads its name (More publish options), menu button and collapsed or expanded. While loading, the action is busy and its hidden status says the loading label.",
     "native": {
@@ -263,8 +264,15 @@
         "focus": "[data-ds='split-button'] > [data-part='trigger']",
         "case": "variants",
         "expect": "focus-moves"
+      },
+      "Escape": {
+        "open": "[data-ds='split-button'] > [data-part='trigger']",
+        "case": "variants",
+        "expect": "focus-returns"
       }
-    }
+    },
+    "trigger": "[data-ds='split-button'] > [data-part='trigger']",
+    "opens": "dropdown-menu"
   },
   "since": "0.1.0"
 }

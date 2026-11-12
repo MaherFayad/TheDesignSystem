@@ -144,6 +144,7 @@ Under `contract` in the manifest:
 | Key | Type | Meaning |
 | --- | --- | --- |
 | `trigger` | selector | Clicked to open the component before the anatomy, state and Escape checks |
+| `opens` | `data-ds` value | The root the trigger opens when it is another component (a SplitButton or Menubar opens a `dropdown-menu`). The open target size and open axe checks run on that root; the anatomy, state and key checks treat the component as static |
 | `optionalParts` | string list | Parts that may be missing from the demo |
 | `skipAxeRules` | string list | Axe rule ids to skip, with the reason in the manifest's notes |
 | `keys` | object, key name to hint | A key check the generic ones do not cover (arrow keys, Home, End) |
@@ -161,6 +162,8 @@ Under `contract` in the manifest:
 - `focus`: a selector inside the demo to focus first. Default: the first
   enabled root, or the first tab stop inside it.
 - `case`: a demo case id to look in. Default: the whole demo.
+- `open`: a selector inside the demo to click first, to open what the key
+  acts on (a SplitButton's menu trigger).
 - `physical`: for `moves` only. The arrow names a screen direction, so
   ArrowRight moves to the right in rtl too. Set it for a positioned object
   (a Window) whose arrows move what the person sees. Default false.
@@ -174,6 +177,8 @@ Under `contract` in the manifest:
   - `click`: a click event fires on the focused element.
   - `closes`: the root that held focus leaves the page, hides or says
     `data-state="closed"`, or every open root closes.
+  - `focus-returns`: after the key, focus is back on the `open` element
+    (Escape closes a menu and returns focus to its trigger).
   - `moves`: the root that holds focus moves at least 1px in the direction
     the arrow key names, read from `getBoundingClientRect`. ArrowRight is
     toward the inline end, so in rtl the sign flips; ArrowUp and ArrowDown
