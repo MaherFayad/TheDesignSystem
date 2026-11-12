@@ -546,7 +546,9 @@
      * The top gap. While toasts show on the top edge, Sheet.tsx sets
      * --_sheet-toast-end (where they end, in px) on this root, and the gap
      * grows to clear them: the panel of any size, its close control first,
-     * stays below the toasts (WCAG 2.4.11). With no toasts the first term wins.
+     * stays below the toasts (WCAG 2.4.11). With no toasts the first term
+     * wins. Sheet.tsx caps the value at half the screen, so a tall stack of
+     * toasts on a short screen cannot squeeze the panel away (WCAG 1.4.10).
      */
     padding-block: max(calc(var(--ds-space-5xl) + env(safe-area-inset-top, 0px)), calc(var(--_sheet-toast-end) + var(--ds-space-s))) 0;
   }

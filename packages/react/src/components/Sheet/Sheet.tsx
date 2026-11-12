@@ -253,7 +253,9 @@ function useTopToastEnd(open: boolean): number {
   const [end, setEnd] = useState(0);
   useEffect(() => {
     if (!open || typeof ResizeObserver === 'undefined' || typeof MutationObserver === 'undefined') return;
+    let frame = 0;
     const measure = () => {
+      frame = 0;
       let bottom = 0;
       for (const toaster of document.querySelectorAll<HTMLElement>("[data-ds='toaster']")) {
         if (!toaster.querySelector("[data-ds='toast']")) continue;
@@ -262,22 +264,33 @@ function useTopToastEnd(open: boolean): number {
         if (rect.height === 0 || rect.top > window.innerHeight / 2) continue;
         bottom = Math.max(bottom, rect.bottom);
       }
-      setEnd(Math.ceil(bottom));
+      // At most half the screen: a tall stack on a short screen must not squeeze the panel away (WCAG 1.4.10).
+      setEnd(Math.ceil(Math.min(bottom, window.innerHeight / 2)));
     };
-    const sizes = new ResizeObserver(measure);
+    // One measure per frame, however many changes the page makes in it.
+    const schedule = () => {
+      if (!frame) frame = requestAnimationFrame(measure);
+    };
+    const sizes = new ResizeObserver(schedule);
     const watch = () => {
       sizes.disconnect();
       for (const toaster of document.querySelectorAll("[data-ds='toaster']")) sizes.observe(toaster);
-      measure();
+      schedule();
     };
-    const tree = new MutationObserver(watch);
+    // Only changes that add or remove a toaster or a toast matter.
+    const touchesToasts = (nodes: NodeList) =>
+      Array.from(nodes).some((n) => n instanceof Element && (n.matches("[data-ds='toaster'], [data-ds='toast']") || n.querySelector("[data-ds='toaster']") !== null));
+    const tree = new MutationObserver((records) => {
+      if (records.some((r) => touchesToasts(r.addedNodes) || touchesToasts(r.removedNodes))) watch();
+    });
     tree.observe(document.documentElement, { childList: true, subtree: true });
-    window.addEventListener('resize', measure);
+    window.addEventListener('resize', schedule);
     watch();
     return () => {
+      if (frame) cancelAnimationFrame(frame);
       tree.disconnect();
       sizes.disconnect();
-      window.removeEventListener('resize', measure);
+      window.removeEventListener('resize', schedule);
       setEnd(0);
     };
   }, [open]);
