@@ -10,7 +10,7 @@
 //
 //   <body>
 //     <div data-ds="theme" data-dialog-layer>
-//       <div data-ds="sheet" data-size data-state data-dragging>
+//       <div data-ds="sheet" data-size data-state data-dragging>   style --_sheet-toast-end while top toasts show
 //         <div data-part="backdrop">                  Radix Overlay
 //         <div data-part="panel" role="dialog">       Radix Content
 //           <div data-part="handle" aria-hidden>
@@ -31,6 +31,7 @@ import {
   createContext,
   use,
   useCallback,
+  useEffect,
   useMemo,
   useRef,
   useState,
@@ -239,6 +240,50 @@ function SheetHandle({ onDragging, dismissible, onDismiss }: { onDragging: (on: 
   );
 }
 
+// ------------------------------------------------------------------ toast clearance
+
+/**
+ * Where the toasts of a toaster on the top edge end, in px from the top of
+ * the viewport, or 0 when none show. While a Sheet is open a bottom toaster
+ * moves to the top edge (Dialog.css), and an lg Sheet reaches the top: the
+ * root's top padding then keeps the panel, with its close control, below the
+ * toasts (WCAG 2.4.11). Only the toaster's public data-ds is read.
+ */
+function useTopToastEnd(open: boolean): number {
+  const [end, setEnd] = useState(0);
+  useEffect(() => {
+    if (!open || typeof ResizeObserver === 'undefined' || typeof MutationObserver === 'undefined') return;
+    const measure = () => {
+      let bottom = 0;
+      for (const toaster of document.querySelectorAll<HTMLElement>("[data-ds='toaster']")) {
+        if (!toaster.querySelector("[data-ds='toast']")) continue;
+        const rect = toaster.getBoundingClientRect();
+        // A toaster in the lower half sits on the bottom edge: the Sheet has its own place for that.
+        if (rect.height === 0 || rect.top > window.innerHeight / 2) continue;
+        bottom = Math.max(bottom, rect.bottom);
+      }
+      setEnd(Math.ceil(bottom));
+    };
+    const sizes = new ResizeObserver(measure);
+    const watch = () => {
+      sizes.disconnect();
+      for (const toaster of document.querySelectorAll("[data-ds='toaster']")) sizes.observe(toaster);
+      measure();
+    };
+    const tree = new MutationObserver(watch);
+    tree.observe(document.documentElement, { childList: true, subtree: true });
+    window.addEventListener('resize', measure);
+    watch();
+    return () => {
+      tree.disconnect();
+      sizes.disconnect();
+      window.removeEventListener('resize', measure);
+      setEnd(0);
+    };
+  }, [open]);
+  return open ? end : 0;
+}
+
 // ------------------------------------------------------------------ SheetContent
 
 export interface SheetContentProps
@@ -273,6 +318,8 @@ export function SheetContent({ title, description, closeLabel, children, classNa
   const theme = useTheme();
   const words = isArabic(theme.lang) ? sheetLabels.ar : sheetLabels.en;
   const [dragging, setDragging] = useState(false);
+  const toastEnd = useTopToastEnd(ctx.open);
+  const rootStyle = toastEnd > 0 ? ({ ...style, '--_sheet-toast-end': `${toastEnd}px` } as CSSProperties) : style;
   const { header, others } = splitHeader({
     children,
     title,
@@ -294,7 +341,7 @@ export function SheetContent({ title, description, closeLabel, children, classNa
       panelProps={panelProps}
       panelRef={ref}
       className={className}
-      style={style}
+      style={rootStyle}
       rootProps={rootProps}
       onOpenAutoFocus={onOpenAutoFocus}
       onCloseAutoFocus={onCloseAutoFocus}
