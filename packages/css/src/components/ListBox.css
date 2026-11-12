@@ -1,0 +1,306 @@
+/*
+ * ListBox: the shared option list of the list family. Alone it is a bordered
+ * box that scrolls inside; in the popup of a Combobox (and later
+ * Autocomplete, MultiSelect, TagField, CommandPalette) the popup draws the
+ * surface and sets the private properties below to the menu surface values.
+ *
+ * Sources: GoBanana `.st-menu` option rows in studio-components.css (rows of
+ * the list height, the inner radius of the card family, the overlay step on
+ * the lit row, the check that carries the selected state), the menu surface
+ * of DropdownMenu.css (the same row padding, gap, radius and type, so an
+ * option row and a menu row line up), Figma-Killer-2 `Select/` (the label
+ * over the description).
+ *
+ *   [data-ds='list-box']                       root: role listbox
+ *     [data-part='option']                     role option: a grid of the parts below
+ *       > [data-part='indicator']              the check of a selected option, on every row
+ *       > [data-part='option-icon']            leading icon
+ *       > [data-part='option-label']           the label; mark wraps the matched part
+ *       > [data-part='option-description']     the second line, under the label
+ *     [data-part='group']                      role group
+ *       > [data-part='group-label']            the group title
+ *     [data-part='separator']                  between groups
+ *     [data-part='empty']                      when there is no option
+ *
+ * Private properties on the root (anatomy.md, one convention). A parent sets
+ * them on the nested root; recipes override them:
+ *   --_list-box-bg, -fg, -border-color, -radius, -padding, -max-height
+ *   --_list-box-option-height, -option-padding-inline, -option-gap,
+ *   --_list-box-option-radius, -option-font-size, -option-font-weight
+ *   --_list-box-option-bg, -option-fg          one row, swapped by state
+ *   --_list-box-option-bg-hover                the pointer veil (::after) when alone
+ *   --_list-box-option-bg-highlight, -option-fg-highlight
+ *   --_list-box-option-ring, -option-ring-color
+ *   --_list-box-meta-fg                        description, group label, empty text
+ *   --_list-box-separator-color
+ *   --_list-box-mark-weight                    the weight of the matched part
+ *
+ * No motion of its own: the popup that holds it carries the enter and exit.
+ */
+@layer ds.base {
+  [data-ds='list-box'] {
+    --_list-box-bg: transparent;
+    --_list-box-fg: var(--ds-color-text-default);
+    --_list-box-border-color: var(--ds-color-border-control);
+    --_list-box-radius: var(--ds-radius-card);
+    --_list-box-padding: var(--ds-space-3xs);
+    /* Alone, ten rows show before the list scrolls inside. */
+    --_list-box-max-height: calc(var(--ds-list-row-height) * 10 + var(--ds-space-3xs) * 2);
+    --_list-box-option-height: var(--ds-list-row-height);
+    --_list-box-option-padding-inline: var(--ds-space-m);
+    --_list-box-option-gap: var(--ds-space-m);
+    --_list-box-option-radius: var(--ds-menu-item-radius);
+    --_list-box-option-font-size: var(--ds-font-size-s);
+    --_list-box-option-font-weight: var(--ds-font-weight-menu);
+    --_list-box-option-bg: transparent;
+    --_list-box-option-fg: var(--_list-box-fg);
+    --_list-box-option-bg-hover: var(--ds-color-bg-overlay-5);
+    --_list-box-option-bg-highlight: var(--ds-color-bg-overlay-10);
+    --_list-box-option-fg-highlight: var(--ds-color-text-default);
+    --_list-box-option-ring: 0 0 transparent;
+    --_list-box-option-ring-color: var(--ds-color-focus-ring);
+    --_list-box-meta-fg: var(--ds-color-text-muted);
+    --_list-box-separator-color: var(--ds-color-bg-surface-2);
+    --_list-box-mark-weight: var(--ds-font-weight-bold);
+
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+    min-inline-size: 0;
+    max-block-size: var(--_list-box-max-height);
+    margin: 0;
+    padding: var(--_list-box-padding);
+    overflow-x: hidden;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    border: var(--ds-border-width-default) solid var(--_list-box-border-color);
+    border-radius: var(--_list-box-radius);
+    background-color: var(--_list-box-bg);
+    color: var(--_list-box-fg);
+    font-family: var(--ds-font-family-sans);
+    font-size: var(--_list-box-option-font-size);
+    line-height: var(--ds-font-leading-snug);
+    outline: none;
+  }
+
+  [data-ds='list-box'][data-orientation='horizontal'] {
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: var(--ds-space-3xs);
+  }
+
+  [data-ds='list-box'][data-size='sm'] {
+    --_list-box-option-height: var(--ds-size-control-xs);
+    --_list-box-option-padding-inline: var(--ds-space-s);
+    --_list-box-option-gap: var(--ds-space-s);
+    --_list-box-option-font-size: var(--ds-font-size-xs);
+    --_list-box-max-height: calc(var(--ds-size-control-xs) * 10 + var(--ds-space-3xs) * 2);
+  }
+
+  /* Arabic: small text one step up, as in the menus. */
+  [data-ds='list-box']:lang(ar) {
+    --_list-box-option-font-size: var(--ds-font-size-m);
+
+    line-height: var(--ds-font-leading-arabic-snug);
+  }
+
+  [data-ds='list-box'][data-size='sm']:lang(ar) {
+    --_list-box-option-font-size: var(--ds-font-size-s);
+  }
+
+  /* ------------------------------------------------------------ options */
+
+  /*
+   * A grid: indicator, icon, then the label over the description. Empty
+   * tracks take no room, so the gaps sit on the parts, not on the grid.
+   */
+  [data-ds='list-box'] [data-part='option'] {
+    position: relative;
+    display: grid;
+    flex: none;
+    grid-template-columns: auto auto minmax(0, 1fr);
+    align-items: center;
+    box-sizing: border-box;
+    min-block-size: max(var(--_list-box-option-height), var(--ds-size-target-min));
+    margin: 0;
+    padding-block: var(--ds-space-4xs);
+    padding-inline: var(--_list-box-option-padding-inline);
+    border-radius: var(--_list-box-option-radius);
+    background-color: var(--_list-box-option-bg);
+    box-shadow: var(--_list-box-option-ring);
+    color: var(--_list-box-option-fg);
+    font-weight: var(--_list-box-option-font-weight);
+    text-align: start;
+    cursor: pointer;
+    user-select: none;
+    outline: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  /* The hover veil: only when the list holds focus itself (an owner moves the highlight with the pointer instead). */
+  [data-ds='list-box'] [data-part='option']::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background-color: var(--_list-box-option-bg-hover);
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  [data-ds='list-box'] [data-part='option']:hover:not([data-highlighted], [data-disabled])::after {
+    opacity: 1;
+  }
+
+  [data-ds='list-box'] [data-part='option'][data-highlighted] {
+    --_list-box-option-bg: var(--_list-box-option-bg-highlight);
+    --_list-box-option-fg: var(--_list-box-option-fg-highlight);
+  }
+
+  /* The keyboard ring sits inside the row. The transparent outline shows in forced colors. */
+  [data-ds='list-box'] [data-part='option']:focus-visible {
+    --_list-box-option-ring: inset 0 0 0 var(--ds-border-width-strong) var(--_list-box-option-ring-color);
+
+    outline: var(--ds-border-width-strong) solid transparent;
+    outline-offset: calc(var(--ds-border-width-strong) * -1);
+  }
+
+  [data-ds='list-box'] [data-part='option'][data-disabled] {
+    opacity: var(--ds-opacity-disabled);
+    cursor: not-allowed;
+  }
+
+  [data-ds='list-box'][data-readonly] [data-part='option'] {
+    cursor: default;
+  }
+
+  /* The whole list disabled: the root fades once, the rows do not fade again. */
+  [data-ds='list-box'][data-disabled] {
+    opacity: var(--ds-opacity-disabled);
+  }
+
+  [data-ds='list-box'][data-disabled] [data-part='option'][data-disabled] {
+    opacity: 1;
+  }
+
+  [data-ds='list-box'] [data-part='option'] > [data-part='indicator'] {
+    display: inline-flex;
+    grid-row: 1 / span 2;
+    grid-column: 1;
+    align-items: center;
+    justify-content: center;
+    min-inline-size: var(--ds-size-icon-md);
+    margin-inline-end: var(--_list-box-option-gap);
+  }
+
+  [data-ds='list-box'] [data-part='option'] > [data-part='option-icon'] {
+    display: inline-flex;
+    grid-row: 1 / span 2;
+    grid-column: 2;
+    align-items: center;
+    justify-content: center;
+    min-inline-size: var(--ds-size-icon-md);
+    margin-inline-end: var(--_list-box-option-gap);
+  }
+
+  [data-ds='list-box'] [data-part='option'] > [data-part='option-label'] {
+    grid-row: 1;
+    grid-column: 3;
+    min-inline-size: 0;
+    overflow-wrap: anywhere;
+  }
+
+  [data-ds='list-box'] [data-part='option'] > [data-part='option-description'] {
+    grid-row: 2;
+    grid-column: 3;
+    min-inline-size: 0;
+    color: var(--_list-box-meta-fg);
+    font-size: var(--ds-font-size-xs);
+    font-weight: var(--ds-font-weight-regular);
+    overflow-wrap: anywhere;
+  }
+
+  [data-ds='list-box'] [data-part='option'][data-highlighted] > [data-part='option-description'] {
+    color: inherit;
+  }
+
+  /* The matched part: heavier and underlined, never color alone. */
+  [data-ds='list-box'] [data-part='option-label'] mark {
+    background: none;
+    color: inherit;
+    font-weight: var(--_list-box-mark-weight);
+    text-decoration-line: underline;
+    text-decoration-thickness: var(--ds-border-width-default);
+    text-underline-offset: var(--ds-space-4xs);
+  }
+
+  /* ------------------------------------------------------------ groups, separator, empty */
+
+  [data-ds='list-box'] [data-part='group'] {
+    display: flex;
+    flex: none;
+    flex-direction: column;
+  }
+
+  [data-ds='list-box'] [data-part='group-label'] {
+    margin: 0;
+    padding-block: var(--ds-space-2xs) var(--ds-space-4xs);
+    padding-inline: var(--_list-box-option-padding-inline);
+    color: var(--_list-box-meta-fg);
+    font-size: var(--ds-font-size-xs);
+    font-weight: var(--ds-font-weight-semibold);
+    overflow-wrap: anywhere;
+  }
+
+  [data-ds='list-box'] [data-part='separator'] {
+    flex: none;
+    block-size: var(--ds-border-width-default);
+    margin-block: var(--ds-space-3xs);
+    margin-inline: var(--ds-space-xs);
+    background-color: var(--_list-box-separator-color);
+  }
+
+  [data-ds='list-box'] [data-part='empty'] {
+    padding-block: var(--ds-space-s);
+    padding-inline: var(--_list-box-option-padding-inline);
+    color: var(--_list-box-meta-fg);
+    overflow-wrap: anywhere;
+  }
+
+  /* ------------------------------------------------------------ contrast, forced colors */
+
+  @media (prefers-contrast: more) {
+    [data-ds='list-box'] {
+      --_list-box-border-color: var(--ds-color-border-strong);
+      --_list-box-separator-color: var(--ds-color-border-strong);
+    }
+  }
+
+  [data-contrast='more'] [data-ds='list-box'] {
+    --_list-box-border-color: var(--ds-color-border-strong);
+    --_list-box-separator-color: var(--ds-color-border-strong);
+  }
+
+  @media (forced-colors: active) {
+    [data-ds='list-box'] {
+      --_list-box-border-color: CanvasText;
+      --_list-box-separator-color: CanvasText;
+      --_list-box-meta-fg: CanvasText;
+      --_list-box-option-bg-highlight: Highlight;
+      --_list-box-option-fg-highlight: HighlightText;
+    }
+
+    [data-ds='list-box'] [data-part='option'][data-highlighted] {
+      forced-color-adjust: none;
+    }
+
+    [data-ds='list-box'] [data-part='option']::after {
+      display: none;
+    }
+
+    [data-ds='list-box'] [data-part='option']:focus-visible {
+      outline-color: CanvasText;
+    }
+  }
+}

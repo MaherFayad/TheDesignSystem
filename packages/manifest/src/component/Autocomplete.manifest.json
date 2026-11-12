@@ -1,0 +1,311 @@
+{
+  "name": "Autocomplete",
+  "kind": "component",
+  "family": "selection",
+  "summary": "A text field that suggests as you type, where any text is a valid answer. Suggestions filter in a list under the field; choosing one fills the field, and Enter with nothing highlighted keeps what was typed.",
+  "useWhen": [
+    "Any text is a valid answer and a list of likely answers saves typing, such as a destination, a tag name or a company",
+    "Past entries or popular values that people often repeat",
+    "A search box that suggests queries before it runs them"
+  ],
+  "avoidWhen": [
+    "The value must be one of the options",
+    "Several values at once",
+    "A short fixed list that reads well without typing",
+    "Running commands or jumping to pages"
+  ],
+  "insteadUse": {
+    "The value must be in the list (Combobox: value must be an option; Autocomplete: any text)": "Combobox",
+    "Several free tags typed by the person": "TagField",
+    "Several values from a fixed list": "MultiSelect",
+    "A short fixed list in a closed field": "Select",
+    "Plain text with no suggestions": "Input",
+    "Search and run any command": "CommandPalette"
+  },
+  "anatomy": [
+    "root",
+    "control",
+    "status",
+    "popup",
+    "empty"
+  ],
+  "parts": {
+    "Autocomplete": "root"
+  },
+  "slots": {
+    "popup": {
+      "accepts": [
+        "ListBox"
+      ],
+      "max": 1
+    },
+    "empty": {
+      "accepts": "any",
+      "max": 1
+    }
+  },
+  "props": {
+    "items": {
+      "type": "node",
+      "required": true,
+      "description": "The suggestions, plain ({ value, label, description?, start?, disabled?, keywords? }) or in titled groups ({ label, options }), as ListBox takes them. Choosing one puts its label in the field. Filtered by the label, then the keywords."
+    },
+    "value": {
+      "type": "string",
+      "description": "The text, controlled with onValueChange. Any text is valid."
+    },
+    "defaultValue": {
+      "type": "string",
+      "default": "",
+      "description": "Uncontrolled starting text."
+    },
+    "onValueChange": {
+      "type": "function",
+      "description": "Called with the text on every keystroke, when a suggestion is chosen and when a second Escape clears it."
+    },
+    "open": {
+      "type": "boolean",
+      "description": "The popup is open, controlled with onOpenChange."
+    },
+    "onOpenChange": {
+      "type": "function",
+      "description": "Called on open and close."
+    },
+    "size": {
+      "type": [
+        "sm",
+        "md",
+        "lg"
+      ],
+      "default": "md",
+      "description": "Field height from size.control (28, 32, 44px at default density). sm lists use sm rows; md and lg lists use list.row.height. lg uses a fixed 16px type so phones do not zoom."
+    },
+    "shape": {
+      "type": [
+        "default",
+        "pill"
+      ],
+      "default": "default",
+      "description": "default: the style's control radius (a pill in Studio and Desk). pill: always fully round."
+    },
+    "invalid": {
+      "type": "boolean",
+      "default": false,
+      "description": "The danger border and aria-invalid. Inside a Field it follows the Field's error."
+    },
+    "disabled": {
+      "type": "boolean",
+      "default": false,
+      "description": "Native disabled on the input; no suggestions. Inside a Field it follows the Field."
+    },
+    "readOnly": {
+      "type": "boolean",
+      "default": false,
+      "description": "The text shows and can be copied, not changed: no suggestions, a dashed border."
+    },
+    "loading": {
+      "type": "boolean",
+      "default": false,
+      "description": "Suggestions are on their way: the popup and the status say loadingLabel, data-loading and aria-busy are set."
+    },
+    "loadingLabel": {
+      "type": "string",
+      "default": "Loading options",
+      "description": "What the popup and the status say while loading. Arabic default: جار تحميل الخيارات."
+    },
+    "empty": {
+      "type": "node",
+      "description": "Shown in the popup when no suggestion matches. Default none: the popup closes, since any text is a fine answer. Use it to say Enter adds the text."
+    },
+    "formatCount": {
+      "type": "function",
+      "description": "The words read for the result count, once typing pauses. Default 3 results, pluralized with Intl.PluralRules in Arabic (نتيجة وحدة، نتيجتين، 5 نتائج، 12 نتيجة)."
+    },
+    "loop": {
+      "type": "boolean",
+      "default": true,
+      "description": "ArrowDown on the last option goes to the first."
+    },
+    "name": {
+      "type": "string",
+      "description": "Submits the text under this name: the input itself carries it."
+    },
+    "placeholder": {
+      "type": "string",
+      "description": "A hint inside the empty field. Never the only label: wrap the Autocomplete in a Field with a label."
+    },
+    "onCommit": {
+      "type": "function",
+      "description": "Called with the text when Enter is pressed with no suggestion highlighted (the form still submits)."
+    }
+  },
+  "states": [
+    "open",
+    "closed",
+    "data-invalid",
+    "data-disabled",
+    "data-readonly",
+    "data-loading"
+  ],
+  "a11y": {
+    "role": "combobox (ARIA 1.2) on the input, aria-autocomplete list, aria-expanded, aria-controls pointing at the listbox in the popup (or the popup when it only says nothing matched), aria-activedescendant pointing at the highlighted suggestion. List autocomplete with no automatic selection. Not modal.",
+    "focus": "Focus stays in the input the whole time. Nothing is highlighted until an arrow key moves, so the typed text is never replaced by surprise. On blur the list closes and the text stays.",
+    "keys": {
+      "Tab": "Moves into the field and out of it; the list closes and the text stays",
+      "ArrowDown": "Closed: opens the suggestions on the first. Open: moves to the next suggestion, wrapping at the end",
+      "ArrowUp": "Closed: opens the suggestions on the last. Open: moves to the previous suggestion",
+      "Alt+ArrowDown": "Opens the suggestions without moving the highlight",
+      "Alt+ArrowUp": "Puts the highlighted suggestion in the field and closes the list",
+      "Enter": "With a suggestion highlighted: puts it in the field and closes the list. With none: keeps the typed text, calls onCommit and lets the form submit",
+      "Escape": "Open: closes the list, the text stays. Closed: clears the text. Inside a Dialog, the Escape after the list closed closes the Dialog (Radix handles Escape on the document first); clear by selecting the text there",
+      "Typing": "Filters the suggestions and opens the list when some match, or when empty is set; nothing is highlighted"
+    },
+    "announce": "The input reads its Field label, its text, and that it has suggestions. Moving through the list reads each suggestion. After each query the count is read once, politely, from a visually hidden status.",
+    "notes": [
+      "Matching ignores case, accents, Arabic diacritics and the tatweel, and unifies alef forms (normalize in @the-system/shared filter.ts). The matched part is wrapped in mark, drawn heavier and underlined, never by color alone (WCAG 1.4.1).",
+      "No trigger and no clear button: the field is a text field that suggests. The list opens with typing or ArrowDown.",
+      "The popup is portaled into a Theme copied from the field's Theme and is its own root carrying data-part popup; data-state open and closed is on the popup only.",
+      "Contract: read as a field, not an overlay, as Combobox. ArrowDown is checked on the input of the many case (aria-expanded changes), Escape there with the list closed (the text clears). The open popup is covered by the unit tests and a lane axe run.",
+      "The list is named like the field: through the Field label, else aria-label or aria-labelledby on the Autocomplete. Without a Field, pass one of them.",
+      "The result count is read only while the popup shows: text with no suggestion is a fine answer and stays silent.",
+      "status is an extra part beyond the order's anatomy (root, control, popup, empty): the polite count needs an element, as in Combobox."
+    ]
+  },
+  "content": {
+    "en": {
+      "label": "A noun in a Field label: Destination, Tag.",
+      "description": "Say any text works: Pick a tag or type a new one.",
+      "suggestions": "As people write them, sentence case.",
+      "empty": "Only when it helps: No tag like that yet. Press Enter to add it."
+    },
+    "ar": {
+      "label": "Noun form, no diacritics: الوجهة، الوسم.",
+      "description": "اختر وسم أو اكتب وسم جديد.",
+      "count": "Pluralized with Intl.PluralRules, Western digits."
+    }
+  },
+  "tokens": [
+    "size.control.sm",
+    "size.control.md",
+    "size.control.lg",
+    "size.target-min",
+    "space.3xs",
+    "space.s",
+    "space.m",
+    "space.2xl",
+    "radius.control",
+    "radius.card",
+    "radius.panel",
+    "radius.field",
+    "color.text.default",
+    "color.text.muted",
+    "color.text.placeholder",
+    "color.border.control",
+    "color.border.control-hover",
+    "color.border.strong",
+    "color.border.hairline",
+    "color.state.danger-text",
+    "color.bg.overlay-5",
+    "color.bg.overlay-10",
+    "color.bg.surface-2",
+    "color.bg.surface-3",
+    "color.material.glass-strong",
+    "color.material.glass-solid",
+    "color.primary.fill",
+    "color.primary.text",
+    "color.focus.ring",
+    "color.focus.ring-on-primary-inner",
+    "elevation.input-focus",
+    "elevation.menu",
+    "focus.shadow.ring",
+    "blur.window-strong",
+    "blur.window-saturation",
+    "menu.width.min",
+    "list.row.height",
+    "border.width.default",
+    "border.width.strong",
+    "font.family.sans",
+    "font.size.s",
+    "font.size.m",
+    "font.size.fixed-m",
+    "font.weight.regular",
+    "font.leading.snug",
+    "font.leading.arabic.snug",
+    "opacity.disabled",
+    "scale.press",
+    "duration.base",
+    "duration.quick",
+    "ease.default",
+    "ease.emphasized",
+    "ease.exit",
+    "z.menu",
+    "radius.pill"
+  ],
+  "motion": "menu-scale",
+  "frameworks": {
+    "react": {
+      "status": "ready",
+      "behavior": "radix:Popover (Root, Anchor, Content); built on the Combobox base (ComboboxBase.tsx) in free text mode, with a ListBox in the popup",
+      "example": "Autocomplete.demo.tsx",
+      "note": "No source: designed from the dials table and Combobox. Styled by Combobox.css with a thin Autocomplete.css (anatomy.md rule 10)."
+    },
+    "angular": {
+      "status": "planned",
+      "behavior": "cdk:overlay with the shared filter.ts and listbox.ts"
+    },
+    "native": {
+      "status": "planned",
+      "behavior": "hand built: a TextInput and a FlatList in a sheet"
+    }
+  },
+  "styles": {
+    "studio": "The Combobox field without buttons: the Input box with even padding. The popup is the Studio menu surface.",
+    "desk": "The same field. The popup is the Desk menu glass with the yellow lit row.",
+    "neutral": "Planned: tokens only."
+  },
+  "mistakes": [
+    {
+      "wrong": "An Autocomplete where only listed values are valid",
+      "right": "Combobox, which keeps the value inside the list"
+    },
+    {
+      "wrong": "Highlighting the first suggestion as people type",
+      "right": "Nothing highlighted until an arrow key, so Enter keeps the typed text (built in)"
+    },
+    {
+      "wrong": "A placeholder as the only label",
+      "right": "A Field with a label around the Autocomplete"
+    },
+    {
+      "wrong": "A popup that says No results for text that is fine as it is",
+      "right": "Leave empty unset: the popup closes when nothing matches"
+    },
+    {
+      "wrong": "Filtering only the exact spelling of Arabic words",
+      "right": "The shared normalize: إمكانية matches امكانية"
+    },
+    {
+      "wrong": "An Autocomplete with no Field and no aria-label",
+      "right": "A Field label, or aria-label: the input and its list both need a name"
+    }
+  ],
+  "contract": {
+    "optionalParts": [
+      "popup",
+      "empty"
+    ],
+    "keys": {
+      "ArrowDown": {
+        "focus": "[data-part='control']",
+        "case": "many",
+        "expect": "state-changes"
+      },
+      "Escape": {
+        "focus": "[data-part='control']",
+        "case": "many",
+        "expect": "value-changes"
+      }
+    }
+  },
+  "since": "0.1.0"
+}

@@ -1,0 +1,336 @@
+{
+  "name": "Combobox",
+  "kind": "component",
+  "family": "selection",
+  "summary": "A text field that filters a long list as you type and keeps one value from it. The list opens under the field; focus stays in the field while the arrow keys move through the matches.",
+  "useWhen": [
+    "One value from a long list (more than about 12 options) that people find faster by typing, such as a city, a country or a person",
+    "Options people know by name or by a code, such as an airport code, which keywords on the options can match",
+    "A value that must be one of the options, never free text"
+  ],
+  "avoidWhen": [
+    "Any text is a valid answer and the options are only suggestions",
+    "A short list of options that reads well without typing",
+    "Several values at once",
+    "Searching a whole site or running commands"
+  ],
+  "insteadUse": {
+    "Any text is allowed, options are suggestions": "Autocomplete",
+    "A short list in a closed field": "Select",
+    "Two to five options shown at once": "RadioGroup",
+    "Several values from a long list": "MultiSelect",
+    "Free tags typed by the person": "TagField",
+    "A list that stays visible on the page": "ListBox",
+    "Search and run any command": "CommandPalette"
+  },
+  "anatomy": [
+    "root",
+    "control",
+    "clear",
+    "trigger",
+    "status",
+    "popup",
+    "empty"
+  ],
+  "parts": {
+    "Combobox": "root"
+  },
+  "slots": {
+    "popup": {
+      "accepts": [
+        "ListBox"
+      ],
+      "max": 1
+    },
+    "empty": {
+      "accepts": "any",
+      "max": 1
+    }
+  },
+  "props": {
+    "items": {
+      "type": "node",
+      "required": true,
+      "description": "The options, plain ({ value, label, description?, start?, disabled?, keywords? }) or in titled groups ({ label, options }), as ListBox takes them. Filtered by the label, then the keywords, best matches first inside each group."
+    },
+    "value": {
+      "type": "string",
+      "description": "The chosen option value, controlled with onValueChange. null: none."
+    },
+    "defaultValue": {
+      "type": "string",
+      "default": null,
+      "description": "Uncontrolled starting value."
+    },
+    "onValueChange": {
+      "type": "function",
+      "description": "Called with the chosen value, or null when cleared (the clear button, a second Escape, or an emptied field on blur)."
+    },
+    "inputValue": {
+      "type": "string",
+      "description": "The text in the field, controlled with onInputValueChange. Use it to fetch options from a server as people type, with loading."
+    },
+    "onInputValueChange": {
+      "type": "function",
+      "description": "Called with the text on every keystroke."
+    },
+    "open": {
+      "type": "boolean",
+      "description": "The popup is open, controlled with onOpenChange."
+    },
+    "onOpenChange": {
+      "type": "function",
+      "description": "Called on open and close."
+    },
+    "size": {
+      "type": [
+        "sm",
+        "md",
+        "lg"
+      ],
+      "default": "md",
+      "description": "Field height from size.control (28, 32, 44px at default density). sm lists use sm rows; md and lg lists use list.row.height. lg uses a fixed 16px type so phones do not zoom."
+    },
+    "shape": {
+      "type": [
+        "default",
+        "pill"
+      ],
+      "default": "default",
+      "description": "default: the style's control radius (a pill in Studio and Desk). pill: always fully round."
+    },
+    "invalid": {
+      "type": "boolean",
+      "default": false,
+      "description": "The danger border and aria-invalid. Inside a Field it follows the Field's error."
+    },
+    "disabled": {
+      "type": "boolean",
+      "default": false,
+      "description": "Native disabled on the input; the list never opens. Inside a Field it follows the Field."
+    },
+    "readOnly": {
+      "type": "boolean",
+      "default": false,
+      "description": "The value shows and can be copied, not changed: no list, no clear button, a dashed border."
+    },
+    "loading": {
+      "type": "boolean",
+      "default": false,
+      "description": "Options are on their way: the trigger shows a spinner, the popup and the status say loadingLabel, data-loading and aria-busy are set."
+    },
+    "loadingLabel": {
+      "type": "string",
+      "default": "Loading options",
+      "description": "What the popup and the status say while loading. Arabic default: جار تحميل الخيارات."
+    },
+    "empty": {
+      "type": "node",
+      "default": "No results. Try another word.",
+      "description": "Shown in the popup when nothing matches. Arabic default: ما فيه نتائج. جرب كلمة ثانية. null shows no popup."
+    },
+    "formatCount": {
+      "type": "function",
+      "description": "The words read for the result count, once typing pauses. Default 3 results, pluralized with Intl.PluralRules in Arabic (نتيجة وحدة، نتيجتين، 5 نتائج، 12 نتيجة)."
+    },
+    "loop": {
+      "type": "boolean",
+      "default": true,
+      "description": "ArrowDown on the last option goes to the first."
+    },
+    "triggerLabel": {
+      "type": "string",
+      "default": "Show options",
+      "description": "The name of the opener button. Arabic default: عرض الخيارات."
+    },
+    "clearLabel": {
+      "type": "string",
+      "default": "Clear value",
+      "description": "The name of the clear button. Arabic default: مسح القيمة."
+    },
+    "name": {
+      "type": "string",
+      "description": "Submits the value under this name in a form, through a hidden input."
+    },
+    "placeholder": {
+      "type": "string",
+      "description": "A hint inside the empty field. Never the only label: wrap the Combobox in a Field with a label."
+    }
+  },
+  "states": [
+    "open",
+    "closed",
+    "data-invalid",
+    "data-disabled",
+    "data-readonly",
+    "data-loading"
+  ],
+  "a11y": {
+    "role": "combobox (ARIA 1.2) on the input, aria-autocomplete list, aria-expanded, aria-controls pointing at the listbox in the popup, aria-activedescendant pointing at the highlighted option. The popup has no role of its own; it holds a ListBox named like the field. Not modal.",
+    "focus": "Focus stays in the input the whole time. The trigger and clear buttons are not in the tab order (tabindex -1) and keep focus in the input when pressed. On blur the list closes and the field shows the chosen label again.",
+    "keys": {
+      "Tab": "Moves into the field and out of it; the list closes",
+      "ArrowDown": "Closed: opens the list on the chosen option, else the first. Open: moves to the next option, skipping disabled ones, wrapping at the end",
+      "ArrowUp": "Closed: opens the list on the last option. Open: moves to the previous option",
+      "Alt+ArrowDown": "Opens the list without moving the highlight",
+      "Alt+ArrowUp": "Chooses the highlighted option and closes the list",
+      "Enter": "Chooses the highlighted option and closes the list; it does not submit the form while an option is highlighted",
+      "Escape": "Open: closes the list and puts the chosen label back. Closed: clears the field and the value. Inside a Dialog, the Escape after the list closed closes the Dialog (Radix handles Escape on the document first); clear with the clear button or by selecting the text there",
+      "Typing": "Filters the list and opens it; the first match is highlighted so Enter picks it"
+    },
+    "announce": "The input reads its Field label, its value, and that it has a list. Moving through the list reads each option (label, description, selected, position). After each query the count is read once, politely, from a visually hidden status (3 results; in Arabic 3 نتائج).",
+    "notes": [
+      "Matching ignores case, accents, Arabic diacritics and the tatweel, and unifies alef forms, alef maqsura, ta marbuta and the hamza seats (normalize in @the-system/shared filter.ts).",
+      "The matched part of each option is wrapped in mark, drawn heavier and underlined, never by color alone (WCAG 1.4.1).",
+      "The trigger and clear buttons are 24px IconButtons (WCAG 2.5.8) with names; the list can also be opened with the keys.",
+      "The popup is portaled into a Theme copied from the field's Theme and is its own root carrying data-part popup, as a DropdownMenu submenu is; its z-index is z.menu so it shows over a Dialog.",
+      "Contract: the suite reads Combobox as a field, not an overlay: its popup never holds a tab stop (focus stays in the input), which the overlay checks require. data-state open and closed is on the popup root only. ArrowDown is checked on the input of the many case (aria-expanded changes) and Escape there with the list closed (the value clears). Opening, the popup anatomy and axe on the open popup are covered by the unit tests and a lane axe run (docs/reports/lanes/lane-3c.md).",
+      "The list is named like the field: through the Field label, else aria-label or aria-labelledby on the Combobox. Without a Field, pass one of them."
+    ]
+  },
+  "content": {
+    "en": {
+      "label": "A noun in a Field label: City, Country, Assignee.",
+      "placeholder": "Optional, a verb plus a noun: Search cities. Not a repeat of the label.",
+      "options": "Nouns as people write them, sentence case: Abu Dhabi, Al Ahsa.",
+      "empty": "Say what to try next: No results. Try another word.",
+      "error": "Say what to do: Choose a city from the list."
+    },
+    "ar": {
+      "label": "Noun form, no diacritics: المدينة.",
+      "placeholder": "Noun form: البحث عن مدينة.",
+      "empty": "ما فيه نتائج. جرب كلمة ثانية.",
+      "count": "Pluralized with Intl.PluralRules (one, two, few, many and other forms), Western digits.",
+      "error": "اختر مدينة من القائمة."
+    }
+  },
+  "tokens": [
+    "size.control.sm",
+    "size.control.md",
+    "size.control.lg",
+    "size.target-min",
+    "space.3xs",
+    "space.s",
+    "space.m",
+    "space.2xl",
+    "radius.control",
+    "radius.pill",
+    "radius.card",
+    "radius.panel",
+    "radius.field",
+    "color.text.default",
+    "color.text.muted",
+    "color.text.placeholder",
+    "color.border.control",
+    "color.border.control-hover",
+    "color.border.strong",
+    "color.border.hairline",
+    "color.state.danger-text",
+    "color.bg.overlay-5",
+    "color.bg.overlay-10",
+    "color.bg.surface-2",
+    "color.bg.surface-3",
+    "color.material.glass-strong",
+    "color.material.glass-solid",
+    "color.primary.fill",
+    "color.primary.text",
+    "color.focus.ring",
+    "color.focus.ring-on-primary-inner",
+    "elevation.input-focus",
+    "elevation.menu",
+    "focus.shadow.ring",
+    "blur.window-strong",
+    "blur.window-saturation",
+    "menu.width.min",
+    "list.row.height",
+    "border.width.default",
+    "border.width.strong",
+    "font.family.sans",
+    "font.size.s",
+    "font.size.m",
+    "font.size.fixed-m",
+    "font.weight.regular",
+    "font.leading.snug",
+    "font.leading.arabic.snug",
+    "opacity.disabled",
+    "scale.press",
+    "duration.base",
+    "duration.quick",
+    "ease.default",
+    "ease.emphasized",
+    "ease.exit",
+    "z.menu"
+  ],
+  "motion": "menu-scale",
+  "frameworks": {
+    "react": {
+      "status": "ready",
+      "behavior": "radix:Popover (Root, Anchor, Content); the combobox and the list hand built on ListBox",
+      "example": "Combobox.demo.tsx",
+      "note": "The base (ComboboxBase.tsx) is shared with Autocomplete. The popup surface is styled in Combobox.css for the whole list family; MultiSelect and TagField add their names to its selector lists. Sources GoBanana and Figma-Killer-2 were not reachable in the lane session; the field follows Input and the popup the DropdownMenu surface."
+    },
+    "angular": {
+      "status": "planned",
+      "behavior": "cdk:overlay with the shared filter.ts and listbox.ts"
+    },
+    "native": {
+      "status": "planned",
+      "behavior": "hand built: a TextInput and a FlatList in a sheet"
+    }
+  },
+  "styles": {
+    "studio": "The field is the Input box: a transparent pill with the control border, the glow and the ring on focus. The popup is the Studio menu surface: surface-3, the card radius, the menu shadow; the lit row takes the overlay step.",
+    "desk": "The same field. The popup is the Desk menu glass: the strong material and blur, a hairline, the panel radius with field radius rows, regular weight; the lit row is the yellow primary fill with dark text. Under reduced transparency and more contrast the glass turns solid.",
+    "neutral": "Planned: tokens only."
+  },
+  "mistakes": [
+    {
+      "wrong": "A Combobox where any typed text is a fine answer",
+      "right": "Autocomplete, which keeps the text"
+    },
+    {
+      "wrong": "A placeholder as the only label",
+      "right": "A Field with a label around the Combobox"
+    },
+    {
+      "wrong": "Moving focus into the list with the arrow keys",
+      "right": "Focus stays in the input; aria-activedescendant points at the option (built in)"
+    },
+    {
+      "wrong": "An empty popup that says nothing when no option matches",
+      "right": "empty says what to try next: No results. Try another word."
+    },
+    {
+      "wrong": "Filtering only the exact spelling of Arabic names",
+      "right": "The shared normalize: أبها matches ابها, جدة matches جده"
+    },
+    {
+      "wrong": "Announcing the result count on every keystroke",
+      "right": "Once per query after typing pauses, in a polite status (built in)"
+    },
+    {
+      "wrong": "A Combobox with no Field and no aria-label",
+      "right": "A Field label, or aria-label: the input and its list both need a name"
+    }
+  ],
+  "contract": {
+    "optionalParts": [
+      "clear",
+      "popup",
+      "empty"
+    ],
+    "keys": {
+      "ArrowDown": {
+        "focus": "[data-part='control']",
+        "case": "many",
+        "expect": "state-changes"
+      },
+      "Escape": {
+        "focus": "[data-part='control']",
+        "case": "many",
+        "expect": "value-changes"
+      }
+    }
+  },
+  "since": "0.1.0"
+}
