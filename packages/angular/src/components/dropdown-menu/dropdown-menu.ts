@@ -308,6 +308,9 @@ export abstract class MenuPanel {
 
   /** Keys on the menu element: Tab stays, typeahead, and the first or last item from the menu itself. */
   onKeyDown(event: KeyboardEvent): void {
+    // Radix composes the content handler after the item's: a key the item used (Space on a
+    // checkbox item) never reaches typeahead, so the next Space is not read as a search.
+    if (event.defaultPrevented) return;
     const el = this.element;
     if (!el) return;
     const target = event.target as Element;
