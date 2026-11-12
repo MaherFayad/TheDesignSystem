@@ -6,15 +6,15 @@
 // button:
 // - pressable: the root is the button, built on ButtonBase. With
 //   `selected`, it is a toggle (aria-pressed) that shows a check.
-// - removable: the root is a span with the label and a remove IconButton.
+// - removable: the root is a span with the label and a remove CloseButton.
 //   Delete and Backspace on the remove button remove the chip too.
 // A chip that does neither is a Badge.
 //
 // Sources: Figma-Killer-2 TagPill (the tinted pill, a Button for the main
 // action and a ghost icon button for remove, "Remove <label>" as its name).
 // GoBanana `.st-chip` and admin `Chip` could not be read in the lane
-// session (no access to the repo). CloseButton (1.1.9) does not exist yet:
-// the remove part is an IconButton with the close icon until it does.
+// session (no access to the repo). The remove part is a CloseButton root
+// carrying data-part="remove".
 import type {
   ButtonHTMLAttributes,
   HTMLAttributes,
@@ -26,8 +26,12 @@ import type {
 } from 'react';
 import { Icon, type IconName } from '@the-system/icons/react';
 import type { Emphasis, Shape, Size, Tone } from '@the-system/shared';
+import { useTheme } from '../../theme/hooks';
 import { ButtonRoot } from '../Button/ButtonBase';
-import { IconButton } from '../IconButton';
+import { CloseButton } from '../CloseButton';
+
+/** The words of the default remove name by language. Arabic: a noun form. */
+const chipRemoveLabels = { en: 'Remove', ar: 'إزالة' } as const;
 
 export type ChipSize = Extract<Size, 'xs' | 'sm' | 'md'>;
 export type ChipTone = Extract<Tone, 'neutral' | 'accent' | 'success' | 'warning' | 'danger' | 'info'>;
@@ -66,7 +70,7 @@ export interface ChipRemovableProps
     Omit<HTMLAttributes<HTMLSpanElement>, 'title' | 'children' | 'onClick'> {
   /** Makes the chip removable: the remove button, Delete or Backspace on it, calls this. Move focus after removing. */
   onRemove: (event: MouseEvent<HTMLButtonElement> | KeyboardEvent<HTMLButtonElement>) => void;
-  /** The name of the remove button. Default "Remove <label>" when the label is text. Pass it when the label is not plain text, and in Arabic. */
+  /** The name of the remove button. Default "Remove <label>", or "إزالة <label>" under an Arabic Theme, when the label is text. Pass it when the label is not plain text, and to name what is removed. */
   removeLabel?: string;
   selected?: undefined;
   onClick?: undefined;
@@ -151,7 +155,9 @@ function RemovableChip({
   ref,
   ...rest
 }: ChipRemovableProps) {
-  const name = removeLabel ?? (typeof children === 'string' ? `Remove ${children}` : 'Remove');
+  const { lang } = useTheme();
+  const word = lang.startsWith('ar') ? chipRemoveLabels.ar : chipRemoveLabels.en;
+  const name = removeLabel ?? (typeof children === 'string' ? `${word} ${children}` : word);
   return (
     <span
       {...rest}
@@ -170,9 +176,8 @@ function RemovableChip({
         </span>
       )}
       <span data-part="label">{children}</span>
-      <IconButton
+      <CloseButton
         data-part="remove"
-        icon="close"
         label={name}
         size="xs"
         shape="pill"

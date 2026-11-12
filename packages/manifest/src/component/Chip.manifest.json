@@ -50,7 +50,7 @@
     },
     "removeLabel": {
       "type": "string",
-      "description": "The name of the remove button. Default Remove followed by the label when it is text. Name what is removed: Remove filter Arabic."
+      "description": "The name of the remove button. Default Remove followed by the label when it is text, or إزالة under an Arabic Theme. Name what is removed: Remove filter Arabic."
     },
     "disabled": {
       "type": "boolean",
@@ -73,8 +73,9 @@
     "native": { "accessibilityRole": "button", "accessibilityState": ["selected", "disabled"] },
     "notes": [
       "A chip is pressable or removable, never both, so a button never sits inside a button.",
-      "The chip and its remove button are two targets of at least 24 by 24 px (WCAG 2.5.8): the remove button is an xs IconButton.",
+      "The chip and its remove button are two targets of at least 24 by 24 px (WCAG 2.5.8): the remove button is an xs CloseButton. An xs removable chip stays 24px tall, in line with a pressable one.",
       "Selected is shown by fill and a check icon, not by color alone (WCAG 1.4.1).",
+      "In forced colors a selected chip is the system Highlight fill with HighlightText; it opts out of forcing so the text backplate does not hide the label.",
       "After a removal, move focus to the next chip's remove button, else the previous one, else a nearby control; the demo shows it (WCAG 2.4.3)."
     ]
   },
@@ -160,9 +161,9 @@
   "frameworks": {
     "react": {
       "status": "ready",
-      "behavior": "ButtonBase (pressable), IconButton (remove)",
+      "behavior": "ButtonBase (pressable), CloseButton (remove)",
       "example": "Chip.demo.tsx",
-      "note": "Motion: none of its own today; colors swap at once. A chip list may use fade-rise for added chips from the catalog (1.11). The remove part is an IconButton with the close icon until CloseButton (1.1.9) exists."
+      "note": "Motion: none of its own today; colors swap at once. A chip list may use fade-rise for added chips from the catalog (1.11). The remove part is a CloseButton root carrying data-part remove."
     },
     "angular": { "status": "planned" },
     "native": { "status": "planned" }
