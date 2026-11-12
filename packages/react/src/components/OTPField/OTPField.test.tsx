@@ -302,4 +302,12 @@ describe('OTPField', () => {
     const demo = readFileSync(join(process.cwd(), 'packages/react/src/components/OTPField/OTPField.demo.tsx'), 'utf8');
     expect(demo).not.toMatch(/<DemoGrid[^>]*min="\d/);
   });
+
+  it('has a gallery route at its data-ds name, so the contract and axe runs open it (review round 2, item 1-2)', () => {
+    // The suites open /c/<kebab name>; a route under another slug renders no demo and the run skips OTPField.
+    const routes = readFileSync(join(process.cwd(), 'apps/gallery-react/src/routes.gen.ts'), 'utf8');
+    expect(routes).toMatch(/\{ name: 'OTPField', slug: 'otp-field',/);
+    const { container } = render(<OTPField length={4} aria-label="Code" />);
+    expect(container.querySelector('[data-ds]')?.getAttribute('data-ds')).toBe('otp-field');
+  });
 });
