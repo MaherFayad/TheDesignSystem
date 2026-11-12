@@ -7,15 +7,21 @@ export interface DemoRoute {
 }
 
 export const routes: DemoRoute[] = [
+  { slug: 'autocomplete', load: () => import('../../../../packages/angular/src/components/autocomplete/autocomplete.demo').then((m) => m.default) },
   { slug: 'button', load: () => import('../../../../packages/angular/src/components/button/button.demo').then((m) => m.default) },
   { slug: 'checkbox', load: () => import('../../../../packages/angular/src/components/checkbox/checkbox.demo').then((m) => m.default) },
   { slug: 'checkbox-group', load: () => import('../../../../packages/angular/src/components/checkbox-group/checkbox-group.demo').then((m) => m.default) },
+  { slug: 'combobox', load: () => import('../../../../packages/angular/src/components/combobox/combobox.demo').then((m) => m.default) },
   { slug: 'dialog', load: () => import('../../../../packages/angular/src/components/dialog/dialog.demo').then((m) => m.default) },
   { slug: 'icon-button', load: () => import('../../../../packages/angular/src/components/icon-button/icon-button.demo').then((m) => m.default) },
+  { slug: 'list-box', load: () => import('../../../../packages/angular/src/components/list-box/list-box.demo').then((m) => m.default) },
+  { slug: 'multi-select', load: () => import('../../../../packages/angular/src/components/multi-select/multi-select.demo').then((m) => m.default) },
   { slug: 'radio-card', load: () => import('../../../../packages/angular/src/components/radio-card/radio-card.demo').then((m) => m.default) },
   { slug: 'radio-group', load: () => import('../../../../packages/angular/src/components/radio-group/radio-group.demo').then((m) => m.default) },
   { slug: 'range-slider', load: () => import('../../../../packages/angular/src/components/range-slider/range-slider.demo').then((m) => m.default) },
   { slug: 'rating', load: () => import('../../../../packages/angular/src/components/rating/rating.demo').then((m) => m.default) },
+  { slug: 'select', load: () => import('../../../../packages/angular/src/components/select/select.demo').then((m) => m.default) },
   { slug: 'slider', load: () => import('../../../../packages/angular/src/components/slider/slider.demo').then((m) => m.default) },
   { slug: 'switch', load: () => import('../../../../packages/angular/src/components/switch/switch.demo').then((m) => m.default) },
+  { slug: 'tag-field', load: () => import('../../../../packages/angular/src/components/tag-field/tag-field.demo').then((m) => m.default) },
 ];

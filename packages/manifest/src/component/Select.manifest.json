@@ -279,8 +279,10 @@
       "note": "Sources Figma-Killer-2 Select/ and GoBanana .st-menu were not reachable in the lane session; the trigger follows the Combobox field (the Input box) and the rows the ListBox option rows. Radix Select has no exit presence, so the list leaves at once on close."
     },
     "angular": {
-      "status": "planned",
-      "behavior": "cdk:overlay with cdk:listbox"
+      "status": "ready",
+      "behavior": "button[dsSelect], hand built with the Radix Select DOM and keys: a CDK ComponentPortal list placed with the Radix Popper steps (internal/popper.ts), focus moved into the list, typeahead from the shared listbox.ts, the page hidden and scroll locked while open (behavior/dialog-behavior.ts), ControlValueAccessor",
+      "example": "select.demo.ts",
+      "note": "The host is the trigger, the root. Inputs take the React prop names; onValueChange and onOpenChange are the valueChange and openChange outputs of [(value)] and [(open)]. aria-label, aria-labelledby and aria-describedby are inputs, as the list reads them too. empty takes text or a TemplateRef. The loading words and, inside a form, the Radix bubble select are siblings after the trigger, added by the component. The Radix Spinner DOM is inline until the Angular Spinner exists. Typeahead folds Arabic like the rest of the list family, with the Radix pause of 1000ms. Angular Aria Select would replace the hand built keys once @angular/aria is installed. Select.css is used as is."
     },
     "native": {
       "status": "planned",
