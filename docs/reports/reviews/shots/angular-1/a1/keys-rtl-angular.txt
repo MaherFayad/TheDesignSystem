@@ -1,0 +1,156 @@
+[tab walk from top]
+  Tab          -> button ds=toggle-button part=null role=null pressed=false exp=null state=off dis=null "Grid view" fv=true ring=solid/2px|shadow|b:1/- layers=0
+  Tab          -> button ds=toggle-button part=null role=null pressed=false exp=null state=off dis=null "Grid view" fv=true ring=solid/2px|shadow|b:1/- layers=0
+  Tab          -> button ds=toggle-button part=null role=null pressed=false exp=null state=off dis=null "Grid view" fv=true ring=solid/2px|shadow|b:1/- layers=0
+  Tab          -> button ds=toggle-button part=null role=null pressed=false exp=null state=off dis=null "Grid view" fv=true ring=solid/2px|shadow|b:1/- layers=0
+  Tab          -> button ds=toggle-button part=null role=null pressed=true exp=null state=on dis=null "Grid view" fv=true ring=solid/2px|shadow|b:1/- layers=0
+  Tab          -> button ds=toggle-button part=null role=null pressed=true exp=null state=on dis=null "Grid view" fv=true ring=solid/2px|shadow|b:1/- layers=0
+  Tab          -> button ds=toggle-button part=null role=null pressed=true exp=null state=on dis=null "Grid view" fv=true ring=solid/2px|shadow|b:1/- layers=0
+  Tab          -> button ds=toggle-button part=null role=null pressed=true exp=null state=on dis=null "Grid view" fv=true ring=solid/2px|shadow|b:1/- layers=0
+[toggle] focus [data-ds=toggle-button]:not([aria-disabled])
+  start        -> button ds=toggle-button part=null role=null pressed=false exp=null state=off dis=null "Grid view" fv=true ring=solid/2px|shadow|b:1/- layers=0
+  Space        -> button ds=toggle-button part=null role=null pressed=true exp=null state=on dis=null "Grid view" fv=true ring=solid/2px|shadow|b:1/- layers=0
+  Enter        -> button ds=toggle-button part=null role=null pressed=false exp=null state=off dis=null "Grid view" fv=true ring=solid/2px|shadow|b:1/- layers=0
+  Space        -> button ds=toggle-button part=null role=null pressed=true exp=null state=on dis=null "Grid view" fv=true ring=solid/2px|shadow|b:1/- layers=0
+  Tab          -> button ds=toggle-button part=null role=null pressed=false exp=null state=off dis=null "Grid view" fv=true ring=solid/2px|shadow|b:1/- layers=0
+  Enter        -> button ds=toggle-button part=null role=null pressed=true exp=null state=on dis=null "Grid view" fv=true ring=solid/2px|shadow|b:1/- layers=0
+  Shift+Tab    -> button ds=toggle-button part=null role=null pressed=true exp=null state=on dis=null "Grid view" fv=true ring=solid/2px|shadow|b:1/- layers=0
+[toggle disabled] focus [data-ds=toggle-button][aria-disabled=true]
+  start        -> button ds=toggle-button part=null role=null pressed=false exp=null state=off dis=true "Grid view" fv=true ring=solid/2px|shadow|b:1/- layers=0
+  Space        -> button ds=toggle-button part=null role=null pressed=false exp=null state=off dis=true "Grid view" fv=true ring=solid/2px|shadow|b:1/- layers=0
+  Enter        -> button ds=toggle-button part=null role=null pressed=false exp=null state=off dis=true "Grid view" fv=true ring=solid/2px|shadow|b:1/- layers=0
+[tab walk from top]
+  Tab          -> button ds=close-button part=null role=null pressed=null exp=null state=null dis=null "" fv=true ring=solid/2px|shadow|b:1/- layers=0
+  Tab          -> button ds=close-button part=null role=null pressed=null exp=null state=null dis=null "" fv=true ring=solid/2px|shadow|b:1/- layers=0
+  Tab          -> button ds=close-button part=null role=null pressed=null exp=null state=null dis=null "" fv=true ring=solid/2px|shadow|b:1/- layers=0
+  Tab          -> button ds=close-button part=null role=null pressed=null exp=null state=null dis=null "" fv=true ring=solid/2px|shadow|b:1/- layers=0
+  Tab          -> button ds=close-button part=null role=null pressed=null exp=null state=null dis=null "" fv=true ring=solid/2px|shadow|b:1/- layers=0
+  Tab          -> button ds=close-button part=null role=null pressed=null exp=null state=null dis=null "" fv=true ring=solid/2px|shadow|b:1/- layers=0
+[tab walk from top]
+  Tab          -> button ds=copy-button part=null role=null pressed=null exp=null state=idle dis=null "Copy command" fv=true ring=solid/2px|shadow|b:1/- layers=0
+  Tab          -> button ds=copy-button part=null role=null pressed=null exp=null state=idle dis=null "Copy command" fv=true ring=solid/2px|shadow|b:1/- layers=0
+  Tab          -> button ds=copy-button part=null role=null pressed=null exp=null state=idle dis=null "Copy command" fv=true ring=solid/2px|shadow|b:1/- layers=0
+  Tab          -> button ds=copy-button part=null role=null pressed=null exp=null state=idle dis=null "Copy command" fv=true ring=solid/2px|shadow|b:1/- layers=0
+  Tab          -> button ds=copy-button part=null role=null pressed=null exp=null state=idle dis=null "Copy command" fv=true ring=solid/2px|shadow|b:1/- layers=0
+  Tab          -> button ds=copy-button part=null role=null pressed=null exp=null state=idle dis=null "" fv=true ring=solid/2px|shadow|b:1/- layers=0
+[copy] focus [data-ds=copy-button]:not([aria-disabled])
+  start        -> button ds=copy-button part=null role=null pressed=null exp=null state=idle dis=null "Copy command" fv=true ring=solid/2px|shadow|b:1/- layers=0
+  Enter        -> button ds=copy-button part=null role=null pressed=null exp=null state=copied dis=null "Copy command" fv=true ring=solid/2px|shadow|b:1/- layers=0
+  status: تم النسخ
+  clipboard: npx the-system add button
+[tab walk from top]
+  Tab          -> button ds=floating-action-button part=null role=null pressed=null exp=null state=null dis=null "" fv=true ring=solid/2px|shadow|b:1/- layers=0
+  Tab          -> button ds=floating-action-button part=null role=null pressed=null exp=null state=null dis=null "" fv=true ring=solid/2px|shadow|b:1/- layers=0
+  Tab          -> button ds=floating-action-button part=null role=null pressed=null exp=null state=null dis=null "" fv=true ring=solid/2px|shadow|b:1/- layers=0
+  Tab          -> button ds=floating-action-button part=null role=null pressed=null exp=null state=null dis=null "" fv=true ring=solid/2px|shadow|b:1/- layers=0
+  Tab          -> button ds=floating-action-button part=null role=null pressed=null exp=null state=null dis=null "" fv=true ring=solid/2px|shadow|b:1/- layers=0
+  Tab          -> button ds=floating-action-button part=null role=null pressed=null exp=null state=null dis=null "" fv=true ring=solid/2px|shadow|b:1/- layers=0
+[tab walk from top]
+  Tab          -> a ds=link part=null role=null pressed=null exp=null state=null dis=null "Read the sharing guide" fv=true ring=solid/2px|shadow|b:1/- layers=0
+  Tab          -> a ds=link part=null role=null pressed=null exp=null state=null dis=null "open the full docs" fv=true ring=solid/2px|shadow|b:1/- layers=0
+  Tab          -> a ds=link part=null role=null pressed=null exp=null state=null dis=null "Read the sharing guide" fv=true ring=solid/2px|shadow|b:1/- layers=0
+  Tab          -> a ds=link part=null role=null pressed=null exp=null state=null dis=null "open the full docs" fv=true ring=solid/2px|shadow|b:1/- layers=0
+  Tab          -> a ds=link part=null role=null pressed=null exp=null state=null dis=null "Read the pricing guide" fv=true ring=solid/2px|shadow|b:1/- layers=0
+  Tab          -> a ds=link part=null role=null pressed=null exp=null state=null dis=null "Read the pricing guide" fv=true ring=solid/2px|shadow|b:1/- layers=0
+  Tab          -> a ds=link part=null role=null pressed=null exp=null state=null dis=null "Open the changelog" fv=true ring=solid/2px|shadow|b:1/- layers=0
+  Tab          -> a ds=link part=null role=null pressed=null exp=null state=null dis=null "Read the pricing guide" fv=true ring=solid/2px|shadow|b:1/- layers=0
+  Tab          -> a ds=link part=null role=null pressed=null exp=null state=null dis=null "Read the pricing guide" fv=true ring=solid/2px|shadow|b:1/- layers=0
+  Tab          -> a ds=link part=null role=null pressed=null exp=null state=null dis=null "Open the changelog" fv=true ring=solid/2px|shadow|b:1/- layers=0
+[link disabled] focus [data-ds=link][aria-disabled=true]
+  start        -> a ds=link part=null role=link pressed=null exp=null state=null dis=true "Download the export kit" fv=true ring=solid/2px|shadow|b:1/- layers=0
+  Enter        -> a ds=link part=null role=link pressed=null exp=null state=null dis=true "Download the export kit" fv=true ring=solid/2px|shadow|b:1/- layers=0
+  url: /c/link
+[tab walk from top]
+  Tab          -> button ds=button part=null role=null pressed=null exp=null state=null dis=null "Save draft" fv=true ring=solid/2px|shadow|b:1/- layers=0
+  Tab          -> button ds=button part=null role=null pressed=null exp=null state=null dis=null "Preview page" fv=true ring=solid/2px|shadow|b:1/- layers=0
+  Tab          -> button ds=button part=null role=null pressed=null exp=null state=null dis=null "Share board" fv=true ring=solid/2px|shadow|b:1/- layers=0
+  Tab          -> button ds=icon-button part=null role=null pressed=null exp=null state=null dis=null "" fv=true ring=solid/2px|shadow|b:1/- layers=0
+  Tab          -> button ds=icon-button part=null role=null pressed=null exp=null state=null dis=null "" fv=true ring=solid/2px|shadow|b:1/- layers=0
+  Tab          -> button ds=button part=null role=null pressed=null exp=null state=null dis=null "Save draft" fv=true ring=solid/2px|shadow|b:1/- layers=0
+  Tab          -> button ds=button part=null role=null pressed=null exp=null state=null dis=null "Preview page" fv=true ring=solid/2px|shadow|b:1/- layers=0
+  Tab          -> button ds=button part=null role=null pressed=null exp=null state=null dis=null "Share board" fv=true ring=solid/2px|shadow|b:1/- layers=0
+  Tab          -> button ds=icon-button part=null role=null pressed=null exp=null state=null dis=null "" fv=true ring=solid/2px|shadow|b:1/- layers=0
+  Tab          -> button ds=icon-button part=null role=null pressed=null exp=null state=null dis=null "" fv=true ring=solid/2px|shadow|b:1/- layers=0
+[group arrows do nothing] focus [data-ds=button-group] > *
+  start        -> button ds=button part=null role=null pressed=null exp=null state=null dis=null "Save draft" fv=true ring=solid/2px|shadow|b:1/- layers=0
+  ArrowRight   -> button ds=button part=null role=null pressed=null exp=null state=null dis=null "Save draft" fv=true ring=solid/2px|shadow|b:1/- layers=0
+  ArrowDown    -> button ds=button part=null role=null pressed=null exp=null state=null dis=null "Save draft" fv=true ring=solid/2px|shadow|b:1/- layers=0
+  Tab          -> button ds=button part=null role=null pressed=null exp=null state=null dis=null "Preview page" fv=true ring=solid/2px|shadow|b:1/- layers=0
+  Tab          -> button ds=button part=null role=null pressed=null exp=null state=null dis=null "Share board" fv=true ring=solid/2px|shadow|b:1/- layers=0
+[tab walk from top]
+  Tab          -> button ds=button part=null role=null pressed=null exp=false state=closed dis=null "Board actions" fv=true ring=solid/2px|shadow|b:1/- layers=0
+  Tab          -> button ds=button part=null role=null pressed=null exp=false state=closed dis=null "Board actions" fv=true ring=solid/2px|shadow|b:1/- layers=0
+  Tab          -> button ds=icon-button part=null role=null pressed=null exp=false state=closed dis=null "" fv=true ring=solid/2px|shadow|b:1/- layers=0
+  Tab          -> button ds=button part=null role=null pressed=null exp=false state=closed dis=null "إجراءات اللوحة" fv=true ring=solid/2px|shadow|b:1/- layers=0
+[menu enter] focus [data-demo-trigger=md]
+  start        -> button ds=button part=null role=null pressed=null exp=false state=closed dis=null "Board actions" fv=true ring=solid/2px|shadow|b:1/- layers=0
+  Enter        -> div ds=null part=item role=menuitem pressed=null exp=null state=null dis=null "Rename board" fv=true ring=solid/2px|shadow|b:1/- layers=1
+  ArrowDown    -> div ds=null part=item role=menuitem pressed=null exp=null state=null dis=null "Duplicate board" fv=true ring=solid/2px|shadow|b:1/- layers=1
+  ArrowDown    -> div ds=null part=item role=menuitem pressed=null exp=null state=null dis=null "Download board" fv=true ring=solid/2px|shadow|b:1/- layers=1
+  ArrowDown    -> div ds=null part=sub-trigger role=menuitem pressed=null exp=false state=closed dis=null "Share board" fv=true ring=solid/2px|shadow|b:1/- layers=1
+  End          -> div ds=null part=item role=menuitem pressed=null exp=null state=null dis=null "Delete board" fv=true ring=solid/2px|shadow|b:1/- layers=1
+  ArrowDown    -> div ds=null part=item role=menuitem pressed=null exp=null state=null dis=null "Delete board" fv=true ring=solid/2px|shadow|b:1/- layers=1
+  Home         -> div ds=null part=item role=menuitem pressed=null exp=null state=null dis=null "Rename board" fv=true ring=solid/2px|shadow|b:1/- layers=1
+  ArrowUp      -> div ds=null part=item role=menuitem pressed=null exp=null state=null dis=null "Rename board" fv=true ring=solid/2px|shadow|b:1/- layers=1
+  type:s       -> div ds=null part=sub-trigger role=menuitem pressed=null exp=false state=closed dis=null "Share board" fv=true ring=solid/2px|shadow|b:1/- layers=1
+  Tab          -> div ds=null part=sub-trigger role=menuitem pressed=null exp=false state=closed dis=null "Share board" fv=true ring=solid/2px|shadow|b:1/- layers=1
+  Escape       -> button ds=button part=null role=null pressed=null exp=false state=closed dis=null "Board actions" fv=true ring=solid/2px|shadow|b:1/- layers=0
+[menu open keys] focus [data-demo-trigger=md]
+  start        -> button ds=button part=null role=null pressed=null exp=false state=closed dis=null "Board actions" fv=true ring=solid/2px|shadow|b:1/- layers=0
+  ArrowUp      -> div ds=null part=item role=menuitem pressed=null exp=null state=null dis=null "Delete board" fv=true ring=solid/2px|shadow|b:1/- layers=1
+  Escape       -> button ds=button part=null role=null pressed=null exp=false state=closed dis=null "Board actions" fv=true ring=solid/2px|shadow|b:1/- layers=0
+  Space        -> div ds=null part=item role=menuitem pressed=null exp=null state=null dis=null "Rename board" fv=true ring=solid/2px|shadow|b:1/- layers=1
+  Escape       -> button ds=button part=null role=null pressed=null exp=false state=closed dis=null "Board actions" fv=true ring=solid/2px|shadow|b:1/- layers=0
+  ArrowDown    -> div ds=null part=item role=menuitem pressed=null exp=null state=null dis=null "Rename board" fv=true ring=solid/2px|shadow|b:1/- layers=1
+  Escape       -> button ds=button part=null role=null pressed=null exp=false state=closed dis=null "Board actions" fv=true ring=solid/2px|shadow|b:1/- layers=0
+[submenu] focus [data-demo-trigger=md]
+  start        -> button ds=button part=null role=null pressed=null exp=false state=closed dis=null "Board actions" fv=true ring=solid/2px|shadow|b:1/- layers=0
+  Enter        -> div ds=null part=item role=menuitem pressed=null exp=null state=null dis=null "Rename board" fv=true ring=solid/2px|shadow|b:1/- layers=1
+  ArrowDown    -> div ds=null part=item role=menuitem pressed=null exp=null state=null dis=null "Duplicate board" fv=true ring=solid/2px|shadow|b:1/- layers=1
+  ArrowDown    -> div ds=null part=item role=menuitem pressed=null exp=null state=null dis=null "Download board" fv=true ring=solid/2px|shadow|b:1/- layers=1
+  ArrowLeft    -> div ds=null part=item role=menuitem pressed=null exp=null state=null dis=null "Download board" fv=true ring=solid/2px|shadow|b:1/- layers=1
+  ArrowDown    -> div ds=null part=sub-trigger role=menuitem pressed=null exp=false state=closed dis=null "Share board" fv=true ring=solid/2px|shadow|b:1/- layers=1
+  ArrowRight   -> div ds=null part=sub-trigger role=menuitem pressed=null exp=false state=closed dis=null "Share board" fv=true ring=solid/2px|shadow|b:1/- layers=1
+  ArrowLeft    -> div ds=null part=item role=menuitem pressed=null exp=null state=null dis=null "Copy link" fv=true ring=solid/2px|shadow|b:1/- layers=2
+  Escape       -> button ds=button part=null role=null pressed=null exp=false state=closed dis=null "Board actions" fv=true ring=solid/2px|shadow|b:1/- layers=0
+[checkbox item] focus [data-demo-trigger=md]
+  start        -> button ds=button part=null role=null pressed=null exp=false state=closed dis=null "Board actions" fv=true ring=solid/2px|shadow|b:1/- layers=0
+  Enter        -> div ds=null part=item role=menuitem pressed=null exp=null state=null dis=null "Rename board" fv=true ring=solid/2px|shadow|b:1/- layers=1
+  ArrowDown    -> div ds=null part=item role=menuitem pressed=null exp=null state=null dis=null "Duplicate board" fv=true ring=solid/2px|shadow|b:1/- layers=1
+  ArrowDown    -> div ds=null part=item role=menuitem pressed=null exp=null state=null dis=null "Download board" fv=true ring=solid/2px|shadow|b:1/- layers=1
+  ArrowDown    -> div ds=null part=sub-trigger role=menuitem pressed=null exp=false state=closed dis=null "Share board" fv=true ring=solid/2px|shadow|b:1/- layers=1
+  ArrowDown    -> div ds=null part=checkbox-item role=menuitemcheckbox pressed=null exp=null state=checked dis=null "Show grid" fv=true ring=solid/2px|shadow|b:1/- layers=1
+  Space        -> button ds=button part=null role=null pressed=null exp=false state=closed dis=null "Board actions" fv=true ring=solid/2px|shadow|b:1/- layers=0
+  ArrowDown    -> div ds=null part=item role=menuitem pressed=null exp=null state=null dis=null "Rename board" fv=true ring=solid/2px|shadow|b:1/- layers=1
+  Enter        -> button ds=button part=null role=null pressed=null exp=false state=closed dis=null "Board actions" fv=true ring=solid/2px|shadow|b:1/- layers=0
+  checked: 
+[arabic menu] focus [data-demo-trigger=ar]
+  start        -> button ds=button part=null role=null pressed=null exp=false state=closed dis=null "إجراءات اللوحة" fv=true ring=solid/2px|shadow|b:1/- layers=0
+  Enter        -> div ds=null part=item role=menuitem pressed=null exp=null state=null dis=null "إعادة تسمية اللوحة" fv=true ring=solid/2px|shadow|b:1/- layers=1
+  ArrowDown    -> div ds=null part=item role=menuitem pressed=null exp=null state=null dis=null "تكرار اللوحة" fv=true ring=solid/2px|shadow|b:1/- layers=1
+  ArrowDown    -> div ds=null part=item role=menuitem pressed=null exp=null state=null dis=null "تنزيل اللوحة" fv=true ring=solid/2px|shadow|b:1/- layers=1
+  ArrowRight   -> div ds=null part=item role=menuitem pressed=null exp=null state=null dis=null "تنزيل اللوحة" fv=true ring=solid/2px|shadow|b:1/- layers=1
+  ArrowLeft    -> div ds=null part=item role=menuitem pressed=null exp=null state=null dis=null "تنزيل اللوحة" fv=true ring=solid/2px|shadow|b:1/- layers=1
+  Escape       -> button ds=button part=null role=null pressed=null exp=false state=closed dis=null "إجراءات اللوحة" fv=true ring=solid/2px|shadow|b:1/- layers=0
+  Escape       -> button ds=button part=null role=null pressed=null exp=false state=closed dis=null "إجراءات اللوحة" fv=true ring=solid/2px|shadow|b:1/- layers=0
+[tab walk from top]
+  Tab          -> button ds=button part=action role=null pressed=null exp=null state=null dis=null "Publish page" fv=true ring=solid/2px|shadow|b:1/- layers=0
+  Tab          -> button ds=icon-button part=trigger role=null pressed=null exp=false state=closed dis=null "" fv=true ring=solid/2px|shadow|b:1/- layers=0
+  Tab          -> button ds=button part=action role=null pressed=null exp=null state=null dis=null "Publish page" fv=true ring=solid/2px|shadow|b:1/- layers=0
+  Tab          -> button ds=icon-button part=trigger role=null pressed=null exp=false state=closed dis=null "" fv=true ring=solid/2px|shadow|b:1/- layers=0
+[split] focus [data-ds=split-button]:not([data-disabled]) > [data-part=trigger]
+  start        -> button ds=icon-button part=trigger role=null pressed=null exp=false state=closed dis=null "" fv=true ring=solid/2px|shadow|b:1/- layers=0
+  Enter        -> div ds=null part=item role=menuitem pressed=null exp=null state=null dis=null "Schedule publish" fv=true ring=solid/2px|shadow|b:1/- layers=1
+  ArrowDown    -> div ds=null part=item role=menuitem pressed=null exp=null state=null dis=null "Publish to staging" fv=true ring=solid/2px|shadow|b:1/- layers=1
+  End          -> div ds=null part=item role=menuitem pressed=null exp=null state=null dis=null "Save as draft" fv=true ring=solid/2px|shadow|b:1/- layers=1
+  Escape       -> button ds=icon-button part=trigger role=null pressed=null exp=false state=closed dis=null "" fv=true ring=solid/2px|shadow|b:1/- layers=0
+  ArrowUp      -> div ds=null part=item role=menuitem pressed=null exp=null state=null dis=null "Save as draft" fv=true ring=solid/2px|shadow|b:1/- layers=1
+  Escape       -> button ds=icon-button part=trigger role=null pressed=null exp=false state=closed dis=null "" fv=true ring=solid/2px|shadow|b:1/- layers=0
+  Shift+Tab    -> button ds=button part=action role=null pressed=null exp=null state=null dis=null "Publish page" fv=true ring=solid/2px|shadow|b:1/- layers=0
+  Tab          -> button ds=icon-button part=trigger role=null pressed=null exp=false state=closed dis=null "" fv=true ring=solid/2px|shadow|b:1/- layers=0
+  ArrowDown    -> div ds=null part=item role=menuitem pressed=null exp=null state=null dis=null "Schedule publish" fv=true ring=solid/2px|shadow|b:1/- layers=1
+  Tab          -> div ds=null part=item role=menuitem pressed=null exp=null state=null dis=null "Schedule publish" fv=true ring=solid/2px|shadow|b:1/- layers=1
+[split disabled] focus [data-ds=split-button][data-disabled] > [data-part=trigger]
+  start        -> button ds=icon-button part=trigger role=null pressed=null exp=false state=closed dis=true "" fv=true ring=solid/2px|shadow|b:1/- layers=0
+  Enter        -> button ds=icon-button part=trigger role=null pressed=null exp=false state=closed dis=true "" fv=true ring=solid/2px|shadow|b:1/- layers=0
+  ArrowDown    -> button ds=icon-button part=trigger role=null pressed=null exp=false state=closed dis=true "" fv=true ring=solid/2px|shadow|b:1/- layers=0

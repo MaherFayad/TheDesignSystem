@@ -1,0 +1,20 @@
+== tab order
+variants button ds=button part=retry label=null text=Retry loading
+== activators 8
+== variants retry Retry loading [Enter] -> focus: variants button ds=button part=retry label=null text=Retry loadingRetrying; ds count 43->43; es-states retrying,error,error,error,error,error,error,retrying,error
+== variants retry Retry loading [Space] -> focus: variants button ds=button part=retry label=null text=Retry loadingRetrying; ds count 43->43; es-states retrying,error,error,error,error,error,error,retrying,error
+== variants retry Retry loading [Enter] -> focus: variants button ds=button part=retry label=null text=Retry loadingRetrying; ds count 43->43; es-states error,retrying,error,error,error,error,error,retrying,error
+== variants retry Retry loading [Space] -> focus: variants button ds=button part=retry label=null text=Retry loadingRetrying; ds count 43->43; es-states error,retrying,error,error,error,error,error,retrying,error
+== variants retry Retry loading [Enter] -> focus: variants button ds=button part=retry label=null text=Retry loadingRetrying; ds count 43->43; es-states error,error,retrying,error,error,error,error,retrying,error
+== variants retry Retry loading [Space] -> focus: variants button ds=button part=retry label=null text=Retry loadingRetrying; ds count 43->43; es-states error,error,retrying,error,error,error,error,retrying,error
+== variants retry إعادة التحميل [Enter] -> focus: variants button ds=button part=retry label=null text=إعادة التحميلجار إعادة المحاولة; ds count 43->43; es-states error,error,error,retrying,error,error,error,retrying,error
+== variants retry إعادة التحميل [Space] -> focus: variants button ds=button part=retry label=null text=إعادة التحميلجار إعادة المحاولة; ds count 43->43; es-states error,error,error,retrying,error,error,error,retrying,error
+== long-text retry Retry loading [Enter] -> focus: long-text button ds=button part=retry label=null text=Retry loadingRetrying; ds count 43->43; es-states error,error,error,error,error,retrying,error,retrying,error
+== long-text retry Retry loading [Space] -> focus: long-text button ds=button part=retry label=null text=Retry loadingRetrying; ds count 43->43; es-states error,error,error,error,error,retrying,error,retrying,error
+== long-arabic retry إعادة التحميل [Enter] -> focus: long-arabic button ds=button part=retry label=null text=إعادة التحميلجار إعادة المحاولة; ds count 43->43; es-states error,error,error,error,error,error,retrying,retrying,error
+== long-arabic retry إعادة التحميل [Space] -> focus: long-arabic button ds=button part=retry label=null text=إعادة التحميلجار إعادة المحاولة; ds count 43->43; es-states error,error,error,error,error,error,retrying,retrying,error
+== loading retry Retry loadingRetrying [Enter] -> focus: loading button ds=button part=retry label=null text=Retry loadingRetrying; ds count 43->43; es-states error,error,error,error,error,error,error,retrying,error
+== loading retry Retry loadingRetrying [Space] -> focus: loading button ds=button part=retry label=null text=Retry loadingRetrying; ds count 43->43; es-states error,error,error,error,error,error,error,retrying,error
+== error retry Retry loading [Enter] -> focus: error button ds=button part=retry label=null text=Retry loadingRetrying; ds count 43->43; es-states error,error,error,error,error,error,error,retrying,retrying
+== error retry Retry loading [Space] -> focus: error button ds=button part=retry label=null text=Retry loadingRetrying; ds count 43->43; es-states error,error,error,error,error,error,error,retrying,retrying
+== errors []

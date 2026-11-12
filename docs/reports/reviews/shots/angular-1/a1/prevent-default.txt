@@ -1,0 +1,16 @@
+Keyboard traces: React and Angular identical (diff empty) in LTR studio and RTL desk ar.
+
+REACT
+toggle mouse: aria-pressed false -> false
+copy mouse: data-state=idle clipboard=SENTINEL
+toggle space: aria-pressed false -> false
+copy space: data-state=idle clipboard=SENTINEL
+toggle el.click(): aria-pressed false -> false
+copy el.click(): data-state=idle clipboard=SENTINEL
+ANGULAR
+toggle mouse: aria-pressed false -> true
+copy mouse: data-state=copied clipboard=npx the-system add button
+toggle space: aria-pressed false -> true
+copy space: data-state=copied clipboard=npx the-system add button
+toggle el.click(): aria-pressed false -> false
+copy el.click(): data-state=idle clipboard=SENTINEL

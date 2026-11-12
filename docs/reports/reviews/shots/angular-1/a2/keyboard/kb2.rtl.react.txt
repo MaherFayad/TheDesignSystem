@@ -1,0 +1,22 @@
+typed value="launchabc" empty=false clear=true input part=control name=Search boards, xs, default
+Escape 1 value="" empty=true clear=false input part=control name=Search boards, xs, default
+Escape 2 value="" empty=true clear=false input part=control name=Search boards, xs, default
+typed value="xy" empty=false clear=true
+Tab button part=clear name=Clear search
+Enter on clear value="" empty=true clear=false input part=control name=Search boards, xs, default
+Space on clear value="" empty=true clear=false input part=control name=Search boards, xs, default
+click clear value="" empty=true clear=false input part=control name=Search boards, xs, default
+Tab back in value="m" empty=false clear=true input part=control name=Search boards, xs, default
+Escape after Tab back value="" empty=true clear=false input part=control name=Search boards, xs, default
+pw toggle type=password visible=false pressed=false label=Show password button part=toggle name=Show password
+Enter type=text visible=true pressed=true label=Hide password button part=toggle name=Hide password
+Space type=password visible=false pressed=false label=Show password button part=toggle name=Show password
+click type=text visible=true pressed=true label=Hide password button part=toggle name=Hide password
+inline roots viewing false | viewing false | viewing false | viewing false | viewing false | viewing false | viewing false | viewing false | viewing false | viewing false | viewing false | viewing false | viewing false | viewing false | viewing false | editing false | viewing false | viewing true
+display focus state=viewing display=Spring launch, xs input=- status= button part=display name=Spring launch, xs, Edit board name
+Enter state=editing display=undefined input="Spring launch, xs" sel=0-17 status= input part=control name=Board name
+Enter commit state=viewing display=Renamed input=- status=Saved button part=display name=Renamed, Edit board name
+Space state=editing display=undefined input="Renamed" sel=0-7 status= input part=control name=Board name
+Escape state=viewing display=Renamed input=- status= button part=display name=Renamed, Edit board name
+click state=editing display=undefined input="Renamed" sel=0-7 status= input part=control name=Board name
+click outside state=viewing display=Blur input=- status=Saved body part=null name=null
