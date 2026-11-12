@@ -22,7 +22,7 @@ import type { IconName } from '@the-system/icons';
 import type { Emphasis, Size, Tone } from '@the-system/shared';
 import { consumeHostAttributes } from '../../internal/host';
 import { DsThemeService } from '../../theme/theme';
-import { DsIconButton } from '../icon-button/icon-button';
+import { DsCloseButton } from '../close-button/close-button';
 import { DsFilledPart, messageIcons, wordsFor } from './message';
 
 export type AlertTone = Tone;
@@ -47,7 +47,7 @@ export type MessageContent = string | TemplateRef<unknown>;
 @Component({
   selector: 'div[dsAlert]',
   exportAs: 'dsAlert',
-  imports: [DsIcon, DsIconButton, DsFilledPart, NgTemplateOutlet],
+  imports: [DsIcon, DsCloseButton, DsFilledPart, NgTemplateOutlet],
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     'data-ds': 'alert',
@@ -71,8 +71,7 @@ export type MessageContent = string | TemplateRef<unknown>;
       <div data-part="actions">@if (isText(a)) {{{ a }}} @else {<ng-container [ngTemplateOutlet]="a" />}</div>
     }
     @if (onClose(); as close) {
-      <!-- The system CloseButton DOM. Swap for dsCloseButton when the A1 port merges. -->
-      <button dsIconButton data-ds="close-button" data-part="close" icon="close" size="xs" [label]="closeName()" (click)="close()"></button>
+      <button dsCloseButton data-part="close" size="xs" [label]="closeName()" (click)="close()"></button>
     }
   `,
 })
