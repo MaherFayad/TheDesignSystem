@@ -21,35 +21,77 @@
     "A notice for the whole page or app": "Banner",
     "A decision that blocks the task": "AlertDialog"
   },
-  "anatomy": ["root", "icon", "title", "body"],
+  "anatomy": [
+    "root",
+    "icon",
+    "title",
+    "body"
+  ],
   "slots": {
-    "title": { "accepts": "text", "max": 1 },
-    "body": { "accepts": "any" }
+    "title": {
+      "accepts": "any",
+      "max": 1
+    },
+    "body": {
+      "accepts": "any"
+    }
   },
   "props": {
     "tone": {
-      "type": ["neutral", "accent", "success", "warning", "danger", "info"],
+      "type": [
+        "neutral",
+        "accent",
+        "success",
+        "warning",
+        "danger",
+        "info"
+      ],
       "default": "neutral",
       "description": "The color, the icon and the tone word: Note, Tip, Information, Success, Warning, Caution."
     },
-    "emphasis": { "type": ["soft", "outline"], "default": "soft", "description": "soft is a tinted box, outline a tone border on the surface. Both keep the strong tone edge on the inline start side." },
-    "title": { "type": "node", "description": "A short line that sums up the note. Optional: without it the tone word names the callout." },
-    "children": { "type": "node", "description": "The note: text, paragraphs, a list, links or inline code." },
-    "icon": { "type": "node", "description": "A system icon name or a node in place of the tone icon. The tone word stays on the icon part." },
-    "toneLabel": { "type": "string", "description": "The word the icon says and the start of the callout's name. Default by tone and language." },
+    "emphasis": {
+      "type": [
+        "soft",
+        "outline"
+      ],
+      "default": "soft",
+      "description": "soft is a tinted box, outline a tone border on the surface. Both keep the strong tone edge on the inline start side."
+    },
+    "title": {
+      "type": "node",
+      "description": "A short line that sums up the note. Optional: without it the tone word names the callout."
+    },
+    "children": {
+      "type": "node",
+      "description": "The note: text, paragraphs, a list, links or inline code."
+    },
+    "icon": {
+      "type": "node",
+      "description": "A system icon name or a node in place of the tone icon. The tone word stays on the icon part."
+    },
+    "toneLabel": {
+      "type": "string",
+      "description": "The word the icon says and the start of the callout's name. Default by tone and language."
+    },
     "as": {
-      "type": ["div", "aside"],
+      "type": [
+        "div",
+        "aside"
+      ],
       "default": "div",
       "description": "div renders role note inside running content. aside renders a complementary landmark, for a note beside the main content; keep it outside other landmarks."
     }
   },
   "states": [],
   "a11y": {
-    "role": "note (a div), or complementary (an aside). Named by the tone word on the icon and the title through aria-labelledby, for example Tip Move faster with the keyboard. An aria-label from the consumer wins.",
+    "role": "note (a div), or complementary (an aside). Named by the tone word on the icon and the title through aria-labelledby, for example Tip Move faster with the keyboard. An aria-label or aria-labelledby from the consumer wins.",
     "focus": "None. The callout takes no focus; links inside it are in the normal tab order.",
     "keys": {},
     "announce": "Never. No live role: it is read in reading order with the content around it. The icon is an image named with the tone word, so the tone is never told by color alone.",
-    "native": { "accessibilityRole": "summary", "accessibilityState": [] },
+    "native": {
+      "accessibilityRole": "text",
+      "accessibilityState": []
+    },
     "notes": [
       "No motion: a callout never moves, so it needs no reduced motion form.",
       "No actions or close part: a note the person can dismiss or act on is an Alert."
@@ -105,9 +147,21 @@
     "color.state.danger.border"
   ],
   "frameworks": {
-    "react": { "status": "ready", "behavior": "hand built", "example": "Callout.demo.tsx" },
-    "angular": { "status": "planned", "behavior": "hand built", "note": "The same DOM on Callout.css, ids from the CDK id generator." },
-    "native": { "status": "planned", "behavior": "hand built", "note": "A View with accessibilityRole summary and the tone word in its label." }
+    "react": {
+      "status": "ready",
+      "behavior": "hand built",
+      "example": "Callout.demo.tsx"
+    },
+    "angular": {
+      "status": "planned",
+      "behavior": "hand built",
+      "note": "The same DOM on Callout.css, ids from the CDK id generator."
+    },
+    "native": {
+      "status": "planned",
+      "behavior": "hand built",
+      "note": "A View with accessibilityRole text and the tone word at the start of its accessibilityLabel."
+    }
   },
   "styles": {
     "studio": "A tinted box with small corners and a 2px tone edge on the inline start side; achromatic accent.",
@@ -116,11 +170,25 @@
     "liquid": "Planned: a solid box, never glass, since a callout is content."
   },
   "mistakes": [
-    { "wrong": "A Callout for a sync error that appeared after load", "right": "An Alert with live, so it is announced" },
-    { "wrong": "A Callout with a Retry button and a close button", "right": "An Alert, which has actions and close" },
-    { "wrong": "Every paragraph of a page in a callout", "right": "One callout per section at most; the rest is plain text" },
-    { "wrong": "as aside inside main content where it is not tangential", "right": "The default div with role note" }
+    {
+      "wrong": "A Callout for a sync error that appeared after load",
+      "right": "An Alert with live, so it is announced"
+    },
+    {
+      "wrong": "A Callout with a Retry button and a close button",
+      "right": "An Alert, which has actions and close"
+    },
+    {
+      "wrong": "Every paragraph of a page in a callout",
+      "right": "One callout per section at most; the rest is plain text"
+    },
+    {
+      "wrong": "as aside inside main content where it is not tangential",
+      "right": "The default div with role note"
+    }
   ],
-  "contract": { "optionalParts": [] },
+  "contract": {
+    "optionalParts": []
+  },
   "since": "0.1.0"
 }

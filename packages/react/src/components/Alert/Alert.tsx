@@ -87,7 +87,8 @@ export function Alert({
   const theme = useTheme();
   const words = wordsFor(alertLabels, lang ?? theme.lang);
   const role = live ? (tone === 'danger' ? 'alert' : 'status') : undefined;
-  const word = toneLabel ?? words.tone[tone];
+  // An empty toneLabel falls back to the tone word: the icon always has a name.
+  const word = toneLabel || words.tone[tone];
   return (
     <div
       {...rest}

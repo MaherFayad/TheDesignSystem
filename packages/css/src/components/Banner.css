@@ -1,0 +1,225 @@
+/*
+ * Banner: a page wide notice at the top of the app. No source: designed
+ * from the dials table in PLAN.md section 3.7 and Alert.css in this repo.
+ *
+ * A full width bar with no radius and a hairline on its block end. The
+ * fill is always opaque (the tone tint is layered over the surface), so a
+ * sticky banner never shows the content scrolling under it. The parts sit
+ * in one row; under breakpoint.phone of the banner's own width the actions
+ * move below the body, so there is no sideways scroll at 320px (WCAG
+ * 1.4.10).
+ *
+ * Private plumbing (docs/contracts/anatomy.md, one convention):
+ *
+ *   --_banner-bg, -tint, -fg, -border-color, -icon
+ *   --_banner-padding-block, -padding-inline, -gap, -font-size
+ *   --_banner-tone-*      the colors of one tone
+ *
+ * Motion: the fade-rise pattern plays once when a banner mounts, transform
+ * and opacity only. Under reduced motion it is none.
+ */
+@layer ds.base {
+  [data-ds='banner'] {
+    --_banner-padding-block: var(--ds-space-s);
+    --_banner-padding-inline: var(--ds-space-l);
+    --_banner-gap: var(--ds-space-m);
+    --_banner-font-size: var(--ds-font-size-m);
+    --_banner-tone-text: var(--ds-color-text-muted);
+    --_banner-tone-tint: var(--ds-color-bg-overlay-5);
+    --_banner-tone-edge: var(--ds-color-border-default);
+    --_banner-tone-solid: var(--ds-color-bg-surface-4);
+    --_banner-tone-on-solid: var(--ds-color-text-bright);
+    --_banner-bg: var(--ds-color-bg-surface);
+    --_banner-tint: var(--_banner-tone-tint);
+    --_banner-fg: var(--ds-color-text-default);
+    --_banner-border-color: var(--_banner-tone-edge);
+    --_banner-icon: var(--_banner-tone-text);
+
+    /* Its parts read the banner width through a container query, so actions move below the body when it is narrow. */
+    container-type: inline-size;
+    display: grid;
+    /* icon, body, actions, close. The gaps are margins on the parts, so a missing part leaves no empty gap. */
+    grid-template-columns: var(--ds-size-icon-md) minmax(0, 1fr) auto auto;
+    align-items: center;
+    box-sizing: border-box;
+    inline-size: 100%;
+    margin: 0;
+    padding-block: var(--_banner-padding-block);
+    padding-inline: var(--_banner-padding-inline);
+    border: 0;
+    border-block-end: var(--ds-border-width-default) solid var(--_banner-border-color);
+    background-color: var(--_banner-bg);
+    background-image: linear-gradient(var(--_banner-tint), var(--_banner-tint));
+    color: var(--_banner-fg);
+    font-family: var(--ds-font-family-sans);
+    font-size: var(--_banner-font-size);
+    line-height: var(--ds-font-leading-normal);
+    overflow-wrap: anywhere;
+    animation: ds-banner-in var(--ds-duration-medium) var(--ds-ease-out);
+  }
+
+  @keyframes ds-banner-in {
+    from {
+      opacity: 0;
+      transform: translateY(calc(-1 * var(--ds-space-3xs)));
+    }
+  }
+
+  /* Sticky: the banner stays at the top of its scroll container, above the content. The component sets the scroll padding. */
+  [data-ds='banner'][data-sticky] {
+    position: sticky;
+    inset-block-start: 0;
+    z-index: var(--ds-z-topbar);
+  }
+
+  /* ------------------------------------------------------------ parts */
+
+  [data-ds='banner'] > [data-part='icon'] {
+    grid-column: 1;
+    grid-row: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--_banner-icon);
+  }
+
+  [data-ds='banner'] > [data-part='body'] {
+    grid-column: 2;
+    grid-row: 1;
+    min-inline-size: 0;
+    margin-inline-start: var(--_banner-gap);
+  }
+
+  [data-ds='banner'] > [data-part='body'] a {
+    color: inherit;
+    text-decoration-line: underline;
+  }
+
+  [data-ds='banner'] > [data-part='actions'] {
+    grid-column: 3;
+    grid-row: 1;
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--ds-space-xs);
+    margin-inline-start: var(--_banner-gap);
+  }
+
+  /* The close button is an IconButton carrying data-part="close". It stays at the inline end of the first line. */
+  [data-ds='banner'] > [data-part='close'] {
+    grid-column: 4;
+    grid-row: 1;
+    align-self: center;
+    margin-inline-start: var(--_banner-gap);
+  }
+
+  /* Narrow banner: the actions move below the body, so the body keeps a readable line and nothing scrolls sideways. */
+  @container (inline-size < 30rem) { /* breakpoint.phone */
+    [data-ds='banner'] > [data-part='actions'] {
+      grid-column: 2 / 4;
+      grid-row: 2;
+      margin-block-start: var(--ds-space-xs);
+    }
+  }
+
+  /* ------------------------------------------------------------ tones */
+
+  [data-ds='banner'][data-tone='accent'] {
+    --_banner-tone-text: var(--ds-color-primary-on-surface);
+    --_banner-tone-tint: var(--ds-color-primary-tint);
+    --_banner-tone-edge: var(--ds-color-primary-border);
+    --_banner-tone-solid: var(--ds-color-primary-fill);
+    --_banner-tone-on-solid: var(--ds-color-primary-text);
+  }
+
+  [data-ds='banner'][data-tone='info'] {
+    --_banner-tone-text: var(--ds-color-state-info-text);
+    --_banner-tone-tint: var(--ds-color-state-info-tint-10);
+    --_banner-tone-edge: var(--ds-color-state-info-tint-20);
+    --_banner-tone-solid: var(--ds-color-state-info-solid);
+    --_banner-tone-on-solid: var(--ds-color-state-info-on-solid);
+  }
+
+  [data-ds='banner'][data-tone='success'] {
+    --_banner-tone-text: var(--ds-color-state-success-text);
+    --_banner-tone-tint: var(--ds-color-state-success-tint-10);
+    --_banner-tone-edge: var(--ds-color-state-success-tint-20);
+    --_banner-tone-solid: var(--ds-color-state-success-solid);
+    --_banner-tone-on-solid: var(--ds-color-state-success-on-solid);
+  }
+
+  [data-ds='banner'][data-tone='warning'] {
+    --_banner-tone-text: var(--ds-color-state-warning-text);
+    --_banner-tone-tint: var(--ds-color-state-warning-tint-10);
+    --_banner-tone-edge: var(--ds-color-state-warning-tint-20);
+    --_banner-tone-solid: var(--ds-color-state-warning-solid);
+    --_banner-tone-on-solid: var(--ds-color-state-warning-on-solid);
+  }
+
+  [data-ds='banner'][data-tone='danger'] {
+    --_banner-tone-text: var(--ds-color-state-danger-text);
+    --_banner-tone-tint: var(--ds-color-state-danger-tint-10);
+    --_banner-tone-edge: var(--ds-color-state-danger-tint-20);
+    --_banner-tone-solid: var(--ds-color-state-danger-solid);
+    --_banner-tone-on-solid: var(--ds-color-state-danger-on-solid);
+  }
+
+  /* ------------------------------------------------------------ emphasis */
+
+  [data-ds='banner'][data-emphasis='solid'] {
+    --_banner-bg: var(--_banner-tone-solid);
+    --_banner-tint: transparent;
+    --_banner-fg: var(--_banner-tone-on-solid);
+    --_banner-icon: var(--_banner-tone-on-solid);
+    --_banner-border-color: transparent;
+  }
+
+  /*
+   * Nested Buttons on a solid fill take the banner's ink, as in a solid
+   * Alert: outlined, a veil of the ink on hover, and the two color focus
+   * ring so the ring keeps 3:1 on any tone fill (WCAG 1.4.11).
+   */
+  [data-ds='banner'][data-emphasis='solid'] > [data-part='actions'] [data-ds='button'] {
+    --_button-ring: var(--ds-focus-shadow-primary);
+    --_button-bg: transparent;
+    --_button-fg: var(--_banner-tone-on-solid);
+    --_button-decoration: var(--_banner-tone-on-solid);
+  }
+
+  [data-ds='banner'][data-emphasis='solid'] > [data-part='actions'] [data-ds='button']:not([data-emphasis='link']) {
+    --_button-border-color: var(--_banner-tone-on-solid);
+  }
+
+  [data-ds='banner'][data-emphasis='solid'] > [data-ds='icon-button'][data-part='close'] {
+    --_button-ring: var(--ds-focus-shadow-primary);
+    --_button-bg: transparent;
+    --_button-fg: var(--_banner-tone-on-solid);
+  }
+
+  [data-ds='banner'][data-emphasis='solid'] > [data-part='actions'] [data-ds='button']:hover:not([data-disabled], [data-loading]),
+  [data-ds='banner'][data-emphasis='solid'] > [data-ds='icon-button'][data-part='close']:hover:not([data-disabled], [data-loading]) {
+    --_button-bg: color-mix(in srgb, var(--_banner-tone-on-solid) 12%, transparent);
+  }
+
+  [data-ds='banner'][data-emphasis='solid'] > [data-part='actions'] [data-ds='button']:active:not([data-disabled], [data-loading]),
+  [data-ds='banner'][data-emphasis='solid'] > [data-ds='icon-button'][data-part='close']:active:not([data-disabled], [data-loading]) {
+    --_button-bg: color-mix(in srgb, var(--_banner-tone-on-solid) 20%, transparent);
+  }
+
+  /* ------------------------------------------------------------ reduced motion, forced colors */
+
+  @media (prefers-reduced-motion: reduce) {
+    [data-ds='banner'] {
+      animation: none;
+    }
+  }
+
+  /* Forced colors: the fill is dropped by the browser; the block end border becomes the system text color. */
+  @media (forced-colors: active) {
+    [data-ds='banner'][data-emphasis] {
+      --_banner-border-color: CanvasText;
+      --_banner-icon: CanvasText;
+
+      animation: none;
+    }
+  }
+}

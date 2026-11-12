@@ -66,7 +66,8 @@ export function Callout({
 }: CalloutProps) {
   const theme = useTheme();
   const words = wordsFor(calloutLabels, lang ?? theme.lang);
-  const word = toneLabel ?? words.tone[tone];
+  // An empty toneLabel falls back to the tone word: the icon always has a name.
+  const word = toneLabel || words.tone[tone];
   const auto = useId();
   const base = id ?? `ds-callout-${auto.replace(/:/g, '')}`;
   const iconId = `${base}-icon`;
@@ -81,7 +82,9 @@ export function Callout({
       id={id}
       lang={lang}
       role={as === 'div' ? 'note' : undefined}
-      aria-labelledby={rest['aria-label'] !== undefined ? undefined : hasTitle ? `${iconId} ${titleId}` : iconId}
+      aria-labelledby={
+        rest['aria-labelledby'] ?? (rest['aria-label'] !== undefined ? undefined : hasTitle ? `${iconId} ${titleId}` : iconId)
+      }
       data-ds="callout"
       data-tone={tone}
       data-emphasis={emphasis}
