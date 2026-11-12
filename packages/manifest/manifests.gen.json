@@ -5286,7 +5286,10 @@
         "example": "ConsentField.demo.tsx"
       },
       "angular": {
-        "status": "planned"
+        "status": "ready",
+        "behavior": "div[dsConsentField] host bindings, ControlValueAccessor with a boolean value; the error is p[dsFieldError] with its own DsFieldContext through viewProviders; reads the dsForm error for its name through DsFormContext",
+        "example": "consent-field.demo.ts",
+        "note": "No default checked: there is no defaultChecked input, a static checked does not type check and the state starts denied. onCheckedChange is the checkedChange output of [(checked)], onDecision is the decision output. The Checkbox and Switch are private stand ins with the React DOM until the A3 port merges. ConsentField.css is used as is."
       },
       "native": {
         "status": "planned"
@@ -8464,7 +8467,10 @@
         "example": "Fieldset.demo.tsx"
       },
       "angular": {
-        "status": "planned"
+        "status": "ready",
+        "behavior": "fieldset[dsFieldset] host bindings; the error is p[dsFieldError] given its own DsFieldContext through viewProviders",
+        "example": "fieldset.demo.ts",
+        "note": "legend, description and error take a string or a TemplateRef. Fieldset.css is used as is."
       },
       "native": {
         "status": "planned"
@@ -8673,7 +8679,10 @@
         "example": "FilterBar.demo.tsx"
       },
       "angular": {
-        "status": "planned"
+        "status": "ready",
+        "behavior": "div[dsFilterBar] host bindings; div[dsSearchField] for the search, a role group of pressable chips, the more menu on dsDropdownMenu with checkbox items, overflow read with a ResizeObserver and the scroll event",
+        "example": "filter-bar.demo.ts",
+        "note": "value is a model ([(value)]), onClear the clear output; search takes the SearchField props in FilterBarSearch with the React names; end and a filter label take a string or a TemplateRef. The chips are a private stand in with the React Chip DOM until Chip has an Angular port. FilterBar.css is used as is."
       },
       "native": {
         "status": "planned"
@@ -9151,7 +9160,10 @@
         "example": "Form.demo.tsx"
       },
       "angular": {
-        "status": "planned"
+        "status": "ready",
+        "behavior": "form[dsForm] host bindings and native submit, input, change and reset listeners; div[dsFormField]; button[dsFormSubmit]; checks through packages/shared/src/form.ts; reads @angular/forms errors through the ControlContainer on the same form (reactive FormGroup or template NgForm)",
+        "example": "form.demo.ts",
+        "note": "onSubmit is a function input (it returns server errors or a promise); onErrors is the errors output; actions takes a TemplateRef rendered with the form injector. Form.css is used as is."
       },
       "native": {
         "status": "planned"
@@ -9386,9 +9398,10 @@
         "note": "Motion fade-rise: the current step body fades in and rises by space.xs through @starting-style; under reduced motion it only fades, and every duration is 0ms."
       },
       "angular": {
-        "status": "planned",
-        "behavior": "[dsFormWizard] on a div, a form[dsFormWizardPanel], state from packages/shared/src/stepper.ts",
-        "note": "FormWizard.css and Stepper.css are used as is."
+        "status": "ready",
+        "behavior": "[dsFormWizard] on a div with a form panel in its template and the dsStepper, state from packages/shared/src/stepper.ts",
+        "example": "form-wizard.demo.ts",
+        "note": "A step content is a TemplateRef with values and errors in its context. onSubmit is a function input, onStepChange the stepChange output, formProps a record of attributes for the panel form, formRef the formElement of exportAs dsFormWizard. FormWizard.css and Stepper.css are used as is."
       },
       "native": {
         "status": "planned",
@@ -22140,9 +22153,10 @@
         "note": "Motion tab-indicator: the connector fill scales from the start side when a step completes; under reduced motion it swaps at once."
       },
       "angular": {
-        "status": "planned",
+        "status": "ready",
         "behavior": "ol[dsStepper] host bindings, state from packages/shared/src/stepper.ts, reachable steps as button[dsButton] or a[dsButton]",
-        "note": "Stepper.css is used as is."
+        "example": "stepper.demo.ts",
+        "note": "onStepSelect is a function input: steps become actions only when it is set, as in React. Step title and description take a string or a TemplateRef. Stepper.css is used as is."
       },
       "native": {
         "status": "planned",

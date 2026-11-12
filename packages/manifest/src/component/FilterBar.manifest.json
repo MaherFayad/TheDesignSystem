@@ -176,7 +176,10 @@
       "example": "FilterBar.demo.tsx"
     },
     "angular": {
-      "status": "planned"
+      "status": "ready",
+      "behavior": "div[dsFilterBar] host bindings; div[dsSearchField] for the search, a role group of pressable chips, the more menu on dsDropdownMenu with checkbox items, overflow read with a ResizeObserver and the scroll event",
+      "example": "filter-bar.demo.ts",
+      "note": "value is a model ([(value)]), onClear the clear output; search takes the SearchField props in FilterBarSearch with the React names; end and a filter label take a string or a TemplateRef. The chips are a private stand in with the React Chip DOM until Chip has an Angular port. FilterBar.css is used as is."
     },
     "native": {
       "status": "planned"

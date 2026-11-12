@@ -2,7 +2,7 @@
 
 Made by `npm run shots`. Each shot is the `variants` case at `chrome=0`, 1280 by 800 viewport, full page, device scale factor 1, animations off, reduced motion, fonts loaded. File names: `<component>/<style>-<scheme>-<dir>[-<density>][-open].png`. Density is default unless named.
 
-252 shots, 18 components, 18.45 MB. Stable (two captures byte equal): 252; unstable: 0; not verified: 0.
+342 shots, 24 components, 24.00 MB. Stable (two captures byte equal): 342; unstable: 0; not verified: 0.
 
 The full list with sizes and hashes is in `captured.json`.
 
@@ -60,6 +60,25 @@ Densities, dark, ltr en:
 | neutral | [compact](close-button/neutral-dark-ltr-compact.png) | [default](close-button/neutral-dark-ltr.png) | [comfortable](close-button/neutral-dark-ltr-comfortable.png) |
 | studio | [compact](close-button/studio-dark-ltr-compact.png) | [default](close-button/studio-dark-ltr.png) | [comfortable](close-button/studio-dark-ltr-comfortable.png) |
 
+## ConsentField
+
+| Style | Scheme | ltr en | rtl ar |
+| --- | --- | --- | --- |
+| desk | dark | [ltr](consent-field/desk-dark-ltr.png) | [rtl](consent-field/desk-dark-rtl.png) |
+| desk | light | [ltr](consent-field/desk-light-ltr.png) | [rtl](consent-field/desk-light-rtl.png) |
+| neutral | dark | [ltr](consent-field/neutral-dark-ltr.png) | [rtl](consent-field/neutral-dark-rtl.png) |
+| neutral | light | [ltr](consent-field/neutral-light-ltr.png) | [rtl](consent-field/neutral-light-rtl.png) |
+| studio | dark | [ltr](consent-field/studio-dark-ltr.png) | [rtl](consent-field/studio-dark-rtl.png) |
+| studio | light | [ltr](consent-field/studio-light-ltr.png) | [rtl](consent-field/studio-light-rtl.png) |
+
+Densities, dark, ltr en:
+
+| Style | compact | default | comfortable |
+| --- | --- | --- | --- |
+| desk | [compact](consent-field/desk-dark-ltr-compact.png) | [default](consent-field/desk-dark-ltr.png) | [comfortable](consent-field/desk-dark-ltr-comfortable.png) |
+| neutral | [compact](consent-field/neutral-dark-ltr-compact.png) | [default](consent-field/neutral-dark-ltr.png) | [comfortable](consent-field/neutral-dark-ltr-comfortable.png) |
+| studio | [compact](consent-field/studio-dark-ltr-compact.png) | [default](consent-field/studio-dark-ltr.png) | [comfortable](consent-field/studio-dark-ltr-comfortable.png) |
+
 ## CopyButton
 
 | Style | Scheme | ltr en | rtl ar |
@@ -108,6 +127,28 @@ Densities, dark, ltr en:
 | studio | dark | [ltr](field/studio-dark-ltr.png) | [rtl](field/studio-dark-rtl.png) |
 | studio | light | [ltr](field/studio-light-ltr.png) | [rtl](field/studio-light-rtl.png) |
 
+## Fieldset
+
+| Style | Scheme | ltr en | rtl ar |
+| --- | --- | --- | --- |
+| desk | dark | [ltr](fieldset/desk-dark-ltr.png) | [rtl](fieldset/desk-dark-rtl.png) |
+| desk | light | [ltr](fieldset/desk-light-ltr.png) | [rtl](fieldset/desk-light-rtl.png) |
+| neutral | dark | [ltr](fieldset/neutral-dark-ltr.png) | [rtl](fieldset/neutral-dark-rtl.png) |
+| neutral | light | [ltr](fieldset/neutral-light-ltr.png) | [rtl](fieldset/neutral-light-rtl.png) |
+| studio | dark | [ltr](fieldset/studio-dark-ltr.png) | [rtl](fieldset/studio-dark-rtl.png) |
+| studio | light | [ltr](fieldset/studio-light-ltr.png) | [rtl](fieldset/studio-light-rtl.png) |
+
+## FilterBar
+
+| Style | Scheme | ltr en | rtl ar |
+| --- | --- | --- | --- |
+| desk | dark | [ltr](filter-bar/desk-dark-ltr.png) | [rtl](filter-bar/desk-dark-rtl.png) |
+| desk | light | [ltr](filter-bar/desk-light-ltr.png) | [rtl](filter-bar/desk-light-rtl.png) |
+| neutral | dark | [ltr](filter-bar/neutral-dark-ltr.png) | [rtl](filter-bar/neutral-dark-rtl.png) |
+| neutral | light | [ltr](filter-bar/neutral-light-ltr.png) | [rtl](filter-bar/neutral-light-rtl.png) |
+| studio | dark | [ltr](filter-bar/studio-dark-ltr.png) | [rtl](filter-bar/studio-dark-rtl.png) |
+| studio | light | [ltr](filter-bar/studio-light-ltr.png) | [rtl](filter-bar/studio-light-rtl.png) |
+
 ## FloatingActionButton
 
 | Style | Scheme | ltr en | rtl ar |
@@ -126,6 +167,44 @@ Densities, dark, ltr en:
 | desk | [compact](floating-action-button/desk-dark-ltr-compact.png) | [default](floating-action-button/desk-dark-ltr.png) | [comfortable](floating-action-button/desk-dark-ltr-comfortable.png) |
 | neutral | [compact](floating-action-button/neutral-dark-ltr-compact.png) | [default](floating-action-button/neutral-dark-ltr.png) | [comfortable](floating-action-button/neutral-dark-ltr-comfortable.png) |
 | studio | [compact](floating-action-button/studio-dark-ltr-compact.png) | [default](floating-action-button/studio-dark-ltr.png) | [comfortable](floating-action-button/studio-dark-ltr-comfortable.png) |
+
+## Form
+
+| Style | Scheme | ltr en | rtl ar |
+| --- | --- | --- | --- |
+| desk | dark | [ltr](form/desk-dark-ltr.png) | [rtl](form/desk-dark-rtl.png) |
+| desk | light | [ltr](form/desk-light-ltr.png) | [rtl](form/desk-light-rtl.png) |
+| neutral | dark | [ltr](form/neutral-dark-ltr.png) | [rtl](form/neutral-dark-rtl.png) |
+| neutral | light | [ltr](form/neutral-light-ltr.png) | [rtl](form/neutral-light-rtl.png) |
+| studio | dark | [ltr](form/studio-dark-ltr.png) | [rtl](form/studio-dark-rtl.png) |
+| studio | light | [ltr](form/studio-light-ltr.png) | [rtl](form/studio-light-rtl.png) |
+
+Densities, dark, ltr en:
+
+| Style | compact | default | comfortable |
+| --- | --- | --- | --- |
+| desk | [compact](form/desk-dark-ltr-compact.png) | [default](form/desk-dark-ltr.png) | [comfortable](form/desk-dark-ltr-comfortable.png) |
+| neutral | [compact](form/neutral-dark-ltr-compact.png) | [default](form/neutral-dark-ltr.png) | [comfortable](form/neutral-dark-ltr-comfortable.png) |
+| studio | [compact](form/studio-dark-ltr-compact.png) | [default](form/studio-dark-ltr.png) | [comfortable](form/studio-dark-ltr-comfortable.png) |
+
+## FormWizard
+
+| Style | Scheme | ltr en | rtl ar |
+| --- | --- | --- | --- |
+| desk | dark | [ltr](form-wizard/desk-dark-ltr.png) | [rtl](form-wizard/desk-dark-rtl.png) |
+| desk | light | [ltr](form-wizard/desk-light-ltr.png) | [rtl](form-wizard/desk-light-rtl.png) |
+| neutral | dark | [ltr](form-wizard/neutral-dark-ltr.png) | [rtl](form-wizard/neutral-dark-rtl.png) |
+| neutral | light | [ltr](form-wizard/neutral-light-ltr.png) | [rtl](form-wizard/neutral-light-rtl.png) |
+| studio | dark | [ltr](form-wizard/studio-dark-ltr.png) | [rtl](form-wizard/studio-dark-rtl.png) |
+| studio | light | [ltr](form-wizard/studio-light-ltr.png) | [rtl](form-wizard/studio-light-rtl.png) |
+
+Densities, dark, ltr en:
+
+| Style | compact | default | comfortable |
+| --- | --- | --- | --- |
+| desk | [compact](form-wizard/desk-dark-ltr-compact.png) | [default](form-wizard/desk-dark-ltr.png) | [comfortable](form-wizard/desk-dark-ltr-comfortable.png) |
+| neutral | [compact](form-wizard/neutral-dark-ltr-compact.png) | [default](form-wizard/neutral-dark-ltr.png) | [comfortable](form-wizard/neutral-dark-ltr-comfortable.png) |
+| studio | [compact](form-wizard/studio-dark-ltr-compact.png) | [default](form-wizard/studio-dark-ltr.png) | [comfortable](form-wizard/studio-dark-ltr-comfortable.png) |
 
 ## Icon
 
@@ -197,6 +276,17 @@ Densities, dark, ltr en:
 | neutral | light | [ltr](split-button/neutral-light-ltr.png) | [rtl](split-button/neutral-light-rtl.png) |
 | studio | dark | [ltr](split-button/studio-dark-ltr.png) | [rtl](split-button/studio-dark-rtl.png) |
 | studio | light | [ltr](split-button/studio-light-ltr.png) | [rtl](split-button/studio-light-rtl.png) |
+
+## Stepper
+
+| Style | Scheme | ltr en | rtl ar |
+| --- | --- | --- | --- |
+| desk | dark | [ltr](stepper/desk-dark-ltr.png) | [rtl](stepper/desk-dark-rtl.png) |
+| desk | light | [ltr](stepper/desk-light-ltr.png) | [rtl](stepper/desk-light-rtl.png) |
+| neutral | dark | [ltr](stepper/neutral-dark-ltr.png) | [rtl](stepper/neutral-dark-rtl.png) |
+| neutral | light | [ltr](stepper/neutral-light-ltr.png) | [rtl](stepper/neutral-light-rtl.png) |
+| studio | dark | [ltr](stepper/studio-dark-ltr.png) | [rtl](stepper/studio-dark-rtl.png) |
+| studio | light | [ltr](stepper/studio-light-ltr.png) | [rtl](stepper/studio-light-rtl.png) |
 
 ## TitleBar
 
