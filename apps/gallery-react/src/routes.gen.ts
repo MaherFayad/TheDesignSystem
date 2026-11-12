@@ -12,6 +12,7 @@ export const routes: DemoRoute[] = [
   { name: 'AvatarGroup', slug: 'avatar-group', load: () => import('../../../packages/react/src/components/AvatarGroup/AvatarGroup.demo') },
   { name: 'Badge', slug: 'badge', load: () => import('../../../packages/react/src/components/Badge/Badge.demo') },
   { name: 'Button', slug: 'button', load: () => import('../../../packages/react/src/components/Button/Button.demo') },
+  { name: 'Chip', slug: 'chip', load: () => import('../../../packages/react/src/components/Chip/Chip.demo') },
   { name: 'Dialog', slug: 'dialog', load: () => import('../../../packages/react/src/components/Dialog/Dialog.demo') },
   { name: 'Field', slug: 'field', load: () => import('../../../packages/react/src/components/Field/Field.demo') },
   { name: 'Icon', slug: 'icon', load: () => import('../../../packages/react/src/components/Icon/Icon.demo') },

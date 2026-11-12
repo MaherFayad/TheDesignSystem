@@ -1,0 +1,190 @@
+{
+  "name": "Chip",
+  "kind": "component",
+  "family": "data-display",
+  "summary": "A compact pill you press (a filter, toggled with selected) or remove (a picked value).",
+  "useWhen": [
+    "A row of filters that each turn on and off",
+    "Values the user picked that can be removed one by one: tags, recipients, filters in use",
+    "A quick attribute choice in a toolbar"
+  ],
+  "avoidWhen": [
+    "A label that cannot be pressed or removed",
+    "One choice out of several where only one may be on",
+    "The main action of a view"
+  ],
+  "insteadUse": {
+    "A static count or status label": "Badge",
+    "Exactly one choice from a set": "SegmentedControl or RadioGroup",
+    "A setting that stays on or off": "Switch",
+    "An action with a verb": "Button",
+    "Free text that becomes tags as you type": "TagInput"
+  },
+  "anatomy": ["root", "icon", "label", "remove"],
+  "slots": {
+    "icon": { "accepts": ["Icon"], "max": 1 },
+    "label": { "accepts": "text", "max": 1 }
+  },
+  "props": {
+    "children": { "type": "node", "required": true, "description": "The visible label, one to three words." },
+    "size": {
+      "type": ["xs", "sm", "md"],
+      "default": "md",
+      "description": "From size.control: 24, 28 and 32 px at default density. Never under 24 by 24."
+    },
+    "tone": { "type": ["neutral", "accent", "success", "warning", "danger", "info"], "default": "neutral" },
+    "emphasis": { "type": ["soft", "outline"], "default": "soft" },
+    "shape": { "type": ["pill"], "default": "pill" },
+    "start": {
+      "type": "node",
+      "description": "Leading content, drawn in the icon part: a system icon name or node, hidden from assistive tech. A selected chip shows check when start is not set. Named start by rule 6 of anatomy.md; the part keeps the order's name icon."
+    },
+    "selected": {
+      "type": "boolean",
+      "description": "Pressable form only. Set (true or false) makes the chip a toggle: aria-pressed, data-selected, the solid fill of its tone and a check. Undefined is a plain action."
+    },
+    "onClick": { "type": "function", "description": "Pressable form: called on click, Enter and Space." },
+    "onRemove": {
+      "type": "function",
+      "description": "Makes the chip removable: the root becomes a span with a remove button. Called on the remove button's click, Delete and Backspace. Move focus after removing."
+    },
+    "removeLabel": {
+      "type": "string",
+      "description": "The name of the remove button. Default Remove followed by the label when it is text. Name what is removed: Remove filter Arabic."
+    },
+    "disabled": {
+      "type": "boolean",
+      "default": false,
+      "description": "aria-disabled and data-disabled on the pressable root or on the remove button. Stays focusable."
+    }
+  },
+  "states": ["data-selected", "data-disabled", "data-removable"],
+  "a11y": {
+    "role": "button (the pressable root, aria-pressed when selected is set). The removable form is a span with text and a remove button.",
+    "focus": "The pressable chip is one tab stop; the removable chip's remove button is one tab stop. A 2px ring on keyboard focus. Both stay focusable when disabled.",
+    "keys": {
+      "Enter": "Presses the chip, or the remove button",
+      "Space": "Presses the chip, or the remove button",
+      "Delete": "On the remove button: removes the chip",
+      "Backspace": "On the remove button: removes the chip",
+      "Tab": "Moves to the next chip or remove button"
+    },
+    "announce": "The label as the button name, with pressed or not pressed when selected is set. The remove button is named by removeLabel.",
+    "native": { "accessibilityRole": "button", "accessibilityState": ["selected", "disabled"] },
+    "notes": [
+      "A chip is pressable or removable, never both, so a button never sits inside a button.",
+      "The chip and its remove button are two targets of at least 24 by 24 px (WCAG 2.5.8): the remove button is an xs IconButton.",
+      "Selected is shown by fill and a check icon, not by color alone (WCAG 1.4.1).",
+      "After a removal, move focus to the next chip's remove button, else the previous one, else a nearby control; the demo shows it (WCAG 2.4.3)."
+    ]
+  },
+  "content": {
+    "en": {
+      "label": "A noun or a short noun phrase in sentence case: Images, Shared with me.",
+      "removeLabel": "Remove plus what it is: Remove filter Arabic."
+    },
+    "ar": {
+      "label": "Noun form, no diacritics: الصور، مشاركة معي.",
+      "removeLabel": "إزالة plus what it is: إزالة فلتر العربية."
+    }
+  },
+  "tokens": [
+    "size.control.xs",
+    "size.control.sm",
+    "size.control.md",
+    "size.target-min",
+    "space.4xs",
+    "space.3xs",
+    "space.xs",
+    "space.s",
+    "space.m",
+    "font.size.xs",
+    "font.size.s",
+    "font.family.sans",
+    "font.weight.semibold",
+    "font.leading.tight",
+    "font.tracking.none",
+    "radius.pill",
+    "border.width.default",
+    "border.width.strong",
+    "opacity.disabled",
+    "color.bg.overlay-5",
+    "color.bg.overlay-10",
+    "color.bg.overlay-20",
+    "color.bg.overlay-30",
+    "color.bg.body",
+    "color.text.default",
+    "color.text.bright",
+    "color.border.control",
+    "color.border.control-hover",
+    "color.primary.fill",
+    "color.primary.fill-hover",
+    "color.primary.fill-pressed",
+    "color.primary.text",
+    "color.primary.border",
+    "color.primary.tint",
+    "color.primary.tint-hover",
+    "color.primary.on-surface",
+    "color.state.danger.solid",
+    "color.state.danger.on-solid",
+    "color.state.danger.text",
+    "color.state.danger.on-tint",
+    "color.state.danger.border",
+    "color.state.danger.tint-10",
+    "color.state.danger.tint-20",
+    "color.state.success.solid",
+    "color.state.success.on-solid",
+    "color.state.success.text",
+    "color.state.success.on-tint",
+    "color.state.success.border",
+    "color.state.success.tint-10",
+    "color.state.success.tint-20",
+    "color.state.warning.solid",
+    "color.state.warning.on-solid",
+    "color.state.warning.text",
+    "color.state.warning.on-tint",
+    "color.state.warning.border",
+    "color.state.warning.tint-10",
+    "color.state.warning.tint-20",
+    "color.state.info.solid",
+    "color.state.info.on-solid",
+    "color.state.info.text",
+    "color.state.info.on-tint",
+    "color.state.info.border",
+    "color.state.info.tint-10",
+    "color.state.info.tint-20",
+    "focus.shadow.ring",
+    "focus.shadow.primary"
+  ],
+  "motion": "fade-rise",
+  "frameworks": {
+    "react": {
+      "status": "ready",
+      "behavior": "ButtonBase (pressable), IconButton (remove)",
+      "example": "Chip.demo.tsx",
+      "note": "Motion: none of its own today; colors swap at once. A chip list may use fade-rise for added chips from the catalog (1.11). The remove part is an IconButton with the close icon until CloseButton (1.1.9) exists."
+    },
+    "angular": { "status": "planned" },
+    "native": { "status": "planned" }
+  },
+  "styles": {
+    "studio": "A semibold pill on the overlay steps; selected is the inverted fill with a check.",
+    "desk": "The same; the selected accent chip is yellow with ink text and the doubled focus ring.",
+    "neutral": "Planned: follows the tokens, no recipe.",
+    "liquid": "Planned."
+  },
+  "mistakes": [
+    { "wrong": "A Chip with no onClick and no onRemove", "right": "Badge" },
+    { "wrong": "A remove button named only Remove", "right": "removeLabel=\"Remove filter Arabic\"" },
+    { "wrong": "Selected shown by a color change alone", "right": "selected, which fills the chip and adds a check" },
+    { "wrong": "Focus lost to the page after a chip is removed", "right": "Move focus to the next chip's remove button" }
+  ],
+  "contract": {
+    "optionalParts": ["icon", "remove"],
+    "keys": {
+      "Delete": { "focus": "[data-part='remove']", "case": "many", "expect": "focus-moves" },
+      "Backspace": { "focus": "[data-part='remove']", "case": "many", "expect": "focus-moves" }
+    }
+  },
+  "since": "0.2.0"
+}
