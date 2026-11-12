@@ -36,7 +36,7 @@ const ar: NavbarItem[] = [
     links: [
       { label: 'اللوحات', href: '#boards', description: 'خطة العمل على مساحة مشتركة', start: 'grid' },
       { label: 'المستندات', href: '#docs', description: 'المواصفات جنب التصاميم', start: 'file', active: true },
-      { label: 'التسليم', href: '#handoff', description: 'تصدير الرموز والملفات للمطورين', start: 'download' },
+      { label: 'التسليم', href: '#handoff', description: 'تصدير القيم والملفات للمطورين', start: 'download' },
       { label: 'المراجعات', href: '#reviews', description: 'كل التعليقات في مكان واحد', start: 'edit' },
     ],
   },
@@ -83,7 +83,7 @@ export default function NavbarDemo() {
         <h3 data-demo="title">Variants in Arabic</h3>
         <Theme lang="ar" data-demo="content">
           <Navbar
-            label="الرئيسية"
+            label="التنقل الرئيسي"
             brand={<Brand>الشمال</Brand>}
             items={ar}
             end={
@@ -144,7 +144,7 @@ export default function NavbarDemo() {
 
       <DemoCase id="long-arabic" title="Long Arabic text, a panel open at first render" lang="ar">
         <Navbar
-          label="الرئيسية"
+          label="التنقل الرئيسي"
           defaultOpenMenu="مصادر الفرق"
           brand={<Brand>استوديو الشمال للتصميم</Brand>}
           items={[

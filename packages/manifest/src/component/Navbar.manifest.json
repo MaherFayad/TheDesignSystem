@@ -33,7 +33,6 @@
     "link-label",
     "link-description",
     "trigger",
-    "trigger-icon",
     "content",
     "content-list",
     "indicator",
@@ -82,7 +81,7 @@
     },
     "end": {
       "type": "node",
-      "description": "Actions at the inline end. They stay in the bar on phones, so keep them to one or two."
+      "description": "Actions at the inline end. On phones they move into the footer of the phone Drawer; with no items they stay in the bar and wrap. Keep them to one or two."
     },
     "sticky": {
       "type": "boolean",
@@ -114,24 +113,24 @@
     "data-sticky"
   ],
   "a11y": {
-    "role": "navigation (Radix NavigationMenu nav with aria-label); the list is a list of links and buttons; the phone list is a nested Sidebar nav named Menu",
-    "focus": "Links and triggers are tab stops. Focus moves into an open panel with ArrowDown or Tab. The menu button sits in the tab order on phones only. Escape in the phone list returns focus to the menu button. Following a link in the phone list closes it. When the window grows past breakpoint.tablet with focus in the list, focus moves to the first item of the bar.",
+    "role": "navigation (Radix NavigationMenu nav with aria-label); the list is a list of links and buttons; on phones the menu button opens a modal Drawer titled Site menu that holds a Sidebar nav named Site menu",
+    "focus": "Links and triggers are tab stops. Focus moves into an open panel with ArrowDown or Tab. The menu button sits in the tab order on phones only. The phone Drawer is modal: focus moves into it, stays inside, and returns to the menu button on Escape or the close control. Following a link in the phone list closes it. When the window grows past breakpoint.tablet while the Drawer is open, it closes and focus moves to the first item of the bar.",
     "keys": {
       "Tab": "Moves to the next link, trigger or action",
       "Shift+Tab": "Moves to the previous one",
       "Enter": "Follows a link, or opens and closes a trigger's panel",
-      "Space": "Opens and closes a trigger's panel, and the phone list from the menu button",
+      "Space": "Opens and closes a trigger's panel, and opens the phone Drawer from the menu button",
       "ArrowDown": "From an open trigger, moves into its panel",
       "ArrowRight, ArrowLeft": "Move between links and triggers in the bar, in the reading direction (flipped in RTL)",
       "Home, End": "Move to the first or last item in the bar",
-      "Escape": "Closes the open panel and returns focus to its trigger, or closes the phone list from inside it or from the menu button"
+      "Escape": "Closes the open panel and returns focus to its trigger, or closes the phone Drawer and returns focus to the menu button"
     },
-    "announce": "The current link says current page. A trigger is a button with aria-expanded and aria-controls from Radix. The menu button keeps one name, Menu, with aria-expanded and aria-controls.",
+    "announce": "The current link says current page. A trigger is a button with aria-expanded and aria-controls from Radix. The menu button keeps one name, Menu, with aria-haspopup dialog, aria-expanded and aria-controls from the Drawer trigger. The Drawer is a dialog named by its title, Site menu.",
     "notes": [
       "The current page is shown by aria-current page, a bold weight and a bar under the link, never by color alone (WCAG 1.4.1). A trigger whose panel holds the current page takes the bold weight.",
-      "Under breakpoint.tablet (48rem) the bar hides the list and shows the menu button; nothing scrolls sideways at 320px (WCAG 1.4.10).",
-      "The phone list is built from items: plain links in one unnamed group, each menu as a named group. It is a Sidebar nav named Site menu nested in the Main nav until Drawer replaces it.",
-      "The mobile part should be a Drawer root (order 1.6.3). Drawer is not built yet, so it is a disclosure panel under the bar holding a Sidebar; swap it when Drawer lands.",
+      "Under breakpoint.tablet (48rem) the bar hides the list and the end actions and shows the menu button. The end actions move into the Drawer's footer, so no label is cut short at 320px (WCAG 1.4.10). With no items there is no menu button: the end actions stay in the bar at full width and wrap to a row of their own when needed.",
+      "The phone list is a Drawer (side start, size sm) with the mobile part on its root. Its body is a Sidebar built from items: plain links in one unnamed group, each menu as a named group. The Drawer covers the bar, so the menu button never moves under the finger.",
+      "The chevron of a trigger is the trigger Button's own end part (anatomy.md: a part belongs to the nearest root); the Navbar only turns it over while the panel is open.",
       "No native title attribute.",
       "contract.skipAxeRules aria-hidden-focus: while a panel is open, Radix NavigationMenu renders a visually hidden, aria-hidden focus proxy span (tabindex 0) beside the trigger. It catches Tab and forwards focus into the panel in the viewport, so it is never a stop a user rests on. Axe flags it by shape. Only the open panel in the long-arabic case shows it.",
       "data-orientation horizontal comes from Radix on the root and the list."
@@ -203,13 +202,13 @@
   "frameworks": {
     "react": {
       "status": "ready",
-      "behavior": "radix:NavigationMenu; the phone list is a disclosure holding a Sidebar",
+      "behavior": "radix:NavigationMenu; the phone list is a Drawer holding a Sidebar",
       "example": "Navbar.demo.tsx",
-      "note": "menu-scale: the viewport scales from 0.97 and fades in, the reverse on close, faster; the indicator slides under the open trigger. Reduced motion: none, and Radix removes the closed viewport at once."
+      "note": "menu-scale: the viewport scales from 0.97 and fades in, the reverse on close, faster; the indicator slides under the open trigger. Reduced motion: none, and Radix removes the closed viewport at once. The phone Drawer plays Drawer's own slide from the inline start."
     },
     "angular": {
       "status": "planned",
-      "behavior": "nav[dsNavbar], cdk:menu for the panels, a disclosure directive for the phone list"
+      "behavior": "nav[dsNavbar], cdk:menu for the panels, the Drawer for the phone list"
     },
     "native": {
       "status": "not-applicable",
@@ -255,7 +254,6 @@
       "viewport",
       "mobile",
       "trigger",
-      "trigger-icon",
       "menu-button"
     ],
     "keys": {
