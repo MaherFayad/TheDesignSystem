@@ -12,6 +12,16 @@
     box-sizing: border-box;
   }
 
+  /*
+   * React only: Radix wraps the root in a ratio box (data-radix-aspect-ratio-wrapper),
+   * and that wrapper is the item a grid or flex row stretches. Keep it at its
+   * own height so the ratio holds next to a taller sibling. Angular sets the
+   * native aspect-ratio on the root and has no wrapper, so this never matches there.
+   */
+  [data-radix-aspect-ratio-wrapper]:has(> [data-ds='aspect-ratio']) {
+    align-self: start;
+  }
+
   [data-ds='aspect-ratio'][data-fit='contain'] {
     --_aspect-ratio-fit: contain;
   }

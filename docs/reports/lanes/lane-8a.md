@@ -108,10 +108,12 @@ Decisions:
 
 - Radix AspectRatio renders a wrapper div around the root. That wrapper is
   what a grid or flex parent stretches, and a stretched wrapper loses the
-  ratio. The demo wraps each box in a cell with `align-self: start`, and the
-  manifest lists the trap under `mistakes`. The shared CSS does not style the
-  Radix wrapper (a React detail; Angular will set native `aspect-ratio` on
-  the host and has no wrapper).
+  ratio. `AspectRatio.css` sets `align-self: start` on
+  `[data-radix-aspect-ratio-wrapper]:has(> [data-ds='aspect-ratio'])`. This is
+  the one selector in the lane that names a React detail. It never matches in
+  Angular, which will set native `aspect-ratio` on the host and has no wrapper.
+- `fit` (`cover`, `contain`) is a prop the order does not list. I added it
+  because media that fills a ratio box always needs crop or letterbox.
 - The manifest names the native `aspect-ratio` property as the plain
   alternative under `avoidWhen`, `insteadUse` and `mistakes`.
 
@@ -156,7 +158,7 @@ Decisions:
 
 - No layout widths. Container widths are `breakpoint.phone`,
   `breakpoint.tablet`, `breakpoint.desktop` and `desktop + phone / 2` (xl,
-  about 86rem). Grid minimums are `phone / 3` (sm, 10rem), `phone / 2` (md,
+  about 84rem). Grid minimums are `phone / 3` (sm, 10rem), `phone / 2` (md,
   15rem) and `tablet / 2` (lg, 24rem). Both sit behind private properties
   (`--_container-max`, `--_grid-min`), so a token swap is one line each.
 - No page gutter token: Container defaults to `space.3xl`, which is 16px on
@@ -175,7 +177,25 @@ barrel (see changes needed); English demo sentences show the full stop on the
 wrong side in the rtl gallery screenshots (the demo kit renders English copy
 in an rtl Theme; a gallery matter).
 
-REVIEW_ROUND_2
+Grid, Container, AspectRatio and Separator, one round. Fixed: the
+AspectRatio blocker (the wrapper stretched in a grid; now fixed in CSS, so
+the demo no longer needs cell wrappers); the AspectRatio long-arabic case
+used the short sample; demos borrowed `menu.width-min` (now breakpoint
+derived); the Container xl size is about 84rem, not 86rem; the Grid too-many
+case is 7 kept columns, a week, not 12, so two-digit numbers no longer split at 320px;
+a mistake entry for spans larger than kept columns; the Separator label flex
+rule is set once; the Separator demo rows line up.
+
+Left open (notes): `data-keep-columns` (Grid) and `data-wrap` (Stack) are
+listed under `states` although the orders list none; they are boolean
+attributes and the contract suite checks them as such. Private property
+names outside the convention's list (`--_grid-columns`, `--_grid-min`,
+`--_grid-template`, `--_grid-item-span`, `--_grid-item-row-span`,
+`--_container-max`, `--_aspect-ratio-fit`, `--_separator-thickness`) are
+layout plumbing with no listed name. The phone media query uses the literal
+with the `breakpoint.phone` comment, as the token's own description says.
+Nobody measured `color.border.control` at 3:1 on every surface. The contrast
+gate covers it for controls (`color.border.control over $bg`).
 
 ## Changes needed from the lead
 
@@ -187,13 +207,14 @@ REVIEW_ROUND_2
    `packages/react/src/components/Stack/index.ts`. Lane 8B (Surface padding)
    needs the same type.
 2. Add layout tokens to `packages/tokens/src/base/size.json`:
-   `size.container.sm` 30rem, `.md` 48rem, `.lg` 68.75rem, `.xl` 86rem;
+   `size.container.sm` 30rem, `.md` 48rem, `.lg` 68.75rem, `.xl` 84rem;
    `size.grid.item-min.sm` 10rem, `.md` 15rem, `.lg` 24rem; and
    `space.gutter` (16px at phone width in every density). Then in
    `Container.css` set `--_container-max: var(--ds-size-container-<w>)` and in
    `Grid.css` `--_grid-min: var(--ds-size-grid-item-min-<s>)`.
-3. Record in `DECISIONS.md` the layout data attributes listed above, and
-   that layout components omit `motion`.
+3. Record in `DECISIONS.md` the layout data attributes listed above, that
+   layout components omit `motion`, and extend the private property names in
+   `docs/contracts/anatomy.md` rule 1 with the layout plumbing names above.
 4. Record that Container's width prop is `width`, not the order's `size`.
 
 ## What I could not do

@@ -15,7 +15,7 @@ export type ContainerWidth = 'sm' | 'md' | 'lg' | 'xl' | 'full';
 export type ContainerElement = 'div' | 'main' | 'section' | 'article' | 'header' | 'footer';
 
 export interface ContainerProps extends HTMLAttributes<HTMLElement> {
-  /** The max inline size: sm 30rem, md 48rem, lg 68.75rem, xl about 86rem, full no cap. Default lg. */
+  /** The max inline size: sm 30rem, md 48rem, lg 68.75rem, xl about 84rem, full no cap. Default lg. */
   width?: ContainerWidth;
   /** The space on both inline sides, a `space.*` step. Default 3xl: 16px on phones in the default density. */
   gutter?: SpaceStep;

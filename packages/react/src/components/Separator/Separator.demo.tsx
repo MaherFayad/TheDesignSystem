@@ -11,14 +11,14 @@ export default function SeparatorDemo() {
     <DemoPage>
       <DemoCase id="variants" title="Orientation, decorative or semantic, and a label">
         <DemoRow label="Horizontal, decorative">
-          <Stack gap="s" style={{ flex: '1 1 0' }}>
+          <Stack gap="s" style={{ flex: '1 1 0', minInlineSize: 0 }}>
             <DemoBox>Account</DemoBox>
             <Separator />
             <DemoBox>Billing</DemoBox>
           </Stack>
         </DemoRow>
         <DemoRow label="Horizontal, semantic">
-          <Stack gap="s" style={{ flex: '1 1 0' }}>
+          <Stack gap="s" style={{ flex: '1 1 0', minInlineSize: 0 }}>
             <DemoBox>Account</DemoBox>
             <Separator decorative={false} />
             <DemoBox>Billing</DemoBox>
@@ -73,7 +73,7 @@ export default function SeparatorDemo() {
       </DemoCase>
 
       <DemoCase id="many" title="Groups of a menu">
-        <Stack gap="2xs" style={{ maxInlineSize: 'var(--ds-menu-width-min)' }}>
+        <Stack gap="2xs" style={{ maxInlineSize: 'calc(var(--ds-breakpoint-phone) / 2)' }}>
           {groups.map((group, i) => (
             <Stack key={group.join()} gap="2xs">
               {i > 0 && <Separator decorative={false} />}

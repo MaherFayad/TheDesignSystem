@@ -63,8 +63,9 @@
     border-inline-start-width: var(--_separator-thickness);
   }
 
+  /* The label takes what it needs and the lines shrink, never past the row. */
   [data-ds='separator'] > [data-part='label'] {
-    flex: none;
+    flex: 0 1 auto;
     max-inline-size: 100%;
     color: var(--ds-color-text-muted);
     font-family: var(--ds-font-family-sans);
@@ -72,11 +73,6 @@
     line-height: var(--ds-font-leading-snug);
     overflow-wrap: anywhere;
     text-align: center;
-  }
-
-  /* A long label takes what it needs and the lines shrink, never past the row. */
-  [data-ds='separator'][data-orientation='horizontal'] > [data-part='label'] {
-    flex: 0 1 auto;
   }
 
   @media (forced-colors: active) {

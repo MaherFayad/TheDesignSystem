@@ -27,11 +27,6 @@ function Picture({ fit, label }: { fit: 'cover' | 'contain'; label: string }) {
   );
 }
 
-/** A grid cell that does not stretch: Radix puts a wrapper div around the root, and a stretched wrapper loses the ratio. */
-function Cell({ children }: { children: ReactNode }) {
-  return <div style={{ alignSelf: 'start', minInlineSize: 0 }}>{children}</div>;
-}
-
 /** Caps a single example at a phone width so it fits the screenshot. */
 function Narrow({ children }: { children: ReactNode }) {
   return <div style={{ maxInlineSize: 'var(--ds-breakpoint-phone)' }}>{children}</div>;
@@ -45,41 +40,29 @@ export default function AspectRatioDemo() {
   return (
     <DemoPage>
       <DemoCase id="variants" title="Ratios and fit">
-        <DemoGrid min="var(--ds-menu-width-min)">
+        <DemoGrid min="calc(var(--ds-breakpoint-phone) / 3)">
           {ratios.map(([name, ratio]) => (
-            <Cell key={name}>
-              <Cell>
-                <AspectRatio ratio={ratio}>
+                <AspectRatio key={name} ratio={ratio}>
                   <Fill>{name}</Fill>
                 </AspectRatio>
-              </Cell>
-            </Cell>
           ))}
         </DemoGrid>
-        <DemoGrid min="var(--ds-menu-width-min)">
-          <Cell>
+        <DemoGrid min="calc(var(--ds-breakpoint-phone) / 3)">
             <AspectRatio ratio={16 / 9} fit="cover">
               <Picture fit="cover" label="A circle, cropped to fill the box" />
             </AspectRatio>
-          </Cell>
-          <Cell>
             <AspectRatio ratio={16 / 9} fit="contain">
               <Picture fit="contain" label="A circle, letterboxed inside the box" />
             </AspectRatio>
-          </Cell>
         </DemoGrid>
         <Theme dir="rtl" lang="ar">
-          <DemoGrid min="var(--ds-menu-width-min)">
-            <Cell>
+          <DemoGrid min="calc(var(--ds-breakpoint-phone) / 3)">
               <AspectRatio ratio={4 / 3}>
                 <Fill>صورة الغلاف</Fill>
               </AspectRatio>
-            </Cell>
-            <Cell>
               <AspectRatio ratio={1}>
                 <Fill>صورة الملف</Fill>
               </AspectRatio>
-            </Cell>
           </DemoGrid>
         </Theme>
       </DemoCase>
@@ -101,34 +84,26 @@ export default function AspectRatioDemo() {
       <DemoCase id="many" title="A gallery of square thumbnails">
         <DemoGrid min="var(--ds-space-12xl)">
           {sample.en.items.map((t) => (
-            <Cell key={t}>
-              <Cell>
-                <AspectRatio ratio={1}>
+                <AspectRatio key={t} ratio={1}>
                   <Fill>{t}</Fill>
                 </AspectRatio>
-              </Cell>
-            </Cell>
           ))}
         </DemoGrid>
       </DemoCase>
 
       <DemoCase id="long-text" title="Text longer than the box is clipped, not grown">
-        <DemoGrid min="var(--ds-menu-width-min)">
-          <Cell>
+        <DemoGrid min="calc(var(--ds-breakpoint-phone) / 3)">
             <AspectRatio ratio={16 / 9}>
               <Fill>{sample.en.long}</Fill>
             </AspectRatio>
-          </Cell>
         </DemoGrid>
       </DemoCase>
 
       <DemoCase id="long-arabic" title="Arabic caption in a ratio box" lang="ar">
-        <DemoGrid min="var(--ds-menu-width-min)">
-          <Cell>
+        <DemoGrid min="calc(var(--ds-breakpoint-phone) / 3)">
             <AspectRatio ratio={4 / 3}>
-              <Fill>{sample.ar.short}</Fill>
+              <Fill>{sample.ar.long}</Fill>
             </AspectRatio>
-          </Cell>
         </DemoGrid>
       </DemoCase>
     </DemoPage>

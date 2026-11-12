@@ -262,6 +262,10 @@
     {
       "wrong": "role grid on a layout Grid",
       "right": "No role; arrow key navigation between cells belongs to DataGrid"
+    },
+    {
+      "wrong": "keepColumns with a GridItem span larger than the column count",
+      "right": "Spans no larger than columns; on phones keepColumns keeps the count, so a wider span adds a track and scrolls sideways"
     }
   ],
   "since": "0.1.0"

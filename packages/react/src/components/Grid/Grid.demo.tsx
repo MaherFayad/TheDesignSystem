@@ -70,9 +70,9 @@ export default function GridDemo() {
         </Grid>
       </DemoCase>
 
-      <DemoCase id="too-many" title="Twelve columns, kept on phones">
-        <Grid columns={12} gap="2xs" keepColumns>
-          {Array.from({ length: 36 }, (_, i) => (
+      <DemoCase id="too-many" title="A week of days: seven columns, kept on phones">
+        <Grid columns={7} gap="2xs" keepColumns>
+          {Array.from({ length: 35 }, (_, i) => (
             <DemoBox key={i} style={{ paddingInline: 'var(--ds-space-2xs)' }}>
               {String(i + 1)}
             </DemoBox>

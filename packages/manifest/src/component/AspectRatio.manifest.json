@@ -80,7 +80,7 @@
       "status": "ready",
       "behavior": "radix:AspectRatio",
       "example": "AspectRatio.demo.tsx",
-      "note": "Radix renders a wrapper div (data-radix-aspect-ratio-wrapper) around the root that takes 100% width; className, style and ref go to the inner root. No motion: nothing animates."
+      "note": "Radix renders a wrapper div (data-radix-aspect-ratio-wrapper) around the root that takes 100% width; className, style and ref go to the inner root. No motion: nothing animates. Component CSS keeps that wrapper at align-self start, so a grid or flex row cannot stretch it out of ratio."
     },
     "angular": {
       "status": "planned",
@@ -111,10 +111,6 @@
     {
       "wrong": "A caption inside the ratio box",
       "right": "The caption below the box, where it can wrap"
-    },
-    {
-      "wrong": "An AspectRatio placed straight in a grid or flex row that stretches its items",
-      "right": "Wrap it in a cell with align-self start, or set align start on the Grid or Stack: the Radix wrapper is the item, and a stretched wrapper loses the ratio"
     }
   ],
   "since": "0.1.0"

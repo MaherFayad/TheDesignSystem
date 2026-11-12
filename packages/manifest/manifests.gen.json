@@ -81,7 +81,7 @@
         "status": "ready",
         "behavior": "radix:AspectRatio",
         "example": "AspectRatio.demo.tsx",
-        "note": "Radix renders a wrapper div (data-radix-aspect-ratio-wrapper) around the root that takes 100% width; className, style and ref go to the inner root. No motion: nothing animates."
+        "note": "Radix renders a wrapper div (data-radix-aspect-ratio-wrapper) around the root that takes 100% width; className, style and ref go to the inner root. No motion: nothing animates. Component CSS keeps that wrapper at align-self start, so a grid or flex row cannot stretch it out of ratio."
       },
       "angular": {
         "status": "planned",
@@ -112,10 +112,6 @@
       {
         "wrong": "A caption inside the ratio box",
         "right": "The caption below the box, where it can wrap"
-      },
-      {
-        "wrong": "An AspectRatio placed straight in a grid or flex row that stretches its items",
-        "right": "Wrap it in a cell with align-self start, or set align start on the Grid or Stack: the Radix wrapper is the item, and a stretched wrapper loses the ratio"
       }
     ],
     "since": "0.1.0"
@@ -574,7 +570,7 @@
           "full"
         ],
         "default": "lg",
-        "description": "The max inline size, gutter included: sm 30rem (breakpoint.phone), md 48rem (breakpoint.tablet), lg 68.75rem (breakpoint.desktop), xl desktop plus half a phone (about 86rem), full no cap. Named width, not size, because size is the shared control axis. Sets data-width."
+        "description": "The max inline size, gutter included: sm 30rem (breakpoint.phone), md 48rem (breakpoint.tablet), lg 68.75rem (breakpoint.desktop), xl desktop plus half a phone (about 84rem), full no cap. Named width, not size, because size is the shared control axis. Sets data-width."
       },
       "gutter": {
         "type": [
@@ -1463,6 +1459,10 @@
       {
         "wrong": "role grid on a layout Grid",
         "right": "No role; arrow key navigation between cells belongs to DataGrid"
+      },
+      {
+        "wrong": "keepColumns with a GridItem span larger than the column count",
+        "right": "Spans no larger than columns; on phones keepColumns keeps the count, so a wider span adds a track and scrolls sideways"
       }
     ],
     "since": "0.1.0"
