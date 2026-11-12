@@ -23,7 +23,7 @@ No adb. No iOS build.
 | 0.5 | Token build | ds-tokens | all | open | |
 | 0.6 | Gates | ds-qa | all | open | |
 | 0.7 | Theme and React gallery | ds-component | react | open | |
-| 0.8 | Icons | ds-style | all | open | |
+| 0.8 | Icons | ds-style | all | done | ade095b |
 | 0.9 | Button | ds-component | react | open | |
 | 0.10 | Field and Input | ds-component | react | open | |
 | 0.11 | Dialog | ds-component | react | open | |
