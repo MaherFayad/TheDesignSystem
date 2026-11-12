@@ -524,10 +524,25 @@
       color: GrayText;
     }
 
-    /* A pressed toggle in the system highlight colors. */
+    /*
+     * A pressed toggle in the system highlight colors. forced-color-adjust
+     * is none on the toggle and everything in it, or the browser draws its
+     * Canvas backplate behind the label and the words vanish on the
+     * Highlight fill. The inner ring is drawn in HighlightText so pressed
+     * still has a second cue besides the fill.
+     */
     [data-ds='toggle-button'][data-state='on'] {
+      --_button-shadow: inset 0 0 0 var(--ds-border-width-strong) HighlightText;
+
+      forced-color-adjust: none;
       background-color: Highlight;
+      border-color: HighlightText;
       color: HighlightText;
+    }
+
+    [data-ds='toggle-button'][data-state='on'] * {
+      forced-color-adjust: none;
+      color: inherit;
     }
   }
 }
