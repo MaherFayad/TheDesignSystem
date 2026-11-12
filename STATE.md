@@ -2,7 +2,7 @@
 Updated: 2026-11-12 08:30 UTC
 Main model: claude-fable-5-2, medium. Subagents: claude-opus-5-5, medium.
 Current wave: 0
-Next open order: 0.15
+Next open order: 0.19
 
 ## Paths
 GoBanana: /home/user/gobanana (read only clone, commit 216625c)
@@ -30,7 +30,7 @@ No adb. No iOS build.
 | 0.12 | Toast | ds-component | react | done | ee104cf, 5520e4f |
 | 0.13 | Window | ds-component, ds-style | react | done | 5c464dc, 7d5ffca |
 | 0.14 | Contract suite | ds-qa | react | done | cd05ff1 |
-| 0.15 | Angular proof | ds-angular | angular | open | |
+| 0.15 | Angular proof | ds-angular | angular | done | 445324f |
 | 0.16 | React Native proof | ds-native | native | done | 5f00f2f |
 | 0.17 | Desk Light | ds-style | all | done, proposed | f7e054b |
 | 0.18 | Consumers | ds-docs | react | done | ae2d0ee |
@@ -40,7 +40,11 @@ No adb. No iOS build.
 ## Coverage
 | Family | React | Angular | Native |
 | --- | --- | --- | --- |
-| Actions | 2 of 11 | 0 of 11 | 2 of 11 |
+| Actions | 2 of 11 | 2 of 11 | 2 of 11 |
+| Text inputs | 2 of 12 | 0 of 12 | 0 of 12 |
+| Feedback | 1 of 12 | 0 of 12 | 0 of 12 |
+| Overlays | 1 of 13 | 1 of 13 | 0 of 13 |
+| Window chrome | 3 of 5 | 0 of 5 | not applicable |
 
 ## Blocked
 Nothing.
@@ -66,6 +70,7 @@ Nothing.
    branch, no pull request, no force push.
 
 ## Contract changes
+2026-11-12: frameworks.md gained the Angular rules found by the proof (`dsTheme="<id>"`, host attribute removal, name mapping, no CDK Dialog or FocusTrap). Reason: order 0.15.
 2026-11-12: anatomy.md: a nested component may carry its parent's `data-part`; a part belongs to the nearest ancestor root; a component may add its own boolean state attributes when the manifest lists them. Reason: review of Toast and Window.
 2026-11-12: anatomy.md gained "One convention for component CSS and props" (12 rules: private `--_c-*` properties, state swaps, pseudo element roles, focus, disabled, `start` and `end`, prop spread, shared axis types). Reason: Button and Input were built with different habits.
 2026-11-12: frameworks.md: Theme uses `css` for inline styles; never wait on transitionend. style-pack.md: `status` and `proposedSchemes` in style.json. Reason: review of order 0.7.
