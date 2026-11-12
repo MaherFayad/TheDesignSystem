@@ -88,7 +88,7 @@ const shapes: SegmentedControlShape[] = ['default', 'pill', 'square'];
         </div>
       </section>
 
-      <section data-demo="case" data-demo-case="too-many" heading="Five options in a narrow column: labels end in an ellipsis">
+      <section data-demo="case" data-demo-case="too-many" heading="Five options in a narrow column: labels wrap">
         <div style="max-inline-size: 18rem;">
           <div dsSegmentedControl aria-label="Chart range" fullWidth defaultValue="7d">
             <button dsSegmentedControlItem value="24h">24 hours</button>
