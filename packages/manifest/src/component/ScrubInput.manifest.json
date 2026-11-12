@@ -1,0 +1,244 @@
+{
+  "name": "ScrubInput",
+  "kind": "component",
+  "family": "forms",
+  "summary": "The Studio inspector number: drag the label to scrub, type a value or an expression such as 12*2, or nudge with the arrow keys.",
+  "useWhen": [
+    "A design property in an inspector panel: position, size, rotation, opacity, spacing",
+    "A value people tune by feel while they watch the canvas change",
+    "A field that must show one value for a multi selection, or say the values differ (mixed)"
+  ],
+  "avoidWhen": [
+    "A count or an amount in a form, where step buttons help more than a drag",
+    "A value on a known range picked by eye",
+    "Touch first screens, where a horizontal drag fights the page scroll"
+  ],
+  "insteadUse": {
+    "A count or an amount in a form": "NumberField",
+    "A value on a known range picked by eye": "Slider",
+    "Free text or a token name": "Input"
+  },
+  "anatomy": [
+    "root",
+    "label",
+    "control",
+    "unit"
+  ],
+  "slots": {
+    "label": {
+      "accepts": [
+        "Icon",
+        "text"
+      ],
+      "max": 1
+    }
+  },
+  "props": {
+    "label": {
+      "type": "node",
+      "required": true,
+      "description": "The scrub handle: a short letter (W, H, X) or an icon name. Hidden from assistive tech; the field is named by aria-label or the Field label."
+    },
+    "value": {
+      "type": "number",
+      "description": "The value, controlled. null is empty."
+    },
+    "defaultValue": {
+      "type": "number",
+      "description": "The first value, uncontrolled. Default empty."
+    },
+    "onChange": {
+      "type": "function",
+      "description": "Called with every value: each pixel of a drag, each nudge, a typed commit on Enter or blur."
+    },
+    "onChangeEnd": {
+      "type": "function",
+      "description": "Called once when a change is done: the end of a drag, a nudge, a typed commit. One undo entry per gesture."
+    },
+    "aria-label": {
+      "type": "string",
+      "description": "The full name of the field (Width, Position X). Required outside a Field, since a letter label is not a name."
+    },
+    "placeholder": {
+      "type": "string",
+      "description": "Shown while empty, such as Auto. Mixed shows mixedLabel instead."
+    },
+    "min": {
+      "type": "number",
+      "description": "The lowest value."
+    },
+    "max": {
+      "type": "number",
+      "description": "The highest value."
+    },
+    "step": {
+      "type": "number",
+      "default": 1,
+      "description": "One arrow key press and one pixel of drag. Shift is ten steps, Alt a tenth."
+    },
+    "precision": {
+      "type": "number",
+      "default": 2,
+      "description": "Decimals the value keeps and shows."
+    },
+    "unit": {
+      "type": "string",
+      "description": "The unit shown after the value: px, %, deg. A typed value may carry this unit or none; another unit is refused."
+    },
+    "mixed": {
+      "type": "boolean",
+      "default": false,
+      "description": "The values of a selection differ: the field is empty and shows mixedLabel. Drag and arrows wait for a typed value."
+    },
+    "mixedLabel": {
+      "type": "string",
+      "default": "Mixed",
+      "description": "The word shown while mixed. Arabic: متعدد."
+    },
+    "size": {
+      "type": [
+        "xs",
+        "sm",
+        "md"
+      ],
+      "default": "md",
+      "description": "Height from size.control: 24, 28 and 32 px at default density. Inspectors use sm or xs."
+    },
+    "invalid": {
+      "type": "boolean",
+      "description": "Marks the value invalid. Inside a Field it follows the Field."
+    },
+    "disabled": {
+      "type": "boolean",
+      "description": "Native disabled on the input; no scrub. Inside a Field it follows the Field."
+    },
+    "readOnly": {
+      "type": "boolean",
+      "description": "Readable and focusable; no scrub and no nudge. Inside a Field it follows the Field."
+    },
+    "rootProps": {
+      "type": "object",
+      "description": "Props for the root. className and style also go to the root; the ref and native input props go to the input."
+    }
+  },
+  "states": [
+    "data-dragging",
+    "data-invalid",
+    "data-disabled",
+    "data-readonly",
+    "data-mixed"
+  ],
+  "a11y": {
+    "role": "textbox, from the native input. The scrub handle is aria-hidden: a pointer only shortcut for the arrow keys.",
+    "focus": "The input is the only tab stop. A press on the handle with no move focuses the input and selects its text, read only too. Focus and a drag show the 2px ring.",
+    "keys": {
+      "Tab": "Moves focus to the input, and on to the next control",
+      "Shift+Tab": "Moves focus back",
+      "ArrowUp": "Adds one step; with Shift ten steps, with Alt a tenth of a step",
+      "ArrowDown": "Takes away one step; with Shift ten steps, with Alt a tenth of a step",
+      "Enter": "Commits the typed value or expression, keeps focus and selects it",
+      "Escape": "Reverts the typed text and keeps focus; with nothing typed it goes on to the parent"
+    },
+    "announce": "Name from aria-label or the Field label. The unit and the Field description and error through aria-describedby. Mixed reads as the placeholder.",
+    "native": {
+      "accessibilityState": [
+        "disabled"
+      ]
+    },
+    "notes": [
+      "Every drag has a key path: the arrow keys move the same steps as the drag (WCAG 2.5.7).",
+      "A drag toward the inline end grows the value, so the drag direction flips in RTL. The ew-resize cursor points both ways and needs no flip.",
+      "Typing accepts arithmetic: + - * / and parentheses, the times and divide signs, Arabic Indic digits and the Arabic decimal mark. The value shows Western digits.",
+      "A typed text that is not arithmetic, or carries a unit other than the field's, goes back to the last value. It never becomes a zero.",
+      "Pass aria-label outside a Field: a letter such as W is not a name."
+    ]
+  },
+  "content": {
+    "en": {
+      "label": "One letter or an icon for the handle: W, H, X, Y. The aria-label is the full noun: Width, Position X.",
+      "unit": "The CSS unit or symbol: px, %, deg.",
+      "mixed": "Mixed"
+    },
+    "ar": {
+      "label": "حرف واحد أو أيقونة للمقبض، والاسم الكامل في aria-label: العرض، الطول",
+      "unit": "الوحدة تبقى بالإنجليزي مثل px",
+      "mixed": "متعدد"
+    }
+  },
+  "tokens": [
+    "size.control.xs",
+    "size.control.sm",
+    "size.control.md",
+    "size.target-min",
+    "space.2xs",
+    "space.xs",
+    "space.s",
+    "font.family.sans",
+    "font.weight.regular",
+    "font.size.xs",
+    "font.size.s",
+    "font.leading.snug",
+    "inspector.field.radius",
+    "inspector.field.bg",
+    "inspector.field.bg-hover",
+    "border.width.default",
+    "border.width.strong",
+    "color.border.control",
+    "color.state.danger.text",
+    "color.text.default",
+    "color.text.muted",
+    "color.text.placeholder",
+    "focus.shadow.ring",
+    "duration.base",
+    "ease.default",
+    "opacity.disabled"
+  ],
+  "motion": "none",
+  "frameworks": {
+    "react": {
+      "status": "ready",
+      "behavior": "hand built, pointer capture for the scrub; logic in @the-system/shared scrub.ts and number.ts",
+      "example": "ScrubInput.demo.tsx",
+      "note": "Motion: none. The value follows the pointer with no animation; only the focus ring fades (an opacity transition)."
+    },
+    "angular": {
+      "status": "planned"
+    },
+    "native": {
+      "status": "planned"
+    }
+  },
+  "styles": {
+    "studio": "A filled inspector rectangle (inspector.field.bg), no border at rest, the 2px ring on focus and while dragging",
+    "desk": "The same filled field on the Desk inspector fill"
+  },
+  "mistakes": [
+    {
+      "wrong": "A letter label as the only name of the field",
+      "right": "aria-label with the full noun, or a Field label"
+    },
+    {
+      "wrong": "A drag with no keyboard path",
+      "right": "The arrow keys on the input move the same steps"
+    },
+    {
+      "wrong": "A typed 5em in a px field kept as 5",
+      "right": "Refused and reverted: the unit must be the field's, or none"
+    },
+    {
+      "wrong": "Showing the first value of a multi selection",
+      "right": "mixed, so the field says the values differ"
+    },
+    {
+      "wrong": "ScrubInput in a checkout or a booking form",
+      "right": "NumberField, with step buttons"
+    }
+  ],
+  "contract": {
+    "keys": {
+      "ArrowUp": { "focus": "[data-part='control']", "case": "one", "expect": "value-changes" },
+      "ArrowDown": { "focus": "[data-part='control']", "case": "one", "expect": "value-changes" }
+    }
+  },
+  "since": "0.1.0"
+}
