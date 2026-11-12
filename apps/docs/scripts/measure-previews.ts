@@ -20,7 +20,7 @@ const site = (process.env.SITE_URL ?? 'http://localhost:4400').replace(/\/+$/, '
 const out = join(import.meta.dirname, '..', 'src', 'data', 'preview-heights.json');
 
 const HIDE = `[data-gallery='demo-title'],[data-demo='case']>[data-demo='title']{display:none}
-html,body,#root,[data-gallery='root']{min-block-size:0;block-size:auto;background:transparent}
+html,body,#root,[data-gallery='root']{min-block-size:0;block-size:auto}
 [data-gallery='stage']{padding:clamp(16px,3vw,28px)}`;
 
 interface Job {

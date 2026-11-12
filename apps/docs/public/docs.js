@@ -89,7 +89,7 @@
 
   // ------------------------------------------------------------ frames
   const HIDE = `[data-gallery='demo-title'],[data-demo='case']>[data-demo='title']{display:none}
-html,body,#root,[data-gallery='root']{min-block-size:0;block-size:auto;background:transparent}
+html,body,#root,[data-gallery='root']{min-block-size:0;block-size:auto}
 [data-gallery='stage']{padding:clamp(16px,3vw,28px)}`;
 
   function sizeFrame(frame) {

@@ -1427,10 +1427,17 @@ pre.astro-code span {
     flex: none;
     padding-inline: var(--ds-space-s);
   }
-  .search-btn-text,
   .search-btn kbd,
   .version {
     display: none;
+  }
+  .search-btn-text {
+    position: absolute;
+    inline-size: 1px;
+    block-size: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
   }
   .style-pick svg {
     display: none;
@@ -1462,6 +1469,10 @@ pre.astro-code span {
   }
   .preview-bar {
     padding-inline-start: var(--ds-space-s);
+  }
+  /* The copy control sits over the block: the code starts under it. */
+  .prose .code-block pre.astro-code {
+    padding-block-start: calc(var(--ds-space-xl) + 36px);
   }
 }
 @media (max-width: 479px) {

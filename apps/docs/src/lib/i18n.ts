@@ -208,8 +208,8 @@ export const pageText = {
 /** Headings and one line explanations of the shared content cases (docs/contracts/anatomy.md). */
 export const caseText: Record<string, { en: [string, string]; ar: [string, string] }> = {
   variants: {
-    en: ['Variants', 'Every tone, emphasis, size and shape the component offers, side by side.'],
-    ar: ['الخيارات', 'كل الألوان والدرجات والأحجام والأشكال التي يقدمها المكون، جنبا إلى جنب.'],
+    en: ['Variants', 'The options the component offers, side by side.'],
+    ar: ['الخيارات', 'الخيارات التي يقدمها المكون، جنبا إلى جنب.'],
   },
   empty: {
     en: ['Empty', 'The component with no content yet, and what it says to do next.'],
