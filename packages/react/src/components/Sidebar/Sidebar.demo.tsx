@@ -54,7 +54,8 @@ const en: Copy = {
 };
 
 const ar: Copy = {
-  label: 'الرئيسية',
+  // The landmark name differs from the Home item, so a screen reader does not say the same word twice.
+  label: 'التنقل الجانبي',
   brand: 'استوديو الشمال',
   brandShort: 'ش',
   workspace: 'مساحة العمل',
@@ -71,6 +72,21 @@ const ar: Copy = {
   help: 'مركز المساعدة',
   unread: (n) => `${n} غير مقروءة`,
 };
+
+/** The folders of the too many case, each with its own icon. */
+const tooMany: [IconName, string][] = [
+  ...en.items.map(([icon, label]): [IconName, string] => [icon, label]),
+  ['edit', 'Drafts'],
+  ['send', 'Sent'],
+  ['download', 'Archive'],
+  ['trash', 'Trash'],
+  ['warning', 'Spam'],
+  ['star', 'Starred'],
+  ['alert-circle', 'Important'],
+  ['clock', 'Scheduled'],
+  ['copy', 'Templates'],
+  ['bell-off', 'Snoozed'],
+];
 
 function Brand({ copy }: { copy: Copy }) {
   const { collapsed } = useSidebar();
@@ -204,13 +220,11 @@ export default function SidebarDemo() {
               <strong>Mail</strong>
             </SidebarHeader>
             <SidebarGroup label="Folders">
-              {[...en.items.map(([, l]) => l), 'Drafts', 'Sent', 'Archive', 'Trash', 'Spam', 'Starred', 'Important', 'Scheduled', 'Templates', 'Snoozed'].map(
-                (label, i) => (
-                  <SidebarItem key={label} href={`#folder-${i}`} start="folder" count={i === 2 ? 1500 : i * 7}>
-                    {label}
-                  </SidebarItem>
-                ),
-              )}
+              {tooMany.map(([icon, label], i) => (
+                <SidebarItem key={label} href={`#folder-${i}`} start={icon} count={i === 2 ? 1500 : i * 7}>
+                  {label}
+                </SidebarItem>
+              ))}
             </SidebarGroup>
             <SidebarFooter>
               <SidebarItem href="#settings" start="settings">

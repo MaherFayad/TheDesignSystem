@@ -6,17 +6,18 @@
  * in docs/contracts/anatomy.md.
  *
  *   [data-ds='sidebar']                         root: nav, data-state expanded or collapsed
- *     [data-part='header']                      brand and the toggle, stays at the top
+ *     [data-part='header']                      brand and the toggle, at the top
  *       [data-part='toggle']                    an IconButton root, icon sidebar
- *     [data-part='group']                       data-state open or closed when collapsible
- *       [data-part='group-label']               the heading of a plain group
- *       [data-part='group-trigger']             a Button root, the heading of a collapsible group
- *       [data-part='list']                      the ul of items
- *         [data-part='item']                    a link, data-active, data-disabled
- *           [data-part='item-icon']
- *           [data-part='item-label']
- *           [data-part='item-count']
- *     [data-part='footer']                      stays at the bottom
+ *     [data-part='body']                        the groups; the only part that scrolls
+ *       [data-part='group']                     data-state open or closed when collapsible
+ *         [data-part='group-label']             the heading of a plain group
+ *         [data-part='group-trigger']           a Button root, the heading of a collapsible group
+ *         [data-part='list']                    the ul of items
+ *           [data-part='item']                  a link, data-active, data-disabled
+ *             [data-part='item-icon']
+ *             [data-part='item-label']
+ *             [data-part='item-count']
+ *     [data-part='footer']                      at the bottom
  *
  * Private properties on the root (recipes override these):
  *
@@ -32,7 +33,9 @@
  *   --_sidebar-meta-fg                               labels and counts
  *   --_sidebar-chevron-closed                        the turn of a closed group's chevron
  *
- * The active item is told apart by weight, a fill and a bar on the inline
+ * The header and the footer sit outside the scrolling body, so nothing is
+ * drawn over an item and a focused item is never hidden under them (WCAG
+ * 2.4.11). The active item is told apart by weight, a fill and a bar on the inline
  * start edge (the ::before glow layer), never by color alone. The width never animates: collapse is
  * instant. Motion, pattern "fade-rise": an opened group's list fades in and
  * rises a step; closing is instant, so Radix never waits for an animation.
@@ -78,9 +81,9 @@
     block-size: 100%;
     margin: 0;
     padding-inline: var(--_sidebar-padding);
+    /* Only the body scrolls. The root scrolls too only when the header and footer alone do not fit. */
     overflow-x: hidden;
     overflow-y: auto;
-    overscroll-behavior: contain;
     isolation: isolate;
     border-inline-start: var(--ds-border-width-default) solid var(--_sidebar-border-start-color);
     border-inline-end: var(--ds-border-width-default) solid var(--_sidebar-border-end-color);
@@ -118,9 +121,6 @@
   /* ------------------------------------------------------------ header and footer */
 
   [data-ds='sidebar'] > :is([data-part='header'], [data-part='footer']) {
-    position: sticky;
-    /* Above the scrolling items. The root isolates, so this stays inside the sidebar. */
-    z-index: var(--ds-z-sidebar);
     display: flex;
     flex: none;
     flex-wrap: wrap;
@@ -132,7 +132,6 @@
   }
 
   [data-ds='sidebar'] > [data-part='header'] {
-    inset-block-start: 0;
     justify-content: space-between;
   }
 
@@ -142,16 +141,40 @@
   }
 
   [data-ds='sidebar'] > [data-part='footer'] {
-    inset-block-end: 0;
     flex-direction: column;
     align-items: stretch;
     margin-block-start: auto;
     border-block-start: var(--ds-border-width-default) solid var(--_sidebar-border-color);
   }
 
-  /* ------------------------------------------------------------ groups */
+  /* ------------------------------------------------------------ body and groups */
 
-  [data-ds='sidebar'] > [data-part='group'] {
+  /* The body takes the room between the header and the footer and scrolls on its own. */
+  [data-ds='sidebar'] > [data-part='body'] {
+    display: flex;
+    flex: 1 1 auto;
+    flex-direction: column;
+    gap: var(--_sidebar-gap);
+    min-block-size: var(--ds-size-target-min);
+    margin-inline: calc(-1 * var(--_sidebar-padding));
+    padding-inline: var(--_sidebar-padding);
+    overflow-x: hidden;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    /* A focused item scrolls in clear of the edge. */
+    scroll-padding-block: var(--ds-space-xs);
+  }
+
+  /* A sidebar with no header: the first group starts one padding below the top edge. */
+  [data-ds='sidebar'] > [data-part='body']:first-child {
+    padding-block-start: var(--_sidebar-padding);
+  }
+
+  [data-ds='sidebar'] > [data-part='body']:last-child {
+    padding-block-end: var(--_sidebar-padding);
+  }
+
+  [data-ds='sidebar'] > [data-part='body'] > [data-part='group'] {
     display: flex;
     flex: none;
     flex-direction: column;
@@ -159,7 +182,7 @@
     min-inline-size: 0;
   }
 
-  [data-ds='sidebar'] > [data-part='group'] > [data-part='group-label'] {
+  [data-ds='sidebar'] > [data-part='body'] > [data-part='group'] > [data-part='group-label'] {
     padding-block: var(--ds-space-3xs);
     padding-inline: var(--_sidebar-item-padding-inline);
     color: var(--_sidebar-meta-fg);
@@ -169,7 +192,7 @@
   }
 
   /* The trigger is a ghost Button: the sidebar sets its private properties and stretches it across the row. */
-  [data-ds='sidebar'] > [data-part='group'] > [data-part='group-trigger'] {
+  [data-ds='sidebar'] > [data-part='body'] > [data-part='group'] > [data-part='group-trigger'] {
     --_button-padding-inline: var(--_sidebar-item-padding-inline);
     --_button-radius: var(--_sidebar-item-radius);
     --_button-font-size: var(--_sidebar-meta-font-size);
@@ -180,19 +203,19 @@
   }
 
   /* A long heading wraps (Button wrap) and reads from the start edge like the items. */
-  [data-ds='sidebar'] > [data-part='group'] > [data-part='group-trigger'][data-wrap] > [data-part='label'] {
+  [data-ds='sidebar'] > [data-part='body'] > [data-part='group'] > [data-part='group-trigger'][data-wrap] > [data-part='label'] {
     text-align: start;
   }
 
-  [data-ds='sidebar'] > [data-part='group'] > [data-part='group-trigger'] > [data-part='end'] {
+  [data-ds='sidebar'] > [data-part='body'] > [data-part='group'] > [data-part='group-trigger'] > [data-part='end'] {
     transition: transform var(--ds-duration-fast) var(--ds-ease-default);
   }
 
-  [data-ds='sidebar'] > [data-part='group'][data-state='closed'] > [data-part='group-trigger'] > [data-part='end'] {
+  [data-ds='sidebar'] > [data-part='body'] > [data-part='group'][data-state='closed'] > [data-part='group-trigger'] > [data-part='end'] {
     transform: rotate(var(--_sidebar-chevron-closed));
   }
 
-  [data-ds='sidebar'] > [data-part='group'] > [data-part='list'] {
+  [data-ds='sidebar'] > [data-part='body'] > [data-part='group'] > [data-part='list'] {
     display: flex;
     flex-direction: column;
     gap: var(--ds-space-4xs);
@@ -201,14 +224,14 @@
     list-style: none;
   }
 
-  [data-ds='sidebar'] > [data-part='group'][data-state='open'] > [data-part='list'] {
+  [data-ds='sidebar'] > [data-part='body'] > [data-part='group'][data-state='open'] > [data-part='list'] {
     animation: ds-sidebar-group-in var(--ds-duration-base) var(--ds-ease-out);
   }
 
   @keyframes ds-sidebar-group-in {
     from {
       opacity: 0;
-      transform: translateY(calc(-1 * var(--ds-space-xs)));
+      transform: translateY(var(--ds-space-xs));
     }
   }
 
@@ -289,7 +312,7 @@
   /* The words of countLabel: read by screen readers, not drawn. */
   [data-ds='sidebar'] [data-visually-hidden],
   [data-ds='sidebar'][data-state='collapsed'] [data-part='item-label'],
-  [data-ds='sidebar'][data-state='collapsed'] > [data-part='group'] > [data-part='group-label'] {
+  [data-ds='sidebar'][data-state='collapsed'] > [data-part='body'] > [data-part='group'] > [data-part='group-label'] {
     position: absolute;
     inline-size: var(--ds-border-width-default);
     block-size: var(--ds-border-width-default);
@@ -342,12 +365,12 @@
   }
 
   /* A collapsed sidebar holds every group open and hides the heading button; its id still names the list. */
-  [data-ds='sidebar'][data-state='collapsed'] > [data-part='group'] > [data-part='group-trigger'] {
+  [data-ds='sidebar'][data-state='collapsed'] > [data-part='body'] > [data-part='group'] > [data-part='group-trigger'] {
     display: none;
   }
 
   /* Groups part with a hairline instead of a heading. */
-  [data-ds='sidebar'][data-state='collapsed'] > [data-part='group'] + [data-part='group'] {
+  [data-ds='sidebar'][data-state='collapsed'] > [data-part='body'] > [data-part='group'] + [data-part='group'] {
     padding-block-start: var(--_sidebar-gap);
     border-block-start: var(--ds-border-width-default) solid var(--_sidebar-border-color);
   }
@@ -382,12 +405,12 @@
   /* ------------------------------------------------------------ reduced motion, forced colors */
 
   @media (prefers-reduced-motion: reduce) {
-    [data-ds='sidebar'] > [data-part='group'][data-state='open'] > [data-part='list'] {
+    [data-ds='sidebar'] > [data-part='body'] > [data-part='group'][data-state='open'] > [data-part='list'] {
       animation: none;
     }
 
     [data-ds='sidebar'] [data-part='item']::after,
-    [data-ds='sidebar'] > [data-part='group'] > [data-part='group-trigger'] > [data-part='end'] {
+    [data-ds='sidebar'] > [data-part='body'] > [data-part='group'] > [data-part='group-trigger'] > [data-part='end'] {
       transition: none;
     }
   }

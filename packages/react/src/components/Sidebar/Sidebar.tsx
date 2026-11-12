@@ -19,12 +19,18 @@
 //   DOM, visually hidden, so it is still the accessible name. Groups show
 //   all their items while collapsed: a closed group would hide destinations
 //   with no visible way to open them.
-// - Tooltip (order 1.6.6) is built by another lane. Once it lands, each item
-//   of a collapsed sidebar is wrapped in a Tooltip with its label, at the
-//   marked line in SidebarItem.
+// - Each item of a collapsed sidebar shows a Tooltip with its label on hover
+//   and focus (WCAG 1.4.13). The Tooltip is always rendered and only turned
+//   off while expanded, so collapsing never remounts an item. The hint is the
+//   item's own name, so it is not wired as its description too.
+// - The groups sit in a `body` part that scrolls; the header and the footer
+//   are outside it. Nothing is drawn over a scrolling item, so a focused item
+//   is never hidden (WCAG 2.4.11) and no footer link covers part of an item.
 // - The width never animates (only transform and opacity may), so collapse
 //   is instant. An opened group fades in (pattern "fade-rise").
 import {
+  Children,
+  Fragment,
   createContext,
   isValidElement,
   useCallback,
@@ -46,6 +52,7 @@ import type { Size } from '@the-system/shared';
 import { useTheme } from '../../theme';
 import { Button } from '../Button';
 import { IconButton } from '../IconButton';
+import { Tooltip, TooltipProvider } from '../Tooltip';
 
 export type SidebarSize = Extract<Size, 'sm' | 'md'>;
 /** Leading content of an item: a system icon name or a node. */
@@ -93,6 +100,13 @@ function useControlled<T>(value: T | undefined, defaultValue: T, onChange?: (nex
     [controlled, onChange],
   );
   return [controlled ? value : inner, set];
+}
+
+/** Flattens fragments, so a header or footer inside a fragment is still found. */
+function flatten(children: ReactNode): ReactNode[] {
+  return Children.toArray(children).flatMap((child) =>
+    isValidElement<{ children?: ReactNode }>(child) && child.type === Fragment ? flatten(child.props.children) : [child],
+  );
 }
 
 function renderStart(content: SidebarSlotContent): ReactNode {
@@ -147,23 +161,38 @@ export function Sidebar({
     return () => setHeaders((n) => n - 1);
   }, []);
 
+  // The header goes first and the footer last; everything else goes in the scrolling body.
+  const head: ReactNode[] = [];
+  const body: ReactNode[] = [];
+  const foot: ReactNode[] = [];
+  for (const child of flatten(children)) {
+    if (isValidElement(child) && child.type === SidebarHeader) head.push(child);
+    else if (isValidElement(child) && child.type === SidebarFooter) foot.push(child);
+    else body.push(child);
+  }
+
   return (
-    <SidebarContext.Provider value={{ collapsed, size, setCollapsed, toggle: collapsible ? words : null, registerHeader }}>
-      <nav
-        {...rest}
-        ref={ref}
-        aria-label={label}
-        data-ds="sidebar"
-        data-size={size}
-        data-state={collapsed ? 'collapsed' : 'expanded'}
-      >
-        {collapsible && headers === 0 && (
-          <div data-part="header">
-            <SidebarToggle />
-          </div>
-        )}
-        {children}
-      </nav>
+    <SidebarContext.Provider
+      value={{
+        collapsed,
+        size,
+        setCollapsed,
+        toggle: collapsible ? words : null,
+        registerHeader,
+      }}
+    >
+      <TooltipProvider>
+        <nav {...rest} ref={ref} aria-label={label} data-ds="sidebar" data-size={size} data-state={collapsed ? 'collapsed' : 'expanded'}>
+          {collapsible && headers === 0 && (
+            <div data-part="header">
+              <SidebarToggle />
+            </div>
+          )}
+          {head}
+          {body.length > 0 && <div data-part="body">{body}</div>}
+          {foot}
+        </nav>
+      </TooltipProvider>
     </SidebarContext.Provider>
   );
 }
@@ -191,7 +220,7 @@ export interface SidebarHeaderProps extends Omit<HTMLAttributes<HTMLDivElement>,
   ref?: Ref<HTMLDivElement>;
 }
 
-/** The top of the sidebar: brand or workspace, then the toggle when the sidebar is collapsible. */
+/** The top of the sidebar: brand or workspace, then the toggle when the sidebar is collapsible. A direct child of Sidebar. */
 export function SidebarHeader({ children, ref, ...rest }: SidebarHeaderProps) {
   const { registerHeader } = useSidebar();
   useLayoutEffect(() => registerHeader(), [registerHeader]);
@@ -209,7 +238,7 @@ export interface SidebarFooterProps extends Omit<HTMLAttributes<HTMLDivElement>,
   ref?: Ref<HTMLDivElement>;
 }
 
-/** The bottom of the sidebar. It stays in view while the groups scroll. */
+/** The bottom of the sidebar. It stays in view while the groups scroll. A direct child of Sidebar. */
 export function SidebarFooter({ children, ref, ...rest }: SidebarFooterProps) {
   return (
     <div {...rest} ref={ref} data-part="footer">
@@ -296,6 +325,19 @@ export function SidebarGroup({
 
 // ------------------------------------------------------------------ item
 
+/**
+ * Sits between the Tooltip trigger and the item. The hint is the item's own
+ * label, so the tooltip id is dropped from aria-describedby and the label is
+ * not read twice. Every other trigger prop (handlers, ref) merges onto the
+ * item through Slot; the item keeps its own aria-describedby.
+ */
+function WithoutHintDescription({
+  'aria-describedby': _hint,
+  ...rest
+}: { 'aria-describedby'?: string; children: ReactElement } & Record<string, unknown>) {
+  return <Slot.Root {...rest} />;
+}
+
 /** No `title`: hints come from Tooltip, never the native title attribute. */
 export interface SidebarItemProps extends Omit<AnchorHTMLAttributes<HTMLAnchorElement>, 'title'> {
   /** The visible label, and the accessible name when the sidebar is collapsed. A noun: "Inbox", "Billing". */
@@ -332,6 +374,7 @@ export function SidebarItem({
   ...rest
 }: SidebarItemProps) {
   const inList = useContext(ListContext);
+  const { collapsed } = useSidebar();
   const shown = !count ? undefined : count > COUNT_MAX ? `${COUNT_MAX}+` : String(count);
 
   const attrs = {
@@ -346,6 +389,8 @@ export function SidebarItem({
     'data-disabled': disabled ? '' : undefined,
     'aria-current': active ? ('page' as const) : rest['aria-current'],
     'aria-disabled': disabled ? true : rest['aria-disabled'],
+    // Set on purpose, also when undefined: the item's own value wins over the Tooltip trigger's, so no tooltip state lands on the part.
+    'data-state': undefined,
     onClick: (event: MouseEvent<HTMLAnchorElement>) => {
       if (disabled) {
         event.preventDefault();
@@ -387,8 +432,8 @@ export function SidebarItem({
     </>
   );
 
-  // Tooltip (1.6.6): when it lands, wrap the item below in a Tooltip with its label while the sidebar is collapsed.
-  let item: ReactNode;
+  let item: ReactElement;
+  let label: ReactNode = children;
   // A disabled item is always the plain anchor: a router child's own click handler would run first and navigate.
   if (asChild && !disabled) {
     if (!isValidElement(children)) {
@@ -402,8 +447,17 @@ export function SidebarItem({
   } else {
     // A disabled asChild item shows its child's text in the plain anchor.
     const text = asChild && isValidElement<{ children?: ReactNode }>(children) ? children.props.children : children;
+    label = text;
     item = <a {...attrs}>{render(text)}</a>;
   }
+  if (asChild && !disabled && isValidElement<{ children?: ReactNode }>(children)) label = children.props.children;
 
-  return inList ? <li>{item}</li> : item;
+  // Collapsed: the label is hidden, so a Tooltip shows it. Always rendered, off while expanded, so the item never remounts.
+  const withHint = (
+    <Tooltip content={label} side="end" disabled={!collapsed}>
+      <WithoutHintDescription>{item}</WithoutHintDescription>
+    </Tooltip>
+  );
+
+  return inList ? <li>{withHint}</li> : withHint;
 }
