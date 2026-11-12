@@ -7508,7 +7508,10 @@
         "example": "Field.demo.tsx"
       },
       "angular": {
-        "status": "planned"
+        "status": "ready",
+        "behavior": "div[dsField], provides DsFieldContext through DI",
+        "example": "field.demo.ts",
+        "note": "Controls read the ids and state through DI (fieldControl, the twin of useFieldControl). label, description and error take a string or a TemplateRef. Compound parts: label[dsFieldLabel], p[dsFieldDescription], p[dsFieldError]."
       },
       "native": {
         "status": "planned"
@@ -7635,9 +7638,10 @@
         "note": "No motion: the message appears and leaves at once, so the layout does not move under the pointer. There is no pattern to name and nothing to reduce."
       },
       "angular": {
-        "status": "planned",
+        "status": "ready",
         "behavior": "p[dsFieldError], host bindings, reads the dsField context",
-        "note": "The host paragraph is the root. Inside dsField it takes the error id and registers with the field."
+        "example": "field-error.demo.ts",
+        "note": "The host paragraph is the root. Inside dsField it takes the error id and registers with the field while it exists. React renders nothing for a FieldError without children; an Angular host cannot leave the DOM by itself, so the caller wraps it in @if (the one line error input of dsField does that and follows invalid false)."
       },
       "native": {
         "status": "planned",
@@ -9587,7 +9591,10 @@
         "note": "Motion: no catalog pattern. Only the focus glow fades (an opacity transition in Input.css); fade-rise would also rise, so it is not named."
       },
       "angular": {
-        "status": "planned"
+        "status": "ready",
+        "behavior": "div[dsInput] around a native input, ControlValueAccessor",
+        "example": "input.demo.ts",
+        "note": "The host box is the root. React spreads native props on the inner input; Angular cannot forward attributes, so the native props are inputs with the React names (type, placeholder, value as a model, id, name, autoComplete, inputMode, aria-label, aria-labelledby, aria-describedby and more). defaultValue is value. start and end take an icon name, a short text or a TemplateRef. Works with ngModel, formControl and formControlName."
       },
       "native": {
         "status": "planned"
@@ -9771,7 +9778,10 @@
         "note": "No motion of its own: the children keep theirs (the Input focus fade, the Button press). Parts are stamped on direct children: the control through rootProps, actions as a data-part prop."
       },
       "angular": {
-        "status": "planned"
+        "status": "ready",
+        "behavior": "div[dsInputGroup], role group, provides DsInputGroupContext through DI",
+        "example": "input-group.demo.ts",
+        "note": "React clones its children to stamp the parts. Angular reads the group through DI: the control takes data-part control and the group's size, shape and state where it sets none, and the add on ids in aria-describedby; span[dsInputGroupAddon] is an add on; DsInputGroupAction stamps data-part action on a dsButton or dsIconButton in the group. It cannot fill the button's own inputs, so size, shape, emphasis outline and disabled are written on each action."
       },
       "native": {
         "status": "planned"
@@ -10095,9 +10105,10 @@
         "note": "No motion: nothing on a label moves or fades, so there is no pattern to name and nothing to reduce."
       },
       "angular": {
-        "status": "planned",
+        "status": "ready",
         "behavior": "label[dsLabel], host bindings",
-        "note": "The host label is the root. Inside dsField the directive reads the field ids and state."
+        "example": "label.demo.ts",
+        "note": "The host label is the root. htmlFor is the htmlFor input or the native for attribute. label[dsFieldLabel] is the FieldLabel form: the field's label id, for and data-part label. The hidden required word uses the Radix VisuallyHidden inline style, so the DOM equals React's. optional takes a string or a TemplateRef."
       },
       "native": {
         "status": "planned",
@@ -20154,8 +20165,10 @@
         "note": "Motion is the focus glow fade of Input, named fade like Input; under reduced motion the duration token is 0ms."
       },
       "angular": {
-        "status": "planned",
-        "behavior": "a dsTextarea component around textarea, host bindings, reads the dsField context"
+        "status": "ready",
+        "behavior": "div[dsTextarea] around a native textarea, ControlValueAccessor, CSS field-sizing",
+        "example": "textarea.demo.ts",
+        "note": "The host box is the root. The value is a model and, as in React, also the text content of the native textarea. The count and the live region use the Radix VisuallyHidden inline style. countMessage is a function input."
       },
       "native": {
         "status": "planned",

@@ -9,5 +9,11 @@ export interface DemoRoute {
 export const routes: DemoRoute[] = [
   { slug: 'button', load: () => import('../../../../packages/angular/src/components/button/button.demo').then((m) => m.default) },
   { slug: 'dialog', load: () => import('../../../../packages/angular/src/components/dialog/dialog.demo').then((m) => m.default) },
+  { slug: 'field', load: () => import('../../../../packages/angular/src/components/field/field.demo').then((m) => m.default) },
+  { slug: 'field-error', load: () => import('../../../../packages/angular/src/components/field-error/field-error.demo').then((m) => m.default) },
   { slug: 'icon-button', load: () => import('../../../../packages/angular/src/components/icon-button/icon-button.demo').then((m) => m.default) },
+  { slug: 'input', load: () => import('../../../../packages/angular/src/components/input/input.demo').then((m) => m.default) },
+  { slug: 'input-group', load: () => import('../../../../packages/angular/src/components/input-group/input-group.demo').then((m) => m.default) },
+  { slug: 'label', load: () => import('../../../../packages/angular/src/components/label/label.demo').then((m) => m.default) },
+  { slug: 'textarea', load: () => import('../../../../packages/angular/src/components/textarea/textarea.demo').then((m) => m.default) },
 ];
