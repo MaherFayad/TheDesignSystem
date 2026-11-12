@@ -30,24 +30,28 @@ function mockAnimate() {
 describe('PasswordField motion', () => {
   afterEach(() => vi.unstubAllGlobals());
 
-  it('changes the type at once, rolls the new glyph in and fades the text back in (password-reveal)', () => {
+  it('changes the type at once, morphs the eye into the eye off and fades the text back in (password-reveal)', () => {
     const { calls, restore } = mockAnimate();
     try {
       const { container } = render(<PasswordField aria-label="Password" />);
       const input = container.querySelector('input') as HTMLInputElement;
       fireEvent.click(screen.getByRole('button', { name: 'Show password' }));
       expect(input.type).toBe('text');
-      const icon = container.querySelector('[data-part="toggle"] > [data-part="icon"]');
-      const glyph = calls.find((c) => c.el === icon);
-      expect(glyph?.frames[0]).toMatchObject({ opacity: 0 });
-      expect(String(glyph?.frames[0]?.transform)).toContain('translateY(var(--ds-space-xs');
-      const text = calls.find((c) => c.el === input);
-      expect(text?.frames).toEqual([{ opacity: 0 }, { opacity: 1 }]);
-      // Hiding again rolls the other way.
+      const icon = container.querySelector('[data-part="toggle"] > [data-part="icon"]') as HTMLElement;
+      // The new glyph first, the leaving one after it in an unnamed aria-hidden span.
+      const incoming = icon.firstElementChild;
+      const leaving = icon.lastElementChild;
+      expect(leaving?.getAttribute('aria-hidden')).toBe('true');
+      expect(leaving?.hasAttribute('data-part')).toBe(false);
+      const turnIn = calls.find((c) => c.el === incoming);
+      expect(String(turnIn?.frames[0]?.transform)).toContain('rotate(-90deg)');
+      expect(String(calls.find((c) => c.el === leaving)?.frames[1]?.transform)).toContain('rotate(90deg)');
+      expect(calls.find((c) => c.el === input)?.frames).toEqual([{ opacity: 0 }, { opacity: 1 }]);
+      // Hiding again turns the other way.
       calls.length = 0;
       fireEvent.click(screen.getByRole('button', { name: 'Hide password' }));
       expect(input.type).toBe('password');
-      expect(String(calls.find((c) => c.el === icon)?.frames[0]?.transform)).toContain('-1 *');
+      expect(String(calls.find((c) => c.el === icon.firstElementChild)?.frames[0]?.transform)).toContain('rotate(90deg)');
     } finally {
       restore();
     }
@@ -75,7 +79,8 @@ describe('PasswordField motion', () => {
     try {
       render(<PasswordField aria-label="Password" />);
       fireEvent.click(screen.getByRole('button', { name: 'Show password' }));
-      expect(calls).toHaveLength(2);
+      // The glyphs cross fade and the text fades: three fades, no transform.
+      expect(calls).toHaveLength(3);
       for (const c of calls) expect(JSON.stringify(c.frames)).not.toContain('transform');
     } finally {
       restore();

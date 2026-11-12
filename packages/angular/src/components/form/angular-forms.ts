@@ -7,8 +7,10 @@ import type { AbstractControl, ValidationErrors } from '@angular/forms';
 import type { FormErrors } from '@the-system/shared';
 
 export interface AngularErrorWords {
-  /** The message of the `required` and `requiredTrue` errors. */
+  /** The message of the `required` error. */
   required: string;
+  /** The message of the `requiredTrue` error: a box to tick. Default `required`. */
+  requiredChoice?: string;
   /** The message of an error that carries no text of its own. */
   invalid: string;
 }
@@ -22,7 +24,8 @@ export interface AngularErrorWords {
 export function messageOf(errors: ValidationErrors, words: AngularErrorWords): string | undefined {
   const keys = Object.keys(errors);
   if (keys.length === 0) return undefined;
-  if ('required' in errors || 'requiredTrue' in errors) return words.required;
+  if ('requiredTrue' in errors) return words.requiredChoice ?? words.required;
+  if ('required' in errors) return words.required;
   for (const key of keys) {
     const value: unknown = errors[key];
     if (typeof value === 'string' && value.trim() !== '') return value;

@@ -54,11 +54,14 @@ import {
   type FormValues,
   type Size,
 } from '@the-system/shared';
+import { staggerGroup } from '@the-system/motion';
+import { useMotion } from '../../internal/motion';
 import { useTheme } from '../../theme';
 import { Alert } from '../Alert/Alert';
 import { Button, type ButtonProps } from '../Button';
 import { Field, type FieldOrientation, type FieldProps } from '../Field/Field';
 import { Link } from '../Link/Link';
+import { playBeat, runStep, token } from '../Input/fieldMotion';
 
 export type FormSize = Extract<Size, 'sm' | 'md' | 'lg'>;
 export type FormState = 'idle' | 'submitting' | 'submitted';
@@ -396,6 +399,10 @@ export function Form({
   const [announcement, setAnnouncement] = useState('');
   const submittedOnce = useRef(false);
   const [focusSummary, setFocusSummary] = useState(false);
+  const motion = useMotion();
+  // Bumped each time a submit shows errors, so the summary rows arrive again (form-summary-enter).
+  const [shownRun, setShownRun] = useState(0);
+  const lastState = useRef<FormState>('idle');
   const requiredMessages = useRef(new Map<string, string>());
   const setRequiredMessage = useCallback((name: string, message: string) => {
     requiredMessages.current.set(name, message);
@@ -431,6 +438,7 @@ export function Form({
       setOrder(names);
       setErrors(fieldErrors);
       setFormErrors(messages);
+      setShownRun((n) => n + 1);
       const count = orderErrors(names, fieldErrors).length;
       announce(count > 0 ? labels.summary(count) : labels.notSent);
       const first = firstInvalid(names, fieldErrors);
@@ -527,6 +535,52 @@ export function Form({
     const n = Object.keys(mappedServer.fields).length;
     if (!first && (n > 0 || mappedServer.form.length > 0)) announce(n > 0 ? labels.summary(n) : labels.notSent);
   }
+
+  // form-summary-enter: after a submit that finds errors, the summary rows arrive in reading order,
+  // each from distance.shift at the inline start, one stagger step apart. Focus never waits.
+  useLayoutEffect(() => {
+    if (shownRun === 0) return;
+    const rows = formRef.current?.querySelectorAll(':scope > [data-part="summary"] li');
+    if (rows)
+      staggerGroup(rows, {
+        from: 'inline',
+        mode: motion.mode('form-summary-enter'),
+      });
+  }, [shownRun, motion]);
+
+  // form-submit-success: when a submit passes, the actions take one celebrate beat: each button
+  // rises to scale.pop and springs back, as one short run from the first. The form is already sent.
+  useLayoutEffect(() => {
+    const before = lastState.current;
+    lastState.current = state;
+    if (state !== 'submitted' || before === 'submitted') return;
+    const buttons = [...(formRef.current?.querySelectorAll(':scope > [data-part="actions"] > *') ?? [])];
+    const mode = motion.mode('form-submit-success');
+    buttons.forEach((el, i) =>
+      playBeat(
+        el,
+        {
+          keyframes: [
+            { transform: 'none', easing: 'ease.out' },
+            {
+              transform: `scale(${token.pop})`,
+              offset: 0.35,
+              easing: 'ease.spring-bouncy',
+            },
+            { transform: 'none' },
+          ],
+          duration: 'duration.celebrate',
+          easing: 'linear',
+          delay: 'delay.stagger',
+          steps: runStep(i, buttons.length),
+          origin: '50% 50%',
+        },
+        'form-submit-success',
+        mode,
+        null,
+      ),
+    );
+  }, [state, motion]);
 
   useLayoutEffect(() => {
     if (!focusSummary) return;

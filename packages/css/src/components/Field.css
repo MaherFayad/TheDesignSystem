@@ -11,6 +11,14 @@
  *   --_field-gap            space between the parts
  *   --_field-label-width    label column in the horizontal orientation
  *   --_field-fg             label color, --_field-fg-disabled when the label is disabled
+ *
+ * Motion plumbing (interaction field-label-focus, order 1.22, proposed):
+ *   --_field-lift       how far the label rises while the field holds focus
+ *                       (distance.nudge; 0px turns the motion off)
+ *   --_field-duration   and --_field-ease time the rise (the snappy spring)
+ * The label moves on the transform only; its color and the ring of the
+ * control change at once. A description or an error that renders after the
+ * first paint slides in from code (FieldDescription, FieldError).
  */
 @layer ds.base {
   [data-ds='field'] {
@@ -18,6 +26,9 @@
     --_field-label-width: var(--ds-field-label-width);
     --_field-fg: var(--ds-color-text-default);
     --_field-fg-disabled: var(--ds-color-text-muted);
+    --_field-lift: var(--ds-distance-nudge);
+    --_field-duration: var(--ds-duration-spring-snappy);
+    --_field-ease: var(--ds-ease-spring-snappy);
 
     display: flex;
     flex-direction: column;
@@ -51,6 +62,17 @@
   [data-ds='field'] > [data-part='label'] {
     --_label-fg: var(--_field-fg);
     --_label-fg-disabled: var(--_field-fg-disabled);
+
+    transition: transform var(--_field-duration) var(--_field-ease);
+  }
+
+  /*
+   * The label answers focus: it rises by distance.nudge on the snappy spring
+   * (Desk overshoots and settles, Studio steps), and drops back on blur. A
+   * disabled or read only field does not move.
+   */
+  [data-ds='field']:focus-within:not([data-disabled], [data-readonly]) > [data-part='label'] {
+    transform: translateY(calc(-1 * var(--_field-lift)));
   }
 
   [data-ds='field'] > [data-part='description'] {
@@ -62,4 +84,15 @@
   }
 
   /* The error part is the system FieldError, styled in FieldError.css. */
+
+  /* Reduced motion: the duration tokens are 0ms, and the label does not rise at all. */
+  @media (prefers-reduced-motion: reduce) {
+    [data-ds='field'] {
+      --_field-lift: 0px;
+    }
+  }
+
+  :root[data-motion='reduce'] [data-ds='field'] {
+    --_field-lift: 0px;
+  }
 }

@@ -229,4 +229,14 @@ describe('NumberField', () => {
     const { container } = render(<NumberFieldDemo />);
     expect(container.querySelectorAll('[data-ds="number-field"]').length).toBeGreaterThan(5);
   });
+
+  it('names the steppers in the language of locale, so English copy in an Arabic page is not half Arabic (note N24)', () => {
+    render(
+      <Theme lang="ar">
+        <NumberField locale="en" aria-label="Quantity" defaultValue={4} />
+      </Theme>,
+    );
+    const names = screen.getAllByRole('button').map((b) => b.getAttribute('aria-label') ?? '');
+    for (const n of names) expect(n).not.toMatch(/[\u0600-\u06FF]/);
+  });
 });

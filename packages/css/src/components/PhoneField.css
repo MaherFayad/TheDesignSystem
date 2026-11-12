@@ -10,11 +10,20 @@
  *   --_phone-field-height, --_phone-field-padding-inline, --_phone-field-gap,
  *   --_phone-field-font-size, --_phone-field-radius, --_phone-field-bg,
  *   --_phone-field-fg, --_phone-field-border-color (at rest, -hover, -focus,
- *   -invalid), --_phone-field-ring, --_phone-field-code-bg (at rest, -hover,
+ *   -invalid), --_phone-field-ring, --_phone-field-shadow-focus,
+ *   --_phone-field-code-bg (at rest, -hover,
  *   -focus), --_phone-field-code-fg (the chevron), --_phone-field-autofill-bg.
  *
- * The glow and ring sit on ::before, whose opacity fades. The dial code's
- * hover and focus fill is a background swap, not an animation.
+ * The dial code's hover and focus fill is a background swap, not an
+ * animation.
+ *
+ * Focus (interaction focus-glow, orders 1.21 and 1.22): --_phone-field-ring is the
+ * focus ring, the root's own box shadow, and shows at once (WCAG 2.4.7).
+ * --_phone-field-shadow-focus is the glow on ::before: it fades in and grows from
+ * --_phone-field-enter-scale (scale.enter) on --_phone-field-duration-in and
+ * --_phone-field-ease-in (the soft spring), and leaves faster on
+ * --_phone-field-duration-out and --_phone-field-ease-out. Only transform and opacity
+ * move.
  */
 @layer ds.base {
   [data-ds='phone-field'] {
@@ -29,7 +38,13 @@
     --_phone-field-border-color-hover: var(--ds-color-border-control-hover);
     --_phone-field-border-color-focus: var(--ds-color-border-control-hover);
     --_phone-field-border-color-invalid: var(--ds-color-state-danger-text);
-    --_phone-field-ring: var(--ds-elevation-input-focus), var(--ds-focus-shadow-ring);
+    --_phone-field-ring: var(--ds-focus-shadow-ring);
+    --_phone-field-shadow-focus: var(--ds-elevation-input-focus);
+    --_phone-field-duration-in: var(--ds-duration-spring-soft);
+    --_phone-field-duration-out: var(--ds-duration-quick);
+    --_phone-field-ease-in: var(--ds-ease-spring-soft);
+    --_phone-field-ease-out: var(--ds-ease-exit);
+    --_phone-field-enter-scale: var(--ds-scale-enter);
     --_phone-field-code-bg: transparent;
     --_phone-field-code-bg-hover: var(--ds-color-bg-overlay-5);
     --_phone-field-code-bg-focus: var(--ds-color-bg-overlay-10);
@@ -55,16 +70,19 @@
     line-height: var(--ds-font-leading-snug);
   }
 
-  /* The glow and the ring. Covers the border box, so the ring sits just outside the border. */
+  /* The glow. Covers the border box, so it sits just outside the border. */
   [data-ds='phone-field']::before {
     content: '';
     position: absolute;
     inset: calc(var(--ds-border-width-default) * -1);
     border-radius: inherit;
-    box-shadow: var(--_phone-field-ring);
+    box-shadow: var(--_phone-field-shadow-focus);
     opacity: 0;
+    transform: scale(var(--_phone-field-enter-scale));
     pointer-events: none;
-    transition: opacity var(--ds-duration-base) var(--ds-ease-default);
+    transition:
+      opacity var(--_phone-field-duration-out) var(--_phone-field-ease-out),
+      transform var(--_phone-field-duration-out) var(--_phone-field-ease-out);
   }
 
   [data-ds='phone-field'][data-size='xs'] {
@@ -203,9 +221,11 @@
     --_phone-field-code-bg: var(--_phone-field-code-bg-hover);
   }
 
-  /* Focus anywhere: the glow and the 2px ring. The transparent outline shows in forced colors mode. */
+  /* Focus anywhere: the 2px ring at once, the glow fades in and grows. The transparent outline shows in forced colors mode. */
   [data-ds='phone-field']:focus-within {
     --_phone-field-border-color: var(--_phone-field-border-color-focus);
+
+    box-shadow: var(--_phone-field-ring);
 
     outline: var(--ds-border-width-strong) solid transparent;
     outline-offset: var(--ds-border-width-default);
@@ -213,6 +233,9 @@
 
   [data-ds='phone-field']:focus-within::before {
     opacity: 1;
+    transform: none;
+    transition-duration: var(--_phone-field-duration-in);
+    transition-timing-function: var(--_phone-field-ease-in);
   }
 
   /* Focus on the picker: the dial code fills too, so it is clear which of the two has focus. */
@@ -269,5 +292,16 @@
 
       color: GrayText;
     }
+  }
+
+  /* Reduced motion: the duration tokens are 0ms, and the glow does not grow. */
+  @media (prefers-reduced-motion: reduce) {
+    [data-ds='phone-field'] {
+      --_phone-field-enter-scale: 1;
+    }
+  }
+
+  :root[data-motion='reduce'] [data-ds='phone-field'] {
+    --_phone-field-enter-scale: 1;
   }
 }

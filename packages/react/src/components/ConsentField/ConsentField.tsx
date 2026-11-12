@@ -25,7 +25,9 @@
 // - Development warnings catch the misuses the types cannot: a stray
 //   defaultChecked, a controlled consent that starts given with no record
 //   line, a given consent locked by disabled, and no way to the details.
-import { useEffect, useId, useMemo, useRef, useState, type ComponentProps, type ReactNode } from 'react';
+import { useEffect, useId, useLayoutEffect, useMemo, useRef, useState, type ComponentProps, type ReactNode } from 'react';
+import { useMotion } from '../../internal/motion';
+import { landPop, playBeat, token } from '../Input/fieldMotion';
 import type { Size } from '@the-system/shared';
 import { useTheme } from '../../theme';
 import { Checkbox } from '../Checkbox/Checkbox';
@@ -168,7 +170,14 @@ export function ConsentField({
       console.warn('ConsentField: defaultChecked is ignored. A consent never starts given; pass checked only for a choice already on record.');
     }
     if (startedGranted.current && !showMeta) {
-      console.warn('ConsentField: checked starts true with no meta. Show the record of the choice in meta, such as the date and the text version, or start denied.');
+      console.warn(
+        'ConsentField: checked starts true with no meta. Show the record of the choice in meta, such as the date and the text version, or start denied.',
+      );
+    } else if (startedGranted.current && typeof meta === 'string' && !/\d/.test(meta)) {
+      // A record line names when the choice was made: a meta with no date is not a record.
+      console.warn(
+        'ConsentField: checked starts true and meta has no date. A given consent comes from a stored decision: show when it was given, or start denied.',
+      );
     }
     // Warn once, on mount: these describe how the consent was set up.
   }, []);
@@ -188,10 +197,39 @@ export function ConsentField({
   }, [detailsHref, purposeId, disabled]);
 
   const decide = (next: boolean) => {
+    if (next) granting.current = true;
     if (checkedProp === undefined) setOwn(next);
     onCheckedChange?.(next);
     onDecision?.({ name, granted: next, version, at: new Date().toISOString() });
   };
+
+  // consent-check: when the person gives the consent, the mark lands past full size on the bouncy
+  // spring, on top of the control's own draw (composite add), so the check draws with a pop.
+  const motion = useMotion();
+  const rootEl = useRef<HTMLDivElement | null>(null);
+  const granting = useRef(false);
+  useLayoutEffect(() => {
+    if (!granting.current || !granted) return;
+    granting.current = false;
+    const mark = rootEl.current?.querySelector(':scope > [data-part="control"] [data-part="indicator"] [data-ds="icon"]');
+    playBeat(
+      mark,
+      {
+        ...landPop(),
+        keyframes: [{ transform: `scale(${token.morph})` }, { transform: 'scale(1)' }],
+        composite: 'add',
+      },
+      'consent-check',
+      motion.mode('consent-check'),
+      null,
+    );
+  }, [granted, motion]);
+
+  // An error that shows after the first paint slides in (order 1.22).
+  const settled = useRef(false);
+  useEffect(() => {
+    settled.current = true;
+  }, []);
 
   const errorContext = useMemo<FieldContextValue>(
     () => ({
@@ -208,6 +246,7 @@ export function ConsentField({
       hasError: showError,
       register: noop,
       setControlId: () => undefined,
+      settled,
     }),
     [controlId, purposeId, metaId, errorId, isInvalid, invalid, disabled, required, showMeta, showError],
   );
@@ -230,6 +269,12 @@ export function ConsentField({
   return (
     <div
       {...rest}
+      ref={(node: HTMLDivElement | null) => {
+        rootEl.current = node;
+        const r = (rest as { ref?: unknown }).ref;
+        if (typeof r === 'function') r(node);
+        else if (r && typeof r === 'object') (r as { current: HTMLDivElement | null }).current = node;
+      }}
       data-ds="consent-field"
       data-size={size}
       data-state={granted ? 'granted' : 'denied'}

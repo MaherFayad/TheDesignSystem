@@ -16,6 +16,12 @@
  * fade-rise); only opacity and transform animate. Under reduced motion
  * the duration tokens are 0ms and the rise is dropped, so the step shows at
  * once.
+ *
+ * Step change with direction (interaction wizard-step, order 1.22,
+ * proposed): React plays it from code over this fade (the old step leaves
+ * toward the inline start as a decorative copy laid over the panel, which
+ * is the positioned box for it; the new one arrives from the inline end).
+ * A framework without the player keeps the fade.
  */
 @layer ds.base {
   [data-ds='form-wizard'] {
@@ -54,6 +60,7 @@
   }
 
   [data-ds='form-wizard'] > [data-part='panel'] {
+    position: relative;
     display: flex;
     flex-direction: column;
     gap: var(--ds-space-xl);
@@ -153,6 +160,15 @@
         opacity: 0;
         transform: none;
       }
+    }
+  }
+
+  :root[data-motion='reduce'] [data-ds='form-wizard'] > [data-part='panel'] > [data-part='body'] {
+    transition: opacity var(--ds-duration-base) var(--ds-ease-out);
+
+    @starting-style {
+      opacity: 0;
+      transform: none;
     }
   }
 

@@ -26,7 +26,24 @@
 // output of `[(checked)]`; `onDecision` is the `decision` output. `purpose`,
 // `detailsLabel`, `meta` and `error` take a string or a TemplateRef.
 import { NgTemplateOutlet } from '@angular/common';
-import { ChangeDetectionStrategy, Component, Directive, booleanAttribute, computed, forwardRef, inject, input, model, output, signal, type TemplateRef } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  Directive,
+  ElementRef,
+  afterNextRender,
+  booleanAttribute,
+  computed,
+  effect,
+  forwardRef,
+  inject,
+  input,
+  isDevMode,
+  model,
+  output,
+  signal,
+  type TemplateRef,
+} from '@angular/core';
 import { NG_VALUE_ACCESSOR, type ControlValueAccessor } from '@angular/forms';
 import type { Size } from '@the-system/shared';
 import { consumeHostAttributes } from '../../internal/host';
@@ -200,7 +217,39 @@ export class DsConsentField implements ControlValueAccessor {
   private onChange: (granted: boolean) => void = () => undefined;
   private onTouched: () => void = () => undefined;
 
+  private readonly hostEl = inject<ElementRef<HTMLElement>>(ElementRef).nativeElement;
+  /** True until the first value from a form arrives: a FormControl that starts true pre-ticks consent. */
+  private firstWrite = true;
+
   constructor() {
+    // A string requiredError is the form's message for this name, in the field and in the summary (as React).
+    effect((onCleanup) => {
+      const name = this.name();
+      const message = this.requiredError();
+      if (!this.form || name === undefined || typeof message !== 'string' || message === '') return;
+      onCleanup(this.form.setRequiredMessage(name, message));
+    });
+    if (isDevMode()) {
+      // The development warnings of the React ConsentField, once, after the first render.
+      const strayDefault = this.hostEl.hasAttribute('defaultChecked') || this.hostEl.hasAttribute('defaultchecked');
+      afterNextRender(() => {
+        if (strayDefault) {
+          console.warn('ConsentField: defaultChecked is ignored. A consent never starts given; pass checked only for a choice already on record.');
+        }
+        this.warnStartedGranted(this.checked() === true);
+        if (this.detailsHref() === undefined && !this.isDisabled()) {
+          const fieldset = this.hostEl.closest('fieldset');
+          if (!fieldset?.querySelector(':scope > [data-part="description"] a[href]')) {
+            console.warn('ConsentField: no detailsHref. Link the privacy notice from the consent, or from the description of the surrounding Fieldset.');
+          }
+        }
+      });
+      effect(() => {
+        if (this.isDisabled() && this.granted()) {
+          console.warn('ConsentField: a given consent is disabled, so it cannot be withdrawn. Keep a given consent enabled.');
+        }
+      });
+    }
     consumeHostAttributes([
       'dsConsentField', 'purpose', 'checked', 'defaultChecked', 'control', 'name', 'value', 'detailsHref', 'detailsLabel',
       'detailsExternal', 'meta', 'version', 'required', 'disabled', 'invalid', 'error', 'requiredError', 'size', 'aria-describedby',
@@ -215,7 +264,25 @@ export class DsConsentField implements ControlValueAccessor {
   }
 
   writeValue(value: unknown): void {
+    // PDPL: a consent is never pre ticked. A FormControl that starts true must come from a stored decision with a record line.
+    if (this.firstWrite && isDevMode()) this.warnStartedGranted(value === true, 'FormControl');
+    this.firstWrite = false;
     this.checked.set(value === true);
+  }
+
+  /** Warns when a consent starts given with no record of the choice: no meta, or a meta text with no date. */
+  private warnStartedGranted(started: boolean, source = 'checked'): void {
+    if (!started) return;
+    const meta = this.meta();
+    if (!hasContent(meta)) {
+      console.warn(
+        `ConsentField: ${source} starts true with no meta. Show the record of the choice in meta, such as the date and the text version, or start denied.`,
+      );
+    } else if (typeof meta === 'string' && !/\d/.test(meta)) {
+      console.warn(
+        `ConsentField: ${source} starts true and meta has no date. A given consent comes from a stored decision: show when it was given, or start denied.`,
+      );
+    }
   }
 
   registerOnChange(fn: (granted: boolean) => void): void {

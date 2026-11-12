@@ -81,7 +81,27 @@ export interface FormLabels {
   failed: string;
   /** The error of an empty required field. */
   required: string;
-  /** The error of a field the browser finds invalid but gives no message for. */
+  /** The error of a required checkbox or switch left off. */
+  requiredChoice: string;
+  /** The error of a required radio group with nothing picked. */
+  requiredOption: string;
+  /** A value that does not fit the input type, from the type: email or url. */
+  typeMismatch: (type: string) => string;
+  /** A value that does not match the pattern. Give the field a validator that names the format. */
+  patternMismatch: string;
+  /** Fewer characters than minLength. */
+  tooShort: (min: number) => string;
+  /** More characters than maxLength. */
+  tooLong: (max: number) => string;
+  /** A value under min. */
+  rangeUnderflow: (min: string) => string;
+  /** A value over max. */
+  rangeOverflow: (max: string) => string;
+  /** A value off the step. */
+  stepMismatch: (step: string) => string;
+  /** A value the browser cannot read for the type, from the type: number or date. */
+  badInput: (type: string) => string;
+  /** The error of a field the browser finds invalid for any other reason. Never the browser's own message, which is in the browser's language. */
   invalid: string;
 }
 
@@ -91,6 +111,20 @@ const labelsByLang: Record<'en' | 'ar', FormLabels> = {
     notSent: 'The form was not sent',
     failed: 'Could not send the form. Check your connection and send it again.',
     required: 'Fill in this field.',
+    requiredChoice: 'Tick this box to go on.',
+    requiredOption: 'Pick one option to go on.',
+    typeMismatch: (type) => {
+      if (type === 'email') return 'Enter an email address, like name@example.com.';
+      if (type === 'url') return 'Enter a web address that starts with https://.';
+      return 'Check the value in this field.';
+    },
+    patternMismatch: 'Check the format of the value in this field.',
+    tooShort: (min) => `Use at least ${min} characters.`,
+    tooLong: (max) => `Use ${max} characters or fewer.`,
+    rangeUnderflow: (min) => `Enter ${min} or more.`,
+    rangeOverflow: (max) => `Enter ${max} or less.`,
+    stepMismatch: (step) => `Enter a value in steps of ${step}.`,
+    badInput: (type) => (type === 'number' ? 'Enter a number, using digits only.' : 'Enter a full date.'),
     invalid: 'Check the value in this field.',
   },
   ar: {
@@ -103,6 +137,20 @@ const labelsByLang: Record<'en' | 'ar', FormLabels> = {
     notSent: 'ما تم إرسال النموذج',
     failed: 'ما قدرنا نرسل النموذج. تأكد من الاتصال وأرسله مرة ثانية.',
     required: 'الحقل هذا مطلوب، عبه قبل الإرسال.',
+    requiredChoice: 'حدد المربع هذا عشان تكمل.',
+    requiredOption: 'اختر خيار واحد عشان تكمل.',
+    typeMismatch: (type) => {
+      if (type === 'email') return 'اكتب بريد إلكتروني صحيح، مثل name@example.com.';
+      if (type === 'url') return 'اكتب رابط يبدأ بـ https://.';
+      return 'راجع القيمة في الحقل هذا.';
+    },
+    patternMismatch: 'راجع صيغة القيمة في الحقل هذا.',
+    tooShort: (min) => `اكتب ${min} حرف على الأقل.`,
+    tooLong: (max) => `اكتب ${max} حرف أو أقل.`,
+    rangeUnderflow: (min) => `اكتب ${min} أو أكثر.`,
+    rangeOverflow: (max) => `اكتب ${max} أو أقل.`,
+    stepMismatch: (step) => `اكتب قيمة من مضاعفات ${step}.`,
+    badInput: (type) => (type === 'number' ? 'اكتب رقم بالأرقام فقط.' : 'اكتب التاريخ كامل.'),
     invalid: 'راجع القيمة في الحقل هذا.',
   },
 };
@@ -164,16 +212,45 @@ function readValues(form: HTMLFormElement): FormValues {
   return values;
 }
 
-function nativeErrors(controls: Control[], labels: FormLabels): FormErrors {
+/** The copy for an empty required control: a box to tick, an option to pick or a field to fill in. */
+function requiredMessage(c: Control, labels: FormLabels): string {
+  if (c instanceof HTMLInputElement && c.type === 'radio') return labels.requiredOption;
+  if (c instanceof HTMLInputElement && c.type === 'checkbox') return labels.requiredChoice;
+  const role = visibleTarget(c).getAttribute('role');
+  if (role === 'radio') return labels.requiredOption;
+  if (role === 'checkbox' || role === 'switch') return labels.requiredChoice;
+  return labels.required;
+}
+
+/**
+ * The copy for a constraint failure, from the ValidityState flags. Never the
+ * browser's validationMessage: it is in the browser's language, not the
+ * page's, and does not say how to fix the value.
+ */
+function constraintMessage(c: Control, labels: FormLabels): string {
+  const v = c.validity;
+  const type = c instanceof HTMLInputElement ? c.type : '';
+  if (v.badInput) return labels.badInput(type);
+  if (v.typeMismatch) return labels.typeMismatch(type);
+  if (v.patternMismatch) return labels.patternMismatch;
+  if (v.tooShort && !(c instanceof HTMLSelectElement)) return labels.tooShort(c.minLength);
+  if (v.tooLong && !(c instanceof HTMLSelectElement)) return labels.tooLong(c.maxLength);
+  if (v.rangeUnderflow) return labels.rangeUnderflow(c.getAttribute('min') ?? '');
+  if (v.rangeOverflow) return labels.rangeOverflow(c.getAttribute('max') ?? '');
+  if (v.stepMismatch) return labels.stepMismatch(c.getAttribute('step') ?? '');
+  return labels.invalid;
+}
+
+function nativeErrors(controls: Control[], labels: FormLabels, messages: ReadonlyMap<string, string> = new Map()): FormErrors {
   const out: FormErrors = {};
   for (const c of controls) {
     if (out[c.name] !== undefined) continue;
     // Read only and hidden controls are not checked: the person cannot fix them.
     if ((c as HTMLInputElement).readOnly || (c instanceof HTMLInputElement && c.type === 'hidden')) continue;
     const required = c.required || c.getAttribute('aria-required') === 'true' || visibleTarget(c).getAttribute('aria-required') === 'true';
-    if (required && isEmpty(c)) out[c.name] = labels.required;
+    if (required && isEmpty(c)) out[c.name] = messages.get(c.name) ?? requiredMessage(c, labels);
     else if (!required && isEmpty(c)) continue;
-    else if (!c.checkValidity()) out[c.name] = c.validationMessage || labels.invalid;
+    else if (!c.checkValidity()) out[c.name] = constraintMessage(c, labels);
   }
   return out;
 }
@@ -319,6 +396,8 @@ export class DsForm extends DsFormContext {
   /** Set on destroy, so work after an await does not touch a destroyed view. */
   private destroyed = false;
   private seenServer: string | null = null;
+  /** Messages for required controls left empty, by name, from ConsentField requiredError. */
+  private readonly requiredMessages = new Map<string, string>();
 
   protected readonly listed = computed(() => orderErrors(this.order(), this.errors()));
   protected readonly invalid = computed(() => this.listed().length > 0 || this.formErrors().length > 0);
@@ -366,6 +445,13 @@ export class DsForm extends DsFormContext {
     });
   }
 
+  setRequiredMessage(name: string, message: string): () => void {
+    this.requiredMessages.set(name, message);
+    return () => {
+      if (this.requiredMessages.get(name) === message) this.requiredMessages.delete(name);
+    };
+  }
+
   protected linkText(name: string, message: string): string {
     const label = this.targets()[name]?.label;
     return label ? `${label}: ${message}` : message;
@@ -379,7 +465,15 @@ export class DsForm extends DsFormContext {
   /** The browser's checks merged with the Angular controls' errors. The browser's message wins for a name both report. */
   private builtInErrors(controls: Control[]): FormErrors {
     const words = this.words();
-    return { ...angularErrors(this.container?.control, words), ...nativeErrors(controls, words) };
+    const out: FormErrors = {
+      ...angularErrors(this.container?.control, words),
+      ...nativeErrors(controls, words, this.requiredMessages),
+    };
+    // A control's own required message (ConsentField requiredError) wins over the form's words for it.
+    for (const [name, message] of this.requiredMessages) {
+      if (out[name] === words.required || out[name] === words.requiredChoice) out[name] = message;
+    }
+    return out;
   }
 
   private values(): FormValues {
@@ -466,7 +560,7 @@ export class DsForm extends DsFormContext {
     if (!name || this.errors()[name] === undefined) return;
     const sameName = controlsOf(this.host).filter((c) => c.name === name);
     const words = this.words();
-    const base: FormErrors = nativeErrors(sameName, words);
+    const base: FormErrors = nativeErrors(sameName, words, this.requiredMessages);
     const fromAngular = angularErrors(this.container?.control, words)[name];
     if (base[name] === undefined && fromAngular !== undefined) base[name] = fromAngular;
     const still = collectErrors(this.values(), this.validators(), base)[name];

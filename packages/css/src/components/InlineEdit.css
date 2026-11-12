@@ -17,6 +17,13 @@
  * properties: the display's padding, text color and alignment, and the
  * editor's width. The edit icon at the display's end shows on hover and
  * focus only, through opacity.
+ *
+ * Glyph morph (interaction inline-edit-morph, order 1.22, proposed): the
+ * component keeps the glyph that leaves for one morph in an unnamed
+ * aria-hidden span inside the icon part of the button that stays (the save
+ * button's icon, or the display's end). Both glyphs sit in one grid cell.
+ * While a morph back to the pencil plays, the display's end shows, so the
+ * check or the close mark is seen turning into the pencil.
  */
 @layer ds.base {
   [data-ds='inline-edit'] {
@@ -93,6 +100,22 @@
     opacity: 1;
   }
 
+  /* The glyph morph: the leaving glyph overlaps the new one in one cell. */
+  [data-ds='inline-edit'] > [data-ds='button'][data-part='display'] > [data-part='end'],
+  [data-ds='inline-edit'] > [data-ds='icon-button'][data-part='save'] > [data-part='icon'] {
+    display: inline-grid;
+    place-items: center;
+  }
+
+  [data-ds='inline-edit'] > [data-ds='button'][data-part='display'] > [data-part='end'] > *,
+  [data-ds='inline-edit'] > [data-ds='icon-button'][data-part='save'] > [data-part='icon'] > * {
+    grid-area: 1 / 1;
+  }
+
+  [data-ds='inline-edit'] > [data-ds='button'][data-part='display'] > [data-part='end']:has(> span[aria-hidden='true']) {
+    opacity: 1;
+  }
+
   /* No hover on touch screens: the edit icon shows at all times. */
   @media (hover: none) {
     [data-ds='inline-edit'] > [data-ds='button'][data-part='display'] > [data-part='end'] {
@@ -146,6 +169,10 @@
     [data-ds='inline-edit'] > [data-ds='button'][data-part='display'] > [data-part='end'] {
       transition: none;
     }
+  }
+
+  :root[data-motion='reduce'] [data-ds='inline-edit'] > [data-ds='button'][data-part='display'] > [data-part='end'] {
+    transition: none;
   }
 
   /* Forced colors: the display keeps Button's focus outline; the placeholder reads as GrayText. */

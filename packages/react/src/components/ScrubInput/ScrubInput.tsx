@@ -21,6 +21,7 @@
 //   value.
 import {
   useId,
+  useLayoutEffect,
   useRef,
   useState,
   type ChangeEvent,
@@ -34,8 +35,13 @@ import {
 import { isIconName, type IconName } from '@the-system/icons';
 import { Icon } from '@the-system/icons/react';
 import { formatScrub, nudgeStepFor, nudgeValue, resolveCommit, scrubValue, type Size } from '@the-system/shared';
+import { useMotion } from '../../internal/motion';
 import { useControllable } from '../../internal/useControllable';
 import { useField, useFieldControl } from '../Field/Field';
+import { useDigitLayer } from '../NumberField/useDigitLayer';
+
+/** The interaction id of the value roll in the registry and the style presets. */
+const SCRUB_ROLL = 'scrub-roll';
 
 export type ScrubInputSize = Extract<Size, 'xs' | 'sm' | 'md'>;
 
@@ -162,9 +168,25 @@ export function ScrubInput({
   const [dragging, setDragging] = useState(false);
   const drag = useRef<Drag | null>(null);
   const input = useRef<HTMLInputElement | null>(null);
+  const motion = useMotion();
+  const digits = useDigitLayer(input);
+  // Set by a drag or an arrow nudge: the change that follows rolls (scrub-roll). Typing never rolls.
+  const rolling = useRef(false);
+  const drawn = useRef('');
 
   const inert = Boolean(control.disabled || control.readOnly);
   const shown = draft ?? (mixed || current === null ? '' : formatScrub(current, precision));
+
+  // scrub-roll: after a drag or nudge drew a new value, it rolls digit by digit in the layer over the input.
+  useLayoutEffect(() => {
+    const before = drawn.current;
+    drawn.current = shown;
+    if (!rolling.current || before === shown || draft !== null) return;
+    rolling.current = false;
+    digits.roll(input.current, before, shown, {
+      mode: motion.mode(SCRUB_ROLL),
+    });
+  }, [shown, draft, digits, motion]);
   // Outside a Field, a text label names the field when no aria-label is given.
   const name = ariaLabel ?? (field || typeof label !== 'string' || isIconName(label) ? undefined : label);
 
@@ -205,7 +227,14 @@ export function ScrubInput({
       const from = mixed && draft === null ? null : (baseline() ?? 0);
       if (from === null) return;
       setDraft(null);
-      finish(nudgeValue(from, event.key === 'ArrowUp' ? 1 : -1, event, step, { min, max, precision }));
+      rolling.current = true;
+      finish(
+        nudgeValue(from, event.key === 'ArrowUp' ? 1 : -1, event, step, {
+          min,
+          max,
+          precision,
+        }),
+      );
       return;
     }
     if (event.key === 'Enter') {
@@ -265,6 +294,7 @@ export function ScrubInput({
     // Compare with the last value sent, not the render's value: two moves can land before a render.
     if (next === d.last) return;
     d.last = next;
+    rolling.current = true;
     commit(next);
   };
 
@@ -333,6 +363,8 @@ export function ScrubInput({
         onKeyDown={onInputKeyDown}
         onBlur={onInputBlur}
       />
+      {/* The digit roll layer (scrub-roll): decorative, empty at rest. */}
+      <span aria-hidden="true" ref={digits.layer} />
       {unit ? (
         // Read once, as the description of the input, not again as page text.
         <span data-part="unit" id={unitId} aria-hidden="true">

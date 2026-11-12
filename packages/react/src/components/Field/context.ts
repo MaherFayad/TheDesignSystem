@@ -16,6 +16,12 @@ export interface FieldContextValue {
   hasError: boolean;
   register: (part: 'description' | 'error') => () => void;
   setControlId: (id: string | undefined) => void;
+  /**
+   * True once the Field's first paint is done (order 1.22). A description or
+   * an error that renders after it slides in; one that is there from the
+   * first paint does not move.
+   */
+  settled?: { readonly current: boolean };
 }
 
 /**

@@ -1,3 +1,4 @@
+import type { ReactElement } from 'react';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 import { Theme } from '../../theme/Theme';
@@ -173,12 +174,12 @@ describe('Rating fill (interaction rating-fill)', () => {
     return { calls, restore: () => Reflect.deleteProperty(SVGElement.prototype, 'animate') };
   }
 
-  it('pops the stars from the first to the chosen one, each a step later, on the icons (Desk plays pop in full)', () => {
+  it('lands the stars that fill as one run from the first new star, on the icons (Desk plays it in full)', () => {
     const { calls, restore } = mockAnimate();
     try {
       render(
         <Theme style="desk">
-          <Rating aria-label="R" style={{ ['--ds-delay-reveal-step' as string]: '80ms' }} />
+          <Rating aria-label="R" style={{ ['--ds-delay-stagger' as string]: '45ms' }} />
         </Theme>,
       );
       expect(calls).toHaveLength(0);
@@ -189,24 +190,30 @@ describe('Rating fill (interaction rating-fill)', () => {
       const delays = calls.map((c) => c.delay);
       expect(delays[0]).toBe(0);
       for (let i = 1; i < delays.length; i++) expect(delays[i]).toBeGreaterThan(delays[i - 1] ?? 0);
+      // The whole run spreads over two stagger steps, whatever its length (note N8).
+      expect(delays[3]).toBe(90);
     } finally {
       restore();
     }
   });
 
-  it('cancels the run on the next pick and does not play on first paint or a controlled change', () => {
+  it('moves only the stars whose state changed, and not on first paint or a controlled change (note N1)', () => {
     const { calls, restore } = mockAnimate();
     try {
-      const { rerender } = render(<Rating aria-label="R" defaultValue={3} />);
+      const desk = (ui: ReactElement) => <Theme style="desk">{ui}</Theme>;
+      const { container, rerender } = render(desk(<Rating aria-label="R" defaultValue={3} />));
+      const icons = Array.from(container.querySelectorAll('[data-part="item"] > [data-part="icon"]'));
       expect(calls).toHaveLength(0);
       fireEvent.click(screen.getByRole('radio', { name: '5 of 5 stars' }));
-      expect(calls).toHaveLength(5);
-      const first = calls.slice();
+      // Stars 4 and 5 fill; 1 to 3 keep their state and never blink.
+      expect(calls.map((c) => icons.indexOf(c.el))).toEqual([3, 4]);
+      calls.length = 0;
       fireEvent.click(screen.getByRole('radio', { name: '2 of 5 stars' }));
-      for (const c of first) expect(c.cancel).toHaveBeenCalled();
-      expect(calls).toHaveLength(7);
-      rerender(<Rating aria-label="R" defaultValue={1} />);
-      expect(calls).toHaveLength(7);
+      // Stars 3 to 5 empty: each dips and springs back, with no fade.
+      expect(calls).toHaveLength(3);
+      for (const c of calls) expect(JSON.stringify(c.frames)).not.toContain('opacity');
+      rerender(desk(<Rating aria-label="R" defaultValue={1} />));
+      expect(calls).toHaveLength(3);
     } finally {
       restore();
     }

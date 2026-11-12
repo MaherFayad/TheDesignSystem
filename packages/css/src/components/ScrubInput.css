@@ -12,9 +12,24 @@
  *   --_scrub-input-gap, --_scrub-input-font-size, --_scrub-input-radius,
  *   --_scrub-input-bg (-hover), --_scrub-input-fg,
  *   --_scrub-input-label-fg (the handle), --_scrub-input-border-color
- *   (-invalid), --_scrub-input-ring (focus and drag).
+ *   (-invalid), --_scrub-input-ring (focus and drag),
+ *   --_scrub-input-shadow-focus (the glow).
  *
- * The ring sits on ::before and fades with opacity. The handle's cursor is
+ * Focus (interaction focus-glow, orders 1.21 and 1.22): the ring is the
+ * root's own box shadow and shows at once on focus and while a drag runs
+ * (WCAG 2.4.7). The glow sits on ::before: it fades in and grows from
+ * --_scrub-input-enter-scale on --_scrub-input-duration-in and
+ * --_scrub-input-ease-in, and leaves on --_scrub-input-duration-out and
+ * --_scrub-input-ease-out.
+ *
+ * Scrub (interaction scrub-roll, order 1.22, proposed): while a drag runs
+ * the handle grows to --_scrub-input-lift (scale.pop) on --_scrub-input-duration
+ * and --_scrub-input-ease (the bouncy spring) and settles back on release;
+ * the value rolls digit by digit in an aria-hidden layer the component adds
+ * over the input (see NumberField.css for the layer). A lift of 1 turns the
+ * handle motion off.
+ *
+ * The handle's cursor is
  * ew-resize, which points both ways, so it needs no flip in RTL; the drag
  * direction flips in the component.
  */
@@ -32,6 +47,15 @@
     --_scrub-input-border-color: transparent;
     --_scrub-input-border-color-invalid: var(--ds-color-state-danger-text);
     --_scrub-input-ring: var(--ds-focus-shadow-ring);
+    --_scrub-input-shadow-focus: var(--ds-elevation-input-focus);
+    --_scrub-input-duration-in: var(--ds-duration-spring-soft);
+    --_scrub-input-duration-out: var(--ds-duration-quick);
+    --_scrub-input-ease-in: var(--ds-ease-spring-soft);
+    --_scrub-input-ease-out: var(--ds-ease-exit);
+    --_scrub-input-enter-scale: var(--ds-scale-enter);
+    --_scrub-input-lift: var(--ds-scale-pop);
+    --_scrub-input-duration: var(--ds-duration-spring-bouncy);
+    --_scrub-input-ease: var(--ds-ease-spring-bouncy);
 
     position: relative;
     box-sizing: border-box;
@@ -59,10 +83,13 @@
     position: absolute;
     inset: calc(var(--ds-border-width-default) * -1);
     border-radius: inherit;
-    box-shadow: var(--_scrub-input-ring);
+    box-shadow: var(--_scrub-input-shadow-focus);
     opacity: 0;
+    transform: scale(var(--_scrub-input-enter-scale));
     pointer-events: none;
-    transition: opacity var(--ds-duration-base) var(--ds-ease-default);
+    transition:
+      opacity var(--_scrub-input-duration-out) var(--_scrub-input-ease-out),
+      transform var(--_scrub-input-duration-out) var(--_scrub-input-ease-out);
   }
 
   /* The hover veil, over the fill. */
@@ -135,6 +162,42 @@
     text-align: end;
   }
 
+  /*
+   * The digit roll layer (order 1.22, proposed): an unnamed aria-hidden span
+   * the component lays over the input's box while a roll runs (it sets the
+   * box inline from the input's measured box) and empties at rest. While it
+   * holds digits the input text is transparent and its caret keeps its
+   * color; the layer clips the roll to the box. Without the layer (a
+   * framework that does not add it) nothing changes.
+   */
+  [data-ds='scrub-input'] > span[aria-hidden='true']:not([data-part]) {
+    position: absolute;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    overflow: clip;
+    color: var(--_scrub-input-fg);
+    font-variant-numeric: tabular-nums;
+    direction: ltr;
+    white-space: nowrap;
+    pointer-events: none;
+  }
+
+  [data-ds='scrub-input']:dir(rtl) > span[aria-hidden='true']:not([data-part]) {
+    justify-content: flex-end;
+  }
+
+  [data-ds='scrub-input'] > span[aria-hidden='true']:not([data-part]):empty {
+    display: none;
+  }
+
+  [data-ds='scrub-input']:has(> span[aria-hidden='true']:not([data-part]):not(:empty)) > [data-part='control'] {
+    color: transparent;
+    -webkit-text-fill-color: transparent;
+    caret-color: var(--_scrub-input-fg);
+  }
+
   [data-ds='scrub-input'] > [data-part='control']::placeholder {
     color: var(--ds-color-text-placeholder);
     opacity: 1;
@@ -162,9 +225,10 @@
     opacity: 1;
   }
 
-  /* Focus and drag: the 2px ring fades in. The transparent outline shows in forced colors mode. */
+  /* Focus and drag: the 2px ring at once, the glow fades in and grows. The transparent outline shows in forced colors mode. */
   [data-ds='scrub-input']:focus-within,
   [data-ds='scrub-input'][data-dragging] {
+    box-shadow: var(--_scrub-input-ring);
     outline: var(--ds-border-width-strong) solid transparent;
     outline-offset: var(--ds-border-width-default);
   }
@@ -172,10 +236,26 @@
   [data-ds='scrub-input']:focus-within::before,
   [data-ds='scrub-input'][data-dragging]::before {
     opacity: 1;
+    transform: none;
+    transition-duration: var(--_scrub-input-duration-in);
+    transition-timing-function: var(--_scrub-input-ease-in);
   }
 
   [data-ds='scrub-input'][data-dragging] > [data-part='label'] {
     --_scrub-input-label-fg: var(--ds-color-text-default);
+  }
+
+  /*
+   * The handle grows while a drag runs and springs back on release. The
+   * pointer is captured by the handle for the whole drag, so the growth
+   * never moves the target away from it.
+   */
+  [data-ds='scrub-input'] > [data-part='label'] {
+    transition: transform var(--_scrub-input-duration) var(--_scrub-input-ease);
+  }
+
+  [data-ds='scrub-input'][data-dragging] > [data-part='label'] {
+    transform: scale(var(--_scrub-input-lift));
   }
 
   [data-ds='scrub-input'][data-invalid] {
@@ -203,11 +283,27 @@
     cursor: not-allowed;
   }
 
+  /* Reduced motion: no transitions, the glow does not grow and the handle does not lift. */
   @media (prefers-reduced-motion: reduce) {
+    [data-ds='scrub-input'] {
+      --_scrub-input-enter-scale: 1;
+      --_scrub-input-lift: 1;
+    }
+
     [data-ds='scrub-input']::before,
     [data-ds='scrub-input']::after {
       transition: none;
     }
+  }
+
+  :root[data-motion='reduce'] [data-ds='scrub-input'] {
+    --_scrub-input-enter-scale: 1;
+    --_scrub-input-lift: 1;
+  }
+
+  :root[data-motion='reduce'] [data-ds='scrub-input']::before,
+  :root[data-motion='reduce'] [data-ds='scrub-input']::after {
+    transition: none;
   }
 
   @media (forced-colors: active) {

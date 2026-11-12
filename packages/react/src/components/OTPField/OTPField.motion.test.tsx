@@ -71,10 +71,15 @@ describe('OTPField motion', () => {
       const { container } = render(<OTPField aria-label="Code" />);
       await user.click(screen.getByRole('textbox', { name: 'Code' }));
       await user.paste('482913');
-      expect(calls.map((c) => c.el)).toEqual(glyphs(container));
-      // Each one waits a half step more than the one before (the token is 0 in jsdom, so the count is checked).
-      expect(calls[0]?.options.delay).toBe(0);
-      expect(calls).toHaveLength(6);
+      const fills = calls.filter((c) => c.el.parentElement?.getAttribute('data-part') === 'cell');
+      expect(fills.map((c) => c.el)).toEqual(glyphs(container));
+      // One run: the steps spread over two stagger steps in all (the token is 0 in jsdom, so the delay is 0).
+      expect(fills[0]?.options.delay).toBe(0);
+      // The code is complete: the cells take one short wave (otp-complete).
+      const cells = Array.from(container.querySelectorAll('[data-part="cell"]'));
+      const wave = calls.filter((c) => cells.includes(c.el));
+      expect(wave).toHaveLength(6);
+      expect(JSON.stringify(wave[0]?.frames)).toContain('translateY');
     } finally {
       restore();
     }

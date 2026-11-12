@@ -14,10 +14,10 @@ import {
   type Ref,
   type SyntheticEvent,
 } from 'react';
-import { POP_MAX_STEPS } from '@the-system/motion';
 import { codeInputHints, codeSeparatorIndexes, parseCode, type CodeCharset, type Shape, type Size } from '@the-system/shared';
 import { useMotion } from '../../internal/motion';
 import { useFieldControl } from '../Field/Field';
+import { landPop, playBeat, runStep, token } from '../Input/fieldMotion';
 import { useErrorShake } from '../Input/useErrorShake';
 
 export type OTPFieldSize = Size;
@@ -150,20 +150,64 @@ export function OTPField({
   const drawn = useRef(value);
   useErrorShake(inner, Boolean(control['aria-invalid']));
 
-  // otp-fill: each character that is new in its cell pops in, in order, after React drew it.
+  // otp-fill: each character that is new in its cell lands, after React drew it. One character
+  // grows from scale.morph past full size on the bouncy spring and settles; a paste or an SMS fill
+  // lands as one run on the snappy spring, spread over two stagger steps.
+  // otp-complete: when the code turns full, the cells lift by distance.lift and settle, as one
+  // short wave from the first cell (never on first paint, never while invalid).
+  const complete = value.length === length;
+  const invalidNow = Boolean(control['aria-invalid']);
+  const wasComplete = useRef(complete);
   useLayoutEffect(() => {
     const before = drawn.current;
     drawn.current = value;
     const root = inner.current?.parentElement;
+    const was = wasComplete.current;
+    wasComplete.current = value.length === length;
     if (!root || value === before) return;
-    const cells = root.querySelectorAll(':scope > [data-part="cell"]');
-    let step = 0;
-    for (let i = 0; i < value.length; i++) {
-      if (value[i] === before[i]) continue;
-      motion.play(cells[i]?.firstElementChild, 'pop', 'otp-fill', { index: Math.min(step, POP_MAX_STEPS) });
-      step += 1;
+    const cells = [...root.querySelectorAll(':scope > [data-part="cell"]')];
+    const changed: number[] = [];
+    for (let i = 0; i < value.length; i++) if (value[i] !== before[i]) changed.push(i);
+    const fill = motion.mode('otp-fill');
+    const run = changed.length > 1;
+    changed.forEach((cell, i) => {
+      const extra = run
+        ? {
+            duration: 'duration.spring-snappy' as const,
+            easing: 'ease.spring-snappy' as const,
+            delay: 'delay.stagger' as const,
+            steps: runStep(i, changed.length),
+          }
+        : {};
+      playBeat(cells[cell]?.firstElementChild, landPop(undefined, extra), 'otp-fill', fill);
+    });
+    if (value.length === length && !was && !invalidNow) {
+      const wave = motion.mode('otp-complete');
+      cells.forEach((cell, i) => {
+        playBeat(
+          cell,
+          {
+            keyframes: [
+              { transform: 'none', easing: 'ease.out' },
+              {
+                transform: `translateY(calc(-1 * ${token.lift}))`,
+                offset: 0.35,
+                easing: 'ease.spring-soft',
+              },
+              { transform: 'none' },
+            ],
+            duration: 'duration.celebrate',
+            easing: 'linear',
+            delay: 'delay.stagger',
+            steps: runStep(i, cells.length),
+          },
+          'otp-complete',
+          wave,
+          null,
+        );
+      });
     }
-  }, [value, motion]);
+  }, [value, length, motion, invalidNow]);
 
   const setRef = useCallback(
     (node: HTMLInputElement | null): (() => void) | undefined => {
@@ -327,7 +371,6 @@ export function OTPField({
 
   const separators = codeSeparatorIndexes(length, groups);
   const hints = codeInputHints(charset);
-  const complete = value.length === length;
   const activeStart = sel.start;
   const activeEnd = Math.max(sel.end, sel.start + 1);
 
