@@ -57,6 +57,15 @@ export default function PaginationDemo() {
         </DemoRow>
       </DemoCase>
 
+      <DemoCase id="long-text" title="Long text: a summary that names the items wraps on a phone">
+        <Pagination
+          defaultPage={3}
+          itemCount={1284}
+          pageSize={50}
+          formatSummary={(s, e, t) => `Showing boards ${s} to ${e} of ${t} in the Brand refresh workspace`}
+        />
+      </DemoCase>
+
       <DemoCase id="long-arabic" title="Long Arabic text" lang="ar">
         <Pagination defaultPage={1240} itemCount={124810} pageSize={100} />
       </DemoCase>

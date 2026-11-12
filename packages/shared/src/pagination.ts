@@ -43,8 +43,8 @@ export function pageRange(current: number, total: number, siblings = 1, boundari
   const count = Math.floor(total);
   if (!Number.isFinite(count) || count < 1) return [];
   const page = clampPage(current, count);
-  const sib = Math.max(0, Math.floor(siblings));
-  const bound = Math.max(0, Math.floor(boundaries));
+  const sib = Number.isFinite(siblings) ? Math.max(0, Math.floor(siblings)) : 1;
+  const bound = Number.isFinite(boundaries) ? Math.max(0, Math.floor(boundaries)) : 1;
 
   // Short enough to show every page: the boundaries, the siblings, the current page and two slots for ellipses.
   if (count <= 2 * bound + 2 * sib + 3) return span(1, count);

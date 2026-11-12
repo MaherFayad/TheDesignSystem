@@ -26,8 +26,12 @@ describe('Pagination', () => {
     expect(el.getAttribute('aria-label')).toBe('Pagination');
     expect(el.getAttribute('data-size')).toBe('md');
     expect(el.getAttribute('data-shape')).toBe('default');
-    expect(parts(el)).toEqual(['first', 'previous', 'page', 'ellipsis', 'page', 'page', 'page', 'ellipsis', 'page', 'next', 'last']);
-    expect(pages(el)).toEqual(['1', '...', '4', '5', '6', '...', '16']);
+    expect(parts(el)).toEqual(['first', 'previous', 'page', 'ellipsis', 'page', 'page', 'page', 'ellipsis', 'ellipsis', 'page', 'next', 'last']);
+    expect(pages(el)).toEqual(['1', '...', '4', '5', '6', '...', '...', '16']);
+    // The second ellipsis before the last page is the compact one, drawn only on phones.
+    const compact = el.querySelectorAll('[data-part="ellipsis"][data-compact]');
+    expect(compact).toHaveLength(1);
+    expect(compact[0]?.nextElementSibling?.textContent).toBe('16');
   });
 
   it('marks the current page with aria-current, data-active and a page label', () => {
@@ -115,6 +119,32 @@ describe('Pagination', () => {
     expect(screen.getByRole('button', { name: 'صفحة 624' })).not.toBeNull();
   });
 
+  it('treats a page count of 0 or NaN as one page with inert ends', () => {
+    const onPageChange = vi.fn();
+    for (const count of [0, Number.NaN]) {
+      const { unmount } = render(<Pagination pageCount={count} onPageChange={onPageChange} />);
+      expect(screen.getByRole('button', { name: 'Page 1' }).getAttribute('aria-current')).toBe('page');
+      for (const name of ['First page', 'Previous page', 'Next page', 'Last page']) {
+        const el = screen.getByRole('button', { name });
+        expect(el.getAttribute('aria-disabled')).toBe('true');
+        fireEvent.click(el);
+      }
+      unmount();
+    }
+    expect(onPageChange).not.toHaveBeenCalled();
+  });
+
+  it('in link mode leaves a modifier click and a middle click to the browser', () => {
+    const onPageChange = vi.fn();
+    render(<Pagination defaultPage={1} pageCount={3} getHref={(p) => `?page=${p}`} onPageChange={onPageChange} />);
+    const link = screen.getByRole('link', { name: 'Page 2' });
+    fireEvent.click(link, { ctrlKey: true });
+    fireEvent.click(link, { metaKey: true });
+    fireEvent.click(link, { button: 1 });
+    expect(onPageChange).not.toHaveBeenCalled();
+    expect(screen.getByRole('link', { name: 'Page 1' }).getAttribute('aria-current')).toBe('page');
+  });
+
   it('says No items for an empty list', () => {
     const { container } = render(<Pagination itemCount={0} />);
     expect(container.querySelector('[data-part="summary"]')?.textContent).toBe('No items');
@@ -144,8 +174,8 @@ describe('Pagination', () => {
   it('size, shape, showEnds and disabled reach the controls', () => {
     const { container } = render(<Pagination size="lg" shape="pill" showEnds={false} disabled pageCount={3} />);
     const el = root(container);
-    expect(parts(el)).toEqual(['previous', 'page', 'page', 'page', 'next']);
-    for (const child of Array.from(el.children)) {
+    expect(parts(el)).toEqual(['previous', 'page', 'page', 'ellipsis', 'page', 'next']);
+    for (const child of Array.from(el.children).filter((c) => c.getAttribute('data-part') !== 'ellipsis')) {
       expect(child.getAttribute('data-size')).toBe('lg');
       expect(child.getAttribute('data-shape')).toBe('pill');
       expect(child.getAttribute('aria-disabled')).toBe('true');
@@ -166,7 +196,7 @@ describe('Pagination', () => {
 
   it('renders every demo case', () => {
     const { container } = render(<PaginationDemo />);
-    for (const id of ['variants', 'empty', 'one', 'many', 'too-many', 'long-arabic', 'disabled']) {
+    for (const id of ['variants', 'empty', 'one', 'many', 'too-many', 'long-text', 'long-arabic', 'disabled']) {
       expect(container.querySelector(`[data-demo-case="${id}"]`)).not.toBeNull();
     }
     const variants = container.querySelector('[data-demo-case="variants"]');

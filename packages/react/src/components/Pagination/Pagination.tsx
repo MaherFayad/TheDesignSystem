@@ -25,7 +25,8 @@
 //   data-disabled, the Button rule), so focus is not lost on the last page.
 // - Numbers use Western digits in both languages, grouped with a comma.
 // - Under breakpoint.phone the compact form keeps the ends and the current
-//   page only (CSS), and the summary wraps above.
+//   page and the last page (CSS), with a compact-only ellipsis (data-compact)
+//   between them when pages are hidden, and the summary wraps above.
 import { useMemo, type HTMLAttributes, type MouseEvent, type ReactElement, type Ref } from 'react';
 import type { IconName } from '@the-system/icons/react';
 import { clampPage, isEllipsis, itemRange, pageCount as countPages, pageRange, type Shape, type Size } from '@the-system/shared';
@@ -59,7 +60,7 @@ const words = {
     last: 'الصفحة الأخيرة',
     page: (p: number) => `صفحة ${n(p)}`,
     summary: (s: number, e: number, t: number) => `${n(s)} إلى ${n(e)} من ${n(t)}`,
-    empty: 'لا توجد عناصر',
+    empty: 'ما فيه عناصر',
   },
 } as const;
 
@@ -120,12 +121,16 @@ export function Pagination({
 }: PaginationProps) {
   const { lang } = useTheme();
   const t = words[lang === 'ar' ? 'ar' : 'en'];
-  const total = pageCount ?? (itemCount !== undefined ? countPages(itemCount, pageSize) : 1);
+  const raw = pageCount ?? (itemCount !== undefined ? countPages(itemCount, pageSize) : 1);
+  // Never under one page: a count of 0 or NaN still shows page 1 with inert ends.
+  const total = Number.isFinite(raw) ? Math.max(1, Math.floor(raw)) : 1;
   const [rawPage, setPage] = useControllable(pageProp, defaultPage, onPageChange);
   const page = clampPage(rawPage, total);
   const range = useMemo(() => pageRange(page, total, siblings, boundaries), [page, total, siblings, boundaries]);
 
   const go = (to: number) => (event: MouseEvent<HTMLElement>) => {
+    // A link opened in a new tab or window leaves this page where it is.
+    if (getHref && (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey)) return;
     if (!getHref) event.preventDefault();
     if (to !== page) setPage(to);
   };
@@ -177,8 +182,16 @@ export function Pagination({
         }
         const active = item === page;
         const text = n(item);
+        // The compact form hides every page but the current and the last; this marks the pages between them.
+        const compactGap =
+          item === total && total - page > 1 ? (
+            <span key="compact-gap" data-part="ellipsis" data-compact="" aria-hidden="true">
+              …
+            </span>
+          ) : null;
         const link = linkTo(item, text);
-        return (
+        return [
+          compactGap,
           <Button
             key={item}
             data-part="page"
@@ -193,8 +206,8 @@ export function Pagination({
             asChild={link !== undefined}
           >
             {link ?? text}
-          </Button>
-        );
+          </Button>,
+        ];
       })}
       {end('next', 'chevron-forward', Math.min(total, page + 1))}
       {showEnds && end('last', 'chevrons-forward', total)}

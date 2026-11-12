@@ -21,25 +21,100 @@
     "Slides of a carousel": "Carousel controls",
     "The path to the current page": "Breadcrumbs"
   },
-  "anatomy": ["root", "first", "previous", "page", "ellipsis", "next", "last", "summary"],
+  "anatomy": [
+    "root",
+    "first",
+    "previous",
+    "page",
+    "ellipsis",
+    "next",
+    "last",
+    "summary"
+  ],
   "props": {
-    "page": { "type": "number", "description": "The current page, from 1. Controlled, with onPageChange. Clamped into 1 to the page count." },
-    "defaultPage": { "type": "number", "default": 1, "description": "The first page shown when uncontrolled." },
-    "onPageChange": { "type": "(page: number) => void", "description": "Called with the new page when a control is pressed. Not called for the current page." },
-    "pageCount": { "type": "number", "description": "The number of pages. Default: worked out from itemCount and pageSize, else 1." },
-    "itemCount": { "type": "number", "description": "The number of items in the list. Turns on the summary part." },
-    "pageSize": { "type": "number", "default": 20, "description": "Items per page, for the summary and the page count." },
-    "siblings": { "type": "number", "default": 1, "description": "Pages shown on each side of the current page (pageRange in @the-system/shared)." },
-    "boundaries": { "type": "number", "default": 1, "description": "Pages always shown at each end." },
-    "showEnds": { "type": "boolean", "default": true, "description": "Shows the first and last page buttons." },
-    "getHref": { "type": "(page: number) => string", "description": "Turns every control into a link (Button asChild with an a). Default none: buttons." },
-    "size": { "type": ["sm", "md", "lg"], "default": "md", "description": "Control height, as Button: sm 28, md 32, lg 44 at default density." },
-    "shape": { "type": ["default", "pill", "square"], "default": "default", "description": "Corner shape of every control, as Button." },
-    "disabled": { "type": "boolean", "default": false, "description": "Every control is inert (aria-disabled, still focusable), for example while the list loads." },
-    "label": { "type": "string", "default": "Pagination", "description": "The accessible name of the nav landmark, not visible text. Under an Arabic Theme the default is التنقل بين الصفحات." },
-    "formatSummary": { "type": "(start, end, total) => string", "description": "Replaces the summary text. Default 21 to 40 of 312, in Arabic 21 إلى 40 من 312. An empty list says No items, in Arabic لا توجد عناصر." }
+    "page": {
+      "type": "number",
+      "description": "The current page, from 1. Controlled, with onPageChange. Clamped into 1 to the page count."
+    },
+    "defaultPage": {
+      "type": "number",
+      "default": 1,
+      "description": "The first page shown when uncontrolled."
+    },
+    "onPageChange": {
+      "type": "(page: number) => void",
+      "description": "Called with the new page when a control is pressed. Not called for the current page."
+    },
+    "pageCount": {
+      "type": "number",
+      "description": "The number of pages. Default: worked out from itemCount and pageSize, else 1. A count under 1 or NaN reads as 1."
+    },
+    "itemCount": {
+      "type": "number",
+      "description": "The number of items in the list. Turns on the summary part."
+    },
+    "pageSize": {
+      "type": "number",
+      "default": 20,
+      "description": "Items per page, for the summary and the page count."
+    },
+    "siblings": {
+      "type": "number",
+      "default": 1,
+      "description": "Pages shown on each side of the current page (pageRange in @the-system/shared)."
+    },
+    "boundaries": {
+      "type": "number",
+      "default": 1,
+      "description": "Pages always shown at each end."
+    },
+    "showEnds": {
+      "type": "boolean",
+      "default": true,
+      "description": "Shows the first and last page buttons."
+    },
+    "getHref": {
+      "type": "(page: number) => string",
+      "description": "Turns every control into a link (Button asChild with an a). Default none: buttons. A click with a modifier key or a middle click is left to the browser and does not change the page."
+    },
+    "size": {
+      "type": [
+        "sm",
+        "md",
+        "lg"
+      ],
+      "default": "md",
+      "description": "Control height, as Button: sm 28, md 32, lg 44 at default density."
+    },
+    "shape": {
+      "type": [
+        "default",
+        "pill",
+        "square"
+      ],
+      "default": "default",
+      "description": "Corner shape of every control, as Button."
+    },
+    "disabled": {
+      "type": "boolean",
+      "default": false,
+      "description": "Every control is inert (aria-disabled, still focusable), for example while the list loads."
+    },
+    "label": {
+      "type": "string",
+      "default": "Pagination",
+      "description": "The accessible name of the nav landmark, not visible text. Under an Arabic Theme the default is التنقل بين الصفحات."
+    },
+    "formatSummary": {
+      "type": "(start, end, total) => string",
+      "description": "Replaces the summary text. Default 21 to 40 of 312, in Arabic 21 إلى 40 من 312. An empty list says No items, in Arabic ما فيه عناصر."
+    }
   },
-  "states": ["data-active", "data-disabled"],
+  "states": [
+    "data-active",
+    "data-disabled",
+    "data-compact"
+  ],
   "a11y": {
     "role": "navigation landmark (nav with aria-label) of buttons, or links with getHref",
     "focus": "Every control is a tab stop in reading order. An end with nowhere to go stays focusable with aria-disabled, so focus is not lost on the first or last page. Each page control is keyed by its number, so focus stays on the pressed page. A 2px ring from the Button focus tokens.",
@@ -48,14 +123,21 @@
       "Enter": "Goes to that page"
     },
     "announce": "Each page reads as Page 5, the current one as Page 5, current page. The ends read First page, Previous page, Next page, Last page. Ellipses are aria-hidden. The summary is plain text before the controls.",
-    "native": { "accessibilityRole": "button", "accessibilityState": ["selected", "disabled"] },
+    "native": {
+      "accessibilityRole": "button",
+      "accessibilityState": [
+        "selected",
+        "disabled"
+      ]
+    },
     "notes": [
       "The current page is a soft fill plus a strong border and aria-current page, never color alone (WCAG 1.4.1).",
       "The ends use chevrons-back, chevron-back, chevron-forward and chevrons-forward, mirrored in RTL.",
       "Numbers use Western digits in both languages, grouped with a comma (12,480).",
-      "Under breakpoint.phone (30rem) the compact form keeps the ends and the current page only, and the summary takes its own line. No sideways scroll at 320px (WCAG 1.4.10).",
+      "Under breakpoint.phone (30rem) the compact form keeps the ends, the current page and the last page, with a compact-only ellipsis (data-compact) between them when pages are hidden; the summary takes its own line and wraps. No sideways scroll at 320px (WCAG 1.4.10).",
       "The page row keeps the same length as the current page moves (pageRange), so controls do not jump under the pointer.",
-      "A page label Page 5 contains the visible number, so voice control by the number works (WCAG 2.5.3)."
+      "A page label Page 5 contains the visible number, so voice control by the number works (WCAG 2.5.3).",
+      "data-active and data-disabled sit on the child controls (page, and first, previous, next, last), not on the root. disabled makes every control aria-disabled."
     ]
   },
   "content": {
@@ -64,7 +146,7 @@
       "labels": "Page 5, First page, Previous page, Next page, Last page."
     },
     "ar": {
-      "summary": "21 إلى 40 من 312, Western digits.",
+      "summary": "21 إلى 40 من 312, Western digits. Empty list: ما فيه عناصر.",
       "labels": "صفحة 5، الصفحة الأولى، الصفحة السابقة، الصفحة التالية، الصفحة الأخيرة. Noun form, no diacritics."
     }
   },
@@ -93,8 +175,14 @@
       "example": "Pagination.demo.tsx",
       "note": "The only motion is the Button press, reduced to none under reduced motion."
     },
-    "angular": { "status": "planned", "behavior": "nav[dsPagination] with button[dsButton] or a[dsButton] controls and the shared pageRange" },
-    "native": { "status": "planned", "note": "A row of Pressables with accessibilityState selected on the current page; the compact form on phones." }
+    "angular": {
+      "status": "planned",
+      "behavior": "nav[dsPagination] with button[dsButton] or a[dsButton] controls and the shared pageRange"
+    },
+    "native": {
+      "status": "planned",
+      "note": "A row of Pressables with accessibilityState selected on the current page; the compact form on phones."
+    }
   },
   "styles": {
     "studio": "Ghost page buttons, the current page a soft fill with a strong border, pixel chevrons on the ends.",
@@ -102,14 +190,34 @@
     "neutral": "Takes the tokens of the Neutral style, no recipe."
   },
   "mistakes": [
-    { "wrong": "The current page told apart by color only", "right": "Pagination, which adds a border and aria-current page" },
-    { "wrong": "Previous and next removed on the first and last page, so focus is lost", "right": "Pagination, which keeps them focusable with aria-disabled" },
-    { "wrong": "A row of every page number for 500 pages", "right": "Pagination, which shows boundaries, siblings and ellipses" },
-    { "wrong": "Arrow characters typed as previous and next labels", "right": "The mirrored chevron icons with spoken labels" },
-    { "wrong": "Eastern Arabic digits in the page numbers", "right": "Western digits, the default in both languages" }
+    {
+      "wrong": "The current page told apart by color only",
+      "right": "Pagination, which adds a border and aria-current page"
+    },
+    {
+      "wrong": "Previous and next removed on the first and last page, so focus is lost",
+      "right": "Pagination, which keeps them focusable with aria-disabled"
+    },
+    {
+      "wrong": "A row of every page number for 500 pages",
+      "right": "Pagination, which shows boundaries, siblings and ellipses"
+    },
+    {
+      "wrong": "Arrow characters typed as previous and next labels",
+      "right": "The mirrored chevron icons with spoken labels"
+    },
+    {
+      "wrong": "Eastern Arabic digits in the page numbers",
+      "right": "Western digits, the default in both languages"
+    }
   ],
   "contract": {
-    "optionalParts": ["first", "last", "ellipsis", "summary"]
+    "optionalParts": [
+      "first",
+      "last",
+      "ellipsis",
+      "summary"
+    ]
   },
   "since": "0.1.0"
 }

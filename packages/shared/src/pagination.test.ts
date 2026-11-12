@@ -41,6 +41,10 @@ describe('pageRange', () => {
     expect(pageRange(10, 20, 0, 0)).toEqual(['ellipsis-start', 10, 'ellipsis-end']);
   });
 
+  it('reads NaN siblings and boundaries as 1', () => {
+    expect(pageRange(10, 20, Number.NaN, Number.NaN)).toEqual(pageRange(10, 20));
+  });
+
   it('clamps the current page', () => {
     expect(pageRange(99, 20)).toEqual(pageRange(20, 20));
     expect(pageRange(-3, 20)).toEqual(pageRange(1, 20));
