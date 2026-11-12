@@ -24,6 +24,7 @@ import {
   Component,
   DestroyRef,
   ElementRef,
+  afterRenderEffect,
   booleanAttribute,
   computed,
   effect,
@@ -128,7 +129,6 @@ const INPUT_ATTRIBUTES = [
       [attr.aria-required]="state().required ? 'true' : null"
       [disabled]="state().disabled"
       [readOnly]="state().readOnly"
-      [value]="value() ?? ''"
       [attr.value]="value() ?? null"
       (input)="onInput(native.value)"
       (blur)="onTouched()"
@@ -221,6 +221,13 @@ export class DsInput implements ControlValueAccessor {
   protected readonly isText = (content: unknown): content is string => typeof content === 'string';
 
   constructor() {
+    // The native value is written only when it differs, as React does: a half typed number ("1e", "-")
+    // reads as "" in the browser and must not be wiped by writing "" back.
+    afterRenderEffect(() => {
+      const next = this.value() ?? '';
+      const el = this.nativeInput;
+      if (el.value !== next) el.value = next;
+    });
     // A control with its own id tells the Field, so the label points at it.
     if (this.field) {
       const field = this.field;

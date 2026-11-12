@@ -1,7 +1,7 @@
 import { Component, signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import { DsInput } from './input';
 
 @Component({
@@ -13,6 +13,7 @@ import { DsInput } from './input';
     <div data-t="disabled" dsInput disabled value="Design team"></div>
     <div data-t="template" dsInput [start]="tpl"></div>
     <ng-template #tpl><b>at</b></ng-template>
+    <div data-t="number" dsInput type="number" aria-label="Width"></div>
     <div data-t="form" dsInput [formControl]="control"></div>
   `,
 })
@@ -118,5 +119,17 @@ describe('DsInput', () => {
     box.dispatchEvent(event);
     expect(event.defaultPrevented).toBe(true);
     expect(document.activeElement).toBe(native('plain'));
+  });
+
+  it('does not wipe a half typed number the browser reads as empty', async () => {
+    const { fixture, native } = await setup();
+    const input = native('number');
+    input.value = '1';
+    input.dispatchEvent(new Event('input'));
+    await fixture.whenStable();
+    const write = vi.spyOn(input, 'value', 'set');
+    input.dispatchEvent(new Event('input'));
+    await fixture.whenStable();
+    expect(write).not.toHaveBeenCalled();
   });
 });
