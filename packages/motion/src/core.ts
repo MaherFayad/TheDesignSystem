@@ -21,7 +21,7 @@ export type EaseToken = `ease.${string}`;
 /** Any token path a pattern reads: duration, delay, ease, scale, space or spring. */
 export type TokenPath = `${'duration' | 'delay' | 'ease' | 'scale' | 'space' | 'spring'}.${string}`;
 
-/** The 18 pattern ids of the catalog. Fixed by order 1.11. */
+/** The pattern ids of the catalog: the 18 of order 1.11, then `fade` and `press`, which the components asked for. */
 export const PATTERN_IDS = [
   'fade-rise',
   'menu-scale',
@@ -41,6 +41,8 @@ export const PATTERN_IDS = [
   'chart-draw',
   'thinking',
   'streaming-text',
+  'fade',
+  'press',
 ] as const;
 
 export type PatternId = (typeof PATTERN_IDS)[number];

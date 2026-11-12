@@ -1,4 +1,4 @@
-import { readFileSync } from 'node:fs';
+import { readdirSync, readFileSync } from 'node:fs';
 import { describe, expect, it, vi } from 'vitest';
 import { catalog, getPattern, isPatternId } from './catalog';
 import { animatedProperties, PATTERN_IDS, tokenVar, type MotionInput, type MotionPattern, type MotionSpec, type PatternId } from './core';
@@ -31,6 +31,8 @@ const inputs: Record<PatternId, MotionInput[]> = {
   'chart-draw': [{}, { axis: 'block' } as MotionInput, { dir: 'rtl' }],
   thinking: [{ index: 0 } as MotionInput, { index: 2 } as MotionInput],
   'streaming-text': [{}],
+  fade: [{}, { phase: 'exit' }],
+  press: [{}, { phase: 'exit' }],
 };
 
 const entries = Object.entries(catalog) as [PatternId, MotionPattern<MotionInput>][];
@@ -48,11 +50,14 @@ function tokensOf(spec: MotionSpec): string[] {
 }
 
 describe('the catalog', () => {
-  it('holds exactly the 18 ids of order 1.11, each under its own id', () => {
+  it('holds the 18 ids of order 1.11 plus fade and press, each under its own id', () => {
     expect(Object.keys(catalog).sort()).toEqual([...PATTERN_IDS].sort());
+    expect(PATTERN_IDS).toHaveLength(20);
     for (const [id, p] of entries) expect(p.id).toBe(id);
     expect(isPatternId('spinner')).toBe(true);
-    expect(isPatternId('press')).toBe(false);
+    expect(isPatternId('fade')).toBe(true);
+    expect(isPatternId('press')).toBe(true);
+    expect(isPatternId('pulse')).toBe(false);
     expect(getPattern('dialog')?.id).toBe('dialog');
     expect(getPattern('nope')).toBeUndefined();
   });
@@ -192,28 +197,21 @@ describe('animate', () => {
 
 // ---------------------------------------------------------------- manifests
 
-/**
- * Names a manifest still uses that are not catalog ids, with the id the
- * lead should put in their place. Each is listed in
- * docs/reports/lanes/order-1-11.md. The test fails on any other name, and
- * fails when a name here is no longer used, so this list only shrinks.
- */
-const PENDING_RENAME: Readonly<Record<string, string>> = {};
-
 describe('manifests name catalog patterns', () => {
-  const manifests = JSON.parse(readFileSync(new URL('../../manifest/manifests.gen.json', import.meta.url), 'utf8')) as {
-    name: string;
-    motion?: string;
-  }[];
-  const named = manifests.filter((m) => typeof m.motion === 'string' && m.motion !== '' && m.motion !== 'none');
+  // The source manifests, not manifests.gen.json, so a stale generated file
+  // cannot hide a new name. There is no allow list: any name that is not a
+  // catalog id or `none` fails.
+  const dir = new URL('../../manifest/src/component/', import.meta.url);
+  const manifests = readdirSync(dir)
+    .filter((f) => f.endsWith('.manifest.json'))
+    .map((f) => JSON.parse(readFileSync(new URL(f, dir), 'utf8')) as { name: string; motion?: string });
 
-  it('every motion value is a catalog id (or a listed rename)', () => {
-    const unknown = named.filter((m) => !isPatternId(m.motion!) && !Object.hasOwn(PENDING_RENAME, m.motion!));
-    expect(unknown.map((m) => `${m.name}: ${m.motion}`)).toEqual([]);
+  it('reads the component manifests', () => {
+    expect(manifests.length).toBeGreaterThan(50);
   });
 
-  it('the rename list holds only names still in use', () => {
-    const used = new Set(named.map((m) => m.motion));
-    for (const name of Object.keys(PENDING_RENAME)) expect(used.has(name), `${name} is no longer used: remove it from PENDING_RENAME`).toBe(true);
+  it('every motion value is a catalog id or none', () => {
+    const unknown = manifests.filter((m) => typeof m.motion === 'string' && m.motion !== 'none' && !isPatternId(m.motion));
+    expect(unknown.map((m) => `${m.name}: ${m.motion}`)).toEqual([]);
   });
 });
