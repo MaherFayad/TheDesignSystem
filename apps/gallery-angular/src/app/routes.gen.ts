@@ -11,4 +11,5 @@ export const routes: DemoRoute[] = [
   { slug: 'checkbox', load: () => import('../../../../packages/angular/src/components/checkbox/checkbox.demo').then((m) => m.default) },
   { slug: 'dialog', load: () => import('../../../../packages/angular/src/components/dialog/dialog.demo').then((m) => m.default) },
   { slug: 'icon-button', load: () => import('../../../../packages/angular/src/components/icon-button/icon-button.demo').then((m) => m.default) },
+  { slug: 'list-box', load: () => import('../../../../packages/angular/src/components/list-box/list-box.demo').then((m) => m.default) },
 ];

@@ -248,8 +248,10 @@
       "note": "No motion of its own: the popup that holds it plays menu-scale. Alone it has none. Sources GoBanana and Figma-Killer-2 were not reachable in the lane session; the rows follow the DropdownMenu surface built from them."
     },
     "angular": {
-      "status": "planned",
-      "behavior": "hand built with the shared filter.ts and listbox.ts (not cdk:listbox, whose typeahead does not fold Arabic)"
+      "status": "ready",
+      "behavior": "div[dsListBox], hand built with the shared filter.ts and listbox.ts; the highlight kept with the CDK ActiveDescendantKeyManager, ControlValueAccessor",
+      "example": "list-box.demo.ts",
+      "note": "The host is the root. Inputs take the React prop names; onValueChange is the valueChange output of [(value)], onHighlightedValueChange the highlightedValueChange output of [(highlightedValue)], onOptionSelect the optionSelect output. value is one input for both modes: a string or null (single), an array (multiple). empty takes text or a TemplateRef, an option's start an icon name or a TemplateRef. Keys, typeahead and the Arabic folding come from the shared helpers, not the CDK typeahead. Angular Aria Listbox would replace the key manager once @angular/aria is installed. ListBox.css is used as is."
     },
     "native": {
       "status": "planned",

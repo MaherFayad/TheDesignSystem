@@ -7,5 +7,6 @@ export * from './components/dialog/index';
 export * from './components/field/index';
 export * from './components/icon-button/index';
 export * from './components/input/index';
+export * from './components/list-box/index';
 export * from './components/title-bar/index';
 export * from './components/window-controls/index';
