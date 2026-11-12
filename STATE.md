@@ -2,7 +2,7 @@
 Updated: 2026-11-12 08:30 UTC
 Main model: claude-fable-5-2, medium. Subagents: claude-opus-5-5, medium.
 Current wave: 0
-Next open order: 0.4
+Next open order: 0.7
 
 ## Paths
 GoBanana: /home/user/gobanana (read only clone, commit 216625c)
@@ -19,8 +19,8 @@ No adb. No iOS build.
 | 0.1 | Preflight | lead | all | done | see 0.3 |
 | 0.2 | Scaffold | lead | all | done | see 0.3 |
 | 0.3 | Plan into repo | lead | all | done | see git log |
-| 0.4 | Token extraction | ds-tokens | all | open | |
-| 0.5 | Token build | ds-tokens | all | open | |
+| 0.4 | Token extraction | ds-tokens | all | done | 0240c02 |
+| 0.5 | Token build | ds-tokens | all | done | 0240c02 |
 | 0.6 | Gates | ds-qa | all | part 1 done, part 2 open | 50ae3c1 |
 | 0.7 | Theme and React gallery | ds-component | react | open | |
 | 0.8 | Icons | ds-style | all | done | ade095b |
@@ -54,4 +54,4 @@ Nothing.
    branch, no pull request, no force push.
 
 ## Contract changes
-None yet.
+2026-11-12: tokens.md gained the DTCG 2025.10 differences and the `added` list in contract.json (64 names). Reason: the spec wins on format, and no source token may be dropped.
