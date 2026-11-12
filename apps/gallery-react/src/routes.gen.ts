@@ -8,6 +8,7 @@ export interface DemoRoute {
 }
 
 export const routes: DemoRoute[] = [
+  { name: 'AlertDialog', slug: 'alert-dialog', load: () => import('../../../packages/react/src/components/AlertDialog/AlertDialog.demo') },
   { name: 'Button', slug: 'button', load: () => import('../../../packages/react/src/components/Button/Button.demo') },
   { name: 'ButtonGroup', slug: 'button-group', load: () => import('../../../packages/react/src/components/ButtonGroup/ButtonGroup.demo') },
   { name: 'Dialog', slug: 'dialog', load: () => import('../../../packages/react/src/components/Dialog/Dialog.demo') },
