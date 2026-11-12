@@ -145,12 +145,38 @@ describe('DsSelect', () => {
     expect(content()?.querySelectorAll('[data-part="separator"]').length).toBe(1);
   });
 
-  it('an empty list says so and describes the list', async () => {
+  it('an empty list does not open; a hidden note with the empty words describes the trigger, as React', async () => {
     const { root, key, content } = await setup();
-    await key(root('empty'), 'Enter');
-    const empty = content()?.querySelector('[data-part="empty"]');
-    expect(empty?.textContent).toBe('No statuses yet.');
-    expect(content()?.getAttribute('aria-describedby')).toBe(empty?.id);
+    const el = root('empty');
+    const note = el.nextElementSibling as HTMLElement;
+    expect(note.tagName).toBe('SPAN');
+    expect(note.hidden).toBe(true);
+    expect(note.textContent).toBe('No statuses yet.');
+    expect(el.getAttribute('aria-describedby')).toBe(note.id);
+    await key(el, 'Enter');
+    expect(content()).toBeNull();
+    await key(el, 'ArrowDown');
+    expect(content()).toBeNull();
+    el.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, cancelable: true, button: 0, pointerType: 'mouse' }));
+    el.click();
+    await new Promise((r) => setTimeout(r, 0));
+    expect(content()).toBeNull();
+  });
+
+  it('is not touched when the list opens and focus moves into it; touched when focus leaves both', async () => {
+    const { host, root, key, content, items, settle } = await setup();
+    const el = root('reactive');
+    el.focus();
+    await key(el, 'Enter');
+    expect(content()).not.toBeNull();
+    el.dispatchEvent(new FocusEvent('blur', { relatedTarget: items()[0] ?? null }));
+    await settle();
+    expect(host.form.touched).toBe(false);
+    await key(content() as HTMLElement, 'Escape');
+    expect(content()).toBeNull();
+    expect(host.form.touched).toBe(false);
+    el.dispatchEvent(new FocusEvent('blur', { relatedTarget: null }));
+    expect(host.form.touched).toBe(true);
   });
 
   it('loading shows a spinner, describes the trigger, and does not open', async () => {

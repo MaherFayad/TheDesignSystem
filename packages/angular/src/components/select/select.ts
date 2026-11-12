@@ -19,7 +19,6 @@
 //             <div data-part="item" role="option" data-state="checked|unchecked" data-highlighted? data-disabled?>
 //               <span data-part="indicator">  <span data-part="item-icon">  <span data-part="item-label" id>  <span data-part="item-description">
 //             <div data-part="separator">  <div data-part="group" role="group"> <div data-part="label">
-//             <div data-part="empty">
 //           <div data-part="scroll-down">
 //
 // Keys and pointer as Radix: on the closed trigger Enter, Space, ArrowDown
@@ -42,6 +41,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   DestroyRef,
+  type EmbeddedViewRef,
   Injector,
   TemplateRef,
   afterNextRender,
@@ -58,6 +58,7 @@ import {
 import { DOCUMENT, NgTemplateOutlet } from '@angular/common';
 import { NG_VALUE_ACCESSOR, type ControlValueAccessor } from '@angular/forms';
 import { DsIcon } from '@the-system/icons/angular';
+import { DsSpinner } from '../spinner/spinner';
 import { createTypeahead, edgeEnabledIndex, nextEnabledIndex, typeaheadIndex, type Shape, type Size } from '@the-system/shared';
 import { hideOthers, lockScroll } from '../../behavior/dialog-behavior';
 import { consumeHostAttributes } from '../../internal/host';
@@ -109,7 +110,7 @@ let nextId = 0;
 @Component({
   selector: 'button[dsSelect]',
   exportAs: 'dsSelect',
-  imports: [DsIcon, NgTemplateOutlet],
+  imports: [DsIcon, DsSpinner, NgTemplateOutlet],
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [{ provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => DsSelect), multi: true }],
   host: {
@@ -139,15 +140,14 @@ let nextId = 0;
     '(pointerdown)': 'onTriggerPointerDown($event)',
     '(click)': 'onTriggerClick($event)',
     '(keydown)': 'onTriggerKeydown($event)',
-    '(blur)': 'onTouched()',
+    '(blur)': 'onTriggerBlur($event)',
   },
-  template: `<span data-part="value" style="pointer-events: none;">@if (current() === null) {{{ placeholderText() }}} @else {<span data-part="item-label">{{ selectedLabel() }}</span>}</span><span aria-hidden="true" data-part="icon">@if (loading()) {<span aria-hidden="true" data-ds="spinner" data-size="sm" data-tone="neutral"></span>} @else {<svg dsIcon name="chevrons-up-down" size="md"></svg>}</span>
+  template: `<span data-part="value" style="pointer-events: none;">@if (current() === null) {{{ placeholderText() }}} @else {<span data-part="item-label">{{ selectedLabel() }}</span>}</span><span aria-hidden="true" data-part="icon">@if (loading()) {<span dsSpinner size="sm" decorative></span>} @else {<svg dsIcon name="chevrons-up-down" size="md"></svg>}</span>
 <ng-template #content><div data-ds="select" data-part="content" role="listbox" [attr.id]="contentId" data-state="open" [attr.dir]="dir()"
   [attr.data-side]="layer.side()" [attr.data-align]="layer.align()" [attr.data-size]="listSize()"
   [attr.aria-labelledby]="listLabelledBy() ?? null" [attr.aria-label]="ariaLabel() ?? null"
-  [attr.aria-describedby]="options().length === 0 ? baseId + '-empty' : null"
   style="box-sizing: border-box; display: flex; flex-direction: column; outline: none; --radix-select-content-transform-origin: var(--radix-popper-transform-origin); --radix-select-content-available-width: var(--radix-popper-available-width); --radix-select-content-available-height: var(--radix-popper-available-height); --radix-select-trigger-width: var(--radix-popper-anchor-width); --radix-select-trigger-height: var(--radix-popper-anchor-height); pointer-events: auto;"
-  tabindex="-1" (keydown)="onContentKeydown($event)">@if (canScrollUp()) {<div aria-hidden="true" data-part="scroll-up" style="flex-shrink: 0;" (pointerdown)="startAutoScroll(-1)" (pointermove)="startAutoScroll(-1); onItemLeave()" (pointerleave)="stopAutoScroll()"><svg dsIcon name="chevron-up" size="md"></svg></div>}<div #viewport data-part="viewport" data-radix-select-viewport="" role="presentation" style="position: relative; flex: 1 1 0%; overflow: hidden auto;" (scroll)="updateScrollButtons()">@if (options().length === 0) {<div data-part="empty" role="presentation" [attr.id]="baseId + '-empty'">@if (loading()) {{{ loadingText() }}} @else if (isIconContent(emptyContent())) {{{ emptyContent() }}} @else {<ng-container [ngTemplateOutlet]="$any(emptyContent())" />}</div>}@for (row of rows(); track row.kind === 'option' ? row.option.value : row.key) {@if (row.kind === 'option') {<ng-container [ngTemplateOutlet]="item" [ngTemplateOutletContext]="{ $implicit: row.option, index: row.index }" />} @else {@if (row.separator) {<div aria-hidden="true" data-part="separator"></div>}<div role="group" data-part="group" [attr.aria-labelledby]="baseId + '-group-' + row.key"><div data-part="label" [attr.id]="baseId + '-group-' + row.key">{{ row.section.label }}</div>@for (entry of row.options; track entry.option.value) {<ng-container [ngTemplateOutlet]="item" [ngTemplateOutletContext]="{ $implicit: entry.option, index: entry.index }" />}</div>}}</div>@if (canScrollDown()) {<div aria-hidden="true" data-part="scroll-down" style="flex-shrink: 0;" (pointerdown)="startAutoScroll(1)" (pointermove)="startAutoScroll(1); onItemLeave()" (pointerleave)="stopAutoScroll()"><svg dsIcon name="chevron-down" size="md"></svg></div>}</div></ng-template>
+  tabindex="-1" (keydown)="onContentKeydown($event)">@if (canScrollUp()) {<div aria-hidden="true" data-part="scroll-up" style="flex-shrink: 0;" (pointerdown)="startAutoScroll(-1)" (pointermove)="startAutoScroll(-1); onItemLeave()" (pointerleave)="stopAutoScroll()"><svg dsIcon name="chevron-up" size="md"></svg></div>}<div #viewport data-part="viewport" data-radix-select-viewport="" role="presentation" style="position: relative; flex: 1 1 0%; overflow: hidden auto;" (scroll)="updateScrollButtons()">@for (row of rows(); track row.kind === 'option' ? row.option.value : row.key) {@if (row.kind === 'option') {<ng-container [ngTemplateOutlet]="item" [ngTemplateOutletContext]="{ $implicit: row.option, index: row.index }" />} @else {@if (row.separator) {<div aria-hidden="true" data-part="separator"></div>}<div role="group" data-part="group" [attr.aria-labelledby]="baseId + '-group-' + row.key"><div data-part="label" [attr.id]="baseId + '-group-' + row.key">{{ row.section.label }}</div>@for (entry of row.options; track entry.option.value) {<ng-container [ngTemplateOutlet]="item" [ngTemplateOutletContext]="{ $implicit: entry.option, index: entry.index }" />}</div>}}</div>@if (canScrollDown()) {<div aria-hidden="true" data-part="scroll-down" style="flex-shrink: 0;" (pointerdown)="startAutoScroll(1)" (pointermove)="startAutoScroll(1); onItemLeave()" (pointerleave)="stopAutoScroll()"><svg dsIcon name="chevron-down" size="md"></svg></div>}</div></ng-template>
 <ng-template #item let-option let-index="index">@let checked = current() === option.value; @let focused = focusedIndex() === index; @let off = option.disabled === true;<div role="option" data-part="item" data-radix-collection-item=""
   [attr.data-index]="null"
   [attr.aria-labelledby]="baseId + '-text-' + index"
@@ -224,7 +224,7 @@ export class DsSelect implements ControlValueAccessor {
   /** The Field wiring merged with the control's own values, as React's useFieldControl. It lands on the trigger. */
   private readonly fieldState = fieldControl(this.field, () => ({
     id: this.id(),
-    describedBy: [this.ariaDescribedby(), this.loading() ? this.loadingId : undefined].filter(Boolean).join(' ') || undefined,
+    describedBy: [this.ariaDescribedby(), this.hasNote() ? this.loadingId : undefined].filter(Boolean).join(' ') || undefined,
     invalid: this.invalid(),
     disabled: this.disabled() ?? this.formDisabled(),
     readOnly: this.readOnly(),
@@ -236,7 +236,11 @@ export class DsSelect implements ControlValueAccessor {
   readonly isReadOnly = computed(() => this.fieldState().readOnly);
   protected readonly isRequired = computed(() => this.fieldState().required);
   protected readonly describedBy = computed(() => this.fieldState().describedBy);
-  private readonly inert = computed(() => this.isReadOnly() || this.loading());
+  /** No option to choose: the list does not open (an empty listbox is not valid), as React. */
+  protected readonly isEmpty = computed(() => flattenListBoxItems(this.items()).length === 0);
+  /** While loading or empty, a hidden note after the trigger describes it. */
+  private readonly hasNote = computed(() => this.loading() || this.isEmpty());
+  private readonly inert = computed(() => this.isReadOnly() || this.loading() || this.isEmpty());
   protected readonly listLabelledBy = computed(
     () => this.ariaLabelledby() ?? (this.ariaLabel() ? undefined : this.field?.labelId),
   );
@@ -344,12 +348,15 @@ export class DsSelect implements ControlValueAccessor {
       else this.host.setAttribute('data-radix-popper-align', align);
     });
 
-    // While loading, the words that describe the trigger, in a hidden span after it.
+    // While loading or with no option, the words that describe the trigger, in a hidden span after it.
+    let noteView: EmbeddedViewRef<unknown> | null = null;
     effect(() => {
-      const loading = this.loading();
-      const text = this.loadingText();
+      const show = this.hasNote();
+      const content: ListBoxContent = this.loading() ? this.loadingText() : this.emptyContent();
       untracked(() => {
-        if (!loading) {
+        noteView?.destroy();
+        noteView = null;
+        if (!show) {
           this.loadingEl?.remove();
           this.loadingEl = null;
           return;
@@ -360,9 +367,16 @@ export class DsSelect implements ControlValueAccessor {
           this.loadingEl.hidden = true;
           this.host.after(this.loadingEl);
         }
-        this.loadingEl.textContent = text;
+        if (typeof content === 'string') this.loadingEl.textContent = content;
+        else {
+          this.loadingEl.textContent = '';
+          noteView = content.createEmbeddedView(undefined);
+          noteView.detectChanges();
+          this.loadingEl.append(...(noteView.rootNodes as Node[]));
+        }
       });
     });
+    inject(DestroyRef).onDestroy(() => noteView?.destroy());
 
     // Inside a form, the Radix bubble select carries the value.
     afterNextRender(() => {
@@ -615,6 +629,15 @@ export class DsSelect implements ControlValueAccessor {
     this.layer.dispose();
     this.resetTypeahead();
     if (returnFocus) this.host.focus({ preventScroll: true });
+    // Focus left the trigger and the list together: the control is touched now.
+    else this.onTouched();
+  }
+
+  /** Touched when focus leaves the trigger, but not when it moves into the open list. */
+  protected onTriggerBlur(event: FocusEvent): void {
+    const to = event.relatedTarget as Node | null;
+    if (this.isOpen() || (to && this.layer.contains(to))) return;
+    this.onTouched();
   }
 
   private focusCandidate(el: HTMLElement | undefined): void {
