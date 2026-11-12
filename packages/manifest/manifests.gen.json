@@ -22205,12 +22205,12 @@
     "props": {
       "value": {
         "type": "string",
-        "description": "The tags (string[]), controlled with onValueChange."
+        "description": "The tags (string[]), controlled with onValueChange. Typed string here because the schema has no array type."
       },
       "defaultValue": {
         "type": "string",
         "default": [],
-        "description": "Uncontrolled starting tags (string[])."
+        "description": "Uncontrolled starting tags (string[]). Typed string here because the schema has no array type."
       },
       "onValueChange": {
         "type": "function",
@@ -22218,7 +22218,7 @@
       },
       "suggestions": {
         "type": "node",
-        "description": "Suggested tags as ListBox items (an array of { value, label } or groups). The control becomes an ARIA 1.2 combobox with list autocomplete; tags already added are not suggested; choosing one adds its label."
+        "description": "Suggested tags as ListBox items (type node here means structured data: an array of { value, label } or groups). The control becomes an ARIA 1.2 combobox with list autocomplete; tags already added are not suggested; choosing one adds its label."
       },
       "max": {
         "type": "number",
@@ -22269,7 +22269,7 @@
       "formatRemoved": {
         "type": "function",
         "default": "Removed tag <tag>",
-        "description": "The words read once after a removal. Arabic default: تم حذف الوسم <tag>."
+        "description": "The words read once after a removal. Arabic default: حذفنا الوسم <tag>."
       },
       "name": {
         "type": "string",
@@ -22288,7 +22288,7 @@
       "data-readonly"
     ],
     "a11y": {
-      "role": "The control is a text input, named by the Field label. With suggestions it is an ARIA 1.2 combobox (aria-autocomplete list, aria-expanded, aria-controls, aria-activedescendant) and the popup holds a ListBox named like the field. The tags are a list (role list and listitem) named like the field; each remove button is a CloseButton named Remove tag <tag>. Not modal.",
+      "role": "The control is a text input, named by the Field label. With suggestions it is an ARIA 1.2 combobox (aria-autocomplete list, aria-expanded, aria-controls, aria-activedescendant) and the popup holds a ListBox named like the field. The tags sit in a group named like the field (aria-disabled when the field is disabled); each remove button is a CloseButton named Remove tag <tag>. Not modal.",
       "focus": "The control is the one tab stop; remove buttons are reached with Backspace and the arrow keys (tabindex -1). After a removal focus moves to the next tag, else the one before, else the control. With suggestions focus stays in the control.",
       "keys": {
         "Enter": "Adds the typed text as a tag, or the highlighted suggestion; with an empty control it does what the form does",
@@ -22302,7 +22302,7 @@
         "ArrowDown": "With suggestions: opens them, then moves to the next suggestion",
         "ArrowUp": "With suggestions: moves to the previous suggestion. Escape closes the suggestions"
       },
-      "announce": "Each removal is read once from a polite status (Removed tag design; Arabic تم حذف الوسم design). A duplicate and the max are read the same way (design is already added). The status empties first, so the same words are read again.",
+      "announce": "Each add, removal, duplicate and the max are read once from a polite status (Added tag design, Removed tag design, design is already added; Arabic أضفنا الوسم، حذفنا الوسم، الحد الأعلى للوسوم: 10). The status empties first, so the same words are read again.",
       "notes": [
         "Splitting and duplicates come from @the-system/shared tags.ts: the comma, the Arabic comma and new lines split; parts are trimmed; two tags are the same when their normalize() forms match (case, accents, Arabic diacritics, tatweel and alef forms ignored).",
         "Pasting text with a separator adds every part at once; a single line pastes as typed text.",
@@ -22310,7 +22310,10 @@
         "The suggestions popup is portaled into a Theme copied from the field's Theme and is its own root carrying data-part popup, as the Combobox popup is.",
         "IME composition: Enter that confirms a composition never adds a tag.",
         "Contract: the root is read as a field, not an overlay (no trigger): the popup holds no tab stop. data-state open and closed is on the popup root only. Backspace is checked on the one case control as focus-moves.",
-        "Disabled: the control is natively disabled and the tag list carries aria-disabled, so the faded tags read as unavailable (WCAG 1.4.3 exempts inactive components)."
+        "Disabled: the control is natively disabled and the tag group carries aria-disabled, so the faded tags read as unavailable (WCAG 1.4.3 exempts inactive components).",
+        "Escape closes the suggestions (in the ArrowUp entry): the contract suite checks Escape only on an overlay with a trigger, and a TagField has none.",
+        "Blur keeps typed text in the control and does not add it; only Enter, a separator or a paste adds. The control's text is not submitted with the form.",
+        "Text past max stays in the control; a paste replaces the selected text."
       ]
     },
     "content": {
@@ -22325,8 +22328,8 @@
         "label": "Noun form, no diacritics: الوسوم.",
         "placeholder": "Noun form: إضافة وسم.",
         "hint": "اضغط Enter أو اكتب فاصلة لإضافة وسم.",
-        "remove": "حذف الوسم <tag>.",
-        "error": "أضف وسم واحد على الأقل."
+        "remove": "حذف الوسم <tag>. After removal: حذفنا الوسم <tag>.",
+        "error": "أضف وسما واحدا على الأقل."
       }
     },
     "tokens": [

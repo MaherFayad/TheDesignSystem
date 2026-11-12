@@ -12,8 +12,8 @@
 // The DOM:
 //
 //   <div data-ds="tag-field" data-size data-shape data-invalid? data-disabled? data-readonly?>   root: the bordered box, wraps
-//     <div data-part="tags" role="list">                                  display contents: the tags sit in the box's flow
-//       <span data-part="tag" role="listitem">
+//     <div data-part="tags" role="group" aria-labelledby aria-disabled?>  display contents: the tags sit in the box's flow
+//       <span data-part="tag">
 //         <span data-part="tag-label">
 //         <button data-ds="close-button" data-part="tag-remove" tabindex="-1" aria-label="Remove tag design">
 //     <input data-part="control" role="combobox"? aria-expanded? aria-controls? aria-activedescendant?>
@@ -70,15 +70,17 @@ const EMPTY: readonly string[] = [];
 const words = {
   en: {
     remove: (tag: string) => `Remove tag ${tag}`,
+    added: (tags: string[]) => (tags.length === 1 ? `Added tag ${tags[0]}` : `Added ${tags.length} tags`),
     removed: (tag: string) => `Removed tag ${tag}`,
     duplicate: (tag: string) => `${tag} is already added`,
     full: (max: number) => `You can add up to ${max} ${max === 1 ? 'tag' : 'tags'}`,
   },
   ar: {
     remove: (tag: string) => `حذف الوسم ${tag}`,
-    removed: (tag: string) => `تم حذف الوسم ${tag}`,
+    added: (tags: string[]) => (tags.length === 1 ? `أضفنا الوسم ${tags[0]}` : `أضفنا الوسوم: ${tags.length}`),
+    removed: (tag: string) => `حذفنا الوسم ${tag}`,
     duplicate: (tag: string) => `الوسم ${tag} مضاف من قبل`,
-    full: (max: number) => `الحد الأعلى ${max} وسوم`,
+    full: (max: number) => `الحد الأعلى للوسوم: ${max}`,
   },
 } as const;
 
@@ -188,12 +190,15 @@ export function TagField({
     requestAnimationFrame(() => setStatus(words));
   };
 
-  const add = (incoming: string[]) => {
-    if (inert || incoming.length === 0) return;
+  /** Adds the parts and says what happened once. Returns the parts that were not added past max, so they stay in the control. */
+  const add = (incoming: string[]): string[] => {
+    if (inert || incoming.length === 0) return [];
     const result = addTags(tags, incoming, max);
     if (result.added.length) setTags(result.tags);
     if (result.overflow.length && max !== undefined) say(t.full(max));
     else if (result.duplicates.length) say(t.duplicate(result.duplicates[0] ?? ''));
+    else if (result.added.length) say(t.added(result.added));
+    return result.overflow;
   };
 
   const remove = (index: number) => {
@@ -218,6 +223,10 @@ export function TagField({
     // The next tag takes the index; at the end, the one before; with none left, the control.
     const left = tags.length - 1;
     focusAfter.current = left === 0 ? 'control' : index < left ? index : index - 1;
+    // A controlled parent may refuse the removal: then nothing moves focus later.
+    requestAnimationFrame(() => {
+      focusAfter.current = null;
+    });
     remove(index);
   };
 
@@ -236,8 +245,8 @@ export function TagField({
   const commitText = () => {
     const parts = splitTags(text);
     if (parts.length === 0) return false;
-    add(parts);
-    setText('');
+    // Text past max stays in the control, so nothing typed is lost.
+    setText(add(parts).join(', '));
     close();
     return true;
   };
@@ -340,8 +349,11 @@ export function TagField({
     // A single line inputs as typed text; text with separators or lines becomes tags at once.
     if (!hasTagSeparator(pasted)) return;
     event.preventDefault();
-    add(splitTags(text + pasted));
-    setText('');
+    // The paste replaces the selection, as a native paste does.
+    const input = event.currentTarget;
+    const start = input.selectionStart ?? text.length;
+    const end = input.selectionEnd ?? text.length;
+    setText(add(splitTags(text.slice(0, start) + pasted + text.slice(end))).join(', '));
   };
 
   const onInputBlur = (event: FocusEvent<HTMLInputElement>) => {
@@ -431,14 +443,14 @@ export function TagField({
           {tags.length > 0 && (
             <div
               data-part="tags"
-              role="list"
+              role="group"
               aria-labelledby={labelledBy}
               aria-label={rest['aria-label']}
-              // A disabled field: the tags read as unavailable, like the native disabled control beside them.
+              // A disabled field: the group of tags reads as unavailable, like the native disabled control beside it.
               aria-disabled={control.disabled || undefined}
             >
               {tags.map((tag, i) => (
-                <span key={tag} data-part="tag" role="listitem">
+                <span key={`${i}-${tag}`} data-part="tag">
                   <span data-part="tag-label">{tag}</span>
                   {!control.readOnly && (
                     <CloseButton
@@ -481,7 +493,9 @@ export function TagField({
             onBlur={onInputBlur}
           />
           {name !== undefined &&
-            tags.map((tag) => <input key={tag} type="hidden" name={name} value={tag} disabled={control.disabled} />)}
+            tags.map((tag, i) => (
+              <input key={`${i}-${tag}`} type="hidden" name={name} value={tag} form={rest.form} disabled={control.disabled} />
+            ))}
           <span data-part="status" role="status">
             {status}
           </span>
