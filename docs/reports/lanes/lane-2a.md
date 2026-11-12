@@ -8,7 +8,7 @@ FieldError, 1.2.1 Field bring up, 1.2.4 Textarea. All four are done.
 | 1.2.2 Label | `wo-1.2.2: label` | 21 passed |
 | 1.4.3 FieldError | `wo-1.4.3: field error` | 20 passed, 1 skipped (no keys to check) |
 | 1.2.1 Field bring up | `wo-1.2.1: field bring up` | 21 passed |
-| 1.2.4 Textarea | `wo-1.2.4: textarea` | 21 passed |
+| 1.2.4 Textarea | `wo-1.2.4: textarea`, then `wo-1.2.4: textarea review fixes` | 21 passed |
 
 `npm run check` is green on the branch head. Screenshots (studio dark and
 light, desk dark and light, desk dark rtl ar) are in
@@ -143,7 +143,7 @@ Decisions:
   root then lacks `data-auto-height`, a state attribute listed in the
   manifest.
 - The count: `length/limit`, code points (an emoji counts as one), digits
-  left to right at the inline end. It joins aria-describedby. There is no
+  left to right at the inline end. It joins aria-describedby, read in words. There is no
   native maxlength, so a paste is never cut. Past the limit: `data-over`,
   `aria-invalid`, danger count.
 - Announcement: a polite visually hidden live region. Its text changes only
@@ -173,13 +173,26 @@ Fixed:
 - FieldError: manifest role wording, insteadUse points at Field's
   description prop, demo long messages now say how to fix the value, a
   forced colors rule that did nothing removed.
-- Textarea: see the Textarea round below.
+- Textarea (blocker): insteadUse named a RichTextEditor that is not in the
+  plan. Removed; avoidWhen says no component covers formatted text yet.
+- Textarea (notes): the count is read in words ("39 of 200 characters",
+  Arabic "39 من 200 حرف") while the digits stay drawn and aria-hidden; a
+  small limit no longer starts in the near zone; Arabic "ما باقي ولا حرف" at
+  zero; `lang.startsWith('ar')`; the measuring fallback reruns on rows and
+  maxRows and clears its height when autoHeight turns off; manifest slots
+  dropped and the over limit note reworded; the demo field "Tag list"
+  renamed; three tests added (Field invalid, description plus count, over
+  on first render, small limit).
 
 Left open (notes, not blockers):
 
 - Field's manifest still lists `parts.FieldError: "error"` although
   FieldError has its own manifest. Kept, because Field renders it from the
   error prop. A generator that lists parts may show it twice.
+- Textarea: the new private names (`padding-block`, `line`, `rows`,
+  `max-rows`, `count-fg`) go past the list in anatomy.md, as Input's
+  `autofill-bg` does. The lead may add them to the list.
+- Textarea: the GoBanana takedown form the order names was not compared.
 - Some Label review fixes landed in the `wo-1.2.1` commit, since they were
   made after `wo-1.2.2` was committed.
 

@@ -13,6 +13,10 @@ function root(container: HTMLElement): HTMLElement {
   return el;
 }
 
+function shown(container: HTMLElement): string {
+  return container.querySelector('[data-part="count"] > [aria-hidden="true"]')?.textContent ?? '';
+}
+
 function live(container: HTMLElement): string {
   return container.querySelector('[aria-live="polite"]')?.textContent ?? '';
 }
@@ -68,11 +72,12 @@ describe('Textarea', () => {
   it('counts characters, and the count joins the description', async () => {
     const { container } = render(<Textarea aria-label="Notes" limit={50} defaultValue="Hi" />);
     const count = root(container).querySelector('[data-part="count"]');
-    expect(count?.textContent).toBe('2/50');
+    expect(shown(container)).toBe('2/50');
+    expect(count?.textContent).toContain('2 of 50 characters');
     const area = screen.getByRole('textbox');
     expect(area.getAttribute('aria-describedby')).toBe(count?.id);
     await userEvent.type(area, '!');
-    expect(count?.textContent).toBe('3/50');
+    expect(shown(container)).toBe('3/50');
   });
 
   it('past the limit marks invalid and over, and never cuts the text', () => {
@@ -85,7 +90,7 @@ describe('Textarea', () => {
     expect(el.hasAttribute('data-over')).toBe(true);
     expect(el.hasAttribute('data-invalid')).toBe(true);
     expect(area.getAttribute('aria-invalid')).toBe('true');
-    expect(el.querySelector('[data-part="count"]')?.textContent).toBe('8/5');
+    expect(shown(container)).toBe('8/5');
   });
 
   it('announces once when near the limit and once when past it, not on every key', () => {
@@ -120,9 +125,35 @@ describe('Textarea', () => {
 
   it('a controlled value drives the count', () => {
     const { container, rerender } = render(<Textarea aria-label="Notes" limit={10} value="abc" onChange={() => {}} />);
-    expect(root(container).querySelector('[data-part="count"]')?.textContent).toBe('3/10');
+    expect(shown(container)).toBe('3/10');
     rerender(<Textarea aria-label="Notes" limit={10} value="abcdef" onChange={() => {}} />);
-    expect(root(container).querySelector('[data-part="count"]')?.textContent).toBe('6/10');
+    expect(shown(container)).toBe('6/10');
+  });
+
+  it('follows the Field invalid state, and the description and the count both describe it', () => {
+    const { container } = render(
+      <Field label="Brief" description="Up to 50 characters." invalid>
+        <Textarea limit={50} />
+      </Field>,
+    );
+    const area = screen.getByRole('textbox', { name: 'Brief' });
+    expect(area.getAttribute('aria-invalid')).toBe('true');
+    const ids = (area.getAttribute('aria-describedby') ?? '').split(' ');
+    expect(ids).toHaveLength(2);
+    expect(document.getElementById(ids[0] ?? '')?.textContent).toBe('Up to 50 characters.');
+    expect(ids[1]).toBe(root(container).querySelector('[data-part="count"]')?.id);
+  });
+
+  it('a value past the limit on the first render is invalid at once', () => {
+    const { container } = render(<Textarea aria-label="Notes" limit={3} defaultValue="abcdef" />);
+    expect(root(container).hasAttribute('data-over')).toBe(true);
+    expect(screen.getByRole('textbox').getAttribute('aria-invalid')).toBe('true');
+  });
+
+  it('with a small limit an empty value is not near, so the near message is said', () => {
+    const { container } = render(<Textarea aria-label="Code" limit={5} />);
+    act(() => void fireEvent.change(screen.getByRole('textbox'), { target: { value: 'ab' } }));
+    expect(live(container)).toBe('3 characters left');
   });
 
   it('renders the demo with every content case', () => {

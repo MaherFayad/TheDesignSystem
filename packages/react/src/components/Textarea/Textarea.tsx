@@ -76,13 +76,24 @@ function arabicCount(n: number): string {
 }
 
 function arabicMessage(left: number): string {
-  if (left >= 0) return `باقي ${arabicCount(left)}`;
+  if (left === 0) return 'ما باقي ولا حرف';
+  if (left > 0) return `باقي ${arabicCount(left)}`;
   return `زاد ${arabicCount(-left)} عن الحد`;
 }
 
-/** Near the limit: the last tenth, and never fewer than the last 10 characters. */
+/**
+ * Near the limit: the last tenth, and never fewer than the last 10
+ * characters, but an empty value is never near, so a small limit still has
+ * a near message to say.
+ */
 function nearAt(limit: number): number {
-  return Math.max(10, Math.ceil(limit / 10));
+  return Math.min(limit - 1, Math.max(10, Math.ceil(limit / 10)));
+}
+
+/** The count in words, for aria-describedby: "39 of 200 characters". */
+function countWords(length: number, limit: number | undefined, arabic: boolean): string {
+  if (arabic) return limit ? `${length} من ${limit} حرف` : `${length} حرف`;
+  return limit ? `${length} of ${limit} characters` : length === 1 ? '1 character' : `${length} characters`;
 }
 
 type Zone = 'under' | 'near' | 'over';
@@ -127,6 +138,7 @@ export function Textarea({
   ...rest
 }: TextareaProps) {
   const { lang } = useTheme();
+  const arabic = lang.startsWith('ar');
   const [ownLength, setOwnLength] = useState(() => lengthOf(defaultValue));
   const length = value !== undefined ? lengthOf(value) : ownLength;
   const hasLimit = limit !== undefined && limit > 0;
@@ -154,9 +166,9 @@ export function Textarea({
       setAnnouncement('');
       return;
     }
-    const message = countMessage ?? (lang === 'ar' ? arabicMessage : englishMessage);
+    const message = countMessage ?? (arabic ? arabicMessage : englishMessage);
     setAnnouncement(message(limit - length));
-  }, [zone, hasLimit, limit, length, countMessage, lang]);
+  }, [zone, hasLimit, limit, length, countMessage, arabic]);
 
   const inner = useRef<HTMLTextAreaElement | null>(null);
   const setRef = useCallback(
@@ -183,11 +195,15 @@ export function Textarea({
   // Fallback for browsers without field-sizing: measure, between the CSS floor and cap.
   const fit = useCallback(() => {
     const node = inner.current;
-    if (!node || !autoHeight || typeof CSS === 'undefined' || CSS.supports('field-sizing', 'content')) return;
+    if (!node || typeof CSS === 'undefined' || CSS.supports('field-sizing', 'content')) return;
+    if (!autoHeight) {
+      node.style.blockSize = '';
+      return;
+    }
     node.style.blockSize = 'auto';
     node.style.blockSize = `${node.scrollHeight}px`;
   }, [autoHeight]);
-  useLayoutEffect(fit, [fit, value]);
+  useLayoutEffect(fit, [fit, value, rows, maxRows]);
 
   const handleChange = (event: ChangeEvent<HTMLTextAreaElement>) => {
     if (value === undefined) setOwnLength(lengthOf(event.target.value));
@@ -224,9 +240,12 @@ export function Textarea({
       <textarea {...rest} {...control} ref={setRef} rows={rows} value={value} defaultValue={defaultValue} onChange={handleChange} data-part="control" />
       {countShown && (
         <span id={countId} data-part="count">
-          {hasLimit ? `${length}/${limit}` : length}
+          {/* The digits are drawn; the words are read. */}
+          <span aria-hidden="true">{hasLimit ? `${length}/${limit}` : length}</span>
+          <VisuallyHidden.Root>{countWords(length, hasLimit ? limit : undefined, arabic)}</VisuallyHidden.Root>
         </span>
       )}
+      {/* The live region: not an anatomy part, so no data-part. */}
       <VisuallyHidden.Root aria-live="polite" aria-atomic="true">
         {announcement}
       </VisuallyHidden.Root>

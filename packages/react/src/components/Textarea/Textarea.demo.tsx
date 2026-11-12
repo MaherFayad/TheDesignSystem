@@ -63,7 +63,7 @@ export default function TextareaDemo() {
 
       <DemoCase id="long-text" title="One long word" lang="en">
         <div style={{ maxInlineSize: '20rem' }}>
-          <Field label="Tag list">
+          <Field label="Link to the file">
             <Textarea defaultValue={sample.en.word.repeat(3)} />
           </Field>
         </div>
