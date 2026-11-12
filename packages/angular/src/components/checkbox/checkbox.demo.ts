@@ -72,7 +72,7 @@ const settings = [
       </section>
 
       <section data-demo="case" data-demo-case="too-many" heading="A long list in two columns">
-        <div data-demo="grid" style="grid-template-columns: repeat(auto-fill, minmax(14rem, 1fr));">
+        <div data-demo="grid" style="grid-template-columns: repeat(auto-fill, minmax(min(14rem, 100%), 1fr));">
           @for (label of settings; track label; let i = $index) {
             <div dsCheckbox size="sm" [label]="label" [defaultChecked]="i % 3 === 0"></div>
           }

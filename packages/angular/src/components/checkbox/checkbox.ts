@@ -39,6 +39,7 @@ import { NG_VALUE_ACCESSOR, type ControlValueAccessor } from '@angular/forms';
 import { DsIcon } from '@the-system/icons/angular';
 import type { Size, Tone } from '@the-system/shared';
 import { consumeHostAttributes } from '../../internal/host';
+import { DsOrderedStyle, type OrderedStyle } from '../../internal/ordered-style';
 import { DsNativeButton } from '../../internal/native-button';
 import { optionalBoolean } from '../../internal/optional-boolean';
 import { DsFieldContext, fieldControl } from '../field/field-context';
@@ -59,7 +60,7 @@ let nextId = 0;
 @Component({
   selector: 'div[dsCheckbox]',
   exportAs: 'dsCheckbox',
-  imports: [DsIcon, DsNativeButton],
+  imports: [DsIcon, DsNativeButton, DsOrderedStyle],
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [{ provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => DsCheckbox), multi: true }],
   host: {
@@ -89,7 +90,7 @@ let nextId = 0;
       data-part="control"
       (click)="onClick($event)"
       (keydown)="onKeydown($event)"
-      (blur)="onTouched()"><span data-part="indicator" [attr.data-state]="state()" [attr.data-disabled]="isDisabled() ? '' : null">@if (state() === 'checked') {<svg dsIcon name="check" [size]="iconSize()"></svg>} @else if (state() === 'indeterminate') {<svg dsIcon name="minus" [size]="iconSize()"></svg>}</span></button>@if (isFormControl()) {<input #bubble
+      (blur)="onTouched()"><span data-part="indicator" [attr.data-state]="state()" [attr.data-disabled]="isDisabled() ? '' : null"><span aria-hidden="true"><svg dsIcon [name]="glyph()" [size]="iconSize()"></svg></span></span></button>@if (isFormControl()) {<input #bubble
       type="checkbox"
       aria-hidden="true"
       tabindex="-1"
@@ -99,7 +100,7 @@ let nextId = 0;
       [indeterminate]="current() === 'indeterminate'"
       [required]="isRequired()"
       [disabled]="isDisabled()"
-      [style]="bubbleStyle()" />}@if (label() !== undefined) {<label [attr.for]="controlId()" data-part="label">{{ label() }}</label>}@if (description() !== undefined) {<p [id]="descriptionId" data-part="description">{{ description() }}</p>}`,
+      [dsOrderedStyle]="bubbleStyle()" />}@if (label() !== undefined) {<label [attr.for]="controlId()" data-part="label">{{ label() }}</label>}@if (description() !== undefined) {<p [id]="descriptionId" data-part="description">{{ description() }}</p>}`,
 })
 export class DsCheckbox implements ControlValueAccessor {
   /** The box size: sm 12, md 16, lg 24 px. Inside a CheckboxGroup it follows the group. Default md. */
@@ -118,7 +119,9 @@ export class DsCheckbox implements ControlValueAccessor {
   readonly required = input<boolean | undefined, unknown>(undefined, { transform: optionalBoolean });
   /** The checked state. Two way: `[(checked)]`. Left out, the box starts at defaultChecked. */
   readonly checked = model<CheckboxCheckedState | undefined>(undefined);
-  readonly defaultChecked = input<CheckboxCheckedState>(false);
+  readonly defaultChecked = input<CheckboxCheckedState, unknown>(false, {
+    transform: (v: unknown) => (v === 'indeterminate' ? 'indeterminate' : (optionalBoolean(v) ?? false)),
+  });
   /** The value sent with the form when checked. Inside a CheckboxGroup it keys this box and is required. */
   readonly value = input<string | undefined>(undefined);
   readonly name = input<string | undefined>(undefined);
@@ -144,7 +147,7 @@ export class DsCheckbox implements ControlValueAccessor {
   private readonly own = linkedSignal<CheckboxCheckedState>(() => this.checked() ?? this.defaultChecked());
   private readonly formDisabled = signal<boolean | undefined>(undefined);
   protected readonly isFormControl = signal(false);
-  protected readonly bubbleStyle = signal<Record<string, string>>({});
+  protected readonly bubbleStyle = signal<OrderedStyle>([]);
 
   /** In a group a box with a value is keyed by it; a box with no value (select all) is driven by its own inputs. */
   private readonly inGroup = computed(() => this.group !== null && this.value() !== undefined);
@@ -161,7 +164,15 @@ export class DsCheckbox implements ControlValueAccessor {
     return c === 'indeterminate' ? 'mixed' : String(c);
   });
   protected readonly iconSize = computed<CheckboxSize>(() => this.size() ?? this.group?.size() ?? 'md');
-  protected readonly itemName = computed(() => this.name() ?? this.group?.name());
+  // The select all box has no value, so it takes no group name and posts nothing, as React.
+  protected readonly itemName = computed(() => this.name() ?? (this.inGroup() ? this.group?.name() : undefined));
+  // The glyph stays in the box while unchecked, hidden, so the next check can
+  // draw it in (interaction check-draw) and an uncheck can fade it out. It
+  // keeps the last glyph shown, a check before any, as React.
+  protected readonly glyph = linkedSignal<CheckboxState, 'check' | 'minus'>({
+    source: this.state,
+    computation: (state, previous) => (state === 'checked' ? 'check' : state === 'indeterminate' ? 'minus' : (previous?.value ?? 'check')),
+  });
   /** The Field wiring merged with the box's own values and its group, as React's useFieldControl. */
   private readonly fieldState = fieldControl(this.field, () => ({
     id: this.id(),
@@ -214,15 +225,16 @@ export class DsCheckbox implements ControlValueAccessor {
       const button = this.control().nativeElement;
       const form = button.closest('form');
       if (!form) return;
-      this.bubbleStyle.set({
-        position: 'absolute',
-        'pointer-events': 'none',
-        opacity: '0',
-        margin: '0px',
-        width: `${button.offsetWidth}px`,
-        height: `${button.offsetHeight}px`,
-        transform: 'translateX(-100%)',
-      });
+      // The order Radix writes, so the style attribute equals React's.
+      this.bubbleStyle.set([
+        ['position', 'absolute'],
+        ['pointer-events', 'none'],
+        ['opacity', '0'],
+        ['margin', '0px'],
+        ['transform', 'translateX(-100%)'],
+        ['width', `${button.offsetWidth}px`],
+        ['height', `${button.offsetHeight}px`],
+      ]);
       this.isFormControl.set(true);
       const initial = this.own();
       const reset = () => this.own.set(initial);
