@@ -19,6 +19,7 @@ export const routes: DemoRoute[] = [
   { name: 'IconButton', slug: 'icon-button', load: () => import('../../../packages/react/src/components/IconButton/IconButton.demo') },
   { name: 'Input', slug: 'input', load: () => import('../../../packages/react/src/components/Input/Input.demo') },
   { name: 'Link', slug: 'link', load: () => import('../../../packages/react/src/components/Link/Link.demo') },
+  { name: 'Sheet', slug: 'sheet', load: () => import('../../../packages/react/src/components/Sheet/Sheet.demo') },
   { name: 'TitleBar', slug: 'title-bar', load: () => import('../../../packages/react/src/components/TitleBar/TitleBar.demo') },
   { name: 'Toast', slug: 'toast', load: () => import('../../../packages/react/src/components/Toast/Toast.demo') },
   { name: 'Window', slug: 'window', load: () => import('../../../packages/react/src/components/Window/Window.demo') },

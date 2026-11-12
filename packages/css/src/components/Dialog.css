@@ -591,7 +591,7 @@
     block-size: var(--ds-space-2xs);
     padding-block: calc((var(--ds-size-target-min) - var(--ds-space-2xs)) / 2);
     padding-inline: var(--ds-space-xl);
-    border-radius: var(--ds-radius-pill);
+    /* No radius: Chromium paints a clipped background over the whole padding box once a radius is set. */
     background-color: var(--_dialog-handle-color);
     background-clip: content-box;
     cursor: grab;
@@ -713,6 +713,11 @@
 
     [data-ds='sheet'] {
       --_dialog-handle-color: CanvasText;
+    }
+
+    /* The bar keeps its own color: forced colors would paint every background as Canvas. */
+    [data-ds='sheet'] > [data-part='panel'] > [data-part='handle'] {
+      forced-color-adjust: none;
     }
 
     [data-ds='alert-dialog'] {
