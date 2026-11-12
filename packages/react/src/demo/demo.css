@@ -1,0 +1,42 @@
+/*
+ * Demo kit layout. Loaded by the gallery apps only, never shipped with the
+ * component CSS. Tokens only and logical properties, like the system CSS.
+ */
+@layer ds.overrides {
+  [data-demo='page'] {
+    display: grid;
+    gap: var(--ds-space-4xl);
+  }
+
+  [data-demo='case'] {
+    display: grid;
+    gap: var(--ds-space-l);
+    align-content: start;
+  }
+
+  [data-demo='title'] {
+    color: var(--ds-color-text-muted);
+    font-size: var(--ds-font-size-s);
+    font-weight: var(--ds-font-weight-semibold);
+    line-height: var(--ds-font-leading-snug);
+  }
+
+  [data-demo='row'] {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--ds-space-s);
+  }
+
+  [data-demo='label'] {
+    min-inline-size: var(--ds-space-12xl);
+    color: var(--ds-color-text-muted);
+    font-size: var(--ds-font-size-s);
+  }
+
+  [data-demo='grid'] {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(var(--ds-menu-width-min), 1fr));
+    gap: var(--ds-space-s);
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "id": "desk",
+  "name": "Desk",
+  "extends": "base",
+  "status": "stable",
+  "schemes": ["dark", "light"],
+  "proposedSchemes": ["light"],
+  "defaultScheme": "dark",
+  "defaultDensity": "default",
+  "iconSet": "pixel",
+  "motionPreset": "window",
+  "usesGlass": true,
+  "optionalParts": {
+    "window": ["controls", "titlebar"],
+    "dialog": ["controls", "titlebar"]
+  },
+  "fonts": { "sans": "Instrument Sans", "arabic": "IBM Plex Sans Arabic" },
+  "dials": {
+    "base": "black desk with grain, glass at #1f1f1f87",
+    "accent": "same accents, yellow #ffd84d primary",
+    "depth": "glass, 24 and 40px blur, deep shadow",
+    "separation": "free windows, hairline inside",
+    "radius": "shared scale, windows 1rem",
+    "controls": "pill, plus lights and roll labels",
+    "density": "roomy",
+    "type": "Instrument Sans, tracking -0.04em",
+    "icons": "pixel",
+    "chrome": "menu bar, dock, windows",
+    "motion": "windows grow from the trigger",
+    "focus": "2px achromatic ring, doubled on yellow"
+  }
+}

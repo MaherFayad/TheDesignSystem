@@ -1,0 +1,47 @@
+{
+  "name": "Bidi",
+  "kind": "component",
+  "family": "foundations",
+  "summary": "Isolates each Latin run inside Arabic copy, so sentence punctuation stays at the logical end of the line.",
+  "useWhen": [
+    "Arabic copy with a Latin term in it: a product name, a file name, a format such as JSON, a URL",
+    "A sentence that ends right after a Latin word and shows its period on the wrong side"
+  ],
+  "avoidWhen": [
+    "English copy: it comes back unchanged, so the wrapper adds nothing",
+    "Copy with markup inside: Bidi takes plain text only",
+    "A whole paragraph in another language: use a nested Theme with its lang"
+  ],
+  "insteadUse": {
+    "A paragraph in English inside an Arabic screen": "Theme with lang en",
+    "Splitting text without React": "splitLatinRuns from @the-system/shared"
+  },
+  "anatomy": ["root", "run"],
+  "slots": { "root": { "accepts": "text", "min": 1, "max": 1 } },
+  "props": {
+    "children": { "type": "string", "required": true, "description": "The copy, as plain text." },
+    "className": "string"
+  },
+  "a11y": {
+    "focus": "Never focusable. It adds no role.",
+    "notes": [
+      "Each run is a bdi element with dir ltr. A run that opens with neutrals, like ~/.cursor, gets an explicit direction instead of a guess.",
+      "No invisible marks (RLM, LRM, U+202A to U+202E) are typed into strings: the markup sets the direction."
+    ],
+    "native": { "accessibilityRole": "text" }
+  },
+  "content": {
+    "en": { "example": "Export as JSON." },
+    "ar": { "example": "نزله بصيغة JSON وأرسله لفريقك." }
+  },
+  "frameworks": {
+    "react": { "status": "ready", "note": "Lives in packages/react/src/theme/Bidi.tsx. The splitting is splitLatinRuns in @the-system/shared." },
+    "angular": { "status": "planned", "note": "A pipe or a component on splitLatinRuns from @the-system/shared." },
+    "native": { "status": "planned", "note": "Text runs with writingDirection from splitLatinRuns." }
+  },
+  "mistakes": [
+    { "wrong": "Typing an LRM mark after a Latin word in an Arabic string", "right": "<Bidi>{text}</Bidi>, which wraps the run in bdi" },
+    { "wrong": "Wrapping the period in the isolate with the Latin word", "right": "Let Bidi find the run: it never takes trailing punctuation" }
+  ],
+  "since": "0.1.0"
+}

@@ -1,0 +1,104 @@
+/*
+ * The gallery shell. Tokens and logical properties, like the system CSS.
+ * In the overrides layer, so it sits above components and recipes.
+ */
+@layer ds.overrides {
+  [data-gallery='root'] {
+    min-block-size: 100dvh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  [data-gallery='shell'] {
+    position: sticky;
+    inset-block-start: 0;
+    z-index: var(--ds-z-topbar);
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--ds-space-s) var(--ds-space-2xl);
+    padding-block: var(--ds-space-s);
+    padding-inline: var(--ds-space-2xl);
+    border-block-end: var(--ds-border-width-default) solid var(--ds-color-border-default);
+    background-color: var(--ds-color-bg-surface);
+  }
+
+  [data-gallery='nav'] {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--ds-space-l);
+  }
+
+  [data-gallery='current'] {
+    color: var(--ds-color-text-bright);
+    font-weight: var(--ds-font-weight-semibold);
+  }
+
+  [data-gallery='axes'] {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--ds-space-xs) var(--ds-space-l);
+  }
+
+  [data-gallery='axis'] {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--ds-space-2xs);
+    color: var(--ds-color-text-muted);
+    font-size: var(--ds-font-size-s);
+  }
+
+  [data-gallery='axis'] select {
+    min-block-size: var(--ds-size-target-min);
+    padding-inline: var(--ds-space-2xs);
+    border: var(--ds-border-width-default) solid var(--ds-color-border-control);
+    border-radius: var(--ds-radius-sm);
+    background-color: var(--ds-color-bg-surface-2);
+    color: var(--ds-color-text-default);
+  }
+
+  [data-gallery='stage'] {
+    flex: 1;
+    padding: var(--ds-space-4xl) var(--ds-space-2xl);
+  }
+
+  [data-gallery='root'] a {
+    color: var(--ds-color-text-link);
+    text-underline-offset: var(--ds-border-width-strong);
+  }
+
+  [data-gallery='index'],
+  [data-gallery='sink'] {
+    display: grid;
+    gap: var(--ds-space-2xl);
+  }
+
+  [data-gallery='index'] h1,
+  [data-gallery='sink-item'] > h1 {
+    color: var(--ds-color-text-bright);
+    font-size: var(--ds-font-size-4xl);
+    font-weight: var(--ds-font-weight-semibold);
+    line-height: var(--ds-font-leading-tight);
+    letter-spacing: var(--ds-font-tracking-display);
+  }
+
+  [data-gallery='index'] ul {
+    display: grid;
+    gap: var(--ds-space-xs);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  [data-gallery='sink-item'] {
+    display: grid;
+    gap: var(--ds-space-xl);
+    padding-block-end: var(--ds-space-4xl);
+    border-block-end: var(--ds-border-width-default) solid var(--ds-color-border-subtle);
+  }
+
+  [data-gallery='loading'] {
+    color: var(--ds-color-text-muted);
+  }
+}

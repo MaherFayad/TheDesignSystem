@@ -1,0 +1,50 @@
+/*
+ * Reset. Lowest layer: every rule here loses to tokens, base, recipes,
+ * overrides and to any consumer CSS outside the layers.
+ *
+ * Sources: Figma-Killer-2 `src/styles/globals.css` (base reset) and GoBanana
+ * `banana-server/styles/studio-components.css` (header rules). Kept small on
+ * purpose: it removes browser defaults that fight the system and nothing more.
+ * Selectors sit in :where() so they carry no specificity.
+ */
+@layer ds.reset {
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+
+  :where(html) {
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+  }
+
+  :where(body) {
+    margin: 0;
+  }
+
+  /* Spacing comes from layouts and tokens, not from browser margins. */
+  :where(h1, h2, h3, h4, h5, h6, p, figure, blockquote, dl, dd, pre) {
+    margin: 0;
+  }
+
+  :where(h1, h2, h3, h4, h5, h6, p) {
+    overflow-wrap: break-word;
+  }
+
+  :where(img, picture, video, canvas) {
+    display: block;
+    max-inline-size: 100%;
+  }
+
+  /* Controls take the type of the text around them. */
+  :where(input, button, textarea, select) {
+    font: inherit;
+    color: inherit;
+    letter-spacing: inherit;
+  }
+
+  :where(table) {
+    border-collapse: collapse;
+  }
+}

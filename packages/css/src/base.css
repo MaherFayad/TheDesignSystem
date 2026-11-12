@@ -1,0 +1,111 @@
+/*
+ * Base. The rules every themed page shares: the Theme element, Arabic, focus,
+ * reduced motion, selection, scrollbars and Bidi.
+ *
+ * Sources: GoBanana `banana-server/styles/studio-tokens.css` (the :lang(ar)
+ * block and the focus ring) and `studio-components.css` (header rules),
+ * Figma-Killer-2 `src/styles/globals.css` (body, scrollbars, reduced motion).
+ *
+ * Tokens only, logical properties only, no !important. Global rules sit in
+ * :where() so a component rule always wins over them.
+ */
+@layer ds.base {
+  /*
+   * The Theme element: `Theme` in React, `dsTheme` in Angular, or an <html>
+   * stamped with `themeAttributes()`. It paints the body color and sets the
+   * type every child inherits. A nested Theme paints again, so a light island
+   * inside a dark page reads as its own surface.
+   */
+  [data-ds='theme'] {
+    background-color: var(--ds-color-bg-body);
+    color: var(--ds-color-text-default);
+    font-family: var(--ds-font-family-sans);
+    font-size: var(--ds-font-size-m);
+    font-weight: var(--ds-font-weight-regular);
+    line-height: var(--ds-font-leading-normal);
+    letter-spacing: var(--ds-font-tracking-none);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    scrollbar-color: var(--ds-scrollbar-thumb) var(--ds-scrollbar-track);
+  }
+
+  /*
+   * Arabic. IBM Plex Sans Arabic through the arabic family token, zero
+   * tracking, the taller Arabic line heights, and small text one step up.
+   * The tokens are switched here so every component that reads them follows
+   * without an Arabic rule of its own. A Latin island inside Arabic needs a
+   * nested Theme with lang="en", which declares every token again.
+   */
+  :lang(ar) {
+    --ds-font-family-sans: var(--ds-font-family-arabic);
+    --ds-font-family-display: var(--ds-font-family-display-arabic);
+    --ds-font-leading-tight: var(--ds-font-leading-arabic-tight);
+    --ds-font-leading-snug: var(--ds-font-leading-arabic-snug);
+    --ds-font-leading-normal: var(--ds-font-leading-arabic-normal);
+    --ds-font-leading-relaxed: var(--ds-font-leading-arabic-relaxed);
+    --ds-font-leading-display: var(--ds-font-leading-arabic-tight);
+    --ds-font-tracking-caps: var(--ds-font-tracking-none);
+    --ds-font-tracking-eyebrow: var(--ds-font-tracking-none);
+    --ds-font-tracking-display: var(--ds-font-tracking-none);
+    /* Small text one step up. Only s moves: xs and below are keycaps and canvas labels, not Arabic text. */
+    --ds-font-size-s: var(--ds-font-size-m);
+  }
+
+  /* The body text of an Arabic Theme is one step up too. */
+  [data-ds='theme']:lang(ar) {
+    font-size: var(--ds-font-size-l);
+  }
+
+  /* An element that switches to Arabic inside a Latin page picks up the Arabic type. */
+  :where([lang]:lang(ar)) {
+    font-family: var(--ds-font-family-sans);
+    line-height: var(--ds-font-leading-normal);
+    letter-spacing: var(--ds-font-tracking-none);
+  }
+
+  /*
+   * Focus. A 2px ring in the focus ring color, for keyboard focus only
+   * (WCAG 2.4.7 and 1.4.11). An outline, so forced colors mode still draws
+   * it. A component may draw its own ring from the focus tokens instead.
+   */
+  :where(:focus-visible) {
+    outline: var(--ds-border-width-strong) solid var(--ds-color-focus-ring);
+    outline-offset: var(--ds-border-width-strong);
+  }
+
+  /*
+   * Reduced motion. The duration tokens are already 0ms under this query, so
+   * every component that reads them stops moving. This rule catches what is
+   * left: instant is 0ms here, and the universal selector has no specificity.
+   */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: var(--ds-duration-instant);
+      animation-iteration-count: 1;
+      transition-duration: var(--ds-duration-instant);
+      scroll-behavior: auto;
+    }
+  }
+
+  /* Selection: the inverse pair, so selected text reads in every style and scheme. */
+  [data-ds='theme']::selection,
+  [data-ds='theme'] ::selection {
+    background-color: var(--ds-color-bg-inverse);
+    color: var(--ds-color-bg-body);
+  }
+
+  /* Scrollbars: quiet and achromatic. The color is inherited from the Theme element. */
+  :where([data-ds='theme'], [data-ds='theme'] *) {
+    scrollbar-width: thin;
+  }
+
+  /*
+   * Bidi. Each Latin run inside Arabic copy is an isolate, so sentence
+   * punctuation stays at the logical end of the line.
+   */
+  [data-ds='bidi'] > [data-part='run'] {
+    unicode-bidi: isolate;
+  }
+}

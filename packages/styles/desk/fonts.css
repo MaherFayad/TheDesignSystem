@@ -1,0 +1,20 @@
+/*
+ * Desk fonts, self hosted through fontsource. Ported from GoBanana
+ * `banana-server/styles/fonts.css`.
+ *
+ * - Instrument Sans (SIL OFL 1.1): latin and latin-ext subsets, weights 400,
+ *   500, 600 and 700. The menu weight 560 resolves to the nearest face.
+ * - IBM Plex Sans Arabic (SIL OFL 1.1): the Arabic subset only, weights 400,
+ *   500, 600 and 700. Latin runs inside Arabic fall through to Instrument Sans.
+ *
+ * Each file holds only @font-face rules with a unicode range, so a browser
+ * downloads a subset only when a page uses its characters.
+ */
+@import '@fontsource/instrument-sans/400.css';
+@import '@fontsource/instrument-sans/500.css';
+@import '@fontsource/instrument-sans/600.css';
+@import '@fontsource/instrument-sans/700.css';
+@import '@fontsource/ibm-plex-sans-arabic/arabic-400.css';
+@import '@fontsource/ibm-plex-sans-arabic/arabic-500.css';
+@import '@fontsource/ibm-plex-sans-arabic/arabic-600.css';
+@import '@fontsource/ibm-plex-sans-arabic/arabic-700.css';
