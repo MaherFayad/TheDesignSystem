@@ -27,7 +27,7 @@ No adb. No iOS build.
 | 0.9 | Button | ds-component | react | built, review open | 41a178b |
 | 0.10 | Field and Input | ds-component | react | built, review open | 70359cb |
 | 0.11 | Dialog | ds-component | react | open | |
-| 0.12 | Toast | ds-component | react | open | |
+| 0.12 | Toast | ds-component | react | built, review open | ee104cf |
 | 0.13 | Window | ds-component, ds-style | react | open | |
 | 0.14 | Contract suite | ds-qa | react | done | cd05ff1 |
 | 0.15 | Angular proof | ds-angular | angular | open | |
