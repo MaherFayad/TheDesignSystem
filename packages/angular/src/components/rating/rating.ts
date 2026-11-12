@@ -60,20 +60,19 @@ export type RatingSize = Extract<Size, 'sm' | 'md' | 'lg'>;
 export type RatingTone = Extract<Tone, 'accent' | 'warning'>;
 export type RatingMax = 5 | 10;
 
-/** A count in the language: Western digits in Arabic too, as the Arabic copy rules ask. */
-function count(n: number, lang: Lang): string {
-  return lang === 'ar' ? new Intl.NumberFormat('ar-u-nu-latn', { maximumFractionDigits: 1 }).format(n) : String(n);
-}
+/** Arabic for ar and any regional tag (ar-SA), as React. */
+const isArabic = (lang: Lang | undefined) => (lang ?? '').toLowerCase().startsWith('ar');
 
 /** The name of one star: "3 of 5 stars", or "3 من 5 نجوم" in Arabic. */
 export function ratingItemLabel(score: number, max: number, lang: Lang = 'en'): string {
-  return lang === 'ar' ? `${count(score, lang)} من ${count(max, lang)} نجوم` : `${score} of ${max} stars`;
+  // Western digits in both languages, as React and the Arabic copy rules ask.
+  return isArabic(lang) ? `${score} من ${max} نجوم` : `${score} of ${max} stars`;
 }
 
 /** The name of a read only rating: "4.5 of 5 stars", or "Not rated" for 0. Arabic: "4.5 من 5 نجوم", "بدون تقييم". */
 export function ratingValueLabel(value: number, max: number, lang: Lang = 'en'): string {
   if (value > 0) return ratingItemLabel(value, max, lang);
-  return lang === 'ar' ? 'بدون تقييم' : 'Not rated';
+  return isArabic(lang) ? 'بدون تقييم' : 'Not rated';
 }
 
 /** How a star draws for a value: full, half or empty. Rounds to the nearest half. */
