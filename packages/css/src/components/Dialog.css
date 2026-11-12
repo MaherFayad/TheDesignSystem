@@ -64,6 +64,7 @@
     --_dialog-scrim: var(--ds-color-bg-scrim);
     --_dialog-scrim-filter: blur(var(--ds-blur-backdrop));
     --_dialog-enter-y: var(--ds-space-2xs);
+    /* Token gap: no scale token yet (suggested scale.dialog-enter). */
     --_dialog-enter-scale: 0.98;
     --_dialog-duration-in: var(--ds-duration-base);
     --_dialog-duration-out: var(--ds-duration-base);
@@ -99,7 +100,12 @@
     --_dialog-width: var(--ds-dialog-width-2xl);
   }
 
-  /* A danger dialog: the title, the question, in the danger text color (3:1 and more on every surface). */
+  /*
+   * A danger dialog: the title, the question, in the danger text color. It
+   * reaches 4.5:1 on the title band in Studio and on the Desk panel over the
+   * darkest and the brightest page behind the scrim (measured, see the Desk
+   * recipe).
+   */
   [data-ds='dialog'][data-tone='danger'] {
     --_dialog-title-fg: var(--ds-color-state-danger-text);
   }
@@ -153,8 +159,16 @@
     font-family: var(--ds-font-family-sans);
     font-size: var(--ds-font-size-l);
     line-height: var(--ds-font-leading-normal);
-    overflow: clip;
+    /*
+     * The body is the scroller. When it cannot take the overflow (a long
+     * title or description with no body, or a short viewport, 400% zoom
+     * included) the panel scrolls as a whole, so every action stays
+     * reachable (WCAG 1.4.10).
+     */
+    overflow: auto;
+    overscroll-behavior: contain;
   }
+
 
   [data-ds='dialog'] > [data-part='panel'][data-state='open'] {
     animation: ds-dialog-in var(--_dialog-duration-in) var(--_dialog-ease-in);
@@ -209,6 +223,14 @@
   }
 
   /* ------------------------------------------------------------ title bar (Desk) */
+
+  /*
+   * The title bar is a TitleBar (nested component). Like a recipe, the
+   * dialog sets two of its private properties: --_title-bar-fg (the title
+   * color, danger in the danger tone) and reads --_title-bar-font-size (to
+   * line the lights up with the first line of the title). TitleBar.css
+   * declares both; renaming either breaks this file.
+   */
 
   [data-ds='dialog'] > [data-part='panel'] > [data-part='titlebar'] {
     --_title-bar-fg: var(--_dialog-title-fg);
@@ -265,6 +287,19 @@
 
   [data-ds='dialog'] > [data-part='panel'] > [data-part='body'] > :last-child {
     margin-block-end: 0;
+  }
+
+  /*
+   * Short viewports (a phone on its side, 400% zoom): the body stops
+   * scrolling on its own and the whole panel scrolls, title, body and
+   * footer together. The token has no dvh form yet; 100% of the fixed root
+   * follows the visible viewport.
+   */
+  @media (height < 30rem) {
+    [data-ds='dialog'] > [data-part='panel'] > [data-part='body'] {
+      flex: none;
+      overflow: visible;
+    }
   }
 
   /* Running text in the body: one step of space between blocks, whatever the page reset says. */
@@ -361,6 +396,9 @@
   /* Forced colors drop shadows and the scrim: a border draws the panel, the outline draws focus. */
   @media (forced-colors: active) {
     [data-ds='dialog'] {
+      --_dialog-bg: Canvas;
+      --_dialog-backdrop: none;
+      --_dialog-scrim-filter: none;
       --_dialog-border-color: CanvasText;
       --_dialog-divider-color: CanvasText;
     }

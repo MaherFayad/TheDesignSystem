@@ -5,6 +5,10 @@
 export const sizes = ['xs', 'sm', 'md', 'lg'] as const;
 export type Size = (typeof sizes)[number];
 
+/** Overlays (Dialog, Drawer) may add xl and 2xl to the size words. */
+export const overlaySizes = [...sizes, 'xl', '2xl'] as const;
+export type OverlaySize = (typeof overlaySizes)[number];
+
 export const tones = ['neutral', 'accent', 'success', 'warning', 'danger', 'info'] as const;
 export type Tone = (typeof tones)[number];
 

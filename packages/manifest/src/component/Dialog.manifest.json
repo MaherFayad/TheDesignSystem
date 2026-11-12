@@ -96,7 +96,7 @@
     "dismissible": {
       "type": "boolean",
       "default": true,
-      "description": "false: only the dialog's own actions close it. Escape and a backdrop click do nothing and the close control is disabled. Use it while an action runs."
+      "description": "false: only the dialog's own actions close it. Escape and a backdrop click do nothing and the close control is disabled (aria-disabled). For short waits while an action runs: the app sets it back to true when the action ends."
     },
     "title": {
       "type": "node",
@@ -119,6 +119,18 @@
     "rootProps": {
       "type": "object",
       "description": "DialogContent: props for the root layer. className and style go to the root too; ref and every other prop go to the panel, the element with role dialog."
+    },
+    "DialogTrigger": {
+      "type": "node",
+      "description": "One child element, a system Button, rendered as the trigger (always asChild). It opens the dialog, gets aria-haspopup, aria-expanded and aria-controls, and takes focus back on close."
+    },
+    "DialogClose": {
+      "type": "node",
+      "description": "One child element, a system Button, that closes the dialog (always asChild). It is marked data-dialog-cancel: in a danger dialog focus opens on it. Wrap only the Cancel action."
+    },
+    "data-autofocus": {
+      "type": "boolean",
+      "description": "Put on any focusable element inside the dialog to take focus on open, before every other rule of the focus rule."
     }
   },
   "states": [
@@ -127,29 +139,25 @@
   ],
   "a11y": {
     "role": "dialog (the panel), modal: Radix hides the rest of the page from assistive tech and keeps focus inside. Named by the title (aria-labelledby), described by the description (aria-describedby).",
-    "focus": "On open, focus goes to an element marked data-autofocus; else to the first field in the body; else, when tone is danger, to the Cancel action (the DialogClose), never the destructive one; else to the first action in the footer; else to the close control. On close, focus returns to the trigger, or to the element that had focus before the dialog opened.",
+    "focus": "On open, focus goes to an element marked data-autofocus; else to the first field in the body; else to the first footer action that is not tone danger; when tone is danger, to the Cancel action (the DialogClose) or else the first footer action that is not tone danger, never a destructive one; else to the close control. On close, focus returns to the trigger, or to the element that had focus before the dialog opened.",
     "keys": {
-      "Escape": "Closes the dialog, unless dismissible is false. A toast or a nested dialog on top closes first.",
+      "Escape": "Closes the dialog, unless dismissible is false. Escape from inside the dialog closes the dialog even while a toast shows above it. A nested dialog or a menu on top closes first.",
       "Tab": "Moves to the next control inside the dialog and wraps from the last to the first",
       "Shift+Tab": "Moves to the previous control inside the dialog and wraps from the first to the last"
     },
     "announce": "The title and the description are read when the dialog opens. The close control and the Desk lights carry their own labels.",
-    "native": {
-      "accessibilityRole": "none",
-      "accessibilityState": [
-        "expanded"
-      ]
-    },
     "notes": [
       "role dialog in every tone. A danger dialog stays a dialog: AlertDialog arrives in wave 1 for actions that cannot be undone.",
       "The page behind does not scroll while the dialog is open (Radix scroll lock); pinch zoom stays on.",
       "A body taller than dialog.height-max scrolls inside, and joins the tab order while it scrolls so the keyboard can scroll it. The title and the footer stay in view.",
       "A click on the backdrop closes the dialog, unless dismissible is false. The close control is the button path for the same action.",
-      "Toasts sit above an open dialog (z.toast over z.dialog) and stay reachable with F8 and Tab.",
+      "Toasts sit above an open dialog (z.toast over z.dialog): they stay visible, their live region is not hidden from screen readers, and a pointer click on a toast action or close button works without closing the dialog. Keyboard focus stays in the dialog: F8 and Tab do not reach the toasts (DECISIONS.md, Components 1). Toasts with an action or the danger tone never time out, so they are still there when the dialog closes.",
       "A dialog opened from a dialog stacks above it; Escape closes the top one first and focus returns to its trigger in the first.",
       "The long title wraps, never cut: it is the question being asked.",
       "No native title attribute.",
-      "In Desk the title and the close control sit inside the title bar, so they are parts of TitleBar and WindowControls there (a part belongs to the nearest root). The dialog's own parts in Desk are titlebar, description, body and footer; title, close and controls are listed here for Studio and for style.json optionalParts."
+      "In Desk the title and the close control sit inside the title bar, so they are parts of TitleBar and WindowControls there (a part belongs to the nearest root). The dialog's own parts in Desk are titlebar, description, body and footer; title, close and controls are listed here for Studio and for style.json optionalParts.",
+      "dismissible false is for short waits, while the dialog's own action runs. The app must set it back to true when the action ends, success or failure. The close control is aria-disabled and stays focusable (Studio). In Desk the close light is disabled the WindowControls way (out of the tab order) until WindowControls offers a focusable disabled light.",
+      "Development builds warn in the console when a dialog opens with no title, and when its footer holds more than three actions."
     ]
   },
   "content": {

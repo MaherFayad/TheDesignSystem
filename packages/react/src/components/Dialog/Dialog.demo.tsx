@@ -1,5 +1,6 @@
-import { useState, type ReactNode } from 'react';
+import { useRef, useState, type ReactNode } from 'react';
 import { DemoCase, DemoPage, DemoRow, sample } from '../../demo';
+import { Theme } from '../../theme/Theme';
 import { Button } from '../Button';
 import { Field } from '../Field';
 import { Input } from '../Input';
@@ -188,6 +189,162 @@ function NestedDialog() {
   );
 }
 
+/** The primary action fails: the error shows in the dialog, on the field, and focus moves to it. */
+function FailedActionDialog() {
+  const [open, setOpen] = useState(false);
+  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const field = useRef<HTMLInputElement>(null);
+  const save = () => {
+    setSaving(true);
+    setError(null);
+    window.setTimeout(() => {
+      setSaving(false);
+      setError('Another board already has this name. Pick another name.');
+      field.current?.focus();
+    }, 800);
+  };
+  return (
+    <Dialog
+      open={open}
+      onOpenChange={(next) => {
+        setOpen(next);
+        if (!next) setError(null);
+      }}
+      dismissible={!saving}
+    >
+      <DialogTrigger>
+        <Button data-demo-trigger="error">Rename board</Button>
+      </DialogTrigger>
+      <DialogContent title="Rename this board?" description="The new name shows on the board card and in every link.">
+        <DialogBody>
+          <Field label="Board name" error={error ?? undefined}>
+            <Input ref={field} defaultValue="Spring launch" />
+          </Field>
+        </DialogBody>
+        <DialogFooter>
+          <DialogClose>
+            <Button disabled={saving}>Cancel rename</Button>
+          </DialogClose>
+          <Button tone="accent" emphasis="solid" loading={saving} loadingLabel="Saving name" onClick={save}>
+            Rename board
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  );
+}
+
+/** Three actions: the most a footer takes. */
+function ThreeActionsDialog() {
+  return (
+    <Dialog>
+      <DialogTrigger>
+        <Button data-demo-trigger="three-actions">Close the editor</Button>
+      </DialogTrigger>
+      <DialogContent title="Save your changes to Spring launch?" description="Your edits since 10:42 are not saved yet.">
+        <DialogFooter>
+          <DialogClose>
+            <Button tone="danger" emphasis="ghost">
+              Discard changes
+            </Button>
+          </DialogClose>
+          <DialogClose>
+            <Button>Keep editing</Button>
+          </DialogClose>
+          <DialogClose>
+            <Button tone="accent" emphasis="solid">
+              Save changes
+            </Button>
+          </DialogClose>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  );
+}
+
+/** Opened from code: no DialogTrigger. Focus goes back to the button that had it. */
+function ControlledDialog() {
+  const [open, setOpen] = useState(false);
+  return (
+    <>
+      <Button data-demo-trigger="controlled" onClick={() => setOpen(true)}>
+        Check for updates
+      </Button>
+      <Dialog open={open} onOpenChange={setOpen} size="sm">
+        <DialogContent title="Install the new version?" description="Version 2.4 is ready. The app restarts after it installs.">
+          <DialogFooter>
+            <DialogClose>
+              <Button>Install later</Button>
+            </DialogClose>
+            <DialogClose>
+              <Button tone="accent" emphasis="solid">
+                Install update
+              </Button>
+            </DialogClose>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+    </>
+  );
+}
+
+/** data-autofocus: focus opens on the second field, the one marked, not on the first. */
+function AutofocusDialog() {
+  return (
+    <Dialog>
+      <DialogTrigger>
+        <Button data-demo-trigger="autofocus">Add people</Button>
+      </DialogTrigger>
+      <DialogContent title="Add people to Spring launch" description="Search by name or email.">
+        <DialogBody>
+          <div style={{ display: 'grid', gap: 'var(--ds-space-l)' }}>
+            <Field label="Message to the invite">
+              <Input placeholder="Optional" />
+            </Field>
+            <Field label="Name or email">
+              <Input data-autofocus="" type="email" placeholder="name@example.com" />
+            </Field>
+          </div>
+        </DialogBody>
+        <DialogFooter>
+          <DialogClose>
+            <Button>Cancel invite</Button>
+          </DialogClose>
+          <DialogClose>
+            <Button tone="accent" emphasis="solid">
+              Send invite
+            </Button>
+          </DialogClose>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  );
+}
+
+/** An Arabic dialog in the variants row. */
+function ArabicDialog() {
+  return (
+    <Dialog size="sm">
+      <DialogTrigger>
+        <Button data-demo-trigger="arabic">نشر اللوحة</Button>
+      </DialogTrigger>
+      <DialogContent title="تبي تنشر اللوحة؟" description="أي أحد عنده الرابط بيشوف النسخة الجديدة.">
+        <DialogFooter>
+          <DialogClose>
+            <Button>إبقاء المسودة</Button>
+          </DialogClose>
+          <DialogClose>
+            <Button tone="accent" emphasis="solid">
+              نشر اللوحة
+            </Button>
+          </DialogClose>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  );
+}
+
 function Case({ children }: { children: ReactNode }) {
   return <DemoRow>{children}</DemoRow>;
 }
@@ -195,7 +352,10 @@ function Case({ children }: { children: ReactNode }) {
 export default function DialogDemo() {
   return (
     <DemoPage>
-      <DemoCase id="variants" title="Sizes sm to 2xl, tone danger, and a dialog opened from a dialog">
+      <DemoCase
+        id="variants"
+        title="Sizes sm to 2xl, tone danger (focus opens on the cancel action; AlertDialog arrives in wave 1), and a dialog opened from a dialog"
+      >
         <Case>
           {sizes.map((size) => (
             <SizeDialog key={size} size={size} />
@@ -203,6 +363,16 @@ export default function DialogDemo() {
           <DangerDialog trigger="danger" />
           <NestedDialog />
         </Case>
+        <DemoRow label="Three actions, opened from code, data-autofocus">
+          <ThreeActionsDialog />
+          <ControlledDialog />
+          <AutofocusDialog />
+        </DemoRow>
+        <Theme lang="ar" data-demo="content">
+          <DemoRow label="عربي">
+            <ArabicDialog />
+          </DemoRow>
+        </Theme>
       </DemoCase>
 
       <DemoCase id="one" title="One short decision">
@@ -245,7 +415,7 @@ export default function DialogDemo() {
               </DialogBody>
               <DialogFooter>
                 <DialogClose>
-                  <Button>Cancel board</Button>
+                  <Button>Discard board</Button>
                 </DialogClose>
                 <DialogClose>
                   <Button tone="accent" emphasis="solid">
@@ -342,9 +512,9 @@ export default function DialogDemo() {
         </Case>
       </DemoCase>
 
-      <DemoCase id="error" title="Danger: focus opens on the cancel action. AlertDialog arrives in wave 1 for actions that cannot be undone.">
+      <DemoCase id="error" title="Error: the action fails, the message shows on the field and focus moves to it">
         <Case>
-          <DangerDialog trigger="error" />
+          <FailedActionDialog />
         </Case>
       </DemoCase>
 

@@ -1,7 +1,8 @@
 import { act, fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 import { useState, type ReactNode } from 'react';
-import { describe, expect, it } from 'vitest';
+import { cleanup } from '@testing-library/react';
+import { describe, expect, it, vi } from 'vitest';
 import { Theme } from '../../theme/Theme';
 import { Button } from '../Button';
 import { Field } from '../Field';
@@ -27,6 +28,7 @@ proto.setPointerCapture ??= () => undefined;
 proto.releasePointerCapture ??= () => undefined;
 
 const rootEl = () => document.body.querySelector<HTMLElement>('[data-ds="dialog"]');
+const cleanupDialogs = () => cleanup();
 const part = (name: string) => rootEl()?.querySelector<HTMLElement>(`[data-part="${name}"]`) ?? null;
 
 /** A dialog with every part, opened from a trigger. */
@@ -257,6 +259,47 @@ describe('Dialog', () => {
       await waitFor(() => expect(document.activeElement).toBe(screen.getByRole('button', { name: 'Keep project' })));
     });
 
+    it('in a danger dialog with no DialogClose, goes to the first footer action that is not tone danger', async () => {
+      const user = userEvent.setup();
+      render(
+        <Dialog tone="danger">
+          <DialogTrigger>
+            <Button>Open dialog</Button>
+          </DialogTrigger>
+          <DialogContent title="Delete the project?">
+            <DialogFooter>
+              <Button tone="danger" emphasis="solid">
+                Delete project
+              </Button>
+              <Button>Keep project</Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>,
+      );
+      await open(user);
+      await waitFor(() => expect(document.activeElement).toBe(screen.getByRole('button', { name: 'Keep project' })));
+    });
+
+    it('in a danger dialog with only a destructive action, goes to the close control', async () => {
+      const user = userEvent.setup();
+      render(
+        <Dialog tone="danger">
+          <DialogTrigger>
+            <Button>Open dialog</Button>
+          </DialogTrigger>
+          <DialogContent title="Delete the project?">
+            <DialogFooter>
+              <Button tone="danger" emphasis="solid">
+                Delete project
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>,
+      );
+      await open(user);
+      await waitFor(() => expect(document.activeElement).toBe(screen.getByRole('button', { name: 'Close dialog' })));
+    });
+
     it('goes to the close control when there is no field and no action', async () => {
       const user = userEvent.setup();
       render(<Basic footer={false} body={<p>Text only.</p>} />);
@@ -360,6 +403,39 @@ describe('Dialog', () => {
       await waitFor(() => expect(rootEl()).toBeNull());
     });
 
+    it('Desk with no title: no empty heading in the title bar, and a warning in development', async () => {
+      const warn = vi.spyOn(console, 'warn').mockImplementation(() => undefined);
+      render(
+        <Theme style="desk">
+          <Dialog defaultOpen>
+            <DialogContent aria-label="Pick a template">
+              <DialogFooter>
+                <Button>One</Button>
+                <Button>Two</Button>
+                <Button>Three</Button>
+                <Button>Four</Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
+        </Theme>,
+      );
+      await screen.findByRole('dialog');
+      expect(part('titlebar')?.querySelector('h2')).toBeNull();
+      expect(warn.mock.calls.some(([m]) => String(m).includes('four actions') || String(m).includes('4 actions'))).toBe(true);
+      warn.mockClear();
+      cleanupDialogs();
+      render(
+        <Dialog defaultOpen>
+          <DialogContent>
+            <DialogBody>No title here.</DialogBody>
+          </DialogContent>
+        </Dialog>,
+      );
+      await screen.findByRole('dialog');
+      await waitFor(() => expect(warn.mock.calls.some(([m]) => String(m).includes('no title'))).toBe(true));
+      warn.mockRestore();
+    });
+
     it('Desk with dismissible false: the close light is disabled', async () => {
       const user = userEvent.setup();
       render(
@@ -428,7 +504,48 @@ describe('Dialog', () => {
     expect(document.activeElement).toBe(resetTrigger);
   });
 
-  it('keeps a toast reachable above the open dialog', async () => {
+  it('keeps toasts visible, read and clickable above the dialog, while keyboard focus stays in the dialog', async () => {
+    const user = userEvent.setup();
+    const store = createToastStore();
+    const toast = createToastFunction(store);
+    let retried = 0;
+    render(
+      <Theme>
+        <Toaster store={store} />
+        <Basic defaultOpen />
+      </Theme>,
+    );
+    const dialog = await screen.findByRole('dialog');
+    await waitFor(() => expect(dialog.contains(document.activeElement)).toBe(true));
+    act(() => void toast.danger({ title: 'Could not delete project', action: { label: 'Retry delete', onAction: () => (retried += 1) } }));
+    act(() => void toast('Draft saved'));
+    const layer = document.body.querySelector<HTMLElement>('[data-toaster-layer]');
+    // Radix hides the rest of the page from assistive tech, but not the toasts and their live region.
+    expect(document.body.querySelector('[data-aria-hidden="true"]')).not.toBeNull();
+    expect(layer?.hasAttribute('aria-hidden')).toBe(false);
+    expect(layer?.closest('[aria-hidden="true"]')).toBeNull();
+    for (const region of Array.from(document.body.querySelectorAll('[aria-live]'))) {
+      if (region.closest('[data-toaster-layer]')) expect(region.closest('[aria-hidden="true"]')).toBeNull();
+    }
+
+    // A pointer click on a toast action works and does not dismiss the dialog.
+    await user.click(screen.getByRole('button', { name: 'Retry delete' }));
+    expect(retried).toBe(1);
+    expect(screen.getByRole('dialog')).toBe(dialog);
+
+    // So does a click on a toast's close button.
+    const closeButtons = screen.getAllByRole('button', { name: 'Close notification' });
+    await user.click(closeButtons[closeButtons.length - 1] as HTMLElement);
+    expect(store.getSnapshot().visible.some((t) => t.state === 'closed')).toBe(true);
+    expect(screen.getByRole('dialog')).toBe(dialog);
+  });
+
+  // The Toaster still closes the newest toast on this Escape (its OPEN_LAYER
+  // exception). Once it keeps toasts unless focus is inside the toaster, turn
+  // this into a test that the danger toast stays open.
+  it.todo('keeps a persistent danger toast open on an Escape meant for the dialog (needs the Toaster change)');
+
+  it('closes on Escape from inside the dialog while a toast shows above it', async () => {
     const user = userEvent.setup();
     const store = createToastStore();
     const toast = createToastFunction(store);
@@ -440,30 +557,16 @@ describe('Dialog', () => {
     );
     const dialog = await screen.findByRole('dialog');
     await waitFor(() => expect(dialog.contains(document.activeElement)).toBe(true));
-    act(() => void toast.danger({ title: 'Could not delete project', action: { label: 'Retry delete', onAction: () => undefined } }));
-    const layer = document.body.querySelector<HTMLElement>('[data-toaster-layer]');
-    // Radix hides the rest of the page from assistive tech, but not the toasts.
-    expect(document.body.querySelector('[data-aria-hidden="true"]')).not.toBeNull();
-    expect(layer?.hasAttribute('aria-hidden')).toBe(false);
-    expect(layer?.closest('[aria-hidden="true"]')).toBeNull();
-
-    // F8 and focus reach the toast; the dialog's focus trap does not pull focus back.
-    fireEvent.keyDown(document, { key: 'F8', code: 'F8' });
-    expect(document.activeElement?.getAttribute('data-ds')).toBe('toaster');
-    const retry = screen.getByRole('button', { name: 'Retry delete' });
-    act(() => retry.focus());
-    expect(document.activeElement).toBe(retry);
-
-    // The toast's close button works with the pointer; the dialog stays open.
-    await user.click(screen.getByRole('button', { name: 'Close notification' }));
-    expect(store.getSnapshot().visible[0]?.state).toBe('closed');
-    expect(screen.getByRole('dialog')).toBe(dialog);
+    act(() => void toast.danger({ title: 'Could not delete project' }));
+    await user.keyboard('{Escape}');
+    await waitFor(() => expect(rootEl()).toBeNull());
   });
 
   it('renders the demo with a trigger per case', () => {
     const { container } = render(<DialogDemo />);
     const cases = Array.from(container.querySelectorAll('[data-demo-case]')).map((c) => c.getAttribute('data-demo-case'));
     expect(cases).toEqual(['variants', 'one', 'many', 'too-many', 'long-text', 'long-arabic', 'loading', 'error', 'disabled']);
+    expect(container.querySelectorAll('[data-demo-case="variants"] [data-demo-trigger]').length).toBe(11);
     for (const section of Array.from(container.querySelectorAll('[data-demo-case]'))) {
       expect(section.querySelector('[data-demo-trigger]')).not.toBeNull();
     }

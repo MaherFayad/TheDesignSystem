@@ -11,6 +11,12 @@
 // above and reachable on its own (see Toaster.tsx), and Radix stacks nested
 // dialogs.
 //
+// Escape and toasts (DECISIONS.md, Components 1): while a toast shows above
+// the dialog, Radix makes the toast the top layer and gives it Escape. The
+// panel's own keydown handler closes the dialog for an Escape from inside it
+// that no layer prevented. Whether the toast also closes is the Toaster's
+// call (it should keep a toast unless focus is inside the toaster).
+//
 // The DOM, the same in every style except for the optional parts:
 //
 //   <body>
@@ -82,7 +88,7 @@ import {
 } from 'react';
 import { createPortal } from 'react-dom';
 import { Dialog as RadixDialog } from 'radix-ui';
-import type { Size, Tone } from '@the-system/shared';
+import type { OverlaySize, Tone } from '@the-system/shared';
 import { Theme } from '../../theme/Theme';
 import { useOptionalPart, useTheme } from '../../theme/hooks';
 import { IconButton } from '../IconButton';
@@ -91,11 +97,8 @@ import { TitleBar } from '../TitleBar';
 import { WindowControls } from '../WindowControls';
 import { useControllable } from '../Window/useControllable';
 
-/**
- * The anatomy contract lets overlays add xl and 2xl to the size words. The
- * shared `Size` type stops at lg, so the two overlay words are added here.
- */
-export type DialogSize = Extract<Size, 'sm' | 'md' | 'lg'> | 'xl' | '2xl';
+/** Overlay sizes (the anatomy contract adds xl and 2xl for overlays). */
+export type DialogSize = Extract<OverlaySize, 'sm' | 'md' | 'lg' | 'xl' | '2xl'>;
 export type DialogTone = Extract<Tone, 'neutral' | 'danger'>;
 
 /** The built in labels, per language. A prop always wins. */
@@ -365,10 +368,22 @@ function first(scope: Element | null, selector: string, enabledOnly = false): HT
 
 /**
  * The focus rule (manifest a11y.focus): an element marked data-autofocus;
- * else the first field in the body; else, in a danger dialog, the Cancel
- * action (DialogClose); else the first footer action; else the close
- * control. Null leaves it to Radix (the first tab stop, or the panel).
+ * else the first field in the body; else the first footer action that is
+ * not tone danger, and in a danger dialog the Cancel action (DialogClose)
+ * first and never a tone danger action; else the close control. Null leaves it to Radix (the first tab stop, or the panel).
  */
+/** Development only: says what a dialog is missing when it opens. */
+function warnInDev(panel: HTMLElement): void {
+  if (process.env.NODE_ENV === 'production') return;
+  const named =
+    panel.hasAttribute('aria-label') ||
+    panel.querySelector('[data-part="title"]:not(:empty), [data-dialog-title]:not(:empty)') !== null;
+  if (!named) console.warn('Dialog: opened with no title. Add a DialogTitle as a direct child of DialogContent, or the title prop.');
+  const footer = Array.from(panel.querySelectorAll('[data-part="footer"]')).find((el) => el.closest('[data-part="panel"]') === panel);
+  const actions = footer ? footer.querySelectorAll(ACTION).length : 0;
+  if (actions > 3) console.warn(`Dialog: the footer holds ${actions} actions. Keep it to three at most.`);
+}
+
 function initialFocus(panel: HTMLElement, tone: DialogTone): HTMLElement | null {
   const mine = (el: Element | null) => el !== null && el.closest('[data-part="panel"]') === panel;
   const marked = first(panel, '[data-autofocus]');
@@ -376,13 +391,17 @@ function initialFocus(panel: HTMLElement, tone: DialogTone): HTMLElement | null 
   const body = Array.from(panel.querySelectorAll('[data-part="body"]')).find(mine) ?? null;
   const field = first(body, FIELD);
   if (field) return field;
-  if (tone === 'danger') {
-    const cancel = first(panel, '[data-dialog-cancel]');
-    if (cancel) return cancel;
-  }
   const footer = Array.from(panel.querySelectorAll('[data-part="footer"]')).find(mine) ?? null;
-  const action = first(footer, ACTION, true) ?? first(footer, ACTION);
-  if (action) return action;
+  // Never a destructive action first: footer actions with tone danger are skipped.
+  const safe = first(footer, `:is(${ACTION}):not([data-tone="danger"])`, true);
+  if (tone === 'danger') {
+    // The Cancel action, else a footer action that is not tone danger.
+    const cancel = first(panel, '[data-dialog-cancel]') ?? safe;
+    if (cancel) return cancel;
+  } else {
+    const action = safe ?? first(footer, ACTION, true) ?? first(footer, ACTION);
+    if (action) return action;
+  }
   const close = Array.from(panel.querySelectorAll<HTMLElement>('[data-part="close"]')).find(usable);
   return close ?? null;
 }
@@ -479,7 +498,8 @@ export function DialogContent({
   const header = titlebarOn ? (
     <TitleBar
       data-part="titlebar"
-      as="h2"
+      // No title in the bar (none given, or a DialogTitle nested deeper): no empty heading.
+      as={titleNode ? 'h2' : 'div'}
       title={<TitleSlotContext value="titlebar">{titleNode}</TitleSlotContext>}
       controls={
         controlsOn ? (
@@ -529,6 +549,7 @@ export function DialogContent({
           data-part="panel"
           onOpenAutoFocus={(event) => {
             onOpenAutoFocus?.(event);
+            if (panelRef.current) warnInDev(panelRef.current);
             if (event.defaultPrevented || !panelRef.current) return;
             const target = initialFocus(panelRef.current, ctx.tone);
             if (!target) return;
@@ -548,6 +569,19 @@ export function DialogContent({
           onEscapeKeyDown={(event) => {
             onEscapeKeyDown?.(event);
             if (!ctx.dismissible) event.preventDefault();
+          }}
+          onKeyDown={(event) => {
+            rest.onKeyDown?.(event);
+            // Radix gives Escape to the top layer only. While a toast shows above
+            // the dialog, the toast is that layer and the dialog never hears the
+            // key. An Escape from inside the dialog that no layer took (none
+            // prevented it) still closes the dialog. When the dialog is the top
+            // layer, Radix has already handled and prevented it.
+            if (event.key !== 'Escape' || event.defaultPrevented || event.nativeEvent.defaultPrevented) return;
+            if (!ctx.dismissible) return;
+            if (!panelRef.current?.contains(event.target as Node)) return;
+            event.preventDefault();
+            ctx.setOpen(false);
           }}
           // Working with a toast above the dialog never closes it, and focus may move into the toasts.
           onPointerDownOutside={(event) => {
