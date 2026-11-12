@@ -82,6 +82,20 @@ const ids = {
       await page.mouse.move(b.x + b.width / 2 + sgn * 20, b.y + b.height / 2, { steps: 3 });
       await page.mouse.up();
     },
+    rapidSel: '[data-interaction-trigger]',
+    // Past the threshold: the toast leaves in the swipe direction.
+    extraAct: async (page) => {
+      await page.click('[data-interaction-trigger]');
+      await page.waitForTimeout(600);
+      const t = page.locator("[data-ds='toast']").first();
+      const b = await t.boundingBox();
+      const dir = await page.evaluate(() => document.documentElement.dir || getComputedStyle(document.body).direction);
+      const sgn = dir === 'rtl' ? -1 : 1;
+      await page.mouse.move(b.x + b.width / 2, b.y + b.height / 2);
+      await page.mouse.down();
+      await page.mouse.move(b.x + b.width / 2 + sgn * 160, b.y + b.height / 2, { steps: 6 });
+      await page.mouse.up();
+    },
   },
   'notification-change': { family: 'feedback', act: click(), rapidSel: '[data-interaction-trigger]', reverseSel: 'button:has-text("Remove the newest")' },
   'progress-spring': { family: 'feedback', act: click(), rapidSel: '[data-interaction-trigger]' },
