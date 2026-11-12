@@ -91,6 +91,11 @@
     padding-inline-end: var(--ds-space-4xs);
   }
 
+  /* An xs removable chip grows by its two borders, so the 24px remove button fits inside it. */
+  [data-ds='chip'][data-removable][data-size='xs'] {
+    --_chip-height: calc(var(--ds-size-control-xs) + 2 * var(--ds-border-width-default));
+  }
+
   [data-ds='chip'] > [data-ds='icon-button'][data-part='remove'] {
     --_button-bg: transparent;
     --_button-fg: var(--_chip-fg);
@@ -272,6 +277,12 @@
     }
 
     button[data-ds='chip'][data-disabled] {
+      color: GrayText;
+    }
+
+    button[data-ds='chip'][data-selected][data-disabled] {
+      border-color: GrayText;
+      background-color: Canvas;
       color: GrayText;
     }
   }

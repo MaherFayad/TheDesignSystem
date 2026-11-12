@@ -45,7 +45,7 @@ interface ChipCommonProps {
   emphasis?: ChipEmphasis;
   /** Always a pill. Default pill. */
   shape?: ChipShape;
-  /** Leading content in the icon part: a system icon name or a node. A selected chip shows a check here when start is not set. */
+  /** Leading content in the icon part: a system icon name or a node. A selected chip shows a check here in its place. */
   start?: IconName | ReactElement;
   /** Blocks pressing and removing. The chip stays focusable (aria-disabled). Default false. */
   disabled?: boolean;
@@ -66,7 +66,7 @@ export interface ChipRemovableProps
     Omit<HTMLAttributes<HTMLSpanElement>, 'title' | 'children' | 'onClick'> {
   /** Makes the chip removable: the remove button, Delete or Backspace on it, calls this. Move focus after removing. */
   onRemove: (event: MouseEvent<HTMLButtonElement> | KeyboardEvent<HTMLButtonElement>) => void;
-  /** The name of the remove button. Default "Remove <label>" when the label is text. Arabic: pass it. */
+  /** The name of the remove button. Default "Remove <label>" when the label is text. Pass it when the label is not plain text, and in Arabic. */
   removeLabel?: string;
   selected?: undefined;
   onClick?: undefined;
@@ -75,8 +75,8 @@ export interface ChipRemovableProps
 
 export type ChipProps = ChipPressableProps | ChipRemovableProps;
 
-function renderIcon(icon: IconName | ReactElement): ReactNode {
-  return typeof icon === 'string' ? <Icon name={icon} size="md" /> : icon;
+function renderIcon(icon: IconName | ReactElement, size: ChipSize): ReactNode {
+  return typeof icon === 'string' ? <Icon name={icon} size={size === 'xs' ? 'sm' : 'md'} /> : icon;
 }
 
 /**
@@ -103,7 +103,8 @@ function PressableChip({
   ref,
   ...rest
 }: ChipPressableProps) {
-  const lead = start ?? (selected ? 'check' : undefined);
+  // Selected always shows the check, in place of start, so selected never rests on the fill color alone.
+  const lead = selected ? 'check' : start;
   return (
     <ButtonRoot
       {...rest}
@@ -115,7 +116,7 @@ function PressableChip({
       size={size}
       tone={tone}
       emphasis={emphasis}
-      shape={shape as 'pill'}
+      shape={shape}
       disabled={disabled}
       aria-pressed={selected}
       data-selected={selected ? '' : undefined}
@@ -123,7 +124,7 @@ function PressableChip({
         <>
           {lead !== undefined && (
             <span data-part="icon" aria-hidden="true">
-              {renderIcon(lead)}
+              {renderIcon(lead, size)}
             </span>
           )}
           <span data-part="label">{content}</span>
@@ -165,7 +166,7 @@ function RemovableChip({
     >
       {start !== undefined && (
         <span data-part="icon" aria-hidden="true">
-          {renderIcon(start)}
+          {renderIcon(start, size)}
         </span>
       )}
       <span data-part="label">{children}</span>

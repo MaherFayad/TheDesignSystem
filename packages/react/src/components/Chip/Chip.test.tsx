@@ -63,6 +63,18 @@ describe('Chip', () => {
     expect(off.querySelector('[data-part="icon"]')).toBeNull();
   });
 
+  it('selected shows the check in place of start', () => {
+    const el = root(
+      render(
+        <Chip selected start="image" onClick={() => undefined}>
+          Images
+        </Chip>,
+      ).container,
+    );
+    expect(el.querySelector('[data-part="icon"] [data-icon="check"]')).not.toBeNull();
+    expect(el.querySelector('[data-icon="image"]')).toBeNull();
+  });
+
   it('disabled stays focusable and blocks pressing', async () => {
     const user = userEvent.setup();
     const onClick = vi.fn();

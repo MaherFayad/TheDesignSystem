@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useLayoutEffect, useRef, useState } from 'react';
 import { DemoCase, DemoPage, DemoRow } from '../../demo';
 import { Chip, type ChipEmphasis, type ChipSize, type ChipTone } from './index';
 
@@ -21,7 +21,7 @@ const toneLabelAr: Record<ChipTone, string> = {
   accent: 'مشاركة معي',
   success: 'منشورة',
   warning: 'تحتاج مراجعة',
-  danger: 'فشلت',
+  danger: 'فاشلة',
   info: 'تجريبي',
 };
 
@@ -60,14 +60,19 @@ function FilterBar({ labels, lang }: { labels: readonly string[]; lang?: 'ar' })
  */
 function RemovableList({ labels, removeWord, resetLabel }: { labels: readonly string[]; removeWord: string; resetLabel: string }) {
   const [items, setItems] = useState<string[]>([...labels]);
+  // The index of the chip just removed, so focus moves after the render that removed it.
+  const [removed, setRemoved] = useState<number | null>(null);
   const rowRef = useRef<HTMLDivElement>(null);
+  useLayoutEffect(() => {
+    if (removed === null) return;
+    const buttons = rowRef.current?.querySelectorAll<HTMLElement>('[data-part="remove"]');
+    const target = buttons && buttons.length > 0 ? buttons[Math.min(removed, buttons.length - 1)] : undefined;
+    (target ?? rowRef.current?.querySelector<HTMLElement>('[data-demo-reset]'))?.focus();
+    setRemoved(null);
+  }, [removed]);
   const remove = (index: number) => {
     setItems((prev) => prev.filter((_, i) => i !== index));
-    requestAnimationFrame(() => {
-      const buttons = rowRef.current?.querySelectorAll<HTMLElement>('[data-part="remove"]');
-      const target = buttons?.[Math.min(index, (buttons?.length ?? 1) - 1)];
-      (target ?? rowRef.current?.querySelector<HTMLElement>('[data-demo-reset]'))?.focus();
-    });
+    setRemoved(index);
   };
   return (
     <div ref={rowRef}>
@@ -141,14 +146,16 @@ export default function ChipDemo() {
       </DemoCase>
 
       <DemoCase id="too-many" title="Too many: the row wraps">
-        <FilterBar labels={filters} />
+        <div style={{ maxInlineSize: '24rem' }}>
+          <FilterBar labels={filters} />
+        </div>
       </DemoCase>
 
       <DemoCase id="long-text" title="Long text: the label ends in an ellipsis">
         <div style={{ maxInlineSize: '16rem' }}>
           <DemoRow>
             <Chip onClick={() => undefined}>Every file shared with the design team this quarter</Chip>
-            <Chip onRemove={() => undefined} removeLabel="Remove filter Every file shared with the design team">
+            <Chip onRemove={() => undefined} removeLabel="Remove filter every file shared with the design team this quarter">
               Every file shared with the design team this quarter
             </Chip>
           </DemoRow>
@@ -158,7 +165,7 @@ export default function ChipDemo() {
       <DemoCase id="long-arabic" title="Long Arabic text" lang="ar">
         <FilterBar labels={filtersAr} lang="ar" />
         <div style={{ maxInlineSize: '16rem' }}>
-          <Chip onRemove={() => undefined} removeLabel="إزالة فلتر كل الملفات المشاركة مع فريق التصميم">
+          <Chip onRemove={() => undefined} removeLabel="إزالة فلتر كل الملفات المشاركة مع فريق التصميم هالربع">
             كل الملفات المشاركة مع فريق التصميم هالربع
           </Chip>
         </div>
