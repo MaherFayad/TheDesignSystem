@@ -33,6 +33,7 @@ export * from './components/ProgressCircle/index';
 export * from './components/ResizablePanels/index';
 export * from './components/ScrollArea/index';
 export * from './components/Section/index';
+export * from './components/SegmentedControl/index';
 export * from './components/Separator/index';
 export * from './components/Skeleton/index';
 export * from './components/Spinner/index';

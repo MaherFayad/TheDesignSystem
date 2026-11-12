@@ -1,0 +1,190 @@
+/*
+ * SegmentedControl: a track of two to five items with a thumb under the
+ * selected one. Source: Figma-Killer-2 `SegmentedControl.module.css` and
+ * `RangeTabs` (an overlay track, a hairline, a small inset, the selected
+ * segment a stronger overlay). Follows "One convention for component CSS and
+ * props" in docs/contracts/anatomy.md.
+ *
+ * Private properties on the root (recipes override these):
+ *
+ *   --_segmented-control-height        the whole control, from size.control
+ *   --_segmented-control-inset         the space between the track and the items
+ *   --_segmented-control-gap           the space between items
+ *   --_segmented-control-radius        the track corners, from the shape (pill at rest)
+ *   --_segmented-control-bg            the track fill
+ *   --_segmented-control-border-color  the track hairline
+ *   --_segmented-control-thumb-bg      the indicator fill
+ *   --_segmented-control-thumb-shadow  the indicator lift
+ *
+ * The indicator reads four more, written by the component from the measured
+ * frame of the selected item: --_segmented-control-indicator-start, -top,
+ * -inline-size and -block-size. They are logical, so RTL needs nothing.
+ *
+ * The items are ToggleButton roots carrying data-part="item" (Button.css).
+ * As their parent, this file sets Button's private properties: the item
+ * height fits inside the track, the corners nest in the track's, the fill is
+ * the ghost fill (no fill at rest) because the thumb draws the selection,
+ * and the selected text is the bright text. Only the indicator moves, with
+ * transform, through the `tab-indicator` pattern; it jumps under reduced
+ * motion.
+ */
+@layer ds.base {
+  [data-ds='segmented-control'] {
+    --_segmented-control-height: var(--ds-size-control-md);
+    --_segmented-control-inset: var(--ds-space-4xs);
+    --_segmented-control-gap: var(--ds-space-4xs);
+    --_segmented-control-radius: var(--ds-radius-pill);
+    --_segmented-control-bg: var(--ds-color-bg-overlay-5);
+    --_segmented-control-border-color: var(--ds-color-border-default);
+    --_segmented-control-thumb-bg: var(--ds-color-bg-overlay-20);
+    --_segmented-control-thumb-shadow: 0 0 transparent;
+    --_segmented-control-item-height: calc(
+      var(--_segmented-control-height) - 2 * (var(--_segmented-control-inset) + var(--ds-border-width-default))
+    );
+    --_segmented-control-item-radius: max(
+      0px,
+      calc(var(--_segmented-control-radius) - var(--_segmented-control-inset) - var(--ds-border-width-default))
+    );
+
+    position: relative;
+    display: inline-flex;
+    align-items: stretch;
+    gap: var(--_segmented-control-gap);
+    box-sizing: border-box;
+    max-inline-size: 100%;
+    padding: var(--_segmented-control-inset);
+    border: var(--ds-border-width-default) solid var(--_segmented-control-border-color);
+    border-radius: var(--_segmented-control-radius);
+    background-color: var(--_segmented-control-bg);
+    vertical-align: middle;
+  }
+
+  /* ------------------------------------------------------------ sizes */
+
+  [data-ds='segmented-control'][data-size='xs'] {
+    --_segmented-control-height: var(--ds-size-control-xs);
+  }
+
+  [data-ds='segmented-control'][data-size='sm'] {
+    --_segmented-control-height: var(--ds-size-control-sm);
+  }
+
+  [data-ds='segmented-control'][data-size='lg'] {
+    --_segmented-control-height: var(--ds-size-control-lg);
+  }
+
+  /* ------------------------------------------------------------ shapes */
+
+  [data-ds='segmented-control'][data-shape='default'] {
+    --_segmented-control-radius: var(--ds-radius-control);
+  }
+
+  [data-ds='segmented-control'][data-shape='square'] {
+    --_segmented-control-radius: var(--ds-radius-sm);
+  }
+
+  /* ------------------------------------------------------------ full width */
+
+  [data-ds='segmented-control'][data-full-width] {
+    display: flex;
+    inline-size: 100%;
+  }
+
+  [data-ds='segmented-control'][data-full-width] > [data-part='item'] {
+    flex: 1 1 0;
+  }
+
+  /* ------------------------------------------------------------ indicator: the thumb */
+
+  /* The first child, so the items (positioned by Button.css) paint over it in DOM order. */
+
+  /* The component writes the measured frame inline on the element, over these rest values. */
+  [data-ds='segmented-control'] > [data-part='indicator'] {
+    --_segmented-control-indicator-start: 0px;
+    --_segmented-control-indicator-top: 0px;
+    --_segmented-control-indicator-inline-size: 0px;
+    --_segmented-control-indicator-block-size: 0px;
+
+    position: absolute;
+    inset-inline-start: var(--_segmented-control-indicator-start);
+    inset-block-start: var(--_segmented-control-indicator-top);
+    box-sizing: border-box;
+    inline-size: var(--_segmented-control-indicator-inline-size);
+    block-size: var(--_segmented-control-indicator-block-size);
+    border-radius: var(--_segmented-control-item-radius);
+    background-color: var(--_segmented-control-thumb-bg);
+    box-shadow: var(--_segmented-control-thumb-shadow);
+    pointer-events: none;
+  }
+
+  /* ------------------------------------------------------------ items: Button's private properties */
+
+  /*
+   * [data-ds='toggle-button'] lifts these rules over Button.css's axis and
+   * on state rules. Items are ghost: no fill at rest, a veil fill on hover.
+   */
+  [data-ds='segmented-control'] > [data-ds='toggle-button'][data-part='item'] {
+    --_button-height: var(--_segmented-control-item-height);
+    --_button-radius: var(--_segmented-control-item-radius);
+    --_button-padding-inline: var(--ds-space-l);
+
+    min-inline-size: 0;
+  }
+
+  [data-ds='segmented-control']:is([data-size='xs'], [data-size='sm']) > [data-ds='toggle-button'][data-part='item'] {
+    --_button-padding-inline: var(--ds-space-s);
+  }
+
+  [data-ds='segmented-control'][data-size='lg'] > [data-ds='toggle-button'][data-part='item'] {
+    --_button-padding-inline: var(--ds-space-xl);
+  }
+
+  /* An icon only item stays square. */
+  [data-ds='segmented-control'] > [data-ds='toggle-button'][data-part='item']:has(> [data-part='icon']) {
+    --_button-padding-inline: 0;
+
+    inline-size: max(var(--_button-height), var(--ds-size-target-min));
+  }
+
+  /* Selected: the thumb draws the fill, so the item stays clear; the text is bright and the ring of ToggleButton goes. */
+  [data-ds='segmented-control'] > [data-ds='toggle-button'][data-part='item'][data-state='on'] {
+    --_button-bg: transparent;
+    --_button-bg-hover: transparent;
+    --_button-bg-active: transparent;
+    --_button-fg: var(--ds-color-text-bright);
+    --_button-fg-hover: var(--ds-color-text-bright);
+    --_button-fg-active: var(--ds-color-text-bright);
+    --_button-shadow: 0 0 transparent;
+  }
+
+  /* ------------------------------------------------------------ disabled */
+
+  /* The items dim themselves (Button.css); the track and the thumb dim with them. */
+  [data-ds='segmented-control'][data-disabled] > [data-part='indicator'] {
+    opacity: var(--ds-opacity-disabled);
+  }
+
+  /* ------------------------------------------------------------ reduced motion, forced colors */
+
+  /* The thumb moves only through the motion catalog, which plays no motion under reduced motion. Nothing else animates here. */
+  @media (prefers-reduced-motion: reduce) {
+    [data-ds='segmented-control'] > [data-part='indicator'] {
+      transition: none;
+    }
+  }
+
+  /*
+   * Forced colors drop the fills. The selected item is Highlight with
+   * HighlightText (the ToggleButton rule in Button.css); the thumb hides so
+   * it does not paint a box of its own, and the track keeps its border.
+   */
+  @media (forced-colors: active) {
+    [data-ds='segmented-control'] > [data-part='indicator'] {
+      visibility: hidden;
+    }
+
+    [data-ds='segmented-control'] {
+      border-color: CanvasText;
+    }
+  }
+}

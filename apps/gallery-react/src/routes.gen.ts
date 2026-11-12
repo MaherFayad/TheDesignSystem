@@ -41,6 +41,7 @@ export const routes: DemoRoute[] = [
   { name: 'ResizablePanels', slug: 'resizable-panels', load: () => import('../../../packages/react/src/components/ResizablePanels/ResizablePanels.demo') },
   { name: 'ScrollArea', slug: 'scroll-area', load: () => import('../../../packages/react/src/components/ScrollArea/ScrollArea.demo') },
   { name: 'Section', slug: 'section', load: () => import('../../../packages/react/src/components/Section/Section.demo') },
+  { name: 'SegmentedControl', slug: 'segmented-control', load: () => import('../../../packages/react/src/components/SegmentedControl/SegmentedControl.demo') },
   { name: 'Separator', slug: 'separator', load: () => import('../../../packages/react/src/components/Separator/Separator.demo') },
   { name: 'Skeleton', slug: 'skeleton', load: () => import('../../../packages/react/src/components/Skeleton/Skeleton.demo') },
   { name: 'Spinner', slug: 'spinner', load: () => import('../../../packages/react/src/components/Spinner/Spinner.demo') },
