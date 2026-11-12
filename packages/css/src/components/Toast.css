@@ -1,0 +1,304 @@
+/*
+ * Toast and the toaster (the viewport the toasts sit in). Sources: GoBanana
+ * `.st-toast-stack` and `.st-toast` in studio-components.css, Figma-Killer-2
+ * `ui/components/Toast/Toast.module.css`.
+ *
+ * Private plumbing (docs/contracts/anatomy.md, one convention): local
+ * --_toast-* properties on the root. Each defaults to a semantic token, the
+ * tones and states only swap them, and a style recipe overrides them by
+ * declaring the same name (packages/styles/<id>/recipes/Toast.css).
+ *
+ *   --_toast-bg, -fg, -border-color  the card
+ *   --_toast-edge                the inline start edge, in the tone color
+ *   --_toast-icon                the icon color
+ *   --_toast-radius, -shadow, -blur
+ *   --_toast-enter-y             how far a toast travels in, toward its edge
+ *
+ * Motion is CSS only: data-state open plays ds-toast-in, closed plays
+ * ds-toast-out, transform and opacity only. Radix keeps the toast mounted
+ * until the exit animation ends. Under reduced motion every toast animation
+ * is none, so Radix unmounts a closed toast at once and never waits for an
+ * animationend that a 0ms animation might not send.
+ *
+ * Swipe to dismiss moves the toast with the pointer through the Radix
+ * variables --radix-toast-swipe-move-x and -y, and --radix-toast-swipe-end-x
+ * and -y for the exit. They are not tokens: Radix sets them on the element.
+ * The close button is the button path for the same action (WCAG 2.5.7).
+ */
+@layer ds.base {
+  /* ------------------------------------------------------------ portal layer */
+
+  /*
+   * The Theme the Toaster renders at the top of its portal, so the toasts
+   * read the tokens of the Theme the Toaster is mounted in. It draws no box.
+   */
+  [data-ds='theme'][data-toaster-layer] {
+    display: contents;
+  }
+
+  /* ------------------------------------------------------------ toaster */
+
+  [data-ds='toaster'] {
+    --_toaster-inset-block-end: calc(var(--ds-toast-inset) + env(safe-area-inset-bottom, 0px));
+    --_toaster-inset-block-start: calc(var(--ds-toast-inset) + env(safe-area-inset-top, 0px));
+    --_toaster-inset-inline: calc(var(--ds-toast-inset) + max(env(safe-area-inset-left, 0px), env(safe-area-inset-right, 0px)));
+
+    position: fixed;
+    z-index: var(--ds-z-toast);
+    display: flex;
+    flex-direction: column;
+    gap: var(--ds-space-s);
+    box-sizing: border-box;
+    /* Fixed, so 100% is the viewport width. */
+    inline-size: min(var(--ds-toast-width-max), calc(100% - 2 * var(--_toaster-inset-inline)));
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    /* The gaps between toasts do not block the page; the toasts take the pointer. */
+    pointer-events: none;
+  }
+
+  [data-ds='toaster'][data-position='bottom-end'] {
+    inset-block-end: var(--_toaster-inset-block-end);
+    inset-inline-end: var(--_toaster-inset-inline);
+  }
+
+  [data-ds='toaster'][data-position='bottom-center'] {
+    inset-block-end: var(--_toaster-inset-block-end);
+    inset-inline: 0;
+    margin-inline: auto;
+  }
+
+  /* At the top the newest toast is first, nearest the edge. */
+  [data-ds='toaster'][data-position='top-end'] {
+    flex-direction: column-reverse;
+    inset-block-start: var(--_toaster-inset-block-start);
+    inset-inline-end: var(--_toaster-inset-inline);
+  }
+
+  [data-ds='toaster'][data-position='top-center'] {
+    flex-direction: column-reverse;
+    inset-block-start: var(--_toaster-inset-block-start);
+    inset-inline: 0;
+    margin-inline: auto;
+  }
+
+  /* ------------------------------------------------------------ toast */
+
+  [data-ds='toast'] {
+    --_toast-bg: var(--ds-color-bg-surface);
+    --_toast-fg: var(--ds-color-text-default);
+    --_toast-border-color: var(--ds-color-bg-overlay-10);
+    --_toast-edge: var(--ds-color-text-subtle);
+    --_toast-icon: var(--ds-color-text-muted);
+    --_toast-radius: var(--ds-radius-panel);
+    --_toast-shadow: var(--ds-elevation-panel);
+    --_toast-blur: var(--ds-blur-panel);
+    --_toast-enter-y: var(--ds-space-xs);
+
+    display: grid;
+    grid-template-columns: var(--ds-size-icon-md) minmax(0, 1fr) auto;
+    grid-template-areas:
+      'icon title close'
+      'icon description close'
+      'icon action close';
+    grid-template-rows: auto auto auto;
+    align-items: start;
+    column-gap: var(--ds-space-m);
+    box-sizing: border-box;
+    inline-size: 100%;
+    max-inline-size: var(--ds-toast-width-max);
+    margin: 0;
+    padding-block: var(--ds-space-m);
+    padding-inline: var(--ds-space-l) var(--ds-space-m);
+    border: var(--ds-border-width-default) solid var(--_toast-border-color);
+    border-inline-start: var(--ds-border-width-strong) solid var(--_toast-edge);
+    border-radius: var(--_toast-radius);
+    background-color: var(--_toast-bg);
+    box-shadow: var(--_toast-shadow);
+    backdrop-filter: blur(var(--_toast-blur));
+    color: var(--_toast-fg);
+    font-family: var(--ds-font-family-sans);
+    font-size: var(--ds-font-size-s);
+    line-height: var(--ds-font-leading-snug);
+    pointer-events: auto;
+    overflow-wrap: anywhere;
+  }
+
+  /* Inside a toaster: the enter, and the focus ring of the toast itself (Radix makes it a tab stop). */
+  [data-ds='toaster'] > [data-ds='toast'][data-state='open'] {
+    animation: ds-toast-in var(--ds-duration-medium) var(--ds-ease-out);
+  }
+
+  [data-ds='toaster'] > [data-ds='toast'][data-state='closed'] {
+    animation: ds-toast-out var(--ds-duration-base) var(--ds-ease-exit);
+  }
+
+  [data-ds='toaster'][data-position^='top'] > [data-ds='toast'] {
+    --_toast-enter-y: calc(-1 * var(--ds-space-xs));
+  }
+
+  @keyframes ds-toast-in {
+    from {
+      opacity: 0;
+      transform: translateY(var(--_toast-enter-y)) scale(0.98);
+    }
+  }
+
+  @keyframes ds-toast-out {
+    to {
+      opacity: 0;
+      transform: scale(0.98);
+    }
+  }
+
+  /* ------------------------------------------------------------ swipe */
+
+  [data-ds='toast'][data-swipe='move'] {
+    transform: translateX(var(--radix-toast-swipe-move-x, 0)) translateY(var(--radix-toast-swipe-move-y, 0));
+  }
+
+  [data-ds='toast'][data-swipe='cancel'] {
+    transform: none;
+    transition: transform var(--ds-duration-base) var(--ds-ease-out);
+  }
+
+  [data-ds='toaster'] > [data-ds='toast'][data-state='closed'][data-swipe='end'] {
+    animation: ds-toast-swipe-out var(--ds-duration-base) var(--ds-ease-exit);
+  }
+
+  @keyframes ds-toast-swipe-out {
+    from {
+      transform: translateX(var(--radix-toast-swipe-end-x, 0)) translateY(var(--radix-toast-swipe-end-y, 0));
+    }
+
+    to {
+      opacity: 0;
+      transform: translateX(var(--radix-toast-swipe-end-x, 0)) translateY(var(--radix-toast-swipe-end-y, 0));
+    }
+  }
+
+  /* ------------------------------------------------------------ parts */
+
+  [data-ds='toast'] > [data-part='icon'] {
+    grid-area: icon;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    /* One title line high, so the icon sits on the first line. */
+    block-size: calc(var(--ds-font-size-s) * var(--ds-font-leading-snug));
+    color: var(--_toast-icon);
+  }
+
+  [data-ds='toast'] > [data-part='title'] {
+    grid-area: title;
+    margin: 0;
+    color: var(--ds-color-text-bright);
+    font-weight: var(--ds-font-weight-medium);
+  }
+
+  [data-ds='toast'] > [data-part='title'] > [data-part='count'] {
+    display: inline-block;
+    margin-inline-start: var(--ds-space-xs);
+    padding-inline: var(--ds-space-2xs);
+    border-radius: var(--ds-radius-sm);
+    background-color: var(--ds-color-bg-overlay-10);
+    color: var(--ds-color-text-default);
+    font-variant-numeric: tabular-nums;
+    font-weight: var(--ds-font-weight-semibold);
+  }
+
+  /* Three lines at most, so a long message cannot fill the screen. The announcement reads all of it. */
+  [data-ds='toast'] > [data-part='description'] {
+    grid-area: description;
+    display: -webkit-box;
+    margin: 0;
+    overflow: hidden;
+    color: var(--ds-color-text-muted);
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+    line-clamp: 3;
+  }
+
+  [data-ds='toast'] > [data-part='title'] + [data-part='description'] {
+    margin-block-start: var(--ds-space-4xs);
+  }
+
+  [data-ds='toast'] > [data-part='action'] {
+    grid-area: action;
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--ds-space-xs);
+    margin-block-start: var(--ds-space-s);
+  }
+
+  [data-ds='toast'] > [data-part='close'] {
+    grid-area: close;
+    display: inline-flex;
+    /* Pull the 24px target into the padding, so the card does not grow for it. */
+    margin-block: calc(-1 * var(--ds-space-2xs));
+  }
+
+  /* ------------------------------------------------------------ tones */
+
+  [data-ds='toast'][data-tone='info'] {
+    --_toast-edge: var(--ds-color-state-info-border);
+    --_toast-icon: var(--ds-color-state-info-border);
+  }
+
+  [data-ds='toast'][data-tone='success'] {
+    --_toast-edge: var(--ds-color-state-success-border);
+    --_toast-icon: var(--ds-color-state-success-border);
+  }
+
+  [data-ds='toast'][data-tone='warning'] {
+    --_toast-edge: var(--ds-color-state-warning-border);
+    --_toast-icon: var(--ds-color-state-warning-border);
+  }
+
+  [data-ds='toast'][data-tone='danger'] {
+    --_toast-edge: var(--ds-color-state-danger-border);
+    --_toast-icon: var(--ds-color-state-danger-border);
+  }
+
+  /* ------------------------------------------------------------ reduced motion, transparency, forced colors */
+
+  @media (prefers-reduced-motion: reduce) {
+    [data-ds='toaster'] > [data-ds='toast'][data-state='open'],
+    [data-ds='toaster'] > [data-ds='toast'][data-state='closed'],
+    [data-ds='toaster'] > [data-ds='toast'][data-state='closed'][data-swipe='end'] {
+      animation: none;
+    }
+  }
+
+  /* The material tokens turn solid here; the blur goes with them. */
+  @media (prefers-reduced-transparency: reduce), (prefers-contrast: more) {
+    [data-ds='toast'] {
+      --_toast-blur: 0;
+    }
+  }
+
+  [data-contrast='more'] [data-ds='toast'] {
+    --_toast-blur: 0;
+  }
+
+  /*
+   * Forced colors: the shadow and the blur are dropped by the browser or
+   * here, the tone edge and the border become the system text color so the
+   * card keeps a boundary, and the toasts do not animate.
+   */
+  @media (forced-colors: active) {
+    [data-ds='toast'] {
+      --_toast-border-color: CanvasText;
+      --_toast-edge: CanvasText;
+      --_toast-blur: 0;
+      --_toast-shadow: none;
+    }
+
+    [data-ds='toaster'] > [data-ds='toast'][data-state='open'],
+    [data-ds='toaster'] > [data-ds='toast'][data-state='closed'],
+    [data-ds='toaster'] > [data-ds='toast'][data-state='closed'][data-swipe='end'] {
+      animation: none;
+    }
+  }
+}

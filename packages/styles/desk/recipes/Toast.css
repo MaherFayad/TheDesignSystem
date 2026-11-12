@@ -1,0 +1,23 @@
+/*
+ * Desk recipe for Toast: notifications are glass, as the desk notification
+ * stack in GoBanana (`app/(site)/_components/desktop/NotificationStack.tsx`
+ * and the "notification stack" rules in desktop.css): the strong glass fill,
+ * the glass border, the window blur, the window radius and the soft window
+ * shadow.
+ *
+ * Glass turns solid by itself: under prefers-reduced-transparency,
+ * prefers-contrast more and data-contrast more the material tokens resolve
+ * to the solid glass color, and Toast.css drops the blur.
+ *
+ * Only the private --_toast-* properties are declared here, so the toast markup and the base
+ * rules stay the same in every style.
+ */
+@layer ds.recipes {
+  [data-style='desk'] [data-ds='toast'] {
+    --_toast-bg: var(--ds-color-material-glass-strong);
+    --_toast-border-color: var(--ds-color-material-glass-border);
+    --_toast-radius: var(--ds-radius-window);
+    --_toast-shadow: var(--ds-elevation-window-soft);
+    --_toast-blur: var(--ds-blur-window);
+  }
+}
