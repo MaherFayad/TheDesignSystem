@@ -14,5 +14,6 @@ export const routes: DemoRoute[] = [
   { slug: 'dialog', load: () => import('../../../../packages/angular/src/components/dialog/dialog.demo').then((m) => m.default) },
   { slug: 'icon-button', load: () => import('../../../../packages/angular/src/components/icon-button/icon-button.demo').then((m) => m.default) },
   { slug: 'list-box', load: () => import('../../../../packages/angular/src/components/list-box/list-box.demo').then((m) => m.default) },
+  { slug: 'multi-select', load: () => import('../../../../packages/angular/src/components/multi-select/multi-select.demo').then((m) => m.default) },
   { slug: 'select', load: () => import('../../../../packages/angular/src/components/select/select.demo').then((m) => m.default) },
 ];

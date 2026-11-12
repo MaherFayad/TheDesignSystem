@@ -317,8 +317,10 @@
       "note": "No source for this order: designed from the dials table, Select (the trigger box) and ListBox (the rows). The popup surface is styled in MultiSelect.css with the same values as the list family popup in Combobox.css."
     },
     "angular": {
-      "status": "planned",
-      "behavior": "cdk:overlay with cdk:listbox (multiple)"
+      "status": "ready",
+      "behavior": "div[dsMultiSelect], hand built: a CDK ComponentPortal popup placed with the Radix Popper steps (internal/popper.ts), a multiple ListBox (CDK ActiveDescendantKeyManager kept in step), the shared filter.ts and listbox.ts, ControlValueAccessor",
+      "example": "multi-select.demo.ts",
+      "note": "The host is the root. Inputs take the React prop names; onValueChange and onOpenChange are the valueChange and openChange outputs of [(value)] and [(open)]. formatCount is a function input, empty takes text or a TemplateRef. React spreads rest props on the trigger: static data-* attributes on the host move to the trigger, and id, aria-label, aria-labelledby and aria-describedby are inputs. The SearchField and Spinner DOM is inline until their Angular ports exist. Angular Aria Multiselect would replace the hand built keys once @angular/aria is installed. MultiSelect.css is used as is."
     },
     "native": {
       "status": "planned",
