@@ -72,6 +72,14 @@ describe('Surface', () => {
     }
   });
 
+  it('says in the manifest why it names no motion pattern', () => {
+    const manifest = JSON.parse(readFileSync(join(process.cwd(), 'packages/manifest/src/component/Surface.manifest.json'), 'utf8')) as {
+      motion?: string | null;
+      frameworks: { react: { note?: string } };
+    };
+    if (manifest.motion == null) expect(manifest.frameworks.react.note ?? '').toMatch(/no motion/i);
+  });
+
   it('renders every demo case', () => {
     const { container } = render(<SurfaceDemo />);
     for (const id of ['variants', 'empty', 'one', 'many', 'too-many', 'long-text', 'long-arabic']) {

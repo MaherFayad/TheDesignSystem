@@ -176,7 +176,8 @@
     "react": {
       "status": "ready",
       "behavior": "plain markup",
-      "example": "Surface.demo.tsx"
+      "example": "Surface.demo.tsx",
+      "note": "No motion: a static box has nothing to animate, so no pattern from the catalog applies. A Surface that appears or moves gets its motion from the parent that shows it."
     },
     "angular": {
       "status": "planned",
@@ -190,8 +191,8 @@
     }
   },
   "styles": {
-    "studio": "Flat: six achromatic steps from black, no shadow. Separate boxes by the step, not by elevation.",
-    "desk": "The same steps on the black desk. Elevation reads the deep Desk shadows.",
+    "studio": "Flat: six achromatic steps from black, no shadow. elevation card draws nothing here (the token is a zero shadow), so separate boxes by the step or a border, not by elevation.",
+    "desk": "The same steps on the black desk. elevation card draws nothing here (a zero shadow); elevation panel reads the deep Desk shadow.",
     "neutral": "White and soft gray steps, light first. Small soft shadows for elevation.",
     "liquid": "Content surfaces stay solid. A Surface is never glass: glass is for the control and navigation layer only."
   },
