@@ -1,0 +1,27 @@
+capture mouse toggle-button: aria-pressed false -> false
+capture mouse copy-button: data-state=idle clipboard=SENTINEL
+capture mouse toggle-group item: aria-pressed true -> true
+capture space toggle-button: aria-pressed false -> false
+capture space copy-button: data-state=idle clipboard=SENTINEL
+capture space toggle-group item: aria-pressed true -> true
+capture el.click() toggle-button: aria-pressed false -> false
+capture el.click() copy-button: data-state=idle clipboard=SENTINEL
+capture el.click() toggle-group item: aria-pressed true -> true
+late mouse toggle-button: aria-pressed false -> false
+late mouse copy-button: data-state=idle clipboard=SENTINEL
+late mouse toggle-group item: aria-pressed true -> true
+late space toggle-button: aria-pressed false -> false
+late space copy-button: data-state=idle clipboard=SENTINEL
+late space toggle-group item: aria-pressed true -> true
+late el.click() toggle-button: aria-pressed false -> false
+late el.click() copy-button: data-state=idle clipboard=SENTINEL
+late el.click() toggle-group item: aria-pressed true -> true
+none mouse toggle-button: aria-pressed false -> true
+none mouse copy-button: data-state=copied clipboard=npx the-system add button
+none mouse toggle-group item: aria-pressed true -> false
+none space toggle-button: aria-pressed false -> true
+none space copy-button: data-state=copied clipboard=npx the-system add button
+none space toggle-group item: aria-pressed true -> false
+none el.click() toggle-button: aria-pressed false -> true
+none el.click() copy-button: data-state=copied clipboard=npx the-system add button
+none el.click() toggle-group item: aria-pressed true -> false
