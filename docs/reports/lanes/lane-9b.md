@@ -9,7 +9,7 @@ List, built in the lane's order. All four are done.
 | 1.9.5 | Kbd | `wo-1.9.5: Kbd`, `wo-1.9.5: Kbd review fixes` | green | 20 passed, 1 skipped (keyboard map: no keys) |
 | 1.9.6 | Stat | `wo-1.9.6: Stat`, `wo-1.9.6: Stat review fixes` | green | 20 passed, 1 skipped (keyboard map: no keys) |
 | 1.9.8 | DescriptionList | `wo-1.9.8: DescriptionList`, `wo-1.9.8: DescriptionList review fixes` | green | 20 passed, 1 skipped (keyboard map: no keys) |
-| 1.9.7 | List | `wo-1.9.7: List` | green | 21 passed |
+| 1.9.7 | List | `wo-1.9.7: List`, `wo-1.9.7: List review fixes` | green | 21 passed |
 
 The contract runs cover anatomy, variant and state attributes, the keyboard
 map, target size in every style and density, reflow at 320px, and axe in
@@ -316,7 +316,7 @@ interface ListItemProps extends Omit<HTMLAttributes<HTMLLIElement>, 'title'> {
   href?: string;             // the title becomes the row link
   linkProps?: Omit<AnchorHTMLAttributes<HTMLAnchorElement>, 'href' | 'title' | 'children'>;
   active?: boolean;          // default false: data-active, aria-current
-  disabled?: boolean;        // default false: data-disabled, no href, aria-disabled
+  disabled?: boolean;        // default false: data-disabled, no href, focusable with aria-disabled, click stopped
   ref?: Ref<HTMLLIElement>;
 }
 ```
@@ -326,8 +326,8 @@ Decisions:
 - **Row height** from `list.row.height`: sm rows are the token, and md rows
   are the token plus two `space.2xs`, at least.
 - **Linked rows:** the title anchor's `::before` stretches over the row. It
-  is both the hit area and the focus layer (the ring draws around the whole
-  row). Actions come later in the DOM and are positioned, so they paint
+  is the hit area. The focus ring is an outline drawn inside the row while
+  the link has focus. Actions come later in the DOM and are positioned, so they paint
   above the link with no z-index. Each row is one Tab stop, then its
   actions. There are no arrow keys: this is not a composite widget, and
   `insteadUse` points selection to ListBox.
@@ -345,14 +345,40 @@ Decisions:
 - `role="list"` is set again, because `list-style: none` drops the role in
   Safari and VoiceOver.
 - `data-variant` is a component attribute, not a shared axis. `data-linked`
-  is a boolean in manifest `states`.
+  is a CSS hook for linked rows, not a state.
 - The manifest names `list-stagger` from the 1.11 list and states that the
   component plays no motion yet.
 
 ### Review findings
 
-The ds-qa review was still running when this report was first pushed.
-This section is updated with what it found and what was fixed.
+Fixed:
+
+- A disabled row no longer runs `linkProps.onClick`: the click is stopped.
+- Per anatomy rule 5, the disabled link stays focusable (`tabIndex` 0,
+  `role="link"`, `aria-disabled`), with tests.
+- `end` is positioned above the row link, so a link or Badge in it can be
+  clicked.
+- The focus ring is now an outline inside the row (`color.focus.ring`). The
+  next row can no longer cover its bottom edge.
+- An active row with no link carries `aria-current` on the `li`.
+- A labelled empty list takes `role="group"`. The demo drops the label on
+  the empty div.
+- `data-linked` was moved out of `states`. It is structure.
+- `insteadUse` now points navigation to Sidebar (1.7.2).
+- A Space key entry, and Arabic content guidance for description and
+  actions.
+- The Arabic action label now names the action: "عرض خيارات مراجعة الدليل".
+- Tests for role list on `ol`, the empty case with and without a label, and
+  the disabled link.
+
+Left open:
+
+- md rows are `list.row.height` plus two `space.2xs` (about 36px), not 32px.
+  The token is the sm row. Record it, or add a token (see token gaps).
+- `ordered` draws no numbers. The manifest says to put a number in `start`
+  when people need to see it.
+- Empty detection counts direct children only. A wrapper component that
+  renders no rows counts as one row. This is documented on `children`.
 
 ---
 
