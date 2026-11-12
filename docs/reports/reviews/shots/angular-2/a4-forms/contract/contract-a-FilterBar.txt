@@ -1,0 +1,59 @@
+
+> the-system@0.0.0 contract
+> tsx packages/contract-tests/run.ts --framework angular --url http://localhost:5302 --component FilterBar
+
+
+Running 44 tests using 4 workers
+
+  ✓   2 packages/contract-tests/src/contract.spec.ts:354:5 › FilterBar: anatomy, neutral (4.5s)
+  ✓   1 packages/contract-tests/src/contract.spec.ts:354:5 › FilterBar: anatomy, desk (5.3s)
+  ✓   3 packages/contract-tests/src/contract.spec.ts:376:3 › FilterBar: variant attributes (7.2s)
+  ✓   4 packages/contract-tests/src/contract.spec.ts:354:5 › FilterBar: anatomy, studio (8.2s)
+  ✓   5 packages/contract-tests/src/contract.spec.ts:393:3 › FilterBar: state attributes (7.0s)
+  ✓   7 packages/contract-tests/src/contract.spec.ts:543:7 › FilterBar: target size, desk compact (5.8s)
+  ✓   8 packages/contract-tests/src/contract.spec.ts:543:7 › FilterBar: target size, desk default (6.2s)
+  ✓   9 packages/contract-tests/src/contract.spec.ts:543:7 › FilterBar: target size, desk comfortable (5.9s)
+  -  10 packages/contract-tests/src/contract.spec.ts:553:7 › FilterBar: target size open, desk
+  ✓  11 packages/contract-tests/src/contract.spec.ts:543:7 › FilterBar: target size, neutral compact (4.9s)
+  ✓  12 packages/contract-tests/src/contract.spec.ts:543:7 › FilterBar: target size, neutral default (5.2s)
+  ✓   6 packages/contract-tests/src/contract.spec.ts:412:3 › FilterBar: keyboard map (19.8s)
+  ✓  13 packages/contract-tests/src/contract.spec.ts:543:7 › FilterBar: target size, neutral comfortable (6.6s)
+  -  14 packages/contract-tests/src/contract.spec.ts:553:7 › FilterBar: target size open, neutral
+  ✓  15 packages/contract-tests/src/contract.spec.ts:543:7 › FilterBar: target size, studio compact (4.3s)
+  ✓  16 packages/contract-tests/src/contract.spec.ts:543:7 › FilterBar: target size, studio default (4.9s)
+  -  18 packages/contract-tests/src/contract.spec.ts:553:7 › FilterBar: target size open, studio
+  ✓  17 packages/contract-tests/src/contract.spec.ts:543:7 › FilterBar: target size, studio comfortable (6.5s)
+  ✓  19 packages/contract-tests/src/contract.spec.ts:574:5 › FilterBar: no sideways scroll at 320px and no title attribute, en ltr (6.1s)
+  ✓  20 packages/contract-tests/src/contract.spec.ts:574:5 › FilterBar: no sideways scroll at 320px and no title attribute, ar rtl (5.3s)
+  -  22 packages/contract-tests/src/contract.spec.ts:593:7 › FilterBar: axe open, desk dark en ltr
+  -  24 packages/contract-tests/src/contract.spec.ts:593:7 › FilterBar: axe open, desk dark ar rtl
+  ✓  23 packages/contract-tests/src/contract.spec.ts:587:5 › FilterBar: axe, desk dark ar rtl (13.7s)
+  ✓  21 packages/contract-tests/src/contract.spec.ts:587:5 › FilterBar: axe, desk dark en ltr (15.8s)
+  -  26 packages/contract-tests/src/contract.spec.ts:593:7 › FilterBar: axe open, desk light en ltr
+  ✓  25 packages/contract-tests/src/contract.spec.ts:587:5 › FilterBar: axe, desk light en ltr (11.6s)
+  -  28 packages/contract-tests/src/contract.spec.ts:593:7 › FilterBar: axe open, desk light ar rtl
+  ✓  27 packages/contract-tests/src/contract.spec.ts:587:5 › FilterBar: axe, desk light ar rtl (8.9s)
+  -  30 packages/contract-tests/src/contract.spec.ts:593:7 › FilterBar: axe open, neutral light en ltr
+  ✓  29 packages/contract-tests/src/contract.spec.ts:587:5 › FilterBar: axe, neutral light en ltr (11.1s)
+  -  32 packages/contract-tests/src/contract.spec.ts:593:7 › FilterBar: axe open, neutral light ar rtl
+  -  34 packages/contract-tests/src/contract.spec.ts:593:7 › FilterBar: axe open, neutral dark en ltr
+  ✓  31 packages/contract-tests/src/contract.spec.ts:587:5 › FilterBar: axe, neutral light ar rtl (14.2s)
+  ✓  33 packages/contract-tests/src/contract.spec.ts:587:5 › FilterBar: axe, neutral dark en ltr (11.9s)
+  -  36 packages/contract-tests/src/contract.spec.ts:593:7 › FilterBar: axe open, neutral dark ar rtl
+  ✓  35 packages/contract-tests/src/contract.spec.ts:587:5 › FilterBar: axe, neutral dark ar rtl (11.3s)
+  -  38 packages/contract-tests/src/contract.spec.ts:593:7 › FilterBar: axe open, studio dark en ltr
+  ✓  37 packages/contract-tests/src/contract.spec.ts:587:5 › FilterBar: axe, studio dark en ltr (10.4s)
+  -  40 packages/contract-tests/src/contract.spec.ts:593:7 › FilterBar: axe open, studio dark ar rtl
+  ✓  39 packages/contract-tests/src/contract.spec.ts:587:5 › FilterBar: axe, studio dark ar rtl (11.2s)
+  -  42 packages/contract-tests/src/contract.spec.ts:593:7 › FilterBar: axe open, studio light en ltr
+  -  44 packages/contract-tests/src/contract.spec.ts:593:7 › FilterBar: axe open, studio light ar rtl
+  ✓  41 packages/contract-tests/src/contract.spec.ts:587:5 › FilterBar: axe, studio light en ltr (13.2s)
+  ✓  43 packages/contract-tests/src/contract.spec.ts:587:5 › FilterBar: axe, studio light ar rtl (10.9s)
+
+  15 skipped
+  29 passed (1.6m)
+
+Contract summary
+pass  FilterBar: 29 passed, 0 failed, 15 skipped
+
+JSON report: /home/user/TheDesignSystem/packages/contract-tests/.out/11534/contract-angular.partial.json (partial run: the full report in docs/reports is untouched)
