@@ -32,11 +32,21 @@
  * Motion, pattern "menu-scale": the popup scales up from the side Radix
  * computes and fades in; it leaves faster on the exit ease. Under reduced
  * motion both are none and Radix removes it at once.
+ *
+ * Order 1.22 (proposed):
+ * - picker-chevron-turn: the trigger icon turns half a turn while open, on
+ *   the snappy spring. --_multi-select-turn is the open angle (0deg turns it
+ *   off), a name beyond the convention's list.
+ * - menu-rows, row-glide and collection-flip are played by MultiSelect.tsx
+ *   and ListBox: the options arrive one stagger step after the surface, the
+ *   lit row's fill travels, and the tags in the trigger move, pop in and
+ *   shrink out as the selection changes.
  */
 @layer ds.base {
   /* ------------------------------------------------------------ the box */
 
   [data-ds='multi-select']:not([data-part]) {
+    --_multi-select-turn: 180deg;
     --_multi-select-height: var(--ds-size-control-md);
     --_multi-select-padding-inline: var(--ds-space-m);
     --_multi-select-gap: var(--ds-space-xs);
@@ -176,6 +186,12 @@
     justify-content: center;
     color: var(--ds-color-text-muted);
     opacity: var(--_multi-select-icon-opacity);
+    transition: transform var(--ds-duration-spring-snappy) var(--ds-ease-spring-snappy);
+  }
+
+  /* picker-chevron-turn. */
+  [data-ds='multi-select'] > [data-part='trigger'][aria-expanded='true'] > [data-part='icon'] {
+    transform: rotate(var(--_multi-select-turn));
   }
 
   [data-ds='multi-select']:not([data-part]):hover:not([data-disabled], [data-readonly], [data-invalid], :focus-within) {
@@ -342,9 +358,19 @@
       animation: none;
     }
 
-    [data-ds='multi-select']:not([data-part])::before {
+    [data-ds='multi-select']:not([data-part])::before,
+    [data-ds='multi-select'] > [data-part='trigger'] > [data-part='icon'] {
       transition: none;
     }
+  }
+
+  :root[data-motion='reduce'] [data-ds='multi-select'][data-part='popup'][data-state] {
+    animation: none;
+  }
+
+  :root[data-motion='reduce'] [data-ds='multi-select']:not([data-part])::before,
+  :root[data-motion='reduce'] [data-ds='multi-select'] > [data-part='trigger'] > [data-part='icon'] {
+    transition: none;
   }
 
   /* ------------------------------------------------------------ transparency, contrast, forced colors */

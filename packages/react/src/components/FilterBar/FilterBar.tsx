@@ -35,6 +35,14 @@ import { Button } from '../Button';
 import { Chip } from '../Chip';
 import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuTrigger } from '../DropdownMenu';
 import { SearchField, type SearchFieldProps } from '../SearchField';
+import { renderDigits, rollDigits } from '@the-system/motion';
+import { useMotion } from '../../internal/motion';
+import { useFlipGroup } from '../ListBox/selectionMotion';
+
+/** The parts of the bar that make room for each other: count and clear come and go. */
+const barPartsOf = (root: Element) => Array.from(root.querySelectorAll(':scope > [data-part]'));
+/** The chips of the strip: a selected chip grows by its check and the chips after it make room. */
+const chipsOf = (strip: Element) => Array.from(strip.querySelectorAll(":scope > [data-ds='chip']"));
 
 export type FilterBarSize = Extract<Size, 'sm' | 'md'>;
 
@@ -213,6 +221,28 @@ export function FilterBar({
     .filter(Boolean)
     .join(lang === 'ar' ? '، ' : ', ');
 
+  // collection-flip: the bar's parts and the chips make room as clear, the count and checks come and go.
+  useFlipGroup(rootRef, { items: barPartsOf });
+  useFlipGroup(stripRef, { items: chipsOf, ghosts: false });
+
+  // filter-count-roll: the count rolls digit by digit in a decorative copy; the real text is visually hidden beside it.
+  const motion = useMotion();
+  const rollRef = useRef<HTMLSpanElement | null>(null);
+  const shownCount = useRef<{ text: string; n: number } | null>(null);
+  const countNumber = (resultCount ?? 0) + activeCount;
+  useLayoutEffect(() => {
+    const host = rollRef.current;
+    if (!host) {
+      shownCount.current = null;
+      return;
+    }
+    const last = shownCount.current;
+    shownCount.current = { text: countText, n: countNumber };
+    if (last && last.text === countText && host.childElementCount > 0) return;
+    if (!last) renderDigits(host, countText);
+    else rollDigits(host, last.text, countText, { direction: countNumber < last.n ? 'down' : 'up', mode: motion.mode('filter-count-roll') });
+  });
+
   return (
     <div
       {...rest}
@@ -270,7 +300,12 @@ export function FilterBar({
           </DropdownMenuContent>
         </DropdownMenu>
       )}
-      {countText !== '' && <span data-part="count">{countText}</span>}
+      {countText !== '' && (
+        <span data-part="count">
+          <span data-visually-hidden="">{countText}</span>
+          <span aria-hidden="true" ref={rollRef} />
+        </span>
+      )}
       {active && (
         <Button size={size} emphasis="ghost" start="close" onClick={clearAll} data-part="clear">
           {labels.clear}

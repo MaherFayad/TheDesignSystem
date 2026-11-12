@@ -38,6 +38,10 @@ import {
 import { Icon, type IconName } from '@the-system/icons/react';
 import type { Size } from '@the-system/shared';
 import { useMotion } from '../../internal/motion';
+import { useFlipGroup, useRowGlide } from '../ListBox/selectionMotion';
+
+/** The rows of a list element. */
+const rowsOf = (list: Element) => Array.from(list.querySelectorAll(":scope > [data-part='item']"));
 
 export type ListSize = Extract<Size, 'sm' | 'md'>;
 export type ListVariant = 'plain' | 'divided' | 'inset';
@@ -82,6 +86,10 @@ function useFirstPaintStagger(hasRows: boolean, ref: Ref<HTMLElement> | undefine
   const fresh = useRef(!hydrating || !hasRows);
   const played = useRef(false);
   const node = useRef<HTMLElement | null>(null);
+  // collection-flip: rows added, removed or moved after the first paint travel, pop in or shrink out.
+  useFlipGroup(node, { items: rowsOf });
+  // row-glide: the hover fill of a linked row travels from the row the pointer left.
+  const glideRef = useRowGlide({ rows: "[data-part='item'][data-linked]:not([data-disabled], [data-active])", lit: 'hover' });
   useLayoutEffect(() => {
     if (played.current || !hasRows) return;
     played.current = true;
@@ -97,10 +105,11 @@ function useFirstPaintStagger(hasRows: boolean, ref: Ref<HTMLElement> | undefine
   return useCallback(
     (el: HTMLElement | null) => {
       node.current = el;
+      glideRef(el);
       if (typeof ref === 'function') ref(el);
       else if (ref) (ref as { current: HTMLElement | null }).current = el;
     },
-    [ref],
+    [ref, glideRef],
   );
 }
 
@@ -188,6 +197,8 @@ export function ListItem({
       aria-current={!linked && active ? 'true' : rest['aria-current']}
     >
       <span data-part="separator" aria-hidden="true" />
+      {/* The row's hover fill, which glides from the row the pointer left (row-glide). Decorative, no part name. */}
+      <span aria-hidden="true" />
       {start !== undefined && (
         <span data-part="start" aria-hidden={typeof start === 'string' ? 'true' : undefined}>
           {slot(start)}

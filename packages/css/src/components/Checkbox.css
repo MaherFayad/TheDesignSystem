@@ -19,15 +19,19 @@
  *   --_checkbox-fill, -fill-border, -on-fill   the checked look of a tone
  *   --_checkbox-ring          the focus glow and ring around the box
  *   --_checkbox-border-style  solid, dashed while read only
- *   --_checkbox-duration, -ease   the draw of the mark when checked (check-draw)
+ *   --_checkbox-duration, -ease   the draw and land of the mark when checked (check-draw)
  *   --_checkbox-duration-out      the fade of the mark when unchecked
  *   --_checkbox-dir           1, or -1 in right to left text
+ *   --_checkbox-press-scale   the box size while pressed (check-draw, the dip); 1 turns it off
+ *   --_checkbox-mark-scale    the size the mark grows from as it draws; 1 turns the land off
+ *   --_checkbox-step          the place of this box in a run of draws (CheckboxGroup's
+ *                             select all sets it inline); the draw waits that many delay.stagger
  *
  * `-border-color-invalid` is a state suffix beyond the convention's list:
  * invalid needs its own color, as in Input.css.
  *
- * The focus ring sits on ::before of the control and fades its opacity.
- * Colors swap at once: only transform and opacity animate.
+ * The focus ring sits on ::before of the control and shows at once
+ * (WCAG 2.4.7). Colors swap at once: only transform and opacity animate.
  *
  * Interaction check-draw (order 1.21, proposed): the mark sits in an unnamed
  * aria-hidden span, the clip. While checked the clip slides in from the
@@ -37,6 +41,17 @@
  * clip jumps back. A box that is checked on first paint draws nothing: the
  * draw is a transition between states. A style turns it off with the two
  * durations at 0s.
+ *
+ * Order 1.22 (proposed), the same interaction in three beats:
+ * - Anticipation: while pressed (the control or its label) the box dips to
+ *   scale.anticipate over duration.instant on ease.out; on release it
+ *   springs back on the bouncy spring, past its size and back.
+ * - Action and overshoot: the draw runs on the bouncy spring
+ *   (duration.spring-bouncy), and the mark grows from scale.morph to its
+ *   size with the overshoot of that spring, then settles. The clip and the
+ *   mark share the curve, so the mark never slides inside the box.
+ * - Stagger: under a CheckboxGroup select all, each box waits its step.
+ * The unchecked fade and jump back use step timing, so no raw 0s is needed.
  */
 @layer ds.base {
   [data-ds='checkbox'] {
@@ -55,10 +70,13 @@
     --_checkbox-on-fill: var(--ds-color-bg-body);
     --_checkbox-ring: var(--ds-elevation-input-focus), var(--ds-focus-shadow-ring);
     --_checkbox-border-style: solid;
-    --_checkbox-duration: var(--ds-duration-medium);
-    --_checkbox-ease: var(--ds-ease-out);
+    --_checkbox-duration: var(--ds-duration-spring-bouncy);
+    --_checkbox-ease: var(--ds-ease-spring-bouncy);
     --_checkbox-duration-out: var(--ds-duration-fast);
     --_checkbox-dir: 1;
+    --_checkbox-press-scale: var(--ds-scale-anticipate);
+    --_checkbox-mark-scale: var(--ds-scale-morph);
+    --_checkbox-step: 0;
 
     display: inline-grid;
     grid-template-columns: var(--_checkbox-target) minmax(0, auto);
@@ -130,7 +148,6 @@
     box-shadow: var(--_checkbox-ring);
     opacity: 0;
     pointer-events: none;
-    transition: opacity var(--ds-duration-base) var(--ds-ease-default);
   }
 
   /* The box. The glyph is drawn over it at the box size, so it keeps its pixel grid. */
@@ -148,6 +165,13 @@
     color: var(--_checkbox-fg);
     overflow: visible;
     pointer-events: none;
+    transition: transform var(--ds-duration-spring-bouncy) var(--ds-ease-spring-bouncy);
+  }
+
+  /* The dip: the box answers the press before the release. The target does not move. */
+  [data-ds='checkbox']:not([data-disabled], [data-readonly]):is(:has(> [data-part='control']:active), :has(> [data-part='label']:active)) > [data-part='control'] > [data-part='indicator'] {
+    transform: scale(var(--_checkbox-press-scale));
+    transition: transform var(--ds-duration-instant) var(--ds-ease-out);
   }
 
   /*
@@ -163,12 +187,12 @@
     justify-content: center;
     overflow: hidden;
     transition:
-      transform var(--_checkbox-duration) var(--_checkbox-ease),
-      opacity 0s;
+      transform var(--_checkbox-duration) var(--_checkbox-ease) calc(var(--ds-delay-stagger) * var(--_checkbox-step)),
+      opacity var(--_checkbox-duration) step-start calc(var(--ds-delay-stagger) * var(--_checkbox-step));
   }
 
   [data-ds='checkbox'] > [data-part='control'] > [data-part='indicator'] > span > [data-ds='icon'] {
-    transition: transform var(--_checkbox-duration) var(--_checkbox-ease);
+    transition: transform var(--_checkbox-duration) var(--_checkbox-ease) calc(var(--ds-delay-stagger) * var(--_checkbox-step));
   }
 
   /* Unchecked: the mark fades out in the fill color, then the clip and the mark jump back to the start. */
@@ -178,12 +202,12 @@
     transform: translateX(calc(var(--_checkbox-box) * var(--_checkbox-dir) * -1));
     transition:
       opacity var(--_checkbox-duration-out) var(--ds-ease-out),
-      transform 0s linear var(--_checkbox-duration-out);
+      transform var(--_checkbox-duration-out) step-end;
   }
 
   [data-ds='checkbox'][data-state='unchecked'] > [data-part='control'] > [data-part='indicator'] > span > [data-ds='icon'] {
-    transform: translateX(calc(var(--_checkbox-box) * var(--_checkbox-dir)));
-    transition: transform 0s linear var(--_checkbox-duration-out);
+    transform: translateX(calc(var(--_checkbox-box) * var(--_checkbox-dir))) scale(var(--_checkbox-mark-scale));
+    transition: transform var(--_checkbox-duration-out) step-end;
   }
 
   /* The label lines its first line up with the center of the target. */
@@ -258,13 +282,32 @@
     cursor: not-allowed;
   }
 
-  /* Reduced motion: the mark appears and leaves at once. */
+  /*
+   * Reduced motion, from the media query or the page setting: the mark
+   * appears and leaves at once, and the box does not dip.
+   */
   @media (prefers-reduced-motion: reduce) {
-    [data-ds='checkbox'] > [data-part='control']::before,
+    [data-ds='checkbox'] {
+      --_checkbox-press-scale: 1;
+      --_checkbox-mark-scale: 1;
+    }
+
+    [data-ds='checkbox'] > [data-part='control'] > [data-part='indicator'],
     [data-ds='checkbox'][data-state] > [data-part='control'] > [data-part='indicator'] > span,
     [data-ds='checkbox'][data-state] > [data-part='control'] > [data-part='indicator'] > span > [data-ds='icon'] {
       transition: none;
     }
+  }
+
+  :root[data-motion='reduce'] [data-ds='checkbox'] {
+    --_checkbox-press-scale: 1;
+    --_checkbox-mark-scale: 1;
+  }
+
+  :root[data-motion='reduce'] [data-ds='checkbox'] > [data-part='control'] > [data-part='indicator'],
+  :root[data-motion='reduce'] [data-ds='checkbox'][data-state] > [data-part='control'] > [data-part='indicator'] > span,
+  :root[data-motion='reduce'] [data-ds='checkbox'][data-state] > [data-part='control'] > [data-part='indicator'] > span > [data-ds='icon'] {
+    transition: none;
   }
 
   /*

@@ -245,7 +245,7 @@
       "status": "ready",
       "behavior": "hand built; shared logic in @the-system/shared filter.ts and listbox.ts",
       "example": "ListBox.demo.tsx",
-      "note": "No motion of its own: the popup that holds it plays menu-scale. Alone it has none. Sources GoBanana and Figma-Killer-2 were not reachable in the lane session; the rows follow the DropdownMenu surface built from them."
+      "note": "The popup that holds it plays menu-scale. Interaction row-glide (order 1.22, proposed): each option holds an unnamed aria-hidden span, the fill layer, and the lit row's fill travels from the last lit row; without the span the row draws its own fill. Sources GoBanana and Figma-Killer-2 were not reachable in the lane session; the rows follow the DropdownMenu surface built from them."
     },
     "angular": {
       "status": "ready",

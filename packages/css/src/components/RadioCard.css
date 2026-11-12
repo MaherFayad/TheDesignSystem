@@ -24,6 +24,21 @@
  * inside the border) and the indicator fills with a dot. ::before is the
  * focus ring, ::after the hover veil.
  *
+ * Interaction radio-card-lift (order 1.22, proposed):
+ * - Anticipation: a pressed card dips to scale.press over duration.instant
+ *   on ease.out.
+ * - Action and overshoot: the chosen card rises by distance.lift on the
+ *   bouncy spring, past its place and back, and stays lifted; the card it
+ *   leaves settles down on the soft spring. Its dot pops as in radio-pop:
+ *   it grows from --_radio-card-dot-from on the bouncy spring while the old
+ *   dot shrinks over duration.quick on ease.exit.
+ * - The dot is an unnamed aria-hidden span inside the indicator. Without it
+ *   (a port that does not render it) the dot stays the radial fill, still.
+ * The ring (::before) shows at once (WCAG 2.4.7). Names beyond the list:
+ *   --_radio-card-press-scale  the card while pressed; 1 turns the dip off
+ *   --_radio-card-lift-now     the working lift a checked card sets
+ *   --_radio-card-dot-from     the dot scale before it lands; 1 turns the pop off
+ *
  * Working properties on the parts, set by the state rules only:
  * --_radio-card-border-now, -bg-now and -inset on the item, and
  * --_radio-card-circle-border and -circle-bg on the indicator.
@@ -47,6 +62,9 @@
     --_radio-card-icon-size: var(--ds-size-icon-lg);
     --_radio-card-fill: var(--ds-color-text-default);
     --_radio-card-dot: var(--ds-color-bg-body);
+    --_radio-card-lift: var(--ds-distance-lift);
+    --_radio-card-press-scale: var(--ds-scale-press);
+    --_radio-card-dot-from: var(--ds-scale-morph);
 
     display: grid;
     grid-template-columns: minmax(0, 1fr);
@@ -97,6 +115,7 @@
     --_radio-card-border-now: var(--_radio-card-border-color);
     --_radio-card-bg-now: var(--_radio-card-bg);
     --_radio-card-inset: transparent;
+    --_radio-card-lift-now: 0px;
 
     position: relative;
     display: grid;
@@ -126,6 +145,21 @@
     text-align: start;
     cursor: pointer;
     -webkit-tap-highlight-color: transparent;
+    transform: translateY(calc(var(--_radio-card-lift-now) * -1));
+    transition: transform var(--ds-duration-spring-soft) var(--ds-ease-spring-soft);
+  }
+
+  /* radio-card-lift: the chosen card rises and stays up. */
+  [data-ds='radio-card'] > [data-part='item'][data-state='checked'] {
+    --_radio-card-lift-now: var(--_radio-card-lift);
+
+    transition: transform var(--ds-duration-spring-bouncy) var(--ds-ease-spring-bouncy);
+  }
+
+  /* The dip: the card answers the press before the release. */
+  [data-ds='radio-card'] > [data-part='item']:active:not([data-disabled]) {
+    transform: translateY(calc(var(--_radio-card-lift-now) * -1)) scale(var(--_radio-card-press-scale));
+    transition: transform var(--ds-duration-instant) var(--ds-ease-out);
   }
 
   [data-ds='radio-card'] > [data-part='item']:has(> [data-part='icon']) {
@@ -144,7 +178,6 @@
     box-shadow: var(--_radio-card-ring);
     opacity: 0;
     pointer-events: none;
-    transition: opacity var(--ds-duration-base) var(--ds-ease-default);
   }
 
   /* The hover veil. */
@@ -172,6 +205,33 @@
     border: var(--ds-border-width-strong) solid var(--_radio-card-circle-border);
     border-radius: var(--ds-radius-pill);
     background: radial-gradient(circle closest-side, var(--_radio-card-dot) 0 40%, var(--_radio-card-circle-bg) 44%);
+  }
+
+  /* radio-card-lift: with the dot layer, the circle is a plain fill and the layer is the dot. */
+  [data-ds='radio-card'] > [data-part='item'] > [data-part='indicator']:has(> span[aria-hidden='true']) {
+    display: grid;
+    place-items: center;
+    background: var(--_radio-card-circle-bg);
+  }
+
+  [data-ds='radio-card'] > [data-part='item'] > [data-part='indicator'] > span[aria-hidden='true'] {
+    inline-size: 40%;
+    block-size: 40%;
+    border-radius: var(--ds-radius-pill);
+    background-color: var(--_radio-card-dot);
+    opacity: 0;
+    transform: scale(var(--_radio-card-dot-from));
+    transition:
+      opacity var(--ds-duration-quick) var(--ds-ease-exit),
+      transform var(--ds-duration-quick) var(--ds-ease-exit);
+  }
+
+  [data-ds='radio-card'] > [data-part='item'][data-state='checked'] > [data-part='indicator'] > span[aria-hidden='true'] {
+    opacity: 1;
+    transform: none;
+    transition:
+      opacity var(--ds-duration-quick) var(--ds-ease-out),
+      transform var(--ds-duration-spring-bouncy) var(--ds-ease-spring-bouncy);
   }
 
   [data-ds='radio-card'] > [data-part='item'] > [data-part='icon'] {
@@ -266,11 +326,27 @@
     cursor: not-allowed;
   }
 
+  /* Reduced motion, from the media query or the page setting: no lift, no dip, the dot appears at once. */
   @media (prefers-reduced-motion: reduce) {
-    [data-ds='radio-card'] > [data-part='item']::before,
+    [data-ds='radio-card'] {
+      --_radio-card-lift: 0px;
+      --_radio-card-press-scale: 1;
+      --_radio-card-dot-from: 1;
+    }
+
     [data-ds='radio-card'] > [data-part='item']::after {
       transition: none;
     }
+  }
+
+  :root[data-motion='reduce'] [data-ds='radio-card'] {
+    --_radio-card-lift: 0px;
+    --_radio-card-press-scale: 1;
+    --_radio-card-dot-from: 1;
+  }
+
+  :root[data-motion='reduce'] [data-ds='radio-card'] > [data-part='item']::after {
+    transition: none;
   }
 
   /*
@@ -281,6 +357,14 @@
   @media (forced-colors: active) {
     [data-ds='radio-card'] > [data-part='item']::before,
     [data-ds='radio-card'] > [data-part='item']::after {
+      display: none;
+    }
+
+    [data-ds='radio-card'] > [data-part='item'] > [data-part='indicator']:has(> span[aria-hidden='true']) {
+      background: radial-gradient(circle closest-side, var(--_radio-card-dot) 0 40%, var(--_radio-card-circle-bg) 44%);
+    }
+
+    [data-ds='radio-card'] > [data-part='item'] > [data-part='indicator'] > span[aria-hidden='true'] {
       display: none;
     }
 

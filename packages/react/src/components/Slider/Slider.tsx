@@ -8,8 +8,9 @@
 // waits on anything: the value changes, and the drag follows the pointer,
 // at once. A held key nudges once, not on every repeat. A vertical slider
 // does not nudge: the shake pattern moves on the inline axis only.
-import { Fragment, useId, useRef, useState, type ComponentProps, type CSSProperties, type PointerEvent, type ReactNode, type Ref } from 'react';
+import { Fragment, useId, useLayoutEffect, useRef, useState, type ComponentProps, type CSSProperties, type PointerEvent, type ReactNode, type Ref } from 'react';
 import { Slider as RadixSlider } from 'radix-ui';
+import { renderDigits, rollDigits } from '@the-system/motion';
 import type { Size, Tone } from '@the-system/shared';
 import { useMotion } from '../../internal/motion';
 import { useTheme } from '../../theme/hooks';
@@ -105,6 +106,43 @@ function useEndNudge() {
   };
 }
 
+/**
+ * slider-bubble: keeps the decorative value bubble of each thumb in step
+ * with the value. While a pointer holds the slider the digits roll (up when
+ * the value grows); otherwise they are written still, since the bubble is
+ * hidden. Returns the ref callback for the bubble of thumb `i`.
+ */
+/** The least time between two rolls of the bubble, in ms (a behavior gap, not a motion timing). */
+const ROLL_GAP = 120;
+
+function useValueBubbles(values: number[], texts: string[], dragging: boolean) {
+  const motion = useMotion();
+  const hosts = useRef<(HTMLSpanElement | null)[]>([]);
+  const shown = useRef<{ value: number; text: string }[]>([]);
+  const lastRoll = useRef(-Infinity);
+  useLayoutEffect(() => {
+    values.forEach((value, i) => {
+      const host = hosts.current[i];
+      const text = texts[i] ?? '';
+      if (!host) return;
+      const last = shown.current[i];
+      shown.current[i] = { value, text };
+      if (last && last.text === text && host.childElementCount > 0) return;
+      // A fast drag changes the value every frame: a roll starts at most once per ROLL_GAP, the steps between are written still.
+      const now = typeof performance === 'undefined' ? Date.now() : performance.now();
+      if (!last || !dragging || now - lastRoll.current < ROLL_GAP) {
+        renderDigits(host, text);
+        return;
+      }
+      lastRoll.current = now;
+      rollDigits(host, last.text, text, { direction: value < last.value ? 'down' : 'up', mode: motion.mode('slider-bubble') });
+    });
+  });
+  return (i: number) => (el: HTMLSpanElement | null) => {
+    hosts.current[i] = el;
+  };
+}
+
 function toMark(mark: number | SliderMark): SliderMark {
   return typeof mark === 'number' ? { value: mark } : mark;
 }
@@ -174,6 +212,7 @@ export function SliderBase({
   const hasLabel = label !== undefined && label !== null && label !== false;
   const valueShown = showValue ?? hasLabel;
   const span = max - min || 1;
+  const bubble = useValueBubbles(values, values.map(format), dragging);
 
   const onChange = (next: number[]) => {
     if (valueProp === undefined) setOwn(next);
@@ -292,7 +331,10 @@ export function SliderBase({
               aria-valuetext={format(v)}
               aria-describedby={control['aria-describedby']}
               aria-invalid={control['aria-invalid']}
-            />
+            >
+              {/* The value bubble (slider-bubble): decorative, the thumb carries the value. */}
+              <span aria-hidden="true" ref={bubble(i)} />
+            </RadixSlider.Thumb>
           );
         })}
       </RadixSlider.Root>

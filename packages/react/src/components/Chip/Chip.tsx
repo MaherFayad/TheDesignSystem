@@ -15,6 +15,7 @@
 // GoBanana `.st-chip` and admin `Chip` could not be read in the lane
 // session (no access to the repo). The remove part is a CloseButton root
 // carrying data-part="remove".
+import { useLayoutEffect, useRef } from 'react';
 import type {
   ButtonHTMLAttributes,
   HTMLAttributes,
@@ -29,6 +30,8 @@ import type { Emphasis, Shape, Size, Tone } from '@the-system/shared';
 import { useTheme } from '../../theme/hooks';
 import { ButtonRoot } from '../Button/ButtonBase';
 import { CloseButton } from '../CloseButton';
+import { iconMorph } from '@the-system/motion';
+import { useMotion } from '../../internal/motion';
 
 /** The words of the default remove name by language. Arabic: a noun form. */
 const chipRemoveLabels = { en: 'Remove', ar: 'إزالة' } as const;
@@ -109,6 +112,15 @@ function PressableChip({
 }: ChipPressableProps) {
   // Selected always shows the check, in place of start, so selected never rests on the fill color alone.
   const lead = selected ? 'check' : start;
+  // chip-check-pop: a new selected state turns its glyph in past its size and back. Not on first paint.
+  const motion = useMotion();
+  const iconRef = useRef<HTMLSpanElement>(null);
+  const lastSelected = useRef(selected);
+  useLayoutEffect(() => {
+    if (lastSelected.current === selected) return;
+    lastSelected.current = selected;
+    iconMorph({ to: iconRef.current?.firstElementChild, turn: 45, mode: motion.mode('chip-check-pop') });
+  }, [selected, motion]);
   return (
     <ButtonRoot
       {...rest}
@@ -125,7 +137,7 @@ function PressableChip({
       render={(content) => (
         <>
           {lead !== undefined && (
-            <span data-part="icon" aria-hidden="true">
+            <span data-part="icon" aria-hidden="true" ref={iconRef}>
               {renderIcon(lead, size)}
             </span>
           )}

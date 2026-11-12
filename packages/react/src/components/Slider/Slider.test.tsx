@@ -236,9 +236,13 @@ describe('Slider', () => {
 
     it('lifts the grabbed thumb in CSS on the catalog timing, and turns it off under reduced motion', () => {
       const css = readFileSync(join(process.cwd(), 'packages/css/src/components/Slider.css'), 'utf8');
-      expect(css).toMatch(/--_slider-duration: var\(--ds-duration-base\);/);
-      expect(css).toMatch(/--_slider-ease: var\(--ds-ease-emphasized\);/);
+      // Order 1.22: the lift on the snappy spring, the release on the bouncy spring, the size from scale.stretch (N10).
+      expect(css).toMatch(/--_slider-lift: var\(--ds-scale-stretch\);/);
+      expect(css).toMatch(/--_slider-duration: var\(--ds-duration-spring-bouncy\);/);
+      expect(css).toMatch(/--_slider-ease: var\(--ds-ease-spring-bouncy\);/);
+      expect(css).toMatch(/--_slider-duration-in: var\(--ds-duration-spring-snappy\);/);
       expect(css).toMatch(/\[data-dragging\] \[data-part='thumb'\]:focus \{\s*--_slider-lift-now: var\(--_slider-lift\);/);
+      expect(css).not.toMatch(/window-enter/);
       const reduced = css.slice(css.indexOf('@media (prefers-reduced-motion: reduce)'));
       expect(reduced).toMatch(/--_slider-lift: 1;/);
     });
@@ -254,17 +258,19 @@ describe('Slider', () => {
             </Theme>,
           );
           const control = document.querySelector<HTMLElement>('[data-part="control"]')!;
+          // The value bubble rolls its digits during the drag (slider-bubble); count the nudges only.
+          const nudges = () => animate.mock.calls.filter((c) => (c as unknown as [Keyframe[], KeyframeAnimationOptions])[1].id === 'ds-motion:shake') as unknown as [Keyframe[], KeyframeAnimationOptions][];
           fireEvent.pointerDown(control, { pointerId: 1, button: 0, clientX: 40 });
           fireEvent.pointerMove(control, { pointerId: 1, clientX: 90 });
-          expect(animate).not.toHaveBeenCalled();
+          expect(nudges()).toHaveLength(0);
           fireEvent.pointerMove(control, { pointerId: 1, clientX: 130 });
           fireEvent.pointerMove(control, { pointerId: 1, clientX: 140 });
-          expect(animate).toHaveBeenCalledTimes(1);
-          expect(String(call(animate)[0][1]?.transform)).toMatch(/^translateX\(calc\(1 \* /);
+          expect(nudges()).toHaveLength(1);
+          expect(String(nudges()[0]![0][1]?.transform)).toMatch(/^translateX\(calc\(1 \* /);
           fireEvent.pointerMove(control, { pointerId: 1, clientX: 50 });
           fireEvent.pointerMove(control, { pointerId: 1, clientX: -20 });
-          expect(animate).toHaveBeenCalledTimes(2);
-          expect(String(call(animate, 1)[0][1]?.transform)).toMatch(/^translateX\(calc\(-1 \* /);
+          expect(nudges()).toHaveLength(2);
+          expect(String(nudges()[1]![0][1]?.transform)).toMatch(/^translateX\(calc\(-1 \* /);
         } finally {
           rect.mockRestore();
           capture.mockRestore();

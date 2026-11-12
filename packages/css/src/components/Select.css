@@ -33,6 +33,21 @@
  * Motion, pattern "menu-scale": the content scales up from the side Radix
  * computes and fades in. Radix Select has no exit presence, so the content
  * leaves at once on close. Under reduced motion the entry is none.
+ *
+ * Order 1.22 (proposed):
+ * - picker-chevron-turn: the trigger icon turns half a turn while the list
+ *   is open, on the snappy spring, and turns back on close. --_select-turn
+ *   is the open angle (a style sets 0deg to turn it off).
+ * - menu-rows and picker-value-roll are played by Select.tsx: the rows arrive
+ *   one stagger step after the surface, and a new value rolls up into the
+ *   trigger (the value clips it).
+ * - row-glide: each row holds an unnamed aria-hidden span as its first
+ *   child that draws the row's fill under its content; Select.tsx moves the
+ *   newly lit row's layer from the old one's box (flipPlay). Without the
+ *   layer the row draws its own fill. In forced colors the layer hides and
+ *   the row keeps the system Highlight.
+ *   --_select-turn is a name beyond the convention's list: the angle of the
+ *   icon while open.
  */
 @layer ds.base {
   /* ------------------------------------------------------------ the trigger */
@@ -52,6 +67,7 @@
     --_select-ring: var(--ds-elevation-input-focus), var(--ds-focus-shadow-ring);
     --_select-border-width: var(--ds-border-width-default);
     --_select-border-style: solid;
+    --_select-turn: 180deg;
 
     position: relative;
     box-sizing: border-box;
@@ -127,6 +143,12 @@
     align-items: center;
     justify-content: center;
     color: var(--ds-color-text-muted);
+    transition: transform var(--ds-duration-spring-snappy) var(--ds-ease-spring-snappy);
+  }
+
+  /* picker-chevron-turn: half a turn while open. */
+  [data-ds='select']:not([data-part])[aria-expanded='true'] > [data-part='icon'] {
+    transform: rotate(var(--_select-turn));
   }
 
   [data-ds='select']:not([data-part]):hover:not([data-disabled], [data-readonly], [data-invalid], :focus-visible) {
@@ -295,6 +317,27 @@
     --_select-item-fg: var(--_menu-item-fg-highlight);
   }
 
+  /* row-glide: the layer under the row's content draws the fill. */
+  [data-ds='select'] [data-part='item']:has(> span[aria-hidden='true']:not([data-part])) {
+    isolation: isolate;
+  }
+
+  [data-ds='select'] [data-part='item'] > span[aria-hidden='true']:not([data-part]) {
+    position: absolute;
+    inset: 0;
+    /* Under the row's content, inside the row's own stacking context. */
+    z-index: calc(0 - var(--ds-z-raised));
+    border-radius: inherit;
+    background-color: var(--_select-item-bg);
+    pointer-events: none;
+  }
+
+  @media (forced-colors: none) {
+    [data-ds='select'] [data-part='item']:has(> span[aria-hidden='true']:not([data-part])) {
+      background-color: transparent;
+    }
+  }
+
   /* The keyboard ring sits inside the row. The transparent outline shows in forced colors. */
   [data-ds='select'] [data-part='item']:focus-visible {
     --_select-item-ring: inset 0 0 0 var(--ds-border-width-strong) var(--_menu-item-ring-color);
@@ -389,9 +432,19 @@
       animation: none;
     }
 
-    [data-ds='select']:not([data-part])::before {
+    [data-ds='select']:not([data-part])::before,
+    [data-ds='select'] > [data-part='icon'] {
       transition: none;
     }
+  }
+
+  :root[data-motion='reduce'] [data-ds='select'][data-part='content'][data-state] {
+    animation: none;
+  }
+
+  :root[data-motion='reduce'] [data-ds='select']:not([data-part])::before,
+  :root[data-motion='reduce'] [data-ds='select'] > [data-part='icon'] {
+    transition: none;
   }
 
   /* ------------------------------------------------------------ transparency, contrast, forced colors */
@@ -445,6 +498,10 @@
 
     [data-ds='select'] [data-part='item'][data-highlighted] {
       forced-color-adjust: none;
+    }
+
+    [data-ds='select'] [data-part='item'] > span[aria-hidden='true']:not([data-part]) {
+      display: none;
     }
 
     [data-ds='select'] [data-part='item']:focus-visible {
