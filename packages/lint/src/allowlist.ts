@@ -17,10 +17,7 @@ export const LOGICAL_PROPERTIES_ALLOW: readonly AllowEntry[] = [];
 
 export const RAW_COLOR_ALLOW: readonly AllowEntry[] = [];
 
-export const RAW_VALUE_ALLOW: readonly AllowEntry[] = [
-  // Order 1.0.a made conditions strict. Dialog.css (owned by another order)
-  // writes the literal without the breakpoint comment; order 1.0.b adds it.
-];
+export const RAW_VALUE_ALLOW: readonly AllowEntry[] = [];
 
 export const BUTTON_PRIMITIVE_ALLOW: readonly AllowEntry[] = [];
 

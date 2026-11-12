@@ -161,8 +161,20 @@ Under `contract` in the manifest:
 - `focus`: a selector inside the demo to focus first. Default: the first
   enabled root, or the first tab stop inside it.
 - `case`: a demo case id to look in. Default: the whole demo.
-- `expect`: `focus-moves`, `value-changes` (the focused value or
-  `aria-valuenow`), `state-changes` (`data-state`, `aria-checked`,
-  `aria-selected`, `aria-expanded`, `aria-pressed`, `aria-valuenow` or
-  `data-selected` on the focused element or its root), `click` (a click
-  event fires on the focused element) or `closes` (an open root closes).
+- `expect`:
+  - `focus-moves`: the focused element changes.
+  - `value-changes`: the focused value or `aria-valuenow` changes.
+  - `state-changes`: `data-state`, `aria-checked`, `aria-selected`,
+    `aria-expanded`, `aria-pressed`, `aria-valuenow` or `data-selected` on
+    the focused element or its root changes, or `data-state` or a boolean
+    state the manifest lists (`data-zoomed`) on any root of the component.
+  - `click`: a click event fires on the focused element.
+  - `closes`: the root that held focus leaves the page, hides or says
+    `data-state="closed"`, or every open root closes.
+  - `moves`: the root that holds focus moves at least 1px in the direction
+    the arrow key names, read from `getBoundingClientRect`. ArrowRight is
+    toward the inline end, so in rtl the sign flips; ArrowUp and ArrowDown
+    never flip. For a Shift arrow, when the keyboard map says Shift moves
+    further (a larger px number than the plain arrow, or the word
+    "further"), a Shift press must move further than the plain arrow from
+    the same place. Keys are pressed in en ltr.
