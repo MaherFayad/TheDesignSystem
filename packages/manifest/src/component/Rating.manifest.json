@@ -191,7 +191,10 @@
       "example": "Rating.demo.tsx"
     },
     "angular": {
-      "status": "planned"
+      "status": "ready",
+      "behavior": "div[dsRating], hand built with the Radix RadioGroup DOM on the CDK FocusKeyManager and Directionality, ControlValueAccessor",
+      "example": "rating.demo.ts",
+      "note": "The host is the root: a radiogroup of star buttons, or with readOnly the role img stars and the text. Inputs take the React prop names; onValueChange is the valueChange output of [(value)]; getItemLabel and getValueLabel are function inputs. aria-label, aria-labelledby and aria-describedby are inputs, because React moves them to the stars when read only and merges them with its own ids. The text after the stars is projected content, read once after the first render. Default star names follow the Theme language (3 من 5 نجوم and بدون تقييم in Arabic). Behavior by hand in behavior/roving-radio.ts as React passes it to Radix: horizontal, no loop, arrows in the reading direction, Home and End pick the ends. Works with reactive and template forms. Rating.css is used as is."
     },
     "native": {
       "status": "planned",

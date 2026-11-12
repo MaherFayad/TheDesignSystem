@@ -15480,7 +15480,10 @@
         "example": "RadioCard.demo.tsx"
       },
       "angular": {
-        "status": "planned"
+        "status": "ready",
+        "behavior": "div[dsRadioCard] and button[dsRadioCardItem], hand built with the Radix RadioGroup DOM on the CDK FocusKeyManager and Directionality, ControlValueAccessor",
+        "example": "radio-card.demo.ts",
+        "note": "The group host is the root (role radiogroup), the item host is the card button (role radio). Inputs take the React prop names; onValueChange is the valueChange output of [(value)]. title and description take text, icon takes an icon name or a TemplateRef, end takes text or a TemplateRef. aria-labelledby and aria-describedby are inputs on the item, because React merges them with its own ids. Behavior as RadioGroup, from behavior/roving-radio.ts. Inside a form the item inserts the hidden native radio after its host, where Radix renders it. Works with reactive and template forms. RadioCard.css is used as is."
       },
       "native": {
         "status": "planned"
@@ -15772,7 +15775,10 @@
         "example": "RadioGroup.demo.tsx"
       },
       "angular": {
-        "status": "planned"
+        "status": "ready",
+        "behavior": "div[dsRadioGroup] and div[dsRadioGroupItem], hand built with the Radix RadioGroup DOM on the CDK FocusKeyManager and Directionality, ControlValueAccessor",
+        "example": "radio-group.demo.ts",
+        "note": "The group host is the root (role radiogroup), the item host is the item row. Inputs take the React prop names; onValueChange is the valueChange output of [(value)]. label, description and error take text. aria-labelledby and aria-describedby are inputs on the group (React merges them with its own ids); id, aria-label, aria-labelledby and aria-describedby are inputs on the item (React spreads them on the control). Behavior by hand in behavior/roving-radio.ts with the Radix DOM: the root is the tab stop and hands focus to the checked item, arrows move and select in the reading direction (key moves on the CDK FocusKeyManager), Space selects, Enter does nothing, Shift+Tab leaves the group, a hidden native radio after each control inside a form. Works with reactive and template forms. RadioGroup.css is used as is."
       },
       "native": {
         "status": "planned"
@@ -16586,7 +16592,10 @@
         "example": "Rating.demo.tsx"
       },
       "angular": {
-        "status": "planned"
+        "status": "ready",
+        "behavior": "div[dsRating], hand built with the Radix RadioGroup DOM on the CDK FocusKeyManager and Directionality, ControlValueAccessor",
+        "example": "rating.demo.ts",
+        "note": "The host is the root: a radiogroup of star buttons, or with readOnly the role img stars and the text. Inputs take the React prop names; onValueChange is the valueChange output of [(value)]; getItemLabel and getValueLabel are function inputs. aria-label, aria-labelledby and aria-describedby are inputs, because React moves them to the stars when read only and merges them with its own ids. The text after the stars is projected content, read once after the first render. Default star names follow the Theme language (3 من 5 نجوم and بدون تقييم in Arabic). Behavior by hand in behavior/roving-radio.ts as React passes it to Radix: horizontal, no loop, arrows in the reading direction, Home and End pick the ends. Works with reactive and template forms. Rating.css is used as is."
       },
       "native": {
         "status": "planned",

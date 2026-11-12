@@ -7,5 +7,8 @@ export * from './components/dialog/index';
 export * from './components/field/index';
 export * from './components/icon-button/index';
 export * from './components/input/index';
+export * from './components/radio-card/index';
+export * from './components/radio-group/index';
+export * from './components/rating/index';
 export * from './components/title-bar/index';
 export * from './components/window-controls/index';
