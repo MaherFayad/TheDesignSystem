@@ -19,7 +19,7 @@ export default function InputGroupDemo() {
         {shapes.map((shape) => (
           <DemoGrid key={shape} min="16rem">
             {sizes.map((size) => (
-              <InputGroup key={size} size={size} shape={shape} aria-label={`Board address, ${size}, ${shape}`}>
+              <InputGroup key={size} size={size} shape={shape}>
                 <InputGroupAddon>https://</InputGroupAddon>
                 <Input aria-label={`Board address, ${size}, ${shape}`} defaultValue="boards.example.com" type="url" />
                 <IconButton icon="copy" label="Copy address" />
@@ -28,27 +28,27 @@ export default function InputGroupDemo() {
           </DemoGrid>
         ))}
         <DemoGrid min="16rem">
-          <InputGroup aria-label="Price">
+          <InputGroup>
             <InputGroupAddon>SAR</InputGroupAddon>
             <Input aria-label="Price" type="number" defaultValue="249" />
           </InputGroup>
-          <InputGroup aria-label="Width">
+          <InputGroup>
             <Input aria-label="Width" type="number" defaultValue="320" />
             <InputGroupAddon>px</InputGroupAddon>
           </InputGroup>
-          <InputGroup aria-label="Invite by email">
+          <InputGroup>
             <Input aria-label="Email" type="email" placeholder="name@example.com" />
             <Button>Send invite</Button>
           </InputGroup>
         </DemoGrid>
         <Theme lang="ar" data-demo="content">
           <DemoRow label="عربي">
-            <InputGroup aria-label="رابط اللوحة" dir="ltr">
+            <InputGroup dir="ltr">
               <InputGroupAddon>https://</InputGroupAddon>
               <Input aria-label="رابط اللوحة" type="url" defaultValue="boards.example.com" />
               <IconButton icon="copy" label="نسخ الرابط" />
             </InputGroup>
-            <InputGroup aria-label="السعر">
+            <InputGroup>
               <Input aria-label="السعر" type="number" defaultValue="249" />
               <InputGroupAddon>ريال</InputGroupAddon>
             </InputGroup>

@@ -11,9 +11,10 @@
  *   --_input-group-padding-inline  the add on inline padding
  *   --_input-group-font-size       the add on text size
  *   --_input-group-radius          the outer corners of an add on at an end
- *   --_input-group-addon-bg        the add on fill
- *   --_input-group-addon-fg        the add on text color
+ *   --_input-group-bg        the add on fill
+ *   --_input-group-fg        the add on text color
  *   --_input-group-border-color    the add on border
+ *   --_input-group-seam-color      the add on border that meets the control (-invalid when invalid)
  *   --_input-group-ring            the focus ring of a joined child, drawn inside it
  *
  * The children are Input, Button and IconButton roots, styled by their own
@@ -27,9 +28,11 @@
     --_input-group-padding-inline: var(--ds-space-m);
     --_input-group-font-size: var(--ds-font-size-s);
     --_input-group-radius: var(--ds-radius-control);
-    --_input-group-addon-bg: var(--ds-color-bg-overlay-5);
-    --_input-group-addon-fg: var(--ds-color-text-muted);
+    --_input-group-bg: var(--ds-color-bg-overlay-5);
+    --_input-group-fg: var(--ds-color-text-muted);
     --_input-group-border-color: var(--ds-color-border-control);
+    --_input-group-seam-color: var(--_input-group-border-color);
+    --_input-group-seam-color-invalid: var(--ds-color-state-danger-text);
     --_input-group-ring: inset 0 0 0 var(--ds-border-width-strong) var(--ds-color-focus-ring);
 
     display: flex;
@@ -40,9 +43,10 @@
     min-inline-size: 0;
   }
 
+  /* As on Input: at xs the padding is at least the end radius, so text never crowds a round end. */
   [data-ds='input-group'][data-size='xs'] {
     --_input-group-height: var(--ds-size-control-xs);
-    --_input-group-padding-inline: var(--ds-space-xs);
+    --_input-group-padding-inline: max(var(--ds-space-xs), min(var(--_input-group-radius), var(--_input-group-height) / 2));
   }
 
   [data-ds='input-group'][data-size='sm'] {
@@ -64,14 +68,28 @@
   /* ------------------------------------------------------------ parts */
 
   /* The control takes the free space; add ons and actions keep their own width. */
+  /* A zero base: the control takes what the add ons and actions leave, so they shrink only when the row is short. */
   [data-ds='input-group'] > [data-part='control'] {
-    flex: 1 1 auto;
+    flex: 1 1 0;
     inline-size: auto;
     min-inline-size: 0;
   }
 
-  [data-ds='input-group'] > :is([data-part='addon'], [data-part='action']) {
+  [data-ds='input-group'] > [data-part='action'] {
     flex: none;
+  }
+
+  /*
+   * A long add on gives way before the control does: it may shrink to half
+   * the row, then its text is cut at the end. The full text stays in the
+   * control's description. At 320px the control keeps room to type.
+   */
+  [data-ds='input-group'] > [data-part='addon'] {
+    flex: 0 1 auto;
+    min-inline-size: 0;
+    max-inline-size: 50%;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   /* The add on: a quiet box with the control's height and border, on the value's text size. */
@@ -83,8 +101,8 @@
     padding-inline: var(--_input-group-padding-inline);
     border: var(--ds-border-width-default) solid var(--_input-group-border-color);
     border-radius: var(--_input-group-radius);
-    background-color: var(--_input-group-addon-bg);
-    color: var(--_input-group-addon-fg);
+    background-color: var(--_input-group-bg);
+    color: var(--_input-group-fg);
     font-family: var(--ds-font-family-sans);
     font-size: var(--_input-group-font-size);
     line-height: var(--ds-font-leading-snug);
@@ -111,6 +129,20 @@
     border-end-end-radius: 0;
   }
 
+  /* The add on border that meets the control: the control's state shows on that side too. */
+  [data-ds='input-group'] > [data-part='addon']:has(+ [data-part='control']) {
+    border-inline-end-color: var(--_input-group-seam-color);
+  }
+
+  [data-ds='input-group'][data-invalid] {
+    --_input-group-seam-color: var(--_input-group-seam-color-invalid);
+  }
+
+  /* Read only: the add ons dash with the control. */
+  [data-ds='input-group'][data-readonly] > [data-part='addon'] {
+    border-style: dashed;
+  }
+
   /*
    * The focus ring goes inside the child: a ring outside would sit under
    * the next part, which paints later. The same width and color as the
@@ -118,6 +150,10 @@
    */
   [data-ds='input-group'] > [data-ds='input'] {
     --_input-ring: var(--_input-group-ring);
+  }
+
+  [data-ds='input-group'] > [data-ds='search-field'] {
+    --_search-field-ring: var(--_input-group-ring);
   }
 
   [data-ds='input-group'] > :is([data-ds='button'], [data-ds='icon-button']) {
@@ -146,7 +182,7 @@
       outline-offset: calc(-2 * var(--ds-border-width-strong));
     }
 
-    [data-ds='input-group'] > [data-ds='input']:focus-within {
+    [data-ds='input-group'] > :is([data-ds='input'], [data-ds='search-field']):focus-within {
       outline-offset: calc(-1 * var(--ds-border-width-strong));
     }
 

@@ -12,9 +12,14 @@
 // IconButton gets data-part="action", InputGroupAddon is the addon part, and
 // any other component (an Input, a PasswordField, a SearchField) is the
 // control: it gets data-part="control" on its root through rootProps, which
-// every form control takes (anatomy.md, one convention, rule 8).
+// every form control takes (anatomy.md, one convention, rule 8). So a
+// wrapper around a Button (a Tooltip trigger) would be read as the control:
+// give such a wrapper's Button data-part="action" yourself, or wrap the
+// group instead. Children inside a fragment are not stamped: list the parts
+// directly.
 // Size, shape, invalid and disabled are passed to every child that leaves
-// them unset, and an action with no emphasis of its own is outline, so its
+// them unset (the add on height follows the group's size, so set size on
+// the group, not on a child), and an action with no emphasis of its own is outline, so its
 // border joins the control's. Add on text joins the control's aria-describedby, so it is
 // read as a description of the control, never as part of its name.
 import {
@@ -47,6 +52,8 @@ export interface InputGroupProps extends Omit<ComponentProps<'div'>, 'title' | '
   invalid?: boolean;
   /** Disables the control and every action. Inside a Field it follows the Field. */
   disabled?: boolean;
+  /** Marks the control read only; the add ons dash with it. Inside a Field it follows the Field. */
+  readOnly?: boolean;
   ref?: Ref<HTMLDivElement>;
 }
 
@@ -89,6 +96,7 @@ export function InputGroup({
   shape = 'default',
   invalid,
   disabled,
+  readOnly,
   children,
   ref,
   ...rest
@@ -97,6 +105,7 @@ export function InputGroup({
   const base = useId();
   const isInvalid = invalid ?? field?.invalid ?? false;
   const isDisabled = disabled ?? field?.disabled ?? false;
+  const isReadOnly = readOnly ?? field?.readOnly ?? false;
 
   // First pass: give every addon an id, so the control can point at them.
   const addonIds: string[] = [];
@@ -116,7 +125,7 @@ export function InputGroup({
       const describedBy = [...addonIds, own].filter(Boolean).join(' ') || undefined;
       const rootProps = { ...(props.rootProps as Record<string, unknown> | undefined), 'data-part': 'control' };
       return cloneElement(element, {
-        ...fillUnset(props, { size, shape, invalid, disabled }),
+        ...fillUnset(props, { size, shape, invalid, disabled, readOnly }),
         'aria-describedby': describedBy,
         rootProps,
       });
@@ -141,6 +150,7 @@ export function InputGroup({
       data-shape={shape}
       data-invalid={isInvalid ? '' : undefined}
       data-disabled={isDisabled ? '' : undefined}
+      data-readonly={isReadOnly ? '' : undefined}
       aria-disabled={isDisabled ? true : undefined}
     >
       {parts}

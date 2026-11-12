@@ -2249,7 +2249,6 @@
       "root": {
         "accepts": [
           "Input",
-          "PasswordField",
           "SearchField",
           "InputGroupAddon",
           "Button",
@@ -2271,7 +2270,7 @@
           "lg"
         ],
         "default": "md",
-        "description": "Passed to every child that does not set its own. The add on takes the same height."
+        "description": "Passed to every child that does not set its own. The add on takes the group's size, so set size on the group, not on a child."
       },
       "shape": {
         "type": [
@@ -2289,14 +2288,19 @@
         "type": "boolean",
         "description": "Disables the control and every action. Inside a Field it follows the Field."
       },
+      "readOnly": {
+        "type": "boolean",
+        "description": "Marks the control read only; add ons dash with it. Inside a Field it follows the Field."
+      },
       "children": {
         "type": "node",
-        "description": "One text control, with InputGroupAddon parts and Buttons or IconButtons around it, in reading order. Direct children only: the group stamps the parts on them."
+        "description": "One text control (Input or SearchField), with InputGroupAddon parts and Buttons or IconButtons around it, in reading order. Direct children only: the group stamps the parts on them. Any component child that is not an add on, a Button or an IconButton is taken as the control, and children inside a fragment are not stamped."
       }
     },
     "states": [
       "data-invalid",
-      "data-disabled"
+      "data-disabled",
+      "data-readonly"
     ],
     "a11y": {
       "role": "group, around the native text control and the buttons",
@@ -2314,7 +2318,8 @@
         "The group passes size, shape, invalid and disabled to children that leave them unset. A child's own prop wins.",
         "Actions keep aria-disabled while the group is disabled, so they stay focusable and a Tooltip can say why.",
         "While disabled the root carries aria-disabled, so the dimmed add on text reads as part of an inactive control (WCAG 1.4.3 exempts inactive components).",
-        "A group whose parts make one Latin value, such as https:// and a host, takes dir ltr in an Arabic page, so the prefix stays before the value. The action then sits at the right end."
+        "A group whose parts make one Latin value, such as https:// and a host, takes dir ltr in an Arabic page, so the prefix stays before the value. The action then sits at the right end.",
+        "A long add on shrinks to half the row and its text is cut at the end, so the control keeps room to type at 320px (WCAG 1.4.10). The full text stays in the control's description; keep add ons short."
       ]
     },
     "content": {
@@ -2391,6 +2396,10 @@
       {
         "wrong": "A URL group in an Arabic page left in rtl, so the page shows the host before https://",
         "right": "dir ltr on the InputGroup when its parts make one Latin value"
+      },
+      {
+        "wrong": "A Tooltip or another wrapper around an action, as a direct child",
+        "right": "Pass data-part action on the Button inside the wrapper, since the group reads the wrapper as the control"
       }
     ],
     "since": "0.1.0"

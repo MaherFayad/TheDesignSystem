@@ -4,6 +4,7 @@ import { Button } from '../Button/Button';
 import { Field } from '../Field/Field';
 import { IconButton } from '../IconButton/IconButton';
 import { Input } from '../Input/Input';
+import { SearchField } from '../SearchField/SearchField';
 import InputGroupDemo from './InputGroup.demo';
 import { InputGroup, InputGroupAddon } from './index';
 
@@ -105,6 +106,32 @@ describe('InputGroup', () => {
     const input = screen.getByRole('textbox', { name: 'Workspace' });
     expect(input.getAttribute('aria-describedby')).toContain(screen.getByText('Use only letters.').closest('[data-part="error"]')?.id);
     expect(screen.getByRole('button', { name: 'Check address' }).getAttribute('aria-disabled')).toBe('true');
+  });
+
+  it('mirrors read only from the Field', () => {
+    const { container } = render(
+      <Field label="Board link" readOnly>
+        <InputGroup>
+          <InputGroupAddon>https://</InputGroupAddon>
+          <Input />
+        </InputGroup>
+      </Field>,
+    );
+    expect(root(container).hasAttribute('data-readonly')).toBe(true);
+    expect((screen.getByRole('textbox', { name: 'Board link' }) as HTMLInputElement).readOnly).toBe(true);
+  });
+
+  it('takes a SearchField as the control', () => {
+    const { container } = render(
+      <InputGroup size="sm">
+        <SearchField aria-label="Search boards" />
+        <Button>Search</Button>
+      </InputGroup>,
+    );
+    const control = root(container).children[0];
+    expect(control?.getAttribute('data-ds')).toBe('search-field');
+    expect(control?.getAttribute('data-part')).toBe('control');
+    expect(control?.getAttribute('data-size')).toBe('sm');
   });
 
   it('renders the demo with every case', () => {
