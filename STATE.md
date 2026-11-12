@@ -95,9 +95,26 @@ components, a fresh review, then commit.
 | 3A | Checkbox, CheckboxGroup, Switch, Slider, RangeSlider | claude/ds-lane-3a | session_01ErLBsa24qpzHgQodUJrTe8 | running |
 | 3B | RadioGroup, RadioCard, Rating | claude/ds-lane-3b | session_01ErLBsdLpnMMa2v2FtGkhme | running |
 | 1.11 | Motion catalog | claude/ds-order-1-11 | session_01ErLBscxhmd1nrS2SH4V1nU | running |
+| 6A | Dialog bring up, AlertDialog, Drawer, Sheet | claude/ds-lane-6a | session_01ErLBsdNLKJYCuviMHY2RUQ | running |
+| 6C | ContextMenu, Menubar | claude/ds-lane-6c | session_01ErLBsZK8DpHg6JpsoEi455 | running |
+| 7A | Sidebar, Rail, Navbar | claude/ds-lane-7a | session_01ErLBsa15oMtQUTSt64h7S1 | running |
+| 7B | Tabs, Toolbar, TabBar, Dock | claude/ds-lane-7b | session_01ErLBsdSbnyDtHbcF8wWvPW | running |
+| 7C | SkipLink, Breadcrumbs, Pagination, TableOfContents, LanguageSwitch | claude/ds-lane-7c | session_01ErLBsaPqGo8ipZihqhLTXM | running |
+| 2A | Label, FieldError, Field bring up, Textarea | claude/ds-lane-2a | session_01ErLBsdmfWzsKQon1KuZQ6V | running |
+| 2B | InputGroup, SearchField, PasswordField, InlineEdit | claude/ds-lane-2b | session_01ErLBsbwATiCna4DXRSoBvp | running |
+| 2D | OTPField, PhoneField | claude/ds-lane-2d | session_01ErLBsbGXGP5q1RazYgciYx | running |
+| 3C | ListBox, Combobox, Autocomplete | claude/ds-lane-3c | session_01ErLBsZo8xNsMUVW6VtiVdG | running |
+| 4B | Stepper, FormWizard | claude/ds-lane-4b | session_01ErLBsZiF2GsbhjQfEgbywx | running |
 
-Local subagents in the lead's tree: lane 1B (Link, ButtonGroup), lane 1C
-(DropdownMenu), 1.10 Neutral, 1.12 checker.
+Not started yet (each waits on another lane): 1D ToggleGroup and
+SegmentedControl, 1E SplitButton, 2C NumberField and ScrubInput (needs an
+install), 3D Select, MultiSelect and TagField (need ListBox), 4A Fieldset,
+Form and ConsentField, 4C FilterBar, 6D CommandPalette and Lightbox.
+
+Done locally: Link, ButtonGroup, DropdownMenu.
+
+Local subagents in the lead's tree: lane 1A (ToggleButton, CloseButton, CopyButton,
+FloatingActionButton), 1.10 Neutral, the base CSS rem fix.
 
 ## Coverage
 | Family | React | Angular | Native |
