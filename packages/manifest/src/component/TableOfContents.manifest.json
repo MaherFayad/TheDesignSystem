@@ -49,7 +49,7 @@
     "offset": {
       "type": "number",
       "default": 0,
-      "description": "The height of a sticky header above the content, in px. A heading counts as reached when its top passes this line plus a fifth of the viewport, at most 64px (the reading line)."
+      "description": "The height of a sticky header above the content, in px. A heading counts as reached when its top passes this line plus a fifth of the viewport, at most 64px (the reading line). A jump from a link also keeps the heading below it: a heading with no scroll-margin-block-start of its own gets one of this height inline."
     },
     "sticky": {
       "type": "boolean",
@@ -89,9 +89,10 @@
       "Scrolling is smooth, and a jump under prefers-reduced-motion. The URL fragment is set with history.pushState, so there is no second jump; hashchange does not fire and :target does not update. While the scroll plays, sections passed on the way are not marked; scrollend lifts the hold.",
       "A click with a modifier key or a middle click is left to the browser.",
       "The active section comes from activeHeading in @the-system/shared at the reading line (offset plus a fifth of the viewport, at most 64px). An IntersectionObserver on that line and the scrollend event trigger a new measure, once per frame at most; nothing runs on every scroll event. A ResizeObserver keeps the indicator on its link when the list reflows.",
-      "Sticky form (WCAG 2.4.11): the list sits below offset plus space.l and keeps scroll padding around the active link. Give the headings scroll-margin-block-start equal to any sticky page header and pass the same height as offset, so a heading never lands under the header.",
+      "Sticky form (WCAG 2.4.11): the list sits below offset plus space.l and keeps scroll padding around the active link. Pass the height of any sticky page header as offset: a jump then sets scroll-margin-block-start to that height inline on a heading that has none of its own, so a heading never lands under the header. A scroll margin set by the page is kept.",
       "Under forced colors the indicator uses Highlight and the focus outline uses Highlight.",
-      "On load, the section named by the URL fragment is marked first, when there is one."
+      "On load, the section named by the URL fragment is marked first, when there is one, and held until the reader scrolls, so the first measure does not move the mark. A malformed fragment such as #50% is read as written and never throws.",
+      "With no headings the component renders nothing: no landmark that holds only its title."
     ]
   },
   "content": {
@@ -128,8 +129,8 @@
     "border.width.strong",
     "focus.shadow.ring",
     "dialog.height.max",
-    "duration.base",
-    "ease.out"
+    "duration.medium",
+    "ease.standard"
   ],
   "motion": "tab-indicator",
   "frameworks": {
@@ -168,7 +169,7 @@
     },
     {
       "wrong": "Headings that land under a sticky header after a jump",
-      "right": "scroll-margin-block-start on the headings and the same height as offset"
+      "right": "The height of the sticky header passed as offset, so the jump keeps the heading below it"
     }
   ],
   "contract": {

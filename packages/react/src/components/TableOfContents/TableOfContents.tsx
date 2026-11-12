@@ -86,11 +86,28 @@ function prefersReducedMotion(view: Window | null): boolean {
   return view?.matchMedia?.('(prefers-reduced-motion: reduce)').matches ?? false;
 }
 
-/** Scrolls to the heading, moves focus to it and sets the fragment. Returns false when it is missing. */
-function jumpTo(id: string, doc: Document): boolean {
+/** The id a URL fragment names. A malformed escape such as `#50%` is read as written, never thrown. */
+export function fragmentId(hash: string): string {
+  const raw = hash.startsWith('#') ? hash.slice(1) : hash;
+  try {
+    return decodeURIComponent(raw);
+  } catch {
+    return raw;
+  }
+}
+
+/**
+ * Scrolls to the heading, moves focus to it and sets the fragment. Returns false when it is missing.
+ * With an offset, a heading that has no scroll margin of its own gets one inline, so it never lands under a sticky header.
+ */
+function jumpTo(id: string, doc: Document, offset = 0): boolean {
   const target = doc.getElementById(id);
   if (!target) return false;
   const view = doc.defaultView;
+  if (offset > 0 && !target.style.scrollMarginBlockStart) {
+    const own = view?.getComputedStyle?.(target).scrollMarginBlockStart ?? '';
+    if (!own || parseFloat(own) === 0) target.style.scrollMarginBlockStart = `${offset}px`;
+  }
   target.scrollIntoView?.({ behavior: prefersReducedMotion(view) ? 'auto' : 'smooth', block: 'start' });
   target.focus({ preventScroll: true });
   if (doc.activeElement !== target) {
@@ -116,6 +133,7 @@ export function TableOfContents({
   const { lang } = useTheme();
   const titleId = useId();
   const tree = useMemo(() => buildTree(items), [items]);
+  const empty = tree.length === 0;
   const [tracked, setTracked] = useState<string | null>(items[0]?.id ?? null);
   const controlled = activeProp !== undefined;
   const active = controlled ? activeProp : tracked;
@@ -141,11 +159,15 @@ export function TableOfContents({
   const ids = useMemo(() => items.map((i) => i.id).join(' '), [items]);
 
   // New headings: start from the fragment of the URL when it names one, else the first.
+  // A fragment that names a heading holds the mark until the reader scrolls, so the first measure does not
+  // overwrite it (a section near the page end can never reach the reading line). scrollend lifts the hold.
   useEffect(() => {
     const view = rootRef.current?.ownerDocument.defaultView;
     const list = ids ? ids.split(' ') : [];
-    const fromHash = view ? decodeURIComponent(view.location.hash.slice(1)) : '';
-    setActive(list.includes(fromHash) ? fromHash : (list[0] ?? null));
+    const fromHash = view ? fragmentId(view.location.hash) : '';
+    const named = fromHash !== '' && list.includes(fromHash);
+    if (named) lockRef.current = fromHash;
+    setActive(named ? fromHash : (list[0] ?? null));
   }, [ids, setActive]);
 
   // Track the section in view. The observer only says "measure again"; activeHeading decides.
@@ -199,7 +221,7 @@ export function TableOfContents({
     const observer = new view.ResizeObserver(() => setLayoutTick((n) => n + 1));
     observer.observe(root);
     return () => observer.disconnect();
-  }, []);
+  }, [empty]);
 
   // Place the indicator beside the active link: transform moves it, block-size is set at once.
   // In the sticky form, the active link is also kept in view inside the list, without scrolling the page.
@@ -229,7 +251,7 @@ export function TableOfContents({
     const doc = event.currentTarget.ownerDocument;
     // Hold the mark on the chosen section while the scroll plays; scrollend lifts it.
     lockRef.current = id;
-    if (!jumpTo(id, doc)) {
+    if (!jumpTo(id, doc, offset)) {
       lockRef.current = null;
       return;
     }
@@ -273,6 +295,9 @@ export function TableOfContents({
 
   const titleText = title === undefined ? words[lang === 'ar' ? 'ar' : 'en'] : title;
 
+  // No headings: nothing to navigate, so no landmark that holds only its title.
+  if (empty) return null;
+
   return (
     <nav
       {...rest}
@@ -288,7 +313,7 @@ export function TableOfContents({
           {titleText}
         </p>
       )}
-      {tree.length > 0 && renderList(tree)}
+      {renderList(tree)}
       <span data-part="indicator" aria-hidden="true" ref={indicatorRef} />
     </nav>
   );

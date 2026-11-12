@@ -4,7 +4,8 @@ import { createRef } from 'react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { Theme } from '../../theme';
 import TableOfContentsDemo from './TableOfContents.demo';
-import { TableOfContents, type TocHeading } from './index';
+import { fragmentId, TableOfContents } from './TableOfContents';
+import type { TocHeading } from './index';
 
 const items: TocHeading[] = [
   { id: 'a', label: 'Get started', level: 2 },
@@ -208,10 +209,70 @@ describe('TableOfContents', () => {
     expect(screen.getByRole('navigation', { name: 'Sections' })).not.toBeNull();
   });
 
-  it('renders the title only when there are no headings', () => {
+  it('renders nothing when there are no headings, so no landmark holds only its title', () => {
     const { container } = render(<TableOfContents items={[]} />);
-    expect(container.querySelector('[data-part="list"]')).toBeNull();
-    expect(container.querySelector('[data-part="title"]')).not.toBeNull();
+    expect(container.querySelector('[data-ds="table-of-contents"]')).toBeNull();
+    expect(screen.queryByRole('navigation')).toBeNull();
+  });
+
+  it('renders with a malformed fragment in the URL, such as #50%', () => {
+    for (const hash of ['#50%', '#%E0%A4%A']) {
+      window.history.replaceState(null, '', hash);
+      const { container, unmount } = render(<Page />);
+      expect(root(container)).not.toBeNull();
+      expect(screen.getByRole('link', { name: 'Get started' }).getAttribute('aria-current')).toBe('location');
+      unmount();
+    }
+    expect(fragmentId('#50%')).toBe('50%');
+    expect(fragmentId('#caf%C3%A9')).toBe('café');
+  });
+
+  it('keeps the section the fragment names when the first measure runs, until the reader scrolls', () => {
+    let callback: (() => void) | undefined;
+    vi.stubGlobal(
+      'IntersectionObserver',
+      class {
+        constructor(cb: () => void) {
+          callback = cb;
+        }
+        observe() {}
+        disconnect() {}
+      },
+    );
+    vi.stubGlobal('requestAnimationFrame', (cb: FrameRequestCallback) => {
+      cb(0);
+      // 0, as a frame that already ran: the next schedule asks again.
+      return 0;
+    });
+    window.history.replaceState(null, '', '#b');
+    render(<Page />);
+    const tops: Record<string, number> = { a: 10, a1: 200, b: 400 };
+    for (const id of Object.keys(tops)) {
+      document.getElementById(id)!.getBoundingClientRect = () => ({ top: tops[id] }) as DOMRect;
+    }
+    // The observer fires once on observe: the mark stays on the fragment.
+    act(() => callback?.());
+    expect(screen.getByRole('link', { name: 'Theming' }).getAttribute('aria-current')).toBe('location');
+    // The reader scrolls: tracking takes over.
+    act(() => {
+      window.dispatchEvent(new Event('scrollend'));
+    });
+    expect(screen.getByRole('link', { name: 'Get started' }).getAttribute('aria-current')).toBe('location');
+  });
+
+  it('applies offset to the jump: a heading with no scroll margin gets one', () => {
+    Element.prototype.scrollIntoView = vi.fn();
+    render(<Page offset={56} />);
+    fireEvent.click(screen.getByRole('link', { name: 'Theming' }));
+    expect(document.getElementById('b')!.style.scrollMarginBlockStart).toBe('56px');
+  });
+
+  it('keeps a scroll margin the heading already has', () => {
+    Element.prototype.scrollIntoView = vi.fn();
+    render(<Page offset={56} />);
+    document.getElementById('b')!.style.scrollMarginBlockStart = '80px';
+    fireEvent.click(screen.getByRole('link', { name: 'Theming' }));
+    expect(document.getElementById('b')!.style.scrollMarginBlockStart).toBe('80px');
   });
 
   it('takes ref as a prop and passes props through', () => {

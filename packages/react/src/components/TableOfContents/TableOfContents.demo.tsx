@@ -3,15 +3,16 @@ import { DemoCase, DemoPage } from '../../demo';
 import { Theme } from '../../theme';
 import { TableOfContents, type TocHeading } from './index';
 
-/** An article beside its contents list. The list sticks while the article scrolls past. */
+/** An article beside its contents list. The list sticks while the article scrolls past. On a narrow screen the list wraps below. */
 const layout: CSSProperties = {
-  display: 'grid',
-  gridTemplateColumns: 'minmax(0, 1fr) minmax(0, var(--ds-menu-width-min))',
+  display: 'flex',
+  flexWrap: 'wrap',
   gap: 'var(--ds-space-4xl)',
-  alignItems: 'start',
+  alignItems: 'flex-start',
 };
 
-const article: CSSProperties = { display: 'grid', gap: 'var(--ds-space-m)', maxInlineSize: '60ch' };
+const article: CSSProperties = { display: 'grid', gap: 'var(--ds-space-m)', maxInlineSize: '60ch', flex: '999 1 30ch', minInlineSize: 0 };
+const side: CSSProperties = { flex: '1 1 var(--ds-menu-width-min)', minInlineSize: 0 };
 const heading: CSSProperties = { margin: 0, scrollMarginBlockStart: 'var(--ds-space-l)' };
 
 interface Section {
@@ -31,11 +32,11 @@ const en: Section[] = [
 ];
 
 const ar: Section[] = [
-  { id: 'toc-ar-start', label: 'البداية', level: 2, body: 'أنشئ لوحة وأضف المراجع وادع فريقك. كل لوحة تحفظ سجلها.' },
-  { id: 'toc-ar-boards', label: 'اللوحات', level: 2, body: 'اللوحة فيها إطارات وملاحظات ومراجع. اسحب العناصر لترتيبها أو استخدم الأسهم.' },
-  { id: 'toc-ar-frames', label: 'الإطارات', level: 3, body: 'الإطار يجمع العناصر وتقدر تصدره كصورة وحدة.' },
-  { id: 'toc-ar-sharing', label: 'المشاركة', level: 2, body: 'شارك الرابط بصلاحية العرض أو التعديل.' },
-  { id: 'toc-ar-export', label: 'التصدير', level: 2, body: 'صدر اللوحة كصور أو ملف PDF.' },
+  { id: 'toc-ar-start', label: 'البداية', level: 2, body: 'ابدأ بلوحة جديدة، ضيف فيها المراجع وشاركها مع فريقك. كل لوحة تحفظ سجلها.' },
+  { id: 'toc-ar-boards', label: 'اللوحات', level: 2, body: 'اللوحة فيها إطارات وملاحظات ومراجع. اسحب العناصر عشان ترتبها، أو استخدم الأسهم.' },
+  { id: 'toc-ar-frames', label: 'الإطارات', level: 3, body: 'الإطار يجمع العناصر، وتقدر تصدره كصورة وحدة.' },
+  { id: 'toc-ar-sharing', label: 'المشاركة', level: 2, body: 'شارك الرابط، وحدد إذا يقدرون يشوفون بس أو يعدلون.' },
+  { id: 'toc-ar-export', label: 'التصدير', level: 2, body: 'صدر اللوحة كصور أو كملف PDF.' },
 ];
 
 const toItems = (sections: Section[]): TocHeading[] => sections.map(({ id, label, level }) => ({ id, label, level }));
@@ -83,22 +84,23 @@ export default function TableOfContentsDemo() {
       <DemoCase id="variants" title="Variants: scroll the article, the list marks the section in view">
         <div style={layout}>
           <Article sections={en} />
-          <TableOfContents items={toItems(en)} sticky />
+          <TableOfContents items={toItems(en)} sticky style={side} />
         </div>
         <div style={layout}>
           <p>Size sm</p>
-          <TableOfContents size="sm" items={toItems(en)} />
+          <TableOfContents size="sm" items={toItems(en)} style={side} />
         </div>
         <h3 data-demo="title">Variants in Arabic</h3>
         <Theme lang="ar" data-demo="content">
           <div style={layout}>
             <Article sections={ar} />
-            <TableOfContents items={toItems(ar)} sticky />
+            <TableOfContents items={toItems(ar)} sticky style={side} />
           </div>
         </Theme>
       </DemoCase>
 
-      <DemoCase id="empty" title="Empty: no headings, the title only">
+      <DemoCase id="empty" title="Empty: no headings, nothing renders">
+        <p>This page has no headings, so there is no contents list.</p>
         <TableOfContents items={[]} />
       </DemoCase>
 
