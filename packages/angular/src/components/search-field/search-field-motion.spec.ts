@@ -17,27 +17,40 @@ interface Recorded {
   finish: () => void;
 }
 
-/** Records every el.animate call and returns a stand in Animation. */
+/**
+ * Records every el.animate call and returns a stand in Animation. It goes on
+ * Element, HTMLElement and SVGElement, since another spec may leave an own
+ * property on one of the lower prototypes.
+ */
 function recordAnimate() {
   const calls: Recorded[] = [];
-  const proto = Element.prototype as unknown as { animate?: unknown; getAnimations?: unknown };
-  const had = proto.animate;
-  const hadGet = proto.getAnimations;
-  proto.animate = function (this: Element, keyframes: Keyframe[], options: KeyframeAnimationOptions) {
+  type Proto = { animate?: unknown; getAnimations?: unknown };
+  const protos = [Element.prototype, HTMLElement.prototype, SVGElement.prototype] as unknown as Proto[];
+  const saved = protos.map((p) => ({
+    animate: Object.getOwnPropertyDescriptor(p, 'animate'),
+    getAnimations: Object.getOwnPropertyDescriptor(p, 'getAnimations'),
+  }));
+  const animate = function (this: Element, keyframes: Keyframe[], options: KeyframeAnimationOptions) {
     let done: () => void = () => undefined;
     const anim = { id: options.id, playState: 'running', finished: new Promise<void>((r) => (done = r)), cancel() {} };
     calls.push({ target: this, keyframes, options, finish: () => ((anim.playState = 'finished'), done()) });
     return anim;
   };
-  proto.getAnimations = () => [];
+  for (const p of protos) {
+    Object.defineProperty(p, 'animate', { configurable: true, writable: true, value: animate });
+    Object.defineProperty(p, 'getAnimations', { configurable: true, writable: true, value: () => [] });
+  }
   return {
     calls,
     take: () => calls.splice(0).map(({ target, keyframes, options }) => ({ target, keyframes, options })),
     restore: () => {
-      if (had === undefined) delete proto.animate;
-      else proto.animate = had;
-      if (hadGet === undefined) delete proto.getAnimations;
-      else proto.getAnimations = hadGet;
+      protos.forEach((p, i) => {
+        for (const name of ['animate', 'getAnimations'] as const) {
+          const d = saved[i]?.[name];
+          if (d) Object.defineProperty(p, name, d);
+          else delete p[name];
+        }
+      });
     },
   };
 }
@@ -52,12 +65,18 @@ class Host {
 
 const byId = (calls: Recorded[], id: string) => calls.filter((c) => c.options.id === `ds-motion:${id}`);
 
-/** jsdom lays nothing out: give every box a size, so the clear button can be copied. */
+/** jsdom lays nothing out: give every box a size, so the clear button can be copied. On HTMLElement too, as another spec may shadow Element. */
 function sized(): () => void {
-  const proto = Element.prototype;
-  const had = proto.getBoundingClientRect;
-  proto.getBoundingClientRect = () => ({ x: 0, y: 0, top: 0, left: 0, right: 24, bottom: 24, width: 24, height: 24, toJSON: () => ({}) }) as DOMRect;
-  return () => (proto.getBoundingClientRect = had);
+  const protos = [Element.prototype, HTMLElement.prototype];
+  const saved = protos.map((p) => Object.getOwnPropertyDescriptor(p, 'getBoundingClientRect'));
+  const rect = () => ({ x: 0, y: 0, top: 0, left: 0, right: 24, bottom: 24, width: 24, height: 24, toJSON: () => ({}) }) as DOMRect;
+  for (const p of protos) Object.defineProperty(p, 'getBoundingClientRect', { configurable: true, writable: true, value: rect });
+  return () =>
+    protos.forEach((p, i) => {
+      const d = saved[i];
+      if (d) Object.defineProperty(p, 'getBoundingClientRect', d);
+      else delete (p as { getBoundingClientRect?: unknown }).getBoundingClientRect;
+    });
 }
 
 function typeInto(input: HTMLInputElement, value: string): void {

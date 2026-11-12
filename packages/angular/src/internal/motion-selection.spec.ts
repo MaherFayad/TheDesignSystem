@@ -40,6 +40,8 @@ beforeEach(() => {
     Object.defineProperty(proto, 'animate', { configurable: true, writable: true, value: record });
   }
   vi.spyOn(Element.prototype, 'getBoundingClientRect').mockImplementation(box);
+  // Also on HTMLElement, where another spec file may have left its own measure.
+  vi.spyOn(HTMLElement.prototype, 'getBoundingClientRect').mockImplementation(box);
 });
 
 afterEach(() => {

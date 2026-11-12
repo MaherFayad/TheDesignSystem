@@ -249,7 +249,8 @@ describe('DsSegmentedControl', () => {
   it('places the indicator under the selected item and slides it with tab-slide on a change, as React', async () => {
     const animate = vi.fn(() => ({ finished: Promise.resolve(), cancel: vi.fn() }) as unknown as Animation);
     const proto = HTMLElement.prototype as unknown as { animate?: unknown; getAnimations?: unknown };
-    const saved = { animate: proto.animate, getAnimations: proto.getAnimations, rect: HTMLElement.prototype.getBoundingClientRect };
+    // Own descriptors, so cleanup removes the stubs instead of leaving own properties that hide later stubs on Element.prototype.
+    const own = (['animate', 'getAnimations', 'getBoundingClientRect'] as const).map((k) => [k, Object.getOwnPropertyDescriptor(HTMLElement.prototype, k)] as const);
     proto.animate = animate;
     proto.getAnimations = () => [];
     // A fake layout: each item is 60 by 26 px, side by side from x 3.
@@ -292,9 +293,10 @@ describe('DsSegmentedControl', () => {
       expect(animate).toHaveBeenCalledTimes(3);
     } finally {
       document.documentElement.removeAttribute('data-motion');
-      proto.animate = saved.animate;
-      proto.getAnimations = saved.getAnimations;
-      HTMLElement.prototype.getBoundingClientRect = saved.rect;
+      for (const [k, d] of own) {
+        if (d) Object.defineProperty(HTMLElement.prototype, k, d);
+        else delete (HTMLElement.prototype as unknown as Record<string, unknown>)[k];
+      }
     }
   });
 

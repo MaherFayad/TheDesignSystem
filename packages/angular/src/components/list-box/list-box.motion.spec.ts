@@ -70,6 +70,8 @@ class Host {
 
 async function setup() {
   vi.spyOn(Element.prototype, 'getBoundingClientRect').mockImplementation(box);
+  // Also on HTMLElement, where another spec file may have left its own measure.
+  vi.spyOn(HTMLElement.prototype, 'getBoundingClientRect').mockImplementation(box);
   const fixture = TestBed.createComponent(Host);
   await fixture.whenStable();
   const options = Array.from(fixture.nativeElement.querySelectorAll('[role="option"]')) as HTMLElement[];

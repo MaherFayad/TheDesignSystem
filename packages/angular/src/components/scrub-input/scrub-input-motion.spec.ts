@@ -16,27 +16,40 @@ interface Recorded {
   finish: () => void;
 }
 
-/** Records every el.animate call and returns a stand in Animation. */
+/**
+ * Records every el.animate call and returns a stand in Animation. It goes on
+ * Element, HTMLElement and SVGElement, since another spec may leave an own
+ * property on one of the lower prototypes.
+ */
 function recordAnimate() {
   const calls: Recorded[] = [];
-  const proto = Element.prototype as unknown as { animate?: unknown; getAnimations?: unknown };
-  const had = proto.animate;
-  const hadGet = proto.getAnimations;
-  proto.animate = function (this: Element, keyframes: Keyframe[], options: KeyframeAnimationOptions) {
+  type Proto = { animate?: unknown; getAnimations?: unknown };
+  const protos = [Element.prototype, HTMLElement.prototype, SVGElement.prototype] as unknown as Proto[];
+  const saved = protos.map((p) => ({
+    animate: Object.getOwnPropertyDescriptor(p, 'animate'),
+    getAnimations: Object.getOwnPropertyDescriptor(p, 'getAnimations'),
+  }));
+  const animate = function (this: Element, keyframes: Keyframe[], options: KeyframeAnimationOptions) {
     let done: () => void = () => undefined;
     const anim = { id: options.id, playState: 'running', finished: new Promise<void>((r) => (done = r)), cancel() {} };
     calls.push({ target: this, keyframes, options, finish: () => ((anim.playState = 'finished'), done()) });
     return anim;
   };
-  proto.getAnimations = () => [];
+  for (const p of protos) {
+    Object.defineProperty(p, 'animate', { configurable: true, writable: true, value: animate });
+    Object.defineProperty(p, 'getAnimations', { configurable: true, writable: true, value: () => [] });
+  }
   return {
     calls,
     take: () => calls.splice(0).map(({ target, keyframes, options }) => ({ target, keyframes, options })),
     restore: () => {
-      if (had === undefined) delete proto.animate;
-      else proto.animate = had;
-      if (hadGet === undefined) delete proto.getAnimations;
-      else proto.getAnimations = hadGet;
+      protos.forEach((p, i) => {
+        for (const name of ['animate', 'getAnimations'] as const) {
+          const d = saved[i]?.[name];
+          if (d) Object.defineProperty(p, name, d);
+          else delete p[name];
+        }
+      });
     },
   };
 }

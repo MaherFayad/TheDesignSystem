@@ -103,7 +103,8 @@ describe('DsToggleGroup', () => {
   it('tab-slide: the on fill slides from the item it leaves, the labels answer; none in a multiple group or when reduced', async () => {
     const animate = vi.fn(() => ({ playState: 'running', cancel: vi.fn() }) as unknown as Animation);
     const proto = HTMLElement.prototype as unknown as { animate?: unknown; getAnimations?: unknown };
-    const saved = { animate: proto.animate, getAnimations: proto.getAnimations, rect: HTMLElement.prototype.getBoundingClientRect };
+    // Own descriptors, so cleanup removes the stubs instead of leaving own properties that hide later stubs on Element.prototype.
+    const own = (['animate', 'getAnimations', 'getBoundingClientRect'] as const).map((k) => [k, Object.getOwnPropertyDescriptor(HTMLElement.prototype, k)] as const);
     proto.animate = animate;
     proto.getAnimations = () => [];
     // A fake layout: each item is 60 by 28 px, side by side; its fill and label inside it.
@@ -135,9 +136,10 @@ describe('DsToggleGroup', () => {
       expect(animate).toHaveBeenCalledTimes(3);
     } finally {
       document.documentElement.removeAttribute('data-motion');
-      proto.animate = saved.animate;
-      proto.getAnimations = saved.getAnimations;
-      HTMLElement.prototype.getBoundingClientRect = saved.rect;
+      for (const [k, d] of own) {
+        if (d) Object.defineProperty(HTMLElement.prototype, k, d);
+        else delete (HTMLElement.prototype as unknown as Record<string, unknown>)[k];
+      }
     }
   });
 
