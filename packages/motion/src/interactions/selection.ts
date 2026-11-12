@@ -1,4 +1,5 @@
-// Interactions of the selection family (order 1.21). See ./types.ts for the shape.
+// Interactions of the selection controls and lists family (orders 1.21 and
+// 1.22). See ./types.ts for the shape.
 import type { Interaction } from './types';
 
 export const selectionInteractions = [
@@ -15,32 +16,40 @@ export const selectionInteractions = [
     status: 'proposed',
   },
   {
-    id: 'switch-stretch',
-    components: ['Switch'],
+    id: 'slider-pull',
+    components: ['Slider', 'RangeSlider'],
     pattern: 'press',
     drive: 'css',
-    trigger: 'The person presses the switch with the pointer or Space, then releases it to toggle.',
+    trigger: 'Hold a slider thumb, or the track, with a pointer, and let go.',
     feedback:
-      'While pressed the thumb widens toward the side it will travel to, its trailing edge still, over duration.instant on ease.out. On the toggle it slides to the other side over duration.medium on ease.emphasized and settles back to its width.',
-    reduced: 'The thumb jumps to the other side and does not stretch.',
+      'The grabbed thumb scales up from its center to 2 minus scale.window-enter squared (1.15) over duration.base on ease.emphasized, and settles back the same way on release. The value follows the pointer at once.',
+    reduced: 'No motion: the thumb keeps its size; the grab cursor and the focus ring carry the state.',
     off: {
-      "[data-ds='switch']": {
-        '--_switch-stretch': '1',
-        '--_switch-duration': 'var(--ds-duration-base)',
-        '--_switch-ease': 'var(--ds-ease-default)',
-      },
+      "[data-ds='slider']": { '--_slider-lift': '1' },
+      "[data-ds='range-slider']": { '--_slider-lift': '1' },
     },
     status: 'proposed',
   },
   {
-    id: 'rating-fill',
-    components: ['Rating'],
-    pattern: 'pop',
+    id: 'slider-nudge',
+    components: ['Slider', 'RangeSlider'],
+    pattern: 'shake',
     drive: 'waapi',
-    trigger: 'The person picks a score by click, an arrow key, Home or End.',
+    trigger: 'A key or a drag pushes a thumb past the minimum or the maximum of a horizontal slider.',
     feedback:
-      'The stars from the first to the chosen one pop in a short run: each lands from about 94% and transparent over duration.medium on ease.emphasized, one half delay.reveal-step after the one before, capped at POP_MAX_STEPS. A new pick cancels the run. The hover preview stays instant.',
-    reduced: 'The stars fade in together, or change at once.',
+      'The thumb nudges space.3xs toward that end and back once (shake, one swing, toward) over duration.base on ease.out, added on top of the lift. A held key nudges once; a drag nudges once each time it goes past the end.',
+    reduced: 'No motion: the value stays at its end.',
+    status: 'proposed',
+  },
+  {
+    id: 'list-stagger',
+    components: ['List'],
+    pattern: 'list-stagger',
+    drive: 'waapi',
+    trigger: 'A list paints its rows for the first time.',
+    feedback:
+      'Each row fades in and rises by space.s over duration.slow on ease.reveal, one delay.reveal-step after the row before, capped at eight steps. Every row is in the DOM and read at once. It never plays on a re-render, an added row, a reorder or rows hydrated from server HTML.',
+    reduced: 'A fade of each row over duration.base with no delay and no rise.',
     status: 'proposed',
   },
 ] as const satisfies readonly Interaction[];

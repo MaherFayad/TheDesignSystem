@@ -6,6 +6,11 @@
 // Interactions (order 1.21, proposed): every one plays in full. Labels and
 // glyphs that change in answer to an action roll (swap), like the roll labels
 // of Desk controls, and numbers roll.
+//
+// Order 1.22 (proposed): Desk's character lives in its motion tokens. Its
+// springs overshoot most (the bouncy spring passes its target by a quarter),
+// settle over 300 to 440ms, stagger 45ms a step, pop to 1.14 and enter from
+// 0.9, like windows that grow and roll; distances are the longest.
 import type { StyleMotionPreset } from '@the-system/motion';
 
 const motion: StyleMotionPreset = {

@@ -18,8 +18,8 @@ export type DurationToken = `duration.${string}`;
 export type DelayToken = `delay.${string}`;
 /** An ease token name, for example `ease.out`. */
 export type EaseToken = `ease.${string}`;
-/** Any token path a pattern reads: duration, delay, ease, scale, space or spring. */
-export type TokenPath = `${'duration' | 'delay' | 'ease' | 'scale' | 'space' | 'spring'}.${string}`;
+/** Any token path a pattern reads: duration, delay, ease, scale, space, spring or distance. */
+export type TokenPath = `${'duration' | 'delay' | 'ease' | 'scale' | 'space' | 'spring' | 'distance'}.${string}`;
 
 /**
  * The pattern ids of the catalog: the 18 of order 1.11, then `fade` and

@@ -1,23 +1,12 @@
-// Interactions of the content family (order 1.21). See ./types.ts for the shape.
+// Interactions of the feedback, progress, data display and layout family
+// (orders 1.21 and 1.22). See ./types.ts for the shape.
 //
-// tab-slide, stat-roll, list-stagger and slider-nudge are played from the
-// component code through useMotion().play, so a style's preset reaches them
-// at run time. accordion-reveal, skeleton-swap and slider-pull are CSS: each
-// lists in `off` the private properties a style recipe sets to turn it off.
+// stat-roll and toast-stack are played from the component code through
+// useMotion(), so a style's preset reaches them at run time. The CSS rows
+// list in `off` the private properties a style recipe sets to turn them off.
 import type { Interaction } from './types';
 
 export const contentInteractions = [
-  {
-    id: 'tab-slide',
-    components: ['Tabs'],
-    pattern: 'tab-indicator',
-    drive: 'waapi',
-    trigger: 'Choose another tab with a click, a tap or the arrow keys.',
-    feedback:
-      'The underline or pill slides and stretches from the old tab to the new one, a transform with origin 0 0 measured from both tab boxes, over duration.medium on ease.standard. The label colors and weight change at once.',
-    reduced: 'No motion: the indicator appears under the new tab at once.',
-    status: 'proposed',
-  },
   {
     id: 'accordion-reveal',
     components: ['Accordion'],
@@ -43,17 +32,6 @@ export const contentInteractions = [
     status: 'proposed',
   },
   {
-    id: 'list-stagger',
-    components: ['List'],
-    pattern: 'list-stagger',
-    drive: 'waapi',
-    trigger: 'A list paints its rows for the first time.',
-    feedback:
-      'Each row fades in and rises by space.s over duration.slow on ease.reveal, one delay.reveal-step after the row before, capped at eight steps. Every row is in the DOM and read at once. It never plays on a re-render, an added row, a reorder or rows hydrated from server HTML.',
-    reduced: 'A fade of each row over duration.base with no delay and no rise.',
-    status: 'proposed',
-  },
-  {
     id: 'stat-roll',
     components: ['Stat'],
     pattern: 'number-roll',
@@ -65,29 +43,42 @@ export const contentInteractions = [
     status: 'proposed',
   },
   {
-    id: 'slider-pull',
-    components: ['Slider', 'RangeSlider'],
-    pattern: 'press',
+    id: 'toast-enter',
+    components: ['Toast'],
+    pattern: 'toast',
     drive: 'css',
-    trigger: 'Hold a slider thumb, or the track, with a pointer, and let go.',
+    trigger: 'A toast is shown, or closed by its timer, its close button or Escape.',
     feedback:
-      'The grabbed thumb scales up from its center to 2 minus scale.window-enter squared (1.15) over duration.base on ease.emphasized, and settles back the same way on release. The value follows the pointer at once.',
-    reduced: 'No motion: the thumb keeps its size; the grab cursor and the focus ring carry the state.',
+      'The new toast travels space.xs in from the edge of the toaster and scales up from scale.dialog-enter while it fades in, over duration.toast-enter on ease.out. A closing toast fades and shrinks in place over duration.toast-exit on ease.exit.',
+    reduced: 'A fade in and out with no travel or scale. Under reduced motion the toast is there and gone at once.',
     off: {
-      "[data-ds='slider']": { '--_slider-lift': '1' },
-      "[data-ds='range-slider']": { '--_slider-lift': '1' },
+      "[data-ds='toast']": { '--_toast-enter-y': '0px', '--_toast-enter-scale': '1' },
     },
     status: 'proposed',
   },
   {
-    id: 'slider-nudge',
-    components: ['Slider', 'RangeSlider'],
-    pattern: 'shake',
+    id: 'toast-stack',
+    components: ['Toast'],
+    pattern: 'drag-drop',
     drive: 'waapi',
-    trigger: 'A key or a drag pushes a thumb past the minimum or the maximum of a horizontal slider.',
+    trigger: 'A toast joins the stack or leaves it while other toasts are shown.',
     feedback:
-      'The thumb nudges space.3xs toward that end and back once (shake, one swing, toward) over duration.base on ease.out, added on top of the lift. A held key nudges once; a drag nudges once each time it goes past the end.',
-    reduced: 'No motion: the value stays at its end.',
+      'The toasts that stay move from where they were to their new place with a transform (a FLIP of the drag-drop settle), over duration.slow on ease.emphasized. Layout never animates and the store never waits; the pause on hover and focus is kept.',
+    reduced: 'No motion: the toasts that stay take their new place at once.',
+    status: 'proposed',
+  },
+  {
+    id: 'toast-swipe',
+    components: ['Toast'],
+    pattern: 'toast',
+    drive: 'css',
+    trigger: 'Drag a toast toward the edge it sits on, then let go.',
+    feedback:
+      'While dragged the toast follows the finger (the Radix swipe variables, no transition). Let go short of the threshold it springs back over duration.base on ease.emphasized; past it, it travels on out in the swipe direction while it fades, over duration.toast-exit on ease.exit.',
+    reduced: 'The toast still follows the finger. Let go, it is back in place at once, or it fades where it was let go.',
+    off: {
+      "[data-ds='toast']": { '--_toast-duration': '0s', '--_toast-swipe-x': '0%', '--_toast-swipe-y': '0%' },
+    },
     status: 'proposed',
   },
 ] as const satisfies readonly Interaction[];

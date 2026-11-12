@@ -1,4 +1,5 @@
-// Interactions of the fields family (order 1.21). See ./types.ts for the shape.
+// Interactions of the text inputs and forms family (orders 1.21 and 1.22).
+// See ./types.ts for the shape.
 import type { Interaction } from './types';
 
 /** The private properties that turn the focus glow off on one field root. */
@@ -69,6 +70,17 @@ export const fieldsInteractions = [
     feedback:
       'The value text rolls in space.xs from below when it goes up and from above when it goes down, fading in, over duration.base on ease.emphasized (the travel of the swap pattern: the native input has no clip, so a full height roll would draw the text outside the box). A step that comes while the last roll still plays changes the value with no roll, so a held key or button does not flicker.',
     reduced: 'The new value fades in.',
+    status: 'proposed',
+  },
+  {
+    id: 'rating-fill',
+    components: ['Rating'],
+    pattern: 'pop',
+    drive: 'waapi',
+    trigger: 'The person picks a score by click, an arrow key, Home or End.',
+    feedback:
+      'The stars from the first to the chosen one pop in a short run: each lands from about 94% and transparent over duration.medium on ease.emphasized, one half delay.reveal-step after the one before, capped at POP_MAX_STEPS. A new pick cancels the run. The hover preview stays instant.',
+    reduced: 'The stars fade in together, or change at once.',
     status: 'proposed',
   },
 ] as const satisfies readonly Interaction[];

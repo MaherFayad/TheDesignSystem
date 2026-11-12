@@ -1,5 +1,5 @@
 /*
- * The /interactions page of the gallery (order 1.21). The page's own reduced
+ * The /interactions page of the gallery (orders 1.21 and 1.22). The page's own reduced
  * motion setting puts data-motion="reduce" on <html>; this block zeroes the
  * duration and delay tokens under it, the same list the token build zeroes
  * under prefers-reduced-motion. The token build should emit this selector
@@ -9,6 +9,12 @@
   :root[data-motion='reduce'],
   :root[data-motion='reduce'] [data-style] {
     --ds-delay-reveal-step: 0ms;
+    --ds-delay-stagger: 0ms;
+    --ds-duration-celebrate: 0ms;
+    --ds-duration-morph: 0ms;
+    --ds-duration-spring-bouncy: 0ms;
+    --ds-duration-spring-snappy: 0ms;
+    --ds-duration-spring-soft: 0ms;
     --ds-duration-base: 0ms;
     --ds-duration-fast: 0ms;
     --ds-duration-instant: 0ms;
@@ -66,9 +72,23 @@
     background-color: var(--ds-color-bg-surface);
   }
 
-  [data-interaction] > h3 {
+  [data-interaction-head] {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--ds-space-s);
+  }
+
+  [data-interaction-head] > h3 {
     margin: 0;
     font-size: var(--ds-font-size-m);
+  }
+
+  [data-interaction-beats] {
+    margin: 0;
+    padding-inline-start: var(--ds-space-l);
+    color: var(--ds-color-text-muted);
+    font-size: var(--ds-font-size-s);
   }
 
   [data-interaction] > p {

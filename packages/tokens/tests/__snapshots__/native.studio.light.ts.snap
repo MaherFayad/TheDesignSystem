@@ -373,6 +373,7 @@ export const studioLight: Theme = {
     feedback: 2000,
     'peek-hide': 600,
     'reveal-step': 80,
+    stagger: 0,
   },
   dialog: {
     height: {
@@ -386,12 +387,20 @@ export const studioLight: Theme = {
       xl: 640,
     },
   },
+  distance: {
+    enter: 4,
+    lift: 0,
+    nudge: 1,
+    shift: 2,
+  },
   duration: {
     base: 120,
+    celebrate: 120,
     fast: 80,
     instant: 70,
     medium: 140,
     moderate: 150,
+    morph: 100,
     pulse: 1400,
     quick: 100,
     reveal: 640,
@@ -399,6 +408,9 @@ export const studioLight: Theme = {
     shimmer: 1400,
     slow: 180,
     spin: 800,
+    'spring-bouncy': 120,
+    'spring-snappy': 80,
+    'spring-soft': 100,
     'toast-enter': 140,
     'toast-exit': 120,
     'window-close': 220,
@@ -414,6 +426,9 @@ export const studioLight: Theme = {
     in: [0.42, 0, 1, 1],
     out: [0, 0, 0.58, 1],
     reveal: [0.22, 1, 0.36, 1],
+    'spring-bouncy': 'steps(3, jump-end)',
+    'spring-snappy': 'steps(2, jump-end)',
+    'spring-soft': 'cubic-bezier(0, 0, 0.2, 1)',
     standard: [0.4, 0, 0.2, 1],
     window: [0.2, 0.8, 0.2, 1],
   },
@@ -866,9 +881,15 @@ export const studioLight: Theme = {
     xs: 3,
   },
   scale: {
+    anticipate: 0.97,
     'dialog-enter': 0.98,
+    enter: 1,
+    lift: 1,
     'menu-enter': 0.97,
+    morph: 0.8,
+    pop: 1,
     press: 0.97,
+    stretch: 1.08,
     'window-enter': 0.92,
   },
   scrollbar: {
@@ -962,6 +983,11 @@ export const studioLight: Theme = {
     width: 640,
   },
   spring: {
+    bouncy: {
+      damping: 84.4,
+      mass: 1,
+      stiffness: 2201,
+    },
     merge: {
       damping: 24,
       mass: 1,
@@ -976,6 +1002,16 @@ export const studioLight: Theme = {
       damping: 30,
       mass: 1,
       stiffness: 300,
+    },
+    snappy: {
+      damping: 187.7,
+      mass: 1,
+      stiffness: 8809,
+    },
+    soft: {
+      damping: 148.6,
+      mass: 1,
+      stiffness: 5521,
     },
   },
   'title-bar': {

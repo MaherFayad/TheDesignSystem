@@ -1,4 +1,5 @@
-// Interactions of the buttons family (order 1.21). See ./types.ts for the shape.
+// Interactions of the actions and toggles family (orders 1.21 and 1.22). See
+// ./types.ts for the shape.
 import type { Interaction } from './types';
 
 /** The private property that turns the press off on each root of the family. */
@@ -35,6 +36,24 @@ export const buttonsInteractions = [
       'both at once over duration.base. The return to idle rolls the other way. The clipboard write, the state and the status are never delayed. ' +
       'The visible label does not change: the status says the result.',
     reduced: 'The old icon fades out while the new one fades in, over duration.base.',
+    status: 'proposed',
+  },
+  {
+    id: 'switch-stretch',
+    components: ['Switch'],
+    pattern: 'press',
+    drive: 'css',
+    trigger: 'The person presses the switch with the pointer or Space, then releases it to toggle.',
+    feedback:
+      'While pressed the thumb widens toward the side it will travel to, its trailing edge still, over duration.instant on ease.out. On the toggle it slides to the other side over duration.medium on ease.emphasized and settles back to its width.',
+    reduced: 'The thumb jumps to the other side and does not stretch.',
+    off: {
+      "[data-ds='switch']": {
+        '--_switch-stretch': '1',
+        '--_switch-duration': 'var(--ds-duration-base)',
+        '--_switch-ease': 'var(--ds-ease-default)',
+      },
+    },
     status: 'proposed',
   },
 ] as const satisfies readonly Interaction[];
