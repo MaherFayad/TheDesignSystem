@@ -1948,7 +1948,7 @@
       "Picking options from rows": "ListBox",
       "Many fields compared across rows": "Table (wave 2)",
       "Term and value pairs about one thing": "DescriptionList",
-      "App navigation with sections": "Sidebar or NavList (wave 1 navigation batch)",
+      "App navigation with sections": "Sidebar (1.7.2)",
       "A list of actions behind one control": "DropdownMenu"
     },
     "anatomy": [
@@ -2028,7 +2028,7 @@
       },
       "empty": {
         "type": "node",
-        "description": "Shown when there are no rows, in a p with part empty; the root is then a div. Say what is missing and what to do next."
+        "description": "Shown when there are no rows, in a p with part empty; the root is then a div. Say what is missing and what to do next. With aria-label the empty div takes role group."
       },
       "ListItem.title": {
         "type": "node",
@@ -2045,7 +2045,7 @@
       },
       "ListItem.end": {
         "type": "node",
-        "description": "Trailing content that is not an action: a time, a count, a Badge."
+        "description": "Trailing content that is not an action: a time, a count, a Badge. Positioned above the row link, so a link or Badge in it stays clickable."
       },
       "ListItem.actions": {
         "type": "node",
@@ -2067,21 +2067,21 @@
       "ListItem.disabled": {
         "type": "boolean",
         "default": false,
-        "description": "Dims the start icon and the title. A link loses its href, keeps role link with aria-disabled and leaves the tab order. The description and end stay at full contrast, so the reason the row is off stays readable. Actions are the caller's to disable."
+        "description": "Dims the start icon and the title. A link loses its href, keeps focus with role link and aria-disabled (anatomy rule 5), and linkProps.onClick does not run. The description and end stay at full contrast, so the reason the row is off stays readable. Actions are the caller's to disable."
       }
     },
     "states": [
       "data-active",
-      "data-disabled",
-      "data-linked"
+      "data-disabled"
     ],
     "a11y": {
       "role": "list (ul or ol) with listitem rows. A linked row's title is a link. An empty list is a div with a paragraph, so it is not read as a list of one.",
-      "focus": "Each linked row is one Tab stop on its title link; its actions follow. Rows without a link and the list itself are not focusable. A 2px ring from focus.shadow.ring draws around the whole row.",
+      "focus": "Each linked row is one Tab stop on its title link; its actions follow. A disabled row link stays focusable with aria-disabled. Rows without a link and the list itself are not focusable. A 2px ring from color.focus.ring draws inside the whole row.",
       "keys": {
         "Tab": "Moves to the next row link or row action",
         "Shift+Tab": "Moves to the previous row link or row action",
-        "Enter": "Follows the focused row link, or activates the focused action"
+        "Enter": "Follows the focused row link, or activates the focused action",
+        "Space": "Activates the focused action button"
       },
       "announce": "The link name is the title only; the description, end and actions are read as the row's other content. Name each action with the row it acts on: Delete mail from Sara.",
       "native": {
@@ -2091,7 +2091,10 @@
         "No arrow key navigation: this is a list of links and buttons, not a composite widget. For arrow keys and selection use ListBox.",
         "The row link's hit area is its ::before stretched over the row, which is also the focus layer. Actions are positioned later in the DOM, so they sit above it without a z-index.",
         "Give the list an aria-label when the page has no heading for it.",
-        "Under forced colors the focus ring is Highlight, the active row gets a CanvasText outline and separators are CanvasText."
+        "Under forced colors the focus ring is Highlight, the active row gets a CanvasText outline and separators are CanvasText.",
+        "data-linked marks a row with a link, for CSS only; it is structure, not a state.",
+        "An active row without a link carries aria-current on the li.",
+        "ordered renders an ol for assistive tech; numbers are not drawn. Put a number in start when people need to see it."
       ]
     },
     "content": {
@@ -2104,7 +2107,9 @@
       "ar": {
         "title": "Noun form, no diacritics.",
         "empty": "ما فيه رسائل للحين. الرسائل اللي توصلك من فريقك بتظهر هنا.",
-        "digits": "Western digits in end content such as times and counts."
+        "digits": "Western digits in end content such as times and counts.",
+        "description": "سطر واحد يوضح السياق، بدون تشكيل.",
+        "actions": "Accessible names say the action and the row in noun form: حذف رسالة سارة القحطاني."
       }
     },
     "tokens": [
@@ -2132,8 +2137,8 @@
       "color.border.hairline",
       "border.width.default",
       "border.width.strong",
-      "focus.shadow.ring",
-      "opacity.disabled"
+      "opacity.disabled",
+      "color.focus.ring"
     ],
     "motion": "list-stagger",
     "frameworks": {

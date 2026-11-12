@@ -38,7 +38,11 @@ export interface ListProps extends Omit<HTMLAttributes<HTMLElement>, 'title'> {
   ordered?: boolean;
   /** Shown when there are no rows: what is missing and what to do next. Required words, no default. */
   empty?: ReactNode;
-  /** ListItem elements. */
+  /**
+   * ListItem elements, as direct children (or in a Fragment). Empty detection
+   * counts direct elements, so a wrapper component that renders no rows still
+   * counts as one.
+   */
   children?: ReactNode;
   ref?: Ref<HTMLElement>;
 }
@@ -59,7 +63,13 @@ export function List({ size = 'md', variant = 'plain', ordered = false, empty, c
   const listRole = { role: 'list' } as const;
   if (rows.length === 0) {
     return (
-      <div {...(rest as HTMLAttributes<HTMLDivElement>)} {...common} ref={rest.ref as Ref<HTMLDivElement>}>
+      <div
+        {...(rest as HTMLAttributes<HTMLDivElement>)}
+        // A name on a plain div is not allowed: a labelled empty list is a group.
+        role={rest['aria-label'] || rest['aria-labelledby'] ? 'group' : rest.role}
+        {...common}
+        ref={rest.ref as Ref<HTMLDivElement>}
+      >
         {empty !== undefined && <p data-part="empty">{empty}</p>}
       </div>
     );
@@ -92,7 +102,11 @@ export interface ListItemProps extends Omit<HTMLAttributes<HTMLLIElement>, 'titl
   linkProps?: Omit<AnchorHTMLAttributes<HTMLAnchorElement>, 'href' | 'title' | 'children'>;
   /** The current row, for example the open mail or the current page. Sets data-active and aria-current on the link. */
   active?: boolean;
-  /** Dims the row. A link loses its href and is out of the tab order; actions are the caller's to disable. */
+  /**
+   * Dims the row. A link loses its href and keeps focus with aria-disabled
+   * (anatomy rule 5), and its click handler does not run. Actions are the
+   * caller's to disable.
+   */
   disabled?: boolean;
   ref?: Ref<HTMLLIElement>;
 }
@@ -118,6 +132,7 @@ export function ListItem({
       data-active={active ? '' : undefined}
       data-disabled={disabled ? '' : undefined}
       data-linked={linked ? '' : undefined}
+      aria-current={!linked && active ? 'true' : rest['aria-current']}
     >
       <span data-part="separator" aria-hidden="true" />
       {start !== undefined && (
@@ -132,6 +147,14 @@ export function ListItem({
           href={disabled ? undefined : href}
           aria-disabled={disabled ? 'true' : undefined}
           role={disabled ? 'link' : undefined}
+          tabIndex={disabled ? 0 : linkProps?.tabIndex}
+          onClick={
+            disabled
+              ? (event) => {
+                  event.preventDefault();
+                }
+              : linkProps?.onClick
+          }
           aria-current={active ? (linkProps?.['aria-current'] ?? 'true') : linkProps?.['aria-current']}
         >
           {title}
