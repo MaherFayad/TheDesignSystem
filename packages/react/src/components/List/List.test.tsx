@@ -171,11 +171,17 @@ describe('List', () => {
       });
     }
 
-    /** Desk plays list-stagger in full; Studio and Neutral play its reduced form. */
+    /**
+     * Every style plays list-stagger in its reduced form for now (Desk is
+     * held there until the contract suite waits for first paint motion; see
+     * docs/reports/interactions.md). The full keyframes are tested in
+     * packages/motion. These tests check when it plays, which does not
+     * depend on the form.
+     */
     const desk = (ui: ReactNode) => <Theme style="desk">{ui}</Theme>;
     const rows = (n: number) => Array.from({ length: n }, (_, i) => <ListItem key={i} title={`Row ${i + 1}`} />);
 
-    it('fades and rises every row in on the first paint, and never again on a re-render, an added row or a reorder', () =>
+    it('fades every row in on the first paint, and never again on a re-render, an added row or a reorder', () =>
       withAnimate((animate) => {
         const { rerender } = render(desk(<List aria-label="Rows">{rows(12)}</List>));
         expect(animate).toHaveBeenCalledTimes(12);
@@ -183,7 +189,6 @@ describe('List', () => {
         for (const t of timings) expect(t.id).toBe('ds-motion:list-stagger');
         const [frames] = animate.mock.calls[0] as unknown as [Keyframe[]];
         expect(frames[0]?.opacity).toBe(0);
-        expect(String(frames[0]?.transform)).toContain('translateY(');
         // Every row is in the DOM and named at once.
         expect(screen.getAllByRole('listitem')).toHaveLength(12);
         rerender(desk(<List aria-label="Rows">{rows(13)}</List>));

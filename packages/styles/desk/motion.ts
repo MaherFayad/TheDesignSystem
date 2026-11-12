@@ -14,6 +14,10 @@ const motion: StyleMotionPreset = {
   patterns: {
     'number-roll': { mode: 'full' },
     swap: { mode: 'full' },
+    // Held at the reduced form (a short fade) until the contract suite waits
+    // for first paint motion before its axe step; see order 1.21's report,
+    // "Changes needed from the lead". The full stagger is the proposal.
+    'list-stagger': { mode: 'reduced' },
   },
 };
 

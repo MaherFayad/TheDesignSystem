@@ -134,7 +134,12 @@ reads `duration.base` as 150ms and `duration.medium` as 180ms).
   not shake, a number step and a Stat number change in place, the list
   stagger is a fade.
 - **Desk, windows and rolls.** Every interaction in full; swaps roll like
-  the roll labels of Desk controls; numbers roll.
+  the roll labels of Desk controls; numbers roll. One exception for now:
+  the list stagger plays its reduced form (a short fade). In full it keeps
+  rows partly transparent for up to about 760ms after load, and the
+  contract suite's axe step, which runs right after load, failed on
+  contrast in all four Desk runs. The full stagger is the proposal; the
+  Desk row goes back to full once the suite waits (item 7 below).
 - **Neutral, 150 to 200ms ease out.** Every moving pattern resolves to 150
   to 200ms on `ease.out` (a test in `preset.test.ts` checks every pattern,
   with the loops and the press exempt); the shake plays over
@@ -175,7 +180,7 @@ reads `duration.base` as 150ms and `duration.medium` as 180ms).
 | Check | Result |
 | --- | --- |
 | `npm run check` | green before the content commit (every step pass) |
-| Contract suite, react, every touched component (28) | see below |
+| Contract suite, react, every touched component (28) | Button to Rating: 644 passed, 0 failed (the run stopped at the call's time limit inside Rating, whose remaining checks passed in the family run, 29 of 29). Input to RangeSlider: 741 passed, 1 failed, the List axe check in Desk (item 7 of section 10). After Desk's list stagger went to its reduced form, List: 29 of 29 |
 | `npm run check -w @the-system/angular` | 35 files, 223 tests pass (run by each family agent and again inside `npm run check`) |
 | Frame strips | `docs/reports/shots/interactions/<id>.<style>.<normal or reduced>.png`: 24 interactions, Studio dark, Desk dark and Neutral light, each in normal and reduced motion (144 strips). The first frame is before the action, then seven steps over the measured timing of the animations the action started. The script is `docs/reports/shots/interactions/strips.cjs` |
 
@@ -185,6 +190,9 @@ script now finishes earlier animations and times only the new ones. Toasts
 with one title deduplicated instead of stacking; the stage now numbers
 them. In every strip the reduced form changes state at once with no
 travel, and the Neutral strips run 150 to 180ms.
+
+The Desk `list-stagger` strips were taken with the full stagger, before
+Desk's row was held at the reduced form; they show the proposal.
 
 Things seen in the frames that are accepted, not bugs: the rating pop
 starts from opacity 0, so stars that were already filled blink out for one
@@ -283,9 +291,12 @@ Not touched in this round. For a later pass:
    would need a change in `DialogBase.tsx` and its Angular mirror. Your
    call.
 7. **Contract suite.** The axe step runs right after load, while first
-   paint animations still play; List once read 4.17:1 mid fade in Desk
-   dark. Awaiting the finite animations after `open()` in the axe test
-   would remove that flake.
+   paint animations still play. With the full list stagger, List failed
+   axe contrast in all four Desk runs (4.17:1 mid fade). Add
+   `await page.evaluate(finiteAnimationsDone);` after `open()` in the axe
+   test of `packages/contract-tests/src/contract.spec.ts` (the target size
+   test already does), then set Desk's `list-stagger` row back to
+   `{ mode: 'full' }` in `packages/styles/desk/motion.ts`.
 8. **Drawer demo.** Under `dir=rtl&lang=ar` the English cases still open at
    the right edge; the cases set their own direction. Not motion; noted.
 9. **Owner decision.** Every interaction here is proposed. The strips and
