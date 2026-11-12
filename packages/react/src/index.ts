@@ -20,6 +20,7 @@ export * from './components/CheckboxGroup/index';
 export * from './components/Chip/index';
 export * from './components/CloseButton/index';
 export * from './components/Combobox/index';
+export * from './components/ConsentField/index';
 export * from './components/Container/index';
 export * from './components/ContextMenu/index';
 export * from './components/CopyButton/index';
