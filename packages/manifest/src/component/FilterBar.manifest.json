@@ -113,6 +113,8 @@
     }
   },
   "states": [
+    "open",
+    "closed",
     "data-active",
     "data-overflow-start",
     "data-overflow-end"
@@ -134,9 +136,9 @@
       "The chip strip scrolls sideways inside itself and never scrolls the page at 320px (WCAG 1.4.10). The root carries data-overflow-start and data-overflow-end in logical terms, so the edge fades flip in RTL.",
       "A selected chip shows a check, not color alone.",
       "Each selected chip carries data-selected on its own Chip root; that state belongs to the Chip manifest, not to this one.",
-      "The more part is a Button whose open and closed states belong to the Button and DropdownMenu manifests. Escape in the search box clears the query; Escape in the more menu closes it and returns focus to the more button.",
+      "open and closed are data-state on the more part, the Button that opens the DropdownMenu; they stay in states because the contract suite reads data-state on every part. Escape in the search box clears the query; Escape in the more menu closes it and returns focus to the more button.",
       "A search query counts as one filter on in the count part, and clear all empties it too.",
-      "The FilterBar root carries only data-active and the overflow states; the nested roots list their own."
+      "The FilterBar root carries data-active and the overflow states; open and closed are on the more part. data-selected sits on the Chip roots and belongs to the Chip manifest."
     ]
   },
   "content": {
