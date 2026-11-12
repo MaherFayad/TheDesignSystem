@@ -1,5 +1,392 @@
 [
   {
+    "name": "Avatar",
+    "kind": "component",
+    "family": "data-display",
+    "summary": "A person or a workspace shown as an image, initials or an icon, with an optional status dot.",
+    "useWhen": [
+      "Showing who wrote, owns or is assigned to something: a comment, a file, a task",
+      "An account menu trigger or a profile header",
+      "A workspace or team picker, with shape square"
+    ],
+    "avoidWhen": [
+      "The person is not known: show nothing or a plain icon",
+      "A brand logo or a product mark that must keep its own shape and colors",
+      "A large profile photo in a page layout"
+    ],
+    "insteadUse": {
+      "Several people in a small space": "AvatarGroup",
+      "A status with no person attached": "StatusDot",
+      "A large photo or a logo": "an img element in a Card media part",
+      "A small count or label on an avatar": "Badge next to the Avatar"
+    },
+    "anatomy": [
+      "root",
+      "image",
+      "fallback",
+      "status"
+    ],
+    "slots": {
+      "fallback": {
+        "accepts": [
+          "Icon",
+          "text"
+        ],
+        "max": 1
+      }
+    },
+    "props": {
+      "name": {
+        "type": "string",
+        "required": true,
+        "description": "The person or workspace name. The accessible name of the avatar, the source of the initials and of the fallback hue."
+      },
+      "src": {
+        "type": "string",
+        "description": "The image URL. Without it the fallback shows at once."
+      },
+      "size": {
+        "type": [
+          "xs",
+          "sm",
+          "md",
+          "lg"
+        ],
+        "default": "md",
+        "description": "A square of size.control: 24, 28, 32 and 44 px at default density."
+      },
+      "shape": {
+        "type": [
+          "default",
+          "square"
+        ],
+        "default": "default",
+        "description": "default is a circle. square takes radius.sm, for workspaces and teams."
+      },
+      "icon": {
+        "type": "node",
+        "description": "A system icon name or a node shown in the fallback in place of the initials. A name with no letters falls back to the user icon."
+      },
+      "decorative": {
+        "type": "boolean",
+        "default": false,
+        "description": "The name is written next to the avatar. The avatar is hidden from assistive tech so the name is read once."
+      },
+      "status": {
+        "type": [
+          "success",
+          "warning",
+          "danger",
+          "neutral"
+        ],
+        "description": "Adds the status dot on the end corner: online, away, busy, offline. The status words join the accessible name; the dot is a visual hint, and offline is drawn hollow."
+      },
+      "statusLabel": {
+        "type": "string",
+        "description": "The status in words, added to the accessible name. Default Online, Away, Busy or Offline. Pass it in Arabic."
+      },
+      "fallbackDelay": {
+        "type": "number",
+        "default": 600,
+        "description": "Milliseconds before the fallback shows while the image loads. Only with src."
+      },
+      "onStateChange": {
+        "type": "function",
+        "description": "Called with loading, loaded or error."
+      }
+    },
+    "states": [
+      "loading",
+      "loaded",
+      "error"
+    ],
+    "a11y": {
+      "role": "img on the root, named by name (and the status words). The image inside has an empty alt; the fallback is aria-hidden.",
+      "focus": "Not focusable. Wrap it in a Button or a link to make it interactive; that control then needs its own name.",
+      "keys": {},
+      "announce": "The name once, whether the image or the initials show, followed by the status words when status is set. Nothing when decorative.",
+      "native": {
+        "accessibilityRole": "image",
+        "accessibilityState": []
+      },
+      "notes": [
+        "The name is the alt: the root role img carries it, so a failed image never leaves an unnamed picture.",
+        "decorative hides the avatar when the name is written next to it (WCAG 1.1.1).",
+        "The fallback is the solid hue of the name with color.text.on-accent: 4.5:1 or more for all ten hues in every style and scheme, tested in Avatar.test.tsx against tokens.css (WCAG 1.4.3).",
+        "The status words join the accessible name, so the status never rests on color for assistive tech. Sighted users get color, plus a hollow ring for offline; online, away and busy differ by color only, so write the status in text where it matters (WCAG 1.4.1).",
+        "data-state is stamped only when there is an image to load.",
+        "decorative hides the status words too: write the status next to the avatar, with the name."
+      ]
+    },
+    "content": {
+      "en": {
+        "name": "The full name as the person writes it: Maher Fayad. A workspace by its name: Design team.",
+        "statusLabel": "One word in sentence case: Online, Away, Busy, Offline."
+      },
+      "ar": {
+        "name": "The full name, no diacritics: ماهر فياض. Initials skip diacritics and the article ال of the last name.",
+        "statusLabel": "Noun or adjective, no diacritics: متصل، بعيد، مشغول، غير متصل."
+      }
+    },
+    "tokens": [
+      "size.control.xs",
+      "size.control.sm",
+      "size.control.md",
+      "size.control.lg",
+      "font.size.2xs",
+      "font.size.xs",
+      "font.size.s",
+      "font.size.m",
+      "font.family.sans",
+      "font.weight.bold",
+      "font.leading.tight",
+      "font.tracking.none",
+      "radius.pill",
+      "radius.sm",
+      "space.2xs",
+      "space.xs",
+      "space.s",
+      "space.m",
+      "border.width.default",
+      "border.width.strong",
+      "color.bg.surface",
+      "color.bg.surface-3",
+      "color.text.on-accent",
+      "space.4xs",
+      "color.text.muted",
+      "color.accent.1",
+      "color.accent.2",
+      "color.accent.3",
+      "color.accent.4",
+      "color.accent.5",
+      "color.accent.6",
+      "color.accent.7",
+      "color.accent.8",
+      "color.accent.9",
+      "color.accent.10",
+      "color.state.success.solid",
+      "color.state.warning.solid",
+      "color.state.danger.solid",
+      "duration.base",
+      "ease.out"
+    ],
+    "motion": "fade-rise",
+    "frameworks": {
+      "react": {
+        "status": "ready",
+        "behavior": "radix:Avatar",
+        "example": "Avatar.demo.tsx",
+        "note": "Motion: fade-rise, the image fades in and rises 2px once loaded (@starting-style, opacity and transform); none under reduced motion. Initials and the hue come from @the-system/shared initials.ts. The status part is drawn by Avatar.css until StatusDot (1.5.10) exists; then it becomes a StatusDot root carrying data-part status."
+      },
+      "angular": {
+        "status": "planned"
+      },
+      "native": {
+        "status": "planned",
+        "note": "Same initials.ts. Image through expo-image with the same fallback rule."
+      }
+    },
+    "styles": {
+      "studio": "A circle in a pastel hue with ink initials in dark, a deep hue with white initials in light. Pixel icons in the fallback.",
+      "desk": "The same, with Instrument Sans initials. Square avatars keep radius.sm.",
+      "neutral": "Planned: follows the tokens, no recipe.",
+      "liquid": "Planned."
+    },
+    "mistakes": [
+      {
+        "wrong": "An avatar with alt text next to the same name in text",
+        "right": "decorative, so the name is read once"
+      },
+      {
+        "wrong": "A status dot as the only sign that someone is offline",
+        "right": "status with statusLabel; offline is drawn hollow"
+      },
+      {
+        "wrong": "Initials typed by hand, or with Arabic diacritics",
+        "right": "Pass the full name; initials.ts builds them"
+      },
+      {
+        "wrong": "An onClick on the avatar",
+        "right": "Wrap it in a Button or a link with its own name"
+      }
+    ],
+    "contract": {
+      "optionalParts": [
+        "image",
+        "status"
+      ]
+    },
+    "since": "0.2.0"
+  },
+  {
+    "name": "AvatarGroup",
+    "kind": "component",
+    "family": "data-display",
+    "summary": "A few overlapping avatars and a +N count for the rest, named as one group.",
+    "useWhen": [
+      "Who is on a board, a thread or a call, in the space of one control",
+      "Assignees or viewers in a table row or a card footer",
+      "A share summary next to a Share button"
+    ],
+    "avoidWhen": [
+      "Each person needs an action of their own: remove, change role",
+      "One person",
+      "The names matter more than the faces"
+    ],
+    "insteadUse": {
+      "One person": "Avatar",
+      "People you act on one by one": "List with an Avatar in each row's start part",
+      "Names that must be read": "Chip per person, or a List",
+      "The full list behind the count": "onOverflowClick opening a Popover with a List"
+    },
+    "anatomy": [
+      "root",
+      "item",
+      "overflow"
+    ],
+    "slots": {
+      "item": {
+        "accepts": [
+          "Avatar"
+        ],
+        "min": 1
+      }
+    },
+    "props": {
+      "label": {
+        "type": "string",
+        "required": true,
+        "description": "The name of the group, read before the avatars: 5 people, Shared with 5 people."
+      },
+      "children": {
+        "type": "node",
+        "required": true,
+        "description": "Avatar elements. The group sets their size and data-part item."
+      },
+      "size": {
+        "type": [
+          "xs",
+          "sm",
+          "md",
+          "lg"
+        ],
+        "default": "md",
+        "description": "Sets every avatar and the count: 24, 28, 32 and 44 px."
+      },
+      "max": {
+        "type": "number",
+        "default": 4,
+        "description": "How many avatars show before the count."
+      },
+      "total": {
+        "type": "number",
+        "description": "The full number of people when it is more than the avatars passed. Default the number of children."
+      },
+      "overflowLabel": {
+        "type": "function",
+        "description": "(hidden) => words for the count. Default \"N more\", or \"Show N more\" when the count is a Button. Pass it in Arabic."
+      },
+      "onOverflowClick": {
+        "type": "function",
+        "description": "Makes the count a Button (data-ds button, data-part overflow), for example to open the full list."
+      }
+    },
+    "states": [],
+    "a11y": {
+      "role": "group, named by label. Each item is an Avatar (role img, named by the person). The count is role img named by overflowLabel, or a button.",
+      "focus": "Not focusable, except the count when onOverflowClick makes it a Button.",
+      "keys": {
+        "Tab": "Reaches the count when it is a Button",
+        "Enter": "Presses the count Button",
+        "Space": "Presses the count Button"
+      },
+      "announce": "The group label, then each shown person by name, then the count in words (2 more). The visible +N text is hidden.",
+      "native": {
+        "accessibilityRole": "none",
+        "accessibilityState": []
+      },
+      "notes": [
+        "Each item overlaps the one before it on the start side (margin-inline-start), so the overlap flips in right to left layouts.",
+        "The count Button keeps the 24px minimum target at xs (WCAG 2.5.8).",
+        "Each item keeps a ring of the surface color, so overlapping faces stay apart without color alone."
+      ]
+    },
+    "content": {
+      "en": {
+        "label": "A count of people in sentence case: 5 people, Shared with 5 people.",
+        "overflowLabel": "N more for the count; Show N more when it is a button."
+      },
+      "ar": {
+        "label": "The count with the Arabic plural, Western digits: 5 أشخاص، شخصين، 12 شخص.",
+        "overflowLabel": "N آخرين."
+      }
+    },
+    "tokens": [
+      "size.control.xs",
+      "size.control.sm",
+      "size.control.md",
+      "size.control.lg",
+      "space.2xs",
+      "space.xs",
+      "space.s",
+      "space.m",
+      "font.size.3xs",
+      "font.size.2xs",
+      "font.size.xs",
+      "font.size.s",
+      "font.family.sans",
+      "font.weight.bold",
+      "font.leading.tight",
+      "radius.pill",
+      "border.width.default",
+      "border.width.strong",
+      "color.bg.surface",
+      "color.bg.surface-3",
+      "color.text.default"
+    ],
+    "motion": "fade-rise",
+    "frameworks": {
+      "react": {
+        "status": "ready",
+        "behavior": "hand built",
+        "example": "AvatarGroup.demo.tsx",
+        "note": "Motion: none of its own; each Avatar image fades in (fade-rise, opacity only). The count is a Button when onOverflowClick is set; the Popover pairing comes with Popover."
+      },
+      "angular": {
+        "status": "planned"
+      },
+      "native": {
+        "status": "planned"
+      }
+    },
+    "styles": {
+      "studio": "Circles cut apart by a ring of bg.surface, the count on bg.surface-3.",
+      "desk": "The same. The count Button is a soft pill.",
+      "neutral": "Planned: follows the tokens, no recipe.",
+      "liquid": "Planned."
+    },
+    "mistakes": [
+      {
+        "wrong": "A group with no label",
+        "right": "label=\"5 people\""
+      },
+      {
+        "wrong": "Twenty avatars in a row",
+        "right": "max 4 with a +N count, and the full list behind the count"
+      },
+      {
+        "wrong": "Avatars with their own size props inside the group",
+        "right": "size on the group"
+      }
+    ],
+    "contract": {
+      "optionalParts": [
+        "overflow"
+      ]
+    },
+    "since": "0.2.0"
+  },
+  {
     "name": "Bidi",
     "kind": "component",
     "family": "foundations",

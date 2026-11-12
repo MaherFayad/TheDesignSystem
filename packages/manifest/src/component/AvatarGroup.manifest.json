@@ -1,0 +1,128 @@
+{
+  "name": "AvatarGroup",
+  "kind": "component",
+  "family": "data-display",
+  "summary": "A few overlapping avatars and a +N count for the rest, named as one group.",
+  "useWhen": [
+    "Who is on a board, a thread or a call, in the space of one control",
+    "Assignees or viewers in a table row or a card footer",
+    "A share summary next to a Share button"
+  ],
+  "avoidWhen": [
+    "Each person needs an action of their own: remove, change role",
+    "One person",
+    "The names matter more than the faces"
+  ],
+  "insteadUse": {
+    "One person": "Avatar",
+    "People you act on one by one": "List with an Avatar in each row's start part",
+    "Names that must be read": "Chip per person, or a List",
+    "The full list behind the count": "onOverflowClick opening a Popover with a List"
+  },
+  "anatomy": ["root", "item", "overflow"],
+  "slots": {
+    "item": { "accepts": ["Avatar"], "min": 1 }
+  },
+  "props": {
+    "label": {
+      "type": "string",
+      "required": true,
+      "description": "The name of the group, read before the avatars: 5 people, Shared with 5 people."
+    },
+    "children": { "type": "node", "required": true, "description": "Avatar elements. The group sets their size and data-part item." },
+    "size": {
+      "type": ["xs", "sm", "md", "lg"],
+      "default": "md",
+      "description": "Sets every avatar and the count: 24, 28, 32 and 44 px."
+    },
+    "max": { "type": "number", "default": 4, "description": "How many avatars show before the count." },
+    "total": {
+      "type": "number",
+      "description": "The full number of people when it is more than the avatars passed. Default the number of children."
+    },
+    "overflowLabel": {
+      "type": "function",
+      "description": "(hidden) => words for the count. Default \"N more\", or \"Show N more\" when the count is a Button. Pass it in Arabic."
+    },
+    "onOverflowClick": {
+      "type": "function",
+      "description": "Makes the count a Button (data-ds button, data-part overflow), for example to open the full list."
+    }
+  },
+  "states": [],
+  "a11y": {
+    "role": "group, named by label. Each item is an Avatar (role img, named by the person). The count is role img named by overflowLabel, or a button.",
+    "focus": "Not focusable, except the count when onOverflowClick makes it a Button.",
+    "keys": {
+      "Tab": "Reaches the count when it is a Button",
+      "Enter": "Presses the count Button",
+      "Space": "Presses the count Button"
+    },
+    "announce": "The group label, then each shown person by name, then the count in words (2 more). The visible +N text is hidden.",
+    "native": { "accessibilityRole": "none", "accessibilityState": [] },
+    "notes": [
+      "Each item overlaps the one before it on the start side (margin-inline-start), so the overlap flips in right to left layouts.",
+      "The count Button keeps the 24px minimum target at xs (WCAG 2.5.8).",
+      "Each item keeps a ring of the surface color, so overlapping faces stay apart without color alone."
+    ]
+  },
+  "content": {
+    "en": {
+      "label": "A count of people in sentence case: 5 people, Shared with 5 people.",
+      "overflowLabel": "N more for the count; Show N more when it is a button."
+    },
+    "ar": {
+      "label": "The count with the Arabic plural, Western digits: 5 أشخاص، شخصين، 12 شخص.",
+      "overflowLabel": "N آخرين."
+    }
+  },
+  "tokens": [
+    "size.control.xs",
+    "size.control.sm",
+    "size.control.md",
+    "size.control.lg",
+    "space.2xs",
+    "space.xs",
+    "space.s",
+    "space.m",
+    "font.size.3xs",
+    "font.size.2xs",
+    "font.size.xs",
+    "font.size.s",
+    "font.family.sans",
+    "font.weight.bold",
+    "font.leading.tight",
+    "radius.pill",
+    "border.width.default",
+    "border.width.strong",
+    "color.bg.surface",
+    "color.bg.surface-3",
+    "color.text.default"
+  ],
+  "motion": "fade-rise",
+  "frameworks": {
+    "react": {
+      "status": "ready",
+      "behavior": "hand built",
+      "example": "AvatarGroup.demo.tsx",
+      "note": "Motion: none of its own; each Avatar image fades in (fade-rise, opacity only). The count is a Button when onOverflowClick is set; the Popover pairing comes with Popover."
+    },
+    "angular": { "status": "planned" },
+    "native": { "status": "planned" }
+  },
+  "styles": {
+    "studio": "Circles cut apart by a ring of bg.surface, the count on bg.surface-3.",
+    "desk": "The same. The count Button is a soft pill.",
+    "neutral": "Planned: follows the tokens, no recipe.",
+    "liquid": "Planned."
+  },
+  "mistakes": [
+    { "wrong": "A group with no label", "right": "label=\"5 people\"" },
+    { "wrong": "Twenty avatars in a row", "right": "max 4 with a +N count, and the full list behind the count" },
+    { "wrong": "Avatars with their own size props inside the group", "right": "size on the group" }
+  ],
+  "contract": {
+    "optionalParts": ["overflow"]
+  },
+  "since": "0.2.0"
+}

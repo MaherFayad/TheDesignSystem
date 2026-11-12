@@ -8,6 +8,8 @@ export interface DemoRoute {
 }
 
 export const routes: DemoRoute[] = [
+  { name: 'Avatar', slug: 'avatar', load: () => import('../../../packages/react/src/components/Avatar/Avatar.demo') },
+  { name: 'AvatarGroup', slug: 'avatar-group', load: () => import('../../../packages/react/src/components/AvatarGroup/AvatarGroup.demo') },
   { name: 'Button', slug: 'button', load: () => import('../../../packages/react/src/components/Button/Button.demo') },
   { name: 'Dialog', slug: 'dialog', load: () => import('../../../packages/react/src/components/Dialog/Dialog.demo') },
   { name: 'Field', slug: 'field', load: () => import('../../../packages/react/src/components/Field/Field.demo') },
