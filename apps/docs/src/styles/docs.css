@@ -120,6 +120,12 @@
   }
 }
 
+/* Code blocks are always left to right, Arabic pages included. */
+:root[dir='rtl'] .expressive-code {
+  direction: ltr;
+  text-align: left;
+}
+
 /* Code, paths and token names stay left to right inside Arabic text. */
 :root[dir='rtl'] :not(pre) > code {
   direction: ltr;

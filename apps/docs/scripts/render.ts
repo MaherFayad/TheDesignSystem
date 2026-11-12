@@ -434,7 +434,8 @@ export function renderManifest(m: Manifest, lang: Lang, mode: Mode, preview: Pre
   if (lang === 'ar') s.push(`> ${t.englishNote}`);
   s.push(enBlock(ctx, inline(m.summary)));
 
-  if (m.frameworks.react?.status === 'ready') {
+  // The gallery has a route only for a React component folder with a demo.
+  if (exampleSource('react', m)?.file.endsWith('.demo.tsx')) {
     s.push(`## ${t.preview}`);
     s.push(previewBlock(ctx, m, preview));
   }

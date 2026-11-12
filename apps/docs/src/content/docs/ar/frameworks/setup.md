@@ -6,7 +6,7 @@ sidebar:
 ---
 
 تصدر الحزم شيفرة TypeScript وCSS المصدرية أثناء التطوير، ويتولى Vite وVitest
-وNext (عبر `transpilePackages`) ومنشئ Angular ترجمتها. أما CSS الرموز
+وNext عبر الخيار `transpilePackages` ومنشئ Angular ترجمتها. أما CSS الرموز
 التصميمية فهو من مخرجات البناء، لذا يلزم تشغيل بناء الرموز قبل أول تشغيل
 للتطوير.
 
