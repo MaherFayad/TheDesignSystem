@@ -1,0 +1,276 @@
+{
+  "name": "ToggleGroup",
+  "kind": "component",
+  "family": "actions",
+  "summary": "A labelled set of toggle buttons with one tab stop, where one (type single) or several (type multiple) can be on: text style, filter chips, view options.",
+  "useWhen": [
+    "Several related settings that each turn on or off and apply at once: bold, italic and underline (type multiple)",
+    "Filter chips over a list, where any number can be on (type multiple)",
+    "A compact choice in a toolbar where turning the only on item off is allowed, so none may be on (type single)",
+    "A set of toggles that should be one tab stop and move with the arrow keys"
+  ],
+  "avoidWhen": [
+    "Exactly one option must always be on (a view or a mode)",
+    "A choice in a form that is saved with the form",
+    "Actions that run once rather than stay on",
+    "A single setting on its own"
+  ],
+  "insteadUse": {
+    "One choice among two to five views or modes, always one on": "SegmentedControl",
+    "One choice in a form": "RadioGroup",
+    "Several choices in a form": "Checkbox group",
+    "Related actions that run once": "ButtonGroup",
+    "One setting on its own": "ToggleButton, or Switch in a settings list",
+    "Panels that switch with the choice": "Tabs"
+  },
+  "anatomy": [
+    "root",
+    "item"
+  ],
+  "parts": {
+    "ToggleGroupItem": "item"
+  },
+  "slots": {
+    "root": {
+      "accepts": [
+        "ToggleGroupItem"
+      ],
+      "min": 2,
+      "max": 12
+    }
+  },
+  "props": {
+    "type": {
+      "type": [
+        "single",
+        "multiple"
+      ],
+      "required": true,
+      "description": "single: at most one item on, Radix renders role radiogroup with radio items. multiple: any number on, role toolbar with pressed buttons."
+    },
+    "value": {
+      "type": "string | string[]",
+      "description": "Controlled. A string for single (empty string for none), a list for multiple. Pair with onValueChange."
+    },
+    "defaultValue": {
+      "type": "string | string[]",
+      "description": "The value at first, uncontrolled."
+    },
+    "onValueChange": {
+      "type": "function",
+      "description": "Called with the new value. For single, an empty string when the on item is turned off."
+    },
+    "aria-label": {
+      "type": "string",
+      "description": "The group's name, for example Text style. Required unless aria-labelledby is set."
+    },
+    "aria-labelledby": {
+      "type": "string",
+      "description": "The id of a visible heading that names the group. Required unless aria-label is set."
+    },
+    "size": {
+      "type": [
+        "xs",
+        "sm",
+        "md",
+        "lg"
+      ],
+      "default": "md",
+      "description": "Passed to every item that does not set its own size. Spaced xs and sm groups use the smaller gap."
+    },
+    "emphasis": {
+      "type": [
+        "solid",
+        "soft",
+        "outline",
+        "ghost"
+      ],
+      "description": "Passed to every item that does not set its own. No default: items are soft, as ToggleButton."
+    },
+    "shape": {
+      "type": [
+        "default",
+        "pill",
+        "square"
+      ],
+      "description": "Passed to every item that does not set its own. No default. Attached, only the outer corners take the shape."
+    },
+    "orientation": {
+      "type": [
+        "horizontal",
+        "vertical"
+      ],
+      "default": "horizontal",
+      "description": "A row with ArrowLeft and ArrowRight, or a column with ArrowUp and ArrowDown. Sets data-orientation."
+    },
+    "attached": {
+      "type": "boolean",
+      "default": false,
+      "description": "Joins the items into one seamed control: no gap, inner corners square on the logical sides (they flip in RTL), a 1px divider. Sets data-attached."
+    },
+    "disabled": {
+      "type": "boolean",
+      "default": false,
+      "description": "Every item is disabled: aria-disabled, does not toggle, stays focusable. Sets data-disabled on the root."
+    },
+    "loop": {
+      "type": "boolean",
+      "default": true,
+      "description": "Arrow keys wrap from the last item to the first and back."
+    },
+    "children": {
+      "type": "node",
+      "required": true,
+      "description": "ToggleGroupItems, each with a unique value. The item takes children (the label), start, end, icon with label for the icon only form, and disabled, as ToggleButton."
+    }
+  },
+  "states": [
+    "on",
+    "off",
+    "data-orientation",
+    "data-disabled",
+    "data-attached"
+  ],
+  "a11y": {
+    "role": "radiogroup of radio items with aria-checked (type single), or toolbar of buttons with aria-pressed (type multiple); named by aria-label or aria-labelledby",
+    "focus": "One tab stop: Tab enters on the on item (or the first), the arrows move between items. Focus alone does not toggle. Disabled items keep aria-disabled and stay focusable and in the arrow order (anatomy rule 5), so a Tooltip can say why; they do not toggle.",
+    "keys": {
+      "Tab": "Moves focus into the group, on the on item or the first item, then out of it",
+      "Shift+Tab": "Moves focus out of the group, backward",
+      "ArrowRight": "Moves focus to the next item in the reading direction (the previous one in RTL); wraps",
+      "ArrowLeft": "Moves focus to the previous item in the reading direction (the next one in RTL); wraps",
+      "ArrowDown": "In a vertical group, moves focus to the next item; wraps",
+      "ArrowUp": "In a vertical group, moves focus to the previous item; wraps",
+      "Home": "Moves focus to the first item",
+      "End": "Moves focus to the last item",
+      "Space": "Toggles the focused item",
+      "Enter": "Toggles the focused item"
+    },
+    "announce": "The group name when focus enters, then each item by its name with checked or not checked (single) or pressed or not pressed (multiple), and its position in the set.",
+    "native": {
+      "accessibilityRole": "radiogroup",
+      "accessibilityState": [
+        "checked",
+        "disabled"
+      ]
+    },
+    "notes": [
+      "On is not told by color alone: an on item gets the ToggleButton inner ring, and Highlight in forced colors.",
+      "Every icon only item needs its own label: the group name does not name its items.",
+      "Keep each label the same in both states; the checked or pressed state carries it.",
+      "Under forced colors the focus outline of an attached item is pulled inside it, so the next item does not cover it.",
+      "The native role above is for type single. Type multiple is a toolbar of buttons with the selected (pressed) state.",
+      "While an on item of an attached group has keyboard focus, its inner ring gives way to the focus ring; the on fill still tells the state."
+    ]
+  },
+  "content": {
+    "en": {
+      "name": "Name the group by what its items set: Text style, Task filters, Board view. Sentence case.",
+      "labels": "Each item is a short noun in sentence case: Bold, Open, Grid. The same words in both states."
+    },
+    "ar": {
+      "name": "Noun form, no diacritics: فلاتر المهام، عرض اللوحة.",
+      "labels": "Short noun form labels, no diacritics: مفتوحة، قائمة، شبكة. Never the imperative."
+    }
+  },
+  "tokens": [
+    "space.xs",
+    "space.2xs",
+    "border.width.strong",
+    "color.border.default",
+    "color.focus.ring",
+    "color.focus.ring-on-primary-inner",
+    "color.focus.ring-on-primary-outer"
+  ],
+  "motion": "none",
+  "frameworks": {
+    "react": {
+      "status": "ready",
+      "behavior": "radix:ToggleGroup; items are ToggleButton roots on ButtonBase",
+      "example": "ToggleGroup.demo.tsx",
+      "note": "The axes reach the items through ButtonGroupContext, which ButtonRoot reads; an item's own prop wins. No motion of its own: items keep Button's."
+    },
+    "angular": {
+      "status": "planned",
+      "behavior": "[dsToggleGroup] host with a roving focus directive; items are dsToggleButton with data-part item",
+      "note": "ToggleGroup.css and Button.css are used as is."
+    },
+    "native": {
+      "status": "planned",
+      "behavior": "rn-primitives:toggle-group",
+      "note": "44pt on iOS, 48dp on Android. Attached corners through the style function, flipped by I18nManager."
+    }
+  },
+  "styles": {
+    "studio": "Overlay filled items; an on item steps up the fill and gets the 2px inner ring. Attached, the seam is color.border.default and only the outer corners take radius.control.",
+    "desk": "Pill items; attached, the group reads as one pill with square inner corners.",
+    "neutral": "Takes the tokens of the Neutral style, no recipe."
+  },
+  "mistakes": [
+    {
+      "wrong": "A ToggleGroup type single used for views, where turning the on item off leaves no view",
+      "right": "SegmentedControl, which always keeps one option on"
+    },
+    {
+      "wrong": "Each item a separate tab stop, built from loose ToggleButtons",
+      "right": "ToggleGroup, one tab stop with arrow keys"
+    },
+    {
+      "wrong": "A group with no aria-label or aria-labelledby",
+      "right": "A name that says what the items set: Text style"
+    },
+    {
+      "wrong": "Icon only items with no label",
+      "right": "label on every icon only item: List view, Grid view"
+    },
+    {
+      "wrong": "A ToggleGroup of form options saved with a submit button",
+      "right": "RadioGroup or a Checkbox group inside a Field"
+    }
+  ],
+  "contract": {
+    "keys": {
+      "ArrowRight": {
+        "focus": "[data-part='item']",
+        "case": "one",
+        "expect": "focus-moves"
+      },
+      "ArrowLeft": {
+        "focus": "[data-part='item']",
+        "case": "one",
+        "expect": "focus-moves"
+      },
+      "ArrowDown": {
+        "focus": "[data-ds='toggle-group'][data-orientation='vertical'] > [data-part='item']",
+        "case": "variants",
+        "expect": "focus-moves"
+      },
+      "ArrowUp": {
+        "focus": "[data-ds='toggle-group'][data-orientation='vertical'] > [data-part='item']",
+        "case": "variants",
+        "expect": "focus-moves"
+      },
+      "Home": {
+        "focus": "[data-part='item']:last-child",
+        "case": "one",
+        "expect": "focus-moves"
+      },
+      "End": {
+        "focus": "[data-part='item']",
+        "case": "one",
+        "expect": "focus-moves"
+      },
+      "Space": {
+        "focus": "[data-part='item']",
+        "case": "one",
+        "expect": "state-changes"
+      },
+      "Enter": {
+        "focus": "[data-part='item']",
+        "case": "one",
+        "expect": "state-changes"
+      }
+    }
+  },
+  "since": "0.2.0"
+}
