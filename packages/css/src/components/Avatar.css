@@ -1,0 +1,170 @@
+/*
+ * Avatar: a picture of a person or a workspace, with initials or an icon as
+ * the fallback and an optional status dot. Follows "One convention for
+ * component CSS and props" in docs/contracts/anatomy.md.
+ *
+ * Private properties on the root (recipes override these):
+ *
+ *   --_avatar-size          the box, from size.control
+ *   --_avatar-font-size     the initials
+ *   --_avatar-radius        circle by default, radius.sm when square
+ *   --_avatar-bg, -fg       the fallback fill and text
+ *   --_avatar-hue           one accent hue from the name, set inline by the
+ *                           component (color.accent.1 to 10). The fallback
+ *                           is the solid hue with color.text.on-accent, which
+ *                           holds 4.5:1 in every style and scheme (pastels
+ *                           with ink in dark, deep hues with white in light).
+ *   --_avatar-status-size, -status-bg, -ring  the status dot and its cutout
+ *   --_avatar-ring          the border drawn by AvatarGroup between items
+ *
+ * The names size, hue and status-* are outside the name list of anatomy
+ * rule 1: an avatar is a square box, not a control with a height, and the
+ * hue and the status dot have no word in that list.
+ *
+ * Not focusable, so no focus layer and no hover veil.
+ */
+@layer ds.base {
+  [data-ds='avatar'] {
+    --_avatar-size: var(--ds-size-control-md);
+    --_avatar-font-size: var(--ds-font-size-s);
+    --_avatar-radius: var(--ds-radius-pill);
+    --_avatar-hue: var(--ds-color-bg-surface-3);
+    --_avatar-bg: var(--_avatar-hue);
+    --_avatar-fg: var(--ds-color-text-on-accent);
+    --_avatar-status-size: var(--ds-space-s);
+    --_avatar-status-bg: var(--ds-color-state-success-solid);
+    --_avatar-ring: transparent;
+
+    position: relative;
+    display: inline-flex;
+    flex: none;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    inline-size: var(--_avatar-size);
+    block-size: var(--_avatar-size);
+    border-radius: var(--_avatar-radius);
+    background-color: var(--_avatar-bg);
+    box-shadow: 0 0 0 var(--ds-border-width-strong) var(--_avatar-ring);
+    color: var(--_avatar-fg);
+    font-family: var(--ds-font-family-sans);
+    font-size: var(--_avatar-font-size);
+    font-weight: var(--ds-font-weight-bold);
+    line-height: var(--ds-font-leading-tight);
+    letter-spacing: var(--ds-font-tracking-none);
+    vertical-align: middle;
+    user-select: none;
+  }
+
+  /* ------------------------------------------------------------ parts */
+
+  [data-ds='avatar'] > [data-part='image'] {
+    display: block;
+    inline-size: 100%;
+    block-size: 100%;
+    border-radius: inherit;
+    object-fit: cover;
+    opacity: 1;
+    transform: none;
+    transition:
+      opacity var(--ds-duration-base) var(--ds-ease-out),
+      transform var(--ds-duration-base) var(--ds-ease-out);
+
+    @starting-style {
+      opacity: 0;
+      transform: translateY(var(--ds-space-4xs));
+    }
+  }
+
+  [data-ds='avatar'] > [data-part='fallback'] {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    inline-size: 100%;
+    block-size: 100%;
+    overflow: hidden;
+    border-radius: inherit;
+    white-space: nowrap;
+  }
+
+  /* The dot sits on the end corner, cut out of the avatar by a ring of the page surface. */
+  [data-ds='avatar'] > [data-part='status'] {
+    position: absolute;
+    inset-block-end: 0;
+    inset-inline-end: 0;
+    box-sizing: content-box;
+    inline-size: var(--_avatar-status-size);
+    block-size: var(--_avatar-status-size);
+    border: var(--ds-border-width-strong) solid var(--ds-color-bg-surface);
+    border-radius: var(--ds-radius-pill);
+    background-color: var(--_avatar-status-bg);
+  }
+
+  [data-ds='avatar'] > [data-part='status'][data-tone='warning'] {
+    --_avatar-status-bg: var(--ds-color-state-warning-solid);
+  }
+
+  [data-ds='avatar'] > [data-part='status'][data-tone='danger'] {
+    --_avatar-status-bg: var(--ds-color-state-danger-solid);
+  }
+
+  /* Offline is a hollow ring, so it differs from the others by shape and not by color alone. */
+  [data-ds='avatar'] > [data-part='status'][data-tone='neutral'] {
+    --_avatar-status-bg: var(--ds-color-bg-surface);
+
+    box-shadow: inset 0 0 0 var(--ds-border-width-strong) var(--ds-color-text-muted);
+  }
+
+  /* ------------------------------------------------------------ sizes */
+
+  [data-ds='avatar'][data-size='xs'] {
+    --_avatar-size: var(--ds-size-control-xs);
+    --_avatar-font-size: var(--ds-font-size-2xs);
+    --_avatar-status-size: var(--ds-space-xs);
+  }
+
+  [data-ds='avatar'][data-size='sm'] {
+    --_avatar-size: var(--ds-size-control-sm);
+    --_avatar-font-size: var(--ds-font-size-xs);
+    --_avatar-status-size: var(--ds-space-xs);
+  }
+
+  [data-ds='avatar'][data-size='lg'] {
+    --_avatar-size: var(--ds-size-control-lg);
+    --_avatar-font-size: var(--ds-font-size-m);
+    --_avatar-status-size: var(--ds-space-m);
+  }
+
+  /* ------------------------------------------------------------ shapes */
+
+  [data-ds='avatar'][data-shape='square'] {
+    --_avatar-radius: var(--ds-radius-sm);
+  }
+
+  /* ------------------------------------------------------------ reduced motion, forced colors */
+
+  @media (prefers-reduced-motion: reduce) {
+    [data-ds='avatar'] > [data-part='image'] {
+      transition: none;
+    }
+  }
+
+  @media (forced-colors: active) {
+    [data-ds='avatar'] {
+      border: var(--ds-border-width-default) solid CanvasText;
+      color: CanvasText;
+    }
+
+    [data-ds='avatar'] > [data-part='status'] {
+      border-color: Canvas;
+      background-color: CanvasText;
+    }
+
+    [data-ds='avatar'] > [data-part='status'][data-tone='neutral'] {
+      background-color: Canvas;
+      box-shadow: none;
+      outline: var(--ds-border-width-strong) solid CanvasText;
+      outline-offset: calc(-1 * var(--ds-border-width-strong));
+    }
+  }
+}
