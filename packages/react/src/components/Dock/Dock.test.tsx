@@ -1,3 +1,5 @@
+import { readFileSync } from 'node:fs';
+import { join } from 'node:path';
 import { render, screen } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 import { describe, expect, it } from 'vitest';
@@ -56,6 +58,65 @@ describe('Dock', () => {
     expect(mail.getAttribute('data-label-hidden')).toBe('');
     await userEvent.tab();
     expect(mail.hasAttribute('data-label-hidden')).toBe(false);
+  });
+
+  it('Escape hides a name shown by hover while focus is elsewhere', async () => {
+    render(
+      <>
+        <Example />
+        <input aria-label="Search" />
+      </>,
+    );
+    const mail = screen.getByRole('link', { name: 'Mail' });
+    screen.getByRole('textbox', { name: 'Search' }).focus();
+    await userEvent.hover(mail);
+    await userEvent.keyboard('{Escape}');
+    expect(mail.getAttribute('data-label-hidden')).toBe('');
+    await userEvent.unhover(mail);
+    expect(mail.hasAttribute('data-label-hidden')).toBe(false);
+    // Not hovered any more: Escape on the page leaves the item alone.
+    await userEvent.keyboard('{Escape}');
+    expect(mail.hasAttribute('data-label-hidden')).toBe(false);
+  });
+
+  describe('CSS', () => {
+    const css = readFileSync(join(process.cwd(), 'packages/css/src/components/Dock.css'), 'utf8');
+    const block = (selector: string) => {
+      const at = css.indexOf(`${selector} {`);
+      expect(at, selector).toBeGreaterThan(-1);
+      return css.slice(at, css.indexOf('}', at));
+    };
+
+    it('lets the pointer onto a shown name (hoverable)', () => {
+      const label = block("  [data-ds='dock'] > [data-part='item'] > [data-part='item-label']");
+      expect(label).toMatch(/pointer-events: var\(--_dock-item-label-events\)/);
+      expect(label).not.toMatch(/pointer-events: none/);
+      expect(block("    [data-ds='dock'] > [data-part='item']:hover")).toMatch(/--_dock-item-label-events: auto/);
+      expect(block("  [data-ds='dock'] > [data-part='item']:focus-visible")).toMatch(/--_dock-item-label-events: auto/);
+      expect(block("  [data-ds='dock'] > [data-part='item'] > [data-part='item-label']::after")).toMatch(/content: ''/);
+    });
+
+    it('draws the current app ring in the default text color, not border.strong', () => {
+      expect(css).toMatch(/--_dock-current-color: var\(--ds-color-text-default\)/);
+      expect(block("  [data-ds='dock'] > [data-part='item'][data-active]")).toMatch(/var\(--_dock-current-color\)/);
+      expect(css).not.toMatch(/border-strong/);
+    });
+
+    it('anchors the names of the first and the last item to the tile edge', () => {
+      expect(block("  [data-ds='dock'] > [data-part='item']:not([data-part='item'] ~ [data-part='item'])")).toMatch(/--_dock-item-label-start: 0;/);
+      expect(block("  [data-ds='dock'] > [data-part='item']:not(:has(~ [data-part='item']))")).toMatch(/--_dock-item-label-end: 0;/);
+    });
+
+    it('places the name above the tile at its magnified size', () => {
+      const label = block("  [data-ds='dock'] > [data-part='item'] > [data-part='item-label']");
+      expect(label).toMatch(/inset-block-end: calc\(100% \+ var\(--_dock-lift\) \+ \(var\(--_dock-scale\) - 1\) \* var\(--_dock-tile\)/);
+    });
+  });
+
+  it('gives every dock in the demo its own landmark name', () => {
+    render(<DockDemo />);
+    const names = screen.getAllByRole('navigation').map((n) => n.getAttribute('aria-label'));
+    expect(new Set(names).size).toBe(names.length);
   });
 
   it('takes a node as the icon', () => {

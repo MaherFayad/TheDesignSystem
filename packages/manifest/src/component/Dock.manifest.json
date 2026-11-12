@@ -101,18 +101,20 @@
       "Tab": "Moves to the next app",
       "Shift+Tab": "Moves to the previous app",
       "Enter": "Follows the link, or runs the item's onClick",
-      "Escape": "Hides the drawn name of the focused or hovered app until focus or the pointer leaves"
+      "Escape": "Hides the drawn name of the focused app, and of the hovered app wherever focus is (the item listens on the document while hovered), until focus or the pointer leaves"
     },
     "announce": "Each link reads the app name, open when the app is open, and current page for the current app.",
     "notes": [
       "The name is always the link text (WCAG 2.4.4, 4.1.2). It is drawn on hover and focus with opacity, so it is read at all times; no native title attribute.",
       "Open is shown by the dot and said in the name; current is shown by a ring on the tile and aria-current, never by color alone.",
+      "The current app ring is 2px in the default text color: 6.57:1 or better against its tile and 12.59:1 or better against the dock in Studio, Desk and Neutral, dark and light (WCAG 1.4.11).",
       "Magnify (Desk) scales the tile with transform only and is off under reduced motion; the name still appears.",
       "A fixed dock covers content unless the page keeps the same room at its block end (WCAG 2.4.11): the layout (PageShell) reserves it.",
       "Tiles are 44px at md (WCAG 2.5.8).",
       "Many apps wrap onto a second row rather than scroll the page sideways (WCAG 1.4.10).",
+      "The first and the last item anchor the name to the tile's inline edge, so an edge name grows into the dock and stays inside a 320px viewport (WCAG 1.4.10). The name sits above the tile at its magnified size, so it never covers the tile or its ring.",
       "Every item is a link. The order allows buttons; a system Button would own the item's parts, so an app that opens a window keeps an href and handles onClick.",
-      "The drawn name is dismissable (Escape), hoverable (it does not hide while the pointer is on the item) and persistent until focus or the pointer leaves (WCAG 1.4.13). It is a part of the link, not a Tooltip, because it is the link's own text.",
+      "The drawn name is dismissable (Escape, heard on the document while the item is hovered), hoverable (the pointer can move from the tile onto the name: the name takes the pointer while it shows and an undrawn bridge covers the gap) and persistent until focus or the pointer leaves (WCAG 1.4.13). It is a part of the link, not a Tooltip, because it is the link's own text.",
       "The demo case many shows the reserved room: the page pads its block end and its scroll padding by the dock's height (size.control.lg plus the dock padding).",
       "Contract keys: Escape sets data-label-hidden on the item, a part, which the generic suite does not watch; the unit tests cover it."
     ]
@@ -132,7 +134,6 @@
     "color.bg.surface-4",
     "color.border.subtle",
     "color.border.default",
-    "color.border.strong",
     "color.bg.overlay-10",
     "color.bg.overlay-20",
     "color.text.default",
