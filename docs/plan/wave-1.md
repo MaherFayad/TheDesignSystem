@@ -729,6 +729,18 @@ components; contrast gate green in every style and scheme; side by side
 evidence under `docs/reports/shots/`; a report under `docs/reports/`; the
 docs site redeployed by the lead. All looks stay "proposed".
 
+### 1.27 Docs site redesign (ds-docs)
+
+Added on 2026-11-12 at the owner's request: a clean and clear docs site, with
+the FlyonUI docs as a first example of clarity. Structure and feel only.
+Owns `apps/docs/**`. A top bar, a grouped sidebar, an "on this page" rail,
+and a component page with one section per demo case: heading, sentence, live
+preview, code tabs per framework with a copy control. Styles pages read
+`packages/styles/`. Client side search. English and Arabic. Accept: `npm run
+check` green, axe clean on the sample pages, screenshots in
+`docs/reports/shots/docs-redesign/`, report `docs/reports/docs-redesign.md`.
+The lead deploys.
+
 ## Schedule
 
 At most four agents at once. Never two installing orders at once (installs

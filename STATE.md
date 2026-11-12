@@ -71,6 +71,7 @@ No adb. No iOS build.
 | 1.24 | Studio, Desk and Neutral apart; overlay surfaces | claude/ds-order-1-24 | session_01ErLBsbJByxDbkQHyYCU8Jp | running |
 | 1.25 | Platform axis: iOS and Android on the web components | claude/ds-order-1-25 | session_01ErLBsbZmbSwXftzpogNPCu | running |
 | 1.26 | Liquid style, proposed | claude/ds-order-1-26 | session_01ErLBscJMviQH5S59ze1TNo | running |
+| 1.27 | Docs site redesign, FlyonUI docs as the clarity reference | claude/ds-order-1-27 | session_01ErLBsZt9axdwsiH8dRRUi4 | running |
 | A-motion | Angular motion for rounds 1 and 2, Form merge cleanup, recheck of Angular review 2 | claude/ds-angular-motion | session_01ErLBsda6FTx4PoGDqs1QU7 | running |
 | 1.17 | Full matrix | ds-qa | all | open | |
 | 1.18 | Consumer apps on wave 1 components | ds-docs | react | open | |
@@ -222,6 +223,7 @@ again: commit the tree as wip, push, and resume the agents by id.
    for demo copy unless told otherwise.
 
 ## Owner answers
+- 2026-11-12 22:52 UTC: make the docs site clean and clear, with the FlyonUI docs as a good first example (structure and feel only). Order 1.27.
 - 2026-11-12 22:50 UTC, after testing the live site: checkbox and toggle need much better interactions (glass thumb, growing dot, drawn check); improve every interaction and its feedback (copy animates from icon to "Copied"); toasts and popups need a better look in every style; Studio and Desk are far too close; iOS, Android and web show no difference. Orders 1.23 to 1.26 in `docs/plan/wave-1.md`. The lead took this as a ruling that motion may use paint properties (see DECISIONS.md).
 - 2026-11-12 18:20 UTC: after the round 1 videos, the interactions are acceptable but need a further round of richer animations and micro interactions. Order 1.22 added.
 1. 2026-11-12: pushing. The owner approved pushing the session branch
