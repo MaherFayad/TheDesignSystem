@@ -1,9 +1,12 @@
+import { readFileSync } from 'node:fs';
+import { join } from 'node:path';
 import { createRef } from 'react';
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 import { Theme } from '../../theme';
 import MeterDemo from './Meter.demo';
 import { Meter } from './index';
+import { fillOnTrack, fillTokens, pairs } from '../ProgressBar/fillContrast.test-util';
 
 function root(container: HTMLElement): HTMLElement {
   const el = container.querySelector<HTMLElement>('[data-ds="meter"]');
@@ -103,5 +106,35 @@ describe('Meter', () => {
       expect(container.querySelector(`[data-demo-case="${id}"]`)).not.toBeNull();
     }
     expect(container.querySelector('[data-demo-case="variants"] [data-ds="theme"][lang="ar"]')).not.toBeNull();
+  });
+});
+
+describe('Meter fill contrast and demo reflow', () => {
+  const css = readFileSync(join(process.cwd(), 'packages/css/src/components/Meter.css'), 'utf8');
+  const fills = fillTokens(css, 'meter', '--_meter-fill');
+
+  it('sets a fill for every tone', () => {
+    expect(Object.keys(fills).sort()).toEqual(['accent', 'danger', 'success', 'warning']);
+  });
+
+  // WCAG 1.4.11: the fill length is the value. 3:1 on the track in every pair.
+  it.each(pairs.map((p) => [p.name, p.body]))('every tone fill holds 3:1 on the track in %s', (_, block) => {
+    for (const [tone, token] of Object.entries(fills)) {
+      expect(fillOnTrack(block, token, 'color-bg-overlay-10'), `${tone} ${token}`).toBeGreaterThanOrEqual(3);
+    }
+  });
+
+  // WCAG 1.4.10: at 320px the demo column is 292px wide. A grid cell with a
+  // fixed minimum above that scrolls the page sideways.
+  it('no demo grid cell has a fixed minimum wider than a 320px page', () => {
+    const { container } = render(<MeterDemo />);
+    const grids = [...container.querySelectorAll<HTMLElement>('[data-demo="grid"]')];
+    expect(grids.length).toBeGreaterThan(0);
+    for (const grid of grids) {
+      const style = grid.getAttribute('style') ?? '';
+      const min = /minmax\((.+), 1fr\)/.exec(style)?.[1] ?? '';
+      const rem = /^([\d.]+)rem$/.exec(min);
+      expect(min.startsWith('min(') || (rem !== null && Number(rem[1]) <= 18), min).toBe(true);
+    }
   });
 });
