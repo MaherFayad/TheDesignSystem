@@ -2,6 +2,36 @@
 
 Newest first inside each section. Each entry has a date and the reasoning.
 
+## Consolidation 2 (2026-11-12)
+
+Recorded by the second consolidation pass. Report:
+`docs/reports/consolidation-2.md`.
+
+1. **Private property names (anatomy rule 1).** The name list in
+   `docs/contracts/anatomy.md` now has kinds: the base list, part names, a
+   working `-now` value, tone groups, layout, motion and drawing extras.
+   Added suffixes: `-invalid`, `-checked`, `-readonly`. Added base names:
+   `padding-block`, `font-weight`, `border-style`, `shadow`. Any other
+   name needs a line in the CSS header. Reason: lanes had already used
+   these names in the same way (consolidation 1, lanes 2D, 3B, 9A); writing
+   them down costs nothing and stops each lane asking.
+2. **`--_menu-*` is one shared family.** Every menu surface reads it, so one
+   Desk recipe draws them all. A rename would touch eight components for no
+   visible gain. No other shared family without a line in the contract.
+3. **`--_fab-inset` renamed to `--_floating-action-button-inset`.** The
+   prefix is the full `data-ds` value, without short aliases.
+4. **Layout and component attributes (anatomy rule 11).** The attributes in
+   use are listed in a table. `data-variant` never stands in for a shared
+   axis.
+5. **Rule 12 covers controls only.** A control's `md` is 32px. Every other
+   component's `md` is the middle of its own scale, from tokens.
+6. **Container takes `width`, not `size`** (`sm`, `md`, `lg`, `xl`, `full`,
+   default `lg`, attribute `data-width`). `size` is the control axis, and a
+   page width is not a control size. Overrides the prop name in order 1.8.
+7. **The contract suite keeps Studio as its single run style** while
+   Neutral is `proposed`. Neutral joins the single runs once the owner
+   approves it.
+
 ## Environment (2026-11-12)
 
 1. **Cloud Linux container, not Windows.** The prompt assumed
