@@ -67,39 +67,43 @@
 
   /* ------------------------------------------------------------ steps */
 
-  /* A link step: muted, a 24px target, one line that ends in an ellipsis. */
+  /* A link step: a standalone Link (a 24px target), muted, shrinking with its row. */
   [data-ds='breadcrumbs'] [data-part='link'] {
     --_link-fg: var(--_breadcrumbs-fg);
     --_link-fg-hover: var(--_breadcrumbs-fg-hover);
 
-    display: inline-block;
     flex: 0 1 auto;
     min-inline-size: 0;
-    max-inline-size: var(--_breadcrumbs-item-max);
-    overflow: hidden;
-    line-height: var(--ds-size-target-min);
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    vertical-align: middle;
+    overflow-wrap: anywhere;
   }
 
-  /* The current page: bright and medium weight, no underline. aria-current names it, not the color. */
+  /*
+   * With a hover pointer, a long link step is one line that ends in an
+   * ellipsis; hover and keyboard focus show it whole. No property of Link
+   * covers truncation, so these declarations are set here. Without hover
+   * (touch), steps wrap and nothing is cut off.
+   */
+  @media (hover: hover) {
+    [data-ds='breadcrumbs'] [data-part='link'] {
+      max-inline-size: var(--_breadcrumbs-item-max);
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    [data-ds='breadcrumbs'] [data-part='link']:is(:hover, :focus-visible) {
+      max-inline-size: none;
+    }
+  }
+
+  /* The current page: bright and medium weight, no underline, never truncated. aria-current names it, not the color. */
   [data-ds='breadcrumbs'] [data-part='current'] {
     display: inline-block;
-    flex: 0 1 auto;
     min-inline-size: 0;
-    max-inline-size: var(--_breadcrumbs-item-max);
-    overflow: hidden;
     color: var(--_breadcrumbs-current-fg);
     font-weight: var(--ds-font-weight-medium);
     line-height: var(--ds-size-target-min);
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-
-  /* The full text of a truncated step shows on hover and on keyboard focus. */
-  [data-ds='breadcrumbs'] :is([data-part='link']:is(:hover, :focus-visible), [data-part='current']:hover) {
-    max-inline-size: none;
+    overflow-wrap: anywhere;
   }
 
   [data-ds='breadcrumbs'] [data-part='separator'] {

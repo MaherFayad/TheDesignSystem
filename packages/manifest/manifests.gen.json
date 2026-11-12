@@ -112,24 +112,11 @@
       "current",
       "overflow"
     ],
-    "slots": {
-      "link": {
-        "accepts": [
-          "Link"
-        ]
-      },
-      "overflow": {
-        "accepts": [
-          "IconButton"
-        ],
-        "max": 1
-      }
-    },
     "props": {
       "items": {
         "type": "BreadcrumbItem[]",
         "required": true,
-        "description": "The path from the top level to the current page. Each item is { label, href?, link? }. The last item is the current page and needs no href. link is a router element rendered through Link asChild."
+        "description": "The path from the top level to the current page. Each item is { label, href?, link? }. Every step but the last needs href or link; a step without either renders as a disabled link. link is a router element rendered through Link asChild; in the overflow menu its href is used when onNavigate is not set."
       },
       "size": {
         "type": [
@@ -167,8 +154,8 @@
       "focus": "Each link step and the overflow button are tab stops, in order. The current page is not focusable. A 2px ring from focus.shadow.ring on keyboard focus.",
       "keys": {
         "Tab": "Moves through the link steps and the overflow button",
-        "Enter": "Follows a link step, or opens the overflow menu",
-        "ArrowDown, ArrowUp": "Inside the overflow menu, as DropdownMenu"
+        "Enter, Space": "Enter follows a link step; Enter or Space opens the overflow menu",
+        "ArrowDown, ArrowUp": "Inside the overflow menu, as DropdownMenu: arrows move, Escape closes the menu and returns focus to the overflow button"
       },
       "announce": "Navigation, Breadcrumbs, list of N items. The current page reads as current page. Separators are aria-hidden and never read.",
       "native": {
@@ -177,9 +164,12 @@
       "notes": [
         "The current page is told apart by weight, the missing underline and aria-current, not by color alone (WCAG 1.4.1).",
         "Separators are chevron-forward icons, aria-hidden, mirrored in RTL.",
-        "A long step truncates with an ellipsis at menu.width.min. Its full text stays in the DOM as the accessible name and shows whole on hover and keyboard focus. No native title.",
+        "With a hover pointer a long link step truncates with an ellipsis at menu.width.min; its full text stays in the DOM as the accessible name and shows whole on hover and keyboard focus. Without hover (touch) steps wrap. The current page never truncates. No native title.",
         "The overflow part is the DropdownMenu trigger, an IconButton carrying data-part overflow, with data-state open or closed for its menu; the menu items are the hidden steps in order. The breadcrumbs root itself has no state.",
-        "Each landmark needs its own name when a page has more than one nav."
+        "Each landmark needs its own name when a page has more than one nav.",
+        "Each step text has dir auto, so a Latin name inside an Arabic page keeps its own direction.",
+        "label is the accessible name of the nav landmark, not visible text: every nav component takes it this way. An aria-label passed directly also works.",
+        "Escape is not in the key map because the contract suite reads it as closing Breadcrumbs itself; it closes the overflow menu, as DropdownMenu, whose own contract checks it."
       ]
     },
     "content": {

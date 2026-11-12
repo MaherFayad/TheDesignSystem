@@ -25,9 +25,13 @@
 //   root renders no element of its own, so the trigger carries the part.
 // - The separator sits inside the item it follows, so the list has only li
 //   children, and it is hidden from assistive tech.
-// - A long step truncates with an ellipsis. Its full text stays in the DOM,
-//   so it is the accessible name, and hover or keyboard focus shows it whole.
-//   There is no native title: Tooltip owns hints.
+// - A long link step truncates with an ellipsis on devices with a hover
+//   pointer. Its full text stays in the DOM, so it is the accessible name,
+//   and hover or keyboard focus shows it whole. Without hover (touch) steps
+//   wrap instead, so nothing is cut off. The current page never truncates: it
+//   wraps. There is no native title: Tooltip owns hints.
+// - Every step text has dir="auto", so a Latin name in an Arabic page (and
+//   the reverse) keeps its own direction and truncates at its own end.
 // - Steps in the overflow menu are menu items: choosing one calls onNavigate,
 //   or, without it, sends the browser to the href.
 import type { HTMLAttributes, ReactElement, Ref } from 'react';
@@ -44,7 +48,7 @@ export type BreadcrumbsSize = Extract<Size, 'sm' | 'md'>;
 export interface BreadcrumbItem {
   /** The page name, as its heading says it. */
   label: string;
-  /** Where the step goes. The last item, the current page, needs none. */
+  /** Where the step goes. Required on every step but the last; a step without one renders as a disabled link. */
   href?: string;
   /**
    * A router link to render as the step, through Link asChild: an element
@@ -115,7 +119,7 @@ export function Breadcrumbs({
   const last = items.length - 1;
 
   return (
-    <nav {...rest} ref={ref} data-ds="breadcrumbs" data-size={size} aria-label={label ?? t.label}>
+    <nav {...rest} ref={ref} data-ds="breadcrumbs" data-size={size} aria-label={label ?? rest['aria-label'] ?? t.label}>
       <ol data-part="list">
         {plan.map((entry) => {
           if (entry === 'overflow') {
@@ -131,8 +135,9 @@ export function Breadcrumbs({
                         key={index}
                         textValue={item.label}
                         onSelect={() => {
+                          const href = item.href ?? (item.link?.props as { href?: string } | undefined)?.href;
                           if (onNavigate) onNavigate(item, index);
-                          else if (item.href) window.location.assign(item.href);
+                          else if (href) window.location.assign(href);
                         }}
                       >
                         {item.label}
@@ -148,7 +153,7 @@ export function Breadcrumbs({
           if (entry === last) {
             return (
               <li key={entry} data-part="item">
-                <span data-part="current" aria-current="page">
+                <span data-part="current" aria-current="page" dir="auto">
                   {item.label}
                 </span>
               </li>
@@ -157,11 +162,11 @@ export function Breadcrumbs({
           return (
             <li key={entry} data-part="item">
               {item.link ? (
-                <Link asChild data-part="link">
+                <Link asChild standalone data-part="link" dir="auto">
                   {item.link}
                 </Link>
               ) : (
-                <Link data-part="link" href={item.href}>
+                <Link standalone data-part="link" dir="auto" href={item.href} disabled={item.href === undefined}>
                   {item.label}
                 </Link>
               )}

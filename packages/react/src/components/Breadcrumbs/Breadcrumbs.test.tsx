@@ -106,6 +106,54 @@ describe('Breadcrumbs', () => {
     expect(onNavigate).toHaveBeenCalledWith(items[2], 2);
   });
 
+  it('falls back to the href of a router link in the overflow menu', async () => {
+    const user = userEvent.setup();
+    const assign = vi.fn();
+    const original = window.location;
+    Object.defineProperty(window, 'location', { configurable: true, value: { ...original, assign } });
+    try {
+      render(
+        <Breadcrumbs
+          maxItems={3}
+          items={[
+            { label: 'Home', href: '/' },
+            { label: 'Projects', link: <a href="/router-projects">Projects</a> },
+            { label: 'Boards', href: '/boards' },
+            { label: 'Hero' },
+          ]}
+        />,
+      );
+      await user.click(screen.getByRole('button', { name: 'Show hidden pages' }));
+      await user.click(screen.getByRole('menuitem', { name: 'Projects' }));
+      expect(assign).toHaveBeenCalledWith('/router-projects');
+    } finally {
+      Object.defineProperty(window, 'location', { configurable: true, value: original });
+    }
+  });
+
+  it('opens the overflow menu from the keyboard and closes it with Escape', async () => {
+    const user = userEvent.setup();
+    render(<Breadcrumbs items={items} maxItems={3} />);
+    await user.tab();
+    expect(document.activeElement?.textContent).toBe('Home');
+    await user.tab();
+    const trigger = screen.getByRole('button', { name: 'Show hidden pages' });
+    expect(document.activeElement).toBe(trigger);
+    await user.keyboard('{Enter}');
+    expect(screen.getAllByRole('menuitem')).toHaveLength(3);
+    await user.keyboard('{Escape}');
+    expect(screen.queryByRole('menu')).toBeNull();
+    expect(document.activeElement).toBe(trigger);
+  });
+
+  it('a middle step without href is a disabled link, and aria-label passes through', () => {
+    render(<Breadcrumbs aria-label="Project path" items={[{ label: 'Home' }, { label: 'Billing' }]} />);
+    expect(screen.getByRole('navigation', { name: 'Project path' })).not.toBeNull();
+    const link = screen.getByRole('link', { name: 'Home' });
+    expect(link.getAttribute('aria-disabled')).toBe('true');
+    expect(link.getAttribute('dir')).toBe('auto');
+  });
+
   it('takes custom labels', () => {
     render(<Breadcrumbs items={items} maxItems={3} label="Project path" overflowLabel="Show 3 more pages" />);
     expect(screen.getByRole('navigation', { name: 'Project path' })).not.toBeNull();
