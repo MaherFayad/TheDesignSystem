@@ -81,6 +81,22 @@ Newest first inside each section. Each entry has a date and the reasoning.
 5. **Import order for consumers.** Only CSS outside layers is certain to win.
    A consumer that uses its own layers imports the system first.
 
+## Components (2026-11-12)
+
+1. **Toasts above a modal dialog.** While a modal dialog is open, toasts stay
+   visible, are read by screen readers and can be clicked, but keyboard focus
+   stays in the dialog, so F8 and Tab do not reach them. A trick that broke
+   the focus trap was removed after review because it silenced other focus
+   handlers on the page. To compensate, error toasts and toasts with an
+   action never time out, so they are still there when the dialog closes.
+2. **The toast store owns time, not Radix.** Durations: 4s, warning 6s,
+   danger and action toasts stay until closed. `toast.configure` lets an app
+   lengthen them (WCAG 2.2.1).
+3. **Window lights keep their order in RTL** (close, minimize, zoom from the
+   left) and show idle dots at rest, as the source does.
+4. **Dialog has a `panel` part.** The root is a fixed layer that holds the
+   backdrop and the panel, so the backdrop belongs to the dialog.
+
 ## Conflicts between the prompt and a source repo
 
 None yet.
