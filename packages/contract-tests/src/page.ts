@@ -193,8 +193,11 @@ export interface TargetProbe {
  * is marked probeable: the suite clicks in the root outside the element and
  * counts the root as the hit area only when that click focuses the element
  * (an input inside its box).
+ * With `scope` set, it measures the elements that match the scope or sit
+ * inside it (the roots a trigger opened, which may render in a portal)
+ * instead of the demo cases.
  */
-export function undersizedTargets(): TargetProbe[] {
+export function undersizedTargets(arg: { scope?: string } = {}): TargetProbe[] {
   const MIN = 24;
   const SELECTOR = 'a[href], button, input:not([type="hidden"]), select, textarea, summary, [role="button"], [tabindex], [contenteditable=""], [contenteditable="true"]';
   const NATIVE = /^(A|BUTTON|INPUT|SELECT|TEXTAREA|SUMMARY)$/;
@@ -223,7 +226,9 @@ export function undersizedTargets(): TargetProbe[] {
     }
     return { left, top, right, bottom, width: right - left, height: bottom - top };
   };
-  const candidates = Array.from(document.querySelectorAll(`[data-demo-case] :is(${SELECTOR})`)).filter((el) => {
+  for (const old of Array.from(document.querySelectorAll('[data-contract-probe]'))) old.removeAttribute('data-contract-probe');
+  const query = arg.scope ? `:is(${arg.scope}) :is(${SELECTOR}), :is(${arg.scope}):is(${SELECTOR})` : `[data-demo-case] :is(${SELECTOR})`;
+  const candidates = Array.from(document.querySelectorAll(query)).filter((el) => {
     if (!NATIVE.test(el.tagName) && el.getAttribute('tabindex') === '-1' && el.getAttribute('role') !== 'button') return false;
     if (el.matches(':disabled')) return false;
     if (el.closest('[inert], [hidden], dialog:not([open])')) return false;
@@ -390,4 +395,18 @@ export function targetStops(): number {
 export function targetModal(): boolean {
   const t = document.querySelector('[data-contract-target]');
   return !!t && (t.getAttribute('aria-modal') === 'true' || t.querySelector('[aria-modal="true"]') !== null);
+}
+
+/**
+ * Waits for every finite animation on the page to finish (an open that
+ * grows from its button), so sizes are read at rest, not mid scale. Endless
+ * animations (a spinner) are left alone.
+ */
+export async function finiteAnimationsDone(): Promise<number> {
+  const finite = document.getAnimations().filter((a) => {
+    const end = a.effect?.getComputedTiming().endTime;
+    return typeof end === 'number' && Number.isFinite(end);
+  });
+  await Promise.all(finite.map((a) => a.finished.catch(() => undefined)));
+  return finite.length;
 }

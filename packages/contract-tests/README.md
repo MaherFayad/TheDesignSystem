@@ -36,6 +36,9 @@ Environment the spec reads: `DS_GALLERY_URL`, `DS_FRAMEWORK` (default
 `DS_CONTRACT_JSON`, `DS_CONTRACT_OUT` (the run folder), `DS_CONTRACT_WORKERS`
 (default 4).
 
+`src/server.ts` starts and stops a gallery on a free port. `run.ts`,
+`scripts/shots.ts` and `scripts/a11y.ts` share it.
+
 Unit tests for the helpers: `src/lib.test.ts` and `src/page.test.ts` run in
 Vitest with `npm run check`. The Playwright suite is not part of check.
 
@@ -59,7 +62,7 @@ Every test title starts with the component name.
 | `states` | **state attributes**: boolean states (`data-disabled`, `data-loading`, `data-invalid`, `data-readonly`, `data-selected`, `data-dragging`, plus any other `data-*` in `states` except `data-state` and `data-orientation`) have an empty value; `data-state` values are in `states`; no state class (`is-*`, `*--disabled`, `active`, `disabled`, `selected`, `loading` and similar) on roots and parts | default style, dark, en ltr |
 | `a11y.keys` | **keyboard map**, one generic check per key (below) | default style, dark, en ltr |
 | (always) | disabled roots are out of the tab order or carry `aria-disabled="true"` | keyboard map |
-| (always) | **target size**: every interactive element in a demo case is at least 24 by 24 CSS px | default style, dark, en ltr |
+| (always) | **target size**: every interactive element in a demo case, and in every root a trigger opens, is at least 24 by 24 CSS px | every style and every density (compact, default, comfortable), dark, en ltr; overlays also with each trigger in the variants case open, density default |
 | (always) | **reflow**: no sideways scroll at 320px wide; no native `title` attribute | en ltr and ar rtl |
 | `contract.skipAxeRules` | **axe** with `wcag2a`, `wcag2aa`, `wcag21aa`, `wcag22aa`, minus these rules | every style and scheme in `packages/styles/*/style.json`, in en ltr and ar rtl |
 
@@ -124,6 +127,10 @@ controls. One case is measured, not assumed: when an undersized element is
 the only interactive element of a root that is 24px or more, the suite clicks
 inside the root outside the element, and counts the root as the hit area only
 when that click focuses the element (an input inside its box).
+
+Scheme and direction do not change sizes, so they are not repeated. The
+`platform=ios` (44pt) and `platform=android` (48dp) passes are not run for
+the web; they belong to wave 2 with the touch templates.
 
 ### Axe
 

@@ -11,6 +11,7 @@ import {
   anatomyFindings,
   axeMatrix,
   booleanStates,
+  DENSITIES,
   defaultStyle,
   demoPath,
   discoverStyles,
@@ -52,6 +53,8 @@ import {
   scanStates,
   scanVariants,
   undersizedTargets,
+  finiteAnimationsDone,
+  type TargetProbe,
 } from './page';
 
 const repo = resolve(dirname(fileURLToPath(import.meta.url)), '../../..');
@@ -200,6 +203,30 @@ async function checkHint(page: Page, kebab: string, key: string, hint: KeyHint, 
             ? (await page.evaluate(clickCount)) > 0
             : openBefore > 0 && (await page.evaluate(openRoots, kebab)) === 0;
   if (!ok) failures.push(`${key}: expected ${hint.expect}, nothing changed`);
+}
+
+/**
+ * Turns undersized elements into failures. An element that is the only
+ * interactive element of a root of 24px or more passes when a click in the
+ * root outside the element focuses it (an input inside its box).
+ */
+async function targetFailures(page: Page, small: TargetProbe[]): Promise<string[]> {
+  const failures: string[] = [];
+  for (const t of small) {
+    if (t.probeable) {
+      await page.locator(`[data-contract-probe="${t.id}"]`).scrollIntoViewIfNeeded();
+      const p = await page.evaluate(probePoint, t.id);
+      if (p) {
+        await page.mouse.click(p.x, p.y);
+        if ((await page.evaluate(probeFocused, t.id)) && p.rootW >= 24 && p.rootH >= 24) {
+          note(`${t.what} is ${t.w} by ${t.h} px; its root is ${p.rootW} by ${p.rootH} px and a click there focuses it`);
+          continue;
+        }
+      }
+    }
+    failures.push(`${t.what} (owner ${t.owner}) is ${t.w} by ${t.h} px, under 24 by 24`);
+  }
+  return failures;
 }
 
 const components = readyComponents(manifests, framework, only);
@@ -406,26 +433,41 @@ for (const m of components) {
     expect(failures, `${name} keyboard map on ${page.url()}`).toEqual([]);
   });
 
-  test(`${name}: target size`, async ({ page }) => {
-    await open(page, kebab, baseAxes);
-    const small = await page.evaluate(undersizedTargets);
-    const failures: string[] = [];
-    for (const t of small) {
-      if (t.probeable) {
-        await page.locator(`[data-contract-probe="${t.id}"]`).scrollIntoViewIfNeeded();
-        const p = await page.evaluate(probePoint, t.id);
-        if (p) {
-          await page.mouse.click(p.x, p.y);
-          if ((await page.evaluate(probeFocused, t.id)) && p.rootW >= 24 && p.rootH >= 24) {
-            note(`${t.what} is ${t.w} by ${t.h} px; its root is ${p.rootW} by ${p.rootH} px and a click there focuses it`);
-            continue;
-          }
-        }
-      }
-      failures.push(`${t.what} (owner ${t.owner}) is ${t.w} by ${t.h} px, under 24 by 24`);
+  // Target size (WCAG 2.5.8, 24 by 24 on the web): every style, every
+  // density, dark, en ltr. Size does not change with the scheme or the
+  // direction, so those are not repeated. Platform ios (44pt) and android
+  // (48dp) passes are wave 2 work.
+  for (const style of styles) {
+    for (const density of DENSITIES) {
+      const axes: Axes = { style: style.id, scheme: style.schemes.includes('dark') ? 'dark' : style.defaultScheme, density, dir: 'ltr', lang: 'en' };
+      test(`${name}: target size, ${style.id} ${density}`, async ({ page }) => {
+        await open(page, kebab, axes);
+        await page.evaluate(finiteAnimationsDone);
+        const failures = await targetFailures(page, await page.evaluate(undersizedTargets, {}));
+        expect(failures, `${name} target size on ${page.url()}`).toEqual([]);
+      });
     }
-    expect(failures, `${name} target size on ${page.url()}`).toEqual([]);
-  });
+    if (opensAndCloses(m)) {
+      const axes: Axes = { style: style.id, scheme: style.schemes.includes('dark') ? 'dark' : style.defaultScheme, dir: 'ltr', lang: 'en' };
+      test(`${name}: target size open, ${style.id}`, async ({ page }) => {
+        await page.emulateMedia({ reducedMotion: 'reduce' });
+        await open(page, kebab, axes);
+        test.skip(!(await overlayMode(page, m)), 'no contract.trigger and no [data-demo-trigger] in the demo');
+        const failures: string[] = [];
+        let opened = 0;
+        failures.push(
+          ...(await eachOpened(page, m, kebab, async () => {
+            opened += 1;
+            await page.evaluate(finiteAnimationsDone);
+            const small = await page.evaluate(undersizedTargets, { scope: `[data-ds="${kebab}"]:not([data-contract-seen])` });
+            failures.push(...(await targetFailures(page, small)).map((f) => `opened by trigger ${opened}: ${f}`));
+          })),
+        );
+        note(`${opened} roots opened and measured`);
+        expect(failures, `${name} target size with each trigger's root open on ${page.url()}`).toEqual([]);
+      });
+    }
+  }
 
   for (const axes of [baseAxes, { ...baseAxes, dir: 'rtl', lang: 'ar' } satisfies Axes]) {
     test(`${name}: no sideways scroll at 320px and no title attribute, ${axes.lang} ${axes.dir}`, async ({ page }) => {

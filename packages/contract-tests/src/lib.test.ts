@@ -10,6 +10,7 @@ import {
   demoPath,
   discoverStyles,
   formatAxe,
+  isControl,
   kebabCase,
   keyCheckFor,
   manifestAxes,
@@ -202,6 +203,15 @@ describe('styles and urls', () => {
 
   it('builds the gallery url from the url contract', () => {
     expect(demoPath('icon-button', { style: 'desk', scheme: 'light', dir: 'rtl', lang: 'ar' })).toBe('/c/icon-button?style=desk&scheme=light&dir=rtl&lang=ar&chrome=0');
+    expect(demoPath('input', { style: 'studio', density: 'compact', dir: 'ltr', lang: 'en', case: 'variants' })).toBe('/c/input?style=studio&density=compact&dir=ltr&lang=en&case=variants&chrome=0');
+  });
+
+  it('tells controls from other components with a size prop', () => {
+    expect(isControl(button)).toBe(true);
+    expect(isControl({ ...button, a11y: { focus: 'Never focusable.' } })).toBe(false);
+    expect(isControl({ ...button, props: { size: { type: ['sm', 'md', 'lg', 'xl', '2xl'] } } })).toBe(false);
+    expect(isControl({ ...button, states: ['open', 'closed'] })).toBe(false);
+    expect(isControl({ ...button, props: {} })).toBe(false);
   });
 });
 

@@ -323,6 +323,8 @@ export function defaultStyle(all: Manifest[], styles: StyleInfo[]): StyleInfo | 
 export interface Axes {
   style?: string;
   scheme?: string;
+  /** compact, default or comfortable. Left out of the URL when not set. */
+  density?: string;
   dir: 'ltr' | 'rtl';
   lang: 'en' | 'ar';
   case?: string;
@@ -333,11 +335,29 @@ export function demoPath(kebab: string, axes: Axes): string {
   const q = new URLSearchParams();
   if (axes.style) q.set('style', axes.style);
   if (axes.scheme) q.set('scheme', axes.scheme);
+  if (axes.density) q.set('density', axes.density);
   q.set('dir', axes.dir);
   q.set('lang', axes.lang);
   if (axes.case) q.set('case', axes.case);
   q.set('chrome', '0');
   return `/c/${kebab}?${q.toString()}`;
+}
+
+/** The densities of the runtime axes in PLAN.md section 3.2. */
+export const DENSITIES = ['compact', 'default', 'comfortable'] as const;
+
+/**
+ * A control, for the density shots and the target size pass: the manifest has
+ * a size prop on the control scale (no overlay sizes xl or 2xl), the
+ * component is focusable (a11y.focus does not say "never focusable") and it
+ * does not open and close. Read from manifest data, not from a name list.
+ */
+export function isControl(m: Manifest): boolean {
+  const sizes = propValues(m.props?.size);
+  if (!sizes || sizes.length === 0) return false;
+  if (sizes.some((s) => s === 'xl' || s === '2xl')) return false;
+  if (/never focusable|not focusable/i.test(m.a11y?.focus ?? '')) return false;
+  return !opensAndCloses(m);
 }
 
 /** The axe matrix: every style and scheme, in en ltr and ar rtl. */

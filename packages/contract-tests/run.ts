@@ -8,13 +8,13 @@
 // packages/contract-tests/.out/<pid>/contract-<framework>.partial.json, so it
 // never clobbers the full report. Each run keeps its Playwright output in
 // packages/contract-tests/.out/<pid>/, so parallel runs do not collide.
-import { spawn, type ChildProcess } from 'node:child_process';
+import { spawn } from 'node:child_process';
 import { copyFileSync, existsSync, mkdirSync, readFileSync, renameSync } from 'node:fs';
-import { createServer } from 'node:net';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { chromium } from '@playwright/test';
-import { demoPath, kebabCase, loadManifests, readyComponents, reportFile } from './src/lib';
+import { kebabCase, loadManifests, readyComponents, reportFile } from './src/lib';
+import { galleryExists, launchGallery, probeRoutes, type Gallery } from './src/server';
 
 const here = dirname(fileURLToPath(import.meta.url));
 const repo = resolve(here, '../..');
@@ -49,71 +49,14 @@ function parseArgs(argv: string[]): Args {
   return out;
 }
 
-function freePort(): Promise<number> {
-  return new Promise((ok, fail) => {
-    const srv = createServer();
-    srv.unref();
-    srv.on('error', fail);
-    srv.listen(0, '127.0.0.1', () => {
-      const addr = srv.address();
-      const port = typeof addr === 'object' && addr ? addr.port : 0;
-      srv.close(() => ok(port));
-    });
-  });
-}
-
-async function waitFor(url: string, server: ChildProcess, ms: number): Promise<void> {
-  const until = Date.now() + ms;
-  while (Date.now() < until) {
-    if (server.exitCode !== null) throw new Error(`the gallery server exited with code ${server.exitCode}`);
-    try {
-      const res = await fetch(url);
-      if (res.ok) return;
-    } catch {
-      // not up yet
-    }
-    await new Promise((r) => setTimeout(r, 300));
-  }
-  throw new Error(`the gallery did not answer at ${url} within ${ms / 1000}s`);
-}
-
-function startGallery(framework: string, port: number): ChildProcess {
-  const env = { ...process.env, PORT: String(port) };
-  if (framework === 'react') {
-    return spawn('npx', ['vite', '--port', String(port), '--strictPort'], { cwd: join(repo, 'apps/gallery-react'), env, detached: true, stdio: ['ignore', 'pipe', 'pipe'] });
-  }
-  // The Angular gallery runs its dev script with PORT set and --port passed.
-  return spawn('npm', ['run', 'dev', '--', '--port', String(port)], { cwd: join(repo, 'apps/gallery-angular'), env, detached: true, stdio: ['ignore', 'pipe', 'pipe'] });
-}
-
-function stop(server: ChildProcess | undefined): void {
-  if (!server?.pid || server.exitCode !== null) return;
-  try {
-    process.kill(-server.pid, 'SIGTERM');
-  } catch {
-    server.kill('SIGTERM');
-  }
-}
-
 /** Which components render a demo at /c/<kebab>. */
-async function probeRoutes(url: string, kebabs: string[]): Promise<Record<string, boolean>> {
+async function probe(url: string, kebabs: string[]): Promise<Record<string, boolean>> {
   const browser = await chromium.launch();
-  const out: Record<string, boolean> = {};
   try {
-    const page = await browser.newPage();
-    for (const kebab of kebabs) {
-      await page.goto(`${url}${demoPath(kebab, { dir: 'ltr', lang: 'en' })}`);
-      out[kebab] = await page
-        .locator('[data-demo-case]')
-        .first()
-        .waitFor({ state: 'attached', timeout: 20_000 })
-        .then(() => true)
-        .catch(() => false);
-    }
+    return await probeRoutes(browser, url, kebabs);
   } finally {
     await browser.close();
   }
-  return out;
 }
 
 interface JsonSpec {
@@ -159,7 +102,7 @@ async function main(): Promise<number> {
   // Playwright writes into the run folder; a full run then moves the JSON into place.
   const runJson = join(runDir, partial ? `contract-${args.framework}.partial.json` : `contract-${args.framework}.json`);
 
-  if (args.framework === 'angular' && !args.url && !existsSync(join(repo, 'apps/gallery-angular/package.json'))) {
+  if (args.framework === 'angular' && !args.url && !galleryExists(repo, 'angular')) {
     console.log('Angular gallery: not available yet. apps/gallery-angular has no package.json, so the contract suite is skipped for angular.');
     return 0;
   }
@@ -170,8 +113,8 @@ async function main(): Promise<number> {
     return 0;
   }
 
-  let server: ChildProcess | undefined;
-  const cleanup = () => stop(server);
+  let gallery: Gallery | undefined;
+  const cleanup = () => gallery?.close();
   process.on('SIGINT', () => {
     cleanup();
     process.exit(130);
@@ -184,31 +127,11 @@ async function main(): Promise<number> {
   try {
     let url = args.url;
     if (!url) {
-      // Another run may take the free port between the pick and the bind
-      // (strictPort makes the server exit then), so pick again a few times.
-      for (let attempt = 1; ; attempt += 1) {
-        const port = await freePort();
-        url = `http://localhost:${port}`;
-        console.log(`Starting the ${args.framework} gallery at ${url}`);
-        server = startGallery(args.framework, port);
-        let log = '';
-        server.stdout?.on('data', (d: Buffer) => (log += d.toString()));
-        server.stderr?.on('data', (d: Buffer) => (log += d.toString()));
-        try {
-          await waitFor(url, server, 90_000);
-          break;
-        } catch (err) {
-          stop(server);
-          if (attempt >= 5 || server.exitCode === null) {
-            console.error(log);
-            throw err;
-          }
-          console.log(`The gallery could not take port ${port}; trying another.`);
-        }
-      }
+      gallery = await launchGallery(repo, args.framework);
+      url = gallery.url;
     }
 
-    const routes = await probeRoutes(url, ready.map((m) => kebabCase(m.name)));
+    const routes = await probe(url, ready.map((m) => kebabCase(m.name)));
     for (const m of ready) {
       if (!routes[kebabCase(m.name)]) console.log(`note: ${m.name} is ready for ${args.framework} but ${url}/c/${kebabCase(m.name)} renders no demo case. Its checks are skipped.`);
     }
