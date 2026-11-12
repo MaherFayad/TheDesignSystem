@@ -1,0 +1,253 @@
+/*
+ * Menubar: the application menu row. The menus it opens are dropdown-menu
+ * roots (data-part content) drawn by DropdownMenu.css; this file draws the
+ * row, its triggers and the end slot. Designed from the dials table in
+ * PLAN.md 3.7 and the menu surface; the GoBanana menu bar sources were not
+ * reachable when it was built.
+ *
+ *   [data-ds='menubar']                 root: the row, draws the surface
+ *     [data-part='bar']                 role menubar, holds the titles
+ *       [data-part='trigger']           role menuitem, opens one menu
+ *         > [data-part='text']          the title; data-text reserves the open weight
+ *     [data-part='end']                 a status slot at the inline end (a clock), outside role menubar
+ *
+ * Private properties on the root (the Desk recipe overrides these):
+ *
+ *   --_menubar-height, -padding-inline, -gap, -font-size
+ *   --_menubar-bg, -fg, -border-color, -backdrop
+ *   --_menubar-trigger-height, -trigger-padding-inline, -trigger-radius
+ *   --_menubar-trigger-weight, -trigger-weight-open
+ *   --_menubar-trigger-bg, -trigger-bg-hover, -trigger-bg-open
+ *   --_menubar-trigger-fg, -trigger-fg-open
+ *
+ * The -open suffix names the value of the current menu, the state this
+ * component adds to the hover, active, focus and disabled suffixes.
+ *   --_menubar-trigger-ring, -trigger-ring-color
+ *   --_menubar-meta-fg
+ *
+ * The current menu is shown by two cues, never color alone: its trigger
+ * takes the open fill and the open weight. The text part lays out a hidden
+ * copy of the title at the open weight, so the row never shifts.
+ *
+ * Motion: none on the row. Colors and weight swap at once; the menus play
+ * "menu-scale" from DropdownMenu.css.
+ */
+@layer ds.base {
+  [data-ds='menubar'] {
+    --_menubar-height: var(--ds-size-control-md);
+    --_menubar-padding-inline: var(--ds-space-xs);
+    --_menubar-gap: var(--ds-space-4xs);
+    --_menubar-font-size: var(--ds-font-size-s);
+    --_menubar-bg: var(--ds-color-material-menubar);
+    --_menubar-fg: var(--ds-color-text-default);
+    --_menubar-border-color: var(--ds-color-border-hairline);
+    --_menubar-backdrop: none;
+    --_menubar-trigger-height: var(--ds-size-control-sm);
+    --_menubar-trigger-padding-inline: var(--ds-space-s);
+    --_menubar-trigger-radius: var(--ds-menu-item-radius);
+    --_menubar-trigger-weight: var(--ds-font-weight-menu);
+    --_menubar-trigger-weight-open: var(--ds-font-weight-bold);
+    --_menubar-trigger-bg: transparent;
+    --_menubar-trigger-bg-hover: var(--ds-color-bg-overlay-10);
+    --_menubar-trigger-bg-open: var(--ds-color-bg-overlay-20);
+    --_menubar-trigger-fg: inherit;
+    --_menubar-trigger-fg-open: var(--ds-color-text-default);
+    --_menubar-trigger-ring: 0 0 transparent;
+    --_menubar-trigger-ring-color: var(--ds-color-focus-ring);
+    --_menubar-meta-fg: var(--ds-color-text-muted);
+
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--_menubar-gap);
+    box-sizing: border-box;
+    min-block-size: var(--_menubar-height);
+    margin: 0;
+    padding-block: 0;
+    padding-inline: var(--_menubar-padding-inline);
+    border-block-end: var(--ds-border-width-default) solid var(--_menubar-border-color);
+    background-color: var(--_menubar-bg);
+    -webkit-backdrop-filter: var(--_menubar-backdrop);
+    backdrop-filter: var(--_menubar-backdrop);
+    color: var(--_menubar-fg);
+    font-family: var(--ds-font-family-sans);
+    font-size: var(--_menubar-font-size);
+    line-height: var(--ds-font-leading-snug);
+  }
+
+  /* The titles: the role menubar part. It wraps onto a second line before the row scrolls. */
+  [data-ds='menubar'] > [data-part='bar'] {
+    display: flex;
+    flex: 1 1 auto;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--_menubar-gap);
+    min-inline-size: 0;
+    outline: none;
+  }
+
+  [data-ds='menubar'][data-size='sm'] {
+    --_menubar-height: var(--ds-size-control-sm);
+    --_menubar-trigger-height: var(--ds-size-control-xs);
+    --_menubar-trigger-padding-inline: var(--ds-space-xs);
+    --_menubar-font-size: var(--ds-font-size-xs);
+  }
+
+  /* Arabic: small text one step up, as in the menus. */
+  [data-ds='menubar']:lang(ar) {
+    --_menubar-font-size: var(--ds-font-size-m);
+
+    line-height: var(--ds-font-leading-arabic-snug);
+  }
+
+  [data-ds='menubar'][data-size='sm']:lang(ar) {
+    --_menubar-font-size: var(--ds-font-size-s);
+  }
+
+  /* ------------------------------------------------------------ trigger */
+
+  [data-ds='menubar'] [data-part='trigger'] {
+    position: relative;
+    display: inline-flex;
+    flex: none;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    min-block-size: max(var(--_menubar-trigger-height), var(--ds-size-target-min));
+    min-inline-size: var(--ds-size-target-min);
+    max-inline-size: 100%;
+    margin: 0;
+    padding-block: 0;
+    padding-inline: var(--_menubar-trigger-padding-inline);
+    border: 0;
+    border-radius: var(--_menubar-trigger-radius);
+    background-color: var(--_menubar-trigger-bg);
+    box-shadow: var(--_menubar-trigger-ring);
+    color: var(--_menubar-trigger-fg);
+    font: inherit;
+    font-weight: var(--_menubar-trigger-weight);
+    overflow-wrap: anywhere;
+    cursor: default;
+    user-select: none;
+    outline: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  @media (hover: hover) {
+    [data-ds='menubar'] [data-part='trigger']:hover {
+      --_menubar-trigger-bg: var(--_menubar-trigger-bg-hover);
+    }
+  }
+
+  /* Radix lights the trigger that has focus while the row is in use. */
+  [data-ds='menubar'] [data-part='trigger'][data-highlighted] {
+    --_menubar-trigger-bg: var(--_menubar-trigger-bg-hover);
+  }
+
+  /* The current menu: the open fill and the open weight. */
+  [data-ds='menubar'] [data-part='trigger'][data-state='open'] {
+    --_menubar-trigger-bg: var(--_menubar-trigger-bg-open);
+    --_menubar-trigger-weight: var(--_menubar-trigger-weight-open);
+    --_menubar-trigger-fg: var(--_menubar-trigger-fg-open);
+  }
+
+  /* The keyboard ring sits inside the trigger. The transparent outline shows in forced colors. */
+  [data-ds='menubar'] [data-part='trigger']:focus-visible {
+    --_menubar-trigger-ring: inset 0 0 0 var(--ds-border-width-strong) var(--_menubar-trigger-ring-color);
+
+    outline: var(--ds-border-width-strong) solid transparent;
+    outline-offset: calc(var(--ds-border-width-strong) * -1);
+  }
+
+  [data-ds='menubar'] [data-part='trigger'][data-disabled] {
+    opacity: var(--ds-opacity-disabled);
+    cursor: not-allowed;
+  }
+
+  /*
+   * The title and, under it, a copy at the open weight that takes no
+   * height: the trigger is as wide as its open title at rest too. The copy
+   * has empty alternative text, so it is never read. It sits on the text
+   * part, not the root: the trigger keeps no ::before or ::after (its ring
+   * is a box shadow, its hover a fill), so the pseudo element rule of
+   * anatomy.md is not in play.
+   */
+  [data-ds='menubar'] [data-part='trigger'] > [data-part='text'] {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    min-inline-size: 0;
+  }
+
+  [data-ds='menubar'] [data-part='trigger'] > [data-part='text'][data-text]::after {
+    content: attr(data-text);
+    content: attr(data-text) / '';
+    block-size: 0;
+    overflow: hidden;
+    font-weight: var(--_menubar-trigger-weight-open);
+    visibility: hidden;
+    pointer-events: none;
+  }
+
+  /* ------------------------------------------------------------ end slot */
+
+  /* Shrinks and wraps before the row scrolls sideways. */
+  [data-ds='menubar'] > [data-part='end'] {
+    display: inline-flex;
+    flex: 0 1 auto;
+    align-items: center;
+    gap: var(--ds-space-s);
+    min-inline-size: 0;
+    margin-inline-start: auto;
+    padding-inline: var(--_menubar-trigger-padding-inline);
+    color: var(--_menubar-meta-fg);
+    font-variant-numeric: tabular-nums;
+    text-align: end;
+    overflow-wrap: anywhere;
+  }
+
+  /* ------------------------------------------------------------ transparency, contrast, forced colors */
+
+  @media (prefers-reduced-transparency: reduce) {
+    [data-ds='menubar'] {
+      --_menubar-backdrop: none;
+    }
+  }
+
+  @media (prefers-contrast: more) {
+    [data-ds='menubar'] {
+      --_menubar-backdrop: none;
+      --_menubar-border-color: var(--ds-color-border-strong);
+      --_menubar-meta-fg: var(--ds-color-text-default);
+    }
+  }
+
+  [data-contrast='more'] [data-ds='menubar'],
+  [data-ds='menubar'][data-contrast='more'] {
+    --_menubar-backdrop: none;
+    --_menubar-border-color: var(--ds-color-border-strong);
+    --_menubar-meta-fg: var(--ds-color-text-default);
+  }
+
+  /* Forced colors drop fills: a border draws the row, system colors draw the open trigger. */
+  @media (forced-colors: active) {
+    [data-ds='menubar'] {
+      --_menubar-bg: Canvas;
+      --_menubar-backdrop: none;
+      --_menubar-border-color: CanvasText;
+      --_menubar-meta-fg: CanvasText;
+    }
+
+    [data-ds='menubar'] [data-part='trigger']:is([data-state='open'], [data-highlighted]) {
+      --_menubar-trigger-bg: Highlight;
+      --_menubar-trigger-fg: HighlightText;
+      --_menubar-trigger-fg-open: HighlightText;
+
+      forced-color-adjust: none;
+    }
+
+    [data-ds='menubar'] [data-part='trigger']:focus-visible {
+      outline-color: CanvasText;
+    }
+  }
+}

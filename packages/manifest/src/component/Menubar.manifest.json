@@ -1,0 +1,355 @@
+{
+  "name": "Menubar",
+  "kind": "component",
+  "family": "overlays",
+  "summary": "The application menu row (File, Edit, View), Desk's menu bar. Menu titles that open DropdownMenu style menus, arrow keys across the row in reading order, and a status slot at the end.",
+  "useWhen": [
+    "A desktop style app with many commands grouped under a few titles, such as a board editor or the Desk shell",
+    "Commands people look for by name and learn by their shortcuts",
+    "The top row of an app window, once, with a clock or a save state at the end"
+  ],
+  "avoidWhen": [
+    "Navigation between pages of a site",
+    "A few actions on one object",
+    "Phone layouts, where the row has no room and nothing is found by hover",
+    "More than one menu row on a screen"
+  ],
+  "insteadUse": {
+    "Navigation between pages": "NavigationMenu",
+    "The actions of one object": "DropdownMenu",
+    "Actions on right click": "ContextMenu",
+    "Search and run any command": "CommandPalette",
+    "A few tools in a row": "Toolbar"
+  },
+  "anatomy": [
+    "root",
+    "bar",
+    "trigger",
+    "text",
+    "content",
+    "end"
+  ],
+  "parts": {
+    "MenubarTrigger": "trigger",
+    "MenubarContent": "content",
+    "MenubarEnd": "end"
+  },
+  "slots": {
+    "root": {
+      "accepts": [
+        "MenubarMenu",
+        "MenubarEnd"
+      ],
+      "min": 1,
+      "max": 11
+    },
+    "content": {
+      "accepts": [
+        "MenubarLabel",
+        "MenubarItem",
+        "MenubarCheckboxItem",
+        "MenubarRadioGroup",
+        "MenubarGroup",
+        "MenubarSeparator",
+        "MenubarSub"
+      ],
+      "min": 1,
+      "max": 12
+    },
+    "trigger": {
+      "accepts": "text",
+      "min": 1,
+      "max": 1
+    },
+    "end": {
+      "accepts": "text",
+      "max": 1
+    },
+    "bar": {
+      "accepts": [
+        "MenubarMenu"
+      ],
+      "min": 1,
+      "max": 10
+    }
+  },
+  "props": {
+    "value": {
+      "type": "string",
+      "description": "Menubar: the value of the open MenubarMenu, \"\" when none is open. Controlled, with onValueChange."
+    },
+    "defaultValue": {
+      "type": "string",
+      "default": "",
+      "description": "Menubar: the menu open at first. Default none."
+    },
+    "onValueChange": {
+      "type": "function",
+      "description": "Menubar: called with the value of the menu that opens, or \"\" when it closes."
+    },
+    "size": {
+      "type": [
+        "sm",
+        "md"
+      ],
+      "default": "md",
+      "description": "Menubar: the row height (size.control.sm or size.control.md), the trigger height and type size, and the size of every menu (rows of 24px, or menu.item.height)."
+    },
+    "loop": {
+      "type": "boolean",
+      "default": true,
+      "description": "Menubar: ArrowRight on the last title goes to the first, and back."
+    },
+    "aria-label": {
+      "type": "string",
+      "description": "Menubar: names the menu bar (it goes on the bar part, role menubar), for example Application menu."
+    },
+    "MenubarMenu.value": {
+      "type": "string",
+      "description": "The value Menubar value and onValueChange use for this menu. Default a generated id."
+    },
+    "MenubarTrigger": {
+      "type": "node",
+      "description": "The menu title, role menuitem with aria-haspopup menu. A short noun. disabled keeps it in the row, skipped by the arrow keys."
+    },
+    "side": {
+      "type": [
+        "block-end",
+        "block-start",
+        "inline-end",
+        "inline-start"
+      ],
+      "default": "block-end",
+      "description": "MenubarContent: where the menu opens, in logical words. It flips when there is no room."
+    },
+    "align": {
+      "type": [
+        "start",
+        "center",
+        "end"
+      ],
+      "default": "start",
+      "description": "MenubarContent: how the menu lines up with its trigger. start is the trigger's inline start edge."
+    },
+    "sideOffset": {
+      "type": "number",
+      "default": 4,
+      "description": "MenubarContent: the gap to the trigger in px."
+    },
+    "collisionPadding": {
+      "type": "number",
+      "default": 8,
+      "description": "MenubarContent and MenubarSubContent: the space kept from the viewport edge in px. A long menu scrolls inside."
+    },
+    "MenubarItem.tone": {
+      "type": [
+        "neutral",
+        "danger"
+      ],
+      "default": "neutral",
+      "description": "An item's tone. danger marks a destructive action; the label names what is destroyed."
+    },
+    "start": {
+      "type": "node",
+      "description": "Items and the sub trigger: leading content, a system icon name or a node. Decorative: the text names the item. Rows without it line their text up with rows that have it."
+    },
+    "end": {
+      "type": "node",
+      "description": "Items: trailing content, a system icon name or a node. MenubarEnd: the status slot at the inline end of the row (text, not controls)."
+    },
+    "shortcut": {
+      "type": "string",
+      "description": "Items: a key hint shown at the inline end as plain text, left to right in every language (for example Ctrl+D). It does not bind the key; the app does."
+    },
+    "disabled": {
+      "type": "boolean",
+      "default": false,
+      "description": "Items: aria-disabled and data-disabled; they stay focusable in the menu, skipped by the arrow keys. MenubarTrigger: the native disabled of the Radix trigger, with data-disabled: dimmed and skipped by the arrow keys (an exception to anatomy rule 5, see a11y notes)."
+    },
+    "onSelect": {
+      "type": "function",
+      "description": "Items: runs on click, Enter and Space, then the menu closes. Call event.preventDefault() to keep it open."
+    },
+    "checked": {
+      "type": [
+        "true",
+        "false",
+        "indeterminate"
+      ],
+      "description": "MenubarCheckboxItem, with onCheckedChange. The check icon shows it, a minus for indeterminate."
+    },
+    "MenubarRadioGroup.value": {
+      "type": "string",
+      "description": "With onValueChange: the chosen MenubarRadioItem value."
+    },
+    "textValue": {
+      "type": "string",
+      "description": "Items: the text typeahead matches. Default: the label when it is plain text."
+    },
+    "MenubarSub": {
+      "type": "node",
+      "description": "A submenu: a MenubarSubTrigger, then a MenubarSubContent; open, defaultOpen and onOpenChange."
+    },
+    "className": {
+      "type": "string",
+      "description": "Menubar: goes to the root, as style does. Every other prop goes to the bar."
+    }
+  },
+  "states": [
+    "open",
+    "closed",
+    "data-highlighted",
+    "data-disabled"
+  ],
+  "a11y": {
+    "role": "The root is a plain element. Its bar part is role menubar, named with aria-label. Each trigger is a menuitem with aria-haspopup menu and aria-expanded, and names its menu. The menus are role menu, not modal: the page stays in the accessibility tree. The end slot sits next to the bar, outside role menubar, so its text is read in the page.",
+    "focus": "The row is one tab stop: Tab reaches the current title, the arrow keys move between titles. A menu opened with the keyboard puts focus on its first item; on close, focus returns to its title.",
+    "keys": {
+      "Tab": "Moves into the row, onto one title, and out again; the row is one tab stop",
+      "ArrowRight": "Moves to the next title in reading order; with a menu open, opens the next menu. In right to left layouts this is ArrowLeft. In a menu, on a sub trigger, opens the submenu",
+      "ArrowLeft": "Moves to the previous title in reading order; with a menu open, opens the previous menu. In right to left layouts this is ArrowRight",
+      "ArrowDown": "On a title, opens its menu with focus on the first item. In a menu, moves to the next item",
+      "ArrowUp": "In a menu, moves to the previous item",
+      "Enter": "On a title, opens its menu. On an item, selects it and closes the menu",
+      "Space": "The same as Enter",
+      "Home": "Moves to the first title, or the first item in a menu",
+      "End": "Moves to the last title, or the last item in a menu",
+      "Escape": "Closes the open menu and returns focus to its title",
+      "Typeahead": "In a menu, typing letters moves to the item whose label starts with them. The titles have no typeahead"
+    },
+    "announce": "The row is read as a menu bar with its name. Each title reads its label, that it has a popup and whether it is expanded. Items read as in DropdownMenu.",
+    "notes": [
+      "The current menu is shown by two cues, never color alone (WCAG 1.4.1): its title takes the open fill and the open weight. The title reserves the width of its open weight, so the row never shifts.",
+      "Arrow keys follow the reading direction: Radix reads the direction from Theme.",
+      "The end slot holds status text (a clock, a save state), outside role menubar. Controls go in their own row or toolbar.",
+      "A disabled title uses the native disabled that Radix Menubar sets, so it leaves the arrow key order; the WAI-ARIA menubar pattern allows either. Items inside the menus keep aria-disabled and stay focusable.",
+      "At narrow widths the titles wrap onto a second line, and long titles and status text wrap, instead of scrolling sideways (WCAG 1.4.10).",
+      "Titles are at least 24px tall (size.target-min).",
+      "Each menu is a dropdown-menu root carrying the part name content, drawn by DropdownMenu.css; its items are DropdownMenu parts.",
+      "Contract keys: ArrowRight, ArrowLeft and ArrowDown are checked on a title of the variants case; Escape on an item of the menu that the open case shows at load. The other keys are covered by the unit tests.",
+      "No native title attribute.",
+      "The item parts inside a menu (item, checkbox-item, radio-item, label, group, separator, sub-trigger, sub-content) belong to the nested dropdown-menu root and are listed in the DropdownMenu manifest (anatomy.md: a manifest lists only its own parts)."
+    ]
+  },
+  "content": {
+    "en": {
+      "trigger": "A short noun in sentence case: File, Edit, View, Help. No verbs, no icons alone.",
+      "items": "Verb plus noun: Save board, Close window. A shortcut in the shortcut prop.",
+      "end": "Status, not a call to act: Thu 12 Nov 9:41, Saved.",
+      "count": "Up to 10 titles; up to 12 entries in each menu."
+    },
+    "ar": {
+      "trigger": "Noun forms, white Saudi dialect, no diacritics: الملف، التحرير، العرض، المساعدة.",
+      "items": "Noun form labels: حفظ اللوحة، إغلاق النافذة.",
+      "end": "Western digits: الخميس 12 نوفمبر 9:41."
+    }
+  },
+  "tokens": [
+    "color.material.menubar",
+    "color.material.glass-solid",
+    "color.text.default",
+    "color.text.muted",
+    "color.border.hairline",
+    "color.border.strong",
+    "color.bg.overlay-10",
+    "color.bg.overlay-20",
+    "color.focus.ring",
+    "size.control.md",
+    "size.control.sm",
+    "size.control.xs",
+    "size.target-min",
+    "space.4xs",
+    "space.xs",
+    "space.s",
+    "font.family.sans",
+    "font.size.xs",
+    "font.size.s",
+    "font.size.m",
+    "font.weight.menu",
+    "font.weight.bold",
+    "font.weight.regular",
+    "font.weight.semibold",
+    "font.leading.snug",
+    "font.leading.arabic.snug",
+    "menu.item.radius",
+    "radius.field",
+    "border.width.default",
+    "border.width.strong",
+    "opacity.disabled",
+    "blur.window",
+    "blur.window-saturation"
+  ],
+  "motion": "menu-scale",
+  "frameworks": {
+    "react": {
+      "status": "ready",
+      "behavior": "radix:Menubar",
+      "example": "Menubar.demo.tsx",
+      "note": "The menus are portaled into a Theme layer marked data-menu-layer menubar, which DropdownMenu.css reads for the Radix menubar measures."
+    },
+    "angular": {
+      "status": "planned",
+      "behavior": "cdk:menu (cdkMenuBar)"
+    },
+    "native": {
+      "status": "not-applicable",
+      "note": "No application menu row on phones; use a header with a DropdownMenu."
+    }
+  },
+  "styles": {
+    "studio": "A flat row in color.material.menubar with a hairline under it. Titles in the menu weight; the open title takes the overlay 20 fill and the bold weight.",
+    "desk": "The macOS style glass row: color.material.menubar with the window blur, regular weight titles that open at semibold, the field radius. Solid under reduced transparency and more contrast.",
+    "neutral": "Planned.",
+    "liquid": "Planned: the glass row, with the menus never on top of other glass."
+  },
+  "mistakes": [
+    {
+      "wrong": "A Menubar as the navigation of a website",
+      "right": "NavigationMenu or links in a header"
+    },
+    {
+      "wrong": "The open menu shown only by a color change on its title",
+      "right": "The open fill and the open weight, as Menubar draws it"
+    },
+    {
+      "wrong": "Buttons or a search field inside the row",
+      "right": "Status text in MenubarEnd; controls in a Toolbar next to the row"
+    },
+    {
+      "wrong": "Verbs as titles: Edit things, View options",
+      "right": "Short nouns: Edit, View"
+    },
+    {
+      "wrong": "A command that lives only in the menu bar",
+      "right": "Also a shortcut, a toolbar button or the CommandPalette"
+    }
+  ],
+  "contract": {
+    "optionalParts": [
+      "content",
+      "end"
+    ],
+    "keys": {
+      "ArrowRight": {
+        "focus": "[data-part='trigger']",
+        "case": "variants",
+        "expect": "focus-moves"
+      },
+      "ArrowLeft": {
+        "focus": "[data-part='trigger']",
+        "case": "variants",
+        "expect": "focus-moves"
+      },
+      "ArrowDown": {
+        "focus": "[data-part='trigger']",
+        "case": "variants",
+        "expect": "focus-moves"
+      },
+      "Escape": {
+        "focus": "[data-menu-layer='menubar'] [role='menuitem']",
+        "expect": "focus-moves"
+      }
+    }
+  },
+  "since": "0.1.0"
+}

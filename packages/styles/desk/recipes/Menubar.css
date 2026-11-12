@@ -1,0 +1,50 @@
+/*
+ * Desk recipe for Menubar: the macOS style menu bar of the Desk shell.
+ * The menus it opens take the Desk DropdownMenu recipe.
+ *
+ * What tokens cannot say:
+ * - the row is glass: color.material.menubar with the window blur behind
+ *   it, while Studio draws the same token as a flat fill;
+ * - Desk titles use the regular weight and open at semibold, as its menu
+ *   rows use the regular weight, and the trigger takes the field radius of
+ *   the Desk menu rows.
+ */
+@layer ds.recipes {
+  [data-style='desk'] [data-ds='menubar'] {
+    --_menubar-backdrop: blur(var(--ds-blur-window)) saturate(var(--ds-blur-window-saturation));
+    --_menubar-trigger-radius: var(--ds-radius-field);
+    --_menubar-trigger-weight: var(--ds-font-weight-regular);
+    --_menubar-trigger-weight-open: var(--ds-font-weight-semibold);
+  }
+
+  /* The token build makes the material solid in these modes; the blur goes too, here, since this layer wins over the base. */
+  @media (prefers-reduced-transparency: reduce) {
+    [data-style='desk'] [data-ds='menubar'] {
+      --_menubar-backdrop: none;
+    }
+  }
+
+  @media (prefers-contrast: more) {
+    [data-style='desk'] [data-ds='menubar'] {
+      --_menubar-backdrop: none;
+    }
+  }
+
+  [data-style='desk'][data-contrast='more'] [data-ds='menubar'],
+  [data-style='desk'] [data-ds='menubar'][data-contrast='more'] {
+    --_menubar-backdrop: none;
+  }
+
+  @media (forced-colors: active) {
+    [data-style='desk'] [data-ds='menubar'] {
+      --_menubar-backdrop: none;
+    }
+  }
+
+  /* No backdrop filter in the browser: the solid material, never glass it cannot blur. */
+  @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+    [data-style='desk'] [data-ds='menubar'] {
+      --_menubar-bg: var(--ds-color-material-glass-solid);
+    }
+  }
+}

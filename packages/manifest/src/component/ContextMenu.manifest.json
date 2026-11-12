@@ -1,0 +1,368 @@
+{
+  "name": "ContextMenu",
+  "kind": "component",
+  "family": "overlays",
+  "summary": "The actions of an item, opened on right click, a long press, or Shift+F10 and the Menu key on the focused item. The DropdownMenu surface and parts: items, checkbox and radio items, labels, separators and submenus.",
+  "useWhen": [
+    "Shortcuts to the actions of an object people already work with by pointer: a file, a canvas layer, a table row",
+    "Dense work surfaces where a visible button per object would crowd the page, as long as each object also has a visible way to its actions",
+    "The same actions as an object's DropdownMenu, offered where the pointer already is"
+  ],
+  "avoidWhen": [
+    "The only way to reach an action: every action in a context menu must also be reachable without it, through a DropdownMenu on the item, a toolbar or a keyboard shortcut",
+    "Touch first screens where people do not know to press and hold",
+    "Primary actions that should be seen on the page",
+    "Choosing a value for a form field",
+    "Rich content or a small form in the panel"
+  ],
+  "insteadUse": {
+    "The visible path to the same actions on the item": "DropdownMenu",
+    "One or two primary actions": "Button",
+    "Choosing a value for a form field": "Select",
+    "Rich content or a small form": "Popover",
+    "The application menu row": "Menubar",
+    "Search and run any command": "CommandPalette"
+  },
+  "anatomy": [
+    "root",
+    "label",
+    "item",
+    "checkbox-item",
+    "radio-item",
+    "indicator",
+    "start",
+    "text",
+    "shortcut",
+    "end",
+    "group",
+    "separator",
+    "sub-trigger",
+    "sub-content"
+  ],
+  "parts": {
+    "ContextMenuContent": "root",
+    "ContextMenuLabel": "label",
+    "ContextMenuItem": "item",
+    "ContextMenuCheckboxItem": "checkbox-item",
+    "ContextMenuRadioItem": "radio-item",
+    "ContextMenuGroup": "group",
+    "ContextMenuRadioGroup": "group",
+    "ContextMenuSeparator": "separator",
+    "ContextMenuSubTrigger": "sub-trigger",
+    "ContextMenuSubContent": "sub-content"
+  },
+  "slots": {
+    "root": {
+      "accepts": [
+        "ContextMenuLabel",
+        "ContextMenuItem",
+        "ContextMenuCheckboxItem",
+        "ContextMenuRadioGroup",
+        "ContextMenuGroup",
+        "ContextMenuSeparator",
+        "ContextMenuSub"
+      ],
+      "min": 1,
+      "max": 12
+    },
+    "group": {
+      "accepts": [
+        "ContextMenuLabel",
+        "ContextMenuItem",
+        "ContextMenuCheckboxItem",
+        "ContextMenuRadioItem"
+      ]
+    },
+    "sub-content": {
+      "accepts": [
+        "ContextMenuLabel",
+        "ContextMenuItem",
+        "ContextMenuCheckboxItem",
+        "ContextMenuRadioGroup",
+        "ContextMenuGroup",
+        "ContextMenuSeparator",
+        "ContextMenuSub"
+      ],
+      "min": 1,
+      "max": 12
+    },
+    "text": {
+      "accepts": "text",
+      "min": 1,
+      "max": 1
+    },
+    "label": {
+      "accepts": "text",
+      "max": 1
+    },
+    "shortcut": {
+      "accepts": "text",
+      "max": 1
+    }
+  },
+  "props": {
+    "onOpenChange": {
+      "type": "function",
+      "description": "ContextMenu: called with true on open and false on close (an item chosen, Escape, a click outside). There is no controlled open prop: the menu opens where the pointer or the focused item is."
+    },
+    "modal": {
+      "type": "boolean",
+      "default": false,
+      "description": "ContextMenu: true hides the rest of the page from assistive tech and blocks pointer input outside while open. Default false, as DropdownMenu: Tab never leaves the open menu and a click outside closes it."
+    },
+    "size": {
+      "type": [
+        "sm",
+        "md"
+      ],
+      "default": "md",
+      "description": "ContextMenu: row height and type size. sm rows are 24px (size.control.xs), md rows follow menu.item.height (24, 28 and 32px in the compact, default and comfortable densities). Submenus take the size of their menu."
+    },
+    "collisionPadding": {
+      "type": "number",
+      "default": 8,
+      "description": "ContextMenuContent and ContextMenuSubContent: the space kept from the viewport edge in px. Near an edge the menu flips to the other side of the pointer; it is never taller than the room left and scrolls inside."
+    },
+    "ContextMenuItem.tone": {
+      "type": [
+        "neutral",
+        "danger"
+      ],
+      "default": "neutral",
+      "description": "An item's tone. danger marks a destructive action: the danger text color, and the label names what is destroyed. The menu root has no tone."
+    },
+    "start": {
+      "type": "node",
+      "description": "Items and the sub trigger: leading content, a system icon name or a node. Decorative: the text names the item. Rows without it line their text up with rows that have it."
+    },
+    "end": {
+      "type": "node",
+      "description": "Items: trailing content, a system icon name or a node. The sub trigger always shows chevron-forward here, mirrored in RTL."
+    },
+    "shortcut": {
+      "type": "string",
+      "description": "Items: a key hint shown at the inline end as plain text, left to right in every language (for example Ctrl+D). It does not bind the key; the app does."
+    },
+    "disabled": {
+      "type": "boolean",
+      "default": false,
+      "description": "Items: aria-disabled and data-disabled; the item stays in the menu, the arrow keys skip it and it does not select. ContextMenuTrigger: right click, long press and the keys open nothing, and the browser menu shows."
+    },
+    "onSelect": {
+      "type": "function",
+      "description": "Items: runs on click, Enter and Space, then the menu closes. Call event.preventDefault() to keep it open."
+    },
+    "checked": {
+      "type": [
+        "true",
+        "false",
+        "indeterminate"
+      ],
+      "description": "ContextMenuCheckboxItem, with onCheckedChange. The check icon shows it, a minus for indeterminate."
+    },
+    "value": {
+      "type": "string",
+      "description": "ContextMenuRadioGroup, with onValueChange: the chosen ContextMenuRadioItem value."
+    },
+    "textValue": {
+      "type": "string",
+      "description": "Items: the text typeahead matches. Default: the label when it is plain text."
+    },
+    "ContextMenuSub": {
+      "type": "node",
+      "description": "A submenu: a ContextMenuSubTrigger, then a ContextMenuSubContent. open, defaultOpen and onOpenChange as on the root."
+    },
+    "ContextMenuTrigger": {
+      "type": "node",
+      "description": "One child element, the item the menu acts on (a file tile, a row, a layer), rendered as the trigger (always asChild) with data-state open or closed. It, or an element inside it, must take focus, so Shift+F10 and the Menu key can open the menu under it."
+    }
+  },
+  "states": [
+    "open",
+    "closed",
+    "checked",
+    "unchecked",
+    "indeterminate",
+    "data-highlighted",
+    "data-disabled"
+  ],
+  "a11y": {
+    "role": "menu (the root and each submenu). Not modal by default: the page stays in the accessibility tree, Tab does not leave the open menu, and a click or focus outside closes it. Items are menuitem, menuitemcheckbox (aria-checked true, false or mixed) and menuitemradio inside a group. The trigger is the item itself and keeps its own role and name.",
+    "focus": "Opened with Shift+F10 or the Menu key: the menu opens under the focused item and focus goes to the first item. Opened with the pointer: focus on the menu, the first arrow key goes to an item. The highlight follows the pointer and the keys. On close, focus returns to the element that had it.",
+    "keys": {
+      "Shift+F10": "On the focused item or an element inside the trigger, opens the menu under it with focus on the first item",
+      "ContextMenu": "The Menu key: the same as Shift+F10",
+      "ArrowDown": "Moves to the next item, skipping disabled ones",
+      "ArrowUp": "Moves to the previous item",
+      "Home": "Moves to the first item",
+      "End": "Moves to the last item",
+      "Enter": "On an item, selects it and closes the menu; on a sub trigger, opens the submenu",
+      "Space": "The same as Enter",
+      "ArrowRight": "On a sub trigger, opens the submenu with focus on its first item. In right to left layouts this is ArrowLeft",
+      "ArrowLeft": "In a submenu, closes it and returns focus to its sub trigger. In right to left layouts this is ArrowRight",
+      "Escape": "Closes the menu, or only the open submenu, and returns focus to where it was",
+      "Typeahead": "Typing letters moves to the next item whose label starts with them"
+    },
+    "announce": "The menu is read when it opens. Each item reads its label, its shortcut, its checked state and whether it is disabled or opens a submenu.",
+    "notes": [
+      "Right click and the long press (700ms, touch and pen) open the menu at the pointer. Shift+F10 and the Menu key open it at the inline start and block end corner of the focused element, in every browser: the trigger handles both keys itself.",
+      "Nothing is reachable only through a context menu: the item also has a DropdownMenu (a More actions IconButton), a toolbar or a key. The demo shows the DropdownMenu on every tile.",
+      "Tab does not move focus while the menu is open (Radix keeps it in the menu); Escape or choosing an item returns focus to the element that had it.",
+      "Disabled items use aria-disabled: they stay in the menu, and the arrow keys skip them.",
+      "Checked state is shown by a check icon, a minus for indeterminate, never by color alone (WCAG 1.4.1).",
+      "A danger item is drawn in the danger text color and its label names the action (Delete board).",
+      "The menu opens toward the inline end of the pointer, so to the left in Arabic, and flips near the viewport edge. It never grows past the viewport and scrolls inside. Rows are at least 24px tall.",
+      "Contract keys: Shift+F10 and the Menu key are checked on a focused tile (focus moves into the menu). The other keys work inside an open menu and are covered by the unit tests.",
+      "The demo's Show menu buttons focus a tile and send Shift+F10, so the gallery and the contract suite can open the menu with a plain click.",
+      "No native title attribute."
+    ]
+  },
+  "content": {
+    "en": {
+      "items": "Verb plus noun, sentence case: Rename board, Copy link. The same words as the item's DropdownMenu, in the same order.",
+      "label": "A short noun over the group: Board, Sort layers by.",
+      "danger": "Name what is destroyed: Delete board, never Delete alone.",
+      "count": "Up to 12 entries at the top level, the most used first. Move the rest into a submenu."
+    },
+    "ar": {
+      "items": "Noun form labels, white Saudi dialect, no diacritics: فتح اللوحة، إعادة تسمية اللوحة، حذف اللوحة.",
+      "label": "A short noun: اللوحة.",
+      "shortcut": "Key names stay in Latin letters and left to right: Ctrl+D."
+    }
+  },
+  "tokens": [
+    "color.bg.surface-2",
+    "color.bg.surface-3",
+    "color.bg.overlay-10",
+    "color.text.default",
+    "color.text.muted",
+    "color.state.danger-text",
+    "color.state.danger-tint-10",
+    "color.state.danger-solid",
+    "color.state.danger-on-solid",
+    "color.primary.fill",
+    "color.primary.text",
+    "color.material.glass-strong",
+    "color.material.glass-solid",
+    "color.border.hairline",
+    "color.border.strong",
+    "color.focus.ring",
+    "color.focus.ring-on-primary-inner",
+    "radius.card",
+    "radius.panel",
+    "radius.field",
+    "menu.item.height",
+    "menu.item.radius",
+    "menu.width.min",
+    "elevation.menu",
+    "blur.window-strong",
+    "blur.window-saturation",
+    "size.target-min",
+    "size.control.xs",
+    "size.icon.md",
+    "space.4xs",
+    "space.3xs",
+    "space.2xs",
+    "space.xs",
+    "space.s",
+    "space.m",
+    "border.width.default",
+    "border.width.strong",
+    "font.family.sans",
+    "font.size.xs",
+    "font.size.s",
+    "font.size.m",
+    "font.weight.menu",
+    "font.weight.regular",
+    "font.weight.semibold",
+    "font.leading.snug",
+    "font.leading.arabic.snug",
+    "font.tracking.none",
+    "opacity.disabled",
+    "scale.press",
+    "duration.base",
+    "duration.quick",
+    "ease.emphasized",
+    "ease.exit",
+    "z.menu"
+  ],
+  "motion": "menu-scale",
+  "frameworks": {
+    "react": {
+      "status": "ready",
+      "behavior": "radix:ContextMenu",
+      "example": "ContextMenu.demo.tsx",
+      "note": "Styled by DropdownMenu.css (the shared menu surface); no ContextMenu.css of its own. The content and each submenu are portaled into a Theme that copies the axes of the Theme the trigger is in. Shift+F10 and the Menu key are handled by the trigger."
+    },
+    "angular": {
+      "status": "planned",
+      "behavior": "cdk:menu (cdkContextMenuTriggerFor)"
+    },
+    "native": {
+      "status": "planned",
+      "behavior": "rn-primitives:context-menu",
+      "note": "Long press only; the actions also on a visible menu."
+    }
+  },
+  "styles": {
+    "studio": "The DropdownMenu surface: surface-3, the card radius with concentric rows, the menu shadow, the overlay step on the lit row.",
+    "desk": "The Desk menu: the strong glass material and blur, a hairline, the panel radius, the yellow primary fill on the lit row. Solid under reduced transparency and more contrast.",
+    "neutral": "Planned: the DropdownMenu surface of the Neutral pack.",
+    "liquid": "Planned: a glass menu, never on top of other glass."
+  },
+  "mistakes": [
+    {
+      "wrong": "An action that only the context menu offers",
+      "right": "The same action on a DropdownMenu on the item, a toolbar or a key; the context menu is a shortcut"
+    },
+    {
+      "wrong": "A trigger that cannot take focus, such as a plain div",
+      "right": "A focusable item (tabindex 0 or a focusable child), so Shift+F10 and the Menu key reach the menu"
+    },
+    {
+      "wrong": "Different words in the context menu and the item's DropdownMenu",
+      "right": "The same labels in the same order"
+    },
+    {
+      "wrong": "A menu of 30 actions in one flat list",
+      "right": "Up to 12 entries: group with labels and separators, or move the rest into a submenu"
+    },
+    {
+      "wrong": "Replacing the browser menu on text people may want to copy",
+      "right": "Put the ContextMenuTrigger on the object, not on running text, or pass disabled"
+    },
+    {
+      "wrong": "A shortcut typed into the label: Duplicate board (Ctrl+D)",
+      "right": "The shortcut prop, which sets the hint apart and keeps it left to right"
+    }
+  ],
+  "contract": {
+    "trigger": "[data-demo-trigger]",
+    "optionalParts": [
+      "label",
+      "checkbox-item",
+      "radio-item",
+      "indicator",
+      "start",
+      "shortcut",
+      "end",
+      "group",
+      "separator",
+      "sub-trigger",
+      "sub-content"
+    ],
+    "keys": {
+      "Shift+F10": {
+        "focus": "[data-demo-target]",
+        "case": "variants",
+        "expect": "focus-moves"
+      },
+      "ContextMenu": {
+        "focus": "[data-demo-target]",
+        "case": "variants",
+        "expect": "focus-moves"
+      }
+    }
+  },
+  "since": "0.1.0"
+}

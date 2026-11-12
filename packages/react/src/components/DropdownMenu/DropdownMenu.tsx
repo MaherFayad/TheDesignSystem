@@ -60,25 +60,31 @@ import {
   createContext,
   use,
   useCallback,
-  useEffect,
   useMemo,
   useRef,
-  useState,
   type ComponentProps,
   type KeyboardEvent,
   type ReactElement,
   type ReactNode,
-  type Ref,
   type RefObject,
 } from 'react';
-import { createPortal } from 'react-dom';
 import { DropdownMenu as RadixMenu } from 'radix-ui';
 import { Icon } from '@the-system/icons/react';
 import type { Size, Tone } from '@the-system/shared';
-import { Theme } from '../../theme/Theme';
-import { useTheme } from '../../theme/hooks';
-import { renderSlotContent, type ButtonSlotContent } from '../Button/ButtonBase';
+import { type ButtonSlotContent } from '../Button/ButtonBase';
 import { useControllable } from '../../internal/useControllable';
+import {
+  ITEM_SELECTOR,
+  IndicatorGlyph,
+  ItemContent,
+  TRIGGER_GAP,
+  VIEWPORT_GUTTER,
+  assignRef,
+  physicalSide,
+  textOf,
+  useMenuLayer,
+  type MenuSide,
+} from './menuShared';
 
 /** Menu sizes: sm rows are 24px, md rows follow menu.item.height (28px at default density). */
 export type DropdownMenuSize = Extract<Size, 'sm' | 'md'>;
@@ -87,17 +93,9 @@ export type DropdownMenuItemTone = Extract<Tone, 'neutral' | 'danger'>;
 /** Leading or trailing content of an item: a system icon name or a node. */
 export type DropdownMenuSlotContent = ButtonSlotContent;
 /** Where the menu opens, in logical words: block-end is below the trigger, inline-end is after it in reading order. */
-export type DropdownMenuSide = 'block-start' | 'block-end' | 'inline-start' | 'inline-end';
+export type DropdownMenuSide = MenuSide;
 /** How the menu lines up with the trigger along that side. start follows the reading direction. */
 export type DropdownMenuAlign = 'start' | 'center' | 'end';
-
-/** Space kept between the menu and the viewport edge, in CSS px. Radix measures in px, so this is a number. */
-const VIEWPORT_GUTTER = 8;
-/** Gap between the trigger and the menu, in CSS px. */
-const TRIGGER_GAP = 4;
-
-/** The menu item roles, for focus moves. */
-const ITEM_SELECTOR = '[role="menuitem"], [role="menuitemcheckbox"], [role="menuitemradio"]';
 
 interface MenuContextValue {
   open: boolean;
@@ -120,19 +118,6 @@ interface SubContextValue {
 }
 
 const SubContext = createContext<SubContextValue | null>(null);
-
-/** Sets a ref of any kind. */
-function assignRef<T>(ref: Ref<T> | undefined, value: T | null): void {
-  if (typeof ref === 'function') ref(value);
-  else if (ref) (ref as RefObject<T | null>).current = value;
-}
-
-/** Plain text of simple children, for typeahead. A node gives undefined: Radix then reads the text content. */
-function textOf(children: ReactNode): string | undefined {
-  if (typeof children === 'string') return children;
-  if (typeof children === 'number') return String(children);
-  return undefined;
-}
 
 // ------------------------------------------------------------------ DropdownMenu
 
@@ -208,58 +193,6 @@ export function DropdownMenuTrigger({ children, onKeyDown, ...rest }: DropdownMe
   );
 }
 
-// ------------------------------------------------------------------ the themed layer
-
-/**
- * Portals its child into <body> inside a Theme that copies every axis of the
- * Theme it is rendered in. Mounted while `open`, and until the content inside
- * reports through `onContent(null)` that it left (after its exit motion).
- */
-function useMenuLayer(open: boolean) {
-  const theme = useTheme();
-  const [body, setBody] = useState<HTMLElement | null>(null);
-  // The portal needs the document, so it renders after the first commit (safe on the server).
-  useEffect(() => setBody(document.body), []);
-
-  const [mounted, setMounted] = useState(open);
-  if (open && !mounted) setMounted(true);
-  const openRef = useRef(open);
-  openRef.current = open;
-  const onContent = useCallback((node: HTMLElement | null) => {
-    if (!node && !openRef.current) setMounted(false);
-  }, []);
-
-  const render = (children: ReactNode) =>
-    body && mounted
-      ? createPortal(
-          <Theme
-            style={theme.style}
-            scheme={theme.scheme}
-            density={theme.density}
-            contrast={theme.contrast}
-            platform={theme.platform}
-            glass={theme.glass}
-            dir={theme.dir}
-            lang={theme.lang}
-            data-menu-layer=""
-          >
-            {children}
-          </Theme>,
-          body,
-        )
-      : null;
-  return { render, onContent, dir: theme.dir };
-}
-
-/** Logical side to the physical side Radix takes. */
-function physicalSide(side: DropdownMenuSide, dir: 'ltr' | 'rtl'): 'top' | 'bottom' | 'left' | 'right' {
-  if (side === 'block-start') return 'top';
-  if (side === 'block-end') return 'bottom';
-  const end = dir === 'rtl' ? 'left' : 'right';
-  const start = dir === 'rtl' ? 'right' : 'left';
-  return side === 'inline-end' ? end : start;
-}
-
 // ------------------------------------------------------------------ DropdownMenuContent
 
 export interface DropdownMenuContentProps
@@ -329,40 +262,6 @@ export function DropdownMenuContent({
 
 // ------------------------------------------------------------------ items
 
-interface ItemContentProps {
-  start?: DropdownMenuSlotContent;
-  end?: DropdownMenuSlotContent;
-  shortcut?: string;
-  indicator?: ReactNode;
-  children?: ReactNode;
-}
-
-/** The inside of every item kind: indicator, start, text, shortcut, end. */
-function ItemContent({ start, end, shortcut, indicator, children }: ItemContentProps) {
-  return (
-    <>
-      {indicator}
-      {start !== undefined && (
-        <span data-part="start" aria-hidden="true">
-          {renderSlotContent(start)}
-        </span>
-      )}
-      <span data-part="text">{children}</span>
-      {shortcut !== undefined && (
-        // Key names are Latin: kept left to right inside Arabic.
-        <span data-part="shortcut" dir="ltr">
-          {shortcut}
-        </span>
-      )}
-      {end !== undefined && (
-        <span data-part="end" aria-hidden="true">
-          {renderSlotContent(end)}
-        </span>
-      )}
-    </>
-  );
-}
-
 interface ItemCommonProps {
   /** Leading content: a system icon name or a node. Decorative: the text names the item. */
   start?: DropdownMenuSlotContent;
@@ -422,7 +321,7 @@ export function DropdownMenuCheckboxItem({ start, end, shortcut, textValue, chil
         indicator={
           <span data-part="indicator" aria-hidden="true">
             <RadixMenu.ItemIndicator>
-              <CheckboxGlyph checked={rest.checked} />
+              <IndicatorGlyph checked={rest.checked} />
             </RadixMenu.ItemIndicator>
           </span>
         }
@@ -431,10 +330,6 @@ export function DropdownMenuCheckboxItem({ start, end, shortcut, textValue, chil
       </ItemContent>
     </RadixMenu.CheckboxItem>
   );
-}
-
-function CheckboxGlyph({ checked }: { checked: DropdownMenuCheckboxItemProps['checked'] }) {
-  return <Icon name={checked === 'indeterminate' ? 'minus' : 'check'} size="md" />;
 }
 
 export interface DropdownMenuRadioGroupProps extends Omit<ComponentProps<typeof RadixMenu.RadioGroup>, 'asChild'> {
