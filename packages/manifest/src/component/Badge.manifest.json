@@ -1,0 +1,161 @@
+{
+  "name": "Badge",
+  "kind": "component",
+  "family": "data-display",
+  "summary": "A small static count or status label attached to something: unread 3, Beta, Draft.",
+  "useWhen": [
+    "A count of new or unread items on a nav item, a tab or a button",
+    "A short status of a row or a card: Draft, Live, Failed",
+    "Marking a feature as Beta or New"
+  ],
+  "avoidWhen": [
+    "The label can be pressed, toggled or removed",
+    "A sentence or a message of more than three words",
+    "The only sign of an error on a field"
+  ],
+  "insteadUse": {
+    "A pressable, selectable or removable tag or filter": "Chip",
+    "A message the user must read": "Alert or Callout",
+    "A presence dot on a person": "Avatar with status",
+    "A status with no text, on its own": "StatusDot",
+    "An error on a field": "Field error"
+  },
+  "anatomy": ["root", "icon", "label"],
+  "slots": {
+    "icon": { "accepts": ["Icon"], "max": 1 },
+    "label": { "accepts": "text", "max": 1 }
+  },
+  "props": {
+    "children": { "type": "node", "description": "The visible label: Beta, Draft. One to three words." },
+    "count": {
+      "type": "number",
+      "description": "A number shown in place of the label. Over max it shows max+ and assistive tech reads the full number."
+    },
+    "max": { "type": "number", "default": 99, "description": "The largest count shown in full." },
+    "countLabel": {
+      "type": "function",
+      "description": "(count) => words read for the count: 3 unread messages. Default the number alone."
+    },
+    "tone": {
+      "type": ["neutral", "accent", "success", "warning", "danger", "info"],
+      "default": "neutral"
+    },
+    "emphasis": {
+      "type": ["solid", "soft", "outline"],
+      "default": "soft",
+      "description": "solid for an unread count, soft for a status, outline for the quietest marker."
+    },
+    "size": {
+      "type": ["xs", "sm"],
+      "default": "sm",
+      "description": "About 20 px (sm) and 16 px (xs) tall at default density; the height follows the space tokens, so it moves a pixel or two with viewport and density. A badge is not a control, so there is no md; the default md rule of anatomy.md applies to controls."
+    },
+    "start": {
+      "type": "node",
+      "description": "Leading content, drawn in the icon part: a system icon name or an Icon node, hidden from assistive tech. Not drawn in the dot form. Named start by rule 6 of anatomy.md; the part keeps the order's name icon."
+    },
+    "dot": {
+      "type": "boolean",
+      "default": false,
+      "description": "Draws only a dot in the solid tone. The label or count words stay for assistive tech."
+    }
+  },
+  "states": ["data-dot"],
+  "a11y": {
+    "role": "none: a span read as text where it sits.",
+    "focus": "Not focusable. It is part of the name of the control it sits in (a Button end part, a link).",
+    "keys": {},
+    "announce": "The label, or the count words (the full number, not 99+), as part of the surrounding text or control name.",
+    "native": { "accessibilityRole": "text", "accessibilityState": [] },
+    "notes": [
+      "Over max, the visible max+ is aria-hidden and the full number is visually hidden text (WCAG 1.3.1).",
+      "Color is never the only signal: every badge has text, and the dot form keeps its words for assistive tech. Write the status in text next to a dot for sighted users (WCAG 1.4.1).",
+      "Text on its fill holds 4.5:1 in every tone and emphasis, checked by axe in every style and scheme (WCAG 1.4.3).",
+      "A badge inside a Button joins the button name: Open inbox 3 unread messages."
+    ]
+  },
+  "content": {
+    "en": {
+      "label": "One to three words in sentence case, a noun or an adjective: Beta, Draft, Pending review.",
+      "countLabel": "The number and what it counts: 3 unread messages."
+    },
+    "ar": {
+      "label": "Noun form, no diacritics: تجريبي، مسودة، بانتظار المراجعة.",
+      "countLabel": "With the Arabic plural, Western digits: رسالتين غير مقروءتين، 3 رسائل غير مقروءة، 12 رسالة غير مقروءة."
+    }
+  },
+  "tokens": [
+    "size.control.xs",
+    "space.4xs",
+    "space.3xs",
+    "space.2xs",
+    "space.xs",
+    "space.s",
+    "font.size.2xs",
+    "font.size.xs",
+    "font.family.sans",
+    "font.weight.bold",
+    "font.leading.tight",
+    "font.tracking.none",
+    "radius.pill",
+    "border.width.default",
+    "color.bg.overlay-10",
+    "color.bg.body",
+    "color.text.default",
+    "color.text.muted",
+    "color.border.control",
+    "color.primary.fill",
+    "color.primary.text",
+    "color.primary.border",
+    "color.primary.tint",
+    "color.primary.on-surface",
+    "color.state.danger.solid",
+    "color.state.danger.on-solid",
+    "color.state.danger.text",
+    "color.state.danger.on-tint",
+    "color.state.danger.border",
+    "color.state.danger.tint-10",
+    "color.state.success.solid",
+    "color.state.success.on-solid",
+    "color.state.success.text",
+    "color.state.success.on-tint",
+    "color.state.success.border",
+    "color.state.success.tint-10",
+    "color.state.warning.solid",
+    "color.state.warning.on-solid",
+    "color.state.warning.text",
+    "color.state.warning.on-tint",
+    "color.state.warning.border",
+    "color.state.warning.tint-10",
+    "color.state.info.solid",
+    "color.state.info.on-solid",
+    "color.state.info.text",
+    "color.state.info.on-tint",
+    "color.state.info.border",
+    "color.state.info.tint-10"
+  ],
+  "motion": "fade-rise",
+  "frameworks": {
+    "react": {
+      "status": "ready",
+      "behavior": "hand built, radix:VisuallyHidden",
+      "example": "Badge.demo.tsx",
+      "note": "Motion: the badge has none of its own; fade-rise names the pattern a caller uses when a badge appears. A count that changes may use number-roll once the catalog (1.11) has it."
+    },
+    "angular": { "status": "planned" },
+    "native": { "status": "planned" }
+  },
+  "styles": {
+    "studio": "A bold pill on the overlay and tone tints, the same tones as Button.",
+    "desk": "The same; the accent solid badge is yellow with ink text.",
+    "neutral": "Planned: follows the tokens, no recipe.",
+    "liquid": "Planned."
+  },
+  "mistakes": [
+    { "wrong": "A Badge with onClick as a filter", "right": "Chip" },
+    { "wrong": "count={120} with a visible 120 in a tight nav item", "right": "count={120}: it shows 99+ and reads 120" },
+    { "wrong": "A red dot as the only sign of an error", "right": "A dot with words, or Alert" },
+    { "wrong": "A badge that says Beta feature available now", "right": "Beta" }
+  ],
+  "since": "0.2.0"
+}

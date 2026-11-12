@@ -1,0 +1,114 @@
+/*
+ * AvatarGroup: overlapping avatars and a "+N" count. Follows "One
+ * convention for component CSS and props" in docs/contracts/anatomy.md.
+ *
+ * Private properties on the root:
+ *
+ *   --_avatar-group-size      the box of the count, from size.control
+ *   --_avatar-group-overlap   how far each item slides under the one before
+ *   --_avatar-group-ring      the cutout ring around each item, the surface color
+ *   --_avatar-group-font-size the count text
+ *   --_avatar-group-bg, -fg   the count fill and text
+ *
+ * The items are Avatar roots: the group sets their private --_avatar-ring.
+ * The count, when it is a Button, takes the group size through Button's
+ * private properties. Overlap uses margin-inline-start, so it flips in
+ * right to left layouts. Nothing animates.
+ */
+@layer ds.base {
+  [data-ds='avatar-group'] {
+    --_avatar-group-size: var(--ds-size-control-md);
+    --_avatar-group-overlap: var(--ds-space-xs);
+    --_avatar-group-ring: var(--ds-color-bg-surface);
+    --_avatar-group-font-size: var(--ds-font-size-xs);
+    --_avatar-group-bg: var(--ds-color-bg-surface-3);
+    --_avatar-group-fg: var(--ds-color-text-default);
+
+    display: inline-flex;
+    flex: none;
+    align-items: center;
+    vertical-align: middle;
+    /* Room for the ring of the first item, which sits outside its box. */
+    padding: var(--ds-border-width-strong);
+  }
+
+  /* Each item after the first slides under its start neighbor's end edge. */
+  [data-ds='avatar-group'] > [data-part] + [data-part] {
+    margin-inline-start: calc(-1 * var(--_avatar-group-overlap));
+  }
+
+  [data-ds='avatar-group'] > [data-ds='avatar'][data-part='item'] {
+    --_avatar-ring: var(--_avatar-group-ring);
+  }
+
+  /* The count as plain text: a circle like an avatar, wide enough for +99. */
+  /* Positioned like the Avatar roots, so it paints over the last item it overlaps. */
+  [data-ds='avatar-group'] > span[data-part='overflow'] {
+    position: relative;
+    display: inline-flex;
+    flex: none;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    min-inline-size: var(--_avatar-group-size);
+    block-size: var(--_avatar-group-size);
+    padding-inline: var(--ds-space-2xs);
+    border-radius: var(--ds-radius-pill);
+    background-color: var(--_avatar-group-bg);
+    box-shadow: 0 0 0 var(--ds-border-width-strong) var(--_avatar-group-ring);
+    color: var(--_avatar-group-fg);
+    font-family: var(--ds-font-family-sans);
+    font-size: var(--_avatar-group-font-size);
+    font-weight: var(--ds-font-weight-bold);
+    line-height: var(--ds-font-leading-tight);
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+  }
+
+  /*
+   * The count as a Button: the group size, a tight pill and the same fill
+   * and text as the plain count. Rest, hover and active are all set here, so
+   * the result does not depend on the order of the files. No cutout ring:
+   * Button draws its focus ring with box-shadow.
+   */
+  [data-ds='avatar-group'] > [data-ds='button'][data-part='overflow'] {
+    --_button-height: var(--_avatar-group-size);
+    --_button-padding-inline: var(--ds-space-2xs);
+    --_button-font-size: var(--_avatar-group-font-size);
+    --_button-bg: var(--_avatar-group-bg);
+    --_button-fg: var(--_avatar-group-fg);
+    --_button-bg-hover: var(--ds-color-bg-overlay-20);
+    --_button-fg-hover: var(--_avatar-group-fg);
+    --_button-bg-active: var(--ds-color-bg-overlay-30);
+    --_button-fg-active: var(--_avatar-group-fg);
+  }
+
+  /* ------------------------------------------------------------ sizes */
+
+  [data-ds='avatar-group'][data-size='xs'] {
+    --_avatar-group-size: var(--ds-size-control-xs);
+    --_avatar-group-overlap: var(--ds-space-3xs);
+    --_avatar-group-font-size: var(--ds-font-size-3xs);
+  }
+
+  [data-ds='avatar-group'][data-size='sm'] {
+    --_avatar-group-size: var(--ds-size-control-sm);
+    --_avatar-group-overlap: var(--ds-space-2xs);
+    --_avatar-group-font-size: var(--ds-font-size-2xs);
+  }
+
+  [data-ds='avatar-group'][data-size='lg'] {
+    --_avatar-group-size: var(--ds-size-control-lg);
+    --_avatar-group-overlap: var(--ds-space-s);
+    --_avatar-group-font-size: var(--ds-font-size-s);
+  }
+
+  /* ------------------------------------------------------------ forced colors */
+
+  @media (forced-colors: active) {
+    [data-ds='avatar-group'] > span[data-part='overflow'] {
+      border: var(--ds-border-width-default) solid CanvasText;
+      color: CanvasText;
+    }
+  }
+}

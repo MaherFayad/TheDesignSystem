@@ -1,0 +1,289 @@
+/*
+ * Chip: a pill you press (the root is a button) or remove (the root is a
+ * span with a remove IconButton). Follows "One convention for component CSS
+ * and props" in docs/contracts/anatomy.md. Source: Figma-Killer-2 TagPill.
+ * Colors follow Button.css and Badge.css so the three match per tone.
+ *
+ * Private properties on the root (recipes override these):
+ *
+ *   --_chip-height, -padding-inline, -gap, -font-size, -radius
+ *   --_chip-bg, -fg, -border-color           at rest
+ *   --_chip-bg-hover, -border-color-hover
+ *   --_chip-bg-active
+ *   --_chip-ring                             the focus ring, a box shadow
+ *   --_chip-tone-*                           the colors of one tone
+ *
+ * The axis rules set the private properties, the state rules at the end
+ * swap them, and only the root rule writes declarations. Colors swap at
+ * once: nothing animates. The focus ring is a box shadow on the root, as
+ * in Button, so no ::before layer is needed; every fill has a hover value,
+ * so no ::after veil is needed. The remove IconButton is restyled through
+ * its private --_button-* properties only.
+ */
+@layer ds.base {
+  [data-ds='chip'] {
+    --_chip-height: var(--ds-size-control-md);
+    --_chip-padding-inline: var(--ds-space-m);
+    --_chip-gap: var(--ds-space-3xs);
+    --_chip-font-size: var(--ds-font-size-s);
+    --_chip-radius: var(--ds-radius-pill);
+    --_chip-bg: var(--ds-color-bg-overlay-10);
+    --_chip-fg: var(--ds-color-text-default);
+    --_chip-border-color: transparent;
+    --_chip-bg-hover: var(--ds-color-bg-overlay-20);
+    --_chip-border-color-hover: transparent;
+    --_chip-bg-active: var(--ds-color-bg-overlay-30);
+    --_chip-ring: var(--ds-focus-shadow-ring);
+
+    position: relative;
+    display: inline-flex;
+    flex: 0 1 auto;
+    align-items: center;
+    gap: var(--_chip-gap);
+    box-sizing: border-box;
+    block-size: var(--_chip-height);
+    min-block-size: var(--ds-size-target-min);
+    min-inline-size: var(--ds-size-target-min);
+    max-inline-size: 100%;
+    margin: 0;
+    padding-block: 0;
+    padding-inline: var(--_chip-padding-inline);
+    border: var(--ds-border-width-default) solid var(--_chip-border-color);
+    border-radius: var(--_chip-radius);
+    background-color: var(--_chip-bg);
+    color: var(--_chip-fg);
+    font-family: var(--ds-font-family-sans);
+    font-size: var(--_chip-font-size);
+    font-weight: var(--ds-font-weight-semibold);
+    line-height: var(--ds-font-leading-tight);
+    letter-spacing: var(--ds-font-tracking-none);
+    text-align: start;
+    white-space: nowrap;
+    vertical-align: middle;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  /* The pressable form is the button itself. */
+  button[data-ds='chip'] {
+    cursor: pointer;
+    appearance: none;
+  }
+
+  /* ------------------------------------------------------------ parts */
+
+  [data-ds='chip'] > [data-part='icon'] {
+    display: inline-flex;
+    flex: none;
+  }
+
+  /* A long label ends in an ellipsis; the chip shrinks with its row (WCAG 1.4.10). */
+  [data-ds='chip'] > [data-part='label'] {
+    min-inline-size: 0;
+    overflow-x: clip;
+    overflow-y: visible;
+    text-overflow: ellipsis;
+    unicode-bidi: plaintext;
+  }
+
+  /* The removable form: the remove button sits close to the end edge, a target of its own. */
+  [data-ds='chip'][data-removable] {
+    padding-inline-end: var(--ds-space-4xs);
+  }
+
+  /* An xs removable chip grows by its two borders, so the 24px remove button fits inside it. */
+  [data-ds='chip'][data-removable][data-size='xs'] {
+    --_chip-height: calc(var(--ds-size-control-xs) + 2 * var(--ds-border-width-default));
+  }
+
+  [data-ds='chip'] > [data-ds='icon-button'][data-part='remove'] {
+    --_button-bg: transparent;
+    --_button-fg: var(--_chip-fg);
+    --_button-bg-hover: var(--ds-color-bg-overlay-20);
+    --_button-fg-hover: var(--_chip-fg);
+    --_button-bg-active: var(--ds-color-bg-overlay-30);
+    --_button-fg-active: var(--_chip-fg);
+  }
+
+  /* ------------------------------------------------------------ sizes */
+
+  [data-ds='chip'][data-size='xs'] {
+    --_chip-height: var(--ds-size-control-xs);
+    --_chip-padding-inline: var(--ds-space-xs);
+    --_chip-font-size: var(--ds-font-size-xs);
+  }
+
+  [data-ds='chip'][data-size='sm'] {
+    --_chip-height: var(--ds-size-control-sm);
+    --_chip-padding-inline: var(--ds-space-s);
+  }
+
+  /* ------------------------------------------------------------ neutral (soft is the root default) */
+
+  [data-ds='chip'][data-tone='neutral'][data-emphasis='outline'] {
+    --_chip-bg: transparent;
+    --_chip-border-color: var(--ds-color-border-control);
+    --_chip-border-color-hover: var(--ds-color-border-control-hover);
+    --_chip-bg-hover: var(--ds-color-bg-overlay-5);
+    --_chip-bg-active: var(--ds-color-bg-overlay-10);
+  }
+
+  /* ------------------------------------------------------------ accent */
+
+  [data-ds='chip'][data-tone='accent'] {
+    --_chip-bg: var(--ds-color-primary-tint);
+    --_chip-fg: var(--ds-color-primary-on-surface);
+    --_chip-bg-hover: var(--ds-color-primary-tint-hover);
+    --_chip-bg-active: var(--ds-color-primary-tint-hover);
+  }
+
+  [data-ds='chip'][data-tone='accent'][data-emphasis='outline'] {
+    --_chip-bg: transparent;
+    --_chip-border-color: var(--ds-color-primary-border);
+    --_chip-border-color-hover: var(--ds-color-primary-border);
+    --_chip-bg-hover: var(--ds-color-primary-tint);
+  }
+
+  /* ------------------------------------------------------------ danger, success, warning, info */
+
+  [data-ds='chip'][data-tone='danger'] {
+    --_chip-tone-solid: var(--ds-color-state-danger-solid);
+    --_chip-tone-on-solid: var(--ds-color-state-danger-on-solid);
+    --_chip-tone-text: var(--ds-color-state-danger-text);
+    --_chip-tone-on-tint: var(--ds-color-state-danger-on-tint);
+    --_chip-tone-border: var(--ds-color-state-danger-border);
+    --_chip-tone-tint: var(--ds-color-state-danger-tint-10);
+    --_chip-tone-tint-strong: var(--ds-color-state-danger-tint-20);
+  }
+
+  [data-ds='chip'][data-tone='success'] {
+    --_chip-tone-solid: var(--ds-color-state-success-solid);
+    --_chip-tone-on-solid: var(--ds-color-state-success-on-solid);
+    --_chip-tone-text: var(--ds-color-state-success-text);
+    --_chip-tone-on-tint: var(--ds-color-state-success-on-tint);
+    --_chip-tone-border: var(--ds-color-state-success-border);
+    --_chip-tone-tint: var(--ds-color-state-success-tint-10);
+    --_chip-tone-tint-strong: var(--ds-color-state-success-tint-20);
+  }
+
+  [data-ds='chip'][data-tone='warning'] {
+    --_chip-tone-solid: var(--ds-color-state-warning-solid);
+    --_chip-tone-on-solid: var(--ds-color-state-warning-on-solid);
+    --_chip-tone-text: var(--ds-color-state-warning-text);
+    --_chip-tone-on-tint: var(--ds-color-state-warning-on-tint);
+    --_chip-tone-border: var(--ds-color-state-warning-border);
+    --_chip-tone-tint: var(--ds-color-state-warning-tint-10);
+    --_chip-tone-tint-strong: var(--ds-color-state-warning-tint-20);
+  }
+
+  [data-ds='chip'][data-tone='info'] {
+    --_chip-tone-solid: var(--ds-color-state-info-solid);
+    --_chip-tone-on-solid: var(--ds-color-state-info-on-solid);
+    --_chip-tone-text: var(--ds-color-state-info-text);
+    --_chip-tone-on-tint: var(--ds-color-state-info-on-tint);
+    --_chip-tone-border: var(--ds-color-state-info-border);
+    --_chip-tone-tint: var(--ds-color-state-info-tint-10);
+    --_chip-tone-tint-strong: var(--ds-color-state-info-tint-20);
+  }
+
+  [data-ds='chip']:is([data-tone='danger'], [data-tone='success'], [data-tone='warning'], [data-tone='info']) {
+    --_chip-bg: var(--_chip-tone-tint);
+    --_chip-fg: var(--_chip-tone-on-tint);
+    --_chip-bg-hover: var(--_chip-tone-tint-strong);
+    --_chip-bg-active: var(--_chip-tone-tint-strong);
+  }
+
+  [data-ds='chip']:is([data-tone='danger'], [data-tone='success'], [data-tone='warning'], [data-tone='info'])[data-emphasis='outline'] {
+    --_chip-bg: transparent;
+    --_chip-fg: var(--_chip-tone-text);
+    --_chip-border-color: var(--_chip-tone-border);
+    --_chip-border-color-hover: var(--_chip-tone-border);
+    --_chip-bg-hover: var(--_chip-tone-tint);
+  }
+
+  /* ------------------------------------------------------------ selected: the solid fill of the tone, plus the check icon */
+
+  [data-ds='chip'][data-selected] {
+    --_chip-bg: var(--ds-color-text-default);
+    --_chip-fg: var(--ds-color-bg-body);
+    --_chip-border-color: transparent;
+    --_chip-bg-hover: var(--ds-color-text-bright);
+    --_chip-border-color-hover: transparent;
+    --_chip-bg-active: var(--ds-color-text-bright);
+    --_chip-ring: var(--ds-focus-shadow-primary);
+  }
+
+  [data-ds='chip'][data-selected][data-tone='accent'] {
+    --_chip-bg: var(--ds-color-primary-fill);
+    --_chip-fg: var(--ds-color-primary-text);
+    --_chip-border-color: var(--ds-color-primary-border);
+    --_chip-bg-hover: var(--ds-color-primary-fill-hover);
+    --_chip-border-color-hover: var(--ds-color-primary-border);
+    --_chip-bg-active: var(--ds-color-primary-fill-pressed);
+  }
+
+  [data-ds='chip'][data-selected]:is([data-tone='danger'], [data-tone='success'], [data-tone='warning'], [data-tone='info']) {
+    --_chip-bg: var(--_chip-tone-solid);
+    --_chip-fg: var(--_chip-tone-on-solid);
+    --_chip-bg-hover: var(--_chip-tone-solid);
+    --_chip-bg-active: var(--_chip-tone-solid);
+  }
+
+  /* ------------------------------------------------------------ states: swap the private properties */
+
+  button[data-ds='chip']:hover:not([data-disabled]) {
+    --_chip-bg: var(--_chip-bg-hover);
+    --_chip-border-color: var(--_chip-border-color-hover);
+  }
+
+  button[data-ds='chip']:active:not([data-disabled]) {
+    --_chip-bg: var(--_chip-bg-active);
+  }
+
+  /* The transparent outline is set only here, so forced colors mode draws it on focus and nowhere else. */
+  button[data-ds='chip']:focus-visible {
+    outline: var(--ds-border-width-strong) solid transparent;
+    outline-offset: var(--ds-border-width-strong);
+    box-shadow: var(--_chip-ring);
+  }
+
+  /*
+   * Disabled keeps focus (aria-disabled), dims and stops reacting. Only the
+   * controls dim: the pressable root, or the remove button of a removable
+   * chip (IconButton dims itself). The label of a removable chip is text,
+   * not a control, so it keeps full contrast (WCAG 1.4.3).
+   */
+  button[data-ds='chip'][data-disabled] {
+    opacity: var(--ds-opacity-disabled);
+    cursor: not-allowed;
+  }
+
+  /* ------------------------------------------------------------ forced colors */
+
+  @media (forced-colors: active) {
+    [data-ds='chip'] {
+      border-color: ButtonText;
+      color: ButtonText;
+    }
+
+    button[data-ds='chip']:focus-visible {
+      outline-color: Highlight;
+    }
+
+    [data-ds='chip'][data-selected] {
+      border-color: Highlight;
+      background-color: Highlight;
+      color: HighlightText;
+    }
+
+    button[data-ds='chip'][data-disabled] {
+      color: GrayText;
+    }
+
+    button[data-ds='chip'][data-selected][data-disabled] {
+      border-color: GrayText;
+      background-color: Canvas;
+      color: GrayText;
+    }
+  }
+}
