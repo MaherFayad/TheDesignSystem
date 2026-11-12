@@ -37,7 +37,7 @@ describe('TagField', () => {
     expect(root().getAttribute('data-size')).toBe('md');
     expect(root().getAttribute('data-shape')).toBe('default');
     expect(input().getAttribute('data-part')).toBe('control');
-    expect(root().querySelector('[data-part="tags"]')?.getAttribute('role')).toBe('list');
+    expect(root().querySelector('[data-part="tags"]')?.getAttribute('role')).toBe('group');
     expect(tagLabels()).toEqual(['Design', 'Copy']);
     const button = remove('Design');
     expect(button.getAttribute('data-ds')).toBe('close-button');
@@ -66,6 +66,22 @@ describe('TagField', () => {
     render(<Tags />);
     fireEvent.paste(input(), { clipboardData: { getData: () => 'one, two\nthree' } });
     expect(tagLabels()).toEqual(['one', 'two', 'three']);
+  });
+
+  it('a paste replaces the selected text', async () => {
+    const user = userEvent.setup();
+    render(<Tags />);
+    await user.type(input(), 'old');
+    (input() as HTMLInputElement).setSelectionRange(0, 3);
+    fireEvent.paste(input(), { clipboardData: { getData: () => 'a,b' } });
+    expect(tagLabels()).toEqual(['a', 'b']);
+  });
+
+  it('announces an add once', async () => {
+    const user = userEvent.setup();
+    render(<Tags />);
+    await user.type(input(), 'design{Enter}');
+    await waitFor(() => expect(status()).toBe('Added tag design'));
   });
 
   it('Backspace on an empty control focuses the last tag, a second removes it and focus goes back', async () => {
@@ -143,6 +159,7 @@ describe('TagField', () => {
     render(<Tags max={1} defaultValue={['A']} />);
     await user.type(input(), 'B{Enter}');
     expect(tagLabels()).toEqual(['A']);
+    expect((input() as HTMLInputElement).value).toBe('B');
     await waitFor(() => expect(status()).toBe('You can add up to 1 tag'));
   });
 

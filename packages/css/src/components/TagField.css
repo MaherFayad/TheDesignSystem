@@ -6,8 +6,8 @@
  * family popup.
  *
  *   [data-ds='tag-field']                        root: the bordered box, wraps
- *     > [data-part='tags']                       role list, display contents
- *       > [data-part='tag']                      role listitem: a pill
+ *     > [data-part='tags']                       role group, display contents
+ *       > [data-part='tag']                      a pill
  *         > [data-part='tag-label']
  *         > [data-ds='close-button'][data-part='tag-remove']
  *     > [data-part='control']                    the native input
@@ -59,7 +59,7 @@
     min-inline-size: 0;
     min-block-size: var(--_tag-field-height);
     /* One line of tags sits centered in the box at its resting height. */
-    padding-block: calc((var(--_tag-field-height) - var(--_tag-field-tag-height)) / 2 - var(--ds-border-width-default));
+    padding-block: calc((var(--_tag-field-height) - var(--_tag-field-tag-height)) / 2 - var(--_tag-field-border-width));
     padding-inline: var(--ds-space-3xs) var(--_tag-field-padding-inline);
     border: var(--_tag-field-border-width) var(--_tag-field-border-style) var(--_tag-field-border-color);
     border-radius: var(--_tag-field-radius);

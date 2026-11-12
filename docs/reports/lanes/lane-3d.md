@@ -8,7 +8,7 @@ are built, reviewed once by a fresh ds-qa agent, fixed and pushed.
 | --- | --- | --- | --- | --- |
 | 1.3.6 | Select | `wo-1.3.6: Select`, `wo-1.3.6: Select review fixes` | 16 | 44 passed |
 | 1.3.9 | MultiSelect | `wo-1.3.9: MultiSelect`, `wo-1.3.9: MultiSelect review fixes` | 15 | 44 passed |
-| 1.3.10 | TagField | `wo-1.3.10: TagField`, `wo-1.3.10: TagField review fixes` | 12 + 7 (tags.ts) | 29 passed, 15 skipped (open overlay checks, field not overlay) |
+| 1.3.10 | TagField | `wo-1.3.10: TagField`, `wo-1.3.10: TagField review fixes` | 14 + 7 (tags.ts) | 29 passed, 15 skipped (open overlay checks, field not overlay) |
 
 `npm run check` is green on the last commit. Screenshots in
 `docs/reports/shots/wave-1/{select,multi-select,tag-field}/`: studio dark,
@@ -128,9 +128,9 @@ Decisions:
 
 ## 1.3.10 TagField
 
-Hand built. The root is the bordered box that wraps; tags are a `role="list"`
-part (`display: contents`) of `tag` list items with a `tag-label` and a
-CloseButton (`tag-remove`). With `suggestions`, the control becomes an ARIA
+Hand built. The root is the bordered box that wraps; tags sit in a
+`role="group"` part (`display: contents`) named like the field, each `tag` a
+pill with a `tag-label` and a CloseButton (`tag-remove`). With `suggestions`, the control becomes an ARIA
 1.2 combobox over a ListBox with `virtualFocus` in a Radix Popover, as in
 Autocomplete. Shared logic in `packages/shared/src/tags.ts`: `splitTags`,
 `hasTagSeparator`, `tagKey`, `addTags` (dedupe through `normalize()`, max),
@@ -195,7 +195,21 @@ focuses the trigger). The label click fix replaces the reviewer's button
 suggestion (a bare button is not allowed). Left open: the Arabic plural
 register (above).
 
-TagField: see the section added after its review below.
+TagField (2 blockers, 10 notes). Fixed: a paste now replaces the selected
+text; text past `max` stays in the control instead of being lost; tag keys
+are `${index}-${tag}` so a controlled value with an exact duplicate does not
+break; a pending focus move is dropped when a controlled parent refuses a
+removal; hidden inputs get `form`; adds are announced once ("Added tag x");
+Arabic status copy (`حذفنا الوسم`, `الحد الأعلى للوسوم: 10`) and the demo
+error (`أضف وسما واحدا على الأقل`); the box padding subtracts the private
+border width; the manifest says why `value` is typed string and where
+Escape is documented. The reviewer found `aria-disabled` unsupported on
+`role="list"`, and dropping it brings back axe contrast failures on the
+faded disabled tags, so the wrapper is now `role="group"` (which supports
+`aria-disabled`) and the list item roles are gone. Left open by decision:
+blur keeps typed text and does not add it (noted in the manifest); Escape is
+written inside the ArrowUp entry because the suite checks Escape only on
+an overlay with a trigger.
 
 ## Changes needed from the lead
 
