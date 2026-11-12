@@ -137,6 +137,43 @@ describe('loops', () => {
     expect(made.map((a) => a.playState)).toEqual(['running', 'running', 'paused']);
   });
 
+  it('a loop that starts while its root is paused is paused as it starts, until resumeLoops', () => {
+    const loop = (playState: AnimationPlayState) => {
+      const a = {
+        id: '',
+        playState,
+        effect: { getTiming: () => ({ iterations: Infinity }) },
+        pause() {
+          a.playState = 'paused';
+        },
+        play() {
+          a.playState = 'running';
+        },
+      };
+      return a;
+    };
+    let listener: ((e: Event) => void) | undefined;
+    const doc = {
+      addEventListener: (_: string, fn: (e: Event) => void) => (listener = fn),
+      removeEventListener: () => (listener = undefined),
+    };
+    const later: ReturnType<typeof loop>[] = [];
+    const child = { getAnimations: () => later } as unknown as Element;
+    const root = {
+      ownerDocument: doc,
+      contains: (n: unknown) => n === child,
+      getAnimations: () => later,
+    } as unknown as Element;
+    expect(core.pauseLoops(root)).toBe(0);
+    // A spinner mounts after the pause: its CSS animation starts running.
+    later.push(loop('running'));
+    listener?.({ target: child } as unknown as Event);
+    expect(later[0]!.playState).toBe('paused');
+    expect(core.resumeLoops(root)).toBe(1);
+    expect(later[0]!.playState).toBe('running');
+    expect(listener).toBeUndefined();
+  });
+
   it('the spinner native block loops with -1, as Reanimated wants', () => {
     expect(catalog.spinner.native.iterations).toBe(-1);
     expect(catalog.spinner.native.easing).toEqual([0, 0, 1, 1]);

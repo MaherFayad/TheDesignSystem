@@ -408,14 +408,11 @@ function loopsUnder(root: Element | Document): Animation[] {
 /** The loops `pauseLoops` paused, so `resumeLoops` leaves alone a loop something else paused. */
 const pausedByUs = new WeakSet<Animation>();
 
-/**
- * Pauses every loop under `root` (a spinner, the thinking dots, a shimmer, a
- * component's CSS spinner) and returns how many it paused. Wire it to a
- * pause control, or call it when the page asks for less motion. WCAG 2.2.2
- * asks for a way to pause anything that moves for more than five seconds.
- * Do not await `settled()` on a paused or endless loop: it never ends.
- */
-export function pauseLoops(root: Element | Document): number {
+/** The roots `pauseLoops` paused and `resumeLoops` has not played again. */
+const pausedRoots = new Set<Element | Document>();
+
+/** Pauses the running loops under `root` and remembers them. Returns how many. */
+function pauseUnder(root: Element | Document): number {
   let n = 0;
   for (const a of loopsUnder(root)) {
     if (a.playState === 'running') {
@@ -427,8 +424,46 @@ export function pauseLoops(root: Element | Document): number {
   return n;
 }
 
-/** Plays again the loops under `root` that `pauseLoops` paused. Returns how many. */
+/**
+ * A loop that starts after the pause (a spinner that mounts, or a CSS
+ * animation the stylesheet restarts) is a new Animation. While a root is
+ * paused, one listener pauses each new loop under it as it starts.
+ */
+function onLoopStart(event: Event): void {
+  const target = event.target as Element | null;
+  if (!target || typeof target.getAnimations !== 'function') return;
+  for (const root of pausedRoots) {
+    if (root === target || root.contains(target)) pauseUnder(target);
+  }
+}
+
+/**
+ * Pauses every loop under `root` (a spinner, the thinking dots, a shimmer, a
+ * component's CSS spinner, and any other endless animation under it, the
+ * system's or not) and returns how many it paused. Loops that start later
+ * under `root` are paused too, until `resumeLoops(root)`. Wire it to a pause
+ * control, or call it when the page asks for less motion. WCAG 2.2.2 asks
+ * for a way to pause anything that moves for more than five seconds. Do not
+ * await `settled()` on a paused or endless loop: it never ends.
+ */
+export function pauseLoops(root: Element | Document): number {
+  const doc = 'documentElement' in root ? root : root.ownerDocument;
+  if (pausedRoots.size === 0) doc?.addEventListener('animationstart', onLoopStart, true);
+  pausedRoots.add(root);
+  return pauseUnder(root);
+}
+
+/**
+ * Plays again the loops under `root` that `pauseLoops` paused, and stops
+ * pausing new ones. Returns how many. A loop it plays again runs even if the
+ * stylesheet has since set animation-play-state: paused on it.
+ */
 export function resumeLoops(root: Element | Document): number {
+  pausedRoots.delete(root);
+  if (pausedRoots.size === 0) {
+    const doc = 'documentElement' in root ? root : root.ownerDocument;
+    doc?.removeEventListener('animationstart', onLoopStart, true);
+  }
   let n = 0;
   for (const a of loopsUnder(root)) {
     if (a.playState === 'paused' && pausedByUs.has(a)) {
