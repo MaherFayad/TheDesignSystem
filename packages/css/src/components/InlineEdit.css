@@ -1,0 +1,161 @@
+/*
+ * InlineEdit: a value shown as a ghost Button (the display part) that turns
+ * into an Input (the control part) with a save and a cancel IconButton.
+ * Sources: Figma-Killer-2 `VariableField.module.css` (text in place of a
+ * field) and GoBanana `.st-input` through Input.css (the editor). Follows
+ * "One convention for component CSS and props" in docs/contracts/anatomy.md.
+ *
+ * Private properties on the root (recipes override these):
+ *
+ *   --_inline-edit-gap             the space between the editor and its buttons
+ *   --_inline-edit-padding-inline  the display text inset, equal to the Input's, so the text does not move
+ *   --_inline-edit-fg              the display text
+ *   --_inline-edit-fg-empty        the placeholder in the display
+ *   --_inline-edit-error-fg        the message under the editor
+ *
+ * As the parent of Button and Input, this file sets their private
+ * properties: the display's padding, text color and alignment, and the
+ * editor's width. The edit icon at the display's end shows on hover and
+ * focus only, through opacity.
+ */
+@layer ds.base {
+  [data-ds='inline-edit'] {
+    --_inline-edit-gap: var(--ds-space-2xs);
+    --_inline-edit-padding-inline: var(--ds-space-m);
+    --_inline-edit-fg: var(--ds-color-text-default);
+    --_inline-edit-fg-empty: var(--ds-color-text-muted);
+    --_inline-edit-error-fg: var(--ds-color-state-danger-text);
+
+    display: inline-flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--_inline-edit-gap);
+    box-sizing: border-box;
+    max-inline-size: 100%;
+    min-inline-size: 0;
+    vertical-align: middle;
+  }
+
+  /* Editing takes the row, so the value has room. */
+  [data-ds='inline-edit'][data-state='editing'] {
+    display: flex;
+    inline-size: 100%;
+  }
+
+  [data-ds='inline-edit'][data-size='xs'] {
+    --_inline-edit-padding-inline: max(var(--ds-space-xs), min(var(--ds-radius-control), var(--ds-size-control-xs) / 2));
+  }
+
+  [data-ds='inline-edit'][data-size='sm'] {
+    --_inline-edit-padding-inline: var(--ds-space-s);
+  }
+
+  [data-ds='inline-edit'][data-size='lg'] {
+    --_inline-edit-padding-inline: var(--ds-space-2xl);
+  }
+
+  /* ------------------------------------------------------------ display */
+
+  /* The value in the same place as the editor's text: the Input's inset, text at the start. */
+  [data-ds='inline-edit'] > [data-ds='button'][data-part='display'] {
+    --_button-padding-inline: var(--_inline-edit-padding-inline);
+    --_button-fg: var(--_inline-edit-fg);
+    --_button-fg-hover: var(--_inline-edit-fg);
+    --_button-fg-active: var(--_inline-edit-fg);
+
+    justify-content: flex-start;
+    /* The editor's weight, so the text does not reflow when editing starts. */
+    font-weight: var(--ds-font-weight-regular);
+    max-inline-size: 100%;
+    min-inline-size: 0;
+  }
+
+  [data-ds='inline-edit'][data-empty] > [data-ds='button'][data-part='display'] {
+    --_button-fg: var(--_inline-edit-fg-empty);
+    --_button-fg-hover: var(--_inline-edit-fg-empty);
+    --_button-fg-active: var(--_inline-edit-fg-empty);
+  }
+
+  /* Invalid while viewing (a check from outside): the value in the danger color, with the message under it. */
+  [data-ds='inline-edit'][data-invalid] > [data-ds='button'][data-part='display'] {
+    --_button-fg: var(--_inline-edit-error-fg);
+    --_button-fg-hover: var(--_inline-edit-error-fg);
+    --_button-fg-active: var(--_inline-edit-error-fg);
+  }
+
+  /* The edit icon shows while the display is hovered or focused. */
+  [data-ds='inline-edit'] > [data-ds='button'][data-part='display'] > [data-part='end'] {
+    opacity: 0;
+    transition: opacity var(--ds-duration-base) var(--ds-ease-default);
+  }
+
+  [data-ds='inline-edit'] > [data-ds='button'][data-part='display']:is(:hover, :focus-visible) > [data-part='end'] {
+    opacity: 1;
+  }
+
+  /* No hover on touch screens: the edit icon shows at all times. */
+  @media (hover: none) {
+    [data-ds='inline-edit'] > [data-ds='button'][data-part='display'] > [data-part='end'] {
+      opacity: 1;
+    }
+  }
+
+  /* ------------------------------------------------------------ editor */
+
+  [data-ds='inline-edit'] > [data-part='control'] {
+    flex: 1 1 0;
+    min-inline-size: 0;
+  }
+
+  [data-ds='inline-edit'] > :is([data-part='save'], [data-part='cancel']) {
+    flex: none;
+  }
+
+  /* The message: under the editor, the full row, an icon and text, never color alone. */
+  [data-ds='inline-edit'] > [data-part='error'] {
+    display: flex;
+    flex: 1 0 100%;
+    align-items: flex-start;
+    gap: var(--ds-space-2xs);
+    margin: 0;
+    color: var(--_inline-edit-error-fg);
+    font-family: var(--ds-font-family-sans);
+    font-size: var(--ds-font-size-s);
+    line-height: var(--ds-font-leading-snug);
+  }
+
+  [data-ds='inline-edit'] > [data-part='error'] > svg {
+    flex: none;
+  }
+
+  /* The status: read by screen readers, not drawn. */
+  [data-ds='inline-edit'] > [data-part='status'] {
+    position: absolute;
+    inline-size: var(--ds-border-width-default);
+    block-size: var(--ds-border-width-default);
+    margin: calc(-1 * var(--ds-border-width-default));
+    padding: 0;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  /* ------------------------------------------------------------ reduced motion, forced colors */
+
+  @media (prefers-reduced-motion: reduce) {
+    [data-ds='inline-edit'] > [data-ds='button'][data-part='display'] > [data-part='end'] {
+      transition: none;
+    }
+  }
+
+  /* Forced colors: the display keeps Button's focus outline; the placeholder reads as GrayText. */
+  @media (forced-colors: active) {
+    [data-ds='inline-edit'][data-empty] > [data-ds='button'][data-part='display'] {
+      color: GrayText;
+    }
+
+    [data-ds='inline-edit'] > [data-ds='button'][data-part='display'] > [data-part='end'] {
+      opacity: 1;
+    }
+  }
+}

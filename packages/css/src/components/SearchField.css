@@ -1,0 +1,261 @@
+/*
+ * SearchField: a bordered box (the root) around a search icon, a nested
+ * Input (the control part), a clear button and an end slot.
+ * Sources: Figma-Killer-2 `SearchBar.module.css` (the row), GoBanana
+ * `studio-components.css` `.st-input` through Input.css (the box, the glow
+ * and the ring). Follows "One convention for component CSS and props" in
+ * docs/contracts/anatomy.md.
+ *
+ * Private properties on the root. Recipes override these; states only swap them:
+ *   --_search-field-height, --_search-field-padding-inline,
+ *   --_search-field-padding-end (when a button sits at the end),
+ *   --_search-field-gap, --_search-field-font-size, --_search-field-radius,
+ *   --_search-field-bg, --_search-field-fg, --_search-field-border-color
+ *   (at rest, -hover, -focus, -invalid), --_search-field-ring.
+ *
+ * The nested Input keeps its native input, its value styles and its
+ * autofill fix. This file clears its own box through its private
+ * properties, and sets its border width, its opacity and its outline
+ * directly where Input has no property for them.
+ */
+@layer ds.base {
+  [data-ds='search-field'] {
+    --_search-field-height: var(--ds-size-control-md);
+    --_search-field-padding-inline: var(--ds-space-m);
+    --_search-field-padding-end: var(--ds-space-2xs);
+    --_search-field-gap: var(--ds-space-xs);
+    --_search-field-font-size: var(--ds-font-size-s);
+    --_search-field-radius: var(--ds-radius-control);
+    --_search-field-bg: transparent;
+    --_search-field-fg: var(--ds-color-text-default);
+    --_search-field-border-color: var(--ds-color-border-control);
+    --_search-field-border-color-hover: var(--ds-color-border-control-hover);
+    --_search-field-border-color-focus: var(--ds-color-border-control-hover);
+    --_search-field-border-color-invalid: var(--ds-color-state-danger-text);
+    --_search-field-ring: var(--ds-elevation-input-focus), var(--ds-focus-shadow-ring);
+
+    position: relative;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    gap: var(--_search-field-gap);
+    inline-size: 100%;
+    min-inline-size: 0;
+    block-size: var(--_search-field-height);
+    min-block-size: var(--ds-size-target-min);
+    padding-block: 0;
+    padding-inline: var(--_search-field-padding-inline);
+    border: var(--ds-border-width-default) solid var(--_search-field-border-color);
+    border-radius: var(--_search-field-radius);
+    background-color: var(--_search-field-bg);
+    color: var(--_search-field-fg);
+    font-family: var(--ds-font-family-sans);
+    font-size: var(--_search-field-font-size);
+    line-height: var(--ds-font-leading-snug);
+    cursor: text;
+  }
+
+  /* The glow and the ring, as on Input. */
+  [data-ds='search-field']::before {
+    content: '';
+    position: absolute;
+    inset: calc(var(--ds-border-width-default) * -1);
+    border-radius: inherit;
+    box-shadow: var(--_search-field-ring);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity var(--ds-duration-base) var(--ds-ease-default);
+  }
+
+  [data-ds='search-field'] > * {
+    position: relative;
+  }
+
+  /* A button at the end sits close to the edge; the text keeps the full padding at the start. */
+  [data-ds='search-field']:has(> [data-part='clear'], > [data-part='end']) {
+    padding-inline-end: var(--_search-field-padding-end);
+  }
+
+  /* ------------------------------------------------------------ sizes and shape */
+
+  [data-ds='search-field'][data-size='xs'] {
+    --_search-field-height: var(--ds-size-control-xs);
+    --_search-field-padding-inline: max(var(--ds-space-xs), min(var(--_search-field-radius), var(--_search-field-height) / 2));
+    --_search-field-padding-end: 0;
+    --_search-field-gap: var(--ds-space-2xs);
+  }
+
+  [data-ds='search-field'][data-size='sm'] {
+    --_search-field-height: var(--ds-size-control-sm);
+    --_search-field-padding-inline: var(--ds-space-s);
+    --_search-field-padding-end: var(--ds-space-3xs);
+    --_search-field-gap: var(--ds-space-2xs);
+  }
+
+  [data-ds='search-field'][data-size='lg'],
+  [data-ds='search-field'][data-size='lg']:lang(ar) {
+    --_search-field-height: var(--ds-size-control-lg);
+    --_search-field-padding-inline: var(--ds-space-2xl);
+    --_search-field-padding-end: var(--ds-space-s);
+    --_search-field-gap: var(--ds-space-s);
+    --_search-field-font-size: var(--ds-font-size-fixed-m);
+  }
+
+  [data-ds='search-field'][data-shape='pill'] {
+    --_search-field-radius: var(--ds-radius-pill);
+  }
+
+  /* ------------------------------------------------------------ the nested Input */
+
+  /*
+   * The control: no box of its own. It is as tall as the root, over the
+   * root's border, so the native input keeps a 24px target at xs. The part
+   * attribute lifts this rule over Input's own size and state rules.
+   */
+  [data-ds='search-field'] > [data-ds='input'][data-part='control'] {
+    --_input-height: var(--_search-field-height);
+    --_input-padding-inline: 0;
+    --_input-radius: 0;
+    --_input-bg: transparent;
+    --_input-border-color: transparent;
+    --_input-border-color-hover: transparent;
+    --_input-border-color-focus: transparent;
+    --_input-border-color-invalid: transparent;
+    --_input-ring: none;
+    --_input-font-size: var(--_search-field-font-size);
+
+    flex: 1 1 auto;
+    min-inline-size: 0;
+    border-width: 0;
+    opacity: 1;
+  }
+
+  /* No native search look (Safari pads it), and one clear button: the browser's own is hidden. */
+  [data-ds='search-field'] > [data-ds='input'] > [data-part='control'] {
+    appearance: none;
+  }
+
+  [data-ds='search-field'] > [data-ds='input'] > [data-part='control']::-webkit-search-cancel-button,
+  [data-ds='search-field'] > [data-ds='input'] > [data-part='control']::-webkit-search-decoration {
+    appearance: none;
+  }
+
+  /* ------------------------------------------------------------ parts */
+
+  [data-ds='search-field'] > :is([data-part='icon'], [data-part='end']) {
+    display: inline-flex;
+    flex: none;
+    align-items: center;
+    gap: var(--ds-space-2xs);
+    color: var(--ds-color-text-muted);
+    cursor: default;
+  }
+
+  [data-ds='search-field'] > [data-part='clear'] {
+    flex: none;
+  }
+
+  [data-ds='search-field'] > [data-part='end'] > [data-part='spinner'] {
+    box-sizing: border-box;
+    inline-size: var(--ds-size-icon-sm);
+    block-size: var(--ds-size-icon-sm);
+    border: var(--ds-border-width-strong) solid var(--ds-color-bg-overlay-20);
+    border-block-start-color: currentColor;
+    border-radius: var(--ds-radius-pill);
+    animation: ds-search-field-spin var(--ds-duration-spin) linear infinite;
+  }
+
+  @keyframes ds-search-field-spin {
+    to {
+      transform: rotate(1turn);
+    }
+  }
+
+  /* The loading status: read by screen readers, not drawn. */
+  [data-ds='search-field'] > [data-part='status'] {
+    position: absolute;
+    inline-size: var(--ds-border-width-default);
+    block-size: var(--ds-border-width-default);
+    margin: calc(-1 * var(--ds-border-width-default));
+    padding: 0;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  /* ------------------------------------------------------------ states */
+
+  [data-ds='search-field']:hover:not([data-disabled], [data-readonly], [data-invalid], :focus-within) {
+    --_search-field-border-color: var(--_search-field-border-color-hover);
+  }
+
+  /* Focus on the input: the glow and the ring. Focus on the clear button shows that button's own ring instead. */
+  [data-ds='search-field']:has(> [data-part='control']:focus-within) {
+    --_search-field-border-color: var(--_search-field-border-color-focus);
+
+    outline: var(--ds-border-width-strong) solid transparent;
+    outline-offset: var(--ds-border-width-default);
+  }
+
+  [data-ds='search-field']:has(> [data-part='control']:focus-within)::before {
+    opacity: 1;
+  }
+
+  [data-ds='search-field'][data-invalid],
+  [data-ds='search-field'][data-invalid]:focus-within {
+    --_search-field-border-color: var(--_search-field-border-color-invalid);
+  }
+
+  [data-ds='search-field'][data-readonly] {
+    --_search-field-bg: var(--ds-color-bg-overlay-5);
+
+    border-style: dashed;
+    cursor: default;
+  }
+
+  [data-ds='search-field'][data-disabled] {
+    opacity: var(--ds-opacity-disabled);
+    cursor: not-allowed;
+  }
+
+  [data-ds='search-field'][data-loading] {
+    cursor: progress;
+  }
+
+  /* ------------------------------------------------------------ reduced motion, forced colors */
+
+  /* The spinner stops as a still ring with one strong quarter. The status text carries the state. */
+  @media (prefers-reduced-motion: reduce) {
+    [data-ds='search-field'] > [data-part='end'] > [data-part='spinner'] {
+      animation: none;
+    }
+  }
+
+  /*
+   * Forced colors: the system draws the root border and drops box shadows,
+   * so the glow layer goes away and the root's transparent outline shows
+   * focus. The nested Input's own focus outline is dropped, so one ring
+   * shows. Disabled reads as GrayText.
+   */
+  @media (forced-colors: active) {
+    [data-ds='search-field']::before {
+      display: none;
+    }
+
+    [data-ds='search-field'] > [data-ds='input'][data-part='control'] {
+      outline-style: none;
+    }
+
+    /* The system colors every border alike, so the strong quarter gets its own color to show the turn. */
+    [data-ds='search-field'] > [data-part='end'] > [data-part='spinner'] {
+      border-color: GrayText;
+      border-block-start-color: CanvasText;
+    }
+
+    [data-ds='search-field'][data-disabled] {
+      --_search-field-border-color: GrayText;
+
+      color: GrayText;
+    }
+  }
+}

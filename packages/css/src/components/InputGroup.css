@@ -1,0 +1,197 @@
+/*
+ * InputGroup: an Input joined with add ons and actions in one row.
+ * Sources: GoBanana `studio-components.css` `.st-input` (the box the add on
+ * matches), Figma-Killer-2 `SplitButton.module.css` through ButtonGroup (the
+ * seam). Follows "One convention for component CSS and props" in
+ * docs/contracts/anatomy.md.
+ *
+ * Private properties on the root (recipes override these):
+ *
+ *   --_input-group-height          the add on height, from size.control
+ *   --_input-group-padding-inline  the add on inline padding
+ *   --_input-group-font-size       the add on text size
+ *   --_input-group-radius          the outer corners of an add on at an end
+ *   --_input-group-bg        the add on fill
+ *   --_input-group-fg        the add on text color
+ *   --_input-group-border-color    the add on border
+ *   --_input-group-seam-color      the add on border that meets the control (-invalid when invalid)
+ *   --_input-group-ring            the focus ring of a joined child, drawn inside it
+ *
+ * The children are Input, Button and IconButton roots, styled by their own
+ * files. As their parent, this file sets their private focus ring and, where
+ * they have no property for it, the corner radii and the seam borders. Every
+ * one is a logical property, so the seams flip in RTL.
+ */
+@layer ds.base {
+  [data-ds='input-group'] {
+    --_input-group-height: var(--ds-size-control-md);
+    --_input-group-padding-inline: var(--ds-space-m);
+    --_input-group-font-size: var(--ds-font-size-s);
+    --_input-group-radius: var(--ds-radius-control);
+    --_input-group-bg: var(--ds-color-bg-overlay-5);
+    --_input-group-fg: var(--ds-color-text-muted);
+    --_input-group-border-color: var(--ds-color-border-control);
+    --_input-group-seam-color: var(--_input-group-border-color);
+    --_input-group-seam-color-invalid: var(--ds-color-state-danger-text);
+    --_input-group-ring: inset 0 0 0 var(--ds-border-width-strong) var(--ds-color-focus-ring);
+
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+    box-sizing: border-box;
+    inline-size: 100%;
+    min-inline-size: 0;
+  }
+
+  /* As on Input: at xs the padding is at least the end radius, so text never crowds a round end. */
+  [data-ds='input-group'][data-size='xs'] {
+    --_input-group-height: var(--ds-size-control-xs);
+    --_input-group-padding-inline: max(var(--ds-space-xs), min(var(--_input-group-radius), var(--_input-group-height) / 2));
+  }
+
+  [data-ds='input-group'][data-size='sm'] {
+    --_input-group-height: var(--ds-size-control-sm);
+    --_input-group-padding-inline: var(--ds-space-s);
+  }
+
+  [data-ds='input-group'][data-size='lg'],
+  [data-ds='input-group'][data-size='lg']:lang(ar) {
+    --_input-group-height: var(--ds-size-control-lg);
+    --_input-group-padding-inline: var(--ds-space-l);
+    --_input-group-font-size: var(--ds-font-size-fixed-m);
+  }
+
+  [data-ds='input-group'][data-shape='pill'] {
+    --_input-group-radius: var(--ds-radius-pill);
+  }
+
+  /* ------------------------------------------------------------ parts */
+
+  /* The control takes the free space; add ons and actions keep their own width. */
+  /* A zero base: the control takes what the add ons and actions leave, so they shrink only when the row is short. */
+  [data-ds='input-group'] > [data-part='control'] {
+    flex: 1 1 0;
+    inline-size: auto;
+    min-inline-size: 0;
+  }
+
+  [data-ds='input-group'] > [data-part='action'] {
+    flex: none;
+  }
+
+  /*
+   * A long add on gives way before the control does: it may shrink to half
+   * the row, then its text is cut at the end. The full text stays in the
+   * control's description. At 320px the control keeps room to type.
+   */
+  [data-ds='input-group'] > [data-part='addon'] {
+    flex: 0 1 auto;
+    min-inline-size: 0;
+    max-inline-size: 50%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  /* The add on: a quiet box with the control's height and border, on the value's text size. */
+  [data-ds='input-group'] > [data-part='addon'] {
+    display: inline-flex;
+    align-items: center;
+    box-sizing: border-box;
+    block-size: var(--_input-group-height);
+    padding-inline: var(--_input-group-padding-inline);
+    border: var(--ds-border-width-default) solid var(--_input-group-border-color);
+    border-radius: var(--_input-group-radius);
+    background-color: var(--_input-group-bg);
+    color: var(--_input-group-fg);
+    font-family: var(--ds-font-family-sans);
+    font-size: var(--_input-group-font-size);
+    line-height: var(--ds-font-leading-snug);
+    white-space: nowrap;
+    /* A Latin prefix (https://) keeps its order inside Arabic; Arabic text (ريال) runs right to left. */
+    unicode-bidi: plaintext;
+  }
+
+  /* ------------------------------------------------------------ the seams */
+
+  /*
+   * Each child but the first drops its start border, so two borders never
+   * meet and the seam stays one hairline: the end border of the child
+   * before it. Inner corners are square on the logical sides.
+   */
+  [data-ds='input-group'] > :not(:first-child) {
+    border-inline-start-width: 0;
+    border-start-start-radius: 0;
+    border-end-start-radius: 0;
+  }
+
+  [data-ds='input-group'] > :not(:last-child) {
+    border-start-end-radius: 0;
+    border-end-end-radius: 0;
+  }
+
+  /* The add on border that meets the control: the control's state shows on that side too. */
+  [data-ds='input-group'] > [data-part='addon']:has(+ [data-part='control']) {
+    border-inline-end-color: var(--_input-group-seam-color);
+  }
+
+  [data-ds='input-group'][data-invalid] {
+    --_input-group-seam-color: var(--_input-group-seam-color-invalid);
+  }
+
+  /* Read only: the add ons dash with the control. */
+  [data-ds='input-group'][data-readonly] > [data-part='addon'] {
+    border-style: dashed;
+  }
+
+  /*
+   * The focus ring goes inside the child: a ring outside would sit under
+   * the next part, which paints later. The same width and color as the
+   * focus tokens.
+   */
+  [data-ds='input-group'] > [data-ds='input'] {
+    --_input-ring: var(--_input-group-ring);
+  }
+
+  [data-ds='input-group'] > [data-ds='search-field'] {
+    --_search-field-ring: var(--_input-group-ring);
+  }
+
+  [data-ds='input-group'] > [data-ds='password-field'] {
+    --_password-field-ring: var(--_input-group-ring);
+  }
+
+  [data-ds='input-group'] > :is([data-ds='button'], [data-ds='icon-button']) {
+    --_button-ring: var(--_input-group-ring);
+  }
+
+  [data-ds='input-group'] > :is([data-ds='button'], [data-ds='icon-button'])[data-emphasis='solid'] {
+    --_button-ring:
+      inset 0 0 0 var(--ds-border-width-strong) var(--ds-color-focus-ring-on-primary-outer),
+      inset 0 0 0 calc(2 * var(--ds-border-width-strong)) var(--ds-color-focus-ring-on-primary-inner);
+  }
+
+  /* Disabled: the add on dims with the control, one disabled look for every part. */
+  [data-ds='input-group'][data-disabled] > [data-part='addon'] {
+    opacity: var(--ds-opacity-disabled);
+  }
+
+  /*
+   * Forced colors: the system draws every border, so the seams need
+   * nothing. The box shadow rings go away; Input shows its transparent
+   * focus outline and Button its focus outline, pulled inside the child so
+   * the next part does not cover it.
+   */
+  @media (forced-colors: active) {
+    [data-ds='input-group'] > :is([data-ds='button'], [data-ds='icon-button']):focus-visible {
+      outline-offset: calc(-2 * var(--ds-border-width-strong));
+    }
+
+    [data-ds='input-group'] > :is([data-ds='input'], [data-ds='search-field'], [data-ds='password-field']):focus-within {
+      outline-offset: calc(-1 * var(--ds-border-width-strong));
+    }
+
+    [data-ds='input-group'][data-disabled] > [data-part='addon'] {
+      color: GrayText;
+    }
+  }
+}

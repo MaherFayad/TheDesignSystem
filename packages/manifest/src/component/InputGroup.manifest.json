@@ -1,0 +1,189 @@
+{
+  "name": "InputGroup",
+  "kind": "component",
+  "family": "forms",
+  "summary": "An Input joined in one row with add on text and action buttons: a unit, a fixed prefix or suffix, or a Button that acts on the value.",
+  "useWhen": [
+    "A value with a fixed prefix or suffix the person does not type: https://, .example.com",
+    "A value with a unit or a currency that reads better outside the box: px, SAR",
+    "A Button that acts on this one value, joined to it: Copy link, Send invite"
+  ],
+  "avoidWhen": [
+    "A short unit or currency inside the box with no border of its own",
+    "A search box with a clear button",
+    "A password with a show and hide button",
+    "Several related buttons with no text control"
+  ],
+  "insteadUse": {
+    "A short unit or currency inside the box with no border of its own": "Input with start or end",
+    "A search box with a clear button": "SearchField",
+    "A password with a show and hide button": "PasswordField",
+    "Several related buttons with no text control": "ButtonGroup",
+    "A number with step buttons": "NumberField"
+  },
+  "anatomy": [
+    "root",
+    "control",
+    "addon",
+    "action"
+  ],
+  "slots": {
+    "root": {
+      "accepts": [
+        "Input",
+        "PasswordField",
+        "SearchField",
+        "InputGroupAddon",
+        "Button",
+        "IconButton"
+      ],
+      "min": 2,
+      "max": 4
+    }
+  },
+  "parts": {
+    "InputGroupAddon": "addon"
+  },
+  "props": {
+    "size": {
+      "type": [
+        "xs",
+        "sm",
+        "md",
+        "lg"
+      ],
+      "default": "md",
+      "description": "Passed to every child that does not set its own. The add on takes the group's size, so set size on the group, not on a child."
+    },
+    "shape": {
+      "type": [
+        "default",
+        "pill"
+      ],
+      "default": "default",
+      "description": "Passed to every child that does not set its own. Only the outer corners round; inner corners are square."
+    },
+    "invalid": {
+      "type": "boolean",
+      "description": "Marks the control invalid. Inside a Field it follows the Field."
+    },
+    "disabled": {
+      "type": "boolean",
+      "description": "Disables the control and every action. Inside a Field it follows the Field."
+    },
+    "readOnly": {
+      "type": "boolean",
+      "description": "Marks the control read only; add ons dash with it. Inside a Field it follows the Field."
+    },
+    "children": {
+      "type": "node",
+      "description": "One text control (Input, PasswordField or SearchField), with InputGroupAddon parts and Buttons or IconButtons around it, in reading order. Direct children only: the group stamps the parts on them. Any component child that is not an add on, a Button or an IconButton is taken as the control, and children inside a fragment are not stamped."
+    }
+  },
+  "states": [
+    "data-invalid",
+    "data-disabled",
+    "data-readonly"
+  ],
+  "a11y": {
+    "role": "group, around the native text control and the buttons",
+    "focus": "No focus of its own and no roving focus. The control and every action are tab stops. Joined children draw the focus ring inside their box, so the next part never covers it.",
+    "keys": {
+      "Tab": "Moves focus to the control, then to each action, then out of the group",
+      "Shift+Tab": "Moves focus back through the actions and the control"
+    },
+    "announce": "The control takes its name from the Field label. Add on text joins the control's aria-describedby, after the Field description and error: it is read as a description, never as part of the name. Each action is named by its own label.",
+    "native": {
+      "accessibilityRole": "none"
+    },
+    "notes": [
+      "Add on text is visible text and stays readable with the browser zoomed to 200 percent; it never wraps.",
+      "The group passes size, shape, invalid and disabled to children that leave them unset. A child's own prop wins.",
+      "Actions keep aria-disabled while the group is disabled, so they stay focusable and a Tooltip can say why.",
+      "While disabled the root carries aria-disabled, so the dimmed add on text reads as part of an inactive control (WCAG 1.4.3 exempts inactive components).",
+      "A group whose parts make one Latin value, such as https:// and a host, takes dir ltr in an Arabic page, so the prefix stays before the value. The action then sits at the right end.",
+      "A long add on shrinks to half the row and its text is cut at the end, so the control keeps room to type at 320px (WCAG 1.4.10). The full text stays in the control's description; keep add ons short."
+    ]
+  },
+  "content": {
+    "en": {
+      "addon": "A unit, a currency or a fixed part of the value: px, SAR, https://. Never words the label needs.",
+      "action": "A verb plus a noun: Copy link, Send invite. An IconButton label follows the same rule."
+    },
+    "ar": {
+      "addon": "وحدة أو عملة أو جزء ثابت من القيمة: ريال، px، https://",
+      "action": "فعل واسم: نسخ الرابط، إرسال الدعوة"
+    }
+  },
+  "tokens": [
+    "size.control.xs",
+    "size.control.sm",
+    "size.control.md",
+    "size.control.lg",
+    "space.xs",
+    "space.s",
+    "space.m",
+    "space.l",
+    "font.size.s",
+    "font.size.fixed-m",
+    "font.leading.snug",
+    "font.family.sans",
+    "radius.control",
+    "radius.pill",
+    "border.width.default",
+    "border.width.strong",
+    "color.border.control",
+    "color.bg.overlay-5",
+    "color.text.muted",
+    "color.focus.ring",
+    "color.focus.ring-on-primary-outer",
+    "color.focus.ring-on-primary-inner",
+    "opacity.disabled"
+  ],
+  "frameworks": {
+    "react": {
+      "status": "ready",
+      "behavior": "hand built, role group",
+      "example": "InputGroup.demo.tsx",
+      "note": "No motion of its own: the children keep theirs (the Input focus fade, the Button press). Parts are stamped on direct children: the control through rootProps, actions as a data-part prop."
+    },
+    "angular": {
+      "status": "planned"
+    },
+    "native": {
+      "status": "planned"
+    }
+  },
+  "styles": {
+    "studio": "The add on is a quiet overlay box with the control border. Joined parts read as one pill with square inner corners.",
+    "desk": "The same joined pill in Instrument Sans.",
+    "neutral": "Takes the tokens of the Neutral style, no recipe."
+  },
+  "mistakes": [
+    {
+      "wrong": "The add on text in the label: Price in SAR, with SAR again in the box",
+      "right": "Label Price, add on SAR"
+    },
+    {
+      "wrong": "aria-labelledby pointing at the add on, so the control is named https://",
+      "right": "The Field label names the control; the group links the add on as a description"
+    },
+    {
+      "wrong": "An InputGroup wrapped in a div inside another InputGroup",
+      "right": "Direct children only: the group stamps parts on its own children"
+    },
+    {
+      "wrong": "An InputGroup for a clear button in a search box",
+      "right": "SearchField"
+    },
+    {
+      "wrong": "A URL group in an Arabic page left in rtl, so the page shows the host before https://",
+      "right": "dir ltr on the InputGroup when its parts make one Latin value"
+    },
+    {
+      "wrong": "A Tooltip or another wrapper around an action, as a direct child",
+      "right": "Pass data-part action on the Button inside the wrapper, since the group reads the wrapper as the control"
+    }
+  ],
+  "since": "0.1.0"
+}
