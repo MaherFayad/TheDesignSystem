@@ -1,0 +1,102 @@
+/*
+ * CheckboxGroup: a fieldset with a legend, a description, the items and an
+ * error, in that DOM order. Source: GoBanana `TakedownForm.tsx` (a legend,
+ * then the boxes one per line) and Field.css in this repo (the label, the
+ * quiet description and the error with its icon).
+ *
+ * Private properties on the root (docs/contracts/anatomy.md, one
+ * convention), for recipes to override:
+ *   --_checkbox-group-gap        space between the legend, items and error
+ *   --_checkbox-group-item-gap   space between items (column gap: -item-gap-inline)
+ *   --_checkbox-group-indent     how far items sit in under a select all item
+ *   --_checkbox-group-fg         legend color, -fg-disabled when disabled
+ *
+ * The legend floats, so it lays out like any other child of the fieldset
+ * and the gap applies to it.
+ */
+@layer ds.base {
+  [data-ds='checkbox-group'] {
+    --_checkbox-group-gap: var(--ds-space-xs);
+    --_checkbox-group-item-gap: var(--ds-space-4xs);
+    --_checkbox-group-item-gap-inline: var(--ds-space-l);
+    --_checkbox-group-indent: calc(var(--ds-size-target-min) + var(--ds-space-3xs));
+    --_checkbox-group-fg: var(--ds-color-text-default);
+    --_checkbox-group-fg-disabled: var(--ds-color-text-muted);
+
+    display: flex;
+    flex-direction: column;
+    gap: var(--_checkbox-group-gap);
+    min-inline-size: 0;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    font-family: var(--ds-font-family-sans);
+  }
+
+  [data-ds='checkbox-group'][data-size='lg'] {
+    --_checkbox-group-indent: calc(var(--ds-size-control-lg) + var(--ds-space-3xs));
+  }
+
+  [data-ds='checkbox-group'] > [data-part='legend'] {
+    float: inline-start;
+    inline-size: 100%;
+    margin: 0;
+    padding: 0;
+    color: var(--_checkbox-group-fg);
+    font-size: var(--ds-font-size-s);
+    font-weight: var(--ds-font-weight-semibold);
+    line-height: var(--ds-font-leading-snug);
+    overflow-wrap: anywhere;
+  }
+
+  [data-ds='checkbox-group'] > [data-part='description'],
+  [data-ds='checkbox-group'] > [data-part='error'] {
+    margin: 0;
+    font-size: var(--ds-font-size-s);
+    line-height: var(--ds-font-leading-normal);
+    overflow-wrap: anywhere;
+  }
+
+  [data-ds='checkbox-group'] > [data-part='description'] {
+    color: var(--ds-color-text-muted);
+  }
+
+  /* The error says what to do. The icon keeps it from being color only. */
+  [data-ds='checkbox-group'] > [data-part='error'] {
+    display: flex;
+    align-items: start;
+    gap: var(--ds-space-2xs);
+    color: var(--ds-color-state-danger-text);
+  }
+
+  [data-ds='checkbox-group'] > [data-part='items'] {
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    gap: var(--_checkbox-group-item-gap);
+    min-inline-size: 0;
+  }
+
+  [data-ds='checkbox-group'][data-orientation='horizontal'] > [data-part='items'] {
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: start;
+    column-gap: var(--_checkbox-group-item-gap-inline);
+  }
+
+  /* Under a select all item, the items sit in by one box, so the parent reads as the parent. */
+  [data-ds='checkbox-group'][data-orientation='vertical'] > [data-part='items'] > [data-part='select-all'] ~ * {
+    margin-inline-start: var(--_checkbox-group-indent);
+  }
+
+  /* Disabled: the words stay readable; each item carries the disabled look. */
+  [data-ds='checkbox-group'][data-disabled] {
+    --_checkbox-group-fg: var(--_checkbox-group-fg-disabled);
+  }
+
+  @media (forced-colors: active) {
+    [data-ds='checkbox-group'][data-disabled] > [data-part='legend'] {
+      color: GrayText;
+    }
+  }
+}

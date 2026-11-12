@@ -9,6 +9,8 @@ export interface DemoRoute {
 
 export const routes: DemoRoute[] = [
   { name: 'Button', slug: 'button', load: () => import('../../../packages/react/src/components/Button/Button.demo') },
+  { name: 'Checkbox', slug: 'checkbox', load: () => import('../../../packages/react/src/components/Checkbox/Checkbox.demo') },
+  { name: 'CheckboxGroup', slug: 'checkbox-group', load: () => import('../../../packages/react/src/components/CheckboxGroup/CheckboxGroup.demo') },
   { name: 'Dialog', slug: 'dialog', load: () => import('../../../packages/react/src/components/Dialog/Dialog.demo') },
   { name: 'Field', slug: 'field', load: () => import('../../../packages/react/src/components/Field/Field.demo') },
   { name: 'Icon', slug: 'icon', load: () => import('../../../packages/react/src/components/Icon/Icon.demo') },
