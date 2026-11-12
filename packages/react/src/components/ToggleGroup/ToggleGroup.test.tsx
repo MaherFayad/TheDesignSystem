@@ -1,3 +1,5 @@
+import { readFileSync } from 'node:fs';
+import { join } from 'node:path';
 import { render, screen } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 import { createRef } from 'react';
@@ -258,5 +260,30 @@ describe('ToggleGroup', () => {
     const cases = Array.from(container.querySelectorAll('[data-demo-case]')).map((c) => c.getAttribute('data-demo-case'));
     expect(cases).toEqual(['variants', 'empty', 'one', 'many', 'too-many', 'long-text', 'long-arabic', 'disabled']);
     expect(container.querySelector('[title]')).toBeNull();
+  });
+});
+
+describe('ToggleGroup fix round', () => {
+  const css = readFileSync(join(process.cwd(), 'packages/css/src/components/ToggleGroup.css'), 'utf8');
+  const rule = (selector: string) => {
+    const at = css.indexOf(`${selector} {`);
+    return at < 0 ? '' : css.slice(at, css.indexOf('}', at));
+  };
+
+  // WCAG 1.4.10: an attached row never wraps, so at 320px its labels must
+  // wrap onto more lines instead of losing words to an ellipsis.
+  it('an attached item label wraps instead of ending in an ellipsis', () => {
+    const label = rule("[data-ds='toggle-group'][data-attached] > [data-part='item'] > [data-part='label']");
+    expect(label).toMatch(/white-space:\s*normal/);
+    expect(label).toMatch(/overflow-x:\s*visible/);
+    const item = rule("[data-ds='toggle-group'][data-attached] > [data-part='item']");
+    expect(item).toMatch(/block-size:\s*auto/);
+  });
+
+  // Arabic labels are noun form in white Saudi dialect, never an MSA verb phrase.
+  it('the Arabic filter labels are noun form', () => {
+    const { container } = render(<ToggleGroupDemo />);
+    expect(container.textContent).toContain('موعدها هالأسبوع');
+    expect(container.textContent).not.toContain('تنتهي هذا الأسبوع');
   });
 });

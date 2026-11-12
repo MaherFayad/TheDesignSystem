@@ -21,7 +21,7 @@ const filters = [
   'Starred',
 ];
 
-const filtersAr = ['مفتوحة', 'مسندة لي', 'فيها تعليقات', 'تنتهي هذا الأسبوع', 'متوقفة'];
+const filtersAr = ['مفتوحة', 'مسندة لي', 'فيها تعليقات', 'موعدها هالأسبوع', 'متوقفة'];
 
 /** The board views: list, grid and columns, as icon only items. */
 function ViewItems() {
