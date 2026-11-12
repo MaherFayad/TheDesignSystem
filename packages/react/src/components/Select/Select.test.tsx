@@ -205,13 +205,25 @@ describe('Select', () => {
     expect(data.get('sort')).toBe('owner');
   });
 
-  it('says so when there is no option', async () => {
+  it('with no option the list does not open and the trigger is described by the empty words', async () => {
     const user = userEvent.setup();
-    render(<Sort items={[]} empty="No statuses yet." />);
+    const onOpenChange = vi.fn();
+    render(<Sort items={[]} empty="No statuses yet." onOpenChange={onOpenChange} />);
+    const ids = trigger().getAttribute('aria-describedby')?.split(' ') ?? [];
+    expect(ids.map((i) => document.getElementById(i)?.textContent)).toContain('No statuses yet.');
     trigger().focus();
-    await user.keyboard('{Enter}');
-    await waitFor(() => expect(content()).not.toBeNull());
-    expect(content()?.querySelector('[data-part="empty"]')?.textContent).toBe('No statuses yet.');
+    for (const key of ['{Enter}', ' ', '{ArrowDown}']) await user.keyboard(key);
+    await user.click(trigger());
+    expect(content()).toBeNull();
+    expect(document.querySelector('[role="listbox"]')).toBeNull();
+    expect(trigger().getAttribute('aria-expanded')).toBe('false');
+    expect(onOpenChange).not.toHaveBeenCalledWith(true);
+  });
+
+  it('an empty group list counts as no option and uses the default words', () => {
+    render(<Sort items={[{ label: 'Done', options: [] }]} />);
+    const ids = trigger().getAttribute('aria-describedby')?.split(' ') ?? [];
+    expect(ids.map((i) => document.getElementById(i)?.textContent)).toContain('No options to choose from yet.');
   });
 
   it('controlled value follows the prop', () => {
