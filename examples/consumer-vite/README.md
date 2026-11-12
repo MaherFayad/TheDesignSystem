@@ -54,8 +54,8 @@ Pass a module class to a component through `className`. It lands on the
 component root (for Input, on the bordered box; the native input gets the
 other props).
 
-`src/vite-env.d.ts` declares the three CSS entry points, which have no type
-declarations of their own.
+Each CSS entry point carries a `types` condition, so TypeScript resolves the
+three imports with no declaration of your own.
 
 ## Theme and Toaster
 

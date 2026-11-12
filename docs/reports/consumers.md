@@ -63,6 +63,11 @@ a toast and Vite at 320px in Arabic with the dialog error.
 
 ## Problems found in the packages, with the smallest fix
 
+Status after order 1.0.d: problems 1, 2 and 3 are fixed in the packages and
+the example workarounds are gone (`next build --webpack` now builds). Problem
+5 waits on a root `overrides` entry (`"playwright-core": "1.63.0"`); the
+casts stay until then. Problem 6 moved to order 1.0.c1.
+
 1. **Webpack cannot resolve the Inter `url()`** (`next build --webpack`).
    `packages/styles/studio/fonts.css` writes
    `url('@fontsource-variable/inter/files/inter-latin-wght-normal.woff2')`.

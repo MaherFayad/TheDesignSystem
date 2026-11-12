@@ -52,8 +52,8 @@ layers always wins over layered CSS, so your rules beat a component's base
 rule without `!important`. If you use layers of your own, import the system
 first so its layer order is declared first.
 
-These imports have no type declarations. With TypeScript 6 declare them once
-(see `system-css.d.ts`).
+Each CSS entry point carries a `types` condition, so TypeScript resolves
+these imports with no declaration of your own.
 
 ## Theme and Toaster
 
@@ -80,6 +80,5 @@ These imports have no type declarations. With TypeScript 6 declare them once
   read in the layout, so the server render matches the client and nothing
   flashes. The switch writes the cookie and calls `router.refresh()`.
 - `agentRules: false` keeps `next dev` from writing an `AGENTS.md` here.
-- Built and tested with Turbopack, the Next 16 default. A webpack build
-  (`next build --webpack`) fails on the Inter `url()` in
-  `packages/styles/studio/fonts.css`; see `docs/reports/consumers.md`.
+- Built and tested with Turbopack, the Next 16 default. `next build
+  --webpack` builds too.

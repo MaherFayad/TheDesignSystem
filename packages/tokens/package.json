@@ -6,10 +6,19 @@
   "type": "module",
   "exports": {
     ".": "./dist/native/index.ts",
-    "./css": "./dist/css/tokens.css",
-    "./css/*": "./dist/css/*",
+    "./css": {
+      "types": "./css.d.ts",
+      "default": "./dist/css/tokens.css"
+    },
+    "./css/*": {
+      "types": "./css.d.ts",
+      "default": "./dist/css/*"
+    },
     "./native": "./dist/native/index.ts",
-    "./tailwind": "./dist/tailwind/theme.css",
+    "./tailwind": {
+      "types": "./css.d.ts",
+      "default": "./dist/tailwind/theme.css"
+    },
     "./figma/*": "./dist/figma/*",
     "./contract": "./src/contract.json"
   },

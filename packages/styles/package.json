@@ -5,12 +5,21 @@
   "license": "UNLICENSED",
   "type": "module",
   "exports": {
-    ".": "./index.css",
-    "./index.css": "./index.css",
+    ".": {
+      "types": "./css.d.ts",
+      "default": "./index.css"
+    },
+    "./index.css": {
+      "types": "./css.d.ts",
+      "default": "./index.css"
+    },
     "./*/style.json": "./*/style.json",
     "./*/icons": "./*/icons.ts",
     "./*/motion": "./*/motion.ts",
-    "./*": "./*/index.css",
+    "./*": {
+      "types": "./css.d.ts",
+      "default": "./*/index.css"
+    },
     "./registry": "./registry.gen.ts",
     "./studio/native/*": "./studio/native/*.ts",
     "./desk/native/*": "./desk/native/*.ts",

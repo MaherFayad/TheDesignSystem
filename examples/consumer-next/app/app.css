@@ -59,16 +59,6 @@ body {
   border-radius: var(--ds-radius-pill);
 }
 
-/*
- * Package gap, worked around here: a Button rendered as a link through
- * asChild keeps the browser's link underline, because Button.css does not
- * reset text-decoration-line on its root. This unlayered rule wins over the
- * system layers without !important.
- */
-.switch-group a[data-ds='button'] {
-  text-decoration-line: none;
-}
-
 .boards-panel {
   display: flex;
   flex-direction: column;
