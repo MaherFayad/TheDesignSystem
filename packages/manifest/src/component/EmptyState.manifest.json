@@ -1,0 +1,196 @@
+{
+  "name": "EmptyState",
+  "kind": "component",
+  "family": "containers",
+  "summary": "A place with no content yet that says what is missing, what to do next and how, with the action that does it.",
+  "useWhen": [
+    "A list, grid, table or panel that has no items yet, the first time someone opens it",
+    "A search or a filter that returns nothing, with live set so it is announced",
+    "A view that needs a first step from the person before it can show anything, such as connecting an account"
+  ],
+  "avoidWhen": [
+    "Something failed to load or save: that is an error, not an empty place",
+    "Content is still loading",
+    "A blocking message that needs a decision",
+    "A one word note inside a row or a field, such as None: write it as plain text"
+  ],
+  "insteadUse": {
+    "Something failed": "ErrorState",
+    "Content is loading": "Skeleton",
+    "A decision before going on": "Dialog",
+    "A message about the whole page": "Banner"
+  },
+  "anatomy": [
+    "root",
+    "icon",
+    "title",
+    "body",
+    "actions"
+  ],
+  "slots": {
+    "icon": {
+      "accepts": [
+        "Icon"
+      ],
+      "max": 1
+    },
+    "title": {
+      "accepts": "text",
+      "min": 1,
+      "max": 1
+    },
+    "body": {
+      "accepts": "any"
+    },
+    "actions": {
+      "accepts": [
+        "Button"
+      ],
+      "max": 2
+    }
+  },
+  "props": {
+    "size": {
+      "type": [
+        "sm",
+        "md",
+        "lg"
+      ],
+      "default": "md",
+      "description": "sm inside a list or a card, md for a panel, lg for a whole view. Sets the block padding (space xl, 6xl, 11xl), the icon box and the type sizes. The inline padding stays at space l or xl, so a narrow column keeps its width."
+    },
+    "icon": {
+      "type": "node",
+      "description": "A system icon name or a node, in a square on surface 2. 16px at sm, 24px at md and lg. Hidden from assistive tech."
+    },
+    "title": {
+      "type": "node",
+      "required": true,
+      "description": "What is empty, as a heading: No boards yet."
+    },
+    "headingLevel": {
+      "type": [
+        "2",
+        "3",
+        "4",
+        "5",
+        "6"
+      ],
+      "default": "3",
+      "description": "The heading level of the title."
+    },
+    "children": {
+      "type": "node",
+      "description": "The body: what to do next, naming the mechanism (Create a board, or drag a file onto this page)."
+    },
+    "actions": {
+      "type": "node",
+      "description": "One or two Buttons. The first is the main action, a verb plus a noun, usually tone accent with emphasis solid."
+    },
+    "live": {
+      "type": "boolean",
+      "default": false,
+      "description": "Adds role status so the empty state is announced when it replaces content, such as a search with no results. Off for a place that is empty on page load."
+    }
+  },
+  "states": [],
+  "a11y": {
+    "role": "None by default; status when live. The title is a heading.",
+    "focus": "Not focusable. Tab reaches the actions, in order.",
+    "keys": {
+      "Tab": "Moves to the first action, then the next"
+    },
+    "announce": "Read in order: title, body, actions. With live, the whole region (actions included) is announced once when it appears. Some screen readers miss a live region that mounts with its content; for a sure announcement, mount the EmptyState inside a live region that is already on the page.",
+    "native": {
+      "accessibilityRole": "none",
+      "accessibilityState": []
+    },
+    "notes": [
+      "The icon is decoration and hidden; the title says what is empty.",
+      "Keep live off for a place that is empty when the page opens, so nothing is announced twice.",
+      "Shares icon, title, body and actions with ErrorState, which adds details and its own states."
+    ]
+  },
+  "content": {
+    "en": {
+      "title": "Name what is missing, sentence case, no end period: No boards yet. For a search: No boards match Spring 2027.",
+      "body": "Say what to do next and name the mechanism: Create a board to plan a project, or drag a file onto this page to import it. No blame, no exclamation marks.",
+      "actions": "A verb plus a noun: Create board, Clear search. Never OK or Continue."
+    },
+    "ar": {
+      "title": "White Saudi dialect, no diacritics: ما فيه لوحات.",
+      "body": "Say what to do next plainly, Western digits.",
+      "actions": "Noun form labels: إنشاء لوحة، استيراد ملف."
+    }
+  },
+  "tokens": [
+    "space.xl",
+    "space.6xl",
+    "space.11xl",
+    "space.12xl",
+    "space.xs",
+    "space.2xs",
+    "space.s",
+    "space.m",
+    "size.control.md",
+    "size.control.lg",
+    "radius.panel",
+    "radius.sm",
+    "border.width.default",
+    "color.bg.surface-2",
+    "color.text.default",
+    "color.text.bright",
+    "color.text.muted",
+    "font.family.sans",
+    "font.size.s",
+    "font.size.m",
+    "font.size.l",
+    "font.size.xl",
+    "font.size.4xl",
+    "font.weight.semibold",
+    "font.leading.snug",
+    "font.leading.normal"
+  ],
+  "motion": "fade-rise",
+  "frameworks": {
+    "react": {
+      "status": "ready",
+      "behavior": "hand built",
+      "example": "EmptyState.demo.tsx",
+      "note": "No motion of its own: fade-rise names how a parent brings it in, from the 1.11 catalog list."
+    },
+    "angular": {
+      "status": "planned",
+      "note": "dsEmptyState on the host with icon, title and headingLevel inputs; body and actions projected. EmptyState.css as is."
+    },
+    "native": {
+      "status": "planned",
+      "note": "A centered View with the same parts; the title with accessibilityRole header."
+    }
+  },
+  "styles": {
+    "studio": "Centered, no surface of its own; the icon sits in a surface 2 square with radius.panel.",
+    "desk": "The same on Desk's surfaces and type. No recipe.",
+    "neutral": "Planned: no recipe expected.",
+    "liquid": "Planned: no recipe expected."
+  },
+  "mistakes": [
+    {
+      "wrong": "A title that only says Nothing here",
+      "right": "Name what is missing and what to do: No boards yet, then Create a board"
+    },
+    {
+      "wrong": "An empty state shown while the data is still loading",
+      "right": "Skeleton until the request ends, then the empty state"
+    },
+    {
+      "wrong": "An empty state for a failed request",
+      "right": "ErrorState with a way to try again"
+    },
+    {
+      "wrong": "Three or more actions of equal weight",
+      "right": "One main action, at most one quiet one"
+    }
+  ],
+  "since": "0.1.0"
+}
