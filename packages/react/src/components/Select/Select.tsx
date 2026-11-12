@@ -43,7 +43,7 @@ import { Select as RadixSelect } from 'radix-ui';
 import { Icon, type IconName } from '@the-system/icons/react';
 import type { Shape, Size } from '@the-system/shared';
 import { useTheme } from '../../theme/hooks';
-import { useFieldControl } from '../Field/Field';
+import { useField, useFieldControl } from '../Field/Field';
 import { flattenListBoxItems, isListBoxSection, listBoxOptionId, type ListBoxItem, type ListBoxOption } from '../ListBox';
 import { Spinner } from '../Spinner';
 import { useControllable } from '../../internal/useControllable';
@@ -94,7 +94,7 @@ export interface SelectProps
   readOnly?: boolean;
   /** Read as required (aria-required). Inside a Field it follows the Field. */
   required?: boolean;
-  /** Options are on their way: the icon is a spinner, aria-busy is set, the list says so. */
+  /** Options are on their way: the icon is a spinner, aria-busy is set, the trigger is described by loadingLabel and the list does not open. */
   loading?: boolean;
   /** Read and shown while loading. Default "Loading options". */
   loadingLabel?: string;
@@ -134,6 +134,7 @@ export function Select({
   loadingLabel,
   empty,
   name,
+  form,
   id,
   'aria-describedby': describedBy,
   onKeyDown,
@@ -141,7 +142,17 @@ export function Select({
   ref,
   ...rest
 }: SelectProps) {
-  const control = useFieldControl({ id, 'aria-describedby': describedBy, invalid, disabled, readOnly, required });
+  const field = useField();
+  const loadingId = `ds-select-loading-${useId().replace(/:/g, '')}`;
+  const control = useFieldControl({
+    id,
+    // While loading, the trigger is described by the loading words (the list cannot open to say them).
+    'aria-describedby': [describedBy, loading ? loadingId : undefined].filter(Boolean).join(' ') || undefined,
+    invalid,
+    disabled,
+    readOnly,
+    required,
+  });
   const { readOnly: controlReadOnly, disabled: controlDisabled, ...controlAttrs } = control;
   const lang: 'en' | 'ar' = useTheme().lang.startsWith('ar') ? 'ar' : 'en';
   const t = words[lang];
@@ -186,6 +197,7 @@ export function Select({
     );
   };
 
+  let drawn = 0;
   const content = (
     <RadixSelect.Content
       position="popper"
@@ -195,6 +207,9 @@ export function Select({
       collisionPadding={VIEWPORT_GUTTER}
       data-ds="select"
       data-part="content"
+      aria-labelledby={rest['aria-labelledby'] ?? (rest['aria-label'] ? undefined : field?.labelId)}
+      aria-label={rest['aria-label']}
+      aria-describedby={options.length === 0 ? `${baseId}-empty` : undefined}
       data-size={listSize}
     >
       <RadixSelect.ScrollUpButton data-part="scroll-up">
@@ -202,16 +217,22 @@ export function Select({
       </RadixSelect.ScrollUpButton>
       <RadixSelect.Viewport data-part="viewport">
         {options.length === 0 && (
-          <div data-part="empty" role="presentation">
+          <div data-part="empty" role="presentation" id={`${baseId}-empty`}>
             {loading ? (loadingLabel ?? t.loading) : (empty ?? t.empty)}
           </div>
         )}
-        {items.map((item, i) => {
-          if (!isListBoxSection(item)) return renderItem(item);
+        {items.map((item) => {
+          if (!isListBoxSection(item)) {
+            drawn += 1;
+            return renderItem(item);
+          }
           if (item.options.length === 0) return null;
           const key = item.key ?? item.label;
+          // A separator only between drawn groups: an empty group earlier in the list draws none.
+          const first = drawn === 0;
+          drawn += 1;
           return [
-            i > 0 ? <RadixSelect.Separator key={`separator-${key}`} data-part="separator" /> : null,
+            !first ? <RadixSelect.Separator key={`separator-${key}`} data-part="separator" /> : null,
             <RadixSelect.Group key={`group-${key}`} data-part="group">
               <RadixSelect.Label data-part="label">{item.label}</RadixSelect.Label>
               {item.options.map(renderItem)}
@@ -238,6 +259,7 @@ export function Select({
       disabled={controlDisabled}
       required={Boolean(control['aria-required'])}
       name={name}
+      form={form}
     >
       <RadixSelect.Trigger
         {...rest}
@@ -260,8 +282,11 @@ export function Select({
         }}
         onKeyDown={(event) => {
           onKeyDown?.(event);
-          // Read only and loading: no key opens the list or changes the value by typeahead. Tab still moves on.
-          if (inert && event.key !== 'Tab') event.preventDefault();
+          // Read only and loading: no key opens the list or changes the value by typeahead.
+          // Other keys (Tab, browser shortcuts with a modifier) pass.
+          const opens = ['Enter', ' ', 'ArrowDown', 'ArrowUp', 'Home', 'End'].includes(event.key);
+          const types = event.key.length === 1 && !event.ctrlKey && !event.metaKey && !event.altKey;
+          if (inert && (opens || types)) event.preventDefault();
         }}
       >
         <RadixSelect.Value data-part="value" placeholder={placeholder ?? t.placeholder} />
@@ -269,6 +294,11 @@ export function Select({
           {loading ? <Spinner size="sm" decorative /> : <Icon name="chevrons-up-down" size="md" />}
         </RadixSelect.Icon>
       </RadixSelect.Trigger>
+      {loading && (
+        <span id={loadingId} hidden>
+          {loadingLabel ?? t.loading}
+        </span>
+      )}
       {shown && typeof document !== 'undefined' ? createPortal(layer(content), document.body) : content}
     </RadixSelect.Root>
   );

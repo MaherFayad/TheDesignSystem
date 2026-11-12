@@ -178,6 +178,33 @@ describe('Select', () => {
     expect(content()).toBeNull();
   });
 
+  it('loading: the trigger is described by the loading words', () => {
+    render(<Sort loading loadingLabel="Loading statuses" />);
+    const ids = trigger().getAttribute('aria-describedby')?.split(' ') ?? [];
+    expect(ids.map((i) => document.getElementById(i)?.textContent)).toContain('Loading statuses');
+  });
+
+  it('names the open list with the Field label', async () => {
+    const user = userEvent.setup();
+    render(<Sort />);
+    const root = trigger();
+    root.focus();
+    await user.keyboard('{Enter}');
+    await waitFor(() => expect(content()).not.toBeNull());
+    const labelId = content()?.getAttribute('aria-labelledby');
+    expect(labelId && document.getElementById(labelId)?.textContent).toBe('Sort by');
+  });
+
+  it('submits the value with name in a form', () => {
+    const { container } = render(
+      <form>
+        <Sort name="sort" defaultValue="owner" />
+      </form>,
+    );
+    const data = new FormData(container.querySelector('form') as HTMLFormElement);
+    expect(data.get('sort')).toBe('owner');
+  });
+
   it('says so when there is no option', async () => {
     const user = userEvent.setup();
     render(<Sort items={[]} empty="No statuses yet." />);

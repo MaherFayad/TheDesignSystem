@@ -50,6 +50,8 @@
     --_select-border-color-focus: var(--ds-color-border-control-hover);
     --_select-border-color-invalid: var(--ds-color-state-danger-text);
     --_select-ring: var(--ds-elevation-input-focus), var(--ds-focus-shadow-ring);
+    --_select-border-width: var(--ds-border-width-default);
+    --_select-border-style: solid;
 
     position: relative;
     box-sizing: border-box;
@@ -63,7 +65,7 @@
     margin: 0;
     padding-block: 0;
     padding-inline: var(--_select-padding-inline) var(--ds-space-xs);
-    border: var(--ds-border-width-default) solid var(--_select-border-color);
+    border: var(--_select-border-width) var(--_select-border-style) var(--_select-border-color);
     border-radius: var(--_select-radius);
     background-color: var(--_select-bg);
     color: var(--_select-fg);
@@ -132,8 +134,11 @@
   }
 
   /* Focus: the glow and the ring. The transparent outline shows in forced colors mode. */
-  [data-ds='select']:not([data-part]):focus-visible,
   [data-ds='select']:not([data-part])[aria-expanded='true'] {
+    --_select-border-color: var(--_select-border-color-focus);
+  }
+
+  [data-ds='select']:not([data-part]):focus-visible {
     --_select-border-color: var(--_select-border-color-focus);
 
     outline: var(--ds-border-width-strong) solid transparent;
@@ -152,8 +157,8 @@
 
   [data-ds='select'][data-readonly]:not([data-part]) {
     --_select-bg: var(--ds-color-bg-overlay-5);
+    --_select-border-style: dashed;
 
-    border-style: dashed;
     cursor: default;
   }
 
@@ -422,6 +427,11 @@
   @media (forced-colors: active) {
     [data-ds='select']:not([data-part])::before {
       display: none;
+    }
+
+    /* Invalid is a system color too, so it is drawn heavier, never color alone. */
+    [data-ds='select'][data-invalid]:not([data-part]) {
+      --_select-border-width: var(--ds-border-width-strong);
     }
 
     [data-ds='select'][data-disabled]:not([data-part]) {
