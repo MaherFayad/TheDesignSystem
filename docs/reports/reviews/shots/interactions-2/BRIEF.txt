@@ -1,0 +1,17 @@
+Shared brief for the measuring reviewers of the ds-qa review of order 1.22.
+(Kept as evidence of the method. Not a work order.)
+
+Repo /home/user/TheDesignSystem, branch claude/ds-review-interactions-2.
+React gallery dev server: http://127.0.0.1:5190 (already running; if it is
+down, restart it: cd apps/gallery-react && PORT=5190 ../../node_modules/.bin/vite --host 127.0.0.1).
+Stage only page: /interactions?focus=<id>&style=<studio|desk|neutral>&scheme=<light|dark>&chrome=0
+Arabic RTL: add &dir=rtl&lang=ar. The full list page is /interactions?style=...&chrome=0
+(it has the reduce switch [data-interactions-reduce] and per card [data-interaction-replay]).
+Each stage marks its main control with [data-interaction-trigger].
+Probe: docs/reports/reviews/shots/interactions-2/probe.cjs (open, sample). It
+samples document.getAnimations() per frame and the trigger's state attributes.
+Read it, extend it in your own script if you need (do not edit probe.cjs).
+Registry: packages/motion/src/interactions/<family>.ts (beats, styles, reduced, off).
+Stages: apps/gallery-react/src/interactions/<family>.tsx.
+Round 1 review (method model and the round 1 baseline durations):
+docs/reports/reviews/interactions.md.
