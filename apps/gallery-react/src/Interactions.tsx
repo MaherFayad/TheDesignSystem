@@ -74,13 +74,30 @@ function PointerDot() {
   return <div data-gallery="pointer-dot" ref={ref} aria-hidden="true" />;
 }
 
+/** The largest zoom, at most 2.5, at which the stage fits the viewport with a margin. */
+const FOCUS_ZOOM = 2.5;
+
 function FocusStage({ id }: { id: string }) {
   const stage = stages[id];
+  const ref = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const fit = () => {
+      el.style.zoom = '1';
+      const r = el.getBoundingClientRect();
+      const z = Math.min(FOCUS_ZOOM, (0.9 * window.innerWidth) / Math.max(1, r.width), (0.85 * window.innerHeight) / Math.max(1, r.height));
+      el.style.zoom = String(Math.max(1, Math.round(z * 100) / 100));
+    };
+    fit();
+    window.addEventListener('resize', fit);
+    return () => window.removeEventListener('resize', fit);
+  }, []);
   return (
     <TooltipProvider>
       <div data-gallery="interactions-focus" data-focus={id}>
         <style>{recipes}</style>
-        <div data-gallery="interactions-focus-stage" data-interaction-stage="">
+        <div data-gallery="interactions-focus-stage" data-interaction-stage="" ref={ref}>
           {stage ? stage() : <p>No stage for {id}.</p>}
         </div>
         <PointerDot />

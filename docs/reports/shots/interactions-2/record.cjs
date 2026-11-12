@@ -84,9 +84,20 @@ async function recordOne(browser, row) {
   const at = loc ? await centre(loc) : null;
   if (at) {
     // Approach, hover, press twice (out and back), then the keyboard path.
-    await page.mouse.move(at.x, at.y, { steps: 20 });
+    // Hover: sweep across up to four items of the stage (a hover that follows
+    // the pointer shows), then rest on the control.
+    const items = page.locator("[data-interaction-stage] :is(button, a[href], [role='option'], [role='menuitem'], [role='tab'], [role='radio'], [role='switch'], li, input)");
+    const n = Math.min(4, await items.count());
     marks.push(Date.now() - t0);
-    await wait(page, 600);
+    for (let i = 0; i < n; i++) {
+      const c = (await items.nth(i).isVisible()) ? await centre(items.nth(i)) : null;
+      if (c && c.y < SIZE.height && c.x < SIZE.width) {
+        await page.mouse.move(c.x, c.y, { steps: 10 });
+        await wait(page, 260);
+      }
+    }
+    await page.mouse.move(at.x, at.y, { steps: 12 });
+    await wait(page, 500);
     await press(page, at, marks, t0);
     // A press may have opened an overlay that now covers the control: let Escape close it first.
     await page.keyboard.press('Escape');
