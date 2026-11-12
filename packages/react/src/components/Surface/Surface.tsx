@@ -10,6 +10,7 @@
 //
 // Every look is a data attribute the shared CSS reads (Surface.css), so the
 // Angular port stamps the same attributes. No inline style.
+import type { SpaceStep } from '@the-system/shared';
 import type { HTMLAttributes, Ref } from 'react';
 
 /** The surface step: `body` is the page, 1 to 5 step up from it. Numbers or the same digits as strings. */
@@ -18,26 +19,8 @@ export type SurfaceLevel = 'body' | 1 | 2 | 3 | 4 | 5 | '1' | '2' | '3' | '4' | 
 export type SurfaceElevation = 'none' | 'card' | 'panel';
 /** A radius token name, or none. */
 export type SurfaceRadius = 'none' | 'xs' | 'sm' | 'field' | 'control' | 'panel' | 'card' | 'window' | 'sheet';
-/** A space token step, or none. */
-export type SurfacePadding =
-  | 'none'
-  | '2xs'
-  | 'xs'
-  | 's'
-  | 'm'
-  | 'l'
-  | 'xl'
-  | '2xl'
-  | '3xl'
-  | '4xl'
-  | '5xl'
-  | '6xl'
-  | '7xl'
-  | '8xl'
-  | '9xl'
-  | '10xl'
-  | '11xl'
-  | '12xl';
+/** A space token step, or none. The shared steps from 2xs up. */
+export type SurfacePadding = Exclude<SpaceStep, '4xs' | '3xs'>;
 /** The element. Pick the one that says what the box is; div says nothing. */
 export type SurfaceElement = 'div' | 'section' | 'article' | 'aside' | 'header' | 'footer' | 'figure' | 'li';
 

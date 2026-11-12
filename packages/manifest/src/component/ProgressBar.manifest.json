@@ -119,13 +119,12 @@
     "duration.shimmer",
     "ease.standard"
   ],
-  "motion": "spinner",
   "frameworks": {
     "react": {
       "status": "ready",
       "behavior": "radix:Progress",
       "example": "ProgressBar.demo.tsx",
-      "note": "Value changes ease the scaleX transform over duration.slow. The indeterminate loop is named after the spinner pattern of the 1.11 catalog (the looping busy form) until the catalog has a bar form. Values are formatted with Intl.NumberFormat and Western digits in a private helper (format.ts) until packages/shared/src/number.ts lands."
+      "note": "Value changes ease the scaleX transform over duration.slow. No catalog pattern: the indeterminate slide is a keyframe in ProgressBar.css until the catalog has a bar slide (a request to the motion owner). Values are formatted with Intl.NumberFormat and Western digits in a private helper (format.ts) until packages/shared/src/number.ts lands."
     },
     "angular": {
       "status": "planned"

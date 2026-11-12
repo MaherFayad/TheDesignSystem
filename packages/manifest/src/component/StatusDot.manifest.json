@@ -92,9 +92,9 @@
     "duration.shimmer",
     "ease.out"
   ],
-  "motion": "thinking",
   "frameworks": {
-    "react": { "status": "ready", "behavior": "hand built", "example": "StatusDot.demo.tsx" },
+    "react": { "status": "ready", "behavior": "hand built", "example": "StatusDot.demo.tsx",
+      "note": "Motion: no catalog pattern. The pulse (a ring that grows and fades, three times) is a keyframe in StatusDot.css until the catalog has a pulse pattern (a request to the motion owner); thinking is three bouncing dots, not this." },
     "angular": { "status": "planned", "behavior": "hand built" },
     "native": { "status": "planned", "behavior": "hand built", "note": "A View dot and a Text label; the pulse through Reanimated, off under reduce motion." }
   },

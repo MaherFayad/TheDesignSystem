@@ -104,7 +104,7 @@ import { IconButton } from '../IconButton';
 import { isInsideToaster } from '../Toast/isInsideToaster';
 import { TitleBar } from '../TitleBar';
 import { WindowControls } from '../WindowControls';
-import { useControllable } from '../Window/useControllable';
+import { useControllable } from '../../internal/useControllable';
 
 /** Overlay sizes (the anatomy contract adds xl and 2xl for overlays). */
 export type DialogSize = Extract<OverlaySize, 'sm' | 'md' | 'lg' | 'xl' | '2xl'>;

@@ -18,7 +18,7 @@
  * Motion: the fade-rise pattern plays once when an alert mounts, transform
  * and opacity only. Under reduced motion it is none.
  *
- * Inside a solid alert the nested Buttons and the close IconButton take the
+ * Inside a solid alert the nested Buttons and the close CloseButton take the
  * alert's ink through their own private --_button-* properties, so their
  * text keeps its contrast on the tone fill.
  */
@@ -126,7 +126,7 @@
     margin-block-start: var(--ds-space-s);
   }
 
-  /* The close button is an IconButton carrying data-part="close". */
+  /* The close button is a CloseButton carrying data-part="close". */
   [data-ds='alert'] > [data-part='close'] {
     grid-area: close;
     /* Pull the 24px target into the padding, so the box does not grow for it. */
@@ -214,19 +214,19 @@
     --_button-decoration: var(--_alert-tone-on-solid);
   }
 
-  [data-ds='alert'][data-emphasis='solid'] > [data-ds='icon-button'][data-part='close'] {
+  [data-ds='alert'][data-emphasis='solid'] > [data-ds='close-button'][data-part='close'] {
     --_button-ring: var(--ds-focus-shadow-primary);
     --_button-bg: transparent;
     --_button-fg: var(--_alert-tone-on-solid);
   }
 
   [data-ds='alert'][data-emphasis='solid'] > [data-part='actions'] [data-ds='button']:hover:not([data-disabled], [data-loading]),
-  [data-ds='alert'][data-emphasis='solid'] > [data-ds='icon-button'][data-part='close']:hover:not([data-disabled], [data-loading]) {
+  [data-ds='alert'][data-emphasis='solid'] > [data-ds='close-button'][data-part='close']:hover:not([data-disabled], [data-loading]) {
     --_button-bg: color-mix(in srgb, var(--_alert-tone-on-solid) 12%, transparent);
   }
 
   [data-ds='alert'][data-emphasis='solid'] > [data-part='actions'] [data-ds='button']:active:not([data-disabled], [data-loading]),
-  [data-ds='alert'][data-emphasis='solid'] > [data-ds='icon-button'][data-part='close']:active:not([data-disabled], [data-loading]) {
+  [data-ds='alert'][data-emphasis='solid'] > [data-ds='close-button'][data-part='close']:active:not([data-disabled], [data-loading]) {
     --_button-bg: color-mix(in srgb, var(--_alert-tone-on-solid) 20%, transparent);
   }
 

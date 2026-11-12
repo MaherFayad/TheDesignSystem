@@ -15,8 +15,8 @@ import {
   type Type,
 } from '@angular/core';
 import { NgComponentOutlet } from '@angular/common';
-import { DEFAULT_STYLE, DsTheme, DsThemeService, applyDocumentTheme, styleIds } from '@the-system/angular';
-import { axisControls, axisQuery, nameOf, readAxes, readCase } from './axes';
+import { DsTheme, DsThemeService, applyDocumentTheme, styleIds } from '@the-system/angular';
+import { GALLERY_STYLE, axisControls, axisQuery, nameOf, readAxes, readCase } from './axes';
 import { routes } from './routes.gen';
 
 const EVENT = 'gallery:navigate';
@@ -154,7 +154,10 @@ export class App {
     const s = this.asked().style;
     return s !== undefined && !styleIds.includes(s) ? s : undefined;
   });
-  protected readonly axes = computed(() => (this.unknownStyle() ? { ...this.asked(), style: DEFAULT_STYLE } : this.asked()));
+  // No style asked, or one not in the registry: the gallery shows GALLERY_STYLE.
+  protected readonly axes = computed(() =>
+    this.asked().style === undefined || this.unknownStyle() ? { ...this.asked(), style: GALLERY_STYLE } : this.asked(),
+  );
   protected readonly chrome = computed(() => this.params().get('chrome') !== '0');
   protected readonly caseId = computed(() => readCase(this.params()));
   protected readonly query = computed(() => axisQuery(this.params()));
@@ -180,7 +183,7 @@ export class App {
   });
   protected readonly loaded = signal<Record<string, Type<unknown>>>({});
   protected readonly failed = signal<string | null>(null);
-  protected readonly defaultStyle = DEFAULT_STYLE;
+  protected readonly defaultStyle = GALLERY_STYLE;
   private readonly stage = viewChild.required<ElementRef<HTMLElement>>('stage');
   private caseStyle: HTMLStyleElement | null = null;
 

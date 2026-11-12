@@ -59,7 +59,7 @@ Every test title starts with the component name.
 | `anatomy` | **anatomy**: a root exists; every part except `root` is found as `[data-part]` owned by some root; no owned `data-part` outside the anatomy; no root carries `data-part="root"` | every style, dark, en ltr |
 | `contract.optionalParts`, `style.json` `optionalParts[<kebab>]` | parts that may be missing; a part a style pack lists is required in that style and optional in the others | anatomy |
 | `props.size`, `props.tone`, `props.emphasis`, `props.shape` | **variant attributes**: manifest values are shared words; every root value is a shared word and is in the manifest; the `variants` case shows every manifest value at least once | default style, dark, en ltr |
-| `states` | **state attributes**: boolean states (`data-disabled`, `data-loading`, `data-invalid`, `data-readonly`, `data-selected`, `data-dragging`, plus any other `data-*` in `states` except `data-state` and `data-orientation`) have an empty value; `data-state` values are in `states`; no state class (`is-*`, `*--disabled`, `active`, `disabled`, `selected`, `loading` and similar) on roots and parts | default style, dark, en ltr |
+| `states` | **state attributes**: boolean states (`data-disabled`, `data-loading`, `data-invalid`, `data-readonly`, `data-selected`, `data-dragging`, plus any other `data-*` in `states` except `data-state`, `data-orientation` and valued entries) have an empty value; a valued state written `data-<name>=<a>|<b>` in `states` (for example `data-level=low|medium|high`) carries one of its values; `data-state` values are in `states`; no state class (`is-*`, `*--disabled`, `active`, `disabled`, `selected`, `loading` and similar) on roots and parts | default style, dark, en ltr |
 | `a11y.keys` | **keyboard map**, one generic check per key (below) | default style, dark, en ltr |
 | (always) | disabled roots are out of the tab order or carry `aria-disabled="true"` | keyboard map |
 | (always) | **target size**: every interactive element in a demo case, and in every root a trigger opens, is at least 24 by 24 CSS px | every style and every density (compact, default, comfortable), dark, en ltr; overlays also with each trigger in the variants case open, density default |
@@ -148,7 +148,7 @@ Under `contract` in the manifest:
 | `skipAxeRules` | string list | Axe rule ids to skip, with the reason in the manifest's notes |
 | `keys` | object, key name to hint | A key check the generic ones do not cover (arrow keys, Home, End) |
 
-`keys` hint shape (not in `schema.json` yet; the suite works without it):
+`keys` hint shape (`schema.json` checks it):
 
 ```json
 "contract": {
@@ -161,6 +161,9 @@ Under `contract` in the manifest:
 - `focus`: a selector inside the demo to focus first. Default: the first
   enabled root, or the first tab stop inside it.
 - `case`: a demo case id to look in. Default: the whole demo.
+- `physical`: for `moves` only. The arrow names a screen direction, so
+  ArrowRight moves to the right in rtl too. Set it for a positioned object
+  (a Window) whose arrows move what the person sees. Default false.
 - `expect`:
   - `focus-moves`: the focused element changes.
   - `value-changes`: the focused value or `aria-valuenow` changes.

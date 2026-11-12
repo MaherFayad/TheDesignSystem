@@ -465,7 +465,7 @@
       "angular": {
         "status": "planned",
         "behavior": "hand built",
-        "note": "The same DOM on Alert.css; the close part becomes CloseButton when it lands."
+        "note": "The same DOM on Alert.css; the close part is a CloseButton."
       },
       "native": {
         "status": "planned",
@@ -1402,13 +1402,12 @@
       "duration.roll",
       "ease.reveal"
     ],
-    "motion": "press",
     "frameworks": {
       "react": {
         "status": "ready",
         "behavior": "native button, radix:Slot",
         "example": "Button.demo.tsx",
-        "note": "Motion: press, named from the pattern catalog that arrives in wave 1. Today: instant color swaps, the spinner, and the Desk roll label."
+        "note": "Motion: no catalog pattern. Press feedback is an instant color swap; the spinner turn, the hover veil fade and the Desk roll label are component CSS. A press pattern (scale.press, spring.press) is a request to the motion owner."
       },
       "angular": {
         "status": "ready",
@@ -5221,13 +5220,12 @@
       "duration.spin",
       "ease.default"
     ],
-    "motion": "press",
     "frameworks": {
       "react": {
         "status": "ready",
         "behavior": "native button, radix:Slot",
         "example": "IconButton.demo.tsx",
-        "note": "Motion: press, named from the pattern catalog that arrives in wave 1. Today: instant color swaps, the spinner, and the Desk roll label."
+        "note": "Motion: no catalog pattern. Press feedback is an instant color swap; the spinner turn and the hover veil fade are component CSS. A press pattern (scale.press, spring.press) is a request to the motion owner."
       },
       "angular": {
         "status": "ready",
@@ -5449,12 +5447,12 @@
       "color.bg.surface",
       "radius.xs"
     ],
-    "motion": "fade",
     "frameworks": {
       "react": {
         "status": "ready",
         "behavior": "native input",
-        "example": "Input.demo.tsx"
+        "example": "Input.demo.tsx",
+        "note": "Motion: no catalog pattern. Only the focus glow fades (an opacity transition in Input.css); fade-rise would also rise, so it is not named."
       },
       "angular": {
         "status": "planned"
@@ -6179,8 +6177,8 @@
         "description": "(value, min, max) => string for the visible value and aria-valuetext: 72 GB of 100 GB. Default: a whole percent of the range, rounded down, Western digits."
       },
       "levelLabels": {
-        "type": "string",
-        "description": "An object of words per level, { low, medium, high }, said after the value: Almost full. Default Low, Medium, High; Arabic منخفض، متوسط، مرتفع under lang ar."
+        "type": "object",
+        "description": "Words per level, { low, medium, high }, each optional, said after the value: Almost full. Default Low, Medium, High; Arabic منخفض، متوسط، مرتفع under lang ar."
       },
       "showLevel": {
         "type": "boolean",
@@ -6205,7 +6203,9 @@
         "description": "Track thickness 4, 8 and 12 px; the text steps from font.size.xs to m."
       }
     },
-    "states": [],
+    "states": [
+      "data-level=low|medium|high"
+    ],
     "a11y": {
       "role": "meter, with aria-valuenow, aria-valuemin, aria-valuemax and aria-valuetext",
       "focus": "Never focusable.",
@@ -6216,7 +6216,7 @@
         "accessibilityState": []
       },
       "notes": [
-        "data-level on the root is low, medium or high. It is a valued attribute, so it is not listed in states: the contract suite reads every data-* entry there as a boolean (see the lane 5B report).",
+        "data-level on the root is low, medium or high: a valued state, listed in states as data-level=low|medium|high so the contract suite checks its values.",
         "The level is in data-level, in the visible value text and in aria-valuetext, never only in the color.",
         "Thresholds follow the HTML meter: low and high are clamped into the range, and high is never below low.",
         "The indicator scales from the inline start: it fills from the right in Arabic.",
@@ -6262,13 +6262,12 @@
       "duration.slow",
       "ease.standard"
     ],
-    "motion": "number-roll",
     "frameworks": {
       "react": {
         "status": "ready",
         "behavior": "hand built, role meter",
         "example": "Meter.demo.tsx",
-        "note": "Level and tone logic in level.ts (pure, to move to packages/shared). Values formatted by the ProgressBar format.ts helper until packages/shared/src/number.ts lands. Motion: a value change eases the scaleX transform over duration.slow; number-roll names that change until the 1.11 catalog has a fill pattern."
+        "note": "Level and tone logic in packages/shared/src/meter.ts (pure, shared with Angular). Values formatted by the ProgressBar format.ts helper until packages/shared/src/number.ts lands. Motion: no catalog pattern. A value change eases the scaleX transform over duration.slow in Meter.css until the catalog has a fill pattern (a request to the motion owner)."
       },
       "angular": {
         "status": "planned"
@@ -6470,12 +6469,12 @@
       "duration.fast",
       "ease.out"
     ],
-    "motion": "list-stagger",
     "frameworks": {
       "react": {
         "status": "ready",
         "behavior": "hand built",
-        "example": "NotificationCenter.demo.tsx"
+        "example": "NotificationCenter.demo.tsx",
+        "note": "Motion: no catalog pattern. The panel renders a static list and no stagger plays when items are inserted; only the item hover veil fades (NotificationCenter.css). list-stagger is the pattern to wire when inserted items animate."
       },
       "angular": {
         "status": "planned",
@@ -6670,13 +6669,12 @@
       "duration.shimmer",
       "ease.standard"
     ],
-    "motion": "spinner",
     "frameworks": {
       "react": {
         "status": "ready",
         "behavior": "radix:Progress",
         "example": "ProgressBar.demo.tsx",
-        "note": "Value changes ease the scaleX transform over duration.slow. The indeterminate loop is named after the spinner pattern of the 1.11 catalog (the looping busy form) until the catalog has a bar form. Values are formatted with Intl.NumberFormat and Western digits in a private helper (format.ts) until packages/shared/src/number.ts lands."
+        "note": "Value changes ease the scaleX transform over duration.slow. No catalog pattern: the indeterminate slide is a keyframe in ProgressBar.css until the catalog has a bar slide (a request to the motion owner). Values are formatted with Intl.NumberFormat and Western digits in a private helper (format.ts) until packages/shared/src/number.ts lands."
       },
       "angular": {
         "status": "planned"
@@ -8551,7 +8549,8 @@
       }
     },
     "states": [
-      "data-loading"
+      "data-loading",
+      "data-trend=up|down|flat"
     ],
     "a11y": {
       "role": "None: a div with text. Read in order: label, value, change, hint.",
@@ -8566,7 +8565,7 @@
       },
       "notes": [
         "The trend is never color alone (WCAG 1.4.1): an arrow or a bar icon draws it and a visually hidden word says it.",
-        "data-trend on the root carries up, down or flat. It is a valued attribute, so it is listed here and under props, not under states, until the contract suite knows valued states.",
+        "data-trend on the root carries up, down or flat: a valued state, listed in states as data-trend=up|down|flat so the contract suite checks its values.",
         "Numbers use tabular figures, so a refreshing value does not shift its neighbours.",
         "Under forced colors the loading block keeps a CanvasText border.",
         "The trend icons (trend-up, trend-down) do not mirror in right to left layouts, like chart glyphs; the trend word carries the meaning."
@@ -8776,12 +8775,12 @@
       "duration.shimmer",
       "ease.out"
     ],
-    "motion": "thinking",
     "frameworks": {
       "react": {
         "status": "ready",
         "behavior": "hand built",
-        "example": "StatusDot.demo.tsx"
+        "example": "StatusDot.demo.tsx",
+        "note": "Motion: no catalog pattern. The pulse (a ring that grows and fades, three times) is a keyframe in StatusDot.css until the catalog has a pulse pattern (a request to the motion owner); thinking is three bouncing dots, not this."
       },
       "angular": {
         "status": "planned",
@@ -9149,8 +9148,8 @@
         "default": "div"
       },
       "css": {
-        "type": "CSSProperties",
-        "description": "Inline styles for the Theme element, as a React style object. style is taken by the style axis."
+        "type": "object",
+        "description": "Inline styles for the Theme element, as a React style object (CSSProperties). style is taken by the style axis."
       },
       "className": "string"
     },
@@ -9769,7 +9768,7 @@
     "states": [
       "open",
       "closed",
-      "data-swipe"
+      "data-swipe=start|move|cancel|end"
     ],
     "a11y": {
       "role": "The Toaster is a region (named Notifications) holding a list; each toast is a list item. Announcements go through two visually hidden regions owned by the Toaster: role status (polite) and role alert (assertive, for danger).",
@@ -10536,42 +10535,50 @@
         "ArrowLeft": {
           "case": "many",
           "focus": "[data-part='move']",
-          "expect": "moves"
+          "expect": "moves",
+          "physical": true
         },
         "ArrowRight": {
           "case": "many",
           "focus": "[data-part='move']",
-          "expect": "moves"
+          "expect": "moves",
+          "physical": true
         },
         "ArrowUp": {
           "case": "many",
           "focus": "[data-part='move']",
-          "expect": "moves"
+          "expect": "moves",
+          "physical": true
         },
         "ArrowDown": {
           "case": "many",
           "focus": "[data-part='move']",
-          "expect": "moves"
+          "expect": "moves",
+          "physical": true
         },
         "Shift+ArrowLeft": {
           "case": "many",
           "focus": "[data-part='move']",
-          "expect": "moves"
+          "expect": "moves",
+          "physical": true
         },
         "Shift+ArrowRight": {
           "case": "many",
           "focus": "[data-part='move']",
-          "expect": "moves"
+          "expect": "moves",
+          "physical": true
         },
         "Shift+ArrowUp": {
           "case": "many",
           "focus": "[data-part='move']",
-          "expect": "moves"
+          "expect": "moves",
+          "physical": true
         },
         "Shift+ArrowDown": {
           "case": "many",
           "focus": "[data-part='move']",
-          "expect": "moves"
+          "expect": "moves",
+          "physical": true
         },
         "Escape": {
           "case": "many",
@@ -10710,12 +10717,12 @@
       "duration.fast",
       "ease.default"
     ],
-    "motion": "press",
     "frameworks": {
       "react": {
         "status": "ready",
         "behavior": "IconButton",
-        "example": "WindowControls.demo.tsx"
+        "example": "WindowControls.demo.tsx",
+        "note": "Motion: no catalog pattern. A press is an instant color swap; the light and its glyph fade on hover and focus in WindowControls.css. A press pattern is a request to the motion owner."
       },
       "angular": {
         "status": "planned",

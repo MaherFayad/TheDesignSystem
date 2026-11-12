@@ -9,7 +9,7 @@
 //
 // Anatomy: root [data-ds=toast] with data-tone (and data-state inside a
 // Toaster), and the parts icon, title (holding count), description, action
-// and close. action is a Button and close an IconButton, each carrying the
+// and close. action is a Button and close a CloseButton, each carrying the
 // toast's data-part next to its own data-ds. The parts are Radix Toast
 // parts, so inside a Toaster the close and action buttons close the toast.
 // Outside a Toaster they are plain elements.
@@ -19,7 +19,7 @@ import type { ToastAction, ToastTone } from '@the-system/shared';
 import type { IconName } from '@the-system/icons';
 import { Icon } from '@the-system/icons/react';
 import { Button } from '../Button';
-import { IconButton } from '../IconButton';
+import { CloseButton } from '../CloseButton';
 
 export type { ToastAction, ToastTone } from '@the-system/shared';
 
@@ -94,7 +94,7 @@ export function ToastParts({ tone, title, description, count = 1, action, closeL
       )}
       {closable && (
         <RadixToast.Close asChild>
-          <IconButton data-part="close" icon="close" label={closeLabel} size="xs" onClick={onClose} />
+          <CloseButton data-part="close" label={closeLabel} size="xs" onClick={onClose} />
         </RadixToast.Close>
       )}
     </>

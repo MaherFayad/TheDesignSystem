@@ -32,7 +32,7 @@
 import { useCallback, useLayoutEffect, useRef, useState, type ComponentProps, type ReactNode } from 'react';
 import { useTheme } from '../../theme/hooks';
 import { Button } from '../Button';
-import { useControllable } from '../Window/useControllable';
+import { useControllable } from '../../internal/useControllable';
 import { PanelGroup, ResizableHandle, ResizablePanel } from '../ResizablePanels/ResizablePanels';
 
 /** auto: split from breakpoint.tablet up, stacked below. split and stacked force a layout. */

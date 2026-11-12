@@ -179,12 +179,12 @@
     "color.bg.surface",
     "radius.xs"
   ],
-  "motion": "fade",
   "frameworks": {
     "react": {
       "status": "ready",
       "behavior": "native input",
-      "example": "Input.demo.tsx"
+      "example": "Input.demo.tsx",
+      "note": "Motion: no catalog pattern. Only the focus glow fades (an opacity transition in Input.css); fade-rise would also rise, so it is not named."
     },
     "angular": {
       "status": "planned"

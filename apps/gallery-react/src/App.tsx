@@ -1,6 +1,6 @@
 import { Component, Suspense, lazy, useEffect, type ComponentType, type ErrorInfo, type LazyExoticComponent, type ReactNode } from 'react';
-import { DEFAULT_STYLE, Theme, styleIds, themeAttributes, useTheme, type ThemeAxesInput } from '@the-system/react';
-import { axisControls, axisQuery, readAxes, readCase } from './axes';
+import { Theme, styleIds, themeAttributes, useTheme, type ThemeAxesInput } from '@the-system/react';
+import { GALLERY_STYLE, axisControls, axisQuery, readAxes, readCase } from './axes';
 import { Link, navigate, useUrl } from './router';
 import { routes } from './routes.gen';
 
@@ -20,10 +20,11 @@ export function App() {
   const url = useUrl();
   const params = url.searchParams;
   const asked = readAxes(params);
-  // A style id that is not in the registry has no token CSS, so nothing would
-  // paint. The gallery uses the default style instead and says so.
+  // No style asked: the gallery shows GALLERY_STYLE. A style id that is not in
+  // the registry has no token CSS, so nothing would paint: the gallery uses
+  // GALLERY_STYLE instead and says so.
   const unknownStyle = asked.style !== undefined && !styleIds.includes(asked.style) ? asked.style : undefined;
-  const axes = unknownStyle ? { ...asked, style: DEFAULT_STYLE } : asked;
+  const axes = asked.style === undefined || unknownStyle ? { ...asked, style: GALLERY_STYLE } : asked;
   const chrome = params.get('chrome') !== '0';
   const caseId = readCase(params);
   const path = url.pathname.replace(/\/+$/, '') || '/';
@@ -47,7 +48,7 @@ export function App() {
       <main data-gallery="stage" data-gallery-case={caseId}>
         {unknownStyle && (
           <p data-gallery="note" role="status">
-            No style called {unknownStyle}. Showing {DEFAULT_STYLE}.
+            No style called {unknownStyle}. Showing {GALLERY_STYLE}.
           </p>
         )}
         {caseId && (

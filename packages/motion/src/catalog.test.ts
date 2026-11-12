@@ -193,10 +193,7 @@ describe('animate', () => {
  * docs/reports/lanes/order-1-11.md. The test fails on any other name, and
  * fails when a name here is no longer used, so this list only shrinks.
  */
-const PENDING_RENAME: Readonly<Record<string, string>> = {
-  press: 'none until order 1.21 adds press feedback (scale.press, spring.press)',
-  fade: 'fade-rise',
-};
+const PENDING_RENAME: Readonly<Record<string, string>> = {};
 
 describe('manifests name catalog patterns', () => {
   const manifests = JSON.parse(readFileSync(new URL('../../manifest/manifests.gen.json', import.meta.url), 'utf8')) as {

@@ -10,7 +10,7 @@
 // the caller's own CSS).
 import { Slot } from 'radix-ui';
 import type { HTMLAttributes, ReactNode, Ref } from 'react';
-import type { SpaceStep } from './space';
+import type { SpaceStep } from '@the-system/shared';
 
 export type StackDirection = 'block' | 'inline';
 export type StackAlign = 'start' | 'center' | 'end' | 'stretch' | 'baseline';

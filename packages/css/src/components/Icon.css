@@ -24,9 +24,17 @@
     shape-rendering: crispEdges;
   }
 
+  /*
+   * The line set draws at 2 on its 24 unit grid. A style sets
+   * --_icon-stroke-width in a recipe (Neutral: 1.5). This CSS wins over the
+   * stroke-width attribute on the svg root.
+   */
   [data-ds='icon'][data-set='line'] {
+    --_icon-stroke-width: 2;
+
     fill: none;
     stroke: currentColor;
+    stroke-width: var(--_icon-stroke-width, 2);
   }
 
   /* Directional glyphs flip when the text runs right to left. */

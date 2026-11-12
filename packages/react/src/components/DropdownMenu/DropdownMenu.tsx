@@ -78,7 +78,7 @@ import type { Size, Tone } from '@the-system/shared';
 import { Theme } from '../../theme/Theme';
 import { useTheme } from '../../theme/hooks';
 import { renderSlotContent, type ButtonSlotContent } from '../Button/ButtonBase';
-import { useControllable } from '../Window/useControllable';
+import { useControllable } from '../../internal/useControllable';
 
 /** Menu sizes: sm rows are 24px, md rows follow menu.item.height (28px at default density). */
 export type DropdownMenuSize = Extract<Size, 'sm' | 'md'>;

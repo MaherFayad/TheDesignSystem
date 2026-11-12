@@ -95,7 +95,7 @@ describe('Toaster', () => {
     expect(parts).toEqual(['icon', 'title', 'description', 'close']);
     expect(el.querySelector('[data-part="icon"] [data-ds="icon"]')?.getAttribute('data-icon')).toBe('success');
     const close = within(el).getByRole('button', { name: 'Close notification' });
-    expect(close.getAttribute('data-ds')).toBe('icon-button');
+    expect(close.getAttribute('data-ds')).toBe('close-button');
     expect(close.getAttribute('data-part')).toBe('close');
   });
 

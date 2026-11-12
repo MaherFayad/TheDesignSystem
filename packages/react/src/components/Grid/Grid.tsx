@@ -8,7 +8,7 @@
 // Studio's 1px tile gap belongs to Bento. GridItem is the optional span
 // wrapper (`data-part="item"`).
 import type { HTMLAttributes, ReactNode, Ref } from 'react';
-import type { SpaceStep } from '../Stack/space';
+import type { SpaceStep } from '@the-system/shared';
 
 export type GridColumns = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 'auto-fit';
 /** The smallest item width for auto-fit: sm 10rem, md 15rem, lg 24rem (derived from the breakpoint tokens). */

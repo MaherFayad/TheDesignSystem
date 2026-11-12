@@ -1,0 +1,11 @@
+/*
+ * Neutral recipe for Icon. Why not a token: the line set's stroke width has
+ * no token (a base number token `icon.stroke.width` is requested from the
+ * token owner). Neutral draws its line icons at 1.5 on the 24 unit grid, per
+ * the icons dial in style.json.
+ */
+@layer ds.recipes {
+  [data-style='neutral'] [data-ds='icon'][data-set='line'] {
+    --_icon-stroke-width: 1.5;
+  }
+}

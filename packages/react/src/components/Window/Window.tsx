@@ -48,7 +48,7 @@ import { IconButton } from '../IconButton';
 import { TitleBar, type TitleBarHeading } from '../TitleBar';
 import { WindowControls } from '../WindowControls';
 import { windowMotionMode } from './styleMotion';
-import { useControllable } from './useControllable';
+import { useControllable } from '../../internal/useControllable';
 import { useWindowLayerContext } from './WindowLayer';
 
 export type WindowKind = 'canvas' | 'finder' | 'settings';

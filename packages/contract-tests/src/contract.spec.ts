@@ -11,6 +11,7 @@ import {
   anatomyFindings,
   axeMatrix,
   booleanStates,
+  valuedStates,
   DENSITIES,
   defaultStyle,
   demoPath,
@@ -195,11 +196,11 @@ async function checkHint(page: Page, m: Manifest, kebab: string, key: string, hi
     await page.locator('[data-contract-stop]').first().focus();
   }
   if (hint.expect === 'moves') {
-    await checkMoves(page, m, kebab, key, failures);
+    await checkMoves(page, m, kebab, key, failures, hint.physical ?? false);
     return;
   }
   if (hint.expect === 'click') await page.evaluate(listenClicks);
-  const snapArg = { kebab, attrs: booleanStates(m) };
+  const snapArg = { kebab, attrs: [...booleanStates(m), ...Object.keys(valuedStates(m))] };
   const before = await page.evaluate(keySnapshot, snapArg);
   const openBefore = await page.evaluate(openRoots, kebab);
   const closing = hint.expect === 'closes' ? await page.evaluate(markClosing, kebab) : false;
@@ -228,14 +229,14 @@ async function checkHint(page: Page, m: Manifest, kebab: string, key: string, hi
 }
 
 /** Presses `key` and waits up to 1.5s for the marked root to move; returns the box after. */
-async function pressAndMove(page: Page, key: string, dir: 'ltr' | 'rtl', from: Box): Promise<Box | null> {
+async function pressAndMove(page: Page, key: string, dir: 'ltr' | 'rtl', from: Box, physical = false): Promise<Box | null> {
   await page.keyboard.press(key);
   let box: Box | null = null;
   await expect
     .poll(
       async () => {
         box = await page.evaluate(movingRootBox);
-        return moveFinding(key, dir, from, box);
+        return moveFinding(key, dir, from, box, physical);
       },
       { timeout: 1_500 },
     )
@@ -250,23 +251,23 @@ async function pressAndMove(page: Page, key: string, dir: 'ltr' | 'rtl', from: B
  * For a Shift arrow, when the keyboard map says Shift moves further, the
  * Shift press must move further than the plain arrow from the same place.
  */
-async function checkMoves(page: Page, m: Manifest, kebab: string, key: string, failures: string[]): Promise<void> {
+async function checkMoves(page: Page, m: Manifest, kebab: string, key: string, failures: string[], physical = false): Promise<void> {
   const start = await page.evaluate(markFocusedRoot, kebab);
   if (!start) {
     failures.push(`${key}: expected moves, but focus is not in a [data-ds=${kebab}]`);
     return;
   }
-  const after = await pressAndMove(page, key, start.dir, start);
-  const finding = moveFinding(key, start.dir, start, after);
+  const after = await pressAndMove(page, key, start.dir, start, physical);
+  const finding = moveFinding(key, start.dir, start, after, physical);
   if (finding) {
     failures.push(finding);
     return;
   }
   if (shiftMovesFurther(m, key) && after) {
     const plain = key.slice('Shift+'.length);
-    const shiftDist = moveDistance(key, start.dir, start, after) ?? 0;
-    const plainAfter = await pressAndMove(page, plain, start.dir, after);
-    const plainDist = plainAfter ? (moveDistance(plain, start.dir, after, plainAfter) ?? 0) : 0;
+    const shiftDist = moveDistance(key, start.dir, start, after, physical) ?? 0;
+    const plainAfter = await pressAndMove(page, plain, start.dir, after, physical);
+    const plainDist = plainAfter ? (moveDistance(plain, start.dir, after, plainAfter, physical) ?? 0) : 0;
     if (!(shiftDist > plainDist)) failures.push(`${key}: moved ${Math.round(shiftDist)}px, not further than ${plain} (${Math.round(plainDist)}px), but the keyboard map says Shift moves further`);
   }
 }
@@ -360,14 +361,15 @@ for (const m of components) {
   test(`${name}: state attributes`, async ({ page }) => {
     await open(page, kebab, baseAxes);
     const booleans = booleanStates(m);
-    const hits = await page.evaluate(scanStates, { kebab, booleans });
+    const valued = Object.keys(valuedStates(m));
+    const hits = await page.evaluate(scanStates, { kebab, booleans, valued });
     const failures: string[] = [];
     if (await overlayMode(page, m)) {
       // A static example has no open or closed behavior, so it stamps no data-state.
       failures.push(...(await page.evaluate(staticDataState, kebab)).map((w) => `presentational example stamps data-state: ${w}`));
       failures.push(
         ...(await eachOpened(page, m, kebab, async () => {
-          hits.push(...(await page.evaluate(scanStates, { kebab, booleans, fresh: true })));
+          hits.push(...(await page.evaluate(scanStates, { kebab, booleans, valued, fresh: true })));
         })),
       );
     }

@@ -78,7 +78,12 @@ async function themeOf() {
 
 const combos = [
   {
+    // No style asked: the gallery opens on Neutral (GALLERY_STYLE), light and comfortable from its style.json.
     query: '',
+    want: { style: 'neutral', scheme: 'light', density: 'comfortable', contrast: 'default', platform: 'web', glass: 'regular', dir: 'ltr', lang: 'en' },
+  },
+  {
+    query: '?style=studio',
     want: { style: 'studio', scheme: 'dark', density: 'default', contrast: 'default', platform: 'web', glass: 'regular', dir: 'ltr', lang: 'en' },
   },
   {
@@ -127,10 +132,10 @@ check('chrome=0 hides the shell', (await page.locator('[data-gallery="shell"]').
 await open('');
 check('the shell shows by default', (await page.locator('[data-gallery="shell"]').count()) === 1);
 
-// A select in the shell updates the URL and the theme.
-await page.locator('[data-gallery="axis"]', { hasText: 'Scheme' }).locator('select').selectOption('light');
-await page.waitForFunction(() => document.querySelector('#gallery-root')?.getAttribute('data-scheme') === 'light');
-check('the scheme select writes the URL', new URL(page.url()).searchParams.get('scheme') === 'light', page.url());
+// A select in the shell updates the URL and the theme. Neutral opens light, so pick dark.
+await page.locator('[data-gallery="axis"]', { hasText: 'Scheme' }).locator('select').selectOption('dark');
+await page.waitForFunction(() => document.querySelector('#gallery-root')?.getAttribute('data-scheme') === 'dark');
+check('the scheme select writes the URL', new URL(page.url()).searchParams.get('scheme') === 'dark', page.url());
 
 // Fonts: the faces each style asks for load.
 await open('?style=studio');
@@ -157,7 +162,7 @@ await page.evaluate(() => {
 await page.waitForFunction(() => document.querySelector('h1')?.textContent === 'No demo at this address').catch(() => {});
 check('a malformed path shows the not found page', (await page.locator('h1').textContent()) === 'No demo at this address');
 await open('?style=nope');
-check('an unknown style falls back with a note', (await themeOf()).root.style === 'studio' && (await page.locator('[data-gallery="note"]').count()) === 1);
+check('an unknown style falls back with a note', (await themeOf()).root.style === 'neutral' && (await page.locator('[data-gallery="note"]').count()) === 1);
 
 // Arabic type: body keeps its size, small text moves up, a lang="en" island gets the Latin type back.
 await open('?style=desk&lang=ar&chrome=0');

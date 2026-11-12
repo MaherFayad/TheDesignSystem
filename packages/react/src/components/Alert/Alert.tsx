@@ -8,7 +8,7 @@
 //
 // Anatomy: root [data-ds=alert] with data-tone, data-emphasis and
 // data-size, and the parts icon, title, body, actions and close. close is
-// an IconButton carrying data-part="close" next to its own data-ds.
+// a CloseButton carrying data-part="close" next to its own data-ds.
 //
 // Live role: none by default, because an alert that is on the page when it
 // loads is read with the page. `live` is for an alert mounted after load:
@@ -18,7 +18,7 @@ import { Icon } from '@the-system/icons/react';
 import type { IconName } from '@the-system/icons';
 import type { Emphasis, Size, Tone } from '@the-system/shared';
 import { useTheme } from '../../theme/hooks';
-import { IconButton } from '../IconButton';
+import { CloseButton } from '../CloseButton';
 import { messageIcons, wordsFor } from './messageTones';
 
 export type AlertTone = Tone;
@@ -114,7 +114,7 @@ export function Alert({
       {children !== undefined && children !== null && children !== '' && <div data-part="body">{children}</div>}
       {actions !== undefined && actions !== null && <div data-part="actions">{actions}</div>}
       {onClose && (
-        <IconButton data-part="close" icon="close" label={closeLabel ?? words.close} size="xs" onClick={onClose} />
+        <CloseButton data-part="close" label={closeLabel ?? words.close} size="xs" onClick={onClose} />
       )}
     </div>
   );

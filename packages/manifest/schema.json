@@ -131,7 +131,8 @@
               "string",
               "number",
               "node",
-              "function"
+              "function",
+              "object"
             ]
           },
           {
@@ -324,6 +325,10 @@
               "case": {
                 "type": "string",
                 "description": "Demo case id to look in."
+              },
+              "physical": {
+                "type": "boolean",
+                "description": "For moves: the arrow names a screen direction, so ArrowRight moves right in rtl too. For a positioned object."
               },
               "expect": {
                 "enum": [

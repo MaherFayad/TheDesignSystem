@@ -14,12 +14,11 @@
  *
  * The toggle is a system Button (data-ds="button" data-part="toggle"). This
  * file restyles it through the Button's private properties, as the anatomy
- * contract allows a parent to do. Four declarations have no private
- * property in Button.css, so they are written on the toggle directly: the
- * start alignment of the row (justify-content) and of a wrapped label
- * (text-align), the start offset (margin-inline-start) and the muted
- * chevron color (color on the start part). A request to add them as
- * properties is in the lane 8B report (docs/reports/lanes/lane-8b.md).
+ * contract allows a parent to do, including the start alignment of the row
+ * (--_button-justify) and of a wrapped label (--_button-label-align). Two
+ * declarations have no private property in Button.css, so they are written
+ * on the toggle directly: the start offset (margin-inline-start) and the
+ * muted chevron color (color on the start part).
  * The start offset puts the hover fill and the focus ring a little past the
  * section's start edge: a clipping parent needs that much inline padding.
  *
@@ -127,16 +126,13 @@
     --_button-fg: var(--_section-fg);
     --_button-fg-hover: var(--_section-fg);
     --_button-fg-active: var(--_section-fg);
+    --_button-justify: flex-start;
+    --_button-label-align: start;
 
-    /* No private property covers these in Button.css: see the file header. */
-    justify-content: flex-start;
-
-    /* The hover fill reaches past the chevron; the chevron itself sits on the section's start edge. */
+    /* No private property covers this in Button.css: see the file header. The
+       hover fill reaches past the chevron; the chevron itself sits on the
+       section's start edge. */
     margin-inline-start: calc(-1 * var(--ds-space-2xs));
-  }
-
-  [data-ds='section'] > [data-part='header'] > [data-part='title'] > [data-part='toggle'] > [data-part='label'] {
-    text-align: start;
   }
 
   [data-ds='section'] > [data-part='header'] > [data-part='title'] > [data-part='toggle'] > [data-part='start'] {

@@ -76,7 +76,7 @@ describe('Alert', () => {
       <Alert title="Could not sync" actions={<Button size="sm">Retry sync</Button>} onClose={onClose} />,
     );
     const close = container.querySelector<HTMLElement>('[data-part="close"]');
-    expect(close?.getAttribute('data-ds')).toBe('icon-button');
+    expect(close?.getAttribute('data-ds')).toBe('close-button');
     expect(close?.getAttribute('aria-label')).toBe('Dismiss alert');
     expect(container.querySelector('[data-part="actions"]')?.textContent).toBe('Retry sync');
     await userEvent.click(screen.getByRole('button', { name: 'Dismiss alert' }));

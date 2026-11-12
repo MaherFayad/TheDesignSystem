@@ -41,6 +41,8 @@
     --_button-height: var(--ds-size-control-md);
     --_button-padding-inline: var(--ds-space-xl);
     --_button-gap: var(--ds-space-2xs);
+    --_button-justify: center;
+    --_button-label-align: center;
     --_button-font-size: var(--ds-font-size-s);
     --_button-radius: var(--ds-radius-control);
     --_button-radius-start-start: var(--_button-radius);
@@ -64,7 +66,7 @@
     display: inline-flex;
     flex: 0 1 auto;
     align-items: center;
-    justify-content: center;
+    justify-content: var(--_button-justify);
     gap: var(--_button-gap);
     box-sizing: border-box;
     block-size: var(--_button-height);
@@ -129,7 +131,7 @@
     overflow-x: visible;
     white-space: normal;
     overflow-wrap: anywhere;
-    text-align: center;
+    text-align: var(--_button-label-align, center);
   }
 
   :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button'], [data-ds='close-button'], [data-ds='copy-button'], [data-ds='floating-action-button']) > :is([data-part='start'], [data-part='end'], [data-part='icon']) {

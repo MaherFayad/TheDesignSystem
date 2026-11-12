@@ -104,7 +104,7 @@
     margin-inline-start: var(--_banner-gap);
   }
 
-  /* The close button is an IconButton carrying data-part="close". It stays at the inline end of the first line. */
+  /* The close button is a CloseButton carrying data-part="close". It stays at the inline end of the first line. */
   [data-ds='banner'] > [data-part='close'] {
     grid-column: 4;
     grid-row: 1;
@@ -189,19 +189,19 @@
     --_button-border-color: var(--_banner-tone-on-solid);
   }
 
-  [data-ds='banner'][data-emphasis='solid'] > [data-ds='icon-button'][data-part='close'] {
+  [data-ds='banner'][data-emphasis='solid'] > [data-ds='close-button'][data-part='close'] {
     --_button-ring: var(--ds-focus-shadow-primary);
     --_button-bg: transparent;
     --_button-fg: var(--_banner-tone-on-solid);
   }
 
   [data-ds='banner'][data-emphasis='solid'] > [data-part='actions'] [data-ds='button']:hover:not([data-disabled], [data-loading]),
-  [data-ds='banner'][data-emphasis='solid'] > [data-ds='icon-button'][data-part='close']:hover:not([data-disabled], [data-loading]) {
+  [data-ds='banner'][data-emphasis='solid'] > [data-ds='close-button'][data-part='close']:hover:not([data-disabled], [data-loading]) {
     --_button-bg: color-mix(in srgb, var(--_banner-tone-on-solid) 12%, transparent);
   }
 
   [data-ds='banner'][data-emphasis='solid'] > [data-part='actions'] [data-ds='button']:active:not([data-disabled], [data-loading]),
-  [data-ds='banner'][data-emphasis='solid'] > [data-ds='icon-button'][data-part='close']:active:not([data-disabled], [data-loading]) {
+  [data-ds='banner'][data-emphasis='solid'] > [data-ds='close-button'][data-part='close']:active:not([data-disabled], [data-loading]) {
     --_button-bg: color-mix(in srgb, var(--_banner-tone-on-solid) 20%, transparent);
   }
 

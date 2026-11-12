@@ -15,6 +15,12 @@ export interface KeyHint {
   /** A demo case id to look in. Default: the whole demo. */
   case?: string;
   expect: KeyExpect;
+  /**
+   * For `moves`: the arrow names a screen direction, not a reading one, so
+   * ArrowRight moves to the right in rtl too. For a positioned object (a
+   * Window), whose arrows move what the person sees. Default false.
+   */
+  physical?: boolean;
 }
 
 export interface ContractHints {
@@ -56,6 +62,27 @@ export const BOOLEAN_STATES = ['data-disabled', 'data-loading', 'data-invalid', 
 
 /** Attributes in manifest `states` that carry a value, not a boolean. */
 const VALUED_STATES = new Set(['data-state', 'data-orientation']);
+
+/**
+ * A valued state attribute a manifest declares in `states` as
+ * `data-<name>=<value>|<value>`, for example `data-level=low|medium|high`.
+ * Undefined for any other entry.
+ */
+export function parseValuedState(entry: string): { attr: string; values: string[] } | undefined {
+  const match = /^(data-[a-z][a-z0-9-]*)=([a-z0-9-]+(?:\|[a-z0-9-]+)*)$/.exec(entry);
+  if (!match?.[1] || !match[2]) return undefined;
+  return { attr: match[1], values: match[2].split('|') };
+}
+
+/** The valued state attributes a manifest declares, with the values each may take. */
+export function valuedStates(m: Manifest): Record<string, string[]> {
+  const out: Record<string, string[]> = {};
+  for (const entry of m.states ?? []) {
+    const v = parseValuedState(entry);
+    if (v) out[v.attr] = v.values;
+  }
+  return out;
+}
 
 /** Demo case ids in contract order. */
 export const DEMO_CASES = ['variants', 'empty', 'one', 'many', 'too-many', 'long-text', 'long-arabic', 'loading', 'error', 'disabled', 'readonly'];
@@ -99,7 +126,7 @@ export function nonSharedWords(m: Manifest): string[] {
 
 /** Boolean state attributes to check: the contract list plus data-* booleans the manifest names. */
 export function booleanStates(m: Manifest): string[] {
-  const extra = (m.states ?? []).filter((s) => s.startsWith('data-') && !VALUED_STATES.has(s));
+  const extra = (m.states ?? []).filter((s) => s.startsWith('data-') && !s.includes('=') && !VALUED_STATES.has(s));
   return [...new Set([...BOOLEAN_STATES, ...extra])];
 }
 
@@ -255,6 +282,8 @@ export interface StateHit {
   where: string;
   /** Boolean state attributes present, with their value. */
   booleans: Record<string, string>;
+  /** Valued state attributes present (manifest `data-<name>=a|b`), with their value. */
+  valued?: Record<string, string>;
   dataState: string | null;
   className: string;
 }
@@ -263,9 +292,14 @@ export interface StateHit {
 export function stateFindings(m: Manifest, hits: StateHit[]): string[] {
   const out: string[] = [];
   const allowedStates = dataStateValues(m);
+  const valued = valuedStates(m);
   for (const h of hits) {
     for (const [attr, value] of Object.entries(h.booleans)) {
       if (value !== '') out.push(`${attr}="${value}": a boolean state is present with an empty value, never a word (${h.where})`);
+    }
+    for (const [attr, value] of Object.entries(h.valued ?? {})) {
+      const allowed = valued[attr];
+      if (allowed && !allowed.includes(value)) out.push(`${attr}="${value}" is not one of the manifest values (${allowed.join(', ')}) (${h.where})`);
     }
     if (h.dataState !== null && !allowedStates.includes(h.dataState)) {
       out.push(`data-state="${h.dataState}" is not in the manifest states (${allowedStates.join(', ') || 'none listed'}) (${h.where})`);
@@ -424,12 +458,14 @@ export interface Box {
 /**
  * The direction an arrow key names, as a screen vector: x +1 is toward the
  * inline end in the reading direction (to the right in ltr, to the left in
- * rtl), y +1 is down. Shift and other modifiers do not change it. Undefined
- * for a key that names no direction.
+ * rtl), y +1 is down. With `physical` (a positioned object, see
+ * KeyHint.physical) ArrowRight is to the right in both directions. Shift and
+ * other modifiers do not change it. Undefined for a key that names no
+ * direction.
  */
-export function moveDirection(key: string, dir: 'ltr' | 'rtl'): { dx: number; dy: number } | undefined {
+export function moveDirection(key: string, dir: 'ltr' | 'rtl', physical = false): { dx: number; dy: number } | undefined {
   const base = key.split('+').pop() ?? key;
-  const flip = dir === 'rtl' ? -1 : 1;
+  const flip = dir === 'rtl' && !physical ? -1 : 1;
   if (base === 'ArrowRight') return { dx: flip, dy: 0 };
   if (base === 'ArrowLeft') return { dx: -flip, dy: 0 };
   if (base === 'ArrowUp') return { dx: 0, dy: -1 };
@@ -438,8 +474,8 @@ export function moveDirection(key: string, dir: 'ltr' | 'rtl'): { dx: number; dy
 }
 
 /** How far the box moved along the key's direction, in px (negative: the wrong way). */
-export function moveDistance(key: string, dir: 'ltr' | 'rtl', before: Box, after: Box): number | undefined {
-  const d = moveDirection(key, dir);
+export function moveDistance(key: string, dir: 'ltr' | 'rtl', before: Box, after: Box, physical = false): number | undefined {
+  const d = moveDirection(key, dir, physical);
   if (!d) return undefined;
   return (after.x - before.x) * d.dx + (after.y - before.y) * d.dy;
 }
@@ -448,14 +484,14 @@ export function moveDistance(key: string, dir: 'ltr' | 'rtl', before: Box, after
  * The `moves` expectation: the focused root's box moved at least 1px in the
  * direction the key names. Returns a failure, or null when it passes.
  */
-export function moveFinding(key: string, dir: 'ltr' | 'rtl', before: Box | null, after: Box | null): string | null {
+export function moveFinding(key: string, dir: 'ltr' | 'rtl', before: Box | null, after: Box | null, physical = false): string | null {
   if (!before) return `${key}: expected moves, but focus is not in a root`;
   if (!after) return `${key}: expected moves, but the root left the page`;
-  const dist = moveDistance(key, dir, before, after);
+  const dist = moveDistance(key, dir, before, after, physical);
   if (dist === undefined) return `${key}: expected moves, but ${key} names no direction (use an arrow key)`;
   const dx = Math.round((after.x - before.x) * 10) / 10;
   const dy = Math.round((after.y - before.y) * 10) / 10;
-  if (dist < 1) return `${key}: expected the root to move ${dir === 'rtl' && key.includes('Arrow') && /Left|Right/.test(key) ? '(rtl) ' : ''}in the key's direction, it moved by x ${dx}, y ${dy}`;
+  if (dist < 1) return `${key}: expected the root to move ${dir === 'rtl' && !physical && key.includes('Arrow') && /Left|Right/.test(key) ? '(rtl) ' : ''}in the key's direction, it moved by x ${dx}, y ${dy}`;
   return null;
 }
 

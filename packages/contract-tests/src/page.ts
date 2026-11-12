@@ -53,7 +53,7 @@ export function scanVariants(arg: { kebab: string; fresh?: boolean; asVariants?:
 }
 
 /** State attributes, data-state and class names on every root and every part the root owns. */
-export function scanStates(arg: { kebab: string; booleans: string[]; fresh?: boolean }): StateHit[] {
+export function scanStates(arg: { kebab: string; booleans: string[]; valued?: string[]; fresh?: boolean }): StateHit[] {
   const out: StateHit[] = [];
   const roots = Array.from(document.querySelectorAll(`[data-ds="${arg.kebab}"]`)).filter((r) => !arg.fresh || !r.hasAttribute('data-contract-seen'));
   for (const root of roots) {
@@ -64,11 +64,17 @@ export function scanStates(arg: { kebab: string; booleans: string[]; fresh?: boo
         const v = el.getAttribute(attr);
         if (v !== null) booleans[attr] = v;
       }
+      const valued: Record<string, string> = {};
+      for (const attr of arg.valued ?? []) {
+        const v = el.getAttribute(attr);
+        if (v !== null) valued[attr] = v;
+      }
       const part = el.getAttribute('data-part');
       const demo = el.closest('[data-demo-case]')?.getAttribute('data-demo-case');
       out.push({
         where: `${el.tagName.toLowerCase()}${part ? `[data-part=${part}]` : `[data-ds=${arg.kebab}]`}${demo ? ` in case ${demo}` : ''}`,
         booleans,
+        valued,
         dataState: el.getAttribute('data-state'),
         className: el.getAttribute('class') ?? '',
       });

@@ -5,7 +5,7 @@
 //
 // Anatomy: root [data-ds=banner] with data-tone, data-emphasis and
 // data-sticky, and the parts icon, body, actions and close. The root is a
-// region (a section) named by `label`. close is an IconButton carrying
+// region (a section) named by `label`. close is a CloseButton carrying
 // data-part="close".
 //
 // Dismiss: the banner never hides itself and stores nothing. The close
@@ -22,7 +22,7 @@ import { Icon } from '@the-system/icons/react';
 import type { IconName } from '@the-system/icons';
 import type { Emphasis, Tone } from '@the-system/shared';
 import { useTheme } from '../../theme/hooks';
-import { IconButton } from '../IconButton';
+import { CloseButton } from '../CloseButton';
 import { messageIcons, wordsFor } from '../Alert/messageTones';
 
 export type BannerTone = Tone;
@@ -168,9 +168,8 @@ export function Banner({
       <div data-part="body">{children}</div>
       {actions !== undefined && actions !== null && <div data-part="actions">{actions}</div>}
       {onDismiss && (
-        <IconButton
+        <CloseButton
           data-part="close"
-          icon="close"
           label={closeLabel ?? words.close}
           size="xs"
           onClick={(event) => {

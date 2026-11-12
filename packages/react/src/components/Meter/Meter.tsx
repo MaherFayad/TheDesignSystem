@@ -11,10 +11,9 @@
 // sits in data-level, in the visible value text and in aria-valuetext, so it
 // is never only a color. The tone follows the optimum.
 import { useId, type CSSProperties, type HTMLAttributes, type ReactNode, type Ref } from 'react';
-import type { Size } from '@the-system/shared';
+import { meterLevel, meterLevelLabelsFor, meterTone, type MeterLevel, type MeterTone, type Size } from '@the-system/shared';
 import { useTheme } from '../../theme';
 import { formatPercent, validMax } from '../ProgressBar/format';
-import { meterLevel, meterLevelLabelsFor, meterTone, type MeterLevel, type MeterTone } from './level';
 
 export type MeterSize = Extract<Size, 'sm' | 'md' | 'lg'>;
 export type { MeterLevel, MeterTone };

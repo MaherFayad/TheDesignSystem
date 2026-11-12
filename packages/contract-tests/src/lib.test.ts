@@ -18,6 +18,7 @@ import {
   moveDistance,
   moveFinding,
   optionalParts,
+  parseValuedState,
   propValues,
   readyComponents,
   reportFile,
@@ -27,6 +28,7 @@ import {
   stateFindings,
   trapsFocus,
   triggerSelector,
+  valuedStates,
   variantFindings,
   type Manifest,
   type StyleInfo,
@@ -187,6 +189,22 @@ describe('stateFindings and stateClasses', () => {
       'state written as a class: is-loading (b)',
     ]);
   });
+
+  it('reads valued states as data-<name>=a|b and checks their values', () => {
+    expect(parseValuedState('data-level=low|medium|high')).toEqual({ attr: 'data-level', values: ['low', 'medium', 'high'] });
+    expect(parseValuedState('data-level')).toBeUndefined();
+    expect(parseValuedState('open')).toBeUndefined();
+    expect(parseValuedState('data-level=')).toBeUndefined();
+    const meter: Manifest = { ...button, states: ['data-zoomed', 'data-level=low|medium|high'] };
+    expect(valuedStates(meter)).toEqual({ 'data-level': ['low', 'medium', 'high'] });
+    expect(booleanStates(meter)).toContain('data-zoomed');
+    expect(booleanStates(meter).some((s) => s.startsWith('data-level'))).toBe(false);
+    const f = stateFindings(meter, [
+      { where: 'a', booleans: {}, valued: { 'data-level': 'high' }, dataState: null, className: '' },
+      { where: 'b', booleans: {}, valued: { 'data-level': 'full' }, dataState: null, className: '' },
+    ]);
+    expect(f).toEqual(['data-level="full" is not one of the manifest values (low, medium, high) (b)']);
+  });
 });
 
 describe('styles and urls', () => {
@@ -246,6 +264,15 @@ describe('the moves expectation', () => {
     expect(moveDirection('Shift+ArrowLeft', 'rtl')).toEqual({ dx: 1, dy: 0 });
     expect(moveDirection('ArrowUp', 'rtl')).toEqual({ dx: 0, dy: -1 });
     expect(moveDirection('Enter', 'ltr')).toBeUndefined();
+  });
+
+  it('keeps the screen direction for a physical hint in rtl', () => {
+    expect(moveDirection('ArrowRight', 'rtl', true)).toEqual({ dx: 1, dy: 0 });
+    expect(moveDirection('Shift+ArrowLeft', 'rtl', true)).toEqual({ dx: -1, dy: 0 });
+    const at = { x: 40, y: 300 };
+    expect(moveFinding('ArrowRight', 'rtl', at, { x: 56, y: 300 }, true)).toBeNull();
+    expect(moveFinding('ArrowRight', 'rtl', at, { x: 24, y: 300 }, true)).toMatch(/moved by x -16/);
+    expect(moveDistance('ArrowLeft', 'rtl', at, { x: 24, y: 300 }, true)).toBe(16);
   });
 
   it('fails a root that does not move, moves the wrong way, or leaves', () => {

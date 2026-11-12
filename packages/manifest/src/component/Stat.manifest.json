@@ -129,7 +129,8 @@
     }
   },
   "states": [
-    "data-loading"
+    "data-loading",
+    "data-trend=up|down|flat"
   ],
   "a11y": {
     "role": "None: a div with text. Read in order: label, value, change, hint.",
@@ -144,7 +145,7 @@
     },
     "notes": [
       "The trend is never color alone (WCAG 1.4.1): an arrow or a bar icon draws it and a visually hidden word says it.",
-      "data-trend on the root carries up, down or flat. It is a valued attribute, so it is listed here and under props, not under states, until the contract suite knows valued states.",
+      "data-trend on the root carries up, down or flat: a valued state, listed in states as data-trend=up|down|flat so the contract suite checks its values.",
       "Numbers use tabular figures, so a refreshing value does not shift its neighbours.",
       "Under forced colors the loading block keeps a CanvasText border.",
       "The trend icons (trend-up, trend-down) do not mirror in right to left layouts, like chart glyphs; the trend word carries the meaning."

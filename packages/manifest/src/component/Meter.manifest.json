@@ -52,8 +52,8 @@
       "description": "(value, min, max) => string for the visible value and aria-valuetext: 72 GB of 100 GB. Default: a whole percent of the range, rounded down, Western digits."
     },
     "levelLabels": {
-      "type": "string",
-      "description": "An object of words per level, { low, medium, high }, said after the value: Almost full. Default Low, Medium, High; Arabic منخفض، متوسط، مرتفع under lang ar."
+      "type": "object",
+      "description": "Words per level, { low, medium, high }, each optional, said after the value: Almost full. Default Low, Medium, High; Arabic منخفض، متوسط، مرتفع under lang ar."
     },
     "showLevel": {
       "type": "boolean",
@@ -69,7 +69,9 @@
       "description": "Track thickness 4, 8 and 12 px; the text steps from font.size.xs to m."
     }
   },
-  "states": [],
+  "states": [
+    "data-level=low|medium|high"
+  ],
   "a11y": {
     "role": "meter, with aria-valuenow, aria-valuemin, aria-valuemax and aria-valuetext",
     "focus": "Never focusable.",
@@ -80,7 +82,7 @@
       "accessibilityState": []
     },
     "notes": [
-      "data-level on the root is low, medium or high. It is a valued attribute, so it is not listed in states: the contract suite reads every data-* entry there as a boolean (see the lane 5B report).",
+      "data-level on the root is low, medium or high: a valued state, listed in states as data-level=low|medium|high so the contract suite checks its values.",
       "The level is in data-level, in the visible value text and in aria-valuetext, never only in the color.",
       "Thresholds follow the HTML meter: low and high are clamped into the range, and high is never below low.",
       "The indicator scales from the inline start: it fills from the right in Arabic.",
@@ -126,13 +128,12 @@
     "duration.slow",
     "ease.standard"
   ],
-  "motion": "number-roll",
   "frameworks": {
     "react": {
       "status": "ready",
       "behavior": "hand built, role meter",
       "example": "Meter.demo.tsx",
-      "note": "Level and tone logic in level.ts (pure, to move to packages/shared). Values formatted by the ProgressBar format.ts helper until packages/shared/src/number.ts lands. Motion: a value change eases the scaleX transform over duration.slow; number-roll names that change until the 1.11 catalog has a fill pattern."
+      "note": "Level and tone logic in packages/shared/src/meter.ts (pure, shared with Angular). Values formatted by the ProgressBar format.ts helper until packages/shared/src/number.ts lands. Motion: no catalog pattern. A value change eases the scaleX transform over duration.slow in Meter.css until the catalog has a fill pattern (a request to the motion owner)."
     },
     "angular": {
       "status": "planned"

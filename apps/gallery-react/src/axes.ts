@@ -21,6 +21,13 @@ export const axisControls: readonly AxisControl[] = [
   { key: 'glass', label: 'Glass', values: ['clear', 'regular', 'tinted'] },
 ];
 
+/**
+ * The style the gallery shows when the query asks for none, or for one that
+ * is not in the registry. The Theme's own fallback stays DEFAULT_STYLE
+ * (studio); only the gallery opens on Neutral.
+ */
+export const GALLERY_STYLE = 'neutral';
+
 /** Gallery keys that are not axes. */
 export const extraKeys = ['case', 'chrome'] as const;
 

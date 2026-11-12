@@ -117,9 +117,9 @@
     "duration.fast",
     "ease.out"
   ],
-  "motion": "list-stagger",
   "frameworks": {
-    "react": { "status": "ready", "behavior": "hand built", "example": "NotificationCenter.demo.tsx" },
+    "react": { "status": "ready", "behavior": "hand built", "example": "NotificationCenter.demo.tsx",
+      "note": "Motion: no catalog pattern. The panel renders a static list and no stagger plays when items are inserted; only the item hover veil fades (NotificationCenter.css). list-stagger is the pattern to wire when inserted items animate." },
     "angular": { "status": "planned", "behavior": "hand built" },
     "native": { "status": "planned", "behavior": "hand built", "note": "A SectionList with a header per group; items as pressable rows." }
   },

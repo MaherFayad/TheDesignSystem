@@ -9,7 +9,7 @@
 // The width prop is called `width`, not `size`: `size` is the shared control
 // axis (xs to lg) and its words may not mean a page width.
 import type { HTMLAttributes, ReactNode, Ref } from 'react';
-import type { SpaceStep } from '../Stack/space';
+import type { SpaceStep } from '@the-system/shared';
 
 export type ContainerWidth = 'sm' | 'md' | 'lg' | 'xl' | 'full';
 export type ContainerElement = 'div' | 'main' | 'section' | 'article' | 'header' | 'footer';

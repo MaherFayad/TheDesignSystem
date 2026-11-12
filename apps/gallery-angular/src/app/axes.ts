@@ -21,6 +21,13 @@ export const axisControls: readonly AxisControl[] = [
   { key: 'glass', label: 'Glass', values: ['clear', 'regular', 'tinted'] },
 ];
 
+/**
+ * The style the gallery shows when the query asks for none, or for one that
+ * is not in the registry. The Theme's own fallback stays DEFAULT_STYLE
+ * (studio); only the gallery opens on Neutral. The same in the React gallery.
+ */
+export const GALLERY_STYLE = 'neutral';
+
 /** Reads the axes from the query. Unknown values are dropped. */
 export function readAxes(params: URLSearchParams): ThemeAxesInput {
   const out: Record<string, string> = {};

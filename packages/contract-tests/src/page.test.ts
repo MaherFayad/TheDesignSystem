@@ -60,6 +60,11 @@ describe('scanStates', () => {
     const dialog = scanStates({ kebab: 'dialog', booleans: [] });
     expect(dialog.map((h) => h.className)).toContain('is-open');
   });
+
+  it('reads the valued state attributes it is asked for', () => {
+    const hits = scanStates({ kebab: 'input', booleans: [], valued: ['data-size'] });
+    expect(hits.filter((h) => h.valued && 'data-size' in h.valued).map((h) => h.valued?.['data-size'])).toEqual(['md', 'sm', 'sm', 'sm']);
+  });
 });
 
 describe('scanDisabled', () => {

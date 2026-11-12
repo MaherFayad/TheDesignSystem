@@ -72,6 +72,28 @@ describe('ButtonGroup', () => {
     expect(third?.getAttribute('data-emphasis')).toBe('outline');
   });
 
+  it('reaches a child wrapped in another element, where a clone would not', () => {
+    const { container } = render(
+      <ButtonGroup aria-label="Page actions" size="lg" emphasis="outline" shape="pill">
+        <span data-testid="wrap">
+          <Button>Save draft</Button>
+        </span>
+        <span>
+          <IconButton icon="more" label="Open more actions" size="sm" />
+        </span>
+      </ButtonGroup>,
+    );
+    const wrap = container.querySelector('[data-testid="wrap"]');
+    expect(wrap?.hasAttribute('size')).toBe(false);
+    const button = wrap?.querySelector('[data-ds="button"]');
+    expect(button?.getAttribute('data-size')).toBe('lg');
+    expect(button?.getAttribute('data-emphasis')).toBe('outline');
+    expect(button?.getAttribute('data-shape')).toBe('pill');
+    const icon = container.querySelector('[data-ds="icon-button"]');
+    expect(icon?.getAttribute('data-size')).toBe('sm');
+    expect(icon?.getAttribute('data-emphasis')).toBe('outline');
+  });
+
   it('keeps tone per child and leaves emphasis to each child when the group sets none', () => {
     const { container } = render(
       <ButtonGroup aria-label="Pages">
