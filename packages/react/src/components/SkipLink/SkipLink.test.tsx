@@ -75,6 +75,34 @@ describe('SkipLink', () => {
     expect(input.hasAttribute('tabindex')).toBe(false);
   });
 
+  it('adds tabindex -1 to an anchor with no href, which reports tabIndex 0 but cannot take focus', () => {
+    render(
+      <>
+        <SkipLink />
+        <a id="main">Content</a>
+      </>,
+    );
+    fireEvent.click(screen.getByRole('link'));
+    expect(document.activeElement?.id).toBe('main');
+    expect(document.activeElement?.getAttribute('tabindex')).toBe('-1');
+  });
+
+  it('leaves a modifier click and a middle click to the browser', () => {
+    render(
+      <>
+        <SkipLink />
+        <main id="main">Content</main>
+      </>,
+    );
+    const link = screen.getByRole('link');
+    for (const init of [{ ctrlKey: true }, { metaKey: true }, { shiftKey: true }, { button: 1 }]) {
+      const event = new MouseEvent('click', { bubbles: true, cancelable: true, ...init });
+      link.dispatchEvent(event);
+      expect(event.defaultPrevented).toBe(false);
+    }
+    expect(document.activeElement).not.toBe(screen.getByRole('main'));
+  });
+
   it('keeps an existing tabindex on the target', () => {
     render(
       <>

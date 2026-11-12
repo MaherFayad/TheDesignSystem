@@ -45,9 +45,9 @@
     },
     "notes": [
       "WCAG 2.4.1 Bypass blocks.",
-      "The target gets tabindex -1 only when it is not focusable already. A link, a button, a field or an element with its own tabindex keeps what it has.",
+      "The target gets tabindex -1 only when focus does not land on it as it is. A link, a button, a field or an element with its own tabindex keeps what it has; an anchor with no href or a disabled control gets tabindex -1.",
       "Focus moves to the target itself, not only the scroll position, so the next Tab continues from the main content in every browser.",
-      "The URL fragment changes through history, as a plain fragment link would. When the target is missing the browser handles the link.",
+      "The URL fragment changes after focus moves, so hashchange and :target fire as for a plain fragment link. A click with a modifier key or a middle click is left to the browser. When the target is missing the browser handles the link.",
       "Drawn on any focus, keyboard or pointer, so it never vanishes under the pointer that clicked it. At 24px or more tall when shown (WCAG 2.5.8).",
       "Under forced colors it is drawn in LinkText on Canvas with a LinkText border, and the focus outline uses Highlight.",
       "No native title attribute."
@@ -64,6 +64,7 @@
     }
   },
   "tokens": [
+    "font.family.sans",
     "size.control.md",
     "size.target-min",
     "space.xl",
@@ -98,7 +99,7 @@
     },
     "native": {
       "status": "not-applicable",
-      "note": "Native screen readers move by headings and containers, and there is no tab order to bypass. Mark the main region with accessibilityRole header or a container label instead."
+      "note": "Native screen readers move by headings and containers, and there is no tab order to bypass. Start the first content block with a heading (accessibilityRole header on its title) so screen reader users can jump to it."
     }
   },
   "styles": {

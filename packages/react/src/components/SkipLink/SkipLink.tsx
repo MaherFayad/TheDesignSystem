@@ -14,8 +14,10 @@
 //   scroll position. A target that is not focusable gets `tabindex="-1"`
 //   first, and only then (a link, a button or an element with its own
 //   tabindex keeps what it has).
-// - The URL fragment still changes through history, so the back button and a
-//   shared link behave as a plain fragment link.
+// - The URL fragment still changes, so the back button, hashchange, :target
+//   and a shared link behave as a plain fragment link.
+// - A click with a modifier key or a middle click is left to the browser, so
+//   open in a new tab still works.
 // - Position absolute: placed first in `body` it sits at the top of the page.
 //   A consumer that wants it fixed sets that from its own CSS.
 import { type AnchorHTMLAttributes, type MouseEvent, type ReactNode, type Ref } from 'react';
@@ -33,10 +35,6 @@ export interface SkipLinkProps extends Omit<AnchorHTMLAttributes<HTMLAnchorEleme
   ref?: Ref<HTMLAnchorElement>;
 }
 
-/** True when the element takes focus without a tabindex of its own. */
-function focusable(el: HTMLElement): boolean {
-  return el.hasAttribute('tabindex') || el.tabIndex >= 0;
-}
 
 /** Moves focus to the element a fragment names. Returns false when there is none. */
 export function focusFragment(href: string, doc: Document = document): boolean {
@@ -49,9 +47,13 @@ export function focusFragment(href: string, doc: Document = document): boolean {
   }
   const target = doc.getElementById(id);
   if (!target) return false;
-  if (!focusable(target)) target.setAttribute('tabindex', '-1');
+  // Try the element as it is first: a link, a field or an element with its own tabindex keeps what it has.
   target.focus();
-  return true;
+  if (doc.activeElement === target) return true;
+  // Not focusable (a region, an anchor with no href, a disabled control): make it a script focus target.
+  target.setAttribute('tabindex', '-1');
+  target.focus();
+  return doc.activeElement === target;
 }
 
 /** A link that is drawn only while it has focus, and moves focus to the main content. */
@@ -66,10 +68,12 @@ export function SkipLink({ href = '#main', children, onClick, ref, ...rest }: Sk
       onClick={(event: MouseEvent<HTMLAnchorElement>) => {
         onClick?.(event);
         if (event.defaultPrevented) return;
+        if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
         if (!focusFragment(href, event.currentTarget.ownerDocument)) return;
         event.preventDefault();
         const view = event.currentTarget.ownerDocument.defaultView;
-        if (view && view.location.hash !== href) view.history.pushState(null, '', href);
+        // After focus, so hashchange and :target fire; the browser scrolls to the same element.
+        if (view && view.location.hash !== href) view.location.hash = href;
       }}
     >
       {children ?? defaultLabels[lang === 'ar' ? 'ar' : 'en']}

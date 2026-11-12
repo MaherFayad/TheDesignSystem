@@ -9,7 +9,7 @@ const frame: CSSProperties = {
   position: 'relative',
   display: 'grid',
   gap: 'var(--ds-space-m)',
-  padding: 'var(--ds-space-6xl) var(--ds-space-l) var(--ds-space-l)',
+  padding: 'calc(var(--ds-size-control-md) + 2 * var(--ds-space-s)) var(--ds-space-l) var(--ds-space-l)',
   border: 'var(--ds-border-width-default) solid var(--ds-color-border-default)',
   borderRadius: 'var(--ds-radius-card)',
 };
@@ -22,11 +22,11 @@ const main: CSSProperties = {
   background: 'var(--ds-color-bg-surface-2)',
 };
 
-function Page({ id, nav, skip, children }: { id: string; nav: string[]; skip: ReactNode; children: ReactNode }) {
+function Page({ id, nav, label, skip, children }: { id: string; nav: string[]; label: string; skip: ReactNode; children: ReactNode }) {
   return (
     <div style={frame}>
       {skip}
-      <nav aria-label={`Site ${id}`} style={header}>
+      <nav aria-label={label} style={header}>
         {nav.map((label) => (
           <Link key={label} standalone href={`#${id}-${label}`}>
             {label}
@@ -47,27 +47,27 @@ export default function SkipLinkDemo() {
   return (
     <DemoPage>
       <DemoCase id="variants" title="Variants: press Tab to show the link, Enter to jump">
-        <Page id="demo-main" nav={navEn} skip={<SkipLink href="#demo-main" />}>
+        <Page id="demo-main" nav={navEn} label="Site" skip={<SkipLink href="#demo-main" />}>
           <p>Main content. Focus lands here, on an element that was not focusable before.</p>
         </Page>
         <h3 data-demo="title">Variants in Arabic</h3>
         <Theme lang="ar" data-demo="content">
-          <Page id="demo-main-ar" nav={navAr} skip={<SkipLink href="#demo-main-ar" />}>
+          <Page id="demo-main-ar" nav={navAr} label="الموقع" skip={<SkipLink href="#demo-main-ar" />}>
             <p>المحتوى الرئيسي. التركيز ينتقل هنا.</p>
           </Page>
         </Theme>
       </DemoCase>
 
-      <DemoCase id="one" title="One link to the default target">
-        <Page id="main-sample" nav={navEn.slice(0, 2)} skip={<SkipLink href="#main-sample">Skip to the board list</SkipLink>}>
-          <p>The default href is #main. This sample points at its own region.</p>
+      <DemoCase id="one" title="One link with custom text">
+        <Page id="main-sample" nav={navEn.slice(0, 2)} label="Site" skip={<SkipLink href="#main-sample">Skip to the board list</SkipLink>}>
+          <p>The default href is #main. This sample points at its own region and names it.</p>
         </Page>
       </DemoCase>
 
       <DemoCase id="many" title="Many: one link per region, in reading order">
         <Page
           id="demo-many-main"
-          nav={navEn}
+          nav={navEn} label="Site"
           skip={
             <>
               <SkipLink href="#demo-many-main">Skip to main content</SkipLink>
@@ -84,7 +84,7 @@ export default function SkipLinkDemo() {
       <DemoCase id="long-text" title="Long text">
         <Page
           id="demo-long"
-          nav={navEn}
+          nav={navEn} label="Site"
           skip={<SkipLink href="#demo-long">Skip past the navigation and the announcement bar to the main content of this page</SkipLink>}
         >
           <p>The link wraps inside the page width.</p>
@@ -94,7 +94,7 @@ export default function SkipLinkDemo() {
       <DemoCase id="long-arabic" title="Long Arabic text" lang="ar">
         <Page
           id="demo-long-ar"
-          nav={navAr}
+          nav={navAr} label="الموقع"
           skip={<SkipLink href="#demo-long-ar">الانتقال مباشرة للمحتوى الرئيسي وتجاوز القائمة وشريط التنبيهات</SkipLink>}
         >
           <p>الرابط ينكسر لسطرين داخل عرض الصفحة.</p>
