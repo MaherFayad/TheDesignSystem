@@ -11841,7 +11841,7 @@
     ],
     "a11y": {
       "role": "combobox on the trigger part (the APG select-only combobox: a focusable element that is not a text box), aria-haspopup listbox, aria-expanded, aria-controls, named by the Field label. The popup has no role of its own and holds a SearchField, a ListBox with aria-multiselectable named like the trigger, and two Buttons. Not modal: the page stays in the accessibility tree.",
-      "focus": "The trigger is one tab stop. Opening moves focus to the search field when there is one, else to the list (the first chosen option, else the first option). Escape, Enter in the list, or a choice outside returns focus to the trigger; a press outside the popup leaves focus where it lands.",
+      "focus": "The trigger is one tab stop. Opening moves focus to the search field when there is one, else to the list (the first chosen option, else the first option). Escape or Enter in the list returns focus to the trigger; a press outside the popup closes it and leaves focus where it lands. A press on the Field label focuses the trigger.",
       "keys": {
         "Enter": "On the trigger, opens the popup. In the list, closes the popup and returns focus to the trigger",
         "Space": "On the trigger, opens the popup. In the list, toggles the option",
@@ -11849,19 +11849,21 @@
         "ArrowUp": "On the trigger, opens the popup. In the list, moves to the previous option",
         "Home": "In the list, moves to the first option",
         "End": "In the list, moves to the last option",
-        "Ctrl+A": "In the list, selects every shown enabled option (Cmd+A on a Mac)",
+        "Ctrl+A": "In the list, selects every shown enabled option (Cmd+A on a Mac); when all are already chosen, it clears them",
         "Typeahead": "In the list, typing letters moves to the next option whose label starts with them",
         "Tab": "Moves between the search field, the list and the actions; focus stays inside the open popup and wraps from the last stop to the first",
-        "Escape": "Closes the popup without changing the values and returns focus to the trigger"
+        "Escape": "Closes the popup without changing the values and returns focus to the trigger. In the search field, the first Escape clears the query and the second closes"
       },
-      "announce": "The trigger reads its Field label, the chosen labels as a list (Design and Copy; in Arabic تصميم و خلل) or the count, and that it opens a list. In the list each option reads its label, selected or not, and unavailable.",
+      "announce": "The trigger reads its Field label, the chosen labels as a list (Design and Copy; in Arabic تصميم ومحتوى) or the count, and that it opens a list. In the list each option reads its label, selected or not, and unavailable.",
       "notes": [
         "The tags in the trigger are drawn only (aria-hidden) and hold no button: a remove button inside a combobox would be a control inside a control. The full list of labels is read from a visually hidden summary-text, written with Intl.ListFormat. Values are removed in the list or with Clear selection.",
         "slots.tag.max is the default maxTags (3): more values show as one +N tag, and the full list is read from summary-text.",
         "Checked state is the ListBox check icon, never color alone (WCAG 1.4.1). The +N tag never hides a value from a screen reader.",
         "The search field and the actions sit outside the Field context, so they never take the Field's id, label or error.",
         "Every target is at least size.target-min: the trigger fills the box, list rows, the sm search field and the sm Buttons (WCAG 2.5.8).",
-        "Contract: the variants case marks one trigger with data-demo-trigger. Enter, Space and ArrowDown on the trigger are checked as state changes (aria-expanded). The box stamps no data-state; data-state open and closed is on the popup root."
+        "Contract: the variants case marks one trigger with data-demo-trigger. Enter, Space and ArrowDown on the trigger are checked as state changes (aria-expanded). The box stamps no data-state; data-state open and closed is on the popup root.",
+        "required is announced (aria-required) only; it does not block a native form submit. Hidden inputs are written only for values that match an option.",
+        "Arabic count words are in white Saudi dialect, like the Combobox count (نتيجتين): عنصرين محددين for two, 11 عنصر محدد for 11 to 99. A product in Gulf modern standard Arabic passes formatCount (عنصران محددان، 11 عنصرا محددا)."
       ]
     },
     "content": {
@@ -20719,6 +20721,304 @@
         "ArrowUp": {
           "focus": "[data-orientation='vertical'] [data-part='trigger'][data-state='active']",
           "case": "variants",
+          "expect": "focus-moves"
+        }
+      }
+    },
+    "since": "0.1.0"
+  },
+  {
+    "name": "TagField",
+    "kind": "component",
+    "family": "selection",
+    "summary": "A box where people type free tags: Enter or a comma adds the text as a tag, each tag has a remove button, and optional suggestions show under the box.",
+    "useWhen": [
+      "People add their own words as a list of values, such as tags on a post, keywords or email domains",
+      "Any text is a valid value, with suggestions from words used before",
+      "Pasting a list separated by commas or lines should become many values at once"
+    ],
+    "avoidWhen": [
+      "The values must come from a fixed list",
+      "Only one value is allowed",
+      "Long text or sentences, not short words"
+    ],
+    "insteadUse": {
+      "Several values from a fixed list": "MultiSelect",
+      "One value from a long fixed list": "Combobox",
+      "One free text value with suggestions": "Autocomplete",
+      "Long text": "Textarea",
+      "Values shown and removed outside a field": "Chip"
+    },
+    "anatomy": [
+      "root",
+      "tags",
+      "tag",
+      "tag-label",
+      "tag-remove",
+      "control",
+      "status",
+      "popup"
+    ],
+    "parts": {
+      "TagField": "root"
+    },
+    "slots": {
+      "tag-remove": {
+        "accepts": [
+          "CloseButton"
+        ],
+        "max": 1
+      },
+      "popup": {
+        "accepts": [
+          "ListBox"
+        ],
+        "max": 1
+      }
+    },
+    "props": {
+      "value": {
+        "type": "string",
+        "description": "The tags (string[]), controlled with onValueChange."
+      },
+      "defaultValue": {
+        "type": "string",
+        "default": [],
+        "description": "Uncontrolled starting tags (string[])."
+      },
+      "onValueChange": {
+        "type": "function",
+        "description": "Called with the new string[] after an add or a removal."
+      },
+      "suggestions": {
+        "type": "node",
+        "description": "Suggested tags as ListBox items (an array of { value, label } or groups). The control becomes an ARIA 1.2 combobox with list autocomplete; tags already added are not suggested; choosing one adds its label."
+      },
+      "max": {
+        "type": "number",
+        "description": "The most tags. Text past it is not added and the status says so."
+      },
+      "size": {
+        "type": [
+          "sm",
+          "md",
+          "lg"
+        ],
+        "default": "md",
+        "description": "Box height at one line from size.control (28, 32, 44px at default density). Tags are size.control.xs high; the box grows a line at a time."
+      },
+      "shape": {
+        "type": [
+          "default",
+          "pill"
+        ],
+        "default": "default",
+        "description": "default: the style's control radius (a pill in Studio and Desk). pill: always fully round; best for one line."
+      },
+      "invalid": {
+        "type": "boolean",
+        "default": false,
+        "description": "The danger border and aria-invalid. Inside a Field it follows the Field's error."
+      },
+      "disabled": {
+        "type": "boolean",
+        "default": false,
+        "description": "Native disabled on the control; remove buttons aria-disabled. Inside a Field it follows the Field."
+      },
+      "readOnly": {
+        "type": "boolean",
+        "default": false,
+        "description": "Tags show without remove buttons; the control is read only. A dashed border."
+      },
+      "required": {
+        "type": "boolean",
+        "default": false,
+        "description": "aria-required on the control. Inside a Field it follows the Field."
+      },
+      "removeLabel": {
+        "type": "function",
+        "default": "Remove tag <tag>",
+        "description": "The name of each remove button. Arabic default: حذف الوسم <tag>."
+      },
+      "formatRemoved": {
+        "type": "function",
+        "default": "Removed tag <tag>",
+        "description": "The words read once after a removal. Arabic default: تم حذف الوسم <tag>."
+      },
+      "name": {
+        "type": "string",
+        "description": "Submits each tag under this name in a form, one hidden input per tag."
+      },
+      "placeholder": {
+        "type": "string",
+        "description": "A hint in the empty control, a verb plus a noun: Add a tag. Never the only label."
+      }
+    },
+    "states": [
+      "open",
+      "closed",
+      "data-invalid",
+      "data-disabled",
+      "data-readonly"
+    ],
+    "a11y": {
+      "role": "The control is a text input, named by the Field label. With suggestions it is an ARIA 1.2 combobox (aria-autocomplete list, aria-expanded, aria-controls, aria-activedescendant) and the popup holds a ListBox named like the field. The tags are a list (role list and listitem) named like the field; each remove button is a CloseButton named Remove tag <tag>. Not modal.",
+      "focus": "The control is the one tab stop; remove buttons are reached with Backspace and the arrow keys (tabindex -1). After a removal focus moves to the next tag, else the one before, else the control. With suggestions focus stays in the control.",
+      "keys": {
+        "Enter": "Adds the typed text as a tag, or the highlighted suggestion; with an empty control it does what the form does",
+        "Comma": "Adds the typed text as a tag (the comma and the Arabic comma ،)",
+        "Backspace": "On an empty control, focuses the last tag's remove button. On a remove button, removes that tag",
+        "Delete": "On a remove button, removes that tag",
+        "ArrowLeft": "With the caret at the start, moves to the last tag; between tags, to the one before. In right to left layouts this is ArrowRight",
+        "ArrowRight": "Between tags, to the next one, and past the last back to the control. In right to left layouts this is ArrowLeft",
+        "Home": "On a remove button, moves to the first tag",
+        "End": "On a remove button, moves back to the control",
+        "ArrowDown": "With suggestions: opens them, then moves to the next suggestion",
+        "ArrowUp": "With suggestions: moves to the previous suggestion. Escape closes the suggestions"
+      },
+      "announce": "Each removal is read once from a polite status (Removed tag design; Arabic تم حذف الوسم design). A duplicate and the max are read the same way (design is already added). The status empties first, so the same words are read again.",
+      "notes": [
+        "Splitting and duplicates come from @the-system/shared tags.ts: the comma, the Arabic comma and new lines split; parts are trimmed; two tags are the same when their normalize() forms match (case, accents, Arabic diacritics, tatweel and alef forms ignored).",
+        "Pasting text with a separator adds every part at once; a single line pastes as typed text.",
+        "Every remove button has its own name (Remove tag design), never a bare Close (WCAG 2.4.6, 4.1.2). Remove buttons are 24px targets (size.target-min, WCAG 2.5.8) and keep the close icon, never color alone.",
+        "The suggestions popup is portaled into a Theme copied from the field's Theme and is its own root carrying data-part popup, as the Combobox popup is.",
+        "IME composition: Enter that confirms a composition never adds a tag.",
+        "Contract: the root is read as a field, not an overlay (no trigger): the popup holds no tab stop. data-state open and closed is on the popup root only. Backspace is checked on the one case control as focus-moves.",
+        "Disabled: the control is natively disabled and the tag list carries aria-disabled, so the faded tags read as unavailable (WCAG 1.4.3 exempts inactive components)."
+      ]
+    },
+    "content": {
+      "en": {
+        "label": "A plural noun in a Field label: Tags, Keywords.",
+        "placeholder": "A verb plus a noun: Add a tag.",
+        "hint": "Say how to add: Press Enter or type a comma to add a tag.",
+        "tags": "Short words, as people write them.",
+        "error": "Say what to do: Add at least one tag."
+      },
+      "ar": {
+        "label": "Noun form, no diacritics: الوسوم.",
+        "placeholder": "Noun form: إضافة وسم.",
+        "hint": "اضغط Enter أو اكتب فاصلة لإضافة وسم.",
+        "remove": "حذف الوسم <tag>.",
+        "error": "أضف وسم واحد على الأقل."
+      }
+    },
+    "tokens": [
+      "blur.window-saturation",
+      "blur.window-strong",
+      "border.width.default",
+      "border.width.strong",
+      "color.bg.overlay-10",
+      "color.bg.overlay-5",
+      "color.bg.surface-2",
+      "color.bg.surface-3",
+      "color.border.control",
+      "color.border.control-hover",
+      "color.border.hairline",
+      "color.border.strong",
+      "color.focus.ring",
+      "color.focus.ring-on-primary-inner",
+      "color.material.glass-solid",
+      "color.material.glass-strong",
+      "color.primary.fill",
+      "color.primary.text",
+      "color.state.danger-text",
+      "color.text.default",
+      "color.text.muted",
+      "color.text.placeholder",
+      "duration.base",
+      "duration.quick",
+      "ease.default",
+      "ease.emphasized",
+      "ease.exit",
+      "elevation.input-focus",
+      "elevation.menu",
+      "focus.shadow.ring",
+      "font.family.sans",
+      "font.leading.arabic.snug",
+      "font.leading.snug",
+      "font.size.fixed-m",
+      "font.size.m",
+      "font.size.s",
+      "font.size.xs",
+      "font.weight.regular",
+      "list.row.height",
+      "menu.width.min",
+      "opacity.disabled",
+      "radius.card",
+      "radius.control",
+      "radius.panel",
+      "radius.pill",
+      "scale.press",
+      "size.control.lg",
+      "size.control.md",
+      "size.control.sm",
+      "size.control.xs",
+      "size.target-min",
+      "space.2xl",
+      "space.2xs",
+      "space.3xs",
+      "space.4xs",
+      "space.m",
+      "space.s",
+      "z.menu"
+    ],
+    "motion": "menu-scale",
+    "frameworks": {
+      "react": {
+        "status": "ready",
+        "behavior": "hand built; suggestions on radix:Popover (Root, Anchor, Content) with ListBox virtualFocus; tags.ts from @the-system/shared",
+        "example": "TagField.demo.tsx",
+        "note": "Sources Figma-Killer-2 TagPill/ and AddablePropertyField/ were not reachable in the lane session; the box follows the Combobox field, the tags Chip, the popup the list family popup."
+      },
+      "angular": {
+        "status": "planned",
+        "behavior": "hand built with cdk:overlay and the shared tags.ts"
+      },
+      "native": {
+        "status": "planned",
+        "behavior": "hand built: a wrapping row of tags and a TextInput"
+      }
+    },
+    "styles": {
+      "studio": "The box is the Input box: a transparent pill with the control border, the glow and the ring while anything inside has focus. Tags are overlay-10 pills with a ghost CloseButton. The popup is the Studio menu surface.",
+      "desk": "The same box and tags. The suggestions popup is the Desk menu glass; the lit row is the yellow primary fill (the Desk ListBox recipe).",
+      "neutral": "Tokens only: the Neutral control radius and border, the Neutral menu surface."
+    },
+    "mistakes": [
+      {
+        "wrong": "A remove button named Close or Remove",
+        "right": "Remove tag design: each button names its tag (built in)"
+      },
+      {
+        "wrong": "Adding Design and design as two tags",
+        "right": "Duplicates dropped, case and diacritic insensitive, and announced (built in)"
+      },
+      {
+        "wrong": "Only Enter adds a tag",
+        "right": "Enter, the comma and the Arabic comma, and pasted lists (built in)"
+      },
+      {
+        "wrong": "A TagField for values that must be in a list",
+        "right": "MultiSelect"
+      },
+      {
+        "wrong": "Removing a tag silently and dropping focus to the page",
+        "right": "The status says it once and focus moves to the next tag (built in)"
+      }
+    ],
+    "contract": {
+      "optionalParts": [
+        "tags",
+        "tag",
+        "tag-label",
+        "tag-remove",
+        "popup"
+      ],
+      "keys": {
+        "Backspace": {
+          "focus": "[data-part='control']",
+          "case": "one",
           "expect": "focus-moves"
         }
       }

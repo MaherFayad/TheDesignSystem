@@ -95,6 +95,7 @@ export const routes: DemoRoute[] = [
   { name: 'TabBar', slug: 'tab-bar', load: () => import('../../../packages/react/src/components/TabBar/TabBar.demo') },
   { name: 'TableOfContents', slug: 'table-of-contents', load: () => import('../../../packages/react/src/components/TableOfContents/TableOfContents.demo') },
   { name: 'Tabs', slug: 'tabs', load: () => import('../../../packages/react/src/components/Tabs/Tabs.demo') },
+  { name: 'TagField', slug: 'tag-field', load: () => import('../../../packages/react/src/components/TagField/TagField.demo') },
   { name: 'Textarea', slug: 'textarea', load: () => import('../../../packages/react/src/components/Textarea/Textarea.demo') },
   { name: 'Tile', slug: 'tile', load: () => import('../../../packages/react/src/components/Tile/Tile.demo') },
   { name: 'TitleBar', slug: 'title-bar', load: () => import('../../../packages/react/src/components/TitleBar/TitleBar.demo') },

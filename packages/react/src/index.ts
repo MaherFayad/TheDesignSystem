@@ -87,6 +87,7 @@ export * from './components/Switch/index';
 export * from './components/TabBar/index';
 export * from './components/TableOfContents/index';
 export * from './components/Tabs/index';
+export * from './components/TagField/index';
 export * from './components/Textarea/index';
 export * from './components/Tile/index';
 export * from './components/TitleBar/index';

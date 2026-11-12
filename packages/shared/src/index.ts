@@ -13,6 +13,7 @@ export * from './resize';
 export * from './shortcut';
 export * from './space';
 export * from './stepper';
+export * from './tags';
 export * from './theme';
 export * from './toast';
 export * from './toc';
