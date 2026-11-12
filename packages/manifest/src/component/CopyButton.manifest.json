@@ -246,8 +246,10 @@
       "example": "CopyButton.demo.tsx"
     },
     "angular": {
-      "status": "planned",
-      "behavior": "button[dsCopyButton] on the shared Button.css"
+      "status": "ready",
+      "behavior": "button[dsCopyButton] on DsButtonBase, the clipboard inside the click handler",
+      "example": "copy-button.demo.ts",
+      "note": "onCopied and onCopyFailed are the copied and copyFailed outputs. A (click) of the caller that calls preventDefault cancels the copy, as onClick does in React. The copy logic is a copy of the React copy.ts until it moves to packages/shared."
     },
     "native": {
       "status": "planned",
