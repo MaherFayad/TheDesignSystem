@@ -1,7 +1,9 @@
 import { render, screen } from '@testing-library/react';
+import { userEvent } from '@testing-library/user-event';
 import { describe, expect, it } from 'vitest';
 import { Checkbox } from '../Checkbox/Checkbox';
 import { Field } from '../Field/Field';
+import { Form, FormSubmit } from '../Form/Form';
 import { Input } from '../Input/Input';
 import FieldsetDemo from './Fieldset.demo';
 import { Fieldset } from './index';
@@ -135,6 +137,30 @@ describe('Fieldset', () => {
     expect(el.hasAttribute('data-disabled')).toBe(true);
     expect(screen.getByRole('textbox', { name: 'City' }).matches(':disabled')).toBe(true);
     expect(screen.getByRole('checkbox', { name: 'Use for shipping' }).matches(':disabled')).toBe(true);
+  });
+
+  it('with name, inside a Form: shows the Form error for that name in the error part', async () => {
+    globalThis.ResizeObserver ??= class {
+      observe() {}
+      unobserve() {}
+      disconnect() {}
+    } as unknown as typeof ResizeObserver;
+    const { container } = render(
+      <Form validators={{ reach: (v) => (v === undefined ? 'Pick at least one way to reach you.' : undefined) }} actions={<FormSubmit>Save contact</FormSubmit>}>
+        <Fieldset legend="How should we reach you" name="reach" error="Unused while the Form has an error.">
+          <Checkbox name="reach" value="email" label="Email" />
+          <Checkbox name="reach" value="call" label="Phone call" />
+        </Fieldset>
+      </Form>,
+    );
+    const el = root(container);
+    expect(el.getAttribute('data-name')).toBe('reach');
+    expect(el.hasAttribute('name')).toBe(false);
+    await userEvent.click(screen.getByRole('button', { name: 'Save contact' }));
+    const error = el.querySelector('[data-part="error"]');
+    expect(error?.textContent).toBe('Pick at least one way to reach you.');
+    expect(describedBy(el)).toContain(error?.id);
+    expect(document.activeElement).toBe(screen.getByRole('checkbox', { name: 'Email' }));
   });
 
   it('renders every demo case', () => {
