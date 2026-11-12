@@ -22,7 +22,8 @@
     isolation: isolate;
   }
 
+  /* Any z token works inside the isolated control. A z.raised token (1) is requested from the lead. */
   [data-ds='range-slider'] [data-part='control'] > :has(> [data-part='thumb']:focus) {
-    z-index: calc(var(--ds-z-canvas) + 1);
+    z-index: var(--ds-z-canvas-selection);
   }
 }
