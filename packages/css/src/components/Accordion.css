@@ -160,5 +160,10 @@
     [data-ds='accordion'][data-variant='card'] > [data-part='item'] {
       border: var(--ds-border-width-default) solid CanvasText;
     }
+
+    /* No Button pill per trigger: the dividers and card edges draw the structure. A system color is kept as written, so Canvas hides the edge; the Highlight focus outline stays. */
+    [data-ds='accordion'] > [data-part='item'] > [data-part='header'] > [data-part='trigger'] {
+      border-color: Canvas;
+    }
   }
 }
