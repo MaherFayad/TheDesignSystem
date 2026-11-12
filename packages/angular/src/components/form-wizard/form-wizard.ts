@@ -30,6 +30,7 @@ import { NgTemplateOutlet } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
+  DestroyRef,
   ElementRef,
   Injector,
   afterNextRender,
@@ -170,6 +171,17 @@ function stepErrors(body: Element | null | undefined, required: string): FormWiz
   return out;
 }
 
+/** Attributes the panel sets itself: formProps never overrides them, as React's own props win over the spread. */
+const RESERVED = new Set(['data-part', 'novalidate', 'aria-labelledby', 'aria-describedby', 'aria-busy']);
+
+/** A React prop name to its attribute: acceptCharset to accept-charset, className to class, the rest lowercased. */
+function attributeName(key: string): string {
+  if (key === 'className') return 'class';
+  if (key === 'htmlFor') return 'for';
+  if (key === 'acceptCharset') return 'accept-charset';
+  return key.startsWith('aria-') || key.startsWith('data-') ? key : key.toLowerCase();
+}
+
 type PendingFocus = { kind: 'title' } | { kind: 'field'; index: number; names: string[] };
 
 let nextId = 0;
@@ -298,11 +310,14 @@ export class DsFormWizard {
   /** Bumped by every move, so a check that resolves after the user moved away is dropped. */
   private run = 0;
   private started = false;
+  /** Set on destroy, so work after an await does not touch a destroyed view. */
+  private destroyed = false;
 
   protected readonly pick = (index: number) => void this.go(index);
   protected readonly isText = (v: unknown): v is string => typeof v === 'string';
 
   constructor() {
+    inject(DestroyRef).onDestroy(() => (this.destroyed = true));
     consumeHostAttributes([
       'dsFormWizard', 'steps', 'defaultStep', 'mode', 'onSubmit', 'submitLabel', 'done', 'doneTitle', 'orientation', 'size',
       'stepsLabel', 'labels', 'defaultErrors', 'formProps',
@@ -327,9 +342,13 @@ export class DsFormWizard {
     afterRenderEffect(() => {
       const form = this.formRef().nativeElement;
       const props = this.formProps() ?? {};
-      for (const name of applied) if (!(name in props)) form.removeAttribute(name);
-      for (const [name, value] of Object.entries(props)) form.setAttribute(name.toLowerCase(), value);
-      applied = Object.keys(props).map((n) => n.toLowerCase());
+      const names = Object.keys(props).map(attributeName).filter((n) => !RESERVED.has(n));
+      for (const name of applied) if (!names.includes(name)) form.removeAttribute(name);
+      for (const [key, value] of Object.entries(props)) {
+        const name = attributeName(key);
+        if (!RESERVED.has(name)) form.setAttribute(name, value);
+      }
+      applied = names;
     });
     // The values the fields start with, so a review step shown first has them.
     afterNextRender(() => this.values.set(readFormValues(this.formElement)));
@@ -345,6 +364,7 @@ export class DsFormWizard {
 
   /** Focus after the next render, so an error is already linked through aria-describedby. */
   private focusAfterRender(target: PendingFocus): void {
+    if (this.destroyed) return;
     this.pendingFocus = target;
     afterNextRender(
       () => {
@@ -365,13 +385,17 @@ export class DsFormWizard {
 
   /** Checks one step and shows its errors. Returns the errors, empty when the step is valid. */
   private async check(index: number, all: FormWizardValues): Promise<FormWizardErrors> {
+    // The DOM is read before the wait, as React does.
+    const builtIn = stepErrors(this.bodyOf(index), this.words().required);
     const own = await this.steps()[index]?.validate?.(all);
-    const found = { ...stepErrors(this.bodyOf(index), this.words().required), ...(own ?? {}) };
+    if (this.destroyed) return {};
+    const found = { ...builtIn, ...(own ?? {}) };
     this.errors.update((e) => ({ ...e, [index]: found }));
     return found;
   }
 
   private moveTo(next: StepperState): void {
+    if (this.destroyed) return;
     this.run += 1;
     this.submitFailed.set(false);
     if (next.current === this.stepper().current) {
@@ -411,7 +435,7 @@ export class DsFormWizard {
       const token = this.run;
       this.checking.set(true);
       const found = await this.check(current, all);
-      if (token !== this.run) return;
+      if (token !== this.run || this.destroyed) return;
       if (Object.keys(found).length > 0) {
         this.stepper.update((s) => setStepComplete(s, current, false));
         this.focusAfterRender({ kind: 'field', index: current, names: Object.keys(found) });
@@ -438,6 +462,7 @@ export class DsFormWizard {
         next = setStepComplete(next, i, valid);
         if (!valid && firstBad === undefined) firstBad = { index: i, found };
       }
+      if (this.destroyed) return;
       this.checking.set(false);
       const current = this.stepper().current;
       if (firstBad !== undefined) {
@@ -453,10 +478,12 @@ export class DsFormWizard {
       this.state.set('submitting');
       try {
         await this.onSubmit()?.(all, el);
+        if (this.destroyed) return;
         this.focusAfterRender({ kind: 'title' });
         this.state.set('done');
         this.announce.set(this.doneTitle() ?? this.words().done);
       } catch {
+        if (this.destroyed) return;
         // Back to editing, with a message in the panel that the status says once (WCAG 3.3.1, 4.1.3).
         this.state.set('editing');
         this.submitFailed.set(true);

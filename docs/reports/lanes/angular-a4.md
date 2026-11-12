@@ -8,7 +8,7 @@ Branch `claude/ds-angular-a4`, created from `claude/relaxed-hypatia-7gseap` at `
 | --- | --- | --- | --- | --- |
 | Fieldset | 5 | 29 passed | equal, every case | 0 in all 12 shots |
 | Form | 9 | 29 passed | equal, every case; open dialog: see below | 0 in all 18 shots |
-| ConsentField | 6 | 29 passed | equal, every case | 0 in all 18 shots |
+| ConsentField | 7 | 29 passed | equal, every case | 0 in all 18 shots |
 | Stepper | 6 | 29 passed | equal, every case and after a step pick | 0 in all 12 shots |
 | FormWizard | 5 | 29 passed | equal, every case and after next, back, a failed check and a submit | 18 shots under the limit, at most 136 px (0.009 percent); see below |
 | FilterBar | 6 | 29 passed, 15 skipped | equal, every case, with the more menu open, and after chip, search, menu and clear all actions | 0 in all 12 shots |
@@ -246,7 +246,23 @@ Names that differ from React:
 
 ## Review
 
-One fresh eyes review (ds-qa, claude-opus-5-5 at medium) of the whole diff. See the commit "a4: review fixes" for what changed.
+One fresh eyes review (ds-qa, claude-opus-5-5 at medium) of the whole diff. Fixed in the commit "a4: review fixes":
+
+- Blocker: ConsentField started granted when `checked` arrived as a truthy string (a static `checked="true"` in a template without strict types). The state is now `checked() === true` everywhere. Test added.
+- Blocker: FormWizard scheduled focus with `afterNextRender` after an await, which throws once the wizard is destroyed (an `onSubmit` that navigates away). A destroyed flag now stops every step after an await.
+- Note: the same destroyed guard in Form after `await onSubmit`.
+- Note: FormSubmit now sets emphasis solid on itself, so a ButtonGroup's emphasis does not override it, as React's explicit prop.
+- Note: Form passes `group.value` (no disabled controls) to onSubmit, as FormData leaves them out.
+- Note: FormWizard reads the step's built in errors before awaiting `validate`, as React.
+- Note: FormWizard `formProps` no longer overrides the panel's own attributes (data-part, novalidate, aria-labelledby, aria-describedby, aria-busy) and maps `className`, `htmlFor` and `acceptCharset` to their attribute names.
+- Note: Stepper reads `defaultCurrent` once, as React's useState.
+
+Left open, with the reason:
+
+- ConsentField gives its error context through `viewProviders`, which also reaches the stand in control. The stand ins do not inject it; `dsCheckbox` and `dsSwitch` from A3 will. When they are swapped in (item 4 below), move the context onto the `p[dsFieldError]` with a small directive, and diff the DOM again.
+- Form finds Angular controls by a static `formcontrolname` attribute. A bound `[formControlName]` has no attribute, so its summary entry has no link and its error clears only on the next submit; a control with both `name` and a different `formControlName` is listed twice. The full fix reads `NgControl.path` through a content query.
+- ConsentField with `formControlName` and no `name` does not show the form's error for its path. Pass `name` as well.
+- FilterBar `value` and ConsentField `checked` are models: a one way binding acts as a starting value that the component then changes, where a React controlled value never changes without the parent. This is how `model()` works; write `[(value)]` or `[(checked)]` for a controlled use.
 
 ## Changes needed from the lead
 

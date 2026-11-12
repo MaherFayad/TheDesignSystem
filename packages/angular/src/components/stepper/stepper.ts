@@ -131,6 +131,12 @@ export class DsStepper {
   protected readonly words = computed<StepperLabels>(() => ({ ...stepperLabels[this.ar() ? 'ar' : 'en'], ...this.labels() }));
   protected readonly separator = computed(() => (this.ar() ? '، ' : ', '));
   private readonly own = signal<number | undefined>(undefined);
+  /** defaultCurrent is read once, at the first use, as React's useState. */
+  private seeded: number | undefined;
+  private firstCurrent(): number {
+    this.seeded ??= this.defaultCurrent();
+    return this.seeded;
+  }
   /** The furthest step reached. Without a completed input, every step before it stays complete, so going back never loses progress. */
   private readonly furthest = signal(0);
 
@@ -138,7 +144,7 @@ export class DsStepper {
   private readonly base = computed(() =>
     createStepperState({
       count: Math.max(this.steps().length, 1),
-      current: this.current() ?? this.own() ?? this.defaultCurrent(),
+      current: this.current() ?? this.own() ?? untracked(() => this.firstCurrent()),
       disabled: this.disabledIndexes(),
       mode: this.mode(),
     }),

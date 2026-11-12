@@ -38,6 +38,7 @@ import { NgTemplateOutlet } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
+  DestroyRef,
   ElementRef,
   Injector,
   afterNextRender,
@@ -315,6 +316,8 @@ export class DsForm extends DsFormContext {
   protected readonly targets = signal<Record<string, { id: string; label: string }>>({});
   protected readonly announcement = signal('');
   private submittedOnce = false;
+  /** Set on destroy, so work after an await does not touch a destroyed view. */
+  private destroyed = false;
   private seenServer: string | null = null;
 
   protected readonly listed = computed(() => orderErrors(this.order(), this.errors()));
@@ -326,6 +329,7 @@ export class DsForm extends DsFormContext {
 
   constructor() {
     super();
+    inject(DestroyRef).onDestroy(() => (this.destroyed = true));
     consumeHostAttributes(['dsForm', 'size', 'orientation', 'validators', 'onSubmit', 'serverErrors', 'actions', 'labels']);
 
     // Errors from outside: applied when their content changes, before the view renders, so they show on the first paint.
@@ -382,7 +386,8 @@ export class DsForm extends DsFormContext {
     const fromDom = readValues(this.host);
     const group = this.container?.control;
     if (!group) return fromDom;
-    const raw = (group as { getRawValue?: () => unknown }).getRawValue?.() ?? group.value;
+    // value, not getRawValue: disabled controls are left out, as the browser leaves them out of FormData.
+    const raw: unknown = group.value;
     return raw && typeof raw === 'object' ? { ...fromDom, ...(raw as FormValues) } : fromDom;
   }
 
@@ -427,10 +432,12 @@ export class DsForm extends DsFormContext {
     try {
       result = await submit(values, this.host);
     } catch {
+      if (this.destroyed) return;
       this.stateSignal.set('idle');
       this.show({}, [this.words().failed]);
       return;
     }
+    if (this.destroyed) return;
     const names = targetsOf(this.host).map((f) => f.name);
     const server = result === undefined || result === null ? { fields: {}, form: [] } : mapServerErrors(result, { names });
     if (hasErrors(server.fields) || server.form.length > 0) {

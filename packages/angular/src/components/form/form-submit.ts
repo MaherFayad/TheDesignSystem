@@ -51,6 +51,8 @@ export class DsFormSubmit extends DsButton {
   /** Default accent. */
   override readonly tone = input<ButtonTone>('accent');
   protected override readonly defaultEmphasis: ButtonEmphasis = 'solid';
+  /** Default solid, set on the control itself, so it wins over a ButtonGroup's emphasis as React's explicit prop does. */
+  override readonly emphasis = input<ButtonEmphasis | undefined>('solid');
   /** Shows loading of its own; the form's submitting state shows it too. */
   readonly loadingInput = input(false, { alias: 'loading', transform: booleanAttribute });
   /** Spoken while the form submits. Default "Sending", or Arabic under lang ar. */

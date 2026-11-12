@@ -69,18 +69,18 @@ let nextId = 0;
   host: {
     'data-ds': 'consent-field',
     '[attr.data-size]': 'size()',
-    '[attr.data-state]': 'checked() ? "granted" : "denied"',
+    '[attr.data-state]': 'granted() ? "granted" : "denied"',
     '[attr.data-required]': 'required() ? "" : null',
     '[attr.data-invalid]': 'isInvalid() ? "" : null',
     '[attr.data-disabled]': 'isDisabled() ? "" : null',
   },
   template: `
     @if (control() === 'switch') {
-      <div dsStandInSwitch part="control" managed [id]="controlId" [size]="size()" [name]="name()" [value]="value()" [checked]="checked()"
+      <div dsStandInSwitch part="control" managed [id]="controlId" [size]="size()" [name]="name()" [value]="value()" [checked]="granted()"
         [disabled]="isDisabled()" [required]="required()" [invalid]="isInvalid()" [aria-labelledby]="purposeId" [aria-describedby]="describedBy()"
         (checkedChangeByUser)="decide($event)"></div>
     } @else {
-      <div dsStandInCheckbox part="control" managed [id]="controlId" [size]="size()" [name]="name()" [value]="value()" [checked]="checked()"
+      <div dsStandInCheckbox part="control" managed [id]="controlId" [size]="size()" [name]="name()" [value]="value()" [checked]="granted()"
         [disabled]="isDisabled()" [required]="required()" [invalid]="isInvalid()" [aria-labelledby]="purposeId" [aria-describedby]="describedBy()"
         (checkedChangeByUser)="decide($event)"></div>
     }
@@ -147,6 +147,8 @@ export class DsConsentField implements ControlValueAccessor {
   private readonly errorId = `${this.base}error`;
   private readonly formDisabled = signal(false);
 
+  /** Only a real true grants: a static `checked="true"` attribute arrives as a string and stays denied. */
+  protected readonly granted = computed(() => this.checked() === true);
   protected readonly isDisabled = computed(() => this.disabled() || this.formDisabled());
   protected readonly shownError = computed(() => {
     const name = this.name();

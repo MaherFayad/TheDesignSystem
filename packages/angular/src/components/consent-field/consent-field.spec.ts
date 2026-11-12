@@ -12,6 +12,7 @@ const tick = () => new Promise((resolve) => setTimeout(resolve, 0));
   template: `
     <div dsConsentField id="plain" name="offers" version="2.1" purpose="Send me offers by email." detailsHref="#privacy" meta="Text version 2.1."
       defaultChecked (decision)="records.push($event)"></div>
+    <div dsConsentField id="stringy" purpose="Send me news." [checked]="$any('true')"></div>
     <div dsConsentField id="settings" control="switch" purpose="Use my location." [(checked)]="granted"></div>
     <div dsConsentField id="required" required purpose="Share my history." [error]="error()" [invalid]="invalid()"></div>
     <div dsConsentField id="cva" purpose="Send me a survey." [formControl]="survey"></div>
@@ -56,6 +57,12 @@ describe('DsConsentField', () => {
     expect(details.getAttribute('data-ds')).toBe('link');
     expect(details.textContent?.trim()).toBe('How we use your data');
     expect(details.getAttribute('href')).toBe('#privacy');
+  });
+
+  it('stays denied when checked arrives as a string, as a static attribute does in a template without strict types', async () => {
+    const { q } = await setup();
+    expect(q('#stringy').getAttribute('data-state')).toBe('denied');
+    expect(q('#stringy [data-part="control"] button').getAttribute('aria-checked')).toBe('false');
   });
 
   it('a click grants, a second click withdraws, and each choice emits a record', async () => {
