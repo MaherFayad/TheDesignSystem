@@ -110,6 +110,33 @@ describe('loops', () => {
     vi.unstubAllGlobals();
   });
 
+  it('pauseLoops also pauses the endless CSS loops components play, which carry no catalog id (WCAG 2.2.2)', () => {
+    const fake = (id: string, iterations: number, playState: AnimationPlayState) => {
+      const a = {
+        id,
+        playState,
+        effect: { getTiming: () => ({ iterations }) },
+        pause() {
+          a.playState = 'paused';
+        },
+        play() {
+          a.playState = 'running';
+        },
+      };
+      return a;
+    };
+    const cssSpinner = fake('', Infinity, 'running');
+    const cssFade = fake('', 1, 'running');
+    // A loop the CSS paused on purpose: resumeLoops must leave it paused.
+    const heldByCss = fake('', Infinity, 'paused');
+    const made = [cssSpinner, cssFade, heldByCss];
+    const root = { getAnimations: (o?: { subtree?: boolean }) => (o?.subtree ? made : []) } as unknown as Element;
+    expect(core.pauseLoops(root)).toBe(1);
+    expect(made.map((a) => a.playState)).toEqual(['paused', 'running', 'paused']);
+    expect(core.resumeLoops(root)).toBe(1);
+    expect(made.map((a) => a.playState)).toEqual(['running', 'running', 'paused']);
+  });
+
   it('the spinner native block loops with -1, as Reanimated wants', () => {
     expect(catalog.spinner.native.iterations).toBe(-1);
     expect(catalog.spinner.native.easing).toEqual([0, 0, 1, 1]);
