@@ -5,3 +5,7 @@ export * from './components/Field/index';
 export * from './components/Icon/index';
 export * from './components/IconButton/index';
 export * from './components/Input/index';
+export * from './components/TitleBar/index';
+export * from './components/Toast/index';
+export * from './components/Window/index';
+export * from './components/WindowControls/index';

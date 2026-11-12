@@ -106,10 +106,11 @@
     },
     "anatomy": [
       "root",
-      "icon-start",
+      "start",
       "label",
-      "icon-end",
-      "spinner"
+      "end",
+      "spinner",
+      "status"
     ],
     "slots": {
       "label": {
@@ -117,13 +118,13 @@
         "min": 1,
         "max": 1
       },
-      "icon-start": {
+      "start": {
         "accepts": [
           "Icon"
         ],
         "max": 1
       },
-      "icon-end": {
+      "end": {
         "accepts": [
           "Icon"
         ],
@@ -176,25 +177,35 @@
       "loading": {
         "type": "boolean",
         "default": false,
-        "description": "Shows the spinner, sets aria-busy and data-loading, keeps the width and focus, blocks activation."
+        "description": "Shows the spinner and a visually hidden status (loadingLabel), sets aria-busy and data-loading, keeps the width and focus, blocks activation."
+      },
+      "loadingLabel": {
+        "type": "string",
+        "default": "Loading",
+        "description": "What the hidden status says while loading, for example Saving changes or جار الحفظ."
       },
       "disabled": {
         "type": "boolean",
         "default": false,
-        "description": "Sets aria-disabled and data-disabled. Stays focusable so a Tooltip can say why. The native disabled attribute is never set."
+        "description": "Sets aria-disabled and data-disabled. Stays focusable so a Tooltip can say why. The native disabled attribute is never set. On an asChild link the href is removed while disabled."
       },
-      "iconStart": {
+      "start": {
         "type": "node",
-        "description": "A system icon name or an icon element, before the label."
+        "description": "Leading content: a system icon name or a node, before the label. Icons are 16px at every size, lg included, as in both sources."
       },
-      "iconEnd": {
+      "end": {
         "type": "node",
-        "description": "A system icon name or an icon element, after the label."
+        "description": "Trailing content: a system icon name or a node, after the label. 16px at every size."
       },
       "fullWidth": {
         "type": "boolean",
         "default": false,
         "description": "Fills the width of its container. Sets data-full-width."
+      },
+      "wrap": {
+        "type": "boolean",
+        "default": false,
+        "description": "Lets a long label wrap and the button grow in height. Off by default: the label ends in an ellipsis and the button shrinks with its row, so nothing scrolls sideways at 320px. Sets data-wrap. Desk draws no roll on a wrapping label."
       },
       "asChild": {
         "type": "boolean",
@@ -220,19 +231,17 @@
       "data-loading",
       "data-disabled",
       "data-full-width",
-      "hover",
-      "active",
-      "focus-visible"
+      "data-wrap"
     ],
     "a11y": {
       "role": "button (native button element), or the role of the asChild element",
-      "focus": "In the tab order in every state, disabled and loading included. A 2px ring on keyboard focus; the solid accent button gets two rings, inner and outer.",
+      "focus": "In the tab order in every state, disabled and loading included. A 2px ring on keyboard focus; every solid fill gets the doubled ring (focus.shadow.primary) so it reads against the fill.",
       "keys": {
         "Enter": "Activates the button",
         "Space": "Activates the button",
         "Tab": "Moves focus to the next control"
       },
-      "announce": "The label is the accessible name. Loading sets aria-busy; for a long wait, say the busy verb in a live region (Toast or a status line).",
+      "announce": "The label is the accessible name. While loading, a visually hidden status inside the button says loadingLabel (Loading by default) and aria-busy is set.",
       "native": {
         "accessibilityRole": "button",
         "accessibilityState": [
@@ -242,9 +251,10 @@
       },
       "notes": [
         "Disabled and loading use aria-disabled, not the native disabled attribute, so focus never drops to the page when an action starts.",
-        "While disabled or loading, a click does not submit a form or follow an asChild link, and onClick, onPointerDown and onKeyDown do not run.",
+        "While disabled or loading, a click or middle click does not submit a form or follow an asChild link, and onClick, onAuxClick, onPointerDown and onKeyDown do not run. A disabled asChild link loses its href and keeps role link.",
         "Icons inside the button are hidden from assistive tech. The label names the button.",
-        "No native title attribute. A hint comes from Tooltip."
+        "Under forced colors the focus outline uses Highlight and the Desk roll is off.",
+        "No native title attribute. Hints come from Tooltip (wave 1)."
       ]
     },
     "content": {
@@ -265,17 +275,16 @@
       "size.control.lg",
       "size.target-min",
       "size.icon.sm",
+      "size.icon.md",
       "space.xs",
       "space.s",
       "space.xl",
       "space.2xl",
       "space.2xs",
-      "space.3xs",
       "radius.control",
       "radius.field",
       "radius.pill",
       "radius.sm",
-      "radius.xs",
       "border.width.default",
       "border.width.strong",
       "font.family.sans",
@@ -285,6 +294,7 @@
       "font.weight.bold",
       "font.leading.tight",
       "font.tracking.none",
+      "opacity.disabled",
       "color.bg.overlay-5",
       "color.bg.overlay-10",
       "color.bg.overlay-20",
@@ -293,8 +303,6 @@
       "color.text.default",
       "color.text.muted",
       "color.text.bright",
-      "color.text.link",
-      "color.text.on-accent",
       "color.border.control",
       "color.border.control-hover",
       "color.primary.fill",
@@ -302,21 +310,36 @@
       "color.primary.fill-pressed",
       "color.primary.text",
       "color.primary.border",
+      "color.primary.tint",
+      "color.primary.tint-hover",
+      "color.primary.on-surface",
+      "color.state.danger.solid",
+      "color.state.danger.solid-hover",
+      "color.state.danger.on-solid",
       "color.state.danger.text",
       "color.state.danger.on-tint",
       "color.state.danger.border",
       "color.state.danger.tint-10",
       "color.state.danger.tint-20",
+      "color.state.success.solid",
+      "color.state.success.solid-hover",
+      "color.state.success.on-solid",
       "color.state.success.text",
       "color.state.success.on-tint",
       "color.state.success.border",
       "color.state.success.tint-10",
       "color.state.success.tint-20",
+      "color.state.warning.solid",
+      "color.state.warning.solid-hover",
+      "color.state.warning.on-solid",
       "color.state.warning.text",
       "color.state.warning.on-tint",
       "color.state.warning.border",
       "color.state.warning.tint-10",
       "color.state.warning.tint-20",
+      "color.state.info.solid",
+      "color.state.info.solid-hover",
+      "color.state.info.on-solid",
       "color.state.info.text",
       "color.state.info.on-tint",
       "color.state.info.border",
@@ -324,11 +347,16 @@
       "color.state.info.tint-20",
       "focus.shadow.ring",
       "focus.shadow.primary",
+      "color.focus.ring",
+      "color.focus.ring-on-primary-inner",
+      "color.focus.ring-on-primary-outer",
       "duration.fast",
-      "duration.moderate",
       "duration.spin",
-      "duration.roll",
       "ease.default",
+      "space.3xs",
+      "radius.xs",
+      "color.text.link",
+      "duration.roll",
       "ease.reveal"
     ],
     "motion": "press",
@@ -336,7 +364,8 @@
       "react": {
         "status": "ready",
         "behavior": "native button, radix:Slot",
-        "example": "Button.demo.tsx"
+        "example": "Button.demo.tsx",
+        "note": "Motion: press, named from the pattern catalog that arrives in wave 1. Today: instant color swaps, the spinner, and the Desk roll label."
       },
       "angular": {
         "status": "planned",
@@ -350,8 +379,8 @@
       }
     },
     "styles": {
-      "studio": "Bordered and filled overlay pills. The primary action is the neutral fill from color.primary (overlay 20 with the control border). Hover and press step the overlay at once.",
-      "desk": "Pill shaped at every size. The primary action is yellow #ffd84d with ink text and a doubled focus ring. The label rolls up on hover and keyboard focus, a copy rolling in from below (recipes/Button.css), off under reduced motion.",
+      "studio": "Bordered and filled overlay pills. The primary action is the neutral fill from color.primary (overlay 20 with the control border); the accent tint is the overlay too. Hover and press step the overlay at once.",
+      "desk": "Pill shaped at every size. The primary action is yellow #ffd84d with ink text and a doubled focus ring; accent soft is a yellow tint. The label rolls up on hover and keyboard focus, a copy rolling in from below (recipes/Button.css), off under reduced motion and forced colors and on a wrapping label.",
       "neutral": "Planned: filled primary, outline secondary, 36 to 40px.",
       "liquid": "Planned: capsule buttons with a press scale."
     },
@@ -491,7 +520,6 @@
       },
       "announce": "The description, then the error, are read with the control through aria-describedby when focus lands there. The error is not a live region and never role alert, so an error that is there when the page loads does not interrupt.",
       "native": {
-        "accessibilityRole": "none",
         "accessibilityState": [
           "disabled"
         ]
@@ -500,7 +528,8 @@
         "The required mark is an asterisk glyph, so it does not rely on color, and it is aria-hidden. The control carries aria-required, not the native required attribute, so the browser shows no validation bubble.",
         "The error starts with a danger icon, so it does not rely on color.",
         "Controls read the wiring with useFieldControl(): id, aria-describedby, aria-invalid, aria-required, disabled and readOnly. A value the control passes itself wins.",
-        "A form that checks on submit moves focus to the first invalid control."
+        "A form that checks on submit moves focus to the first invalid control.",
+        "Validate on blur or on submit, never on every key. On submit, move focus to the first invalid control."
       ]
     },
     "content": {
@@ -508,14 +537,16 @@
         "label": "A noun in sentence case that names the value: Email, Board name. No colon, no question.",
         "description": "One sentence that helps fill the field or says where the value shows. Not a repeat of the label.",
         "error": "Says what to do, in plain words: Add the part after the @. Never only Invalid or Required.",
-        "placeholder": "Never the label. An example value at most: For example, spring launch."
+        "placeholder": "Never the label. An example value at most: For example, spring launch.",
+        "required": "Mark required fields with * and say once, above the form, that fields marked * are required."
       },
       "ar": {
         "label": "اسم بصيغة المصدر أو الاسم، بدون تشكيل: البريد الإلكتروني، اسم اللوحة",
         "description": "جملة وحدة توضح وش يكتب أو وين تظهر القيمة",
         "error": "يقول وش يسوي عشان يصلحها: البريد ناقص، اكتبه كامل. مو بس غلط",
         "placeholder": "ما يكون بديل عن العنوان. مثال على القيمة بس",
-        "latin": "النص اللاتيني داخل العربي يمر عبر Bidi"
+        "latin": "النص اللاتيني داخل العربي يمر عبر Bidi",
+        "required": "سطر واحد فوق النموذج: الحقول اللي عليها * مطلوبة"
       }
     },
     "tokens": [
@@ -523,7 +554,7 @@
       "space.3xs",
       "space.2xs",
       "space.l",
-      "control-row.label.width",
+      "field.label.width",
       "font.size.s",
       "font.weight.semibold",
       "font.weight.regular",
@@ -750,7 +781,8 @@
     "anatomy": [
       "root",
       "icon",
-      "spinner"
+      "spinner",
+      "status"
     ],
     "slots": {
       "icon": {
@@ -765,12 +797,12 @@
       "icon": {
         "type": "node",
         "required": true,
-        "description": "A system icon name or an icon element. Hidden from assistive tech."
+        "description": "A system icon name or a node. Hidden from assistive tech. 16px at every size, lg included, as in both sources."
       },
       "label": {
         "type": "string",
         "required": true,
-        "description": "The accessible name, set as aria-label. A verb plus a noun. Never shown with the native title attribute."
+        "description": "The accessible name, set as aria-label. A verb plus a noun. Never the native title attribute. The Tooltip pairing that shows it on hover arrives with Tooltip in wave 1."
       },
       "size": {
         "type": [
@@ -798,11 +830,10 @@
           "solid",
           "soft",
           "outline",
-          "ghost",
-          "link"
+          "ghost"
         ],
         "default": "ghost",
-        "description": "ghost, because icon buttons sit in toolbars and headers."
+        "description": "ghost, because icon buttons sit in toolbars and headers. No link: an icon only link reads as neither."
       },
       "shape": {
         "type": [
@@ -816,7 +847,12 @@
       "loading": {
         "type": "boolean",
         "default": false,
-        "description": "The spinner replaces the icon, aria-busy is set, activation is blocked, focus stays."
+        "description": "The spinner replaces the icon, a visually hidden status says loadingLabel, aria-busy is set, activation is blocked, focus stays."
+      },
+      "loadingLabel": {
+        "type": "string",
+        "default": "Loading",
+        "description": "What the hidden status says while loading."
       },
       "disabled": {
         "type": "boolean",
@@ -839,20 +875,17 @@
     },
     "states": [
       "data-loading",
-      "data-disabled",
-      "hover",
-      "active",
-      "focus-visible"
+      "data-disabled"
     ],
     "a11y": {
       "role": "button (native button element), or the role of the asChild element",
-      "focus": "In the tab order in every state. A 2px ring on keyboard focus; the solid accent icon button gets two rings.",
+      "focus": "In the tab order in every state. A 2px ring on keyboard focus; solid fills get the doubled ring.",
       "keys": {
         "Enter": "Activates the button",
         "Space": "Activates the button",
         "Tab": "Moves focus to the next control"
       },
-      "announce": "The label prop is the accessible name. Loading sets aria-busy.",
+      "announce": "The label prop is the accessible name. While loading, a visually hidden status says loadingLabel and aria-busy is set.",
       "native": {
         "accessibilityRole": "button",
         "accessibilityState": [
@@ -863,8 +896,9 @@
       "notes": [
         "label is required by the type, so an icon button always has a name.",
         "At least 24 by 24 CSS px at xs (WCAG 2.5.8). Use lg (44px) in touch layouts.",
-        "Show the label on hover and focus with Tooltip. No native title attribute.",
-        "Directional icons (chevron-back, arrow-forward) mirror in right to left layouts."
+        "No native title attribute. The Tooltip pairing that shows the label on hover and focus arrives with Tooltip in wave 1.",
+        "Directional icons (chevron-back, arrow-forward) mirror in right to left layouts.",
+        "A disabled asChild link loses its href and keeps role link."
       ]
     },
     "content": {
@@ -883,30 +917,91 @@
       "size.target-min",
       "size.icon.sm",
       "size.icon.md",
+      "space.xs",
+      "space.s",
+      "space.xl",
+      "space.2xl",
+      "space.2xs",
       "radius.control",
       "radius.field",
       "radius.pill",
       "radius.sm",
+      "border.width.default",
+      "border.width.strong",
+      "font.family.sans",
+      "font.size.s",
+      "font.size.m",
+      "font.size.l",
+      "font.weight.bold",
+      "font.leading.tight",
+      "font.tracking.none",
+      "opacity.disabled",
+      "color.bg.overlay-5",
       "color.bg.overlay-10",
       "color.bg.overlay-20",
       "color.bg.overlay-30",
-      "color.text.muted",
+      "button.text.secondary",
       "color.text.default",
+      "color.text.muted",
+      "color.text.bright",
+      "color.border.control",
+      "color.border.control-hover",
       "color.primary.fill",
       "color.primary.fill-hover",
       "color.primary.fill-pressed",
       "color.primary.text",
       "color.primary.border",
+      "color.primary.tint",
+      "color.primary.tint-hover",
+      "color.primary.on-surface",
+      "color.state.danger.solid",
+      "color.state.danger.solid-hover",
+      "color.state.danger.on-solid",
+      "color.state.danger.text",
+      "color.state.danger.on-tint",
+      "color.state.danger.border",
+      "color.state.danger.tint-10",
+      "color.state.danger.tint-20",
+      "color.state.success.solid",
+      "color.state.success.solid-hover",
+      "color.state.success.on-solid",
+      "color.state.success.text",
+      "color.state.success.on-tint",
+      "color.state.success.border",
+      "color.state.success.tint-10",
+      "color.state.success.tint-20",
+      "color.state.warning.solid",
+      "color.state.warning.solid-hover",
+      "color.state.warning.on-solid",
+      "color.state.warning.text",
+      "color.state.warning.on-tint",
+      "color.state.warning.border",
+      "color.state.warning.tint-10",
+      "color.state.warning.tint-20",
+      "color.state.info.solid",
+      "color.state.info.solid-hover",
+      "color.state.info.on-solid",
+      "color.state.info.text",
+      "color.state.info.on-tint",
+      "color.state.info.border",
+      "color.state.info.tint-10",
+      "color.state.info.tint-20",
       "focus.shadow.ring",
       "focus.shadow.primary",
-      "duration.spin"
+      "color.focus.ring",
+      "color.focus.ring-on-primary-inner",
+      "color.focus.ring-on-primary-outer",
+      "duration.fast",
+      "duration.spin",
+      "ease.default"
     ],
     "motion": "press",
     "frameworks": {
       "react": {
         "status": "ready",
         "behavior": "native button, radix:Slot",
-        "example": "IconButton.demo.tsx"
+        "example": "IconButton.demo.tsx",
+        "note": "Motion: press, named from the pattern catalog that arrives in wave 1. Today: instant color swaps, the spinner, and the Desk roll label."
       },
       "angular": {
         "status": "planned",
@@ -921,7 +1016,7 @@
     },
     "styles": {
       "studio": "Ghost by default, the control radius, the overlay steps on hover and press.",
-      "desk": "A circle by default (Desk controls are pills). The solid accent icon button is yellow with a doubled focus ring. No roll: there is no label.",
+      "desk": "A circle by default (Desk controls are pills). The solid accent icon button is yellow with a doubled focus ring, accent soft a yellow tint. No roll: there is no label.",
       "neutral": "Planned.",
       "liquid": "Planned: capsule glass on toolbars."
     },
@@ -1045,16 +1140,14 @@
         "description": "An icon name, a short text such as px, or a node. Icon names and texts are aria-hidden."
       },
       "rootProps": {
-        "type": "string",
+        "type": "object",
         "description": "Props for the root box. className and style also go to the root; every other native prop and the ref go to the input."
       }
     },
     "states": [
       "data-invalid",
       "data-disabled",
-      "data-readonly",
-      "focus-within",
-      "hover"
+      "data-readonly"
     ],
     "a11y": {
       "role": "textbox, from the native input (spinbutton for type number, searchbox for type search)",
@@ -1068,7 +1161,6 @@
       },
       "announce": "Name from the Field label. The Field description and error through aria-describedby. aria-invalid and aria-required from the Field.",
       "native": {
-        "accessibilityRole": "none",
         "accessibilityState": [
           "disabled"
         ]
@@ -1078,14 +1170,17 @@
         "dir auto is not set: the value follows the page direction, so a field does not jump sides while someone types a Latin word into Arabic. Pass dir auto yourself for free text in a mixed language form.",
         "Email, url, tel and number values always run left to right, and stay on the reading side of the form. Their placeholder runs in the page direction.",
         "A long value scrolls inside the box. It is never cut with an ellipsis.",
-        "Read only looks different from disabled: a dashed border and a quiet fill, full contrast text, and it stays focusable."
+        "Read only looks different from disabled: a dashed border and a quiet fill, full contrast text, and it stays focusable.",
+        "Validate on blur or on submit, never on every key. On submit, move focus to the first invalid control.",
+        "Disabled uses native disabled and draws with opacity.disabled, like every control.",
+        "A value being checked shows the loader icon in the end slot for now. A Spinner arrives in wave 1 and replaces it."
       ]
     },
     "content": {
       "en": {
         "label": "Always a visible Field label, a noun in sentence case. aria-label only for a toolbar search box.",
         "placeholder": "An example value at most: For example, spring launch. Never the label, never an instruction the person needs after typing.",
-        "adornment": "A unit or a currency the value is in: px, USD. Never words the label needs."
+        "adornment": "A unit or a currency the value is in: px, USD. Never words the label needs. No icon that only decorates, such as a paper plane on an email field."
       },
       "ar": {
         "label": "عنوان ظاهر دايم، بصيغة الاسم وبدون تشكيل",
@@ -1105,7 +1200,6 @@
       "space.m",
       "space.2xl",
       "font.size.s",
-      "font.size.xl",
       "font.leading.snug",
       "radius.control",
       "radius.pill",
@@ -1113,18 +1207,19 @@
       "border.width.strong",
       "color.border.control",
       "color.border.control-hover",
-      "color.border.strong",
-      "color.bg.overlay-50",
       "color.bg.overlay-5",
       "color.text.default",
       "color.text.muted",
       "color.text.placeholder",
-      "color.text.disabled",
-      "color.state.danger.border",
       "elevation.input-focus",
       "focus.shadow.ring",
       "duration.base",
-      "ease.default"
+      "ease.default",
+      "font.size.fixed-m",
+      "opacity.disabled",
+      "color.state.danger.text",
+      "color.bg.surface",
+      "radius.xs"
     ],
     "motion": "fade",
     "frameworks": {
@@ -1360,6 +1455,905 @@
       {
         "wrong": "Reading data-style from the DOM to pick a branch",
         "right": "useTheme().style, or useOptionalPart for a part only one style shows"
+      }
+    ],
+    "since": "0.1.0"
+  },
+  {
+    "name": "TitleBar",
+    "kind": "component",
+    "family": "overlays",
+    "summary": "The bar at the top of a window or a panel: window controls at the start, the title, then trailing actions.",
+    "useWhen": [
+      "The header of a Window, or of a Dialog drawn as a window in Desk",
+      "A panel header that needs a title and a close button"
+    ],
+    "avoidWhen": [
+      "The header of a page",
+      "A toolbar of many tools with no title"
+    ],
+    "insteadUse": {
+      "A page header": "Header",
+      "A row of tools": "Toolbar",
+      "A whole window": "Window"
+    },
+    "anatomy": [
+      "root",
+      "controls",
+      "title",
+      "actions"
+    ],
+    "slots": {
+      "controls": {
+        "accepts": [
+          "WindowControls"
+        ],
+        "max": 1
+      },
+      "title": {
+        "accepts": "text",
+        "min": 1,
+        "max": 1
+      },
+      "actions": {
+        "accepts": [
+          "IconButton",
+          "Button"
+        ],
+        "max": 3
+      }
+    },
+    "props": {
+      "title": {
+        "type": "node",
+        "description": "The title. One line with an ellipsis."
+      },
+      "as": {
+        "type": [
+          "h1",
+          "h2",
+          "h3",
+          "h4",
+          "h5",
+          "h6",
+          "div"
+        ],
+        "default": "h2",
+        "description": "The element of the title."
+      },
+      "titleId": {
+        "type": "string",
+        "description": "id of the title, for aria-labelledby on the window or dialog."
+      },
+      "controls": {
+        "type": "node",
+        "description": "The start slot: WindowControls."
+      },
+      "actions": {
+        "type": "node",
+        "description": "The end slot: IconButtons and small Buttons."
+      },
+      "active": {
+        "type": "boolean",
+        "default": true,
+        "description": "Sets data-state active or inactive."
+      }
+    },
+    "states": [
+      "active",
+      "inactive"
+    ],
+    "a11y": {
+      "role": "none: a plain container. The title is a heading (h2 by default).",
+      "focus": "Not focusable. Focus goes to the controls and actions inside.",
+      "keys": {
+        "Tab": "Moves through the controls, then the actions"
+      },
+      "announce": "The heading is read in document order. A window or dialog points aria-labelledby at titleId.",
+      "native": {
+        "accessibilityRole": "header",
+        "accessibilityState": []
+      },
+      "notes": [
+        "The title truncates with an ellipsis; the full text stays in the DOM.",
+        "In right to left layouts a bar with controls keeps them at the top left and centers the title, as macOS draws it. A bar without controls mirrors."
+      ]
+    },
+    "content": {
+      "en": {
+        "title": "A file or app name in sentence case."
+      },
+      "ar": {
+        "title": "Noun form, no diacritics. Latin file names go through Bidi."
+      }
+    },
+    "tokens": [
+      "size.control.md",
+      "size.icon.sm",
+      "size.target-min",
+      "space.2xs",
+      "space.l",
+      "color.material.titlebar",
+      "color.text.bright",
+      "color.text.muted",
+      "color.border.hairline",
+      "border.width.default",
+      "font.size.m",
+      "font.weight.semibold",
+      "font.leading.tight",
+      "font.tracking.none"
+    ],
+    "frameworks": {
+      "react": {
+        "status": "ready",
+        "behavior": "plain markup",
+        "example": "TitleBar.demo.tsx"
+      },
+      "angular": {
+        "status": "planned",
+        "behavior": "[dsTitleBar]",
+        "note": "TitleBar.css is used as is."
+      },
+      "native": {
+        "status": "not-applicable",
+        "note": "Native screens use the platform navigation bar."
+      }
+    },
+    "styles": {
+      "studio": "A plain header on the panel surface with a hairline under it (recipes/Window.css when inside a Window).",
+      "desk": "The titlebar material, a 3% white over the glass, no divider. The lights sit at the start."
+    },
+    "mistakes": [
+      {
+        "wrong": "A title in a native title attribute to show the full text",
+        "right": "The full text stays in the title; a Tooltip shows it"
+      },
+      {
+        "wrong": "Mirroring the lights in Arabic",
+        "right": "The lights keep their place and order; only a bar without lights mirrors"
+      }
+    ],
+    "contract": {
+      "optionalParts": [
+        "controls",
+        "actions"
+      ]
+    },
+    "since": "0.1.0"
+  },
+  {
+    "name": "Toast",
+    "kind": "component",
+    "family": "feedback",
+    "summary": "A short notice that something happened, shown in a corner and gone on its own. Called from anywhere with toast(); one Toaster renders them.",
+    "useWhen": [
+      "Confirming that an action the person took has finished: Draft saved, Link copied",
+      "A failure the person can fix later or retry from the toast, as tone danger with one action",
+      "A background event worth knowing now: a new version, a finished upload",
+      "Progress that ends in a result, updated in place with toast.update"
+    ],
+    "avoidWhen": [
+      "The person needs to make a decision before going on",
+      "Long content, a list, or anything to read twice",
+      "A critical error that blocks the task or loses data",
+      "A message tied to one field or one place on the page",
+      "Something that must stay on screen while the condition lasts"
+    ],
+    "insteadUse": {
+      "A decision is needed": "Dialog",
+      "A critical error that blocks the task": "AlertDialog",
+      "A message about one place on the page": "Alert",
+      "A condition that lasts, for the whole page": "Banner",
+      "An error on a field": "Field"
+    },
+    "anatomy": [
+      "root",
+      "icon",
+      "title",
+      "count",
+      "description",
+      "action",
+      "close"
+    ],
+    "parts": {
+      "Toaster": "viewport, data-ds=\"toaster\" with data-position",
+      "Toast": "root, without behavior"
+    },
+    "slots": {
+      "title": {
+        "accepts": "text",
+        "max": 1
+      },
+      "description": {
+        "accepts": "text",
+        "max": 1
+      },
+      "action": {
+        "accepts": [
+          "Button"
+        ],
+        "max": 1
+      }
+    },
+    "props": {
+      "tone": {
+        "type": [
+          "neutral",
+          "success",
+          "warning",
+          "danger",
+          "info"
+        ],
+        "default": "neutral",
+        "description": "The color and icon, and the timing: neutral, info and success close after 4s, warning after 6s, danger stays until closed."
+      },
+      "title": {
+        "type": "string",
+        "description": "One line: what happened, naming the thing."
+      },
+      "description": {
+        "type": "string",
+        "description": "More detail. Shown up to three lines; the announcement reads all of it."
+      },
+      "duration": {
+        "type": "number",
+        "description": "toast() option. Milliseconds before it closes; Infinity keeps it. Default by tone. Ignored for danger."
+      },
+      "action": {
+        "type": "object",
+        "description": "toast() option. One button: { label, onAction, altText }. altText is what a screen reader hears in its place, for example where else the same action lives."
+      },
+      "dedupeKey": {
+        "type": [
+          "string",
+          "false"
+        ],
+        "description": "toast() option. A toast that reads the same as an open one bumps its count instead of stacking; a key groups repeats with other copy; false turns it off."
+      },
+      "id": {
+        "type": "string",
+        "description": "toast() option. A call with the id of an open toast updates it."
+      },
+      "lang": {
+        "type": "string",
+        "description": "toast() option. The language of the copy when it differs from the page. The root gets lang and dir."
+      },
+      "count": {
+        "type": "number",
+        "description": "Toast prop. The repeat count; the Toaster passes it from the store."
+      },
+      "onClose": {
+        "type": "function",
+        "description": "Toast prop. Renders the close button and is called by it. The Toaster always renders it."
+      },
+      "closeLabel": {
+        "type": "string",
+        "default": "Close notification",
+        "description": "The accessible name of the close button. Arabic under lang ar."
+      },
+      "position": {
+        "type": [
+          "bottom-end",
+          "bottom-center",
+          "top-end",
+          "top-center"
+        ],
+        "default": "bottom-end",
+        "description": "Toaster prop. end is the inline end: right in English, left in Arabic."
+      },
+      "label": {
+        "type": "string",
+        "default": "Notifications",
+        "description": "Toaster prop. The name of the region. {hotkey} in it is replaced by the hotkey."
+      },
+      "hotkey": {
+        "type": "string",
+        "default": "F8",
+        "description": "Toaster prop. The keys that move focus to the toasts."
+      },
+      "store": {
+        "type": "object",
+        "description": "Toaster prop. The store to render. Default the app wide store behind toast()."
+      }
+    },
+    "states": [
+      "open",
+      "closed",
+      "data-swipe"
+    ],
+    "a11y": {
+      "role": "The Toaster is a region (named Notifications) holding a list; each toast is a list item. The announcement goes through a separate visually hidden role status region.",
+      "focus": "Toasts never take focus on their own. F8 moves focus to the list; Tab moves through the toasts, newest first, and each toast's action and close button. Closing the focused toast puts focus on the list.",
+      "keys": {
+        "F8": "Moves focus to the notifications list",
+        "Tab": "Moves to the next toast, action or close button",
+        "Shift+Tab": "Moves back",
+        "Enter": "Runs the focused action or close button",
+        "Escape": "Closes the focused toast, or the newest one. Above an open dialog the first Escape closes the toast and the next one the dialog."
+      },
+      "announce": "Once per toast (WCAG 4.1.3), when it appears: the toast label and its text, through a status region that Radix removes after reading. danger is assertive (Radix type foreground), the rest polite (background). The toast itself has no live role, so it is never read twice. A repeat or an update is read once more. The action is read as its altText, the close button not at all.",
+      "native": {
+        "accessibilityRole": "alert",
+        "accessibilityState": []
+      },
+      "notes": [
+        "danger toasts stay until closed. The others pause while the pointer is over them, while focus is inside, and while the window is blurred or the tab hidden (WCAG 2.2.1).",
+        "Swipe toward the edge closes a toast; the close button is the button path for the same action (WCAG 2.5.7).",
+        "Above an open modal dialog the toasts stay visible (z.toast is above z.dialog), stay in the accessibility tree and can be reached with F8, Tab and the pointer.",
+        "At most three toasts show at once; the rest wait their turn, so a burst never covers the page.",
+        "No native title attribute anywhere."
+      ]
+    },
+    "content": {
+      "en": {
+        "title": "Say what happened and name the thing: Draft saved, Could not upload photo.jpg. Sentence case, no exclamation marks.",
+        "description": "Optional. What it means or what to do next, in one or two short sentences.",
+        "action": "A verb plus a noun: Retry upload, Undo move, Open draft. Never OK, Continue, Confirm or Yes. One action at most.",
+        "danger": "Name the failure and what is safe: Could not publish page. Your draft is safe.",
+        "repeats": "Keep the copy the same for the same event, so repeats fold into one toast with a count."
+      },
+      "ar": {
+        "title": "Say what happened and name the thing, in noun forms where you can: المسودة محفوظة، تعذر رفع الصورة. No diacritics.",
+        "action": "Noun form labels, no diacritics: إعادة الرفع، تراجع عن النقل. Never the imperative.",
+        "digits": "Western digits. Latin names in the copy go through Bidi when the toast is rendered by hand.",
+        "lang": "Pass lang: \"ar\" when the page is not Arabic, so the toast gets the Arabic type and direction."
+      }
+    },
+    "tokens": [
+      "z.toast",
+      "toast.inset",
+      "toast.width.max",
+      "color.bg.surface",
+      "color.bg.overlay-10",
+      "color.text.default",
+      "color.text.bright",
+      "color.text.muted",
+      "color.text.subtle",
+      "color.state.info.border",
+      "color.state.success.border",
+      "color.state.warning.border",
+      "color.state.danger.border",
+      "color.material.glass-strong",
+      "color.material.glass-border",
+      "radius.panel",
+      "radius.window",
+      "radius.sm",
+      "elevation.panel",
+      "elevation.window-soft",
+      "blur.panel",
+      "blur.window",
+      "border.width.default",
+      "border.width.strong",
+      "size.icon.md",
+      "space.4xs",
+      "space.2xs",
+      "space.xs",
+      "space.s",
+      "space.m",
+      "space.l",
+      "font.family.sans",
+      "font.size.s",
+      "font.leading.snug",
+      "font.weight.medium",
+      "font.weight.semibold",
+      "duration.medium",
+      "duration.base",
+      "ease.out",
+      "ease.exit"
+    ],
+    "motion": "toast",
+    "frameworks": {
+      "react": {
+        "status": "ready",
+        "behavior": "radix:Toast",
+        "example": "Toast.demo.tsx",
+        "note": "Toaster renders the shared store from @the-system/shared; toast is re-exported from @the-system/react."
+      },
+      "angular": {
+        "status": "planned",
+        "behavior": "the shared toast store with cdk:a11y LiveAnnouncer",
+        "note": "Reuses the store, its timers and Toast.css as is; reports pause and resume like the React Toaster."
+      },
+      "native": {
+        "status": "planned",
+        "behavior": "rn-primitives:toast",
+        "note": "The same store. Safe areas and reduce motion from the platform."
+      }
+    },
+    "styles": {
+      "studio": "A flat surface card with a hairline border and a 2px edge in the tone color on the inline start side.",
+      "desk": "Glass notifications as on the desk: strong glass fill, window blur, window radius and the soft window shadow (recipes/Toast.css). Solid under reduced transparency and more contrast.",
+      "neutral": "Planned: a white card with a small shadow.",
+      "liquid": "Planned: a glass capsule at the top center."
+    },
+    "mistakes": [
+      {
+        "wrong": "A toast for an error that blocks the task, such as a lost session",
+        "right": "An AlertDialog that says what happened and how to go on"
+      },
+      {
+        "wrong": "A danger toast that closes itself after a few seconds",
+        "right": "danger stays until closed; the store ignores a duration for it"
+      },
+      {
+        "wrong": "A toast with two buttons, or an action labelled OK",
+        "right": "One action at most, a verb plus a noun: Retry upload"
+      },
+      {
+        "wrong": "The same toast stacked five times by a retry loop",
+        "right": "Same copy, one toast with a count. Dedupe is on by default."
+      },
+      {
+        "wrong": "A second Toaster for Arabic copy",
+        "right": "One Toaster per page; pass lang: \"ar\" on the toast"
+      },
+      {
+        "wrong": "A toast as the only place a result lives",
+        "right": "Show the result on the page too; the toast only says it happened"
+      },
+      {
+        "wrong": "Mounting the Toaster inside a dialog or outside the root Theme",
+        "right": "Mount it once inside the root Theme, before any dialog can open"
+      }
+    ],
+    "contract": {
+      "trigger": "[data-demo-trigger]",
+      "optionalParts": [
+        "count",
+        "action",
+        "description",
+        "title"
+      ]
+    },
+    "since": "0.1.0"
+  },
+  {
+    "name": "Window",
+    "kind": "component",
+    "family": "overlays",
+    "summary": "An app window over the page: a title bar, a body and an optional footer. It opens from a trigger, moves, zooms, minimizes and closes. Desk draws it as a glass window with traffic lights; Studio as a flat panel with a close button.",
+    "useWhen": [
+      "A tool or a document the person works in next to the page: a board, a file browser, settings",
+      "Several views the person arranges side by side and brings to the front",
+      "Content that opens from a control and should grow out of it"
+    ],
+    "avoidWhen": [
+      "A decision that blocks the page until it is made",
+      "A short message with no work in it",
+      "A list of actions behind one control",
+      "Content that belongs in the page flow"
+    ],
+    "insteadUse": {
+      "A blocking decision": "Dialog",
+      "A short message": "Toast",
+      "A list of actions": "DropdownMenu",
+      "Side content that stays docked": "Drawer"
+    },
+    "anatomy": [
+      "root",
+      "titlebar",
+      "controls",
+      "title",
+      "actions",
+      "close",
+      "body",
+      "footer"
+    ],
+    "parts": {
+      "TitleBar": "titlebar",
+      "WindowControls": "controls"
+    },
+    "slots": {
+      "title": {
+        "accepts": "text",
+        "min": 1,
+        "max": 1
+      },
+      "actions": {
+        "accepts": [
+          "IconButton",
+          "Button"
+        ],
+        "max": 3
+      },
+      "body": {
+        "accepts": "any"
+      },
+      "footer": {
+        "accepts": [
+          "Button"
+        ],
+        "max": 3
+      }
+    },
+    "props": {
+      "kind": {
+        "type": [
+          "canvas",
+          "finder",
+          "settings"
+        ],
+        "default": "settings",
+        "description": "Sets data-kind. canvas: a large window with a margin of layer around it, no body padding. finder: wide, the layer edge around it. settings: centered, as tall as its content."
+      },
+      "title": {
+        "type": "node",
+        "required": true,
+        "description": "Names the window through aria-labelledby. One line with an ellipsis."
+      },
+      "titleAs": {
+        "type": [
+          "h1",
+          "h2",
+          "h3",
+          "h4",
+          "h5",
+          "h6",
+          "div"
+        ],
+        "default": "h2",
+        "description": "The element of the title."
+      },
+      "actions": {
+        "type": "node",
+        "description": "IconButtons or small Buttons at the end of the title bar."
+      },
+      "footer": {
+        "type": "node",
+        "description": "The footer part, for the window's Buttons."
+      },
+      "open": {
+        "type": "boolean",
+        "description": "Controlled open state, with onOpenChange. Closing plays window-close, then unmounts."
+      },
+      "defaultOpen": {
+        "type": "boolean",
+        "default": true
+      },
+      "onOpenChange": {
+        "type": "function"
+      },
+      "zoomed": {
+        "type": "boolean",
+        "description": "Fills the layer. Sets data-zoomed and aria-pressed on the zoom light."
+      },
+      "defaultZoomed": {
+        "type": "boolean",
+        "default": false
+      },
+      "onZoomedChange": {
+        "type": "function",
+        "description": "With it, or inside a WindowLayer, the zoom light works."
+      },
+      "minimized": {
+        "type": "boolean",
+        "description": "Plays window-minimize toward the dock, then hides the window. Sets data-minimized."
+      },
+      "defaultMinimized": {
+        "type": "boolean",
+        "default": false
+      },
+      "onMinimizedChange": {
+        "type": "function",
+        "description": "With it the minimize light works. The app shows the way back (a dock) and sets minimized to false."
+      },
+      "frame": {
+        "type": "object",
+        "description": "{ x, y, width, height } in px: x from the inline start edge of the layer, y from the top. null lets the kind place the window. Controlled with onFrameChange."
+      },
+      "defaultFrame": {
+        "type": "object"
+      },
+      "onFrameChange": {
+        "type": "function",
+        "description": "Called on every move by key or pointer, with the clamped frame."
+      },
+      "movable": {
+        "type": "boolean",
+        "description": "Drag by the title bar and move with the arrow keys. Default true inside a WindowLayer or with a frame, false for a window placed by its parent."
+      },
+      "origin": {
+        "type": "node",
+        "description": "An element, a ref or a screen rect the window grows out of and closes back into. Focus returns to it on close."
+      },
+      "dock": {
+        "type": "node",
+        "description": "An element, a ref or a screen rect a minimized window falls into. Default the bottom center of the layer."
+      },
+      "modal": {
+        "type": "boolean",
+        "default": false,
+        "description": "aria-modal and a Tab loop inside the window. Off by default: windows sit next to the page."
+      },
+      "closeLabel": {
+        "type": "string",
+        "default": "Close window"
+      },
+      "minimizeLabel": {
+        "type": "string",
+        "default": "Minimize window"
+      },
+      "zoomLabel": {
+        "type": "string",
+        "default": "Zoom window"
+      },
+      "controlsLabel": {
+        "type": "string",
+        "default": "Window controls"
+      }
+    },
+    "states": [
+      "active",
+      "inactive",
+      "data-zoomed",
+      "data-minimized",
+      "data-dragging",
+      "data-movable",
+      "data-layered"
+    ],
+    "a11y": {
+      "role": "dialog, named by the title (aria-labelledby) or aria-label. Not modal unless modal is set.",
+      "focus": "Focus moves into the window (the window element, tabindex -1) when it opens after mount, or on mount when its origin has focus. On close and minimize focus returns to the origin, else to the element that had focus, but only when focus was in the window or lost. The window shows the 2px ring on keyboard focus.",
+      "keys": {
+        "Escape": "Closes the window. A control inside that handles Escape itself (a menu) prevents it first.",
+        "ArrowUp": "Moves the window up 16px, while focus is on the window or in its title bar",
+        "ArrowDown": "Moves the window down 16px",
+        "ArrowLeft": "Moves the window 16px to the left on screen, in both directions",
+        "ArrowRight": "Moves the window 16px to the right on screen, in both directions",
+        "Shift+Arrow": "Moves the window 64px",
+        "Tab": "Moves through the lights or the close button, the title bar actions, the body and the footer. With modal, Tab stays inside the window."
+      },
+      "announce": "The title is the accessible name of the dialog. The lights and the close button carry their own labels.",
+      "native": {
+        "accessibilityRole": "none",
+        "accessibilityState": []
+      },
+      "notes": [
+        "Every drag has a key path (WCAG 2.1.1, 2.5.7): arrow keys move the window. The frame is clamped so 160px of the window and its title bar stay inside the layer.",
+        "Arrow keys pressed in the body (a field, a list) never move the window.",
+        "Moving is off while the window is zoomed, and for a window placed by its parent with no frame.",
+        "A long title truncates with an ellipsis; the full text stays in the DOM as the accessible name. A Tooltip on the title comes with Tooltip in wave 1.",
+        "Double click on the title bar zooms, as on the desktop. The zoom light is the same action for every input.",
+        "No native title attribute."
+      ]
+    },
+    "content": {
+      "en": {
+        "title": "A file or app name in sentence case: checkout-flow.board, Account settings.",
+        "labels": "Close window, Minimize window, Zoom window. Name the window when several are open: Close notes.txt."
+      },
+      "ar": {
+        "title": "Noun form, no diacritics: إعدادات الحساب. Latin file names inside Arabic go through Bidi.",
+        "labels": "إغلاق النافذة، تصغير النافذة، تكبير النافذة."
+      }
+    },
+    "tokens": [
+      "color.material.glass",
+      "color.material.glass-solid",
+      "color.material.titlebar",
+      "color.border.hairline",
+      "color.border.strong",
+      "color.text.default",
+      "color.text.bright",
+      "radius.window",
+      "elevation.window",
+      "blur.window",
+      "border.width.default",
+      "border.width.strong",
+      "focus.shadow.ring",
+      "space.8xl",
+      "space.5xl",
+      "space.xl",
+      "space.l",
+      "space.s",
+      "size.control.lg",
+      "font.family.sans",
+      "duration.window-open",
+      "duration.window-close",
+      "duration.zoom",
+      "duration.base",
+      "ease.window",
+      "ease.exit",
+      "z.canvas",
+      "palette.site.grain-opacity"
+    ],
+    "motion": "window-grow",
+    "frameworks": {
+      "react": {
+        "status": "ready",
+        "behavior": "own: @the-system/shared window manager, @the-system/motion window patterns",
+        "example": "Window.demo.tsx"
+      },
+      "angular": {
+        "status": "planned",
+        "behavior": "cdk:drag-drop for the title bar, cdk:a11y for focus, the shared window manager",
+        "note": "Window.css, TitleBar.css and WindowControls.css are used as is."
+      },
+      "native": {
+        "status": "not-applicable",
+        "note": "Phones and tablets have no free windows. A native app shows the same content as a full screen or a sheet; see Dialog and Drawer."
+      }
+    },
+    "styles": {
+      "studio": "A flat panel: the solid surface, the panel radius and shadow, no backdrop blur, a hairline under a plain title bar, and a close IconButton (part close) at the end of it. No lights. Open, close and minimize fade on duration.base; zoom has no motion.",
+      "desk": "A glass window: material glass with a 24px blur, radius 1rem, a hairline inside, the deep window shadow. The title bar starts with the traffic lights (optional part controls, and the close light is part close): lit while the window is active, idle dots when it is not, glyphs on hover and keyboard focus. The window grows out of its trigger, closes back into it, zooms with a FLIP and falls into the dock. The layer carries the desk grain. In right to left layouts the lights stay at the top left and the title is centered.",
+      "neutral": "Planned.",
+      "liquid": "Planned: a glass sheet."
+    },
+    "mistakes": [
+      {
+        "wrong": "A window that only moves with a pointer",
+        "right": "Window moves with the arrow keys while focus is on it or its title bar"
+      },
+      {
+        "wrong": "A Window used for a decision that must be made first",
+        "right": "Dialog"
+      },
+      {
+        "wrong": "Waiting for transitionend before unmounting",
+        "right": "Window awaits the animation's finished promise; under reduced motion it is 0ms"
+      },
+      {
+        "wrong": "Hiding the lights in Studio with CSS",
+        "right": "The style turns the controls part on or off in style.json; Window renders the close IconButton when it is off"
+      },
+      {
+        "wrong": "A minimize light with no way back",
+        "right": "Pass onMinimizedChange and show the way back (a dock row); without it the light is disabled"
+      }
+    ],
+    "contract": {
+      "optionalParts": [
+        "controls",
+        "actions",
+        "footer"
+      ]
+    },
+    "since": "0.1.0"
+  },
+  {
+    "name": "WindowControls",
+    "kind": "component",
+    "family": "overlays",
+    "summary": "The traffic lights of a window: close, minimize and zoom. 12px lights with 24 by 24 px targets, each an IconButton with its own label.",
+    "useWhen": [
+      "The controls slot of a TitleBar in a style that turns the window controls part on (Desk)",
+      "A window picture where the lights are shown but do nothing, with no handlers"
+    ],
+    "avoidWhen": [
+      "A panel in a style without lights (Studio)",
+      "Any control that is not close, minimize or zoom of a window"
+    ],
+    "insteadUse": {
+      "A close control in a panel": "IconButton",
+      "Other window actions": "IconButton in the TitleBar actions"
+    },
+    "anatomy": [
+      "root",
+      "close",
+      "minimize",
+      "zoom"
+    ],
+    "props": {
+      "onClose": {
+        "type": "function",
+        "description": "Without it the close light is disabled."
+      },
+      "onMinimize": {
+        "type": "function",
+        "description": "Without it the minimize light is disabled."
+      },
+      "onZoom": {
+        "type": "function",
+        "description": "Without it the zoom light is disabled."
+      },
+      "zoomed": {
+        "type": "boolean",
+        "description": "aria-pressed on the zoom light."
+      },
+      "closeLabel": {
+        "type": "string",
+        "default": "Close window"
+      },
+      "minimizeLabel": {
+        "type": "string",
+        "default": "Minimize window"
+      },
+      "zoomLabel": {
+        "type": "string",
+        "default": "Zoom window"
+      },
+      "label": {
+        "type": "string",
+        "default": "Window controls",
+        "description": "The name of the group."
+      },
+      "active": {
+        "type": "boolean",
+        "default": true,
+        "description": "data-state active: lit. inactive: idle dots until hover or keyboard focus."
+      }
+    },
+    "states": [
+      "active",
+      "inactive",
+      "data-disabled"
+    ],
+    "a11y": {
+      "role": "group, named by label. Each light is a native button (IconButton).",
+      "focus": "Each light with a handler is in the tab order with the 2px ring around its 24px target. A light with no handler is aria-disabled and out of the tab order (tabIndex -1): three tab stops that do nothing slow a keyboard down, and a screen reader still finds them, dimmed.",
+      "keys": {
+        "Enter": "Presses the focused light",
+        "Space": "Presses the focused light",
+        "Tab": "Moves to the next light with a handler"
+      },
+      "announce": "Each light is named by its label. The zoom light reports pressed while the window is zoomed.",
+      "native": {
+        "accessibilityRole": "none",
+        "accessibilityState": []
+      },
+      "notes": [
+        "Never color alone: the glyphs (x, minus, arrows) show on hover and on keyboard focus of the group, and in forced colors always.",
+        "The lights do not mirror in right to left layouts. They keep the order close, minimize, zoom from the left, as macOS draws them and as the source does.",
+        "Targets are 24 by 24 px and touch, so light centers are 24px apart (WCAG 2.5.8).",
+        "No native title attribute."
+      ]
+    },
+    "content": {
+      "en": {
+        "labels": "Close window, Minimize window, Zoom window. Name the window when several are open: Close notes.txt."
+      },
+      "ar": {
+        "labels": "إغلاق النافذة، تصغير النافذة، تكبير النافذة."
+      }
+    },
+    "tokens": [
+      "color.window.light-close",
+      "color.window.light-min",
+      "color.window.light-zoom",
+      "color.window.light-ink",
+      "color.window.light-idle",
+      "size.icon.sm",
+      "size.target-min",
+      "radius.pill",
+      "border.width.default",
+      "focus.shadow.ring",
+      "duration.fast",
+      "ease.default"
+    ],
+    "motion": "press",
+    "frameworks": {
+      "react": {
+        "status": "ready",
+        "behavior": "IconButton",
+        "example": "WindowControls.demo.tsx"
+      },
+      "angular": {
+        "status": "planned",
+        "behavior": "[dsWindowControls] with button[dsIconButton]",
+        "note": "WindowControls.css is used as is."
+      },
+      "native": {
+        "status": "not-applicable",
+        "note": "Native apps have no window lights."
+      }
+    },
+    "styles": {
+      "studio": "Not drawn inside a Window (the controls part is off). Standalone it draws the same lights.",
+      "desk": "The traffic lights at the start of every window title bar."
+    },
+    "mistakes": [
+      {
+        "wrong": "Lights as bare buttons or spans with click handlers",
+        "right": "WindowControls: each light is an IconButton with a label"
+      },
+      {
+        "wrong": "A light that does nothing but stays in the tab order",
+        "right": "Leave out the handler: the light is disabled and skipped"
+      },
+      {
+        "wrong": "Telling the lights apart by color only",
+        "right": "The glyphs show on hover and focus"
       }
     ],
     "since": "0.1.0"
