@@ -46,7 +46,7 @@
     },
     "maxItems": {
       "type": "number",
-      "description": "The most steps to show. With more, the first step, the overflow menu and the last maxItems minus 2 steps (at least the current page) show. No default: every step shows and the list wraps."
+      "description": "The most steps to show. With more, the first step, the overflow menu and the last maxItems minus 2 steps (at least the current page) show. The least is 3: 0, 1 or 2 are read as 3, so the first step, the menu and the current page always show. No default: every step shows and the list wraps."
     },
     "label": {
       "type": "string",
@@ -82,8 +82,8 @@
     "notes": [
       "The current page is told apart by weight, the missing underline and aria-current, not by color alone (WCAG 1.4.1).",
       "Separators are chevron-forward icons, aria-hidden, mirrored in RTL.",
-      "With a hover pointer a long link step truncates with an ellipsis at menu.width.min; its full text stays in the DOM as the accessible name and shows whole on hover and keyboard focus. Without hover (touch) steps wrap. The current page never truncates. No native title.",
-      "The overflow part is the DropdownMenu trigger, an IconButton carrying data-part overflow, with data-state open or closed for its menu; the menu items are the hidden steps in order. The breadcrumbs root itself has no state.",
+      "With a hover pointer a long link step truncates with an ellipsis at menu.width.min; its full text stays in the DOM as the accessible name and shows whole on hover and keyboard focus, wrapping inside its row when it is wider than the row (320px). Without hover (touch) steps wrap. The current page never truncates. No native title.",
+      "The overflow part is the DropdownMenu trigger, an IconButton carrying data-part overflow, with data-state open or closed for its menu; the menu items are the hidden steps in order. The breadcrumbs root itself has no state: open and closed are listed under states only because the contract suite reads data-state on every part, the overflow trigger included.",
       "Each landmark needs its own name when a page has more than one nav.",
       "Each step text has dir auto, so a Latin name inside an Arabic page keeps its own direction.",
       "label is the accessible name of the nav landmark, not visible text: every nav component takes it this way. An aria-label passed directly also works.",

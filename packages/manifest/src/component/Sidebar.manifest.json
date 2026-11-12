@@ -28,6 +28,7 @@
     "root",
     "header",
     "toggle",
+    "body",
     "group",
     "group-label",
     "group-trigger",
@@ -48,6 +49,12 @@
     "header": {
       "accepts": "any",
       "max": 1
+    },
+    "body": {
+      "accepts": [
+        "SidebarGroup"
+      ],
+      "min": 1
     },
     "group": {
       "accepts": [
@@ -167,7 +174,7 @@
     "children": {
       "type": "node",
       "required": true,
-      "description": "SidebarHeader, SidebarGroups and a SidebarFooter. An item's children are its label."
+      "description": "SidebarHeader, SidebarGroups and a SidebarFooter. The header and footer are direct children of Sidebar; everything else goes in the scrolling body. An item's children are its label."
     }
   },
   "states": [
@@ -180,7 +187,7 @@
   ],
   "a11y": {
     "role": "navigation (nav with aria-label); each group is a list named by its heading; items are links",
-    "focus": "Every item is a tab stop, disabled ones included. The ring is an inset 2px ring from color.focus.ring inside the row.",
+    "focus": "Every item is a tab stop, disabled ones included. The ring is an inset 2px ring from color.focus.ring inside the row. A focused item scrolls into the body, never under the header or the footer.",
     "keys": {
       "Tab": "Moves to the next item, group trigger or the toggle",
       "Shift+Tab": "Moves to the previous one",
@@ -197,7 +204,8 @@
     },
     "notes": [
       "The current page is shown by aria-current, a bold weight, a fill and an edge bar, never by color alone (WCAG 1.4.1).",
-      "Collapsed items keep the label in the DOM, visually hidden, so it stays the accessible name. Tooltip (1.6.6) is not built yet: once it is, each collapsed item gets a Tooltip with its label (marked in SidebarItem).",
+      "Collapsed items keep the label in the DOM, visually hidden, so it stays the accessible name, and show a Tooltip with the label on hover and focus, at the inline end (WCAG 1.4.13). The hint repeats the name, so it is not wired as the description. The Tooltip is turned off while expanded and never remounts the item.",
+      "The groups scroll inside the body part; the header and the footer sit outside it, so nothing is drawn over an item and a focused item is never hidden (WCAG 2.4.11). The body has a small scroll padding so a focused item stops clear of its edge.",
       "The border and the active bar are on logical sides, so the sidebar's edge flips in RTL; the sidebar icon of the toggle mirrors. A sidebar placed at the inline end swaps --_sidebar-border-start-color and --_sidebar-border-end-color.",
       "Group headings and counts go one font step up in Arabic, like the item labels.",
       "A collapsed sidebar holds collapsible groups open and hides their trigger; the group stays mounted, so focus inside it is kept.",
@@ -250,7 +258,6 @@
     "space.m",
     "space.l",
     "radius.pill",
-    "z.sidebar",
     "duration.fast",
     "duration.base",
     "ease.default",
@@ -261,9 +268,9 @@
   "frameworks": {
     "react": {
       "status": "ready",
-      "behavior": "hand built nav, radix:Collapsible for groups, radix:Slot for asChild",
+      "behavior": "hand built nav, radix:Collapsible for groups, radix:Slot for asChild, Tooltip for collapsed items",
       "example": "Sidebar.demo.tsx",
-      "note": "fade-rise: an opened group's list fades in and rises one step; closing is instant. Reduced motion: none. The width never animates, so collapse is instant."
+      "note": "fade-rise: an opened group's list fades in and rises one step from below; closing is instant. Reduced motion: no animation, the list shows at once. The width never animates, so collapse is instant."
     },
     "angular": {
       "status": "planned",

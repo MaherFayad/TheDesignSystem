@@ -1,3 +1,5 @@
+import { readFileSync } from 'node:fs';
+import { join } from 'node:path';
 import { render, screen } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';
@@ -155,6 +157,37 @@ describe('Tabs', () => {
     vi.spyOn(console, 'error').mockImplementation(() => undefined);
     expect(() => render(<TabsList aria-label="x" />)).toThrow(/inside Tabs/);
     vi.restoreAllMocks();
+  });
+
+  it('scrolls a default tab past the visible part into view inside the list on load', () => {
+    const rect = (left: number, width: number) => ({ left, right: left + width, width, top: 0, bottom: 32, height: 32, x: left, y: 0, toJSON: () => ({}) });
+    const spy = vi.spyOn(HTMLElement.prototype, 'getBoundingClientRect').mockImplementation(function (this: HTMLElement) {
+      if (this.getAttribute('role') === 'tablist') return rect(0, 300) as DOMRect;
+      if (this.getAttribute('role') === 'tab' && this.getAttribute('data-state') === 'active') return rect(680, 60) as DOMRect;
+      return rect(0, 0) as DOMRect;
+    });
+    const scrollIntoView = vi.fn();
+    const original = Element.prototype.scrollIntoView;
+    Element.prototype.scrollIntoView = scrollIntoView;
+    render(<Example defaultValue="c" />);
+    const list = screen.getByRole('tablist');
+    expect(list.scrollLeft).toBe(440);
+    expect(scrollIntoView).not.toHaveBeenCalled();
+    Element.prototype.scrollIntoView = original;
+    spy.mockRestore();
+  });
+
+  it('gives the soft pill a muted text border, so the active tab has a 3:1 edge', () => {
+    const css = readFileSync(join(process.cwd(), 'packages/css/src/components/Tabs.css'), 'utf8');
+    const soft = /\[data-ds='tabs'\]\[data-emphasis='soft'\] \{([^}]*)\}/.exec(css)?.[1] ?? '';
+    expect(soft).toMatch(/--_tabs-indicator-border-color: var\(--ds-color-text-muted\)/);
+    expect(soft).toMatch(/--_tabs-indicator-border-width: var\(--ds-border-width-default\)/);
+    expect(css).toMatch(/border: var\(--_tabs-indicator-border-width\) solid var\(--_tabs-indicator-border-color\)/);
+  });
+
+  it('plays the tab-indicator catalog ease', () => {
+    const css = readFileSync(join(process.cwd(), 'packages/css/src/components/Tabs.css'), 'utf8');
+    expect(css).toMatch(/--_tabs-indicator-ease: var\(--ds-ease-standard\)/);
   });
 
   it('renders the demo with every case', () => {

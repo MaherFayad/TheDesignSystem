@@ -22,10 +22,10 @@ const apps: App[] = [
 
 const sizes: DockSize[] = ['md', 'lg'];
 
-function AppDock({ lang = 'en', size, count = apps.length }: { lang?: 'en' | 'ar'; size?: DockSize; count?: number }) {
+function AppDock({ lang = 'en', size, count = apps.length, name }: { lang?: 'en' | 'ar'; size?: DockSize; count?: number; name: string }) {
   const list = apps.slice(0, count);
   return (
-    <Dock aria-label={lang === 'ar' ? 'التطبيقات' : 'Apps'} size={size}>
+    <Dock aria-label={name} size={size}>
       {list.map((a, i) => (
         <DockItem key={a.en} href={`#${a.en.toLowerCase()}`} icon={a.icon} label={a[lang]} open={a.open} active={i === 0} />
       ))}
@@ -57,20 +57,20 @@ export default function DockDemo() {
       <DemoCase id="variants" title="Variants: sizes, open apps, the current app and a separator">
         {sizes.map((size) => (
           <DemoRow key={size} label={`Size ${size}`}>
-            <AppDock size={size} />
+            <AppDock size={size} name={`Apps, size ${size}`} />
           </DemoRow>
         ))}
         <h3 data-demo="title">Variants in Arabic</h3>
         <Theme lang="ar" data-demo="content">
           <DemoRow label="md">
-            <AppDock lang="ar" />
+            <AppDock lang="ar" name="التطبيقات" />
           </DemoRow>
         </Theme>
       </DemoCase>
 
       <DemoCase id="one" title="One app">
         <div>
-          <Dock aria-label="Apps">
+          <Dock aria-label="One app">
             <DockItem href="#files" icon="folder" label="Files" open />
           </Dock>
         </div>
@@ -93,7 +93,7 @@ export default function DockDemo() {
             <p key={i}>Your changes are saved to your account. Open the board on any other device to see the same version.</p>
           ))}
           <div style={{ position: 'sticky', insetBlockEnd: 0, display: 'flex', justifyContent: 'center' }}>
-            <Dock aria-label="Apps">
+            <Dock aria-label="Page apps">
               {many.slice(0, 7).map((a) => (
                 <DockItem key={a.en} href={`#${a.en.toLowerCase()}`} icon={a.icon} label={a.en} open={a.open} />
               ))}
@@ -106,7 +106,7 @@ export default function DockDemo() {
 
       <DemoCase id="too-many" title="Too many apps: the dock wraps, the page does not scroll sideways">
         <div>
-          <Dock aria-label="Apps">
+          <Dock aria-label="All apps">
             {many.map((a) => (
               <DockItem key={a.en} href={`#${a.en.toLowerCase()}`} icon={a.icon} label={a.en} open={a.open} />
             ))}
@@ -116,7 +116,7 @@ export default function DockDemo() {
 
       <DemoCase id="long-text" title="Long text: the name shows on hover and focus">
         <div>
-          <Dock aria-label="Apps">
+          <Dock aria-label="Review apps">
             <DockItem href="#review" icon="check-circle" label="Design review for the spring release" />
             <DockItem href="#notes" icon="edit" label="Notes" />
           </Dock>
@@ -125,7 +125,7 @@ export default function DockDemo() {
 
       <DemoCase id="long-arabic" title="Long Arabic text" lang="ar">
         <div>
-          <Dock aria-label="التطبيقات">
+          <Dock aria-label="تطبيقات المراجعة">
             <DockItem href="#review" icon="check-circle" label="مراجعة التصميم لإصدار الربيع" />
             <DockItem href="#notes" icon="edit" label="الملاحظات" />
           </Dock>

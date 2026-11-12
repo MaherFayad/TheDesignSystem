@@ -1,6 +1,6 @@
 /*
  * Chip: a pill you press (the root is a button) or remove (the root is a
- * span with a remove IconButton). Follows "One convention for component CSS
+ * span with a remove CloseButton). Follows "One convention for component CSS
  * and props" in docs/contracts/anatomy.md. Source: Figma-Killer-2 TagPill.
  * Colors follow Button.css and Badge.css so the three match per tone.
  *
@@ -17,7 +17,7 @@
  * swap them, and only the root rule writes declarations. Colors swap at
  * once: nothing animates. The focus ring is a box shadow on the root, as
  * in Button, so no ::before layer is needed; every fill has a hover value,
- * so no ::after veil is needed. The remove IconButton is restyled through
+ * so no ::after veil is needed. The remove CloseButton is restyled through
  * its private --_button-* properties only.
  */
 @layer ds.base {
@@ -91,12 +91,16 @@
     padding-inline-end: var(--ds-space-4xs);
   }
 
-  /* An xs removable chip grows by its two borders, so the 24px remove button fits inside it. */
-  [data-ds='chip'][data-removable][data-size='xs'] {
-    --_chip-height: calc(var(--ds-size-control-xs) + 2 * var(--ds-border-width-default));
+  /*
+   * An xs chip is as tall as the 24px remove button, so the button reaches
+   * over the two borders: the removable xs chip stays 24px, in line with a
+   * pressable one, and the target stays 24 by 24.
+   */
+  [data-ds='chip'][data-removable][data-size='xs'] > [data-part='remove'] {
+    margin-block: calc(-1 * var(--ds-border-width-default));
   }
 
-  [data-ds='chip'] > [data-ds='icon-button'][data-part='remove'] {
+  [data-ds='chip'] > [data-ds='close-button'][data-part='remove'] {
     --_button-bg: transparent;
     --_button-fg: var(--_chip-fg);
     --_button-bg-hover: var(--ds-color-bg-overlay-20);
@@ -250,7 +254,7 @@
   /*
    * Disabled keeps focus (aria-disabled), dims and stops reacting. Only the
    * controls dim: the pressable root, or the remove button of a removable
-   * chip (IconButton dims itself). The label of a removable chip is text,
+   * chip (CloseButton dims itself). The label of a removable chip is text,
    * not a control, so it keeps full contrast (WCAG 1.4.3).
    */
   button[data-ds='chip'][data-disabled] {
@@ -270,10 +274,18 @@
       outline-color: Highlight;
     }
 
+    /*
+     * The selected chip keeps the system highlight pair. Chromium draws a
+     * Canvas backplate behind forced text, which hid HighlightText on the
+     * Highlight fill, so the selected root and its parts opt out of forcing
+     * and set only system colors themselves.
+     */
     [data-ds='chip'][data-selected] {
+      forced-color-adjust: none;
       border-color: Highlight;
       background-color: Highlight;
       color: HighlightText;
+      box-shadow: none;
     }
 
     button[data-ds='chip'][data-disabled] {

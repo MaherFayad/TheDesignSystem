@@ -197,11 +197,11 @@ export function TabsTrigger({ value, start, count, children, ref, ...rest }: Tab
     ctx.previous.current = value;
     const node = ownRef.current;
     if (!node) return;
-    // Keep the active tab in view inside a scrolling list. Not on the first
-    // render, so a page never scrolls by itself on load.
-    // Only the list scrolls, never the page around it.
+    // Keep the active tab in view inside a scrolling list, on load too (a
+    // default tab past the visible part). Only the list's own scroll offset
+    // is set, never scrollIntoView, so the page around it never scrolls.
     const list = node.parentElement;
-    if (from !== null && from !== value && list) {
+    if (from !== value && list) {
       if (ctx.orientation === 'vertical') {
         const top = node.offsetTop - list.offsetTop;
         if (top < list.scrollTop) list.scrollTop = top;

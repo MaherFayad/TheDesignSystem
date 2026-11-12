@@ -154,7 +154,8 @@
     "announce": "Each tab reads its label, its count, its position (2 of 4) and whether it is selected. The panel is named by its tab.",
     "notes": [
       "The active tab is marked by the indicator and a heavier weight, never by color alone (WCAG 1.4.1).",
-      "The list scrolls inside itself when the tabs do not fit, so the page never scrolls sideways (WCAG 1.4.10). The active tab scrolls into view when it changes.",
+      "The soft pill has a 1px border in the muted text color, 3:1 or better against the track and the pill fill in Studio, Desk and Neutral, dark and light (WCAG 1.4.11). The overlay-20 fill alone measures 1.5:1 to 1.9:1.",
+      "The list scrolls inside itself when the tabs do not fit, so the page never scrolls sideways (WCAG 1.4.10). The active tab scrolls into view inside the list on load and when it changes; only the list scrolls, never the page.",
       "The focus ring is drawn inside the tab, so a scrolling list never clips it (WCAG 2.4.7).",
       "Disabled tabs use the native disabled attribute from Radix: a tab is not an action, so it is skipped rather than kept focusable with aria-disabled. Say why on the page or in a Tooltip next to the list.",
       "The trigger is the button Radix renders with role tab. It is not a system Button, because its indicator and count are parts of Tabs.",
@@ -210,7 +211,7 @@
     "opacity.disabled",
     "scrollbar.thumb",
     "duration.medium",
-    "ease.emphasized"
+    "ease.standard"
   ],
   "motion": "tab-indicator",
   "frameworks": {
@@ -218,7 +219,7 @@
       "status": "ready",
       "behavior": "radix:Tabs",
       "example": "Tabs.demo.tsx",
-      "note": "The indicator lives in the active trigger and plays a FLIP from the previous trigger with the Web Animations API (translate and scale only). Under reduced motion the duration token is 0ms and nothing plays."
+      "note": "The indicator lives in the active trigger and plays a FLIP from the previous trigger with the Web Animations API (translate and scale only). It plays the tab-indicator catalog spec: duration.medium with ease.standard. Under reduced motion the duration token is 0ms and nothing plays."
     },
     "angular": {
       "status": "planned",
@@ -230,7 +231,7 @@
     }
   },
   "styles": {
-    "studio": "Muted labels on the body, the active one bright and bold. ghost: a 2px bright line on the default hairline. soft: the overlay-20 pill on an overlay-5 track, 6px corners.",
+    "studio": "Muted labels on the body, the active one bright and bold. ghost: a 2px bright line on the default hairline. soft: the overlay-20 pill with a muted text color border on an overlay-5 track, 6px corners.",
     "desk": "The same parts on Desk tokens: Instrument Sans, the Desk text steps, the overlay steps over the dark or light desk. The line and the pill take the bright text color, not the yellow primary, so the active tab never reads as a primary action.",
     "neutral": "Token driven; applies once the Neutral pack is merged.",
     "liquid": "Planned."

@@ -1,9 +1,18 @@
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';
 import { Theme } from '../../theme';
 import SidebarDemo from './Sidebar.demo';
 import { Sidebar, SidebarFooter, SidebarGroup, SidebarHeader, SidebarItem } from './index';
+
+// jsdom has no ResizeObserver, which Radix Popper reads for the tooltip arrow.
+globalThis.ResizeObserver ??= class {
+  observe() {}
+  unobserve() {}
+  disconnect() {}
+} as unknown as typeof ResizeObserver;
+
+const tooltip = () => document.body.querySelector<HTMLElement>('[data-ds="tooltip"]');
 
 function root(container: HTMLElement): HTMLElement {
   const el = container.querySelector<HTMLElement>('[data-ds="sidebar"]');
@@ -283,5 +292,42 @@ describe('Sidebar', () => {
     const { container } = render(<SidebarDemo />);
     expect(container.querySelector('[title]')).toBeNull();
     expect(container.querySelectorAll('[data-ds="sidebar"]').length).toBeGreaterThan(5);
+  });
+
+  it('scrolls the groups in a body part, with the header and footer outside it (WCAG 2.4.11)', () => {
+    const { container } = render(<Basic />);
+    const el = root(container);
+    const kids = Array.from(el.children).map((c) => c.getAttribute('data-part'));
+    expect(kids).toEqual(['header', 'body', 'footer']);
+    const body = el.querySelector(':scope > [data-part="body"]')!;
+    expect(body.querySelector('[data-part="group"]')).not.toBeNull();
+    expect(body.querySelector('[data-part="footer"], [data-part="header"]')).toBeNull();
+  });
+
+  it('shows a Tooltip with the label on a focused item while collapsed', async () => {
+    const user = userEvent.setup();
+    render(<Basic defaultCollapsed />);
+    // The toggle comes first; the next stop is Home.
+    await user.tab();
+    await user.tab();
+    const home = screen.getByRole('link', { name: 'Home' });
+    expect(document.activeElement).toBe(home);
+    await waitFor(() => expect(tooltip()).not.toBeNull());
+    expect(tooltip()!.textContent).toContain('Home');
+    // The hint repeats the name: it is not the description too, and no tooltip state lands on the part.
+    expect(home.hasAttribute('aria-describedby')).toBe(false);
+    expect(home.hasAttribute('data-state')).toBe(false);
+  });
+
+  it('shows no Tooltip while expanded, and keeps focus on the item when it collapses', async () => {
+    const user = userEvent.setup();
+    const { rerender } = render(<Basic collapsed={false} />);
+    await user.tab();
+    await user.tab();
+    const home = screen.getByRole('link', { name: 'Home' });
+    expect(document.activeElement).toBe(home);
+    expect(tooltip()).toBeNull();
+    rerender(<Basic collapsed />);
+    expect(document.activeElement).toBe(home);
   });
 });

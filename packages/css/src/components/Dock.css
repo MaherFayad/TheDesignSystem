@@ -10,9 +10,12 @@
  *   --_dock-tile                 the tile size of an item
  *   --_dock-tile-radius, -tile-bg, -tile-bg-hover, -tile-bg-active
  *   --_dock-label-bg, -label-fg  the name drawn on hover and focus
+ *   --_dock-label-gap            the room between the magnified tile and the name
+ *   --_dock-current-color        the current app ring, 3:1 or better against the tile and the dock
  *   --_dock-indicator            the open dot color
  *   --_dock-ring                 the focus ring, on the tile
  *   --_dock-scale, -neighbor-scale, -lift   the hover transform of the tile and its neighbors
+ *                                (the lift is a length, 0px at rest: the label offset adds it)
  *                                (1, 1 and 0 here; Desk magnifies)
  *
  * Items swap their own --_dock-item-* properties for the states (the state
@@ -34,11 +37,13 @@
     --_dock-tile-bg-active: var(--ds-color-bg-overlay-20);
     --_dock-label-bg: var(--ds-color-bg-surface-4);
     --_dock-label-fg: var(--ds-color-text-default);
+    --_dock-label-gap: var(--ds-space-xs);
+    --_dock-current-color: var(--ds-color-text-default);
     --_dock-indicator: var(--ds-color-text-default);
     --_dock-ring: var(--ds-focus-shadow-ring);
     --_dock-scale: 1;
     --_dock-neighbor-scale: 1;
-    --_dock-lift: 0;
+    --_dock-lift: 0px;
 
     display: inline-flex;
     flex-wrap: wrap;
@@ -72,6 +77,11 @@
     --_dock-item-label-opacity: 0;
     --_dock-item-label-max: 0;
     --_dock-item-label-pad: 0;
+    --_dock-item-label-overflow: hidden;
+    --_dock-item-label-events: none;
+    --_dock-item-label-start: 50%;
+    --_dock-item-label-end: auto;
+    --_dock-item-label-shift: translateX(-50%);
     --_dock-item-transform: none;
 
     position: relative;
@@ -110,14 +120,22 @@
    * The name: drawn above the tile on hover and focus, always in the link
    * text. At rest it has no width (and no padding), so a long name never
    * makes the page scroll sideways; it is still read.
+   *
+   * It sits above the tile at its largest (the lift and the magnify scale of
+   * the recipe), so it never covers the magnified tile or its ring. While it
+   * shows it takes the pointer: it is inside the link, so the link stays
+   * hovered while the pointer is on the name, and the bridge below it covers
+   * the gap to the tile (WCAG 1.4.13, hoverable).
    */
   [data-ds='dock'] > [data-part='item'] > [data-part='item-label'] {
     position: absolute;
-    inset-block-end: calc(100% + var(--ds-space-xs));
-    inset-inline-start: 50%;
+    inset-block-end: calc(100% + var(--_dock-lift) + (var(--_dock-scale) - 1) * var(--_dock-tile) + var(--_dock-label-gap));
+    inset-inline-start: var(--_dock-item-label-start);
+    inset-inline-end: var(--_dock-item-label-end);
     box-sizing: border-box;
     max-inline-size: var(--_dock-item-label-max);
-    overflow: hidden;
+    overflow: var(--_dock-item-label-overflow);
+    overflow-wrap: anywhere;
     padding-block: var(--ds-space-4xs);
     padding-inline: var(--_dock-item-label-pad);
     border-radius: var(--ds-radius-sm);
@@ -130,18 +148,55 @@
     inline-size: max-content;
     text-align: center;
     opacity: var(--_dock-item-label-opacity);
-    transform: translateX(-50%);
-    pointer-events: none;
+    transform: var(--_dock-item-label-shift);
+    pointer-events: var(--_dock-item-label-events);
     transition: opacity var(--ds-duration-fast) var(--ds-ease-default);
+  }
+
+  /* The bridge: an empty box under the name, over the gap to the tile, so the pointer can move onto the name. Not drawn. */
+  [data-ds='dock'] > [data-part='item'] > [data-part='item-label']::after {
+    content: '';
+    position: absolute;
+    inset-inline: 0;
+    inset-block-start: 100%;
+    block-size: calc(var(--_dock-lift) + (var(--_dock-scale) - 1) * var(--_dock-tile) + var(--_dock-label-gap));
+  }
+
+  /* The centered name moves the other way in right to left layouts. */
+  [data-ds='dock'] > [data-part='item']:dir(rtl) {
+    --_dock-item-label-shift: translateX(50%);
+  }
+
+  /*
+   * The first and the last item anchor the name to the tile's inline edge
+   * instead of its center, so the name of an edge tile grows into the dock
+   * and never past the viewport at 320px (WCAG 1.4.10).
+   */
+  [data-ds='dock'] > [data-part='item']:not([data-part='item'] ~ [data-part='item']) {
+    --_dock-item-label-start: 0;
+    --_dock-item-label-shift: none;
+  }
+
+  [data-ds='dock'] > [data-part='item']:not(:has(~ [data-part='item'])) {
+    --_dock-item-label-start: auto;
+    --_dock-item-label-end: 0;
+    --_dock-item-label-shift: none;
+  }
+
+  /* A single item keeps the centered name. */
+  [data-ds='dock'] > [data-part='item']:not([data-part='item'] ~ [data-part='item']):not(:has(~ [data-part='item'])) {
+    --_dock-item-label-start: 50%;
+    --_dock-item-label-end: auto;
+    --_dock-item-label-shift: translateX(-50%);
+  }
+
+  [data-ds='dock'] > [data-part='item']:dir(rtl):not([data-part='item'] ~ [data-part='item']):not(:has(~ [data-part='item'])) {
+    --_dock-item-label-shift: translateX(50%);
   }
 
   /* Arabic small text is one step up (PLAN.md section 12). */
   [data-ds='dock'] > [data-part='item'] > [data-part='item-label']:lang(ar) {
     font-size: var(--ds-font-size-s);
-  }
-
-  [data-ds='dock'] > [data-part='item']:dir(rtl) > [data-part='item-label'] {
-    transform: translateX(50%);
   }
 
   /* Read with the name, not drawn. */
@@ -183,6 +238,8 @@
       --_dock-item-label-opacity: 1;
       --_dock-item-label-max: var(--ds-tooltip-width-max);
       --_dock-item-label-pad: var(--ds-space-s);
+      --_dock-item-label-overflow: visible;
+      --_dock-item-label-events: auto;
       --_dock-item-transform: translateY(calc(-1 * var(--_dock-lift))) scale(var(--_dock-scale));
     }
 
@@ -193,10 +250,14 @@
     }
   }
 
-  /* The current app: a ring on the tile and aria-current, never color alone. */
+  /*
+   * The current app: a ring on the tile and aria-current, never color alone.
+   * The ring is the default text color, 3:1 or better against the tile fill
+   * and the dock in every style (WCAG 1.4.11); border.strong was near 1:1.
+   */
   [data-ds='dock'] > [data-part='item'][data-active] {
     --_dock-item-tile-bg: var(--_dock-tile-bg-active);
-    --_dock-item-tile-ring: inset 0 0 0 var(--ds-border-width-strong) var(--ds-color-border-strong);
+    --_dock-item-tile-ring: inset 0 0 0 var(--ds-border-width-strong) var(--_dock-current-color);
   }
 
   /* The transparent outline is set only here, so forced colors mode draws it on focus and nowhere else. */
@@ -204,6 +265,8 @@
     --_dock-item-label-opacity: 1;
     --_dock-item-label-max: var(--ds-tooltip-width-max);
     --_dock-item-label-pad: var(--ds-space-s);
+    --_dock-item-label-overflow: visible;
+    --_dock-item-label-events: auto;
     --_dock-item-tile-ring: var(--_dock-ring);
     --_dock-item-transform: translateY(calc(-1 * var(--_dock-lift))) scale(var(--_dock-scale));
 
@@ -219,6 +282,8 @@
     --_dock-item-label-opacity: 0;
     --_dock-item-label-max: 0;
     --_dock-item-label-pad: 0;
+    --_dock-item-label-overflow: hidden;
+    --_dock-item-label-events: none;
   }
 
   /* ------------------------------------------------------------ reduced motion, forced colors */
@@ -228,7 +293,7 @@
     [data-ds='dock'] {
       --_dock-scale: 1;
       --_dock-neighbor-scale: 1;
-      --_dock-lift: 0;
+      --_dock-lift: 0px;
     }
 
     [data-ds='dock'] > [data-part='item'] > :is([data-part='item-icon'], [data-part='item-label']) {

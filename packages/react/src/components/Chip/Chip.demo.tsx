@@ -1,5 +1,6 @@
 import { useLayoutEffect, useRef, useState } from 'react';
 import { DemoCase, DemoPage, DemoRow } from '../../demo';
+import { Button } from '../Button';
 import { Chip, type ChipEmphasis, type ChipSize, type ChipTone } from './index';
 
 const tones: ChipTone[] = ['neutral', 'accent', 'success', 'warning', 'danger', 'info'];
@@ -83,9 +84,9 @@ function RemovableList({ labels, removeWord, resetLabel }: { labels: readonly st
           </Chip>
         ))}
         {items.length === 0 && (
-          <Chip data-demo-reset="" onClick={() => setItems([...labels])}>
+          <Button data-demo-reset="" size="sm" emphasis="outline" start="refresh" onClick={() => setItems([...labels])}>
             {resetLabel}
-          </Chip>
+          </Button>
         )}
       </DemoRow>
     </div>

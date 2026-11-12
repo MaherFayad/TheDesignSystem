@@ -22,7 +22,7 @@
 // href (its route or a hash) and handles onClick; with asChild the item
 // renders a router link. A system Button is not used: its own parts would
 // own the label and the indicator.
-import { Children, isValidElement, useState, type AnchorHTMLAttributes, type FocusEvent, type KeyboardEvent, type PointerEvent, type HTMLAttributes, type ReactElement, type ReactNode, type Ref } from 'react';
+import { Children, isValidElement, useEffect, useState, type AnchorHTMLAttributes, type FocusEvent, type KeyboardEvent, type PointerEvent, type HTMLAttributes, type ReactElement, type ReactNode, type Ref } from 'react';
 import { Slot } from 'radix-ui';
 import { Icon, type IconName } from '@the-system/icons/react';
 import type { Size } from '@the-system/shared';
@@ -84,12 +84,24 @@ export function DockItem({
   ref,
   onKeyDown,
   onBlur,
+  onPointerEnter,
   onPointerLeave,
   ...rest
 }: DockItemProps) {
   const { lang } = useTheme();
   // Escape hides the drawn name until focus or the pointer leaves (WCAG 1.4.13).
   const [labelHidden, setLabelHidden] = useState(false);
+  // While the pointer is on the item its name shows wherever focus is, so
+  // Escape is heard on the document then, not only on the focused link.
+  const [hovered, setHovered] = useState(false);
+  useEffect(() => {
+    if (!hovered) return;
+    const onKey = (event: globalThis.KeyboardEvent) => {
+      if (event.key === 'Escape') setLabelHidden(true);
+    };
+    document.addEventListener('keydown', onKey);
+    return () => document.removeEventListener('keydown', onKey);
+  }, [hovered]);
   const ar = lang === 'ar';
   const parts = (
     <>
@@ -117,8 +129,13 @@ export function DockItem({
       onBlur?.(event);
       setLabelHidden(false);
     },
+    onPointerEnter: (event: PointerEvent<HTMLAnchorElement>) => {
+      onPointerEnter?.(event);
+      if (event.pointerType !== 'touch') setHovered(true);
+    },
     onPointerLeave: (event: PointerEvent<HTMLAnchorElement>) => {
       onPointerLeave?.(event);
+      setHovered(false);
       setLabelHidden(false);
     },
   };

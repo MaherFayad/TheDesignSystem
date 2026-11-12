@@ -86,6 +86,70 @@ describe('Pagination', () => {
     expect(onPageChange).toHaveBeenLastCalledWith(1);
   });
 
+  it('keeps focus on a pressed page when the window of pages shifts: 4 to 5 and 250 to 251', async () => {
+    const user = userEvent.setup();
+    for (const [from, to, count] of [
+      [4, 5, 16],
+      [250, 251, 500],
+      [251, 252, 500],
+    ] as const) {
+      const { unmount } = render(<Pagination defaultPage={from} pageCount={count} />);
+      const pressed = screen.getByRole('button', { name: `Page ${to}` });
+      pressed.focus();
+      await user.keyboard('{Enter}');
+      const now = screen.getByRole('button', { name: `Page ${to}` });
+      expect(now.getAttribute('aria-current')).toBe('page');
+      // The same element: React kept it, so focus never fell to body.
+      expect(now).toBe(pressed);
+      expect(document.activeElement).toBe(pressed);
+      unmount();
+    }
+  });
+
+  it('in link mode keeps an inert end in the tab order, and focus on it after the press', async () => {
+    const user = userEvent.setup();
+    const { container } = render(
+      <Pagination defaultPage={2} pageCount={5} getHref={(p) => `#page-${p}`} />,
+    );
+    const previous = screen.getByRole('link', { name: 'Previous page' });
+    previous.focus();
+    await user.keyboard('{Enter}');
+    expect(screen.getByRole('link', { name: 'Page 1' }).getAttribute('aria-current')).toBe('page');
+    expect(previous.hasAttribute('href')).toBe(false);
+    expect(previous.getAttribute('aria-disabled')).toBe('true');
+    expect(previous.tabIndex).toBe(0);
+    expect(previous.getAttribute('tabindex')).toBe('0');
+    expect(document.activeElement).toBe(previous);
+    // Every control is a tab stop, the inert first and previous included.
+    const controls = Array.from(container.querySelectorAll<HTMLElement>('[data-ds="pagination"] > a'));
+    for (const el of controls) expect(el.hasAttribute('href') || el.getAttribute('tabindex') === '0').toBe(true);
+    // Links that go somewhere get no tabindex.
+    expect(screen.getByRole('link', { name: 'Next page' }).hasAttribute('tabindex')).toBe(false);
+  });
+
+  it('in link mode keeps every control focusable when the whole row is disabled', () => {
+    const { container } = render(<Pagination disabled pageCount={3} getHref={(p) => `#page-${p}`} />);
+    for (const el of container.querySelectorAll<HTMLElement>('[data-ds="pagination"] > a')) {
+      expect(el.hasAttribute('href')).toBe(false);
+      expect(el.getAttribute('tabindex')).toBe('0');
+    }
+  });
+
+  it('renders no summary for an item count that is not a finite number', () => {
+    for (const itemCount of [Number.NaN, Number.POSITIVE_INFINITY, Number.NEGATIVE_INFINITY]) {
+      const { container, unmount } = render(<Pagination itemCount={itemCount} defaultPage={3} />);
+      expect(container.querySelector('[data-part="summary"]')).toBeNull();
+      expect(container.textContent).not.toMatch(/NaN|∞|Infinity/);
+      expect(screen.getByRole('button', { name: 'Page 1' }).getAttribute('aria-current')).toBe('page');
+      unmount();
+    }
+  });
+
+  it('reads a page size that is not a finite number as 20', () => {
+    const { container } = render(<Pagination itemCount={312} pageSize={Number.NaN} defaultPage={2} />);
+    expect(container.querySelector('[data-part="summary"]')?.textContent).toBe('21 to 40 of 312');
+  });
+
   it('is controlled with page and onPageChange', async () => {
     const user = userEvent.setup();
     function Controlled() {

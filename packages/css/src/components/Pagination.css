@@ -10,12 +10,15 @@
  *   --_pagination-bg-active, -bg-active-hover            the current page fill
  *   --_pagination-fg-active                              the current page number color
  *   --_pagination-border-color-active                    the border that marks the current page
+ *   --_pagination-weight, -weight-active                 the page number weight, and the current page's
  *
  * Every control is a system Button or IconButton (data-part first, previous,
- * page, next, last). This file restyles them only through Button's private
- * properties. The current page is a soft fill plus a strong border and
- * aria-current, so it is never told apart by color alone. Nothing animates
- * beyond the Button press.
+ * page, next, last). This file restyles them through Button's private
+ * properties, and sets the page number weight, which no Button property
+ * covers. The current page has a border in the muted text color (3:1 or
+ * more against the page in every style, WCAG 1.4.11), a heavier weight than
+ * the other pages, a soft fill and aria-current, so it is never told apart
+ * by color alone. Nothing animates beyond the Button press.
  */
 @layer ds.base {
   [data-ds='pagination'] {
@@ -25,7 +28,9 @@
     --_pagination-bg-active: var(--ds-color-bg-overlay-10);
     --_pagination-bg-active-hover: var(--ds-color-bg-overlay-20);
     --_pagination-fg-active: var(--ds-color-text-bright);
-    --_pagination-border-color-active: var(--ds-color-border-strong);
+    --_pagination-border-color-active: var(--ds-color-text-muted);
+    --_pagination-weight: var(--ds-font-weight-regular);
+    --_pagination-weight-active: var(--ds-font-weight-bold);
 
     display: flex;
     flex-wrap: wrap;
@@ -62,6 +67,8 @@
   /* A page number: at least as wide as it is tall, with tight padding. */
   [data-ds='pagination'] > [data-part='page'] {
     --_button-padding-inline: var(--ds-space-2xs);
+
+    font-weight: var(--_pagination-weight);
   }
 
   [data-ds='pagination'] > [data-part='page'][data-active] {
@@ -71,6 +78,7 @@
     --_button-fg-hover: var(--_pagination-fg-active);
     --_button-border-color: var(--_pagination-border-color-active);
     --_button-border-color-hover: var(--_pagination-border-color-active);
+    --_pagination-weight: var(--_pagination-weight-active);
   }
 
   [data-ds='pagination'] > [data-part='ellipsis'] {

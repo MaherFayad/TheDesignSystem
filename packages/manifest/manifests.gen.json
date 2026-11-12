@@ -1251,7 +1251,7 @@
       "name": {
         "type": "string",
         "required": true,
-        "description": "The person or workspace name. The accessible name of the avatar, the source of the initials and of the fallback hue."
+        "description": "The person or workspace name. The accessible name of the avatar, the source of the initials and of the fallback hue. An empty name makes the avatar decorative and warns in development."
       },
       "src": {
         "type": "string",
@@ -1291,11 +1291,11 @@
           "danger",
           "neutral"
         ],
-        "description": "Adds the status dot on the end corner: online, away, busy, offline. The status words join the accessible name; the dot is a visual hint, and offline is drawn hollow."
+        "description": "Adds the status dot on the end corner: online, away, busy, offline. The status words join the accessible name. The dot is a StatusDot root carrying data-part status, with one shape per status: online a full disk, away a ring with its lower half filled, busy a disk with a bar, offline an empty ring."
       },
       "statusLabel": {
         "type": "string",
-        "description": "The status in words, added to the accessible name. Default Online, Away, Busy or Offline. Pass it in Arabic."
+        "description": "The status in words, added to the accessible name. Default Online, Away, Busy or Offline; under an Arabic Theme متصل، غير متواجد، مشغول، غير متصل."
       },
       "fallbackDelay": {
         "type": "number",
@@ -1325,7 +1325,8 @@
         "The name is the alt: the root role img carries it, so a failed image never leaves an unnamed picture.",
         "decorative hides the avatar when the name is written next to it (WCAG 1.1.1).",
         "The fallback is the solid hue of the name with color.text.on-accent: 4.5:1 or more for all ten hues in every style and scheme, tested in Avatar.test.tsx against tokens.css (WCAG 1.4.3).",
-        "The status words join the accessible name, so the status never rests on color for assistive tech. Sighted users get color, plus a hollow ring for offline; online, away and busy differ by color only, so write the status in text where it matters (WCAG 1.4.1).",
+        "The status words join the accessible name, so the status never rests on color for assistive tech. Sighted users get a shape per status as well as its color, and the shapes stay in forced colors (WCAG 1.4.1).",
+        "An empty name has nothing to announce: the avatar is drawn as decorative and a warning shows in development.",
         "data-state is stamped only when there is an image to load.",
         "decorative hides the status words too: write the status next to the avatar, with the name."
       ]
@@ -1337,7 +1338,7 @@
       },
       "ar": {
         "name": "The full name, no diacritics: ماهر فياض. Initials skip diacritics and the article ال of the last name.",
-        "statusLabel": "Noun or adjective, no diacritics: متصل، بعيد، مشغول، غير متصل."
+        "statusLabel": "Noun or adjective, no diacritics: متصل، غير متواجد، مشغول، غير متصل. Not بعيد for away: it reads as far."
       }
     },
     "tokens": [
@@ -1386,9 +1387,9 @@
     "frameworks": {
       "react": {
         "status": "ready",
-        "behavior": "radix:Avatar",
+        "behavior": "radix:Avatar, StatusDot (status)",
         "example": "Avatar.demo.tsx",
-        "note": "Motion: fade-rise, the image fades in and rises 2px once loaded (@starting-style, opacity and transform); none under reduced motion. Initials and the hue come from @the-system/shared initials.ts. The status part is drawn by Avatar.css until StatusDot (1.5.10) exists; then it becomes a StatusDot root carrying data-part status."
+        "note": "Motion: a CSS form of fade-rise. The image fades in and rises by space.4xs once loaded (@starting-style, opacity and transform), a smaller rise than the pattern's space.xs at avatar size; under reduced motion it shows at once. Initials and the hue come from @the-system/shared initials.ts. The status part is a StatusDot root carrying data-part status, with its label visually hidden; Avatar.css draws the shape of each status on it. The loading case shows Skeleton circles while the people load: an image that stays loading needs a network stall the gallery does not have, so the loading state of the image is covered by a unit test."
       },
       "angular": {
         "status": "planned"
@@ -1410,8 +1411,8 @@
         "right": "decorative, so the name is read once"
       },
       {
-        "wrong": "A status dot as the only sign that someone is offline",
-        "right": "status with statusLabel; offline is drawn hollow"
+        "wrong": "A status dot told apart by color only",
+        "right": "status, which draws a shape per status and adds the words to the name"
       },
       {
         "wrong": "Initials typed by hand, or with Arabic diacritics",
@@ -2359,7 +2360,7 @@
       },
       "maxItems": {
         "type": "number",
-        "description": "The most steps to show. With more, the first step, the overflow menu and the last maxItems minus 2 steps (at least the current page) show. No default: every step shows and the list wraps."
+        "description": "The most steps to show. With more, the first step, the overflow menu and the last maxItems minus 2 steps (at least the current page) show. The least is 3: 0, 1 or 2 are read as 3, so the first step, the menu and the current page always show. No default: every step shows and the list wraps."
       },
       "label": {
         "type": "string",
@@ -2395,8 +2396,8 @@
       "notes": [
         "The current page is told apart by weight, the missing underline and aria-current, not by color alone (WCAG 1.4.1).",
         "Separators are chevron-forward icons, aria-hidden, mirrored in RTL.",
-        "With a hover pointer a long link step truncates with an ellipsis at menu.width.min; its full text stays in the DOM as the accessible name and shows whole on hover and keyboard focus. Without hover (touch) steps wrap. The current page never truncates. No native title.",
-        "The overflow part is the DropdownMenu trigger, an IconButton carrying data-part overflow, with data-state open or closed for its menu; the menu items are the hidden steps in order. The breadcrumbs root itself has no state.",
+        "With a hover pointer a long link step truncates with an ellipsis at menu.width.min; its full text stays in the DOM as the accessible name and shows whole on hover and keyboard focus, wrapping inside its row when it is wider than the row (320px). Without hover (touch) steps wrap. The current page never truncates. No native title.",
+        "The overflow part is the DropdownMenu trigger, an IconButton carrying data-part overflow, with data-state open or closed for its menu; the menu items are the hidden steps in order. The breadcrumbs root itself has no state: open and closed are listed under states only because the contract suite reads data-state on every part, the overflow trigger included.",
         "Each landmark needs its own name when a page has more than one nav.",
         "Each step text has dir auto, so a Latin name inside an Arabic page keeps its own direction.",
         "label is the accessible name of the nav landmark, not visible text: every nav component takes it this way. An aria-label passed directly also works.",
@@ -4021,7 +4022,7 @@
       },
       "removeLabel": {
         "type": "string",
-        "description": "The name of the remove button. Default Remove followed by the label when it is text. Name what is removed: Remove filter Arabic."
+        "description": "The name of the remove button. Default Remove followed by the label when it is text, or إزالة under an Arabic Theme. Name what is removed: Remove filter Arabic."
       },
       "disabled": {
         "type": "boolean",
@@ -4054,8 +4055,9 @@
       },
       "notes": [
         "A chip is pressable or removable, never both, so a button never sits inside a button.",
-        "The chip and its remove button are two targets of at least 24 by 24 px (WCAG 2.5.8): the remove button is an xs IconButton.",
+        "The chip and its remove button are two targets of at least 24 by 24 px (WCAG 2.5.8): the remove button is an xs CloseButton. An xs removable chip stays 24px tall, in line with a pressable one.",
         "Selected is shown by fill and a check icon, not by color alone (WCAG 1.4.1).",
+        "In forced colors a selected chip is the system Highlight fill with HighlightText; it opts out of forcing so the text backplate does not hide the label.",
         "After a removal, move focus to the next chip's remove button, else the previous one, else a nearby control; the demo shows it (WCAG 2.4.3)."
       ]
     },
@@ -4141,9 +4143,9 @@
     "frameworks": {
       "react": {
         "status": "ready",
-        "behavior": "ButtonBase (pressable), IconButton (remove)",
+        "behavior": "ButtonBase (pressable), CloseButton (remove)",
         "example": "Chip.demo.tsx",
-        "note": "Motion: none of its own today; colors swap at once. A chip list may use fade-rise for added chips from the catalog (1.11). The remove part is an IconButton with the close icon until CloseButton (1.1.9) exists."
+        "note": "Motion: none of its own today; colors swap at once. A chip list may use fade-rise for added chips from the catalog (1.11). The remove part is a CloseButton root carrying data-part remove."
       },
       "angular": {
         "status": "planned"
@@ -6424,18 +6426,20 @@
         "Tab": "Moves to the next app",
         "Shift+Tab": "Moves to the previous app",
         "Enter": "Follows the link, or runs the item's onClick",
-        "Escape": "Hides the drawn name of the focused or hovered app until focus or the pointer leaves"
+        "Escape": "Hides the drawn name of the focused app, and of the hovered app wherever focus is (the item listens on the document while hovered), until focus or the pointer leaves"
       },
       "announce": "Each link reads the app name, open when the app is open, and current page for the current app.",
       "notes": [
         "The name is always the link text (WCAG 2.4.4, 4.1.2). It is drawn on hover and focus with opacity, so it is read at all times; no native title attribute.",
         "Open is shown by the dot and said in the name; current is shown by a ring on the tile and aria-current, never by color alone.",
+        "The current app ring is 2px in the default text color: 6.57:1 or better against its tile and 12.59:1 or better against the dock in Studio, Desk and Neutral, dark and light (WCAG 1.4.11).",
         "Magnify (Desk) scales the tile with transform only and is off under reduced motion; the name still appears.",
         "A fixed dock covers content unless the page keeps the same room at its block end (WCAG 2.4.11): the layout (PageShell) reserves it.",
         "Tiles are 44px at md (WCAG 2.5.8).",
         "Many apps wrap onto a second row rather than scroll the page sideways (WCAG 1.4.10).",
+        "The first and the last item anchor the name to the tile's inline edge, so an edge name grows into the dock and stays inside a 320px viewport (WCAG 1.4.10). The name sits above the tile at its magnified size, so it never covers the tile or its ring.",
         "Every item is a link. The order allows buttons; a system Button would own the item's parts, so an app that opens a window keeps an href and handles onClick.",
-        "The drawn name is dismissable (Escape), hoverable (it does not hide while the pointer is on the item) and persistent until focus or the pointer leaves (WCAG 1.4.13). It is a part of the link, not a Tooltip, because it is the link's own text.",
+        "The drawn name is dismissable (Escape, heard on the document while the item is hovered), hoverable (the pointer can move from the tile onto the name: the name takes the pointer while it shows and an undrawn bridge covers the gap) and persistent until focus or the pointer leaves (WCAG 1.4.13). It is a part of the link, not a Tooltip, because it is the link's own text.",
         "The demo case many shows the reserved room: the page pads its block end and its scroll padding by the dock's height (size.control.lg plus the dock padding).",
         "Contract keys: Escape sets data-label-hidden on the item, a part, which the generic suite does not watch; the unit tests cover it."
       ]
@@ -6455,7 +6459,6 @@
       "color.bg.surface-4",
       "color.border.subtle",
       "color.border.default",
-      "color.border.strong",
       "color.bg.overlay-10",
       "color.bg.overlay-20",
       "color.text.default",
@@ -12668,7 +12671,6 @@
       "link-label",
       "link-description",
       "trigger",
-      "trigger-icon",
       "content",
       "content-list",
       "indicator",
@@ -12717,7 +12719,7 @@
       },
       "end": {
         "type": "node",
-        "description": "Actions at the inline end. They stay in the bar on phones, so keep them to one or two."
+        "description": "Actions at the inline end. On phones they move into the footer of the phone Drawer; with no items they stay in the bar and wrap. Keep them to one or two."
       },
       "sticky": {
         "type": "boolean",
@@ -12749,24 +12751,24 @@
       "data-sticky"
     ],
     "a11y": {
-      "role": "navigation (Radix NavigationMenu nav with aria-label); the list is a list of links and buttons; the phone list is a nested Sidebar nav named Menu",
-      "focus": "Links and triggers are tab stops. Focus moves into an open panel with ArrowDown or Tab. The menu button sits in the tab order on phones only. Escape in the phone list returns focus to the menu button. Following a link in the phone list closes it. When the window grows past breakpoint.tablet with focus in the list, focus moves to the first item of the bar.",
+      "role": "navigation (Radix NavigationMenu nav with aria-label); the list is a list of links and buttons; on phones the menu button opens a modal Drawer titled Site menu that holds a Sidebar nav named Site menu",
+      "focus": "Links and triggers are tab stops. Focus moves into an open panel with ArrowDown or Tab. The menu button sits in the tab order on phones only. The phone Drawer is modal: focus moves into it, stays inside, and returns to the menu button on Escape or the close control. Following a link in the phone list closes it. When the window grows past breakpoint.tablet while the Drawer is open, it closes and focus moves to the first item of the bar.",
       "keys": {
         "Tab": "Moves to the next link, trigger or action",
         "Shift+Tab": "Moves to the previous one",
         "Enter": "Follows a link, or opens and closes a trigger's panel",
-        "Space": "Opens and closes a trigger's panel, and the phone list from the menu button",
+        "Space": "Opens and closes a trigger's panel, and opens the phone Drawer from the menu button",
         "ArrowDown": "From an open trigger, moves into its panel",
         "ArrowRight, ArrowLeft": "Move between links and triggers in the bar, in the reading direction (flipped in RTL)",
         "Home, End": "Move to the first or last item in the bar",
-        "Escape": "Closes the open panel and returns focus to its trigger, or closes the phone list from inside it or from the menu button"
+        "Escape": "Closes the open panel and returns focus to its trigger, or closes the phone Drawer and returns focus to the menu button"
       },
-      "announce": "The current link says current page. A trigger is a button with aria-expanded and aria-controls from Radix. The menu button keeps one name, Menu, with aria-expanded and aria-controls.",
+      "announce": "The current link says current page. A trigger is a button with aria-expanded and aria-controls from Radix. The menu button keeps one name, Menu, with aria-haspopup dialog, aria-expanded and aria-controls from the Drawer trigger. The Drawer is a dialog named by its title, Site menu.",
       "notes": [
         "The current page is shown by aria-current page, a bold weight and a bar under the link, never by color alone (WCAG 1.4.1). A trigger whose panel holds the current page takes the bold weight.",
-        "Under breakpoint.tablet (48rem) the bar hides the list and shows the menu button; nothing scrolls sideways at 320px (WCAG 1.4.10).",
-        "The phone list is built from items: plain links in one unnamed group, each menu as a named group. It is a Sidebar nav named Site menu nested in the Main nav until Drawer replaces it.",
-        "The mobile part should be a Drawer root (order 1.6.3). Drawer is not built yet, so it is a disclosure panel under the bar holding a Sidebar; swap it when Drawer lands.",
+        "Under breakpoint.tablet (48rem) the bar hides the list and the end actions and shows the menu button. The end actions move into the Drawer's footer, so no label is cut short at 320px (WCAG 1.4.10). With no items there is no menu button: the end actions stay in the bar at full width and wrap to a row of their own when needed.",
+        "The phone list is a Drawer (side start, size sm) with the mobile part on its root. Its body is a Sidebar built from items: plain links in one unnamed group, each menu as a named group. The Drawer covers the bar, so the menu button never moves under the finger.",
+        "The chevron of a trigger is the trigger Button's own end part (anatomy.md: a part belongs to the nearest root); the Navbar only turns it over while the panel is open.",
         "No native title attribute.",
         "contract.skipAxeRules aria-hidden-focus: while a panel is open, Radix NavigationMenu renders a visually hidden, aria-hidden focus proxy span (tabindex 0) beside the trigger. It catches Tab and forwards focus into the panel in the viewport, so it is never a stop a user rests on. Axe flags it by shape. Only the open panel in the long-arabic case shows it.",
         "data-orientation horizontal comes from Radix on the root and the list."
@@ -12838,13 +12840,13 @@
     "frameworks": {
       "react": {
         "status": "ready",
-        "behavior": "radix:NavigationMenu; the phone list is a disclosure holding a Sidebar",
+        "behavior": "radix:NavigationMenu; the phone list is a Drawer holding a Sidebar",
         "example": "Navbar.demo.tsx",
-        "note": "menu-scale: the viewport scales from 0.97 and fades in, the reverse on close, faster; the indicator slides under the open trigger. Reduced motion: none, and Radix removes the closed viewport at once."
+        "note": "menu-scale: the viewport scales from 0.97 and fades in, the reverse on close, faster; the indicator slides under the open trigger. Reduced motion: none, and Radix removes the closed viewport at once. The phone Drawer plays Drawer's own slide from the inline start."
       },
       "angular": {
         "status": "planned",
-        "behavior": "nav[dsNavbar], cdk:menu for the panels, a disclosure directive for the phone list"
+        "behavior": "nav[dsNavbar], cdk:menu for the panels, the Drawer for the phone list"
       },
       "native": {
         "status": "not-applicable",
@@ -12890,7 +12892,6 @@
         "viewport",
         "mobile",
         "trigger",
-        "trigger-icon",
         "menu-button"
       ],
       "keys": {
@@ -13995,12 +13996,12 @@
       },
       "itemCount": {
         "type": "number",
-        "description": "The number of items in the list. Turns on the summary part."
+        "description": "The number of items in the list. Turns on the summary part. A count that is not a finite number (NaN, Infinity) shows no summary and counts as one page."
       },
       "pageSize": {
         "type": "number",
         "default": 20,
-        "description": "Items per page, for the summary and the page count."
+        "description": "Items per page, for the summary and the page count. A size under 1 or not a finite number reads as 20."
       },
       "siblings": {
         "type": "number",
@@ -14061,7 +14062,7 @@
     ],
     "a11y": {
       "role": "navigation landmark (nav with aria-label) of buttons, or links with getHref",
-      "focus": "Every control is a tab stop in reading order. An end with nowhere to go stays focusable with aria-disabled, so focus is not lost on the first or last page. Each page control is keyed by its number, so focus stays on the pressed page. A 2px ring from the Button focus tokens.",
+      "focus": "Every control is a tab stop in reading order. An end with nowhere to go stays focusable with aria-disabled, so focus is not lost on the first or last page; in link mode, where Button drops the href of an inert link, Pagination gives it tabIndex 0. Each page control is keyed by its number at one level of the list, so focus stays on the pressed page when the window of pages shifts (4 to 5, 250 to 251). A 2px ring from the Button focus tokens.",
       "keys": {
         "Tab": "Moves through the controls",
         "Enter": "Goes to that page"
@@ -14075,7 +14076,7 @@
         ]
       },
       "notes": [
-        "The current page is a soft fill plus a strong border and aria-current page, never color alone (WCAG 1.4.1).",
+        "The current page has a border in color.text.muted (5.76:1 to 8.58:1 against the page across Studio, Desk and Neutral, dark and light; WCAG 1.4.11), a weight step from font.weight.regular to font.weight.bold (400 to 700, 400 to 600 in Neutral), a soft fill and aria-current page, never color alone (WCAG 1.4.1).",
         "The ends use chevrons-back, chevron-back, chevron-forward and chevrons-forward, mirrored in RTL.",
         "Numbers use Western digits in both languages, grouped with a comma (12,480).",
         "Under breakpoint.phone (30rem) the compact form keeps the ends, the current page and the last page, with a compact-only ellipsis (data-compact) between them when pages are hidden; the summary takes its own line and wraps. No sideways scroll at 320px (WCAG 1.4.10).",
@@ -14087,7 +14088,7 @@
     "content": {
       "en": {
         "summary": "First to last item of the total: 21 to 40 of 312. Name the items in formatSummary when the page does not: 21 to 40 of 312 boards.",
-        "labels": "Page 5, First page, Previous page, Next page, Last page."
+        "labels": "Page 5, First page, Previous page, Next page, Last page. These are not a verb plus a noun: they are the standard names of pagination controls, an accepted exception to the button rule."
       },
       "ar": {
         "summary": "21 إلى 40 من 312, Western digits. Empty list: ما فيه عناصر.",
@@ -14107,7 +14108,8 @@
       "font.leading.arabic-tight",
       "color.text.muted",
       "color.text.bright",
-      "color.border.strong",
+      "font.weight.regular",
+      "font.weight.bold",
       "color.bg.overlay-10",
       "color.bg.overlay-20"
     ],
@@ -14129,14 +14131,14 @@
       }
     },
     "styles": {
-      "studio": "Ghost page buttons, the current page a soft fill with a strong border, pixel chevrons on the ends.",
+      "studio": "Ghost page buttons at regular weight, the current page bold with a soft fill and a muted text color border, pixel chevrons on the ends.",
       "desk": "The same from the Desk tokens: pill controls, the current page bordered.",
       "neutral": "Takes the tokens of the Neutral style, no recipe."
     },
     "mistakes": [
       {
         "wrong": "The current page told apart by color only",
-        "right": "Pagination, which adds a border and aria-current page"
+        "right": "Pagination, which adds a 3:1 border, a weight step and aria-current page"
       },
       {
         "wrong": "Previous and next removed on the first and last page, so focus is lost",
@@ -15852,8 +15854,7 @@
       "More than seven destinations, or destinations that fall into named groups",
       "Destinations whose names do not fit in one short word",
       "Three to five destinations on a phone layout",
-      "Actions that change data, such as Save or Delete",
-      "Hidden labels while no Tooltip is in place"
+      "Actions that change data, such as Save or Delete"
     ],
     "insteadUse": {
       "Groups, counts or long names": "Sidebar",
@@ -15923,7 +15924,7 @@
       "hideLabels": {
         "type": "boolean",
         "default": false,
-        "description": "Draws only the icons; each label stays the accessible name. Sets data-hide-labels. Pair it with Tooltip (1.6.6) once that exists."
+        "description": "Draws only the icons; each label stays the accessible name and shows in a Tooltip on hover and focus. Sets data-hide-labels."
       },
       "start": {
         "type": "node",
@@ -15992,10 +15993,10 @@
       },
       "announce": "The label is the accessible name, then the badge: Inbox 3, or Boards New activity with badgeLabel. The current item says current page.",
       "notes": [
-        "Every item has a visible label by default. hideLabels needs a Tooltip per item (WCAG 1.4.13, order 1.6.6); Tooltip is not built yet, so the place is marked in RailItem.",
+        "Every item has a visible label by default. With hideLabels, and for any label cut to an ellipsis, the item shows a Tooltip with the full label on hover and focus, at the inline end (WCAG 1.4.13). The hint repeats the name, so it is not wired as the description.",
         "The current page is shown by aria-current, a fill, a bold label and an edge bar, never by color alone (WCAG 1.4.1).",
         "Items in end form a second list after the main one, so a screen reader hears two lists.",
-        "Targets: 24px at least in compact (sm), 44px at md in default density for touch templates (WCAG 2.5.8).",
+        "Targets: md items are size.control.md (32px) and sm items size.control.sm (28px) at default density, never under 24px (WCAG 2.5.8). Only data-platform ios or android grows them to 44 or 48px for touch templates.",
         "The border and the active bar sit on logical sides, so they flip in RTL.",
         "No native title attribute.",
         "Labels carry dir auto, so a Latin label in an Arabic rail ends in its own ellipsis."
@@ -16051,7 +16052,7 @@
     "frameworks": {
       "react": {
         "status": "ready",
-        "behavior": "hand built nav, radix:Slot for asChild",
+        "behavior": "hand built nav, radix:Slot for asChild, Tooltip for hidden or cut labels",
         "example": "Rail.demo.tsx",
         "note": "No motion pattern: nothing moves. The hover veil fades on duration.fast and is instant under reduced motion. The order names no motion pattern, so the manifest names none, as in Link and ButtonGroup."
       },
@@ -18833,6 +18834,7 @@
       "root",
       "header",
       "toggle",
+      "body",
       "group",
       "group-label",
       "group-trigger",
@@ -18853,6 +18855,12 @@
       "header": {
         "accepts": "any",
         "max": 1
+      },
+      "body": {
+        "accepts": [
+          "SidebarGroup"
+        ],
+        "min": 1
       },
       "group": {
         "accepts": [
@@ -18972,7 +18980,7 @@
       "children": {
         "type": "node",
         "required": true,
-        "description": "SidebarHeader, SidebarGroups and a SidebarFooter. An item's children are its label."
+        "description": "SidebarHeader, SidebarGroups and a SidebarFooter. The header and footer are direct children of Sidebar; everything else goes in the scrolling body. An item's children are its label."
       }
     },
     "states": [
@@ -18985,7 +18993,7 @@
     ],
     "a11y": {
       "role": "navigation (nav with aria-label); each group is a list named by its heading; items are links",
-      "focus": "Every item is a tab stop, disabled ones included. The ring is an inset 2px ring from color.focus.ring inside the row.",
+      "focus": "Every item is a tab stop, disabled ones included. The ring is an inset 2px ring from color.focus.ring inside the row. A focused item scrolls into the body, never under the header or the footer.",
       "keys": {
         "Tab": "Moves to the next item, group trigger or the toggle",
         "Shift+Tab": "Moves to the previous one",
@@ -19002,7 +19010,8 @@
       },
       "notes": [
         "The current page is shown by aria-current, a bold weight, a fill and an edge bar, never by color alone (WCAG 1.4.1).",
-        "Collapsed items keep the label in the DOM, visually hidden, so it stays the accessible name. Tooltip (1.6.6) is not built yet: once it is, each collapsed item gets a Tooltip with its label (marked in SidebarItem).",
+        "Collapsed items keep the label in the DOM, visually hidden, so it stays the accessible name, and show a Tooltip with the label on hover and focus, at the inline end (WCAG 1.4.13). The hint repeats the name, so it is not wired as the description. The Tooltip is turned off while expanded and never remounts the item.",
+        "The groups scroll inside the body part; the header and the footer sit outside it, so nothing is drawn over an item and a focused item is never hidden (WCAG 2.4.11). The body has a small scroll padding so a focused item stops clear of its edge.",
         "The border and the active bar are on logical sides, so the sidebar's edge flips in RTL; the sidebar icon of the toggle mirrors. A sidebar placed at the inline end swaps --_sidebar-border-start-color and --_sidebar-border-end-color.",
         "Group headings and counts go one font step up in Arabic, like the item labels.",
         "A collapsed sidebar holds collapsible groups open and hides their trigger; the group stays mounted, so focus inside it is kept.",
@@ -19055,7 +19064,6 @@
       "space.m",
       "space.l",
       "radius.pill",
-      "z.sidebar",
       "duration.fast",
       "duration.base",
       "ease.default",
@@ -19066,9 +19074,9 @@
     "frameworks": {
       "react": {
         "status": "ready",
-        "behavior": "hand built nav, radix:Collapsible for groups, radix:Slot for asChild",
+        "behavior": "hand built nav, radix:Collapsible for groups, radix:Slot for asChild, Tooltip for collapsed items",
         "example": "Sidebar.demo.tsx",
-        "note": "fade-rise: an opened group's list fades in and rises one step; closing is instant. Reduced motion: none. The width never animates, so collapse is instant."
+        "note": "fade-rise: an opened group's list fades in and rises one step from below; closing is instant. Reduced motion: no animation, the list shows at once. The width never animates, so collapse is instant."
       },
       "angular": {
         "status": "planned",
@@ -21952,7 +21960,7 @@
       "offset": {
         "type": "number",
         "default": 0,
-        "description": "The height of a sticky header above the content, in px. A heading counts as reached when its top passes this line plus a fifth of the viewport, at most 64px (the reading line)."
+        "description": "The height of a sticky header above the content, in px. A heading counts as reached when its top passes this line plus a fifth of the viewport, at most 64px (the reading line). A jump from a link also keeps the heading below it: a heading with no scroll-margin-block-start of its own gets one of this height inline."
       },
       "sticky": {
         "type": "boolean",
@@ -21992,9 +22000,10 @@
         "Scrolling is smooth, and a jump under prefers-reduced-motion. The URL fragment is set with history.pushState, so there is no second jump; hashchange does not fire and :target does not update. While the scroll plays, sections passed on the way are not marked; scrollend lifts the hold.",
         "A click with a modifier key or a middle click is left to the browser.",
         "The active section comes from activeHeading in @the-system/shared at the reading line (offset plus a fifth of the viewport, at most 64px). An IntersectionObserver on that line and the scrollend event trigger a new measure, once per frame at most; nothing runs on every scroll event. A ResizeObserver keeps the indicator on its link when the list reflows.",
-        "Sticky form (WCAG 2.4.11): the list sits below offset plus space.l and keeps scroll padding around the active link. Give the headings scroll-margin-block-start equal to any sticky page header and pass the same height as offset, so a heading never lands under the header.",
+        "Sticky form (WCAG 2.4.11): the list sits below offset plus space.l and keeps scroll padding around the active link. Pass the height of any sticky page header as offset: a jump then sets scroll-margin-block-start to that height inline on a heading that has none of its own, so a heading never lands under the header. A scroll margin set by the page is kept.",
         "Under forced colors the indicator uses Highlight and the focus outline uses Highlight.",
-        "On load, the section named by the URL fragment is marked first, when there is one."
+        "On load, the section named by the URL fragment is marked first, when there is one, and held until the reader scrolls, so the first measure does not move the mark. A malformed fragment such as #50% is read as written and never throws.",
+        "With no headings the component renders nothing: no landmark that holds only its title."
       ]
     },
     "content": {
@@ -22031,8 +22040,8 @@
       "border.width.strong",
       "focus.shadow.ring",
       "dialog.height.max",
-      "duration.base",
-      "ease.out"
+      "duration.medium",
+      "ease.standard"
     ],
     "motion": "tab-indicator",
     "frameworks": {
@@ -22071,7 +22080,7 @@
       },
       {
         "wrong": "Headings that land under a sticky header after a jump",
-        "right": "scroll-margin-block-start on the headings and the same height as offset"
+        "right": "The height of the sticky header passed as offset, so the jump keeps the heading below it"
       }
     ],
     "contract": {
@@ -22246,7 +22255,8 @@
       "announce": "Each tab reads its label, its count, its position (2 of 4) and whether it is selected. The panel is named by its tab.",
       "notes": [
         "The active tab is marked by the indicator and a heavier weight, never by color alone (WCAG 1.4.1).",
-        "The list scrolls inside itself when the tabs do not fit, so the page never scrolls sideways (WCAG 1.4.10). The active tab scrolls into view when it changes.",
+        "The soft pill has a 1px border in the muted text color, 3:1 or better against the track and the pill fill in Studio, Desk and Neutral, dark and light (WCAG 1.4.11). The overlay-20 fill alone measures 1.5:1 to 1.9:1.",
+        "The list scrolls inside itself when the tabs do not fit, so the page never scrolls sideways (WCAG 1.4.10). The active tab scrolls into view inside the list on load and when it changes; only the list scrolls, never the page.",
         "The focus ring is drawn inside the tab, so a scrolling list never clips it (WCAG 2.4.7).",
         "Disabled tabs use the native disabled attribute from Radix: a tab is not an action, so it is skipped rather than kept focusable with aria-disabled. Say why on the page or in a Tooltip next to the list.",
         "The trigger is the button Radix renders with role tab. It is not a system Button, because its indicator and count are parts of Tabs.",
@@ -22302,7 +22312,7 @@
       "opacity.disabled",
       "scrollbar.thumb",
       "duration.medium",
-      "ease.emphasized"
+      "ease.standard"
     ],
     "motion": "tab-indicator",
     "frameworks": {
@@ -22310,7 +22320,7 @@
         "status": "ready",
         "behavior": "radix:Tabs",
         "example": "Tabs.demo.tsx",
-        "note": "The indicator lives in the active trigger and plays a FLIP from the previous trigger with the Web Animations API (translate and scale only). Under reduced motion the duration token is 0ms and nothing plays."
+        "note": "The indicator lives in the active trigger and plays a FLIP from the previous trigger with the Web Animations API (translate and scale only). It plays the tab-indicator catalog spec: duration.medium with ease.standard. Under reduced motion the duration token is 0ms and nothing plays."
       },
       "angular": {
         "status": "planned",
@@ -22322,7 +22332,7 @@
       }
     },
     "styles": {
-      "studio": "Muted labels on the body, the active one bright and bold. ghost: a 2px bright line on the default hairline. soft: the overlay-20 pill on an overlay-5 track, 6px corners.",
+      "studio": "Muted labels on the body, the active one bright and bold. ghost: a 2px bright line on the default hairline. soft: the overlay-20 pill with a muted text color border on an overlay-5 track, 6px corners.",
       "desk": "The same parts on Desk tokens: Instrument Sans, the Desk text steps, the overlay steps over the dark or light desk. The line and the pill take the bright text color, not the yellow primary, so the active tab never reads as a primary action.",
       "neutral": "Token driven; applies once the Neutral pack is merged.",
       "liquid": "Planned."

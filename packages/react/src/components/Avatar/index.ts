@@ -1,6 +1,7 @@
 export {
   Avatar,
   avatarStatusLabel,
+  avatarStatusLabelAr,
   type AvatarProps,
   type AvatarShape,
   type AvatarSize,

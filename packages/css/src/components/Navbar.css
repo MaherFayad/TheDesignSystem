@@ -10,8 +10,8 @@
  *     [data-part='list']                        Radix List ul (inside Radix's unstyled track div)
  *       [data-part='item']                      li
  *         [data-part='link']                    a, data-active and aria-current page
- *         [data-part='trigger']                 a ghost Button root, data-state open or closed
- *           [data-part='trigger-icon']          the chevron, in the Button's end slot
+ *         [data-part='trigger']                 a ghost Button root, data-state open or closed;
+ *                                               its chevron is the Button's own end part
  *         [data-part='content']                 the panel of one menu, shown in the viewport
  *           [data-part='content-list']          ul of panel links
  *             [data-part='link']                > [data-part='link-label'], [data-part='link-description']
@@ -19,7 +19,8 @@
  *     [data-part='viewport']                    the surface the open panel renders in
  *     [data-part='end']                         actions
  *     [data-part='menu-button']                 an IconButton root, phones only
- *     [data-part='mobile']                      the phone list, data-state open or closed
+ *   [data-ds='drawer'][data-part='mobile']      the phone list: a Drawer root in a portal, from the
+ *                                               inline start, with a Sidebar and the end actions
  *
  * Private properties on the root (recipes override these):
  *
@@ -138,8 +139,7 @@
 
   /* ------------------------------------------------------------ list, links, triggers */
 
-  /* Not inside the phone list: the Sidebar there has a list part of its own. */
-  [data-ds='navbar'] [data-part='list']:not([data-part='mobile'] *) {
+  [data-ds='navbar'] [data-part='list'] {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
@@ -231,9 +231,8 @@
     --_navbar-trigger-turn: 180deg;
   }
 
-  /* The chevron, in a part the navbar owns, turns over while the panel is open. */
-  [data-ds='navbar'] [data-part='trigger-icon'] {
-    display: inline-flex;
+  /* The chevron, the trigger Button's end part, turns over while the panel is open. */
+  [data-ds='navbar'] [data-part='trigger'][data-emphasis] > [data-part='end'] {
     transform: rotate(var(--_navbar-trigger-turn));
     transition: transform var(--ds-duration-fast) var(--ds-ease-default);
   }
@@ -354,18 +353,14 @@
     font-size: var(--ds-font-size-s);
   }
 
-  /* ------------------------------------------------------------ phones: the menu button and the list */
+  /* ------------------------------------------------------------ phones: the menu button and the drawer */
 
   [data-ds='navbar'] > [data-part='menu-button'] {
     display: none;
   }
 
-  [data-ds='navbar'] > [data-part='mobile'] {
-    display: none;
-  }
-
   @media (width < 48rem) { /* breakpoint.tablet */
-    [data-ds='navbar'] [data-part='list']:not([data-part='mobile'] *),
+    [data-ds='navbar'] [data-part='list'],
     [data-ds='navbar'] > [data-part='viewport'] {
       display: none;
     }
@@ -373,49 +368,43 @@
     [data-ds='navbar'] > [data-part='menu-button'] {
       display: inline-flex;
       flex: none;
-    }
-
-    /* One row on phones: the brand gives way before the actions or the button wrap. */
-    [data-ds='navbar'] {
-      flex-wrap: nowrap;
-    }
-
-    /* A long brand wraps between its words, never inside one; the actions shrink to an ellipsis first. */
-    [data-ds='navbar'] > [data-part='brand'] {
-      flex: 0 1 auto;
-    }
-
-    /* With no actions, the menu button takes the inline end itself. */
-    [data-ds='navbar'] > [data-part='brand'] + [data-part='menu-button'] {
       margin-inline-start: auto;
     }
 
-    /* The open list takes a row of its own: the root wraps again. */
-    [data-ds='navbar']:has(> [data-part='mobile'][data-state='open']) {
+    /* The end actions move into the drawer's footer, so none is cut short at 320px (WCAG 1.4.10). */
+    [data-ds='navbar'] > [data-part='end']:has(~ [data-part='menu-button']) {
+      display: none;
+    }
+
+    /* A long brand wraps between its words, never inside one. */
+    [data-ds='navbar'] > [data-part='brand'] {
+      flex: 0 1 auto;
+      min-inline-size: 0;
+      overflow-wrap: anywhere;
+    }
+
+    /* With no menu button the actions stay in the bar: they keep their full width and wrap to a row of their own. */
+    [data-ds='navbar'] > [data-part='end'] {
+      flex: none;
       flex-wrap: wrap;
+      max-inline-size: 100%;
     }
+  }
 
-    [data-ds='navbar'] > [data-part='mobile'][data-state='open'] {
-      display: block;
-      flex: 1 0 100%;
-      padding-block-end: var(--ds-space-s);
-    }
+  /* The phone list: a Sidebar that fills the drawer body, with no edge and the drawer's surface. */
+  [data-ds='drawer'][data-part='mobile'] [data-ds='sidebar'] {
+    --_sidebar-width: 100%;
+    --_sidebar-bg: transparent;
+    --_sidebar-border-end-color: transparent;
+    --_sidebar-item-height: var(--ds-size-control-lg);
+    --_sidebar-padding: 0;
 
-    /* A sticky bar never grows past the screen: the list scrolls inside it, so every link stays reachable. */
-    [data-ds='navbar'][data-sticky] > [data-part='mobile'][data-state='open'] {
-      /* No viewport height token: dialog.height-max (80dvh) caps the list well inside the screen under the bar. */
-      max-block-size: var(--ds-dialog-height-max);
-      overflow-y: auto;
-      overscroll-behavior: contain;
-    }
+    block-size: auto;
+  }
 
-    /* The phone list is a Sidebar that fills the row: no width, no edge, the bar's surface. */
-    [data-ds='navbar'] > [data-part='mobile'] > [data-ds='sidebar'] {
-      --_sidebar-width: 100%;
-      --_sidebar-bg: transparent;
-      --_sidebar-border-end-color: transparent;
-      --_sidebar-item-height: var(--ds-size-control-lg);
-    }
+  /* The drawer body scrolls; the Sidebar's own body need not. */
+  [data-ds='drawer'][data-part='mobile'] [data-ds='sidebar'] > [data-part='body'] {
+    overflow: visible;
   }
 
   /* ------------------------------------------------------------ reduced motion, forced colors */
@@ -427,7 +416,7 @@
 
     [data-ds='navbar'] [data-part='indicator'],
     [data-ds='navbar'] [data-part='link']::after,
-    [data-ds='navbar'] [data-part='trigger-icon'] {
+    [data-ds='navbar'] [data-part='trigger'][data-emphasis] > [data-part='end'] {
       transition: none;
     }
   }

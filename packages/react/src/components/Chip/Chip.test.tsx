@@ -1,6 +1,9 @@
+import { readFileSync } from 'node:fs';
+import { join } from 'node:path';
 import { render, screen } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';
+import { Theme } from '../../theme';
 import ChipDemo from './Chip.demo';
 import { Chip } from './index';
 
@@ -86,7 +89,7 @@ describe('Chip', () => {
     expect(onClick).not.toHaveBeenCalled();
   });
 
-  it('the removable form is a span with a named remove IconButton', async () => {
+  it('the removable form is a span with a named remove CloseButton', async () => {
     const user = userEvent.setup();
     const onRemove = vi.fn();
     const { container } = render(<Chip onRemove={onRemove}>Arabic</Chip>);
@@ -94,7 +97,7 @@ describe('Chip', () => {
     expect(el.tagName).toBe('SPAN');
     expect(el.getAttribute('data-removable')).toBe('');
     const remove = screen.getByRole('button', { name: 'Remove Arabic' });
-    expect(remove.getAttribute('data-ds')).toBe('icon-button');
+    expect(remove.getAttribute('data-ds')).toBe('close-button');
     expect(remove.getAttribute('data-part')).toBe('remove');
     await user.click(remove);
     expect(onRemove).toHaveBeenCalledTimes(1);
@@ -129,9 +132,53 @@ describe('Chip', () => {
     expect(onRemove).not.toHaveBeenCalled();
   });
 
+  it('the default remove name follows an Arabic Theme', () => {
+    render(
+      <Theme lang="ar">
+        <Chip onRemove={() => undefined}>العربية</Chip>
+      </Theme>,
+    );
+    expect(screen.getByRole('button', { name: 'إزالة العربية' })).toBeTruthy();
+  });
+
+  it('the demo resets removed chips with a Button, not a Chip used as an action', async () => {
+    const user = userEvent.setup();
+    const { container } = render(<ChipDemo />);
+    const one = container.querySelector<HTMLElement>('[data-demo-case="one"]')!;
+    await user.click(one.querySelector<HTMLElement>('[data-part="remove"]')!);
+    const reset = one.querySelector<HTMLElement>('[data-demo-reset]');
+    expect(reset?.getAttribute('data-ds')).toBe('button');
+    expect(document.activeElement).toBe(reset);
+  });
+
   it('renders every demo case', () => {
     const { container } = render(<ChipDemo />);
     const cases = [...container.querySelectorAll('[data-demo-case]')].map((el) => el.getAttribute('data-demo-case'));
     expect(cases).toEqual(['variants', 'one', 'many', 'too-many', 'long-text', 'long-arabic', 'disabled']);
+  });
+});
+
+describe('Chip CSS', () => {
+  const css = readFileSync(join(process.cwd(), 'packages/css/src/components/Chip.css'), 'utf8');
+  const forced = css.slice(css.indexOf('@media (forced-colors: active)'));
+  const rule = (selector: string, from: string) => {
+    const at = from.indexOf(`${selector} {`);
+    if (at < 0) return '';
+    return from.slice(at, from.indexOf('}', at));
+  };
+
+  // Chromium draws a Canvas backplate behind forced text, so HighlightText on
+  // a forced Highlight fill vanishes. The selected root must opt out of forcing.
+  it('a selected chip keeps its label in forced colors', () => {
+    const selected = rule("[data-ds='chip'][data-selected]", forced);
+    expect(selected).toMatch(/forced-color-adjust:\s*none/);
+    expect(selected).toMatch(/background-color:\s*Highlight/);
+    expect(selected).toMatch(/color:\s*HighlightText/);
+  });
+
+  // A mixed xs row lines up: the removable xs chip keeps the xs height.
+  it('an xs removable chip does not change the chip height', () => {
+    const xs = rule("[data-ds='chip'][data-removable][data-size='xs']", css);
+    expect(xs).not.toMatch(/--_chip-height/);
   });
 });

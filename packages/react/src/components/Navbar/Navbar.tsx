@@ -17,32 +17,26 @@
 //   breakpoint.tablet. `linkAs` takes a router link component.
 // - The current page is `aria-current="page"` plus weight and a bar under
 //   the link, never color alone.
-// - The `mobile` part should be a Drawer root (order 1.6.3). Drawer is not
-//   built yet, so the phone list is a disclosure panel under the bar: the
-//   menu button (an IconButton with aria-expanded) shows and hides it, and
-//   Escape closes it and returns focus to the button. It holds a Sidebar
-//   with collapsible false, one group per menu. When Drawer lands, swap the
-//   panel for a Drawer root carrying `data-part="mobile"`.
+// - Under breakpoint.tablet the menu button opens a Drawer from the inline
+//   start. Its root carries `data-part="mobile"`. It is titled with the
+//   panel name ("Site menu") and holds a Sidebar with collapsible false,
+//   one group per menu, then the end actions in its footer: on phones the
+//   bar hides the end actions, so no label is cut to an ellipsis at 320px
+//   (WCAG 1.4.10). With no items there is no menu button, so the end
+//   actions stay in the bar and wrap to a row of their own when needed.
+//   Drawer gives the focus trap, Escape and the return to the button.
+// - The chevron of a trigger is Button's own `end` part; the Navbar turns
+//   it over, it does not own it.
 // - `sticky` keeps the bar at the top and reserves the same room as
 //   scroll padding on the page (WCAG 2.4.11).
-import {
-  createElement,
-  useEffect,
-  useId,
-  useRef,
-  useState,
-  type ElementType,
-  type HTMLAttributes,
-  type KeyboardEvent,
-  type ReactNode,
-  type Ref,
-} from 'react';
+import { createElement, useEffect, useRef, useState, type ElementType, type HTMLAttributes, type ReactNode, type Ref } from 'react';
 import { NavigationMenu } from 'radix-ui';
 import { Icon, type IconName } from '@the-system/icons/react';
 import type { Size } from '@the-system/shared';
 import { useTheme } from '../../theme';
 import { Button } from '../Button';
 import { IconButton } from '../IconButton';
+import { Drawer, DrawerBody, DrawerContent, DrawerFooter, DrawerTrigger } from '../Drawer';
 import { Sidebar, SidebarGroup, SidebarItem } from '../Sidebar';
 
 export type NavbarSize = Extract<Size, 'md' | 'lg'>;
@@ -97,8 +91,8 @@ export interface NavbarProps extends Omit<HTMLAttributes<HTMLElement>, 'title' |
   defaultOpenMenu?: string;
   /**
    * The menu button's name (one stable name; aria-expanded carries the
-   * state) and the phone list's landmark name. Default "Menu" and "Site
-   * menu", in Arabic too.
+   * state) and the phone list's name: the title of the Drawer and the name
+   * of the nav inside it. Default "Menu" and "Site menu", in Arabic too.
    */
   menuLabels?: { button: string; panel: string };
   ref?: Ref<HTMLElement>;
@@ -121,9 +115,7 @@ export function Navbar({
   const { lang } = useTheme();
   const words = labels ?? menuLabels[lang === 'ar' ? 'ar' : 'en'];
   const [mobileOpen, setMobileOpen] = useState(false);
-  const mobileId = useId();
-  const buttonRef = useRef<HTMLButtonElement>(null);
-  const mobileRef = useRef<HTMLDivElement>(null);
+  const rootRef = useRef<HTMLElement | null>(null);
   // Radix builds element ids from item values, so values are indexes, never labels with spaces.
   const openIndex = defaultOpenMenu === undefined ? -1 : items.findIndex((item) => item.label === defaultOpenMenu);
   const openValue = openIndex < 0 ? undefined : `item-${openIndex}`;
@@ -133,22 +125,16 @@ export function Navbar({
     if (!mobileOpen || typeof window.matchMedia !== 'function') return;
     const query = window.matchMedia('(min-width: 48rem)'); // breakpoint.tablet
     const onChange = () => {
-      if (!query.matches) return;
-      // Focus inside the list would drop to the body when it unmounts: move it to the button's place in the bar.
-      const focusInside = mobileRef.current?.contains(document.activeElement) ?? false;
-      setMobileOpen(false);
-      if (focusInside) mobileRef.current?.closest('[data-ds="navbar"]')?.querySelector<HTMLElement>('[data-part="list"] a, [data-part="list"] button')?.focus();
+      if (query.matches) setMobileOpen(false);
     };
     query.addEventListener('change', onChange);
     return () => query.removeEventListener('change', onChange);
   }, [mobileOpen]);
 
-  const onMobileKeyDown = (event: KeyboardEvent<HTMLElement>) => {
-    if (event.key === 'Escape' && mobileOpen) {
-      event.stopPropagation();
-      setMobileOpen(false);
-      buttonRef.current?.focus();
-    }
+  const setRootRef = (node: HTMLElement | null) => {
+    rootRef.current = node;
+    if (typeof ref === 'function') ref(node);
+    else if (ref) ref.current = node;
   };
 
   const renderLink = (link: NavbarLink, inPanel: boolean) => (
@@ -171,7 +157,7 @@ export function Navbar({
   return (
     <NavigationMenu.Root
       {...rest}
-      ref={ref}
+      ref={setRootRef}
       aria-label={label}
       defaultValue={openValue}
       data-ds="navbar"
@@ -190,11 +176,7 @@ export function Navbar({
                     emphasis="ghost"
                     size={size === 'lg' ? 'lg' : 'md'}
                     data-active={item.links.some((l) => l.active) ? '' : undefined}
-                    end={
-                      <span data-part="trigger-icon">
-                        <Icon name="chevron-down" size="sm" />
-                      </span>
-                    }
+                    end={<Icon name="chevron-down" size="sm" />}
                   >
                     {item.label}
                   </Button>
@@ -217,41 +199,47 @@ export function Navbar({
       <NavigationMenu.Viewport data-part="viewport" />
       {end !== undefined && <div data-part="end">{end}</div>}
       {items.length > 0 && (
-        <IconButton
-          ref={buttonRef}
-          data-part="menu-button"
-          icon={mobileOpen ? 'close' : 'menu'}
-          size={size === 'lg' ? 'lg' : 'md'}
-          label={words.button}
-          aria-expanded={mobileOpen}
-          aria-controls={mobileId}
-          onClick={() => setMobileOpen(!mobileOpen)}
-          onKeyDown={onMobileKeyDown}
-        />
-      )}
-      <div
-        ref={mobileRef}
-        data-part="mobile"
-        id={mobileId}
-        data-state={mobileOpen ? 'open' : 'closed'}
-        hidden={!mobileOpen}
-        onKeyDown={onMobileKeyDown}
-      >
-        {mobileOpen && (
-          <Sidebar label={words.panel} collapsible={false}>
-            {groupsOf(items).map((group, i) => (
-              <SidebarGroup key={group.label ?? `links-${i}`} label={group.label}>
-                {group.links.map((link, j) => (
-                  <SidebarItem key={`${j}-${link.href}`} start={link.start} active={link.active} asChild>
-                    {/* Following a link closes the list, so a router page change never sits under it. */}
-                    {createElement(linkAs, { href: link.href, onClick: () => setMobileOpen(false) }, link.label)}
-                  </SidebarItem>
+        <Drawer open={mobileOpen} onOpenChange={setMobileOpen} side="start" size="sm">
+          <DrawerTrigger>
+            <IconButton data-part="menu-button" icon="menu" size={size === 'lg' ? 'lg' : 'md'} label={words.button} />
+          </DrawerTrigger>
+          <DrawerContent
+            title={words.panel}
+            rootProps={{ 'data-part': 'mobile' } as Record<string, string>}
+            // The window grew past the breakpoint: the button is hidden, so focus goes to the first item of the bar.
+            onCloseAutoFocus={(event) => {
+              if (typeof window.matchMedia !== 'function' || !window.matchMedia('(min-width: 48rem)').matches) return;
+              const first = rootRef.current?.querySelector<HTMLElement>('[data-part="list"] a, [data-part="list"] button');
+              if (!first) return;
+              event.preventDefault();
+              first.focus();
+            }}
+          >
+            <DrawerBody>
+              <Sidebar label={words.panel} collapsible={false}>
+                {groupsOf(items).map((group, i) => (
+                  <SidebarGroup key={group.label ?? `links-${i}`} label={group.label}>
+                    {group.links.map((link, j) => (
+                      <SidebarItem key={`${j}-${link.href}`} start={link.start} active={link.active} asChild>
+                        {/* Following a link closes the list, so a router page change never sits under it. */}
+                        {createElement(
+                          linkAs,
+                          {
+                            href: link.href,
+                            onClick: () => setMobileOpen(false),
+                          },
+                          link.label,
+                        )}
+                      </SidebarItem>
+                    ))}
+                  </SidebarGroup>
                 ))}
-              </SidebarGroup>
-            ))}
-          </Sidebar>
-        )}
-      </div>
+              </Sidebar>
+            </DrawerBody>
+            {end !== undefined && <DrawerFooter>{end}</DrawerFooter>}
+          </DrawerContent>
+        </Drawer>
+      )}
     </NavigationMenu.Root>
   );
 }

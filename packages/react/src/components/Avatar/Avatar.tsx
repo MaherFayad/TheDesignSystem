@@ -9,10 +9,16 @@
 // the lane session (no access to the repo); designed from Figma-Killer-2
 // TagPill (the tinted accent from a name), the dials table in PLAN.md 3.7
 // and Button (sizes from size.control).
+//
+// The status part is a StatusDot root carrying data-part="status", with its
+// label visually hidden. Avatar.css draws one shape per status on it, so the
+// status never rests on color alone (WCAG 1.4.1), forced colors included.
 import { useState, type CSSProperties, type HTMLAttributes, type ReactElement, type Ref } from 'react';
 import { Avatar as RadixAvatar } from 'radix-ui';
 import { Icon, type IconName } from '@the-system/icons/react';
 import { hasArabic, initials, toneIndex, type Shape, type Size, type Tone } from '@the-system/shared';
+import { useTheme } from '../../theme/hooks';
+import { StatusDot } from '../StatusDot';
 
 export type AvatarSize = Extract<Size, 'xs' | 'sm' | 'md' | 'lg'>;
 export type AvatarShape = Extract<Shape, 'default' | 'square'>;
@@ -29,12 +35,22 @@ export const avatarStatusLabel: Record<AvatarStatusTone, string> = {
   neutral: 'Offline',
 };
 
+/** Arabic words for each status tone, used under an Arabic Theme when statusLabel is not set. */
+export const avatarStatusLabelAr: Record<AvatarStatusTone, string> = {
+  success: 'متصل',
+  warning: 'غير متواجد',
+  danger: 'مشغول',
+  neutral: 'غير متصل',
+};
+
 const iconSize: Record<AvatarSize, 'sm' | 'md' | 'lg'> = { xs: 'sm', sm: 'sm', md: 'md', lg: 'lg' };
 
 export interface AvatarProps extends Omit<HTMLAttributes<HTMLSpanElement>, 'title' | 'children'> {
   /**
    * The person or workspace name. It is the accessible name of the avatar,
-   * the source of the initials and of the fallback color. Required.
+   * the source of the initials and of the fallback color. Required. An
+   * empty name has nothing to say: the avatar is then decorative, and a
+   * warning shows in development.
    */
   name: string;
   /** The image URL. Without it, the fallback shows at once. */
@@ -52,7 +68,7 @@ export interface AvatarProps extends Omit<HTMLAttributes<HTMLSpanElement>, 'titl
   decorative?: boolean;
   /** Adds the status part, a dot on the end corner, in this tone. */
   status?: AvatarStatusTone;
-  /** The status in words, added to the accessible name. Default from the tone: Online, Away, Busy, Offline. Arabic: pass it. */
+  /** The status in words, added to the accessible name. Default from the tone: Online, Away, Busy, Offline, or the Arabic words under an Arabic Theme. */
   statusLabel?: string;
   /** Milliseconds before the fallback shows while the image loads, so a fast image does not flash initials. Default 600 with src. */
   fallbackDelay?: number;
@@ -83,9 +99,16 @@ export function Avatar({
   ...rest
 }: AvatarProps) {
   const [state, setState] = useState<AvatarState>('loading');
+  const { lang } = useTheme();
+  const unnamed = name.trim() === '';
+  if (process.env.NODE_ENV !== 'production' && unnamed && !decorative) {
+    console.warn('Avatar: the name is empty, so the avatar is drawn as decorative. Pass the person or workspace name.');
+  }
+  const hidden = decorative || unnamed;
   const letters = initials(name);
   const hue = toneIndex(name);
-  const statusWords = status ? (statusLabel ?? avatarStatusLabel[status]) : undefined;
+  const words = lang.startsWith('ar') ? avatarStatusLabelAr : avatarStatusLabel;
+  const statusWords = status ? (statusLabel ?? words[status]) : undefined;
   const separator = hasArabic(`${name}${statusWords ?? ''}`) ? '، ' : ', ';
   const accessibleName = statusWords ? `${name}${separator}${statusWords}` : name;
   const fallbackIcon: IconName | ReactElement | undefined = icon ?? (letters === '' ? 'user' : undefined);
@@ -103,9 +126,9 @@ export function Avatar({
       data-size={size}
       data-shape={shape}
       data-state={src ? state : undefined}
-      role={decorative ? undefined : 'img'}
-      aria-label={decorative ? undefined : accessibleName}
-      aria-hidden={decorative ? true : undefined}
+      role={hidden ? undefined : 'img'}
+      aria-label={hidden ? undefined : accessibleName}
+      aria-hidden={hidden ? true : undefined}
       style={hueStyle}
     >
       {src && (
@@ -129,7 +152,7 @@ export function Avatar({
           fallbackIcon
         )}
       </RadixAvatar.Fallback>
-      {status && <span data-part="status" data-tone={status} aria-hidden="true" />}
+      {status && <StatusDot data-part="status" tone={status} size="sm" label={statusWords} hideLabel aria-hidden="true" />}
     </RadixAvatar.Root>
   );
 }

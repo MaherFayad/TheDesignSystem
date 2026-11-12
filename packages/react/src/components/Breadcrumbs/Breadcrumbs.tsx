@@ -71,6 +71,7 @@ export interface BreadcrumbsProps extends Omit<HTMLAttributes<HTMLElement>, 'tit
   /**
    * The most steps to show. With more, the first step, an overflow menu and
    * the last maxItems minus 2 steps show; the rest move into the menu.
+   * The least is 3: a smaller value is read as 3.
    * Default none: every step shows and the list wraps.
    */
   maxItems?: number;
@@ -86,8 +87,12 @@ export interface BreadcrumbsProps extends Omit<HTMLAttributes<HTMLElement>, 'tit
 /** The visible plan: steps by index, with an overflow marker where steps are collapsed. */
 export function collapseItems(count: number, maxItems?: number): (number | 'overflow')[] {
   const all = Array.from({ length: count }, (_, i) => i);
-  if (maxItems === undefined || count <= maxItems) return all;
-  const tail = Math.max(1, maxItems - 2);
+  // The fewest a collapsed path can show is three: the first step, the overflow menu and the current page.
+  // A smaller maxItems is read as 3; one that is not a finite number shows every step.
+  if (maxItems === undefined || !Number.isFinite(maxItems)) return all;
+  const max = Math.max(3, Math.floor(maxItems));
+  if (count <= max) return all;
+  const tail = max - 2;
   if (count <= tail + 2) return all;
   return [0, 'overflow', ...all.slice(count - tail)];
 }

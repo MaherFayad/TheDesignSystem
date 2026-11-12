@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 import type { AnchorHTMLAttributes } from 'react';
 import { beforeAll, describe, expect, it } from 'vitest';
@@ -42,7 +42,8 @@ describe('Navbar', () => {
     expect(el.getAttribute('data-size')).toBe('md');
     expect(el.hasAttribute('data-sticky')).toBe(false);
     // The viewport and the indicator mount only while a panel is open.
-    for (const part of ['brand', 'list', 'item', 'link', 'trigger', 'end', 'menu-button', 'mobile']) {
+    // The mobile part, a Drawer root, mounts in a portal only while open.
+    for (const part of ['brand', 'list', 'item', 'link', 'trigger', 'end', 'menu-button']) {
       expect(el.querySelector(`[data-part="${part}"]`), part).not.toBeNull();
     }
     expect(el.querySelector('[data-part="trigger"]')?.getAttribute('data-ds')).toBe('button');
@@ -79,48 +80,54 @@ describe('Navbar', () => {
     expect(trigger.getAttribute('data-state')).toBe('closed');
   });
 
-  it('the menu button opens the phone list and Escape closes it, back to the button', async () => {
-    const { container } = render(<Navbar label="Main" items={items} />);
+  it('the menu button opens the phone list as a Drawer root, and Escape closes it, back to the button', async () => {
+    render(<Navbar label="Main" items={items} end={<span>Start a trial</span>} />);
     const button = screen.getByRole('button', { name: 'Menu' });
-    const mobile = container.querySelector<HTMLElement>('[data-part="mobile"]');
     expect(button.getAttribute('aria-expanded')).toBe('false');
-    expect(button.getAttribute('aria-controls')).toBe(mobile?.id);
-    expect(mobile?.hidden).toBe(true);
-    expect(mobile?.getAttribute('data-state')).toBe('closed');
+    expect(document.querySelector('[data-part="mobile"]')).toBeNull();
     await userEvent.click(button);
-    expect(mobile?.hidden).toBe(false);
+    const mobile = document.querySelector<HTMLElement>('[data-part="mobile"]');
+    // The mobile part is the Drawer root, from the inline start, and the button controls its dialog.
+    expect(mobile?.getAttribute('data-ds')).toBe('drawer');
+    expect(mobile?.getAttribute('data-side')).toBe('start');
     expect(mobile?.getAttribute('data-state')).toBe('open');
     expect(button.getAttribute('aria-expanded')).toBe('true');
+    const dialog = screen.getByRole('dialog', { name: 'Site menu' });
+    expect(button.getAttribute('aria-controls')).toBe(dialog.id);
     // The phone list is a Sidebar: one group per menu, every link once.
     const list = screen.getByRole('navigation', { name: 'Site menu' });
     expect(list.getAttribute('data-ds')).toBe('sidebar');
     expect(screen.getByRole('list', { name: 'Product' })).toBeTruthy();
+    // The end actions are in the drawer's footer, so on phones they are never cut short (WCAG 1.4.10).
+    expect(mobile?.querySelector('[data-part="footer"]')?.textContent).toContain('Start a trial');
     screen.getAllByRole('link', { name: 'Docs' }).at(-1)?.focus();
     await userEvent.keyboard('{Escape}');
-    expect(mobile?.hidden).toBe(true);
+    await waitFor(() => expect(document.querySelector('[data-part="mobile"]')).toBeNull());
     expect(document.activeElement).toBe(button);
-    // Escape on the button itself closes an open list too.
-    await userEvent.click(button);
-    expect(mobile?.hidden).toBe(false);
-    await userEvent.keyboard('{Escape}');
-    expect(mobile?.hidden).toBe(true);
+    expect(button.getAttribute('aria-expanded')).toBe('false');
   });
 
   it('following a link in the phone list closes it, and plain links share one group', async () => {
-    const { container } = render(
+    render(
       <Navbar
         label="Main"
         items={[{ label: 'Overview', href: '#o' }, { label: 'Pricing', href: '#p' }, ...items.slice(1, 2)]}
       />,
     );
     await userEvent.click(screen.getByRole('button', { name: 'Menu' }));
-    const mobile = container.querySelector<HTMLElement>('[data-part="mobile"]');
+    const mobile = document.querySelector<HTMLElement>('[data-part="mobile"]');
     // Two plain links in one unnamed group, then the Product menu.
-    expect(mobile?.querySelectorAll('[data-ds="sidebar"] > [data-part="group"]')).toHaveLength(2);
+    expect(mobile?.querySelectorAll('[data-ds="sidebar"] [data-part="group"]')).toHaveLength(2);
     const pricing = Array.from(mobile?.querySelectorAll<HTMLElement>('[data-part="item"]') ?? []).find((a) => a.textContent === 'Pricing');
     pricing?.addEventListener('click', (e) => e.preventDefault());
     await userEvent.click(pricing as HTMLElement);
-    expect(mobile?.hidden).toBe(true);
+    await waitFor(() => expect(document.querySelector('[data-part="mobile"]')).toBeNull());
+  });
+
+  it('the trigger chevron is the Button end part, not a part of the Navbar', () => {
+    const { container } = render(<Navbar label="Main" items={items} />);
+    expect(container.querySelector('[data-part="trigger-icon"]')).toBeNull();
+    expect(container.querySelector('[data-part="trigger"] > [data-part="end"] svg')).not.toBeNull();
   });
 
   it('draws no menu button with no items', () => {
@@ -131,7 +138,7 @@ describe('Navbar', () => {
   it('arrow keys follow the reading direction in RTL', async () => {
     render(
       <Theme dir="rtl" lang="ar">
-        <Navbar label="الرئيسية" items={items} />
+        <Navbar label="التنقل الرئيسي" items={items} />
       </Theme>,
     );
     const first = screen.getByRole('link', { name: 'Overview' });
@@ -153,7 +160,7 @@ describe('Navbar', () => {
   it('uses Arabic menu button words under an Arabic Theme', () => {
     render(
       <Theme lang="ar">
-        <Navbar label="الرئيسية" items={items} />
+        <Navbar label="التنقل الرئيسي" items={items} />
       </Theme>,
     );
     expect(screen.getByRole('button', { name: 'القائمة' })).toBeTruthy();
