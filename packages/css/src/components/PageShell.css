@@ -24,7 +24,7 @@
  * Private properties on the root. Recipes override them:
  *   --_page-shell-bg, -fg, -border-color
  *   --_page-shell-header-height, -header-padding-inline, -header-gap
- *   --_page-shell-main-padding, -aside-width, -aside-padding, -footer-padding
+ *   --_page-shell-main-padding, -aside-width, -aside-padding, -footer-padding, -footer-fg
  *
  * No motion: the column swaps at once (the width never animates). The Drawer
  * brings its own motion.
@@ -42,6 +42,7 @@
     --_page-shell-aside-width: var(--ds-dialog-width-sm);
     --_page-shell-aside-padding: var(--ds-space-xl);
     --_page-shell-footer-padding: var(--ds-space-l);
+    --_page-shell-footer-fg: var(--ds-color-text-muted);
 
     position: relative;
     display: grid;
@@ -146,7 +147,7 @@
     min-inline-size: 0;
     padding: var(--_page-shell-footer-padding) var(--_page-shell-main-padding);
     border-block-start: var(--ds-border-width-default) solid var(--_page-shell-border-color);
-    color: var(--ds-color-text-muted);
+    color: var(--_page-shell-footer-fg);
     font-size: var(--ds-font-size-s);
     overflow-wrap: break-word;
   }
@@ -216,6 +217,7 @@
       --_page-shell-bg: Canvas;
       --_page-shell-fg: CanvasText;
       --_page-shell-border-color: CanvasText;
+      --_page-shell-footer-fg: CanvasText;
     }
   }
 }

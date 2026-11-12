@@ -126,7 +126,7 @@ export default function PageShellDemo() {
             <PageShell
               embedded
               mainId="shell-ar"
-              nav={<ShellSidebar items={arNav} label="الرئيسية" prefix="shell-ar" />}
+              nav={<ShellSidebar items={arNav} label="التنقل الرئيسي" prefix="shell-ar" />}
               header={<Header title="استوديو الشمال" action="إنشاء لوحة" />}
               aside={<p>3 أعضاء يشوفون اللوحة الحين.</p>}
               footer="استوديو الشمال، 2026"
@@ -205,7 +205,7 @@ export default function PageShellDemo() {
           <PageShell
             embedded
             mainId="shell-long-ar"
-            nav={<ShellSidebar items={arNav} label="الرئيسية" prefix="shell-long-ar" />}
+            nav={<ShellSidebar items={arNav} label="التنقل الرئيسي" prefix="shell-long-ar" />}
             header={<Header title="استوديو الشمال ومساحة تخطيط إطلاق الربيع لفريق الهوية" action="إنشاء لوحة" />}
             aside={<p>{sample.ar.long}</p>}
             footer={sample.ar.long}
