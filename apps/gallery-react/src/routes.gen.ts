@@ -9,11 +9,15 @@ export interface DemoRoute {
 
 export const routes: DemoRoute[] = [
   { name: 'Button', slug: 'button', load: () => import('../../../packages/react/src/components/Button/Button.demo') },
+  { name: 'ButtonGroup', slug: 'button-group', load: () => import('../../../packages/react/src/components/ButtonGroup/ButtonGroup.demo') },
   { name: 'Dialog', slug: 'dialog', load: () => import('../../../packages/react/src/components/Dialog/Dialog.demo') },
+  { name: 'DropdownMenu', slug: 'dropdown-menu', load: () => import('../../../packages/react/src/components/DropdownMenu/DropdownMenu.demo') },
   { name: 'Field', slug: 'field', load: () => import('../../../packages/react/src/components/Field/Field.demo') },
   { name: 'Icon', slug: 'icon', load: () => import('../../../packages/react/src/components/Icon/Icon.demo') },
   { name: 'IconButton', slug: 'icon-button', load: () => import('../../../packages/react/src/components/IconButton/IconButton.demo') },
   { name: 'Input', slug: 'input', load: () => import('../../../packages/react/src/components/Input/Input.demo') },
+  { name: 'Link', slug: 'link', load: () => import('../../../packages/react/src/components/Link/Link.demo') },
+  { name: 'ListBox', slug: 'list-box', load: () => import('../../../packages/react/src/components/ListBox/ListBox.demo') },
   { name: 'TitleBar', slug: 'title-bar', load: () => import('../../../packages/react/src/components/TitleBar/TitleBar.demo') },
   { name: 'Toast', slug: 'toast', load: () => import('../../../packages/react/src/components/Toast/Toast.demo') },
   { name: 'Window', slug: 'window', load: () => import('../../../packages/react/src/components/Window/Window.demo') },

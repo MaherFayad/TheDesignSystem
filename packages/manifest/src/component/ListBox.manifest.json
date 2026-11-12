@@ -1,0 +1,322 @@
+{
+  "name": "ListBox",
+  "kind": "component",
+  "family": "selection",
+  "summary": "A visible list of options to choose one or many from, with groups, descriptions, icons, typeahead and the matched part of each label marked. The same list sits inside the popups of Combobox, Autocomplete, MultiSelect, TagField and CommandPalette.",
+  "useWhen": [
+    "A short to medium list of options that stays visible on the page, such as a filter panel or a settings column",
+    "Choosing several options where seeing every choice at once helps, such as folders to sync",
+    "Building a new picker on the shared option list: put a ListBox with virtualFocus inside the popup and drive it from the owner"
+  ],
+  "avoidWhen": [
+    "Two to five options that fit as plain controls",
+    "A long list where people know what they want and can type it",
+    "Choosing a value in a compact form row where the list should stay closed",
+    "A list of actions or commands",
+    "Navigation between pages or sections"
+  ],
+  "insteadUse": {
+    "Two to five options, one value": "RadioGroup",
+    "Two to five options, several values": "CheckboxGroup",
+    "A long list filtered by typing, one value": "Combobox",
+    "Free text with suggestions": "Autocomplete",
+    "A closed field that opens a short list": "Select",
+    "Several values from a long list in a closed field": "MultiSelect",
+    "Actions on an object": "DropdownMenu",
+    "Navigation": "NavigationList"
+  },
+  "anatomy": [
+    "root",
+    "option",
+    "indicator",
+    "option-icon",
+    "option-label",
+    "option-description",
+    "group",
+    "group-label",
+    "separator",
+    "empty"
+  ],
+  "parts": {
+    "ListBox": "root"
+  },
+  "slots": {
+    "option-label": {
+      "accepts": "text",
+      "min": 1,
+      "max": 1
+    },
+    "option-description": {
+      "accepts": "text",
+      "max": 1
+    },
+    "group-label": {
+      "accepts": "text",
+      "max": 1
+    },
+    "empty": {
+      "accepts": "any",
+      "max": 1
+    }
+  },
+  "props": {
+    "items": {
+      "type": "node",
+      "required": true,
+      "description": "The options, plain ({ value, label, description?, start?, disabled?, keywords? }) or in titled groups ({ label, options, key? }). A separator is drawn between groups; a group with no option is dropped. Labels are plain text, so the match can be marked and typeahead can read them."
+    },
+    "selectionMode": {
+      "type": [
+        "single",
+        "multiple"
+      ],
+      "default": "single",
+      "description": "single: one value or none (value is a string or null). multiple: any number (value is an array in the order of choice); the root gets aria-multiselectable."
+    },
+    "value": {
+      "type": "string",
+      "description": "Controlled selection, with onValueChange: a string or null in single mode, a string array in multiple mode."
+    },
+    "defaultValue": {
+      "type": "string",
+      "description": "Uncontrolled starting selection, the same shape as value."
+    },
+    "onValueChange": {
+      "type": "function",
+      "description": "Called with the new selection after a click, Enter, Space or Ctrl+A."
+    },
+    "allowEmpty": {
+      "type": "boolean",
+      "default": false,
+      "description": "Single mode: choosing the chosen option again clears the value."
+    },
+    "size": {
+      "type": [
+        "sm",
+        "md"
+      ],
+      "default": "md",
+      "description": "Row height and type size: sm rows are size.control.xs (24px), md rows follow list.row.height (24, 28 and 32px in the compact, default and comfortable densities)."
+    },
+    "orientation": {
+      "type": [
+        "vertical",
+        "horizontal"
+      ],
+      "default": "vertical",
+      "description": "vertical: one column, ArrowDown and ArrowUp. horizontal: a wrapping row, ArrowRight and ArrowLeft in reading order (swapped in right to left layouts)."
+    },
+    "highlightedValue": {
+      "type": "string",
+      "description": "The keyboard cursor, controlled with onHighlightedValueChange. An owner that keeps focus sets it."
+    },
+    "onHighlightedValueChange": {
+      "type": "function",
+      "description": "Called when the arrows, typeahead or (with virtualFocus) the pointer move the highlight."
+    },
+    "virtualFocus": {
+      "type": "boolean",
+      "default": false,
+      "description": "true: focus stays on an owner, a combobox input that points aria-activedescendant at listBoxOptionId(listId, value). Options take no focus and the list handles no keys. false: the list is one tab stop (roving tabindex) and handles its own keys."
+    },
+    "query": {
+      "type": "string",
+      "description": "The text the owner filtered with (filterItems from @the-system/shared). The matched part of each label is wrapped in mark, drawn heavier and underlined."
+    },
+    "loop": {
+      "type": "boolean",
+      "default": false,
+      "description": "ArrowDown on the last option goes to the first, and ArrowUp on the first to the last."
+    },
+    "empty": {
+      "type": "node",
+      "description": "Shown when there is no option. Say what to do next, not only that the list is empty."
+    },
+    "disabled": {
+      "type": "boolean",
+      "default": false,
+      "description": "No option can be chosen. The list stays focusable and readable with aria-disabled, drawn with opacity.disabled."
+    },
+    "readOnly": {
+      "type": "boolean",
+      "default": false,
+      "description": "The selection is shown and can be moved through, not changed. aria-readonly and data-readonly."
+    },
+    "onOptionSelect": {
+      "type": "function",
+      "description": "Runs with the option value after a click, Enter or Space chose it. Owners use it to close their popup."
+    },
+    "aria-label": {
+      "type": "string",
+      "description": "The list needs a name: aria-label, or aria-labelledby pointing at a visible label."
+    }
+  },
+  "states": [
+    "data-orientation",
+    "data-highlighted",
+    "data-selected",
+    "data-disabled",
+    "data-readonly"
+  ],
+  "a11y": {
+    "role": "listbox, with option children and group children named by their group label. aria-multiselectable in multiple mode. Options carry aria-selected, and aria-disabled when they cannot be chosen. With no option, the root is a group named the same way that holds the empty text, since a listbox must own options.",
+    "focus": "Alone: one tab stop, the highlighted option, else the first selected option, else the first enabled option (roving tabindex). With virtualFocus: options never take focus; the owner keeps it and points aria-activedescendant at the highlighted option.",
+    "keys": {
+      "Tab": "Moves into the list, to the selected option, and out of it again",
+      "ArrowDown": "Moves to the next enabled option. In a horizontal list this is ArrowRight, or ArrowLeft in right to left layouts",
+      "ArrowUp": "Moves to the previous enabled option",
+      "Home": "Moves to the first enabled option",
+      "End": "Moves to the last enabled option",
+      "Enter": "Selects the highlighted option; in multiple mode, toggles it",
+      "Space": "Selects the highlighted option; in multiple mode, toggles it",
+      "Ctrl+A": "Multiple mode: selects every enabled option, or clears them when all are selected",
+      "Typeahead": "Typing letters moves to the next option whose label starts with them, ignoring case, accents, Arabic diacritics and alef forms"
+    },
+    "announce": "Each option reads its label, its description, its selected state and its position in the list (from the browser). A group is read with its title. No live region of its own: an owner that filters announces the result count.",
+    "notes": [
+      "Selected state is shown by a check icon, never by color alone (WCAG 1.4.1). The check slot is kept on every row so labels line up.",
+      "The matched part of a label is wrapped in mark and drawn heavier and underlined, never by color alone.",
+      "Rows are at least 24px tall (size.target-min, WCAG 2.5.8).",
+      "Disabled options use aria-disabled, stay in the list and are skipped by the arrow keys.",
+      "Separators between groups are drawn only (aria-hidden): a listbox may hold only options and groups.",
+      "No virtualization in wave 1: filterItems handles 1000 options in under a frame (unit test); render fewer than a few hundred rows at once.",
+      "Contract keys: ArrowDown, ArrowUp, Home and End are checked from the first option of the many case. Enter, Space, Ctrl+A and typeahead are covered by the unit tests."
+    ]
+  },
+  "content": {
+    "en": {
+      "options": "Nouns or short noun phrases in sentence case: Date edited, Saudi Arabia. No ending punctuation.",
+      "description": "One short line that tells options apart: Newest first. Not a repeat of the label.",
+      "group": "A short noun over the group: Gulf, Recent.",
+      "empty": "Say what to do next: No cities yet. Add one from Settings.",
+      "name": "Name the list with what is chosen: City, Sort by."
+    },
+    "ar": {
+      "options": "Noun form labels, white Saudi dialect, no diacritics: تاريخ التعديل، المالك.",
+      "group": "A short noun: الخليج، الأخيرة.",
+      "empty": "What to do next: ما فيه مدن. أضف مدينة من الإعدادات.",
+      "digits": "Western digits in labels and counts."
+    }
+  },
+  "tokens": [
+    "color.text.default",
+    "color.text.muted",
+    "color.bg.overlay-5",
+    "color.bg.overlay-10",
+    "color.bg.surface-2",
+    "color.border.control",
+    "color.border.strong",
+    "color.border.hairline",
+    "color.focus.ring",
+    "color.focus.ring-on-primary-inner",
+    "color.primary.fill",
+    "color.primary.text",
+    "radius.card",
+    "radius.panel",
+    "radius.field",
+    "menu.item.radius",
+    "list.row.height",
+    "size.control.xs",
+    "size.icon.md",
+    "size.target-min",
+    "space.4xs",
+    "space.3xs",
+    "space.2xs",
+    "space.xs",
+    "space.s",
+    "space.m",
+    "border.width.default",
+    "border.width.strong",
+    "font.family.sans",
+    "font.size.xs",
+    "font.size.s",
+    "font.size.m",
+    "font.weight.menu",
+    "font.weight.regular",
+    "font.weight.semibold",
+    "font.weight.bold",
+    "font.leading.snug",
+    "font.leading.arabic.snug",
+    "opacity.disabled"
+  ],
+  "motion": "menu-scale",
+  "frameworks": {
+    "react": {
+      "status": "ready",
+      "behavior": "hand built; shared logic in @the-system/shared filter.ts and listbox.ts",
+      "example": "ListBox.demo.tsx",
+      "note": "No motion of its own: the popup that holds it plays menu-scale. Alone it has none. Sources GoBanana and Figma-Killer-2 were not reachable in the lane session; the rows follow the DropdownMenu surface built from them."
+    },
+    "angular": {
+      "status": "planned",
+      "behavior": "cdk:listbox"
+    },
+    "native": {
+      "status": "planned",
+      "behavior": "hand built on FlatList with the shared listbox.ts"
+    }
+  },
+  "styles": {
+    "studio": "A bordered box with the card radius and rows of the menu radius inside, the menu weight. The lit row takes the overlay step, the hover a lighter veil. Separators on surface-2. In a popup the box drops its border and takes the menu surface.",
+    "desk": "The panel radius with field radius rows and the regular weight. The lit row is the yellow primary fill with dark text and the on-primary keyboard ring, as in the Desk menus. Hairline separators.",
+    "neutral": "Planned: tokens only."
+  },
+  "mistakes": [
+    {
+      "wrong": "Showing the selected option only by a colored row",
+      "right": "The check in the indicator carries the state; the color is extra"
+    },
+    {
+      "wrong": "Filtering inside ListBox or passing every option with a hidden flag",
+      "right": "The owner keeps the query, passes filterItems(items, query, text) as items and the query to mark the match"
+    },
+    {
+      "wrong": "Moving focus into the list from a combobox input",
+      "right": "virtualFocus on the ListBox, aria-activedescendant on the input pointing at listBoxOptionId(listId, value)"
+    },
+    {
+      "wrong": "A ListBox with no name",
+      "right": "aria-label, or aria-labelledby pointing at the visible label"
+    },
+    {
+      "wrong": "Hiding an option that cannot be chosen now",
+      "right": "disabled on the option, with a description that says why"
+    },
+    {
+      "wrong": "A ListBox of actions (Delete, Duplicate)",
+      "right": "DropdownMenu, whose items are actions"
+    }
+  ],
+  "contract": {
+    "optionalParts": [
+      "option-icon",
+      "option-description",
+      "group",
+      "group-label",
+      "separator"
+    ],
+    "keys": {
+      "ArrowDown": {
+        "focus": "[data-part='option']",
+        "case": "many",
+        "expect": "focus-moves"
+      },
+      "ArrowUp": {
+        "focus": "[data-part='option']:last-child",
+        "case": "many",
+        "expect": "focus-moves"
+      },
+      "End": {
+        "focus": "[data-part='option']",
+        "case": "many",
+        "expect": "focus-moves"
+      },
+      "Home": {
+        "focus": "[data-part='option']:last-child",
+        "case": "many",
+        "expect": "focus-moves"
+      }
+    }
+  },
+  "since": "0.1.0"
+}
