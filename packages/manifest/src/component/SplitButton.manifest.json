@@ -166,7 +166,8 @@
       "Both halves are at least 24 by 24 CSS px at every size (WCAG 2.5.8); the trigger is a square of the control height.",
       "Under forced colors the system draws every border, so the seam stays visible, the focus outline is pulled inside each half, and the open trigger takes the system Highlight.",
       "The menu is a DropdownMenu root portaled into a themed layer under body, carrying data-part menu. The contract suite cannot own a part outside the root's subtree, so menu is listed in contract.optionalParts.",
-      "In an attached ButtonGroup a SplitButton joins the row's seam on both sides. Horizontal groups only: it is a row control and is not placed in a vertical attached group."
+      "In an attached ButtonGroup a SplitButton joins the row's seam on both sides. Horizontal groups only: it is a row control and is not placed in a vertical attached group.",
+      "Motion of round 3 (order 1.23, proposed, interactions split-chevron and segment-press): the chevron drops on hover (hover capable devices only) and further while the closed trigger is held, then flips half a turn on the snappy spring as the menu opens. The pressed half keeps its box: its parts dip, the action's parts sink and Button's inner shade comes in, so the seam never opens."
     ]
   },
   "content": {

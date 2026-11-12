@@ -84,6 +84,10 @@ describe('field motion, order 1.22', () => {
       );
       const error = container.querySelector('[data-ds="field-error"]');
       expect(ids(calls, 'field-error-enter')[0]?.el).toBe(error);
+      // Order 1.23: it comes out from under the control, behind a clip-path that holds its top edge.
+      const frames = ids(calls, 'field-error-enter')[0]?.frames ?? [];
+      expect(frames[0]).toMatchObject({ transform: 'translateY(-100%)', clipPath: 'inset(100% 0 0 0)' });
+      expect(frames[frames.length - 1]).toMatchObject({ transform: 'none', clipPath: 'inset(0 0 0 0)' });
       expect(ids(calls, 'field-error-enter-icon')[0]?.el).toBe(error?.querySelector('[data-part="icon"]'));
       // The control shakes on the same commit.
       expect(ids(calls, 'error-shake')[0]?.el).toBe(container.querySelector('[data-ds="input"]'));
@@ -169,8 +173,11 @@ describe('field motion, order 1.22', () => {
     ];
     for (const [file, c] of pairs) {
       const text = css(file);
-      const before = new RegExp(`\\[data-ds='${c}'\\]::before \\{([^}]*)\\}`).exec(text)?.[1] ?? '';
-      expect(before, file).toContain(`box-shadow: var(--_${c}-shadow-focus)`);
+      const before = (new RegExp(`\\[data-ds='${c}'\\]::before \\{([^}]*)\\}`).exec(text)?.[1] ?? '').replace(/\s+/g, ' ');
+      expect(before, file).toContain(`box-shadow: var(--_${c}-shadow-focus), 0 0 0 var(--_${c}-bloom-now) var(--_${c}-bloom)`);
+      // Order 1.23: the bloom spreads on box-shadow; the border color eases.
+      expect(before, file).toContain(`box-shadow var(--_${c}-duration-out)`);
+      expect(text, file).toContain(`transition: border-color var(--_${c}-duration) var(--_${c}-ease);`);
       expect(before, file).not.toContain(`--_${c}-ring`);
       expect(text, file).toContain(`box-shadow: var(--_${c}-ring);`);
     }

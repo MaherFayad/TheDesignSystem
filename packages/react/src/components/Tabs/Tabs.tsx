@@ -52,7 +52,8 @@ import {
 import { Tabs as RadixTabs } from 'radix-ui';
 import type { Emphasis, Size } from '@the-system/shared';
 import { renderSlotContent, type ButtonSlotContent } from '../Button/ButtonBase';
-import { followIndicator, useIndicatorTrack, type IndicatorTrack } from '../../internal/indicator';
+import { followIndicator, fromLocal, useIndicatorTrack, type IndicatorTrack } from '../../internal/indicator';
+import { playInk } from './ink';
 import { useMotion } from '../../internal/motion';
 import { useControllable } from '../../internal/useControllable';
 
@@ -167,6 +168,9 @@ export function TabsList(props: TabsListProps) {
 
 // ------------------------------------------------------------------ TabsTrigger
 
+/** The parts of a trigger whose color crosses under the pill. */
+const INKED = ':scope > :is([data-part="label"], [data-part="start"])';
+
 export interface TabsTriggerProps extends Omit<ComponentProps<typeof RadixTabs.Trigger>, 'asChild' | 'title' | 'children'> {
   /** The value this tab shows. Equal to one TabsPanel value. */
   value: string;
@@ -224,12 +228,21 @@ export function TabsTrigger({ value, start, count, children, ref, ...rest }: Tab
     }
     const indicator = indicatorRef.current;
     if (!indicator || !list) return;
-    followIndicator(ctx.track, value, { el: indicator }, {
-      mode: motion.mode('tab-slide'),
+    const slide = followIndicator(ctx.track, value, { el: indicator }, { mode: motion.mode('tab-slide'), anchor: list });
+    // Round 3: the text under the pill takes the active color where the pill is (./ink.ts).
+    const inked = (el: Element | undefined) => (el ? [...el.querySelectorAll(INKED)] : []);
+    const left = from === null ? undefined : ctx.triggers.get(from);
+    playInk({
+      slide,
+      to: ctx.track.rect ? fromLocal(ctx.track.rect, list) : indicator.getBoundingClientRect(),
       anchor: list,
-      label: node.querySelector(':scope > [data-part="label"]'),
+      parts: [...ctx.triggers.values()].flatMap(inked),
+      reaching: inked(node),
+      restFrom: left?.querySelector(':scope > [data-part="label"]'),
+      inkFrom: node.querySelector(':scope > [data-part="label"]'),
+      axis: ctx.orientation === 'vertical' ? 'y' : 'x',
     });
-  }, [active, value, ctx.previous, ctx.track, ctx.orientation, motion]);
+  }, [active, value, ctx.previous, ctx.track, ctx.orientation, ctx.triggers, motion]);
 
   return (
     <RadixTabs.Trigger

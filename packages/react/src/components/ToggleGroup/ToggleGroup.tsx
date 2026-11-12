@@ -31,12 +31,16 @@ import { ButtonGroupContext, type ButtonGroupContextValue } from '../ButtonGroup
 import { ButtonRoot, renderSlotContent, type ButtonBaseProps, type ButtonSlotContent } from '../Button/ButtonBase';
 import { useTheme } from '../../theme';
 import { GroupDisabledContext, moveFromInertItem, useGroupDisabled } from './inertItems';
-import { followIndicator, useIndicatorTrack } from '../../internal/indicator';
+import { followIndicator, fromLocal, useIndicatorTrack } from '../../internal/indicator';
+import { playInk } from '../Tabs/ink';
 import { useMotion } from '../../internal/motion';
 import { useControllable } from '../../internal/useControllable';
 
 /** True inside a single choice group: its items hold the pill span. */
 const PillContext = createContext(false);
+/** The parts whose color crosses under the pill, of one item and of the whole group. */
+const INKED_OWN = ':scope > :is([data-part="label"], [data-part="start"], [data-part="icon"], [data-part="end"])';
+const INKED = ':scope > [data-part="item"] > :is([data-part="label"], [data-part="start"], [data-part="icon"], [data-part="end"])';
 import type { Emphasis, Shape, Size } from '@the-system/shared';
 
 export type ToggleGroupSize = Extract<Size, 'xs' | 'sm' | 'md' | 'lg'>;
@@ -134,12 +138,22 @@ export function ToggleGroup({
       track.key = null;
       return;
     }
-    followIndicator(track, singleValue, { el: pill }, {
-      mode: motion.mode('tab-slide'),
+    const lastLabel = track.label;
+    const label = item.querySelector(':scope > [data-part="label"], :scope > [data-part="icon"]');
+    const slide = followIndicator(track, singleValue, { el: pill }, { mode: motion.mode('tab-slide'), anchor: root });
+    track.label = label;
+    // Round 3: the text under the pill takes the on color where the pill is (Tabs/ink.ts).
+    playInk({
+      slide,
+      to: track.rect ? fromLocal(track.rect, root) : pill.getBoundingClientRect(),
       anchor: root,
-      label: item.querySelector(':scope > [data-part="label"], :scope > [data-part="icon"]'),
+      parts: Array.from(root.querySelectorAll(INKED)),
+      reaching: Array.from(item.querySelectorAll(INKED_OWN)),
+      restFrom: lastLabel,
+      inkFrom: label,
+      axis: orientation === 'vertical' ? 'y' : 'x',
     });
-  }, [single, singleValue, track, motion]);
+  }, [single, singleValue, track, motion, orientation]);
 
   const controlled = single ? { value: singleValue, onValueChange: setSingleValue, defaultValue: undefined } : {};
   return (

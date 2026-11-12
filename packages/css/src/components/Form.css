@@ -17,6 +17,9 @@
     --_form-gap: var(--ds-space-xl);
     --_form-body-gap: var(--ds-space-l);
     --_form-actions-gap: var(--ds-space-xs);
+    --_form-mark: var(--ds-color-state-success-border);
+    --_form-mark-size: var(--ds-size-icon-lg);
+    --_form-mark-wait: var(--ds-duration-quick);
 
     display: flex;
     flex-direction: column;
@@ -68,6 +71,72 @@
     flex-wrap: wrap;
     align-items: center;
     gap: var(--_form-actions-gap);
+  }
+
+  /*
+   * form-submit-success (order 1.23, proposed): once the form is sent, the
+   * success-mark part (decorative, after the buttons) draws its ring over
+   * duration.morph, then its tick one --_form-mark-wait later, both with
+   * stroke-dashoffset on ease.standard, and the mark lands from
+   * scale.morph on the bouncy spring. Private properties:
+   *   --_form-mark        the mark color (state success border, 3:1)
+   *   --_form-mark-size   its size
+   *   --_form-mark-wait   the time between the ring and the tick
+   */
+  [data-ds='form'] > [data-part='actions'] > [data-part='success-mark'] {
+    inline-size: var(--_form-mark-size);
+    block-size: var(--_form-mark-size);
+    flex: none;
+    color: var(--_form-mark);
+    fill: none;
+    stroke: currentColor;
+    stroke-width: var(--ds-border-width-strong);
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    animation: ds-form-mark-land var(--ds-duration-spring-bouncy) var(--ds-ease-spring-bouncy) backwards;
+  }
+
+  [data-ds='form'] > [data-part='actions'] > [data-part='success-mark'] > * {
+    stroke-dasharray: 1;
+    animation: ds-form-mark-draw var(--ds-duration-morph) var(--ds-ease-standard) backwards;
+  }
+
+  [data-ds='form'] > [data-part='actions'] > [data-part='success-mark'] > path {
+    animation-delay: var(--_form-mark-wait);
+  }
+
+  @keyframes ds-form-mark-draw {
+    from {
+      stroke-dashoffset: 1;
+    }
+
+    to {
+      stroke-dashoffset: 0;
+    }
+  }
+
+  @keyframes ds-form-mark-land {
+    from {
+      transform: scale(var(--ds-scale-morph));
+      opacity: 0;
+    }
+
+    to {
+      transform: none;
+      opacity: 1;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    [data-ds='form'] > [data-part='actions'] > [data-part='success-mark'],
+    [data-ds='form'] > [data-part='actions'] > [data-part='success-mark'] > * {
+      animation: none;
+    }
+  }
+
+  :root[data-motion='reduce'] [data-ds='form'] > [data-part='actions'] > [data-part='success-mark'],
+  :root[data-motion='reduce'] [data-ds='form'] > [data-part='actions'] > [data-part='success-mark'] > * {
+    animation: none;
   }
 
   /* While it submits the fields stay as they are: the submit Button shows the loading state. */

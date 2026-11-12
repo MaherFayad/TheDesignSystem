@@ -38,7 +38,28 @@ import {
 } from '@the-system/shared';
 import { useTheme } from '../../theme';
 import { Button } from '../Button';
+import { readDuration, readEasing, type PatternMode } from '@the-system/motion';
 import { followIndicator, popIn, useIndicatorTrack } from '../../internal/indicator';
+
+/** The length of the system check path (M20 6 9 17l-5-5) in its 24 unit box, rounded up. */
+const CHECK_LENGTH = 24;
+
+/**
+ * Round 3: draws a check path from its end (the short stroke) to its start
+ * with stroke-dashoffset, on the soft spring. Full mode only; the check is
+ * whole at once otherwise, and whole again when the animation ends.
+ */
+function drawCheck(path: Element | null | undefined, mode: PatternMode): Animation | null {
+  if (!path || mode !== 'full' || typeof path.animate !== 'function') return null;
+  const dash = `${CHECK_LENGTH} ${CHECK_LENGTH}`;
+  return path.animate(
+    [
+      { strokeDasharray: dash, strokeDashoffset: -CHECK_LENGTH },
+      { strokeDasharray: dash, strokeDashoffset: 0 },
+    ],
+    { duration: readDuration(path, 'duration.spring-soft'), easing: readEasing(path, 'ease.out'), id: 'ds-motion:stepper-check' },
+  );
+}
 import { useMotion } from '../../internal/motion';
 
 export type StepperSize = Extract<Size, 'sm' | 'md'>;
@@ -159,8 +180,17 @@ export function Stepper({
       return;
     }
     const mode = motion.mode('stepper-travel');
+    const before = track.key === null ? null : Number(track.key);
     const moved = followIndicator(track, String(base.current), { el: indicator, pseudo: '::after' }, { mode, anchor: root, ghost: true });
     if (moved) popIn(indicator, mode);
+    // Round 3: a step that turns complete draws its check, short stroke first.
+    if (before !== null && base.current > before) {
+      const steps = root.querySelectorAll(':scope > [data-part="step"]');
+      for (let i = before; i < base.current; i++) {
+        const path = steps[i]?.querySelector(':scope > [data-part="indicator"] [data-icon="check"] path');
+        drawCheck(path, mode);
+      }
+    }
   });
 
   const select = (index: number) => {

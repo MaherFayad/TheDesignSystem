@@ -399,3 +399,121 @@ describe('Button motion CSS (order 1.22 and the round 1 review)', () => {
     expect(css).toContain('--_button-ease-out: var(--ds-ease-spring-bouncy);');
   });
 });
+
+describe('Button result (interaction button-result, order 1.23)', () => {
+  it('has no result part or status until a result shows', () => {
+    const { container } = render(<Button>Save changes</Button>);
+    const el = root(container);
+    expect(el.hasAttribute('data-result')).toBe(false);
+    expect(el.querySelector('[data-part="result"]')).toBeNull();
+    expect(el.querySelector('[role="status"]')).toBeNull();
+  });
+
+  it('stamps data-result, draws a decorative glyph and says the result once', () => {
+    const { container, rerender } = render(<Button resultLabel="Saved">Save changes</Button>);
+    const el = root(container);
+    // The status waits empty, so the words are read when they arrive.
+    expect(el.querySelector('[role="status"]')?.textContent).toBe('');
+    rerender(
+      <Button result="success" resultLabel="Saved">
+        Save changes
+      </Button>,
+    );
+    expect(el.getAttribute('data-result')).toBe('success');
+    const glyph = el.querySelector('[data-part="result"]');
+    expect(glyph?.getAttribute('aria-hidden')).toBe('true');
+    const paths = Array.from(glyph?.querySelectorAll('path') ?? []);
+    expect(paths).toHaveLength(1);
+    expect(paths[0]?.getAttribute('pathLength')).toBe('1');
+    expect(el.querySelectorAll('[role="status"]')).toHaveLength(1);
+    expect(el.querySelector('[role="status"]')?.textContent).toBe('Saved');
+    // The label stays in the flow, so the width holds, and the name stays.
+    expect(screen.getByRole('button', { name: /Save changes/ })).toBe(el);
+  });
+
+  it('draws the error mark in two strokes and goes back, keeping the glyph for the exit', () => {
+    const { container, rerender } = render(
+      <Button result="error" resultLabel="Could not save">
+        Save changes
+      </Button>,
+    );
+    const el = root(container);
+    expect(el.getAttribute('data-result')).toBe('error');
+    expect(el.querySelectorAll('[data-part="result"] path')).toHaveLength(2);
+    rerender(<Button resultLabel="Could not save">Save changes</Button>);
+    expect(el.hasAttribute('data-result')).toBe(false);
+    expect(el.querySelector('[data-part="result"]')).not.toBeNull();
+    expect(el.querySelector('[role="status"]')?.textContent).toBe('');
+  });
+
+  it('says nothing about a result while loading', () => {
+    const { container } = render(
+      <Button loading result="success" resultLabel="Saved">
+        Save changes
+      </Button>,
+    );
+    const statuses = Array.from(root(container).querySelectorAll('[role="status"]')).map((s) => s.textContent);
+    expect(statuses).toEqual(['Loading', '']);
+  });
+});
+
+describe('Button glow (interaction button-glow, order 1.23)', () => {
+  function rect(el: HTMLElement) {
+    el.getBoundingClientRect = () => ({ left: 100, top: 50, width: 200, height: 40, right: 300, bottom: 90, x: 100, y: 50, toJSON: () => ({}) }) as DOMRect;
+  }
+
+  it('places the glow of a solid button where the pointer is, as a share of the box', () => {
+    const onPointerMove = vi.fn();
+    const { container } = render(
+      <Button tone="accent" emphasis="solid" onPointerMove={onPointerMove}>
+        Publish
+      </Button>,
+    );
+    const el = root(container);
+    rect(el);
+    fireEvent.pointerMove(el, { clientX: 150, clientY: 60 });
+    expect(el.style.getPropertyValue('--_button-glow-x')).toBe('25%');
+    expect(el.style.getPropertyValue('--_button-glow-y')).toBe('25%');
+    expect(onPointerMove).toHaveBeenCalled();
+    fireEvent.pointerDown(el, { clientX: 300, clientY: 90 });
+    expect(el.style.getPropertyValue('--_button-glow-x')).toBe('100%');
+  });
+
+  it('leaves other emphases and inert buttons alone', () => {
+    const { container, rerender } = render(<Button>Save</Button>);
+    const el = root(container);
+    rect(el);
+    fireEvent.pointerMove(el, { clientX: 150, clientY: 60 });
+    expect(el.style.getPropertyValue('--_button-glow-x')).toBe('');
+    rerender(
+      <Button emphasis="solid" disabled>
+        Save
+      </Button>,
+    );
+    fireEvent.pointerMove(el, { clientX: 150, clientY: 60 });
+    expect(el.style.getPropertyValue('--_button-glow-x')).toBe('');
+  });
+});
+
+describe('Button press and layers CSS (order 1.23)', () => {
+  const css = readFileSync(join(process.cwd(), 'packages/css/src/components/Button.css'), 'utf8');
+
+  it('presses deeper at larger sizes and sinks the parts while held', () => {
+    const lg = css.indexOf("[data-size='lg'] {");
+    expect(css.slice(lg, css.indexOf('}', lg))).toContain('--_button-press-y: calc(var(--ds-distance-nudge) + var(--ds-border-width-default));');
+    const sm = css.indexOf("[data-size='sm'] {");
+    expect(css.slice(sm, css.indexOf('}', sm))).toContain('--_button-press-y: var(--ds-border-width-default);');
+    expect(css).toContain('--_button-part-y: var(--_button-press-y);');
+    expect(css).toContain('--_button-press-layer: 1;');
+  });
+
+  it('keeps hover behind a hover capable device, and the glow off under reduced motion and more contrast', () => {
+    const media = css.indexOf('@media (hover: hover) {\n    :is(');
+    expect(media).toBeGreaterThan(0);
+    expect(css.slice(media, css.indexOf('}', media))).toContain('--_button-bg: var(--_button-bg-hover);');
+    const reduce = css.indexOf(":root[data-motion='reduce'] :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button'], [data-ds='close-button'], [data-ds='copy-button'], [data-ds='floating-action-button']) {");
+    const block = css.slice(reduce, css.indexOf('}', reduce));
+    for (const line of ['--_button-glow: 0;', '--_button-press-y: 0px;', '--_button-shake: 0px;', '--_button-draw: 0;']) expect(block).toContain(line);
+    expect(css).toContain("[data-contrast='more'] :is(");
+  });
+});

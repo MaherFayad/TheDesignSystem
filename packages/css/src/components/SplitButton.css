@@ -9,6 +9,9 @@
  *   --_split-button-drop      how far the chevron drops toward its menu on
  *                             hover while closed (interaction
  *                             split-chevron), distance.nudge; 0px while open
+ *   --_split-button-drop-press how far the chevron drops while the closed
+ *                             trigger is held (order 1.23): distance.shift,
+ *                             so the press reads as pulling the menu out
  *   --_split-button-divider   the 1px seam between the halves, declared on
  *                             the root. A deliberate exception to rule 1:
  *                             the action redeclares it for solid and outline
@@ -28,6 +31,7 @@
   [data-ds='split-button'] {
     --_split-button-divider: var(--ds-color-border-default);
     --_split-button-drop: 0px;
+    --_split-button-drop-press: var(--ds-distance-shift);
 
     display: inline-flex;
     flex-wrap: nowrap;
@@ -103,8 +107,20 @@
     transform: translateY(var(--_split-button-drop)) rotate(var(--_button-turn)) scale(var(--_button-part-scale));
   }
 
-  [data-ds='split-button']:not([data-disabled]) > [data-part='trigger'][data-state='closed']:hover {
-    --_split-button-drop: var(--ds-distance-nudge);
+  /*
+   * Round 3 (order 1.23, proposed): hover drops the chevron only where the
+   * device can hover; a press on the closed trigger pulls it further down
+   * (--_split-button-drop-press, in place of the generic sink), so the flip
+   * that follows starts from below and swings up past its mark.
+   */
+  @media (hover: hover) {
+    [data-ds='split-button']:not([data-disabled]) > [data-part='trigger'][data-state='closed']:hover {
+      --_split-button-drop: var(--ds-distance-nudge);
+    }
+  }
+
+  [data-ds='split-button']:not([data-disabled]) > [data-part='trigger'][data-state='closed']:active {
+    --_split-button-drop: var(--_split-button-drop-press);
   }
 
   [data-ds='split-button'] > [data-part='trigger'][data-state='open'] {
@@ -124,6 +140,11 @@
   [data-ds='split-button'] > :is([data-part='action'], [data-part='trigger']) {
     --_button-press-scale: 1;
     --_button-part-press: var(--ds-scale-anticipate);
+  }
+
+  /* The chevron takes its own drop on press, not the sink of the other parts. */
+  [data-ds='split-button'] > [data-part='trigger'] {
+    --_button-press-y: 0px;
   }
 
   /* ------------------------------------------------------------ inside an attached ButtonGroup */
@@ -159,11 +180,19 @@
     [data-ds='split-button'] > :is([data-part='action'], [data-part='trigger']) {
       --_button-part-press: 1;
     }
+
+    [data-ds='split-button'] {
+      --_split-button-drop-press: 0px;
+    }
   }
 
   /* The page's own reduced motion setting (data-motion="reduce" on the root) gets the same reduced form. */
   :root[data-motion='reduce'] [data-ds='split-button'] > :is([data-part='action'], [data-part='trigger']) {
     --_button-part-press: 1;
+  }
+
+  :root[data-motion='reduce'] [data-ds='split-button'] {
+    --_split-button-drop-press: 0px;
   }
 
   /*

@@ -1,6 +1,68 @@
 /*
  * CopyButton: what differs from Button. The look and the result colors are
- * a copy-button block in Button.css. Here: the icon only form is a square.
+ * a copy-button block in Button.css. Here: the icon only form is a square,
+ * and the confirmation (interaction copy-swap, order 1.23, proposed).
+ *
+ * Private properties on the root (recipes override these):
+ *
+ *   --_copy-button-motion     1 plays the confirmation, 0 shows each state at
+ *                             once (a style's off row): every duration and
+ *                             delay here is multiplied by it
+ *   --_copy-button-roll       how far a word rolls: from below the button to
+ *                             its place, and from there up and out. Half the
+ *                             word plus half the button, so a word leaves the
+ *                             button whole
+ *   --_copy-button-wipe       where the check's wipe starts: a clip that hides
+ *                             it all but its inline start edge (the check is
+ *                             a glyph, not text: it draws left to right in
+ *                             both directions, as its strokes run)
+ *   --_copy-button-turn       how far the copy glyph turns as it closes
+ *   --_copy-button-close      the clip of the closed copy glyph: a circle of 0
+ *   --_copy-button-erase      the clip of the check at rest: erased toward
+ *                             its inline end edge, the way it drew
+ *   --_copy-button-shrink     the scale a glyph closes to and grows from,
+ *                             scale.morph
+ *   --_copy-button-fade       the check's opacity where its wipe starts: 1,
+ *                             so the wipe carries it; 0 under reduced motion,
+ *                             where it fades in place
+ *   --_copy-button-rise       how far the bubble of the icon only form rises
+ *   --_copy-button-bubble-bg, -bubble-fg, -bubble-border-color, -bubble-shadow
+ *                             the bubble's look (a tooltip's colors)
+ *
+ * The state machine, timed by tokens:
+ *
+ *   idle to copied:  the copy glyph closes into its centre (a circle clip
+ *                    from 75% to 0, a turn of --_copy-button-turn and
+ *                    scale.morph) over duration.quick on ease.exit. One
+ *                    stagger step later the check wipes in along its strokes
+ *                    (clip-path) over duration.morph on ease.out while it
+ *                    grows from scale.morph on the bouncy spring, and the
+ *                    icon color moves to the success text color. The word
+ *                    "Copy" rolls up and out over duration.quick; "Copied"
+ *                    rolls up into place from below on the snappy spring,
+ *                    one stagger step later. In the icon only form the
+ *                    bubble rises by --_copy-button-rise into place above
+ *                    the button on the snappy spring.
+ *   idle to failed:  the same, with the warning glyph popping in from
+ *                    scale.morph on the bouncy spring, the danger text
+ *                    color, "Could not copy", and one shake of the button
+ *                    (ds-button-shake, two swings of distance.nudge over
+ *                    duration.celebrate).
+ *   back to idle:    after delay.feedback the result glyph is erased in the
+ *                    direction it drew (the check) or shrinks away (the
+ *                    warning) over duration.quick; the copy glyph opens back
+ *                    on the snappy spring; the result word rolls up and out
+ *                    and "Copy" rolls up into place from below; the bubble
+ *                    keeps rising as it fades.
+ *   a second copy:   the hold restarts; the check draws again and the bubble
+ *                    rises again (React keys them by the copy count).
+ *
+ * The words sit in one grid cell, so the button keeps the width of the
+ * widest word and never changes size. The label part clips to the button's
+ * height band, so a rolling word shows only inside the button.
+ *
+ * Reduced (the system setting and data-motion="reduce"): no roll, no turn,
+ * no rise, no wipe, no shake. The glyphs and the words cross fade in place.
  */
 @layer ds.base {
   /* [data-size][data-shape] are always present: they lift this rule over the Button size rules. */
@@ -10,5 +72,256 @@
     flex: none;
     inline-size: max(var(--_button-height), var(--ds-size-target-min));
     min-inline-size: var(--ds-size-target-min);
+  }
+
+  [data-ds='copy-button'] {
+    --_copy-button-motion: 1;
+    --_copy-button-roll: calc(50% + var(--_button-height) / 2);
+    --_copy-button-wipe: inset(0 100% 0 0);
+    --_copy-button-turn: -45deg;
+    --_copy-button-close: circle(0% at 50% 50%);
+    --_copy-button-erase: inset(0 0 0 100%);
+    --_copy-button-shrink: var(--ds-scale-morph);
+    --_copy-button-fade: 1;
+    --_copy-button-rise: var(--ds-distance-enter);
+    --_copy-button-bubble-bg: var(--ds-color-bg-surface);
+    --_copy-button-bubble-fg: var(--ds-color-text-bright);
+    --_copy-button-bubble-border-color: var(--ds-color-border-default);
+    --_copy-button-bubble-shadow: var(--ds-elevation-tooltip);
+  }
+
+  /* ------------------------------------------------------------ the glyphs */
+
+  /* The icon color moves to the result color with the glyphs. Opacity and transform keep Button's part timing. */
+  [data-ds='copy-button'] > [data-part='icon'] {
+    transition:
+      opacity calc(var(--ds-duration-fast) * var(--_button-motion)) var(--ds-ease-default),
+      transform calc(var(--_button-duration) * var(--_button-motion)) var(--_button-ease),
+      color calc(var(--ds-duration-morph) * var(--_copy-button-motion)) var(--ds-ease-out);
+  }
+
+  [data-ds='copy-button'] > [data-part='icon'] > [data-copy-glyph] {
+    display: inline-flex;
+  }
+
+  /* The copy glyph: open at idle, closed into its centre in a result. */
+  [data-ds='copy-button'] > [data-part='icon'] > [data-copy-glyph='idle'] {
+    clip-path: circle(75% at 50% 50%);
+    transition:
+      clip-path calc(var(--ds-duration-spring-snappy) * var(--_copy-button-motion)) var(--ds-ease-spring-snappy) calc(var(--ds-delay-stagger) * var(--_copy-button-motion)),
+      transform calc(var(--ds-duration-spring-snappy) * var(--_copy-button-motion)) var(--ds-ease-spring-snappy) calc(var(--ds-delay-stagger) * var(--_copy-button-motion)),
+      opacity calc(var(--ds-duration-fast) * var(--_copy-button-motion)) var(--ds-ease-out) calc(var(--ds-delay-stagger) * var(--_copy-button-motion));
+  }
+
+  [data-ds='copy-button']:not([data-state='idle']) > [data-part='icon'] > [data-copy-glyph='idle'] {
+    clip-path: var(--_copy-button-close);
+    opacity: 0;
+    transform: rotate(var(--_copy-button-turn)) scale(var(--_copy-button-shrink));
+    transition:
+      clip-path calc(var(--ds-duration-quick) * var(--_copy-button-motion)) var(--ds-ease-exit),
+      transform calc(var(--ds-duration-quick) * var(--_copy-button-motion)) var(--ds-ease-exit),
+      opacity calc(var(--ds-duration-quick) * var(--_copy-button-motion)) var(--ds-ease-exit);
+  }
+
+  /* The check: erased toward its end at rest, wiped in along its strokes after a copy. */
+  [data-ds='copy-button'] > [data-part='icon'] > [data-copy-glyph='copied'] {
+    clip-path: var(--_copy-button-erase);
+    opacity: 0;
+    transition:
+      clip-path calc(var(--ds-duration-quick) * var(--_copy-button-motion)) var(--ds-ease-exit),
+      opacity calc(var(--ds-duration-quick) * var(--_copy-button-motion)) var(--ds-ease-exit);
+  }
+
+  [data-ds='copy-button'][data-state='copied'] > [data-part='icon'] > [data-copy-glyph='copied'] {
+    clip-path: inset(0);
+    opacity: 1;
+    transition: none;
+    animation: ds-copy-button-wipe calc(var(--ds-duration-morph) * var(--_copy-button-motion)) var(--ds-ease-out) calc(var(--ds-delay-stagger) * var(--_copy-button-motion)) backwards;
+  }
+
+  [data-ds='copy-button'][data-state='copied'] > [data-part='icon'] > [data-copy-glyph='copied'] > * {
+    animation: ds-copy-button-pop calc(var(--ds-duration-spring-bouncy) * var(--_copy-button-motion)) var(--ds-ease-spring-bouncy) calc(var(--ds-delay-stagger) * var(--_copy-button-motion)) backwards;
+  }
+
+  /* The warning: small and clear at rest, popped in after a failure. */
+  [data-ds='copy-button'] > [data-part='icon'] > [data-copy-glyph='failed'] {
+    opacity: 0;
+    transform: scale(var(--_copy-button-shrink));
+    transition:
+      opacity calc(var(--ds-duration-quick) * var(--_copy-button-motion)) var(--ds-ease-exit),
+      transform calc(var(--ds-duration-quick) * var(--_copy-button-motion)) var(--ds-ease-exit);
+  }
+
+  [data-ds='copy-button'][data-state='failed'] > [data-part='icon'] > [data-copy-glyph='failed'] {
+    opacity: 1;
+    transform: none;
+    transition:
+      opacity calc(var(--ds-duration-fast) * var(--_copy-button-motion)) var(--ds-ease-out) calc(var(--ds-delay-stagger) * var(--_copy-button-motion)),
+      transform calc(var(--ds-duration-spring-bouncy) * var(--_copy-button-motion)) var(--ds-ease-spring-bouncy) calc(var(--ds-delay-stagger) * var(--_copy-button-motion));
+  }
+
+  /* One shake after a failure (the keyframes are Button.css's; --_button-shake is 0px under reduced motion). */
+  [data-ds='copy-button'][data-state='failed'] {
+    animation: ds-button-shake calc(var(--ds-duration-celebrate) * var(--_copy-button-motion)) var(--ds-ease-out) calc(var(--ds-delay-stagger) * var(--_copy-button-motion));
+  }
+
+  @keyframes ds-copy-button-wipe {
+    from {
+      clip-path: var(--_copy-button-wipe);
+      opacity: var(--_copy-button-fade);
+    }
+
+    to {
+      clip-path: inset(0);
+      opacity: 1;
+    }
+  }
+
+  @keyframes ds-copy-button-pop {
+    from {
+      transform: scale(var(--_copy-button-shrink));
+    }
+
+    to {
+      transform: none;
+    }
+  }
+
+  /* ------------------------------------------------------------ the words */
+
+  /*
+   * The three words in one cell: the widest sets the width. Each word clips
+   * and ends in an ellipsis on its own when the button is squeezed. The
+   * label part clips to the button's height band (inset() percentages are
+   * of the label's own height), and not along the line.
+   */
+  [data-ds='copy-button'] > [data-part='label'] {
+    display: inline-grid;
+    grid-template-columns: minmax(0, max-content);
+    justify-items: center;
+    clip-path: inset(calc((100% - var(--_button-height)) / 2) calc(-1 * var(--_button-padding-inline)));
+  }
+
+  [data-ds='copy-button'] > [data-part='label'] > [data-copy-label] {
+    grid-area: 1 / 1;
+    min-inline-size: 0;
+    max-inline-size: 100%;
+    overflow-x: clip;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    opacity: 0;
+    transform: translateY(calc(-1 * var(--_copy-button-roll)));
+    transition:
+      opacity calc(var(--ds-duration-quick) * var(--_copy-button-motion)) var(--ds-ease-exit),
+      transform calc(var(--ds-duration-quick) * var(--_copy-button-motion)) var(--ds-ease-exit);
+  }
+
+  /* The word of the state shows. It arrives through the roll below, so it takes no transition of its own. */
+  :is([data-ds='copy-button'][data-state='idle'] > [data-part='label'] > [data-copy-label='idle'], [data-ds='copy-button'][data-state='copied'] > [data-part='label'] > [data-copy-label='copied'], [data-ds='copy-button'][data-state='failed'] > [data-part='label'] > [data-copy-label='failed']) {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+
+  [data-ds='copy-button'] > [data-part='label'] > [data-copy-label][data-roll] {
+    animation: ds-copy-button-roll calc(var(--ds-duration-spring-snappy) * var(--_copy-button-motion)) var(--ds-ease-spring-snappy) calc(var(--ds-delay-stagger) * var(--_copy-button-motion)) backwards;
+  }
+
+  /* Opacity is whole early, so the word is readable for nearly all of its roll. */
+  @keyframes ds-copy-button-roll {
+    0% {
+      opacity: 0;
+      transform: translateY(var(--_copy-button-roll));
+    }
+
+    35% {
+      opacity: 1;
+    }
+
+    100% {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  /* ------------------------------------------------------------ the bubble of the icon only form */
+
+  [data-ds='copy-button'] > [data-part='bubble'] {
+    position: absolute;
+    inset-block-end: calc(100% + var(--ds-space-2xs));
+    inset-inline-start: 50%;
+    padding-block: var(--ds-space-4xs);
+    padding-inline: var(--ds-space-xs);
+    border: var(--ds-border-width-default) solid var(--_copy-button-bubble-border-color);
+    border-radius: var(--ds-radius-pill);
+    background-color: var(--_copy-button-bubble-bg);
+    box-shadow: var(--_copy-button-bubble-shadow);
+    color: var(--_copy-button-bubble-fg);
+    font-size: var(--ds-font-size-xs);
+    font-weight: var(--ds-font-weight-bold);
+    line-height: var(--ds-font-leading-tight);
+    white-space: nowrap;
+    pointer-events: none;
+    opacity: 0;
+    transform: translateX(calc(-50% * var(--_button-dir))) translateY(calc(-1 * var(--_copy-button-rise)));
+    transition:
+      opacity calc(var(--ds-duration-base) * var(--_copy-button-motion)) var(--ds-ease-exit),
+      transform calc(var(--ds-duration-morph) * var(--_copy-button-motion)) var(--ds-ease-out);
+  }
+
+  [data-ds='copy-button']:not([data-state='idle']) > [data-part='bubble'] {
+    opacity: 1;
+    transform: translateX(calc(-50% * var(--_button-dir)));
+    animation: ds-copy-button-bubble calc(var(--ds-duration-spring-snappy) * var(--_copy-button-motion)) var(--ds-ease-spring-snappy) calc(var(--ds-delay-stagger) * var(--_copy-button-motion)) backwards;
+  }
+
+  @keyframes ds-copy-button-bubble {
+    0% {
+      opacity: 0;
+      transform: translateX(calc(-50% * var(--_button-dir))) translateY(var(--_copy-button-rise)) scale(var(--ds-scale-enter));
+    }
+
+    40% {
+      opacity: 1;
+    }
+
+    100% {
+      opacity: 1;
+      transform: translateX(calc(-50% * var(--_button-dir)));
+    }
+  }
+
+  /* ------------------------------------------------------------ reduced motion */
+
+  /* The glyphs and the words cross fade in place. The duration tokens are 0ms under the system setting, so it is a swap there. */
+  @media (prefers-reduced-motion: reduce) {
+    [data-ds='copy-button'] {
+      --_copy-button-roll: 0px;
+      --_copy-button-wipe: inset(0);
+      --_copy-button-turn: 0deg;
+      --_copy-button-rise: 0px;
+    }
+      --_copy-button-close: circle(75% at 50% 50%);
+      --_copy-button-erase: inset(0);
+      --_copy-button-shrink: 1;
+      --_copy-button-fade: 0;
+  }
+
+  :root[data-motion='reduce'] [data-ds='copy-button'] {
+    --_copy-button-roll: 0px;
+    --_copy-button-wipe: inset(0);
+    --_copy-button-turn: 0deg;
+    --_copy-button-rise: 0px;
+    --_copy-button-close: circle(75% at 50% 50%);
+    --_copy-button-erase: inset(0);
+    --_copy-button-shrink: 1;
+    --_copy-button-fade: 0;
+  }
+
+  /* Forced colors: the bubble draws in system colors with its border; the clips draw the same. */
+  @media (forced-colors: active) {
+    [data-ds='copy-button'] > [data-part='bubble'] {
+      border-color: CanvasText;
+    }
   }
 }

@@ -170,6 +170,7 @@ export function ButtonRoot({
   onClick,
   onAuxClick,
   onPointerDown,
+  onPointerMove,
   onKeyDown,
   onKeyUp,
   onBlur,
@@ -216,6 +217,20 @@ export function ButtonRoot({
   const sh = shape ?? group?.shape ?? 'default';
   const groupEmphasis = group?.emphasis && !(iconOnly && (group.emphasis as string) === 'link') ? group.emphasis : undefined;
   const em = emphasis ?? groupEmphasis ?? defaultEmphasis;
+  // The glow that follows the pointer on a solid fill (interaction
+  // button-glow, order 1.23): the pointer's place as a share of the box, so
+  // it holds at any zoom. A custom property on the element, not React state:
+  // no render per move. A touch sets it on pointer down, so the press lights
+  // up under the finger. Button.css decides whether the glow shows.
+  const placeGlow = (event: PointerEvent<HTMLButtonElement>) => {
+    if (em !== 'solid') return;
+    const el = event.currentTarget;
+    const box = el.getBoundingClientRect();
+    if (!(box.width > 0 && box.height > 0)) return;
+    const share = (n: number) => `${Math.round(Math.min(1, Math.max(0, n)) * 1000) / 10}%`;
+    el.style.setProperty('--_button-glow-x', share((event.clientX - box.left) / box.width));
+    el.style.setProperty('--_button-glow-y', share((event.clientY - box.top) / box.height));
+  };
   const attrs = {
     ...rest,
     ref: setOwn,
@@ -246,7 +261,14 @@ export function ButtonRoot({
       onAuxClick?.(event);
     },
     onPointerDown: (event: PointerEvent<HTMLButtonElement>) => {
-      if (!inert) onPointerDown?.(event);
+      if (!inert) {
+        placeGlow(event);
+        onPointerDown?.(event);
+      }
+    },
+    onPointerMove: (event: PointerEvent<HTMLButtonElement>) => {
+      if (!inert) placeGlow(event);
+      onPointerMove?.(event);
     },
     // While inert, navigation keys (arrows, Home, End, Page keys, Tab) still
     // reach the handler, so a roving group can move past a disabled item.

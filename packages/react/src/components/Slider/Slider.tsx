@@ -2,16 +2,32 @@
 // Motion. slider-pull (pattern press, Slider.css): the thumb lifts a little
 // while it is grabbed and settles on release, a CSS transition on the
 // thumb's transform. slider-nudge (pattern shake, one swing toward the end):
-// when a key or a drag pushes a thumb past the minimum or the maximum, the
-// thumb nudges toward that end and back once, played through
-// useMotion().play and added on top of the lift (composite add). Neither
-// waits on anything: the value changes, and the drag follows the pointer,
-// at once. A held key nudges once, not on every repeat. A vertical slider
-// does not nudge: the shake pattern moves on the inline axis only.
+// when a key pushes a thumb past the minimum or the maximum, the thumb
+// nudges toward that end and back once, played through useMotion().play and
+// added on top of the lift (composite add). A held key nudges once, not on
+// every repeat.
+//
+// Order 1.23 (proposed):
+// - slider-fill: the fill is drawn by the track's ::before with a clip-path
+//   from --_slider-from to --_slider-to, set here on the root. While a
+//   pointer drags, the fill and the thumb follow the pointer at once. Any
+//   other change (a key, a press on the track, a new controlled value) glides:
+//   the fill's clip-path and the thumb's wrapper (a FLIP, composite add on
+//   Radix's own transform) play from the old place to the new one on the
+//   snappy spring.
+// - slider-rubber-band: a drag past the minimum or the maximum pulls the
+//   outer thumb, and the fill with it, past the end of the track with a
+//   resistance that grows with the distance (--_slider-pull-start and
+//   --_slider-pull-end, 0 to 1, times --_slider-pull-max). On release both
+//   spring back on the bouncy spring.
+// Nothing waits: the value changes, and the drag follows the pointer, at
+// once. A vertical slider does not nudge or pull: both move on the inline
+// axis only.
 import { Fragment, useId, useLayoutEffect, useRef, useState, type ComponentProps, type CSSProperties, type PointerEvent, type ReactNode, type Ref } from 'react';
 import { Slider as RadixSlider } from 'radix-ui';
-import { renderDigits, rollDigits } from '@the-system/motion';
+import { renderDigits, rollDigits, type PatternMode } from '@the-system/motion';
 import type { Size, Tone } from '@the-system/shared';
+import { ANIMATION_ID_PREFIX, readDuration, readEasing } from '@the-system/motion';
 import { useMotion } from '../../internal/motion';
 import { useTheme } from '../../theme/hooks';
 import { useField, useFieldControl } from '../Field/Field';
@@ -143,6 +159,79 @@ function useValueBubbles(values: number[], texts: string[], dragging: boolean) {
   };
 }
 
+/** The id of the glide of order 1.23 in the registry. */
+export const SLIDER_FILL = 'slider-fill';
+
+/** The rubber band pull for a pointer `distance` px past the end, 0 to 1: it resists more the further it goes. */
+export function rubberBand(distance: number, scale: number): number {
+  if (!(distance > 0) || !(scale > 0)) return 0;
+  return Math.round((1 - 1 / (1 + distance / scale)) * 1000) / 1000;
+}
+
+/** Reads the clip-path of the fill (the track's ::before). Empty where the browser cannot. */
+function fillClip(track: Element | null | undefined): string {
+  if (!track || typeof getComputedStyle !== 'function') return '';
+  try {
+    return getComputedStyle(track, '::before').getPropertyValue('clip-path').trim();
+  } catch {
+    return '';
+  }
+}
+
+/**
+ * slider-fill: after each render, when the fill or a thumb moved and the
+ * pointer is not dragging, plays the move from where it was drawn. A
+ * release from a pull springs back on the bouncy spring, anything else
+ * glides on the snappy spring. Reduced motion lands at once.
+ */
+function useGlide(control: { current: HTMLSpanElement | null }, following: { current: boolean }, pulled: boolean, mode: (id: string) => PatternMode) {
+  const last = useRef<{ clip: string; places: number[]; pulled: boolean } | null>(null);
+  useLayoutEffect(() => {
+    const root = control.current;
+    if (!root) return;
+    const track = root.querySelector<HTMLElement>(':scope > [data-part="track"]');
+    const wrappers = Array.from(root.querySelectorAll<HTMLElement>('[data-part="thumb"]')).map((t) => t.parentElement);
+    const id = `${ANIMATION_ID_PREFIX}${SLIDER_FILL}`;
+    const glides = (el: Element | null | undefined) => (el?.getAnimations?.({ subtree: true }) ?? []).filter((a) => a.id === id);
+    // A glide in flight: the next one starts where the fill is drawn now, then the old one stops.
+    const flying = glides(track);
+    const live = flying.some((a) => a.playState === 'running') ? fillClip(track) : '';
+    for (const a of flying) a.cancel();
+    const now = { clip: fillClip(track), places: wrappers.map((w) => (w ? w.offsetLeft + w.offsetTop : 0)), pulled };
+    const before = last.current;
+    last.current = now;
+    if (following.current) {
+      // A drag took over: a glide still in flight would hold a thumb behind the pointer.
+      for (const w of wrappers) for (const a of glides(w)) a.cancel();
+      return;
+    }
+    if (!before) return;
+    const m = mode(SLIDER_FILL);
+    if (m !== 'full') return;
+    const spring = before.pulled && !pulled ? 'bouncy' : 'snappy';
+    const duration = readDuration(root, `duration.spring-${spring}`);
+    const easing = readEasing(root, `ease.spring-${spring}`);
+    if (!(duration > 0)) return;
+    const fromClip = live || before.clip;
+    if (track && fromClip && now.clip && fromClip !== now.clip && typeof track.animate === 'function') {
+      try {
+        track.animate({ clipPath: [fromClip, now.clip] }, { id, duration, easing, pseudoElement: '::before' });
+      } catch {
+        /* no pseudo element animation: the fill lands at once */
+      }
+    }
+    wrappers.forEach((w, i) => {
+      const from = before.places[i];
+      const to = now.places[i];
+      if (!w || from === undefined || to === undefined || from === to || typeof w.animate !== 'function') return;
+      const vertical = root.getAttribute('data-orientation') === 'vertical';
+      const delta = `${from - to}px`;
+      for (const a of glides(w)) a.cancel();
+      w.animate({ transform: [vertical ? `translateY(${delta})` : `translateX(${delta})`, vertical ? 'translateY(0)' : 'translateX(0)'] }, { id, duration, easing, composite: 'add' });
+    });
+  });
+}
+
 function toMark(mark: number | SliderMark): SliderMark {
   return typeof mark === 'number' ? { value: mark } : mark;
 }
@@ -196,9 +285,19 @@ export function SliderBase({
   const [dragging, setDragging] = useState(false);
   const values = valueProp ?? own;
   const nudge = useEndNudge();
-  /** The end the pointer went past during this drag, so a drag nudges once per excursion. */
-  const pastEnd = useRef<SliderEnd | null>(null);
+  const motion = useMotion();
+  /** slider-rubber-band: how far a drag pulls past each end, 0 to 1. */
+  const [pull, setPull] = useState<{ start: number; end: number }>({ start: 0, end: 0 });
+  /** True while a pointer drag has moved since it went down: the fill and the thumb follow at once. */
+  const following = useRef(false);
+  const controlRef = useRef<HTMLSpanElement | null>(null);
   const horizontal = orientation === 'horizontal';
+  useGlide(controlRef, following, pull.start > 0 || pull.end > 0, motion.mode);
+  const release = () => {
+    setDragging(false);
+    following.current = false;
+    setPull((p) => (p.start === 0 && p.end === 0 ? p : { start: 0, end: 0 }));
+  };
 
   /** The thumb that has focus in this slider, and its index. */
   const focusedThumb = (control: Element): [Element, number] | null => {
@@ -212,6 +311,9 @@ export function SliderBase({
   const hasLabel = label !== undefined && label !== null && label !== false;
   const valueShown = showValue ?? hasLabel;
   const span = max - min || 1;
+  const fraction = (v: number) => Math.min(1, Math.max(0, (v - min) / span));
+  const fillFrom = values.length > 1 ? fraction(values[0] ?? min) : 0;
+  const fillTo = fraction(values[values.length - 1] ?? min);
   const bubble = useValueBubbles(values, values.map(format), dragging);
 
   const onChange = (next: number[]) => {
@@ -223,7 +325,15 @@ export function SliderBase({
     <div
       {...rootProps}
       className={className}
-      style={style}
+      style={
+        {
+          ...style,
+          '--_slider-from': fillFrom,
+          '--_slider-to': fillTo,
+          '--_slider-pull-start': pull.start,
+          '--_slider-pull-end': pull.end,
+        } as CSSProperties
+      }
       role={values.length > 1 && hasLabel ? 'group' : undefined}
       aria-labelledby={values.length > 1 && hasLabel ? labelId : undefined}
       data-ds={kind}
@@ -252,6 +362,7 @@ export function SliderBase({
       )}
       <RadixSlider.Root
         {...rest}
+        ref={controlRef}
         data-part="control"
         dir={theme.dir}
         min={min}
@@ -262,8 +373,7 @@ export function SliderBase({
         value={values}
         onValueChange={onChange}
         onValueCommit={(next) => {
-          setDragging(false);
-          pastEnd.current = null;
+          release();
           onValueCommit?.(next);
         }}
         minStepsBetweenThumbs={minStepsBetweenThumbs}
@@ -288,27 +398,33 @@ export function SliderBase({
         }}
         onPointerDown={(event) => {
           onPointerDown?.(event);
+          following.current = false;
           if (!control.disabled) setDragging(true);
         }}
         onLostPointerCapture={(event) => {
           onLostPointerCapture?.(event);
-          setDragging(false);
-          pastEnd.current = null;
+          release();
         }}
         onPointerMove={(event: PointerEvent<HTMLSpanElement>) => {
           onPointerMove?.(event);
-          if (!dragging || !horizontal) return;
-          // slider-nudge: the pointer went past the start or the end of the track.
+          if (!dragging) return;
+          // From the first move of a drag, the fill and the thumb follow the pointer with no glide.
+          following.current = true;
+          if (!horizontal) return;
+          // slider-rubber-band: the pointer went past the start or the end of the track.
           const track = event.currentTarget.querySelector('[data-part="track"]')?.getBoundingClientRect();
           if (!track) return;
-          const beforeLeft = event.clientX < track.left;
-          const pastRight = event.clientX > track.right;
-          const end: SliderEnd | null = beforeLeft || pastRight ? (beforeLeft === (theme.dir === 'rtl') ? 'end' : 'start') : null;
-          if (end === pastEnd.current) return;
-          pastEnd.current = end;
+          const beforeLeft = Math.max(0, track.left - event.clientX);
+          const pastRight = Math.max(0, event.clientX - track.right);
+          const end: SliderEnd | null = beforeLeft > 0 || pastRight > 0 ? (beforeLeft > 0 === (theme.dir === 'rtl') ? 'end' : 'start') : null;
           const found = end ? focusedThumb(event.currentTarget) : null;
           // Only the outer thumb of that end: the start thumb of a range stops at the end thumb, not at the maximum.
-          if (end && found && found[1] === (end === 'start' ? 0 : values.length - 1)) nudge(found[0], end);
+          const outer = Boolean(end && found && found[1] === (end === 'start' ? 0 : values.length - 1));
+          // The resistance scale is the thumb's own target, so a larger slider pulls further.
+          const scale = found?.[0] instanceof HTMLElement ? found[0].offsetWidth : 0;
+          const amount = outer ? rubberBand(Math.max(beforeLeft, pastRight), scale) : 0;
+          const next = { start: end === 'start' ? amount : 0, end: end === 'end' ? amount : 0 };
+          setPull((p) => (p.start === next.start && p.end === next.end ? p : next));
         }}
       >
         <RadixSlider.Track data-part="track">

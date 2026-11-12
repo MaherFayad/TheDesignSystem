@@ -6,13 +6,19 @@
 // ProgressBar, whose behavior, states, tones and formatting it shares.
 // Behavior: Radix Progress.
 //
-// How the ring is drawn: both rings are a round border on a span. The
-// indicator ring is cut to the value with a conic gradient mask (the order
-// allows a conic mask or two rotated halves; this is the conic mask). No SVG
-// stroke and no stroke-dashoffset. A value change swaps the mask at once,
-// since only transform and opacity may animate; the indeterminate form turns
-// a quarter arc with transform: rotate. The ring fills clockwise in both
-// directions, like a clock face, which does not mirror in RTL.
+// How the ring is drawn: the track is a round border on a span. The
+// indicator holds an SVG circle whose stroke is cut to the value with
+// stroke-dasharray and stroke-dashoffset (pathLength 100). The
+// indeterminate form turns a quarter arc with transform: rotate. The ring
+// fills clockwise in both directions, like a clock face, which does not
+// mirror in RTL.
+//
+// Round 3 (order 1.23, proposed): the arc is an SVG circle inside the
+// indicator (aria-hidden, part "arc"), drawn with stroke-dashoffset on a
+// pathLength of 100, so a value change draws the arc forward or back from
+// where it was on the soft spring (a CSS transition), the leading end
+// moving and the start staying at 12 o'clock. The turn of round 2 is gone.
+// Completion beats once: the ring pops and a halo grows from it and fades.
 //
 // Motion (order 1.22, proposed). progress-spring: the mask cannot animate,
 // so the nearest transform form plays: the new arc starts turned back by the
@@ -21,8 +27,7 @@
 // inside rolls digit by digit (it is aria-hidden; aria-valuetext reads the
 // value). progress-celebrate: reaching max after being below it pops the
 // ring once (scale.anticipate, scale.pop, duration.celebrate).
-import { useLayoutEffect, useRef, type CSSProperties, type HTMLAttributes, type Ref } from 'react';
-import { play } from '@the-system/motion';
+import { type CSSProperties, type HTMLAttributes, type Ref } from 'react';
 import { Progress } from 'radix-ui';
 import type { Size, Tone } from '@the-system/shared';
 import { useTheme } from '../../theme';
@@ -80,16 +85,7 @@ export function ProgressCircle({
   const visibleValue = (showValue ?? (size === 'md' || size === 'lg')) && value !== null;
   const motion = useMotion();
   const mode = motion.mode('progress-spring');
-  const root = useCelebrate<HTMLDivElement>(value !== null && value >= max, 'both');
-  const indicator = useRef<HTMLSpanElement>(null);
-  const lastFraction = useRef(value === null ? null : fraction);
-  useLayoutEffect(() => {
-    const before = lastFraction.current;
-    lastFraction.current = value === null ? null : fraction;
-    if (!indicator.current || before === null || value === null || before === fraction || mode !== 'full') return;
-    const turn = Math.round((before - fraction) * 360);
-    play(indicator.current, { keyframes: [{ transform: `rotate(${turn}deg)` }, { transform: 'none' }], duration: 'duration.spring-soft', easing: 'ease.spring-soft', fill: 'none', origin: '50% 50%' }, 'progress-sweep');
-  }, [fraction, value, mode]);
+  const root = useCelebrate<HTMLDivElement>(value !== null && value >= max, 'both', ':scope > [data-part="indicator"]');
   const valueRef = useDigitRoll<HTMLSpanElement>(visibleValue ? text : undefined, mode, undefined, value ?? undefined);
 
   return (
@@ -110,7 +106,11 @@ export function ProgressCircle({
     >
       <span data-part="track" />
       <Progress.Indicator asChild style={{ '--_progress-circle-fraction': fraction } as CSSProperties}>
-        <span data-part="indicator" ref={indicator} />
+        <span data-part="indicator">
+          <svg data-part="arc" aria-hidden="true" focusable="false">
+            <circle pathLength={100} />
+          </svg>
+        </span>
       </Progress.Indicator>
       {visibleValue && (
         <span data-part="value" aria-hidden="true" ref={valueRef}>

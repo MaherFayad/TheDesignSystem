@@ -41,6 +41,14 @@ export const stages: Record<string, () => ReactNode> = {
       </Theme>
     </>
   ),
+  'switch-drag': () => (
+    <>
+      <Switch label="Wi-Fi" size="lg" data-interaction-trigger="" />
+      <Theme lang="ar">
+        <Switch label="الوضع الليلي" size="lg" defaultChecked />
+      </Theme>
+    </>
+  ),
   'check-draw': () => (
     <div style={stack}>
       <Checkbox label="Snap frames to the grid" data-interaction-trigger="" />
@@ -51,6 +59,13 @@ export const stages: Record<string, () => ReactNode> = {
         <Checkbox value="reviews" label="Reviews" />
       </CheckboxGroup>
     </div>
+  ),
+  'check-mixed': () => (
+    <CheckboxGroup legend="Export layers" selectAll="All layers">
+      <Checkbox value="frames" label="Frames" data-interaction-trigger="" />
+      <Checkbox value="text" label="Text" />
+      <Checkbox value="images" label="Images" />
+    </CheckboxGroup>
   ),
   'radio-pop': () => (
     <RadioGroup label="Export as" defaultValue="png">

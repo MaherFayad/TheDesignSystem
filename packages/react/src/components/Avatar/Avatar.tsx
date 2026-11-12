@@ -20,6 +20,11 @@
 // it and fades, three loops of duration.pulse (4.2s), then it stops by
 // itself before five seconds; `pauseLoops()` also pauses it. A first paint
 // never pulses, so a page of avatars stays still.
+//
+// Round 3 (order 1.23, proposed): the ring is a thin outline (box-shadow on
+// a clear dot) that travels out like a sonar ping, so it reads as a signal
+// and not as a growing blot. Pause path: the loops end by themselves in
+// 4.2s, `pauseLoops()` pauses them, and reduced motion never starts them.
 import { useLayoutEffect, useRef, useState, type CSSProperties, type HTMLAttributes, type ReactElement, type Ref } from 'react';
 import { Avatar as RadixAvatar } from 'radix-ui';
 import { Icon, type IconName } from '@the-system/icons/react';
@@ -137,7 +142,19 @@ export function Avatar({
     if (ring) {
       play(
         ring,
-        { keyframes: [{ opacity: 0.6, transform: 'none' }, { opacity: 0, transform: 'scale(2.5)' }], duration: 'duration.pulse', easing: 'ease.out', fill: 'none', origin: '50% 50%', iterations: 3, loopLimitMs: 5000 },
+        {
+          // Round 3: a thin sonar ring (a box-shadow outline on a clear dot), not a filled disc.
+          keyframes: [
+            { opacity: 1, transform: 'none', backgroundColor: 'transparent', boxShadow: '0 0 0 var(--ds-border-width-strong) var(--_avatar-status-bg)' },
+            { opacity: 0, transform: 'scale(2.5)', backgroundColor: 'transparent', boxShadow: '0 0 0 var(--ds-border-width-default) var(--_avatar-status-bg)' },
+          ],
+          duration: 'duration.pulse',
+          easing: 'ease.out',
+          fill: 'none',
+          origin: '50% 50%',
+          iterations: 3,
+          loopLimitMs: 5000,
+        },
         'avatar-status-pulse',
       );
     }

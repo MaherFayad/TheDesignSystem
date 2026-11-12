@@ -20,7 +20,7 @@
  *   --_accordion-border-color    the line under each section (divided)
  *   --_accordion-bg              a section's surface (card)
  *   --_accordion-radius          a section's corners (card)
- *   --_accordion-shift           where the content starts as it opens: -100% of its own height
+ *   --_accordion-shift           where the content starts as it opens (round 3: distance.shift up)
  *   --_accordion-duration, --_accordion-ease   the accordion-reveal timing
  *   --_accordion-icon-duration, -icon-ease      the chevron's turn
  *   --_accordion-stagger         the step between the content's children; a
@@ -41,6 +41,21 @@
  * degrees in Desk and settles. A style turns all of it off with
  * --_accordion-duration, --_accordion-icon-duration and --_accordion-stagger
  * at 0s (review note N6: the chevron is covered too).
+ *
+ * Round 3 (order 1.23, proposed): the content is revealed with clip-path,
+ * a wipe from the header down (inset from the block end to none), while the
+ * layer travels only --_accordion-shift (distance.shift) instead of its
+ * full height, so the text is drawn in place under the wipe rather than
+ * sliding through it. The height still never animates. The chevron answers
+ * the pointer: on hover it leans distance.nudge toward where it will turn
+ * (down when closed, up when open) and turns on the snappy spring when the
+ * section opens or closes.
+ *
+ *   --_accordion-icon-nudge     how far the chevron leans on hover; a name
+ *                               outside the list in anatomy.md: a distance
+ *   --_accordion-icon-nudge-now the lean now (state rules set it)
+ *   --_accordion-reveal         the clip the reveal starts from; a name outside
+ *                               the list: a clip-path
  */
 @layer ds.base {
   [data-ds='accordion'] {
@@ -51,9 +66,12 @@
     --_accordion-border-color: transparent;
     --_accordion-bg: transparent;
     --_accordion-radius: 0;
-    --_accordion-shift: -100%;
-    --_accordion-duration: var(--ds-duration-slow);
-    --_accordion-ease: var(--ds-ease-standard);
+    --_accordion-shift: calc(-1 * var(--ds-distance-shift));
+    --_accordion-duration: var(--ds-duration-zoom);
+    --_accordion-ease: var(--ds-ease-reveal);
+    --_accordion-reveal: inset(0 0 100% 0);
+    --_accordion-icon-nudge: var(--ds-distance-nudge);
+    --_accordion-icon-nudge-now: 0px;
     --_accordion-icon-duration: var(--ds-duration-spring-snappy);
     --_accordion-icon-ease: var(--ds-ease-spring-snappy);
     --_accordion-stagger: var(--ds-delay-stagger);
@@ -131,11 +149,20 @@
 
   [data-ds='accordion'] > [data-part='item'] > [data-part='header'] > [data-part='trigger'] [data-ds='icon'] {
     color: var(--ds-color-text-muted);
-    transition: transform var(--_accordion-icon-duration) var(--_accordion-icon-ease);
+    transform: translateY(var(--_accordion-icon-nudge-now));
+    transition:
+      transform var(--_accordion-icon-duration) var(--_accordion-icon-ease),
+      color var(--ds-duration-fast) var(--ds-ease-default);
+  }
+
+  [data-ds='accordion'] > [data-part='item'] > [data-part='header'] > [data-part='trigger']:hover [data-ds='icon'] {
+    --_accordion-icon-nudge-now: var(--_accordion-icon-nudge);
+
+    color: var(--ds-color-text-default);
   }
 
   [data-ds='accordion'] > [data-part='item'] > [data-part='header'] > [data-part='trigger'][data-state='open'] [data-ds='icon'] {
-    transform: rotate(180deg);
+    transform: translateY(calc(-1 * var(--_accordion-icon-nudge-now))) rotate(180deg);
   }
 
   [data-ds='accordion'] > [data-part='item'] > [data-part='content'] {
@@ -198,18 +225,15 @@
     }
   }
 
+  /* A wipe from the header down; the layer settles distance.shift as it is uncovered. */
   @keyframes ds-accordion-reveal {
     from {
-      opacity: 0;
+      clip-path: var(--_accordion-reveal);
       transform: translateY(var(--_accordion-shift));
     }
 
-    60% {
-      opacity: 1;
-    }
-
     to {
-      opacity: 1;
+      clip-path: inset(0);
       transform: none;
     }
   }
@@ -224,6 +248,8 @@
     }
 
     [data-ds='accordion'] > [data-part='item'] > [data-part='header'] > [data-part='trigger'] [data-ds='icon'] {
+      --_accordion-icon-nudge: 0px;
+
       transition: none;
     }
   }
@@ -234,6 +260,8 @@
   }
 
   :root[data-motion='reduce'] [data-ds='accordion'] > [data-part='item'] > [data-part='header'] > [data-part='trigger'] [data-ds='icon'] {
+    --_accordion-icon-nudge: 0px;
+
     transition: none;
   }
 

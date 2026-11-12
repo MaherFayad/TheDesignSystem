@@ -1,3 +1,4 @@
+import type { CSSProperties } from 'react';
 import { act, fireEvent, render, screen } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { Theme } from '../../theme';
@@ -30,8 +31,15 @@ describe('CopyButton', () => {
     expect(el.getAttribute('data-ds')).toBe('copy-button');
     expect(el.getAttribute('data-state')).toBe('idle');
     expect(el.getAttribute('data-emphasis')).toBe('ghost');
-    expect(el.querySelector('[data-part="icon"] [data-ds="icon"]')?.getAttribute('data-icon')).toBe('copy');
-    expect(el.querySelector('[data-part="label"]')?.textContent).toBe('Copy');
+    const glyphs = Array.from(el.querySelectorAll('[data-part="icon"] [data-copy-glyph]'));
+    expect(glyphs.map((g) => g.getAttribute('data-copy-glyph'))).toEqual(['idle', 'copied', 'failed']);
+    expect(glyphs.map((g) => g.querySelector('[data-ds="icon"]')?.getAttribute('data-icon'))).toEqual(['copy', 'check', 'warning']);
+    // Every word sits in the label, so the width is the widest; only the idle word is read.
+    const words = Array.from(el.querySelectorAll('[data-part="label"] > [data-copy-label]'));
+    expect(words.map((w) => w.textContent)).toEqual(['Copy', 'Copied', 'Could not copy']);
+    expect(words.map((w) => w.getAttribute('aria-hidden'))).toEqual([null, 'true', 'true']);
+    expect(words.some((w) => w.hasAttribute('data-roll'))).toBe(false);
+    expect(el.querySelector('[data-part="bubble"]')).toBeNull();
     const status = el.querySelector('[data-part="status"]');
     expect(status?.getAttribute('role')).toBe('status');
     expect(status?.textContent).toBe('');
@@ -49,7 +57,6 @@ describe('CopyButton', () => {
     expect(onCopied).toHaveBeenCalledWith('npx the-system');
     expect(el.getAttribute('data-state')).toBe('copied');
     expect(el.querySelector('[data-part="status"]')?.textContent).toBe('Copied');
-    expect(el.querySelector('[data-ds="icon"]')?.getAttribute('data-icon')).toBe('check');
     await act(async () => {
       vi.advanceTimersByTime(5000);
     });
@@ -83,7 +90,7 @@ describe('CopyButton', () => {
     await click(el);
     expect(el.getAttribute('data-state')).toBe('failed');
     expect(el.querySelector('[data-part="status"]')?.textContent).toBe('Could not copy');
-    expect(el.querySelector('[data-ds="icon"]')?.getAttribute('data-icon')).toBe('warning');
+    expect(el.querySelector('[data-copy-label="failed"]')?.hasAttribute('data-roll')).toBe(true);
     expect(onCopyFailed).toHaveBeenCalled();
     expect(window.getSelection()?.toString()).toBe('npx the-system');
   });
@@ -121,113 +128,97 @@ describe('CopyButton', () => {
   });
 });
 
-describe('CopyButton result morph (interaction copy-swap)', () => {
-  interface Call {
-    el: Element;
-    frames: Keyframe[];
-    finish: () => void;
-  }
-
-  /** A stand in for Element.animate: records each call and lets the test finish it. */
-  function mockAnimate() {
-    const calls: Call[] = [];
-    const animate = vi.fn(function (this: Element, frames: Keyframe[]) {
-      let finish = () => {};
-      const finished = new Promise<void>((resolve) => {
-        finish = resolve;
-      });
-      calls.push({ el: this, frames, finish: () => finish() });
-      return { id: '', playState: 'running', finished, cancel: vi.fn(), effect: { target: this } } as unknown as Animation;
-    });
-    Object.defineProperty(Element.prototype, 'animate', { configurable: true, value: animate });
-    return { calls, restore: () => Reflect.deleteProperty(Element.prototype, 'animate') };
-  }
-
+describe('CopyButton confirmation (interaction copy-swap, round 3)', () => {
+  /** The hold time token, set on the button so jsdom reads it. */
+  const hold = { '--ds-delay-feedback': '2000ms' } as CSSProperties;
   beforeEach(() => vi.useFakeTimers());
   afterEach(() => {
     vi.useRealTimers();
-    vi.unstubAllGlobals();
     mockClipboard(undefined);
   });
 
-  it('morphs the copy icon into the check and swells once, without holding back the state or the status', async () => {
-    const { calls, restore } = mockAnimate();
+  it('rolls the label to Copied and back, keeping the accessible name and the width', async () => {
     mockClipboard(vi.fn().mockResolvedValue(undefined));
-    try {
-      render(<CopyButton value="abc" iconOnly label="Copy command" />);
-      const el = screen.getByRole('button', { name: 'Copy command' });
-      await click(el);
-      expect(el.getAttribute('data-state')).toBe('copied');
-      expect(el.querySelector('[data-part="status"]')?.textContent).toBe('Copied');
-      const part = el.querySelector('[data-part="icon"]');
-      const icons = part?.querySelectorAll('[data-ds="icon"]');
-      expect(Array.from(icons ?? []).map((i) => i.getAttribute('data-icon'))).toEqual(['check', 'copy']);
-      const leaving = part?.lastElementChild;
-      expect(leaving?.tagName).toBe('SPAN');
-      expect(leaving?.getAttribute('aria-hidden')).toBe('true');
-      expect(leaving?.hasAttribute('data-part')).toBe(false);
-      // The copy icon rolls up and out; the check turns in; the button swells.
-      const out = calls.find((c) => c.el === leaving);
-      expect(JSON.stringify(out?.frames)).toContain('translateY');
-      const inn = calls.find((c) => c.el === part?.firstElementChild);
-      expect(JSON.stringify(inn?.frames)).toContain('rotate(-45deg)');
-      const swell = calls.find((c) => c.el === el);
-      expect(JSON.stringify(swell?.frames)).toContain('--ds-scale-pop');
-      // The leaving copy goes once its exit settles.
-      await act(async () => {
-        for (const c of calls) c.finish();
-        for (let i = 0; i < 5; i += 1) await Promise.resolve();
-      });
-      expect(part?.querySelectorAll('[data-ds="icon"]')).toHaveLength(1);
-      // The return to idle rolls the copy icon back in from above.
-      calls.length = 0;
-      await act(async () => {
-        vi.advanceTimersByTime(5000);
-      });
-      expect(el.getAttribute('data-state')).toBe('idle');
-      expect(Array.from(part?.querySelectorAll('[data-ds="icon"]') ?? []).map((i) => i.getAttribute('data-icon'))).toEqual(['copy', 'check']);
-      const back = calls.find((c) => c.el === part?.firstElementChild);
-      expect(JSON.stringify(back?.frames)).toContain('translateY(calc(-1 *');
-    } finally {
-      restore();
-    }
+    render(<CopyButton value="abc" label="Copy link" style={hold} />);
+    const el = screen.getByRole('button', { name: 'Copy link' });
+    const word = (s: string) => el.querySelector(`[data-copy-label="${s}"]`);
+    await click(el);
+    expect(el.getAttribute('data-state')).toBe('copied');
+    expect(word('copied')?.hasAttribute('data-roll')).toBe(true);
+    expect(word('idle')?.hasAttribute('data-roll')).toBe(false);
+    // The accessible name does not change: the status says the result.
+    expect(screen.getByRole('button', { name: 'Copy link' })).toBe(el);
+    expect(el.querySelectorAll('[data-part="label"] > [data-copy-label]')).toHaveLength(3);
+    await act(async () => {
+      vi.advanceTimersByTime(5000);
+    });
+    expect(el.getAttribute('data-state')).toBe('idle');
+    // Back at idle, the idle word rolls in again.
+    expect(word('idle')?.hasAttribute('data-roll')).toBe(true);
+    expect(word('copied')?.hasAttribute('data-roll')).toBe(false);
   });
 
-  it('shakes once after a failure', async () => {
-    const { calls, restore } = mockAnimate();
+  it('writes the status once per copy and restarts cleanly on a second copy', async () => {
+    mockClipboard(vi.fn().mockResolvedValue(undefined));
+    render(<CopyButton value="abc" style={hold} />);
+    const el = screen.getByRole('button');
+    const statuses = () => el.querySelectorAll('[role="status"]');
+    await click(el);
+    expect(statuses()).toHaveLength(1);
+    const first = statuses()[0]?.firstElementChild;
+    const check = el.querySelector('[data-copy-glyph="copied"]');
+    expect(first?.textContent).toBe('Copied');
+    await act(async () => {
+      vi.advanceTimersByTime(500);
+    });
+    await click(el);
+    // A new text node in the one live region, so the second copy is heard too; the check is drawn again.
+    const second = statuses()[0]?.firstElementChild;
+    expect(statuses()).toHaveLength(1);
+    expect(second?.textContent).toBe('Copied');
+    expect(second).not.toBe(first);
+    expect(el.querySelector('[data-copy-glyph="copied"]')).not.toBe(check);
+    // The hold restarted: 1.9s after the second copy (2.4s after the first) it still shows.
+    await act(async () => {
+      vi.advanceTimersByTime(1900);
+    });
+    expect(el.getAttribute('data-state')).toBe('copied');
+    await act(async () => {
+      vi.advanceTimersByTime(5000);
+    });
+    expect(el.getAttribute('data-state')).toBe('idle');
+    expect(statuses()[0]?.textContent).toBe('');
+  });
+
+  it('shows a decorative bubble with the result word in the icon only form', async () => {
     mockClipboard(vi.fn().mockRejectedValue(new Error('denied')));
-    try {
-      render(<CopyButton value="abc" />);
-      const el = screen.getByRole('button');
-      await click(el);
-      expect(el.getAttribute('data-state')).toBe('failed');
-      const shake = calls.find((c) => c.el === el);
-      expect(JSON.stringify(shake?.frames)).toContain('translateX');
-    } finally {
-      restore();
-    }
+    Object.defineProperty(document, 'execCommand', { configurable: true, value: vi.fn().mockReturnValue(false) });
+    render(<CopyButton value="abc" iconOnly label="Copy command" />);
+    const el = screen.getByRole('button', { name: 'Copy command' });
+    expect(el.querySelector('[data-part="label"]')).toBeNull();
+    const bubble = () => el.querySelector('[data-part="bubble"]');
+    expect(bubble()?.getAttribute('aria-hidden')).toBe('true');
+    await click(el);
+    expect(el.getAttribute('data-state')).toBe('failed');
+    expect(bubble()?.textContent).toBe('Could not copy');
+    // The bubble keeps its word while it fades out after the hold.
+    await act(async () => {
+      vi.advanceTimersByTime(5000);
+    });
+    expect(el.getAttribute('data-state')).toBe('idle');
+    expect(bubble()?.textContent).toBe('Could not copy');
   });
 
-  it('fades under reduced motion', async () => {
-    const { calls, restore } = mockAnimate();
+  it('plays from the CSS alone, so it needs no Web Animations API', async () => {
     mockClipboard(vi.fn().mockResolvedValue(undefined));
-    vi.stubGlobal('matchMedia', (q: string) => ({ matches: q.includes('reduce'), media: q, addEventListener() {}, removeEventListener() {} }));
+    const animate = vi.fn();
+    Object.defineProperty(Element.prototype, 'animate', { configurable: true, value: animate });
     try {
       render(<CopyButton value="abc" />);
       await click(screen.getByRole('button'));
-      const swaps = calls.filter((c) => JSON.stringify(c.frames).includes('opacity'));
-      expect(swaps).toHaveLength(2);
-      for (const c of swaps) expect(JSON.stringify(c.frames)).not.toContain('transform');
+      expect(animate).not.toHaveBeenCalled();
     } finally {
-      restore();
+      Reflect.deleteProperty(Element.prototype, 'animate');
     }
-  });
-
-  it('adds no leaving copy without the Web Animations API', async () => {
-    mockClipboard(vi.fn().mockResolvedValue(undefined));
-    render(<CopyButton value="abc" />);
-    const el = screen.getByRole('button');
-    await click(el);
-    expect(el.querySelector('[data-part="icon"]')?.children).toHaveLength(1);
   });
 });

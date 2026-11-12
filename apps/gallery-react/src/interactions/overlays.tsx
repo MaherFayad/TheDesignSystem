@@ -1,5 +1,5 @@
-// Stages of the /interactions page for the overlays and menus family
-// (orders 1.21 and 1.22). One live stage per interaction id of
+// Stages of the /interactions page for the overlays family (orders 1.21 to
+// 1.23). One live stage per interaction id of
 // packages/motion/src/interactions. Each stage marks the control that plays
 // it with data-interaction-trigger, so the page's replay control can press
 // it again. Owned by the family agent of order 1.22.
@@ -133,6 +133,24 @@ function ToastStackStage() {
       }}
     >
       Show a toast
+    </Button>
+  );
+}
+
+/** Three toasts at once, so the stack shows its depth and the hover opens it. */
+function ToastExpandStage() {
+  const [n, setN] = useState(1);
+  return (
+    <Button
+      data-interaction-trigger=""
+      onClick={() => {
+        toast({ lang: 'en', tone: 'info', title: `Export ${n} ready`, description: 'Saved to your downloads.', dedupeKey: false });
+        toast({ lang: 'en', tone: 'success', title: `Board ${n} shared`, description: 'Sara can comment now.', dedupeKey: false });
+        toast({ lang: 'en', tone: 'warning', title: 'Storage almost full', description: 'Remove old versions to free space.', dedupeKey: false });
+        setN((v) => v + 1);
+      }}
+    >
+      Show three toasts
     </Button>
   );
 }
@@ -312,6 +330,35 @@ export const stages: Record<string, () => ReactNode> = {
     </Button>
   ),
   'toast-stack': () => <ToastStackStage />,
+  'toast-expand': () => <ToastExpandStage />,
+  'toast-timer': () => (
+    <Button data-interaction-trigger="" onClick={() => toast({ lang: 'en', tone: 'success', title: 'Draft saved', description: 'Rest the pointer here to keep it.', dedupeKey: false })}>
+      Show a timed toast
+    </Button>
+  ),
+  'dialog-refuse': () => (
+    <AlertDialog>
+      <AlertDialogTrigger>
+        <Button tone="danger" emphasis="soft" data-interaction-trigger="">
+          Leave the board
+        </Button>
+      </AlertDialogTrigger>
+      <AlertDialogContent>
+        <AlertDialogTitle>Leave this board?</AlertDialogTitle>
+        <AlertDialogDescription>You lose access until someone invites you again.</AlertDialogDescription>
+        <AlertDialogFooter>
+          <AlertDialogCancel>
+            <Button>Stay on board</Button>
+          </AlertDialogCancel>
+          <AlertDialogAction>
+            <Button tone="danger" emphasis="solid">
+              Leave board
+            </Button>
+          </AlertDialogAction>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
+  ),
   'toast-swipe': () => (
     <Button data-interaction-trigger="" onClick={() => toast({ lang: 'en', title: 'Board duplicated', description: 'Swipe it away or wait.' })}>
       Show a toast

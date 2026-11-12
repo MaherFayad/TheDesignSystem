@@ -37,7 +37,8 @@ import {
 } from 'react';
 import { ToggleGroup as RadixToggleGroup } from 'radix-ui';
 import { settle } from '@the-system/motion';
-import { answerLabels, slideTo } from '../../internal/indicator';
+import { slideTo } from '../../internal/indicator';
+import { playInk } from '../Tabs/ink';
 import { useMotion } from '../../internal/motion';
 import type { Shape, Size } from '@the-system/shared';
 import { ButtonGroupContext, type ButtonGroupContextValue } from '../ButtonGroup/ButtonGroupContext';
@@ -80,6 +81,9 @@ interface SegmentedContextValue {
 const SegmentedContext = createContext<SegmentedContextValue | null>(null);
 
 const ITEM = ":scope > [data-part='item']";
+/** The parts whose color crosses under the thumb, of one item and of the whole control. */
+const INKED_OWN = ':scope > :is([data-part="label"], [data-part="start"], [data-part="icon"])';
+const INKED = `${ITEM} > :is([data-part="label"], [data-part="start"], [data-part="icon"])`;
 
 /**
  * The frame of the selected item inside the root, in logical px from the
@@ -172,8 +176,19 @@ export function SegmentedControl({
       const label = item.querySelector(':scope > [data-part="label"], :scope > [data-part="icon"]');
       if (from) {
         const mode = modeRef.current('tab-slide');
-        slideTo({ el: thumb }, from, thumb.getBoundingClientRect(), { mode, axis: 'x' });
-        answerLabels(lastLabel.current, label, mode);
+        const to = thumb.getBoundingClientRect();
+        const anim = slideTo({ el: thumb }, from, to, { mode, axis: 'x' });
+        // Round 3: the text under the thumb takes the selected color where the thumb is (Tabs/ink.ts).
+        playInk({
+          slide: anim,
+          to,
+          anchor: root,
+          parts: Array.from(root.querySelectorAll(INKED)),
+          reaching: Array.from(item.querySelectorAll(INKED_OWN)),
+          restFrom: lastLabel.current,
+          inkFrom: label,
+          axis: 'x',
+        });
       }
       lastLabel.current = label;
     },

@@ -43,15 +43,18 @@ describe('PasswordField motion', () => {
       const leaving = icon.lastElementChild;
       expect(leaving?.getAttribute('aria-hidden')).toBe('true');
       expect(leaving?.hasAttribute('data-part')).toBe(false);
-      const turnIn = calls.find((c) => c.el === incoming);
-      expect(String(turnIn?.frames[0]?.transform)).toContain('rotate(-90deg)');
-      expect(String(calls.find((c) => c.el === leaving)?.frames[1]?.transform)).toContain('rotate(90deg)');
+      // Order 1.23: the glyphs trade places along a diagonal line from the top left (the slash is drawn).
+      const wipeIn = calls.find((c) => c.el === incoming);
+      expect(String(wipeIn?.frames[0]?.clipPath)).toBe('polygon(0% 0%, 0% 0%, 0% 0%, 0% 0%, 0% 0%)');
+      expect(String(wipeIn?.frames[2]?.clipPath)).toBe('polygon(0% 0%, 100% 0%, 100% 100%, 100% 100%, 0% 100%)');
+      expect(String(calls.find((c) => c.el === leaving)?.frames[2]?.clipPath)).toBe('polygon(100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%)');
+      for (const c of calls) expect(JSON.stringify(c.frames)).not.toContain('rotate');
       expect(calls.find((c) => c.el === input)?.frames).toEqual([{ opacity: 0 }, { opacity: 1 }]);
-      // Hiding again turns the other way.
+      // Hiding again wipes from the other corner.
       calls.length = 0;
       fireEvent.click(screen.getByRole('button', { name: 'Hide password' }));
       expect(input.type).toBe('password');
-      expect(String(calls.find((c) => c.el === icon.firstElementChild)?.frames[0]?.transform)).toContain('rotate(90deg)');
+      expect(String(calls.find((c) => c.el === icon.firstElementChild)?.frames[0]?.clipPath)).toBe('polygon(100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%)');
     } finally {
       restore();
     }

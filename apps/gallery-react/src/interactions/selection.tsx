@@ -1,5 +1,5 @@
 // Stages of the /interactions page for the selection controls and lists family
-// (orders 1.21 and 1.22). One live stage per interaction id of
+// (orders 1.21 to 1.23). One live stage per interaction id of
 // packages/motion/src/interactions. Each stage marks the control that plays
 // it with data-interaction-trigger, so the page's replay control can press
 // it again. Owned by the family agent of order 1.22.
@@ -37,6 +37,17 @@ import {
   TagField,
   type CommandPaletteItem,
 } from '@the-system/react';
+
+const more = [
+  { value: 'kiwi', label: 'Kiwi' },
+  { value: 'lemon', label: 'Lemon' },
+  { value: 'lime', label: 'Lime' },
+  { value: 'mango', label: 'Mango' },
+  { value: 'melon', label: 'Melon' },
+  { value: 'orange', label: 'Orange' },
+  { value: 'peach', label: 'Peach' },
+  { value: 'pear', label: 'Pear' },
+];
 
 const fruit = [
   { value: 'apple', label: 'Apple' },
@@ -178,15 +189,36 @@ export const stages: Record<string, () => ReactNode> = {
   ),
   'picker-value-roll': () => <Select aria-label="Size" items={fruit} defaultValue="banana" data-interaction-trigger="" />,
   'row-glide': () => (
-    <div style={stack}>
-      <ListBox aria-label="Fruit" items={fruit.slice(0, 4)} style={{ inlineSize: '16rem' }} data-interaction-trigger="" />
-      <List aria-label="Pages">
-        <ListItem start="file" title="Overview" href="#overview" />
-        <ListItem start="file" title="Pricing" href="#pricing" />
-        <ListItem start="file" title="Changelog" href="#changelog" />
-      </List>
-    </div>
+    <List aria-label="Pages" style={{ inlineSize: '18rem' }}>
+      <ListItem start="file" title="Overview" href="#overview" data-interaction-trigger="" />
+      <ListItem start="file" title="Pricing" href="#pricing" />
+      <ListItem start="file" title="Changelog" href="#changelog" />
+      <ListItem start="file" title="Roadmap" href="#roadmap" />
+    </List>
   ),
+  'highlight-marker': () => (
+    <DropdownMenu>
+      <DropdownMenuTrigger>
+        <Button data-interaction-trigger="">Open menu</Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent>
+        <DropdownMenuItem start="edit" shortcut="F2">
+          Rename board
+        </DropdownMenuItem>
+        <DropdownMenuItem start="copy">Duplicate board</DropdownMenuItem>
+        <DropdownMenuItem start="link">Copy link</DropdownMenuItem>
+        <DropdownMenuItem start="download">Export board</DropdownMenuItem>
+        <DropdownMenuSeparator />
+        <DropdownMenuItem start="trash" tone="danger">
+          Delete board
+        </DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
+  ),
+  'check-draw-pick': () => (
+    <ListBox aria-label="Toppings" selectionMode="multiple" items={fruit.slice(0, 5)} defaultValue={['apple']} style={{ inlineSize: '16rem' }} data-interaction-trigger="" />
+  ),
+  'combobox-results': () => <Combobox aria-label="Fruit search" items={[...fruit, ...more]} placeholder="Find a fruit" data-interaction-trigger="" />,
   'collection-flip': () => <CollectionStage />,
   'chip-check-pop': () => <ChipStage />,
   'filter-count-roll': () => <FilterStage />,
@@ -228,21 +260,9 @@ export const stages: Record<string, () => ReactNode> = {
   ),
   'menu-row-slide': () => (
     <>
-      <DropdownMenu>
-        <DropdownMenuTrigger>
-          <Button data-interaction-trigger="menu">Open menu</Button>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent>
-          <DropdownMenuItem start="edit">Rename board</DropdownMenuItem>
-          <DropdownMenuItem start="copy">Duplicate board</DropdownMenuItem>
-          <DropdownMenuItem start="link">Copy link</DropdownMenuItem>
-          <DropdownMenuSeparator />
-          <DropdownMenuItem start="download">Export board</DropdownMenuItem>
-        </DropdownMenuContent>
-      </DropdownMenu>
       <Menubar aria-label="Board menu">
         <MenubarMenu value="file">
-          <MenubarTrigger>File</MenubarTrigger>
+          <MenubarTrigger data-interaction-trigger="">File</MenubarTrigger>
           <MenubarContent>
             <MenubarItem>New board</MenubarItem>
             <MenubarItem>Open board</MenubarItem>

@@ -39,6 +39,20 @@
  *   --_radio-card-lift-now     the working lift a checked card sets
  *   --_radio-card-dot-from     the dot scale before it lands; 1 turns the pop off
  *
+ * Round 3 (order 1.23, proposed): the indicator becomes a badge. Its
+ * circle fills from the border inward (an inset box-shadow) and a check is
+ * drawn in it with stroke-dashoffset; the border, the inner line and the
+ * card fill cross over duration.morph; the card it leaves crosses back over
+ * duration.quick and its check retracts. The badge part is an aria-hidden svg.
+ * Names beyond the list:
+ *   --_radio-card-motion        1 plays the transitions, 0 turns them all off (a style's off row)
+ *   --_radio-card-check         the check's stroke color, the dot color
+ *   --_radio-card-stroke-width  the check's stroke, in the 16 unit box of its view box
+ *   --_radio-card-fill-now      working, on the indicator: the spread of the inset fill
+ *   --_radio-card-check-cut     working, on the indicator: the check's stroke-dashoffset,
+ *                               0 drawn, 1.05 retracted
+ * --_radio-card-dot-from is kept for recipes; the badge does not read it.
+ *
  * Working properties on the parts, set by the state rules only:
  * --_radio-card-border-now, -bg-now and -inset on the item, and
  * --_radio-card-circle-border and -circle-bg on the indicator.
@@ -65,6 +79,9 @@
     --_radio-card-lift: var(--ds-distance-lift);
     --_radio-card-press-scale: var(--ds-scale-press);
     --_radio-card-dot-from: var(--ds-scale-morph);
+    --_radio-card-motion: 1;
+    --_radio-card-check: var(--_radio-card-dot);
+    --_radio-card-stroke-width: 2;
 
     display: grid;
     grid-template-columns: minmax(0, 1fr);
@@ -146,20 +163,32 @@
     cursor: pointer;
     -webkit-tap-highlight-color: transparent;
     transform: translateY(calc(var(--_radio-card-lift-now) * -1));
-    transition: transform var(--ds-duration-spring-soft) var(--ds-ease-spring-soft);
+    transition:
+      transform calc(var(--ds-duration-spring-soft) * var(--_radio-card-motion)) var(--ds-ease-spring-soft),
+      border-color calc(var(--ds-duration-quick) * var(--_radio-card-motion)) var(--ds-ease-exit),
+      background-color calc(var(--ds-duration-quick) * var(--_radio-card-motion)) var(--ds-ease-exit),
+      box-shadow calc(var(--ds-duration-quick) * var(--_radio-card-motion)) var(--ds-ease-exit);
   }
 
-  /* radio-card-lift: the chosen card rises and stays up. */
+  /* radio-card-lift: the chosen card rises and stays up; its border, inner line and fill cross in. */
   [data-ds='radio-card'] > [data-part='item'][data-state='checked'] {
     --_radio-card-lift-now: var(--_radio-card-lift);
 
-    transition: transform var(--ds-duration-spring-bouncy) var(--ds-ease-spring-bouncy);
+    transition:
+      transform calc(var(--ds-duration-spring-bouncy) * var(--_radio-card-motion)) var(--ds-ease-spring-bouncy),
+      border-color calc(var(--ds-duration-morph) * var(--_radio-card-motion)) var(--ds-ease-out),
+      background-color calc(var(--ds-duration-morph) * var(--_radio-card-motion)) var(--ds-ease-out),
+      box-shadow calc(var(--ds-duration-morph) * var(--_radio-card-motion)) var(--ds-ease-out);
   }
 
   /* The dip: the card answers the press before the release. */
   [data-ds='radio-card'] > [data-part='item']:active:not([data-disabled]) {
     transform: translateY(calc(var(--_radio-card-lift-now) * -1)) scale(var(--_radio-card-press-scale));
-    transition: transform var(--ds-duration-instant) var(--ds-ease-out);
+    transition:
+      transform calc(var(--ds-duration-instant) * var(--_radio-card-motion)) var(--ds-ease-out),
+      border-color calc(var(--ds-duration-quick) * var(--_radio-card-motion)) var(--ds-ease-out),
+      background-color calc(var(--ds-duration-quick) * var(--_radio-card-motion)) var(--ds-ease-out),
+      box-shadow calc(var(--ds-duration-quick) * var(--_radio-card-motion)) var(--ds-ease-out);
   }
 
   [data-ds='radio-card'] > [data-part='item']:has(> [data-part='icon']) {
@@ -189,7 +218,7 @@
     background-color: var(--_radio-card-veil);
     opacity: 0;
     pointer-events: none;
-    transition: opacity var(--ds-duration-fast) var(--ds-ease-default);
+    transition: opacity calc(var(--ds-duration-fast) * var(--_radio-card-motion)) var(--ds-ease-default);
   }
 
   /* The circle, on the title's first line. The dot is a radial fill, so it needs no extra element. */
@@ -207,31 +236,51 @@
     background: radial-gradient(circle closest-side, var(--_radio-card-dot) 0 40%, var(--_radio-card-circle-bg) 44%);
   }
 
-  /* radio-card-lift: with the dot layer, the circle is a plain fill and the layer is the dot. */
-  [data-ds='radio-card'] > [data-part='item'] > [data-part='indicator']:has(> span[aria-hidden='true']) {
-    display: grid;
-    place-items: center;
-    background: var(--_radio-card-circle-bg);
+  /*
+   * The badge: with the check layer, the circle fills inward with an inset
+   * shadow and the check strokes in. Unchecked, the fill opens back to the
+   * border and the check retracts, faster.
+   */
+  [data-ds='radio-card'] > [data-part='item'] > [data-part='indicator']:has(> [data-part='badge']) {
+    --_radio-card-fill-now: 0px;
+    --_radio-card-check-cut: 1.05;
+
+    position: relative;
+    background: transparent;
+    box-shadow: inset 0 0 0 var(--_radio-card-fill-now) var(--_radio-card-fill);
+    transition:
+      border-color calc(var(--ds-duration-quick) * var(--_radio-card-motion)) var(--ds-ease-exit),
+      box-shadow calc(var(--ds-duration-quick) * var(--_radio-card-motion)) var(--ds-ease-exit) calc(var(--ds-duration-quick) * 0.4 * var(--_radio-card-motion));
   }
 
-  [data-ds='radio-card'] > [data-part='item'] > [data-part='indicator'] > span[aria-hidden='true'] {
-    inline-size: 40%;
-    block-size: 40%;
-    border-radius: var(--ds-radius-pill);
-    background-color: var(--_radio-card-dot);
-    opacity: 0;
-    transform: scale(var(--_radio-card-dot-from));
-    transition:
-      opacity var(--ds-duration-quick) var(--ds-ease-exit),
-      transform var(--ds-duration-quick) var(--ds-ease-exit);
+  [data-ds='radio-card'] > [data-part='item'] > [data-part='indicator'] > [data-part='badge'] {
+    position: absolute;
+    inset: calc(var(--ds-border-width-strong) * -1);
+    inline-size: calc(100% + var(--ds-border-width-strong) * 2);
+    block-size: calc(100% + var(--ds-border-width-strong) * 2);
+    overflow: visible;
+    fill: none;
+    stroke: var(--_radio-card-check);
+    stroke-width: var(--_radio-card-stroke-width);
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-dasharray: 1 2;
+    stroke-dashoffset: var(--_radio-card-check-cut);
+    transition: stroke-dashoffset calc(var(--ds-duration-quick) * 0.6 * var(--_radio-card-motion)) var(--ds-ease-in);
   }
 
-  [data-ds='radio-card'] > [data-part='item'][data-state='checked'] > [data-part='indicator'] > span[aria-hidden='true'] {
-    opacity: 1;
-    transform: none;
+  [data-ds='radio-card'] > [data-part='item'][data-state='checked'] > [data-part='indicator']:has(> [data-part='badge']) {
+    --_radio-card-fill-now: calc(var(--_radio-card-control-size) / 2);
+    --_radio-card-check-cut: 0;
+
     transition:
-      opacity var(--ds-duration-quick) var(--ds-ease-out),
-      transform var(--ds-duration-spring-bouncy) var(--ds-ease-spring-bouncy);
+      border-color calc(var(--ds-duration-quick) * var(--_radio-card-motion)) var(--ds-ease-out),
+      box-shadow calc(var(--ds-duration-spring-snappy) * var(--_radio-card-motion)) var(--ds-ease-out);
+  }
+
+  [data-ds='radio-card'] > [data-part='item'][data-state='checked'] > [data-part='indicator'] > [data-part='badge'] {
+    transition: stroke-dashoffset calc(var(--ds-duration-morph) * var(--_radio-card-motion)) var(--ds-ease-out)
+      calc(var(--ds-duration-morph) * 0.25 * var(--_radio-card-motion));
   }
 
   [data-ds='radio-card'] > [data-part='item'] > [data-part='icon'] {
@@ -297,8 +346,8 @@
     --_radio-card-circle-bg: var(--_radio-card-fill);
   }
 
-  /* Unchecked: the dot takes the circle's own fill, so it does not show. */
-  [data-ds='radio-card'] > [data-part='item'][data-state='unchecked'] > [data-part='indicator'] {
+  /* Unchecked: the dot takes the circle's own fill, so it does not show. The check keeps its color while it retracts. */
+  [data-ds='radio-card'] > [data-part='item'][data-state='unchecked'] > [data-part='indicator']:not(:has(> [data-part='badge'])) {
     --_radio-card-dot: transparent;
   }
 
@@ -332,6 +381,7 @@
       --_radio-card-lift: 0px;
       --_radio-card-press-scale: 1;
       --_radio-card-dot-from: 1;
+      --_radio-card-motion: 0;
     }
 
     [data-ds='radio-card'] > [data-part='item']::after {
@@ -343,6 +393,7 @@
     --_radio-card-lift: 0px;
     --_radio-card-press-scale: 1;
     --_radio-card-dot-from: 1;
+    --_radio-card-motion: 0;
   }
 
   :root[data-motion='reduce'] [data-ds='radio-card'] > [data-part='item']::after {
@@ -360,12 +411,9 @@
       display: none;
     }
 
-    [data-ds='radio-card'] > [data-part='item'] > [data-part='indicator']:has(> span[aria-hidden='true']) {
-      background: radial-gradient(circle closest-side, var(--_radio-card-dot) 0 40%, var(--_radio-card-circle-bg) 44%);
-    }
-
-    [data-ds='radio-card'] > [data-part='item'] > [data-part='indicator'] > span[aria-hidden='true'] {
-      display: none;
+    /* The fill is a shadow, which forced colors drops: the check alone shows the choice, in Highlight. */
+    [data-ds='radio-card'] > [data-part='item'] > [data-part='indicator'] > [data-part='badge'] {
+      stroke: Highlight;
     }
 
     /* The inset line is a shadow, which forced colors drops: the border itself thickens instead. */

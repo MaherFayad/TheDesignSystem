@@ -8,6 +8,14 @@
 // jumping. Spring overshoot per style, from the tokens: Neutral bouncy 6%,
 // snappy 1.5%, soft none; Desk bouncy 25%, snappy 10%, soft 2%; Studio steps.
 //
+// Order 1.23 (round 3) makes each one specific to what the overlay is: a
+// popover, a hover card and a tooltip unfold out of their trigger (a larger
+// scale along the axis away from it), a dialog's backdrop blurs the page in
+// and its parts read within 200ms, a refused outside press nudges the panel,
+// and toasts stack with depth, open into a list on hover or focus, swipe
+// away with a rubber band and a flick, and show their time left on a line
+// that pauses with the store.
+//
 // Every CSS row reads its motion from private properties on the component
 // root (packages/css/src/components: DropdownMenu.css, Popover.css,
 // HoverCard.css, Tooltip.css, Dialog.css, CommandPalette.css, Lightbox.css,
@@ -18,7 +26,7 @@
 import type { Interaction } from './types';
 
 /** The private properties that turn the dialog travel off. */
-const dialogOff = { '--_dialog-enter-y': '0px', '--_dialog-enter-scale': '1', '--_dialog-shift': '0px' } as const;
+const dialogOff = { '--_dialog-enter-y': '0px', '--_dialog-enter-scale': '1', '--_dialog-shift': '0px', '--_dialog-backdrop-blur': '0px' } as const;
 
 export const overlaysInteractions = [
   {
@@ -28,14 +36,14 @@ export const overlaysInteractions = [
     drive: 'css',
     trigger: 'Open a popover from its trigger, or rest the pointer on a link with a hover card, then close it.',
     feedback:
-      'A small surface that lands: it travels distance.shift out of its trigger side and grows from scale.enter while it fades in, on the bouncy spring, passing its size a little and settling. ' +
+      'A small surface that unfolds out of its trigger: it travels distance.shift out of its trigger side (data-side) and grows out of the Radix transform origin, more along the axis away from the trigger (scale.enter times scale.anticipate) than across it (scale.enter), while it fades in, on the bouncy spring, passing its size a little and settling. ' +
       'The title, the body and the footer (in a hover card, each piece of the preview) then rise distance.shift one delay.stagger step apart. A part with focus is there at once. ' +
       'Closing is faster, all at once, and takes no pointer.',
     beats: [
-      'Action: the surface travels distance.shift and grows from scale.enter (Neutral 0.97, Desk 0.9, Studio 1) on ease.spring-bouncy over duration.spring-bouncy (Neutral 220ms, Desk 440ms, Studio 120ms in three steps).',
+      'Action: the surface travels distance.shift and unfolds from scale.enter across and scale.enter times scale.anticipate along (Neutral 0.97 by 0.92) out of the trigger side, on ease.spring-bouncy over duration.spring-bouncy (Neutral 220ms, Desk 440ms, Studio 120ms in three steps).',
       'Overshoot: it passes its size (Neutral 6% of the way, Desk 25%) and settles.',
       'Stagger: title, body and footer rise distance.shift on ease.spring-soft over duration.spring-soft, at one, two and three delay.stagger steps (Neutral 24ms apart, Desk 45ms, Studio together).',
-      'Exit: over duration.quick (a hover card duration.fast) on ease.exit, all at once.',
+      'Exit: it folds back into the trigger the same way over duration.quick (a hover card duration.fast) on ease.exit, all at once, and lets the pointer through.',
     ],
     styles: {
       studio: 'a three step cut',
@@ -44,10 +52,10 @@ export const overlaysInteractions = [
     },
     reduced: 'A fade with no travel, scale or stagger. Under reduced motion it is there and gone at once.',
     off: {
-      "[data-ds='popover']": { '--_popover-enter-scale': '1', '--_popover-shift': '0px', '--_popover-item-shift': '0px' },
-      "[data-ds='hover-card']": { '--_hover-card-enter-scale': '1', '--_hover-card-shift': '0px', '--_hover-card-item-shift': '0px' },
+      "[data-ds='popover']": { '--_popover-enter-scale': '1', '--_popover-enter-stretch': '1', '--_popover-shift': '0px', '--_popover-item-shift': '0px' },
+      "[data-ds='hover-card']": { '--_hover-card-enter-scale': '1', '--_hover-card-enter-stretch': '1', '--_hover-card-shift': '0px', '--_hover-card-item-shift': '0px' },
     },
-    round: 2,
+    round: 3,
     status: 'proposed',
   },
   {
@@ -57,9 +65,9 @@ export const overlaysInteractions = [
     drive: 'css',
     trigger: 'Rest the pointer on a control with a tooltip, or focus it.',
     feedback:
-      'After the open delay the tooltip travels distance.shift from its trigger side (data-side) into place and grows from scale.enter while it fades in, on the snappy spring. The shortcut follows one delay.stagger step later. Closing plays the travel backward, faster, over duration.quick on ease.exit.',
+      'After the open delay the tooltip travels distance.shift from its trigger side (data-side) into place and unfolds out of the trigger, more along the axis away from it than across, while it fades in, on the snappy spring. The shortcut follows one delay.stagger step later. Closing plays the travel backward, faster, over duration.quick on ease.exit.',
     beats: [
-      'Action: the tooltip travels distance.shift and grows from scale.enter on ease.spring-snappy over duration.spring-snappy (Neutral 180ms, Desk 300ms passing its place by 10%, Studio 80ms in two steps).',
+      'Action: the tooltip travels distance.shift and unfolds from scale.enter across and scale.enter times scale.anticipate along on ease.spring-snappy over duration.spring-snappy (Neutral 180ms, Desk 300ms passing its place by 10%, Studio 80ms in two steps).',
       'Stagger: the shortcut rises distance.shift one delay.stagger step later on the soft spring.',
       'Exit: back toward the trigger over duration.quick (100ms) on ease.exit.',
     ],
@@ -70,9 +78,9 @@ export const overlaysInteractions = [
     },
     reduced: 'A fade with no travel. Under reduced motion the tooltip is there and gone at once.',
     off: {
-      "[data-ds='tooltip']": { '--_tooltip-shift': '0px', '--_tooltip-enter-scale': '1' },
+      "[data-ds='tooltip']": { '--_tooltip-shift': '0px', '--_tooltip-enter-scale': '1', '--_tooltip-enter-stretch': '1' },
     },
-    round: 2,
+    round: 3,
     status: 'proposed',
   },
   {
@@ -106,26 +114,48 @@ export const overlaysInteractions = [
     drive: 'css',
     trigger: 'Open a dialog, then close it.',
     feedback:
-      'The backdrop fades in while the panel rises distance.enter and grows from scale.dialog-enter on the soft spring, at full opacity within the first third of the rise, so the control that takes focus is readable almost at once. ' +
-      'The parts then arrive one delay.stagger step apart: the title (and the AlertDialog icon, which pops from scale.morph on the bouncy spring), the description, the body, the footer. A part that holds focus is there at once. ' +
-      'Closing is faster (duration.quick on ease.exit), all at once, and nothing waits for it.',
+      'The backdrop fades in and the page behind it goes out of focus: its backdrop-filter blur grows from nothing to --_dialog-backdrop-blur (blur.backdrop) over the panel\'s rise. The panel rises distance.enter and grows from scale.dialog-enter on the soft spring, at full opacity within the first third of the rise, so the control that takes focus is readable almost at once. ' +
+      'The parts then arrive one delay.stagger step apart: the title (and the AlertDialog icon, which pops from scale.morph on the bouncy spring), the description, the body, the footer. Each is readable duration.fast after its start and the last starts by duration.base, so the whole panel reads within 200ms; the rise settles after. A part that holds focus is there at once. ' +
+      'Closing is faster (duration.quick on ease.exit), all at once: the blur goes with the backdrop, and nothing waits for it. State machine: closed, opening, open, closing (refused is the row dialog-refuse).',
     beats: [
       'Action: the panel rises distance.enter (Neutral 6px, Desk 12px, Studio 4px) and grows from scale.dialog-enter (0.98) on ease.spring-soft over duration.spring-soft (Neutral 220ms, Desk 340ms with a 2% overshoot, Studio 100ms in steps); its opacity is full at a third of that.',
-      'Stagger: title at one step, description at two, body at three, footer at four (Neutral 24ms a step, Desk 45ms, Studio 0ms), each rising distance.shift on the soft spring.',
+      'Secondary: the backdrop blur grows from 0 to blur.backdrop (Neutral 8px) and the scrim reaches full opacity at a third, over the same run.',
+      'Stagger: title at one step, description at two, body at three, footer at four (Neutral 24ms a step, Desk 45ms capped at duration.base 120ms, Studio 0ms); each fades in over duration.fast (80ms) on ease.out and rises distance.shift on the soft spring, so the last part reads by 200ms.',
       'React: the AlertDialog icon pops from scale.morph (Neutral 0.5, Desk 0.3, Studio 0.8) on ease.spring-bouncy over duration.spring-bouncy, passing its size and settling.',
-      'Exit: panel and backdrop over duration.quick (100ms) on ease.exit, all at once.',
+      'Exit: panel and backdrop over duration.quick (100ms) on ease.exit, all at once; the blur falls back to 0 with the backdrop.',
     ],
     styles: {
       studio: 'a quick stepped rise, the parts together',
       desk: 'a long soft rise with a cascade and a bouncing icon',
       neutral: 'a short soft rise with a quick cascade',
     },
-    reduced: 'The panel and the backdrop fade in and out with no travel, scale or stagger. Under reduced motion they are there and gone at once.',
+    reduced: 'The panel and the backdrop fade in and out with no travel, scale, blur or stagger. Under reduced motion they are there and gone at once. Without backdrop-filter, under reduced transparency and under more contrast the backdrop is a solid scrim with no blur.',
     off: {
       "[data-ds='dialog']": dialogOff,
       "[data-ds='alert-dialog']": dialogOff,
     },
-    round: 2,
+    round: 3,
+    status: 'proposed',
+  },
+  {
+    id: 'dialog-refuse',
+    components: ['AlertDialog', 'Dialog', 'Sheet', 'Drawer'],
+    pattern: 'shake',
+    drive: 'waapi',
+    trigger: 'Press the backdrop of an alert dialog, or of a dialog set to dismissible false; or press Escape on a dialog set to dismissible false.',
+    feedback:
+      'The dialog does not close, and says so: the panel nudges along the inline axis, two swings of space.3xs out and back inside duration.roll (the catalog pattern shake, played on the panel through useMotion). No color or light changes, so it is no flash. A second refusal cancels the first nudge and plays again, so a burst of presses never stacks or leaves the panel off its place. State machine: open, refused, open.',
+    beats: [
+      'Action: the panel swings space.3xs (4px) toward the inline end, then back past its place, on ease.out.',
+      'Settle: a smaller second swing and rest, all inside duration.roll (300ms).',
+    ],
+    styles: {
+      studio: 'the same two swings, Studio timing',
+      desk: 'the same two swings, Desk timing',
+      neutral: 'two short swings',
+    },
+    reduced: 'No motion: the dialog stays open and still; its own actions are the way out.',
+    round: 3,
     status: 'proposed',
   },
   {
@@ -135,11 +165,12 @@ export const overlaysInteractions = [
     drive: 'css',
     trigger: 'Open a sheet or a drawer, close it, or drag a sheet by its handle and let go.',
     feedback:
-      'The panel slides in its own size from its edge (a drawer from its side, mirrored in right to left layouts; a sheet from the block end) on the soft spring, with no fade, so the focused control is readable at once. ' +
+      'The panel slides in its own size from its edge (a drawer from its side, mirrored in right to left layouts; a sheet from the block end) on the soft spring, with no fade, so the focused control is readable at once, while the backdrop blurs the page in as a dialog does. ' +
       'Its header, body and footer then rise one delay.stagger step apart. A sheet let go short of closing settles back on the same spring. Closing slides out faster, over duration.quick on ease.exit.',
     beats: [
       'Action: the panel slides from its edge on ease.spring-soft over duration.spring-soft (Neutral 220ms, Desk 340ms passing its place by 2%, Studio 100ms in steps).',
-      'Stagger: header (or title) at one step, description at two, body at three, footer at four, each rising distance.shift on the soft spring.',
+      'Secondary: the backdrop blur grows from 0 to blur.backdrop over the slide.',
+      'Stagger: header (or title) at one step, description at two, body at three, footer at four, each readable after duration.fast and rising distance.shift on the soft spring; all of it reads within 200ms.',
       'Settle: a released sheet springs back to rest on the soft spring.',
       'Exit: the panel slides out over duration.quick (100ms) on ease.exit, all at once.',
     ],
@@ -150,10 +181,10 @@ export const overlaysInteractions = [
     },
     reduced: 'The panel fades in and out where it rests, with no slide or stagger, and a released sheet is back in place at once.',
     off: {
-      "[data-ds='sheet']": { '--_dialog-slide': '0%', '--_dialog-enter-opacity': '0', '--_dialog-drag-duration': '0s', '--_dialog-shift': '0px' },
-      "[data-ds='drawer']": { '--_dialog-slide': '0%', '--_dialog-enter-opacity': '0', '--_dialog-shift': '0px' },
+      "[data-ds='sheet']": { '--_dialog-slide': '0%', '--_dialog-enter-opacity': '0', '--_dialog-drag-duration': '0s', '--_dialog-shift': '0px', '--_dialog-backdrop-blur': '0px' },
+      "[data-ds='drawer']": { '--_dialog-slide': '0%', '--_dialog-enter-opacity': '0', '--_dialog-shift': '0px', '--_dialog-backdrop-blur': '0px' },
     },
-    round: 2,
+    round: 3,
     status: 'proposed',
   },
   {
@@ -260,35 +291,62 @@ export const overlaysInteractions = [
     drive: 'css',
     trigger: 'A toast is shown, or closed by its timer, its close button or Escape.',
     feedback:
-      'The new toast springs in from the edge of the toaster and its icon pops a beat later; a closing toast fades and shrinks faster than it came.',
+      'The new toast comes in from its own edge, a full toast height (up from below at the bottom, down from above at the top), on the bouncy spring, readable by a third of the run, and pushes the one that was in front back into the stack. One delay.stagger later its icon pops from scale.morph. A closing toast fades and shrinks faster than it came, and the one behind it comes forward. State machine: entering, then stacked or in front.',
     beats: [
-      'Action: the toast travels space.xs in from the edge and grows from scale.enter while it fades in, on ease.spring-bouncy over duration.spring-bouncy, landing past its place in Desk.',
+      'Action: the toast travels its own height in from the edge (--_toast-enter-y, 100%) and grows from scale.enter while it fades in, on ease.spring-bouncy over duration.spring-bouncy (Neutral 220ms, Desk 440ms landing past its place, Studio 120ms in steps); full opacity at 30%.',
+      'Secondary: the toast that was in front steps back one place in the stack on the snappy spring (row toast-stack).',
       'Overshoot: one delay.stagger later the icon pops from scale.morph on the bouncy spring and settles.',
-      'Exit: a closing toast fades and shrinks to scale.enter over duration.toast-exit on ease.exit, faster than the entrance.',
+      'Exit: a closing toast fades and shrinks to scale.enter over duration.toast-exit (120ms) on ease.exit, faster than the entrance.',
     ],
-    styles: { studio: 'a stepped arrival, icon with the card', desk: 'a springy arrival and a bouncing icon', neutral: 'a short spring, a small pop' },
+    styles: { studio: 'a stepped arrival, icon with the card', desk: 'a springy arrival and a bouncing icon', neutral: 'a short spring from the edge, a small pop' },
     reduced: 'No motion: the toast is there and gone at once.',
     off: {
       "[data-ds='toast']": { '--_toast-enter-y': '0px', '--_toast-enter-scale': '1', '--_toast-icon-enter-scale': '1' },
     },
-    round: 2,
+    round: 3,
     status: 'proposed',
   },
   {
     id: 'toast-stack',
     components: ['Toast'],
-    pattern: 'drag-drop',
-    drive: 'waapi',
-    primitive: 'flip',
-    trigger: 'A toast joins the stack or leaves it while other toasts are shown.',
+    pattern: 'toast',
+    drive: 'css',
+    trigger: 'Show a second and a third toast while the first is still there.',
     feedback:
-      'The toasts that stay move from where they were to their new place with a transform on a spring (flipPlay). Layout never animates and the store never waits; the pause on hover and focus is kept.',
+      'The toasts stack with depth instead of making a column: the newest is in front, and each older one sits behind it, its edge peeking --_toast-peek (space.s) past the one in front, a step smaller (--_toast-depth, 1 minus scale.anticipate) and clipped to the strip that shows, so nothing shows through a glass toast. A toast that joins pushes the others back a step; a toast that leaves brings them forward. From the fourth back a toast is hidden. ' +
+      'Toaster.tsx measures the toasts and writes their place (stack.ts); Toast.css draws it with translate, scale and clip-path and transitions them on the snappy spring. Layout never animates and the store never waits. State machine: in front, stacked, hidden.',
     beats: [
-      'Secondary: each toast that has to make room travels from its old place on ease.spring-snappy over duration.spring-snappy (180, 300, 80ms), past its place in Desk; a move still in flight starts from where the toast is drawn.',
+      'Action: the toasts behind move one --_toast-peek step away from the edge, shrink one --_toast-depth step and clip to their strip, on ease.spring-snappy over duration.spring-snappy (Neutral 180ms, Desk 300ms passing their place, Studio 80ms in two steps).',
+      'Secondary: the new toast enters in front (row toast-enter).',
+      'Settle: a toast that leaves takes nothing with it: the ones behind come forward on the same spring.',
     ],
-    styles: { studio: 'stepped moves', desk: 'springy room making', neutral: 'a quick slide' },
-    reduced: 'No motion: the toasts that stay take their new place at once.',
-    round: 2,
+    styles: { studio: 'stepped moves', desk: 'springy room making', neutral: 'a quick step back' },
+    reduced: 'No motion: the toasts take their places in the stack at once.',
+    off: {
+      "[data-ds='toast']": { '--_toast-stack-duration': '0s' },
+    },
+    round: 3,
+    status: 'proposed',
+  },
+  {
+    id: 'toast-expand',
+    components: ['Toast'],
+    pattern: 'toast',
+    drive: 'css',
+    trigger: 'With two or more toasts shown, rest the pointer on the stack, or move focus into it (F8, then Tab); then move away.',
+    feedback:
+      'The stack opens into a list: each toast behind the front one travels to its own place (the toasts in front of it plus the gaps), grows back to full size and unclips, so all of them can be read and reached. The front toast never moves under the pointer. The list takes the pointer in its gaps too, so moving from one toast to the next keeps it open. Leaving it, pointer and focus, folds it back into the stack. While it is open the timers are paused. State machine: stacked, expanded, stacked.',
+    beats: [
+      'Action: the toasts behind travel out to their places in the list and unclip from their strip to the full card on ease.spring-snappy over duration.spring-snappy (Neutral 180ms, Desk 300ms with a swing past, Studio 80ms in two steps).',
+      'Secondary: the progress lines stop where they are (row toast-timer).',
+      'Exit: on leave they fold back to their strips on the same spring.',
+    ],
+    styles: { studio: 'a stepped fan out', desk: 'a springy fan out that swings past', neutral: 'a quick fan out' },
+    reduced: 'No motion: the list is open at once and folds at once; the pause is the same.',
+    off: {
+      "[data-ds='toast']": { '--_toast-stack-duration': '0s' },
+    },
+    round: 3,
     status: 'proposed',
   },
   {
@@ -296,19 +354,41 @@ export const overlaysInteractions = [
     components: ['Toast'],
     pattern: 'toast',
     drive: 'css',
-    trigger: 'Drag a toast toward the edge it sits on, then let go.',
+    trigger: 'Drag a toast toward the edge it sits on and let go, or flick it; or drag it the other way.',
     feedback:
-      'While dragged the toast follows the finger. Let go short of the threshold it springs back on the snappy spring; past it, it travels on out in the swipe direction while it fades.',
+      'While dragged toward its edge the toast follows the finger one to one. Dragged the other way it gives a little and no more (a rubber band that never passes 24px), so it is clear that way does nothing. Let go past 50px, or flung toward the edge faster than 0.3px a millisecond over its last 100ms, it travels on out in the swipe direction while it fades; let go short, it springs back. The Toaster runs the swipe itself (swipe.ts): Radix clamps to one way and reads distance only. The close button is the button path (WCAG 2.5.7). State machine: rest, swiping, back to rest or leaving.',
     beats: [
-      'Action: the toast follows the finger (the Radix swipe variables, no transition).',
-      'Settle: let go short, it springs back on ease.spring-snappy over duration.spring-snappy; past the threshold it travels on out over duration.toast-exit on ease.exit.',
+      'Action: the toast follows the finger (data-swipe move, no transition); the wrong way, the rubber band.',
+      'Settle: let go short, it springs back on ease.spring-snappy over duration.spring-snappy (Neutral 180ms, Desk 300ms swinging past, Studio 80ms).',
+      'Exit: past the distance or on a flick it travels a toast width further and fades over duration.toast-exit (120ms) on ease.exit; the toast behind comes forward.',
     ],
     styles: { studio: 'a stepped return', desk: 'a return that swings past its place', neutral: 'a quick return' },
     reduced: 'The toast still follows the finger. Let go, it is back in place at once, or it is gone where it was let go.',
     off: {
       "[data-ds='toast']": { '--_toast-duration': '0s', '--_toast-swipe-x': '0%', '--_toast-swipe-y': '0%' },
     },
-    round: 2,
+    round: 3,
+    status: 'proposed',
+  },
+  {
+    id: 'toast-timer',
+    components: ['Toast'],
+    pattern: 'toast',
+    drive: 'css',
+    trigger: 'Show a toast that closes by itself, then rest the pointer on it, focus it, or leave the window, and come back.',
+    feedback:
+      'A line on the toast\'s block end edge shows the time it has left: it shrinks toward the inline start, linear, over the toast\'s own duration (4s, 6s for a warning, or what the app configured). It stops while the toaster is paused, which is exactly when the toast store pauses its timer (pointer over the toasts, focus inside them, window blurred, tab hidden), and runs on from where it stopped. A repeat or an update starts the line again with the timer. The toast never closes while paused (WCAG 2.2.1). Danger toasts and toasts with an action stay until closed and have no line.',
+    beats: [
+      'Action: the progress part scales from 1 to 0 along the inline axis over the toast duration (--_toast-life), linear.',
+      'Pause: animation-play-state paused under data-paused on the toaster, at once.',
+      'Restart: a new version of the toast mounts a new line.',
+    ],
+    styles: { studio: 'a thin line in the tone', desk: 'a thin line in the tone', neutral: 'a thin line in the tone' },
+    reduced: 'The timer runs and pauses the same; the line is not drawn.',
+    off: {
+      "[data-ds='toast']": { '--_toast-progress-thickness': '0px' },
+    },
+    round: 3,
     status: 'proposed',
   },
   {

@@ -550,11 +550,12 @@ export function Form({
 
   // form-submit-success: when a submit passes, the actions take one celebrate beat: each button
   // rises to scale.pop and springs back, as one short run from the first. The form is already sent.
+  // Order 1.23: a success mark after the buttons draws its ring, then its tick (Form.css).
   useLayoutEffect(() => {
     const before = lastState.current;
     lastState.current = state;
     if (state !== 'submitted' || before === 'submitted') return;
-    const buttons = [...(formRef.current?.querySelectorAll(':scope > [data-part="actions"] > *') ?? [])];
+    const buttons = [...(formRef.current?.querySelectorAll(':scope > [data-part="actions"] > :not([data-part="success-mark"])') ?? [])];
     const mode = motion.mode('form-submit-success');
     buttons.forEach((el, i) =>
       playBeat(
@@ -665,7 +666,19 @@ export function Form({
           </Alert>
         )}
         <div data-part="body">{children}</div>
-        {actions !== undefined && actions !== null && actions !== false && <div data-part="actions">{actions}</div>}
+        {actions !== undefined && actions !== null && actions !== false && (
+          <div data-part="actions">
+            {actions}
+            {state === 'submitted' && (
+              // form-submit-success (order 1.23): a ring and a tick that draw themselves, decorative.
+              // The status message, read by assistive technology, says the form was sent.
+              <svg data-part="success-mark" aria-hidden="true" focusable="false" viewBox="0 0 24 24">
+                <circle cx="12" cy="12" r="10" pathLength={1} />
+                <path d="M7.5 12.5l3 3 6-6.5" pathLength={1} />
+              </svg>
+            )}
+          </div>
+        )}
       </form>
     </FormContext>
   );

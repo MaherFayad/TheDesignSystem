@@ -108,6 +108,7 @@ describe('ContextMenu', () => {
       'sub-trigger',
       'separator',
       'item',
+      'highlight',
     ]);
     const rename = screen.getByRole('menuitem', { name: /Rename board/ });
     expect(Array.from(rename.children).map((c) => c.getAttribute('data-part'))).toEqual(['start', 'text', 'shortcut']);

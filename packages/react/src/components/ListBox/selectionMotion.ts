@@ -242,3 +242,35 @@ export function useStaggerOnOpen(rows: string, forward?: (node: HTMLElement | nu
     [rows, interaction],
   );
 }
+
+/** The option rows of the ListBox inside a picker popup. */
+const POPUP_OPTIONS = "[data-ds='list-box'] [data-part='option']";
+
+/**
+ * The rows of a picker popup (Combobox, Autocomplete, MultiSelect, TagField):
+ * they stagger in after the surface when it opens (menu-rows), and when the
+ * results change while it stays open (a query), the rows that stay slide to
+ * their new place and the new ones rise in one short stagger step apart
+ * (interaction "combobox-results", order 1.23). The highlight marker of the
+ * ListBox follows the lit row on its own. Returns the ref callback for the
+ * popup content; `forward` gets the node too.
+ */
+export function usePopupRows(forward?: (node: HTMLElement | null) => void) {
+  const popup = useRef<HTMLElement | null>(null);
+  const ref = useStaggerOnOpen(POPUP_OPTIONS, (node) => {
+    popup.current = node;
+    forward?.(node);
+  });
+  // The list, not the popup, so a scroll of the list is not read as a move.
+  const list = useRef<{ readonly current: Element | null }>({
+    get current() {
+      return popup.current?.querySelector("[data-ds='list-box']") ?? null;
+    },
+  });
+  useFlipGroup(list.current, {
+    items: (el) => Array.from(el.querySelectorAll("[data-part='option']")),
+    interaction: 'combobox-results',
+    ghosts: false,
+  });
+  return ref;
+}

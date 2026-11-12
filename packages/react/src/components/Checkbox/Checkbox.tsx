@@ -1,7 +1,6 @@
 'use client';
 import { useId, useState, type ComponentProps, type MouseEvent, type ReactNode, type Ref } from 'react';
 import { Checkbox as RadixCheckbox } from 'radix-ui';
-import { Icon } from '@the-system/icons/react';
 import type { Size, Tone } from '@the-system/shared';
 import { useFieldControl } from '../Field/Field';
 import { useCheckboxGroupItem } from './group-context';
@@ -125,7 +124,7 @@ export function Checkbox({
     if (isReadOnly) event.preventDefault();
   };
 
-  const iconSize = size ?? group?.size ?? 'md';
+  const boxSize = size ?? group?.size ?? 'md';
   const hasLabel = label !== undefined && label !== null && label !== false;
 
   return (
@@ -134,7 +133,7 @@ export function Checkbox({
       className={className}
       style={style}
       data-ds="checkbox"
-      data-size={iconSize}
+      data-size={boxSize}
       data-tone={tone}
       data-state={state}
       data-invalid={control['aria-invalid'] ? '' : undefined}
@@ -158,10 +157,17 @@ export function Checkbox({
         data-part="control"
       >
         <RadixCheckbox.Indicator forceMount data-part="indicator">
-          {/* The clip of the draw (check-draw): purely visual, no part name. */}
-          <span aria-hidden="true">
-            <Icon name={glyph} size={iconSize} />
-          </span>
+          {/* The fill that grows from the centre (check-draw, order 1.23): purely visual, no part name. */}
+          <span aria-hidden="true" />
+          {/*
+           * The mark: two strokes that meet at a joint, the short arm then the
+           * long arm. Checkbox.css turns and draws them (stroke-dashoffset), so
+           * the same two strokes are the check and the dash and morph between them.
+           */}
+          <svg data-part="mark" data-glyph={glyph} viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+            <path d="M-4.25 0H0" pathLength={1} />
+            <path d="M0 0H8.85" pathLength={1} />
+          </svg>
         </RadixCheckbox.Indicator>
       </RadixCheckbox.Root>
       {hasLabel && (

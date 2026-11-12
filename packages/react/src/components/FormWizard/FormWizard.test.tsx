@@ -170,6 +170,8 @@ describe('FormWizard', () => {
     expect(onSubmit).toHaveBeenCalledWith({ email: 'sara@example.com', city: 'Riyadh' }, expect.any(HTMLFormElement));
     await waitFor(() => expect(root(container).getAttribute('data-state')).toBe('done'));
     expect(title(container)?.textContent).toBe('Order placed');
+    // wizard-done (order 1.23): a decorative mark draws before the done title and adds no words.
+    expect(title(container)?.querySelector(':scope > [data-part="success-mark"]')?.getAttribute('aria-hidden')).toBe('true');
     expect(screen.getByText('Receipt sent')).toBeTruthy();
     expect(container.querySelector('[data-part="actions"]')).toBeNull();
     expect(status(container)?.textContent).toBe('Order placed');

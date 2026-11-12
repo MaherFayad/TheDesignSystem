@@ -152,8 +152,10 @@ export function RadioCardItem({
       data-part="item"
     >
       <RadixRadioGroup.Indicator forceMount data-part="indicator">
-        {/* The dot that pops in (radio-card-lift). Decorative, no part name. */}
-        <span aria-hidden="true" />
+        {/* The check that draws in the filled circle (radio-card-lift, order 1.23). Decorative. */}
+        <svg data-part="badge" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+          <path d="M4.5 8.25 7 10.75 11.5 5.5" pathLength={1} />
+        </svg>
       </RadixRadioGroup.Indicator>
       {has(icon) && (
         <span data-part="icon" aria-hidden="true">

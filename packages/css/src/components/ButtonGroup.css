@@ -119,6 +119,12 @@
    * start, label, end) dip to scale.anticipate while it is held and spring
    * back on release on Button's snappy spring. A spaced group keeps the
    * whole button press.
+   *
+   * Round 3 (order 1.23, proposed): the parts also sink by Button's
+   * --_button-press-y and Button's press shade (an inner shadow at the top
+   * edge of the pressed segment) comes in, so the segment reads as a key
+   * pushed into the row while its neighbors stay up. The box, the seam and
+   * the neighbors never move.
    */
   [data-ds='button-group'][data-attached] > :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button'], [data-ds='copy-button'], [data-ds='close-button']) {
     --_button-press-scale: 1;

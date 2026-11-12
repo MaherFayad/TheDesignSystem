@@ -23,14 +23,11 @@ describe('ListBox motion and focus (order 1.22)', () => {
     expect(read('TagField')).not.toMatch(/--_list-box-option-ring:/);
   });
 
-  it('row-glide: each option holds a decorative layer, and a new highlight travels from the old row', async () => {
-    const animate = vi.fn(() => ({ finished: Promise.resolve(), cancel() {} }) as unknown as Animation);
-    const proto = HTMLElement.prototype as unknown as { animate?: unknown };
-    const original = proto.animate;
-    proto.animate = animate;
+  it('highlight-marker: one aria-hidden marker in the list, placed at the lit row and moved by transform', async () => {
     const rect = vi.spyOn(Element.prototype, 'getBoundingClientRect').mockImplementation(function (this: Element) {
-      const i = Array.from(this.closest('[data-ds="list-box"]')?.querySelectorAll('[data-part="option"]') ?? []).indexOf(this.closest('[data-part="option"]')!);
-      return new DOMRect(0, i * 32, 200, 32);
+      if (this.matches('[data-ds="list-box"]')) return new DOMRect(0, 0, 200, 64);
+      const i = Array.from(this.closest('[data-ds="list-box"]')?.querySelectorAll('[data-part="option"]') ?? []).indexOf(this);
+      return new DOMRect(0, Math.max(0, i) * 32, 200, 32);
     });
     try {
       const { container, rerender } = render(
@@ -38,21 +35,54 @@ describe('ListBox motion and focus (order 1.22)', () => {
           <ListBox aria-label="Fruit" items={items} virtualFocus highlightedValue="a" />
         </Theme>,
       );
-      const layers = container.querySelectorAll("[data-part='option'] > span:first-child");
-      expect(layers).toHaveLength(2);
-      for (const l of layers) expect(l.getAttribute('aria-hidden')).toBe('true');
+      // No layer per row any more.
+      expect(container.querySelectorAll("[data-part='option'] > span:not([data-part])")).toHaveLength(0);
+      const marker = container.querySelector<HTMLElement>("[data-ds='list-box'] > [data-part='highlight']");
+      expect(marker).not.toBeNull();
+      expect(marker?.getAttribute('aria-hidden')).toBe('true');
+      expect(marker?.parentElement?.lastElementChild).toBe(marker);
+      // First show: at the lit row, shown.
+      expect(marker?.style.transform).toMatch(/^translate\(0px(, 0px)?\)$/);
+      expect(marker?.style.opacity).toBe('1');
       rerender(
         <Theme style="desk">
           <ListBox aria-label="Fruit" items={items} virtualFocus highlightedValue="b" />
         </Theme>,
       );
-      await waitFor(() => expect(animate.mock.calls.some((c) => (c as unknown as [Keyframe[], { id: string }])[1].id === 'ds-motion:flip')).toBe(true));
-      const [frames] = animate.mock.calls.find((c) => (c as unknown as [Keyframe[], { id: string }])[1].id === 'ds-motion:flip') as unknown as [Keyframe[]];
-      // From the old row, 32px above.
-      expect(String(frames[0]?.transform)).toMatch(/translate\(0px, -32px\)/);
+      await waitFor(() => expect(marker?.style.transform).toBe('translate(0px, 32px)'));
+      expect(marker?.style.blockSize).toBe('32px');
+      rerender(
+        <Theme style="desk">
+          <ListBox aria-label="Fruit" items={items} virtualFocus highlightedValue={null} />
+        </Theme>,
+      );
+      await waitFor(() => expect(marker?.style.opacity).toBe('0'));
+    } finally {
+      rect.mockRestore();
+    }
+  });
+
+  it('check-draw-pick: choosing an option draws its check, a first paint does not', async () => {
+    const animate = vi.fn(() => ({ finished: Promise.resolve(), cancel() {} }) as unknown as Animation);
+    const proto = Element.prototype as unknown as { animate?: unknown };
+    const original = proto.animate;
+    proto.animate = animate;
+    try {
+      const { rerender } = render(
+        <Theme style="desk">
+          <ListBox aria-label="Fruit" items={items} value="a" />
+        </Theme>,
+      );
+      const ids = () => animate.mock.calls.map((c) => (c as unknown as [Keyframe[], { id: string }])[1].id);
+      expect(ids()).not.toContain('ds-motion:check-draw-pick');
+      rerender(
+        <Theme style="desk">
+          <ListBox aria-label="Fruit" items={items} value="b" />
+        </Theme>,
+      );
+      expect(ids()).toContain('ds-motion:check-draw-pick');
     } finally {
       proto.animate = original;
-      rect.mockRestore();
     }
   });
 });

@@ -1,25 +1,33 @@
 'use client';
 // CopyButton: copies a value to the clipboard and confirms it. On the Button
-// base. The icon swaps from copy to check (or to warning after a failure),
-// a visually hidden status says the result once, and after the hold time
-// the button returns to idle. Source: GoBanana site `CopyButton.tsx`,
-// `CodeBlock.tsx` and `copy-text.ts` (the failure selects the visible text).
+// base. A visually hidden status says the result once, and after the hold
+// time (delay.feedback) the button returns to idle. Source: GoBanana site
+// `CopyButton.tsx`, `CodeBlock.tsx` and `copy-text.ts` (the failure selects
+// the visible text).
 //
-// The result morph (interaction copy-swap, order 1.22, primitive
-// buttonMorph): when the icon changes, the old icon stays for one morph in
-// an unnamed aria-hidden span after the new one, inside the icon part. The
-// old icon rolls out while the new one arrives one stagger step later: the
-// check turns in from a quarter turn back, grows past rest and settles, and
-// the button swells once (scale.pop over duration.celebrate); the warning
-// pops in and the button shakes once along the inline axis; the copy icon
-// rolls back in from above when the result ends. The span rests at opacity
-// 0 (Button.css) and goes when its exit settles. The clipboard write, the
-// state and the status are never held back by it. With no Web Animations
-// API, or a style that turns the morph off, no span is added.
-import { useEffect, useLayoutEffect, useRef, useState, type MouseEvent } from 'react';
+// The confirmation (interaction copy-swap, order 1.23, proposed) is CSS in
+// CopyButton.css, driven by data-state. Every glyph and every word is in the
+// DOM from the first paint, so nothing mounts or waits:
+//
+//   - The icon part holds the copy, check and warning glyphs of the style's
+//     icon set, stacked in one grid cell. The copy glyph closes into its
+//     centre, the check wipes in along its strokes, the warning pops in.
+//   - The label part holds the three words ("Copy link", "Copied", "Could
+//     not copy") stacked in one grid cell, so the button always keeps the
+//     width of the widest and the width never animates. The words roll up
+//     through the button like a counter. The others are aria-hidden, and
+//     the button's aria-label is the idle word, so the accessible name
+//     never changes.
+//   - The icon only form shows a small bubble above the button with the
+//     result word. It rises and fades. aria-hidden: decoration only.
+//   - The status (role status, polite) gets the result word once per copy:
+//     each copy writes a new text node, so a second copy is heard again, and
+//     going back to idle empties it.
+//
+// A second copy while the result shows restarts the hold time, draws the
+// check again and replays the bubble; it never leaves a stuck state.
+import { useEffect, useRef, useState, type MouseEvent } from 'react';
 import type { IconName } from '@the-system/icons';
-import { buttonMorph, settled, type MorphParts, type MorphState } from '@the-system/motion';
-import { useMotion } from '../../internal/motion';
 import { useTheme } from '../../theme/hooks';
 import { ButtonRoot, renderSlotContent, setRef, type ButtonBaseProps } from '../Button/ButtonBase';
 import { copyToClipboard, readTimeToken, selectTextOf } from './copy';
@@ -39,7 +47,9 @@ export const copyButtonLabels = {
  */
 const HOLD_TOKEN = '--ds-delay-feedback';
 
+/** The glyph of each state, in the order they stack. */
 const icons: Record<CopyButtonState, IconName> = { idle: 'copy', copied: 'check', failed: 'warning' };
+const STATES: readonly CopyButtonState[] = ['idle', 'copied', 'failed'];
 
 export interface CopyButtonProps
   extends Omit<ButtonBaseProps, 'children' | 'aria-label' | 'loading' | 'loadingLabel' | 'asChild' | 'type'> {
@@ -53,9 +63,9 @@ export interface CopyButtonProps
   label?: string;
   /** Shows only the icon; `label` becomes the accessible name. Default false. */
   iconOnly?: boolean;
-  /** What the status says after a copy. Default "Copied" ("تم النسخ"). */
+  /** What the label rolls to and the status says after a copy. Default "Copied" ("تم النسخ"). */
   copiedLabel?: string;
-  /** What the status says after a failure. Default "Could not copy" ("تعذر النسخ"). */
+  /** What the label rolls to and the status says after a failure. Default "Could not copy" ("تعذر النسخ"). */
   failedLabel?: string;
   /** The id of the element that shows the value. A failed copy selects its text, so the keyboard can copy it. */
   target?: string;
@@ -66,19 +76,6 @@ export interface CopyButtonProps
   /** Default ghost: a copy control sits beside the value it copies. */
   emphasis?: ButtonBaseProps['emphasis'];
 }
-
-/** The icon that leaves during a morph, and the states the morph goes between. */
-interface Leaving {
-  id: number;
-  icon: IconName;
-  from: CopyButtonState;
-  to: CopyButtonState;
-}
-
-/** The morph state of each copy state. */
-const morphStates: Record<CopyButtonState, MorphState> = { idle: 'idle', copied: 'success', failed: 'error' };
-/** The morph part that shows in each copy state. */
-const morphSlots: Record<CopyButtonState, 'label' | 'success' | 'error'> = { idle: 'label', copied: 'success', failed: 'error' };
 
 /** A button that copies `value`, with `data-state` idle, copied or failed. */
 export function CopyButton({
@@ -95,51 +92,23 @@ export function CopyButton({
   ...rest
 }: CopyButtonProps) {
   const { lang } = useTheme();
-  const words = lang.startsWith('ar') ? copyButtonLabels.ar : copyButtonLabels.en;
-  const name = label ?? words.label;
+  const defaults = lang.startsWith('ar') ? copyButtonLabels.ar : copyButtonLabels.en;
+  const words: Record<CopyButtonState, string> = {
+    idle: label ?? defaults.label,
+    copied: copiedLabel ?? defaults.copied,
+    failed: failedLabel ?? defaults.failed,
+  };
   const [state, setState] = useState<CopyButtonState>('idle');
-  const [leaving, setLeaving] = useState<Leaving | null>(null);
+  // Counts the results. It keys the check, the bubble and the status text,
+  // so a second copy replays them; 0 means nothing has happened yet, so the
+  // idle word does not roll in on the first paint.
+  const [count, setCount] = useState(0);
+  // The last result, so the bubble keeps its word while it fades out.
+  const [last, setLast] = useState<Exclude<CopyButtonState, 'idle'>>('copied');
   const el = useRef<HTMLButtonElement | null>(null);
-  const iconPart = useRef<HTMLSpanElement | null>(null);
-  const current = useRef<CopyButtonState>('idle');
-  const swaps = useRef(0);
   const timer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
-  const motion = useMotion();
 
   useEffect(() => () => clearTimeout(timer.current), []);
-
-  /** Sets the state at once and, when the icon changes and motion can play, keeps the old icon for the swap. */
-  const change = (next: CopyButtonState) => {
-    const prev = current.current;
-    current.current = next;
-    if (icons[prev] !== icons[next] && typeof el.current?.animate === 'function' && motion.mode('copy-swap') !== 'none') {
-      swaps.current += 1;
-      setLeaving({ id: swaps.current, icon: icons[prev], from: prev, to: next });
-    }
-    setState(next);
-  };
-
-  // Plays the morph on the committed icons, before paint, so the old icon
-  // never shows over the new one at rest. The new icon is the first child of
-  // the icon part, the leaving copy the last.
-  useLayoutEffect(() => {
-    const part = iconPart.current;
-    if (!leaving || !part) return;
-    const incoming = part.firstElementChild;
-    const outgoing = part.lastElementChild;
-    const parts: MorphParts = { root: el.current };
-    if (outgoing && outgoing !== incoming) parts[morphSlots[leaving.from]] = outgoing;
-    if (incoming) parts[morphSlots[leaving.to]] = incoming;
-    const played = buttonMorph(parts, morphStates[leaving.from], morphStates[leaving.to], { mode: motion.mode('copy-swap') });
-    const exit = played.find((a) => (a.effect as KeyframeEffect | null)?.target === outgoing) ?? null;
-    let live = true;
-    void settled(exit).then(() => {
-      if (live) setLeaving((l) => (l?.id === leaving.id ? null : l));
-    });
-    return () => {
-      live = false;
-    };
-  }, [leaving, motion]);
 
   const handleClick = async (event: MouseEvent<HTMLButtonElement>) => {
     onClick?.(event);
@@ -150,12 +119,17 @@ export function CopyButton({
       selectTextOf(target);
       onCopyFailed?.(value);
     }
-    change(ok ? 'copied' : 'failed');
+    const next = ok ? 'copied' : 'failed';
+    setState(next);
+    setLast(next);
+    setCount((n) => n + 1);
     clearTimeout(timer.current);
-    timer.current = setTimeout(() => change('idle'), readTimeToken(el.current, HOLD_TOKEN));
+    timer.current = setTimeout(() => setState('idle'), readTimeToken(el.current, HOLD_TOKEN));
   };
 
-  const status = state === 'copied' ? (copiedLabel ?? words.copied) : state === 'failed' ? (failedLabel ?? words.failed) : '';
+  const status = state === 'idle' ? '' : words[state];
+  /** The word that shows now rolls in, except the idle word on the first paint. */
+  const rolls = (s: CopyButtonState) => s === state && (s !== 'idle' || count > 0);
 
   return (
     <ButtonRoot
@@ -168,21 +142,36 @@ export function CopyButton({
       iconOnly={iconOnly}
       defaultEmphasis="ghost"
       data-state={state}
-      aria-label={iconOnly ? name : undefined}
+      // The name is always the idle word, also with a visible label: the
+      // status inside the button would otherwise join the name while it
+      // speaks ("Copy link Copied"), and the rolling words are aria-hidden.
+      aria-label={words.idle}
       onClick={handleClick}
       render={() => (
         <>
-          <span data-part="icon" ref={iconPart}>
-            {renderSlotContent(icons[state])}
-            {leaving && (
-              <span key={leaving.id} aria-hidden="true">
-                {renderSlotContent(leaving.icon)}
+          <span data-part="icon">
+            {STATES.map((s) => (
+              <span key={s === 'idle' ? s : `${s}-${count}`} data-copy-glyph={s}>
+                {renderSlotContent(icons[s])}
               </span>
-            )}
+            ))}
           </span>
-          {!iconOnly && <span data-part="label">{name}</span>}
+          {!iconOnly && (
+            <span data-part="label">
+              {STATES.map((s) => (
+                <span key={s} data-copy-label={s} data-roll={rolls(s) ? '' : undefined} aria-hidden={s === 'idle' ? undefined : true}>
+                  {words[s]}
+                </span>
+              ))}
+            </span>
+          )}
+          {iconOnly && (
+            <span key={count} data-part="bubble" aria-hidden="true">
+              {words[last]}
+            </span>
+          )}
           <span data-part="status" role="status">
-            {status}
+            {status && <span key={count}>{status}</span>}
           </span>
         </>
       )}

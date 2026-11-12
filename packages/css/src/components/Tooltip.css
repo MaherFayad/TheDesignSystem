@@ -27,6 +27,10 @@
  * out, lets the pointer through.
  *
  *   --_tooltip-enter-scale    the scale the tooltip grows from
+ *   --_tooltip-enter-stretch   order 1.23: the scale along the axis away from the trigger
+ *                                  (the cross axis keeps -enter-scale), so the surface unfolds
+ *                                  out of its trigger instead of growing evenly
+ *   --_tooltip-enter-sx, -enter-sy   working values: the two scales per side (data-side)
  *
  * Motion, order 1.22, proposed. Interaction "tooltip-rise" (pattern
  * "fade-rise"): on a delayed open the tooltip travels distance.shift from
@@ -66,6 +70,9 @@
     --_tooltip-enter-x: 0px;
     --_tooltip-enter-y: 0px;
     --_tooltip-enter-scale: var(--ds-scale-enter);
+    --_tooltip-enter-stretch: calc(var(--_tooltip-enter-scale) * var(--ds-scale-anticipate));
+    --_tooltip-enter-sx: var(--_tooltip-enter-scale);
+    --_tooltip-enter-sy: var(--_tooltip-enter-stretch);
     --_tooltip-duration-in: var(--ds-duration-spring-snappy);
     --_tooltip-duration-out: var(--ds-duration-quick);
     --_tooltip-ease-in: var(--ds-ease-spring-snappy);
@@ -102,10 +109,14 @@
   }
 
   [data-ds='tooltip'][data-side='left'] {
+    --_tooltip-enter-sx: var(--_tooltip-enter-stretch);
+    --_tooltip-enter-sy: var(--_tooltip-enter-scale);
     --_tooltip-enter-x: var(--_tooltip-shift);
   }
 
   [data-ds='tooltip'][data-side='right'] {
+    --_tooltip-enter-sx: var(--_tooltip-enter-stretch);
+    --_tooltip-enter-sy: var(--_tooltip-enter-scale);
     --_tooltip-enter-x: calc(var(--_tooltip-shift) * -1);
   }
 
@@ -155,7 +166,7 @@
   @keyframes ds-tooltip-in {
     from {
       opacity: 0;
-      transform: translate(var(--_tooltip-enter-x), var(--_tooltip-enter-y)) scale(var(--_tooltip-enter-scale));
+      transform: translate(var(--_tooltip-enter-x), var(--_tooltip-enter-y)) scale(var(--_tooltip-enter-sx), var(--_tooltip-enter-sy));
     }
   }
 
@@ -174,7 +185,7 @@
   @keyframes ds-tooltip-out {
     to {
       opacity: 0;
-      transform: translate(var(--_tooltip-enter-x), var(--_tooltip-enter-y)) scale(var(--_tooltip-enter-scale));
+      transform: translate(var(--_tooltip-enter-x), var(--_tooltip-enter-y)) scale(var(--_tooltip-enter-sx), var(--_tooltip-enter-sy));
     }
   }
 

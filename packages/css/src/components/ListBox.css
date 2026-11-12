@@ -37,14 +37,26 @@
  *
  * The popup that holds it carries the enter and exit.
  *
- * Interaction row-glide (order 1.22, proposed): each option holds an
- * unnamed aria-hidden span as its first child, the glide layer. With it
- * the row's fill (--_list-box-option-bg, the highlight) is drawn on the
- * layer, under the row's content, and ListBox.tsx moves the new lit row's
- * layer from the old one's box on the snappy spring with a stretch along
- * the travel (flipPlay). The row never moves. Without the layer (a port
- * that does not render it) the row draws its own fill as before. In forced
- * colors the row keeps the system Highlight and the layer is hidden.
+ * Interaction highlight-marker (order 1.23, proposed; it replaces the
+ * row-glide layer of order 1.22): the list holds one aria-hidden marker,
+ * [data-part='highlight'], its last child. It draws the lit row's fill and
+ * highlightMarker.tsx places it with transform at the lit row's offset, so
+ * the fill slides from row to row on the snappy spring (a CSS transition
+ * on transform, timed by tokens), keeps up with the keys (duration.fast),
+ * jumps with no motion the first time it shows, and fades out when no row
+ * is lit. Alone, the marker also follows the pointer with the hover veil
+ * color. The rows, their hit areas, their text and their ring never move.
+ * While the marker is there the lit row draws no fill of its own; without
+ * it (a port that does not render it) the row draws its fill as before. In
+ * forced colors the marker is hidden and the row keeps the system
+ * Highlight.
+ *
+ *   --_list-box-highlight-bg          the marker fill (the lit row color)
+ *   --_list-box-highlight-duration    its slide, -highlight-ease its curve
+ *
+ * Interaction check-draw-pick: the check of an option chosen now draws
+ * itself (stroke-dashoffset on a stroked glyph, a clip-path wipe on a
+ * filled one), played from ListBox.tsx with the Web Animations API.
  */
 @layer ds.base {
   [data-ds='list-box'] {
@@ -173,24 +185,43 @@
     --_list-box-option-ring: inset 0 0 0 var(--ds-border-width-strong) var(--_list-box-option-ring-color);
   }
 
-  /* row-glide: the layer under the row's content draws the fill; the row keeps its ring and veil. */
-  [data-ds='list-box'] [data-part='option']:has(> span[aria-hidden='true']:not([data-part])) {
+  /*
+   * highlight-marker: the marker draws the fill under the rows; the lit row
+   * keeps its ring and text color. The list is the marker's containing block
+   * and a stacking context, so the marker sits under the rows.
+   */
+  [data-ds='list-box']:has(> [data-part='highlight']) {
+    --_list-box-highlight-bg: var(--_list-box-option-bg-highlight);
+    --_list-box-highlight-duration: var(--ds-duration-spring-snappy);
+    --_list-box-highlight-ease: var(--ds-ease-spring-snappy);
+
     isolation: isolate;
   }
 
-  [data-ds='list-box'] [data-part='option'] > span[aria-hidden='true']:not([data-part]) {
+  [data-ds='list-box'] > [data-part='highlight'] {
     position: absolute;
-    inset: 0;
-    /* Under the row's content, inside the row's own stacking context. */
     z-index: calc(0 - var(--ds-z-raised));
-    border-radius: inherit;
-    background-color: var(--_list-box-option-bg);
+    inset-block-start: 0;
+    inset-inline-start: 0;
+    box-sizing: border-box;
+    border-radius: var(--_list-box-option-radius);
+    background-color: var(--_list-box-highlight-bg);
+    opacity: 0;
     pointer-events: none;
+    transition:
+      transform var(--_list-box-highlight-duration) var(--_list-box-highlight-ease),
+      background-color var(--ds-duration-fast) var(--ds-ease-out),
+      opacity var(--ds-duration-fast) var(--ds-ease-out);
   }
 
   @media (forced-colors: none) {
-    [data-ds='list-box'] [data-part='option']:has(> span[aria-hidden='true']:not([data-part])) {
-      background-color: transparent;
+    [data-ds='list-box']:has(> [data-part='highlight']) [data-part='option'][data-highlighted] {
+      --_list-box-option-bg: transparent;
+    }
+
+    /* Alone, the marker carries the hover veil too. */
+    [data-ds='list-box']:has(> [data-part='highlight']) [data-part='option']::after {
+      display: none;
     }
   }
 
@@ -304,6 +335,17 @@
     overflow-wrap: anywhere;
   }
 
+  /* Reduced motion: the marker jumps and the fill shows at once. */
+  @media (prefers-reduced-motion: reduce) {
+    [data-ds='list-box'] > [data-part='highlight'] {
+      transition: none;
+    }
+  }
+
+  :root[data-motion='reduce'] [data-ds='list-box'] > [data-part='highlight'] {
+    transition: none;
+  }
+
   /* ------------------------------------------------------------ contrast, forced colors */
 
   @media (prefers-contrast: more) {
@@ -332,7 +374,7 @@
     }
 
     [data-ds='list-box'] [data-part='option']::after,
-    [data-ds='list-box'] [data-part='option'] > span[aria-hidden='true']:not([data-part]) {
+    [data-ds='list-box'] > [data-part='highlight'] {
       display: none;
     }
 

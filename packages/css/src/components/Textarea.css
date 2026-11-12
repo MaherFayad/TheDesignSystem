@@ -25,6 +25,15 @@
  * --_textarea-ease-in (the soft spring), and leaves faster on
  * --_textarea-duration-out and --_textarea-ease-out. Only transform and opacity
  * move.
+ *
+ * Order 1.23 (focus-glow, round 3, proposed). The glow layer also blooms:
+ *   --_textarea-bloom          the color of the bloom, a soft halo outside the ring
+ *   --_textarea-bloom-invalid  the bloom while invalid (the danger tint)
+ *   --_textarea-bloom-spread   how far the bloom reaches; 0px turns it off
+ *   --_textarea-bloom-now      the working spread the focus rule sets
+ *   --_textarea-duration, --_textarea-ease   the border color change (focus, hover, invalid)
+ * On focus the bloom's box shadow spreads from 0 on the in timing; on blur it
+ * draws back on the out timing. The ring is not on this layer and shows at once.
  */
 @layer ds.base {
   [data-ds='textarea'] {
@@ -48,6 +57,12 @@
     --_textarea-ease-in: var(--ds-ease-spring-soft);
     --_textarea-ease-out: var(--ds-ease-exit);
     --_textarea-enter-scale: var(--ds-scale-enter);
+    --_textarea-bloom: var(--ds-color-primary-tint-hover);
+    --_textarea-bloom-invalid: var(--ds-color-state-danger-tint-10);
+    --_textarea-bloom-spread: var(--ds-space-s);
+    --_textarea-bloom-now: 0px;
+    --_textarea-duration: var(--ds-duration-base);
+    --_textarea-ease: var(--ds-ease-out);
     --_textarea-count-fg: var(--ds-color-text-muted);
     --_textarea-count-fg-over: var(--ds-color-state-danger-text);
 
@@ -58,6 +73,7 @@
     inline-size: 100%;
     min-inline-size: 0;
     border: var(--ds-border-width-default) solid var(--_textarea-border-color);
+    transition: border-color var(--_textarea-duration) var(--_textarea-ease);
     border-radius: var(--_textarea-radius);
     background-color: var(--_textarea-bg);
     color: var(--_textarea-fg);
@@ -74,13 +90,16 @@
     position: absolute;
     inset: calc(var(--ds-border-width-default) * -1);
     border-radius: inherit;
-    box-shadow: var(--_textarea-shadow-focus);
+    box-shadow:
+      var(--_textarea-shadow-focus),
+      0 0 0 var(--_textarea-bloom-now) var(--_textarea-bloom);
     opacity: 0;
     transform: scale(var(--_textarea-enter-scale));
     pointer-events: none;
     transition:
       opacity var(--_textarea-duration-out) var(--_textarea-ease-out),
-      transform var(--_textarea-duration-out) var(--_textarea-ease-out);
+      transform var(--_textarea-duration-out) var(--_textarea-ease-out),
+      box-shadow var(--_textarea-duration-out) var(--_textarea-ease-out);
   }
 
   [data-ds='textarea'] > * {
@@ -174,6 +193,8 @@
   }
 
   [data-ds='textarea']:focus-within::before {
+    --_textarea-bloom-now: var(--_textarea-bloom-spread);
+
     opacity: 1;
     transform: none;
     transition-duration: var(--_textarea-duration-in);
@@ -218,6 +239,11 @@
 
       color: GrayText;
     }
+  }
+
+  /* Invalid: the bloom takes the danger tint, so focus on a field in error still reads as an error. */
+  [data-ds='textarea'][data-invalid] {
+    --_textarea-bloom: var(--_textarea-bloom-invalid);
   }
 
   /* Reduced motion: the duration tokens are 0ms, and the glow does not grow. */

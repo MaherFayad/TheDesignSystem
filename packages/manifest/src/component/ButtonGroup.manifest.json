@@ -23,10 +23,17 @@
     "A bar of mixed controls with arrow key navigation": "Toolbar",
     "Navigation between pages": "Pagination or Link"
   },
-  "anatomy": ["root"],
+  "anatomy": [
+    "root"
+  ],
   "slots": {
     "root": {
-      "accepts": ["Button", "IconButton", "ToggleButton", "SplitButton"],
+      "accepts": [
+        "Button",
+        "IconButton",
+        "ToggleButton",
+        "SplitButton"
+      ],
       "min": 2,
       "max": 5
     }
@@ -41,20 +48,37 @@
       "description": "The id of a visible heading that names the group. Required unless aria-label is set."
     },
     "size": {
-      "type": ["xs", "sm", "md", "lg"],
+      "type": [
+        "xs",
+        "sm",
+        "md",
+        "lg"
+      ],
       "default": "md",
       "description": "Passed to every child that does not set its own size. Spaced xs and sm groups use the smaller gap."
     },
     "emphasis": {
-      "type": ["solid", "soft", "outline", "ghost"],
+      "type": [
+        "solid",
+        "soft",
+        "outline",
+        "ghost"
+      ],
       "description": "Passed to every child that does not set its own. No default: each child keeps its own default (soft for Button, ghost for IconButton). No link: links are not grouped."
     },
     "shape": {
-      "type": ["default", "pill", "square"],
+      "type": [
+        "default",
+        "pill",
+        "square"
+      ],
       "description": "Passed to every child that does not set its own. No default. Attached, only the outer corners take the shape."
     },
     "orientation": {
-      "type": ["horizontal", "vertical"],
+      "type": [
+        "horizontal",
+        "vertical"
+      ],
       "default": "horizontal",
       "description": "A row or a column. Sets data-orientation. A spaced row wraps; a column stretches its children to the widest."
     },
@@ -74,7 +98,11 @@
       "description": "Two to five Buttons, IconButtons, ToggleButtons or SplitButtons. Tone stays per child."
     }
   },
-  "states": ["data-orientation", "data-attached", "data-full-width"],
+  "states": [
+    "data-orientation",
+    "data-attached",
+    "data-full-width"
+  ],
   "a11y": {
     "role": "group, named by aria-label or aria-labelledby",
     "focus": "No roving focus: every child is its own tab stop, disabled children included (they use aria-disabled). Attached children draw the focus ring inside their box, so the next child never covers it.",
@@ -90,7 +118,8 @@
       "The group adds no keys. Arrow keys do nothing here; a set that should move with arrows is a Toolbar, a ToggleGroup or a SegmentedControl.",
       "Every IconButton child needs its own label: the group name does not name its children.",
       "Tone stays on each child, so a danger action in a group stays danger.",
-      "Under forced colors the system draws every child's border, so the seam stays visible, and the focus outline is pulled inside the child."
+      "Under forced colors the system draws every child's border, so the seam stays visible, and the focus outline is pulled inside the child.",
+      "Motion of round 3 (order 1.23, proposed, interaction segment-press): in an attached group the pressed segment keeps its box; its parts dip to scale.anticipate and sink by Button's --_button-press-y while Button's inner shade comes in, so the segment reads as a key pushed into the row. Neighbors and the seam stay still."
     ]
   },
   "content": {

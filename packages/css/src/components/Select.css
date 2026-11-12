@@ -41,11 +41,25 @@
  * - menu-rows and picker-value-roll are played by Select.tsx: the rows arrive
  *   one stagger step after the surface, and a new value rolls up into the
  *   trigger (the value clips it).
- * - row-glide: each row holds an unnamed aria-hidden span as its first
- *   child that draws the row's fill under its content; Select.tsx moves the
- *   newly lit row's layer from the old one's box (flipPlay). Without the
- *   layer the row draws its own fill. In forced colors the layer hides and
- *   the row keeps the system Highlight.
+ *
+ * Order 1.23 (proposed):
+ * - highlight-marker (it replaces the row-glide layer of order 1.22): the
+ *   viewport holds one aria-hidden marker, [data-part='highlight'], its
+ *   last child. It draws the lit row's fill under the rows and Select.tsx
+ *   (highlightMarker.tsx) places it with transform at the lit row, so the
+ *   fill slides from row to row (the snappy spring for the pointer,
+ *   duration.fast for the keys, a jump the first time). While it is there
+ *   the lit row draws no fill of its own. In forced colors it hides and the
+ *   row keeps the system Highlight.
+ * - menu-origin for the list: the content travels --_menu-shift out of the
+ *   trigger side, grows from scale.menu-enter at the Radix origin and is
+ *   revealed by a clip-path from that side, on the snappy spring. Radix
+ *   Select has no exit presence, so it still leaves at once.
+ * - picker-value-roll: the old label rolls out upward while the new one
+ *   rolls in from below (Select.tsx), clipped by the value part.
+ *   Names beyond the list: --_menu-clip-room, -clip-from, -clip-to (the
+ *   reveal) and --_select-highlight-bg, -highlight-duration,
+ *   -highlight-ease (the marker).
  *   --_select-turn is a name beyond the convention's list: the angle of the
  *   icon while open.
  */
@@ -213,8 +227,16 @@
     --_menu-meta-fg: var(--ds-color-text-muted);
     --_menu-separator-color: var(--ds-color-bg-surface-2);
     --_menu-enter-scale: var(--ds-scale-menu-enter);
-    --_menu-duration-in: var(--ds-duration-base);
-    --_menu-ease-in: var(--ds-ease-emphasized);
+    --_menu-duration-in: var(--ds-duration-spring-snappy);
+    --_menu-ease-in: var(--ds-ease-spring-snappy);
+    --_menu-shift: var(--ds-distance-shift);
+    --_menu-enter-y: 0px;
+    --_menu-clip-room: var(--ds-space-6xl);
+    --_menu-clip-to: inset(calc(var(--_menu-clip-room) * -1));
+    --_menu-clip-from: var(--_menu-clip-to);
+    --_select-highlight-bg: var(--_menu-item-bg-highlight);
+    --_select-highlight-duration: var(--ds-duration-spring-snappy);
+    --_select-highlight-ease: var(--ds-ease-spring-snappy);
     /* The rows: the ListBox option values. */
     --_select-item-height: var(--ds-list-row-height);
     --_select-item-padding-inline: var(--ds-space-m);
@@ -273,9 +295,11 @@
     --_select-item-font-size: var(--ds-font-size-s);
   }
 
+  /* The viewport is the marker's containing block and a stacking context, so the marker sits under the rows. */
   [data-ds='select'][data-part='content'] > [data-part='viewport'] {
     flex: 1 1 auto;
     min-block-size: 0;
+    isolation: isolate;
   }
 
   [data-ds='select'][data-part='content'] > :is([data-part='scroll-up'], [data-part='scroll-down']) {
@@ -317,24 +341,25 @@
     --_select-item-fg: var(--_menu-item-fg-highlight);
   }
 
-  /* row-glide: the layer under the row's content draws the fill. */
-  [data-ds='select'] [data-part='item']:has(> span[aria-hidden='true']:not([data-part])) {
-    isolation: isolate;
-  }
-
-  [data-ds='select'] [data-part='item'] > span[aria-hidden='true']:not([data-part]) {
+  /* highlight-marker: the marker draws the lit row's fill and slides between rows. */
+  [data-ds='select'] [data-part='viewport'] > [data-part='highlight'] {
     position: absolute;
-    inset: 0;
-    /* Under the row's content, inside the row's own stacking context. */
     z-index: calc(0 - var(--ds-z-raised));
-    border-radius: inherit;
-    background-color: var(--_select-item-bg);
+    inset-block-start: 0;
+    inset-inline-start: 0;
+    box-sizing: border-box;
+    border-radius: var(--_select-item-radius);
+    background-color: var(--_select-highlight-bg);
+    opacity: 0;
     pointer-events: none;
+    transition:
+      transform var(--_select-highlight-duration) var(--_select-highlight-ease),
+      opacity var(--ds-duration-fast) var(--ds-ease-out);
   }
 
   @media (forced-colors: none) {
-    [data-ds='select'] [data-part='item']:has(> span[aria-hidden='true']:not([data-part])) {
-      background-color: transparent;
+    [data-ds='select'] [data-part='viewport']:has(> [data-part='highlight']) [data-part='item'][data-highlighted] {
+      --_select-item-bg: transparent;
     }
   }
 
@@ -420,10 +445,30 @@
     animation: ds-select-content-in var(--_menu-duration-in) var(--_menu-ease-in);
   }
 
+  /* menu-origin: out of the trigger side, revealed by the clip from that side. */
+  [data-ds='select'][data-part='content'][data-side='bottom'] {
+    --_menu-enter-y: calc(var(--_menu-shift) * -1);
+    --_menu-clip-from: inset(calc(var(--_menu-clip-room) * -1) calc(var(--_menu-clip-room) * -1) 100% calc(var(--_menu-clip-room) * -1));
+  }
+
+  [data-ds='select'][data-part='content'][data-side='top'] {
+    --_menu-enter-y: var(--_menu-shift);
+    --_menu-clip-from: inset(100% calc(var(--_menu-clip-room) * -1) calc(var(--_menu-clip-room) * -1) calc(var(--_menu-clip-room) * -1));
+  }
+
   @keyframes ds-select-content-in {
     from {
       opacity: 0;
-      transform: scale(var(--_menu-enter-scale));
+      transform: translateY(var(--_menu-enter-y)) scale(var(--_menu-enter-scale));
+      clip-path: var(--_menu-clip-from);
+    }
+
+    40% {
+      opacity: 1;
+    }
+
+    to {
+      clip-path: var(--_menu-clip-to);
     }
   }
 
@@ -433,7 +478,8 @@
     }
 
     [data-ds='select']:not([data-part])::before,
-    [data-ds='select'] > [data-part='icon'] {
+    [data-ds='select'] > [data-part='icon'],
+    [data-ds='select'] [data-part='viewport'] > [data-part='highlight'] {
       transition: none;
     }
   }
@@ -443,7 +489,8 @@
   }
 
   :root[data-motion='reduce'] [data-ds='select']:not([data-part])::before,
-  :root[data-motion='reduce'] [data-ds='select'] > [data-part='icon'] {
+  :root[data-motion='reduce'] [data-ds='select'] > [data-part='icon'],
+  :root[data-motion='reduce'] [data-ds='select'] [data-part='viewport'] > [data-part='highlight'] {
     transition: none;
   }
 
@@ -500,7 +547,7 @@
       forced-color-adjust: none;
     }
 
-    [data-ds='select'] [data-part='item'] > span[aria-hidden='true']:not([data-part]) {
+    [data-ds='select'] [data-part='viewport'] > [data-part='highlight'] {
       display: none;
     }
 

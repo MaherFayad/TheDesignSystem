@@ -18,8 +18,18 @@
 // their Overlay and Content, so the behavior of each primitive stays its own
 // (AlertDialog never closes on an outside click, whatever is passed here).
 //
-// Motion is CSS only. Under reduced motion every animation is none, so Radix
-// unmounts at once and nothing here waits for an animationend.
+// Motion is CSS, but for one beat. Under reduced motion every animation is
+// none, so Radix unmounts at once and nothing here waits for an
+// animationend.
+//
+// Refused (order 1.23, interaction "dialog-refuse"): a press on the backdrop
+// of an AlertDialog (which never closes on an outside click) or of a dialog
+// with dismissible false, and Escape on a dialog with dismissible false, do
+// not close it. The panel nudges instead: the catalog pattern "shake" (two
+// swings of space.3xs inside duration.roll, no change of light), played with
+// the Web Animations API through useMotion, so a style can tune or turn it
+// off and reduced motion leaves it still. A second refusal cancels the first
+// and plays again, so a rapid series never stacks or sticks.
 import {
   createContext,
   use,
@@ -45,6 +55,7 @@ import {
 } from '@the-system/shared';
 import { Theme } from '../../theme/Theme';
 import { useTheme } from '../../theme/hooks';
+import { useMotion } from '../../internal/motion';
 import { isInsideToaster } from '../Toast/isInsideToaster';
 
 /** Sets a ref of any kind. */
@@ -191,6 +202,16 @@ export function DialogBase({
   }, [state.open, settle]);
 
   const panelRef = useRef<HTMLDivElement | null>(null);
+
+  // The refused nudge: one at a time, the newest wins.
+  const motion = useMotion();
+  const refusal = useRef<Animation | null>(null);
+  const refuse = useCallback(() => {
+    refusal.current?.cancel();
+    refusal.current = motion.play(panelRef.current, 'shake', 'dialog-refuse', { dir: theme.dir });
+  }, [motion, theme.dir]);
+  const refusesOutside = kind === 'alert-dialog' || !state.dismissible;
+
   // Where focus goes back (packages/shared dialog-focus.ts), captured on open.
   const returnTo = useRef<{ active: FocusReturn; trigger: FocusReturn } | null>(null);
   const { triggerRef } = state;
@@ -244,6 +265,12 @@ export function DialogBase({
         style={style}
         data-ds={kind}
         data-state={state.open ? 'open' : 'closed'}
+        onPointerDown={(event) => {
+          rootProps?.onPointerDown?.(event);
+          // A press on the backdrop that will not close the overlay: the panel nudges.
+          if (event.button !== 0 || !refusesOutside || !state.open) return;
+          if ((event.target as Element | null)?.getAttribute?.('data-part') === 'backdrop') refuse();
+        }}
       >
         {Backdrop ? <Backdrop {...backdropProps} ref={setBackdropRef} data-part="backdrop" /> : null}
         <Panel
@@ -286,7 +313,10 @@ export function DialogBase({
           }}
           onEscapeKeyDown={(event: KeyboardEvent) => {
             onEscapeKeyDown?.(event);
-            if (!state.dismissible) event.preventDefault();
+            if (!state.dismissible) {
+              event.preventDefault();
+              refuse();
+            }
           }}
           onKeyDown={(event: ReactKeyboardEvent<HTMLDivElement>) => {
             onKeyDown?.(event);

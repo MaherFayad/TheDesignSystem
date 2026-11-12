@@ -41,6 +41,28 @@
  *   --_dialog-handle-color, -drag-y, -drag-duration   Sheet: the handle and the drag
  *
  *   --_dialog-shift                    how far each part of the panel rises as it arrives
+ *   --_dialog-backdrop-blur            how much the backdrop blurs the page behind it; the
+ *                                      blur grows in with the backdrop and goes with it
+ *   --_dialog-part-fade                how long each part takes to become readable (the opacity
+ *                                      of the stagger); the rise carries on after it
+ *   --_dialog-stagger-max              the latest a part starts, so the last one reads in time
+ *   --_dialog-part-delay               working value: when this part starts
+ *
+ * Order 1.23, proposed. The state machine: closed, opening, open, refused,
+ * closing. Opening: the backdrop fades in and its blur grows from nothing to
+ * --_dialog-backdrop-blur (backdrop-filter; where the browser has none, under
+ * reduced transparency and under more contrast the backdrop is a solid scrim
+ * with no blur); the panel rises (a Dialog, an AlertDialog) or comes in from
+ * its edge (a Drawer, a Sheet); its parts arrive one delay.stagger step
+ * apart, and each is readable within --_dialog-part-fade of its start, the
+ * last one starting no later than --_dialog-stagger-max, so all of it reads
+ * within 200ms. Refused: a click outside an AlertDialog, or outside a dialog
+ * that is not dismissible, or Escape on one, does not close it; the panel
+ * nudges instead (DialogBase.tsx plays the catalog pattern "shake", two
+ * swings of space.3xs inside duration.roll, interaction "dialog-refuse"),
+ * once per refusal, never more than three a second in practice and with no
+ * change of light. Closing: the panel and the backdrop leave faster than
+ * they came, all at once, and the blur goes with the backdrop.
  *
  * Motion, order 1.22, proposed. Interaction "dialog-spring" (pattern
  * "dialog"): the backdrop fades in while the panel rises distance.enter and
@@ -62,8 +84,8 @@
  * state change never waits for them. A style turns the travel off with
  * --_dialog-enter-y: 0px, --_dialog-enter-scale: 1 and --_dialog-shift: 0px
  * (a dialog), or --_dialog-slide: 0% and --_dialog-enter-opacity: 0 (a
- * drawer or a sheet), which leaves fades. Only transform and opacity
- * animate. Under reduced motion, and under data-motion="reduce" on the root
+ * drawer or a sheet), which leaves fades. transform, opacity and the
+ * backdrop's backdrop-filter animate. Under reduced motion, and under data-motion="reduce" on the root
  * element, the animations are none: Radix then removes the closed dialog
  * at once and never waits for an animationend.
  */
@@ -95,7 +117,10 @@
     --_dialog-band-padding-block: var(--ds-space-l);
     --_dialog-band-padding-inline: var(--ds-space-xl);
     --_dialog-scrim: var(--ds-color-bg-scrim);
-    --_dialog-scrim-filter: blur(var(--ds-blur-backdrop));
+    --_dialog-backdrop-blur: var(--ds-blur-backdrop);
+    --_dialog-scrim-filter: blur(var(--_dialog-backdrop-blur));
+    --_dialog-part-fade: var(--ds-duration-fast);
+    --_dialog-stagger-max: var(--ds-duration-base);
     --_dialog-enter-y: var(--ds-distance-enter);
     --_dialog-enter-scale: var(--ds-scale-dialog-enter);
     --_dialog-shift: var(--ds-distance-shift);
@@ -164,12 +189,13 @@
     backdrop-filter: var(--_dialog-scrim-filter);
   }
 
+  /* The scrim fades in on the panel's curve, and the blur behind it grows from nothing; both leave faster. */
   :is([data-ds='dialog'], [data-ds='alert-dialog'], [data-ds='drawer'], [data-ds='sheet']) > [data-part='backdrop'][data-state='open'] {
-    animation: ds-dialog-fade-in var(--_dialog-duration-in) var(--_dialog-ease-in);
+    animation: ds-dialog-backdrop-in var(--_dialog-duration-in) var(--_dialog-ease-in);
   }
 
   :is([data-ds='dialog'], [data-ds='alert-dialog'], [data-ds='drawer'], [data-ds='sheet']) > [data-part='backdrop'][data-state='closed'] {
-    animation: ds-dialog-fade-out var(--_dialog-duration-out) var(--_dialog-ease-out) forwards;
+    animation: ds-dialog-backdrop-out var(--_dialog-duration-out) var(--_dialog-ease-out) forwards;
   }
 
   /* ------------------------------------------------------------ panel */
@@ -217,20 +243,24 @@
    * control come with the panel.
    */
   :is([data-ds='dialog'], [data-ds='alert-dialog'], [data-ds='drawer'], [data-ds='sheet']) > [data-part='panel'][data-state='open'] > :is([data-part='header'], [data-part='title'], [data-part='description'], [data-part='body'], [data-part='footer']):not(:focus-within) {
-    animation: ds-dialog-part-in var(--ds-duration-spring-soft) var(--ds-ease-spring-soft) backwards;
-    animation-delay: var(--ds-delay-stagger);
+    /* Two runs: the part is readable after --_dialog-part-fade, the rise settles on the soft spring. */
+    --_dialog-part-delay: var(--ds-delay-stagger);
+
+    animation:
+      ds-dialog-part-fade var(--_dialog-part-fade) var(--ds-ease-out) var(--_dialog-part-delay) backwards,
+      ds-dialog-part-in var(--ds-duration-spring-soft) var(--ds-ease-spring-soft) var(--_dialog-part-delay) backwards;
   }
 
   :is([data-ds='dialog'], [data-ds='alert-dialog'], [data-ds='drawer'], [data-ds='sheet']) > [data-part='panel'][data-state='open'] > [data-part='description']:not(:focus-within) {
-    animation-delay: min(calc(var(--ds-delay-stagger) * 2), var(--ds-duration-base));
+    --_dialog-part-delay: min(calc(var(--ds-delay-stagger) * 2), var(--_dialog-stagger-max));
   }
 
   :is([data-ds='dialog'], [data-ds='alert-dialog'], [data-ds='drawer'], [data-ds='sheet']) > [data-part='panel'][data-state='open'] > [data-part='body']:not(:focus-within) {
-    animation-delay: min(calc(var(--ds-delay-stagger) * 3), var(--ds-duration-base));
+    --_dialog-part-delay: min(calc(var(--ds-delay-stagger) * 3), var(--_dialog-stagger-max));
   }
 
   :is([data-ds='dialog'], [data-ds='alert-dialog'], [data-ds='drawer'], [data-ds='sheet']) > [data-part='panel'][data-state='open'] > [data-part='footer']:not(:focus-within) {
-    animation-delay: min(calc(var(--ds-delay-stagger) * 4), var(--ds-duration-base));
+    --_dialog-part-delay: min(calc(var(--ds-delay-stagger) * 4), var(--_dialog-stagger-max));
   }
 
   /* The AlertDialog icon lands: it pops from scale.morph on the bouncy spring, with the title. */
@@ -657,13 +687,17 @@
    * (docs/reports/fixes).
    */
   :root:has([data-ds='sheet'] > [data-part='panel'][data-state='open']) [data-ds='toaster'][data-position^='bottom'] {
+    --_toaster-dir: 1;
+
     flex-direction: column-reverse;
+    align-items: start;
     inset-block-start: var(--_toaster-inset-block-start);
     inset-block-end: auto;
   }
 
-  :root:has([data-ds='sheet'] > [data-part='panel'][data-state='open']) [data-ds='toaster'][data-position^='bottom'] > [data-ds='toast'] {
-    --_toast-enter-y: calc(-1 * var(--ds-space-xs));
+  :root:has([data-ds='sheet'] > [data-part='panel'][data-state='open']) [data-ds='toaster'][data-stacked][data-position^='bottom'] > [data-ds='toast'] {
+    transform-origin: 50% 100%;
+    clip-path: inset(var(--_toast-strip) calc(var(--_toast-shadow-room) * -1) calc(var(--_toast-shadow-room) * -1) calc(var(--_toast-shadow-room) * -1));
   }
 
   [data-ds='sheet'] > [data-part='panel'][data-state='closed'] {
@@ -717,13 +751,13 @@
 
   @keyframes ds-dialog-part-in {
     from {
-      opacity: 0;
       transform: translateY(var(--_dialog-shift));
     }
+  }
 
-    /* Readable early: full opacity at 30%, the transform carries the rest. */
-    30% {
-      opacity: 1;
+  @keyframes ds-dialog-part-fade {
+    from {
+      opacity: 0;
     }
   }
 
@@ -746,15 +780,24 @@
     }
   }
 
-  @keyframes ds-dialog-fade-in {
+  /* Full opacity in the first third, as the panel; the blur keeps growing over the whole run. */
+  @keyframes ds-dialog-backdrop-in {
     from {
       opacity: 0;
+      -webkit-backdrop-filter: blur(0);
+      backdrop-filter: blur(0);
+    }
+
+    33% {
+      opacity: 1;
     }
   }
 
-  @keyframes ds-dialog-fade-out {
+  @keyframes ds-dialog-backdrop-out {
     to {
       opacity: 0;
+      -webkit-backdrop-filter: blur(0);
+      backdrop-filter: blur(0);
     }
   }
 
@@ -810,9 +853,19 @@
 
   /* ------------------------------------------------------------ transparency, contrast, forced colors */
 
+  /* No backdrop filter in this browser: a solid scrim, no blur to grow. */
+  @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+    :is([data-ds='dialog'], [data-ds='alert-dialog'], [data-ds='drawer'], [data-ds='sheet']) {
+      --_dialog-backdrop-blur: 0px;
+      --_dialog-scrim-filter: none;
+      --_dialog-scrim: var(--ds-color-bg-scrim-80);
+    }
+  }
+
   /* Nothing to see through: the scrim and the panel stop blurring (the tokens make the materials solid). */
   @media (prefers-reduced-transparency: reduce) {
     :is([data-ds='dialog'], [data-ds='alert-dialog'], [data-ds='drawer'], [data-ds='sheet']) {
+      --_dialog-backdrop-blur: 0px;
       --_dialog-backdrop: none;
       --_dialog-scrim-filter: none;
       --_dialog-scrim: var(--ds-color-bg-scrim-80);
@@ -821,6 +874,7 @@
 
   @media (prefers-contrast: more) {
     :is([data-ds='dialog'], [data-ds='alert-dialog'], [data-ds='drawer'], [data-ds='sheet']) {
+      --_dialog-backdrop-blur: 0px;
       --_dialog-backdrop: none;
       --_dialog-scrim-filter: none;
       --_dialog-scrim: var(--ds-color-bg-scrim-80);
@@ -829,6 +883,7 @@
   }
 
   [data-contrast='more'] :is([data-ds='dialog'], [data-ds='alert-dialog'], [data-ds='drawer'], [data-ds='sheet']) {
+    --_dialog-backdrop-blur: 0px;
     --_dialog-backdrop: none;
     --_dialog-scrim-filter: none;
     --_dialog-scrim: var(--ds-color-bg-scrim-80);
@@ -838,6 +893,7 @@
   /* Forced colors drop shadows and the scrim: a border draws the panel, the outline draws focus. */
   @media (forced-colors: active) {
     :is([data-ds='dialog'], [data-ds='alert-dialog'], [data-ds='drawer'], [data-ds='sheet']) {
+      --_dialog-backdrop-blur: 0px;
       --_dialog-bg: Canvas;
       --_dialog-backdrop: none;
       --_dialog-scrim-filter: none;

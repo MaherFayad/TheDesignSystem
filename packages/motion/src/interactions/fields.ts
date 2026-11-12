@@ -1,4 +1,4 @@
-// Interactions of the text inputs and forms family (orders 1.21 and 1.22).
+// Interactions of the text inputs and forms family (orders 1.21 to 1.23).
 // See ./types.ts for the shape. Timings in the beats are the base values
 // per style: Neutral, Desk, Studio.
 import type { Interaction } from './types';
@@ -9,6 +9,7 @@ const glowOff = (c: string) =>
     [`--_${c}-duration-in`]: '0s',
     [`--_${c}-duration-out`]: '0s',
     [`--_${c}-enter-scale`]: '1',
+    [`--_${c}-bloom-spread`]: '0px',
   }) as Readonly<Record<`--_${string}`, string>>;
 
 export const fieldsInteractions = [
@@ -17,20 +18,21 @@ export const fieldsInteractions = [
     components: ['Input', 'PasswordField', 'OTPField', 'NumberField', 'SearchField', 'Textarea', 'PhoneField', 'ScrubInput'],
     pattern: 'fade',
     drive: 'css',
-    trigger: 'The field takes focus, or loses it.',
+    trigger: 'The field takes focus, or loses it. Hover and a change to invalid move the border too.',
     feedback:
-      'The focus ring is the root box shadow and shows at once. The glow behind it (the ::before layer) fades in and grows from scale.enter on the soft spring; on blur it leaves faster, over duration.quick on ease.exit. In OTPField it follows the active cell.',
+      'Rest, hover, focus, blur. The focus ring is the root box shadow and shows on the first frame. The border color eases to its focus color. Behind the ring the glow layer (::before) fades in and grows from scale.enter, and its box shadow blooms: a soft halo in the primary tint spreads out from the edge to --_<field>-bloom-spread on the soft spring. On blur the halo draws back and the glow fades over duration.quick, faster than it came. An invalid field blooms in the danger tint. In OTPField the bloom follows the active cell.',
     beats: [
-      'Action, at once: the 2px ring and the focus border show on the first frame (WCAG 2.4.7). The ring is never on a layer that fades or scales.',
-      'Layer: the glow fades in and grows from scale.enter (Neutral 0.97, Desk 0.9, Studio 1) on ease.spring-soft over duration.spring-soft (Neutral 220ms, Desk 340ms with a 1% settle, Studio 100ms on a plain curve).',
-      'Exit: the glow fades and shrinks over duration.quick (100ms) on ease.exit, faster than it came.',
+      'Action, at once: the 2px ring shows on the first frame (WCAG 2.4.7). The ring is never on a layer that fades, scales or blooms.',
+      'Border: the border color eases to the focus color over duration.base (120ms) on ease.out; hover and invalid use the same timing.',
+      'Bloom: the halo box shadow spreads from 0 to space.s in primary.tint-hover, and the glow fades in from scale.enter, on ease.spring-soft over duration.spring-soft (Neutral 220ms, Desk 340ms with a soft settle, Studio 100ms).',
+      'Exit: the halo draws back and the glow fades over duration.quick (100ms) on ease.exit.',
     ],
     styles: {
-      studio: 'ring and glow at once, no growth',
-      desk: 'the glow blooms from 90% and settles',
-      neutral: 'a short soft grow from 97%',
+      studio: 'ring at once, a short hard bloom',
+      desk: 'a wide bloom that settles',
+      neutral: 'a soft 8px halo in 220ms',
     },
-    reduced: 'The ring and the glow show at once and do not grow (every duration token is 0ms, the start scale is 1).',
+    reduced: 'The ring, the border color and the halo show at once (every duration token is 0ms); the glow does not grow.',
     off: {
       "[data-ds='input']": glowOff('input'),
       "[data-ds='password-field']": glowOff('password-field'),
@@ -41,7 +43,7 @@ export const fieldsInteractions = [
       "[data-ds='phone-field']": glowOff('phone-field'),
       "[data-ds='scrub-input']": glowOff('scrub-input'),
     },
-    round: 2,
+    round: 3,
     status: 'proposed',
   },
   {
@@ -55,7 +57,7 @@ export const fieldsInteractions = [
     beats: [
       'Action: the box swings distance.shift toward the inline end (Neutral 4px, Desk 6px), then back about two thirds of it.',
       'Settle: two smaller swings, distance.nudge and half of it, then rest, all inside duration.spring-bouncy (Neutral 220ms, Desk 440ms) on ease.out. RTL swings the other way first.',
-      'Secondary: the Field error slides in under the control on the same frame (field-error-enter).',
+      'Secondary: the border eases to the danger color over duration.base, and the Field error comes out from under the control on the same frame (field-error-enter).',
     ],
     styles: {
       studio: 'none: the error color and message carry it',
@@ -63,7 +65,7 @@ export const fieldsInteractions = [
       neutral: 'a short swing that settles in 220ms',
     },
     reduced: 'No motion. The error color and the Field message carry the state.',
-    round: 2,
+    round: 3,
     status: 'proposed',
   },
   {
@@ -113,42 +115,41 @@ export const fieldsInteractions = [
     drive: 'waapi',
     trigger: 'An error message renders after its Field first painted, for example after a submit or a check.',
     feedback:
-      'The error slides down from distance.shift above, out from under the control, and fades in on the soft spring; one stagger step later its icon lands from scale.morph past full size on the bouncy spring. The control shakes on the same frame. The message is read at once; the content below moves down at once, since height may not animate.',
+      'The message comes out from under the control: it slides down a full line from behind its own top edge, which a clip-path holds still, so it is never seen floating over the field, and fades in on the soft spring. One stagger step later its icon lands from scale.morph past full size on the bouncy spring. The control shakes and its border turns the danger color on the same frame. The message is read at once; the content below moves down at once, since height may not animate.',
     beats: [
-      'Action: the message slides from distance.shift above and fades in, ease.spring-soft over duration.spring-soft (Neutral 220ms, Desk 340ms, Studio 100ms).',
+      'Action: translateY(-100%) to rest with clip-path inset(100% 0 0 0) to inset(0), opacity full by 30%, on ease.spring-soft over duration.spring-soft (Neutral 220ms, Desk 340ms, Studio 100ms).',
       'Overshoot: after delay.stagger (24ms, 45ms, 0ms) the danger icon grows from scale.morph (0.5, 0.3, 0.8) on ease.spring-bouncy over duration.spring-bouncy (220ms, 440ms landing about 25% past, 120ms in three steps).',
-      'Secondary: the control shakes once (error-shake).',
+      'Secondary: the control shakes once (error-shake) and its border eases to the danger color (focus-glow timing).',
     ],
     styles: {
-      studio: 'a short fade, the icon steps in',
-      desk: 'the icon lands big and settles',
-      neutral: 'a 4px slide, a small icon pop',
+      studio: 'a short reveal, the icon steps in',
+      desk: 'a slow reveal, the icon lands big',
+      neutral: 'a 220ms reveal, a small icon pop',
     },
     reduced: 'The message fades in; the icon does not move.',
-    round: 2,
+    round: 3,
     status: 'proposed',
   },
   {
     id: 'password-reveal',
     components: ['PasswordField'],
     pattern: 'swap',
-    primitive: 'icon-morph',
     drive: 'waapi',
     trigger: 'A press on the show or hide toggle.',
     feedback:
-      'The input type changes at once. The eye turns into the eye off glyph (or back): the old glyph turns a quarter and shrinks out while the new one turns in and lands past full size. The field text fades back in.',
+      'The input type changes at once. The eye and the eye off glyph of the style icon set trade places along a diagonal line, so showing the password draws the slash across the eye from the top left, and hiding wipes it off from the bottom right. The two glyphs sit in one cell; the button keeps its size. The field text fades back in.',
     beats: [
-      'Action: the type changes on the press; the old glyph turns 90 degrees and shrinks to scale.morph while it fades, over duration.morph (Neutral 200ms, Desk 320ms, Studio 100ms) on ease.exit.',
-      'Overshoot: the new glyph turns in from the other side and lands on ease.spring-bouncy (220ms, 440ms, 120ms). Hiding turns the other way.',
+      'Action: on the press the type changes. A 45 degree line crosses the glyph cell over duration.morph (Neutral 200ms, Desk 320ms, Studio 100ms) on ease.standard: the arriving glyph is clipped to what the line has passed (clip-path polygon), the leaving one to what it has not.',
+      'Direction: show runs from the top left corner, hide from the bottom right, so the slash is drawn on and wiped off along its own stroke.',
       'Secondary: the field text fades back in over duration.base.',
     ],
     styles: {
-      studio: 'a hard cut in steps',
-      desk: 'a wide turn and a big land',
-      neutral: 'a quick turn with a small land',
+      studio: 'a fast wipe in 100ms',
+      desk: 'a slow drawn slash',
+      neutral: 'a 200ms wipe',
     },
-    reduced: 'The glyphs and the text cross fade, with no turn.',
-    round: 2,
+    reduced: 'The glyphs cross fade, with no wipe.',
+    round: 3,
     status: 'proposed',
   },
   {
@@ -359,18 +360,19 @@ export const fieldsInteractions = [
     drive: 'waapi',
     trigger: 'A submit passes every check and the form turns submitted.',
     feedback:
-      'The buttons of the actions part take one celebrate beat: each rises to scale.pop and springs back, as one short run from the first. The form is already sent and announced; nothing waits.',
+      'A success mark appears after the buttons (the success-mark part, aria-hidden): it lands from scale.morph past full size, its ring draws itself with stroke-dashoffset, then its tick draws. At the same time the buttons take one celebrate beat, each rising to scale.pop and springing back as a short run. The form is already sent and announced; nothing waits.',
     beats: [
-      'Action: each button grows to scale.pop (1.05, 1.14, 1) over the first third on ease.out, then springs back on ease.spring-bouncy, inside duration.celebrate (220ms, 480ms, 120ms).',
-      'Stagger: the starts spread over two delay.stagger steps in all.',
+      'Land: the mark grows from scale.morph and fades in on ease.spring-bouncy over duration.spring-bouncy (Neutral 220ms, Desk 440ms landing about 25% past).',
+      'Draw: the ring draws over duration.morph (200ms, 320ms, 100ms) on ease.standard; the tick follows --_form-mark-wait (duration.quick) later on the same timing.',
+      'Secondary: each button grows to scale.pop over the first third on ease.out, then springs back on ease.spring-bouncy, inside duration.celebrate, the starts spread over two delay.stagger steps.',
     ],
     styles: {
-      studio: 'none (scale.pop is 1)',
-      desk: 'a big happy bounce',
-      neutral: 'a small pop',
+      studio: 'the mark draws fast, no pop',
+      desk: 'a big landing mark and a happy bounce',
+      neutral: 'a drawn tick in about 300ms',
     },
-    reduced: 'No motion. The status message says the form was sent.',
-    round: 2,
+    reduced: 'The mark shows at once, drawn; the buttons do not move. The status message says the form was sent.',
+    round: 3,
     status: 'proposed',
   },
   {
@@ -402,17 +404,18 @@ export const fieldsInteractions = [
     drive: 'waapi',
     trigger: 'The wizard form is sent (state done).',
     feedback:
-      'Every Stepper mark dips and springs back, as one short wave from the first: the celebrate beat of the wizard. The done title and status show at once.',
+      'The done title gets a success mark before its words (the success-mark part, aria-hidden): the mark lands from scale.morph, its ring draws with stroke-dashoffset, then its tick. Every Stepper mark dips and springs back as one short wave from the first. The done title and status show at once.',
     beats: [
-      'Action: each mark dips to scale.anticipate and springs back past rest on ease.spring-bouncy over duration.spring-bouncy, the starts spread over two delay.stagger steps.',
+      'Land and draw: as form-submit-success, the ring over duration.morph on ease.standard, the tick --_form-wizard-mark-wait later.',
+      'Wave: each Stepper mark dips to scale.anticipate and springs back past rest on ease.spring-bouncy over duration.spring-bouncy, the starts spread over two delay.stagger steps.',
     ],
     styles: {
-      studio: 'a 3% dip in steps',
-      desk: 'a bouncing wave',
-      neutral: 'a small quick wave',
+      studio: 'a fast draw, marks step',
+      desk: 'a big mark and a bouncing wave',
+      neutral: 'a drawn tick and a small wave',
     },
-    reduced: 'No motion.',
-    round: 2,
+    reduced: 'The mark shows at once, drawn; the Stepper marks do not move.',
+    round: 3,
     status: 'proposed',
   },
   {
@@ -444,19 +447,19 @@ export const fieldsInteractions = [
     drive: 'waapi',
     trigger: 'The person picks a score by click, an arrow key, Home or End.',
     feedback:
-      'Only the stars whose state changed move. Stars that fill land from scale.morph past full size, as one run spread over two stagger steps; the chosen star lands on the bouncy spring, the ones before it on the snappy spring. Stars that empty dip and spring back. A new pick restarts the run. Stars that keep their state never blink.',
+      'The chosen star and every star before it pop as one short run from the first star. Stars that were already filled bounce (a dip and a spring back, no fade, so they never blink); stars that fill land from scale.morph past full size; the chosen star lands on the bouncy spring, the others on the snappy spring. Stars that empty dip and spring back together. A new pick restarts the run.',
     beats: [
-      'Action: each new star grows from scale.morph and fades in over the first third, on ease.spring-snappy (Neutral 180ms, Desk 300ms).',
-      'Overshoot: the chosen star on ease.spring-bouncy over duration.spring-bouncy (220ms, 440ms landing about 25% past, 120ms in steps).',
-      'Stagger: starts spread over two delay.stagger steps in all, so Neutral ends by about 270ms whatever the run.',
+      'Run: starts spread evenly over two delay.stagger steps from the first star to the chosen one (Neutral 48ms in all, Desk 90ms).',
+      'Land: a star that fills grows from scale.morph and fades in over the first third on ease.spring-snappy (Neutral 180ms, Desk 300ms); the chosen star on ease.spring-bouncy over duration.spring-bouncy (220ms, 440ms landing about 25% past, 120ms in steps).',
+      'Bounce: a star already filled dips to scale.anticipate and springs back on ease.spring-bouncy.',
     ],
     styles: {
-      studio: 'stars step in together',
+      studio: 'new stars step in, no bounce',
       desk: 'a bouncy run to the pick',
-      neutral: 'a short run',
+      neutral: 'a short run in about 270ms',
     },
-    reduced: 'The new stars fade in; stars that empty change at once.',
-    round: 2,
+    reduced: 'The new stars fade in; the others change at once.',
+    round: 3,
     status: 'proposed',
   },
   {
@@ -464,21 +467,22 @@ export const fieldsInteractions = [
     components: ['Rating'],
     pattern: 'pop',
     drive: 'css',
-    trigger: 'The pointer moves over a star (the hover preview).',
+    trigger: 'The pointer moves over the stars (the hover preview), and leaves them.',
     feedback:
-      'The fill color changes at once. The icon of each star that joins the preview dips to scale.anticipate and springs back past rest, the star under the pointer two stagger steps late and the one before it one step, so the fill runs toward the pointer. A star that stays in the preview does not replay.',
+      'The color sweeps from the first star to the pointer. Each star holds a filled glyph in the hover color (the fill part, aria-hidden), clipped away toward the inline start at rest; when the star joins the preview its clip opens toward the inline end, each star one --_rating-sweep after the one before, so the fill runs like a wipe up to the pointer. The star under the pointer dips and springs back as the sweep reaches it. Moving back closes the clips past the pointer at once. RTL sweeps from the right.',
     beats: [
-      'Anticipation and overshoot: from scale.anticipate (0.95, 0.9, 0.97) back to rest on ease.spring-bouncy over duration.spring-bouncy (220ms, 440ms, 120ms).',
-      'Stagger: delay.stagger for the star before the pointer, two for the star under it.',
+      'Sweep: clip-path inset(0 100% 0 0) to inset(0) over duration.base (120ms) on ease.out, star n waits n times delay.stagger (Neutral 24ms, Desk 45ms, Studio 0ms).',
+      'Answer: the star under the pointer dips to scale.anticipate and springs back on ease.spring-bouncy over duration.spring-bouncy, as the sweep reaches it.',
+      'Leave: the clips close together over duration.base with no wait.',
     ],
     styles: {
-      studio: 'a 3% dip in steps, no stagger',
-      desk: 'a deep dip and a bounce toward the pointer',
-      neutral: 'a small dip in 220ms',
+      studio: 'all stars fill together',
+      desk: 'a slow sweep with a deep answer',
+      neutral: 'a quick sweep in about 220ms',
     },
-    reduced: 'The preview color changes at once with no dip.',
-    off: { "[data-ds='rating']": { '--_rating-enter-scale': '1' } },
-    round: 2,
+    reduced: 'The preview color shows at once, with no sweep and no dip.',
+    off: { "[data-ds='rating']": { '--_rating-enter-scale': '1', '--_rating-sweep': '0s' } },
+    round: 3,
     status: 'proposed',
   },
   {
@@ -486,20 +490,21 @@ export const fieldsInteractions = [
     components: ['Slider', 'RangeSlider'],
     pattern: 'press',
     drive: 'css',
-    trigger: 'Hold a slider thumb, or the track, with a pointer, and let go.',
+    trigger: 'Hover a slider thumb, hold it (or the track) with a pointer, and let go.',
     feedback:
-      'The grabbed thumb grows to scale.stretch from its center on the snappy spring, and on release it springs back on the bouncy spring, under its size and back. The value follows the pointer at once.',
+      'Rest, hover, press, drag, release. On hover a soft halo (the state layer, a box shadow on the thumb edge layer) spreads around the thumb. On press the thumb grows to scale.stretch from its center on the snappy spring and keeps the halo while held. On release it springs back on the bouncy spring, past its size and back. The value follows the pointer at once.',
     beats: [
-      'Action: the thumb grows to scale.stretch (Neutral 1.15, Desk 1.3, Studio 1.08) on ease.spring-snappy over duration.spring-snappy (180, 300, 80ms).',
+      'Hover: the halo spreads from 0 to space.xs in primary.tint-hover on ease.spring-snappy over duration.spring-snappy.',
+      'Press: the thumb grows to scale.stretch (Neutral 1.15, Desk 1.3, Studio 1.08) on ease.spring-snappy over duration.spring-snappy (180, 300, 80ms).',
       'Release and overshoot: it returns on ease.spring-bouncy over duration.spring-bouncy (220, 440, 120ms) and dips under its size before it settles.',
     ],
-    styles: { neutral: 'a small lift', desk: 'a large lift and a bouncy release', studio: 'a small lift in steps' },
-    reduced: 'No motion: the thumb keeps its size; the grab cursor and the focus ring carry the state.',
+    styles: { neutral: 'a soft halo, a small lift', desk: 'a large lift and a bouncy release', studio: 'a small lift in steps' },
+    reduced: 'The thumb keeps its size; the halo shows at once; the grab cursor and the focus ring carry the state.',
     off: {
       "[data-ds='slider']": { '--_slider-lift': '1' },
       "[data-ds='range-slider']": { '--_slider-lift': '1' },
     },
-    round: 2,
+    round: 3,
     status: 'proposed',
   },
   {
@@ -526,10 +531,52 @@ export const fieldsInteractions = [
     components: ['Slider', 'RangeSlider'],
     pattern: 'shake',
     drive: 'waapi',
-    trigger: 'A key or a drag pushes a thumb past the minimum or the maximum of a horizontal slider.',
+    trigger: 'A key pushes a thumb past the minimum or the maximum of a horizontal slider. A drag past the end pulls instead (slider-rubber-band).',
     feedback:
-      'The thumb nudges space.3xs toward that end and back once (shake, one swing, toward) over duration.base on ease.out, added on top of the lift. A held key nudges once; a drag nudges once each time it goes past the end.',
+      'The thumb nudges toward that end and back once (shake, one swing, toward) over duration.base on ease.out, added on top of the lift. A held key nudges once.',
+    beats: ['Action: one swing of distance.shift toward the end and back, over duration.base on ease.out, composite add.'],
+    styles: { neutral: 'a 4px swing', desk: 'a 6px swing', studio: 'none' },
     reduced: 'No motion: the value stays at its end.',
+    round: 3,
+    status: 'proposed',
+  },
+  {
+    id: 'slider-fill',
+    components: ['Slider', 'RangeSlider'],
+    pattern: 'tab-indicator',
+    drive: 'waapi',
+    trigger: 'The value changes by a key, a press on the track, or a new controlled value. A drag does not glide.',
+    feedback:
+      'The fill (the track ::before, a clip-path from --_slider-from to --_slider-to) and the thumb glide from the old value to the new one together: the fill clip on the snappy spring, the thumb wrapper by a FLIP transform on the same timing, added to its own place. From the first move of a drag both follow the pointer exactly, and a glide in flight stops.',
+    beats: [
+      'Action: clip-path and translateX from the old place to the new on ease.spring-snappy over duration.spring-snappy (Neutral 180ms, Desk 300ms with about 10% overshoot, Studio 80ms).',
+      'Follow: while a pointer drags, no glide: the fill edge stays under the thumb center on every frame.',
+      'A second change while one plays starts from where the fill is drawn.',
+    ],
+    styles: { neutral: 'a quick glide', desk: 'a glide that overshoots a little', studio: 'a near jump in 80ms' },
+    reduced: 'The fill and the thumb land at once.',
+    round: 3,
+    status: 'proposed',
+  },
+  {
+    id: 'slider-rubber-band',
+    components: ['Slider', 'RangeSlider'],
+    pattern: 'drag-drop',
+    drive: 'css',
+    trigger: 'A drag on a horizontal slider goes past the minimum or the maximum, and lets go.',
+    feedback:
+      'The outer thumb of that end follows the pointer past the end of the track with resistance, and the fill stretches out with it, up to --_slider-pull-max (twice distance.enter). The further the pointer goes, the less it gives: the pull is 1 minus 1 over (1 plus distance over the thumb size). On release the thumb and the fill spring back to the end on the bouncy spring, past it and back.',
+    beats: [
+      'Pull: the thumb translates by the pull times --_slider-pull-max (Neutral 12px at most, Desk 24px, Studio 8px); the fill clip reaches the same place.',
+      'Release: the thumb transform returns on ease.spring-bouncy over duration.spring-bouncy (220, 440, 120ms); the fill clip on the same spring (slider-fill).',
+    ],
+    styles: { neutral: 'a 12px pull', desk: 'a long elastic pull', studio: 'a short stop' },
+    reduced: 'No pull: the thumb stops at the end (--_slider-pull-max is 0px).',
+    off: {
+      "[data-ds='slider']": { '--_slider-pull-max': '0px' },
+      "[data-ds='range-slider']": { '--_slider-pull-max': '0px' },
+    },
+    round: 3,
     status: 'proposed',
   },
 ] as const satisfies readonly Interaction[];

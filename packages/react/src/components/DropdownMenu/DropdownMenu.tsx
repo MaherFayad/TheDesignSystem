@@ -77,6 +77,7 @@ import {
   ITEM_SELECTOR,
   IndicatorGlyph,
   ItemContent,
+  MenuHighlight,
   TRIGGER_GAP,
   VIEWPORT_GUTTER,
   assignRef,
@@ -256,6 +257,7 @@ export function DropdownMenuContent({
       data-size={ctx.size}
     >
       {children}
+      <MenuHighlight />
     </RadixMenu.Content>,
   );
 }
@@ -481,6 +483,7 @@ export function DropdownMenuSubContent({
       data-size={ctx.size}
     >
       {children}
+      <MenuHighlight />
     </RadixMenu.SubContent>,
   );
 }

@@ -4,8 +4,9 @@
 // A beat is one Web Animations API animation with token timing: its
 // duration, delay and ease are read from the element's live CSS variables,
 // so a style changes the feel through its tokens and reduced motion (every
-// duration and delay token 0ms) lands it at once. Only transform and opacity
-// move. A keyframe may name an ease token in `easing` (`ease.spring-bouncy`)
+// duration and delay token 0ms) lands it at once. Transform and opacity
+// move, and since order 1.23 the paint properties of the motion ruling
+// (clip-path, stroke-dashoffset, box-shadow, colors). A keyframe may name an ease token in `easing` (`ease.spring-bouncy`)
 // for the segment it starts, so one animation can hold an anticipation on
 // one curve and a spring on another.
 //
@@ -158,6 +159,67 @@ export function slideIn(extra: Partial<Beat> = {}, from = `translateY(calc(-1 * 
     keyframes: readableEnter(from),
     duration: 'duration.spring-soft',
     easing: 'ease.spring-soft',
+    ...extra,
+  };
+}
+
+/**
+ * A message that comes out from under the control above it (order 1.23):
+ * it slides down a full line from behind its own top edge, which a
+ * clip-path holds still, so the text appears to emerge from under the
+ * control rather than float in. Opacity is full by READABLE_AT; the soft
+ * spring carries the slide. Text never overshoots.
+ */
+export function emerge(extra: Partial<Beat> = {}): Beat {
+  return {
+    keyframes: [
+      { transform: 'translateY(-100%)', clipPath: 'inset(100% 0 0 0)', opacity: 0, offset: 0 },
+      { opacity: 1, offset: READABLE_AT },
+      { transform: 'none', clipPath: 'inset(0 0 0 0)', opacity: 1, offset: 1 },
+    ],
+    duration: 'duration.spring-soft',
+    easing: 'ease.spring-soft',
+    ...extra,
+  };
+}
+
+/** The fade a reduced exit plays: opacity only. */
+export const fadeOutBeat: Beat = {
+  keyframes: [{ opacity: 1 }, { opacity: 0 }],
+  duration: 'duration.base',
+  easing: 'ease.out',
+};
+
+/** A point of a clip-path polygon in percent of the box. */
+const at = (x: number, y: number, flip: boolean) => (flip ? `${100 - x}% ${100 - y}%` : `${x}% ${y}%`);
+const polygon = (points: [number, number][], flip: boolean) => `polygon(${points.map(([x, y]) => at(x, y, flip)).join(', ')})`;
+
+/**
+ * A diagonal wipe (order 1.23, password-reveal): a line at 45 degrees
+ * travels across the box from the top left corner to the bottom right one
+ * (`back` runs it the other way). `side: 'behind'` keeps what the line has
+ * passed (the glyph that arrives), `side: 'ahead'` keeps what it has not
+ * passed yet (the glyph that leaves), so two glyphs in one cell trade places
+ * along the line, which reads as a slash drawn across an eye, or wiped off
+ * it. Each frame is a five point polygon, so the line stays straight at
+ * every step.
+ */
+export function diagonalWipe(side: 'behind' | 'ahead', back = false, extra: Partial<Beat> = {}): Beat {
+  const behind: [number, number][][] = [
+    [[0, 0], [0, 0], [0, 0], [0, 0], [0, 0]],
+    [[0, 0], [100, 0], [100, 0], [0, 100], [0, 100]],
+    [[0, 0], [100, 0], [100, 100], [100, 100], [0, 100]],
+  ];
+  const ahead: [number, number][][] = [
+    [[0, 0], [100, 0], [100, 100], [0, 100], [0, 0]],
+    [[100, 0], [100, 0], [100, 100], [0, 100], [0, 100]],
+    [[100, 100], [100, 100], [100, 100], [100, 100], [100, 100]],
+  ];
+  const frames = side === 'behind' ? behind : ahead;
+  return {
+    keyframes: frames.map((f, i) => ({ clipPath: polygon(f, back), offset: i / 2 })),
+    duration: 'duration.morph',
+    easing: 'ease.standard',
     ...extra,
   };
 }

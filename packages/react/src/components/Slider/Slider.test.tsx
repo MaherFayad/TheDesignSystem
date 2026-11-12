@@ -7,6 +7,8 @@ import { Theme } from '../../theme/Theme';
 import { Field } from '../Field/Field';
 import SliderDemo from './Slider.demo';
 import { formatSliderValue, Slider } from './index';
+import { rubberBand } from './Slider';
+import { RangeSlider } from '../RangeSlider';
 
 // jsdom has no ResizeObserver; Radix Slider measures the thumb with it.
 beforeAll(() => {
@@ -247,35 +249,70 @@ describe('Slider', () => {
       expect(reduced).toMatch(/--_slider-lift: 1;/);
     });
 
-    it('nudges once when a drag goes past the end of the track, and again only after it comes back', () =>
-      withAnimate((animate) => {
-        const rect = vi.spyOn(Element.prototype, 'getBoundingClientRect').mockReturnValue(new DOMRect(0, 0, 100, 24));
-        const capture = vi.spyOn(Element.prototype, 'hasPointerCapture').mockReturnValue(true);
-        try {
-          render(
-            <Theme style="desk">
-              <Slider aria-label="Volume" defaultValue={40} />
-            </Theme>,
-          );
-          const control = document.querySelector<HTMLElement>('[data-part="control"]')!;
-          // The value bubble rolls its digits during the drag (slider-bubble); count the nudges only.
-          const nudges = () => animate.mock.calls.filter((c) => (c as unknown as [Keyframe[], KeyframeAnimationOptions])[1].id === 'ds-motion:shake') as unknown as [Keyframe[], KeyframeAnimationOptions][];
-          fireEvent.pointerDown(control, { pointerId: 1, button: 0, clientX: 40 });
-          fireEvent.pointerMove(control, { pointerId: 1, clientX: 90 });
-          expect(nudges()).toHaveLength(0);
-          fireEvent.pointerMove(control, { pointerId: 1, clientX: 130 });
-          fireEvent.pointerMove(control, { pointerId: 1, clientX: 140 });
-          expect(nudges()).toHaveLength(1);
-          expect(String(nudges()[0]![0][1]?.transform)).toMatch(/^translateX\(calc\(1 \* /);
-          fireEvent.pointerMove(control, { pointerId: 1, clientX: 50 });
-          fireEvent.pointerMove(control, { pointerId: 1, clientX: -20 });
-          expect(nudges()).toHaveLength(2);
-          expect(String(nudges()[1]![0][1]?.transform)).toMatch(/^translateX\(calc\(-1 \* /);
-        } finally {
-          rect.mockRestore();
-          capture.mockRestore();
-        }
-      }));
+    it('slider-rubber-band: a drag past the end pulls the thumb and the fill with resistance, and lets go on release', () => {
+      const rect = vi.spyOn(Element.prototype, 'getBoundingClientRect').mockReturnValue(new DOMRect(0, 0, 100, 24));
+      const capture = vi.spyOn(Element.prototype, 'hasPointerCapture').mockReturnValue(true);
+      const width = vi.spyOn(HTMLElement.prototype, 'offsetWidth', 'get').mockReturnValue(24);
+      try {
+        const { container } = render(
+          <Theme style="desk">
+            <Slider aria-label="Volume" defaultValue={40} />
+          </Theme>,
+        );
+        const el = root(container);
+        const pull = (end: 'start' | 'end') => Number(el.style.getPropertyValue(`--_slider-pull-${end}`));
+        const control = container.querySelector<HTMLElement>('[data-part="control"]')!;
+        fireEvent.pointerDown(control, { pointerId: 1, button: 0, clientX: 40 });
+        fireEvent.pointerMove(control, { pointerId: 1, clientX: 90 });
+        expect(pull('end')).toBe(0);
+        fireEvent.pointerMove(control, { pointerId: 1, clientX: 124 });
+        const near = pull('end');
+        expect(near).toBeGreaterThan(0);
+        fireEvent.pointerMove(control, { pointerId: 1, clientX: 400 });
+        const far = pull('end');
+        // It resists: further out pulls more, but never the whole way.
+        expect(far).toBeGreaterThan(near);
+        expect(far).toBeLessThan(1);
+        expect(pull('start')).toBe(0);
+        fireEvent.pointerMove(control, { pointerId: 1, clientX: -30 });
+        expect(pull('end')).toBe(0);
+        expect(pull('start')).toBeGreaterThan(0);
+        fireEvent.lostPointerCapture(control, { pointerId: 1 });
+        expect(pull('start')).toBe(0);
+        expect(pull('end')).toBe(0);
+      } finally {
+        rect.mockRestore();
+        capture.mockRestore();
+        width.mockRestore();
+      }
+    });
+
+    it('slider-rubber-band: the pull rises with the distance and stays under 1', () => {
+      expect(rubberBand(0, 24)).toBe(0);
+      expect(rubberBand(24, 24)).toBe(0.5);
+      expect(rubberBand(72, 24)).toBe(0.75);
+      expect(rubberBand(10, 0)).toBe(0);
+    });
+
+    it('slider-fill: the root carries where the fill starts and ends', () => {
+      const one = render(<Slider aria-label="Volume" min={0} max={200} defaultValue={50} />);
+      expect(root(one.container).style.getPropertyValue('--_slider-from')).toBe('0');
+      expect(root(one.container).style.getPropertyValue('--_slider-to')).toBe('0.25');
+      one.unmount();
+      const two = render(<RangeSlider thumbLabels={['Lowest', 'Highest']} defaultValue={[20, 80]} />);
+      const range = two.container.querySelector<HTMLElement>('[data-ds="range-slider"]')!;
+      expect(range.style.getPropertyValue('--_slider-from')).toBe('0.2');
+      expect(range.style.getPropertyValue('--_slider-to')).toBe('0.8');
+    });
+
+    it('slider-fill: the fill is a clip-path on the track, and the range has no paint', () => {
+      const css = readFileSync(join(process.cwd(), 'packages/css/src/components/Slider.css'), 'utf8').replace(/\/\*[\s\S]*?\*\//g, '');
+      const at = css.indexOf("> [data-part='track']::before {");
+      expect(css.slice(at, css.indexOf('}', at))).toMatch(/clip-path: inset\(0 var\(--_slider-clip-right\) 0 var\(--_slider-clip-left\)/);
+      const range = css.indexOf("> [data-part='track'] > [data-part='range'] {");
+      expect(css.slice(range, css.indexOf('}', range))).not.toMatch(/background/);
+      expect(css).not.toMatch(/transition[^;]*\b(width|inset|left|right)\b/);
+    });
 
     it('marks the root while a pointer holds the thumb', () => {
       const { container } = render(<Slider aria-label="Volume" defaultValue={40} />);

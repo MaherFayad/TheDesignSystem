@@ -20,38 +20,80 @@
  *                                let go, in the swipe direction (data-swipe-direction)
  *   --_toast-icon-enter-scale    where the icon pops from (a part name and a motion name)
  *
- * Order 1.22 (proposed): the enter is a spring. The toast travels in from
- * the toaster's edge on the bouncy spring (duration.spring-bouncy), so it
- * lands a little past its place in Desk and settles; one stagger step later
- * its icon pops from scale.morph on the bouncy spring (the icon beat). The
- * exit is faster than the enter (duration.toast-exit on ease.exit). The
- * swipe let go short springs back on the snappy spring. The stack moves
- * with the flip primitive (flipPlay, from Toaster.tsx).
+ * Order 1.23 (proposed). Interactions "toast-enter", "toast-stack",
+ * "toast-swipe" and "toast-timer". The state machine of one toast:
+ * entering, stacked (behind the front one), expanded (the stack opened into
+ * a list), swiping, leaving.
  *
- * Motion, interaction "toast-stack" (pattern "toast"): data-state open
- * plays ds-toast-in, a travel of space.xs from the toaster's edge and a
- * scale from scale.enter while it fades in (the bouncy spring, see below);
- * closed plays ds-toast-out, a fade and shrink in place
- * (duration.toast-exit, ease.exit). The toasts already in the stack move
- * to make room with a transform played from Toaster.tsx (a FLIP), never by
- * animating layout. Radix keeps the toast mounted until the exit animation
- * ends. Under reduced motion every toast animation is none, so Radix
- * unmounts a closed toast at once and never waits for an animationend that
- * a 0ms animation might not send. A style turns the travel and the scale
- * off with --_toast-enter-y: 0px and --_toast-enter-scale: 1, which leaves
- * a fade.
+ *   entering  data-state open plays ds-toast-in: the toast comes in from
+ *             its edge (--_toast-enter-y, its own height by default) on the
+ *             bouncy spring, readable by 30% of the run; one stagger step
+ *             later its icon pops from scale.morph.
+ *   stacked   on a toaster with data-stacked (the React Toaster sets it;
+ *             without it the toasts sit in a plain list) the toasts share
+ *             one grid cell. Toaster.tsx (stack.ts) writes
+ *             each one's place: --_toast-index (0 is the front),
+ *             --_toast-height and --_toast-offset, and on the toaster
+ *             --_toaster-front-height and --_toaster-height. A toast behind
+ *             the front one moves so its near edge peeks --_toast-peek past
+ *             the one in front of it, shrinks by --_toast-depth a step, and
+ *             is clipped to that strip (clip-path), so nothing of it shows
+ *             through a glass front toast. From the fourth one back it is
+ *             hidden. translate, scale, clip-path and opacity transition on
+ *             --_toast-stack-duration and --_toast-stack-ease (the snappy
+ *             spring), so a toast that joins or leaves pushes the others
+ *             back or brings them forward.
+ *   expanded  while the pointer is over the toasts or focus is inside them
+ *             the toaster carries data-expanded: each toast travels to its
+ *             place in a list (--_toast-offset, the toasts in front of it
+ *             plus the gaps) and unclips, on the same transition; the
+ *             toaster takes the pointer over the whole list, gaps included,
+ *             so moving between two toasts keeps it open. Leaving collapses
+ *             it again. The front toast never moves under the pointer.
+ *   swiping   the toast follows the finger toward its edge (data-swipe move,
+ *             the --radix-toast-swipe-move-x and -y the Toaster writes, no
+ *             transition); against the edge it gives a little and no more
+ *             (a rubber band, swipe.ts). Let go short (data-swipe cancel)
+ *             it springs back on the snappy spring; past the distance, or
+ *             flung fast enough (data-swipe end), it travels on out in the
+ *             swipe direction while it fades (duration.toast-exit, ease.exit)
+ *             from --radix-toast-swipe-end-x and -y.
+ *   leaving   data-state closed plays ds-toast-out: it fades and shrinks to
+ *             --_toast-enter-scale, faster than it came.
  *
- * Interaction "toast-swipe": swipe to dismiss moves the toast with the
- * pointer through the Radix variables --radix-toast-swipe-move-x and -y
- * (no transition: it follows the finger). Let go short of the threshold
- * (data-swipe cancel), it springs back on the snappy spring; past it (data-swipe end), it travels on out in the swipe
- * direction while it fades (duration.toast-exit, ease.exit), from
- * --radix-toast-swipe-end-x and -y. Radix variables are not tokens: Radix
- * sets them on the element. A style turns the spring back and the travel
- * off with --_toast-duration: 0s and --_toast-swipe-x and -y at 0%, which
- * leaves a fade. The close button is the button path for the same action
- * (WCAG 2.5.7). The pause on hover and focus (WCAG 2.2.1, 2.2.2) is the
- * Toaster's: nothing here takes it away.
+ * The progress line ("toast-timer"): a timed toast shows how much of its
+ * time is left as a line on its block end edge, the `progress` part. It is
+ * a scaleX from 1 to 0 over the toast's own duration (--_toast-life, set
+ * by the Toaster from the store), linear, and its play state pauses while
+ * the toaster carries data-paused: the same moments the store pauses its
+ * timer (hover, focus inside, window blurred, tab hidden), so the line and
+ * the timer never drift apart and the toast never closes while paused
+ * (WCAG 2.2.1). Danger toasts and toasts with an action have no line: they
+ * stay until closed.
+ *
+ * New private properties of order 1.23 (besides the motion names):
+ *   --_toast-peek            how far each toast behind peeks past the one in front
+ *   --_toast-depth           how much smaller each step back is (a share of 1)
+ *   --_toast-stack-duration, -stack-ease   the stack transition
+ *   --_toast-progress        the color of the progress line
+ *   --_toast-progress-thickness   its thickness
+ *   --_toast-index, -height, -offset, --_toaster-front-height, -height,
+ *   --_toaster-dir           working values: Toaster.tsx writes the first
+ *                            five; --_toaster-dir is -1 when the stack grows
+ *                            up from the bottom edge and 1 from the top
+ *   --_toast-life            working value: the toast's duration, set inline
+ *   --_toaster-gap           the gap between toasts in the list
+ *   --_toast-shadow-room     how far past its box a clipped toast keeps its shadow
+ *   --_toast-strip           working value: how much of a toast behind is clipped away
+ *   --_toast-swipe-duration-now   working value: 0s while the toast follows the finger
+ *
+ * A style tunes the stack with --_toast-peek and --_toast-depth, turns the
+ * travel off with --_toast-enter-y: 0px and --_toast-enter-scale: 1, and the
+ * spring back with --_toast-duration: 0s. The close button is the button
+ * path for a swipe (WCAG 2.5.7). Under reduced motion every animation and
+ * transition is none: the stack takes its places at once, Radix unmounts a
+ * closed toast at once and never waits for an animationend, and the
+ * progress line is not drawn.
  */
 @layer ds.base {
   /* ------------------------------------------------------------ portal layer */
@@ -70,20 +112,46 @@
     --_toaster-inset-block-end: calc(var(--ds-toast-inset) + env(safe-area-inset-bottom, 0px));
     --_toaster-inset-block-start: calc(var(--ds-toast-inset) + env(safe-area-inset-top, 0px));
     --_toaster-inset-inline: calc(var(--ds-toast-inset) + max(env(safe-area-inset-left, 0px), env(safe-area-inset-right, 0px)));
+    --_toaster-gap: var(--ds-space-s);
+    --_toaster-dir: -1;
+    --_toaster-front-height: 0px;
+    --_toaster-height: 0px;
 
     position: fixed;
     z-index: var(--ds-z-toast);
     display: flex;
     flex-direction: column;
-    gap: var(--ds-space-s);
+    gap: var(--_toaster-gap);
     box-sizing: border-box;
     /* Fixed, so 100% is the viewport width. */
     inline-size: min(var(--ds-toast-width-max), calc(100% - 2 * var(--_toaster-inset-inline)));
     margin: 0;
     padding: 0;
     list-style: none;
-    /* The gaps between toasts do not block the page; the toasts take the pointer. */
+    /* Around a collapsed stack the page stays usable; the toasts take the pointer. */
     pointer-events: none;
+  }
+
+  /*
+   * Stacked (data-stacked, set by a Toaster that measures its toasts): one
+   * grid cell, the toasts overlap and stack.ts places them. Without it (a
+   * framework that does not measure yet) the toasts sit in a plain list.
+   * The gap is read by stack.ts for the expanded list.
+   */
+  [data-ds='toaster'][data-stacked] {
+    display: grid;
+    grid-template-areas: 'stack';
+    align-items: end;
+  }
+
+  [data-ds='toaster'][data-stacked] > [data-ds='toast'] {
+    grid-area: stack;
+  }
+
+  /* Expanded: the list takes the pointer over its whole height, gaps included, so it stays open between two toasts. */
+  [data-ds='toaster'][data-stacked][data-expanded] {
+    min-block-size: var(--_toaster-height);
+    pointer-events: auto;
   }
 
   /*
@@ -111,15 +179,23 @@
     margin-inline: auto;
   }
 
-  /* At the top the newest toast is first, nearest the edge. */
-  [data-ds='toaster'][data-position='top-end'] {
+  /* At the top the newest toast is nearest the edge, and the list and the stack grow down. */
+  [data-ds='toaster'][data-position^='top'] {
+    --_toaster-dir: 1;
+
     flex-direction: column-reverse;
+  }
+
+  [data-ds='toaster'][data-stacked][data-position^='top'] {
+    align-items: start;
+  }
+
+  [data-ds='toaster'][data-position='top-end'] {
     inset-block-start: var(--_toaster-inset-block-start);
     inset-inline-end: var(--_toaster-inset-inline);
   }
 
   [data-ds='toaster'][data-position='top-center'] {
-    flex-direction: column-reverse;
     inset-block-start: var(--_toaster-inset-block-start);
     inset-inline: 0;
     margin-inline: auto;
@@ -147,7 +223,21 @@
     --_toast-icon-enter-scale: var(--ds-scale-morph);
     --_toast-swipe-x: 0%;
     --_toast-swipe-y: 0%;
+    --_toast-peek: var(--ds-space-s);
+    --_toast-depth: calc(1 - var(--ds-scale-anticipate));
+    --_toast-stack-duration: var(--ds-duration-spring-snappy);
+    --_toast-stack-ease: var(--ds-ease-spring-snappy);
+    --_toast-progress: var(--_toast-edge);
+    --_toast-progress-thickness: var(--ds-border-width-strong);
+    --_toast-index: 0;
+    --_toast-height: 0px;
+    --_toast-offset: 0px;
+    /* Room for the shadow around a clipped toast, so the clip only ever cuts the strip edge. */
+    --_toast-shadow-room: var(--ds-space-3xl);
+    /* Working value: how long the spring back of a swipe takes now; 0s while the toast follows the finger. */
+    --_toast-swipe-duration-now: var(--_toast-duration);
 
+    position: relative;
     display: grid;
     grid-template-columns: var(--ds-size-icon-md) minmax(0, 1fr) auto;
     grid-template-areas:
@@ -178,16 +268,24 @@
   }
 
   /* Inside a toaster: the enter and the exit. The toast's own focus ring is the base :focus-visible outline (Radix makes it a tab stop). */
+  [data-ds='toaster'] > [data-ds='toast'] {
+    /* From its own edge: up from below at the bottom, down from above at the top. */
+    --_toast-enter-y: calc(-100% * var(--_toaster-dir));
+
+    transition:
+      translate var(--_toast-stack-duration) var(--_toast-stack-ease),
+      scale var(--_toast-stack-duration) var(--_toast-stack-ease),
+      clip-path var(--_toast-stack-duration) var(--_toast-stack-ease),
+      opacity var(--_toast-stack-duration) var(--_toast-stack-ease),
+      transform var(--_toast-swipe-duration-now) var(--_toast-ease);
+  }
+
   [data-ds='toaster'] > [data-ds='toast'][data-state='open'] {
     animation: ds-toast-in var(--_toast-duration-in) var(--_toast-ease-in);
   }
 
   [data-ds='toaster'] > [data-ds='toast'][data-state='closed'] {
     animation: ds-toast-out var(--_toast-duration-out) var(--_toast-ease-out);
-  }
-
-  [data-ds='toaster'][data-position^='top'] > [data-ds='toast'] {
-    --_toast-enter-y: calc(-1 * var(--ds-space-xs));
   }
 
   /* The icon beat: the icon pops one stagger step after the card. */
@@ -226,6 +324,40 @@
     }
   }
 
+  /* ------------------------------------------------------------ stack */
+
+  /*
+   * Collapsed: a toast behind the front one moves so its near edge peeks
+   * --_toast-peek past the toast in front of it, shrinks a step from that
+   * edge, and is clipped to the strip that shows. The front toast (index 0)
+   * gets no move, no shrink and no clip from the same formulas. The clip
+   * keeps --_toast-shadow-room on the other sides, so it never cuts a shadow.
+   */
+  [data-ds='toaster'][data-stacked] > [data-ds='toast'] {
+    --_toast-strip: calc((var(--_toast-height) - var(--_toast-peek)) * min(var(--_toast-index), 1));
+
+    translate: 0 calc(var(--_toaster-dir) * (var(--_toaster-front-height) + var(--_toast-index) * var(--_toast-peek) - var(--_toast-height)));
+    scale: calc(1 - var(--_toast-index) * var(--_toast-depth));
+    /* From the fourth toast back, it is hidden. */
+    opacity: clamp(0, calc(3 - var(--_toast-index)), 1);
+    transform-origin: 50% 0;
+    clip-path: inset(calc(var(--_toast-shadow-room) * -1) calc(var(--_toast-shadow-room) * -1) var(--_toast-strip) calc(var(--_toast-shadow-room) * -1));
+  }
+
+  [data-ds='toaster'][data-stacked][data-position^='top'] > [data-ds='toast'] {
+    transform-origin: 50% 100%;
+    clip-path: inset(var(--_toast-strip) calc(var(--_toast-shadow-room) * -1) calc(var(--_toast-shadow-room) * -1) calc(var(--_toast-shadow-room) * -1));
+  }
+
+  /* Expanded: each toast travels to its place in the list and unclips. */
+  [data-ds='toaster'][data-stacked][data-expanded] > [data-ds='toast'] {
+    --_toast-strip: calc(var(--_toast-shadow-room) * -1);
+
+    translate: 0 calc(var(--_toaster-dir) * var(--_toast-offset));
+    scale: 1;
+    opacity: 1;
+  }
+
   /* ------------------------------------------------------------ swipe */
 
   /* The swipe direction is physical, as Radix names it: the toast leaves the way the finger went. */
@@ -245,13 +377,23 @@
     --_toast-swipe-y: -100%;
   }
 
+  /* Following the finger: no transition, the rubber band is in the numbers the Toaster writes. */
   [data-ds='toast'][data-swipe='move'] {
+    --_toast-swipe-duration-now: 0s;
+
     transform: translateX(var(--radix-toast-swipe-move-x, 0px)) translateY(var(--radix-toast-swipe-move-y, 0px));
   }
 
+  /* Let go short: back to rest on the snappy spring (the transition of the toast reads --_toast-duration). */
   [data-ds='toast'][data-swipe='cancel'] {
     transform: none;
-    transition: transform var(--_toast-duration) var(--_toast-ease);
+  }
+
+  /* Let go past the threshold: held where it was let go until the exit takes it on out. */
+  [data-ds='toast'][data-swipe='end'] {
+    --_toast-swipe-duration-now: 0s;
+
+    transform: translateX(var(--radix-toast-swipe-end-x, 0px)) translateY(var(--radix-toast-swipe-end-y, 0px));
   }
 
   [data-ds='toaster'] > [data-ds='toast'][data-state='closed'][data-swipe='end'] {
@@ -266,6 +408,42 @@
     to {
       opacity: 0;
       transform: translateX(calc(var(--radix-toast-swipe-end-x, 0px) + var(--_toast-swipe-x))) translateY(calc(var(--radix-toast-swipe-end-y, 0px) + var(--_toast-swipe-y)));
+    }
+  }
+
+  /* ------------------------------------------------------------ progress (interaction "toast-timer") */
+
+  /*
+   * The time left of a timed toast, on its block end edge between the
+   * corner radii. It shrinks toward the inline start over the toast's own
+   * duration and pauses with the store (data-paused on the toaster).
+   */
+  [data-ds='toast'] > [data-part='progress'] {
+    position: absolute;
+    inset-block-end: 0;
+    inset-inline: var(--_toast-radius);
+    block-size: var(--_toast-progress-thickness);
+    background-color: var(--_toast-progress);
+    transform-origin: 0 50%;
+    pointer-events: none;
+    animation: ds-toast-progress var(--_toast-life, 0s) linear forwards;
+  }
+
+  [data-ds='toast'] > [data-part='progress']:dir(rtl) {
+    transform-origin: 100% 50%;
+  }
+
+  [data-ds='toaster'][data-paused] > [data-ds='toast'] > [data-part='progress'] {
+    animation-play-state: paused;
+  }
+
+  @keyframes ds-toast-progress {
+    from {
+      transform: scaleX(1);
+    }
+
+    to {
+      transform: scaleX(0);
     }
   }
 
@@ -362,8 +540,14 @@
       animation: none;
     }
 
-    [data-ds='toast'][data-swipe='cancel'] {
+    /* The stack takes its places at once; a swipe let go short is back at once. */
+    [data-ds='toaster'] > [data-ds='toast'] {
       transition: none;
+    }
+
+    /* A moving line is motion: the timer still runs and pauses, the line is not drawn. */
+    [data-ds='toast'] > [data-part='progress'] {
+      display: none;
     }
   }
 
@@ -372,8 +556,12 @@
     animation: none;
   }
 
-  :root[data-motion='reduce'] [data-ds='toast'][data-swipe='cancel'] {
+  :root[data-motion='reduce'] [data-ds='toaster'] > [data-ds='toast'] {
     transition: none;
+  }
+
+  :root[data-motion='reduce'] [data-ds='toast'] > [data-part='progress'] {
+    display: none;
   }
 
   /* The material tokens turn solid here; the blur goes with them. */
@@ -400,6 +588,7 @@
     [data-ds='toast'] {
       --_toast-border-color: CanvasText;
       --_toast-edge: CanvasText;
+      --_toast-progress: CanvasText;
       --_toast-blur: 0;
       --_toast-shadow: none;
     }
@@ -409,6 +598,11 @@
     [data-ds='toaster'] > [data-ds='toast'][data-state='closed'],
     [data-ds='toaster'] > [data-ds='toast'][data-state='closed'][data-swipe='end'] {
       animation: none;
+    }
+
+    /* The line keeps its own color: forced colors would paint every background as Canvas. */
+    [data-ds='toast'] > [data-part='progress'] {
+      forced-color-adjust: none;
     }
   }
 }

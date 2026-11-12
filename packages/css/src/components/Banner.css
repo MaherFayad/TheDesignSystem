@@ -29,6 +29,13 @@
  * A style turns the travel off with the enter values at rest, which leaves a
  * fade. Under reduced motion (media query or data-motion="reduce") there is
  * no animation.
+ * Round 3 (order 1.23, proposed): the surface is uncovered with clip-path, a wipe from the inline start (--_banner-reveal, mirrored in RTL), while it rises; it no longer grows (--_banner-enter-scale defaults to 1). The icon
+ * beat adds a halo: as the icon lands, a ring in the icon color (box-shadow)
+ * grows from it by distance.shift and fades, once.
+ *
+ *   --_banner-reveal       the clip the surface starts from; a name outside the
+ *                       list in anatomy.md: a clip-path
+ *   --_banner-icon-halo    the halo color (default the icon color, transparent turns it off)
  */
 @layer ds.base {
   [data-ds='banner'] {
@@ -46,6 +53,8 @@
     --_banner-fg: var(--ds-color-text-default);
     --_banner-border-color: var(--_banner-tone-edge);
     --_banner-icon: var(--_banner-tone-text);
+    --_banner-icon-halo: var(--_banner-icon);
+    --_banner-reveal: inset(0 100% 0 0);
     --_banner-enter-y: calc(-1 * var(--ds-distance-enter));
     --_banner-duration-in: var(--ds-duration-spring-soft);
     --_banner-ease-in: var(--ds-ease-spring-soft);
@@ -75,8 +84,13 @@
     animation: ds-banner-in var(--_banner-duration-in) var(--_banner-ease-in);
   }
 
+  [data-ds='banner']:dir(rtl) {
+    --_banner-reveal: inset(0 0 0 100%);
+  }
+
   @keyframes ds-banner-in {
     from {
+      clip-path: var(--_banner-reveal);
       opacity: 0;
       transform: translateY(var(--_banner-enter-y));
     }
@@ -85,14 +99,20 @@
     30% {
       opacity: 1;
     }
+
+    to {
+      clip-path: inset(0);
+    }
   }
 
   [data-ds='banner'] > [data-part='icon'] {
+    border-radius: var(--ds-radius-pill);
     animation: ds-banner-icon-in var(--ds-duration-spring-bouncy) var(--ds-ease-spring-bouncy) var(--ds-delay-stagger) backwards;
   }
 
   @keyframes ds-banner-icon-in {
     from {
+      box-shadow: 0 0 0 0 var(--_banner-icon-halo);
       opacity: 0;
       transform: scale(var(--_banner-icon-enter-scale));
     }
@@ -100,6 +120,10 @@
     /* Readable early: full opacity by 30% of the run (READABLE_AT); the transform settles over all of it. */
     30% {
       opacity: 1;
+    }
+
+    to {
+      box-shadow: 0 0 0 var(--ds-distance-shift) transparent;
     }
   }
 

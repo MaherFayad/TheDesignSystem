@@ -35,7 +35,7 @@ const fruit = [
 ];
 
 describe('picker motion (order 1.22)', () => {
-  it('Select: the rows stagger in on open, each row holds a glide layer, and a new value rolls into the trigger', async () => {
+  it('Select: the rows stagger in on open, the viewport holds one highlight marker, and a new value rolls into the trigger', async () => {
     const user = userEvent.setup();
     render(
       <Theme style="desk">
@@ -46,11 +46,16 @@ describe('picker motion (order 1.22)', () => {
     await user.click(screen.getByRole('combobox'));
     const options = await screen.findAllByRole('option');
     expect(ids().filter((id) => id === 'ds-motion:stagger')).toHaveLength(options.length);
-    for (const o of options) expect(o.querySelector(':scope > span:first-child')?.getAttribute('aria-hidden')).toBe('true');
+    // Order 1.23: no glide layer per row; one aria-hidden marker in the viewport.
+    for (const o of options) expect(o.querySelector(':scope > span:not([data-part])')).toBeNull();
+    const markers = document.querySelectorAll("[data-part='viewport'] > [data-part='highlight']");
+    expect(markers).toHaveLength(1);
+    expect(markers[0]?.getAttribute('aria-hidden')).toBe('true');
     animate.mockClear();
     await user.click(screen.getByRole('option', { name: 'Cherry' }));
     await waitFor(() => expect(screen.getByRole('combobox').textContent).toContain('Cherry'));
-    expect(ids()).toContain('ds-motion:stagger');
+    // The new label rolls in and the old one, an inert copy, rolls out.
+    expect(ids().filter((id) => id === 'ds-motion:picker-value-roll')).toHaveLength(2);
   });
 
   it('Combobox: the options stagger in each time the popup opens', async () => {

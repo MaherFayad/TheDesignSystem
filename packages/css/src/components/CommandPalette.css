@@ -40,6 +40,8 @@
  *   --_command-palette-enter-y, -enter-scale, -duration-in, -duration-out,
  *   --_command-palette-ease-in, -ease-out   pattern "dialog"
  *   --_command-palette-shift                how far the search band and the footer rise as they arrive
+ *   --_command-palette-highlight-bg         the fill of the highlight marker (order 1.23)
+ *   --_command-palette-highlight-duration, -highlight-ease   the marker's slide
  *
  * Motion, interaction "command-palette-open" (order 1.22, proposed): the
  * backdrop fades and the panel rises distance.enter and grows from
@@ -58,12 +60,24 @@
  * travel off with --_command-palette-enter-y: 0px,
  * --_command-palette-enter-scale: 1 and --_command-palette-shift: 0px.
  *
+ * Order 1.23 (proposed): interaction "highlight-marker" replaces the
+ * ::after slide. The list holds one aria-hidden marker,
+ * [data-part='highlight'], its last child, that draws the lit row's fill;
+ * CommandPalette.tsx (highlightMarker.tsx) places it with transform at the
+ * lit row, so it slides on the snappy spring for the pointer, keeps up with
+ * the arrow keys (duration.fast), jumps the first time, and follows the lit
+ * row when a new query moves it. While it is there the row's ::after is
+ * transparent; in forced colors it hides and the row keeps Highlight.
+ *
  * The SearchField draws no box of its own here: this file sets its private
  * properties (border, ring, radius, background). The band shows focus with a
  * strong accent line under it instead of the field's ring.
  */
 @layer ds.base {
   [data-ds='command-palette'] {
+    --_command-palette-highlight-bg: var(--_command-palette-item-bg-highlight);
+    --_command-palette-highlight-duration: var(--ds-duration-spring-snappy);
+    --_command-palette-highlight-ease: var(--ds-ease-spring-snappy);
     --_command-palette-width: var(--ds-dialog-width-lg);
     --_command-palette-height-max: var(--ds-dialog-height-max);
     --_command-palette-gutter: var(--ds-space-5xl);
@@ -252,6 +266,30 @@
     overscroll-behavior: contain;
     /* A stacking context, so the layers of the rows stay inside the list. */
     isolation: isolate;
+    /* The containing block of the highlight marker. */
+    position: relative;
+  }
+
+  /* highlight-marker: one marker under the rows draws the lit fill and slides between rows. */
+  [data-ds='command-palette'] [data-part='list'] > [data-part='highlight'] {
+    position: absolute;
+    z-index: calc(0 - var(--ds-z-raised));
+    inset-block-start: 0;
+    inset-inline-start: 0;
+    box-sizing: border-box;
+    border-radius: var(--_command-palette-item-radius);
+    background-color: var(--_command-palette-highlight-bg);
+    opacity: 0;
+    pointer-events: none;
+    transition:
+      transform var(--_command-palette-highlight-duration) var(--_command-palette-highlight-ease),
+      opacity var(--ds-duration-fast) var(--ds-ease-out);
+  }
+
+  @media (forced-colors: none) {
+    [data-ds='command-palette'] [data-part='list']:has(> [data-part='highlight']) [data-part='item'][data-highlighted] {
+      --_command-palette-item-bg: transparent;
+    }
   }
 
   [data-ds='command-palette'] [data-part='list'] > [data-part='group'] + :is([data-part='group'], [data-part='item']),
@@ -434,11 +472,19 @@
     [data-ds='command-palette'] > [data-part='panel'][data-state] > [data-part='footer'] {
       animation: none;
     }
+
+    [data-ds='command-palette'] [data-part='list'] > [data-part='highlight'] {
+      transition: none;
+    }
   }
 
   :root[data-motion='reduce'] [data-ds='command-palette'] > :is([data-part='panel'], [data-part='backdrop'])[data-state],
   :root[data-motion='reduce'] [data-ds='command-palette'] > [data-part='panel'][data-state] > [data-part='footer'] {
     animation: none;
+  }
+
+  :root[data-motion='reduce'] [data-ds='command-palette'] [data-part='list'] > [data-part='highlight'] {
+    transition: none;
   }
 
   /* ------------------------------------------------------------ transparency, contrast, forced colors */
@@ -484,6 +530,10 @@
       --_command-palette-item-fg: HighlightText;
 
       forced-color-adjust: none;
+    }
+
+    [data-ds='command-palette'] [data-part='list'] > [data-part='highlight'] {
+      display: none;
     }
   }
 }

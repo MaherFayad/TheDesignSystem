@@ -3,6 +3,7 @@ import { useId, useState, type ComponentProps, type MouseEvent, type ReactNode, 
 import { Switch as RadixSwitch } from 'radix-ui';
 import type { Size, Tone } from '@the-system/shared';
 import { useFieldControl } from '../Field/Field';
+import { useSwitchDrag } from './drag';
 
 export type SwitchSize = Extract<Size, 'sm' | 'md' | 'lg'>;
 export type SwitchTone = Extract<Tone, 'accent'>;
@@ -106,10 +107,14 @@ export function Switch({
     onCheckedChange?.(next);
   };
 
+  // switch-drag (order 1.23): the thumb follows a drag and snaps on release. A tap still toggles through the click.
+  const drag = useSwitchDrag({ checked, disabled: Boolean(control.disabled) || isReadOnly, onToggle: onChange });
+
   const onControlClick = (event: MouseEvent<HTMLButtonElement>) => {
     onClick?.(event);
     // Radix skips the toggle when the click is prevented. Space and Enter on a button are clicks too.
-    if (isReadOnly) event.preventDefault();
+    // A drag already decided the state on release, so the click that ends it toggles nothing.
+    if (isReadOnly || drag.consumeClick()) event.preventDefault();
   };
 
   // Inside the label it follows the label's last line; aria-hidden keeps it out of the name.
@@ -131,9 +136,11 @@ export function Switch({
       data-invalid={control['aria-invalid'] ? '' : undefined}
       data-disabled={control.disabled ? '' : undefined}
       data-readonly={isReadOnly ? '' : undefined}
+      data-dragging={drag.dragging ? '' : undefined}
     >
       <RadixSwitch.Root
         {...rest}
+        {...drag.handlers(rest)}
         ref={ref}
         id={controlId}
         checked={checked}
@@ -149,7 +156,10 @@ export function Switch({
         <span data-part="track">
           {/* The on tint that crosses in (interaction switch-stretch, order 1.22): decorative, styled by Switch.css. */}
           <span aria-hidden="true" />
-          <RadixSwitch.Thumb data-part="thumb" />
+          <RadixSwitch.Thumb data-part="thumb">
+            {/* A highlight layer a style can turn into a glass lens (order 1.23): decorative, styled by Switch.css. */}
+            <span data-part="thumb-lens" aria-hidden="true" />
+          </RadixSwitch.Thumb>
         </span>
       </RadixSwitch.Root>
       {hasContent(label) ? (

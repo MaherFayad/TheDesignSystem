@@ -27,6 +27,17 @@
  *   the one before it by one. A star that stays in the preview
  *   does not replay. --_rating-enter-scale is the dip; 1 turns it off.
  *   rating-fill: a pick pops the stars whose state changed, from code.
+ *
+ * Order 1.23 (proposed), rating-preview as a color sweep:
+ *   --_rating-index        on each item, set by Rating.tsx: 0 for the first star
+ *   --_rating-sweep        the time between two stars of the sweep (delay.stagger)
+ *   --_rating-sweep-now    the working clip of the fill part, set by the state rules
+ * Each interactive star holds a filled glyph, the fill part (aria-hidden),
+ * over its icon in the hover color, clipped away toward the inline start at
+ * rest. When a star joins the preview its clip opens toward the inline end
+ * over duration.base, each star --_rating-sweep after the one before it, so
+ * the color sweeps up to the pointer. Leaving, the clip closes at once
+ * together. Only the star under the pointer dips now (--_rating-enter-scale).
  * The focus ring shows at once (WCAG 2.4.7); only the hover veil fades.
  *
  * Never color alone: a filled star is a filled shape, an empty one an
@@ -46,6 +57,7 @@
     --_rating-duration: var(--ds-duration-spring-bouncy);
     --_rating-ease: var(--ds-ease-spring-bouncy);
     --_rating-enter-scale: var(--ds-scale-anticipate);
+    --_rating-sweep: var(--ds-delay-stagger);
 
     display: inline-flex;
     flex-wrap: wrap;
@@ -90,6 +102,7 @@
 
   [data-ds='rating'] [data-part='item'] {
     --_rating-now: var(--_rating-fg);
+    --_rating-index: 0;
 
     position: relative;
     display: inline-flex;
@@ -144,6 +157,21 @@
     position: relative;
   }
 
+  /* rating-preview: the sweep. Clipped to nothing at the inline start; the preview opens it. */
+  [data-ds='rating'] > [data-part='item'] > [data-part='fill'] {
+    --_rating-sweep-now: inset(0 100% 0 0);
+
+    position: absolute;
+    color: var(--_rating-fg-hover);
+    clip-path: var(--_rating-sweep-now);
+    pointer-events: none;
+    transition: clip-path var(--ds-duration-base) var(--ds-ease-out);
+  }
+
+  [data-ds='rating'] > [data-part='item'] > [data-part='fill']:dir(rtl) {
+    --_rating-sweep-now: inset(0 0 0 100%);
+  }
+
   /* The text sits beside the stars and wraps in its own column; on a narrow line it moves under them. */
   [data-ds='rating'] > [data-part='value'] {
     flex: 1 1 0;
@@ -168,22 +196,24 @@
   }
 
   /*
-   * rating-preview: the icons of the stars that join the preview dip and
-   * spring back. The star under the pointer waits two stagger steps and the
-   * one before it one step (--_rating-wait), so the fill reads as running
-   * toward the pointer.
+   * rating-preview: the color sweeps from the first star to the pointer.
+   * Each star that joins opens its fill clip one --_rating-sweep after the
+   * one before it. The star under the pointer dips and springs back once the
+   * sweep reaches it (--_rating-wait).
    */
-  [data-ds='rating']:not([data-readonly], [data-disabled]) > [data-part='item']:hover > [data-part='icon'],
-  [data-ds='rating']:not([data-readonly], [data-disabled]) > [data-part='item']:has(~ [data-part='item']:hover) > [data-part='icon'] {
+  [data-ds='rating']:not([data-readonly], [data-disabled]) > [data-part='item']:hover > [data-part='fill'],
+  [data-ds='rating']:not([data-readonly], [data-disabled]) > [data-part='item']:has(~ [data-part='item']:hover) > [data-part='fill'] {
+    --_rating-sweep-now: inset(0 0 0 0);
+
+    transition-delay: calc(var(--_rating-index) * var(--_rating-sweep));
+  }
+
+  [data-ds='rating']:not([data-readonly], [data-disabled]) > [data-part='item']:hover > [data-part='icon'] {
     animation: ds-rating-preview var(--_rating-duration) var(--_rating-ease) var(--_rating-wait, 0s) backwards;
   }
 
-  [data-ds='rating']:not([data-readonly], [data-disabled]) > [data-part='item']:has(+ [data-part='item']:hover) {
-    --_rating-wait: var(--ds-delay-stagger);
-  }
-
   [data-ds='rating']:not([data-readonly], [data-disabled]) > [data-part='item']:hover {
-    --_rating-wait: calc(2 * var(--ds-delay-stagger));
+    --_rating-wait: calc(var(--_rating-index) * var(--_rating-sweep));
   }
 
   [data-ds='rating']:not([data-readonly], [data-disabled]) > [data-part='item']:hover::after {
@@ -225,7 +255,8 @@
       --_rating-enter-scale: 1;
     }
 
-    [data-ds='rating'] > [data-part='item']::after {
+    [data-ds='rating'] > [data-part='item']::after,
+    [data-ds='rating'] > [data-part='item'] > [data-part='fill'] {
       transition: none;
     }
   }
@@ -234,7 +265,8 @@
     --_rating-enter-scale: 1;
   }
 
-  :root[data-motion='reduce'] [data-ds='rating'] > [data-part='item']::after {
+  :root[data-motion='reduce'] [data-ds='rating'] > [data-part='item']::after,
+  :root[data-motion='reduce'] [data-ds='rating'] > [data-part='item'] > [data-part='fill'] {
     transition: none;
   }
 
@@ -245,7 +277,8 @@
    */
   @media (forced-colors: active) {
     [data-ds='rating'] > [data-part='item']::before,
-    [data-ds='rating'] > [data-part='item']::after {
+    [data-ds='rating'] > [data-part='item']::after,
+    [data-ds='rating'] > [data-part='item'] > [data-part='fill'] {
       display: none;
     }
 

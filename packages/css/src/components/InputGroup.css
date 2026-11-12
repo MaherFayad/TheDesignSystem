@@ -152,21 +152,25 @@
   [data-ds='input-group'] > [data-ds='input'] {
     --_input-ring: var(--_input-group-ring);
     --_input-shadow-focus: none;
+    --_input-bloom-spread: 0px;
   }
 
   [data-ds='input-group'] > [data-ds='search-field'] {
     --_search-field-ring: var(--_input-group-ring);
     --_search-field-shadow-focus: none;
+    --_search-field-bloom-spread: 0px;
   }
 
   [data-ds='input-group'] > [data-ds='password-field'] {
     --_password-field-ring: var(--_input-group-ring);
     --_password-field-shadow-focus: none;
+    --_password-field-bloom-spread: 0px;
   }
 
   [data-ds='input-group'] > [data-ds='number-field'] {
     --_number-field-ring: var(--_input-group-ring);
     --_number-field-shadow-focus: none;
+    --_number-field-bloom-spread: 0px;
   }
 
   [data-ds='input-group'] > :is([data-ds='button'], [data-ds='icon-button']) {

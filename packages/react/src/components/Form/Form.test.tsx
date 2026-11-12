@@ -132,8 +132,13 @@ describe('Form', () => {
     expect(root(container).getAttribute('data-state')).toBe('submitting');
     expect(root(container).getAttribute('aria-busy')).toBe('true');
     expect(container.querySelector('[type="submit"]')?.hasAttribute('data-loading')).toBe(true);
+    expect(container.querySelector('[data-part="success-mark"]')).toBeNull();
     await act(async () => finish());
     expect(root(container).getAttribute('data-state')).toBe('submitted');
+    // form-submit-success (order 1.23): a decorative mark draws after the buttons.
+    const mark = container.querySelector('[data-part="actions"] > [data-part="success-mark"]');
+    expect(mark?.getAttribute('aria-hidden')).toBe('true');
+    expect(mark?.querySelectorAll('[pathLength="1"]')).toHaveLength(2);
   });
 
   it('Enter in a single line field submits', async () => {

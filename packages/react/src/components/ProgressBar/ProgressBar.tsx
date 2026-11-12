@@ -19,6 +19,7 @@ import { Progress } from 'radix-ui';
 import type { Size, Tone } from '@the-system/shared';
 import { useTheme } from '../../theme';
 import { useMotion } from '../../internal/motion';
+import { play, type PatternMode } from '@the-system/motion';
 import { popMark } from '../Stat/useDigitRoll';
 import { clampValue, formatPercent, loadingLabelFor, validMax } from './format';
 
@@ -114,7 +115,7 @@ export function ProgressBar({
  * progress-celebrate: pops the element once each time `done` turns true
  * after the first paint. Returns its ref. Shared with ProgressCircle.
  */
-export function useCelebrate<T extends HTMLElement>(done: boolean, axis: 'both' | 'block' = 'block') {
+export function useCelebrate<T extends HTMLElement>(done: boolean, axis: 'both' | 'block' = 'block', halo?: string) {
   const ref = useRef<T>(null);
   const motion = useMotion();
   const mode = motion.mode('progress-celebrate');
@@ -122,7 +123,33 @@ export function useCelebrate<T extends HTMLElement>(done: boolean, axis: 'both' 
   useLayoutEffect(() => {
     const before = was.current;
     was.current = done;
-    if (done && !before) popMark(ref.current, mode, axis);
-  }, [done, mode, axis]);
+    if (!done || before) return;
+    popMark(ref.current, mode, axis);
+    const ring = halo ? ref.current?.querySelector(halo) : ref.current;
+    haloBurst(ring, mode);
+  }, [done, mode, axis, halo]);
   return ref;
+}
+
+/**
+ * Round 3: the completion beat's halo. A box-shadow ring in the fill color
+ * grows from the element by distance.shift and fades, once, over
+ * duration.celebrate on ease.out. Full mode only.
+ */
+export function haloBurst(el: Element | null | undefined, mode: PatternMode): Animation | null {
+  if (!el || mode !== 'full') return null;
+  return play(
+    el,
+    {
+      keyframes: [
+        { boxShadow: '0 0 0 0 var(--_progress-bar-fill, var(--_progress-circle-fill))' },
+        { boxShadow: '0 0 0 var(--ds-distance-shift) transparent' },
+      ],
+      duration: 'duration.celebrate',
+      easing: 'ease.out',
+      fill: 'none',
+      origin: '50% 50%',
+    },
+    'progress-halo',
+  );
 }

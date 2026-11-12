@@ -26,6 +26,12 @@
  * value always starts at the inline start), so it never reads as done or as
  * a part done. The value text says Loading.
  *
+ * Round 3 (order 1.23, proposed): the fill is cut with clip-path instead of
+ * scaled, so its leading end stays round (inset with round) while it eases
+ * to the new value on the soft spring; the transition is on clip-path. The
+ * completion beat adds a halo: a box-shadow ring in the fill color grows
+ * from the track by distance.shift and fades, once, with the pop.
+ *
  * Motion (order 1.22, interaction progress-spring, proposed): a new value
  * eases the indicator's scaleX on the soft spring, so it lands a little past
  * the value in Desk and settles. Reaching max plays a celebrate once per
@@ -122,25 +128,27 @@
     inline-size: 100%;
     block-size: 100%;
     background-color: var(--_progress-bar-fill);
-    transform: scaleX(var(--_progress-bar-fraction));
-    transform-origin: 0 50%;
-    transition: transform var(--_progress-bar-duration) var(--_progress-bar-ease);
+    clip-path: inset(0 calc((1 - var(--_progress-bar-fraction)) * 100%) 0 0 round var(--_progress-bar-radius));
+    transition: clip-path var(--_progress-bar-duration) var(--_progress-bar-ease);
   }
 
+  /* clip-path is physical: in RTL the fill grows from the right edge. */
   [data-ds='progress-bar'] [data-part='indicator']:dir(rtl) {
-    transform-origin: 100% 50%;
+    clip-path: inset(0 0 0 calc((1 - var(--_progress-bar-fraction)) * 100%) round var(--_progress-bar-radius));
   }
 
   /* ------------------------------------------------------------ states */
 
   [data-ds='progress-bar'][data-state='indeterminate'] [data-part='indicator'] {
     inline-size: 40%;
+    clip-path: none;
     transform: translateX(-100%);
     transition: none;
     animation: ds-progress-bar-slide var(--ds-duration-shimmer) var(--ds-ease-standard) infinite;
   }
 
   [data-ds='progress-bar'][data-state='indeterminate'] [data-part='indicator']:dir(rtl) {
+    clip-path: none;
     transform: translateX(100%);
     animation-name: ds-progress-bar-slide-rtl;
   }

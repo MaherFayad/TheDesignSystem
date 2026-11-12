@@ -66,7 +66,7 @@ import { FieldContext } from '../Field/context';
 import { FieldError } from '../FieldError/FieldError';
 import { ListBox, filterListBoxItems, flattenListBoxItems, listBoxOptionId, type ListBoxItem, type ListBoxOption } from '../ListBox';
 import { usePopupLayer } from '../Select/popupLayer';
-import { useFlipGroup, useStaggerOnOpen } from '../ListBox/selectionMotion';
+import { useFlipGroup, usePopupRows } from '../ListBox/selectionMotion';
 
 /** The tags and the input of the box, the items that move together. */
 const tagsAndInputOf = (root: Element) => Array.from(root.querySelectorAll(":scope > [data-part='tags'] > [data-part='tag'], :scope > [data-part='control']"));
@@ -423,7 +423,7 @@ export function TagField({
 
   const layer = usePopupLayer(popupOpen);
   // menu-rows: the suggestions arrive one stagger step after the popup surface, each time it opens.
-  const popupRef = useStaggerOnOpen("[data-ds='list-box'] [data-part='option']", layer.onContent);
+  const popupRef = usePopupRows(layer.onContent);
   // collection-flip: tags move, pop in and shrink out; the input closes the gap with them.
   useFlipGroup(rootRef, { items: tagsAndInputOf });
   const activeId = popupOpen && highlightVisible && highlighted !== null ? listBoxOptionId(listId, highlighted) : undefined;

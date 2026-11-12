@@ -8,6 +8,16 @@
  *                          keyboard focus (interaction close-turn), a
  *                          quarter turn, so the glyph lands looking the
  *                          same; a style sets it to 0deg to turn it off
+ *
+ * Added in order 1.23 (proposed):
+ *   --_close-button-bloom  the color of the round fill that opens from the
+ *                          glyph on hover, focus and press (the ::before
+ *                          layer, under the glyph): the ghost hover fill
+ *   --_close-button-bloom-now
+ *                          the bloom's clip now: a circle of 0 at rest, one
+ *                          that covers the box on hover, focus and press
+ *   --_close-button-pinch  the scale the glyph pinches to while pressed,
+ *                          scale.anticipate; 1 turns it off
  */
 @layer ds.base {
   /* [data-size][data-shape] are always present: they lift this rule over the Button size rules. */
@@ -29,7 +39,98 @@
    * crooked. Under reduced motion the duration is 0ms and nothing is seen
    * to move.
    */
-  [data-ds='close-button'][data-size][data-shape]:is(:hover, :focus-visible):not([data-disabled]) {
+  [data-ds='close-button'][data-size][data-shape]:focus-visible:not([data-disabled]) {
     --_button-turn: var(--_close-button-turn);
   }
+
+  /*
+   * Round 3 (order 1.23, proposed): the turn also plays on press, so a tap
+   * on a phone shows it; hover plays only where the device can hover.
+   *
+   * The bloom: the hover fill no longer cuts in on the whole square. A
+   * round fill opens from the glyph's centre (clip-path circle 0 to 75%) on
+   * the snappy spring with the turn, and closes over duration.quick when
+   * the pointer leaves. The press then pinches the glyph to
+   * --_close-button-pinch while the button dips (button-press), and on
+   * release the glyph springs back. The root keeps its pressed fill.
+   */
+  [data-ds='close-button'] {
+    --_close-button-bloom: var(--ds-color-bg-overlay-10);
+    --_close-button-bloom-now: circle(0% at 50% 50%);
+    --_close-button-pinch: var(--ds-scale-anticipate);
+  }
+
+  /* [data-size][data-shape] lift these over Button's hover and press swaps. */
+  [data-ds='close-button'][data-size][data-shape] {
+    --_button-bg-hover: transparent;
+    --_button-part-press: var(--_close-button-pinch);
+  }
+
+  [data-ds='close-button']::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    border-radius: inherit;
+    background-color: var(--_close-button-bloom);
+    clip-path: var(--_close-button-bloom-now);
+    pointer-events: none;
+    transition: clip-path calc(var(--ds-duration-quick) * var(--_button-motion)) var(--ds-ease-exit);
+  }
+
+  [data-ds='close-button'][data-size][data-shape]:is(:focus-visible, :active):not([data-disabled]) {
+    --_close-button-bloom-now: circle(75% at 50% 50%);
+  }
+
+  [data-ds='close-button'][data-size][data-shape]:active:not([data-disabled]) {
+    --_button-turn: var(--_close-button-turn);
+  }
+
+  [data-ds='close-button'][data-size][data-shape]:is(:focus-visible, :active):not([data-disabled])::before {
+    transition: clip-path calc(var(--_button-duration) * var(--_button-motion)) var(--_button-ease);
+  }
+
+  @media (hover: hover) {
+    [data-ds='close-button'][data-size][data-shape]:hover:not([data-disabled]) {
+      --_button-turn: var(--_close-button-turn);
+      --_close-button-bloom-now: circle(75% at 50% 50%);
+    }
+
+    [data-ds='close-button'][data-size][data-shape]:hover:not([data-disabled])::before {
+      transition: clip-path calc(var(--_button-duration) * var(--_button-motion)) var(--_button-ease);
+    }
+  }
+
+  /* Reduced: the fill shows whole at once, the glyph neither turns nor pinches. */
+  @media (prefers-reduced-motion: reduce) {
+    [data-ds='close-button'][data-size][data-shape] {
+      --_close-button-turn: 0deg;
+      --_close-button-pinch: 1;
+    }
+
+    [data-ds='close-button']::before {
+      clip-path: none;
+      opacity: 0;
+    }
+
+    [data-ds='close-button'][data-size][data-shape]:is(:hover, :focus-visible, :active):not([data-disabled])::before {
+      opacity: 1;
+    }
+  }
+
+  :root[data-motion='reduce'] [data-ds='close-button'][data-size][data-shape] {
+    --_close-button-turn: 0deg;
+    --_close-button-pinch: 1;
+  }
+
+  :root[data-motion='reduce'] [data-ds='close-button']::before {
+    clip-path: none;
+    opacity: 0;
+  }
+
+  :root[data-motion='reduce'] [data-ds='close-button'][data-size][data-shape]:is(:hover, :focus-visible, :active):not([data-disabled])::before {
+    opacity: 1;
+  }
+
+  /* Forced colors: Button.css hides the layers; the system draws the hover. */
 }

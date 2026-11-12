@@ -27,7 +27,7 @@ describe('FilterBar motion (order 1.22)', () => {
     expect(drawn().textContent).toBe(count().querySelector('[data-visually-hidden]')?.textContent);
   });
 
-  it('a chip that turns selected turns its check in (icon morph)', async () => {
+  it('a chip that turns selected draws its check (order 1.23)', async () => {
     const animate = vi.fn(() => ({ finished: Promise.resolve(), cancel() {} }) as unknown as Animation);
     const proto = SVGElement.prototype as unknown as { animate?: unknown };
     const original = proto.animate;
@@ -45,7 +45,7 @@ describe('FilterBar motion (order 1.22)', () => {
         </Theme>,
       );
       const ids = animate.mock.calls.map((c) => (c as unknown as [Keyframe[], { id: string }])[1].id);
-      expect(ids).toContain('ds-motion:icon-morph-in');
+      expect(ids).toContain('ds-motion:check-draw-pick');
     } finally {
       proto.animate = original;
     }

@@ -1,7 +1,7 @@
 import { act, fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 import { useState } from 'react';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import { Theme } from '../../theme/Theme';
 import { Button } from '../Button';
 import { Toaster, createToastFunction, createToastStore } from '../Toast';
@@ -152,6 +152,37 @@ describe('AlertDialog', () => {
     await user.click(screen.getByRole('button', { name: 'Delete board' }));
     await waitFor(() => expect(rootEl()).toBeNull());
     expect(ran).toBe(1);
+  });
+
+  it('nudges the panel when a backdrop press is refused, and stays still under reduced motion', async () => {
+    const user = userEvent.setup();
+    const animate = vi.fn(() => ({ cancel() {}, playState: 'running' }) as unknown as Animation);
+    const proto = HTMLElement.prototype as unknown as { animate?: unknown };
+    const had = 'animate' in proto;
+    proto.animate = animate;
+    try {
+      render(<Basic />);
+      const panel = await open(user);
+      animate.mockClear();
+      fireEvent.pointerDown(part('backdrop') as HTMLElement, { button: 0 });
+      expect(rootEl()).not.toBeNull();
+      expect(animate).toHaveBeenCalledTimes(1);
+      expect(animate.mock.contexts[0]).toBe(panel);
+      const [, timing] = animate.mock.calls[0] as unknown as [Keyframe[], KeyframeAnimationOptions];
+      expect(timing.id).toBe('ds-motion:shake');
+      // A press inside the panel is not a refusal.
+      fireEvent.pointerDown(panel, { button: 0 });
+      expect(animate).toHaveBeenCalledTimes(1);
+      document.documentElement.setAttribute('data-motion', 'reduce');
+      fireEvent.pointerDown(part('backdrop') as HTMLElement, { button: 0 });
+      // The reduced shake holds still: whatever plays moves nothing.
+      const reduced = animate.mock.calls.slice(1) as unknown as [Keyframe[]][];
+      expect(reduced.flatMap(([k]) => k).some((k) => k.transform !== undefined && k.transform !== 'none')).toBe(false);
+    } finally {
+      document.documentElement.removeAttribute('data-motion');
+      if (had) proto.animate = undefined;
+      else delete proto.animate;
+    }
   });
 
   it('traps Tab inside the panel', async () => {

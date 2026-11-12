@@ -19,9 +19,17 @@
 // so it never holds back the next pick. rating-preview (CSS): the stars
 // that join the hover preview dip and spring back, toward the pointer.
 //
+// Order 1.23 (proposed): rating-preview becomes a color sweep. Each star
+// holds a decorative filled glyph (the fill part, aria-hidden) clipped away
+// at rest; on hover the clip opens from the inline start, star after star
+// (--_rating-index on each item sets its delay), so the color runs up to the
+// pointer. rating-fill pops the chosen star and every star before it, as
+// one short run from the first: stars that were already filled bounce,
+// stars that fill land from scale.morph, the chosen one on the bouncy spring.
+//
 // Source: GoBanana admin FeedbackList could not be fetched in the lane
 // session. Designed from the dials table in PLAN.md 3.7 and RadioGroup.
-import { useId, useLayoutEffect, useRef, type ComponentProps, type KeyboardEvent, type ReactNode } from 'react';
+import { useId, useLayoutEffect, useRef, type ComponentProps, type CSSProperties, type KeyboardEvent, type ReactNode } from 'react';
 import { RadioGroup as RadixRadioGroup } from 'radix-ui';
 import { Icon } from '@the-system/icons/react';
 import type { Size, Tone } from '@the-system/shared';
@@ -141,14 +149,11 @@ export function Rating({
     picked.current = null;
     if (before === null || before === whole) return;
     const mode = motion.mode('rating-fill');
-    const lo = Math.min(before, whole);
-    const hi = Math.max(before, whole);
-    const n = hi - lo;
-    for (let score = lo + 1; score <= hi; score++) {
+    // The chosen star and every star before it pop as one run from the first.
+    for (let score = 1; score <= whole; score++) {
       const icon = items.current[score - 1]?.querySelector('[data-part="icon"]');
-      const i = score - lo - 1;
-      const wait = { delay: 'delay.stagger' as const, steps: runStep(i, n) };
-      if (whole > before) {
+      const wait = { delay: 'delay.stagger' as const, steps: runStep(score - 1, whole) };
+      if (score > before) {
         const last = score === whole;
         const timing = last
           ? {}
@@ -160,6 +165,10 @@ export function Rating({
       } else {
         playBeat(icon, dipPop(wait), 'rating-fill', mode, null);
       }
+    }
+    // Stars that empty dip and spring back, together.
+    for (let score = whole + 1; score <= before; score++) {
+      playBeat(items.current[score - 1]?.querySelector('[data-part="icon"]'), dipPop(), 'rating-fill', mode, null);
     }
   }, [whole, motion]);
 
@@ -247,8 +256,11 @@ export function Rating({
             aria-label={getItemLabel(score, max)}
             data-part="item"
             data-filled={filled ? '' : undefined}
+            style={{ '--_rating-index': score - 1 } as CSSProperties}
           >
             <Icon name={filled ? 'star-filled' : 'star'} size={ICON_SIZE[size]} data-part="icon" />
+            {/* rating-preview: the color the hover sweeps in, decorative. */}
+            <Icon name="star-filled" size={ICON_SIZE[size]} data-part="fill" />
           </RadixRadioGroup.Item>
         );
       })}

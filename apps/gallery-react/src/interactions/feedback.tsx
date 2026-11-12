@@ -102,7 +102,7 @@ function SkeletonStage() {
 }
 
 function AlertStage() {
-  const [shown, setShown] = useState(false);
+  const [shown, setShown] = useState(true);
   const [n, setN] = useState(0);
   return (
     <div style={column}>

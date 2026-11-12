@@ -24,6 +24,23 @@
  *   --_link-motion                               1 plays the transitions, 0 turns them
  *                                                off (a style's off row)
  *
+ * Added in order 1.23 (proposed):
+ *
+ *   --_link-clip-now                             the hover line's clip now: hidden at
+ *                                                rest, whole on hover, focus and press
+ *   --_link-clip-start                           the clip the line draws from: all
+ *                                                but its inline start edge hidden
+ *   --_link-clip-end                             the clip it is erased to when the
+ *                                                pointer leaves: all but its inline end
+ *                                                edge hidden, so it leaves the way it drew
+ *   --_link-duration-color                       how long the text color takes to move
+ *                                                to its hover color
+ *
+ * Round 3 draws the hover line with clip-path in place of the round 2
+ * scaleX, so its rounded ends never stretch. --_link-draw and
+ * --_link-draw-origin are kept for recipes that read them; the base no
+ * longer draws with them.
+ *
  * The underline is drawn at rest and on hover, so a link in running text
  * never relies on color alone (WCAG 1.4.1). Hover makes it thicker and
  * brighter. Colors swap at once: only transform and opacity animate.
@@ -62,9 +79,14 @@
     --_link-nudge: 0px;
     --_link-dir: 1;
     --_link-motion: 1;
+    --_link-clip-start: inset(0 100% 0 0);
+    --_link-clip-end: inset(0 0 0 100%);
+    --_link-clip-now: var(--_link-clip-end);
+    --_link-duration-color: var(--ds-duration-morph);
 
     border-radius: var(--_link-radius);
     color: var(--_link-fg);
+    transition: color calc(var(--_link-duration-color) * var(--_link-motion)) var(--ds-ease-out);
     text-decoration-line: none;
     cursor: pointer;
     -webkit-tap-highlight-color: transparent;
@@ -104,6 +126,8 @@
   [data-ds='link']:dir(rtl) {
     --_link-dir: -1;
     --_link-draw-origin: 0% 50%;
+    --_link-clip-start: inset(0 0 0 100%);
+    --_link-clip-end: inset(0 100% 0 0);
   }
 
   /* An inline block, so the icon can move; it holds the icon and the hidden words on one line, as before. */
@@ -142,27 +166,57 @@
     block-size: var(--_link-thickness-hover);
     border-radius: var(--ds-radius-pill);
     background-color: currentColor;
-    transform: scaleX(var(--_link-draw));
-    transform-origin: var(--_link-draw-origin);
-    transition: transform calc(var(--_link-duration-out) * var(--_link-motion)) var(--_link-ease-out);
+    clip-path: var(--_link-clip-now);
+    transition: clip-path calc(var(--_link-duration-out) * var(--_link-motion)) var(--_link-ease-out);
     pointer-events: none;
   }
 
-  [data-ds='link'][data-standalone]:is(:hover, :focus-visible):not([data-disabled]) {
+  /*
+   * Draw (order 1.23): on hover, keyboard focus or a press (a tap on a
+   * phone), the line's clip opens from the inline start to the whole label
+   * over --_link-duration-in on ease.out; when the state ends the clip closes
+   * toward the inline end over --_link-duration-out, so the line runs on in
+   * the reading direction and leaves the way it drew. A new hover in the
+   * middle of the exit starts a fresh draw from the start edge.
+   */
+  [data-ds='link'][data-standalone]:is(:focus-visible, :active):not([data-disabled]) {
     --_link-draw: 1;
     --_link-draw-origin: 0% 50%;
+    --_link-clip-now: inset(0);
   }
 
-  [data-ds='link'][data-standalone]:dir(rtl):is(:hover, :focus-visible):not([data-disabled]) {
-    --_link-draw-origin: 100% 50%;
+  [data-ds='link'][data-standalone]:is(:focus-visible, :active):not([data-disabled]) > [data-part='label']::after {
+    animation: ds-link-draw calc(var(--_link-duration-in) * var(--_link-motion)) var(--_link-ease-in);
   }
 
-  [data-ds='link'][data-standalone]:is(:hover, :focus-visible):not([data-disabled]) > [data-part='label']::after {
-    transition: transform calc(var(--_link-duration-in) * var(--_link-motion)) var(--_link-ease-in);
-  }
-
-  [data-ds='link']:is(:hover, :focus-visible):not([data-disabled]) {
+  [data-ds='link']:is(:focus-visible, :active):not([data-disabled]) {
     --_link-nudge: var(--_link-shift);
+  }
+
+  @media (hover: hover) {
+    [data-ds='link'][data-standalone]:hover:not([data-disabled]) {
+      --_link-draw: 1;
+      --_link-draw-origin: 0% 50%;
+      --_link-clip-now: inset(0);
+    }
+
+    [data-ds='link'][data-standalone]:hover:not([data-disabled]) > [data-part='label']::after {
+      animation: ds-link-draw calc(var(--_link-duration-in) * var(--_link-motion)) var(--_link-ease-in);
+    }
+
+    [data-ds='link']:hover:not([data-disabled]) {
+      --_link-nudge: var(--_link-shift);
+    }
+  }
+
+  @keyframes ds-link-draw {
+    from {
+      clip-path: var(--_link-clip-start);
+    }
+
+    to {
+      clip-path: inset(0);
+    }
   }
 
   /* ------------------------------------------------------------ sizes: none inherits the text around it */
@@ -203,14 +257,23 @@
 
   /* ------------------------------------------------------------ states: swap the private properties */
 
-  [data-ds='link']:hover:not([data-disabled]) {
+  /* Hover only where the device can hover; a press (a tap) takes the hover look while it is held. */
+  @media (hover: hover) {
+    [data-ds='link']:hover:not([data-disabled]) {
+      --_link-fg: var(--_link-fg-hover);
+      --_link-decoration: var(--_link-decoration-hover);
+      --_link-thickness: var(--_link-thickness-hover);
+    }
+  }
+
+  [data-ds='link']:active:not([data-disabled]) {
     --_link-fg: var(--_link-fg-hover);
     --_link-decoration: var(--_link-decoration-hover);
     --_link-thickness: var(--_link-thickness-hover);
   }
 
   /* A standalone link keeps its thin underline on hover: the drawn line above is its hover cue. */
-  [data-ds='link'][data-standalone]:hover:not([data-disabled]) {
+  [data-ds='link'][data-standalone]:is(:hover, :active):not([data-disabled]) {
     --_link-thickness: var(--ds-border-width-default);
   }
 
@@ -236,9 +299,10 @@
     }
   }
 
-  /* The page's own reduced motion setting (data-motion="reduce" on the root) gets the same reduced form. */
+  /* The page's own reduced motion setting (data-motion="reduce" on the root) gets the same reduced form: the line shows and goes at once. */
   :root[data-motion='reduce'] [data-ds='link'] {
     --_link-shift: 0px;
+    --_link-motion: 0;
   }
 
   @media (forced-colors: active) {

@@ -50,6 +50,30 @@
  *   thumb announces (aria-valuetext) and the value output stay the real
  *   ones. Without the span (a port that does not render it) nothing shows.
  * The focus ring (::before) shows at once (WCAG 2.4.7).
+ *
+ * Order 1.23 (proposed). The fill and the pull:
+ *   --_slider-from, --_slider-to   where the fill starts and ends, 0 to 1 along
+ *                                  the track; Slider.tsx sets them on the root
+ *   --_slider-pull-start, --_slider-pull-end   how far a drag pulls past each
+ *                                  end, 0 to 1 (slider-rubber-band); set by Slider.tsx
+ *   --_slider-pull-max             the furthest a pull reaches; 0px turns it off
+ *   --_slider-pull-now             on a thumb: the pull it follows
+ *   --_slider-clip-start, --_slider-clip-end   the fill's clip from each end,
+ *                                  read by --_slider-clip-left and -right
+ *   --_slider-halo                 the state layer around the thumb (hover, held)
+ *   --_slider-halo-spread          how far it reaches; 0px turns it off
+ *   --_slider-halo-now             the working spread the hover and held rules set
+ * - slider-fill: the fill is the track's ::before, a clip-path over the whole
+ *   track. The Radix range stays as the part, with no paint. A clip-path
+ *   change is not a layout change, so Slider.tsx glides the fill (and the
+ *   thumb wrapper, with transform) on the snappy spring when a key or a
+ *   press moves the value, and lets both follow a drag at once.
+ * - slider-rubber-band: past an end, the outer thumb travels up to
+ *   --_slider-pull-max beyond the track and the fill stretches with it; the
+ *   ::before reaches --_slider-pull-max past each end of the track for that.
+ *   On release the thumb's transform springs back on the bouncy spring.
+ * - slider-pull gains a state layer: on hover and while held, a soft halo
+ *   spreads around the circle (box-shadow on ::after, the edge layer).
  */
 @layer ds.base {
   :is([data-ds='slider'], [data-ds='range-slider']) {
@@ -75,6 +99,18 @@
     --_slider-ease-in: var(--ds-ease-spring-snappy);
     --_slider-enter-scale: var(--ds-scale-morph);
     --_slider-enter-y: var(--ds-distance-enter);
+    --_slider-from: 0;
+    --_slider-to: 0;
+    --_slider-pull-start: 0;
+    --_slider-pull-end: 0;
+    --_slider-pull-max: calc(var(--ds-distance-enter) * 2);
+    --_slider-clip-start: calc(var(--_slider-from) * 100% + var(--_slider-pull-max) * (1 - 2 * var(--_slider-from) - var(--_slider-pull-start)));
+    --_slider-clip-end: calc((1 - var(--_slider-to)) * 100% + var(--_slider-pull-max) * (2 * var(--_slider-to) - 1 - var(--_slider-pull-end)));
+    --_slider-clip-left: var(--_slider-clip-start);
+    --_slider-clip-right: var(--_slider-clip-end);
+    --_slider-halo: var(--ds-color-primary-tint-hover);
+    --_slider-halo-spread: var(--ds-space-xs);
+    --_slider-halo-now: 0px;
 
     display: grid;
     grid-template-columns: minmax(0, 1fr) auto;
@@ -90,6 +126,8 @@
 
   :is([data-ds='slider'], [data-ds='range-slider']):dir(rtl) {
     --_slider-dir: -1;
+    --_slider-clip-left: var(--_slider-clip-end);
+    --_slider-clip-right: var(--_slider-clip-start);
   }
 
   :is([data-ds='slider'], [data-ds='range-slider'])[data-size='sm'] {
@@ -139,18 +177,35 @@
     margin-inline: calc(var(--_slider-target) / 2);
     border-radius: var(--ds-radius-pill);
     background-color: var(--_slider-bg);
-    overflow: hidden;
   }
 
+  /* The range keeps its place for Radix; the fill is the track's ::before. */
   :is([data-ds='slider'], [data-ds='range-slider']) > [data-part='control'] > [data-part='track'] > [data-part='range'] {
     position: absolute;
     block-size: 100%;
     border-radius: inherit;
+  }
+
+  /*
+   * slider-fill: the fill, clipped from each end. It reaches --_slider-pull-max
+   * past both ends of the track, so a pull can stretch it; at rest the clip
+   * keeps it inside the track.
+   */
+  :is([data-ds='slider'], [data-ds='range-slider']) > [data-part='control'] > [data-part='track']::before {
+    content: '';
+    position: absolute;
+    inset-block: 0;
+    inset-inline: calc(var(--_slider-pull-max) * -1);
+    border-radius: var(--ds-radius-pill);
     background-color: var(--_slider-fill);
+    clip-path: inset(0 var(--_slider-clip-right) 0 var(--_slider-clip-left) round var(--ds-radius-pill));
+    pointer-events: none;
   }
 
   /* The target is transparent; the circle is its content box. */
   :is([data-ds='slider'], [data-ds='range-slider']) [data-part='thumb'] {
+    --_slider-pull-now: calc(var(--_slider-pull-end) - var(--_slider-pull-start));
+
     position: relative;
     display: block;
     box-sizing: border-box;
@@ -162,8 +217,17 @@
     background-clip: content-box;
     cursor: grab;
     outline: none;
-    transform: scale(var(--_slider-lift-now));
+    transform: translateX(calc(var(--_slider-pull-now) * var(--_slider-pull-max) * var(--_slider-dir))) scale(var(--_slider-lift-now));
     transition: transform var(--_slider-duration) var(--_slider-ease);
+  }
+
+  /* A range pulls only its outer thumb at each end. */
+  [data-ds='range-slider'] [data-part='thumb'][data-thumb='start'] {
+    --_slider-pull-now: calc(var(--_slider-pull-start) * -1);
+  }
+
+  [data-ds='range-slider'] [data-part='thumb'][data-thumb='end'] {
+    --_slider-pull-now: var(--_slider-pull-end);
   }
 
   /* The focus glow and ring, the size of the circle. */
@@ -186,8 +250,17 @@
     position: absolute;
     inset: calc((var(--_slider-target) - var(--_slider-thumb)) / 2);
     border-radius: var(--ds-radius-pill);
-    box-shadow: 0 0 0 var(--ds-border-width-default) var(--_slider-thumb-border);
+    box-shadow:
+      0 0 0 var(--ds-border-width-default) var(--_slider-thumb-border),
+      0 0 0 var(--_slider-halo-now) var(--_slider-halo);
     pointer-events: none;
+    transition: box-shadow var(--_slider-duration-in) var(--_slider-ease-in);
+  }
+
+  /* The state layer: a halo on hover and while held. */
+  :is([data-ds='slider'], [data-ds='range-slider']):not([data-disabled]) [data-part='thumb']:hover,
+  :is([data-ds='slider'], [data-ds='range-slider'])[data-dragging] [data-part='thumb']:focus {
+    --_slider-halo-now: var(--_slider-halo-spread);
   }
 
   :is([data-ds='slider'], [data-ds='range-slider']) [data-part='thumb']:focus-visible {
@@ -303,6 +376,13 @@
     block-size: auto;
   }
 
+  /* A vertical slider fills from the bottom and does not pull. */
+  :is([data-ds='slider'], [data-ds='range-slider'])[data-orientation='vertical'] > [data-part='control'] > [data-part='track']::before {
+    inset-block: 0;
+    inset-inline: 0;
+    clip-path: inset(calc((1 - var(--_slider-to)) * 100%) 0 calc(var(--_slider-from) * 100%) 0 round var(--ds-radius-pill));
+  }
+
   :is([data-ds='slider'], [data-ds='range-slider'])[data-invalid] {
     --_slider-bg: var(--ds-color-state-danger-tint-20);
   }
@@ -327,6 +407,7 @@
       --_slider-lift: 1;
       --_slider-enter-scale: 1;
       --_slider-enter-y: 0px;
+      --_slider-pull-max: 0px;
     }
   }
 
@@ -334,6 +415,7 @@
     --_slider-lift: 1;
     --_slider-enter-scale: 1;
     --_slider-enter-y: 0px;
+    --_slider-pull-max: 0px;
   }
 
   /*
@@ -346,7 +428,7 @@
       border: var(--ds-border-width-default) solid CanvasText;
     }
 
-    :is([data-ds='slider'], [data-ds='range-slider']) > [data-part='control'] > [data-part='track'] > [data-part='range'],
+    :is([data-ds='slider'], [data-ds='range-slider']) > [data-part='control'] > [data-part='track']::before,
     :is([data-ds='slider'], [data-ds='range-slider']) [data-part='thumb'] {
       forced-color-adjust: none;
       background-color: Highlight;
@@ -364,7 +446,8 @@
       outline-color: Highlight;
     }
 
-    :is([data-ds='slider'], [data-ds='range-slider'])[data-disabled] :is([data-part='thumb'], [data-part='range']) {
+    :is([data-ds='slider'], [data-ds='range-slider'])[data-disabled] [data-part='thumb'],
+    :is([data-ds='slider'], [data-ds='range-slider'])[data-disabled] > [data-part='control'] > [data-part='track']::before {
       background-color: GrayText;
     }
   }

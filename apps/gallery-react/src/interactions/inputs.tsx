@@ -1,5 +1,5 @@
 // Stages of the /interactions page for the text inputs and forms family
-// (orders 1.21 and 1.22). One live stage per interaction id of
+// (orders 1.21 to 1.23). One live stage per interaction id of
 // packages/motion/src/interactions. Each stage marks the control that plays
 // it with data-interaction-trigger, so the page's replay control can press
 // it again. Owned by the family agent of order 1.22.
@@ -304,12 +304,8 @@ export const stages: Record<string, () => ReactNode> = {
       />
     </>
   ),
-  'rating-preview': () => (
-    <>
-      <Rating aria-label="Rate this template" defaultValue={1} />
-      <Play label="Pick four stars" act={(s) => [...s.querySelectorAll<HTMLElement>('[role="radio"]')][3]?.click()} />
-    </>
-  ),
+  // The sweep needs a pointer over the stars: the recorder's drive hovers across them.
+  'rating-preview': () => <Rating aria-label="Rate this template" defaultValue={1} data-interaction-trigger="" />,
   'slider-pull': () => (
     <div style={stack}>
       <Slider label="Opacity" unit="%" defaultValue={40} data-interaction-trigger="" />
@@ -320,6 +316,17 @@ export const stages: Record<string, () => ReactNode> = {
     <div style={stack}>
       <Slider label="Zoom" unit="%" min={10} max={400} defaultValue={120} data-interaction-trigger="" />
       <RangeSlider label="Budget" unit="SAR" min={0} max={5000} step={10} defaultValue={[900, 3200]} thumbLabels={['Lowest budget', 'Highest budget']} />
+    </div>
+  ),
+  'slider-fill': () => (
+    <div style={stack}>
+      <Slider label="Opacity" unit="%" defaultValue={20} data-interaction-trigger="" />
+      <RangeSlider label="Price" unit="SAR" min={0} max={1000} step={50} defaultValue={[200, 800]} thumbLabels={['Minimum price', 'Maximum price']} />
+    </div>
+  ),
+  'slider-rubber-band': () => (
+    <div style={stack}>
+      <Slider label="Volume" unit="%" defaultValue={80} data-interaction-trigger="" />
     </div>
   ),
   'slider-nudge': () => (
