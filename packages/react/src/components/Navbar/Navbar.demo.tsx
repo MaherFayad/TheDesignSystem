@@ -95,8 +95,12 @@ export default function NavbarDemo() {
         </Theme>
       </DemoCase>
 
-      <DemoCase id="one" title="One link">
-        <Navbar label="Main" brand={<Brand>Northwind</Brand>} items={[{ label: 'Docs', href: '#docs', active: true }]} />
+      <DemoCase id="empty" title="No links yet: brand and actions only, no menu button">
+        <Navbar label="Main" brand={<Brand>Northwind</Brand>} items={[]} end={<Button emphasis="outline">Sign in</Button>} />
+      </DemoCase>
+
+      <DemoCase id="one" title="One link, sticky">
+        <Navbar label="Docs" sticky brand={<Brand>Northwind</Brand>} items={[{ label: 'Docs', href: '#docs', active: true }]} />
       </DemoCase>
 
       <DemoCase id="many" title="Many links and menus">

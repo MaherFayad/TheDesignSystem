@@ -73,8 +73,8 @@ function isMenu(item: NavbarItem): item is NavbarMenu {
 }
 
 const menuLabels = {
-  en: { open: 'Open menu', close: 'Close menu', panel: 'Menu' },
-  ar: { open: 'فتح القائمة', close: 'إغلاق القائمة', panel: 'القائمة' },
+  en: { button: 'Menu', panel: 'Site menu' },
+  ar: { button: 'القائمة', panel: 'قائمة الموقع' },
 } as const;
 
 /** No `title`: hints come from Tooltip, never the native title attribute. */
@@ -95,8 +95,12 @@ export interface NavbarProps extends Omit<HTMLAttributes<HTMLElement>, 'title' |
   linkAs?: ElementType;
   /** The label of a menu whose panel is open at first render. Default none. */
   defaultOpenMenu?: string;
-  /** The menu button's names and the phone list's name. Default "Open menu", "Close menu" and "Menu", in Arabic too. */
-  menuLabels?: { open: string; close: string; panel: string };
+  /**
+   * The menu button's name (one stable name; aria-expanded carries the
+   * state) and the phone list's landmark name. Default "Menu" and "Site
+   * menu", in Arabic too.
+   */
+  menuLabels?: { button: string; panel: string };
   ref?: Ref<HTMLElement>;
 }
 
@@ -119,6 +123,7 @@ export function Navbar({
   const [mobileOpen, setMobileOpen] = useState(false);
   const mobileId = useId();
   const buttonRef = useRef<HTMLButtonElement>(null);
+  const mobileRef = useRef<HTMLDivElement>(null);
   // Radix builds element ids from item values, so values are indexes, never labels with spaces.
   const openIndex = defaultOpenMenu === undefined ? -1 : items.findIndex((item) => item.label === defaultOpenMenu);
   const openValue = openIndex < 0 ? undefined : `item-${openIndex}`;
@@ -127,13 +132,19 @@ export function Navbar({
   useEffect(() => {
     if (!mobileOpen || typeof window.matchMedia !== 'function') return;
     const query = window.matchMedia('(min-width: 48rem)'); // breakpoint.tablet
-    const onChange = () => query.matches && setMobileOpen(false);
+    const onChange = () => {
+      if (!query.matches) return;
+      // Focus inside the list would drop to the body when it unmounts: move it to the button's place in the bar.
+      const focusInside = mobileRef.current?.contains(document.activeElement) ?? false;
+      setMobileOpen(false);
+      if (focusInside) mobileRef.current?.closest('[data-ds="navbar"]')?.querySelector<HTMLElement>('[data-part="list"] a, [data-part="list"] button')?.focus();
+    };
     query.addEventListener('change', onChange);
     return () => query.removeEventListener('change', onChange);
   }, [mobileOpen]);
 
-  const onMobileKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
-    if (event.key === 'Escape') {
+  const onMobileKeyDown = (event: KeyboardEvent<HTMLElement>) => {
+    if (event.key === 'Escape' && mobileOpen) {
       event.stopPropagation();
       setMobileOpen(false);
       buttonRef.current?.focus();
@@ -170,7 +181,7 @@ export function Navbar({
       {brand !== undefined && <div data-part="brand">{brand}</div>}
       <NavigationMenu.List data-part="list">
         {items.map((item, index) => (
-          <NavigationMenu.Item key={item.label} value={`item-${index}`} data-part="item">
+          <NavigationMenu.Item key={index} value={`item-${index}`} data-part="item">
             {isMenu(item) ? (
               <>
                 <NavigationMenu.Trigger asChild>
@@ -179,15 +190,19 @@ export function Navbar({
                     emphasis="ghost"
                     size={size === 'lg' ? 'lg' : 'md'}
                     data-active={item.links.some((l) => l.active) ? '' : undefined}
-                    end={<Icon name="chevron-down" size="sm" />}
+                    end={
+                      <span data-part="trigger-icon">
+                        <Icon name="chevron-down" size="sm" />
+                      </span>
+                    }
                   >
                     {item.label}
                   </Button>
                 </NavigationMenu.Trigger>
                 <NavigationMenu.Content data-part="content">
                   <ul data-part="content-list">
-                    {item.links.map((link) => (
-                      <li key={link.href}>{renderLink(link, true)}</li>
+                    {item.links.map((link, i) => (
+                      <li key={`${i}-${link.href}`}>{renderLink(link, true)}</li>
                     ))}
                   </ul>
                 </NavigationMenu.Content>
@@ -201,17 +216,21 @@ export function Navbar({
       </NavigationMenu.List>
       <NavigationMenu.Viewport data-part="viewport" />
       {end !== undefined && <div data-part="end">{end}</div>}
-      <IconButton
-        ref={buttonRef}
-        data-part="menu-button"
-        icon={mobileOpen ? 'close' : 'menu'}
-        size={size === 'lg' ? 'lg' : 'md'}
-        label={mobileOpen ? words.close : words.open}
-        aria-expanded={mobileOpen}
-        aria-controls={mobileId}
-        onClick={() => setMobileOpen(!mobileOpen)}
-      />
+      {items.length > 0 && (
+        <IconButton
+          ref={buttonRef}
+          data-part="menu-button"
+          icon={mobileOpen ? 'close' : 'menu'}
+          size={size === 'lg' ? 'lg' : 'md'}
+          label={words.button}
+          aria-expanded={mobileOpen}
+          aria-controls={mobileId}
+          onClick={() => setMobileOpen(!mobileOpen)}
+          onKeyDown={onMobileKeyDown}
+        />
+      )}
       <div
+        ref={mobileRef}
         data-part="mobile"
         id={mobileId}
         data-state={mobileOpen ? 'open' : 'closed'}
@@ -222,9 +241,10 @@ export function Navbar({
           <Sidebar label={words.panel} collapsible={false}>
             {groupsOf(items).map((group, i) => (
               <SidebarGroup key={group.label ?? `links-${i}`} label={group.label}>
-                {group.links.map((link) => (
-                  <SidebarItem key={link.href} start={link.start} active={link.active} asChild>
-                    {createElement(linkAs, { href: link.href }, link.label)}
+                {group.links.map((link, j) => (
+                  <SidebarItem key={`${j}-${link.href}`} start={link.start} active={link.active} asChild>
+                    {/* Following a link closes the list, so a router page change never sits under it. */}
+                    {createElement(linkAs, { href: link.href, onClick: () => setMobileOpen(false) }, link.label)}
                   </SidebarItem>
                 ))}
               </SidebarGroup>

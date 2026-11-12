@@ -11,6 +11,7 @@
  *       [data-part='item']                      li
  *         [data-part='link']                    a, data-active and aria-current page
  *         [data-part='trigger']                 a ghost Button root, data-state open or closed
+ *           [data-part='trigger-icon']          the chevron, in the Button's end slot
  *         [data-part='content']                 the panel of one menu, shown in the viewport
  *           [data-part='content-list']          ul of panel links
  *             [data-part='link']                > [data-part='link-label'], [data-part='link-description']
@@ -107,12 +108,13 @@
     z-index: var(--ds-z-topbar);
   }
 
+  /* One row of the bar and its border, at the density of :root. A bar that wraps to two rows covers more. */
   :root:has([data-ds='navbar'][data-sticky]) {
-    scroll-padding-block-start: calc(var(--ds-size-control-md) + 2 * var(--ds-space-s));
+    scroll-padding-block-start: calc(var(--ds-size-control-md) + 2 * var(--ds-space-s) + var(--ds-border-width-default));
   }
 
   :root:has([data-ds='navbar'][data-sticky][data-size='lg']) {
-    scroll-padding-block-start: calc(var(--ds-size-control-lg) + 2 * var(--ds-space-s));
+    scroll-padding-block-start: calc(var(--ds-size-control-lg) + 2 * var(--ds-space-s) + var(--ds-border-width-default));
   }
 
   /* ------------------------------------------------------------ brand, end */
@@ -214,6 +216,7 @@
     --_button-font-size: var(--_navbar-font-size);
     --_button-fg: var(--_navbar-fg);
     --_button-height: var(--_navbar-control-height);
+    --_navbar-trigger-turn: 0deg;
 
     font-weight: var(--_navbar-link-font-weight);
   }
@@ -221,16 +224,18 @@
   /* A menu that holds the current page: the weight and color of the current link. */
   [data-ds='navbar'] [data-part='trigger'][data-emphasis][data-active] {
     --_button-fg: var(--_navbar-link-fg-active);
-
-    font-weight: var(--_navbar-link-font-weight-active);
+    --_navbar-link-font-weight: var(--_navbar-link-font-weight-active);
   }
 
-  [data-ds='navbar'] [data-part='trigger'] > [data-part='end'] {
+  [data-ds='navbar'] [data-part='trigger'][data-state='open'] {
+    --_navbar-trigger-turn: 180deg;
+  }
+
+  /* The chevron, in a part the navbar owns, turns over while the panel is open. */
+  [data-ds='navbar'] [data-part='trigger-icon'] {
+    display: inline-flex;
+    transform: rotate(var(--_navbar-trigger-turn));
     transition: transform var(--ds-duration-fast) var(--ds-ease-default);
-  }
-
-  [data-ds='navbar'] [data-part='trigger'][data-state='open'] > [data-part='end'] {
-    transform: rotate(180deg);
   }
 
   /* The bar under the open trigger. Radix sets its inline position and width. */
@@ -299,7 +304,8 @@
 
   [data-ds='navbar'] [data-part='content-list'] {
     display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    /* Two columns, or one when the menu holds a single link. */
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, var(--ds-menu-width-min)), 1fr));
     gap: var(--_navbar-panel-padding);
     margin: 0;
     padding: 0;
@@ -369,15 +375,38 @@
       flex: none;
     }
 
+    /* One row on phones: the brand gives way before the actions or the button wrap. */
+    [data-ds='navbar'] {
+      flex-wrap: nowrap;
+    }
+
+    /* A long brand wraps between its words, never inside one; the actions shrink to an ellipsis first. */
+    [data-ds='navbar'] > [data-part='brand'] {
+      flex: 0 1 auto;
+    }
+
     /* With no actions, the menu button takes the inline end itself. */
     [data-ds='navbar'] > [data-part='brand'] + [data-part='menu-button'] {
       margin-inline-start: auto;
+    }
+
+    /* The open list takes a row of its own: the root wraps again. */
+    [data-ds='navbar']:has(> [data-part='mobile'][data-state='open']) {
+      flex-wrap: wrap;
     }
 
     [data-ds='navbar'] > [data-part='mobile'][data-state='open'] {
       display: block;
       flex: 1 0 100%;
       padding-block-end: var(--ds-space-s);
+    }
+
+    /* A sticky bar never grows past the screen: the list scrolls inside it, so every link stays reachable. */
+    [data-ds='navbar'][data-sticky] > [data-part='mobile'][data-state='open'] {
+      /* No viewport height token: dialog.height-max (80dvh) caps the list well inside the screen under the bar. */
+      max-block-size: var(--ds-dialog-height-max);
+      overflow-y: auto;
+      overscroll-behavior: contain;
     }
 
     /* The phone list is a Sidebar that fills the row: no width, no edge, the bar's surface. */
@@ -398,7 +427,7 @@
 
     [data-ds='navbar'] [data-part='indicator'],
     [data-ds='navbar'] [data-part='link']::after,
-    [data-ds='navbar'] [data-part='trigger'] > [data-part='end'] {
+    [data-ds='navbar'] [data-part='trigger-icon'] {
       transition: none;
     }
   }

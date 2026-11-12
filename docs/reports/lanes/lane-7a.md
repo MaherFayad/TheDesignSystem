@@ -7,7 +7,7 @@ built in that order. All three are React `ready`, Angular `planned`.
 | --- | --- | --- | --- | --- |
 | 1.7.2 | Sidebar | `wo-1.7.2: sidebar`, then review fixes | green | 21 passed, 0 failed, 10 skipped |
 | 1.7.3 | Rail | `wo-1.7.3: rail`, then review fixes | green | 21 passed, 0 failed, 0 skipped |
-| 1.7.1 | Navbar | `wo-1.7.1: navbar` | green | 21 passed, 0 failed, 10 skipped |
+| 1.7.1 | Navbar | `wo-1.7.1: navbar`, then review fixes | green | 21 passed, 0 failed, 10 skipped |
 
 The skipped Sidebar and Navbar tests are the overlay only cases ("target size
 open", "axe open"), which do not apply: neither is an overlay.
@@ -129,7 +129,105 @@ Decisions:
 
 ## Navbar (1.7.1)
 
-See the section below, filled after its review.
+What it is: the top bar of a site or app on Radix NavigationMenu: a brand,
+links and menus with panels, actions at the end, and under breakpoint.tablet
+a menu button with a phone list.
+
+```tsx
+<Navbar
+  label="Main"                         // required
+  size="md"                            // 'md' | 'lg', default 'md' (size.control.md / lg)
+  brand={<Link href="/" standalone>Northwind</Link>}
+  items={[
+    { label: 'Overview', href: '/', start: 'home', active: true },
+    { label: 'Product', links: [
+      { label: 'Boards', href: '/boards', description: 'Plan work on one shared canvas', start: 'grid' },
+    ] },
+  ]}
+  end={<Button>Sign in</Button>}
+  sticky={false}                       // data-sticky, z.topbar, scroll padding on :root
+  linkAs={RouterLink}                  // default 'a'
+  defaultOpenMenu="Product"            // a menu open at first render
+  menuLabels={{ button: 'Menu', panel: 'Site menu' }}
+/>
+```
+
+Decisions:
+
+- Items are data, not children: one list draws both the bar and the phone
+  list. `linkAs` takes a router link.
+- Anatomy adds `link-label`, `link-description` (panel links),
+  `content-list` (the panel `ul`) and `trigger-icon` (the chevron, so the
+  navbar turns a part it owns, not Button's `end`).
+- The trigger is a ghost Button through `NavigationMenu.Trigger asChild`; a
+  menu holding the current page takes the bold weight.
+- The current link: `aria-current="page"` (from Radix `active`), bold weight
+  and a bar under it (the `::before` glow layer); in a panel the bar runs
+  down the inline start edge.
+- `mobile`: Drawer (1.6.3) is not built, so the phone list is a disclosure
+  panel under the bar holding a Sidebar (`collapsible={false}`, one group per
+  menu, plain links in one unnamed group). The menu button keeps one name,
+  "Menu", with `aria-expanded` and `aria-controls`. Escape (in the list or on
+  the button) closes it and returns focus to the button. Following a link
+  closes it. Growing past the breakpoint closes it and moves focus into the
+  bar. No items: no menu button.
+- Sticky: `scroll-padding-block-start` on `:root` is one row of the bar plus
+  its border at the `:root` density (WCAG 2.4.11). A bar that wraps, or a
+  denser nested Theme, covers more; the manifest says so. The open phone
+  list scrolls inside a sticky bar, capped at `dialog.height-max`.
+- Phones: the bar stays on one row; the actions shrink to an ellipsis and a
+  long brand wraps between words.
+- Motion `menu-scale`: the viewport scales from 0.97 and fades; the
+  indicator slides under the open trigger. None under reduced motion.
+- `contract.skipAxeRules: ["aria-hidden-focus"]`: while a panel is open,
+  Radix renders an aria-hidden focus proxy span (tabindex 0) that forwards
+  Tab into the viewport. Only the long-arabic case (open at first render, so
+  the Escape hint can test closing) shows it.
+- Radix item values are indexes, never labels: Radix builds element ids from
+  them and a label with a space made an invalid id.
+
+## Review findings
+
+One fresh eyes review per component (ds-qa, claude-opus-5-5 at medium).
+
+Sidebar, 2 blockers and 12 notes. Fixed: a SidebarHeader nested in another
+component made a second header (now it registers through context); Arabic
+group headings and counts stayed at font.size.xs (now one step up); the
+toggle announced its state twice (aria-expanded dropped); groups remounted
+on collapse and lost focus (the Collapsible stays mounted); no auxclick guard
+on disabled items; count 0 drew "0"; group, list and label selectors are
+anchored with child combinators; radius from `radius.field` instead of the
+menu's token; the edge is two private border properties; native role fixed
+in the manifest; the empty case removed; a fragment Arabic word replaced.
+Left open: item selectors are still descendant selectors under the root (a
+nested component in the header with an `item` part would match); `z.sidebar`
+inside the isolated root (see token gaps); no dev warning for an item without
+`start` in a collapsible sidebar.
+
+Rail, 3 blockers and 12 notes. Fixed: md was 44px against anatomy rule 12
+(now 32px, touch sizes from the platform axis); Latin labels in RTL lost
+their first letters (`dir="auto"`); a disabled `asChild` item still ran the
+router child's click (the plain anchor renders; the same fix in Sidebar);
+the badge sits on the icon; the width is based on `shell.rail-width`; thin
+scrollbar; Arabic badge words and a distinct Arabic landmark name;
+`start`/`end` of null render nothing; `end` is a second list; missing tokens
+listed; the `a11y.native` block dropped; more tests. Left open: `badge={true}`
+without `badgeLabel` is not a type error (a mistake entry covers it); no
+motion pattern named (see Rail decisions).
+
+Navbar, 1 blocker and 18 notes. Fixed: a sticky bar with the phone list open
+could not scroll (the list now scrolls inside); scroll padding adds the
+border and the manifest no longer says "never hidden"; the bar wrapped at
+320px with lg (one row now); links in the phone list close it; one stable
+menu button name; Escape on the button closes the list; focus moves into the
+bar on resize; keys by index; one column for a single panel link; state
+rules swap properties only; the chevron is a navbar part; `slots.mobile`
+removed; `horizontal` listed; empty and sticky demo cases; four more tests.
+Left open: the viewport always sits at the inline start of the bar, not under
+its trigger; the `48rem` media query in `Navbar.tsx` is a literal with a
+comment (no shared breakpoint constant exists); the phone list is a nested
+`nav` named "Site menu" until Drawer replaces it; landmark names under the
+prop `label` (see changes needed).
 
 ## Token gaps
 
@@ -141,6 +239,11 @@ See the section below, filled after its review.
   number never leaves it. A `z.raised` (1) would say it better.
 - No `scale.menu-enter`: Navbar uses `scale.press` (0.97), as DropdownMenu
   does.
+- No viewport height token: the open phone list of a sticky Navbar is capped
+  at `dialog.height-max` (80dvh). A `size.viewport-block` (100dvh) would let
+  it be `100dvh` minus the bar.
+- No shared breakpoint constant for TypeScript: `Navbar.tsx` closes the phone
+  list on `(min-width: 48rem)` with a `breakpoint.tablet` comment.
 
 ## Changes needed from the lead
 
@@ -159,15 +262,29 @@ See the section below, filled after its review.
    `Navbar.css` sets `font-weight` on the trigger directly.
 3. `DECISIONS.md` (optional): record that the Rail's 44px target comes from
    the platform axis, not from `md`.
-4. When Tooltip (1.6.6) lands: wrap each `SidebarItem` of a collapsed
+4. `DECISIONS.md` or `anatomy.md` rule 7: Sidebar, Rail and Navbar take a
+   required `label` that names the `nav` landmark and is never drawn. Rule 7
+   says `label` is visible text except on icon only components. Either add a
+   written exception for landmark names or rename the prop to a required
+   `aria-label` across the navigation family.
+5. When Tooltip (1.6.6) lands: wrap each `SidebarItem` of a collapsed
    sidebar and each `RailItem` of a rail with `hideLabels` in a Tooltip with
    its label. The places are marked with a `Tooltip (1.6.6)` comment in
    `Sidebar.tsx` and `Rail.tsx`.
-5. When Drawer (1.6.3) lands: replace Navbar's `mobile` disclosure panel with
+6. When Drawer (1.6.3) lands: replace Navbar's `mobile` disclosure panel with
    a Drawer root carrying `data-part="mobile"` (marked in the header comment
    of `Navbar.tsx`).
-6. Generated files were refreshed with `npm run gen` and committed as
+7. Generated files were refreshed with `npm run gen` and committed as
    generated (barrels, `packages/css/src/index.css`, `routes.gen.ts`,
    `manifests.gen.json`). `packages/styles/desk/index.css` picked up an
    import of `recipes/DropdownMenu.css` that the last gen on the lead's
    branch had missed. Regenerate on merge.
+
+## What I could not do
+
+- Read GoBanana: adding the private repo was refused in this session.
+- Tooltip on collapsed Sidebar items and on Rail items with hidden labels:
+  Tooltip is another lane's order (places marked).
+- Navbar's `mobile` as a Drawer root: Drawer is not built (place marked).
+- A Desk menu bar recipe for Navbar (`packages/styles/desk/recipes/Navbar.css`):
+  it needs the GoBanana menu bar CSS, which I could not read.
