@@ -1,0 +1,67 @@
+/*
+ * Label: the visible name of a control, a native <label>.
+ * Sources: Figma-Killer-2 `FormField.module.css` (a semibold label in the
+ * text color, text s) and the label part of Field from wave 0. GoBanana
+ * could not be read in this session.
+ *
+ * Private properties on the root (docs/contracts/anatomy.md, one
+ * convention), for recipes and for a parent such as Field to override:
+ *   --_label-fg             label color, --_label-fg-disabled when disabled
+ *   --_label-font-size      text size, from the size axis
+ *   --_label-gap            space before the required mark
+ *   --_label-fg-muted       color of the required mark and the optional text
+ */
+@layer ds.base {
+  [data-ds='label'] {
+    --_label-fg: var(--ds-color-text-default);
+    --_label-fg-disabled: var(--ds-color-text-muted);
+    --_label-font-size: var(--ds-font-size-s);
+    --_label-gap: var(--ds-space-3xs);
+    --_label-fg-muted: var(--ds-color-text-muted);
+
+    color: var(--_label-fg);
+    font-family: var(--ds-font-family-sans);
+    font-size: var(--_label-font-size);
+    font-weight: var(--ds-font-weight-semibold);
+    line-height: var(--ds-font-leading-snug);
+    overflow-wrap: anywhere;
+  }
+
+  [data-ds='label'][data-size='sm'] {
+    --_label-font-size: var(--ds-font-size-xs);
+  }
+
+  /* Arabic small text one step up (PLAN.md section 12): base.css raises only s, so sm takes s. */
+  [data-ds='label'][data-size='sm']:lang(ar) {
+    --_label-font-size: var(--ds-font-size-s);
+  }
+
+  /* The required mark: a glyph, so it does not rely on color. */
+  [data-ds='label'] > [data-part='required'] {
+    margin-inline-start: var(--_label-gap);
+    color: var(--_label-fg-muted);
+    font-weight: var(--ds-font-weight-regular);
+  }
+
+  /* A space in the markup separates it from the label text, so the accessible name has the space too. */
+  [data-ds='label'] > [data-part='optional'] {
+    color: var(--_label-fg-muted);
+    font-weight: var(--ds-font-weight-regular);
+  }
+
+  /* Disabled: the words stay readable; the control carries the disabled look. */
+  [data-ds='label'][data-disabled] {
+    --_label-fg: var(--_label-fg-disabled);
+  }
+
+  /*
+   * Invalid changes nothing here on purpose: the control border and the
+   * error message, which has an icon, carry it. A recipe may use it.
+   */
+
+  @media (forced-colors: active) {
+    [data-ds='label'][data-disabled] {
+      color: GrayText;
+    }
+  }
+}
