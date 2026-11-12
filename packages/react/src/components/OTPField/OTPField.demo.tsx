@@ -12,7 +12,7 @@ export default function OTPFieldDemo() {
     <DemoPage>
       <DemoCase id="variants" title="Sizes, shapes and groups">
         {shapes.map((shape) => (
-          <DemoGrid key={shape} min="22rem">
+          <DemoGrid key={shape} min="min(100%, 22rem)">
             {sizes.map((size) => (
               <OTPField key={size} size={size} shape={shape} defaultValue="48" aria-label={`Verification code, ${size}, ${shape}`} />
             ))}

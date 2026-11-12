@@ -44,6 +44,12 @@
      */
     inline-size: fit-content;
     max-inline-size: 100%;
+    /*
+     * As a flex or grid item the automatic minimum would be the cells' full
+     * width, so max-inline-size never won and lg rows overflowed at 320px.
+     * Zero lets the cells shrink to their 24px floor (WCAG 1.4.10).
+     */
+    min-inline-size: 0;
     color: var(--_otp-field-fg);
     font-family: var(--ds-font-family-sans);
     font-size: var(--_otp-field-font-size);
