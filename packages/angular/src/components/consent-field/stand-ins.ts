@@ -50,6 +50,8 @@ abstract class StandInToggle {
   readonly ariaDescribedby = input<string | undefined>(undefined, { alias: 'aria-describedby' });
   /** The root part name, as React's rootProps data-part. */
   readonly part = input<string | undefined>(undefined);
+  /** The owner keeps the state: a click only emits, as a controlled Radix root. */
+  readonly managed = input(false, { transform: booleanAttribute });
   /** Fires with the new state after a click, as onCheckedChange. */
   readonly checkedChangeByUser = output<boolean>();
 
@@ -66,7 +68,7 @@ abstract class StandInToggle {
   constructor() {
     this.host = consumeHostAttributes([
       'size', 'label', 'checked', 'disabled', 'required', 'invalid', 'name', 'value', 'id',
-      'aria-labelledby', 'aria-describedby', 'part', 'tone',
+      'aria-labelledby', 'aria-describedby', 'part', 'tone', 'managed',
     ]);
     let observer: ResizeObserver | undefined;
     afterNextRender(() => {
@@ -84,17 +86,27 @@ abstract class StandInToggle {
       }
     });
     inject(DestroyRef).onDestroy(() => observer?.disconnect());
-    // Radix keeps the hidden input's checked property in step, with no attribute.
+    // Radix keeps the hidden input's checked property in step, with no
+    // attribute, and dispatches a click on it after a change, so a form's
+    // change handling sees the toggle.
+    let seen: HTMLInputElement | undefined;
     effect(() => {
       const bubble = this.bubble()?.nativeElement;
-      if (bubble) bubble.checked = this.checked();
+      const checked = this.checked();
+      if (!bubble) return;
+      // The first sync is the starting state, not a change.
+      const first = seen !== bubble;
+      seen = bubble;
+      if (bubble.checked === checked) return;
+      bubble.checked = checked;
+      if (!first) bubble.dispatchEvent(new Event('click', { bubbles: true }));
     });
   }
 
   protected toggle(): void {
     if (this.disabled()) return;
     const next = !this.checked();
-    this.checked.set(next);
+    if (!this.managed()) this.checked.set(next);
     this.checkedChangeByUser.emit(next);
   }
 

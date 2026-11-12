@@ -2,7 +2,7 @@
 
 Made by `npm run shots -- --compare react angular`. pixelmatch threshold 0.1; a pair passes when at most 0.5 percent of pixels differ and the sizes match.
 
-568 pairs, 568 pass, 0 fail. Only in react: 32. Only in angular: 0.
+586 pairs, 586 pass, 0 fail. Only in react: 32. Only in angular: 0.
 
 | File | Result | Differing pixels | Where | Diff |
 | --- | --- | --- | --- | --- |
@@ -96,6 +96,24 @@ Made by `npm run shots -- --compare react angular`. pixelmatch threshold 0.1; a 
 | close-button/studio-dark-rtl.png | pass | 0 (0.000 percent) |  | none |
 | close-button/studio-light-ltr.png | pass | 0 (0.000 percent) |  | none |
 | close-button/studio-light-rtl.png | pass | 0 (0.000 percent) |  | none |
+| consent-field/desk-dark-ltr-comfortable.png | pass | 0 (0.000 percent) |  | none |
+| consent-field/desk-dark-ltr-compact.png | pass | 0 (0.000 percent) |  | none |
+| consent-field/desk-dark-ltr.png | pass | 0 (0.000 percent) |  | none |
+| consent-field/desk-dark-rtl.png | pass | 0 (0.000 percent) |  | none |
+| consent-field/desk-light-ltr.png | pass | 0 (0.000 percent) |  | none |
+| consent-field/desk-light-rtl.png | pass | 0 (0.000 percent) |  | none |
+| consent-field/neutral-dark-ltr-comfortable.png | pass | 0 (0.000 percent) |  | none |
+| consent-field/neutral-dark-ltr-compact.png | pass | 0 (0.000 percent) |  | none |
+| consent-field/neutral-dark-ltr.png | pass | 0 (0.000 percent) |  | none |
+| consent-field/neutral-dark-rtl.png | pass | 0 (0.000 percent) |  | none |
+| consent-field/neutral-light-ltr.png | pass | 0 (0.000 percent) |  | none |
+| consent-field/neutral-light-rtl.png | pass | 0 (0.000 percent) |  | none |
+| consent-field/studio-dark-ltr-comfortable.png | pass | 0 (0.000 percent) |  | none |
+| consent-field/studio-dark-ltr-compact.png | pass | 0 (0.000 percent) |  | none |
+| consent-field/studio-dark-ltr.png | pass | 0 (0.000 percent) |  | none |
+| consent-field/studio-dark-rtl.png | pass | 0 (0.000 percent) |  | none |
+| consent-field/studio-light-ltr.png | pass | 0 (0.000 percent) |  | none |
+| consent-field/studio-light-rtl.png | pass | 0 (0.000 percent) |  | none |
 | copy-button/desk-dark-ltr-comfortable.png | pass | 0 (0.000 percent) |  | none |
 | copy-button/desk-dark-ltr-compact.png | pass | 0 (0.000 percent) |  | none |
 | copy-button/desk-dark-ltr.png | pass | 0 (0.000 percent) |  | none |

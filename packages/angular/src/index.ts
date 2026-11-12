@@ -7,6 +7,7 @@ export * from './components/button/index';
 export * from './components/button-group/index';
 export * from './components/callout/index';
 export * from './components/close-button/index';
+export * from './components/consent-field/index';
 export * from './components/copy-button/index';
 export * from './components/dialog/index';
 export * from './components/dropdown-menu/index';

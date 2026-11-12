@@ -5273,7 +5273,10 @@
         "example": "ConsentField.demo.tsx"
       },
       "angular": {
-        "status": "planned"
+        "status": "ready",
+        "behavior": "div[dsConsentField] host bindings, ControlValueAccessor with a boolean value; the error is p[dsFieldError] with its own DsFieldContext through viewProviders; reads the dsForm error for its name through DsFormContext",
+        "example": "consent-field.demo.ts",
+        "note": "No default checked: there is no defaultChecked input, a static checked does not type check and the state starts denied. onCheckedChange is the checkedChange output of [(checked)], onDecision is the decision output. The Checkbox and Switch are private stand ins with the React DOM until the A3 port merges. ConsentField.css is used as is."
       },
       "native": {
         "status": "planned"

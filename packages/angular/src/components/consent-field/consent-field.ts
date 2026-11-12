@@ -1,0 +1,214 @@
+// ConsentField: one consent, its purpose, a link to the details and, when
+// given, a record line. The twin of
+// packages/react/src/components/ConsentField/ConsentField.tsx.
+//
+//   <div dsConsentField name="marketing" purpose="Send me offers by email." detailsHref="/privacy"
+//        version="2.1" [(checked)]="granted" (decision)="store($event)"></div>
+//
+// Never ticked in advance. There is no defaultChecked input, a static
+// `checked` or `defaultChecked` attribute is dropped, and the state starts
+// denied. `[(checked)]` is for showing a choice the person already made.
+//
+// The control is the Checkbox (a form that is sent) or the Switch (settings
+// that save at once). Angular batch A3 ports both on another branch, so this
+// folder renders private stand ins with the same DOM (stand-ins.ts). Swap
+// them for dsCheckbox and dsSwitch when A3 merges.
+//
+// Inside a dsForm, the form's error for `name` shows in the error part,
+// with requiredError in place of the form's words when given. The error is
+// the system FieldError with a Field context of its own (viewProviders), as
+// in Fieldset.
+//
+// It implements ControlValueAccessor with a boolean value, so `formControl`,
+// `formControlName` and `ngModel` bind the granted state.
+//
+// Names that differ from React: `onCheckedChange` is the `checkedChange`
+// output of `[(checked)]`; `onDecision` is the `decision` output. `purpose`,
+// `detailsLabel`, `meta` and `error` take a string or a TemplateRef.
+import { NgTemplateOutlet } from '@angular/common';
+import { ChangeDetectionStrategy, Component, booleanAttribute, computed, forwardRef, inject, input, model, output, signal, type TemplateRef } from '@angular/core';
+import { NG_VALUE_ACCESSOR, type ControlValueAccessor } from '@angular/forms';
+import type { Size } from '@the-system/shared';
+import { consumeHostAttributes } from '../../internal/host';
+import { DsThemeService } from '../../theme/theme';
+import { DsFieldContext } from '../field/field-context';
+import { DsFieldError } from '../field-error/field-error';
+import { DsErrorContext, hasContent } from '../fieldset/error-context';
+import { DsFormContext } from '../form/form-context';
+import { DsLink } from '../link/link';
+import { StandInCheckbox, StandInSwitch } from './stand-ins';
+
+export type ConsentFieldSize = Extract<Size, 'sm' | 'md' | 'lg'>;
+export type ConsentFieldState = 'granted' | 'denied';
+export type ConsentFieldControl = 'checkbox' | 'switch';
+/** A node prop in Angular: text, or a template. */
+export type ConsentFieldText = string | TemplateRef<unknown>;
+
+/** What the app stores when the person decides. */
+export interface ConsentRecord {
+  /** The form name of the consent, when given. */
+  name: string | undefined;
+  granted: boolean;
+  /** The version of the purpose text the person saw, when given. */
+  version: string | undefined;
+  /** When the choice was made, as an ISO 8601 string. */
+  at: string;
+}
+
+const detailsByLang = { en: 'How we use your data', ar: 'طريقة استخدام بياناتك' } as const;
+
+let nextId = 0;
+
+@Component({
+  selector: 'div[dsConsentField]',
+  exportAs: 'dsConsentField',
+  imports: [NgTemplateOutlet, DsFieldError, DsLink, StandInCheckbox, StandInSwitch],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [{ provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => DsConsentField), multi: true }],
+  viewProviders: [{ provide: DsFieldContext, useFactory: () => inject(DsConsentField).errorContext }],
+  host: {
+    'data-ds': 'consent-field',
+    '[attr.data-size]': 'size()',
+    '[attr.data-state]': 'checked() ? "granted" : "denied"',
+    '[attr.data-required]': 'required() ? "" : null',
+    '[attr.data-invalid]': 'isInvalid() ? "" : null',
+    '[attr.data-disabled]': 'isDisabled() ? "" : null',
+  },
+  template: `
+    @if (control() === 'switch') {
+      <div dsStandInSwitch part="control" managed [id]="controlId" [size]="size()" [name]="name()" [value]="value()" [checked]="checked()"
+        [disabled]="isDisabled()" [required]="required()" [invalid]="isInvalid()" [aria-labelledby]="purposeId" [aria-describedby]="describedBy()"
+        (checkedChangeByUser)="decide($event)"></div>
+    } @else {
+      <div dsStandInCheckbox part="control" managed [id]="controlId" [size]="size()" [name]="name()" [value]="value()" [checked]="checked()"
+        [disabled]="isDisabled()" [required]="required()" [invalid]="isInvalid()" [aria-labelledby]="purposeId" [aria-describedby]="describedBy()"
+        (checkedChangeByUser)="decide($event)"></div>
+    }
+    <div data-part="text">
+      <label [attr.id]="purposeId" [attr.for]="controlId" data-part="purpose"><ng-container *ngTemplateOutlet="text; context: { $implicit: purpose() }" />@if (required()) {<span data-part="required" aria-hidden="true">{{ ' *' }}</span>}</label>
+      @if (showMeta()) {
+        <p [attr.id]="metaId" data-part="meta"><ng-container *ngTemplateOutlet="text; context: { $implicit: meta() }" /></p>
+      }
+      @if (detailsHref() !== undefined) {
+        <a dsLink data-part="details" [href]="detailsHref()" [external]="detailsExternal()" [size]="size() === 'sm' ? 'xs' : 'sm'" standalone><ng-container *ngTemplateOutlet="text; context: { $implicit: detailsText() }" /></a>
+      }
+      @if (showError()) {
+        <p dsFieldError [size]="size() === 'sm' ? 'sm' : 'md'"><ng-container *ngTemplateOutlet="text; context: { $implicit: shownError() }" /></p>
+      }
+    </div>
+    <ng-template #text let-value>@if (isText(value)) {{{ value }}} @else {<ng-container [ngTemplateOutlet]="value" />}</ng-template>
+  `,
+})
+export class DsConsentField implements ControlValueAccessor {
+  /** What the person agrees to, in one sentence that names one purpose. It is the control's label. Required. */
+  readonly purpose = input.required<ConsentFieldText>();
+  /** The choice on record. Starts denied; there is no default checked. Write `[(checked)]` to show a choice already made. */
+  readonly checked = model(false);
+  /** checkbox in a form that is sent, switch in settings that save at once. Default checkbox. */
+  readonly control = input<ConsentFieldControl>('checkbox');
+  /** The form name. The value sent while granted is `value`. */
+  readonly name = input<string | undefined>(undefined);
+  /** The value sent while granted. Default "granted". */
+  readonly value = input('granted');
+  /** Where the details live. Renders the details link. */
+  readonly detailsHref = input<string | undefined>(undefined);
+  /** The text of the details link. Default "How we use your data", or Arabic under lang ar. */
+  readonly detailsLabel = input<ConsentFieldText | undefined>(undefined);
+  /** Opens the details in a new tab. Default false. */
+  readonly detailsExternal = input(false, { transform: booleanAttribute });
+  /** A record line under the purpose: the version of the text or the date of the choice. */
+  readonly meta = input<ConsentFieldText | null | undefined>(undefined);
+  /** The version of the purpose text, passed back in the record. */
+  readonly version = input<string | undefined>(undefined);
+  /** The service cannot work without this consent. Shows the required mark and sets aria-required. */
+  readonly required = input(false, { transform: booleanAttribute });
+  readonly disabled = input(false, { transform: booleanAttribute });
+  /** Unset: invalid while an error shows. `false` hides the error. */
+  readonly invalid = input<boolean | undefined, unknown>(undefined, {
+    transform: (v: unknown) => (v === undefined || v === null ? undefined : booleanAttribute(v)),
+  });
+  /** An error shown now, for a required consent left denied. */
+  readonly error = input<ConsentFieldText | null | undefined>(undefined);
+  /** Inside a dsForm: what the error says when the form finds this consent left off. Default the form's own message. */
+  readonly requiredError = input<ConsentFieldText | undefined>(undefined);
+  /** Control and text size. Default md. */
+  readonly size = input<ConsentFieldSize>('md');
+  /** Joins the meta and error ids on the control, after them. */
+  readonly ariaDescribedby = input<string | undefined>(undefined, { alias: 'aria-describedby' });
+  /** A record of each choice, for the app to store. React's onDecision. */
+  readonly decision = output<ConsentRecord>();
+
+  private readonly theme = inject(DsThemeService);
+  private readonly form = inject(DsFormContext, { optional: true });
+  private readonly base = `ds-consent-${++nextId}-`;
+  protected readonly controlId = `${this.base}control`;
+  protected readonly purposeId = `${this.base}purpose`;
+  protected readonly metaId = `${this.base}meta`;
+  private readonly errorId = `${this.base}error`;
+  private readonly formDisabled = signal(false);
+
+  protected readonly isDisabled = computed(() => this.disabled() || this.formDisabled());
+  protected readonly shownError = computed(() => {
+    const name = this.name();
+    const fromForm = name === undefined ? undefined : this.form?.errors()[name];
+    return fromForm !== undefined ? (this.requiredError() ?? fromForm) : this.error();
+  });
+  protected readonly showError = computed(() => hasContent(this.shownError()) && this.invalid() !== false);
+  protected readonly isInvalid = computed(() => this.invalid() ?? this.showError());
+  protected readonly showMeta = computed(() => hasContent(this.meta()));
+  protected readonly describedBy = computed(
+    () => [this.showMeta() ? this.metaId : undefined, this.showError() ? this.errorId : undefined, this.ariaDescribedby()].filter(Boolean).join(' ') || undefined,
+  );
+  protected readonly detailsText = computed(
+    () => this.detailsLabel() ?? (this.theme.value().lang === 'ar' ? detailsByLang.ar : detailsByLang.en),
+  );
+
+  /** The context the error part reads. */
+  readonly errorContext = new DsErrorContext({
+    controlId: this.controlId,
+    labelId: this.purposeId,
+    descriptionId: this.metaId,
+    errorId: this.errorId,
+    invalid: this.isInvalid,
+    invalidProp: computed(() => this.invalid()),
+    disabled: this.isDisabled,
+    required: computed(() => this.required()),
+    hasDescription: this.showMeta,
+    hasError: this.showError,
+  });
+
+  protected readonly isText = (v: unknown): v is string => typeof v === 'string';
+
+  private onChange: (granted: boolean) => void = () => undefined;
+  private onTouched: () => void = () => undefined;
+
+  constructor() {
+    consumeHostAttributes([
+      'dsConsentField', 'purpose', 'checked', 'defaultChecked', 'control', 'name', 'value', 'detailsHref', 'detailsLabel',
+      'detailsExternal', 'meta', 'version', 'required', 'disabled', 'invalid', 'error', 'requiredError', 'size', 'aria-describedby',
+    ]);
+  }
+
+  protected decide(next: boolean): void {
+    this.checked.set(next);
+    this.onChange(next);
+    this.onTouched();
+    this.decision.emit({ name: this.name(), granted: next, version: this.version(), at: new Date().toISOString() });
+  }
+
+  writeValue(value: unknown): void {
+    this.checked.set(value === true);
+  }
+
+  registerOnChange(fn: (granted: boolean) => void): void {
+    this.onChange = fn;
+  }
+
+  registerOnTouched(fn: () => void): void {
+    this.onTouched = fn;
+  }
+
+  setDisabledState(disabled: boolean): void {
+    this.formDisabled.set(disabled);
+  }
+}

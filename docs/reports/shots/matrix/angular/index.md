@@ -2,7 +2,7 @@
 
 Made by `npm run shots`. Each shot is the `variants` case at `chrome=0`, 1280 by 800 viewport, full page, device scale factor 1, animations off, reduced motion, fonts loaded. File names: `<component>/<style>-<scheme>-<dir>[-<density>][-open].png`. Density is default unless named.
 
-214 shots, 13 components, 16.49 MB. Stable (two captures byte equal): 214; unstable: 0; not verified: 0.
+232 shots, 14 components, 17.36 MB. Stable (two captures byte equal): 232; unstable: 0; not verified: 0.
 
 The full list with sizes and hashes is in `captured.json`.
 
@@ -59,6 +59,25 @@ Densities, dark, ltr en:
 | desk | [compact](close-button/desk-dark-ltr-compact.png) | [default](close-button/desk-dark-ltr.png) | [comfortable](close-button/desk-dark-ltr-comfortable.png) |
 | neutral | [compact](close-button/neutral-dark-ltr-compact.png) | [default](close-button/neutral-dark-ltr.png) | [comfortable](close-button/neutral-dark-ltr-comfortable.png) |
 | studio | [compact](close-button/studio-dark-ltr-compact.png) | [default](close-button/studio-dark-ltr.png) | [comfortable](close-button/studio-dark-ltr-comfortable.png) |
+
+## ConsentField
+
+| Style | Scheme | ltr en | rtl ar |
+| --- | --- | --- | --- |
+| desk | dark | [ltr](consent-field/desk-dark-ltr.png) | [rtl](consent-field/desk-dark-rtl.png) |
+| desk | light | [ltr](consent-field/desk-light-ltr.png) | [rtl](consent-field/desk-light-rtl.png) |
+| neutral | dark | [ltr](consent-field/neutral-dark-ltr.png) | [rtl](consent-field/neutral-dark-rtl.png) |
+| neutral | light | [ltr](consent-field/neutral-light-ltr.png) | [rtl](consent-field/neutral-light-rtl.png) |
+| studio | dark | [ltr](consent-field/studio-dark-ltr.png) | [rtl](consent-field/studio-dark-rtl.png) |
+| studio | light | [ltr](consent-field/studio-light-ltr.png) | [rtl](consent-field/studio-light-rtl.png) |
+
+Densities, dark, ltr en:
+
+| Style | compact | default | comfortable |
+| --- | --- | --- | --- |
+| desk | [compact](consent-field/desk-dark-ltr-compact.png) | [default](consent-field/desk-dark-ltr.png) | [comfortable](consent-field/desk-dark-ltr-comfortable.png) |
+| neutral | [compact](consent-field/neutral-dark-ltr-compact.png) | [default](consent-field/neutral-dark-ltr.png) | [comfortable](consent-field/neutral-dark-ltr-comfortable.png) |
+| studio | [compact](consent-field/studio-dark-ltr-compact.png) | [default](consent-field/studio-dark-ltr.png) | [comfortable](consent-field/studio-dark-ltr-comfortable.png) |
 
 ## CopyButton
 

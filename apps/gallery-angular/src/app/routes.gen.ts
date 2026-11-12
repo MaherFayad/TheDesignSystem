@@ -13,6 +13,7 @@ export const routes: DemoRoute[] = [
   { slug: 'button-group', load: () => import('../../../../packages/angular/src/components/button-group/button-group.demo').then((m) => m.default) },
   { slug: 'callout', load: () => import('../../../../packages/angular/src/components/callout/callout.demo').then((m) => m.default) },
   { slug: 'close-button', load: () => import('../../../../packages/angular/src/components/close-button/close-button.demo').then((m) => m.default) },
+  { slug: 'consent-field', load: () => import('../../../../packages/angular/src/components/consent-field/consent-field.demo').then((m) => m.default) },
   { slug: 'copy-button', load: () => import('../../../../packages/angular/src/components/copy-button/copy-button.demo').then((m) => m.default) },
   { slug: 'dialog', load: () => import('../../../../packages/angular/src/components/dialog/dialog.demo').then((m) => m.default) },
   { slug: 'dropdown-menu', load: () => import('../../../../packages/angular/src/components/dropdown-menu/dropdown-menu.demo').then((m) => m.default) },
