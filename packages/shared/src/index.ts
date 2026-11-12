@@ -3,6 +3,7 @@ export * from './axes';
 export * from './bidi';
 export * from './dialog-focus';
 export * from './resize';
+export * from './shortcut';
 export * from './theme';
 export * from './toast';
 export * from './window';
