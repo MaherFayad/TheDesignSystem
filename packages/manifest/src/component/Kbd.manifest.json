@@ -1,0 +1,147 @@
+{
+  "name": "Kbd",
+  "kind": "component",
+  "family": "data-display",
+  "summary": "A key or a keyboard shortcut drawn as keycaps, with the key names spoken to screen readers.",
+  "useWhen": [
+    "Telling people which key or shortcut runs an action: Ctrl+K opens search",
+    "The shortcut part of a menu item, a tooltip or a command palette row",
+    "A keyboard help sheet that lists shortcuts next to what they do"
+  ],
+  "avoidWhen": [
+    "Code, a file name or a command people type, which is not a key press",
+    "A label on a button people click",
+    "The only way to learn an action: a shortcut is an extra path, the action needs a visible control too"
+  ],
+  "insteadUse": {
+    "Code or a command people type": "Code (wave 2), or a monospace text span",
+    "A status or a count next to a label": "Badge",
+    "A removable value or a filter": "Chip",
+    "A hint that explains a control": "Tooltip, with Kbd in its shortcut part"
+  },
+  "anatomy": ["root", "key", "separator", "spoken"],
+  "slots": {
+    "key": { "accepts": "text", "min": 1 }
+  },
+  "props": {
+    "children": {
+      "type": "node",
+      "required": true,
+      "description": "The key or the shortcut. A string is split into keycaps by splitShortcut: Mod+K, Ctrl+Shift+P, ⌘⇧P, Esc, Ctrl++ for the plus key. Mod is Command on a Mac and Control elsewhere. A node draws one keycap as is; give it a label."
+    },
+    "size": {
+      "type": ["xs", "sm", "md"],
+      "default": "md",
+      "description": "Keycap height: xs 16 (size.icon.md), sm 20, md 24 (size.icon.lg) px. Use xs or sm inside menus, tooltips and running text."
+    },
+    "platform": {
+      "type": ["mac", "other"],
+      "description": "The convention to draw. mac: symbols and no separators (⌘⇧P). other: names joined by plus (Ctrl+Shift+P). Default: mac under a Theme with platform ios, otherwise the user agent after hydration; the server draws other."
+    },
+    "label": {
+      "type": "string",
+      "description": "What screen readers say instead of the spoken key names (Control Shift P by default), for example names in another language."
+    },
+    "decorative": {
+      "type": "boolean",
+      "default": false,
+      "description": "Hides the whole root from assistive tech and drops the spoken copy. For a shortcut next to an action that already carries aria-keyshortcuts."
+    },
+    "separator": {
+      "type": "string",
+      "description": "Drawn between keycaps. Default plus on other and nothing on mac."
+    }
+  },
+  "states": [],
+  "a11y": {
+    "role": "None: a kbd element. Each keycap is hidden; a visually hidden span (spoken) says the key names, so a screen reader hears Control Shift P, not C T R L plus.",
+    "focus": "Never focusable.",
+    "keys": {},
+    "announce": "The spoken key names, or label. Nothing when decorative.",
+    "native": {
+      "accessibilityRole": "text"
+    },
+    "notes": [
+      "The root is dir ltr and isolated (unicode-bidi isolate), so a shortcut reads Ctrl then K inside an Arabic sentence and does not move the punctuation around it.",
+      "Menu items and buttons that have a shortcut set aria-keyshortcuts (ariaKeyShortcuts from the same helpers) and render Kbd decorative.",
+      "No hover, press or motion: a keycap is text, not a control.",
+      "Under forced colors the gradient and the depth shadow drop; each key keeps a CanvasText border."
+    ]
+  },
+  "content": {
+    "en": {
+      "keys": "Key names as printed on keyboards: Ctrl, Shift, Alt, Esc, Enter, Tab, single letters in upper case.",
+      "sentence": "Put the shortcut after the verb: Press Ctrl+K to open search."
+    },
+    "ar": {
+      "keys": "Keys stay in Latin letters and read left to right: Ctrl+K, never translated or mirrored.",
+      "sentence": "اضغط Ctrl+K للبحث. The key names are spoken in English by default; pass label for another wording.",
+      "digits": "Western digits."
+    }
+  },
+  "tokens": [
+    "kbd.text",
+    "kbd.border",
+    "kbd.face-top",
+    "kbd.face-bottom",
+    "kbd.highlight",
+    "kbd.edge",
+    "kbd.drop",
+    "size.icon.md",
+    "size.icon.lg",
+    "space.4xs",
+    "space.3xs",
+    "space.2xs",
+    "radius.xs",
+    "border.width.default",
+    "border.width.strong",
+    "font.family.mono",
+    "font.family.sans",
+    "font.size.2xs",
+    "font.size.xs",
+    "font.size.s",
+    "font.weight.medium",
+    "font.tracking.none",
+    "color.text.muted"
+  ],
+  "frameworks": {
+    "react": {
+      "status": "ready",
+      "behavior": "hand built kbd elements",
+      "example": "Kbd.demo.tsx",
+      "note": "Parsing, the Mod mapping and spoken names live in @the-system/shared (shortcut.ts), so Angular and native read the same keys."
+    },
+    "angular": {
+      "status": "planned",
+      "behavior": "kbd[dsKbd], hand built on shortcut.ts"
+    },
+    "native": {
+      "status": "planned",
+      "note": "Touch first apps rarely show shortcuts; useful on iPad and Android with a hardware keyboard. Same shortcut.ts."
+    }
+  },
+  "styles": {
+    "studio": "A dark sculpted keycap: gradient face, top highlight, bottom edge and a soft drop, from the kbd tokens.",
+    "desk": "The same keycap on the Desk tokens.",
+    "neutral": "Light keycap from the kbd tokens of the Neutral style once it lands; no recipe."
+  },
+  "mistakes": [
+    {
+      "wrong": "<kbd>Ctrl+Shift+P</kbd> as one cap, read as C T R L plus",
+      "right": "Kbd with the shortcut string: three keycaps and the spoken names"
+    },
+    {
+      "wrong": "Hard coding ⌘ for everyone",
+      "right": "Mod+K, which draws ⌘K on a Mac and Ctrl+K elsewhere"
+    },
+    {
+      "wrong": "A shortcut in an Arabic sentence that renders K+Ctrl",
+      "right": "Kbd, which keeps the keys left to right inside right to left text"
+    },
+    {
+      "wrong": "A menu item whose shortcut is read twice",
+      "right": "aria-keyshortcuts on the item and Kbd decorative"
+    }
+  ],
+  "since": "0.1.0"
+}
