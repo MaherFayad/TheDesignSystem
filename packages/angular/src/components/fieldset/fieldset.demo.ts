@@ -5,7 +5,8 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { DEMO, sample } from '../../demo/demo';
 import { DsTheme } from '../../theme/theme';
-import { StandInCheckbox, StandInSwitch } from '../consent-field/stand-ins';
+import { DsCheckbox } from '../checkbox/checkbox';
+import { DsSwitch } from '../switch/switch';
 import { DsField } from '../field/field';
 import { DsInput } from '../input/input';
 import { DsFieldset } from './fieldset';
@@ -34,7 +35,7 @@ const manyFields: [string, string][] = [
 
 @Component({
   selector: 'div[data-demo=page]',
-  imports: [DEMO, DsFieldset, DsField, DsInput, DsTheme, StandInCheckbox, StandInSwitch],
+  imports: [DEMO, DsFieldset, DsField, DsInput, DsTheme, DsCheckbox, DsSwitch],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <section data-demo="case" data-demo-case="variants" heading="Sizes, and an Arabic row">
@@ -49,8 +50,8 @@ const manyFields: [string, string][] = [
         </div>
         <div data-demo="grid" style="grid-template-columns: repeat(auto-fill, minmax(16rem, 1fr));">
           <fieldset dsFieldset legend="Email notifications" description="Pick what lands in your inbox.">
-            <div dsStandInCheckbox label="Comments on my boards" [checked]="true"></div>
-            <div dsStandInCheckbox label="Weekly summary"></div>
+            <div dsCheckbox label="Comments on my boards" [defaultChecked]="true"></div>
+            <div dsCheckbox label="Weekly summary"></div>
           </fieldset>
           <div dsTheme [lang]="'ar'">
             <fieldset dsFieldset legend="عنوان التوصيل" description="المكان اللي نرسل له اللوحات المطبوعة.">
@@ -92,8 +93,8 @@ const manyFields: [string, string][] = [
             <div dsField label="Postal code"><div dsInput autoComplete="postal-code"></div></div>
           </fieldset>
           <fieldset dsFieldset legend="Updates">
-            <div dsStandInSwitch label="Order updates by text message"></div>
-            <div dsStandInSwitch label="Product news by email"></div>
+            <div dsSwitch label="Order updates by text message"></div>
+            <div dsSwitch label="Product news by email"></div>
           </fieldset>
         </div>
       </div>
@@ -130,8 +131,8 @@ const manyFields: [string, string][] = [
           <div dsField label="الحي"><div dsInput autoComplete="address-level3" value="العليا"></div></div>
         </fieldset>
         <fieldset dsFieldset legend="تنبيهات البريد" error="اختر طريقة وحدة على الأقل عشان نوصلك.">
-          <div dsStandInCheckbox label="التعليقات على لوحاتي"></div>
-          <div dsStandInCheckbox label="الملخص الأسبوعي"></div>
+          <div dsCheckbox label="التعليقات على لوحاتي"></div>
+          <div dsCheckbox label="الملخص الأسبوعي"></div>
         </fieldset>
       </div>
     </section>
@@ -139,9 +140,9 @@ const manyFields: [string, string][] = [
     <section data-demo="case" data-demo-case="error" heading="A group error">
       <div dsTheme [lang]="'en'" data-demo="content">
         <fieldset dsFieldset legend="How should we reach you" error="Pick at least one way to reach you.">
-          <div dsStandInCheckbox label="Email"></div>
-          <div dsStandInCheckbox label="Text message"></div>
-          <div dsStandInCheckbox label="Phone call"></div>
+          <div dsCheckbox label="Email"></div>
+          <div dsCheckbox label="Text message"></div>
+          <div dsCheckbox label="Phone call"></div>
         </fieldset>
       </div>
     </section>
@@ -150,7 +151,7 @@ const manyFields: [string, string][] = [
       <div dsTheme [lang]="'en'" data-demo="content">
         <fieldset dsFieldset legend="Billing address" description="Only owners can change billing details." disabled>
           <div dsField label="City"><div dsInput autoComplete="address-level2" value="Riyadh"></div></div>
-          <div dsStandInCheckbox label="Use this address for shipping" [checked]="true"></div>
+          <div dsCheckbox label="Use this address for shipping" [defaultChecked]="true"></div>
         </fieldset>
       </div>
     </section>
