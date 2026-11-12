@@ -544,5 +544,16 @@
       forced-color-adjust: none;
       color: inherit;
     }
+
+    /* With forced-color-adjust none, author colors would show: the focus ring and disabled stay in system colors. */
+    [data-ds='toggle-button'][data-state='on']:focus-visible {
+      --_button-ring: 0 0 0 var(--ds-border-width-strong) CanvasText;
+    }
+
+    [data-ds='toggle-button'][data-state='on'][data-disabled] {
+      background-color: Canvas;
+      border-color: GrayText;
+      color: GrayText;
+    }
   }
 }
