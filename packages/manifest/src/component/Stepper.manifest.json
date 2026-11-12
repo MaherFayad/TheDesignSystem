@@ -1,0 +1,211 @@
+{
+  "name": "Stepper",
+  "kind": "component",
+  "family": "navigation",
+  "summary": "Shows the steps of a process in order, which are complete, which one is current and which are still to come.",
+  "useWhen": [
+    "A task split into three to seven ordered steps, such as a checkout, an onboarding or a setup",
+    "The user needs to see how far they are and what is left",
+    "The user may go back to an earlier step, or jump between steps in free mode"
+  ],
+  "avoidWhen": [
+    "Views of the same content that have no order (use tabs)",
+    "Progress of a single running task with a percentage",
+    "A process of one or two steps, where a heading is enough",
+    "The main navigation of an app"
+  ],
+  "insteadUse": {
+    "A long form split into steps with back, next and a review step": "FormWizard",
+    "Views with no order": "Tabs",
+    "Progress of one running task": "ProgressBar",
+    "A guided walk through the interface": "Tour",
+    "Where the page sits in a hierarchy": "Breadcrumbs"
+  },
+  "anatomy": ["root", "step", "indicator", "title", "description", "connector", "status"],
+  "slots": {
+    "title": { "accepts": "text", "min": 1, "max": 1 },
+    "description": { "accepts": "text", "max": 1 }
+  },
+  "props": {
+    "steps": {
+      "type": "StepperStep[]",
+      "required": true,
+      "description": "One entry per step: title (a short noun), description (one line), invalid, disabled, href, id."
+    },
+    "current": {
+      "type": "number",
+      "description": "The index of the current step, from 0. Controlled. Without it the stepper keeps its own, starting at defaultCurrent."
+    },
+    "defaultCurrent": {
+      "type": "number",
+      "default": 0,
+      "description": "The first current step when current is not passed."
+    },
+    "completed": {
+      "type": "number[]",
+      "description": "Indexes of the complete steps. Default every step before the furthest step reached, so going back keeps them complete."
+    },
+    "mode": {
+      "type": ["linear", "free"],
+      "default": "linear",
+      "description": "linear: earlier steps can be reached, a later step only when every step before it is complete. free: any step that is not disabled. The rule lives in packages/shared/src/stepper.ts."
+    },
+    "onStepSelect": {
+      "type": "(index: number) => void",
+      "description": "Called when the user picks a step. When it is passed, or a step has href, every step the user may reach, other than the current one, renders its title as a system Button."
+    },
+    "orientation": {
+      "type": ["horizontal", "vertical"],
+      "default": "horizontal",
+      "description": "Sets data-orientation. A horizontal stepper takes the vertical layout under breakpoint.phone (30rem), so it never scrolls sideways."
+    },
+    "size": {
+      "type": ["sm", "md"],
+      "default": "md",
+      "description": "md: a 32px indicator (size.control.sm) and text s. sm: a 24px indicator (size.icon.lg) and text xs."
+    },
+    "labels": {
+      "type": "Partial<StepperLabels>",
+      "description": "The list name and the hidden state words. Defaults: Steps, current step, complete, has errors, unavailable; under an Arabic Theme الخطوات، الخطوة الحالية، مكتملة، فيها أخطاء، غير متاحة."
+    },
+    "aria-label": {
+      "type": "string",
+      "default": "Steps",
+      "description": "The name of the list. Name the process: Checkout steps."
+    }
+  },
+  "states": ["complete", "current", "upcoming", "data-orientation", "data-invalid", "data-disabled"],
+  "a11y": {
+    "role": "list (an ol), each step a listitem; a step the user may reach holds a button or a link",
+    "focus": "Only steps the user may reach are tab stops, each a system Button with the focus ring from focus.shadow.ring. Static steps and the current step are not focusable.",
+    "keys": {
+      "Tab": "Moves focus to the next step the user may reach",
+      "Shift+Tab": "Moves focus to the previous step the user may reach",
+      "Enter": "Goes to the focused step",
+      "Space": "Goes to the focused step when it is a button"
+    },
+    "announce": "The list name, then each step with its position from the list (2 of 4), its title and hidden words: current step, complete, has errors, unavailable. The current step also carries aria-current=\"step\".",
+    "native": {
+      "accessibilityRole": "list",
+      "accessibilityState": ["disabled"]
+    },
+    "notes": [
+      "Complete shows a check and invalid shows a danger glyph, never color alone (WCAG 1.4.1). The indicator is hidden from assistive tech; the hidden status words carry the state.",
+      "The step number is not read from the indicator: the ordered list gives the position.",
+      "The connector fill starts at the inline start, so it grows from the right in RTL.",
+      "Under forced colors the indicator border takes CanvasText, the current step Highlight, and the connector stays a border.",
+      "No native title attribute. Hints come from Tooltip.",
+      "React Native has no current state: the current step says current step in its accessibilityLabel."
+    ]
+  },
+  "content": {
+    "en": {
+      "title": "A short noun in sentence case: Account, Address, Payment, Review. Not a verb, not a sentence.",
+      "description": "One line that says what the step asks for: Email and password.",
+      "count": "Three to seven steps. More than seven: group them, or use the vertical form."
+    },
+    "ar": {
+      "title": "Noun form, no diacritics: الحساب، العنوان، الدفع، المراجعة.",
+      "description": "One short line in white Saudi dialect.",
+      "digits": "Western digits in the indicator."
+    }
+  },
+  "tokens": [
+    "font.family.sans",
+    "font.leading.tight",
+    "focus.shadow.ring",
+    "size.control.sm",
+    "size.icon.lg",
+    "size.target-min",
+    "font.size.s",
+    "font.size.xs",
+    "font.size.2xs",
+    "font.weight.medium",
+    "font.weight.semibold",
+    "font.leading.snug",
+    "space.3xs",
+    "space.2xs",
+    "space.xs",
+    "space.l",
+    "space.xl",
+    "border.width.default",
+    "border.width.strong",
+    "radius.pill",
+    "radius.sm",
+    "color.primary.fill",
+    "color.primary.text",
+    "color.primary.border",
+    "color.primary.tint",
+    "color.primary.on-surface",
+    "color.state.danger.tint-10",
+    "color.state.danger.on-tint",
+    "color.state.danger.border",
+    "color.state.danger.text",
+    "color.border.control",
+    "color.border.default",
+    "color.text.muted",
+    "color.text.default",
+    "color.text.bright",
+    "color.bg.overlay-10",
+    "color.bg.overlay-20",
+    "opacity.disabled",
+    "duration.base",
+    "ease.out",
+    "breakpoint.phone"
+  ],
+  "motion": "tab-indicator",
+  "frameworks": {
+    "react": {
+      "status": "ready",
+      "behavior": "hand built ol; state from packages/shared/src/stepper.ts; reachable steps are system Buttons (asChild for links)",
+      "example": "Stepper.demo.tsx",
+      "note": "Motion tab-indicator: the connector fill scales from the start side when a step completes; under reduced motion it swaps at once."
+    },
+    "angular": {
+      "status": "planned",
+      "behavior": "ol[dsStepper] host bindings, state from packages/shared/src/stepper.ts, reachable steps as button[dsButton] or a[dsButton]",
+      "note": "Stepper.css is used as is."
+    },
+    "native": {
+      "status": "planned",
+      "behavior": "react-native:View list with Pressable steps, state from packages/shared/src/stepper.ts",
+      "note": "Vertical on phones; the connector is a View."
+    }
+  },
+  "styles": {
+    "studio": "Neutral: a complete step is the neutral fill with a check, the current step a bright ring, the filled connector bright on a dim track.",
+    "desk": "The yellow family: a complete step is the yellow fill with ink, the current step a yellow ring, the filled connector yellow.",
+    "neutral": "Takes the tokens of the Neutral style, no recipe."
+  },
+  "mistakes": [
+    {
+      "wrong": "Complete told apart from upcoming by color only",
+      "right": "Stepper, which draws a check and says complete in hidden words"
+    },
+    {
+      "wrong": "A Stepper used as tabs for views with no order",
+      "right": "Tabs"
+    },
+    {
+      "wrong": "Step titles that are actions: Enter your address",
+      "right": "Nouns: Address"
+    },
+    {
+      "wrong": "Twelve steps in a horizontal row on a wide screen",
+      "right": "Group the steps, or use orientation vertical"
+    },
+    {
+      "wrong": "Every step clickable in a process where later steps need earlier data",
+      "right": "mode linear, the default, which opens a later step only when the ones before it are complete"
+    }
+  ],
+  "contract": {
+    "optionalParts": ["description", "status", "connector"],
+    "keys": {
+      "Tab": { "focus": "[data-ds='stepper'] [data-ds='button'][data-part='title']", "expect": "focus-moves" },
+      "Enter": { "focus": "[data-ds='stepper'] [data-ds='button'][data-part='title']", "case": "variants", "expect": "click" },
+      "Space": { "focus": "[data-ds='stepper'] button[data-part='title']", "case": "variants", "expect": "click" }
+    }
+  },
+  "since": "0.1.0"
+}
