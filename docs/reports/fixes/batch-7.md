@@ -317,3 +317,23 @@ a token for the room a fixed Dock or TabBar takes.
   open-menu shot were not retaken; their look did not change.
 
 ## Contract
+
+One run over the final tree, all ten components:
+
+```text
+npm run contract -- --framework react --component Navbar,Sidebar,Rail,Tabs,Dock,Breadcrumbs,Pagination,TableOfContents,Avatar,Chip
+pass  Avatar: 28 passed, 0 failed, 1 skipped
+pass  Breadcrumbs: 29 passed, 0 failed, 15 skipped
+pass  Chip: 29 passed, 0 failed, 0 skipped
+pass  Dock: 29 passed, 0 failed, 0 skipped
+pass  Navbar: 29 passed, 0 failed, 15 skipped
+pass  Pagination: 29 passed, 0 failed, 0 skipped
+pass  Rail: 29 passed, 0 failed, 0 skipped
+pass  Sidebar: 29 passed, 0 failed, 15 skipped
+pass  TableOfContents: 29 passed, 0 failed, 0 skipped
+pass  Tabs: 29 passed, 0 failed, 0 skipped
+```
+
+Sidebar no longer fails its two axe runs. The skips are the same as in the
+review: Avatar has no keys, and the 15 on Breadcrumbs, Navbar and Sidebar
+are the open runs for components the manifest does not mark as opening.
