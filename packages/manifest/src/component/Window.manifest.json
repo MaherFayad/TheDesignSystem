@@ -208,7 +208,9 @@
       "WindowLayer is the container for windows, not a part of one: a positioned region (tabindex -1, named Windows) that stacks its windows, tracks the active one through the shared window manager and takes focus when its last window leaves. useWindowLayer() returns that manager, for a dock that restores minimized windows.",
       "A Window outside a WindowLayer sits in the page flow (position relative), takes the size its parent gives it, has no frame and does not move. Give it a frame (and a positioned parent) to place and move it.",
       "The five chrome labels (close, minimize, zoom, the controls group, the move handle) and the move hint default to Arabic under lang=\"ar\", as Dialog and Toast do. A prop always wins.",
-      "Contract suite: Escape is checked in the many case, where closing the front window makes the next one active (data-state changes). The arrow keys move the frame (inline position), which no contract.keys expectation reads yet, so the suite notes them; Window.test.tsx covers them."
+      "Contract suite (many case, focus on the move handle): the arrow keys are checked with moves, Shift with the arrows with moves further, Escape with closes and Enter (zoom) with state-changes.",
+      "Arrow keys move the window in the physical direction on screen, in both directions: ArrowRight moves it right in Arabic too. A window is a spatial object on a desk, like a dragged card; a text or list control follows the reading direction, a positioned object does not (lead decision, wave 1).",
+      "Enter on the move handle zooms, and the handle is not rendered while the window is zoomed: focus moves to the window element (WCAG 2.4.3) and back to the handle when the window is restored."
     ]
   },
   "content": {
@@ -243,7 +245,12 @@
     "font.family.sans",
     "duration.window-open",
     "duration.window-close",
-    "duration.zoom",
+    "duration.window-zoom",
+    "duration.window-minimize",
+    "blur.window-saturation",
+    "window.width.settings",
+    "window.width.finder-max",
+    "scale.window-enter",
     "duration.base",
     "ease.window",
     "ease.exit",

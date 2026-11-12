@@ -351,6 +351,11 @@ export function Window({
   }, [isOpen]);
 
   // Zoom: a FLIP from the frame the window had.
+  // The move handle is rendered only while the window can move, so zoom
+  // takes it away. Focus on it would drop to the body (WCAG 2.4.3): it goes
+  // to the window element instead, and back to the handle on restore.
+  const handleFocused = useRef(false);
+  const backToHandle = useRef(false);
   const prevZoomed = useRef(zoomed);
   useLayoutEffect(() => {
     if (prevZoomed.current === zoomed) return;
@@ -358,6 +363,14 @@ export function Window({
     const el = rootRef.current;
     manager.zoom(windowId, boundsOf(container()), zoomed);
     if (!el) return;
+    const lost = !document.activeElement || document.activeElement === document.body || !el.contains(document.activeElement);
+    if (zoomed && handleFocused.current && lost) {
+      backToHandle.current = true;
+      el.focus({ preventScroll: true });
+    } else if (!zoomed && backToHandle.current) {
+      backToHandle.current = false;
+      if (document.activeElement === el || lost) el.querySelector<HTMLElement>('[data-part="move"]')?.focus({ preventScroll: true });
+    }
     const from = zoomFrom.current ?? lastRect.current;
     zoomFrom.current = null;
     animateWindow(el, 'zoom', { mode, from, to: el.getBoundingClientRect() });
@@ -563,6 +576,7 @@ export function Window({
       onPointerDown={handlePointerDown}
       onFocus={(event) => {
         onFocus?.(event);
+        handleFocused.current = (event.target as Element).getAttribute('data-part') === 'move';
         manager.focus(windowId);
       }}
     >

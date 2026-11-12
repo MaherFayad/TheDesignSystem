@@ -25,7 +25,7 @@ function Working({ active = true }: { active?: boolean }) {
 export default function WindowControlsDemo() {
   return (
     <DemoPage>
-      <DemoCase id="variants" title="Variants: idle dots at rest in an active and an inactive window, as in the source; the colors and the glyphs show on hover and keyboard focus of the group">
+      <DemoCase id="variants" title="Variants: idle dots at rest in an active and an inactive window, as in the source; the colors and the glyphs show on hover and keyboard focus of the group. The lights show here in every style because the demo passes them; Window turns them on only in styles that list the controls optional part.">
         <Working />
         <Working active={false} />
       </DemoCase>

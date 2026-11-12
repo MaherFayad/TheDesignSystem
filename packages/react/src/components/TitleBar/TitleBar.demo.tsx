@@ -8,7 +8,7 @@ const lights = <WindowControls onClose={() => undefined} onMinimize={() => undef
 export default function TitleBarDemo() {
   return (
     <DemoPage>
-      <DemoCase id="variants" title="Variants: with lights, with a close button, inactive">
+      <DemoCase id="variants" title="Variants: with lights, with a close button, inactive. The lights show here in every style because the demo passes them; Window turns them on only in styles that list the controls optional part.">
         <TitleBar title="brief.md" controls={lights} />
         <TitleBar title="Layers" actions={<IconButton icon="close" label="Close panel" size="sm" />} />
         <TitleBar title="tokens.json" active={false} controls={<WindowControls active={false} onClose={() => undefined} />} />

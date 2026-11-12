@@ -420,6 +420,59 @@ describe('Window', () => {
     expect(screen.getByRole('button', { name: 'إغلاق النافذة' }).getAttribute('data-part')).toBe('close');
   });
 
+  it('Enter on the move handle zooms and focus goes to the window, then back to the handle on restore', async () => {
+    const user = userEvent.setup();
+    const { container } = render(
+      <Theme style="desk">
+        <WindowLayer>
+          <Window title="Notes" defaultFrame={{ x: 100, y: 100, width: 400, height: 300 }}>
+            Body
+          </Window>
+        </WindowLayer>
+      </Theme>,
+    );
+    const el = root(container);
+    const handle = screen.getByRole('group', { name: 'Move window' });
+    act(() => handle.focus());
+    await user.keyboard('{Enter}');
+    expect(el.hasAttribute('data-zoomed')).toBe(true);
+    expect(container.querySelector('[data-part="move"]')).toBeNull();
+    expect(document.activeElement).toBe(el);
+    await user.click(screen.getByRole('button', { name: 'Zoom window' }));
+    // A pointer press on the zoom light keeps focus on the light.
+    expect(el.hasAttribute('data-zoomed')).toBe(false);
+    act(() => el.focus());
+    await user.keyboard('{Enter}');
+    expect(document.activeElement).toBe(el);
+  });
+
+  it('restoring a zoom started from the move handle returns focus to the handle', () => {
+    let setZoom: (z: boolean) => void = () => undefined;
+    function Controlled() {
+      const [zoomed, setZoomed] = useState(false);
+      setZoom = setZoomed;
+      return (
+        <Theme style="desk">
+          <WindowLayer>
+            <Window title="Notes" zoomed={zoomed} onZoomedChange={setZoomed}>
+              Body
+            </Window>
+          </WindowLayer>
+        </Theme>
+      );
+    }
+    const { container } = render(<Controlled />);
+    const el = root(container);
+    const handle = screen.getByRole('group', { name: 'Move window' });
+    act(() => handle.focus());
+    fireEvent.keyDown(handle, { key: 'Enter' });
+    expect(el.hasAttribute('data-zoomed')).toBe(true);
+    expect(document.activeElement).toBe(el);
+    act(() => setZoom(false));
+    expect(el.hasAttribute('data-zoomed')).toBe(false);
+    expect(document.activeElement).toBe(screen.getByRole('group', { name: 'Move window' }));
+  });
+
   it('renders every demo case', () => {
     const { container } = render(<WindowDemo />);
     for (const id of ['variants', 'one', 'many', 'long-text', 'long-arabic', 'disabled']) {
