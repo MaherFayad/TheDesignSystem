@@ -1,0 +1,732 @@
+/*
+ * Platform android (order 1.25, proposed). Read when the Theme element, or
+ * any ancestor, carries data-platform="android". Every rule sits under
+ * [data-platform='android'], so the web platform is untouched.
+ *
+ * A platform changes proportion, touch target, the shape and travel of
+ * controls, press feedback, where overlays come from and how they leave,
+ * the place of toasts, navigation placement and the type scale. It never
+ * changes brand: colors, font family, surface material and character stay
+ * with the style. So this file reads only semantic tokens, and a style's
+ * recipes (ds.recipes, the layer after this one) still paint over it.
+ *
+ * Conventions followed, from the public Material guidance (values checked
+ * against Google's published component tokens): a 48dp least target;
+ * buttons 40dp tall as full capsules with 14sp labels and 24dp sides, the
+ * hit area widened to 48; a switch 52 by 32 whose thumb is a 16dp dot
+ * while off, 24 while on and 28 while pressed, with a 2dp outline off; an
+ * 18dp checkbox with a 2dp edge and a 40dp state layer; a state layer and a
+ * ripple as press feedback; outlined segmented buttons 40dp tall; list rows
+ * 56, 72 with a second line, 16dp sides; a filled text field 56dp tall with
+ * an active indicator under it; dialogs with a 28dp radius, 24dp padding, a
+ * start aligned 24sp title and text actions at the end; menus with a 4dp
+ * radius, 48dp rows, a scale and fade from the anchor; a bottom sheet with
+ * a 28dp top radius and a 32 by 4 handle; a snackbar at the bottom, start
+ * aligned, one row with a text action at the end (the surface stays the
+ * style's); a navigation bar 80dp tall with a 64 by
+ * 32 pill behind the current icon; a top app bar 64dp tall; a floating
+ * action button 56dp with a 16dp corner.
+ *
+ * Mechanics. Private --_<component>-* properties are set where a component
+ * offers them; where a shape needs more, the documented parts are styled.
+ * This layer comes after ds.base, so a value here beats a state rule of the
+ * component that sets the same private property: only properties the
+ * component's states do not swap are set on a root, and state values are
+ * restated here when a platform needs its own. No new private property is
+ * declared. A button that is a part of another component (a segment, a
+ * close control, a stepper title) or sits in an attached ButtonGroup keeps
+ * the size its parent gives it: the sizing rules skip [data-part] and those
+ * children, and only the hit area and the press feedback reach them.
+ * Logical properties only.
+ *
+ * The ripple is a ::after layer filled with the text color that grows
+ * from the centre of the control while it is pressed and fades on release
+ * (transform and opacity). The motion ruling of 2026-11-12 allows a
+ * clip-path circle from the touch point, the closer match; it waits for
+ * the lint rule of order 1.23 and for a component hook that hands the
+ * pointer position to CSS (see docs/reports/platforms.md). The hit area of a
+ * control drawn under 48dp is a transparent ::before. Under reduced motion
+ * the ripple shows at full size at once, with no growth. Under forced
+ * colors the ripple and the drawn handle are hidden or take system colors.
+ *
+ * Known limit: a Theme with another data-platform nested inside an android
+ * one still matches these descendant selectors.
+ */
+@layer ds.platform {
+  /* ------------------------------------------------------------ buttons: Button, IconButton, ToggleButton, CloseButton, CopyButton, FloatingActionButton */
+
+  /* Common buttons: 40dp capsules, 24dp sides, a 14sp medium label. Filled, tonal, outlined and text are the solid, soft, outline and ghost emphases. */
+  [data-platform='android'] :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button'], [data-ds='close-button'], [data-ds='copy-button']):not([data-part], [data-ds='button-group'][data-attached] > *) {
+    --_button-height: calc(var(--ds-size-touch-android) - var(--ds-space-fixed-m));
+    --_button-padding-inline: var(--ds-space-6xl);
+    --_button-gap: var(--ds-space-s);
+    --_button-font-size: var(--ds-font-size-xl);
+    --_button-radius: var(--ds-radius-pill);
+    --_button-press-scale: 1;
+    --_button-part-press: 1;
+
+    font-weight: var(--ds-font-weight-medium);
+  }
+
+  [data-platform='android'] :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button'], [data-ds='close-button'], [data-ds='copy-button']):not([data-part], [data-ds='button-group'][data-attached] > *)[data-size='xs'] {
+    --_button-height: var(--ds-size-control-md);
+    --_button-padding-inline: var(--ds-space-l);
+    --_button-font-size: var(--ds-font-size-l);
+  }
+
+  [data-platform='android'] :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button'], [data-ds='close-button'], [data-ds='copy-button']):not([data-part], [data-ds='button-group'][data-attached] > *)[data-size='sm'] {
+    --_button-height: calc(var(--ds-size-touch-android) - var(--ds-space-fixed-m));
+    --_button-padding-inline: var(--ds-space-3xl);
+  }
+
+  [data-platform='android'] :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button'], [data-ds='close-button'], [data-ds='copy-button']):not([data-part], [data-ds='button-group'][data-attached] > *)[data-size='lg'] {
+    --_button-height: calc(var(--ds-size-touch-android) + var(--ds-space-fixed-m));
+    --_button-padding-inline: var(--ds-space-7xl);
+    --_button-font-size: var(--ds-font-size-2xl);
+  }
+
+  [data-platform='android'] [data-ds='button'][data-emphasis='ghost']:not([data-part]) {
+    --_button-padding-inline: var(--ds-space-xl);
+  }
+
+  /* A neutral text or outlined button reads in the primary color, as Material's do. Other tones keep their own text color. */
+  [data-platform='android'] [data-ds='button']:is([data-emphasis='ghost'], [data-emphasis='outline']):is(:not([data-tone]), [data-tone='neutral']):not([data-part], :is([data-ds='alert'], [data-ds='banner']) *) {
+    --_button-fg: var(--ds-color-primary-on-surface);
+    --_button-fg-hover: var(--ds-color-primary-on-surface);
+    --_button-fg-active: var(--ds-color-primary-on-surface);
+  }
+
+  /* Floating action button: 56dp, a rounded square with a 16dp corner, the style's lift. */
+  [data-platform='android'] [data-ds='floating-action-button'][data-size] {
+    --_button-height: calc(var(--ds-size-touch-android) + var(--ds-space-fixed-m));
+    --_button-padding-inline: var(--ds-space-3xl);
+    --_button-radius: var(--ds-radius-card);
+    --_button-press-scale: 1;
+    --_button-part-press: 1;
+  }
+
+  [data-platform='android'] [data-ds='floating-action-button'][data-size='lg'] {
+    --_button-height: calc(var(--ds-size-touch-android) * 2);
+    --_button-radius: calc(var(--ds-radius-card) + var(--ds-radius-panel));
+  }
+
+  /* The 48dp hit area of a control drawn smaller: a transparent layer around it (the target size check counts it). */
+  [data-platform='android'] :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button'], [data-ds='close-button'], [data-ds='copy-button'], [data-ds='chip'])::before {
+    content: '';
+    position: absolute;
+    /* Each axis grows only when the control is shorter than the target; percentages read the control's own box. */
+    inset-block: min(0px, calc((100% - var(--ds-size-touch-android)) / 2));
+    inset-inline: min(0px, calc((100% - var(--ds-size-touch-android)) / 2));
+  }
+
+  /* ------------------------------------------------------------ the ripple: press feedback on every control that presses */
+
+  [data-platform='android'] :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button'], [data-ds='close-button'], [data-ds='copy-button'], [data-ds='floating-action-button'], [data-ds='chip'])::after,
+  [data-platform='android'] [data-ds='tab-bar'] > [data-part='item']::after,
+  [data-platform='android'] [data-ds='list'] > [data-part='item'][data-linked]::after,
+  [data-platform='android'] [data-ds='pagination'] > [data-part='page']::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background-color: currentColor;
+    opacity: 0;
+    transform: scale(0);
+    pointer-events: none;
+    /* On release: the layer fades, then shrinks back to nothing, unseen. */
+    transition:
+      opacity var(--ds-duration-celebrate) var(--ds-ease-out),
+      transform 0s linear var(--ds-duration-celebrate);
+  }
+
+  [data-platform='android'] :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button'], [data-ds='close-button'], [data-ds='copy-button'], [data-ds='floating-action-button'], [data-ds='chip']):active:not([data-disabled], [data-loading], [aria-disabled='true'])::after,
+  [data-platform='android'] [data-ds='tab-bar'] > [data-part='item']:active::after,
+  [data-platform='android'] [data-ds='list'] > [data-part='item'][data-linked]:active:not([data-disabled])::after,
+  [data-platform='android'] [data-ds='pagination'] > [data-part='page']:active::after {
+    opacity: 0.12;
+    transform: scale(1);
+    transition:
+      opacity 0s,
+      transform var(--ds-duration-window-open) var(--ds-ease-standard);
+  }
+
+  /* The ripple of a tab sits in the pill, not across the whole item. */
+  [data-platform='android'] [data-ds='tab-bar'] > [data-part='item']::after {
+    inset-block: var(--ds-space-xl) auto;
+    inset-inline: 0;
+    block-size: calc(var(--ds-size-control-md) + var(--ds-space-fixed-2xs) * 2 - var(--ds-space-fixed-m));
+    margin-inline: auto;
+    inline-size: calc(var(--ds-size-touch-android) + var(--ds-space-fixed-m) * 2);
+    border-radius: var(--ds-radius-pill);
+  }
+
+  /* ------------------------------------------------------------ switch: the thumb is a dot at rest, grows while pressed, larger when on */
+
+  [data-platform='android'] [data-ds='switch'] {
+    --_switch-target: var(--ds-size-touch-android);
+    --_switch-height: var(--ds-size-control-md);
+    --_switch-width: calc(var(--_switch-height) * 1.625);
+    --_switch-inset: var(--ds-border-width-strong);
+    --_switch-bg: var(--ds-color-bg-overlay-10);
+    --_switch-thumb-off: var(--ds-color-border-control-hover);
+    --_switch-stretch: 1;
+    --_switch-stretch-now: calc(16 / 28);
+    --_switch-track-press: 1;
+    --_switch-font-size: var(--ds-font-size-xl);
+    --_switch-gap: var(--ds-space-xl);
+    --_switch-duration: var(--ds-duration-window-open);
+    --_switch-ease: var(--ds-ease-emphasized);
+  }
+
+  [data-platform='android'] [data-ds='switch'][data-state='checked'] {
+    --_switch-bg: var(--_switch-fill);
+    --_switch-stretch-now: calc(24 / 28);
+  }
+
+  /* The outline is 2dp. The track keeps no padding, so the 28dp thumb sits 2dp in from the outline. */
+  [data-platform='android'] [data-ds='switch'] > [data-part='control'] > [data-part='track'] {
+    padding-inline: 0;
+    border-width: var(--ds-border-width-strong);
+  }
+
+  /* One uniform scale from the thumb's centre: 16dp off, 24dp on, 28dp while held. */
+  [data-platform='android'] [data-ds='switch'] > [data-part='control'] > [data-part='track'] > [data-part='thumb'] {
+    transform: translateX(calc(var(--_switch-travel) * var(--_switch-dir))) scale(var(--_switch-stretch-now));
+  }
+
+  /* ------------------------------------------------------------ checkbox and radio: 18dp box, 2dp edge, a 40dp state layer */
+
+  [data-platform='android'] [data-ds='checkbox'] {
+    --_checkbox-target: var(--ds-size-touch-android);
+    --_checkbox-box: calc(var(--ds-size-icon-md) + var(--ds-space-fixed-4xs));
+    --_checkbox-radius: var(--ds-radius-xs);
+    --_checkbox-font-size: var(--ds-font-size-xl);
+    --_checkbox-gap: 0;
+  }
+
+  [data-platform='android'] [data-ds='checkbox'] > [data-part='control'] > [data-part='indicator'] {
+    border-width: var(--ds-border-width-strong);
+  }
+
+  [data-platform='android'] [data-ds='checkbox'] > [data-part='control']::after {
+    content: '';
+    position: absolute;
+    inset: calc((var(--_checkbox-target) - (var(--ds-size-touch-android) - var(--ds-space-fixed-m))) / 2);
+    border-radius: var(--ds-radius-pill);
+    background-color: currentColor;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity var(--ds-duration-celebrate) var(--ds-ease-out);
+  }
+
+  [data-platform='android'] [data-ds='checkbox']:not([data-disabled], [data-readonly]) > [data-part='control']:hover::after {
+    opacity: 0.08;
+  }
+
+  [data-platform='android'] [data-ds='checkbox']:not([data-disabled], [data-readonly]) > [data-part='control']:active::after {
+    opacity: 0.12;
+    transition-duration: 0s;
+  }
+
+  [data-platform='android'] [data-ds='radio-group'] {
+    --_radio-group-control-size: calc(var(--ds-size-icon-md) + var(--ds-space-fixed-2xs));
+    --_radio-group-font-size: var(--ds-font-size-xl);
+    --_radio-group-gap: 0;
+  }
+
+  [data-platform='android'] [data-ds='radio-group'] [data-part='item'] {
+    min-block-size: var(--ds-size-touch-android);
+  }
+
+  /* ------------------------------------------------------------ slider: a 16dp track and a tall thin handle */
+
+  [data-platform='android'] :is([data-ds='slider'], [data-ds='range-slider']) {
+    --_slider-target: var(--ds-size-touch-android);
+    --_slider-thumb: var(--ds-space-fixed-2xs);
+    --_slider-thickness: var(--ds-space-3xl);
+    --_slider-lift: 1;
+    --_slider-font-size: var(--ds-font-size-xl);
+  }
+
+  /* The handle: a 4 by 44dp bar centred in the 48dp target, square ended. A vertical slider lays it across. */
+  [data-platform='android'] :is([data-ds='slider'], [data-ds='range-slider']) [data-part='thumb'] {
+    padding-block: calc((var(--_slider-target) - var(--ds-size-touch-ios)) / 2);
+    padding-inline: calc((var(--_slider-target) - var(--ds-space-fixed-2xs)) / 2);
+    border-radius: var(--ds-radius-xs);
+  }
+
+  [data-platform='android'] :is([data-ds='slider'], [data-ds='range-slider'])[data-orientation='vertical'] [data-part='thumb'] {
+    padding-block: calc((var(--_slider-target) - var(--ds-space-fixed-2xs)) / 2);
+    padding-inline: calc((var(--_slider-target) - var(--ds-size-touch-ios)) / 2);
+  }
+
+  /* The focus ring follows the bar; the round edge of the web thumb is not drawn. */
+  [data-platform='android'] :is([data-ds='slider'], [data-ds='range-slider']) [data-part='thumb']::before {
+    inset-block: calc((var(--_slider-target) - var(--ds-size-touch-ios)) / 2);
+    inset-inline: calc((var(--_slider-target) - var(--ds-space-fixed-2xs)) / 2);
+    border-radius: var(--ds-radius-xs);
+  }
+
+  [data-platform='android'] :is([data-ds='slider'], [data-ds='range-slider'])[data-orientation='vertical'] [data-part='thumb']::before {
+    inset-block: calc((var(--_slider-target) - var(--ds-space-fixed-2xs)) / 2);
+    inset-inline: calc((var(--_slider-target) - var(--ds-size-touch-ios)) / 2);
+  }
+
+  [data-platform='android'] :is([data-ds='slider'], [data-ds='range-slider']) [data-part='thumb']::after {
+    display: none;
+  }
+
+  /* ------------------------------------------------------------ segmented buttons: outlined, 40dp, the selected one tonal */
+
+  [data-platform='android'] [data-ds='segmented-control'] {
+    --_segmented-control-height: calc(var(--ds-size-touch-android) - var(--ds-space-fixed-m));
+    --_segmented-control-inset: 0px;
+    --_segmented-control-gap: 0px;
+    --_segmented-control-radius: var(--ds-radius-pill);
+    --_segmented-control-bg: transparent;
+    --_segmented-control-border-color: var(--ds-color-border-control-hover);
+    --_segmented-control-thumb-bg: var(--ds-color-primary-tint);
+    --_segmented-control-thumb-shadow: none;
+    --_segmented-control-item-radius: 0px;
+
+    overflow: clip;
+  }
+
+  /* The track clips the ends, so the focus ring sits inside each segment and is never cut off (WCAG 2.4.7). */
+  [data-platform='android'] [data-ds='segmented-control'] > [data-ds='toggle-button'][data-part='item'] {
+    --_button-font-size: var(--ds-font-size-xl);
+    --_button-ring: inset 0 0 0 var(--ds-border-width-strong) var(--ds-color-focus-ring);
+  }
+
+  /* The segments are split by the outline. */
+  [data-platform='android'] [data-ds='segmented-control'] > [data-ds='toggle-button'][data-part='item'] + [data-ds='toggle-button'][data-part='item'] {
+    box-shadow: inset var(--ds-border-width-default) 0 0 0 var(--_segmented-control-border-color);
+  }
+
+  [data-platform='android'] [data-ds='segmented-control']:dir(rtl) > [data-ds='toggle-button'][data-part='item'] + [data-ds='toggle-button'][data-part='item'] {
+    box-shadow: inset calc(-1 * var(--ds-border-width-default)) 0 0 0 var(--_segmented-control-border-color);
+  }
+
+  /* ------------------------------------------------------------ tabs: 48dp, a 3dp indicator in the primary color, tabs share the width and the list scrolls when they do not fit */
+
+  [data-platform='android'] [data-ds='tabs'] {
+    --_tabs-height: var(--ds-size-touch-android);
+    --_tabs-font-size: var(--ds-font-size-xl);
+    --_tabs-padding-inline: var(--ds-space-3xl);
+  }
+
+  [data-platform='android'] [data-ds='tabs'][data-emphasis='ghost'] {
+    --_tabs-radius: 0;
+    --_tabs-fg-active: var(--ds-color-primary-on-surface);
+    --_tabs-indicator-bg: var(--ds-color-primary-on-surface);
+    --_tabs-indicator-thickness: calc(var(--ds-border-width-strong) + var(--ds-border-width-default));
+  }
+
+  [data-platform='android'] [data-ds='tabs']:not([data-orientation='vertical']) > [data-part='list'] > [data-part='trigger'] {
+    flex: 1 0 auto;
+    justify-content: center;
+  }
+
+  /* ------------------------------------------------------------ chip: 32dp, 8dp corners, an outline at rest */
+
+  [data-platform='android'] [data-ds='chip'] {
+    --_chip-height: var(--ds-size-control-md);
+    --_chip-padding-inline: var(--ds-space-3xl);
+    --_chip-font-size: var(--ds-font-size-xl);
+    --_chip-radius: var(--ds-radius-field);
+
+    font-weight: var(--ds-font-weight-medium);
+  }
+
+  [data-platform='android'] [data-ds='chip']:not([data-selected]):is(:not([data-tone]), [data-tone='neutral']) {
+    --_chip-bg: transparent;
+    --_chip-border-color: var(--ds-color-border-control-hover);
+  }
+
+  [data-platform='android'] [data-ds='chip']:not([data-selected]):is(:not([data-tone]), [data-tone='neutral']):hover {
+    --_chip-bg: var(--ds-color-bg-overlay-5);
+  }
+
+  /* ------------------------------------------------------------ fields: a filled field, 56dp, an active indicator under it */
+
+  [data-platform='android'] [data-ds='input'] {
+    --_input-height: calc(var(--ds-size-touch-android) + var(--ds-space-fixed-m));
+    --_input-padding-inline: var(--ds-space-3xl);
+    --_input-font-size: var(--ds-font-size-2xl);
+    --_input-radius: 0;
+    --_input-bg: var(--ds-color-bg-surface-3);
+    --_input-border-color-focus: var(--ds-color-primary-on-surface);
+
+    border-width: 0;
+    border-block-end-width: var(--ds-border-width-default);
+    border-start-start-radius: var(--ds-radius-xs);
+    border-start-end-radius: var(--ds-radius-xs);
+  }
+
+  [data-platform='android'] [data-ds='input']:focus-within {
+    border-block-end-width: var(--ds-border-width-strong);
+  }
+
+  [data-platform='android'] [data-ds='textarea'] {
+    --_textarea-padding-inline: var(--ds-space-3xl);
+    --_textarea-padding-block: var(--ds-space-3xl);
+    --_textarea-font-size: var(--ds-font-size-2xl);
+    --_textarea-radius: 0;
+    --_textarea-bg: var(--ds-color-bg-surface-3);
+
+    border-width: 0;
+    border-block-end-width: var(--ds-border-width-default);
+    border-start-start-radius: var(--ds-radius-xs);
+    border-start-end-radius: var(--ds-radius-xs);
+  }
+
+  [data-platform='android'] [data-ds='textarea']:focus-within {
+    border-block-end-width: var(--ds-border-width-strong);
+  }
+
+  [data-platform='android'] [data-ds='select']:not([data-part]) {
+    --_select-height: calc(var(--ds-size-touch-android) + var(--ds-space-fixed-m));
+    --_select-padding-inline: var(--ds-space-3xl);
+    --_select-font-size: var(--ds-font-size-2xl);
+    --_select-radius: 0;
+    --_select-bg: var(--ds-color-bg-surface-3);
+    --_select-border-color-focus: var(--ds-color-primary-on-surface);
+
+    border-width: 0;
+    border-block-end-width: var(--ds-border-width-default);
+    border-start-start-radius: var(--ds-radius-xs);
+    border-start-end-radius: var(--ds-radius-xs);
+  }
+
+  /* ------------------------------------------------------------ list: 56dp rows, 72 with a second line, 16dp sides, no hairlines */
+
+  [data-platform='android'] [data-ds='list'] {
+    --_list-height: calc(var(--ds-size-touch-android) + var(--ds-space-fixed-m));
+    --_list-padding-inline: var(--ds-space-3xl);
+    --_list-padding-block: var(--ds-space-s);
+    --_list-gap: var(--ds-space-3xl);
+    --_list-font-size: var(--ds-font-size-2xl);
+    --_list-description-font-size: var(--ds-font-size-xl);
+  }
+
+  [data-platform='android'] [data-ds='list'] > [data-part='item']:has(> [data-part='description']) {
+    min-block-size: calc(var(--ds-size-touch-android) * 1.5);
+  }
+
+  [data-platform='android'] [data-ds='list'] > [data-part='item'] {
+    border-radius: 0;
+  }
+
+  [data-platform='android'] [data-ds='list'][data-variant='inset'] {
+    --_list-radius: var(--ds-radius-card);
+
+    padding: 0;
+    overflow: clip;
+  }
+
+  [data-platform='android'] [data-ds='list'][data-variant='inset'] > [data-part='item'] + [data-part='item'] > [data-part='separator'] {
+    display: none;
+  }
+
+  /* ------------------------------------------------------------ navigation: Navbar, TabBar, Sidebar, Pagination, Stepper */
+
+  /* The top app bar: 64dp, a start aligned 22sp title. */
+  [data-platform='android'] [data-ds='navbar'] {
+    --_navbar-height: calc(var(--ds-size-touch-android) + var(--ds-space-fixed-m) * 2);
+    --_navbar-control-height: var(--ds-size-touch-android);
+    --_navbar-padding-inline: var(--ds-space-xs);
+    --_navbar-border-color: transparent;
+    --_navbar-font-size: var(--ds-font-size-xl);
+  }
+
+  /* The title link is a full height target. */
+  [data-platform='android'] [data-ds='navbar'] > [data-part='brand'],
+  [data-platform='android'] [data-ds='navbar'] > [data-part='brand'] > a {
+    display: inline-flex;
+    align-items: center;
+    min-block-size: var(--ds-size-touch-android);
+  }
+
+  [data-platform='android'] [data-ds='navbar'] > [data-part='brand'] {
+    font-size: var(--ds-font-size-4xl);
+    font-weight: var(--ds-font-weight-regular);
+  }
+
+  /* The navigation bar: 80dp, a 64 by 32 pill behind the current icon, a 12sp label. */
+  [data-platform='android'] [data-ds='tab-bar'] {
+    --_tab-bar-item-height: calc(var(--ds-size-touch-android) + var(--ds-size-control-md));
+    --_tab-bar-icon-size: var(--ds-size-icon-lg);
+    --_tab-bar-pill-bg: var(--ds-color-primary-tint);
+    --_tab-bar-fg-active: var(--ds-color-text-bright);
+    --_tab-bar-border-color: transparent;
+    --_tab-bar-weight: var(--ds-font-weight-medium);
+    --_tab-bar-weight-active: var(--ds-font-weight-bold);
+  }
+
+  [data-platform='android'] [data-ds='tab-bar'] > [data-part='item'] {
+    gap: var(--ds-space-fixed-2xs);
+    padding-block: var(--ds-space-xl) var(--ds-space-3xl);
+    font-size: var(--ds-font-size-s);
+  }
+
+  [data-platform='android'] [data-ds='tab-bar'] > [data-part='item'] > [data-part='item-icon'] {
+    padding-block: var(--ds-space-fixed-2xs);
+    padding-inline: calc((var(--ds-size-touch-android) + var(--ds-space-fixed-m) * 2 - var(--_tab-bar-icon-size)) / 2);
+  }
+
+  /* A navigation drawer: 56dp items, a full pill behind the current one, no edge mark. */
+  [data-platform='android'] [data-ds='sidebar'] {
+    --_sidebar-item-height: calc(var(--ds-size-touch-android) + var(--ds-space-fixed-m));
+    --_sidebar-item-radius: var(--ds-radius-pill);
+    --_sidebar-item-padding-inline: var(--ds-space-3xl);
+    --_sidebar-item-font-size: var(--ds-font-size-xl);
+    --_sidebar-item-bg-active: var(--ds-color-primary-tint);
+    --_sidebar-item-edge-active: transparent;
+  }
+
+  [data-platform='android'] [data-ds='pagination'] {
+    --_pagination-height: var(--ds-size-touch-android);
+    --_pagination-bg-active: var(--ds-color-primary-tint);
+    --_pagination-border-color-active: transparent;
+  }
+
+  [data-platform='android'] [data-ds='pagination'] > [data-part='page'] {
+    position: relative;
+    min-inline-size: var(--ds-size-touch-android);
+    min-block-size: var(--ds-size-touch-android);
+    border-radius: var(--ds-radius-pill);
+  }
+
+  [data-platform='android'] [data-ds='stepper'] {
+    --_stepper-indicator-size: var(--ds-size-icon-lg);
+    --_stepper-font-size: var(--ds-font-size-xl);
+    --_stepper-description-size: var(--ds-font-size-s);
+  }
+
+  /* ------------------------------------------------------------ menus: DropdownMenu, ContextMenu, the Select list */
+
+  [data-platform='android'] :is([data-ds='dropdown-menu'], [data-ds='context-menu'], [data-ds='select'][data-part='content']) {
+    --_menu-width-min: calc(var(--ds-menu-width-min) * 0.56);
+    --_menu-width-max: calc(var(--ds-menu-width-min) * 1.4);
+    --_menu-radius: var(--ds-radius-xs);
+    --_menu-padding: var(--ds-space-s) 0;
+    --_menu-item-height: var(--ds-size-touch-android);
+    --_menu-item-padding-inline: var(--ds-space-xl);
+    --_menu-item-radius: 0;
+    --_menu-item-gap: var(--ds-space-xl);
+    --_menu-item-font-size: var(--ds-font-size-xl);
+    --_menu-item-font-weight: var(--ds-font-weight-regular);
+    --_menu-enter-scale: var(--ds-scale-window-enter);
+    --_menu-shift: 0px;
+    --_menu-item-shift: 0px;
+    --_menu-duration-in: var(--ds-duration-zoom);
+    --_menu-ease-in: var(--ds-ease-emphasized);
+  }
+
+  [data-platform='android'] [data-ds='select'][data-part='content'] {
+    --_select-item-height: var(--ds-size-touch-android);
+  }
+
+  /* ------------------------------------------------------------ popover and tooltip */
+
+  [data-platform='android'] [data-ds='popover'] {
+    --_popover-radius: var(--ds-radius-panel);
+    --_popover-padding: var(--ds-space-3xl);
+    --_popover-enter-scale: var(--ds-scale-window-enter);
+    --_popover-shift: 0px;
+    --_popover-duration-in: var(--ds-duration-zoom);
+    --_popover-ease-in: var(--ds-ease-emphasized);
+
+    font-size: var(--ds-font-size-xl);
+  }
+
+  /* A plain tooltip: 4dp corners, small text. Touch shows it on long press (left to the component). */
+  [data-platform='android'] [data-ds='tooltip'] {
+    --_tooltip-radius: var(--ds-radius-xs);
+    --_tooltip-padding-block: var(--ds-space-2xs);
+    --_tooltip-padding-inline: var(--ds-space-s);
+    --_tooltip-enter-scale: var(--ds-scale-window-enter);
+    --_tooltip-duration-in: var(--ds-duration-medium);
+    --_tooltip-ease-in: var(--ds-ease-emphasized);
+  }
+
+  /* ------------------------------------------------------------ dialog and alert dialog: 28dp corners, a start aligned title, text actions at the end */
+
+  [data-platform='android'] :is([data-ds='dialog'], [data-ds='alert-dialog']) {
+    --_dialog-gutter: var(--ds-space-6xl);
+    --_dialog-radius: calc(var(--ds-radius-card) + var(--ds-radius-panel));
+    --_dialog-padding: var(--ds-space-6xl);
+    --_dialog-header-bg: transparent;
+    --_dialog-footer-bg: transparent;
+    --_dialog-divider-color: transparent;
+    --_dialog-enter-y: 0px;
+    --_dialog-enter-scale: var(--ds-scale-window-enter);
+    --_dialog-duration-in: var(--ds-duration-window-open);
+    --_dialog-ease-in: var(--ds-ease-emphasized);
+  }
+
+  [data-platform='android'] [data-ds='dialog'] > [data-part='panel'] > [data-part='title'] {
+    padding-block: var(--_dialog-padding) var(--ds-space-xl);
+    padding-inline-start: var(--_dialog-padding);
+    border-block-end: 0;
+    font-size: var(--ds-font-size-5xl);
+    font-weight: var(--ds-font-weight-regular);
+  }
+
+  [data-platform='android'] [data-ds='dialog'] > [data-part='panel'] > [data-part='close'] {
+    inset-block-start: var(--ds-space-3xl);
+    inset-inline-end: var(--ds-space-3xl);
+  }
+
+  [data-platform='android'] [data-ds='alert-dialog'] > [data-part='panel'] > [data-part='title'] {
+    font-size: var(--ds-font-size-5xl);
+    font-weight: var(--ds-font-weight-regular);
+  }
+
+  [data-platform='android'] :is([data-ds='dialog'], [data-ds='alert-dialog']) > [data-part='panel'] > [data-part='description'] {
+    font-size: var(--ds-font-size-xl);
+  }
+
+  [data-platform='android'] :is([data-ds='dialog'], [data-ds='alert-dialog'], [data-ds='sheet'], [data-ds='drawer']) > [data-part='panel'] > [data-part='footer'] {
+    gap: var(--ds-space-s);
+    padding-block: var(--ds-space-xl) var(--_dialog-padding);
+    padding-inline: var(--_dialog-padding);
+    border-block-start: 0;
+  }
+
+  /* The actions are text buttons in the primary color. */
+  [data-platform='android'] :is([data-ds='dialog'], [data-ds='alert-dialog']) > [data-part='panel'] > [data-part='footer'] > [data-ds='button'],
+  [data-platform='android'] [data-ds='toast'] > [data-part='action'] {
+    --_button-bg: transparent;
+    --_button-border-color: transparent;
+    --_button-fg: var(--ds-color-primary-on-surface);
+    --_button-padding-inline: var(--ds-space-xl);
+  }
+
+  [data-platform='android'] :is([data-ds='dialog'], [data-ds='alert-dialog']) > [data-part='panel'] > [data-part='footer'] > [data-ds='button'][data-tone='danger'] {
+    --_button-fg: var(--ds-color-state-danger-text);
+  }
+
+  [data-platform='android'] :is([data-ds='dialog'], [data-ds='alert-dialog']) > [data-part='panel'] > [data-part='footer'] > [data-ds='button']:hover:not([data-disabled], [data-loading]) {
+    --_button-bg: var(--ds-color-bg-overlay-5);
+  }
+
+  /* ------------------------------------------------------------ bottom sheet and side sheet */
+
+  [data-platform='android'] :is([data-ds='sheet'], [data-ds='drawer']) {
+    --_dialog-duration-in: var(--ds-duration-window-open);
+    --_dialog-ease-in: var(--ds-ease-emphasized);
+    --_dialog-handle-color: transparent;
+  }
+
+  [data-platform='android'] [data-ds='sheet'] {
+    --_dialog-radius: calc(var(--ds-radius-card) + var(--ds-radius-panel));
+  }
+
+  [data-platform='android'] [data-ds='drawer'] {
+    --_dialog-radius: var(--ds-radius-card);
+  }
+
+  /* The drag handle: 32 by 4, round, 22dp from the top, inside a 48dp target. */
+  [data-platform='android'] [data-ds='sheet'] > [data-part='panel'] > [data-part='handle'] {
+    position: relative;
+    inline-size: calc(var(--ds-size-touch-android) - var(--ds-space-fixed-m) * 2);
+    block-size: var(--ds-space-fixed-2xs);
+    padding-block: calc((var(--ds-size-touch-android) - var(--ds-space-fixed-2xs)) / 2);
+  }
+
+  [data-platform='android'] [data-ds='sheet'] > [data-part='panel'] > [data-part='handle']::before {
+    content: '';
+    position: absolute;
+    inset-block-start: calc((var(--ds-size-touch-android) - var(--ds-space-fixed-2xs)) / 2);
+    inset-inline: var(--ds-space-xl);
+    block-size: var(--ds-space-fixed-2xs);
+    border-radius: var(--ds-radius-pill);
+    background-color: var(--ds-color-border-strong);
+    pointer-events: none;
+  }
+
+  /* ------------------------------------------------------------ toast: a snackbar at the bottom, start aligned, one row with the action at the end. The surface stays the style's: Material's inverse surface is a surface choice, so a style opts in through its recipe. */
+
+  :root:not(:has([data-ds='sheet'] > [data-part='panel'][data-state='open'])) [data-platform='android'] [data-ds='toaster'] {
+    flex-direction: column;
+    inset-block: auto var(--_toaster-inset-block-end);
+    inset-inline: var(--_toaster-inset-inline) auto;
+    margin-inline: 0;
+  }
+
+  [data-platform='android'] [data-ds='toast'] {
+    --_toast-edge: var(--_toast-border-color);
+    --_toast-radius: var(--ds-radius-xs);
+    --_toast-shadow: var(--ds-elevation-menu);
+    --_toast-blur: 0px;
+    --_toast-enter-scale: 1;
+    --_toast-duration-in: var(--ds-duration-window-open);
+    --_toast-ease-in: var(--ds-ease-emphasized);
+
+    grid-template-columns: auto minmax(0, 1fr) auto auto;
+    grid-template-areas:
+      'icon title action close'
+      'icon description action close';
+    grid-template-rows: auto auto;
+    align-items: center;
+    column-gap: var(--ds-space-xl);
+    min-block-size: var(--ds-size-touch-android);
+    padding-block: var(--ds-space-xl);
+    padding-inline: var(--ds-space-3xl) var(--ds-space-s);
+    border-inline-start-width: 0;
+    font-size: var(--ds-font-size-xl);
+  }
+
+  [data-platform='android'] [data-ds='toast'] > :is([data-part='action'], [data-part='close']) {
+    align-self: center;
+  }
+
+  [data-platform='android'] [data-ds='toast'] > [data-part='action'] {
+    font-weight: var(--ds-font-weight-bold);
+  }
+
+  /* ------------------------------------------------------------ reduced motion: the ripple shows at once, nothing grows or travels */
+
+  @media (prefers-reduced-motion: reduce) {
+    [data-platform='android'] :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button'], [data-ds='close-button'], [data-ds='copy-button'], [data-ds='floating-action-button'], [data-ds='chip'])::after,
+    [data-platform='android'] [data-ds='tab-bar'] > [data-part='item']::after,
+    [data-platform='android'] [data-ds='list'] > [data-part='item'][data-linked]::after,
+    [data-platform='android'] [data-ds='pagination'] > [data-part='page']::after,
+    [data-platform='android'] [data-ds='checkbox'] > [data-part='control']::after {
+      transform: none;
+      transition: none;
+    }
+  }
+
+  :root[data-motion='reduce'] [data-platform='android'] :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button'], [data-ds='close-button'], [data-ds='copy-button'], [data-ds='floating-action-button'], [data-ds='chip'])::after,
+  :root[data-motion='reduce'] [data-platform='android'] [data-ds='tab-bar'] > [data-part='item']::after,
+  :root[data-motion='reduce'] [data-platform='android'] [data-ds='list'] > [data-part='item'][data-linked]::after,
+  :root[data-motion='reduce'] [data-platform='android'] [data-ds='pagination'] > [data-part='page']::after,
+  :root[data-motion='reduce'] [data-platform='android'] [data-ds='checkbox'] > [data-part='control']::after {
+    transform: none;
+    transition: none;
+  }
+
+  /* ------------------------------------------------------------ forced colors */
+
+  @media (forced-colors: active) {
+    /* The ripple and the state layer are decoration: the system draws its own focus and press. */
+    [data-platform='android'] :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button'], [data-ds='close-button'], [data-ds='copy-button'], [data-ds='floating-action-button'], [data-ds='chip'])::after,
+    [data-platform='android'] [data-ds='tab-bar'] > [data-part='item']::after,
+    [data-platform='android'] [data-ds='list'] > [data-part='item'][data-linked]::after,
+    [data-platform='android'] [data-ds='pagination'] > [data-part='page']::after,
+    [data-platform='android'] [data-ds='checkbox'] > [data-part='control']::after {
+      display: none;
+    }
+
+    /* A filled field has an edge only under it; forced colors gets the whole box back, so the field is still found. */
+    [data-platform='android'] :is([data-ds='input'], [data-ds='textarea'], [data-ds='select']:not([data-part])) {
+      border-width: var(--ds-border-width-default);
+    }
+
+    [data-platform='android'] [data-ds='sheet'] > [data-part='panel'] > [data-part='handle']::before {
+      background-color: CanvasText;
+    }
+  }
+}

@@ -26,7 +26,7 @@ export const SCHEMA_URL = 'https://ui.shadcn.com/schema/registry.json';
 export const ITEM_SCHEMA_URL = 'https://ui.shadcn.com/schema/registry-item.json';
 
 /** The layer order every system CSS file assumes. Equal to the line in tokens.css. */
-export const LAYER_ORDER = '@layer ds.reset, ds.tokens, ds.base, ds.recipes, ds.overrides;';
+export const LAYER_ORDER = '@layer ds.reset, ds.tokens, ds.base, ds.platform, ds.recipes, ds.overrides;';
 
 /** Folder inside the consumer's components alias that holds every file. */
 export const TARGET_ROOT = '@components/ds';
