@@ -59,8 +59,8 @@ No adb. No iOS build.
 | 1.8 | Batch 8 layout (12) | ds-component | react | open | |
 | 1.9 | Batch 9 data display A (12) | ds-component | react | open | |
 | A1 to A5 | Angular batches 1 to 5 | ds-angular | angular | open | |
-| 1.10 | Neutral style | ds-style | all | running | |
-| 1.11 | Motion catalog | ds-style | all | open | |
+| 1.10 | Neutral style | ds-style | all | done, proposed | see git log |
+| 1.11 | Motion catalog | ds-style | all | merged, review open | see git log |
 | 1.12 | Checker | ds-qa | all | built, review open | f6f29a5 |
 | 1.13 | Registry | ds-docs | react | open | |
 | 1.14 | CLI | ds-docs | all | open | |
@@ -82,19 +82,19 @@ components, a fresh review, then commit.
 
 | Lane | Components | Branch | Session | Status |
 | --- | --- | --- | --- | --- |
-| 5A | Alert, Callout, Banner | claude/ds-lane-5a | session_01ErLBsbefnDBtEpkCj3GvTS | running |
-| 5B | Spinner, ProgressBar, ProgressCircle, Meter | claude/ds-lane-5b | session_01ErLBsbQkcpmsu3TmHi5rBc | running |
-| 5C | StatusDot, Skeleton, ErrorState, NotificationCenter | claude/ds-lane-5c | session_01ErLBscJqT26iQKYXWfvW2v | running |
-| 8A | Stack, Grid, Container, AspectRatio, Separator | claude/ds-lane-8a | session_01ErLBsatk6FvhTqt28raxGW | running |
-| 8B | Surface, Section, Bento | claude/ds-lane-8b | session_01ErLBsaksJtMzavzrmJEa6t | running |
-| 8C | ScrollArea, ResizablePanels, SplitView, PageShell | claude/ds-lane-8c | session_01ErLBsa8BSXjHaR4V3oZ3Ey | running |
+| 5A | Alert, Callout, Banner | claude/ds-lane-5a | session_01ErLBsbefnDBtEpkCj3GvTS | merged, review open |
+| 5B | Spinner, ProgressBar, ProgressCircle, Meter | claude/ds-lane-5b | session_01ErLBsbQkcpmsu3TmHi5rBc | merged, review open |
+| 5C | StatusDot, Skeleton, ErrorState, NotificationCenter | claude/ds-lane-5c | session_01ErLBscJqT26iQKYXWfvW2v | merged, review open |
+| 8A | Stack, Grid, Container, AspectRatio, Separator | claude/ds-lane-8a | session_01ErLBsatk6FvhTqt28raxGW | merged, review open |
+| 8B | Surface, Section, Bento | claude/ds-lane-8b | session_01ErLBsaksJtMzavzrmJEa6t | merged, review open |
+| 8C | ScrollArea, ResizablePanels, SplitView, PageShell | claude/ds-lane-8c | session_01ErLBsa8BSXjHaR4V3oZ3Ey | merged, review open |
 | 9A | Avatar, AvatarGroup, Badge, Chip | claude/ds-lane-9a | session_01ErLBsdSNQd8GYQXKyPnFtx | running |
-| 9B | Kbd, Stat, DescriptionList, List | claude/ds-lane-9b | session_01ErLBsbn61TreoYiaJyiVHH | running |
-| 9C | Card, Tile, Accordion, EmptyState | claude/ds-lane-9c | session_01ErLBsckjBZHg8VUHK6mfMB | running |
+| 9B | Kbd, Stat, DescriptionList, List | claude/ds-lane-9b | session_01ErLBsbn61TreoYiaJyiVHH | merged, review open |
+| 9C | Card, Tile, Accordion, EmptyState | claude/ds-lane-9c | session_01ErLBsckjBZHg8VUHK6mfMB | merged, review open |
 | 6B | Popover, Tooltip, HoverCard, Tour | claude/ds-lane-6b | session_01ErLBscFPqJJ34KeEwkLV3n | running |
 | 3A | Checkbox, CheckboxGroup, Switch, Slider, RangeSlider | claude/ds-lane-3a | session_01ErLBsa24qpzHgQodUJrTe8 | running |
 | 3B | RadioGroup, RadioCard, Rating | claude/ds-lane-3b | session_01ErLBsdLpnMMa2v2FtGkhme | running |
-| 1.11 | Motion catalog | claude/ds-order-1-11 | session_01ErLBscxhmd1nrS2SH4V1nU | running |
+| 1.11 | Motion catalog | claude/ds-order-1-11 | session_01ErLBscxhmd1nrS2SH4V1nU | merged |
 | 6A | Dialog bring up, AlertDialog, Drawer, Sheet | claude/ds-lane-6a | session_01ErLBsdNLKJYCuviMHY2RUQ | running |
 | 6C | ContextMenu, Menubar | claude/ds-lane-6c | session_01ErLBsZK8DpHg6JpsoEi455 | running |
 | 7A | Sidebar, Rail, Navbar | claude/ds-lane-7a | session_01ErLBsa15oMtQUTSt64h7S1 | running |
@@ -112,6 +112,12 @@ install), 3D Select, MultiSelect and TagField (need ListBox), 4A Fieldset,
 Form and ConsentField, 4C FilterBar, 6D CommandPalette and Lightbox.
 
 Done locally: Link, ButtonGroup, DropdownMenu.
+
+Review sessions (findings only, no source edits): batch 5 on
+`claude/ds-review-5` (session_01ErLBsd5dj77mtG4ZKCmhTs), batch 8 on
+`claude/ds-review-8` (session_01ErLBsZfAjNyUmivfhgabX1). Their reports land in
+`docs/reports/reviews/`. Requests from the lanes are collected in
+`docs/plan/wave-1-followups.md`.
 
 Local subagents in the lead's tree: lane 1A (ToggleButton, CloseButton, CopyButton,
 FloatingActionButton), 1.10 Neutral, the base CSS rem fix.
@@ -149,6 +155,10 @@ again: commit the tree as wip, push, and resume the agents by id.
 3. Liquid and Button on a real iPhone (HUMAN GATE). This container and the
    owner's Windows machine cannot build iOS. Steps to open the Expo gallery
    in Expo Go: `docs/reports/ios-check.md`.
+5. Neutral approval (HUMAN GATE). Proposal and screenshots:
+   `docs/reports/neutral.md`. Open choices, each with a recommendation: the
+   brand blue `#2563eb`, a 36px default control height, an 8px control
+   radius, and whether the default soft button stays a gray fill.
 4. Arabic docs register. The docs site ships in English and Arabic, and the
    content guide describes two registers. Which one do the Arabic docs pages
    use: Gulf modern standard Arabic or white Saudi dialect? The lead will
