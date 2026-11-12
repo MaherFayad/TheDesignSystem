@@ -1,0 +1,356 @@
+{
+  "name": "Select",
+  "kind": "component",
+  "family": "selection",
+  "summary": "A closed trigger that opens a short list and keeps one value from it. The trigger shows the chosen label; the list opens under it and takes focus while it is open.",
+  "useWhen": [
+    "One value from a short list of about 4 to 12 options that people read rather than search, such as a sort order, a status or a time zone region",
+    "A form row with little room, where the options need not all show at once",
+    "A value that must be one of the options, with a sensible default or a placeholder"
+  ],
+  "avoidWhen": [
+    "A long list (more than about 12 options) that people find faster by typing",
+    "Two to five options that fit on the page and read better side by side",
+    "Several values at once",
+    "An action to run, not a value to keep"
+  ],
+  "insteadUse": {
+    "A long list people search by typing": "Combobox",
+    "Any typed text is allowed, options are only suggestions": "Autocomplete",
+    "Two to five options shown at once": "RadioGroup",
+    "Several values from a list": "MultiSelect",
+    "Free tags typed by the person": "TagField",
+    "A list of actions or commands": "DropdownMenu",
+    "A list that stays visible on the page": "ListBox"
+  },
+  "anatomy": [
+    "root",
+    "value",
+    "icon",
+    "content",
+    "scroll-up",
+    "viewport",
+    "item",
+    "indicator",
+    "item-icon",
+    "item-label",
+    "item-description",
+    "group",
+    "label",
+    "separator",
+    "empty",
+    "scroll-down"
+  ],
+  "parts": {
+    "Select": "root"
+  },
+  "slots": {
+    "item-icon": {
+      "accepts": [
+        "Icon"
+      ],
+      "max": 1
+    }
+  },
+  "props": {
+    "items": {
+      "type": "node",
+      "required": true,
+      "description": "An array of options, plain ({ value, label, description?, start?, disabled?, keywords? }) or in titled groups ({ label, options }), as ListBox takes them (type node here means structured data). A separator is drawn between groups. Typeahead reads the label."
+    },
+    "value": {
+      "type": "string",
+      "description": "The chosen option value, controlled with onValueChange. null: none, the placeholder shows."
+    },
+    "defaultValue": {
+      "type": "string",
+      "default": null,
+      "description": "Uncontrolled starting value."
+    },
+    "onValueChange": {
+      "type": "function",
+      "description": "Called with the chosen value."
+    },
+    "open": {
+      "type": "boolean",
+      "description": "The list is open, controlled with onOpenChange."
+    },
+    "defaultOpen": {
+      "type": "boolean",
+      "default": false,
+      "description": "Uncontrolled starting open state."
+    },
+    "onOpenChange": {
+      "type": "function",
+      "description": "Called on open and close."
+    },
+    "placeholder": {
+      "type": "string",
+      "default": "Choose an option",
+      "description": "Shown in the trigger when nothing is chosen. Arabic default: اختيار من القائمة. Never the only label: wrap the Select in a Field."
+    },
+    "size": {
+      "type": [
+        "sm",
+        "md",
+        "lg"
+      ],
+      "default": "md",
+      "description": "Trigger height from size.control (28, 32, 44px at default density). sm lists use sm rows; md and lg lists use list.row.height, the ListBox row. lg uses a fixed 16px type so phones do not zoom."
+    },
+    "shape": {
+      "type": [
+        "default",
+        "pill"
+      ],
+      "default": "default",
+      "description": "default: the style's control radius (a pill in Studio and Desk). pill: always fully round."
+    },
+    "invalid": {
+      "type": "boolean",
+      "default": false,
+      "description": "The danger border and aria-invalid. Inside a Field it follows the Field's error."
+    },
+    "disabled": {
+      "type": "boolean",
+      "default": false,
+      "description": "Native disabled on the trigger: out of the tab order, the list never opens. Inside a Field it follows the Field."
+    },
+    "readOnly": {
+      "type": "boolean",
+      "default": false,
+      "description": "The value shows and the trigger stays focusable, but no key, typeahead or press opens the list or changes the value. aria-readonly, a dashed border, no chevron."
+    },
+    "required": {
+      "type": "boolean",
+      "default": false,
+      "description": "aria-required on the trigger and required on the hidden native select. Inside a Field it follows the Field."
+    },
+    "loading": {
+      "type": "boolean",
+      "default": false,
+      "description": "Options are on their way: the icon is a spinner, aria-busy and data-loading are set, the trigger is described by loadingLabel (aria-describedby), and the list does not open."
+    },
+    "loadingLabel": {
+      "type": "string",
+      "default": "Loading options",
+      "description": "What the trigger is described by while loading. Arabic default: جار تحميل الخيارات."
+    },
+    "empty": {
+      "type": "node",
+      "default": "No options to choose from yet.",
+      "description": "Shown in the list when there is no option. Arabic default: ما فيه خيارات للاختيار. Say what to do next."
+    },
+    "name": {
+      "type": "string",
+      "description": "Submits the value under this name in a form (Radix renders a hidden native select)."
+    },
+    "form": {
+      "type": "string",
+      "description": "The id of a form outside the Select's own ancestors that the hidden native select submits with (passed to Radix Root)."
+    }
+  },
+  "states": [
+    "open",
+    "closed",
+    "checked",
+    "unchecked",
+    "data-placeholder",
+    "data-highlighted",
+    "data-invalid",
+    "data-disabled",
+    "data-readonly",
+    "data-loading"
+  ],
+  "a11y": {
+    "role": "combobox on the trigger (Radix Select: aria-expanded, aria-controls, aria-autocomplete none), named by the Field label. The open list is a listbox of option rows (aria-selected on the chosen one, aria-disabled on the disabled ones) in titled groups. While the list is open the rest of the page is hidden from assistive tech and Tab does not leave it.",
+    "focus": "The trigger is one tab stop. Opening moves focus to the chosen item, else the first enabled one. Escape, a choice or a press outside closes the list and returns focus to the trigger.",
+    "keys": {
+      "Enter": "On the trigger, opens the list. On an item, chooses it and closes the list",
+      "Space": "On the trigger, opens the list. On an item, chooses it and closes the list",
+      "ArrowDown": "On the trigger, opens the list. In the list, moves to the next item, skipping disabled ones",
+      "ArrowUp": "On the trigger, opens the list. In the list, moves to the previous item",
+      "Home": "In the list, moves to the first item",
+      "End": "In the list, moves to the last item",
+      "Typeahead": "On the closed trigger, typing letters chooses the next option whose label starts with them. In the list, it moves to that item",
+      "Escape": "Closes the list without changing the value and returns focus to the trigger"
+    },
+    "announce": "The trigger reads its Field label, the chosen label (or the placeholder), and that it opens a list. Moving through the list reads each option: its label, its description, selected or not, unavailable, and its position.",
+    "notes": [
+      "Tab does not move focus while the list is open (Radix keeps it in the list); Escape or a choice returns focus to the trigger.",
+      "The open listbox is named like the trigger: through the Field label, else aria-label or aria-labelledby on the Select. With no option, the list is described by its empty text.",
+      "Read only and loading block only the keys that open the list or choose by typeahead; Tab and browser shortcuts with a modifier pass.",
+      "The chosen item shows a check on every style, never color alone (WCAG 1.4.1). The check column is on every row so labels line up.",
+      "Rows equal ListBox option rows: the same list.row.height (sm: size.control.xs), padding, gap, radius, type and highlight tokens. Rows and the scroll buttons are at least size.target-min (WCAG 2.5.8).",
+      "The content is portaled into a Theme copied from the trigger's Theme and is its own root carrying data-part content, as the Combobox popup is; its z-index is z.menu so it shows over a Dialog.",
+      "Disabled is native disabled (a form control, anatomy.md rule 5). Read only keeps the trigger focusable with aria-readonly and blocks every key but Tab and the pointer.",
+      "An option description is read through aria-describedby on the item.",
+      "Contract: the variants case marks one trigger with data-demo-trigger. Enter, Space and ArrowDown on the trigger are checked as state changes (aria-expanded), because Radix opens on keydown and prevents the click. The closed trigger stamps no data-state (it reads as open through aria-expanded); data-state open is on the content root.",
+      "contract.skipAxeRules aria-hidden-focus: while the list is open, Radix Select hides the rest of the page with aria-hidden and traps focus in the list (a focus scope, and pointer events off outside it), so the other triggers on the page cannot be reached until it closes. Axe flags those hidden triggers by shape. The closed pages passed axe with the rule on in the lane run before it was skipped (docs/reports/lanes/lane-3d.md).",
+      "States: open is data-state on the content root; closed means the content is not in the DOM (Radix Select has no exit presence). checked and unchecked are data-state on each item."
+    ]
+  },
+  "content": {
+    "en": {
+      "label": "A noun in a Field label: Sort by, Status, Region.",
+      "placeholder": "Optional: Choose an option. Better, preselect a sensible default.",
+      "options": "Short nouns, sentence case, parallel in form: To do, In progress, Done. Order by use or by a natural order, not alphabetically by default.",
+      "empty": "Say what to do next: No statuses yet. Add one from Settings.",
+      "error": "Say what to do: Choose a status for the task."
+    },
+    "ar": {
+      "label": "Noun form, no diacritics: الحالة، الترتيب حسب.",
+      "placeholder": "Noun form: اختيار من القائمة.",
+      "options": "Nouns as people write them, Western digits: قيد التنفيذ، مكتملة.",
+      "empty": "ما فيه حالات. أضف حالة من الإعدادات.",
+      "error": "اختر حالة للمهمة."
+    }
+  },
+  "tokens": [
+    "size.control.xs",
+    "size.control.sm",
+    "size.control.md",
+    "size.control.lg",
+    "size.target-min",
+    "size.icon.md",
+    "space.4xs",
+    "space.3xs",
+    "space.2xs",
+    "space.xs",
+    "space.s",
+    "space.m",
+    "space.2xl",
+    "radius.control",
+    "radius.pill",
+    "radius.card",
+    "radius.panel",
+    "radius.field",
+    "menu.item.radius",
+    "menu.width.min",
+    "list.row.height",
+    "color.text.default",
+    "color.text.muted",
+    "color.text.placeholder",
+    "color.border.control",
+    "color.border.control-hover",
+    "color.border.strong",
+    "color.border.hairline",
+    "color.state.danger-text",
+    "color.bg.overlay-5",
+    "color.bg.overlay-10",
+    "color.bg.surface-2",
+    "color.bg.surface-3",
+    "color.material.glass-strong",
+    "color.material.glass-solid",
+    "color.primary.fill",
+    "color.primary.text",
+    "color.focus.ring",
+    "color.focus.ring-on-primary-inner",
+    "elevation.input-focus",
+    "elevation.menu",
+    "focus.shadow.ring",
+    "blur.window-strong",
+    "blur.window-saturation",
+    "border.width.default",
+    "border.width.strong",
+    "font.family.sans",
+    "font.size.xs",
+    "font.size.s",
+    "font.size.m",
+    "font.size.fixed-m",
+    "font.weight.regular",
+    "font.weight.semibold",
+    "font.weight.menu",
+    "font.leading.snug",
+    "font.leading.arabic.snug",
+    "opacity.disabled",
+    "scale.press",
+    "duration.base",
+    "ease.default",
+    "ease.emphasized",
+    "z.menu"
+  ],
+  "motion": "menu-scale",
+  "frameworks": {
+    "react": {
+      "status": "ready",
+      "behavior": "radix:Select (Root, Trigger, Value, Icon, Content in popper position, Viewport, Item, ItemText, Group, Label, Separator, ScrollUpButton, ScrollDownButton)",
+      "example": "Select.demo.tsx",
+      "note": "Sources Figma-Killer-2 Select/ and GoBanana .st-menu were not reachable in the lane session; the trigger follows the Combobox field (the Input box) and the rows the ListBox option rows. Radix Select has no exit presence, so the list leaves at once on close."
+    },
+    "angular": {
+      "status": "planned",
+      "behavior": "cdk:overlay with cdk:listbox"
+    },
+    "native": {
+      "status": "planned",
+      "behavior": "rn-primitives:select"
+    }
+  },
+  "styles": {
+    "studio": "The trigger is the Input box: a transparent pill with the control border, the glow and the ring on focus or while open, chevrons up and down at the end. The list is the Studio menu surface: surface-3, the card radius, the menu shadow; the lit row takes the overlay step.",
+    "desk": "The same trigger. The list is the Desk menu glass: the strong material and blur, a hairline, the panel radius with field radius rows, regular weight; the lit row is the yellow primary fill with dark text. Under reduced transparency and more contrast the glass turns solid.",
+    "neutral": "Tokens only: the Neutral control radius and border, the Neutral menu surface."
+  },
+  "mistakes": [
+    {
+      "wrong": "A Select with 40 cities",
+      "right": "A Combobox, which filters as people type"
+    },
+    {
+      "wrong": "A Select with two options, Yes and No",
+      "right": "A RadioGroup, or a Switch for an on and off setting"
+    },
+    {
+      "wrong": "A Select whose options run actions (Delete, Duplicate)",
+      "right": "A DropdownMenu"
+    },
+    {
+      "wrong": "The placeholder as the only label",
+      "right": "A Field with a label around the Select"
+    },
+    {
+      "wrong": "Showing the chosen option by color alone",
+      "right": "The check in the indicator column (built in)"
+    },
+    {
+      "wrong": "A read only Select drawn as disabled",
+      "right": "readOnly: focusable and readable, with a dashed border"
+    }
+  ],
+  "contract": {
+    "trigger": "[data-demo-trigger]",
+    "optionalParts": [
+      "content",
+      "scroll-up",
+      "scroll-down",
+      "item-icon",
+      "item-description",
+      "group",
+      "label",
+      "separator",
+      "empty"
+    ],
+    "keys": {
+      "Enter": {
+        "focus": "[data-demo-trigger]",
+        "case": "variants",
+        "expect": "state-changes"
+      },
+      "Space": {
+        "focus": "[data-demo-trigger]",
+        "case": "variants",
+        "expect": "state-changes"
+      },
+      "ArrowDown": {
+        "focus": "[data-demo-trigger]",
+        "case": "variants",
+        "expect": "state-changes"
+      }
+    },
+    "skipAxeRules": [
+      "aria-hidden-focus"
+    ]
+  },
+  "since": "0.1.0"
+}

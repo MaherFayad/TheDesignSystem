@@ -1,0 +1,461 @@
+/*
+ * Select: one value from a list in a closed trigger. The trigger is the
+ * Combobox field box (the Input box: the same height, padding, border,
+ * radius, glow and ring, from the same tokens); the content is the menu
+ * surface of the list family popup, and its rows equal ListBox option rows
+ * (the same row height, padding, gap, radius, type and highlight tokens).
+ *
+ *   [data-ds='select']                           root: Radix Trigger, a button with role combobox (open: aria-expanded)
+ *     > [data-part='value']                      the chosen label or the placeholder
+ *     > [data-part='icon']                       chevrons-up-down, a spinner while loading
+ *   [data-ds='theme'][data-menu-layer]           the portal Theme (DropdownMenu.css draws it as contents)
+ *   [data-ds='select'][data-part='content']      the list, its own root: Radix Content
+ *     > [data-part='scroll-up'], [data-part='scroll-down']
+ *     > [data-part='viewport']                   scrolls the rows
+ *       [data-part='item']                       role option, data-state checked|unchecked
+ *         > [data-part='indicator'], [data-part='item-icon'], [data-part='item-label'], [data-part='item-description']
+ *       [data-part='group'] > [data-part='label']
+ *       [data-part='separator'], [data-part='empty']
+ *
+ * Trigger private properties (Input's names under this component):
+ *   --_select-height, -padding-inline, -gap, -font-size, -radius, -bg, -fg,
+ *   --_select-border-color (at rest, -hover, -focus, -invalid), -ring
+ *
+ * Content private properties: the menu surface names the list family popup
+ * uses (--_menu-bg, -fg, -border-color, -radius, -shadow, -backdrop,
+ * -padding, -item-bg-highlight, -item-fg-highlight, -item-ring-color,
+ * -separator-color, -meta-fg, -enter-scale, -duration-in, -ease-in), so a
+ * recipe draws the same glass, and the row names of ListBox under this
+ * component: --_select-item-height, -item-padding-inline, -item-gap,
+ * -item-radius, -item-font-size, -item-font-weight, -item-bg, -item-fg,
+ * -item-ring.
+ *
+ * Motion, pattern "menu-scale": the content scales up from the side Radix
+ * computes and fades in. Radix Select has no exit presence, so the content
+ * leaves at once on close. Under reduced motion the entry is none.
+ */
+@layer ds.base {
+  /* ------------------------------------------------------------ the trigger */
+
+  [data-ds='select']:not([data-part]) {
+    --_select-height: var(--ds-size-control-md);
+    --_select-padding-inline: var(--ds-space-m);
+    --_select-gap: var(--ds-space-xs);
+    --_select-font-size: var(--ds-font-size-s);
+    --_select-radius: var(--ds-radius-control);
+    --_select-bg: transparent;
+    --_select-fg: var(--ds-color-text-default);
+    --_select-border-color: var(--ds-color-border-control);
+    --_select-border-color-hover: var(--ds-color-border-control-hover);
+    --_select-border-color-focus: var(--ds-color-border-control-hover);
+    --_select-border-color-invalid: var(--ds-color-state-danger-text);
+    --_select-ring: var(--ds-elevation-input-focus), var(--ds-focus-shadow-ring);
+    --_select-border-width: var(--ds-border-width-default);
+    --_select-border-style: solid;
+
+    position: relative;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    gap: var(--_select-gap);
+    inline-size: 100%;
+    min-inline-size: 0;
+    block-size: var(--_select-height);
+    min-block-size: var(--ds-size-target-min);
+    margin: 0;
+    padding-block: 0;
+    padding-inline: var(--_select-padding-inline) var(--ds-space-xs);
+    border: var(--_select-border-width) var(--_select-border-style) var(--_select-border-color);
+    border-radius: var(--_select-radius);
+    background-color: var(--_select-bg);
+    color: var(--_select-fg);
+    font-family: var(--ds-font-family-sans);
+    font-size: var(--_select-font-size);
+    font-weight: var(--ds-font-weight-regular);
+    line-height: var(--ds-font-leading-snug);
+    text-align: start;
+    cursor: pointer;
+    appearance: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  /* The glow and the ring, as Input: they fade in on focus. */
+  [data-ds='select']:not([data-part])::before {
+    content: '';
+    position: absolute;
+    inset: calc(var(--ds-border-width-default) * -1);
+    border-radius: inherit;
+    box-shadow: var(--_select-ring);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity var(--ds-duration-base) var(--ds-ease-default);
+  }
+
+  [data-ds='select'][data-size='sm']:not([data-part]) {
+    --_select-height: var(--ds-size-control-sm);
+    --_select-padding-inline: var(--ds-space-s);
+  }
+
+  /* Site fields: 44px and a fixed 16px, as Input. */
+  [data-ds='select'][data-size='lg']:not([data-part]),
+  [data-ds='select'][data-size='lg']:not([data-part]):lang(ar) {
+    --_select-height: var(--ds-size-control-lg);
+    --_select-padding-inline: var(--ds-space-2xl);
+    --_select-font-size: var(--ds-font-size-fixed-m);
+  }
+
+  [data-ds='select'][data-shape='pill']:not([data-part]) {
+    --_select-radius: var(--ds-radius-pill);
+  }
+
+  /* The label takes the room and ends in an ellipsis; the full text is in the list. */
+  [data-ds='select'] > [data-part='value'] {
+    flex: 1 1 auto;
+    min-inline-size: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  [data-ds='select'][data-placeholder] > [data-part='value'] {
+    color: var(--ds-color-text-placeholder);
+  }
+
+  [data-ds='select'] > [data-part='icon'] {
+    display: inline-flex;
+    flex: none;
+    align-items: center;
+    justify-content: center;
+    color: var(--ds-color-text-muted);
+  }
+
+  [data-ds='select']:not([data-part]):hover:not([data-disabled], [data-readonly], [data-invalid], :focus-visible) {
+    --_select-border-color: var(--_select-border-color-hover);
+  }
+
+  /* Focus: the glow and the ring. The transparent outline shows in forced colors mode. */
+  [data-ds='select']:not([data-part])[aria-expanded='true'] {
+    --_select-border-color: var(--_select-border-color-focus);
+  }
+
+  [data-ds='select']:not([data-part]):focus-visible {
+    --_select-border-color: var(--_select-border-color-focus);
+
+    outline: var(--ds-border-width-strong) solid transparent;
+    outline-offset: var(--ds-border-width-default);
+  }
+
+  [data-ds='select']:not([data-part]):focus-visible::before,
+  [data-ds='select']:not([data-part])[aria-expanded='true']::before {
+    opacity: 1;
+  }
+
+  [data-ds='select'][data-invalid]:not([data-part]),
+  [data-ds='select'][data-invalid]:not([data-part]):focus-visible {
+    --_select-border-color: var(--_select-border-color-invalid);
+  }
+
+  [data-ds='select'][data-readonly]:not([data-part]) {
+    --_select-bg: var(--ds-color-bg-overlay-5);
+    --_select-border-style: dashed;
+
+    cursor: default;
+  }
+
+  [data-ds='select'][data-readonly]:not([data-part]) > [data-part='icon'] {
+    opacity: 0;
+  }
+
+  [data-ds='select'][data-loading]:not([data-part]) {
+    cursor: progress;
+  }
+
+  [data-ds='select'][data-disabled]:not([data-part]) {
+    opacity: var(--ds-opacity-disabled);
+    cursor: not-allowed;
+  }
+
+  /* ------------------------------------------------------------ the content: the menu surface */
+
+  [data-ds='select'][data-part='content'] {
+    --_menu-bg: var(--ds-color-bg-surface-3);
+    --_menu-fg: var(--ds-color-text-default);
+    --_menu-border-color: transparent;
+    --_menu-radius: var(--ds-radius-card);
+    --_menu-shadow: var(--ds-elevation-menu);
+    --_menu-backdrop: none;
+    --_menu-padding: var(--ds-space-3xs);
+    --_menu-item-bg-highlight: var(--ds-color-bg-overlay-10);
+    --_menu-item-fg-highlight: var(--ds-color-text-default);
+    --_menu-item-ring-color: var(--ds-color-focus-ring);
+    --_menu-meta-fg: var(--ds-color-text-muted);
+    --_menu-separator-color: var(--ds-color-bg-surface-2);
+    --_menu-enter-scale: var(--ds-scale-press);
+    --_menu-duration-in: var(--ds-duration-base);
+    --_menu-ease-in: var(--ds-ease-emphasized);
+    /* The rows: the ListBox option values. */
+    --_select-item-height: var(--ds-list-row-height);
+    --_select-item-padding-inline: var(--ds-space-m);
+    --_select-item-gap: var(--ds-space-m);
+    --_select-item-radius: var(--ds-menu-item-radius);
+    --_select-item-font-size: var(--ds-font-size-s);
+    --_select-item-font-weight: var(--ds-font-weight-menu);
+    --_select-item-bg: transparent;
+    --_select-item-fg: var(--_menu-fg);
+    --_select-item-ring: 0 0 transparent;
+    /* Eight rows show before the list scrolls inside. */
+    --_select-content-max-height: calc(var(--_select-item-height) * 8 + var(--_menu-padding) * 2);
+
+    position: relative;
+    z-index: var(--ds-z-menu);
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+    /* As wide as the trigger, never wider than the room Radix measures. */
+    inline-size: var(--radix-select-trigger-width);
+    min-inline-size: min(var(--ds-menu-width-min), var(--radix-select-content-available-width));
+    max-inline-size: var(--radix-select-content-available-width);
+    max-block-size: min(var(--_select-content-max-height), var(--radix-select-content-available-height));
+    margin: 0;
+    padding: var(--_menu-padding);
+    overflow: hidden;
+    border: var(--ds-border-width-default) solid var(--_menu-border-color);
+    border-radius: var(--_menu-radius);
+    background-color: var(--_menu-bg);
+    -webkit-backdrop-filter: var(--_menu-backdrop);
+    backdrop-filter: var(--_menu-backdrop);
+    box-shadow: var(--_menu-shadow);
+    color: var(--_menu-fg);
+    font-family: var(--ds-font-family-sans);
+    font-size: var(--_select-item-font-size);
+    line-height: var(--ds-font-leading-snug);
+    transform-origin: var(--radix-select-content-transform-origin);
+    outline: none;
+  }
+
+  [data-ds='select'][data-part='content'][data-size='sm'] {
+    --_select-item-height: var(--ds-size-control-xs);
+    --_select-item-padding-inline: var(--ds-space-s);
+    --_select-item-gap: var(--ds-space-s);
+    --_select-item-font-size: var(--ds-font-size-xs);
+  }
+
+  /* Arabic: small text one step up, as in the menus. */
+  [data-ds='select'][data-part='content']:lang(ar) {
+    --_select-item-font-size: var(--ds-font-size-m);
+
+    line-height: var(--ds-font-leading-arabic-snug);
+  }
+
+  [data-ds='select'][data-part='content'][data-size='sm']:lang(ar) {
+    --_select-item-font-size: var(--ds-font-size-s);
+  }
+
+  [data-ds='select'][data-part='content'] > [data-part='viewport'] {
+    flex: 1 1 auto;
+    min-block-size: 0;
+  }
+
+  [data-ds='select'][data-part='content'] > :is([data-part='scroll-up'], [data-part='scroll-down']) {
+    display: flex;
+    flex: none;
+    align-items: center;
+    justify-content: center;
+    block-size: max(var(--_select-item-height), var(--ds-size-target-min));
+    color: var(--_menu-meta-fg);
+    cursor: default;
+  }
+
+  /* ------------------------------------------------------------ rows: the ListBox option grid */
+
+  [data-ds='select'] [data-part='item'] {
+    position: relative;
+    display: grid;
+    grid-template-columns: auto auto minmax(0, 1fr);
+    align-items: center;
+    box-sizing: border-box;
+    min-block-size: max(var(--_select-item-height), var(--ds-size-target-min));
+    margin: 0;
+    padding-block: var(--ds-space-4xs);
+    padding-inline: var(--_select-item-padding-inline);
+    border-radius: var(--_select-item-radius);
+    background-color: var(--_select-item-bg);
+    box-shadow: var(--_select-item-ring);
+    color: var(--_select-item-fg);
+    font-weight: var(--_select-item-font-weight);
+    text-align: start;
+    cursor: pointer;
+    user-select: none;
+    outline: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  [data-ds='select'] [data-part='item'][data-highlighted] {
+    --_select-item-bg: var(--_menu-item-bg-highlight);
+    --_select-item-fg: var(--_menu-item-fg-highlight);
+  }
+
+  /* The keyboard ring sits inside the row. The transparent outline shows in forced colors. */
+  [data-ds='select'] [data-part='item']:focus-visible {
+    --_select-item-ring: inset 0 0 0 var(--ds-border-width-strong) var(--_menu-item-ring-color);
+
+    outline: var(--ds-border-width-strong) solid transparent;
+    outline-offset: calc(var(--ds-border-width-strong) * -1);
+  }
+
+  [data-ds='select'] [data-part='item'][data-disabled] {
+    opacity: var(--ds-opacity-disabled);
+    cursor: not-allowed;
+  }
+
+  [data-ds='select'] [data-part='item'] > [data-part='indicator'] {
+    display: inline-flex;
+    grid-row: 1 / span 2;
+    grid-column: 1;
+    align-items: center;
+    justify-content: center;
+    min-inline-size: var(--ds-size-icon-md);
+    margin-inline-end: var(--_select-item-gap);
+  }
+
+  [data-ds='select'] [data-part='item'] > [data-part='item-icon'] {
+    display: inline-flex;
+    grid-row: 1 / span 2;
+    grid-column: 2;
+    align-items: center;
+    justify-content: center;
+    min-inline-size: var(--ds-size-icon-md);
+    margin-inline-end: var(--_select-item-gap);
+  }
+
+  [data-ds='select'] [data-part='item'] > [data-part='item-label'] {
+    grid-row: 1;
+    grid-column: 3;
+    min-inline-size: 0;
+    overflow-wrap: anywhere;
+  }
+
+  [data-ds='select'] [data-part='item'] > [data-part='item-description'] {
+    grid-row: 2;
+    grid-column: 3;
+    min-inline-size: 0;
+    color: var(--_menu-meta-fg);
+    font-size: var(--ds-font-size-xs);
+    font-weight: var(--ds-font-weight-regular);
+    overflow-wrap: anywhere;
+  }
+
+  [data-ds='select'] [data-part='item'][data-highlighted] > [data-part='item-description'] {
+    color: inherit;
+  }
+
+  [data-ds='select'] [data-part='group'] {
+    display: flex;
+    flex-direction: column;
+  }
+
+  [data-ds='select'] [data-part='group'] > [data-part='label'] {
+    margin: 0;
+    padding-block: var(--ds-space-2xs) var(--ds-space-4xs);
+    padding-inline: var(--_select-item-padding-inline);
+    color: var(--_menu-meta-fg);
+    font-size: var(--ds-font-size-xs);
+    font-weight: var(--ds-font-weight-semibold);
+    overflow-wrap: anywhere;
+  }
+
+  [data-ds='select'] [data-part='separator'] {
+    block-size: var(--ds-border-width-default);
+    margin-block: var(--ds-space-3xs);
+    margin-inline: var(--ds-space-xs);
+    background-color: var(--_menu-separator-color);
+  }
+
+  [data-ds='select'] [data-part='empty'] {
+    padding-block: var(--ds-space-s);
+    padding-inline: var(--_select-item-padding-inline);
+    color: var(--_menu-meta-fg);
+    overflow-wrap: anywhere;
+  }
+
+  /* ------------------------------------------------------------ motion: pattern "menu-scale" */
+
+  [data-ds='select'][data-part='content'][data-state='open'] {
+    animation: ds-select-content-in var(--_menu-duration-in) var(--_menu-ease-in);
+  }
+
+  @keyframes ds-select-content-in {
+    from {
+      opacity: 0;
+      transform: scale(var(--_menu-enter-scale));
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    [data-ds='select'][data-part='content'][data-state] {
+      animation: none;
+    }
+
+    [data-ds='select']:not([data-part])::before {
+      transition: none;
+    }
+  }
+
+  /* ------------------------------------------------------------ transparency, contrast, forced colors */
+
+  @media (prefers-reduced-transparency: reduce) {
+    [data-ds='select'][data-part='content'] {
+      --_menu-backdrop: none;
+    }
+  }
+
+  @media (prefers-contrast: more) {
+    [data-ds='select'][data-part='content'] {
+      --_menu-backdrop: none;
+      --_menu-border-color: var(--ds-color-border-strong);
+      --_menu-separator-color: var(--ds-color-border-strong);
+    }
+  }
+
+  [data-contrast='more'] [data-ds='select'][data-part='content'] {
+    --_menu-backdrop: none;
+    --_menu-border-color: var(--ds-color-border-strong);
+    --_menu-separator-color: var(--ds-color-border-strong);
+  }
+
+  /* Forced colors: no shadows or glow; a border draws the list, system colors the lit row. */
+  @media (forced-colors: active) {
+    [data-ds='select']:not([data-part])::before {
+      display: none;
+    }
+
+    /* Invalid is a system color too, so it is drawn heavier, never color alone. */
+    [data-ds='select'][data-invalid]:not([data-part]) {
+      --_select-border-width: var(--ds-border-width-strong);
+    }
+
+    [data-ds='select'][data-disabled]:not([data-part]) {
+      --_select-border-color: GrayText;
+
+      color: GrayText;
+    }
+
+    [data-ds='select'][data-part='content'] {
+      --_menu-bg: Canvas;
+      --_menu-backdrop: none;
+      --_menu-border-color: CanvasText;
+      --_menu-separator-color: CanvasText;
+      --_menu-meta-fg: CanvasText;
+      --_menu-item-bg-highlight: Highlight;
+      --_menu-item-fg-highlight: HighlightText;
+    }
+
+    [data-ds='select'] [data-part='item'][data-highlighted] {
+      forced-color-adjust: none;
+    }
+
+    [data-ds='select'] [data-part='item']:focus-visible {
+      outline-color: CanvasText;
+    }
+  }
+}

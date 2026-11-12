@@ -1,0 +1,61 @@
+/*
+ * Desk recipe for the TagField popup. The same glass the Desk recipes of
+ * DropdownMenu, the Combobox popup, Select and MultiSelect draw (GoBanana `.mb-menu` in
+ * desktop/desktop.css), set through the menu surface properties the popup
+ * reads. The rows of the nested ListBox take the Desk ListBox recipe.
+ *
+ * What tokens cannot say:
+ * - the popup is glass (the strong material and a backdrop filter), while
+ *   Studio draws the flat surface-3;
+ * - the panel radius family: a 12px popup with 8px rows inside.
+ */
+@layer ds.recipes {
+  [data-style='desk'] [data-ds='tag-field'][data-part='popup'] {
+    --_menu-bg: var(--ds-color-material-glass-strong);
+    --_menu-border-color: var(--ds-color-border-hairline);
+    --_menu-radius: var(--ds-radius-panel);
+    --_menu-backdrop: blur(var(--ds-blur-window-strong)) saturate(var(--ds-blur-window-saturation));
+    --_menu-item-bg-highlight: var(--ds-color-primary-fill);
+    --_menu-item-fg-highlight: var(--ds-color-primary-text);
+    --_menu-item-ring-color: var(--ds-color-focus-ring-on-primary-inner);
+    --_menu-separator-color: var(--ds-color-border-hairline);
+  }
+
+  @media (prefers-reduced-transparency: reduce) {
+    [data-style='desk'] [data-ds='tag-field'][data-part='popup'] {
+      --_menu-backdrop: none;
+      --_menu-bg: var(--ds-color-material-glass-solid);
+    }
+  }
+
+  @media (prefers-contrast: more) {
+    [data-style='desk'] [data-ds='tag-field'][data-part='popup'] {
+      --_menu-backdrop: none;
+      --_menu-border-color: var(--ds-color-border-strong);
+      --_menu-separator-color: var(--ds-color-border-strong);
+    }
+  }
+
+  [data-style='desk'][data-contrast='more'] [data-ds='tag-field'][data-part='popup'] {
+    --_menu-backdrop: none;
+    --_menu-border-color: var(--ds-color-border-strong);
+    --_menu-separator-color: var(--ds-color-border-strong);
+  }
+
+  @media (forced-colors: active) {
+    [data-style='desk'] [data-ds='tag-field'][data-part='popup'] {
+      --_menu-bg: Canvas;
+      --_menu-backdrop: none;
+      --_menu-border-color: CanvasText;
+      --_menu-separator-color: CanvasText;
+      --_menu-item-bg-highlight: Highlight;
+      --_menu-item-fg-highlight: HighlightText;
+    }
+  }
+
+  @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+    [data-style='desk'] [data-ds='tag-field'][data-part='popup'] {
+      --_menu-bg: var(--ds-color-material-glass-solid);
+    }
+  }
+}
