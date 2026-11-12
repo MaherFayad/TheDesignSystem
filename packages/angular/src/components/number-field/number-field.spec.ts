@@ -132,6 +132,23 @@ describe('DsNumberField', () => {
     expect(native('seats').value).toBe('');
   });
 
+  it('refuses a key in beforeinput, so the selection stays and the next key replaces it, as React Aria', async () => {
+    const { native } = await setup();
+    const el = native('seats');
+    el.focus();
+    el.setSelectionRange(0, el.value.length);
+    const refused = new InputEvent('beforeinput', { inputType: 'insertText', data: '-', bubbles: true, cancelable: true });
+    el.dispatchEvent(refused);
+    expect(refused.defaultPrevented).toBe(true);
+    expect([el.selectionStart, el.selectionEnd]).toEqual([0, el.value.length]);
+    const letter = new InputEvent('beforeinput', { inputType: 'insertText', data: 'x', bubbles: true, cancelable: true });
+    el.dispatchEvent(letter);
+    expect(letter.defaultPrevented).toBe(true);
+    const digit = new InputEvent('beforeinput', { inputType: 'insertText', data: '5', bubbles: true, cancelable: true });
+    el.dispatchEvent(digit);
+    expect(digit.defaultPrevented).toBe(false);
+  });
+
   it('reads a percent typed with its sign', async () => {
     const { native, type, blur } = await setup();
     await type('pct', '40%');

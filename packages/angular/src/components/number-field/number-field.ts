@@ -190,6 +190,7 @@ type StepperSlot = 'increment' | 'decrement';
       [disabled]="state().disabled"
       [readOnly]="state().readOnly"
       [attr.value]="text()"
+      (beforeinput)="onBeforeInput($event)"
       (input)="onInput()"
       (paste)="onPaste($event)"
       (keydown)="onKeyDown($event)"
@@ -537,6 +538,30 @@ export class DsNumberField implements ControlValueAccessor {
   }
 
   // Events of the input.
+
+  /**
+   * Refuses a key before the browser edits the text, as React Aria does, so the
+   * selection stays as it was: select all of "320" and type "-5" gives "5".
+   */
+  protected onBeforeInput(event: InputEvent): void {
+    const el = this.nativeInput;
+    const value = el.value;
+    const start = el.selectionStart ?? value.length;
+    const end = el.selectionEnd ?? start;
+    let next: string;
+    switch (event.inputType) {
+      case 'deleteContentBackward':
+        next = start === end ? value.slice(0, Math.max(0, start - 1)) + value.slice(end) : value.slice(0, start) + value.slice(end);
+        break;
+      case 'deleteContentForward':
+        next = start === end ? value.slice(0, start) + value.slice(end + 1) : value.slice(0, start) + value.slice(end);
+        break;
+      default:
+        if (!event.inputType.startsWith('insert') || event.data === null) return;
+        next = value.slice(0, start) + event.data + value.slice(end);
+    }
+    if (!this.isPartial(westernize(next, this.tag()))) event.preventDefault();
+  }
 
   protected onInput(): void {
     const el = this.nativeInput;
