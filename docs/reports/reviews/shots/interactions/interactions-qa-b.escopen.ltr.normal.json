@@ -1,0 +1,795 @@
+{
+ "neutral": {
+  "menu@600": {
+   "settledWithinMs": 200,
+   "end": {
+    "n": 0,
+    "ae": "Open menu",
+    "bodyPE": "auto",
+    "inertSiblings": 0
+   },
+   "ev": [
+    {
+     "k": "focus",
+     "t": -711,
+     "trig": false,
+     "inS": true
+    },
+    {
+     "k": "focus",
+     "t": -708,
+     "trig": false,
+     "inS": true
+    },
+    {
+     "k": "mount",
+     "t": -701
+    },
+    {
+     "k": "anim",
+     "n": "ds-menu-in",
+     "d": 150,
+     "e": "cubic-bezier(0.16, 1, 0.3, 1)",
+     "t": -645,
+     "part": "dropdown-menu"
+    },
+    {
+     "k": "animEnd",
+     "n": "ds-menu-in",
+     "t": -497
+    },
+    {
+     "k": "esc",
+     "t": 0
+    },
+    {
+     "k": "anim",
+     "n": "ds-menu-out",
+     "d": 100,
+     "e": "cubic-bezier(0.4, 0, 1, 1)",
+     "t": 49,
+     "part": "dropdown-menu"
+    },
+    {
+     "k": "animEnd",
+     "n": "ds-menu-out",
+     "t": 173
+    },
+    {
+     "k": "unmount",
+     "t": 201
+    },
+    {
+     "k": "focus",
+     "t": 243,
+     "trig": true,
+     "inS": false
+    }
+   ]
+  },
+  "popover@600": {
+   "settledWithinMs": 100,
+   "end": {
+    "n": 0,
+    "ae": "Open popover",
+    "bodyPE": "auto",
+    "inertSiblings": 0
+   },
+   "ev": [
+    {
+     "k": "focus",
+     "t": -463,
+     "trig": false,
+     "inS": true
+    },
+    {
+     "k": "mount",
+     "t": -458
+    },
+    {
+     "k": "anim",
+     "n": "ds-popover-in",
+     "d": 150,
+     "e": "cubic-bezier(0.16, 1, 0.3, 1)",
+     "t": -415,
+     "part": "popover"
+    },
+    {
+     "k": "animEnd",
+     "n": "ds-popover-in",
+     "t": -247
+    },
+    {
+     "k": "esc",
+     "t": 0
+    },
+    {
+     "k": "anim",
+     "n": "ds-popover-out",
+     "d": 100,
+     "e": "cubic-bezier(0.4, 0, 1, 1)",
+     "t": 21,
+     "part": "popover"
+    },
+    {
+     "k": "animEnd",
+     "n": "ds-popover-out",
+     "t": 115
+    },
+    {
+     "k": "unmount",
+     "t": 127
+    },
+    {
+     "k": "focus",
+     "t": 155,
+     "trig": true,
+     "inS": false
+    }
+   ]
+  },
+  "dialog@600": {
+   "settledWithinMs": 200,
+   "end": {
+    "n": 0,
+    "ae": "Open dialog",
+    "bodyPE": "auto",
+    "inertSiblings": 0
+   },
+   "ev": [
+    {
+     "k": "focus",
+     "t": -663,
+     "trig": false,
+     "inS": true
+    },
+    {
+     "k": "mount",
+     "t": -662
+    },
+    {
+     "k": "anim",
+     "n": "ds-dialog-fade-in",
+     "d": 150,
+     "e": "cubic-bezier(0.16, 1, 0.3, 1)",
+     "t": -661,
+     "part": "backdrop"
+    },
+    {
+     "k": "anim",
+     "n": "ds-dialog-in",
+     "d": 150,
+     "e": "cubic-bezier(0.16, 1, 0.3, 1)",
+     "t": -660,
+     "part": "panel"
+    },
+    {
+     "k": "animEnd",
+     "n": "ds-dialog-fade-in",
+     "t": -338
+    },
+    {
+     "k": "animEnd",
+     "n": "ds-dialog-in",
+     "t": -338
+    },
+    {
+     "k": "esc",
+     "t": 0
+    },
+    {
+     "k": "anim",
+     "n": "ds-dialog-fade-out",
+     "d": 150,
+     "e": "cubic-bezier(0.4, 0, 1, 1)",
+     "t": 68,
+     "part": "backdrop"
+    },
+    {
+     "k": "anim",
+     "n": "ds-dialog-out",
+     "d": 150,
+     "e": "cubic-bezier(0.4, 0, 1, 1)",
+     "t": 69,
+     "part": "panel"
+    },
+    {
+     "k": "animEnd",
+     "n": "ds-dialog-fade-out",
+     "t": 257
+    },
+    {
+     "k": "animEnd",
+     "n": "ds-dialog-out",
+     "t": 257
+    },
+    {
+     "k": "unmount",
+     "t": 284
+    },
+    {
+     "k": "focus",
+     "t": 333,
+     "trig": true,
+     "inS": false
+    }
+   ]
+  },
+  "sheet@600": {
+   "settledWithinMs": 300,
+   "end": {
+    "n": 0,
+    "ae": "Open sheet",
+    "bodyPE": "auto",
+    "inertSiblings": 0
+   },
+   "ev": [
+    {
+     "k": "focus",
+     "t": -724,
+     "trig": false,
+     "inS": true
+    },
+    {
+     "k": "mount",
+     "t": -724
+    },
+    {
+     "k": "anim",
+     "n": "ds-dialog-fade-in",
+     "d": 180,
+     "e": "cubic-bezier(0.16, 1, 0.3, 1)",
+     "t": -723,
+     "part": "backdrop"
+    },
+    {
+     "k": "anim",
+     "n": "ds-sheet-in-y",
+     "d": 180,
+     "e": "cubic-bezier(0.16, 1, 0.3, 1)",
+     "t": -723,
+     "part": "panel"
+    },
+    {
+     "k": "animEnd",
+     "n": "ds-dialog-fade-in",
+     "t": -491
+    },
+    {
+     "k": "animEnd",
+     "n": "ds-sheet-in-y",
+     "t": -491
+    },
+    {
+     "k": "esc",
+     "t": 0
+    },
+    {
+     "k": "anim",
+     "n": "ds-dialog-fade-out",
+     "d": 150,
+     "e": "cubic-bezier(0.4, 0, 1, 1)",
+     "t": 82,
+     "part": "backdrop"
+    },
+    {
+     "k": "anim",
+     "n": "ds-sheet-out-y",
+     "d": 150,
+     "e": "cubic-bezier(0.4, 0, 1, 1)",
+     "t": 83,
+     "part": "panel"
+    },
+    {
+     "k": "animEnd",
+     "n": "ds-dialog-fade-out",
+     "t": 318
+    },
+    {
+     "k": "animEnd",
+     "n": "ds-sheet-out-y",
+     "t": 318
+    },
+    {
+     "k": "unmount",
+     "t": 398
+    },
+    {
+     "k": "focus",
+     "t": 538,
+     "trig": true,
+     "inS": false
+    }
+   ]
+  },
+  "drawer@600": {
+   "settledWithinMs": 200,
+   "end": {
+    "n": 0,
+    "ae": "Open drawer",
+    "bodyPE": "auto",
+    "inertSiblings": 0
+   },
+   "ev": [
+    {
+     "k": "focus",
+     "t": -620,
+     "trig": false,
+     "inS": true
+    },
+    {
+     "k": "mount",
+     "t": -620
+    },
+    {
+     "k": "anim",
+     "n": "ds-dialog-fade-in",
+     "d": 180,
+     "e": "cubic-bezier(0.16, 1, 0.3, 1)",
+     "t": -620,
+     "part": "backdrop"
+    },
+    {
+     "k": "anim",
+     "n": "ds-sheet-in-x",
+     "d": 180,
+     "e": "cubic-bezier(0.16, 1, 0.3, 1)",
+     "t": -619,
+     "part": "panel"
+    },
+    {
+     "k": "animEnd",
+     "n": "ds-dialog-fade-in",
+     "t": -395
+    },
+    {
+     "k": "animEnd",
+     "n": "ds-sheet-in-x",
+     "t": -395
+    },
+    {
+     "k": "esc",
+     "t": 0
+    },
+    {
+     "k": "anim",
+     "n": "ds-dialog-fade-out",
+     "d": 150,
+     "e": "cubic-bezier(0.4, 0, 1, 1)",
+     "t": 210,
+     "part": "backdrop"
+    },
+    {
+     "k": "anim",
+     "n": "ds-sheet-out-x",
+     "d": 150,
+     "e": "cubic-bezier(0.4, 0, 1, 1)",
+     "t": 210,
+     "part": "panel"
+    },
+    {
+     "k": "animEnd",
+     "n": "ds-dialog-fade-out",
+     "t": 389
+    },
+    {
+     "k": "animEnd",
+     "n": "ds-sheet-out-x",
+     "t": 389
+    },
+    {
+     "k": "unmount",
+     "t": 470
+    },
+    {
+     "k": "focus",
+     "t": 522,
+     "trig": true,
+     "inS": false
+    }
+   ]
+  }
+ },
+ "desk": {
+  "menu@600": {
+   "settledWithinMs": 200,
+   "end": {
+    "n": 0,
+    "ae": "Open menu",
+    "bodyPE": "auto",
+    "inertSiblings": 0
+   },
+   "ev": [
+    {
+     "k": "focus",
+     "t": -678,
+     "trig": false,
+     "inS": true
+    },
+    {
+     "k": "focus",
+     "t": -677,
+     "trig": false,
+     "inS": true
+    },
+    {
+     "k": "mount",
+     "t": -670
+    },
+    {
+     "k": "anim",
+     "n": "ds-menu-in",
+     "d": 120,
+     "e": "cubic-bezier(0.16, 1, 0.3, 1)",
+     "t": -663,
+     "part": "dropdown-menu"
+    },
+    {
+     "k": "animEnd",
+     "n": "ds-menu-in",
+     "t": -517
+    },
+    {
+     "k": "esc",
+     "t": 0
+    },
+    {
+     "k": "anim",
+     "n": "ds-menu-out",
+     "d": 100,
+     "e": "cubic-bezier(0.4, 0, 1, 1)",
+     "t": 47,
+     "part": "dropdown-menu"
+    },
+    {
+     "k": "animEnd",
+     "n": "ds-menu-out",
+     "t": 166
+    },
+    {
+     "k": "unmount",
+     "t": 174
+    },
+    {
+     "k": "focus",
+     "t": 230,
+     "trig": true,
+     "inS": false
+    }
+   ]
+  },
+  "popover@600": {
+   "settledWithinMs": 100,
+   "end": {
+    "n": 0,
+    "ae": "Open popover",
+    "bodyPE": "auto",
+    "inertSiblings": 0
+   },
+   "ev": [
+    {
+     "k": "focus",
+     "t": -561,
+     "trig": false,
+     "inS": true
+    },
+    {
+     "k": "mount",
+     "t": -557
+    },
+    {
+     "k": "anim",
+     "n": "ds-popover-in",
+     "d": 120,
+     "e": "cubic-bezier(0.16, 1, 0.3, 1)",
+     "t": -543,
+     "part": "popover"
+    },
+    {
+     "k": "animEnd",
+     "n": "ds-popover-in",
+     "t": -412
+    },
+    {
+     "k": "esc",
+     "t": 0
+    },
+    {
+     "k": "anim",
+     "n": "ds-popover-out",
+     "d": 100,
+     "e": "cubic-bezier(0.4, 0, 1, 1)",
+     "t": 36,
+     "part": "popover"
+    },
+    {
+     "k": "animEnd",
+     "n": "ds-popover-out",
+     "t": 171
+    },
+    {
+     "k": "unmount",
+     "t": 181
+    },
+    {
+     "k": "focus",
+     "t": 193,
+     "trig": true,
+     "inS": false
+    }
+   ]
+  },
+  "dialog@600": {
+   "settledWithinMs": 300,
+   "end": {
+    "n": 0,
+    "ae": "Open dialog",
+    "bodyPE": "auto",
+    "inertSiblings": 0
+   },
+   "ev": [
+    {
+     "k": "focus",
+     "t": -626,
+     "trig": false,
+     "inS": true
+    },
+    {
+     "k": "mount",
+     "t": -625
+    },
+    {
+     "k": "anim",
+     "d": 300,
+     "e": "linear",
+     "t": -625,
+     "part": "label"
+    },
+    {
+     "k": "anim",
+     "n": "ds-dialog-fade-in",
+     "d": 300,
+     "e": "cubic-bezier(0.2, 0.8, 0.2, 1)",
+     "t": -624,
+     "part": "backdrop"
+    },
+    {
+     "k": "anim",
+     "n": "ds-dialog-in",
+     "d": 300,
+     "e": "cubic-bezier(0.2, 0.8, 0.2, 1)",
+     "t": -624,
+     "part": "panel"
+    },
+    {
+     "k": "animEnd",
+     "t": -244
+    },
+    {
+     "k": "animEnd",
+     "n": "ds-dialog-fade-in",
+     "t": -244
+    },
+    {
+     "k": "animEnd",
+     "n": "ds-dialog-in",
+     "t": -244
+    },
+    {
+     "k": "esc",
+     "t": 0
+    },
+    {
+     "k": "anim",
+     "n": "ds-dialog-fade-out",
+     "d": 220,
+     "e": "cubic-bezier(0.4, 0, 1, 1)",
+     "t": 50,
+     "part": "backdrop"
+    },
+    {
+     "k": "anim",
+     "n": "ds-dialog-out",
+     "d": 220,
+     "e": "cubic-bezier(0.4, 0, 1, 1)",
+     "t": 50,
+     "part": "panel"
+    },
+    {
+     "k": "animEnd",
+     "n": "ds-dialog-fade-out",
+     "t": 308
+    },
+    {
+     "k": "animEnd",
+     "n": "ds-dialog-out",
+     "t": 308
+    },
+    {
+     "k": "unmount",
+     "t": 544
+    },
+    {
+     "k": "focus",
+     "t": 575,
+     "trig": true,
+     "inS": false
+    }
+   ]
+  },
+  "sheet@600": {
+   "settledWithinMs": 400,
+   "end": {
+    "n": 0,
+    "ae": "Open sheet",
+    "bodyPE": "auto",
+    "inertSiblings": 0
+   },
+   "ev": [
+    {
+     "k": "focus",
+     "t": -710,
+     "trig": false,
+     "inS": true
+    },
+    {
+     "k": "mount",
+     "t": -710
+    },
+    {
+     "k": "anim",
+     "n": "ds-dialog-fade-in",
+     "d": 180,
+     "e": "cubic-bezier(0.16, 1, 0.3, 1)",
+     "t": -709,
+     "part": "backdrop"
+    },
+    {
+     "k": "anim",
+     "n": "ds-sheet-in-y",
+     "d": 180,
+     "e": "cubic-bezier(0.16, 1, 0.3, 1)",
+     "t": -709,
+     "part": "panel"
+    },
+    {
+     "k": "animEnd",
+     "n": "ds-dialog-fade-in",
+     "t": -442
+    },
+    {
+     "k": "animEnd",
+     "n": "ds-sheet-in-y",
+     "t": -442
+    },
+    {
+     "k": "esc",
+     "t": 0
+    },
+    {
+     "k": "anim",
+     "n": "ds-dialog-fade-out",
+     "d": 220,
+     "e": "cubic-bezier(0.4, 0, 1, 1)",
+     "t": 328,
+     "part": "backdrop"
+    },
+    {
+     "k": "anim",
+     "n": "ds-sheet-out-y",
+     "d": 220,
+     "e": "cubic-bezier(0.4, 0, 1, 1)",
+     "t": 328,
+     "part": "panel"
+    },
+    {
+     "k": "animEnd",
+     "n": "ds-dialog-fade-out",
+     "t": 634
+    },
+    {
+     "k": "animEnd",
+     "n": "ds-sheet-out-y",
+     "t": 634
+    },
+    {
+     "k": "unmount",
+     "t": 959
+    },
+    {
+     "k": "focus",
+     "t": 1096,
+     "trig": true,
+     "inS": false
+    }
+   ]
+  },
+  "drawer@600": {
+   "settledWithinMs": 700,
+   "end": {
+    "n": 0,
+    "ae": "Open drawer",
+    "bodyPE": "auto",
+    "inertSiblings": 0
+   },
+   "ev": [
+    {
+     "k": "focus",
+     "t": -681,
+     "trig": false,
+     "inS": true
+    },
+    {
+     "k": "mount",
+     "t": -674
+    },
+    {
+     "k": "anim",
+     "n": "ds-dialog-fade-in",
+     "d": 180,
+     "e": "cubic-bezier(0.16, 1, 0.3, 1)",
+     "t": -674,
+     "part": "backdrop"
+    },
+    {
+     "k": "anim",
+     "n": "ds-sheet-in-x",
+     "d": 180,
+     "e": "cubic-bezier(0.16, 1, 0.3, 1)",
+     "t": -674,
+     "part": "panel"
+    },
+    {
+     "k": "animEnd",
+     "n": "ds-dialog-fade-in",
+     "t": -432
+    },
+    {
+     "k": "animEnd",
+     "n": "ds-sheet-in-x",
+     "t": -432
+    },
+    {
+     "k": "esc",
+     "t": 0
+    },
+    {
+     "k": "anim",
+     "n": "ds-dialog-fade-out",
+     "d": 220,
+     "e": "cubic-bezier(0.4, 0, 1, 1)",
+     "t": 169,
+     "part": "backdrop"
+    },
+    {
+     "k": "anim",
+     "n": "ds-sheet-out-x",
+     "d": 220,
+     "e": "cubic-bezier(0.4, 0, 1, 1)",
+     "t": 170,
+     "part": "panel"
+    },
+    {
+     "k": "animEnd",
+     "n": "ds-dialog-fade-out",
+     "t": 928
+    },
+    {
+     "k": "animEnd",
+     "n": "ds-sheet-out-x",
+     "t": 928
+    },
+    {
+     "k": "unmount",
+     "t": 1201
+    },
+    {
+     "k": "focus",
+     "t": 1296,
+     "trig": true,
+     "inS": false
+    }
+   ]
+  }
+ }
+}
