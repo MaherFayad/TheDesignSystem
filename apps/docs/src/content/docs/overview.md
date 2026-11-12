@@ -1,5 +1,5 @@
 ---
-title: Overview
+title: Overview of the docs
 description: What the system is, what it covers and how these docs are built.
 ---
 
@@ -45,10 +45,16 @@ behavior.
 ## How to read a component page
 
 Every component page is generated from its manifest in
-`packages/manifest/src/component/`. The sections come in a fixed order: the
-summary, a live preview, when to use it, when not to, what to use instead,
-anatomy and variants, content rules, accessibility, common mistakes, styles
-and a code tab per framework. A framework that is not ready shows as planned.
+`packages/manifest/src/component/` and from its demo files. The sections come
+in a fixed order: the title and a one line summary, the status in React,
+Angular and React Native, a live preview with settings for style, scheme,
+platform, density, direction and language, then one section per demo case
+(variants, one item, many items, long text, Arabic, loading, disabled and so
+on), each with a live preview and the real example code for each framework.
+After the examples: when to use it, when not to, what to use instead,
+anatomy, props, states, accessibility with the WCAG 2.2 criteria, content
+rules in English and Arabic, tokens, motion and common mistakes. A framework
+that is not ready shows as planned.
 
 ## For agents
 

@@ -1,0 +1,50 @@
+---
+// Every component, grouped by family, each with its summary and status.
+import { slugOf } from '../../scripts/manifests.ts';
+import { pageText, type Lang } from '../lib/i18n.ts';
+import { inlineHtml } from '../lib/text.ts';
+import { componentPath, coverage, families, href } from '../lib/site.ts';
+import Layout, { type TocItem } from './Layout.astro';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const t = pageText[lang];
+const c = coverage();
+const groups = families();
+const ar = lang === 'ar';
+const title = ar ? 'المكونات' : 'Components';
+const lead = ar
+  ? `عدد المكونات: ${c.total}، مجمعة حسب الفئة. تنشأ كل صفحة من ملف تعريف المكون وملفات العرض.`
+  : `${c.total} components, grouped by family. Each page is generated from the component manifest and its demo files.`;
+const toc: TocItem[] = groups.map((g) => ({ depth: 2, slug: `family-${g.id}`, text: g.label[lang] }));
+---
+
+<Layout lang={lang} path="/components/" title={title} description={lead} toc={toc} twin={ar ? '/ar/components.md' : '/components.md'}>
+  <article>
+    <header class="page-head">
+      <h1>{title}</h1>
+      <p class="lead">{lead}</p>
+      {ar && <p class="note">{t.englishNote}</p>}
+    </header>
+    {groups.map((g) => (
+      <section class="doc-section" aria-labelledby={`family-${g.id}`}>
+        <h2 id={`family-${g.id}`}>{g.label[lang]} <span class="badge">{g.items.length}</span></h2>
+        <ul class="cards">
+          {g.items.map((m) => (
+            <li class="card" id={`c-${slugOf(m.name)}`}>
+              <h3 lang="en"><a class="card-link" href={href(lang, componentPath(m))}>{m.name}</a></h3>
+              <p lang={ar ? 'en' : undefined} dir={ar ? 'ltr' : undefined} set:html={inlineHtml(m.summary)} />
+              <p>
+                <span class:list={['badge', m.frameworks.react?.status === 'ready' ? 'badge-ready' : 'badge-planned']} lang="en">React</span>
+                <span class:list={['badge', m.frameworks.angular?.status === 'ready' ? 'badge-ready' : 'badge-planned']} lang="en">Angular</span>
+                <span class:list={['badge', m.frameworks.native?.status === 'ready' ? 'badge-ready' : 'badge-planned']} lang="en">Native</span>
+              </p>
+            </li>
+          ))}
+        </ul>
+      </section>
+    ))}
+  </article>
+</Layout>

@@ -1,0 +1,72 @@
+---
+// Every page of the site, in English at the root and in Arabic under /ar/:
+// the home page, the hand written Markdown pages, one page per component
+// manifest, one page per style pack, the components index and the coverage
+// table. One route file, so both languages share every template.
+import { getCollection, render } from 'astro:content';
+import { slugOf } from '../../scripts/manifests.ts';
+import ComponentPage from '../components/ComponentPage.astro';
+import ComponentsIndex from '../components/ComponentsIndex.astro';
+import Coverage from '../components/Coverage.astro';
+import Extras from '../components/Extras.astro';
+import Home from '../components/Home.astro';
+import Layout from '../components/Layout.astro';
+import StylePage from '../components/StylePage.astro';
+import { langs, type Lang } from '../lib/i18n.ts';
+import { manifests, styles } from '../lib/site.ts';
+
+export async function getStaticPaths() {
+  const entries = await getCollection('docs');
+  const out: { params: { path: string | undefined }; props: Record<string, unknown> }[] = [];
+  const at = (lang: Lang, p: string) => (lang === 'ar' ? (p ? `ar/${p}` : 'ar') : p || undefined);
+  for (const lang of langs) {
+    out.push({ params: { path: at(lang, '') }, props: { kind: 'home', lang } });
+    out.push({ params: { path: at(lang, 'components') }, props: { kind: 'components', lang } });
+    out.push({ params: { path: at(lang, 'frameworks/coverage') }, props: { kind: 'coverage', lang } });
+    for (const m of manifests.filter((x) => x.kind === 'component')) {
+      out.push({ params: { path: at(lang, `components/${slugOf(m.name)}`) }, props: { kind: 'component', lang, name: m.name } });
+    }
+    for (const s of styles) out.push({ params: { path: at(lang, `styles/${s.id}`) }, props: { kind: 'style', lang, id: s.id } });
+  }
+  for (const entry of entries) {
+    const ar = entry.id === 'ar' || entry.id.startsWith('ar/');
+    const rest = ar ? entry.id.replace(/^ar\/?/, '') : entry.id;
+    if (rest === 'index' || rest === '') continue;
+    out.push({ params: { path: at(ar ? 'ar' : 'en', rest) }, props: { kind: 'md', lang: ar ? 'ar' : 'en', id: entry.id, rest } });
+  }
+  return out;
+}
+
+const props = Astro.props as { kind: string; lang: Lang; name?: string; id?: string; rest?: string };
+const { kind, lang } = props;
+let md: { Content: unknown; headings: { depth: number; slug: string; text: string }[]; data: { title: string; description?: string; eyebrow?: string } } | undefined;
+if (kind === 'md') {
+  const entry = (await getCollection('docs')).find((e) => e.id === props.id)!;
+  const r = await render(entry);
+  md = { Content: r.Content, headings: r.headings, data: entry.data };
+}
+const mdPath = `/${props.rest ?? ''}/`;
+const twinOf = (p: string) => `${lang === 'ar' ? '/ar' : ''}/${p}.md`;
+const MdContent = md?.Content as never;
+---
+
+{kind === 'home' && <Home lang={lang} />}
+{kind === 'components' && <ComponentsIndex lang={lang} />}
+{kind === 'coverage' && <Coverage lang={lang} />}
+{kind === 'component' && <ComponentPage lang={lang} m={manifests.find((x) => x.name === props.name)!} />}
+{kind === 'style' && <StylePage lang={lang} id={props.id!} />}
+{kind === 'md' && md && (
+  <Layout lang={lang} path={mdPath} title={md.data.title} description={md.data.description} toc={md.headings} twin={twinOf(props.rest!)}>
+    <article>
+      <header class="page-head">
+        {md.data.eyebrow && <p class="eyebrow">{md.data.eyebrow}</p>}
+        <h1>{md.data.title}</h1>
+        {md.data.description && <p class="lead">{md.data.description}</p>}
+      </header>
+      <div class="prose">
+        <MdContent />
+        <Extras path={mdPath} lang={lang} />
+      </div>
+    </article>
+  </Layout>
+)}

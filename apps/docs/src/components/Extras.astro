@@ -1,0 +1,107 @@
+---
+// Live parts added under some hand written pages: style cards, token
+// swatches, platform previews and interaction embeds. Everything is read from
+// disk or from the gallery at build time.
+import { interactions, INTERACTION_FAMILIES } from '@the-system/motion';
+import { galleryHref } from '../../scripts/gallery.ts';
+import { paletteTokens, tokenValue } from '../../scripts/styles.ts';
+import type { Lang } from '../lib/i18n.ts';
+import { href, styles } from '../lib/site.ts';
+import Preview from './Preview.astro';
+
+interface Props {
+  path: string;
+  lang: Lang;
+}
+const { path, lang } = Astro.props;
+const ar = lang === 'ar';
+const loading = ar ? 'جار تحميل المعاينة' : 'Loading the preview';
+const spacing = ['--ds-space-2xs', '--ds-space-xs', '--ds-space-s', '--ds-space-m', '--ds-space-l', '--ds-space-xl', '--ds-space-2xl', '--ds-space-4xl', '--ds-space-6xl', '--ds-space-8xl', '--ds-space-10xl'];
+const firstOfFamily = Object.keys(INTERACTION_FAMILIES)
+  .map((f) => interactions.find((i) => i.family === f))
+  .filter((i) => i !== undefined)
+  .slice(0, 4);
+const statusWord = (w: string) => (ar ? ({ proposed: 'مقترح', stable: 'معتمد' } as Record<string, string>)[w] ?? w : w.charAt(0).toUpperCase() + w.slice(1));
+---
+
+{path === '/styles/' && (
+  <>
+    <h2 id="packs">{ar ? 'حزم الأنماط' : 'The style packs'}</h2>
+    <ul class="cards">
+      {styles.map((s) => (
+        <li class="card">
+          <h3 lang="en"><a class="card-link" href={href(lang, `/styles/${s.id}/`)}>{s.name}</a></h3>
+          <p lang={ar ? 'en' : undefined} dir={ar ? 'ltr' : undefined}>{s.dials.base ?? ''}</p>
+          <p><span class:list={['badge', s.status === 'proposed' ? 'badge-proposed' : 'badge-approved']}>{statusWord(s.status)}</span></p>
+        </li>
+      ))}
+    </ul>
+  </>
+)}
+
+{path === '/foundations/tokens/' && (
+  <>
+    <h2 id="swatches">{ar ? 'عينات حية من النمط Neutral' : 'Live swatches, Neutral'}</h2>
+    <p>{ar ? 'ترسم كل عينة بمتغير CSS من ملف الرموز المبني. القيمة تحت كل اسم هي القيمة الفعلية.' : 'Each swatch is drawn with a CSS variable from the built token file. The value under each name is the resolved value.'}</p>
+    <div class="scheme-pair">
+      {['light', 'dark'].map((scheme) => (
+        <div class="scheme-panel" data-style="neutral" data-scheme={scheme}>
+          <h3 id={`swatches-${scheme}`}>{scheme === 'light' ? (ar ? 'فاتح' : 'Light') : ar ? 'داكن' : 'Dark'}</h3>
+          <ul class="swatches">
+            {paletteTokens.map((p) => (
+              <li class="swatch">
+                <div class="swatch-chip" style={`background: var(${p.token})`} />
+                <div class="swatch-text">
+                  <strong>{p.role[lang]}</strong>
+                  <code>{p.token.replace('--ds-', '')}</code>
+                  <code>{tokenValue('neutral', scheme, p.token) ?? ''}</code>
+                </div>
+              </li>
+            ))}
+          </ul>
+        </div>
+      ))}
+    </div>
+    <h2 id="spacing">{ar ? 'مقياس المسافات' : 'Spacing scale'}</h2>
+    <p>{ar ? 'المسافات مرنة بين حد أدنى وحد أقصى حسب عرض الشاشة.' : 'Spacing is fluid between a minimum and a maximum, by viewport width.'}</p>
+    <ul class="space-scale">
+      {spacing.map((sp) => (
+        <li>
+          <code>{sp.replace('--ds-', '')}</code>
+          <span class="space-bar" style={`inline-size: var(${sp})`} />
+          <span dir="ltr">{(tokenValue('neutral', 'light', sp) ?? '').replace(/^clamp\(([^,]+),.*,\s*([^)]+)\)$/, '$1 to $2')}</span>
+        </li>
+      ))}
+    </ul>
+    <p><a href={href(lang, '/styles/')}>{ar ? 'مقارنة الألوان في كل الأنماط' : 'Compare the palette of every style'}</a></p>
+  </>
+)}
+
+{path === '/platforms/' && (
+  <>
+    <h2 id="platform-previews">{ar ? 'المكون Rail على كل منصة' : 'Rail on each platform'}</h2>
+    <p>{ar ? 'معاينات حية لحالة عدة عناصر من Rail، مع تغيير محور المنصة فقط.' : 'Live previews of the Rail many items case. Only the platform axis changes.'}</p>
+    <div class="strip">
+      {(['web', 'ios', 'android'] as const).map((p) => (
+        <Preview base={galleryHref('/c/rail')} caseId="many" label={`Rail, ${p}`} heightKey={`platform/rail/${p}`} fixed={{ platform: p }} lang={lang} loadingLabel={loading} fallbackHeight={420}>
+          <div class="strip-head"><span lang="en">{p === 'web' ? 'Web' : p === 'ios' ? 'iOS' : 'Android'}</span></div>
+        </Preview>
+      ))}
+    </div>
+  </>
+)}
+
+{path === '/interactions/' && (
+  <>
+    <h2 id="samples">{ar ? 'أمثلة حية' : 'Live samples'}</h2>
+    <p>{ar ? 'تفاعل واحد من كل فئة، من صفحة التفاعلات في المعرض.' : 'One interaction from each family, from the gallery interactions page.'}</p>
+    <div class="strip">
+      {firstOfFamily.map((i) => (
+        <Preview base={galleryHref('/interactions')} label={`${i.id}`} heightKey={`interaction/${i.id}`} fixed={{ focus: i.id }} lang={lang} loadingLabel={loading} fallbackHeight={260}>
+          <div class="strip-head"><code>{i.id}</code><span lang="en">{INTERACTION_FAMILIES[i.family]}</span></div>
+        </Preview>
+      ))}
+    </div>
+    <p><a class="btn btn-primary" href={galleryHref('/interactions')}>{ar ? 'فتح كل التفاعلات' : 'Open every interaction'}</a></p>
+  </>
+)}

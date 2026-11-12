@@ -1,0 +1,186 @@
+---
+// One page per style pack in packages/styles: its status, its dials, the
+// palette in each scheme as live swatches with the resolved values, the
+// radius and type scales, and the same screen as on the home page.
+import { galleryHref } from '../../scripts/gallery.ts';
+import { paletteTokens, radiusTokens, tokenValue, typeTokens } from '../../scripts/styles.ts';
+import type { Lang } from '../lib/i18n.ts';
+import { href, styles } from '../lib/site.ts';
+import Layout, { type TocItem } from './Layout.astro';
+import Preview from './Preview.astro';
+
+interface Props {
+  lang: Lang;
+  id: string;
+}
+const { lang, id } = Astro.props;
+const s = styles.find((x) => x.id === id)!;
+const ar = lang === 'ar';
+const text = {
+  en: {
+    eyebrow: 'Style',
+    lead: (n: string) => `The ${n} style pack. A style changes tokens, recipes, icons and motion. It never changes markup or behavior.`,
+    status: 'Status',
+    statusWord: (w: string) => w.charAt(0).toUpperCase() + w.slice(1),
+    facts: 'At a glance',
+    schemes: 'Schemes',
+    defaultScheme: 'Default scheme',
+    density: 'Default density',
+    icons: 'Icon set',
+    motion: 'Motion preset',
+    glass: 'Uses glass',
+    yes: 'Yes',
+    no: 'No',
+    fonts: 'Fonts',
+    dials: 'Dials',
+    dialsLead: 'The words that define the style, from its style.json.',
+    dial: 'Dial',
+    value: 'Value',
+    palette: 'Palette',
+    paletteLead: 'Live swatches drawn with the style tokens, with the resolved value of each.',
+    scheme: { light: 'Light', dark: 'Dark' } as Record<string, string>,
+    radius: 'Radius',
+    type: 'Type scale',
+    sample: 'Save changes to the board',
+    screen: 'The screen in this style',
+    screenLabel: `Form in the ${s.name} style`,
+    loading: 'Loading the preview',
+    all: 'Compare every style',
+  },
+  ar: {
+    eyebrow: 'النمط',
+    lead: (n: string) => `حزمة النمط ${n}. يغير النمط الرموز والوصفات والأيقونات والحركة، ولا يغير البنية أو السلوك.`,
+    status: 'الحالة',
+    statusWord: (w: string) => ({ proposed: 'مقترح', stable: 'معتمد', approved: 'معتمد' })[w] ?? w,
+    facts: 'لمحة سريعة',
+    schemes: 'المظاهر',
+    defaultScheme: 'المظهر الافتراضي',
+    density: 'الكثافة الافتراضية',
+    icons: 'مجموعة الأيقونات',
+    motion: 'إعداد الحركة',
+    glass: 'استخدام الزجاج',
+    yes: 'نعم',
+    no: 'لا',
+    fonts: 'الخطوط',
+    dials: 'المحددات',
+    dialsLead: 'الكلمات التي تعرف النمط، من ملف style.json.',
+    dial: 'المحدد',
+    value: 'القيمة',
+    palette: 'الألوان',
+    paletteLead: 'عينات حية مرسومة برموز النمط، مع القيمة الفعلية لكل منها.',
+    scheme: { light: 'فاتح', dark: 'داكن' } as Record<string, string>,
+    radius: 'الزوايا',
+    type: 'مقاسات الخط',
+    sample: 'حفظ التغييرات في اللوحة',
+    screen: 'الشاشة بهذا النمط',
+    screenLabel: `نموذج بنمط ${s.name}`,
+    loading: 'جار تحميل المعاينة',
+    all: 'مقارنة كل الأنماط',
+  },
+}[lang];
+const approved = s.status === 'stable' || s.status === 'approved';
+const schemes = [...s.schemes].sort((a, b) => (a === 'light' ? -1 : b === 'light' ? 1 : 0));
+const toc: TocItem[] = [
+  { depth: 2, slug: 'facts', text: text.facts },
+  { depth: 2, slug: 'dials', text: text.dials },
+  { depth: 2, slug: 'palette', text: text.palette },
+  { depth: 2, slug: 'radius', text: text.radius },
+  { depth: 2, slug: 'type', text: text.type },
+  { depth: 2, slug: 'screen', text: text.screen },
+];
+const short = (v: string | undefined) => (v ?? '').replace(/^"([^"]+)".*$/, '$1');
+---
+
+<Layout lang={lang} path={`/styles/${s.id}/`} title={s.name} description={text.lead(s.name)} toc={toc} twin={`${ar ? '/ar' : ''}/styles/${s.id}.md`}>
+  <article>
+    <header class="page-head">
+      <p class="eyebrow"><a href={href(lang, '/styles/')}>{text.eyebrow}</a></p>
+      <div class="title-row">
+        <h1 lang="en">{s.name}</h1>
+        <span class:list={['badge', approved ? 'badge-approved' : 'badge-proposed']}>{text.status}: {text.statusWord(s.status)}</span>
+      </div>
+      <p class="lead">{text.lead(s.name)}</p>
+    </header>
+
+    <section class="doc-section" aria-labelledby="facts">
+      <h2 id="facts">{text.facts}</h2>
+      <dl class="facts">
+        <dt>{text.schemes}</dt><dd>{s.schemes.map((x) => text.scheme[x] ?? x).join(ar ? '، ' : ', ')}</dd>
+        {s.defaultScheme && <><dt>{text.defaultScheme}</dt><dd>{text.scheme[s.defaultScheme] ?? s.defaultScheme}</dd></>}
+        {s.defaultDensity && <><dt>{text.density}</dt><dd><code>{s.defaultDensity}</code></dd></>}
+        {s.iconSet && <><dt>{text.icons}</dt><dd><code>{s.iconSet}</code></dd></>}
+        {s.motionPreset && <><dt>{text.motion}</dt><dd><code>{s.motionPreset}</code></dd></>}
+        <dt>{text.glass}</dt><dd>{s.usesGlass ? text.yes : text.no}</dd>
+        {s.fonts && <><dt>{text.fonts}</dt><dd lang="en" dir="ltr">{Object.values(s.fonts).join(', ')}</dd></>}
+      </dl>
+    </section>
+
+    <section class="doc-section" aria-labelledby="dials">
+      <h2 id="dials">{text.dials}</h2>
+      <p>{text.dialsLead}</p>
+      <div class="table-wrap" tabindex="0" role="region" aria-labelledby="dials">
+        <table>
+          <thead><tr><th scope="col">{text.dial}</th><th scope="col">{text.value}</th></tr></thead>
+          <tbody>
+            {Object.entries(s.dials).map(([k, v]) => <tr><td><code>{k}</code></td><td lang={ar ? 'en' : undefined} dir={ar ? 'ltr' : undefined}>{v}</td></tr>)}
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="doc-section" aria-labelledby="palette">
+      <h2 id="palette">{text.palette}</h2>
+      <p>{text.paletteLead}</p>
+      <div class="scheme-pair">
+        {schemes.map((scheme) => (
+          <div class="scheme-panel" data-style={s.id} data-scheme={scheme}>
+            <h3 id={`palette-${scheme}`}>{text.scheme[scheme] ?? scheme}</h3>
+            <ul class="swatches">
+              {paletteTokens.map((p) => (
+                <li class="swatch">
+                  <div class="swatch-chip" style={`background: var(${p.token})`} />
+                  <div class="swatch-text">
+                    <strong>{p.role[lang]}</strong>
+                    <code>{p.token.replace('--ds-', '')}</code>
+                    <code>{tokenValue(s.id, scheme, p.token) ?? ''}</code>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <section class="doc-section" aria-labelledby="radius">
+      <h2 id="radius">{text.radius}</h2>
+      <ul class="radius-row" data-style={s.id} data-scheme={schemes[0]}>
+        {radiusTokens.map((r) => (
+          <li>
+            <span class="radius-box" style={`border-radius: var(${r})`} />
+            <code>{r.replace('--ds-radius-', '')}</code>
+            <span dir="ltr">{tokenValue(s.id, schemes[0] ?? 'light', r)}</span>
+          </li>
+        ))}
+      </ul>
+    </section>
+
+    <section class="doc-section" aria-labelledby="type">
+      <h2 id="type">{text.type}</h2>
+      <div data-style={s.id} data-scheme={schemes[0]}>
+        {typeTokens.map((f) => (
+          <div class="type-sample">
+            <code>{f.replace('--ds-font-size-', '')} <span dir="ltr">{short(tokenValue(s.id, schemes[0] ?? 'light', f)).replace(/^clamp\(([^,]+),.*,\s*([^)]+)\)$/, '$1 to $2')}</span></code>
+            <span style={`font-size: var(${f}); font-family: var(${ar ? '--ds-font-family-arabic' : '--ds-font-family-sans'})`}>{text.sample}</span>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <section class="doc-section" aria-labelledby="screen">
+      <h2 id="screen">{text.screen}</h2>
+      <Preview base={galleryHref('/c/form')} caseId="one" label={text.screenLabel} heightKey="home/form/one" fixed={{ style: s.id }} lang={lang} loadingLabel={text.loading} fallbackHeight={360} />
+      <p><a href={href(lang, '/styles/')}>{text.all}</a></p>
+    </section>
+  </article>
+</Layout>

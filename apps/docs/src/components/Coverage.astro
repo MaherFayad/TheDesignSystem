@@ -1,0 +1,57 @@
+---
+// Coverage per component and framework, read from the manifests.
+import { frameworkIds } from '../../scripts/manifests.ts';
+import { pageText, type Lang } from '../lib/i18n.ts';
+import { componentPath, coverage, families, href } from '../lib/site.ts';
+import Layout, { type TocItem } from './Layout.astro';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const t = pageText[lang];
+const c = coverage();
+const ar = lang === 'ar';
+const title = ar ? 'التغطية' : 'Coverage';
+const lead = ar
+  ? `الحالة لكل مكون في كل إطار عمل. الجاهز في React ‏${c.react}، وفي Angular ‏${c.angular}، وفي React Native ‏${c.native}، من أصل ${c.total}.`
+  : `The status of every component in each framework. Ready: React ${c.react}, Angular ${c.angular}, React Native ${c.native}, of ${c.total}.`;
+const fwName = { react: 'React', angular: 'Angular', native: 'React Native' } as const;
+const groups = families();
+const toc: TocItem[] = groups.map((g) => ({ depth: 2, slug: `cov-${g.id}`, text: g.label[lang] }));
+---
+
+<Layout lang={lang} path="/frameworks/coverage/" title={title} description={lead} toc={toc} twin={ar ? '/ar/frameworks/coverage.md' : '/frameworks/coverage.md'}>
+  <article>
+    <header class="page-head">
+      <h1>{title}</h1>
+      <p class="lead">{lead}</p>
+    </header>
+    {groups.map((g) => (
+      <section class="doc-section" aria-labelledby={`cov-${g.id}`}>
+        <h2 id={`cov-${g.id}`}>{g.label[lang]}</h2>
+        <div class="table-wrap" tabindex="0" role="region" aria-labelledby={`cov-${g.id}`}>
+          <table>
+            <thead>
+              <tr>
+                <th scope="col">{t.component}</th>
+                {frameworkIds.map((fw) => <th scope="col" lang="en">{fwName[fw]}</th>)}
+              </tr>
+            </thead>
+            <tbody>
+              {g.items.map((m) => (
+                <tr>
+                  <th scope="row" lang="en"><a href={href(lang, componentPath(m))}>{m.name}</a></th>
+                  {frameworkIds.map((fw) => {
+                    const s = m.frameworks[fw]?.status ?? 'planned';
+                    return <td><span class:list={['badge', s === 'ready' ? 'badge-ready' : 'badge-planned']}>{t.status[s]}</span></td>;
+                  })}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </section>
+    ))}
+  </article>
+</Layout>
