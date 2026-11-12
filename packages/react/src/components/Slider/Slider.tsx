@@ -105,6 +105,8 @@ export function SliderBase({
   'aria-describedby': describedBy,
   onPointerDown,
   onLostPointerCapture,
+  onKeyDown,
+  minStepsBetweenThumbs = 0,
   ...rest
 }: SliderBaseProps & BaseInternals) {
   const theme = useTheme();
@@ -130,6 +132,8 @@ export function SliderBase({
       {...rootProps}
       className={className}
       style={style}
+      role={values.length > 1 && hasLabel ? 'group' : undefined}
+      aria-labelledby={values.length > 1 && hasLabel ? labelId : undefined}
       data-ds={kind}
       data-size={size}
       data-tone={tone}
@@ -167,6 +171,22 @@ export function SliderBase({
         onValueChange={onChange}
         onValueCommit={(next) => {
           setDragging(false);
+          onValueCommit?.(next);
+        }}
+        minStepsBetweenThumbs={minStepsBetweenThumbs}
+        onKeyDown={(event) => {
+          onKeyDown?.(event);
+          // Radix sends Home to the start thumb and End to the end thumb, whichever has focus.
+          // With two thumbs, move the focused one as far as the other allows instead.
+          if (event.defaultPrevented || values.length < 2 || (event.key !== 'Home' && event.key !== 'End')) return;
+          const index = (event.target as HTMLElement).getAttribute('data-thumb') === 'end' ? 1 : 0;
+          const gap = minStepsBetweenThumbs * step;
+          const next = [...values];
+          if (index === 0) next[0] = event.key === 'Home' ? min : (values[1] ?? max) - gap;
+          else next[1] = event.key === 'Home' ? (values[0] ?? min) + gap : max;
+          event.preventDefault();
+          if (next[index] === values[index]) return;
+          onChange(next);
           onValueCommit?.(next);
         }}
         onPointerDown={(event) => {

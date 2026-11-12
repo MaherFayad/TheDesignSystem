@@ -8,6 +8,7 @@ export * from './components/Field/index';
 export * from './components/Icon/index';
 export * from './components/IconButton/index';
 export * from './components/Input/index';
+export * from './components/RangeSlider/index';
 export * from './components/Slider/index';
 export * from './components/Switch/index';
 export * from './components/TitleBar/index';
