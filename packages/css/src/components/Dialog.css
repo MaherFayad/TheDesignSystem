@@ -588,10 +588,14 @@
    * the Sheet footer, and keyboard focus cannot reach the toast while the
    * Sheet is open (WCAG 2.4.11, 2.4.12; PLAN.md section 12). While a Sheet
    * is open the toaster moves to the top edge, at the same inline place,
-   * and its toasts enter from above. Only the toaster's position and its
-   * private properties change; the toast store does not.
+   * and its toasts enter from above and stack as the top positions do.
+   * Only the toaster's position and its private properties change; the
+   * toast store does not. A size lg Sheet fills the screen, so there the
+   * top toast can still cover the title and close part: the lasting fix is
+   * in the toast layer and is asked of the lead (docs/reports/fixes).
    */
   :root:has([data-ds='sheet'] > [data-part='panel'][data-state='open']) [data-ds='toaster'][data-position^='bottom'] {
+    flex-direction: column-reverse;
     inset-block-start: var(--_toaster-inset-block-start);
     inset-block-end: auto;
   }
