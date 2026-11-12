@@ -11,7 +11,7 @@ const motion: StyleMotionPreset = {
   patterns: {
     sheet: { mode: 'full', duration: 'duration.base' },
     'number-roll': { mode: 'reduced' },
-    'list-stagger': { mode: 'full', duration: 'duration.base' },
+    'list-stagger': { mode: 'reduced' },
     'chart-draw': { mode: 'full', duration: 'duration.zoom' },
     'drag-drop': { mode: 'full', duration: 'duration.base' },
   },

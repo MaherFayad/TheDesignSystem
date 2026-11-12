@@ -240,7 +240,31 @@
       }
     },
     "motion": {
-      "type": "string"
+      "type": "string",
+      "description": "A pattern id from packages/motion/src/core.ts, or none. Written by scripts/gen-index.ts.",
+      "enum": [
+        "none",
+        "fade-rise",
+        "menu-scale",
+        "dialog",
+        "sheet",
+        "toast",
+        "accordion-height",
+        "tab-indicator",
+        "list-stagger",
+        "drag-drop",
+        "window-grow",
+        "window-zoom",
+        "window-minimize",
+        "skeleton-shimmer",
+        "spinner",
+        "number-roll",
+        "chart-draw",
+        "thinking",
+        "streaming-text",
+        "fade",
+        "press"
+      ]
     },
     "frameworks": {
       "type": "object",

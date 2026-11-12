@@ -236,12 +236,13 @@
     "duration.spin",
     "ease.default"
   ],
+  "motion": "press",
   "frameworks": {
     "react": {
       "status": "ready",
       "behavior": "native button, radix:Slot",
       "example": "IconButton.demo.tsx",
-      "note": "Motion: no catalog pattern. Press feedback is an instant color swap; the spinner turn and the hover veil fade are component CSS. A press pattern (scale.press, spring.press) is a request to the motion owner."
+      "note": "Motion: press (scale.press, spring.press). On the web the press is still an instant color swap until the component plays the pattern; the spinner turn and the hover veil fade are component CSS."
     },
     "angular": {
       "status": "ready",

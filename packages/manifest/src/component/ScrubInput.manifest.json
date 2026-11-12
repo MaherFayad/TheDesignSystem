@@ -193,13 +193,13 @@
     "ease.default",
     "opacity.disabled"
   ],
-  "motion": "none",
+  "motion": "fade",
   "frameworks": {
     "react": {
       "status": "ready",
       "behavior": "hand built, pointer capture for the scrub; logic in @the-system/shared scrub.ts and number.ts",
       "example": "ScrubInput.demo.tsx",
-      "note": "Motion: none. The value follows the pointer with no animation; only the focus ring fades (an opacity transition)."
+      "note": "Motion: fade, for the focus ring. The value follows the pointer with no animation; only the focus ring fades (an opacity transition)."
     },
     "angular": {
       "status": "planned"
