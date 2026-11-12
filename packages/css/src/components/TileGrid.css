@@ -1,0 +1,30 @@
+/*
+ * TileGrid: the grid that holds tiles, split by a 1px gap that shows the
+ * parent surface (Studio dial 4). Source: Figma-Killer-2 `DashboardGrid`
+ * (1px gap on the darker parent). The tiles are styled in Tile.css; this
+ * file holds the second root only (anatomy.md rule 10).
+ *
+ * Private properties: --_tile-grid-min, -gap, -radius. The grid clips its
+ * tiles to its radius, so Tile draws its rings inside.
+ */
+@layer ds.base {
+  [data-ds='tile-grid'] {
+    --_tile-grid-min: calc(2 * var(--ds-space-12xl));
+    --_tile-grid-gap: var(--ds-space-px);
+    --_tile-grid-radius: var(--ds-radius-panel);
+
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, var(--_tile-grid-min)), 1fr));
+    gap: var(--_tile-grid-gap);
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    border-radius: var(--_tile-grid-radius);
+    list-style: none;
+  }
+
+  /* Inside the grid the tiles touch the gap: square corners, the grid rounds the outside. */
+  [data-ds='tile-grid'] > [data-ds='tile'] {
+    --_tile-radius: 0;
+  }
+}

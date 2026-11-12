@@ -2055,6 +2055,209 @@
     "since": "0.1.0"
   },
   {
+    "name": "Tile",
+    "kind": "component",
+    "family": "containers",
+    "summary": "The borderless card of Studio: a thumbnail, a title, one meta line and an icon action, laid out in a TileGrid split by a 1px gap that shows the parent surface.",
+    "useWhen": [
+      "A browsable grid of files, boards, templates or assets, where the thumbnail and the name do most of the work",
+      "A Studio dashboard of many equal items that should read as one surface cut into cells",
+      "A grid where every item opens on click and holds at most one or two icon actions"
+    ],
+    "avoidWhen": [
+      "An item that needs a description, a body or labelled buttons",
+      "A single item on its own, away from a grid",
+      "Rows of text that people scan and compare",
+      "Picking one option out of several"
+    ],
+    "insteadUse": {
+      "An item with a description, body or labelled actions": "Card",
+      "Rows of text to scan": "List",
+      "Tabular data": "Table",
+      "Picking one option shown as a card": "RadioCard",
+      "An empty grid": "EmptyState"
+    },
+    "anatomy": [
+      "root",
+      "media",
+      "title",
+      "link",
+      "meta",
+      "actions"
+    ],
+    "parts": {
+      "TileMedia": "media",
+      "TileTitle": "title",
+      "TileLink": "link",
+      "TileMeta": "meta",
+      "TileActions": "actions"
+    },
+    "slots": {
+      "media": {
+        "accepts": "any",
+        "max": 1
+      },
+      "title": {
+        "accepts": "text",
+        "min": 1,
+        "max": 1
+      },
+      "link": {
+        "accepts": "text",
+        "max": 1
+      },
+      "meta": {
+        "accepts": "text",
+        "max": 1
+      },
+      "actions": {
+        "accepts": [
+          "IconButton",
+          "DropdownMenu"
+        ],
+        "max": 2
+      }
+    },
+    "props": {
+      "size": {
+        "type": [
+          "sm",
+          "md"
+        ],
+        "default": "md",
+        "description": "Padding and type size: space s with a small title, or space l with a medium title."
+      },
+      "selected": {
+        "type": "boolean",
+        "default": false,
+        "description": "Draws a 2px ring inside the tile (not color alone) and sets data-selected. Say it in words too, with aria-current on the TileLink."
+      },
+      "asChild": {
+        "type": "boolean",
+        "default": false,
+        "description": "On Tile and TileGrid: renders the single child element as the root, for example a ul grid of li tiles."
+      },
+      "level": {
+        "type": [
+          "2",
+          "3",
+          "4",
+          "5",
+          "6"
+        ],
+        "default": "3",
+        "description": "On TileTitle: the heading level."
+      },
+      "href": {
+        "type": "string",
+        "description": "On TileLink: the target. Its hit area covers the whole tile."
+      },
+      "children": {
+        "type": "node",
+        "description": "TileMedia, TileTitle (with a TileLink), TileMeta, TileActions. TileGrid takes Tiles."
+      }
+    },
+    "states": [
+      "data-interactive",
+      "data-selected"
+    ],
+    "a11y": {
+      "role": "None on the tile. The title is a heading; a whole tile link is one native link inside it. A ul TileGrid with li tiles (asChild) gives a list role and a count.",
+      "focus": "The tile never takes focus. Tab reaches the TileLink, then the actions. Focus draws a double ring inside the tile (2px ring, 2px gap, 2px ring), so the grid's clip never hides it and it never looks like the single selected ring.",
+      "keys": {
+        "Tab": "Moves to the tile link, then to its actions, then to the next tile",
+        "Enter": "On the tile link: opens it"
+      },
+      "announce": "The link is named by the full title, even when the visible title is cut at two lines. The meta line is read after it.",
+      "native": {
+        "accessibilityRole": "none",
+        "accessibilityState": [
+          "selected"
+        ]
+      },
+      "notes": [
+        "The title is cut at two lines with an ellipsis; the link still holds the full name. Keep names short enough to read in two lines.",
+        "Actions sit above the stretched link target and keep their own 24px targets.",
+        "Forced colors: every tile gets a CanvasText border, the selected one a Highlight outline at its edge, focus a Highlight outline one step further in."
+      ]
+    },
+    "content": {
+      "en": {
+        "title": "The item's name, sentence case: Spring launch.",
+        "meta": "One short fact: Edited 2 hours ago.",
+        "actions": "An icon action names its item: More actions for Spring launch."
+      },
+      "ar": {
+        "title": "The item's name in white Saudi dialect, no diacritics: إطلاق الربيع.",
+        "meta": "One short fact, Western digits: آخر تعديل قبل 3 أيام."
+      }
+    },
+    "tokens": [
+      "space.px",
+      "space.12xl",
+      "space.l",
+      "space.s",
+      "space.m",
+      "space.3xs",
+      "space.4xs",
+      "radius.panel",
+      "border.width.default",
+      "border.width.strong",
+      "color.bg.surface",
+      "color.bg.surface-2",
+      "color.bg.surface-3",
+      "color.border.hairline",
+      "color.text.default",
+      "color.text.bright",
+      "color.text.muted",
+      "color.focus.ring",
+      "font.family.sans",
+      "font.size.s",
+      "font.size.m",
+      "font.weight.semibold",
+      "font.leading.snug",
+      "font.leading.normal"
+    ],
+    "motion": "fade-rise",
+    "frameworks": {
+      "react": {
+        "status": "ready",
+        "behavior": "hand built, radix:Slot for asChild",
+        "example": "Tile.demo.tsx",
+        "note": "Motion: none of its own. The hover swaps the surface tone at once, as the source does. fade-rise is named for the entrance of a tile into its grid, which the parent drives, from the 1.11 catalog list. TileGrid is a second root (data-ds tile-grid) styled in TileGrid.css, with no manifest of its own."
+      },
+      "angular": {
+        "status": "planned",
+        "note": "dsTileGrid and dsTile on the host, parts as attribute directives. Tile.css as is."
+      },
+      "native": {
+        "status": "planned",
+        "note": "A FlatList with numColumns and a hairline gap on the parent surface; each tile a Pressable."
+      }
+    },
+    "styles": {
+      "studio": "Borderless tiles on surface 2, square inside the grid, split by a 1px gap that shows the parent; the grid rounds the outside with radius.panel. Hover steps to surface 3.",
+      "desk": "recipes/Tile.css: the grid opens to a space.m gap, each tile is a rounded card on the surface with the hairline border; hover steps to surface 2.",
+      "neutral": "Planned: reads as a card with 1px borders and white space, through a recipe like Desk's.",
+      "liquid": "Planned: solid tiles under the glass layer."
+    },
+    "mistakes": [
+      {
+        "wrong": "Tiles with their own borders and gaps in Studio",
+        "right": "Tiles inside TileGrid; the 1px gap is the separation"
+      },
+      {
+        "wrong": "A tile with a description paragraph and two labelled buttons",
+        "right": "A Card"
+      },
+      {
+        "wrong": "Hiding the tile actions until hover",
+        "right": "Keep them visible, so keyboard and touch reach them"
+      }
+    ],
+    "since": "0.1.0"
+  },
+  {
     "name": "TitleBar",
     "kind": "component",
     "family": "overlays",
