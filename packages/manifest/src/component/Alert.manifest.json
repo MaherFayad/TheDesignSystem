@@ -212,9 +212,10 @@
       "example": "Alert.demo.tsx"
     },
     "angular": {
-      "status": "planned",
-      "behavior": "hand built",
-      "note": "The same DOM on Alert.css; the close part is a CloseButton."
+      "status": "ready",
+      "behavior": "div[dsAlert], host bindings",
+      "example": "alert.demo.ts",
+      "note": "The host element is the root; the body is the projected content and the part is left out while empty. title, actions and icon take a string (an icon name for icon) or a TemplateRef. onClose is a function input: the close part renders only with a handler. The close part has the CloseButton DOM. Alert.css is used as is."
     },
     "native": {
       "status": "planned",
