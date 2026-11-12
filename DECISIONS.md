@@ -31,6 +31,20 @@ Recorded by the second consolidation pass. Report:
 7. **The contract suite keeps Studio as its single run style** while
    Neutral is `proposed`. Neutral joins the single runs once the owner
    approves it.
+8. **Tokens added to the contract** (`added`): `delay.feedback` 2s (how
+   long CopyButton shows copied or failed; was `delay.peek-hide`, 600ms),
+   `duration.pulse` 1.4s (StatusDot), `z.raised` 1, `scale.menu-enter`
+   0.97, `size.icon.xl` 36px, `size.container.sm` to `xl` (30, 48, 68.75,
+   84rem), `size.grid.item-min.sm` to `lg` (10, 15, 24rem), `size.measure`
+   33.75rem. Component token `menu.width.max` 400px. Each equals the value
+   its component computed before, except the feedback delay, which grows to
+   the 2s that was asked for.
+9. **Scrollbar thumb meets 3:1** on body and surface 1 to 5 in every style
+   and scheme (SC 1.4.11), with the hover one step stronger. Light schemes
+   and Neutral dark alias `color.text.subtle` (hover `muted`); Studio and
+   Desk dark use an opaque `#b8b8b8` (hover `text.default`), since muted
+   text is only 2.5:1 on their surface 5. The contrast gate measures the
+   pair now.
 
 ## Environment (2026-11-12)
 

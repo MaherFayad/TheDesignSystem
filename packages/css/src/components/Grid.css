@@ -5,15 +5,14 @@
  * minmax(0, 1fr) and the auto-fit minimum is capped at 100%, so the grid
  * never scrolls sideways at 320px. Layout only: no color and no motion.
  *
- * The minimum item sizes are derived from the breakpoint tokens until the
- * token build has a size.grid scale (asked of the lead in the lane report).
+ * The minimum item sizes come from the size.grid.item-min scale.
  */
 @layer ds.base {
   [data-ds='grid'] {
     --_grid-gap: var(--ds-space-l);
     --_grid-row-gap: var(--_grid-gap);
     --_grid-columns: 1;
-    --_grid-min: calc(var(--ds-breakpoint-phone) / 2);
+    --_grid-min: var(--ds-size-grid-item-min-md);
     --_grid-template: repeat(var(--_grid-columns), minmax(0, 1fr));
 
     display: grid;
@@ -36,11 +35,11 @@
   }
 
   [data-ds='grid'][data-min='sm'] {
-    --_grid-min: calc(var(--ds-breakpoint-phone) / 3);
+    --_grid-min: var(--ds-size-grid-item-min-sm);
   }
 
   [data-ds='grid'][data-min='lg'] {
-    --_grid-min: calc(var(--ds-breakpoint-tablet) / 2);
+    --_grid-min: var(--ds-size-grid-item-min-lg);
   }
 
   [data-ds='grid'][data-columns='1'] {

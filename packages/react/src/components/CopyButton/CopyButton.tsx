@@ -19,11 +19,11 @@ export const copyButtonLabels = {
 } as const;
 
 /**
- * How long the result shows before the button returns to idle. Hover intent
- * timing, not motion, so it is kept under reduced motion. Token gap: no
- * feedback hold token yet; delay.peek-hide is the nearest.
+ * How long the result shows before the button returns to idle
+ * (delay.feedback, 2s). Timing, not motion, so it is kept under reduced
+ * motion.
  */
-const HOLD_TOKEN = '--ds-delay-peek-hide';
+const HOLD_TOKEN = '--ds-delay-feedback';
 
 const icons: Record<CopyButtonState, IconName> = { idle: 'copy', copied: 'check', failed: 'warning' };
 

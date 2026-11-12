@@ -13,8 +13,7 @@
  *   --_empty-state-icon-box           the square that holds the icon
  *   --_empty-state-icon-bg, -icon-fg  its fill and the glyph color
  *   --_empty-state-title-size, -body-size
- *   --_empty-state-measure            the widest line of the body (no measure token yet: five
- *                                     space.12xl steps, about 540px; see the lane report)
+ *   --_empty-state-measure            the widest line of the body (size.measure)
  *
  * Not interactive and no motion of its own: the parent decides how it
  * appears (fade-rise). The actions are system Buttons with their own states.
@@ -29,7 +28,7 @@
     --_empty-state-icon-fg: var(--ds-color-text-muted);
     --_empty-state-title-size: var(--ds-font-size-xl);
     --_empty-state-body-size: var(--ds-font-size-m);
-    --_empty-state-measure: calc(5 * var(--ds-space-12xl));
+    --_empty-state-measure: var(--ds-size-measure);
 
     display: flex;
     flex-direction: column;

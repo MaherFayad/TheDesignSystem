@@ -2724,23 +2724,13 @@
     },
     "thumb": {
       "$type": "color",
-      "$value": {
-        "colorSpace": "srgb",
-        "components": [0.3961, 0.3882, 0.3686],
-        "alpha": 0.58,
-        "hex": "#65635e"
-      },
-      "$description": "Scrollbar thumb. Light: text subtle at 58%. Proposed, Desk Light."
+      "$value": "{color.text.subtle}",
+      "$description": "Text subtle, at least 4.2:1 on body and every surface (SC 1.4.11). The source was a translucent gray under 3:1."
     },
     "thumb-hover": {
       "$type": "color",
-      "$value": {
-        "colorSpace": "srgb",
-        "components": [0.3412, 0.3333, 0.3098],
-        "alpha": 0.72,
-        "hex": "#57554f"
-      },
-      "$description": "Scrollbar thumb under the pointer. Light: text muted at 72%. Proposed, Desk Light."
+      "$value": "{color.text.muted}",
+      "$description": "One text step stronger than the thumb, so hover reads without color alone."
     }
   },
   "window": {

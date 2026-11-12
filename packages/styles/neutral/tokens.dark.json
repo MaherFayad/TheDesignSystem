@@ -3172,31 +3172,13 @@
     },
     "thumb": {
       "$type": "color",
-      "$value": {
-        "colorSpace": "srgb",
-        "components": [
-          0.5608,
-          0.5608,
-          0.5608
-        ],
-        "alpha": 0.58,
-        "hex": "#8f8f8f"
-      },
-      "$description": "Text subtle at 58%."
+      "$value": "{color.text.subtle}",
+      "$description": "Text subtle, at least 4:1 on body and every surface (SC 1.4.11). The source was a translucent gray under 3:1."
     },
     "thumb-hover": {
       "$type": "color",
-      "$value": {
-        "colorSpace": "srgb",
-        "components": [
-          0.6314,
-          0.6314,
-          0.6667
-        ],
-        "alpha": 0.72,
-        "hex": "#a1a1aa"
-      },
-      "$description": "Text muted at 72%."
+      "$value": "{color.text.muted}",
+      "$description": "One text step stronger than the thumb, so hover reads without color alone."
     }
   },
   "window": {

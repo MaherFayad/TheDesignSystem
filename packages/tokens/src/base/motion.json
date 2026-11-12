@@ -137,6 +137,14 @@
         "unit": "s"
       },
       "$description": "Desk label roll, light colour change, dock lift."
+    },
+    "pulse": {
+      "$type": "duration",
+      "$value": {
+        "value": 1.4,
+        "unit": "s"
+      },
+      "$description": "One loop of a status pulse. Three loops end before five seconds (SC 2.2.2)."
     }
   },
   "delay": {
@@ -158,6 +166,17 @@
         "unit": "ms"
       },
       "$description": "Stagger step between revealed items."
+    },
+    "feedback": {
+      "$type": "duration",
+      "$value": {
+        "value": 2000,
+        "unit": "ms"
+      },
+      "$description": "How long a short result (copied, failed) stays before the control returns to rest. Timing, not motion: kept under reduced motion.",
+      "$extensions": {
+        "ds.motion": false
+      }
     }
   },
   "ease": {

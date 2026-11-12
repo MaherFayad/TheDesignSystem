@@ -40,6 +40,7 @@
     --ds-canvas-zoom-fit-padding: 64px;
     --ds-control-row-height: 28px;
     --ds-control-row-label-width: 100px;
+    --ds-delay-feedback: 2000ms;
     --ds-delay-peek-hide: 600ms;
     --ds-delay-reveal-step: 80ms;
     --ds-dialog-height-max: 80vh;
@@ -53,6 +54,7 @@
     --ds-duration-instant: 70ms;
     --ds-duration-medium: 140ms;
     --ds-duration-moderate: 150ms;
+    --ds-duration-pulse: 1.4s;
     --ds-duration-quick: 100ms;
     --ds-duration-reveal: 640ms;
     --ds-duration-roll: 0.3s;
@@ -118,6 +120,7 @@
     --ds-inspector-row-height: 32px;
     --ds-list-row-height: 28px;
     --ds-menu-item-height: 28px;
+    --ds-menu-width-max: 400px;
     --ds-menu-width-min: 200px;
     --ds-opacity-disabled: 0.38;
     --ds-palette-art-blue: #2d6bff;
@@ -223,6 +226,7 @@
     --ds-palette-site-trail-default: #d6d6d6;
     --ds-palette-site-trail-warm: #ff5a4d;
     --ds-scale-dialog-enter: 0.98;
+    --ds-scale-menu-enter: 0.97;
     --ds-scale-press: 0.97;
     --ds-scale-window-enter: 0.92;
     --ds-scrollbar-size: 6px;
@@ -232,13 +236,22 @@
     --ds-shell-sidebar-width-min: 260px;
     --ds-shell-sidebar-width-start: 320px;
     --ds-shell-topbar-height: 36px;
+    --ds-size-container-lg: 68.75rem;
+    --ds-size-container-md: 48rem;
+    --ds-size-container-sm: 30rem;
+    --ds-size-container-xl: 84rem;
     --ds-size-control-lg: 44px;
     --ds-size-control-md: 32px;
     --ds-size-control-sm: 28px;
     --ds-size-control-xs: 24px;
+    --ds-size-grid-item-min-lg: 24rem;
+    --ds-size-grid-item-min-md: 15rem;
+    --ds-size-grid-item-min-sm: 10rem;
     --ds-size-icon-lg: 24px;
     --ds-size-icon-md: 16px;
     --ds-size-icon-sm: 12px;
+    --ds-size-icon-xl: 36px;
+    --ds-size-measure: 33.75rem;
     --ds-size-target-min: 24px;
     --ds-size-touch-android: 48px;
     --ds-size-touch-ios: 44px;
@@ -295,6 +308,7 @@
     --ds-z-dropdown: 20;
     --ds-z-floating-panel: 50;
     --ds-z-menu: 9800;
+    --ds-z-raised: 1;
     --ds-z-sidebar: 55;
     --ds-z-spotlight: 9000;
     --ds-z-toast: 10000;
@@ -620,8 +634,8 @@
     --ds-radius-sm: 6px;
     --ds-radius-window: 1rem;
     --ds-radius-xs: 3px;
-    --ds-scrollbar-thumb: rgb(143 143 143 / 0.58);
-    --ds-scrollbar-thumb-hover: rgb(161 161 170 / 0.72);
+    --ds-scrollbar-thumb: #b8b8b8;
+    --ds-scrollbar-thumb-hover: var(--ds-color-text-default);
     --ds-scrollbar-track: rgb(0 0 0 / 0);
     --ds-window-backdrop-bg: rgb(0 0 0 / 0.4);
   }
@@ -878,8 +892,8 @@
     --ds-radius-sm: 6px;
     --ds-radius-window: 1rem;
     --ds-radius-xs: 3px;
-    --ds-scrollbar-thumb: rgb(101 99 94 / 0.58);
-    --ds-scrollbar-thumb-hover: rgb(87 85 79 / 0.72);
+    --ds-scrollbar-thumb: var(--ds-color-text-subtle);
+    --ds-scrollbar-thumb-hover: var(--ds-color-text-muted);
     --ds-scrollbar-track: rgb(0 0 0 / 0);
     --ds-window-backdrop-bg: rgb(26 29 36 / 0.2);
   }
@@ -1142,8 +1156,8 @@
     --ds-radius-sm: 6px;
     --ds-radius-window: var(--ds-radius-panel);
     --ds-radius-xs: 4px;
-    --ds-scrollbar-thumb: rgb(143 143 143 / 0.58);
-    --ds-scrollbar-thumb-hover: rgb(161 161 170 / 0.72);
+    --ds-scrollbar-thumb: var(--ds-color-text-subtle);
+    --ds-scrollbar-thumb-hover: var(--ds-color-text-muted);
     --ds-scrollbar-track: rgb(0 0 0 / 0);
     --ds-window-backdrop-bg: rgb(0 0 0 / 0.5);
   }
@@ -1406,8 +1420,8 @@
     --ds-radius-sm: 6px;
     --ds-radius-window: var(--ds-radius-panel);
     --ds-radius-xs: 4px;
-    --ds-scrollbar-thumb: rgb(86 96 110 / 0.58);
-    --ds-scrollbar-thumb-hover: rgb(75 85 99 / 0.72);
+    --ds-scrollbar-thumb: var(--ds-color-text-subtle);
+    --ds-scrollbar-thumb-hover: var(--ds-color-text-muted);
     --ds-scrollbar-track: rgb(0 0 0 / 0);
     --ds-window-backdrop-bg: rgb(0 0 0 / 0.3);
   }
@@ -1664,8 +1678,8 @@
     --ds-radius-sm: 6px;
     --ds-radius-window: var(--ds-radius-panel);
     --ds-radius-xs: 3px;
-    --ds-scrollbar-thumb: rgb(143 143 143 / 0.58);
-    --ds-scrollbar-thumb-hover: rgb(161 161 170 / 0.72);
+    --ds-scrollbar-thumb: #b8b8b8;
+    --ds-scrollbar-thumb-hover: var(--ds-color-text-default);
     --ds-scrollbar-track: rgb(0 0 0 / 0);
     --ds-window-backdrop-bg: rgb(0 0 0 / 0.4);
   }
@@ -1922,8 +1936,8 @@
     --ds-radius-sm: 6px;
     --ds-radius-window: var(--ds-radius-panel);
     --ds-radius-xs: 3px;
-    --ds-scrollbar-thumb: rgb(86 96 110 / 0.58);
-    --ds-scrollbar-thumb-hover: rgb(75 85 99 / 0.72);
+    --ds-scrollbar-thumb: var(--ds-color-text-subtle);
+    --ds-scrollbar-thumb-hover: var(--ds-color-text-muted);
     --ds-scrollbar-track: rgb(0 0 0 / 0);
     --ds-window-backdrop-bg: rgb(0 0 0 / 0.4);
   }
@@ -1937,6 +1951,7 @@
       --ds-duration-instant: 0ms;
       --ds-duration-medium: 0ms;
       --ds-duration-moderate: 0ms;
+      --ds-duration-pulse: 0ms;
       --ds-duration-quick: 0ms;
       --ds-duration-reveal: 0ms;
       --ds-duration-roll: 0ms;

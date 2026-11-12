@@ -73,7 +73,7 @@
     --_menu-padding: var(--ds-space-3xs);
     --_menu-width-min: var(--ds-menu-width-min);
     /* No menu.width.max token yet: twice the minimum, never past the room Radix measures. */
-    --_menu-width-max: calc(var(--ds-menu-width-min) * 2);
+    --_menu-width-max: var(--ds-menu-width-max);
     --_menu-item-height: var(--ds-menu-item-height);
     --_menu-item-padding-inline: var(--ds-space-m);
     --_menu-item-gap: var(--ds-space-m);
@@ -93,7 +93,7 @@
     --_menu-separator-color: var(--ds-color-bg-surface-2);
     --_menu-inset: calc(var(--ds-size-icon-md) + var(--_menu-item-gap));
     /* No scale.menu-enter token yet: scale.press is the same 0.97 (GB st-menu-in). */
-    --_menu-enter-scale: var(--ds-scale-press);
+    --_menu-enter-scale: var(--ds-scale-menu-enter);
     --_menu-duration-in: var(--ds-duration-base);
     --_menu-duration-out: var(--ds-duration-quick);
     --_menu-ease-in: var(--ds-ease-emphasized);
