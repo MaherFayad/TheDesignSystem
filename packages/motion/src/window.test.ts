@@ -104,7 +104,7 @@ describe('web helper', () => {
     vi.stubGlobal('getComputedStyle', () => style);
     const a = animateWindow(el, 'grow', { from: trigger, to: win, reduced: false });
     expect(a).not.toBeNull();
-    expect(animate).toHaveBeenCalledWith(expect.any(Array), { duration: 300, easing: 'cubic-bezier(0.2, 0.8, 0.2, 1)', fill: 'none' });
+    expect(animate).toHaveBeenCalledWith(expect.any(Array), expect.objectContaining({ id: 'ds-motion:window-grow', duration: 300, easing: 'cubic-bezier(0.2, 0.8, 0.2, 1)', fill: 'none', iterations: 1 }));
     expect(el.style.transformOrigin).toBe('0 0');
     expect(animateWindow(el, 'zoom', { from: trigger, to: win, mode: 'fade' })).toBeNull();
     expect(animateWindow({} as HTMLElement, 'grow', { reduced: false })).toBeNull();

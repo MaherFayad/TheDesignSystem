@@ -8,6 +8,7 @@ export type Bezier = readonly [number, number, number, number];
 
 /** Duration and delay tokens, in ms. */
 export const durationMs = {
+  'duration.instant': 70,
   'duration.fast': 80,
   'duration.quick': 100,
   'duration.base': 120,

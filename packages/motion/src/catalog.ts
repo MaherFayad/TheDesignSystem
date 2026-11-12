@@ -1,15 +1,18 @@
-// The motion catalog: the 18 named patterns, one file each in ./patterns.
-// A manifest's `motion` field names one of these ids (catalog.test.ts reads
-// packages/manifest/manifests.gen.json and fails on any other name).
+// The motion catalog: the named patterns, one file each in ./patterns.
+// A manifest's `motion` field names one of these ids or `none`
+// (catalog.test.ts reads every packages/manifest/src/component manifest and
+// fails on any other name).
 import type { MotionInput, MotionPattern, PatternId } from './core';
 import { accordionHeight } from './patterns/accordion-height';
 import { chartDraw } from './patterns/chart-draw';
 import { dialog } from './patterns/dialog';
 import { dragDrop } from './patterns/drag-drop';
+import { fade } from './patterns/fade';
 import { fadeRise } from './patterns/fade-rise';
 import { listStagger } from './patterns/list-stagger';
 import { menuScale } from './patterns/menu-scale';
 import { numberRoll } from './patterns/number-roll';
+import { press } from './patterns/press';
 import { sheet } from './patterns/sheet';
 import { skeletonShimmer } from './patterns/skeleton-shimmer';
 import { spinner } from './patterns/spinner';
@@ -55,6 +58,8 @@ export const catalog = {
   'chart-draw': chartDraw,
   thinking,
   'streaming-text': streamingText,
+  fade,
+  press,
 } as const satisfies Record<PatternId, MotionPattern<never>>;
 
 export type Catalog = typeof catalog;
@@ -74,10 +79,12 @@ export {
   chartDraw,
   dialog as dialogMotion,
   dragDrop,
+  fade as fadeMotion,
   fadeRise,
   listStagger,
   menuScale,
   numberRoll,
+  press as pressMotion,
   sheet as sheetMotion,
   skeletonShimmer,
   spinner as spinnerMotion,

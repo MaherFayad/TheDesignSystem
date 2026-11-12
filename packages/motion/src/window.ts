@@ -3,7 +3,8 @@
 // the same values; this file keeps the names Window.tsx and its tests use,
 // and the web helper `animateWindow`. `window-close` is the exit of
 // `window-grow`.
-import { prefersReducedMotion, readDuration, readEasing, settle, type MotionRect } from './core';
+import { play, prefersReducedMotion, type MotionRect } from './core';
+import { asSpec } from './patterns/window-shared';
 import type { WindowMotionMode } from './preset';
 import { windowClose, windowGrow } from './patterns/window-grow';
 import { windowMinimize } from './patterns/window-minimize';
@@ -45,17 +46,14 @@ export interface AnimateWindowOptions extends WindowMotionInput {
  * Plays a window pattern on `el` with the Web Animations API and returns
  * the Animation, or null when there is nothing to play (mode `none`, a zoom
  * with no motion, or no Web Animations API). Duration and easing come from
- * the tokens on the element. Await `settled(animation)`, never an end event.
+ * the tokens on the element. It plays through `play()` with the pattern name
+ * as its id: it replaces the window motion already on the element (from the
+ * live frame when one is in flight) and leaves other catalog animations
+ * alone. Await `settled(animation)`, never an end event.
  */
 export function animateWindow(el: HTMLElement, pattern: WindowPattern, opts: AnimateWindowOptions = {}): Animation | null {
   const { mode = 'grow', prefix = 'ds', ...input } = opts;
   const spec = windowMotionFor(mode, pattern, { ...input, reduced: input.reduced ?? prefersReducedMotion() });
-  if (!spec || spec.keyframes.length === 0 || typeof el.animate !== 'function') return null;
-  settle(el);
-  el.style.transformOrigin = spec.origin;
-  return el.animate(spec.keyframes, {
-    duration: readDuration(el, spec.duration, prefix),
-    easing: readEasing(el, spec.easing, prefix),
-    fill: spec.fill,
-  });
+  if (!spec) return null;
+  return play(el, asSpec(spec), spec.name, prefix, { group: 'window-' });
 }

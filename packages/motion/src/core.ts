@@ -21,7 +21,7 @@ export type EaseToken = `ease.${string}`;
 /** Any token path a pattern reads: duration, delay, ease, scale, space or spring. */
 export type TokenPath = `${'duration' | 'delay' | 'ease' | 'scale' | 'space' | 'spring'}.${string}`;
 
-/** The 18 pattern ids of the catalog. Fixed by order 1.11. */
+/** The pattern ids of the catalog: the 18 of order 1.11, then `fade` and `press`, which the components asked for. */
 export const PATTERN_IDS = [
   'fade-rise',
   'menu-scale',
@@ -41,6 +41,8 @@ export const PATTERN_IDS = [
   'chart-draw',
   'thinking',
   'streaming-text',
+  'fade',
+  'press',
 ] as const;
 
 export type PatternId = (typeof PATTERN_IDS)[number];
@@ -69,6 +71,13 @@ export interface MotionSpec {
   origin: string;
   /** Loops. Default 1. */
   iterations?: number;
+  /**
+   * For a loop that is not the activity itself: on the web the loop count is
+   * computed from the live duration token so that every loop ends before
+   * this many ms (at least one loop). `iterations` holds the count at the
+   * base token value.
+   */
+  loopLimitMs?: number;
   /** A delay token, multiplied by `delaySteps`. */
   delay?: DelayToken;
   delaySteps?: number;
@@ -77,9 +86,12 @@ export interface MotionSpec {
 /** Numbers for Reanimated (wave 2): ms, cubic bezier points, scales, px and springs. */
 export interface NativeMotion {
   duration: number;
-  easing: readonly [number, number, number, number] | 'linear';
+  /** Cubic bezier points. Linear is `[0, 0, 1, 1]`. */
+  easing: readonly [number, number, number, number];
   /** Reduced form duration in ms; 0 when the reduced form is no motion. */
   reducedDuration: number;
+  /** Loops. `-1` loops until stopped, as Reanimated's `withRepeat` reads it. Default 1. */
+  iterations?: number;
   [key: string]: unknown;
 }
 
@@ -103,12 +115,26 @@ export interface PatternDefinition<I extends MotionInput> {
 /** How a style plays one pattern: the full form, the reduced form, or nothing. */
 export type PatternMode = 'full' | 'reduced' | 'none';
 
+/** Timing a preset gives one phase of the full form. */
+export interface PhaseTiming {
+  duration?: DurationToken;
+  easing?: EaseToken;
+}
+
+/**
+ * A style's choice for one pattern. Timing rows change the full form only;
+ * the reduced form keeps its own timing.
+ */
 export interface PatternPreset {
   mode: PatternMode;
-  /** A duration token that replaces the pattern's own. */
+  /** A duration token that replaces the pattern's own, in both phases. */
   duration?: DurationToken;
-  /** An ease token that replaces the pattern's own. */
+  /** An ease token that replaces the pattern's own, in both phases. */
   easing?: EaseToken;
+  /** Timing for the enter phase only. Wins over `duration` and `easing`. */
+  enter?: PhaseTiming;
+  /** Timing for the exit phase only. Wins over `duration` and `easing`. */
+  exit?: PhaseTiming;
 }
 
 export interface AnimateOptions {
@@ -148,8 +174,13 @@ export function definePattern<I extends MotionInput>(def: PatternDefinition<I>):
     const s = reduced ? reducedSpec(input) : spec(input);
     if (s.keyframes.length === 0) return null;
     const out = { ...s };
-    if (opts.preset?.duration) out.duration = opts.preset.duration;
-    if (opts.preset?.easing && out.easing !== 'linear') out.easing = opts.preset.easing;
+    const p = opts.preset;
+    if (reduced || !p) return out;
+    const phase = p[input?.phase === 'exit' ? 'exit' : 'enter'];
+    const duration = phase?.duration ?? p.duration;
+    const easing = phase?.easing ?? p.easing;
+    if (duration) out.duration = duration;
+    if (easing && out.easing !== 'linear') out.easing = easing;
     return out;
   };
   return {
@@ -272,34 +303,142 @@ export function readDir(el: Element): MotionDir {
 /** The id the catalog gives every Animation it starts: `ds-motion:<pattern>`. */
 export const ANIMATION_ID_PREFIX = 'ds-motion:';
 
+/** WCAG 2.2.2: anything that moves for more than five seconds needs a way to pause it. */
+export const LOOP_LIMIT_MS = 5000;
+
+/** The loop count that ends before `limitMs` at a duration, at least 1. */
+export function loopsWithin(durationMs: number, limitMs = LOOP_LIMIT_MS): number {
+  if (!(durationMs > 0)) return 1;
+  return Math.max(1, Math.floor((limitMs - 1) / durationMs));
+}
+
 /** Cancels the running animations of an element, so the next one measures its real frame. */
 export function settle(el: Element): void {
   if (typeof el.getAnimations !== 'function') return;
   for (const a of el.getAnimations()) a.cancel();
 }
 
-/** Plays a spec on an element with token timing. Null when there is no Web Animations API. */
-export function play(el: Element, spec: MotionSpec, id: string, prefix = 'ds'): Animation | null {
+export interface PlayOptions {
+  /**
+   * Running catalog animations whose id starts with `ds-motion:<group>` are
+   * replaced too, not only the one with the same id. The window patterns
+   * use `window-`, so a close replaces a grow.
+   */
+  group?: string;
+}
+
+/** True for an animation that holds its last frame after it ends: an exit. */
+function holdsEnd(a: Animation): boolean {
+  const fill = (a.effect?.getTiming().fill ?? 'auto') as FillMode;
+  return fill === 'forwards' || fill === 'both';
+}
+
+/**
+ * The first keyframe replaced by the live values of the element, for the
+ * properties it sets. Read while the old animation still runs, so a quick
+ * reverse starts where the element is instead of jumping.
+ */
+function fromLiveFrame(el: Element, frames: Keyframe[]): Keyframe[] {
+  if (typeof getComputedStyle !== 'function' || frames.length === 0) return frames;
+  const cs = getComputedStyle(el);
+  const first: Keyframe = { ...frames[0] };
+  for (const prop of ['transform', 'opacity'] as const) {
+    if (!(prop in first)) continue;
+    const live = cs.getPropertyValue(prop).trim();
+    if (live) first[prop] = live;
+  }
+  return [first, ...frames.slice(1)];
+}
+
+/**
+ * Plays a spec on an element with token timing. Null when there is no Web
+ * Animations API.
+ *
+ * Before it plays, it cancels the catalog animations it replaces: its own id
+ * (or its group), and any catalog animation that holds an end frame (an exit
+ * of another pattern would otherwise cover the new one). When one of those
+ * is still in flight, the new animation starts from the live frame. Other
+ * catalog animations on the element, such as a spinner, keep playing.
+ */
+export function play(el: Element, spec: MotionSpec, id: string, prefix = 'ds', opts: PlayOptions = {}): Animation | null {
   if (spec.keyframes.length === 0 || typeof el.animate !== 'function') return null;
+  const ownId = `${ANIMATION_ID_PREFIX}${id}`;
+  let keyframes = spec.keyframes;
   if (typeof el.getAnimations === 'function') {
-    for (const a of el.getAnimations()) if (a.id === `${ANIMATION_ID_PREFIX}${id}`) a.cancel();
+    const sameKind = (a: Animation) => {
+      const aid = String(a.id);
+      return aid === ownId || (opts.group !== undefined && aid.startsWith(`${ANIMATION_ID_PREFIX}${opts.group}`));
+    };
+    const replaced = el.getAnimations().filter((a) => String(a.id).startsWith(ANIMATION_ID_PREFIX) && (sameKind(a) || holdsEnd(a)));
+    if (replaced.some((a) => a.playState === 'running' || a.playState === 'paused')) keyframes = fromLiveFrame(el, keyframes);
+    for (const a of replaced) a.cancel();
   }
   const style = (el as HTMLElement).style as CSSStyleDeclaration | undefined;
-  if (style) style.transformOrigin = spec.origin;
+  if (style) {
+    style.transformOrigin = spec.origin;
+    // On SVG, transform-box defaults to the view box: make the origin the element's own box.
+    if (typeof SVGElement !== 'undefined' && el instanceof SVGElement) style.transformBox = 'fill-box';
+  }
   const delay = spec.delay ? readDuration(el, spec.delay, prefix) * (spec.delaySteps ?? 1) : 0;
-  return el.animate(spec.keyframes, {
-    id: `${ANIMATION_ID_PREFIX}${id}`,
-    duration: readDuration(el, spec.duration, prefix),
+  const duration = readDuration(el, spec.duration, prefix);
+  const iterations = spec.loopLimitMs ? loopsWithin(duration, spec.loopLimitMs) : (spec.iterations ?? 1);
+  return el.animate(keyframes, {
+    id: ownId,
+    duration,
     easing: spec.easing === 'linear' ? 'linear' : readEasing(el, spec.easing, prefix),
     fill: spec.fill,
-    iterations: spec.iterations ?? 1,
+    iterations,
     delay,
   });
 }
 
-/** Resolves when the animation ends or is cancelled. Resolves at once for null. */
+/** The catalog loops under `root` (its own and its descendants'): animations it started with more than one loop. */
+function loopsUnder(root: Element | Document): Animation[] {
+  if (typeof root.getAnimations !== 'function') return [];
+  return root.getAnimations({ subtree: true } as GetAnimationsOptions).filter((a) => {
+    if (!String(a.id).startsWith(ANIMATION_ID_PREFIX)) return false;
+    const n = a.effect?.getTiming().iterations ?? 1;
+    return n > 1;
+  });
+}
+
+/**
+ * Pauses every catalog loop under `root` (a spinner, the thinking dots, a
+ * shimmer) and returns how many it paused. Wire it to a pause control, or
+ * call it when the page asks for less motion. WCAG 2.2.2 asks for a way to
+ * pause anything that moves for more than five seconds.
+ */
+export function pauseLoops(root: Element | Document): number {
+  let n = 0;
+  for (const a of loopsUnder(root)) {
+    if (a.playState === 'running') {
+      a.pause();
+      n += 1;
+    }
+  }
+  return n;
+}
+
+/** Plays again the catalog loops under `root` that `pauseLoops` paused. Returns how many. */
+export function resumeLoops(root: Element | Document): number {
+  let n = 0;
+  for (const a of loopsUnder(root)) {
+    if (a.playState === 'paused') {
+      a.play();
+      n += 1;
+    }
+  }
+  return n;
+}
+
+/**
+ * Resolves when the animation ends or is cancelled. Resolves at once for
+ * null and for an animation that is already idle: after a cancel the browser
+ * puts a new `finished` promise in place that stays pending while the
+ * animation is idle, so awaiting it would never end.
+ */
 export async function settled(animation: Animation | null | undefined): Promise<void> {
-  if (!animation) return;
+  if (!animation || animation.playState === 'idle') return;
   try {
     await animation.finished;
   } catch {
