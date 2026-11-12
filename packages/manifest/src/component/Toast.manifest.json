@@ -2,7 +2,7 @@
   "name": "Toast",
   "kind": "component",
   "family": "feedback",
-  "summary": "A short notice that something happened, shown in a corner and gone on its own. Called from anywhere with toast(); one Toaster renders them.",
+  "summary": "A short notice that something happened, shown in a corner and gone on its own. Called from anywhere with toast(); one Toaster renders them. Call shape: toast(title, options) or toast(options); toast.success, toast.warning, toast.danger and toast.info set the tone; each returns the id; toast.dismiss(id) closes one (or all, without an id), toast.update(id, patch) changes one in place, toast.configure(config) sets the max and the durations for the app.",
   "useWhen": [
     "Confirming that an action the person took has finished: Draft saved, Link copied",
     "A failure the person can fix later or retry from the toast, as tone danger with one action",
@@ -226,7 +226,7 @@
       "status": "ready",
       "behavior": "radix:Toast",
       "example": "Toast.demo.tsx",
-      "note": "Toaster renders the shared store from @the-system/shared; toast is re-exported from @the-system/react."
+      "note": "Toaster renders the shared store from @the-system/shared; toast is re-exported from @the-system/react. Call shape: toast(title: string, options?) or toast(options) with title inside; toast.success, toast.warning, toast.danger and toast.info take the same arguments and set tone; toast.dismiss(id?), toast.update(id, { tone, title, description }), toast.configure({ max, durations }). From packages/shared/src/toast.ts."
     },
     "angular": {
       "status": "planned",
@@ -277,6 +277,10 @@
     {
       "wrong": "A dialog that closes when the person clicks a toast above it",
       "right": "Call isInsideToaster(event.target) in the dialog's outside handlers and prevent the default"
+    },
+    {
+      "wrong": "toast({ type: \"success\", message: \"Draft saved\" }), or a toast component rendered by hand for a one off notice",
+      "right": "toast.success(\"Draft saved\"), or toast(\"Draft saved\", { tone: \"success\", lang: \"en\" }); keep the id to call toast.update(id, patch) or toast.dismiss(id)"
     }
   ],
   "contract": {

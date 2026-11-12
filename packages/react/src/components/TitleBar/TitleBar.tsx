@@ -17,6 +17,17 @@
 // left and centers the title (the source, as macOS draws it). A bar with no
 // controls mirrors like any other row.
 import { useId, type HTMLAttributes, type ReactNode, type Ref } from 'react';
+import { useTheme } from '../../theme/hooks';
+
+/** The built in move hint, per language. A prop always wins. */
+const titleBarLabels = {
+  en: { moveHint: 'Arrow keys move the window. Shift moves it further.' },
+  ar: { moveHint: 'مفاتيح الأسهم لتحريك النافذة، ومع Shift لمسافة أبعد.' },
+} as const;
+
+function titleBarLabelsFor(lang: string) {
+  return lang === 'ar' || lang.startsWith('ar-') ? titleBarLabels.ar : titleBarLabels.en;
+}
 
 export type TitleBarHeading = 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'div';
 
@@ -39,7 +50,7 @@ export interface TitleBarProps extends Omit<HTMLAttributes<HTMLDivElement>, 'tit
    * move.
    */
   moveLabel?: string;
-  /** The description of the move handle: the keys. Default "Arrow keys move the window. Shift moves it further." */
+  /** The description of the move handle: the keys. Default "Arrow keys move the window. Shift moves it further.", in Arabic "مفاتيح الأسهم لتحريك النافذة، ومع Shift لمسافة أبعد." */
   moveHint?: string;
   ref?: Ref<HTMLDivElement>;
 }
@@ -55,9 +66,10 @@ export function TitleBar({
   actions,
   active = true,
   moveLabel,
-  moveHint = 'Arrow keys move the window. Shift moves it further.',
+  moveHint: moveHintProp,
   ...rest
 }: TitleBarProps) {
+  const moveHint = moveHintProp ?? titleBarLabelsFor(useTheme().lang).moveHint;
   const hintId = `${useId()}-move-hint`;
   const heading = (
     <Heading data-part="title" id={titleId}>

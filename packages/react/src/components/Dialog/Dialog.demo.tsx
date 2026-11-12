@@ -355,6 +355,7 @@ export default function DialogDemo() {
       <DemoCase
         id="variants"
         title="Sizes sm to 2xl, tone danger (focus opens on the cancel action; AlertDialog arrives in wave 1), and a dialog opened from a dialog"
+        lang="en"
       >
         <Case>
           {sizes.map((size) => (
@@ -375,7 +376,7 @@ export default function DialogDemo() {
         </Theme>
       </DemoCase>
 
-      <DemoCase id="one" title="One short decision">
+      <DemoCase id="one" title="One short decision" lang="en">
         <Case>
           <Dialog size="sm">
             <DialogTrigger>
@@ -397,7 +398,7 @@ export default function DialogDemo() {
         </Case>
       </DemoCase>
 
-      <DemoCase id="many" title="A form of five fields: focus opens on the first field">
+      <DemoCase id="many" title="A form of five fields: focus opens on the first field" lang="en">
         <Case>
           <Dialog>
             <DialogTrigger>
@@ -428,7 +429,7 @@ export default function DialogDemo() {
         </Case>
       </DemoCase>
 
-      <DemoCase id="too-many" title="Long content: the body scrolls, the title and the footer stay">
+      <DemoCase id="too-many" title="Long content: the body scrolls, the title and the footer stay" lang="en">
         <Case>
           <Dialog size="lg">
             <DialogTrigger>
@@ -453,7 +454,7 @@ export default function DialogDemo() {
         </Case>
       </DemoCase>
 
-      <DemoCase id="long-text" title="Long title and long button labels: they wrap">
+      <DemoCase id="long-text" title="Long title and long button labels: they wrap" lang="en">
         <Case>
           <Dialog>
             <DialogTrigger>
@@ -506,19 +507,19 @@ export default function DialogDemo() {
         </Case>
       </DemoCase>
 
-      <DemoCase id="loading" title="Loading: the action runs and nothing dismisses the dialog">
+      <DemoCase id="loading" title="Loading: the action runs and nothing dismisses the dialog" lang="en">
         <Case>
           <LoadingDialog />
         </Case>
       </DemoCase>
 
-      <DemoCase id="error" title="Error: the action fails, the message shows on the field and focus moves to it">
+      <DemoCase id="error" title="Error: the action fails, the message shows on the field and focus moves to it" lang="en">
         <Case>
           <FailedActionDialog />
         </Case>
       </DemoCase>
 
-      <DemoCase id="disabled" title="The primary action is disabled until the field has a value">
+      <DemoCase id="disabled" title="The primary action is disabled until the field has a value" lang="en">
         <Case>
           <DisabledDialog />
         </Case>

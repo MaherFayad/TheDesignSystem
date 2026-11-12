@@ -45,20 +45,23 @@
     },
     "closeLabel": {
       "type": "string",
-      "default": "Close window"
+      "default": "Close window",
+      "description": "Under lang=\"ar\" the default is إغلاق النافذة. A prop always wins."
     },
     "minimizeLabel": {
       "type": "string",
-      "default": "Minimize window"
+      "default": "Minimize window",
+      "description": "Under lang=\"ar\" the default is تصغير النافذة. A prop always wins."
     },
     "zoomLabel": {
       "type": "string",
-      "default": "Zoom window"
+      "default": "Zoom window",
+      "description": "Under lang=\"ar\" the default is تكبير النافذة. A prop always wins."
     },
     "label": {
       "type": "string",
       "default": "Window controls",
-      "description": "The name of the group."
+      "description": "The name of the group. Under lang=\"ar\" the default is أزرار النافذة. A prop always wins."
     },
     "active": {
       "type": "boolean",
@@ -96,7 +99,7 @@
       "labels": "Close window, Minimize window, Zoom window. Name the window when several are open: Close notes.txt."
     },
     "ar": {
-      "labels": "إغلاق النافذة، تصغير النافذة، تكبير النافذة."
+      "labels": "The defaults under lang=\"ar\": إغلاق النافذة، تصغير النافذة، تكبير النافذة، أزرار النافذة."
     }
   },
   "tokens": [

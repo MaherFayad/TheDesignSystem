@@ -390,6 +390,36 @@ describe('Window', () => {
     expect(a.getAttribute('data-state')).toBe('active');
   });
 
+  it('defaults its chrome labels to Arabic under lang="ar", and a prop still wins', () => {
+    render(
+      <Theme style="desk" lang="ar">
+        <WindowLayer>
+          <Window title="ملاحظات" onZoomedChange={() => undefined} onMinimizedChange={() => undefined} zoomLabel="تكبير الملاحظات">
+            نص
+          </Window>
+        </WindowLayer>
+      </Theme>,
+    );
+    expect(screen.getByRole('region', { name: 'النوافذ' })).toBeDefined();
+    expect(screen.getByRole('group', { name: 'أزرار النافذة' })).toBeDefined();
+    expect(screen.getByRole('button', { name: 'إغلاق النافذة' })).toBeDefined();
+    expect(screen.getByRole('button', { name: 'تصغير النافذة' })).toBeDefined();
+    expect(screen.getByRole('button', { name: 'تكبير الملاحظات' })).toBeDefined();
+    const handle = screen.getByRole('group', { name: 'تحريك النافذة' });
+    expect(document.getElementById(handle.getAttribute('aria-describedby') ?? '')?.textContent).toBe(
+      'مفاتيح الأسهم لتحريك النافذة، ومع Shift لمسافة أبعد، وEnter لتكبيرها.',
+    );
+  });
+
+  it('in Studio under lang="ar" the title bar buttons are Arabic too', () => {
+    render(
+      <Theme style="studio" lang="ar">
+        <Window title="الطبقات">نص</Window>
+      </Theme>,
+    );
+    expect(screen.getByRole('button', { name: 'إغلاق النافذة' }).getAttribute('data-part')).toBe('close');
+  });
+
   it('renders every demo case', () => {
     const { container } = render(<WindowDemo />);
     for (const id of ['variants', 'one', 'many', 'long-text', 'long-arabic', 'disabled']) {

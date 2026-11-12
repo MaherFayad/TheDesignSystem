@@ -114,7 +114,8 @@
     "notes": [
       "dir and lang on the element let screen readers pick the right voice and let CSS mirror the layout.",
       "The Radix direction provider follows dir, so menus, sliders and arrow keys mirror in right to left.",
-      "Arabic text gets IBM Plex Sans Arabic, zero tracking, taller lines and small text one step up through base.css. Body text keeps its size."
+      "Arabic text gets IBM Plex Sans Arabic, zero tracking, taller lines and small text one step up through base.css. Body text keeps its size.",
+      "A root Theme is needed even when <html> is stamped with themeAttributes(): attributes give the CSS its axes but no React context, so useTheme, useOptionalPart and the Dialog and Toaster portals would fall back to the root defaults (Studio dark, English). Stamp <html> for the first paint and wrap the app in <Theme> with the same axes."
     ],
     "native": {
       "accessibilityRole": "none"
@@ -162,7 +163,7 @@
     "react": {
       "status": "ready",
       "behavior": "radix-ui Direction.Provider",
-      "note": "Exports Theme, useTheme, useOptionalPart, themeAttributes and resolveTheme from packages/react/src/theme."
+      "note": "Exports Theme, useTheme, useOptionalPart, themeAttributes and resolveTheme from packages/react/src/theme. themeAttributes() on <html> does not replace the root <Theme>: attributes carry no React context."
     },
     "angular": {
       "status": "ready",
@@ -190,6 +191,10 @@
     {
       "wrong": "Reading data-style from the DOM to pick a branch",
       "right": "useTheme().style, or useOptionalPart for a part only one style shows"
+    },
+    {
+      "wrong": "<html {...themeAttributes({ style: \"desk\", lang: \"ar\" })}> with no Theme around the app",
+      "right": "Stamp <html> and also wrap the app in <Theme style=\"desk\" lang=\"ar\">: portals and useTheme read the React context, not the html attributes"
     }
   ],
   "since": "0.1.0"

@@ -25,7 +25,7 @@ function Working({ active = true }: { active?: boolean }) {
 export default function WindowControlsDemo() {
   return (
     <DemoPage>
-      <DemoCase id="variants" title="Variants: lit in an active window, idle dots in an inactive one, glyphs on hover and focus">
+      <DemoCase id="variants" title="Variants: idle dots at rest in an active and an inactive window, as in the source; the colors and the glyphs show on hover and keyboard focus of the group">
         <Working />
         <Working active={false} />
       </DemoCase>
@@ -36,13 +36,9 @@ export default function WindowControlsDemo() {
         </DemoRow>
       </DemoCase>
 
-      <DemoCase id="long-arabic" title="Arabic labels: the lights keep their order" lang="ar">
+      <DemoCase id="long-arabic" title="Arabic: the labels default to Arabic, the lights keep their order" lang="ar">
         <DemoRow>
           <WindowControls
-            label="أزرار النافذة"
-            closeLabel="إغلاق النافذة"
-            minimizeLabel="تصغير النافذة"
-            zoomLabel="تكبير النافذة"
             onClose={() => undefined}
             onMinimize={() => undefined}
             onZoom={() => undefined}

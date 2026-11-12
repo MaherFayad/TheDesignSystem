@@ -24,7 +24,18 @@
 //   source does (`.dwin-lights { direction: ltr }`).
 import type { HTMLAttributes, MouseEvent, Ref } from 'react';
 import { Icon } from '@the-system/icons/react';
+import { useTheme } from '../../theme/hooks';
 import { IconButton } from '../IconButton';
+
+/** The built in labels, per language. A prop always wins. Arabic: noun form, no diacritics. */
+const controlsLabels = {
+  en: { close: 'Close window', minimize: 'Minimize window', zoom: 'Zoom window', group: 'Window controls' },
+  ar: { close: 'إغلاق النافذة', minimize: 'تصغير النافذة', zoom: 'تكبير النافذة', group: 'أزرار النافذة' },
+} as const;
+
+function controlsLabelsFor(lang: string) {
+  return lang === 'ar' || lang.startsWith('ar-') ? controlsLabels.ar : controlsLabels.en;
+}
 
 export type WindowControlsState = 'active' | 'inactive';
 
@@ -45,13 +56,13 @@ export interface WindowControlsProps extends Omit<HTMLAttributes<HTMLDivElement>
   onZoom?: (event: MouseEvent<HTMLButtonElement>) => void;
   /** The zoom state, set as aria-pressed on the zoom light. Leave it out when zoom is not a toggle. */
   zoomed?: boolean;
-  /** Accessible name of the close light. Default "Close window". */
+  /** Accessible name of the close light. Default "Close window", in Arabic "إغلاق النافذة". */
   closeLabel?: string;
-  /** Accessible name of the minimize light. Default "Minimize window". */
+  /** Accessible name of the minimize light. Default "Minimize window", in Arabic "تصغير النافذة". */
   minimizeLabel?: string;
-  /** Accessible name of the zoom light. Default "Zoom window". */
+  /** Accessible name of the zoom light. Default "Zoom window", in Arabic "تكبير النافذة". */
   zoomLabel?: string;
-  /** Accessible name of the group. Default "Window controls". */
+  /** Accessible name of the group. Default "Window controls", in Arabic "أزرار النافذة". */
   label?: string;
   /**
    * Whether the window these lights belong to has focus. Inactive lights
@@ -68,13 +79,18 @@ export function WindowControls({
   onMinimize,
   onZoom,
   zoomed,
-  closeLabel = 'Close window',
-  minimizeLabel = 'Minimize window',
-  zoomLabel = 'Zoom window',
-  label = 'Window controls',
+  closeLabel: closeLabelProp,
+  minimizeLabel: minimizeLabelProp,
+  zoomLabel: zoomLabelProp,
+  label: labelProp,
   active = true,
   ...rest
 }: WindowControlsProps) {
+  const words = controlsLabelsFor(useTheme().lang);
+  const closeLabel = closeLabelProp ?? words.close;
+  const minimizeLabel = minimizeLabelProp ?? words.minimize;
+  const zoomLabel = zoomLabelProp ?? words.zoom;
+  const label = labelProp ?? words.group;
   const state: WindowControlsState = active ? 'active' : 'inactive';
   return (
     <div {...rest} data-ds="window-controls" data-state={state} role="group" aria-label={label}>

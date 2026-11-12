@@ -1,6 +1,7 @@
 import { render, screen } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';
+import { Theme } from '../../theme/Theme';
 import WindowControlsDemo from './WindowControls.demo';
 import { WindowControls } from './index';
 
@@ -87,6 +88,18 @@ describe('WindowControls', () => {
     // Without a handler closeDisabled changes nothing: the light stays inert decoration.
     const { container } = render(<WindowControls closeDisabled />);
     expect(container.querySelector<HTMLElement>('[data-part="close"]')?.tabIndex).toBe(-1);
+  });
+
+  it('defaults its labels to Arabic under lang="ar"', () => {
+    render(
+      <Theme lang="ar">
+        <WindowControls onClose={() => undefined} />
+      </Theme>,
+    );
+    expect(screen.getByRole('group', { name: 'أزرار النافذة' })).toBeDefined();
+    expect(screen.getByRole('button', { name: 'إغلاق النافذة' })).toBeDefined();
+    expect(screen.getByRole('button', { name: 'تصغير النافذة' })).toBeDefined();
+    expect(screen.getByRole('button', { name: 'تكبير النافذة' })).toBeDefined();
   });
 
   it('renders every demo case', () => {

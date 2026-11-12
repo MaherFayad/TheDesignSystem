@@ -1,5 +1,6 @@
 import { render } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
+import { Theme } from '../../theme/Theme';
 import { WindowControls } from '../WindowControls';
 import TitleBarDemo from './TitleBar.demo';
 import { TitleBar } from './index';
@@ -53,6 +54,16 @@ describe('TitleBar', () => {
     expect(move?.querySelector('[data-part="title"]')?.textContent).toBe('brief.md');
     expect(document.getElementById(move?.getAttribute('aria-describedby') ?? '')?.textContent).toBe('Arrow keys move it.');
     expect(root(render(<TitleBar title="x" />).container).querySelector('[data-part="move"]')).toBeNull();
+  });
+
+  it('defaults the move hint to Arabic under lang="ar"', () => {
+    const { container } = render(
+      <Theme lang="ar">
+        <TitleBar title="ملاحظات" moveLabel="تحريك النافذة" />
+      </Theme>,
+    );
+    const move = container.querySelector('[data-part="move"]');
+    expect(document.getElementById(move?.getAttribute('aria-describedby') ?? '')?.textContent).toBe('مفاتيح الأسهم لتحريك النافذة، ومع Shift لمسافة أبعد.');
   });
 
   it('renders every demo case', () => {

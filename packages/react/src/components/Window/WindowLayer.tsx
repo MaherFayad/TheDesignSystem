@@ -8,6 +8,9 @@
 // stretch it. It paints nothing of its own; the Desk recipe adds the grain.
 import { createContext, use, useCallback, useMemo, useRef, useState, type HTMLAttributes, type ReactNode, type Ref, type RefObject } from 'react';
 import { createWindowManager, type WindowManager } from '@the-system/shared';
+import { useTheme } from '../../theme/hooks';
+
+const isArabic = (lang: string) => lang === 'ar' || lang.startsWith('ar-');
 
 interface WindowLayerContextValue {
   manager: WindowManager;
@@ -33,7 +36,7 @@ export interface WindowLayerProps extends HTMLAttributes<HTMLDivElement> {
   /** A manager made with createWindowManager, to drive the layer from outside. Default: one of its own. */
   manager?: WindowManager;
   /**
-   * The name of the layer, a region. Default "Windows". The layer takes
+   * The name of the layer, a region. Default "Windows", in Arabic "النوافذ". The layer takes
    * focus (tabIndex -1) when the last window in it closes or minimizes and
    * nothing else can.
    */
@@ -43,7 +46,8 @@ export interface WindowLayerProps extends HTMLAttributes<HTMLDivElement> {
 }
 
 /** A positioned layer for windows. Windows inside it are placed by kind, stacked and moved inside its box. */
-export function WindowLayer({ manager: given, label = 'Windows', children, ref, ...rest }: WindowLayerProps) {
+export function WindowLayer({ manager: given, label: labelProp, children, ref, ...rest }: WindowLayerProps) {
+  const label = labelProp ?? (isArabic(useTheme().lang) ? 'النوافذ' : 'Windows');
   const [own] = useState(() => createWindowManager());
   const manager = given ?? own;
   const layer = useRef<HTMLDivElement | null>(null);

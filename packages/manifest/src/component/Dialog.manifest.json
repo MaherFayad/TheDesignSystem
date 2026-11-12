@@ -118,7 +118,7 @@
     },
     "rootProps": {
       "type": "object",
-      "description": "DialogContent: props for the root layer. className and style go to the root too; ref and every other prop go to the panel, the element with role dialog."
+      "description": "DialogContent: props for the root layer. className and style go to the root too; ref and every other prop go to the panel, the element with role dialog, Radix Content props included. The useful ones: onOpenAutoFocus (preventDefault to place focus yourself), onCloseAutoFocus (preventDefault and focus another element when the trigger is gone, for example after a delete), onEscapeKeyDown (preventDefault to keep the dialog open, for example while a field holds unsaved text)."
     },
     "DialogTrigger": {
       "type": "node",
@@ -139,7 +139,7 @@
   ],
   "a11y": {
     "role": "dialog (the panel), modal: Radix hides the rest of the page from assistive tech and keeps focus inside. Named by the title (aria-labelledby), described by the description (aria-describedby).",
-    "focus": "On open, focus goes to an element marked data-autofocus; else to the first field in the body; else to the first footer action that is not tone danger; when tone is danger, to the Cancel action (the DialogClose) or else the first footer action that is not tone danger, never a destructive one; else to the close control. On close, focus returns to the trigger, or to the element that had focus before the dialog opened.",
+    "focus": "On open, focus goes to an element marked data-autofocus; else to the first field in the body; else to the first footer action that is not tone danger; when tone is danger, to the Cancel action (the DialogClose) or else the first footer action that is not tone danger, never a destructive one; else to the close control. On close, focus returns to the trigger, or to the element that had focus before the dialog opened; when that element is gone, to its nearest connected focusable ancestor, else the first tab stop of main, else the body.",
     "keys": {
       "Escape": "Closes the dialog, unless dismissible is false. Escape from inside the dialog closes the dialog even while a toast shows above it. A nested dialog or a menu on top closes first.",
       "Tab": "Moves to the next control inside the dialog and wraps from the last to the first",
@@ -157,7 +157,8 @@
       "No native title attribute.",
       "In Desk the title and the close control sit inside the title bar, so they are parts of TitleBar and WindowControls there (a part belongs to the nearest root). The dialog's own parts in Desk are titlebar, description, body and footer; title, close and controls are listed here for Studio and for style.json optionalParts.",
       "dismissible false is for short waits, while the dialog's own action runs. The app must set it back to true when the action ends, success or failure. The close control (the Studio IconButton or the Desk close light) is aria-disabled and stays focusable.",
-      "Development builds warn in the console when a dialog opens with no title, and when its footer holds more than three actions."
+      "Development builds warn in the console when a dialog opens with no title, and when its footer holds more than three actions.",
+      "A form in a dialog: the form element lives in DialogBody with an id and an onSubmit; the submit Button sits in DialogFooter with type=\"submit\" and form={id}, so Enter in a field and the button both submit. Close the dialog from onSubmit when the save succeeds, not from a DialogClose around the submit button."
     ]
   },
   "content": {
@@ -279,6 +280,10 @@
     {
       "wrong": "Waiting for animationend before removing a closed dialog",
       "right": "Dialog.css sets the animations to none under reduced motion, so Radix removes the dialog at once"
+    },
+    {
+      "wrong": "A <form> that wraps the whole DialogContent, or a submit Button inside DialogClose",
+      "right": "<form id=\"rename\" onSubmit={save}> inside DialogBody; <Button type=\"submit\" form=\"rename\" tone=\"accent\" emphasis=\"solid\"> in DialogFooter; close on success"
     }
   ],
   "contract": {

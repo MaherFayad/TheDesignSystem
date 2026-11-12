@@ -27,7 +27,8 @@
     "footer"
   ],
   "parts": {
-    "TitleBar": "titlebar"
+    "TitleBar": "titlebar",
+    "WindowLayer": "none: the positioned layer that hosts windows (data-ds window-layer, a region named Windows, النوافذ in Arabic). Not a part of a window; see a11y notes"
   },
   "slots": {
     "body": {
@@ -78,7 +79,7 @@
     },
     "open": {
       "type": "boolean",
-      "description": "Controlled open state, with onOpenChange. Closing plays window-close, then unmounts."
+      "description": "Controlled open state, with onOpenChange. Keep rendering the Window with open={false}: it stays mounted while window-close plays, then renders nothing. Unmounting it instead (a conditional render) skips the close motion."
     },
     "defaultOpen": {
       "type": "boolean",
@@ -124,7 +125,7 @@
     },
     "movable": {
       "type": "boolean",
-      "description": "Drag by the title bar and move with the arrow keys. Default true inside a WindowLayer or with a frame, false for a window placed by its parent."
+      "description": "Drag by the title bar and move with the arrow keys. Default true inside a WindowLayer or with a frame. A Window outside a WindowLayer sits in the page flow (position relative), has no frame and does not move unless it gets a frame."
     },
     "origin": {
       "type": "node",
@@ -141,28 +142,32 @@
     },
     "closeLabel": {
       "type": "string",
-      "default": "Close window"
+      "default": "Close window",
+      "description": "Under lang=\"ar\" the default is إغلاق النافذة. A prop always wins."
     },
     "minimizeLabel": {
       "type": "string",
-      "default": "Minimize window"
+      "default": "Minimize window",
+      "description": "Under lang=\"ar\" the default is تصغير النافذة. A prop always wins."
     },
     "zoomLabel": {
       "type": "string",
-      "default": "Zoom window"
+      "default": "Zoom window",
+      "description": "Under lang=\"ar\" the default is تكبير النافذة. A prop always wins."
     },
     "controlsLabel": {
       "type": "string",
-      "default": "Window controls"
+      "default": "Window controls",
+      "description": "Under lang=\"ar\" the default is أزرار النافذة. A prop always wins."
     },
     "moveLabel": {
       "type": "string",
       "default": "Move window",
-      "description": "Name of the move handle: the title of a window that can move, focusable, a TitleBar part."
+      "description": "Name of the move handle: the title of a window that can move, focusable, a TitleBar part. Under lang=\"ar\" the default is تحريك النافذة."
     },
     "moveHint": {
       "type": "string",
-      "description": "Description of the move handle. Default names the arrow keys, Shift, and Enter when zoom works."
+      "description": "Description of the move handle. Default names the arrow keys, Shift, and Enter when zoom works, in Arabic under lang=\"ar\"."
     }
   },
   "states": [
@@ -200,6 +205,9 @@
       "Tab order follows the DOM order of the windows, not their stacking. Moving focus into a window with Tab brings it to the front.",
       "A long title truncates with an ellipsis; the full text is the accessible name, and keyboard focus on the move handle wraps the title to show it in full.",
       "No native title attribute.",
+      "WindowLayer is the container for windows, not a part of one: a positioned region (tabindex -1, named Windows) that stacks its windows, tracks the active one through the shared window manager and takes focus when its last window leaves. useWindowLayer() returns that manager, for a dock that restores minimized windows.",
+      "A Window outside a WindowLayer sits in the page flow (position relative), takes the size its parent gives it, has no frame and does not move. Give it a frame (and a positioned parent) to place and move it.",
+      "The five chrome labels (close, minimize, zoom, the controls group, the move handle) and the move hint default to Arabic under lang=\"ar\", as Dialog and Toast do. A prop always wins.",
       "Contract suite: Escape is checked in the many case, where closing the front window makes the next one active (data-state changes). The arrow keys move the frame (inline position), which no contract.keys expectation reads yet, so the suite notes them; Window.test.tsx covers them."
     ]
   },
@@ -210,7 +218,7 @@
     },
     "ar": {
       "title": "Noun form, no diacritics: إعدادات الحساب. Latin file names inside Arabic go through Bidi.",
-      "labels": "إغلاق النافذة، تصغير النافذة، تكبير النافذة."
+      "labels": "The defaults under lang=\"ar\": إغلاق النافذة، تصغير النافذة، تكبير النافذة، أزرار النافذة، تحريك النافذة."
     }
   },
   "tokens": [

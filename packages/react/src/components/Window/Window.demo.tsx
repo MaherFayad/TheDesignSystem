@@ -113,13 +113,13 @@ function ManyDemo() {
 export default function WindowDemo() {
   return (
     <DemoPage>
-      <DemoCase id="variants" title="Variants: canvas, finder and settings, each grown from its button">
+      <DemoCase id="variants" title="Variants: canvas, finder and settings, each grown from its button" lang="en">
         <KindDemo kind="settings" />
         <KindDemo kind="finder" />
         <KindDemo kind="canvas" />
       </DemoCase>
 
-      <DemoCase id="one" title="One window, with an action in the title bar">
+      <DemoCase id="one" title="One window, with an action in the title bar" lang="en">
         <WindowLayer style={layerStyle}>
           <Window title="Share board" actions={<IconButton icon="more" label="Open menu" size="sm" />}>
             <Paragraph>Anyone with the link can view this board. Comments stay private to your team.</Paragraph>
@@ -127,11 +127,11 @@ export default function WindowDemo() {
         </WindowLayer>
       </DemoCase>
 
-      <DemoCase id="many" title="Many windows: the one with focus comes to the front">
+      <DemoCase id="many" title="Many windows: the one with focus comes to the front" lang="en">
         <ManyDemo />
       </DemoCase>
 
-      <DemoCase id="long-text" title="Long title: it truncates; keyboard focus on the title (the move handle) shows it in full">
+      <DemoCase id="long-text" title="Long title: it truncates; keyboard focus on the title (the move handle) shows it in full" lang="en">
         <WindowLayer style={{ ...layerStyle, maxInlineSize: 'calc(var(--ds-space-12xl) * 5)' }}>
           <Window title="Quarterly planning notes for the design system team, with every comment and reference.board">
             <Paragraph>{sample.en.long}</Paragraph>
@@ -140,14 +140,10 @@ export default function WindowDemo() {
         </WindowLayer>
       </DemoCase>
 
-      <DemoCase id="long-arabic" title="Long Arabic text" lang="ar">
+      <DemoCase id="long-arabic" title="Long Arabic text: the chrome labels default to Arabic" lang="ar">
         <WindowLayer style={layerStyle}>
           <Window
             title="إعدادات الحساب والاشتراك والفواتير وكل أعضاء الفريق"
-            closeLabel="إغلاق النافذة"
-            minimizeLabel="تصغير النافذة"
-            zoomLabel="تكبير النافذة"
-            controlsLabel="أزرار النافذة"
             footer={
               <>
                 <Button>إلغاء التعديل</Button>
@@ -162,7 +158,7 @@ export default function WindowDemo() {
         </WindowLayer>
       </DemoCase>
 
-      <DemoCase id="disabled" title="Disabled controls: a window that cannot move, zoom or minimize">
+      <DemoCase id="disabled" title="Disabled controls: a window that cannot move, zoom or minimize" lang="en">
         <div style={{ maxInlineSize: 'calc(var(--ds-space-12xl) * 4)' }}>
           <Window title="Release notes" defaultOpen>
             <Paragraph>{sample.en.short}</Paragraph>

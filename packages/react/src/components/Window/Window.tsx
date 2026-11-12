@@ -104,19 +104,49 @@ export interface WindowProps extends Omit<HTMLAttributes<HTMLDivElement>, 'title
   dock?: WindowAnchor;
   /** aria-modal and a Tab loop inside the window. Default false. */
   modal?: boolean;
-  /** Accessible name of the close control. Default "Close window". */
+  /** Accessible name of the close control. Default "Close window", in Arabic "إغلاق النافذة". */
   closeLabel?: string;
-  /** Accessible name of the minimize light. Default "Minimize window". */
+  /** Accessible name of the minimize light. Default "Minimize window", in Arabic "تصغير النافذة". */
   minimizeLabel?: string;
-  /** Accessible name of the zoom light. Default "Zoom window". */
+  /** Accessible name of the zoom light. Default "Zoom window", in Arabic "تكبير النافذة". */
   zoomLabel?: string;
-  /** Accessible name of the lights group. Default "Window controls". */
+  /** Accessible name of the lights group. Default "Window controls", in Arabic "أزرار النافذة". */
   controlsLabel?: string;
-  /** Accessible name of the move handle (the title, focusable while the window can move). Default "Move window". */
+  /** Accessible name of the move handle (the title, focusable while the window can move). Default "Move window", in Arabic "تحريك النافذة". */
   moveLabel?: string;
   /** Description of the move handle: its keys. Default names the arrow keys, Shift and, when zoom works, Enter. */
   moveHint?: string;
   ref?: Ref<HTMLDivElement>;
+}
+
+/**
+ * The built in labels, per language, as Dialog and Toast have them. A prop
+ * always wins. Arabic: noun form labels, no diacritics (the GoBanana Arabic
+ * copy cookbook).
+ */
+const windowLabels = {
+  en: {
+    close: 'Close window',
+    minimize: 'Minimize window',
+    zoom: 'Zoom window',
+    controls: 'Window controls',
+    move: 'Move window',
+    hint: 'Arrow keys move the window. Shift moves it further.',
+    hintZoom: 'Arrow keys move the window. Shift moves it further. Enter zooms it.',
+  },
+  ar: {
+    close: 'إغلاق النافذة',
+    minimize: 'تصغير النافذة',
+    zoom: 'تكبير النافذة',
+    controls: 'أزرار النافذة',
+    move: 'تحريك النافذة',
+    hint: 'مفاتيح الأسهم لتحريك النافذة، ومع Shift لمسافة أبعد.',
+    hintZoom: 'مفاتيح الأسهم لتحريك النافذة، ومع Shift لمسافة أبعد، وEnter لتكبيرها.',
+  },
+} as const;
+
+function windowLabelsFor(lang: string) {
+  return lang === 'ar' || lang.startsWith('ar-') ? windowLabels.ar : windowLabels.en;
 }
 
 const FOCUSABLE = 'a[href], button, input, select, textarea, summary, [tabindex]';
@@ -199,11 +229,11 @@ export function Window({
   origin,
   dock,
   modal = false,
-  closeLabel = 'Close window',
-  minimizeLabel = 'Minimize window',
-  zoomLabel = 'Zoom window',
-  controlsLabel = 'Window controls',
-  moveLabel = 'Move window',
+  closeLabel: closeLabelProp,
+  minimizeLabel: minimizeLabelProp,
+  zoomLabel: zoomLabelProp,
+  controlsLabel: controlsLabelProp,
+  moveLabel: moveLabelProp,
   moveHint,
   id,
   style,
@@ -224,6 +254,12 @@ export function Window({
   const entry = managerState.windows[windowId];
 
   const theme = useTheme();
+  const words = windowLabelsFor(theme.lang);
+  const closeLabel = closeLabelProp ?? words.close;
+  const minimizeLabel = minimizeLabelProp ?? words.minimize;
+  const zoomLabel = zoomLabelProp ?? words.zoom;
+  const controlsLabel = controlsLabelProp ?? words.controls;
+  const moveLabel = moveLabelProp ?? words.move;
   const dir = theme.dir;
   const mode = windowMotionMode(theme.styleData.motionPreset);
   const controlsOn = useOptionalPart('window', 'controls');
@@ -501,9 +537,7 @@ export function Window({
       <IconButton data-part="close" icon="close" label={closeLabel} size="sm" onClick={requestClose} />
     </>
   );
-  const hint =
-    moveHint ??
-    (zoomable ? 'Arrow keys move the window. Shift moves it further. Enter zooms it.' : 'Arrow keys move the window. Shift moves it further.');
+  const hint = moveHint ?? (zoomable ? words.hintZoom : words.hint);
 
   return (
     <div

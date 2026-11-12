@@ -5,7 +5,8 @@
 //
 // Language: the Toaster takes its axes from the Theme it is mounted in, so
 // it speaks the gallery language. A toast whose copy is in another language
-// passes `lang` (the long-arabic case passes "ar"): the toast root then
+// passes `lang` (the English triggers pass "en", the long-arabic case "ar",
+// so English copy never runs right to left in an Arabic gallery): the toast root then
 // carries lang and dir, picks the Arabic type and the Arabic close label,
 // and still sits in the page's corner. One Toaster per page, never one per
 // language.
@@ -40,7 +41,7 @@ function Specimen({ tone, count }: { tone: ToastTone; count?: number }) {
 }
 
 function saveDraft() {
-  const id = toast({ title: 'Saving draft', description: 'Your changes are on the way to your account.', duration: Infinity, dedupeKey: false });
+  const id = toast({ lang: 'en', title: 'Saving draft', description: 'Your changes are on the way to your account.', duration: Infinity, dedupeKey: false });
   window.setTimeout(() => {
     toast.update(id, { tone: 'success', title: 'Draft saved', description: 'Saved to your account a moment ago.' });
   }, 1500);
@@ -48,9 +49,10 @@ function saveDraft() {
 
 function failUpload() {
   toast.danger({
+    lang: 'en',
     title: 'Could not upload photo.jpg',
     description: 'The connection dropped at 80 percent. The file is still on your device.',
-    action: { label: 'Retry upload', onAction: () => toast.success('Upload started again'), altText: 'Upload the file again from the Files panel' },
+    action: { label: 'Retry upload', onAction: () => toast.success('Upload started again', { lang: 'en' }), altText: 'Upload the file again from the Files panel' },
   });
 }
 
@@ -62,7 +64,7 @@ export default function ToastDemo() {
       <DemoCase id="variants" title="Variants: one toast per tone, with an action, with a title and a description">
         <DemoRow>
           {tones.map((tone) => (
-            <Button key={tone} data-demo-trigger="" tone={tone} onClick={() => toast({ tone, title: copy[tone].title })}>
+            <Button key={tone} data-demo-trigger="" tone={tone} onClick={() => toast({ lang: 'en', tone, title: copy[tone].title })}>
               {copy[tone].trigger}
             </Button>
           ))}
@@ -72,14 +74,15 @@ export default function ToastDemo() {
             data-demo-trigger=""
             onClick={() =>
               toast({
+                lang: 'en',
                 title: 'Card moved to Archive',
-                action: { label: 'Undo move', onAction: () => toast('Card moved back'), altText: 'Move the card back from the Archive list' },
+                action: { label: 'Undo move', onAction: () => toast('Card moved back', { lang: 'en' }), altText: 'Move the card back from the Archive list' },
               })
             }
           >
             Show toast with action
           </Button>
-          <Button data-demo-trigger="" onClick={() => toast.info({ title: copy.info.title, description: copy.info.description })}>
+          <Button data-demo-trigger="" onClick={() => toast.info({ lang: 'en', title: copy.info.title, description: copy.info.description })}>
             Show toast with description
           </Button>
         </DemoRow>
@@ -92,7 +95,7 @@ export default function ToastDemo() {
 
       <DemoCase id="one" title="One toast">
         <DemoRow>
-          <Button data-demo-trigger="" onClick={() => toast.success('Link copied')}>
+          <Button data-demo-trigger="" onClick={() => toast.success('Link copied', { lang: 'en' })}>
             Copy link
           </Button>
         </DemoRow>
@@ -103,9 +106,9 @@ export default function ToastDemo() {
           <Button
             data-demo-trigger=""
             onClick={() => {
-              toast.success('Draft saved');
-              toast.info('Board shared with Sara');
-              toast('Two comments added');
+              toast.success('Draft saved', { lang: 'en' });
+              toast.info('Board shared with Sara', { lang: 'en' });
+              toast('Two comments added', { lang: 'en' });
             }}
           >
             Show three toasts
@@ -118,7 +121,7 @@ export default function ToastDemo() {
           <Button
             data-demo-trigger=""
             onClick={() => {
-              for (const file of files) toast.success({ title: `${file} uploaded`, dedupeKey: false });
+              for (const file of files) toast.success({ lang: 'en', title: `${file} uploaded`, dedupeKey: false });
             }}
           >
             Upload eight files
@@ -135,6 +138,7 @@ export default function ToastDemo() {
             data-demo-trigger=""
             onClick={() =>
               toast.warning({
+                lang: 'en',
                 title: 'Some references on the board Spring campaign moodboard for the retail launch could not be loaded',
                 description:
                   'Twelve images come from sites that block hotlinking. They show as placeholders until you upload a copy. Open each placeholder to see where it came from, then drop the file on it to replace it. Nothing else on the board changed.',

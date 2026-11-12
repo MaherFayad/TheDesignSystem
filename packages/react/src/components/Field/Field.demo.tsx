@@ -22,14 +22,17 @@ const formFields: [string, string][] = [
 export default function FieldDemo() {
   return (
     <DemoPage>
-      <DemoCase id="variants" title="Orientations, required, compound parts">
+      <DemoCase id="variants" title="Orientations, required, compound parts" lang="en">
         <DemoGrid min="18rem">
           <Field label="Board name" description="Shown on the board card.">
             <Input placeholder="For example, spring launch" />
           </Field>
-          <Field label="Board name" description="Shown on the board card." orientation="horizontal">
-            <Input placeholder="For example, spring launch" />
-          </Field>
+          {/* A horizontal field shares its row with the label: it spans the grid, so the input has room for the placeholder. */}
+          <div style={{ gridColumn: '1 / -1' }}>
+            <Field label="Board name" description="Shown on the board card." orientation="horizontal">
+              <Input placeholder="For example, spring launch" />
+            </Field>
+          </div>
           <Field required>
             <FieldLabel>Email</FieldLabel>
             <Input type="email" placeholder="name@example.com" />
@@ -43,19 +46,19 @@ export default function FieldDemo() {
         </DemoGrid>
       </DemoCase>
 
-      <DemoCase id="empty" title="Label only">
+      <DemoCase id="empty" title="Label only" lang="en">
         <Field label="Board name">
           <Input />
         </Field>
       </DemoCase>
 
-      <DemoCase id="one" title="One field">
+      <DemoCase id="one" title="One field" lang="en">
         <Field label="Workspace name" description="Everyone in the workspace sees this name.">
           <Input defaultValue="Design team" />
         </Field>
       </DemoCase>
 
-      <DemoCase id="many" title="A short form">
+      <DemoCase id="many" title="A short form" lang="en">
         <p data-demo="label">Fields marked * are required.</p>
         <DemoGrid min="16rem">
           <Field label="First name" required>
@@ -73,7 +76,7 @@ export default function FieldDemo() {
         </DemoGrid>
       </DemoCase>
 
-      <DemoCase id="too-many" title="A long form in a narrow container">
+      <DemoCase id="too-many" title="A long form in a narrow container" lang="en">
         <div style={{ maxInlineSize: 'var(--ds-dialog-width-sm)', display: 'grid', gap: 'var(--ds-space-l)' }}>
           {formFields.map(([label, value], i) => (
             <Field key={label} label={label} description={i % 4 === 0 ? 'Shown on invoices.' : undefined} required={i < 2}>
@@ -83,7 +86,7 @@ export default function FieldDemo() {
         </div>
       </DemoCase>
 
-      <DemoCase id="long-text" title="Long label, description and error">
+      <DemoCase id="long-text" title="Long label, description and error" lang="en">
         <Field
           label="The name people see on the board card, in shared links and in every email we send about this board"
           description={sample.en.long}
@@ -110,14 +113,14 @@ export default function FieldDemo() {
         </Field>
       </DemoCase>
 
-      <DemoCase id="loading" title="Value being checked">
+      <DemoCase id="loading" title="Value being checked" lang="en">
         <Field label="Workspace address">
           <Input defaultValue="design-team" end="loader" />
           <FieldDescription>Checking if this address is free.</FieldDescription>
         </Field>
       </DemoCase>
 
-      <DemoCase id="error" title="Invalid with a message">
+      <DemoCase id="error" title="Invalid with a message" lang="en">
         <Field invalid>
           <FieldLabel>Board name</FieldLabel>
           <Input defaultValue="" placeholder="For example, spring launch" />
@@ -125,13 +128,13 @@ export default function FieldDemo() {
         </Field>
       </DemoCase>
 
-      <DemoCase id="disabled" title="Disabled">
+      <DemoCase id="disabled" title="Disabled" lang="en">
         <Field label="Workspace" disabled description="Only owners can rename the workspace.">
           <Input defaultValue="Design team" />
         </Field>
       </DemoCase>
 
-      <DemoCase id="readonly" title="Read only">
+      <DemoCase id="readonly" title="Read only" lang="en">
         <Field label="Workspace ID" readOnly description="Support asks for this when you write in.">
           <Input defaultValue="ws_4f9a21" />
         </Field>
