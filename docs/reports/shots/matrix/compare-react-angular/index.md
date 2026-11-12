@@ -2,7 +2,7 @@
 
 Made by `npm run shots -- --compare react angular`. pixelmatch threshold 0.1; a pair passes when at most 0.5 percent of pixels differ and the sizes match.
 
-130 pairs, 130 pass, 0 fail. Only in react: 48. Only in angular: 0.
+220 pairs, 220 pass, 0 fail. Only in react: 48. Only in angular: 0.
 
 | File | Result | Differing pixels | Where | Diff |
 | --- | --- | --- | --- | --- |
@@ -70,6 +70,24 @@ Made by `npm run shots -- --compare react angular`. pixelmatch threshold 0.1; a 
 | icon-button/studio-dark-rtl.png | pass | 0 (0.000 percent) |  | none |
 | icon-button/studio-light-ltr.png | pass | 0 (0.000 percent) |  | none |
 | icon-button/studio-light-rtl.png | pass | 0 (0.000 percent) |  | none |
+| inline-edit/desk-dark-ltr-comfortable.png | pass | 0 (0.000 percent) |  | none |
+| inline-edit/desk-dark-ltr-compact.png | pass | 0 (0.000 percent) |  | none |
+| inline-edit/desk-dark-ltr.png | pass | 0 (0.000 percent) |  | none |
+| inline-edit/desk-dark-rtl.png | pass | 0 (0.000 percent) |  | none |
+| inline-edit/desk-light-ltr.png | pass | 0 (0.000 percent) |  | none |
+| inline-edit/desk-light-rtl.png | pass | 0 (0.000 percent) |  | none |
+| inline-edit/neutral-dark-ltr-comfortable.png | pass | 0 (0.000 percent) |  | none |
+| inline-edit/neutral-dark-ltr-compact.png | pass | 0 (0.000 percent) |  | none |
+| inline-edit/neutral-dark-ltr.png | pass | 0 (0.000 percent) |  | none |
+| inline-edit/neutral-dark-rtl.png | pass | 0 (0.000 percent) |  | none |
+| inline-edit/neutral-light-ltr.png | pass | 0 (0.000 percent) |  | none |
+| inline-edit/neutral-light-rtl.png | pass | 0 (0.000 percent) |  | none |
+| inline-edit/studio-dark-ltr-comfortable.png | pass | 0 (0.000 percent) |  | none |
+| inline-edit/studio-dark-ltr-compact.png | pass | 0 (0.000 percent) |  | none |
+| inline-edit/studio-dark-ltr.png | pass | 0 (0.000 percent) |  | none |
+| inline-edit/studio-dark-rtl.png | pass | 0 (0.000 percent) |  | none |
+| inline-edit/studio-light-ltr.png | pass | 0 (0.000 percent) |  | none |
+| inline-edit/studio-light-rtl.png | pass | 0 (0.000 percent) |  | none |
 | input-group/desk-dark-ltr-comfortable.png | pass | 0 (0.000 percent) |  | none |
 | input-group/desk-dark-ltr-compact.png | pass | 0 (0.000 percent) |  | none |
 | input-group/desk-dark-ltr.png | pass | 0 (0.000 percent) |  | none |
@@ -118,6 +136,78 @@ Made by `npm run shots -- --compare react angular`. pixelmatch threshold 0.1; a 
 | label/studio-dark-rtl.png | pass | 0 (0.000 percent) |  | none |
 | label/studio-light-ltr.png | pass | 0 (0.000 percent) |  | none |
 | label/studio-light-rtl.png | pass | 0 (0.000 percent) |  | none |
+| otp-field/desk-dark-ltr-comfortable.png | pass | 186 (0.018 percent) | x 27 to 67, y 26 to 35 | [diff](otp-field/desk-dark-ltr-comfortable.png) |
+| otp-field/desk-dark-ltr-compact.png | pass | 186 (0.018 percent) | x 23 to 63, y 21 to 30 | [diff](otp-field/desk-dark-ltr-compact.png) |
+| otp-field/desk-dark-ltr.png | pass | 186 (0.018 percent) | x 25 to 65, y 23 to 32 | [diff](otp-field/desk-dark-ltr.png) |
+| otp-field/desk-dark-rtl.png | pass | 126 (0.012 percent) | x 1209 to 1234, y 25 to 35 | [diff](otp-field/desk-dark-rtl.png) |
+| otp-field/desk-light-ltr.png | pass | 176 (0.017 percent) | x 25 to 65, y 23 to 32 | [diff](otp-field/desk-light-ltr.png) |
+| otp-field/desk-light-rtl.png | pass | 124 (0.012 percent) | x 1209 to 1234, y 25 to 35 | [diff](otp-field/desk-light-rtl.png) |
+| otp-field/neutral-dark-ltr-comfortable.png | pass | 187 (0.018 percent) | x 28 to 72, y 27 to 37 | [diff](otp-field/neutral-dark-ltr-comfortable.png) |
+| otp-field/neutral-dark-ltr-compact.png | pass | 187 (0.018 percent) | x 24 to 68, y 22 to 32 | [diff](otp-field/neutral-dark-ltr-compact.png) |
+| otp-field/neutral-dark-ltr.png | pass | 187 (0.018 percent) | x 28 to 72, y 27 to 37 | [diff](otp-field/neutral-dark-ltr.png) |
+| otp-field/neutral-dark-rtl.png | pass | 143 (0.014 percent) | x 1202 to 1228, y 28 to 39 | [diff](otp-field/neutral-dark-rtl.png) |
+| otp-field/neutral-light-ltr.png | pass | 183 (0.018 percent) | x 28 to 72, y 27 to 37 | [diff](otp-field/neutral-light-ltr.png) |
+| otp-field/neutral-light-rtl.png | pass | 141 (0.014 percent) | x 1202 to 1228, y 28 to 39 | [diff](otp-field/neutral-light-rtl.png) |
+| otp-field/studio-dark-ltr-comfortable.png | pass | 168 (0.016 percent) | x 27 to 67, y 25 to 35 | [diff](otp-field/studio-dark-ltr-comfortable.png) |
+| otp-field/studio-dark-ltr-compact.png | pass | 168 (0.016 percent) | x 23 to 63, y 20 to 30 | [diff](otp-field/studio-dark-ltr-compact.png) |
+| otp-field/studio-dark-ltr.png | pass | 168 (0.016 percent) | x 25 to 65, y 22 to 32 | [diff](otp-field/studio-dark-ltr.png) |
+| otp-field/studio-dark-rtl.png | pass | 121 (0.012 percent) | x 1209 to 1233, y 25 to 35 | [diff](otp-field/studio-dark-rtl.png) |
+| otp-field/studio-light-ltr.png | pass | 163 (0.016 percent) | x 25 to 65, y 22 to 32 | [diff](otp-field/studio-light-ltr.png) |
+| otp-field/studio-light-rtl.png | pass | 117 (0.011 percent) | x 1209 to 1233, y 25 to 35 | [diff](otp-field/studio-light-rtl.png) |
+| password-field/desk-dark-ltr-comfortable.png | pass | 0 (0.000 percent) |  | none |
+| password-field/desk-dark-ltr-compact.png | pass | 0 (0.000 percent) |  | none |
+| password-field/desk-dark-ltr.png | pass | 0 (0.000 percent) |  | none |
+| password-field/desk-dark-rtl.png | pass | 0 (0.000 percent) |  | none |
+| password-field/desk-light-ltr.png | pass | 0 (0.000 percent) |  | none |
+| password-field/desk-light-rtl.png | pass | 0 (0.000 percent) |  | none |
+| password-field/neutral-dark-ltr-comfortable.png | pass | 0 (0.000 percent) |  | none |
+| password-field/neutral-dark-ltr-compact.png | pass | 0 (0.000 percent) |  | none |
+| password-field/neutral-dark-ltr.png | pass | 0 (0.000 percent) |  | none |
+| password-field/neutral-dark-rtl.png | pass | 0 (0.000 percent) |  | none |
+| password-field/neutral-light-ltr.png | pass | 0 (0.000 percent) |  | none |
+| password-field/neutral-light-rtl.png | pass | 0 (0.000 percent) |  | none |
+| password-field/studio-dark-ltr-comfortable.png | pass | 0 (0.000 percent) |  | none |
+| password-field/studio-dark-ltr-compact.png | pass | 0 (0.000 percent) |  | none |
+| password-field/studio-dark-ltr.png | pass | 0 (0.000 percent) |  | none |
+| password-field/studio-dark-rtl.png | pass | 0 (0.000 percent) |  | none |
+| password-field/studio-light-ltr.png | pass | 0 (0.000 percent) |  | none |
+| password-field/studio-light-rtl.png | pass | 0 (0.000 percent) |  | none |
+| phone-field/desk-dark-ltr-comfortable.png | pass | 0 (0.000 percent) |  | none |
+| phone-field/desk-dark-ltr-compact.png | pass | 0 (0.000 percent) |  | none |
+| phone-field/desk-dark-ltr.png | pass | 0 (0.000 percent) |  | none |
+| phone-field/desk-dark-rtl.png | pass | 0 (0.000 percent) |  | none |
+| phone-field/desk-light-ltr.png | pass | 0 (0.000 percent) |  | none |
+| phone-field/desk-light-rtl.png | pass | 0 (0.000 percent) |  | none |
+| phone-field/neutral-dark-ltr-comfortable.png | pass | 0 (0.000 percent) |  | none |
+| phone-field/neutral-dark-ltr-compact.png | pass | 0 (0.000 percent) |  | none |
+| phone-field/neutral-dark-ltr.png | pass | 0 (0.000 percent) |  | none |
+| phone-field/neutral-dark-rtl.png | pass | 0 (0.000 percent) |  | none |
+| phone-field/neutral-light-ltr.png | pass | 0 (0.000 percent) |  | none |
+| phone-field/neutral-light-rtl.png | pass | 0 (0.000 percent) |  | none |
+| phone-field/studio-dark-ltr-comfortable.png | pass | 0 (0.000 percent) |  | none |
+| phone-field/studio-dark-ltr-compact.png | pass | 0 (0.000 percent) |  | none |
+| phone-field/studio-dark-ltr.png | pass | 0 (0.000 percent) |  | none |
+| phone-field/studio-dark-rtl.png | pass | 0 (0.000 percent) |  | none |
+| phone-field/studio-light-ltr.png | pass | 0 (0.000 percent) |  | none |
+| phone-field/studio-light-rtl.png | pass | 0 (0.000 percent) |  | none |
+| search-field/desk-dark-ltr-comfortable.png | pass | 0 (0.000 percent) |  | none |
+| search-field/desk-dark-ltr-compact.png | pass | 0 (0.000 percent) |  | none |
+| search-field/desk-dark-ltr.png | pass | 0 (0.000 percent) |  | none |
+| search-field/desk-dark-rtl.png | pass | 0 (0.000 percent) |  | none |
+| search-field/desk-light-ltr.png | pass | 0 (0.000 percent) |  | none |
+| search-field/desk-light-rtl.png | pass | 0 (0.000 percent) |  | none |
+| search-field/neutral-dark-ltr-comfortable.png | pass | 0 (0.000 percent) |  | none |
+| search-field/neutral-dark-ltr-compact.png | pass | 0 (0.000 percent) |  | none |
+| search-field/neutral-dark-ltr.png | pass | 0 (0.000 percent) |  | none |
+| search-field/neutral-dark-rtl.png | pass | 0 (0.000 percent) |  | none |
+| search-field/neutral-light-ltr.png | pass | 0 (0.000 percent) |  | none |
+| search-field/neutral-light-rtl.png | pass | 0 (0.000 percent) |  | none |
+| search-field/studio-dark-ltr-comfortable.png | pass | 0 (0.000 percent) |  | none |
+| search-field/studio-dark-ltr-compact.png | pass | 0 (0.000 percent) |  | none |
+| search-field/studio-dark-ltr.png | pass | 0 (0.000 percent) |  | none |
+| search-field/studio-dark-rtl.png | pass | 0 (0.000 percent) |  | none |
+| search-field/studio-light-ltr.png | pass | 0 (0.000 percent) |  | none |
+| search-field/studio-light-rtl.png | pass | 0 (0.000 percent) |  | none |
 | textarea/desk-dark-ltr-comfortable.png | pass | 0 (0.000 percent) |  | none |
 | textarea/desk-dark-ltr-compact.png | pass | 0 (0.000 percent) |  | none |
 | textarea/desk-dark-ltr.png | pass | 0 (0.000 percent) |  | none |

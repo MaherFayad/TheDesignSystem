@@ -2,7 +2,7 @@
 
 Made by `npm run shots`. Each shot is the `variants` case at `chrome=0`, 1280 by 800 viewport, full page, device scale factor 1, animations off, reduced motion, fonts loaded. File names: `<component>/<style>-<scheme>-<dir>[-<density>][-open].png`. Density is default unless named.
 
-130 shots, 9 components, 6.57 MB. Stable (two captures byte equal): 129; unstable: 1; not verified: 0.
+220 shots, 14 components, 9.05 MB. Stable (two captures byte equal): 219; unstable: 1; not verified: 0.
 
 The full list with sizes and hashes is in `captured.json`.
 
@@ -69,6 +69,25 @@ Densities, dark, ltr en:
 | desk | [compact](icon-button/desk-dark-ltr-compact.png) | [default](icon-button/desk-dark-ltr.png) | [comfortable](icon-button/desk-dark-ltr-comfortable.png) |
 | studio | [compact](icon-button/studio-dark-ltr-compact.png) | [default](icon-button/studio-dark-ltr.png) | [comfortable](icon-button/studio-dark-ltr-comfortable.png) |
 
+## InlineEdit
+
+| Style | Scheme | ltr en | rtl ar |
+| --- | --- | --- | --- |
+| desk | dark | [ltr](inline-edit/desk-dark-ltr.png) | [rtl](inline-edit/desk-dark-rtl.png) |
+| desk | light | [ltr](inline-edit/desk-light-ltr.png) | [rtl](inline-edit/desk-light-rtl.png) |
+| neutral | dark | [ltr](inline-edit/neutral-dark-ltr.png) | [rtl](inline-edit/neutral-dark-rtl.png) |
+| neutral | light | [ltr](inline-edit/neutral-light-ltr.png) | [rtl](inline-edit/neutral-light-rtl.png) |
+| studio | dark | [ltr](inline-edit/studio-dark-ltr.png) | [rtl](inline-edit/studio-dark-rtl.png) |
+| studio | light | [ltr](inline-edit/studio-light-ltr.png) | [rtl](inline-edit/studio-light-rtl.png) |
+
+Densities, dark, ltr en:
+
+| Style | compact | default | comfortable |
+| --- | --- | --- | --- |
+| desk | [compact](inline-edit/desk-dark-ltr-compact.png) | [default](inline-edit/desk-dark-ltr.png) | [comfortable](inline-edit/desk-dark-ltr-comfortable.png) |
+| neutral | [compact](inline-edit/neutral-dark-ltr-compact.png) | [default](inline-edit/neutral-dark-ltr.png) | [comfortable](inline-edit/neutral-dark-ltr-comfortable.png) |
+| studio | [compact](inline-edit/studio-dark-ltr-compact.png) | [default](inline-edit/studio-dark-ltr.png) | [comfortable](inline-edit/studio-dark-ltr-comfortable.png) |
+
 ## Input
 
 | Style | Scheme | ltr en | rtl ar |
@@ -119,6 +138,82 @@ Densities, dark, ltr en:
 | neutral | light | [ltr](label/neutral-light-ltr.png) | [rtl](label/neutral-light-rtl.png) |
 | studio | dark | [ltr](label/studio-dark-ltr.png) | [rtl](label/studio-dark-rtl.png) |
 | studio | light | [ltr](label/studio-light-ltr.png) | [rtl](label/studio-light-rtl.png) |
+
+## OTPField
+
+| Style | Scheme | ltr en | rtl ar |
+| --- | --- | --- | --- |
+| desk | dark | [ltr](otp-field/desk-dark-ltr.png) | [rtl](otp-field/desk-dark-rtl.png) |
+| desk | light | [ltr](otp-field/desk-light-ltr.png) | [rtl](otp-field/desk-light-rtl.png) |
+| neutral | dark | [ltr](otp-field/neutral-dark-ltr.png) | [rtl](otp-field/neutral-dark-rtl.png) |
+| neutral | light | [ltr](otp-field/neutral-light-ltr.png) | [rtl](otp-field/neutral-light-rtl.png) |
+| studio | dark | [ltr](otp-field/studio-dark-ltr.png) | [rtl](otp-field/studio-dark-rtl.png) |
+| studio | light | [ltr](otp-field/studio-light-ltr.png) | [rtl](otp-field/studio-light-rtl.png) |
+
+Densities, dark, ltr en:
+
+| Style | compact | default | comfortable |
+| --- | --- | --- | --- |
+| desk | [compact](otp-field/desk-dark-ltr-compact.png) | [default](otp-field/desk-dark-ltr.png) | [comfortable](otp-field/desk-dark-ltr-comfortable.png) |
+| neutral | [compact](otp-field/neutral-dark-ltr-compact.png) | [default](otp-field/neutral-dark-ltr.png) | [comfortable](otp-field/neutral-dark-ltr-comfortable.png) |
+| studio | [compact](otp-field/studio-dark-ltr-compact.png) | [default](otp-field/studio-dark-ltr.png) | [comfortable](otp-field/studio-dark-ltr-comfortable.png) |
+
+## PasswordField
+
+| Style | Scheme | ltr en | rtl ar |
+| --- | --- | --- | --- |
+| desk | dark | [ltr](password-field/desk-dark-ltr.png) | [rtl](password-field/desk-dark-rtl.png) |
+| desk | light | [ltr](password-field/desk-light-ltr.png) | [rtl](password-field/desk-light-rtl.png) |
+| neutral | dark | [ltr](password-field/neutral-dark-ltr.png) | [rtl](password-field/neutral-dark-rtl.png) |
+| neutral | light | [ltr](password-field/neutral-light-ltr.png) | [rtl](password-field/neutral-light-rtl.png) |
+| studio | dark | [ltr](password-field/studio-dark-ltr.png) | [rtl](password-field/studio-dark-rtl.png) |
+| studio | light | [ltr](password-field/studio-light-ltr.png) | [rtl](password-field/studio-light-rtl.png) |
+
+Densities, dark, ltr en:
+
+| Style | compact | default | comfortable |
+| --- | --- | --- | --- |
+| desk | [compact](password-field/desk-dark-ltr-compact.png) | [default](password-field/desk-dark-ltr.png) | [comfortable](password-field/desk-dark-ltr-comfortable.png) |
+| neutral | [compact](password-field/neutral-dark-ltr-compact.png) | [default](password-field/neutral-dark-ltr.png) | [comfortable](password-field/neutral-dark-ltr-comfortable.png) |
+| studio | [compact](password-field/studio-dark-ltr-compact.png) | [default](password-field/studio-dark-ltr.png) | [comfortable](password-field/studio-dark-ltr-comfortable.png) |
+
+## PhoneField
+
+| Style | Scheme | ltr en | rtl ar |
+| --- | --- | --- | --- |
+| desk | dark | [ltr](phone-field/desk-dark-ltr.png) | [rtl](phone-field/desk-dark-rtl.png) |
+| desk | light | [ltr](phone-field/desk-light-ltr.png) | [rtl](phone-field/desk-light-rtl.png) |
+| neutral | dark | [ltr](phone-field/neutral-dark-ltr.png) | [rtl](phone-field/neutral-dark-rtl.png) |
+| neutral | light | [ltr](phone-field/neutral-light-ltr.png) | [rtl](phone-field/neutral-light-rtl.png) |
+| studio | dark | [ltr](phone-field/studio-dark-ltr.png) | [rtl](phone-field/studio-dark-rtl.png) |
+| studio | light | [ltr](phone-field/studio-light-ltr.png) | [rtl](phone-field/studio-light-rtl.png) |
+
+Densities, dark, ltr en:
+
+| Style | compact | default | comfortable |
+| --- | --- | --- | --- |
+| desk | [compact](phone-field/desk-dark-ltr-compact.png) | [default](phone-field/desk-dark-ltr.png) | [comfortable](phone-field/desk-dark-ltr-comfortable.png) |
+| neutral | [compact](phone-field/neutral-dark-ltr-compact.png) | [default](phone-field/neutral-dark-ltr.png) | [comfortable](phone-field/neutral-dark-ltr-comfortable.png) |
+| studio | [compact](phone-field/studio-dark-ltr-compact.png) | [default](phone-field/studio-dark-ltr.png) | [comfortable](phone-field/studio-dark-ltr-comfortable.png) |
+
+## SearchField
+
+| Style | Scheme | ltr en | rtl ar |
+| --- | --- | --- | --- |
+| desk | dark | [ltr](search-field/desk-dark-ltr.png) | [rtl](search-field/desk-dark-rtl.png) |
+| desk | light | [ltr](search-field/desk-light-ltr.png) | [rtl](search-field/desk-light-rtl.png) |
+| neutral | dark | [ltr](search-field/neutral-dark-ltr.png) | [rtl](search-field/neutral-dark-rtl.png) |
+| neutral | light | [ltr](search-field/neutral-light-ltr.png) | [rtl](search-field/neutral-light-rtl.png) |
+| studio | dark | [ltr](search-field/studio-dark-ltr.png) | [rtl](search-field/studio-dark-rtl.png) |
+| studio | light | [ltr](search-field/studio-light-ltr.png) | [rtl](search-field/studio-light-rtl.png) |
+
+Densities, dark, ltr en:
+
+| Style | compact | default | comfortable |
+| --- | --- | --- | --- |
+| desk | [compact](search-field/desk-dark-ltr-compact.png) | [default](search-field/desk-dark-ltr.png) | [comfortable](search-field/desk-dark-ltr-comfortable.png) |
+| neutral | [compact](search-field/neutral-dark-ltr-compact.png) | [default](search-field/neutral-dark-ltr.png) | [comfortable](search-field/neutral-dark-ltr-comfortable.png) |
+| studio | [compact](search-field/studio-dark-ltr-compact.png) | [default](search-field/studio-dark-ltr.png) | [comfortable](search-field/studio-dark-ltr-comfortable.png) |
 
 ## Textarea
 
