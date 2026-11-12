@@ -21,7 +21,7 @@
 // safe area inset, so the home indicator of a phone never covers a label.
 // Where the bar sits (fixed at the bottom, in a PageShell) is the layout's
 // choice; a fixed bar needs the page to keep the same room at its end.
-import { Children, isValidElement, type AnchorHTMLAttributes, type HTMLAttributes, type ReactElement, type ReactNode, type Ref } from 'react';
+import { Children, createContext, isValidElement, use, type AnchorHTMLAttributes, type HTMLAttributes, type ReactElement, type ReactNode, type Ref } from 'react';
 import { Slot } from 'radix-ui';
 import { Icon, type IconName } from '@the-system/icons/react';
 import type { Size } from '@the-system/shared';
@@ -42,11 +42,13 @@ interface TabBarOwnProps extends Omit<HTMLAttributes<HTMLElement>, 'title'> {
 export type TabBarProps = TabBarOwnProps &
   ({ 'aria-label': string; 'aria-labelledby'?: string } | { 'aria-labelledby': string; 'aria-label'?: string });
 
+const TabBarSizeContext = createContext<TabBarSize>('md');
+
 /** The bottom navigation of a phone layout: a nav landmark with a name. */
 export function TabBar({ size = 'md', children, ...rest }: TabBarProps) {
   return (
     <nav {...rest} data-ds="tab-bar" data-size={size}>
-      {children}
+      <TabBarSizeContext value={size}>{children}</TabBarSizeContext>
     </nav>
   );
 }
@@ -77,6 +79,7 @@ const words = { en: { count: 'new', dot: 'New' }, ar: { count: 'جديد', dot: 
 /** One destination of the bar: an icon over a label, with an optional badge. */
 export function TabBarItem({ label, icon, active = false, badge, badgeLabel, asChild = false, children, ref, ...rest }: TabBarItemProps) {
   const { lang } = useTheme();
+  const barSize = use(TabBarSizeContext);
   const w = words[lang === 'ar' ? 'ar' : 'en'];
   const showBadge = badge !== undefined && badge !== false && badge !== 0;
   const count = typeof badge === 'number' ? (badge > 99 ? '99+' : String(badge)) : null;
@@ -85,7 +88,7 @@ export function TabBarItem({ label, icon, active = false, badge, badgeLabel, asC
   const parts = (
     <>
       <span data-part="item-icon">
-        <Icon name={icon} size="md" />
+        <Icon name={icon} size={barSize === 'lg' ? 'lg' : 'md'} />
         {showBadge && (
           <span data-part="item-badge" data-dot={count === null ? '' : undefined} dir="ltr" aria-hidden="true">
             {count}

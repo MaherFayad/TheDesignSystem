@@ -55,15 +55,26 @@ export default function TabBarDemo() {
         </Theme>
       </DemoCase>
 
-      <DemoCase id="many" title="Three destinations, the fewest a bar should hold">
+      <DemoCase id="many" title="Three destinations, the fewest a bar holds">
         <AppBar count={3} />
       </DemoCase>
 
-      <DemoCase id="too-many" title="Five destinations, the most: past five, move the rest into a More page">
+      <DemoCase id="too-many" title="Five destinations at lg in 320px, the most a bar holds: past five, move the rest into a More page">
         <AppBar count={5} activeIndex={4} />
+        <Theme lang="ar" data-demo="content">
+          <div style={{ maxInlineSize: 'calc(var(--ds-menu-width-min) * 1.6)' }}>
+            <TabBar aria-label="التنقل الرئيسي" size="lg">
+              <TabBarItem href="#home" icon="home" label="الرئيسية" active />
+              <TabBarItem href="#library" icon="folder" label="المكتبات المشتركة" />
+              <TabBarItem href="#inbox" icon="inbox" label="الرسائل الواردة" badge={12} />
+              <TabBarItem href="#alerts" icon="bell" label="الإشعارات" badge />
+              <TabBarItem href="#settings" icon="settings" label="إعدادات الحساب" />
+            </TabBar>
+          </div>
+        </Theme>
       </DemoCase>
 
-      <DemoCase id="long-text" title="Long text: the label ends in an ellipsis, the full name stays in the link">
+      <DemoCase id="long-text" title="Long text: the label ends in an ellipsis, the full name stays in the link" lang="en">
         <div style={{ maxInlineSize: 'calc(var(--ds-menu-width-min) * 1.6)' }}>
           <TabBar aria-label="Main">
             <TabBarItem href="#home" icon="home" label="Home" active />

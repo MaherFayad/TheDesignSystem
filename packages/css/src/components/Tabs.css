@@ -69,6 +69,11 @@
     --_tabs-font-size: var(--ds-font-size-xs);
   }
 
+  /* Arabic small text is one step up (PLAN.md section 12): base.css moves s to m; xs moves to s here. */
+  [data-ds='tabs'][data-size='sm']:lang(ar) {
+    --_tabs-font-size: var(--ds-font-size-s);
+  }
+
   /* soft: a quiet track with a filled pill behind the active label. */
   [data-ds='tabs'][data-emphasis='soft'] {
     --_tabs-list-bg: var(--ds-color-bg-overlay-5);

@@ -51,6 +51,23 @@ describe('TabBar', () => {
     expect(container.querySelector('[data-ds="tab-bar"]')?.getAttribute('data-size')).toBe('lg');
   });
 
+  it('shows nothing for a badge of 0 or false', () => {
+    const { container } = render(
+      <TabBar aria-label="Main">
+        <TabBarItem href="#a" icon="inbox" label="Inbox" badge={0} />
+        <TabBarItem href="#b" icon="bell" label="Alerts" badge={false} />
+      </TabBar>,
+    );
+    expect(container.querySelector('[data-part="item-badge"]')).toBeNull();
+    expect(container.querySelector('[data-part="item-status"]')).toBeNull();
+    expect(screen.getByRole('link', { name: 'Inbox' })).toBeTruthy();
+  });
+
+  it('sizes the icon with the bar', () => {
+    const { container } = render(<Example size="lg" />);
+    expect(container.querySelector('[data-part="item-icon"] [data-ds="icon"]')?.getAttribute('data-size')).toBe('lg');
+  });
+
   it('speaks the badge in Arabic', () => {
     render(
       <Theme lang="ar" dir="rtl">

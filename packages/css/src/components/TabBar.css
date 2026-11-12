@@ -7,7 +7,8 @@
  *   --_tab-bar-bg, -border-color
  *   --_tab-bar-item-height        the target height of each item
  *   --_tab-bar-icon-size          the box the icon sits in
- *   --_tab-bar-fg, -fg-active     item text at rest and when current
+ *   --_tab-bar-fg, -fg-hover, -fg-active   item text at rest, on hover, when current
+ *   --_tab-bar-weight, -weight-active      the current item is bolder, never color alone
  *   --_tab-bar-pill-bg            the pill behind the current item's icon
  *   --_tab-bar-badge-bg, -badge-fg
  *   --_tab-bar-ring               the focus ring
@@ -27,6 +28,8 @@
     --_tab-bar-pill-bg: var(--ds-color-bg-overlay-20);
     --_tab-bar-badge-bg: var(--ds-color-state-danger-solid);
     --_tab-bar-badge-fg: var(--ds-color-state-danger-on-solid);
+    --_tab-bar-weight: var(--ds-font-weight-medium);
+    --_tab-bar-weight-active: var(--ds-font-weight-bold);
     --_tab-bar-ring: inset 0 0 0 var(--ds-border-width-strong) var(--ds-color-focus-ring);
 
     display: flex;
@@ -38,14 +41,16 @@
     padding-block: var(--ds-space-3xs);
     /* The safe area of a phone: the home indicator and the rounded corners never cover a label. */
     padding-block-end: max(var(--ds-space-3xs), env(safe-area-inset-bottom));
-    padding-inline: max(var(--ds-space-3xs), env(safe-area-inset-left)) max(var(--ds-space-3xs), env(safe-area-inset-right));
+    /* The larger side inset on both sides, so the bar stays symmetric in either direction. */
+    padding-inline: max(var(--ds-space-3xs), env(safe-area-inset-left), env(safe-area-inset-right));
     border-block-start: var(--ds-border-width-default) solid var(--_tab-bar-border-color);
     background-color: var(--_tab-bar-bg);
     font-family: var(--ds-font-family-sans);
   }
 
+  /* lg is a touch layout: never under 44px, whatever the density does to control.lg. */
   [data-ds='tab-bar'][data-size='lg'] {
-    --_tab-bar-item-height: var(--ds-size-control-lg);
+    --_tab-bar-item-height: max(var(--ds-size-control-lg), var(--ds-size-touch-ios));
     --_tab-bar-icon-size: var(--ds-size-icon-lg);
   }
 
@@ -54,7 +59,7 @@
   [data-ds='tab-bar'] > [data-part='item'] {
     --_tab-bar-item-fg: var(--_tab-bar-fg);
     --_tab-bar-item-pill: transparent;
-    --_tab-bar-item-weight: var(--ds-font-weight-medium);
+    --_tab-bar-item-weight: var(--_tab-bar-weight);
 
     position: relative;
     display: flex;
@@ -92,9 +97,9 @@
     background-color: var(--_tab-bar-item-pill);
   }
 
-  [data-ds='tab-bar'] > [data-part='item'] > [data-part='item-icon'] > [data-ds='icon'] {
-    inline-size: var(--_tab-bar-icon-size);
-    block-size: var(--_tab-bar-icon-size);
+  /* Arabic small text is one step up (PLAN.md section 12). */
+  [data-ds='tab-bar'] > [data-part='item']:lang(ar) {
+    font-size: var(--ds-font-size-s);
   }
 
   /* One line, cut with an ellipsis: five short nouns fit at 320px. */
@@ -154,7 +159,7 @@
   [data-ds='tab-bar'] > [data-part='item'][data-active] {
     --_tab-bar-item-fg: var(--_tab-bar-fg-active);
     --_tab-bar-item-pill: var(--_tab-bar-pill-bg);
-    --_tab-bar-item-weight: var(--ds-font-weight-bold);
+    --_tab-bar-item-weight: var(--_tab-bar-weight-active);
   }
 
   /* The transparent outline is set only here, so forced colors mode draws it on focus and nowhere else. */
