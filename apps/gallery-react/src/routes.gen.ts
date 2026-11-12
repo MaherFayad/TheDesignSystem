@@ -75,6 +75,7 @@ export const routes: DemoRoute[] = [
   { name: 'ScrollArea', slug: 'scroll-area', load: () => import('../../../packages/react/src/components/ScrollArea/ScrollArea.demo') },
   { name: 'SearchField', slug: 'search-field', load: () => import('../../../packages/react/src/components/SearchField/SearchField.demo') },
   { name: 'Section', slug: 'section', load: () => import('../../../packages/react/src/components/Section/Section.demo') },
+  { name: 'Select', slug: 'select', load: () => import('../../../packages/react/src/components/Select/Select.demo') },
   { name: 'Separator', slug: 'separator', load: () => import('../../../packages/react/src/components/Separator/Separator.demo') },
   { name: 'Sheet', slug: 'sheet', load: () => import('../../../packages/react/src/components/Sheet/Sheet.demo') },
   { name: 'Sidebar', slug: 'sidebar', load: () => import('../../../packages/react/src/components/Sidebar/Sidebar.demo') },

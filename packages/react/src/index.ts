@@ -67,6 +67,7 @@ export * from './components/ResizablePanels/index';
 export * from './components/ScrollArea/index';
 export * from './components/SearchField/index';
 export * from './components/Section/index';
+export * from './components/Select/index';
 export * from './components/Separator/index';
 export * from './components/Sheet/index';
 export * from './components/Sidebar/index';
