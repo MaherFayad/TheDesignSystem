@@ -1,0 +1,288 @@
+{
+  "name": "Toolbar",
+  "kind": "component",
+  "family": "navigation",
+  "summary": "A labelled row of controls for one context, such as a text editor or a canvas. One tab stop, arrow keys between items, and a More tools menu for what does not fit.",
+  "useWhen": [
+    "Several commands and toggles that act on one thing in view: the selected text, the canvas, a table",
+    "A set of tools a keyboard user should cross with one Tab and the arrow keys",
+    "A bar of icon tools that must survive a narrow window without wrapping"
+  ],
+  "avoidWhen": [
+    "Two or three related actions with no shared context",
+    "Navigation between pages or sections",
+    "The actions of a form: submit and cancel",
+    "Switching between panels of content"
+  ],
+  "insteadUse": {
+    "Two or three related actions": "ButtonGroup",
+    "Navigation between pages": "Navbar, Sidebar or Rail",
+    "Form actions": "Buttons in the form footer",
+    "Switching panels": "Tabs",
+    "The application menu row": "Menubar",
+    "Actions on one object behind one button": "DropdownMenu"
+  },
+  "anatomy": [
+    "root",
+    "item",
+    "group",
+    "separator",
+    "more"
+  ],
+  "parts": {
+    "ToolbarButton": "item",
+    "ToolbarLink": "item",
+    "ToolbarToggleItem": "item",
+    "ToolbarGroup": "group",
+    "ToolbarToggleGroup": "group",
+    "ToolbarSeparator": "separator"
+  },
+  "slots": {
+    "root": {
+      "accepts": [
+        "ToolbarButton",
+        "ToolbarLink",
+        "ToolbarGroup",
+        "ToolbarToggleGroup",
+        "ToolbarSeparator"
+      ],
+      "min": 1
+    },
+    "group": {
+      "accepts": [
+        "ToolbarButton",
+        "ToolbarLink",
+        "ToolbarToggleItem"
+      ],
+      "min": 1
+    }
+  },
+  "props": {
+    "aria-label": {
+      "type": "string",
+      "description": "Toolbar: required unless aria-labelledby names a visible heading. Names the context: Text formatting, Canvas tools."
+    },
+    "size": {
+      "type": [
+        "xs",
+        "sm",
+        "md",
+        "lg"
+      ],
+      "default": "md",
+      "description": "Toolbar: passed to every item that does not set its own (xs 24, sm 28, md 32, lg 44 px at default density). A Link item takes sm at xs."
+    },
+    "emphasis": {
+      "type": [
+        "soft",
+        "outline",
+        "ghost"
+      ],
+      "default": "ghost",
+      "description": "Toolbar: passed to every Button and IconButton item that does not set its own. The toolbar draws its own quiet surface."
+    },
+    "orientation": {
+      "type": [
+        "horizontal",
+        "vertical"
+      ],
+      "default": "horizontal",
+      "description": "Toolbar: a row, or a column where the up and down arrows move. Separators run across it."
+    },
+    "loop": {
+      "type": "boolean",
+      "default": true,
+      "description": "Toolbar: the arrow keys wrap from the last item to the first."
+    },
+    "overflow": {
+      "type": [
+        "menu",
+        "wrap"
+      ],
+      "default": "menu",
+      "description": "Toolbar: menu measures the top level children; the ones that do not fit are hidden (data-overflowed) and appear in the More tools menu, where choosing one clicks the hidden item. wrap lets the row break onto more lines."
+    },
+    "moreLabel": {
+      "type": "string",
+      "default": "More tools",
+      "description": "Toolbar: the name of the overflow trigger. Arabic default: أدوات أكثر. Name the context when the page has more than one toolbar: More text tools."
+    },
+    "icon": {
+      "type": "string",
+      "description": "ToolbarButton and ToolbarToggleItem: a system icon name. With it the item is an IconButton and label (its name) is required; without, a Button with a visible label."
+    },
+    "label": {
+      "type": "string",
+      "description": "ToolbarButton and ToolbarToggleItem with icon: the accessible name, a verb plus a noun."
+    },
+    "disabled": {
+      "type": "boolean",
+      "default": false,
+      "description": "ToolbarButton, ToolbarLink and ToolbarToggleItem: aria-disabled, drawn with opacity.disabled. The item keeps its place in the arrow key order and its click is cancelled. A disabled link loses its href."
+    },
+    "type": {
+      "type": [
+        "single",
+        "multiple"
+      ],
+      "description": "ToolbarToggleGroup: multiple toggles each item on its own (aria-pressed): bold, italic. single keeps one at most on (radio semantics): alignment."
+    },
+    "value": {
+      "type": "string",
+      "description": "ToolbarToggleGroup (a string, or a list for multiple) with onValueChange; ToolbarToggleItem: its value."
+    }
+  },
+  "states": [
+    "on",
+    "off",
+    "open",
+    "closed",
+    "data-orientation",
+    "data-overflowing",
+    "data-overflowed",
+    "data-measuring",
+    "data-wrap"
+  ],
+  "a11y": {
+    "role": "toolbar with a name and aria-orientation. Groups are role group with a name; toggle items are buttons with aria-pressed (multiple) or radio with aria-checked (single). The overflow trigger is a menu button.",
+    "focus": "One tab stop: the last focused item, else the first. Arrow keys move between items, groups included. Hidden (overflowed) items cannot take focus and are skipped.",
+    "keys": {
+      "Tab": "Moves focus into the toolbar, to one item",
+      "Shift+Tab": "Moves focus out of the toolbar",
+      "ArrowRight": "Moves to the next item. In right to left layouts this is ArrowLeft. Wraps at the end",
+      "ArrowLeft": "Moves to the previous item. In right to left layouts this is ArrowRight",
+      "ArrowDown, ArrowUp": "In a vertical toolbar, move to the next and the previous item",
+      "Home": "Moves to the first item",
+      "End": "Moves to the last item, the More tools trigger when it shows",
+      "Enter, Space": "Runs the focused item, toggles a toggle item, or opens the More tools menu"
+    },
+    "announce": "The toolbar is read with its name when focus enters. Each item reads its name, its pressed state and whether it is disabled. The More tools trigger reads as a menu button.",
+    "notes": [
+      "Icon only items name their action through label (aria-label). A Tooltip with the same words belongs on each one once Tooltip (1.6.6) is merged; until then there is no visible hint, and no native title attribute.",
+      "Disabled items use aria-disabled and stay in the arrow key order, so a keyboard user learns they exist.",
+      "A toggle item that is on is drawn filled; in forced colors a Highlight frame marks it, and aria-pressed carries it for assistive tech.",
+      "Overflow keeps the page from scrolling sideways (WCAG 1.4.10): the toolbar is never wider than its container.",
+      "Every item is a system Button, IconButton or Link: 24px targets at xs, 44px at lg (WCAG 2.5.8).",
+      "Contract keys: arrows, Home and End are checked by hints; Enter and Space run on the items, which are Buttons with their own contract.",
+      "open and closed are the data-state of the More tools trigger, from DropdownMenu.",
+      "Items of a single ToolbarToggleGroup (radio semantics) appear in the More tools menu as checkbox items, since the menu has no radio entry built from the DOM yet.",
+      "On a disabled item the hover fill still shows: Button draws hover from its own data-disabled, which the toolbar cannot set without trapping the arrow keys."
+    ]
+  },
+  "content": {
+    "en": {
+      "toolbar": "Name the context with a noun phrase: Text formatting, Canvas tools.",
+      "items": "Verb plus noun: Add frame, Zoom in. Toggle items name the option: Bold, Show grid.",
+      "more": "More tools, or More text tools when two toolbars share a page."
+    },
+    "ar": {
+      "items": "Noun form labels, white Saudi dialect, no diacritics: إضافة إطار، تكبير، حذف الإطار.",
+      "more": "أدوات أكثر."
+    }
+  },
+  "tokens": [
+    "color.bg.surface-2",
+    "color.border.subtle",
+    "color.border.default",
+    "color.bg.overlay-20",
+    "color.bg.overlay-30",
+    "color.text.bright",
+    "radius.panel",
+    "radius.card",
+    "space.4xs",
+    "space.3xs",
+    "space.2xs",
+    "border.width.default",
+    "color.text.muted",
+    "color.bg.overlay-40",
+    "opacity.disabled"
+  ],
+  "motion": "menu-scale",
+  "frameworks": {
+    "react": {
+      "status": "ready",
+      "behavior": "radix:Toolbar",
+      "example": "Toolbar.demo.tsx",
+      "note": "Items are system Button, IconButton and Link roots through Radix asChild. Toggle groups use Radix ToolbarToggleGroup until ToggleButton and ToggleGroup (batch 1) are merged; then ToolbarToggleItem should render a ToggleButton. The overflow menu is the system DropdownMenu, which plays menu-scale."
+    },
+    "angular": {
+      "status": "planned",
+      "behavior": "cdk:a11y (FocusKeyManager) and cdk:menu for the overflow"
+    },
+    "native": {
+      "status": "planned",
+      "behavior": "rn-primitives:toolbar",
+      "note": "A native toolbar is a row of Pressables with accessibilityRole toolbar; overflow becomes a menu sheet."
+    }
+  },
+  "styles": {
+    "studio": "A surface-2 bar with a subtle hairline and the panel radius, ghost items, a 1px separator.",
+    "desk": "The same parts on Desk tokens; items take the Desk Button look (pills).",
+    "neutral": "Token driven; applies once the Neutral pack is merged.",
+    "liquid": "Planned: a glass bar."
+  },
+  "mistakes": [
+    {
+      "wrong": "A toolbar with no name",
+      "right": "aria-label naming the context: Text formatting"
+    },
+    {
+      "wrong": "Every item a separate tab stop",
+      "right": "Toolbar: one tab stop and the arrow keys"
+    },
+    {
+      "wrong": "A row of tools that pushes the page wider on a phone",
+      "right": "overflow menu, the default: the rest moves into More tools"
+    },
+    {
+      "wrong": "Pressed state shown only by a color change",
+      "right": "ToolbarToggleItem: aria-pressed and the filled on state"
+    },
+    {
+      "wrong": "Hiding a tool that cannot run now",
+      "right": "disabled: it stays in the row with aria-disabled"
+    },
+    {
+      "wrong": "An icon only item named More",
+      "right": "Name the action: Open review settings"
+    }
+  ],
+  "contract": {
+    "optionalParts": [
+      "more"
+    ],
+    "keys": {
+      "ArrowRight": {
+        "focus": "[data-part='item']",
+        "case": "one",
+        "expect": "focus-moves"
+      },
+      "ArrowLeft": {
+        "focus": "[data-part='item']",
+        "case": "one",
+        "expect": "focus-moves"
+      },
+      "ArrowDown": {
+        "focus": "[data-orientation='vertical'] [data-part='item']",
+        "case": "variants",
+        "expect": "focus-moves"
+      },
+      "ArrowUp": {
+        "focus": "[data-orientation='vertical'] [data-part='item']",
+        "case": "variants",
+        "expect": "focus-moves"
+      },
+      "Home": {
+        "focus": "[data-part='item'] + [data-part='item']",
+        "case": "one",
+        "expect": "focus-moves"
+      },
+      "End": {
+        "focus": "[data-part='item']",
+        "case": "one",
+        "expect": "focus-moves"
+      }
+    }
+  },
+  "since": "0.1.0"
+}

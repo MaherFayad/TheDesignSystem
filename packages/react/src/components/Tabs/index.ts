@@ -1,0 +1,15 @@
+export {
+  Tabs,
+  TabsList,
+  TabsPanel,
+  TabsTrigger,
+  type TabsActivationMode,
+  type TabsEmphasis,
+  type TabsListProps,
+  type TabsOrientation,
+  type TabsPanelProps,
+  type TabsProps,
+  type TabsSize,
+  type TabsSlotContent,
+  type TabsTriggerProps,
+} from './Tabs';

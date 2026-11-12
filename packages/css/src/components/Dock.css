@@ -1,0 +1,259 @@
+/*
+ * Dock: a row of app shortcuts. The base draws a plain row of icon tiles;
+ * the Desk recipe (packages/styles/desk/recipes/Dock.css) makes it glass and
+ * adds the magnify effect. Follows "One convention for component CSS and
+ * props" in docs/contracts/anatomy.md.
+ *
+ * Private properties on the root (recipes override these):
+ *
+ *   --_dock-gap, -padding, -radius, -bg, -border-color, -shadow, -backdrop
+ *   --_dock-tile                 the tile size of an item
+ *   --_dock-tile-radius, -tile-bg, -tile-bg-hover, -tile-bg-active
+ *   --_dock-label-bg, -label-fg  the name drawn on hover and focus
+ *   --_dock-indicator            the open dot color
+ *   --_dock-ring                 the focus ring, on the tile
+ *   --_dock-scale, -neighbor-scale, -lift   the hover transform of the tile and its neighbors
+ *                                (1, 1 and 0 here; Desk magnifies)
+ *
+ * Items swap their own --_dock-item-* properties for the states (the state
+ * is on the item). Only the label's opacity and the tile's transform move.
+ */
+@layer ds.base {
+  [data-ds='dock'] {
+    --_dock-gap: var(--ds-space-2xs);
+    --_dock-padding: var(--ds-space-2xs);
+    --_dock-radius: var(--ds-radius-card);
+    --_dock-bg: var(--ds-color-bg-surface-2);
+    --_dock-border-color: var(--ds-color-border-subtle);
+    --_dock-shadow: none;
+    --_dock-backdrop: none;
+    --_dock-tile: var(--ds-size-control-lg);
+    --_dock-tile-radius: var(--ds-radius-panel);
+    --_dock-tile-bg: var(--ds-color-bg-overlay-10);
+    --_dock-tile-bg-hover: var(--ds-color-bg-overlay-20);
+    --_dock-tile-bg-active: var(--ds-color-bg-overlay-20);
+    --_dock-label-bg: var(--ds-color-bg-surface-4);
+    --_dock-label-fg: var(--ds-color-text-default);
+    --_dock-indicator: var(--ds-color-text-default);
+    --_dock-ring: var(--ds-focus-shadow-ring);
+    --_dock-scale: 1;
+    --_dock-neighbor-scale: 1;
+    --_dock-lift: 0;
+
+    display: inline-flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    justify-content: center;
+    gap: var(--_dock-gap);
+    box-sizing: border-box;
+    max-inline-size: 100%;
+    padding: var(--_dock-padding);
+    padding-block-end: var(--ds-space-xs);
+    border: var(--ds-border-width-default) solid var(--_dock-border-color);
+    border-radius: var(--_dock-radius);
+    background-color: var(--_dock-bg);
+    box-shadow: var(--_dock-shadow);
+    -webkit-backdrop-filter: var(--_dock-backdrop);
+    backdrop-filter: var(--_dock-backdrop);
+    font-family: var(--ds-font-family-sans);
+  }
+
+  [data-ds='dock'][data-size='lg'] {
+    --_dock-tile: calc(var(--ds-size-control-lg) * 1.25);
+    --_dock-gap: var(--ds-space-s);
+    --_dock-padding: var(--ds-space-s);
+  }
+
+  /* ------------------------------------------------------------ item */
+
+  [data-ds='dock'] > [data-part='item'] {
+    --_dock-item-tile-bg: var(--_dock-tile-bg);
+    --_dock-item-tile-ring: none;
+    --_dock-item-label-opacity: 0;
+    --_dock-item-label-max: 0;
+    --_dock-item-label-pad: 0;
+    --_dock-item-transform: none;
+
+    position: relative;
+    display: flex;
+    flex: none;
+    flex-direction: column;
+    align-items: center;
+    color: var(--ds-color-text-default);
+    text-decoration-line: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  [data-ds='dock'] > [data-part='item'] > [data-part='item-icon'] {
+    display: grid;
+    place-items: center;
+    box-sizing: border-box;
+    inline-size: var(--_dock-tile);
+    block-size: var(--_dock-tile);
+    overflow: hidden;
+    border-radius: var(--_dock-tile-radius);
+    background-color: var(--_dock-item-tile-bg);
+    box-shadow: var(--_dock-item-tile-ring);
+    transform: var(--_dock-item-transform);
+    transform-origin: 50% 100%;
+    transition: transform var(--ds-duration-base) var(--ds-ease-emphasized);
+  }
+
+  /* An app image fills its tile. */
+  [data-ds='dock'] > [data-part='item'] > [data-part='item-icon'] > :is(img, svg:not([data-ds='icon'])) {
+    inline-size: 100%;
+    block-size: 100%;
+    object-fit: cover;
+  }
+
+  /*
+   * The name: drawn above the tile on hover and focus, always in the link
+   * text. At rest it has no width (and no padding), so a long name never
+   * makes the page scroll sideways; it is still read.
+   */
+  [data-ds='dock'] > [data-part='item'] > [data-part='item-label'] {
+    position: absolute;
+    inset-block-end: calc(100% + var(--ds-space-xs));
+    inset-inline-start: 50%;
+    box-sizing: border-box;
+    max-inline-size: var(--_dock-item-label-max);
+    overflow: hidden;
+    padding-block: var(--ds-space-4xs);
+    padding-inline: var(--_dock-item-label-pad);
+    border-radius: var(--ds-radius-sm);
+    background-color: var(--_dock-label-bg);
+    box-shadow: var(--ds-elevation-tooltip);
+    color: var(--_dock-label-fg);
+    font-size: var(--ds-font-size-xs);
+    font-weight: var(--ds-font-weight-medium);
+    line-height: var(--ds-font-leading-snug);
+    inline-size: max-content;
+    text-align: center;
+    opacity: var(--_dock-item-label-opacity);
+    transform: translateX(-50%);
+    pointer-events: none;
+    transition: opacity var(--ds-duration-fast) var(--ds-ease-default);
+  }
+
+  /* Arabic small text is one step up (PLAN.md section 12). */
+  [data-ds='dock'] > [data-part='item'] > [data-part='item-label']:lang(ar) {
+    font-size: var(--ds-font-size-s);
+  }
+
+  [data-ds='dock'] > [data-part='item']:dir(rtl) > [data-part='item-label'] {
+    transform: translateX(50%);
+  }
+
+  /* Read with the name, not drawn. */
+  [data-ds='dock'] [data-part='item-label'] > [data-part='item-status'] {
+    position: absolute;
+    inline-size: var(--ds-border-width-default);
+    block-size: var(--ds-border-width-default);
+    margin: calc(-1 * var(--ds-border-width-default));
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  /* The open dot, under the tile. */
+  [data-ds='dock'] > [data-part='item'] > [data-part='item-indicator'] {
+    position: absolute;
+    inset-block-start: calc(100% + var(--ds-space-4xs));
+    inline-size: var(--ds-space-3xs);
+    block-size: var(--ds-space-3xs);
+    border-radius: var(--ds-radius-pill);
+    background-color: var(--_dock-indicator);
+  }
+
+  [data-ds='dock'] > [data-part='separator'] {
+    flex: none;
+    align-self: stretch;
+    inline-size: var(--ds-border-width-default);
+    margin-block: var(--ds-space-xs);
+    margin-inline: var(--ds-space-4xs);
+    background-color: var(--ds-color-border-default);
+  }
+
+  /* ------------------------------------------------------------ states */
+
+  /* Hover only where a pointer can hover, so a tap does not leave the state stuck. */
+  @media (hover: hover) {
+    [data-ds='dock'] > [data-part='item']:hover {
+      --_dock-item-tile-bg: var(--_dock-tile-bg-hover);
+      --_dock-item-label-opacity: 1;
+      --_dock-item-label-max: var(--ds-tooltip-width-max);
+      --_dock-item-label-pad: var(--ds-space-s);
+      --_dock-item-transform: translateY(calc(-1 * var(--_dock-lift))) scale(var(--_dock-scale));
+    }
+
+    /* The neighbors of the hovered tile (Desk sets the scale above 1). */
+    [data-ds='dock'] > [data-part='item']:has(+ [data-part='item']:hover),
+    [data-ds='dock'] > [data-part='item']:hover + [data-part='item'] {
+      --_dock-item-transform: translateY(calc(-0.5 * var(--_dock-lift))) scale(var(--_dock-neighbor-scale));
+    }
+  }
+
+  /* The current app: a ring on the tile and aria-current, never color alone. */
+  [data-ds='dock'] > [data-part='item'][data-active] {
+    --_dock-item-tile-bg: var(--_dock-tile-bg-active);
+    --_dock-item-tile-ring: inset 0 0 0 var(--ds-border-width-strong) var(--ds-color-border-strong);
+  }
+
+  /* The transparent outline is set only here, so forced colors mode draws it on focus and nowhere else. */
+  [data-ds='dock'] > [data-part='item']:focus-visible {
+    --_dock-item-label-opacity: 1;
+    --_dock-item-label-max: var(--ds-tooltip-width-max);
+    --_dock-item-label-pad: var(--ds-space-s);
+    --_dock-item-tile-ring: var(--_dock-ring);
+    --_dock-item-transform: translateY(calc(-1 * var(--_dock-lift))) scale(var(--_dock-scale));
+
+    outline: none;
+  }
+
+  [data-ds='dock'] > [data-part='item']:focus-visible > [data-part='item-icon'] {
+    outline: var(--ds-border-width-strong) solid transparent;
+  }
+
+  /* Escape hides the drawn name until focus or the pointer leaves (WCAG 1.4.13); it is still read. */
+  [data-ds='dock'] > [data-part='item'][data-label-hidden] {
+    --_dock-item-label-opacity: 0;
+    --_dock-item-label-max: 0;
+    --_dock-item-label-pad: 0;
+  }
+
+  /* ------------------------------------------------------------ reduced motion, forced colors */
+
+  /* No magnify: the transform values collapse on the root, so every state rule gets scale 1 and no lift. */
+  @media (prefers-reduced-motion: reduce) {
+    [data-ds='dock'] {
+      --_dock-scale: 1;
+      --_dock-neighbor-scale: 1;
+      --_dock-lift: 0;
+    }
+
+    [data-ds='dock'] > [data-part='item'] > :is([data-part='item-icon'], [data-part='item-label']) {
+      transition: none;
+    }
+  }
+
+  @media (forced-colors: active) {
+    [data-ds='dock'] > [data-part='item'][data-active] > [data-part='item-icon'] {
+      outline: var(--ds-border-width-strong) solid Highlight;
+    }
+
+    /* Focus must differ from the active frame: a dashed, offset outline. */
+    [data-ds='dock'] > [data-part='item']:focus-visible > [data-part='item-icon'] {
+      outline: var(--ds-border-width-strong) dashed CanvasText;
+      outline-offset: var(--ds-border-width-strong);
+    }
+
+    [data-ds='dock'] > [data-part='item'] > [data-part='item-indicator'] {
+      background-color: CanvasText;
+      forced-color-adjust: none;
+    }
+
+    [data-ds='dock'] > [data-part='item'] > [data-part='item-label'] {
+      border: var(--ds-border-width-default) solid CanvasText;
+    }
+  }
+}
