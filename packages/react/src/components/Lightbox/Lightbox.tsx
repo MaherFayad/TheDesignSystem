@@ -168,6 +168,18 @@ export interface LightboxProps {
   rootProps?: Omit<ComponentProps<'div'>, 'title' | 'children'>;
 }
 
+/**
+ * Whether a mouse event happened over the image. Pointer capture on the stage
+ * can retarget the click and the double click to the stage itself, so the
+ * event target alone is not enough: the point under the pointer decides.
+ */
+function isOnImage(event: MouseEvent<HTMLElement>, image: HTMLImageElement | null): boolean {
+  if (!image) return false;
+  if (event.target instanceof Node && image.contains(event.target)) return true;
+  const hit = event.currentTarget.ownerDocument.elementFromPoint?.(event.clientX, event.clientY);
+  return hit != null && image.contains(hit);
+}
+
 /** Development only: says when an image has no alt text. */
 function warnAlt(images: readonly LightboxImage[]): void {
   if (process.env.NODE_ENV === 'production') return;
@@ -345,6 +357,8 @@ export function Lightbox({
     event.currentTarget.setPointerCapture?.(event.pointerId);
   };
   const onStagePointerUp = (event: PointerEvent<HTMLDivElement>) => {
+    // Let go of the capture, so the click and the double click that follow go to the image under the pointer.
+    if (event.currentTarget.hasPointerCapture?.(event.pointerId)) event.currentTarget.releasePointerCapture?.(event.pointerId);
     const start = swipe.current;
     swipe.current = null;
     if (!start || start.id !== event.pointerId) return;
@@ -407,7 +421,7 @@ export function Lightbox({
             }}
             // A double click toggles the zoom, as photo viewers do. The zoom button is its key path.
             onDoubleClick={(event: MouseEvent<HTMLDivElement>) => {
-              if (event.target === imageRef.current && zoomable) zoomTo(!zoomed);
+              if (zoomable && isOnImage(event, imageRef.current)) zoomTo(!zoomed);
             }}
           >
             <img

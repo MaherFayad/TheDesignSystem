@@ -39,7 +39,7 @@
     "status"
   ],
   "parts": {
-    "LightboxTrigger": "trigger (outside the root)",
+    "LightboxTrigger": "trigger (outside the root). One child element, a system Button (always asChild), with index: the image it opens. Focus returns to the trigger that opened the viewer.",
     "IconButton": "zoom, close, previous, next",
     "Spinner": "spinner"
   },
@@ -123,10 +123,6 @@
     "rootProps": {
       "type": "object",
       "description": "Props for the root layer. className and style go to the root too."
-    },
-    "LightboxTrigger": {
-      "type": "node",
-      "description": "One child element, a system Button (always asChild), with index: the image it opens. Focus returns to the trigger that opened the viewer."
     }
   },
   "states": [
@@ -155,6 +151,8 @@
       "Every image needs alt text that says what it shows, never the file name. A caption does not replace it.",
       "A swipe on the image moves to the next or previous image in reading order. The previous and next buttons and the arrow keys are the key path (WCAG 2.5.7).",
       "A double click on the image toggles the zoom; the zoom button and + and - are its key path.",
+      "While zoomed, the arrows pan the image and do not move to another image. Press - first, then an arrow, to move on. Escape closes the viewer at any zoom.",
+      "Previous and next have a solid surface fill, so the chevrons read on any image where the buttons sit over it (on phones, and over a zoomed image).",
       "Previous and next stay focusable when there is no image that way (aria-disabled), so focus never drops.",
       "The neighbours of the image on show load ahead.",
       "Images sit on the solid page color of the scheme, never on glass, in every style.",
@@ -176,6 +174,10 @@
   "tokens": [
     "color.bg.body",
     "color.bg.scrim",
+    "color.bg.surface",
+    "color.bg.surface-2",
+    "color.bg.surface-3",
+    "color.border.default",
     "color.text.default",
     "color.text.muted",
     "space.s",
@@ -215,7 +217,7 @@
     }
   },
   "styles": {
-    "studio": "No recipe: the base CSS applies. Full screen on the page color: black in dark, the light page gray in light. The counter sits at the inline start of the toolbar, zoom and close at its end, previous and next as 44px IconButtons at the middle of each side, the caption centered under the image. The viewer fades in from 98%.",
+    "studio": "No recipe: the base CSS applies. Full screen on the page color: black in dark, the light page gray in light. The counter sits at the inline start of the toolbar, zoom and close at its end, previous and next as 44px IconButtons on a solid surface fill at the middle of each side, the caption centered under the image. The viewer fades in from 98%.",
     "desk": "No recipe: the base CSS applies on the Desk page color. No glass: images never sit on glass.",
     "neutral": "Tokens only: the Neutral page color and controls apply with no recipe.",
     "liquid": "Planned: the toolbar may float on glass; the image stays on a solid surface."
