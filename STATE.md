@@ -37,6 +37,40 @@ No adb. No iOS build.
 | 0.19 | Matrix | ds-qa | all | done | 6a0444d |
 | 0.20 | Gate 0 report | lead | all | done | see git log |
 
+### Wave 1 (orders in docs/plan/wave-1.md and wave-1-batch-N.md)
+| Id | Title | Owner | Framework | Status | Commit |
+| --- | --- | --- | --- | --- | --- |
+| 1.0.a | Lint gate changes | ds-qa | all | running | |
+| 1.0.b | Token adoption in wave 0 components | ds-component | react | open | |
+| 1.0.c1 | Shared theme and dialog focus, React | ds-component | react | running | |
+| 1.0.c2 | Shared logic in Angular | ds-angular | angular | open | |
+| 1.0.c3 | Shared logic in native | ds-native | native | open | |
+| 1.0.d | Package fixes from the consumers report | ds-docs | all | running | |
+| 1.0.e | Contract `moves` expectation, Window key hints | ds-qa | all | open | |
+| 1.0.f | Manifest gaps and visual findings | ds-component | react | open | |
+| 1.0.g | Icons for wave 1 | ds-style | all | running | |
+| 1.1 | Batch 1 actions (11) | ds-component | react | open | |
+| 1.2 | Batch 2 text inputs (12) | ds-component | react | open | |
+| 1.3 | Batch 3 selection (14) | ds-component | react | open | |
+| 1.4 | Batch 4 forms (6) | ds-component | react | open | |
+| 1.5 | Batch 5 feedback (12) | ds-component | react | open | |
+| 1.6 | Batch 6 overlays (13) | ds-component | react | open | |
+| 1.7 | Batch 7 navigation (13) | ds-component | react | open | |
+| 1.8 | Batch 8 layout (12) | ds-component | react | open | |
+| 1.9 | Batch 9 data display A (12) | ds-component | react | open | |
+| A1 to A5 | Angular batches 1 to 5 | ds-angular | angular | open | |
+| 1.10 | Neutral style | ds-style | all | open | |
+| 1.11 | Motion catalog | ds-style | all | open | |
+| 1.12 | Checker | ds-qa | all | open | |
+| 1.13 | Registry | ds-docs | react | open | |
+| 1.14 | CLI | ds-docs | all | open | |
+| 1.15 | Docs site | ds-docs | all | open | |
+| 1.16 | Agent files | ds-docs | all | open | |
+| 1.17 | Full matrix | ds-qa | all | open | |
+| 1.18 | Consumer apps on wave 1 components | ds-docs | react | open | |
+| 1.19 | Adoption guides | ds-docs | all | open | |
+| 1.20 | Gate 1 report | lead | all | open | |
+
 ## Coverage
 | Family | React | Angular | Native |
 | --- | --- | --- | --- |
@@ -63,6 +97,11 @@ Nothing.
 3. Liquid and Button on a real iPhone (HUMAN GATE). This container and the
    owner's Windows machine cannot build iOS. Steps to open the Expo gallery
    in Expo Go: `docs/reports/ios-check.md`.
+4. Arabic docs register. The docs site ships in English and Arabic, and the
+   content guide describes two registers. Which one do the Arabic docs pages
+   use: Gulf modern standard Arabic or white Saudi dialect? The lead will
+   use Gulf modern standard Arabic for docs prose and white Saudi dialect
+   for demo copy unless told otherwise.
 
 ## Owner answers
 1. 2026-11-12: pushing. The owner approved pushing the session branch
