@@ -40,7 +40,7 @@ No adb. No iOS build.
 ### Wave 1 (orders in docs/plan/wave-1.md and wave-1-batch-N.md)
 | Id | Title | Owner | Framework | Status | Commit |
 | --- | --- | --- | --- | --- | --- |
-| 1.0.a | Lint gate changes | ds-qa | all | running | |
+| 1.0.a | Lint gate changes | ds-qa | all | done | e6d3b58 |
 | 1.0.b | Token adoption in wave 0 components | ds-component | react | open | |
 | 1.0.c1 | Shared theme and dialog focus, React | ds-component | react | running | |
 | 1.0.c2 | Shared logic in Angular | ds-angular | angular | open | |
