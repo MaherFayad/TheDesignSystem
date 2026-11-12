@@ -130,8 +130,8 @@ async function recordOne(browser, row) {
 function sheet(rec) {
   const dir = path.join(TMP, style, 'frames', rec.id);
   fs.mkdirSync(dir, { recursive: true });
-  // One row per mark after the hover: the first press, the second press, the keyboard.
-  const marks = rec.marks.slice(1, 4);
+  // One row per mark: the hover, the first press, the second press, the keyboard.
+  const marks = rec.marks.slice(0, 4);
   const rows = [];
   marks.forEach((m, r) => {
     for (let k = 0; k < FRAMES; k++) {
@@ -173,6 +173,17 @@ function stitch(family, recs) {
 }
 
 (async () => {
+  // Sheets only: rebuild the sheets of a finished run from its log
+  // (SHEETS_FROM=<log of this script>), with the clips still in RECORD_TMP.
+  if (process.env.SHEETS_FROM) {
+    for (const line of fs.readFileSync(process.env.SHEETS_FROM, 'utf8').split('\n')) {
+      if (!line.startsWith('{"id"')) continue;
+      const rec = JSON.parse(line);
+      rec.file = path.join(TMP, style, 'raw', `${rec.id}.webm`);
+      if (fs.existsSync(rec.file)) sheet(rec);
+    }
+    return;
+  }
   const browser = await chromium.launch();
   let rows = await listInteractions(browser);
   if (onlyFamily) rows = rows.filter((r) => r.family === onlyFamily);
