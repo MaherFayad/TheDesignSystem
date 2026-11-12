@@ -2,6 +2,7 @@ import { createRef, useState } from 'react';
 import { fireEvent, render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 import { Field } from '../Field/Field';
+import { IconButton } from '../IconButton/IconButton';
 import SearchFieldDemo from './SearchField.demo';
 import { SearchField } from './index';
 
@@ -96,10 +97,10 @@ describe('SearchField', () => {
   });
 
   it('keeps the end content while loading, after the spinner', () => {
-    const { container } = render(<SearchField aria-label="Search" loading end={<button type="button">Filter</button>} />);
+    const { container } = render(<SearchField aria-label="Search" loading end={<IconButton icon="filter" label="Filter" />} />);
     const end = container.querySelector('[data-part="end"]');
     expect(end?.children[0]?.getAttribute('data-part')).toBe('spinner');
-    expect(end?.textContent).toBe('Filter');
+    expect(end?.querySelector('[aria-label="Filter"]')).not.toBeNull();
   });
 
   it('ignores Enter and Escape that end an IME composition', () => {
