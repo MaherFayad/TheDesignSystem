@@ -410,7 +410,7 @@ export function FormWizard({
         mode={mode}
         size={size}
         orientation={orientation}
-        aria-label={stepsLabel}
+        {...(stepsLabel === undefined ? {} : { 'aria-label': stepsLabel })}
         onStepSelect={idle ? (i) => void go(i) : undefined}
       />
       <form
