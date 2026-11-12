@@ -3,6 +3,7 @@ import { Theme } from '../../theme';
 import { DemoCase, DemoGrid, DemoPage, sample } from '../../demo';
 import { Fieldset } from '../Fieldset/Fieldset';
 import { Form, FormSubmit } from '../Form/Form';
+import { Link } from '../Link/Link';
 import { ConsentField, type ConsentRecord } from './index';
 
 const privacy = '#privacy';
@@ -58,8 +59,8 @@ export default function ConsentFieldDemo() {
         </DemoGrid>
       </DemoCase>
 
-      <DemoCase id="empty" title="Purpose only" lang="en">
-        <ConsentField purpose="Send me a survey after each order." />
+      <DemoCase id="empty" title="Purpose and the details link only" lang="en">
+        <ConsentField purpose="Send me a survey after each order." detailsHref={privacy} />
       </DemoCase>
 
       <DemoCase id="one" title="One consent in a form" lang="en">
@@ -78,7 +79,18 @@ export default function ConsentFieldDemo() {
 
       <DemoCase id="too-many" title="A long settings list" lang="en">
         <div style={{ maxInlineSize: 'var(--ds-dialog-width-sm)' }}>
-          <Fieldset legend="Privacy settings" size="sm">
+          <Fieldset
+            legend="Privacy settings"
+            size="sm"
+            description={
+              <>
+                Each switch saves at once, and you can turn it off the same way.{' '}
+                <Link href={privacy}>
+                  Read how we use your data
+                </Link>
+              </>
+            }
+          >
             {purposes.map((p) => (
               <ConsentField key={p} size="sm" control="switch" purpose={p} />
             ))}
@@ -88,7 +100,7 @@ export default function ConsentFieldDemo() {
 
       <DemoCase id="long-text" title="Long purpose" lang="en">
         <ConsentField
-          purpose={`Share my order history, delivery address and phone number with the delivery partner, so they can plan delivery times and call me when the driver is near. ${sample.en.word}`}
+          purpose={`Share my full name, mobile number, delivery address, building and floor, order contents and delivery notes with Swift Route Logistics, the delivery partner for Riyadh, Jeddah, Dammam and Al Khobar, so they can deliver my orders. ${sample.en.word}`}
           detailsHref={privacy}
           detailsLabel="Read who the delivery partner is, what they keep and for how long"
           meta="You agreed to text version 2.1 on 3 November 2026 at 10:42 from this device. We keep this record for as long as your account is open, and you can withdraw at any time in Settings."
@@ -97,7 +109,7 @@ export default function ConsentFieldDemo() {
 
       <DemoCase id="long-arabic" title="نص عربي طويل" lang="ar">
         <ConsentField
-          purpose="أوافق على مشاركة سجل طلباتي وعنوان التوصيل ورقم جوالي مع شريك التوصيل، عشان يرتب مواعيد التوصيل ويتصل علي لما يقرب المندوب."
+          purpose="أوافق على مشاركة اسمي الكامل ورقم جوالي وعنوان التوصيل ورقم المبنى والدور ومحتوى الطلب وملاحظات التوصيل مع شركة المسار السريع للخدمات اللوجستية، شريك التوصيل في الرياض وجدة والدمام والخبر، عشان توصل طلباتي."
           detailsHref={privacy}
           meta="الإصدار 2.1، آخر تحديث 1 نوفمبر 2026. تقدر تلغي الموافقة متى ما تبي من الإعدادات."
         />
