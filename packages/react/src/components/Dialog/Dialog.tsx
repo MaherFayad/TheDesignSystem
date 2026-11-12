@@ -59,6 +59,10 @@
 // accessible name, stay on the visible text. A DialogTitle nested deeper is
 // not lifted and renders where it is.
 //
+// The shared internals (the themed portal, the root layer kept mounted until
+// the exit ends, the focus rule and return, Escape and the toasts above) live
+// in DialogBase.tsx, which AlertDialog, Drawer and Sheet reuse.
+//
 // The themed portal: as in Toaster.tsx, the portal starts with a Theme that
 // copies every axis of the Theme the Dialog is rendered in, so the tokens,
 // the language and the direction apply inside it, nested themes included.
@@ -75,7 +79,6 @@ import {
   isValidElement,
   use,
   useCallback,
-  useEffect,
   useLayoutEffect,
   useMemo,
   useRef,
@@ -84,26 +87,15 @@ import {
   type CSSProperties,
   type ReactElement,
   type ReactNode,
-  type Ref,
   type RefObject,
 } from 'react';
-import { createPortal } from 'react-dom';
 import { Dialog as RadixDialog } from 'radix-ui';
-import {
-  DIALOG_ACTION_SELECTOR,
-  captureFocusReturn,
-  dialogInitialFocus,
-  focusReturnTarget,
-  type FocusReturn,
-  type OverlaySize,
-  type Tone,
-} from '@the-system/shared';
-import { Theme } from '../../theme/Theme';
+import type { OverlaySize, Tone } from '@the-system/shared';
 import { useOptionalPart, useTheme } from '../../theme/hooks';
 import { IconButton } from '../IconButton';
-import { isInsideToaster } from '../Toast/isInsideToaster';
 import { TitleBar } from '../TitleBar';
 import { WindowControls } from '../WindowControls';
+import { DialogBase, assignRef } from './DialogBase';
 import { useControllable } from '../../internal/useControllable';
 
 /** Overlay sizes (the anatomy contract adds xl and 2xl for overlays). */
@@ -139,12 +131,6 @@ function useDialogContext(name: string): DialogContextValue {
 
 /** Where a DialogTitle renders: in place (the panel) or inside the Desk title bar. */
 const TitleSlotContext = createContext<'panel' | 'titlebar'>('panel');
-
-/** Sets a ref of any kind. */
-function assignRef<T>(ref: Ref<T> | undefined, value: T | null): void {
-  if (typeof ref === 'function') ref(value);
-  else if (ref) (ref as RefObject<T | null>).current = value;
-}
 
 // ------------------------------------------------------------------ Dialog
 
@@ -356,18 +342,6 @@ function flatten(children: ReactNode): ReactNode[] {
   );
 }
 
-/** Development only: says what a dialog is missing when it opens. */
-function warnInDev(panel: HTMLElement): void {
-  if (process.env.NODE_ENV === 'production') return;
-  const named =
-    panel.hasAttribute('aria-label') ||
-    panel.querySelector('[data-part="title"]:not(:empty), [data-dialog-title]:not(:empty)') !== null;
-  if (!named) console.warn('Dialog: opened with no title. Add a DialogTitle as a direct child of DialogContent, or the title prop.');
-  const footer = Array.from(panel.querySelectorAll('[data-part="footer"]')).find((el) => el.closest('[data-part="panel"]') === panel);
-  const actions = footer ? footer.querySelectorAll(DIALOG_ACTION_SELECTOR).length : 0;
-  if (actions > 3) console.warn(`Dialog: the footer holds ${actions} actions. Keep it to three at most.`);
-}
-
 /**
  * The portal, the backdrop and the panel. The root (`data-ds="dialog"`)
  * carries data-size, data-tone and data-state. `ref` and the Radix Content
@@ -391,6 +365,7 @@ export function DialogContent({
   onPointerDownOutside,
   onInteractOutside,
   onFocusOutside,
+  onKeyDown,
   ...rest
 }: DialogContentProps) {
   const ctx = useDialogContext('DialogContent');
@@ -398,48 +373,6 @@ export function DialogContent({
   const words = labelsFor(theme.lang);
   const titlebarOn = useOptionalPart('dialog', 'titlebar');
   const controlsOn = useOptionalPart('dialog', 'controls');
-  const [body, setBody] = useState<HTMLElement | null>(null);
-
-  // The portal needs the document, so it renders after the first commit (safe on the server).
-  useEffect(() => setBody(document.body), []);
-
-  // The root stays mounted while open, and until the panel and the backdrop have played their exit.
-  const [mounted, setMounted] = useState(ctx.open);
-  if (ctx.open && !mounted) setMounted(true);
-  const openRef = useRef(ctx.open);
-  openRef.current = ctx.open;
-  const alive = useRef({ panel: false, backdrop: false });
-  const settle = useCallback(() => {
-    if (!openRef.current && !alive.current.panel && !alive.current.backdrop) setMounted(false);
-  }, []);
-
-  const panelRef = useRef<HTMLDivElement | null>(null);
-  // Where focus goes back (packages/shared dialog-focus.ts), captured on open.
-  const returnTo = useRef<{ active: FocusReturn; trigger: FocusReturn } | null>(null);
-  const setPanelRef = useCallback(
-    (node: HTMLDivElement | null) => {
-      panelRef.current = node;
-      alive.current.panel = node !== null;
-      if (node && !returnTo.current) {
-        returnTo.current = {
-          active: captureFocusReturn(node.ownerDocument.activeElement),
-          trigger: captureFocusReturn(ctx.triggerRef.current),
-        };
-      }
-      assignRef(ref, node);
-      if (!node) settle();
-    },
-    [ref, settle, ctx.triggerRef],
-  );
-  const setBackdropRef = useCallback(
-    (node: HTMLDivElement | null) => {
-      alive.current.backdrop = node !== null;
-      if (!node) settle();
-    },
-    [settle],
-  );
-
-  if (!body || !mounted) return null;
 
   // Lift a DialogTitle that is a direct child, so it renders once at the top.
   let titleNode: ReactNode = title !== undefined && title !== null ? <DialogTitle>{title}</DialogTitle> : null;
@@ -486,95 +419,30 @@ export function DialogContent({
     </>
   );
 
-  return createPortal(
-    <Theme
-      style={theme.style}
-      scheme={theme.scheme}
-      density={theme.density}
-      contrast={theme.contrast}
-      platform={theme.platform}
-      glass={theme.glass}
-      dir={theme.dir}
-      lang={theme.lang}
-      data-dialog-layer=""
+  return (
+    <DialogBase
+      state={ctx}
+      kind="dialog"
+      rootAttributes={{ 'data-size': ctx.size, 'data-tone': ctx.tone }}
+      focusTone={ctx.tone}
+      Backdrop={RadixDialog.Overlay}
+      Panel={RadixDialog.Content}
+      panelProps={rest}
+      panelRef={ref}
+      className={className}
+      style={style}
+      rootProps={rootProps}
+      onOpenAutoFocus={onOpenAutoFocus}
+      onCloseAutoFocus={onCloseAutoFocus}
+      onEscapeKeyDown={onEscapeKeyDown}
+      onPointerDownOutside={onPointerDownOutside}
+      onInteractOutside={onInteractOutside}
+      onFocusOutside={onFocusOutside}
+      onKeyDown={onKeyDown}
     >
-      <div
-        {...rootProps}
-        className={className}
-        style={style}
-        data-ds="dialog"
-        data-size={ctx.size}
-        data-tone={ctx.tone}
-        data-state={ctx.open ? 'open' : 'closed'}
-      >
-        <RadixDialog.Overlay ref={setBackdropRef} data-part="backdrop" />
-        <RadixDialog.Content
-          {...rest}
-          ref={setPanelRef}
-          data-part="panel"
-          onOpenAutoFocus={(event) => {
-            onOpenAutoFocus?.(event);
-            if (panelRef.current) warnInDev(panelRef.current);
-            if (event.defaultPrevented || !panelRef.current) return;
-            const target = dialogInitialFocus(panelRef.current, ctx.tone);
-            if (!target) return;
-            event.preventDefault();
-            target.focus();
-          }}
-          onCloseAutoFocus={(event) => {
-            onCloseAutoFocus?.(event);
-            if (event.defaultPrevented) return;
-            // Back to the trigger, else to what had focus before the dialog
-            // opened. When that is gone: its nearest connected focusable
-            // ancestor, else the first tab stop of main, else the body.
-            event.preventDefault();
-            const trigger = ctx.triggerRef.current;
-            const memo = returnTo.current;
-            returnTo.current = null;
-            const target = trigger?.isConnected
-              ? trigger
-              : memo
-                ? focusReturnTarget(memo.active.target ? memo.active : memo.trigger, document)
-                : null;
-            if (target?.isConnected) target.focus();
-          }}
-          onEscapeKeyDown={(event) => {
-            onEscapeKeyDown?.(event);
-            if (!ctx.dismissible) event.preventDefault();
-          }}
-          onKeyDown={(event) => {
-            rest.onKeyDown?.(event);
-            // Radix gives Escape to the top layer only. While a toast shows above
-            // the dialog, the toast is that layer and the dialog never hears the
-            // key. An Escape from inside the dialog that no layer took (none
-            // prevented it) still closes the dialog. When the dialog is the top
-            // layer, Radix has already handled and prevented it.
-            if (event.key !== 'Escape' || event.defaultPrevented || event.nativeEvent.defaultPrevented) return;
-            if (!ctx.dismissible) return;
-            if (!panelRef.current?.contains(event.target as Node)) return;
-            event.preventDefault();
-            ctx.setOpen(false);
-          }}
-          // Working with a toast above the dialog never closes it, and focus may move into the toasts.
-          onPointerDownOutside={(event) => {
-            onPointerDownOutside?.(event);
-            if (!ctx.dismissible || isInsideToaster(event.target)) event.preventDefault();
-          }}
-          onInteractOutside={(event) => {
-            onInteractOutside?.(event);
-            if (!ctx.dismissible || isInsideToaster(event.target)) event.preventDefault();
-          }}
-          onFocusOutside={(event) => {
-            onFocusOutside?.(event);
-            if (isInsideToaster(event.target)) event.preventDefault();
-          }}
-        >
-          {header}
-          {descriptionNode}
-          {others}
-        </RadixDialog.Content>
-      </div>
-    </Theme>,
-    body,
+      {header}
+      {descriptionNode}
+      {others}
+    </DialogBase>
   );
 }

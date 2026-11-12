@@ -1,0 +1,252 @@
+{
+  "name": "Sheet",
+  "kind": "component",
+  "family": "overlays",
+  "summary": "A modal panel that rises from the bottom of the screen, for phone layouts and quick tasks. A drag handle closes it, with the close control and Escape as the key path.",
+  "useWhen": [
+    "A quick task on a phone layout: share, pick an option, a short form",
+    "More options for an item where a menu would be too cramped on touch",
+    "Content the person checks and dismisses, close to the thumb"
+  ],
+  "avoidWhen": [
+    "A desktop side panel for filters or details",
+    "A question about an action that cannot be undone",
+    "A short decision on a wide screen",
+    "Content that needs the full page"
+  ],
+  "insteadUse": {
+    "A desktop side panel": "Drawer",
+    "Cannot be undone": "AlertDialog",
+    "A decision on a wide screen": "Dialog",
+    "Full page content": "a route of its own"
+  },
+  "anatomy": [
+    "root",
+    "backdrop",
+    "panel",
+    "handle",
+    "header",
+    "title",
+    "description",
+    "body",
+    "footer",
+    "close"
+  ],
+  "parts": {
+    "SheetContent": "panel",
+    "SheetTitle": "title",
+    "SheetDescription": "description",
+    "SheetBody": "body",
+    "SheetFooter": "footer"
+  },
+  "slots": {
+    "title": {
+      "accepts": "text",
+      "min": 1,
+      "max": 1
+    },
+    "description": {
+      "accepts": "text",
+      "max": 1
+    },
+    "body": {
+      "accepts": "any"
+    },
+    "footer": {
+      "accepts": [
+        "Button"
+      ],
+      "max": 3
+    }
+  },
+  "props": {
+    "open": {
+      "type": "boolean",
+      "description": "Controlled open state, with onOpenChange."
+    },
+    "defaultOpen": {
+      "type": "boolean",
+      "default": false
+    },
+    "onOpenChange": {
+      "type": "function",
+      "description": "Called with false for Escape, a backdrop click, the close control, SheetClose and a drag down."
+    },
+    "size": {
+      "type": [
+        "sm",
+        "md",
+        "lg"
+      ],
+      "default": "md",
+      "description": "The most of the screen's height it takes: sm half, md three quarters, lg all of it under a top gap. Never wider than the xl dialog width, centered on wide screens."
+    },
+    "dismissible": {
+      "type": "boolean",
+      "default": true,
+      "description": "false: Escape, a backdrop click and a drag do nothing, and the close control is aria-disabled."
+    },
+    "title": {
+      "type": "node",
+      "description": "SheetContent: the title for the common case, the same as a SheetTitle child."
+    },
+    "description": {
+      "type": "node",
+      "description": "SheetContent: the description for the common case."
+    },
+    "closeLabel": {
+      "type": "string",
+      "default": "Close sheet",
+      "description": "SheetContent: the accessible name of the close control. Arabic default under lang ar: إغلاق النافذة السفلية."
+    },
+    "rootProps": {
+      "type": "object",
+      "description": "SheetContent: props for the root layer. className and style go to the root too; ref and every other prop go to the panel, Radix Content props included."
+    },
+    "SheetTrigger": {
+      "type": "node",
+      "description": "One child element, a system Button, rendered as the trigger (always asChild). Focus returns to it on close."
+    },
+    "SheetClose": {
+      "type": "node",
+      "description": "One child element, a system Button that closes the sheet (always asChild), marked data-dialog-cancel."
+    },
+    "data-autofocus": {
+      "type": "boolean",
+      "description": "Put on any focusable element inside the sheet to take focus on open."
+    }
+  },
+  "states": [
+    "open",
+    "closed",
+    "data-dragging"
+  ],
+  "a11y": {
+    "role": "dialog (the panel), modal: Radix hides the rest of the page from assistive tech and keeps focus inside. Named by the title, described by the description.",
+    "focus": "The Dialog focus rule: an element marked data-autofocus, else the first field in the body, else the first footer action that is not tone danger, else the close control. On close, focus returns to the trigger, or to the element that had focus before.",
+    "keys": {
+      "Escape": "Closes the sheet, unless dismissible is false. The key path for the drag down.",
+      "Tab": "Moves to the next control inside the sheet and wraps from the last to the first",
+      "Shift+Tab": "Moves to the previous control inside the sheet and wraps from the first to the last"
+    },
+    "announce": "The title and the description are read when the sheet opens. The handle is hidden from assistive tech: the close control is the same action.",
+    "notes": [
+      "The drag to dismiss has a button path, the close control, and a key path, Escape (WCAG 2.5.7). The handle is a pointer target only, out of the tab order.",
+      "A release past a quarter of the panel's height, or a quick flick down, closes it; a shorter drag snaps back. The panel never rises above its open place.",
+      "The panel keeps clear of the home bar with env(safe-area-inset-bottom).",
+      "Detents are wave 2.",
+      "No native title attribute.",
+      "When the whole panel scrolls (a short viewport, 400% zoom) the handle scrolls away; the close control stays."
+    ]
+  },
+  "content": {
+    "en": {
+      "title": "The task as a noun phrase or a question: Share Spring launch.",
+      "buttons": "Verb plus noun: Send invite, Cancel invite. Never OK or Continue.",
+      "close": "Close sheet"
+    },
+    "ar": {
+      "title": "Noun form, no diacritics: مشاركة اللوحة",
+      "buttons": "Noun form labels: إرسال الدعوة، إلغاء الدعوة.",
+      "close": "إغلاق النافذة السفلية"
+    }
+  },
+  "tokens": [
+    "dialog.width.xl",
+    "radius.sheet",
+    "color.bg.surface",
+    "color.bg.surface-2",
+    "color.bg.scrim",
+    "color.bg.scrim-80",
+    "color.border.default",
+    "color.border.strong",
+    "color.border.hairline",
+    "color.text.default",
+    "color.text.bright",
+    "color.text.muted",
+    "color.focus.ring",
+    "color.material.glass-strong",
+    "color.material.glass-solid",
+    "elevation.dialog",
+    "elevation.window",
+    "blur.backdrop",
+    "blur.window",
+    "blur.window-saturation",
+    "focus.shadow.ring",
+    "border.width.default",
+    "border.width.strong",
+    "space.2xs",
+    "space.s",
+    "space.l",
+    "space.xl",
+    "space.2xl",
+    "space.5xl",
+    "size.control.sm",
+    "size.control.lg",
+    "size.target-min",
+    "font.family.sans",
+    "font.size.l",
+    "font.size.xl",
+    "font.weight.semibold",
+    "font.leading.tight",
+    "font.leading.normal",
+    "duration.slow",
+    "duration.base",
+    "duration.window-close",
+    "ease.emphasized",
+    "ease.exit",
+    "z.dialog"
+  ],
+  "motion": "sheet",
+  "frameworks": {
+    "react": {
+      "status": "ready",
+      "behavior": "radix:Dialog",
+      "example": "Sheet.demo.tsx",
+      "note": "Built on DialogBase (Dialog folder). The drag uses pointer events with pointer capture on the handle. Styled by the sheet block of Dialog.css."
+    },
+    "angular": {
+      "status": "planned",
+      "behavior": "cdk:portal, cdk:a11y InteractivityChecker",
+      "note": "On the Angular Dialog layer, with the handle and data-dragging."
+    },
+    "native": {
+      "status": "planned",
+      "behavior": "rn-primitives:dialog",
+      "note": "A native bottom sheet with detents in wave 2, spring.sheet."
+    }
+  },
+  "styles": {
+    "studio": "A surface panel from the bottom with radius.sheet on the top corners, a handle bar, a header without a band color, the footer band. It rises on duration.slow, ease.emphasized.",
+    "desk": "The Desk dialog glass, hairline and window shadow, with radius.sheet on the top corners.",
+    "neutral": "Planned.",
+    "liquid": "Planned: a glass sheet."
+  },
+  "mistakes": [
+    {
+      "wrong": "A sheet that closes only by dragging",
+      "right": "The close control and Escape close it too; the handle is a shortcut"
+    },
+    {
+      "wrong": "A sheet as the desktop filter panel",
+      "right": "Drawer"
+    },
+    {
+      "wrong": "Content under the home bar",
+      "right": "The panel pads its block end with the safe area inset"
+    },
+    {
+      "wrong": "Waiting for transitionend after a drag",
+      "right": "The close runs from state; under reduced motion every duration is 0"
+    }
+  ],
+  "contract": {
+    "trigger": "[data-demo-trigger]",
+    "optionalParts": [
+      "description",
+      "body",
+      "footer"
+    ]
+  },
+  "since": "0.1.0"
+}

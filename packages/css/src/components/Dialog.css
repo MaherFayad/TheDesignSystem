@@ -1,5 +1,12 @@
 /*
  * Dialog: a fixed layer (the root) that holds the backdrop and the panel.
+ * The same file styles the family built on DialogBase.tsx, by the base
+ * rule (rule 10 of docs/contracts/anatomy.md): AlertDialog, Drawer and
+ * Sheet share the root, backdrop, panel, description, body and footer rules
+ * through :is() lists of the four roots (the same specificity as one
+ * attribute), and add their own blocks below the Dialog rules. Their
+ * private properties keep the --_dialog- prefix, as IconButton keeps
+ * --_button-.
  * Sources: GoBanana `.st-dialog` in studio-components.css (sizes from the
  * dialog width tokens, the viewport minus a gutter, the header and footer
  * bands on surface-2, the panel radius and shadow, the enter motion) and
@@ -27,6 +34,9 @@
  *   --_dialog-scrim, -scrim-filter     the backdrop color and blur
  *   --_dialog-enter-y, -enter-scale, -duration-in, -duration-out,
  *   --_dialog-ease-in, -ease-out       the motion (pattern "dialog")
+ *   --_dialog-icon-bg, -icon-fg        AlertDialog: the icon disc
+ *   --_dialog-slide                    Drawer: the slide offset, mirrored in rtl
+ *   --_dialog-handle-color, -drag-y, -drag-duration   Sheet: the handle and the drag
  *
  * Motion, pattern "dialog": the panel rises a few px and scales up from
  * 98% while it fades in; the backdrop fades. Closing plays the reverse,
@@ -43,7 +53,7 @@
 
   /* ------------------------------------------------------------ root */
 
-  [data-ds='dialog'] {
+  :is([data-ds='dialog'], [data-ds='alert-dialog'], [data-ds='drawer'], [data-ds='sheet']) {
     --_dialog-width: var(--ds-dialog-width-md);
     --_dialog-height-max: var(--ds-dialog-height-max);
     --_dialog-gutter: var(--ds-space-5xl);
@@ -83,19 +93,19 @@
     padding-inline: calc(var(--_dialog-gutter) + max(env(safe-area-inset-left, 0px), env(safe-area-inset-right, 0px)));
   }
 
-  [data-ds='dialog'][data-size='sm'] {
+  :is([data-ds='dialog'], [data-ds='alert-dialog'], [data-ds='drawer'], [data-ds='sheet'])[data-size='sm'] {
     --_dialog-width: var(--ds-dialog-width-sm);
   }
 
-  [data-ds='dialog'][data-size='lg'] {
+  :is([data-ds='dialog'], [data-ds='alert-dialog'], [data-ds='drawer'], [data-ds='sheet'])[data-size='lg'] {
     --_dialog-width: var(--ds-dialog-width-lg);
   }
 
-  [data-ds='dialog'][data-size='xl'] {
+  :is([data-ds='dialog'], [data-ds='alert-dialog'], [data-ds='drawer'], [data-ds='sheet'])[data-size='xl'] {
     --_dialog-width: var(--ds-dialog-width-xl);
   }
 
-  [data-ds='dialog'][data-size='2xl'] {
+  :is([data-ds='dialog'], [data-ds='alert-dialog'], [data-ds='drawer'], [data-ds='sheet'])[data-size='2xl'] {
     --_dialog-width: var(--ds-dialog-width-2xl);
   }
 
@@ -105,7 +115,7 @@
    * darkest and the brightest page behind the scrim (measured, see the Desk
    * recipe).
    */
-  [data-ds='dialog'][data-tone='danger'] {
+  :is([data-ds='dialog'], [data-ds='alert-dialog'], [data-ds='drawer'], [data-ds='sheet'])[data-tone='danger'] {
     --_dialog-title-fg: var(--ds-color-state-danger-text);
   }
 
@@ -114,7 +124,7 @@
    * with a small gutter.
    */
   @media (width < 30rem) { /* breakpoint.phone */
-    [data-ds='dialog'] {
+    :is([data-ds='dialog'], [data-ds='alert-dialog'], [data-ds='drawer'], [data-ds='sheet']) {
       --_dialog-gutter: var(--ds-space-s);
       --_dialog-padding: var(--ds-space-xl);
     }
@@ -122,7 +132,7 @@
 
   /* ------------------------------------------------------------ backdrop */
 
-  [data-ds='dialog'] > [data-part='backdrop'] {
+  :is([data-ds='dialog'], [data-ds='alert-dialog'], [data-ds='drawer'], [data-ds='sheet']) > [data-part='backdrop'] {
     position: absolute;
     inset: 0;
     background-color: var(--_dialog-scrim);
@@ -130,17 +140,17 @@
     backdrop-filter: var(--_dialog-scrim-filter);
   }
 
-  [data-ds='dialog'] > [data-part='backdrop'][data-state='open'] {
+  :is([data-ds='dialog'], [data-ds='alert-dialog'], [data-ds='drawer'], [data-ds='sheet']) > [data-part='backdrop'][data-state='open'] {
     animation: ds-dialog-fade-in var(--_dialog-duration-in) var(--_dialog-ease-in);
   }
 
-  [data-ds='dialog'] > [data-part='backdrop'][data-state='closed'] {
+  :is([data-ds='dialog'], [data-ds='alert-dialog'], [data-ds='drawer'], [data-ds='sheet']) > [data-part='backdrop'][data-state='closed'] {
     animation: ds-dialog-fade-out var(--_dialog-duration-out) var(--_dialog-ease-out) forwards;
   }
 
   /* ------------------------------------------------------------ panel */
 
-  [data-ds='dialog'] > [data-part='panel'] {
+  :is([data-ds='dialog'], [data-ds='alert-dialog'], [data-ds='drawer'], [data-ds='sheet']) > [data-part='panel'] {
     position: relative;
     display: flex;
     flex-direction: column;
@@ -169,11 +179,11 @@
   }
 
 
-  [data-ds='dialog'] > [data-part='panel'][data-state='open'] {
+  :is([data-ds='dialog'], [data-ds='alert-dialog'], [data-ds='drawer'], [data-ds='sheet']) > [data-part='panel'][data-state='open'] {
     animation: ds-dialog-in var(--_dialog-duration-in) var(--_dialog-ease-in);
   }
 
-  [data-ds='dialog'] > [data-part='panel'][data-state='closed'] {
+  :is([data-ds='dialog'], [data-ds='alert-dialog'], [data-ds='drawer'], [data-ds='sheet']) > [data-part='panel'][data-state='closed'] {
     animation: ds-dialog-out var(--_dialog-duration-out) var(--_dialog-ease-out) forwards;
   }
 
@@ -181,13 +191,13 @@
    * The panel takes focus only when it holds nothing focusable. It shows the
    * ring on keyboard focus. The transparent outline shows in forced colors.
    */
-  [data-ds='dialog'] > [data-part='panel']:focus-visible {
+  :is([data-ds='dialog'], [data-ds='alert-dialog'], [data-ds='drawer'], [data-ds='sheet']) > [data-part='panel']:focus-visible {
     --_dialog-ring: var(--ds-focus-shadow-ring);
 
     outline: var(--ds-border-width-strong) solid transparent;
   }
 
-  [data-ds='dialog'] > [data-part='panel']:focus:not(:focus-visible) {
+  :is([data-ds='dialog'], [data-ds='alert-dialog'], [data-ds='drawer'], [data-ds='sheet']) > [data-part='panel']:focus:not(:focus-visible) {
     outline: none;
   }
 
@@ -253,7 +263,7 @@
 
   /* ------------------------------------------------------------ description, body, footer */
 
-  [data-ds='dialog'] > [data-part='panel'] > [data-part='description'] {
+  :is([data-ds='dialog'], [data-ds='alert-dialog'], [data-ds='drawer'], [data-ds='sheet']) > [data-part='panel'] > [data-part='description'] {
     flex: none;
     margin: 0;
     padding-block: var(--_dialog-padding) 0;
@@ -262,15 +272,15 @@
   }
 
   /* No body under it: the description keeps the padding the body would have given. */
-  [data-ds='dialog'] > [data-part='panel'] > [data-part='description']:not(:has(+ [data-part='body'])) {
+  :is([data-ds='dialog'], [data-ds='alert-dialog'], [data-ds='drawer'], [data-ds='sheet']) > [data-part='panel'] > [data-part='description']:not(:has(+ [data-part='body'])) {
     padding-block-end: var(--_dialog-padding);
   }
 
-  [data-ds='dialog'] > [data-part='panel'] > [data-part='description'] + [data-part='body'] {
+  :is([data-ds='dialog'], [data-ds='alert-dialog'], [data-ds='drawer'], [data-ds='sheet']) > [data-part='panel'] > [data-part='description'] + [data-part='body'] {
     padding-block-start: var(--ds-space-l);
   }
 
-  [data-ds='dialog'] > [data-part='panel'] > [data-part='body'] {
+  :is([data-ds='dialog'], [data-ds='alert-dialog'], [data-ds='drawer'], [data-ds='sheet']) > [data-part='panel'] > [data-part='body'] {
     flex: 1 1 auto;
     min-block-size: 0;
     min-inline-size: 0;
@@ -280,11 +290,11 @@
     overflow-wrap: break-word;
   }
 
-  [data-ds='dialog'] > [data-part='panel'] > [data-part='body'] > :first-child {
+  :is([data-ds='dialog'], [data-ds='alert-dialog'], [data-ds='drawer'], [data-ds='sheet']) > [data-part='panel'] > [data-part='body'] > :first-child {
     margin-block-start: 0;
   }
 
-  [data-ds='dialog'] > [data-part='panel'] > [data-part='body'] > :last-child {
+  :is([data-ds='dialog'], [data-ds='alert-dialog'], [data-ds='drawer'], [data-ds='sheet']) > [data-part='panel'] > [data-part='body'] > :last-child {
     margin-block-end: 0;
   }
 
@@ -296,24 +306,24 @@
    * query reuses the phone breakpoint value.
    */
   @media (height < 30rem) { /* breakpoint.phone */
-    [data-ds='dialog'] > [data-part='panel'] > [data-part='body'] {
+    :is([data-ds='dialog'], [data-ds='alert-dialog'], [data-ds='drawer'], [data-ds='sheet']) > [data-part='panel'] > [data-part='body'] {
       flex: none;
       overflow: visible;
     }
   }
 
   /* Running text in the body: one step of space between blocks, whatever the page reset says. */
-  [data-ds='dialog'] > [data-part='panel'] > [data-part='body'] > :is(p, ul, ol) + :is(p, ul, ol) {
+  :is([data-ds='dialog'], [data-ds='alert-dialog'], [data-ds='drawer'], [data-ds='sheet']) > [data-part='panel'] > [data-part='body'] > :is(p, ul, ol) + :is(p, ul, ol) {
     margin-block-start: var(--ds-space-l);
   }
 
   /* A body that scrolls is a tab stop, so the keyboard can scroll it. The ring sits inside the panel edge. */
-  [data-ds='dialog'] > [data-part='panel'] > [data-part='body']:focus-visible {
+  :is([data-ds='dialog'], [data-ds='alert-dialog'], [data-ds='drawer'], [data-ds='sheet']) > [data-part='panel'] > [data-part='body']:focus-visible {
     outline: var(--ds-border-width-strong) solid var(--ds-color-focus-ring);
     outline-offset: calc(var(--ds-border-width-strong) * -1);
   }
 
-  [data-ds='dialog'] > [data-part='panel'] > [data-part='footer'] {
+  :is([data-ds='dialog'], [data-ds='alert-dialog'], [data-ds='drawer'], [data-ds='sheet']) > [data-part='panel'] > [data-part='footer'] {
     display: flex;
     flex: none;
     flex-wrap: wrap;
@@ -327,9 +337,285 @@
   }
 
   /* Long labels: a footer Button shrinks with the row instead of pushing past the panel. */
-  [data-ds='dialog'] > [data-part='panel'] > [data-part='footer'] > * {
+  :is([data-ds='dialog'], [data-ds='alert-dialog'], [data-ds='drawer'], [data-ds='sheet']) > [data-part='panel'] > [data-part='footer'] > * {
     min-inline-size: 0;
     max-inline-size: 100%;
+  }
+
+  /* ------------------------------------------------------------ alert-dialog */
+
+  /*
+   * AlertDialog: a question about an action that cannot be undone. No title
+   * band and no close part: the icon, the title and the description sit on
+   * the panel, the footer band holds Cancel and the action. Sizes sm and md
+   * take the dialog widths from the family rules above.
+   */
+  [data-ds='alert-dialog'] {
+    --_dialog-icon-bg: var(--ds-color-bg-surface-2);
+    --_dialog-icon-fg: var(--ds-color-text-default);
+  }
+
+  [data-ds='alert-dialog'][data-tone='danger'] {
+    --_dialog-icon-bg: var(--ds-color-state-danger-tint-10);
+    --_dialog-icon-fg: var(--ds-color-state-danger-text);
+  }
+
+  [data-ds='alert-dialog'] > [data-part='panel'] > [data-part='icon'] {
+    display: flex;
+    flex: none;
+    align-items: center;
+    align-self: flex-start;
+    justify-content: center;
+    box-sizing: border-box;
+    inline-size: var(--ds-size-control-lg);
+    block-size: var(--ds-size-control-lg);
+    margin-block-start: var(--_dialog-padding);
+    margin-inline-start: var(--_dialog-padding);
+    border-radius: var(--ds-radius-pill);
+    background-color: var(--_dialog-icon-bg);
+    color: var(--_dialog-icon-fg);
+  }
+
+  [data-ds='alert-dialog'] > [data-part='panel'] > [data-part='title'] {
+    flex: none;
+    margin: 0;
+    padding-block: var(--_dialog-padding) 0;
+    padding-inline: var(--_dialog-padding);
+    color: var(--_dialog-title-fg);
+    font-size: var(--ds-font-size-xl);
+    font-weight: var(--ds-font-weight-semibold);
+    line-height: var(--ds-font-leading-tight);
+    overflow-wrap: anywhere;
+    text-wrap: balance;
+  }
+
+  [data-ds='alert-dialog'] > [data-part='panel'] > [data-part='icon'] + [data-part='title'] {
+    padding-block-start: var(--ds-space-l);
+  }
+
+  /* The title right above the footer: it keeps the padding the description would have given. */
+  [data-ds='alert-dialog'] > [data-part='panel'] > [data-part='title']:has(+ [data-part='footer']) {
+    padding-block-end: var(--_dialog-padding);
+  }
+
+  [data-ds='alert-dialog'] > [data-part='panel'] > [data-part='title'] + [data-part='description'] {
+    padding-block-start: var(--ds-space-s);
+  }
+
+  /* ------------------------------------------------------------ drawer */
+
+  /*
+   * Drawer: a full height panel at the inline end (or start) of the page.
+   * The root stops taking clicks, so a non modal drawer leaves the page
+   * usable; the backdrop and the panel take them again. Sizes sm to xl are
+   * widths from the dialog width tokens. Motion, pattern "sheet": the panel
+   * slides in from its side, mirrored in right to left layouts.
+   */
+  [data-ds='drawer'] {
+    --_dialog-gutter: 0;
+    --_dialog-slide: 100%;
+    --_dialog-duration-in: var(--ds-duration-slow);
+    --_dialog-ease-in: var(--ds-ease-emphasized);
+
+    align-items: stretch;
+    justify-content: flex-end;
+    pointer-events: none;
+  }
+
+  [data-ds='drawer'] > * {
+    pointer-events: auto;
+  }
+
+  [data-ds='drawer'][data-side='start'] {
+    --_dialog-slide: -100%;
+
+    justify-content: flex-start;
+  }
+
+  /* Start is the right in Arabic: the slide flips with the reading direction. */
+  [data-ds='drawer']:dir(rtl) {
+    --_dialog-slide: -100%;
+  }
+
+  [data-ds='drawer'][data-side='start']:dir(rtl) {
+    --_dialog-slide: 100%;
+  }
+
+  [data-ds='drawer'] > [data-part='panel'] {
+    block-size: 100%;
+    max-block-size: 100%;
+    border-radius: 0;
+    border-start-start-radius: var(--_dialog-radius);
+    border-end-start-radius: var(--_dialog-radius);
+  }
+
+  [data-ds='drawer'][data-side='start'] > [data-part='panel'] {
+    border-radius: 0;
+    border-start-end-radius: var(--_dialog-radius);
+    border-end-end-radius: var(--_dialog-radius);
+  }
+
+  [data-ds='drawer'] > [data-part='panel'][data-state='open'] {
+    animation: ds-sheet-in-x var(--_dialog-duration-in) var(--_dialog-ease-in);
+  }
+
+  [data-ds='drawer'] > [data-part='panel'][data-state='closed'] {
+    animation: ds-sheet-out-x var(--_dialog-duration-out) var(--_dialog-ease-out) forwards;
+  }
+
+  /* Phones: under breakpoint.phone (480px) the drawer fills the width, square edged. */
+  @media (width < 30rem) { /* breakpoint.phone */
+    [data-ds='drawer'][data-size] {
+      --_dialog-width: 100%;
+    }
+
+    [data-ds='drawer'][data-size] > [data-part='panel'] {
+      border-radius: 0;
+    }
+  }
+
+  /* ------------------------------------------------------------ drawer and sheet header */
+
+  /*
+   * The header band: the title and the description in the first column, the
+   * close IconButton at the inline end of the title's first line.
+   */
+  :is([data-ds='drawer'], [data-ds='sheet']) > [data-part='panel'] > [data-part='header'] {
+    display: grid;
+    flex: none;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: start;
+    gap: var(--ds-space-2xs) var(--ds-space-s);
+    padding-block: var(--_dialog-band-padding-block);
+    padding-inline: var(--_dialog-band-padding-inline);
+    border-block-end: var(--ds-border-width-default) solid var(--_dialog-divider-color);
+    background-color: var(--_dialog-header-bg);
+  }
+
+  :is([data-ds='drawer'], [data-ds='sheet']) > [data-part='panel'] > [data-part='header'] > [data-part='title'] {
+    grid-column: 1;
+    margin: 0;
+    color: var(--_dialog-title-fg);
+    font-size: var(--ds-font-size-xl);
+    font-weight: var(--ds-font-weight-semibold);
+    line-height: var(--ds-font-leading-tight);
+    overflow-wrap: anywhere;
+    text-wrap: balance;
+  }
+
+  :is([data-ds='drawer'], [data-ds='sheet']) > [data-part='panel'] > [data-part='header'] > [data-part='description'] {
+    grid-column: 1;
+    margin: 0;
+    color: var(--ds-color-text-muted);
+    overflow-wrap: break-word;
+  }
+
+  :is([data-ds='drawer'], [data-ds='sheet']) > [data-part='panel'] > [data-part='header'] > [data-part='close'] {
+    grid-row: 1;
+    grid-column: 2;
+    /* Centered on the first line of the title. */
+    margin-block-start: calc((var(--ds-font-size-xl) * var(--ds-font-leading-tight) - var(--ds-size-control-sm)) / 2);
+    margin-inline-end: calc(var(--ds-space-2xs) * -1);
+  }
+
+  /* ------------------------------------------------------------ sheet */
+
+  /*
+   * Sheet: a panel that rises from the block end. Sizes are the most it may
+   * take of the screen's height: sm half, md three quarters, lg all of it
+   * under a top gap. It never passes the xl dialog width and keeps clear of
+   * the home bar (safe area). Motion, pattern "sheet": it rises from below.
+   * While the handle is dragged the panel follows the pointer through
+   * --_dialog-drag-y, set inline on the panel by Sheet.tsx.
+   */
+  [data-ds='sheet'] {
+    --_dialog-gutter: 0;
+    --_dialog-radius: var(--ds-radius-sheet);
+    --_dialog-height-max: 75%;
+    --_dialog-header-bg: transparent;
+    --_dialog-handle-color: var(--ds-color-border-strong);
+    --_dialog-drag-y: 0px;
+    --_dialog-drag-duration: var(--ds-duration-base);
+    --_dialog-duration-in: var(--ds-duration-slow);
+    --_dialog-ease-in: var(--ds-ease-emphasized);
+
+    align-items: flex-end;
+    padding-block: calc(var(--ds-space-5xl) + env(safe-area-inset-top, 0px)) 0;
+  }
+
+  [data-ds='sheet'][data-size='sm'] {
+    --_dialog-height-max: 50%;
+  }
+
+  [data-ds='sheet'][data-size='lg'] {
+    --_dialog-height-max: 100%;
+  }
+
+  [data-ds='sheet'][data-dragging] {
+    --_dialog-drag-duration: 0s;
+  }
+
+  [data-ds='sheet'] > [data-part='panel'] {
+    inline-size: min(var(--ds-dialog-width-xl), 100%);
+    max-block-size: var(--_dialog-height-max);
+    padding-block-end: env(safe-area-inset-bottom, 0px);
+    border-block-end-width: 0;
+    border-end-start-radius: 0;
+    border-end-end-radius: 0;
+    transform: translateY(var(--_dialog-drag-y));
+    transition: transform var(--_dialog-drag-duration) var(--_dialog-ease-in);
+  }
+
+  [data-ds='sheet'][data-size='lg'] > [data-part='panel'] {
+    block-size: 100%;
+  }
+
+  /* A footer band reaches the bottom edge: it takes the safe area inside itself, so its color runs under the home bar. */
+  [data-ds='sheet'] > [data-part='panel']:has(> [data-part='footer']) {
+    padding-block-end: 0;
+  }
+
+  [data-ds='sheet'] > [data-part='panel'] > [data-part='footer'] {
+    padding-block-end: calc(var(--_dialog-band-padding-block) + env(safe-area-inset-bottom, 0px));
+  }
+
+  [data-ds='sheet'] > [data-part='panel'][data-state='open'] {
+    animation: ds-sheet-in-y var(--_dialog-duration-in) var(--_dialog-ease-in);
+  }
+
+  [data-ds='sheet'] > [data-part='panel'][data-state='closed'] {
+    animation: ds-sheet-out-y var(--_dialog-duration-out) var(--_dialog-ease-out) forwards;
+  }
+
+  /*
+   * The handle: a short bar drawn on the content box, with a strip of the
+   * 24px target height around it for the pointer. Dragging it down closes
+   * the sheet; the close control and Escape are the key path (WCAG 2.5.7).
+   * When the whole panel scrolls (a short viewport, 400% zoom) the handle
+   * scrolls away with the header; the close control stays the way out.
+   */
+  [data-ds='sheet'] > [data-part='panel'] > [data-part='handle'] {
+    flex: none;
+    align-self: center;
+    box-sizing: content-box;
+    inline-size: var(--ds-size-control-lg);
+    block-size: var(--ds-space-2xs);
+    padding-block: calc((var(--ds-size-target-min) - var(--ds-space-2xs)) / 2);
+    padding-inline: var(--ds-space-xl);
+    /* No radius: Chromium paints a clipped background over the whole padding box once a radius is set. */
+    background-color: var(--_dialog-handle-color);
+    background-clip: content-box;
+    cursor: grab;
+    touch-action: none;
+  }
+
+  [data-ds='sheet'][data-dragging] > [data-part='panel'] > [data-part='handle'] {
+    cursor: grabbing;
+  }
+
+  /* Under the handle the header needs no line on top of it. */
+  [data-ds='sheet'] > [data-part='panel'] > [data-part='handle'] + [data-part='header'] {
+    padding-block-start: 0;
   }
 
   /* ------------------------------------------------------------ motion: pattern "dialog" */
@@ -360,9 +646,38 @@
     }
   }
 
+  /* Pattern "sheet": a Drawer slides in from its side, a Sheet rises from the block end. */
+  @keyframes ds-sheet-in-x {
+    from {
+      transform: translateX(var(--_dialog-slide));
+    }
+  }
+
+  @keyframes ds-sheet-out-x {
+    to {
+      transform: translateX(var(--_dialog-slide));
+    }
+  }
+
+  @keyframes ds-sheet-in-y {
+    from {
+      transform: translateY(100%);
+    }
+  }
+
+  @keyframes ds-sheet-out-y {
+    to {
+      transform: translateY(100%);
+    }
+  }
+
   @media (prefers-reduced-motion: reduce) {
-    [data-ds='dialog'] > :is([data-part='panel'], [data-part='backdrop'])[data-state] {
+    :is([data-ds='dialog'], [data-ds='alert-dialog'], [data-ds='drawer'], [data-ds='sheet']) > :is([data-part='panel'], [data-part='backdrop'])[data-state] {
       animation: none;
+    }
+
+    [data-ds='sheet'] {
+      --_dialog-drag-duration: 0s;
     }
   }
 
@@ -370,7 +685,7 @@
 
   /* Nothing to see through: the scrim and the panel stop blurring (the tokens make the materials solid). */
   @media (prefers-reduced-transparency: reduce) {
-    [data-ds='dialog'] {
+    :is([data-ds='dialog'], [data-ds='alert-dialog'], [data-ds='drawer'], [data-ds='sheet']) {
       --_dialog-backdrop: none;
       --_dialog-scrim-filter: none;
       --_dialog-scrim: var(--ds-color-bg-scrim-80);
@@ -378,7 +693,7 @@
   }
 
   @media (prefers-contrast: more) {
-    [data-ds='dialog'] {
+    :is([data-ds='dialog'], [data-ds='alert-dialog'], [data-ds='drawer'], [data-ds='sheet']) {
       --_dialog-backdrop: none;
       --_dialog-scrim-filter: none;
       --_dialog-scrim: var(--ds-color-bg-scrim-80);
@@ -386,7 +701,7 @@
     }
   }
 
-  [data-contrast='more'] [data-ds='dialog'] {
+  [data-contrast='more'] :is([data-ds='dialog'], [data-ds='alert-dialog'], [data-ds='drawer'], [data-ds='sheet']) {
     --_dialog-backdrop: none;
     --_dialog-scrim-filter: none;
     --_dialog-scrim: var(--ds-color-bg-scrim-80);
@@ -395,7 +710,7 @@
 
   /* Forced colors drop shadows and the scrim: a border draws the panel, the outline draws focus. */
   @media (forced-colors: active) {
-    [data-ds='dialog'] {
+    :is([data-ds='dialog'], [data-ds='alert-dialog'], [data-ds='drawer'], [data-ds='sheet']) {
       --_dialog-bg: Canvas;
       --_dialog-backdrop: none;
       --_dialog-scrim-filter: none;
@@ -403,8 +718,22 @@
       --_dialog-divider-color: CanvasText;
     }
 
-    [data-ds='dialog'] > [data-part='panel']:focus-visible {
+    :is([data-ds='dialog'], [data-ds='alert-dialog'], [data-ds='drawer'], [data-ds='sheet']) > [data-part='panel']:focus-visible {
       outline-color: Highlight;
+    }
+
+    [data-ds='sheet'] {
+      --_dialog-handle-color: CanvasText;
+    }
+
+    /* The bar keeps its own color: forced colors would paint every background as Canvas. */
+    [data-ds='sheet'] > [data-part='panel'] > [data-part='handle'] {
+      forced-color-adjust: none;
+    }
+
+    [data-ds='alert-dialog'] {
+      --_dialog-icon-bg: Canvas;
+      --_dialog-icon-fg: CanvasText;
     }
   }
 }
