@@ -31,6 +31,15 @@ const motion: StyleMotionPreset = {
   interactions: {
     'error-shake': 'none',
     'field-step': 'reduced',
+    // Order 1.22 (proposed): Studio's spring eases are steps, so these play in
+    // full as hard cuts: a count or a page number flips in two or three steps
+    // instead of fading, and the tab bar and dock land in steps with no pop
+    // (scale.pop is 1 in Studio).
+    'stat-roll': 'full',
+    'badge-count': 'full',
+    'pagination-roll': 'full',
+    'tab-bar-pop': 'full',
+    'dock-lift': 'full',
   },
 };
 

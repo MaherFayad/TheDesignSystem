@@ -1784,7 +1784,7 @@
         "status": "ready",
         "behavior": "hand built, radix:VisuallyHidden",
         "example": "Badge.demo.tsx",
-        "note": "Motion: the badge has none of its own; fade-rise names the pattern a caller uses when a badge appears. A count that changes may use number-roll once the catalog (1.11) has it."
+        "note": "Motion (badge-count, order 1.22): when the count changes after the first paint its digits roll (digit-roll primitive) and the badge pops (scale.anticipate, scale.pop); a count is always drawn aria-hidden with a visually hidden copy; a dot only pops. Nothing under reduced motion but a fade of the digits."
       },
       "angular": {
         "status": "planned"
@@ -2432,14 +2432,23 @@
       "menu.width.min",
       "color.text.muted",
       "color.text.bright",
-      "color.text.subtle"
+      "color.text.subtle",
+      "duration.spring-snappy",
+      "ease.spring-snappy",
+      "scale.stretch",
+      "distance.nudge",
+      "color.bg.overlay-10",
+      "radius.sm",
+      "duration.fast",
+      "ease.default"
     ],
+    "motion": "tab-indicator",
     "frameworks": {
       "react": {
         "status": "ready",
         "behavior": "nav and ol, system Link, IconButton and radix:DropdownMenu for the overflow",
         "example": "Breadcrumbs.demo.tsx",
-        "note": "No motion of its own: the overflow menu plays DropdownMenu's menu-scale."
+        "note": "The overflow menu plays DropdownMenu's menu-scale. Round 2 (order 1.22, proposed), interaction nav-hover-follow: each link step draws a hover pill on its ::before, under its label, that fades in on hover and slides from the step the pointer left (internal/indicator.ts); the separator after a hovered step nudges by distance.nudge toward the next step in CSS. Reduced motion: the pill fades in place."
       },
       "angular": {
         "status": "planned",
@@ -2762,7 +2771,24 @@
       "radius.xs",
       "color.text.link",
       "duration.roll",
-      "ease.reveal"
+      "ease.reveal",
+      "duration.instant",
+      "ease.out",
+      "duration.spring-bouncy",
+      "ease.spring-bouncy",
+      "duration.spring-snappy",
+      "ease.spring-snappy",
+      "duration.spring-soft",
+      "ease.spring-soft",
+      "duration.quick",
+      "ease.exit",
+      "duration.celebrate",
+      "delay.stagger",
+      "scale.press",
+      "scale.anticipate",
+      "scale.morph",
+      "distance.nudge",
+      "distance.shift"
     ],
     "motion": "press",
     "frameworks": {
@@ -2962,7 +2988,10 @@
       "color.border.default",
       "color.focus.ring",
       "color.focus.ring-on-primary-inner",
-      "color.focus.ring-on-primary-outer"
+      "color.focus.ring-on-primary-outer",
+      "duration.spring-snappy",
+      "ease.spring-snappy",
+      "scale.anticipate"
     ],
     "frameworks": {
       "react": {
@@ -3427,7 +3456,7 @@
         "status": "ready",
         "behavior": "hand built, radix:Slot for asChild",
         "example": "Card.demo.tsx",
-        "note": "Motion: an interactive card rises by space.4xs on hover (transform only) and its hover veil fades in (opacity), off under reduced motion. Named fade-rise from the 1.11 catalog list; no catalog pattern covers a hover lift yet."
+        "note": "Motion (card-lift, order 1.22): an interactive card rises distance.lift and grows to scale.lift on the soft spring under the pointer, and a decorative aria-hidden span (last child, not with asChild) draws a highlight that follows the pointer by transform; off under reduced motion."
       },
       "angular": {
         "status": "planned",
@@ -4343,8 +4372,16 @@
       "color.bg.overlay-10",
       "color.bg.overlay-20",
       "focus.shadow.ring",
-      "opacity.disabled"
+      "opacity.disabled",
+      "duration.instant",
+      "ease.out",
+      "duration.spring-bouncy",
+      "ease.spring-bouncy",
+      "duration.spring-snappy",
+      "ease.spring-snappy",
+      "scale.press"
     ],
+    "motion": "press",
     "frameworks": {
       "react": {
         "status": "ready",
@@ -6115,8 +6152,24 @@
       "color.text.link",
       "duration.roll",
       "ease.reveal",
-      "delay.peek-hide"
+      "delay.peek-hide",
+      "duration.instant",
+      "ease.out",
+      "duration.spring-bouncy",
+      "ease.spring-bouncy",
+      "duration.spring-soft",
+      "ease.spring-soft",
+      "duration.quick",
+      "ease.exit",
+      "duration.celebrate",
+      "delay.stagger",
+      "scale.press",
+      "scale.morph",
+      "scale.pop",
+      "distance.shift",
+      "distance.nudge"
     ],
+    "motion": "swap",
     "frameworks": {
       "react": {
         "status": "ready",
@@ -6786,7 +6839,12 @@
       "ease.default",
       "tooltip.width-max",
       "space.3xl",
-      "font.size.s"
+      "font.size.s",
+      "duration.spring-bouncy",
+      "ease.spring-bouncy",
+      "scale.anticipate",
+      "scale.lift",
+      "distance.lift"
     ],
     "motion": "fade-rise",
     "frameworks": {
@@ -6794,7 +6852,7 @@
         "status": "ready",
         "behavior": "hand built nav of links",
         "example": "Dock.demo.tsx",
-        "note": "The name fades in on hover and focus (the opacity half of fade-rise; the rise is left out so the name sits still over a moving tile). Desk magnifies the tile with a transform. Both collapse under reduced motion."
+        "note": "The name fades in on hover and focus (the opacity half of fade-rise; the rise is left out so the name sits still over a moving tile). Desk magnifies the tile with a transform. Both collapse under reduced motion. Round 2 (order 1.22, proposed), interaction dock-lift: the tile lifts toward the pointer on the bouncy spring, the next tiles follow at a half and a quarter, and a tile that becomes current pops (animation-composition add). Reduced motion: nothing moves."
       },
       "angular": {
         "status": "planned",
@@ -8964,7 +9022,15 @@
       "size.touch.android",
       "elevation.card-hover",
       "z.floating-panel",
-      "space.4xl"
+      "space.4xl",
+      "duration.instant",
+      "ease.out",
+      "duration.spring-bouncy",
+      "ease.spring-bouncy",
+      "duration.spring-snappy",
+      "ease.spring-snappy",
+      "scale.press",
+      "distance.shift"
     ],
     "motion": "spinner",
     "frameworks": {
@@ -10368,7 +10434,17 @@
       "color.focus.ring-on-primary-outer",
       "duration.fast",
       "duration.spin",
-      "ease.default"
+      "ease.default",
+      "duration.instant",
+      "ease.out",
+      "duration.spring-bouncy",
+      "ease.spring-bouncy",
+      "duration.spring-snappy",
+      "ease.spring-snappy",
+      "scale.press",
+      "scale.anticipate",
+      "scale.morph",
+      "distance.shift"
     ],
     "motion": "press",
     "frameworks": {
@@ -11205,7 +11281,7 @@
         "status": "ready",
         "behavior": "hand built kbd elements",
         "example": "Kbd.demo.tsx",
-        "note": "Parsing, the Mod mapping and spoken names live in @the-system/shared (shortcut.ts), so Angular and native read the same keys."
+        "note": "Parsing, the Mod mapping and spoken names live in @the-system/shared (shortcut.ts), so Angular and native read the same keys. Motion (kbd-press, order 1.22): a passive window key listener presses the keycap of a held key and springs it back on release; nothing under reduced motion."
       },
       "angular": {
         "status": "planned",
@@ -11520,14 +11596,22 @@
       "space.s",
       "space.m",
       "color.text.muted",
-      "color.text.bright"
+      "color.text.bright",
+      "duration.spring-snappy",
+      "ease.spring-snappy",
+      "duration.spring-bouncy",
+      "ease.spring-bouncy",
+      "scale.anticipate",
+      "duration.base",
+      "ease.out"
     ],
+    "motion": "swap",
     "frameworks": {
       "react": {
         "status": "ready",
         "behavior": "nav of system Links for two languages; system Button and radix:DropdownMenu radio items for more",
         "example": "LanguageSwitch.demo.tsx",
-        "note": "No motion of its own: the menu plays DropdownMenu's menu-scale."
+        "note": "No motion of its own: the menu plays DropdownMenu's menu-scale. Round 2 (order 1.22, proposed), interaction language-roll: when the current language changes in place, the trigger name rolls (an aria-hidden copy of the old name rolls out); in the pair the names dip and pop. Reduced: the new name fades in."
       },
       "angular": {
         "status": "planned",
@@ -11989,7 +12073,14 @@
       "size.icon.sm",
       "focus.shadow.ring",
       "color.focus.ring",
-      "opacity.disabled"
+      "opacity.disabled",
+      "duration.morph",
+      "ease.out",
+      "duration.quick",
+      "ease.exit",
+      "duration.spring-snappy",
+      "ease.spring-snappy",
+      "distance.nudge"
     ],
     "frameworks": {
       "react": {
@@ -12554,7 +12645,7 @@
         "status": "ready",
         "behavior": "hand built; shared logic in @the-system/shared filter.ts and listbox.ts",
         "example": "ListBox.demo.tsx",
-        "note": "No motion of its own: the popup that holds it plays menu-scale. Alone it has none. Sources GoBanana and Figma-Killer-2 were not reachable in the lane session; the rows follow the DropdownMenu surface built from them."
+        "note": "The popup that holds it plays menu-scale. Interaction row-glide (order 1.22, proposed): each option holds an unnamed aria-hidden span, the fill layer, and the lit row's fill travels from the last lit row; without the span the row draws its own fill. Sources GoBanana and Figma-Killer-2 were not reachable in the lane session; the rows follow the DropdownMenu surface built from them."
       },
       "angular": {
         "status": "ready",
@@ -13769,7 +13860,15 @@
       "ease.default",
       "ease.out",
       "ease.emphasized",
-      "ease.exit"
+      "ease.exit",
+      "duration.spring-snappy",
+      "ease.spring-snappy",
+      "duration.spring-bouncy",
+      "ease.spring-bouncy",
+      "duration.spring-soft",
+      "ease.spring-soft",
+      "scale.stretch",
+      "scale.anticipate"
     ],
     "motion": "menu-scale",
     "frameworks": {
@@ -13777,7 +13876,7 @@
         "status": "ready",
         "behavior": "radix:NavigationMenu; the phone list is a Drawer holding a Sidebar",
         "example": "Navbar.demo.tsx",
-        "note": "menu-scale: the viewport scales from 0.97 and fades in, the reverse on close, faster; the indicator slides under the open trigger. Reduced motion: none, and Radix removes the closed viewport at once. The phone Drawer plays Drawer's own slide from the inline start."
+        "note": "menu-scale: the viewport scales from 0.97 and fades in, the reverse on close, faster; the indicator slides under the open trigger. Reduced motion: none, and Radix removes the closed viewport at once. The phone Drawer plays Drawer's own slide from the inline start. Round 2 (order 1.22, proposed): nav-current-slide, the current link's bar (::before) slides from the old current link on the snappy spring, stretched along its travel; nav-hover-follow, the hover veil (::after) slides from the link the pointer left. Both from internal/indicator.ts, WAAPI on the pseudo elements."
       },
       "angular": {
         "status": "planned",
@@ -15050,7 +15149,18 @@
       "font.weight.regular",
       "font.weight.bold",
       "color.bg.overlay-10",
-      "color.bg.overlay-20"
+      "color.bg.overlay-20",
+      "duration.spring-snappy",
+      "ease.spring-snappy",
+      "duration.spring-bouncy",
+      "ease.spring-bouncy",
+      "duration.spring-soft",
+      "ease.spring-soft",
+      "scale.stretch",
+      "scale.anticipate",
+      "delay.stagger",
+      "distance.nudge",
+      "distance.shift"
     ],
     "motion": "press",
     "frameworks": {
@@ -15058,7 +15168,7 @@
         "status": "ready",
         "behavior": "nav of system Button and IconButton (asChild links with getHref); pageRange and itemRange from @the-system/shared",
         "example": "Pagination.demo.tsx",
-        "note": "The only motion is the Button press, reduced to none under reduced motion."
+        "note": "The only motion is the Button press, reduced to none under reduced motion. Round 2 (order 1.22, proposed), interaction pagination-roll: the current page holds an empty aria-hidden span (inside the page part) that draws its fill so the shared pill can slide it; page numbers sit in an aria-hidden span in the label (the page keeps its aria-label) and roll digit by digit with rollDigits when the window shifts; a pressed arrow winds up (back by distance.nudge, forward by distance.shift)."
       },
       "angular": {
         "status": "planned",
@@ -17004,14 +17114,25 @@
       "size.touch.android",
       "font.family.sans",
       "font.leading.tight",
-      "font.leading.arabic.tight"
+      "font.leading.arabic.tight",
+      "duration.spring-snappy",
+      "ease.spring-snappy",
+      "duration.spring-bouncy",
+      "ease.spring-bouncy",
+      "duration.spring-soft",
+      "ease.spring-soft",
+      "scale.stretch",
+      "scale.anticipate",
+      "delay.stagger",
+      "distance.enter"
     ],
+    "motion": "tab-indicator",
     "frameworks": {
       "react": {
         "status": "ready",
         "behavior": "hand built nav, radix:Slot for asChild, Tooltip for hidden or cut labels",
         "example": "Rail.demo.tsx",
-        "note": "No motion pattern: nothing moves. The hover veil fades on duration.fast and is instant under reduced motion. The order names no motion pattern, so the manifest names none, as in Link and ButtonGroup."
+        "note": "The hover veil fades on duration.fast and is instant under reduced motion. Round 2 (order 1.22, proposed): nav-current-slide (the edge bar ::before slides along the column, the icons dip and pop), nav-hover-follow (the hover veil slides from the item the pointer left) and sidebar-collapse (hideLabels moves the icons with flipPlay and the labels rise in after them)."
       },
       "angular": {
         "status": "planned",
@@ -18951,7 +19072,15 @@
       "ease.standard",
       "color.bg.overlay-50",
       "border.width.strong",
-      "color.border.subtle"
+      "color.border.subtle",
+      "duration.spring-snappy",
+      "ease.spring-snappy",
+      "duration.spring-bouncy",
+      "ease.spring-bouncy",
+      "duration.spring-soft",
+      "ease.spring-soft",
+      "scale.stretch",
+      "scale.anticipate"
     ],
     "motion": "tab-indicator",
     "frameworks": {
@@ -18959,7 +19088,7 @@
         "status": "ready",
         "behavior": "radix:ToggleGroup type single, the value never empty, selection follows focus; items are ToggleButton roots on ButtonBase",
         "example": "SegmentedControl.demo.tsx",
-        "note": "The indicator is measured from the selected item (logical start, top, inline and block size) and slides with catalog['tab-indicator'], transform only. Reduced motion plays nothing: it jumps. A ResizeObserver re-places it, without motion, when density, fonts or labels change the size."
+        "note": "The indicator is measured from the selected item (logical start, top, inline and block size) and slides with transform only. Reduced motion plays nothing: it jumps. A ResizeObserver re-places it, without motion, when density, fonts or labels change the size. Round 2 (order 1.22, proposed), interaction tab-slide: the thumb slides with the shared pill (internal/indicator.ts) on the snappy spring, stretched along its travel, and the labels dip and pop. Reduced motion: it jumps."
       },
       "angular": {
         "status": "ready",
@@ -20042,7 +20171,17 @@
       "duration.base",
       "ease.default",
       "ease.out",
-      "opacity.disabled"
+      "opacity.disabled",
+      "duration.spring-snappy",
+      "ease.spring-snappy",
+      "duration.spring-bouncy",
+      "ease.spring-bouncy",
+      "duration.spring-soft",
+      "ease.spring-soft",
+      "scale.stretch",
+      "scale.anticipate",
+      "delay.stagger",
+      "distance.shift"
     ],
     "motion": "fade-rise",
     "frameworks": {
@@ -20050,7 +20189,7 @@
         "status": "ready",
         "behavior": "hand built nav, radix:Collapsible for groups, radix:Slot for asChild, Tooltip for collapsed items",
         "example": "Sidebar.demo.tsx",
-        "note": "fade-rise: an opened group's list fades in and rises one step from below; closing is instant. Reduced motion: no animation, the list shows at once. The width never animates, so collapse is instant."
+        "note": "fade-rise: an opened group's list fades in and rises one step from below; closing is instant. Reduced motion: no animation, the list shows at once. The width never animates, so collapse is instant. Round 2 (order 1.22, proposed): nav-current-slide (the edge bar ::before slides along the column, labels dip and pop), nav-hover-follow (the hover veil ::after slides from the item the pointer left) and sidebar-collapse (the width changes at once; on expand the labels come in from the inline start after it with staggerGroup, on collapse the icons pop)."
       },
       "angular": {
         "status": "planned",
@@ -20340,14 +20479,18 @@
       "border.width.strong",
       "elevation.menu",
       "focus.shadow.ring",
-      "z.spotlight"
+      "z.spotlight",
+      "duration.spring-bouncy",
+      "ease.spring-bouncy",
+      "distance.enter"
     ],
+    "motion": "fade-rise",
     "frameworks": {
       "react": {
         "status": "ready",
         "behavior": "native a, focus moved by hand",
         "example": "SkipLink.demo.tsx",
-        "note": "No motion: the link appears at once on focus, so there is no pattern to name and nothing to reduce."
+        "note": "No motion: the link appears at once on focus, so there is no pattern to name and nothing to reduce. Round 2 (order 1.22, proposed), interaction skip-link-slide: drawn at once with its ring on focus, it slides down from distance.enter above on the bouncy spring. Reduced motion: it appears in place."
       },
       "angular": {
         "status": "planned",
@@ -21016,7 +21159,11 @@
       "color.focus.ring-on-primary-inner",
       "color.focus.ring-on-primary-outer",
       "duration.quick",
-      "ease.default"
+      "ease.default",
+      "duration.spring-snappy",
+      "ease.spring-snappy",
+      "scale.anticipate",
+      "distance.nudge"
     ],
     "motion": "menu-scale",
     "frameworks": {
@@ -21771,7 +21918,7 @@
         "status": "ready",
         "behavior": "hand built",
         "example": "Stat.demo.tsx",
-        "note": "number-roll plays through the Web Animations API on duration.roll and ease.reveal when a numeric value changes after the first paint; opacity only under reduced motion. Numbers go through a private formatStatNumber until packages/shared/src/number.ts (order 1.2.5) lands."
+        "note": "stat-roll (order 1.22): the drawn number is aria-hidden and rolls digit by digit with the digit-roll primitive when a numeric value changes after the first paint, the trend mark nudges the same way, and a visually hidden copy carries the number; at most three rolls a second; a fade of the new digits under reduced motion. Numbers go through a private formatStatNumber until packages/shared/src/number.ts (order 1.2.5) lands."
       },
       "angular": {
         "status": "planned",
@@ -22155,7 +22302,15 @@
       "opacity.disabled",
       "duration.base",
       "ease.out",
-      "breakpoint.phone"
+      "breakpoint.phone",
+      "duration.spring-snappy",
+      "ease.spring-snappy",
+      "duration.spring-bouncy",
+      "ease.spring-bouncy",
+      "duration.spring-soft",
+      "ease.spring-soft",
+      "scale.stretch",
+      "scale.anticipate"
     ],
     "motion": "tab-indicator",
     "frameworks": {
@@ -22163,7 +22318,7 @@
         "status": "ready",
         "behavior": "hand built ol; state from packages/shared/src/stepper.ts; reachable steps are system Buttons (asChild for links)",
         "example": "Stepper.demo.tsx",
-        "note": "Motion tab-indicator: the connector fill scales from the start side when a step completes; under reduced motion it swaps at once."
+        "note": "Motion tab-indicator: the connector fill scales from the start side when a step completes; under reduced motion it swaps at once. Round 2 (order 1.22, proposed), interaction stepper-travel: a ring on the indicator's ::after, drawn only while it travels, slides from the old current indicator to the new one (internal/indicator.ts, ghost form), the new indicator pops, and the connector fill moves on the soft spring."
       },
       "angular": {
         "status": "ready",
@@ -22632,9 +22787,18 @@
       "focus.shadow.ring",
       "duration.base",
       "ease.default",
-      "opacity.disabled"
+      "opacity.disabled",
+      "duration.instant",
+      "ease.out",
+      "duration.spring-bouncy",
+      "ease.spring-bouncy",
+      "duration.spring-soft",
+      "ease.spring-soft",
+      "scale.press",
+      "scale.stretch",
+      "scale.morph"
     ],
-    "motion": "fade",
+    "motion": "press",
     "frameworks": {
       "react": {
         "status": "ready",
@@ -22846,7 +23010,12 @@
       "border.width.default",
       "border.width.strong",
       "size.touch-ios",
-      "font.size.s"
+      "font.size.s",
+      "duration.spring-bouncy",
+      "ease.spring-bouncy",
+      "scale.anticipate",
+      "distance.nudge",
+      "delay.stagger"
     ],
     "motion": "fade-rise",
     "frameworks": {
@@ -22854,7 +23023,7 @@
         "status": "ready",
         "behavior": "hand built nav of links",
         "example": "TabBar.demo.tsx",
-        "note": "No motion of its own: the current item's colors swap at once. fade-rise is the pattern a layout uses if it reveals the bar."
+        "note": "No motion of its own: the current item's colors swap at once. fade-rise is the pattern a layout uses if it reveals the bar. Round 2 (order 1.22, proposed), interaction tab-bar-pop: when an item becomes current its icon and pill pop from scale.anticipate past rest and its label rises a stagger step later (CSS keyframes that start with data-active). Reduced motion: nothing moves."
       },
       "angular": {
         "status": "planned",
@@ -23038,7 +23207,10 @@
       "focus.shadow.ring",
       "dialog.height.max",
       "duration.medium",
-      "ease.standard"
+      "ease.standard",
+      "duration.spring-snappy",
+      "ease.spring-snappy",
+      "scale.stretch"
     ],
     "motion": "tab-indicator",
     "frameworks": {
@@ -23046,7 +23218,7 @@
         "status": "ready",
         "behavior": "nav with ol of anchors; IntersectionObserver in an effect; buildTree and activeHeading from @the-system/shared",
         "example": "TableOfContents.demo.tsx",
-        "note": "The indicator moves with a transform transition (tab-indicator); under reduced motion the duration is 0ms and the scroll is a jump."
+        "note": "The indicator moves with a transform transition (tab-indicator); under reduced motion the duration is 0ms and the scroll is a jump. Round 2 (order 1.22, proposed), interaction toc-travel: the bar moves on the snappy spring (CSS) and stretches along its travel from its trailing edge (a WAAPI stretch added to the transition)."
       },
       "angular": {
         "status": "planned",
@@ -23309,7 +23481,15 @@
       "opacity.disabled",
       "scrollbar.thumb",
       "duration.medium",
-      "ease.standard"
+      "ease.standard",
+      "duration.spring-snappy",
+      "ease.spring-snappy",
+      "duration.spring-bouncy",
+      "ease.spring-bouncy",
+      "duration.spring-soft",
+      "ease.spring-soft",
+      "scale.stretch",
+      "scale.anticipate"
     ],
     "motion": "tab-indicator",
     "frameworks": {
@@ -23317,7 +23497,7 @@
         "status": "ready",
         "behavior": "radix:Tabs",
         "example": "Tabs.demo.tsx",
-        "note": "The indicator lives in the active trigger and plays a FLIP from the previous trigger with the Web Animations API (translate and scale only). It plays the tab-indicator catalog spec: duration.medium with ease.standard. Under reduced motion the duration token is 0ms and nothing plays."
+        "note": "The indicator lives in the active trigger. Round 2 (order 1.22, proposed), interaction tab-slide: the indicator slides with the shared pill of internal/indicator.ts, from the box the old one is drawn in to its own on the snappy spring, stretched along its travel by up to scale.stretch (translate and scale, center origin). The label it leaves dips and the one it reaches pops (scale.anticipate, added to its transform). Under reduced motion or a style's reduced mode nothing plays."
       },
       "angular": {
         "status": "planned",
@@ -25059,8 +25239,20 @@
       "color.text.link",
       "duration.roll",
       "ease.reveal",
-      "color.bg.overlay-50"
+      "color.bg.overlay-50",
+      "duration.instant",
+      "ease.out",
+      "duration.spring-bouncy",
+      "ease.spring-bouncy",
+      "duration.spring-soft",
+      "ease.spring-soft",
+      "duration.celebrate",
+      "delay.stagger",
+      "scale.press",
+      "scale.pop",
+      "scale.anticipate"
     ],
+    "motion": "press",
     "frameworks": {
       "react": {
         "status": "ready",
@@ -25283,7 +25475,15 @@
       "color.border.default",
       "color.focus.ring",
       "color.focus.ring-on-primary-inner",
-      "color.focus.ring-on-primary-outer"
+      "color.focus.ring-on-primary-outer",
+      "duration.spring-snappy",
+      "ease.spring-snappy",
+      "duration.spring-bouncy",
+      "ease.spring-bouncy",
+      "duration.spring-soft",
+      "ease.spring-soft",
+      "scale.stretch",
+      "scale.anticipate"
     ],
     "motion": "press",
     "frameworks": {
@@ -25291,7 +25491,7 @@
         "status": "ready",
         "behavior": "radix:ToggleGroup; items are ToggleButton roots on ButtonBase",
         "example": "ToggleGroup.demo.tsx",
-        "note": "The axes reach the items through ButtonGroupContext, which ButtonRoot reads; an item's own prop wins. No motion of its own: items keep Button's."
+        "note": "The axes reach the items through ButtonGroupContext, which ButtonRoot reads; an item's own prop wins. No motion of its own: items keep Button's. Round 2 (order 1.22, proposed), interaction tab-slide: a single group renders an empty aria-hidden span as the first child of each item (inside the item part) that draws the on fill and ring, so the shared pill (internal/indicator.ts) slides the fill from the item it leaves on the snappy spring, stretched along its travel. A multiple group has none. The value of a single group is kept by ToggleGroup so it knows when it changes."
       },
       "angular": {
         "status": "ready",
@@ -25575,7 +25775,10 @@
       "border.width.default",
       "color.text.muted",
       "color.bg.overlay-40",
-      "opacity.disabled"
+      "opacity.disabled",
+      "duration.spring-bouncy",
+      "ease.spring-bouncy",
+      "scale.anticipate"
     ],
     "motion": "menu-scale",
     "frameworks": {
@@ -25583,7 +25786,7 @@
         "status": "ready",
         "behavior": "radix:Toolbar",
         "example": "Toolbar.demo.tsx",
-        "note": "Items are system Button, IconButton and Link roots through Radix asChild. Toggle groups use Radix ToolbarToggleGroup until ToggleButton and ToggleGroup (batch 1) are merged; then ToolbarToggleItem should render a ToggleButton. The overflow menu is the system DropdownMenu, which plays menu-scale."
+        "note": "Items are system Button, IconButton and Link roots through Radix asChild. Toggle groups use Radix ToolbarToggleGroup until ToggleButton and ToggleGroup (batch 1) are merged; then ToolbarToggleItem should render a ToggleButton. The overflow menu is the system DropdownMenu, which plays menu-scale. Round 2 (order 1.22, proposed), interaction toolbar-press: items dip their parts to scale.anticipate while pressed (Button's --_button-part-press) and a toggle item that turns on pops its icon (CSS keyframes, animation-composition add)."
       },
       "angular": {
         "status": "planned",
