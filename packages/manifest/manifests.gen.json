@@ -415,6 +415,261 @@
     "since": "0.1.0"
   },
   {
+    "name": "Checkbox",
+    "kind": "component",
+    "family": "selection",
+    "summary": "One on or off choice that is saved with a form, with an indeterminate state for a parent of mixed children.",
+    "useWhen": [
+      "One yes or no choice that takes effect when the form is saved, such as agreeing to terms",
+      "Picking rows in a table or items in a list, where several can be picked",
+      "A parent that checks or clears a set of children, shown indeterminate when only some are checked"
+    ],
+    "avoidWhen": [
+      "A setting that takes effect the moment it changes",
+      "One choice among options that exclude each other",
+      "Several related choices under one question with one value array"
+    ],
+    "insteadUse": {
+      "A setting that takes effect at once": "Switch",
+      "One choice among a few options": "RadioGroup",
+      "Several choices under one question": "CheckboxGroup",
+      "A pressed or not pressed tool in a toolbar": "ToggleButton"
+    },
+    "anatomy": [
+      "root",
+      "control",
+      "indicator",
+      "label",
+      "description"
+    ],
+    "slots": {
+      "label": {
+        "accepts": "text",
+        "max": 1
+      },
+      "description": {
+        "accepts": "text",
+        "max": 1
+      }
+    },
+    "props": {
+      "size": {
+        "type": [
+          "sm",
+          "md",
+          "lg"
+        ],
+        "default": "md",
+        "description": "Box of 12, 16 and 24 px in a target of 24 px, 24 px and the lg control height (40 to 48 px by density). Inside a CheckboxGroup it follows the group."
+      },
+      "tone": {
+        "type": [
+          "neutral",
+          "accent",
+          "danger"
+        ],
+        "default": "neutral",
+        "description": "The fill of a checked box. neutral is the text color, accent the primary fill of the style, danger for a destructive choice."
+      },
+      "checked": {
+        "type": [
+          "true",
+          "false",
+          "indeterminate"
+        ],
+        "description": "Controlled state. Pair with onCheckedChange."
+      },
+      "defaultChecked": {
+        "type": [
+          "true",
+          "false",
+          "indeterminate"
+        ],
+        "default": "false",
+        "description": "Uncontrolled starting state."
+      },
+      "onCheckedChange": {
+        "type": "function",
+        "description": "Called with true or false when the person toggles the box. Never called while read only."
+      },
+      "label": {
+        "type": "node",
+        "description": "Visible text after the box, a native label bound to the control. Without it, pass aria-label."
+      },
+      "description": {
+        "type": "node",
+        "description": "A hint under the label. Joins aria-describedby."
+      },
+      "value": {
+        "type": "string",
+        "description": "Sent with the form when checked. Inside a CheckboxGroup it is the value this box adds to the group array, and the group owns the checked state."
+      },
+      "name": {
+        "type": "string",
+        "description": "The form name. Inside a CheckboxGroup it follows the group."
+      },
+      "id": {
+        "type": "string",
+        "description": "The control id. Inside a Field it defaults to the Field control id."
+      },
+      "invalid": {
+        "type": "boolean",
+        "description": "Danger border on an empty box and aria-invalid. Inside a Field or a CheckboxGroup it follows them."
+      },
+      "disabled": {
+        "type": "boolean",
+        "description": "Native disabled on the control. Inside a Field or a CheckboxGroup it follows them."
+      },
+      "readOnly": {
+        "type": "boolean",
+        "description": "Keeps the value and focus, ignores clicks and Space, sets aria-readonly."
+      },
+      "required": {
+        "type": "boolean",
+        "description": "Sets aria-required. Inside a Field it follows the Field."
+      },
+      "rootProps": {
+        "type": "object",
+        "description": "Props for the root element. className and style also go to the root; the ref and every other prop go to the control."
+      }
+    },
+    "states": [
+      "checked",
+      "unchecked",
+      "indeterminate",
+      "data-disabled",
+      "data-invalid",
+      "data-readonly"
+    ],
+    "a11y": {
+      "role": "checkbox, on the control (a Radix button). aria-checked is true, false or mixed.",
+      "focus": "The control is the one tab stop. Focus shows the glow and a 2px ring around the box.",
+      "keys": {
+        "Tab": "Moves focus to the control, and on to the next control",
+        "Shift+Tab": "Moves focus back",
+        "Space": "Toggles the box. Enter does nothing, as a native checkbox."
+      },
+      "announce": "Name from the label (or aria-label), the state as checked, not checked or mixed, the description through aria-describedby, and invalid and required.",
+      "native": {
+        "accessibilityRole": "checkbox",
+        "accessibilityState": [
+          "checked",
+          "disabled"
+        ]
+      },
+      "notes": [
+        "The box is 16px inside a 24px target. The label is a native label bound to the control, so it extends the target.",
+        "A checked box shows a check and an indeterminate box a minus, so the state never relies on color alone.",
+        "Read only is not part of Radix: clicks are prevented, aria-readonly is set and the box draws dashed.",
+        "Indeterminate is a display state. The next click checks the box."
+      ]
+    },
+    "content": {
+      "en": {
+        "label": "A statement in sentence case that is true when checked: Email me a weekly summary. No question, no trailing period.",
+        "negative": "Never a negative label such as Do not email me. A checked box turns something on.",
+        "terms": "For agreement, say what is agreed: I agree to the terms of use."
+      },
+      "ar": {
+        "label": "جملة قصيرة بصيغة الاسم، تصير صحيحة لما ينحدد المربع، بدون تشكيل",
+        "negative": "لا تستخدم النفي في العنوان، المربع المحدد يشغل الشي",
+        "terms": "في الموافقة، اذكر وش اللي ينوافق عليه بالضبط"
+      }
+    },
+    "tokens": [
+      "size.target-min",
+      "size.control.lg",
+      "size.icon.sm",
+      "size.icon.md",
+      "size.icon.lg",
+      "space.3xs",
+      "font.size.s",
+      "font.size.m",
+      "font.leading.snug",
+      "font.leading.normal",
+      "radius.xs",
+      "radius.sm",
+      "border.width.default",
+      "border.width.strong",
+      "color.border.control",
+      "color.border.control-hover",
+      "color.state.danger.text",
+      "color.state.danger.solid",
+      "color.state.danger.on-solid",
+      "color.text.default",
+      "color.text.muted",
+      "color.bg.body",
+      "color.bg.overlay-5",
+      "color.bg.overlay-20",
+      "color.primary.fill",
+      "color.primary.border",
+      "color.text.on-primary",
+      "elevation.input-focus",
+      "focus.shadow.ring",
+      "duration.base",
+      "ease.default",
+      "opacity.disabled"
+    ],
+    "motion": "fade",
+    "frameworks": {
+      "react": {
+        "status": "ready",
+        "behavior": "radix:Checkbox",
+        "example": "Checkbox.demo.tsx"
+      },
+      "angular": {
+        "status": "planned"
+      },
+      "native": {
+        "status": "planned"
+      }
+    },
+    "styles": {
+      "studio": "Achromatic: the checked box fills with the text color and the glyph takes the body color. accent is a quiet overlay fill.",
+      "desk": "The same box. accent fills with the yellow primary and a dark glyph."
+    },
+    "mistakes": [
+      {
+        "wrong": "A checkbox that saves a setting the moment it changes",
+        "right": "A Switch"
+      },
+      {
+        "wrong": "Color alone shows that the box is checked",
+        "right": "The check and minus glyphs, which this component draws"
+      },
+      {
+        "wrong": "A disabled checkbox to show a value that cannot change",
+        "right": "readOnly, which stays readable and focusable"
+      },
+      {
+        "wrong": "A row of checkboxes with one label above them in a div",
+        "right": "A CheckboxGroup, a fieldset with a legend"
+      },
+      {
+        "wrong": "A Field label and a Checkbox label on the same box, which joins both into one name",
+        "right": "The Checkbox label only; use Field for its error and description"
+      },
+      {
+        "wrong": "A 16px box with no label and no wider target",
+        "right": "The control, which is a 24px target, and aria-label when there is no visible label"
+      }
+    ],
+    "contract": {
+      "optionalParts": [
+        "label",
+        "description"
+      ],
+      "keys": {
+        "Space": {
+          "focus": "[data-ds='checkbox'] [data-part='control']",
+          "case": "one",
+          "expect": "state-changes"
+        }
+      }
+    },
+    "since": "0.1.0"
+  },
+  {
     "name": "Dialog",
     "kind": "component",
     "family": "overlays",
