@@ -10,6 +10,7 @@ import { DsToggleButton } from './toggle-button';
     <button id="first" dsToggleButton defaultPressed start="grid" end="check" tone="accent" emphasis="outline">Grid view</button>
     <button id="bound" dsToggleButton [(pressed)]="bold">Bold</button>
     <button id="icon" dsToggleButton icon="eye" label="Show guides"></button>
+    <button id="guard" dsToggleButton (click)="$event.preventDefault()">Strict mode</button>
     <button id="disabled" dsToggleButton disabled (pressedChange)="changes.set(changes() + 1)">Lock layer</button>
   `,
 })
@@ -66,6 +67,13 @@ describe('DsToggleButton', () => {
     expect(el.getAttribute('aria-label')).toBe('Show guides');
     expect(el.hasAttribute('label')).toBe(false);
     expect(Array.from(el.children).map((c) => c.getAttribute('data-part'))).toEqual(['icon']);
+  });
+
+  it('a caller click that prevents the default keeps the state', async () => {
+    const { fixture, q } = await setup();
+    q('guard').click();
+    await fixture.whenStable();
+    expect(q('guard').getAttribute('data-state')).toBe('off');
   });
 
   it('disabled stays focusable and does not toggle', async () => {

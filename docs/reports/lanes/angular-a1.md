@@ -15,12 +15,12 @@ Skipped: ToggleGroup and SegmentedControl. Neither has a React version in
 | Component | DOM diff vs React | Contract (angular) | Pixels vs React | Unit tests |
 | --- | --- | --- | --- | --- |
 | ButtonGroup | 0 lines differ (en, ar rtl desk) | 29 passed | 18 shots, 0 px | 4 |
-| ToggleButton | 0 (en, ar rtl desk) | 29 passed | 18 shots, 0 px | 5 |
+| ToggleButton | 0 (en, ar rtl desk) | 29 passed | 18 shots, 0 px | 6 |
 | CloseButton | 0 | 29 passed | 18 shots, 0 px | 4 |
 | CopyButton | 0 | 29 passed | 18 shots, 0 px | 7 |
 | FloatingActionButton | 0 | 29 passed | 18 shots, 0 px | 3 |
 | Link | 0 (en, ar rtl desk) | 29 passed | 18 shots, 0 px | 4 |
-| DropdownMenu | 0, closed page and every open menu (see below) | 44 passed | 24 shots (12 open), 0 px | 11 |
+| DropdownMenu | 0, closed page and every open menu (see below) | 44 passed | 24 shots (12 open), 0 px | 13 |
 | SplitButton | 0, closed page and open menu, en and ar rtl | 29 passed, 15 skipped | 12 shots, 0 px | 4 |
 
 - DOM diff: `docs/reports/shots/angular/compare-dom.mjs` on `/c/<slug>?chrome=0`
@@ -262,6 +262,48 @@ Inputs: `label` (required), `menuLabel` (required), `start`, `size`, `tone`,
   'dsSplitButton'` or a view query.
 - Reads the ButtonGroup axes through the same token as the buttons.
 
+## Review
+
+One fresh eyes review (ds-qa, claude-opus-5-5 at medium) of the whole diff.
+Fixed in the commit "a1: review fixes":
+
+- Blocker: a DropdownMenu inside a Dialog closed as soon as it opened. The
+  dialog's focusin listener pulled focus from the menu layer back into the
+  panel, and the menu read that as focus outside. The dialog now leaves focus
+  that lands inside a `[data-menu-layer]` alone (`dialog.ts`, one line).
+  Test: "a menu inside a dialog stays open and takes focus". Dialog contract
+  44 of 44 again.
+- Blocker: a menu or submenu reopened during its exit animation skipped its
+  open rules: a submenu was not re-registered with its parent, so the parent
+  treated it as outside and closed everything; the root got no focus and lost
+  its placement attributes. The reopen path now places again and runs the
+  open rules.
+- Note: with a submenu opened by hover, ArrowRight, Enter or Space on the sub
+  trigger now moves focus into it, as Radix does. Test added.
+- Note: ToggleButton now keeps its state when a caller's `(click)` calls
+  `preventDefault()`, as Radix Toggle does. Angular runs the host listener
+  before the caller's, so it waits one microtask, as CopyButton does. Test
+  added.
+- Note: CopyButton no longer sets state or a timer after it is destroyed
+  during a pending copy.
+- Extra: a menu whose host is destroyed while open now runs its close rules
+  (focus back to the trigger, the submenu leaves its parent) before the layer
+  goes.
+
+Left open, with the reason:
+
+- No pointer grace area toward a submenu (see "What I could not do").
+- ToggleButton and CopyButton read `defaultPrevented` after one microtask,
+  so a `preventDefault()` anywhere on the propagation path (a clickable card
+  around the button) also cancels, where React only sees the caller's own
+  `onClick`. Rare, and the alternative (ordering listeners on one element)
+  has no Angular API.
+- `behavior/popper.ts` flip: the alignment side used for the cross axis
+  check differs from Floating UI's `getAlignmentSides` when the anchor is
+  wider than the menu, and center alignment skips the cross axis check. This
+  only matters when no placement fits and a tie must be broken at a viewport
+  edge. All shots are at 0 pixels; the edge cases are not covered by a demo.
+
 ## Changes outside the component folders
 
 - `packages/angular/src/components/button/button-base.ts`, `button.ts`,
@@ -269,6 +311,8 @@ Inputs: `label` (required), `menuLabel` (required), `start`, `size`, `tone`,
   row asks for it ("On DsButtonBase"). Button and IconButton DOM, contract
   and pixels are unchanged.
 - `packages/angular/src/behavior/popper.ts`: new, the positioning above.
+- `packages/angular/src/components/dialog/dialog.ts`: the one line focusin
+  fix from the review, so a menu can open inside a dialog.
 - `apps/gallery-angular/src/app/app.ts`: a click listener that resolves
   in-page links (`href="#..."`) against the current page. The Angular CLI
   needs `<base href="/">` for its script paths, and with it `#sharing` opened

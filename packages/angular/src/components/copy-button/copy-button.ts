@@ -91,11 +91,15 @@ export class DsCopyButton extends DsButtonBase {
     return '';
   });
   private timer: ReturnType<typeof setTimeout> | undefined;
+  private destroyed = false;
 
   constructor() {
     super();
     consumeHostAttributes(['dsCopyButton', 'value', 'label', 'iconOnly', 'copiedLabel', 'failedLabel', 'target']);
-    inject(DestroyRef).onDestroy(() => clearTimeout(this.timer));
+    inject(DestroyRef).onDestroy(() => {
+      this.destroyed = true;
+      clearTimeout(this.timer);
+    });
   }
 
   protected override isIconOnly(): boolean {
@@ -109,6 +113,7 @@ export class DsCopyButton extends DsButtonBase {
     if (event.defaultPrevented) return;
     const value = this.value();
     const ok = await copyToClipboard(value);
+    if (this.destroyed) return;
     if (ok) this.copied.emit(value);
     else {
       selectTextOf(this.target());

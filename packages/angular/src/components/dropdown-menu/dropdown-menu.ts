@@ -439,6 +439,8 @@ abstract class MenuPanelHost extends MenuPanel {
   protected readonly themeService = inject(DsThemeService);
   private outlet: DomPortalOutlet | null = null;
   protected layer: DsMenuLayer | null = null;
+  /** Places the open layer again. */
+  private replace: (() => void) | null = null;
   private undo: (() => void)[] = [];
   private generation = 0;
 
@@ -459,13 +461,20 @@ abstract class MenuPanelHost extends MenuPanel {
       const open = this.isOpen();
       untracked(() => (open ? this.mount() : this.unmountAfterExit()));
     });
-    inject(DestroyRef).onDestroy(() => this.dispose());
+    inject(DestroyRef).onDestroy(() => {
+      // Removed while open: run the close rules, then drop the layer at once.
+      if (this.layer && !this.layer.closing()) this.closed();
+      this.dispose();
+    });
   }
 
   private mount(): void {
     this.generation += 1;
-    if (this.layer) {
+    if (this.layer && this.element) {
+      // Reopened while the exit played: stay mounted, open again, and run the open rules again.
       this.layer.closing.set(false);
+      this.replace?.();
+      this.opened(this.element);
       return;
     }
     const injector = Injector.create({
@@ -503,6 +512,7 @@ abstract class MenuPanelHost extends MenuPanel {
       }
       ref.changeDetectorRef.detectChanges();
     };
+    this.replace = place;
     this.undo = [autoPlace(anchor ?? wrapper, wrapper, place), ...this.listen(menu)];
     if (this.root.modal() && this.partName() !== 'sub-content') this.undo.push(hideOthers(ref.location.nativeElement as Element));
     this.opened(menu);
@@ -532,6 +542,7 @@ abstract class MenuPanelHost extends MenuPanel {
     this.outlet?.detach();
     this.outlet = null;
     this.layer = null;
+    this.replace = null;
     this.element = null;
     this.tabStop.set(null);
     clearTimeout(this.searchTimer);
@@ -676,6 +687,8 @@ export class DsDropdownMenuSub {
   readonly contentId = newId('sub-content');
   trigger: HTMLElement | null = null;
   openTimer: ReturnType<typeof setTimeout> | undefined;
+  /** The submenu's panel while it exists, so the keyboard can enter a menu the pointer opened. */
+  panel: MenuPanel | null = null;
   /** Where the submenu is placed, for the sub trigger's data-radix-popper-* attributes. */
   readonly placed = signal<{ side: PopperSide; align: PopperAlign } | null>(null);
 
@@ -735,6 +748,10 @@ export class DsDropdownMenuSubContent extends MenuPanelHost {
 
   constructor() {
     super();
+    this.sub.panel = this;
+    inject(DestroyRef).onDestroy(() => {
+      if (this.sub.panel === this) this.sub.panel = null;
+    });
     this.watch();
   }
 
@@ -1115,8 +1132,15 @@ export class DsDropdownMenuSubTrigger extends MenuItemBase {
     if (this.panel.search !== '' && event.key === ' ') return;
     const openKey = this.dir.value === 'rtl' ? 'ArrowLeft' : 'ArrowRight';
     if ([...SELECTION_KEYS, openKey].includes(event.key)) {
-      this.sub.setOpen(true);
       event.preventDefault();
+      // Already open from a hover: move into it, as Radix focuses the sub content.
+      const panel = this.sub.panel;
+      if (this.sub.isOpen() && panel?.element) {
+        panel.element.focus({ preventScroll: true });
+        focusFirst(panel.items(), this.host.ownerDocument);
+        return;
+      }
+      this.sub.setOpen(true);
     }
   }
 }

@@ -3,10 +3,11 @@ import { TestBed } from '@angular/core/testing';
 import { afterEach, describe, expect, it } from 'vitest';
 import { DsTheme } from '../../theme/theme';
 import { DsButton } from '../button/button';
+import { DS_DIALOG } from '../dialog/dialog';
 import { DS_DROPDOWN_MENU, type DropdownMenuChecked } from './dropdown-menu';
 
 @Component({
-  imports: [DsButton, DsTheme, ...DS_DROPDOWN_MENU],
+  imports: [DsButton, DsTheme, ...DS_DROPDOWN_MENU, ...DS_DIALOG],
   template: `
     <div dsTheme="desk" [lang]="'en'">
       <ng-container dsDropdownMenu [(open)]="open" size="sm">
@@ -34,6 +35,14 @@ import { DS_DROPDOWN_MENU, type DropdownMenuChecked } from './dropdown-menu';
           <div id="delete" dsDropdownMenuItem tone="danger">Delete board</div>
         </ng-template>
       </ng-container>
+      <ng-container dsDialog [(open)]="dialogOpen">
+        <ng-template dsDialogContent title="Board settings">
+          <ng-container dsDropdownMenu [(open)]="innerOpen">
+            <button id="inner" dsButton dsDropdownMenuTrigger>More actions</button>
+            <ng-template dsDropdownMenuContent><div id="inner-item" dsDropdownMenuItem>Copy link</div></ng-template>
+          </ng-container>
+        </ng-template>
+      </ng-container>
       <ng-container dsDropdownMenu>
         <button id="off" dsButton dsDropdownMenuTrigger disabled>Share board</button>
         <ng-template dsDropdownMenuContent><div dsDropdownMenuItem>Copy link</div></ng-template>
@@ -46,6 +55,8 @@ class Host {
   readonly grid = signal<DropdownMenuChecked>('indeterminate');
   readonly sort = signal<string | undefined>('edited');
   readonly chosen = signal<string | null>(null);
+  readonly dialogOpen = signal(false);
+  readonly innerOpen = signal<boolean | undefined>(undefined);
   keepOpen(event: Event): void {
     event.preventDefault();
     this.chosen.set('duplicate');
@@ -226,6 +237,33 @@ describe('DsDropdownMenu', () => {
     const tab = new KeyboardEvent('keydown', { key: 'Tab', bubbles: true, cancelable: true });
     document.activeElement?.dispatchEvent(tab);
     expect(tab.defaultPrevented).toBe(true);
+  });
+
+  it('a menu inside a dialog stays open and takes focus', async () => {
+    const { byId, press, host, fixture } = await setup();
+    host.dialogOpen.set(true);
+    await fixture.whenStable();
+    await new Promise((r) => setTimeout(r, 0));
+    byId('inner').focus();
+    await press('Enter');
+    expect(host.innerOpen()).toBe(true);
+    expect(document.activeElement?.id).toBe('inner-item');
+    await press('Escape');
+    expect(host.innerOpen()).toBe(false);
+    expect(host.dialogOpen()).toBe(true);
+    expect(document.activeElement?.id).toBe('inner');
+  });
+
+  it('the keyboard enters a submenu the pointer already opened', async () => {
+    const { byId, press } = await setup();
+    byId('trigger').focus();
+    await press('Enter');
+    byId('share').click();
+    await press('Shift', byId('share'));
+    expect(byId('share').getAttribute('data-state')).toBe('open');
+    byId('share').focus();
+    await press('ArrowRight');
+    expect(document.activeElement?.id).toBe('copy-link');
   });
 
   it('a disabled trigger does not open', async () => {

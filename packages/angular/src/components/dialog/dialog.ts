@@ -388,6 +388,8 @@ export class DsDialogLayer {
     const panel = this.panel().nativeElement;
     const target = event.target;
     if (target instanceof Node && panel.contains(target)) return;
+    // A menu opened from inside the dialog lives in its own portal layer: focus there stays.
+    if (target instanceof Element && target.closest('[data-menu-layer]')) return;
     (tabbables(panel, this.checker)[0] ?? panel).focus();
   }
 

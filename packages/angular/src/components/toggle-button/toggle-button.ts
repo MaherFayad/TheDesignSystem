@@ -25,7 +25,7 @@ import { DsButtonBase, isIconName, type ButtonEmphasis, type ButtonSlotContent }
     '[attr.aria-pressed]': 'on() ? "true" : "false"',
     '[attr.data-state]': 'on() ? "on" : "off"',
     '[attr.aria-label]': 'icon() !== undefined ? label() : null',
-    '(click)': 'toggle()',
+    '(click)': 'toggle($event)',
   },
   template: `
     <ng-template #slot let-content>
@@ -80,7 +80,12 @@ export class DsToggleButton extends DsButtonBase {
   }
 
   /** Runs after the base: an inert toggle never gets here (the capture listener stops the click). */
-  protected toggle(): void {
+  protected async toggle(event: Event): Promise<void> {
+    // A caller's (click) that prevents the default keeps the state, as with
+    // Radix Toggle. Angular runs this host listener before the caller's, so
+    // wait one microtask for it.
+    await Promise.resolve();
+    if (event.defaultPrevented) return;
     const next = !this.on();
     this.on.set(next);
     this.pressed.set(next);
