@@ -1,0 +1,124 @@
+/*
+ * Skeleton: a placeholder shape while content loads. Source: Figma-Killer-2
+ * `Skeleton.module.css` (a base fill, a band that sweeps across, 1.4s cadence).
+ *
+ * The fill and the band are overlay tokens, not surface steps: an overlay
+ * shows on any surface it sits on (body, surface, glass) and goes the right
+ * way in each scheme, lighter on dark and darker on light. The band is a
+ * second overlay-10 over the fill, so it doubles the overlay. The surface steps
+ * read as holes in the light schemes, where surface-3 is lighter than body.
+ *
+ * Private plumbing (docs/contracts/anatomy.md, one convention), on the root:
+ *
+ *   --_skeleton-bg            the base fill
+ *   --_skeleton-highlight     the color of the band that sweeps across
+ *   --_skeleton-radius
+ *   --_skeleton-width         the width; the width prop sets it inline, which wins
+ *   --_skeleton-height        the height of a rect; the height prop sets it inline
+ *   --_skeleton-font-size     the type size a text line stands for
+ *
+ * The shimmer is the skeleton-shimmer pattern: a band on ::before (the glow
+ * layer) moves across with transform only. It travels toward the inline end,
+ * so it runs right to left in RTL. Under reduced motion the band is not
+ * drawn and the shape stays still. Forced colors draws an outline, since the
+ * fill is not painted there.
+ */
+@layer ds.base {
+  [data-ds='skeleton'] {
+    --_skeleton-bg: var(--ds-color-bg-overlay-10);
+    --_skeleton-highlight: var(--ds-color-bg-overlay-10);
+    --_skeleton-radius: var(--ds-radius-xs);
+    --_skeleton-font-size: var(--ds-font-size-m);
+    --_skeleton-width: 100%;
+    --_skeleton-height: auto;
+    --_skeleton-shimmer-from: -100%;
+    --_skeleton-shimmer-to: 100%;
+
+    position: relative;
+    display: block;
+    box-sizing: border-box;
+    inline-size: var(--_skeleton-width);
+    max-inline-size: 100%;
+    overflow: hidden;
+    border-radius: var(--_skeleton-radius);
+    background-color: var(--_skeleton-bg);
+    user-select: none;
+    pointer-events: none;
+  }
+
+  [data-ds='skeleton']:dir(rtl) {
+    --_skeleton-shimmer-from: 100%;
+    --_skeleton-shimmer-to: -100%;
+  }
+
+  [data-ds='skeleton']::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: linear-gradient(to right, transparent, var(--_skeleton-highlight), transparent);
+    transform: translateX(var(--_skeleton-shimmer-from));
+    animation: ds-skeleton-shimmer var(--ds-duration-shimmer) var(--ds-ease-default) infinite;
+  }
+
+  @keyframes ds-skeleton-shimmer {
+    from {
+      transform: translateX(var(--_skeleton-shimmer-from));
+    }
+
+    to {
+      transform: translateX(var(--_skeleton-shimmer-to));
+    }
+  }
+
+  /* ------------------------------------------------------------ variants */
+
+  /* A text line: as tall as the type it stands for, with half the leading above and below, so lines stack like text. */
+  [data-ds='skeleton'][data-variant='text'] {
+    block-size: var(--_skeleton-font-size);
+    margin-block: calc(var(--_skeleton-font-size) * (var(--ds-font-leading-normal) - 1) / 2);
+  }
+
+  [data-ds='skeleton'][data-variant='text'][data-size='sm'] {
+    --_skeleton-font-size: var(--ds-font-size-s);
+  }
+
+  [data-ds='skeleton'][data-variant='text'][data-size='lg'] {
+    --_skeleton-font-size: var(--ds-font-size-2xl);
+  }
+
+  [data-ds='skeleton'][data-variant='circle'] {
+    --_skeleton-radius: var(--ds-radius-pill);
+    --_skeleton-width: var(--ds-size-control-md);
+
+    flex: none;
+    aspect-ratio: 1;
+  }
+
+  [data-ds='skeleton'][data-variant='rect'] {
+    --_skeleton-radius: var(--ds-radius-sm);
+    --_skeleton-height: var(--ds-size-control-lg);
+
+    block-size: var(--_skeleton-height);
+  }
+
+  /* ------------------------------------------------------------ reduced motion, forced colors */
+
+  @media (prefers-reduced-motion: reduce) {
+    [data-ds='skeleton']::before {
+      animation: none;
+      opacity: 0;
+    }
+  }
+
+  @media (forced-colors: active) {
+    [data-ds='skeleton'] {
+      outline: var(--ds-border-width-default) solid CanvasText;
+      outline-offset: calc(-1 * var(--ds-border-width-default));
+    }
+
+    [data-ds='skeleton']::before {
+      animation: none;
+      opacity: 0;
+    }
+  }
+}
