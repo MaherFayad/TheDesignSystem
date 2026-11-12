@@ -1608,6 +1608,184 @@
     "since": "0.1.0"
   },
   {
+    "name": "ProgressBar",
+    "kind": "component",
+    "family": "feedback",
+    "summary": "A labelled bar that shows how far a task has come, or that it runs with no known end.",
+    "useWhen": [
+      "A task that reports how far it is: an upload, an export, an import",
+      "A task with no known end that takes more than a few seconds and has a name, as the indeterminate form",
+      "A list of tasks, one small bar per row"
+    ],
+    "avoidWhen": [
+      "A measured value that is not a task, such as storage used or a score",
+      "A short wait on a small area with no value",
+      "Little room, such as a card corner or a file chip"
+    ],
+    "insteadUse": {
+      "A measured value that is not a task": "Meter",
+      "A short wait on a small area with no value": "Spinner",
+      "Little room": "ProgressCircle"
+    },
+    "anatomy": [
+      "root",
+      "label",
+      "value",
+      "track",
+      "indicator"
+    ],
+    "props": {
+      "value": {
+        "type": "number",
+        "description": "Progress from 0 to max. null or undefined gives the indeterminate form. Values out of range are clamped."
+      },
+      "max": {
+        "type": "number",
+        "default": 100,
+        "description": "The value that means done. The minimum is always 0 (Radix Progress)."
+      },
+      "label": {
+        "type": "node",
+        "description": "Visible text that names the task and labels the progressbar through aria-labelledby. Without it, pass aria-label."
+      },
+      "showValue": {
+        "type": "boolean",
+        "default": true,
+        "description": "Shows the value text at the end of the label row: the percent, or the loading words while indeterminate."
+      },
+      "valueText": {
+        "type": "function",
+        "description": "(value, max) => string. Builds both the visible value and aria-valuetext, for example 3 of 10 files. Default: a whole percent in the page language with Western digits."
+      },
+      "loadingLabel": {
+        "type": "string",
+        "default": "Loading",
+        "description": "What the value and aria-valuetext say while indeterminate. Arabic default under lang ar: جار التحميل."
+      },
+      "size": {
+        "type": [
+          "sm",
+          "md",
+          "lg"
+        ],
+        "default": "md",
+        "description": "Track thickness 4, 8 and 12 px (space.fixed.2xs, m, xl); the text steps from font.size.xs to m."
+      },
+      "tone": {
+        "type": [
+          "accent",
+          "success",
+          "warning",
+          "danger"
+        ],
+        "default": "accent",
+        "description": "Indicator color. accent is color.primary.on-surface; the others are color.state.<tone>.solid."
+      }
+    },
+    "states": [
+      "loading",
+      "complete",
+      "indeterminate"
+    ],
+    "a11y": {
+      "role": "progressbar (Radix Progress) with aria-valuemin 0, aria-valuemax, aria-valuenow and aria-valuetext",
+      "focus": "Never focusable.",
+      "keys": {},
+      "announce": "Not a live region: a screen reader reads the label and the value text when it reaches the bar. aria-valuetext carries the formatted value, or the loading words while indeterminate. To announce a finish, say it once in a Toast or a status line.",
+      "native": {
+        "accessibilityRole": "progressbar",
+        "accessibilityState": [
+          "busy"
+        ]
+      },
+      "notes": [
+        "The label and the value sit inside the progressbar; its children are presentational, so the label names it through aria-labelledby and the value through aria-valuetext.",
+        "Indeterminate slides a 40% segment along the track. Under reduced motion it stops as a full, faded track and the value text says Loading.",
+        "The indicator scales from the inline start: it fills from the right in Arabic.",
+        "Under forced colors the track has a CanvasText border and the indicator is Highlight.",
+        "Tone is never the only signal: the label says what happened (Upload stopped) and the value says how far."
+      ]
+    },
+    "content": {
+      "en": {
+        "label": "Name the task as a present participle plus a noun: Uploading files, Exporting board. On a stop, say what happened and what to do next.",
+        "value": "A whole percent by default. Count units when they mean more: 3 of 10 files.",
+        "loading": "Loading by default; a more exact verb when known: Preparing export."
+      },
+      "ar": {
+        "label": "Noun form labels, no diacritics: رفع الملفات، تصدير اللوحة.",
+        "value": "Western digits: 46%، 3 من 10 ملفات.",
+        "loading": "جار التحميل by default."
+      }
+    },
+    "tokens": [
+      "space.fixed.2xs",
+      "space.fixed.m",
+      "space.fixed.xl",
+      "space.2xs",
+      "space.s",
+      "font.family.sans",
+      "font.size.xs",
+      "font.size.s",
+      "font.size.m",
+      "font.weight.medium",
+      "font.leading.snug",
+      "radius.pill",
+      "border.width.default",
+      "opacity.disabled",
+      "color.bg.overlay-10",
+      "color.text.default",
+      "color.text.muted",
+      "color.primary.on-surface",
+      "color.state.success.solid",
+      "color.state.warning.solid",
+      "color.state.danger.solid",
+      "duration.slow",
+      "duration.shimmer",
+      "ease.standard"
+    ],
+    "motion": "spinner",
+    "frameworks": {
+      "react": {
+        "status": "ready",
+        "behavior": "radix:Progress",
+        "example": "ProgressBar.demo.tsx",
+        "note": "Value changes ease the scaleX transform over duration.slow. The indeterminate loop is named after the spinner pattern of the 1.11 catalog (the looping busy form) until the catalog has a bar form. Values are formatted with Intl.NumberFormat and Western digits in a private helper (format.ts) until packages/shared/src/number.ts lands."
+      },
+      "angular": {
+        "status": "planned"
+      },
+      "native": {
+        "status": "planned"
+      }
+    },
+    "styles": {
+      "studio": "A pill track in overlay 10; the accent indicator is the bright text color, as Studio has a neutral primary.",
+      "desk": "The same track; the accent indicator is yellow on dark and dark gold on light.",
+      "neutral": "Planned: the brand color for accent.",
+      "liquid": "Planned: a solid track; the bar is content, never glass."
+    },
+    "mistakes": [
+      {
+        "wrong": "A ProgressBar for storage used",
+        "right": "A Meter: storage is a measure, not a task"
+      },
+      {
+        "wrong": "Only the danger color when an upload fails",
+        "right": "tone danger and a label that says Upload stopped and what to do next"
+      },
+      {
+        "wrong": "A bar that jumps back to 0 between steps of one task",
+        "right": "One bar for the whole task, or count units with valueText"
+      },
+      {
+        "wrong": "A bar with no label and no aria-label",
+        "right": "A visible label that names the task, or aria-label when the context names it"
+      }
+    ],
+    "since": "0.1.0"
+  },
+  {
     "name": "Spinner",
     "kind": "component",
     "family": "feedback",
@@ -1619,27 +1797,22 @@
     ],
     "avoidWhen": [
       "The task reports how far it is",
-      "A whole page or a large layout loads and its shape is known",
+      "The layout is known while content loads",
       "An action button is busy",
-      "A wait longer than a few seconds with no text"
+      "A wait longer than a few seconds with no visible text"
     ],
     "insteadUse": {
       "The task reports how far it is": "ProgressBar",
       "Compact progress with a known value": "ProgressCircle",
       "The layout is known while content loads": "Skeleton",
-      "A busy action button": "Button with loading",
+      "An action button is busy": "Button",
+      "A wait longer than a few seconds with no visible text": "ProgressBar",
       "A live state marker such as syncing": "StatusDot"
     },
     "anatomy": [
       "root",
       "label"
     ],
-    "slots": {
-      "label": {
-        "accepts": "text",
-        "max": 1
-      }
-    },
     "props": {
       "size": {
         "type": [
@@ -1661,8 +1834,8 @@
       },
       "label": {
         "type": "string",
-        "required": true,
-        "description": "The accessible name, read by a status region: Loading files. Required unless decorative. Never rendered as visible text."
+        "required": false,
+        "description": "The accessible name, read by a status region: Loading files. Required unless decorative (a TypeScript union enforces it). Never rendered as visible text."
       },
       "decorative": {
         "type": "boolean",
@@ -1675,7 +1848,7 @@
       "role": "status (with a label), or none and aria-hidden (decorative)",
       "focus": "Never focusable.",
       "keys": {},
-      "announce": "With a label, the root is a polite status region holding the visually hidden label, so the label is read when it appears or changes. Decorative spinners say nothing.",
+      "announce": "With a label, the root is a polite status region holding the visually hidden label. It is read when a screen reader reaches it and when the label changes; a region inserted with its text already in it is not announced by every reader. Decorative spinners say nothing. aria-hidden is ignored on the labelled form.",
       "native": {
         "accessibilityRole": "progressbar",
         "accessibilityState": [
@@ -1686,7 +1859,8 @@
         "Under reduced motion the ring stops and stays as a still ring with its arc; the label is still read.",
         "Under forced colors the ring is GrayText with a CanvasText arc, so it does not collapse into one color.",
         "Many spinners on one view: make them decorative and say the busy state once, in a region with aria-busy or in one status line.",
-        "The turn is clockwise in both directions: a spinner is a clock and does not mirror in RTL."
+        "The turn is clockwise in both directions: a spinner is a clock and does not mirror in RTL.",
+        "WCAG 2.2.2: a busy indicator is essential motion, but a wait longer than five seconds should show visible text or move to ProgressBar."
       ]
     },
     "content": {
@@ -1747,7 +1921,7 @@
         "right": "A ProgressBar or a ProgressCircle with the value"
       },
       {
-        "wrong": "A Spinner placed inside a Button by hand",
+        "wrong": "A Spinner placed inside a busy Button by hand",
         "right": "Button with loading and loadingLabel"
       }
     ],

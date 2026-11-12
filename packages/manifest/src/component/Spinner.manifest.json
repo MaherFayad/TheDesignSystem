@@ -10,21 +10,19 @@
   ],
   "avoidWhen": [
     "The task reports how far it is",
-    "A whole page or a large layout loads and its shape is known",
+    "The layout is known while content loads",
     "An action button is busy",
-    "A wait longer than a few seconds with no text"
+    "A wait longer than a few seconds with no visible text"
   ],
   "insteadUse": {
     "The task reports how far it is": "ProgressBar",
     "Compact progress with a known value": "ProgressCircle",
     "The layout is known while content loads": "Skeleton",
-    "A busy action button": "Button with loading",
+    "An action button is busy": "Button",
+    "A wait longer than a few seconds with no visible text": "ProgressBar",
     "A live state marker such as syncing": "StatusDot"
   },
   "anatomy": ["root", "label"],
-  "slots": {
-    "label": { "accepts": "text", "max": 1 }
-  },
   "props": {
     "size": {
       "type": ["xs", "sm", "md", "lg"],
@@ -38,8 +36,8 @@
     },
     "label": {
       "type": "string",
-      "required": true,
-      "description": "The accessible name, read by a status region: Loading files. Required unless decorative. Never rendered as visible text."
+      "required": false,
+      "description": "The accessible name, read by a status region: Loading files. Required unless decorative (a TypeScript union enforces it). Never rendered as visible text."
     },
     "decorative": {
       "type": "boolean",
@@ -52,7 +50,7 @@
     "role": "status (with a label), or none and aria-hidden (decorative)",
     "focus": "Never focusable.",
     "keys": {},
-    "announce": "With a label, the root is a polite status region holding the visually hidden label, so the label is read when it appears or changes. Decorative spinners say nothing.",
+    "announce": "With a label, the root is a polite status region holding the visually hidden label. It is read when a screen reader reaches it and when the label changes; a region inserted with its text already in it is not announced by every reader. Decorative spinners say nothing. aria-hidden is ignored on the labelled form.",
     "native": {
       "accessibilityRole": "progressbar",
       "accessibilityState": ["busy"]
@@ -61,7 +59,8 @@
       "Under reduced motion the ring stops and stays as a still ring with its arc; the label is still read.",
       "Under forced colors the ring is GrayText with a CanvasText arc, so it does not collapse into one color.",
       "Many spinners on one view: make them decorative and say the busy state once, in a region with aria-busy or in one status line.",
-      "The turn is clockwise in both directions: a spinner is a clock and does not mirror in RTL."
+      "The turn is clockwise in both directions: a spinner is a clock and does not mirror in RTL.",
+      "WCAG 2.2.2: a busy indicator is essential motion, but a wait longer than five seconds should show visible text or move to ProgressBar."
     ]
   },
   "content": {
@@ -94,7 +93,9 @@
       "example": "Spinner.demo.tsx",
       "note": "Motion: the spinner pattern from the 1.11 catalog list, today a CSS rotate keyframe on duration.spin, none under reduced motion."
     },
-    "angular": { "status": "planned" },
+    "angular": {
+      "status": "planned"
+    },
     "native": {
       "status": "planned",
       "note": "Expected on ActivityIndicator or a Reanimated rotation, still under reduce motion."
@@ -120,7 +121,7 @@
       "right": "A ProgressBar or a ProgressCircle with the value"
     },
     {
-      "wrong": "A Spinner placed inside a Button by hand",
+      "wrong": "A Spinner placed inside a busy Button by hand",
       "right": "Button with loading and loadingLabel"
     }
   ],

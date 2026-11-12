@@ -5,8 +5,11 @@
 // color with one arc in the mark color, turning once per duration.spin.
 //
 // Two forms:
-// - With `label`: `role="status"` and a visually hidden label, so a screen
-//   reader hears "Loading files" once when the spinner appears.
+// - With `label`: `role="status"` and a visually hidden label. A screen
+//   reader reads it when it reaches the spinner and when the label changes.
+//   A region inserted with its text already in it is not announced by every
+//   reader, so a wait that must be heard needs the words in a status line
+//   that is already on the page.
 // - `decorative`: `aria-hidden`, no label. For a spinner next to visible
 //   text, or inside a container that already says it is busy (`aria-busy`).
 import type { HTMLAttributes, Ref } from 'react';
@@ -30,7 +33,7 @@ interface SpinnerLabelledProps extends SpinnerBaseProps {
 }
 
 interface SpinnerDecorativeProps extends SpinnerBaseProps {
-  /** Hides the spinner from assistive tech. Use it when visible text or an `aria-busy` parent already says the area is busy. */
+  /** Hides the spinner from assistive tech. A literal true: a boolean variable needs a label too. Use it when visible text or an `aria-busy` parent already says the area is busy. */
   decorative: true;
   label?: undefined;
 }
@@ -50,7 +53,7 @@ export function Spinner({ size = 'md', tone = 'neutral', label, decorative = fal
       data-size={size}
       data-tone={tone}
       role={decorative ? undefined : 'status'}
-      aria-hidden={decorative ? true : rest['aria-hidden']}
+      aria-hidden={decorative ? true : undefined}
     >
       {!decorative && <span data-part="label">{label}</span>}
     </span>
