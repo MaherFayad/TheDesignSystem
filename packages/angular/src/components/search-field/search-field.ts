@@ -65,6 +65,11 @@ const ATTRIBUTES = [
   'name',
   'placeholder',
   'autoComplete',
+  'inputMode',
+  'enterKeyHint',
+  'maxLength',
+  'minLength',
+  'pattern',
   'aria-label',
   'aria-labelledby',
   'aria-describedby',
@@ -107,6 +112,11 @@ const ATTRIBUTES = [
       [name]="name()"
       [placeholder]="placeholder()"
       [autoComplete]="autoComplete()"
+      [inputMode]="inputMode()"
+      [enterKeyHint]="enterKeyHint()"
+      [maxLength]="maxLength()"
+      [minLength]="minLength()"
+      [pattern]="pattern()"
       [aria-label]="ariaLabel()"
       [aria-labelledby]="ariaLabelledby()"
       [aria-describedby]="describedBy()"
@@ -154,6 +164,11 @@ export class DsSearchField implements ControlValueAccessor {
   readonly name = input<string | undefined>(undefined);
   readonly placeholder = input<string | undefined>(undefined);
   readonly autoComplete = input<string | undefined>(undefined);
+  readonly inputMode = input<string | undefined>(undefined);
+  readonly enterKeyHint = input<string | undefined>(undefined);
+  readonly maxLength = input<number | undefined>(undefined);
+  readonly minLength = input<number | undefined>(undefined);
+  readonly pattern = input<string | undefined>(undefined);
   readonly ariaLabel = input<string | undefined>(undefined, { alias: 'aria-label' });
   readonly ariaLabelledby = input<string | undefined>(undefined, { alias: 'aria-labelledby' });
   readonly ariaDescribedby = input<string | undefined>(undefined, { alias: 'aria-describedby' });

@@ -104,6 +104,9 @@ const TEXTAREA_ATTRIBUTES = [
   'autoComplete',
   'autofocus',
   'spellCheck',
+  'inputMode',
+  'enterKeyHint',
+  'minLength',
   'aria-label',
   'aria-labelledby',
   'aria-describedby',
@@ -134,6 +137,9 @@ const TEXTAREA_ATTRIBUTES = [
       [attr.placeholder]="placeholder() ?? null"
       [attr.name]="name() ?? null"
       [attr.autocomplete]="autoComplete() ?? null"
+      [attr.inputmode]="inputMode() ?? null"
+      [attr.enterkeyhint]="enterKeyHint() ?? null"
+      [attr.minlength]="minLength() ?? null"
       [attr.spellcheck]="spellCheck() === undefined ? null : String(spellCheck())"
       [attr.data-autofocus]="autofocus() ? '' : null"
       [attr.aria-label]="ariaLabel() ?? null"
@@ -191,6 +197,9 @@ export class DsTextarea implements ControlValueAccessor {
   /** Marks the control with data-autofocus, so a Dialog opens with focus on it. */
   readonly autofocus = input(false, { transform: booleanAttribute });
   readonly spellCheck = input<boolean | undefined, unknown>(undefined, { transform: optionalBoolean });
+  readonly inputMode = input<string | undefined>(undefined);
+  readonly enterKeyHint = input<string | undefined>(undefined);
+  readonly minLength = input<number | undefined>(undefined);
   readonly ariaLabel = input<string | undefined>(undefined, { alias: 'aria-label' });
   readonly ariaLabelledby = input<string | undefined>(undefined, { alias: 'aria-labelledby' });
   readonly ariaDescribedby = input<string | undefined>(undefined, { alias: 'aria-describedby' });

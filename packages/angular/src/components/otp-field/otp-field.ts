@@ -78,6 +78,7 @@ const ATTRIBUTES = [
   'autoComplete',
   'inputMode',
   'enterKeyHint',
+  'form',
   'aria-label',
   'aria-labelledby',
   'aria-describedby',
@@ -106,6 +107,7 @@ const ATTRIBUTES = [
       [attr.aria-labelledby]="ariaLabelledby() ?? null"
       [attr.aria-busy]="ariaBusy() ?? null"
       [attr.name]="name() ?? null"
+      [attr.form]="form() ?? null"
       [attr.id]="state().id ?? null"
       [attr.aria-describedby]="state().describedBy ?? null"
       [attr.aria-invalid]="state().invalid ? 'true' : null"
@@ -170,6 +172,7 @@ export class DsOTPField implements ControlValueAccessor {
   readonly autoComplete = input('one-time-code');
   readonly inputMode = input<string | undefined>(undefined);
   readonly enterKeyHint = input('done');
+  readonly form = input<string | undefined>(undefined);
   readonly ariaLabel = input<string | undefined>(undefined, { alias: 'aria-label' });
   readonly ariaLabelledby = input<string | undefined>(undefined, { alias: 'aria-labelledby' });
   readonly ariaDescribedby = input<string | undefined>(undefined, { alias: 'aria-describedby' });
