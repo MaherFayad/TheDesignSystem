@@ -101,7 +101,7 @@
     "data-collapsed"
   ],
   "a11y": {
-    "role": "separator on each handle (the WAI-ARIA window splitter): focusable, aria-valuenow is the size of the panel before it in percent, aria-valuemin and aria-valuemax its limits, aria-controls names that panel, aria-orientation is vertical in a horizontal group.",
+    "role": "separator on each handle (the WAI-ARIA window splitter): focusable, aria-valuenow is the size of the panel before it in percent, aria-valuemin and aria-valuemax the values Home and End reach (a collapsed panel sits below the min), aria-controls names that panel, aria-orientation is vertical in a horizontal group.",
     "focus": "Each handle is one tab stop, in reading order between its panels. A drag focuses the handle it moves.",
     "keys": {
       "Tab": "Moves to the next handle or the next control inside a panel",
@@ -120,7 +120,9 @@
       "Every drag has a key path (WCAG 2.5.7): the arrows, Home, End and Enter do all a drag does.",
       "The handle line is 1px, its target is 24px (size.target-min) spread over both panels (WCAG 2.5.8).",
       "A collapsed panel at size 0 is inert, so its controls leave the tab order and the accessibility tree.",
-      "Panels and handles must be direct children of ResizablePanels (fragments and arrays are fine): the group walks them in order.",
+      "Panels and handles must be children of ResizablePanels, directly or inside fragments and arrays: the group walks them in order. A panel inside another component is not found.",
+      "The 24px handle target reaches 11.5px into each panel, so the focus ring can sit over the edge of panel content. Keep interactive content of a panel at least that far from a handle, or pad the panel.",
+      "A cancelled drag puts the sizes back. A press with no move reports no layout.",
       "Sizes are layout and never animate; under reduced motion nothing changes."
     ]
   },
@@ -133,7 +135,8 @@
     }
   },
   "tokens": [
-    "color.border.subtle",
+    "color.border.control",
+    "color.border.control-hover",
     "color.border.strong",
     "color.focus.ring",
     "focus.shadow.ring",
@@ -161,12 +164,13 @@
       "note": "ResizablePanels.css is used as is."
     },
     "native": {
-      "status": "not-applicable",
-      "note": "Phones show one pane at a time. Tablets use SplitView, which stacks or shows two panes by width."
+      "status": "planned",
+      "behavior": "own: the shared resize math, an adjustable handle",
+      "note": "Tablets only; phones show one pane at a time through SplitView."
     }
   },
   "styles": {
-    "studio": "A 1px subtle line between flat panels; the line turns strong on hover and takes the focus color while it drags or has focus, with a small pill grip.",
+    "studio": "A 1px line in the control border color (3:1) between flat panels; the line darkens on hover and takes the focus color while it drags or has focus, with a small pill grip.",
     "desk": "The same hairline and grip on the Desk border tokens.",
     "neutral": "The same parts on the Neutral border tokens once 1.10 lands.",
     "liquid": "Planned."

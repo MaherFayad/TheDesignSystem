@@ -59,8 +59,27 @@ function SavedLayout() {
   );
 }
 
+/** Starts with the layers collapsed and the inspector as a rail. Enter on a handle opens them. */
+function CollapsedLayout() {
+  return (
+    <ResizablePanels defaultSizes={[0, 94, 6]} style={frame('8rem')}>
+      <ResizablePanel min={15} max={35} collapsible>
+        <Pane title="Layers" />
+      </ResizablePanel>
+      <ResizableHandle label="Resize layers" />
+      <ResizablePanel min={30}>
+        <Pane title="Canvas">Layers collapsed, inspector as a rail. Press Enter on a divider to open a panel.</Pane>
+      </ResizablePanel>
+      <ResizableHandle label="Resize inspector" />
+      <ResizablePanel min={18} max={40} collapsible collapsedSize={6}>
+        <Pane title="Inspector" />
+      </ResizablePanel>
+    </ResizablePanels>
+  );
+}
+
 const many = ['Files', 'Outline', 'Editor', 'Preview'];
-const tooMany = ['One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight'];
+const tooMany = ['1', '2', '3', '4', '5', '6', '7', '8'];
 
 /** ResizablePanels in every content case. */
 export default function ResizablePanelsDemo() {
@@ -69,6 +88,7 @@ export default function ResizablePanelsDemo() {
       <DemoCase id="variants" title="Horizontal and vertical">
         <EditorLayout />
         <SavedLayout />
+        <CollapsedLayout />
         <Theme lang="ar">
           <DemoRow label="العربية">
             <div style={{ inlineSize: '100%' }}>

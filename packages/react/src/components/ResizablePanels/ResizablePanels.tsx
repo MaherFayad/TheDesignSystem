@@ -34,6 +34,7 @@
 // as defaultSizes (or sizes) on the next load.
 import {
   Children,
+  Fragment,
   createContext,
   isValidElement,
   use,
@@ -85,6 +86,8 @@ interface GroupContextValue {
   rootRef: RefObject<HTMLDivElement | null>;
   /** The size each collapsed panel had before it collapsed. */
   restoreSizes: RefObject<number[]>;
+  /** The data-part of each panel: panel, or the names a component built on the group gives them. */
+  panelParts?: readonly string[];
 }
 
 const GroupContext = createContext<GroupContextValue | null>(null);
@@ -116,10 +119,20 @@ export interface ResizablePanelsProps extends Omit<ComponentProps<'div'>, 'dir' 
   children?: ReactNode;
 }
 
+/** The children in order, with fragments and arrays opened. */
+function flatten(children: ReactNode): ReactNode[] {
+  const out: ReactNode[] = [];
+  for (const child of Children.toArray(children)) {
+    if (isValidElement<{ children?: ReactNode }>(child) && child.type === Fragment) out.push(...flatten(child.props.children));
+    else out.push(child);
+  }
+  return out;
+}
+
 /** Reads the panel props of the children, in order. */
 function readPanels(children: ReactNode): ResizablePanelProps[] {
   const out: ResizablePanelProps[] = [];
-  for (const child of Children.toArray(children)) {
+  for (const child of flatten(children)) {
     if (isValidElement(child) && child.type === ResizablePanel) out.push(child.props as ResizablePanelProps);
   }
   return out;
@@ -135,7 +148,26 @@ function initialSizes(panels: ResizablePanelProps[], defaults: number[] | undefi
 }
 
 /** A group of resizable panels with handles between them. */
-export function ResizablePanels({
+export function ResizablePanels(props: ResizablePanelsProps) {
+  return <PanelGroup {...props} ds="resizable-panels" />;
+}
+
+/** Props of the group base that a component built on it (SplitView) adds. */
+export interface PanelGroupProps extends ResizablePanelsProps {
+  /** The root's data-ds. */
+  ds: string;
+  /** The data-part of each panel, in order. Default panel. */
+  panelParts?: readonly string[];
+}
+
+/**
+ * The group base: ResizablePanels, and SplitView, which renders the same
+ * group under its own data-ds with its own panel part names (anatomy.md,
+ * rule 10: a component built on another's base).
+ */
+export function PanelGroup({
+  ds,
+  panelParts,
   orientation = 'horizontal',
   sizes: sizesProp,
   defaultSizes,
@@ -145,7 +177,7 @@ export function ResizablePanels({
   children,
   ref,
   ...rest
-}: ResizablePanelsProps) {
+}: PanelGroupProps) {
   const { dir, lang } = useTheme();
   const panels = readPanels(children);
   // The limits change only when a panel's limit props change, so they are
@@ -186,22 +218,23 @@ export function ResizablePanels({
     commit,
     rootRef,
     restoreSizes,
+    panelParts,
   };
 
   let panelIndex = -1;
-  const ordered = Children.toArray(children).map((child) => {
+  const ordered = flatten(children).map((child, i) => {
     if (!isValidElement(child)) return child;
     if (child.type === ResizablePanel) {
       panelIndex += 1;
       return (
-        <IndexContext key={child.key} value={panelIndex}>
+        <IndexContext key={child.key ?? i} value={panelIndex}>
           {child}
         </IndexContext>
       );
     }
     if (child.type === ResizableHandle) {
       return (
-        <IndexContext key={child.key} value={panelIndex}>
+        <IndexContext key={child.key ?? i} value={panelIndex}>
           {child}
         </IndexContext>
       );
@@ -217,7 +250,7 @@ export function ResizablePanels({
         if (typeof ref === 'function') ref(el);
         else if (ref) ref.current = el;
       }}
-      data-ds="resizable-panels"
+      data-ds={ds}
       data-orientation={orientation}
     >
       <GroupContext value={value}>{ordered}</GroupContext>
@@ -262,7 +295,7 @@ export function ResizablePanel({
     <div
       {...rest}
       id={group.panelIds[index]}
-      data-part="panel"
+      data-part={group.panelParts?.[index] ?? 'panel'}
       data-collapsed={collapsed ? '' : undefined}
       inert={hidden || undefined}
       style={{ ...style, '--_resizable-panels-size': size } as CSSProperties}
@@ -347,7 +380,7 @@ export function ResizableHandle({ label, onKeyDown, onPointerDown, ...rest }: Re
     if (!root) return;
     // The room the panels share: the sum of their measured sizes.
     const px = Array.from(root.children)
-      .filter((el) => el.getAttribute('data-part') === 'panel')
+      .filter((el) => el.matches(':not([data-part="handle"])[data-part]') && !el.hasAttribute('hidden'))
       .reduce((sum, el) => sum + (horizontal ? el.getBoundingClientRect().width : el.getBoundingClientRect().height), 0);
     drag.current = { start: horizontal ? event.clientX : event.clientY, sizes: [...sizes], px };
     event.currentTarget.setPointerCapture?.(event.pointerId);
@@ -364,12 +397,18 @@ export function ResizableHandle({ label, onKeyDown, onPointerDown, ...rest }: Re
     commit(resizeBy(d.sizes, limits, handle, (deltaPx / d.px) * 100), false);
   };
 
-  const pointerEnd = (event: PointerEvent<HTMLDivElement>) => {
+  const pointerEnd = (event: PointerEvent<HTMLDivElement>, cancelled: boolean) => {
     if (!drag.current) return;
     const d = drag.current;
     drag.current = null;
     setDragging(false);
     event.currentTarget.releasePointerCapture?.(event.pointerId);
+    // A cancelled drag puts the sizes back; a press with no move reports nothing.
+    if (cancelled) {
+      commit(d.sizes, false);
+      return;
+    }
+    if (d.sizes.every((v, i) => Math.abs(v - (sizes[i] ?? 0)) < 0.01)) return;
     // A collapse by drag remembers the size the panel had when the drag began.
     for (const i of [handle, handle + 1]) {
       const l = limits[i];
@@ -378,9 +417,10 @@ export function ResizableHandle({ label, onKeyDown, onPointerDown, ...rest }: Re
     commit(sizes, true);
   };
 
+  // The range is what Home and End reach; a collapsed panel sits below it.
   const now = Math.round(sizes[handle] ?? 0);
-  const min = before ? Math.round(before.collapsible ? before.collapsedSize : before.min) : 0;
-  const max = before ? Math.round(before.max) : 100;
+  const min = Math.min(now, Math.round(resizeToEdge(sizes, limits, handle, 'min')[handle] ?? 0));
+  const max = Math.max(now, Math.round(resizeToEdge(sizes, limits, handle, 'max')[handle] ?? 100));
 
   return (
     <div
@@ -399,8 +439,8 @@ export function ResizableHandle({ label, onKeyDown, onPointerDown, ...rest }: Re
       onKeyDown={keyDown}
       onPointerDown={pointerDown}
       onPointerMove={pointerMove}
-      onPointerUp={pointerEnd}
-      onPointerCancel={pointerEnd}
+      onPointerUp={(event) => pointerEnd(event, false)}
+      onPointerCancel={(event) => pointerEnd(event, true)}
       onDoubleClick={toggle}
     >
       <span data-part="handle-grip" aria-hidden="true" />

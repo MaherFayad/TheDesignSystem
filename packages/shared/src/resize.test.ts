@@ -106,12 +106,17 @@ describe('collapse and expand', () => {
     expect(collapsePanel([30, 70], [main, main], 0)).toEqual([30, 70]);
     expect(isCollapsed(0, side)).toBe(true);
     expect(isCollapsed(0, free)).toBe(false);
+    const loose = panelLimits({ collapsible: true });
+    expect(isCollapsed(0, loose)).toBe(true);
+    expect(collapsePanel([30, 70], [loose, free], 0)).toEqual([0, 100]);
+    expect(expandPanel([0, 100], [loose, free], 0, 30)).toEqual([30, 70]);
   });
 
   it('opens a panel to a size, taking room from the neighbor down to its min', () => {
     expect(expandPanel([0, 100], [side, main], 0)).toEqual([20, 80]);
     expect(expandPanel([0, 100], [side, main], 0, 35)).toEqual([35, 65]);
-    expect(expandPanel([0, 100], [side, panelLimits({ min: 90 })], 0, 35)).toEqual([10, 90]);
+    expect(expandPanel([0, 100], [side, panelLimits({ min: 70 })], 0, 35)).toEqual([30, 70]);
+    expect(expandPanel([0, 100], [side, panelLimits({ min: 90 })], 0, 35)).toEqual([0, 100]);
   });
 });
 

@@ -50,7 +50,7 @@ export function evenSizes(count: number): number[] {
 
 /** True when the panel sits at its collapsed size. */
 export function isCollapsed(size: number, limits: PanelLimits): boolean {
-  return limits.collapsible && size <= limits.collapsedSize + EPSILON && limits.collapsedSize < limits.min;
+  return limits.collapsible && size <= limits.collapsedSize + EPSILON;
 }
 
 function lowest(size: number, limits: PanelLimits): number {
@@ -180,6 +180,7 @@ export function collapsePanel(sizes: readonly number[], limits: readonly PanelLi
 /**
  * Opens a collapsed panel `index` to `size` (default its min), taking the
  * room from its neighbor across `handle`, which never goes below its own min.
+ * When the neighbor cannot give enough room to reach the min, nothing changes.
  */
 export function expandPanel(sizes: readonly number[], limits: readonly PanelLimits[], index: number, size?: number, handle?: number): number[] {
   const l = limits[index];
@@ -191,6 +192,8 @@ export function expandPanel(sizes: readonly number[], limits: readonly PanelLimi
   const room = (out[n] as number) - ln.min;
   const want = clamp(size ?? l.min, l.min, l.max) - current;
   const take = Math.max(0, Math.min(want, room));
+  // A panel opens only when it can reach its min; otherwise it stays as it is.
+  if (current + take < l.min - EPSILON) return out;
   out[index] = current + take;
   out[n] = (out[n] as number) - take;
   return out;

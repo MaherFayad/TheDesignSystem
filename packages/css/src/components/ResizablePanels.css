@@ -1,16 +1,20 @@
 /*
  * ResizablePanels: panels in a flex row or column with handles between them.
+ * SplitView is built on the same group (anatomy.md rule 10): every rule here
+ * also applies to [data-ds='split-view'], whose panels are the parts primary
+ * and secondary. SplitView.css holds only what differs.
  * No source: designed from the dials table (Studio separates by a 1px line,
  * Desk by a hairline) and the shell sidebar widths.
  *
- *   [data-ds='resizable-panels'][data-orientation]   root: flex row (horizontal) or column (vertical)
+ *   :is([data-ds='resizable-panels'], [data-ds='split-view'])[data-orientation]   root: flex row (horizontal) or column (vertical)
  *     > [data-part='panel']                           flex grow = its size in percent, on a 0 basis
  *     > [data-part='handle']                          role separator: a 1px line in a 24px hit area
  *         > [data-part='handle-grip']                 the small pill in the middle of the line
  *
  * The handle takes 1px of layout (border.width.default) and spreads its
  * 24px target (size.target-min) over both panels with negative margins
- * (WCAG 2.5.8). The root isolates its stacking, so the handle can sit
+ * (WCAG 2.5.8). The line at rest is the control border (3:1, WCAG 1.4.11),
+ * since it is the only sign of the handle. The root isolates its stacking, so the handle can sit
  * above the panel after it without reaching the rest of the page.
  *
  * Private properties on the root (docs/contracts/anatomy.md, one convention):
@@ -29,9 +33,9 @@
  * fades in on hover and focus. Under reduced motion it switches at once.
  */
 @layer ds.base {
-  [data-ds='resizable-panels'] {
-    --_resizable-panels-line: var(--ds-color-border-subtle);
-    --_resizable-panels-line-hover: var(--ds-color-border-strong);
+  :is([data-ds='resizable-panels'], [data-ds='split-view']) {
+    --_resizable-panels-line: var(--ds-color-border-control);
+    --_resizable-panels-line-hover: var(--ds-color-border-control-hover);
     --_resizable-panels-line-active: var(--ds-color-focus-ring);
     --_resizable-panels-line-width: var(--ds-border-width-default);
     --_resizable-panels-target: var(--ds-size-target-min);
@@ -53,12 +57,12 @@
     isolation: isolate;
   }
 
-  [data-ds='resizable-panels'][data-orientation='vertical'] {
+  :is([data-ds='resizable-panels'], [data-ds='split-view'])[data-orientation='vertical'] {
     flex-direction: column;
   }
 
   /* The component sets the size inline on each panel; 1 is the even share before it does. */
-  [data-ds='resizable-panels'] > [data-part='panel'] {
+  :is([data-ds='resizable-panels'] > [data-part='panel'], [data-ds='split-view'] > :is([data-part='primary'], [data-part='secondary'])) {
     --_resizable-panels-size: 1;
 
     flex: var(--_resizable-panels-size) 1 0;
@@ -69,18 +73,18 @@
   }
 
   /* A collapsed panel at size 0 draws nothing; its content is inert. */
-  [data-ds='resizable-panels'] > [data-part='panel'][data-collapsed][inert] {
+  :is([data-ds='resizable-panels'] > [data-part='panel'], [data-ds='split-view'] > :is([data-part='primary'], [data-part='secondary']))[data-collapsed][inert] {
     visibility: hidden;
   }
 
   /* While a handle drags, the page text does not select and the cursor stays. */
-  [data-ds='resizable-panels']:has(> [data-part='handle'][data-dragging]) {
+  :is([data-ds='resizable-panels'], [data-ds='split-view']):has(> [data-part='handle'][data-dragging]) {
     user-select: none;
   }
 
   /* ------------------------------------------------------------ handle */
 
-  [data-ds='resizable-panels'] > [data-part='handle'] {
+  :is([data-ds='resizable-panels'], [data-ds='split-view']) > [data-part='handle'] {
     --_resizable-panels-line-now: var(--_resizable-panels-line);
 
     position: relative;
@@ -98,32 +102,32 @@
     outline: none;
   }
 
-  [data-ds='resizable-panels'][data-orientation='horizontal'] > [data-part='handle'] {
+  :is([data-ds='resizable-panels'], [data-ds='split-view'])[data-orientation='horizontal'] > [data-part='handle'] {
     inline-size: var(--_resizable-panels-target);
     margin-inline: calc((var(--_resizable-panels-line-width) - var(--_resizable-panels-target)) / 2);
     background-size: var(--_resizable-panels-line-width) 100%;
     cursor: col-resize;
   }
 
-  [data-ds='resizable-panels'][data-orientation='vertical'] > [data-part='handle'] {
+  :is([data-ds='resizable-panels'], [data-ds='split-view'])[data-orientation='vertical'] > [data-part='handle'] {
     block-size: var(--_resizable-panels-target);
     margin-block: calc((var(--_resizable-panels-line-width) - var(--_resizable-panels-target)) / 2);
     background-size: 100% var(--_resizable-panels-line-width);
     cursor: row-resize;
   }
 
-  [data-ds='resizable-panels'] > [data-part='handle']:hover {
+  :is([data-ds='resizable-panels'], [data-ds='split-view']) > [data-part='handle']:hover {
     --_resizable-panels-line-now: var(--_resizable-panels-line-hover);
     --_resizable-panels-grip-opacity: 1;
   }
 
-  [data-ds='resizable-panels'] > [data-part='handle'][data-dragging] {
+  :is([data-ds='resizable-panels'], [data-ds='split-view']) > [data-part='handle'][data-dragging] {
     --_resizable-panels-line-now: var(--_resizable-panels-line-active);
     --_resizable-panels-grip-opacity: 1;
   }
 
   /* The transparent outline is set only here, so forced colors mode draws it on focus and nowhere else. */
-  [data-ds='resizable-panels'] > [data-part='handle']:focus-visible {
+  :is([data-ds='resizable-panels'], [data-ds='split-view']) > [data-part='handle']:focus-visible {
     --_resizable-panels-line-now: var(--_resizable-panels-line-active);
     --_resizable-panels-grip-opacity: 1;
 
@@ -132,7 +136,7 @@
   }
 
   /* ::before is the focus layer: the ring around the 24px target. */
-  [data-ds='resizable-panels'] > [data-part='handle']::before {
+  :is([data-ds='resizable-panels'], [data-ds='split-view']) > [data-part='handle']::before {
     content: '';
     position: absolute;
     inset: 0;
@@ -140,11 +144,11 @@
     pointer-events: none;
   }
 
-  [data-ds='resizable-panels'] > [data-part='handle']:focus-visible::before {
+  :is([data-ds='resizable-panels'], [data-ds='split-view']) > [data-part='handle']:focus-visible::before {
     box-shadow: var(--_resizable-panels-ring);
   }
 
-  [data-ds='resizable-panels'] > [data-part='handle'] > [data-part='handle-grip'] {
+  :is([data-ds='resizable-panels'], [data-ds='split-view']) > [data-part='handle'] > [data-part='handle-grip'] {
     flex: 0 0 auto;
     border-radius: var(--ds-radius-pill);
     background: var(--_resizable-panels-grip);
@@ -153,12 +157,12 @@
     pointer-events: none;
   }
 
-  [data-ds='resizable-panels'][data-orientation='horizontal'] > [data-part='handle'] > [data-part='handle-grip'] {
+  :is([data-ds='resizable-panels'], [data-ds='split-view'])[data-orientation='horizontal'] > [data-part='handle'] > [data-part='handle-grip'] {
     inline-size: var(--_resizable-panels-grip-thickness);
     block-size: var(--_resizable-panels-grip-length);
   }
 
-  [data-ds='resizable-panels'][data-orientation='vertical'] > [data-part='handle'] > [data-part='handle-grip'] {
+  :is([data-ds='resizable-panels'], [data-ds='split-view'])[data-orientation='vertical'] > [data-part='handle'] > [data-part='handle-grip'] {
     inline-size: var(--_resizable-panels-grip-length);
     block-size: var(--_resizable-panels-grip-thickness);
   }
@@ -166,22 +170,22 @@
   /* ------------------------------------------------------------ reduced motion, forced colors */
 
   @media (prefers-reduced-motion: reduce) {
-    [data-ds='resizable-panels'] > [data-part='handle'] > [data-part='handle-grip'] {
+    :is([data-ds='resizable-panels'], [data-ds='split-view']) > [data-part='handle'] > [data-part='handle-grip'] {
       transition: none;
     }
   }
 
   @media (forced-colors: active) {
-    [data-ds='resizable-panels'] > [data-part='handle'] {
+    :is([data-ds='resizable-panels'], [data-ds='split-view']) > [data-part='handle'] {
       forced-color-adjust: none;
       --_resizable-panels-line-now: CanvasText;
     }
 
-    [data-ds='resizable-panels'] > [data-part='handle']:focus-visible {
+    :is([data-ds='resizable-panels'], [data-ds='split-view']) > [data-part='handle']:focus-visible {
       outline-color: Highlight;
     }
 
-    [data-ds='resizable-panels'] > [data-part='handle'] > [data-part='handle-grip'] {
+    :is([data-ds='resizable-panels'], [data-ds='split-view']) > [data-part='handle'] > [data-part='handle-grip'] {
       background: CanvasText;
     }
   }

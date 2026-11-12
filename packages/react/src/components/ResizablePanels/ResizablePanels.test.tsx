@@ -37,7 +37,7 @@ describe('ResizablePanels', () => {
     expect(handle.getAttribute('aria-label')).toBe('Resize sidebar');
     expect(handle.getAttribute('aria-orientation')).toBe('vertical');
     expect(handle.getAttribute('aria-valuenow')).toBe('30');
-    expect(handle.getAttribute('aria-valuemin')).toBe('0');
+    expect(handle.getAttribute('aria-valuemin')).toBe('20');
     expect(handle.getAttribute('aria-valuemax')).toBe('40');
     expect(handle.getAttribute('aria-controls')).toBe(panels[0]?.id);
     expect(handle.querySelector('[data-part="handle-grip"]')?.getAttribute('aria-hidden')).toBe('true');
@@ -148,6 +148,37 @@ describe('ResizablePanels', () => {
       </Theme>,
     );
     expect(parts(container).handle.getAttribute('aria-label')).toBe('تغيير حجم الأقسام');
+  });
+
+  it('reads panels and handles inside fragments', () => {
+    const { container } = render(
+      <ResizablePanels>
+        <>
+          <ResizablePanel defaultSize={40}>A</ResizablePanel>
+          <ResizableHandle />
+        </>
+        <ResizablePanel>B</ResizablePanel>
+      </ResizablePanels>,
+    );
+    const { handle, panels } = parts(container);
+    expect(size(panels[0])).toBe(40);
+    expect(size(panels[1])).toBe(60);
+    fireEvent.keyDown(handle, { key: 'ArrowRight' });
+    expect(handle.getAttribute('aria-valuenow')).toBe('45');
+  });
+
+  it('puts the sizes back when a drag is cancelled', () => {
+    const onLayout = vi.fn();
+    const { container } = render(<Group onLayout={onLayout} />);
+    const { handle, panels } = parts(container);
+    for (const [i, w] of [300, 700].entries()) {
+      panels[i]!.getBoundingClientRect = () => ({ width: w, height: 100 }) as DOMRect;
+    }
+    fireEvent.pointerDown(handle, { button: 0, clientX: 300, pointerId: 1 });
+    fireEvent.pointerMove(handle, { clientX: 350, pointerId: 1 });
+    fireEvent.pointerCancel(handle, { pointerId: 1 });
+    expect(handle.getAttribute('aria-valuenow')).toBe('30');
+    expect(onLayout).not.toHaveBeenCalled();
   });
 
   it('renders the demo', () => {
