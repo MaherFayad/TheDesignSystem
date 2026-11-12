@@ -58,6 +58,9 @@ export function readCase(params: URLSearchParams): string | undefined {
 }
 
 /** button -> Button, icon-button -> IconButton: the React component name. */
+/** Slug words that the component name writes in capitals, as the React gallery reads them from the manifest. */
+const ACRONYMS: Record<string, string> = { otp: 'OTP' };
+
 export function nameOf(slug: string): string {
-  return slug.replace(/(^|-)([a-z0-9])/g, (_, __, c: string) => c.toUpperCase());
+  return slug.replace(/(^|-)([a-z0-9]+)/g, (_, __, word: string) => ACRONYMS[word] ?? word.charAt(0).toUpperCase() + word.slice(1));
 }

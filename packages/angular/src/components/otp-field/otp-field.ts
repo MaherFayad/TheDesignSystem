@@ -144,7 +144,7 @@ const ATTRIBUTES = [
         aria-hidden="true"
         [attr.data-active]="focused() && i >= sel().start && i < activeEnd() ? '' : null"
         [attr.data-filled]="i < code().length ? '' : null"
-      >{{ code()[i] ?? '' }}</span>
+      >@if (code()[i]; as ch) {<span>{{ ch }}</span>}</span>
     }
   `,
 })
