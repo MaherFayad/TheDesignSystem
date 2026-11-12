@@ -442,7 +442,7 @@ describe('Dialog', () => {
   });
 
   describe('styles', () => {
-    it('Studio: the title in place and the close IconButton, no title bar', async () => {
+    it('Studio: the title in place and the CloseButton, no title bar', async () => {
       const user = userEvent.setup();
       render(
         <Theme style="studio">
@@ -453,7 +453,7 @@ describe('Dialog', () => {
       expect(part('titlebar')).toBeNull();
       expect(rootEl()?.querySelector('[data-ds="window-controls"]')).toBeNull();
       const close = part('close');
-      expect(close?.getAttribute('data-ds')).toBe('icon-button');
+      expect(close?.getAttribute('data-ds')).toBe('close-button');
       expect(close?.getAttribute('aria-label')).toBe('Close dialog');
     });
 
@@ -472,8 +472,8 @@ describe('Dialog', () => {
       expect(screen.getAllByText('Delete the project?')).toHaveLength(1);
       expect(bar?.querySelector('[data-part="title"]')?.textContent).toBe('Delete the project?');
       expect(screen.getByRole('dialog', { name: 'Delete the project?' })).toBe(dialog);
-      // No IconButton close: the close light is the close control.
-      expect(dialog.querySelector('[data-ds="icon-button"][data-part="close"]:not([data-ds="window-controls"] *)')).toBeNull();
+      // No CloseButton: the close light is the close control.
+      expect(dialog.querySelector('[data-ds="close-button"][data-part="close"]:not([data-ds="window-controls"] *)')).toBeNull();
       const lights = bar?.querySelector('[data-ds="window-controls"]');
       expect(lights?.getAttribute('aria-label')).toBe('Dialog controls');
       const closeLight = screen.getByRole('button', { name: 'Close dialog' });

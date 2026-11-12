@@ -275,7 +275,7 @@ function ControlledDialog() {
         <DialogContent title="Install the new version?" description="Version 2.4 is ready. The app restarts after it installs.">
           <DialogFooter>
             <DialogClose>
-              <Button>Install later</Button>
+              <Button>Skip update</Button>
             </DialogClose>
             <DialogClose>
               <Button tone="accent" emphasis="solid">

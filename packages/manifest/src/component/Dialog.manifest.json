@@ -156,7 +156,7 @@
       "The long title wraps, never cut: it is the question being asked.",
       "No native title attribute.",
       "In Desk the title and the close control sit inside the title bar, so they are parts of TitleBar and WindowControls there (a part belongs to the nearest root). The dialog's own parts in Desk are titlebar, description, body and footer; title, close and controls are listed here for Studio and for style.json optionalParts.",
-      "dismissible false is for short waits, while the dialog's own action runs. The app must set it back to true when the action ends, success or failure. The close control (the Studio IconButton or the Desk close light) is aria-disabled and stays focusable.",
+      "dismissible false is for short waits, while the dialog's own action runs. The app must set it back to true when the action ends, success or failure. The close control (the Studio CloseButton or the Desk close light) is aria-disabled and stays focusable.",
       "Development builds warn in the console when a dialog opens with no title, and when its footer holds more than three actions.",
       "A form in a dialog: the form element lives in DialogBody with an id and an onSubmit; the submit Button sits in DialogFooter with type=\"submit\" and form={id}, so Enter in a field and the button both submit. Close the dialog from onSubmit when the save succeeds, not from a DialogClose around the submit button."
     ]
@@ -247,7 +247,7 @@
     }
   },
   "styles": {
-    "studio": "A flat panel: the solid surface, the panel radius, the dialog shadow. The title sits in a band on surface-2 with a line under it and the close IconButton (part close) at its inline end; the footer is a band on surface-2 with a line over it. The backdrop is the scrim with a light blur. The panel rises 4px and scales up from 98% on duration.base.",
+    "studio": "A flat panel: the solid surface, the panel radius, the dialog shadow. The title sits in a band on surface-2 with a line under it and the CloseButton (part close) at its inline end; the footer is a band on surface-2 with a line over it. The backdrop is the scrim with a light blur. The panel rises 4px and scales up from 98% on duration.base.",
     "desk": "Renders as a window with traffic lights: glass with a 24px blur, radius 1rem, a hairline inside, the deep window shadow. The title bar (optional part titlebar) starts with the lights (optional part controls): only the close light works, minimize and zoom are idle and out of the tab order, and the close light is part close. The title sits in the bar and wraps when long. The window grows from 92% on the window open timing. In right to left layouts the lights stay at the top left and the title is centered.",
     "neutral": "Planned.",
     "liquid": "Planned: a glass sheet."
@@ -271,7 +271,7 @@
     },
     {
       "wrong": "Hiding the close button in Desk with CSS",
-      "right": "The style turns the titlebar and controls parts on in style.json; Dialog then renders the close light instead of the IconButton"
+      "right": "The style turns the titlebar and controls parts on in style.json; Dialog then renders the close light instead of the CloseButton"
     },
     {
       "wrong": "A dialog that closes while its action is still saving",

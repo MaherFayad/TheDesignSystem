@@ -29,7 +29,7 @@
 //             <div data-part="controls"><WindowControls/></div>   Desk only (optional part)
 //             <h2 data-part="title"><span id=title>...</span></h2>
 //           <h2 data-part="title">                  Studio: the title in place
-//           <button data-part="close">              Studio: the close IconButton
+//           <button data-part="close">              Studio: the CloseButton
 //           <p data-part="description">
 //           <div data-part="body">
 //           <div data-part="footer">
@@ -51,7 +51,7 @@
 // `controls` (style.json `optionalParts.dialog`). The dialog then renders a
 // TitleBar at the top of the panel with the traffic lights, only the close
 // light working, and the title inside the bar, where a window has it. The
-// close IconButton is not rendered: the close light is part `close`.
+// CloseButton is not rendered: the close light is part `close`.
 // DialogContent lifts a DialogTitle that is its direct child (or the `title`
 // prop) out of the children and renders it once, at the top: in place in
 // Studio, inside the title bar in Desk. Through a context it then renders as
@@ -92,7 +92,7 @@ import {
 import { Dialog as RadixDialog } from 'radix-ui';
 import type { OverlaySize, Tone } from '@the-system/shared';
 import { useOptionalPart, useTheme } from '../../theme/hooks';
-import { IconButton } from '../IconButton';
+import { CloseButton } from '../CloseButton';
 import { TitleBar } from '../TitleBar';
 import { WindowControls } from '../WindowControls';
 import { DialogBase, assignRef } from './DialogBase';
@@ -388,7 +388,7 @@ export function DialogContent({
   const closeName = closeLabel ?? words.close;
   const closeButton = (
     <RadixDialog.Close asChild>
-      <IconButton data-part="close" icon="close" label={closeName} size="sm" disabled={!ctx.dismissible} />
+      <CloseButton data-part="close" label={closeName} size="sm" disabled={!ctx.dismissible} />
     </RadixDialog.Close>
   );
 
