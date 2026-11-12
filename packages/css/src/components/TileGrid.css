@@ -27,4 +27,11 @@
   [data-ds='tile-grid'] > [data-ds='tile'] {
     --_tile-radius: 0;
   }
+
+  /* Forced colors: no radius, so the clip does not cut the CanvasText borders of the corner tiles. */
+  @media (forced-colors: active) {
+    [data-ds='tile-grid'] {
+      --_tile-grid-radius: 0;
+    }
+  }
 }
