@@ -93,6 +93,14 @@ describe('DsCopyButton', () => {
     expect(writeText).not.toHaveBeenCalled();
   });
 
+  it('starts the clipboard write inside the click, with no microtask wait', async () => {
+    const writeText = vi.fn(() => Promise.resolve());
+    mockClipboard(writeText);
+    const { q } = await setup();
+    q('plain').click();
+    expect(writeText).toHaveBeenCalledTimes(1);
+  });
+
   it('disabled does not copy', async () => {
     const writeText = vi.fn(() => Promise.resolve());
     mockClipboard(writeText);

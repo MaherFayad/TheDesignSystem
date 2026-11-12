@@ -22,6 +22,7 @@ import {
 import type { IconName } from '@the-system/icons';
 import { DsIcon } from '@the-system/icons/angular';
 import { consumeHostAttributes } from '../../internal/host';
+import { listenAfterCallers } from '../../internal/late-listener';
 import { DsThemeService } from '../../theme/theme';
 import { DsButtonBase, type ButtonEmphasis } from '../button/button-base';
 import { copyToClipboard, readTimeToken, selectTextOf } from './copy';
@@ -34,8 +35,8 @@ export const copyButtonLabels = {
   ar: { label: 'نسخ', copied: 'تم النسخ', failed: 'تعذر النسخ' },
 } as const;
 
-/** How long the result shows. Hover intent timing, kept under reduced motion. Token gap: delay.peek-hide is the nearest. */
-const HOLD_TOKEN = '--ds-delay-peek-hide';
+/** How long the result shows (delay.feedback, 2s). Timing, not motion, so it is kept under reduced motion. */
+const HOLD_TOKEN = '--ds-delay-feedback';
 
 const icons: Record<CopyButtonState, IconName> = { idle: 'copy', copied: 'check', failed: 'warning' };
 
@@ -48,7 +49,6 @@ const icons: Record<CopyButtonState, IconName> = { idle: 'copy', copied: 'check'
     'data-ds': 'copy-button',
     '[attr.data-state]': 'state()',
     '[attr.aria-label]': 'iconOnly() ? name() : null',
-    '(click)': 'copy($event)',
   },
   template: `
     <span data-part="icon"><svg dsIcon [name]="icon()" size="md"></svg></span>
@@ -96,6 +96,7 @@ export class DsCopyButton extends DsButtonBase {
   constructor() {
     super();
     consumeHostAttributes(['dsCopyButton', 'value', 'label', 'iconOnly', 'copiedLabel', 'failedLabel', 'target']);
+    listenAfterCallers(this.host, 'click', (event) => void this.copy(event));
     inject(DestroyRef).onDestroy(() => {
       this.destroyed = true;
       clearTimeout(this.timer);
@@ -106,10 +107,12 @@ export class DsCopyButton extends DsButtonBase {
     return this.iconOnly();
   }
 
-  /** Runs in the click: the clipboard needs the user activation. A caller's (click) may cancel it with preventDefault. */
+  /**
+   * Runs in the click, after the caller's (click), as React calls onClick
+   * first: a caller may cancel it with preventDefault. The clipboard write
+   * starts synchronously, inside the user activation.
+   */
   protected async copy(event: Event): Promise<void> {
-    // Let a (click) of the caller on the same element run first, as React calls onClick first.
-    await Promise.resolve();
     if (event.defaultPrevented) return;
     const value = this.value();
     const ok = await copyToClipboard(value);
