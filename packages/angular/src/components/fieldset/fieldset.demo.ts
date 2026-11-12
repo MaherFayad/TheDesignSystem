@@ -40,7 +40,7 @@ const manyFields: [string, string][] = [
   template: `
     <section data-demo="case" data-demo-case="variants" heading="Sizes, and an Arabic row">
       <div dsTheme [lang]="'en'" data-demo="content">
-        <div data-demo="grid" style="grid-template-columns: repeat(auto-fill, minmax(16rem, 1fr));">
+        <div data-demo="grid" style="grid-template-columns: repeat(auto-fill, minmax(min(16rem, 100%), 1fr));">
           @for (size of sizes; track size) {
             <fieldset dsFieldset [size]="size" legend="Delivery address" description="Where we send the printed boards.">
               <div dsField label="City"><div dsInput autoComplete="address-level2" value="Riyadh"></div></div>
@@ -48,7 +48,7 @@ const manyFields: [string, string][] = [
             </fieldset>
           }
         </div>
-        <div data-demo="grid" style="grid-template-columns: repeat(auto-fill, minmax(16rem, 1fr));">
+        <div data-demo="grid" style="grid-template-columns: repeat(auto-fill, minmax(min(16rem, 100%), 1fr));">
           <fieldset dsFieldset legend="Email notifications" description="Pick what lands in your inbox.">
             <div dsCheckbox label="Comments on my boards" [defaultChecked]="true"></div>
             <div dsCheckbox label="Weekly summary"></div>
@@ -83,7 +83,7 @@ const manyFields: [string, string][] = [
 
     <section data-demo="case" data-demo-case="many" heading="Several groups in one form">
       <div dsTheme [lang]="'en'" data-demo="content">
-        <div data-demo="grid" style="grid-template-columns: repeat(auto-fill, minmax(16rem, 1fr));">
+        <div data-demo="grid" style="grid-template-columns: repeat(auto-fill, minmax(min(16rem, 100%), 1fr));">
           <fieldset dsFieldset legend="Contact">
             <div dsField label="Full name"><div dsInput autoComplete="name"></div></div>
             <div dsField label="Email"><div dsInput type="email" autoComplete="email"></div></div>
