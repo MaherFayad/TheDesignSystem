@@ -10,6 +10,7 @@ export * from './components/IconButton/index';
 export * from './components/Input/index';
 export * from './components/InputGroup/index';
 export * from './components/Link/index';
+export * from './components/PasswordField/index';
 export * from './components/SearchField/index';
 export * from './components/TitleBar/index';
 export * from './components/Toast/index';

@@ -156,6 +156,10 @@
     --_search-field-ring: var(--_input-group-ring);
   }
 
+  [data-ds='input-group'] > [data-ds='password-field'] {
+    --_password-field-ring: var(--_input-group-ring);
+  }
+
   [data-ds='input-group'] > :is([data-ds='button'], [data-ds='icon-button']) {
     --_button-ring: var(--_input-group-ring);
   }
@@ -182,7 +186,7 @@
       outline-offset: calc(-2 * var(--ds-border-width-strong));
     }
 
-    [data-ds='input-group'] > :is([data-ds='input'], [data-ds='search-field']):focus-within {
+    [data-ds='input-group'] > :is([data-ds='input'], [data-ds='search-field'], [data-ds='password-field']):focus-within {
       outline-offset: calc(-1 * var(--ds-border-width-strong));
     }
 
