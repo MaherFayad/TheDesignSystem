@@ -13,6 +13,7 @@ import { ChangeDetectionStrategy, Component, booleanAttribute, computed, input, 
 import { NgTemplateOutlet } from '@angular/common';
 import { DsIcon } from '@the-system/icons/angular';
 import { consumeHostAttributes } from '../../internal/host';
+import { listenAfterCallers } from '../../internal/late-listener';
 import { DsButtonBase, isIconName, type ButtonEmphasis, type ButtonSlotContent } from '../button/button-base';
 
 @Component({
@@ -24,8 +25,7 @@ import { DsButtonBase, isIconName, type ButtonEmphasis, type ButtonSlotContent }
     'data-ds': 'toggle-button',
     '[attr.aria-pressed]': 'on() ? "true" : "false"',
     '[attr.data-state]': 'on() ? "on" : "off"',
-    '[attr.aria-label]': 'icon() !== undefined ? label() : null',
-    '(click)': 'toggle($event)',
+    '[attr.aria-label]': 'icon() !== undefined ? label() : (ariaLabel() ?? null)',
   },
   template: `
     <ng-template #slot let-content>
@@ -63,6 +63,8 @@ export class DsToggleButton extends DsButtonBase {
   readonly icon = input<ButtonSlotContent | undefined>(undefined);
   /** The accessible name of the icon only form, set as aria-label. Required with `icon`. */
   readonly label = input<string | undefined>(undefined);
+  /** A caller's own aria-label on the text form, kept as React passes it through. Ignored with `icon`. */
+  readonly ariaLabel = input<string | undefined>(undefined, { alias: 'aria-label' });
 
   protected readonly defaultEmphasis: ButtonEmphasis = 'soft';
   protected readonly isIconName = isIconName;
@@ -73,18 +75,16 @@ export class DsToggleButton extends DsButtonBase {
   constructor() {
     super();
     consumeHostAttributes(['dsToggleButton', 'pressed', 'defaultPressed', 'start', 'end', 'icon', 'label']);
+    listenAfterCallers(this.host, 'click', (event) => this.toggle(event));
   }
 
   protected override isIconOnly(): boolean {
     return this.hasIcon();
   }
 
-  /** Runs after the base: an inert toggle never gets here (the capture listener stops the click). */
-  protected async toggle(event: Event): Promise<void> {
-    // A caller's (click) that prevents the default keeps the state, as with
-    // Radix Toggle. Angular runs this host listener before the caller's, so
-    // wait one microtask for it.
-    await Promise.resolve();
+  /** Runs after the base and after the caller's (click): an inert toggle never gets here (the capture listener stops the click). */
+  protected toggle(event: Event): void {
+    // A caller's (click) that prevents the default keeps the state, as with Radix Toggle.
     if (event.defaultPrevented) return;
     const next = !this.on();
     this.on.set(next);
