@@ -92,13 +92,8 @@ export class DsFieldDescription {
         <ng-container *ngTemplateOutlet="textTemplate; context: { $implicit: error() }" />
       </p>
     }
-    <ng-template #textTemplate let-text>
-      @if (isText(text)) {
-        {{ text }}
-      } @else {
-        <ng-container [ngTemplateOutlet]="text" />
-      }
-    </ng-template>
+    <!-- On one line: a text node with no space around it, as React renders the string. -->
+    <ng-template #textTemplate let-text>@if (isText(text)) {{{ text }}} @else {<ng-container [ngTemplateOutlet]="text" />}</ng-template>
   `,
 })
 export class DsField extends DsFieldContext {
