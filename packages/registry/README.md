@@ -31,6 +31,10 @@ Keep `cssVariables` set to `true`. With `false`, the CLI rewrites string
 literals as class lists and turns the icon `viewBox` `'0 0 24 24'` into
 `'0 24'`.
 
+Dialog and Tooltip read `process.env.NODE_ENV` for development warnings. A
+Vite app built with `tsc -b` needs `"types": ["vite/client", "node"]` in
+`tsconfig.app.json` (the Vite template already installs `@types/node`).
+
 Then, once at the app root:
 
 ```ts

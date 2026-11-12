@@ -338,7 +338,7 @@ export function buildRegistry({ root }: BuildOptions): BuildResult {
       description: 'Shared logic, icons, motion patterns, style data, the reset and the base CSS. Every other item needs it.',
       dependencies: npmList(g.npm),
       files: [entryCss, ...coreCss.map((f) => toRegistryFile(f, 'registry:file')), ...g.files.map((f) => toRegistryFile(f, 'registry:lib'))],
-      docs: 'Import ds/ds.css and one ds/style-<id>.css once at the app root.',
+      docs: 'Import ds/ds.css and one ds/style-<id>.css once at the app root. Dialog and Tooltip read process.env.NODE_ENV: in a Vite app add "node" to compilerOptions.types.',
       categories: ['core'],
       meta: { source: config.name, version: config.version },
     });
