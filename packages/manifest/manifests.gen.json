@@ -11,10 +11,10 @@
     "avoidWhen": [
       "English copy: it comes back unchanged, so the wrapper adds nothing",
       "Copy with markup inside: Bidi takes plain text only",
-      "A whole paragraph in another language: use a nested Theme with its lang"
+      "A whole paragraph in another language: give its element a lang attribute"
     ],
     "insteadUse": {
-      "A paragraph in English inside an Arabic screen": "Theme with lang en",
+      "A paragraph in English inside an Arabic screen": "an element with lang en, or a Theme with lang en to change direction too",
       "Splitting text without React": "splitLatinRuns from @the-system/shared"
     },
     "anatomy": [
@@ -76,6 +76,500 @@
       {
         "wrong": "Wrapping the period in the isolate with the Latin word",
         "right": "Let Bidi find the run: it never takes trailing punctuation"
+      }
+    ],
+    "since": "0.1.0"
+  },
+  {
+    "name": "Button",
+    "kind": "component",
+    "family": "actions",
+    "summary": "An action the person takes on this page: save, send, open, delete. The one control that renders a native button.",
+    "useWhen": [
+      "An action that changes data or starts a task on this page",
+      "The main action of a form, a dialog or a card, as tone accent with emphasis solid",
+      "A secondary or quiet action next to the main one, as soft, outline or ghost",
+      "A link that must look like an action, through asChild"
+    ],
+    "avoidWhen": [
+      "A control with only an icon and no visible label",
+      "Navigation inside running text",
+      "A choice that stays on or off",
+      "More than one solid accent button in the same view"
+    ],
+    "insteadUse": {
+      "Only an icon": "IconButton",
+      "Navigation inside text": "Link",
+      "A setting that stays on or off": "Switch",
+      "One of several options": "SegmentedControl",
+      "A list of actions behind one control": "DropdownMenu"
+    },
+    "anatomy": [
+      "root",
+      "icon-start",
+      "label",
+      "icon-end",
+      "spinner"
+    ],
+    "slots": {
+      "label": {
+        "accepts": "text",
+        "min": 1,
+        "max": 1
+      },
+      "icon-start": {
+        "accepts": [
+          "Icon"
+        ],
+        "max": 1
+      },
+      "icon-end": {
+        "accepts": [
+          "Icon"
+        ],
+        "max": 1
+      }
+    },
+    "props": {
+      "size": {
+        "type": [
+          "xs",
+          "sm",
+          "md",
+          "lg"
+        ],
+        "default": "md",
+        "description": "Height from size.control: 24, 28, 32 and 44 px in the default density."
+      },
+      "tone": {
+        "type": [
+          "neutral",
+          "accent",
+          "danger",
+          "success",
+          "warning",
+          "info"
+        ],
+        "default": "neutral",
+        "description": "The color family. accent is the primary action color of the active style."
+      },
+      "emphasis": {
+        "type": [
+          "solid",
+          "soft",
+          "outline",
+          "ghost",
+          "link"
+        ],
+        "default": "soft",
+        "description": "soft is the standard button of Studio and Desk (the source secondary). tone accent with emphasis solid is the primary action."
+      },
+      "shape": {
+        "type": [
+          "default",
+          "pill",
+          "square"
+        ],
+        "default": "default",
+        "description": "default takes radius.control (Desk draws it as a pill), pill is fully round, square takes radius.sm."
+      },
+      "loading": {
+        "type": "boolean",
+        "default": false,
+        "description": "Shows the spinner, sets aria-busy and data-loading, keeps the width and focus, blocks activation."
+      },
+      "disabled": {
+        "type": "boolean",
+        "default": false,
+        "description": "Sets aria-disabled and data-disabled. Stays focusable so a Tooltip can say why. The native disabled attribute is never set."
+      },
+      "iconStart": {
+        "type": "node",
+        "description": "A system icon name or an icon element, before the label."
+      },
+      "iconEnd": {
+        "type": "node",
+        "description": "A system icon name or an icon element, after the label."
+      },
+      "fullWidth": {
+        "type": "boolean",
+        "default": false,
+        "description": "Fills the width of its container. Sets data-full-width."
+      },
+      "asChild": {
+        "type": "boolean",
+        "default": false,
+        "description": "Renders the single child element, for example a link, as the button."
+      },
+      "type": {
+        "type": [
+          "button",
+          "submit",
+          "reset"
+        ],
+        "default": "button",
+        "description": "Native type, so a button never submits a form by accident. Ignored with asChild."
+      },
+      "children": {
+        "type": "node",
+        "required": true,
+        "description": "The label text."
+      }
+    },
+    "states": [
+      "data-loading",
+      "data-disabled",
+      "data-full-width",
+      "hover",
+      "active",
+      "focus-visible"
+    ],
+    "a11y": {
+      "role": "button (native button element), or the role of the asChild element",
+      "focus": "In the tab order in every state, disabled and loading included. A 2px ring on keyboard focus; the solid accent button gets two rings, inner and outer.",
+      "keys": {
+        "Enter": "Activates the button",
+        "Space": "Activates the button",
+        "Tab": "Moves focus to the next control"
+      },
+      "announce": "The label is the accessible name. Loading sets aria-busy; for a long wait, say the busy verb in a live region (Toast or a status line).",
+      "native": {
+        "accessibilityRole": "button",
+        "accessibilityState": [
+          "disabled",
+          "busy"
+        ]
+      },
+      "notes": [
+        "Disabled and loading use aria-disabled, not the native disabled attribute, so focus never drops to the page when an action starts.",
+        "While disabled or loading, a click does not submit a form or follow an asChild link, and onClick, onPointerDown and onKeyDown do not run.",
+        "Icons inside the button are hidden from assistive tech. The label names the button.",
+        "No native title attribute. A hint comes from Tooltip."
+      ]
+    },
+    "content": {
+      "en": {
+        "label": "A verb plus a noun in sentence case: Save changes, Delete project. Never OK, Continue, Confirm or Yes.",
+        "busy": "Keep the label while loading. Say the verb in progress (Saving changes) in a live region, not on the button.",
+        "danger": "Name what goes: Delete project, not Delete."
+      },
+      "ar": {
+        "label": "Noun form labels, no diacritics: حفظ التغييرات، حذف المشروع. Never the imperative.",
+        "digits": "Western digits."
+      }
+    },
+    "tokens": [
+      "size.control.xs",
+      "size.control.sm",
+      "size.control.md",
+      "size.control.lg",
+      "size.target-min",
+      "size.icon.sm",
+      "space.xs",
+      "space.s",
+      "space.xl",
+      "space.2xl",
+      "space.2xs",
+      "space.3xs",
+      "radius.control",
+      "radius.field",
+      "radius.pill",
+      "radius.sm",
+      "radius.xs",
+      "border.width.default",
+      "border.width.strong",
+      "font.family.sans",
+      "font.size.s",
+      "font.size.m",
+      "font.size.l",
+      "font.weight.bold",
+      "font.leading.tight",
+      "font.tracking.none",
+      "color.bg.overlay-5",
+      "color.bg.overlay-10",
+      "color.bg.overlay-20",
+      "color.bg.overlay-30",
+      "button.text.secondary",
+      "color.text.default",
+      "color.text.muted",
+      "color.text.bright",
+      "color.text.link",
+      "color.text.on-accent",
+      "color.border.control",
+      "color.border.control-hover",
+      "color.primary.fill",
+      "color.primary.fill-hover",
+      "color.primary.fill-pressed",
+      "color.primary.text",
+      "color.primary.border",
+      "color.state.danger.text",
+      "color.state.danger.on-tint",
+      "color.state.danger.border",
+      "color.state.danger.tint-10",
+      "color.state.danger.tint-20",
+      "color.state.success.text",
+      "color.state.success.on-tint",
+      "color.state.success.border",
+      "color.state.success.tint-10",
+      "color.state.success.tint-20",
+      "color.state.warning.text",
+      "color.state.warning.on-tint",
+      "color.state.warning.border",
+      "color.state.warning.tint-10",
+      "color.state.warning.tint-20",
+      "color.state.info.text",
+      "color.state.info.on-tint",
+      "color.state.info.border",
+      "color.state.info.tint-10",
+      "color.state.info.tint-20",
+      "focus.shadow.ring",
+      "focus.shadow.primary",
+      "duration.fast",
+      "duration.moderate",
+      "duration.spin",
+      "duration.roll",
+      "ease.default",
+      "ease.reveal"
+    ],
+    "motion": "press",
+    "frameworks": {
+      "react": {
+        "status": "ready",
+        "behavior": "native button, radix:Slot",
+        "example": "Button.demo.tsx"
+      },
+      "angular": {
+        "status": "planned",
+        "behavior": "button[dsButton] and a[dsButton]",
+        "note": "Host bindings set the same data attributes; Button.css is used as is."
+      },
+      "native": {
+        "status": "planned",
+        "behavior": "rn-primitives:slot and Pressable",
+        "note": "44pt on iOS, 48dp on Android. No roll label."
+      }
+    },
+    "styles": {
+      "studio": "Bordered and filled overlay pills. The primary action is the neutral fill from color.primary (overlay 20 with the control border). Hover and press step the overlay at once.",
+      "desk": "Pill shaped at every size. The primary action is yellow #ffd84d with ink text and a doubled focus ring. The label rolls up on hover and keyboard focus, a copy rolling in from below (recipes/Button.css), off under reduced motion.",
+      "neutral": "Planned: filled primary, outline secondary, 36 to 40px.",
+      "liquid": "Planned: capsule buttons with a press scale."
+    },
+    "mistakes": [
+      {
+        "wrong": "Two solid accent buttons side by side",
+        "right": "One solid accent button for the main action, soft or ghost for the rest"
+      },
+      {
+        "wrong": "A button labelled OK or Continue",
+        "right": "A verb plus a noun that names the result: Save changes"
+      },
+      {
+        "wrong": "Swapping the label to Saving while loading",
+        "right": "loading on the button and the busy verb in a live region; the width holds"
+      },
+      {
+        "wrong": "A disabled button with no reason",
+        "right": "Leave it out, or keep it focusable and explain with a Tooltip"
+      },
+      {
+        "wrong": "An anchor styled with button classes",
+        "right": "Button with asChild around the anchor"
+      },
+      {
+        "wrong": "A Button with an icon and no visible text",
+        "right": "IconButton with a label"
+      }
+    ],
+    "since": "0.1.0"
+  },
+  {
+    "name": "Field",
+    "kind": "component",
+    "family": "forms",
+    "summary": "Wires one label, one description and one error message to one form control, and passes the invalid, disabled, read only and required state to it.",
+    "useWhen": [
+      "Any form control that needs a visible label",
+      "A control with a hint that helps fill it, or an error that says how to fix the value",
+      "A settings row with the label at the start and the control at the end (orientation horizontal)"
+    ],
+    "avoidWhen": [
+      "A search box in a toolbar whose purpose is plain from an icon and an aria-label",
+      "A group of checkboxes or radios that shares one question",
+      "Read only text that is not a control"
+    ],
+    "insteadUse": {
+      "A group of choices under one question": "Fieldset",
+      "Read only text that is not a control": "a description list",
+      "A message about the whole form": "Alert"
+    },
+    "anatomy": [
+      "root",
+      "label",
+      "required",
+      "description",
+      "error"
+    ],
+    "parts": {
+      "FieldLabel": "label",
+      "FieldDescription": "description",
+      "FieldError": "error"
+    },
+    "slots": {
+      "root": {
+        "accepts": [
+          "Input",
+          "Select",
+          "Textarea",
+          "Combobox"
+        ],
+        "min": 1,
+        "max": 1
+      },
+      "label": {
+        "accepts": "text"
+      },
+      "description": {
+        "accepts": "text"
+      },
+      "error": {
+        "accepts": "text"
+      }
+    },
+    "props": {
+      "orientation": {
+        "type": [
+          "vertical",
+          "horizontal"
+        ],
+        "default": "vertical",
+        "description": "vertical: label above the control. horizontal: label at the start of the control's line."
+      },
+      "invalid": {
+        "type": "boolean",
+        "description": "Marks the control invalid. When not passed, the field is invalid while an error message shows. false hides the error."
+      },
+      "disabled": {
+        "type": "boolean",
+        "default": false,
+        "description": "Passed to the control."
+      },
+      "readOnly": {
+        "type": "boolean",
+        "default": false,
+        "description": "Passed to the control. Still focusable and readable."
+      },
+      "required": {
+        "type": "boolean",
+        "default": false,
+        "description": "Shows the required mark and sets aria-required on the control."
+      },
+      "label": {
+        "type": "node",
+        "description": "One line API: renders FieldLabel."
+      },
+      "description": {
+        "type": "node",
+        "description": "One line API: renders FieldDescription."
+      },
+      "error": {
+        "type": "node",
+        "description": "One line API: renders FieldError."
+      }
+    },
+    "states": [
+      "data-invalid",
+      "data-disabled",
+      "data-readonly",
+      "data-orientation"
+    ],
+    "a11y": {
+      "role": "none on the root. The label is a native label bound to the control with for and id.",
+      "focus": "The root is never focusable. Clicking the label focuses the control.",
+      "keys": {
+        "Tab": "Moves to the control. The field adds no stop of its own."
+      },
+      "announce": "The description, then the error, are read with the control through aria-describedby when focus lands there. The error is not a live region and never role alert, so an error that is there when the page loads does not interrupt.",
+      "native": {
+        "accessibilityRole": "none",
+        "accessibilityState": [
+          "disabled"
+        ]
+      },
+      "notes": [
+        "The required mark is an asterisk glyph, so it does not rely on color, and it is aria-hidden. The control carries aria-required, not the native required attribute, so the browser shows no validation bubble.",
+        "The error starts with a danger icon, so it does not rely on color.",
+        "Controls read the wiring with useFieldControl(): id, aria-describedby, aria-invalid, aria-required, disabled and readOnly. A value the control passes itself wins.",
+        "A form that checks on submit moves focus to the first invalid control."
+      ]
+    },
+    "content": {
+      "en": {
+        "label": "A noun in sentence case that names the value: Email, Board name. No colon, no question.",
+        "description": "One sentence that helps fill the field or says where the value shows. Not a repeat of the label.",
+        "error": "Says what to do, in plain words: Add the part after the @. Never only Invalid or Required.",
+        "placeholder": "Never the label. An example value at most: For example, spring launch."
+      },
+      "ar": {
+        "label": "اسم بصيغة المصدر أو الاسم، بدون تشكيل: البريد الإلكتروني، اسم اللوحة",
+        "description": "جملة وحدة توضح وش يكتب أو وين تظهر القيمة",
+        "error": "يقول وش يسوي عشان يصلحها: البريد ناقص، اكتبه كامل. مو بس غلط",
+        "placeholder": "ما يكون بديل عن العنوان. مثال على القيمة بس",
+        "latin": "النص اللاتيني داخل العربي يمر عبر Bidi"
+      }
+    },
+    "tokens": [
+      "space.xs",
+      "space.3xs",
+      "space.2xs",
+      "space.l",
+      "control-row.label.width",
+      "font.size.s",
+      "font.weight.semibold",
+      "font.weight.regular",
+      "font.leading.snug",
+      "font.leading.normal",
+      "color.text.default",
+      "color.text.muted",
+      "color.state.danger.text"
+    ],
+    "frameworks": {
+      "react": {
+        "status": "ready",
+        "behavior": "radix:Label, native label wiring",
+        "example": "Field.demo.tsx"
+      },
+      "angular": {
+        "status": "planned"
+      },
+      "native": {
+        "status": "planned"
+      }
+    },
+    "styles": {
+      "studio": "Semibold label, muted description, danger text error with an icon",
+      "desk": "The same, in Instrument Sans"
+    },
+    "mistakes": [
+      {
+        "wrong": "A placeholder used as the label",
+        "right": "A FieldLabel above the control, and an example value in the placeholder at most"
+      },
+      {
+        "wrong": "An error that only says Invalid email",
+        "right": "An error that says how to fix it: Add the part after the @, for example name@example.com"
+      },
+      {
+        "wrong": "role alert on an inline error that is there when the page loads",
+        "right": "FieldError, read through aria-describedby when focus lands on the control"
+      },
+      {
+        "wrong": "A red asterisk as the only sign of a required field",
+        "right": "required on Field: an aria-hidden asterisk glyph plus aria-required on the control"
+      },
+      {
+        "wrong": "A label with an id written by hand and a control with a different id",
+        "right": "Field gives both ids. A control id of its own is picked up by the label."
       }
     ],
     "since": "0.1.0"
@@ -233,6 +727,448 @@
     "since": "0.1.0"
   },
   {
+    "name": "IconButton",
+    "kind": "component",
+    "family": "actions",
+    "summary": "A square action button with only an icon. Its label is the accessible name and the text of its Tooltip.",
+    "useWhen": [
+      "A toolbar, a header or a row where the icon is well known: close, more, settings",
+      "A repeated action in a list where a text label would crowd the row",
+      "A close control in a dialog, a panel or a toast"
+    ],
+    "avoidWhen": [
+      "The icon alone does not say what happens",
+      "The main action of a form or a dialog",
+      "A choice that stays on or off"
+    ],
+    "insteadUse": {
+      "An action that needs words": "Button",
+      "The main action of a view": "Button with tone accent and emphasis solid",
+      "A setting that stays on or off": "Switch",
+      "A list of actions behind one control": "DropdownMenu"
+    },
+    "anatomy": [
+      "root",
+      "icon",
+      "spinner"
+    ],
+    "slots": {
+      "icon": {
+        "accepts": [
+          "Icon"
+        ],
+        "min": 1,
+        "max": 1
+      }
+    },
+    "props": {
+      "icon": {
+        "type": "node",
+        "required": true,
+        "description": "A system icon name or an icon element. Hidden from assistive tech."
+      },
+      "label": {
+        "type": "string",
+        "required": true,
+        "description": "The accessible name, set as aria-label. A verb plus a noun. Never shown with the native title attribute."
+      },
+      "size": {
+        "type": [
+          "xs",
+          "sm",
+          "md",
+          "lg"
+        ],
+        "default": "md",
+        "description": "A square of size.control: 24, 28, 32 and 44 px. Never under 24 by 24."
+      },
+      "tone": {
+        "type": [
+          "neutral",
+          "accent",
+          "danger",
+          "success",
+          "warning",
+          "info"
+        ],
+        "default": "neutral"
+      },
+      "emphasis": {
+        "type": [
+          "solid",
+          "soft",
+          "outline",
+          "ghost",
+          "link"
+        ],
+        "default": "ghost",
+        "description": "ghost, because icon buttons sit in toolbars and headers."
+      },
+      "shape": {
+        "type": [
+          "default",
+          "pill",
+          "square"
+        ],
+        "default": "default",
+        "description": "pill is a circle, square takes radius.sm, default takes radius.control (a circle in Desk)."
+      },
+      "loading": {
+        "type": "boolean",
+        "default": false,
+        "description": "The spinner replaces the icon, aria-busy is set, activation is blocked, focus stays."
+      },
+      "disabled": {
+        "type": "boolean",
+        "default": false,
+        "description": "aria-disabled and data-disabled. Stays focusable so a Tooltip can say why."
+      },
+      "asChild": {
+        "type": "boolean",
+        "default": false,
+        "description": "Renders the single child element, for example an empty link, as the button."
+      },
+      "type": {
+        "type": [
+          "button",
+          "submit",
+          "reset"
+        ],
+        "default": "button"
+      }
+    },
+    "states": [
+      "data-loading",
+      "data-disabled",
+      "hover",
+      "active",
+      "focus-visible"
+    ],
+    "a11y": {
+      "role": "button (native button element), or the role of the asChild element",
+      "focus": "In the tab order in every state. A 2px ring on keyboard focus; the solid accent icon button gets two rings.",
+      "keys": {
+        "Enter": "Activates the button",
+        "Space": "Activates the button",
+        "Tab": "Moves focus to the next control"
+      },
+      "announce": "The label prop is the accessible name. Loading sets aria-busy.",
+      "native": {
+        "accessibilityRole": "button",
+        "accessibilityState": [
+          "disabled",
+          "busy"
+        ]
+      },
+      "notes": [
+        "label is required by the type, so an icon button always has a name.",
+        "At least 24 by 24 CSS px at xs (WCAG 2.5.8). Use lg (44px) in touch layouts.",
+        "Show the label on hover and focus with Tooltip. No native title attribute.",
+        "Directional icons (chevron-back, arrow-forward) mirror in right to left layouts."
+      ]
+    },
+    "content": {
+      "en": {
+        "label": "A verb plus a noun in sentence case: Close panel, Open settings. Not the icon name."
+      },
+      "ar": {
+        "label": "Noun form, no diacritics: إغلاق اللوحة، فتح الإعدادات."
+      }
+    },
+    "tokens": [
+      "size.control.xs",
+      "size.control.sm",
+      "size.control.md",
+      "size.control.lg",
+      "size.target-min",
+      "size.icon.sm",
+      "size.icon.md",
+      "radius.control",
+      "radius.field",
+      "radius.pill",
+      "radius.sm",
+      "color.bg.overlay-10",
+      "color.bg.overlay-20",
+      "color.bg.overlay-30",
+      "color.text.muted",
+      "color.text.default",
+      "color.primary.fill",
+      "color.primary.fill-hover",
+      "color.primary.fill-pressed",
+      "color.primary.text",
+      "color.primary.border",
+      "focus.shadow.ring",
+      "focus.shadow.primary",
+      "duration.spin"
+    ],
+    "motion": "press",
+    "frameworks": {
+      "react": {
+        "status": "ready",
+        "behavior": "native button, radix:Slot",
+        "example": "IconButton.demo.tsx"
+      },
+      "angular": {
+        "status": "planned",
+        "behavior": "button[dsIconButton] and a[dsIconButton]",
+        "note": "Uses Button.css and IconButton.css as is."
+      },
+      "native": {
+        "status": "planned",
+        "behavior": "rn-primitives:slot and Pressable",
+        "note": "44pt on iOS, 48dp on Android, accessibilityLabel from label."
+      }
+    },
+    "styles": {
+      "studio": "Ghost by default, the control radius, the overlay steps on hover and press.",
+      "desk": "A circle by default (Desk controls are pills). The solid accent icon button is yellow with a doubled focus ring. No roll: there is no label.",
+      "neutral": "Planned.",
+      "liquid": "Planned: capsule glass on toolbars."
+    },
+    "mistakes": [
+      {
+        "wrong": "An icon button with no label, or the label in a title attribute",
+        "right": "label set; the hint in a Tooltip"
+      },
+      {
+        "wrong": "label=\"trash\"",
+        "right": "label=\"Delete file\""
+      },
+      {
+        "wrong": "A 16px icon button in a dense row",
+        "right": "size xs, which keeps the 24px target"
+      },
+      {
+        "wrong": "A Button with only an icon child",
+        "right": "IconButton"
+      }
+    ],
+    "since": "0.1.0"
+  },
+  {
+    "name": "Input",
+    "kind": "component",
+    "family": "forms",
+    "summary": "A single line text input: a native input in a bordered box with optional start and end adornments.",
+    "useWhen": [
+      "A short value typed on one line: a name, an email, a link, a number",
+      "A search box, with the search icon at the start",
+      "A value with a unit or a currency shown inside the box"
+    ],
+    "avoidWhen": [
+      "Text longer than one line",
+      "A choice from a known list",
+      "A date, a color or a file"
+    ],
+    "insteadUse": {
+      "Text longer than one line": "Textarea",
+      "A choice from a short known list": "Select",
+      "A choice from a long list with typing": "Combobox",
+      "A yes or no setting": "Switch"
+    },
+    "anatomy": [
+      "root",
+      "control",
+      "start",
+      "end"
+    ],
+    "slots": {
+      "start": {
+        "accepts": [
+          "Icon",
+          "text"
+        ],
+        "max": 1
+      },
+      "end": {
+        "accepts": [
+          "Icon",
+          "text"
+        ],
+        "max": 1
+      }
+    },
+    "props": {
+      "size": {
+        "type": [
+          "xs",
+          "sm",
+          "md",
+          "lg"
+        ],
+        "default": "md",
+        "description": "Height from size.control: 24, 28, 32 and 44 px at default density."
+      },
+      "shape": {
+        "type": [
+          "default",
+          "pill"
+        ],
+        "default": "default",
+        "description": "default takes radius.control from the style, a pill in Studio and Desk. pill is always fully round."
+      },
+      "type": {
+        "type": [
+          "text",
+          "email",
+          "url",
+          "tel",
+          "number",
+          "password",
+          "search"
+        ],
+        "default": "text",
+        "description": "Text types only."
+      },
+      "invalid": {
+        "type": "boolean",
+        "description": "Marks the value invalid. Inside a Field it follows the Field."
+      },
+      "disabled": {
+        "type": "boolean",
+        "description": "Inside a Field it follows the Field."
+      },
+      "readOnly": {
+        "type": "boolean",
+        "description": "Still focusable, selectable and readable. Inside a Field it follows the Field."
+      },
+      "required": {
+        "type": "boolean",
+        "description": "Sets aria-required. Inside a Field it follows the Field."
+      },
+      "start": {
+        "type": "node",
+        "description": "An icon name, a short text such as $, or a node. Icon names and texts are aria-hidden."
+      },
+      "end": {
+        "type": "node",
+        "description": "An icon name, a short text such as px, or a node. Icon names and texts are aria-hidden."
+      },
+      "rootProps": {
+        "type": "string",
+        "description": "Props for the root box. className and style also go to the root; every other native prop and the ref go to the input."
+      }
+    },
+    "states": [
+      "data-invalid",
+      "data-disabled",
+      "data-readonly",
+      "focus-within",
+      "hover"
+    ],
+    "a11y": {
+      "role": "textbox, from the native input (spinbutton for type number, searchbox for type search)",
+      "focus": "The input is the only tab stop. Clicking anywhere in the box that is not interactive focuses the input. Focus shows the glow and a 2px ring around the box.",
+      "keys": {
+        "Tab": "Moves focus to the input, and on to the next control",
+        "Shift+Tab": "Moves focus back",
+        "Home, End": "Move the caret to the start or the end of the value",
+        "ArrowUp, ArrowDown": "Change the value for type number",
+        "Escape": "Clears the value for type search, as the browser does"
+      },
+      "announce": "Name from the Field label. The Field description and error through aria-describedby. aria-invalid and aria-required from the Field.",
+      "native": {
+        "accessibilityRole": "none",
+        "accessibilityState": [
+          "disabled"
+        ]
+      },
+      "notes": [
+        "No native title attribute. Use Tooltip for a hint, or the Field description.",
+        "dir auto is not set: the value follows the page direction, so a field does not jump sides while someone types a Latin word into Arabic. Pass dir auto yourself for free text in a mixed language form.",
+        "Email, url, tel and number values always run left to right, and stay on the reading side of the form. Their placeholder runs in the page direction.",
+        "A long value scrolls inside the box. It is never cut with an ellipsis.",
+        "Read only looks different from disabled: a dashed border and a quiet fill, full contrast text, and it stays focusable."
+      ]
+    },
+    "content": {
+      "en": {
+        "label": "Always a visible Field label, a noun in sentence case. aria-label only for a toolbar search box.",
+        "placeholder": "An example value at most: For example, spring launch. Never the label, never an instruction the person needs after typing.",
+        "adornment": "A unit or a currency the value is in: px, USD. Never words the label needs."
+      },
+      "ar": {
+        "label": "عنوان ظاهر دايم، بصيغة الاسم وبدون تشكيل",
+        "placeholder": "مثال على القيمة بس، مو بديل عن العنوان",
+        "latin": "البريد والروابط والأرقام تنكتب من اليسار لليمين حتى داخل العربي"
+      }
+    },
+    "tokens": [
+      "size.control.xs",
+      "size.control.sm",
+      "size.control.md",
+      "size.control.lg",
+      "size.target-min",
+      "space.xs",
+      "space.2xs",
+      "space.s",
+      "space.m",
+      "space.2xl",
+      "font.size.s",
+      "font.size.xl",
+      "font.leading.snug",
+      "radius.control",
+      "radius.pill",
+      "border.width.default",
+      "border.width.strong",
+      "color.border.control",
+      "color.border.control-hover",
+      "color.border.strong",
+      "color.bg.overlay-50",
+      "color.bg.overlay-5",
+      "color.text.default",
+      "color.text.muted",
+      "color.text.placeholder",
+      "color.text.disabled",
+      "color.state.danger.border",
+      "elevation.input-focus",
+      "focus.shadow.ring",
+      "duration.base",
+      "ease.default"
+    ],
+    "motion": "fade",
+    "frameworks": {
+      "react": {
+        "status": "ready",
+        "behavior": "native input",
+        "example": "Input.demo.tsx"
+      },
+      "angular": {
+        "status": "planned"
+      },
+      "native": {
+        "status": "planned"
+      }
+    },
+    "styles": {
+      "studio": "Bordered transparent pill, the control border, a soft inner glow and the 2px achromatic ring on focus",
+      "desk": "The same pill and glow, in Instrument Sans"
+    },
+    "mistakes": [
+      {
+        "wrong": "A placeholder as the only label",
+        "right": "A Field with a FieldLabel"
+      },
+      {
+        "wrong": "An input with a title attribute for the hint",
+        "right": "A FieldDescription, or a Tooltip"
+      },
+      {
+        "wrong": "A disabled input to show a value that cannot change",
+        "right": "readOnly, which stays readable and focusable"
+      },
+      {
+        "wrong": "dir auto on every input in an Arabic form",
+        "right": "No dir: email, url, tel and number run left to right through the CSS"
+      },
+      {
+        "wrong": "type date or checkbox on Input",
+        "right": "The DatePicker or Checkbox component"
+      }
+    ],
+    "since": "0.1.0"
+  },
+  {
     "name": "Theme",
     "kind": "component",
     "family": "foundations",
@@ -338,25 +1274,17 @@
         "default": "div"
       },
       "css": {
-        "type": "string",
-        "description": "Inline styles for the Theme element (an object in React). style is taken by the style axis."
+        "type": "CSSProperties",
+        "description": "Inline styles for the Theme element, as a React style object. style is taken by the style axis."
       },
       "className": "string"
     },
-    "states": [
-      "data-style",
-      "data-scheme",
-      "data-density",
-      "data-contrast",
-      "data-platform",
-      "data-glass"
-    ],
     "a11y": {
       "focus": "Never focusable. It adds no role.",
       "notes": [
         "dir and lang on the element let screen readers pick the right voice and let CSS mirror the layout.",
         "The Radix direction provider follows dir, so menus, sliders and arrow keys mirror in right to left.",
-        "Arabic text gets IBM Plex Sans Arabic, zero tracking, taller lines and small text one step up through base.css."
+        "Arabic text gets IBM Plex Sans Arabic, zero tracking, taller lines and small text one step up through base.css. Body text keeps its size."
       ],
       "native": {
         "accessibilityRole": "none"
@@ -364,7 +1292,7 @@
     },
     "content": {
       "en": {
-        "lang": "Set lang on the root Theme. A Latin island inside Arabic is a nested Theme with lang en."
+        "lang": "Set lang on the root Theme. A Latin island inside Arabic is any element with lang en; it gets the Latin type back."
       },
       "ar": {
         "lang": "Set lang ar on the root Theme. dir follows as rtl."
@@ -376,17 +1304,25 @@
       "color.bg.inverse",
       "color.focus.ring",
       "font.family.sans",
+      "font.family.display",
       "font.family.arabic",
       "font.family.display-arabic",
+      "font.size.s",
       "font.size.m",
-      "font.size.l",
       "font.weight.regular",
+      "font.leading.tight",
+      "font.leading.snug",
       "font.leading.normal",
+      "font.leading.relaxed",
+      "font.leading.display",
       "font.leading.arabic.tight",
       "font.leading.arabic.snug",
       "font.leading.arabic.normal",
       "font.leading.arabic.relaxed",
       "font.tracking.none",
+      "font.tracking.caps",
+      "font.tracking.eyebrow",
+      "font.tracking.display",
       "border.width.strong",
       "duration.instant",
       "scrollbar.thumb",

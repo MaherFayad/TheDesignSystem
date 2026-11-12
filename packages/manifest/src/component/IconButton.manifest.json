@@ -1,0 +1,109 @@
+{
+  "name": "IconButton",
+  "kind": "component",
+  "family": "actions",
+  "summary": "A square action button with only an icon. Its label is the accessible name and the text of its Tooltip.",
+  "useWhen": [
+    "A toolbar, a header or a row where the icon is well known: close, more, settings",
+    "A repeated action in a list where a text label would crowd the row",
+    "A close control in a dialog, a panel or a toast"
+  ],
+  "avoidWhen": [
+    "The icon alone does not say what happens",
+    "The main action of a form or a dialog",
+    "A choice that stays on or off"
+  ],
+  "insteadUse": {
+    "An action that needs words": "Button",
+    "The main action of a view": "Button with tone accent and emphasis solid",
+    "A setting that stays on or off": "Switch",
+    "A list of actions behind one control": "DropdownMenu"
+  },
+  "anatomy": ["root", "icon", "spinner"],
+  "slots": {
+    "icon": { "accepts": ["Icon"], "min": 1, "max": 1 }
+  },
+  "props": {
+    "icon": { "type": "node", "required": true, "description": "A system icon name or an icon element. Hidden from assistive tech." },
+    "label": { "type": "string", "required": true, "description": "The accessible name, set as aria-label. A verb plus a noun. Never shown with the native title attribute." },
+    "size": { "type": ["xs", "sm", "md", "lg"], "default": "md", "description": "A square of size.control: 24, 28, 32 and 44 px. Never under 24 by 24." },
+    "tone": { "type": ["neutral", "accent", "danger", "success", "warning", "info"], "default": "neutral" },
+    "emphasis": { "type": ["solid", "soft", "outline", "ghost", "link"], "default": "ghost", "description": "ghost, because icon buttons sit in toolbars and headers." },
+    "shape": { "type": ["default", "pill", "square"], "default": "default", "description": "pill is a circle, square takes radius.sm, default takes radius.control (a circle in Desk)." },
+    "loading": { "type": "boolean", "default": false, "description": "The spinner replaces the icon, aria-busy is set, activation is blocked, focus stays." },
+    "disabled": { "type": "boolean", "default": false, "description": "aria-disabled and data-disabled. Stays focusable so a Tooltip can say why." },
+    "asChild": { "type": "boolean", "default": false, "description": "Renders the single child element, for example an empty link, as the button." },
+    "type": { "type": ["button", "submit", "reset"], "default": "button" }
+  },
+  "states": ["data-loading", "data-disabled", "hover", "active", "focus-visible"],
+  "a11y": {
+    "role": "button (native button element), or the role of the asChild element",
+    "focus": "In the tab order in every state. A 2px ring on keyboard focus; the solid accent icon button gets two rings.",
+    "keys": {
+      "Enter": "Activates the button",
+      "Space": "Activates the button",
+      "Tab": "Moves focus to the next control"
+    },
+    "announce": "The label prop is the accessible name. Loading sets aria-busy.",
+    "native": { "accessibilityRole": "button", "accessibilityState": ["disabled", "busy"] },
+    "notes": [
+      "label is required by the type, so an icon button always has a name.",
+      "At least 24 by 24 CSS px at xs (WCAG 2.5.8). Use lg (44px) in touch layouts.",
+      "Show the label on hover and focus with Tooltip. No native title attribute.",
+      "Directional icons (chevron-back, arrow-forward) mirror in right to left layouts."
+    ]
+  },
+  "content": {
+    "en": {
+      "label": "A verb plus a noun in sentence case: Close panel, Open settings. Not the icon name."
+    },
+    "ar": {
+      "label": "Noun form, no diacritics: إغلاق اللوحة، فتح الإعدادات."
+    }
+  },
+  "tokens": [
+    "size.control.xs",
+    "size.control.sm",
+    "size.control.md",
+    "size.control.lg",
+    "size.target-min",
+    "size.icon.sm",
+    "size.icon.md",
+    "radius.control",
+    "radius.field",
+    "radius.pill",
+    "radius.sm",
+    "color.bg.overlay-10",
+    "color.bg.overlay-20",
+    "color.bg.overlay-30",
+    "color.text.muted",
+    "color.text.default",
+    "color.primary.fill",
+    "color.primary.fill-hover",
+    "color.primary.fill-pressed",
+    "color.primary.text",
+    "color.primary.border",
+    "focus.shadow.ring",
+    "focus.shadow.primary",
+    "duration.spin"
+  ],
+  "motion": "press",
+  "frameworks": {
+    "react": { "status": "ready", "behavior": "native button, radix:Slot", "example": "IconButton.demo.tsx" },
+    "angular": { "status": "planned", "behavior": "button[dsIconButton] and a[dsIconButton]", "note": "Uses Button.css and IconButton.css as is." },
+    "native": { "status": "planned", "behavior": "rn-primitives:slot and Pressable", "note": "44pt on iOS, 48dp on Android, accessibilityLabel from label." }
+  },
+  "styles": {
+    "studio": "Ghost by default, the control radius, the overlay steps on hover and press.",
+    "desk": "A circle by default (Desk controls are pills). The solid accent icon button is yellow with a doubled focus ring. No roll: there is no label.",
+    "neutral": "Planned.",
+    "liquid": "Planned: capsule glass on toolbars."
+  },
+  "mistakes": [
+    { "wrong": "An icon button with no label, or the label in a title attribute", "right": "label set; the hint in a Tooltip" },
+    { "wrong": "label=\"trash\"", "right": "label=\"Delete file\"" },
+    { "wrong": "A 16px icon button in a dense row", "right": "size xs, which keeps the 24px target" },
+    { "wrong": "A Button with only an icon child", "right": "IconButton" }
+  ],
+  "since": "0.1.0"
+}

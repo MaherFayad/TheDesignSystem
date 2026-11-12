@@ -1,0 +1,61 @@
+/*
+ * Desk recipe for Button and IconButton: what the tokens cannot say.
+ * Source: GoBanana `RollButton.tsx` and the "rolling labels" rules in
+ * `app/(site)/_components/desktop/desktop.css`.
+ *
+ * The Theme element carries data-style and a button can be its direct
+ * child, so the descendant selector below always finds it.
+ */
+@layer ds.recipes {
+  /* Desk controls are pills (the source `.roll-btn`). The other shapes still apply. */
+  [data-style='desk'] :is([data-ds='button'], [data-ds='icon-button'])[data-shape='default'] {
+    --ds-button-radius: var(--ds-radius-pill);
+  }
+
+  /*
+   * The roll label. On hover and keyboard focus the label rolls up out of
+   * the button and a copy rolls in from below, transform only, over
+   * duration.roll on ease.reveal. The copy is a text shadow one button
+   * height below the label, so the markup stays the same in every style and
+   * a screen reader hears the label once. The button is the window: it
+   * clips the label and its copy above and below.
+   */
+  [data-style='desk'] [data-ds='button']:not([data-emphasis='link']) {
+    --ds-button-roll: var(--ds-size-control-md);
+
+    overflow: clip;
+  }
+
+  [data-style='desk'] [data-ds='button'][data-size='xs']:not([data-emphasis='link']) {
+    --ds-button-roll: var(--ds-size-control-xs);
+  }
+
+  [data-style='desk'] [data-ds='button'][data-size='sm']:not([data-emphasis='link']) {
+    --ds-button-roll: var(--ds-size-control-sm);
+  }
+
+  [data-style='desk'] [data-ds='button'][data-size='lg']:not([data-emphasis='link']) {
+    --ds-button-roll: var(--ds-size-control-lg);
+  }
+
+  /* The label clips only along the line (Button.css), so the copy below it shows through to the button window. */
+  [data-style='desk'] [data-ds='button']:not([data-emphasis='link']) > [data-part='label'] {
+    text-shadow: 0 var(--ds-button-roll) currentColor;
+    transition: transform var(--ds-duration-roll) var(--ds-ease-reveal);
+  }
+
+  [data-style='desk'] [data-ds='button']:not([data-emphasis='link'], [data-disabled], [data-loading]):is(:hover, :focus-visible) > [data-part='label'] {
+    transform: translateY(calc(-1 * var(--ds-button-roll)));
+  }
+
+  /* Off under reduced motion: duration.roll is 0ms there, and the label does not move at all. */
+  @media (prefers-reduced-motion: reduce) {
+    [data-style='desk'] [data-ds='button']:not([data-emphasis='link']) > [data-part='label'] {
+      text-shadow: none;
+    }
+
+    [data-style='desk'] [data-ds='button']:not([data-emphasis='link'], [data-disabled], [data-loading]):is(:hover, :focus-visible) > [data-part='label'] {
+      transform: none;
+    }
+  }
+}

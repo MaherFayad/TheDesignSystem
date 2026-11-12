@@ -1,0 +1,19 @@
+/*
+ * IconButton: the square box. Colors, states, sizes and shapes come from
+ * Button.css, which styles [data-ds='icon-button'] with [data-ds='button'].
+ * Source: GoBanana `.st-btn[data-icon-only]`.
+ */
+@layer ds.base {
+  /* As wide as it is tall, never under the 24px target. [data-size] wins over the Button padding. */
+  [data-ds='icon-button'][data-size] {
+    aspect-ratio: 1;
+    min-inline-size: var(--ds-size-target-min);
+    padding-inline: 0;
+  }
+
+  /* A link emphasis icon button keeps its box: an icon has no underline. */
+  [data-ds='icon-button'][data-size][data-emphasis='link'] {
+    block-size: var(--ds-size-target-min);
+    text-decoration-line: none;
+  }
+}

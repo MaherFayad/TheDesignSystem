@@ -1,0 +1,168 @@
+{
+  "name": "Button",
+  "kind": "component",
+  "family": "actions",
+  "summary": "An action the person takes on this page: save, send, open, delete. The one control that renders a native button.",
+  "useWhen": [
+    "An action that changes data or starts a task on this page",
+    "The main action of a form, a dialog or a card, as tone accent with emphasis solid",
+    "A secondary or quiet action next to the main one, as soft, outline or ghost",
+    "A link that must look like an action, through asChild"
+  ],
+  "avoidWhen": [
+    "A control with only an icon and no visible label",
+    "Navigation inside running text",
+    "A choice that stays on or off",
+    "More than one solid accent button in the same view"
+  ],
+  "insteadUse": {
+    "Only an icon": "IconButton",
+    "Navigation inside text": "Link",
+    "A setting that stays on or off": "Switch",
+    "One of several options": "SegmentedControl",
+    "A list of actions behind one control": "DropdownMenu"
+  },
+  "anatomy": ["root", "icon-start", "label", "icon-end", "spinner"],
+  "slots": {
+    "label": { "accepts": "text", "min": 1, "max": 1 },
+    "icon-start": { "accepts": ["Icon"], "max": 1 },
+    "icon-end": { "accepts": ["Icon"], "max": 1 }
+  },
+  "props": {
+    "size": { "type": ["xs", "sm", "md", "lg"], "default": "md", "description": "Height from size.control: 24, 28, 32 and 44 px in the default density." },
+    "tone": { "type": ["neutral", "accent", "danger", "success", "warning", "info"], "default": "neutral", "description": "The color family. accent is the primary action color of the active style." },
+    "emphasis": { "type": ["solid", "soft", "outline", "ghost", "link"], "default": "soft", "description": "soft is the standard button of Studio and Desk (the source secondary). tone accent with emphasis solid is the primary action." },
+    "shape": { "type": ["default", "pill", "square"], "default": "default", "description": "default takes radius.control (Desk draws it as a pill), pill is fully round, square takes radius.sm." },
+    "loading": { "type": "boolean", "default": false, "description": "Shows the spinner, sets aria-busy and data-loading, keeps the width and focus, blocks activation." },
+    "disabled": { "type": "boolean", "default": false, "description": "Sets aria-disabled and data-disabled. Stays focusable so a Tooltip can say why. The native disabled attribute is never set." },
+    "iconStart": { "type": "node", "description": "A system icon name or an icon element, before the label." },
+    "iconEnd": { "type": "node", "description": "A system icon name or an icon element, after the label." },
+    "fullWidth": { "type": "boolean", "default": false, "description": "Fills the width of its container. Sets data-full-width." },
+    "asChild": { "type": "boolean", "default": false, "description": "Renders the single child element, for example a link, as the button." },
+    "type": { "type": ["button", "submit", "reset"], "default": "button", "description": "Native type, so a button never submits a form by accident. Ignored with asChild." },
+    "children": { "type": "node", "required": true, "description": "The label text." }
+  },
+  "states": ["data-loading", "data-disabled", "data-full-width", "hover", "active", "focus-visible"],
+  "a11y": {
+    "role": "button (native button element), or the role of the asChild element",
+    "focus": "In the tab order in every state, disabled and loading included. A 2px ring on keyboard focus; the solid accent button gets two rings, inner and outer.",
+    "keys": {
+      "Enter": "Activates the button",
+      "Space": "Activates the button",
+      "Tab": "Moves focus to the next control"
+    },
+    "announce": "The label is the accessible name. Loading sets aria-busy; for a long wait, say the busy verb in a live region (Toast or a status line).",
+    "native": { "accessibilityRole": "button", "accessibilityState": ["disabled", "busy"] },
+    "notes": [
+      "Disabled and loading use aria-disabled, not the native disabled attribute, so focus never drops to the page when an action starts.",
+      "While disabled or loading, a click does not submit a form or follow an asChild link, and onClick, onPointerDown and onKeyDown do not run.",
+      "Icons inside the button are hidden from assistive tech. The label names the button.",
+      "No native title attribute. A hint comes from Tooltip."
+    ]
+  },
+  "content": {
+    "en": {
+      "label": "A verb plus a noun in sentence case: Save changes, Delete project. Never OK, Continue, Confirm or Yes.",
+      "busy": "Keep the label while loading. Say the verb in progress (Saving changes) in a live region, not on the button.",
+      "danger": "Name what goes: Delete project, not Delete."
+    },
+    "ar": {
+      "label": "Noun form labels, no diacritics: حفظ التغييرات، حذف المشروع. Never the imperative.",
+      "digits": "Western digits."
+    }
+  },
+  "tokens": [
+    "size.control.xs",
+    "size.control.sm",
+    "size.control.md",
+    "size.control.lg",
+    "size.target-min",
+    "size.icon.sm",
+    "space.xs",
+    "space.s",
+    "space.xl",
+    "space.2xl",
+    "space.2xs",
+    "space.3xs",
+    "radius.control",
+    "radius.field",
+    "radius.pill",
+    "radius.sm",
+    "radius.xs",
+    "border.width.default",
+    "border.width.strong",
+    "font.family.sans",
+    "font.size.s",
+    "font.size.m",
+    "font.size.l",
+    "font.weight.bold",
+    "font.leading.tight",
+    "font.tracking.none",
+    "color.bg.overlay-5",
+    "color.bg.overlay-10",
+    "color.bg.overlay-20",
+    "color.bg.overlay-30",
+    "button.text.secondary",
+    "color.text.default",
+    "color.text.muted",
+    "color.text.bright",
+    "color.text.link",
+    "color.text.on-accent",
+    "color.border.control",
+    "color.border.control-hover",
+    "color.primary.fill",
+    "color.primary.fill-hover",
+    "color.primary.fill-pressed",
+    "color.primary.text",
+    "color.primary.border",
+    "color.state.danger.text",
+    "color.state.danger.on-tint",
+    "color.state.danger.border",
+    "color.state.danger.tint-10",
+    "color.state.danger.tint-20",
+    "color.state.success.text",
+    "color.state.success.on-tint",
+    "color.state.success.border",
+    "color.state.success.tint-10",
+    "color.state.success.tint-20",
+    "color.state.warning.text",
+    "color.state.warning.on-tint",
+    "color.state.warning.border",
+    "color.state.warning.tint-10",
+    "color.state.warning.tint-20",
+    "color.state.info.text",
+    "color.state.info.on-tint",
+    "color.state.info.border",
+    "color.state.info.tint-10",
+    "color.state.info.tint-20",
+    "focus.shadow.ring",
+    "focus.shadow.primary",
+    "duration.fast",
+    "duration.moderate",
+    "duration.spin",
+    "duration.roll",
+    "ease.default",
+    "ease.reveal"
+  ],
+  "motion": "press",
+  "frameworks": {
+    "react": { "status": "ready", "behavior": "native button, radix:Slot", "example": "Button.demo.tsx" },
+    "angular": { "status": "planned", "behavior": "button[dsButton] and a[dsButton]", "note": "Host bindings set the same data attributes; Button.css is used as is." },
+    "native": { "status": "planned", "behavior": "rn-primitives:slot and Pressable", "note": "44pt on iOS, 48dp on Android. No roll label." }
+  },
+  "styles": {
+    "studio": "Bordered and filled overlay pills. The primary action is the neutral fill from color.primary (overlay 20 with the control border). Hover and press step the overlay at once.",
+    "desk": "Pill shaped at every size. The primary action is yellow #ffd84d with ink text and a doubled focus ring. The label rolls up on hover and keyboard focus, a copy rolling in from below (recipes/Button.css), off under reduced motion.",
+    "neutral": "Planned: filled primary, outline secondary, 36 to 40px.",
+    "liquid": "Planned: capsule buttons with a press scale."
+  },
+  "mistakes": [
+    { "wrong": "Two solid accent buttons side by side", "right": "One solid accent button for the main action, soft or ghost for the rest" },
+    { "wrong": "A button labelled OK or Continue", "right": "A verb plus a noun that names the result: Save changes" },
+    { "wrong": "Swapping the label to Saving while loading", "right": "loading on the button and the busy verb in a live region; the width holds" },
+    { "wrong": "A disabled button with no reason", "right": "Leave it out, or keep it focusable and explain with a Tooltip" },
+    { "wrong": "An anchor styled with button classes", "right": "Button with asChild around the anchor" },
+    { "wrong": "A Button with an icon and no visible text", "right": "IconButton with a label" }
+  ],
+  "since": "0.1.0"
+}

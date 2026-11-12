@@ -1,0 +1,429 @@
+/*
+ * Button, and the look IconButton shares with it (IconButton.css adds the
+ * square box). Source: GoBanana `.st-btn` in studio-components.css.
+ *
+ * Component tokens are local custom properties on the root. Each defaults
+ * to a semantic token, the axes only swap them, and a style recipe overrides
+ * them by declaring the same name (packages/styles/<id>/recipes/Button.css).
+ *
+ *   --ds-button-height, -padding, -gap, -font-size, -radius
+ *   --ds-button-bg, -fg, -border        at rest
+ *   --ds-button-bg-hover, -fg-hover, -border-hover
+ *   --ds-button-bg-active, -fg-active
+ *   --ds-button-veil                    a layer over the fill on hover, for
+ *                                       fills that have no hover token
+ *   --ds-button-focus                   the focus ring, a box shadow
+ *   --ds-button-disabled-opacity
+ *
+ * Hover and press swap colors at once: only transform and opacity animate,
+ * so a color change cannot fade. The veil is the one part that fades, with
+ * opacity. Focus is a box shadow ring plus a transparent outline, so forced
+ * colors mode still draws a boundary.
+ */
+@layer ds.base {
+  :is([data-ds='button'], [data-ds='icon-button']) {
+    --ds-button-height: var(--ds-size-control-md);
+    --ds-button-padding: var(--ds-space-xl);
+    --ds-button-gap: var(--ds-space-2xs);
+    --ds-button-font-size: var(--ds-font-size-s);
+    --ds-button-radius: var(--ds-radius-control);
+    --ds-button-bg: var(--ds-color-bg-overlay-10);
+    --ds-button-fg: var(--ds-button-text-secondary);
+    --ds-button-border: transparent;
+    --ds-button-bg-hover: var(--ds-color-bg-overlay-20);
+    --ds-button-fg-hover: var(--ds-color-text-default);
+    --ds-button-border-hover: var(--ds-button-border);
+    --ds-button-bg-active: var(--ds-color-bg-overlay-30);
+    --ds-button-fg-active: var(--ds-button-fg-hover);
+    --ds-button-veil: transparent;
+    --ds-button-focus: var(--ds-focus-shadow-ring);
+    --ds-button-disabled-opacity: 0.38;
+
+    position: relative;
+    display: inline-flex;
+    flex: none;
+    align-items: center;
+    justify-content: center;
+    gap: var(--ds-button-gap);
+    box-sizing: border-box;
+    block-size: var(--ds-button-height);
+    min-block-size: var(--ds-size-target-min);
+    min-inline-size: max(var(--ds-button-height), var(--ds-size-target-min));
+    max-inline-size: 100%;
+    margin: 0;
+    padding-block: 0;
+    padding-inline: var(--ds-button-padding);
+    border: var(--ds-border-width-default) solid var(--ds-button-border);
+    border-radius: var(--ds-button-radius);
+    background-color: var(--ds-button-bg);
+    color: var(--ds-button-fg);
+    font-family: var(--ds-font-family-sans);
+    font-size: var(--ds-button-font-size);
+    font-weight: var(--ds-font-weight-bold);
+    line-height: var(--ds-font-leading-tight);
+    letter-spacing: var(--ds-font-tracking-none);
+    text-decoration: none;
+    white-space: nowrap;
+    vertical-align: middle;
+    cursor: pointer;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+    outline: var(--ds-border-width-strong) solid transparent;
+    outline-offset: var(--ds-border-width-strong);
+  }
+
+  /* The veil: transparent unless a tone sets it, faded in on hover. */
+  :is([data-ds='button'], [data-ds='icon-button'])::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background-color: var(--ds-button-veil);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity var(--ds-duration-moderate) var(--ds-ease-default);
+  }
+
+  /* Parts paint above the veil. */
+  :is([data-ds='button'], [data-ds='icon-button']) > [data-part] {
+    position: relative;
+  }
+
+  /* ------------------------------------------------------------ states */
+
+  :is([data-ds='button'], [data-ds='icon-button']):hover:not([data-disabled], [data-loading]) {
+    border-color: var(--ds-button-border-hover);
+    background-color: var(--ds-button-bg-hover);
+    color: var(--ds-button-fg-hover);
+  }
+
+  :is([data-ds='button'], [data-ds='icon-button']):hover:not([data-disabled], [data-loading])::before {
+    opacity: 1;
+  }
+
+  :is([data-ds='button'], [data-ds='icon-button']):active:not([data-disabled], [data-loading]) {
+    background-color: var(--ds-button-bg-active);
+    color: var(--ds-button-fg-active);
+  }
+
+  :is([data-ds='button'], [data-ds='icon-button']):focus-visible {
+    outline-color: transparent;
+    box-shadow: var(--ds-button-focus);
+  }
+
+  /* Disabled keeps focus (aria-disabled), dims and stops reacting. */
+  :is([data-ds='button'], [data-ds='icon-button'])[data-disabled] {
+    opacity: var(--ds-button-disabled-opacity);
+    cursor: not-allowed;
+  }
+
+  /* Loading: the content stays in flow and fades out under the spinner, so the width holds. */
+  :is([data-ds='button'], [data-ds='icon-button'])[data-loading] {
+    cursor: progress;
+  }
+
+  :is([data-ds='button'], [data-ds='icon-button']) > :not([data-part='spinner']) {
+    transition: opacity var(--ds-duration-fast) var(--ds-ease-default);
+  }
+
+  :is([data-ds='button'], [data-ds='icon-button'])[data-loading] > :not([data-part='spinner']) {
+    opacity: 0;
+  }
+
+  /* ------------------------------------------------------------ parts */
+
+  /*
+   * A long label ends in an ellipsis. It clips only along the line (x is the
+   * inline axis: button labels are horizontal in both directions), so tall
+   * Arabic glyphs, the link underline and a recipe's text shadow can leave
+   * the line box.
+   */
+  [data-ds='button'] > [data-part='label'] {
+    min-inline-size: 0;
+    overflow-x: clip;
+    overflow-y: visible;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  :is([data-ds='button'], [data-ds='icon-button']) > :is([data-part='icon-start'], [data-part='icon-end'], [data-part='icon']) {
+    display: inline-flex;
+    flex: none;
+  }
+
+  :is([data-ds='button'], [data-ds='icon-button']) > [data-part='spinner'] {
+    position: absolute;
+    inset: 0;
+    box-sizing: border-box;
+    inline-size: var(--ds-size-icon-sm);
+    block-size: var(--ds-size-icon-sm);
+    margin: auto;
+    border: var(--ds-border-width-strong) solid var(--ds-color-bg-overlay-20);
+    border-block-start-color: currentColor;
+    border-radius: var(--ds-radius-pill);
+    animation: ds-button-spin var(--ds-duration-spin) linear infinite;
+  }
+
+  @keyframes ds-button-spin {
+    to {
+      transform: rotate(1turn);
+    }
+  }
+
+  /* ------------------------------------------------------------ sizes */
+
+  :is([data-ds='button'], [data-ds='icon-button'])[data-size='xs'] {
+    --ds-button-height: var(--ds-size-control-xs);
+    --ds-button-padding: var(--ds-space-xs);
+    --ds-button-radius: var(--ds-radius-field);
+  }
+
+  :is([data-ds='button'], [data-ds='icon-button'])[data-size='sm'] {
+    --ds-button-height: var(--ds-size-control-sm);
+    --ds-button-padding: var(--ds-space-s);
+  }
+
+  :is([data-ds='button'], [data-ds='icon-button'])[data-size='lg'] {
+    --ds-button-height: var(--ds-size-control-lg);
+    --ds-button-padding: var(--ds-space-2xl);
+    --ds-button-gap: var(--ds-space-xs);
+    --ds-button-font-size: var(--ds-font-size-m);
+  }
+
+  /* Arabic is one step up. base.css already moves font.size.s to m; lg moves from m to l here. */
+  :is([data-ds='button'], [data-ds='icon-button'])[data-size='lg']:lang(ar) {
+    --ds-button-font-size: var(--ds-font-size-l);
+  }
+
+  /* ------------------------------------------------------------ shapes */
+
+  :is([data-ds='button'], [data-ds='icon-button'])[data-shape='pill'] {
+    --ds-button-radius: var(--ds-radius-pill);
+  }
+
+  :is([data-ds='button'], [data-ds='icon-button'])[data-shape='square'] {
+    --ds-button-radius: var(--ds-radius-sm);
+  }
+
+  [data-ds='button'][data-full-width] {
+    inline-size: 100%;
+  }
+
+  /* ------------------------------------------------------------ neutral */
+
+  :is([data-ds='button'], [data-ds='icon-button'])[data-tone='neutral'][data-emphasis='solid'] {
+    --ds-button-bg: var(--ds-color-bg-overlay-20);
+    --ds-button-fg: var(--ds-color-text-default);
+    --ds-button-bg-hover: var(--ds-color-bg-overlay-30);
+    --ds-button-bg-active: var(--ds-color-bg-overlay-20);
+  }
+
+  /* soft is the root default: overlay-10 fill, the secondary text color. */
+
+  :is([data-ds='button'], [data-ds='icon-button'])[data-tone='neutral'][data-emphasis='outline'] {
+    --ds-button-bg: transparent;
+    --ds-button-fg: var(--ds-color-text-default);
+    --ds-button-border: var(--ds-color-border-control);
+    --ds-button-border-hover: var(--ds-color-border-control-hover);
+    --ds-button-bg-hover: var(--ds-color-bg-overlay-5);
+    --ds-button-bg-active: var(--ds-color-bg-overlay-10);
+  }
+
+  :is([data-ds='button'], [data-ds='icon-button'])[data-tone='neutral'][data-emphasis='ghost'] {
+    --ds-button-bg: transparent;
+    --ds-button-fg: var(--ds-color-text-muted);
+    --ds-button-bg-hover: var(--ds-color-bg-overlay-10);
+    --ds-button-bg-active: var(--ds-color-bg-overlay-20);
+  }
+
+  /* ------------------------------------------------------------ accent */
+
+  /* The primary action: color.primary in every style. Yellow with ink text in Desk, the neutral fill in Studio. */
+  :is([data-ds='button'], [data-ds='icon-button'])[data-tone='accent'][data-emphasis='solid'] {
+    --ds-button-bg: var(--ds-color-primary-fill);
+    --ds-button-fg: var(--ds-color-primary-text);
+    --ds-button-border: var(--ds-color-primary-border);
+    --ds-button-bg-hover: var(--ds-color-primary-fill-hover);
+    --ds-button-fg-hover: var(--ds-color-primary-text);
+    --ds-button-bg-active: var(--ds-color-primary-fill-pressed);
+    --ds-button-focus: var(--ds-focus-shadow-primary);
+  }
+
+  /*
+   * The lighter accent emphases. There is no primary tint or primary text
+   * token yet, so the fill stays neutral, the text is bright and the outline
+   * takes the primary border.
+   */
+  :is([data-ds='button'], [data-ds='icon-button'])[data-tone='accent'][data-emphasis='soft'] {
+    --ds-button-fg: var(--ds-color-text-bright);
+    --ds-button-fg-hover: var(--ds-color-text-bright);
+  }
+
+  :is([data-ds='button'], [data-ds='icon-button'])[data-tone='accent'][data-emphasis='outline'] {
+    --ds-button-bg: transparent;
+    --ds-button-fg: var(--ds-color-text-bright);
+    --ds-button-fg-hover: var(--ds-color-text-bright);
+    --ds-button-border: var(--ds-color-primary-border);
+    --ds-button-bg-hover: var(--ds-color-bg-overlay-10);
+    --ds-button-bg-active: var(--ds-color-bg-overlay-20);
+  }
+
+  :is([data-ds='button'], [data-ds='icon-button'])[data-tone='accent'][data-emphasis='ghost'] {
+    --ds-button-bg: transparent;
+    --ds-button-fg: var(--ds-color-text-bright);
+    --ds-button-fg-hover: var(--ds-color-text-bright);
+    --ds-button-bg-hover: var(--ds-color-bg-overlay-10);
+    --ds-button-bg-active: var(--ds-color-bg-overlay-20);
+  }
+
+  /* ------------------------------------------------------------ danger, success, warning, info */
+
+  /*
+   * solid: the state border color as the fill (it holds 4.5:1 with the
+   * on-accent text in every scheme; the state fill does not on light danger),
+   * with a veil for hover and press.
+   */
+  :is([data-ds='button'], [data-ds='icon-button'])[data-tone='danger'][data-emphasis='solid'] {
+    --ds-button-bg: var(--ds-color-state-danger-border);
+  }
+
+  :is([data-ds='button'], [data-ds='icon-button'])[data-tone='success'][data-emphasis='solid'] {
+    --ds-button-bg: var(--ds-color-state-success-border);
+  }
+
+  :is([data-ds='button'], [data-ds='icon-button'])[data-tone='warning'][data-emphasis='solid'] {
+    --ds-button-bg: var(--ds-color-state-warning-border);
+  }
+
+  :is([data-ds='button'], [data-ds='icon-button'])[data-tone='info'][data-emphasis='solid'] {
+    --ds-button-bg: var(--ds-color-state-info-border);
+  }
+
+  :is([data-ds='button'], [data-ds='icon-button']):is([data-tone='danger'], [data-tone='success'], [data-tone='warning'], [data-tone='info'])[data-emphasis='solid'] {
+    --ds-button-fg: var(--ds-color-text-on-accent);
+    --ds-button-bg-hover: var(--ds-button-bg);
+    --ds-button-fg-hover: var(--ds-button-fg);
+    --ds-button-bg-active: var(--ds-button-bg);
+    --ds-button-veil: var(--ds-color-bg-overlay-20);
+  }
+
+  /* soft: the source destructive button. Tint 10 at rest, tint 20 and the on-tint text on hover. */
+  :is([data-ds='button'], [data-ds='icon-button'])[data-tone='danger'] {
+    --ds-button-tone-text: var(--ds-color-state-danger-text);
+    --ds-button-tone-on-tint: var(--ds-color-state-danger-on-tint);
+    --ds-button-tone-border: var(--ds-color-state-danger-border);
+    --ds-button-tone-tint: var(--ds-color-state-danger-tint-10);
+    --ds-button-tone-tint-strong: var(--ds-color-state-danger-tint-20);
+  }
+
+  :is([data-ds='button'], [data-ds='icon-button'])[data-tone='success'] {
+    --ds-button-tone-text: var(--ds-color-state-success-text);
+    --ds-button-tone-on-tint: var(--ds-color-state-success-on-tint);
+    --ds-button-tone-border: var(--ds-color-state-success-border);
+    --ds-button-tone-tint: var(--ds-color-state-success-tint-10);
+    --ds-button-tone-tint-strong: var(--ds-color-state-success-tint-20);
+  }
+
+  :is([data-ds='button'], [data-ds='icon-button'])[data-tone='warning'] {
+    --ds-button-tone-text: var(--ds-color-state-warning-text);
+    --ds-button-tone-on-tint: var(--ds-color-state-warning-on-tint);
+    --ds-button-tone-border: var(--ds-color-state-warning-border);
+    --ds-button-tone-tint: var(--ds-color-state-warning-tint-10);
+    --ds-button-tone-tint-strong: var(--ds-color-state-warning-tint-20);
+  }
+
+  :is([data-ds='button'], [data-ds='icon-button'])[data-tone='info'] {
+    --ds-button-tone-text: var(--ds-color-state-info-text);
+    --ds-button-tone-on-tint: var(--ds-color-state-info-on-tint);
+    --ds-button-tone-border: var(--ds-color-state-info-border);
+    --ds-button-tone-tint: var(--ds-color-state-info-tint-10);
+    --ds-button-tone-tint-strong: var(--ds-color-state-info-tint-20);
+  }
+
+  :is([data-ds='button'], [data-ds='icon-button']):is([data-tone='danger'], [data-tone='success'], [data-tone='warning'], [data-tone='info'])[data-emphasis='soft'] {
+    --ds-button-bg: var(--ds-button-tone-tint);
+    --ds-button-fg: var(--ds-button-tone-text);
+    --ds-button-bg-hover: var(--ds-button-tone-tint-strong);
+    --ds-button-fg-hover: var(--ds-button-tone-on-tint);
+    --ds-button-bg-active: var(--ds-button-tone-tint-strong);
+  }
+
+  :is([data-ds='button'], [data-ds='icon-button']):is([data-tone='danger'], [data-tone='success'], [data-tone='warning'], [data-tone='info'])[data-emphasis='outline'] {
+    --ds-button-bg: transparent;
+    --ds-button-fg: var(--ds-button-tone-text);
+    --ds-button-border: var(--ds-button-tone-border);
+    --ds-button-bg-hover: var(--ds-button-tone-tint);
+    --ds-button-fg-hover: var(--ds-button-tone-text);
+    --ds-button-bg-active: var(--ds-button-tone-tint-strong);
+  }
+
+  /* ghost: the source ghost with data-tone danger. Text only at rest, the tint on hover. */
+  :is([data-ds='button'], [data-ds='icon-button']):is([data-tone='danger'], [data-tone='success'], [data-tone='warning'], [data-tone='info'])[data-emphasis='ghost'] {
+    --ds-button-bg: transparent;
+    --ds-button-fg: var(--ds-button-tone-text);
+    --ds-button-bg-hover: var(--ds-button-tone-tint);
+    --ds-button-fg-hover: var(--ds-button-tone-text);
+    --ds-button-bg-active: var(--ds-button-tone-tint-strong);
+  }
+
+  /* ------------------------------------------------------------ link */
+
+  /* A button that reads as a link: no fill, no padding, always underlined (not color alone). */
+  :is([data-ds='button'], [data-ds='icon-button'])[data-emphasis='link'] {
+    --ds-button-bg: transparent;
+    --ds-button-bg-hover: transparent;
+    --ds-button-bg-active: transparent;
+    --ds-button-fg: var(--ds-color-text-link);
+    --ds-button-fg-hover: var(--ds-color-text-bright);
+    --ds-button-radius: var(--ds-radius-xs);
+
+    block-size: auto;
+    min-inline-size: var(--ds-size-target-min);
+    text-decoration-line: underline;
+    text-decoration-color: var(--ds-color-border-control);
+    text-decoration-thickness: var(--ds-border-width-default);
+    text-underline-offset: var(--ds-space-3xs);
+  }
+
+  [data-ds='button'][data-emphasis='link'] {
+    --ds-button-padding: 0;
+  }
+
+  [data-ds='button'][data-emphasis='link'] > [data-part='label'] {
+    text-decoration: inherit;
+  }
+
+  :is([data-ds='button'], [data-ds='icon-button'])[data-emphasis='link']:hover:not([data-disabled], [data-loading]) {
+    text-decoration-color: currentColor;
+  }
+
+  :is([data-ds='button'], [data-ds='icon-button'])[data-tone='accent'][data-emphasis='link'] {
+    --ds-button-fg: var(--ds-color-text-bright);
+    text-decoration-color: var(--ds-color-primary-border);
+  }
+
+  :is([data-ds='button'], [data-ds='icon-button']):is([data-tone='danger'], [data-tone='success'], [data-tone='warning'], [data-tone='info'])[data-emphasis='link'] {
+    --ds-button-fg: var(--ds-button-tone-text);
+    --ds-button-fg-hover: var(--ds-button-tone-text);
+    text-decoration-color: currentColor;
+  }
+
+  /* ------------------------------------------------------------ reduced motion, forced colors */
+
+  /* The spinner stops and stays as a still ring with one dark quarter. aria-busy carries the state. */
+  @media (prefers-reduced-motion: reduce) {
+    :is([data-ds='button'], [data-ds='icon-button']) > [data-part='spinner'] {
+      animation: none;
+    }
+  }
+
+  @media (forced-colors: active) {
+    :is([data-ds='button'], [data-ds='icon-button']):focus-visible {
+      outline-color: Highlight;
+    }
+
+    :is([data-ds='button'], [data-ds='icon-button'])[data-disabled] {
+      color: GrayText;
+    }
+  }
+}
