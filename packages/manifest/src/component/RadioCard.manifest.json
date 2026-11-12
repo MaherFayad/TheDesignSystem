@@ -227,7 +227,10 @@
       "example": "RadioCard.demo.tsx"
     },
     "angular": {
-      "status": "planned"
+      "status": "ready",
+      "behavior": "div[dsRadioCard] and button[dsRadioCardItem], hand built with the Radix RadioGroup DOM on the CDK FocusKeyManager and Directionality, ControlValueAccessor",
+      "example": "radio-card.demo.ts",
+      "note": "The group host is the root (role radiogroup), the item host is the card button (role radio). Inputs take the React prop names; onValueChange is the valueChange output of [(value)]. title and description take text, icon takes an icon name or a TemplateRef, end takes text or a TemplateRef. aria-labelledby and aria-describedby are inputs on the item, because React merges them with its own ids. Behavior as RadioGroup, from behavior/roving-radio.ts. Inside a form the item inserts the hidden native radio after its host, where Radix renders it. Works with reactive and template forms. RadioCard.css is used as is."
     },
     "native": {
       "status": "planned"

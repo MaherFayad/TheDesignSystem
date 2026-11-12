@@ -246,8 +246,10 @@
       "note": "Sources Figma-Killer-2 TagPill/ and AddablePropertyField/ were not reachable in the lane session; the box follows the Combobox field, the tags Chip, the popup the list family popup."
     },
     "angular": {
-      "status": "planned",
-      "behavior": "hand built with cdk:overlay and the shared tags.ts"
+      "status": "ready",
+      "behavior": "div[dsTagField], hand built with the shared tags.ts and filter.ts: the suggestions are a ListBox with virtualFocus in a CDK ComponentPortal placed with the Radix Popper steps (internal/popper.ts), the highlight on the CDK ActiveDescendantKeyManager, ControlValueAccessor",
+      "example": "tag-field.demo.ts",
+      "note": "The host is the root (the Radix Anchor, with its class and data-radix-popper-side and -align). Inputs take the React prop names; onValueChange is the valueChange output of [(value)]. removeLabel and formatRemoved are function inputs. Native input props React spreads on the input (placeholder, id, name, aria-label, aria-labelledby, aria-describedby) are inputs. The CloseButton DOM is inline on a native button until the Angular CloseButton exists. Angular Aria would replace the key manager once @angular/aria is installed. TagField.css is used as is."
     },
     "native": {
       "status": "planned",

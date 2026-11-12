@@ -204,7 +204,10 @@
       "example": "Slider.demo.tsx"
     },
     "angular": {
-      "status": "planned"
+      "status": "ready",
+      "behavior": "div[dsSlider], keys and pointer hand built with the Radix Slider DOM and arithmetic, CDK Directionality, ControlValueAccessor",
+      "example": "slider.demo.ts",
+      "note": "The host is the root. Inputs take the React prop names; onValueChange is the valueChange output of [(value)] and onValueCommit the valueCommit output. aria-label, aria-labelledby and aria-describedby are inputs, as React sends them to the thumb. label and mark labels take text; formatValue is a function input. No CDK slider: the Radix DOM is copied, with the control dir and aria-disabled, the thumb wrapper and its inline position style, data-radix-collection-item on the thumb and a hidden input per thumb in a form. Arrows follow the reading direction of the nearest dsTheme through the CDK Directionality. Value text from formatNumber in packages/shared. Slider.css is used as is."
     },
     "native": {
       "status": "planned"

@@ -270,8 +270,10 @@
       "note": "The base (ComboboxBase.tsx) is shared with Autocomplete. The popup surface is styled in Combobox.css for the whole list family; MultiSelect and TagField add their names to its selector lists. Sources GoBanana and Figma-Killer-2 were not reachable in the lane session; the field follows Input and the popup the DropdownMenu surface."
     },
     "angular": {
-      "status": "planned",
-      "behavior": "cdk:overlay with the shared filter.ts and listbox.ts"
+      "status": "ready",
+      "behavior": "div[dsCombobox], hand built: a CDK ComponentPortal popup placed with the Radix Popper steps (internal/popper.ts), a ListBox with virtualFocus, the highlight on the CDK ActiveDescendantKeyManager, the shared filter.ts and listbox.ts, ControlValueAccessor",
+      "example": "combobox.demo.ts",
+      "note": "The host is the root (the Radix Anchor, with its class and data-radix-popper-side and -align). Inputs take the React prop names; onValueChange, onOpenChange and onInputValueChange are the valueChange, openChange and inputValueChange outputs of [(value)], [(open)] and [(inputValue)]. Native input props React spreads on the input (placeholder, id, name, aria-label, aria-labelledby, aria-describedby) are inputs. empty takes text or a TemplateRef. The popup is not a CDK Overlay pane: the same DOM and position as Radix Popover. Angular Aria Combobox would replace the key manager once @angular/aria is installed. Combobox.css is used as is."
     },
     "native": {
       "status": "planned",

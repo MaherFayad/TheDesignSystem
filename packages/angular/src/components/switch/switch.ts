@@ -1,0 +1,222 @@
+// Switch: an immediate on or off setting. The twin of
+// packages/react/src/components/Switch/Switch.tsx. The host is the root
+// (`div[dsSwitch]`); the template renders the parts in the React order: the
+// control (the Radix button with role switch) holding the track and the
+// thumb, then the label with the optional state text, then the description.
+//
+//   <div dsSwitch label="Auto save" [(checked)]="autoSave"></div>
+//   <div dsSwitch label="Show rulers" [formControl]="rulers"></div>
+//
+// React gets the behavior from Radix Switch. Here it is hand built with the
+// same DOM: Space and Enter toggle (a native button click), read only keeps
+// the value and focus. Inside a form a hidden native checkbox carries the
+// value, as the Radix bubble input does.
+//
+// Names that differ from React: `onCheckedChange` is the `checkedChange`
+// output of `[(checked)]`. `stateText` takes `{ on, off }` text. `aria-label`,
+// `aria-labelledby` and `aria-describedby` are inputs, because React spreads
+// them on the control and Angular cannot forward host attributes to an
+// element in the template. `rootProps`, `className` and `style` have no
+// form: the host is the root.
+import {
+  ChangeDetectionStrategy,
+  Component,
+  DestroyRef,
+  ElementRef,
+  afterNextRender,
+  computed,
+  forwardRef,
+  inject,
+  input,
+  linkedSignal,
+  model,
+  signal,
+  viewChild,
+} from '@angular/core';
+import { NG_VALUE_ACCESSOR, type ControlValueAccessor } from '@angular/forms';
+import type { Size, Tone } from '@the-system/shared';
+import { consumeHostAttributes } from '../../internal/host';
+import { DsNativeButton } from '../../internal/native-button';
+import { optionalBoolean } from '../../internal/optional-boolean';
+import { DsOrderedStyle, type OrderedStyle } from '../../internal/ordered-style';
+import { DsField } from '../field/field';
+
+export type SwitchSize = Extract<Size, 'sm' | 'md' | 'lg'>;
+export type SwitchTone = Extract<Tone, 'accent'>;
+
+export interface SwitchStateText {
+  /** Shown while on. */
+  on: string;
+  /** Shown while off. */
+  off: string;
+}
+
+let nextId = 0;
+
+@Component({
+  selector: 'div[dsSwitch]',
+  exportAs: 'dsSwitch',
+  imports: [DsNativeButton, DsOrderedStyle],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [{ provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => DsSwitch), multi: true }],
+  host: {
+    'data-ds': 'switch',
+    '[attr.data-size]': 'size()',
+    '[attr.data-tone]': 'tone()',
+    '[attr.data-state]': 'state()',
+    '[attr.data-invalid]': 'isInvalid() ? "" : null',
+    '[attr.data-disabled]': 'isDisabled() ? "" : null',
+    '[attr.data-readonly]': 'isReadOnly() ? "" : null',
+  },
+  template: `<button dsNativeButton #control
+      type="button"
+      role="switch"
+      [attr.aria-checked]="current() ? 'true' : 'false'"
+      [attr.aria-required]="isRequired() ? 'true' : 'false'"
+      [attr.data-state]="state()"
+      [attr.data-disabled]="isDisabled() ? '' : null"
+      [disabled]="isDisabled()"
+      [attr.value]="value() ?? 'on'"
+      [attr.id]="controlId()"
+      [attr.aria-label]="ariaLabel() ?? null"
+      [attr.aria-labelledby]="ariaLabelledby() ?? null"
+      [attr.aria-describedby]="describedBy() ?? null"
+      [attr.aria-invalid]="isInvalid() ? 'true' : null"
+      [attr.aria-readonly]="isReadOnly() ? 'true' : null"
+      data-part="control"
+      (click)="onClick($event)"
+      (blur)="onTouched()"><span data-part="track"><span [attr.data-state]="state()" [attr.data-disabled]="isDisabled() ? '' : null" data-part="thumb"></span></span></button>@if (isFormControl()) {<input
+      type="checkbox"
+      aria-hidden="true"
+      [attr.checked]="initialChecked() ? '' : null"
+      [required]="isRequired()"
+      [disabled]="isDisabled()"
+      [attr.name]="name() ?? null"
+      [attr.value]="value() ?? 'on'"
+      tabindex="-1"
+      [checked]="current()"
+      [dsOrderedStyle]="bubbleStyle()" />}@if (label() !== undefined) {<label [attr.for]="controlId()" data-part="label">{{ label() }}@if (stateText(); as text) {<span data-part="state-text" aria-hidden="true">{{ current() ? text.on : text.off }}</span>}</label>} @else if (stateText(); as text) {<span data-part="state-text" aria-hidden="true">{{ current() ? text.on : text.off }}</span>}@if (description() !== undefined) {<p [id]="descriptionId" data-part="description">{{ description() }}</p>}`,
+})
+export class DsSwitch implements ControlValueAccessor {
+  /** Track of 16, 24 and 32 px high, in a target of 24 px, 24 px and the lg control height. Default md. */
+  readonly size = input<SwitchSize>('md');
+  /** The fill of the track while on. Only accent. */
+  readonly tone = input<SwitchTone>('accent');
+  /** Visible text after the switch. Clicking it toggles. Without it, pass aria-label. */
+  readonly label = input<string | undefined>(undefined);
+  /** A hint under the label. Joins aria-describedby. */
+  readonly description = input<string | undefined>(undefined);
+  /** Optional words for the two states, shown after the label. Hidden from assistive tech. */
+  readonly stateText = input<SwitchStateText | undefined>(undefined);
+  /** Inside a Field it follows the Field. */
+  readonly invalid = input<boolean | undefined, unknown>(undefined, { transform: optionalBoolean });
+  readonly disabled = input<boolean | undefined, unknown>(undefined, { transform: optionalBoolean });
+  /** Keeps the value and focus, but ignores clicks, Space and Enter. */
+  readonly readOnly = input<boolean | undefined, unknown>(undefined, { transform: optionalBoolean });
+  readonly required = input<boolean | undefined, unknown>(undefined, { transform: optionalBoolean });
+  /** On or off. Two way: `[(checked)]`. Left out, the switch starts at defaultChecked. */
+  readonly checked = model<boolean | undefined>(undefined);
+  readonly defaultChecked = input(false, { transform: (v: unknown) => optionalBoolean(v) ?? false });
+  /** The value sent with the form while on. Default "on". */
+  readonly value = input<string | undefined>(undefined);
+  readonly name = input<string | undefined>(undefined);
+  /** The id of the control. Inside a Field it defaults to the Field's control id. */
+  readonly id = input<string | undefined>(undefined);
+  readonly ariaLabel = input<string | undefined>(undefined, { alias: 'aria-label' });
+  readonly ariaLabelledby = input<string | undefined>(undefined, { alias: 'aria-labelledby' });
+  readonly ariaDescribedby = input<string | undefined>(undefined, { alias: 'aria-describedby' });
+
+  private readonly field = inject(DsField, { optional: true });
+  private readonly host = consumeHostAttributes([
+    'dsSwitch', 'size', 'tone', 'label', 'description', 'stateText', 'invalid', 'disabled', 'readOnly', 'required',
+    'checked', 'defaultChecked', 'value', 'name', 'id', 'aria-label', 'aria-labelledby', 'aria-describedby',
+  ]);
+  private readonly control = viewChild.required<ElementRef<HTMLButtonElement>>('control');
+
+  protected readonly descriptionId = `ds-switch-${++nextId}-description`;
+  private readonly ownId = `ds-switch-${nextId}`;
+
+  /** The model, else defaultChecked, moved by clicks and forms. */
+  private readonly own = linkedSignal<boolean>(() => this.checked() ?? this.defaultChecked());
+  private readonly formDisabled = signal<boolean | undefined>(undefined);
+  protected readonly isFormControl = signal(false);
+  protected readonly initialChecked = signal(false);
+  protected readonly bubbleStyle = signal<OrderedStyle>([]);
+
+  readonly current = computed(() => this.own());
+  readonly state = computed(() => (this.current() ? 'checked' : 'unchecked'));
+  protected readonly controlId = computed(() => this.id() ?? this.field?.controlId ?? this.ownId);
+  readonly isInvalid = computed(() => this.invalid() ?? this.field?.isInvalid() ?? false);
+  readonly isDisabled = computed(() => this.disabled() ?? this.formDisabled() ?? this.field?.disabled() ?? false);
+  readonly isReadOnly = computed(() => this.readOnly() ?? this.field?.readOnly() ?? false);
+  protected readonly isRequired = computed(() => this.required() ?? this.field?.required() ?? false);
+  protected readonly describedBy = computed(() => {
+    const own = [this.description() !== undefined ? this.descriptionId : undefined, this.ariaDescribedby()].filter(Boolean).join(' ');
+    return [this.field?.describedBy(), own].filter(Boolean).join(' ') || undefined;
+  });
+
+  private onChange: (value: boolean) => void = () => {};
+  protected onTouched: () => void = () => {};
+
+  constructor() {
+    const destroyRef = inject(DestroyRef);
+    afterNextRender(() => {
+      const button = this.control().nativeElement;
+      const form = button.closest('form');
+      if (!form) return;
+      // The Radix bubble input: the size of the control, pulled back over it, invisible.
+      this.bubbleStyle.set([
+        ['width', `${button.offsetWidth}px`],
+        ['height', `${button.offsetHeight}px`],
+        ['position', 'absolute'],
+        ['pointer-events', 'none'],
+        ['opacity', '0'],
+        ['margin', '0px'],
+        ['transform', 'translateX(-100%)'],
+      ]);
+      const initial = this.own();
+      this.initialChecked.set(initial);
+      this.isFormControl.set(true);
+      const reset = () => this.own.set(initial);
+      form.addEventListener('reset', reset);
+      destroyRef.onDestroy(() => form.removeEventListener('reset', reset));
+    });
+  }
+
+  /** The control, the element with role switch. */
+  get nativeControl(): HTMLButtonElement {
+    return this.control().nativeElement;
+  }
+
+  focus(): void {
+    this.nativeControl.focus();
+  }
+
+  protected onClick(event: MouseEvent): void {
+    // Space and Enter on a button are clicks too.
+    if (this.isReadOnly()) {
+      event.preventDefault();
+      return;
+    }
+    const next = !this.current();
+    this.own.set(next);
+    this.checked.set(next);
+    this.onChange(next);
+  }
+
+  writeValue(value: boolean | null | undefined): void {
+    this.own.set(Boolean(value));
+  }
+
+  registerOnChange(fn: (value: boolean) => void): void {
+    this.onChange = fn;
+  }
+
+  registerOnTouched(fn: () => void): void {
+    this.onTouched = fn;
+  }
+
+  setDisabledState(disabled: boolean): void {
+    this.formDisabled.set(disabled || undefined);
+  }
+}
