@@ -1,0 +1,81 @@
+/*
+ * Desk recipe for DropdownMenu (and the menu surface ContextMenu shares).
+ * Source: GoBanana `.mb-menu` and `.mb-item` in desktop/desktop.css, the
+ * macOS style menu bar menu: a frosted panel with a hairline, the strong
+ * blur, the soft window shadow, compact rows, and the lit row in the yellow
+ * primary fill with dark text.
+ *
+ * What tokens cannot say:
+ * - the surface is glass (the strong material and a backdrop filter), while
+ *   Studio draws the flat surface-3;
+ * - the lit row takes the primary fill, while Studio lights it with the
+ *   overlay step; a danger row lights in the danger fill, since its red text
+ *   would not reach 4.5:1 on yellow;
+ * - the keyboard ring on the yellow row is the on-primary ring color;
+ * - Desk rows use the regular weight and the panel radius family: a 12px
+ *   panel with 8px rows inside, concentric with the padding.
+ */
+@layer ds.recipes {
+  [data-style='desk'] :is([data-ds='dropdown-menu'], [data-ds='context-menu']) {
+    /*
+     * Menu text is read on the glass: the strong material keeps it at 4.5:1
+     * over the darkest and the brightest page (it is the same material the
+     * Desk dialog panel uses, measured in the Dialog recipe).
+     */
+    --_menu-bg: var(--ds-color-material-glass-strong);
+    --_menu-border-color: var(--ds-color-border-hairline);
+    --_menu-radius: var(--ds-radius-panel);
+    --_menu-shadow: var(--ds-elevation-menu);
+    --_menu-backdrop: blur(var(--ds-blur-window-strong)) saturate(var(--ds-blur-window-saturation));
+    --_menu-item-radius: var(--ds-radius-field);
+    --_menu-item-font-weight: var(--ds-font-weight-regular);
+    --_menu-item-bg-highlight: var(--ds-color-primary-fill);
+    --_menu-item-fg-highlight: var(--ds-color-primary-text);
+    /* The keyboard ring sits on the yellow row: the dark ring made for the primary fill. */
+    --_menu-item-ring-color: var(--ds-color-focus-ring-on-primary-inner);
+    --_menu-item-bg-danger-highlight: var(--ds-color-state-danger-solid);
+    --_menu-item-fg-danger-highlight: var(--ds-color-state-danger-on-solid);
+    --_menu-separator-color: var(--ds-color-border-hairline);
+  }
+
+  /* The token build makes the glass solid in these modes; the blur goes too, here, since this layer wins over the base. */
+  @media (prefers-reduced-transparency: reduce) {
+    [data-style='desk'] :is([data-ds='dropdown-menu'], [data-ds='context-menu']) {
+      --_menu-backdrop: none;
+    }
+  }
+
+  @media (prefers-contrast: more) {
+    [data-style='desk'] :is([data-ds='dropdown-menu'], [data-ds='context-menu']) {
+      --_menu-backdrop: none;
+      --_menu-border-color: var(--ds-color-border-strong);
+      --_menu-separator-color: var(--ds-color-border-strong);
+    }
+  }
+
+  [data-style='desk'][data-contrast='more'] :is([data-ds='dropdown-menu'], [data-ds='context-menu']) {
+    --_menu-backdrop: none;
+    --_menu-border-color: var(--ds-color-border-strong);
+    --_menu-separator-color: var(--ds-color-border-strong);
+  }
+
+  @media (forced-colors: active) {
+    [data-style='desk'] :is([data-ds='dropdown-menu'], [data-ds='context-menu']) {
+      --_menu-bg: Canvas;
+      --_menu-backdrop: none;
+      --_menu-border-color: CanvasText;
+      --_menu-separator-color: CanvasText;
+      --_menu-item-bg-highlight: Highlight;
+      --_menu-item-fg-highlight: HighlightText;
+      --_menu-item-bg-danger-highlight: Highlight;
+      --_menu-item-fg-danger-highlight: HighlightText;
+    }
+  }
+
+  /* No backdrop filter in the browser: the solid material, never glass it cannot blur. */
+  @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+    [data-style='desk'] :is([data-ds='dropdown-menu'], [data-ds='context-menu']) {
+      --_menu-bg: var(--ds-color-material-glass-solid);
+    }
+  }
+}

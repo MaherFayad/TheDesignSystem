@@ -1,0 +1,407 @@
+{
+  "name": "DropdownMenu",
+  "kind": "component",
+  "family": "overlays",
+  "summary": "A menu of actions or options that opens from a trigger button. Items, checkbox and radio items, labels, separators and submenus, with arrow keys, typeahead and Escape.",
+  "useWhen": [
+    "More actions than fit next to the object they act on",
+    "A set of related commands behind one button, such as the actions of a board",
+    "Options that are switched on and off, or one chosen from a short set, next to the commands they change"
+  ],
+  "avoidWhen": [
+    "Choosing a value for a form field",
+    "Actions that need a right click to find",
+    "Rich content, a form or a picture in the panel",
+    "One or two actions that fit on the page as buttons",
+    "Navigation between pages of a site"
+  ],
+  "insteadUse": {
+    "Choosing a value for a form field": "Select",
+    "Right click on an item": "ContextMenu",
+    "Rich content or a small form": "Popover",
+    "One or two actions": "Button",
+    "The application menu row": "Menubar",
+    "Search and run any command": "CommandPalette"
+  },
+  "anatomy": [
+    "root",
+    "label",
+    "item",
+    "checkbox-item",
+    "radio-item",
+    "indicator",
+    "start",
+    "text",
+    "shortcut",
+    "end",
+    "group",
+    "separator",
+    "sub-trigger",
+    "sub-content"
+  ],
+  "parts": {
+    "DropdownMenuContent": "root",
+    "DropdownMenuLabel": "label",
+    "DropdownMenuItem": "item",
+    "DropdownMenuCheckboxItem": "checkbox-item",
+    "DropdownMenuRadioItem": "radio-item",
+    "DropdownMenuGroup": "group",
+    "DropdownMenuRadioGroup": "group",
+    "DropdownMenuSeparator": "separator",
+    "DropdownMenuSubTrigger": "sub-trigger",
+    "DropdownMenuSubContent": "sub-content"
+  },
+  "slots": {
+    "root": {
+      "accepts": [
+        "DropdownMenuLabel",
+        "DropdownMenuItem",
+        "DropdownMenuCheckboxItem",
+        "DropdownMenuRadioGroup",
+        "DropdownMenuGroup",
+        "DropdownMenuSeparator",
+        "DropdownMenuSub"
+      ],
+      "min": 1,
+      "max": 12
+    },
+    "group": {
+      "accepts": [
+        "DropdownMenuLabel",
+        "DropdownMenuItem",
+        "DropdownMenuCheckboxItem",
+        "DropdownMenuRadioItem"
+      ]
+    },
+    "sub-content": {
+      "accepts": [
+        "DropdownMenuLabel",
+        "DropdownMenuItem",
+        "DropdownMenuCheckboxItem",
+        "DropdownMenuRadioGroup",
+        "DropdownMenuGroup",
+        "DropdownMenuSeparator",
+        "DropdownMenuSub"
+      ],
+      "min": 1,
+      "max": 12
+    },
+    "text": {
+      "accepts": "text",
+      "min": 1,
+      "max": 1
+    },
+    "label": {
+      "accepts": "text",
+      "max": 1
+    },
+    "shortcut": {
+      "accepts": "text",
+      "max": 1
+    }
+  },
+  "props": {
+    "open": {
+      "type": "boolean",
+      "description": "DropdownMenu: controlled open state, with onOpenChange."
+    },
+    "defaultOpen": {
+      "type": "boolean",
+      "default": false,
+      "description": "DropdownMenu."
+    },
+    "onOpenChange": {
+      "type": "function",
+      "description": "DropdownMenu: called with true on open and false on close (an item chosen, Escape, a click outside)."
+    },
+    "modal": {
+      "type": "boolean",
+      "default": false,
+      "description": "DropdownMenu: true hides the rest of the page from assistive tech (aria-hidden) and blocks pointer input outside while open. Default false: the menu button pattern needs neither, and axe flags focusable content under aria-hidden when no aria-modal dialog is open."
+    },
+    "size": {
+      "type": [
+        "sm",
+        "md"
+      ],
+      "default": "md",
+      "description": "DropdownMenu: row height and type size. sm rows are 24px (size.control.xs), md rows follow menu.item.height (24, 28 and 32px in the compact, default and comfortable densities). Submenus take the size of their menu."
+    },
+    "side": {
+      "type": [
+        "block-end",
+        "block-start",
+        "inline-end",
+        "inline-start"
+      ],
+      "default": "block-end",
+      "description": "DropdownMenuContent: where the menu opens, in logical words. block-end is under the trigger; inline-end is after it in reading order, so on its left in Arabic. It flips to the other side when there is no room."
+    },
+    "align": {
+      "type": [
+        "start",
+        "center",
+        "end"
+      ],
+      "default": "start",
+      "description": "DropdownMenuContent: how the menu lines up with the trigger. start is the trigger's inline start edge, its right edge in Arabic."
+    },
+    "sideOffset": {
+      "type": "number",
+      "default": 4,
+      "description": "DropdownMenuContent: the gap to the trigger in px."
+    },
+    "collisionPadding": {
+      "type": "number",
+      "default": 8,
+      "description": "DropdownMenuContent and DropdownMenuSubContent: the space kept from the viewport edge in px. The menu is never taller than the room left: it scrolls inside."
+    },
+    "loop": {
+      "type": "boolean",
+      "default": false,
+      "description": "DropdownMenuContent: ArrowDown on the last item goes to the first."
+    },
+    "DropdownMenuItem.tone": {
+      "type": [
+        "neutral",
+        "danger"
+      ],
+      "default": "neutral",
+      "description": "An item's tone. danger marks a destructive action: the danger text color, and the label names what is destroyed. The menu root has no tone."
+    },
+    "start": {
+      "type": "node",
+      "description": "Items and the sub trigger: leading content, a system icon name or a node. Decorative: the text names the item. Rows without it line their text up with rows that have it."
+    },
+    "end": {
+      "type": "node",
+      "description": "Items: trailing content, a system icon name or a node. The sub trigger always shows chevron-forward here, mirrored in RTL."
+    },
+    "shortcut": {
+      "type": "string",
+      "description": "Items: a key hint shown at the inline end as plain text, left to right in every language (for example Ctrl+D). It does not bind the key; the app does."
+    },
+    "disabled": {
+      "type": "boolean",
+      "default": false,
+      "description": "Items and DropdownMenuTrigger: aria-disabled and data-disabled. A disabled item stays in the menu, is skipped by the arrow keys and does not select. Drawn with opacity.disabled."
+    },
+    "onSelect": {
+      "type": "function",
+      "description": "Items: runs on click, Enter and Space, then the menu closes. Call event.preventDefault() to keep it open."
+    },
+    "checked": {
+      "type": [
+        "true",
+        "false",
+        "indeterminate"
+      ],
+      "description": "DropdownMenuCheckboxItem, with onCheckedChange. The check icon shows it, a minus for indeterminate."
+    },
+    "value": {
+      "type": "string",
+      "description": "DropdownMenuRadioGroup, with onValueChange: the chosen DropdownMenuRadioItem value."
+    },
+    "textValue": {
+      "type": "string",
+      "description": "Items: the text typeahead matches. Default: the label when it is plain text."
+    },
+    "DropdownMenuTrigger": {
+      "type": "node",
+      "description": "One child element, a system Button or IconButton, rendered as the trigger (always asChild). It gets aria-haspopup menu, aria-expanded and data-state, names the menu, and takes focus back on close."
+    },
+    "DropdownMenuSub": {
+      "type": "node",
+      "description": "A submenu: a DropdownMenuSubTrigger, then a DropdownMenuSubContent. open, defaultOpen and onOpenChange as on the root."
+    }
+  },
+  "states": [
+    "open",
+    "closed",
+    "checked",
+    "unchecked",
+    "indeterminate",
+    "data-highlighted",
+    "data-disabled"
+  ],
+  "a11y": {
+    "role": "menu (the root and each submenu). Not modal by default: the page stays in the accessibility tree, Tab does not leave the open menu, and a click or focus outside closes it. Items are menuitem, menuitemcheckbox (aria-checked true, false or mixed) and menuitemradio inside a group. The trigger has aria-haspopup menu and aria-expanded, and names the menu (aria-labelledby).",
+    "focus": "Opened with Enter, Space or ArrowDown on the trigger: focus on the first item. Opened with ArrowUp: focus on the last item. Opened with the pointer: focus on the menu, the first arrow key goes to an item. The highlight follows the pointer and the keys. On close, focus returns to the trigger.",
+    "keys": {
+      "ArrowDown": "On the trigger, opens the menu with focus on the first item. In the menu, moves to the next item, skipping disabled ones",
+      "ArrowUp": "On the trigger, opens the menu with focus on the last item. In the menu, moves to the previous item",
+      "Home": "Moves to the first item",
+      "End": "Moves to the last item",
+      "Enter": "On the trigger, opens the menu. On an item, selects it and closes the menu; on a sub trigger, opens the submenu",
+      "Space": "The same as Enter",
+      "ArrowRight": "On a sub trigger, opens the submenu with focus on its first item. In a submenu, nothing. In right to left layouts this is ArrowLeft",
+      "ArrowLeft": "In a submenu, closes it and returns focus to its sub trigger. In right to left layouts this is ArrowRight",
+      "Escape": "Closes the menu, or only the open submenu, and returns focus to the trigger",
+      "Typeahead": "Typing letters moves to the next item whose label starts with them"
+    },
+    "announce": "The menu is read with the trigger's name when it opens. Each item reads its label, its shortcut, its checked state and whether it is disabled or opens a submenu.",
+    "notes": [
+      "Tab does not move focus while the menu is open (Radix keeps it in the menu); Escape or choosing an item returns focus to the trigger.",
+      "Disabled items use aria-disabled: they stay in the menu so a screen reader user learns they exist, and the arrow keys skip them.",
+      "Checked state is shown by a check icon, a minus for indeterminate, never by color alone (WCAG 1.4.1).",
+      "A danger item is drawn in the danger text color; its label also names the action (Delete board), so color is never the only cue.",
+      "The menu never grows past the viewport: it takes the room Radix measures on the open side, minus collisionPadding, and scrolls inside. Rows are at least 24px tall (size.target-min).",
+      "Shortcut hints are plain text set left to right, so key names read the same inside Arabic.",
+      "The submenu chevron is chevron-forward and mirrors in right to left layouts; the submenu opens toward the inline end and Radix follows the direction set by Theme.",
+      "Contract keys: ArrowDown and ArrowUp are checked on the trigger (they open the menu and move focus). Home, End, Enter, Space, the submenu arrows and typeahead are covered by the unit tests, since the generic suite cannot press them inside an open menu.",
+      "No native title attribute."
+    ]
+  },
+  "content": {
+    "en": {
+      "trigger": "Names the menu: a noun (Board actions, Edit) or a verb plus a noun. An icon only trigger names the object too: More frame actions, never only More.",
+      "items": "Verb plus noun, sentence case: Duplicate board, Copy link. Options are nouns or short phrases: Show grid, Name. No ending punctuation, no ellipsis unless the item opens a dialog that asks for more.",
+      "label": "A short noun over the group: Board, Sort by.",
+      "danger": "Name what is destroyed: Delete board, never Delete alone or Remove.",
+      "count": "Up to 12 entries at the top level. Group or split longer menus, or use a submenu."
+    },
+    "ar": {
+      "items": "Noun form labels, white Saudi dialect, no diacritics: تكرار اللوحة، نسخ الرابط، حذف اللوحة.",
+      "label": "A short noun: اللوحة، الترتيب حسب.",
+      "shortcut": "Key names stay in Latin letters and left to right: Ctrl+D."
+    }
+  },
+  "tokens": [
+    "color.bg.surface-2",
+    "color.bg.surface-3",
+    "color.bg.overlay-10",
+    "color.text.default",
+    "color.text.muted",
+    "color.state.danger-text",
+    "color.state.danger-tint-10",
+    "color.state.danger-solid",
+    "color.state.danger-on-solid",
+    "color.primary.fill",
+    "color.primary.text",
+    "color.material.glass-strong",
+    "color.material.glass-solid",
+    "color.border.hairline",
+    "color.border.strong",
+    "color.focus.ring",
+    "color.focus.ring-on-primary-inner",
+    "radius.card",
+    "radius.panel",
+    "radius.field",
+    "menu.item.height",
+    "menu.item.radius",
+    "menu.width.min",
+    "elevation.menu",
+    "blur.window-strong",
+    "blur.window-saturation",
+    "size.target-min",
+    "size.control.xs",
+    "size.icon.md",
+    "space.4xs",
+    "space.3xs",
+    "space.2xs",
+    "space.xs",
+    "space.s",
+    "space.m",
+    "border.width.default",
+    "border.width.strong",
+    "font.family.sans",
+    "font.size.xs",
+    "font.size.s",
+    "font.size.m",
+    "font.weight.menu",
+    "font.weight.regular",
+    "font.weight.semibold",
+    "font.leading.snug",
+    "font.leading.arabic.snug",
+    "font.tracking.none",
+    "opacity.disabled",
+    "scale.press",
+    "duration.base",
+    "duration.quick",
+    "ease.emphasized",
+    "ease.exit",
+    "z.menu"
+  ],
+  "motion": "menu-scale",
+  "frameworks": {
+    "react": {
+      "status": "ready",
+      "behavior": "radix:DropdownMenu",
+      "example": "DropdownMenu.demo.tsx",
+      "note": "The content and each submenu are portaled into a Theme that copies the axes of the Theme the menu is in (the Toaster pattern), so tokens, language and direction apply inside. A submenu is its own root carrying data-part sub-content."
+    },
+    "angular": {
+      "status": "planned",
+      "behavior": "cdk:menu"
+    },
+    "native": {
+      "status": "planned",
+      "behavior": "rn-primitives:dropdown-menu"
+    }
+  },
+  "styles": {
+    "studio": "A flat surface: surface-3, the card radius (16px) with 12px rows inside, the menu shadow, no border. The lit row takes the overlay step; a danger row a danger tint. Rows use the menu weight. Separators on surface-2.",
+    "desk": "Glass, from the macOS style menu bar menu: the strong glass material with the strong blur, a hairline, the soft window shadow, the panel radius (12px) with 8px rows inside, regular weight. The lit row is the yellow primary fill with dark text, a danger row lights in the danger fill. Under reduced transparency and more contrast the glass turns solid and the blur goes.",
+    "neutral": "Planned.",
+    "liquid": "Planned: a glass menu, never on top of other glass."
+  },
+  "mistakes": [
+    {
+      "wrong": "A DropdownMenu to choose a value in a form",
+      "right": "Select, which shows the chosen value in the field"
+    },
+    {
+      "wrong": "An icon only trigger named More",
+      "right": "Name the object: More frame actions"
+    },
+    {
+      "wrong": "A checked option shown only by a colored label",
+      "right": "DropdownMenuCheckboxItem or DropdownMenuRadioItem: the check icon carries the state"
+    },
+    {
+      "wrong": "A menu of 30 actions in one flat list",
+      "right": "Up to 12 entries: group with labels and separators, or move the rest into a submenu"
+    },
+    {
+      "wrong": "A bare button or a div with onClick as the trigger",
+      "right": "A system Button or IconButton inside DropdownMenuTrigger"
+    },
+    {
+      "wrong": "Hiding an action that cannot run now",
+      "right": "disabled: the item stays in the menu with aria-disabled, and a Tooltip or the page says why"
+    },
+    {
+      "wrong": "A shortcut typed into the label: Duplicate board (Ctrl+D)",
+      "right": "The shortcut prop, which sets the hint apart and keeps it left to right"
+    }
+  ],
+  "contract": {
+    "trigger": "[data-demo-trigger]",
+    "optionalParts": [
+      "label",
+      "checkbox-item",
+      "radio-item",
+      "indicator",
+      "start",
+      "shortcut",
+      "end",
+      "group",
+      "separator",
+      "sub-trigger",
+      "sub-content"
+    ],
+    "keys": {
+      "ArrowDown": {
+        "focus": "[data-demo-trigger]",
+        "case": "variants",
+        "expect": "focus-moves"
+      },
+      "ArrowUp": {
+        "focus": "[data-demo-trigger]",
+        "case": "variants",
+        "expect": "focus-moves"
+      }
+    }
+  },
+  "since": "0.1.0"
+}
