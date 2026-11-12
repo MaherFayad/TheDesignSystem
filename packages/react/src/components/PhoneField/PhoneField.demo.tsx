@@ -1,4 +1,3 @@
-import { Bidi } from '../../theme/Bidi';
 import { DemoCase, DemoGrid, DemoPage, DemoRow, sample } from '../../demo';
 import { Field } from '../Field/Field';
 import { PhoneField, type PhoneFieldShape, type PhoneFieldSize } from './index';
@@ -62,7 +61,7 @@ export default function PhoneFieldDemo() {
       <DemoCase id="too-many" title="A long number in a narrow container">
         <div style={{ maxInlineSize: '16rem' }}>
           <Field label="Office number in Germany">
-            <PhoneField defaultCountry="DE" defaultValue="+4930123456789012" size="sm" />
+            <PhoneField defaultCountry="DE" defaultValue="+49301234567890" size="sm" />
           </Field>
         </div>
       </DemoCase>
@@ -80,7 +79,12 @@ export default function PhoneFieldDemo() {
         <Field
           label="رقم الجوال"
           required
-          description={<Bidi>نرسل لك رمز الدخول على هذا الرقم في رسالة نصية. اكتب الرقم بدون الصفر في البداية، مثل 50 123 4567، أو الصقه كامل مع رمز الدولة.</Bidi>}
+          description={
+            <>
+              نرسل لك رمز الدخول على هذا الرقم في رسالة نصية. اكتب الرقم بدون الصفر في البداية، مثل <bdi dir="ltr">50 123 4567</bdi>، أو
+              الصقه كامل مع رمز الدولة.
+            </>
+          }
         >
           <PhoneField defaultValue="+966501234567" />
         </Field>

@@ -145,9 +145,71 @@ describe('PhoneField', () => {
     render(<PhoneField aria-label="Mobile" defaultValue="+966501234567" onValueChange={onValueChange} />);
     await user.selectOptions(screen.getByRole('combobox'), 'KW');
     const input = screen.getByRole('textbox', { name: 'Mobile' }) as HTMLInputElement;
-    expect(input.value).toBe('5012 3456');
-    expect(onValueChange).toHaveBeenLastCalledWith('+96550123456', expect.objectContaining({ country: 'KW' }));
+    // The digits stay; the length no longer fits Kuwait, and valid says so.
+    expect(input.value).toBe('5012 3456 7');
+    expect(onValueChange).toHaveBeenLastCalledWith('+965501234567', expect.objectContaining({ country: 'KW', valid: false }));
     expect(root(document.body).querySelector('[data-part="code"]')?.textContent).toContain('+965');
+  });
+
+  it('removes the digit before a group space on Backspace, and after it on Delete', async () => {
+    const user = userEvent.setup();
+    render(<PhoneField aria-label="Mobile" defaultValue="+966501234567" />);
+    const input = screen.getByRole('textbox', { name: 'Mobile' }) as HTMLInputElement;
+    await user.click(input);
+    input.setSelectionRange(3, 3);
+    await user.keyboard('{Backspace}');
+    expect(input.value).toBe('51 234 567');
+    expect(input.selectionStart).toBe(1);
+    input.setSelectionRange(2, 2);
+    await user.keyboard('{Delete}');
+    expect(input.value).toBe('51 345 67');
+  });
+
+  it('keeps the caret after the same digit when typing inside the number', async () => {
+    const user = userEvent.setup();
+    render(<PhoneField aria-label="Mobile" defaultValue="+96650123456" />);
+    const input = screen.getByRole('textbox', { name: 'Mobile' }) as HTMLInputElement;
+    await user.click(input);
+    input.setSelectionRange(1, 1);
+    await user.keyboard('9');
+    expect(input.value).toBe('59 012 3456');
+    expect(input.selectionStart).toBe(2);
+  });
+
+  it('clears the number when a plus is typed over it', async () => {
+    const user = userEvent.setup();
+    const onValueChange = vi.fn();
+    const { container } = render(<PhoneField aria-label="Mobile" name="mobile" defaultValue="+966501234567" onValueChange={onValueChange} />);
+    const input = screen.getByRole('textbox', { name: 'Mobile' }) as HTMLInputElement;
+    await user.tripleClick(input);
+    await user.keyboard('+');
+    expect(input.value).toBe('+');
+    expect(onValueChange).toHaveBeenLastCalledWith('', expect.objectContaining({ national: '' }));
+    expect((container.querySelector('input[type="hidden"]') as HTMLInputElement).value).toBe('');
+  });
+
+  it('takes the country from a controlled value', () => {
+    const { container } = render(<PhoneField aria-label="Mobile" name="mobile" value="+971501234567" onValueChange={() => {}} />);
+    expect((screen.getByRole('combobox') as HTMLSelectElement).value).toBe('AE');
+    expect((container.querySelector('input[type="hidden"]') as HTMLInputElement).value).toBe('+971501234567');
+    expect((screen.getByRole('textbox', { name: 'Mobile' }) as HTMLInputElement).value).toBe('50 123 4567');
+  });
+
+  it('names the picker with the Field label, and describes a read only number by its dial code', () => {
+    render(
+      <>
+        <Field label="Office number">
+          <PhoneField />
+        </Field>
+        <Field label="Account phone" readOnly>
+          <PhoneField defaultValue="+97336001234" />
+        </Field>
+      </>,
+    );
+    expect(screen.getByRole('combobox', { name: 'Country code Office number' })).toBeTruthy();
+    const ro = screen.getByRole('textbox', { name: 'Account phone' });
+    const ids = (ro.getAttribute('aria-describedby') ?? '').split(' ');
+    expect(ids.map((i) => document.getElementById(i)?.textContent)).toContain('+973');
   });
 
   it('posts the E.164 number through a hidden input', () => {

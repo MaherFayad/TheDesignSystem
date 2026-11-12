@@ -107,6 +107,8 @@ describe('formatNational', () => {
     expect(formatNational('501234567', 'SA')).toBe('50 123 4567');
     expect(formatNational('501234567', 'AE')).toBe('50 123 4567');
     expect(formatNational('41234567', 'AE')).toBe('4 123 4567');
+    expect(formatNational('5012345', 'AE')).toBe('50 123 45');
+    expect(formatNational('412', 'AE')).toBe('4 12');
     expect(formatNational('50001234', 'KW')).toBe('5000 1234');
     expect(formatNational('33123456', 'QA')).toBe('3312 3456');
   });
@@ -135,6 +137,7 @@ describe('toE164', () => {
     expect(toE164('5000 1234', 'KW')).toBe('+96550001234');
     expect(toE164('', 'SA')).toBe('');
     expect(toE164('123', 'ZZ')).toBe('');
+    expect(toE164('5012345678', 'KW')).toBe('+9655012345678');
   });
 });
 

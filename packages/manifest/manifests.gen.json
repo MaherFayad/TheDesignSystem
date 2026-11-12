@@ -2791,7 +2791,7 @@
         "Enter, Space": "On the picker, open the country list (native select, by platform)",
         "Home, End": "On the number, move the caret to the start or the end"
       },
-      "announce": "The number takes its name from the Field label, the description and error through aria-describedby. The picker is named Country code and reads the country name and its dial code.",
+      "announce": "The number takes its name from the Field label, the description and error through aria-describedby. The picker is named Country code plus the Field label (Country code, Mobile number) and reads the country name and its dial code. Read only, the number is described by its dial code.",
       "native": {
         "accessibilityState": [
           "disabled"
@@ -2802,7 +2802,7 @@
         "The number always runs left to right (dir ltr on the input), also inside Arabic. The dial code is isolated in a bdi. In Arabic the dial code sits at the start (right) and the number next to it.",
         "A pasted or autofilled +9665... or 009665... sets the country. Arabic Indic digits are read. The trunk 0 of SA and AE is dropped: 050 becomes 50.",
         "Gulf numbers are grouped as typed (50 123 4567, 5000 1234) and checked for length. Other countries keep their digits as typed and get the E.164 limit only.",
-        "The value out is E.164 from onValueChange and the hidden input named name. Check detail.valid on blur or on submit, never on every key.",
+        "The value out is E.164 from onValueChange and the hidden input named name. Keep the last detail from onValueChange and check detail.valid on blur or on submit, never on every key. Changing the country keeps the digits; detail.valid says whether their length fits the new country.",
         "Paste and autofill are never blocked (WCAG 2.2, 3.3.8)."
       ]
     },
@@ -2890,7 +2890,7 @@
       },
       {
         "wrong": "Checking the length on every key",
-        "right": "Check detail.valid on blur or on submit"
+        "right": "Keep the last detail from onValueChange and check detail.valid on blur or on submit"
       }
     ],
     "contract": {

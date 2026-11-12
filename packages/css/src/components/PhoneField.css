@@ -11,7 +11,7 @@
  *   --_phone-field-font-size, --_phone-field-radius, --_phone-field-bg,
  *   --_phone-field-fg, --_phone-field-border-color (at rest, -hover, -focus,
  *   -invalid), --_phone-field-ring, --_phone-field-code-bg (at rest, -hover,
- *   -focus), --_phone-field-autofill-bg.
+ *   -focus), --_phone-field-code-fg (the chevron), --_phone-field-autofill-bg.
  *
  * The glow and ring sit on ::before, whose opacity fades. The dial code's
  * hover and focus fill is a background swap, not an animation.
@@ -33,6 +33,7 @@
     --_phone-field-code-bg: transparent;
     --_phone-field-code-bg-hover: var(--ds-color-bg-overlay-5);
     --_phone-field-code-bg-focus: var(--ds-color-bg-overlay-10);
+    --_phone-field-code-fg: var(--ds-color-text-muted);
     --_phone-field-autofill-bg: var(--ds-color-bg-surface);
 
     position: relative;
@@ -109,14 +110,14 @@
     white-space: nowrap;
   }
 
-  [data-ds='phone-field'] > [data-part='code'] > [aria-hidden='true'] {
+  [data-ds='phone-field'] > [data-part='code'] > :not([data-part]) {
     display: inline-flex;
     align-items: center;
     gap: var(--ds-space-2xs);
   }
 
   [data-ds='phone-field'] > [data-part='code'] svg {
-    color: var(--ds-color-text-muted);
+    color: var(--_phone-field-code-fg);
   }
 
   /*
@@ -141,7 +142,9 @@
     cursor: pointer;
   }
 
+  /* Positioned, so the number paints above the glow layer. */
   [data-ds='phone-field'] > [data-part='control'] {
+    position: relative;
     flex: 1 1 auto;
     box-sizing: border-box;
     inline-size: 100%;
@@ -172,6 +175,11 @@
   [data-ds='phone-field'] > [data-part='control']::placeholder {
     color: var(--ds-color-text-placeholder);
     opacity: 1;
+  }
+
+  /* The placeholder takes its direction from its own first letter: an Arabic hint runs right to left, 50 123 4567 stays left to right. */
+  [data-ds='phone-field'] > [data-part='control']:placeholder-shown {
+    unicode-bidi: plaintext;
   }
 
   [data-ds='phone-field'] > [data-part='control']:autofill {
@@ -250,6 +258,10 @@
     [data-ds='phone-field'] > [data-part='code']:has(> [data-part='country']:focus-visible) {
       outline: var(--ds-border-width-strong) solid CanvasText;
       outline-offset: calc(var(--ds-border-width-strong) * -1);
+    }
+
+    [data-ds='phone-field'] > [data-part='control']::placeholder {
+      color: GrayText;
     }
 
     [data-ds='phone-field'][data-disabled] {

@@ -79,13 +79,16 @@ interface GulfRule {
   trunk: boolean;
   groups: Record<number, readonly number[]>;
   example: string;
+  /** Digits that start a number of the longest length: a partial number takes its groups from the start. */
+  long?: RegExp;
 }
 
 const GULF_RULES: Record<GulfCountry, GulfRule> = {
   // Mobile 5X XXX XXXX and landline 1X XXX XXXX, both 9 digits; 05 at home.
   SA: { lengths: [9], trunk: true, groups: { 9: [2, 3, 4] }, example: '50 123 4567' },
   // Mobile 5X XXX XXXX (9 digits), landline X XXX XXXX (8 digits); 0 at home.
-  AE: { lengths: [8, 9], trunk: true, groups: { 8: [1, 3, 4], 9: [2, 3, 4] }, example: '50 123 4567' },
+  // 5 starts a mobile and 6 a shared 600 number, both 9 digits.
+  AE: { lengths: [8, 9], trunk: true, groups: { 8: [1, 3, 4], 9: [2, 3, 4] }, example: '50 123 4567', long: /^[56]/ },
   KW: { lengths: [8], trunk: false, groups: { 8: [4, 4] }, example: '5000 1234' },
   QA: { lengths: [8], trunk: false, groups: { 8: [4, 4] }, example: '3312 3456' },
   BH: { lengths: [8], trunk: false, groups: { 8: [4, 4] }, example: '3600 1234' },
@@ -152,12 +155,13 @@ export function phoneCountryOptions(locale = 'en', only?: readonly string[]): Ph
  * become Latin, everything but digits goes, the trunk 0 of SA and AE goes
  * (050 becomes 50), and the result is cut to the longest valid length.
  */
-export function nationalDigits(input: string, iso: string): string {
+export function nationalDigits(input: string, iso: string, options: { cut?: boolean } = {}): string {
+  const cut = options.cut ?? true;
   let digits = toLatinDigits(input).replace(/\D/g, '');
   const country = findPhoneCountry(iso);
-  if (!country) return digits.slice(0, 15);
+  if (!country) return cut ? digits.slice(0, 15) : digits;
   if (gulfRule(country.iso)?.trunk) digits = digits.replace(/^0+/, '');
-  return digits.slice(0, maxNational(country));
+  return cut ? digits.slice(0, maxNational(country)) : digits;
 }
 
 /** True when the national digits have a valid length: the Gulf rules, else 4 to the E.164 limit. */
@@ -180,7 +184,7 @@ export function formatNational(national: string, iso: string): string {
   if (!rule) return digits;
   const longest = Math.max(...rule.lengths);
   // A partial number takes the groups of the length it is heading for.
-  const target = rule.lengths.find((l) => l >= digits.length) ?? longest;
+  const target = rule.long?.test(digits) ? longest : (rule.lengths.find((l) => l >= digits.length) ?? longest);
   const groups = rule.groups[target] ?? rule.groups[longest] ?? [];
   const out: string[] = [];
   let at = 0;
@@ -193,10 +197,14 @@ export function formatNational(national: string, iso: string): string {
   return out.join(' ');
 }
 
-/** The E.164 form, +966501234567, or an empty string when there are no digits. */
+/**
+ * The E.164 form, +966501234567, or an empty string when there are no
+ * digits. Digits are never cut here: a number that is too long stays too
+ * long, and `isValidNational` says so.
+ */
 export function toE164(national: string, iso: string): string {
   const country = findPhoneCountry(iso);
-  const digits = nationalDigits(national, iso);
+  const digits = nationalDigits(national, iso, { cut: false });
   if (!country || digits === '') return '';
   return `+${country.dial}${digits}`;
 }

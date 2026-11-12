@@ -1,16 +1,19 @@
 'use client';
 import {
   useCallback,
+  useId,
   useLayoutEffect,
   useMemo,
   useRef,
   useState,
   type ChangeEvent,
   type ComponentProps,
+  type KeyboardEvent,
   type Ref,
 } from 'react';
 import { Icon } from '@the-system/icons/react';
 import {
+  findPhoneCountry,
   formatNational,
   isValidNational,
   nationalDigits,
@@ -23,7 +26,7 @@ import {
   type Size,
 } from '@the-system/shared';
 import { useTheme } from '../../theme/hooks';
-import { useFieldControl } from '../Field/Field';
+import { useField, useFieldControl } from '../Field/Field';
 
 export type PhoneFieldSize = Size;
 export type PhoneFieldShape = Extract<Shape, 'default' | 'pill'>;
@@ -96,6 +99,14 @@ const COPY = {
 const LRI = String.fromCharCode(0x2066);
 const PDI = String.fromCharCode(0x2069);
 
+/** The national digits of a controlled E.164 value, never cut, so what shows is what was passed. */
+function controlledNational(value: string, country: string): string {
+  const dial = findPhoneCountry(country)?.dial;
+  const latin = toLatinDigits(value).trim();
+  if (dial && latin.startsWith(`+${dial}`)) return nationalDigits(latin.slice(dial.length + 1), country, { cut: false });
+  return parsePhone(latin, country).national;
+}
+
 /** The position in `text` just after the `count`th digit. */
 function caretAfterDigits(text: string, count: number): number {
   if (count <= 0) return 0;
@@ -145,19 +156,26 @@ export function PhoneField({
   placeholder,
   'aria-describedby': describedBy,
   onChange,
+  onKeyDown,
   ...rest
 }: PhoneFieldProps) {
   const theme = useTheme();
   const lang = locale ?? theme.lang;
   const copy = lang.toLowerCase().startsWith('ar') ? COPY.ar : COPY.en;
+  const field = useField();
+  const uid = useId();
+  const pickerId = `${uid}country`;
+  const codeId = `${uid}code`;
   const control = useFieldControl({ id, 'aria-describedby': describedBy, invalid, disabled, readOnly, required });
 
   const [own, setOwn] = useState(() => {
     const first = parsePhone(defaultValue ?? '', countryProp ?? defaultCountry);
     return { country: countryProp ?? first.country, national: first.national };
   });
-  const country = (countryProp ?? own.country).toUpperCase();
-  const national = valueProp !== undefined ? parsePhone(valueProp, country).national : own.national;
+  // A controlled value names its own country (+971...), unless the country is controlled too.
+  const fromValue = valueProp !== undefined ? parsePhone(valueProp, countryProp ?? own.country) : undefined;
+  const country = (countryProp ?? (fromValue?.international ? fromValue.country : own.country)).toUpperCase();
+  const national = valueProp !== undefined ? controlledNational(valueProp, country) : own.national;
   const shown = formatNational(national, country);
 
   const options = useMemo(() => {
@@ -173,8 +191,17 @@ export function PhoneField({
 
   // While "+9" or "+97" is typed no dial code matches yet: the raw text shows until one does.
   const [draft, setDraft] = useState<string | null>(null);
+  // Bumped when an edit leaves the digits as they were, so the caret effect runs again.
+  const [, setRefresh] = useState(0);
   const inner = useRef<HTMLInputElement | null>(null);
   const pendingDigits = useRef<number | null>(null);
+  const lastKey = useRef<string | null>(null);
+  const lastEmitted = useRef<string | undefined>(undefined);
+
+  // A controlled value the parent set itself (a reset to "") ends a draft.
+  useLayoutEffect(() => {
+    if (valueProp !== undefined && valueProp !== lastEmitted.current) setDraft(null);
+  }, [valueProp]);
 
   const setRef = useCallback(
     (node: HTMLInputElement | null): (() => void) | undefined => {
@@ -214,7 +241,8 @@ export function PhoneField({
     }
     if (countryChanged) onCountryChange?.(nextCountry);
     if (nextNational !== national || countryChanged) {
-      onValueChange?.(toE164(nextNational, nextCountry), {
+      lastEmitted.current = toE164(nextNational, nextCountry);
+      onValueChange?.(lastEmitted.current, {
         country: nextCountry,
         national: nextNational,
         valid: isValidNational(nextNational, nextCountry),
@@ -227,12 +255,30 @@ export function PhoneField({
     if (event.defaultPrevented) return;
     const input = event.currentTarget;
     const raw = toLatinDigits(input.value);
+    const key = lastKey.current;
+    lastKey.current = null;
     const parsed = parsePhone(raw, country);
-    if (!parsed.international && /^\s*(\+|00)/.test(raw)) {
+    // "+", "+9", "0" and "00" match no number yet: the raw text shows, and the old number is gone.
+    if (!parsed.international && (/^\s*(\+|00)/.test(raw) || /^\s*0+\s*$/.test(raw))) {
       setDraft(input.value);
+      emit(country, '');
       return;
     }
     setDraft(null);
+    // Backspace or Delete on a group space removes no digit: remove the digit next to it instead.
+    const typed = raw.replace(/\D/g, '');
+    if ((key === 'Backspace' || key === 'Delete') && typed === national && raw.length < shown.length) {
+      const before = raw.slice(0, input.selectionStart ?? raw.length).replace(/\D/g, '').length;
+      const at = key === 'Backspace' ? before - 1 : before;
+      if (at >= 0 && at < national.length) {
+        pendingDigits.current = at;
+        emit(country, national.slice(0, at) + national.slice(at + 1));
+      } else {
+        pendingDigits.current = before;
+        setRefresh((n) => n + 1);
+      }
+      return;
+    }
     if (parsed.international) {
       // A pasted or filled +966... : the caret goes to the end.
       pendingDigits.current = parsed.national.length;
@@ -247,10 +293,16 @@ export function PhoneField({
     emit(parsed.country, parsed.national);
   };
 
+  const handleKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
+    onKeyDown?.(event);
+    lastKey.current = event.key;
+  };
+
+  // The digits stay when the country changes; detail.valid says if the length fits the new country.
   const handleCountry = (event: ChangeEvent<HTMLSelectElement>) => {
     const next = event.currentTarget.value;
     setDraft(null);
-    emit(next, nationalDigits(national, next));
+    emit(next, national);
   };
 
   const e164 = toE164(national, country);
@@ -268,15 +320,20 @@ export function PhoneField({
       data-readonly={control.readOnly ? '' : undefined}
     >
       <span data-part="code">
-        {/* aria-disabled: the dimmed code of a disabled field is inactive text (WCAG 1.4.3 exception). */}
-        <span aria-hidden="true" aria-disabled={control.disabled ? true : undefined}>
+        {/*
+          With a picker, the picker reads the country. Read only, the number is described by the dial code.
+          Disabled, the dimmed code is inactive text (WCAG 1.4.3 exception); aria-disabled tells axe so.
+        */}
+        <span id={codeId} aria-hidden={control.readOnly ? undefined : true} aria-disabled={control.disabled ? true : undefined}>
           <bdi dir="ltr">+{selected?.dial ?? ''}</bdi>
           {!control.readOnly && <Icon name="chevron-down" size="sm" />}
         </span>
         {!control.readOnly && (
           <select
             data-part="country"
+            id={pickerId}
             aria-label={labels?.country ?? copy.country}
+            aria-labelledby={field ? `${pickerId} ${field.labelId}` : undefined}
             value={country}
             disabled={control.disabled}
             onChange={handleCountry}
@@ -307,10 +364,12 @@ export function PhoneField({
         inputMode={rest.inputMode ?? 'tel'}
         autoComplete={rest.autoComplete ?? 'tel-national'}
         placeholder={placeholder ?? phoneExample(country)}
+        aria-describedby={control.readOnly ? [control['aria-describedby'], codeId].filter(Boolean).join(' ') : control['aria-describedby']}
         value={draft ?? shown}
         onChange={handleInput}
+        onKeyDown={handleKeyDown}
       />
-      {name !== undefined && <input type="hidden" name={name} value={e164} disabled={control.disabled} />}
+      {name !== undefined && <input type="hidden" name={name} form={rest.form} value={e164} disabled={control.disabled} />}
     </div>
   );
 }

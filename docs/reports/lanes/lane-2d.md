@@ -5,7 +5,7 @@ Branch `claude/ds-lane-2d`. Batch file `docs/plan/wave-1-batch-2.md`.
 | Order | Component | Commit | Check | Contract (react) |
 | --- | --- | --- | --- | --- |
 | 1.2.9 | OTPField | `wo-1.2.9: OTPField` | green | 21 passed (with the slug fix below) |
-| 1.2.10 | PhoneField | `wo-1.2.10: PhoneField` | green | 21 passed |
+| 1.2.10 | PhoneField | `wo-1.2.10: PhoneField`, then `wo-1.2.10: PhoneField review fixes` | green | 21 passed |
 
 Both are hand built. No dependency added. No file outside the lane's owned
 set was edited by hand; the generated files were refreshed with `npm run gen`.
@@ -194,17 +194,43 @@ Decisions:
 - The select and the input reach over the root's 1px border, so each is
   24px tall at `xs` (WCAG 2.5.8); the contract caught 22px.
 - The dimmed dial code of a disabled field carries `aria-disabled` on its
-  `aria-hidden` span: inactive text is exempt from 1.4.3 and axe honors the
-  attribute.
+  span: inactive text is exempt from 1.4.3. Axe needs the attribute; without
+  it the contract fails on the disabled case (checked both ways).
+- Changing the country keeps the digits (SA 501234567 to KW stays 9 digits)
+  and `detail.valid` reports the length, so nothing is lost without a word.
+  `toE164` never cuts digits; typing is capped at the country's longest
+  length.
+- The picker is named by its own label plus the Field label ("Country code,
+  Office number"), so three phone fields in one form have three names.
 - The full ISO list is shown by default. A product that must limit the list
   passes `countries`.
 
-Review: see the section below.
+Review (one round, fresh agent): 5 blockers fixed: a controlled value from
+another country kept the old country (the hidden input posted +966 with AE
+digits); Backspace or Delete on a group space got stuck; typing "+" over a
+full number left the old number in the value; a read only dial code was
+hidden from screen readers (now it describes the number); AE mobile numbers
+took the landline groups until the ninth digit. Notes fixed: picker names,
+digits kept on a country change, a lone "0" or "00" kept as a draft, a
+controlled reset ends a draft, `form` on the hidden input, the number paints
+above the glow, a private property for the chevron color, the placeholder
+bidi rule from Input, GrayText placeholder in forced colors, a valid German
+demo number, the manifest wording for `detail.valid`, five more tests, and an
+Arabic demo description where "50 123 4567" read in reverse order. Left open:
+the read only border style (Changes needed, item 3).
 
 ## Token gaps
 
 None needed a new token. Both components reuse Input's tokens; OTPField adds
 `radius.field`, `font.size.xl` and `font.size.3xl`, `color.border.strong`.
+
+## Arabic copy
+
+All Arabic demo copy and `content.ar` rules were written without the
+GoBanana copy cookbook (not available in this session). Labels are noun form
+(رمز التحقق، رقم الجوال، رمز الدولة), white Saudi dialect in the sentences
+(اللي، تقدر، وش), no diacritics, Western digits. A native reviewer should
+read the demos once.
 
 ## Could not do
 
@@ -213,3 +239,8 @@ None needed a new token. Both components reuse Input's tokens; OTPField adds
   `autocomplete="one-time-code"`, no maxlength) and by a test that sets the
   whole value in one change.
 - Neutral is not on this branch; both components use tokens only.
+- The Gulf numbering rules were written from the national numbering plans as
+  I know them (SA 9 digits for mobile and landline, AE 9 mobile and 8
+  landline, KW, QA, BH and OM 8). Only lengths are enforced, so a new range
+  is never refused, but the lead may want them checked against the current
+  CST, TDRA, CITRA, CRA, TRA and TRA Oman plans.
