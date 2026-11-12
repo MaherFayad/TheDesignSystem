@@ -1,0 +1,12 @@
+/* Fixture for ds/no-public-token-declared. Lines 4 and 8 fail. */
+@layer ds.base {
+  [data-ds='sample'] {
+    --ds-sample-height: var(--ds-size-control-md);
+    --_sample-height: var(--ds-sample-height);
+    block-size: var(--_sample-height);
+    &[data-size='sm'] {
+      --ds-sample-height: var(--ds-size-control-sm);
+      --_sample-height: var(--ds-size-control-sm);
+    }
+  }
+}

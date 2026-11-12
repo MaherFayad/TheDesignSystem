@@ -2,8 +2,14 @@
 // token build, or is a local variable the same file declares. Ported from
 // Figma-Killer-2 `css-token-vocabulary.test.ts`, turned around: instead of a
 // list of banned names, the build is the list of allowed names.
+//
+// Private properties `--_<component>-<name>` (docs/contracts/anatomy.md) are
+// declared in component CSS and overridden by recipes. Reading one that no
+// file under packages/css/src/components declares is a finding, and so is
+// declaring one outside component CSS and recipes. `--radix-*` and any other
+// third party variable may be read freely.
 import { parseCss } from '../css';
-import { isSystemCss } from '../scopes';
+import { isComponentCss, isSystemCss } from '../scopes';
 import type { Finding, Rule, RuleCheck, SourceFile } from '../types';
 import { locator, stripCssComments } from '../util';
 
@@ -19,14 +25,52 @@ export function declaredCustomProperties(css: string): Set<string> {
   return out;
 }
 
-/** Builds the check from the names the token build declares. */
-export function createTokenVocabulary(known: ReadonlySet<string>, prefix = DEFAULT_PREFIX): RuleCheck {
+/** Every private `--_*` property the given stylesheets declare. */
+export function declaredPrivateProperties(contents: Iterable<string>): Set<string> {
+  const out = new Set<string>();
+  for (const css of contents) for (const d of parseCss(css).declarations) if (d.property.startsWith('--_')) out.add(d.property);
+  return out;
+}
+
+/**
+ * Builds the check from the names the token build declares. With
+ * `privateNames` (the `--_*` names component CSS declares) it also checks
+ * private properties.
+ */
+export function createTokenVocabulary(known: ReadonlySet<string>, prefix = DEFAULT_PREFIX, privateNames?: ReadonlySet<string>): RuleCheck {
   const used = new RegExp(`var\\(\\s*(--${prefix}-[\\w-]+)`, 'g');
+  const usedPrivate = /var\(\s*(--_[\w-]+)/g;
   return (file: SourceFile): Finding[] => {
     const local = declaredCustomProperties(file.content);
     const src = stripCssComments(file.content);
     const at = locator(src);
     const out: Finding[] = [];
+    if (privateNames) {
+      for (const m of src.matchAll(usedPrivate)) {
+        const name = m[1] ?? '';
+        if (privateNames.has(name)) continue;
+        const pos = at((m.index ?? 0) + 4);
+        out.push({
+          ruleId: TOKEN_VOCABULARY,
+          file: file.path,
+          line: pos.line,
+          column: pos.column,
+          message: `${name} is a private property that no file in packages/css/src/components declares. Declare it on the component root.`,
+        });
+      }
+      if (!isComponentCss(file.path)) {
+        for (const d of parseCss(file.content).declarations) {
+          if (!d.property.startsWith('--_')) continue;
+          out.push({
+            ruleId: TOKEN_VOCABULARY,
+            file: file.path,
+            line: d.line,
+            column: d.column,
+            message: `${d.property} is a private property declared outside component CSS and recipes.`,
+          });
+        }
+      }
+    }
     for (const m of src.matchAll(used)) {
       const name = m[1] ?? '';
       if (known.has(name) || local.has(name)) continue;
@@ -39,15 +83,15 @@ export function createTokenVocabulary(known: ReadonlySet<string>, prefix = DEFAU
         message: `${name} is not in the token build and this file does not declare it. Use a token from packages/tokens or add the name to packages/tokens/src/contract.json.`,
       });
     }
-    return out;
+    return out.sort((a, b) => a.line - b.line || (a.column ?? 0) - (b.column ?? 0));
   };
 }
 
-export function createTokenVocabularyRule(known: ReadonlySet<string>, prefix = DEFAULT_PREFIX): Rule {
+export function createTokenVocabularyRule(known: ReadonlySet<string>, prefix = DEFAULT_PREFIX, privateNames?: ReadonlySet<string>): Rule {
   return {
     id: TOKEN_VOCABULARY,
-    description: 'Every var(--ds-*) used in system CSS exists in the token build or is declared in the same file.',
+    description: 'Every var(--ds-*) used in system CSS exists in the token build or is declared in the same file; every var(--_*) is declared in component CSS.',
     appliesTo: isSystemCss,
-    check: createTokenVocabulary(known, prefix),
+    check: createTokenVocabulary(known, prefix, privateNames),
   };
 }

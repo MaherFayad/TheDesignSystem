@@ -8,6 +8,11 @@ export function isComponentCss(path: string): boolean {
   return /^packages\/css\/src\/components\/[^/]+\.css$/.test(path) || /^packages\/styles\/[^/]+\/recipes\/[^/]+\.css$/.test(path);
 }
 
+/** Component CSS only (`packages/css/src/components`), without recipes: where private properties are declared. */
+export function isComponentBaseCss(path: string): boolean {
+  return /^packages\/css\/src\/components\/[^/]+\.css$/.test(path);
+}
+
 /** Every stylesheet the system ships: `packages/css` and `packages/styles`. */
 export function isSystemCss(path: string): boolean {
   return /^packages\/(css|styles)\//.test(path) && path.endsWith('.css');

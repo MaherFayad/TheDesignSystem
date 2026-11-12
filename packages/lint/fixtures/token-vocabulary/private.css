@@ -1,0 +1,12 @@
+/* Fixture for private properties. With the names of component CSS: lines 4, 7 and 8 fail. */
+@layer ds.base {
+  [data-ds='sample'] {
+    --_sample-gap: var(--ds-space-2);
+    gap: var(--_sample-gap);
+    padding: var(--_button-height);
+    margin: var(--_sample-missing);
+    color: var( --_sample-made-up, var(--ds-space-2));
+    inline-size: var(--radix-popover-trigger-width);
+    block-size: var(--radix-select-content-available-height);
+  }
+}

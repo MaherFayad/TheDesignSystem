@@ -1,4 +1,4 @@
-/* Fixture for ds/no-raw-value. Lines 4, 5, 6, 7, 8, 9, 10 and 11 fail. */
+/* Fixture for ds/no-raw-value. Lines 4, 5, 6, 7, 8, 9, 10, 11 and 24 fail. env(safe-area-inset-*) and opacity: 0.38 pass. */
 @layer ds.base {
   [data-ds='sample'] {
     padding-inline: 12px;
@@ -19,6 +19,10 @@
     grid-template-columns: 1fr 2fr;
     z-index: 0;
     padding: calc(var(--ds-space-2) * 2);
+    padding-block-end: env(safe-area-inset-bottom);
+    padding-inline-start: env(safe-area-inset-left, 8px);
+    padding-block-start: max(env(safe-area-inset-top, calc(2px + var(--ds-space-2))), 12px);
+    opacity: 0.38;
   }
   @media (min-width: 600px) {
     [data-ds='sample'] { gap: var(--ds-space-4); }

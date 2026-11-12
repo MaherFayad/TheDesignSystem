@@ -18,6 +18,8 @@ export * from './rules/no-raw-color';
 export * from './rules/no-raw-value';
 export * from './rules/no-tailwind';
 export * from './rules/token-vocabulary';
+export * from './rules/no-public-token-declared';
+export * from './rules/forced-colors-fallback';
 
 import { animateTransformOpacityOnlyRule } from './rules/animate-transform-opacity-only';
 import { buttonPrimitiveRule } from './rules/button-primitive';
@@ -29,6 +31,8 @@ import { noNativeTitleRule } from './rules/no-native-title';
 import { noRawColorRule } from './rules/no-raw-color';
 import { noRawValueRule } from './rules/no-raw-value';
 import { noTailwindRule } from './rules/no-tailwind';
+import { noPublicTokenDeclaredRule } from './rules/no-public-token-declared';
+import { forcedColorsFallbackRule } from './rules/forced-colors-fallback';
 import type { Rule } from './types';
 
 /**
@@ -46,6 +50,8 @@ export const rules: readonly Rule[] = [
   nativeNoStyleLiteralsRule,
   animateTransformOpacityOnlyRule,
   noImportantRule,
+  noPublicTokenDeclaredRule,
+  forcedColorsFallbackRule,
 ];
 
 // Gates that read the token build instead of files.

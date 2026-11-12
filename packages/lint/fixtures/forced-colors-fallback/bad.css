@@ -1,0 +1,21 @@
+/* Fixture for ds/forced-colors-fallback. Lines 4, 7 and 19 fail. */
+@layer ds.base {
+  [data-ds='sample'] {
+    outline: var(--ds-border-width-strong) solid transparent;
+  }
+  [data-ds='sample']:hover {
+    outline-color: transparent;
+  }
+  [data-ds='sample']:focus-visible {
+    outline: var(--ds-border-width-strong) solid transparent;
+  }
+  [data-ds='field']:focus-within {
+    outline-color: transparent;
+  }
+  [data-ds='sample'] {
+    &:focus-visible { outline: var(--ds-border-width-strong) solid transparent; }
+    outline: none;
+    outline-color: Highlight;
+    outline: 2px solid TRANSPARENT;
+  }
+}
