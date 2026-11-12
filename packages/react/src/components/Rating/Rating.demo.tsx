@@ -6,10 +6,6 @@ import { Rating, type RatingSize, type RatingTone } from './index';
 const sizes: RatingSize[] = ['sm', 'md', 'lg'];
 const tones: RatingTone[] = ['warning', 'accent'];
 
-/** Arabic star names, Western digits. */
-const arItemLabel = (score: number, max: number) => `${score} من ${max} نجوم`;
-const arValueLabel = (value: number, max: number) => (value > 0 ? `${value} من ${max} نجوم` : 'بدون تقييم');
-
 /** A visible label that names an interactive rating. */
 function Labeled({ text, ...props }: Parameters<typeof Rating>[0] & { text: string }) {
   const id = useId();
@@ -42,8 +38,8 @@ export default function RatingDemo() {
         </DemoRow>
         <Theme lang="ar">
           <DemoRow>
-            <Labeled text="تقييم اللوحة" defaultValue={4} getItemLabel={arItemLabel} />
-            <Rating readOnly value={3.5} getValueLabel={arValueLabel} showValue />
+            <Labeled text="تقييم اللوحة" defaultValue={4} />
+            <Rating readOnly value={3.5} showValue />
           </DemoRow>
         </Theme>
       </DemoCase>
@@ -80,8 +76,8 @@ export default function RatingDemo() {
 
       <DemoCase id="long-arabic" title="نص عربي طويل" lang="ar">
         <div style={{ maxInlineSize: 'var(--ds-dialog-width-sm)', display: 'grid', gap: 'var(--ds-space-s)' }}>
-          <Labeled text="تقييم تجربتك مع اللوحة" defaultValue={2} getItemLabel={arItemLabel} />
-          <Rating readOnly value={4.5} getValueLabel={arValueLabel} showValue>
+          <Labeled text="تقييم تجربتك مع اللوحة" defaultValue={2} />
+          <Rating readOnly value={4.5} showValue>
             {sample.ar.long}
           </Rating>
         </div>
