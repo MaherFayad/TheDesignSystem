@@ -1,0 +1,145 @@
+/* Docs site additions on top of Starlight. Logical properties only. */
+
+/* Arabic: zero letter spacing, a taller line, no italics for emphasis. */
+:root[lang='ar'] {
+  --sl-font: 'IBM Plex Sans Arabic', system-ui, sans-serif;
+  --sl-line-height: 1.85;
+  letter-spacing: 0;
+}
+:lang(ar) em {
+  font-style: normal;
+  font-weight: 600;
+}
+
+/* English manifest prose on an Arabic page: a left to right isolate. */
+.ds-en {
+  unicode-bidi: isolate;
+  text-align: start;
+}
+.ds-en > :first-child {
+  margin-block-start: 0;
+}
+
+/* Live preview: axis selects above an iframe of the React gallery. */
+.ds-preview {
+  margin-block: 1rem 1.5rem;
+  border: 1px solid var(--sl-color-hairline-light);
+  border-radius: 0.5rem;
+  overflow: hidden;
+}
+.ds-axes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1rem;
+  padding: 0.75rem 1rem;
+  background: var(--sl-color-bg-nav);
+  border-block-end: 1px solid var(--sl-color-hairline-light);
+}
+.ds-axis {
+  display: inline-flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  font-size: var(--sl-text-xs);
+  color: var(--sl-color-gray-2);
+}
+.ds-axis select {
+  min-block-size: 2rem;
+  min-inline-size: 7rem;
+  padding-inline: 0.5rem;
+  font: inherit;
+  font-size: var(--sl-text-sm);
+  color: var(--sl-color-white);
+  background: var(--sl-color-bg);
+  border: 1px solid var(--sl-color-gray-4);
+  border-radius: 0.25rem;
+}
+.ds-axis select:focus-visible {
+  outline: 2px solid var(--sl-color-text-accent);
+  outline-offset: 2px;
+}
+.ds-frame {
+  display: block;
+  inline-size: 100%;
+  block-size: 32rem;
+  border: 0;
+  background: var(--sl-color-bg);
+}
+.ds-preview-note {
+  margin: 0;
+  padding: 0.5rem 1rem;
+  font-size: var(--sl-text-xs);
+  color: var(--sl-color-gray-3);
+  border-block-start: 1px solid var(--sl-color-hairline-light);
+}
+
+/* Code tabs. Without the script every panel shows under its heading. */
+.ds-tablist {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+  margin-block-start: 1rem;
+  border-block-end: 1px solid var(--sl-color-hairline-light);
+}
+.ds-tab {
+  min-block-size: 2.25rem;
+  padding-inline: 0.875rem;
+  font: inherit;
+  font-size: var(--sl-text-sm);
+  color: var(--sl-color-gray-2);
+  background: transparent;
+  border: 0;
+  border-block-end: 2px solid transparent;
+  cursor: pointer;
+}
+.ds-tab[aria-selected='true'] {
+  color: var(--sl-color-white);
+  border-block-end-color: var(--sl-color-text-accent);
+}
+.ds-tab:focus-visible {
+  outline: 2px solid var(--sl-color-text-accent);
+  outline-offset: -2px;
+}
+[data-ds-tabs][data-ready] .ds-tab-panel > :first-child {
+  position: absolute;
+  inline-size: 1px;
+  block-size: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+.ds-tab-panel[hidden] {
+  display: none;
+}
+.ds-code {
+  text-align: left;
+}
+
+@media (forced-colors: active) {
+  .ds-tab[aria-selected='true'] {
+    border-block-end-color: Highlight;
+  }
+}
+
+/* Code blocks are always left to right, Arabic pages included. */
+:root[dir='rtl'] .expressive-code {
+  direction: ltr;
+  text-align: left;
+}
+
+/* Code, paths and token names stay left to right inside Arabic text. */
+:root[dir='rtl'] :not(pre) > code {
+  direction: ltr;
+  unicode-bidi: isolate;
+}
+
+/* Demo files run to hundreds of lines: the block scrolls inside a fixed height. */
+.ds-code pre {
+  max-block-size: 36rem;
+  overflow: auto;
+}
+
+/* The search button's visible Ctrl K chip is not part of its accessible
+   name, which fails WCAG 2.5.3 (label in name). The shortcut still works. */
+site-search button kbd {
+  display: none;
+}
