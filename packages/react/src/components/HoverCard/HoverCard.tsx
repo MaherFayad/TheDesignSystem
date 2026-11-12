@@ -119,10 +119,14 @@ export function HoverCardTrigger({ children, onFocus, ...rest }: HoverCardTrigge
   return (
     <RadixHoverCard.Trigger
       {...rest}
-      // Radix waits openDelay on focus as on hover. Keyboard focus opens at once.
+      // Radix waits openDelay on focus as on hover. Keyboard focus opens at once,
+      // and preventDefault stops the Radix focus handler, whose openDelay timer
+      // would open the card again after an early Escape (WCAG 1.4.13).
       onFocus={(event) => {
         onFocus?.(event);
-        if (!event.defaultPrevented) ctx.setOpen(true);
+        if (event.defaultPrevented) return;
+        ctx.setOpen(true);
+        event.preventDefault();
       }}
       asChild
     >
