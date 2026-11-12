@@ -1,0 +1,30 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "allowImportingTsExtensions": false,
+    "noEmit": false,
+    "outDir": "./out-tsc/spec",
+    "types": [],
+    "paths": {
+      "@the-system/icons/angular": [
+        "../icons/src/angular/index.ts"
+      ],
+      "@the-system/icons": [
+        "../icons/src/index.ts"
+      ],
+      "@the-system/shared": [
+        "../shared/src/index.ts"
+      ],
+      "@the-system/styles/registry": [
+        "../styles/registry.gen.ts"
+      ],
+      "@the-system/styles/*/icons": [
+        "../styles/*/icons.ts"
+      ]
+    }
+  },
+  "include": [
+    "src/**/*.spec.ts",
+    "src/**/*.ts"
+  ]
+}

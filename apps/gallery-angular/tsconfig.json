@@ -1,0 +1,19 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "jsx": "preserve",
+    "types": [],
+    "useDefineForClassFields": false,
+    "allowImportingTsExtensions": false,
+    "noEmit": false,
+    "outDir": "./out-tsc"
+  },
+  "angularCompilerOptions": {
+    "strictTemplates": true,
+    "strictInputAccessModifiers": true,
+    "strictInjectionParameters": true,
+    "typeCheckHostBindings": true
+  },
+  "files": ["src/main.ts"],
+  "include": ["src/**/*.d.ts"]
+}

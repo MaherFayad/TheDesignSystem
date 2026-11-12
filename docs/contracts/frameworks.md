@@ -42,6 +42,24 @@ Full detail: sections 3.1 and 3.5 of PLAN.md.
 - Behavior from `@angular/cdk` first, then `@angular/aria`. Angular Aria is
   imported only inside `packages/angular/src/behavior/`.
 - Direction through the CDK `Directionality`.
+- Findings from the wave 0 proof, now rules:
+  - The theme style is written `dsTheme="<id>"`. A static `style="desk"` is
+    parsed by the compiler as inline CSS and never reaches the input.
+  - Angular leaves the selector marker and static input attributes on the
+    host. Each directive removes them (`internal/host.ts`), so the DOM equals
+    React's attribute for attribute. A static `disabled` would otherwise
+    become the native attribute.
+  - Names that cannot equal React's: `asChild` has no form (`a[dsButton]` is
+    the link form). `onOpenChange` is the `openChange` output of `[(open)]`.
+    Node props (`start`, `end`, `icon`, `title`) take an icon name or a
+    `TemplateRef`. Handlers a component must detect (`onClose` on
+    WindowControls) are function inputs.
+  - DI follows declaration, not projection. A theme inside a component
+    template does not scope projected content.
+  - Overlays: no CDK Dialog and no CDK FocusTrap, because both insert
+    elements inside the root. Use a CDK `ComponentPortal` whose host is the
+    themed portal wrapper, and wrap Tab by hand with `InteractivityChecker`.
+  - A dialog title that React lifts from children is the `title` input.
 - Files: `packages/angular/src/components/<name>/` with `<name>.ts`,
   `<name>.spec.ts`, `<name>.demo.ts`, `index.ts`.
 

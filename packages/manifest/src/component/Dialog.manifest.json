@@ -234,9 +234,10 @@
       "note": "The portal is a Theme that copies the axes of the Theme the Dialog is in (the Toaster pattern), so tokens, language and direction apply inside it."
     },
     "angular": {
-      "status": "planned",
-      "behavior": "cdk:dialog",
-      "note": "Dialog.css is used as is: the overlay pane is the root (data-ds dialog) and holds the backdrop and the panel, the same DOM as React."
+      "status": "ready",
+      "behavior": "cdk:portal, cdk:a11y InteractivityChecker",
+      "example": "dialog.demo.ts",
+      "note": "Directives dsDialog (on an ng-container), dsDialogTrigger, dsDialogContent (an ng-template), dsDialogClose, dsDialogBody, dsDialogFooter, dsDialogTitle, dsDialogDescription. The layer renders through a CDK ComponentPortal straight into body, so the DOM equals React's: no cdk-dialog-container and no overlay pane. The portal theme copies every axis of the opening dsTheme. Focus trap on the CDK InteractivityChecker; exit waits for getAnimations. The panel also carries aria-modal. Dialog.css is used as is."
     },
     "native": {
       "status": "planned",

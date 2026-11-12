@@ -286,9 +286,10 @@
       "note": "Motion: press, named from the pattern catalog that arrives in wave 1. Today: instant color swaps, the spinner, and the Desk roll label."
     },
     "angular": {
-      "status": "planned",
-      "behavior": "button[dsButton] and a[dsButton]",
-      "note": "Host bindings set the same data attributes; Button.css is used as is."
+      "status": "ready",
+      "behavior": "button[dsButton] and a[dsButton], host bindings",
+      "example": "button.demo.ts",
+      "note": "The host element is the root. Inputs take the React prop names; start and end take an icon name or a TemplateRef. No asChild: a[dsButton] is the link form, and an inert link loses its href. Disabled and loading block click and auxclick with a capture listener. Button.css is used as is."
     },
     "native": {
       "status": "ready",

@@ -1,0 +1,12 @@
+/*
+ * The same CSS entry points as the React gallery, in the same order:
+ * tokens, the system CSS (reset, base, components), the style packs (fonts
+ * and recipes), then the demo kit and the gallery shell. The demo kit and
+ * the shell CSS are framework free, so they are read from the React folders
+ * by path, byte for byte.
+ */
+@import '@the-system/tokens/css';
+@import '@the-system/css';
+@import '@the-system/styles';
+@import '../../../packages/react/src/demo/demo.css';
+@import '../../gallery-react/src/gallery.css';

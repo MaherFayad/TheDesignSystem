@@ -122,8 +122,8 @@
     },
     "angular": {
       "status": "planned",
-      "behavior": "[dsWindowControls] with button[dsIconButton]",
-      "note": "WindowControls.css is used as is."
+      "behavior": "div[dsWindowControls] with button[dsIconButton]",
+      "note": "A first port exists for the Desk dialog chrome (packages/angular/src/components/window-controls), with the React DOM. The handlers are function inputs named like the React props (onClose, onMinimize, onZoom): a light with no handler is disabled, and an Angular output cannot tell whether anyone listens. No demo yet; it turns ready with Window. WindowControls.css is used as is."
     },
     "native": {
       "status": "not-applicable",

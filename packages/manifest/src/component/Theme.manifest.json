@@ -165,9 +165,9 @@
       "note": "Exports Theme, useTheme, useOptionalPart, themeAttributes and resolveTheme from packages/react/src/theme."
     },
     "angular": {
-      "status": "planned",
+      "status": "ready",
       "behavior": "@angular/cdk Directionality",
-      "note": "dsTheme directive with the same inputs."
+      "note": "dsTheme directive in packages/angular/src/theme, inputs named like the React props. A static style=\"desk\" never reaches the style input (the Angular compiler parses it as inline CSS): bind [style]=\"'desk'\" or use dsTheme=\"desk\". Inline styles pass through css. Provides DsThemeService (value signal, optionalPart), the CDK Directionality and the icon style to its subtree. applyDocumentTheme stamps the html element."
     },
     "native": {
       "status": "planned",

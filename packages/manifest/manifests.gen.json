@@ -368,14 +368,16 @@
         "note": "Motion: press, named from the pattern catalog that arrives in wave 1. Today: instant color swaps, the spinner, and the Desk roll label."
       },
       "angular": {
-        "status": "planned",
-        "behavior": "button[dsButton] and a[dsButton]",
-        "note": "Host bindings set the same data attributes; Button.css is used as is."
+        "status": "ready",
+        "behavior": "button[dsButton] and a[dsButton], host bindings",
+        "example": "button.demo.ts",
+        "note": "The host element is the root. Inputs take the React prop names; start and end take an icon name or a TemplateRef. No asChild: a[dsButton] is the link form, and an inert link loses its href. Disabled and loading block click and auxclick with a capture listener. Button.css is used as is."
       },
       "native": {
-        "status": "planned",
-        "behavior": "rn-primitives:slot and Pressable",
-        "note": "44pt on iOS, 48dp on Android. No roll label."
+        "status": "ready",
+        "behavior": "react-native:Pressable",
+        "example": "Button.demo.tsx",
+        "note": "Styles from createButtonStyles(theme, variants) on the generated theme objects; Desk pill through packages/styles/desk/native/Button.ts. hitSlop reaches 44pt on iOS and 48dp on Android at every size. Press feedback: a Reanimated spring scale from spring.press, off under reduce motion. The Desk roll label is a web hover effect with no touch equivalent: not on native. No asChild and no token focus ring yet (the platform draws keyboard focus)."
       }
     },
     "styles": {
@@ -410,6 +412,303 @@
         "right": "IconButton with a label"
       }
     ],
+    "since": "0.1.0"
+  },
+  {
+    "name": "Dialog",
+    "kind": "component",
+    "family": "overlays",
+    "summary": "A modal task that must be finished or dismissed. The page behind it is covered by a backdrop, hidden from assistive tech and out of reach until the dialog closes.",
+    "useWhen": [
+      "A decision blocks the rest of the page",
+      "A short form of up to five fields",
+      "A destructive action that needs one more look before it runs"
+    ],
+    "avoidWhen": [
+      "Long content, or content compared with the page",
+      "A message that needs no decision",
+      "Work the person does next to the page, moving between both",
+      "An action that cannot be undone and must not be dismissed by accident"
+    ],
+    "insteadUse": {
+      "Long content": "Drawer",
+      "No decision": "Toast",
+      "Work next to the page": "Window",
+      "Cannot be undone": "AlertDialog"
+    },
+    "anatomy": [
+      "root",
+      "backdrop",
+      "panel",
+      "titlebar",
+      "controls",
+      "title",
+      "description",
+      "close",
+      "body",
+      "footer"
+    ],
+    "parts": {
+      "DialogContent": "panel",
+      "DialogTitle": "title",
+      "DialogDescription": "description",
+      "DialogBody": "body",
+      "DialogFooter": "footer",
+      "TitleBar": "titlebar",
+      "WindowControls": "controls"
+    },
+    "slots": {
+      "title": {
+        "accepts": "text",
+        "min": 1,
+        "max": 1
+      },
+      "description": {
+        "accepts": "text",
+        "max": 1
+      },
+      "body": {
+        "accepts": "any"
+      },
+      "footer": {
+        "accepts": [
+          "Button"
+        ],
+        "max": 3
+      }
+    },
+    "props": {
+      "open": {
+        "type": "boolean",
+        "description": "Controlled open state, with onOpenChange."
+      },
+      "defaultOpen": {
+        "type": "boolean",
+        "default": false
+      },
+      "onOpenChange": {
+        "type": "function",
+        "description": "Called with false for Escape, a backdrop click, the close control and DialogClose."
+      },
+      "size": {
+        "type": [
+          "sm",
+          "md",
+          "lg",
+          "xl",
+          "2xl"
+        ],
+        "default": "md",
+        "description": "The width from the dialog.width tokens: 360, 440, 520, 640 and 820 px, never wider than the viewport minus a gutter."
+      },
+      "tone": {
+        "type": [
+          "neutral",
+          "danger"
+        ],
+        "default": "neutral",
+        "description": "danger: a destructive decision. The title takes the danger color and focus opens on the Cancel action."
+      },
+      "dismissible": {
+        "type": "boolean",
+        "default": true,
+        "description": "false: only the dialog's own actions close it. Escape and a backdrop click do nothing and the close control is disabled (aria-disabled). For short waits while an action runs: the app sets it back to true when the action ends."
+      },
+      "title": {
+        "type": "node",
+        "description": "DialogContent: the title for the common case, the same as a DialogTitle as its first child."
+      },
+      "description": {
+        "type": "node",
+        "description": "DialogContent: the description for the common case."
+      },
+      "closeLabel": {
+        "type": "string",
+        "default": "Close dialog",
+        "description": "DialogContent: the accessible name of the close control. Arabic default under lang ar: إغلاق النافذة."
+      },
+      "controlsLabel": {
+        "type": "string",
+        "default": "Dialog controls",
+        "description": "DialogContent: the accessible name of the Desk lights group."
+      },
+      "rootProps": {
+        "type": "object",
+        "description": "DialogContent: props for the root layer. className and style go to the root too; ref and every other prop go to the panel, the element with role dialog."
+      },
+      "DialogTrigger": {
+        "type": "node",
+        "description": "One child element, a system Button, rendered as the trigger (always asChild). It opens the dialog, gets aria-haspopup, aria-expanded and aria-controls, and takes focus back on close."
+      },
+      "DialogClose": {
+        "type": "node",
+        "description": "One child element, a system Button, that closes the dialog (always asChild). It is marked data-dialog-cancel: in a danger dialog focus opens on it. Wrap only the Cancel action."
+      },
+      "data-autofocus": {
+        "type": "boolean",
+        "description": "Put on any focusable element inside the dialog to take focus on open, before every other rule of the focus rule."
+      }
+    },
+    "states": [
+      "open",
+      "closed"
+    ],
+    "a11y": {
+      "role": "dialog (the panel), modal: Radix hides the rest of the page from assistive tech and keeps focus inside. Named by the title (aria-labelledby), described by the description (aria-describedby).",
+      "focus": "On open, focus goes to an element marked data-autofocus; else to the first field in the body; else to the first footer action that is not tone danger; when tone is danger, to the Cancel action (the DialogClose) or else the first footer action that is not tone danger, never a destructive one; else to the close control. On close, focus returns to the trigger, or to the element that had focus before the dialog opened.",
+      "keys": {
+        "Escape": "Closes the dialog, unless dismissible is false. Escape from inside the dialog closes the dialog even while a toast shows above it. A nested dialog or a menu on top closes first.",
+        "Tab": "Moves to the next control inside the dialog and wraps from the last to the first",
+        "Shift+Tab": "Moves to the previous control inside the dialog and wraps from the first to the last"
+      },
+      "announce": "The title and the description are read when the dialog opens. The close control and the Desk lights carry their own labels.",
+      "notes": [
+        "role dialog in every tone. A danger dialog stays a dialog: AlertDialog arrives in wave 1 for actions that cannot be undone.",
+        "The page behind does not scroll while the dialog is open (Radix scroll lock); pinch zoom stays on.",
+        "A body taller than dialog.height-max scrolls inside, and joins the tab order while it scrolls so the keyboard can scroll it. The title and the footer stay in view.",
+        "A click on the backdrop closes the dialog, unless dismissible is false. The close control is the button path for the same action.",
+        "Toasts sit above an open dialog (z.toast over z.dialog): they stay visible, their live region is not hidden from screen readers, and a pointer click on a toast action or close button works without closing the dialog. Keyboard focus stays in the dialog: F8 and Tab do not reach the toasts (DECISIONS.md, Components 1). Toasts with an action or the danger tone never time out, so they are still there when the dialog closes.",
+        "A dialog opened from a dialog stacks above it; Escape closes the top one first and focus returns to its trigger in the first.",
+        "The long title wraps, never cut: it is the question being asked.",
+        "No native title attribute.",
+        "In Desk the title and the close control sit inside the title bar, so they are parts of TitleBar and WindowControls there (a part belongs to the nearest root). The dialog's own parts in Desk are titlebar, description, body and footer; title, close and controls are listed here for Studio and for style.json optionalParts.",
+        "dismissible false is for short waits, while the dialog's own action runs. The app must set it back to true when the action ends, success or failure. The close control (the Studio IconButton or the Desk close light) is aria-disabled and stays focusable.",
+        "Development builds warn in the console when a dialog opens with no title, and when its footer holds more than three actions."
+      ]
+    },
+    "content": {
+      "en": {
+        "title": "The question being asked, in sentence case: Delete the project Spring launch? A task title is fine for a form: Create a board.",
+        "description": "One sentence that says what happens: Its 12 boards go to the trash for 30 days.",
+        "buttons": "Verb plus noun: Delete project, Keep project. Never OK, Yes, Continue or Confirm. Cancel first, the primary action last.",
+        "close": "Close dialog"
+      },
+      "ar": {
+        "title": "The question in white Saudi dialect, no diacritics: تبي تحذف المشروع؟",
+        "buttons": "Noun form labels, no diacritics: حذف المشروع، إبقاء المشروع. Never نعم or موافق.",
+        "close": "إغلاق النافذة"
+      }
+    },
+    "tokens": [
+      "dialog.width.sm",
+      "dialog.width.md",
+      "dialog.width.lg",
+      "dialog.width.xl",
+      "dialog.width.2xl",
+      "dialog.height.max",
+      "color.bg.surface",
+      "color.bg.surface-2",
+      "color.bg.scrim",
+      "color.bg.scrim-80",
+      "color.border.default",
+      "color.border.hairline",
+      "color.border.strong",
+      "color.material.glass",
+      "color.material.glass-solid",
+      "color.text.default",
+      "color.text.bright",
+      "color.text.muted",
+      "color.state.danger-text",
+      "color.focus.ring",
+      "radius.panel",
+      "radius.window",
+      "elevation.dialog",
+      "elevation.window",
+      "blur.backdrop",
+      "blur.window",
+      "focus.shadow.ring",
+      "border.width.default",
+      "border.width.strong",
+      "space.2xs",
+      "space.xs",
+      "space.s",
+      "space.l",
+      "space.xl",
+      "space.2xl",
+      "space.5xl",
+      "size.control.sm",
+      "font.family.sans",
+      "font.size.l",
+      "font.size.xl",
+      "font.weight.semibold",
+      "font.leading.tight",
+      "font.leading.normal",
+      "duration.base",
+      "duration.window-open",
+      "duration.window-close",
+      "ease.out",
+      "ease.exit",
+      "ease.window",
+      "z.dialog"
+    ],
+    "motion": "dialog",
+    "frameworks": {
+      "react": {
+        "status": "ready",
+        "behavior": "radix:Dialog",
+        "example": "Dialog.demo.tsx",
+        "note": "The portal is a Theme that copies the axes of the Theme the Dialog is in (the Toaster pattern), so tokens, language and direction apply inside it."
+      },
+      "angular": {
+        "status": "ready",
+        "behavior": "cdk:portal, cdk:a11y InteractivityChecker",
+        "example": "dialog.demo.ts",
+        "note": "Directives dsDialog (on an ng-container), dsDialogTrigger, dsDialogContent (an ng-template), dsDialogClose, dsDialogBody, dsDialogFooter, dsDialogTitle, dsDialogDescription. The layer renders through a CDK ComponentPortal straight into body, so the DOM equals React's: no cdk-dialog-container and no overlay pane. The portal theme copies every axis of the opening dsTheme. Focus trap on the CDK InteractivityChecker; exit waits for getAnimations. The panel also carries aria-modal. Dialog.css is used as is."
+      },
+      "native": {
+        "status": "planned",
+        "behavior": "rn-primitives:dialog",
+        "note": "Renders as a sheet on phones"
+      }
+    },
+    "styles": {
+      "studio": "A flat panel: the solid surface, the panel radius, the dialog shadow. The title sits in a band on surface-2 with a line under it and the close IconButton (part close) at its inline end; the footer is a band on surface-2 with a line over it. The backdrop is the scrim with a light blur. The panel rises 4px and scales up from 98% on duration.base.",
+      "desk": "Renders as a window with traffic lights: glass with a 24px blur, radius 1rem, a hairline inside, the deep window shadow. The title bar (optional part titlebar) starts with the lights (optional part controls): only the close light works, minimize and zoom are idle and out of the tab order, and the close light is part close. The title sits in the bar and wraps when long. The window grows from 92% on the window open timing. In right to left layouts the lights stay at the top left and the title is centered.",
+      "neutral": "Planned.",
+      "liquid": "Planned: a glass sheet."
+    },
+    "mistakes": [
+      {
+        "wrong": "A dialog that only says Saved",
+        "right": "A toast"
+      },
+      {
+        "wrong": "Buttons that say OK and Cancel",
+        "right": "Verb plus noun: Delete project and Keep project"
+      },
+      {
+        "wrong": "Focus on the destructive button of a danger dialog",
+        "right": "tone danger and the Cancel action in DialogClose: focus opens on it"
+      },
+      {
+        "wrong": "A DialogTitle wrapped in a div inside the body",
+        "right": "DialogTitle as a direct child of DialogContent, or the title prop, so it renders once at the top and in the Desk title bar"
+      },
+      {
+        "wrong": "Hiding the close button in Desk with CSS",
+        "right": "The style turns the titlebar and controls parts on in style.json; Dialog then renders the close light instead of the IconButton"
+      },
+      {
+        "wrong": "A dialog that closes while its action is still saving",
+        "right": "dismissible false and the primary Button loading until the action ends"
+      },
+      {
+        "wrong": "Waiting for animationend before removing a closed dialog",
+        "right": "Dialog.css sets the animations to none under reduced motion, so Radix removes the dialog at once"
+      }
+    ],
+    "contract": {
+      "trigger": "[data-demo-trigger]",
+      "optionalParts": [
+        "titlebar",
+        "controls",
+        "title",
+        "close",
+        "description",
+        "body",
+        "footer"
+      ]
+    },
     "since": "0.1.0"
   },
   {
@@ -732,7 +1031,8 @@
       },
       "angular": {
         "status": "planned",
-        "note": "svg[dsIcon] is generated by packages/icons/build.ts and waits in generated-pending until Angular is installed."
+        "behavior": "svg[dsIcon], a directive",
+        "note": "Generated by packages/icons/build.ts into packages/icons/src/angular. The host svg is the root, glyph nodes come from the Renderer (no innerHTML), the style's icon set comes from dsTheme through the DS_ICON_STYLE signal. Used by dsButton and dsIconButton. No Angular demo yet, so the contract suite does not cover it on its own."
       },
       "native": {
         "status": "planned",
@@ -1004,14 +1304,16 @@
         "note": "Motion: press, named from the pattern catalog that arrives in wave 1. Today: instant color swaps, the spinner, and the Desk roll label."
       },
       "angular": {
-        "status": "planned",
-        "behavior": "button[dsIconButton] and a[dsIconButton]",
-        "note": "Uses Button.css and IconButton.css as is."
+        "status": "ready",
+        "behavior": "button[dsIconButton] and a[dsIconButton], host bindings",
+        "example": "icon-button.demo.ts",
+        "note": "Built on the same base directive as dsButton. label is required and becomes aria-label. Button.css and IconButton.css are used as is."
       },
       "native": {
-        "status": "planned",
-        "behavior": "rn-primitives:slot and Pressable",
-        "note": "44pt on iOS, 48dp on Android, accessibilityLabel from label."
+        "status": "ready",
+        "behavior": "react-native:Pressable",
+        "example": "IconButton.demo.tsx",
+        "note": "Built on the Button internals and Button.styles.ts. label becomes accessibilityLabel and is required. hitSlop reaches 44pt on iOS and 48dp on Android at every size. Directional icons mirror from the theme dir. No asChild yet."
       }
     },
     "styles": {
@@ -1430,9 +1732,9 @@
         "note": "Exports Theme, useTheme, useOptionalPart, themeAttributes and resolveTheme from packages/react/src/theme."
       },
       "angular": {
-        "status": "planned",
+        "status": "ready",
         "behavior": "@angular/cdk Directionality",
-        "note": "dsTheme directive with the same inputs."
+        "note": "dsTheme directive in packages/angular/src/theme, inputs named like the React props. A static style=\"desk\" never reaches the style input (the Angular compiler parses it as inline CSS): bind [style]=\"'desk'\" or use dsTheme=\"desk\". Inline styles pass through css. Provides DsThemeService (value signal, optionalPart), the CDK Directionality and the icon style to its subtree. applyDocumentTheme stamps the html element."
       },
       "native": {
         "status": "planned",
@@ -1480,8 +1782,12 @@
     "anatomy": [
       "root",
       "controls",
+      "move",
       "title",
-      "actions"
+      "actions",
+      "minimize",
+      "zoom",
+      "close"
     ],
     "slots": {
       "controls": {
@@ -1500,7 +1806,7 @@
           "IconButton",
           "Button"
         ],
-        "max": 3
+        "max": 5
       }
     },
     "props": {
@@ -1537,6 +1843,15 @@
         "type": "boolean",
         "default": true,
         "description": "Sets data-state active or inactive."
+      },
+      "moveLabel": {
+        "type": "string",
+        "description": "Puts the title in a focusable move handle (part move, role group) named by this label: \"Move window\". The host (Window) listens for the keys there."
+      },
+      "moveHint": {
+        "type": "string",
+        "default": "Arrow keys move the window. Shift moves it further.",
+        "description": "Description of the move handle, through aria-describedby."
       }
     },
     "states": [
@@ -1545,9 +1860,9 @@
     ],
     "a11y": {
       "role": "none: a plain container. The title is a heading (h2 by default).",
-      "focus": "Not focusable. Focus goes to the controls and actions inside.",
+      "focus": "The bar itself is not focusable. With moveLabel the move handle is a tab stop with the 2px ring; while it has keyboard focus the title wraps to show in full. Then the controls and actions take focus in order.",
       "keys": {
-        "Tab": "Moves through the controls, then the actions"
+        "Tab": "Moves through the controls, the move handle and the actions"
       },
       "announce": "The heading is read in document order. A window or dialog points aria-labelledby at titleId.",
       "native": {
@@ -1555,7 +1870,8 @@
         "accessibilityState": []
       },
       "notes": [
-        "The title truncates with an ellipsis; the full text stays in the DOM.",
+        "The title truncates with an ellipsis; the full text stays in the DOM, and keyboard focus on the move handle shows it wrapped.",
+        "Parts minimize, zoom and close are IconButtons a host renders in the actions slot when it has no lights (Window in Studio). They belong to the TitleBar, their nearest root.",
         "In right to left layouts a bar with controls keeps them at the top left and centers the title, as macOS draws it. A bar without controls mirrors."
       ]
     },
@@ -1573,7 +1889,6 @@
       "size.target-min",
       "space.2xs",
       "space.l",
-      "color.material.titlebar",
       "color.text.bright",
       "color.text.muted",
       "color.border.hairline",
@@ -1581,7 +1896,10 @@
       "font.size.m",
       "font.weight.semibold",
       "font.leading.tight",
-      "font.tracking.none"
+      "font.tracking.none",
+      "radius.field",
+      "focus.shadow.ring",
+      "border.width.strong"
     ],
     "frameworks": {
       "react": {
@@ -1591,8 +1909,8 @@
       },
       "angular": {
         "status": "planned",
-        "behavior": "[dsTitleBar]",
-        "note": "TitleBar.css is used as is."
+        "behavior": "div[dsTitleBar]",
+        "note": "A first port exists for the Desk dialog chrome (packages/angular/src/components/title-bar): controls, title (a string, a TemplateRef or an ng-template dsTitleBarTitle), actions, as, titleId, active, with the React DOM. No move handle and no demo yet; it turns ready with Window. TitleBar.css is used as is."
       },
       "native": {
         "status": "not-applicable",
@@ -1601,7 +1919,7 @@
     },
     "styles": {
       "studio": "A plain header on the panel surface with a hairline under it (recipes/Window.css when inside a Window).",
-      "desk": "The titlebar material, a 3% white over the glass, no divider. The lights sit at the start."
+      "desk": "Transparent, as the source .dwin-bar: the window glass shows through, no divider. The lights sit at the start."
     },
     "mistakes": [
       {
@@ -1616,7 +1934,11 @@
     "contract": {
       "optionalParts": [
         "controls",
-        "actions"
+        "move",
+        "actions",
+        "minimize",
+        "zoom",
+        "close"
       ]
     },
     "since": "0.1.0"
@@ -1657,7 +1979,8 @@
     ],
     "parts": {
       "Toaster": "viewport, data-ds=\"toaster\" with data-position",
-      "Toast": "root, without behavior"
+      "Toast": "root, without behavior and without data-state",
+      "isInsideToaster": "helper for overlays: true for a target inside the toaster"
     },
     "slots": {
       "title": {
@@ -1693,15 +2016,15 @@
       },
       "description": {
         "type": "string",
-        "description": "More detail. Shown up to three lines; the announcement reads all of it."
+        "description": "More detail. Long text wraps in full; keep it to one or two sentences."
       },
       "duration": {
         "type": "number",
-        "description": "toast() option. Milliseconds before it closes; Infinity keeps it. Default by tone. Ignored for danger."
+        "description": "toast() option. Milliseconds before it closes; Infinity keeps it. Default by tone. Ignored for danger and for a toast with an action, which stay until closed. toast.configure({ durations, max }) lengthens them for the whole app."
       },
       "action": {
         "type": "object",
-        "description": "toast() option. One button: { label, onAction, altText }. altText is what a screen reader hears in its place, for example where else the same action lives."
+        "description": "toast() option. One button: { label, onAction, altText }. A toast with an action never times out. altText is read in place of the button, for example where else the same action lives."
       },
       "dedupeKey": {
         "type": [
@@ -1762,24 +2085,24 @@
       "data-swipe"
     ],
     "a11y": {
-      "role": "The Toaster is a region (named Notifications) holding a list; each toast is a list item. The announcement goes through a separate visually hidden role status region.",
-      "focus": "Toasts never take focus on their own. F8 moves focus to the list; Tab moves through the toasts, newest first, and each toast's action and close button. Closing the focused toast puts focus on the list.",
+      "role": "The Toaster is a region (named Notifications) holding a list; each toast is a list item. Announcements go through two visually hidden regions owned by the Toaster: role status (polite) and role alert (assertive, for danger).",
+      "focus": "Not modal: toasts never take focus on their own. F8 moves focus to the list, which shows the focus ring; Tab moves through the toasts, newest first, and each toast's action and close button. Closing the focused toast puts focus on the list. While a dialog with a focus trap is open, keyboard focus stays in the dialog: the toasts stay visible, readable and clickable, and a toast with an action waits until the dialog closes.",
       "keys": {
         "F8": "Moves focus to the notifications list",
         "Tab": "Moves to the next toast, action or close button",
         "Shift+Tab": "Moves back",
         "Enter": "Runs the focused action or close button",
-        "Escape": "Closes the focused toast, or the newest one. Above an open dialog the first Escape closes the toast and the next one the dialog."
+        "Escape": "Closes a toast only when the key comes from inside the toaster: the focused toast, or the newest one from the list. Escape anywhere else, in a Window, a Dialog or a form, leaves every toast alone, a danger toast included, and is not prevented, so the system Dialog still closes itself. A raw Radix Dialog from a consumer does not get that Escape while a toast shows above it (Radix gives Escape to the top layer only), so use the system Dialog or close the toast first."
       },
-      "announce": "Once per toast (WCAG 4.1.3), when it appears: the toast label and its text, through a status region that Radix removes after reading. danger is assertive (Radix type foreground), the rest polite (background). The toast itself has no live role, so it is never read twice. A repeat or an update is read once more. The action is read as its altText, the close button not at all.",
+      "announce": "Once per change (WCAG 4.1.3): when a toast shows, and again on each repeat or update, as \"Notification. Title. Description. Action alternative.\" with the toast's text in the toast's language. danger is assertive (role alert), the rest polite (role status). The toast itself has no live role and keeps its element across a repeat or update, so it is never read twice and focus stays. Radix's own announcer is muted. The close button is not read.",
       "native": {
         "accessibilityRole": "alert",
         "accessibilityState": []
       },
       "notes": [
-        "danger toasts stay until closed. The others pause while the pointer is over them, while focus is inside, and while the window is blurred or the tab hidden (WCAG 2.2.1).",
+        "danger toasts and toasts with an action stay until closed. The others pause while the pointer is over them, while focus is inside, and while the window is blurred or the tab hidden (WCAG 2.2.1). toast.configure({ durations }) lengthens them for the whole app.",
         "Swipe toward the edge closes a toast; the close button is the button path for the same action (WCAG 2.5.7).",
-        "Above an open modal dialog the toasts stay visible (z.toast is above z.dialog), stay in the accessibility tree and can be reached with F8, Tab and the pointer.",
+        "Above an open modal dialog the toasts stay visible (z.toast is above z.dialog), stay in the accessibility tree and take the pointer. A dialog calls isInsideToaster(event.target) in onFocusOutside, onPointerDownOutside and onInteractOutside and prevents the default, so a toast never closes it.",
         "At most three toasts show at once; the rest wait their turn, so a burst never covers the page.",
         "No native title attribute anywhere."
       ]
@@ -1787,8 +2110,8 @@
     "content": {
       "en": {
         "title": "Say what happened and name the thing: Draft saved, Could not upload photo.jpg. Sentence case, no exclamation marks.",
-        "description": "Optional. What it means or what to do next, in one or two short sentences.",
-        "action": "A verb plus a noun: Retry upload, Undo move, Open draft. Never OK, Continue, Confirm or Yes. One action at most.",
+        "description": "Optional. What it means or what to do next, in one or two short sentences. Long text wraps in full, so keep it short.",
+        "action": "A verb plus a noun: Retry upload, Undo move, Open draft. Never OK, Continue, Confirm or Yes. One action at most. The toast then stays until closed.",
         "danger": "Name the failure and what is safe: Could not publish page. Your draft is safe.",
         "repeats": "Keep the copy the same for the same event, so repeats fold into one toast with a count."
       },
@@ -1839,7 +2162,8 @@
       "duration.medium",
       "duration.base",
       "ease.out",
-      "ease.exit"
+      "ease.exit",
+      "focus.shadow.ring"
     ],
     "motion": "toast",
     "frameworks": {
@@ -1894,6 +2218,10 @@
       {
         "wrong": "Mounting the Toaster inside a dialog or outside the root Theme",
         "right": "Mount it once inside the root Theme, before any dialog can open"
+      },
+      {
+        "wrong": "A dialog that closes when the person clicks a toast above it",
+        "right": "Call isInsideToaster(event.target) in the dialog's outside handlers and prevent the default"
       }
     ],
     "contract": {
@@ -1932,30 +2260,13 @@
     "anatomy": [
       "root",
       "titlebar",
-      "controls",
-      "title",
-      "actions",
-      "close",
       "body",
       "footer"
     ],
     "parts": {
-      "TitleBar": "titlebar",
-      "WindowControls": "controls"
+      "TitleBar": "titlebar"
     },
     "slots": {
-      "title": {
-        "accepts": "text",
-        "min": 1,
-        "max": 1
-      },
-      "actions": {
-        "accepts": [
-          "IconButton",
-          "Button"
-        ],
-        "max": 3
-      },
       "body": {
         "accepts": "any"
       },
@@ -1996,7 +2307,7 @@
       },
       "actions": {
         "type": "node",
-        "description": "IconButtons or small Buttons at the end of the title bar."
+        "description": "IconButtons or small Buttons at the end of the title bar, before the window buttons. They are TitleBar parts."
       },
       "footer": {
         "type": "node",
@@ -2023,7 +2334,7 @@
       },
       "onZoomedChange": {
         "type": "function",
-        "description": "With it, or inside a WindowLayer, the zoom light works."
+        "description": "With it, or inside a WindowLayer, zoom works: the zoom light (Desk), the zoom IconButton (Studio), Enter on the move handle and a double click on the title bar."
       },
       "minimized": {
         "type": "boolean",
@@ -2035,7 +2346,7 @@
       },
       "onMinimizedChange": {
         "type": "function",
-        "description": "With it the minimize light works. The app shows the way back (a dock) and sets minimized to false."
+        "description": "With it minimize works: the minimize light (Desk) or IconButton (Studio). The app shows the way back (a dock) and sets minimized to false."
       },
       "frame": {
         "type": "object",
@@ -2058,7 +2369,7 @@
       },
       "dock": {
         "type": "node",
-        "description": "An element, a ref or a screen rect a minimized window falls into. Default the bottom center of the layer."
+        "description": "An element, a ref or a screen rect a minimized window falls into. Default the bottom center of the layer. Focus goes to it when nothing before it in the focus order can take focus."
       },
       "modal": {
         "type": "boolean",
@@ -2080,6 +2391,15 @@
       "controlsLabel": {
         "type": "string",
         "default": "Window controls"
+      },
+      "moveLabel": {
+        "type": "string",
+        "default": "Move window",
+        "description": "Name of the move handle: the title of a window that can move, focusable, a TitleBar part."
+      },
+      "moveHint": {
+        "type": "string",
+        "description": "Description of the move handle. Default names the arrow keys, Shift, and Enter when zoom works."
       }
     },
     "states": [
@@ -2093,15 +2413,16 @@
     ],
     "a11y": {
       "role": "dialog, named by the title (aria-labelledby) or aria-label. Not modal unless modal is set.",
-      "focus": "Focus moves into the window (the window element, tabindex -1) when it opens after mount, or on mount when its origin has focus. On close and minimize focus returns to the origin, else to the element that had focus, but only when focus was in the window or lost. The window shows the 2px ring on keyboard focus.",
+      "focus": "Focus moves into the window (the window element, tabindex -1) when it opens after mount, or on mount when its origin has focus. When the window closes or minimizes, focus goes to the first of: the origin, the next active window of the layer, the element that had focus before it opened, the dock, the WindowLayer (a region with tabindex -1). It moves only when focus was in the window or lost. Keyboard focus and pointer down both bring a window to the front.",
       "keys": {
         "Escape": "Closes the window. A control inside that handles Escape itself (a menu) prevents it first.",
-        "ArrowUp": "Moves the window up 16px, while focus is on the window or in its title bar",
-        "ArrowDown": "Moves the window down 16px",
+        "ArrowUp": "Moves the window up 16px, while focus is on the window or on its move handle (the title)",
+        "ArrowDown": "Moves the window down 16px, from the same places",
         "ArrowLeft": "Moves the window 16px to the left on screen, in both directions",
         "ArrowRight": "Moves the window 16px to the right on screen, in both directions",
-        "Shift+Arrow": "Moves the window 64px",
-        "Tab": "Moves through the lights or the close button, the title bar actions, the body and the footer. With modal, Tab stays inside the window."
+        "Shift+ArrowUp, Shift+ArrowDown, Shift+ArrowLeft, Shift+ArrowRight": "Moves the window 64px, from the same places",
+        "Enter": "On the move handle: zooms the window or puts it back, when zoom works",
+        "Tab": "Moves through the lights or the title bar buttons, the move handle, the title bar actions, the body and the footer. With modal, Tab stays inside the window."
       },
       "announce": "The title is the accessible name of the dialog. The lights and the close button carry their own labels.",
       "native": {
@@ -2109,12 +2430,14 @@
         "accessibilityState": []
       },
       "notes": [
-        "Every drag has a key path (WCAG 2.1.1, 2.5.7): arrow keys move the window. The frame is clamped so 160px of the window and its title bar stay inside the layer.",
-        "Arrow keys pressed in the body (a field, a list) never move the window.",
-        "Moving is off while the window is zoomed, and for a window placed by its parent with no frame.",
-        "A long title truncates with an ellipsis; the full text stays in the DOM as the accessible name. A Tooltip on the title comes with Tooltip in wave 1.",
-        "Double click on the title bar zooms, as on the desktop. The zoom light is the same action for every input.",
-        "No native title attribute."
+        "Every drag has a key path (WCAG 2.1.1, 2.5.7): the arrow keys move the window from the window element or the move handle. The frame is clamped so 160px of the window and its title bar stay inside the layer.",
+        "Arrow keys pressed on a light, an action or anything in the body never move the window, so a roving toolbar in actions keeps its arrows.",
+        "Zoom has a key and a button in every style: Enter on the move handle, the zoom light in Desk, the zoom IconButton in Studio. A double click on the title bar is a pointer shortcut for the same action.",
+        "Moving is off while the window is zoomed, and for a window placed by its parent with no frame. The move handle is rendered only while the window can move.",
+        "Tab order follows the DOM order of the windows, not their stacking. Moving focus into a window with Tab brings it to the front.",
+        "A long title truncates with an ellipsis; the full text is the accessible name, and keyboard focus on the move handle wraps the title to show it in full.",
+        "No native title attribute.",
+        "Contract suite: Escape is checked in the many case, where closing the front window makes the next one active (data-state changes). The arrow keys move the frame (inline position), which no contract.keys expectation reads yet, so the suite notes them; Window.test.tsx covers them."
       ]
     },
     "content": {
@@ -2130,7 +2453,6 @@
     "tokens": [
       "color.material.glass",
       "color.material.glass-solid",
-      "color.material.titlebar",
       "color.border.hairline",
       "color.border.strong",
       "color.text.default",
@@ -2175,8 +2497,8 @@
       }
     },
     "styles": {
-      "studio": "A flat panel: the solid surface, the panel radius and shadow, no backdrop blur, a hairline under a plain title bar, and a close IconButton (part close) at the end of it. No lights. Open, close and minimize fade on duration.base; zoom has no motion.",
-      "desk": "A glass window: material glass with a 24px blur, radius 1rem, a hairline inside, the deep window shadow. The title bar starts with the traffic lights (optional part controls, and the close light is part close): lit while the window is active, idle dots when it is not, glyphs on hover and keyboard focus. The window grows out of its trigger, closes back into it, zooms with a FLIP and falls into the dock. The layer carries the desk grain. In right to left layouts the lights stay at the top left and the title is centered.",
+      "studio": "A flat panel: the solid surface, the panel radius and shadow, no backdrop blur, a hairline under a plain title bar. No lights: minimize, zoom and close are IconButtons at the end of the title bar, minimize and zoom only when the window can do them. Open, close and minimize fade on duration.base; zoom has no motion.",
+      "desk": "A glass window: material glass with a 24px blur, radius 1rem, a hairline inside, the deep window shadow, a transparent title bar as in the source. The title bar starts with the traffic lights (optional part controls): idle dots at rest, colors and glyphs on hover or keyboard focus of the group. The window grows out of its trigger, closes back into it, zooms with a FLIP and falls into the dock. The layer carries the desk grain. In right to left layouts the lights stay at the top left and the title is centered.",
       "neutral": "Planned.",
       "liquid": "Planned: a glass sheet."
     },
@@ -2194,22 +2516,32 @@
         "right": "Window awaits the animation's finished promise; under reduced motion it is 0ms"
       },
       {
-        "wrong": "Hiding the lights in Studio with CSS",
-        "right": "The style turns the controls part on or off in style.json; Window renders the close IconButton when it is off"
-      },
-      {
         "wrong": "A minimize light with no way back",
         "right": "Pass onMinimizedChange and show the way back (a dock row); without it the light is disabled"
+      },
+      {
+        "wrong": "Hiding the lights in Studio with CSS",
+        "right": "The style turns the controls part on in style.json; without it Window renders IconButtons for the same actions"
       }
     ],
     "contract": {
       "optionalParts": [
-        "controls",
-        "actions",
         "footer"
-      ]
+      ],
+      "keys": {
+        "Escape": {
+          "case": "many",
+          "focus": "#demo-tokens",
+          "expect": "state-changes"
+        }
+      }
     },
-    "since": "0.1.0"
+    "since": "0.1.0",
+    "uses": [
+      "TitleBar",
+      "WindowControls",
+      "IconButton"
+    ]
   },
   {
     "name": "WindowControls",
@@ -2238,6 +2570,11 @@
       "onClose": {
         "type": "function",
         "description": "Without it the close light is disabled."
+      },
+      "closeDisabled": {
+        "type": "boolean",
+        "default": false,
+        "description": "With onClose: the close light is aria-disabled and data-disabled, stays in the tab order, blocks activation and draws as an idle dot; its glyph still shows on hover and focus. For a window or dialog that cannot be dismissed right now."
       },
       "onMinimize": {
         "type": "function",
@@ -2271,7 +2608,7 @@
       "active": {
         "type": "boolean",
         "default": true,
-        "description": "data-state active: lit. inactive: idle dots until hover or keyboard focus."
+        "description": "data-state active or inactive, for hosts and recipes. As in the source, it does not change how the lights look."
       }
     },
     "states": [
@@ -2281,9 +2618,9 @@
     ],
     "a11y": {
       "role": "group, named by label. Each light is a native button (IconButton).",
-      "focus": "Each light with a handler is in the tab order with the 2px ring around its 24px target. A light with no handler is aria-disabled and out of the tab order (tabIndex -1): three tab stops that do nothing slow a keyboard down, and a screen reader still finds them, dimmed.",
+      "focus": "Each light with a handler is in the tab order with the 2px ring around its 24px target. A light with no handler is aria-disabled and out of the tab order (tabIndex -1): an accepted exception to the rule that disabled actions stay focusable, because a dead light is inert decoration of the window chrome; a screen reader still finds it, dimmed. A close light disabled through closeDisabled is an action that cannot run now: it stays focusable with aria-disabled, like any disabled Button.",
       "keys": {
-        "Enter": "Presses the focused light",
+        "Enter": "Presses the focused light. Nothing happens on a disabled light.",
         "Space": "Presses the focused light",
         "Tab": "Moves to the next light with a handler"
       },
@@ -2293,7 +2630,7 @@
         "accessibilityState": []
       },
       "notes": [
-        "Never color alone: the glyphs (x, minus, arrows) show on hover and on keyboard focus of the group, and in forced colors always.",
+        "Never color alone: the glyphs (x, minus, arrows) show with the colors on hover and on keyboard focus of the group, and always in forced colors.",
         "The lights do not mirror in right to left layouts. They keep the order close, minimize, zoom from the left, as macOS draws them and as the source does.",
         "Targets are 24 by 24 px and touch, so light centers are 24px apart (WCAG 2.5.8).",
         "No native title attribute."
@@ -2330,8 +2667,8 @@
       },
       "angular": {
         "status": "planned",
-        "behavior": "[dsWindowControls] with button[dsIconButton]",
-        "note": "WindowControls.css is used as is."
+        "behavior": "div[dsWindowControls] with button[dsIconButton]",
+        "note": "A first port exists for the Desk dialog chrome (packages/angular/src/components/window-controls), with the React DOM. The handlers are function inputs named like the React props (onClose, onMinimize, onZoom): a light with no handler is disabled, and an Angular output cannot tell whether anyone listens. No demo yet; it turns ready with Window. WindowControls.css is used as is."
       },
       "native": {
         "status": "not-applicable",
@@ -2340,7 +2677,7 @@
     },
     "styles": {
       "studio": "Not drawn inside a Window (the controls part is off). Standalone it draws the same lights.",
-      "desk": "The traffic lights at the start of every window title bar."
+      "desk": "The traffic lights at the start of every window title bar. As in the source: idle dots at rest, the three colors on hover or focus within the group; this system adds the glyphs in the same state."
     },
     "mistakes": [
       {
