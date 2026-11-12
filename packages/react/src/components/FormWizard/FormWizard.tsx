@@ -22,6 +22,7 @@
 // - On a step change focus moves to the new step's title, and a polite
 //   status says "Step 2 of 4, Address" once (WCAG 4.1.3).
 import {
+  useCallback,
   useId,
   useLayoutEffect,
   useRef,
@@ -43,6 +44,7 @@ import {
   type StepperMode,
   type StepperState,
 } from '@the-system/shared';
+import { Icon } from '@the-system/icons/react';
 import { useTheme } from '../../theme';
 import { Button } from '../Button';
 import { Stepper, type StepperOrientation } from '../Stepper';
@@ -90,13 +92,39 @@ export interface FormWizardLabels {
   required: string;
   /** The heading after a successful submit. */
   done: string;
+  /** Shown and said when onSubmit rejects. */
+  submitError: string;
+  /** The hidden status of the next button while a step is checked. */
+  checking: string;
+  /** The hidden status of the submit button while the form is sent. */
+  sending: string;
   /** The word between the position and the title in the status: "Step 2 of 4, Address". */
   separator: string;
 }
 
 const defaultLabels: Record<'en' | 'ar', FormWizardLabels> = {
-  en: { next: 'Go to next step', back: 'Go to previous step', submit: 'Send form', required: 'Fill in this field', done: 'Form sent', separator: ', ' },
-  ar: { next: 'الخطوة التالية', back: 'الخطوة السابقة', submit: 'إرسال النموذج', required: 'هذا الحقل مطلوب', done: 'تم الإرسال', separator: '، ' },
+  en: {
+    next: 'Go to next step',
+    back: 'Go to previous step',
+    submit: 'Send form',
+    required: 'Fill in this field',
+    done: 'Form sent',
+    submitError: 'The form was not sent. Check your connection and send it again.',
+    checking: 'Checking',
+    sending: 'Sending',
+    separator: ', ',
+  },
+  ar: {
+    next: 'الانتقال للخطوة التالية',
+    back: 'الرجوع للخطوة السابقة',
+    submit: 'إرسال النموذج',
+    required: 'هذا الحقل مطلوب',
+    done: 'تم الإرسال',
+    submitError: 'ما انرسل النموذج. تأكد من الاتصال وأرسله مرة ثانية.',
+    checking: 'جار التحقق',
+    sending: 'جار الإرسال',
+    separator: '، ',
+  },
 };
 
 export interface FormWizardProps extends Omit<ComponentProps<'div'>, 'title' | 'onSubmit' | 'ref'> {
@@ -197,8 +225,15 @@ export function FormWizard({
   const id = useId();
   const form = useRef<HTMLFormElement | null>(null);
   const titleRef = useRef<HTMLHeadingElement | null>(null);
-  const moved = useRef(false);
+  // Where focus goes after the next commit: the title, or the first field with an error.
+  // Focusing after the commit means the error is already linked through aria-describedby.
+  const pendingFocus = useRef<{ kind: 'title' } | { kind: 'field'; index: number; names: string[] } | null>(null);
+  // True while a check or a submit runs. A ref, so a second Enter in the same tick sees it.
+  const busy = useRef(false);
+  // Bumped by every move, so a check that resolves after the user moved away is dropped.
+  const run = useRef(0);
 
+  // mode and the number of steps are read once, at mount.
   const [stepper, setStepper] = useState<StepperState>(() =>
     // Steps before the first one read as complete; submit checks every step again.
     createStepperState({
@@ -212,25 +247,40 @@ export function FormWizard({
   const [values, setValues] = useState<FormWizardValues>({});
   const [state, setState] = useState<FormWizardState>('editing');
   const [checking, setChecking] = useState(false);
+  const [submitFailed, setSubmitFailed] = useState(false);
   const [announce, setAnnounce] = useState('');
 
   const current = stepper.current;
   const step = steps[current];
   const last = isLastStep(stepper);
 
-  // Focus the new title after a move, never on the first render.
-  useLayoutEffect(() => {
-    if (!moved.current) return;
-    titleRef.current?.focus();
-  }, [current, state]);
-
-  const setForm = (el: HTMLFormElement | null) => {
-    form.current = el;
-    if (typeof formRef === 'function') formRef(el);
-    else if (formRef) formRef.current = el;
-  };
-
   const bodyOf = (index: number) => form.current?.querySelector(`[data-part='body'][data-step='${index}']`);
+
+  // The values the fields start with, so a review step shown first has them.
+  useLayoutEffect(() => {
+    if (form.current) setValues(readFormValues(form.current));
+  }, []);
+
+  useLayoutEffect(() => {
+    const target = pendingFocus.current;
+    if (!target) return;
+    pendingFocus.current = null;
+    if (target.kind === 'title') {
+      titleRef.current?.focus();
+      return;
+    }
+    const field = controlsIn(bodyOf(target.index)).find((c) => target.names.includes(c.name));
+    (field ?? titleRef.current)?.focus();
+  });
+
+  const setForm = useCallback(
+    (el: HTMLFormElement | null) => {
+      form.current = el;
+      if (typeof formRef === 'function') formRef(el);
+      else if (formRef) formRef.current = el;
+    },
+    [formRef],
+  );
 
   /** Checks one step and shows its errors. Returns the errors, empty when the step is valid. */
   const check = async (index: number, all: FormWizardValues): Promise<FormWizardErrors> => {
@@ -241,22 +291,30 @@ export function FormWizard({
 
   const isValid = (found: FormWizardErrors) => Object.keys(found).length === 0;
 
-  const focusFirstInvalid = (index: number, found: FormWizardErrors) => {
-    const names = Object.keys(found);
-    const target = controlsIn(bodyOf(index)).find((c) => names.includes(c.name)) ?? titleRef.current;
-    target?.focus();
-  };
-
   const moveTo = (nextState: StepperState) => {
+    run.current += 1;
+    setSubmitFailed(false);
     if (nextState.current === stepper.current) {
       setStepper(nextState);
       return;
     }
-    moved.current = true;
+    pendingFocus.current = { kind: 'title' };
     setStepper(nextState);
     const title = steps[nextState.current]?.title ?? '';
     setAnnounce(`${formatStepPosition(nextState.current, nextState.count, ar ? 'ar' : 'en')}${labels.separator}${title}`);
     onStepChange?.(nextState.current);
+  };
+
+  /** Runs one async task at a time. A call while another runs does nothing. */
+  const exclusive = async (task: () => Promise<void>) => {
+    if (busy.current) return;
+    busy.current = true;
+    try {
+      await task();
+    } finally {
+      busy.current = false;
+      setChecking(false);
+    }
   };
 
   /**
@@ -264,78 +322,83 @@ export function FormWizard({
    * fails, the step stays, is marked not complete, and focus moves to the
    * first field to fix.
    */
-  const go = async (index: number) => {
-    if (!form.current || state !== 'editing' || checking) return;
-    const all = readFormValues(form.current);
-    setValues(all);
-    if (index < current) {
-      moveTo(stepGoTo(stepper, index));
-      return;
-    }
-    setChecking(true);
-    const found = await check(current, all);
-    setChecking(false);
-    if (!isValid(found)) {
-      setStepper((s) => setStepComplete(s, current, false));
-      focusFirstInvalid(current, found);
-      return;
-    }
-    moveTo(stepGoTo(setStepComplete(stepper, current, true), index));
-  };
-
-  const submit = async () => {
-    const el = form.current;
-    if (!el) return;
-    const all = readFormValues(el);
-    setValues(all);
-    setChecking(true);
-    // Every step again, so a step reached in free mode or changed later cannot slip through.
-    let firstBad: { index: number; found: FormWizardErrors } | undefined;
-    let next = stepper;
-    for (let i = 0; i < steps.length; i += 1) {
-      const found = await check(i, all);
-      next = setStepComplete(next, i, isValid(found));
-      if (!isValid(found) && firstBad === undefined) firstBad = { index: i, found };
-    }
-    setChecking(false);
-    if (firstBad !== undefined) {
-      if (firstBad.index === current) {
-        setStepper(next);
-        focusFirstInvalid(current, firstBad.found);
-      } else {
-        moveTo({ ...next, current: firstBad.index });
+  const go = (index: number) =>
+    exclusive(async () => {
+      if (!form.current || state !== 'editing') return;
+      const all = readFormValues(form.current);
+      setValues(all);
+      if (index < current) {
+        moveTo(stepGoTo(stepper, index));
+        return;
       }
-      return;
-    }
-    setStepper(next);
-    setState('submitting');
-    try {
-      await onSubmit?.(all, el);
-      moved.current = true;
-      setState('done');
-      setAnnounce(doneTitle ?? labels.done);
-    } catch {
-      setState('editing');
-    }
-  };
+      const token = run.current;
+      setChecking(true);
+      const found = await check(current, all);
+      if (token !== run.current) return;
+      if (!isValid(found)) {
+        setStepper((s) => setStepComplete(s, current, false));
+        pendingFocus.current = { kind: 'field', index: current, names: Object.keys(found) };
+        return;
+      }
+      moveTo(stepGoTo(setStepComplete(stepper, current, true), index));
+    });
 
-  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+  const submit = () =>
+    exclusive(async () => {
+      const el = form.current;
+      if (!el || state !== 'editing') return;
+      const all = readFormValues(el);
+      setValues(all);
+      setSubmitFailed(false);
+      setChecking(true);
+      // Every step again, so a step reached in free mode or changed later cannot slip through.
+      let firstBad: { index: number; found: FormWizardErrors } | undefined;
+      let next = stepper;
+      for (let i = 0; i < steps.length; i += 1) {
+        const found = await check(i, all);
+        next = setStepComplete(next, i, isValid(found));
+        if (!isValid(found) && firstBad === undefined) firstBad = { index: i, found };
+      }
+      setChecking(false);
+      if (firstBad !== undefined) {
+        if (firstBad.index === current) {
+          setStepper(next);
+          pendingFocus.current = { kind: 'field', index: current, names: Object.keys(firstBad.found) };
+        } else {
+          moveTo({ ...next, current: firstBad.index });
+        }
+        return;
+      }
+      setStepper(next);
+      setState('submitting');
+      try {
+        await onSubmit?.(all, el);
+        pendingFocus.current = { kind: 'title' };
+        setState('done');
+        setAnnounce(doneTitle ?? labels.done);
+      } catch {
+        // Back to editing, with a message in the panel that the status says once (WCAG 3.3.1, 4.1.3).
+        setState('editing');
+        setSubmitFailed(true);
+        setAnnounce(labels.submitError);
+      }
+    });
+
+  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    if (state !== 'editing') return;
-    if (last) {
-      await submit();
-      return;
-    }
-    await go(current + 1);
+    if (state !== 'editing' || busy.current) return;
+    void (last ? submit() : go(current + 1));
   };
 
   const titleId = `${id}title`;
+  const errorId = `${id}error`;
   const stepperSteps = steps.map((s, i) => ({
     id: s.id,
     title: s.title,
     description: s.description,
     invalid: Object.keys(errors[i] ?? {}).length > 0,
   }));
+  const idle = state === 'editing' && !checking;
 
   return (
     <div {...rest} ref={ref} data-ds="form-wizard" data-size={size} data-state={state}>
@@ -348,7 +411,7 @@ export function FormWizard({
         size={size}
         orientation={orientation}
         aria-label={stepsLabel}
-        onStepSelect={state === 'editing' ? (i) => void go(i) : undefined}
+        onStepSelect={idle ? (i) => void go(i) : undefined}
       />
       <form
         {...formProps}
@@ -356,8 +419,9 @@ export function FormWizard({
         data-part="panel"
         noValidate
         aria-labelledby={titleId}
+        aria-describedby={submitFailed ? errorId : undefined}
         aria-busy={state === 'submitting' || checking ? true : undefined}
-        onSubmit={(e) => void handleSubmit(e)}
+        onSubmit={handleSubmit}
       >
         <h2 ref={titleRef} id={titleId} data-part="title" tabIndex={-1}>
           {state === 'done' ? (doneTitle ?? labels.done) : step?.title}
@@ -368,6 +432,12 @@ export function FormWizard({
           </div>
         ))}
         {state === 'done' && done !== undefined && <div data-part="body">{done}</div>}
+        {submitFailed && state === 'editing' && (
+          <p id={errorId} data-part="error">
+            <Icon name="danger" size="md" />
+            <span>{labels.submitError}</span>
+          </p>
+        )}
         {state !== 'done' && (
           <div data-part="actions">
             {!isFirstStep(stepper) && (
@@ -376,9 +446,9 @@ export function FormWizard({
                 size={size}
                 emphasis="ghost"
                 start="chevron-back"
-                disabled={state !== 'editing'}
+                disabled={!idle}
                 onClick={() => {
-                  if (!form.current) return;
+                  if (!form.current || !idle) return;
                   setValues(readFormValues(form.current));
                   moveTo(stepBack(stepper));
                 }}
@@ -393,7 +463,7 @@ export function FormWizard({
               tone="accent"
               emphasis="solid"
               loading={state === 'submitting' || checking}
-              loadingLabel={ar ? 'جار التحقق' : 'Checking'}
+              loadingLabel={state === 'submitting' ? labels.sending : labels.checking}
             >
               {last ? (submitLabel ?? step?.nextLabel ?? labels.submit) : (step?.nextLabel ?? labels.next)}
             </Button>

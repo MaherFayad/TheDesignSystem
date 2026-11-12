@@ -38,6 +38,20 @@ const steps: FormWizardStep[] = [
   },
 ];
 
+/** The same steps with the email already filled in, for the tests that start on the review step. */
+const filled: FormWizardStep[] = steps.map((s) =>
+  s.id === 'account'
+    ? {
+        ...s,
+        content: () => (
+          <Field label="Email" required>
+            <Input name="email" type="email" defaultValue="sara@example.com" />
+          </Field>
+        ),
+      }
+    : s,
+);
+
 function root(container: HTMLElement): HTMLElement {
   const el = container.querySelector<HTMLElement>('[data-ds="form-wizard"]');
   if (!el) throw new Error('no form wizard rendered');
@@ -194,6 +208,59 @@ describe('FormWizard', () => {
     await userEvent.click(screen.getByRole('button', { name: 'Send form' }));
     expect(title(container)?.textContent).toBe('Address');
     expect(status(container)?.textContent).toBe('Step 2 of 3, Address');
+  });
+
+  it('links the error to the field before it takes focus', async () => {
+    render(<FormWizard steps={steps} />);
+    await userEvent.click(screen.getByRole('button', { name: 'Save account' }));
+    const input = screen.getByLabelText(/Email/);
+    expect(document.activeElement).toBe(input);
+    const ids = (input.getAttribute('aria-describedby') ?? '').split(' ');
+    expect(ids.map((i) => document.getElementById(i)?.textContent).join(' ')).toContain('Fill in this field');
+  });
+
+  it('runs one check at a time and drops a check the user left with Back', async () => {
+    let resolve: (e: Record<string, string> | void) => void = () => undefined;
+    const validate = vi.fn(() => new Promise<Record<string, string> | void>((r) => (resolve = r)));
+    const slow = steps.map((s) => (s.id === 'address' ? { ...s, validate } : s));
+    const { container } = render(<FormWizard steps={slow} />);
+    await fillAccount();
+    await userEvent.type(screen.getByLabelText('City'), 'Riyadh');
+    const next = screen.getByRole('button', { name: /Review order/ });
+    await userEvent.click(next);
+    await userEvent.click(next);
+    expect(validate).toHaveBeenCalledTimes(1);
+    const back = screen.getByRole('button', { name: 'Edit account' });
+    expect(back.getAttribute('aria-disabled')).toBe('true');
+    resolve(undefined);
+    await waitFor(() => expect(title(container)?.textContent).toBe('Review'));
+  });
+
+  it('sends once when Enter is pressed twice', async () => {
+    let finish: () => void = () => undefined;
+    const onSubmit = vi.fn(() => new Promise<void>((r) => (finish = r)));
+    render(<FormWizard steps={filled} defaultStep={2} onSubmit={onSubmit} />);
+    const form = document.querySelector('form') as HTMLFormElement;
+    form.requestSubmit();
+    form.requestSubmit();
+    await waitFor(() => expect(onSubmit).toHaveBeenCalled());
+    form.requestSubmit();
+    finish();
+    await waitFor(() => expect(document.querySelector('[data-ds="form-wizard"]')?.getAttribute('data-state')).toBe('done'));
+    expect(onSubmit).toHaveBeenCalledTimes(1);
+  });
+
+  it('says so when the submit fails, and lets the user send again', async () => {
+    const onSubmit = vi.fn().mockRejectedValueOnce(new Error('offline')).mockResolvedValueOnce(undefined);
+    const { container } = render(<FormWizard steps={filled} defaultStep={2} onSubmit={onSubmit} />);
+    await userEvent.click(screen.getByRole('button', { name: 'Send form' }));
+    const message = 'The form was not sent. Check your connection and send it again.';
+    await waitFor(() => expect(status(container)?.textContent).toBe(message));
+    expect(container.querySelector('[data-part="panel"] > [data-part="error"]')?.textContent).toBe(message);
+    expect(root(container).getAttribute('data-state')).toBe('editing');
+    await userEvent.click(screen.getByRole('button', { name: 'Send form' }));
+    await waitFor(() => expect(root(container).getAttribute('data-state')).toBe('done'));
+    expect(container.querySelector('[data-part="error"]')).toBeNull();
   });
 
   it('shows errors passed in defaultErrors', () => {

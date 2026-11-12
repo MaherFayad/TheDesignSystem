@@ -30,6 +30,7 @@ const copy = {
     postal: 'Postal code',
     postalHint: 'Five digits',
     postalError: 'Enter the five digit postal code',
+    postalServer: 'We do not deliver to this postal code yet. Pick another address.',
     note: 'Note for the driver',
     noteHint: 'Optional. A gate code or a landmark.',
     saveAccount: 'Save account',
@@ -60,6 +61,7 @@ const copy = {
     postal: 'الرمز البريدي',
     postalHint: 'خمسة أرقام',
     postalError: 'اكتب الرمز البريدي من خمسة أرقام',
+    postalServer: 'ما نوصل لهذا الرمز البريدي حاليا. اختر عنوان ثاني.',
     note: 'ملاحظة للمندوب',
     noteHint: 'اختياري. رمز البوابة أو معلم قريب.',
     saveAccount: 'حفظ الحساب',
@@ -76,14 +78,21 @@ const copy = {
   },
 } as const;
 
+/** Answers already given, for the cases that open on a later step. Western digits in both languages. */
+const prefills = {
+  en: { name: 'Sara Alharbi', email: 'sara@example.com', street: '12 King Fahd Road, building 4', city: 'Riyadh', postal: '12271', note: 'Gate code 4410' },
+  ar: { name: 'سارة الحربي', email: 'sara@example.com', street: 'طريق الملك فهد 12، مبنى 4', city: 'الرياض', postal: '12271', note: 'رمز البوابة 4410' },
+} as const;
+
 function text(values: FormWizardValues, name: string): string {
   const v = values[name];
   return typeof v === 'string' ? v : '';
 }
 
 /** The four checkout steps, in one language. */
-function checkout(lang: Lang, longText = false): FormWizardStep[] {
+function checkout(lang: Lang, longText = false, prefill = false): FormWizardStep[] {
   const t = copy[lang];
+  const sample = prefill ? prefills[lang] : undefined;
   const pad = (s: string, extra: string) => (longText ? `${s} ${extra}` : s);
   return [
     {
@@ -94,10 +103,10 @@ function checkout(lang: Lang, longText = false): FormWizardStep[] {
       content: ({ errors }) => (
         <>
           <Field label={t.name} required error={errors.name}>
-            <Input name="name" autoComplete="name" />
+            <Input name="name" autoComplete="name" defaultValue={sample?.name} />
           </Field>
           <Field label={t.email} required error={errors.email}>
-            <Input name="email" type="email" autoComplete="email" />
+            <Input name="email" type="email" autoComplete="email" defaultValue={sample?.email} />
           </Field>
         </>
       ),
@@ -115,13 +124,13 @@ function checkout(lang: Lang, longText = false): FormWizardStep[] {
       content: ({ errors }) => (
         <>
           <Field label={t.street} required error={errors.street}>
-            <Input name="street" autoComplete="address-line1" />
+            <Input name="street" autoComplete="address-line1" defaultValue={sample?.street} />
           </Field>
           <Field label={t.city} required error={errors.city}>
-            <Input name="city" autoComplete="address-level2" />
+            <Input name="city" autoComplete="address-level2" defaultValue={sample?.city} />
           </Field>
           <Field label={t.postal} required description={t.postalHint} error={errors.postal}>
-            <Input name="postal" inputMode="numeric" autoComplete="postal-code" />
+            <Input name="postal" inputMode="numeric" autoComplete="postal-code" defaultValue={sample?.postal} />
           </Field>
         </>
       ),
@@ -134,7 +143,7 @@ function checkout(lang: Lang, longText = false): FormWizardStep[] {
       backLabel: t.editAddress,
       content: (
         <Field label={t.note} description={t.noteHint}>
-          <Input name="note" />
+          <Input name="note" defaultValue={sample?.note} />
         </Field>
       ),
     },
@@ -164,8 +173,10 @@ function Checkout({
   longText,
   defaultStep,
   defaultErrors,
+  prefill,
   label,
 }: {
+  prefill?: boolean;
   lang?: Lang;
   size?: FormWizardSize;
   vertical?: boolean;
@@ -177,7 +188,7 @@ function Checkout({
   const t = copy[lang];
   return (
     <FormWizard
-      steps={checkout(lang, longText)}
+      steps={checkout(lang, longText, prefill)}
       size={size}
       orientation={vertical ? 'vertical' : 'horizontal'}
       defaultStep={defaultStep}
@@ -212,8 +223,13 @@ export default function FormWizardDemo() {
 
       <DemoCase id="many" title="Many steps, on the review step">
         <DemoRow>
-          <Checkout defaultStep={3} label="Checkout steps, review" />
+          <Checkout defaultStep={3} prefill label="Checkout steps, review" />
         </DemoRow>
+        <Theme lang="ar" data-demo="content">
+          <DemoRow label="Arabic">
+            <Checkout lang="ar" defaultStep={3} prefill vertical />
+          </DemoRow>
+        </Theme>
       </DemoCase>
 
       <DemoCase id="long-text" title="Long text">
@@ -232,10 +248,16 @@ export default function FormWizardDemo() {
         <DemoRow>
           <Checkout
             defaultStep={1}
-            defaultErrors={{ 1: { postal: copy.en.postalError } }}
+            defaultErrors={{ 1: { postal: copy.en.postalServer } }}
+            prefill
             label="Checkout steps with an error"
           />
         </DemoRow>
+        <Theme lang="ar" data-demo="content">
+          <DemoRow label="Arabic">
+            <Checkout lang="ar" defaultStep={1} prefill defaultErrors={{ 1: { postal: copy.ar.postalServer } }} />
+          </DemoRow>
+        </Theme>
       </DemoCase>
     </DemoPage>
   );

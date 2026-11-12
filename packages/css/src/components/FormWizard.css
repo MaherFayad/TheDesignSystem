@@ -8,20 +8,19 @@
  * Private properties on the root (recipes override these):
  *
  *   --_form-wizard-gap          space between the steps, the panel and its parts
- *   --_form-wizard-steps-width  vertical Stepper: the width of the steps column
- *   --_form-wizard-title-size   the step heading
+ *   --_form-wizard-font-size    the step heading
  *   --_form-wizard-ring         the focus ring of the title, which takes focus on a step change
  *
  * Bodies that are not current carry the hidden attribute and stay in the
  * DOM, so their values are kept. The current body fades in (motion pattern
- * fade-rise); only opacity and transform animate, and reduced motion keeps
- * the fade without the rise.
+ * fade-rise); only opacity and transform animate. Under reduced motion
+ * the duration tokens are 0ms and the rise is dropped, so the step shows at
+ * once.
  */
 @layer ds.base {
   [data-ds='form-wizard'] {
     --_form-wizard-gap: var(--ds-space-2xl);
-    --_form-wizard-steps-width: var(--ds-field-label-width);
-    --_form-wizard-title-size: var(--ds-font-size-xl);
+    --_form-wizard-font-size: var(--ds-font-size-xl);
     --_form-wizard-ring: var(--ds-focus-shadow-ring);
 
     display: flex;
@@ -36,14 +35,22 @@
 
   [data-ds='form-wizard'][data-size='sm'] {
     --_form-wizard-gap: var(--ds-space-xl);
-    --_form-wizard-title-size: var(--ds-font-size-l);
+    --_form-wizard-font-size: var(--ds-font-size-l);
   }
 
-  /* A vertical Stepper sits in a column at the start side, the panel beside it. */
+  /*
+   * A vertical Stepper sits in a column at the start side, the panel beside
+   * it. The column fits its titles up to a third of the row and is never
+   * narrower than field.label-width.
+   */
   [data-ds='form-wizard']:has(> [data-part='steps'][data-orientation='vertical']) {
     display: grid;
-    grid-template-columns: minmax(0, var(--_form-wizard-steps-width)) minmax(0, 1fr);
+    grid-template-columns: fit-content(33%) minmax(0, 1fr);
     align-items: start;
+  }
+
+  [data-ds='form-wizard'] > [data-part='steps'][data-orientation='vertical'] {
+    min-inline-size: min(100%, var(--ds-field-label-width));
   }
 
   [data-ds='form-wizard'] > [data-part='panel'] {
@@ -58,7 +65,7 @@
     margin: 0;
     border-radius: var(--ds-radius-xs);
     color: var(--ds-color-text-bright);
-    font-size: var(--_form-wizard-title-size);
+    font-size: var(--_form-wizard-font-size);
     font-weight: var(--ds-font-weight-semibold);
     line-height: var(--ds-font-leading-snug);
     overflow-wrap: anywhere;
@@ -88,6 +95,17 @@
 
   [data-ds='form-wizard'] > [data-part='panel'] > [data-part='body'][hidden] {
     display: none;
+  }
+
+  /* The submit failed: what happened and what to do, with a glyph so it is not color alone. */
+  [data-ds='form-wizard'] > [data-part='panel'] > [data-part='error'] {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--ds-space-2xs);
+    margin: 0;
+    color: var(--ds-color-state-danger-text);
+    font-size: var(--ds-font-size-s);
+    line-height: var(--ds-font-leading-snug);
   }
 
   /* Back at the start, next or submit at the end, on every step. */

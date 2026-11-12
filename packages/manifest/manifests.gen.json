@@ -1541,6 +1541,7 @@
       "panel",
       "title",
       "body",
+      "error",
       "actions",
       "back",
       "next",
@@ -1550,12 +1551,6 @@
     "slots": {
       "body": {
         "accepts": "any"
-      },
-      "actions": {
-        "accepts": [
-          "Button"
-        ],
-        "max": 2
       }
     },
     "props": {
@@ -1575,11 +1570,11 @@
           "free"
         ],
         "default": "linear",
-        "description": "Passed to the Stepper. linear: a later step opens only when the ones before it passed their check. free: any step; moving forward still checks the current step, and submit checks every step."
+        "description": "Passed to the Stepper. linear: a later step opens only when the ones before it passed their check. free: any step; moving forward still checks the current step, and submit checks every step. Read once, at mount, with the number of steps."
       },
       "onSubmit": {
         "type": "(values, form) => void | Promise<void>",
-        "description": "Called with every value of every step when the last step is sent. While a promise runs the state is submitting; when it rejects the wizard goes back to editing; when it resolves the state is done."
+        "description": "Called with every value of every step when the last step is sent. While a promise runs the state is submitting and the submit button shows the sending status. When it resolves the state is done. When it rejects the wizard goes back to editing, shows the submitError words in the error part and says them once."
       },
       "onStepChange": {
         "type": "(index: number) => void",
@@ -1621,7 +1616,7 @@
       },
       "labels": {
         "type": "Partial<FormWizardLabels>",
-        "description": "Default words: next, back, submit, required, done, separator. English Go to next step, Go to previous step, Send form, Fill in this field, Form sent. Arabic الخطوة التالية، الخطوة السابقة، إرسال النموذج، هذا الحقل مطلوب، تم الإرسال. Demos pass a verb plus a noun per step instead."
+        "description": "Default words: next, back, submit, required, done, submitError, checking, sending, separator. English Go to next step, Go to previous step, Send form, Fill in this field, Form sent. Arabic الانتقال للخطوة التالية، الرجوع للخطوة السابقة، إرسال النموذج، هذا الحقل مطلوب، تم الإرسال. Demos pass a verb plus a noun per step instead."
       },
       "defaultErrors": {
         "type": "Record<number, Record<string, string>>",
@@ -1630,6 +1625,14 @@
       "formProps": {
         "type": "ComponentProps<'form'>",
         "description": "Props of the panel form: name, action, autoComplete."
+      },
+      "formRef": {
+        "type": "Ref<HTMLFormElement>",
+        "description": "Goes to the panel form."
+      },
+      "ref": {
+        "type": "Ref<HTMLDivElement>",
+        "description": "Goes to the root."
       }
     },
     "states": [
@@ -1639,7 +1642,7 @@
     ],
     "a11y": {
       "role": "The panel is a form named by the step title (aria-labelledby). The steps are a Stepper list. The status is a polite live region.",
-      "focus": "Tab order: the steps the user may reach, then the fields of the current step, then back and next. On a step change focus moves to the step title (tabindex -1), which shows the focus ring. A failed check moves focus to the first field with an error.",
+      "focus": "Tab order: the steps the user may reach, then the fields of the current step, then back and next. On a step change focus moves to the step title (tabindex -1), which shows the focus ring. A failed check moves focus to the first field with an error, after the error is linked to it.",
       "keys": {
         "Tab": "Moves through the steps, the fields and the actions, in that order",
         "Shift+Tab": "Moves back through them",
@@ -1656,6 +1659,7 @@
         "Every step stays in the DOM; steps that are not current carry hidden. What the user typed is kept when they go back, and is never asked for twice (WCAG 3.3.7). autocomplete values on the fields are kept as given.",
         "The panel is noValidate. The wizard checks one step at a time: an empty field marked required on its Field gets the required words, then the browser's constraint validation (type, pattern, min, max), then the step's validate function.",
         "The next button is the form's submit button, so Enter in a field moves on. Back is type button.",
+        "One check or submit runs at a time: a second Enter while a check runs does nothing, and Back and the steps are inactive until it ends. A check that resolves after the user moved away is dropped.",
         "Form (1.4.1) will render the panel later, as <Form data-part=\"panel\">, and bring the error summary and the server error mapping. Until then the panel is a plain form and works with Field.",
         "No native title attribute. Hints come from Tooltip."
       ]
@@ -1695,7 +1699,10 @@
       "focus.shadow.ring",
       "duration.base",
       "ease.out",
-      "breakpoint.phone"
+      "breakpoint.phone",
+      "color.state.danger.text",
+      "font.size.s",
+      "space.2xs"
     ],
     "motion": "fade-rise",
     "frameworks": {
@@ -1746,7 +1753,8 @@
     "contract": {
       "optionalParts": [
         "back",
-        "submit"
+        "submit",
+        "error"
       ],
       "keys": {
         "Enter": {
