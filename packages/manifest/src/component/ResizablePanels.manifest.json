@@ -1,0 +1,226 @@
+{
+  "name": "ResizablePanels",
+  "kind": "component",
+  "family": "layout",
+  "summary": "Two or more panels side by side or stacked, with dividers a person drags or moves with the keys to share the room. Sizes are percents, reported through onLayout for the app to save.",
+  "useWhen": [
+    "An editor layout: a layers sidebar, the canvas and an inspector the person sizes to their task",
+    "A preview over a console or a log that the person makes taller or shorter",
+    "Two views compared side by side where the person decides the split"
+  ],
+  "avoidWhen": [
+    "A list and its detail that should stack on phones",
+    "A fixed page frame with a header, a sidebar and main content",
+    "Content that should simply wrap to the width it gets"
+  ],
+  "insteadUse": {
+    "A list and its detail, stacked on phones": "SplitView",
+    "The page frame with landmarks": "PageShell",
+    "A responsive grid of cards": "Grid",
+    "Side content that slides over the page": "Drawer"
+  },
+  "anatomy": [
+    "root",
+    "panel",
+    "handle",
+    "handle-grip"
+  ],
+  "parts": {
+    "ResizablePanel": "panel",
+    "ResizableHandle": "handle"
+  },
+  "slots": {
+    "panel": {
+      "accepts": "any",
+      "min": 2
+    }
+  },
+  "props": {
+    "orientation": {
+      "type": [
+        "horizontal",
+        "vertical"
+      ],
+      "default": "horizontal",
+      "description": "horizontal: panels side by side, in reading order (the first on the right in Arabic). vertical: panels stacked. Sets data-orientation."
+    },
+    "sizes": {
+      "type": "number[]",
+      "description": "Controlled sizes in percent, one per panel, with onSizesChange."
+    },
+    "defaultSizes": {
+      "type": "number[]",
+      "description": "Starting sizes in percent. Default: each panel's defaultSize, the rest shared evenly. Pass the sizes saved from onLayout to restore a layout."
+    },
+    "onSizesChange": {
+      "type": "function",
+      "description": "Called on every change, while a drag runs too."
+    },
+    "onLayout": {
+      "type": "function",
+      "description": "Called with the settled sizes when a drag ends and after each key. The component keeps no storage."
+    },
+    "step": {
+      "type": "number",
+      "default": 5,
+      "description": "The arrow key step in percent."
+    },
+    "ResizablePanel.defaultSize": {
+      "type": "number",
+      "description": "The starting size in percent when the group has no defaultSizes."
+    },
+    "ResizablePanel.min": {
+      "type": "number",
+      "default": 0,
+      "description": "Smallest open size in percent."
+    },
+    "ResizablePanel.max": {
+      "type": "number",
+      "default": 100,
+      "description": "Largest size in percent."
+    },
+    "ResizablePanel.collapsible": {
+      "type": "boolean",
+      "default": false,
+      "description": "The panel collapses when dragged past half its min, with Enter or a double click on a handle next to it. Sets data-collapsed."
+    },
+    "ResizablePanel.collapsedSize": {
+      "type": "number",
+      "default": 0,
+      "description": "The collapsed size in percent. 0 hides the panel and makes its content inert; a few percent leaves a rail."
+    },
+    "ResizableHandle.label": {
+      "type": "string",
+      "default": "Resize panels",
+      "description": "The name of the separator. Name the panel it resizes: Resize sidebar. Under lang=\"ar\" the default is تغيير حجم الأقسام."
+    }
+  },
+  "states": [
+    "data-orientation",
+    "data-dragging",
+    "data-collapsed"
+  ],
+  "a11y": {
+    "role": "separator on each handle (the WAI-ARIA window splitter): focusable, aria-valuenow is the size of the panel before it in percent, aria-valuemin and aria-valuemax the values Home and End reach (a collapsed panel sits below the min), aria-controls names that panel, aria-orientation is vertical in a horizontal group.",
+    "focus": "Each handle is one tab stop, in reading order between its panels. A drag focuses the handle it moves.",
+    "keys": {
+      "Tab": "Moves to the next handle or the next control inside a panel",
+      "ArrowLeft, ArrowRight": "In a horizontal group, move the handle 5 percent left or right on screen. In Arabic the first panel is on the right, so ArrowLeft grows it. An arrow that grows a collapsed panel opens it at its last size.",
+      "ArrowUp, ArrowDown": "In a vertical group, move the handle 5 percent up or down",
+      "Home": "Moves the handle to its far start: the panel before it at its min",
+      "End": "Moves the handle to its far end: the panel before it at its max",
+      "Enter": "Collapses the collapsible panel next to the handle (the one before it first) and restores it to its last size"
+    },
+    "announce": "The separator's value, the size of the panel before it in percent, after each key.",
+    "native": {
+      "accessibilityRole": "adjustable",
+      "accessibilityState": []
+    },
+    "notes": [
+      "Every drag has a key path (WCAG 2.5.7): the arrows, Home, End and Enter do all a drag does.",
+      "The handle line is 1px, its target is 24px (size.target-min) spread over both panels (WCAG 2.5.8).",
+      "A collapsed panel at size 0 is inert, so its controls leave the tab order and the accessibility tree.",
+      "Panels and handles must be children of ResizablePanels, directly or inside fragments and arrays: the group walks them in order. A panel inside another component is not found.",
+      "The 24px handle target reaches 11.5px into each panel, so the focus ring can sit over the edge of panel content. Keep interactive content of a panel at least that far from a handle, or pad the panel.",
+      "A cancelled drag puts the sizes back. A press with no move reports no layout.",
+      "Sizes are layout and never animate; under reduced motion nothing changes."
+    ]
+  },
+  "content": {
+    "en": {
+      "label": "Resize plus the panel name, in sentence case: Resize sidebar, Resize inspector."
+    },
+    "ar": {
+      "label": "Noun form, no diacritics: تغيير حجم الطبقات، تغيير حجم الخصائص."
+    }
+  },
+  "tokens": [
+    "color.border.control",
+    "color.border.control-hover",
+    "color.border.strong",
+    "color.focus.ring",
+    "focus.shadow.ring",
+    "border.width.default",
+    "border.width.strong",
+    "size.target-min",
+    "space.3xl",
+    "space.3xs",
+    "radius.xs",
+    "radius.pill",
+    "duration.base",
+    "ease.out",
+    "z.dropdown"
+  ],
+  "motion": "drag-drop",
+  "frameworks": {
+    "react": {
+      "status": "ready",
+      "behavior": "own: WAI-ARIA window splitter, @the-system/shared resize",
+      "example": "ResizablePanels.demo.tsx"
+    },
+    "angular": {
+      "status": "planned",
+      "behavior": "own: the shared resize math, cdk:bidi for the arrow direction",
+      "note": "ResizablePanels.css is used as is."
+    },
+    "native": {
+      "status": "planned",
+      "behavior": "own: the shared resize math, an adjustable handle",
+      "note": "Tablets only; phones show one pane at a time through SplitView."
+    }
+  },
+  "styles": {
+    "studio": "A 1px line in the control border color (3:1) between flat panels; the line darkens on hover and takes the focus color while it drags or has focus, with a small pill grip.",
+    "desk": "The same hairline and grip on the Desk border tokens.",
+    "neutral": "The same parts on the Neutral border tokens once 1.10 lands.",
+    "liquid": "Planned."
+  },
+  "mistakes": [
+    {
+      "wrong": "A divider that only moves with a pointer",
+      "right": "ResizableHandle moves with the arrows, Home, End and Enter"
+    },
+    {
+      "wrong": "Saving the layout to localStorage inside the component",
+      "right": "Save the sizes from onLayout in the app and pass them back as defaultSizes"
+    },
+    {
+      "wrong": "A 1px hit area",
+      "right": "The handle keeps a 1px line in a 24px target"
+    },
+    {
+      "wrong": "Every handle named Resize",
+      "right": "Name the panel: Resize layers, Resize inspector"
+    }
+  ],
+  "contract": {
+    "keys": {
+      "ArrowLeft": {
+        "case": "variants",
+        "focus": "[data-part='handle']",
+        "expect": "value-changes"
+      },
+      "ArrowRight": {
+        "case": "variants",
+        "focus": "[data-part='handle']",
+        "expect": "value-changes"
+      },
+      "Home": {
+        "case": "variants",
+        "focus": "[data-part='handle']",
+        "expect": "value-changes"
+      },
+      "End": {
+        "case": "variants",
+        "focus": "[data-part='handle']",
+        "expect": "value-changes"
+      },
+      "Enter": {
+        "case": "variants",
+        "focus": "[data-part='handle']",
+        "expect": "value-changes"
+      }
+    }
+  },
+  "since": "0.1.0"
+}

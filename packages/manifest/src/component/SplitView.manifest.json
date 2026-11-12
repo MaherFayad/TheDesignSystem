@@ -1,0 +1,244 @@
+{
+  "name": "SplitView",
+  "kind": "component",
+  "family": "layout",
+  "summary": "A list and its detail side by side with a resize handle, stacked one at a time with a back Button under breakpoint.tablet, as in a mail reader.",
+  "useWhen": [
+    "A list whose items open a detail next to it: mail, messages, tickets, files",
+    "A master and detail layout that must work on phones as well as desktops",
+    "Settings with a list of sections and the chosen section beside it"
+  ],
+  "avoidWhen": [
+    "Three or more panes the person sizes freely, as in an editor",
+    "The detail is a short task that should block the page",
+    "The page frame itself, with header, sidebar and footer"
+  ],
+  "insteadUse": {
+    "Three or more panes sized freely": "ResizablePanels",
+    "A short blocking task opened from the list": "Dialog",
+    "The page frame with landmarks": "PageShell",
+    "Detail that slides over the list": "Drawer"
+  },
+  "anatomy": [
+    "root",
+    "primary",
+    "secondary",
+    "handle",
+    "handle-grip",
+    "back"
+  ],
+  "parts": {
+    "Button": "back"
+  },
+  "slots": {
+    "primary": {
+      "accepts": "any"
+    },
+    "secondary": {
+      "accepts": "any"
+    }
+  },
+  "props": {
+    "primary": {
+      "type": "node",
+      "required": true,
+      "description": "The list that opens the detail."
+    },
+    "secondary": {
+      "type": "node",
+      "required": true,
+      "description": "The detail of the chosen item, or an empty state that says what to choose."
+    },
+    "showSecondary": {
+      "type": "boolean",
+      "description": "Controlled: the detail is the pane shown while stacked. Set it to true when an item opens, with onShowSecondaryChange."
+    },
+    "defaultShowSecondary": {
+      "type": "boolean",
+      "default": false
+    },
+    "onShowSecondaryChange": {
+      "type": "function",
+      "description": "Called with false by the back Button."
+    },
+    "layout": {
+      "type": [
+        "auto",
+        "split",
+        "stacked"
+      ],
+      "default": "auto",
+      "description": "auto: split when the root is at least breakpoint.tablet (48rem) wide, stacked below. The root's own width counts, not the window's. The first render, before the width is measured and on the server, is split. 48rem is read at 16px, as media queries do."
+    },
+    "defaultSizes": {
+      "type": "number[]",
+      "default": "[35, 65]",
+      "description": "Starting sizes of the two panes in percent. Pass the sizes saved from onLayout to restore them."
+    },
+    "onLayout": {
+      "type": "function",
+      "description": "Called with the settled sizes when a drag ends and after each key."
+    },
+    "primaryMin": {
+      "type": "number",
+      "default": 25
+    },
+    "primaryMax": {
+      "type": "number",
+      "default": 50
+    },
+    "secondaryMin": {
+      "type": "number",
+      "default": 35
+    },
+    "primaryLabel": {
+      "type": "string",
+      "default": "List",
+      "description": "The name of the list pane, a region. Under lang=\"ar\" the default is القائمة. Name the list: Messages."
+    },
+    "secondaryLabel": {
+      "type": "string",
+      "default": "Detail",
+      "description": "The name of the detail pane, a region. Under lang=\"ar\" the default is التفاصيل. Name the detail: Message."
+    },
+    "handleLabel": {
+      "type": "string",
+      "default": "Resize list",
+      "description": "Under lang=\"ar\" the default is تغيير حجم القائمة."
+    },
+    "backLabel": {
+      "type": "string",
+      "default": "Return to list",
+      "description": "Under lang=\"ar\" the default is الرجوع للقائمة. Name the list: Return to messages."
+    }
+  },
+  "states": [
+    "split",
+    "primary",
+    "secondary",
+    "data-orientation",
+    "data-dragging"
+  ],
+  "a11y": {
+    "role": "none on the root. The panes are regions, named by primaryLabel and secondaryLabel (List and Detail by default). The handle is a separator (the window splitter of ResizablePanels).",
+    "focus": "While stacked, focus moves to the detail pane when it opens, and back returns it to the last element focused in the list (the item that opened the detail), else to the list pane. When the view narrows into stacked with focus in the pane that hides, focus moves to the pane that stays. While split, focus stays where the person put it.",
+    "keys": {
+      "Tab": "Moves through the list, the handle and the detail",
+      "ArrowLeft, ArrowRight": "On the handle, move it 5 percent left or right on screen. The list is on the right in Arabic.",
+      "Home, End": "On the handle, move it to the list's min and max",
+      "Enter, Space": "On the back Button, return to the list"
+    },
+    "announce": "The detail pane's name when it takes focus while stacked.",
+    "native": {
+      "accessibilityRole": "none",
+      "accessibilityState": []
+    },
+    "notes": [
+      "Both panes stay mounted while stacked; the hidden one has the hidden attribute, so the list keeps its scroll position.",
+      "The width is read from the root, so a SplitView inside a narrow window or panel stacks there too. No sideways scroll at 320px.",
+      "Every drag has a key path (WCAG 2.5.7), from ResizablePanels.",
+      "handle-grip is the grip of the shared handle; the order's anatomy did not list it."
+    ]
+  },
+  "content": {
+    "en": {
+      "back": "A verb plus the list name: Return to messages.",
+      "empty": "The detail pane without a choice says what to do: Choose a message from the list."
+    },
+    "ar": {
+      "back": "Noun form, no diacritics: الرجوع للرسائل.",
+      "empty": "ما فيه رسالة مختارة. اختار رسالة من القائمة."
+    }
+  },
+  "tokens": [
+    "breakpoint.tablet",
+    "color.focus.ring",
+    "focus.shadow.ring",
+    "border.width.default",
+    "border.width.strong",
+    "space.s",
+    "space.3xl",
+    "space.3xs",
+    "color.border.control",
+    "color.border.control-hover",
+    "color.border.strong",
+    "radius.xs",
+    "radius.pill",
+    "size.target-min",
+    "duration.base",
+    "ease.out",
+    "z.dropdown"
+  ],
+  "motion": "drag-drop",
+  "frameworks": {
+    "react": {
+      "status": "ready",
+      "behavior": "own: the ResizablePanels group (PanelGroup) and @the-system/shared resize",
+      "example": "SplitView.demo.tsx"
+    },
+    "angular": {
+      "status": "planned",
+      "behavior": "own: the shared resize math, cdk:layout for the width",
+      "note": "SplitView.css and ResizablePanels.css are used as is."
+    },
+    "native": {
+      "status": "planned",
+      "behavior": "a stack on phones, two panes on tablets",
+      "note": "The stacked form maps to a navigation stack with the platform back gesture plus the back Button."
+    }
+  },
+  "styles": {
+    "studio": "Flat panes split by the 1px control line of ResizablePanels; the back Button is a ghost Button.",
+    "desk": "The same, on the Desk tokens; inside a Window it fills the body.",
+    "neutral": "The same parts once 1.10 lands.",
+    "liquid": "Planned: the stacked form slides like a navigation stack."
+  },
+  "mistakes": [
+    {
+      "wrong": "Hiding the list with CSS media queries and losing its scroll position",
+      "right": "SplitView keeps both panes mounted and hides one with the hidden attribute"
+    },
+    {
+      "wrong": "A back control that leaves focus at the top of the page",
+      "right": "SplitView returns focus to the list item that opened the detail"
+    },
+    {
+      "wrong": "Deciding the layout from the window width while the view sits in a narrow panel",
+      "right": "SplitView reads its own width"
+    }
+  ],
+  "contract": {
+    "optionalParts": [
+      "handle",
+      "handle-grip",
+      "back"
+    ],
+    "keys": {
+      "ArrowLeft": {
+        "case": "variants",
+        "focus": "[data-part='handle']",
+        "expect": "value-changes"
+      },
+      "ArrowRight": {
+        "case": "variants",
+        "focus": "[data-part='handle']",
+        "expect": "value-changes"
+      },
+      "Home": {
+        "case": "variants",
+        "focus": "[data-part='handle']",
+        "expect": "value-changes"
+      },
+      "End": {
+        "case": "variants",
+        "focus": "[data-part='handle']",
+        "expect": "value-changes"
+      }
+    }
+  },
+  "since": "0.1.0",
+  "uses": [
+    "ResizablePanels",
+    "Button"
+  ]
+}
