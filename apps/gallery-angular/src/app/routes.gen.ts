@@ -7,7 +7,19 @@ export interface DemoRoute {
 }
 
 export const routes: DemoRoute[] = [
+  { slug: 'alert', load: () => import('../../../../packages/angular/src/components/alert/alert.demo').then((m) => m.default) },
+  { slug: 'banner', load: () => import('../../../../packages/angular/src/components/banner/banner.demo').then((m) => m.default) },
   { slug: 'button', load: () => import('../../../../packages/angular/src/components/button/button.demo').then((m) => m.default) },
+  { slug: 'callout', load: () => import('../../../../packages/angular/src/components/callout/callout.demo').then((m) => m.default) },
   { slug: 'dialog', load: () => import('../../../../packages/angular/src/components/dialog/dialog.demo').then((m) => m.default) },
+  { slug: 'error-state', load: () => import('../../../../packages/angular/src/components/error-state/error-state.demo').then((m) => m.default) },
   { slug: 'icon-button', load: () => import('../../../../packages/angular/src/components/icon-button/icon-button.demo').then((m) => m.default) },
+  { slug: 'meter', load: () => import('../../../../packages/angular/src/components/meter/meter.demo').then((m) => m.default) },
+  { slug: 'notification-center', load: () => import('../../../../packages/angular/src/components/notification-center/notification-center.demo').then((m) => m.default) },
+  { slug: 'progress-bar', load: () => import('../../../../packages/angular/src/components/progress-bar/progress-bar.demo').then((m) => m.default) },
+  { slug: 'progress-circle', load: () => import('../../../../packages/angular/src/components/progress-circle/progress-circle.demo').then((m) => m.default) },
+  { slug: 'skeleton', load: () => import('../../../../packages/angular/src/components/skeleton/skeleton.demo').then((m) => m.default) },
+  { slug: 'spinner', load: () => import('../../../../packages/angular/src/components/spinner/spinner.demo').then((m) => m.default) },
+  { slug: 'status-dot', load: () => import('../../../../packages/angular/src/components/status-dot/status-dot.demo').then((m) => m.default) },
+  { slug: 'toast', load: () => import('../../../../packages/angular/src/components/toast/toast.demo').then((m) => m.default) },
 ];

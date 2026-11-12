@@ -462,9 +462,10 @@
         "example": "Alert.demo.tsx"
       },
       "angular": {
-        "status": "planned",
-        "behavior": "hand built",
-        "note": "The same DOM on Alert.css; the close part is a CloseButton."
+        "status": "ready",
+        "behavior": "div[dsAlert], host bindings",
+        "example": "alert.demo.ts",
+        "note": "The host element is the root; the body is the projected content and the part is left out while empty. title, actions and icon take a string (an icon name for icon) or a TemplateRef. onClose is a function input: the close part renders only with a handler. The close part has the CloseButton DOM. Alert.css is used as is."
       },
       "native": {
         "status": "planned",
@@ -2015,9 +2016,10 @@
         "example": "Banner.demo.tsx"
       },
       "angular": {
-        "status": "planned",
-        "behavior": "hand built",
-        "note": "The same DOM on Banner.css; the scroll padding through a ResizeObserver in the directive."
+        "status": "ready",
+        "behavior": "section[dsBanner], host bindings, ResizeObserver",
+        "example": "banner.demo.ts",
+        "note": "The host element is the root. The body is the projected content; actions and icon take a TemplateRef (an icon name for icon). onDismiss is a function input: the close part renders only with a handler, and focus moves to returnFocus before it runs. sticky reserves scroll padding on the scroll container in an afterRenderEffect. The close part has the CloseButton DOM. Banner.css is used as is."
       },
       "native": {
         "status": "planned",
@@ -3162,9 +3164,10 @@
         "example": "Callout.demo.tsx"
       },
       "angular": {
-        "status": "planned",
-        "behavior": "hand built",
-        "note": "The same DOM on Callout.css, ids from the CDK id generator."
+        "status": "ready",
+        "behavior": "div[dsCallout] and aside[dsCallout], host bindings, cdk:a11y _IdGenerator",
+        "example": "callout.demo.ts",
+        "note": "The host element is the root; React's as prop is the host tag (div gets role note, aside is a landmark). The body is the projected content and the part is left out while empty. title and icon take a string (an icon name for icon) or a TemplateRef. Icon and title ids come from the CDK id generator, or from the id input. Callout.css is used as is."
       },
       "native": {
         "status": "planned",
@@ -7635,8 +7638,10 @@
         "example": "ErrorState.demo.tsx"
       },
       "angular": {
-        "status": "planned",
-        "behavior": "hand built"
+        "status": "ready",
+        "behavior": "div[dsErrorState], host bindings, cdk:a11y _IdGenerator",
+        "example": "error-state.demo.ts",
+        "note": "The host element is the root. title, body, actions and details take a string or a TemplateRef; icon takes an icon name, a TemplateRef or false. onRetry is a function input: the retry Button renders only with a handler. The heading level picks h2 to h6. The title id comes from the CDK id generator. ErrorState.css is used as is."
       },
       "native": {
         "status": "planned",
@@ -12212,7 +12217,10 @@
         "note": "Level and tone logic in packages/shared/src/meter.ts (pure, shared with Angular). Values formatted by the ProgressBar format.ts helper until packages/shared/src/number.ts lands. Motion: no catalog pattern. A value change eases the scaleX transform over duration.slow in Meter.css until the catalog has a fill pattern (a request to the motion owner)."
       },
       "angular": {
-        "status": "planned"
+        "status": "ready",
+        "behavior": "div[dsMeter], hand built, role meter, level and tone from @the-system/shared meter.ts",
+        "example": "meter.demo.ts",
+        "note": "The host element is the root. Inputs take the React prop names; React spreads a range object, Angular takes min, max, low, high and optimum as inputs. label takes a string or a TemplateRef. Meter.css is used as is."
       },
       "native": {
         "status": "planned"
@@ -13105,8 +13113,10 @@
         "note": "Motion: no catalog pattern. The panel renders a static list and no stagger plays when items are inserted; only the item hover veil fades (NotificationCenter.css). list-stagger is the pattern to wire when inserted items animate."
       },
       "angular": {
-        "status": "planned",
-        "behavior": "hand built"
+        "status": "ready",
+        "behavior": "section[dsNotificationCenter], host bindings, cdk:a11y _IdGenerator",
+        "example": "notification-center.demo.ts",
+        "note": "The host element is the root. title, emptyTitle, emptyBody and an item's title and body take a string or a TemplateRef. onMarkAllRead is a function input: the mark-all Button renders only with a handler while an item is unread, and focus moves to the title first. Ids come from the CDK id generator, one per item id. time.ts is a copy of the React helper until it moves to packages/shared. NotificationCenter.css is used as is."
       },
       "native": {
         "status": "planned",
@@ -15042,7 +15052,10 @@
         "note": "Value changes ease the scaleX transform over duration.slow. No catalog pattern: the indeterminate slide is a keyframe in ProgressBar.css until the catalog has a bar slide (a request to the motion owner). Values are formatted with Intl.NumberFormat and Western digits in a private helper (format.ts) until packages/shared/src/number.ts lands."
       },
       "angular": {
-        "status": "planned"
+        "status": "ready",
+        "behavior": "div[dsProgressBar], hand built on the Radix Progress attributes (role progressbar, aria values, data-state, data-value, data-max)",
+        "example": "progress-bar.demo.ts",
+        "note": "The host element is the root. Inputs take the React prop names; aria-label and aria-labelledby are inputs so the label part wiring follows React. label takes a string or a TemplateRef. Value text from the shared number formatting. ProgressBar.css is used as is."
       },
       "native": {
         "status": "planned"
@@ -15219,7 +15232,10 @@
         "note": "Shares format.ts with ProgressBar (Intl.NumberFormat, Western digits) until packages/shared/src/number.ts lands."
       },
       "angular": {
-        "status": "planned"
+        "status": "ready",
+        "behavior": "div[dsProgressCircle], hand built on the Radix Progress attributes",
+        "example": "progress-circle.demo.ts",
+        "note": "The host element is the root. Inputs take the React prop names. ProgressCircle.css is used as is."
       },
       "native": {
         "status": "planned",
@@ -19234,8 +19250,10 @@
         "example": "Skeleton.demo.tsx"
       },
       "angular": {
-        "status": "planned",
-        "behavior": "hand built"
+        "status": "ready",
+        "behavior": "span[dsSkeleton], host bindings",
+        "example": "skeleton.demo.ts",
+        "note": "The host element is the root, always aria-hidden. width and height set --_skeleton-width and --_skeleton-height as inline styles, numbers as px. Skeleton.css is used as is."
       },
       "native": {
         "status": "planned",
@@ -19803,7 +19821,10 @@
         "note": "Motion: the spinner pattern from the 1.11 catalog list, today a CSS rotate keyframe on duration.spin, none under reduced motion."
       },
       "angular": {
-        "status": "planned"
+        "status": "ready",
+        "behavior": "span[dsSpinner], hand built, role status",
+        "example": "spinner.demo.ts",
+        "note": "The host element is the root. Inputs take the React prop names. React types label and decorative as a union; Angular cannot, so a labelled spinner without a label warns in development. Spinner.css is used as is."
       },
       "native": {
         "status": "planned",
@@ -20934,8 +20955,10 @@
         "note": "Motion: no catalog pattern. The pulse (a ring that grows and fades, three times) is a keyframe in StatusDot.css until the catalog has a pulse pattern (a request to the motion owner); thinking is three bouncing dots, not this."
       },
       "angular": {
-        "status": "planned",
-        "behavior": "hand built"
+        "status": "ready",
+        "behavior": "span[dsStatusDot], host bindings",
+        "example": "status-dot.demo.ts",
+        "note": "The host element is the root. label takes a string or a TemplateRef. StatusDot.css is used as is."
       },
       "native": {
         "status": "planned",
@@ -23723,9 +23746,10 @@
         "note": "Toaster renders the shared store from @the-system/shared; toast is re-exported from @the-system/react. Call shape: toast(title: string, options?) or toast(options) with title inside; toast.success, toast.warning, toast.danger and toast.info take the same arguments and set tone; toast.dismiss(id?), toast.update(id, { tone, title, description }), toast.configure({ max, durations }). From packages/shared/src/toast.ts."
       },
       "angular": {
-        "status": "planned",
-        "behavior": "the shared toast store with cdk:a11y LiveAnnouncer",
-        "note": "Reuses the store, its timers and Toast.css as is; reports pause and resume like the React Toaster."
+        "status": "ready",
+        "behavior": "hand built on the shared toast store and the Radix Toast DOM; CDK ComponentPortal for the themed layer",
+        "example": "toast.demo.ts",
+        "note": "ng-container dsToaster mounts the toaster; div[dsToast] is the static notice. toast() and the store come from @the-system/shared and are re-exported. Reuses the store and its timers, reports pause and resume like the React Toaster, owns two visually hidden live regions (no CDK LiveAnnouncer, which would add an element React does not render). onClose on dsToast is a function input. The close part is a private CloseButton twin until the Angular CloseButton lands. Toast.css is used as is."
       },
       "native": {
         "status": "planned",
