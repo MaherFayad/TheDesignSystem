@@ -2,7 +2,7 @@
 
 Made by `npm run shots -- --compare react angular`. pixelmatch threshold 0.1; a pair passes when at most 0.5 percent of pixels differ and the sizes match.
 
-550 pairs, 550 pass, 0 fail. Only in react: 32. Only in angular: 0.
+568 pairs, 568 pass, 0 fail. Only in react: 32. Only in angular: 0.
 
 | File | Result | Differing pixels | Where | Diff |
 | --- | --- | --- | --- | --- |
@@ -226,6 +226,24 @@ Made by `npm run shots -- --compare react angular`. pixelmatch threshold 0.1; a 
 | floating-action-button/studio-dark-rtl.png | pass | 0 (0.000 percent) |  | none |
 | floating-action-button/studio-light-ltr.png | pass | 0 (0.000 percent) |  | none |
 | floating-action-button/studio-light-rtl.png | pass | 0 (0.000 percent) |  | none |
+| form/desk-dark-ltr-comfortable.png | pass | 0 (0.000 percent) |  | none |
+| form/desk-dark-ltr-compact.png | pass | 0 (0.000 percent) |  | none |
+| form/desk-dark-ltr.png | pass | 0 (0.000 percent) |  | none |
+| form/desk-dark-rtl.png | pass | 0 (0.000 percent) |  | none |
+| form/desk-light-ltr.png | pass | 0 (0.000 percent) |  | none |
+| form/desk-light-rtl.png | pass | 0 (0.000 percent) |  | none |
+| form/neutral-dark-ltr-comfortable.png | pass | 0 (0.000 percent) |  | none |
+| form/neutral-dark-ltr-compact.png | pass | 0 (0.000 percent) |  | none |
+| form/neutral-dark-ltr.png | pass | 0 (0.000 percent) |  | none |
+| form/neutral-dark-rtl.png | pass | 0 (0.000 percent) |  | none |
+| form/neutral-light-ltr.png | pass | 0 (0.000 percent) |  | none |
+| form/neutral-light-rtl.png | pass | 0 (0.000 percent) |  | none |
+| form/studio-dark-ltr-comfortable.png | pass | 0 (0.000 percent) |  | none |
+| form/studio-dark-ltr-compact.png | pass | 0 (0.000 percent) |  | none |
+| form/studio-dark-ltr.png | pass | 0 (0.000 percent) |  | none |
+| form/studio-dark-rtl.png | pass | 0 (0.000 percent) |  | none |
+| form/studio-light-ltr.png | pass | 0 (0.000 percent) |  | none |
+| form/studio-light-rtl.png | pass | 0 (0.000 percent) |  | none |
 | icon-button/desk-dark-ltr-comfortable.png | pass | 0 (0.000 percent) |  | none |
 | icon-button/desk-dark-ltr-compact.png | pass | 0 (0.000 percent) |  | none |
 | icon-button/desk-dark-ltr.png | pass | 0 (0.000 percent) |  | none |

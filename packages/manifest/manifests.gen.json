@@ -9141,7 +9141,10 @@
         "example": "Form.demo.tsx"
       },
       "angular": {
-        "status": "planned"
+        "status": "ready",
+        "behavior": "form[dsForm] host bindings and native submit, input, change and reset listeners; div[dsFormField]; button[dsFormSubmit]; checks through packages/shared/src/form.ts; reads @angular/forms errors through the ControlContainer on the same form (reactive FormGroup or template NgForm)",
+        "example": "form.demo.ts",
+        "note": "onSubmit is a function input (it returns server errors or a promise); onErrors is the errors output; actions takes a TemplateRef rendered with the form injector. Form.css is used as is."
       },
       "native": {
         "status": "planned"
