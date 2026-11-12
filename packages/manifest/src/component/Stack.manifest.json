@@ -59,7 +59,7 @@
     "asChild": {
       "type": "boolean",
       "default": false,
-      "description": "Renders the single child element as the Stack through Radix Slot. Wins over as."
+      "description": "Renders the single child element as the Stack through Radix Slot. Wins over as. A ul or ol child loses its bullets, so give it role list yourself."
     },
     "children": {
       "type": "node",
@@ -140,7 +140,7 @@
     },
     {
       "wrong": "A gap of 12 as a number",
-      "right": "gap xl, a space step that follows density"
+      "right": "gap l (12px in the default density on a wide screen), a space step that follows density"
     },
     {
       "wrong": "A Stack used to make a two dimension card grid with nested rows",

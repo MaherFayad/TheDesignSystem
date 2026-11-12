@@ -61,6 +61,25 @@ describe('Stack', () => {
     expect(el.getAttribute('data-orientation')).toBe('horizontal');
   });
 
+  it('stamps gap none and leaves align and justify off by default', () => {
+    const el = root(render(<Stack gap="none" />).container);
+    expect(el.getAttribute('data-gap')).toBe('none');
+    expect(el.hasAttribute('data-align')).toBe(false);
+    expect(el.hasAttribute('data-justify')).toBe(false);
+  });
+
+  it('leaves the role of an asChild list to the caller', () => {
+    const el = root(
+      render(
+        <Stack asChild>
+          <ul role="list" />
+        </Stack>,
+      ).container,
+    );
+    expect(el.tagName).toBe('UL');
+    expect(el.getAttribute('role')).toBe('list');
+  });
+
   it('passes ref, className, style and rest props to the root', () => {
     const ref = createRef<HTMLElement>();
     const { container } = render(<Stack ref={ref} className="x" style={{ opacity: 0.5 }} data-testid="s" />);

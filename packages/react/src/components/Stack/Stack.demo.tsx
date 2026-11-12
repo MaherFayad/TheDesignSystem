@@ -40,25 +40,35 @@ export default function StackDemo() {
         </DemoRow>
         {(['start', 'center', 'end', 'stretch'] as const).map((align) => (
           <DemoRow key={align} label={`Align ${align}`}>
-            <Stack direction="inline" align={align} style={{ minBlockSize: 'var(--ds-space-9xl)' }}>
+            <Stack
+              direction="inline"
+              align={align}
+              style={{ outline: 'var(--ds-border-width-default) dashed var(--ds-color-border-default)' }}
+            >
               <DemoBox>Short</DemoBox>
-              <DemoBox style={{ paddingBlock: 'var(--ds-space-xl)' }}>Tall</DemoBox>
+              <DemoBox style={{ minBlockSize: 'var(--ds-space-12xl)' }}>Tall</DemoBox>
             </Stack>
           </DemoRow>
         ))}
         {(['start', 'center', 'end', 'between'] as const).map((justify) => (
-          <Stack key={justify} direction="inline" justify={justify}>
-            <DemoBox>{`Justify ${justify}`}</DemoBox>
-            <DemoBox>End item</DemoBox>
-          </Stack>
+          <DemoRow key={justify} label={`Justify ${justify}`}>
+            <Stack direction="inline" justify={justify} style={{ flex: '1 1 0' }}>
+              <DemoBox>First</DemoBox>
+              <DemoBox>Second</DemoBox>
+            </Stack>
+          </DemoRow>
         ))}
-        <Theme dir="rtl" lang="ar">
-          <Stack direction="inline" justify="between">
-            {threeAr.map((t) => (
-              <DemoBox key={t}>{t}</DemoBox>
-            ))}
-          </Stack>
-        </Theme>
+        <DemoRow label="Arabic, inline, between">
+          <div style={{ flex: '1 1 0' }}>
+            <Theme dir="rtl" lang="ar">
+              <Stack direction="inline" justify="between">
+                {threeAr.map((t) => (
+                  <DemoBox key={t}>{t}</DemoBox>
+                ))}
+              </Stack>
+            </Theme>
+          </div>
+        </DemoRow>
       </DemoCase>
 
       <DemoCase id="empty" title="No children: the stack takes no space">
