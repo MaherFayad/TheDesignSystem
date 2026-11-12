@@ -8,6 +8,7 @@
  * Private properties on the root (recipes override these):
  *
  *   --_description-list-gap            between pairs
+ *   --_description-list-pair-gap       between a term and its value when stacked
  *   --_description-list-column-gap     between a term and its value
  *   --_description-list-term-width     the most a term column takes
  *   --_description-list-font-size, --_description-list-term-fg, --_description-list-fg
@@ -15,11 +16,13 @@
  * Horizontal: the root is a two column grid and each item is a subgrid
  * row, so every term lines up with the longest one, up to the term width.
  * Under breakpoint.phone each item stacks, term above value. Vertical: every
- * item stacks.
+ * item stacks. The stack follows the viewport (like Dialog), not the
+ * list's own width: a list in a narrow desktop panel takes vertical.
  */
 @layer ds.base {
   [data-ds='description-list'] {
     --_description-list-gap: var(--ds-space-s);
+    --_description-list-pair-gap: var(--ds-space-4xs);
     --_description-list-column-gap: var(--ds-space-2xl);
     --_description-list-term-width: 40%;
     --_description-list-font-size: var(--ds-font-size-m);
@@ -52,7 +55,7 @@
     display: grid;
     grid-template-columns: subgrid;
     grid-column: 1 / -1;
-    row-gap: var(--ds-space-4xs);
+    row-gap: var(--_description-list-pair-gap);
     align-items: baseline;
     min-inline-size: 0;
   }
@@ -63,7 +66,7 @@
     margin: 0;
     color: var(--_description-list-term-fg);
     font-weight: var(--ds-font-weight-medium);
-    overflow-wrap: break-word;
+    overflow-wrap: anywhere;
   }
 
   [data-ds='description-list'] > [data-part='item'] > [data-part='details'] {
@@ -76,7 +79,13 @@
   /* ------------------------------------------------------ orientation */
 
   [data-ds='description-list'][data-orientation='vertical'] {
+    --_description-list-gap: var(--ds-space-l);
+
     grid-template-columns: minmax(0, 1fr);
+  }
+
+  [data-ds='description-list'][data-orientation='vertical'][data-size='sm'] {
+    --_description-list-gap: var(--ds-space-s);
   }
 
   [data-ds='description-list'][data-orientation='vertical'] > [data-part='item'] > :is([data-part='term'], [data-part='details']) {
@@ -96,5 +105,10 @@
   /* Arabic: a taller line, so wrapped values do not touch. */
   [data-ds='description-list']:lang(ar) {
     line-height: var(--ds-font-leading-arabic-normal);
+  }
+
+  /* Small Arabic text goes one step up (PLAN.md section 12). */
+  [data-ds='description-list'][data-size='sm']:lang(ar) {
+    --_description-list-font-size: var(--ds-font-size-m);
   }
 }

@@ -480,8 +480,8 @@
         "description": "Text size font.size s or m, with the gaps to match."
       },
       "items": {
-        "type": "string",
-        "description": "The pairs as data: an array of { key?, term, details }. Rendered before children."
+        "type": "object",
+        "description": "The pairs as data: an array of { key?, term, details }, where details is one node or an array of nodes (one dd each). Rendered before children."
       },
       "children": {
         "type": "node",
@@ -493,14 +493,16 @@
       "role": "None beyond the native dl, dt and dd. Each pair sits in a div, which HTML allows inside dl.",
       "focus": "Never focusable itself. Links or buttons inside a value keep their own focus.",
       "keys": {},
-      "announce": "Screen readers read the list with its term and value pairs and their count.",
+      "announce": "Screen readers read each term with its value. Some also say it is a list.",
       "native": {
-        "accessibilityRole": "list"
+        "accessibilityRole": "text"
       },
       "notes": [
         "Terms are nouns without a colon; the layout shows the pairing.",
         "Values wrap anywhere, so a long URL or a long Arabic address never scrolls sideways at 320px.",
-        "Terms are muted text; check that a recipe keeps 4.5:1 on the surface the list sits on."
+        "Terms are muted text; check that a recipe keeps 4.5:1 on the surface the list sits on.",
+        "Latin codes inside Arabic values (order numbers, URLs) go through Bidi.",
+        "The stack under breakpoint.phone follows the viewport, not the list width; use vertical in a narrow panel."
       ]
     },
     "content": {
@@ -524,10 +526,11 @@
       "font.size.m",
       "font.weight.medium",
       "font.leading.normal",
-      "font.leading.arabic-normal",
+      "font.leading.arabic.normal",
       "color.text.muted",
       "color.text.default",
-      "breakpoint.phone"
+      "breakpoint.phone",
+      "space.l"
     ],
     "frameworks": {
       "react": {
@@ -2105,7 +2108,7 @@
       "font.weight.semibold",
       "font.leading.tight",
       "font.leading.snug",
-      "font.leading.arabic-snug",
+      "font.leading.arabic.snug",
       "font.tracking.display",
       "font.tracking.none",
       "color.text.bright",
@@ -2118,7 +2121,8 @@
       "size.icon.sm",
       "size.icon.md",
       "duration.roll",
-      "ease.reveal"
+      "ease.reveal",
+      "font.size.l"
     ],
     "motion": "number-roll",
     "frameworks": {

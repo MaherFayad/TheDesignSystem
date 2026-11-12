@@ -38,6 +38,19 @@ describe('DescriptionList', () => {
     expect(Array.from(second.querySelectorAll('dd')).map((d) => d.textContent)).toEqual(['2', '3']);
   });
 
+  it('takes several values through items, and keeps a dd for an empty details array', () => {
+    const { container } = render(
+      <DescriptionList items={[{ term: 'Admins', details: ['Sara', 'Omar'] }]}>
+        <DescriptionListItem term="Empty" details={[]}>
+          Not set
+        </DescriptionListItem>
+      </DescriptionList>,
+    );
+    const items = container.querySelectorAll('[data-part="item"]');
+    expect(Array.from(items[0]!.querySelectorAll('dd')).map((d) => d.textContent)).toEqual(['Sara', 'Omar']);
+    expect(Array.from(items[1]!.querySelectorAll('dd')).map((d) => d.textContent)).toEqual(['Not set']);
+  });
+
   it('passes props and refs to the root and the item', () => {
     let dl: HTMLDListElement | null = null;
     let row: HTMLDivElement | null = null;

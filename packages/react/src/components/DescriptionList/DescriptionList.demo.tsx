@@ -3,6 +3,7 @@
 // shows values; a value that loads or fails is its own component (Skeleton,
 // a message) inside details.
 import { DemoCase, DemoGrid, DemoPage } from '../../demo';
+import { Bidi } from '../../theme/Bidi';
 import { Theme } from '../../theme/Theme';
 import { Kbd } from '../Kbd';
 import { DescriptionList, DescriptionListItem, type DescriptionListEntry } from './index';
@@ -15,7 +16,7 @@ const order: DescriptionListEntry[] = [
 ];
 
 const orderAr: DescriptionListEntry[] = [
-  { term: 'رقم الطلب', details: 'GB-20481' },
+  { term: 'رقم الطلب', details: <Bidi>GB-20481</Bidi> },
   { term: 'تاريخ الطلب', details: '12 نوفمبر 2026' },
   { term: 'طريقة الدفع', details: 'بطاقة تنتهي بـ 4242' },
   { term: 'الإجمالي', details: '1,250.00 ر.س' },
@@ -30,6 +31,7 @@ const settings: DescriptionListEntry[] = [
   { term: 'Time zone', details: 'Asia/Riyadh' },
   { term: 'Two step sign in', details: 'On for every member' },
   { term: 'Search shortcut', details: <Kbd size="sm">Mod+K</Kbd> },
+  { term: 'Admins', details: ['Sara Alqahtani', 'Omar Alharbi'] },
 ];
 
 const tooMany: DescriptionListEntry[] = Array.from({ length: 24 }, (_, i) => ({
@@ -67,9 +69,7 @@ export default function DescriptionListDemo() {
       </DemoCase>
 
       <DemoCase id="many" title="Many: a settings summary, one term with two values">
-        <DescriptionList items={settings}>
-          <DescriptionListItem term="Admins" details={['Sara Alqahtani', 'Omar Alharbi']} />
-        </DescriptionList>
+        <DescriptionList items={settings} />
       </DemoCase>
 
       <DemoCase id="too-many" title="Too many: 24 pairs in a narrow column">

@@ -16,9 +16,11 @@ export interface DescriptionListEntry {
   /** A stable key. Default the index. */
   key?: string;
   term: ReactNode;
-  details: ReactNode;
+  /** One value, or several values for the term (each in its own dd). */
+  details: ReactNode | readonly ReactNode[];
 }
 
+/** No `title`: hints never use the native title attribute (docs/contracts/anatomy.md). */
 export interface DescriptionListProps extends Omit<HTMLAttributes<HTMLDListElement>, 'title'> {
   /**
    * horizontal: terms in a column at the start, values beside them; it
@@ -40,8 +42,12 @@ export function DescriptionList({ orientation = 'horizontal', size = 'md', items
   return (
     <dl {...rest} data-ds="description-list" data-size={size} data-orientation={orientation}>
       {items?.map((item, i) => (
-        <DescriptionListItem key={item.key ?? i} term={item.term}>
-          {item.details}
+        <DescriptionListItem
+          key={item.key ?? i}
+          term={item.term}
+          details={Array.isArray(item.details) ? (item.details as readonly ReactNode[]) : undefined}
+        >
+          {Array.isArray(item.details) ? undefined : (item.details as ReactNode)}
         </DescriptionListItem>
       ))}
       {children}
@@ -54,7 +60,7 @@ export interface DescriptionListItemProps extends Omit<HTMLAttributes<HTMLDivEle
   term: ReactNode;
   /** The value. Text, a Badge, a Link, or several dd values through `details` as an array. */
   children?: ReactNode;
-  /** More than one value for the term, each in its own dd. Wins over children. */
+  /** More than one value for the term, each in its own dd. Wins over children when not empty, so a pair always has a dd. */
   details?: readonly ReactNode[];
   ref?: Ref<HTMLDivElement>;
 }
@@ -64,7 +70,7 @@ export function DescriptionListItem({ term, children, details, ...rest }: Descri
   return (
     <div {...rest} data-part="item">
       <dt data-part="term">{term}</dt>
-      {details ? (
+      {details && details.length > 0 ? (
         details.map((d, i) => (
           <dd key={i} data-part="details">
             {d}
