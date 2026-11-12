@@ -33,7 +33,7 @@ No adb. No iOS build.
 | 0.15 | Angular proof | ds-angular | angular | open | |
 | 0.16 | React Native proof | ds-native | native | done | 5f00f2f |
 | 0.17 | Desk Light | ds-style | all | done, proposed | f7e054b |
-| 0.18 | Consumers | ds-docs | react | open | |
+| 0.18 | Consumers | ds-docs | react | done | ae2d0ee |
 | 0.19 | Matrix | ds-qa | all | open | |
 | 0.20 | Gate 0 report | lead | all | open | |
 
