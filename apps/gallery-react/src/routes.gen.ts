@@ -8,6 +8,7 @@ export interface DemoRoute {
 }
 
 export const routes: DemoRoute[] = [
+  { name: 'AspectRatio', slug: 'aspect-ratio', load: () => import('../../../packages/react/src/components/AspectRatio/AspectRatio.demo') },
   { name: 'Button', slug: 'button', load: () => import('../../../packages/react/src/components/Button/Button.demo') },
   { name: 'Container', slug: 'container', load: () => import('../../../packages/react/src/components/Container/Container.demo') },
   { name: 'Dialog', slug: 'dialog', load: () => import('../../../packages/react/src/components/Dialog/Dialog.demo') },

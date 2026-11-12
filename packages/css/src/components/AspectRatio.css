@@ -1,0 +1,32 @@
+/*
+ * AspectRatio: the root is the inner box Radix stretches over its ratio
+ * wrapper. Media children fill it; the fit attribute picks crop or
+ * letterbox. Overflow is clipped so a cropped image never spills. Layout
+ * only: no color of its own and no motion.
+ */
+@layer ds.base {
+  [data-ds='aspect-ratio'] {
+    --_aspect-ratio-fit: cover;
+
+    overflow: hidden;
+    box-sizing: border-box;
+  }
+
+  [data-ds='aspect-ratio'][data-fit='contain'] {
+    --_aspect-ratio-fit: contain;
+  }
+
+  [data-ds='aspect-ratio'] > :is(img, video, iframe, picture, canvas, svg) {
+    display: block;
+    inline-size: 100%;
+    block-size: 100%;
+    object-fit: var(--_aspect-ratio-fit);
+    border: 0;
+  }
+
+  [data-ds='aspect-ratio'] > picture > img {
+    inline-size: 100%;
+    block-size: 100%;
+    object-fit: var(--_aspect-ratio-fit);
+  }
+}
