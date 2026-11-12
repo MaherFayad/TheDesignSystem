@@ -1,0 +1,98 @@
+== layer at rest
+<div aria-live="off" data-contrast="default" data-density="default" data-ds="theme" data-glass="regular" data-platform="web" data-scheme="dark" data-style="studio" data-toaster-layer="" dir="ltr" lang="en">
+  <span aria-atomic="false" aria-live="polite" data-toaster-announce="polite" role="status" style="position: absolute; border: 0px; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; overflow-wrap: normal;">
+  <span aria-atomic="false" aria-live="assertive" data-toaster-announce="assertive" role="alert" style="position: absolute; border: 0px; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; overflow-wrap: normal;">
+  <div aria-label="Notifications" role="region" tabindex="-1">
+    <ol data-ds="toaster" data-position="bottom-end" tabindex="-1">
+== focus before show: button ds=button part=null label=null text=Show info toast
+== focus after show : button ds=button part=null label=null text=Show info toast
+== toasts: ["info:open:New version ready"]
+== live at 400ms: polite=[Notification. New version ready.] assertive=[]
+== layer with one toast
+<div aria-live="off" data-contrast="default" data-density="default" data-ds="theme" data-glass="regular" data-platform="web" data-scheme="dark" data-style="studio" data-toaster-layer="" dir="ltr" lang="en">
+  <span aria-atomic="false" aria-live="polite" data-toaster-announce="polite" role="status" style="position: absolute; border: 0px; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; overflow-wrap: normal;">
+    <p >
+      "Notification"
+      "."
+      <span dir="ltr" lang="en">
+        "New version ready."
+  <span aria-atomic="false" aria-live="assertive" data-toaster-announce="assertive" role="alert" style="position: absolute; border: 0px; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; overflow-wrap: normal;">
+  <div aria-label="Notifications" role="region" style="" tabindex="-1">
+    <span style="position: fixed; border: 0px; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; overflow-wrap: normal;" tabindex="0">
+    <ol data-ds="toaster" data-position="bottom-end" tabindex="-1">
+      <li data-ds="toast" data-radix-collection-item="" data-state="open" data-swipe-direction="right" data-tone="info" dir="ltr" lang="en" style="user-select: none; touch-action: none;" tabindex="0">
+        <span data-part="icon">
+          <svg aria-hidden="true" data-ds="icon" data-icon="info" data-set="pixel" data-size="md" fill="currentColor" focusable="false" height="16" viewBox="0 0 24 24" width="16" xmlns="http://www.w3.org/2000/svg">
+            <path d="M18 22H6V20H18V22ZM6 20H4V18H6V20ZM20 20H18V18H20V20ZM4 18H2V6H4V18ZM22 18H20V6H22V18ZM13 17H11V11H13V17ZM13 9H11V7H13V9ZM6 6H4V4H6V6ZM20 6H18V4H20V6ZM18 4H6V2H18V4Z">
+        <div data-part="title">
+          "New version ready"
+        <button aria-label="Close notification" data-ds="close-button" data-emphasis="ghost" data-part="close" data-radix-toast-announce-exclude="" data-shape="default" data-size="xs" data-tone="neutral" type="button">
+          <span data-part="icon">
+            <svg aria-hidden="true" data-ds="icon" data-icon="close" data-set="pixel" data-size="md" fill="currentColor" focusable="false" height="16" viewBox="0 0 24 24" width="16" xmlns="http://www.w3.org/2000/svg">
+              <path d="M7 19H5V17H7V19ZM19 19H17V17H19V19ZM9 15V17H7V15H9ZM17 17H15V15H17V17ZM11 15H9V13H11V15ZM15 15H13V13H15V15ZM13 13H11V11H13V13ZM11 11H9V9H11V11ZM15 11H13V9H15V11ZM9 9H7V7H9V9ZM17 9H15V7H17V9ZM7 7H5V5H7V7ZM19 7H17V5H19V7Z">
+    <span style="position: fixed; border: 0px; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; overflow-wrap: normal;" tabindex="0">
+== tone toast removed after ms (reduced motion): 3066
+== errors: []
+== live after danger + action: polite=[Notification. Card moved to Archive. Move the card back from the Archive list.] assertive=[]
+== layer with danger + action
+<div aria-live="off" data-contrast="default" data-density="default" data-ds="theme" data-glass="regular" data-platform="web" data-scheme="dark" data-style="studio" data-toaster-layer="" dir="ltr" lang="en">
+  <span aria-atomic="false" aria-live="polite" data-toaster-announce="polite" role="status" style="position: absolute; border: 0px; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; overflow-wrap: normal;">
+    <p >
+      "Notification"
+      "."
+      <span dir="ltr" lang="en">
+        "Card moved to Archive. Move the card back from the Archive list."
+  <span aria-atomic="false" aria-live="assertive" data-toaster-announce="assertive" role="alert" style="position: absolute; border: 0px; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; overflow-wrap: normal;">
+  <div aria-label="Notifications" role="region" style="" tabindex="-1">
+    <span style="position: fixed; border: 0px; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; overflow-wrap: normal;" tabindex="0">
+    <ol data-ds="toaster" data-position="bottom-end" tabindex="-1">
+      <li data-ds="toast" data-radix-collection-item="" data-state="open" data-swipe-direction="right" data-tone="danger" dir="ltr" lang="en" style="user-select: none; touch-action: none;" tabindex="0">
+        <span data-part="icon">
+          <svg aria-hidden="true" data-ds="icon" data-icon="danger" data-set="pixel" data-size="md" fill="currentColor" focusable="false" height="16" viewBox="0 0 24 24" width="16" xmlns="http://www.w3.org/2000/svg">
+            <path d="M4 2h16v2H4zm0 18h16v2H4zM20 4h2v16h-2zM2 4h2v16H2zm9 2h2v8h-2zm0 10h2v2h-2z">
+        <div data-part="title">
+          "Could not upload photo.jpg"
+        <div data-part="description">
+          "The connection dropped at 80 percent. The file is still on your device."
+        <button data-ds="button" data-emphasis="soft" data-part="action" data-radix-toast-announce-alt="Upload the file again from the Files panel" data-radix-toast-announce-exclude="" data-shape="default" data-size="sm" data-tone="neutral" type="button">
+          <span data-part="label">
+            "Retry upload"
+        <button aria-label="Close notification" data-ds="close-button" data-emphasis="ghost" data-part="close" data-radix-toast-announce-exclude="" data-shape="default" data-size="xs" data-tone="neutral" type="button">
+          <span data-part="icon">
+            <svg aria-hidden="true" data-ds="icon" data-icon="close" data-set="pixel" data-size="md" fill="currentColor" focusable="false" height="16" viewBox="0 0 24 24" width="16" xmlns="http://www.w3.org/2000/svg">
+              <path d="M7 19H5V17H7V19ZM19 19H17V17H19V19ZM9 15V17H7V15H9ZM17 17H15V15H17V17ZM11 15H9V13H11V15ZM15 15H13V13H15V15ZM13 13H11V11H13V13ZM11 11H9V9H11V11ZM15 11H13V9H15V11ZM9 9H7V7H9V9ZM17 9H15V7H17V9ZM7 7H5V5H7V7ZM19 7H17V5H19V7Z">
+      <li data-ds="toast" data-radix-collection-item="" data-state="open" data-swipe-direction="right" data-tone="neutral" dir="ltr" lang="en" style="user-select: none; touch-action: none;" tabindex="0">
+        <span data-part="icon">
+          <svg aria-hidden="true" data-ds="icon" data-icon="bell" data-set="pixel" data-size="md" fill="currentColor" focusable="false" height="16" viewBox="0 0 24 24" width="16" xmlns="http://www.w3.org/2000/svg">
+            <path d="M9 2h6v2H9zM7 4h2v2H7zm8 0h2v2h-2zM5 6h2v7H5zm12 0h2v7h-2zM3 13h2v4H3zm16 0h2v4h-2z">
+            <path d="M3 15h18v2H3zm5 3h2v2H8zm6 0h2v2h-2zm-4 2h4v2h-4z">
+        <div data-part="title">
+          "Card moved to Archive"
+        <button data-ds="button" data-emphasis="soft" data-part="action" data-radix-toast-announce-alt="Move the card back from the Archive list" data-radix-toast-announce-exclude="" data-shape="default" data-size="sm" data-tone="neutral" type="button">
+          <span data-part="label">
+            "Undo move"
+        <button aria-label="Close notification" data-ds="close-button" data-emphasis="ghost" data-part="close" data-radix-toast-announce-exclude="" data-shape="default" data-size="xs" data-tone="neutral" type="button">
+          <span data-part="icon">
+            <svg aria-hidden="true" data-ds="icon" data-icon="close" data-set="pixel" data-size="md" fill="currentColor" focusable="false" height="16" viewBox="0 0 24 24" width="16" xmlns="http://www.w3.org/2000/svg">
+              <path d="M7 19H5V17H7V19ZM19 19H17V17H19V19ZM9 15V17H7V15H9ZM17 17H15V15H17V17ZM11 15H9V13H11V15ZM15 15H13V13H15V15ZM13 13H11V11H13V13ZM11 11H9V9H11V11ZM15 11H13V9H15V11ZM9 9H7V7H9V9ZM17 9H15V7H17V9ZM7 7H5V5H7V7ZM19 7H17V5H19V7Z">
+    <span style="position: fixed; border: 0px; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; overflow-wrap: normal;" tabindex="0">
+== after 8s: ["danger:open:Could not upload photo.jpg","neutral:open:Card moved to Archive"]
+== F8 -> ol ds=toaster part=null label=null text=Could not upload photo.jpgThe connection
+== Tab 1 -> li ds=toast part=null label=null text=Card moved to ArchiveUndo move
+== Tab 2 -> button ds=button part=action label=null text=Undo move
+== Tab 3 -> button ds=close-button part=close label=Close notification text=
+== Tab 4 -> li ds=toast part=null label=null text=Could not upload photo.jpgThe connection
+== Tab 5 -> button ds=button part=action label=null text=Retry upload
+== Tab 6 -> button ds=close-button part=close label=Close notification text=
+== F8 Tab -> li ds=toast part=null label=null text=Card moved to ArchiveUndo move
+== after Escape focus -> ol ds=toaster part=null label=null text=Could not upload photo.jpgThe connection ["danger:open:Could not upload photo.jpg"]
+== Escape outside -> ["danger:open:Could not upload photo.jpg"]
+== on -> button ds=close-button part=close label=Close notification text=
+== after Enter -> ol ds=toaster part=null label=null text= []
+== hovered 6s: ["success:open:Link copied"]
+== removed after leave ms: 3655
+== focused -> li ds=toast part=null label=null text=Link copied
+== focused 6s: ["success:open:Link copied"]
+== removed after blur ms: 4039
+== motion close removed ms: <1000
+== reduced close removed ms <200: true
