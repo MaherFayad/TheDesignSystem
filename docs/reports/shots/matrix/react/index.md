@@ -2,7 +2,7 @@
 
 Made by `npm run shots`. Each shot is the `variants` case at `chrome=0`, 1280 by 800 viewport, full page, device scale factor 1, animations off, reduced motion, fonts loaded. File names: `<component>/<style>-<scheme>-<dir>[-<density>][-open].png`. Density is default unless named.
 
-1782 shots, 109 components, 41.41 MB after lossless recompression. Stable (two captures byte equal): 1769; unstable: 13; not verified: 0.
+1782 shots, 109 components, 41.41 MB after lossless recompression. Stable (two captures byte equal): 0; unstable: 0; not verified: 1782.
 
 Images kept in this folder: 721 (16.44 MB). A cell with a link is kept here; a cell with a short hash was captured, compared and recorded, and its image is in the work folder `node_modules/.cache/ds-shots/react` of the run, not in git. Rerun `npm run shots -- --keep all` to get every image.
 
@@ -1063,8 +1063,8 @@ Densities, dark, ltr en:
 
 | Style | Scheme | ltr en | rtl ar |
 | --- | --- | --- | --- |
-| desk | dark | `836ba2aa` (unstable) | [rtl](scroll-area/desk-dark-rtl.png) (unstable) |
-| desk | light | `b3a49d95` | `234727ad` (unstable) |
+| desk | dark | `8ccc1356` | [rtl](scroll-area/desk-dark-rtl.png) |
+| desk | light | `b3a49d95` | `d60989e3` |
 | neutral | dark | `7d2da5a5` | `75cd806f` |
 | neutral | light | [ltr](scroll-area/neutral-light-ltr.png) | [rtl](scroll-area/neutral-light-rtl.png) |
 | studio | dark | [ltr](scroll-area/studio-dark-ltr.png) | [rtl](scroll-area/studio-dark-rtl.png) |
@@ -1074,14 +1074,9 @@ Densities, dark, ltr en:
 
 | Style | compact | default | comfortable |
 | --- | --- | --- | --- |
-| desk | `2b805716` | `836ba2aa` (unstable) | `307ae00d` |
-| neutral | `b8f43c79` | `7d2da5a5` | `7d2da5a5` |
-| studio | [compact](scroll-area/studio-dark-ltr-compact.png) | [default](scroll-area/studio-dark-ltr.png) | [comfortable](scroll-area/studio-dark-ltr-comfortable.png) (unstable) |
-
-- scroll-area/desk-dark-ltr.png: unstable: 0 pixels differ between two captures (0.000 percent), no box
-- scroll-area/desk-dark-rtl.png: unstable: 0 pixels differ between two captures (0.000 percent), no box
-- scroll-area/desk-light-rtl.png: unstable: 0 pixels differ between two captures (0.000 percent), no box
-- scroll-area/studio-dark-ltr-comfortable.png: unstable: 0 pixels differ between two captures (0.000 percent), no box
+| desk | `2b805716` | `8ccc1356` | `307ae00d` |
+| neutral | `b8f43c79` | `7d2da5a5` | `b5c2c89e` |
+| studio | [compact](scroll-area/studio-dark-ltr-compact.png) | [default](scroll-area/studio-dark-ltr.png) | [comfortable](scroll-area/studio-dark-ltr-comfortable.png) |
 
 ## ScrubInput
 
@@ -1378,29 +1373,19 @@ Densities, dark, ltr en:
 | Style | Scheme | ltr en | rtl ar |
 | --- | --- | --- | --- |
 | desk | dark | `44a6ff2f` | [rtl](tabs/desk-dark-rtl.png) |
-| desk | light | `6d03425d` (unstable) | `6271f16e` (unstable) |
-| neutral | dark | `e10fdb21` (unstable) | `b9733670` |
+| desk | light | `c9f52afd` | `f402eda3` |
+| neutral | dark | `bd576790` | `b9733670` |
 | neutral | light | [ltr](tabs/neutral-light-ltr.png) | [rtl](tabs/neutral-light-rtl.png) |
 | studio | dark | [ltr](tabs/studio-dark-ltr.png) | [rtl](tabs/studio-dark-rtl.png) |
-| studio | light | `16b39bc7` (unstable) | `90cbeafe` (unstable) |
+| studio | light | `40ee3d23` | `90cbeafe` |
 
 Densities, dark, ltr en:
 
 | Style | compact | default | comfortable |
 | --- | --- | --- | --- |
-| desk | `aca9fb12` (unstable) | `44a6ff2f` | `ac3abd51` (unstable) |
-| neutral | `d6d470c2` (unstable) | `e10fdb21` (unstable) | `bd576790` (unstable) |
+| desk | `3e4f6357` | `44a6ff2f` | `001eb4ff` |
+| neutral | `ad2958f3` | `bd576790` | `e10fdb21` |
 | studio | [compact](tabs/studio-dark-ltr-compact.png) | [default](tabs/studio-dark-ltr.png) | [comfortable](tabs/studio-dark-ltr-comfortable.png) |
-
-- tabs/desk-dark-ltr-comfortable.png: unstable: 0 pixels differ between two captures (0.000 percent), no box
-- tabs/desk-dark-ltr-compact.png: unstable: 0 pixels differ between two captures (0.000 percent), no box
-- tabs/desk-light-ltr.png: unstable: 0 pixels differ between two captures (0.000 percent), no box
-- tabs/desk-light-rtl.png: unstable: 0 pixels differ between two captures (0.000 percent), no box
-- tabs/neutral-dark-ltr-comfortable.png: unstable: 0 pixels differ between two captures (0.000 percent), no box
-- tabs/neutral-dark-ltr-compact.png: unstable: 0 pixels differ between two captures (0.000 percent), no box
-- tabs/neutral-dark-ltr.png: unstable: 0 pixels differ between two captures (0.000 percent), no box
-- tabs/studio-light-ltr.png: unstable: 0 pixels differ between two captures (0.000 percent), no box
-- tabs/studio-light-rtl.png: unstable: 0 pixels differ between two captures (0.000 percent), no box
 
 ## TagField
 
