@@ -115,12 +115,26 @@ export interface PatternDefinition<I extends MotionInput> {
 /** How a style plays one pattern: the full form, the reduced form, or nothing. */
 export type PatternMode = 'full' | 'reduced' | 'none';
 
+/** Timing a preset gives one phase of the full form. */
+export interface PhaseTiming {
+  duration?: DurationToken;
+  easing?: EaseToken;
+}
+
+/**
+ * A style's choice for one pattern. Timing rows change the full form only;
+ * the reduced form keeps its own timing.
+ */
 export interface PatternPreset {
   mode: PatternMode;
-  /** A duration token that replaces the pattern's own. */
+  /** A duration token that replaces the pattern's own, in both phases. */
   duration?: DurationToken;
-  /** An ease token that replaces the pattern's own. */
+  /** An ease token that replaces the pattern's own, in both phases. */
   easing?: EaseToken;
+  /** Timing for the enter phase only. Wins over `duration` and `easing`. */
+  enter?: PhaseTiming;
+  /** Timing for the exit phase only. Wins over `duration` and `easing`. */
+  exit?: PhaseTiming;
 }
 
 export interface AnimateOptions {
@@ -160,8 +174,13 @@ export function definePattern<I extends MotionInput>(def: PatternDefinition<I>):
     const s = reduced ? reducedSpec(input) : spec(input);
     if (s.keyframes.length === 0) return null;
     const out = { ...s };
-    if (opts.preset?.duration) out.duration = opts.preset.duration;
-    if (opts.preset?.easing && out.easing !== 'linear') out.easing = opts.preset.easing;
+    const p = opts.preset;
+    if (reduced || !p) return out;
+    const phase = p[input?.phase === 'exit' ? 'exit' : 'enter'];
+    const duration = phase?.duration ?? p.duration;
+    const easing = phase?.easing ?? p.easing;
+    if (duration) out.duration = duration;
+    if (easing && out.easing !== 'linear') out.easing = easing;
     return out;
   };
   return {

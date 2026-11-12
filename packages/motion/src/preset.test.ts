@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import desk from '../../styles/desk/motion';
 import studio from '../../styles/studio/motion';
+import { catalog } from './catalog';
 import { PATTERN_IDS } from './core';
 import { patternPreset, resolvePreset } from './preset';
 import { durationMs } from './tokens';
@@ -37,5 +38,18 @@ describe('style motion presets', () => {
     expect(patternPreset(still, 'window-grow').mode).toBe('none');
     expect(patternPreset(still, 'window-zoom').mode).toBe('none');
     expect(patternPreset(still, 'dialog').mode).toBe('full');
+  });
+});
+
+describe('preset timing per phase (N12)', () => {
+  it('an enter row changes the enter only, and no row changes the reduced form', () => {
+    const preset = { mode: 'full' as const, enter: { easing: 'ease.out' as const, duration: 'duration.slow' as const } };
+    expect(catalog['menu-scale'].specFor({}, { reduced: false, preset })).toMatchObject({ easing: 'ease.out', duration: 'duration.slow' });
+    const exit = catalog['menu-scale'].specFor({ phase: 'exit' }, { reduced: false, preset });
+    expect(exit?.easing).toBe(catalog['menu-scale'].spec({ phase: 'exit' }).easing);
+    expect(exit?.duration).toBe(catalog['menu-scale'].spec({ phase: 'exit' }).duration);
+    const both = { mode: 'full' as const, duration: 'duration.slow' as const };
+    expect(catalog.dialog.specFor({}, { reduced: true, preset: both })?.duration).toBe(catalog.dialog.reducedSpec().duration);
+    expect(catalog.dialog.specFor({ phase: 'exit' }, { reduced: false, preset: both })?.duration).toBe('duration.slow');
   });
 });
