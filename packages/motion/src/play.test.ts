@@ -45,3 +45,74 @@ describe('settled', () => {
     expect(await race(settled(a as unknown as Animation))).toBe('settled');
   });
 });
+
+// ---------------------------------------------------------------- loops (B3)
+
+import { vi } from 'vitest';
+import { catalog } from './catalog';
+import * as core from './core';
+
+/** A fake element whose `animate` returns a fake Animation with timing. */
+function loopEl(vars: Record<string, string>) {
+  const made: (ReturnType<typeof fakeAnimation> & { iterations: number; pause: () => void; play: () => void })[] = [];
+  const el = {
+    style: {} as CSSStyleDeclaration,
+    getAnimations: () => made,
+    animate: vi.fn((_frames: Keyframe[], opts: KeyframeAnimationOptions) => {
+      const a = Object.assign(fakeAnimation(String(opts.id)), {
+        iterations: Number(opts.iterations ?? 1),
+        effect: { getTiming: () => ({ iterations: opts.iterations ?? 1 }) },
+        pause() {
+          a.playState = 'paused';
+        },
+        play() {
+          a.playState = 'running';
+        },
+      });
+      made.push(a);
+      return a as unknown as Animation;
+    }),
+  };
+  vi.stubGlobal('getComputedStyle', () => ({ direction: 'ltr', getPropertyValue: (n: string) => vars[n] ?? '' }));
+  return { el: el as unknown as HTMLElement, made, animate: el.animate };
+}
+
+describe('loops', () => {
+  it('thinking stops before five seconds, counted from the live token', () => {
+    const { el, animate } = loopEl({ '--ds-duration-shimmer': '1400ms' });
+    catalog.thinking.animate(el, { reduced: false });
+    const it1 = animate.mock.calls[0]![1].iterations as number;
+    expect(Number.isFinite(it1)).toBe(true);
+    expect(it1 * 1400).toBeLessThan(5000);
+    catalog.thinking.animate(el, { reduced: false, index: 1 });
+    vi.stubGlobal('getComputedStyle', () => ({ direction: 'ltr', getPropertyValue: (n: string) => (n === '--ds-duration-shimmer' ? '2s' : '') }));
+    catalog.thinking.animate(el, { reduced: false });
+    expect(animate.mock.calls[2]![1].iterations).toBe(2);
+    vi.unstubAllGlobals();
+  });
+
+  it('the shimmer cap follows a style that slows the shimmer', () => {
+    const { el, animate } = loopEl({ '--ds-duration-shimmer': '2s' });
+    catalog['skeleton-shimmer'].animate(el, { reduced: false });
+    expect(animate.mock.calls[0]![1].iterations).toBe(2);
+    vi.unstubAllGlobals();
+  });
+
+  it('pauseLoops and resumeLoops pause and play every catalog loop under a root', () => {
+    const { el, made } = loopEl({ '--ds-duration-spin': '800ms' });
+    catalog.spinner.animate(el, { reduced: false });
+    catalog.dialog.animate(el, { reduced: false });
+    const root = { getAnimations: (o?: { subtree?: boolean }) => (o?.subtree ? made : []) } as unknown as Element;
+    expect(core.pauseLoops(root)).toBe(1);
+    expect(made.map((a) => a.playState)).toEqual(['paused', 'running']);
+    expect(core.resumeLoops(root)).toBe(1);
+    expect(made[0]!.playState).toBe('running');
+    vi.unstubAllGlobals();
+  });
+
+  it('the spinner native block loops with -1, as Reanimated wants', () => {
+    expect(catalog.spinner.native.iterations).toBe(-1);
+    expect(catalog.spinner.native.easing).toEqual([0, 0, 1, 1]);
+    expect(JSON.parse(JSON.stringify(catalog.thinking.native)).iterations).toBe(3);
+  });
+});

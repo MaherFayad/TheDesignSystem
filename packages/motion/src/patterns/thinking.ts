@@ -1,9 +1,12 @@
 // thinking: the three dots of an assistant that is working. Each dot lifts
 // and brightens in turn (`index` 0 to 2 sets its offset in the loop). One
-// cycle is duration.shimmer (1.4s), well under three flashes a second. It
-// loops while the work runs and stops the moment the first text arrives.
-// Announce the state in text. Reduced: no motion, the dots stay still.
-import { definePattern, stillSpec, type MotionInput } from '../core';
+// cycle is duration.shimmer (1.4s), well under three flashes a second. The
+// dots are decoration next to a text state, so they stop before five seconds
+// (WCAG 2.2.2): the web counts the loops from the live token (3 at 1.4s) and
+// the dots then rest at their first frame. Remove them the moment the first
+// text arrives. `pauseLoops(root)` pauses them earlier. Announce the state
+// in text. Reduced: no motion, the dots stay still.
+import { definePattern, LOOP_LIMIT_MS, loopsWithin, stillSpec, type MotionInput } from '../core';
 import { durationMs, easeBezier, spacePx } from '../tokens';
 import { negSpace } from './values';
 
@@ -14,6 +17,9 @@ export interface ThinkingInput extends MotionInput {
 
 /** The share of one cycle between two dots. */
 export const THINKING_DOT_STEP = 0.2;
+
+/** Loops at the base value of duration.shimmer: 3 loops of 1.4s is 4.2s. */
+export const THINKING_ITERATIONS = loopsWithin(durationMs['duration.shimmer']);
 
 export const thinking = definePattern<ThinkingInput>({
   id: 'thinking',
@@ -30,7 +36,8 @@ export const thinking = definePattern<ThinkingInput>({
       easing: 'ease.default',
       fill: 'none',
       origin: '50% 50%',
-      iterations: Infinity,
+      iterations: THINKING_ITERATIONS,
+      loopLimitMs: LOOP_LIMIT_MS,
     };
   },
   reduced: () => stillSpec('duration.shimmer'),
@@ -38,6 +45,7 @@ export const thinking = definePattern<ThinkingInput>({
     duration: durationMs['duration.shimmer'],
     easing: easeBezier['ease.default'],
     reducedDuration: 0,
+    iterations: THINKING_ITERATIONS,
     liftY: spacePx['space.4xs'],
     dotStep: THINKING_DOT_STEP,
   },

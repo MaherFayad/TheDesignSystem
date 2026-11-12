@@ -90,7 +90,8 @@ describe('the catalog', () => {
     it('gives native numbers for Reanimated', () => {
       expect(typeof pattern.native.duration).toBe('number');
       expect(pattern.native.duration).toBeGreaterThan(0);
-      expect(pattern.native.easing === 'linear' || pattern.native.easing.length === 4).toBe(true);
+      expect(pattern.native.easing).toHaveLength(4);
+      for (const v of Object.values(pattern.native)) if (typeof v === 'number') expect(Number.isFinite(v), `${id} native holds a finite number`).toBe(true);
     });
   });
 
@@ -112,8 +113,12 @@ describe('the catalog', () => {
   });
 
   it('stops loops that are not the activity itself before five seconds', () => {
-    const s = catalog['skeleton-shimmer'].spec();
-    expect((s.iterations ?? 1) * catalog['skeleton-shimmer'].native.duration).toBeLessThan(5000);
+    for (const id of ['skeleton-shimmer', 'thinking'] as const) {
+      const s = catalog[id].spec();
+      expect(Number.isFinite(s.iterations), id).toBe(true);
+      expect((s.iterations ?? 1) * catalog[id].native.duration, id).toBeLessThan(5000);
+      expect(s.loopLimitMs, id).toBe(5000);
+    }
   });
 
   it('caps the stagger', () => {

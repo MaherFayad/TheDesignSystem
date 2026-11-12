@@ -69,6 +69,13 @@ export interface MotionSpec {
   origin: string;
   /** Loops. Default 1. */
   iterations?: number;
+  /**
+   * For a loop that is not the activity itself: on the web the loop count is
+   * computed from the live duration token so that every loop ends before
+   * this many ms (at least one loop). `iterations` holds the count at the
+   * base token value.
+   */
+  loopLimitMs?: number;
   /** A delay token, multiplied by `delaySteps`. */
   delay?: DelayToken;
   delaySteps?: number;
@@ -77,9 +84,12 @@ export interface MotionSpec {
 /** Numbers for Reanimated (wave 2): ms, cubic bezier points, scales, px and springs. */
 export interface NativeMotion {
   duration: number;
-  easing: readonly [number, number, number, number] | 'linear';
+  /** Cubic bezier points. Linear is `[0, 0, 1, 1]`. */
+  easing: readonly [number, number, number, number];
   /** Reduced form duration in ms; 0 when the reduced form is no motion. */
   reducedDuration: number;
+  /** Loops. `-1` loops until stopped, as Reanimated's `withRepeat` reads it. Default 1. */
+  iterations?: number;
   [key: string]: unknown;
 }
 
@@ -272,6 +282,15 @@ export function readDir(el: Element): MotionDir {
 /** The id the catalog gives every Animation it starts: `ds-motion:<pattern>`. */
 export const ANIMATION_ID_PREFIX = 'ds-motion:';
 
+/** WCAG 2.2.2: anything that moves for more than five seconds needs a way to pause it. */
+export const LOOP_LIMIT_MS = 5000;
+
+/** The loop count that ends before `limitMs` at a duration, at least 1. */
+export function loopsWithin(durationMs: number, limitMs = LOOP_LIMIT_MS): number {
+  if (!(durationMs > 0)) return 1;
+  return Math.max(1, Math.floor((limitMs - 1) / durationMs));
+}
+
 /** Cancels the running animations of an element, so the next one measures its real frame. */
 export function settle(el: Element): void {
   if (typeof el.getAnimations !== 'function') return;
@@ -287,14 +306,55 @@ export function play(el: Element, spec: MotionSpec, id: string, prefix = 'ds'): 
   const style = (el as HTMLElement).style as CSSStyleDeclaration | undefined;
   if (style) style.transformOrigin = spec.origin;
   const delay = spec.delay ? readDuration(el, spec.delay, prefix) * (spec.delaySteps ?? 1) : 0;
+  const duration = readDuration(el, spec.duration, prefix);
+  const iterations = spec.loopLimitMs ? loopsWithin(duration, spec.loopLimitMs) : (spec.iterations ?? 1);
   return el.animate(spec.keyframes, {
     id: `${ANIMATION_ID_PREFIX}${id}`,
-    duration: readDuration(el, spec.duration, prefix),
+    duration,
     easing: spec.easing === 'linear' ? 'linear' : readEasing(el, spec.easing, prefix),
     fill: spec.fill,
-    iterations: spec.iterations ?? 1,
+    iterations,
     delay,
   });
+}
+
+/** The catalog loops under `root` (its own and its descendants'): animations it started with more than one loop. */
+function loopsUnder(root: Element | Document): Animation[] {
+  if (typeof root.getAnimations !== 'function') return [];
+  return root.getAnimations({ subtree: true } as GetAnimationsOptions).filter((a) => {
+    if (!String(a.id).startsWith(ANIMATION_ID_PREFIX)) return false;
+    const n = a.effect?.getTiming().iterations ?? 1;
+    return n > 1;
+  });
+}
+
+/**
+ * Pauses every catalog loop under `root` (a spinner, the thinking dots, a
+ * shimmer) and returns how many it paused. Wire it to a pause control, or
+ * call it when the page asks for less motion. WCAG 2.2.2 asks for a way to
+ * pause anything that moves for more than five seconds.
+ */
+export function pauseLoops(root: Element | Document): number {
+  let n = 0;
+  for (const a of loopsUnder(root)) {
+    if (a.playState === 'running') {
+      a.pause();
+      n += 1;
+    }
+  }
+  return n;
+}
+
+/** Plays again the catalog loops under `root` that `pauseLoops` paused. Returns how many. */
+export function resumeLoops(root: Element | Document): number {
+  let n = 0;
+  for (const a of loopsUnder(root)) {
+    if (a.playState === 'paused') {
+      a.play();
+      n += 1;
+    }
+  }
+  return n;
 }
 
 /**
