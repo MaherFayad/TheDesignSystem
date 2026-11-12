@@ -46,9 +46,12 @@ No adb. No iOS build.
 Nothing.
 
 ## Waiting on owner
-1. Pushing. The prompt forbids pushing, but this container is temporary and
-   unpushed commits are lost when it is reclaimed. May the lead push the
-   session branch `claude/relaxed-hypatia-7gseap` to `origin` after each wave?
+Nothing.
+
+## Owner answers
+1. 2026-11-12: pushing. The owner approved pushing the session branch
+   `claude/relaxed-hypatia-7gseap` to `origin` after each wave. No other
+   branch, no pull request, no force push.
 
 ## Contract changes
 None yet.

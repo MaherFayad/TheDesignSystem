@@ -17,7 +17,8 @@ Newest first inside each section. Each entry has a date and the reasoning.
    `git init`, branch `main`, no remote, never push. We commit on the session
    branch, one commit per green work order, and do not push. Pushing stays a
    HUMAN GATE. Risk the owner should know: the container is temporary, so
-   unpushed commits are lost when it is reclaimed. Asked at the end of wave 0.
+   unpushed commits are lost when it is reclaimed. Asked on 2026-11-12. The owner answered the same day: push the session
+   branch to `origin` after each wave. Nothing else is pushed.
 3. **Models.** Main agent: claude-fable-5-2 at medium (confirmed from the
    session record). Subagents: claude-opus-5-5 at medium. The Agent tool takes
    the alias `opus` plus effort `medium`, and `.claude/settings.json` forces
