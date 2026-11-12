@@ -2429,6 +2429,211 @@
     "since": "0.1.0"
   },
   {
+    "name": "TabBar",
+    "kind": "component",
+    "family": "navigation",
+    "summary": "The bottom bar of three to five top level destinations on phone layouts: an icon over a label for each, the current one marked.",
+    "useWhen": [
+      "Three to five top level destinations of an app on a phone width layout",
+      "Destinations a person moves between often and wants one thumb tap away",
+      "A web app that replaces its Sidebar or Rail with a bottom bar under breakpoint.tablet"
+    ],
+    "avoidWhen": [
+      "Switching panels of content inside one page",
+      "More than five destinations, or only two",
+      "Actions such as Add or Share",
+      "Desktop width layouts"
+    ],
+    "insteadUse": {
+      "Panels inside one page": "Tabs",
+      "More than five destinations": "Sidebar in a Drawer, or a More destination page",
+      "Actions": "Toolbar or FloatingActionButton",
+      "Desktop layouts": "Sidebar, Rail or Navbar",
+      "App shortcuts in Desk": "Dock"
+    },
+    "anatomy": [
+      "root",
+      "item",
+      "item-icon",
+      "item-label",
+      "item-badge",
+      "item-status"
+    ],
+    "parts": {
+      "TabBarItem": "item"
+    },
+    "slots": {
+      "root": {
+        "accepts": [
+          "TabBarItem"
+        ],
+        "min": 3,
+        "max": 5
+      }
+    },
+    "props": {
+      "aria-label": {
+        "type": "string",
+        "description": "TabBar: required unless aria-labelledby is set. Names the landmark: Main."
+      },
+      "size": {
+        "type": [
+          "md",
+          "lg"
+        ],
+        "default": "md",
+        "description": "TabBar: md items are at least size.control.md (32px) with 16px icons; lg items are size.control.lg (44px) with 24px icons, for touch layouts."
+      },
+      "label": {
+        "type": "string",
+        "description": "TabBarItem: the visible name, a short noun. Always shown; a long one ends in an ellipsis and stays whole in the link name."
+      },
+      "icon": {
+        "type": "string",
+        "description": "TabBarItem: a system icon name. Decorative."
+      },
+      "href": {
+        "type": "string",
+        "description": "TabBarItem: the destination."
+      },
+      "active": {
+        "type": "boolean",
+        "default": false,
+        "description": "TabBarItem: the current destination. Sets aria-current page and data-active: a bolder label and a pill behind the icon."
+      },
+      "badge": {
+        "type": "number | boolean",
+        "description": "TabBarItem: a count (99+ past 99, Western digits) or true for a dot. 0 and false show nothing. Its words join the link name."
+      },
+      "badgeLabel": {
+        "type": "string",
+        "default": "new",
+        "description": "TabBarItem: the words the badge adds to the name: Inbox, 3 new. A dot says New. Arabic: جديد."
+      },
+      "asChild": {
+        "type": "boolean",
+        "default": false,
+        "description": "TabBarItem: renders its one child element (a router link) as the item."
+      }
+    },
+    "states": [
+      "data-active",
+      "data-dot"
+    ],
+    "a11y": {
+      "role": "navigation (the nav landmark) with a name; each item is a link, the current one with aria-current page.",
+      "focus": "Every item is a tab stop, in reading order.",
+      "keys": {
+        "Tab": "Moves to the next item",
+        "Shift+Tab": "Moves to the previous item",
+        "Enter": "Follows the link"
+      },
+      "announce": "Each link reads its label, its badge words (Inbox, 3 new) and current page for the active one.",
+      "notes": [
+        "The current item is marked by aria-current, a bolder label and a pill behind its icon, never by color alone (WCAG 1.4.1).",
+        "Labels are always visible; icons are decorative.",
+        "The bar pads its block end by env(safe-area-inset-bottom) and its sides by the side insets.",
+        "A bar fixed to the bottom of the viewport covers content unless the page keeps the same room at its end (WCAG 2.4.11): the layout (PageShell) reserves it.",
+        "lg gives 44px targets for touch layouts (WCAG 2.5.8 and the touch template rule); md items are at least 32px.",
+        "No native title attribute; a cut label keeps its full text in the link name."
+      ]
+    },
+    "content": {
+      "en": {
+        "label": "One short noun, sentence case: Home, Search, Inbox. No verbs.",
+        "landmark": "Name it Main, or after the app section."
+      },
+      "ar": {
+        "label": "Noun form labels, white Saudi dialect, no diacritics: الرئيسية، البحث، الوارد.",
+        "badge": "Western digits; the badge words read جديد."
+      }
+    },
+    "tokens": [
+      "color.bg.surface-2",
+      "color.border.subtle",
+      "color.text.muted",
+      "color.text.default",
+      "color.text.bright",
+      "color.bg.overlay-20",
+      "color.state.danger-solid",
+      "color.state.danger-on-solid",
+      "color.focus.ring",
+      "size.control.md",
+      "size.control.lg",
+      "size.target-min",
+      "size.icon.md",
+      "size.icon.lg",
+      "space.4xs",
+      "space.3xs",
+      "space.2xs",
+      "space.s",
+      "space.m",
+      "radius.field",
+      "radius.pill",
+      "font.family.sans",
+      "font.size.2xs",
+      "font.size.xs",
+      "font.weight.medium",
+      "font.weight.bold",
+      "font.leading.tight",
+      "border.width.default",
+      "border.width.strong"
+    ],
+    "motion": "fade-rise",
+    "frameworks": {
+      "react": {
+        "status": "ready",
+        "behavior": "hand built nav of links",
+        "example": "TabBar.demo.tsx",
+        "note": "No motion of its own: the current item's colors swap at once. fade-rise is the pattern a layout uses if it reveals the bar."
+      },
+      "angular": {
+        "status": "planned",
+        "behavior": "hand built"
+      },
+      "native": {
+        "status": "planned",
+        "behavior": "react-navigation bottom tabs or a hand built bar",
+        "note": "44pt on iOS, 48dp on Android; safe area from react-native-safe-area-context."
+      }
+    },
+    "styles": {
+      "studio": "A surface-2 bar with a subtle top hairline, muted labels, the current item bright and bold with an overlay-20 pill behind its icon.",
+      "desk": "The same parts on Desk tokens: the Desk surface and type.",
+      "neutral": "Token driven; applies once the Neutral pack is merged.",
+      "liquid": "Planned: a glass bar."
+    },
+    "mistakes": [
+      {
+        "wrong": "Icons with no labels",
+        "right": "A short visible label on every item"
+      },
+      {
+        "wrong": "Six or seven destinations squeezed into the bar",
+        "right": "Five at most; the rest go on a More page or in a Drawer"
+      },
+      {
+        "wrong": "A TabBar that switches panels inside a page",
+        "right": "Tabs"
+      },
+      {
+        "wrong": "The current item shown only by color",
+        "right": "active: aria-current, weight and the icon pill"
+      },
+      {
+        "wrong": "A fixed bar over the last line of the page",
+        "right": "Reserve the bar's height at the end of the page"
+      }
+    ],
+    "contract": {
+      "optionalParts": [
+        "item-badge",
+        "item-status"
+      ]
+    },
+    "since": "0.1.0"
+  },
+  {
     "name": "Tabs",
     "kind": "component",
     "family": "navigation",

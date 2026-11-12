@@ -1,0 +1,178 @@
+/*
+ * TabBar: the bottom bar of a phone layout. Follows "One convention for
+ * component CSS and props" in docs/contracts/anatomy.md.
+ *
+ * Private properties on the root (recipes override these):
+ *
+ *   --_tab-bar-bg, -border-color
+ *   --_tab-bar-item-height        the target height of each item
+ *   --_tab-bar-icon-size          the box the icon sits in
+ *   --_tab-bar-fg, -fg-active     item text at rest and when current
+ *   --_tab-bar-pill-bg            the pill behind the current item's icon
+ *   --_tab-bar-badge-bg, -badge-fg
+ *   --_tab-bar-ring               the focus ring
+ *
+ * Items swap their own --_tab-bar-item-* properties for the states (the
+ * state is on the item, not the root). Nothing animates: colors swap.
+ */
+@layer ds.base {
+  [data-ds='tab-bar'] {
+    --_tab-bar-bg: var(--ds-color-bg-surface-2);
+    --_tab-bar-border-color: var(--ds-color-border-subtle);
+    --_tab-bar-item-height: var(--ds-size-control-md);
+    --_tab-bar-icon-size: var(--ds-size-icon-md);
+    --_tab-bar-fg: var(--ds-color-text-muted);
+    --_tab-bar-fg-hover: var(--ds-color-text-default);
+    --_tab-bar-fg-active: var(--ds-color-text-bright);
+    --_tab-bar-pill-bg: var(--ds-color-bg-overlay-20);
+    --_tab-bar-badge-bg: var(--ds-color-state-danger-solid);
+    --_tab-bar-badge-fg: var(--ds-color-state-danger-on-solid);
+    --_tab-bar-ring: inset 0 0 0 var(--ds-border-width-strong) var(--ds-color-focus-ring);
+
+    display: flex;
+    align-items: stretch;
+    justify-content: space-around;
+    gap: var(--ds-space-4xs);
+    box-sizing: border-box;
+    inline-size: 100%;
+    padding-block: var(--ds-space-3xs);
+    /* The safe area of a phone: the home indicator and the rounded corners never cover a label. */
+    padding-block-end: max(var(--ds-space-3xs), env(safe-area-inset-bottom));
+    padding-inline: max(var(--ds-space-3xs), env(safe-area-inset-left)) max(var(--ds-space-3xs), env(safe-area-inset-right));
+    border-block-start: var(--ds-border-width-default) solid var(--_tab-bar-border-color);
+    background-color: var(--_tab-bar-bg);
+    font-family: var(--ds-font-family-sans);
+  }
+
+  [data-ds='tab-bar'][data-size='lg'] {
+    --_tab-bar-item-height: var(--ds-size-control-lg);
+    --_tab-bar-icon-size: var(--ds-size-icon-lg);
+  }
+
+  /* ------------------------------------------------------------ item */
+
+  [data-ds='tab-bar'] > [data-part='item'] {
+    --_tab-bar-item-fg: var(--_tab-bar-fg);
+    --_tab-bar-item-pill: transparent;
+    --_tab-bar-item-weight: var(--ds-font-weight-medium);
+
+    position: relative;
+    display: flex;
+    flex: 1 1 0;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: var(--ds-space-4xs);
+    box-sizing: border-box;
+    min-inline-size: 0;
+    min-block-size: max(var(--_tab-bar-item-height), var(--ds-size-target-min));
+    padding-block: var(--ds-space-4xs);
+    padding-inline: var(--ds-space-3xs);
+    border-radius: var(--ds-radius-field);
+    color: var(--_tab-bar-item-fg);
+    font-size: var(--ds-font-size-xs);
+    font-weight: var(--_tab-bar-item-weight);
+    line-height: var(--ds-font-leading-tight);
+    text-align: center;
+    text-decoration-line: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  [data-ds='tab-bar'] > [data-part='item'] > [data-part='item-icon'] {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: content-box;
+    inline-size: var(--_tab-bar-icon-size);
+    block-size: var(--_tab-bar-icon-size);
+    padding-block: var(--ds-space-4xs);
+    padding-inline: var(--ds-space-m);
+    border-radius: var(--ds-radius-pill);
+    background-color: var(--_tab-bar-item-pill);
+  }
+
+  [data-ds='tab-bar'] > [data-part='item'] > [data-part='item-icon'] > [data-ds='icon'] {
+    inline-size: var(--_tab-bar-icon-size);
+    block-size: var(--_tab-bar-icon-size);
+  }
+
+  /* One line, cut with an ellipsis: five short nouns fit at 320px. */
+  [data-ds='tab-bar'] > [data-part='item'] > [data-part='item-label'] {
+    max-inline-size: 100%;
+    overflow-x: clip;
+    overflow-y: visible;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  /* On the icon's block start, inline end corner; it follows the reading direction. */
+  [data-ds='tab-bar'] [data-part='item-icon'] > [data-part='item-badge'] {
+    position: absolute;
+    inset-block-start: 0;
+    inset-inline-start: calc(50% + var(--ds-space-2xs));
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    min-inline-size: var(--ds-size-icon-md);
+    block-size: var(--ds-size-icon-md);
+    padding-inline: var(--ds-space-4xs);
+    border-radius: var(--ds-radius-pill);
+    background-color: var(--_tab-bar-badge-bg);
+    color: var(--_tab-bar-badge-fg);
+    font-size: var(--ds-font-size-2xs);
+    font-weight: var(--ds-font-weight-bold);
+    font-variant-numeric: tabular-nums;
+    line-height: var(--ds-font-leading-tight);
+  }
+
+  [data-ds='tab-bar'] [data-part='item-icon'] > [data-part='item-badge'][data-dot] {
+    min-inline-size: var(--ds-space-s);
+    block-size: var(--ds-space-s);
+    padding: 0;
+  }
+
+  /* Read by screen readers as part of the link name, not drawn. */
+  [data-ds='tab-bar'] > [data-part='item'] > [data-part='item-status'] {
+    position: absolute;
+    inline-size: var(--ds-border-width-default);
+    block-size: var(--ds-border-width-default);
+    margin: calc(-1 * var(--ds-border-width-default));
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  /* ------------------------------------------------------------ states */
+
+  [data-ds='tab-bar'] > [data-part='item']:hover:not([data-active]) {
+    --_tab-bar-item-fg: var(--_tab-bar-fg-hover);
+  }
+
+  /* The current destination: weight, the pill and aria-current, never color alone. */
+  [data-ds='tab-bar'] > [data-part='item'][data-active] {
+    --_tab-bar-item-fg: var(--_tab-bar-fg-active);
+    --_tab-bar-item-pill: var(--_tab-bar-pill-bg);
+    --_tab-bar-item-weight: var(--ds-font-weight-bold);
+  }
+
+  /* The transparent outline is set only here, so forced colors mode draws it on focus and nowhere else. */
+  [data-ds='tab-bar'] > [data-part='item']:focus-visible {
+    outline: var(--ds-border-width-strong) solid transparent;
+    outline-offset: calc(-1 * var(--ds-border-width-strong));
+    box-shadow: var(--_tab-bar-ring);
+  }
+
+  /* ------------------------------------------------------------ forced colors */
+
+  @media (forced-colors: active) {
+    [data-ds='tab-bar'] > [data-part='item'][data-active] > [data-part='item-icon'] {
+      outline: var(--ds-border-width-strong) solid Highlight;
+    }
+
+    [data-ds='tab-bar'] [data-part='item-badge'] {
+      border: var(--ds-border-width-default) solid CanvasText;
+    }
+  }
+}
