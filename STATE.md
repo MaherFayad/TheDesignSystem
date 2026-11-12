@@ -118,10 +118,12 @@ components, a fresh review, then commit.
 | A3 | Angular selection | claude/ds-angular-a3 | session_01ErLBsZmDNkdQpudsTbFqG8 | running |
 | A5 | Angular feedback | claude/ds-angular-a5 | session_01ErLBsd34hcZtLBuSrspqeS | merged, review open |
 | A4 | Angular forms | claude/ds-angular-a4 | session_01ErLBsaB3LdL7KLxRWy1ezY | running |
-| 1.0.i | Consolidation 2: follow ups round 2, tokens, contract text | claude/ds-consolidation-2 | session_01ErLBsasj4xo1JcwWMq49Dd | running |
+| 1.0.i | Consolidation 2: follow ups round 2, tokens, contract text | claude/ds-consolidation-2 | session_01ErLBsasj4xo1JcwWMq49Dd | merged |
+| 1.21 | Interaction round (proposed) | claude/ds-order-1-21 | session_01ErLBsbZ3wQ2RMr25bxi1QU | running |
+| 1.18, 1.19 | Consumers on wave 1, adoption guides | claude/ds-order-1-18 | session_01ErLBsZSfR7PvXto2uEYenL | running |
 
 React Aria Components 1.22.1 is installed (order 1.2.0). Not started yet:
-orders 1.17 to 1.21. The fix rounds changed the React DOM of some components after Angular A1 and A2 were ported (see "DOM changes" in `docs/reports/fixes/batch-1-6.md` and `batch-7.md`): the Angular review must catch each, and an Angular sync order follows it.
+orders 1.17 and 1.20. Full React contract suite after consolidation 2: 103 of 107 manifests pass, 2 fail (3 tests; Sidebar target size is in the late fix round), see `docs/reports/consolidation-2.md`. The fix rounds changed the React DOM of some components after Angular A1 and A2 were ported (see "DOM changes" in `docs/reports/fixes/batch-1-6.md` and `batch-7.md`): the Angular review must catch each, and an Angular sync order follows it.
 
 Done locally: Link, ButtonGroup, DropdownMenu, lane 1A (ToggleButton,
 CloseButton, CopyButton, FloatingActionButton), the consolidation pass
@@ -139,7 +141,7 @@ Review sessions (findings only, no source edits), reports in
 | Batches 3 and 4 | claude/ds-review-3-4 | session_01ErLBsd5x5XcqMzeeS8QJks | merged, 3 blockers |
 | Batch 6 | claude/ds-review-6 | session_01ErLBsZcdwTv7v9hbqpAv7g | merged, 5 blockers |
 | Batch 7 and lane 9A | claude/ds-review-7 | session_01ErLBsbTnC7FkxYnXYwpRXK | merged, 21 blockers |
-| Late React lanes (1D, 2C, 3D, 4A, 6D) | claude/ds-review-late | session_01ErLBsaHFu2h1gcvSgRHo9b | running |
+| Late React lanes (1D, 2C, 3D, 4A, 6D) | claude/ds-review-late | session_01ErLBsaHFu2h1gcvSgRHo9b | merged, 18 blockers |
 | Round 2: every first review blocker rechecked | claude/ds-review-round-2 | session_01ErLBsadmficC3cuMWybkRE | running |
 | Angular A1, A2, A5 | claude/ds-review-angular-1 | session_01ErLBsdPS43RLcuWFDVcWKs | running |
 
@@ -151,6 +153,7 @@ Fix round sessions (round 1 of 3), reports in `docs/reports/fixes/`:
 | Batch 8 and 9 blockers | claude/ds-fix-8-9 | session_01ErLBsdNKL8hgeVbwciEbpg | merged, second review open |
 | Motion catalog blockers, plus `fade` and `press` patterns | claude/ds-fix-motion | session_01ErLBsZwcTK6P49LLqbm1Lb | merged |
 | Reviews 1-2, 3-4, 6 blockers | claude/ds-fix-1-6 | session_01ErLBsZcfuz1s1NKys7fajT | merged, second review open |
+| Late lanes blockers, Sidebar target size | claude/ds-fix-late | session_01ErLBsc2CaZGKDvsW79jfhp | running |
 | Review 7 blockers | claude/ds-fix-7 | session_01ErLBsZh5KyRZBXYhtBr3Fz | merged, second review open |
 
 Requests from the lanes are collected in `docs/plan/wave-1-followups.md`.
