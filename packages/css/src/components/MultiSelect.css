@@ -54,6 +54,8 @@
     --_multi-select-tag-bg: var(--ds-color-bg-overlay-10);
     --_multi-select-tag-fg: var(--ds-color-text-default);
     --_multi-select-tag-radius: var(--ds-radius-pill);
+    --_multi-select-value-fg: inherit;
+    --_multi-select-icon-opacity: 1;
 
     position: relative;
     box-sizing: border-box;
@@ -124,13 +126,17 @@
     gap: var(--ds-space-3xs);
     min-inline-size: 0;
     overflow: hidden;
+    color: var(--_multi-select-value-fg);
     white-space: nowrap;
     text-overflow: ellipsis;
   }
 
+  [data-ds='multi-select'][data-placeholder]:not([data-part]) {
+    --_multi-select-value-fg: var(--ds-color-text-placeholder);
+  }
+
   [data-ds='multi-select'][data-placeholder]:not([data-part]) > [data-part='trigger'] > [data-part='value'] {
     display: block;
-    color: var(--ds-color-text-placeholder);
   }
 
   [data-ds='multi-select'] [data-part='tag'] {
@@ -169,6 +175,7 @@
     align-items: center;
     justify-content: center;
     color: var(--ds-color-text-muted);
+    opacity: var(--_multi-select-icon-opacity);
   }
 
   [data-ds='multi-select']:not([data-part]):hover:not([data-disabled], [data-readonly], [data-invalid], :focus-within) {
@@ -200,14 +207,11 @@
   [data-ds='multi-select'][data-readonly]:not([data-part]) {
     --_multi-select-bg: var(--ds-color-bg-overlay-5);
     --_multi-select-border-style: dashed;
+    --_multi-select-icon-opacity: 0;
   }
 
   [data-ds='multi-select'][data-readonly]:not([data-part]) > [data-part='trigger'] {
     cursor: default;
-  }
-
-  [data-ds='multi-select'][data-readonly]:not([data-part]) > [data-part='trigger'] > [data-part='icon'] {
-    opacity: 0;
   }
 
   [data-ds='multi-select'][data-loading]:not([data-part]) > [data-part='trigger'] {
@@ -372,6 +376,15 @@
     --_menu-backdrop: none;
     --_menu-border-color: var(--ds-color-border-strong);
     --_menu-separator-color: var(--ds-color-border-strong);
+  }
+
+  [data-contrast='more'] [data-ds='multi-select']:not([data-part]) {
+    --_multi-select-tag-bg: transparent;
+  }
+
+  [data-contrast='more'] [data-ds='multi-select'] [data-part='tag'] {
+    outline: var(--ds-border-width-default) solid var(--ds-color-border-strong);
+    outline-offset: calc(var(--ds-border-width-default) * -1);
   }
 
   @media (forced-colors: active) {

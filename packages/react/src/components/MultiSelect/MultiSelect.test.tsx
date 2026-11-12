@@ -199,6 +199,33 @@ describe('MultiSelect', () => {
     expect(new FormData(container.querySelector('form') as HTMLFormElement).getAll('labels')).toEqual(['design', 'bug']);
   });
 
+  it('controlled value follows the prop', () => {
+    const { rerender } = render(<Labels value={['bug']} />);
+    expect(root().querySelector('[data-part="tag"]')?.textContent).toBe('Bug');
+    rerender(<Labels value={[]} />);
+    expect(root().hasAttribute('data-placeholder')).toBe(true);
+  });
+
+  it('Select all and Clear selection leave a chosen disabled option in place', async () => {
+    const user = userEvent.setup();
+    const onValueChange = vi.fn();
+    render(<Labels defaultValue={['legal']} onValueChange={onValueChange} defaultOpen />);
+    await waitFor(() => expect(popup()).not.toBeNull());
+    const clear = popup()?.querySelector('[data-part="clear"]') as HTMLElement;
+    expect(clear.getAttribute('aria-disabled')).toBe('true');
+    await user.click(popup()?.querySelector('[data-part="select-all"]') as HTMLElement);
+    expect(onValueChange).toHaveBeenLastCalledWith(['legal', 'design', 'research', 'copy', 'bug']);
+    await user.click(popup()?.querySelector('[data-part="clear"]') as HTMLElement);
+    expect(onValueChange).toHaveBeenLastCalledWith(['legal']);
+  });
+
+  it('a press on the Field label focuses the trigger', async () => {
+    const user = userEvent.setup();
+    render(<Labels />);
+    await user.click(screen.getByText('Labels'));
+    expect(document.activeElement).toBe(trigger());
+  });
+
   it('the demo renders every content case', () => {
     render(<MultiSelectDemo />);
     const ids = [...document.querySelectorAll('[data-demo-case]')].map((n) => n.getAttribute('data-demo-case'));

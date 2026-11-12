@@ -11,6 +11,7 @@ const copy = {
     labels: 'Labels',
     cities: 'Cities',
     hint: 'Tasks with any of these labels show on the board.',
+    cityHint: 'The report covers sales in these cities.',
     error: 'Choose at least one city.',
     noLabels: 'No labels yet. Add one from Settings.',
     loading: 'Loading labels',
@@ -19,6 +20,7 @@ const copy = {
     labels: 'التصنيفات',
     cities: 'المدن',
     hint: 'تظهر في اللوحة المهام اللي فيها أي تصنيف من هذي.',
+    cityHint: 'التقرير يشمل المبيعات في هذي المدن.',
     error: 'اختر مدينة وحدة على الأقل.',
     noLabels: 'ما فيه تصنيفات. أضف تصنيف من الإعدادات.',
     loading: 'جار تحميل التصنيفات',
@@ -109,7 +111,7 @@ export default function MultiSelectDemo() {
       </DemoCase>
 
       <DemoCase id="many" title="Many options">
-        <Field label={copy.en.cities} description={copy.en.hint} style={{ inlineSize: '16rem' }}>
+        <Field label={copy.en.cities} description={copy.en.cityHint} style={{ inlineSize: '16rem' }}>
           <MultiSelect items={cityOptions('en', 'gulf')} defaultValue={['doha', 'dubai']} />
         </Field>
       </DemoCase>

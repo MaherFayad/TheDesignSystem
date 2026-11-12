@@ -206,7 +206,7 @@
   ],
   "a11y": {
     "role": "combobox on the trigger part (the APG select-only combobox: a focusable element that is not a text box), aria-haspopup listbox, aria-expanded, aria-controls, named by the Field label. The popup has no role of its own and holds a SearchField, a ListBox with aria-multiselectable named like the trigger, and two Buttons. Not modal: the page stays in the accessibility tree.",
-    "focus": "The trigger is one tab stop. Opening moves focus to the search field when there is one, else to the list (the first chosen option, else the first option). Escape, Enter in the list, or a choice outside returns focus to the trigger; a press outside the popup leaves focus where it lands.",
+    "focus": "The trigger is one tab stop. Opening moves focus to the search field when there is one, else to the list (the first chosen option, else the first option). Escape or Enter in the list returns focus to the trigger; a press outside the popup closes it and leaves focus where it lands. A press on the Field label focuses the trigger.",
     "keys": {
       "Enter": "On the trigger, opens the popup. In the list, closes the popup and returns focus to the trigger",
       "Space": "On the trigger, opens the popup. In the list, toggles the option",
@@ -214,19 +214,21 @@
       "ArrowUp": "On the trigger, opens the popup. In the list, moves to the previous option",
       "Home": "In the list, moves to the first option",
       "End": "In the list, moves to the last option",
-      "Ctrl+A": "In the list, selects every shown enabled option (Cmd+A on a Mac)",
+      "Ctrl+A": "In the list, selects every shown enabled option (Cmd+A on a Mac); when all are already chosen, it clears them",
       "Typeahead": "In the list, typing letters moves to the next option whose label starts with them",
       "Tab": "Moves between the search field, the list and the actions; focus stays inside the open popup and wraps from the last stop to the first",
-      "Escape": "Closes the popup without changing the values and returns focus to the trigger"
+      "Escape": "Closes the popup without changing the values and returns focus to the trigger. In the search field, the first Escape clears the query and the second closes"
     },
-    "announce": "The trigger reads its Field label, the chosen labels as a list (Design and Copy; in Arabic تصميم و خلل) or the count, and that it opens a list. In the list each option reads its label, selected or not, and unavailable.",
+    "announce": "The trigger reads its Field label, the chosen labels as a list (Design and Copy; in Arabic تصميم ومحتوى) or the count, and that it opens a list. In the list each option reads its label, selected or not, and unavailable.",
     "notes": [
       "The tags in the trigger are drawn only (aria-hidden) and hold no button: a remove button inside a combobox would be a control inside a control. The full list of labels is read from a visually hidden summary-text, written with Intl.ListFormat. Values are removed in the list or with Clear selection.",
       "slots.tag.max is the default maxTags (3): more values show as one +N tag, and the full list is read from summary-text.",
       "Checked state is the ListBox check icon, never color alone (WCAG 1.4.1). The +N tag never hides a value from a screen reader.",
       "The search field and the actions sit outside the Field context, so they never take the Field's id, label or error.",
       "Every target is at least size.target-min: the trigger fills the box, list rows, the sm search field and the sm Buttons (WCAG 2.5.8).",
-      "Contract: the variants case marks one trigger with data-demo-trigger. Enter, Space and ArrowDown on the trigger are checked as state changes (aria-expanded). The box stamps no data-state; data-state open and closed is on the popup root."
+      "Contract: the variants case marks one trigger with data-demo-trigger. Enter, Space and ArrowDown on the trigger are checked as state changes (aria-expanded). The box stamps no data-state; data-state open and closed is on the popup root.",
+      "required is announced (aria-required) only; it does not block a native form submit. Hidden inputs are written only for values that match an option.",
+      "Arabic count words are in white Saudi dialect, like the Combobox count (نتيجتين): عنصرين محددين for two, 11 عنصر محدد for 11 to 99. A product in Gulf modern standard Arabic passes formatCount (عنصران محددان، 11 عنصرا محددا)."
     ]
   },
   "content": {

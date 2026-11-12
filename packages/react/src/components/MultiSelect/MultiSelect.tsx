@@ -35,6 +35,7 @@
 // focus goes back to the trigger.
 import {
   useCallback,
+  useEffect,
   useId,
   useMemo,
   useRef,
@@ -231,6 +232,16 @@ export function MultiSelect({
   const listRef = useRef<HTMLDivElement | null>(null);
   const interactedOutside = useRef(false);
 
+  // The Field label points at the trigger with for, which a div cannot take: a press on the label focuses the trigger.
+  const labelId = field?.labelId;
+  useEffect(() => {
+    const label = labelId ? document.getElementById(labelId) : null;
+    if (!label) return undefined;
+    const focus = () => triggerRef.current?.focus();
+    label.addEventListener('click', focus);
+    return () => label.removeEventListener('click', focus);
+  }, [labelId]);
+
   const all = useMemo(() => flattenListBoxItems(items), [items]);
   const shown = useMemo(() => filterListBoxItems(items, query), [items, query]);
   const shownOptions = useMemo(() => flattenListBoxItems(shown), [shown]);
@@ -392,7 +403,7 @@ export function MultiSelect({
               data-part="clear"
               size="sm"
               emphasis="ghost"
-              disabled={chosen.length === 0}
+              disabled={!chosen.some((o) => !o.disabled)}
               onClick={clear}
             >
               {clearLabel ?? t.clear}
@@ -429,7 +440,7 @@ export function MultiSelect({
             tabIndex={control.disabled ? -1 : 0}
             aria-haspopup="listbox"
             aria-expanded={popupOpen}
-            aria-controls={popupOpen ? popupId : undefined}
+            aria-controls={popupOpen ? listId : undefined}
             aria-label={ariaLabel}
             aria-labelledby={labelledBy}
             aria-describedby={control['aria-describedby']}
@@ -469,7 +480,7 @@ export function MultiSelect({
             </span>
           </div>
           {name !== undefined &&
-            value.map((v) => <input key={v} type="hidden" name={name} value={v} disabled={control.disabled} />)}
+            chosen.map((o) => <input key={o.value} type="hidden" name={name} value={o.value} disabled={control.disabled} />)}
         </div>
       </Popover.Anchor>
       {layer.render(popup)}
