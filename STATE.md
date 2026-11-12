@@ -48,7 +48,7 @@ No adb. No iOS build.
 | 1.0.d | Package fixes from the consumers report | ds-docs | all | done | a85837c |
 | 1.0.e | Contract `moves` expectation, Window key hints | ds-qa | all | open | |
 | 1.0.f | Manifest gaps and visual findings | ds-component | react | open | |
-| 1.0.g | Icons for wave 1 | ds-style | all | running | |
+| 1.0.g | Icons for wave 1 | ds-style | all | done | 24b8a20 |
 | 1.1 | Batch 1 actions (11) | ds-component | react | open | |
 | 1.2 | Batch 2 text inputs (12) | ds-component | react | open | |
 | 1.3 | Batch 3 selection (14) | ds-component | react | open | |
