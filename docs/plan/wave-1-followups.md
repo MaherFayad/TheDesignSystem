@@ -642,3 +642,13 @@ Copied from each lane report's "Changes needed from the lead" section. Not yet w
 5. When 1.11 lands: confirm `fade-rise` is the pattern for the four, and
    whether a `none` id should exist for components with no motion.
 
+
+# Round 3: found by the lead while merging
+
+1. `npm run check` passed while `packages/css/src/components/Dialog.css` held
+   merge conflict markers. Add a gate in `packages/lint` that fails on a line
+   starting with seven `<`, `=` or `>` characters in any source file, and a
+   CSS parse step for `packages/css/src/components/*.css`.
+2. The CLI test `ds add --framework angular` snapshots the real Angular file
+   list, so it breaks on every Angular merge. Snapshot a fixture folder, or
+   assert the shape and a few known files.
