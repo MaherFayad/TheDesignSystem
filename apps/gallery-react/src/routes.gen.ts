@@ -13,6 +13,7 @@ export const routes: DemoRoute[] = [
   { name: 'Dialog', slug: 'dialog', load: () => import('../../../packages/react/src/components/Dialog/Dialog.demo') },
   { name: 'DropdownMenu', slug: 'dropdown-menu', load: () => import('../../../packages/react/src/components/DropdownMenu/DropdownMenu.demo') },
   { name: 'Field', slug: 'field', load: () => import('../../../packages/react/src/components/Field/Field.demo') },
+  { name: 'FormWizard', slug: 'form-wizard', load: () => import('../../../packages/react/src/components/FormWizard/FormWizard.demo') },
   { name: 'Icon', slug: 'icon', load: () => import('../../../packages/react/src/components/Icon/Icon.demo') },
   { name: 'IconButton', slug: 'icon-button', load: () => import('../../../packages/react/src/components/IconButton/IconButton.demo') },
   { name: 'Input', slug: 'input', load: () => import('../../../packages/react/src/components/Input/Input.demo') },

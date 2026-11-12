@@ -1,0 +1,146 @@
+/*
+ * FormWizard: a Stepper, then the panel (a form) with the step title, one
+ * body per step and the actions. No source: designed from the dials table
+ * in PLAN.md 3.7 and the nearest components (Stepper, Field, Button).
+ * Follows "One convention for component CSS and props" in
+ * docs/contracts/anatomy.md.
+ *
+ * Private properties on the root (recipes override these):
+ *
+ *   --_form-wizard-gap          space between the steps, the panel and its parts
+ *   --_form-wizard-steps-width  vertical Stepper: the width of the steps column
+ *   --_form-wizard-title-size   the step heading
+ *   --_form-wizard-ring         the focus ring of the title, which takes focus on a step change
+ *
+ * Bodies that are not current carry the hidden attribute and stay in the
+ * DOM, so their values are kept. The current body fades in (motion pattern
+ * fade-rise); only opacity and transform animate, and reduced motion keeps
+ * the fade without the rise.
+ */
+@layer ds.base {
+  [data-ds='form-wizard'] {
+    --_form-wizard-gap: var(--ds-space-2xl);
+    --_form-wizard-steps-width: var(--ds-field-label-width);
+    --_form-wizard-title-size: var(--ds-font-size-xl);
+    --_form-wizard-ring: var(--ds-focus-shadow-ring);
+
+    display: flex;
+    flex-direction: column;
+    gap: var(--_form-wizard-gap);
+    box-sizing: border-box;
+    inline-size: 100%;
+    min-inline-size: 0;
+    color: var(--ds-color-text-default);
+    font-family: var(--ds-font-family-sans);
+  }
+
+  [data-ds='form-wizard'][data-size='sm'] {
+    --_form-wizard-gap: var(--ds-space-xl);
+    --_form-wizard-title-size: var(--ds-font-size-l);
+  }
+
+  /* A vertical Stepper sits in a column at the start side, the panel beside it. */
+  [data-ds='form-wizard']:has(> [data-part='steps'][data-orientation='vertical']) {
+    display: grid;
+    grid-template-columns: minmax(0, var(--_form-wizard-steps-width)) minmax(0, 1fr);
+    align-items: start;
+  }
+
+  [data-ds='form-wizard'] > [data-part='panel'] {
+    display: flex;
+    flex-direction: column;
+    gap: var(--ds-space-xl);
+    min-inline-size: 0;
+    margin: 0;
+  }
+
+  [data-ds='form-wizard'] > [data-part='panel'] > [data-part='title'] {
+    margin: 0;
+    border-radius: var(--ds-radius-xs);
+    color: var(--ds-color-text-bright);
+    font-size: var(--_form-wizard-title-size);
+    font-weight: var(--ds-font-weight-semibold);
+    line-height: var(--ds-font-leading-snug);
+    overflow-wrap: anywhere;
+  }
+
+  /* The transparent outline is set only here, so forced colors draws it on focus and nowhere else. */
+  [data-ds='form-wizard'] > [data-part='panel'] > [data-part='title']:focus-visible {
+    outline: var(--ds-border-width-strong) solid transparent;
+    outline-offset: var(--ds-border-width-strong);
+    box-shadow: var(--_form-wizard-ring);
+  }
+
+  [data-ds='form-wizard'] > [data-part='panel'] > [data-part='body'] {
+    display: flex;
+    flex-direction: column;
+    gap: var(--ds-space-l);
+    min-inline-size: 0;
+    transition:
+      opacity var(--ds-duration-base) var(--ds-ease-out),
+      transform var(--ds-duration-base) var(--ds-ease-out);
+
+    @starting-style {
+      opacity: 0;
+      transform: translateY(var(--ds-space-xs));
+    }
+  }
+
+  [data-ds='form-wizard'] > [data-part='panel'] > [data-part='body'][hidden] {
+    display: none;
+  }
+
+  /* Back at the start, next or submit at the end, on every step. */
+  [data-ds='form-wizard'] > [data-part='panel'] > [data-part='actions'] {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--ds-space-s);
+    padding-block-start: var(--ds-space-l);
+    border-block-start: var(--ds-border-width-default) solid var(--ds-color-border-default);
+  }
+
+  [data-ds='form-wizard'] > [data-part='panel'] > [data-part='actions'] > :is([data-part='next'], [data-part='submit']) {
+    margin-inline-start: auto;
+  }
+
+  /* The step change status: read by screen readers, not drawn. */
+  [data-ds='form-wizard'] > [data-part='status'] {
+    position: absolute;
+    inline-size: var(--ds-border-width-default);
+    block-size: var(--ds-border-width-default);
+    margin: calc(-1 * var(--ds-border-width-default));
+    padding: 0;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  /* On a phone the steps stack above the panel. */
+  @media (width < 30rem) { /* breakpoint.phone */
+    [data-ds='form-wizard']:has(> [data-part='steps'][data-orientation='vertical']) {
+      display: flex;
+      align-items: stretch;
+    }
+  }
+
+  /* ------------------------------------------------------------ reduced motion, forced colors */
+
+  @media (prefers-reduced-motion: reduce) {
+    [data-ds='form-wizard'] > [data-part='panel'] > [data-part='body'] {
+      transition: opacity var(--ds-duration-base) var(--ds-ease-out);
+
+      @starting-style {
+        opacity: 0;
+        transform: none;
+      }
+    }
+  }
+
+  @media (forced-colors: active) {
+    [data-ds='form-wizard'] > [data-part='panel'] > [data-part='title']:focus-visible {
+      outline-color: Highlight;
+    }
+  }
+}
