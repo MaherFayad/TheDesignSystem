@@ -1,0 +1,14 @@
+/*
+ * CopyButton: what differs from Button. The look and the result colors are
+ * a copy-button block in Button.css. Here: the icon only form is a square.
+ */
+@layer ds.base {
+  /* [data-size][data-shape] are always present: they lift this rule over the Button size rules. */
+  [data-ds='copy-button'][data-size][data-shape]:not(:has(> [data-part='label'])) {
+    --_button-padding-inline: 0;
+
+    flex: none;
+    inline-size: max(var(--_button-height), var(--ds-size-target-min));
+    min-inline-size: var(--ds-size-target-min);
+  }
+}

@@ -17,6 +17,7 @@ import {
 import { Slot } from 'radix-ui';
 import { Icon, type IconName } from '@the-system/icons/react';
 import type { Emphasis, Shape, Size, Tone } from '@the-system/shared';
+import { useButtonGroup } from '../ButtonGroup/ButtonGroupContext';
 
 /** The shared axes, all of them: Button takes every value. */
 export type ButtonSize = Extract<Size, 'xs' | 'sm' | 'md' | 'lg'>;
@@ -74,9 +75,14 @@ export function ButtonLoading({ label }: { label: string }) {
   );
 }
 
+/** The components built on ButtonRoot. */
+export type ButtonDs = 'button' | 'icon-button' | 'toggle-button' | 'close-button' | 'copy-button' | 'floating-action-button';
+
 interface ButtonRootProps extends ButtonBaseProps {
   /** The root `data-ds` value. */
-  ds: 'button' | 'icon-button';
+  ds: ButtonDs;
+  /** An icon only control (IconButton, CloseButton, a FAB without a label): it never takes link from a group. */
+  iconOnly?: boolean;
   /** Default emphasis of this component. */
   defaultEmphasis: ButtonEmphasis;
   /** Builds the parts around the content: the children, or the asChild element's children. */
@@ -90,12 +96,13 @@ interface ButtonRootProps extends ButtonBaseProps {
  */
 export function ButtonRoot({
   ds,
+  iconOnly = ds === 'icon-button',
   defaultEmphasis,
   render,
-  size = 'md',
+  size,
   tone = 'neutral',
   emphasis,
-  shape = 'default',
+  shape,
   loading = false,
   loadingLabel: _loadingLabel,
   disabled = false,
@@ -110,14 +117,22 @@ export function ButtonRoot({
   ...rest
 }: ButtonRootProps) {
   const inert = disabled || loading;
+  // A ButtonGroup passes size, emphasis and shape through context, so they
+  // reach a child through any wrapper. The child's own prop always wins. An
+  // icon only control never takes link from a group.
+  const group = useButtonGroup();
+  const s = size ?? group?.size ?? 'md';
+  const sh = shape ?? group?.shape ?? 'default';
+  const groupEmphasis = group?.emphasis && !(iconOnly && (group.emphasis as string) === 'link') ? group.emphasis : undefined;
+  const em = emphasis ?? groupEmphasis ?? defaultEmphasis;
   const attrs = {
     ...rest,
     ref,
     'data-ds': ds,
-    'data-size': size,
+    'data-size': s,
     'data-tone': tone,
-    'data-emphasis': emphasis ?? defaultEmphasis,
-    'data-shape': shape,
+    'data-emphasis': em,
+    'data-shape': sh,
     'data-loading': loading ? '' : undefined,
     'data-disabled': disabled ? '' : undefined,
     'aria-disabled': inert ? true : rest['aria-disabled'],
@@ -149,7 +164,7 @@ export function ButtonRoot({
 
   if (asChild) {
     if (!isValidElement<{ href?: string; role?: string }>(children)) {
-      throw new Error(`${ds === 'button' ? 'Button' : 'IconButton'} with asChild needs one element as its child.`);
+      throw new Error(`${ds} with asChild needs one element as its child.`);
     }
     // An inert link loses its href, so no click, middle click, context menu
     // or drag can open it. role="link" keeps it announced as a link.

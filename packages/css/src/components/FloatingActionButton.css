@@ -1,0 +1,43 @@
+/*
+ * FloatingActionButton: what differs from Button. The size, the elevation
+ * and the label weight are a floating-action-button block in Button.css.
+ * Here: the floating position and the square of the icon only form.
+ *
+ * Private properties on the root:
+ *   --_fab-inset   the distance from the inline end and the block end
+ */
+@layer ds.base {
+  /*
+   * Fixed at the inline end and the block end of the viewport, clear of the
+   * device safe area, on the floating panel step of the z ladder. The
+   * inline end safe area is the larger of the two side insets, so it holds
+   * in both directions.
+   */
+  [data-ds='floating-action-button'] {
+    --_fab-inset: var(--ds-space-4xl);
+
+    position: fixed;
+    inset-inline-end: calc(var(--_fab-inset) + max(env(safe-area-inset-left, 0px), env(safe-area-inset-right, 0px)));
+    inset-block-end: calc(var(--_fab-inset) + env(safe-area-inset-bottom, 0px));
+    z-index: var(--ds-z-floating-panel);
+  }
+
+  /* Inside a positioned container (a panel, a card, a demo), or in the flow. */
+  [data-ds='floating-action-button'][data-position='absolute'] {
+    position: absolute;
+  }
+
+  [data-ds='floating-action-button'][data-position='static'] {
+    position: relative;
+    inset: auto;
+    z-index: auto;
+  }
+
+  /* The icon only form is a square. [data-size][data-shape] lift this over the Button size rules. */
+  [data-ds='floating-action-button'][data-size][data-shape]:not([data-extended]) {
+    --_button-padding-inline: 0;
+
+    flex: none;
+    inline-size: var(--_button-height);
+  }
+}

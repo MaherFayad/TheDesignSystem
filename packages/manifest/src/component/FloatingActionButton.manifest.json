@@ -1,0 +1,278 @@
+{
+  "name": "FloatingActionButton",
+  "kind": "component",
+  "family": "actions",
+  "summary": "The one main action of a screen, floating above the content at the inline end and the block end. Icon only or extended with a label.",
+  "useWhen": [
+    "A screen with one main action that must stay in reach while the content scrolls (create, compose)",
+    "Touch first layouts and phone screens",
+    "A canvas or a list where a toolbar would cover the content"
+  ],
+  "avoidWhen": [
+    "More than one main action on the screen",
+    "A form with a submit button at its end",
+    "Desktop layouts with a toolbar that already holds the action",
+    "On glass or over a floating bar"
+  ],
+  "insteadUse": {
+    "Several actions": "ButtonGroup or a toolbar",
+    "Submit a form": "Button with tone accent and emphasis solid",
+    "An action in a toolbar": "IconButton"
+  },
+  "anatomy": [
+    "root",
+    "icon",
+    "label",
+    "spinner",
+    "status"
+  ],
+  "contract": {
+    "optionalParts": [
+      "label",
+      "spinner",
+      "status"
+    ]
+  },
+  "props": {
+    "icon": {
+      "type": "node",
+      "required": true,
+      "description": "A system icon name or a node. Hidden from assistive tech."
+    },
+    "label": {
+      "type": "string",
+      "required": true,
+      "description": "The action, a verb plus a noun. The accessible name, and the visible text when extended."
+    },
+    "extended": {
+      "type": "boolean",
+      "default": false,
+      "description": "Shows the label beside the icon. Sets data-extended."
+    },
+    "size": {
+      "type": [
+        "md",
+        "lg"
+      ],
+      "default": "lg",
+      "description": "md: 44px (size.touch.ios), lg: 48px (size.touch.android). Never under 44px."
+    },
+    "emphasis": {
+      "type": [
+        "solid"
+      ],
+      "default": "solid",
+      "description": "Fixed: the main action is a solid fill. Not a prop."
+    },
+    "tone": {
+      "type": [
+        "neutral",
+        "accent",
+        "danger",
+        "success",
+        "warning",
+        "info"
+      ],
+      "default": "accent",
+      "description": "accent: the main action. Emphasis is always solid."
+    },
+    "shape": {
+      "type": [
+        "default",
+        "pill",
+        "square"
+      ],
+      "default": "default",
+      "description": "default takes radius.control (Desk draws it as a pill), pill is fully round, square takes radius.sm."
+    },
+    "position": {
+      "type": [
+        "fixed",
+        "absolute",
+        "static"
+      ],
+      "default": "fixed",
+      "description": "fixed to the viewport; absolute in the nearest positioned container; static in the flow. Sets data-position."
+    },
+    "loading": {
+      "type": "boolean",
+      "default": false
+    },
+    "loadingLabel": {
+      "type": "string",
+      "default": "Loading"
+    },
+    "disabled": {
+      "type": "boolean",
+      "default": false
+    }
+  },
+  "states": [
+    "data-disabled",
+    "data-loading",
+    "data-extended"
+  ],
+  "a11y": {
+    "role": "button",
+    "focus": "In the tab order where it sits in the DOM: render it after the content it acts on. The doubled focus ring.",
+    "keys": {
+      "Enter": "Activates the action",
+      "Space": "Activates the action",
+      "Tab": "Moves focus to the next control"
+    },
+    "announce": "The label is the accessible name in both forms.",
+    "native": {
+      "accessibilityRole": "button",
+      "accessibilityState": [
+        "disabled",
+        "busy"
+      ]
+    },
+    "notes": [
+      "Floats at space.4xl from the inline end and the block end, plus the device safe area, on z.floating-panel.",
+      "Reserve room so it never covers focused content (WCAG 2.4.11): give the scroll container scroll-padding-block-end and padding-block-end of at least the button height plus its inset, and leave the last row clear.",
+      "Never under 44 by 44 CSS px (a touch first control)."
+    ]
+  },
+  "content": {
+    "en": {
+      "label": "A verb plus a noun: Create board, Write note."
+    },
+    "ar": {
+      "label": "Noun form, no diacritics: إنشاء لوحة، كتابة ملاحظة."
+    }
+  },
+  "tokens": [
+    "size.control.xs",
+    "size.control.sm",
+    "size.control.md",
+    "size.control.lg",
+    "size.target-min",
+    "size.icon.sm",
+    "size.icon.md",
+    "space.xs",
+    "space.s",
+    "space.xl",
+    "space.2xl",
+    "space.2xs",
+    "radius.control",
+    "radius.field",
+    "radius.pill",
+    "radius.sm",
+    "border.width.default",
+    "border.width.strong",
+    "font.family.sans",
+    "font.size.s",
+    "font.size.m",
+    "font.size.l",
+    "font.weight.bold",
+    "font.leading.tight",
+    "font.tracking.none",
+    "opacity.disabled",
+    "color.bg.overlay-5",
+    "color.bg.overlay-10",
+    "color.bg.overlay-20",
+    "color.bg.overlay-30",
+    "button.text.secondary",
+    "color.text.default",
+    "color.text.muted",
+    "color.text.bright",
+    "color.border.control",
+    "color.border.control-hover",
+    "color.primary.fill",
+    "color.primary.fill-hover",
+    "color.primary.fill-pressed",
+    "color.primary.text",
+    "color.primary.border",
+    "color.primary.tint",
+    "color.primary.tint-hover",
+    "color.primary.on-surface",
+    "color.state.danger.solid",
+    "color.state.danger.solid-hover",
+    "color.state.danger.on-solid",
+    "color.state.danger.text",
+    "color.state.danger.on-tint",
+    "color.state.danger.border",
+    "color.state.danger.tint-10",
+    "color.state.danger.tint-20",
+    "color.state.success.solid",
+    "color.state.success.solid-hover",
+    "color.state.success.on-solid",
+    "color.state.success.text",
+    "color.state.success.on-tint",
+    "color.state.success.border",
+    "color.state.success.tint-10",
+    "color.state.success.tint-20",
+    "color.state.warning.solid",
+    "color.state.warning.solid-hover",
+    "color.state.warning.on-solid",
+    "color.state.warning.text",
+    "color.state.warning.on-tint",
+    "color.state.warning.border",
+    "color.state.warning.tint-10",
+    "color.state.warning.tint-20",
+    "color.state.info.solid",
+    "color.state.info.solid-hover",
+    "color.state.info.on-solid",
+    "color.state.info.text",
+    "color.state.info.on-tint",
+    "color.state.info.border",
+    "color.state.info.tint-10",
+    "color.state.info.tint-20",
+    "focus.shadow.ring",
+    "focus.shadow.primary",
+    "color.focus.ring",
+    "color.focus.ring-on-primary-inner",
+    "color.focus.ring-on-primary-outer",
+    "duration.fast",
+    "duration.spin",
+    "ease.default",
+    "space.3xs",
+    "radius.xs",
+    "color.text.link",
+    "duration.roll",
+    "ease.reveal",
+    "size.touch.ios",
+    "size.touch.android",
+    "elevation.card-hover",
+    "z.floating-panel",
+    "space.4xl"
+  ],
+  "motion": "spinner",
+  "frameworks": {
+    "react": {
+      "status": "ready",
+      "behavior": "native button on ButtonBase",
+      "example": "FloatingActionButton.demo.tsx"
+    },
+    "angular": {
+      "status": "planned",
+      "behavior": "button[dsFloatingActionButton] on the shared Button.css"
+    },
+    "native": {
+      "status": "planned",
+      "note": "Respects the safe area and the keyboard; 56pt is common on phones."
+    }
+  },
+  "styles": {
+    "studio": "The neutral primary fill with an elevation.",
+    "desk": "Yellow, pill shaped, with an elevation.",
+    "neutral": "Tokens only: the brand fill.",
+    "liquid": "Never on glass: a solid fill over the content, never inside a floating glass bar."
+  },
+  "mistakes": [
+    {
+      "wrong": "Two floating action buttons on one screen",
+      "right": "One; the other actions in a toolbar or a menu"
+    },
+    {
+      "wrong": "A floating button that covers the last list row",
+      "right": "scroll-padding-block-end and bottom padding on the scroll container"
+    },
+    {
+      "wrong": "An icon only floating button with no label",
+      "right": "label is required and names it"
+    }
+  ],
+  "since": "0.2.0"
+}

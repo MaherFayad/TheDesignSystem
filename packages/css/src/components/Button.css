@@ -1,12 +1,21 @@
 /*
- * Button, and the look IconButton shares with it (IconButton.css keeps what
- * differs: the square box). Source: GoBanana `.st-btn` in
+ * Button, and the look every component on the Button base shares with it:
+ * IconButton, ToggleButton, CloseButton, CopyButton and FloatingActionButton
+ * (rule 10 of the convention). Each keeps a thin file of its own for what
+ * differs (the square box, the floating position). Source: GoBanana `.st-btn` in
  * studio-components.css. Follows "One convention for component CSS and
  * props" in docs/contracts/anatomy.md.
  *
  * Private properties on the root (recipes override these):
  *
  *   --_button-height, -padding-inline, -gap, -font-size, -radius
+ *   --_button-radius-start-start, -start-end, -end-start, -end-end
+ *                                            one corner each, defaulting to
+ *                                            -radius, so a parent (an
+ *                                            attached ButtonGroup) can square
+ *                                            one side
+ *   --_button-shadow                         an elevation or an inner ring,
+ *                                            under the focus ring
  *   --_button-bg, -fg, -border-color         at rest
  *   --_button-bg-hover, -fg-hover, -border-color-hover
  *   --_button-bg-active, -fg-active
@@ -28,12 +37,16 @@
  * token.
  */
 @layer ds.base {
-  :is([data-ds='button'], [data-ds='icon-button']) {
+  :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button'], [data-ds='close-button'], [data-ds='copy-button'], [data-ds='floating-action-button']) {
     --_button-height: var(--ds-size-control-md);
     --_button-padding-inline: var(--ds-space-xl);
     --_button-gap: var(--ds-space-2xs);
     --_button-font-size: var(--ds-font-size-s);
     --_button-radius: var(--ds-radius-control);
+    --_button-radius-start-start: var(--_button-radius);
+    --_button-radius-start-end: var(--_button-radius);
+    --_button-radius-end-start: var(--_button-radius);
+    --_button-radius-end-end: var(--_button-radius);
     --_button-bg: var(--ds-color-bg-overlay-10);
     --_button-fg: var(--ds-button-text-secondary);
     --_button-border-color: transparent;
@@ -43,6 +56,7 @@
     --_button-bg-active: var(--ds-color-bg-overlay-30);
     --_button-fg-active: var(--ds-color-text-bright);
     --_button-ring: var(--ds-focus-shadow-ring);
+    --_button-shadow: 0 0 transparent;
     --_button-decoration: var(--ds-color-border-control);
     --_button-decoration-hover: currentColor;
 
@@ -61,7 +75,10 @@
     padding-block: 0;
     padding-inline: var(--_button-padding-inline);
     border: var(--ds-border-width-default) solid var(--_button-border-color);
-    border-radius: var(--_button-radius);
+    border-start-start-radius: var(--_button-radius-start-start);
+    border-start-end-radius: var(--_button-radius-start-end);
+    border-end-start-radius: var(--_button-radius-end-start);
+    border-end-end-radius: var(--_button-radius-end-end);
     background-color: var(--_button-bg);
     color: var(--_button-fg);
     font-family: var(--ds-font-family-sans);
@@ -76,11 +93,12 @@
     cursor: pointer;
     user-select: none;
     -webkit-tap-highlight-color: transparent;
+    box-shadow: var(--_button-shadow);
   }
 
   /* ------------------------------------------------------------ parts */
 
-  :is([data-ds='button'], [data-ds='icon-button']) > [data-part] {
+  :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button'], [data-ds='close-button'], [data-ds='copy-button'], [data-ds='floating-action-button']) > [data-part] {
     position: relative;
     transition: opacity var(--ds-duration-fast) var(--ds-ease-default);
   }
@@ -92,7 +110,7 @@
    * directions), so tall Arabic glyphs, the link underline and a recipe's
    * text shadow can leave the line box. `wrap` lets the label wrap instead.
    */
-  [data-ds='button'] > [data-part='label'] {
+  :is([data-ds='button'], [data-ds='toggle-button'], [data-ds='copy-button'], [data-ds='floating-action-button']) > [data-part='label'] {
     min-inline-size: 0;
     overflow-x: clip;
     overflow-y: visible;
@@ -114,12 +132,12 @@
     text-align: center;
   }
 
-  :is([data-ds='button'], [data-ds='icon-button']) > :is([data-part='start'], [data-part='end'], [data-part='icon']) {
+  :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button'], [data-ds='close-button'], [data-ds='copy-button'], [data-ds='floating-action-button']) > :is([data-part='start'], [data-part='end'], [data-part='icon']) {
     display: inline-flex;
     flex: none;
   }
 
-  :is([data-ds='button'], [data-ds='icon-button']) > [data-part='spinner'] {
+  :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button'], [data-ds='close-button'], [data-ds='copy-button'], [data-ds='floating-action-button']) > [data-part='spinner'] {
     position: absolute;
     inset: 0;
     box-sizing: border-box;
@@ -139,7 +157,7 @@
   }
 
   /* The loading status: read by screen readers, not drawn. */
-  :is([data-ds='button'], [data-ds='icon-button']) > [data-part='status'] {
+  :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button'], [data-ds='close-button'], [data-ds='copy-button'], [data-ds='floating-action-button']) > [data-part='status'] {
     position: absolute;
     inline-size: var(--ds-border-width-default);
     block-size: var(--ds-border-width-default);
@@ -152,18 +170,18 @@
 
   /* ------------------------------------------------------------ sizes */
 
-  :is([data-ds='button'], [data-ds='icon-button'])[data-size='xs'] {
+  :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button'], [data-ds='close-button'], [data-ds='copy-button'], [data-ds='floating-action-button'])[data-size='xs'] {
     --_button-height: var(--ds-size-control-xs);
     --_button-padding-inline: var(--ds-space-xs);
     --_button-radius: var(--ds-radius-field);
   }
 
-  :is([data-ds='button'], [data-ds='icon-button'])[data-size='sm'] {
+  :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button'], [data-ds='close-button'], [data-ds='copy-button'], [data-ds='floating-action-button'])[data-size='sm'] {
     --_button-height: var(--ds-size-control-sm);
     --_button-padding-inline: var(--ds-space-s);
   }
 
-  :is([data-ds='button'], [data-ds='icon-button'])[data-size='lg'] {
+  :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button'], [data-ds='close-button'], [data-ds='copy-button'], [data-ds='floating-action-button'])[data-size='lg'] {
     --_button-height: var(--ds-size-control-lg);
     --_button-padding-inline: var(--ds-space-2xl);
     --_button-gap: var(--ds-space-xs);
@@ -171,17 +189,17 @@
   }
 
   /* Arabic is one step up. base.css already moves font.size.s to m; lg moves from m to l here. */
-  :is([data-ds='button'], [data-ds='icon-button'])[data-size='lg']:lang(ar) {
+  :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button'], [data-ds='close-button'], [data-ds='copy-button'], [data-ds='floating-action-button'])[data-size='lg']:lang(ar) {
     --_button-font-size: var(--ds-font-size-l);
   }
 
   /* ------------------------------------------------------------ shapes */
 
-  :is([data-ds='button'], [data-ds='icon-button'])[data-shape='pill'] {
+  :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button'], [data-ds='close-button'], [data-ds='copy-button'], [data-ds='floating-action-button'])[data-shape='pill'] {
     --_button-radius: var(--ds-radius-pill);
   }
 
-  :is([data-ds='button'], [data-ds='icon-button'])[data-shape='square'] {
+  :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button'], [data-ds='close-button'], [data-ds='copy-button'], [data-ds='floating-action-button'])[data-shape='square'] {
     --_button-radius: var(--ds-radius-sm);
   }
 
@@ -191,13 +209,13 @@
 
   /* ------------------------------------------------------------ solid fills: the doubled ring reads on any fill */
 
-  :is([data-ds='button'], [data-ds='icon-button'])[data-emphasis='solid'] {
+  :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button'], [data-ds='close-button'], [data-ds='copy-button'], [data-ds='floating-action-button'])[data-emphasis='solid'] {
     --_button-ring: var(--ds-focus-shadow-primary);
   }
 
   /* ------------------------------------------------------------ neutral (soft is the root default) */
 
-  :is([data-ds='button'], [data-ds='icon-button'])[data-tone='neutral'][data-emphasis='solid'] {
+  :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button'], [data-ds='close-button'], [data-ds='copy-button'], [data-ds='floating-action-button'])[data-tone='neutral'][data-emphasis='solid'] {
     --_button-bg: var(--ds-color-bg-overlay-20);
     --_button-fg: var(--ds-color-text-default);
     --_button-bg-hover: var(--ds-color-bg-overlay-30);
@@ -205,7 +223,7 @@
     --_button-bg-active: var(--ds-color-bg-overlay-20);
   }
 
-  :is([data-ds='button'], [data-ds='icon-button'])[data-tone='neutral'][data-emphasis='outline'] {
+  :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button'], [data-ds='close-button'], [data-ds='copy-button'], [data-ds='floating-action-button'])[data-tone='neutral'][data-emphasis='outline'] {
     --_button-bg: transparent;
     --_button-fg: var(--ds-color-text-default);
     --_button-border-color: var(--ds-color-border-control);
@@ -214,7 +232,7 @@
     --_button-bg-active: var(--ds-color-bg-overlay-10);
   }
 
-  :is([data-ds='button'], [data-ds='icon-button'])[data-tone='neutral'][data-emphasis='ghost'] {
+  :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button'], [data-ds='close-button'], [data-ds='copy-button'], [data-ds='floating-action-button'])[data-tone='neutral'][data-emphasis='ghost'] {
     --_button-bg: transparent;
     --_button-fg: var(--ds-color-text-muted);
     --_button-bg-hover: var(--ds-color-bg-overlay-10);
@@ -225,7 +243,7 @@
   /* ------------------------------------------------------------ accent */
 
   /* The primary action. Yellow with ink text in Desk, the neutral fill in Studio. */
-  :is([data-ds='button'], [data-ds='icon-button'])[data-tone='accent'][data-emphasis='solid'] {
+  :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button'], [data-ds='close-button'], [data-ds='copy-button'], [data-ds='floating-action-button'])[data-tone='accent'][data-emphasis='solid'] {
     --_button-bg: var(--ds-color-primary-fill);
     --_button-fg: var(--ds-color-primary-text);
     --_button-border-color: var(--ds-color-primary-border);
@@ -237,7 +255,7 @@
   }
 
   /* The lighter accents: the primary tint and the primary text for a plain surface. A yellow tint in Desk. */
-  :is([data-ds='button'], [data-ds='icon-button'])[data-tone='accent'] {
+  :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button'], [data-ds='close-button'], [data-ds='copy-button'], [data-ds='floating-action-button'])[data-tone='accent'] {
     --_button-bg: var(--ds-color-primary-tint);
     --_button-fg: var(--ds-color-primary-on-surface);
     --_button-bg-hover: var(--ds-color-primary-tint-hover);
@@ -247,21 +265,21 @@
     --_button-decoration: var(--ds-color-primary-border);
   }
 
-  :is([data-ds='button'], [data-ds='icon-button'])[data-tone='accent'][data-emphasis='outline'] {
+  :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button'], [data-ds='close-button'], [data-ds='copy-button'], [data-ds='floating-action-button'])[data-tone='accent'][data-emphasis='outline'] {
     --_button-bg: transparent;
     --_button-border-color: var(--ds-color-primary-border);
     --_button-border-color-hover: var(--ds-color-primary-border);
     --_button-bg-hover: var(--ds-color-primary-tint);
   }
 
-  :is([data-ds='button'], [data-ds='icon-button'])[data-tone='accent'][data-emphasis='ghost'] {
+  :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button'], [data-ds='close-button'], [data-ds='copy-button'], [data-ds='floating-action-button'])[data-tone='accent'][data-emphasis='ghost'] {
     --_button-bg: transparent;
     --_button-bg-hover: var(--ds-color-primary-tint);
   }
 
   /* ------------------------------------------------------------ danger, success, warning, info */
 
-  :is([data-ds='button'], [data-ds='icon-button'])[data-tone='danger'] {
+  :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button'], [data-ds='close-button'], [data-ds='copy-button'], [data-ds='floating-action-button'])[data-tone='danger'] {
     --_button-tone-solid: var(--ds-color-state-danger-solid);
     --_button-tone-solid-hover: var(--ds-color-state-danger-solid-hover);
     --_button-tone-on-solid: var(--ds-color-state-danger-on-solid);
@@ -272,7 +290,7 @@
     --_button-tone-tint-strong: var(--ds-color-state-danger-tint-20);
   }
 
-  :is([data-ds='button'], [data-ds='icon-button'])[data-tone='success'] {
+  :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button'], [data-ds='close-button'], [data-ds='copy-button'], [data-ds='floating-action-button'])[data-tone='success'] {
     --_button-tone-solid: var(--ds-color-state-success-solid);
     --_button-tone-solid-hover: var(--ds-color-state-success-solid-hover);
     --_button-tone-on-solid: var(--ds-color-state-success-on-solid);
@@ -283,7 +301,7 @@
     --_button-tone-tint-strong: var(--ds-color-state-success-tint-20);
   }
 
-  :is([data-ds='button'], [data-ds='icon-button'])[data-tone='warning'] {
+  :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button'], [data-ds='close-button'], [data-ds='copy-button'], [data-ds='floating-action-button'])[data-tone='warning'] {
     --_button-tone-solid: var(--ds-color-state-warning-solid);
     --_button-tone-solid-hover: var(--ds-color-state-warning-solid-hover);
     --_button-tone-on-solid: var(--ds-color-state-warning-on-solid);
@@ -294,7 +312,7 @@
     --_button-tone-tint-strong: var(--ds-color-state-warning-tint-20);
   }
 
-  :is([data-ds='button'], [data-ds='icon-button'])[data-tone='info'] {
+  :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button'], [data-ds='close-button'], [data-ds='copy-button'], [data-ds='floating-action-button'])[data-tone='info'] {
     --_button-tone-solid: var(--ds-color-state-info-solid);
     --_button-tone-solid-hover: var(--ds-color-state-info-solid-hover);
     --_button-tone-on-solid: var(--ds-color-state-info-on-solid);
@@ -305,7 +323,7 @@
     --_button-tone-tint-strong: var(--ds-color-state-info-tint-20);
   }
 
-  :is([data-ds='button'], [data-ds='icon-button']):is([data-tone='danger'], [data-tone='success'], [data-tone='warning'], [data-tone='info'])[data-emphasis='solid'] {
+  :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button'], [data-ds='close-button'], [data-ds='copy-button'], [data-ds='floating-action-button']):is([data-tone='danger'], [data-tone='success'], [data-tone='warning'], [data-tone='info'])[data-emphasis='solid'] {
     --_button-bg: var(--_button-tone-solid);
     --_button-fg: var(--_button-tone-on-solid);
     --_button-bg-hover: var(--_button-tone-solid-hover);
@@ -315,7 +333,7 @@
   }
 
   /* soft: the source destructive button. On a tint the text is the on-tint tone, at rest and on hover. */
-  :is([data-ds='button'], [data-ds='icon-button']):is([data-tone='danger'], [data-tone='success'], [data-tone='warning'], [data-tone='info'])[data-emphasis='soft'] {
+  :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button'], [data-ds='close-button'], [data-ds='copy-button'], [data-ds='floating-action-button']):is([data-tone='danger'], [data-tone='success'], [data-tone='warning'], [data-tone='info'])[data-emphasis='soft'] {
     --_button-bg: var(--_button-tone-tint);
     --_button-fg: var(--_button-tone-on-tint);
     --_button-bg-hover: var(--_button-tone-tint-strong);
@@ -325,7 +343,7 @@
   }
 
   /* outline, ghost and link: the tone text on the surface at rest, the on-tint tone over the tint on hover. */
-  :is([data-ds='button'], [data-ds='icon-button']):is([data-tone='danger'], [data-tone='success'], [data-tone='warning'], [data-tone='info']):is([data-emphasis='outline'], [data-emphasis='ghost']) {
+  :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button'], [data-ds='close-button'], [data-ds='copy-button'], [data-ds='floating-action-button']):is([data-tone='danger'], [data-tone='success'], [data-tone='warning'], [data-tone='info']):is([data-emphasis='outline'], [data-emphasis='ghost']) {
     --_button-bg: transparent;
     --_button-fg: var(--_button-tone-text);
     --_button-bg-hover: var(--_button-tone-tint);
@@ -334,7 +352,7 @@
     --_button-fg-active: var(--_button-tone-on-tint);
   }
 
-  :is([data-ds='button'], [data-ds='icon-button']):is([data-tone='danger'], [data-tone='success'], [data-tone='warning'], [data-tone='info'])[data-emphasis='outline'] {
+  :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button'], [data-ds='close-button'], [data-ds='copy-button'], [data-ds='floating-action-button']):is([data-tone='danger'], [data-tone='success'], [data-tone='warning'], [data-tone='info'])[data-emphasis='outline'] {
     --_button-border-color: var(--_button-tone-border);
     --_button-border-color-hover: var(--_button-tone-border);
   }
@@ -342,7 +360,7 @@
   /* ------------------------------------------------------------ link */
 
   /* A button that reads as a link: no fill, no padding, always underlined (not color alone). */
-  [data-ds='button'][data-emphasis='link'] {
+  :is([data-ds='button'], [data-ds='copy-button'])[data-emphasis='link'] {
     --_button-bg: transparent;
     --_button-bg-hover: transparent;
     --_button-bg-active: transparent;
@@ -359,52 +377,130 @@
     text-underline-offset: var(--ds-space-3xs);
   }
 
-  [data-ds='button'][data-tone='accent'][data-emphasis='link'] {
+  :is([data-ds='button'], [data-ds='copy-button'])[data-tone='accent'][data-emphasis='link'] {
     --_button-fg: var(--ds-color-primary-on-surface);
     --_button-fg-hover: var(--ds-color-primary-on-surface);
     --_button-fg-active: var(--ds-color-primary-on-surface);
   }
 
-  [data-ds='button']:is([data-tone='danger'], [data-tone='success'], [data-tone='warning'], [data-tone='info'])[data-emphasis='link'] {
+  :is([data-ds='button'], [data-ds='copy-button']):is([data-tone='danger'], [data-tone='success'], [data-tone='warning'], [data-tone='info'])[data-emphasis='link'] {
     --_button-fg: var(--_button-tone-text);
     --_button-fg-hover: var(--_button-tone-text);
     --_button-fg-active: var(--_button-tone-text);
     --_button-decoration: currentColor;
   }
 
+  /* ------------------------------------------------------------ toggle-button (lane 1A) */
+
+  /*
+   * On: a stronger fill and a 2px inner ring, so pressed is not told by
+   * color alone (source: GB `.st-btn[aria-pressed='true']`, the fill plus a
+   * ring on the whole button). A solid toggle keeps its fill and draws the
+   * ring in its text color. Hover over an on toggle keeps the on fill.
+   */
+  [data-ds='toggle-button'][data-state='on'] {
+    --_toggle-on-bg: var(--ds-color-bg-overlay-20);
+    --_toggle-on-fg: var(--ds-color-text-bright);
+    --_toggle-on-ring: var(--ds-color-bg-overlay-50);
+    --_button-shadow: inset 0 0 0 var(--ds-border-width-strong) var(--_toggle-on-ring);
+  }
+
+  [data-ds='toggle-button'][data-state='on'][data-tone='accent'] {
+    --_toggle-on-bg: var(--ds-color-primary-tint-hover);
+    --_toggle-on-fg: var(--ds-color-primary-on-surface);
+    --_toggle-on-ring: var(--ds-color-primary-border);
+  }
+
+  [data-ds='toggle-button'][data-state='on']:is([data-tone='danger'], [data-tone='success'], [data-tone='warning'], [data-tone='info']) {
+    --_toggle-on-bg: var(--_button-tone-tint-strong);
+    --_toggle-on-fg: var(--_button-tone-on-tint);
+    --_toggle-on-ring: var(--_button-tone-border);
+  }
+
+  [data-ds='toggle-button'][data-state='on']:not([data-emphasis='solid']) {
+    --_button-bg: var(--_toggle-on-bg);
+    --_button-bg-hover: var(--_toggle-on-bg);
+    --_button-bg-active: var(--_toggle-on-bg);
+    --_button-fg: var(--_toggle-on-fg);
+    --_button-fg-hover: var(--_toggle-on-fg);
+    --_button-fg-active: var(--_toggle-on-fg);
+  }
+
+  [data-ds='toggle-button'][data-state='on'][data-emphasis='solid'] {
+    --_toggle-on-ring: var(--_button-fg);
+  }
+
+  /* ------------------------------------------------------------ close-button (lane 1A) */
+
+  /* CloseButton is the neutral ghost icon button: the shared look above, nothing of its own here. */
+
+  /* ------------------------------------------------------------ copy-button (lane 1A) */
+
+  /* The icon tells the result: the success color after a copy, the danger color after a failure. Not on a solid fill. */
+  [data-ds='copy-button'] > [data-part='icon'] {
+    color: var(--_copy-icon-fg, currentColor);
+  }
+
+  [data-ds='copy-button'][data-state='copied']:not([data-emphasis='solid']) {
+    --_copy-icon-fg: var(--ds-color-state-success-text);
+  }
+
+  [data-ds='copy-button'][data-state='failed']:not([data-emphasis='solid']) {
+    --_copy-icon-fg: var(--ds-color-state-danger-text);
+  }
+
+  /* ------------------------------------------------------------ floating-action-button (lane 1A) */
+
+  /*
+   * A touch first control: never under 44px (size.touch.ios), 48px at lg
+   * (size.touch.android), lifted by elevation.card-hover. [data-size] lifts
+   * these rules over the shared size rules.
+   */
+  [data-ds='floating-action-button'][data-size] {
+    --_button-height: max(var(--ds-size-control-lg), var(--ds-size-touch-ios));
+    --_button-padding-inline: var(--ds-space-2xl);
+    --_button-gap: var(--ds-space-s);
+    --_button-font-size: var(--ds-font-size-m);
+    --_button-shadow: var(--ds-elevation-card-hover);
+  }
+
+  [data-ds='floating-action-button'][data-size='lg'] {
+    --_button-height: max(var(--ds-size-control-lg), var(--ds-size-touch-android));
+  }
+
   /* ------------------------------------------------------------ states: swap the private properties */
 
-  :is([data-ds='button'], [data-ds='icon-button']):hover:not([data-disabled], [data-loading]) {
+  :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button'], [data-ds='close-button'], [data-ds='copy-button'], [data-ds='floating-action-button']):hover:not([data-disabled], [data-loading]) {
     --_button-bg: var(--_button-bg-hover);
     --_button-fg: var(--_button-fg-hover);
     --_button-border-color: var(--_button-border-color-hover);
     --_button-decoration: var(--_button-decoration-hover);
   }
 
-  :is([data-ds='button'], [data-ds='icon-button']):active:not([data-disabled], [data-loading]) {
+  :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button'], [data-ds='close-button'], [data-ds='copy-button'], [data-ds='floating-action-button']):active:not([data-disabled], [data-loading]) {
     --_button-bg: var(--_button-bg-active);
     --_button-fg: var(--_button-fg-active);
   }
 
   /* The transparent outline is set only here, so forced colors mode draws it on focus and nowhere else. */
-  :is([data-ds='button'], [data-ds='icon-button']):focus-visible {
+  :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button'], [data-ds='close-button'], [data-ds='copy-button'], [data-ds='floating-action-button']):focus-visible {
     outline: var(--ds-border-width-strong) solid transparent;
     outline-offset: var(--ds-border-width-strong);
-    box-shadow: var(--_button-ring);
+    box-shadow: var(--_button-shadow), var(--_button-ring);
   }
 
   /* Disabled keeps focus (aria-disabled), dims and stops reacting. */
-  :is([data-ds='button'], [data-ds='icon-button'])[data-disabled] {
+  :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button'], [data-ds='close-button'], [data-ds='copy-button'], [data-ds='floating-action-button'])[data-disabled] {
     opacity: var(--ds-opacity-disabled);
     cursor: not-allowed;
   }
 
   /* Loading: the content stays in flow and fades out under the spinner, so the width holds. */
-  :is([data-ds='button'], [data-ds='icon-button'])[data-loading] {
+  :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button'], [data-ds='close-button'], [data-ds='copy-button'], [data-ds='floating-action-button'])[data-loading] {
     cursor: progress;
   }
 
-  :is([data-ds='button'], [data-ds='icon-button'])[data-loading] > :not([data-part='spinner'], [data-part='status']) {
+  :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button'], [data-ds='close-button'], [data-ds='copy-button'], [data-ds='floating-action-button'])[data-loading] > :not([data-part='spinner'], [data-part='status']) {
     opacity: 0;
   }
 
@@ -412,18 +508,24 @@
 
   /* The spinner stops and stays as a still ring with one strong quarter. The status text carries the state. */
   @media (prefers-reduced-motion: reduce) {
-    :is([data-ds='button'], [data-ds='icon-button']) > [data-part='spinner'] {
+    :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button'], [data-ds='close-button'], [data-ds='copy-button'], [data-ds='floating-action-button']) > [data-part='spinner'] {
       animation: none;
     }
   }
 
   @media (forced-colors: active) {
-    :is([data-ds='button'], [data-ds='icon-button']):focus-visible {
+    :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button'], [data-ds='close-button'], [data-ds='copy-button'], [data-ds='floating-action-button']):focus-visible {
       outline-color: Highlight;
     }
 
-    :is([data-ds='button'], [data-ds='icon-button'])[data-disabled] {
+    :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button'], [data-ds='close-button'], [data-ds='copy-button'], [data-ds='floating-action-button'])[data-disabled] {
       color: GrayText;
+    }
+
+    /* A pressed toggle in the system highlight colors. */
+    [data-ds='toggle-button'][data-state='on'] {
+      background-color: Highlight;
+      color: HighlightText;
     }
   }
 }

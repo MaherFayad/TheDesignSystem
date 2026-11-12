@@ -9,7 +9,7 @@
  */
 @layer ds.recipes {
   /* Desk controls are pills (the source `.roll-btn`). The other shapes still apply. */
-  [data-style='desk'] :is([data-ds='button'], [data-ds='icon-button'])[data-shape='default'] {
+  [data-style='desk'] :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button'], [data-ds='close-button'], [data-ds='copy-button'], [data-ds='floating-action-button'])[data-shape='default'] {
     --_button-radius: var(--ds-radius-pill);
   }
 

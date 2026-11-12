@@ -1,0 +1,14 @@
+/*
+ * CloseButton: what differs from Button. The look is Button.css (the
+ * neutral ghost of IconButton). Here: the square box.
+ */
+@layer ds.base {
+  /* [data-size][data-shape] are always present: they lift this rule over the Button size rules. */
+  [data-ds='close-button'][data-size][data-shape] {
+    --_button-padding-inline: 0;
+
+    flex: none;
+    inline-size: max(var(--_button-height), var(--ds-size-target-min));
+    min-inline-size: var(--ds-size-target-min);
+  }
+}

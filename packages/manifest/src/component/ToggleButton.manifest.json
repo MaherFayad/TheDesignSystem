@@ -1,0 +1,298 @@
+{
+  "name": "ToggleButton",
+  "kind": "component",
+  "family": "actions",
+  "summary": "A button that stays pressed or not: bold, mute, grid view. aria-pressed tells assistive tech the state.",
+  "useWhen": [
+    "One setting that is on or off and applies at once, shown as a button in a toolbar",
+    "A formatting control (bold, italic) or a view switch that can be on alone",
+    "An icon only on and off control in a toolbar, named by its label"
+  ],
+  "avoidWhen": [
+    "A choice between two or more options where one is always on",
+    "A setting in a form that is saved with the form",
+    "An action that runs once (save, send)"
+  ],
+  "insteadUse": {
+    "One of several options": "SegmentedControl or ToggleGroup",
+    "A setting in a form or a settings list": "Switch",
+    "An action that runs once": "Button",
+    "A checkable item in a menu": "DropdownMenu with a checkbox item"
+  },
+  "anatomy": [
+    "root",
+    "start",
+    "label",
+    "end",
+    "icon"
+  ],
+  "slots": {
+    "label": {
+      "accepts": "text",
+      "max": 1
+    },
+    "start": {
+      "accepts": [
+        "Icon"
+      ],
+      "max": 1
+    },
+    "end": {
+      "accepts": [
+        "Icon"
+      ],
+      "max": 1
+    },
+    "icon": {
+      "accepts": [
+        "Icon"
+      ],
+      "max": 1
+    }
+  },
+  "props": {
+    "pressed": {
+      "type": "boolean",
+      "description": "Pressed, controlled. Pair with onPressedChange."
+    },
+    "defaultPressed": {
+      "type": "boolean",
+      "default": false,
+      "description": "Pressed at first, uncontrolled."
+    },
+    "onPressedChange": {
+      "type": "function",
+      "description": "Called with the new pressed value."
+    },
+    "size": {
+      "type": [
+        "xs",
+        "sm",
+        "md",
+        "lg"
+      ],
+      "default": "md",
+      "description": "Height from size.control: 24, 28, 32 and 44 px in the default density. A ButtonGroup passes its size; this prop wins."
+    },
+    "tone": {
+      "type": [
+        "neutral",
+        "accent",
+        "danger",
+        "success",
+        "warning",
+        "info"
+      ],
+      "default": "neutral"
+    },
+    "emphasis": {
+      "type": [
+        "solid",
+        "soft",
+        "outline",
+        "ghost"
+      ],
+      "default": "soft",
+      "description": "As Button. No link: a link that stays pressed reads as neither."
+    },
+    "shape": {
+      "type": [
+        "default",
+        "pill",
+        "square"
+      ],
+      "default": "default",
+      "description": "default takes radius.control (Desk draws it as a pill), pill is fully round, square takes radius.sm."
+    },
+    "start": {
+      "type": "node",
+      "description": "Leading content: a system icon name or a node. 16px at every size."
+    },
+    "end": {
+      "type": "node",
+      "description": "Trailing content: a system icon name or a node."
+    },
+    "icon": {
+      "type": "node",
+      "description": "The icon only form: an icon name or a node. Then label is the accessible name."
+    },
+    "label": {
+      "type": "string",
+      "description": "The accessible name of the icon only form (aria-label). Required with icon."
+    },
+    "disabled": {
+      "type": "boolean",
+      "default": false,
+      "description": "aria-disabled and data-disabled; stays focusable; does not toggle."
+    },
+    "children": {
+      "type": "node",
+      "description": "The visible label: the setting it turns on, a noun (Grid view)."
+    }
+  },
+  "states": [
+    "on",
+    "off",
+    "data-disabled"
+  ],
+  "a11y": {
+    "role": "button with aria-pressed",
+    "focus": "In the tab order in every state. A 2px ring on keyboard focus, the doubled ring on a solid fill.",
+    "keys": {
+      "Space": "Toggles the pressed state",
+      "Enter": "Toggles the pressed state",
+      "Tab": "Moves focus to the next control"
+    },
+    "announce": "aria-pressed is announced as pressed or not pressed with the name. The name stays the same in both states.",
+    "native": {
+      "accessibilityRole": "togglebutton",
+      "accessibilityState": [
+        "checked",
+        "disabled"
+      ]
+    },
+    "notes": [
+      "Pressed is not told by color alone: an on toggle also gets a 2px inner ring.",
+      "In forced colors an on toggle is drawn in Highlight and HighlightText.",
+      "Keep the label the same in both states. Do not swap Show to Hide: aria-pressed carries the state.",
+      "A ButtonGroup passes size, emphasis and shape through context; a prop on the toggle wins."
+    ]
+  },
+  "content": {
+    "en": {
+      "label": "The setting it turns on, a noun or a short phrase in sentence case: Grid view, Mute alerts. The same in both states."
+    },
+    "ar": {
+      "label": "Noun form, no diacritics: عرض الشبكة، كتم التنبيهات."
+    }
+  },
+  "tokens": [
+    "size.control.xs",
+    "size.control.sm",
+    "size.control.md",
+    "size.control.lg",
+    "size.target-min",
+    "size.icon.sm",
+    "size.icon.md",
+    "space.xs",
+    "space.s",
+    "space.xl",
+    "space.2xl",
+    "space.2xs",
+    "radius.control",
+    "radius.field",
+    "radius.pill",
+    "radius.sm",
+    "border.width.default",
+    "border.width.strong",
+    "font.family.sans",
+    "font.size.s",
+    "font.size.m",
+    "font.size.l",
+    "font.weight.bold",
+    "font.leading.tight",
+    "font.tracking.none",
+    "opacity.disabled",
+    "color.bg.overlay-5",
+    "color.bg.overlay-10",
+    "color.bg.overlay-20",
+    "color.bg.overlay-30",
+    "button.text.secondary",
+    "color.text.default",
+    "color.text.muted",
+    "color.text.bright",
+    "color.border.control",
+    "color.border.control-hover",
+    "color.primary.fill",
+    "color.primary.fill-hover",
+    "color.primary.fill-pressed",
+    "color.primary.text",
+    "color.primary.border",
+    "color.primary.tint",
+    "color.primary.tint-hover",
+    "color.primary.on-surface",
+    "color.state.danger.solid",
+    "color.state.danger.solid-hover",
+    "color.state.danger.on-solid",
+    "color.state.danger.text",
+    "color.state.danger.on-tint",
+    "color.state.danger.border",
+    "color.state.danger.tint-10",
+    "color.state.danger.tint-20",
+    "color.state.success.solid",
+    "color.state.success.solid-hover",
+    "color.state.success.on-solid",
+    "color.state.success.text",
+    "color.state.success.on-tint",
+    "color.state.success.border",
+    "color.state.success.tint-10",
+    "color.state.success.tint-20",
+    "color.state.warning.solid",
+    "color.state.warning.solid-hover",
+    "color.state.warning.on-solid",
+    "color.state.warning.text",
+    "color.state.warning.on-tint",
+    "color.state.warning.border",
+    "color.state.warning.tint-10",
+    "color.state.warning.tint-20",
+    "color.state.info.solid",
+    "color.state.info.solid-hover",
+    "color.state.info.on-solid",
+    "color.state.info.text",
+    "color.state.info.on-tint",
+    "color.state.info.border",
+    "color.state.info.tint-10",
+    "color.state.info.tint-20",
+    "focus.shadow.ring",
+    "focus.shadow.primary",
+    "color.focus.ring",
+    "color.focus.ring-on-primary-inner",
+    "color.focus.ring-on-primary-outer",
+    "duration.fast",
+    "duration.spin",
+    "ease.default",
+    "space.3xs",
+    "radius.xs",
+    "color.text.link",
+    "duration.roll",
+    "ease.reveal",
+    "color.bg.overlay-50"
+  ],
+  "frameworks": {
+    "react": {
+      "status": "ready",
+      "behavior": "radix:Toggle on ButtonBase",
+      "example": "ToggleButton.demo.tsx"
+    },
+    "angular": {
+      "status": "planned",
+      "behavior": "button[dsToggleButton] on the shared Button.css"
+    },
+    "native": {
+      "status": "planned",
+      "behavior": "rn-primitives:toggle",
+      "note": "44pt on iOS, 48dp on Android."
+    }
+  },
+  "styles": {
+    "studio": "The overlay fill steps up and a 2px inner ring shows when on.",
+    "desk": "Pill shaped; on is the stronger fill with the ring; no roll label.",
+    "neutral": "Tokens only: the same on fill and ring in Neutral's colors.",
+    "liquid": "Planned."
+  },
+  "mistakes": [
+    {
+      "wrong": "A toggle whose label switches between Show and Hide",
+      "right": "One label, Show guides; aria-pressed says the state"
+    },
+    {
+      "wrong": "Two toggles where exactly one must be on",
+      "right": "SegmentedControl"
+    },
+    {
+      "wrong": "An on state told only by color",
+      "right": "The inner ring the component draws; do not override it away"
+    }
+  ],
+  "since": "0.2.0"
+}

@@ -2099,6 +2099,171 @@
     "since": "0.1.0"
   },
   {
+    "name": "CloseButton",
+    "kind": "component",
+    "family": "actions",
+    "summary": "The one close control for dialogs, toasts, banners, chips and drawers: a ghost icon button with the close icon and a default name.",
+    "useWhen": [
+      "Closing a dialog, a drawer, a panel, a banner or a toast",
+      "Removing a chip or a filter, named for what it removes",
+      "Any close control, so every close looks and reads the same"
+    ],
+    "avoidWhen": [
+      "Cancelling a form or a task: say what happens with a Button (Cancel edit)",
+      "Deleting data: a close never deletes",
+      "A back step in a flow"
+    ],
+    "insteadUse": {
+      "Cancel with words": "Button",
+      "Delete something": "Button with tone danger",
+      "Go back": "IconButton with chevron-back"
+    },
+    "anatomy": [
+      "root",
+      "icon"
+    ],
+    "props": {
+      "size": {
+        "type": [
+          "xs",
+          "sm",
+          "md",
+          "lg"
+        ],
+        "default": "md",
+        "description": "Height from size.control: 24, 28, 32 and 44 px in the default density. A ButtonGroup passes its size; this prop wins."
+      },
+      "tone": {
+        "type": [
+          "neutral"
+        ],
+        "default": "neutral",
+        "description": "Fixed: stamped so the shared Button.css draws it. Not a prop."
+      },
+      "emphasis": {
+        "type": [
+          "ghost"
+        ],
+        "default": "ghost",
+        "description": "Fixed: a close is always quiet. Not a prop; a ButtonGroup cannot change it."
+      },
+      "shape": {
+        "type": [
+          "default",
+          "pill",
+          "square"
+        ],
+        "default": "default",
+        "description": "default takes radius.control (Desk draws it as a pill), pill is fully round, square takes radius.sm."
+      },
+      "label": {
+        "type": "string",
+        "default": "Close",
+        "description": "The accessible name (aria-label). Close, or إغلاق under an Arabic Theme. Name what closes when a screen has more than one (Close panel)."
+      },
+      "disabled": {
+        "type": "boolean",
+        "default": false
+      },
+      "asChild": {
+        "type": "boolean",
+        "default": false,
+        "description": "Renders the single child element, for example a link, as the control."
+      },
+      "type": {
+        "type": [
+          "button",
+          "submit",
+          "reset"
+        ],
+        "default": "button"
+      }
+    },
+    "states": [
+      "data-disabled"
+    ],
+    "a11y": {
+      "role": "button",
+      "focus": "In the tab order. A 2px ring on keyboard focus.",
+      "keys": {
+        "Enter": "Activates the close",
+        "Space": "Activates the close",
+        "Tab": "Moves focus to the next control"
+      },
+      "announce": "The label is the accessible name: Close by default, إغلاق under an Arabic Theme.",
+      "native": {
+        "accessibilityRole": "button",
+        "accessibilityState": [
+          "disabled"
+        ]
+      },
+      "notes": [
+        "Emphasis is always ghost and tone neutral; a ButtonGroup passes only size and shape.",
+        "The default name reads the lang of the nearest Theme, not a lang attribute on a plain element.",
+        "Dialog, Toast and Window draw their own close parts today; they can adopt CloseButton later (orders 1.6.1 and on).",
+        "At least 24 by 24 CSS px at xs."
+      ]
+    },
+    "content": {
+      "en": {
+        "label": "Close, or Close plus the thing: Close panel, Remove filter."
+      },
+      "ar": {
+        "label": "إغلاق، أو إغلاق مع الشيء: إغلاق اللوحة."
+      }
+    },
+    "tokens": [
+      "size.control.xs",
+      "size.control.sm",
+      "size.control.md",
+      "size.control.lg",
+      "size.target-min",
+      "size.icon.md",
+      "radius.control",
+      "radius.field",
+      "radius.pill",
+      "radius.sm",
+      "color.text.muted",
+      "color.text.default",
+      "color.bg.overlay-10",
+      "color.bg.overlay-20",
+      "focus.shadow.ring",
+      "opacity.disabled"
+    ],
+    "frameworks": {
+      "react": {
+        "status": "ready",
+        "behavior": "native button on ButtonBase",
+        "example": "CloseButton.demo.tsx"
+      },
+      "angular": {
+        "status": "planned",
+        "behavior": "button[dsCloseButton] on the shared Button.css"
+      },
+      "native": {
+        "status": "planned",
+        "note": "44pt on iOS, 48dp on Android."
+      }
+    },
+    "styles": {
+      "studio": "Ghost, the control radius.",
+      "desk": "Ghost, a circle (Desk controls are pills).",
+      "neutral": "Tokens only.",
+      "liquid": "Planned."
+    },
+    "mistakes": [
+      {
+        "wrong": "A close button labelled X",
+        "right": "The default name, or Close plus the thing"
+      },
+      {
+        "wrong": "A close button that deletes the item",
+        "right": "A close only hides; deleting is a Button with tone danger"
+      }
+    ],
+    "since": "0.2.0"
+  },
+  {
     "name": "Container",
     "kind": "component",
     "family": "layout",
@@ -2271,6 +2436,285 @@
       }
     ],
     "since": "0.1.0"
+  },
+  {
+    "name": "CopyButton",
+    "kind": "component",
+    "family": "actions",
+    "summary": "Copies a value to the clipboard and confirms it once: the icon turns to a check and a hidden status says Copied.",
+    "useWhen": [
+      "A command, a link, an id or a color the person will paste somewhere else",
+      "Beside a code block or a read only field that shows the value",
+      "An icon only copy control next to its value, named by label"
+    ],
+    "avoidWhen": [
+      "The value is long text the person edits first",
+      "Copying needs a choice of format",
+      "The value is not shown anywhere on the page"
+    ],
+    "insteadUse": {
+      "Share a link to people": "Button that opens a share Dialog",
+      "Pick a format first": "DropdownMenu with copy items",
+      "Edit then copy": "Input with a CopyButton at its end"
+    },
+    "anatomy": [
+      "root",
+      "icon",
+      "label",
+      "status"
+    ],
+    "props": {
+      "value": {
+        "type": "string",
+        "required": true,
+        "description": "The text to copy."
+      },
+      "label": {
+        "type": "string",
+        "default": "Copy",
+        "description": "The action name: visible text, or the accessible name with iconOnly. Copy, or نسخ under an Arabic Theme. Name what is copied when it helps: Copy command."
+      },
+      "iconOnly": {
+        "type": "boolean",
+        "default": false,
+        "description": "Shows only the icon; label becomes the accessible name."
+      },
+      "copiedLabel": {
+        "type": "string",
+        "default": "Copied",
+        "description": "What the status says after a copy (تم النسخ in Arabic)."
+      },
+      "failedLabel": {
+        "type": "string",
+        "default": "Could not copy",
+        "description": "What the status says after a failure (تعذر النسخ in Arabic)."
+      },
+      "target": {
+        "type": "string",
+        "description": "The id of the element that shows the value. A failed copy selects its text, so the keyboard can copy it."
+      },
+      "onCopied": {
+        "type": "function",
+        "description": "Called with the value after it reached the clipboard."
+      },
+      "onCopyFailed": {
+        "type": "function",
+        "description": "Called with the value after the copy failed."
+      },
+      "size": {
+        "type": [
+          "xs",
+          "sm",
+          "md",
+          "lg"
+        ],
+        "default": "md",
+        "description": "Height from size.control: 24, 28, 32 and 44 px in the default density. A ButtonGroup passes its size; this prop wins."
+      },
+      "tone": {
+        "type": [
+          "neutral",
+          "accent",
+          "danger",
+          "success",
+          "warning",
+          "info"
+        ],
+        "default": "neutral"
+      },
+      "emphasis": {
+        "type": [
+          "solid",
+          "soft",
+          "outline",
+          "ghost",
+          "link"
+        ],
+        "default": "ghost",
+        "description": "ghost: a copy control sits beside the value it copies."
+      },
+      "shape": {
+        "type": [
+          "default",
+          "pill",
+          "square"
+        ],
+        "default": "default",
+        "description": "default takes radius.control (Desk draws it as a pill), pill is fully round, square takes radius.sm."
+      },
+      "disabled": {
+        "type": "boolean",
+        "default": false
+      }
+    },
+    "states": [
+      "idle",
+      "copied",
+      "failed",
+      "data-disabled"
+    ],
+    "a11y": {
+      "role": "button",
+      "focus": "In the tab order. Focus stays on the button through the copy.",
+      "keys": {
+        "Enter": "Copies the value",
+        "Space": "Copies the value",
+        "Tab": "Moves focus to the next control"
+      },
+      "announce": "A visually hidden status inside the button says Copied, or Could not copy, once per copy (WCAG 4.1.3), and is emptied when the button returns to idle. No native title.",
+      "native": {
+        "accessibilityRole": "button",
+        "accessibilityState": [
+          "disabled"
+        ]
+      },
+      "notes": [
+        "The Clipboard API is called inside the click handler. Where it is missing or refused, a hidden textarea and the copy command are tried; if both fail, the state is failed and the target text is selected.",
+        "The result shows for delay.peek-hide, then the button returns to idle. Hold time, not motion: it is kept under reduced motion.",
+        "The result is not told by color alone: the icon changes from copy to check or warning, and the status says it."
+      ]
+    },
+    "content": {
+      "en": {
+        "label": "Copy, or Copy plus the thing: Copy command, Copy link.",
+        "copied": "Copied",
+        "failed": "Could not copy"
+      },
+      "ar": {
+        "label": "نسخ، أو نسخ مع الشيء: نسخ الرابط.",
+        "copied": "تم النسخ",
+        "failed": "تعذر النسخ"
+      }
+    },
+    "tokens": [
+      "size.control.xs",
+      "size.control.sm",
+      "size.control.md",
+      "size.control.lg",
+      "size.target-min",
+      "size.icon.sm",
+      "size.icon.md",
+      "space.xs",
+      "space.s",
+      "space.xl",
+      "space.2xl",
+      "space.2xs",
+      "radius.control",
+      "radius.field",
+      "radius.pill",
+      "radius.sm",
+      "border.width.default",
+      "border.width.strong",
+      "font.family.sans",
+      "font.size.s",
+      "font.size.m",
+      "font.size.l",
+      "font.weight.bold",
+      "font.leading.tight",
+      "font.tracking.none",
+      "opacity.disabled",
+      "color.bg.overlay-5",
+      "color.bg.overlay-10",
+      "color.bg.overlay-20",
+      "color.bg.overlay-30",
+      "button.text.secondary",
+      "color.text.default",
+      "color.text.muted",
+      "color.text.bright",
+      "color.border.control",
+      "color.border.control-hover",
+      "color.primary.fill",
+      "color.primary.fill-hover",
+      "color.primary.fill-pressed",
+      "color.primary.text",
+      "color.primary.border",
+      "color.primary.tint",
+      "color.primary.tint-hover",
+      "color.primary.on-surface",
+      "color.state.danger.solid",
+      "color.state.danger.solid-hover",
+      "color.state.danger.on-solid",
+      "color.state.danger.text",
+      "color.state.danger.on-tint",
+      "color.state.danger.border",
+      "color.state.danger.tint-10",
+      "color.state.danger.tint-20",
+      "color.state.success.solid",
+      "color.state.success.solid-hover",
+      "color.state.success.on-solid",
+      "color.state.success.text",
+      "color.state.success.on-tint",
+      "color.state.success.border",
+      "color.state.success.tint-10",
+      "color.state.success.tint-20",
+      "color.state.warning.solid",
+      "color.state.warning.solid-hover",
+      "color.state.warning.on-solid",
+      "color.state.warning.text",
+      "color.state.warning.on-tint",
+      "color.state.warning.border",
+      "color.state.warning.tint-10",
+      "color.state.warning.tint-20",
+      "color.state.info.solid",
+      "color.state.info.solid-hover",
+      "color.state.info.on-solid",
+      "color.state.info.text",
+      "color.state.info.on-tint",
+      "color.state.info.border",
+      "color.state.info.tint-10",
+      "color.state.info.tint-20",
+      "focus.shadow.ring",
+      "focus.shadow.primary",
+      "color.focus.ring",
+      "color.focus.ring-on-primary-inner",
+      "color.focus.ring-on-primary-outer",
+      "duration.fast",
+      "duration.spin",
+      "ease.default",
+      "space.3xs",
+      "radius.xs",
+      "color.text.link",
+      "duration.roll",
+      "ease.reveal",
+      "delay.peek-hide"
+    ],
+    "frameworks": {
+      "react": {
+        "status": "ready",
+        "behavior": "native button on ButtonBase, Clipboard API",
+        "example": "CopyButton.demo.tsx"
+      },
+      "angular": {
+        "status": "planned",
+        "behavior": "button[dsCopyButton] on the shared Button.css"
+      },
+      "native": {
+        "status": "planned",
+        "behavior": "expo-clipboard",
+        "note": "Announce through AccessibilityInfo.announceForAccessibility."
+      }
+    },
+    "styles": {
+      "studio": "Ghost by default; the check in the success color, the warning in the danger color.",
+      "desk": "Pill shaped; the same result colors.",
+      "neutral": "Tokens only.",
+      "liquid": "Planned."
+    },
+    "mistakes": [
+      {
+        "wrong": "A toast for every copy",
+        "right": "The check and the hidden status of CopyButton"
+      },
+      {
+        "wrong": "A copy button with no visible value nearby",
+        "right": "Show the value, and pass its id as target"
+      },
+      {
+        "wrong": "A title tooltip that says Copied",
+        "right": "The status part; a Tooltip arrives in wave 1"
+      }
+    ],
+    "since": "0.2.0"
   },
   {
     "name": "DescriptionList",
@@ -3793,6 +4237,284 @@
       }
     ],
     "since": "0.1.0"
+  },
+  {
+    "name": "FloatingActionButton",
+    "kind": "component",
+    "family": "actions",
+    "summary": "The one main action of a screen, floating above the content at the inline end and the block end. Icon only or extended with a label.",
+    "useWhen": [
+      "A screen with one main action that must stay in reach while the content scrolls (create, compose)",
+      "Touch first layouts and phone screens",
+      "A canvas or a list where a toolbar would cover the content"
+    ],
+    "avoidWhen": [
+      "More than one main action on the screen",
+      "A form with a submit button at its end",
+      "Desktop layouts with a toolbar that already holds the action",
+      "On glass or over a floating bar"
+    ],
+    "insteadUse": {
+      "Several actions": "ButtonGroup or a toolbar",
+      "Submit a form": "Button with tone accent and emphasis solid",
+      "An action in a toolbar": "IconButton"
+    },
+    "anatomy": [
+      "root",
+      "icon",
+      "label",
+      "spinner",
+      "status"
+    ],
+    "contract": {
+      "optionalParts": [
+        "label",
+        "spinner",
+        "status"
+      ]
+    },
+    "props": {
+      "icon": {
+        "type": "node",
+        "required": true,
+        "description": "A system icon name or a node. Hidden from assistive tech."
+      },
+      "label": {
+        "type": "string",
+        "required": true,
+        "description": "The action, a verb plus a noun. The accessible name, and the visible text when extended."
+      },
+      "extended": {
+        "type": "boolean",
+        "default": false,
+        "description": "Shows the label beside the icon. Sets data-extended."
+      },
+      "size": {
+        "type": [
+          "md",
+          "lg"
+        ],
+        "default": "lg",
+        "description": "md: 44px (size.touch.ios), lg: 48px (size.touch.android). Never under 44px."
+      },
+      "emphasis": {
+        "type": [
+          "solid"
+        ],
+        "default": "solid",
+        "description": "Fixed: the main action is a solid fill. Not a prop."
+      },
+      "tone": {
+        "type": [
+          "neutral",
+          "accent",
+          "danger",
+          "success",
+          "warning",
+          "info"
+        ],
+        "default": "accent",
+        "description": "accent: the main action. Emphasis is always solid."
+      },
+      "shape": {
+        "type": [
+          "default",
+          "pill",
+          "square"
+        ],
+        "default": "default",
+        "description": "default takes radius.control (Desk draws it as a pill), pill is fully round, square takes radius.sm."
+      },
+      "position": {
+        "type": [
+          "fixed",
+          "absolute",
+          "static"
+        ],
+        "default": "fixed",
+        "description": "fixed to the viewport; absolute in the nearest positioned container; static in the flow. Sets data-position."
+      },
+      "loading": {
+        "type": "boolean",
+        "default": false
+      },
+      "loadingLabel": {
+        "type": "string",
+        "default": "Loading"
+      },
+      "disabled": {
+        "type": "boolean",
+        "default": false
+      }
+    },
+    "states": [
+      "data-disabled",
+      "data-loading",
+      "data-extended"
+    ],
+    "a11y": {
+      "role": "button",
+      "focus": "In the tab order where it sits in the DOM: render it after the content it acts on. The doubled focus ring.",
+      "keys": {
+        "Enter": "Activates the action",
+        "Space": "Activates the action",
+        "Tab": "Moves focus to the next control"
+      },
+      "announce": "The label is the accessible name in both forms.",
+      "native": {
+        "accessibilityRole": "button",
+        "accessibilityState": [
+          "disabled",
+          "busy"
+        ]
+      },
+      "notes": [
+        "Floats at space.4xl from the inline end and the block end, plus the device safe area, on z.floating-panel.",
+        "Reserve room so it never covers focused content (WCAG 2.4.11): give the scroll container scroll-padding-block-end and padding-block-end of at least the button height plus its inset, and leave the last row clear.",
+        "Never under 44 by 44 CSS px (a touch first control)."
+      ]
+    },
+    "content": {
+      "en": {
+        "label": "A verb plus a noun: Create board, Write note."
+      },
+      "ar": {
+        "label": "Noun form, no diacritics: إنشاء لوحة، كتابة ملاحظة."
+      }
+    },
+    "tokens": [
+      "size.control.xs",
+      "size.control.sm",
+      "size.control.md",
+      "size.control.lg",
+      "size.target-min",
+      "size.icon.sm",
+      "size.icon.md",
+      "space.xs",
+      "space.s",
+      "space.xl",
+      "space.2xl",
+      "space.2xs",
+      "radius.control",
+      "radius.field",
+      "radius.pill",
+      "radius.sm",
+      "border.width.default",
+      "border.width.strong",
+      "font.family.sans",
+      "font.size.s",
+      "font.size.m",
+      "font.size.l",
+      "font.weight.bold",
+      "font.leading.tight",
+      "font.tracking.none",
+      "opacity.disabled",
+      "color.bg.overlay-5",
+      "color.bg.overlay-10",
+      "color.bg.overlay-20",
+      "color.bg.overlay-30",
+      "button.text.secondary",
+      "color.text.default",
+      "color.text.muted",
+      "color.text.bright",
+      "color.border.control",
+      "color.border.control-hover",
+      "color.primary.fill",
+      "color.primary.fill-hover",
+      "color.primary.fill-pressed",
+      "color.primary.text",
+      "color.primary.border",
+      "color.primary.tint",
+      "color.primary.tint-hover",
+      "color.primary.on-surface",
+      "color.state.danger.solid",
+      "color.state.danger.solid-hover",
+      "color.state.danger.on-solid",
+      "color.state.danger.text",
+      "color.state.danger.on-tint",
+      "color.state.danger.border",
+      "color.state.danger.tint-10",
+      "color.state.danger.tint-20",
+      "color.state.success.solid",
+      "color.state.success.solid-hover",
+      "color.state.success.on-solid",
+      "color.state.success.text",
+      "color.state.success.on-tint",
+      "color.state.success.border",
+      "color.state.success.tint-10",
+      "color.state.success.tint-20",
+      "color.state.warning.solid",
+      "color.state.warning.solid-hover",
+      "color.state.warning.on-solid",
+      "color.state.warning.text",
+      "color.state.warning.on-tint",
+      "color.state.warning.border",
+      "color.state.warning.tint-10",
+      "color.state.warning.tint-20",
+      "color.state.info.solid",
+      "color.state.info.solid-hover",
+      "color.state.info.on-solid",
+      "color.state.info.text",
+      "color.state.info.on-tint",
+      "color.state.info.border",
+      "color.state.info.tint-10",
+      "color.state.info.tint-20",
+      "focus.shadow.ring",
+      "focus.shadow.primary",
+      "color.focus.ring",
+      "color.focus.ring-on-primary-inner",
+      "color.focus.ring-on-primary-outer",
+      "duration.fast",
+      "duration.spin",
+      "ease.default",
+      "space.3xs",
+      "radius.xs",
+      "color.text.link",
+      "duration.roll",
+      "ease.reveal",
+      "size.touch.ios",
+      "size.touch.android",
+      "elevation.card-hover",
+      "z.floating-panel",
+      "space.4xl"
+    ],
+    "motion": "spinner",
+    "frameworks": {
+      "react": {
+        "status": "ready",
+        "behavior": "native button on ButtonBase",
+        "example": "FloatingActionButton.demo.tsx"
+      },
+      "angular": {
+        "status": "planned",
+        "behavior": "button[dsFloatingActionButton] on the shared Button.css"
+      },
+      "native": {
+        "status": "planned",
+        "note": "Respects the safe area and the keyboard; 56pt is common on phones."
+      }
+    },
+    "styles": {
+      "studio": "The neutral primary fill with an elevation.",
+      "desk": "Yellow, pill shaped, with an elevation.",
+      "neutral": "Tokens only: the brand fill.",
+      "liquid": "Never on glass: a solid fill over the content, never inside a floating glass bar."
+    },
+    "mistakes": [
+      {
+        "wrong": "Two floating action buttons on one screen",
+        "right": "One; the other actions in a toolbar or a menu"
+      },
+      {
+        "wrong": "A floating button that covers the last list row",
+        "right": "scroll-padding-block-end and bottom padding on the scroll container"
+      },
+      {
+        "wrong": "An icon only floating button with no label",
+        "right": "label is required and names it"
+      }
+    ],
+    "since": "0.2.0"
   },
   {
     "name": "Grid",
@@ -9203,6 +9925,304 @@
       ]
     },
     "since": "0.1.0"
+  },
+  {
+    "name": "ToggleButton",
+    "kind": "component",
+    "family": "actions",
+    "summary": "A button that stays pressed or not: bold, mute, grid view. aria-pressed tells assistive tech the state.",
+    "useWhen": [
+      "One setting that is on or off and applies at once, shown as a button in a toolbar",
+      "A formatting control (bold, italic) or a view switch that can be on alone",
+      "An icon only on and off control in a toolbar, named by its label"
+    ],
+    "avoidWhen": [
+      "A choice between two or more options where one is always on",
+      "A setting in a form that is saved with the form",
+      "An action that runs once (save, send)"
+    ],
+    "insteadUse": {
+      "One of several options": "SegmentedControl or ToggleGroup",
+      "A setting in a form or a settings list": "Switch",
+      "An action that runs once": "Button",
+      "A checkable item in a menu": "DropdownMenu with a checkbox item"
+    },
+    "anatomy": [
+      "root",
+      "start",
+      "label",
+      "end",
+      "icon"
+    ],
+    "slots": {
+      "label": {
+        "accepts": "text",
+        "max": 1
+      },
+      "start": {
+        "accepts": [
+          "Icon"
+        ],
+        "max": 1
+      },
+      "end": {
+        "accepts": [
+          "Icon"
+        ],
+        "max": 1
+      },
+      "icon": {
+        "accepts": [
+          "Icon"
+        ],
+        "max": 1
+      }
+    },
+    "props": {
+      "pressed": {
+        "type": "boolean",
+        "description": "Pressed, controlled. Pair with onPressedChange."
+      },
+      "defaultPressed": {
+        "type": "boolean",
+        "default": false,
+        "description": "Pressed at first, uncontrolled."
+      },
+      "onPressedChange": {
+        "type": "function",
+        "description": "Called with the new pressed value."
+      },
+      "size": {
+        "type": [
+          "xs",
+          "sm",
+          "md",
+          "lg"
+        ],
+        "default": "md",
+        "description": "Height from size.control: 24, 28, 32 and 44 px in the default density. A ButtonGroup passes its size; this prop wins."
+      },
+      "tone": {
+        "type": [
+          "neutral",
+          "accent",
+          "danger",
+          "success",
+          "warning",
+          "info"
+        ],
+        "default": "neutral"
+      },
+      "emphasis": {
+        "type": [
+          "solid",
+          "soft",
+          "outline",
+          "ghost"
+        ],
+        "default": "soft",
+        "description": "As Button. No link: a link that stays pressed reads as neither."
+      },
+      "shape": {
+        "type": [
+          "default",
+          "pill",
+          "square"
+        ],
+        "default": "default",
+        "description": "default takes radius.control (Desk draws it as a pill), pill is fully round, square takes radius.sm."
+      },
+      "start": {
+        "type": "node",
+        "description": "Leading content: a system icon name or a node. 16px at every size."
+      },
+      "end": {
+        "type": "node",
+        "description": "Trailing content: a system icon name or a node."
+      },
+      "icon": {
+        "type": "node",
+        "description": "The icon only form: an icon name or a node. Then label is the accessible name."
+      },
+      "label": {
+        "type": "string",
+        "description": "The accessible name of the icon only form (aria-label). Required with icon."
+      },
+      "disabled": {
+        "type": "boolean",
+        "default": false,
+        "description": "aria-disabled and data-disabled; stays focusable; does not toggle."
+      },
+      "children": {
+        "type": "node",
+        "description": "The visible label: the setting it turns on, a noun (Grid view)."
+      }
+    },
+    "states": [
+      "on",
+      "off",
+      "data-disabled"
+    ],
+    "a11y": {
+      "role": "button with aria-pressed",
+      "focus": "In the tab order in every state. A 2px ring on keyboard focus, the doubled ring on a solid fill.",
+      "keys": {
+        "Space": "Toggles the pressed state",
+        "Enter": "Toggles the pressed state",
+        "Tab": "Moves focus to the next control"
+      },
+      "announce": "aria-pressed is announced as pressed or not pressed with the name. The name stays the same in both states.",
+      "native": {
+        "accessibilityRole": "togglebutton",
+        "accessibilityState": [
+          "checked",
+          "disabled"
+        ]
+      },
+      "notes": [
+        "Pressed is not told by color alone: an on toggle also gets a 2px inner ring.",
+        "In forced colors an on toggle is drawn in Highlight and HighlightText.",
+        "Keep the label the same in both states. Do not swap Show to Hide: aria-pressed carries the state.",
+        "A ButtonGroup passes size, emphasis and shape through context; a prop on the toggle wins."
+      ]
+    },
+    "content": {
+      "en": {
+        "label": "The setting it turns on, a noun or a short phrase in sentence case: Grid view, Mute alerts. The same in both states."
+      },
+      "ar": {
+        "label": "Noun form, no diacritics: عرض الشبكة، كتم التنبيهات."
+      }
+    },
+    "tokens": [
+      "size.control.xs",
+      "size.control.sm",
+      "size.control.md",
+      "size.control.lg",
+      "size.target-min",
+      "size.icon.sm",
+      "size.icon.md",
+      "space.xs",
+      "space.s",
+      "space.xl",
+      "space.2xl",
+      "space.2xs",
+      "radius.control",
+      "radius.field",
+      "radius.pill",
+      "radius.sm",
+      "border.width.default",
+      "border.width.strong",
+      "font.family.sans",
+      "font.size.s",
+      "font.size.m",
+      "font.size.l",
+      "font.weight.bold",
+      "font.leading.tight",
+      "font.tracking.none",
+      "opacity.disabled",
+      "color.bg.overlay-5",
+      "color.bg.overlay-10",
+      "color.bg.overlay-20",
+      "color.bg.overlay-30",
+      "button.text.secondary",
+      "color.text.default",
+      "color.text.muted",
+      "color.text.bright",
+      "color.border.control",
+      "color.border.control-hover",
+      "color.primary.fill",
+      "color.primary.fill-hover",
+      "color.primary.fill-pressed",
+      "color.primary.text",
+      "color.primary.border",
+      "color.primary.tint",
+      "color.primary.tint-hover",
+      "color.primary.on-surface",
+      "color.state.danger.solid",
+      "color.state.danger.solid-hover",
+      "color.state.danger.on-solid",
+      "color.state.danger.text",
+      "color.state.danger.on-tint",
+      "color.state.danger.border",
+      "color.state.danger.tint-10",
+      "color.state.danger.tint-20",
+      "color.state.success.solid",
+      "color.state.success.solid-hover",
+      "color.state.success.on-solid",
+      "color.state.success.text",
+      "color.state.success.on-tint",
+      "color.state.success.border",
+      "color.state.success.tint-10",
+      "color.state.success.tint-20",
+      "color.state.warning.solid",
+      "color.state.warning.solid-hover",
+      "color.state.warning.on-solid",
+      "color.state.warning.text",
+      "color.state.warning.on-tint",
+      "color.state.warning.border",
+      "color.state.warning.tint-10",
+      "color.state.warning.tint-20",
+      "color.state.info.solid",
+      "color.state.info.solid-hover",
+      "color.state.info.on-solid",
+      "color.state.info.text",
+      "color.state.info.on-tint",
+      "color.state.info.border",
+      "color.state.info.tint-10",
+      "color.state.info.tint-20",
+      "focus.shadow.ring",
+      "focus.shadow.primary",
+      "color.focus.ring",
+      "color.focus.ring-on-primary-inner",
+      "color.focus.ring-on-primary-outer",
+      "duration.fast",
+      "duration.spin",
+      "ease.default",
+      "space.3xs",
+      "radius.xs",
+      "color.text.link",
+      "duration.roll",
+      "ease.reveal",
+      "color.bg.overlay-50"
+    ],
+    "frameworks": {
+      "react": {
+        "status": "ready",
+        "behavior": "radix:Toggle on ButtonBase",
+        "example": "ToggleButton.demo.tsx"
+      },
+      "angular": {
+        "status": "planned",
+        "behavior": "button[dsToggleButton] on the shared Button.css"
+      },
+      "native": {
+        "status": "planned",
+        "behavior": "rn-primitives:toggle",
+        "note": "44pt on iOS, 48dp on Android."
+      }
+    },
+    "styles": {
+      "studio": "The overlay fill steps up and a 2px inner ring shows when on.",
+      "desk": "Pill shaped; on is the stronger fill with the ring; no roll label.",
+      "neutral": "Tokens only: the same on fill and ring in Neutral's colors.",
+      "liquid": "Planned."
+    },
+    "mistakes": [
+      {
+        "wrong": "A toggle whose label switches between Show and Hide",
+        "right": "One label, Show guides; aria-pressed says the state"
+      },
+      {
+        "wrong": "Two toggles where exactly one must be on",
+        "right": "SegmentedControl"
+      },
+      {
+        "wrong": "An on state told only by color",
+        "right": "The inner ring the component draws; do not override it away"
+      }
+    ],
+    "since": "0.2.0"
   },
   {
     "name": "Window",

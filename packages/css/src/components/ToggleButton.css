@@ -1,0 +1,15 @@
+/*
+ * ToggleButton: what differs from Button. The look, the on state and the
+ * forced colors form are a toggle-button block in Button.css (rule 10 of
+ * the convention). Here: the icon only form is a square, as IconButton.
+ */
+@layer ds.base {
+  /* [data-size][data-shape] are always present: they lift this rule over the Button size rules. */
+  [data-ds='toggle-button'][data-size][data-shape]:not(:has(> [data-part='label'])) {
+    --_button-padding-inline: 0;
+
+    flex: none;
+    inline-size: max(var(--_button-height), var(--ds-size-target-min));
+    min-inline-size: var(--ds-size-target-min);
+  }
+}

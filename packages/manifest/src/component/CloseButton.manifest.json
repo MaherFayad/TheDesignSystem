@@ -1,0 +1,165 @@
+{
+  "name": "CloseButton",
+  "kind": "component",
+  "family": "actions",
+  "summary": "The one close control for dialogs, toasts, banners, chips and drawers: a ghost icon button with the close icon and a default name.",
+  "useWhen": [
+    "Closing a dialog, a drawer, a panel, a banner or a toast",
+    "Removing a chip or a filter, named for what it removes",
+    "Any close control, so every close looks and reads the same"
+  ],
+  "avoidWhen": [
+    "Cancelling a form or a task: say what happens with a Button (Cancel edit)",
+    "Deleting data: a close never deletes",
+    "A back step in a flow"
+  ],
+  "insteadUse": {
+    "Cancel with words": "Button",
+    "Delete something": "Button with tone danger",
+    "Go back": "IconButton with chevron-back"
+  },
+  "anatomy": [
+    "root",
+    "icon"
+  ],
+  "props": {
+    "size": {
+      "type": [
+        "xs",
+        "sm",
+        "md",
+        "lg"
+      ],
+      "default": "md",
+      "description": "Height from size.control: 24, 28, 32 and 44 px in the default density. A ButtonGroup passes its size; this prop wins."
+    },
+    "tone": {
+      "type": [
+        "neutral"
+      ],
+      "default": "neutral",
+      "description": "Fixed: stamped so the shared Button.css draws it. Not a prop."
+    },
+    "emphasis": {
+      "type": [
+        "ghost"
+      ],
+      "default": "ghost",
+      "description": "Fixed: a close is always quiet. Not a prop; a ButtonGroup cannot change it."
+    },
+    "shape": {
+      "type": [
+        "default",
+        "pill",
+        "square"
+      ],
+      "default": "default",
+      "description": "default takes radius.control (Desk draws it as a pill), pill is fully round, square takes radius.sm."
+    },
+    "label": {
+      "type": "string",
+      "default": "Close",
+      "description": "The accessible name (aria-label). Close, or إغلاق under an Arabic Theme. Name what closes when a screen has more than one (Close panel)."
+    },
+    "disabled": {
+      "type": "boolean",
+      "default": false
+    },
+    "asChild": {
+      "type": "boolean",
+      "default": false,
+      "description": "Renders the single child element, for example a link, as the control."
+    },
+    "type": {
+      "type": [
+        "button",
+        "submit",
+        "reset"
+      ],
+      "default": "button"
+    }
+  },
+  "states": [
+    "data-disabled"
+  ],
+  "a11y": {
+    "role": "button",
+    "focus": "In the tab order. A 2px ring on keyboard focus.",
+    "keys": {
+      "Enter": "Activates the close",
+      "Space": "Activates the close",
+      "Tab": "Moves focus to the next control"
+    },
+    "announce": "The label is the accessible name: Close by default, إغلاق under an Arabic Theme.",
+    "native": {
+      "accessibilityRole": "button",
+      "accessibilityState": [
+        "disabled"
+      ]
+    },
+    "notes": [
+      "Emphasis is always ghost and tone neutral; a ButtonGroup passes only size and shape.",
+      "The default name reads the lang of the nearest Theme, not a lang attribute on a plain element.",
+      "Dialog, Toast and Window draw their own close parts today; they can adopt CloseButton later (orders 1.6.1 and on).",
+      "At least 24 by 24 CSS px at xs."
+    ]
+  },
+  "content": {
+    "en": {
+      "label": "Close, or Close plus the thing: Close panel, Remove filter."
+    },
+    "ar": {
+      "label": "إغلاق، أو إغلاق مع الشيء: إغلاق اللوحة."
+    }
+  },
+  "tokens": [
+    "size.control.xs",
+    "size.control.sm",
+    "size.control.md",
+    "size.control.lg",
+    "size.target-min",
+    "size.icon.md",
+    "radius.control",
+    "radius.field",
+    "radius.pill",
+    "radius.sm",
+    "color.text.muted",
+    "color.text.default",
+    "color.bg.overlay-10",
+    "color.bg.overlay-20",
+    "focus.shadow.ring",
+    "opacity.disabled"
+  ],
+  "frameworks": {
+    "react": {
+      "status": "ready",
+      "behavior": "native button on ButtonBase",
+      "example": "CloseButton.demo.tsx"
+    },
+    "angular": {
+      "status": "planned",
+      "behavior": "button[dsCloseButton] on the shared Button.css"
+    },
+    "native": {
+      "status": "planned",
+      "note": "44pt on iOS, 48dp on Android."
+    }
+  },
+  "styles": {
+    "studio": "Ghost, the control radius.",
+    "desk": "Ghost, a circle (Desk controls are pills).",
+    "neutral": "Tokens only.",
+    "liquid": "Planned."
+  },
+  "mistakes": [
+    {
+      "wrong": "A close button labelled X",
+      "right": "The default name, or Close plus the thing"
+    },
+    {
+      "wrong": "A close button that deletes the item",
+      "right": "A close only hides; deleting is a Button with tone danger"
+    }
+  ],
+  "since": "0.2.0"
+}
