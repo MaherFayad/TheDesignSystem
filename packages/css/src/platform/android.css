@@ -96,18 +96,13 @@
     --_button-fg-active: var(--ds-color-primary-on-surface);
   }
 
-  /* Floating action button: 56dp, a rounded square with a 16dp corner, the style's lift. */
+  /* Floating action button: 56dp, a rounded square with a 16dp corner, the style's lift. Every size is the standard FAB: Material's 96dp large FAB is a separate choice, not lg. */
   [data-platform='android'] [data-ds='floating-action-button'][data-size] {
     --_button-height: calc(var(--ds-size-touch-android) + var(--ds-space-fixed-m));
     --_button-padding-inline: var(--ds-space-3xl);
     --_button-radius: var(--ds-radius-card);
     --_button-press-scale: 1;
     --_button-part-press: 1;
-  }
-
-  [data-platform='android'] [data-ds='floating-action-button'][data-size='lg'] {
-    --_button-height: calc(var(--ds-size-touch-android) * 2);
-    --_button-radius: calc(var(--ds-radius-card) + var(--ds-radius-panel));
   }
 
   /* The 48dp hit area of a control drawn smaller: a transparent layer around it (the target size check counts it). */
