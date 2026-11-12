@@ -121,7 +121,10 @@ export function Pagination({
 }: PaginationProps) {
   const { lang } = useTheme();
   const t = words[lang === 'ar' ? 'ar' : 'en'];
-  const raw = pageCount ?? (itemCount !== undefined ? countPages(itemCount, pageSize) : 1);
+  // A page size or item count that is not a finite number never reaches the count or the summary.
+  const perPage = Number.isFinite(pageSize) && pageSize >= 1 ? Math.floor(pageSize) : 20;
+  const items = itemCount !== undefined && Number.isFinite(itemCount) ? itemCount : undefined;
+  const raw = pageCount ?? (items !== undefined ? countPages(items, perPage) : 1);
   // Never under one page: a count of 0 or NaN still shows page 1 with inert ends.
   const total = Number.isFinite(raw) ? Math.max(1, Math.floor(raw)) : 1;
   const [rawPage, setPage] = useControllable(pageProp, defaultPage, onPageChange);
@@ -142,6 +145,7 @@ export function Pagination({
   const end = (part: 'first' | 'previous' | 'next' | 'last', icon: IconName, to: number) => {
     const inert = disabled || to === page;
     const link = linkTo(to);
+    // An inert link loses its href in Button, which would take it out of the tab order: tabIndex 0 keeps it there.
     return (
       <IconButton
         data-part={part}
@@ -150,6 +154,7 @@ export function Pagination({
         size={size}
         shape={shape}
         disabled={inert}
+        tabIndex={inert && link !== undefined ? 0 : undefined}
         onClick={go(to)}
         asChild={link !== undefined}
       >
@@ -158,10 +163,11 @@ export function Pagination({
     );
   };
 
+  // No summary for an item count that is not a finite number (NaN, Infinity): it would print as "NaN" or "∞".
   const summary =
-    itemCount !== undefined
+    items !== undefined
       ? (() => {
-          const r = itemRange(page, pageSize, itemCount);
+          const r = itemRange(page, perPage, items);
           if (r.total === 0 && !formatSummary) return t.empty;
           return (formatSummary ?? t.summary)(r.start, r.end, r.total);
         })()
@@ -172,13 +178,14 @@ export function Pagination({
       {summary !== undefined && <span data-part="summary">{summary}</span>}
       {showEnds && end('first', 'chevrons-back', 1)}
       {end('previous', 'chevron-back', Math.max(1, page - 1))}
-      {range.map((item) => {
+      {/* flatMap keys every element at one level, so a page keeps its Button (and focus) when the window of pages shifts. */}
+      {range.flatMap((item) => {
         if (isEllipsis(item)) {
-          return (
+          return [
             <span key={item} data-part="ellipsis" aria-hidden="true">
               …
-            </span>
-          );
+            </span>,
+          ];
         }
         const active = item === page;
         const text = n(item);
@@ -190,10 +197,9 @@ export function Pagination({
             </span>
           ) : null;
         const link = linkTo(item, text);
-        return [
-          compactGap,
+        const pageButton = (
           <Button
-            key={item}
+            key={`page-${item}`}
             data-part="page"
             data-active={active ? '' : undefined}
             aria-current={active ? 'page' : undefined}
@@ -202,12 +208,14 @@ export function Pagination({
             shape={shape}
             emphasis={active ? 'soft' : 'ghost'}
             disabled={disabled}
+            tabIndex={disabled && link !== undefined ? 0 : undefined}
             onClick={go(item)}
             asChild={link !== undefined}
           >
             {link ?? text}
-          </Button>,
-        ];
+          </Button>
+        );
+        return compactGap ? [compactGap, pageButton] : [pageButton];
       })}
       {end('next', 'chevron-forward', Math.min(total, page + 1))}
       {showEnds && end('last', 'chevrons-forward', total)}

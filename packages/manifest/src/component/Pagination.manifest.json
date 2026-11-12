@@ -51,12 +51,12 @@
     },
     "itemCount": {
       "type": "number",
-      "description": "The number of items in the list. Turns on the summary part."
+      "description": "The number of items in the list. Turns on the summary part. A count that is not a finite number (NaN, Infinity) shows no summary and counts as one page."
     },
     "pageSize": {
       "type": "number",
       "default": 20,
-      "description": "Items per page, for the summary and the page count."
+      "description": "Items per page, for the summary and the page count. A size under 1 or not a finite number reads as 20."
     },
     "siblings": {
       "type": "number",
@@ -117,7 +117,7 @@
   ],
   "a11y": {
     "role": "navigation landmark (nav with aria-label) of buttons, or links with getHref",
-    "focus": "Every control is a tab stop in reading order. An end with nowhere to go stays focusable with aria-disabled, so focus is not lost on the first or last page. Each page control is keyed by its number, so focus stays on the pressed page. A 2px ring from the Button focus tokens.",
+    "focus": "Every control is a tab stop in reading order. An end with nowhere to go stays focusable with aria-disabled, so focus is not lost on the first or last page; in link mode, where Button drops the href of an inert link, Pagination gives it tabIndex 0. Each page control is keyed by its number at one level of the list, so focus stays on the pressed page when the window of pages shifts (4 to 5, 250 to 251). A 2px ring from the Button focus tokens.",
     "keys": {
       "Tab": "Moves through the controls",
       "Enter": "Goes to that page"
@@ -131,7 +131,7 @@
       ]
     },
     "notes": [
-      "The current page is a soft fill plus a strong border and aria-current page, never color alone (WCAG 1.4.1).",
+      "The current page has a border in color.text.muted (5.76:1 to 8.58:1 against the page across Studio, Desk and Neutral, dark and light; WCAG 1.4.11), a weight step from font.weight.regular to font.weight.bold (400 to 700, 400 to 600 in Neutral), a soft fill and aria-current page, never color alone (WCAG 1.4.1).",
       "The ends use chevrons-back, chevron-back, chevron-forward and chevrons-forward, mirrored in RTL.",
       "Numbers use Western digits in both languages, grouped with a comma (12,480).",
       "Under breakpoint.phone (30rem) the compact form keeps the ends, the current page and the last page, with a compact-only ellipsis (data-compact) between them when pages are hidden; the summary takes its own line and wraps. No sideways scroll at 320px (WCAG 1.4.10).",
@@ -143,7 +143,7 @@
   "content": {
     "en": {
       "summary": "First to last item of the total: 21 to 40 of 312. Name the items in formatSummary when the page does not: 21 to 40 of 312 boards.",
-      "labels": "Page 5, First page, Previous page, Next page, Last page."
+      "labels": "Page 5, First page, Previous page, Next page, Last page. These are not a verb plus a noun: they are the standard names of pagination controls, an accepted exception to the button rule."
     },
     "ar": {
       "summary": "21 إلى 40 من 312, Western digits. Empty list: ما فيه عناصر.",
@@ -163,7 +163,8 @@
     "font.leading.arabic-tight",
     "color.text.muted",
     "color.text.bright",
-    "color.border.strong",
+    "font.weight.regular",
+    "font.weight.bold",
     "color.bg.overlay-10",
     "color.bg.overlay-20"
   ],
@@ -185,14 +186,14 @@
     }
   },
   "styles": {
-    "studio": "Ghost page buttons, the current page a soft fill with a strong border, pixel chevrons on the ends.",
+    "studio": "Ghost page buttons at regular weight, the current page bold with a soft fill and a muted text color border, pixel chevrons on the ends.",
     "desk": "The same from the Desk tokens: pill controls, the current page bordered.",
     "neutral": "Takes the tokens of the Neutral style, no recipe."
   },
   "mistakes": [
     {
       "wrong": "The current page told apart by color only",
-      "right": "Pagination, which adds a border and aria-current page"
+      "right": "Pagination, which adds a 3:1 border, a weight step and aria-current page"
     },
     {
       "wrong": "Previous and next removed on the first and last page, so focus is lost",
