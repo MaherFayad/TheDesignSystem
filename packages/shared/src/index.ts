@@ -6,6 +6,7 @@ export * from './filter';
 export * from './initials';
 export * from './listbox';
 export * from './meter';
+export * from './number';
 export * from './otp';
 export * from './pagination';
 export * from './phone';

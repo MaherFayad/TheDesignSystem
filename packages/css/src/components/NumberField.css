@@ -1,0 +1,235 @@
+/*
+ * NumberField: the Input box (border, radius, glow, ring, states) around a
+ * native input (the control part), with a decrement and an increment
+ * IconButton at the two ends and the start and end adornments around the
+ * value. Sources: GoBanana `.st-input` through Input.css, Figma-Killer-2
+ * `Input/` and `ScrubInput/`. Follows "One convention for component CSS and
+ * props" in docs/contracts/anatomy.md.
+ *
+ * Private properties on the root (recipes override these; states swap them):
+ *   --_number-field-height, --_number-field-padding-inline,
+ *   --_number-field-gap, --_number-field-font-size, --_number-field-radius,
+ *   --_number-field-bg, --_number-field-fg, --_number-field-border-color
+ *   (-hover, -focus, -invalid), --_number-field-ring (the focus glow and
+ *   ring), --_number-field-stepper-size (the IconButton height: xs, or md at
+ *   lg), --_number-field-stepper-inset (the space between a stepper and the
+ *   box edge, so a round stepper sits concentric in a pill box).
+ *
+ * The steppers are IconButton roots styled by Button.css. As their parent,
+ * this file only places them. They are 24px targets or larger (WCAG 2.5.8).
+ */
+@layer ds.base {
+  [data-ds='number-field'] {
+    --_number-field-height: var(--ds-size-control-md);
+    --_number-field-padding-inline: var(--ds-space-m);
+    --_number-field-gap: var(--ds-space-xs);
+    --_number-field-font-size: var(--ds-font-size-s);
+    --_number-field-radius: var(--ds-radius-control);
+    --_number-field-bg: transparent;
+    --_number-field-fg: var(--ds-color-text-default);
+    --_number-field-border-color: var(--ds-color-border-control);
+    --_number-field-border-color-hover: var(--ds-color-border-control-hover);
+    --_number-field-border-color-focus: var(--ds-color-border-control-hover);
+    --_number-field-border-color-invalid: var(--ds-color-state-danger-text);
+    --_number-field-ring: var(--ds-elevation-input-focus), var(--ds-focus-shadow-ring);
+    --_number-field-stepper-size: var(--ds-size-control-xs);
+    --_number-field-stepper-inset: calc((var(--_number-field-height) - var(--_number-field-stepper-size)) / 2 - var(--ds-border-width-default));
+
+    position: relative;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    gap: var(--_number-field-gap);
+    inline-size: 100%;
+    min-inline-size: 0;
+    block-size: var(--_number-field-height);
+    min-block-size: var(--ds-size-target-min);
+    padding-block: 0;
+    padding-inline: var(--_number-field-padding-inline);
+    border: var(--ds-border-width-default) solid var(--_number-field-border-color);
+    border-radius: var(--_number-field-radius);
+    background-color: var(--_number-field-bg);
+    color: var(--_number-field-fg);
+    font-family: var(--ds-font-family-sans);
+    font-size: var(--_number-field-font-size);
+    font-weight: var(--ds-font-weight-regular);
+    line-height: var(--ds-font-leading-snug);
+    cursor: text;
+  }
+
+  /* The glow and the ring, faded with opacity. */
+  [data-ds='number-field']::before {
+    content: '';
+    position: absolute;
+    inset: calc(var(--ds-border-width-default) * -1);
+    border-radius: inherit;
+    box-shadow: var(--_number-field-ring);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity var(--ds-duration-base) var(--ds-ease-default);
+  }
+
+  [data-ds='number-field'] > * {
+    position: relative;
+  }
+
+  [data-ds='number-field'][data-size='xs'] {
+    --_number-field-height: var(--ds-size-control-xs);
+    --_number-field-padding-inline: max(var(--ds-space-xs), min(var(--_number-field-radius), var(--_number-field-height) / 2));
+    --_number-field-gap: var(--ds-space-2xs);
+  }
+
+  [data-ds='number-field'][data-size='sm'] {
+    --_number-field-height: var(--ds-size-control-sm);
+    --_number-field-padding-inline: var(--ds-space-s);
+    --_number-field-gap: var(--ds-space-2xs);
+  }
+
+  /* Site fields: 44px and a fixed 16px, so phones do not zoom on focus. The steppers grow to md. */
+  [data-ds='number-field'][data-size='lg'],
+  [data-ds='number-field'][data-size='lg']:lang(ar) {
+    --_number-field-height: var(--ds-size-control-lg);
+    --_number-field-padding-inline: var(--ds-space-l);
+    --_number-field-gap: var(--ds-space-s);
+    --_number-field-font-size: var(--ds-font-size-fixed-m);
+    --_number-field-stepper-size: var(--ds-size-control-md);
+  }
+
+  [data-ds='number-field'][data-shape='pill'] {
+    --_number-field-radius: var(--ds-radius-pill);
+  }
+
+  /*
+   * The value: Western digits run left to right in every language, in
+   * tabular figures so a stepped value does not shift. It stays on the
+   * reading side of the form, as on Input type number.
+   */
+  [data-ds='number-field'] > [data-part='control'] {
+    flex: 1 1 auto;
+    box-sizing: border-box;
+    inline-size: 100%;
+    min-inline-size: 0;
+    /* The full height of the box, borders included, so the xs input is a 24px target next to the steppers. */
+    block-size: calc(100% + var(--ds-border-width-default) * 2);
+    margin-block: calc(var(--ds-border-width-default) * -1);
+    margin-inline: 0;
+    padding: 0;
+    border: 0;
+    border-radius: var(--ds-radius-xs);
+    background: transparent;
+    color: inherit;
+    font: inherit;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: inherit;
+    text-overflow: clip;
+    direction: ltr;
+    text-align: start;
+    outline: none;
+  }
+
+  [data-ds='number-field']:dir(rtl) > [data-part='control'] {
+    text-align: end;
+  }
+
+  [data-ds='number-field'] > [data-part='control']::placeholder {
+    color: var(--ds-color-text-placeholder);
+    opacity: 1;
+  }
+
+  /* An Arabic placeholder runs right to left. */
+  [data-ds='number-field'] > [data-part='control']:placeholder-shown {
+    unicode-bidi: plaintext;
+  }
+
+  [data-ds='number-field'] > :is([data-part='start'], [data-part='end']) {
+    display: inline-flex;
+    flex: none;
+    align-items: center;
+    color: var(--ds-color-text-muted);
+    white-space: nowrap;
+    cursor: default;
+  }
+
+  /*
+   * The steppers hug the two ends: concentric in a pill, the same inset in a
+   * rounded box. At xs the box and the stepper are both 24px, so the inset
+   * is minus the border: the stepper covers the border at its end, by
+   * design, and keeps its full 24px target.
+   */
+  [data-ds='number-field'] > :is([data-part='decrement'], [data-part='increment']) {
+    flex: none;
+  }
+
+  [data-ds='number-field'] > [data-part='decrement'] {
+    margin-inline-start: calc(var(--_number-field-stepper-inset) - var(--_number-field-padding-inline));
+  }
+
+  [data-ds='number-field'] > [data-part='increment'] {
+    margin-inline-end: calc(var(--_number-field-stepper-inset) - var(--_number-field-padding-inline));
+  }
+
+  [data-ds='number-field']:hover:not([data-disabled], [data-readonly], [data-invalid], :focus-within) {
+    --_number-field-border-color: var(--_number-field-border-color-hover);
+  }
+
+  /* Focus: the glow and the 2px ring fade in. The transparent outline shows in forced colors mode. */
+  [data-ds='number-field']:focus-within {
+    --_number-field-border-color: var(--_number-field-border-color-focus);
+
+    outline: var(--ds-border-width-strong) solid transparent;
+    outline-offset: var(--ds-border-width-default);
+  }
+
+  [data-ds='number-field']:focus-within::before {
+    opacity: 1;
+  }
+
+  [data-ds='number-field'][data-invalid],
+  [data-ds='number-field'][data-invalid]:focus-within {
+    --_number-field-border-color: var(--_number-field-border-color-invalid);
+  }
+
+  /* Read only: a dashed border and a quiet fill. The steppers are not shown. */
+  [data-ds='number-field'][data-readonly] {
+    --_number-field-bg: var(--ds-color-bg-overlay-5);
+
+    border-style: dashed;
+    cursor: default;
+  }
+
+  [data-ds='number-field'][data-readonly] > [data-part='control'] {
+    cursor: default;
+  }
+
+  [data-ds='number-field'][data-disabled] {
+    opacity: var(--ds-opacity-disabled);
+    cursor: not-allowed;
+  }
+
+  [data-ds='number-field'][data-disabled] > [data-part='control'] {
+    cursor: not-allowed;
+  }
+
+  /* The steppers draw disabled on their own; inside a disabled box the box already dims. */
+  [data-ds='number-field'][data-disabled] > :is([data-part='decrement'], [data-part='increment']) {
+    opacity: 1;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    [data-ds='number-field']::before {
+      transition: none;
+    }
+  }
+
+  @media (forced-colors: active) {
+    [data-ds='number-field']::before {
+      display: none;
+    }
+
+    [data-ds='number-field'][data-disabled] {
+      --_number-field-border-color: GrayText;
+
+      color: GrayText;
+    }
+  }
+}

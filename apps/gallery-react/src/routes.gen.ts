@@ -59,6 +59,7 @@ export const routes: DemoRoute[] = [
   { name: 'Meter', slug: 'meter', load: () => import('../../../packages/react/src/components/Meter/Meter.demo') },
   { name: 'Navbar', slug: 'navbar', load: () => import('../../../packages/react/src/components/Navbar/Navbar.demo') },
   { name: 'NotificationCenter', slug: 'notification-center', load: () => import('../../../packages/react/src/components/NotificationCenter/NotificationCenter.demo') },
+  { name: 'NumberField', slug: 'number-field', load: () => import('../../../packages/react/src/components/NumberField/NumberField.demo') },
   { name: 'OTPField', slug: 'otpfield', load: () => import('../../../packages/react/src/components/OTPField/OTPField.demo') },
   { name: 'Pagination', slug: 'pagination', load: () => import('../../../packages/react/src/components/Pagination/Pagination.demo') },
   { name: 'PasswordField', slug: 'password-field', load: () => import('../../../packages/react/src/components/PasswordField/PasswordField.demo') },
