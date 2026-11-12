@@ -299,8 +299,18 @@ export function DrawerContent({
       style={style}
       rootProps={rootProps}
       onOpenAutoFocus={onOpenAutoFocus}
-      onCloseAutoFocus={onCloseAutoFocus}
-      onEscapeKeyDown={onEscapeKeyDown}
+      // Non modal: when the person is working on the page, focus stays where it is on close.
+      onCloseAutoFocus={(event) => {
+        onCloseAutoFocus?.(event);
+        const active = document.activeElement;
+        if (!ctx.modal && active && active !== document.body && active.isConnected) event.preventDefault();
+      }}
+      // Non modal: an Escape in a page field belongs to that field, not to the drawer.
+      onEscapeKeyDown={(event) => {
+        onEscapeKeyDown?.(event);
+        const panel = event.target instanceof Node ? (event.target as Element).closest?.('[data-ds="drawer"]') : null;
+        if (!ctx.modal && !panel) event.preventDefault();
+      }}
       onPointerDownOutside={onPointerDownOutside}
       onKeyDown={onKeyDown}
       // Non modal: working on the page next to the drawer never closes it.

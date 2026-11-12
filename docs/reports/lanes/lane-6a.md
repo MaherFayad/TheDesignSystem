@@ -259,7 +259,36 @@ Left open:
 - `a11y.native` is still absent from `Dialog.manifest.json`. It is outside
   this lane's orders and the schema treats the key as optional.
 
-Round 2, Drawer and Sheet: see the section below.
+Round 2, Drawer and Sheet. Fixed:
+
+- Blocker: a non modal Drawer moved focus to its trigger on close even
+  while the person worked on the page. It now leaves focus where it is.
+  There is a test for it.
+- A non modal Drawer closed on an Escape typed in a page field. Escape now
+  closes it only from inside the drawer. There is a test, and the manifest
+  note says so.
+- A controlled Sheet kept open after a drag stayed partway down. The offset
+  is now cleared when the panel is still open. There is a test.
+- The flick speed was averaged over the whole drag. It is now the speed of
+  the last move.
+- Losing pointer capture left `data-dragging` set. There is now an
+  `onLostPointerCapture` handler and a test.
+- The safe area padding showed the panel color under the footer band. The
+  footer now takes the safe area inside itself.
+- `radius.pill` was removed from the Sheet tokens.
+- Drawer `frameworks.native` is now `planned` (tablets).
+- Demos: Drawer gained `one` and `disabled` cases, Sheet gained a
+  `disabled` case (`dismissible={false}` while an action runs).
+- Copy: "Clear filters" closed without clearing and became "Discard
+  changes" (تجاهل التغييرات). "Cancel invite" became "Close share"
+  (إغلاق المشاركة). "Cancel board" became "Discard board". Both Arabic
+  drawer triggers read "فتح الفلاتر" and the row labels tell them apart.
+
+Left open, accepted:
+
+- When the whole Sheet panel scrolls (a short viewport, 400% zoom), the
+  handle scrolls away with the header. The close control stays, and both
+  the CSS comment and the manifest say so.
 
 ## Changes needed from the lead
 

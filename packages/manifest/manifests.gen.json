@@ -1335,7 +1335,7 @@
         "data-side holds start or end; start is the right in Arabic, and the slide mirrors with the reading direction.",
         "A body taller than the screen scrolls inside and joins the tab order while it scrolls. The header and the footer stay in view.",
         "Toasts sit above an open drawer and stay readable and clickable, as with Dialog.",
-        "Non modal: Tab leaves the drawer for the page, as for any region. Escape still closes it.",
+        "Non modal: Tab leaves the drawer for the page, as for any region. Escape from inside the drawer closes it; an Escape in a page field stays with that field. When the drawer closes while the person works on the page, focus stays where it is.",
         "No native title attribute."
       ]
     },
@@ -1413,8 +1413,9 @@
         "note": "On the Angular Dialog layer, with data-side and the header part."
       },
       "native": {
-        "status": "not-applicable",
-        "note": "Phones use Sheet; a side drawer is a web and tablet pattern."
+        "status": "planned",
+        "behavior": "rn-primitives:dialog",
+        "note": "Tablets only: a side panel. Phones use Sheet."
       }
     },
     "styles": {
@@ -3104,7 +3105,8 @@
         "A release past a quarter of the panel's height, or a quick flick down, closes it; a shorter drag snaps back. The panel never rises above its open place.",
         "The panel keeps clear of the home bar with env(safe-area-inset-bottom).",
         "Detents are wave 2.",
-        "No native title attribute."
+        "No native title attribute.",
+        "When the whole panel scrolls (a short viewport, 400% zoom) the handle scrolls away; the close control stays."
       ]
     },
     "content": {
@@ -3152,7 +3154,6 @@
       "size.control.sm",
       "size.control.lg",
       "size.target-min",
-      "radius.pill",
       "font.family.sans",
       "font.size.l",
       "font.size.xl",

@@ -570,6 +570,15 @@
     block-size: 100%;
   }
 
+  /* A footer band reaches the bottom edge: it takes the safe area inside itself, so its color runs under the home bar. */
+  [data-ds='sheet'] > [data-part='panel']:has(> [data-part='footer']) {
+    padding-block-end: 0;
+  }
+
+  [data-ds='sheet'] > [data-part='panel'] > [data-part='footer'] {
+    padding-block-end: calc(var(--_dialog-band-padding-block) + env(safe-area-inset-bottom, 0px));
+  }
+
   [data-ds='sheet'] > [data-part='panel'][data-state='open'] {
     animation: ds-sheet-in-y var(--_dialog-duration-in) var(--_dialog-ease-in);
   }
@@ -582,6 +591,8 @@
    * The handle: a short bar drawn on the content box, with a strip of the
    * 24px target height around it for the pointer. Dragging it down closes
    * the sheet; the close control and Escape are the key path (WCAG 2.5.7).
+   * When the whole panel scrolls (a short viewport, 400% zoom) the handle
+   * scrolls away with the header; the close control stays the way out.
    */
   [data-ds='sheet'] > [data-part='panel'] > [data-part='handle'] {
     flex: none;

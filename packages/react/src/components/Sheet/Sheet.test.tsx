@@ -26,7 +26,7 @@ function Basic(props: SheetProps) {
         <SheetBody>Body</SheetBody>
         <SheetFooter>
           <SheetClose>
-            <Button>Cancel invite</Button>
+            <Button>Close share</Button>
           </SheetClose>
         </SheetFooter>
       </SheetContent>
@@ -98,7 +98,7 @@ describe('Sheet', () => {
     await user.click(await screen.findByRole('button', { name: 'Close sheet' }));
     await waitFor(() => expect(rootEl()).toBeNull());
     await user.click(trigger);
-    await user.click(await screen.findByRole('button', { name: 'Cancel invite' }));
+    await user.click(await screen.findByRole('button', { name: 'Close share' }));
     await waitFor(() => expect(rootEl()).toBeNull());
   });
 
@@ -126,6 +126,29 @@ describe('Sheet', () => {
     expect(rootEl()).not.toBeNull();
   });
 
+  it('puts the panel back when a controlled parent keeps it open after a drag', async () => {
+    render(<Basic open onOpenChange={() => undefined} />);
+    await screen.findByRole('dialog');
+    drag(300, 1000);
+    await waitFor(() => expect(part('panel')?.style.getPropertyValue('--_dialog-drag-y')).toBe(''));
+    expect(rootEl()?.getAttribute('data-state')).toBe('open');
+  });
+
+  it('clears the drag when pointer capture is lost', async () => {
+    render(<Basic defaultOpen />);
+    await screen.findByRole('dialog');
+    const handle = part('handle') as HTMLElement;
+    pointer(handle, 'pointerDown', 100, 1);
+    pointer(handle, 'pointerMove', 160, 50);
+    fireEvent(handle, Object.assign(createEvent.lostPointerCapture(handle), {}));
+    expect(rootEl()?.hasAttribute('data-dragging')).toBe(true);
+    const lost = createEvent.lostPointerCapture(handle);
+    Object.defineProperty(lost, 'pointerId', { value: 1 });
+    fireEvent(handle, lost);
+    expect(rootEl()?.hasAttribute('data-dragging')).toBe(false);
+    expect(part('panel')?.style.getPropertyValue('--_dialog-drag-y')).toBe('');
+  });
+
   it('with dismissible false, a drag, Escape and the backdrop do nothing', async () => {
     render(<Basic defaultOpen dismissible={false} />);
     await screen.findByRole('dialog');
@@ -149,7 +172,7 @@ describe('Sheet', () => {
   it('renders the demo with a trigger per case', () => {
     const { container } = render(<SheetDemo />);
     const cases = Array.from(container.querySelectorAll('[data-demo-case]')).map((c) => c.getAttribute('data-demo-case'));
-    expect(cases).toEqual(['variants', 'empty', 'one', 'many', 'too-many', 'long-text', 'long-arabic', 'loading', 'error']);
+    expect(cases).toEqual(['variants', 'empty', 'one', 'many', 'too-many', 'long-text', 'long-arabic', 'loading', 'error', 'disabled']);
     for (const section of Array.from(container.querySelectorAll('[data-demo-case]'))) {
       expect(section.querySelector('[data-demo-trigger]')).not.toBeNull();
     }

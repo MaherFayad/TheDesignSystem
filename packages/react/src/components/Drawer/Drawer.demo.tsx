@@ -51,7 +51,7 @@ function FilterDrawer({ trigger, label, fields = filterFields.slice(0, 2), ...pr
         </DrawerBody>
         <DrawerFooter>
           <DrawerClose>
-            <Button>Clear filters</Button>
+            <Button>Discard changes</Button>
           </DrawerClose>
           <DrawerClose>
             <Button tone="accent" emphasis="solid">
@@ -85,7 +85,7 @@ function ArabicDrawer({ trigger, long = false, side }: { trigger: string; long?:
   return (
     <Drawer side={side}>
       <DrawerTrigger>
-        <Button data-demo-trigger={trigger}>{side === 'start' ? 'الفلاتر من البداية' : 'الفلاتر'}</Button>
+        <Button data-demo-trigger={trigger}>فتح الفلاتر</Button>
       </DrawerTrigger>
       <DrawerContent>
         <DrawerTitle>{long ? 'فلترة اللوحات حسب المالك والفريق وتاريخ آخر تعديل' : 'فلترة اللوحات'}</DrawerTitle>
@@ -102,7 +102,7 @@ function ArabicDrawer({ trigger, long = false, side }: { trigger: string; long?:
         </DrawerBody>
         <DrawerFooter>
           <DrawerClose>
-            <Button wrap>مسح الفلاتر</Button>
+            <Button wrap>تجاهل التغييرات</Button>
           </DrawerClose>
           <DrawerClose>
             <Button wrap tone="accent" emphasis="solid">
@@ -143,6 +143,41 @@ function StateDrawer({ state }: { state: 'loading' | 'error' }) {
   );
 }
 
+/** Apply runs for two seconds: nothing dismisses the drawer until it ends. */
+function BusyDrawer() {
+  const [open, setOpen] = useState(false);
+  const [busy, setBusy] = useState(false);
+  const apply = () => {
+    setBusy(true);
+    window.setTimeout(() => {
+      setBusy(false);
+      setOpen(false);
+    }, 2000);
+  };
+  return (
+    <Drawer open={open} onOpenChange={setOpen} dismissible={!busy}>
+      <DrawerTrigger>
+        <Button data-demo-trigger="disabled">Filter boards slowly</Button>
+      </DrawerTrigger>
+      <DrawerContent title="Filter boards" description="Applying filters to 2,400 boards takes a moment.">
+        <DrawerBody>
+          <Field label="Owner">
+            <Input defaultValue="Sara Ahmed" disabled={busy} />
+          </Field>
+        </DrawerBody>
+        <DrawerFooter>
+          <DrawerClose>
+            <Button disabled={busy}>Discard changes</Button>
+          </DrawerClose>
+          <Button tone="accent" emphasis="solid" loading={busy} loadingLabel="Applying filters" onClick={apply}>
+            Apply filters
+          </Button>
+        </DrawerFooter>
+      </DrawerContent>
+    </Drawer>
+  );
+}
+
 export default function DrawerDemo() {
   return (
     <DemoPage>
@@ -155,8 +190,10 @@ export default function DrawerDemo() {
           <DetailsDrawer />
         </DemoRow>
         <Theme lang="ar" data-demo="content">
-          <DemoRow label="عربي">
+          <DemoRow label="عربي، من النهاية">
             <ArabicDrawer trigger="arabic" />
+          </DemoRow>
+          <DemoRow label="عربي، من البداية">
             <ArabicDrawer trigger="arabic-start" side="start" />
           </DemoRow>
         </Theme>
@@ -174,6 +211,12 @@ export default function DrawerDemo() {
               </DrawerBody>
             </DrawerContent>
           </Drawer>
+        </DemoRow>
+      </DemoCase>
+
+      <DemoCase id="one" title="One field and one action" lang="en">
+        <DemoRow>
+          <FilterDrawer trigger="one" label="Filter by owner" size="sm" fields={filterFields.slice(0, 1)} />
         </DemoRow>
       </DemoCase>
 
@@ -250,6 +293,12 @@ export default function DrawerDemo() {
       <DemoCase id="error" title="Error: the body says what failed and offers a retry" lang="en">
         <DemoRow>
           <StateDrawer state="error" />
+        </DemoRow>
+      </DemoCase>
+
+      <DemoCase id="disabled" title="Not dismissible while an action runs: the close control is disabled, Escape and the backdrop wait" lang="en">
+        <DemoRow>
+          <BusyDrawer />
         </DemoRow>
       </DemoCase>
     </DemoPage>

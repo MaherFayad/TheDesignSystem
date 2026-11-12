@@ -177,8 +177,11 @@ export function SheetFooter(props: SheetFooterProps) {
 interface Drag {
   id: number;
   startY: number;
-  startTime: number;
   dy: number;
+  /** The last move, for the speed of a flick at the end of the drag. */
+  lastY: number;
+  lastTime: number;
+  speed: number;
 }
 
 /** The drag handle: a pointer path only (the close control and Escape are the key path). */
@@ -196,12 +199,16 @@ function SheetHandle({ onDragging, dismissible, onDismiss }: { onDragging: (on: 
     const panel = panelRef?.current;
     if (!panel) return;
     const height = panel.getBoundingClientRect().height;
-    const speed = d.dy / Math.max(1, event.timeStamp - d.startTime);
     const far = d.dy > height * DISMISS_SHARE;
-    const flick = speed > FLICK_SPEED && d.dy > FLICK_MIN;
-    // The offset stays when it closes, so the exit plays from where the panel is.
-    if (!cancelled && dismissible && (far || flick)) onDismiss();
-    else reset();
+    const flick = d.speed > FLICK_SPEED && d.dy > FLICK_MIN;
+    if (!cancelled && dismissible && (far || flick)) {
+      // The offset stays while it closes, so the exit plays from where the
+      // panel is. A controlled parent that keeps it open gets it back in place.
+      onDismiss();
+      queueMicrotask(() => {
+        if (panel.isConnected && panel.getAttribute('data-state') === 'open') reset();
+      });
+    } else reset();
   };
 
   return (
@@ -211,7 +218,7 @@ function SheetHandle({ onDragging, dismissible, onDismiss }: { onDragging: (on: 
       onPointerDown={(event) => {
         if (event.button !== 0 || !panelRef?.current) return;
         event.currentTarget.setPointerCapture?.(event.pointerId);
-        drag.current = { id: event.pointerId, startY: event.clientY, startTime: event.timeStamp, dy: 0 };
+        drag.current = { id: event.pointerId, startY: event.clientY, dy: 0, lastY: event.clientY, lastTime: event.timeStamp, speed: 0 };
         onDragging(true);
       }}
       onPointerMove={(event) => {
@@ -219,10 +226,15 @@ function SheetHandle({ onDragging, dismissible, onDismiss }: { onDragging: (on: 
         if (!d || d.id !== event.pointerId) return;
         // Down only: the panel never rises above its open place.
         d.dy = Math.max(0, event.clientY - d.startY);
+        // Speed over the last move only: a slow start and a quick flick still count as a flick.
+        d.speed = (event.clientY - d.lastY) / Math.max(1, event.timeStamp - d.lastTime);
+        d.lastY = event.clientY;
+        d.lastTime = event.timeStamp;
         panelRef?.current?.style.setProperty('--_dialog-drag-y', `${d.dy}px`);
       }}
       onPointerUp={(event) => end(event, false)}
       onPointerCancel={(event) => end(event, true)}
+      onLostPointerCapture={(event) => end(event, true)}
     />
   );
 }

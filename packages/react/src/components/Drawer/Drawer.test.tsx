@@ -1,5 +1,6 @@
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
+import { useState } from 'react';
 import { describe, expect, it } from 'vitest';
 import { Theme } from '../../theme/Theme';
 import { Button } from '../Button';
@@ -39,7 +40,7 @@ function Basic(props: DrawerProps) {
           </DrawerBody>
           <DrawerFooter>
             <DrawerClose>
-              <Button>Clear filters</Button>
+              <Button>Discard changes</Button>
             </DrawerClose>
           </DrawerFooter>
         </DrawerContent>
@@ -110,7 +111,7 @@ describe('Drawer', () => {
     await user.click(screen.getByRole('button', { name: 'Close drawer' }));
     await waitFor(() => expect(rootEl()).toBeNull());
     await open(user);
-    await user.click(screen.getByRole('button', { name: 'Clear filters' }));
+    await user.click(screen.getByRole('button', { name: 'Discard changes' }));
     await waitFor(() => expect(rootEl()).toBeNull());
     await open(user);
     fireEvent.pointerDown(part('backdrop') as HTMLElement);
@@ -130,6 +131,32 @@ describe('Drawer', () => {
     expect(rootEl()?.getAttribute('data-state')).toBe('open');
     await user.click(screen.getByRole('button', { name: 'Close drawer' }));
     await waitFor(() => expect(rootEl()).toBeNull());
+  });
+
+  it('non modal: focus stays on the page when it closes, and an Escape in a page field keeps it open', async () => {
+    const user = userEvent.setup();
+    function Page() {
+      const [open, setOpen] = useState(true);
+      return (
+        <>
+          <input aria-label="Search boards" />
+          <Button onClick={() => setOpen(false)}>Hide details</Button>
+          <Drawer open={open} onOpenChange={setOpen} modal={false}>
+            <DrawerContent title="Details" description="One board." />
+          </Drawer>
+        </>
+      );
+    }
+    render(<Page />);
+    await screen.findByRole('dialog');
+    const search = screen.getByRole('textbox', { name: 'Search boards' });
+    await user.click(search);
+    await user.keyboard('{Escape}');
+    expect(rootEl()?.getAttribute('data-state')).toBe('open');
+    const hide = screen.getByRole('button', { name: 'Hide details' });
+    await user.click(hide);
+    await waitFor(() => expect(rootEl()).toBeNull());
+    expect(document.activeElement).toBe(hide);
   });
 
   it('with dismissible false, Escape and the backdrop do nothing and the close control is disabled', async () => {
@@ -155,7 +182,7 @@ describe('Drawer', () => {
   it('renders the demo with a trigger per case', () => {
     const { container } = render(<DrawerDemo />);
     const cases = Array.from(container.querySelectorAll('[data-demo-case]')).map((c) => c.getAttribute('data-demo-case'));
-    expect(cases).toEqual(['variants', 'empty', 'many', 'too-many', 'long-text', 'long-arabic', 'loading', 'error']);
+    expect(cases).toEqual(['variants', 'empty', 'one', 'many', 'too-many', 'long-text', 'long-arabic', 'loading', 'error', 'disabled']);
     for (const section of Array.from(container.querySelectorAll('[data-demo-case]'))) {
       expect(section.querySelector('[data-demo-trigger]')).not.toBeNull();
     }

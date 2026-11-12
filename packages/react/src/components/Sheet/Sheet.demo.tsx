@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { DemoCase, DemoPage, DemoRow, sample } from '../../demo';
 import { Theme } from '../../theme/Theme';
 import { Button } from '../Button';
@@ -38,7 +39,7 @@ function ShareSheet({ trigger, label, ...props }: SheetProps & { trigger: string
         </SheetBody>
         <SheetFooter>
           <SheetClose>
-            <Button>Cancel invite</Button>
+            <Button>Close share</Button>
           </SheetClose>
           <SheetClose>
             <Button tone="accent" emphasis="solid">
@@ -67,13 +68,43 @@ function ArabicSheet({ trigger, long = false }: { trigger: string; long?: boolea
         </SheetBody>
         <SheetFooter>
           <SheetClose>
-            <Button wrap>إلغاء الدعوة</Button>
+            <Button wrap>إغلاق المشاركة</Button>
           </SheetClose>
           <SheetClose>
             <Button wrap tone="accent" emphasis="solid">
               {long ? 'إرسال الدعوة لكل أعضاء الفريق' : 'إرسال الدعوة'}
             </Button>
           </SheetClose>
+        </SheetFooter>
+      </SheetContent>
+    </Sheet>
+  );
+}
+
+/** Send runs for two seconds: nothing dismisses the sheet until it ends. */
+function BusySheet() {
+  const [open, setOpen] = useState(false);
+  const [busy, setBusy] = useState(false);
+  const send = () => {
+    setBusy(true);
+    window.setTimeout(() => {
+      setBusy(false);
+      setOpen(false);
+    }, 2000);
+  };
+  return (
+    <Sheet open={open} onOpenChange={setOpen} dismissible={!busy} size="sm">
+      <SheetTrigger>
+        <Button data-demo-trigger="disabled">Send invites</Button>
+      </SheetTrigger>
+      <SheetContent title="Send 12 invites?" description="Each person gets an email with the link.">
+        <SheetFooter>
+          <SheetClose>
+            <Button disabled={busy}>Close share</Button>
+          </SheetClose>
+          <Button tone="accent" emphasis="solid" loading={busy} loadingLabel="Sending invites" onClick={send}>
+            Send invites
+          </Button>
         </SheetFooter>
       </SheetContent>
     </Sheet>
@@ -148,7 +179,7 @@ export default function SheetDemo() {
               </SheetBody>
               <SheetFooter>
                 <SheetClose>
-                  <Button>Cancel board</Button>
+                  <Button>Discard board</Button>
                 </SheetClose>
                 <SheetClose>
                   <Button tone="accent" emphasis="solid">
@@ -243,6 +274,12 @@ export default function SheetDemo() {
               </SheetFooter>
             </SheetContent>
           </Sheet>
+        </DemoRow>
+      </DemoCase>
+
+      <DemoCase id="disabled" title="Not dismissible while sending: the close control is disabled, a drag and Escape wait" lang="en">
+        <DemoRow>
+          <BusySheet />
         </DemoRow>
       </DemoCase>
     </DemoPage>
