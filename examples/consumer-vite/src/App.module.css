@@ -1,0 +1,11 @@
+/* The root Theme element fills the viewport, so its body color covers it. */
+.root {
+  min-block-size: 100dvh;
+}
+
+/* Plain globals for the document. :global keeps them unscoped. */
+:global(html),
+:global(body) {
+  margin: 0;
+  min-block-size: 100%;
+}

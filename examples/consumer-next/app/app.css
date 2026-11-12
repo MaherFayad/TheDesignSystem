@@ -1,0 +1,137 @@
+/*
+ * The app's own CSS: page layout only. Plain CSS, tokens only (var(--ds-...)),
+ * logical properties only, so the screen mirrors in Arabic by itself.
+ *
+ * These rules sit outside any @layer. Unlayered CSS beats every layer of the
+ * system (ds.reset to ds.overrides), so a rule here wins over a component's
+ * base rule without !important.
+ */
+
+html,
+body {
+  margin: 0;
+  min-block-size: 100%;
+}
+
+/* The root Theme element fills the viewport, so its body color covers it. */
+.app-root {
+  min-block-size: 100dvh;
+}
+
+.screen {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: var(--ds-space-xl);
+  max-inline-size: calc(var(--ds-size-control-lg) * 22);
+  margin-inline: auto;
+  padding-block: var(--ds-space-3xl);
+  padding-inline: var(--ds-space-l);
+}
+
+.screen-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ds-space-m);
+}
+
+.screen-title {
+  margin: 0;
+  font-size: var(--ds-font-size-2xl);
+  font-weight: var(--ds-font-weight-semibold);
+  line-height: var(--ds-font-leading-tight);
+  color: var(--ds-color-text-bright);
+}
+
+.display-switch {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ds-space-s);
+}
+
+.switch-group {
+  display: flex;
+  gap: var(--ds-space-4xs);
+  padding: var(--ds-space-4xs);
+  border: var(--ds-border-width-default) solid var(--ds-color-border-default);
+  border-radius: var(--ds-radius-pill);
+}
+
+/*
+ * Package gap, worked around here: a Button rendered as a link through
+ * asChild keeps the browser's link underline, because Button.css does not
+ * reset text-decoration-line on its root. This unlayered rule wins over the
+ * system layers without !important.
+ */
+.switch-group a[data-ds='button'] {
+  text-decoration-line: none;
+}
+
+.boards-panel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ds-space-m);
+  padding: var(--ds-space-l);
+  border: var(--ds-border-width-default) solid var(--ds-color-border-default);
+  border-radius: var(--ds-radius-panel);
+  background-color: var(--ds-color-bg-surface);
+}
+
+.panel-title {
+  margin: 0;
+  font-size: var(--ds-font-size-l);
+  font-weight: var(--ds-font-weight-semibold);
+  color: var(--ds-color-text-bright);
+}
+
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--ds-space-s);
+  margin-block-end: var(--ds-space-m);
+}
+
+.toolbar-search {
+  flex: 1 1 calc(var(--ds-size-control-lg) * 5);
+}
+
+.board-list {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.board-row {
+  display: flex;
+  align-items: center;
+  gap: var(--ds-space-s);
+  padding-block: var(--ds-space-xs);
+  border-block-end: var(--ds-border-width-default) solid var(--ds-color-border-hairline);
+}
+
+.board-row:last-child {
+  border-block-end: 0;
+}
+
+.board-name {
+  flex: 1 1 auto;
+  min-inline-size: 0;
+  overflow-wrap: anywhere;
+  color: var(--ds-color-text-bright);
+}
+
+.board-meta {
+  color: var(--ds-color-text-muted);
+  font-size: var(--ds-font-size-s);
+  white-space: nowrap;
+}
+
+.empty {
+  margin: 0;
+  color: var(--ds-color-text-muted);
+}
