@@ -1,0 +1,21 @@
+/*
+ * Desk recipe for Tile: Desk separates by space and a hairline, not by a
+ * 1px gap (dial 4, "free windows, hairline inside"). The grid opens up to
+ * the card gap and stops clipping, and each tile becomes a rounded card on
+ * the surface with the hairline border. The private properties carry it;
+ * no declaration is restyled.
+ */
+@layer ds.recipes {
+  [data-style='desk'] [data-ds='tile-grid'] {
+    --_tile-grid-gap: var(--ds-space-m);
+    --_tile-grid-radius: 0;
+  }
+
+  [data-style='desk'] [data-ds='tile'],
+  [data-style='desk'] [data-ds='tile-grid'] > [data-ds='tile'] {
+    --_tile-radius: var(--ds-radius-panel);
+    --_tile-bg: var(--ds-color-bg-surface);
+    --_tile-bg-hover: var(--ds-color-bg-surface-2);
+    --_tile-border-color: var(--ds-color-border-hairline);
+  }
+}

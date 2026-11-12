@@ -1,0 +1,298 @@
+/*
+ * Card: a container for one item. Sources: Figma-Killer-2 `Card.module.css`
+ * (surface, hairline border, panel radius) and `Widget.module.css` (a lift
+ * of the surface tone on hover). Follows "One convention for component CSS
+ * and props" in docs/contracts/anatomy.md.
+ *
+ * Private properties on the root (recipes override these):
+ *
+ *   --_card-padding, -gap, -radius          size
+ *   --_card-bg, -border-color, -shadow      at rest, per emphasis
+ *   --_card-bg-hover, -shadow-hover         an interactive card under the pointer
+ *   --_card-select                          the selected ring, an inset shadow
+ *   --_card-ring                            the focus ring of the link, drawn by ::before
+ *   --_card-veil                            the hover veil color, drawn by ::after
+ *   --_card-lift                            how far an interactive card rises on hover
+ *   --_card-title-size, -title-fg           the title font size and color
+ *
+ * The root is not clipped, so the focus ring outside it shows. The media
+ * part takes the top corners itself.
+ */
+@layer ds.base {
+  [data-ds='card'] {
+    --_card-padding: var(--ds-space-2xl);
+    --_card-gap: var(--ds-space-m);
+    --_card-radius: var(--ds-radius-card);
+    --_card-bg: var(--ds-color-bg-surface);
+    --_card-border-color: var(--ds-color-border-default);
+    --_card-shadow: var(--ds-elevation-card);
+    --_card-bg-hover: var(--ds-color-bg-surface);
+    --_card-shadow-hover: var(--ds-elevation-card-hover);
+    --_card-select: 0 0 0 0 transparent;
+    --_card-ring: 0 0 0 0 transparent;
+    --_card-veil: transparent;
+    --_card-lift: calc(-1 * var(--ds-space-4xs));
+    --_card-title-size: var(--ds-font-size-l);
+    --_card-title-fg: var(--ds-color-text-bright);
+
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: var(--_card-gap);
+    box-sizing: border-box;
+    min-inline-size: 0;
+    margin: 0;
+    padding: var(--_card-padding);
+    border: var(--ds-border-width-default) solid var(--_card-border-color);
+    border-radius: var(--_card-radius);
+    background-color: var(--_card-bg);
+    box-shadow: var(--_card-select), var(--_card-shadow);
+    color: var(--ds-color-text-default);
+    font-family: var(--ds-font-family-sans);
+    font-size: var(--ds-font-size-m);
+    line-height: var(--ds-font-leading-normal);
+    transition: transform var(--ds-duration-base) var(--ds-ease-default);
+  }
+
+  /* ::before: the focus ring of the card link, around the whole card. */
+  [data-ds='card']::before {
+    content: '';
+    position: absolute;
+    inset: calc(-1 * var(--ds-border-width-default));
+    border-radius: inherit;
+    box-shadow: var(--_card-ring);
+    pointer-events: none;
+  }
+
+  /* ::after: the hover veil of an interactive card. */
+  [data-ds='card']::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background-color: var(--_card-veil);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity var(--ds-duration-fast) var(--ds-ease-default);
+  }
+
+  /* ------------------------------------------------------------ sizes */
+
+  [data-ds='card'][data-size='sm'] {
+    --_card-padding: var(--ds-space-l);
+    --_card-gap: var(--ds-space-s);
+    --_card-radius: var(--ds-radius-panel);
+    --_card-title-size: var(--ds-font-size-m);
+  }
+
+  [data-ds='card'][data-size='lg'] {
+    --_card-padding: var(--ds-space-4xl);
+    --_card-gap: var(--ds-space-l);
+    --_card-title-size: var(--ds-font-size-xl);
+  }
+
+  /* ------------------------------------------------------------ emphasis */
+
+  /* soft: one tone step up from the surface, no border. */
+  [data-ds='card'][data-emphasis='soft'] {
+    --_card-bg: var(--ds-color-bg-surface-2);
+    --_card-bg-hover: var(--ds-color-bg-surface-3);
+    --_card-border-color: transparent;
+  }
+
+  /* solid: raised off the page with the style's panel elevation. Flat styles keep the tone step. */
+  [data-ds='card'][data-emphasis='solid'] {
+    --_card-bg: var(--ds-color-bg-surface-2);
+    --_card-bg-hover: var(--ds-color-bg-surface-3);
+    --_card-border-color: transparent;
+    --_card-shadow: var(--ds-elevation-menu);
+    --_card-shadow-hover: var(--ds-elevation-panel);
+  }
+
+  /* ------------------------------------------------------------ parts */
+
+  [data-ds='card'] > [data-part='media'] {
+    display: block;
+    overflow: hidden;
+    border-radius: var(--ds-radius-sm);
+  }
+
+  /* As the first part the media bleeds to the edges and takes the card's top corners. */
+  [data-ds='card'] > [data-part='media']:first-child {
+    margin-block-start: calc(-1 * var(--_card-padding));
+    margin-inline: calc(-1 * var(--_card-padding));
+    border-start-start-radius: calc(var(--_card-radius) - var(--ds-border-width-default));
+    border-start-end-radius: calc(var(--_card-radius) - var(--ds-border-width-default));
+    border-end-start-radius: 0;
+    border-end-end-radius: 0;
+  }
+
+  [data-ds='card'] > [data-part='media'] > :is(img, video, svg, picture) {
+    display: block;
+    inline-size: 100%;
+    block-size: auto;
+    object-fit: cover;
+  }
+
+  [data-ds='card'] > [data-part='header'] {
+    display: flex;
+    flex-direction: column;
+    gap: var(--ds-space-3xs);
+    min-inline-size: 0;
+  }
+
+  [data-ds='card'] > [data-part='title'],
+  [data-ds='card'] > [data-part='header'] > [data-part='title'] {
+    margin: 0;
+    color: var(--_card-title-fg);
+    font-size: var(--_card-title-size);
+    font-weight: var(--ds-font-weight-semibold);
+    line-height: var(--ds-font-leading-snug);
+    overflow-wrap: anywhere;
+  }
+
+  [data-ds='card'] > [data-part='description'],
+  [data-ds='card'] > [data-part='header'] > [data-part='description'] {
+    margin: 0;
+    color: var(--ds-color-text-muted);
+    font-size: var(--ds-font-size-s);
+    line-height: var(--ds-font-leading-normal);
+    overflow-wrap: anywhere;
+  }
+
+  [data-ds='card'] > [data-part='body'] {
+    min-inline-size: 0;
+    overflow-wrap: anywhere;
+  }
+
+  [data-ds='card'] > [data-part='footer'] {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--ds-space-s);
+    min-inline-size: 0;
+    color: var(--ds-color-text-muted);
+    font-size: var(--ds-font-size-s);
+  }
+
+  /* Actions sit above the stretched link (later in the tree, positioned), so their targets stay their own. */
+  [data-ds='card'] > [data-part='actions'],
+  [data-ds='card'] > [data-part='footer'] > [data-part='actions'] {
+    position: relative;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--ds-space-xs);
+    margin-inline-start: auto;
+  }
+
+  /* ------------------------------------------------------------ the whole card link */
+
+  [data-ds='card'] > [data-part='header'] > [data-part='title'] > [data-part='link'],
+  [data-ds='card'] > [data-part='title'] > [data-part='link'] {
+    color: inherit;
+    text-decoration-line: none;
+    outline: none;
+  }
+
+  /*
+   * The link's target covers the card. The title stays its accessible name.
+   * Interactive content belongs in actions only: anything in the body sits
+   * under this target and cannot be clicked.
+   */
+  [data-ds='card'] > [data-part='header'] > [data-part='title'] > [data-part='link']::before,
+  [data-ds='card'] > [data-part='title'] > [data-part='link']::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+  }
+
+  [data-ds='card'][data-interactive]:not([data-disabled]) {
+    --_card-veil: var(--ds-color-bg-overlay-5);
+
+    cursor: pointer;
+  }
+
+  [data-ds='card'][data-interactive]:not([data-disabled]) > [data-part='header'] > [data-part='title'] > [data-part='link']:hover,
+  [data-ds='card'][data-interactive]:not([data-disabled]) > [data-part='title'] > [data-part='link']:hover {
+    text-decoration-line: underline;
+  }
+
+  /* ------------------------------------------------------------ states: swap the private properties */
+
+  [data-ds='card'][data-interactive]:not([data-disabled]):hover {
+    --_card-bg: var(--_card-bg-hover);
+    --_card-shadow: var(--_card-shadow-hover);
+
+    transform: translateY(var(--_card-lift));
+  }
+
+  [data-ds='card'][data-interactive]:not([data-disabled]):hover::after {
+    opacity: 1;
+  }
+
+  [data-ds='card'][data-selected] {
+    --_card-select: inset 0 0 0 var(--ds-border-width-strong) var(--ds-color-focus-ring);
+    --_card-border-color: var(--ds-color-focus-ring);
+  }
+
+  [data-ds='card']:has(> [data-part='header'] > [data-part='title'] > [data-part='link']:focus-visible, > [data-part='title'] > [data-part='link']:focus-visible) {
+    --_card-ring: var(--ds-focus-shadow-ring);
+  }
+
+  /* The transparent outline is set only here, so forced colors mode draws it on focus and nowhere else. */
+  [data-ds='card']:has(> [data-part='header'] > [data-part='title'] > [data-part='link']:focus-visible, > [data-part='title'] > [data-part='link']:focus-visible)::before {
+    outline: var(--ds-border-width-strong) solid transparent;
+    outline-offset: var(--ds-border-width-strong);
+  }
+
+  /*
+   * Disabled: the text stays readable at 4.5:1 (a card is not a control, so
+   * the contrast exception for inactive controls does not cover it). The
+   * title steps down to the muted color, the media dims, the link loses its
+   * href and the actions dim themselves.
+   */
+  [data-ds='card'][data-disabled] {
+    --_card-title-fg: var(--ds-color-text-muted);
+  }
+
+  [data-ds='card'][data-disabled] > [data-part='media'] {
+    opacity: var(--ds-opacity-disabled);
+  }
+
+  [data-ds='card'][data-disabled] > [data-part='header'] > [data-part='title'] > [data-part='link'],
+  [data-ds='card'][data-disabled] > [data-part='title'] > [data-part='link'] {
+    cursor: not-allowed;
+  }
+
+  /* ------------------------------------------------------------ motion, contrast, forced colors */
+
+  @media (prefers-reduced-motion: reduce) {
+    [data-ds='card'],
+    [data-ds='card']::after {
+      transition: none;
+    }
+
+    [data-ds='card'][data-interactive]:not([data-disabled]):hover {
+      transform: none;
+    }
+  }
+
+  /* Forced colors drop shadows: the selected card gets a Highlight outline inside its border (no layout shift), focus shows as Highlight. */
+  @media (forced-colors: active) {
+    [data-ds='card'] {
+      border-color: CanvasText;
+    }
+
+    [data-ds='card'][data-selected] {
+      outline: var(--ds-border-width-strong) solid Highlight;
+      outline-offset: calc(-1 * var(--ds-border-width-strong));
+    }
+
+    [data-ds='card']:has(> [data-part='header'] > [data-part='title'] > [data-part='link']:focus-visible, > [data-part='title'] > [data-part='link']:focus-visible)::before {
+      outline-color: Highlight;
+    }
+  }
+}

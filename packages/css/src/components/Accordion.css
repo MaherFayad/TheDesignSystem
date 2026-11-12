@@ -1,0 +1,164 @@
+/*
+ * Accordion: stacked sections that open and close. Source: Figma-Killer-2
+ * `Section.module.css` (the title is the toggle, a hairline between
+ * sections, a chevron that turns). Follows "One convention for component
+ * CSS and props" in docs/contracts/anatomy.md.
+ *
+ * The trigger is the system Button carrying data-part="trigger". This file
+ * restyles it through the Button's private properties (--_button-*), and
+ * sets two layout declarations the Button has no property for: the row
+ * spreads its label to the start and the chevron to the end. The lead's
+ * change list in docs/reports/lanes/lane-9c.md proposes Button properties
+ * for both.
+ *
+ * Private properties on the root:
+ *
+ *   --_accordion-gap             space between sections (card variant)
+ *   --_accordion-padding-inline  inline padding of trigger and content
+ *   --_accordion-height          the trigger's minimum height
+ *   --_accordion-font-size       trigger and content text size
+ *   --_accordion-border-color    the line under each section (divided)
+ *   --_accordion-bg              a section's surface (card)
+ *   --_accordion-radius          a section's corners (card)
+ *   --_accordion-shift           how far the content slides as it opens (the one name outside the list in anatomy.md)
+ */
+@layer ds.base {
+  [data-ds='accordion'] {
+    --_accordion-gap: 0;
+    --_accordion-padding-inline: var(--ds-space-s);
+    --_accordion-height: var(--ds-size-control-lg);
+    --_accordion-font-size: var(--ds-font-size-m);
+    --_accordion-border-color: transparent;
+    --_accordion-bg: transparent;
+    --_accordion-radius: 0;
+    --_accordion-shift: calc(-1 * var(--ds-space-xs));
+
+    display: flex;
+    flex-direction: column;
+    gap: var(--_accordion-gap);
+    min-inline-size: 0;
+    color: var(--ds-color-text-default);
+    font-family: var(--ds-font-family-sans);
+  }
+
+  /* ------------------------------------------------------------ sizes */
+
+  [data-ds='accordion'][data-size='sm'] {
+    --_accordion-padding-inline: var(--ds-space-xs);
+    --_accordion-height: var(--ds-size-control-md);
+    --_accordion-font-size: var(--ds-font-size-s);
+  }
+
+  /* ------------------------------------------------------------ variants */
+
+  [data-ds='accordion'][data-variant='divided'] {
+    --_accordion-border-color: var(--ds-color-border-default);
+  }
+
+  [data-ds='accordion'][data-variant='card'] {
+    --_accordion-gap: var(--ds-space-s);
+    --_accordion-padding-inline: var(--ds-space-l);
+    --_accordion-bg: var(--ds-color-bg-surface-2);
+    --_accordion-radius: var(--ds-radius-panel);
+  }
+
+  [data-ds='accordion'][data-variant='card'][data-size='sm'] {
+    --_accordion-padding-inline: var(--ds-space-m);
+  }
+
+  /* ------------------------------------------------------------ parts */
+
+  [data-ds='accordion'] > [data-part='item'] {
+    min-inline-size: 0;
+    border-block-end: var(--ds-border-width-default) solid var(--_accordion-border-color);
+    border-radius: var(--_accordion-radius);
+    background-color: var(--_accordion-bg);
+  }
+
+  [data-ds='accordion'] > [data-part='item'] > [data-part='header'] {
+    display: flex;
+    margin: 0;
+    font: inherit;
+  }
+
+  /* The trigger: the system Button, quiet, full width, the label at the start and the chevron at the end. */
+  [data-ds='accordion'] > [data-part='item'] > [data-part='header'] > [data-part='trigger'] {
+    --_button-height: var(--_accordion-height);
+    --_button-padding-inline: var(--_accordion-padding-inline);
+    --_button-font-size: var(--_accordion-font-size);
+    --_button-radius: var(--_accordion-radius);
+    --_button-gap: var(--ds-space-s);
+    --_button-bg: transparent;
+    --_button-fg: var(--ds-color-text-default);
+    --_button-bg-hover: var(--ds-color-bg-overlay-5);
+    --_button-fg-hover: var(--ds-color-text-bright);
+    --_button-bg-active: var(--ds-color-bg-overlay-10);
+    --_button-fg-active: var(--ds-color-text-bright);
+
+    justify-content: space-between;
+  }
+
+  [data-ds='accordion'] > [data-part='item'] > [data-part='header'] > [data-part='trigger'] > [data-part='label'] {
+    flex: 1 1 auto;
+    text-align: start;
+  }
+
+  [data-ds='accordion'] > [data-part='item'] > [data-part='header'] > [data-part='trigger'] [data-ds='icon'] {
+    color: var(--ds-color-text-muted);
+    transition: transform var(--ds-duration-base) var(--ds-ease-default);
+  }
+
+  [data-ds='accordion'] > [data-part='item'] > [data-part='header'] > [data-part='trigger'][data-state='open'] [data-ds='icon'] {
+    transform: rotate(180deg);
+  }
+
+  [data-ds='accordion'] > [data-part='item'] > [data-part='content'] {
+    overflow: clip;
+    padding-block: 0 var(--ds-space-m);
+    padding-inline: var(--_accordion-padding-inline);
+    color: var(--ds-color-text-muted);
+    font-size: var(--_accordion-font-size);
+    line-height: var(--ds-font-leading-normal);
+    overflow-wrap: anywhere;
+  }
+
+  /*
+   * accordion-height: the content fades in and slides down a step as it
+   * opens. Closing is at once. translateY is right in both directions of
+   * text: the sections always stack on the block axis. For its 140ms the
+   * faded content may pass under the header; it never animates height.
+   */
+  [data-ds='accordion'] > [data-part='item'] > [data-part='content'][data-state='open'] {
+    animation: ds-accordion-open var(--ds-duration-medium) var(--ds-ease-out);
+  }
+
+  @keyframes ds-accordion-open {
+    from {
+      opacity: 0;
+      transform: translateY(var(--_accordion-shift));
+    }
+  }
+
+  /* ------------------------------------------------------------ motion, forced colors */
+
+  @media (prefers-reduced-motion: reduce) {
+    [data-ds='accordion'] > [data-part='item'] > [data-part='content'][data-state='open'] {
+      animation: none;
+    }
+
+    [data-ds='accordion'] > [data-part='item'] > [data-part='header'] > [data-part='trigger'] [data-ds='icon'] {
+      transition: none;
+    }
+  }
+
+  /* Forced colors drop backgrounds: card sections and dividers keep a system line. */
+  @media (forced-colors: active) {
+    [data-ds='accordion'][data-variant='divided'] > [data-part='item'] {
+      border-block-end-color: CanvasText;
+    }
+
+    [data-ds='accordion'][data-variant='card'] > [data-part='item'] {
+      border: var(--ds-border-width-default) solid CanvasText;
+    }
+  }
+}

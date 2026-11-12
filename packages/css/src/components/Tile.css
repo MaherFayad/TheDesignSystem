@@ -1,0 +1,196 @@
+/*
+ * Tile and TileGrid: the borderless card of Studio, split by a 1px gap that
+ * shows the parent surface (Studio dial 4). Source: Figma-Killer-2
+ * `Widget.module.css` and `DashboardGrid` (borderless tile, 1px gap on the
+ * darker parent, the surface tone lifts on hover). Follows "One convention
+ * for component CSS and props" in docs/contracts/anatomy.md.
+ *
+ * TileGrid, the second root, is styled in TileGrid.css (one file per
+ * data-ds, anatomy.md rule 10).
+ *
+ * Private properties:
+ *
+ *   on the tile   --_tile-padding, -gap, -radius, -bg, -bg-hover,
+ *                 -border-color, -select and -ring (the selected and the
+ *                 focus ring, inset, both drawn by ::before), -title-size
+ *
+ * The grid clips its tiles to its own radius, so the focus ring and the
+ * selected ring are drawn inside the tile, never outside.
+ */
+@layer ds.base {
+  [data-ds='tile'] {
+    --_tile-padding: var(--ds-space-l);
+    --_tile-gap: var(--ds-space-3xs);
+    --_tile-radius: var(--ds-radius-panel);
+    --_tile-bg: var(--ds-color-bg-surface-2);
+    --_tile-bg-hover: var(--ds-color-bg-surface-3);
+    --_tile-border-color: transparent;
+    --_tile-select: 0 0 0 0 transparent;
+    --_tile-ring: 0 0 0 0 transparent;
+    --_tile-title-size: var(--ds-font-size-m);
+
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-areas:
+      'media media'
+      'title actions'
+      'meta actions';
+    column-gap: var(--ds-space-s);
+    row-gap: var(--_tile-gap);
+    align-content: start;
+    align-items: start;
+    box-sizing: border-box;
+    min-inline-size: 0;
+    margin: 0;
+    padding: var(--_tile-padding);
+    border: var(--ds-border-width-default) solid var(--_tile-border-color);
+    border-radius: var(--_tile-radius);
+    background-color: var(--_tile-bg);
+    color: var(--ds-color-text-default);
+    font-family: var(--ds-font-family-sans);
+    font-size: var(--ds-font-size-s);
+    line-height: var(--ds-font-leading-normal);
+  }
+
+  /*
+   * ::before: the selected ring and the focus ring, inside the tile so the
+   * grid does not clip them. A positioned layer paints above the media.
+   */
+  [data-ds='tile']::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    box-shadow: var(--_tile-ring), var(--_tile-select);
+    pointer-events: none;
+  }
+
+  /* ------------------------------------------------------------ sizes */
+
+  [data-ds='tile'][data-size='sm'] {
+    --_tile-padding: var(--ds-space-s);
+    --_tile-gap: var(--ds-space-4xs);
+    --_tile-title-size: var(--ds-font-size-s);
+  }
+
+  /* ------------------------------------------------------------ parts */
+
+  [data-ds='tile'] > [data-part='media'] {
+    grid-area: media;
+    display: block;
+    overflow: hidden;
+    margin-block-start: calc(-1 * var(--_tile-padding));
+    margin-inline: calc(-1 * var(--_tile-padding));
+    margin-block-end: var(--_tile-padding);
+    border-start-start-radius: inherit;
+    border-start-end-radius: inherit;
+  }
+
+  [data-ds='tile'] > [data-part='media'] > :is(img, video, svg, picture) {
+    display: block;
+    inline-size: 100%;
+    block-size: auto;
+    object-fit: cover;
+  }
+
+  /* Two lines, then an ellipsis. The link keeps the full name for assistive tech. */
+  [data-ds='tile'] > [data-part='title'] {
+    grid-area: title;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    overflow: hidden;
+    margin: 0;
+    color: var(--ds-color-text-bright);
+    font-size: var(--_tile-title-size);
+    font-weight: var(--ds-font-weight-semibold);
+    line-height: var(--ds-font-leading-snug);
+    overflow-wrap: anywhere;
+  }
+
+  [data-ds='tile'] > [data-part='meta'] {
+    grid-area: meta;
+    margin: 0;
+    overflow: hidden;
+    color: var(--ds-color-text-muted);
+    font-size: var(--ds-font-size-s);
+    line-height: var(--ds-font-leading-snug);
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  /* Above the stretched link (later in the tree, positioned), so the buttons keep their own targets. */
+  [data-ds='tile'] > [data-part='actions'] {
+    grid-area: actions;
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: var(--ds-space-4xs);
+    margin-block: calc(-1 * var(--ds-space-4xs));
+  }
+
+  /* ------------------------------------------------------------ the whole tile link */
+
+  [data-ds='tile'] > [data-part='title'] > [data-part='link'] {
+    color: inherit;
+    text-decoration-line: none;
+    outline: none;
+  }
+
+  [data-ds='tile'] > [data-part='title'] > [data-part='link']::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+  }
+
+  [data-ds='tile']:is([data-interactive], :has(> [data-part='title'] > [data-part='link'])) {
+    cursor: pointer;
+  }
+
+  /* ------------------------------------------------------------ states: swap the private properties */
+
+  [data-ds='tile']:is([data-interactive], :has(> [data-part='title'] > [data-part='link'])):hover {
+    --_tile-bg: var(--_tile-bg-hover);
+  }
+
+  /* Selected: one 2px ring. */
+  [data-ds='tile'][data-selected] {
+    --_tile-select: inset 0 0 0 var(--ds-border-width-strong) var(--ds-color-focus-ring);
+  }
+
+  /*
+   * Focus: a double ring (2px ring, 2px gap in the tile color, 2px ring), so
+   * a focused tile never looks like a selected one, and focusing a selected
+   * tile still changes what is drawn (WCAG 2.4.7).
+   */
+  [data-ds='tile']:has(> [data-part='title'] > [data-part='link']:focus-visible) {
+    --_tile-ring:
+      inset 0 0 0 var(--ds-border-width-strong) var(--ds-color-focus-ring),
+      inset 0 0 0 calc(2 * var(--ds-border-width-strong)) var(--_tile-bg),
+      inset 0 0 0 calc(3 * var(--ds-border-width-strong)) var(--ds-color-focus-ring);
+  }
+
+  /* The transparent outline is set only here, so forced colors mode draws it on focus and nowhere else. */
+  [data-ds='tile']:has(> [data-part='title'] > [data-part='link']:focus-visible)::before {
+    outline: var(--ds-border-width-strong) solid transparent;
+    outline-offset: calc(-2 * var(--ds-border-width-strong));
+  }
+
+  /* Forced colors drop shadows and backgrounds: each tile gets a system border, selection a Highlight outline at its edge, focus one 2px further in. */
+  @media (forced-colors: active) {
+    [data-ds='tile'] {
+      border-color: CanvasText;
+    }
+
+    [data-ds='tile'][data-selected] {
+      outline: var(--ds-border-width-strong) solid Highlight;
+      outline-offset: calc(-1 * var(--ds-border-width-strong));
+    }
+
+    [data-ds='tile']:has(> [data-part='title'] > [data-part='link']:focus-visible)::before {
+      outline-color: Highlight;
+    }
+  }
+}
