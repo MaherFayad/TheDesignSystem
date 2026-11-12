@@ -54,7 +54,8 @@ export default function KbdDemo() {
       <DemoCase id="many" title="Many keys">
         <DemoRow>
           <Kbd platform="other">Ctrl+Alt+Shift+Delete</Kbd>
-          <Kbd platform="mac">Mod+Alt+Shift+Ctrl+Z</Kbd>
+          <Kbd platform="mac">Ctrl+Alt+Shift+Mod+Z</Kbd>
+          <Kbd platform="mac">⌘+</Kbd>
           <Kbd platform="other">Ctrl++</Kbd>
         </DemoRow>
       </DemoCase>

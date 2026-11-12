@@ -117,6 +117,9 @@ export function splitShortcut(shortcut: string): string[] {
   // True right after a key ended without a separator (a Mac symbol), so a
   // plus that follows is the separator ("⌘+K"), not the plus key.
   let afterKey = false;
+  // True when the last plus was read as a separator and no key came after
+  // it yet: a shortcut that ends there ends with the plus key ("⌘+", "Ctrl+").
+  let pendingSeparator = false;
   const push = () => {
     const key = current.trim();
     if (key) out.push(key);
@@ -127,26 +130,34 @@ export function splitShortcut(shortcut: string): string[] {
       push();
       out.push(ch);
       afterKey = true;
+      pendingSeparator = false;
       continue;
     }
     if (ch === '+') {
       if (current.trim() !== '') {
         push();
         afterKey = false;
+        pendingSeparator = true;
       } else if (afterKey) {
         afterKey = false;
+        pendingSeparator = true;
       } else {
         // A plus with no key before it is the plus key: "Ctrl++" and "+".
         out.push('+');
         current = '';
         afterKey = true;
+        pendingSeparator = false;
       }
       continue;
     }
     current += ch;
-    if (ch.trim()) afterKey = false;
+    if (ch.trim()) {
+      afterKey = false;
+      pendingSeparator = false;
+    }
   }
   push();
+  if (pendingSeparator && current === '' && out.length > 0 && text.endsWith('+')) out.push('+');
   return out;
 }
 
@@ -171,9 +182,18 @@ export function resolveKey(key: string, platform: KeyboardPlatform): ShortcutKey
   return { label, spoken: label, modifier: false };
 }
 
-/** Every key of a shortcut, resolved for a platform. */
+/** Apple's order for modifiers: Control, Option, Shift, Command. */
+const MAC_ORDER = ['⌃', '⌥', '⇧', '⌘'];
+
+/**
+ * Every key of a shortcut, resolved for a platform. On a Mac the modifiers
+ * come first in Apple's order (⌃⌥⇧⌘), as the menus print them.
+ */
 export function shortcutKeys(shortcut: string, platform: KeyboardPlatform): ShortcutKey[] {
-  return splitShortcut(shortcut).map((key) => resolveKey(key, platform));
+  const keys = splitShortcut(shortcut).map((key) => resolveKey(key, platform));
+  if (platform !== 'mac') return keys;
+  const mods = keys.filter((k) => k.modifier).sort((a, b) => MAC_ORDER.indexOf(a.label) - MAC_ORDER.indexOf(b.label));
+  return [...mods, ...keys.filter((k) => !k.modifier)];
 }
 
 /** The shortcut as a screen reader should say it: `Control Shift P`. */

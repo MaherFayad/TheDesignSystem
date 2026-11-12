@@ -31,7 +31,7 @@ describe('Kbd', () => {
 
   it('draws Mac symbols with no separators on mac', () => {
     const { container } = render(<Kbd platform="mac">Mod+Shift+P</Kbd>);
-    expect(keys(container)).toEqual(['⌘', '⇧', 'P']);
+    expect(keys(container)).toEqual(['⇧', '⌘', 'P']);
     expect(container.querySelectorAll('[data-part="separator"]')).toHaveLength(0);
   });
 
@@ -59,6 +59,17 @@ describe('Kbd', () => {
       expect(k.getAttribute('aria-hidden')).toBe('true');
     }
     expect(container.querySelector('[data-part="spoken"]')?.textContent).toBe('Control K');
+    expect(container.querySelector('[data-part="spoken"]')?.getAttribute('lang')).toBe('en');
+  });
+
+  it('leaves a node keycap readable when it has no label', () => {
+    const { container } = render(
+      <Kbd>
+        <span>fn</span>
+      </Kbd>,
+    );
+    expect(container.querySelector('[data-part="key"]')?.hasAttribute('aria-hidden')).toBe(false);
+    expect(container.querySelector('[data-part="spoken"]')).toBeNull();
   });
 
   it('uses the label as the spoken text', () => {
@@ -68,6 +79,7 @@ describe('Kbd', () => {
       </Kbd>,
     );
     expect(container.querySelector('[data-part="spoken"]')?.textContent).toBe('كنترول K');
+    expect(container.querySelector('[data-part="spoken"]')?.hasAttribute('lang')).toBe(false);
   });
 
   it('renders a node as one keycap', () => {

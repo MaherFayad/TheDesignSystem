@@ -27,7 +27,7 @@
     "children": {
       "type": "node",
       "required": true,
-      "description": "The key or the shortcut. A string is split into keycaps by splitShortcut: Mod+K, Ctrl+Shift+P, ⌘⇧P, Esc, Ctrl++ for the plus key. Mod is Command on a Mac and Control elsewhere. A node draws one keycap as is; give it a label."
+      "description": "The key or the shortcut. A string is split into keycaps by splitShortcut: Mod+K, Ctrl+Shift+P, ⌘⇧P, Esc, Ctrl++ or ⌘+ for the plus key. Plus is the only separator. Mod is Command on a Mac and Control elsewhere; on a Mac the modifiers are drawn in Apple order (⌃⌥⇧⌘). A node draws one keycap as is; give it a label, or the node itself stays readable."
     },
     "size": {
       "type": ["xs", "sm", "md"],
@@ -65,7 +65,8 @@
       "The root is dir ltr and isolated (unicode-bidi isolate), so a shortcut reads Ctrl then K inside an Arabic sentence and does not move the punctuation around it.",
       "Menu items and buttons that have a shortcut set aria-keyshortcuts (ariaKeyShortcuts from the same helpers) and render Kbd decorative.",
       "No hover, press or motion: a keycap is text, not a control.",
-      "Under forced colors the gradient and the depth shadow drop; each key keeps a CanvasText border."
+      "Under forced colors the gradient and the depth shadow drop; each key keeps a CanvasText border.",
+      "The default spoken names are English and carry lang en, so an Arabic page reads them with an English voice. Pass label for names in another language."
     ]
   },
   "content": {

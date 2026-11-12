@@ -9,6 +9,7 @@
  *
  *   --_kbd-height, -padding-inline, -gap, -font-size, -radius
  *   --_kbd-fg, -border-color, -face-top, -face-bottom
+ *   --_kbd-separator-fg the plus between keycaps
  *   --_kbd-shadow      the depth stack: top highlight, bottom edge, drop
  *
  * A keycap is text, not a control: no hover, press, focus or motion. The
@@ -26,6 +27,7 @@
     --_kbd-border-color: var(--ds-kbd-border);
     --_kbd-face-top: var(--ds-kbd-face-top);
     --_kbd-face-bottom: var(--ds-kbd-face-bottom);
+    --_kbd-separator-fg: var(--ds-color-text-muted);
     --_kbd-shadow:
       inset 0 var(--ds-border-width-default) 0 var(--ds-kbd-highlight),
       0 var(--ds-border-width-default) 0 var(--ds-kbd-edge),
@@ -41,7 +43,7 @@
     font-family: var(--ds-font-family-mono);
     font-size: var(--_kbd-font-size);
     font-weight: var(--ds-font-weight-medium);
-    line-height: 1;
+    line-height: var(--ds-font-leading-tight);
     letter-spacing: var(--ds-font-tracking-none);
     white-space: nowrap;
     vertical-align: middle;
@@ -82,7 +84,7 @@
   }
 
   [data-ds='kbd'] > [data-part='separator'] {
-    color: var(--ds-color-text-muted);
+    color: var(--_kbd-separator-fg);
     font-family: var(--ds-font-family-sans);
   }
 

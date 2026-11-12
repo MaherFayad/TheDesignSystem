@@ -24,7 +24,7 @@ export interface KbdProps extends Omit<HTMLAttributes<HTMLElement>, 'children' |
   /**
    * The key or the shortcut. A string is split into keycaps: `Mod+K`,
    * `Ctrl+Shift+P`, `⌘⇧P`, `Esc`. `Mod` is Command on a Mac and Control
-   * elsewhere. A node draws one keycap as is (give it a `label`).
+   * elsewhere. A node draws one keycap as is; give it a `label`, or the node itself is read.
    */
   children: ReactNode;
   /** xs 16, sm 20, md 24 px tall. Default md. */
@@ -79,9 +79,14 @@ export function Kbd({ children, size = 'md', platform, label, decorative = false
   return (
     <kbd {...rest} data-ds="kbd" data-size={size} dir="ltr" aria-hidden={decorative ? true : rest['aria-hidden']}>
       {keys.map((k, i) => (
-        <KbdKey key={i} index={i} keyItem={k} separator={sep} />
+        <KbdKey key={i} index={i} keyItem={k} separator={sep} exposed={!decorative && !spoken} />
       ))}
-      {!decorative && spoken && <span data-part="spoken">{spoken}</span>}
+      {!decorative && spoken && (
+        // The default names are English words: say them with an English voice on an Arabic page.
+        <span data-part="spoken" lang={label === undefined ? 'en' : undefined}>
+          {spoken}
+        </span>
+      )}
     </kbd>
   );
 }
@@ -90,10 +95,13 @@ function KbdKey({
   index,
   keyItem,
   separator,
+  exposed,
 }: {
   index: number;
   keyItem: { label: ReactNode };
   separator: string;
+  /** A node keycap with no label stays readable, since nothing else names it. */
+  exposed: boolean;
 }) {
   return (
     <>
@@ -102,7 +110,7 @@ function KbdKey({
           {separator}
         </span>
       )}
-      <kbd data-part="key" aria-hidden="true">
+      <kbd data-part="key" aria-hidden={exposed ? undefined : 'true'}>
         {keyItem.label}
       </kbd>
     </>

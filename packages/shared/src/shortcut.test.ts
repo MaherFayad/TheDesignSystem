@@ -31,6 +31,10 @@ describe('splitShortcut', () => {
     expect(splitShortcut('+')).toEqual(['+']);
     expect(splitShortcut('Ctrl++')).toEqual(['Ctrl', '+']);
     expect(splitShortcut('Ctrl+Plus')).toEqual(['Ctrl', 'Plus']);
+    expect(splitShortcut('⌘+')).toEqual(['⌘', '+']);
+    expect(splitShortcut('⌘⇧+')).toEqual(['⌘', '⇧', '+']);
+    expect(splitShortcut('Ctrl+')).toEqual(['Ctrl', '+']);
+    expect(splitShortcut('⌘+K')).toEqual(['⌘', 'K']);
   });
 
   it('gives nothing for an empty string', () => {
@@ -67,7 +71,12 @@ describe('resolveKey', () => {
 
 describe('whole shortcuts', () => {
   it('resolves every key', () => {
-    expect(shortcutKeys('Mod+Shift+P', 'mac').map((k) => k.label)).toEqual(['⌘', '⇧', 'P']);
+    expect(shortcutKeys('Mod+Shift+P', 'other').map((k) => k.label)).toEqual(['Ctrl', 'Shift', 'P']);
+  });
+
+  it('puts Mac modifiers in Apple order', () => {
+    expect(shortcutKeys('Mod+Shift+P', 'mac').map((k) => k.label)).toEqual(['⇧', '⌘', 'P']);
+    expect(shortcutKeys('Mod+Alt+Shift+Ctrl+Z', 'mac').map((k) => k.label)).toEqual(['⌃', '⌥', '⇧', '⌘', 'Z']);
   });
 
   it('speaks the names', () => {
@@ -77,7 +86,7 @@ describe('whole shortcuts', () => {
   });
 
   it('formats one line of text in the platform convention', () => {
-    expect(formatShortcut('Mod+Shift+P', 'mac')).toBe('⌘⇧P');
+    expect(formatShortcut('Mod+Shift+P', 'mac')).toBe('⇧⌘P');
     expect(formatShortcut('Mod+Shift+P', 'other')).toBe('Ctrl+Shift+P');
   });
 
