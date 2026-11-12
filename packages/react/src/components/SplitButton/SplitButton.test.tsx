@@ -168,11 +168,31 @@ describe('SplitButton', () => {
     expect(menu()!.dataset.align).toBe('end');
   });
 
-  it('opens controlled and reports changes', async () => {
+  it('stays open while controlled and reports Escape through onOpenChange', async () => {
+    const user = userEvent.setup();
     const onOpenChange = vi.fn();
     render(<Basic open onOpenChange={onOpenChange} />);
-    await waitFor(() => expect(menu()).not.toBeNull());
+    await waitFor(() => expect(menu()?.contains(document.activeElement)).toBe(true));
     expect(trigger().getAttribute('data-state')).toBe('open');
+    await user.keyboard('{Escape}');
+    expect(onOpenChange).toHaveBeenCalledWith(false);
+    await act(async () => {});
+    expect(trigger().getAttribute('data-state')).toBe('open');
+    expect(menu()).not.toBeNull();
+  });
+
+  it('starts open with defaultOpen and closes on Escape', async () => {
+    const user = userEvent.setup();
+    render(<Basic defaultOpen />);
+    await waitFor(() => expect(menu()?.contains(document.activeElement)).toBe(true));
+    await user.keyboard('{Escape}');
+    await waitFor(() => expect(trigger().getAttribute('data-state')).toBe('closed'));
+  });
+
+  it('puts start content on the action only', () => {
+    render(<Basic start="upload" />);
+    expect(action().querySelector('[data-part="start"] svg')).not.toBeNull();
+    expect(trigger().querySelector('[data-part="start"]')).toBeNull();
   });
 
   it('loading blocks the action only and keeps the menu usable', async () => {
@@ -182,6 +202,8 @@ describe('SplitButton', () => {
     expect(action().hasAttribute('data-loading')).toBe(true);
     expect(action().getAttribute('aria-busy')).toBe('true');
     expect(trigger().hasAttribute('data-loading')).toBe(false);
+    expect(trigger().hasAttribute('aria-busy')).toBe(false);
+    expect(trigger().hasAttribute('aria-disabled')).toBe(false);
     expect(root(container).hasAttribute('data-loading')).toBe(false);
     expect(screen.getByRole('status').textContent).toBe('Publishing');
     await user.click(action());
@@ -205,7 +227,11 @@ describe('SplitButton', () => {
     trigger().focus();
     await user.keyboard('{Enter}');
     await user.keyboard('{ArrowUp}');
+    await act(async () => {
+      await new Promise((resolve) => setTimeout(resolve, 50));
+    });
     expect(onClick).not.toHaveBeenCalled();
+    expect(trigger().getAttribute('data-state')).toBe('closed');
     expect(menu()).toBeNull();
   });
 

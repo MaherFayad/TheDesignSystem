@@ -17,17 +17,17 @@ const copy = {
     label: 'Publish page',
     menu: 'More publish options',
     items: ['Schedule publish', 'Publish to staging', 'Save as draft'],
-    many: ['Schedule publish', 'Publish to staging', 'Save as draft', 'Copy preview link', 'Export as PDF', 'Share with team', 'Unpublish page'],
+    many: ['Schedule publish', 'Publish to staging', 'Save as draft', 'Publish to production', 'Publish and notify team', 'Publish as unlisted page', 'Publish with comments off'],
   },
   ar: {
     label: 'نشر الصفحة',
     menu: 'خيارات النشر الأخرى',
     items: ['جدولة النشر', 'النشر للتجربة', 'الحفظ كمسودة'],
-    many: ['جدولة النشر', 'النشر للتجربة', 'الحفظ كمسودة', 'نسخ رابط المعاينة', 'التصدير بصيغة PDF', 'المشاركة مع الفريق', 'إلغاء النشر'],
+    many: ['جدولة النشر', 'النشر للتجربة', 'الحفظ كمسودة', 'النشر للإنتاج', 'النشر مع تنبيه الفريق', 'النشر كصفحة غير مدرجة', 'النشر بدون تعليقات'],
   },
 } as const;
 
-const icons = ['clock', 'upload', 'file', 'link', 'download', 'send', 'eye-off'] as const;
+const icons = ['clock', 'upload', 'file', 'globe', 'bell', 'eye-off', 'lock'] as const;
 
 function Items({ lang = 'en', count = 3 }: { lang?: 'en' | 'ar'; count?: number }) {
   return (

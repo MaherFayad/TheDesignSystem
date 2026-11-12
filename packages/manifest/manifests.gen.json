@@ -8126,10 +8126,11 @@
         "In the open menu the DropdownMenu keys apply: ArrowDown and ArrowUp move, Home and End, typeahead, Enter and Space select and close, and Escape closes the menu and returns focus to the trigger. Unit tests cover Escape here; the generic contract suite checks it on DropdownMenu, because the root it opens is a dropdown-menu, not a split-button.",
         "The trigger's name names the menu (More publish options), never only More: a screen reader user hears it without the action next to it (WCAG 2.4.6).",
         "Loading blocks the action only, so a long publish does not hide the other ways to publish.",
-        "The open trigger keeps its pressed fill and aria-expanded true, so open is not told by color alone.",
+        "When the menu is open the trigger's chevron turns to point up and the trigger takes its pressed fill where the fill has one, with aria-expanded true, so open is not told by color alone. Under reduced motion the chevron turns at once.",
         "Both halves are at least 24 by 24 CSS px at every size (WCAG 2.5.8); the trigger is a square of the control height.",
-        "Under forced colors the system draws every border, so the seam stays visible, and the focus outline is pulled inside each half.",
-        "The menu is a DropdownMenu root portaled into a themed layer under body, carrying data-part menu. The contract suite cannot own a part outside the root's subtree, so menu is listed in contract.optionalParts."
+        "Under forced colors the system draws every border, so the seam stays visible, the focus outline is pulled inside each half, and the open trigger takes the system Highlight.",
+        "The menu is a DropdownMenu root portaled into a themed layer under body, carrying data-part menu. The contract suite cannot own a part outside the root's subtree, so menu is listed in contract.optionalParts.",
+        "In an attached ButtonGroup a SplitButton joins the row's seam on both sides. Horizontal groups only: it is a row control and is not placed in a vertical attached group."
       ]
     },
     "content": {
@@ -8146,11 +8147,12 @@
     },
     "tokens": [
       "color.border.default",
-      "border.width.default",
       "border.width.strong",
       "color.focus.ring",
       "color.focus.ring-on-primary-inner",
-      "color.focus.ring-on-primary-outer"
+      "color.focus.ring-on-primary-outer",
+      "duration.quick",
+      "ease.default"
     ],
     "motion": "menu-scale",
     "frameworks": {
@@ -8158,7 +8160,7 @@
         "status": "ready",
         "behavior": "Button plus radix:DropdownMenu (DropdownMenuTrigger around an IconButton)",
         "example": "SplitButton.demo.tsx",
-        "note": "The menu opens with menu-scale from the trigger side, aligned to the control's inline end; each half keeps Button's press. The seam is drawn by SplitButton.css through Button's private corner properties. Inside a ButtonGroup, unset size, emphasis and shape come from the group."
+        "note": "The menu opens with menu-scale from the trigger side, aligned to the control's inline end; each half keeps Button's press, and the open trigger's chevron turns over (transform, quick duration, instant under reduced motion). The seam is drawn by SplitButton.css through Button's private corner properties. Inside a ButtonGroup, unset size, emphasis and shape come from the group."
       },
       "angular": {
         "status": "planned",
