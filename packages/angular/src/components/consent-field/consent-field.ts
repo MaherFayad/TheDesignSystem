@@ -14,19 +14,45 @@
 // data-part control, as React's rootProps. They read no Field: the error's
 // own context below wraps only the error, as in React (dsNoFieldContext).
 //
-// Inside a dsForm, the form's error for `name` shows in the error part,
-// with requiredError in place of the form's words when given. The error is
-// the system FieldError with a Field context of its own (viewProviders), as
-// in Fieldset.
+// Inside a dsForm, the form's error for `name` shows in the error part.
+// requiredError is given to the form by name (setRequiredMessage, React's
+// useFormRequiredMessage), so the form puts the same words in the field and
+// in the summary; it never replaces a validator or server error. The error
+// is the system FieldError with a Field context of its own
+// (viewProviders), as in Fieldset.
 //
 // It implements ControlValueAccessor with a boolean value, so `formControl`,
-// `formControlName` and `ngModel` bind the granted state.
+// `formControlName` and `ngModel` bind the granted state. It is touched when
+// focus leaves the field, as on blur, or when the person decides.
+//
+// In development it warns, as React does, about a stray defaultChecked, a
+// consent that starts given with no record line, a given consent locked by
+// disabled, and no way to the details.
 //
 // Names that differ from React: `onCheckedChange` is the `checkedChange`
 // output of `[(checked)]`; `onDecision` is the `decision` output. `purpose`,
 // `detailsLabel`, `meta` and `error` take a string or a TemplateRef.
 import { NgTemplateOutlet } from '@angular/common';
-import { ChangeDetectionStrategy, Component, Directive, booleanAttribute, computed, forwardRef, inject, input, model, output, signal, type TemplateRef } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  Directive,
+  ElementRef,
+  Injector,
+  afterNextRender,
+  booleanAttribute,
+  computed,
+  effect,
+  forwardRef,
+  inject,
+  input,
+  isDevMode,
+  model,
+  output,
+  signal,
+  type OnInit,
+  type TemplateRef,
+} from '@angular/core';
 import { NG_VALUE_ACCESSOR, type ControlValueAccessor } from '@angular/forms';
 import type { Size } from '@the-system/shared';
 import { consumeHostAttributes } from '../../internal/host';
@@ -89,6 +115,7 @@ class DsNoFieldContext {
     '[attr.data-required]': 'required() ? "" : null',
     '[attr.data-invalid]': 'isInvalid() ? "" : null',
     '[attr.data-disabled]': 'isDisabled() ? "" : null',
+    '(focusout)': 'onFocusout($event)',
   },
   template: `
     @if (control() === 'switch') {
@@ -115,7 +142,7 @@ class DsNoFieldContext {
     <ng-template #text let-value>@if (isText(value)) {{{ value }}} @else {<ng-container [ngTemplateOutlet]="value" />}</ng-template>
   `,
 })
-export class DsConsentField implements ControlValueAccessor {
+export class DsConsentField implements ControlValueAccessor, OnInit {
   /** What the person agrees to, in one sentence that names one purpose. It is the control's label. Required. */
   readonly purpose = input.required<ConsentFieldText>();
   /** The choice on record. Starts denied; there is no default checked. Write `[(checked)]` to show a choice already made. */
@@ -145,8 +172,13 @@ export class DsConsentField implements ControlValueAccessor {
   });
   /** An error shown now, for a required consent left denied. */
   readonly error = input<ConsentFieldText | null | undefined>(undefined);
-  /** Inside a dsForm: what the error says when the form finds this consent left off. Default the form's own message. */
-  readonly requiredError = input<ConsentFieldText | undefined>(undefined);
+  /**
+   * Inside a dsForm, with `name`: what the error says when the form finds
+   * this required consent left off. The form shows it in the field and in
+   * the summary. Say why it is needed and the other way. Default the form's
+   * own message for a box left off.
+   */
+  readonly requiredError = input<string | undefined>(undefined);
   /** Control and text size. Default md. */
   readonly size = input<ConsentFieldSize>('md');
   /** Joins the meta and error ids on the control, after them. */
@@ -166,10 +198,10 @@ export class DsConsentField implements ControlValueAccessor {
   /** Only a real true grants: a static `checked="true"` attribute arrives as a string and stays denied. */
   protected readonly granted = computed(() => this.checked() === true);
   protected readonly isDisabled = computed(() => this.disabled() || this.formDisabled());
-  protected readonly shownError = computed(() => {
+  /** The form's error for `name` wins over `error`. requiredError reaches it through the form. */
+  protected readonly shownError = computed<ConsentFieldText | null | undefined>(() => {
     const name = this.name();
-    const fromForm = name === undefined ? undefined : this.form?.errors()[name];
-    return fromForm !== undefined ? (this.requiredError() ?? fromForm) : this.error();
+    return (name === undefined ? undefined : this.form?.errors()[name]) ?? this.error();
   });
   protected readonly showError = computed(() => hasContent(this.shownError()) && this.invalid() !== false);
   protected readonly isInvalid = computed(() => this.invalid() ?? this.showError());
@@ -200,11 +232,58 @@ export class DsConsentField implements ControlValueAccessor {
   private onChange: (granted: boolean) => void = () => undefined;
   private onTouched: () => void = () => undefined;
 
+  private readonly hostEl = inject<ElementRef<HTMLElement>>(ElementRef).nativeElement;
+  private readonly injector = inject(Injector);
+  /** Read before the constructor drops the attribute. */
+  private readonly strayDefault = typeof this.hostEl.hasAttribute === 'function' && this.hostEl.hasAttribute('defaultChecked');
+
   constructor() {
+    // Give the form the message for this name left off, so the field and the summary say the same.
+    effect((onCleanup) => {
+      const name = this.name();
+      const message = this.requiredError();
+      if (!this.form || name === undefined || !message) return;
+      onCleanup(this.form.setRequiredMessage(name, message));
+    });
+    if (isDevMode()) {
+      effect(() => {
+        if (this.isDisabled() && this.granted()) {
+          console.warn('ConsentField: a given consent is disabled, so it cannot be withdrawn. Keep a given consent enabled.');
+        }
+      });
+    }
     consumeHostAttributes([
       'dsConsentField', 'purpose', 'checked', 'defaultChecked', 'control', 'name', 'value', 'detailsHref', 'detailsLabel',
       'detailsExternal', 'meta', 'version', 'required', 'disabled', 'invalid', 'error', 'requiredError', 'size', 'aria-describedby',
     ]);
+  }
+
+  ngOnInit(): void {
+    if (!isDevMode()) return;
+    if (this.strayDefault) {
+      console.warn('ConsentField: defaultChecked is ignored. A consent never starts given; pass checked only for a choice already on record.');
+    }
+    if (this.granted() && !this.showMeta()) {
+      console.warn('ConsentField: checked starts true with no meta. Show the record of the choice in meta, such as the date and the text version, or start denied.');
+    }
+    afterNextRender(
+      () => {
+        // A disabled consent cannot be given yet: the link is asked for once it can.
+        if (this.detailsHref() !== undefined || this.isDisabled()) return;
+        // A link in the description of the surrounding Fieldset counts as the way to the details.
+        const fieldset = this.hostEl.closest('fieldset');
+        if (fieldset?.querySelector(':scope > [data-part="description"] a[href]')) return;
+        console.warn('ConsentField: no detailsHref. Link the privacy notice from the consent, or from the description of the surrounding Fieldset.');
+      },
+      { injector: this.injector },
+    );
+  }
+
+  /** Touched when focus leaves the field, as a blur. */
+  protected onFocusout(event: FocusEvent): void {
+    const next = event.relatedTarget;
+    if (next instanceof Node && this.hostEl.contains(next)) return;
+    this.onTouched();
   }
 
   protected decide(next: boolean): void {
