@@ -120,6 +120,7 @@ components, a fresh review, then commit.
 | A4 | Angular forms | claude/ds-angular-a4 | session_01ErLBsaB3LdL7KLxRWy1ezY | merged |
 | 1.0.i | Consolidation 2: follow ups round 2, tokens, contract text | claude/ds-consolidation-2 | session_01ErLBsasj4xo1JcwWMq49Dd | merged |
 | 1.21 | Interaction round (proposed) | claude/ds-order-1-21 | session_01ErLBsbZ3wQ2RMr25bxi1QU | merged, proposed, review open |
+| 1.17 | Full matrix, contract suites, a11y sweep, size report | claude/ds-order-1-17 | session_01ErLBsa6pbDJmysTT7fLpsV | running |
 | 1.18, 1.19 | Consumers on wave 1, adoption guides | claude/ds-order-1-18 | session_01ErLBsZSfR7PvXto2uEYenL | merged |
 
 React Aria Components 1.22.1 is installed (order 1.2.0). Not started yet:
@@ -144,6 +145,7 @@ Review sessions (findings only, no source edits), reports in
 | Late React lanes (1D, 2C, 3D, 4A, 6D) | claude/ds-review-late | session_01ErLBsaHFu2h1gcvSgRHo9b | merged, 18 blockers |
 | Round 2: every first review blocker rechecked | claude/ds-review-round-2 | session_01ErLBsadmficC3cuMWybkRE | merged: 52 of 55 fixed, 1 not, 2 regressed, 3 new blockers |
 | Interaction round and late fix recheck | claude/ds-review-interactions | session_01ErLBsZpFBNp9CcbADZHPc5 | running |
+| Angular A3, A4, late ports, recheck of angular-1 | claude/ds-review-angular-2 | session_01ErLBsbZDc249xJd2nXyVxA | running |
 | Angular A1, A2, A5 | claude/ds-review-angular-1 | session_01ErLBsdPS43RLcuWFDVcWKs | merged, blockers in 6 components, 4 not ported |
 
 Fix round sessions (round 1 of 3), reports in `docs/reports/fixes/`:
@@ -163,7 +165,7 @@ Requests from the lanes are collected in `docs/plan/wave-1-followups.md`.
 
 ## Coverage
 As of 2026-11-12 14:35 UTC: 111 component manifests, all built in React
-(`packages/manifest/src/component/`). Angular has 35 marked ready. React
+(`packages/manifest/src/component/`). Angular has 59 marked ready (17:30 UTC). React
 Native has 2. The per family table comes back with the matrix
 order 1.17, generated from the manifests.
 
