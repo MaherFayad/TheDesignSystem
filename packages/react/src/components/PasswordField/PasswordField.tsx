@@ -11,6 +11,7 @@
 // CSS clears its own box through its private --_input-* properties. The
 // toggle is an IconButton with aria-pressed; its name also says what a
 // press does, as the order asks.
+import { flushSync } from 'react-dom';
 import { useCallback, useEffect, useId, useRef, useState, type ComponentProps, type MouseEvent, type Ref } from 'react';
 import type { Shape, Size } from '@the-system/shared';
 import { useField } from '../Field/Field';
@@ -116,7 +117,8 @@ export function PasswordField({
   useEffect(() => {
     const form = inner.current?.form;
     if (!form || !shown) return undefined;
-    const hide = () => setShown(false);
+    // flushSync: the input is type password again before the browser reads the form.
+    const hide = () => flushSync(() => setShown(false));
     form.addEventListener('submit', hide);
     return () => form.removeEventListener('submit', hide);
   }, [shown, setShown]);

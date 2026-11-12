@@ -94,6 +94,28 @@ describe('PasswordField', () => {
     expect(field.type).toBe('password');
   });
 
+  it('still toggles while read only', () => {
+    const { container } = render(<PasswordField aria-label="API key" readOnly defaultValue="k" />);
+    fireEvent.click(screen.getByRole('button', { name: 'Show password' }));
+    expect(input(container).type).toBe('text');
+  });
+
+  it('points aria-controls at a custom id outside a Field', () => {
+    render(<PasswordField aria-label="Password" id="pw" />);
+    expect(screen.getByRole('button', { name: 'Show password' }).getAttribute('aria-controls')).toBe('pw');
+  });
+
+  it('calls onVisibleChange(false) on submit when controlled', () => {
+    const onVisibleChange = vi.fn();
+    const { container } = render(
+      <form onSubmit={(e) => e.preventDefault()}>
+        <PasswordField aria-label="Password" visible onVisibleChange={onVisibleChange} />
+      </form>,
+    );
+    fireEvent.submit(container.querySelector('form') as HTMLFormElement);
+    expect(onVisibleChange).toHaveBeenCalledWith(false);
+  });
+
   it('sends the ref to the input and className to the root', () => {
     const ref = createRef<HTMLInputElement>();
     const { container } = render(<PasswordField ref={ref} aria-label="Password" name="pw" className="box" />);
