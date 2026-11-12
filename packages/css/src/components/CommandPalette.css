@@ -1,0 +1,423 @@
+/*
+ * CommandPalette: a fixed layer (the root) that holds the backdrop and the
+ * panel, as Dialog does. The panel sits high on the screen, not centered, so
+ * it does not jump while the list grows and shrinks with the query. It
+ * holds a search band (a SearchField), the list of commands that scrolls
+ * inside, and a footer band of key hints.
+ * Sources: Dialog.css (the root, the backdrop, the panel, the motion
+ * "dialog", the transparency, contrast and forced colors fallbacks), ListBox.css
+ * and DropdownMenu.css (the row height, padding, gap, radius and the lit row
+ * overlay), Figma-Killer-2 `ContextMenu/MenuSearchHeader.tsx` (the search on top
+ * of the list). Follows "One convention for component CSS and props" in
+ * docs/contracts/anatomy.md.
+ *
+ *   [data-ds='command-palette']              root: fixed, places the panel
+ *     > [data-part='backdrop']               the scrim, Radix Overlay
+ *     > [data-part='panel']                  role dialog, Radix Content
+ *         > [data-part='title']              visually hidden, names the dialog
+ *         > [data-part='search']             a SearchField root, borderless in a band
+ *         > [data-part='close']              an IconButton over the inline end of the band
+ *         > [data-part='list']               role listbox, scrolls inside
+ *             [data-part='group']            role group, a line between groups
+ *               > [data-part='group-label']
+ *             [data-part='item']             role option: icon, label, description, shortcut
+ *               > [data-part='item-icon'], [data-part='item-label'],
+ *               > [data-part='item-description'], [data-part='shortcut'] (a Kbd root)
+ *         > [data-part='empty']              in place of the list
+ *         > [data-part='status']             visually hidden, the result count
+ *         > [data-part='footer']             key hints, each a [data-part='hint']
+ *
+ * Private properties on the root. Sizes only swap them; recipes override them:
+ *   --_command-palette-width, -height-max, -gutter, -offset
+ *   --_command-palette-bg, -fg, -border-color, -radius, -shadow, -backdrop
+ *   --_command-palette-band-bg, -divider-color, -divider-color-focus
+ *   --_command-palette-padding, -scrim, -scrim-filter
+ *   --_command-palette-item-height, -item-padding-inline, -item-gap, -item-radius
+ *   --_command-palette-item-bg, -item-fg, -item-bg-highlight, -item-fg-highlight
+ *   --_command-palette-meta-fg              description, group label, empty, hints
+ *   --_command-palette-meta-fg-highlight    the icon and the description on the lit row
+ *   --_command-palette-mark-weight
+ *   --_command-palette-enter-y, -enter-scale, -duration-in, -duration-out,
+ *   --_command-palette-ease-in, -ease-out   pattern "dialog"
+ *
+ * The SearchField draws no box of its own here: this file sets its private
+ * properties (border, ring, radius, background). The band shows focus with a
+ * strong accent line under it instead of the field's ring.
+ */
+@layer ds.base {
+  [data-ds='command-palette'] {
+    --_command-palette-width: var(--ds-dialog-width-lg);
+    --_command-palette-height-max: var(--ds-dialog-height-max);
+    --_command-palette-gutter: var(--ds-space-5xl);
+    --_command-palette-offset: var(--ds-space-10xl);
+    --_command-palette-bg: var(--ds-color-bg-surface);
+    --_command-palette-fg: var(--ds-color-text-default);
+    --_command-palette-border-color: transparent;
+    --_command-palette-radius: var(--ds-radius-panel);
+    --_command-palette-shadow: var(--ds-elevation-dialog);
+    --_command-palette-backdrop: none;
+    --_command-palette-band-bg: var(--ds-color-bg-surface-2);
+    --_command-palette-divider-color: var(--ds-color-border-default);
+    --_command-palette-divider-color-focus: var(--ds-color-focus-ring);
+    --_command-palette-padding: var(--ds-space-2xs);
+    --_command-palette-scrim: var(--ds-color-bg-scrim);
+    --_command-palette-scrim-filter: blur(var(--ds-blur-backdrop));
+    --_command-palette-item-height: var(--ds-size-control-md);
+    --_command-palette-item-padding-inline: var(--ds-space-m);
+    --_command-palette-item-gap: var(--ds-space-m);
+    --_command-palette-item-radius: var(--ds-menu-item-radius);
+    --_command-palette-item-bg: transparent;
+    --_command-palette-item-fg: var(--ds-color-text-default);
+    --_command-palette-item-bg-highlight: var(--ds-color-bg-overlay-10);
+    --_command-palette-item-fg-highlight: var(--ds-color-text-bright);
+    --_command-palette-meta-fg: var(--ds-color-text-muted);
+    --_command-palette-meta-fg-highlight: var(--ds-color-text-default);
+    --_command-palette-mark-weight: var(--ds-font-weight-bold);
+    --_command-palette-enter-y: var(--ds-space-2xs);
+    --_command-palette-enter-scale: var(--ds-scale-dialog-enter);
+    --_command-palette-duration-in: var(--ds-duration-base);
+    --_command-palette-duration-out: var(--ds-duration-base);
+    --_command-palette-ease-in: var(--ds-ease-out);
+    --_command-palette-ease-out: var(--ds-ease-exit);
+
+    position: fixed;
+    z-index: var(--ds-z-dialog);
+    inset: 0;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    box-sizing: border-box;
+    padding-block-start: calc(var(--_command-palette-offset) + env(safe-area-inset-top, 0px));
+    padding-block-end: calc(var(--_command-palette-gutter) + env(safe-area-inset-bottom, 0px));
+    padding-inline: calc(var(--_command-palette-gutter) + max(env(safe-area-inset-left, 0px), env(safe-area-inset-right, 0px)));
+  }
+
+  [data-ds='command-palette'][data-size='lg'] {
+    --_command-palette-width: var(--ds-dialog-width-xl);
+    --_command-palette-item-height: var(--ds-size-control-lg);
+  }
+
+  /* Phones and short screens: the panel fills the width under a small gutter and starts near the top. */
+  @media (width < 30rem) { /* breakpoint.phone */
+    [data-ds='command-palette'] {
+      --_command-palette-gutter: var(--ds-space-s);
+      --_command-palette-offset: var(--ds-space-s);
+    }
+  }
+
+  @media (height < 30rem) { /* breakpoint.phone */
+    [data-ds='command-palette'] {
+      --_command-palette-offset: var(--ds-space-s);
+      --_command-palette-gutter: var(--ds-space-s);
+    }
+  }
+
+  /* ------------------------------------------------------------ backdrop */
+
+  [data-ds='command-palette'] > [data-part='backdrop'] {
+    position: absolute;
+    inset: 0;
+    background-color: var(--_command-palette-scrim);
+    -webkit-backdrop-filter: var(--_command-palette-scrim-filter);
+    backdrop-filter: var(--_command-palette-scrim-filter);
+  }
+
+  [data-ds='command-palette'] > [data-part='backdrop'][data-state='open'] {
+    animation: ds-dialog-fade-in var(--_command-palette-duration-in) var(--_command-palette-ease-in);
+  }
+
+  [data-ds='command-palette'] > [data-part='backdrop'][data-state='closed'] {
+    animation: ds-dialog-fade-out var(--_command-palette-duration-out) var(--_command-palette-ease-out) forwards;
+  }
+
+  /* ------------------------------------------------------------ panel */
+
+  [data-ds='command-palette'] > [data-part='panel'] {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+    inline-size: min(var(--_command-palette-width), 100%);
+    max-block-size: min(var(--_command-palette-height-max), 100%);
+    min-inline-size: 0;
+    border: var(--ds-border-width-default) solid var(--_command-palette-border-color);
+    border-radius: var(--_command-palette-radius);
+    background-color: var(--_command-palette-bg);
+    -webkit-backdrop-filter: var(--_command-palette-backdrop);
+    backdrop-filter: var(--_command-palette-backdrop);
+    box-shadow: var(--_command-palette-shadow);
+    color: var(--_command-palette-fg);
+    font-family: var(--ds-font-family-sans);
+    font-size: var(--ds-font-size-m);
+    line-height: var(--ds-font-leading-normal);
+    overflow: hidden;
+  }
+
+  [data-ds='command-palette'] > [data-part='panel'][data-state='open'] {
+    animation: ds-command-palette-in var(--_command-palette-duration-in) var(--_command-palette-ease-in);
+  }
+
+  [data-ds='command-palette'] > [data-part='panel'][data-state='closed'] {
+    animation: ds-command-palette-out var(--_command-palette-duration-out) var(--_command-palette-ease-out) forwards;
+  }
+
+  /* Focus lives in the search box; the panel itself never shows a ring. */
+  [data-ds='command-palette'] > [data-part='panel']:focus {
+    outline: none;
+  }
+
+  /* ------------------------------------------------------------ visually hidden parts */
+
+  [data-ds='command-palette'] > [data-part='panel'] > :is([data-part='title'], [data-part='status']) {
+    position: absolute;
+    inline-size: var(--ds-border-width-default);
+    block-size: var(--ds-border-width-default);
+    margin: calc(-1 * var(--ds-border-width-default));
+    padding: 0;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  /* ------------------------------------------------------------ search band */
+
+  /*
+   * The nested SearchField draws no box: the band is the box. Its private
+   * properties are declared in SearchField.css; renaming one breaks this rule.
+   */
+  [data-ds='command-palette'] > [data-part='panel'] > [data-ds='search-field'][data-part='search'] {
+    --_search-field-radius: 0;
+    --_search-field-bg: var(--_command-palette-band-bg);
+    --_search-field-border-color: transparent;
+    --_search-field-border-color-hover: transparent;
+    --_search-field-border-color-focus: transparent;
+    --_search-field-ring: none;
+
+    flex: none;
+    /* Room for the close button that sits over the inline end of the band. */
+    padding-inline-end: calc(var(--ds-size-control-sm) + var(--ds-space-m) * 2);
+    border-width: 0;
+    border-block-end: var(--ds-border-width-default) solid var(--_command-palette-divider-color);
+  }
+
+  /* The close button, centered on the search band at its inline end. */
+  [data-ds='command-palette'] > [data-part='panel'] > [data-part='close'] {
+    position: absolute;
+    inset-block-start: calc((var(--ds-size-control-lg) - var(--ds-size-control-sm)) / 2);
+    inset-inline-end: var(--ds-space-m);
+  }
+
+  /*
+   * Focus is shown on the band, not as a ring around a borderless field: a
+   * line of the focus ring color, two px, under the search (WCAG 2.4.7).
+   * The caret marks the spot inside it.
+   */
+  [data-ds='command-palette'] > [data-part='panel'] > [data-ds='search-field'][data-part='search']:focus-within {
+    border-block-end: var(--ds-border-width-strong) solid var(--_command-palette-divider-color-focus);
+    outline: var(--ds-border-width-strong) solid transparent;
+  }
+
+  /* ------------------------------------------------------------ list */
+
+  [data-ds='command-palette'] > [data-part='panel'] > [data-part='list'] {
+    flex: 1 1 auto;
+    min-block-size: 0;
+    padding: var(--_command-palette-padding);
+    overflow: hidden auto;
+    overscroll-behavior: contain;
+  }
+
+  [data-ds='command-palette'] [data-part='list'] > [data-part='group'] + :is([data-part='group'], [data-part='item']),
+  [data-ds='command-palette'] [data-part='list'] > [data-part='item'] + [data-part='group'] {
+    margin-block-start: var(--_command-palette-padding);
+    padding-block-start: var(--_command-palette-padding);
+    border-block-start: var(--ds-border-width-default) solid var(--_command-palette-divider-color);
+  }
+
+  [data-ds='command-palette'] [data-part='group-label'] {
+    padding-block: var(--ds-space-xs) var(--ds-space-2xs);
+    padding-inline: var(--_command-palette-item-padding-inline);
+    color: var(--_command-palette-meta-fg);
+    font-size: var(--ds-font-size-xs);
+    font-weight: var(--ds-font-weight-medium);
+    line-height: var(--ds-font-leading-tight);
+  }
+
+  /* ------------------------------------------------------------ item */
+
+  /*
+   * One row: the icon, then the label over the description, then the
+   * shortcut at the inline end. The lit row (the highlight, keyboard or
+   * pointer) takes the overlay step and the bright text.
+   */
+  [data-ds='command-palette'] [data-part='item'] {
+    position: relative;
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    grid-template-areas:
+      'icon label shortcut'
+      'icon description shortcut';
+    align-items: center;
+    column-gap: var(--_command-palette-item-gap);
+    box-sizing: border-box;
+    min-block-size: var(--_command-palette-item-height);
+    padding-block: var(--ds-space-2xs);
+    padding-inline: var(--_command-palette-item-padding-inline);
+    border-radius: var(--_command-palette-item-radius);
+    background-color: var(--_command-palette-item-bg);
+    color: var(--_command-palette-item-fg);
+    cursor: default;
+    user-select: none;
+  }
+
+  [data-ds='command-palette'] [data-part='item'][data-highlighted] {
+    --_command-palette-item-bg: var(--_command-palette-item-bg-highlight);
+    --_command-palette-item-fg: var(--_command-palette-item-fg-highlight);
+  }
+
+  [data-ds='command-palette'] [data-part='item'][data-disabled] {
+    opacity: var(--ds-opacity-disabled);
+  }
+
+  [data-ds='command-palette'] [data-part='item'] > [data-part='item-icon'] {
+    display: inline-flex;
+    grid-area: icon;
+    color: var(--_command-palette-meta-fg);
+  }
+
+  [data-ds='command-palette'] [data-part='item'][data-highlighted] > :is([data-part='item-icon'], [data-part='item-description']) {
+    color: var(--_command-palette-meta-fg-highlight);
+  }
+
+  [data-ds='command-palette'] [data-part='item'] > [data-part='item-label'] {
+    grid-area: label;
+    min-inline-size: 0;
+    overflow-wrap: anywhere;
+  }
+
+  /* A label alone in its row sits on the center line of the icon. */
+  [data-ds='command-palette'] [data-part='item']:not(:has(> [data-part='item-description'])) > [data-part='item-label'] {
+    grid-row: 1 / span 2;
+  }
+
+  [data-ds='command-palette'] [data-part='item'] > [data-part='item-label'] > mark {
+    background: none;
+    color: inherit;
+    font-weight: var(--_command-palette-mark-weight);
+  }
+
+  [data-ds='command-palette'] [data-part='item'] > [data-part='item-description'] {
+    grid-area: description;
+    min-inline-size: 0;
+    color: var(--_command-palette-meta-fg);
+    font-size: var(--ds-font-size-s);
+    line-height: var(--ds-font-leading-snug);
+    overflow-wrap: anywhere;
+  }
+
+  [data-ds='command-palette'] [data-part='item'] > [data-part='shortcut'] {
+    grid-area: shortcut;
+  }
+
+  /* ------------------------------------------------------------ empty */
+
+  [data-ds='command-palette'] > [data-part='panel'] > [data-part='empty'] {
+    flex: none;
+    padding-block: var(--ds-space-3xl);
+    padding-inline: var(--ds-space-2xl);
+    color: var(--_command-palette-meta-fg);
+    text-align: center;
+    overflow-wrap: anywhere;
+  }
+
+  /* ------------------------------------------------------------ footer */
+
+  [data-ds='command-palette'] > [data-part='panel'] > [data-part='footer'] {
+    display: flex;
+    flex: none;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--ds-space-xs) var(--ds-space-xl);
+    padding-block: var(--ds-space-s);
+    padding-inline: var(--ds-space-xl);
+    border-block-start: var(--ds-border-width-default) solid var(--_command-palette-divider-color);
+    background-color: var(--_command-palette-band-bg);
+    color: var(--_command-palette-meta-fg);
+    font-size: var(--ds-font-size-xs);
+  }
+
+  [data-ds='command-palette'] > [data-part='panel'] > [data-part='footer'] > [data-part='hint'] {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--ds-space-xs);
+  }
+
+  /* ------------------------------------------------------------ motion: pattern "dialog" */
+
+  /* The backdrop fades with ds-dialog-fade-in and -out from Dialog.css; the panel has its own keyframes on its own properties. */
+  @keyframes ds-command-palette-in {
+    from {
+      opacity: 0;
+      transform: translateY(var(--_command-palette-enter-y)) scale(var(--_command-palette-enter-scale));
+    }
+  }
+
+  @keyframes ds-command-palette-out {
+    to {
+      opacity: 0;
+      transform: translateY(var(--_command-palette-enter-y)) scale(var(--_command-palette-enter-scale));
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    [data-ds='command-palette'] > :is([data-part='panel'], [data-part='backdrop'])[data-state] {
+      animation: none;
+    }
+  }
+
+  /* ------------------------------------------------------------ transparency, contrast, forced colors */
+
+  @media (prefers-reduced-transparency: reduce) {
+    [data-ds='command-palette'] {
+      --_command-palette-backdrop: none;
+      --_command-palette-scrim-filter: none;
+      --_command-palette-scrim: var(--ds-color-bg-scrim-80);
+    }
+  }
+
+  @media (prefers-contrast: more) {
+    [data-ds='command-palette'] {
+      --_command-palette-backdrop: none;
+      --_command-palette-scrim-filter: none;
+      --_command-palette-scrim: var(--ds-color-bg-scrim-80);
+      --_command-palette-border-color: var(--ds-color-border-strong);
+    }
+  }
+
+  [data-contrast='more'] [data-ds='command-palette'] {
+    --_command-palette-backdrop: none;
+    --_command-palette-scrim-filter: none;
+    --_command-palette-scrim: var(--ds-color-bg-scrim-80);
+    --_command-palette-border-color: var(--ds-color-border-strong);
+  }
+
+  /* Forced colors drop the scrim and the overlay: a border draws the panel, Highlight draws the lit row. */
+  @media (forced-colors: active) {
+    [data-ds='command-palette'] {
+      --_command-palette-bg: Canvas;
+      --_command-palette-backdrop: none;
+      --_command-palette-scrim-filter: none;
+      --_command-palette-border-color: CanvasText;
+      --_command-palette-divider-color: CanvasText;
+      --_command-palette-divider-color-focus: Highlight;
+      --_command-palette-meta-fg-highlight: HighlightText;
+    }
+
+    [data-ds='command-palette'] [data-part='item'][data-highlighted] {
+      --_command-palette-item-bg: Highlight;
+      --_command-palette-item-fg: HighlightText;
+
+      forced-color-adjust: none;
+    }
+  }
+}

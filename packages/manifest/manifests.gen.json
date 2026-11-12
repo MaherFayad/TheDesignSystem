@@ -4698,6 +4698,348 @@
     "since": "0.1.0"
   },
   {
+    "name": "CommandPalette",
+    "kind": "component",
+    "family": "overlays",
+    "summary": "A modal search box over the page that finds a command by name and runs it. It opens from anywhere with Mod+K (Command K on a Mac, Control K elsewhere) or from a trigger Button.",
+    "useWhen": [
+      "An app with more commands than its toolbars and menus can show at once",
+      "Power users who work from the keyboard and know the names of the actions they want",
+      "Jumping to a place by name: a board, a page, a setting"
+    ],
+    "avoidWhen": [
+      "The only way to reach an action: every command must also live in a visible menu, toolbar or page",
+      "Picking a value for a form field",
+      "A site search over documents or records with filters and rich results",
+      "An app with a handful of actions that all fit in a toolbar"
+    ],
+    "insteadUse": {
+      "Picking a value for a field": "Combobox",
+      "Searching content with filters": "SearchField with a results page",
+      "A few actions on one object": "DropdownMenu",
+      "The actions of the item under the pointer": "ContextMenu",
+      "The application menu row": "Menubar"
+    },
+    "anatomy": [
+      "root",
+      "backdrop",
+      "panel",
+      "title",
+      "search",
+      "close",
+      "list",
+      "group",
+      "group-label",
+      "item",
+      "item-icon",
+      "item-label",
+      "item-description",
+      "shortcut",
+      "empty",
+      "status",
+      "footer",
+      "hint"
+    ],
+    "parts": {
+      "SearchField": "search",
+      "Kbd": "shortcut",
+      "CommandPaletteTrigger": "trigger (outside the root): one system Button, asChild, says the shortcut through aria-keyshortcuts",
+      "IconButton": "close"
+    },
+    "slots": {
+      "empty": {
+        "accepts": "any"
+      },
+      "footer": {
+        "accepts": "any"
+      }
+    },
+    "props": {
+      "open": {
+        "type": "boolean",
+        "description": "Controlled open state, with onOpenChange."
+      },
+      "defaultOpen": {
+        "type": "boolean",
+        "default": false
+      },
+      "onOpenChange": {
+        "type": "function",
+        "description": "Called with true for the shortcut and the trigger, false for Escape, a backdrop click and a run."
+      },
+      "items": {
+        "type": "object",
+        "required": true,
+        "description": "The commands, plain or in titled groups ({ label, commands }). A command: value (unique), label (verb plus noun), description, start (an icon name or a node), shortcut (its own shortcut, drawn as keycaps), keywords (more words it is found by), disabled, onRun."
+      },
+      "onRun": {
+        "type": "function",
+        "description": "Called with the value and the command after the command's own onRun. Commands run once the palette has closed and focus is back, so a command may move focus."
+      },
+      "recent": {
+        "type": "object",
+        "description": "Values of recently run commands, newest first. Shown as the first group while the query is empty. The app keeps the list."
+      },
+      "recentLabel": {
+        "type": "string",
+        "default": "Recent",
+        "description": "Arabic default under lang ar: آخر الأوامر."
+      },
+      "size": {
+        "type": [
+          "md",
+          "lg"
+        ],
+        "default": "md",
+        "description": "md 520px wide with 32px rows; lg 640px wide with 44px rows. Never wider than the viewport minus a gutter."
+      },
+      "shortcut": {
+        "type": "string",
+        "default": "Mod+K",
+        "description": "Opens and closes the palette from anywhere on the page. Mod is Command on a Mac and Control elsewhere. A letter also matches by its physical key, so it works on an Arabic layout. null turns it off. Only one palette on a page should keep it."
+      },
+      "label": {
+        "type": "string",
+        "default": "Command palette",
+        "description": "The accessible name of the dialog and of the list (a visually hidden title). Arabic default: لوحة الأوامر."
+      },
+      "closeLabel": {
+        "type": "string",
+        "default": "Close command palette",
+        "description": "The accessible name of the close IconButton at the inline end of the search band. Arabic default: إغلاق لوحة الأوامر."
+      },
+      "placeholder": {
+        "type": "string",
+        "default": "Search commands",
+        "description": "Arabic default: بحث في الأوامر."
+      },
+      "query": {
+        "type": "string",
+        "description": "The query, controlled, with onQueryChange. Uncontrolled, it empties when the palette closes."
+      },
+      "defaultQuery": {
+        "type": "string",
+        "default": ""
+      },
+      "onQueryChange": {
+        "type": "function"
+      },
+      "loading": {
+        "type": "boolean",
+        "default": false,
+        "description": "A spinner in the search box and a polite status. With no commands yet, the list area says the loading label."
+      },
+      "loadingLabel": {
+        "type": "string",
+        "default": "Loading commands"
+      },
+      "empty": {
+        "type": "node",
+        "default": "No commands match. Try another word.",
+        "description": "Shown when no command matches. Say what to do next. An error with a retry Button goes here too."
+      },
+      "formatCount": {
+        "type": "function",
+        "description": "The announced result count. Default: 3 results, pluralized in Arabic with Western digits."
+      },
+      "footer": {
+        "type": "node",
+        "description": "The key hints at the bottom. false hides them. Default: move, run and close with their keycaps."
+      },
+      "closeOnRun": {
+        "type": "boolean",
+        "default": true,
+        "description": "false keeps the palette open after a run, for commands that toggle a setting."
+      },
+      "rootProps": {
+        "type": "object",
+        "description": "Props for the root layer. className and style go to the root too."
+      }
+    },
+    "states": [
+      "open",
+      "closed",
+      "data-loading",
+      "data-highlighted",
+      "data-disabled"
+    ],
+    "a11y": {
+      "role": "dialog (the panel), modal: Radix hides the rest of the page and keeps focus inside. The search input is a combobox with aria-expanded, aria-controls and aria-activedescendant; the list is a listbox of options, in groups when the commands are grouped.",
+      "focus": "On open, focus goes to the search input and stays there: the highlighted command is pointed at with aria-activedescendant, rows never take focus. On close, focus returns to the element that had it when the shortcut opened the palette, or to the trigger that opened it; when that element is gone, to its nearest connected focusable ancestor, else the first tab stop of main.",
+      "keys": {
+        "Mod+K": "Opens the palette from anywhere on the page, and closes it. The shortcut prop changes or turns it off.",
+        "ArrowDown": "Highlights the next command, skipping disabled ones, and wraps from the last to the first",
+        "ArrowUp": "Highlights the previous command and wraps from the first to the last",
+        "Enter": "Runs the highlighted command and closes the palette",
+        "Escape": "Clears the query; on an empty query, closes the palette",
+        "Tab": "Moves from the search input to its clear button (there only while the box holds a query), then to the close button, and wraps inside the palette",
+        "Shift+Tab": "Moves back inside the palette and wraps from the first to the last"
+      },
+      "announce": "The dialog is named by its label and the search box by the placeholder words. The result count is read once per query, after typing pauses, through a polite status. Loading is read by the SearchField status.",
+      "notes": [
+        "Typing filters through filterListBoxItems: the label and the keywords, case and diacritics folded, Arabic letter forms folded (alef, yeh, teh marbuta), word starts first.",
+        "The highlight lands on the first enabled command when the palette opens and after every keystroke, so Enter runs the best match.",
+        "Each row with a shortcut carries aria-keyshortcuts; its keycaps are hidden from assistive tech.",
+        "The recent group shows only while the query is empty. A command in it is the same command as in its own group.",
+        "A pointer click on a row runs it without moving focus out of the search box.",
+        "The close IconButton is the pointer and touch way out next to Escape and the backdrop.",
+        "The trigger Button is optional: the shortcut alone opens the palette. A visible way in is still needed for touch and for people who do not know the shortcut.",
+        "No native title attribute."
+      ]
+    },
+    "content": {
+      "en": {
+        "label": "Verb plus noun, sentence case: Create board, Invite people, Export as PDF. Never a bare noun for an action.",
+        "description": "One short line that says what the command does when its name is not enough.",
+        "groups": "Plural nouns: Boards, Team, Account.",
+        "empty": "Say what to do next: No commands match. Try another word.",
+        "placeholder": "Search commands"
+      },
+      "ar": {
+        "label": "Noun form labels, no diacritics: إنشاء لوحة، دعوة أعضاء، تصدير PDF.",
+        "groups": "اللوحات، الفريق، الحساب",
+        "empty": "ما فيه أوامر مطابقة. جرب كلمة ثانية.",
+        "placeholder": "بحث في الأوامر",
+        "digits": "Western digits, Latin names (PDF) in place inside the Arabic line."
+      }
+    },
+    "tokens": [
+      "dialog.width.lg",
+      "dialog.width.xl",
+      "dialog.height.max",
+      "color.bg.surface",
+      "color.bg.surface-2",
+      "color.bg.scrim",
+      "color.bg.scrim-80",
+      "color.bg.overlay-10",
+      "color.border.default",
+      "color.border.hairline",
+      "color.border.strong",
+      "color.material.glass-strong",
+      "color.material.glass-solid",
+      "color.primary.fill",
+      "color.primary.text",
+      "color.text.default",
+      "color.text.bright",
+      "color.text.muted",
+      "color.focus.ring",
+      "radius.panel",
+      "radius.window",
+      "radius.field",
+      "menu.item.radius",
+      "elevation.dialog",
+      "elevation.window",
+      "blur.backdrop",
+      "blur.window",
+      "blur.window-saturation",
+      "border.width.default",
+      "border.width.strong",
+      "space.2xs",
+      "space.xs",
+      "space.s",
+      "space.m",
+      "space.xl",
+      "space.2xl",
+      "space.3xl",
+      "space.5xl",
+      "space.10xl",
+      "size.control.md",
+      "size.control.lg",
+      "font.family.sans",
+      "font.size.xs",
+      "font.size.s",
+      "font.size.m",
+      "font.weight.medium",
+      "font.weight.bold",
+      "font.leading.tight",
+      "font.leading.snug",
+      "font.leading.normal",
+      "opacity.disabled",
+      "scale.dialog-enter",
+      "scale.window-enter",
+      "duration.base",
+      "duration.window-open",
+      "duration.window-close",
+      "ease.out",
+      "ease.exit",
+      "ease.window",
+      "z.dialog"
+    ],
+    "motion": "dialog",
+    "frameworks": {
+      "react": {
+        "status": "ready",
+        "behavior": "radix:Dialog",
+        "example": "CommandPalette.demo.tsx",
+        "note": "Built on DialogBase (Dialog folder) with a SearchField and a hand built listbox on the shared listbox logic (listbox.ts, filter.ts, shortcut.ts)."
+      },
+      "angular": {
+        "status": "planned",
+        "behavior": "cdk:portal, cdk:a11y ActiveDescendantKeyManager",
+        "note": "On the Angular Dialog layer, with the Angular SearchField."
+      },
+      "native": {
+        "status": "planned",
+        "behavior": "rn-primitives:dialog",
+        "note": "A full screen sheet with the search on top; no global shortcut on touch, a visible trigger only."
+      }
+    },
+    "styles": {
+      "studio": "A flat panel high on the screen: the solid surface, the panel radius, the dialog shadow. The search sits in a band on surface-2, borderless, with a line under it that turns into a 2px focus ring line while it has focus. Rows of the menu height light up with the overlay step; group titles are small and muted; a line separates groups. The hints sit in a footer band.",
+      "desk": "A glass window: the strong glass with a 24px blur, the window radius, a hairline inside, the deep window shadow. Bands are clear on the glass under hairlines. The lit row takes the yellow primary fill with dark text, as Desk menus do. It grows from 92% on the window open timing.",
+      "neutral": "Tokens only: the Neutral surface, borders and accent ring apply with no recipe.",
+      "liquid": "Planned: a glass sheet."
+    },
+    "mistakes": [
+      {
+        "wrong": "A command that exists only in the palette",
+        "right": "The same action in a visible menu or toolbar; the palette is a faster way to it"
+      },
+      {
+        "wrong": "Labels that are nouns, such as Settings or Board",
+        "right": "Verb plus noun: Open settings, Create board"
+      },
+      {
+        "wrong": "Two palettes on one page that both listen for Mod+K",
+        "right": "One palette per app; shortcut null on any other"
+      },
+      {
+        "wrong": "Moving focus inside a command's onRun while the palette is still open",
+        "right": "Let the palette run it: commands run after it has closed and focus is back, so focus moves stay"
+      },
+      {
+        "wrong": "A Kbd in the label text for the shortcut",
+        "right": "The command's shortcut field: it draws keycaps at the row end and sets aria-keyshortcuts"
+      },
+      {
+        "wrong": "Filtering the commands yourself and passing the result",
+        "right": "Pass every command: the palette filters with filter.ts, Arabic folding included, and marks the match"
+      }
+    ],
+    "contract": {
+      "trigger": "[data-demo-trigger]",
+      "optionalParts": [
+        "group",
+        "group-label",
+        "item-icon",
+        "item-description",
+        "shortcut",
+        "empty",
+        "list",
+        "item",
+        "hint",
+        "footer"
+      ]
+    },
+    "uses": [
+      "Dialog",
+      "SearchField",
+      "Kbd",
+      "ListBox"
+    ],
+    "since": "0.1.0"
+  },
+  {
     "name": "Container",
     "kind": "component",
     "family": "layout",
@@ -10305,6 +10647,268 @@
     "since": "0.1.0"
   },
   {
+    "name": "Lightbox",
+    "kind": "component",
+    "family": "overlays",
+    "summary": "A full screen viewer for images, one at a time, with previous, next, zoom, a counter and a caption. Opens from a thumbnail or a Button and returns focus to it.",
+    "useWhen": [
+      "A set of photos or screenshots the person wants to see large, one after another",
+      "A thumbnail grid where each thumbnail opens the full image",
+      "Detail in an image that needs zoom"
+    ],
+    "avoidWhen": [
+      "A single decorative image that adds no detail when large",
+      "Images that must be compared side by side",
+      "Video or documents: the viewer shows images only",
+      "Images with text the person must act on, such as a form or a contract"
+    ],
+    "insteadUse": {
+      "Images compared side by side": "Grid of Card",
+      "A single image in the page flow": "AspectRatio",
+      "A document or a form": "Dialog",
+      "A walk through steps with images": "Tour"
+    },
+    "anatomy": [
+      "root",
+      "backdrop",
+      "panel",
+      "title",
+      "toolbar",
+      "counter",
+      "zoom",
+      "close",
+      "stage",
+      "image",
+      "spinner",
+      "error",
+      "previous",
+      "next",
+      "caption",
+      "status"
+    ],
+    "parts": {
+      "LightboxTrigger": "trigger (outside the root)",
+      "IconButton": "zoom, close, previous, next",
+      "Spinner": "spinner"
+    },
+    "slots": {
+      "caption": {
+        "accepts": "text",
+        "max": 1
+      }
+    },
+    "props": {
+      "images": {
+        "type": "object",
+        "required": true,
+        "description": "The images in order: { src, alt (required, what the image shows), caption, srcSet, sizes, width, height, key }. Development builds warn when an alt is empty."
+      },
+      "open": {
+        "type": "boolean",
+        "description": "Controlled open state, with onOpenChange."
+      },
+      "defaultOpen": {
+        "type": "boolean",
+        "default": false
+      },
+      "onOpenChange": {
+        "type": "function"
+      },
+      "index": {
+        "type": "number",
+        "description": "The image on show, controlled, with onIndexChange."
+      },
+      "defaultIndex": {
+        "type": "number",
+        "default": 0
+      },
+      "onIndexChange": {
+        "type": "function",
+        "description": "Called for the buttons, the keys, a swipe and a trigger."
+      },
+      "loop": {
+        "type": "boolean",
+        "default": false,
+        "description": "Next on the last image goes to the first, previous on the first to the last."
+      },
+      "label": {
+        "type": "string",
+        "default": "Image viewer",
+        "description": "The accessible name of the dialog. Arabic default: عارض الصور."
+      },
+      "closeLabel": {
+        "type": "string",
+        "default": "Close image viewer"
+      },
+      "previousLabel": {
+        "type": "string",
+        "default": "Previous image"
+      },
+      "nextLabel": {
+        "type": "string",
+        "default": "Next image"
+      },
+      "zoomInLabel": {
+        "type": "string",
+        "default": "Zoom in"
+      },
+      "zoomOutLabel": {
+        "type": "string",
+        "default": "Zoom out"
+      },
+      "errorLabel": {
+        "type": "node",
+        "default": "The image could not load."
+      },
+      "formatCounter": {
+        "type": "function",
+        "description": "The visible counter. Default 3 of 12 (Arabic 3 من 12, Western digits)."
+      },
+      "formatStatus": {
+        "type": "function",
+        "description": "What the status says for each image. Default Image 3 of 12: and the alt text."
+      },
+      "rootProps": {
+        "type": "object",
+        "description": "Props for the root layer. className and style go to the root too."
+      },
+      "LightboxTrigger": {
+        "type": "node",
+        "description": "One child element, a system Button (always asChild), with index: the image it opens. Focus returns to the trigger that opened the viewer."
+      }
+    },
+    "states": [
+      "open",
+      "closed",
+      "data-zoomed",
+      "data-loading",
+      "data-error"
+    ],
+    "a11y": {
+      "role": "dialog (the panel), modal: Radix hides the rest of the page and keeps focus inside. Named by the label.",
+      "focus": "On open, focus goes to the next button when there is a next image, else to the close button. On close, focus returns to the trigger that opened the viewer.",
+      "keys": {
+        "ArrowRight": "Shows the next image in reading order (the previous one in Arabic). While zoomed, pans the image to the right.",
+        "ArrowLeft": "Shows the previous image in reading order (the next one in Arabic). While zoomed, pans the image to the left.",
+        "ArrowUp, ArrowDown": "While zoomed, pan the image up and down",
+        "Home, End": "Show the first and the last image",
+        "+": "Zooms in to twice the fitted width (one step). = does the same, for keyboards where + needs Shift.",
+        "-": "Zooms back out to the fitted size. _ does the same.",
+        "Escape": "Closes the viewer",
+        "Tab": "Moves between zoom, close, previous and next, and wraps inside the viewer",
+        "Shift+Tab": "Moves back and wraps from the first to the last"
+      },
+      "announce": "Each image is announced once through a polite status: Image 3 of 12, then its alt text. The visible counter is hidden from assistive tech, so it is not read twice. A failed image is announced as an alert.",
+      "notes": [
+        "Every image needs alt text that says what it shows, never the file name. A caption does not replace it.",
+        "A swipe on the image moves to the next or previous image in reading order. The previous and next buttons and the arrow keys are the key path (WCAG 2.5.7).",
+        "A double click on the image toggles the zoom; the zoom button and + and - are its key path.",
+        "Previous and next stay focusable when there is no image that way (aria-disabled), so focus never drops.",
+        "The neighbours of the image on show load ahead.",
+        "Images sit on the solid page color of the scheme, never on glass, in every style.",
+        "No native title attribute."
+      ]
+    },
+    "content": {
+      "en": {
+        "alt": "What the image shows, in a sentence fragment: Blue hills under a pale sky. Not the file name, not Image of.",
+        "caption": "The place, the time or the source, in sentence case: Asir mountains at sunrise.",
+        "trigger": "Verb plus noun: View photo, View 12 photos."
+      },
+      "ar": {
+        "alt": "Noun phrase, no diacritics: جبال زرقاء تحت سماء فاتحة.",
+        "caption": "عبارة قصيرة بدون تشكيل: جبال عسير وقت الشروق.",
+        "counter": "3 من 12, Western digits."
+      }
+    },
+    "tokens": [
+      "color.bg.body",
+      "color.bg.scrim",
+      "color.text.default",
+      "color.text.muted",
+      "space.s",
+      "space.l",
+      "space.xl",
+      "size.control.lg",
+      "dialog.width.2xl",
+      "border.width.default",
+      "font.family.sans",
+      "font.size.s",
+      "font.size.m",
+      "font.leading.normal",
+      "scale.dialog-enter",
+      "duration.fast",
+      "duration.base",
+      "ease.out",
+      "ease.exit",
+      "z.dialog"
+    ],
+    "motion": "dialog",
+    "frameworks": {
+      "react": {
+        "status": "ready",
+        "behavior": "radix:Dialog",
+        "example": "Lightbox.demo.tsx",
+        "note": "Built on DialogBase (Dialog folder), with IconButton and Spinner parts."
+      },
+      "angular": {
+        "status": "planned",
+        "behavior": "cdk:portal, cdk:a11y InteractivityChecker",
+        "note": "On the Angular Dialog layer."
+      },
+      "native": {
+        "status": "planned",
+        "behavior": "rn-primitives:dialog",
+        "note": "A full screen modal with a pager; pinch to zoom with the zoom button as its button path."
+      }
+    },
+    "styles": {
+      "studio": "No recipe: the base CSS applies. Full screen on the page color: black in dark, the light page gray in light. The counter sits at the inline start of the toolbar, zoom and close at its end, previous and next as 44px IconButtons at the middle of each side, the caption centered under the image. The viewer fades in from 98%.",
+      "desk": "No recipe: the base CSS applies on the Desk page color. No glass: images never sit on glass.",
+      "neutral": "Tokens only: the Neutral page color and controls apply with no recipe.",
+      "liquid": "Planned: the toolbar may float on glass; the image stays on a solid surface."
+    },
+    "mistakes": [
+      {
+        "wrong": "alt text that repeats the file name or says Image",
+        "right": "Say what the image shows: Orange dunes under a warm sky"
+      },
+      {
+        "wrong": "Swipe as the only way to the next image",
+        "right": "Keep the previous and next buttons; the arrow keys move too"
+      },
+      {
+        "wrong": "A caption used in place of alt text",
+        "right": "Both: alt says what it shows, the caption says the place, time or source"
+      },
+      {
+        "wrong": "A Lightbox for one decorative image",
+        "right": "The image in the page, at a useful size"
+      },
+      {
+        "wrong": "A Lightbox on a glass surface in Desk or Liquid",
+        "right": "The solid page color; the style recipe may only float the toolbar"
+      }
+    ],
+    "contract": {
+      "trigger": "[data-demo-trigger]",
+      "optionalParts": [
+        "counter",
+        "previous",
+        "next",
+        "caption",
+        "spinner",
+        "error"
+      ]
+    },
+    "uses": [
+      "Dialog",
+      "IconButton",
+      "Spinner"
+    ],
+    "since": "0.1.0"
+  },
+  {
     "name": "Link",
     "kind": "component",
     "family": "actions",
@@ -13088,6 +13692,253 @@
         }
       }
     },
+    "since": "0.1.0"
+  },
+  {
+    "name": "PageShell",
+    "kind": "component",
+    "family": "layout",
+    "summary": "The frame of a page: a skip link first, then a header, the navigation column, one main, an aside and a footer, each in its landmark. Under breakpoint.tablet the navigation moves to a Drawer behind a menu button.",
+    "useWhen": [
+      "The outer frame of an app or a site page, once per page",
+      "A page with a side navigation (Sidebar or Rail) that must fold away on phones",
+      "Any page that needs the landmarks and the skip link set up the same way everywhere"
+    ],
+    "avoidWhen": [
+      "A part of a page: a card, a panel or a form section",
+      "A second frame inside a page that already has one, except as a preview with embedded",
+      "Side by side list and detail inside main"
+    ],
+    "insteadUse": {
+      "A section inside a page": "Section",
+      "List and detail side by side": "SplitView",
+      "Panels the person resizes": "ResizablePanels",
+      "A floating work area next to the page": "Window"
+    },
+    "anatomy": [
+      "root",
+      "skip",
+      "header",
+      "menu",
+      "nav",
+      "main",
+      "aside",
+      "footer"
+    ],
+    "parts": {
+      "SkipLink": "skip",
+      "IconButton": "menu",
+      "Drawer": "the navigation on narrow screens and while the column is hidden (outside the root, in a portal)"
+    },
+    "slots": {
+      "header": {
+        "accepts": "any",
+        "max": 1
+      },
+      "nav": {
+        "accepts": [
+          "Sidebar",
+          "Rail"
+        ],
+        "max": 1
+      },
+      "main": {
+        "accepts": "any"
+      },
+      "aside": {
+        "accepts": "any"
+      },
+      "footer": {
+        "accepts": "any"
+      }
+    },
+    "props": {
+      "header": {
+        "type": "node",
+        "description": "The top bar: a Navbar, or a brand and actions. In the header landmark (banner)."
+      },
+      "nav": {
+        "type": "node",
+        "description": "A Sidebar or a Rail, each its own labelled nav landmark. The nav part is a plain element around it."
+      },
+      "aside": {
+        "type": "node",
+        "description": "Secondary content next to main. Under breakpoint.desktop it goes under main."
+      },
+      "asideLabel": {
+        "type": "string",
+        "default": "More on this page",
+        "description": "The name of the aside landmark. Arabic default: تفاصيل إضافية."
+      },
+      "footer": {
+        "type": "node",
+        "description": "In the footer landmark (contentinfo)."
+      },
+      "children": {
+        "type": "node",
+        "description": "The page content, in main."
+      },
+      "mainId": {
+        "type": "string",
+        "default": "main",
+        "description": "The id of main and the skip link target. One per page."
+      },
+      "skipLabel": {
+        "type": "string",
+        "default": "Skip to main content",
+        "description": "The skip link text. Arabic default from SkipLink: الانتقال للمحتوى الرئيسي."
+      },
+      "sidebar": {
+        "type": [
+          "expanded",
+          "collapsed",
+          "hidden"
+        ],
+        "description": "The column state on wide screens, controlled, with onSidebarChange. Under breakpoint.tablet the root always says hidden."
+      },
+      "defaultSidebar": {
+        "type": [
+          "expanded",
+          "collapsed",
+          "hidden"
+        ],
+        "default": "expanded"
+      },
+      "onSidebarChange": {
+        "type": "function"
+      },
+      "menuLabel": {
+        "type": "string",
+        "default": "Open navigation",
+        "description": "The menu button's name. Arabic default: فتح التنقل."
+      },
+      "drawerTitle": {
+        "type": "string",
+        "default": "Navigation",
+        "description": "The title of the navigation Drawer. Arabic default: التنقل."
+      },
+      "embedded": {
+        "type": "boolean",
+        "default": false,
+        "description": "A preview of a page inside another page (a gallery, docs, a template picker): the same frame with no landmarks; main becomes a region named Main content."
+      },
+      "usePageShell": {
+        "type": "function",
+        "description": "Hook: { sidebar, wideSidebar, setSidebar, narrow, setDrawerOpen }. Pass collapsed={sidebar === 'collapsed'} and onCollapsedChange to the Sidebar so its toggle and the shell agree."
+      }
+    },
+    "states": [
+      "data-sidebar=expanded|collapsed|hidden"
+    ],
+    "a11y": {
+      "role": "No role on the root. header is the banner, main the main landmark (one per page, id main), aside a complementary landmark with a label, footer the contentinfo. The navigation landmark is the Sidebar or Rail inside the nav part.",
+      "focus": "The skip link is the first tab stop; Enter moves focus to main. The menu button opens the navigation Drawer, and focus returns to it when the Drawer closes.",
+      "keys": {
+        "Tab": "The first press reaches the skip link, then the header, the navigation, main, the aside and the footer in that order",
+        "Shift+Tab": "Moves back through the same order",
+        "Enter": "On the skip link, moves focus to main"
+      },
+      "announce": "Landmarks carry the names a screen reader lists: the Sidebar or Rail label, the aside label.",
+      "notes": [
+        "The reading order equals the visual order in every width: header, navigation, main, aside, footer.",
+        "Under breakpoint.tablet the column is not rendered, so its links are never in the page twice; the Drawer renders them while open. A media query hides the column from the first paint, before hydration.",
+        "While the column is hidden on a wide screen (sidebar hidden), the menu button and the Drawer are the way to the navigation, as on phones.",
+        "No motion: the column swaps at once. The Drawer brings its own motion (pattern sheet).",
+        "The shell takes the height of its parent (min-block-size 100%). Give html and body a height for a full screen frame; no viewport height token exists yet.",
+        "No native title attribute."
+      ]
+    },
+    "content": {
+      "en": {
+        "asideLabel": "A noun phrase that names the content: Board details, Filters.",
+        "skipLabel": "Skip to main content, or name the target: Skip to the board list.",
+        "menuLabel": "Open navigation"
+      },
+      "ar": {
+        "asideLabel": "تفاصيل اللوحة، الفلاتر",
+        "skipLabel": "الانتقال للمحتوى الرئيسي",
+        "menuLabel": "فتح التنقل"
+      }
+    },
+    "tokens": [
+      "color.bg.body",
+      "color.text.default",
+      "color.text.muted",
+      "color.border.default",
+      "color.border.strong",
+      "border.width.default",
+      "size.control.lg",
+      "dialog.width.sm",
+      "space.s",
+      "space.l",
+      "space.xl",
+      "space.2xl",
+      "font.size.s",
+      "breakpoint.tablet",
+      "breakpoint.desktop"
+    ],
+    "motion": "none",
+    "frameworks": {
+      "react": {
+        "status": "ready",
+        "behavior": "hand built",
+        "example": "PageShell.demo.tsx",
+        "note": "Renders SkipLink, IconButton and Drawer; usePageShell() shares the column state."
+      },
+      "angular": {
+        "status": "planned",
+        "behavior": "cdk:layout BreakpointObserver",
+        "note": "Content projection into the same parts."
+      },
+      "native": {
+        "status": "not-applicable",
+        "note": "Native apps use navigation stacks and tab bars from the router, not a page frame with landmarks."
+      }
+    },
+    "styles": {
+      "studio": "No recipe: the page color with 1px lines between the regions, the compact header at the large control height.",
+      "desk": "No recipe: the same frame on the Desk page color. Desk apps usually live in Windows, not in a PageShell.",
+      "neutral": "Tokens only: the Neutral page color and borders.",
+      "liquid": "Planned: the header and navigation may float on glass over scrolling content."
+    },
+    "mistakes": [
+      {
+        "wrong": "Two PageShells on one page, or a PageShell inside main",
+        "right": "One per page; previews inside a page use embedded"
+      },
+      {
+        "wrong": "A nav element around the Sidebar",
+        "right": "Pass the Sidebar as nav: it is the labelled nav landmark itself"
+      },
+      {
+        "wrong": "Hiding the Sidebar on phones with display none and no other way in",
+        "right": "PageShell moves it to a Drawer behind the menu button"
+      },
+      {
+        "wrong": "A Sidebar with its own collapsed state that the shell does not know",
+        "right": "Wire collapsed and onCollapsedChange to usePageShell()"
+      },
+      {
+        "wrong": "A main id other than the skip link target",
+        "right": "mainId sets both"
+      }
+    ],
+    "contract": {
+      "optionalParts": [
+        "menu",
+        "nav",
+        "aside",
+        "footer",
+        "header"
+      ]
+    },
+    "uses": [
+      "SkipLink",
+      "Drawer",
+      "IconButton",
+      "Sidebar",
+      "Rail"
+    ],
     "since": "0.1.0"
   },
   {

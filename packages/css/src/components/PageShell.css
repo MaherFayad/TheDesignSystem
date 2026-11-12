@@ -1,0 +1,220 @@
+/*
+ * PageShell: the frame of a page on a grid of named areas. The header runs
+ * across the top, the navigation column runs down the inline start, main
+ * and the aside sit side by side, the footer closes main and the aside.
+ * No source reachable (GoBanana layout.tsx and AdminNav.tsx): the frame
+ * follows the dials table in PLAN.md 3.7 and the nearest components
+ * (Sidebar, Rail, Navbar). Follows "One convention for component CSS and
+ * props" in docs/contracts/anatomy.md.
+ *
+ *   [data-ds='page-shell'][data-sidebar]       root: the grid
+ *     > [data-part='skip']                     a SkipLink root, drawn only on focus
+ *     > [data-part='header']                   area header
+ *         > [data-part='menu']                 an IconButton, only while the column is hidden
+ *     > [data-part='nav']                      area nav: holds a Sidebar or a Rail
+ *     > [data-part='main']                     area main
+ *     > [data-part='aside']                    area aside
+ *     > [data-part='footer']                   area footer
+ *
+ * Widths:
+ *   wide (breakpoint.desktop and up)     nav | main | aside
+ *   medium (tablet to desktop)           nav | main, the aside under main
+ *   narrow (under breakpoint.tablet)     one column; the navigation is in a Drawer
+ *
+ * Private properties on the root. Recipes override them:
+ *   --_page-shell-bg, -fg, -divider-color
+ *   --_page-shell-header-height, -header-padding-inline, -header-gap
+ *   --_page-shell-main-padding, -aside-width, -aside-padding, -footer-padding
+ *
+ * No motion: the column swaps at once (the width never animates). The Drawer
+ * brings its own motion.
+ */
+@layer ds.base {
+  [data-ds='page-shell'] {
+    --_page-shell-bg: var(--ds-color-bg-body);
+    --_page-shell-fg: var(--ds-color-text-default);
+    --_page-shell-divider-color: var(--ds-color-border-default);
+    --_page-shell-header-height: var(--ds-size-control-lg);
+    --_page-shell-header-padding-inline: var(--ds-space-l);
+    --_page-shell-header-gap: var(--ds-space-s);
+    --_page-shell-main-padding: var(--ds-space-2xl);
+    --_page-shell-aside-width: var(--ds-dialog-width-sm);
+    --_page-shell-aside-padding: var(--ds-space-xl);
+    --_page-shell-footer-padding: var(--ds-space-l);
+
+    position: relative;
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    grid-template-rows: auto minmax(0, 1fr) auto;
+    grid-template-areas:
+      'header header header'
+      'nav main aside'
+      'nav footer footer';
+    box-sizing: border-box;
+    min-block-size: 100%;
+    min-inline-size: 0;
+    background-color: var(--_page-shell-bg);
+    color: var(--_page-shell-fg);
+  }
+
+  /* ------------------------------------------------------------ header */
+
+  [data-ds='page-shell'] > [data-part='header'] {
+    display: flex;
+    grid-area: header;
+    align-items: center;
+    gap: var(--_page-shell-header-gap);
+    box-sizing: border-box;
+    min-block-size: var(--_page-shell-header-height);
+    min-inline-size: 0;
+    padding-inline: var(--_page-shell-header-padding-inline);
+    border-block-end: var(--ds-border-width-default) solid var(--_page-shell-divider-color);
+  }
+
+  /* The header content takes the rest of the row, so a Navbar spans it. */
+  [data-ds='page-shell'] > [data-part='header'] > :not([data-part='menu']) {
+    flex: 1 1 auto;
+    min-inline-size: 0;
+  }
+
+  /* The menu button shows only while the column is hidden: the Drawer is the way to the navigation then. */
+  [data-ds='page-shell'] > [data-part='header'] > [data-part='menu'] {
+    display: none;
+    flex: none;
+  }
+
+  [data-ds='page-shell'][data-sidebar='hidden'] > [data-part='header'] > [data-part='menu'] {
+    display: inline-flex;
+  }
+
+  /* ------------------------------------------------------------ nav */
+
+  [data-ds='page-shell'] > [data-part='nav'] {
+    display: flex;
+    grid-area: nav;
+    flex-direction: column;
+    min-block-size: 0;
+    border-inline-end: var(--ds-border-width-default) solid var(--_page-shell-divider-color);
+  }
+
+  [data-ds='page-shell'] > [data-part='nav'][hidden] {
+    display: none;
+  }
+
+  /* The Sidebar or Rail fills the column's height. */
+  [data-ds='page-shell'] > [data-part='nav'] > * {
+    flex: 1 1 auto;
+  }
+
+  /* ------------------------------------------------------------ main */
+
+  [data-ds='page-shell'] > [data-part='main'] {
+    grid-area: main;
+    box-sizing: border-box;
+    min-inline-size: 0;
+    padding: var(--_page-shell-main-padding);
+    overflow-wrap: break-word;
+  }
+
+  /*
+   * The skip link moves focus to main (a script focus target, tabindex -1).
+   * main is a region, not a control: no ring around the whole page. The
+   * focus lands at its start, where the next Tab goes on.
+   */
+  [data-ds='page-shell'] > [data-part='main']:focus {
+    outline: none;
+  }
+
+  /* ------------------------------------------------------------ aside */
+
+  [data-ds='page-shell'] > [data-part='aside'] {
+    grid-area: aside;
+    box-sizing: border-box;
+    inline-size: var(--_page-shell-aside-width);
+    min-inline-size: 0;
+    padding: var(--_page-shell-aside-padding);
+    border-inline-start: var(--ds-border-width-default) solid var(--_page-shell-divider-color);
+    overflow-wrap: break-word;
+  }
+
+  /* ------------------------------------------------------------ footer */
+
+  [data-ds='page-shell'] > [data-part='footer'] {
+    grid-area: footer;
+    box-sizing: border-box;
+    min-inline-size: 0;
+    padding: var(--_page-shell-footer-padding) var(--_page-shell-main-padding);
+    border-block-start: var(--ds-border-width-default) solid var(--_page-shell-divider-color);
+    color: var(--ds-color-text-muted);
+    font-size: var(--ds-font-size-s);
+    overflow-wrap: break-word;
+  }
+
+  /* ------------------------------------------------------------ widths */
+
+  /* Under breakpoint.desktop the aside goes under main, full width. */
+  @media (width < 68.75rem) { /* breakpoint.desktop */
+    [data-ds='page-shell'] {
+      grid-template-columns: auto minmax(0, 1fr);
+      grid-template-rows: auto minmax(0, 1fr) auto auto;
+      grid-template-areas:
+        'header header'
+        'nav main'
+        'nav aside'
+        'nav footer';
+    }
+
+    [data-ds='page-shell'] > [data-part='aside'] {
+      inline-size: auto;
+      border-inline-start: 0;
+      border-block-start: var(--ds-border-width-default) solid var(--_page-shell-divider-color);
+    }
+  }
+
+  /*
+   * Under breakpoint.tablet: one column, and the navigation moves to a
+   * Drawer behind the menu button. This query draws it from the first paint;
+   * PageShell.tsx then says data-sidebar hidden and stops rendering the column.
+   */
+  @media (width < 48rem) { /* breakpoint.tablet */
+    [data-ds='page-shell'] {
+      --_page-shell-main-padding: var(--ds-space-l);
+
+      grid-template-columns: minmax(0, 1fr);
+      grid-template-rows: auto minmax(0, 1fr) auto auto;
+      grid-template-areas:
+        'header'
+        'main'
+        'aside'
+        'footer';
+    }
+
+    [data-ds='page-shell'] > [data-part='nav'] {
+      display: none;
+    }
+
+    [data-ds='page-shell'] > [data-part='header'] > [data-part='menu'] {
+      display: inline-flex;
+    }
+  }
+
+  /* ------------------------------------------------------------ contrast and forced colors */
+
+  @media (prefers-contrast: more) {
+    [data-ds='page-shell'] {
+      --_page-shell-divider-color: var(--ds-color-border-strong);
+    }
+  }
+
+  [data-contrast='more'] [data-ds='page-shell'] {
+    --_page-shell-divider-color: var(--ds-color-border-strong);
+  }
+
+  @media (forced-colors: active) {
+    [data-ds='page-shell'] {
+      --_page-shell-bg: Canvas;
+      --_page-shell-fg: CanvasText;
+      --_page-shell-divider-color: CanvasText;
+    }
+  }
+}

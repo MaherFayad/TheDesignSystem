@@ -1,0 +1,342 @@
+{
+  "name": "CommandPalette",
+  "kind": "component",
+  "family": "overlays",
+  "summary": "A modal search box over the page that finds a command by name and runs it. It opens from anywhere with Mod+K (Command K on a Mac, Control K elsewhere) or from a trigger Button.",
+  "useWhen": [
+    "An app with more commands than its toolbars and menus can show at once",
+    "Power users who work from the keyboard and know the names of the actions they want",
+    "Jumping to a place by name: a board, a page, a setting"
+  ],
+  "avoidWhen": [
+    "The only way to reach an action: every command must also live in a visible menu, toolbar or page",
+    "Picking a value for a form field",
+    "A site search over documents or records with filters and rich results",
+    "An app with a handful of actions that all fit in a toolbar"
+  ],
+  "insteadUse": {
+    "Picking a value for a field": "Combobox",
+    "Searching content with filters": "SearchField with a results page",
+    "A few actions on one object": "DropdownMenu",
+    "The actions of the item under the pointer": "ContextMenu",
+    "The application menu row": "Menubar"
+  },
+  "anatomy": [
+    "root",
+    "backdrop",
+    "panel",
+    "title",
+    "search",
+    "close",
+    "list",
+    "group",
+    "group-label",
+    "item",
+    "item-icon",
+    "item-label",
+    "item-description",
+    "shortcut",
+    "empty",
+    "status",
+    "footer",
+    "hint"
+  ],
+  "parts": {
+    "SearchField": "search",
+    "Kbd": "shortcut",
+    "CommandPaletteTrigger": "trigger (outside the root): one system Button, asChild, says the shortcut through aria-keyshortcuts",
+    "IconButton": "close"
+  },
+  "slots": {
+    "empty": {
+      "accepts": "any"
+    },
+    "footer": {
+      "accepts": "any"
+    }
+  },
+  "props": {
+    "open": {
+      "type": "boolean",
+      "description": "Controlled open state, with onOpenChange."
+    },
+    "defaultOpen": {
+      "type": "boolean",
+      "default": false
+    },
+    "onOpenChange": {
+      "type": "function",
+      "description": "Called with true for the shortcut and the trigger, false for Escape, a backdrop click and a run."
+    },
+    "items": {
+      "type": "object",
+      "required": true,
+      "description": "The commands, plain or in titled groups ({ label, commands }). A command: value (unique), label (verb plus noun), description, start (an icon name or a node), shortcut (its own shortcut, drawn as keycaps), keywords (more words it is found by), disabled, onRun."
+    },
+    "onRun": {
+      "type": "function",
+      "description": "Called with the value and the command after the command's own onRun. Commands run once the palette has closed and focus is back, so a command may move focus."
+    },
+    "recent": {
+      "type": "object",
+      "description": "Values of recently run commands, newest first. Shown as the first group while the query is empty. The app keeps the list."
+    },
+    "recentLabel": {
+      "type": "string",
+      "default": "Recent",
+      "description": "Arabic default under lang ar: آخر الأوامر."
+    },
+    "size": {
+      "type": [
+        "md",
+        "lg"
+      ],
+      "default": "md",
+      "description": "md 520px wide with 32px rows; lg 640px wide with 44px rows. Never wider than the viewport minus a gutter."
+    },
+    "shortcut": {
+      "type": "string",
+      "default": "Mod+K",
+      "description": "Opens and closes the palette from anywhere on the page. Mod is Command on a Mac and Control elsewhere. A letter also matches by its physical key, so it works on an Arabic layout. null turns it off. Only one palette on a page should keep it."
+    },
+    "label": {
+      "type": "string",
+      "default": "Command palette",
+      "description": "The accessible name of the dialog and of the list (a visually hidden title). Arabic default: لوحة الأوامر."
+    },
+    "closeLabel": {
+      "type": "string",
+      "default": "Close command palette",
+      "description": "The accessible name of the close IconButton at the inline end of the search band. Arabic default: إغلاق لوحة الأوامر."
+    },
+    "placeholder": {
+      "type": "string",
+      "default": "Search commands",
+      "description": "Arabic default: بحث في الأوامر."
+    },
+    "query": {
+      "type": "string",
+      "description": "The query, controlled, with onQueryChange. Uncontrolled, it empties when the palette closes."
+    },
+    "defaultQuery": {
+      "type": "string",
+      "default": ""
+    },
+    "onQueryChange": {
+      "type": "function"
+    },
+    "loading": {
+      "type": "boolean",
+      "default": false,
+      "description": "A spinner in the search box and a polite status. With no commands yet, the list area says the loading label."
+    },
+    "loadingLabel": {
+      "type": "string",
+      "default": "Loading commands"
+    },
+    "empty": {
+      "type": "node",
+      "default": "No commands match. Try another word.",
+      "description": "Shown when no command matches. Say what to do next. An error with a retry Button goes here too."
+    },
+    "formatCount": {
+      "type": "function",
+      "description": "The announced result count. Default: 3 results, pluralized in Arabic with Western digits."
+    },
+    "footer": {
+      "type": "node",
+      "description": "The key hints at the bottom. false hides them. Default: move, run and close with their keycaps."
+    },
+    "closeOnRun": {
+      "type": "boolean",
+      "default": true,
+      "description": "false keeps the palette open after a run, for commands that toggle a setting."
+    },
+    "rootProps": {
+      "type": "object",
+      "description": "Props for the root layer. className and style go to the root too."
+    }
+  },
+  "states": [
+    "open",
+    "closed",
+    "data-loading",
+    "data-highlighted",
+    "data-disabled"
+  ],
+  "a11y": {
+    "role": "dialog (the panel), modal: Radix hides the rest of the page and keeps focus inside. The search input is a combobox with aria-expanded, aria-controls and aria-activedescendant; the list is a listbox of options, in groups when the commands are grouped.",
+    "focus": "On open, focus goes to the search input and stays there: the highlighted command is pointed at with aria-activedescendant, rows never take focus. On close, focus returns to the element that had it when the shortcut opened the palette, or to the trigger that opened it; when that element is gone, to its nearest connected focusable ancestor, else the first tab stop of main.",
+    "keys": {
+      "Mod+K": "Opens the palette from anywhere on the page, and closes it. The shortcut prop changes or turns it off.",
+      "ArrowDown": "Highlights the next command, skipping disabled ones, and wraps from the last to the first",
+      "ArrowUp": "Highlights the previous command and wraps from the first to the last",
+      "Enter": "Runs the highlighted command and closes the palette",
+      "Escape": "Clears the query; on an empty query, closes the palette",
+      "Tab": "Moves from the search input to its clear button (there only while the box holds a query), then to the close button, and wraps inside the palette",
+      "Shift+Tab": "Moves back inside the palette and wraps from the first to the last"
+    },
+    "announce": "The dialog is named by its label and the search box by the placeholder words. The result count is read once per query, after typing pauses, through a polite status. Loading is read by the SearchField status.",
+    "notes": [
+      "Typing filters through filterListBoxItems: the label and the keywords, case and diacritics folded, Arabic letter forms folded (alef, yeh, teh marbuta), word starts first.",
+      "The highlight lands on the first enabled command when the palette opens and after every keystroke, so Enter runs the best match.",
+      "Each row with a shortcut carries aria-keyshortcuts; its keycaps are hidden from assistive tech.",
+      "The recent group shows only while the query is empty. A command in it is the same command as in its own group.",
+      "A pointer click on a row runs it without moving focus out of the search box.",
+      "The close IconButton is the pointer and touch way out next to Escape and the backdrop.",
+      "The trigger Button is optional: the shortcut alone opens the palette. A visible way in is still needed for touch and for people who do not know the shortcut.",
+      "No native title attribute."
+    ]
+  },
+  "content": {
+    "en": {
+      "label": "Verb plus noun, sentence case: Create board, Invite people, Export as PDF. Never a bare noun for an action.",
+      "description": "One short line that says what the command does when its name is not enough.",
+      "groups": "Plural nouns: Boards, Team, Account.",
+      "empty": "Say what to do next: No commands match. Try another word.",
+      "placeholder": "Search commands"
+    },
+    "ar": {
+      "label": "Noun form labels, no diacritics: إنشاء لوحة، دعوة أعضاء، تصدير PDF.",
+      "groups": "اللوحات، الفريق، الحساب",
+      "empty": "ما فيه أوامر مطابقة. جرب كلمة ثانية.",
+      "placeholder": "بحث في الأوامر",
+      "digits": "Western digits, Latin names (PDF) in place inside the Arabic line."
+    }
+  },
+  "tokens": [
+    "dialog.width.lg",
+    "dialog.width.xl",
+    "dialog.height.max",
+    "color.bg.surface",
+    "color.bg.surface-2",
+    "color.bg.scrim",
+    "color.bg.scrim-80",
+    "color.bg.overlay-10",
+    "color.border.default",
+    "color.border.hairline",
+    "color.border.strong",
+    "color.material.glass-strong",
+    "color.material.glass-solid",
+    "color.primary.fill",
+    "color.primary.text",
+    "color.text.default",
+    "color.text.bright",
+    "color.text.muted",
+    "color.focus.ring",
+    "radius.panel",
+    "radius.window",
+    "radius.field",
+    "menu.item.radius",
+    "elevation.dialog",
+    "elevation.window",
+    "blur.backdrop",
+    "blur.window",
+    "blur.window-saturation",
+    "border.width.default",
+    "border.width.strong",
+    "space.2xs",
+    "space.xs",
+    "space.s",
+    "space.m",
+    "space.xl",
+    "space.2xl",
+    "space.3xl",
+    "space.5xl",
+    "space.10xl",
+    "size.control.md",
+    "size.control.lg",
+    "font.family.sans",
+    "font.size.xs",
+    "font.size.s",
+    "font.size.m",
+    "font.weight.medium",
+    "font.weight.bold",
+    "font.leading.tight",
+    "font.leading.snug",
+    "font.leading.normal",
+    "opacity.disabled",
+    "scale.dialog-enter",
+    "scale.window-enter",
+    "duration.base",
+    "duration.window-open",
+    "duration.window-close",
+    "ease.out",
+    "ease.exit",
+    "ease.window",
+    "z.dialog"
+  ],
+  "motion": "dialog",
+  "frameworks": {
+    "react": {
+      "status": "ready",
+      "behavior": "radix:Dialog",
+      "example": "CommandPalette.demo.tsx",
+      "note": "Built on DialogBase (Dialog folder) with a SearchField and a hand built listbox on the shared listbox logic (listbox.ts, filter.ts, shortcut.ts)."
+    },
+    "angular": {
+      "status": "planned",
+      "behavior": "cdk:portal, cdk:a11y ActiveDescendantKeyManager",
+      "note": "On the Angular Dialog layer, with the Angular SearchField."
+    },
+    "native": {
+      "status": "planned",
+      "behavior": "rn-primitives:dialog",
+      "note": "A full screen sheet with the search on top; no global shortcut on touch, a visible trigger only."
+    }
+  },
+  "styles": {
+    "studio": "A flat panel high on the screen: the solid surface, the panel radius, the dialog shadow. The search sits in a band on surface-2, borderless, with a line under it that turns into a 2px focus ring line while it has focus. Rows of the menu height light up with the overlay step; group titles are small and muted; a line separates groups. The hints sit in a footer band.",
+    "desk": "A glass window: the strong glass with a 24px blur, the window radius, a hairline inside, the deep window shadow. Bands are clear on the glass under hairlines. The lit row takes the yellow primary fill with dark text, as Desk menus do. It grows from 92% on the window open timing.",
+    "neutral": "Tokens only: the Neutral surface, borders and accent ring apply with no recipe.",
+    "liquid": "Planned: a glass sheet."
+  },
+  "mistakes": [
+    {
+      "wrong": "A command that exists only in the palette",
+      "right": "The same action in a visible menu or toolbar; the palette is a faster way to it"
+    },
+    {
+      "wrong": "Labels that are nouns, such as Settings or Board",
+      "right": "Verb plus noun: Open settings, Create board"
+    },
+    {
+      "wrong": "Two palettes on one page that both listen for Mod+K",
+      "right": "One palette per app; shortcut null on any other"
+    },
+    {
+      "wrong": "Moving focus inside a command's onRun while the palette is still open",
+      "right": "Let the palette run it: commands run after it has closed and focus is back, so focus moves stay"
+    },
+    {
+      "wrong": "A Kbd in the label text for the shortcut",
+      "right": "The command's shortcut field: it draws keycaps at the row end and sets aria-keyshortcuts"
+    },
+    {
+      "wrong": "Filtering the commands yourself and passing the result",
+      "right": "Pass every command: the palette filters with filter.ts, Arabic folding included, and marks the match"
+    }
+  ],
+  "contract": {
+    "trigger": "[data-demo-trigger]",
+    "optionalParts": [
+      "group",
+      "group-label",
+      "item-icon",
+      "item-description",
+      "shortcut",
+      "empty",
+      "list",
+      "item",
+      "hint",
+      "footer"
+    ]
+  },
+  "uses": [
+    "Dialog",
+    "SearchField",
+    "Kbd",
+    "ListBox"
+  ],
+  "since": "0.1.0"
+}

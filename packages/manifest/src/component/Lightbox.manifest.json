@@ -1,0 +1,262 @@
+{
+  "name": "Lightbox",
+  "kind": "component",
+  "family": "overlays",
+  "summary": "A full screen viewer for images, one at a time, with previous, next, zoom, a counter and a caption. Opens from a thumbnail or a Button and returns focus to it.",
+  "useWhen": [
+    "A set of photos or screenshots the person wants to see large, one after another",
+    "A thumbnail grid where each thumbnail opens the full image",
+    "Detail in an image that needs zoom"
+  ],
+  "avoidWhen": [
+    "A single decorative image that adds no detail when large",
+    "Images that must be compared side by side",
+    "Video or documents: the viewer shows images only",
+    "Images with text the person must act on, such as a form or a contract"
+  ],
+  "insteadUse": {
+    "Images compared side by side": "Grid of Card",
+    "A single image in the page flow": "AspectRatio",
+    "A document or a form": "Dialog",
+    "A walk through steps with images": "Tour"
+  },
+  "anatomy": [
+    "root",
+    "backdrop",
+    "panel",
+    "title",
+    "toolbar",
+    "counter",
+    "zoom",
+    "close",
+    "stage",
+    "image",
+    "spinner",
+    "error",
+    "previous",
+    "next",
+    "caption",
+    "status"
+  ],
+  "parts": {
+    "LightboxTrigger": "trigger (outside the root)",
+    "IconButton": "zoom, close, previous, next",
+    "Spinner": "spinner"
+  },
+  "slots": {
+    "caption": {
+      "accepts": "text",
+      "max": 1
+    }
+  },
+  "props": {
+    "images": {
+      "type": "object",
+      "required": true,
+      "description": "The images in order: { src, alt (required, what the image shows), caption, srcSet, sizes, width, height, key }. Development builds warn when an alt is empty."
+    },
+    "open": {
+      "type": "boolean",
+      "description": "Controlled open state, with onOpenChange."
+    },
+    "defaultOpen": {
+      "type": "boolean",
+      "default": false
+    },
+    "onOpenChange": {
+      "type": "function"
+    },
+    "index": {
+      "type": "number",
+      "description": "The image on show, controlled, with onIndexChange."
+    },
+    "defaultIndex": {
+      "type": "number",
+      "default": 0
+    },
+    "onIndexChange": {
+      "type": "function",
+      "description": "Called for the buttons, the keys, a swipe and a trigger."
+    },
+    "loop": {
+      "type": "boolean",
+      "default": false,
+      "description": "Next on the last image goes to the first, previous on the first to the last."
+    },
+    "label": {
+      "type": "string",
+      "default": "Image viewer",
+      "description": "The accessible name of the dialog. Arabic default: عارض الصور."
+    },
+    "closeLabel": {
+      "type": "string",
+      "default": "Close image viewer"
+    },
+    "previousLabel": {
+      "type": "string",
+      "default": "Previous image"
+    },
+    "nextLabel": {
+      "type": "string",
+      "default": "Next image"
+    },
+    "zoomInLabel": {
+      "type": "string",
+      "default": "Zoom in"
+    },
+    "zoomOutLabel": {
+      "type": "string",
+      "default": "Zoom out"
+    },
+    "errorLabel": {
+      "type": "node",
+      "default": "The image could not load."
+    },
+    "formatCounter": {
+      "type": "function",
+      "description": "The visible counter. Default 3 of 12 (Arabic 3 من 12, Western digits)."
+    },
+    "formatStatus": {
+      "type": "function",
+      "description": "What the status says for each image. Default Image 3 of 12: and the alt text."
+    },
+    "rootProps": {
+      "type": "object",
+      "description": "Props for the root layer. className and style go to the root too."
+    },
+    "LightboxTrigger": {
+      "type": "node",
+      "description": "One child element, a system Button (always asChild), with index: the image it opens. Focus returns to the trigger that opened the viewer."
+    }
+  },
+  "states": [
+    "open",
+    "closed",
+    "data-zoomed",
+    "data-loading",
+    "data-error"
+  ],
+  "a11y": {
+    "role": "dialog (the panel), modal: Radix hides the rest of the page and keeps focus inside. Named by the label.",
+    "focus": "On open, focus goes to the next button when there is a next image, else to the close button. On close, focus returns to the trigger that opened the viewer.",
+    "keys": {
+      "ArrowRight": "Shows the next image in reading order (the previous one in Arabic). While zoomed, pans the image to the right.",
+      "ArrowLeft": "Shows the previous image in reading order (the next one in Arabic). While zoomed, pans the image to the left.",
+      "ArrowUp, ArrowDown": "While zoomed, pan the image up and down",
+      "Home, End": "Show the first and the last image",
+      "+": "Zooms in to twice the fitted width (one step). = does the same, for keyboards where + needs Shift.",
+      "-": "Zooms back out to the fitted size. _ does the same.",
+      "Escape": "Closes the viewer",
+      "Tab": "Moves between zoom, close, previous and next, and wraps inside the viewer",
+      "Shift+Tab": "Moves back and wraps from the first to the last"
+    },
+    "announce": "Each image is announced once through a polite status: Image 3 of 12, then its alt text. The visible counter is hidden from assistive tech, so it is not read twice. A failed image is announced as an alert.",
+    "notes": [
+      "Every image needs alt text that says what it shows, never the file name. A caption does not replace it.",
+      "A swipe on the image moves to the next or previous image in reading order. The previous and next buttons and the arrow keys are the key path (WCAG 2.5.7).",
+      "A double click on the image toggles the zoom; the zoom button and + and - are its key path.",
+      "Previous and next stay focusable when there is no image that way (aria-disabled), so focus never drops.",
+      "The neighbours of the image on show load ahead.",
+      "Images sit on the solid page color of the scheme, never on glass, in every style.",
+      "No native title attribute."
+    ]
+  },
+  "content": {
+    "en": {
+      "alt": "What the image shows, in a sentence fragment: Blue hills under a pale sky. Not the file name, not Image of.",
+      "caption": "The place, the time or the source, in sentence case: Asir mountains at sunrise.",
+      "trigger": "Verb plus noun: View photo, View 12 photos."
+    },
+    "ar": {
+      "alt": "Noun phrase, no diacritics: جبال زرقاء تحت سماء فاتحة.",
+      "caption": "عبارة قصيرة بدون تشكيل: جبال عسير وقت الشروق.",
+      "counter": "3 من 12, Western digits."
+    }
+  },
+  "tokens": [
+    "color.bg.body",
+    "color.bg.scrim",
+    "color.text.default",
+    "color.text.muted",
+    "space.s",
+    "space.l",
+    "space.xl",
+    "size.control.lg",
+    "dialog.width.2xl",
+    "border.width.default",
+    "font.family.sans",
+    "font.size.s",
+    "font.size.m",
+    "font.leading.normal",
+    "scale.dialog-enter",
+    "duration.fast",
+    "duration.base",
+    "ease.out",
+    "ease.exit",
+    "z.dialog"
+  ],
+  "motion": "dialog",
+  "frameworks": {
+    "react": {
+      "status": "ready",
+      "behavior": "radix:Dialog",
+      "example": "Lightbox.demo.tsx",
+      "note": "Built on DialogBase (Dialog folder), with IconButton and Spinner parts."
+    },
+    "angular": {
+      "status": "planned",
+      "behavior": "cdk:portal, cdk:a11y InteractivityChecker",
+      "note": "On the Angular Dialog layer."
+    },
+    "native": {
+      "status": "planned",
+      "behavior": "rn-primitives:dialog",
+      "note": "A full screen modal with a pager; pinch to zoom with the zoom button as its button path."
+    }
+  },
+  "styles": {
+    "studio": "No recipe: the base CSS applies. Full screen on the page color: black in dark, the light page gray in light. The counter sits at the inline start of the toolbar, zoom and close at its end, previous and next as 44px IconButtons at the middle of each side, the caption centered under the image. The viewer fades in from 98%.",
+    "desk": "No recipe: the base CSS applies on the Desk page color. No glass: images never sit on glass.",
+    "neutral": "Tokens only: the Neutral page color and controls apply with no recipe.",
+    "liquid": "Planned: the toolbar may float on glass; the image stays on a solid surface."
+  },
+  "mistakes": [
+    {
+      "wrong": "alt text that repeats the file name or says Image",
+      "right": "Say what the image shows: Orange dunes under a warm sky"
+    },
+    {
+      "wrong": "Swipe as the only way to the next image",
+      "right": "Keep the previous and next buttons; the arrow keys move too"
+    },
+    {
+      "wrong": "A caption used in place of alt text",
+      "right": "Both: alt says what it shows, the caption says the place, time or source"
+    },
+    {
+      "wrong": "A Lightbox for one decorative image",
+      "right": "The image in the page, at a useful size"
+    },
+    {
+      "wrong": "A Lightbox on a glass surface in Desk or Liquid",
+      "right": "The solid page color; the style recipe may only float the toolbar"
+    }
+  ],
+  "contract": {
+    "trigger": "[data-demo-trigger]",
+    "optionalParts": [
+      "counter",
+      "previous",
+      "next",
+      "caption",
+      "spinner",
+      "error"
+    ]
+  },
+  "uses": [
+    "Dialog",
+    "IconButton",
+    "Spinner"
+  ],
+  "since": "0.1.0"
+}
