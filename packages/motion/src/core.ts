@@ -299,19 +299,72 @@ export function settle(el: Element): void {
   for (const a of el.getAnimations()) a.cancel();
 }
 
-/** Plays a spec on an element with token timing. Null when there is no Web Animations API. */
-export function play(el: Element, spec: MotionSpec, id: string, prefix = 'ds'): Animation | null {
+export interface PlayOptions {
+  /**
+   * Running catalog animations whose id starts with `ds-motion:<group>` are
+   * replaced too, not only the one with the same id. The window patterns
+   * use `window-`, so a close replaces a grow.
+   */
+  group?: string;
+}
+
+/** True for an animation that holds its last frame after it ends: an exit. */
+function holdsEnd(a: Animation): boolean {
+  const fill = (a.effect?.getTiming().fill ?? 'auto') as FillMode;
+  return fill === 'forwards' || fill === 'both';
+}
+
+/**
+ * The first keyframe replaced by the live values of the element, for the
+ * properties it sets. Read while the old animation still runs, so a quick
+ * reverse starts where the element is instead of jumping.
+ */
+function fromLiveFrame(el: Element, frames: Keyframe[]): Keyframe[] {
+  if (typeof getComputedStyle !== 'function' || frames.length === 0) return frames;
+  const cs = getComputedStyle(el);
+  const first: Keyframe = { ...frames[0] };
+  for (const prop of ['transform', 'opacity'] as const) {
+    if (!(prop in first)) continue;
+    const live = cs.getPropertyValue(prop).trim();
+    if (live) first[prop] = live;
+  }
+  return [first, ...frames.slice(1)];
+}
+
+/**
+ * Plays a spec on an element with token timing. Null when there is no Web
+ * Animations API.
+ *
+ * Before it plays, it cancels the catalog animations it replaces: its own id
+ * (or its group), and any catalog animation that holds an end frame (an exit
+ * of another pattern would otherwise cover the new one). When one of those
+ * is still in flight, the new animation starts from the live frame. Other
+ * catalog animations on the element, such as a spinner, keep playing.
+ */
+export function play(el: Element, spec: MotionSpec, id: string, prefix = 'ds', opts: PlayOptions = {}): Animation | null {
   if (spec.keyframes.length === 0 || typeof el.animate !== 'function') return null;
+  const ownId = `${ANIMATION_ID_PREFIX}${id}`;
+  let keyframes = spec.keyframes;
   if (typeof el.getAnimations === 'function') {
-    for (const a of el.getAnimations()) if (a.id === `${ANIMATION_ID_PREFIX}${id}`) a.cancel();
+    const sameKind = (a: Animation) => {
+      const aid = String(a.id);
+      return aid === ownId || (opts.group !== undefined && aid.startsWith(`${ANIMATION_ID_PREFIX}${opts.group}`));
+    };
+    const replaced = el.getAnimations().filter((a) => String(a.id).startsWith(ANIMATION_ID_PREFIX) && (sameKind(a) || holdsEnd(a)));
+    if (replaced.some((a) => a.playState === 'running' || a.playState === 'paused')) keyframes = fromLiveFrame(el, keyframes);
+    for (const a of replaced) a.cancel();
   }
   const style = (el as HTMLElement).style as CSSStyleDeclaration | undefined;
-  if (style) style.transformOrigin = spec.origin;
+  if (style) {
+    style.transformOrigin = spec.origin;
+    // On SVG, transform-box defaults to the view box: make the origin the element's own box.
+    if (typeof SVGElement !== 'undefined' && el instanceof SVGElement) style.transformBox = 'fill-box';
+  }
   const delay = spec.delay ? readDuration(el, spec.delay, prefix) * (spec.delaySteps ?? 1) : 0;
   const duration = readDuration(el, spec.duration, prefix);
   const iterations = spec.loopLimitMs ? loopsWithin(duration, spec.loopLimitMs) : (spec.iterations ?? 1);
-  return el.animate(spec.keyframes, {
-    id: `${ANIMATION_ID_PREFIX}${id}`,
+  return el.animate(keyframes, {
+    id: ownId,
     duration,
     easing: spec.easing === 'linear' ? 'linear' : readEasing(el, spec.easing, prefix),
     fill: spec.fill,
