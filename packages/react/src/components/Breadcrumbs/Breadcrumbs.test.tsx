@@ -77,6 +77,12 @@ describe('Breadcrumbs.css truncation', () => {
     // and lose hover at once (WCAG 1.4.13, review round 2 B1). It keeps the
     // truncated width and grows downward only.
     expect(open![2]).not.toMatch(/(inline-size|width|flex)\s*:/);
+    // The width it keeps is the truncation cap.
+    const cap = [...css.matchAll(/([^{}]+)\{([^{}]*)\}/g)].find(([, sel, body]) => sel!.includes("[data-part='link'][data-ds='link']") && !sel!.includes(':is(') && body!.includes('text-overflow'));
+    expect(cap?.[2]).toMatch(/max-inline-size:\s*var\(--_breadcrumbs-item-max\)/);
+    // The other steps of the row stay put while it grows downward.
+    const list = [...css.matchAll(/([^{}]+)\{([^{}]*)\}/g)].find(([sel]) => sel!.includes("> [data-part='list']"));
+    expect(list?.[2]).toMatch(/align-items:\s*flex-start/);
   });
 });
 

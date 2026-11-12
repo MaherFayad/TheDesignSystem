@@ -48,10 +48,11 @@
     --_breadcrumbs-font-size: var(--ds-font-size-s);
   }
 
+  /* Start aligned: a hovered step that grows downward leaves the other steps of its row where they are. */
   [data-ds='breadcrumbs'] > [data-part='list'] {
     display: flex;
     flex-wrap: wrap;
-    align-items: center;
+    align-items: flex-start;
     min-inline-size: 0;
     margin: 0;
     padding: 0;
