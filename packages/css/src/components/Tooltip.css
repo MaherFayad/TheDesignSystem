@@ -1,0 +1,170 @@
+/*
+ * Tooltip: a short hint for a control. The root is the Radix Content (role
+ * tooltip); Radix positions it in a fixed wrapper and copies its z-index.
+ * Sources: Figma-Killer-2 `Tooltip.module.css` (padding, the small medium
+ * weight text, line height, the 240px cap, the tooltip shadow, the faint
+ * border, the arrow with a border on its outer edges, the short fade).
+ * GoBanana could not be read in this lane.
+ *
+ *   [data-ds='theme'][data-tooltip-layer]   the portal Theme, draws no box
+ *   [data-ds='tooltip']                     root: the bubble, the hint text in it
+ *     > [data-part='shortcut'] > bdi        optional, after the text; the bdi keeps the keys ltr
+ *     > span > [data-part='arrow']          Radix Arrow wrapper, then the SVG
+ *
+ * The surface is the raised surface of the style, not the page color, so it
+ * stands apart from the page in light schemes as well as dark ones.
+ *
+ * Private properties on the root (docs/contracts/anatomy.md, one convention):
+ *   --_tooltip-bg, -fg, -muted, -border-color, -radius, -shadow, -blur
+ *   --_tooltip-padding-block, -padding-inline
+ *   --_tooltip-arrow-width, -arrow-height
+ *   --_tooltip-enter-x, -enter-y, -duration-in, -duration-out, -ease-in, -ease-out
+ *
+ * Hoverable (WCAG 1.4.13): the tooltip takes the pointer, so it stays open
+ * while the pointer moves onto it. Nothing here sets pointer-events none.
+ *
+ * Motion, pattern "fade-rise": the tooltip fades in while it moves a few px
+ * away from the trigger. It fades out faster. Only transform and opacity
+ * animate; under reduced motion the animations are none.
+ */
+@layer ds.base {
+  [data-ds='theme'][data-tooltip-layer] {
+    display: contents;
+  }
+
+  [data-ds='tooltip'] {
+    --_tooltip-bg: var(--ds-color-bg-surface);
+    --_tooltip-fg: var(--ds-color-text-bright);
+    --_tooltip-muted: var(--ds-color-text-muted);
+    --_tooltip-border-color: var(--ds-color-border-default);
+    --_tooltip-radius: var(--ds-radius-sm);
+    --_tooltip-shadow: var(--ds-elevation-tooltip);
+    --_tooltip-blur: 0;
+    --_tooltip-padding-block: var(--ds-space-xs);
+    --_tooltip-padding-inline: var(--ds-space-m);
+    --_tooltip-arrow-width: var(--ds-space-l);
+    --_tooltip-arrow-height: calc(var(--ds-space-l) / 2);
+    --_tooltip-enter-x: 0;
+    --_tooltip-enter-y: 0;
+    --_tooltip-duration-in: var(--ds-duration-fast);
+    --_tooltip-duration-out: var(--ds-duration-instant);
+    --_tooltip-ease-in: var(--ds-ease-out);
+    --_tooltip-ease-out: var(--ds-ease-exit);
+
+    position: relative;
+    z-index: var(--ds-z-tooltip);
+    box-sizing: border-box;
+    max-inline-size: min(var(--ds-tooltip-width-max), var(--radix-tooltip-content-available-width));
+    padding-block: var(--_tooltip-padding-block);
+    padding-inline: var(--_tooltip-padding-inline);
+    border: var(--ds-border-width-default) solid var(--_tooltip-border-color);
+    border-radius: var(--_tooltip-radius);
+    background-color: var(--_tooltip-bg);
+    -webkit-backdrop-filter: blur(var(--_tooltip-blur));
+    backdrop-filter: blur(var(--_tooltip-blur));
+    box-shadow: var(--_tooltip-shadow);
+    color: var(--_tooltip-fg);
+    font-family: var(--ds-font-family-sans);
+    font-size: var(--ds-font-size-s);
+    font-weight: var(--ds-font-weight-medium);
+    line-height: var(--ds-font-leading-snug);
+    overflow-wrap: break-word;
+    transform-origin: var(--radix-tooltip-content-transform-origin);
+  }
+
+  [data-ds='tooltip'][data-side='top'] {
+    --_tooltip-enter-y: var(--ds-space-3xs);
+  }
+
+  [data-ds='tooltip'][data-side='bottom'] {
+    --_tooltip-enter-y: calc(var(--ds-space-3xs) * -1);
+  }
+
+  [data-ds='tooltip'][data-side='left'] {
+    --_tooltip-enter-x: var(--ds-space-3xs);
+  }
+
+  [data-ds='tooltip'][data-side='right'] {
+    --_tooltip-enter-x: calc(var(--ds-space-3xs) * -1);
+  }
+
+  [data-ds='tooltip']:is([data-state='delayed-open'], [data-state='instant-open']) {
+    animation: ds-tooltip-in var(--_tooltip-duration-in) var(--_tooltip-ease-in);
+  }
+
+  [data-ds='tooltip'][data-state='closed'] {
+    animation: ds-tooltip-out var(--_tooltip-duration-out) var(--_tooltip-ease-out) forwards;
+  }
+
+  /* The shortcut: after the hint, quieter, never wrapped inside. */
+  [data-ds='tooltip'] > [data-part='shortcut'] {
+    margin-inline-start: var(--ds-space-s);
+    color: var(--_tooltip-muted);
+    font-family: var(--ds-font-family-mono);
+    font-weight: var(--ds-font-weight-regular);
+    white-space: nowrap;
+  }
+
+  [data-ds='tooltip'] [data-part='arrow'] {
+    display: block;
+    inline-size: var(--_tooltip-arrow-width);
+    block-size: var(--_tooltip-arrow-height);
+    margin-block-start: calc(var(--ds-border-width-default) * -1);
+    overflow: visible;
+    fill: var(--_tooltip-bg);
+    stroke: var(--_tooltip-border-color);
+    stroke-width: var(--ds-border-width-default);
+    vector-effect: non-scaling-stroke;
+  }
+
+  @keyframes ds-tooltip-in {
+    from {
+      opacity: 0;
+      transform: translate(var(--_tooltip-enter-x), var(--_tooltip-enter-y));
+    }
+  }
+
+  @keyframes ds-tooltip-out {
+    to {
+      opacity: 0;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    [data-ds='tooltip'][data-state] {
+      animation: none;
+    }
+  }
+
+  @media (prefers-reduced-transparency: reduce) {
+    [data-ds='tooltip'] {
+      --_tooltip-blur: 0;
+    }
+  }
+
+  @media (prefers-contrast: more) {
+    [data-ds='tooltip'] {
+      --_tooltip-blur: 0;
+      --_tooltip-border-color: var(--ds-color-border-strong);
+      --_tooltip-muted: var(--ds-color-text-default);
+    }
+  }
+
+  [data-contrast='more'] [data-ds='tooltip'] {
+    --_tooltip-blur: 0;
+    --_tooltip-border-color: var(--ds-color-border-strong);
+    --_tooltip-muted: var(--ds-color-text-default);
+  }
+
+  /* Forced colors: no shadow, the border draws the bubble. */
+  @media (forced-colors: active) {
+    [data-ds='tooltip'] {
+      --_tooltip-shadow: none;
+      --_tooltip-bg: Canvas;
+      --_tooltip-fg: CanvasText;
+      --_tooltip-muted: CanvasText;
+      --_tooltip-border-color: CanvasText;
+      --_tooltip-blur: 0;
+    }
+  }
+}

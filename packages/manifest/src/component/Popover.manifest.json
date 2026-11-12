@@ -1,0 +1,185 @@
+{
+  "name": "Popover",
+  "kind": "component",
+  "family": "overlays",
+  "summary": "Non modal content anchored to a trigger: a small form or details next to the control that opened it. The page stays usable while it is open.",
+  "useWhen": [
+    "A small form of one to three fields tied to one control (rename, set a link, set a size)",
+    "Details about a control that need more than one line or hold a link or an action",
+    "Settings that apply to the selection and are changed while the page stays in view"
+  ],
+  "avoidWhen": [
+    "A one line hint for a control on hover and focus",
+    "A list of commands to pick from",
+    "A decision that blocks the page or must be answered",
+    "A preview of a link or a person that the user only reads",
+    "Long content or more than three fields"
+  ],
+  "insteadUse": {
+    "One line hint": "Tooltip",
+    "List of commands": "DropdownMenu",
+    "Blocking decision": "Dialog",
+    "Read only preview of a link or a user": "HoverCard",
+    "Long content or a long form": "Drawer",
+    "Guided steps over the page": "Tour"
+  },
+  "anatomy": ["root", "arrow", "title", "close", "body", "footer"],
+  "parts": {
+    "PopoverContent": "root",
+    "PopoverTitle": "title",
+    "PopoverBody": "body",
+    "PopoverFooter": "footer"
+  },
+  "slots": {
+    "title": { "accepts": "text", "max": 1 },
+    "body": { "accepts": "any" },
+    "footer": { "accepts": ["Button"], "max": 2 }
+  },
+  "props": {
+    "open": { "type": "boolean", "description": "Controlled open state, with onOpenChange." },
+    "defaultOpen": { "type": "boolean", "default": false },
+    "onOpenChange": {
+      "type": "function",
+      "description": "Called with false for Escape, an outside click, the close control and PopoverClose."
+    },
+    "size": {
+      "type": ["sm", "md", "lg"],
+      "default": "md",
+      "description": "The width: sm 240 (tooltip.width.max), md 320 (menu.width.min times 1.6), lg 440 px (dialog.width.md), never wider than the room beside the trigger."
+    },
+    "side": {
+      "type": ["top", "bottom", "start", "end"],
+      "default": "bottom",
+      "description": "PopoverContent: the preferred side. start and end follow the reading direction, so start is the right side in Arabic. It flips to the other side when there is no room."
+    },
+    "align": {
+      "type": ["start", "center", "end"],
+      "default": "center",
+      "description": "PopoverContent: alignment along the trigger, mirrored in right to left layouts."
+    },
+    "sideOffset": { "type": "number", "default": 8, "description": "PopoverContent: distance from the trigger in px, the arrow included." },
+    "hideWhenDetached": { "type": "boolean", "default": false, "description": "PopoverContent: hides the popover while its trigger is scrolled out of view, for popovers in scrolling panels." },
+    "arrow": { "type": "boolean", "default": true, "description": "PopoverContent: shows the arrow that points at the trigger." },
+    "close": {
+      "type": "boolean",
+      "default": true,
+      "description": "PopoverContent: shows the close IconButton. Escape and an outside click always close."
+    },
+    "closeLabel": {
+      "type": "string",
+      "default": "Close popover",
+      "description": "PopoverContent: accessible name of the close control. Arabic default under lang ar: إغلاق النافذة."
+    },
+    "title": { "type": "node", "description": "PopoverContent: the title for the common case, the same as a PopoverTitle child. It names the popover." },
+    "PopoverTrigger": {
+      "type": "node",
+      "description": "One child element, a system Button or IconButton, rendered as the trigger (always asChild). It gets aria-haspopup dialog and aria-expanded and takes focus back on close."
+    },
+    "PopoverClose": { "type": "node", "description": "One child element, a system Button, that closes the popover (always asChild)." },
+    "PopoverAnchor": { "type": "node", "description": "Positions the popover against this element instead of the trigger." },
+    "data-autofocus": { "type": "boolean", "description": "Put on any focusable element inside the popover to take focus on open." }
+  },
+  "states": ["open", "closed"],
+  "a11y": {
+    "role": "dialog (the root), not modal: the page stays in the accessibility tree and usable. Named by the title (aria-labelledby); without a title pass aria-label on PopoverContent.",
+    "focus": "On open, focus goes to an element marked data-autofocus; else to the first field in the body; else to the first footer action; else to the root itself. Never to the close control first. On close, focus returns to the trigger.",
+    "keys": {
+      "Enter, Space": "On the trigger: opens and closes the popover",
+      "Escape": "Closes the popover and returns focus to the trigger",
+      "Tab": "Moves to the next control inside the popover. Not modal, no trap: the popover renders at the end of the page, so Tab past its last control leaves the page content; Escape is the way back to the trigger",
+      "Shift+Tab": "Moves to the previous control inside the popover"
+    },
+    "announce": "The trigger says it opens a dialog and whether it is expanded. On open the title is read as the name of the dialog, then the focused field.",
+    "notes": [
+      "Not modal: a click outside closes the popover and the page keeps working. Use Dialog for a decision that blocks the page.",
+      "The popover never runs past the viewport: it flips to the other side, shifts along the trigger, and its body scrolls inside the height left.",
+      "A popover opened from inside a Dialog sits above it (z.menu over z.dialog) and below the toasts.",
+      "The close control is the button path for Escape and the outside click. Hide it with close false only when a footer action closes the popover.",
+      "The arrow is decoration and hidden from assistive tech.",
+      "A disabled trigger is aria-disabled: it stays focusable and does not open.",
+      "No native title attribute.",
+      "The root also carries data-side and data-align from Radix. data-side is physical (top, right, bottom, left) after the logical side prop is mapped by direction: side start is data-side right in Arabic.",
+      "Focus returns to the trigger on close. A popover with only a PopoverAnchor returns focus to the element that had it when it opened.",
+      "Inside a scrolling panel pass hideWhenDetached so the popover hides while its trigger is scrolled out of view (default false)."
+    ]
+  },
+  "content": {
+    "en": {
+      "title": "A noun phrase for what is edited or shown, sentence case: Rename layer, Frame size, File details.",
+      "buttons": "Verb plus noun: Rename layer, Apply size, Save link. Never OK, Yes, Continue or Confirm. The primary action last.",
+      "close": "Close popover"
+    },
+    "ar": {
+      "title": "Noun form, no diacritics: تسمية الطبقة، مقاس الإطار.",
+      "buttons": "Noun form labels: حفظ الاسم، إلغاء. Never نعم or موافق.",
+      "close": "إغلاق النافذة"
+    }
+  },
+  "tokens": [
+    "menu.width.min",
+    "tooltip.width.max",
+    "dialog.width.md",
+    "color.bg.surface",
+    "color.text.default",
+    "color.text.bright",
+    "color.border.default",
+    "color.border.strong",
+    "color.material.glass-strong",
+    "color.material.glass-border",
+    "radius.panel",
+    "elevation.menu",
+    "elevation.window-soft",
+    "blur.window",
+    "focus.shadow.ring",
+    "border.width.default",
+    "border.width.strong",
+    "space.2xs",
+    "space.s",
+    "space.m",
+    "space.l",
+    "space.xl",
+    "space.2xl",
+    "size.control.xs",
+    "font.family.sans",
+    "font.size.m",
+    "font.size.l",
+    "font.weight.semibold",
+    "font.leading.tight",
+    "font.leading.normal",
+    "scale.press",
+    "duration.base",
+    "duration.fast",
+    "ease.out",
+    "ease.exit",
+    "z.menu"
+  ],
+  "motion": "menu-scale",
+  "frameworks": {
+    "react": {
+      "status": "ready",
+      "behavior": "radix:Popover",
+      "example": "Popover.demo.tsx",
+      "note": "The portal is a Theme that copies the axes of the Theme the Popover is in (the Dialog pattern), so tokens, language and direction apply inside it. The shared portal and side helpers live in FloatingLayer.tsx and serve Tooltip, HoverCard and Tour."
+    },
+    "angular": { "status": "planned", "behavior": "cdk:overlay" },
+    "native": { "status": "planned", "behavior": "rn-primitives:popover", "note": "Renders as a sheet on phones" }
+  },
+  "styles": {
+    "studio": "A flat surface: color.bg.surface with the default border, the panel radius and the menu shadow. The arrow carries the same fill and border. Grows from 97% out of the trigger side on duration.base.",
+    "desk": "Glass: the strong glass fill, the glass border, the 24px window blur and the soft window shadow (recipe). Turns solid under reduced transparency and more contrast.",
+    "neutral": "Planned.",
+    "liquid": "Planned: a glass popover."
+  },
+  "mistakes": [
+    { "wrong": "A popover that holds a single line of hint text", "right": "A Tooltip" },
+    { "wrong": "A popover with a long form and its own scrolling sections", "right": "A Drawer or a Dialog" },
+    { "wrong": "A popover with no title and no aria-label", "right": "A title, or aria-label on PopoverContent, so the dialog has a name" },
+    { "wrong": "side left in code that must also work in Arabic", "right": "side start: it follows the reading direction" },
+    { "wrong": "A bare button as the trigger", "right": "A system Button or IconButton inside PopoverTrigger" }
+  ],
+  "contract": {
+    "trigger": "[data-demo-trigger]",
+    "optionalParts": ["arrow", "title", "close", "footer"]
+  },
+  "since": "0.1.0"
+}

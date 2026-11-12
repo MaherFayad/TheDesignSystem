@@ -1,0 +1,167 @@
+/*
+ * HoverCard: a read only preview card for a link or a person. The root is the
+ * Radix Content; Radix positions it in a fixed wrapper and copies its z-index.
+ * No source: designed from the dials table and Popover.css, the nearest
+ * component (the same surface, arrow and motion).
+ *
+ *   [data-ds='theme'][data-hover-card-layer]   the portal Theme, draws no box
+ *   [data-ds='hover-card']                     root: the surface
+ *     > [data-part='body']                     the preview
+ *     > span > [data-part='arrow']             Radix Arrow wrapper, then the SVG
+ *
+ * Private properties on the root (docs/contracts/anatomy.md, one convention):
+ *   --_hover-card-width
+ *   --_hover-card-bg, -fg, -border-color, -radius, -shadow, -blur
+ *   --_hover-card-padding
+ *   --_hover-card-arrow-width, -arrow-height
+ *   --_hover-card-enter-x, -enter-y, -enter-scale
+ *   --_hover-card-duration-in, -duration-out, -ease-in, -ease-out
+ *
+ * Motion, pattern "menu-scale": as Popover, the card grows from 97% out of
+ * the trigger side while it fades in. Only transform and opacity animate;
+ * under reduced motion the animations are none.
+ */
+@layer ds.base {
+  [data-ds='theme'][data-hover-card-layer] {
+    display: contents;
+  }
+
+  [data-ds='hover-card'] {
+    --_hover-card-width: calc(var(--ds-menu-width-min) * 1.6);
+    --_hover-card-bg: var(--ds-color-bg-surface);
+    --_hover-card-fg: var(--ds-color-text-default);
+    --_hover-card-border-color: var(--ds-color-border-default);
+    --_hover-card-radius: var(--ds-radius-panel);
+    --_hover-card-shadow: var(--ds-elevation-menu);
+    --_hover-card-blur: 0;
+    --_hover-card-padding: var(--ds-space-xl);
+    --_hover-card-arrow-width: var(--ds-space-2xl);
+    --_hover-card-arrow-height: calc(var(--ds-space-2xl) / 2);
+    --_hover-card-enter-x: 0;
+    --_hover-card-enter-y: 0;
+    --_hover-card-enter-scale: var(--ds-scale-press);
+    --_hover-card-duration-in: var(--ds-duration-base);
+    --_hover-card-duration-out: var(--ds-duration-fast);
+    --_hover-card-ease-in: var(--ds-ease-out);
+    --_hover-card-ease-out: var(--ds-ease-exit);
+
+    position: relative;
+    z-index: var(--ds-z-menu);
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+    inline-size: var(--_hover-card-width);
+    max-inline-size: var(--radix-hover-card-content-available-width);
+    max-block-size: var(--radix-hover-card-content-available-height);
+    padding: var(--_hover-card-padding);
+    border: var(--ds-border-width-default) solid var(--_hover-card-border-color);
+    border-radius: var(--_hover-card-radius);
+    background-color: var(--_hover-card-bg);
+    -webkit-backdrop-filter: blur(var(--_hover-card-blur));
+    backdrop-filter: blur(var(--_hover-card-blur));
+    box-shadow: var(--_hover-card-shadow);
+    color: var(--_hover-card-fg);
+    font-family: var(--ds-font-family-sans);
+    font-size: var(--ds-font-size-m);
+    line-height: var(--ds-font-leading-normal);
+    overflow-wrap: break-word;
+    transform-origin: var(--radix-hover-card-content-transform-origin);
+  }
+
+  [data-ds='hover-card'][data-size='sm'] {
+    --_hover-card-width: var(--ds-tooltip-width-max);
+    --_hover-card-padding: var(--ds-space-l);
+  }
+
+  [data-ds='hover-card'][data-side='bottom'] {
+    --_hover-card-enter-y: calc(var(--ds-space-2xs) * -1);
+  }
+
+  [data-ds='hover-card'][data-side='top'] {
+    --_hover-card-enter-y: var(--ds-space-2xs);
+  }
+
+  [data-ds='hover-card'][data-side='right'] {
+    --_hover-card-enter-x: calc(var(--ds-space-2xs) * -1);
+  }
+
+  [data-ds='hover-card'][data-side='left'] {
+    --_hover-card-enter-x: var(--ds-space-2xs);
+  }
+
+  [data-ds='hover-card'][data-state='open'] {
+    animation: ds-hover-card-in var(--_hover-card-duration-in) var(--_hover-card-ease-in);
+  }
+
+  [data-ds='hover-card'][data-state='closed'] {
+    animation: ds-hover-card-out var(--_hover-card-duration-out) var(--_hover-card-ease-out) forwards;
+  }
+
+  /* The preview scrolls inside when the room beside the trigger is short. */
+  [data-ds='hover-card'] > [data-part='body'] {
+    display: flex;
+    flex-direction: column;
+    gap: var(--ds-space-m);
+    min-block-size: 0;
+    overflow: auto;
+    overscroll-behavior: contain;
+  }
+
+  [data-ds='hover-card'] > [data-part='body'] :is(p, h2, h3, h4) {
+    margin: 0;
+  }
+
+  [data-ds='hover-card'] [data-part='arrow'] {
+    display: block;
+    inline-size: var(--_hover-card-arrow-width);
+    block-size: var(--_hover-card-arrow-height);
+    margin-block-start: calc(var(--ds-border-width-default) * -1);
+    overflow: visible;
+    fill: var(--_hover-card-bg);
+    stroke: var(--_hover-card-border-color);
+    stroke-width: var(--ds-border-width-default);
+    vector-effect: non-scaling-stroke;
+  }
+
+  @keyframes ds-hover-card-in {
+    from {
+      opacity: 0;
+      transform: translate(var(--_hover-card-enter-x), var(--_hover-card-enter-y)) scale(var(--_hover-card-enter-scale));
+    }
+  }
+
+  @keyframes ds-hover-card-out {
+    to {
+      opacity: 0;
+      transform: translate(var(--_hover-card-enter-x), var(--_hover-card-enter-y)) scale(var(--_hover-card-enter-scale));
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    [data-ds='hover-card'][data-state] {
+      animation: none;
+    }
+  }
+
+  @media (prefers-contrast: more) {
+    [data-ds='hover-card'] {
+      --_hover-card-blur: 0;
+      --_hover-card-border-color: var(--ds-color-border-strong);
+    }
+  }
+
+  [data-contrast='more'] [data-ds='hover-card'] {
+    --_hover-card-blur: 0;
+    --_hover-card-border-color: var(--ds-color-border-strong);
+  }
+
+  /* Forced colors drop the shadow: the border draws the card. */
+  @media (forced-colors: active) {
+    [data-ds='hover-card'] {
+      --_hover-card-bg: Canvas;
+      --_hover-card-fg: CanvasText;
+      --_hover-card-border-color: CanvasText;
+      --_hover-card-blur: 0;
+    }
+  }
+}

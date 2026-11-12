@@ -1,0 +1,48 @@
+/*
+ * Desk recipe for HoverCard: floating surfaces on the desk are glass (the
+ * dials table of PLAN.md 3.7, depth "glass"), the same material as the Desk
+ * toasts: the strong glass fill, the glass border, the window blur and the
+ * soft window shadow. The radius stays the panel radius: a hover card is
+ * smaller than a window.
+ *
+ * Glass turns solid by itself: under prefers-reduced-transparency,
+ * prefers-contrast more and data-contrast more the material tokens resolve
+ * to the solid glass color, and the rules below drop the blur.
+ *
+ * Only the private --_hover-card-* properties are declared here, so the markup
+ * and the base rules stay the same in every style.
+ */
+@layer ds.recipes {
+  [data-style='desk'] [data-ds='hover-card'] {
+    --_hover-card-bg: var(--ds-color-material-glass-strong);
+    --_hover-card-border-color: var(--ds-color-material-glass-border);
+    --_hover-card-shadow: var(--ds-elevation-window-soft);
+    --_hover-card-blur: var(--ds-blur-window);
+  }
+
+  /* The recipe layer wins over the base layer, so the blur is dropped here again where the glass turns solid. */
+  @media (prefers-reduced-transparency: reduce), (prefers-contrast: more), (forced-colors: active) {
+    [data-style='desk'] [data-ds='hover-card'] {
+      --_hover-card-blur: 0;
+    }
+  }
+
+  @media (prefers-contrast: more) {
+    [data-style='desk'] [data-ds='hover-card'] {
+      --_hover-card-border-color: var(--ds-color-border-strong);
+    }
+  }
+
+  @media (forced-colors: active) {
+    [data-style='desk'] [data-ds='hover-card'] {
+      --_hover-card-bg: Canvas;
+      --_hover-card-border-color: CanvasText;
+    }
+  }
+
+  [data-style='desk'][data-contrast='more'] [data-ds='hover-card'],
+  [data-style='desk'] [data-contrast='more'] [data-ds='hover-card'] {
+    --_hover-card-blur: 0;
+    --_hover-card-border-color: var(--ds-color-border-strong);
+  }
+}
