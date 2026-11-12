@@ -66,6 +66,7 @@ No adb. No iOS build.
 | 1.14 | CLI | ds-docs | all | open | |
 | 1.15 | Docs site | ds-docs | all | open | |
 | 1.16 | Agent files | ds-docs | all | open | |
+| 1.22 | Interaction round 2, richer motion (proposed); also takes the 6 blockers of the interaction review | claude/ds-order-1-22 | session_01ErLBsaXB3wXF8YHpuV9bS5 | running |
 | 1.17 | Full matrix | ds-qa | all | open | |
 | 1.18 | Consumer apps on wave 1 components | ds-docs | react | open | |
 | 1.19 | Adoption guides | ds-docs | all | open | |
@@ -120,6 +121,7 @@ components, a fresh review, then commit.
 | A4 | Angular forms | claude/ds-angular-a4 | session_01ErLBsaB3LdL7KLxRWy1ezY | merged |
 | 1.0.i | Consolidation 2: follow ups round 2, tokens, contract text | claude/ds-consolidation-2 | session_01ErLBsasj4xo1JcwWMq49Dd | merged |
 | 1.21 | Interaction round (proposed) | claude/ds-order-1-21 | session_01ErLBsbZ3wQ2RMr25bxi1QU | merged, proposed, review open |
+| 1.22 | Interaction round 2, richer motion (proposed); also takes the 6 blockers of the interaction review | claude/ds-order-1-22 | session_01ErLBsaXB3wXF8YHpuV9bS5 | running |
 | 1.17 | Full matrix, contract suites, a11y sweep, size report | claude/ds-order-1-17 | session_01ErLBsa6pbDJmysTT7fLpsV | running |
 | 1.18, 1.19 | Consumers on wave 1, adoption guides | claude/ds-order-1-18 | session_01ErLBsZSfR7PvXto2uEYenL | merged |
 
@@ -144,8 +146,8 @@ Review sessions (findings only, no source edits), reports in
 | Batch 7 and lane 9A | claude/ds-review-7 | session_01ErLBsbTnC7FkxYnXYwpRXK | merged, 21 blockers |
 | Late React lanes (1D, 2C, 3D, 4A, 6D) | claude/ds-review-late | session_01ErLBsaHFu2h1gcvSgRHo9b | merged, 18 blockers |
 | Round 2: every first review blocker rechecked | claude/ds-review-round-2 | session_01ErLBsadmficC3cuMWybkRE | merged: 52 of 55 fixed, 1 not, 2 regressed, 3 new blockers |
-| Interaction round and late fix recheck | claude/ds-review-interactions | session_01ErLBsZpFBNp9CcbADZHPc5 | running |
-| Angular A3, A4, late ports, recheck of angular-1 | claude/ds-review-angular-2 | session_01ErLBsbZDc249xJd2nXyVxA | running |
+| Interaction round and late fix recheck | claude/ds-review-interactions | session_01ErLBsZpFBNp9CcbADZHPc5 | merged: 3 interaction blockers, 3 late blockers, all handed to order 1.22 |
+| Angular A3, A4, late ports, recheck of angular-1 | claude/ds-review-angular-2 | session_01ErLBsbZDc249xJd2nXyVxA | merged: 20 blockers in 12 components |
 | Angular A1, A2, A5 | claude/ds-review-angular-1 | session_01ErLBsdPS43RLcuWFDVcWKs | merged, blockers in 6 components, 4 not ported |
 
 Fix round sessions (round 1 of 3), reports in `docs/reports/fixes/`:
@@ -158,7 +160,8 @@ Fix round sessions (round 1 of 3), reports in `docs/reports/fixes/`:
 | Reviews 1-2, 3-4, 6 blockers | claude/ds-fix-1-6 | session_01ErLBsZcfuz1s1NKys7fajT | merged, second review open |
 | Late lanes blockers, Sidebar target size | claude/ds-fix-late | session_01ErLBsc2CaZGKDvsW79jfhp | merged, recheck open |
 | Round 2 leftovers (Sheet, Breadcrumbs, new blockers, Switch label gap) | claude/ds-fix-round-2 | session_01ErLBsaZPjzKmFAAdPBF2UR | merged |
-| Angular: review blockers, 4 missing ports, DOM sync, Field API | claude/ds-angular-sync | session_01ErLBsdvtuUeh2CMnRYDKRE | merged up to its contract report; screenshot compare and report still to come |
+| Angular: review blockers, 4 missing ports, DOM sync, Field API | claude/ds-angular-sync | session_01ErLBsdvtuUeh2CMnRYDKRE | merged |
+| Angular review 2 blockers | claude/ds-angular-fix-2 | session_01ErLBsaCAJgzAtNDG4vkyUP | running |
 | Review 7 blockers | claude/ds-fix-7 | session_01ErLBsZh5KyRZBXYhtBr3Fz | merged, second review open |
 
 Requests from the lanes are collected in `docs/plan/wave-1-followups.md`.
