@@ -41,6 +41,16 @@
 //           <span data-part="status" role="status">              the result count, once per query
 //           <div data-part="footer">                             key hints
 //
+// Motion (order 1.22, proposed). CommandPalette.css springs the panel open
+// (interaction "command-palette-open"). Here: the rows of results arrive one
+// stagger step apart on open and on each new list (staggerGroup, capped at
+// eight rows; the lit row is there at once, it shows where the arrow keys
+// are), while the rows that stay from the last list slide to their new
+// place (a FLIP, interaction "command-palette-results"); and the lit fill
+// slides from the old row to the new one (interaction
+// "command-palette-row-slide"). Typing is never held back: the list is
+// rendered at once and only its drawing moves.
+//
 // Running a command closes the palette first. The command runs once the
 // palette has closed and focus is back where it was (the Radix close focus
 // event), so a command may move focus itself.
@@ -50,6 +60,7 @@ import {
   useCallback,
   useEffect,
   useId,
+  useLayoutEffect,
   useMemo,
   useRef,
   useState,
@@ -71,6 +82,12 @@ import { Kbd, useKeyboardPlatform } from '../Kbd';
 import { filterListBoxItems, listBoxOptionId, type ListBoxItem, type ListBoxOption } from '../ListBox';
 import { SearchField } from '../SearchField';
 import { hasCommandModifier, isEditableTarget, matchShortcut } from './matchShortcut';
+import { flipPlay, flipSnapshot, staggerGroup, type FlipSnapshot } from '@the-system/motion';
+import { useMotion } from '../../internal/motion';
+import { slideHighlight } from '../DropdownMenu/menuShared';
+
+/** The most rows that stagger in; the rest of a long list is there at once. */
+const STAGGER_ROWS = 8;
 
 /** Widths from the dialog width tokens: md 520, lg 640 px. */
 export type CommandPaletteSize = Extract<OverlaySize, 'md' | 'lg'>;
@@ -382,6 +399,54 @@ export function CommandPalette({
     listRef.current?.querySelector<HTMLElement>(`#${CSS.escape(rowId(highlighted))}`)?.scrollIntoView?.({ block: 'nearest' });
   }, [highlighted, rowId]);
 
+  // Interaction "command-palette-row-slide": the lit fill slides from the old row to the new one.
+  const motion = useMotion();
+  const litBefore = useRef<string | null>(null);
+  useLayoutEffect(() => {
+    const list = listRef.current;
+    const before = litBefore.current;
+    litBefore.current = highlighted;
+    if (!list || before === null || highlighted === null || before === highlighted) return;
+    const from = list.querySelector(`#${CSS.escape(rowId(before))}`);
+    const to = list.querySelector(`#${CSS.escape(rowId(highlighted))}`);
+    if (to) slideHighlight(from, to, motion.mode('command-palette-row-slide'));
+  }, [highlighted, rowId, motion]);
+
+  // Interaction "command-palette-results": the rows arrive in order on open
+  // and on a new list; rows that stay slide from where they were. The
+  // snapshot is taken before the query changes (onQueryInput), while the old
+  // rows are still drawn.
+  const rowsBefore = useRef<FlipSnapshot | null>(null);
+  const shownOnce = useRef(false);
+  useLayoutEffect(() => {
+    const list = listRef.current;
+    const snap = rowsBefore.current;
+    rowsBefore.current = null;
+    if (!open) {
+      shownOnce.current = false;
+      return;
+    }
+    if (!list) return;
+    const mode = motion.mode('command-palette-results');
+    const all = Array.from(list.querySelectorAll<HTMLElement>('[data-part="item"]'));
+    const first = !shownOnce.current;
+    shownOnce.current = true;
+    if (!first && !snap) return;
+    const staying = snap ? all.filter((el) => snap.rects.has(el)) : [];
+    if (snap && staying.length) flipPlay(snap, { items: staying, spring: 'snappy', enter: 'none', mode });
+    // The lit row is there at once: the one lit now, and the first one, which the highlight lands on after a new list.
+    const litIds = new Set([highlighted, firstKey].filter((k): k is string => k !== null).map(rowId));
+    const arriving = all.filter((el) => !staying.includes(el) && !litIds.has(el.id)).slice(0, STAGGER_ROWS);
+    // On open the rows follow the panel by one step.
+    staggerGroup(arriving, { mode, offset: first ? 1 : 0 });
+    // Runs when the list changes; the highlight is read as it is then.
+  }, [open, rows, motion]);
+  const onQueryInput = (next: string) => {
+    const list = listRef.current;
+    if (list) rowsBefore.current = flipSnapshot(list.querySelectorAll('[data-part="item"]'));
+    setQuery(next);
+  };
+
   // The result count, once per query, after typing pauses. The status empties first, so the same count after a new query is read again.
   const [status, setStatus] = useState('');
   const formatRef = useRef(formatCount);
@@ -544,7 +609,7 @@ export function CommandPalette({
         <SearchField
           size="lg"
           value={query}
-          onValueChange={setQuery}
+          onValueChange={onQueryInput}
           placeholder={placeholder ?? words.placeholder}
           clearLabel={words.clear}
           loading={loading}

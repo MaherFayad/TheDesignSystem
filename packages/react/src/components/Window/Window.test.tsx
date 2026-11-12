@@ -482,3 +482,46 @@ describe('Window', () => {
     expect(container.querySelectorAll('[data-demo-case="variants"] [data-ds="window"]')).toHaveLength(3);
   });
 });
+
+// ------------------------------------------------------------------ motion, order 1.22
+
+describe('motion (order 1.22): window-settle', () => {
+  const windowEl = () => {
+    const el = document.createElement('div');
+    el.style.setProperty('--ds-duration-window-open', '300ms');
+    el.style.setProperty('--ds-duration-spring-bouncy', '440ms');
+    el.style.setProperty('--ds-duration-quick', '100ms');
+    el.style.setProperty('--ds-ease-out', 'ease-out');
+    el.style.setProperty('--ds-ease-exit', 'ease-in');
+    document.body.append(el);
+    return el;
+  };
+
+  it('lands with a swell added on top of the grow, near its end', async () => {
+    const { settleWindow } = await import('./windowSettle');
+    const el = windowEl();
+    const animate = vi.fn(() => ({}) as Animation);
+    (el as unknown as { animate: typeof animate }).animate = animate;
+    settleWindow(el, 'land', 'duration.window-open', 'grow', 'full');
+    const [frames, options] = animate.mock.calls[0] as unknown as [Keyframe[], KeyframeAnimationOptions];
+    expect(frames[1]?.transform).toBe('scale(var(--ds-scale-lift, 1.01))');
+    expect(options.composite).toBe('add');
+    expect(options.duration).toBe(440);
+    expect(options.delay).toBeCloseTo(300 * 0.55);
+    el.remove();
+  });
+
+  it('gathers at once on close, and plays nothing in a fading style or under reduced motion', async () => {
+    const { settleWindow } = await import('./windowSettle');
+    const el = windowEl();
+    const animate = vi.fn(() => ({}) as Animation);
+    (el as unknown as { animate: typeof animate }).animate = animate;
+    settleWindow(el, 'gather', 'duration.window-open', 'grow', 'full');
+    expect((animate.mock.calls[0] as unknown as [Keyframe[], KeyframeAnimationOptions])[1].delay).toBe(0);
+    expect(settleWindow(el, 'land', 'duration.window-open', 'fade', 'full')).toBeNull();
+    expect(settleWindow(el, 'land', 'duration.window-open', 'grow', 'reduced')).toBeNull();
+    expect(settleWindow(el, 'land', 'duration.window-open', 'grow', 'none')).toBeNull();
+    expect(animate).toHaveBeenCalledTimes(1);
+    el.remove();
+  });
+});

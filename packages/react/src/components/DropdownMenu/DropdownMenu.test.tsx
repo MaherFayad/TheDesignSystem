@@ -388,3 +388,99 @@ describe('DropdownMenu', () => {
     expect(document.querySelectorAll('button:not([data-ds])')).toHaveLength(0);
   });
 });
+
+// ------------------------------------------------------------------ motion, order 1.22
+
+describe('motion (order 1.22)', () => {
+  const box = (top: number, height = 28) =>
+    ({ x: 0, y: top, left: 0, top, width: 120, height, right: 120, bottom: top + height, toJSON: () => ({}) }) as DOMRect;
+  const row = (top: number) => {
+    const el = document.createElement('div');
+    el.setAttribute('role', 'menuitem');
+    el.style.setProperty('--ds-duration-spring-snappy', '180ms');
+    el.style.setProperty('--ds-ease-spring-snappy', 'linear(0, 1)');
+    el.getBoundingClientRect = () => box(top);
+    document.body.append(el);
+    return el;
+  };
+
+  it('menu-row-slide: the new row fill starts over the old row and travels on its ::after', async () => {
+    const { slideHighlight } = await import('./menuShared');
+    const from = row(10);
+    const to = row(66);
+    const animate = vi.fn(() => ({}) as Animation);
+    (to as unknown as { animate: typeof animate }).animate = animate;
+    slideHighlight(from, to, 'full');
+    expect(animate).toHaveBeenCalledTimes(1);
+    const [frames, options] = animate.mock.calls[0] as unknown as [Keyframe[], KeyframeAnimationOptions & { pseudoElement: string }];
+    expect(frames[0]?.transform).toBe('translate(0px, -56px) scale(1, 1)');
+    expect(frames[1]?.transform).toBe('none');
+    expect(options.pseudoElement).toBe('::after');
+    expect(options.duration).toBe(180);
+    from.remove();
+    to.remove();
+  });
+
+  it('menu-row-slide: nothing plays when reduced, turned off, or with no row before', async () => {
+    const { slideHighlight } = await import('./menuShared');
+    const from = row(10);
+    const to = row(66);
+    const animate = vi.fn(() => ({}) as Animation);
+    (to as unknown as { animate: typeof animate }).animate = animate;
+    expect(slideHighlight(from, to, 'reduced')).toBeNull();
+    expect(slideHighlight(from, to, 'none')).toBeNull();
+    expect(slideHighlight(null, to, 'full')).toBeNull();
+    expect(slideHighlight(to, to, 'full')).toBeNull();
+    expect(animate).not.toHaveBeenCalled();
+    from.remove();
+    to.remove();
+  });
+
+  it('keeps the row, its text and its role when the highlight moves (the fill is decorative)', async () => {
+    const user = userEvent.setup();
+    render(
+      <DropdownMenu>
+        <DropdownMenuTrigger>
+          <Button>Board</Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent>
+          <DropdownMenuItem>Rename board</DropdownMenuItem>
+          <DropdownMenuItem>Duplicate board</DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>,
+    );
+    await user.click(screen.getByRole('button', { name: 'Board' }));
+    const items = await screen.findAllByRole('menuitem');
+    items[0]?.focus();
+    await user.keyboard('{ArrowDown}');
+    expect(document.activeElement).toBe(items[1]);
+    expect(items[1]?.querySelectorAll('[aria-hidden="true"]:not([data-part])')).toHaveLength(0);
+  });
+
+  describe('DropdownMenu.css', async () => {
+    const { readFileSync } = await import('node:fs');
+    const { join } = await import('node:path');
+    const css = readFileSync(join(process.cwd(), 'packages/css/src/components/DropdownMenu.css'), 'utf8');
+
+    it('review N2: in right to left layouts a menu grows from the corner at its trigger', () => {
+      expect(css).toMatch(/:dir\(rtl\)\[data-side='bottom'\]\[data-align='start'\] \{\s*--_menu-origin: 100% 0%;/);
+      expect(css).toMatch(/:dir\(rtl\)\[data-side='bottom'\]\[data-align='end'\] \{\s*--_menu-origin: 0% 0%;/);
+      expect(css).toMatch(/:dir\(rtl\)\[data-side='top'\]\[data-align='start'\] \{\s*--_menu-origin: 100% 100%;/);
+    });
+
+    it('review B2: every reduced motion rule also applies under data-motion="reduce"', () => {
+      expect(css).toContain('@media (prefers-reduced-motion: reduce)');
+      expect(css).toContain(":root[data-motion='reduce'] :is([data-ds='dropdown-menu'], [data-ds='context-menu'])[data-state],");
+      expect(css).toContain(":root[data-motion='reduce'] :is([data-ds='dropdown-menu'], [data-ds='context-menu']) [data-part='sub-trigger'] > [data-part='end'] {");
+    });
+
+    it('staggers the inside of the rows, never the row with its fill and ring', () => {
+      expect(css).toContain("[data-state='open'] :is([data-part='item'], [data-part='checkbox-item'], [data-part='radio-item'], [data-part='sub-trigger']) > *,");
+      expect(css).toContain('animation-delay: min(calc(var(--ds-delay-stagger) * (var(--_menu-item-step) + 1)), var(--ds-duration-base));');
+    });
+
+    it('lead rule: a staggered row is readable early (a capped delay, full opacity at 30%)', () => {
+      expect(css).toMatch(/@keyframes ds-menu-row-in \{[^@]*30% \{\s*opacity: 1;/);
+    });
+  });
+});

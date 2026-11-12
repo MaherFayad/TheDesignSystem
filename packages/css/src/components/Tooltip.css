@@ -26,15 +26,24 @@
  * while the pointer moves onto it. Only a closing tooltip, while it fades
  * out, lets the pointer through.
  *
- * Motion, interaction "tooltip-rise" (pattern "fade-rise"): on a delayed
- * open the tooltip fades in while it travels space.xs from its trigger side
- * (data-side) into place, over duration.base on ease.out. Moving to another
- * trigger of the same provider inside the skip delay opens it with
- * data-state instant-open: no animation, it is there at once. Closing plays
- * the travel backward, faster (duration.quick, ease.exit). Only transform
- * and opacity animate. A style turns the travel off with
- * --_tooltip-shift: 0px, which leaves a fade. Under reduced motion the
- * animations are none.
+ *   --_tooltip-enter-scale    the scale the tooltip grows from
+ *
+ * Motion, order 1.22, proposed. Interaction "tooltip-rise" (pattern
+ * "fade-rise"): on a delayed open the tooltip travels distance.shift from
+ * its trigger side (data-side) into place and grows from scale.enter while
+ * it fades in, on the snappy spring (ease.spring-snappy over
+ * duration.spring-snappy: a small overshoot that settles); the shortcut
+ * follows one delay.stagger step later. Interaction "tooltip-follow": moving
+ * to another trigger of the same provider inside the skip delay opens it
+ * with data-state instant-open, with no CSS animation; Tooltip.tsx then
+ * slides it from where the last tooltip was to its own place (a FLIP on the
+ * snappy spring) and hides the old one at once, so one tooltip seems to
+ * follow the pointer or the focus along a toolbar. Without the script, as
+ * in Angular until it ports it, the next tooltip is there at once. Closing
+ * plays the travel backward, faster (duration.quick, ease.exit), all at
+ * once. Only transform and opacity animate. A style turns the travel and
+ * the scale off with --_tooltip-shift: 0px and --_tooltip-enter-scale: 1,
+ * which leaves a fade. Under reduced motion the animations are none.
  */
 @layer ds.base {
   [data-ds='theme'][data-tooltip-layer] {
@@ -53,12 +62,13 @@
     --_tooltip-padding-inline: var(--ds-space-m);
     --_tooltip-arrow-width: var(--ds-space-l);
     --_tooltip-arrow-height: calc(var(--ds-space-l) / 2);
-    --_tooltip-shift: var(--ds-space-xs);
+    --_tooltip-shift: var(--ds-distance-shift);
     --_tooltip-enter-x: 0px;
     --_tooltip-enter-y: 0px;
-    --_tooltip-duration-in: var(--ds-duration-base);
+    --_tooltip-enter-scale: var(--ds-scale-enter);
+    --_tooltip-duration-in: var(--ds-duration-spring-snappy);
     --_tooltip-duration-out: var(--ds-duration-quick);
-    --_tooltip-ease-in: var(--ds-ease-out);
+    --_tooltip-ease-in: var(--ds-ease-spring-snappy);
     --_tooltip-ease-out: var(--ds-ease-exit);
 
     position: relative;
@@ -103,7 +113,13 @@
     animation: ds-tooltip-in var(--_tooltip-duration-in) var(--_tooltip-ease-in);
   }
 
-  /* Inside the skip delay of the provider: the next tooltip is there at once. */
+  /* The shortcut arrives one stagger step after the hint. */
+  [data-ds='tooltip'][data-state='delayed-open'] > [data-part='shortcut'] {
+    animation: ds-tooltip-part-in var(--ds-duration-spring-soft) var(--ds-ease-spring-soft) backwards;
+    animation-delay: var(--ds-delay-stagger);
+  }
+
+  /* Inside the skip delay of the provider: the next tooltip is there at once (Tooltip.tsx slides it over from the last one). */
   [data-ds='tooltip'][data-state='instant-open'] {
     animation: none;
   }
@@ -114,7 +130,9 @@
   }
 
   /* The shortcut: after the hint, quieter, never wrapped inside. */
+  /* An inline block, so it can move on its own as it arrives. */
   [data-ds='tooltip'] > [data-part='shortcut'] {
+    display: inline-block;
     margin-inline-start: var(--ds-space-s);
     color: var(--_tooltip-muted);
     font-family: var(--ds-font-family-mono);
@@ -137,21 +155,40 @@
   @keyframes ds-tooltip-in {
     from {
       opacity: 0;
-      transform: translate(var(--_tooltip-enter-x), var(--_tooltip-enter-y));
+      transform: translate(var(--_tooltip-enter-x), var(--_tooltip-enter-y)) scale(var(--_tooltip-enter-scale));
+    }
+  }
+
+  @keyframes ds-tooltip-part-in {
+    from {
+      opacity: 0;
+      transform: translateY(var(--_tooltip-shift));
+    }
+
+    /* Readable early: full opacity at 30%, the transform carries the rest. */
+    30% {
+      opacity: 1;
     }
   }
 
   @keyframes ds-tooltip-out {
     to {
       opacity: 0;
-      transform: translate(var(--_tooltip-enter-x), var(--_tooltip-enter-y));
+      transform: translate(var(--_tooltip-enter-x), var(--_tooltip-enter-y)) scale(var(--_tooltip-enter-scale));
     }
   }
 
+  /* Reduced motion: the system setting and the page's own setting (data-motion="reduce" on the root element). */
   @media (prefers-reduced-motion: reduce) {
-    [data-ds='tooltip'][data-state] {
+    [data-ds='tooltip'][data-state],
+    [data-ds='tooltip'][data-state] > [data-part='shortcut'] {
       animation: none;
     }
+  }
+
+  :root[data-motion='reduce'] [data-ds='tooltip'][data-state],
+  :root[data-motion='reduce'] [data-ds='tooltip'][data-state] > [data-part='shortcut'] {
+    animation: none;
   }
 
   @media (prefers-reduced-transparency: reduce) {

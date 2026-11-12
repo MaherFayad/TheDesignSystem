@@ -36,7 +36,13 @@
 // A tooltip hides while its trigger is out of view or hidden
 // (hideWhenDetached), so it never floats on alone.
 //
-// Motion, pattern "fade-rise" (Tooltip.css).
+// Motion (order 1.22, proposed): interaction "tooltip-rise" in Tooltip.css (a
+// delayed open travels out of the trigger side on the snappy spring), and
+// interaction "tooltip-follow" here: a tooltip that opens at once inside the
+// provider's skip delay (data-state instant-open) slides from where the last
+// tooltip was to its own place, and the last one is hidden at once, so one
+// tooltip seems to move along the toolbar. Only the drawing moves; the
+// tooltip is open and described from its first frame.
 import {
   Children,
   cloneElement,
@@ -57,6 +63,8 @@ import { Tooltip as RadixTooltip } from 'radix-ui';
 import { useTheme } from '../../theme/hooks';
 import { ArrowShape, ThemedPortal, physicalSide, useLayerPresence, type FloatingAlign, type FloatingSide } from '../Popover/FloatingLayer';
 import { useControllable } from '../../internal/useControllable';
+import { flipPlay, readDuration, rectOf, type MotionRect, type PatternMode } from '@the-system/motion';
+import { useMotion } from '../../internal/motion';
 
 export type TooltipSide = FloatingSide;
 export type TooltipAlign = FloatingAlign;
@@ -67,6 +75,40 @@ export const TOOLTIP_DELAY = 500;
 export const TOOLTIP_SKIP_DELAY = 300;
 
 const ProviderPresent = createContext(false);
+
+/** The last tooltip that closed: the element, where it was drawn and when (interaction "tooltip-follow"). */
+let lastClosed: { el: HTMLElement; rect: MotionRect; at: number } | null = null;
+
+/** Frames to wait for Radix to place a new tooltip before it slides. */
+const PLACE_FRAMES = 8;
+
+/**
+ * Interaction "tooltip-follow": a tooltip that opened at once right after
+ * another one closed slides from the old place to its own on the snappy
+ * spring, and the old one is hidden at once. Radix places the content in a
+ * later frame (its wrapper waits off screen until then), so the slide starts
+ * once it is placed.
+ */
+function followLast(node: HTMLElement, mode: PatternMode, skipDelay: number): void {
+  const prev = lastClosed;
+  if (mode !== 'full' || !prev || prev.el === node || node.getAttribute('data-state') !== 'instant-open') return;
+  // instant-open already says the provider is inside its skip delay; the portal mounts a frame or two after that.
+  if (performance.now() - prev.at > 2 * skipDelay || typeof node.animate !== 'function') return;
+  if (prev.el.isConnected) {
+    prev.el.animate([{ opacity: 0 }, { opacity: 0 }], { duration: Math.max(readDuration(prev.el, 'duration.quick'), 1), fill: 'forwards' });
+  }
+  let frames = 0;
+  const placed = () => !(node.parentElement?.style.transform ?? '').includes('-200%');
+  const step = () => {
+    if (!node.isConnected) return;
+    if (!placed() && frames++ < PLACE_FRAMES) {
+      requestAnimationFrame(step);
+      return;
+    }
+    flipPlay({ rects: new Map([[node, prev.rect]]) }, { items: [node], spring: 'snappy', mode });
+  };
+  requestAnimationFrame(step);
+}
 
 function assignRef<T>(ref: Ref<T> | undefined, value: T | null): void {
   if (typeof ref === 'function') ref(value);
@@ -205,13 +247,25 @@ export function Tooltip({
   }, [children]);
   const userRef = useRef(ref);
   userRef.current = ref;
+  const motion = useMotion();
+  const motionRef = useRef(motion);
+  motionRef.current = motion;
+  const nodeRef = useRef<HTMLDivElement | null>(null);
   const setRef = useCallback(
     (node: HTMLDivElement | null) => {
+      nodeRef.current = node;
       presenceRef(node);
       assignRef(userRef.current, node);
+      if (node) followLast(node, motionRef.current.mode('tooltip-follow'), TOOLTIP_SKIP_DELAY);
     },
     [presenceRef],
   );
+  // Where this tooltip was when it started to close, for the next one to slide from.
+  useEffect(() => {
+    const node = nodeRef.current;
+    if (shown || !node) return;
+    lastClosed = { el: node, rect: rectOf(node), at: performance.now() };
+  }, [shown]);
 
   // The tooltip repeats the trigger's name (an IconButton label): it is not
   // also its description, so a screen reader does not say it twice.

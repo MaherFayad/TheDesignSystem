@@ -40,23 +40,32 @@
  *                                      leaves to, 1; 0 when a style turns the slide into a fade
  *   --_dialog-handle-color, -drag-y, -drag-duration   Sheet: the handle and the drag
  *
- * Motion, interaction "dialog-spring" (pattern "dialog"): the panel rises
- * space.2xs and scales up from scale.dialog-enter while it fades in, over
- * duration.base on ease.emphasized; the backdrop fades. Interaction
- * "sheet-spring" (pattern "sheet"): a Drawer slides in from its side and a
- * Sheet rises from the block end, over duration.slow on ease.emphasized,
- * and a Sheet let go after a short drag settles back on the same ease.
- * CSS cannot compute a spring, and there is no ease.spring-* token yet:
- * ease.emphasized is the nearest curve, read through --_dialog-ease-in, so
- * a later ease.spring-sheet token or a style recipe can set a linear()
- * curve (packages/motion spring.ts) without a change here. Closing plays
- * the reverse on duration.base and ease.exit: short, and the state change
- * never waits for it. A style turns the travel off with
- * --_dialog-enter-y: 0px and --_dialog-enter-scale: 1 (a dialog), or
- * --_dialog-slide: 0% and --_dialog-enter-opacity: 0 (a drawer or a sheet),
- * which leaves a fade. Only transform and opacity animate. Under reduced
- * motion both animations are none: Radix then removes the closed dialog at
- * once and never waits for an animationend.
+ *   --_dialog-shift                    how far each part of the panel rises as it arrives
+ *
+ * Motion, order 1.22, proposed. Interaction "dialog-spring" (pattern
+ * "dialog"): the backdrop fades in while the panel rises distance.enter and
+ * grows from scale.dialog-enter on the soft spring (ease.spring-soft over
+ * duration.spring-soft: Neutral 220ms with no overshoot, Desk 340ms with a
+ * small one, Studio in steps). The panel reaches full opacity in the first
+ * third of its rise, so a control that takes focus on open is readable
+ * almost at once. Its parts then arrive in order, one delay.stagger step
+ * apart: the AlertDialog icon (it pops from scale.morph on the bouncy
+ * spring) and the title or header, the description, the body, the footer;
+ * each rises distance.shift on the soft spring. A part that holds focus is
+ * there at once (:focus-within), so the focus ring never waits for a
+ * stagger. Interaction "sheet-spring" (pattern "sheet"): a Drawer slides in
+ * its own size from its side (mirrored in right to left layouts) and a
+ * Sheet rises from the block end, on the soft spring, with no fade, and
+ * their parts arrive as a dialog's do; a Sheet let go after a short drag
+ * settles back on the same spring. Exits are faster than entrances
+ * (duration.quick on ease.exit), all at once, with no stagger, and the
+ * state change never waits for them. A style turns the travel off with
+ * --_dialog-enter-y: 0px, --_dialog-enter-scale: 1 and --_dialog-shift: 0px
+ * (a dialog), or --_dialog-slide: 0% and --_dialog-enter-opacity: 0 (a
+ * drawer or a sheet), which leaves fades. Only transform and opacity
+ * animate. Under reduced motion, and under data-motion="reduce" on the root
+ * element, the animations are none: Radix then removes the closed dialog
+ * at once and never waits for an animationend.
  */
 @layer ds.base {
   /* ------------------------------------------------------------ portal layer */
@@ -87,12 +96,12 @@
     --_dialog-band-padding-inline: var(--ds-space-xl);
     --_dialog-scrim: var(--ds-color-bg-scrim);
     --_dialog-scrim-filter: blur(var(--ds-blur-backdrop));
-    --_dialog-enter-y: var(--ds-space-2xs);
+    --_dialog-enter-y: var(--ds-distance-enter);
     --_dialog-enter-scale: var(--ds-scale-dialog-enter);
-    --_dialog-duration-in: var(--ds-duration-base);
-    --_dialog-duration-out: var(--ds-duration-base);
-    /* The nearest curve to spring.sheet until an ease.spring-sheet token exists. */
-    --_dialog-ease-in: var(--ds-ease-emphasized);
+    --_dialog-shift: var(--ds-distance-shift);
+    --_dialog-duration-in: var(--ds-duration-spring-soft);
+    --_dialog-duration-out: var(--ds-duration-quick);
+    --_dialog-ease-in: var(--ds-ease-spring-soft);
     --_dialog-ease-out: var(--ds-ease-exit);
 
     position: fixed;
@@ -200,6 +209,34 @@
 
   :is([data-ds='dialog'], [data-ds='alert-dialog'], [data-ds='drawer'], [data-ds='sheet']) > [data-part='panel'][data-state='closed'] {
     animation: ds-dialog-out var(--_dialog-duration-out) var(--_dialog-ease-out) forwards;
+  }
+
+  /*
+   * The parts arrive in order after the panel, one stagger step apart. A
+   * part that holds focus is there at once. The title bar and the close
+   * control come with the panel.
+   */
+  :is([data-ds='dialog'], [data-ds='alert-dialog'], [data-ds='drawer'], [data-ds='sheet']) > [data-part='panel'][data-state='open'] > :is([data-part='header'], [data-part='title'], [data-part='description'], [data-part='body'], [data-part='footer']):not(:focus-within) {
+    animation: ds-dialog-part-in var(--ds-duration-spring-soft) var(--ds-ease-spring-soft) backwards;
+    animation-delay: var(--ds-delay-stagger);
+  }
+
+  :is([data-ds='dialog'], [data-ds='alert-dialog'], [data-ds='drawer'], [data-ds='sheet']) > [data-part='panel'][data-state='open'] > [data-part='description']:not(:focus-within) {
+    animation-delay: min(calc(var(--ds-delay-stagger) * 2), var(--ds-duration-base));
+  }
+
+  :is([data-ds='dialog'], [data-ds='alert-dialog'], [data-ds='drawer'], [data-ds='sheet']) > [data-part='panel'][data-state='open'] > [data-part='body']:not(:focus-within) {
+    animation-delay: min(calc(var(--ds-delay-stagger) * 3), var(--ds-duration-base));
+  }
+
+  :is([data-ds='dialog'], [data-ds='alert-dialog'], [data-ds='drawer'], [data-ds='sheet']) > [data-part='panel'][data-state='open'] > [data-part='footer']:not(:focus-within) {
+    animation-delay: min(calc(var(--ds-delay-stagger) * 4), var(--ds-duration-base));
+  }
+
+  /* The AlertDialog icon lands: it pops from scale.morph on the bouncy spring, with the title. */
+  :is([data-ds='dialog'], [data-ds='alert-dialog'], [data-ds='drawer'], [data-ds='sheet']) > [data-part='panel'][data-state='open'] > [data-part='icon'] {
+    animation: ds-dialog-icon-in var(--ds-duration-spring-bouncy) var(--ds-ease-spring-bouncy) backwards;
+    animation-delay: var(--ds-delay-stagger);
   }
 
   /*
@@ -430,7 +467,6 @@
     --_dialog-gutter: 0;
     --_dialog-slide: 100%;
     --_dialog-enter-opacity: 1;
-    --_dialog-duration-in: var(--ds-duration-slow);
 
     align-items: stretch;
     justify-content: flex-end;
@@ -553,7 +589,6 @@
     --_dialog-drag-duration: var(--ds-duration-base);
     --_dialog-slide: 100%;
     --_dialog-enter-opacity: 1;
-    --_dialog-duration-in: var(--ds-duration-slow);
     /* Where toasts on the top edge end; Sheet.tsx sets it inline while they show. */
     --_sheet-toast-end: 0px;
 
@@ -668,10 +703,39 @@
 
   /* ------------------------------------------------------------ motion: interactions "dialog-spring" and "sheet-spring" */
 
+  /* Full opacity in the first third: the rise goes on, the panel is readable. */
   @keyframes ds-dialog-in {
     from {
       opacity: 0;
       transform: translateY(var(--_dialog-enter-y)) scale(var(--_dialog-enter-scale));
+    }
+
+    33% {
+      opacity: 1;
+    }
+  }
+
+  @keyframes ds-dialog-part-in {
+    from {
+      opacity: 0;
+      transform: translateY(var(--_dialog-shift));
+    }
+
+    /* Readable early: full opacity at 30%, the transform carries the rest. */
+    30% {
+      opacity: 1;
+    }
+  }
+
+  @keyframes ds-dialog-icon-in {
+    from {
+      opacity: 0;
+      transform: scale(var(--ds-scale-morph));
+    }
+
+    /* Readable early: full opacity at 30%, the transform carries the rest. */
+    30% {
+      opacity: 1;
     }
   }
 
@@ -723,14 +787,25 @@
     }
   }
 
+  /* Reduced motion: the system setting and the page's own setting (data-motion="reduce" on the root element). */
   @media (prefers-reduced-motion: reduce) {
-    :is([data-ds='dialog'], [data-ds='alert-dialog'], [data-ds='drawer'], [data-ds='sheet']) > :is([data-part='panel'], [data-part='backdrop'])[data-state] {
+    :is([data-ds='dialog'], [data-ds='alert-dialog'], [data-ds='drawer'], [data-ds='sheet']) > :is([data-part='panel'], [data-part='backdrop'])[data-state],
+    :is([data-ds='dialog'], [data-ds='alert-dialog'], [data-ds='drawer'], [data-ds='sheet']) > [data-part='panel'][data-state] > :is([data-part='icon'], [data-part='header'], [data-part='title'], [data-part='description'], [data-part='body'], [data-part='footer']) {
       animation: none;
     }
 
     [data-ds='sheet'] {
       --_dialog-drag-duration: 0s;
     }
+  }
+
+  :root[data-motion='reduce'] :is([data-ds='dialog'], [data-ds='alert-dialog'], [data-ds='drawer'], [data-ds='sheet']) > :is([data-part='panel'], [data-part='backdrop'])[data-state],
+  :root[data-motion='reduce'] :is([data-ds='dialog'], [data-ds='alert-dialog'], [data-ds='drawer'], [data-ds='sheet']) > [data-part='panel'][data-state] > :is([data-part='icon'], [data-part='header'], [data-part='title'], [data-part='description'], [data-part='body'], [data-part='footer']) {
+    animation: none;
+  }
+
+  :root[data-motion='reduce'] [data-ds='sheet'] {
+    --_dialog-drag-duration: 0s;
   }
 
   /* ------------------------------------------------------------ transparency, contrast, forced colors */

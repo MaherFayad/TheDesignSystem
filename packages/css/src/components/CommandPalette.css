@@ -39,6 +39,24 @@
  *   --_command-palette-mark-weight
  *   --_command-palette-enter-y, -enter-scale, -duration-in, -duration-out,
  *   --_command-palette-ease-in, -ease-out   pattern "dialog"
+ *   --_command-palette-shift                how far the search band and the footer rise as they arrive
+ *
+ * Motion, interaction "command-palette-open" (order 1.22, proposed): the
+ * backdrop fades and the panel rises distance.enter and grows from
+ * scale.dialog-enter on the snappy spring, at full opacity within the first
+ * third of the rise, so the search box, which has focus, is readable at
+ * once. The footer of key hints follows one delay.stagger step later. The
+ * rows of results arrive in CommandPalette.tsx (a staggered group on open
+ * and on each new query, capped, while the rows that stay slide to their
+ * new place); typing is never held back. Interaction
+ * "command-palette-row-slide": the lit fill of a row is its ::after (the
+ * hover veil of anatomy.md), so CommandPalette.tsx can slide it from the
+ * old row to the new one on the snappy spring when the arrow keys or the
+ * pointer move the highlight. Without the script, as in Angular until it
+ * ports it, the rows are there at once and the fill moves at once. Closing
+ * is faster (duration.quick on ease.exit), all at once. A style turns the
+ * travel off with --_command-palette-enter-y: 0px,
+ * --_command-palette-enter-scale: 1 and --_command-palette-shift: 0px.
  *
  * The SearchField draws no box of its own here: this file sets its private
  * properties (border, ring, radius, background). The band shows focus with a
@@ -73,11 +91,12 @@
     --_command-palette-meta-fg: var(--ds-color-text-muted);
     --_command-palette-meta-fg-highlight: var(--ds-color-text-default);
     --_command-palette-mark-weight: var(--ds-font-weight-bold);
-    --_command-palette-enter-y: var(--ds-space-2xs);
+    --_command-palette-enter-y: var(--ds-distance-enter);
     --_command-palette-enter-scale: var(--ds-scale-dialog-enter);
-    --_command-palette-duration-in: var(--ds-duration-base);
-    --_command-palette-duration-out: var(--ds-duration-base);
-    --_command-palette-ease-in: var(--ds-ease-out);
+    --_command-palette-shift: var(--ds-distance-shift);
+    --_command-palette-duration-in: var(--ds-duration-spring-snappy);
+    --_command-palette-duration-out: var(--ds-duration-quick);
+    --_command-palette-ease-in: var(--ds-ease-spring-snappy);
     --_command-palette-ease-out: var(--ds-ease-exit);
 
     position: fixed;
@@ -157,6 +176,12 @@
     animation: ds-command-palette-in var(--_command-palette-duration-in) var(--_command-palette-ease-in);
   }
 
+  /* The key hints follow the panel by one stagger step. */
+  [data-ds='command-palette'] > [data-part='panel'][data-state='open'] > [data-part='footer'] {
+    animation: ds-command-palette-part-in var(--ds-duration-spring-soft) var(--ds-ease-spring-soft) backwards;
+    animation-delay: var(--ds-delay-stagger);
+  }
+
   [data-ds='command-palette'] > [data-part='panel'][data-state='closed'] {
     animation: ds-command-palette-out var(--_command-palette-duration-out) var(--_command-palette-ease-out) forwards;
   }
@@ -225,6 +250,8 @@
     padding: var(--_command-palette-padding);
     overflow: hidden auto;
     overscroll-behavior: contain;
+    /* A stacking context, so the layers of the rows stay inside the list. */
+    isolation: isolate;
   }
 
   [data-ds='command-palette'] [data-part='list'] > [data-part='group'] + :is([data-part='group'], [data-part='item']),
@@ -264,10 +291,26 @@
     padding-block: var(--ds-space-2xs);
     padding-inline: var(--_command-palette-item-padding-inline);
     border-radius: var(--_command-palette-item-radius);
-    background-color: var(--_command-palette-item-bg);
     color: var(--_command-palette-item-fg);
     cursor: default;
     user-select: none;
+  }
+
+  /* The lit fill (z.canvas), under the row's content (z.raised). The origin is the top left corner: CommandPalette.tsx measures the slide in screen px. */
+  [data-ds='command-palette'] [data-part='item']::after {
+    content: '';
+    position: absolute;
+    z-index: var(--ds-z-canvas);
+    inset: 0;
+    border-radius: inherit;
+    background-color: var(--_command-palette-item-bg);
+    transform-origin: 0 0;
+    pointer-events: none;
+  }
+
+  [data-ds='command-palette'] [data-part='item'] > * {
+    position: relative;
+    z-index: var(--ds-z-raised);
   }
 
   [data-ds='command-palette'] [data-part='item'][data-highlighted] {
@@ -352,13 +395,29 @@
     gap: var(--ds-space-xs);
   }
 
-  /* ------------------------------------------------------------ motion: pattern "dialog" */
+  /* ------------------------------------------------------------ motion: interaction "command-palette-open", pattern "dialog" */
 
   /* The backdrop fades with ds-dialog-fade-in and -out from Dialog.css; the panel has its own keyframes on its own properties. */
   @keyframes ds-command-palette-in {
     from {
       opacity: 0;
       transform: translateY(var(--_command-palette-enter-y)) scale(var(--_command-palette-enter-scale));
+    }
+
+    33% {
+      opacity: 1;
+    }
+  }
+
+  @keyframes ds-command-palette-part-in {
+    from {
+      opacity: 0;
+      transform: translateY(var(--_command-palette-shift));
+    }
+
+    /* Readable early: full opacity at 30%, the transform carries the rest. */
+    30% {
+      opacity: 1;
     }
   }
 
@@ -369,10 +428,17 @@
     }
   }
 
+  /* Reduced motion: the system setting and the page's own setting (data-motion="reduce" on the root element). */
   @media (prefers-reduced-motion: reduce) {
-    [data-ds='command-palette'] > :is([data-part='panel'], [data-part='backdrop'])[data-state] {
+    [data-ds='command-palette'] > :is([data-part='panel'], [data-part='backdrop'])[data-state],
+    [data-ds='command-palette'] > [data-part='panel'][data-state] > [data-part='footer'] {
       animation: none;
     }
+  }
+
+  :root[data-motion='reduce'] [data-ds='command-palette'] > :is([data-part='panel'], [data-part='backdrop'])[data-state],
+  :root[data-motion='reduce'] [data-ds='command-palette'] > [data-part='panel'][data-state] > [data-part='footer'] {
+    animation: none;
   }
 
   /* ------------------------------------------------------------ transparency, contrast, forced colors */

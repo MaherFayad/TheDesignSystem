@@ -323,3 +323,26 @@ describe('Popover', () => {
     expect(manifest.a11y.keys.Tab).toMatch(/wraps/);
   });
 });
+
+// ------------------------------------------------------------------ motion, order 1.22
+
+describe('motion (order 1.22): Popover.css and HoverCard.css', () => {
+  const popover = readFileSync(join(process.cwd(), 'packages/css/src/components/Popover.css'), 'utf8');
+  const hoverCard = readFileSync(join(process.cwd(), 'packages/css/src/components/HoverCard.css'), 'utf8');
+  it('popover-spring: both land on the bouncy spring and leave faster', () => {
+    for (const [css, name] of [
+      [popover, 'popover'],
+      [hoverCard, 'hover-card'],
+    ] as const) {
+      expect(css).toContain(`--_${name}-ease-in: var(--ds-ease-spring-bouncy);`);
+      expect(css).toContain(`--_${name}-enter-scale: var(--ds-scale-enter);`);
+    }
+  });
+  it('staggers the parts; a part with focus is there at once', () => {
+    expect(popover).toContain("> :is([data-part='title'], [data-part='body'], [data-part='footer']):not(:focus-within) {");
+  });
+  it('review B2: the reduced forms apply under data-motion="reduce" too', () => {
+    expect(popover).toContain(":root[data-motion='reduce'] [data-ds='popover'][data-state],");
+    expect(hoverCard).toContain(":root[data-motion='reduce'] [data-ds='hover-card'][data-state],");
+  });
+});

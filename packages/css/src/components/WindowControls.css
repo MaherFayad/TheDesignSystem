@@ -22,8 +22,22 @@
  *   --_window-controls-lit    0 or 1: the lit layer (the light's ::before, its glow layer)
  *   --_window-controls-glyph  0 or 1: the glyph
  *
- * Only opacity animates: the lit color is a layer over the idle dot that
- * fades in (the source fades background-color, which may not animate here).
+ * Only opacity and transform animate: the lit color is a layer over the
+ * idle dot that fades in (the source fades background-color, which may not
+ * animate here).
+ *
+ * Motion, interaction "window-lights" (order 1.22, proposed): when the
+ * pointer or focus enters the group, the colors fade in at once and each
+ * glyph pops in from scale.morph on the bouncy spring (it passes its size
+ * and settles), close, minimize and zoom one delay.stagger step apart. When
+ * it leaves, the glyphs fade out together, faster (duration.fast, no
+ * stagger). A press dips the light to scale.anticipate on the snappy
+ * spring; the 24px target never moves or shrinks, only the 12px dot inside
+ * it. The focus ring is the button's own and shows at once. A style turns
+ * the pop and the dip off with --_window-controls-enter-scale: 1 and
+ * --_window-controls-press-scale: 1 (names beyond the convention: the
+ * scale a glyph pops from, the scale a pressed light dips to). Reduced
+ * motion: the glyphs and colors are there at once.
  */
 @layer ds.base {
   [data-ds='window-controls'] {
@@ -31,6 +45,8 @@
     --_window-controls-ink: var(--ds-color-window-light-ink);
     --_window-controls-lit: 0;
     --_window-controls-glyph: 0;
+    --_window-controls-enter-scale: var(--ds-scale-morph);
+    --_window-controls-press-scale: var(--ds-scale-anticipate);
 
     display: inline-flex;
     flex: none;
@@ -106,6 +122,12 @@
     block-size: var(--ds-size-icon-sm);
     border-radius: var(--ds-radius-pill);
     background-color: var(--_window-controls-idle);
+    transition: transform var(--ds-duration-spring-snappy) var(--ds-ease-spring-snappy);
+  }
+
+  /* A press dips the dot inside its target. */
+  [data-ds='window-controls'] > [data-ds='icon-button']:not([data-disabled]):active > [data-part='icon'] {
+    transform: scale(var(--_window-controls-press-scale));
   }
 
   /* The lit color, the glow layer over the dot. */
@@ -125,7 +147,41 @@
     inline-size: calc(var(--ds-size-icon-sm) * 0.75);
     block-size: calc(var(--ds-size-icon-sm) * 0.75);
     opacity: var(--_window-controls-glyph);
-    transition: opacity var(--ds-duration-fast) var(--ds-ease-default);
+    /* At rest the glyph waits small; the way out is quick and all at once. */
+    transform: scale(calc(var(--_window-controls-enter-scale) + (1 - var(--_window-controls-enter-scale)) * var(--_window-controls-glyph)));
+    transition:
+      opacity var(--ds-duration-fast) var(--ds-ease-default),
+      transform var(--ds-duration-fast) var(--ds-ease-exit);
+  }
+
+  /* The way in: each glyph pops on the bouncy spring, one stagger step after the light before it. */
+  [data-ds='window-controls']:is(:hover, :focus-within) > [data-ds='icon-button'] > [data-part='icon'] > [data-ds='icon'] {
+    transition:
+      opacity var(--ds-duration-fast) var(--ds-ease-default),
+      transform var(--ds-duration-spring-bouncy) var(--ds-ease-spring-bouncy);
+  }
+
+  [data-ds='window-controls']:is(:hover, :focus-within) > [data-part='minimize'] > [data-part='icon'] > [data-ds='icon'] {
+    transition-delay: var(--ds-delay-stagger);
+  }
+
+  [data-ds='window-controls']:is(:hover, :focus-within) > [data-part='zoom'] > [data-part='icon'] > [data-ds='icon'] {
+    transition-delay: calc(var(--ds-delay-stagger) * 2);
+  }
+
+  /* Reduced motion: the system setting and the page's own setting (data-motion="reduce" on the root element). */
+  @media (prefers-reduced-motion: reduce) {
+    [data-ds='window-controls'] > [data-ds='icon-button'] > [data-part='icon'],
+    [data-ds='window-controls'] > [data-ds='icon-button'] > [data-part='icon']::before,
+    [data-ds='window-controls'] > [data-ds='icon-button'] > [data-part='icon'] > [data-ds='icon'] {
+      transition: none;
+    }
+  }
+
+  :root[data-motion='reduce'] [data-ds='window-controls'] > [data-ds='icon-button'] > [data-part='icon'],
+  :root[data-motion='reduce'] [data-ds='window-controls'] > [data-ds='icon-button'] > [data-part='icon']::before,
+  :root[data-motion='reduce'] [data-ds='window-controls'] > [data-ds='icon-button'] > [data-part='icon'] > [data-ds='icon'] {
+    transition: none;
   }
 
   /* Forced colors: no fills. Each light is a ring with its glyph always shown. */

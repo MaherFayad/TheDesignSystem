@@ -17,7 +17,10 @@
 //
 // Motion comes from the style's preset (styleMotion.ts): Desk windows grow
 // out of their origin, Studio panels fade. Web Animations API only, transform
-// and opacity only, never waiting on an end event.
+// and opacity only, never waiting on an end event. Order 1.22 (proposed):
+// interaction "window-settle" (windowSettle.ts) adds a settle in Desk: a
+// window that lands (open, zoom, restore) swells a touch and settles, and
+// one that leaves (close, minimize) gathers before it shrinks.
 import {
   useCallback,
   useId,
@@ -48,6 +51,8 @@ import { IconButton } from '../IconButton';
 import { TitleBar, type TitleBarHeading } from '../TitleBar';
 import { WindowControls } from '../WindowControls';
 import { windowMotionMode } from './styleMotion';
+import { settleWindow } from './windowSettle';
+import { useMotion } from '../../internal/motion';
 import { useControllable } from '../../internal/useControllable';
 import { useWindowLayerContext } from './WindowLayer';
 
@@ -262,6 +267,8 @@ export function Window({
   const moveLabel = moveLabelProp ?? words.move;
   const dir = theme.dir;
   const mode = windowMotionMode(theme.styleData.motionPreset);
+  const motion = useMotion();
+  const settleMode = motion.mode('window-settle');
   const controlsOn = useOptionalPart('window', 'controls');
 
   const [isOpen, setOpen] = useControllable(openProp, defaultOpen, onOpenChange);
@@ -332,6 +339,7 @@ export function Window({
       if (!el || minimizedRef.current) return;
       const to = el.getBoundingClientRect();
       animateWindow(el, 'grow', { mode, from: rectOf(origin), to });
+      settleWindow(el, 'land', 'duration.window-open', mode, settleMode);
       // Focus moves in when the window opens after mount, or on mount when its origin has focus (it was just pressed).
       const originEl = elementOf(origin);
       if (!first || (originEl !== null && document.activeElement === originEl)) {
@@ -342,6 +350,7 @@ export function Window({
     }
     if (first || !el) return;
     const anim = animateWindow(el, 'close', { mode, from: el.getBoundingClientRect(), to: rectOf(origin) });
+    settleWindow(el, 'gather', 'duration.window-close', mode, settleMode);
     void settled(anim).then(() => {
       if (isOpenRef.current) return;
       leaveFocus();
@@ -374,6 +383,7 @@ export function Window({
     const from = zoomFrom.current ?? lastRect.current;
     zoomFrom.current = null;
     animateWindow(el, 'zoom', { mode, from, to: el.getBoundingClientRect() });
+    settleWindow(el, 'land', 'duration.window-zoom', mode, settleMode);
   }, [zoomed]);
 
   // Minimize: fall into the dock, then hide. Restore: grow back out of it.
@@ -391,6 +401,7 @@ export function Window({
       manager.minimize(windowId);
       if (!el) return;
       const anim = animateWindow(el, 'minimize', { mode, from: el.getBoundingClientRect(), to: target });
+      settleWindow(el, 'gather', 'duration.window-minimize', mode, settleMode);
       void settled(anim).then(() => {
         if (!minimizedRef.current) return;
         leaveFocus();
@@ -401,6 +412,7 @@ export function Window({
     manager.restore(windowId);
     if (!el) return;
     animateWindow(el, 'grow', { mode, from: target, to: el.getBoundingClientRect() });
+    settleWindow(el, 'land', 'duration.window-open', mode, settleMode);
     el.focus({ preventScroll: true });
   }, [minimized]);
 

@@ -297,3 +297,43 @@ describe('Lightbox', () => {
     expect(theme?.getAttribute('dir')).toBe('rtl');
   });
 });
+
+// ------------------------------------------------------------------ motion, order 1.22
+
+describe('motion (order 1.22): lightbox-zoom', () => {
+  it('grows the image out of the thumbnail on open and shrinks it back on close, with focus moved in at once', async () => {
+    const calls: { el: Element; frames: Keyframe[]; options: KeyframeAnimationOptions }[] = [];
+    const animate = Element.prototype.animate;
+    const rect = Element.prototype.getBoundingClientRect;
+    Element.prototype.animate = function (this: Element, frames: Keyframe[] | PropertyIndexedKeyframes | null, options?: number | KeyframeAnimationOptions) {
+      calls.push({ el: this, frames: frames as Keyframe[], options: (options ?? {}) as KeyframeAnimationOptions });
+      return { cancel() {}, finished: Promise.resolve(), id: '', playState: 'finished' } as unknown as Animation;
+    };
+    // The thumbnail is small at the top left; the image is large in the middle.
+    Element.prototype.getBoundingClientRect = function (this: Element) {
+      const small = this.tagName === 'BUTTON' && !this.closest('[data-ds="lightbox"]');
+      const r = small ? { x: 10, y: 10, width: 40, height: 30 } : { x: 100, y: 80, width: 800, height: 500 };
+      return { ...r, left: r.x, top: r.y, right: r.x + r.width, bottom: r.y + r.height, toJSON: () => ({}) } as DOMRect;
+    };
+    try {
+      const user = userEvent.setup();
+      render(<Basic />);
+      const dialog = await open(user);
+      expect(dialog.contains(document.activeElement)).toBe(true);
+      const grow = calls.find((c) => c.el === img() && c.options.id === 'ds-motion:flip');
+      expect(grow?.frames[0]?.transform).toBe('translate(-90px, -70px) scale(0.05, 0.06)');
+      await user.keyboard('{Escape}');
+      const back = calls.find((c) => c.options.id === 'ds-motion:flip-exit');
+      expect(back?.frames[1]?.transform).toBe('translate(-90px, -70px) scale(0.05, 0.06)');
+      expect(back?.options.fill).toBe('forwards');
+    } finally {
+      Element.prototype.animate = animate;
+      Element.prototype.getBoundingClientRect = rect;
+    }
+  });
+
+  it('review B2: the reduced form applies under data-motion="reduce" too', () => {
+    const css = readFileSync(join(process.cwd(), 'packages/css/src/components/Lightbox.css'), 'utf8');
+    expect(css).toContain(":root[data-motion='reduce'] [data-ds='lightbox'] > :is([data-part='panel'], [data-part='backdrop'])[data-state],");
+  });
+});

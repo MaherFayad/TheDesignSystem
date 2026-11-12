@@ -35,6 +35,19 @@
  *   --_lightbox-image-opacity     0 while the image loads
  *   --_lightbox-stage-touch-action  pan-y when fitted (a sideways swipe moves), auto when zoomed
  *   --_lightbox-enter-scale, -duration-in, -duration-out, -ease-in, -ease-out
+ *   --_lightbox-shift             how far the toolbar, the arrows and the caption rise as they arrive
+ *
+ * Motion, interaction "lightbox-zoom" (order 1.22, proposed): the backdrop
+ * and the panel fade in, the panel at full opacity within the first third
+ * of the soft spring. Lightbox.tsx grows the image out of the thumbnail
+ * that opened it (a FLIP with size, on the soft spring) and, on close,
+ * shrinks it back into the thumbnail while the panel fades, faster than it
+ * came (duration.base on ease.exit). The toolbar, the previous and next
+ * arrows and the caption rise distance.shift one delay.stagger step apart
+ * after the panel; a part with focus is there at once. Without the script
+ * (Angular until it ports it, or no thumbnail) the panel grows from
+ * --_lightbox-enter-scale, 1 by default: the image itself carries the zoom.
+ * Reduced motion: fades, there and gone at once.
  */
 @layer ds.base {
   [data-ds='lightbox'] {
@@ -56,10 +69,11 @@
     --_lightbox-nav-border-color: var(--ds-color-border-default);
     --_lightbox-image-opacity: 1;
     --_lightbox-stage-touch-action: pan-y pinch-zoom;
-    --_lightbox-enter-scale: var(--ds-scale-dialog-enter);
-    --_lightbox-duration-in: var(--ds-duration-base);
+    --_lightbox-enter-scale: 1;
+    --_lightbox-shift: var(--ds-distance-shift);
+    --_lightbox-duration-in: var(--ds-duration-spring-soft);
     --_lightbox-duration-out: var(--ds-duration-base);
-    --_lightbox-ease-in: var(--ds-ease-out);
+    --_lightbox-ease-in: var(--ds-ease-spring-soft);
     --_lightbox-ease-out: var(--ds-ease-exit);
 
     position: fixed;
@@ -133,6 +147,21 @@
 
   [data-ds='lightbox'] > [data-part='panel'][data-state='open'] {
     animation: ds-lightbox-in var(--_lightbox-duration-in) var(--_lightbox-ease-in);
+  }
+
+  /* The chrome around the image arrives in order after the panel. A part with focus is there at once. */
+  [data-ds='lightbox'] > [data-part='panel'][data-state='open'] > [data-part='toolbar']:not(:focus-within),
+  [data-ds='lightbox'] > [data-part='panel'][data-state='open'] > :is([data-part='previous'], [data-part='next'], [data-part='caption']):not(:focus) {
+    animation: ds-lightbox-part-in var(--ds-duration-spring-soft) var(--ds-ease-spring-soft) backwards;
+    animation-delay: var(--ds-delay-stagger);
+  }
+
+  [data-ds='lightbox'] > [data-part='panel'][data-state='open'] > :is([data-part='previous'], [data-part='next']):not(:focus) {
+    animation-delay: min(calc(var(--ds-delay-stagger) * 2), var(--ds-duration-base));
+  }
+
+  [data-ds='lightbox'] > [data-part='panel'][data-state='open'] > [data-part='caption'] {
+    animation-delay: min(calc(var(--ds-delay-stagger) * 3), var(--ds-duration-base));
   }
 
   [data-ds='lightbox'] > [data-part='panel'][data-state='closed'] {
@@ -296,19 +325,47 @@
       opacity: 0;
       transform: scale(var(--_lightbox-enter-scale));
     }
+
+    33% {
+      opacity: 1;
+    }
   }
 
+  @keyframes ds-lightbox-part-in {
+    from {
+      opacity: 0;
+      transform: translateY(var(--_lightbox-shift));
+    }
+
+    /* Readable early: full opacity at 30%, the transform carries the rest. */
+    30% {
+      opacity: 1;
+    }
+  }
+
+  /* The panel holds until the image is nearly back in its thumbnail, then fades. */
   @keyframes ds-lightbox-out {
+    50% {
+      opacity: 1;
+    }
+
     to {
       opacity: 0;
       transform: scale(var(--_lightbox-enter-scale));
     }
   }
 
+  /* Reduced motion: the system setting and the page's own setting (data-motion="reduce" on the root element). */
   @media (prefers-reduced-motion: reduce) {
-    [data-ds='lightbox'] > :is([data-part='panel'], [data-part='backdrop'])[data-state] {
+    [data-ds='lightbox'] > :is([data-part='panel'], [data-part='backdrop'])[data-state],
+    [data-ds='lightbox'] > [data-part='panel'][data-state] > :is([data-part='toolbar'], [data-part='previous'], [data-part='next'], [data-part='caption']) {
       animation: none;
     }
+  }
+
+  :root[data-motion='reduce'] [data-ds='lightbox'] > :is([data-part='panel'], [data-part='backdrop'])[data-state],
+  :root[data-motion='reduce'] [data-ds='lightbox'] > [data-part='panel'][data-state] > :is([data-part='toolbar'], [data-part='previous'], [data-part='next'], [data-part='caption']) {
+    animation: none;
   }
 
   /* ------------------------------------------------------------ contrast and forced colors */

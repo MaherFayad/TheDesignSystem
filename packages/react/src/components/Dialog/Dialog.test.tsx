@@ -696,3 +696,32 @@ describe('Dialog', () => {
     }
   });
 });
+
+// ------------------------------------------------------------------ motion, order 1.22
+
+describe('motion (order 1.22): Dialog.css', async () => {
+  const { readFileSync } = await import('node:fs');
+  const { join } = await import('node:path');
+  const css = readFileSync(join(process.cwd(), 'packages/css/src/components/Dialog.css'), 'utf8');
+
+  it('review N5: the panel is at full opacity within the first third of its rise', () => {
+    expect(css).toMatch(/@keyframes ds-dialog-in \{[^@]*33% \{\s*opacity: 1;/);
+  });
+
+  it('review N4: the exit is faster than the entrance and never staggers', () => {
+    expect(css).toContain('--_dialog-duration-in: var(--ds-duration-spring-soft);');
+    expect(css).toContain('--_dialog-duration-out: var(--ds-duration-quick);');
+    expect(css).not.toMatch(/\[data-state='closed'\] > :is\(\[data-part='header'\]/);
+  });
+
+  it('staggers the parts, but a part that holds focus is there at once', () => {
+    expect(css).toContain("> :is([data-part='header'], [data-part='title'], [data-part='description'], [data-part='body'], [data-part='footer']):not(:focus-within) {");
+    expect(css).toContain("> [data-part='footer']:not(:focus-within) {\n    animation-delay: min(calc(var(--ds-delay-stagger) * 4), var(--ds-duration-base));");
+    expect(css).toMatch(/@keyframes ds-dialog-part-in \{[^@]*30% \{\s*opacity: 1;/);
+  });
+
+  it('review B2: every reduced motion rule also applies under data-motion="reduce"', () => {
+    expect(css).toContain(":root[data-motion='reduce'] :is([data-ds='dialog'], [data-ds='alert-dialog'], [data-ds='drawer'], [data-ds='sheet']) > :is([data-part='panel'], [data-part='backdrop'])[data-state],");
+    expect(css).toContain(":root[data-motion='reduce'] [data-ds='sheet'] {");
+  });
+});

@@ -30,8 +30,19 @@
  *   --_tour-arrow-width, -arrow-height
  *   --_tour-enter-x, -enter-y, -enter-scale, -duration-in, -duration-out, -ease-in, -ease-out
  *
- * Motion, pattern "menu-scale": the panel grows from 97% out of the target
- * side while it fades in; the ring fades in. Only transform and opacity
+ *   --_tour-shift            how far the title, body and footer rise as they arrive
+ *
+ * Motion, interaction "tour-spotlight" (pattern "menu-scale"), order 1.22,
+ * proposed. On open the ring closes in on its target: it fades in while it
+ * shrinks from scale.pop on the snappy spring. The panel grows from
+ * scale.enter out of the target side on the bouncy spring (as Popover), and
+ * its title, body and footer rise distance.shift one delay.stagger step
+ * apart; a part with focus is there at once. On each step Tour.tsx moves
+ * the ring from the old target to the new one (a FLIP of its box, the
+ * snappy spring) and the panel follows one stagger step later on the soft
+ * spring, while the new title, body and footer arrive in order. Without the
+ * script the ring and the panel are at the new target at once. Closing is
+ * faster (duration.fast) and all at once. Only transform and opacity
  * animate; under reduced motion the animations are none.
  */
 @layer ds.base {
@@ -64,10 +75,11 @@
     --_tour-arrow-height: calc(var(--ds-space-2xl) / 2);
     --_tour-enter-x: 0;
     --_tour-enter-y: 0;
-    --_tour-enter-scale: var(--ds-scale-press);
-    --_tour-duration-in: var(--ds-duration-base);
+    --_tour-enter-scale: var(--ds-scale-enter);
+    --_tour-shift: var(--ds-distance-shift);
+    --_tour-duration-in: var(--ds-duration-spring-bouncy);
     --_tour-duration-out: var(--ds-duration-fast);
-    --_tour-ease-in: var(--ds-ease-out);
+    --_tour-ease-in: var(--ds-ease-spring-bouncy);
     --_tour-ease-out: var(--ds-ease-exit);
 
     position: fixed;
@@ -93,7 +105,21 @@
     border: var(--_tour-highlight-width) solid var(--_tour-highlight-color);
     border-radius: var(--_tour-highlight-radius);
     pointer-events: none;
-    animation: ds-tour-fade-in var(--_tour-duration-in) var(--_tour-ease-in);
+    animation: ds-tour-ring-in var(--ds-duration-spring-snappy) var(--ds-ease-spring-snappy);
+  }
+
+  /* The title, body and footer arrive in order after the panel. A part with focus is there at once. */
+  [data-ds='tour'] [data-part='panel'][data-state='open'] > :is([data-part='title'], [data-part='body'], [data-part='footer']):not(:focus-within) {
+    animation: ds-tour-part-in var(--ds-duration-spring-soft) var(--ds-ease-spring-soft) backwards;
+    animation-delay: var(--ds-delay-stagger);
+  }
+
+  [data-ds='tour'] [data-part='panel'][data-state='open'] > [data-part='body']:not(:focus-within) {
+    animation-delay: min(calc(var(--ds-delay-stagger) * 2), var(--ds-duration-base));
+  }
+
+  [data-ds='tour'] [data-part='panel'][data-state='open'] > [data-part='footer']:not(:focus-within) {
+    animation-delay: min(calc(var(--ds-delay-stagger) * 3), var(--ds-duration-base));
   }
 
   /* ------------------------------------------------------------ panel */
@@ -225,16 +251,36 @@
     }
   }
 
-  @keyframes ds-tour-fade-in {
+  @keyframes ds-tour-ring-in {
     from {
       opacity: 0;
+      transform: scale(var(--ds-scale-pop));
     }
   }
 
+  @keyframes ds-tour-part-in {
+    from {
+      opacity: 0;
+      transform: translateY(var(--_tour-shift));
+    }
+
+    /* Readable early: full opacity at 30%, the transform carries the rest. */
+    30% {
+      opacity: 1;
+    }
+  }
+
+  /* Reduced motion: the system setting and the page's own setting (data-motion="reduce" on the root element). */
   @media (prefers-reduced-motion: reduce) {
-    [data-ds='tour'] :is([data-part='panel'][data-state], [data-part='highlight']) {
+    [data-ds='tour'] :is([data-part='panel'][data-state], [data-part='highlight']),
+    [data-ds='tour'] [data-part='panel'][data-state] > :is([data-part='title'], [data-part='body'], [data-part='footer']) {
       animation: none;
     }
+  }
+
+  :root[data-motion='reduce'] [data-ds='tour'] :is([data-part='panel'][data-state], [data-part='highlight']),
+  :root[data-motion='reduce'] [data-ds='tour'] [data-part='panel'][data-state] > :is([data-part='title'], [data-part='body'], [data-part='footer']) {
+    animation: none;
   }
 
   /* ------------------------------------------------------------ contrast, forced colors */

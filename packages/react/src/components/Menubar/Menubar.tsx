@@ -41,8 +41,12 @@
 // weight change would shift the row, so the text part reserves the width
 // of its open weight (Menubar.css).
 //
-// Motion: the menus play "menu-scale" from DropdownMenu.css. The row itself
-// does not move.
+// Motion: the menus play "menu-origin" from DropdownMenu.css (the surface
+// from the trigger side, the rows one stagger step apart). The row itself
+// does not move; its lit fill (the trigger's ::after) slides from title to
+// title, interaction "menu-row-slide": on the arrow keys through the focus
+// handlers of useRowSlide, and when the open menu changes with the pointer
+// through the layout effect in Menubar.
 import {
   Children,
   createContext,
@@ -50,6 +54,7 @@ import {
   use,
   useCallback,
   useId,
+  useLayoutEffect,
   useMemo,
   useRef,
   type ComponentProps,
@@ -60,15 +65,19 @@ import { Icon } from '@the-system/icons/react';
 import type { Size, Tone } from '@the-system/shared';
 import { type ButtonSlotContent } from '../Button/ButtonBase';
 import { useControllable } from '../../internal/useControllable';
+import { useMotion } from '../../internal/motion';
 import {
+  ROW_SLIDE_ID,
   IndicatorGlyph,
   ItemContent,
   TRIGGER_GAP,
   VIEWPORT_GUTTER,
   assignRef,
   physicalSide,
+  slideHighlight,
   textOf,
   useMenuLayer,
+  useRowSlide,
   type MenuSide,
 } from '../DropdownMenu/menuShared';
 
@@ -152,8 +161,19 @@ export function Menubar({
     if (isValidElement(child) && child.type === MenubarEnd) end.push(child);
     else menus.push(child);
   });
+  // Interaction "menu-row-slide" on the row: the open fill slides from the old title to the new one.
+  const motion = useMotion();
+  const slide = useRowSlide();
+  const rowRef = useRef<HTMLDivElement | null>(null);
+  const openTitle = useRef<Element | null>(null);
+  useLayoutEffect(() => {
+    const now = value ? (rowRef.current?.querySelector('[data-part="trigger"][data-state="open"]') ?? null) : null;
+    if (now && openTitle.current && openTitle.current !== now) slideHighlight(openTitle.current, now, motion.mode(ROW_SLIDE_ID));
+    openTitle.current = now;
+    // Runs when the open menu changes; the motion mode is read as it is then.
+  }, [value]);
   return (
-    <div data-ds="menubar" data-size={size} className={className} style={style}>
+    <div ref={rowRef} data-ds="menubar" data-size={size} className={className} style={style} onFocus={slide.onFocus} onBlur={slide.onBlur}>
       <RadixMenubar.Root {...rest} value={value} onValueChange={setValue} loop={loop} data-part="bar">
         <BarContext value={ctx}>{menus}</BarContext>
       </RadixMenubar.Root>
