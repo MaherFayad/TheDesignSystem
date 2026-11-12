@@ -1,5 +1,6 @@
 // npm run shots -- [--framework react|angular] [--url http://...] [--component a,b]
-//                  [--style a,b] [--scheme a,b] [--out dir] [--no-verify] [--workers n]
+//                  [--style a,b] [--scheme a,b] [--out dir] [--work dir]
+//                  [--keep subset|all|none] [--ready] [--no-verify] [--workers n]
 // npm run shots -- --compare react angular
 //
 // The screenshot matrix. For every component with a gallery route it
@@ -9,12 +10,25 @@
 // also the first trigger's root open. Viewport 1280 by 800, full page, device
 // scale factor 1, animations off, reduced motion, fonts loaded. Each shot is
 // taken twice in fresh contexts and the bytes compared, so an unstable shot
-// is named in the run. Output: docs/reports/shots/matrix/<framework>/, with
-// index.md and captured.json.
+// is named in the run.
+//
+// Size. Every PNG is recompressed losslessly (libvips through sharp when it
+// can be loaded, zlib level 9 with adaptive filters; the pixels do not
+// change), and a file whose bytes did not change is not written again. The
+// whole matrix goes to a work folder outside git (--work, default
+// node_modules/.cache/ds-shots/<framework>). Only a kept subset is copied to
+// docs/reports/shots/matrix/<framework>/: with --keep subset (the default)
+// Neutral light, Studio dark and Desk dark rtl, in every case the matrix takes
+// for them (opens and densities included); --keep all copies everything and
+// --keep none copies no image. captured.json and index.md always list every
+// shot with its size and sha256, so a shot that is not kept can still be
+// compared by hash. --ready limits the run to components whose manifest says
+// ready for the framework.
 //
 // --compare A B pixel diffs the matching files of two frameworks (threshold
-// 0.1, at most 0.5 percent of pixels may differ) and writes diff images and a
-// table to docs/reports/shots/matrix/compare-A-B/. A framework without
+// 0.1, at most 0.5 percent of pixels may differ), reading the work folders
+// first and the docs folders after, and writes a diff image for each pair that
+// differs and a table to docs/reports/shots/matrix/compare-A-B/. A framework without
 // captures is captured first; a gallery that is missing or does not start
 // is a skip with a note, not a failure.
 import { createHash } from 'node:crypto';
@@ -24,7 +38,7 @@ import { fileURLToPath } from 'node:url';
 import { chromium, type Browser, type Page } from '@playwright/test';
 import pixelmatch from 'pixelmatch';
 import { PNG } from 'pngjs';
-import { DENSITIES, demoPath, discoverStyles, isControl, kebabCase, loadManifests, opensAndCloses, triggerSelector, type Axes, type Manifest } from '../packages/contract-tests/src/lib';
+import { DENSITIES, demoPath, discoverStyles, hasOpenChecks, isControl, kebabCase, loadManifests, openedKebab, triggerSelector, type Axes, type Manifest } from '../packages/contract-tests/src/lib';
 import { freshOpen, markSeen } from '../packages/contract-tests/src/page';
 import { galleryExists, launchGallery, probeRoutes, type Gallery } from '../packages/contract-tests/src/server';
 
@@ -40,13 +54,16 @@ interface Args {
   styles: string[];
   schemes: string[];
   out?: string;
+  work?: string;
+  keep: 'subset' | 'all' | 'none';
+  ready: boolean;
   verify: boolean;
   workers: number;
   compare?: [string, string];
 }
 
 function parseArgs(argv: string[]): Args {
-  const out: Args = { framework: 'react', components: [], styles: [], schemes: [], verify: true, workers: 4 };
+  const out: Args = { framework: 'react', components: [], styles: [], schemes: [], keep: 'subset', ready: false, verify: true, workers: 4 };
   const list = (v: string) => v.split(',').map((s) => s.trim()).filter(Boolean);
   for (let i = 0; i < argv.length; i += 1) {
     const a = argv[i] ?? '';
@@ -58,11 +75,20 @@ function parseArgs(argv: string[]): Args {
     else if (flag === '--style') out.styles.push(...list(value()));
     else if (flag === '--scheme') out.schemes.push(...list(value()));
     else if (flag === '--out') out.out = resolve(value());
+    else if (flag === '--work') out.work = resolve(value());
+    else if (flag === '--keep') {
+      const k = value();
+      if (k !== 'subset' && k !== 'all' && k !== 'none') {
+        console.error(`--keep must be subset, all or none, not "${k}"`);
+        process.exit(2);
+      }
+      out.keep = k;
+    } else if (flag === '--ready') out.ready = true;
     else if (flag === '--no-verify') out.verify = false;
     else if (flag === '--workers') out.workers = Math.max(1, Number(value()) || 1);
     else if (flag === '--compare') out.compare = [argv[++i] ?? '', argv[++i] ?? ''];
     else if (flag === '--help' || flag === '-h') {
-      console.log('npm run shots -- [--framework react|angular] [--url URL] [--component a,b] [--style a,b] [--scheme a,b] [--out DIR] [--no-verify] [--workers N]');
+      console.log('npm run shots -- [--framework react|angular] [--url URL] [--component a,b] [--style a,b] [--scheme a,b] [--out DIR] [--work DIR] [--keep subset|all|none] [--ready] [--no-verify] [--workers N]');
       console.log('npm run shots -- --compare react angular');
       process.exit(0);
     } else {
@@ -82,6 +108,47 @@ function parseArgs(argv: string[]): Args {
 
 const matrixRoot = join(repo, 'docs/reports/shots/matrix');
 const defaultOut = (framework: string) => join(matrixRoot, framework);
+const defaultWork = (framework: string) => join(repo, 'node_modules/.cache/ds-shots', framework);
+
+/** The subset whose images are committed: Neutral light, Studio dark, Desk dark rtl. */
+function kept(s: Pick<Shot, 'style' | 'scheme' | 'dir'>, keep: Args['keep']): boolean {
+  if (keep === 'all') return true;
+  if (keep === 'none') return false;
+  return (s.style === 'neutral' && s.scheme === 'light') || (s.style === 'studio' && s.scheme === 'dark') || (s.style === 'desk' && s.scheme === 'dark' && s.dir === 'rtl');
+}
+
+type Recompress = (png: Buffer) => Promise<Buffer>;
+/** Undefined until the first call; null when sharp cannot be loaded. */
+let recompressor: Recompress | null | undefined;
+
+/**
+ * Lossless recompression. sharp (libvips) is loaded when the install has it;
+ * it is not a dependency of this repo, so without it the Chromium PNG is kept
+ * as it is. Either way the pixels are the same.
+ */
+async function recompress(png: Buffer): Promise<{ bytes: Buffer; codec: string }> {
+  if (recompressor === undefined) {
+    try {
+      const name = 'sharp';
+      const mod = (await import(name)) as { default: (b: Buffer) => { png: (o: object) => { toBuffer: () => Promise<Buffer> } } };
+      recompressor = (b) => mod.default(b).png({ compressionLevel: 9, adaptiveFiltering: true, effort: 10 }).toBuffer();
+    } catch {
+      recompressor = null;
+    }
+  }
+  if (!recompressor) return { bytes: png, codec: 'chromium' };
+  const out = await recompressor(png);
+  // Keep the smaller of the two; both hold the same pixels.
+  return out.length < png.length ? { bytes: out, codec: 'libvips' } : { bytes: png, codec: 'chromium' };
+}
+
+/** Writes the file only when its bytes changed. Returns true when it wrote. */
+function writeIfChanged(file: string, bytes: Buffer): boolean {
+  if (existsSync(file) && readFileSync(file).equals(bytes)) return false;
+  mkdirSync(dirname(file), { recursive: true });
+  writeFileSync(file, bytes);
+  return true;
+}
 
 interface Shot {
   component: string;
@@ -102,6 +169,7 @@ interface Captured extends Omit<Shot, 'file'> {
   bytes: number;
   sha256: string;
   stable: boolean | null;
+  kept: boolean;
   note?: string;
 }
 
@@ -143,7 +211,7 @@ async function settle(page: Page): Promise<void> {
 }
 
 /** One capture in a fresh context. Returns the PNG bytes, or throws. */
-async function capture(browser: Browser, url: string, s: Shot, trigger: string): Promise<Buffer> {
+async function capture(browser: Browser, url: string, s: Shot, trigger: string, opens: string): Promise<Buffer> {
   const context = await browser.newContext({ viewport: VIEWPORT, deviceScaleFactor: 1, reducedMotion: 'reduce' });
   try {
     const page = await context.newPage();
@@ -152,13 +220,16 @@ async function capture(browser: Browser, url: string, s: Shot, trigger: string):
     await page.locator('[data-demo-case]').first().waitFor({ state: 'attached', timeout: 20_000 });
     await settle(page);
     if (s.open) {
-      const inVariants = `[data-demo-case="variants"] :is(${trigger})`;
-      const selector = (await page.locator(inVariants).count()) > 0 ? inVariants : trigger;
-      await page.evaluate(markSeen, s.kebab);
+      // The first visible trigger, in the variants case when it has one. A
+      // trigger can be in the DOM and hidden (the overflow of a Breadcrumbs
+      // that does not collapse at this width).
+      const inVariants = `[data-demo-case="variants"] :is(${trigger}) >> visible=true`;
+      const selector = (await page.locator(inVariants).count()) > 0 ? inVariants : `:is(${trigger}) >> visible=true`;
+      await page.evaluate(markSeen, opens);
       await page.locator(selector).first().click();
       const deadline = Date.now() + 5_000;
-      while ((await page.evaluate(freshOpen, s.kebab)) === 0) {
-        if (Date.now() > deadline) throw new Error(`the first trigger opens no [data-ds=${s.kebab}]`);
+      while ((await page.evaluate(freshOpen, opens)) === 0) {
+        if (Date.now() > deadline) throw new Error(`the first visible trigger opens no [data-ds=${opens}]`);
         await page.waitForTimeout(50);
       }
       // Park the pointer so no hover state is caught, then let the open settle.
@@ -245,7 +316,7 @@ interface Manifesto {
   shots: Captured[];
 }
 
-function writeIndex(out: string, framework: string, shots: Captured[]): void {
+function writeIndex(out: string, framework: string, shots: Captured[], work: string): void {
   const byComponent = new Map<string, Captured[]>();
   for (const s of shots) byComponent.set(s.component, [...(byComponent.get(s.component) ?? []), s]);
   const total = shots.reduce((n, s) => n + s.bytes, 0);
@@ -255,12 +326,14 @@ function writeIndex(out: string, framework: string, shots: Captured[]): void {
     '',
     'Made by `npm run shots`. Each shot is the `variants` case at `chrome=0`, 1280 by 800 viewport, full page, device scale factor 1, animations off, reduced motion, fonts loaded. File names: `<component>/<style>-<scheme>-<dir>[-<density>][-open].png`. Density is default unless named.',
     '',
-    `${shots.length} shots, ${byComponent.size} components, ${mb(total)}. Stable (two captures byte equal): ${shots.filter((s) => s.stable === true).length}; unstable: ${unstable.length}; not verified: ${shots.filter((s) => s.stable === null).length}.`,
+    `${shots.length} shots, ${byComponent.size} components, ${mb(total)} after lossless recompression. Stable (two captures byte equal): ${shots.filter((s) => s.stable === true).length}; unstable: ${unstable.length}; not verified: ${shots.filter((s) => s.stable === null).length}.`,
+    '',
+    `Images kept in this folder: ${shots.filter((s) => s.kept).length} (${mb(shots.filter((s) => s.kept).reduce((n, s) => n + s.bytes, 0))}). A cell with a link is kept here; a cell with a short hash was captured, compared and recorded, and its image is in the work folder \`${relative(repo, work)}\` of the run, not in git. Rerun \`npm run shots -- --keep all\` to get every image.`,
     '',
     'The full list with sizes and hashes is in `captured.json`.',
     '',
   ];
-  const link = (s: Captured | undefined, label: string) => (s ? `[${label}](${s.file})${s.stable === false ? ' (unstable)' : ''}` : 'none');
+  const link = (s: Captured | undefined, label: string) => (s ? `${s.kept ? `[${label}](${s.file})` : `\`${s.sha256.slice(0, 8)}\``}${s.stable === false ? ' (unstable)' : ''}` : 'none');
   for (const [component, list] of [...byComponent].sort(([a], [b]) => a.localeCompare(b))) {
     const find = (style: string, scheme: string, dir: string, open: boolean, density?: string) =>
       list.find((s) => s.style === style && s.scheme === scheme && s.dir === dir && s.open === open && s.density === density);
@@ -321,6 +394,7 @@ async function runCapture(args: Args, framework: string, out: string): Promise<n
     const wanted = args.components.map((c) => c.toLowerCase());
     const candidates = manifests
       .filter((m) => wanted.length === 0 || wanted.includes(m.name.toLowerCase()) || wanted.includes(kebabCase(m.name)))
+      .filter((m) => !args.ready || m.frameworks?.[framework]?.status === 'ready')
       .sort((a, b) => a.name.localeCompare(b.name));
     const routes = await probeRoutes(browser, url, candidates.map((m) => kebabCase(m.name)));
     const components = candidates.filter((m) => routes[kebabCase(m.name)]);
@@ -331,51 +405,58 @@ async function runCapture(args: Args, framework: string, out: string): Promise<n
       .map((s) => ({ id: s.id, schemes: s.schemes.filter((x) => args.schemes.length === 0 || args.schemes.includes(x)) }))
       .filter((s) => s.schemes.length > 0);
 
-    // An overlay: the manifest says open and closed, and the demo has a trigger.
+    // An overlay: the manifest says open and closed or names what it opens
+    // (contract.opens), and the demo has a visible trigger.
     const overlays = new Set<string>();
     const triggers = new Map<string, string>();
+    const opensMap = new Map<string, string>();
     const page = await browser.newPage();
-    for (const m of components.filter(opensAndCloses)) {
+    for (const m of components.filter(hasOpenChecks)) {
       const kebab = kebabCase(m.name);
       triggers.set(kebab, triggerSelector(m));
+      opensMap.set(kebab, openedKebab(m, kebab));
       await page.goto(`${url}${demoPath(kebab, { dir: 'ltr', lang: 'en', case: 'variants' })}`);
       await page.locator('[data-demo-case]').first().waitFor({ state: 'attached', timeout: 20_000 });
-      if ((await page.locator('[data-demo-trigger]').count()) > 0 || (await page.locator(triggerSelector(m)).count()) > 0) overlays.add(kebab);
+      if ((await page.locator(`:is(${triggerSelector(m)}) >> visible=true`).count()) > 0) overlays.add(kebab);
     }
     await page.close();
 
     const shots = plan(components, styles, overlays);
     console.log(`${framework}: ${components.length} components, ${styles.map((s) => `${s.id} (${s.schemes.join(', ')})`).join(', ')}; ${shots.length} shots${args.verify ? ', each taken twice' : ''}.`);
-    console.log(`Controls (size prop on the control scale, focusable, no open state): ${components.filter(isControl).map((m) => m.name).join(', ') || 'none'}. Overlays: ${[...overlays].join(', ') || 'none'}.`);
+    console.log(`Controls (size prop on the control scale, focusable, no open state): ${components.filter(isControl).map((m) => m.name).join(', ') || 'none'}. Overlays: ${[...overlays].map((k) => (opensMap.get(k) !== k ? `${k} (opens ${opensMap.get(k)})` : k)).join(', ') || 'none'}.`);
 
-    if (!filtered && existsSync(out)) {
-      // A full run owns the folder: stale shots from an earlier matrix go.
-      for (const name of readdirSync(out)) if (name !== 'index.md' && name !== 'captured.json') rmSync(join(out, name), { recursive: true, force: true });
-    }
+    const work = args.work ?? defaultWork(framework);
     mkdirSync(out, { recursive: true });
+    mkdirSync(work, { recursive: true });
     const results: Captured[] = [];
     let failed = 0;
     let done = 0;
+    let written = 0;
+    const codecs = new Map<string, number>();
     await pool(shots, args.workers, async (s) => {
       const trigger = triggers.get(s.kebab) ?? '[data-demo-trigger]';
+      const opens = opensMap.get(s.kebab) ?? s.kebab;
       try {
-        const first = await capture(browser, url, s, trigger);
+        const first = await capture(browser, url, s, trigger, opens);
         let stable: boolean | null = null;
         let note: string | undefined;
         if (args.verify) {
-          const second = await capture(browser, url, s, trigger);
+          const second = await capture(browser, url, s, trigger, opens);
           stable = first.equals(second);
           if (!stable) {
             const d = pngDiff(first, second);
             note = d.sizeMismatch ? `unstable: page size changes between captures (${d.sizeMismatch})` : `unstable: ${d.differ} pixels differ between two captures (${((d.differ / d.total) * 100).toFixed(3)} percent), ${d.box ?? 'no box'}`;
           }
         }
-        const file = join(out, s.file);
-        mkdirSync(dirname(file), { recursive: true });
-        writeFileSync(file, first);
+        const { bytes, codec } = await recompress(first);
+        codecs.set(codec, (codecs.get(codec) ?? 0) + 1);
+        const keep = kept(s, args.keep);
+        if (writeIfChanged(join(work, s.file), bytes)) written += 1;
+        if (keep) writeIfChanged(join(out, s.file), bytes);
+        else if (existsSync(join(out, s.file))) rmSync(join(out, s.file));
         const png = PNG.sync.read(first);
         const { file: _f, ...rest } = s;
-        results.push({ ...rest, file: s.file, width: png.width, height: png.height, bytes: first.length, sha256: sha(first), stable, note });
+        results.push({ ...rest, file: s.file, width: png.width, height: png.height, bytes: bytes.length, sha256: sha(bytes), stable, kept: keep, note });
         if (note) console.log(`  ${s.file}: ${note}`);
       } catch (err) {
         failed += 1;
@@ -394,13 +475,23 @@ async function runCapture(args: Args, framework: string, out: string): Promise<n
       all = [...prior.filter((p) => !fresh.has(p.file)), ...results];
     }
     all.sort((a, b) => a.file.localeCompare(b.file));
+    if (!filtered) {
+      // A full run owns the folder: images that are not kept, or not in this
+      // matrix any more, go.
+      const keepFiles = new Set(all.filter((r) => r.kept).map((r) => r.file));
+      for (const f of pngsIn(out)) if (!keepFiles.has(f)) rmSync(join(out, f));
+      for (const name of readdirSync(out)) {
+        const p = join(out, name);
+        if (statSync(p).isDirectory() && readdirSync(p).length === 0) rmSync(p, { recursive: true });
+      }
+    }
     const record: Manifesto = { framework, viewport: VIEWPORT, deviceScaleFactor: 1, case: 'variants', shots: all };
     writeFileSync(recordFile, `${JSON.stringify(record, null, 2)}\n`);
-    writeIndex(out, framework, all);
+    writeIndex(out, framework, all, work);
 
     const unstable = results.filter((r) => r.stable === false);
     const pngBytes = results.reduce((n, r) => n + r.bytes, 0);
-    console.log(`\n${results.length} shots written to ${relative(repo, out)} (${mb(pngBytes)} of PNG this run; folder ${mb(sizeOf(out))}; matrix folder ${mb(sizeOf(matrixRoot))}).`);
+    console.log(`\n${results.length} shots in ${relative(repo, work)} (${written} changed, ${mb(pngBytes)} of PNG; codecs ${[...codecs].map(([c, n]) => `${c} ${n}`).join(', ')}). Kept in ${relative(repo, out)}: ${results.filter((r) => r.kept).length} (folder ${mb(sizeOf(out))}; matrix folder ${mb(sizeOf(matrixRoot))}).`);
     if (args.verify) console.log(`Stability: ${results.length - unstable.length} byte equal across two captures, ${unstable.length} unstable${unstable.length ? `: ${[...new Set(unstable.map((u) => u.component))].join(', ')}` : ''}.`);
     if (failed) console.log(`${failed} shots failed.`);
     return failed > 0 ? 1 : 0;
@@ -425,17 +516,19 @@ function pngsIn(dir: string): string[] {
 }
 
 async function runCompare(args: Args, a: string, b: string): Promise<number> {
+  // The work folder holds the whole matrix; the docs folder only the kept subset.
+  const source = (f: string) => (pngsIn(defaultWork(f)).length > 0 ? defaultWork(f) : defaultOut(f));
   for (const f of [a, b]) {
-    if (pngsIn(defaultOut(f)).length > 0) continue;
-    console.log(`No ${f} shots in ${relative(repo, defaultOut(f))}; capturing them first.`);
+    if (pngsIn(source(f)).length > 0) continue;
+    console.log(`No ${f} shots in ${relative(repo, defaultWork(f))} or ${relative(repo, defaultOut(f))}; capturing them first.`);
     const code = await runCapture({ ...args, url: undefined, compare: undefined }, f, defaultOut(f));
     if (code === 'skip') {
       console.log(`Compare ${a} with ${b}: skipped, the ${f} gallery is not available.`);
       return 0;
     }
   }
-  const left = new Set(pngsIn(defaultOut(a)));
-  const right = new Set(pngsIn(defaultOut(b)));
+  const left = new Set(pngsIn(source(a)));
+  const right = new Set(pngsIn(source(b)));
   const both = [...left].filter((f) => right.has(f));
   const onlyA = [...left].filter((f) => !right.has(f));
   const onlyB = [...right].filter((f) => !left.has(f));
@@ -445,7 +538,7 @@ async function runCompare(args: Args, a: string, b: string): Promise<number> {
   const rows: string[] = [];
   let fails = 0;
   for (const f of both) {
-    const d = pngDiff(readFileSync(join(defaultOut(a), f)), readFileSync(join(defaultOut(b), f)), join(out, f));
+    const d = pngDiff(readFileSync(join(source(a), f)), readFileSync(join(source(b), f)), join(out, f));
     const ratio = d.differ / d.total;
     const ok = !d.sizeMismatch && ratio <= MAX_DIFF_RATIO;
     if (!ok) fails += 1;
