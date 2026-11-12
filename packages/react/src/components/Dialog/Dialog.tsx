@@ -89,7 +89,15 @@ import {
 } from 'react';
 import { createPortal } from 'react-dom';
 import { Dialog as RadixDialog } from 'radix-ui';
-import type { OverlaySize, Tone } from '@the-system/shared';
+import {
+  DIALOG_ACTION_SELECTOR,
+  captureFocusReturn,
+  dialogInitialFocus,
+  focusReturnTarget,
+  type FocusReturn,
+  type OverlaySize,
+  type Tone,
+} from '@the-system/shared';
 import { Theme } from '../../theme/Theme';
 import { useOptionalPart, useTheme } from '../../theme/hooks';
 import { IconButton } from '../IconButton';
@@ -348,31 +356,6 @@ function flatten(children: ReactNode): ReactNode[] {
   );
 }
 
-const FIELD = 'input:not([type="hidden"]), select, textarea';
-const ACTION = 'button, a[href], [tabindex]:not([tabindex="-1"])';
-
-function usable(el: Element): el is HTMLElement {
-  if (!(el instanceof HTMLElement)) return false;
-  if (el.matches(':disabled') || el.closest('[hidden], [inert]')) return false;
-  return typeof el.checkVisibility === 'function' ? el.checkVisibility({ visibilityProperty: true }) : true;
-}
-
-function first(scope: Element | null, selector: string, enabledOnly = false): HTMLElement | null {
-  if (!scope) return null;
-  for (const el of Array.from(scope.querySelectorAll(selector))) {
-    if (!usable(el)) continue;
-    if (enabledOnly && el.getAttribute('aria-disabled') === 'true') continue;
-    return el;
-  }
-  return null;
-}
-
-/**
- * The focus rule (manifest a11y.focus): an element marked data-autofocus;
- * else the first field in the body; else the first footer action that is
- * not tone danger, and in a danger dialog the Cancel action (DialogClose)
- * first and never a tone danger action; else the close control. Null leaves it to Radix (the first tab stop, or the panel).
- */
 /** Development only: says what a dialog is missing when it opens. */
 function warnInDev(panel: HTMLElement): void {
   if (process.env.NODE_ENV === 'production') return;
@@ -381,30 +364,8 @@ function warnInDev(panel: HTMLElement): void {
     panel.querySelector('[data-part="title"]:not(:empty), [data-dialog-title]:not(:empty)') !== null;
   if (!named) console.warn('Dialog: opened with no title. Add a DialogTitle as a direct child of DialogContent, or the title prop.');
   const footer = Array.from(panel.querySelectorAll('[data-part="footer"]')).find((el) => el.closest('[data-part="panel"]') === panel);
-  const actions = footer ? footer.querySelectorAll(ACTION).length : 0;
+  const actions = footer ? footer.querySelectorAll(DIALOG_ACTION_SELECTOR).length : 0;
   if (actions > 3) console.warn(`Dialog: the footer holds ${actions} actions. Keep it to three at most.`);
-}
-
-function initialFocus(panel: HTMLElement, tone: DialogTone): HTMLElement | null {
-  const mine = (el: Element | null) => el !== null && el.closest('[data-part="panel"]') === panel;
-  const marked = first(panel, '[data-autofocus]');
-  if (marked) return marked;
-  const body = Array.from(panel.querySelectorAll('[data-part="body"]')).find(mine) ?? null;
-  const field = first(body, FIELD);
-  if (field) return field;
-  const footer = Array.from(panel.querySelectorAll('[data-part="footer"]')).find(mine) ?? null;
-  // Never a destructive action first: footer actions with tone danger are skipped.
-  const safe = first(footer, `:is(${ACTION}):not([data-tone="danger"])`, true);
-  if (tone === 'danger') {
-    // The Cancel action, else a footer action that is not tone danger.
-    const cancel = first(panel, '[data-dialog-cancel]') ?? safe;
-    if (cancel) return cancel;
-  } else {
-    const action = safe ?? first(footer, ACTION, true) ?? first(footer, ACTION);
-    if (action) return action;
-  }
-  const close = Array.from(panel.querySelectorAll<HTMLElement>('[data-part="close"]')).find(usable);
-  return close ?? null;
 }
 
 /**
@@ -453,20 +414,22 @@ export function DialogContent({
   }, []);
 
   const panelRef = useRef<HTMLDivElement | null>(null);
-  const returnTo = useRef<HTMLElement | null>(null);
+  // Where focus goes back (packages/shared dialog-focus.ts), captured on open.
+  const returnTo = useRef<{ active: FocusReturn; trigger: FocusReturn } | null>(null);
   const setPanelRef = useCallback(
     (node: HTMLDivElement | null) => {
       panelRef.current = node;
       alive.current.panel = node !== null;
       if (node && !returnTo.current) {
-        // Where focus goes back when there is no DialogTrigger (a controlled dialog).
-        const active = document.activeElement;
-        returnTo.current = active instanceof HTMLElement && active !== document.body ? active : null;
+        returnTo.current = {
+          active: captureFocusReturn(node.ownerDocument.activeElement),
+          trigger: captureFocusReturn(ctx.triggerRef.current),
+        };
       }
       assignRef(ref, node);
       if (!node) settle();
     },
-    [ref, settle],
+    [ref, settle, ctx.triggerRef],
   );
   const setBackdropRef = useCallback(
     (node: HTMLDivElement | null) => {
@@ -553,7 +516,7 @@ export function DialogContent({
             onOpenAutoFocus?.(event);
             if (panelRef.current) warnInDev(panelRef.current);
             if (event.defaultPrevented || !panelRef.current) return;
-            const target = initialFocus(panelRef.current, ctx.tone);
+            const target = dialogInitialFocus(panelRef.current, ctx.tone);
             if (!target) return;
             event.preventDefault();
             target.focus();
@@ -561,11 +524,18 @@ export function DialogContent({
           onCloseAutoFocus={(event) => {
             onCloseAutoFocus?.(event);
             if (event.defaultPrevented) return;
-            // Back to the trigger, else to what had focus before the dialog opened.
+            // Back to the trigger, else to what had focus before the dialog
+            // opened. When that is gone: its nearest connected focusable
+            // ancestor, else the first tab stop of main, else the body.
             event.preventDefault();
             const trigger = ctx.triggerRef.current;
-            const target = trigger?.isConnected ? trigger : returnTo.current;
+            const memo = returnTo.current;
             returnTo.current = null;
+            const target = trigger?.isConnected
+              ? trigger
+              : memo
+                ? focusReturnTarget(memo.active.target ? memo.active : memo.trigger, document)
+                : null;
             if (target?.isConnected) target.focus();
           }}
           onEscapeKeyDown={(event) => {

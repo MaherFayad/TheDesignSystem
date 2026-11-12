@@ -356,6 +356,91 @@ describe('Dialog', () => {
     });
   });
 
+  describe('focus return when the target is gone', () => {
+    it('goes to the first tab stop of main when the row that opened the dialog was removed', async () => {
+      const user = userEvent.setup();
+      function Boards() {
+        const [rows, setRows] = useState(['Spring launch']);
+        const [open, setOpen] = useState(false);
+        return (
+          <main>
+            <Button>Create board</Button>
+            <ul>
+              {rows.map((row) => (
+                <li key={row}>
+                  <Button onClick={() => setOpen(true)}>{`Delete ${row}`}</Button>
+                </li>
+              ))}
+            </ul>
+            <Dialog open={open} onOpenChange={setOpen} tone="danger">
+              <DialogContent title="Delete the board?">
+                <DialogFooter>
+                  <DialogClose>
+                    <Button>Keep board</Button>
+                  </DialogClose>
+                  <Button
+                    tone="danger"
+                    emphasis="solid"
+                    onClick={() => {
+                      setRows([]);
+                      setOpen(false);
+                    }}
+                  >
+                    Delete board
+                  </Button>
+                </DialogFooter>
+              </DialogContent>
+            </Dialog>
+          </main>
+        );
+      }
+      render(<Boards />);
+      await user.click(screen.getByRole('button', { name: 'Delete Spring launch' }));
+      await screen.findByRole('dialog');
+      await user.click(screen.getByRole('button', { name: 'Delete board' }));
+      await waitFor(() => expect(rootEl()).toBeNull());
+      expect(screen.queryByRole('button', { name: 'Delete Spring launch' })).toBeNull();
+      expect(document.activeElement).toBe(screen.getByRole('button', { name: 'Create board' }));
+    });
+
+    it('goes to the nearest focusable ancestor that is still there', async () => {
+      const user = userEvent.setup();
+      function List() {
+        const [shown, setShown] = useState(true);
+        const [open, setOpen] = useState(false);
+        return (
+          <section aria-label="Boards" tabIndex={-1} data-testid="list">
+            {shown && (
+              <div>
+                <Button onClick={() => setOpen(true)}>Archive board</Button>
+              </div>
+            )}
+            <Dialog open={open} onOpenChange={setOpen}>
+              <DialogContent title="Archive the board?">
+                <DialogFooter>
+                  <Button
+                    onClick={() => {
+                      setShown(false);
+                      setOpen(false);
+                    }}
+                  >
+                    Archive board now
+                  </Button>
+                </DialogFooter>
+              </DialogContent>
+            </Dialog>
+          </section>
+        );
+      }
+      render(<List />);
+      await user.click(screen.getByRole('button', { name: 'Archive board' }));
+      await screen.findByRole('dialog');
+      await user.click(screen.getByRole('button', { name: 'Archive board now' }));
+      await waitFor(() => expect(rootEl()).toBeNull());
+      expect(document.activeElement).toBe(screen.getByTestId('list'));
+    });
+  });
+
   describe('styles', () => {
     it('Studio: the title in place and the close IconButton, no title bar', async () => {
       const user = userEvent.setup();
