@@ -106,19 +106,21 @@ components, a fresh review, then commit.
 | 3C | ListBox, Combobox, Autocomplete | claude/ds-lane-3c | session_01ErLBsZo8xNsMUVW6VtiVdG | merged, review open |
 | 4B | Stepper, FormWizard | claude/ds-lane-4b | session_01ErLBsZiF2GsbhjQfEgbywx | merged, review open |
 | 1E | SplitButton | claude/ds-lane-1e | session_01ErLBsd2g8TDh8kPx6CyQfU | merged, review open |
-| 1D | ToggleGroup, SegmentedControl | claude/ds-lane-1d | session_01ErLBsaLU7fYh8oJTPLRUYN | running |
-| 3D | Select, MultiSelect, TagField | claude/ds-lane-3d | session_01ErLBscBVRhPUortaE6kB1W | running |
+| 1D | ToggleGroup, SegmentedControl | claude/ds-lane-1d | session_01ErLBsaLU7fYh8oJTPLRUYN | merged, review open |
+| 3D | Select, MultiSelect, TagField | claude/ds-lane-3d | session_01ErLBscBVRhPUortaE6kB1W | merged, review open |
 | 4A, 4C | Fieldset, Form, ConsentField, FilterBar | claude/ds-lane-4a | session_01ErLBsdAxTp9pNKkafLst2H | running |
-| 6D | CommandPalette, Lightbox, PageShell | claude/ds-lane-6d | session_01ErLBscXKXkP4UetBBLqh7d | running |
-| 2C | NumberField, ScrubInput | claude/ds-lane-2c | session_01ErLBsa9N8BxuZxXv3txFFC | running |
-| 1.13, 1.14, 1.16 | Registry, CLI, agent files | claude/ds-order-1-13 | session_01ErLBscA1spNxiDuqwFeKkb | running |
-| 1.15 | Docs site | claude/ds-order-1-15 | session_01ErLBsdntSkYYP93KvNeUUF | running |
+| 6D | CommandPalette, Lightbox, PageShell | claude/ds-lane-6d | session_01ErLBscXKXkP4UetBBLqh7d | merged, review open |
+| 2C | NumberField, ScrubInput | claude/ds-lane-2c | session_01ErLBsa9N8BxuZxXv3txFFC | merged, review open |
+| 1.13, 1.14, 1.16 | Registry, CLI, agent files | claude/ds-order-1-13 | session_01ErLBscA1spNxiDuqwFeKkb | merged, review open |
+| 1.15 | Docs site | claude/ds-order-1-15 | session_01ErLBsdntSkYYP93KvNeUUF | merged, review open |
 | A1 | Angular actions | claude/ds-angular-a1 | session_01ErLBscFDv12uob1HrEYb2e | running |
 | A2 | Angular text inputs | claude/ds-angular-a2 | session_01ErLBsdMcfbuvbHoYkVYJB5 | running |
+| A3 | Angular selection | claude/ds-angular-a3 | session_01ErLBsZmDNkdQpudsTbFqG8 | running |
+| A5 | Angular feedback | claude/ds-angular-a5 | session_01ErLBsd34hcZtLBuSrspqeS | running |
+| 1.0.i | Consolidation 2: follow ups round 2, tokens, contract text | claude/ds-consolidation-2 | session_01ErLBsasj4xo1JcwWMq49Dd | running |
 
 React Aria Components 1.22.1 is installed (order 1.2.0). Not started yet:
-Angular A3 to A5 (after the reviews and fix rounds of React batches 3 to 5),
-orders 1.17 to 1.21.
+Angular A4 (after lane 4A merges), orders 1.17 to 1.21.
 
 Done locally: Link, ButtonGroup, DropdownMenu, lane 1A (ToggleButton,
 CloseButton, CopyButton, FloatingActionButton), the consolidation pass
@@ -132,18 +134,20 @@ Review sessions (findings only, no source edits), reports in
 | Batch 5 | claude/ds-review-5 | session_01ErLBsd5dj77mtG4ZKCmhTs | merged, 13 blockers |
 | Batch 8 | claude/ds-review-8 | session_01ErLBsZfAjNyUmivfhgabX1 | merged, 5 blockers |
 | Batch 9 (9B, 9C) and motion catalog | claude/ds-review-9 | session_01ErLBsc1vxoKHFFzBBENpbB | merged, 2 and 3 blockers |
-| Batches 1 and 2 | claude/ds-review-1-2 | session_01ErLBscUzPBTFNWCJyke4iK | running |
-| Batches 3 and 4 | claude/ds-review-3-4 | session_01ErLBsd5x5XcqMzeeS8QJks | running |
-| Batch 6 | claude/ds-review-6 | session_01ErLBsZcdwTv7v9hbqpAv7g | running |
-| Batch 7 and lane 9A | claude/ds-review-7 | session_01ErLBsbTnC7FkxYnXYwpRXK | running |
+| Batches 1 and 2 | claude/ds-review-1-2 | session_01ErLBscUzPBTFNWCJyke4iK | merged, 3 blockers |
+| Batches 3 and 4 | claude/ds-review-3-4 | session_01ErLBsd5x5XcqMzeeS8QJks | merged, 3 blockers |
+| Batch 6 | claude/ds-review-6 | session_01ErLBsZcdwTv7v9hbqpAv7g | merged, 5 blockers |
+| Batch 7 and lane 9A | claude/ds-review-7 | session_01ErLBsbTnC7FkxYnXYwpRXK | merged, 21 blockers |
 
 Fix round sessions (round 1 of 3), reports in `docs/reports/fixes/`:
 
 | Scope | Branch | Session | Status |
 | --- | --- | --- | --- |
-| Batch 5 blockers | claude/ds-fix-5 | session_01ErLBsaGC9XKK8xzKjxjGVv | running |
-| Batch 8 and 9 blockers | claude/ds-fix-8-9 | session_01ErLBsdNKL8hgeVbwciEbpg | running |
-| Motion catalog blockers, plus `fade` and `press` patterns | claude/ds-fix-motion | session_01ErLBsZwcTK6P49LLqbm1Lb | running |
+| Batch 5 blockers | claude/ds-fix-5 | session_01ErLBsaGC9XKK8xzKjxjGVv | merged, second review open |
+| Batch 8 and 9 blockers | claude/ds-fix-8-9 | session_01ErLBsdNKL8hgeVbwciEbpg | merged, second review open |
+| Motion catalog blockers, plus `fade` and `press` patterns | claude/ds-fix-motion | session_01ErLBsZwcTK6P49LLqbm1Lb | merged |
+| Reviews 1-2, 3-4, 6 blockers | claude/ds-fix-1-6 | session_01ErLBsZcfuz1s1NKys7fajT | running |
+| Review 7 blockers | claude/ds-fix-7 | session_01ErLBsZh5KyRZBXYhtBr3Fz | running |
 
 Requests from the lanes are collected in `docs/plan/wave-1-followups.md`.
 
