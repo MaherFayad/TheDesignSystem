@@ -61,5 +61,9 @@ hand built styles. Arabic uses IBM Plex Sans Arabic in every style.
 
 ## Status
 
+`style.json` adds two keys to the schema in PLAN.md: `status` (`stable` or
+`proposed`) and `proposedSchemes` (a list of schemes still waiting for the
+owner).
+
 A new look is marked `"status": "proposed"` in `style.json` until the owner
 approves it. Desk Light, Neutral and Liquid start as proposed.

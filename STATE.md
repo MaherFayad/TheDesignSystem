@@ -54,4 +54,5 @@ Nothing.
    branch, no pull request, no force push.
 
 ## Contract changes
+2026-11-12: frameworks.md: Theme uses `css` for inline styles; never wait on transitionend. style-pack.md: `status` and `proposedSchemes` in style.json. Reason: review of order 0.7.
 2026-11-12: tokens.md gained the DTCG 2025.10 differences and the `added` list in contract.json (64 names). Reason: the spec wins on format, and no source token may be dropped.

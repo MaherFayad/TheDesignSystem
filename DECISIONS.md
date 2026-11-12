@@ -68,6 +68,19 @@ Newest first inside each section. Each entry has a date and the reasoning.
    and glass-tinted, the three springs. They are reviewed with the charts
    (wave 2) and with Liquid.
 
+## Theme and styles (2026-11-12)
+
+1. **`Theme` takes inline styles through `css`.** Its `style` prop is the
+   style axis. Recorded in `docs/contracts/frameworks.md`.
+2. **`style.json` gains `status` and `proposedSchemes`.** They mark looks that
+   wait for the owner. Desk has `proposedSchemes: ["light"]`.
+3. **`defaultDensity` is `default` for Studio and Desk.** The base token
+   values are the source values of each look. The words compact and roomy in
+   the dials table describe how the look reads, not the axis value.
+4. **Arabic: only small text moves one step up.** Body text keeps its step.
+5. **Import order for consumers.** Only CSS outside layers is certain to win.
+   A consumer that uses its own layers imports the system first.
+
 ## Conflicts between the prompt and a source repo
 
 None yet.

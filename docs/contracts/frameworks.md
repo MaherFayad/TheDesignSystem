@@ -25,6 +25,12 @@ Full detail: sections 3.1 and 3.5 of PLAN.md.
 - Files: `packages/react/src/components/<Name>/` with `<Name>.tsx`,
   `<Name>.test.tsx`, `<Name>.demo.tsx`, `index.ts`.
 - Props spread onto the root. `className` and `style` pass through.
+- The one exception is `Theme`: its `style` prop is the style axis, so inline
+  styles pass through a `css` prop. The Angular `dsTheme` input has the same
+  names.
+- Under reduced motion every duration token is 0ms, so `transitionend` and
+  `animationend` may never fire. Never wait on those events. Use the Web
+  Animations API `finished` promise, or act at once when the duration is 0.
 
 ## Angular
 
