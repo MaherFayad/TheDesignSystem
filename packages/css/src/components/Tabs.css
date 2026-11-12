@@ -14,6 +14,7 @@
  *   --_tabs-weight, -weight-active               the active tab is heavier, never color alone
  *   --_tabs-list-bg, -list-border-color, -list-padding
  *   --_tabs-indicator-bg, -indicator-thickness
+ *   --_tabs-indicator-border-color, -indicator-border-width   the soft pill's 3:1 edge (WCAG 1.4.11)
  *   --_tabs-indicator-duration, -indicator-ease  read by Tabs.tsx for the tab-indicator FLIP
  *   --_tabs-ring                                 the focus ring, inset so a scrolling list never clips it
  *   --_tabs-count-bg, -count-fg
@@ -43,8 +44,10 @@
     --_tabs-list-padding: 0;
     --_tabs-indicator-bg: var(--ds-color-text-bright);
     --_tabs-indicator-thickness: var(--ds-border-width-strong);
+    --_tabs-indicator-border-color: transparent;
+    --_tabs-indicator-border-width: 0;
     --_tabs-indicator-duration: var(--ds-duration-medium);
-    --_tabs-indicator-ease: var(--ds-ease-emphasized);
+    --_tabs-indicator-ease: var(--ds-ease-standard);
     --_tabs-ring: inset 0 0 0 var(--ds-border-width-strong) var(--ds-color-focus-ring);
     --_tabs-count-bg: var(--ds-color-bg-overlay-10);
     --_tabs-count-fg: var(--ds-color-text-default);
@@ -74,12 +77,19 @@
     --_tabs-font-size: var(--ds-font-size-s);
   }
 
-  /* soft: a quiet track with a filled pill behind the active label. */
+  /*
+   * soft: a quiet track with a filled pill behind the active label. The
+   * overlay-20 fill alone is under 2:1 against the track, so the pill gets a
+   * border in the muted text color, 3:1 or better against the track and the
+   * fill in every style (WCAG 1.4.11), as Toolbar does for a pressed tool.
+   */
   [data-ds='tabs'][data-emphasis='soft'] {
     --_tabs-list-bg: var(--ds-color-bg-overlay-5);
     --_tabs-list-border-color: transparent;
     --_tabs-list-padding: var(--ds-space-4xs);
     --_tabs-indicator-bg: var(--ds-color-bg-overlay-20);
+    --_tabs-indicator-border-color: var(--ds-color-text-muted);
+    --_tabs-indicator-border-width: var(--ds-border-width-default);
     --_tabs-radius: var(--ds-radius-sm);
   }
 
@@ -224,7 +234,9 @@
     position: absolute;
     inset-inline: 0;
     inset-block-end: 0;
+    box-sizing: border-box;
     block-size: var(--_tabs-indicator-thickness);
+    border: var(--_tabs-indicator-border-width) solid var(--_tabs-indicator-border-color);
     border-radius: var(--ds-radius-pill);
     background-color: var(--_tabs-indicator-bg);
     transform-origin: 0 0;
