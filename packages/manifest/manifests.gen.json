@@ -18,7 +18,6 @@
     "insteadUse": {
       "Switching between views": "Tabs",
       "Steps done in order": "Stepper",
-      "One detail to show or hide": "Collapsible",
       "Content that everyone needs": "Card",
       "Navigation between pages": "Sidebar"
     },
@@ -109,7 +108,7 @@
       "data-orientation"
     ],
     "a11y": {
-      "role": "Each trigger is a native button with aria-expanded and aria-controls, inside a heading (level from headingLevel). Each open content is a region named by its trigger.",
+      "role": "Each trigger is a native button with aria-expanded, and aria-controls while its section is open (Radix drops it when closed, which the APG pattern allows), inside a heading (level from headingLevel). Each open content is a region named by its trigger.",
       "focus": "Every trigger is in the tab order, disabled ones included (aria-disabled). The content's own controls follow their trigger. The trigger takes the Button's 2px focus ring.",
       "keys": {
         "Tab": "Moves to the next trigger, or into the open content",
@@ -3216,7 +3215,7 @@
       "A dense grid of files or boards in Studio, where tiles split by a 1px gap read better",
       "Rows that people scan and compare, such as a list of messages or a table",
       "A choice of one option out of several",
-      "Wrapping a whole page section only to draw a border around it"
+      "Wrapping a whole page section only to draw a border around it: use Surface or Section"
     ],
     "insteadUse": {
       "A Studio grid of files or boards": "Tile",
@@ -3224,7 +3223,9 @@
       "Tabular data": "Table",
       "Picking one option shown as a card": "RadioCard",
       "Sections that open and close": "Accordion",
-      "A place with no content yet": "EmptyState"
+      "A place with no content yet": "EmptyState",
+      "A plain box with a fill or a border and no title": "Surface",
+      "Facts about one thing as term and value pairs": "DescriptionList"
     },
     "anatomy": [
       "root",
@@ -10765,6 +10766,10 @@
       {
         "wrong": "An empty ul with nothing in it",
         "right": "empty with what to do next"
+      },
+      {
+        "wrong": "A long sentence as the title, cut to one line with an ellipsis that a pointer user cannot read in full",
+        "right": "A short title of a few words, with the rest in description, which wraps to two lines"
       }
     ],
     "since": "0.1.0"

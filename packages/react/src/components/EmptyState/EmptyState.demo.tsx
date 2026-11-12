@@ -1,6 +1,7 @@
 import { DemoCase, DemoPage, sample } from '../../demo';
 import { Theme } from '../../theme';
 import { Button } from '../Button';
+import { Kbd } from '../Kbd';
 import { EmptyState, type EmptyStateSize } from './index';
 
 const sizes: EmptyStateSize[] = ['sm', 'md', 'lg'];
@@ -52,7 +53,7 @@ export default function EmptyStateDemo() {
 
       <DemoCase id="empty" title="Empty: a title and the way forward, no icon and no action">
         <EmptyState size="sm" title="No comments">
-          Select text on the board and press C to leave the first comment.
+          Select text on the board and press <Kbd size="sm">C</Kbd> to leave the first comment.
         </EmptyState>
       </DemoCase>
 
