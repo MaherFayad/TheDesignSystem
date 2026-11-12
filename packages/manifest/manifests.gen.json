@@ -4709,7 +4709,8 @@
     "avoidWhen": [
       "Inside a panel, card or dialog that already has its own padding",
       "Laying out children in a row or columns",
-      "A full bleed band of color or media that must reach the screen edges"
+      "A full bleed band of color or media that must reach the screen edges",
+      "Inside another Container: the gutters add up"
     ],
     "insteadUse": {
       "Children in a row or a column": "Stack",
@@ -15115,7 +15116,8 @@
     "avoidWhen": [
       "A list and its detail that should stack on phones",
       "A fixed page frame with a header, a sidebar and main content",
-      "Content that should simply wrap to the width it gets"
+      "Content that should simply wrap to the width it gets",
+      "Phone widths: limits are percents, so at 320px panels shrink to 60 to 70px; use SplitView, which stacks"
     ],
     "insteadUse": {
       "A list and its detail, stacked on phones": "SplitView",
@@ -16068,7 +16070,7 @@
       "decorative": {
         "type": "boolean",
         "default": true,
-        "description": "true: role none, hidden from assistive tech, drawn with color.border.subtle. false: role separator, announced, drawn with color.border.control at 3:1. Sets data-decorative when true."
+        "description": "true: role none, hidden from assistive tech, drawn with color.border.subtle. false: role separator, announced, drawn with color.border.control, 3:1 on body and surface 1 to 3 (2.4 to 2.9 on surface 4 and 5 in the dark schemes and Neutral light). Sets data-decorative when true."
       },
       "label": {
         "type": "node",
