@@ -19,24 +19,94 @@
     "A choice from a long list with typing": "Combobox",
     "A yes or no setting": "Switch"
   },
-  "anatomy": ["root", "control", "start", "end"],
+  "anatomy": [
+    "root",
+    "control",
+    "start",
+    "end"
+  ],
   "slots": {
-    "start": { "accepts": ["Icon", "text"], "max": 1 },
-    "end": { "accepts": ["Icon", "text"], "max": 1 }
+    "start": {
+      "accepts": [
+        "Icon",
+        "text"
+      ],
+      "max": 1
+    },
+    "end": {
+      "accepts": [
+        "Icon",
+        "text"
+      ],
+      "max": 1
+    }
   },
   "props": {
-    "size": { "type": ["xs", "sm", "md", "lg"], "default": "md", "description": "Height from size.control: 24, 28, 32 and 44 px at default density." },
-    "shape": { "type": ["default", "pill"], "default": "default", "description": "default takes radius.control from the style, a pill in Studio and Desk. pill is always fully round." },
-    "type": { "type": ["text", "email", "url", "tel", "number", "password", "search"], "default": "text", "description": "Text types only." },
-    "invalid": { "type": "boolean", "description": "Marks the value invalid. Inside a Field it follows the Field." },
-    "disabled": { "type": "boolean", "description": "Inside a Field it follows the Field." },
-    "readOnly": { "type": "boolean", "description": "Still focusable, selectable and readable. Inside a Field it follows the Field." },
-    "required": { "type": "boolean", "description": "Sets aria-required. Inside a Field it follows the Field." },
-    "start": { "type": "node", "description": "An icon name, a short text such as $, or a node. Icon names and texts are aria-hidden." },
-    "end": { "type": "node", "description": "An icon name, a short text such as px, or a node. Icon names and texts are aria-hidden." },
-    "rootProps": { "type": "string", "description": "Props for the root box. className and style also go to the root; every other native prop and the ref go to the input." }
+    "size": {
+      "type": [
+        "xs",
+        "sm",
+        "md",
+        "lg"
+      ],
+      "default": "md",
+      "description": "Height from size.control: 24, 28, 32 and 44 px at default density."
+    },
+    "shape": {
+      "type": [
+        "default",
+        "pill"
+      ],
+      "default": "default",
+      "description": "default takes radius.control from the style, a pill in Studio and Desk. pill is always fully round."
+    },
+    "type": {
+      "type": [
+        "text",
+        "email",
+        "url",
+        "tel",
+        "number",
+        "password",
+        "search"
+      ],
+      "default": "text",
+      "description": "Text types only."
+    },
+    "invalid": {
+      "type": "boolean",
+      "description": "Marks the value invalid. Inside a Field it follows the Field."
+    },
+    "disabled": {
+      "type": "boolean",
+      "description": "Inside a Field it follows the Field."
+    },
+    "readOnly": {
+      "type": "boolean",
+      "description": "Still focusable, selectable and readable. Inside a Field it follows the Field."
+    },
+    "required": {
+      "type": "boolean",
+      "description": "Sets aria-required. Inside a Field it follows the Field."
+    },
+    "start": {
+      "type": "node",
+      "description": "An icon name, a short text such as $, or a node. Icon names and texts are aria-hidden."
+    },
+    "end": {
+      "type": "node",
+      "description": "An icon name, a short text such as px, or a node. Icon names and texts are aria-hidden."
+    },
+    "rootProps": {
+      "type": "object",
+      "description": "Props for the root box. className and style also go to the root; every other native prop and the ref go to the input."
+    }
   },
-  "states": ["data-invalid", "data-disabled", "data-readonly", "focus-within", "hover"],
+  "states": [
+    "data-invalid",
+    "data-disabled",
+    "data-readonly"
+  ],
   "a11y": {
     "role": "textbox, from the native input (spinbutton for type number, searchbox for type search)",
     "focus": "The input is the only tab stop. Clicking anywhere in the box that is not interactive focuses the input. Focus shows the glow and a 2px ring around the box.",
@@ -48,20 +118,27 @@
       "Escape": "Clears the value for type search, as the browser does"
     },
     "announce": "Name from the Field label. The Field description and error through aria-describedby. aria-invalid and aria-required from the Field.",
-    "native": { "accessibilityRole": "none", "accessibilityState": ["disabled"] },
+    "native": {
+      "accessibilityState": [
+        "disabled"
+      ]
+    },
     "notes": [
       "No native title attribute. Use Tooltip for a hint, or the Field description.",
       "dir auto is not set: the value follows the page direction, so a field does not jump sides while someone types a Latin word into Arabic. Pass dir auto yourself for free text in a mixed language form.",
       "Email, url, tel and number values always run left to right, and stay on the reading side of the form. Their placeholder runs in the page direction.",
       "A long value scrolls inside the box. It is never cut with an ellipsis.",
-      "Read only looks different from disabled: a dashed border and a quiet fill, full contrast text, and it stays focusable."
+      "Read only looks different from disabled: a dashed border and a quiet fill, full contrast text, and it stays focusable.",
+      "Validate on blur or on submit, never on every key. On submit, move focus to the first invalid control.",
+      "Disabled uses native disabled and draws with opacity.disabled, like every control.",
+      "A value being checked shows the loader icon in the end slot for now. A Spinner arrives in wave 1 and replaces it."
     ]
   },
   "content": {
     "en": {
       "label": "Always a visible Field label, a noun in sentence case. aria-label only for a toolbar search box.",
       "placeholder": "An example value at most: For example, spring launch. Never the label, never an instruction the person needs after typing.",
-      "adornment": "A unit or a currency the value is in: px, USD. Never words the label needs."
+      "adornment": "A unit or a currency the value is in: px, USD. Never words the label needs. No icon that only decorates, such as a paper plane on an email field."
     },
     "ar": {
       "label": "عنوان ظاهر دايم، بصيغة الاسم وبدون تشكيل",
@@ -81,7 +158,6 @@
     "space.m",
     "space.2xl",
     "font.size.s",
-    "font.size.xl",
     "font.leading.snug",
     "radius.control",
     "radius.pill",
@@ -89,35 +165,59 @@
     "border.width.strong",
     "color.border.control",
     "color.border.control-hover",
-    "color.border.strong",
-    "color.bg.overlay-50",
     "color.bg.overlay-5",
     "color.text.default",
     "color.text.muted",
     "color.text.placeholder",
-    "color.text.disabled",
-    "color.state.danger.border",
     "elevation.input-focus",
     "focus.shadow.ring",
     "duration.base",
-    "ease.default"
+    "ease.default",
+    "font.size.fixed-m",
+    "opacity.disabled",
+    "color.state.danger.text",
+    "color.bg.surface",
+    "radius.xs"
   ],
   "motion": "fade",
   "frameworks": {
-    "react": { "status": "ready", "behavior": "native input", "example": "Input.demo.tsx" },
-    "angular": { "status": "planned" },
-    "native": { "status": "planned" }
+    "react": {
+      "status": "ready",
+      "behavior": "native input",
+      "example": "Input.demo.tsx"
+    },
+    "angular": {
+      "status": "planned"
+    },
+    "native": {
+      "status": "planned"
+    }
   },
   "styles": {
     "studio": "Bordered transparent pill, the control border, a soft inner glow and the 2px achromatic ring on focus",
     "desk": "The same pill and glow, in Instrument Sans"
   },
   "mistakes": [
-    { "wrong": "A placeholder as the only label", "right": "A Field with a FieldLabel" },
-    { "wrong": "An input with a title attribute for the hint", "right": "A FieldDescription, or a Tooltip" },
-    { "wrong": "A disabled input to show a value that cannot change", "right": "readOnly, which stays readable and focusable" },
-    { "wrong": "dir auto on every input in an Arabic form", "right": "No dir: email, url, tel and number run left to right through the CSS" },
-    { "wrong": "type date or checkbox on Input", "right": "The DatePicker or Checkbox component" }
+    {
+      "wrong": "A placeholder as the only label",
+      "right": "A Field with a FieldLabel"
+    },
+    {
+      "wrong": "An input with a title attribute for the hint",
+      "right": "A FieldDescription, or a Tooltip"
+    },
+    {
+      "wrong": "A disabled input to show a value that cannot change",
+      "right": "readOnly, which stays readable and focusable"
+    },
+    {
+      "wrong": "dir auto on every input in an Arabic form",
+      "right": "No dir: email, url, tel and number run left to right through the CSS"
+    },
+    {
+      "wrong": "type date or checkbox on Input",
+      "right": "The DatePicker or Checkbox component"
+    }
   ],
   "since": "0.1.0"
 }

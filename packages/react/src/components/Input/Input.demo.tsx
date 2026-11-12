@@ -6,6 +6,21 @@ import { Input, type InputShape, type InputSize } from './index';
 const sizes: InputSize[] = ['xs', 'sm', 'md', 'lg'];
 const shapes: InputShape[] = ['default', 'pill'];
 
+const formFields: [string, string][] = [
+  ['First name', 'Sara'],
+  ['Last name', 'Ahmed'],
+  ['Job title', 'Product designer'],
+  ['Company', 'Northwind'],
+  ['Street address', '12 King Fahd Road'],
+  ['City', 'Riyadh'],
+  ['Postal code', '12211'],
+  ['Country', 'Saudi Arabia'],
+  ['Time zone', 'Arabia Standard Time'],
+  ['Website', 'northwind.example.com'],
+  ['Team name', 'Design'],
+  ['Billing contact', 'Omar Khalid'],
+];
+
 const longValue =
   'https://boards.example.com/team/design/reviews/2026/november/landing-page-hero-directions-final-round?view=grid&sort=recent';
 
@@ -42,12 +57,13 @@ export default function InputDemo() {
       </DemoCase>
 
       <DemoCase id="many" title="A short form">
+        <p data-demo="label">Fields marked * are required.</p>
         <DemoGrid min="16rem">
           <Field label="Full name" required>
             <Input autoComplete="name" defaultValue="Sara Ahmed" />
           </Field>
           <Field label="Email" required description="Sign in links go here.">
-            <Input type="email" autoComplete="email" start="send" placeholder="name@example.com" />
+            <Input type="email" autoComplete="email" placeholder="name@example.com" />
           </Field>
           <Field label="Phone">
             <Input type="tel" autoComplete="tel" placeholder="+966 5x xxx xxxx" />
@@ -60,9 +76,9 @@ export default function InputDemo() {
 
       <DemoCase id="too-many" title="A long form in a narrow container">
         <div style={{ maxInlineSize: 'var(--ds-dialog-width-sm)', display: 'grid', gap: 'var(--ds-space-m)' }}>
-          {sample.en.items.map((item) => (
-            <Field key={item} label={`${item} folder name`} orientation="horizontal">
-              <Input size="sm" defaultValue={item} />
+          {formFields.map(([label, value]) => (
+            <Field key={label} label={label} orientation="horizontal">
+              <Input size="sm" defaultValue={value} />
             </Field>
           ))}
         </div>
@@ -81,11 +97,12 @@ export default function InputDemo() {
       </DemoCase>
 
       <DemoCase id="long-arabic" title="نص عربي طويل" lang="ar">
+        <p data-demo="label">الحقول اللي عليها * مطلوبة.</p>
         <Field label="اسم اللوحة" description={sample.ar.long}>
           <Input defaultValue="إطلاق الربيع، الاتجاهات النهائية للواجهة الرئيسية وصفحة الأسعار" />
         </Field>
         <Field label="البريد الإلكتروني" required description="يوصلك عليه رابط الدخول، وما يشوفه أحد غيرك.">
-          <Input type="email" start="send" placeholder="name@example.com" />
+          <Input type="email" placeholder="name@example.com" />
         </Field>
         <Field
           label="رابط اللوحة"

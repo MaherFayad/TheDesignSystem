@@ -104,6 +104,28 @@ describe('Input', () => {
     expect(document.activeElement).toBe(input);
   });
 
+  it('focuses the input from the box inside an ancestor with a tabindex', () => {
+    const { container } = render(
+      <div tabIndex={-1} data-testid="dialog">
+        <Input aria-label="Name" end="px" />
+      </div>,
+    );
+    const input = screen.getByRole('textbox', { name: 'Name' });
+    fireEvent.mouseDown(container.querySelector('[data-part="end"]') as HTMLElement);
+    expect(document.activeElement).toBe(input);
+    (document.activeElement as HTMLElement).blur();
+    fireEvent.mouseDown(root(container));
+    expect(document.activeElement).toBe(input);
+  });
+
+  it('leaves the press to an interactive element inside the box', () => {
+    const { container } = render(<Input aria-label="Code" end={<a href="#help">Help</a>} />);
+    const link = container.querySelector('a') as HTMLElement;
+    const ev = fireEvent.mouseDown(link);
+    expect(ev).toBe(true);
+    expect(document.activeElement).not.toBe(screen.getByRole('textbox', { name: 'Code' }));
+  });
+
   it('does not focus a disabled input from the box', () => {
     const { container } = render(<Input aria-label="Off" disabled />);
     fireEvent.mouseDown(root(container));

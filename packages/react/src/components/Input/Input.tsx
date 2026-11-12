@@ -2,10 +2,11 @@
 import { useCallback, useRef, type ComponentProps, type MouseEvent, type ReactNode, type Ref } from 'react';
 import { isIconName, type IconName } from '@the-system/icons';
 import { Icon } from '@the-system/icons/react';
+import type { Shape, Size } from '@the-system/shared';
 import { useFieldControl } from '../Field/Field';
 
-export type InputSize = 'xs' | 'sm' | 'md' | 'lg';
-export type InputShape = 'default' | 'pill';
+export type InputSize = Size;
+export type InputShape = Extract<Shape, 'default' | 'pill'>;
 /** Text types only. A checkbox, a date or a file is its own component. */
 export type InputType = 'text' | 'email' | 'url' | 'tel' | 'number' | 'password' | 'search';
 /** An icon name, a short text such as "px" or "$", or any node. */
@@ -114,7 +115,12 @@ export function Input({
     const input = inner.current;
     if (event.defaultPrevented || !input || input.disabled) return;
     const target = event.target as Element;
-    if (target === input || target.closest(INTERACTIVE)) return;
+    if (target === input) return;
+    // Only an interactive element inside the box keeps the press. An
+    // ancestor with a tabindex (a dialog's content) does not count.
+    const root = event.currentTarget;
+    const match = target.closest(INTERACTIVE);
+    if (match && match !== root && root.contains(match)) return;
     // Keep focus where it lands: on the input, not on the box.
     event.preventDefault();
     input.focus();

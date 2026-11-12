@@ -3,6 +3,21 @@ import { DemoCase, DemoGrid, DemoPage, sample } from '../../demo';
 import { Input } from '../Input/Input';
 import { Field, FieldDescription, FieldError, FieldLabel } from './index';
 
+const formFields: [string, string][] = [
+  ['First name', 'Sara'],
+  ['Last name', 'Ahmed'],
+  ['Job title', 'Product designer'],
+  ['Company', 'Northwind'],
+  ['Street address', '12 King Fahd Road'],
+  ['City', 'Riyadh'],
+  ['Postal code', '12211'],
+  ['Country', 'Saudi Arabia'],
+  ['Time zone', 'Arabia Standard Time'],
+  ['Website', 'northwind.example.com'],
+  ['Team name', 'Design'],
+  ['Billing contact', 'Omar Khalid'],
+];
+
 /** Field with the one line API and the compound API, in every content case. */
 export default function FieldDemo() {
   return (
@@ -41,6 +56,7 @@ export default function FieldDemo() {
       </DemoCase>
 
       <DemoCase id="many" title="A short form">
+        <p data-demo="label">Fields marked * are required.</p>
         <DemoGrid min="16rem">
           <Field label="First name" required>
             <Input autoComplete="given-name" />
@@ -59,9 +75,9 @@ export default function FieldDemo() {
 
       <DemoCase id="too-many" title="A long form in a narrow container">
         <div style={{ maxInlineSize: 'var(--ds-dialog-width-sm)', display: 'grid', gap: 'var(--ds-space-l)' }}>
-          {sample.en.items.map((item, i) => (
-            <Field key={item} label={`${item} label`} description={i % 3 === 0 ? 'Shown in the sidebar.' : undefined} required={i % 2 === 0}>
-              <Input size="sm" defaultValue={item} />
+          {formFields.map(([label, value], i) => (
+            <Field key={label} label={label} description={i % 4 === 0 ? 'Shown on invoices.' : undefined} required={i < 2}>
+              <Input size="sm" defaultValue={value} />
             </Field>
           ))}
         </div>
@@ -82,10 +98,11 @@ export default function FieldDemo() {
       </DemoCase>
 
       <DemoCase id="long-arabic" title="نص عربي طويل" lang="ar">
+        <p data-demo="label">الحقول اللي عليها * مطلوبة.</p>
         <Field label="اسم مساحة العمل" required description={sample.ar.long}>
           <Input defaultValue="فريق التصميم والمحتوى" />
         </Field>
-        <Field label="البريد الإلكتروني" required error={<Bidi>البريد ناقص. اكتبه كامل بهذا الشكل: name@example.com</Bidi>}>
+        <Field label="البريد الإلكتروني" required error={<Bidi>البريد ناقص. اكتبه كامل كذا: name@example.com</Bidi>}>
           <Input type="email" defaultValue="sara@" />
         </Field>
         <Field orientation="horizontal" label="المدينة" description="تظهر في الفواتير بس.">

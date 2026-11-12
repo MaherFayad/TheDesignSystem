@@ -4,27 +4,31 @@
  * text s) and Figma-Killer-2 `FormField.module.css` (stacked gap, a semibold
  * label, a quiet description).
  *
- * Component custom properties on the root, for recipes to override:
- *   --ds-field-gap            space between the parts
- *   --ds-field-label-width    label column in the horizontal orientation
+ * Private properties on the root (docs/contracts/anatomy.md, one
+ * convention), for recipes to override:
+ *   --_field-gap            space between the parts
+ *   --_field-label-width    label column in the horizontal orientation
+ *   --_field-fg             label color, --_field-fg-disabled when disabled
  */
 @layer ds.base {
   [data-ds='field'] {
-    --ds-field-gap: var(--ds-space-xs);
-    --ds-field-label-width: var(--ds-control-row-label-width);
+    --_field-gap: var(--ds-space-xs);
+    --_field-label-width: var(--ds-field-label-width);
+    --_field-fg: var(--ds-color-text-default);
+    --_field-fg-disabled: var(--ds-color-text-muted);
 
     display: flex;
     flex-direction: column;
-    gap: var(--ds-field-gap);
+    gap: var(--_field-gap);
     min-inline-size: 0;
   }
 
   /* Horizontal: the label sits at the start of the control's line, the rest stacks at the end. */
   [data-ds='field'][data-orientation='horizontal'] {
     display: grid;
-    grid-template-columns: minmax(0, var(--ds-field-label-width)) minmax(0, 1fr);
+    grid-template-columns: minmax(0, var(--_field-label-width)) minmax(0, 1fr);
     column-gap: var(--ds-space-l);
-    row-gap: var(--ds-field-gap);
+    row-gap: var(--_field-gap);
     align-items: center;
   }
 
@@ -38,7 +42,7 @@
   }
 
   [data-ds='field'] > [data-part='label'] {
-    color: var(--ds-color-text-default);
+    color: var(--_field-fg);
     font-size: var(--ds-font-size-s);
     font-weight: var(--ds-font-weight-semibold);
     line-height: var(--ds-font-leading-snug);
@@ -73,7 +77,7 @@
   }
 
   /* Disabled: the words stay readable; the control itself carries the disabled look. */
-  [data-ds='field'][data-disabled] > [data-part='label'] {
-    color: var(--ds-color-text-muted);
+  [data-ds='field'][data-disabled] {
+    --_field-fg: var(--_field-fg-disabled);
   }
 }
