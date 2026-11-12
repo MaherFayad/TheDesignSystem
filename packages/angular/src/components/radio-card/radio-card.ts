@@ -53,6 +53,7 @@ import { isIconName, type IconName } from '@the-system/icons';
 import { DsIcon } from '@the-system/icons/angular';
 import type { Size, Tone } from '@the-system/shared';
 import { RovingRadioGroup, bubbleInputStyle, rovingItem, type RovingRadioItem } from '../../behavior/roving-radio';
+import { BubbleEvent } from '../../internal/bubble-event';
 import { consumeHostAttributes } from '../../internal/host';
 
 export type RadioCardSize = Extract<Size, 'sm' | 'md' | 'lg'>;
@@ -281,6 +282,7 @@ export class DsRadioCardItem {
     destroyRef.onDestroy(this.group.roving.register(this.item));
     // Inside a form, the hidden native radio Radix renders after the card.
     const bubble = signal<HTMLInputElement | null>(null);
+    const bubbleClick = new BubbleEvent<boolean>('click');
     afterNextRender(() => {
       if (!this.host.closest('form')) return;
       const input = this.host.ownerDocument.createElement('input');
@@ -303,6 +305,7 @@ export class DsRadioCardItem {
       else input.name = name;
       input.value = this.value();
       input.checked = this.checked();
+      bubbleClick.update(input, input.checked);
     });
   }
 
