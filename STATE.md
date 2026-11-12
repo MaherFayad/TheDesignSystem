@@ -108,19 +108,20 @@ components, a fresh review, then commit.
 | 1E | SplitButton | claude/ds-lane-1e | session_01ErLBsd2g8TDh8kPx6CyQfU | merged, review open |
 | 1D | ToggleGroup, SegmentedControl | claude/ds-lane-1d | session_01ErLBsaLU7fYh8oJTPLRUYN | merged, review open |
 | 3D | Select, MultiSelect, TagField | claude/ds-lane-3d | session_01ErLBscBVRhPUortaE6kB1W | merged, review open |
-| 4A, 4C | Fieldset, Form, ConsentField, FilterBar | claude/ds-lane-4a | session_01ErLBsdAxTp9pNKkafLst2H | running |
+| 4A, 4C | Fieldset, Form, ConsentField, FilterBar | claude/ds-lane-4a | session_01ErLBsdAxTp9pNKkafLst2H | merged, review open |
 | 6D | CommandPalette, Lightbox, PageShell | claude/ds-lane-6d | session_01ErLBscXKXkP4UetBBLqh7d | merged, review open |
 | 2C | NumberField, ScrubInput | claude/ds-lane-2c | session_01ErLBsa9N8BxuZxXv3txFFC | merged, review open |
 | 1.13, 1.14, 1.16 | Registry, CLI, agent files | claude/ds-order-1-13 | session_01ErLBscA1spNxiDuqwFeKkb | merged, review open |
 | 1.15 | Docs site | claude/ds-order-1-15 | session_01ErLBsdntSkYYP93KvNeUUF | merged, review open |
-| A1 | Angular actions | claude/ds-angular-a1 | session_01ErLBscFDv12uob1HrEYb2e | running |
-| A2 | Angular text inputs | claude/ds-angular-a2 | session_01ErLBsdMcfbuvbHoYkVYJB5 | running |
+| A1 | Angular actions | claude/ds-angular-a1 | session_01ErLBscFDv12uob1HrEYb2e | merged, review open |
+| A2 | Angular text inputs | claude/ds-angular-a2 | session_01ErLBsdMcfbuvbHoYkVYJB5 | merged, review open |
 | A3 | Angular selection | claude/ds-angular-a3 | session_01ErLBsZmDNkdQpudsTbFqG8 | running |
-| A5 | Angular feedback | claude/ds-angular-a5 | session_01ErLBsd34hcZtLBuSrspqeS | running |
+| A5 | Angular feedback | claude/ds-angular-a5 | session_01ErLBsd34hcZtLBuSrspqeS | merged, review open |
+| A4 | Angular forms | claude/ds-angular-a4 | session_01ErLBsaB3LdL7KLxRWy1ezY | running |
 | 1.0.i | Consolidation 2: follow ups round 2, tokens, contract text | claude/ds-consolidation-2 | session_01ErLBsasj4xo1JcwWMq49Dd | running |
 
 React Aria Components 1.22.1 is installed (order 1.2.0). Not started yet:
-Angular A4 (after lane 4A merges), orders 1.17 to 1.21.
+orders 1.17 to 1.21. The fix rounds changed the React DOM of some components after Angular A1 and A2 were ported (see "DOM changes" in `docs/reports/fixes/batch-1-6.md` and `batch-7.md`): the Angular review must catch each, and an Angular sync order follows it.
 
 Done locally: Link, ButtonGroup, DropdownMenu, lane 1A (ToggleButton,
 CloseButton, CopyButton, FloatingActionButton), the consolidation pass
@@ -138,6 +139,9 @@ Review sessions (findings only, no source edits), reports in
 | Batches 3 and 4 | claude/ds-review-3-4 | session_01ErLBsd5x5XcqMzeeS8QJks | merged, 3 blockers |
 | Batch 6 | claude/ds-review-6 | session_01ErLBsZcdwTv7v9hbqpAv7g | merged, 5 blockers |
 | Batch 7 and lane 9A | claude/ds-review-7 | session_01ErLBsbTnC7FkxYnXYwpRXK | merged, 21 blockers |
+| Late React lanes (1D, 2C, 3D, 4A, 6D) | claude/ds-review-late | session_01ErLBsaHFu2h1gcvSgRHo9b | running |
+| Round 2: every first review blocker rechecked | claude/ds-review-round-2 | session_01ErLBsadmficC3cuMWybkRE | running |
+| Angular A1, A2, A5 | claude/ds-review-angular-1 | session_01ErLBsdPS43RLcuWFDVcWKs | running |
 
 Fix round sessions (round 1 of 3), reports in `docs/reports/fixes/`:
 
@@ -146,15 +150,15 @@ Fix round sessions (round 1 of 3), reports in `docs/reports/fixes/`:
 | Batch 5 blockers | claude/ds-fix-5 | session_01ErLBsaGC9XKK8xzKjxjGVv | merged, second review open |
 | Batch 8 and 9 blockers | claude/ds-fix-8-9 | session_01ErLBsdNKL8hgeVbwciEbpg | merged, second review open |
 | Motion catalog blockers, plus `fade` and `press` patterns | claude/ds-fix-motion | session_01ErLBsZwcTK6P49LLqbm1Lb | merged |
-| Reviews 1-2, 3-4, 6 blockers | claude/ds-fix-1-6 | session_01ErLBsZcfuz1s1NKys7fajT | running |
-| Review 7 blockers | claude/ds-fix-7 | session_01ErLBsZh5KyRZBXYhtBr3Fz | running |
+| Reviews 1-2, 3-4, 6 blockers | claude/ds-fix-1-6 | session_01ErLBsZcfuz1s1NKys7fajT | merged, second review open |
+| Review 7 blockers | claude/ds-fix-7 | session_01ErLBsZh5KyRZBXYhtBr3Fz | merged, second review open |
 
 Requests from the lanes are collected in `docs/plan/wave-1-followups.md`.
 
 ## Coverage
-As of 2026-11-12 13:00 UTC: 97 component manifests, all React
-(`packages/manifest/src/component/`). Angular has 4 full and 4 minimal
-components, React Native 2. The per family table comes back with the matrix
+As of 2026-11-12 14:35 UTC: 111 component manifests, all built in React
+(`packages/manifest/src/component/`). Angular has 35 marked ready. React
+Native has 2. The per family table comes back with the matrix
 order 1.17, generated from the manifests.
 
 ## Blocked
