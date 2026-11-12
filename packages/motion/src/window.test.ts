@@ -1,11 +1,8 @@
 import { readFileSync } from 'node:fs';
 import { describe, expect, it, vi } from 'vitest';
+import { between, parseDuration, settled, tokenVar } from './core';
 import {
   animateWindow,
-  between,
-  parseDuration,
-  settled,
-  tokenVar,
   windowClose,
   windowGrow,
   windowMinimize,
