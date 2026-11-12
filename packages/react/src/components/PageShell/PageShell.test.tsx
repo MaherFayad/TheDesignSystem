@@ -13,7 +13,11 @@ const childParts = () => Array.from(rootEl()?.children ?? []).map((c) => c.getAt
 function Nav() {
   const { sidebar, setSidebar } = usePageShell();
   return (
-    <Sidebar label="Main" collapsed={sidebar === 'collapsed'} onCollapsedChange={(c) => setSidebar(c ? 'collapsed' : 'expanded')}>
+    <Sidebar
+      label="Main"
+      collapsed={sidebar === 'collapsed'}
+      onCollapsedChange={(c) => setSidebar(c ? 'collapsed' : 'expanded')}
+    >
       <SidebarGroup label="Workspace">
         <SidebarItem href="#home" start="home">
           Home
@@ -26,7 +30,14 @@ function Nav() {
 function Basic(props: Partial<PageShellProps>) {
   return (
     <Theme>
-      <PageShell header={<span>Northwind</span>} nav={<Nav />} aside={<p>Details</p>} asideLabel="Board details" footer="2026" {...props}>
+      <PageShell
+        header={<span>Northwind</span>}
+        nav={<Nav />}
+        aside={<p>Details</p>}
+        asideLabel="Board details"
+        footer="2026"
+        {...props}
+      >
         <Button>Create board</Button>
       </PageShell>
     </Theme>
@@ -41,7 +52,10 @@ function mockNarrow(matches: boolean) {
     addEventListener: (_: string, fn: () => void) => listeners.add(fn),
     removeEventListener: (_: string, fn: () => void) => listeners.delete(fn),
   };
-  vi.stubGlobal('matchMedia', vi.fn(() => query));
+  vi.stubGlobal(
+    'matchMedia',
+    vi.fn(() => query),
+  );
   return {
     set(next: boolean) {
       query.matches = next;
@@ -114,6 +128,12 @@ describe('PageShell', () => {
     await waitFor(() => expect(rootEl()?.getAttribute('data-sidebar')).toBe('hidden'));
     await user.click(screen.getByRole('button', { name: 'Open navigation' }));
     await screen.findByRole('dialog');
+    expect(rootEl()?.querySelector('[data-part="nav"]')?.children).toHaveLength(0);
+    expect(screen.getAllByRole('link', { name: 'Home' })).toHaveLength(1);
+    await user.click(screen.getByRole('link', { name: 'Home' }));
+    await waitFor(() => expect(screen.queryByRole('dialog')).toBeNull());
+    await user.click(screen.getByRole('button', { name: 'Open navigation' }));
+    await screen.findByRole('dialog');
     act(() => media.set(false));
     expect(rootEl()?.getAttribute('data-sidebar')).toBe('expanded');
     await waitFor(() => expect(screen.queryByRole('dialog')).toBeNull());
@@ -149,13 +169,21 @@ describe('PageShell', () => {
     expect(await screen.findByRole('dialog', { name: 'التنقل' })).toBeTruthy();
   });
 
+  it('renders no banner for a nav alone while the column shows', () => {
+    render(<Basic header={undefined} />);
+    expect(screen.queryByRole('banner')).toBeNull();
+    expect(childParts()).toEqual(['skip', 'nav', 'main', 'aside', 'footer']);
+  });
+
   it('renders every demo case', () => {
     render(
       <Theme>
         <PageShellDemo />
       </Theme>,
     );
-    const cases = Array.from(document.querySelectorAll('[data-demo-case]')).map((c) => c.getAttribute('data-demo-case'));
+    const cases = Array.from(document.querySelectorAll('[data-demo-case]')).map((c) =>
+      c.getAttribute('data-demo-case'),
+    );
     expect(cases).toEqual(['variants', 'empty', 'one', 'many', 'too-many', 'long-text', 'long-arabic']);
     expect(new Set(Array.from(document.querySelectorAll('[data-part="main"]')).map((m) => m.id)).size).toBe(
       document.querySelectorAll('[data-part="main"]').length,

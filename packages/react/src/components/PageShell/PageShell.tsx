@@ -1,4 +1,4 @@
-"use client";
+'use client';
 // PageShell: the frame of a page. A skip link, a header, the navigation
 // column (a Sidebar or a Rail), the main content, an aside and a footer,
 // each in its landmark.
@@ -31,42 +31,35 @@
 // - `embedded` draws the same frame without landmarks, for a page shown
 //   inside another page (a gallery, docs, a template picker). Landmarks must
 //   be unique on a page, and main must not sit inside another main.
-import {
-  createContext,
-  use,
-  useEffect,
-  useMemo,
-  useState,
-  type ComponentProps,
-  type ReactNode,
-  type Ref,
-} from "react";
-import { useTheme } from "../../theme/hooks";
-import { useControllable } from "../../internal/useControllable";
-import { Drawer, DrawerBody, DrawerContent, DrawerTrigger } from "../Drawer";
-import { IconButton } from "../IconButton";
-import { SkipLink } from "../SkipLink";
+import { createContext, use, useEffect, useMemo, useState, type ComponentProps, type ReactNode, type Ref } from 'react';
+import { useTheme } from '../../theme/hooks';
+import { useControllable } from '../../internal/useControllable';
+import { Drawer, DrawerBody, DrawerContent } from '../Drawer';
+import { IconButton } from '../IconButton';
+import { SkipLink } from '../SkipLink';
 
 /** The navigation column: drawn full, drawn as icons, or not drawn (reached through the menu button). */
-export type PageShellSidebar = "expanded" | "collapsed" | "hidden";
+export type PageShellSidebar = 'expanded' | 'collapsed' | 'hidden';
 
 const shellWords = {
   en: {
-    menu: "Open navigation",
-    drawer: "Navigation",
-    main: "Main content",
-    aside: "More on this page",
+    skip: 'Skip to main content',
+    menu: 'Open navigation',
+    drawer: 'Navigation',
+    main: 'Main content',
+    aside: 'More on this page',
   },
   ar: {
-    menu: "فتح التنقل",
-    drawer: "التنقل",
-    main: "المحتوى الرئيسي",
-    aside: "تفاصيل إضافية",
+    skip: 'الانتقال للمحتوى الرئيسي',
+    menu: 'فتح التنقل',
+    drawer: 'التنقل',
+    main: 'المحتوى الرئيسي',
+    aside: 'تفاصيل إضافية',
   },
 } as const;
 
 /** The query for breakpoint.tablet. Media queries cannot read custom properties. */
-const NARROW_QUERY = "(width < 48rem)"; // breakpoint.tablet
+const NARROW_QUERY = '(width < 48rem)'; // breakpoint.tablet
 
 interface PageShellContextValue {
   /** The state the root shows: hidden on narrow screens whatever the app set. */
@@ -85,7 +78,7 @@ const PageShellContext = createContext<PageShellContextValue | null>(null);
 /** The column state of the nearest PageShell, to wire a Sidebar's collapsed prop. */
 export function usePageShell(): PageShellContextValue {
   const ctx = use(PageShellContext);
-  if (!ctx) throw new Error("usePageShell must be used inside a PageShell.");
+  if (!ctx) throw new Error('usePageShell must be used inside a PageShell.');
   return ctx;
 }
 
@@ -93,20 +86,17 @@ export function usePageShell(): PageShellContextValue {
 function useNarrow(): boolean {
   const [narrow, setNarrow] = useState(false);
   useEffect(() => {
-    if (typeof window.matchMedia !== "function") return undefined;
+    if (typeof window.matchMedia !== 'function') return undefined;
     const query = window.matchMedia(NARROW_QUERY);
     const update = () => setNarrow(query.matches);
     update();
-    query.addEventListener("change", update);
-    return () => query.removeEventListener("change", update);
+    query.addEventListener('change', update);
+    return () => query.removeEventListener('change', update);
   }, []);
   return narrow;
 }
 
-export interface PageShellProps extends Omit<
-  ComponentProps<"div">,
-  "title" | "children"
-> {
+export interface PageShellProps extends Omit<ComponentProps<'div'>, 'title' | 'children'> {
   /** The top bar: a Navbar, or a brand and actions. Rendered in the header landmark. */
   header?: ReactNode;
   /** The navigation: a Sidebar or a Rail (each its own labelled nav landmark). */
@@ -148,10 +138,10 @@ export function PageShell({
   asideLabel,
   footer,
   children,
-  mainId = "main",
+  mainId = 'main',
   skipLabel,
   sidebar: sidebarProp,
-  defaultSidebar = "expanded",
+  defaultSidebar = 'expanded',
   onSidebarChange,
   menuLabel,
   drawerTitle,
@@ -160,24 +150,17 @@ export function PageShell({
   ...rest
 }: PageShellProps) {
   const theme = useTheme();
-  const words =
-    theme.lang === "ar" || theme.lang.startsWith("ar-")
-      ? shellWords.ar
-      : shellWords.en;
-  const [wideSidebar, setSidebar] = useControllable(
-    sidebarProp,
-    defaultSidebar,
-    onSidebarChange,
-  );
+  const words = theme.lang === 'ar' || theme.lang.startsWith('ar-') ? shellWords.ar : shellWords.en;
+  const [wideSidebar, setSidebar] = useControllable(sidebarProp, defaultSidebar, onSidebarChange);
   const narrow = useNarrow();
   const [drawerOpen, setDrawerOpen] = useState(false);
   const hasNav = nav !== undefined && nav !== null && nav !== false;
   const hasHeader = header !== undefined && header !== null && header !== false;
-  const sidebar: PageShellSidebar = !hasNav || narrow ? "hidden" : wideSidebar;
+  const sidebar: PageShellSidebar = !hasNav || narrow ? 'hidden' : wideSidebar;
 
   // The Drawer is for a hidden column only: it closes when the column shows again.
   useEffect(() => {
-    if (sidebar !== "hidden") setDrawerOpen(false);
+    if (sidebar !== 'hidden') setDrawerOpen(false);
   }, [sidebar]);
 
   const value = useMemo<PageShellContextValue>(
@@ -185,26 +168,22 @@ export function PageShell({
     [sidebar, wideSidebar, setSidebar, narrow],
   );
 
-  const Header = embedded ? "div" : "header";
-  const Main = embedded ? "div" : "main";
-  const Aside = embedded ? "div" : "aside";
-  const Footer = embedded ? "div" : "footer";
+  const Header = embedded ? 'div' : 'header';
+  const Main = embedded ? 'div' : 'main';
+  const Aside = embedded ? 'div' : 'aside';
+  const Footer = embedded ? 'div' : 'footer';
 
   return (
     <PageShellContext value={value}>
       <div {...rest} ref={ref} data-ds="page-shell" data-sidebar={sidebar}>
         <SkipLink data-part="skip" href={`#${mainId}`}>
-          {skipLabel}
+          {skipLabel ?? words.skip}
         </SkipLink>
-        {(hasNav || hasHeader) && (
+        {/* No empty banner: the header renders for its content, or for the menu button while the column is hidden. */}
+        {(hasHeader || (hasNav && sidebar === 'hidden')) && (
           <Header data-part="header">
             {hasNav && (
-              <Drawer
-                open={drawerOpen}
-                onOpenChange={setDrawerOpen}
-                side="start"
-                size="sm"
-              >
+              <Drawer open={drawerOpen} onOpenChange={setDrawerOpen} side="start" size="sm">
                 <IconButton
                   data-part="menu"
                   icon="menu"
@@ -216,7 +195,14 @@ export function PageShell({
                   onClick={() => setDrawerOpen(true)}
                 />
                 <DrawerContent title={drawerTitle ?? words.drawer}>
-                  <DrawerBody>{nav}</DrawerBody>
+                  <DrawerBody
+                    // Following a link closes the Drawer, so a client routed page does not open under it.
+                    onClick={(event) => {
+                      if ((event.target as Element).closest?.('a[href]')) setDrawerOpen(false);
+                    }}
+                  >
+                    {nav}
+                  </DrawerBody>
                 </DrawerContent>
               </Drawer>
             )}
@@ -225,31 +211,25 @@ export function PageShell({
         )}
         {hasNav && (
           // The column is not drawn while hidden: its links are in the Drawer then, never twice in the page.
-          <div data-part="nav" hidden={sidebar === "hidden" || undefined}>
-            {sidebar !== "hidden" && nav}
+          <div data-part="nav" hidden={sidebar === 'hidden' || undefined}>
+            {sidebar !== 'hidden' && nav}
           </div>
         )}
         <Main
           data-part="main"
           id={mainId}
           tabIndex={-1}
-          role={embedded ? "region" : undefined}
+          role={embedded ? 'region' : undefined}
           aria-label={embedded ? words.main : undefined}
         >
           {children}
         </Main>
         {aside !== undefined && aside !== null && aside !== false && (
-          <Aside
-            data-part="aside"
-            aria-label={asideLabel ?? words.aside}
-            role={embedded ? "group" : undefined}
-          >
+          <Aside data-part="aside" aria-label={asideLabel ?? words.aside} role={embedded ? 'group' : undefined}>
             {aside}
           </Aside>
         )}
-        {footer !== undefined && footer !== null && footer !== false && (
-          <Footer data-part="footer">{footer}</Footer>
-        )}
+        {footer !== undefined && footer !== null && footer !== false && <Footer data-part="footer">{footer}</Footer>}
       </div>
     </PageShellContext>
   );
