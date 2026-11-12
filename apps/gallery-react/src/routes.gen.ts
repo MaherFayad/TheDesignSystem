@@ -18,6 +18,7 @@ export const routes: DemoRoute[] = [
   { name: 'Input', slug: 'input', load: () => import('../../../packages/react/src/components/Input/Input.demo') },
   { name: 'Link', slug: 'link', load: () => import('../../../packages/react/src/components/Link/Link.demo') },
   { name: 'OTPField', slug: 'otpfield', load: () => import('../../../packages/react/src/components/OTPField/OTPField.demo') },
+  { name: 'PhoneField', slug: 'phone-field', load: () => import('../../../packages/react/src/components/PhoneField/PhoneField.demo') },
   { name: 'TitleBar', slug: 'title-bar', load: () => import('../../../packages/react/src/components/TitleBar/TitleBar.demo') },
   { name: 'Toast', slug: 'toast', load: () => import('../../../packages/react/src/components/Toast/Toast.demo') },
   { name: 'Window', slug: 'window', load: () => import('../../../packages/react/src/components/Window/Window.demo') },

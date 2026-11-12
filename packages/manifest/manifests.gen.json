@@ -2670,6 +2670,237 @@
     "since": "0.1.0"
   },
   {
+    "name": "PhoneField",
+    "kind": "component",
+    "family": "forms",
+    "summary": "A phone number with a country code picker, Gulf countries first. The value out is E.164.",
+    "useWhen": [
+      "A mobile or landline number that may be outside the home country",
+      "A number you will send a text message or call to, and need in E.164 form",
+      "A sign up or checkout form for the Gulf, where most numbers are SA, AE, KW, QA, BH or OM"
+    ],
+    "avoidWhen": [
+      "A one time code sent to the phone",
+      "A number that is always local and stored as typed",
+      "A short internal extension"
+    ],
+    "insteadUse": {
+      "A one time code": "OTPField",
+      "A local number stored as typed": "Input with type tel",
+      "A short extension or a count": "NumberField"
+    },
+    "anatomy": [
+      "root",
+      "code",
+      "country",
+      "control"
+    ],
+    "props": {
+      "value": {
+        "type": "string",
+        "description": "The number in E.164 form, +966501234567, controlled. An empty string clears it."
+      },
+      "defaultValue": {
+        "type": "string",
+        "description": "The first number in E.164 form, uncontrolled."
+      },
+      "onValueChange": {
+        "type": "(value: string, detail: { country: string; national: string; valid: boolean }) => void",
+        "description": "Called with the E.164 number (empty while there are no digits). valid is the length check for the country."
+      },
+      "country": {
+        "type": "string",
+        "description": "The selected country, an ISO 3166 code, controlled."
+      },
+      "defaultCountry": {
+        "type": "string",
+        "default": "SA",
+        "description": "The first country, uncontrolled."
+      },
+      "onCountryChange": {
+        "type": "(country: string) => void",
+        "description": "Called when the country changes, from the picker or from a pasted +number."
+      },
+      "countries": {
+        "type": "string[]",
+        "description": "Limits the picker to these ISO codes. The Gulf countries in the list still come first."
+      },
+      "locale": {
+        "type": "string",
+        "description": "Language of the country names. Default: the lang of the nearest Theme."
+      },
+      "labels": {
+        "type": "{ country?: string; gulf?: string; all?: string }",
+        "description": "The picker's accessible name and its two group labels. English and Arabic defaults follow the language."
+      },
+      "name": {
+        "type": "string",
+        "description": "A hidden input with this name posts the E.164 number with the form."
+      },
+      "size": {
+        "type": [
+          "xs",
+          "sm",
+          "md",
+          "lg"
+        ],
+        "default": "md",
+        "description": "Height from size.control: 24, 28, 32 and 44 px at default density."
+      },
+      "shape": {
+        "type": [
+          "default",
+          "pill"
+        ],
+        "default": "default",
+        "description": "default takes radius.control from the style. pill is always fully round."
+      },
+      "invalid": {
+        "type": "boolean",
+        "description": "Marks the number invalid. Inside a Field it follows the Field."
+      },
+      "disabled": {
+        "type": "boolean",
+        "description": "Disables the picker and the number. Inside a Field it follows the Field."
+      },
+      "readOnly": {
+        "type": "boolean",
+        "description": "The number stays focusable and readable; the picker is not shown, only the dial code."
+      },
+      "required": {
+        "type": "boolean",
+        "description": "Sets aria-required on the number. Inside a Field it follows the Field."
+      },
+      "rootProps": {
+        "type": "object",
+        "description": "Props for the root box. className and style also go to the root; every other native prop and the ref go to the number input."
+      }
+    },
+    "states": [
+      "data-invalid",
+      "data-disabled",
+      "data-readonly"
+    ],
+    "a11y": {
+      "role": "combobox for the native select (country), textbox for the native tel input (number)",
+      "focus": "Two tab stops: the country picker, then the number. Focus on either shows the glow and the 2px ring around the box; the dial code also fills while the picker has focus.",
+      "keys": {
+        "Tab": "Moves focus to the country picker, then to the number",
+        "Shift+Tab": "Moves focus back",
+        "ArrowUp, ArrowDown": "On the picker, choose the previous or the next country (native select)",
+        "Enter, Space": "On the picker, open the country list (native select, by platform)",
+        "Home, End": "On the number, move the caret to the start or the end"
+      },
+      "announce": "The number takes its name from the Field label, the description and error through aria-describedby. The picker is named Country code and reads the country name and its dial code.",
+      "native": {
+        "accessibilityState": [
+          "disabled"
+        ]
+      },
+      "notes": [
+        "The country is a native select (decision 4 of wave 1): the platform picker on phones and type ahead on desktops. It covers the dial code and is transparent, so the closed state shows +966 and not a long country name.",
+        "The number always runs left to right (dir ltr on the input), also inside Arabic. The dial code is isolated in a bdi. In Arabic the dial code sits at the start (right) and the number next to it.",
+        "A pasted or autofilled +9665... or 009665... sets the country. Arabic Indic digits are read. The trunk 0 of SA and AE is dropped: 050 becomes 50.",
+        "Gulf numbers are grouped as typed (50 123 4567, 5000 1234) and checked for length. Other countries keep their digits as typed and get the E.164 limit only.",
+        "The value out is E.164 from onValueChange and the hidden input named name. Check detail.valid on blur or on submit, never on every key.",
+        "Paste and autofill are never blocked (WCAG 2.2, 3.3.8)."
+      ]
+    },
+    "content": {
+      "en": {
+        "label": "A noun in sentence case: Mobile number, Office number. Never Phone # or Tel.",
+        "placeholder": "The Gulf example comes by default: 50 123 4567. Never the label.",
+        "error": "Say how many digits and give an example: Enter the 9 digits after +966, for example 50 123 4567."
+      },
+      "ar": {
+        "label": "رقم الجوال، رقم المكتب",
+        "placeholder": "مثال الرقم بالأرقام اللاتينية بس",
+        "error": "وضح كم رقم ومثال: اكتب 9 أرقام بعد +966، مثل 50 123 4567"
+      }
+    },
+    "tokens": [
+      "size.control.xs",
+      "size.control.sm",
+      "size.control.md",
+      "size.control.lg",
+      "size.target-min",
+      "space.2xs",
+      "space.xs",
+      "space.s",
+      "space.m",
+      "space.2xl",
+      "font.family.sans",
+      "font.size.s",
+      "font.size.fixed-m",
+      "font.weight.regular",
+      "font.leading.snug",
+      "radius.control",
+      "radius.pill",
+      "border.width.default",
+      "border.width.strong",
+      "color.border.control",
+      "color.border.control-hover",
+      "color.bg.overlay-5",
+      "color.bg.overlay-10",
+      "color.bg.surface",
+      "color.text.default",
+      "color.text.muted",
+      "color.text.placeholder",
+      "color.state.danger.text",
+      "elevation.input-focus",
+      "focus.shadow.ring",
+      "duration.base",
+      "ease.default",
+      "opacity.disabled"
+    ],
+    "motion": "fade",
+    "frameworks": {
+      "react": {
+        "status": "ready",
+        "behavior": "hand built on a native select and a native tel input",
+        "example": "PhoneField.demo.tsx"
+      },
+      "angular": {
+        "status": "planned"
+      },
+      "native": {
+        "status": "planned"
+      }
+    },
+    "styles": {
+      "studio": "The Input pill with the dial code at the start behind a divider, the soft glow and the 2px achromatic ring on focus",
+      "desk": "The same box and ring, digits in Instrument Sans with tabular figures"
+    },
+    "mistakes": [
+      {
+        "wrong": "A custom dropdown for the country",
+        "right": "PhoneField's native select: the platform picker on phones and type ahead"
+      },
+      {
+        "wrong": "Storing the number as typed, 050 123 4567",
+        "right": "Store the E.164 value, +966501234567"
+      },
+      {
+        "wrong": "Blocking paste or stripping the plus",
+        "right": "Leave paste on; a pasted +number sets the country"
+      },
+      {
+        "wrong": "dir rtl on the number in an Arabic form",
+        "right": "PhoneField keeps the number left to right"
+      },
+      {
+        "wrong": "Checking the length on every key",
+        "right": "Check detail.valid on blur or on submit"
+      }
+    ],
+    "contract": {
+      "optionalParts": [
+        "country"
+      ]
+    },
+    "since": "0.1.0"
+  },
+  {
     "name": "Theme",
     "kind": "component",
     "family": "foundations",
