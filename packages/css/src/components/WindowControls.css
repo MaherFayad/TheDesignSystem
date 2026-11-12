@@ -1,0 +1,130 @@
+/*
+ * WindowControls: the traffic lights. Source: `.dwin-lights` and
+ * `.dwin-light` in GoBanana desktop/desktop.css.
+ *
+ * Each light is an IconButton (Button.css draws the box and the focus ring).
+ * The 24 by 24 button is the target; its icon part is the 12px light; the
+ * glyph inside it is the light ink. Targets touch, so the light centers are
+ * 24px apart.
+ *
+ * Private properties (docs/contracts/anatomy.md):
+ *   --_window-controls-idle   the dot at rest
+ *   --_window-controls-ink    the glyph
+ *   --_window-controls-light  the lit color of one light
+ *   --_window-controls-lit    0 or 1: the lit layer (the light's ::before, its glow layer)
+ *   --_window-controls-glyph  0 or 1: the glyph
+ *
+ * Only opacity animates: the lit color is a layer over the idle dot that
+ * fades in, and the glyph fades in on hover and keyboard focus of the group.
+ *
+ * The light buttons are drawn transparent here with declarations, not with
+ * Button's properties: Button.css still uses the old public names and will
+ * move to private ones, so this file does not depend on them.
+ */
+@layer ds.base {
+  [data-ds='window-controls'] {
+    --_window-controls-idle: var(--ds-color-window-light-idle);
+    --_window-controls-ink: var(--ds-color-window-light-ink);
+    --_window-controls-lit: 0;
+    --_window-controls-glyph: 0;
+
+    display: inline-flex;
+    flex: none;
+    align-items: center;
+    gap: 0;
+    /* The lights never mirror: close, minimize, zoom from the left in every direction. */
+    direction: ltr;
+  }
+
+  /* Lit while the window is active, and in any window on hover or keyboard focus of the group. */
+  [data-ds='window-controls']:is([data-state='active'], :hover, :focus-within) {
+    --_window-controls-lit: 1;
+  }
+
+  /* The glyphs tell the lights apart without color. */
+  [data-ds='window-controls']:is(:hover, :focus-within) {
+    --_window-controls-glyph: 1;
+  }
+
+  /* Specific enough to win over the tone, emphasis and state rules in Button.css. */
+  [data-ds='window-controls'] > [data-ds='icon-button'][data-part][data-emphasis] {
+    border-color: transparent;
+    background-color: transparent;
+    color: var(--_window-controls-ink);
+    opacity: 1;
+  }
+
+  [data-ds='window-controls'] > [data-part='close'] {
+    --_window-controls-light: var(--ds-color-window-light-close);
+  }
+
+  [data-ds='window-controls'] > [data-part='minimize'] {
+    --_window-controls-light: var(--ds-color-window-light-min);
+  }
+
+  [data-ds='window-controls'] > [data-part='zoom'] {
+    --_window-controls-light: var(--ds-color-window-light-zoom);
+  }
+
+  /* A light with no handler stays an idle dot with no glyph. */
+  [data-ds='window-controls'] > [data-ds='icon-button'][data-disabled] {
+    --_window-controls-lit: 0;
+    --_window-controls-glyph: 0;
+
+    cursor: default;
+  }
+
+  /* The light: a 12px dot. */
+  [data-ds='window-controls'] > [data-ds='icon-button'] > [data-part='icon'] {
+    display: grid;
+    place-items: center;
+    box-sizing: border-box;
+    inline-size: var(--ds-size-icon-sm);
+    block-size: var(--ds-size-icon-sm);
+    border-radius: var(--ds-radius-pill);
+    background-color: var(--_window-controls-idle);
+  }
+
+  /* The lit color, the glow layer over the dot. */
+  [data-ds='window-controls'] > [data-ds='icon-button'] > [data-part='icon']::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background-color: var(--_window-controls-light);
+    opacity: var(--_window-controls-lit);
+    transition: opacity var(--ds-duration-fast) var(--ds-ease-default);
+  }
+
+  /* The glyph, smaller than the dot so a ring of color shows around it. */
+  [data-ds='window-controls'] > [data-ds='icon-button'] > [data-part='icon'] > [data-ds='icon'] {
+    position: relative;
+    inline-size: calc(var(--ds-size-icon-sm) * 0.75);
+    block-size: calc(var(--ds-size-icon-sm) * 0.75);
+    opacity: var(--_window-controls-glyph);
+    transition: opacity var(--ds-duration-fast) var(--ds-ease-default);
+  }
+
+  /* Forced colors: no fills. Each light is a ring with its glyph always shown. */
+  @media (forced-colors: active) {
+    [data-ds='window-controls'] {
+      --_window-controls-glyph: 1;
+    }
+
+    [data-ds='window-controls'] > [data-ds='icon-button'] > [data-part='icon'] {
+      border: var(--ds-border-width-default) solid ButtonText;
+    }
+
+    [data-ds='window-controls'] > [data-ds='icon-button'] > [data-part='icon'] > [data-ds='icon'] {
+      color: ButtonText;
+    }
+
+    [data-ds='window-controls'] > [data-ds='icon-button'][data-disabled] > [data-part='icon'] {
+      border-color: GrayText;
+    }
+
+    [data-ds='window-controls'] > [data-ds='icon-button'][data-disabled] > [data-part='icon'] > [data-ds='icon'] {
+      color: GrayText;
+    }
+  }
+}

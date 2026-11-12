@@ -1,0 +1,61 @@
+import { useState } from 'react';
+import { DemoCase, DemoPage, DemoRow } from '../../demo';
+import { WindowControls } from './index';
+
+function Working({ active = true }: { active?: boolean }) {
+  const [zoomed, setZoomed] = useState(false);
+  const [said, setSaid] = useState('Nothing pressed yet');
+  return (
+    <DemoRow label={active ? 'Active' : 'Inactive'}>
+      <WindowControls
+        active={active}
+        zoomed={zoomed}
+        onClose={() => setSaid('Close pressed')}
+        onMinimize={() => setSaid('Minimize pressed')}
+        onZoom={() => {
+          setZoomed((z) => !z);
+          setSaid('Zoom pressed');
+        }}
+      />
+      <span role="status">{said}</span>
+    </DemoRow>
+  );
+}
+
+export default function WindowControlsDemo() {
+  return (
+    <DemoPage>
+      <DemoCase id="variants" title="Variants: lit in an active window, idle dots in an inactive one, glyphs on hover and focus">
+        <Working />
+        <Working active={false} />
+      </DemoCase>
+
+      <DemoCase id="one" title="Close only">
+        <DemoRow>
+          <WindowControls onClose={() => undefined} />
+        </DemoRow>
+      </DemoCase>
+
+      <DemoCase id="long-arabic" title="Arabic labels: the lights keep their order" lang="ar">
+        <DemoRow>
+          <WindowControls
+            label="أزرار النافذة"
+            closeLabel="إغلاق النافذة"
+            minimizeLabel="تصغير النافذة"
+            zoomLabel="تكبير النافذة"
+            onClose={() => undefined}
+            onMinimize={() => undefined}
+            onZoom={() => undefined}
+          />
+        </DemoRow>
+      </DemoCase>
+
+      <DemoCase id="disabled" title="Disabled: lights with no handler are idle and out of the tab order">
+        <DemoRow>
+          <WindowControls />
+          <WindowControls onClose={() => undefined} />
+        </DemoRow>
+      </DemoCase>
+    </DemoPage>
+  );
+}

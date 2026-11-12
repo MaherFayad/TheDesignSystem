@@ -1,0 +1,145 @@
+{
+  "name": "Window",
+  "kind": "component",
+  "family": "overlays",
+  "summary": "An app window over the page: a title bar, a body and an optional footer. It opens from a trigger, moves, zooms, minimizes and closes. Desk draws it as a glass window with traffic lights; Studio as a flat panel with a close button.",
+  "useWhen": [
+    "A tool or a document the person works in next to the page: a board, a file browser, settings",
+    "Several views the person arranges side by side and brings to the front",
+    "Content that opens from a control and should grow out of it"
+  ],
+  "avoidWhen": [
+    "A decision that blocks the page until it is made",
+    "A short message with no work in it",
+    "A list of actions behind one control",
+    "Content that belongs in the page flow"
+  ],
+  "insteadUse": {
+    "A blocking decision": "Dialog",
+    "A short message": "Toast",
+    "A list of actions": "DropdownMenu",
+    "Side content that stays docked": "Drawer"
+  },
+  "anatomy": ["root", "titlebar", "controls", "title", "actions", "close", "body", "footer"],
+  "parts": { "TitleBar": "titlebar", "WindowControls": "controls" },
+  "slots": {
+    "title": { "accepts": "text", "min": 1, "max": 1 },
+    "actions": { "accepts": ["IconButton", "Button"], "max": 3 },
+    "body": { "accepts": "any" },
+    "footer": { "accepts": ["Button"], "max": 3 }
+  },
+  "props": {
+    "kind": { "type": ["canvas", "finder", "settings"], "default": "settings", "description": "Sets data-kind. canvas: a large window with a margin of layer around it, no body padding. finder: wide, the layer edge around it. settings: centered, as tall as its content." },
+    "title": { "type": "node", "required": true, "description": "Names the window through aria-labelledby. One line with an ellipsis." },
+    "titleAs": { "type": ["h1", "h2", "h3", "h4", "h5", "h6", "div"], "default": "h2", "description": "The element of the title." },
+    "actions": { "type": "node", "description": "IconButtons or small Buttons at the end of the title bar." },
+    "footer": { "type": "node", "description": "The footer part, for the window's Buttons." },
+    "open": { "type": "boolean", "description": "Controlled open state, with onOpenChange. Closing plays window-close, then unmounts." },
+    "defaultOpen": { "type": "boolean", "default": true },
+    "onOpenChange": { "type": "function" },
+    "zoomed": { "type": "boolean", "description": "Fills the layer. Sets data-zoomed and aria-pressed on the zoom light." },
+    "defaultZoomed": { "type": "boolean", "default": false },
+    "onZoomedChange": { "type": "function", "description": "With it, or inside a WindowLayer, the zoom light works." },
+    "minimized": { "type": "boolean", "description": "Plays window-minimize toward the dock, then hides the window. Sets data-minimized." },
+    "defaultMinimized": { "type": "boolean", "default": false },
+    "onMinimizedChange": { "type": "function", "description": "With it the minimize light works. The app shows the way back (a dock) and sets minimized to false." },
+    "frame": { "type": "object", "description": "{ x, y, width, height } in px: x from the inline start edge of the layer, y from the top. null lets the kind place the window. Controlled with onFrameChange." },
+    "defaultFrame": { "type": "object" },
+    "onFrameChange": { "type": "function", "description": "Called on every move by key or pointer, with the clamped frame." },
+    "movable": { "type": "boolean", "description": "Drag by the title bar and move with the arrow keys. Default true inside a WindowLayer or with a frame, false for a window placed by its parent." },
+    "origin": { "type": "node", "description": "An element, a ref or a screen rect the window grows out of and closes back into. Focus returns to it on close." },
+    "dock": { "type": "node", "description": "An element, a ref or a screen rect a minimized window falls into. Default the bottom center of the layer." },
+    "modal": { "type": "boolean", "default": false, "description": "aria-modal and a Tab loop inside the window. Off by default: windows sit next to the page." },
+    "closeLabel": { "type": "string", "default": "Close window" },
+    "minimizeLabel": { "type": "string", "default": "Minimize window" },
+    "zoomLabel": { "type": "string", "default": "Zoom window" },
+    "controlsLabel": { "type": "string", "default": "Window controls" }
+  },
+  "states": ["active", "inactive", "data-zoomed", "data-minimized", "data-dragging", "data-movable", "data-layered"],
+  "a11y": {
+    "role": "dialog, named by the title (aria-labelledby) or aria-label. Not modal unless modal is set.",
+    "focus": "Focus moves into the window (the window element, tabindex -1) when it opens after mount, or on mount when its origin has focus. On close and minimize focus returns to the origin, else to the element that had focus, but only when focus was in the window or lost. The window shows the 2px ring on keyboard focus.",
+    "keys": {
+      "Escape": "Closes the window. A control inside that handles Escape itself (a menu) prevents it first.",
+      "ArrowUp": "Moves the window up 16px, while focus is on the window or in its title bar",
+      "ArrowDown": "Moves the window down 16px",
+      "ArrowLeft": "Moves the window 16px to the left on screen, in both directions",
+      "ArrowRight": "Moves the window 16px to the right on screen, in both directions",
+      "Shift+Arrow": "Moves the window 64px",
+      "Tab": "Moves through the lights or the close button, the title bar actions, the body and the footer. With modal, Tab stays inside the window."
+    },
+    "announce": "The title is the accessible name of the dialog. The lights and the close button carry their own labels.",
+    "native": { "accessibilityRole": "none", "accessibilityState": [] },
+    "notes": [
+      "Every drag has a key path (WCAG 2.1.1, 2.5.7): arrow keys move the window. The frame is clamped so 160px of the window and its title bar stay inside the layer.",
+      "Arrow keys pressed in the body (a field, a list) never move the window.",
+      "Moving is off while the window is zoomed, and for a window placed by its parent with no frame.",
+      "A long title truncates with an ellipsis; the full text stays in the DOM as the accessible name. A Tooltip on the title comes with Tooltip in wave 1.",
+      "Double click on the title bar zooms, as on the desktop. The zoom light is the same action for every input.",
+      "No native title attribute."
+    ]
+  },
+  "content": {
+    "en": {
+      "title": "A file or app name in sentence case: checkout-flow.board, Account settings.",
+      "labels": "Close window, Minimize window, Zoom window. Name the window when several are open: Close notes.txt."
+    },
+    "ar": {
+      "title": "Noun form, no diacritics: إعدادات الحساب. Latin file names inside Arabic go through Bidi.",
+      "labels": "إغلاق النافذة، تصغير النافذة، تكبير النافذة."
+    }
+  },
+  "tokens": [
+    "color.material.glass",
+    "color.material.glass-solid",
+    "color.material.titlebar",
+    "color.border.hairline",
+    "color.border.strong",
+    "color.text.default",
+    "color.text.bright",
+    "radius.window",
+    "elevation.window",
+    "blur.window",
+    "border.width.default",
+    "border.width.strong",
+    "focus.shadow.ring",
+    "space.8xl",
+    "space.5xl",
+    "space.xl",
+    "space.l",
+    "space.s",
+    "size.control.lg",
+    "font.family.sans",
+    "duration.window-open",
+    "duration.window-close",
+    "duration.zoom",
+    "duration.base",
+    "ease.window",
+    "ease.exit",
+    "z.canvas",
+    "palette.site.grain-opacity"
+  ],
+  "motion": "window-grow",
+  "frameworks": {
+    "react": { "status": "ready", "behavior": "own: @the-system/shared window manager, @the-system/motion window patterns", "example": "Window.demo.tsx" },
+    "angular": { "status": "planned", "behavior": "cdk:drag-drop for the title bar, cdk:a11y for focus, the shared window manager", "note": "Window.css, TitleBar.css and WindowControls.css are used as is." },
+    "native": { "status": "not-applicable", "note": "Phones and tablets have no free windows. A native app shows the same content as a full screen or a sheet; see Dialog and Drawer." }
+  },
+  "styles": {
+    "studio": "A flat panel: the solid surface, the panel radius and shadow, no backdrop blur, a hairline under a plain title bar, and a close IconButton (part close) at the end of it. No lights. Open, close and minimize fade on duration.base; zoom has no motion.",
+    "desk": "A glass window: material glass with a 24px blur, radius 1rem, a hairline inside, the deep window shadow. The title bar starts with the traffic lights (optional part controls, and the close light is part close): lit while the window is active, idle dots when it is not, glyphs on hover and keyboard focus. The window grows out of its trigger, closes back into it, zooms with a FLIP and falls into the dock. The layer carries the desk grain. In right to left layouts the lights stay at the top left and the title is centered.",
+    "neutral": "Planned.",
+    "liquid": "Planned: a glass sheet."
+  },
+  "mistakes": [
+    { "wrong": "A window that only moves with a pointer", "right": "Window moves with the arrow keys while focus is on it or its title bar" },
+    { "wrong": "A Window used for a decision that must be made first", "right": "Dialog" },
+    { "wrong": "Waiting for transitionend before unmounting", "right": "Window awaits the animation's finished promise; under reduced motion it is 0ms" },
+    { "wrong": "Hiding the lights in Studio with CSS", "right": "The style turns the controls part on or off in style.json; Window renders the close IconButton when it is off" },
+    { "wrong": "A minimize light with no way back", "right": "Pass onMinimizedChange and show the way back (a dock row); without it the light is disabled" }
+  ],
+  "contract": {
+    "optionalParts": ["controls", "actions", "footer"]
+  },
+  "since": "0.1.0"
+}

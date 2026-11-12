@@ -1,0 +1,93 @@
+/*
+ * TitleBar: controls, title, actions. Source: GoBanana `.dwin-bar` and
+ * `.dwin-title` in desktop/desktop.css: the lights, then the title as a file
+ * name, no divider, a 36px row.
+ *
+ * Private properties on the root (docs/contracts/anatomy.md):
+ *   --_title-bar-height, -padding-inline, -gap, -bg, -fg, -font-size,
+ *   --_title-bar-border-color (the line under the bar, transparent by default)
+ */
+@layer ds.base {
+  [data-ds='title-bar'] {
+    --_title-bar-height: calc(var(--ds-size-control-md) + var(--ds-space-2xs));
+    --_title-bar-padding-inline: var(--ds-space-l);
+    --_title-bar-gap: var(--ds-space-l);
+    --_title-bar-bg: var(--ds-color-material-titlebar);
+    --_title-bar-fg: var(--ds-color-text-bright);
+    --_title-bar-font-size: var(--ds-font-size-m);
+    --_title-bar-border-color: transparent;
+
+    display: flex;
+    align-items: center;
+    gap: var(--_title-bar-gap);
+    box-sizing: border-box;
+    min-block-size: var(--_title-bar-height);
+    min-inline-size: 0;
+    padding-block: 0;
+    padding-inline: var(--_title-bar-padding-inline);
+    border-block-end: var(--ds-border-width-default) solid var(--_title-bar-border-color);
+    background-color: var(--_title-bar-bg);
+    user-select: none;
+  }
+
+  [data-ds='title-bar'] > [data-part='controls'] {
+    display: flex;
+    flex: none;
+    align-items: center;
+    /* The lights' 24px targets reach past the 12px dots: pull them back so the first dot sits on the padding. */
+    margin-inline-start: calc((var(--ds-size-icon-sm) - var(--ds-size-target-min)) / 2);
+  }
+
+  /* The title: one line, an ellipsis when it is long. The full text stays in the DOM (the window's accessible name). */
+  [data-ds='title-bar'] > [data-part='title'] {
+    flex: 1 1 auto;
+    min-inline-size: 0;
+    margin: 0;
+    overflow: hidden;
+    color: var(--_title-bar-fg);
+    font-family: inherit;
+    font-size: var(--_title-bar-font-size);
+    font-weight: var(--ds-font-weight-semibold);
+    line-height: var(--ds-font-leading-tight);
+    letter-spacing: var(--ds-font-tracking-none);
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  [data-ds='title-bar'] > [data-part='actions'] {
+    display: flex;
+    flex: none;
+    align-items: center;
+    gap: var(--ds-space-2xs);
+    margin-inline-end: calc(-1 * var(--ds-space-2xs));
+    color: var(--ds-color-text-muted);
+  }
+
+  /*
+   * Right to left with lights: as macOS draws it and as the source does, the
+   * lights stay at the top left in their usual order and the title sits in
+   * the middle, read right to left. A bar without lights mirrors as usual.
+   */
+  [data-ds='title-bar']:has(> [data-part='controls']):dir(rtl) {
+    display: grid;
+    grid-template-columns: minmax(max-content, 1fr) minmax(0, auto) minmax(max-content, 1fr);
+    direction: ltr;
+  }
+
+  [data-ds='title-bar']:has(> [data-part='controls']):dir(rtl) > [data-part='controls'] {
+    grid-column: 1;
+    justify-self: start;
+  }
+
+  [data-ds='title-bar']:has(> [data-part='controls']):dir(rtl) > [data-part='title'] {
+    grid-column: 2;
+    direction: rtl;
+    text-align: center;
+  }
+
+  [data-ds='title-bar']:has(> [data-part='controls']):dir(rtl) > [data-part='actions'] {
+    grid-column: 3;
+    justify-self: end;
+    direction: rtl;
+  }
+}

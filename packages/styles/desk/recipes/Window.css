@@ -1,0 +1,25 @@
+/*
+ * Desk recipe for Window and WindowLayer: what the tokens cannot say.
+ * Source: GoBanana `app/(site)/_components/desktop/desktop.css` (the desk
+ * grain under every window, the glass at saturate 1.3).
+ *
+ * The layer is the desk: film grain over it, under every window (z.canvas,
+ * 0, inside the layer's own stacking context; windows stack from 1). The grain is an SVG noise
+ * tile; its strength is palette.site.grain-opacity.
+ */
+@layer ds.recipes {
+  [data-style='desk'] [data-ds='window-layer']::before {
+    content: '';
+    position: absolute;
+    z-index: var(--ds-z-canvas);
+    inset: 0;
+    pointer-events: none;
+    opacity: var(--ds-palette-site-grain-opacity);
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 .7 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  /* Light Desk: the grain darkens instead of lightening. */
+  [data-style='desk'][data-scheme='light'] [data-ds='window-layer']::before {
+    filter: invert(1);
+  }
+}

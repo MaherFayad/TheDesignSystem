@@ -1,0 +1,16 @@
+/*
+ * Studio recipe for Window: a flat panel. Source: Figma-Killer-2
+ * docs/design.md, "Floating overlay panels": a solid surface, one border,
+ * the panel radius and shadow. The tokens already map the materials to solid
+ * surfaces; what they cannot say is "no backdrop filter" (nothing to see
+ * through, so no blur cost) and the line under the plain header.
+ */
+@layer ds.recipes {
+  [data-style='studio'] [data-ds='window'] {
+    --_window-backdrop: none;
+  }
+
+  [data-style='studio'] [data-ds='window'] > [data-ds='title-bar'] {
+    --_title-bar-border-color: var(--ds-color-border-hairline);
+  }
+}
