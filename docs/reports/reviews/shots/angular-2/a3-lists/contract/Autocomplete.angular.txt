@@ -1,0 +1,59 @@
+
+> the-system@0.0.0 contract
+> tsx packages/contract-tests/run.ts --framework angular --url http://localhost:5302 --component Autocomplete
+
+
+Running 44 tests using 4 workers
+
+  ✓   2 packages/contract-tests/src/contract.spec.ts:354:5 › Autocomplete: anatomy, studio (5.7s)
+  ✓   1 packages/contract-tests/src/contract.spec.ts:354:5 › Autocomplete: anatomy, desk (6.6s)
+  ✓   3 packages/contract-tests/src/contract.spec.ts:376:3 › Autocomplete: variant attributes (6.0s)
+  ✓   4 packages/contract-tests/src/contract.spec.ts:354:5 › Autocomplete: anatomy, neutral (6.0s)
+  ✓   5 packages/contract-tests/src/contract.spec.ts:393:3 › Autocomplete: state attributes (4.1s)
+  ✓   7 packages/contract-tests/src/contract.spec.ts:543:7 › Autocomplete: target size, desk compact (5.0s)
+  ✓   8 packages/contract-tests/src/contract.spec.ts:543:7 › Autocomplete: target size, desk default (4.7s)
+  ✓   9 packages/contract-tests/src/contract.spec.ts:543:7 › Autocomplete: target size, desk comfortable (4.2s)
+  ✓  11 packages/contract-tests/src/contract.spec.ts:543:7 › Autocomplete: target size, neutral compact (5.0s)
+  -  10 packages/contract-tests/src/contract.spec.ts:553:7 › Autocomplete: target size open, desk
+  ✓  12 packages/contract-tests/src/contract.spec.ts:543:7 › Autocomplete: target size, neutral default (6.5s)
+  -  14 packages/contract-tests/src/contract.spec.ts:553:7 › Autocomplete: target size open, neutral
+  ✓  13 packages/contract-tests/src/contract.spec.ts:543:7 › Autocomplete: target size, neutral comfortable (9.5s)
+  ✓  15 packages/contract-tests/src/contract.spec.ts:543:7 › Autocomplete: target size, studio compact (7.1s)
+  ✓  16 packages/contract-tests/src/contract.spec.ts:543:7 › Autocomplete: target size, studio default (6.6s)
+  -  18 packages/contract-tests/src/contract.spec.ts:553:7 › Autocomplete: target size open, studio
+  ✓  17 packages/contract-tests/src/contract.spec.ts:543:7 › Autocomplete: target size, studio comfortable (8.8s)
+  ✓  19 packages/contract-tests/src/contract.spec.ts:574:5 › Autocomplete: no sideways scroll at 320px and no title attribute, en ltr (7.5s)
+  ✓  20 packages/contract-tests/src/contract.spec.ts:574:5 › Autocomplete: no sideways scroll at 320px and no title attribute, ar rtl (7.5s)
+  ✓  21 packages/contract-tests/src/contract.spec.ts:587:5 › Autocomplete: axe, desk dark en ltr (10.5s)
+  -  22 packages/contract-tests/src/contract.spec.ts:593:7 › Autocomplete: axe open, desk dark en ltr
+  ✓   6 packages/contract-tests/src/contract.spec.ts:412:3 › Autocomplete: keyboard map (40.3s)
+  -  24 packages/contract-tests/src/contract.spec.ts:593:7 › Autocomplete: axe open, desk dark ar rtl
+  ✓  23 packages/contract-tests/src/contract.spec.ts:587:5 › Autocomplete: axe, desk dark ar rtl (11.4s)
+  -  26 packages/contract-tests/src/contract.spec.ts:593:7 › Autocomplete: axe open, desk light en ltr
+  -  28 packages/contract-tests/src/contract.spec.ts:593:7 › Autocomplete: axe open, desk light ar rtl
+  ✓  25 packages/contract-tests/src/contract.spec.ts:587:5 › Autocomplete: axe, desk light en ltr (10.1s)
+  -  30 packages/contract-tests/src/contract.spec.ts:593:7 › Autocomplete: axe open, neutral light en ltr
+  ✓  29 packages/contract-tests/src/contract.spec.ts:587:5 › Autocomplete: axe, neutral light en ltr (8.0s)
+  -  32 packages/contract-tests/src/contract.spec.ts:593:7 › Autocomplete: axe open, neutral light ar rtl
+  ✓  27 packages/contract-tests/src/contract.spec.ts:587:5 › Autocomplete: axe, desk light ar rtl (11.7s)
+  ✓  31 packages/contract-tests/src/contract.spec.ts:587:5 › Autocomplete: axe, neutral light ar rtl (7.2s)
+  -  34 packages/contract-tests/src/contract.spec.ts:593:7 › Autocomplete: axe open, neutral dark en ltr
+  -  36 packages/contract-tests/src/contract.spec.ts:593:7 › Autocomplete: axe open, neutral dark ar rtl
+  ✓  33 packages/contract-tests/src/contract.spec.ts:587:5 › Autocomplete: axe, neutral dark en ltr (6.1s)
+  -  38 packages/contract-tests/src/contract.spec.ts:593:7 › Autocomplete: axe open, studio dark en ltr
+  ✓  35 packages/contract-tests/src/contract.spec.ts:587:5 › Autocomplete: axe, neutral dark ar rtl (7.4s)
+  ✓  37 packages/contract-tests/src/contract.spec.ts:587:5 › Autocomplete: axe, studio dark en ltr (6.1s)
+  -  40 packages/contract-tests/src/contract.spec.ts:593:7 › Autocomplete: axe open, studio dark ar rtl
+  -  42 packages/contract-tests/src/contract.spec.ts:593:7 › Autocomplete: axe open, studio light en ltr
+  ✓  39 packages/contract-tests/src/contract.spec.ts:587:5 › Autocomplete: axe, studio dark ar rtl (10.7s)
+  ✓  41 packages/contract-tests/src/contract.spec.ts:587:5 › Autocomplete: axe, studio light en ltr (8.4s)
+  -  44 packages/contract-tests/src/contract.spec.ts:593:7 › Autocomplete: axe open, studio light ar rtl
+  ✓  43 packages/contract-tests/src/contract.spec.ts:587:5 › Autocomplete: axe, studio light ar rtl (6.7s)
+
+  15 skipped
+  29 passed (1.5m)
+
+Contract summary
+pass  Autocomplete: 29 passed, 0 failed, 15 skipped
+
+JSON report: /home/user/TheDesignSystem/packages/contract-tests/.out/6499/contract-angular.partial.json (partial run: the full report in docs/reports is untouched)
