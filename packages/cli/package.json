@@ -3,5 +3,11 @@
   "version": "0.0.0",
   "private": true,
   "license": "UNLICENSED",
-  "type": "module"
+  "type": "module",
+  "bin": {
+    "ds": "./bin/ds.mjs"
+  },
+  "exports": {
+    ".": "./src/main.ts"
+  }
 }
