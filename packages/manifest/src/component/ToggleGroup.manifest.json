@@ -191,9 +191,10 @@
       "note": "The axes reach the items through ButtonGroupContext, which ButtonRoot reads; an item's own prop wins. No motion of its own: items keep Button's."
     },
     "angular": {
-      "status": "planned",
-      "behavior": "[dsToggleGroup] host with a roving focus directive; items are dsToggleButton with data-part item",
-      "note": "ToggleGroup.css and Button.css are used as is."
+      "status": "ready",
+      "behavior": "div[dsToggleGroup] and button[dsToggleGroupItem] on DsButtonBase, hand built with the Radix ToggleGroup DOM on behavior/roving-radio.ts (CDK FocusKeyManager and Directionality), ControlValueAccessor",
+      "example": "toggle-group.demo.ts",
+      "note": "The group host is the root (role radiogroup for single, toolbar for multiple); each item host is a ToggleButton root with data-part item. Inputs take the React prop names; onValueChange is the valueChange output of [(value)], a string for single and a list for multiple. start, end and icon take an icon name or a TemplateRef. The axes reach the items through DS_BUTTON_GROUP; an item input wins. Disabled items stay in the arrow order and focusable. A press is decided synchronously in a click listener added after the first render, so a caller (click) that calls preventDefault() keeps the state. With a one way [value], the local state still moves on a press, as an Angular model does. Works with reactive and template forms. ToggleGroup.css and Button.css are used as is."
     },
     "native": {
       "status": "planned",

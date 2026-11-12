@@ -14323,7 +14323,10 @@
         "note": "Motion: fade. Only the focus glow fades (an opacity transition), and the value changes at once: number-roll is for a value someone reads, not one they type."
       },
       "angular": {
-        "status": "planned"
+        "status": "ready",
+        "behavior": "div[dsNumberField] with a native input and two dsIconButton steppers, hand built on packages/shared number.ts with React Aria's rules, CDK LiveAnnouncer, ControlValueAccessor",
+        "example": "number-field.demo.ts",
+        "note": "Same DOM, keys and words as React (React Aria's English and Arabic stepper names and role description). value is a model: [(value)]; defaultValue is value and onChange is valueChange, fired with each committed change. start and end take an icon name, a short text or a TemplateRef. rootProps, className and style have no input: attributes on the host already land on the root. The hidden input named name sits after the root, as in React. Stepper words exist in English and Arabic only. The mouse wheel never changes the value."
       },
       "native": {
         "status": "planned"
@@ -18247,7 +18250,10 @@
         "note": "Motion: fade, for the focus ring. The value follows the pointer with no animation; only the focus ring fades (an opacity transition)."
       },
       "angular": {
-        "status": "planned"
+        "status": "ready",
+        "behavior": "div[dsScrubInput], hand built, pointer capture for the scrub; logic in packages/shared scrub.ts and number.ts, ControlValueAccessor",
+        "example": "scrub-input.demo.ts",
+        "note": "Same DOM and keys as React. value is a model: [(value)]; defaultValue is value, onChange is valueChange (every drag move) and onChangeEnd is the changeEnd output (once per gesture). label takes a letter, an icon name or a TemplateRef. rootProps, className and style have no input: attributes on the host already land on the root."
       },
       "native": {
         "status": "planned"
@@ -18956,9 +18962,10 @@
         "note": "The indicator is measured from the selected item (logical start, top, inline and block size) and slides with catalog['tab-indicator'], transform only. Reduced motion plays nothing: it jumps. A ResizeObserver re-places it, without motion, when density, fonts or labels change the size."
       },
       "angular": {
-        "status": "planned",
-        "behavior": "[dsSegmentedControl] host with roving focus; items are dsToggleButton with data-part item; the indicator placed by the same measuring and the motion catalog",
-        "note": "SegmentedControl.css and Button.css are used as is."
+        "status": "ready",
+        "behavior": "div[dsSegmentedControl] and button[dsSegmentedControlItem] on DsButtonBase, hand built with the Radix ToggleGroup type single DOM on behavior/roving-radio.ts (CDK FocusKeyManager and Directionality), the indicator placed by the same measuring and the motion catalog, ControlValueAccessor",
+        "example": "segmented-control.demo.ts",
+        "note": "The host is the root (role radiogroup) with the indicator span as its first child; each item host is a ToggleButton root with data-part item, role radio and aria-checked. onValueChange is the valueChange output of [(value)]. start and icon take an icon name or a TemplateRef. Selection follows focus; a press on the selected item is ignored, so the value never goes empty. The indicator is placed after each render that changes the value (afterRenderEffect) and on resize, and slides with tab-indicator. Works with reactive and template forms. SegmentedControl.css and Button.css are used as is."
       },
       "native": {
         "status": "planned",
@@ -25287,9 +25294,10 @@
         "note": "The axes reach the items through ButtonGroupContext, which ButtonRoot reads; an item's own prop wins. No motion of its own: items keep Button's."
       },
       "angular": {
-        "status": "planned",
-        "behavior": "[dsToggleGroup] host with a roving focus directive; items are dsToggleButton with data-part item",
-        "note": "ToggleGroup.css and Button.css are used as is."
+        "status": "ready",
+        "behavior": "div[dsToggleGroup] and button[dsToggleGroupItem] on DsButtonBase, hand built with the Radix ToggleGroup DOM on behavior/roving-radio.ts (CDK FocusKeyManager and Directionality), ControlValueAccessor",
+        "example": "toggle-group.demo.ts",
+        "note": "The group host is the root (role radiogroup for single, toolbar for multiple); each item host is a ToggleButton root with data-part item. Inputs take the React prop names; onValueChange is the valueChange output of [(value)], a string for single and a list for multiple. start, end and icon take an icon name or a TemplateRef. The axes reach the items through DS_BUTTON_GROUP; an item input wins. Disabled items stay in the arrow order and focusable. A press is decided synchronously in a click listener added after the first render, so a caller (click) that calls preventDefault() keeps the state. With a one way [value], the local state still moves on a press, as an Angular model does. Works with reactive and template forms. ToggleGroup.css and Button.css are used as is."
       },
       "native": {
         "status": "planned",

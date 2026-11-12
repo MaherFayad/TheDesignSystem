@@ -73,6 +73,9 @@ function boardState() {
   return { grid: signal<DropdownMenuChecked>(true), snap: signal<DropdownMenuChecked>(false), sort: signal<string | undefined>('edited') };
 }
 
+// The Arabic board menu has its own template, declared inside the Arabic
+// dsTheme: DI follows declaration, so the menu layer takes dir and lang from
+// there (review angular-1, A1 DropdownMenu B1).
 @Component({
   selector: 'div[data-demo=page]',
   imports: [DEMO, DsTheme, DsButton, DsIconButton, NgTemplateOutlet, ...DS_DROPDOWN_MENU],
@@ -134,8 +137,44 @@ function boardState() {
           </ng-container>
         </div>
         <div dsTheme [lang]="'ar'" data-demo="content">
+          <ng-template #boardMenuAr let-trigger="trigger" let-size="size" let-lang="lang">
+            @let t = copy[lang === 'ar' ? 'ar' : 'en'];
+            @let s = stateOf(trigger);
+            <ng-container dsDropdownMenu [size]="size ?? 'md'">
+              <button dsButton dsDropdownMenuTrigger [attr.data-demo-trigger]="trigger" [size]="size" end="chevron-down">{{ t.trigger }}</button>
+              <ng-template dsDropdownMenuContent>
+                <div dsDropdownMenuLabel>{{ t.board }}</div>
+                <div dsDropdownMenuItem start="edit" shortcut="F2">{{ t.rename }}</div>
+                <div dsDropdownMenuItem start="copy" shortcut="Ctrl+D">{{ t.duplicate }}</div>
+                <div dsDropdownMenuItem start="download">{{ t.download }}</div>
+                <ng-container dsDropdownMenuSub>
+                  <div dsDropdownMenuSubTrigger start="link">{{ t.share }}</div>
+                  <ng-template dsDropdownMenuSubContent>
+                    <div dsDropdownMenuItem start="copy" shortcut="Ctrl+L">{{ t.copyLink }}</div>
+                    <div dsDropdownMenuItem start="user-plus">{{ t.invite }}</div>
+                    <div dsDropdownMenuItem start="globe">{{ t.publish }}</div>
+                  </ng-template>
+                </ng-container>
+                <div dsDropdownMenuSeparator></div>
+                <div dsDropdownMenuGroup>
+                  <div dsDropdownMenuLabel>{{ t.view }}</div>
+                  <div dsDropdownMenuCheckboxItem [(checked)]="s.grid" shortcut="Ctrl+G">{{ t.grid }}</div>
+                  <div dsDropdownMenuCheckboxItem [(checked)]="s.snap">{{ t.snap }}</div>
+                </div>
+                <div dsDropdownMenuSeparator></div>
+                <div dsDropdownMenuRadioGroup [(value)]="s.sort">
+                  <div dsDropdownMenuLabel>{{ t.sort }}</div>
+                  <div dsDropdownMenuRadioItem value="name">{{ t.name }}</div>
+                  <div dsDropdownMenuRadioItem value="edited">{{ t.edited }}</div>
+                  <div dsDropdownMenuRadioItem value="owner">{{ t.owner }}</div>
+                </div>
+                <div dsDropdownMenuSeparator></div>
+                <div dsDropdownMenuItem start="trash" tone="danger" shortcut="Del">{{ t.remove }}</div>
+              </ng-template>
+            </ng-container>
+          </ng-template>
           <div data-demo="row" [label]="'عربي'">
-            <ng-container [ngTemplateOutlet]="boardMenu" [ngTemplateOutletContext]="{ trigger: 'ar', lang: 'ar' }" />
+            <ng-container [ngTemplateOutlet]="boardMenuAr" [ngTemplateOutletContext]="{ trigger: 'ar', lang: 'ar' }" />
           </div>
         </div>
       </section>

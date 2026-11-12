@@ -64,7 +64,7 @@ import { consumeHostAttributes } from '../../internal/host';
 import { optionalBoolean } from '../../internal/optional-boolean';
 import { PopupLayer } from '../../internal/popper';
 import { DsThemeService } from '../../theme';
-import { DsField } from '../field/field';
+import { DsFieldContext, fieldControl } from '../field/field-context';
 import {
   flattenListBoxItems,
   isIconContent,
@@ -198,7 +198,7 @@ export class DsSelect implements ControlValueAccessor {
   readonly ariaLabelledby = input<string | undefined>(undefined, { alias: 'aria-labelledby' });
   readonly ariaDescribedby = input<string | undefined>(undefined, { alias: 'aria-describedby' });
 
-  private readonly field = inject(DsField, { optional: true });
+  private readonly field = inject(DsFieldContext, { optional: true });
   private readonly theme = inject(DsThemeService);
   private readonly doc = inject(DOCUMENT);
   private readonly injector = inject(Injector);
@@ -220,17 +220,22 @@ export class DsSelect implements ControlValueAccessor {
   protected readonly loadingText = computed(() => this.loadingLabel() ?? words[this.lang()].loading);
   protected readonly emptyContent = computed<ListBoxContent>(() => this.empty() ?? words[this.lang()].empty);
 
-  protected readonly controlId = computed(() => this.id() ?? this.field?.controlId());
-  readonly isInvalid = computed(() => this.invalid() ?? this.field?.invalid() ?? false);
   private readonly formDisabled = signal<boolean | undefined>(undefined);
-  readonly isDisabled = computed(() => this.disabled() ?? this.formDisabled() ?? this.field?.disabled() ?? false);
-  readonly isReadOnly = computed(() => this.readOnly() ?? this.field?.readOnly() ?? false);
-  protected readonly isRequired = computed(() => this.required() ?? this.field?.required() ?? false);
-  protected readonly describedBy = computed(
-    () =>
-      [this.field?.describedBy(), this.ariaDescribedby(), this.loading() ? this.loadingId : undefined].filter(Boolean).join(' ') ||
-      undefined,
-  );
+  /** The Field wiring merged with the control's own values, as React's useFieldControl. It lands on the trigger. */
+  private readonly fieldState = fieldControl(this.field, () => ({
+    id: this.id(),
+    describedBy: [this.ariaDescribedby(), this.loading() ? this.loadingId : undefined].filter(Boolean).join(' ') || undefined,
+    invalid: this.invalid(),
+    disabled: this.disabled() ?? this.formDisabled(),
+    readOnly: this.readOnly(),
+    required: this.required(),
+  }));
+  protected readonly controlId = computed(() => this.fieldState().id);
+  readonly isInvalid = computed(() => this.fieldState().invalid);
+  readonly isDisabled = computed(() => this.fieldState().disabled);
+  readonly isReadOnly = computed(() => this.fieldState().readOnly);
+  protected readonly isRequired = computed(() => this.fieldState().required);
+  protected readonly describedBy = computed(() => this.fieldState().describedBy);
   private readonly inert = computed(() => this.isReadOnly() || this.loading());
   protected readonly listLabelledBy = computed(
     () => this.ariaLabelledby() ?? (this.ariaLabel() ? undefined : this.field?.labelId),
@@ -305,6 +310,17 @@ export class DsSelect implements ControlValueAccessor {
 
   constructor() {
     const destroyRef = inject(DestroyRef);
+    // A control with its own id tells the Field, so the Field label points at it, as React's useFieldControl.
+    const field = this.field;
+    if (field) {
+      effect(() => {
+        const id = this.id();
+        untracked(() => field.setControlId(id));
+      });
+      destroyRef.onDestroy(() => {
+        if (untracked(this.id) !== undefined) field.setControlId(undefined);
+      });
+    }
     destroyRef.onDestroy(() => {
       this.unmount(false);
       this.loadingEl?.remove();

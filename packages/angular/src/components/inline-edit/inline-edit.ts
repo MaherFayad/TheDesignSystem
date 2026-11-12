@@ -297,6 +297,11 @@ export class DsInlineEdit implements ControlValueAccessor, OnInit {
   protected onRootBlur(event: FocusEvent): void {
     this.onTouched();
     if (!this.editing()) return;
+    // Opening the editor removes the focused display button, and the browser
+    // fires focusout on it with no relatedTarget. That is not leaving the
+    // editor: only a focusout from the editor's own parts may close it.
+    const from = event.target as Element | null;
+    if (!from || !from.isConnected || from.getAttribute('data-part') === 'display') return;
     const next = event.relatedTarget as Node | null;
     if (next && (event.currentTarget as Element).contains(next)) return;
     // Nothing changed: close without a check, so an empty new item never traps the editor.

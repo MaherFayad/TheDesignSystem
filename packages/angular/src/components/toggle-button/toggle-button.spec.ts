@@ -1,5 +1,6 @@
 import { Component, signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
+import { By } from '@angular/platform-browser';
 import { describe, expect, it } from 'vitest';
 import { DsToggleButton } from './toggle-button';
 
@@ -11,6 +12,7 @@ import { DsToggleButton } from './toggle-button';
     <button id="bound" dsToggleButton [(pressed)]="bold">Bold</button>
     <button id="icon" dsToggleButton icon="eye" label="Show guides"></button>
     <button id="guard" dsToggleButton (click)="$event.preventDefault()">Strict mode</button>
+    <button id="named" dsToggleButton aria-label="Bold text">B</button>
     <button id="disabled" dsToggleButton disabled (pressedChange)="changes.set(changes() + 1)">Lock layer</button>
   `,
 })
@@ -67,6 +69,22 @@ describe('DsToggleButton', () => {
     expect(el.getAttribute('aria-label')).toBe('Show guides');
     expect(el.hasAttribute('label')).toBe(false);
     expect(Array.from(el.children).map((c) => c.getAttribute('data-part'))).toEqual(['icon']);
+  });
+
+  it('keeps a caller aria-label on the text form', async () => {
+    const { q } = await setup();
+    expect(q('named').getAttribute('aria-label')).toBe('Bold text');
+    expect(q('plain').hasAttribute('aria-label')).toBe(false);
+  });
+
+  it('decides inside the click, after the caller listener, with no microtask wait', async () => {
+    const { fixture, q } = await setup();
+    const toggle = fixture.debugElement.query(By.css('#guard')).injector.get(DsToggleButton);
+    q('guard').click();
+    expect(toggle.on()).toBe(false);
+    const plain = fixture.debugElement.query(By.css('#plain')).injector.get(DsToggleButton);
+    q('plain').click();
+    expect(plain.on()).toBe(true);
   });
 
   it('a caller click that prevents the default keeps the state', async () => {

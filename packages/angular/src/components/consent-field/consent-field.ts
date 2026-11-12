@@ -10,9 +10,9 @@
 // denied. `[(checked)]` is for showing a choice the person already made.
 //
 // The control is the Checkbox (a form that is sent) or the Switch (settings
-// that save at once). Angular batch A3 ports both on another branch, so this
-// folder renders private stand ins with the same DOM (stand-ins.ts). Swap
-// them for dsCheckbox and dsSwitch when A3 merges.
+// that save at once): the system dsCheckbox and dsSwitch. Their root carries
+// data-part control, as React's rootProps. They read no Field: the error's
+// own context below wraps only the error, as in React (dsNoFieldContext).
 //
 // Inside a dsForm, the form's error for `name` shows in the error part,
 // with requiredError in place of the form's words when given. The error is
@@ -26,7 +26,7 @@
 // output of `[(checked)]`; `onDecision` is the `decision` output. `purpose`,
 // `detailsLabel`, `meta` and `error` take a string or a TemplateRef.
 import { NgTemplateOutlet } from '@angular/common';
-import { ChangeDetectionStrategy, Component, booleanAttribute, computed, forwardRef, inject, input, model, output, signal, type TemplateRef } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Directive, booleanAttribute, computed, forwardRef, inject, input, model, output, signal, type TemplateRef } from '@angular/core';
 import { NG_VALUE_ACCESSOR, type ControlValueAccessor } from '@angular/forms';
 import type { Size } from '@the-system/shared';
 import { consumeHostAttributes } from '../../internal/host';
@@ -36,7 +36,8 @@ import { DsFieldError } from '../field-error/field-error';
 import { DsErrorContext, hasContent } from '../fieldset/error-context';
 import { DsFormContext } from '../form/form-context';
 import { DsLink } from '../link/link';
-import { StandInCheckbox, StandInSwitch } from './stand-ins';
+import { DsCheckbox } from '../checkbox/checkbox';
+import { DsSwitch } from '../switch/switch';
 
 export type ConsentFieldSize = Extract<Size, 'sm' | 'md' | 'lg'>;
 export type ConsentFieldState = 'granted' | 'denied';
@@ -59,10 +60,25 @@ const detailsByLang = { en: 'How we use your data', ar: 'طريقة استخدا
 
 let nextId = 0;
 
+/**
+ * Gives the control no Field context. ConsentField provides one for its
+ * error part through viewProviders, which reaches its whole template; the
+ * control gets its describedby from ConsentField itself, as in React.
+ */
+@Directive({
+  selector: '[dsNoFieldContext]',
+  providers: [{ provide: DsFieldContext, useValue: null }],
+})
+class DsNoFieldContext {
+  constructor() {
+    consumeHostAttributes(['dsNoFieldContext']);
+  }
+}
+
 @Component({
   selector: 'div[dsConsentField]',
   exportAs: 'dsConsentField',
-  imports: [NgTemplateOutlet, DsFieldError, DsLink, StandInCheckbox, StandInSwitch],
+  imports: [NgTemplateOutlet, DsFieldError, DsLink, DsCheckbox, DsSwitch, DsNoFieldContext],
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [{ provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => DsConsentField), multi: true }],
   viewProviders: [{ provide: DsFieldContext, useFactory: () => inject(DsConsentField).errorContext }],
@@ -76,13 +92,13 @@ let nextId = 0;
   },
   template: `
     @if (control() === 'switch') {
-      <div dsStandInSwitch part="control" managed [id]="controlId" [size]="size()" [name]="name()" [value]="value()" [checked]="granted()"
+      <div dsSwitch dsNoFieldContext data-part="control" [id]="controlId" [size]="size()" [name]="name()" [value]="value()" [checked]="granted()"
         [disabled]="isDisabled()" [required]="required()" [invalid]="isInvalid()" [aria-labelledby]="purposeId" [aria-describedby]="describedBy()"
-        (checkedChangeByUser)="decide($event)"></div>
+        (checkedChange)="decide($event === true)"></div>
     } @else {
-      <div dsStandInCheckbox part="control" managed [id]="controlId" [size]="size()" [name]="name()" [value]="value()" [checked]="granted()"
+      <div dsCheckbox dsNoFieldContext data-part="control" [id]="controlId" [size]="size()" [name]="name()" [value]="value()" [checked]="granted()"
         [disabled]="isDisabled()" [required]="required()" [invalid]="isInvalid()" [aria-labelledby]="purposeId" [aria-describedby]="describedBy()"
-        (checkedChangeByUser)="decide($event)"></div>
+        (checkedChange)="decide($event === true)"></div>
     }
     <div data-part="text">
       <label [attr.id]="purposeId" [attr.for]="controlId" data-part="purpose"><ng-container *ngTemplateOutlet="text; context: { $implicit: purpose() }" />@if (required()) {<span data-part="required" aria-hidden="true">{{ ' *' }}</span>}</label>

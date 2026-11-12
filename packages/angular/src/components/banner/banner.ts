@@ -28,7 +28,7 @@ import type { IconName } from '@the-system/icons';
 import type { Emphasis, Tone } from '@the-system/shared';
 import { consumeHostAttributes } from '../../internal/host';
 import { DsThemeService } from '../../theme/theme';
-import { DsIconButton } from '../icon-button/icon-button';
+import { DsCloseButton } from '../close-button/close-button';
 import { messageIcons, wordsFor } from '../alert/message';
 import type { MessageContent } from '../alert/alert';
 
@@ -78,7 +78,7 @@ function focusTarget(doc: Document, target: HTMLElement | string | undefined) {
 @Component({
   selector: 'section[dsBanner]',
   exportAs: 'dsBanner',
-  imports: [DsIcon, DsIconButton, NgTemplateOutlet],
+  imports: [DsIcon, DsCloseButton, NgTemplateOutlet],
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     'data-ds': 'banner',
@@ -100,8 +100,7 @@ function focusTarget(doc: Document, target: HTMLElement | string | undefined) {
       <div data-part="actions">@if (isText(a)) {{{ a }}} @else {<ng-container [ngTemplateOutlet]="a" />}</div>
     }
     @if (onDismiss()) {
-      <!-- The system CloseButton DOM. Swap for dsCloseButton when the A1 port merges. -->
-      <button dsIconButton data-ds="close-button" data-part="close" icon="close" size="xs" [label]="closeName()" (click)="dismiss()"></button>
+      <button dsCloseButton data-part="close" size="xs" [label]="closeName()" (click)="dismiss()"></button>
     }
   `,
 })

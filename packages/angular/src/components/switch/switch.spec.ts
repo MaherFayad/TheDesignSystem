@@ -163,3 +163,56 @@ describe('DsSwitch', () => {
     expect(root('plain').querySelector('input')).toBeNull();
   });
 });
+
+@Component({
+  imports: [DsSwitch, DsField],
+  template: `
+    <div dsField data-test="wired" label="Name" description="A hint." error="Fix this." required>
+      <div dsSwitch></div>
+    </div>
+    <div dsField data-test="own-id" label="Name">
+      <div dsSwitch id="own-control"></div>
+    </div>
+    <div dsField data-test="off" label="Name" disabled>
+      <div dsSwitch></div>
+    </div>
+  `,
+})
+class FieldWiringHost {
+}
+
+describe('DsSwitch in a Field', () => {
+  it('reads the Field as React useFieldControl does: id, describedby order, invalid, required, disabled', async () => {
+    const fixture = TestBed.createComponent(FieldWiringHost);
+    await fixture.whenStable();
+    fixture.detectChanges();
+    await fixture.whenStable();
+    const field = (id: string) => fixture.nativeElement.querySelector(`[data-test="${id}"]`) as HTMLElement;
+    const control = (id: string) => field(id).querySelector('[data-ds="switch"] > [data-part="control"]') as HTMLElement;
+
+    const wired = field('wired');
+    const label = wired.querySelector(':scope > label') as HTMLLabelElement;
+    const description = wired.querySelector(':scope > [data-part="description"]') as HTMLElement;
+    const error = wired.querySelector(':scope > [data-part="error"]') as HTMLElement;
+    const c = control('wired');
+    expect(c.id).not.toBe('');
+    expect(label.getAttribute('for')).toBe(c.id);
+    expect(c.getAttribute('aria-describedby')).toBe(`${description.id} ${error.id}`);
+    expect(c.getAttribute('aria-invalid')).toBe('true');
+    expect(c.getAttribute('aria-required')).toBe('true');
+
+    // A control with an id of its own tells the Field, so the label points at it.
+    expect(control('own-id').id).toBe('own-control');
+    expect(field('own-id').querySelector(':scope > label')?.getAttribute('for')).toBe('own-control');
+    expect(control('own-id').hasAttribute('aria-describedby')).toBe(false);
+    expect(control('own-id').hasAttribute('aria-invalid')).toBe(false);
+  });
+
+  it('takes disabled from the Field', async () => {
+    const fixture = TestBed.createComponent(FieldWiringHost);
+    await fixture.whenStable();
+    const c = fixture.nativeElement.querySelector('[data-test="off"] [data-ds="switch"] > [data-part="control"]') as HTMLButtonElement;
+    expect(c.disabled).toBe(true);
+    expect(c.closest('[data-ds="switch"]')?.hasAttribute('data-disabled')).toBe(true);
+  });
+});

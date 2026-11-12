@@ -18,7 +18,7 @@ import { DsIcon } from '@the-system/icons/angular';
 import type { ToastAction, ToastTone } from '@the-system/shared';
 import { consumeHostAttributes } from '../../internal/host';
 import { DsButton } from '../button/button';
-import { DsToastClose } from './toast-close';
+import { DsCloseButton } from '../close-button/close-button';
 
 export type { ToastAction, ToastTone } from '@the-system/shared';
 
@@ -79,11 +79,11 @@ export const TOAST_PARTS_TEMPLATE = `
       [attr.data-radix-toast-announce-alt]="action.altText ?? action.label" (click)="runAction(action)">{{ action.label }}</button>
   }
   @if (p.closable) {
-    <button dsToastClose data-part="close" [label]="p.closeLabel" size="xs" data-radix-toast-announce-exclude="" (click)="close()"></button>
+    <button dsCloseButton data-part="close" [label]="p.closeLabel" size="xs" data-radix-toast-announce-exclude="" (click)="close()"></button>
   }
 `;
 
-export const TOAST_PARTS_IMPORTS = [DsIcon, DsButton, DsToastClose] as const;
+export const TOAST_PARTS_IMPORTS = [DsIcon, DsButton, DsCloseButton] as const;
 
 /**
  * One notice, drawn as a toast, with no timer, queue or live region, and no

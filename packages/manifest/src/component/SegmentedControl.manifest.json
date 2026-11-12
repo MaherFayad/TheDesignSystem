@@ -175,9 +175,10 @@
       "note": "The indicator is measured from the selected item (logical start, top, inline and block size) and slides with catalog['tab-indicator'], transform only. Reduced motion plays nothing: it jumps. A ResizeObserver re-places it, without motion, when density, fonts or labels change the size."
     },
     "angular": {
-      "status": "planned",
-      "behavior": "[dsSegmentedControl] host with roving focus; items are dsToggleButton with data-part item; the indicator placed by the same measuring and the motion catalog",
-      "note": "SegmentedControl.css and Button.css are used as is."
+      "status": "ready",
+      "behavior": "div[dsSegmentedControl] and button[dsSegmentedControlItem] on DsButtonBase, hand built with the Radix ToggleGroup type single DOM on behavior/roving-radio.ts (CDK FocusKeyManager and Directionality), the indicator placed by the same measuring and the motion catalog, ControlValueAccessor",
+      "example": "segmented-control.demo.ts",
+      "note": "The host is the root (role radiogroup) with the indicator span as its first child; each item host is a ToggleButton root with data-part item, role radio and aria-checked. onValueChange is the valueChange output of [(value)]. start and icon take an icon name or a TemplateRef. Selection follows focus; a press on the selected item is ignored, so the value never goes empty. The indicator is placed after each render that changes the value (afterRenderEffect) and on resize, and slides with tab-indicator. Works with reactive and template forms. SegmentedControl.css and Button.css are used as is."
     },
     "native": {
       "status": "planned",
