@@ -573,6 +573,46 @@ Added by the architect: gate 1 needs it and no other order covers it.
 `docs/reports/wave-1.md`: the gate table below with evidence, what changed in
 the contracts, open HUMAN GATE items, coverage per framework.
 
+### 1.21 Interaction round (ds-style with ds-component)
+
+Added on 2026-11-12 at the owner's request.
+
+- Installs: no. Starts when 1.11 (motion catalog) is green and the batch 1 to
+  3 components exist. Runs again at the end of the wave over every batch.
+- Goal: a round that adds small, considered interactions to the components,
+  in the spirit of the collections the owner named:
+  `khagwal.com/interactions` and `bestdesignsonx.com`. Fetch and study both
+  first. Take the kind of feedback and the timing, never code, assets or
+  names. Write what was observed in `docs/reports/interactions.md` as a list
+  of interaction ideas, each mapped to a component and a catalog pattern.
+- Scope, at least: press feedback on buttons and toggles, a checkmark that
+  draws, a switch thumb that stretches while it travels, a segmented control
+  and tab indicator that slides between items, number roll on Stat and
+  NumberField, copy button success swap, password reveal, OTP cell fill,
+  input focus glow, error shake kept under the flash and motion limits, menu
+  and popover origin scale, toast stack and swipe, accordion reveal, skeleton
+  to content swap, drag lift and drop settle, rating fill, list stagger on
+  first paint, pull and release on sliders, dialog and sheet springs.
+- Rules that do not bend: only `transform` and `opacity` animate; no
+  animation library on the web (CSS transitions, `@starting-style` and the
+  Web Animations API only); durations, eases, scales and springs come from
+  tokens; every interaction has a reduced motion form; nothing flashes more
+  than three times a second; anything that plays longer than five seconds
+  has a pause control; an interaction never delays the action it decorates
+  and never blocks input; behavior stays out of style packs, so an
+  interaction is a motion preset a style may tune or turn off.
+- Each style gets its own character through `packages/styles/<id>/motion.ts`:
+  Studio flat and fast, Desk windows and rolls, Neutral 150 to 200ms ease
+  out, Liquid springs (wave 2).
+- Owns: `packages/motion/` additions, the motion presets of each style, and,
+  per component, a block in that component's CSS file handed over by the lead
+  one family at a time (no two agents in one CSS file).
+- Accept: `npm run check` and the contract suite green; a gallery page
+  `/interactions` that plays each one with a reduced motion toggle; a short
+  screen recording or frame strip per interaction in
+  `docs/reports/shots/interactions/`; the report lists what was added, what
+  was rejected and why. New looks are proposed to the owner, not final.
+
 ## Schedule
 
 At most four agents at once. Never two installing orders at once (installs

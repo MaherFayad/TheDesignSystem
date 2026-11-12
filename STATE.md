@@ -70,6 +70,7 @@ No adb. No iOS build.
 | 1.18 | Consumer apps on wave 1 components | ds-docs | react | open | |
 | 1.19 | Adoption guides | ds-docs | all | open | |
 | 1.20 | Gate 1 report | lead | all | open | |
+| 1.21 | Interaction round | ds-style, ds-component | all | open | |
 
 ## Coverage
 | Family | React | Angular | Native |
@@ -118,6 +119,11 @@ again: commit the tree as wip, push, and resume the agents by id.
    once, in other sessions too. The limit of four from the plan no longer
    applies. Local subagents share one working tree, so lanes still may not
    overlap in files, and only one order installs packages at a time.
+3. 2026-11-12: the owner reset the usage allowance and asked to use it
+   freely. Lanes with no file overlap also run in separate cloud sessions,
+   each on its own branch `claude/ds-<lane>`, merged by the lead.
+4. 2026-11-12: the owner asked for a round of added interactions in the
+   spirit of khagwal.com/interactions and bestdesignsonx.com. Order 1.21.
 
 ## Contract changes
 2026-11-12: frameworks.md gained the Angular rules found by the proof (`dsTheme="<id>"`, host attribute removal, name mapping, no CDK Dialog or FocusTrap). Reason: order 0.15.
