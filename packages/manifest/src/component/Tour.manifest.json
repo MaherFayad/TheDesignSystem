@@ -62,7 +62,7 @@
     "focus": "On open and on every step, focus moves to the panel, so the title, the body and the progress are read. Tab then reaches Skip tour, Previous step and Next step. On close, focus returns to the element that had it when the tour started.",
     "keys": {
       "Escape": "Ends the tour and returns focus",
-      "Tab": "Moves to Skip tour, Previous step and Next step, then out to the step's target on the page; the tour stays open (not modal, no trap)",
+      "Tab": "Moves to Skip tour, Previous step and Next step, then out to the step's target on the page (a target that takes no focus gets tabindex -1; with no target, the element that started the tour); the tour stays open (not modal, no trap)",
       "Shift+Tab": "Moves back through the step's buttons; from the first button or the panel it moves to the step's target",
       "Enter, Space": "On Next step, Previous step or Skip tour: runs it"
     },

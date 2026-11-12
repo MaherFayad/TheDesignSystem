@@ -122,11 +122,18 @@ function tabStops(root: HTMLElement): HTMLElement[] {
   return [...root.querySelectorAll<HTMLElement>(TABBABLE)].filter((el) => el.tabIndex >= 0 && !el.hidden);
 }
 
-/** Where Tab out of the panel lands: the target when it takes focus, else its first tab stop. */
+/**
+ * Where Tab out of the panel lands: the target when it takes focus, else its
+ * first tab stop, else the target itself made focusable by script only
+ * (tabindex -1, the skip link pattern), so a section or a chart works too.
+ */
 function focusTarget(target: HTMLElement | null): HTMLElement | null {
   if (!target?.isConnected) return null;
   if (target.tabIndex >= 0 && target.matches(TABBABLE)) return target;
-  return tabStops(target)[0] ?? null;
+  const inside = tabStops(target)[0];
+  if (inside) return inside;
+  if (!target.hasAttribute('tabindex')) target.setAttribute('tabindex', '-1');
+  return target;
 }
 
 function resolveTarget(target: TourTarget, doc: Document): HTMLElement | null {
@@ -366,14 +373,17 @@ export function Tour({
             onKeyDownCapture={(event) => {
               if (event.key !== 'Tab' || event.altKey || event.ctrlKey || event.metaKey) return;
               const panel = panelRef.current;
-              const into = focusTarget(target);
-              if (!panel || !into) return;
+              if (!panel) return;
               const stops = tabStops(panel);
               const active = document.activeElement;
               const atEnd = event.shiftKey ? active === panel || active === stops[0] : active === stops[stops.length - 1];
               if (!atEnd) return;
-              event.preventDefault();
+              // The target, else the element that started the tour (a missing target).
+              const into = focusTarget(target) ?? (openedFrom.current?.isConnected ? openedFrom.current : null);
+              if (!into) return;
               into.focus();
+              // Only cancel the Tab when focus really moved (a hidden or inert target refuses it).
+              if (document.activeElement === into) event.preventDefault();
             }}
           >
             <h2 id={titleId} data-part="title">
