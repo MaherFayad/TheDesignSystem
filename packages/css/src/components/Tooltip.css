@@ -18,14 +18,23 @@
  *   --_tooltip-bg, -fg, -muted, -border-color, -radius, -shadow, -blur
  *   --_tooltip-padding-block, -padding-inline
  *   --_tooltip-arrow-width, -arrow-height
- *   --_tooltip-enter-x, -enter-y, -duration-in, -duration-out, -ease-in, -ease-out
+ *   --_tooltip-shift          how far the tooltip travels in, away from its trigger
+ *   --_tooltip-enter-x        the inline travel of the enter, set per side from -shift
+ *   --_tooltip-enter-y, -duration-in, -duration-out, -ease-in, -ease-out
  *
  * Hoverable (WCAG 1.4.13): the tooltip takes the pointer, so it stays open
- * while the pointer moves onto it. Nothing here sets pointer-events none.
+ * while the pointer moves onto it. Only a closing tooltip, while it fades
+ * out, lets the pointer through.
  *
- * Motion, pattern "fade-rise": the tooltip fades in while it moves a few px
- * away from the trigger. It fades out faster. Only transform and opacity
- * animate; under reduced motion the animations are none.
+ * Motion, interaction "tooltip-rise" (pattern "fade-rise"): on a delayed
+ * open the tooltip fades in while it travels space.xs from its trigger side
+ * (data-side) into place, over duration.base on ease.out. Moving to another
+ * trigger of the same provider inside the skip delay opens it with
+ * data-state instant-open: no animation, it is there at once. Closing plays
+ * the travel backward, faster (duration.quick, ease.exit). Only transform
+ * and opacity animate. A style turns the travel off with
+ * --_tooltip-shift: 0px, which leaves a fade. Under reduced motion the
+ * animations are none.
  */
 @layer ds.base {
   [data-ds='theme'][data-tooltip-layer] {
@@ -44,10 +53,11 @@
     --_tooltip-padding-inline: var(--ds-space-m);
     --_tooltip-arrow-width: var(--ds-space-l);
     --_tooltip-arrow-height: calc(var(--ds-space-l) / 2);
-    --_tooltip-enter-x: 0;
-    --_tooltip-enter-y: 0;
-    --_tooltip-duration-in: var(--ds-duration-fast);
-    --_tooltip-duration-out: var(--ds-duration-instant);
+    --_tooltip-shift: var(--ds-space-xs);
+    --_tooltip-enter-x: 0px;
+    --_tooltip-enter-y: 0px;
+    --_tooltip-duration-in: var(--ds-duration-base);
+    --_tooltip-duration-out: var(--ds-duration-quick);
     --_tooltip-ease-in: var(--ds-ease-out);
     --_tooltip-ease-out: var(--ds-ease-exit);
 
@@ -72,28 +82,35 @@
     transform-origin: var(--radix-tooltip-content-transform-origin);
   }
 
+  /* The enter travels from the trigger side into place: physical sides, as Radix names them. */
   [data-ds='tooltip'][data-side='top'] {
-    --_tooltip-enter-y: var(--ds-space-3xs);
+    --_tooltip-enter-y: var(--_tooltip-shift);
   }
 
   [data-ds='tooltip'][data-side='bottom'] {
-    --_tooltip-enter-y: calc(var(--ds-space-3xs) * -1);
+    --_tooltip-enter-y: calc(var(--_tooltip-shift) * -1);
   }
 
   [data-ds='tooltip'][data-side='left'] {
-    --_tooltip-enter-x: var(--ds-space-3xs);
+    --_tooltip-enter-x: var(--_tooltip-shift);
   }
 
   [data-ds='tooltip'][data-side='right'] {
-    --_tooltip-enter-x: calc(var(--ds-space-3xs) * -1);
+    --_tooltip-enter-x: calc(var(--_tooltip-shift) * -1);
   }
 
-  [data-ds='tooltip']:is([data-state='delayed-open'], [data-state='instant-open']) {
+  [data-ds='tooltip'][data-state='delayed-open'] {
     animation: ds-tooltip-in var(--_tooltip-duration-in) var(--_tooltip-ease-in);
+  }
+
+  /* Inside the skip delay of the provider: the next tooltip is there at once. */
+  [data-ds='tooltip'][data-state='instant-open'] {
+    animation: none;
   }
 
   [data-ds='tooltip'][data-state='closed'] {
     animation: ds-tooltip-out var(--_tooltip-duration-out) var(--_tooltip-ease-out) forwards;
+    pointer-events: none;
   }
 
   /* The shortcut: after the hint, quieter, never wrapped inside. */
@@ -127,6 +144,7 @@
   @keyframes ds-tooltip-out {
     to {
       opacity: 0;
+      transform: translate(var(--_tooltip-enter-x), var(--_tooltip-enter-y));
     }
   }
 

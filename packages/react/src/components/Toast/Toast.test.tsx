@@ -7,6 +7,7 @@ import { Button } from '../Button';
 import { Dialog as SystemDialog, DialogContent } from '../Dialog';
 import ToastDemo from './Toast.demo';
 import { Toast, Toaster, isInsideToaster, createToastFunction, createToastStore, type ToastStoreOptions } from './index';
+import { liveOffsetY, watchStackShift } from './stackShift';
 
 // jsdom has no pointer capture, which Radix Toast calls on pointer up.
 const proto = Element.prototype as unknown as Record<string, unknown>;
@@ -465,5 +466,116 @@ describe('Toast', () => {
     const arabic = container.querySelector('[data-demo-case="long-arabic"] [data-ds="theme"]');
     expect(arabic?.getAttribute('lang')).toBe('ar');
     await waitFor(() => expect(document.body.querySelector('[data-ds="toaster"]')).not.toBeNull());
+  });
+});
+
+/** Lays out the toasts of a viewport by hand: jsdom has no layout. Bottom stack: the newest, last, sits lowest. */
+function fakeStackLayout(height = 40, gap = 8) {
+  const li = HTMLLIElement.prototype;
+  const saved = (['offsetTop', 'offsetWidth', 'offsetHeight'] as const).map((k) => [k, Object.getOwnPropertyDescriptor(HTMLElement.prototype, k)] as const);
+  Object.defineProperty(li, 'offsetTop', {
+    configurable: true,
+    get(this: HTMLElement) {
+      const items = Array.from(this.parentElement?.children ?? []).filter((c) => c.getAttribute('data-ds') === 'toast');
+      return (items.indexOf(this) - items.length) * (height + gap);
+    },
+  });
+  Object.defineProperty(li, 'offsetWidth', { configurable: true, get: () => 320 });
+  Object.defineProperty(li, 'offsetHeight', { configurable: true, get: () => height });
+  return () => {
+    for (const [k] of saved) delete (li as unknown as Record<string, unknown>)[k];
+  };
+}
+
+describe('the toast stack shift (interaction toast-stack)', () => {
+  it('moves the toasts that stay from where they were, and skips the new one', async () => {
+    const restore = fakeStackLayout();
+    const viewport = document.createElement('ol');
+    for (let i = 0; i < 2; i += 1) {
+      const li = document.createElement('li');
+      li.setAttribute('data-ds', 'toast');
+      viewport.append(li);
+    }
+    document.body.append(viewport);
+    const play = vi.fn(() => null);
+    const stop = watchStackShift(viewport, play);
+    const fresh = document.createElement('li');
+    fresh.setAttribute('data-ds', 'toast');
+    viewport.append(fresh);
+    await Promise.resolve();
+    expect(play).toHaveBeenCalledTimes(2);
+    for (const call of play.mock.calls as unknown as [HTMLElement, { y: number; width: number; height: number }, { y: number }][]) {
+      expect(call[0]).not.toBe(fresh);
+      // Each one was 48px lower (one toast and the gap) and plays up into place.
+      expect(call[1]).toMatchObject({ x: 0, y: 48, width: 320, height: 40 });
+      expect(call[2]).toMatchObject({ x: 0, y: 0 });
+    }
+    stop();
+    viewport.append(document.createElement('li'));
+    await Promise.resolve();
+    expect(play).toHaveBeenCalledTimes(2);
+    viewport.remove();
+    restore();
+  });
+
+  it('reads the block offset of a running transform', () => {
+    const el = document.createElement('div');
+    el.style.transform = 'matrix(1, 0, 0, 1, 0, -12)';
+    document.body.append(el);
+    expect(liveOffsetY(el)).toBe(-12);
+    el.style.transform = 'none';
+    expect(liveOffsetY(el)).toBe(0);
+    el.remove();
+  });
+
+  it('plays the shift through the style preset in the Toaster, and nothing under reduced motion', async () => {
+    const restore = fakeStackLayout();
+    const animate = vi.fn(() => ({ playState: 'running', cancel() {}, id: '' }) as unknown as Animation);
+    const proto = HTMLElement.prototype as unknown as { animate?: unknown };
+    const hadAnimate = 'animate' in proto;
+    proto.animate = animate;
+    const matchMedia = window.matchMedia;
+    try {
+      const { store, toast, fire } = setup();
+      const view = render(
+        <Theme>
+          <Toaster store={store} />
+        </Theme>,
+      );
+      await waitFor(() => expect(document.body.querySelector('[data-ds="toaster"]')).not.toBeNull());
+      fire(() => toast({ title: 'File 1 uploaded', dedupeKey: false }));
+      await act(async () => undefined);
+      animate.mockClear();
+      fire(() => toast({ title: 'File 2 uploaded', dedupeKey: false }));
+      await act(async () => undefined);
+      expect(animate).toHaveBeenCalledTimes(1);
+      const [keyframes] = animate.mock.calls[0] as unknown as [Keyframe[]];
+      expect(keyframes[0]?.transform).toBe('translate(0px, 48px) scale(1, 1)');
+      expect(keyframes[1]?.transform).toBe('none');
+      expect(toasts()[0]?.style.transformOrigin).toBe('');
+      view.unmount();
+
+      // Reduced motion: the stack still changes at once, nothing plays.
+      window.matchMedia = ((q: string) => ({ matches: q.includes('reduce'), media: q, addEventListener() {}, removeEventListener() {} })) as unknown as typeof window.matchMedia;
+      const second = setup();
+      render(
+        <Theme>
+          <Toaster store={second.store} />
+        </Theme>,
+      );
+      await waitFor(() => expect(document.body.querySelector('[data-ds="toaster"]')).not.toBeNull());
+      second.fire(() => second.toast({ title: 'File 1 uploaded', dedupeKey: false }));
+      await act(async () => undefined);
+      animate.mockClear();
+      second.fire(() => second.toast({ title: 'File 2 uploaded', dedupeKey: false }));
+      await act(async () => undefined);
+      expect(animate).not.toHaveBeenCalled();
+      expect(openToasts()).toHaveLength(2);
+    } finally {
+      window.matchMedia = matchMedia;
+      if (hadAnimate) proto.animate = undefined;
+      else delete proto.animate;
+      restore();
+    }
   });
 });

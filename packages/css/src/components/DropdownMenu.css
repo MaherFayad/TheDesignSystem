@@ -48,11 +48,15 @@
  *   --_menu-inset                                start space for items with no icon
  *   --_menu-enter-scale, -duration-in, -duration-out, -ease-in, -ease-out
  *
- * Motion, pattern "menu-scale": the menu scales up from the transform origin
- * Radix computes on the trigger side while it fades in; closing plays the
- * reverse, faster, on the exit ease. Only transform and opacity animate.
- * Under reduced motion both animations are none, so Radix removes the
- * closed menu at once and never waits for an animationend.
+ * Motion, interaction "menu-origin" (pattern "menu-scale"), the same values
+ * and plumbing as Popover: the menu scales up from scale.menu-enter out of
+ * the transform origin Radix computes on the trigger side while it fades
+ * in, over duration.base on ease.emphasized; closing plays the reverse,
+ * faster (duration.quick, ease.exit), and takes no pointer. Only transform
+ * and opacity animate. A style turns the scale off with
+ * --_menu-enter-scale: 1, which leaves a fade. Under reduced motion both
+ * animations are none, so Radix removes the closed menu at once and never
+ * waits for an animationend.
  */
 @layer ds.base {
   /* ------------------------------------------------------------ portal layer */
@@ -92,7 +96,7 @@
     --_menu-meta-fg: var(--ds-color-text-muted);
     --_menu-separator-color: var(--ds-color-bg-surface-2);
     --_menu-inset: calc(var(--ds-size-icon-md) + var(--_menu-item-gap));
-    /* No scale.menu-enter token yet: scale.press is the same 0.97 (GB st-menu-in). */
+    /* scale.menu-enter, 0.97 (GB st-menu-in); the menu-scale pattern reads scale.press, the same value. */
     --_menu-enter-scale: var(--ds-scale-menu-enter);
     --_menu-duration-in: var(--ds-duration-base);
     --_menu-duration-out: var(--ds-duration-quick);
@@ -298,7 +302,7 @@
     background-color: var(--_menu-separator-color);
   }
 
-  /* ------------------------------------------------------------ motion: pattern "menu-scale" */
+  /* ------------------------------------------------------------ motion: interaction "menu-origin", pattern "menu-scale" */
 
   :is([data-ds='dropdown-menu'], [data-ds='context-menu'])[data-state='open'] {
     animation: ds-menu-in var(--_menu-duration-in) var(--_menu-ease-in);
