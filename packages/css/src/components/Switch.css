@@ -29,8 +29,20 @@
  *   --_switch-stretch         how wide the pressed thumb grows, as a scale
  *   --_switch-stretch-now     1 at rest, the stretch while pressed
  *   --_switch-toward          1 while off, -1 while on: the way the thumb will travel
+ *   --_switch-duration-out, -ease-out the spring of the track back to rest on release
+ *   --_switch-track-press     how far the track dips while pressed, scale.press;
+ *                             1 turns the dip off
+ *   --_switch-track-scale     the track's scale now: 1, or -track-press while pressed
+ *   --_switch-fill-now        the on tint layer's opacity now: 0 off, 1 on
+ *   --_switch-fill-scale      the on tint layer's width now, as a scale: scale.morph
+ *                             off, 1 on
+ *   --_switch-fill-origin     where the tint layer grows from: the inline start
+ *   --_switch-motion          1 plays every transition of the switch, 0 turns
+ *                             them all off (a style's off row): each
+ *                             duration is multiplied by it
  *
- * The thumb moves with transform only. The ring fades its opacity.
+ * The thumb moves with transform only. The focus ring shows at once: its
+ * layer has no transition (WCAG 2.4.7).
  *
  * Interaction switch-stretch (order 1.21, proposed, pattern press): while
  * the control is pressed the thumb widens toward the side it will travel
@@ -38,6 +50,20 @@
  * the growth, so the release blends into the slide with no jump). On the
  * toggle it slides over duration.medium on ease.emphasized and settles back
  * to its width. A style turns the stretch off with --_switch-stretch: 1.
+ *
+ * Order 1.22 (proposed) raises it to a small choreography:
+ *   anticipation  while held the thumb stretches (above) and the track dips
+ *                 to scale.press over duration.instant on ease.out;
+ *   action        on the toggle the thumb travels on the bouncy spring
+ *                 (ease.spring-bouncy over duration.spring-bouncy), passing
+ *                 its end and settling, its stretch springing back with it;
+ *                 the track springs back to rest the same way;
+ *   secondary     the on tint crosses the off look: an unnamed aria-hidden
+ *                 layer in the track (Switch.tsx adds it) fades in and grows
+ *                 from the inline start behind the thumb on the soft spring,
+ *                 and fades and shrinks back when turned off. Without the
+ *                 layer (a port that does not add it) the track fills at
+ *                 once, the round 1 look.
  */
 @layer ds.base {
   [data-ds='switch'] {
@@ -59,13 +85,21 @@
     --_switch-ring: var(--ds-elevation-input-focus), var(--ds-focus-shadow-ring);
     --_switch-dir: 1;
     --_switch-travel: 0px;
-    --_switch-duration: var(--ds-duration-medium);
-    --_switch-ease: var(--ds-ease-emphasized);
+    --_switch-duration: var(--ds-duration-spring-bouncy);
+    --_switch-ease: var(--ds-ease-spring-bouncy);
+    --_switch-duration-out: var(--ds-duration-spring-bouncy);
+    --_switch-ease-out: var(--ds-ease-spring-bouncy);
+    --_switch-track-press: var(--ds-scale-press);
+    --_switch-track-scale: 1;
+    --_switch-fill-now: 0;
+    --_switch-fill-scale: var(--ds-scale-morph);
+    --_switch-fill-origin: 0% 50%;
     --_switch-duration-in: var(--ds-duration-instant);
     --_switch-ease-in: var(--ds-ease-out);
-    --_switch-stretch: calc(2 - var(--ds-scale-window-enter) * var(--ds-scale-window-enter));
+    --_switch-stretch: var(--ds-scale-stretch);
     --_switch-stretch-now: 1;
     --_switch-toward: 1;
+    --_switch-motion: 1;
 
     display: inline-grid;
     grid-template-columns: auto minmax(0, auto);
@@ -82,6 +116,7 @@
 
   [data-ds='switch']:dir(rtl) {
     --_switch-dir: -1;
+    --_switch-fill-origin: 100% 50%;
   }
 
   [data-ds='switch'][data-size='sm'] {
@@ -125,7 +160,6 @@
     box-shadow: var(--_switch-ring);
     opacity: 0;
     pointer-events: none;
-    transition: opacity var(--ds-duration-base) var(--ds-ease-default);
   }
 
   [data-ds='switch'] > [data-part='control'] > [data-part='track'] {
@@ -140,10 +174,31 @@
     border-radius: var(--ds-radius-pill);
     background-color: var(--_switch-bg);
     pointer-events: none;
+    transform: scale(var(--_switch-track-scale));
+    transition: transform calc(var(--_switch-duration-out) * var(--_switch-motion)) var(--_switch-ease-out);
+  }
+
+  /* With the tint layer, the layer draws the on fill, so the fill can cross in. */
+  [data-ds='switch'] > [data-part='control'] > [data-part='track']:has(> span:not([data-part])) {
+    background-color: transparent;
+  }
+
+  [data-ds='switch'] > [data-part='control'] > [data-part='track'] > span:not([data-part]) {
+    position: absolute;
+    inset: calc(-1 * var(--ds-border-width-default));
+    border-radius: var(--ds-radius-pill);
+    background-color: var(--_switch-fill);
+    opacity: var(--_switch-fill-now);
+    transform: scaleX(var(--_switch-fill-scale));
+    transform-origin: var(--_switch-fill-origin);
+    transition:
+      opacity calc(var(--ds-duration-spring-soft) * var(--_switch-motion)) var(--ds-ease-out),
+      transform calc(var(--ds-duration-spring-soft) * var(--_switch-motion)) var(--ds-ease-spring-soft);
   }
 
   /* The thumb travels the track width less its own size and the two insets. */
   [data-ds='switch'] > [data-part='control'] > [data-part='track'] > [data-part='thumb'] {
+    position: relative;
     display: block;
     flex: none;
     inline-size: calc(var(--_switch-height) - var(--_switch-inset) * 2);
@@ -159,7 +214,7 @@
         )
       )
       scaleX(var(--_switch-stretch-now));
-    transition: transform var(--_switch-duration) var(--_switch-ease);
+    transition: transform calc(var(--_switch-duration) * var(--_switch-motion)) var(--_switch-ease);
   }
 
   /* Pressed: the thumb stretches toward its travel. Not while disabled or read only. */
@@ -168,7 +223,14 @@
   }
 
   [data-ds='switch']:not([data-disabled], [data-readonly]) > [data-part='control']:active > [data-part='track'] > [data-part='thumb'] {
-    transition: transform var(--_switch-duration-in) var(--_switch-ease-in);
+    transition: transform calc(var(--_switch-duration-in) * var(--_switch-motion)) var(--_switch-ease-in);
+  }
+
+  /* Pressed: the track dips a little and springs back on release. */
+  [data-ds='switch']:not([data-disabled], [data-readonly]) > [data-part='control']:active > [data-part='track'] {
+    --_switch-track-scale: var(--_switch-track-press);
+
+    transition: transform calc(var(--_switch-duration-in) * var(--_switch-motion)) var(--_switch-ease-in);
   }
 
   [data-ds='switch'] > :is([data-part='label'], [data-part='state-text']) {
@@ -216,13 +278,15 @@
     --_switch-thumb-bg: var(--_switch-on-fill);
     --_switch-travel: calc(var(--_switch-width) - var(--_switch-height));
     --_switch-toward: -1;
+    --_switch-fill-now: 1;
+    --_switch-fill-scale: 1;
   }
 
   [data-ds='switch'][data-state='unchecked']:hover:not([data-disabled], [data-readonly], [data-invalid]) {
     --_switch-border-color: var(--_switch-border-color-hover);
   }
 
-  /* Focus: the glow and the 2px ring fade in. The transparent outline shows in forced colors mode. */
+  /* Focus: the glow and the 2px ring show at once (WCAG 2.4.7): the ring layer has no transition. The transparent outline shows in forced colors mode. */
   [data-ds='switch'] > [data-part='control']:focus-visible > [data-part='track'] {
     outline: var(--ds-border-width-strong) solid transparent;
     outline-offset: var(--ds-border-width-default);
@@ -261,13 +325,32 @@
   @media (prefers-reduced-motion: reduce) {
     [data-ds='switch'] {
       --_switch-stretch: 1;
+      --_switch-track-press: 1;
     }
 
     [data-ds='switch'] > [data-part='control']::before,
+    [data-ds='switch'] > [data-part='control'] > [data-part='track'],
+    [data-ds='switch'] > [data-part='control'] > [data-part='track'] > span:not([data-part]),
     [data-ds='switch'] > [data-part='control'] > [data-part='track'] > [data-part='thumb'],
+    [data-ds='switch']:not([data-disabled], [data-readonly]) > [data-part='control']:active > [data-part='track'],
     [data-ds='switch']:not([data-disabled], [data-readonly]) > [data-part='control']:active > [data-part='track'] > [data-part='thumb'] {
       transition: none;
     }
+  }
+
+  /* The page's own reduced motion setting (data-motion="reduce" on the root) gets the same reduced form. */
+  :root[data-motion='reduce'] [data-ds='switch'] {
+    --_switch-stretch: 1;
+    --_switch-track-press: 1;
+  }
+
+  :root[data-motion='reduce'] [data-ds='switch'] > [data-part='control']::before,
+  :root[data-motion='reduce'] [data-ds='switch'] > [data-part='control'] > [data-part='track'],
+  :root[data-motion='reduce'] [data-ds='switch'] > [data-part='control'] > [data-part='track'] > span:not([data-part]),
+  :root[data-motion='reduce'] [data-ds='switch'] > [data-part='control'] > [data-part='track'] > [data-part='thumb'],
+  :root[data-motion='reduce'] [data-ds='switch']:not([data-disabled], [data-readonly]) > [data-part='control']:active > [data-part='track'],
+  :root[data-motion='reduce'] [data-ds='switch']:not([data-disabled], [data-readonly]) > [data-part='control']:active > [data-part='track'] > [data-part='thumb'] {
+    transition: none;
   }
 
   /*
@@ -276,7 +359,8 @@
    * outline in the focus rule shows focus.
    */
   @media (forced-colors: active) {
-    [data-ds='switch'] > [data-part='control']::before {
+    [data-ds='switch'] > [data-part='control']::before,
+    [data-ds='switch'] > [data-part='control'] > [data-part='track'] > span:not([data-part]) {
       display: none;
     }
 

@@ -6,6 +6,9 @@
  *
  * Private properties (recipes override these):
  *
+ *   --_split-button-drop      how far the chevron drops toward its menu on
+ *                             hover while closed (interaction
+ *                             split-chevron), distance.nudge; 0px while open
  *   --_split-button-divider   the 1px seam between the halves, declared on
  *                             the root. A deliberate exception to rule 1:
  *                             the action redeclares it for solid and outline
@@ -24,6 +27,7 @@
 @layer ds.base {
   [data-ds='split-button'] {
     --_split-button-divider: var(--ds-color-border-default);
+    --_split-button-drop: 0px;
 
     display: inline-flex;
     flex-wrap: nowrap;
@@ -86,22 +90,40 @@
   /*
    * Some fills have no separate pressed color (neutral solid, Studio's
    * primary), so the open state is told by the chevron turning to point up,
-   * never by the fill alone. Under reduced motion the duration token is 0ms:
-   * it turns at once.
+   * never by the fill alone.
+   *
+   * Interaction split-chevron (order 1.22, proposed): the chevron turns
+   * half a turn on the snappy spring (Button.css times the icon part
+   * through --_button-turn), passing its mark a little and settling;
+   * Studio's spring is two steps. On hover while closed it drops
+   * distance.nudge toward the menu and springs back. Under reduced motion
+   * the duration tokens are 0ms: it turns at once.
    */
   [data-ds='split-button'] > [data-part='trigger'] > [data-part='icon'] {
-    transition: transform var(--ds-duration-quick) var(--ds-ease-default);
+    transform: translateY(var(--_split-button-drop)) rotate(var(--_button-turn)) scale(var(--_button-part-scale));
   }
 
-  [data-ds='split-button'] > [data-part='trigger'][data-state='open'] > [data-part='icon'] {
-    transform: rotate(0.5turn);
+  [data-ds='split-button']:not([data-disabled]) > [data-part='trigger'][data-state='closed']:hover {
+    --_split-button-drop: var(--ds-distance-nudge);
   }
 
   [data-ds='split-button'] > [data-part='trigger'][data-state='open'] {
+    --_button-turn: 0.5turn;
     --_button-bg: var(--_button-bg-active);
     --_button-bg-hover: var(--_button-bg-active);
     --_button-fg: var(--_button-fg-active);
     --_button-fg-hover: var(--_button-fg-active);
+  }
+
+  /*
+   * The pressed half answers, the other half does not move (interaction
+   * segment-press, order 1.22, proposed): a half never scales its box, so
+   * the seam stays shut; its parts dip to scale.anticipate while it is held
+   * and spring back on release.
+   */
+  [data-ds='split-button'] > :is([data-part='action'], [data-part='trigger']) {
+    --_button-press-scale: 1;
+    --_button-part-press: var(--ds-scale-anticipate);
   }
 
   /* ------------------------------------------------------------ inside an attached ButtonGroup */
@@ -134,9 +156,14 @@
   }
 
   @media (prefers-reduced-motion: reduce) {
-    [data-ds='split-button'] > [data-part='trigger'] > [data-part='icon'] {
-      transition: none;
+    [data-ds='split-button'] > :is([data-part='action'], [data-part='trigger']) {
+      --_button-part-press: 1;
     }
+  }
+
+  /* The page's own reduced motion setting (data-motion="reduce" on the root) gets the same reduced form. */
+  :root[data-motion='reduce'] [data-ds='split-button'] > :is([data-part='action'], [data-part='trigger']) {
+    --_button-part-press: 1;
   }
 
   /*

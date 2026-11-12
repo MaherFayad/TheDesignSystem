@@ -10,10 +10,35 @@
  *   --_link-thickness, -thickness-hover          the underline thickness
  *   --_link-font-size                            used only when data-size is set
  *   --_link-gap, -radius, -ring
+ *   --_link-duration-in, -ease-in                the draw of the hover line
+ *   --_link-duration-out, -ease-out              its retreat when the pointer leaves
+ *   --_link-draw                                 the hover line's scale now: 0, or 1
+ *                                                on hover and keyboard focus
+ *   --_link-draw-origin                          where the hover line grows from:
+ *                                                the inline start on hover, the
+ *                                                inline end as it leaves
+ *   --_link-shift                                how far the external icon nudges
+ *                                                toward where it leads on hover
+ *   --_link-nudge                                the external icon's nudge now
+ *   --_link-dir                                  1, or -1 in right to left text
+ *   --_link-motion                               1 plays the transitions, 0 turns them
+ *                                                off (a style's off row)
  *
  * The underline is drawn at rest and on hover, so a link in running text
  * never relies on color alone (WCAG 1.4.1). Hover makes it thicker and
- * brighter. Colors swap at once: nothing animates.
+ * brighter. Colors swap at once: only transform and opacity animate.
+ *
+ * Interaction link-underline (order 1.22, proposed): a link on its own line
+ * (standalone) keeps its thin rest underline (drawn as a ::before layer, so
+ * the two lines meet exactly) and, on hover or keyboard
+ * focus, a second line in the text color draws over it from the inline
+ * start (a scaleX on a decorative ::after layer of the label, origin at the
+ * inline start, so it runs right to left in Arabic) over duration.morph on
+ * ease.out; when the pointer leaves it retreats toward the inline end,
+ * faster, on ease.exit. A link in running text keeps the round 1 look (the
+ * underline thickens at once): a layer cannot follow a line break with a
+ * transform. The external icon nudges distance.nudge up and toward where
+ * it leads on the snappy spring.
  */
 @layer ds.base {
   [data-ds='link'] {
@@ -27,6 +52,16 @@
     --_link-gap: var(--ds-space-3xs);
     --_link-radius: var(--ds-radius-xs);
     --_link-ring: var(--ds-focus-shadow-ring);
+    --_link-duration-in: var(--ds-duration-morph);
+    --_link-ease-in: var(--ds-ease-out);
+    --_link-duration-out: var(--ds-duration-quick);
+    --_link-ease-out: var(--ds-ease-exit);
+    --_link-draw: 0;
+    --_link-draw-origin: 100% 50%;
+    --_link-shift: var(--ds-distance-nudge);
+    --_link-nudge: 0px;
+    --_link-dir: 1;
+    --_link-motion: 1;
 
     border-radius: var(--_link-radius);
     color: var(--_link-fg);
@@ -62,6 +97,72 @@
     overflow: hidden;
     clip-path: inset(50%);
     white-space: nowrap;
+  }
+
+  /* ------------------------------------------------------------ motion (order 1.22): the drawn line and the icon nudge */
+
+  [data-ds='link']:dir(rtl) {
+    --_link-dir: -1;
+    --_link-draw-origin: 0% 50%;
+  }
+
+  /* An inline block, so the icon can move; it holds the icon and the hidden words on one line, as before. */
+  [data-ds='link'] > [data-part='end'] {
+    display: inline-block;
+    transform: translate(calc(var(--_link-nudge) * var(--_link-dir)), calc(-1 * var(--_link-nudge)));
+    transition: transform calc(var(--ds-duration-spring-snappy) * var(--_link-motion)) var(--ds-ease-spring-snappy);
+  }
+
+  /*
+   * A standalone link draws its underline as a layer too (::before, always
+   * shown, the rest thickness and color), so the hover line (::after) lies
+   * exactly on it. The text decoration comes back in forced colors.
+   */
+  [data-ds='link'][data-standalone] > [data-part='label'] {
+    position: relative;
+    text-decoration-line: none;
+  }
+
+  [data-ds='link'][data-standalone] > [data-part='label']::before {
+    content: '';
+    position: absolute;
+    inset-inline: 0;
+    inset-block-end: 0;
+    block-size: var(--_link-thickness);
+    background-color: var(--_link-decoration);
+    pointer-events: none;
+  }
+
+  /* The hover line: the strong underline width, in the text color, at the foot of the label. Decorative: the rest underline is the cue. */
+  [data-ds='link'][data-standalone] > [data-part='label']::after {
+    content: '';
+    position: absolute;
+    inset-inline: 0;
+    inset-block-end: 0;
+    block-size: var(--_link-thickness-hover);
+    border-radius: var(--ds-radius-pill);
+    background-color: currentColor;
+    transform: scaleX(var(--_link-draw));
+    transform-origin: var(--_link-draw-origin);
+    transition: transform calc(var(--_link-duration-out) * var(--_link-motion)) var(--_link-ease-out);
+    pointer-events: none;
+  }
+
+  [data-ds='link'][data-standalone]:is(:hover, :focus-visible):not([data-disabled]) {
+    --_link-draw: 1;
+    --_link-draw-origin: 0% 50%;
+  }
+
+  [data-ds='link'][data-standalone]:dir(rtl):is(:hover, :focus-visible):not([data-disabled]) {
+    --_link-draw-origin: 100% 50%;
+  }
+
+  [data-ds='link'][data-standalone]:is(:hover, :focus-visible):not([data-disabled]) > [data-part='label']::after {
+    transition: transform calc(var(--_link-duration-in) * var(--_link-motion)) var(--_link-ease-in);
+  }
+
+  [data-ds='link']:is(:hover, :focus-visible):not([data-disabled]) {
+    --_link-nudge: var(--_link-shift);
   }
 
   /* ------------------------------------------------------------ sizes: none inherits the text around it */
@@ -108,6 +209,11 @@
     --_link-thickness: var(--_link-thickness-hover);
   }
 
+  /* A standalone link keeps its thin underline on hover: the drawn line above is its hover cue. */
+  [data-ds='link'][data-standalone]:hover:not([data-disabled]) {
+    --_link-thickness: var(--ds-border-width-default);
+  }
+
   /* The transparent outline is set only here, so forced colors mode draws it on focus and nowhere else. */
   [data-ds='link']:focus-visible {
     outline: var(--ds-border-width-strong) solid transparent;
@@ -123,9 +229,31 @@
 
   /* ------------------------------------------------------------ forced colors */
 
+  /* Reduced motion: the line shows at once (the duration tokens are 0ms) and the icon stays put. */
+  @media (prefers-reduced-motion: reduce) {
+    [data-ds='link'] {
+      --_link-shift: 0px;
+    }
+  }
+
+  /* The page's own reduced motion setting (data-motion="reduce" on the root) gets the same reduced form. */
+  :root[data-motion='reduce'] [data-ds='link'] {
+    --_link-shift: 0px;
+  }
+
   @media (forced-colors: active) {
     [data-ds='link'] > [data-part='label'] {
       text-decoration-color: currentColor;
+    }
+
+    /* The system draws the text underline; the layers would draw in author colors. */
+    [data-ds='link'][data-standalone] > [data-part='label'] {
+      text-decoration-line: underline;
+    }
+
+    [data-ds='link'][data-standalone] > [data-part='label']::before,
+    [data-ds='link'][data-standalone] > [data-part='label']::after {
+      display: none;
     }
 
     [data-ds='link']:focus-visible {

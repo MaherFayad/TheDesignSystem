@@ -1,3 +1,5 @@
+import { readFileSync } from 'node:fs';
+import { join } from 'node:path';
 import { fireEvent, render, screen } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 import { createRef } from 'react';
@@ -196,5 +198,35 @@ describe('Link', () => {
       </Theme>,
     );
     expect(screen.getByRole('link').textContent).toContain('، ');
+  });
+});
+
+describe('Link underline draw (interaction link-underline)', () => {
+  const css = readFileSync(join(process.cwd(), 'packages/css/src/components/Link.css'), 'utf8');
+
+  it('draws a decorative layer of a standalone link from the inline start, flipping in right to left text', () => {
+    expect(css).toContain("[data-ds='link'][data-standalone] > [data-part='label']::after {");
+    expect(css).toContain('transform: scaleX(var(--_link-draw));');
+    const hover = css.indexOf("[data-ds='link'][data-standalone]:is(:hover, :focus-visible):not([data-disabled]) {");
+    expect(css.slice(hover, css.indexOf('}', hover))).toContain('--_link-draw-origin: 0% 50%;');
+    const rtl = css.indexOf("[data-ds='link'][data-standalone]:dir(rtl):is(:hover, :focus-visible):not([data-disabled]) {");
+    expect(css.slice(rtl, css.indexOf('}', rtl))).toContain('--_link-draw-origin: 100% 50%;');
+  });
+
+  it('keeps the rest underline on a standalone link, so it never relies on color alone', () => {
+    render(
+      <Link href="/pricing" standalone>
+        Read the pricing guide
+      </Link>,
+    );
+    const link = screen.getByRole('link');
+    expect(link.querySelector('[data-part="label"]')).not.toBeNull();
+    expect(css).toContain('text-decoration-line: underline;');
+  });
+
+  it('turns the nudge off under data-motion reduce as under the media query (B2)', () => {
+    const at = css.indexOf(":root[data-motion='reduce'] [data-ds='link'] {");
+    expect(at).toBeGreaterThan(0);
+    expect(css.slice(at, css.indexOf('}', at))).toContain('--_link-shift: 0px;');
   });
 });

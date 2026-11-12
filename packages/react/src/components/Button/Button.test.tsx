@@ -1,4 +1,6 @@
-import { fireEvent, render, screen } from '@testing-library/react';
+import { readFileSync } from 'node:fs';
+import { join } from 'node:path';
+import { act, fireEvent, render, screen } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 import { createRef } from 'react';
 import { describe, expect, it, vi } from 'vitest';
@@ -313,5 +315,87 @@ describe('Button press (interaction button-press)', () => {
     fireEvent.keyDown(el, { key: 'Enter' });
     fireEvent.keyUp(el, { key: 'Enter' });
     expect(el.getAttribute('style')).toBeNull();
+  });
+});
+
+describe('Button loading morph (interaction button-loading)', () => {
+  interface Call {
+    el: Element;
+    frames: Keyframe[];
+    finish: () => void;
+  }
+  function mockAnimate() {
+    const calls: Call[] = [];
+    const animate = vi.fn(function (this: Element, frames: Keyframe[]) {
+      let finish = () => {};
+      const finished = new Promise<void>((resolve) => {
+        finish = resolve;
+      });
+      calls.push({ el: this, frames, finish: () => finish() });
+      return { id: '', playState: 'running', finished, cancel: vi.fn(), effect: { target: this } } as unknown as Animation;
+    });
+    Object.defineProperty(Element.prototype, 'animate', { configurable: true, value: animate });
+    return { calls, restore: () => Reflect.deleteProperty(Element.prototype, 'animate') };
+  }
+
+  it('rolls the label out and pops the spinner in, then brings the label back while the spinner leaves', async () => {
+    const { calls, restore } = mockAnimate();
+    try {
+      const { rerender } = render(<Button>Save changes</Button>);
+      const el = screen.getByRole('button');
+      rerender(<Button loading>Save changes</Button>);
+      expect(el.getAttribute('aria-busy')).toBe('true');
+      const label = el.querySelector('[data-part="label"]');
+      const spinner = el.querySelector('[data-part="spinner"]');
+      expect(JSON.stringify(calls.find((c) => c.el === label)?.frames)).toContain('translateY');
+      expect(JSON.stringify(calls.find((c) => c.el === spinner)?.frames)).toContain('--ds-scale-morph');
+      expect(JSON.stringify(calls.find((c) => c.el === el)?.frames)).toContain('--ds-scale-anticipate');
+      calls.length = 0;
+      rerender(<Button>Save changes</Button>);
+      // The state changes at once; the spinner stays for its exit only, hidden from assistive tech.
+      expect(el.hasAttribute('aria-busy')).toBe(false);
+      expect(el.querySelector('[data-part="status"]')).toBeNull();
+      const leaving = el.querySelector('[data-part="spinner"]');
+      expect(leaving?.getAttribute('aria-hidden')).toBe('true');
+      expect(calls.some((c) => c.el === leaving)).toBe(true);
+      expect(calls.some((c) => c.el === label)).toBe(true);
+      await act(async () => {
+        for (const c of calls) c.finish();
+        for (let i = 0; i < 5; i += 1) await Promise.resolve();
+      });
+      expect(el.querySelector('[data-part="spinner"]')).toBeNull();
+    } finally {
+      restore();
+    }
+  });
+
+  it('keeps no leaving spinner without the Web Animations API', () => {
+    const { rerender } = render(<Button loading>Save changes</Button>);
+    rerender(<Button>Save changes</Button>);
+    expect(screen.getByRole('button').querySelector('[data-part="spinner"]')).toBeNull();
+  });
+});
+
+describe('Button motion CSS (order 1.22 and the round 1 review)', () => {
+  const css = readFileSync(join(process.cwd(), 'packages/css/src/components/Button.css'), 'utf8');
+
+  it('holds scale(1) at rest, so a press of scale 1 starts no empty transition (N14)', () => {
+    const at = css.indexOf('--_button-duration-out: var(--ds-duration-spring-bouncy);');
+    expect(at).toBeGreaterThan(0);
+    expect(css.slice(at, css.indexOf('}', at))).toContain('transform: scale(1);');
+  });
+
+  it('turns the press, the dip and the nudge off under data-motion reduce as under the media query (B2)', () => {
+    const at = css.indexOf(":root[data-motion='reduce'] :is([data-ds='button']");
+    const block = css.slice(css.indexOf('{', css.indexOf('--_button-press-scale: 1;', at) - 400), css.indexOf('}', css.indexOf('--_button-press-scale: 1;', at)));
+    expect(at).toBeGreaterThan(0);
+    expect(block).toContain('--_button-press-scale: 1;');
+    expect(block).toContain('--_button-part-press: 1;');
+    expect(block).toContain('--_button-shift: 0px;');
+  });
+
+  it('springs back on release and multiplies every transition by the motion switch', () => {
+    expect(css).toContain('transition: transform calc(var(--_button-duration-out) * var(--_button-motion)) var(--_button-ease-out);');
+    expect(css).toContain('--_button-ease-out: var(--ds-ease-spring-bouncy);');
   });
 });

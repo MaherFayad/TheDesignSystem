@@ -4,6 +4,7 @@ import { fireEvent, render, screen } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 import { createRef } from 'react';
 import { describe, expect, it, vi } from 'vitest';
+import { Theme } from '../../theme';
 import { ButtonGroup } from '../ButtonGroup';
 import ToggleButtonDemo from './ToggleButton.demo';
 import { ToggleButton } from './index';
@@ -129,16 +130,108 @@ describe('ToggleButton press (interaction button-press)', () => {
       },
     });
     try {
-      render(<ToggleButton>Grid view</ToggleButton>);
+      render(
+        <Theme style="desk">
+          <ToggleButton>Grid view</ToggleButton>
+        </Theme>,
+      );
       const el = screen.getByRole('button');
       fireEvent.keyDown(el, { key: 'Enter' });
       fireEvent.click(el);
       fireEvent.keyUp(el, { key: 'Enter' });
       expect(el.getAttribute('aria-pressed')).toBe('true');
-      expect(frames).toHaveLength(2);
+      // The press and its release on the root, and the pop of the label (toggle-pop).
+      expect(frames).toHaveLength(3);
+      expect(JSON.stringify(frames[1])).toContain('--ds-scale-pop');
       expect(el.getAttribute('data-ds')).toBe('toggle-button');
     } finally {
       Reflect.deleteProperty(HTMLElement.prototype, 'animate');
+    }
+  });
+});
+
+describe('ToggleButton pop (interaction toggle-pop)', () => {
+  function mockAnimate() {
+    const calls: { el: Element; frames: Keyframe[] }[] = [];
+    Object.defineProperty(HTMLElement.prototype, 'animate', {
+      configurable: true,
+      value: function (this: Element, f: Keyframe[]) {
+        calls.push({ el: this, frames: f });
+        return { id: '', playState: 'running', finished: Promise.resolve(), cancel: () => {} } as unknown as Animation;
+      },
+    });
+    return { calls, restore: () => Reflect.deleteProperty(HTMLElement.prototype, 'animate') };
+  }
+
+  it('plays no pop in Studio, whose pop is reduced', () => {
+    const { calls, restore } = mockAnimate();
+    try {
+      render(
+        <Theme style="studio">
+          <ToggleButton>Grid view</ToggleButton>
+        </Theme>,
+      );
+      fireEvent.click(screen.getByRole('button'));
+      expect(calls).toHaveLength(0);
+    } finally {
+      restore();
+    }
+  });
+
+  it('pops the parts when turned on and lets them sink when turned off, never the root', () => {
+    const { calls, restore } = mockAnimate();
+    try {
+      render(
+        <Theme style="desk">
+          <ToggleButton start="grid">Grid view</ToggleButton>
+        </Theme>,
+      );
+      const el = screen.getByRole('button');
+      fireEvent.click(el);
+      expect(el.getAttribute('data-state')).toBe('on');
+      expect(calls.map((c) => c.el.getAttribute('data-part'))).toEqual(['start', 'label']);
+      expect(JSON.stringify(calls[0]?.frames)).toContain('--ds-scale-pop');
+      calls.length = 0;
+      fireEvent.click(el);
+      expect(el.getAttribute('data-state')).toBe('off');
+      expect(JSON.stringify(calls[0]?.frames)).toContain('--ds-scale-anticipate');
+      expect(calls.some((c) => c.el === el)).toBe(false);
+    } finally {
+      restore();
+    }
+  });
+
+  it('plays no pop under reduced motion, and the state still changes', () => {
+    const { calls, restore } = mockAnimate();
+    vi.stubGlobal('matchMedia', (q: string) => ({ matches: q.includes('reduce'), media: q, addEventListener() {}, removeEventListener() {} }));
+    try {
+      render(
+        <Theme style="desk">
+          <ToggleButton>Grid view</ToggleButton>
+        </Theme>,
+      );
+      const el = screen.getByRole('button');
+      fireEvent.click(el);
+      expect(el.getAttribute('aria-pressed')).toBe('true');
+      expect(calls).toHaveLength(0);
+    } finally {
+      restore();
+      vi.unstubAllGlobals();
+    }
+  });
+});
+
+describe('ToggleButton label without icon (review B3)', () => {
+  it('warns in development when label is given without icon, since it is dropped', () => {
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    try {
+      render(<ToggleButton label="Bold">Bold</ToggleButton>);
+      expect(warn).toHaveBeenCalledWith(expect.stringContaining('ToggleButton: label'));
+      warn.mockClear();
+      render(<ToggleButton icon="grid" label="Grid view" />);
+      expect(warn).not.toHaveBeenCalled();
+    } finally {
+      warn.mockRestore();
     }
   });
 });

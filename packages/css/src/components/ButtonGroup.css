@@ -113,6 +113,30 @@
   }
 
   /*
+   * The pressed segment answers, the neighbor does not move (interaction
+   * segment-press, order 1.22, proposed). An attached child never scales
+   * its box, so no seam opens and no neighbor shifts: its parts (icon,
+   * start, label, end) dip to scale.anticipate while it is held and spring
+   * back on release on Button's snappy spring. A spaced group keeps the
+   * whole button press.
+   */
+  [data-ds='button-group'][data-attached] > :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button'], [data-ds='copy-button'], [data-ds='close-button']) {
+    --_button-press-scale: 1;
+    --_button-part-press: var(--ds-scale-anticipate);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    [data-ds='button-group'][data-attached] > :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button'], [data-ds='copy-button'], [data-ds='close-button']) {
+      --_button-part-press: 1;
+    }
+  }
+
+  /* The page's own reduced motion setting (data-motion="reduce" on the root) gets the same reduced form. */
+  :root[data-motion='reduce'] [data-ds='button-group'][data-attached] > :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button'], [data-ds='copy-button'], [data-ds='close-button']) {
+    --_button-part-press: 1;
+  }
+
+  /*
    * Forced colors drop the box shadow ring and draw Button's focus outline
    * instead (Button.css). Pull it inside the child too, so the next child
    * does not cover it. The seam needs nothing: the system draws every
