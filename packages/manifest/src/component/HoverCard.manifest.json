@@ -1,0 +1,203 @@
+{
+  "name": "HoverCard",
+  "kind": "component",
+  "family": "overlays",
+  "summary": "A read only preview card for a link or a person, shown on hover and on keyboard focus of the link. The link works on its own; the card only saves a click.",
+  "useWhen": [
+    "A preview of a person behind a name link (avatar, role, a line of bio)",
+    "A preview of a page, a file or a board behind a link in running text",
+    "Extra context that sighted pointer users like to peek at, and that the link target also shows"
+  ],
+  "avoidWhen": [
+    "Content with actions or fields a person must use",
+    "The only place some information or a link is reachable",
+    "A one line hint for a control",
+    "Touch first screens, where nothing hovers"
+  ],
+  "insteadUse": {
+    "Interactive content or actions": "Popover",
+    "One line hint for a control": "Tooltip",
+    "Information needed to finish a task": "Field description",
+    "Content a person must read": "Dialog"
+  },
+  "anatomy": [
+    "root",
+    "arrow",
+    "body"
+  ],
+  "parts": {
+    "HoverCardContent": "root"
+  },
+  "slots": {
+    "body": {
+      "accepts": "any"
+    }
+  },
+  "props": {
+    "open": {
+      "type": "boolean",
+      "description": "Controlled open state, with onOpenChange."
+    },
+    "defaultOpen": {
+      "type": "boolean",
+      "default": false
+    },
+    "onOpenChange": {
+      "type": "function"
+    },
+    "size": {
+      "type": [
+        "sm",
+        "md"
+      ],
+      "default": "md",
+      "description": "The width: sm 240 (tooltip.width.max), md 320 px (menu.width.min times 1.6)."
+    },
+    "openDelay": {
+      "type": "number",
+      "default": 500,
+      "description": "Open delay on hover in ms. Focus opens at once."
+    },
+    "closeDelay": {
+      "type": "number",
+      "default": 300,
+      "description": "Close delay in ms after the pointer leaves the link and the card."
+    },
+    "side": {
+      "type": [
+        "top",
+        "bottom",
+        "start",
+        "end"
+      ],
+      "default": "bottom",
+      "description": "HoverCardContent: the preferred side. start and end follow the reading direction. It flips when there is no room."
+    },
+    "align": {
+      "type": [
+        "start",
+        "center",
+        "end"
+      ],
+      "default": "start",
+      "description": "HoverCardContent: alignment along the link, mirrored in right to left layouts."
+    },
+    "sideOffset": {
+      "type": "number",
+      "default": 8
+    },
+    "arrow": {
+      "type": "boolean",
+      "default": true
+    },
+    "hideWhenDetached": {
+      "type": "boolean",
+      "default": true,
+      "description": "HoverCardContent: hides the card while its link is out of view or hidden."
+    },
+    "HoverCardTrigger": {
+      "type": "node",
+      "description": "One child element, a link that works on its own (always asChild). Hover and focus open the card."
+    }
+  },
+  "states": [
+    "open",
+    "closed"
+  ],
+  "a11y": {
+    "role": "No role: a visual preview next to the link. The trigger gets no aria-describedby; the card is not announced and takes no focus.",
+    "focus": "Never takes focus. Keyboard focus on the link opens the card; focus stays on the link. Links inside the card are taken out of the tab order (tabindex -1).",
+    "keys": {
+      "Escape": "Hides the card; focus stays on the link"
+    },
+    "announce": "Nothing: the card is a visual preview. Screen reader users follow the link to the full page.",
+    "notes": [
+      "The card is never the only way to reach its content or its links: the link target shows the same and more.",
+      "WCAG 1.4.13: hoverable (the pointer can move onto the card), dismissable with Escape, persistent until the pointer leaves both or focus leaves the link.",
+      "The root carries data-side and data-align from Radix; data-side is physical after the logical side prop is mapped by direction.",
+      "The gallery demo sets openDelay 0 so the contract suite and screenshots open a card with one hover; products keep the 500 ms default.",
+      "A card short of room scrolls inside, and the keyboard cannot scroll it (the card takes no focus). That is acceptable only because the link target repeats the content; keep cards short."
+    ]
+  },
+  "content": {
+    "en": {
+      "body": "Short facts in sentence case: the name and handle, one line of bio, one line of meta. An empty field says so: No bio yet."
+    },
+    "ar": {
+      "body": "Short facts, no diacritics, Western digits: سارة أحمد، 12 لوحة."
+    }
+  },
+  "tokens": [
+    "menu.width.min",
+    "tooltip.width.max",
+    "color.bg.surface",
+    "color.text.default",
+    "color.border.default",
+    "color.border.strong",
+    "color.material.glass-strong",
+    "color.material.glass-border",
+    "radius.panel",
+    "elevation.menu",
+    "elevation.window-soft",
+    "blur.window",
+    "border.width.default",
+    "space.2xs",
+    "space.m",
+    "space.l",
+    "space.xl",
+    "space.2xl",
+    "font.family.sans",
+    "font.size.m",
+    "font.leading.normal",
+    "scale.press",
+    "duration.base",
+    "duration.fast",
+    "ease.out",
+    "ease.exit",
+    "z.menu"
+  ],
+  "motion": "menu-scale",
+  "frameworks": {
+    "react": {
+      "status": "ready",
+      "behavior": "radix:HoverCard",
+      "example": "HoverCard.demo.tsx",
+      "note": "Shares the themed portal and side mapping of Popover (FloatingLayer.tsx)."
+    },
+    "angular": {
+      "status": "planned",
+      "behavior": "cdk:overlay"
+    },
+    "native": {
+      "status": "not-applicable",
+      "note": "Nothing hovers on touch screens: the link opens the page directly."
+    }
+  },
+  "styles": {
+    "studio": "The Popover surface: color.bg.surface, the default border, the panel radius and the menu shadow, with the arrow. Grows from 97% out of the link side.",
+    "desk": "Glass: the strong glass fill, the glass border, the window blur and the soft window shadow (recipe).",
+    "neutral": "Planned.",
+    "liquid": "Planned."
+  },
+  "mistakes": [
+    {
+      "wrong": "A Follow button inside the hover card",
+      "right": "A Popover, or the button on the profile page"
+    },
+    {
+      "wrong": "A hover card on a span that does not take focus",
+      "right": "A link as the trigger, so focus opens it too"
+    },
+    {
+      "wrong": "Facts that appear only in the hover card",
+      "right": "The same facts on the page the link opens"
+    }
+  ],
+  "contract": {
+    "trigger": "[data-demo-trigger]",
+    "optionalParts": [
+      "arrow"
+    ]
+  },
+  "since": "0.1.0"
+}
