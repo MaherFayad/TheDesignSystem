@@ -1,0 +1,176 @@
+/*
+ * Section: a titled region of a page or panel, optionally collapsible.
+ * Source: Figma-Killer-2 `Section/` (the inspector section): no fill, no
+ * radius, a hairline between neighbours, a strong small title, trailing
+ * actions outside the toggle.
+ *
+ * Private properties on the root (recipes override these):
+ *   --_section-gap            space between header and body, and in the header row
+ *   --_section-header-height  the least height of the header row
+ *   --_section-font-size      the title size
+ *   --_section-fg             the title color
+ *   --_section-description-size, --_section-description-fg
+ *   --_section-border-color   the hairline above a section that follows another
+ *
+ * The toggle is a system Button (data-ds="button" data-part="toggle"). This
+ * file restyles it through the Button's private properties, as the anatomy
+ * contract allows a parent to do. Two declarations have no private property
+ * in Button.css (the start alignment of the row and of a wrapped label), so
+ * they are written on the toggle directly. A request to add them as
+ * properties is in docs/reports/lanes/lane-8b.md.
+ *
+ * Motion: accordion-height. The opening body fades in and slides from a
+ * little above (transform and opacity only, never height). Closing is
+ * instant: Radix unmounts a closed body at once when it has no animation, so
+ * nothing waits on animationend.
+ */
+@layer ds.base {
+  [data-ds='section'] {
+    --_section-gap: var(--ds-space-m);
+    --_section-header-height: var(--ds-size-control-md);
+    --_section-font-size: var(--ds-font-size-xl);
+    --_section-fg: var(--ds-color-text-bright);
+    --_section-description-size: var(--ds-font-size-s);
+    --_section-description-fg: var(--ds-color-text-muted);
+    --_section-border-color: var(--ds-color-border-hairline);
+
+    display: flex;
+    flex-direction: column;
+    gap: var(--_section-gap);
+    box-sizing: border-box;
+    min-inline-size: 0;
+    margin: 0;
+    padding: 0;
+    color: var(--ds-color-text-default);
+  }
+
+  [data-ds='section'][data-size='sm'] {
+    --_section-gap: var(--ds-space-s);
+    --_section-header-height: var(--ds-size-control-sm);
+    --_section-font-size: var(--ds-font-size-s);
+    --_section-description-size: var(--ds-font-size-xs);
+  }
+
+  /* A section that follows another is set off by a hairline, drawn on the section itself (the source). */
+  [data-ds='section'] + [data-ds='section'] {
+    margin-block-start: var(--_section-gap);
+    padding-block-start: var(--_section-gap);
+    border-block-start: var(--ds-border-width-default) solid var(--_section-border-color);
+  }
+
+  /* ------------------------------------------------------------ header */
+
+  [data-ds='section'] > [data-part='header'] {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    align-items: center;
+    column-gap: var(--_section-gap);
+    row-gap: var(--ds-space-3xs);
+    min-block-size: var(--_section-header-height);
+  }
+
+  [data-ds='section'] > [data-part='header']:has(> [data-part='actions']) {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  [data-ds='section'] > [data-part='header'] > [data-part='title'] {
+    grid-row: 1;
+    grid-column: 1;
+    min-inline-size: 0;
+    margin: 0;
+    color: var(--_section-fg);
+    font-family: inherit;
+    font-size: var(--_section-font-size);
+    font-weight: var(--ds-font-weight-bold);
+    line-height: var(--ds-font-leading-snug);
+    letter-spacing: var(--ds-font-tracking-none);
+    overflow-wrap: anywhere;
+  }
+
+  [data-ds='section'] > [data-part='header'] > [data-part='actions'] {
+    display: flex;
+    grid-row: 1;
+    grid-column: 2;
+    flex: none;
+    align-items: center;
+    gap: var(--ds-space-2xs);
+    color: var(--ds-color-text-muted);
+  }
+
+  [data-ds='section'] > [data-part='header'] > [data-part='description'] {
+    grid-row: 2;
+    grid-column: 1;
+    min-inline-size: 0;
+    margin: 0;
+    color: var(--_section-description-fg);
+    font-size: var(--_section-description-size);
+    line-height: var(--ds-font-leading-normal);
+    overflow-wrap: anywhere;
+  }
+
+  /* With a toggle, the description lines up with the title text, past the chevron. */
+  [data-ds='section'][data-state] > [data-part='header'] > [data-part='description'] {
+    padding-inline-start: calc(var(--ds-size-icon-md) + var(--ds-space-2xs));
+  }
+
+  /* ------------------------------------------------------------ toggle (a ghost Button) */
+
+  [data-ds='section'] > [data-part='header'] > [data-part='title'] > [data-part='toggle'] {
+    --_button-height: var(--_section-header-height);
+    --_button-padding-inline: var(--ds-space-2xs);
+    --_button-gap: var(--ds-space-2xs);
+    --_button-font-size: var(--_section-font-size);
+    --_button-fg: var(--_section-fg);
+    --_button-fg-hover: var(--_section-fg);
+    --_button-fg-active: var(--_section-fg);
+
+    /* No private property covers these two in Button.css: see the file header. */
+    justify-content: flex-start;
+
+    /* The hover fill reaches past the chevron; the chevron itself sits on the section's start edge. */
+    margin-inline-start: calc(-1 * var(--ds-space-2xs));
+  }
+
+  [data-ds='section'] > [data-part='header'] > [data-part='title'] > [data-part='toggle'] > [data-part='label'] {
+    text-align: start;
+  }
+
+  [data-ds='section'] > [data-part='header'] > [data-part='title'] > [data-part='toggle'] > [data-part='start'] {
+    color: var(--ds-color-text-muted);
+  }
+
+  /* ------------------------------------------------------------ body */
+
+  [data-ds='section'] > [data-part='body'] {
+    min-inline-size: 0;
+  }
+
+  [data-ds='section'] > [data-part='body'][data-state='open'] {
+    animation: ds-section-reveal var(--ds-duration-base) var(--ds-ease-out);
+  }
+
+  @keyframes ds-section-reveal {
+    from {
+      opacity: 0;
+      transform: translateY(calc(-1 * var(--ds-space-xs)));
+    }
+  }
+
+  @keyframes ds-section-fade {
+    from {
+      opacity: 0;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    [data-ds='section'] > [data-part='body'][data-state='open'] {
+      animation-name: ds-section-fade;
+    }
+  }
+
+  @media (forced-colors: active) {
+    [data-ds='section'] + [data-ds='section'] {
+      border-block-start-color: CanvasText;
+    }
+  }
+}

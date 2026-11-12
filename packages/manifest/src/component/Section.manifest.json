@@ -1,0 +1,232 @@
+{
+  "name": "Section",
+  "kind": "component",
+  "family": "layout",
+  "summary": "A titled region of a page or panel: a heading at a level you set, an optional description and actions, and a body that can collapse.",
+  "useWhen": [
+    "A page or a settings screen splits into titled groups",
+    "An inspector or side panel has groups of properties the user opens and closes",
+    "A group needs header actions next to its title, such as add or a menu"
+  ],
+  "avoidWhen": [
+    "Several groups where only one may be open at a time",
+    "Switching between views of the same content",
+    "A box that needs its own background or border",
+    "A hint that shows and hides one short line"
+  ],
+  "insteadUse": {
+    "Only one group open at a time": "Accordion",
+    "Views of the same content": "Tabs",
+    "A box with a fill or border": "Surface",
+    "A clickable tile with a title": "Card",
+    "Show and hide one short line": "Collapsible"
+  },
+  "anatomy": [
+    "root",
+    "header",
+    "title",
+    "description",
+    "actions",
+    "toggle",
+    "body"
+  ],
+  "slots": {
+    "title": {
+      "accepts": "text",
+      "min": 1,
+      "max": 1
+    },
+    "description": {
+      "accepts": "text",
+      "max": 1
+    },
+    "actions": {
+      "accepts": [
+        "IconButton",
+        "Button"
+      ],
+      "max": 3
+    },
+    "body": {
+      "accepts": "any"
+    }
+  },
+  "props": {
+    "title": {
+      "type": "node",
+      "description": "The title. Required. It is the toggle's name when collapsible."
+    },
+    "level": {
+      "type": [
+        "1",
+        "2",
+        "3",
+        "4",
+        "5",
+        "6"
+      ],
+      "description": "The heading level of the title, h1 to h6. Required, no default: it follows the page outline and is never guessed. React takes the numbers."
+    },
+    "description": {
+      "type": "node",
+      "description": "A line under the title. The toggle points aria-describedby at it."
+    },
+    "actions": {
+      "type": "node",
+      "description": "Trailing header actions, outside the toggle."
+    },
+    "size": {
+      "type": [
+        "sm",
+        "md"
+      ],
+      "default": "md",
+      "description": "sm for panels and inspectors, md for pages."
+    },
+    "collapsible": {
+      "type": "boolean",
+      "default": false,
+      "description": "The title becomes a toggle that shows and hides the body. With no children there is nothing to disclose, so the header draws alone, with no toggle."
+    },
+    "open": {
+      "type": "boolean",
+      "description": "Controlled open state, with collapsible."
+    },
+    "defaultOpen": {
+      "type": "boolean",
+      "default": true,
+      "description": "Open state on first render, uncontrolled."
+    },
+    "onOpenChange": {
+      "type": "function",
+      "description": "Called with the next open state."
+    },
+    "landmark": {
+      "type": "boolean",
+      "default": false,
+      "description": "Names the section with its title (aria-labelledby), which makes it a region landmark."
+    }
+  },
+  "states": [
+    "open",
+    "closed"
+  ],
+  "a11y": {
+    "role": "No role of its own: a section element, which is a region landmark only with landmark set. The title is a heading at level. The toggle is a button with aria-expanded and aria-controls.",
+    "focus": "A static section is not focusable. A collapsible one puts the toggle in the tab order, then the actions, then the body content.",
+    "keys": {
+      "Tab": "Moves to the toggle, then the header actions, then the body",
+      "Enter": "On the toggle: opens or closes the body",
+      "Space": "On the toggle: opens or closes the body"
+    },
+    "announce": "The heading at its level, then the toggle as a button with its expanded state and description. A closed body is hidden from everyone.",
+    "native": {
+      "accessibilityRole": "header",
+      "accessibilityState": [
+        "expanded"
+      ]
+    },
+    "notes": [
+      "The toggle sits inside the heading (the disclosure pattern), so the heading keeps its place in the outline.",
+      "Header actions are siblings of the toggle, never inside it: a control inside a control is invalid and unreachable by keyboard.",
+      "The chevron points forward when closed and down when open. chevron-forward mirrors in right to left layouts."
+    ]
+  },
+  "content": {
+    "en": {
+      "title": "A noun or short noun phrase in sentence case: Billing, Notifications.",
+      "description": "One sentence that says what is inside. No period after a fragment."
+    },
+    "ar": {
+      "title": "Noun form, no diacritics: الفوترة، الإشعارات.",
+      "description": "White Saudi dialect, one short sentence."
+    }
+  },
+  "tokens": [
+    "space.3xs",
+    "space.2xs",
+    "space.xs",
+    "space.s",
+    "space.m",
+    "size.control.sm",
+    "size.control.md",
+    "size.icon.md",
+    "font.size.xs",
+    "font.size.s",
+    "font.size.xl",
+    "font.weight.bold",
+    "font.leading.snug",
+    "font.leading.normal",
+    "font.tracking.none",
+    "color.text.default",
+    "color.text.bright",
+    "color.text.muted",
+    "color.border.hairline",
+    "border.width.default",
+    "duration.base",
+    "ease.out"
+  ],
+  "motion": "accordion-height",
+  "frameworks": {
+    "react": {
+      "status": "ready",
+      "behavior": "radix:Collapsible",
+      "example": "Section.demo.tsx"
+    },
+    "angular": {
+      "status": "planned",
+      "behavior": "cdk:accordion item (single, not grouped)",
+      "note": "Same DOM: the toggle is a dsButton inside the heading. Section.css is used as is."
+    },
+    "native": {
+      "status": "planned",
+      "behavior": "Pressable header with accessibilityState expanded",
+      "note": "The body collapses with the accordion-height preset of the style."
+    }
+  },
+  "styles": {
+    "studio": "No fill, no radius, a hairline between sections, a bold small title (the inspector section).",
+    "desk": "The same on the glass of a window. The toggle is a square ghost button with no roll label.",
+    "neutral": "The same structure, with the Neutral hairline and type scale.",
+    "liquid": "Content stays solid: a Section is never glass."
+  },
+  "mistakes": [
+    {
+      "wrong": "An IconButton for add placed inside the toggle",
+      "right": "The actions prop, beside the toggle"
+    },
+    {
+      "wrong": "Guessing the heading level from nesting",
+      "right": "Set level from the page outline"
+    },
+    {
+      "wrong": "A collapsible section with nothing inside and a chevron that opens an empty body",
+      "right": "Pass no children: the header draws alone"
+    },
+    {
+      "wrong": "Every section as a landmark",
+      "right": "landmark only for a few regions a user would jump to"
+    }
+  ],
+  "contract": {
+    "optionalParts": [
+      "description",
+      "actions",
+      "toggle",
+      "body"
+    ],
+    "keys": {
+      "Enter": {
+        "focus": "[data-part='toggle']",
+        "case": "variants",
+        "expect": "state-changes"
+      },
+      "Space": {
+        "focus": "[data-part='toggle']",
+        "case": "variants",
+        "expect": "state-changes"
+      }
+    }
+  },
+  "since": "0.1.0"
+}
