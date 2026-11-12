@@ -52,6 +52,8 @@ describe('DsOTPField', () => {
     expect(input.value).toBe('48');
     expect(cells('code').length).toBe(6);
     expect(cells('code').map((c) => c.textContent)).toEqual(['4', '8', '', '', '', '']);
+    // Each filled character sits in its own span (the otp-fill target), as React; an empty cell has none.
+    expect(cells('code').map((c) => c.firstElementChild?.tagName ?? null)).toEqual(['SPAN', 'SPAN', null, null, null, null]);
     expect(cells('code').every((c) => c.getAttribute('aria-hidden') === 'true')).toBe(true);
     expect(cells('code').map((c) => c.hasAttribute('data-filled'))).toEqual([true, true, false, false, false, false]);
     const order = Array.from(el.children).map((c) => c.getAttribute('data-part'));

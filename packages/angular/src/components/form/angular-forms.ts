@@ -3,34 +3,99 @@
 // has a ControlContainer on the same element. dsForm reads the errors of its
 // controls here and maps them, with the browser's checks and the custom
 // validators, through collectErrors in packages/shared/src/form.ts.
+//
+// The built in Angular validators map to the same Form copy as the
+// browser's constraint flags in React's Form: `min` says rangeUnderflow,
+// `minlength` says tooShort, `pattern` says patternMismatch, `email` says
+// typeMismatch for email, and so on. An error whose value is a string, or
+// an object with a `message` string, is a custom validator: it says that
+// text and wins over a built in message, as a Form validator does in React.
 import type { AbstractControl, ValidationErrors } from '@angular/forms';
 import type { FormErrors } from '@the-system/shared';
 
 export interface AngularErrorWords {
   /** The message of the `required` and `requiredTrue` errors. */
   required: string;
-  /** The message of an error that carries no text of its own. */
+  /** The message of an error that carries no text of its own and has no copy below. */
   invalid: string;
+  /** `email`. Called with "email". */
+  typeMismatch?: (type: string) => string;
+  /** `pattern`. */
+  patternMismatch?: string;
+  /** `minlength`, from requiredLength. */
+  tooShort?: (min: number) => string;
+  /** `maxlength`, from requiredLength. */
+  tooLong?: (max: number) => string;
+  /** `min`. */
+  rangeUnderflow?: (min: string) => string;
+  /** `max`. */
+  rangeOverflow?: (max: string) => string;
+}
+
+/** Which bucket an error goes to: required wins over the custom validators, which win over the built in constraints. */
+export type AngularErrorKind = 'required' | 'custom' | 'constraint';
+
+function textOf(value: unknown): string | undefined {
+  if (typeof value === 'string' && value.trim() !== '') return value;
+  if (value && typeof value === 'object' && typeof (value as { message?: unknown }).message === 'string') {
+    return (value as { message: string }).message;
+  }
+  return undefined;
+}
+
+function field(value: unknown, key: string): string {
+  const v = value && typeof value === 'object' ? (value as Record<string, unknown>)[key] : undefined;
+  return v === undefined || v === null ? '' : String(v);
+}
+
+/** The copy for one built in Angular error key, or undefined for a key with no copy. */
+function builtIn(key: string, value: unknown, words: AngularErrorWords): string | undefined {
+  switch (key) {
+    case 'email':
+      return words.typeMismatch?.('email');
+    case 'pattern':
+      return words.patternMismatch;
+    case 'minlength':
+      return words.tooShort?.(Number(field(value, 'requiredLength')));
+    case 'maxlength':
+      return words.tooLong?.(Number(field(value, 'requiredLength')));
+    case 'min':
+      return words.rangeUnderflow?.(field(value, 'min'));
+    case 'max':
+      return words.rangeOverflow?.(field(value, 'max'));
+    default:
+      return undefined;
+  }
 }
 
 /**
- * The message for one control's errors. `required` uses the form's words;
- * an error whose value is a string, or an object with a `message` string,
- * says that text (a custom validator can return `{ workEmail: 'Use your
- * work email.' }`); any other error uses the invalid words.
+ * The message and its kind for one control's errors. `required` and
+ * `requiredTrue` say `requiredMessage`, or the form's required words; a
+ * custom error with text says that text; a built in key says its copy; any
+ * other error says the invalid words.
  */
-export function messageOf(errors: ValidationErrors, words: AngularErrorWords): string | undefined {
+export function describeErrors(
+  errors: ValidationErrors,
+  words: AngularErrorWords,
+  requiredMessage?: string,
+): { message: string; kind: AngularErrorKind } | undefined {
   const keys = Object.keys(errors);
   if (keys.length === 0) return undefined;
-  if ('required' in errors || 'requiredTrue' in errors) return words.required;
+  if ('required' in errors || 'requiredTrue' in errors) return { message: requiredMessage ?? words.required, kind: 'required' };
   for (const key of keys) {
-    const value: unknown = errors[key];
-    if (typeof value === 'string' && value.trim() !== '') return value;
-    if (value && typeof value === 'object' && typeof (value as { message?: unknown }).message === 'string') {
-      return (value as { message: string }).message;
-    }
+    const text = textOf(errors[key]);
+    if (text !== undefined) return { message: text, kind: 'custom' };
   }
-  return words.invalid;
+  for (const key of keys) {
+    const text = builtIn(key, errors[key], words);
+    if (text !== undefined) return { message: text, kind: 'constraint' };
+  }
+  return { message: words.invalid, kind: 'constraint' };
+}
+
+/** The message for one control's errors. See describeErrors. */
+export function messageOf(errors: ValidationErrors, words: AngularErrorWords, requiredMessage?: string): string | undefined {
+  return describeErrors(errors, words, requiredMessage)?.message;
 }
 
 /** The leaf controls of a group or array, by dotted path. A disabled control is skipped, as the browser skips one. */
@@ -46,15 +111,34 @@ export function leafControls(control: AbstractControl, prefix = ''): [string, Ab
   return out;
 }
 
-/** Errors of every enabled leaf control, by dotted path. */
-export function angularErrors(root: AbstractControl | null | undefined, words: AngularErrorWords): FormErrors {
-  const out: FormErrors = {};
+/**
+ * Errors of every enabled leaf control, by dotted path and kind.
+ * `requiredFor` gives the required message of a path: a box to tick, an
+ * option to pick, or a message a ConsentField set.
+ */
+export function angularErrorsByKind(
+  root: AbstractControl | null | undefined,
+  words: AngularErrorWords,
+  requiredFor?: (path: string) => string | undefined,
+): Record<AngularErrorKind, FormErrors> {
+  const out: Record<AngularErrorKind, FormErrors> = { required: {}, custom: {}, constraint: {} };
   if (!root) return out;
   for (const [path, control] of leafControls(root)) {
-    const message = control.errors ? messageOf(control.errors, words) : undefined;
-    if (message !== undefined) out[path] = message;
+    if (!control.errors) continue;
+    const found = describeErrors(control.errors, words, requiredFor?.(path));
+    if (found !== undefined) out[found.kind][path] = found.message;
   }
   return out;
+}
+
+/** Errors of every enabled leaf control, by dotted path. */
+export function angularErrors(
+  root: AbstractControl | null | undefined,
+  words: AngularErrorWords,
+  requiredFor?: (path: string) => string | undefined,
+): FormErrors {
+  const { required, custom, constraint } = angularErrorsByKind(root, words, requiredFor);
+  return { ...constraint, ...custom, ...required };
 }
 
 /** The control at a dotted path, or null. */

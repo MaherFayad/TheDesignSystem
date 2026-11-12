@@ -41,7 +41,7 @@ const steps = [
   'Select Export board',
 ];
 
-const GRID = 'grid-template-columns: repeat(auto-fill, minmax(18rem, 1fr));';
+const GRID = 'grid-template-columns: repeat(auto-fill, minmax(min(18rem, 100%), 1fr));';
 
 @Component({
   selector: 'div[data-demo=page]',

@@ -67,7 +67,7 @@ export class SkeletonLoadDemo {
       <div>
         <span role="status" style="${HIDDEN}" data-demo="loading-status">Loading variants</span>
         <div aria-busy="true" aria-label="Variants" role="group">
-          <div data-demo="grid" style="grid-template-columns: repeat(auto-fill, minmax(14rem, 1fr));">
+          <div data-demo="grid" style="grid-template-columns: repeat(auto-fill, minmax(min(14rem, 100%), 1fr));">
             <div>
               <span dsSkeleton size="sm"></span>
               <span dsSkeleton size="md"></span>
@@ -123,7 +123,7 @@ export class SkeletonLoadDemo {
       <div>
         <span role="status" style="${HIDDEN}" data-demo="loading-status">Loading files</span>
         <div aria-busy="true" aria-label="Files" role="group">
-          <div data-demo="grid" style="grid-template-columns: repeat(auto-fill, minmax(8rem, 1fr));">
+          <div data-demo="grid" style="grid-template-columns: repeat(auto-fill, minmax(min(8rem, 100%), 1fr));">
             @for (i of twelve; track i) {
               <div>
                 <span dsSkeleton variant="rect" [height]="72"></span>

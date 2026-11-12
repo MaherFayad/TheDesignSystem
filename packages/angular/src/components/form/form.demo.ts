@@ -7,6 +7,7 @@ import type { FormValidators } from '@the-system/shared';
 import { DEMO, sample } from '../../demo/demo';
 import { DsTheme } from '../../theme/theme';
 import { DsButton } from '../button/button';
+import { DsCheckbox } from '../checkbox/checkbox';
 import { DS_DIALOG } from '../dialog/dialog';
 import { DsFieldset } from '../fieldset/fieldset';
 import { DsInput } from '../input/input';
@@ -18,6 +19,11 @@ const wait = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 const workEmail: FormValidators = {
   email: (v) => (typeof v === 'string' && /@(gmail|hotmail|yahoo)\./i.test(v) ? 'Use your work email, not a personal one.' : undefined),
+};
+
+const addressChecks: FormValidators = {
+  postal: (v) => (typeof v === 'string' && v !== '' && !/^[0-9]{5}$/.test(v) ? 'Enter the 5 digit postal code.' : undefined),
+  reach: (v) => (v === undefined ? 'Pick at least one way to reach you.' : undefined),
 };
 
 const longFields: [string, string, string][] = [
@@ -39,7 +45,7 @@ let nextId = 0;
 
 @Component({
   selector: 'div[data-demo=page]',
-  imports: [DEMO, NgTemplateOutlet, DsTheme, DsButton, DS_DIALOG, DsFieldset, DsInput, DsForm, DsFormField, DsFormSubmit],
+  imports: [DEMO, NgTemplateOutlet, DsTheme, DsButton, DsCheckbox, DS_DIALOG, DsFieldset, DsInput, DsForm, DsFormField, DsFormSubmit],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <ng-template #contact let-size="size" let-orientation="orientation">
@@ -57,7 +63,7 @@ let nextId = 0;
     <section data-demo="case" data-demo-case="variants" heading="Sizes, horizontal labels, and an Arabic row">
       <div dsTheme [lang]="'en'" data-demo="content">
         <p data-demo="label">Fields marked * are required.</p>
-        <div data-demo="grid" style="grid-template-columns: repeat(auto-fill, minmax(18rem, 1fr));">
+        <div data-demo="grid" style="grid-template-columns: repeat(auto-fill, minmax(min(18rem, 100%), 1fr));">
           <ng-container *ngTemplateOutlet="contact; context: { size: 'sm' }" />
           <ng-container *ngTemplateOutlet="contact; context: { size: 'md' }" />
           <ng-container *ngTemplateOutlet="contact; context: { size: 'lg' }" />
@@ -101,7 +107,7 @@ let nextId = 0;
 
     <section data-demo="case" data-demo-case="many" heading="Sections in fieldsets">
       <div dsTheme [lang]="'en'" data-demo="content">
-        <form dsForm [actions]="manyActions" [onSubmit]="wait600">
+        <form dsForm [actions]="manyActions" [validators]="addressChecks" [onSubmit]="wait600">
           <fieldset dsFieldset legend="Contact">
             <div dsFormField name="name" label="Full name" required>
               <div dsInput name="name" autoComplete="name"></div>
@@ -114,9 +120,14 @@ let nextId = 0;
             <div dsFormField name="city" label="City" required>
               <div dsInput name="city" autoComplete="address-level2"></div>
             </div>
-            <div dsFormField name="postal" label="Postal code">
+            <div dsFormField name="postal" label="Postal code" description="5 digits, such as 12211.">
               <div dsInput name="postal" autoComplete="postal-code" inputMode="numeric" pattern="[0-9]{5}"></div>
             </div>
+          </fieldset>
+          <fieldset dsFieldset legend="How should we reach you" name="reach">
+            <div dsCheckbox name="reach" value="email" label="Email"></div>
+            <div dsCheckbox name="reach" value="text" label="Text message"></div>
+            <div dsCheckbox name="reach" value="call" label="Phone call"></div>
           </fieldset>
           <ng-template #manyActions>
             <button dsFormSubmit>Save address</button>
@@ -248,6 +259,7 @@ let nextId = 0;
 export default class FormDemo {
   protected readonly sample = sample;
   protected readonly workEmail = workEmail;
+  protected readonly addressChecks = addressChecks;
   protected readonly longFields = longFields;
   protected readonly wait600 = () => wait(600);
   protected readonly wait4000 = () => wait(4000);

@@ -39,6 +39,12 @@ import { DsCheckboxGroup } from './checkbox-group';
       <div dsCheckbox value="email" label="Email"></div>
       <div dsCheckbox value="push" label="Push"></div>
     </fieldset>
+    <form data-test="allform">
+      <fieldset dsCheckboxGroup legend="All in a form" name="channels" selectAll="All channels">
+        <div dsCheckbox value="a" label="A"></div>
+        <div dsCheckbox value="b" label="B"></div>
+      </fieldset>
+    </form>
     <form>
       <fieldset data-test="inform" dsCheckboxGroup legend="In a form" name="channels" [defaultValue]="['push']">
         <div dsCheckbox value="email" label="Email"></div>
@@ -178,5 +184,15 @@ describe('DsCheckboxGroup', () => {
     const inputs = [...root('inform').querySelectorAll<HTMLInputElement>('input[type="checkbox"]')];
     expect(inputs.map((i) => i.name)).toEqual(['channels', 'channels']);
     expect(inputs.map((i) => i.checked)).toEqual([false, true]);
+  });
+
+  it('the select all box takes no group name, so select all posts only the items, as React', async () => {
+    const { root, settle } = await setup();
+    await settle();
+    const form = root('allform') as HTMLFormElement;
+    const all = form.querySelector<HTMLButtonElement>('[role="checkbox"]') as HTMLButtonElement;
+    all.click();
+    await settle();
+    expect(new FormData(form).getAll('channels')).toEqual(['a', 'b']);
   });
 });

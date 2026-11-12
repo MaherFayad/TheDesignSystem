@@ -79,6 +79,20 @@ describe('DsCheckbox', () => {
     expect(el.querySelector('[data-icon="minus"]')).not.toBeNull();
   });
 
+  it('keeps the indicator and a hidden span with the last glyph while unchecked, for the check draw, as React', async () => {
+    const { root, control, settle } = await setup();
+    const glyph = (id: string) => root(id).querySelector('[data-part="indicator"] > span[aria-hidden="true"] > svg');
+    expect(glyph('plain')?.getAttribute('data-icon')).toBe('check');
+    expect(glyph('sized')?.getAttribute('data-icon')).toBe('minus');
+    control('sized').click();
+    await settle();
+    expect(glyph('sized')?.getAttribute('data-icon')).toBe('check');
+    control('sized').click();
+    await settle();
+    expect(root('sized').getAttribute('data-state')).toBe('unchecked');
+    expect(glyph('sized')?.getAttribute('data-icon')).toBe('check');
+  });
+
   it('a click on the indeterminate box checks it', async () => {
     const { root, control, settle } = await setup();
     control('sized').click();

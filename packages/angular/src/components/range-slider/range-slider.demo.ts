@@ -17,7 +17,7 @@ const priceLabelsAr: [string, string] = ['أقل سعر', 'أعلى سعر'];
   template: `
     <div data-demo="page">
       <section data-demo="case" data-demo-case="variants" heading="Sizes, marks and orientation">
-        <div data-demo="grid" style="grid-template-columns: repeat(auto-fill, minmax(16rem, 1fr));">
+        <div data-demo="grid" style="grid-template-columns: repeat(auto-fill, minmax(min(16rem, 100%), 1fr));">
           @for (size of sizes; track size) {
             <div dsRangeSlider [size]="size" [label]="'Price, ' + size" unit="SAR" [max]="1000" [step]="50" [defaultValue]="[200, 700]" [thumbLabels]="priceLabels"></div>
           }

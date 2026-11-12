@@ -73,7 +73,7 @@ const copy = {
       </section>
 
       <section data-demo="case" data-demo-case="too-many" heading="Too many options, grouped">
-        <div data-demo="grid" style="grid-template-columns: repeat(auto-fill, minmax(16rem, 1fr));">
+        <div data-demo="grid" style="grid-template-columns: repeat(auto-fill, minmax(min(16rem, 100%), 1fr));">
           <ng-container [ngTemplateOutlet]="city" [ngTemplateOutletContext]="{ value: 'riyadh' }" />
         </div>
       </section>

@@ -13,6 +13,7 @@ import { DsToggleButton } from './toggle-button';
     <button id="icon" dsToggleButton icon="eye" label="Show guides"></button>
     <button id="guard" dsToggleButton (click)="$event.preventDefault()">Strict mode</button>
     <button id="named" dsToggleButton aria-label="Bold text">B</button>
+    <button id="attr" dsToggleButton [attr.aria-label]="'Italic text'">I</button>
     <button id="disabled" dsToggleButton disabled (pressedChange)="changes.set(changes() + 1)">Lock layer</button>
   `,
 })
@@ -75,6 +76,7 @@ describe('DsToggleButton', () => {
     const { q } = await setup();
     expect(q('named').getAttribute('aria-label')).toBe('Bold text');
     expect(q('plain').hasAttribute('aria-label')).toBe(false);
+    expect(q('attr').getAttribute('aria-label')).toBe('Italic text');
   });
 
   it('decides inside the click, after the caller listener, with no microtask wait', async () => {

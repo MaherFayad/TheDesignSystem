@@ -27,6 +27,7 @@ import { DS_DROPDOWN_MENU, type DropdownMenuChecked } from './dropdown-menu';
           <div dsDropdownMenuSeparator></div>
           <div dsDropdownMenuGroup>
             <div id="grid" dsDropdownMenuCheckboxItem [(checked)]="grid">Show grid</div>
+            <div id="archived" dsDropdownMenuCheckboxItem [(checked)]="archived" (select)="$event.preventDefault()">Archived</div>
           </div>
           <div dsDropdownMenuRadioGroup [(value)]="sort">
             <div id="by-name" dsDropdownMenuRadioItem value="name">Name</div>
@@ -53,6 +54,7 @@ import { DS_DROPDOWN_MENU, type DropdownMenuChecked } from './dropdown-menu';
 class Host {
   readonly open = signal<boolean | undefined>(undefined);
   readonly grid = signal<DropdownMenuChecked>('indeterminate');
+  readonly archived = signal(false);
   readonly sort = signal<string | undefined>('edited');
   readonly chosen = signal<string | null>(null);
   readonly dialogOpen = signal(false);
@@ -227,6 +229,18 @@ describe('DsDropdownMenu', () => {
     await press('d');
     await new Promise((r) => setTimeout(r, 10));
     expect(document.activeElement?.id).toBe('duplicate');
+  });
+
+  it('a second Space on a checkbox item within the typeahead pause toggles it back', async () => {
+    const { byId, press, host } = await setup();
+    byId('trigger').focus();
+    await press('Enter');
+    byId('archived').focus();
+    await press(' ');
+    expect(host.archived()).toBe(true);
+    expect(host.open()).toBe(true);
+    await press(' ');
+    expect(host.archived()).toBe(false);
   });
 
   it('Tab stays in the open menu', async () => {

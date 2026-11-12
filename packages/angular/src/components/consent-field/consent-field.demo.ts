@@ -6,6 +6,7 @@ import { DsTheme } from '../../theme/theme';
 import { DsFieldset } from '../fieldset/fieldset';
 import { DsForm } from '../form/form';
 import { DsFormSubmit } from '../form/form-submit';
+import { DsLink } from '../link/link';
 import { DsConsentField, type ConsentRecord } from './consent-field';
 
 const purposes = [
@@ -25,17 +26,17 @@ const purposes = [
 
 @Component({
   selector: 'div[data-demo=page]',
-  imports: [DEMO, DsTheme, DsFieldset, DsForm, DsFormSubmit, DsConsentField],
+  imports: [DEMO, DsTheme, DsFieldset, DsForm, DsFormSubmit, DsLink, DsConsentField],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <section data-demo="case" data-demo-case="variants" heading="Sizes, checkbox and switch, and an Arabic row">
       <div dsTheme [lang]="'en'" data-demo="content">
-        <div data-demo="grid" style="grid-template-columns: repeat(auto-fill, minmax(18rem, 1fr));">
+        <div data-demo="grid" style="grid-template-columns: repeat(auto-fill, minmax(min(18rem, 100%), 1fr));">
           @for (size of sizes; track size) {
             <div dsConsentField [size]="size" purpose="Send me offers by email." [detailsHref]="privacy" meta="Text version 2.1, updated 1 November 2026."></div>
           }
         </div>
-        <div data-demo="grid" style="grid-template-columns: repeat(auto-fill, minmax(18rem, 1fr));">
+        <div data-demo="grid" style="grid-template-columns: repeat(auto-fill, minmax(min(18rem, 100%), 1fr));">
           <div
             dsConsentField
             control="switch"
@@ -54,9 +55,9 @@ const purposes = [
       </div>
     </section>
 
-    <section data-demo="case" data-demo-case="empty" heading="Purpose only">
+    <section data-demo="case" data-demo-case="empty" heading="Purpose and the details link only">
       <div dsTheme [lang]="'en'" data-demo="content">
-        <div dsConsentField purpose="Send me a survey after each order."></div>
+        <div dsConsentField purpose="Send me a survey after each order." [detailsHref]="privacy"></div>
       </div>
     </section>
 
@@ -82,11 +83,12 @@ const purposes = [
     <section data-demo="case" data-demo-case="too-many" heading="A long settings list">
       <div dsTheme [lang]="'en'" data-demo="content">
         <div style="max-inline-size: var(--ds-dialog-width-sm);">
-          <fieldset dsFieldset legend="Privacy settings" size="sm">
+          <fieldset dsFieldset legend="Privacy settings" size="sm" [description]="settingsNote">
             @for (p of purposes; track p) {
               <div dsConsentField size="sm" control="switch" [purpose]="p"></div>
             }
           </fieldset>
+          <ng-template #settingsNote>Each switch saves at once, and you can turn it off the same way. <a dsLink [href]="privacy">Read how we use your data</a></ng-template>
         </div>
       </div>
     </section>
@@ -107,7 +109,7 @@ const purposes = [
       <div dsTheme [lang]="'ar'" data-demo="content">
         <div
           dsConsentField
-          purpose="أوافق على مشاركة سجل طلباتي وعنوان التوصيل ورقم جوالي مع شريك التوصيل، عشان يرتب مواعيد التوصيل ويتصل علي لما يقرب المندوب."
+          purpose="أوافق على مشاركة اسمي الكامل ورقم جوالي وعنوان التوصيل ورقم المبنى والدور ومحتوى الطلب وملاحظات التوصيل مع شركة المسار السريع للخدمات اللوجستية، شريك التوصيل في الرياض وجدة والدمام والخبر، عشان توصل طلباتي."
           [detailsHref]="privacy"
           meta="الإصدار 2.1، آخر تحديث 1 نوفمبر 2026. تقدر تلغي الموافقة متى ما تبي من الإعدادات."
         ></div>
@@ -144,7 +146,7 @@ export default class ConsentFieldDemo {
   protected readonly privacy = '#privacy';
   protected readonly sizes = ['sm', 'md', 'lg'] as const;
   protected readonly purposes = purposes;
-  protected readonly longPurpose = `Share my order history, delivery address and phone number with the delivery partner, so they can plan delivery times and call me when the driver is near. ${sample.en.word}`;
+  protected readonly longPurpose = `Share my full name, mobile number, delivery address, building and floor, order contents and delivery notes with Swift Route Logistics, the delivery partner for Riyadh, Jeddah, Dammam and Al Khobar, so they can deliver my orders. ${sample.en.word}`;
   protected readonly granted = signal(true);
   protected readonly record = signal<ConsentRecord | null>(null);
   protected readonly settingsMeta = computed(() => {

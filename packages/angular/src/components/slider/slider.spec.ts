@@ -218,6 +218,16 @@ describe('DsSlider', () => {
     expect(input.value).toBe('21');
     expect(root('plain').querySelector('input')).toBeNull();
   });
+
+  it('dispatches input on the hidden input after a change, as Radix, so a form sees it', async () => {
+    const { root, press, settle } = await setup();
+    await settle();
+    const form = root('inform').closest('form') as HTMLFormElement;
+    const seen: string[] = [];
+    form.addEventListener('input', (e) => seen.push((e.target as HTMLInputElement).value));
+    await press('inform', 'ArrowRight');
+    expect(seen).toEqual(['21']);
+  });
 });
 
 @Component({

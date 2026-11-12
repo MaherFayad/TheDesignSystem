@@ -16,13 +16,13 @@ const shapes: PhoneFieldShape[] = ['default', 'pill'];
   template: `
     <section data-demo="case" data-demo-case="variants" heading="Sizes, shapes and Gulf countries">
       @for (shape of shapes; track shape) {
-        <div data-demo="grid" style="grid-template-columns: repeat(auto-fill, minmax(16rem, 1fr));">
+        <div data-demo="grid" style="grid-template-columns: repeat(auto-fill, minmax(min(16rem, 100%), 1fr));">
           @for (size of sizes; track size) {
             <div dsPhoneField [size]="size" [shape]="shape" value="+966501234567" [aria-label]="'Mobile number, ' + size + ', ' + shape"></div>
           }
         </div>
       }
-      <div data-demo="grid" style="grid-template-columns: repeat(auto-fill, minmax(16rem, 1fr));">
+      <div data-demo="grid" style="grid-template-columns: repeat(auto-fill, minmax(min(16rem, 100%), 1fr));">
         <div dsPhoneField value="+97141234567" aria-label="Office number in the UAE"></div>
         <div dsPhoneField value="+96550001234" aria-label="Mobile number in Kuwait"></div>
         <div dsPhoneField value="+97433123456" aria-label="Mobile number in Qatar"></div>
@@ -50,7 +50,7 @@ const shapes: PhoneFieldShape[] = ['default', 'pill'];
     </section>
 
     <section data-demo="case" data-demo-case="many" heading="A short contact form">
-      <div data-demo="grid" style="grid-template-columns: repeat(auto-fill, minmax(16rem, 1fr));">
+      <div data-demo="grid" style="grid-template-columns: repeat(auto-fill, minmax(min(16rem, 100%), 1fr));">
         <div dsField label="Mobile number" required>
           <div dsPhoneField value="+966551234567"></div>
         </div>

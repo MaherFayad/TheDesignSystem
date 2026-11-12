@@ -59,22 +59,22 @@ const errors = [
 
     <section data-demo="case" data-demo-case="variants" heading="Variants: six tones in soft, outline and solid, two sizes, and Arabic">
       @for (emphasis of emphases; track emphasis) {
-        <div data-demo="grid" style="grid-template-columns: repeat(auto-fill, minmax(18rem, 1fr));">
+        <div data-demo="grid" style="grid-template-columns: repeat(auto-fill, minmax(min(18rem, 100%), 1fr));">
           @for (tone of tones; track tone) {
             <div dsAlert [tone]="tone" [emphasis]="emphasis" [title]="copy[tone].title">{{ copy[tone].body }}</div>
           }
         </div>
       }
-      <div data-demo="grid" style="grid-template-columns: repeat(auto-fill, minmax(18rem, 1fr));">
+      <div data-demo="grid" style="grid-template-columns: repeat(auto-fill, minmax(min(18rem, 100%), 1fr));">
         <div dsAlert size="sm" tone="warning" [title]="copy.warning.title">{{ copy.warning.body }}</div>
         <div dsAlert size="md" tone="warning" [title]="copy.warning.title">{{ copy.warning.body }}</div>
       </div>
-      <div data-demo="grid" style="grid-template-columns: repeat(auto-fill, minmax(18rem, 1fr));">
+      <div data-demo="grid" style="grid-template-columns: repeat(auto-fill, minmax(min(18rem, 100%), 1fr));">
         <div dsAlert tone="danger" emphasis="solid" [title]="copy.danger.title" [onClose]="noop" [actions]="retryOpen">{{ copy.danger.body }}</div>
         <div dsAlert tone="warning" emphasis="outline" [title]="copy.warning.title" [onClose]="noop" [actions]="manage">{{ copy.warning.body }}</div>
       </div>
       <div dsTheme [lang]="'ar'" data-demo="content">
-        <div data-demo="grid" style="grid-template-columns: repeat(auto-fill, minmax(18rem, 1fr));">
+        <div data-demo="grid" style="grid-template-columns: repeat(auto-fill, minmax(min(18rem, 100%), 1fr));">
           @for (tone of arTones; track tone) {
             <div dsAlert [tone]="tone" [title]="copyAr[tone].title" [onClose]="noop">{{ copyAr[tone].body }}</div>
           }

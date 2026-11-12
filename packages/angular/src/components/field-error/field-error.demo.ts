@@ -20,7 +20,7 @@ import { DsFieldError } from './field-error';
   template: `
     <section data-demo="case" data-demo-case="variants" heading="Sizes, alone and in a Field">
       <div dsTheme [lang]="'en'" data-demo="content">
-        <div data-demo="grid" style="grid-template-columns: repeat(auto-fill, minmax(16rem, 1fr));">
+        <div data-demo="grid" style="grid-template-columns: repeat(auto-fill, minmax(min(16rem, 100%), 1fr));">
           <div style="display: grid; gap: var(--ds-space-xs); align-content: start;">
             <label dsLabel for="fe-md">Board name</label>
             <div dsInput id="fe-md" invalid aria-describedby="fe-md-error"></div>
@@ -36,7 +36,7 @@ import { DsFieldError } from './field-error';
           </div>
         </div>
         <div dsTheme [lang]="'ar'" data-demo="content">
-          <div data-demo="grid" style="grid-template-columns: repeat(auto-fill, minmax(16rem, 1fr));">
+          <div data-demo="grid" style="grid-template-columns: repeat(auto-fill, minmax(min(16rem, 100%), 1fr));">
             <div style="display: grid; gap: var(--ds-space-xs); align-content: start;">
               <label dsLabel for="fe-ar">اسم اللوحة</label>
               <div dsInput id="fe-ar" invalid aria-describedby="fe-ar-error"></div>
@@ -70,7 +70,7 @@ import { DsFieldError } from './field-error';
 
     <section data-demo="case" data-demo-case="many" heading="Several errors after submit">
       <div dsTheme [lang]="'en'" data-demo="content">
-        <div data-demo="grid" style="grid-template-columns: repeat(auto-fill, minmax(16rem, 1fr));">
+        <div data-demo="grid" style="grid-template-columns: repeat(auto-fill, minmax(min(16rem, 100%), 1fr));">
           <div dsField label="First name" required error="Add a first name.">
             <div dsInput autoComplete="given-name"></div>
           </div>

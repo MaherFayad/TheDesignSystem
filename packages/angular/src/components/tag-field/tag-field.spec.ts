@@ -98,6 +98,26 @@ describe('DsTagField', () => {
     expect(root('tags').querySelector('[data-part="status"]')?.textContent).toBe('design is already added');
   });
 
+  it('a refusal shows a FieldError after the root that the control points at, until the next add or removal, as React', async () => {
+    const { key, input, type, root, removes } = await setup();
+    const error = () => root('tags').nextElementSibling as HTMLElement | null;
+    expect(error()?.getAttribute('data-ds')).not.toBe('field-error');
+    await type('tags', 'design');
+    await key(input('tags'), 'Enter');
+    const p = error() as HTMLElement;
+    expect(p.tagName).toBe('P');
+    expect(p.getAttribute('data-ds')).toBe('field-error');
+    expect(p.getAttribute('data-size')).toBe('md');
+    expect(p.hasAttribute('data-part')).toBe(false);
+    expect(p.hasAttribute('dsFieldError')).toBe(false);
+    expect(p.querySelector('[data-part="message"]')?.textContent).toBe('design is already added');
+    expect(input('tags').getAttribute('aria-describedby')?.split(' ')).toContain(p.id);
+    removes('tags')[0]?.click();
+    await key(input('tags'), 'Shift');
+    expect(error()?.getAttribute('data-ds')).not.toBe('field-error');
+    expect(input('tags').getAttribute('aria-describedby')?.split(' ')).not.toContain(p.id);
+  });
+
   it('a comma or the Arabic comma adds the parts before it', async () => {
     const { host, input, type } = await setup();
     await type('tags', 'Alpha، Beta, Gam');

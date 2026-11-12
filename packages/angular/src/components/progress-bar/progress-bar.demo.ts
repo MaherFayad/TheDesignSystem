@@ -47,24 +47,24 @@ const filesOfAr = (v: number, max: number) => `${v} من ${max} ملفات`;
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <section data-demo="case" data-demo-case="variants" heading="Variants: each tone, each size, and the indeterminate form">
-      <div data-demo="grid" style="grid-template-columns: repeat(auto-fill, minmax(16rem, 1fr))">
+      <div data-demo="grid" style="grid-template-columns: repeat(auto-fill, minmax(min(16rem, 100%), 1fr))">
         @for (tone of tones; track tone) {
           <div dsProgressBar [tone]="tone" [value]="toneValue[tone]" [label]="toneLabel[tone]"></div>
         }
       </div>
-      <div data-demo="grid" style="grid-template-columns: repeat(auto-fill, minmax(16rem, 1fr))">
+      <div data-demo="grid" style="grid-template-columns: repeat(auto-fill, minmax(min(16rem, 100%), 1fr))">
         @for (size of sizes; track size) {
           <div dsProgressBar [size]="size" [value]="46" [label]="'Size ' + size"></div>
         }
       </div>
-      <div data-demo="grid" style="grid-template-columns: repeat(auto-fill, minmax(16rem, 1fr))">
+      <div data-demo="grid" style="grid-template-columns: repeat(auto-fill, minmax(min(16rem, 100%), 1fr))">
         <div dsProgressBar label="Preparing export"></div>
         <div dsProgressBar [value]="3" [max]="10" [valueText]="filesOf" label="Copying files"></div>
         <div dsProgressBar [value]="60" aria-label="Import progress" [showValue]="false"></div>
       </div>
       <h3 data-demo="title">Variants in Arabic</h3>
       <div dsTheme [lang]="'ar'" data-demo="content">
-        <div data-demo="grid" style="grid-template-columns: repeat(auto-fill, minmax(16rem, 1fr))">
+        <div data-demo="grid" style="grid-template-columns: repeat(auto-fill, minmax(min(16rem, 100%), 1fr))">
           @for (tone of tones; track tone) {
             <div dsProgressBar [tone]="tone" [value]="toneValue[tone]" [label]="toneLabelAr[tone]"></div>
           }
@@ -83,7 +83,7 @@ const filesOfAr = (v: number, max: number) => `${v} من ${max} ملفات`;
     </section>
 
     <section data-demo="case" data-demo-case="many" heading="Many bars, one per upload">
-      <div data-demo="grid" style="grid-template-columns: repeat(auto-fill, minmax(18rem, 1fr))">
+      <div data-demo="grid" style="grid-template-columns: repeat(auto-fill, minmax(min(18rem, 100%), 1fr))">
         @for (upload of uploads; track upload[0]) {
           <div dsProgressBar size="sm" [value]="upload[1]" [label]="upload[0]" [tone]="upload[1] === 100 ? 'success' : 'accent'"></div>
         }

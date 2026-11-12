@@ -34,6 +34,7 @@ import {
   ElementRef,
   InjectionToken,
   afterNextRender,
+  afterRenderEffect,
   booleanAttribute,
   computed,
   forwardRef,
@@ -51,6 +52,7 @@ import { NG_VALUE_ACCESSOR, type ControlValueAccessor } from '@angular/forms';
 import { DsIcon } from '@the-system/icons/angular';
 import type { Size, Tone } from '@the-system/shared';
 import { RovingRadioGroup, bubbleInputStyle, rovingItem, type RovingRadioItem } from '../../behavior/roving-radio';
+import { BubbleEvent } from '../../internal/bubble-event';
 import { consumeHostAttributes } from '../../internal/host';
 import { DsNativeButton } from '../../internal/native-button';
 import { optionalBoolean } from '../../internal/optional-boolean';
@@ -260,6 +262,7 @@ export class DsRadioGroup implements ControlValueAccessor {
       (focus)="group.roving.onItemFocus(item)"
       (keydown)="group.roving.onItemKeydown(item, $event)"
       (click)="group.roving.onItemClick(item)"><span data-part="indicator" [attr.data-state]="state()" [attr.data-disabled]="isDisabled() ? '' : null"></span></button>@if (isFormControl()) {<input
+      #bubble
       type="radio"
       aria-hidden="true"
       tabindex="-1"
@@ -291,6 +294,7 @@ export class DsRadioGroupItem {
     'dsRadioGroupItem', 'value', 'label', 'description', 'disabled', 'id', 'aria-label', 'aria-labelledby', 'aria-describedby',
   ]);
   private readonly control = viewChild.required<ElementRef<HTMLButtonElement>>('control');
+  private readonly bubble = viewChild<ElementRef<HTMLInputElement>>('bubble');
 
   private readonly base = `ds-radio-group-item-${++nextId}`;
   private readonly ownId = `${this.base}-control`;
@@ -324,6 +328,8 @@ export class DsRadioGroupItem {
       this.bubbleStyle.set(bubbleInputStyle(button));
       this.isFormControl.set(true);
     });
+    const bubbleClick = new BubbleEvent<boolean>('click');
+    afterRenderEffect(() => bubbleClick.update(this.bubble()?.nativeElement, this.checked()));
   }
 
   /** The control, the element with role radio. */

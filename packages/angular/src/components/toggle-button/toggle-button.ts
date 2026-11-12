@@ -12,6 +12,7 @@
 import { ChangeDetectionStrategy, Component, booleanAttribute, computed, input, linkedSignal, model } from '@angular/core';
 import { NgTemplateOutlet } from '@angular/common';
 import { DsIcon } from '@the-system/icons/angular';
+import { ownAttribute } from '../../internal/own-attribute';
 import { consumeHostAttributes } from '../../internal/host';
 import { listenAfterCallers } from '../../internal/late-listener';
 import { DsButtonBase, isIconName, type ButtonEmphasis, type ButtonSlotContent } from '../button/button-base';
@@ -25,7 +26,6 @@ import { DsButtonBase, isIconName, type ButtonEmphasis, type ButtonSlotContent }
     'data-ds': 'toggle-button',
     '[attr.aria-pressed]': 'on() ? "true" : "false"',
     '[attr.data-state]': 'on() ? "on" : "off"',
-    '[attr.aria-label]': 'icon() !== undefined ? label() : (ariaLabel() ?? null)',
   },
   template: `
     <ng-template #slot let-content>
@@ -76,6 +76,8 @@ export class DsToggleButton extends DsButtonBase {
     super();
     consumeHostAttributes(['dsToggleButton', 'pressed', 'defaultPressed', 'start', 'end', 'icon', 'label']);
     listenAfterCallers(this.host, 'click', (event) => this.toggle(event));
+    // Bound only while set, so a caller's [attr.aria-label] stays (review angular-2 R1).
+    ownAttribute(this.host, 'aria-label', () => (this.icon() !== undefined ? this.label() : this.ariaLabel()));
   }
 
   protected override isIconOnly(): boolean {

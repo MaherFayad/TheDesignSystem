@@ -59,6 +59,7 @@ import {
 import { DOCUMENT } from '@angular/common';
 import { NG_VALUE_ACCESSOR, type ControlValueAccessor } from '@angular/forms';
 import { DsIcon } from '@the-system/icons/angular';
+import { DsSpinner } from '../spinner/spinner';
 import type { Shape, Size } from '@the-system/shared';
 import { consumeHostAttributes } from '../../internal/host';
 import { optionalBoolean } from '../../internal/optional-boolean';
@@ -126,7 +127,7 @@ let nextId = 0;
 @Component({
   selector: 'div[dsMultiSelect]',
   exportAs: 'dsMultiSelect',
-  imports: [DsIcon, DsListBox, DsButton, DsIconButton],
+  imports: [DsIcon, DsListBox, DsButton, DsIconButton, DsSpinner],
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [{ provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => DsMultiSelect), multi: true }],
   host: {
@@ -155,7 +156,7 @@ let nextId = 0;
   [attr.aria-busy]="loading() ? 'true' : null"
   (keydown)="onTriggerKeydown($event)"
   (click)="onTriggerClick($event)"
-  (blur)="onTouched()"><span data-part="value">@if (chosen().length === 0) {{{ placeholderText() }}} @else if (summary() === 'count') {{{ countText() }}} @else {@for (o of shownTags(); track o.value) {<span data-part="tag" aria-hidden="true">{{ o.label }}</span>}@if (more() > 0) {<span data-part="tag" data-more="" aria-hidden="true"><ng-container>+</ng-container>{{ more() }}</span>}<span data-part="summary-text">{{ listText() }}</span>}</span><span data-part="icon" aria-hidden="true">@if (loading()) {<span aria-hidden="true" data-ds="spinner" data-size="sm" data-tone="neutral"></span>} @else {<svg dsIcon name="chevrons-up-down" size="md"></svg>}</span></div>@if (name() !== undefined) {@for (o of chosen(); track o.value) {<input type="hidden" [attr.name]="name()" [value]="o.value" [attr.value]="o.value" [disabled]="isDisabled()" />}}
+  (blur)="onTriggerBlur($event)"><span data-part="value">@if (chosen().length === 0) {{{ placeholderText() }}} @else if (summary() === 'count') {{{ countText() }}} @else {@for (o of shownTags(); track o.value) {<span data-part="tag" aria-hidden="true">{{ o.label }}</span>}@if (more() > 0) {<span data-part="tag" data-more="" aria-hidden="true"><ng-container>+</ng-container>{{ more() }}</span>}<span data-part="summary-text">{{ listText() }}</span>}</span><span data-part="icon" aria-hidden="true">@if (loading()) {<span dsSpinner size="sm" decorative></span>} @else {<svg dsIcon name="chevrons-up-down" size="md"></svg>}</span></div>@if (name() !== undefined) {@for (o of chosen(); track o.value) {<input type="hidden" [attr.name]="name()" [value]="o.value" [attr.value]="o.value" [disabled]="isDisabled()" />}}
 <ng-template #popup><div data-ds="multi-select" data-part="popup" [attr.id]="popupId" [attr.data-size]="size()" [attr.data-state]="layer.closing() ? 'closed' : 'open'"
   [attr.data-side]="layer.side()" [attr.data-align]="layer.align()"
   style="--radix-popover-content-transform-origin: var(--radix-popper-transform-origin); --radix-popover-content-available-width: var(--radix-popper-available-width); --radix-popover-content-available-height: var(--radix-popper-available-height); --radix-popover-trigger-width: var(--radix-popper-anchor-width); --radix-popover-trigger-height: var(--radix-popper-anchor-height);"
@@ -465,6 +466,15 @@ export class DsMultiSelect implements ControlValueAccessor {
     this.undo = [];
     this.layer.close();
     if (returnFocus && !this.interactedOutside) this.nativeControl.focus();
+    // Focus left the trigger and the popup together: the control is touched now.
+    else this.onTouched();
+  }
+
+  /** Touched when focus leaves the trigger, but not when it moves into the open popup. */
+  protected onTriggerBlur(event: FocusEvent): void {
+    const to = event.relatedTarget as Node | null;
+    if (this.popupOpen() || (to && this.layer.contains(to))) return;
+    this.onTouched();
   }
 
   private onPopupKeydown(event: KeyboardEvent, content: HTMLElement): void {

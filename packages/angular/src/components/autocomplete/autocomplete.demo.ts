@@ -77,7 +77,7 @@ const tagItems = (lang: 'en' | 'ar') => copy[lang].tags.map((label) => ({ value:
       </section>
 
       <section data-demo="case" data-demo-case="too-many" heading="Too many suggestions, grouped">
-        <div data-demo="grid" style="grid-template-columns: repeat(auto-fill, minmax(16rem, 1fr));">
+        <div data-demo="grid" style="grid-template-columns: repeat(auto-fill, minmax(min(16rem, 100%), 1fr));">
           <div dsField [label]="copy.en.city" [description]="copy.en.cityHint">
             <div dsAutocomplete [items]="cities"></div>
           </div>

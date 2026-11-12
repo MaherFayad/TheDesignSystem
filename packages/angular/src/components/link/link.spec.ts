@@ -11,6 +11,7 @@ import { DsLink } from './link';
     <a id="ext" dsLink href="https://example.com" external tone="accent" size="sm" standalone>Open the site</a>
     <a id="disabled" dsLink href="#report" disabled (click)="clicks.set(clicks() + 1)">Download the report</a>
     <a id="skip" dsLink href="#a" tabindex="-1" aria-disabled="true">Skipped link</a>
+    <a id="bound" dsLink href="#b" [attr.tabindex]="-1" [attr.aria-disabled]="'true'">Bound link</a>
     <div dsTheme [lang]="'ar-SA'"><a id="arsa" dsLink href="https://example.com" external>الدليل</a></div>
     <div dsTheme [lang]="'ar'"><a id="ar" dsLink href="https://example.com" external>الدليل</a></div>
   `,
@@ -69,6 +70,14 @@ describe('DsLink', () => {
     expect(el.getAttribute('tabindex')).toBe('-1');
     expect(el.getAttribute('aria-disabled')).toBe('true');
     expect(el.getAttribute('href')).toBe('#a');
+  });
+
+  it('keeps a caller [attr.tabindex] and [attr.aria-disabled] (review angular-2 R2)', async () => {
+    const { q } = await setup();
+    expect(q('bound').getAttribute('tabindex')).toBe('-1');
+    expect(q('bound').getAttribute('aria-disabled')).toBe('true');
+    expect(q('plain').hasAttribute('tabindex')).toBe(false);
+    expect(q('plain').hasAttribute('aria-disabled')).toBe(false);
   });
 
   it('reads a regional Arabic lang as Arabic', async () => {

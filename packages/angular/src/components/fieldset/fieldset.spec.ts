@@ -1,9 +1,30 @@
 import { Component, signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { describe, expect, it } from 'vitest';
+import { DsCheckbox } from '../checkbox/checkbox';
 import { DsField } from '../field/field';
+import { DsForm } from '../form/form';
+import { DsFormSubmit } from '../form/form-submit';
 import { DsInput } from '../input/input';
 import { DsFieldset } from './fieldset';
+
+const tick = () => new Promise((resolve) => setTimeout(resolve, 0));
+
+@Component({
+  imports: [DsFieldset, DsForm, DsFormSubmit, DsCheckbox],
+  template: `
+    <form dsForm id="form" [validators]="validators" [actions]="actions">
+      <fieldset dsFieldset id="reach" legend="How should we reach you" name="reach" error="Unused while the Form has an error.">
+        <div dsCheckbox name="reach" value="email" label="Email"></div>
+        <div dsCheckbox name="reach" value="call" label="Phone call"></div>
+      </fieldset>
+      <ng-template #actions><button dsFormSubmit>Save contact</button></ng-template>
+    </form>
+  `,
+})
+class FormHost {
+  readonly validators = { reach: (v: unknown) => (v === undefined ? 'Pick at least one way to reach you.' : undefined) };
+}
 
 @Component({
   imports: [DsFieldset, DsField, DsInput],
@@ -88,5 +109,25 @@ describe('DsFieldset', () => {
   it('takes a template legend', async () => {
     const { q } = await setup();
     expect(q('#tpl legend').innerHTML).toContain('<strong>Rich</strong>');
+  });
+
+  it('with name, inside a Form: shows the Form error for that name in the error part', async () => {
+    const fixture = TestBed.createComponent(FormHost);
+    document.body.appendChild(fixture.nativeElement);
+    await fixture.whenStable();
+    const el = fixture.nativeElement.querySelector('#reach') as HTMLElement;
+    expect(el.getAttribute('data-name')).toBe('reach');
+    expect(el.hasAttribute('name')).toBe(false);
+    (fixture.nativeElement.querySelector('#form') as HTMLFormElement).dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
+    await fixture.whenStable();
+    await tick();
+    await fixture.whenStable();
+    const error = el.querySelector('[data-part="error"]') as HTMLElement;
+    expect(error.textContent?.trim()).toBe('Pick at least one way to reach you.');
+    expect(el.getAttribute('aria-describedby')).toContain(error.id);
+    expect(el.hasAttribute('data-invalid')).toBe(true);
+    const email = el.querySelector('[data-ds="checkbox"] button') as HTMLElement;
+    expect(document.activeElement).toBe(email);
+    fixture.nativeElement.remove();
   });
 });

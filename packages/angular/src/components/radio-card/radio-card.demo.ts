@@ -16,7 +16,7 @@ const plans = Array.from({ length: 12 }, (_, i) => ({ value: `seat-${i + 1}`, ti
   template: `
     <div data-demo="page">
       <section data-demo="case" data-demo-case="variants" heading="Sizes, tones, icons and end content">
-        <div data-demo="grid" style="grid-template-columns: repeat(auto-fill, minmax(18rem, 1fr));">
+        <div data-demo="grid" style="grid-template-columns: repeat(auto-fill, minmax(min(18rem, 100%), 1fr));">
           @for (tone of tones; track tone) {
             @for (size of sizes; track size) {
               <div style="display: grid; align-content: start; gap: var(--ds-space-xs);">
@@ -136,7 +136,7 @@ const plans = Array.from({ length: 12 }, (_, i) => ({ value: `seat-${i + 1}`, ti
       </section>
 
       <section data-demo="case" data-demo-case="disabled" heading="Disabled group and one disabled card">
-        <div data-demo="grid" style="grid-template-columns: repeat(auto-fill, minmax(18rem, 1fr));">
+        <div data-demo="grid" style="grid-template-columns: repeat(auto-fill, minmax(min(18rem, 100%), 1fr));">
           <div style="display: grid; align-content: start; gap: var(--ds-space-xs);">
             <p data-demo="label" id="rc-disabled">Plan</p>
             <div dsRadioCard aria-labelledby="rc-disabled" disabled defaultValue="team">

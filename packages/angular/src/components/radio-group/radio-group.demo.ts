@@ -27,7 +27,7 @@ const timeZones = [
   template: `
     <div data-demo="page">
       <section data-demo="case" data-demo-case="variants" heading="Sizes, tones and orientations">
-        <div data-demo="grid" style="grid-template-columns: repeat(auto-fill, minmax(14rem, 1fr));">
+        <div data-demo="grid" style="grid-template-columns: repeat(auto-fill, minmax(min(14rem, 100%), 1fr));">
           @for (tone of tones; track tone) {
             @for (size of sizes; track size) {
               <div dsRadioGroup [label]="'Board view, ' + size + ', ' + tone" [size]="size" [tone]="tone" defaultValue="grid">
@@ -125,7 +125,7 @@ const timeZones = [
       </section>
 
       <section data-demo="case" data-demo-case="disabled" heading="Disabled group and one disabled option">
-        <div data-demo="grid" style="grid-template-columns: repeat(auto-fill, minmax(14rem, 1fr));">
+        <div data-demo="grid" style="grid-template-columns: repeat(auto-fill, minmax(min(14rem, 100%), 1fr));">
           <div dsRadioGroup label="Workspace role" disabled defaultValue="editor" description="Only owners can change roles.">
             <div dsRadioGroupItem value="viewer" label="Viewer"></div>
             <div dsRadioGroupItem value="editor" label="Editor"></div>

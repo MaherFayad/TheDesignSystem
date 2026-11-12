@@ -33,6 +33,7 @@ import {
   DestroyRef,
   ElementRef,
   afterNextRender,
+  afterRenderEffect,
   booleanAttribute,
   computed,
   effect,
@@ -51,6 +52,7 @@ import { NG_VALUE_ACCESSOR, type ControlValueAccessor } from '@angular/forms';
 import { DsIcon } from '@the-system/icons/angular';
 import type { Size, Tone } from '@the-system/shared';
 import { RovingRadioGroup, bubbleInputStyle, rovingItem, type RovingRadioItem } from '../../behavior/roving-radio';
+import { BubbleEvent } from '../../internal/bubble-event';
 import { consumeHostAttributes } from '../../internal/host';
 import { DsNativeButton } from '../../internal/native-button';
 import { DsThemeService } from '../../theme/theme';
@@ -141,6 +143,7 @@ let nextId = 0;
       (focus)="roving.onItemFocus(itemAt(i))"
       (keydown)="roving.onItemKeydown(itemAt(i), $event)"
       (click)="roving.onItemClick(itemAt(i))"><svg dsIcon [name]="score <= whole() ? 'star-filled' : 'star'" [size]="iconSize()" data-part="icon"></svg></button>@if (isFormControl()) {<input
+      #bubble
       type="radio"
       aria-hidden="true"
       tabindex="-1"
@@ -188,6 +191,7 @@ export class DsRating implements ControlValueAccessor {
   private readonly theme = inject(DsThemeService);
   private readonly stars = viewChildren<ElementRef<HTMLButtonElement>>('star');
   private readonly text = viewChild<ElementRef<HTMLSpanElement>>('text');
+  private readonly bubbles = viewChildren<ElementRef<HTMLInputElement>>('bubble');
 
   protected readonly icon = ICON;
   protected readonly valueId = `ds-rating-${++nextId}-value`;
@@ -269,6 +273,11 @@ export class DsRating implements ControlValueAccessor {
       const reset = () => this.current.set(initial);
       form.addEventListener('reset', reset);
       destroyRef.onDestroy(() => form.removeEventListener('reset', reset));
+    });
+    const bubbleClick = new BubbleEvent<boolean>('click');
+    afterRenderEffect(() => {
+      const whole = this.whole();
+      for (const ref of this.bubbles()) bubbleClick.update(ref.nativeElement, Number(ref.nativeElement.value) === whole);
     });
   }
 

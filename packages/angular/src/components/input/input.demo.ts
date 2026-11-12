@@ -35,13 +35,13 @@ const longValue =
   template: `
     <section data-demo="case" data-demo-case="variants" heading="Sizes, shapes and adornments">
       @for (shape of shapes; track shape) {
-        <div data-demo="grid" style="grid-template-columns: repeat(auto-fill, minmax(12rem, 1fr));">
+        <div data-demo="grid" style="grid-template-columns: repeat(auto-fill, minmax(min(12rem, 100%), 1fr));">
           @for (size of sizes; track size) {
             <div dsInput [size]="size" [shape]="shape" [aria-label]="'Board name, ' + size + ', ' + shape" [placeholder]="size + ', ' + shape"></div>
           }
         </div>
       }
-      <div data-demo="grid" style="grid-template-columns: repeat(auto-fill, minmax(14rem, 1fr));">
+      <div data-demo="grid" style="grid-template-columns: repeat(auto-fill, minmax(min(14rem, 100%), 1fr));">
         <div dsInput start="search" placeholder="Search boards" aria-label="Search boards" type="search"></div>
         <div dsInput start="$" end="USD" value="29" aria-label="Price" type="number"></div>
         <div dsInput end="px" value="320" aria-label="Width" type="number" size="sm"></div>
@@ -63,7 +63,7 @@ const longValue =
 
     <section data-demo="case" data-demo-case="many" heading="A short form">
       <p data-demo="label">Fields marked * are required.</p>
-      <div data-demo="grid" style="grid-template-columns: repeat(auto-fill, minmax(16rem, 1fr));">
+      <div data-demo="grid" style="grid-template-columns: repeat(auto-fill, minmax(min(16rem, 100%), 1fr));">
         <div dsField label="Full name" required>
           <div dsInput autoComplete="name" value="Sara Ahmed"></div>
         </div>
@@ -130,7 +130,7 @@ const longValue =
     </section>
 
     <section data-demo="case" data-demo-case="disabled" heading="Disabled">
-      <div data-demo="grid" style="grid-template-columns: repeat(auto-fill, minmax(16rem, 1fr));">
+      <div data-demo="grid" style="grid-template-columns: repeat(auto-fill, minmax(min(16rem, 100%), 1fr));">
         <div dsField label="Workspace" disabled description="Only owners can rename the workspace.">
           <div dsInput value="Design team"></div>
         </div>
@@ -141,7 +141,7 @@ const longValue =
     </section>
 
     <section data-demo="case" data-demo-case="readonly" heading="Read only">
-      <div data-demo="grid" style="grid-template-columns: repeat(auto-fill, minmax(16rem, 1fr));">
+      <div data-demo="grid" style="grid-template-columns: repeat(auto-fill, minmax(min(16rem, 100%), 1fr));">
         <div dsField label="Board link" readOnly description="Copy it to share the board.">
           <div dsInput type="url" start="link" value="https://boards.example.com/b/42"></div>
         </div>

@@ -169,4 +169,19 @@ describe('DsRadioCard', () => {
     expect(input.checked).toBe(true);
     expect(root('plain').querySelector('input')).toBeNull();
   });
+
+  it('dispatches a click on the hidden radio after a pick, as Radix, so a form sees the change', async () => {
+    const { fixture, cards, settle } = await setup();
+    await settle();
+    const form = fixture.nativeElement.querySelector('form') as HTMLFormElement;
+    const seen: string[] = [];
+    form.addEventListener('click', (e) => {
+      const t = e.target as HTMLInputElement;
+      if (t.type === 'radio') seen.push(`${t.value}:${t.checked}`);
+    });
+    cards('inform')[0]?.click();
+    await settle();
+    expect(seen).toContain('a:true');
+    expect(seen).toContain('b:false');
+  });
 });

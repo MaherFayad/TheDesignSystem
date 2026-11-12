@@ -17,7 +17,7 @@ const shapes: SearchFieldShape[] = ['default', 'pill'];
   template: `
     <section data-demo="case" data-demo-case="variants" heading="Sizes and shapes">
       @for (shape of shapes; track shape) {
-        <div data-demo="grid" style="grid-template-columns: repeat(auto-fill, minmax(14rem, 1fr));">
+        <div data-demo="grid" style="grid-template-columns: repeat(auto-fill, minmax(min(14rem, 100%), 1fr));">
           @for (size of sizes; track size) {
             <div
               dsSearchField
@@ -30,7 +30,7 @@ const shapes: SearchFieldShape[] = ['default', 'pill'];
           }
         </div>
       }
-      <div data-demo="grid" style="grid-template-columns: repeat(auto-fill, minmax(14rem, 1fr));">
+      <div data-demo="grid" style="grid-template-columns: repeat(auto-fill, minmax(min(14rem, 100%), 1fr));">
         <div dsSearchField aria-label="Search members" placeholder="Search members" [end]="filterMembers"></div>
         <ng-template #filterMembers><button dsIconButton icon="filter" label="Filter members" size="xs" shape="pill"></button></ng-template>
         <div dsSearchField aria-label="Search files" value="brand" [end]="filterFiles"></div>

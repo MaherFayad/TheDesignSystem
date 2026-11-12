@@ -49,7 +49,7 @@ const boards = ['Spring launch', 'Brand refresh', 'Pricing page', 'Onboarding em
     </section>
 
     <section data-demo="case" data-demo-case="many" heading="A list of names">
-      <div data-demo="grid" style="grid-template-columns: repeat(auto-fill, minmax(14rem, 1fr));">
+      <div data-demo="grid" style="grid-template-columns: repeat(auto-fill, minmax(min(14rem, 100%), 1fr));">
         @for (board of boards; track board) {
           <div dsInlineEdit size="sm" label="Board name" [value]="board" [validate]="required"></div>
         }

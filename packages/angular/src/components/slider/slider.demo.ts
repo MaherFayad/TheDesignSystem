@@ -16,7 +16,7 @@ const tooMany = Array.from({ length: 11 }, (_, i) => i * 10);
   template: `
     <div data-demo="page">
       <section data-demo="case" data-demo-case="variants" heading="Sizes, marks and orientation">
-        <div data-demo="grid" style="grid-template-columns: repeat(auto-fill, minmax(16rem, 1fr));">
+        <div data-demo="grid" style="grid-template-columns: repeat(auto-fill, minmax(min(16rem, 100%), 1fr));">
           @for (size of sizes; track size) {
             <div dsSlider [size]="size" [label]="'Volume, ' + size" unit="%" [defaultValue]="60"></div>
           }
