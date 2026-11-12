@@ -1,0 +1,273 @@
+/*
+ * Tour: a guided tour over the page. No source: designed from the dials
+ * table and Popover.css, the nearest component (the panel surface, the
+ * arrow, the motion), with the progress line of a stepper.
+ *
+ *   [data-ds='theme'][data-tour-layer]    the portal Theme, draws no box
+ *   [data-ds='tour']                      root: a fixed layer over the viewport that takes no pointer
+ *     > [data-part='highlight']           the ring around the target (no dimmed page)
+ *     > [data-radix-popper-content-wrapper] > [data-part='panel']   the step, Radix Content
+ *         > [data-part='title']
+ *         > [data-part='body']
+ *         > [data-part='footer']
+ *             > [data-part='progress']    "Step 2 of 4"
+ *             > [data-part='skip'], [data-part='back'], [data-part='next']   system Buttons
+ *         > span > [data-part='arrow']
+ *
+ * The root never blocks the page: it takes no pointer and paints nothing;
+ * only the panel takes the pointer. The ring takes no pointer either, so the
+ * target stays usable.
+ *
+ * The ring box comes from Tour.tsx as four private properties set inline on
+ * the highlight, in logical viewport coordinates:
+ *   --_tour-target-inline-start, -block-start, -inline-size, -block-size
+ *
+ * Private properties on the root (docs/contracts/anatomy.md, one convention):
+ *   --_tour-width
+ *   --_tour-bg, -fg, -title-fg, -muted, -border-color, -radius, -shadow, -blur, -ring
+ *   --_tour-padding, -gap
+ *   --_tour-highlight-color, -highlight-width, -highlight-offset, -highlight-radius
+ *   --_tour-arrow-width, -arrow-height
+ *   --_tour-enter-x, -enter-y, -enter-scale, -duration-in, -duration-out, -ease-in, -ease-out
+ *
+ * Motion, pattern "menu-scale": the panel grows from 97% out of the target
+ * side while it fades in; the ring fades in. Only transform and opacity
+ * animate; under reduced motion the animations are none.
+ */
+@layer ds.base {
+  [data-ds='theme'][data-tour-layer] {
+    display: contents;
+  }
+
+  [data-ds='tour'] {
+    --_tour-width: calc(var(--ds-menu-width-min) * 1.6);
+    --_tour-bg: var(--ds-color-bg-surface);
+    --_tour-fg: var(--ds-color-text-default);
+    --_tour-title-fg: var(--ds-color-text-bright);
+    --_tour-muted: var(--ds-color-text-muted);
+    --_tour-border-color: var(--ds-color-border-default);
+    --_tour-radius: var(--ds-radius-panel);
+    --_tour-shadow: var(--ds-elevation-menu);
+    --_tour-blur: 0;
+    --_tour-ring: 0 0 transparent;
+    --_tour-padding: var(--ds-space-xl);
+    --_tour-gap: var(--ds-space-m);
+    --_tour-highlight-color: var(--ds-color-focus-ring);
+    --_tour-highlight-width: var(--ds-border-width-strong);
+    --_tour-highlight-offset: var(--ds-space-2xs);
+    --_tour-highlight-radius: var(--ds-radius-sm);
+    --_tour-target-inline-start: 0;
+    --_tour-target-block-start: 0;
+    --_tour-target-inline-size: 0;
+    --_tour-target-block-size: 0;
+    --_tour-arrow-width: var(--ds-space-2xl);
+    --_tour-arrow-height: calc(var(--ds-space-2xl) / 2);
+    --_tour-enter-x: 0;
+    --_tour-enter-y: 0;
+    --_tour-enter-scale: var(--ds-scale-press);
+    --_tour-duration-in: var(--ds-duration-base);
+    --_tour-duration-out: var(--ds-duration-fast);
+    --_tour-ease-in: var(--ds-ease-out);
+    --_tour-ease-out: var(--ds-ease-exit);
+
+    position: fixed;
+    z-index: var(--ds-z-menu);
+    inset: 0;
+    pointer-events: none;
+  }
+
+  [data-ds='tour'][data-size='sm'] {
+    --_tour-width: var(--ds-tooltip-width-max);
+    --_tour-padding: var(--ds-space-l);
+  }
+
+  /* ------------------------------------------------------------ highlight */
+
+  [data-ds='tour'] > [data-part='highlight'] {
+    position: absolute;
+    inset-inline-start: calc(var(--_tour-target-inline-start) - var(--_tour-highlight-offset));
+    inset-block-start: calc(var(--_tour-target-block-start) - var(--_tour-highlight-offset));
+    inline-size: calc(var(--_tour-target-inline-size) + 2 * var(--_tour-highlight-offset));
+    block-size: calc(var(--_tour-target-block-size) + 2 * var(--_tour-highlight-offset));
+    box-sizing: border-box;
+    border: var(--_tour-highlight-width) solid var(--_tour-highlight-color);
+    border-radius: var(--_tour-highlight-radius);
+    pointer-events: none;
+    animation: ds-tour-fade-in var(--_tour-duration-in) var(--_tour-ease-in);
+  }
+
+  /* ------------------------------------------------------------ panel */
+
+  [data-ds='tour'] [data-part='panel'] {
+    display: flex;
+    flex-direction: column;
+    gap: var(--_tour-gap);
+    box-sizing: border-box;
+    inline-size: var(--_tour-width);
+    max-inline-size: var(--radix-popover-content-available-width);
+    max-block-size: var(--radix-popover-content-available-height);
+    padding: var(--_tour-padding);
+    border: var(--ds-border-width-default) solid var(--_tour-border-color);
+    border-radius: var(--_tour-radius);
+    background-color: var(--_tour-bg);
+    -webkit-backdrop-filter: blur(var(--_tour-blur));
+    backdrop-filter: blur(var(--_tour-blur));
+    box-shadow: var(--_tour-shadow), var(--_tour-ring);
+    color: var(--_tour-fg);
+    font-family: var(--ds-font-family-sans);
+    font-size: var(--ds-font-size-m);
+    line-height: var(--ds-font-leading-normal);
+    overflow: auto;
+    overflow-wrap: break-word;
+    pointer-events: auto;
+    transform-origin: var(--radix-popover-content-transform-origin);
+  }
+
+  [data-ds='tour'] [data-part='panel'][data-side='bottom'] {
+    --_tour-enter-y: calc(var(--ds-space-2xs) * -1);
+  }
+
+  [data-ds='tour'] [data-part='panel'][data-side='top'] {
+    --_tour-enter-y: var(--ds-space-2xs);
+  }
+
+  [data-ds='tour'] [data-part='panel'][data-side='right'] {
+    --_tour-enter-x: calc(var(--ds-space-2xs) * -1);
+  }
+
+  [data-ds='tour'] [data-part='panel'][data-side='left'] {
+    --_tour-enter-x: var(--ds-space-2xs);
+  }
+
+  [data-ds='tour'] [data-part='panel'][data-state='open'] {
+    animation: ds-tour-in var(--_tour-duration-in) var(--_tour-ease-in);
+  }
+
+  [data-ds='tour'] [data-part='panel'][data-state='closed'] {
+    animation: ds-tour-out var(--_tour-duration-out) var(--_tour-ease-out) forwards;
+  }
+
+  /* The panel takes focus on each step; the ring shows on keyboard focus. */
+  [data-ds='tour'] [data-part='panel']:focus-visible {
+    --_tour-ring: var(--ds-focus-shadow-ring);
+
+    outline: var(--ds-border-width-strong) solid transparent;
+  }
+
+  [data-ds='tour'] [data-part='panel']:focus:not(:focus-visible) {
+    outline: none;
+  }
+
+  [data-ds='tour'] [data-part='panel'] > [data-part='title'] {
+    margin: 0;
+    color: var(--_tour-title-fg);
+    font-size: var(--ds-font-size-l);
+    font-weight: var(--ds-font-weight-semibold);
+    line-height: var(--ds-font-leading-tight);
+    overflow-wrap: anywhere;
+    text-wrap: balance;
+  }
+
+  [data-ds='tour'] [data-part='panel'] > [data-part='body'] > :first-child {
+    margin-block-start: 0;
+  }
+
+  [data-ds='tour'] [data-part='panel'] > [data-part='body'] > :last-child {
+    margin-block-end: 0;
+  }
+
+  /* Progress at the inline start; skip, back and next at the inline end. They wrap on a narrow panel. */
+  [data-ds='tour'] [data-part='panel'] > [data-part='footer'] {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: flex-end;
+    gap: var(--ds-space-s);
+  }
+
+  [data-ds='tour'] [data-part='footer'] > [data-part='progress'] {
+    flex: 1 1 auto;
+    margin: 0;
+    color: var(--_tour-muted);
+    font-size: var(--ds-font-size-s);
+  }
+
+  [data-ds='tour'] [data-part='footer'] > :not([data-part='progress']) {
+    min-inline-size: 0;
+    max-inline-size: 100%;
+  }
+
+  [data-ds='tour'] [data-part='arrow'] {
+    display: block;
+    inline-size: var(--_tour-arrow-width);
+    block-size: var(--_tour-arrow-height);
+    margin-block-start: calc(var(--ds-border-width-default) * -1);
+    overflow: visible;
+    fill: var(--_tour-bg);
+    stroke: var(--_tour-border-color);
+    stroke-width: var(--ds-border-width-default);
+    vector-effect: non-scaling-stroke;
+  }
+
+  /* ------------------------------------------------------------ motion: pattern "menu-scale" */
+
+  @keyframes ds-tour-in {
+    from {
+      opacity: 0;
+      transform: translate(var(--_tour-enter-x), var(--_tour-enter-y)) scale(var(--_tour-enter-scale));
+    }
+  }
+
+  @keyframes ds-tour-out {
+    to {
+      opacity: 0;
+      transform: translate(var(--_tour-enter-x), var(--_tour-enter-y)) scale(var(--_tour-enter-scale));
+    }
+  }
+
+  @keyframes ds-tour-fade-in {
+    from {
+      opacity: 0;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    [data-ds='tour'] :is([data-part='panel'][data-state], [data-part='highlight']) {
+      animation: none;
+    }
+  }
+
+  /* ------------------------------------------------------------ contrast, forced colors */
+
+  @media (prefers-contrast: more) {
+    [data-ds='tour'] {
+      --_tour-blur: 0;
+      --_tour-border-color: var(--ds-color-border-strong);
+      --_tour-muted: var(--ds-color-text-default);
+    }
+  }
+
+  [data-contrast='more'] [data-ds='tour'] {
+    --_tour-blur: 0;
+    --_tour-border-color: var(--ds-color-border-strong);
+    --_tour-muted: var(--ds-color-text-default);
+  }
+
+  /* Forced colors: no shadow; the border draws the panel and the ring is Highlight. */
+  @media (forced-colors: active) {
+    [data-ds='tour'] {
+      --_tour-bg: Canvas;
+      --_tour-fg: CanvasText;
+      --_tour-title-fg: CanvasText;
+      --_tour-muted: CanvasText;
+      --_tour-border-color: CanvasText;
+      --_tour-highlight-color: Highlight;
+      --_tour-shadow: none;
+      --_tour-blur: 0;
+    }
+
+    [data-ds='tour'] [data-part='panel']:focus-visible {
+      outline-color: Highlight;
+    }
+  }
+}

@@ -1,0 +1,162 @@
+{
+  "name": "Tour",
+  "kind": "component",
+  "family": "overlays",
+  "summary": "A short guided tour that points at real parts of the screen, one step at a time. Not modal: the page stays usable, a ring marks the target and skip is always there.",
+  "useWhen": [
+    "Introducing three to five parts of a screen the first time someone opens it",
+    "Showing where a new feature lives after a release",
+    "A walkthrough the person starts on purpose from a help menu"
+  ],
+  "avoidWhen": [
+    "Steps the person must complete to finish a task",
+    "Explaining one control: a single hint is enough",
+    "Content that blocks the page until it is read",
+    "More than five steps: split the tour or write a help page"
+  ],
+  "insteadUse": {
+    "A task with required steps": "FormWizard",
+    "One hint for one control": "Tooltip",
+    "Details anchored to one control": "Popover",
+    "A message that blocks the page": "Dialog",
+    "Showing progress through a process": "Stepper"
+  },
+  "anatomy": ["root", "highlight", "panel", "arrow", "title", "body", "footer", "progress", "skip", "back", "next"],
+  "parts": {
+    "Button (skip)": "skip",
+    "Button (back)": "back",
+    "Button (next)": "next"
+  },
+  "slots": {
+    "title": { "accepts": "text", "min": 1, "max": 1 },
+    "body": { "accepts": "any", "max": 1 }
+  },
+  "props": {
+    "steps": {
+      "type": "object",
+      "required": true,
+      "description": "The steps in order: { target, title, body?, side?, align? }. target is a CSS selector, a ref or a function that returns the element. A missing target shows the step in the middle of the viewport with no ring and no arrow."
+    },
+    "open": { "type": "boolean", "description": "Controlled open state, with onOpenChange. Open it from any Button: the tour has no trigger part." },
+    "defaultOpen": { "type": "boolean", "default": false },
+    "onOpenChange": { "type": "function", "description": "Called with false on Escape, Skip tour and Finish tour." },
+    "step": { "type": "number", "description": "Controlled step index from 0, with onStepChange. Clamped to the steps." },
+    "defaultStep": { "type": "number", "default": 0 },
+    "onStepChange": { "type": "function" },
+    "onFinish": { "type": "function", "description": "Called when Finish tour is pressed on the last step, before onOpenChange(false)." },
+    "size": { "type": ["sm", "md"], "default": "md", "description": "The panel width: sm 240 (tooltip.width.max), md 320 px (menu.width.min times 1.6)." },
+    "labels": {
+      "type": "object",
+      "description": "Overrides for next, back, skip, finish and progress(current, total). Defaults: Next step, Previous step, Skip tour, Finish tour, Step 2 of 4; Arabic under lang ar."
+    },
+    "side": {
+      "type": ["top", "bottom", "start", "end"],
+      "default": "bottom",
+      "description": "Per step: the preferred side of the target. start and end follow the reading direction."
+    },
+    "align": { "type": ["start", "center", "end"], "default": "center", "description": "Per step: alignment along the target." }
+  },
+  "states": ["open", "closed"],
+  "a11y": {
+    "role": "dialog (the panel), not modal: the page stays in the accessibility tree and usable. Named by the step title, described by the body and the progress line.",
+    "focus": "On open and on every step, focus moves to the panel, so the title, the body and the progress are read. Tab then reaches Skip tour, Previous step and Next step. On close, focus returns to the element that had it when the tour started.",
+    "keys": {
+      "Escape": "Ends the tour and returns focus",
+      "Tab": "Moves to Skip tour, Previous step and Next step, then out to the page (not modal, no trap)",
+      "Shift+Tab": "Moves back through the step's buttons",
+      "Enter, Space": "On Next step, Previous step or Skip tour: runs it"
+    },
+    "announce": "Each step is read when focus moves to it: the title, the body, then Step 2 of 4.",
+    "notes": [
+      "Never blocks the page: no backdrop and no dimmed page. The root layer and the ring take no pointer, so the target stays usable. A click on the page does not end the tour.",
+      "Skip tour is on every step, the last one included. Escape ends the tour too.",
+      "The ring around the target is drawn in the focus ring color and is not the only signal: the panel's arrow points at the target and the title names it.",
+      "The target scrolls into view on each step: smoothly, or at once under reduced motion.",
+      "The panel carries data-side and data-align from Radix; data-side is physical after the logical side is mapped by direction.",
+      "The root is a fixed layer that holds the ring and the panel (the order made the content the root): the ring must sit outside the Radix wrapper, which is positioned with a transform, and still belong to the tour. Dialog uses the same shape.",
+      "The step state is local until packages/shared/src/stepper.ts (order 1.7.7) is merged; the props do not change when it moves."
+    ]
+  },
+  "content": {
+    "en": {
+      "title": "What this part of the screen is, as a short phrase: Share with your team.",
+      "body": "One or two sentences on what to do with it.",
+      "buttons": "Next step, Previous step, Skip tour, Finish tour. Never OK, Got it or Continue.",
+      "progress": "Step 2 of 4"
+    },
+    "ar": {
+      "title": "Noun form, no diacritics: مشاركة الفريق.",
+      "buttons": "الخطوة التالية، الخطوة السابقة، تخطي الجولة، إنهاء الجولة.",
+      "progress": "الخطوة 2 من 4, Western digits"
+    }
+  },
+  "tokens": [
+    "menu.width.min",
+    "tooltip.width.max",
+    "color.bg.surface",
+    "color.text.default",
+    "color.text.bright",
+    "color.text.muted",
+    "color.border.default",
+    "color.border.strong",
+    "color.focus.ring",
+    "color.material.glass-strong",
+    "color.material.glass-border",
+    "radius.panel",
+    "radius.sm",
+    "elevation.menu",
+    "elevation.window-soft",
+    "blur.window",
+    "focus.shadow.ring",
+    "border.width.default",
+    "border.width.strong",
+    "space.2xs",
+    "space.s",
+    "space.m",
+    "space.l",
+    "space.xl",
+    "space.2xl",
+    "font.family.sans",
+    "font.size.s",
+    "font.size.m",
+    "font.size.l",
+    "font.weight.semibold",
+    "font.leading.tight",
+    "font.leading.normal",
+    "scale.press",
+    "duration.base",
+    "duration.fast",
+    "ease.out",
+    "ease.exit",
+    "z.menu"
+  ],
+  "motion": "menu-scale",
+  "frameworks": {
+    "react": {
+      "status": "ready",
+      "behavior": "radix:Popover with a virtual anchor",
+      "example": "Tour.demo.tsx",
+      "note": "Shares the themed portal and side mapping of Popover (FloatingLayer.tsx)."
+    },
+    "angular": { "status": "planned", "behavior": "cdk:overlay" },
+    "native": { "status": "planned", "behavior": "rn-primitives:popover" }
+  },
+  "styles": {
+    "studio": "The Popover surface with the arrow; the ring is 2px in the focus ring color, a small gap around the target, the small radius.",
+    "desk": "The panel is glass: the strong glass fill, the glass border, the window blur and the soft window shadow (recipe). The ring is the same.",
+    "neutral": "Planned.",
+    "liquid": "Planned."
+  },
+  "mistakes": [
+    { "wrong": "A tour that dims the page behind a backdrop", "right": "Tour draws a ring around the target and leaves the page as it is" },
+    { "wrong": "A tour with no way out until the last step", "right": "Skip tour on every step, and Escape" },
+    { "wrong": "Buttons that say Got it or Next", "right": "Next step, Previous step, Finish tour" },
+    { "wrong": "A tour that starts by itself on every visit", "right": "Start it once for new people, or from a help menu" },
+    { "wrong": "Twelve steps", "right": "Three to five steps; a help page for the rest" }
+  ],
+  "contract": {
+    "trigger": "[data-demo-trigger]",
+    "optionalParts": ["highlight", "arrow", "body", "back"]
+  },
+  "since": "0.1.0"
+}
