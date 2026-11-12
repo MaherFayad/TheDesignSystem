@@ -1,0 +1,25 @@
+{
+  "$description": "A tiny fake style that breaks the contract gate on purpose.",
+  "color": {
+    "$type": "color",
+    "bg": {
+      "body": { "$value": { "colorSpace": "srgb", "components": [0, 0, 0], "alpha": 1, "hex": "#000000" } },
+      "surface": { "$value": "{color.bg.missing}" },
+      "overlay": { "$value": "{color.text.default}" },
+      "extra": { "$value": { "colorSpace": "srgb", "components": [1, 1, 1], "alpha": 1, "hex": "#ffffff" } }
+    },
+    "text": {
+      "default": { "$value": { "colorSpace": "srgb", "components": [0.929, 0.929, 0.929], "alpha": 1, "hex": "#ededed" } },
+      "muted": { "$value": "{radius.sm}" }
+    },
+    "brand": {
+      "ink": { "$value": { "colorSpace": "srgb", "components": [1, 1, 1], "alpha": 1, "hex": "#ffffff" } }
+    }
+  },
+  "radius": {
+    "sm": { "$type": "dimension", "$value": { "value": 6, "unit": "px" } }
+  },
+  "button": {
+    "radius": { "$type": "dimension", "$value": "{radius.sm}" }
+  }
+}

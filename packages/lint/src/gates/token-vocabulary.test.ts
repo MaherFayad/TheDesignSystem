@@ -5,16 +5,19 @@ import { createTokenVocabulary, createTokenVocabularyRule, declaredCustomPropert
 import { ROOT, fixture, format, lines, runRule } from './harness';
 
 const BUILT = 'packages/tokens/dist/css/tokens.css';
-const built = existsSync(join(ROOT, BUILT));
 
-const NOTE = `[ds/token-vocabulary] skipped: ${BUILT} is not built yet. Run the token build (order 0.5) to make this gate strict.`;
-
-// Vitest hides console output of passing tests, so the note goes straight to stderr.
-if (!built) process.stderr.write(`${NOTE}\n`);
+// `npm run check` builds the tokens before vitest, so the file is always there
+// in check. Running vitest alone needs the build first.
+function builtNames(): Set<string> {
+  if (!existsSync(join(ROOT, BUILT))) {
+    throw new Error(`${BUILT} is missing. Run the token build first: npx tsx packages/tokens/build.ts (npm run check does it).`);
+  }
+  return declaredCustomProperties(readFileSync(join(ROOT, BUILT), 'utf8'));
+}
 
 describe('gate ds/token-vocabulary: every var(--ds-*) exists in the token build', () => {
-  it.skipIf(!built)(`every var(--ds-*) in packages/css and packages/styles is in ${BUILT} or declared in the same file`, () => {
-    const known = declaredCustomProperties(readFileSync(join(ROOT, BUILT), 'utf8'));
+  it(`every var(--ds-*) in packages/css and packages/styles is in ${BUILT} or declared in the same file`, () => {
+    const known = builtNames();
     expect(known.size, `${BUILT} declares no --ds-* names`).toBeGreaterThan(0);
     expect(format(runRule(createTokenVocabularyRule(known))), 'use a built token or add the name to packages/tokens/src/contract.json').toEqual([]);
   });

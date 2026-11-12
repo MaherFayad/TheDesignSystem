@@ -47,3 +47,8 @@ export const rules: readonly Rule[] = [
   animateTransformOpacityOnlyRule,
   noImportantRule,
 ];
+
+// Gates that read the token build instead of files.
+export * from './rules/contrast';
+export * from './rules/contract-filled';
+export * from './contrast-pairs';
