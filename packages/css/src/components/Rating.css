@@ -1,0 +1,211 @@
+/*
+ * Rating: a row of stars. Interactive, each star is a radio button (the
+ * item part) holding the system Icon (the icon part). Read only, the root
+ * is role img and the items are plain spans. The value part is text after
+ * the stars.
+ *
+ * Source: GoBanana could not be fetched in the lane session. Designed from
+ * the dials table in PLAN.md 3.7 and RadioGroup (the focus ring, the veil).
+ *
+ * Private properties on the root (docs/contracts/anatomy.md, one convention).
+ * Recipes override these; states only swap them:
+ *   --_rating-height      the press area of one star (at least 24px)
+ *   --_rating-gap         space between the stars
+ *   --_rating-font-size   the value text
+ *   --_rating-fg          an empty star, an outline
+ *   --_rating-fg-filled   a filled star (the tone color)
+ *   --_rating-fg-hover    a star under the pointer, and the stars before it
+ *   --_rating-ring        the focus ring
+ *   --_rating-veil        the hover veil
+ *   --_rating-now         on each item: the state rules point it at -fg, -fg-filled or -fg-hover
+ *
+ * Never color alone: a filled star is a filled shape, an empty one an
+ * outline. The filled colors keep 3:1 against the page (WCAG 1.4.11):
+ * warning uses the warning text color, accent the primary border color.
+ */
+@layer ds.base {
+  [data-ds='rating'] {
+    --_rating-height: var(--ds-size-control-sm);
+    --_rating-gap: 0;
+    --_rating-font-size: var(--ds-font-size-s);
+    --_rating-fg: var(--ds-color-border-control-hover);
+    --_rating-fg-filled: var(--ds-color-state-warning-text);
+    --_rating-fg-hover: var(--_rating-fg-filled);
+    --_rating-ring: var(--ds-focus-shadow-ring);
+    --_rating-veil: var(--ds-color-bg-overlay-10);
+
+    display: inline-flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--_rating-gap);
+    max-inline-size: 100%;
+    color: var(--ds-color-text-default);
+    font-family: var(--ds-font-family-sans);
+    font-size: var(--_rating-font-size);
+    line-height: var(--ds-font-leading-snug);
+  }
+
+  [data-ds='rating'][data-size='sm'] {
+    --_rating-height: var(--ds-size-target-min);
+    --_rating-font-size: var(--ds-font-size-xs);
+  }
+
+  /* lg: 44px stars, for touch. */
+  [data-ds='rating'][data-size='lg'] {
+    --_rating-height: var(--ds-size-control-lg);
+    --_rating-font-size: var(--ds-font-size-m);
+  }
+
+  [data-ds='rating'][data-tone='accent'] {
+    --_rating-fg-filled: var(--ds-color-primary-border);
+  }
+
+  /* Read only: no press area, the stars sit close. */
+  [data-ds='rating'][data-readonly] {
+    --_rating-gap: var(--ds-space-4xs);
+  }
+
+  /* ------------------------------------------------------------ items */
+
+  /* Read only: the stars sit in one image element. */
+  [data-ds='rating'] > [data-part='stars'] {
+    display: inline-flex;
+    flex: none;
+    align-items: center;
+    gap: var(--_rating-gap);
+  }
+
+  [data-ds='rating'] [data-part='item'] {
+    --_rating-now: var(--_rating-fg);
+
+    position: relative;
+    display: inline-flex;
+    flex: none;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    border-radius: var(--ds-radius-sm);
+    background: transparent;
+    color: var(--_rating-now);
+    font: inherit;
+  }
+
+  [data-ds='rating']:not([data-readonly]) > [data-part='item'] {
+    inline-size: var(--_rating-height);
+    block-size: var(--_rating-height);
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  [data-ds='rating'] [data-part='item'][data-filled] {
+    --_rating-now: var(--_rating-fg-filled);
+  }
+
+  /* The focus ring. */
+  [data-ds='rating'] > [data-part='item']::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    box-shadow: var(--_rating-ring);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity var(--ds-duration-base) var(--ds-ease-default);
+  }
+
+  /* The hover veil. */
+  [data-ds='rating']:not([data-readonly]) > [data-part='item']::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background-color: var(--_rating-veil);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity var(--ds-duration-fast) var(--ds-ease-default);
+  }
+
+  [data-ds='rating'] [data-part='item'] > [data-part='icon'] {
+    position: relative;
+  }
+
+  /* The text sits beside the stars and wraps in its own column; on a narrow line it moves under them. */
+  [data-ds='rating'] > [data-part='value'] {
+    flex: 1 1 0;
+    min-inline-size: min(100%, calc(var(--ds-size-control-lg) * 3));
+    padding-inline-start: var(--ds-space-xs);
+    color: var(--ds-color-text-muted);
+    font-variant-numeric: tabular-nums;
+    overflow-wrap: anywhere;
+  }
+
+  /* ------------------------------------------------------------ states */
+
+  /* Hover: the star under the pointer and the stars before it preview the score in the tone color. */
+  [data-ds='rating']:not([data-readonly], [data-disabled]) > [data-part='item']:hover,
+  [data-ds='rating']:not([data-readonly], [data-disabled]) > [data-part='item']:has(~ [data-part='item']:hover) {
+    --_rating-now: var(--_rating-fg-hover);
+  }
+
+  /* Stars after the hovered one preview as empty, also when the score is higher. */
+  [data-ds='rating']:not([data-readonly], [data-disabled]) > [data-part='item']:hover ~ [data-part='item'] {
+    --_rating-now: var(--_rating-fg);
+  }
+
+  [data-ds='rating']:not([data-readonly], [data-disabled]) > [data-part='item']:hover::after {
+    opacity: 1;
+  }
+
+  /* Focus: the ring fades in. The transparent outline shows in forced colors mode. */
+  [data-ds='rating'] > [data-part='item']:focus-visible {
+    outline: var(--ds-border-width-strong) solid transparent;
+    outline-offset: calc(var(--ds-border-width-strong) * -1);
+  }
+
+  [data-ds='rating'] > [data-part='item']:focus-visible::before {
+    opacity: 1;
+  }
+
+  /*
+   * Disabled: one disabled look for every control, on the stars. The text
+   * after them stays readable: it often says why. Native disabled on the stars.
+   */
+  [data-ds='rating'][data-disabled] [data-part='item'] {
+    opacity: var(--ds-opacity-disabled);
+    cursor: not-allowed;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    [data-ds='rating'] > [data-part='item']::before,
+    [data-ds='rating'] > [data-part='item']::after {
+      transition: none;
+    }
+  }
+
+  /*
+   * Forced colors: the ring and the veil go away and the transparent
+   * outline shows focus. Filled stars take Highlight; the shape still tells
+   * filled from empty.
+   */
+  @media (forced-colors: active) {
+    [data-ds='rating'] > [data-part='item']::before,
+    [data-ds='rating'] > [data-part='item']::after {
+      display: none;
+    }
+
+    [data-ds='rating'] [data-part='item'] {
+      color: CanvasText;
+    }
+
+    [data-ds='rating'] [data-part='item'][data-filled] {
+      color: Highlight;
+    }
+
+    [data-ds='rating'][data-disabled] [data-part='item'] {
+      color: GrayText;
+    }
+  }
+}

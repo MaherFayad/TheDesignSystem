@@ -1,0 +1,312 @@
+/*
+ * RadioCard: a group of cards, each one radio button. A card holds the
+ * indicator, an optional icon, the title and description, and optional end
+ * content.
+ *
+ * Source: no source (order 1.3.4). Designed from the dials table in PLAN.md
+ * 3.7 (bordered transparent controls in Studio and Desk), RadioGroup (the
+ * indicator circle) and the card radius of the active style.
+ *
+ * Private properties on the root (docs/contracts/anatomy.md, one convention).
+ * Recipes override these; states only swap them:
+ *   --_radio-card-padding-block, -padding-inline, -gap  card spacing
+ *   --_radio-card-font-size                            the title
+ *   --_radio-card-radius                               the card corners
+ *   --_radio-card-bg, -bg-checked                      the card fill
+ *   --_radio-card-border-color, -hover, -checked, -invalid
+ *   --_radio-card-ring                                 the focus ring
+ *   --_radio-card-veil                                 the hover veil
+ *   --_radio-card-control-size                         the indicator circle
+ *   --_radio-card-icon-size                            the icon, to line it up with the title
+ *   --_radio-card-fill, --_radio-card-dot              the checked circle and its dot
+ *
+ * Checked is never color alone: the border doubles in width (an inset line
+ * inside the border) and the indicator fills with a dot. ::before is the
+ * focus ring, ::after the hover veil.
+ *
+ * Working properties on the parts, set by the state rules only:
+ * --_radio-card-border-now, -bg-now and -inset on the item, and
+ * --_radio-card-circle-border and -circle-bg on the indicator.
+ */
+@layer ds.base {
+  [data-ds='radio-card'] {
+    --_radio-card-padding-block: var(--ds-space-m);
+    --_radio-card-padding-inline: var(--ds-space-l);
+    --_radio-card-gap: var(--ds-space-s);
+    --_radio-card-font-size: var(--ds-font-size-s);
+    --_radio-card-radius: var(--ds-radius-card);
+    --_radio-card-bg: transparent;
+    --_radio-card-bg-checked: var(--ds-color-bg-overlay-5);
+    --_radio-card-border-color: var(--ds-color-border-control);
+    --_radio-card-border-color-hover: var(--ds-color-border-control-hover);
+    --_radio-card-border-color-checked: var(--ds-color-text-default);
+    --_radio-card-border-color-invalid: var(--ds-color-state-danger-text);
+    --_radio-card-ring: var(--ds-focus-shadow-ring);
+    --_radio-card-veil: var(--ds-color-bg-overlay-5);
+    --_radio-card-control-size: var(--ds-size-icon-md);
+    --_radio-card-icon-size: var(--ds-size-icon-lg);
+    --_radio-card-fill: var(--ds-color-text-default);
+    --_radio-card-dot: var(--ds-color-bg-body);
+
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--ds-space-s);
+    align-content: start;
+    min-inline-size: 0;
+    font-family: var(--ds-font-family-sans);
+  }
+
+  /* horizontal: cards side by side, as many as fit, at least 12rem each. */
+  [data-ds='radio-card'][data-orientation='horizontal'] {
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, calc(var(--ds-size-control-lg) * 4)), 1fr));
+  }
+
+  /* ------------------------------------------------------------ sizes */
+
+  [data-ds='radio-card'][data-size='sm'] {
+    --_radio-card-padding-block: var(--ds-space-s);
+    --_radio-card-padding-inline: var(--ds-space-m);
+    --_radio-card-gap: var(--ds-space-xs);
+    --_radio-card-font-size: var(--ds-font-size-xs);
+    --_radio-card-radius: var(--ds-radius-sm);
+    --_radio-card-control-size: calc(var(--ds-size-icon-md) - var(--ds-space-fixed-4xs));
+    --_radio-card-icon-size: var(--ds-size-icon-md);
+  }
+
+  [data-ds='radio-card'][data-size='lg'] {
+    --_radio-card-padding-block: var(--ds-space-xl);
+    --_radio-card-padding-inline: var(--ds-space-xl);
+    --_radio-card-gap: var(--ds-space-m);
+    --_radio-card-font-size: var(--ds-font-size-m);
+    --_radio-card-control-size: calc(var(--ds-size-icon-md) + var(--ds-space-fixed-2xs));
+  }
+
+  /* ------------------------------------------------------------ tones */
+
+  /* The border keeps 3:1 against the page (WCAG 1.4.11): the yellow and the Studio fill do not. */
+  [data-ds='radio-card'][data-tone='accent'] {
+    --_radio-card-border-color-checked: var(--ds-color-primary-border);
+    --_radio-card-fill: var(--ds-color-primary-fill);
+    --_radio-card-dot: var(--ds-color-text-on-primary);
+    --_radio-card-ring: var(--ds-focus-shadow-primary);
+  }
+
+  /* ------------------------------------------------------------ the card */
+
+  [data-ds='radio-card'] > [data-part='item'] {
+    --_radio-card-border-now: var(--_radio-card-border-color);
+    --_radio-card-bg-now: var(--_radio-card-bg);
+    --_radio-card-inset: transparent;
+
+    position: relative;
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    grid-template-areas:
+      'indicator title end'
+      'indicator description end';
+    grid-template-rows: auto 1fr;
+    column-gap: var(--_radio-card-gap);
+    row-gap: var(--ds-space-3xs);
+    align-items: start;
+    box-sizing: border-box;
+    inline-size: 100%;
+    min-inline-size: 0;
+    min-block-size: var(--ds-size-target-min);
+    margin: 0;
+    padding-block: var(--_radio-card-padding-block);
+    padding-inline: var(--_radio-card-padding-inline);
+    border: var(--ds-border-width-default) solid var(--_radio-card-border-now);
+    border-radius: var(--_radio-card-radius);
+    background-color: var(--_radio-card-bg-now);
+    box-shadow: inset 0 0 0 var(--ds-border-width-default) var(--_radio-card-inset);
+    color: var(--ds-color-text-default);
+    font: inherit;
+    font-size: var(--_radio-card-font-size);
+    line-height: var(--ds-font-leading-snug);
+    text-align: start;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  [data-ds='radio-card'] > [data-part='item']:has(> [data-part='icon']) {
+    grid-template-columns: auto auto minmax(0, 1fr) auto;
+    grid-template-areas:
+      'indicator icon title end'
+      'indicator icon description end';
+  }
+
+  /* The focus ring, just outside the border. */
+  [data-ds='radio-card'] > [data-part='item']::before {
+    content: '';
+    position: absolute;
+    inset: calc(var(--ds-border-width-default) * -1);
+    border-radius: inherit;
+    box-shadow: var(--_radio-card-ring);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity var(--ds-duration-base) var(--ds-ease-default);
+  }
+
+  /* The hover veil. */
+  [data-ds='radio-card'] > [data-part='item']::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background-color: var(--_radio-card-veil);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity var(--ds-duration-fast) var(--ds-ease-default);
+  }
+
+  /* The circle, on the title's first line. The dot is a radial fill, so it needs no extra element. */
+  [data-ds='radio-card'] > [data-part='item'] > [data-part='indicator'] {
+    --_radio-card-circle-border: var(--ds-color-border-control);
+    --_radio-card-circle-bg: transparent;
+
+    grid-area: indicator;
+    box-sizing: border-box;
+    inline-size: var(--_radio-card-control-size);
+    block-size: var(--_radio-card-control-size);
+    margin-block-start: calc((var(--_radio-card-font-size) * var(--ds-font-leading-snug) - var(--_radio-card-control-size)) / 2);
+    border: var(--ds-border-width-strong) solid var(--_radio-card-circle-border);
+    border-radius: var(--ds-radius-pill);
+    background: radial-gradient(circle closest-side, var(--_radio-card-dot) 0 40%, var(--_radio-card-circle-bg) 44%);
+  }
+
+  [data-ds='radio-card'] > [data-part='item'] > [data-part='icon'] {
+    grid-area: icon;
+    display: inline-flex;
+    margin-block-start: calc((var(--_radio-card-font-size) * var(--ds-font-leading-snug) - var(--_radio-card-icon-size)) / 2);
+    color: var(--ds-color-text-muted);
+  }
+
+  [data-ds='radio-card'] > [data-part='item'] > [data-part='title'] {
+    grid-area: title;
+    min-inline-size: 0;
+    font-weight: var(--ds-font-weight-semibold);
+    overflow-wrap: anywhere;
+  }
+
+  [data-ds='radio-card'] > [data-part='item'] > [data-part='description'] {
+    grid-area: description;
+    min-inline-size: 0;
+    color: var(--ds-color-text-muted);
+    font-size: var(--ds-font-size-xs);
+    line-height: var(--ds-font-leading-normal);
+    overflow-wrap: anywhere;
+  }
+
+  [data-ds='radio-card'][data-size='lg'] > [data-part='item'] > [data-part='description'] {
+    font-size: var(--ds-font-size-s);
+  }
+
+  /* End content (a price): on the title line, its own width, never squeezed below a word. */
+  [data-ds='radio-card'] > [data-part='item'] > [data-part='end'] {
+    grid-area: end;
+    max-inline-size: calc(var(--ds-size-control-lg) * 3);
+    font-weight: var(--ds-font-weight-semibold);
+    text-align: end;
+    overflow-wrap: anywhere;
+  }
+
+  /* Content paints above the veil. */
+  [data-ds='radio-card'] > [data-part='item'] > * {
+    position: relative;
+  }
+
+  /* ------------------------------------------------------------ states */
+
+  [data-ds='radio-card'] > [data-part='item']:hover:not([data-disabled]) {
+    --_radio-card-border-now: var(--_radio-card-border-color-hover);
+  }
+
+  [data-ds='radio-card'] > [data-part='item']:hover:not([data-disabled])::after {
+    opacity: 1;
+  }
+
+  [data-ds='radio-card'] > [data-part='item'][data-state='checked'],
+  [data-ds='radio-card'] > [data-part='item'][data-state='checked']:hover {
+    --_radio-card-border-now: var(--_radio-card-border-color-checked);
+    --_radio-card-bg-now: var(--_radio-card-bg-checked);
+    --_radio-card-inset: var(--_radio-card-border-color-checked);
+  }
+
+  [data-ds='radio-card'] > [data-part='item'][data-state='checked'] > [data-part='indicator'] {
+    --_radio-card-circle-border: var(--_radio-card-border-color-checked);
+    --_radio-card-circle-bg: var(--_radio-card-fill);
+  }
+
+  /* Unchecked: the dot takes the circle's own fill, so it does not show. */
+  [data-ds='radio-card'] > [data-part='item'][data-state='unchecked'] > [data-part='indicator'] {
+    --_radio-card-dot: transparent;
+  }
+
+  [data-ds='radio-card'][data-invalid] > [data-part='item']:not([data-state='checked']) {
+    --_radio-card-border-now: var(--_radio-card-border-color-invalid);
+  }
+
+  [data-ds='radio-card'][data-invalid] > [data-part='item']:not([data-state='checked']) > [data-part='indicator'] {
+    --_radio-card-circle-border: var(--_radio-card-border-color-invalid);
+  }
+
+  /* Focus: the ring fades in. The transparent outline shows in forced colors mode. */
+  [data-ds='radio-card'] > [data-part='item']:focus-visible {
+    outline: var(--ds-border-width-strong) solid transparent;
+    outline-offset: var(--ds-border-width-strong);
+  }
+
+  [data-ds='radio-card'] > [data-part='item']:focus-visible::before {
+    opacity: 1;
+  }
+
+  /* Disabled: one disabled look for every control. Native disabled on the card. */
+  [data-ds='radio-card'] > [data-part='item'][data-disabled] {
+    opacity: var(--ds-opacity-disabled);
+    cursor: not-allowed;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    [data-ds='radio-card'] > [data-part='item']::before,
+    [data-ds='radio-card'] > [data-part='item']::after {
+      transition: none;
+    }
+  }
+
+  /*
+   * Forced colors: shadows and fills are dropped, so the ring, the veil and
+   * the inset line go away. The border turns Highlight and thick when
+   * checked, and the indicator keeps its dot in system colors.
+   */
+  @media (forced-colors: active) {
+    [data-ds='radio-card'] > [data-part='item']::before,
+    [data-ds='radio-card'] > [data-part='item']::after {
+      display: none;
+    }
+
+    /* The inset line is a shadow, which forced colors drops: the border itself thickens instead. */
+    [data-ds='radio-card'] > [data-part='item'][data-state='checked'] {
+      --_radio-card-border-now: Highlight;
+
+      border-width: var(--ds-border-width-strong);
+    }
+
+    [data-ds='radio-card'] > [data-part='item'] > [data-part='indicator'] {
+      forced-color-adjust: none;
+      --_radio-card-circle-border: CanvasText;
+      --_radio-card-circle-bg: Canvas;
+    }
+
+    [data-ds='radio-card'] > [data-part='item'][data-state='checked'] > [data-part='indicator'] {
+      --_radio-card-circle-border: Highlight;
+      --_radio-card-circle-bg: Canvas;
+      --_radio-card-dot: Highlight;
+    }
+
+    [data-ds='radio-card'] > [data-part='item'][data-disabled] {
+      --_radio-card-border-now: GrayText;
+
+      color: GrayText;
+    }
+  }
+}

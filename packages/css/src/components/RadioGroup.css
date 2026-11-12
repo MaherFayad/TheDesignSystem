@@ -1,0 +1,346 @@
+/*
+ * RadioGroup: a legend, an optional description, the items and an error.
+ * Each item is a row: the round control (a Radix radio button) with its
+ * indicator dot, the label and an optional description.
+ *
+ * Source: GoBanana could not be fetched in the lane session. The look comes
+ * from the dials table in PLAN.md 3.7 and the nearest components: Input (the
+ * control border and its hover, the focus ring) and Field (the legend,
+ * description and error type).
+ *
+ * Private properties on the root (docs/contracts/anatomy.md, one convention).
+ * Recipes override these; states only swap them:
+ *   --_radio-group-control-size  the circle
+ *   --_radio-group-dot-size      the indicator dot
+ *   --_radio-group-gap           space between the items
+ *   --_radio-group-item-gap      space between the circle and the label
+ *   --_radio-group-font-size     label size
+ *   --_radio-group-fg            text color
+ *   --_radio-group-bg            the circle at rest, -checked when checked
+ *   --_radio-group-border-color  the circle border, -hover, -checked, -invalid
+ *   --_radio-group-dot           the dot color on the checked fill
+ *   --_radio-group-ring          the focus ring, a box shadow
+ *   --_radio-group-veil          the hover veil around the circle
+ *
+ * The control holds two working properties, --_radio-group-border-now and
+ * --_radio-group-bg-now: the state rules point them at the -hover,
+ * -checked or -invalid value, so a state never writes a declaration.
+ * -checked and -invalid are suffixes beyond the convention's list, for the
+ * two states a radio has that a button does not.
+ *
+ * The control is 16px at md and sits in a 24px target: the ::after hover
+ * veil is a circle of size.target-min around it, so the press area is 24px
+ * even where the label is short. The label is bound to the control, so it
+ * extends the target too. ::before is the focus ring.
+ */
+@layer ds.base {
+  [data-ds='radio-group'] {
+    --_radio-group-control-size: var(--ds-size-icon-md);
+    --_radio-group-dot-size: calc(var(--_radio-group-control-size) * 0.4);
+    --_radio-group-gap: var(--ds-space-xs);
+    --_radio-group-item-gap: var(--ds-space-s);
+    --_radio-group-font-size: var(--ds-font-size-s);
+    --_radio-group-fg: var(--ds-color-text-default);
+    --_radio-group-bg: transparent;
+    --_radio-group-bg-checked: var(--ds-color-text-default);
+    --_radio-group-border-color: var(--ds-color-border-control);
+    --_radio-group-border-color-hover: var(--ds-color-border-control-hover);
+    --_radio-group-border-color-checked: var(--ds-color-text-default);
+    --_radio-group-border-color-invalid: var(--ds-color-state-danger-text);
+    --_radio-group-dot: var(--ds-color-bg-body);
+    --_radio-group-ring: var(--ds-focus-shadow-ring);
+    --_radio-group-veil: var(--ds-color-bg-overlay-10);
+
+    display: flex;
+    flex-direction: column;
+    gap: var(--ds-space-xs);
+    min-inline-size: 0;
+    color: var(--_radio-group-fg);
+    font-family: var(--ds-font-family-sans);
+    font-size: var(--_radio-group-font-size);
+    line-height: var(--ds-font-leading-snug);
+  }
+
+  /* ------------------------------------------------------------ sizes */
+
+  [data-ds='radio-group'][data-size='sm'] {
+    --_radio-group-control-size: calc(var(--ds-size-icon-md) - var(--ds-space-fixed-4xs));
+    --_radio-group-gap: var(--ds-space-2xs);
+    --_radio-group-item-gap: var(--ds-space-xs);
+    --_radio-group-font-size: var(--ds-font-size-xs);
+  }
+
+  /* lg: a 20px circle in a 44px row, for touch and site forms. */
+  [data-ds='radio-group'][data-size='lg'] {
+    --_radio-group-control-size: calc(var(--ds-size-icon-md) + var(--ds-space-fixed-2xs));
+    --_radio-group-gap: var(--ds-space-2xs);
+    --_radio-group-item-gap: var(--ds-space-m);
+    --_radio-group-font-size: var(--ds-font-size-m);
+  }
+
+  /* ------------------------------------------------------------ tones */
+
+  /* accent: the primary fill, yellow in Desk and the neutral fill in Studio. */
+  [data-ds='radio-group'][data-tone='accent'] {
+    --_radio-group-bg-checked: var(--ds-color-primary-fill);
+    /* The border keeps 3:1 against the page (WCAG 1.4.11): the yellow and the Studio fill do not. */
+    --_radio-group-border-color-checked: var(--ds-color-primary-border);
+    --_radio-group-dot: var(--ds-color-text-on-primary);
+    --_radio-group-ring: var(--ds-focus-shadow-primary);
+  }
+
+  /* ------------------------------------------------------------ group parts */
+
+  [data-ds='radio-group'] > [data-part='legend'] {
+    color: var(--ds-color-text-default);
+    font-size: var(--ds-font-size-s);
+    font-weight: var(--ds-font-weight-semibold);
+    line-height: var(--ds-font-leading-snug);
+    overflow-wrap: anywhere;
+  }
+
+  /* The required mark: a glyph, so it does not rely on color. */
+  [data-ds='radio-group'] > [data-part='legend'] > [data-part='required'] {
+    margin-inline-start: var(--ds-space-3xs);
+    color: var(--ds-color-text-muted);
+    font-weight: var(--ds-font-weight-regular);
+  }
+
+  [data-ds='radio-group'] > :is([data-part='description'], [data-part='error']) {
+    margin: 0;
+    font-size: var(--ds-font-size-s);
+    line-height: var(--ds-font-leading-normal);
+    overflow-wrap: anywhere;
+  }
+
+  [data-ds='radio-group'] > [data-part='description'] {
+    color: var(--ds-color-text-muted);
+  }
+
+  /* The error says what to do. The icon keeps it from being color only. */
+  [data-ds='radio-group'] > [data-part='error'] {
+    display: flex;
+    align-items: start;
+    gap: var(--ds-space-2xs);
+    color: var(--ds-color-state-danger-text);
+  }
+
+  [data-ds='radio-group'] > [data-part='items'] {
+    display: flex;
+    flex-direction: column;
+    gap: var(--_radio-group-gap);
+    min-inline-size: 0;
+  }
+
+  [data-ds='radio-group'][data-orientation='horizontal'] > [data-part='items'] {
+    flex-flow: row wrap;
+    column-gap: var(--ds-space-xl);
+  }
+
+  /* ------------------------------------------------------------ item */
+
+  /* A row: the control in the first column, the label and description in the second. */
+  [data-ds='radio-group'] [data-part='item'] {
+    display: grid;
+    grid-template-columns: max(var(--_radio-group-control-size), var(--ds-size-target-min)) minmax(0, 1fr);
+    column-gap: calc(var(--_radio-group-item-gap) - (max(var(--_radio-group-control-size), var(--ds-size-target-min)) - var(--_radio-group-control-size)) / 2);
+    align-items: center;
+    align-content: center;
+    min-block-size: var(--ds-size-target-min);
+    min-inline-size: 0;
+  }
+
+  [data-ds='radio-group'][data-size='lg'] [data-part='item'] {
+    min-block-size: var(--ds-size-control-lg);
+  }
+
+  /* With a description the control lines up with the first line of the label. */
+  [data-ds='radio-group'] [data-part='item']:has(> [data-part='description']) {
+    align-items: start;
+  }
+
+  [data-ds='radio-group'] [data-part='item'] > [data-part='control'] {
+    --_radio-group-border-now: var(--_radio-group-border-color);
+    --_radio-group-bg-now: var(--_radio-group-bg);
+
+    position: relative;
+    grid-column: 1;
+    grid-row: 1;
+    justify-self: center;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    inline-size: var(--_radio-group-control-size);
+    block-size: var(--_radio-group-control-size);
+    margin: 0;
+    padding: 0;
+    border: var(--ds-border-width-strong) solid var(--_radio-group-border-now);
+    border-radius: var(--ds-radius-pill);
+    background-color: var(--_radio-group-bg-now);
+    color: inherit;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  /* With a description the circle sits on the label's first line. */
+  [data-ds='radio-group'] [data-part='item']:has(> [data-part='description']) > [data-part='control'] {
+    align-self: start;
+    margin-block-start: calc(var(--ds-space-3xs) + (var(--_radio-group-font-size) * var(--ds-font-leading-snug) - var(--_radio-group-control-size)) / 2);
+  }
+
+  /* The focus ring. */
+  [data-ds='radio-group'] [data-part='control']::before {
+    content: '';
+    position: absolute;
+    inset: calc(var(--ds-border-width-strong) * -1);
+    border-radius: inherit;
+    box-shadow: var(--_radio-group-ring);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity var(--ds-duration-base) var(--ds-ease-default);
+  }
+
+  /* The hover veil, and the 24px press area around a smaller circle. */
+  [data-ds='radio-group'] [data-part='control']::after {
+    content: '';
+    position: absolute;
+    inset: calc((var(--_radio-group-control-size) - max(var(--_radio-group-control-size), var(--ds-size-target-min))) / 2 - var(--ds-border-width-strong));
+    border-radius: var(--ds-radius-pill);
+    background-color: var(--_radio-group-veil);
+    opacity: 0;
+    transition: opacity var(--ds-duration-fast) var(--ds-ease-default);
+  }
+
+  /* The dot: always in the DOM, so it can fade and scale in. Never color alone: the dot is a shape. */
+  [data-ds='radio-group'] [data-part='indicator'] {
+    display: block;
+    inline-size: var(--_radio-group-dot-size);
+    block-size: var(--_radio-group-dot-size);
+    border-radius: var(--ds-radius-pill);
+    background-color: var(--_radio-group-dot);
+    opacity: 0;
+    transform: scale(0.4);
+    transition:
+      opacity var(--ds-duration-fast) var(--ds-ease-default),
+      transform var(--ds-duration-fast) var(--ds-ease-default);
+  }
+
+  [data-ds='radio-group'] [data-part='item'] > [data-part='label'] {
+    grid-column: 2;
+    min-inline-size: 0;
+    padding-block: var(--ds-space-3xs);
+    color: inherit;
+    line-height: var(--ds-font-leading-snug);
+    overflow-wrap: anywhere;
+    cursor: pointer;
+  }
+
+  [data-ds='radio-group'] [data-part='item'] > [data-part='description'] {
+    grid-column: 2;
+    margin: 0;
+    color: var(--ds-color-text-muted);
+    font-size: var(--ds-font-size-xs);
+    line-height: var(--ds-font-leading-normal);
+    overflow-wrap: anywhere;
+  }
+
+  [data-ds='radio-group'][data-size='lg'] [data-part='item'] > [data-part='description'] {
+    font-size: var(--ds-font-size-s);
+  }
+
+  /* ------------------------------------------------------------ states */
+
+  /* Hover on the row, the label included. */
+  [data-ds='radio-group'] [data-part='item']:not([data-disabled]):has(> :is([data-part='control'], [data-part='label']):hover) > [data-part='control'] {
+    --_radio-group-border-now: var(--_radio-group-border-color-hover);
+  }
+
+  /* The veil shows around an unchecked circle only, so it never greys the dot. */
+  [data-ds='radio-group'] [data-part='item'][data-state='unchecked']:not([data-disabled]):has(> :is([data-part='control'], [data-part='label']):hover) > [data-part='control']::after {
+    opacity: 1;
+  }
+
+  [data-ds='radio-group'] [data-part='item'][data-state='checked'] > [data-part='control'] {
+    --_radio-group-border-now: var(--_radio-group-border-color-checked);
+    --_radio-group-bg-now: var(--_radio-group-bg-checked);
+  }
+
+  [data-ds='radio-group'] [data-part='item'][data-state='checked'] [data-part='indicator'] {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  /* Invalid: the danger border on every unchecked circle; the error text says what to do. */
+  [data-ds='radio-group'][data-invalid] [data-part='item']:not([data-state='checked']) > [data-part='control'] {
+    --_radio-group-border-now: var(--_radio-group-border-color-invalid);
+  }
+
+  /* Focus: the ring fades in. The transparent outline shows in forced colors mode. */
+  [data-ds='radio-group'] [data-part='control']:focus-visible {
+    outline: var(--ds-border-width-strong) solid transparent;
+    outline-offset: var(--ds-border-width-strong);
+  }
+
+  [data-ds='radio-group'] [data-part='control']:focus-visible::before {
+    opacity: 1;
+  }
+
+  /*
+   * Disabled: one disabled look for every control, on the circle and the
+   * label. The description stays readable: it often says why.
+   */
+  [data-ds='radio-group'] [data-part='item'][data-disabled] > :is([data-part='control'], [data-part='label']) {
+    opacity: var(--ds-opacity-disabled);
+    cursor: not-allowed;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    [data-ds='radio-group'] [data-part='control']::before,
+    [data-ds='radio-group'] [data-part='control']::after,
+    [data-ds='radio-group'] [data-part='indicator'] {
+      transition: none;
+    }
+
+    [data-ds='radio-group'] [data-part='indicator'] {
+      transform: none;
+    }
+  }
+
+  /*
+   * Forced colors: box shadows and backgrounds are dropped, so the ring and
+   * the veil go away and the transparent outline in the focus rule shows
+   * focus. The circle and the dot keep system colors.
+   */
+  @media (forced-colors: active) {
+    [data-ds='radio-group'] [data-part='control']::before {
+      display: none;
+    }
+
+    [data-ds='radio-group'] [data-part='control']::after {
+      background-color: transparent;
+    }
+
+    [data-ds='radio-group'] [data-part='item'] > [data-part='control'] {
+      --_radio-group-border-now: CanvasText;
+      --_radio-group-bg-now: Canvas;
+    }
+
+    [data-ds='radio-group'] [data-part='item'][data-state='checked'] > [data-part='control'] {
+      --_radio-group-border-now: Highlight;
+    }
+
+    [data-ds='radio-group'] [data-part='indicator'] {
+      forced-color-adjust: none;
+      background-color: Highlight;
+    }
+
+    [data-ds='radio-group'] [data-part='item'][data-disabled] {
+      color: GrayText;
+    }
+
+    [data-ds='radio-group'] [data-part='item'][data-disabled] > [data-part='control'] {
+      --_radio-group-border-now: GrayText;
+    }
+  }
+}

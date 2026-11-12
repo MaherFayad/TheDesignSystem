@@ -1,0 +1,292 @@
+{
+  "name": "RadioGroup",
+  "kind": "component",
+  "family": "forms",
+  "summary": "One choice among a few visible options: round controls with labels under a legend, with an optional description and error.",
+  "useWhen": [
+    "One choice among two to six options that people should see side by side before they pick",
+    "A setting where the options need a line of explanation each",
+    "A required question in a form where no answer is picked yet"
+  ],
+  "avoidWhen": [
+    "Seven or more options, or a list that grows",
+    "A single yes or no setting",
+    "Several answers may be picked",
+    "Options that need a title, text and an icon in a card"
+  ],
+  "insteadUse": {
+    "Seven or more options, or a list that grows": "Select",
+    "A single yes or no setting that applies at once": "Switch",
+    "A single yes or no answer in a form": "Checkbox",
+    "Several answers may be picked": "CheckboxGroup",
+    "Options drawn as cards with a title, text and an icon": "RadioCard",
+    "Two to four views of the same content, switched in place": "SegmentedControl",
+    "A score from 1 to 5": "Rating"
+  },
+  "anatomy": [
+    "root",
+    "legend",
+    "required",
+    "description",
+    "items",
+    "item",
+    "control",
+    "indicator",
+    "label",
+    "error"
+  ],
+  "parts": {
+    "RadioGroupItem": "item"
+  },
+  "slots": {
+    "items": {
+      "accepts": [
+        "RadioGroupItem"
+      ],
+      "min": 2
+    },
+    "legend": {
+      "accepts": "text",
+      "max": 1
+    }
+  },
+  "props": {
+    "label": {
+      "type": "node",
+      "description": "The visible question, rendered as the legend and used as the group name."
+    },
+    "description": {
+      "type": "node",
+      "description": "A hint for the whole group. Joins aria-describedby. On RadioGroupItem, a line of help under that option."
+    },
+    "error": {
+      "type": "node",
+      "description": "What is wrong and how to fix it. While it shows, the group is invalid."
+    },
+    "invalid": {
+      "type": "boolean",
+      "description": "Marks the group invalid. When not passed, the group is invalid while it shows an error. false hides the error."
+    },
+    "value": {
+      "type": "string",
+      "description": "The checked value, controlled."
+    },
+    "defaultValue": {
+      "type": "string",
+      "description": "The checked value at first render. No default: a group starts with none checked."
+    },
+    "onValueChange": {
+      "type": "function",
+      "description": "Called with the new value when a person picks an option."
+    },
+    "disabled": {
+      "type": "boolean",
+      "default": false,
+      "description": "Disables every option. On RadioGroupItem, that option only."
+    },
+    "required": {
+      "type": "boolean",
+      "default": false,
+      "description": "Shows the required mark on the legend and sets aria-required."
+    },
+    "name": {
+      "type": "string",
+      "description": "The form field name of the hidden native inputs."
+    },
+    "orientation": {
+      "type": [
+        "vertical",
+        "horizontal"
+      ],
+      "default": "vertical",
+      "description": "vertical: one option per line. horizontal: options on one line that wraps."
+    },
+    "size": {
+      "type": [
+        "sm",
+        "md",
+        "lg"
+      ],
+      "default": "md",
+      "description": "Circle 14, 16 and 20 px. Every circle sits in a press area of at least 24px; lg rows are 44px."
+    },
+    "tone": {
+      "type": [
+        "neutral",
+        "accent"
+      ],
+      "default": "neutral",
+      "description": "neutral: the checked circle takes the text color. accent: the primary fill, yellow in Desk."
+    },
+    "loop": {
+      "type": "boolean",
+      "default": true,
+      "description": "Arrow keys wrap from the last option to the first."
+    }
+  },
+  "states": [
+    "checked",
+    "unchecked",
+    "data-disabled",
+    "data-invalid",
+    "data-orientation"
+  ],
+  "a11y": {
+    "role": "radiogroup on the root, named by the legend; radio on each control, named by its label",
+    "focus": "One tab stop for the group. Tab lands on the checked option, or the first enabled option when none is checked. Focus shows a 2px ring around the circle.",
+    "keys": {
+      "Tab": "Moves focus into the group at the checked option, and on to the next control",
+      "Shift+Tab": "Moves focus back out of the group",
+      "ArrowDown": "Moves to the next option and selects it",
+      "ArrowUp": "Moves to the previous option and selects it",
+      "ArrowRight, ArrowLeft": "Move to the option on that side and select it, in either orientation. They follow the reading direction: in Arabic ArrowLeft moves to the next option.",
+      "Space": "Selects the focused option when it is not checked"
+    },
+    "announce": "The group name from the legend, the group description and error through aria-describedby, aria-invalid and aria-required on the group. Each option is read with its label, its description, its checked state and its position, for example 2 of 3.",
+    "native": {
+      "accessibilityRole": "radiogroup",
+      "accessibilityState": [
+        "checked",
+        "disabled"
+      ]
+    },
+    "notes": [
+      "Behavior from Radix RadioGroup. Each control is a button with role radio; a hidden native input per option posts the value with the form.",
+      "Enter does not select, as in a native radio group. Enter submits the form.",
+      "Disabled uses native disabled, as for text entry: a disabled option leaves the arrow order and draws with opacity.disabled.",
+      "Read only does not apply: show the chosen value as text instead.",
+      "The 16px circle sits in a 24px press area (WCAG 2.5.8): the hover veil is that area, and the label is bound to the control, so the text extends it.",
+      "The checked state is a filled circle with a dot, never color alone. Invalid adds the danger border to the unchecked circles and an error with an icon.",
+      "The error is not a live region. On submit, move focus to the checked option or the first option.",
+      "data-invalid is on the root and on each item; the unchecked circles take the danger border."
+    ]
+  },
+  "content": {
+    "en": {
+      "legend": "A short question or a noun in sentence case: Who can comment, Billing period.",
+      "label": "Short, parallel and in sentence case. Start with the word that tells options apart. No end punctuation.",
+      "description": "One line that helps choose: what the option means or costs.",
+      "error": "Say what to do: Pick a billing period, so we can show the price.",
+      "order": "A natural order (smallest to largest, most common first). Preselect the safe default when there is one."
+    },
+    "ar": {
+      "legend": "سؤال قصير أو اسم بدون تشكيل: صلاحية التعليق، فترة الفوترة",
+      "label": "قصيرة ومتوازية، بصيغة الاسم وبدون تشكيل",
+      "description": "سطر واحد يوضح الفرق بين الخيارات",
+      "error": "قل وش المطلوب: اختر فترة الفوترة عشان نعرض لك السعر"
+    }
+  },
+  "tokens": [
+    "size.icon.md",
+    "size.target-min",
+    "size.control.lg",
+    "space.fixed.4xs",
+    "space.fixed.2xs",
+    "space.3xs",
+    "space.2xs",
+    "space.xs",
+    "space.s",
+    "space.m",
+    "space.xl",
+    "font.family.sans",
+    "font.size.xs",
+    "font.size.s",
+    "font.size.m",
+    "font.weight.semibold",
+    "font.weight.regular",
+    "font.leading.snug",
+    "font.leading.normal",
+    "radius.pill",
+    "border.width.strong",
+    "color.text.default",
+    "color.text.muted",
+    "color.text.on-primary",
+    "color.bg.body",
+    "color.bg.overlay-10",
+    "color.border.control",
+    "color.border.control-hover",
+    "color.primary.fill",
+    "color.state.danger.text",
+    "focus.shadow.ring",
+    "focus.shadow.primary",
+    "opacity.disabled",
+    "duration.base",
+    "duration.fast",
+    "ease.default"
+  ],
+  "motion": "fade",
+  "frameworks": {
+    "react": {
+      "status": "ready",
+      "behavior": "radix RadioGroup",
+      "example": "RadioGroup.demo.tsx"
+    },
+    "angular": {
+      "status": "planned"
+    },
+    "native": {
+      "status": "planned"
+    }
+  },
+  "styles": {
+    "studio": "A transparent circle with the control border; checked fills it with the text color and a dot in the body color. accent uses the translucent primary fill with the control border and a dot in the text color.",
+    "desk": "The same circle in Instrument Sans; accent fills it with the yellow primary and a dark dot, with the primary border (dark gold in light) and the doubled focus ring."
+  },
+  "mistakes": [
+    {
+      "wrong": "A RadioGroup with one option, to ask for a yes or no",
+      "right": "A Checkbox, or a Switch for a setting that applies at once"
+    },
+    {
+      "wrong": "Twelve time zones as radios",
+      "right": "A Select or a Combobox"
+    },
+    {
+      "wrong": "Options without a legend, named only by the heading above",
+      "right": "label on the RadioGroup, so the group has a name"
+    },
+    {
+      "wrong": "Red labels to show the group is invalid",
+      "right": "error on the RadioGroup: the message with an icon says what to do"
+    },
+    {
+      "wrong": "Options that change the page at once, like tabs",
+      "right": "SegmentedControl or Tabs"
+    }
+  ],
+  "contract": {
+    "optionalParts": [
+      "required",
+      "description",
+      "error"
+    ],
+    "keys": {
+      "ArrowDown": {
+        "focus": "[data-part='control'][data-state='checked']",
+        "case": "many",
+        "expect": "value-changes"
+      },
+      "ArrowRight": {
+        "focus": "[data-part='control'][data-state='checked']",
+        "case": "many",
+        "expect": "value-changes"
+      },
+      "ArrowUp": {
+        "focus": "[data-part='control'][data-state='checked']",
+        "case": "many",
+        "expect": "value-changes"
+      },
+      "ArrowLeft": {
+        "focus": "[data-part='control'][data-state='checked']",
+        "case": "many",
+        "expect": "value-changes"
+      },
+      "Space": {
+        "focus": "[data-part='control']",
+        "case": "empty",
+        "expect": "state-changes"
+      }
+    }
+  },
+  "since": "0.1.0"
+}
