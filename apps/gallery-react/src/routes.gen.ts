@@ -42,6 +42,7 @@ export const routes: DemoRoute[] = [
   { name: 'FieldError', slug: 'field-error', load: () => import('../../../packages/react/src/components/FieldError/FieldError.demo') },
   { name: 'Fieldset', slug: 'fieldset', load: () => import('../../../packages/react/src/components/Fieldset/Fieldset.demo') },
   { name: 'FloatingActionButton', slug: 'floating-action-button', load: () => import('../../../packages/react/src/components/FloatingActionButton/FloatingActionButton.demo') },
+  { name: 'Form', slug: 'form', load: () => import('../../../packages/react/src/components/Form/Form.demo') },
   { name: 'FormWizard', slug: 'form-wizard', load: () => import('../../../packages/react/src/components/FormWizard/FormWizard.demo') },
   { name: 'Grid', slug: 'grid', load: () => import('../../../packages/react/src/components/Grid/Grid.demo') },
   { name: 'HoverCard', slug: 'hover-card', load: () => import('../../../packages/react/src/components/HoverCard/HoverCard.demo') },

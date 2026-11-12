@@ -8136,6 +8136,208 @@
     "since": "0.2.0"
   },
   {
+    "name": "Form",
+    "kind": "component",
+    "family": "forms",
+    "summary": "A native form that checks on submit, lists the errors in a summary with links to the fields, moves focus to the first invalid field, announces the result once and maps server errors to fields by name.",
+    "useWhen": [
+      "Any set of fields sent together with one submit button",
+      "A form that needs custom checks next to the browser's own (type, pattern, required)",
+      "A form whose server answer can say which field is wrong",
+      "A short form inside a Dialog, with the submit Button in the footer"
+    ],
+    "avoidWhen": [
+      "A long form the person fills over several steps",
+      "One setting that saves the moment it changes",
+      "A search box or a filter row that updates a list as the person types"
+    ],
+    "insteadUse": {
+      "A long form split into steps with a review step": "FormWizard",
+      "One setting that saves at once": "Switch",
+      "A search and filter row above a list": "FilterBar",
+      "A text that is edited where it is shown": "InlineEdit"
+    },
+    "anatomy": [
+      "root",
+      "summary",
+      "body",
+      "actions"
+    ],
+    "parts": {
+      "FormField": "body",
+      "FormSubmit": "actions"
+    },
+    "slots": {
+      "summary": {
+        "accepts": [
+          "Alert"
+        ],
+        "max": 1
+      },
+      "body": {
+        "accepts": [
+          "FormField",
+          "Field",
+          "Fieldset",
+          "CheckboxGroup",
+          "RadioGroup",
+          "ConsentField",
+          "Checkbox",
+          "Switch"
+        ],
+        "min": 1
+      },
+      "actions": {
+        "accepts": [
+          "FormSubmit",
+          "Button"
+        ],
+        "max": 3
+      }
+    },
+    "props": {
+      "size": {
+        "type": [
+          "sm",
+          "md",
+          "lg"
+        ],
+        "default": "md",
+        "description": "Space between the fields and the parts. Shared with the fields through useFormContext()."
+      },
+      "orientation": {
+        "type": [
+          "vertical",
+          "horizontal"
+        ],
+        "default": "vertical",
+        "description": "The default orientation of every FormField: label above, or label at the start of the line."
+      },
+      "validators": {
+        "type": "Record<string, FormValidator | FormValidator[]>",
+        "description": "Custom checks by field name, run after the browser constraint check. Each returns a message or nothing."
+      },
+      "onSubmit": {
+        "type": "function",
+        "description": "Called with the values when every check passes. May return server errors in any shape mapServerErrors reads; a promise keeps the form in submitting."
+      },
+      "onErrors": {
+        "type": "function",
+        "description": "Called with the field errors each time a submit finds some."
+      },
+      "serverErrors": {
+        "type": "unknown",
+        "description": "Errors from outside, such as a server action rendered with the page. Shown without moving focus."
+      },
+      "actions": {
+        "type": "node",
+        "description": "The buttons, in the actions part. FormSubmit first."
+      },
+      "labels": {
+        "type": "Partial<FormLabels>",
+        "description": "Copy for the summary title and the built in errors. Default from the Theme language, English or Arabic."
+      }
+    },
+    "states": [
+      "idle",
+      "submitting",
+      "submitted",
+      "data-invalid",
+      "data-orientation"
+    ],
+    "a11y": {
+      "role": "form, the native element. Give it aria-label or aria-labelledby when the page has more than one form.",
+      "focus": "On a submit with errors, focus moves to the first invalid field in form order; when no field can take it, to the summary. Values are kept.",
+      "keys": {
+        "Tab": "Moves through the fields, then the actions. The form adds no stop of its own.",
+        "Enter": "In a single line field, submits the form through its submit button. On a summary link, moves focus to that field."
+      },
+      "announce": "Once per submit with errors, a polite status says how many fields to fix (WCAG 4.1.3). The summary itself is not a live region, so nothing is read twice. Each field reads its error through aria-describedby when focus lands on it.",
+      "native": {
+        "accessibilityRole": "none"
+      },
+      "notes": [
+        "Hand built on the native form with noValidate: the browser bubble never shows, and type, pattern, min and maxLength still feed the check through checkValidity().",
+        "An empty control with native required or aria-required (Field sets aria-required) gets the required message.",
+        "After a submit, a change that fixes a field removes its error at once. A change never adds an error: checks run on submit.",
+        "autocomplete is never changed and values are never cleared on an error, so nothing is asked twice (WCAG 3.3.7, 3.3.8).",
+        "aria-busy is true while onSubmit runs, and FormSubmit shows its loading state.",
+        "A form in a Dialog: the form sits in DialogBody with an id, and the submit Button in DialogFooter takes form set to that id and type submit. Enter in a field still submits. That footer Button is outside the Form context, so it shows no loading state: give it loading from your own state when onSubmit is slow.",
+        "The action prop is not taken: the form checks before it sends, and React does not run an action on a submit that is stopped. Call the server action from onSubmit and return its errors.",
+        "When onSubmit throws, the summary says the form could not be sent and focus moves to it. Values are kept.",
+        "Read only controls, hidden inputs and controls in a disabled Fieldset are not checked."
+      ]
+    },
+    "content": {
+      "en": {
+        "submit": "A verb plus a noun that names the result: Send request, Save address, Create account. Never Submit, OK or Continue.",
+        "summary": "Fix 2 fields to send the form. Count the fields, name the goal.",
+        "errors": "Each says what to do with the field: Add your city. Use your work email, not a personal one.",
+        "required": "Say once, above the form, that fields marked * are required."
+      },
+      "ar": {
+        "submit": "اسم الفعل مع الشيء: إرسال الطلب، حفظ العنوان، إنشاء الحساب",
+        "summary": "حقلين يحتاجون تصحيح قبل الإرسال",
+        "errors": "كل خطأ يقول وش يسوي: اكتب المدينة. استخدم بريد العمل مو البريد الشخصي",
+        "required": "سطر واحد فوق النموذج: الحقول اللي عليها * مطلوبة"
+      }
+    },
+    "tokens": [
+      "space.3xs",
+      "space.2xs",
+      "space.xs",
+      "space.s",
+      "space.m",
+      "space.l",
+      "space.xl",
+      "space.2xl",
+      "border.width.strong",
+      "focus.shadow.ring"
+    ],
+    "motion": "none",
+    "frameworks": {
+      "react": {
+        "status": "ready",
+        "behavior": "hand built native form, shared logic in packages/shared/src/form.ts, Alert as the summary",
+        "example": "Form.demo.tsx"
+      },
+      "angular": {
+        "status": "planned"
+      },
+      "native": {
+        "status": "planned"
+      }
+    },
+    "styles": {
+      "studio": "Fields stacked with a roomy gap, the danger Alert summary on top, the actions on one wrapping line at the start",
+      "desk": "The same layout, in Instrument Sans, the summary Alert in its Desk look",
+      "neutral": "Takes the tokens of the Neutral style, no recipe."
+    },
+    "mistakes": [
+      {
+        "wrong": "A submit button that stays disabled until every field is valid",
+        "right": "An enabled submit that checks, lists the errors and moves focus to the first one"
+      },
+      {
+        "wrong": "Checking every field on each key press and showing errors while the person types",
+        "right": "Check on submit; after that, remove an error as soon as the field is fixed"
+      },
+      {
+        "wrong": "A summary with role alert and a field error that is also live, so each error is read twice",
+        "right": "One polite status per submit, and errors read through aria-describedby"
+      },
+      {
+        "wrong": "Clearing the fields or the password after a server error",
+        "right": "Keep every value and show the server message on the field it names"
+      },
+      {
+        "wrong": "A multi step flow built as one long Form with hidden sections",
+        "right": "FormWizard"
+      }
+    ],
+    "since": "0.1.0"
+  },
+  {
     "name": "FormWizard",
     "kind": "component",
     "family": "forms",
