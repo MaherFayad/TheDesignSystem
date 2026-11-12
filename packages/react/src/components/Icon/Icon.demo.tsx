@@ -1,74 +1,81 @@
-import type { CSSProperties } from 'react';
+import { Fragment } from 'react';
 import { iconNames, iconSetIds, mirrorIcons, type IconName } from '@the-system/icons';
+import { DemoCase, DemoGrid, DemoPage, DemoRow } from '../../demo';
+import { Theme } from '../../theme';
 import { Icon, IconSetContext } from './index';
 
-const row: CSSProperties = {
-  display: 'flex',
-  flexWrap: 'wrap',
-  alignItems: 'center',
-  gap: 'var(--ds-space-xs)',
-};
-
-const grid: CSSProperties = {
-  display: 'grid',
-  gridTemplateColumns: 'repeat(auto-fill, minmax(8rem, 1fr))',
-  gap: 'var(--ds-space-xs)',
-};
-
 const sizes = ['sm', 'md', 'lg'] as const;
-const sample: IconName[] = ['close', 'check', 'search', 'warning', 'settings', 'chevron-forward'];
+const sample: IconName[] = ['close', 'check', 'search', 'warning', 'settings', 'mail', 'star-half', 'chevron-forward'];
+/** Glyphs that never flip, shown next to the mirror list for contrast. */
+const fixed: IconName[] = ['clock', 'history', 'play', 'pause', 'trend-up'];
 
-export default function IconDemo() {
+function MirrorRows({ labels }: { labels: { ltr: string; rtl: string } }) {
   return (
-    <div style={{ display: 'grid', gap: 'var(--ds-space-md)' }}>
-      <section data-demo-case="variants">
-        <h2>Sizes and sets</h2>
-        {iconSetIds.map((set) => (
-          <IconSetContext key={set} value={{ set }}>
-            <h3>{set}</h3>
-            {sizes.map((size) => (
-              <div key={size} style={row}>
-                <span>{size}</span>
-                {sample.map((name) => (
-                  <Icon key={name} name={name} size={size} />
-                ))}
-              </div>
-            ))}
-          </IconSetContext>
-        ))}
-        <h3>Mirror in right to left</h3>
-        {(['ltr', 'rtl'] as const).map((dir) => (
-          <div key={dir} dir={dir} style={row}>
-            <span>{dir}</span>
+    <>
+      {(['ltr', 'rtl'] as const).map((dir) => (
+        <Theme key={dir} dir={dir}>
+          <DemoRow label={labels[dir]}>
             {mirrorIcons.map((name) => (
               <Icon key={name} name={name} />
             ))}
-            <Icon name="clock" />
-            <Icon name="play" />
-          </div>
+            {fixed.map((name) => (
+              <Icon key={name} name={name} />
+            ))}
+          </DemoRow>
+        </Theme>
+      ))}
+    </>
+  );
+}
+
+export default function IconDemo() {
+  return (
+    <DemoPage>
+      <DemoCase id="variants" title="Sizes in each set, and the mirror flag">
+        {iconSetIds.map((set) => (
+          <IconSetContext key={set} value={{ set }}>
+            {sizes.map((size) => (
+              <DemoRow key={size} label={`${set} ${size}`}>
+                {sample.map((name) => (
+                  <Icon key={name} name={name} size={size} />
+                ))}
+              </DemoRow>
+            ))}
+          </IconSetContext>
         ))}
-        <h3>With a label</h3>
-        <div style={row}>
+        <MirrorRows labels={{ ltr: 'Left to right', rtl: 'Right to left' }} />
+      </DemoCase>
+
+      <DemoCase id="one" title="One icon with a label">
+        <DemoRow>
           <Icon name="warning" label="Warning" />
           <span>Storage is almost full</span>
-        </div>
-      </section>
-      <section data-demo-case="many">
-        <h2>Every icon</h2>
+        </DemoRow>
+      </DemoCase>
+
+      <DemoCase id="many" title="Every icon in every set">
         {iconSetIds.map((set) => (
-          <div key={set}>
-            <h3>{set}</h3>
-            <div style={grid}>
+          <Fragment key={set}>
+            <h3 data-demo="title">{set === 'pixel' ? 'Pixel set' : 'Line set'}</h3>
+            <DemoGrid>
               {iconNames.map((name) => (
-                <div key={name} style={row}>
+                <DemoRow key={name}>
                   <Icon name={name} set={set} />
                   <span>{name}</span>
-                </div>
+                </DemoRow>
               ))}
-            </div>
-          </div>
+            </DemoGrid>
+          </Fragment>
         ))}
-      </section>
-    </div>
+      </DemoCase>
+
+      <DemoCase id="long-arabic" title="Arabic: directional icons flip" lang="ar">
+        <MirrorRows labels={{ ltr: 'من اليسار', rtl: 'من اليمين' }} />
+        <DemoRow>
+          <Icon name="warning" label="تحذير" />
+          <span>المساحة قربت تخلص، احذف ملفات ما تحتاجها</span>
+        </DemoRow>
+      </DemoCase>
+    </DemoPage>
   );
 }

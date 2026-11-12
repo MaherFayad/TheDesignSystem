@@ -1,4 +1,4 @@
-import { existsSync, readFileSync } from 'node:fs';
+import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { generate, optimizeSvg, readGlyph, sources } from './build';
@@ -36,6 +36,16 @@ describe('icon build', () => {
     expect(a.has(join(import.meta.dirname, 'src', 'generated', 'sets.gen.ts'))).toBe(true);
   });
 
+  it('keeps every attribute, digits in names included', () => {
+    for (const set of Object.values(iconSets)) {
+      for (const [name, { body }] of Object.entries(set.icons)) {
+        for (const [tag, attrs] of parseBody(body)) expect(Object.keys(attrs).length, `${set.id} ${name} ${tag}`).toBeGreaterThan(0);
+        expect(body, `${set.id} ${name}`).not.toMatch(/<[a-z]+\/>/);
+      }
+    }
+    expect(parseBody(iconSets.line.icons['zoom-in'].body)[1]?.[1]).toEqual({ x1: '21', x2: '16.65', y1: '21', y2: '16.65' });
+  });
+
   it('optimizes to flat self closing elements and rejects groups', () => {
     const out = optimizeSvg(
       '<!-- c --><svg class="a" viewBox="0 0 24 24" fill="none">\n  <path d="M1 1  h2" class="b" />\n  <circle cx="1" cy="1" r="1"/>\n</svg>',
@@ -57,5 +67,22 @@ describe('icon build', () => {
     expect(resolveIcon('close', { set: 'nope' }).set.id).toBe('pixel');
     const mapped = resolveIcon('success', { set: 'pixel', map: { success: 'missing-glyph' } });
     expect(mapped.data).toBe(iconSets.pixel.icons.success);
+  });
+});
+
+describe('icon names outside the package', () => {
+  it('the Icon manifest lists every system name, in order', () => {
+    const file = join(import.meta.dirname, '..', 'manifest', 'src', 'component', 'Icon.manifest.json');
+    const manifest = JSON.parse(readFileSync(file, 'utf8')) as { props: { name: { type: string[] } } };
+    expect(manifest.props.name.type).toEqual([...iconNames]);
+  });
+
+  it('every derived glyph in sets/local is used by its set', () => {
+    for (const source of sources) {
+      const dir = join(import.meta.dirname, 'sets', 'local', source.id);
+      if (!existsSync(dir)) continue;
+      const used = new Set(Object.values(source.glyphs));
+      for (const f of readdirSync(dir)) expect(used.has(`local:${f.replace(/\.svg$/, '')}`), f).toBe(true);
+    }
   });
 });

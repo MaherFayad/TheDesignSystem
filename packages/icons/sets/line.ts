@@ -1,4 +1,8 @@
 // Lucide (ISC). A 24 by 24 grid, 2px round stroked lines in currentColor.
+//
+// local:<file> is a glyph in sets/local/line/, derived from Lucide: dot (a
+// filled circle, the Lucide dot is too small for a radio mark) and
+// star-filled (the Lucide star with a fill).
 import type { IconSetSource } from './source';
 
 const line: IconSetSource = {
@@ -66,6 +70,48 @@ const line: IconSetSource = {
     moon: 'moon',
     globe: 'globe',
     drag: 'grip-vertical',
+    mail: 'mail',
+    dot: 'local:dot',
+    'chevrons-up-down': 'chevrons-up-down',
+    'chevrons-forward': 'chevrons-right',
+    'chevrons-back': 'chevrons-left',
+    'check-circle': 'circle-check',
+    'x-circle': 'circle-x',
+    'alert-circle': 'circle-alert',
+    'check-double': 'check-check',
+    'star-filled': 'local:star-filled',
+    'star-half': 'star-half',
+    grip: 'grip',
+    sidebar: 'sidebar',
+    'panel-start': 'panel-left',
+    'panel-end': 'panel-right',
+    phone: 'phone',
+    key: 'key',
+    'lock-open': 'lock-open',
+    refresh: 'refresh-cw',
+    history: 'history',
+    inbox: 'inbox',
+    'bell-off': 'bell-off',
+    image: 'image',
+    'zoom-in': 'zoom-in',
+    'zoom-out': 'zoom-out',
+    maximize: 'maximize',
+    command: 'command',
+    keyboard: 'keyboard',
+    language: 'languages',
+    list: 'list',
+    grid: 'layout-grid',
+    columns: 'columns-3',
+    'filter-x': 'funnel-x',
+    tag: 'tag',
+    file: 'file',
+    folder: 'folder',
+    'user-plus': 'user-plus',
+    'log-out': 'log-out',
+    shield: 'shield',
+    spinner: 'loader',
+    'trend-up': 'trending-up',
+    'trend-down': 'trending-down',
   },
 };
 

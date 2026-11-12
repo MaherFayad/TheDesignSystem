@@ -1,4 +1,16 @@
 // Pixelarticons (MIT). A 24 by 24 grid in 2px steps, filled with currentColor.
+//
+// Pixelarticons has no glyph for some names. Two ways out:
+// - local:<file> is a glyph in sets/local/pixel/, drawn on the same grid and
+//   derived from pixelarticons glyphs: dot, chevrons-forward and
+//   chevrons-back (two chevron-right strokes), check-circle, x-circle and
+//   alert-circle (circle plus a mark; alert is circle-info upside down),
+//   star-filled and star-half (star filled in), grip and grip-vertical
+//   (square dots), panel-start, panel-end and columns (the layout frame),
+//   command, maximize (four corners), filter-x (filter plus a small x),
+//   trend-down (trending-up upside down), drag (grip-vertical).
+// - The nearest glyph by meaning: history uses clock, tag uses label,
+//   sidebar uses layout, success uses check, minimize uses minus.
 import type { IconSetSource } from './source';
 
 const pixel: IconSetSource = {
@@ -59,7 +71,49 @@ const pixel: IconSetSource = {
     sun: 'sun',
     moon: 'moon',
     globe: 'globe',
-    drag: 'drag-and-drop',
+    drag: 'local:grip-vertical',
+    mail: 'mail',
+    dot: 'local:dot',
+    'chevrons-up-down': 'chevrons-vertical',
+    'chevrons-forward': 'local:chevrons-forward',
+    'chevrons-back': 'local:chevrons-back',
+    'check-circle': 'local:check-circle',
+    'x-circle': 'local:x-circle',
+    'alert-circle': 'local:alert-circle',
+    'check-double': 'check-double',
+    'star-filled': 'local:star-filled',
+    'star-half': 'local:star-half',
+    grip: 'local:grip',
+    sidebar: 'layout',
+    'panel-start': 'local:panel-start',
+    'panel-end': 'local:panel-end',
+    phone: 'phone',
+    key: 'key',
+    'lock-open': 'unlock',
+    refresh: 'refresh',
+    history: 'clock',
+    inbox: 'inbox',
+    'bell-off': 'bell-off',
+    image: 'image',
+    'zoom-in': 'zoom-in',
+    'zoom-out': 'zoom-out',
+    maximize: 'local:maximize',
+    command: 'local:command',
+    keyboard: 'keyboard',
+    language: 'languages',
+    list: 'bulletlist',
+    grid: 'grid-2x2-2',
+    columns: 'local:columns',
+    'filter-x': 'local:filter-x',
+    tag: 'label',
+    file: 'file',
+    folder: 'folder',
+    'user-plus': 'user-plus',
+    'log-out': 'logout',
+    shield: 'shield',
+    spinner: 'spinner',
+    'trend-up': 'trending-up',
+    'trend-down': 'local:trend-down',
   },
 };
 

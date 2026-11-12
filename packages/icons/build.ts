@@ -11,6 +11,7 @@
 //   generated-pending/ until then, so the root typecheck stays green.
 //
 // A new icon set is one file in sets/ plus one line in `sources` below.
+// Glyphs a package lacks are derived in sets/local/<set>/ and named `local:<file>`.
 import { existsSync, mkdirSync, readFileSync, readdirSync, rmSync, writeFileSync } from 'node:fs';
 import { dirname, join, relative } from 'node:path';
 import { pathToFileURL } from 'node:url';
@@ -68,7 +69,10 @@ export function optimizeSvg(svg: string, file = 'svg'): Glyph {
     const tag = m[1] as string;
     if (!allowedTags.has(tag)) throw new Error(`${file}: element <${tag}> is not supported`);
     const attrs: string[] = [];
-    for (const a of (m[2] ?? '').matchAll(/([a-zA-Z:-]+)="([^"]*)"/g)) {
+    const attrPattern = /([a-zA-Z][a-zA-Z0-9:-]*)="([^"]*)"/g;
+    const leftover = (m[2] ?? '').replace(attrPattern, '').trim();
+    if (leftover !== '') throw new Error(`${file}: attribute markup not understood: ${leftover.slice(0, 40)}`);
+    for (const a of (m[2] ?? '').matchAll(attrPattern)) {
       const name = a[1] as string;
       if (droppedAttrs.has(name)) continue;
       attrs.push(`${name}="${(a[2] as string).trim().replace(/\s+/g, ' ')}"`);
@@ -83,8 +87,11 @@ export function optimizeSvg(svg: string, file = 'svg'): Glyph {
 }
 
 export function readGlyph(source: IconSetSource, glyph: string): Glyph {
-  const file = join(packageDir(source.package), source.dir, `${glyph}.svg`);
-  if (!existsSync(file)) throw new Error(`${source.id}: glyph ${glyph} not found in ${source.package}`);
+  const local = glyph.startsWith('local:');
+  const file = local
+    ? join(here, 'sets', 'local', source.id, `${glyph.slice(6)}.svg`)
+    : join(packageDir(source.package), source.dir, `${glyph}.svg`);
+  if (!existsSync(file)) throw new Error(`${source.id}: glyph ${glyph} not found in ${local ? 'sets/local' : source.package}`);
   return optimizeSvg(readFileSync(file, 'utf8'), `${source.package}/${glyph}.svg`);
 }
 

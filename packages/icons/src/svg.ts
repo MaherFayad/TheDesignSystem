@@ -6,8 +6,8 @@ import type { IconData, IconSetData, IconStyle } from './types';
 
 export type IconNode = readonly [tag: string, attrs: Readonly<Record<string, string>>];
 
-const elementPattern = /<([a-zA-Z]+)((?:\s+[a-zA-Z:-]+="[^"]*")*)\s*\/>/g;
-const attrPattern = /([a-zA-Z:-]+)="([^"]*)"/g;
+const elementPattern = /<([a-zA-Z]+)((?:\s+[a-zA-Z][a-zA-Z0-9:-]*="[^"]*")*)\s*\/>/g;
+const attrPattern = /([a-zA-Z][a-zA-Z0-9:-]*)="([^"]*)"/g;
 const cache = new Map<string, readonly IconNode[]>();
 
 /** Splits a minified body into flat element nodes. The build only emits self closing elements. */
