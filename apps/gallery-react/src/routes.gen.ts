@@ -62,6 +62,7 @@ export const routes: DemoRoute[] = [
   { name: 'Navbar', slug: 'navbar', load: () => import('../../../packages/react/src/components/Navbar/Navbar.demo') },
   { name: 'NotificationCenter', slug: 'notification-center', load: () => import('../../../packages/react/src/components/NotificationCenter/NotificationCenter.demo') },
   { name: 'OTPField', slug: 'otpfield', load: () => import('../../../packages/react/src/components/OTPField/OTPField.demo') },
+  { name: 'PageShell', slug: 'page-shell', load: () => import('../../../packages/react/src/components/PageShell/PageShell.demo') },
   { name: 'Pagination', slug: 'pagination', load: () => import('../../../packages/react/src/components/Pagination/Pagination.demo') },
   { name: 'PasswordField', slug: 'password-field', load: () => import('../../../packages/react/src/components/PasswordField/PasswordField.demo') },
   { name: 'PhoneField', slug: 'phone-field', load: () => import('../../../packages/react/src/components/PhoneField/PhoneField.demo') },

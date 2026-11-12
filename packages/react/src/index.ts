@@ -54,6 +54,7 @@ export * from './components/Meter/index';
 export * from './components/Navbar/index';
 export * from './components/NotificationCenter/index';
 export * from './components/OTPField/index';
+export * from './components/PageShell/index';
 export * from './components/Pagination/index';
 export * from './components/PasswordField/index';
 export * from './components/PhoneField/index';

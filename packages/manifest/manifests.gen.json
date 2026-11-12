@@ -13001,6 +13001,253 @@
     "since": "0.1.0"
   },
   {
+    "name": "PageShell",
+    "kind": "component",
+    "family": "layout",
+    "summary": "The frame of a page: a skip link first, then a header, the navigation column, one main, an aside and a footer, each in its landmark. Under breakpoint.tablet the navigation moves to a Drawer behind a menu button.",
+    "useWhen": [
+      "The outer frame of an app or a site page, once per page",
+      "A page with a side navigation (Sidebar or Rail) that must fold away on phones",
+      "Any page that needs the landmarks and the skip link set up the same way everywhere"
+    ],
+    "avoidWhen": [
+      "A part of a page: a card, a panel or a form section",
+      "A second frame inside a page that already has one, except as a preview with embedded",
+      "Side by side list and detail inside main"
+    ],
+    "insteadUse": {
+      "A section inside a page": "Section",
+      "List and detail side by side": "SplitView",
+      "Panels the person resizes": "ResizablePanels",
+      "A floating work area next to the page": "Window"
+    },
+    "anatomy": [
+      "root",
+      "skip",
+      "header",
+      "menu",
+      "nav",
+      "main",
+      "aside",
+      "footer"
+    ],
+    "parts": {
+      "SkipLink": "skip",
+      "IconButton": "menu",
+      "Drawer": "the navigation on narrow screens and while the column is hidden (outside the root, in a portal)"
+    },
+    "slots": {
+      "header": {
+        "accepts": "any",
+        "max": 1
+      },
+      "nav": {
+        "accepts": [
+          "Sidebar",
+          "Rail"
+        ],
+        "max": 1
+      },
+      "main": {
+        "accepts": "any"
+      },
+      "aside": {
+        "accepts": "any"
+      },
+      "footer": {
+        "accepts": "any"
+      }
+    },
+    "props": {
+      "header": {
+        "type": "node",
+        "description": "The top bar: a Navbar, or a brand and actions. In the header landmark (banner)."
+      },
+      "nav": {
+        "type": "node",
+        "description": "A Sidebar or a Rail, each its own labelled nav landmark. The nav part is a plain element around it."
+      },
+      "aside": {
+        "type": "node",
+        "description": "Secondary content next to main. Under breakpoint.desktop it goes under main."
+      },
+      "asideLabel": {
+        "type": "string",
+        "default": "More on this page",
+        "description": "The name of the aside landmark. Arabic default: تفاصيل إضافية."
+      },
+      "footer": {
+        "type": "node",
+        "description": "In the footer landmark (contentinfo)."
+      },
+      "children": {
+        "type": "node",
+        "description": "The page content, in main."
+      },
+      "mainId": {
+        "type": "string",
+        "default": "main",
+        "description": "The id of main and the skip link target. One per page."
+      },
+      "skipLabel": {
+        "type": "string",
+        "default": "Skip to main content",
+        "description": "The skip link text. Arabic default from SkipLink: الانتقال للمحتوى الرئيسي."
+      },
+      "sidebar": {
+        "type": [
+          "expanded",
+          "collapsed",
+          "hidden"
+        ],
+        "description": "The column state on wide screens, controlled, with onSidebarChange. Under breakpoint.tablet the root always says hidden."
+      },
+      "defaultSidebar": {
+        "type": [
+          "expanded",
+          "collapsed",
+          "hidden"
+        ],
+        "default": "expanded"
+      },
+      "onSidebarChange": {
+        "type": "function"
+      },
+      "menuLabel": {
+        "type": "string",
+        "default": "Open navigation",
+        "description": "The menu button's name. Arabic default: فتح التنقل."
+      },
+      "drawerTitle": {
+        "type": "string",
+        "default": "Navigation",
+        "description": "The title of the navigation Drawer. Arabic default: التنقل."
+      },
+      "embedded": {
+        "type": "boolean",
+        "default": false,
+        "description": "A preview of a page inside another page (a gallery, docs, a template picker): the same frame with no landmarks; main becomes a region named Main content."
+      },
+      "usePageShell": {
+        "type": "function",
+        "description": "Hook: { sidebar, wideSidebar, setSidebar, narrow, setDrawerOpen }. Pass collapsed={sidebar === 'collapsed'} and onCollapsedChange to the Sidebar so its toggle and the shell agree."
+      }
+    },
+    "states": [
+      "data-sidebar=expanded|collapsed|hidden"
+    ],
+    "a11y": {
+      "role": "No role on the root. header is the banner, main the main landmark (one per page, id main), aside a complementary landmark with a label, footer the contentinfo. The navigation landmark is the Sidebar or Rail inside the nav part.",
+      "focus": "The skip link is the first tab stop; Enter moves focus to main. The menu button opens the navigation Drawer, and focus returns to it when the Drawer closes.",
+      "keys": {
+        "Tab": "The first press reaches the skip link, then the header, the navigation, main, the aside and the footer in that order",
+        "Shift+Tab": "Moves back through the same order",
+        "Enter": "On the skip link, moves focus to main"
+      },
+      "announce": "Landmarks carry the names a screen reader lists: the Sidebar or Rail label, the aside label.",
+      "notes": [
+        "The reading order equals the visual order in every width: header, navigation, main, aside, footer.",
+        "Under breakpoint.tablet the column is not rendered, so its links are never in the page twice; the Drawer renders them while open. A media query hides the column from the first paint, before hydration.",
+        "While the column is hidden on a wide screen (sidebar hidden), the menu button and the Drawer are the way to the navigation, as on phones.",
+        "No motion: the column swaps at once. The Drawer brings its own motion (pattern sheet).",
+        "The shell takes the height of its parent (min-block-size 100%). Give html and body a height for a full screen frame; no viewport height token exists yet.",
+        "No native title attribute."
+      ]
+    },
+    "content": {
+      "en": {
+        "asideLabel": "A noun phrase that names the content: Board details, Filters.",
+        "skipLabel": "Skip to main content, or name the target: Skip to the board list.",
+        "menuLabel": "Open navigation"
+      },
+      "ar": {
+        "asideLabel": "تفاصيل اللوحة، الفلاتر",
+        "skipLabel": "الانتقال للمحتوى الرئيسي",
+        "menuLabel": "فتح التنقل"
+      }
+    },
+    "tokens": [
+      "color.bg.body",
+      "color.text.default",
+      "color.text.muted",
+      "color.border.default",
+      "color.border.strong",
+      "border.width.default",
+      "size.control.lg",
+      "dialog.width.sm",
+      "space.s",
+      "space.l",
+      "space.xl",
+      "space.2xl",
+      "font.size.s",
+      "breakpoint.tablet",
+      "breakpoint.desktop"
+    ],
+    "motion": "none",
+    "frameworks": {
+      "react": {
+        "status": "ready",
+        "behavior": "hand built",
+        "example": "PageShell.demo.tsx",
+        "note": "Renders SkipLink, IconButton and Drawer; usePageShell() shares the column state."
+      },
+      "angular": {
+        "status": "planned",
+        "behavior": "cdk:layout BreakpointObserver",
+        "note": "Content projection into the same parts."
+      },
+      "native": {
+        "status": "not-applicable",
+        "note": "Native apps use navigation stacks and tab bars from the router, not a page frame with landmarks."
+      }
+    },
+    "styles": {
+      "studio": "No recipe: the page color with 1px lines between the regions, the compact header at the large control height.",
+      "desk": "No recipe: the same frame on the Desk page color. Desk apps usually live in Windows, not in a PageShell.",
+      "neutral": "Tokens only: the Neutral page color and borders.",
+      "liquid": "Planned: the header and navigation may float on glass over scrolling content."
+    },
+    "mistakes": [
+      {
+        "wrong": "Two PageShells on one page, or a PageShell inside main",
+        "right": "One per page; previews inside a page use embedded"
+      },
+      {
+        "wrong": "A nav element around the Sidebar",
+        "right": "Pass the Sidebar as nav: it is the labelled nav landmark itself"
+      },
+      {
+        "wrong": "Hiding the Sidebar on phones with display none and no other way in",
+        "right": "PageShell moves it to a Drawer behind the menu button"
+      },
+      {
+        "wrong": "A Sidebar with its own collapsed state that the shell does not know",
+        "right": "Wire collapsed and onCollapsedChange to usePageShell()"
+      },
+      {
+        "wrong": "A main id other than the skip link target",
+        "right": "mainId sets both"
+      }
+    ],
+    "contract": {
+      "optionalParts": [
+        "menu",
+        "nav",
+        "aside",
+        "footer",
+        "header"
+      ]
+    },
+    "uses": [
+      "SkipLink",
+      "Drawer",
+      "IconButton",
+      "Sidebar",
+      "Rail"
+    ],
+    "since": "0.1.0"
+  },
+  {
     "name": "Pagination",
     "kind": "component",
     "family": "navigation",
