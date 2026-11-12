@@ -10,4 +10,19 @@
   [data-ds='range-slider'] > [data-part='value'] {
     unicode-bidi: isolate;
   }
+
+  /*
+   * When the thumbs overlap, the focused one is drawn on top. Radix focuses
+   * a thumb on pointer down too, so the thumb a person presses or tabs to
+   * is the one they see and the one a press on its visible part reaches.
+   * Each thumb sits in a Radix wrapper with a transform, so the wrapper is
+   * what gets lifted. The control isolates, so the lift stays local.
+   */
+  [data-ds='range-slider'] [data-part='control'] {
+    isolation: isolate;
+  }
+
+  [data-ds='range-slider'] [data-part='control'] > :has(> [data-part='thumb']:focus) {
+    z-index: calc(var(--ds-z-canvas) + 1);
+  }
 }

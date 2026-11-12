@@ -70,12 +70,14 @@ export default function RangeSliderDemo() {
         </div>
       </DemoCase>
 
+      {/* Three steps keep the thumb centers 24px apart on a 320px screen, so neither target is hidden (WCAG 2.5.8). */}
       <DemoCase id="too-many" title="Thumbs side by side">
         <RangeSlider
           label="Year"
           min={2000}
           max={2026}
-          defaultValue={[2019, 2020]}
+          defaultValue={[2019, 2022]}
+          minStepsBetweenThumbs={3}
           formatOptions={{ useGrouping: false }}
           marks={[2000, 2005, 2010, 2015, 2020, 2025].map((value) => ({ value, label: String(value) }))}
           thumbLabels={['First year', 'Last year']}
@@ -109,8 +111,9 @@ export default function RangeSliderDemo() {
       </DemoCase>
 
       <DemoCase id="error" title="Invalid with a message">
-        <Field error="Leave at least 100 SAR between the two prices.">
-          <RangeSlider label="Price" unit="SAR" max={1000} step={50} minStepsBetweenThumbs={2} defaultValue={[450, 500]} thumbLabels={priceLabels} />
+        {/* 100 SAR apart keeps the thumb centers 24px apart at 320px (WCAG 2.5.8). */}
+        <Field error="Leave at least 150 SAR between the two prices.">
+          <RangeSlider label="Price" unit="SAR" max={1000} step={50} defaultValue={[400, 500]} thumbLabels={priceLabels} />
         </Field>
       </DemoCase>
 

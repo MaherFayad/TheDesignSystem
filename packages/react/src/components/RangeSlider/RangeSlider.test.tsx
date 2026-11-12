@@ -1,3 +1,5 @@
+import { readFileSync } from 'node:fs';
+import { join } from 'node:path';
 import { createRef } from 'react';
 import { fireEvent, render, screen } from '@testing-library/react';
 import { beforeAll, describe, expect, it, vi } from 'vitest';
@@ -99,5 +101,26 @@ describe('RangeSlider', () => {
     const { container } = render(<RangeSliderDemo />);
     const ids = [...container.querySelectorAll('[data-demo-case]')].map((el) => el.getAttribute('data-demo-case'));
     expect(ids).toEqual(['variants', 'empty', 'one', 'many', 'too-many', 'long-text', 'long-arabic', 'error', 'disabled']);
+  });
+
+  it('draws the focused thumb on top when the thumbs overlap', () => {
+    const css = readFileSync(join(process.cwd(), 'packages/css/src/components/RangeSlider.css'), 'utf8');
+    expect(css).toMatch(/\[data-part='control'\] \{\s*isolation: isolate;/);
+    expect(css).toMatch(/:has\(> \[data-part='thumb'\]:focus\) \{\s*z-index:/);
+  });
+
+  it('keeps the demo thumb centers 24px apart on a 320px screen', () => {
+    // 320px less the 16px page gutters and one 24px target is the travel of a thumb center.
+    const travel = 320 - 2 * 16 - 24;
+    const { container } = render(<RangeSliderDemo />);
+    for (const slider of container.querySelectorAll('[data-ds="range-slider"]')) {
+      const [start, end] = [...slider.querySelectorAll('[role="slider"]')].map((thumb) => ({
+        now: Number(thumb.getAttribute('aria-valuenow')),
+        min: Number(thumb.getAttribute('aria-valuemin')),
+        max: Number(thumb.getAttribute('aria-valuemax')),
+      }));
+      const gap = ((end!.now - start!.now) / (start!.max - start!.min)) * travel;
+      expect(gap, slider.textContent ?? '').toBeGreaterThanOrEqual(24);
+    }
   });
 });
