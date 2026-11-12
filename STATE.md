@@ -67,6 +67,10 @@ No adb. No iOS build.
 | 1.15 | Docs site | ds-docs | all | open | |
 | 1.16 | Agent files | ds-docs | all | open | |
 | 1.22 | Interaction round 2, richer motion (proposed); also takes the 6 blockers of the interaction review | claude/ds-order-1-22 | session_01ErLBsaXB3wXF8YHpuV9bS5 | merged (proposed); its own recording run was not finished, the lead records the clips |
+| 1.23 | Interaction round 3: signature controls and feedback | claude/ds-order-1-23 | session_01ErLBsavRXxHMTS9VyScMJ5 | running |
+| 1.24 | Studio, Desk and Neutral apart; overlay surfaces | claude/ds-order-1-24 | session_01ErLBsbJByxDbkQHyYCU8Jp | running |
+| 1.25 | Platform axis: iOS and Android on the web components | claude/ds-order-1-25 | session_01ErLBsbZmbSwXftzpogNPCu | running |
+| 1.26 | Liquid style, proposed | claude/ds-order-1-26 | session_01ErLBscJMviQH5S59ze1TNo | running |
 | A-motion | Angular motion for rounds 1 and 2, Form merge cleanup, recheck of Angular review 2 | claude/ds-angular-motion | session_01ErLBsda6FTx4PoGDqs1QU7 | running |
 | 1.17 | Full matrix | ds-qa | all | open | |
 | 1.18 | Consumer apps on wave 1 components | ds-docs | react | open | |
@@ -123,6 +127,10 @@ components, a fresh review, then commit.
 | 1.0.i | Consolidation 2: follow ups round 2, tokens, contract text | claude/ds-consolidation-2 | session_01ErLBsasj4xo1JcwWMq49Dd | merged |
 | 1.21 | Interaction round (proposed) | claude/ds-order-1-21 | session_01ErLBsbZ3wQ2RMr25bxi1QU | merged, proposed, review open |
 | 1.22 | Interaction round 2, richer motion (proposed); also takes the 6 blockers of the interaction review | claude/ds-order-1-22 | session_01ErLBsaXB3wXF8YHpuV9bS5 | merged (proposed); its own recording run was not finished, the lead records the clips |
+| 1.23 | Interaction round 3: signature controls and feedback | claude/ds-order-1-23 | session_01ErLBsavRXxHMTS9VyScMJ5 | running |
+| 1.24 | Studio, Desk and Neutral apart; overlay surfaces | claude/ds-order-1-24 | session_01ErLBsbJByxDbkQHyYCU8Jp | running |
+| 1.25 | Platform axis: iOS and Android on the web components | claude/ds-order-1-25 | session_01ErLBsbZmbSwXftzpogNPCu | running |
+| 1.26 | Liquid style, proposed | claude/ds-order-1-26 | session_01ErLBscJMviQH5S59ze1TNo | running |
 | A-motion | Angular motion for rounds 1 and 2, Form merge cleanup, recheck of Angular review 2 | claude/ds-angular-motion | session_01ErLBsda6FTx4PoGDqs1QU7 | running |
 | 1.17 | Full matrix, contract suites, a11y sweep, size report | claude/ds-order-1-17 | session_01ErLBsa6pbDJmysTT7fLpsV | merged |
 | 1.18, 1.19 | Consumers on wave 1, adoption guides | claude/ds-order-1-18 | session_01ErLBsZSfR7PvXto2uEYenL | merged |
