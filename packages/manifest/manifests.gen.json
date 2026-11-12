@@ -11634,6 +11634,393 @@
     "since": "0.1.0"
   },
   {
+    "name": "MultiSelect",
+    "kind": "component",
+    "family": "selection",
+    "summary": "A closed trigger that opens a list with checks and keeps any number of values from it. The trigger shows the chosen values as tags, or as a count.",
+    "useWhen": [
+      "Several values from a known list, such as labels, cities or team members, in a form row with little room",
+      "Filters with more options than fit as a CheckboxGroup on the page",
+      "A list long enough to need a search field (more than 8 options turns it on)"
+    ],
+    "avoidWhen": [
+      "Only one value is allowed",
+      "Two to six options that fit on the page as checkboxes",
+      "People type new values that are not in any list",
+      "The chosen values must stay visible and editable one by one on the page"
+    ],
+    "insteadUse": {
+      "One value from a short list": "Select",
+      "One value from a long list, by typing": "Combobox",
+      "A few options shown at once": "CheckboxGroup",
+      "Free tags typed by the person, with suggestions": "TagField",
+      "A list that stays visible on the page": "ListBox"
+    },
+    "anatomy": [
+      "root",
+      "trigger",
+      "value",
+      "tag",
+      "summary-text",
+      "icon",
+      "popup",
+      "search",
+      "actions",
+      "select-all",
+      "clear"
+    ],
+    "parts": {
+      "MultiSelect": "root"
+    },
+    "slots": {
+      "value": {
+        "accepts": "text",
+        "max": 1
+      },
+      "tag": {
+        "accepts": "text",
+        "max": 3
+      },
+      "popup": {
+        "accepts": [
+          "SearchField",
+          "ListBox",
+          "Button"
+        ]
+      },
+      "actions": {
+        "accepts": [
+          "Button"
+        ],
+        "max": 2
+      }
+    },
+    "props": {
+      "items": {
+        "type": "node",
+        "required": true,
+        "description": "An array of options, plain ({ value, label, description?, start?, disabled?, keywords? }) or in titled groups ({ label, options }), as ListBox takes them (type node here means structured data). The search filters by the label, then the keywords."
+      },
+      "value": {
+        "type": "string",
+        "description": "The chosen values (string[]) in the order they were chosen, controlled with onValueChange."
+      },
+      "defaultValue": {
+        "type": "string",
+        "default": [],
+        "description": "Uncontrolled starting values (string[])."
+      },
+      "onValueChange": {
+        "type": "function",
+        "description": "Called with the new string[] on every toggle, Select all, Clear selection and Ctrl+A."
+      },
+      "open": {
+        "type": "boolean",
+        "description": "The popup is open, controlled with onOpenChange."
+      },
+      "defaultOpen": {
+        "type": "boolean",
+        "default": false,
+        "description": "Uncontrolled starting open state."
+      },
+      "onOpenChange": {
+        "type": "function",
+        "description": "Called on open and close."
+      },
+      "summary": {
+        "type": [
+          "tags",
+          "count"
+        ],
+        "default": "tags",
+        "description": "tags: the chosen labels as tags, up to maxTags, then +N. count: 3 selected."
+      },
+      "maxTags": {
+        "type": "number",
+        "default": 3,
+        "description": "In tags mode, the most tags drawn before the +N tag."
+      },
+      "formatCount": {
+        "type": "function",
+        "description": "The count words. Default 3 selected; Arabic pluralized with Intl.PluralRules (عنصر واحد محدد، عنصرين محددين، 3 عناصر محددة، 11 عنصر محدد)."
+      },
+      "placeholder": {
+        "type": "string",
+        "default": "Choose options",
+        "description": "Shown when nothing is chosen. Arabic default: اختيار من القائمة."
+      },
+      "searchable": {
+        "type": "boolean",
+        "description": "Shows the search field in the popup. Default: on when there are more than 8 options."
+      },
+      "searchLabel": {
+        "type": "string",
+        "default": "Search options",
+        "description": "The name and placeholder of the search field. Arabic default: البحث في الخيارات."
+      },
+      "actions": {
+        "type": "boolean",
+        "default": true,
+        "description": "Shows Select all and Clear selection under the list."
+      },
+      "selectAllLabel": {
+        "type": "string",
+        "default": "Select all",
+        "description": "Arabic default: تحديد الكل. Selects the shown enabled options (after a search, only the matches)."
+      },
+      "clearLabel": {
+        "type": "string",
+        "default": "Clear selection",
+        "description": "Arabic default: مسح التحديد. Disabled options keep their state."
+      },
+      "size": {
+        "type": [
+          "sm",
+          "md",
+          "lg"
+        ],
+        "default": "md",
+        "description": "Box height from size.control (28, 32, 44px at default density). sm lists use sm rows; md and lg use list.row.height."
+      },
+      "shape": {
+        "type": [
+          "default",
+          "pill"
+        ],
+        "default": "default",
+        "description": "default: the style's control radius (a pill in Studio and Desk). pill: always fully round."
+      },
+      "invalid": {
+        "type": "boolean",
+        "default": false,
+        "description": "The danger border and aria-invalid. Inside a Field it follows the Field's error."
+      },
+      "disabled": {
+        "type": "boolean",
+        "default": false,
+        "description": "aria-disabled and out of the tab order; the popup never opens. Inside a Field it follows the Field."
+      },
+      "readOnly": {
+        "type": "boolean",
+        "default": false,
+        "description": "The values show and the trigger stays focusable with aria-readonly; the popup does not open. A dashed border, no chevron."
+      },
+      "required": {
+        "type": "boolean",
+        "default": false,
+        "description": "aria-required. Inside a Field it follows the Field."
+      },
+      "loading": {
+        "type": "boolean",
+        "default": false,
+        "description": "Options are on their way: the icon is a spinner, aria-busy and data-loading are set, the popup says loadingLabel."
+      },
+      "loadingLabel": {
+        "type": "string",
+        "default": "Loading options",
+        "description": "Arabic default: جار تحميل الخيارات."
+      },
+      "empty": {
+        "type": "node",
+        "description": "Shown in the popup when there is no option (default No options to choose from yet.) or no match for the search (default No results. Try another word.)."
+      },
+      "name": {
+        "type": "string",
+        "description": "Submits each value under this name in a form, one hidden input per value."
+      }
+    },
+    "states": [
+      "open",
+      "closed",
+      "data-placeholder",
+      "data-invalid",
+      "data-disabled",
+      "data-readonly",
+      "data-loading",
+      "data-more"
+    ],
+    "a11y": {
+      "role": "combobox on the trigger part (the APG select-only combobox: a focusable element that is not a text box), aria-haspopup listbox, aria-expanded, aria-controls, named by the Field label. The popup has no role of its own and holds a SearchField, a ListBox with aria-multiselectable named like the trigger, and two Buttons. Not modal: the page stays in the accessibility tree.",
+      "focus": "The trigger is one tab stop. Opening moves focus to the search field when there is one, else to the list (the first chosen option, else the first option). Escape, Enter in the list, or a choice outside returns focus to the trigger; a press outside the popup leaves focus where it lands.",
+      "keys": {
+        "Enter": "On the trigger, opens the popup. In the list, closes the popup and returns focus to the trigger",
+        "Space": "On the trigger, opens the popup. In the list, toggles the option",
+        "ArrowDown": "On the trigger, opens the popup. In the search field, moves into the list. In the list, moves to the next option, skipping disabled ones",
+        "ArrowUp": "On the trigger, opens the popup. In the list, moves to the previous option",
+        "Home": "In the list, moves to the first option",
+        "End": "In the list, moves to the last option",
+        "Ctrl+A": "In the list, selects every shown enabled option (Cmd+A on a Mac)",
+        "Typeahead": "In the list, typing letters moves to the next option whose label starts with them",
+        "Tab": "Moves between the search field, the list and the actions; focus stays inside the open popup and wraps from the last stop to the first",
+        "Escape": "Closes the popup without changing the values and returns focus to the trigger"
+      },
+      "announce": "The trigger reads its Field label, the chosen labels as a list (Design and Copy; in Arabic تصميم و خلل) or the count, and that it opens a list. In the list each option reads its label, selected or not, and unavailable.",
+      "notes": [
+        "The tags in the trigger are drawn only (aria-hidden) and hold no button: a remove button inside a combobox would be a control inside a control. The full list of labels is read from a visually hidden summary-text, written with Intl.ListFormat. Values are removed in the list or with Clear selection.",
+        "slots.tag.max is the default maxTags (3): more values show as one +N tag, and the full list is read from summary-text.",
+        "Checked state is the ListBox check icon, never color alone (WCAG 1.4.1). The +N tag never hides a value from a screen reader.",
+        "The search field and the actions sit outside the Field context, so they never take the Field's id, label or error.",
+        "Every target is at least size.target-min: the trigger fills the box, list rows, the sm search field and the sm Buttons (WCAG 2.5.8).",
+        "Contract: the variants case marks one trigger with data-demo-trigger. Enter, Space and ArrowDown on the trigger are checked as state changes (aria-expanded). The box stamps no data-state; data-state open and closed is on the popup root."
+      ]
+    },
+    "content": {
+      "en": {
+        "label": "A plural noun in a Field label: Labels, Cities, Assignees.",
+        "placeholder": "Optional: Choose options.",
+        "summary": "3 selected. With tags, the labels themselves.",
+        "actions": "Select all, Clear selection.",
+        "empty": "Say what to do next: No labels yet. Add one from Settings.",
+        "error": "Say what to do: Choose at least one city."
+      },
+      "ar": {
+        "label": "Noun form, no diacritics: التصنيفات، المدن.",
+        "placeholder": "اختيار من القائمة.",
+        "summary": "Pluralized with Intl.PluralRules, Western digits: 3 عناصر محددة.",
+        "actions": "تحديد الكل، مسح التحديد.",
+        "empty": "ما فيه تصنيفات. أضف تصنيف من الإعدادات.",
+        "error": "اختر مدينة وحدة على الأقل."
+      }
+    },
+    "tokens": [
+      "blur.window-saturation",
+      "blur.window-strong",
+      "border.width.default",
+      "border.width.strong",
+      "color.bg.overlay-10",
+      "color.bg.overlay-5",
+      "color.bg.surface-2",
+      "color.bg.surface-3",
+      "color.border.control",
+      "color.border.control-hover",
+      "color.border.hairline",
+      "color.border.strong",
+      "color.focus.ring",
+      "color.focus.ring-on-primary-inner",
+      "color.material.glass-solid",
+      "color.material.glass-strong",
+      "color.primary.fill",
+      "color.primary.text",
+      "color.state.danger-text",
+      "color.text.default",
+      "color.text.muted",
+      "color.text.placeholder",
+      "duration.base",
+      "duration.quick",
+      "ease.default",
+      "ease.emphasized",
+      "ease.exit",
+      "elevation.input-focus",
+      "elevation.menu",
+      "focus.shadow.ring",
+      "font.family.sans",
+      "font.leading.arabic.snug",
+      "font.leading.snug",
+      "font.size.fixed-m",
+      "font.size.m",
+      "font.size.s",
+      "font.size.xs",
+      "font.weight.regular",
+      "list.row.height",
+      "menu.width.min",
+      "opacity.disabled",
+      "radius.card",
+      "radius.control",
+      "radius.panel",
+      "radius.pill",
+      "scale.press",
+      "size.control.lg",
+      "size.control.md",
+      "size.control.sm",
+      "size.target-min",
+      "space.2xl",
+      "space.3xs",
+      "space.4xs",
+      "space.m",
+      "space.s",
+      "space.xs",
+      "z.menu"
+    ],
+    "motion": "menu-scale",
+    "frameworks": {
+      "react": {
+        "status": "ready",
+        "behavior": "radix:Popover (Root, Anchor, Content); the trigger hand built (APG select-only combobox), the list on ListBox multiple, the search on SearchField",
+        "example": "MultiSelect.demo.tsx",
+        "note": "No source for this order: designed from the dials table, Select (the trigger box) and ListBox (the rows). The popup surface is styled in MultiSelect.css with the same values as the list family popup in Combobox.css."
+      },
+      "angular": {
+        "status": "planned",
+        "behavior": "cdk:overlay with cdk:listbox (multiple)"
+      },
+      "native": {
+        "status": "planned",
+        "behavior": "hand built: a sheet with a FlatList of checks"
+      }
+    },
+    "styles": {
+      "studio": "The box is the Input box: a transparent pill with the control border, the glow and the ring on focus or while open. Tags are small overlay-10 pills. The popup is the Studio menu surface: surface-3, the card radius, the menu shadow; the lit row takes the overlay step.",
+      "desk": "The same box. The popup is the Desk menu glass: the strong material and blur, a hairline, the panel radius; the lit row is the yellow primary fill with dark text (the Desk ListBox recipe). Under reduced transparency and more contrast the glass turns solid.",
+      "neutral": "Tokens only: the Neutral control radius and border, the Neutral menu surface."
+    },
+    "mistakes": [
+      {
+        "wrong": "A remove button on each tag inside the trigger",
+        "right": "Tags drawn only; remove in the list or with Clear selection (built in)"
+      },
+      {
+        "wrong": "Ten tags that wrap the trigger onto three lines",
+        "right": "maxTags with a +N tag, or summary count"
+      },
+      {
+        "wrong": "A MultiSelect for two options",
+        "right": "Two checkboxes, or a CheckboxGroup"
+      },
+      {
+        "wrong": "Typing new values into a MultiSelect",
+        "right": "TagField, which adds free tags"
+      },
+      {
+        "wrong": "Enter in the list toggles the option",
+        "right": "Space toggles, Enter closes (built in)"
+      },
+      {
+        "wrong": "A count summary written as 3 items in Arabic with one plural form",
+        "right": "Intl.PluralRules with every Arabic form (built in)"
+      }
+    ],
+    "contract": {
+      "trigger": "[data-demo-trigger]",
+      "optionalParts": [
+        "popup",
+        "search",
+        "actions",
+        "select-all",
+        "clear",
+        "tag",
+        "summary-text"
+      ],
+      "keys": {
+        "Enter": {
+          "focus": "[data-demo-trigger]",
+          "case": "variants",
+          "expect": "state-changes"
+        },
+        "Space": {
+          "focus": "[data-demo-trigger]",
+          "case": "variants",
+          "expect": "state-changes"
+        },
+        "ArrowDown": {
+          "focus": "[data-demo-trigger]",
+          "case": "variants",
+          "expect": "state-changes"
+        }
+      }
+    },
+    "since": "0.1.0"
+  },
+  {
     "name": "Navbar",
     "kind": "component",
     "family": "navigation",
@@ -16064,7 +16451,7 @@
       "items": {
         "type": "node",
         "required": true,
-        "description": "The options, plain ({ value, label, description?, start?, disabled?, keywords? }) or in titled groups ({ label, options }), as ListBox takes them. A separator is drawn between groups. Typeahead reads the label."
+        "description": "An array of options, plain ({ value, label, description?, start?, disabled?, keywords? }) or in titled groups ({ label, options }), as ListBox takes them (type node here means structured data). A separator is drawn between groups. Typeahead reads the label."
       },
       "value": {
         "type": "string",
@@ -16137,12 +16524,12 @@
       "loading": {
         "type": "boolean",
         "default": false,
-        "description": "Options are on their way: the icon is a spinner, aria-busy and data-loading are set, the list does not open."
+        "description": "Options are on their way: the icon is a spinner, aria-busy and data-loading are set, the trigger is described by loadingLabel (aria-describedby), and the list does not open."
       },
       "loadingLabel": {
         "type": "string",
         "default": "Loading options",
-        "description": "What the list says while loading. Arabic default: جار تحميل الخيارات."
+        "description": "What the trigger is described by while loading. Arabic default: جار تحميل الخيارات."
       },
       "empty": {
         "type": "node",
@@ -16152,6 +16539,10 @@
       "name": {
         "type": "string",
         "description": "Submits the value under this name in a form (Radix renders a hidden native select)."
+      },
+      "form": {
+        "type": "string",
+        "description": "The id of a form outside the Select's own ancestors that the hidden native select submits with (passed to Radix Root)."
       }
     },
     "states": [
@@ -16182,6 +16573,8 @@
       "announce": "The trigger reads its Field label, the chosen label (or the placeholder), and that it opens a list. Moving through the list reads each option: its label, its description, selected or not, unavailable, and its position.",
       "notes": [
         "Tab does not move focus while the list is open (Radix keeps it in the list); Escape or a choice returns focus to the trigger.",
+        "The open listbox is named like the trigger: through the Field label, else aria-label or aria-labelledby on the Select. With no option, the list is described by its empty text.",
+        "Read only and loading block only the keys that open the list or choose by typeahead; Tab and browser shortcuts with a modifier pass.",
         "The chosen item shows a check on every style, never color alone (WCAG 1.4.1). The check column is on every row so labels line up.",
         "Rows equal ListBox option rows: the same list.row.height (sm: size.control.xs), padding, gap, radius, type and highlight tokens. Rows and the scroll buttons are at least size.target-min (WCAG 2.5.8).",
         "The content is portaled into a Theme copied from the trigger's Theme and is its own root carrying data-part content, as the Combobox popup is; its z-index is z.menu so it shows over a Dialog.",

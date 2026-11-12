@@ -57,6 +57,7 @@ export const routes: DemoRoute[] = [
   { name: 'ListBox', slug: 'list-box', load: () => import('../../../packages/react/src/components/ListBox/ListBox.demo') },
   { name: 'Menubar', slug: 'menubar', load: () => import('../../../packages/react/src/components/Menubar/Menubar.demo') },
   { name: 'Meter', slug: 'meter', load: () => import('../../../packages/react/src/components/Meter/Meter.demo') },
+  { name: 'MultiSelect', slug: 'multi-select', load: () => import('../../../packages/react/src/components/MultiSelect/MultiSelect.demo') },
   { name: 'Navbar', slug: 'navbar', load: () => import('../../../packages/react/src/components/Navbar/Navbar.demo') },
   { name: 'NotificationCenter', slug: 'notification-center', load: () => import('../../../packages/react/src/components/NotificationCenter/NotificationCenter.demo') },
   { name: 'OTPField', slug: 'otpfield', load: () => import('../../../packages/react/src/components/OTPField/OTPField.demo') },

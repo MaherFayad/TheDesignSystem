@@ -1,0 +1,407 @@
+/*
+ * MultiSelect: several values from a list in a closed trigger. The root is
+ * the Select trigger box (the Input box: the same height, padding, border,
+ * radius, glow and ring, from the same tokens) holding the trigger part;
+ * the popup is the menu surface of the list family popup with a search
+ * field, a ListBox with checks and an actions row.
+ *
+ *   [data-ds='multi-select']                       root: the bordered box
+ *     > [data-part='trigger']                      role combobox, fills the box
+ *       > [data-part='value']                      tags, a count or the placeholder
+ *         > [data-part='tag']                      a drawn tag (data-more on the "+2" tag)
+ *         > [data-part='summary-text']             the labels as a list, visually hidden
+ *       > [data-part='icon']                       chevrons-up-down or a spinner
+ *   [data-ds='theme'][data-menu-layer]             the portal Theme (DropdownMenu.css draws it as contents)
+ *   [data-ds='multi-select'][data-part='popup']    its own root: Radix Popover Content, data-state open|closed
+ *     > [data-ds='search-field'][data-part='search']
+ *     > [data-ds='list-box']
+ *     > [data-part='actions'] > [data-part='select-all'], [data-part='clear']   system Buttons
+ *
+ * Box private properties: --_multi-select-height, -padding-inline, -gap,
+ * -font-size, -radius, -bg, -fg, -border-width, -border-style,
+ * --_multi-select-border-color (at rest, -hover, -focus, -invalid), -ring,
+ * --_multi-select-tag-bg, -tag-fg, -tag-radius.
+ *
+ * The popup sets the menu surface properties of the list family popup
+ * (--_menu-bg, -fg, -border-color, -radius, -shadow, -backdrop, -padding,
+ * -item-bg-highlight, -item-fg-highlight, -item-ring-color,
+ * -separator-color, -meta-fg, -enter-scale, -duration-in, -duration-out,
+ * -ease-in, -ease-out) to the Combobox popup values and hands the row values
+ * to the nested ListBox.
+ *
+ * Motion, pattern "menu-scale": the popup scales up from the side Radix
+ * computes and fades in; it leaves faster on the exit ease. Under reduced
+ * motion both are none and Radix removes it at once.
+ */
+@layer ds.base {
+  /* ------------------------------------------------------------ the box */
+
+  [data-ds='multi-select']:not([data-part]) {
+    --_multi-select-height: var(--ds-size-control-md);
+    --_multi-select-padding-inline: var(--ds-space-m);
+    --_multi-select-gap: var(--ds-space-xs);
+    --_multi-select-font-size: var(--ds-font-size-s);
+    --_multi-select-radius: var(--ds-radius-control);
+    --_multi-select-bg: transparent;
+    --_multi-select-fg: var(--ds-color-text-default);
+    --_multi-select-border-width: var(--ds-border-width-default);
+    --_multi-select-border-style: solid;
+    --_multi-select-border-color: var(--ds-color-border-control);
+    --_multi-select-border-color-hover: var(--ds-color-border-control-hover);
+    --_multi-select-border-color-focus: var(--ds-color-border-control-hover);
+    --_multi-select-border-color-invalid: var(--ds-color-state-danger-text);
+    --_multi-select-ring: var(--ds-elevation-input-focus), var(--ds-focus-shadow-ring);
+    --_multi-select-tag-bg: var(--ds-color-bg-overlay-10);
+    --_multi-select-tag-fg: var(--ds-color-text-default);
+    --_multi-select-tag-radius: var(--ds-radius-pill);
+
+    position: relative;
+    box-sizing: border-box;
+    display: flex;
+    align-items: stretch;
+    inline-size: 100%;
+    min-inline-size: 0;
+    block-size: var(--_multi-select-height);
+    min-block-size: var(--ds-size-target-min);
+    border: var(--_multi-select-border-width) var(--_multi-select-border-style) var(--_multi-select-border-color);
+    border-radius: var(--_multi-select-radius);
+    background-color: var(--_multi-select-bg);
+    color: var(--_multi-select-fg);
+    font-family: var(--ds-font-family-sans);
+    font-size: var(--_multi-select-font-size);
+    font-weight: var(--ds-font-weight-regular);
+    line-height: var(--ds-font-leading-snug);
+  }
+
+  /* The glow and the ring, as Input: they fade in on focus. */
+  [data-ds='multi-select']:not([data-part])::before {
+    content: '';
+    position: absolute;
+    inset: calc(var(--ds-border-width-default) * -1);
+    border-radius: inherit;
+    box-shadow: var(--_multi-select-ring);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity var(--ds-duration-base) var(--ds-ease-default);
+  }
+
+  [data-ds='multi-select'][data-size='sm']:not([data-part]) {
+    --_multi-select-height: var(--ds-size-control-sm);
+    --_multi-select-padding-inline: var(--ds-space-s);
+  }
+
+  [data-ds='multi-select'][data-size='lg']:not([data-part]),
+  [data-ds='multi-select'][data-size='lg']:not([data-part]):lang(ar) {
+    --_multi-select-height: var(--ds-size-control-lg);
+    --_multi-select-padding-inline: var(--ds-space-2xl);
+    --_multi-select-font-size: var(--ds-font-size-fixed-m);
+  }
+
+  [data-ds='multi-select'][data-shape='pill']:not([data-part]) {
+    --_multi-select-radius: var(--ds-radius-pill);
+  }
+
+  /* The trigger fills the box, so the whole box is the target. */
+  [data-ds='multi-select'] > [data-part='trigger'] {
+    position: relative;
+    display: flex;
+    flex: 1 1 auto;
+    align-items: center;
+    gap: var(--_multi-select-gap);
+    min-inline-size: 0;
+    min-block-size: var(--ds-size-target-min);
+    padding-inline: var(--_multi-select-padding-inline) var(--ds-space-xs);
+    border-radius: inherit;
+    cursor: pointer;
+    outline: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  [data-ds='multi-select'] > [data-part='trigger'] > [data-part='value'] {
+    display: flex;
+    flex: 1 1 auto;
+    align-items: center;
+    gap: var(--ds-space-3xs);
+    min-inline-size: 0;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+
+  [data-ds='multi-select'][data-placeholder]:not([data-part]) > [data-part='trigger'] > [data-part='value'] {
+    display: block;
+    color: var(--ds-color-text-placeholder);
+  }
+
+  [data-ds='multi-select'] [data-part='tag'] {
+    flex: 0 1 auto;
+    min-inline-size: 0;
+    padding-block: var(--ds-space-4xs);
+    padding-inline: var(--ds-space-xs);
+    overflow: hidden;
+    border-radius: var(--_multi-select-tag-radius);
+    background-color: var(--_multi-select-tag-bg);
+    color: var(--_multi-select-tag-fg);
+    font-size: var(--ds-font-size-xs);
+    line-height: var(--ds-font-leading-snug);
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  [data-ds='multi-select'] [data-part='tag'][data-more] {
+    flex: none;
+  }
+
+  [data-ds='multi-select'] [data-part='summary-text'] {
+    position: absolute;
+    inline-size: var(--ds-border-width-default);
+    block-size: var(--ds-border-width-default);
+    margin: calc(-1 * var(--ds-border-width-default));
+    padding: 0;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  [data-ds='multi-select'] > [data-part='trigger'] > [data-part='icon'] {
+    display: inline-flex;
+    flex: none;
+    align-items: center;
+    justify-content: center;
+    color: var(--ds-color-text-muted);
+  }
+
+  [data-ds='multi-select']:not([data-part]):hover:not([data-disabled], [data-readonly], [data-invalid], :focus-within) {
+    --_multi-select-border-color: var(--_multi-select-border-color-hover);
+  }
+
+  [data-ds='multi-select']:not([data-part]):has(> [data-part='trigger'][aria-expanded='true']) {
+    --_multi-select-border-color: var(--_multi-select-border-color-focus);
+  }
+
+  /* Focus: the glow and the ring on the box. The transparent outline shows in forced colors mode. */
+  [data-ds='multi-select']:not([data-part]):has(> [data-part='trigger']:focus-visible) {
+    --_multi-select-border-color: var(--_multi-select-border-color-focus);
+
+    outline: var(--ds-border-width-strong) solid transparent;
+    outline-offset: var(--ds-border-width-default);
+  }
+
+  [data-ds='multi-select']:not([data-part]):has(> [data-part='trigger']:focus-visible)::before,
+  [data-ds='multi-select']:not([data-part]):has(> [data-part='trigger'][aria-expanded='true'])::before {
+    opacity: 1;
+  }
+
+  [data-ds='multi-select'][data-invalid]:not([data-part]),
+  [data-ds='multi-select'][data-invalid]:not([data-part]):focus-within {
+    --_multi-select-border-color: var(--_multi-select-border-color-invalid);
+  }
+
+  [data-ds='multi-select'][data-readonly]:not([data-part]) {
+    --_multi-select-bg: var(--ds-color-bg-overlay-5);
+    --_multi-select-border-style: dashed;
+  }
+
+  [data-ds='multi-select'][data-readonly]:not([data-part]) > [data-part='trigger'] {
+    cursor: default;
+  }
+
+  [data-ds='multi-select'][data-readonly]:not([data-part]) > [data-part='trigger'] > [data-part='icon'] {
+    opacity: 0;
+  }
+
+  [data-ds='multi-select'][data-loading]:not([data-part]) > [data-part='trigger'] {
+    cursor: progress;
+  }
+
+  [data-ds='multi-select'][data-disabled]:not([data-part]) {
+    opacity: var(--ds-opacity-disabled);
+  }
+
+  [data-ds='multi-select'][data-disabled]:not([data-part]) > [data-part='trigger'] {
+    cursor: not-allowed;
+  }
+
+  /* ------------------------------------------------------------ the popup: the menu surface */
+
+  [data-ds='multi-select'][data-part='popup'] {
+    --_menu-bg: var(--ds-color-bg-surface-3);
+    --_menu-fg: var(--ds-color-text-default);
+    --_menu-border-color: transparent;
+    --_menu-radius: var(--ds-radius-card);
+    --_menu-shadow: var(--ds-elevation-menu);
+    --_menu-backdrop: none;
+    --_menu-padding: var(--ds-space-3xs);
+    --_menu-item-bg-highlight: var(--ds-color-bg-overlay-10);
+    --_menu-item-fg-highlight: var(--ds-color-text-default);
+    --_menu-item-ring-color: var(--ds-color-focus-ring);
+    --_menu-meta-fg: var(--ds-color-text-muted);
+    --_menu-separator-color: var(--ds-color-bg-surface-2);
+    --_menu-enter-scale: var(--ds-scale-press);
+    --_menu-duration-in: var(--ds-duration-base);
+    --_menu-duration-out: var(--ds-duration-quick);
+    --_menu-ease-in: var(--ds-ease-emphasized);
+    --_menu-ease-out: var(--ds-ease-exit);
+    /* Eight rows show before the list scrolls inside. */
+    --_multi-select-popup-max-height: calc(var(--ds-list-row-height) * 8 + var(--ds-space-3xs) * 2);
+
+    position: relative;
+    z-index: var(--ds-z-menu);
+    display: flex;
+    flex-direction: column;
+    gap: var(--ds-space-3xs);
+    box-sizing: border-box;
+    inline-size: var(--radix-popover-trigger-width);
+    min-inline-size: min(var(--ds-menu-width-min), var(--radix-popover-content-available-width));
+    max-inline-size: var(--radix-popover-content-available-width);
+    max-block-size: var(--radix-popover-content-available-height);
+    margin: 0;
+    padding: var(--_menu-padding);
+    overflow: hidden;
+    border: var(--ds-border-width-default) solid var(--_menu-border-color);
+    border-radius: var(--_menu-radius);
+    background-color: var(--_menu-bg);
+    -webkit-backdrop-filter: var(--_menu-backdrop);
+    backdrop-filter: var(--_menu-backdrop);
+    box-shadow: var(--_menu-shadow);
+    color: var(--_menu-fg);
+    font-family: var(--ds-font-family-sans);
+    font-size: var(--ds-font-size-s);
+    line-height: var(--ds-font-leading-snug);
+    transform-origin: var(--radix-popover-content-transform-origin);
+    outline: none;
+  }
+
+  [data-ds='multi-select'][data-part='popup'] > [data-part='search'] {
+    flex: none;
+  }
+
+  /* The nested ListBox: no box of its own, the menu row colors, and it scrolls. */
+  [data-ds='multi-select'][data-part='popup'] > [data-ds='list-box'] {
+    --_list-box-bg: transparent;
+    --_list-box-border-color: transparent;
+    --_list-box-padding: 0;
+    --_list-box-radius: 0;
+    --_list-box-max-height: var(--_multi-select-popup-max-height);
+    --_list-box-option-bg-highlight: var(--_menu-item-bg-highlight);
+    --_list-box-option-fg-highlight: var(--_menu-item-fg-highlight);
+    --_list-box-option-ring-color: var(--_menu-item-ring-color);
+    --_list-box-meta-fg: var(--_menu-meta-fg);
+    --_list-box-separator-color: var(--_menu-separator-color);
+
+    flex: 1 1 auto;
+    min-block-size: 0;
+  }
+
+  [data-ds='multi-select'][data-part='popup'] > [data-part='actions'] {
+    display: flex;
+    flex: none;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: var(--ds-space-3xs);
+    padding-block-start: var(--ds-space-3xs);
+    border-block-start: var(--ds-border-width-default) solid var(--_menu-separator-color);
+  }
+
+  [data-ds='multi-select'][data-part='popup']:lang(ar) {
+    font-size: var(--ds-font-size-m);
+    line-height: var(--ds-font-leading-arabic-snug);
+  }
+
+  /* ------------------------------------------------------------ motion: pattern "menu-scale" */
+
+  [data-ds='multi-select'][data-part='popup'][data-state='open'] {
+    animation: ds-multi-select-popup-in var(--_menu-duration-in) var(--_menu-ease-in);
+  }
+
+  [data-ds='multi-select'][data-part='popup'][data-state='closed'] {
+    animation: ds-multi-select-popup-out var(--_menu-duration-out) var(--_menu-ease-out) forwards;
+    pointer-events: none;
+  }
+
+  @keyframes ds-multi-select-popup-in {
+    from {
+      opacity: 0;
+      transform: scale(var(--_menu-enter-scale));
+    }
+  }
+
+  @keyframes ds-multi-select-popup-out {
+    to {
+      opacity: 0;
+      transform: scale(var(--_menu-enter-scale));
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    [data-ds='multi-select'][data-part='popup'][data-state] {
+      animation: none;
+    }
+
+    [data-ds='multi-select']:not([data-part])::before {
+      transition: none;
+    }
+  }
+
+  /* ------------------------------------------------------------ transparency, contrast, forced colors */
+
+  @media (prefers-reduced-transparency: reduce) {
+    [data-ds='multi-select'][data-part='popup'] {
+      --_menu-backdrop: none;
+    }
+  }
+
+  @media (prefers-contrast: more) {
+    [data-ds='multi-select'][data-part='popup'] {
+      --_menu-backdrop: none;
+      --_menu-border-color: var(--ds-color-border-strong);
+      --_menu-separator-color: var(--ds-color-border-strong);
+    }
+
+    [data-ds='multi-select']:not([data-part]) {
+      --_multi-select-tag-bg: transparent;
+    }
+
+    [data-ds='multi-select'] [data-part='tag'] {
+      outline: var(--ds-border-width-default) solid var(--ds-color-border-strong);
+      outline-offset: calc(var(--ds-border-width-default) * -1);
+    }
+  }
+
+  [data-contrast='more'] [data-ds='multi-select'][data-part='popup'] {
+    --_menu-backdrop: none;
+    --_menu-border-color: var(--ds-color-border-strong);
+    --_menu-separator-color: var(--ds-color-border-strong);
+  }
+
+  @media (forced-colors: active) {
+    [data-ds='multi-select']:not([data-part])::before {
+      display: none;
+    }
+
+    [data-ds='multi-select'][data-invalid]:not([data-part]) {
+      --_multi-select-border-width: var(--ds-border-width-strong);
+    }
+
+    [data-ds='multi-select'][data-disabled]:not([data-part]) {
+      --_multi-select-border-color: GrayText;
+
+      color: GrayText;
+    }
+
+    [data-ds='multi-select'] [data-part='tag'] {
+      outline: var(--ds-border-width-default) solid CanvasText;
+      outline-offset: calc(var(--ds-border-width-default) * -1);
+    }
+
+    [data-ds='multi-select'][data-part='popup'] {
+      --_menu-bg: Canvas;
+      --_menu-backdrop: none;
+      --_menu-border-color: CanvasText;
+      --_menu-separator-color: CanvasText;
+      --_menu-meta-fg: CanvasText;
+      --_menu-item-bg-highlight: Highlight;
+      --_menu-item-fg-highlight: HighlightText;
+    }
+  }
+}

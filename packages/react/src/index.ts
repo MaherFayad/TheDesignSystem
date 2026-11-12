@@ -49,6 +49,7 @@ export * from './components/List/index';
 export * from './components/ListBox/index';
 export * from './components/Menubar/index';
 export * from './components/Meter/index';
+export * from './components/MultiSelect/index';
 export * from './components/Navbar/index';
 export * from './components/NotificationCenter/index';
 export * from './components/OTPField/index';
