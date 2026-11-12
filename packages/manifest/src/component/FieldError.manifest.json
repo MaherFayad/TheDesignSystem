@@ -1,0 +1,131 @@
+{
+  "name": "FieldError",
+  "kind": "component",
+  "family": "forms",
+  "summary": "An error message under one control or one group: a danger icon and words that say how to fix the value, linked to the control through aria-describedby.",
+  "useWhen": [
+    "A value that fails a check on blur or on submit, under the control it belongs to",
+    "The error part of a Field, through the error prop or as a child",
+    "An error for a group of choices, under a Fieldset"
+  ],
+  "avoidWhen": [
+    "A problem with the whole form or the page, such as a failed save",
+    "A hint that helps fill the control before anything is wrong",
+    "A result that needs no fix, such as Saved"
+  ],
+  "insteadUse": {
+    "A hint before anything is wrong": "Field (the description prop)"
+  },
+  "anatomy": [
+    "root",
+    "icon",
+    "message"
+  ],
+  "slots": {
+    "message": {
+      "accepts": "text",
+      "min": 1,
+      "max": 1
+    }
+  },
+  "props": {
+    "size": {
+      "type": [
+        "sm",
+        "md"
+      ],
+      "default": "md",
+      "description": "md is font.size.s with the 16px icon, the error of a Field. sm is font.size.xs with the 12px icon, under a small control."
+    },
+    "id": {
+      "type": "string",
+      "description": "Alone, the id the control's aria-describedby points at. Inside a Field the Field gives it."
+    },
+    "children": {
+      "type": "node",
+      "description": "The message. Nothing renders when it is empty."
+    }
+  },
+  "states": [],
+  "a11y": {
+    "role": "paragraph, with no role attribute: never role alert and never a live region",
+    "focus": "Never focusable. On submit the form moves focus to the first invalid control, which reads the error.",
+    "keys": {},
+    "announce": "Read with the control through aria-describedby when focus lands there. The control carries aria-invalid. Inside a Field both are wired while the error renders.",
+    "native": {
+      "accessibilityRole": "text"
+    },
+    "notes": [
+      "Never color alone: a danger icon and words. The icon is aria-hidden; the words carry the meaning.",
+      "Not a live region and never role alert: an error that is on the page when it loads must not interrupt, and a screen reader reads it with the control.",
+      "Rendered only when there is an error, so it has no state attributes. invalid false on the Field hides it.",
+      "Validate on blur or on submit, never on every key.",
+      "Inside a Field the Field's error id wins over an id passed in. An empty string renders nothing, like no message."
+    ]
+  },
+  "content": {
+    "en": {
+      "message": "Says how to fix it, in plain words: Add the part after the @, for example name@example.com. Never only Invalid, Error or Required.",
+      "tone": "Calm and specific. No blame, no exclamation marks, no codes."
+    },
+    "ar": {
+      "message": "يقول وش يسوي عشان يصلحها: البريد ناقص، اكتبه كامل. مو بس غلط أو مطلوب",
+      "tone": "هادي وواضح، بدون لوم وبدون علامات تعجب",
+      "latin": "النص اللاتيني داخل العربي يمر عبر Bidi"
+    }
+  },
+  "tokens": [
+    "color.state.danger.text",
+    "font.family.sans",
+    "font.size.s",
+    "font.size.xs",
+    "font.leading.normal",
+    "space.2xs"
+  ],
+  "frameworks": {
+    "react": {
+      "status": "ready",
+      "behavior": "hand built, reads the Field context",
+      "example": "FieldError.demo.tsx",
+      "note": "No motion: the message appears and leaves at once, so the layout does not move under the pointer. There is no pattern to name and nothing to reduce."
+    },
+    "angular": {
+      "status": "planned",
+      "behavior": "p[dsFieldError], host bindings, reads the dsField context",
+      "note": "The host paragraph is the root. Inside dsField it takes the error id and registers with the field."
+    },
+    "native": {
+      "status": "planned",
+      "behavior": "react-native:Text with a danger icon, linked with accessibilityHint on the control",
+      "note": "React Native has no aria-describedby: the control reads the message as its hint."
+    }
+  },
+  "styles": {
+    "studio": "color.state.danger.text for the icon and the words, text s",
+    "desk": "The same, in Instrument Sans",
+    "neutral": "Takes the tokens of the Neutral style, no recipe."
+  },
+  "mistakes": [
+    {
+      "wrong": "An error that only says Invalid email",
+      "right": "An error that says how to fix it: Add the part after the @, for example name@example.com"
+    },
+    {
+      "wrong": "role alert on an inline error that is there when the page loads",
+      "right": "FieldError, read through aria-describedby when focus lands on the control"
+    },
+    {
+      "wrong": "Red text with no icon",
+      "right": "FieldError, which starts with the danger icon"
+    },
+    {
+      "wrong": "A FieldError with no aria-describedby on the control and no Field around it",
+      "right": "An id on the FieldError and aria-describedby plus aria-invalid on the control, or a Field"
+    },
+    {
+      "wrong": "An error that shows on every key while the person types",
+      "right": "Check on blur or on submit"
+    }
+  ],
+  "since": "0.1.0"
+}
