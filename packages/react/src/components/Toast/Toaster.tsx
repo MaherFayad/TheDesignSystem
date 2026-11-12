@@ -52,7 +52,8 @@
 // Motion (order 1.21, interaction "toast-stack"): a toast enters and leaves
 // with the CSS of Toast.css. When one joins or leaves, the toasts that stay
 // move to their new place with a transform played from where they were
-// (stackShift.ts, pattern drag-drop through useMotion, so the style's preset
+// (stackShift.ts; order 1.22 plays it with the flip primitive, flipPlay, on
+// the snappy spring, with the style's mode from useMotion, so the preset
 // and reduced motion apply). Layout never animates, the store never waits,
 // and the pause on hover and focus is untouched.
 //
@@ -68,6 +69,7 @@ import { useEffect, useRef, useState, useSyncExternalStore } from 'react';
 import { createPortal } from 'react-dom';
 import { Toast as RadixToast, VisuallyHidden } from 'radix-ui';
 import { toastStore, toastUrgency, type ToastItem, type ToastStore } from '@the-system/shared';
+import { flipPlay, rectOf } from '@the-system/motion';
 import { Theme } from '../../theme/Theme';
 import { useTheme } from '../../theme/hooks';
 import { useMotion } from '../../internal/motion';
@@ -213,10 +215,13 @@ export function Toaster({ position = 'bottom-end', label, hotkey = ['F8'], toast
     const viewport = layer?.querySelector<HTMLElement>('[data-ds="toaster"]');
     if (!viewport) return;
     return watchStackShift(viewport, (el, from, to) => {
-      const animation = motion.play(el, 'drag-drop', 'toast-stack', { step: 'drop', from, to });
+      // Order 1.22: the flip primitive on the snappy spring, so a toast that makes room lands past its place in Desk and settles.
+      const now = rectOf(el);
+      const snap = { rects: new Map([[el as Element, { ...now, y: now.y + from.y - to.y }]]) };
+      const [animation] = flipPlay(snap, { items: [el], spring: 'snappy', enter: 'none', mode: motion.mode('toast-stack') });
       // The shift does not scale, so its origin does not matter; the toast's own exit scales from its center.
       el.style.removeProperty('transform-origin');
-      return animation;
+      return animation ?? null;
     });
   }, [layer, motion]);
 

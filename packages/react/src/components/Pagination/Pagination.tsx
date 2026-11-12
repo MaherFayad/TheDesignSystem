@@ -24,16 +24,31 @@
 // - The ends stay focusable when there is nowhere to go (aria-disabled and
 //   data-disabled, the Button rule), so focus is not lost on the last page.
 // - Numbers use Western digits in both languages, grouped with a comma.
+// - Motion, interaction "pagination-roll" (order 1.22, proposed). The
+//   current page holds an aria-hidden span (inside the page part) that
+//   draws its fill; when the page changes the shared pill slides it from the
+//   page it leaves on the snappy spring, stretched along the way, and the
+//   number it reaches pops. When the window of pages shifts and a slot
+//   shows another number, that number rolls digit by digit (rollDigits, up
+//   for a later page, down for an earlier one) in an aria-hidden host: the
+//   page's accessible name is its aria-label. A pressed arrow winds up
+//   (back by distance.nudge, then forward) while the page changes at once.
 // - Under breakpoint.phone the compact form keeps the ends and the current
 //   page and the last page (CSS), with a compact-only ellipsis (data-compact)
 //   between them when pages are hidden, and the summary wraps above.
-import { useMemo, type HTMLAttributes, type MouseEvent, type ReactElement, type Ref } from 'react';
+import { useCallback, useLayoutEffect, useMemo, useRef, type HTMLAttributes, type MouseEvent, type ReactElement, type Ref } from 'react';
+import { rollDigits } from '@the-system/motion';
 import type { IconName } from '@the-system/icons/react';
 import { clampPage, isEllipsis, itemRange, pageCount as countPages, pageRange, type Shape, type Size } from '@the-system/shared';
 import { useTheme } from '../../theme';
-import { Button } from '../Button';
+import { ButtonRoot } from '../Button/ButtonBase';
 import { IconButton } from '../IconButton';
+import { followIndicator, inlineSign, useIndicatorTrack, windUp } from '../../internal/indicator';
+import { useMotion } from '../../internal/motion';
 import { useControllable } from '../../internal/useControllable';
+
+const PAGE = ':scope > [data-part="page"]';
+const HOST = ':scope > [data-part="label"] span[aria-hidden="true"]';
 
 export type PaginationSize = Extract<Size, 'sm' | 'md' | 'lg'>;
 export type PaginationShape = Extract<Shape, 'default' | 'pill' | 'square'>;
@@ -130,6 +145,41 @@ export function Pagination({
   const [rawPage, setPage] = useControllable(pageProp, defaultPage, onPageChange);
   const page = clampPage(rawPage, total);
   const range = useMemo(() => pageRange(page, total, siblings, boundaries), [page, total, siblings, boundaries]);
+  const motion = useMotion();
+  const track = useIndicatorTrack();
+  const rootRef = useRef<HTMLElement | null>(null);
+  const slots = useRef<{ page: number; texts: string[] } | null>(null);
+  const setRootRef = useCallback(
+    (node: HTMLElement | null) => {
+      rootRef.current = node;
+      if (typeof ref === 'function') ref(node);
+      else if (ref) ref.current = node;
+    },
+    [ref],
+  );
+
+  // After each commit: roll the numbers whose slot changed, slide the pill.
+  useLayoutEffect(() => {
+    const root = rootRef.current;
+    if (!root) return;
+    const mode = motion.mode('pagination-roll');
+    const pages = Array.from(root.querySelectorAll<HTMLElement>(PAGE));
+    const texts = pages.map((el) => el.querySelector(HOST)?.textContent ?? '');
+    const before = slots.current;
+    if (before && before.page !== page && before.texts.length === texts.length) {
+      const direction = page > before.page ? 'up' : 'down';
+      texts.forEach((text, i) => {
+        const host = pages[i]?.querySelector<HTMLElement>(HOST);
+        const from = before.texts[i];
+        if (host && from !== undefined && from !== text) rollDigits(host, from, text, { mode, direction });
+      });
+    }
+    slots.current = { page, texts };
+    const current = pages.find((el) => el.hasAttribute('data-active'));
+    const pill = current?.querySelector(':scope > span[aria-hidden="true"]:not([data-part])');
+    if (!current || !pill) return;
+    followIndicator(track, String(page), { el: pill }, { mode, anchor: root, label: current.querySelector(':scope > [data-part="label"]'), axis: 'x' });
+  }, [page, range, motion, track]);
 
   const go = (to: number) => (event: MouseEvent<HTMLElement>) => {
     // A link opened in a new tab or window leaves this page where it is.
@@ -139,12 +189,20 @@ export function Pagination({
   };
 
   /** A link child for getHref, else nothing: the Button renders its own <button>. */
-  const linkTo = (to: number, text?: string): ReactElement | undefined =>
+  const linkTo = (to: number, text?: ReactElement | string): ReactElement | undefined =>
     getHref ? <a href={getHref(to)}>{text}</a> : undefined;
 
   const end = (part: 'first' | 'previous' | 'next' | 'last', icon: IconName, to: number) => {
     const inert = disabled || to === page;
     const link = linkTo(to);
+    const onClick = (event: MouseEvent<HTMLElement>) => {
+      go(to)(event);
+      if (inert || to === page) return;
+      const button = event.currentTarget;
+      const forward = part === 'next' || part === 'last';
+      const sign = inlineSign(button);
+      windUp(button.querySelector('[data-part="icon"]'), (forward ? sign : -sign) as 1 | -1, motion.mode('pagination-roll'));
+    };
     // An inert link loses its href in Button, which would take it out of the tab order: tabIndex 0 keeps it there.
     return (
       <IconButton
@@ -155,7 +213,7 @@ export function Pagination({
         shape={shape}
         disabled={inert}
         tabIndex={inert && link !== undefined ? 0 : undefined}
-        onClick={go(to)}
+        onClick={onClick}
         asChild={link !== undefined}
       >
         {link}
@@ -174,7 +232,7 @@ export function Pagination({
       : undefined;
 
   return (
-    <nav {...rest} ref={ref} data-ds="pagination" data-size={size} data-shape={shape} aria-label={label ?? t.label}>
+    <nav {...rest} ref={setRootRef} data-ds="pagination" data-size={size} data-shape={shape} aria-label={label ?? t.label}>
       {summary !== undefined && <span data-part="summary">{summary}</span>}
       {showEnds && end('first', 'chevrons-back', 1)}
       {end('previous', 'chevron-back', Math.max(1, page - 1))}
@@ -196,10 +254,18 @@ export function Pagination({
               …
             </span>
           ) : null;
-        const link = linkTo(item, text);
+        // The number is drawn in an aria-hidden host the roll owns; aria-label names the page.
+        const digitsHost = (
+          <span aria-hidden="true">
+            {text}
+          </span>
+        );
+        const link = linkTo(item, digitsHost);
         const pageButton = (
-          <Button
+          <ButtonRoot
             key={`page-${item}`}
+            ds="button"
+            defaultEmphasis="soft"
             data-part="page"
             data-active={active ? '' : undefined}
             aria-current={active ? 'page' : undefined}
@@ -211,9 +277,15 @@ export function Pagination({
             tabIndex={disabled && link !== undefined ? 0 : undefined}
             onClick={go(item)}
             asChild={link !== undefined}
+            render={(content) => (
+              <>
+                {active && <span aria-hidden="true" />}
+                <span data-part="label">{content}</span>
+              </>
+            )}
           >
-            {link ?? text}
-          </Button>
+            {link ?? digitsHost}
+          </ButtonRoot>
         );
         return compactGap ? [compactGap, pageButton] : [pageButton];
       })}

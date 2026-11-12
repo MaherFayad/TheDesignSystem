@@ -195,7 +195,10 @@
     "border.width.default",
     "color.text.muted",
     "color.bg.overlay-40",
-    "opacity.disabled"
+    "opacity.disabled",
+    "duration.spring-bouncy",
+    "ease.spring-bouncy",
+    "scale.anticipate"
   ],
   "motion": "menu-scale",
   "frameworks": {
@@ -203,7 +206,7 @@
       "status": "ready",
       "behavior": "radix:Toolbar",
       "example": "Toolbar.demo.tsx",
-      "note": "Items are system Button, IconButton and Link roots through Radix asChild. Toggle groups use Radix ToolbarToggleGroup until ToggleButton and ToggleGroup (batch 1) are merged; then ToolbarToggleItem should render a ToggleButton. The overflow menu is the system DropdownMenu, which plays menu-scale."
+      "note": "Items are system Button, IconButton and Link roots through Radix asChild. Toggle groups use Radix ToolbarToggleGroup until ToggleButton and ToggleGroup (batch 1) are merged; then ToolbarToggleItem should render a ToggleButton. The overflow menu is the system DropdownMenu, which plays menu-scale. Round 2 (order 1.22, proposed), interaction toolbar-press: items dip their parts to scale.anticipate while pressed (Button's --_button-part-press) and a toggle item that turns on pops its icon (CSS keyframes, animation-composition add)."
     },
     "angular": {
       "status": "planned",

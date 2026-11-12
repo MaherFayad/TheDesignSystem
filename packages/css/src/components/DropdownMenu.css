@@ -47,16 +47,37 @@
  *   --_menu-separator-color
  *   --_menu-inset                                start space for items with no icon
  *   --_menu-enter-scale, -duration-in, -duration-out, -ease-in, -ease-out
+ *   --_menu-enter-x, -enter-y     the travel of the enter, set per side from -shift (enter-x is
+ *                                 the inline twin of the motion name enter-y)
+ *   --_menu-shift                 how far the surface travels in from its trigger side
+ *   --_menu-item-step             the stagger step of a row, 0 to 6, set by its place in the menu
+ *   --_menu-item-shift            how far the inside of a row rises as it arrives
+ *   --_menu-nudge                 how far the submenu chevron moves toward its submenu
  *
- * Motion, interaction "menu-origin" (pattern "menu-scale"), the same values
- * and plumbing as Popover: the menu scales up from scale.menu-enter out of
- * the transform origin Radix computes on the trigger side while it fades
- * in, over duration.base on ease.emphasized; closing plays the reverse,
- * faster (duration.quick, ease.exit), and takes no pointer. Only transform
- * and opacity animate. A style turns the scale off with
- * --_menu-enter-scale: 1, which leaves a fade. Under reduced motion both
- * animations are none, so Radix removes the closed menu at once and never
- * waits for an animationend.
+ * Motion, order 1.22 (proposed). Interaction "menu-origin" (pattern
+ * "menu-scale"): the menu comes out of its trigger side (data-side): it
+ * travels distance.shift from the trigger and grows from scale.menu-enter
+ * out of the transform origin Radix computes, while it fades in, on the
+ * snappy spring (ease.spring-snappy over duration.spring-snappy, a small
+ * overshoot in Neutral, a playful one in Desk, steps in Studio). The inside
+ * of each row (its icon, text, shortcut, chevron), the labels and the
+ * separators then rise distance.shift and fade in on the soft spring, one
+ * delay.stagger step apart in reading order, capped at six steps. The row
+ * itself, with its lit fill and its focus ring, is there from the first
+ * frame, so focus and the highlight never wait. Closing plays the surface
+ * back, faster (duration.quick, ease.exit), all at once, and takes no
+ * pointer. Interaction "menu-row-slide": the lit fill of a row is its
+ * ::after (the hover veil of anatomy.md); menuShared.tsx slides it from the
+ * old row to the new one when the highlight moves (Web Animations, the
+ * snappy spring). Without the script, as in Angular until it ports it, the
+ * fill appears on the new row at once. Interaction "menu-submenu-nudge":
+ * the chevron of a lit or open sub-trigger moves distance.nudge toward its
+ * submenu on the bouncy spring, mirrored in right to left layouts, and comes
+ * back faster. Only transform and opacity animate. A style turns the travel
+ * and the scale off with --_menu-enter-scale: 1, --_menu-shift: 0px,
+ * --_menu-item-shift: 0px and --_menu-nudge: 0px, which leaves fades. Under
+ * reduced motion the animations are none, so Radix removes the closed menu
+ * at once and never waits for an animationend.
  */
 @layer ds.base {
   /* ------------------------------------------------------------ portal layer */
@@ -98,9 +119,15 @@
     --_menu-inset: calc(var(--ds-size-icon-md) + var(--_menu-item-gap));
     /* scale.menu-enter, 0.97 (GB st-menu-in); the menu-scale pattern reads scale.press, the same value. */
     --_menu-enter-scale: var(--ds-scale-menu-enter);
-    --_menu-duration-in: var(--ds-duration-base);
+    --_menu-shift: var(--ds-distance-shift);
+    --_menu-enter-x: 0px;
+    --_menu-enter-y: 0px;
+    --_menu-item-shift: var(--ds-distance-shift);
+    --_menu-item-step: 0;
+    --_menu-nudge: var(--ds-distance-nudge);
+    --_menu-duration-in: var(--ds-duration-spring-snappy);
     --_menu-duration-out: var(--ds-duration-quick);
-    --_menu-ease-in: var(--ds-ease-emphasized);
+    --_menu-ease-in: var(--ds-ease-spring-snappy);
     --_menu-ease-out: var(--ds-ease-exit);
 
     /* Positioned so the z-index applies: Radix copies it onto its positioning wrapper. */
@@ -161,6 +188,28 @@
     --_menu-origin: var(--radix-menubar-content-transform-origin);
   }
 
+  /*
+   * Right to left: Radix names the origin by the align word alone, so a menu
+   * aligned to the start of its trigger (the right edge in Arabic) would grow
+   * from its left corner, away from the trigger. The origin is put on the
+   * trigger's corner here, for menus above or below their trigger.
+   */
+  :is([data-ds='dropdown-menu'], [data-ds='context-menu']):dir(rtl)[data-side='bottom'][data-align='start'] {
+    --_menu-origin: 100% 0%;
+  }
+
+  :is([data-ds='dropdown-menu'], [data-ds='context-menu']):dir(rtl)[data-side='bottom'][data-align='end'] {
+    --_menu-origin: 0% 0%;
+  }
+
+  :is([data-ds='dropdown-menu'], [data-ds='context-menu']):dir(rtl)[data-side='top'][data-align='start'] {
+    --_menu-origin: 100% 100%;
+  }
+
+  :is([data-ds='dropdown-menu'], [data-ds='context-menu']):dir(rtl)[data-side='top'][data-align='end'] {
+    --_menu-origin: 0% 100%;
+  }
+
   :is([data-ds='dropdown-menu'], [data-ds='context-menu'])[data-size='sm'] {
     --_menu-item-height: var(--ds-size-control-xs);
     --_menu-item-padding-inline: var(--ds-space-s);
@@ -193,8 +242,6 @@
     padding-block: var(--ds-space-4xs);
     padding-inline: var(--_menu-item-padding-inline);
     border-radius: var(--_menu-item-radius);
-    background-color: var(--_menu-item-bg);
-    box-shadow: var(--_menu-item-ring);
     color: var(--_menu-item-fg);
     font-weight: var(--_menu-item-font-weight);
     text-align: start;
@@ -202,6 +249,42 @@
     user-select: none;
     outline: none;
     -webkit-tap-highlight-color: transparent;
+  }
+
+  /*
+   * The lit fill: the row's ::after (the hover veil of anatomy.md), on layer
+   * z.canvas, under the row's content and its focus ring (the ::before, the
+   * focus layer of anatomy.md), both on z.raised. The fill is its own layer
+   * so the slide of interaction "menu-row-slide" can move it from row to row
+   * while the row stays still. The origin is the top left corner:
+   * menuShared.tsx measures the slide in screen px.
+   */
+  :is([data-ds='dropdown-menu'], [data-ds='context-menu']) :is([data-part='item'], [data-part='checkbox-item'], [data-part='radio-item'], [data-part='sub-trigger'])::after {
+    content: '';
+    position: absolute;
+    z-index: var(--ds-z-canvas);
+    inset: 0;
+    border-radius: inherit;
+    background-color: var(--_menu-item-bg);
+    transform-origin: 0 0;
+    pointer-events: none;
+  }
+
+  /* The keyboard ring, over the fill. */
+  :is([data-ds='dropdown-menu'], [data-ds='context-menu']) :is([data-part='item'], [data-part='checkbox-item'], [data-part='radio-item'], [data-part='sub-trigger'])::before {
+    content: '';
+    position: absolute;
+    z-index: var(--ds-z-raised);
+    inset: 0;
+    border-radius: inherit;
+    box-shadow: var(--_menu-item-ring);
+    pointer-events: none;
+  }
+
+  /* The content of the row, over the fill. */
+  :is([data-ds='dropdown-menu'], [data-ds='context-menu']) :is([data-part='item'], [data-part='checkbox-item'], [data-part='radio-item'], [data-part='sub-trigger']) > * {
+    position: relative;
+    z-index: var(--ds-z-raised);
   }
 
   /* A destructive action: the danger text color, and the word in the label says what it does. */
@@ -302,7 +385,24 @@
     background-color: var(--_menu-separator-color);
   }
 
-  /* ------------------------------------------------------------ motion: interaction "menu-origin", pattern "menu-scale" */
+  /* ------------------------------------------------------------ motion: interactions "menu-origin" and "menu-submenu-nudge" */
+
+  /* The travel comes from the trigger side: a menu below its trigger comes down out of it. */
+  :is([data-ds='dropdown-menu'], [data-ds='context-menu'])[data-side='bottom'] {
+    --_menu-enter-y: calc(var(--_menu-shift) * -1);
+  }
+
+  :is([data-ds='dropdown-menu'], [data-ds='context-menu'])[data-side='top'] {
+    --_menu-enter-y: var(--_menu-shift);
+  }
+
+  :is([data-ds='dropdown-menu'], [data-ds='context-menu'])[data-side='right'] {
+    --_menu-enter-x: calc(var(--_menu-shift) * -1);
+  }
+
+  :is([data-ds='dropdown-menu'], [data-ds='context-menu'])[data-side='left'] {
+    --_menu-enter-x: var(--_menu-shift);
+  }
 
   :is([data-ds='dropdown-menu'], [data-ds='context-menu'])[data-state='open'] {
     animation: ds-menu-in var(--_menu-duration-in) var(--_menu-ease-in);
@@ -313,24 +413,106 @@
     pointer-events: none;
   }
 
+  /* The stagger step of each child of the menu, in reading order, capped at six. A row in a group takes its group's step. */
+  :is([data-ds='dropdown-menu'], [data-ds='context-menu'])[data-state='open'] > :nth-child(2) {
+    --_menu-item-step: 1;
+  }
+
+  :is([data-ds='dropdown-menu'], [data-ds='context-menu'])[data-state='open'] > :nth-child(3) {
+    --_menu-item-step: 2;
+  }
+
+  :is([data-ds='dropdown-menu'], [data-ds='context-menu'])[data-state='open'] > :nth-child(4) {
+    --_menu-item-step: 3;
+  }
+
+  :is([data-ds='dropdown-menu'], [data-ds='context-menu'])[data-state='open'] > :nth-child(5) {
+    --_menu-item-step: 4;
+  }
+
+  :is([data-ds='dropdown-menu'], [data-ds='context-menu'])[data-state='open'] > :nth-child(6) {
+    --_menu-item-step: 5;
+  }
+
+  :is([data-ds='dropdown-menu'], [data-ds='context-menu'])[data-state='open'] > :nth-child(n + 7) {
+    --_menu-item-step: 6;
+  }
+
+  /*
+   * The rows arrive in order: the inside of each row (never the row, its
+   * fill or its ring), the labels and the separators. The first one follows
+   * the surface by one step.
+   */
+  :is([data-ds='dropdown-menu'], [data-ds='context-menu'])[data-state='open'] :is([data-part='item'], [data-part='checkbox-item'], [data-part='radio-item'], [data-part='sub-trigger']) > *,
+  :is([data-ds='dropdown-menu'], [data-ds='context-menu'])[data-state='open'] > :is([data-part='label'], [data-part='separator']),
+  :is([data-ds='dropdown-menu'], [data-ds='context-menu'])[data-state='open'] > [data-part='group'] > [data-part='label'] {
+    animation: ds-menu-row-in var(--ds-duration-spring-soft) var(--ds-ease-spring-soft) backwards;
+    animation-delay: min(calc(var(--ds-delay-stagger) * (var(--_menu-item-step) + 1)), var(--ds-duration-base));
+  }
+
+  /* The submenu chevron leans toward its submenu while its row is lit or its submenu open, and comes back faster. */
+  :is([data-ds='dropdown-menu'], [data-ds='context-menu']) [data-part='sub-trigger'] > [data-part='end'] {
+    transition: transform var(--ds-duration-quick) var(--ds-ease-exit);
+  }
+
+  :is([data-ds='dropdown-menu'], [data-ds='context-menu']) [data-part='sub-trigger']:is([data-highlighted], [data-state='open']) > [data-part='end'] {
+    transform: translateX(var(--_menu-nudge));
+    transition: transform var(--ds-duration-spring-bouncy) var(--ds-ease-spring-bouncy);
+  }
+
+  :is([data-ds='dropdown-menu'], [data-ds='context-menu']) [data-part='sub-trigger']:is([data-highlighted], [data-state='open']):dir(rtl) > [data-part='end'] {
+    transform: translateX(calc(var(--_menu-nudge) * -1));
+  }
+
   @keyframes ds-menu-in {
     from {
       opacity: 0;
-      transform: scale(var(--_menu-enter-scale));
+      transform: translate(var(--_menu-enter-x), var(--_menu-enter-y)) scale(var(--_menu-enter-scale));
     }
   }
 
   @keyframes ds-menu-out {
     to {
       opacity: 0;
-      transform: scale(var(--_menu-enter-scale));
+      transform: translate(var(--_menu-enter-x), var(--_menu-enter-y)) scale(var(--_menu-enter-scale));
     }
   }
 
+  @keyframes ds-menu-row-in {
+    from {
+      opacity: 0;
+      transform: translateY(var(--_menu-item-shift));
+    }
+
+    /* Readable early: full opacity at 30%, the transform carries the rest. */
+    30% {
+      opacity: 1;
+    }
+  }
+
+  /* Reduced motion: the system setting and the page's own setting (data-motion="reduce" on the root element). */
   @media (prefers-reduced-motion: reduce) {
-    :is([data-ds='dropdown-menu'], [data-ds='context-menu'])[data-state] {
+    :is([data-ds='dropdown-menu'], [data-ds='context-menu'])[data-state],
+    :is([data-ds='dropdown-menu'], [data-ds='context-menu'])[data-state] :is([data-part='item'], [data-part='checkbox-item'], [data-part='radio-item'], [data-part='sub-trigger']) > *,
+    :is([data-ds='dropdown-menu'], [data-ds='context-menu'])[data-state] > :is([data-part='label'], [data-part='separator']),
+    :is([data-ds='dropdown-menu'], [data-ds='context-menu'])[data-state] > [data-part='group'] > [data-part='label'] {
       animation: none;
     }
+
+    :is([data-ds='dropdown-menu'], [data-ds='context-menu']) [data-part='sub-trigger'] > [data-part='end'] {
+      transition: none;
+    }
+  }
+
+  :root[data-motion='reduce'] :is([data-ds='dropdown-menu'], [data-ds='context-menu'])[data-state],
+  :root[data-motion='reduce'] :is([data-ds='dropdown-menu'], [data-ds='context-menu'])[data-state] :is([data-part='item'], [data-part='checkbox-item'], [data-part='radio-item'], [data-part='sub-trigger']) > *,
+  :root[data-motion='reduce'] :is([data-ds='dropdown-menu'], [data-ds='context-menu'])[data-state] > :is([data-part='label'], [data-part='separator']),
+  :root[data-motion='reduce'] :is([data-ds='dropdown-menu'], [data-ds='context-menu'])[data-state] > [data-part='group'] > [data-part='label'] {
+    animation: none;
+  }
+
+  :root[data-motion='reduce'] :is([data-ds='dropdown-menu'], [data-ds='context-menu']) [data-part='sub-trigger'] > [data-part='end'] {
+    transition: none;
   }
 
   /* ------------------------------------------------------------ transparency, contrast, forced colors */

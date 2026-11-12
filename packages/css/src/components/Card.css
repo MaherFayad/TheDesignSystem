@@ -13,6 +13,24 @@
  *   --_card-ring                            the focus ring of the link, drawn by ::before
  *   --_card-veil                            the hover veil color, drawn by ::after
  *   --_card-lift                            how far an interactive card rises on hover
+ *   --_card-lift-scale                      how much it grows as it rises; a name
+ *                                           outside the list in anatomy.md: the lift's scale
+ *   --_card-duration, -ease                 the lift's spring
+ *   --_card-glow, -glow-size                the pointer highlight's color and diameter
+ *   --_card-glow-x, -glow-y                 where the pointer is, from the inline and block
+ *                                           start; written on the highlight span by Card.tsx
+ *
+ * Motion, interaction card-lift (order 1.22, proposed). Under the pointer an
+ * interactive card rises distance.lift and grows to scale.lift on the soft
+ * spring (a small overshoot in Desk, nothing in Studio, whose lift tokens
+ * are rest), and a soft round highlight follows the pointer inside it. The
+ * highlight is a decorative span (aria-hidden, empty, no pointer) that
+ * Card.tsx adds as the last child of an interactive card: it clips a circle
+ * drawn on its ::before, which moves by transform to the pointer. The hit
+ * area never follows the pointer. A style turns it off with --_card-lift 0px,
+ * --_card-lift-scale 1 and --_card-glow transparent. Under reduced motion
+ * (media query or data-motion="reduce") the card does not move and the
+ * highlight is not drawn.
  *   --_card-title-size, -title-fg           the title font size and color
  *
  * The root is not clipped, so the focus ring outside it shows. The media
@@ -31,7 +49,14 @@
     --_card-select: 0 0 0 0 transparent;
     --_card-ring: 0 0 0 0 transparent;
     --_card-veil: transparent;
-    --_card-lift: calc(-1 * var(--ds-space-4xs));
+    --_card-lift: calc(-1 * var(--ds-distance-lift));
+    --_card-lift-scale: var(--ds-scale-lift);
+    --_card-duration: var(--ds-duration-spring-soft);
+    --_card-ease: var(--ds-ease-spring-soft);
+    --_card-glow: var(--ds-color-bg-overlay-10);
+    --_card-glow-size: calc(4 * var(--ds-size-control-lg));
+    --_card-glow-x: 0px;
+    --_card-glow-y: 0px;
     --_card-title-size: var(--ds-font-size-l);
     --_card-title-fg: var(--ds-color-text-bright);
 
@@ -51,7 +76,34 @@
     font-family: var(--ds-font-family-sans);
     font-size: var(--ds-font-size-m);
     line-height: var(--ds-font-leading-normal);
-    transition: transform var(--ds-duration-base) var(--ds-ease-default);
+    transition: transform var(--_card-duration) var(--_card-ease);
+  }
+
+  /* card-lift: the pointer highlight, a decorative span Card.tsx adds as the last child. */
+  [data-ds='card'] > span[aria-hidden='true']:empty:last-child {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    border-radius: inherit;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity var(--ds-duration-moderate) var(--ds-ease-out);
+  }
+
+  [data-ds='card'] > span[aria-hidden='true']:empty:last-child::before {
+    content: '';
+    position: absolute;
+    inset-block-start: 0;
+    inset-inline-start: 0;
+    inline-size: var(--_card-glow-size);
+    block-size: var(--_card-glow-size);
+    border-radius: var(--ds-radius-pill);
+    background-image: radial-gradient(closest-side, var(--_card-glow), transparent);
+    transform: translate(calc(var(--_card-glow-x) - 50%), calc(var(--_card-glow-y) - 50%));
+  }
+
+  [data-ds='card'][data-interactive]:not([data-disabled]):hover > span[aria-hidden='true']:empty:last-child {
+    opacity: 1;
   }
 
   /* ::before: the focus ring of the card link, around the whole card. */
@@ -226,7 +278,7 @@
     --_card-bg: var(--_card-bg-hover);
     --_card-shadow: var(--_card-shadow-hover);
 
-    transform: translateY(var(--_card-lift));
+    transform: translateY(var(--_card-lift)) scale(var(--_card-lift-scale));
   }
 
   [data-ds='card'][data-interactive]:not([data-disabled]):hover::after {
@@ -278,12 +330,33 @@
     [data-ds='card'][data-interactive]:not([data-disabled]):hover {
       transform: none;
     }
+
+    [data-ds='card'] > span[aria-hidden='true']:empty:last-child {
+      display: none;
+    }
+  }
+
+  :root[data-motion='reduce'] [data-ds='card'],
+  :root[data-motion='reduce'] [data-ds='card']::after {
+    transition: none;
+  }
+
+  :root[data-motion='reduce'] [data-ds='card'][data-interactive]:not([data-disabled]):hover {
+    transform: none;
+  }
+
+  :root[data-motion='reduce'] [data-ds='card'] > span[aria-hidden='true']:empty:last-child {
+    display: none;
   }
 
   /* Forced colors drop shadows: the selected card gets a Highlight outline inside its border (no layout shift), focus shows as Highlight. */
   @media (forced-colors: active) {
     [data-ds='card'] {
       border-color: CanvasText;
+    }
+
+    [data-ds='card'] > span[aria-hidden='true']:empty:last-child {
+      display: none;
     }
 
     [data-ds='card'][data-selected] {

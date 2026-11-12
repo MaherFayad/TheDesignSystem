@@ -110,6 +110,11 @@
           "target": "@components/ds/motion/interactions/fields.ts"
         },
         {
+          "path": "packages/motion/src/interactions/navigation.ts",
+          "type": "registry:lib",
+          "target": "@components/ds/motion/interactions/navigation.ts"
+        },
+        {
           "path": "packages/motion/src/interactions/overlays.ts",
           "type": "registry:lib",
           "target": "@components/ds/motion/interactions/overlays.ts"
@@ -253,6 +258,41 @@
           "path": "packages/motion/src/preset.ts",
           "type": "registry:lib",
           "target": "@components/ds/motion/preset.ts"
+        },
+        {
+          "path": "packages/motion/src/primitives.ts",
+          "type": "registry:lib",
+          "target": "@components/ds/motion/primitives.ts"
+        },
+        {
+          "path": "packages/motion/src/primitives/button-morph.ts",
+          "type": "registry:lib",
+          "target": "@components/ds/motion/primitives/button-morph.ts"
+        },
+        {
+          "path": "packages/motion/src/primitives/digit-roll.ts",
+          "type": "registry:lib",
+          "target": "@components/ds/motion/primitives/digit-roll.ts"
+        },
+        {
+          "path": "packages/motion/src/primitives/flip.ts",
+          "type": "registry:lib",
+          "target": "@components/ds/motion/primitives/flip.ts"
+        },
+        {
+          "path": "packages/motion/src/primitives/icon-morph.ts",
+          "type": "registry:lib",
+          "target": "@components/ds/motion/primitives/icon-morph.ts"
+        },
+        {
+          "path": "packages/motion/src/primitives/shared.ts",
+          "type": "registry:lib",
+          "target": "@components/ds/motion/primitives/shared.ts"
+        },
+        {
+          "path": "packages/motion/src/primitives/stagger.ts",
+          "type": "registry:lib",
+          "target": "@components/ds/motion/primitives/stagger.ts"
         },
         {
           "path": "packages/motion/src/spring.ts",
@@ -452,6 +492,11 @@
         "@ds/style-studio"
       ],
       "files": [
+        {
+          "path": "packages/react/src/internal/indicator.ts",
+          "type": "registry:ui",
+          "target": "@components/ds/react/internal/indicator.ts"
+        },
         {
           "path": "packages/react/src/internal/keys.ts",
           "type": "registry:ui",
@@ -830,6 +875,11 @@
           "target": "@components/ds/react/components/Alert/Alert.tsx"
         },
         {
+          "path": "packages/react/src/components/Alert/ghost.ts",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/Alert/ghost.ts"
+        },
+        {
           "path": "packages/react/src/components/Alert/index.ts",
           "type": "registry:ui",
           "target": "@components/ds/react/components/Alert/index.ts"
@@ -972,6 +1022,7 @@
       ],
       "registryDependencies": [
         "@ds/core",
+        "@ds/stat",
         "@ds/status-dot",
         "@ds/theme"
       ],
@@ -1007,8 +1058,11 @@
       "title": "AvatarGroup",
       "description": "A few overlapping avatars and a +N count for the rest, named as one group.",
       "registryDependencies": [
+        "@ds/alert",
         "@ds/avatar",
         "@ds/button",
+        "@ds/core",
+        "@ds/stat",
         "@ds/theme"
       ],
       "files": [
@@ -1021,6 +1075,11 @@
           "path": "packages/react/src/components/AvatarGroup/index.ts",
           "type": "registry:ui",
           "target": "@components/ds/react/components/AvatarGroup/index.ts"
+        },
+        {
+          "path": "packages/react/src/components/AvatarGroup/useFlipList.ts",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/AvatarGroup/useFlipList.ts"
         },
         {
           "path": "packages/css/src/components/AvatarGroup.css",
@@ -1047,6 +1106,7 @@
       ],
       "registryDependencies": [
         "@ds/core",
+        "@ds/stat",
         "@ds/theme"
       ],
       "files": [
@@ -1347,6 +1407,11 @@
           "target": "@components/ds/react/components/Card/index.ts"
         },
         {
+          "path": "packages/react/src/components/Card/pointerGlow.ts",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/Card/pointerGlow.ts"
+        },
+        {
           "path": "packages/css/src/components/Card.css",
           "type": "registry:file",
           "target": "@components/ds/css/components/Card.css"
@@ -1571,6 +1636,7 @@
         "@ds/combobox",
         "@ds/core",
         "@ds/dialog",
+        "@ds/dropdown-menu",
         "@ds/icon-button",
         "@ds/kbd",
         "@ds/list-box",
@@ -1619,6 +1685,7 @@
         "@ds/field",
         "@ds/field-error",
         "@ds/form",
+        "@ds/input",
         "@ds/link",
         "@ds/switch",
         "@ds/theme"
@@ -2037,6 +2104,7 @@
       "description": "Wires one label, one description and one error message to one form control, and passes the invalid, disabled, read only and required state to it.",
       "registryDependencies": [
         "@ds/field-error",
+        "@ds/input",
         "@ds/label",
         "@ds/theme"
       ],
@@ -2079,6 +2147,7 @@
       "registryDependencies": [
         "@ds/core",
         "@ds/field",
+        "@ds/input",
         "@ds/theme"
       ],
       "files": [
@@ -2158,6 +2227,7 @@
         "@ds/chip",
         "@ds/core",
         "@ds/dropdown-menu",
+        "@ds/list-box",
         "@ds/search-field",
         "@ds/theme"
       ],
@@ -2236,6 +2306,7 @@
         "@ds/button",
         "@ds/core",
         "@ds/field",
+        "@ds/input",
         "@ds/link",
         "@ds/theme"
       ],
@@ -2273,6 +2344,7 @@
       "registryDependencies": [
         "@ds/button",
         "@ds/core",
+        "@ds/input",
         "@ds/stepper",
         "@ds/theme"
       ],
@@ -2491,6 +2563,11 @@
       ],
       "files": [
         {
+          "path": "packages/react/src/components/Input/fieldMotion.ts",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/Input/fieldMotion.ts"
+        },
+        {
           "path": "packages/react/src/components/Input/index.ts",
           "type": "registry:ui",
           "target": "@components/ds/react/components/Input/index.ts"
@@ -2679,6 +2756,7 @@
         "radix-ui@^1.8.1"
       ],
       "registryDependencies": [
+        "@ds/core",
         "@ds/dialog",
         "@ds/icon-button",
         "@ds/spinner",
@@ -2755,6 +2833,7 @@
       "description": "A vertical list of rows, each with a title and optional start, description, end and actions. Rows can be links.",
       "registryDependencies": [
         "@ds/core",
+        "@ds/list-box",
         "@ds/theme"
       ],
       "files": [
@@ -2802,6 +2881,11 @@
           "path": "packages/react/src/components/ListBox/ListBox.tsx",
           "type": "registry:ui",
           "target": "@components/ds/react/components/ListBox/ListBox.tsx"
+        },
+        {
+          "path": "packages/react/src/components/ListBox/selectionMotion.ts",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/ListBox/selectionMotion.ts"
         },
         {
           "path": "packages/css/src/components/ListBox.css",
@@ -2986,8 +3070,10 @@
       "title": "NotificationCenter",
       "description": "The panel of notifications: a list grouped by day or by the consumer's groups, unread marks, mark all read, actions per item and an empty state. Placed by the consumer in a Popover or a Sheet.",
       "registryDependencies": [
+        "@ds/avatar-group",
         "@ds/button",
         "@ds/core",
+        "@ds/stat",
         "@ds/theme"
       ],
       "files": [
@@ -3046,6 +3132,11 @@
           "path": "packages/react/src/components/NumberField/NumberField.tsx",
           "type": "registry:ui",
           "target": "@components/ds/react/components/NumberField/NumberField.tsx"
+        },
+        {
+          "path": "packages/react/src/components/NumberField/useDigitLayer.ts",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/NumberField/useDigitLayer.ts"
         },
         {
           "path": "packages/css/src/components/NumberField.css",
@@ -3303,6 +3394,7 @@
       ],
       "registryDependencies": [
         "@ds/core",
+        "@ds/stat",
         "@ds/theme"
       ],
       "files": [
@@ -3347,6 +3439,7 @@
       "registryDependencies": [
         "@ds/core",
         "@ds/progress-bar",
+        "@ds/stat",
         "@ds/theme"
       ],
       "files": [
@@ -3535,6 +3628,7 @@
       ],
       "registryDependencies": [
         "@ds/core",
+        "@ds/input",
         "@ds/theme"
       ],
       "files": [
@@ -3644,6 +3738,7 @@
       "registryDependencies": [
         "@ds/core",
         "@ds/field",
+        "@ds/number-field",
         "@ds/theme"
       ],
       "files": [
@@ -3955,6 +4050,7 @@
       "title": "Skeleton",
       "description": "A placeholder shape that stands where content will appear while it loads: a text line, a circle or a rectangle.",
       "registryDependencies": [
+        "@ds/alert",
         "@ds/core",
         "@ds/theme"
       ],
@@ -4239,6 +4335,11 @@
           "path": "packages/react/src/components/Stat/Stat.tsx",
           "type": "registry:ui",
           "target": "@components/ds/react/components/Stat/Stat.tsx"
+        },
+        {
+          "path": "packages/react/src/components/Stat/useDigitRoll.ts",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/Stat/useDigitRoll.ts"
         },
         {
           "path": "packages/css/src/components/Stat.css",
@@ -4603,6 +4704,7 @@
         "radix-ui@^1.8.1"
       ],
       "registryDependencies": [
+        "@ds/card",
         "@ds/core",
         "@ds/theme"
       ],
@@ -4731,6 +4833,7 @@
       ],
       "registryDependencies": [
         "@ds/button",
+        "@ds/core",
         "@ds/theme"
       ],
       "files": [
@@ -4855,6 +4958,7 @@
         "radix-ui@^1.8.1"
       ],
       "registryDependencies": [
+        "@ds/core",
         "@ds/popover",
         "@ds/theme"
       ],
@@ -4956,6 +5060,11 @@
           "path": "packages/react/src/components/Window/WindowLayer.tsx",
           "type": "registry:ui",
           "target": "@components/ds/react/components/Window/WindowLayer.tsx"
+        },
+        {
+          "path": "packages/react/src/components/Window/windowSettle.ts",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/Window/windowSettle.ts"
         },
         {
           "path": "packages/css/src/components/Window.css",

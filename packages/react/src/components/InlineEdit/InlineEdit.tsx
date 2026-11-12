@@ -11,10 +11,20 @@
 // Enter or save keeps the value, Escape or cancel drops it; both return
 // focus to the display. Leaving the editor saves, but never an invalid
 // value: the editor stays open with the message.
+//
+// Motion (interaction inline-edit-morph, order 1.22, proposed): starting
+// to edit morphs the edit glyph into the save check (the icon morph
+// primitive: the pencil turns and shrinks out while the check turns in and
+// lands past full size), and the cancel glyph lands one stagger step later.
+// Saving morphs the check back into the pencil; cancelling morphs the close
+// mark into it. The leaving glyph is kept for one morph in an aria-hidden
+// span inside the icon part of the button that stays. Focus and the value
+// never wait for it.
 import {
   useCallback,
   useEffect,
   useId,
+  useLayoutEffect,
   useRef,
   useState,
   type ChangeEvent,
@@ -26,6 +36,8 @@ import {
   type Ref,
 } from 'react';
 import { Icon } from '@the-system/icons/react';
+import { iconMorph, iconParts, settled } from '@the-system/motion';
+import { useMotion } from '../../internal/motion';
 import type { Size } from '@the-system/shared';
 import { Button } from '../Button/Button';
 import { IconButton } from '../IconButton/IconButton';
@@ -117,6 +129,57 @@ export function InlineEdit({
   // Set when a key or a button ends editing, so focus returns to the display.
   // Not set when focus left the editor on its own.
   const returnFocus = useRef(false);
+  const motion = useMotion();
+  const rootEl = useRef<HTMLDivElement | null>(null);
+  // The glyph that leaves on the last change of state, kept for one morph.
+  const [leaving, setLeaving] = useState<{
+    id: number;
+    icon: 'edit' | 'check' | 'close';
+  } | null>(null);
+  const morphs = useRef(0);
+  const morphFrom = (icon: 'edit' | 'check' | 'close') => {
+    if (typeof rootEl.current?.animate !== 'function' || motion.mode('inline-edit-morph') === 'none') return;
+    morphs.current += 1;
+    setLeaving({ id: morphs.current, icon });
+  };
+
+  // inline-edit-morph: plays on the glyphs React just drew, before paint.
+  useLayoutEffect(() => {
+    const root = rootEl.current;
+    if (!leaving || !root) return;
+    const mode = motion.mode('inline-edit-morph');
+    const anims: Animation[] = [];
+    if (leaving.icon === 'edit') {
+      const part = root.querySelector(':scope > [data-part="save"] > [data-part="icon"]');
+      anims.push(
+        ...iconMorph({
+          from: part?.querySelector(':scope > span[aria-hidden="true"]'),
+          to: part?.firstElementChild,
+          turn: 90,
+          mode,
+        }),
+      );
+      anims.push(...iconParts([null, root.querySelector(':scope > [data-part="cancel"] > [data-part="icon"]')], { mode }));
+    } else {
+      const part = root.querySelector(':scope > [data-part="display"] > [data-part="end"]');
+      anims.push(
+        ...iconMorph({
+          from: part?.querySelector(':scope > span[aria-hidden="true"]'),
+          to: part?.firstElementChild,
+          turn: leaving.icon === 'check' ? -90 : 90,
+          mode,
+        }),
+      );
+    }
+    const id = leaving.id;
+    let live = true;
+    void Promise.all(anims.map((a) => settled(a))).then(() => {
+      if (live) setLeaving((l) => (l?.id === id ? null : l));
+    });
+    return () => {
+      live = false;
+    };
+  }, [leaving, motion]);
 
   const empty = current === '';
   const hasOutside = outsideError !== undefined && outsideError !== null && outsideError !== false;
@@ -149,6 +212,7 @@ export function InlineEdit({
     setDraft(current);
     setError(null);
     setStatus('');
+    morphFrom('edit');
     setEditingState(true);
   };
 
@@ -169,6 +233,7 @@ export function InlineEdit({
       setStatus(savedLabel);
     }
     returnFocus.current = focusBack;
+    morphFrom('check');
     setEditingState(false);
     return true;
   };
@@ -176,6 +241,7 @@ export function InlineEdit({
   const cancel = () => {
     setError(null);
     returnFocus.current = true;
+    morphFrom('close');
     setEditingState(false);
   };
 
@@ -243,7 +309,11 @@ export function InlineEdit({
   return (
     <div
       {...rest}
-      ref={ref}
+      ref={(node: HTMLDivElement | null) => {
+        rootEl.current = node;
+        if (typeof ref === 'function') ref(node);
+        else if (ref) ref.current = node;
+      }}
       onBlur={onRootBlur}
       data-ds="inline-edit"
       data-size={size}
@@ -265,7 +335,23 @@ export function InlineEdit({
             aria-describedby={describedBy}
             rootProps={{ 'data-part': 'control' } as ComponentProps<'div'>}
           />
-          <IconButton data-part="save" icon="check" label={saveLabel} size={iconSize} onMouseDown={keepFocus} onClick={() => save(true)} />
+          <IconButton
+            data-part="save"
+            icon={
+              <>
+                <Icon name="check" size="md" />
+                {leaving?.icon === 'edit' && (
+                  <span key={leaving.id} aria-hidden="true">
+                    <Icon name="edit" size="md" />
+                  </span>
+                )}
+              </>
+            }
+            label={saveLabel}
+            size={iconSize}
+            onMouseDown={keepFocus}
+            onClick={() => save(true)}
+          />
           <IconButton data-part="cancel" icon="close" label={cancelLabel} size={iconSize} onMouseDown={keepFocus} onClick={cancel} />
         </>
       ) : (
@@ -274,7 +360,16 @@ export function InlineEdit({
           data-part="display"
           emphasis="ghost"
           size={size}
-          end="edit"
+          end={
+            <>
+              <Icon name="edit" size="md" />
+              {leaving && leaving.icon !== 'edit' && (
+                <span key={leaving.id} aria-hidden="true">
+                  <Icon name={leaving.icon} size="md" />
+                </span>
+              )}
+            </>
+          }
           disabled={disabled}
           aria-label={name}
           aria-describedby={describedBy}

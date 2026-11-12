@@ -21,17 +21,18 @@
 //   next step. Back is type button.
 // - On a step change focus moves to the new step's title, and a polite
 //   status says "Step 2 of 4, Address" once (WCAG 4.1.3).
-import {
-  useCallback,
-  useId,
-  useLayoutEffect,
-  useRef,
-  useState,
-  type ComponentProps,
-  type FormEvent,
-  type ReactNode,
-  type Ref,
-} from 'react';
+//
+// Motion (interaction wizard-step, order 1.22, proposed): a step change has
+// a direction. Going on, the step that leaves slides toward the inline start
+// by distance.enter and fades out, faster than the new one comes (a
+// decorative copy, inert and aria-hidden, over the place it had: the real
+// body is hidden at once and keeps its values), while the new step arrives
+// from the inline end on the soft spring. Going back reverses both; RTL
+// flips both. A mark that turned complete lands its check past full size
+// (the new current mark answers in Stepper's own motion). When the
+// form is sent (wizard-done), the marks take one short wave. The title,
+// which takes focus, never moves, so its ring shows at once.
+import { useCallback, useId, useLayoutEffect, useRef, useState, type ComponentProps, type FormEvent, type ReactNode, type Ref } from 'react';
 import {
   back as stepBack,
   createStepperState,
@@ -45,6 +46,8 @@ import {
   type StepperState,
 } from '@the-system/shared';
 import { Icon } from '@the-system/icons/react';
+import { useMotion } from '../../internal/motion';
+import { dipPop, dropAfter, slideIn, inlineSign, landPop, leavingCopy, playBeat, runStep, snapshot, token, type Snapshot } from '../Input/fieldMotion';
 import { useTheme } from '../../theme';
 import { Button } from '../Button';
 import { Stepper, type StepperOrientation } from '../Stepper';
@@ -232,6 +235,14 @@ export function FormWizard({
   const busy = useRef(false);
   // Bumped by every move, so a check that resolves after the user moved away is dropped.
   const run = useRef(0);
+  const motion = useMotion();
+  // The step that leaves, read before the change: its copy, where it went from and the way.
+  const leavingStep = useRef<{
+    snap: Snapshot | null;
+    from: number;
+    forward: boolean;
+  } | null>(null);
+  const rootEl = useRef<HTMLDivElement | null>(null);
 
   // mode and the number of steps are read once, at mount.
   const [stepper, setStepper] = useState<StepperState>(() =>
@@ -273,6 +284,61 @@ export function FormWizard({
     (field ?? titleRef.current)?.focus();
   });
 
+  // wizard-step: plays on the step React just drew, before paint.
+  useLayoutEffect(() => {
+    const leave = leavingStep.current;
+    leavingStep.current = null;
+    const panel = form.current;
+    if (!leave || !panel || leave.from === current) return;
+    const mode = motion.mode('wizard-step');
+    const sign = inlineSign(panel) * (leave.forward ? 1 : -1);
+    const along = (k: number) => `translateX(calc(${k * sign} * ${token.enter}))`;
+    if (leave.snap && mode !== 'none') {
+      const copy = leavingCopy(leave.snap, panel);
+      const out = playBeat(
+        copy.el,
+        {
+          keyframes: [
+            { transform: 'none', opacity: 1 },
+            { transform: along(-1), opacity: 0 },
+          ],
+          duration: 'duration.quick',
+          easing: 'ease.exit',
+          fill: 'forwards',
+        },
+        'wizard-step-out',
+        mode,
+        {
+          keyframes: [{ opacity: 1 }, { opacity: 0 }],
+          duration: 'duration.quick',
+          easing: 'ease.exit',
+          fill: 'forwards',
+        },
+      );
+      dropAfter(out, copy);
+    }
+    playBeat(
+      bodyOf(current),
+      slideIn({}, along(1)),
+      'wizard-step',
+      mode,
+    );
+    const steps = rootEl.current?.querySelectorAll(':scope > [data-part="steps"] [data-part="step"]');
+    // The new current mark answers in Stepper itself (its own indicator motion); the wizard adds only the check that lands.
+    if (leave.forward) playBeat(steps?.[leave.from]?.querySelector(':scope > [data-part="indicator"] > *'), landPop(), 'wizard-step-check', mode, null);
+  }, [current, motion]);
+
+  // wizard-done: every mark takes one short wave once the form is sent.
+  const lastState = useRef(state);
+  useLayoutEffect(() => {
+    const before = lastState.current;
+    lastState.current = state;
+    if (state !== 'done' || before === 'done') return;
+    const marks = [...(rootEl.current?.querySelectorAll(':scope > [data-part="steps"] [data-part="indicator"]') ?? [])];
+    const mode = motion.mode('wizard-done');
+    marks.forEach((el, i) => playBeat(el, dipPop({ delay: 'delay.stagger', steps: runStep(i, marks.length) }), 'wizard-done', mode, null));
+  }, [state, motion]);
+
   const setForm = useCallback(
     (el: HTMLFormElement | null) => {
       form.current = el;
@@ -299,6 +365,11 @@ export function FormWizard({
       return;
     }
     pendingFocus.current = { kind: 'title' };
+    leavingStep.current = {
+      snap: snapshot(bodyOf(stepper.current) as HTMLElement | null | undefined, form.current),
+      from: stepper.current,
+      forward: nextState.current > stepper.current,
+    };
     setStepper(nextState);
     const title = steps[nextState.current]?.title ?? '';
     setAnnounce(`${formatStepPosition(nextState.current, nextState.count, ar ? 'ar' : 'en')}${labels.separator}${title}`);
@@ -401,7 +472,17 @@ export function FormWizard({
   const idle = state === 'editing' && !checking;
 
   return (
-    <div {...rest} ref={ref} data-ds="form-wizard" data-size={size} data-state={state}>
+    <div
+      {...rest}
+      ref={(node: HTMLDivElement | null) => {
+        rootEl.current = node;
+        if (typeof ref === 'function') ref(node);
+        else if (ref) ref.current = node;
+      }}
+      data-ds="form-wizard"
+      data-size={size}
+      data-state={state}
+    >
       <Stepper
         data-part="steps"
         steps={stepperSteps}

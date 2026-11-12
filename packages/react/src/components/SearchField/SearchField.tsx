@@ -10,9 +10,17 @@
 // component's CSS clears its own box through its private --_input-*
 // properties. The clear part is an IconButton. When CloseButton (order
 // 1.1.9) lands, it takes its place with the same part name.
+//
+// Motion (order 1.22, proposed): search-clear, the clear glyph turns in
+// from a quarter turn and lands past full size on the bouncy spring when
+// the box gets a value, and turns out and shrinks (a decorative copy, inert
+// and aria-hidden, over the place it had) when the value is cleared;
+// search-submit, Enter dips the search glyph and springs it back with a
+// small turn. Neither waits: the value, the clear and onSubmit happen first.
 import {
   useCallback,
   useEffect,
+  useLayoutEffect,
   useRef,
   useState,
   type ChangeEvent,
@@ -27,6 +35,9 @@ import type { Shape, Size } from '@the-system/shared';
 import { useField } from '../Field/Field';
 import { IconButton } from '../IconButton/IconButton';
 import { Input, type InputProps } from '../Input/Input';
+import { iconMorph } from '@the-system/motion';
+import { useMotion } from '../../internal/motion';
+import { dropAfter, leavingCopy, playBeat, snapshot, token, type Snapshot } from '../Input/fieldMotion';
 
 export type SearchFieldSize = Size;
 export type SearchFieldShape = Extract<Shape, 'default' | 'pill'>;
@@ -99,6 +110,54 @@ export function SearchField({
   const isDisabled = disabled ?? field?.disabled ?? false;
   const isReadOnly = readOnly ?? field?.readOnly ?? false;
   const empty = query === '';
+  const motion = useMotion();
+  const rootEl = useRef<HTMLDivElement | null>(null);
+  // The clear button as it was drawn, read before a change that empties the box.
+  const leaving = useRef<Snapshot | null>(null);
+  const wasEmpty = useRef(empty);
+
+  // search-clear: the clear glyph turns in when it appears and a copy of it turns out when it goes.
+  useLayoutEffect(() => {
+    const before = wasEmpty.current;
+    wasEmpty.current = empty;
+    const root = rootEl.current;
+    if (before === empty || !root) return;
+    const mode = motion.mode('search-clear');
+    if (!empty) {
+      iconMorph({
+        to: root.querySelector(':scope > [data-part="clear"] > [data-part="icon"]'),
+        turn: 90,
+        mode,
+      });
+      return;
+    }
+    const snap = leaving.current;
+    leaving.current = null;
+    if (!snap || mode === 'none') return;
+    const copy = leavingCopy(snap, root);
+    const out = playBeat(
+      copy.el,
+      {
+        keyframes: [
+          { transform: 'none', opacity: 1 },
+          { transform: `rotate(90deg) scale(${token.morph})`, opacity: 0 },
+        ],
+        duration: 'duration.morph',
+        easing: 'ease.exit',
+        fill: 'forwards',
+        origin: '50% 50%',
+      },
+      'search-clear-out',
+      mode,
+      {
+        keyframes: [{ opacity: 1 }, { opacity: 0 }],
+        duration: 'duration.quick',
+        easing: 'ease.exit',
+        fill: 'forwards',
+      },
+    );
+    dropAfter(out, copy);
+  }, [empty, motion]);
 
   const setRef = useCallback(
     (node: HTMLInputElement | null): (() => void) | undefined => {
@@ -122,6 +181,10 @@ export function SearchField({
   );
 
   const change = (next: string) => {
+    if (next === '' && query !== '') {
+      const root = rootEl.current;
+      leaving.current = snapshot(root?.querySelector<HTMLElement>(':scope > [data-part="clear"]'), root);
+    }
     if (value === undefined) setOwn(next);
     onValueChange?.(next);
   };
@@ -145,6 +208,27 @@ export function SearchField({
     if (composing) return;
     if (event.key === 'Enter') {
       onSubmit?.(query);
+      // search-submit: the search glyph dips and springs back with a small turn.
+      playBeat(
+        rootEl.current?.querySelector(':scope > [data-part="icon"]'),
+        {
+          keyframes: [
+            { transform: 'none', easing: 'ease.out' },
+            {
+              transform: `scale(${token.anticipate}) rotate(-12deg)`,
+              offset: 0.25,
+              easing: 'ease.spring-bouncy',
+            },
+            { transform: 'none' },
+          ],
+          duration: 'duration.spring-bouncy',
+          easing: 'linear',
+          origin: '50% 50%',
+        },
+        'search-submit',
+        motion.mode('search-submit'),
+        null,
+      );
     }
   };
 
@@ -185,6 +269,12 @@ export function SearchField({
   return (
     <div
       {...rootProps}
+      ref={(node: HTMLDivElement | null) => {
+        rootEl.current = node;
+        const r = rootProps?.ref;
+        if (typeof r === 'function') r(node);
+        else if (r && typeof r === 'object') (r as { current: HTMLDivElement | null }).current = node;
+      }}
       className={className}
       style={style}
       onMouseDown={onRootMouseDown}

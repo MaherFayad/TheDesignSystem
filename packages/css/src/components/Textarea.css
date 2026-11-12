@@ -9,16 +9,22 @@
  * Recipes override these; states only swap them:
  *   --_textarea-padding-inline, --_textarea-padding-block, --_textarea-font-size,
  *   --_textarea-radius, --_textarea-bg, --_textarea-fg, --_textarea-border-color
- *   (at rest, -hover, -focus, -invalid), --_textarea-ring (the focus glow and
- *   ring), --_textarea-count-fg (the count, -over past the limit).
+ *   (at rest, -hover, -focus, -invalid), --_textarea-ring (the focus ring),
+ *   --_textarea-shadow-focus (the focus glow), --_textarea-count-fg (the count, -over past the limit).
  *   --_textarea-line (one line of text), --_textarea-rows (the floor of the
  *   auto height) and --_textarea-max-rows (the cap; none, an invalid number,
  *   leaves max-block-size at none). The component sets the last two inline
  *   from the rows and maxRows props.
  *
  * A pill never wraps lines, so the radius is radius.field in every shape.
- * The glow and ring sit on ::before, whose opacity fades, since only
- * transform and opacity may animate.
+ *
+ * Focus (interaction focus-glow, orders 1.21 and 1.22): --_textarea-ring is the
+ * focus ring, the root's own box shadow, and shows at once (WCAG 2.4.7).
+ * --_textarea-shadow-focus is the glow on ::before: it fades in and grows from
+ * --_textarea-enter-scale (scale.enter) on --_textarea-duration-in and
+ * --_textarea-ease-in (the soft spring), and leaves faster on
+ * --_textarea-duration-out and --_textarea-ease-out. Only transform and opacity
+ * move.
  */
 @layer ds.base {
   [data-ds='textarea'] {
@@ -35,7 +41,13 @@
     --_textarea-border-color-hover: var(--ds-color-border-control-hover);
     --_textarea-border-color-focus: var(--ds-color-border-control-hover);
     --_textarea-border-color-invalid: var(--ds-color-state-danger-text);
-    --_textarea-ring: var(--ds-elevation-input-focus), var(--ds-focus-shadow-ring);
+    --_textarea-ring: var(--ds-focus-shadow-ring);
+    --_textarea-shadow-focus: var(--ds-elevation-input-focus);
+    --_textarea-duration-in: var(--ds-duration-spring-soft);
+    --_textarea-duration-out: var(--ds-duration-quick);
+    --_textarea-ease-in: var(--ds-ease-spring-soft);
+    --_textarea-ease-out: var(--ds-ease-exit);
+    --_textarea-enter-scale: var(--ds-scale-enter);
     --_textarea-count-fg: var(--ds-color-text-muted);
     --_textarea-count-fg-over: var(--ds-color-state-danger-text);
 
@@ -56,16 +68,19 @@
     cursor: text;
   }
 
-  /* The glow and the ring, just outside the border. */
+  /* The glow, just outside the border. It leaves on blur with the out timing. */
   [data-ds='textarea']::before {
     content: '';
     position: absolute;
     inset: calc(var(--ds-border-width-default) * -1);
     border-radius: inherit;
-    box-shadow: var(--_textarea-ring);
+    box-shadow: var(--_textarea-shadow-focus);
     opacity: 0;
+    transform: scale(var(--_textarea-enter-scale));
     pointer-events: none;
-    transition: opacity var(--ds-duration-base) var(--ds-ease-default);
+    transition:
+      opacity var(--_textarea-duration-out) var(--_textarea-ease-out),
+      transform var(--_textarea-duration-out) var(--_textarea-ease-out);
   }
 
   [data-ds='textarea'] > * {
@@ -148,9 +163,11 @@
     --_textarea-border-color: var(--_textarea-border-color-hover);
   }
 
-  /* Focus: the glow and the 2px ring fade in. The transparent outline shows in forced colors mode. */
+  /* Focus: the 2px ring shows at once, the glow fades in and grows. The transparent outline shows in forced colors mode. */
   [data-ds='textarea']:focus-within {
     --_textarea-border-color: var(--_textarea-border-color-focus);
+
+    box-shadow: var(--_textarea-ring);
 
     outline: var(--ds-border-width-strong) solid transparent;
     outline-offset: var(--ds-border-width-default);
@@ -158,6 +175,9 @@
 
   [data-ds='textarea']:focus-within::before {
     opacity: 1;
+    transform: none;
+    transition-duration: var(--_textarea-duration-in);
+    transition-timing-function: var(--_textarea-ease-in);
   }
 
   [data-ds='textarea'][data-invalid],
@@ -198,5 +218,16 @@
 
       color: GrayText;
     }
+  }
+
+  /* Reduced motion: the duration tokens are 0ms, and the glow does not grow. */
+  @media (prefers-reduced-motion: reduce) {
+    [data-ds='textarea'] {
+      --_textarea-enter-scale: 1;
+    }
+  }
+
+  :root[data-motion='reduce'] [data-ds='textarea'] {
+    --_textarea-enter-scale: 1;
   }
 }

@@ -1,27 +1,45 @@
-// The interaction registry of order 1.21: every small piece of feedback the
-// components play, by id, with its trigger, its pattern, its reduced form and
-// the private properties a style sets to turn a CSS one off. The gallery page
-// `/interactions` plays each one; docs/reports/interactions.md explains them.
-// Every row is a proposal to the owner.
+// The interaction registry of orders 1.21 and 1.22: every small piece of
+// feedback the components play, by id, with its trigger, its pattern, its
+// beats, its reduced form and the private properties a style sets to turn a
+// CSS one off. One file per family under ./interactions (order 1.22): actions
+// (buttons.ts), inputs (fields.ts), selection, overlays, navigation and
+// feedback (content.ts). The gallery page `/interactions` plays each one;
+// docs/reports/interactions.md and interactions-2.md explain them. Every row
+// is a proposal to the owner.
 import type { PatternMode } from './core';
 import { buttonsInteractions } from './interactions/buttons';
 import { contentInteractions } from './interactions/content';
 import { fieldsInteractions } from './interactions/fields';
+import { navigationInteractions } from './interactions/navigation';
 import { overlaysInteractions } from './interactions/overlays';
 import { selectionInteractions } from './interactions/selection';
-import type { Interaction } from './interactions/types';
+import type { Interaction, InteractionFamily } from './interactions/types';
 import type { StyleMotionPreset } from './preset';
 
-export type { Interaction, InteractionDrive } from './interactions/types';
+export type { Interaction, InteractionDrive, InteractionFamily, PrimitiveId } from './interactions/types';
 
-/** Every interaction, in the order the gallery shows them. */
-export const interactions: readonly Interaction[] = [
-  ...buttonsInteractions,
-  ...selectionInteractions,
-  ...fieldsInteractions,
-  ...overlaysInteractions,
-  ...contentInteractions,
+/** The families in the order the gallery shows them, with their rows. */
+const byFamily: readonly [InteractionFamily, readonly Interaction[]][] = [
+  ['actions', buttonsInteractions],
+  ['inputs', fieldsInteractions],
+  ['selection', selectionInteractions],
+  ['overlays', overlaysInteractions],
+  ['navigation', navigationInteractions],
+  ['feedback', contentInteractions],
 ];
+
+/** The title of each family. */
+export const INTERACTION_FAMILIES: Readonly<Record<InteractionFamily, string>> = {
+  actions: 'Actions and toggles',
+  inputs: 'Text inputs and forms',
+  selection: 'Selection controls and lists',
+  overlays: 'Overlays and menus',
+  navigation: 'Navigation and shared indicators',
+  feedback: 'Feedback, progress, data display and layout',
+};
+
+/** Every interaction, in the order the gallery shows them, with its family. */
+export const interactions: readonly Interaction[] = byFamily.flatMap(([family, rows]) => rows.map((r) => ({ ...r, family })));
 
 /** The interaction with this id, or undefined. */
 export function getInteraction(id: string): Interaction | undefined {

@@ -18,11 +18,20 @@
  *   --_toast-duration, -ease     the spring back of a swipe let go short of the threshold
  *   --_toast-swipe-x, -swipe-y   how far a swiped toast travels on past the point it was
  *                                let go, in the swipe direction (data-swipe-direction)
+ *   --_toast-icon-enter-scale    where the icon pops from (a part name and a motion name)
+ *
+ * Order 1.22 (proposed): the enter is a spring. The toast travels in from
+ * the toaster's edge on the bouncy spring (duration.spring-bouncy), so it
+ * lands a little past its place in Desk and settles; one stagger step later
+ * its icon pops from scale.morph on the bouncy spring (the icon beat). The
+ * exit is faster than the enter (duration.toast-exit on ease.exit). The
+ * swipe let go short springs back on the snappy spring. The stack moves
+ * with the flip primitive (flipPlay, from Toaster.tsx).
  *
  * Motion, interaction "toast-stack" (pattern "toast"): data-state open
  * plays ds-toast-in, a travel of space.xs from the toaster's edge and a
- * scale from scale.dialog-enter while it fades in (duration.toast-enter,
- * ease.out); closed plays ds-toast-out, a fade and shrink in place
+ * scale from scale.enter while it fades in (the bouncy spring, see below);
+ * closed plays ds-toast-out, a fade and shrink in place
  * (duration.toast-exit, ease.exit). The toasts already in the stack move
  * to make room with a transform played from Toaster.tsx (a FLIP), never by
  * animating layout. Radix keeps the toast mounted until the exit animation
@@ -35,8 +44,7 @@
  * Interaction "toast-swipe": swipe to dismiss moves the toast with the
  * pointer through the Radix variables --radix-toast-swipe-move-x and -y
  * (no transition: it follows the finger). Let go short of the threshold
- * (data-swipe cancel), it springs back over duration.base on
- * ease.emphasized; past it (data-swipe end), it travels on out in the swipe
+ * (data-swipe cancel), it springs back on the snappy spring; past it (data-swipe end), it travels on out in the swipe
  * direction while it fades (duration.toast-exit, ease.exit), from
  * --radix-toast-swipe-end-x and -y. Radix variables are not tokens: Radix
  * sets them on the element. A style turns the spring back and the travel
@@ -129,13 +137,14 @@
     --_toast-shadow: var(--ds-elevation-panel);
     --_toast-blur: var(--ds-blur-panel);
     --_toast-enter-y: var(--ds-space-xs);
-    --_toast-enter-scale: var(--ds-scale-dialog-enter);
-    --_toast-duration-in: var(--ds-duration-toast-enter);
+    --_toast-enter-scale: var(--ds-scale-enter);
+    --_toast-duration-in: var(--ds-duration-spring-bouncy);
     --_toast-duration-out: var(--ds-duration-toast-exit);
-    --_toast-ease-in: var(--ds-ease-out);
+    --_toast-ease-in: var(--ds-ease-spring-bouncy);
     --_toast-ease-out: var(--ds-ease-exit);
-    --_toast-duration: var(--ds-duration-base);
-    --_toast-ease: var(--ds-ease-emphasized);
+    --_toast-duration: var(--ds-duration-spring-snappy);
+    --_toast-ease: var(--ds-ease-spring-snappy);
+    --_toast-icon-enter-scale: var(--ds-scale-morph);
     --_toast-swipe-x: 0%;
     --_toast-swipe-y: 0%;
 
@@ -181,10 +190,32 @@
     --_toast-enter-y: calc(-1 * var(--ds-space-xs));
   }
 
+  /* The icon beat: the icon pops one stagger step after the card. */
+  [data-ds='toaster'] > [data-ds='toast'][data-state='open'] > [data-part='icon'] {
+    animation: ds-toast-icon-in var(--ds-duration-spring-bouncy) var(--ds-ease-spring-bouncy) var(--ds-delay-stagger) backwards;
+  }
+
+  @keyframes ds-toast-icon-in {
+    from {
+      opacity: 0;
+      transform: scale(var(--_toast-icon-enter-scale));
+    }
+
+    /* Readable early: full opacity by 30% of the run (READABLE_AT); the transform settles over all of it. */
+    30% {
+      opacity: 1;
+    }
+  }
+
   @keyframes ds-toast-in {
     from {
       opacity: 0;
       transform: translateY(var(--_toast-enter-y)) scale(var(--_toast-enter-scale));
+    }
+
+    /* Readable early: full opacity by 30% of the run (READABLE_AT); the transform settles over all of it. */
+    30% {
+      opacity: 1;
     }
   }
 
@@ -325,10 +356,24 @@
 
   @media (prefers-reduced-motion: reduce) {
     [data-ds='toaster'] > [data-ds='toast'][data-state='open'],
+    [data-ds='toaster'] > [data-ds='toast'][data-state='open'] > [data-part='icon'],
     [data-ds='toaster'] > [data-ds='toast'][data-state='closed'],
     [data-ds='toaster'] > [data-ds='toast'][data-state='closed'][data-swipe='end'] {
       animation: none;
     }
+
+    [data-ds='toast'][data-swipe='cancel'] {
+      transition: none;
+    }
+  }
+
+  :root[data-motion='reduce'] [data-ds='toaster'] > [data-ds='toast']:is([data-state='open'], [data-state='closed'], [data-state='closed'][data-swipe='end']),
+  :root[data-motion='reduce'] [data-ds='toaster'] > [data-ds='toast'][data-state='open'] > [data-part='icon'] {
+    animation: none;
+  }
+
+  :root[data-motion='reduce'] [data-ds='toast'][data-swipe='cancel'] {
+    transition: none;
   }
 
   /* The material tokens turn solid here; the blur goes with them. */
@@ -360,6 +405,7 @@
     }
 
     [data-ds='toaster'] > [data-ds='toast'][data-state='open'],
+    [data-ds='toaster'] > [data-ds='toast'][data-state='open'] > [data-part='icon'],
     [data-ds='toaster'] > [data-ds='toast'][data-state='closed'],
     [data-ds='toaster'] > [data-ds='toast'][data-state='closed'][data-swipe='end'] {
       animation: none;

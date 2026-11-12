@@ -109,14 +109,22 @@
     "space.s",
     "space.m",
     "color.text.muted",
-    "color.text.bright"
+    "color.text.bright",
+    "duration.spring-snappy",
+    "ease.spring-snappy",
+    "duration.spring-bouncy",
+    "ease.spring-bouncy",
+    "scale.anticipate",
+    "duration.base",
+    "ease.out"
   ],
+  "motion": "swap",
   "frameworks": {
     "react": {
       "status": "ready",
       "behavior": "nav of system Links for two languages; system Button and radix:DropdownMenu radio items for more",
       "example": "LanguageSwitch.demo.tsx",
-      "note": "No motion of its own: the menu plays DropdownMenu's menu-scale."
+      "note": "No motion of its own: the menu plays DropdownMenu's menu-scale. Round 2 (order 1.22, proposed), interaction language-roll: when the current language changes in place, the trigger name rolls (an aria-hidden copy of the old name rolls out); in the pair the names dip and pop. Reduced: the new name fades in."
     },
     "angular": {
       "status": "planned",

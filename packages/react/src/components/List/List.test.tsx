@@ -188,7 +188,10 @@ describe('List', () => {
         expect(screen.getAllByRole('listitem')).toHaveLength(12);
         rerender(desk(<List aria-label="Rows">{rows(13)}</List>));
         rerender(desk(<List aria-label="Rows">{rows(13).reverse()}</List>));
-        expect(animate).toHaveBeenCalledTimes(12);
+        const ids = animate.mock.calls.map((c) => (c as unknown as [Keyframe[], KeyframeAnimationOptions])[1].id);
+        expect(ids.filter((id) => id === 'ds-motion:list-stagger')).toHaveLength(12);
+        // collection-flip: the added row pops in once; nothing else plays.
+        expect(ids.filter((id) => id === 'ds-motion:flip')).toHaveLength(1);
       }));
 
     it('plays when rows arrive after an empty first paint', () =>

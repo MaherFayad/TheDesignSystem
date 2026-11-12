@@ -118,12 +118,17 @@
     overflow-wrap: break-word;
   }
 
-  /* stat-roll: the number's own span is the layer that rolls; the value part is its clip. */
+  /*
+   * stat-roll: the drawn copy of the number (aria-hidden) rolls digit by
+   * digit, each column clipping its own digits; the value part clips the
+   * whole. The number is read from the visually hidden copy beside it
+   * (the global data-visually-hidden rule).
+   */
   [data-ds='stat'] > [data-part='value']:has(> span:not([data-loading-label], [data-empty-label])) {
     overflow-y: clip;
   }
 
-  [data-ds='stat'] > [data-part='value'] > span:not([data-loading-label], [data-empty-label]) {
+  [data-ds='stat'] > [data-part='value'] > span:not([data-loading-label], [data-empty-label], [data-visually-hidden]) {
     display: block;
   }
 

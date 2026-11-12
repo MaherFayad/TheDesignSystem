@@ -27,9 +27,14 @@
 //   Drawer gives the focus trap, Escape and the return to the button.
 // - The chevron of a trigger is Button's own `end` part; the Navbar turns
 //   it over, it does not own it.
+// - Motion of order 1.22 (proposed), from react/src/internal/indicator.ts:
+//   "nav-current-slide": when another link of the bar becomes current, its
+//   bar (the link's ::before) slides from the old one on the snappy spring,
+//   stretched on the way. "nav-hover-follow": the hover veil (::after)
+//   slides from the link the pointer just left. No DOM is added.
 // - `sticky` keeps the bar at the top and reserves the same room as
 //   scroll padding on the page (WCAG 2.4.11).
-import { createElement, useEffect, useRef, useState, type ElementType, type HTMLAttributes, type ReactNode, type Ref } from 'react';
+import { createElement, useEffect, useLayoutEffect, useRef, useState, type ElementType, type HTMLAttributes, type ReactNode, type Ref } from 'react';
 import { NavigationMenu } from 'radix-ui';
 import { Icon, type IconName } from '@the-system/icons/react';
 import type { Size } from '@the-system/shared';
@@ -38,6 +43,11 @@ import { Button } from '../Button';
 import { IconButton } from '../IconButton';
 import { Drawer, DrawerBody, DrawerContent, DrawerFooter, DrawerTrigger } from '../Drawer';
 import { Sidebar, SidebarGroup, SidebarItem } from '../Sidebar';
+import { followIndicator, useHoverFollow, useIndicatorTrack } from '../../internal/indicator';
+import { useMotion } from '../../internal/motion';
+
+/** The links of the bar itself, not those in a panel. */
+const BAR_LINK = '[data-part="list"] > [data-part="item"] > [data-part="link"]';
 
 export type NavbarSize = Extract<Size, 'md' | 'lg'>;
 
@@ -116,6 +126,21 @@ export function Navbar({
   const words = labels ?? menuLabels[lang === 'ar' ? 'ar' : 'en'];
   const [mobileOpen, setMobileOpen] = useState(false);
   const rootRef = useRef<HTMLElement | null>(null);
+  const motion = useMotion();
+  const track = useIndicatorTrack();
+  useHoverFollow(rootRef, { item: BAR_LINK, pseudo: '::after', mode: () => motion.mode('nav-hover-follow') });
+
+  // The current link of the bar: its bar (::before) slides from the link that was current (nav-current-slide).
+  useLayoutEffect(() => {
+    const root = rootRef.current;
+    const current = root?.querySelectorAll<HTMLElement>(`${BAR_LINK}[data-active]`);
+    if (!root || !current || current.length !== 1) {
+      track.key = null;
+      return;
+    }
+    const link = current[0]!;
+    followIndicator(track, link.getAttribute('href') ?? '', { el: link, pseudo: '::before' }, { mode: motion.mode('nav-current-slide'), anchor: root, axis: 'x' });
+  });
   // Radix builds element ids from item values, so values are indexes, never labels with spaces.
   const openIndex = defaultOpenMenu === undefined ? -1 : items.findIndex((item) => item.label === defaultOpenMenu);
   const openValue = openIndex < 0 ? undefined : `item-${openIndex}`;

@@ -180,7 +180,15 @@
     "color.border.default",
     "color.focus.ring",
     "color.focus.ring-on-primary-inner",
-    "color.focus.ring-on-primary-outer"
+    "color.focus.ring-on-primary-outer",
+    "duration.spring-snappy",
+    "ease.spring-snappy",
+    "duration.spring-bouncy",
+    "ease.spring-bouncy",
+    "duration.spring-soft",
+    "ease.spring-soft",
+    "scale.stretch",
+    "scale.anticipate"
   ],
   "motion": "press",
   "frameworks": {
@@ -188,7 +196,7 @@
       "status": "ready",
       "behavior": "radix:ToggleGroup; items are ToggleButton roots on ButtonBase",
       "example": "ToggleGroup.demo.tsx",
-      "note": "The axes reach the items through ButtonGroupContext, which ButtonRoot reads; an item's own prop wins. No motion of its own: items keep Button's."
+      "note": "The axes reach the items through ButtonGroupContext, which ButtonRoot reads; an item's own prop wins. No motion of its own: items keep Button's. Round 2 (order 1.22, proposed), interaction tab-slide: a single group renders an empty aria-hidden span as the first child of each item (inside the item part) that draws the on fill and ring, so the shared pill (internal/indicator.ts) slides the fill from the item it leaves on the snappy spring, stretched along its travel. A multiple group has none. The value of a single group is kept by ToggleGroup so it knows when it changes."
     },
     "angular": {
       "status": "ready",

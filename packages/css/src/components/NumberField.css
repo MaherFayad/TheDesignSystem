@@ -40,11 +40,11 @@
     --_number-field-border-color-invalid: var(--ds-color-state-danger-text);
     --_number-field-ring: var(--ds-focus-shadow-ring);
     --_number-field-shadow-focus: var(--ds-elevation-input-focus);
-    --_number-field-duration-in: var(--ds-duration-base);
-    --_number-field-duration-out: var(--ds-duration-fast);
-    --_number-field-ease-in: var(--ds-ease-out);
+    --_number-field-duration-in: var(--ds-duration-spring-soft);
+    --_number-field-duration-out: var(--ds-duration-quick);
+    --_number-field-ease-in: var(--ds-ease-spring-soft);
     --_number-field-ease-out: var(--ds-ease-exit);
-    --_number-field-enter-scale: var(--ds-scale-dialog-enter);
+    --_number-field-enter-scale: var(--ds-scale-enter);
     --_number-field-stepper-size: var(--ds-size-control-xs);
     --_number-field-stepper-inset: calc((var(--_number-field-height) - var(--_number-field-stepper-size)) / 2 - var(--ds-border-width-default));
 
@@ -147,6 +147,42 @@
     text-align: end;
   }
 
+  /*
+   * The digit roll layer (order 1.22, proposed): an unnamed aria-hidden span
+   * the component lays over the input's box while a roll runs (it sets the
+   * box inline from the input's measured box) and empties at rest. While it
+   * holds digits the input text is transparent and its caret keeps its
+   * color; the layer clips the roll to the box. Without the layer (a
+   * framework that does not add it) nothing changes.
+   */
+  [data-ds='number-field'] > span[aria-hidden='true']:not([data-part]) {
+    position: absolute;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    overflow: clip;
+    color: var(--_number-field-fg);
+    font-variant-numeric: tabular-nums;
+    direction: ltr;
+    white-space: nowrap;
+    pointer-events: none;
+  }
+
+  [data-ds='number-field']:dir(rtl) > span[aria-hidden='true']:not([data-part]) {
+    justify-content: flex-end;
+  }
+
+  [data-ds='number-field'] > span[aria-hidden='true']:not([data-part]):empty {
+    display: none;
+  }
+
+  [data-ds='number-field']:has(> span[aria-hidden='true']:not([data-part]):not(:empty)) > [data-part='control'] {
+    color: transparent;
+    -webkit-text-fill-color: transparent;
+    caret-color: var(--_number-field-fg);
+  }
+
   [data-ds='number-field'] > [data-part='control']::placeholder {
     color: var(--ds-color-text-placeholder);
     opacity: 1;
@@ -243,6 +279,10 @@
     [data-ds='number-field'] {
       --_number-field-enter-scale: 1;
     }
+  }
+
+  :root[data-motion='reduce'] [data-ds='number-field'] {
+    --_number-field-enter-scale: 1;
   }
 
   /* Forced colors: the ring and the glow go with the box shadows; the transparent outline shows focus. */

@@ -9,12 +9,20 @@
  *   --_spinner-width     the stroke of the ring
  *   --_spinner-track     the full ring, quiet
  *   --_spinner-arc       the one quarter that reads as the moving mark
+ *   --_spinner-duration-in  the fade in on mount (spinner-loop; 0s turns it off)
  *
  * The ring is the root's own border, so the root turns with transform:
  * rotate. The visually hidden label turns with it, which nobody sees. The
  * turn is clockwise in both directions: a spinner is a clock, and clocks do
- * not mirror in RTL. Motion pattern: spinner. Under reduced motion the
- * animation is none and a still ring with its arc stays.
+ * not mirror in RTL. Motion pattern: spinner. Under reduced motion (media
+ * query or data-motion="reduce") the animation is none and a still ring with
+ * its arc stays.
+ *
+ * Order 1.22 (interaction spinner-loop, proposed): the spinner fades in over
+ * duration.spring-soft when it mounts, so a spinner that shows for a moment
+ * does not blink, and the turn keeps its endless linear loop. Its pause
+ * path: `pauseLoops()` pauses any endless animation under a root (WCAG
+ * 2.2.2), and the label says what is busy.
  */
 @layer ds.base {
   [data-ds='spinner'] {
@@ -22,6 +30,7 @@
     --_spinner-width: var(--ds-border-width-strong);
     --_spinner-track: var(--ds-color-bg-overlay-20);
     --_spinner-arc: var(--ds-color-text-default);
+    --_spinner-duration-in: var(--ds-duration-spring-soft);
 
     position: relative;
     display: inline-block;
@@ -34,7 +43,15 @@
     border-block-start-color: var(--_spinner-arc);
     border-radius: var(--ds-radius-pill);
     vertical-align: middle;
-    animation: ds-spinner-turn var(--ds-duration-spin) linear infinite;
+    animation:
+      ds-spinner-in var(--_spinner-duration-in) var(--ds-ease-out),
+      ds-spinner-turn var(--ds-duration-spin) linear infinite;
+  }
+
+  @keyframes ds-spinner-in {
+    from {
+      opacity: 0;
+    }
   }
 
   [data-ds='spinner'][data-size='xs'] {
@@ -76,6 +93,10 @@
     [data-ds='spinner'] {
       animation: none;
     }
+  }
+
+  :root[data-motion='reduce'] [data-ds='spinner'] {
+    animation: none;
   }
 
   /*

@@ -21,6 +21,11 @@
  * arc that turns with transform: rotate (motion pattern spinner); under
  * reduced motion it stops as a dashed full ring, a shape no value can take
  * (a still quarter arc reads as 25 percent).
+ *
+ * Order 1.22 (proposed), from ProgressCircle.tsx with the Web Animations
+ * API: a value change turns the new arc into place on the soft spring (the
+ * nearest transform form of a sweep), the value rolls digit by digit, and
+ * reaching max pops the ring once. Under reduced motion none of it plays.
  */
 @layer ds.base {
   [data-ds='progress-circle'] {
@@ -120,6 +125,12 @@
       mask-image: none;
       animation: none;
     }
+  }
+
+  :root[data-motion='reduce'] [data-ds='progress-circle'][data-state='indeterminate'] > [data-part='indicator'] {
+    border-style: dashed;
+    mask-image: none;
+    animation: none;
   }
 
   @media (forced-colors: active) {

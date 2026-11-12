@@ -15,8 +15,20 @@
  *   --_banner-padding-block, -padding-inline, -gap, -font-size
  *   --_banner-tone-*      the colors of one tone
  *
- * Motion: the fade-rise pattern plays once when a banner mounts, transform
- * and opacity only. Under reduced motion it is none.
+ * Motion, interaction alert-entrance (order 1.22, proposed), played once
+ * when a banner mounts, transform and opacity only: the bar comes down
+ * distance.enter from above while it fades in, on the soft spring; one
+ * stagger step later the icon pops from scale.morph on the bouncy spring;
+ * two steps later the body and the actions settle from distance.nudge. The
+ * dismiss (alert-dismiss) is a ghost played from Banner.tsx.
+ *
+ *   --_banner-enter-y               the bar's travel (a motion name)
+ *   --_banner-duration-in, -ease-in the bar's spring
+ *   --_banner-icon-enter-scale      where the icon pops from
+ *   --_banner-shift                 how far the text settles from
+ * A style turns the travel off with the enter values at rest, which leaves a
+ * fade. Under reduced motion (media query or data-motion="reduce") there is
+ * no animation.
  */
 @layer ds.base {
   [data-ds='banner'] {
@@ -34,6 +46,11 @@
     --_banner-fg: var(--ds-color-text-default);
     --_banner-border-color: var(--_banner-tone-edge);
     --_banner-icon: var(--_banner-tone-text);
+    --_banner-enter-y: calc(-1 * var(--ds-distance-enter));
+    --_banner-duration-in: var(--ds-duration-spring-soft);
+    --_banner-ease-in: var(--ds-ease-spring-soft);
+    --_banner-icon-enter-scale: var(--ds-scale-morph);
+    --_banner-shift: var(--ds-distance-nudge);
 
     /* Its parts read the banner width through a container query, so actions move below the body when it is narrow. */
     container-type: inline-size;
@@ -55,13 +72,50 @@
     font-size: var(--_banner-font-size);
     line-height: var(--ds-font-leading-normal);
     overflow-wrap: anywhere;
-    animation: ds-banner-in var(--ds-duration-medium) var(--ds-ease-out);
+    animation: ds-banner-in var(--_banner-duration-in) var(--_banner-ease-in);
   }
 
   @keyframes ds-banner-in {
     from {
       opacity: 0;
-      transform: translateY(calc(-1 * var(--ds-space-3xs)));
+      transform: translateY(var(--_banner-enter-y));
+    }
+
+    /* Readable early: full opacity by 30% of the run (READABLE_AT); the transform settles over all of it. */
+    30% {
+      opacity: 1;
+    }
+  }
+
+  [data-ds='banner'] > [data-part='icon'] {
+    animation: ds-banner-icon-in var(--ds-duration-spring-bouncy) var(--ds-ease-spring-bouncy) var(--ds-delay-stagger) backwards;
+  }
+
+  @keyframes ds-banner-icon-in {
+    from {
+      opacity: 0;
+      transform: scale(var(--_banner-icon-enter-scale));
+    }
+
+    /* Readable early: full opacity by 30% of the run (READABLE_AT); the transform settles over all of it. */
+    30% {
+      opacity: 1;
+    }
+  }
+
+  [data-ds='banner'] > :is([data-part='body'], [data-part='actions']) {
+    animation: ds-banner-text-in var(--ds-duration-spring-soft) var(--ds-ease-spring-soft) calc(2 * var(--ds-delay-stagger)) backwards;
+  }
+
+  @keyframes ds-banner-text-in {
+    from {
+      opacity: 0;
+      transform: translateY(var(--_banner-shift));
+    }
+
+    /* Readable early: full opacity by 30% of the run (READABLE_AT); the transform settles over all of it. */
+    30% {
+      opacity: 1;
     }
   }
 
@@ -208,9 +262,14 @@
   /* ------------------------------------------------------------ reduced motion, forced colors */
 
   @media (prefers-reduced-motion: reduce) {
-    [data-ds='banner'] {
+    [data-ds='banner'],
+    [data-ds='banner'] > :is([data-part='icon'], [data-part='body'], [data-part='actions']) {
       animation: none;
     }
+  }
+
+  :root[data-motion='reduce'] :is([data-ds='banner'], [data-ds='banner'] > :is([data-part='icon'], [data-part='body'], [data-part='actions'])) {
+    animation: none;
   }
 
   /* Forced colors: the fill is dropped by the browser; the block end border becomes the system text color. */
@@ -219,6 +278,10 @@
       --_banner-border-color: CanvasText;
       --_banner-icon: CanvasText;
 
+      animation: none;
+    }
+
+    [data-ds='banner'] > :is([data-part='icon'], [data-part='body'], [data-part='actions']) {
       animation: none;
     }
   }

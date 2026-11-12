@@ -1,8 +1,14 @@
-// The shape of one interaction of the round in order 1.21. An interaction is
-// a small piece of feedback on one or more components, played by a catalog
-// pattern or by a CSS transition that reads tokens. Each one is a proposal
-// to the owner until it is approved.
+// The shape of one interaction of the rounds in orders 1.21 and 1.22. An
+// interaction is a small piece of feedback on one or more components, played
+// by a catalog pattern, a primitive of order 1.22, or a CSS transition that
+// reads tokens. Each one is a proposal to the owner until it is approved.
 import type { PatternId } from '../core';
+
+/** The six families of order 1.22, one registry file each. */
+export type InteractionFamily = 'actions' | 'inputs' | 'selection' | 'overlays' | 'navigation' | 'feedback';
+
+/** The primitives of order 1.22 (packages/motion/src/primitives). */
+export type PrimitiveId = 'flip' | 'stagger' | 'icon-morph' | 'digit-roll' | 'button-morph';
 
 /** How the interaction is played on the web. */
 export type InteractionDrive =
@@ -32,6 +38,20 @@ export interface Interaction {
    * writes these as a recipe (see `interactionRecipes`).
    */
   off?: Readonly<Record<string, Readonly<Record<`--_${string}`, string>>>>;
-  /** Every interaction of this round waits for the owner. */
+  /**
+   * The beats, in order, with their tokens and the base timing (order 1.22):
+   * anticipation, action, overshoot, settle, and what else reacts. Optional
+   * for the rows of order 1.21 that one property carries.
+   */
+  beats?: readonly string[];
+  /** The primitive it plays, if any (order 1.22). */
+  primitive?: PrimitiveId;
+  /** How the three styles differ, in a few words each (order 1.22). */
+  styles?: Readonly<Partial<Record<'studio' | 'desk' | 'neutral', string>>>;
+  /** The round that added or last reworked it. Default 1. */
+  round?: 1 | 2;
+  /** Set by the registry from the file it lives in. */
+  family?: InteractionFamily;
+  /** Every interaction waits for the owner. */
   status: 'proposed';
 }

@@ -31,7 +31,19 @@
  * The control is 16px at md and sits in a 24px target: the ::after hover
  * veil is a circle of size.target-min around it, so the press area is 24px
  * even where the label is short. The label is bound to the control, so it
- * extends the target too. ::before is the focus ring.
+ * extends the target too. ::before is the focus ring; it shows at once
+ * (WCAG 2.4.7).
+ *
+ * Interaction radio-pop (order 1.22, proposed):
+ * - Anticipation: while the control or its label is pressed, the circle
+ *   dips to scale.anticipate over duration.instant on ease.out, and springs
+ *   back on the bouncy spring on release.
+ * - Action and overshoot: the new dot grows from --_radio-group-dot-from on
+ *   the bouncy spring (duration.spring-bouncy), past its size and back.
+ * - The old dot shrinks and fades at the same time over duration.quick on
+ *   ease.exit, faster than the new one lands.
+ *   --_radio-group-press-scale  the circle while pressed; 1 turns the dip off
+ *   --_radio-group-dot-from     the dot scale before it lands; 1 turns the pop off
  */
 @layer ds.base {
   [data-ds='radio-group'] {
@@ -50,6 +62,8 @@
     --_radio-group-dot: var(--ds-color-bg-body);
     --_radio-group-ring: var(--ds-focus-shadow-ring);
     --_radio-group-veil: var(--ds-color-bg-overlay-10);
+    --_radio-group-press-scale: var(--ds-scale-anticipate);
+    --_radio-group-dot-from: var(--ds-scale-morph);
 
     display: flex;
     flex-direction: column;
@@ -181,6 +195,13 @@
     color: inherit;
     cursor: pointer;
     -webkit-tap-highlight-color: transparent;
+    transition: transform var(--ds-duration-spring-bouncy) var(--ds-ease-spring-bouncy);
+  }
+
+  /* radio-pop, the dip: the circle answers the press before the release. */
+  [data-ds='radio-group'] [data-part='item']:not([data-disabled]):has(> :is([data-part='control'], [data-part='label']):active) > [data-part='control'] {
+    transform: scale(var(--_radio-group-press-scale));
+    transition: transform var(--ds-duration-instant) var(--ds-ease-out);
   }
 
   /* With a description the circle sits on the label's first line. */
@@ -198,7 +219,6 @@
     box-shadow: var(--_radio-group-ring);
     opacity: 0;
     pointer-events: none;
-    transition: opacity var(--ds-duration-base) var(--ds-ease-default);
   }
 
   /* The hover veil, and the 24px press area around a smaller circle. */
@@ -220,10 +240,10 @@
     border-radius: var(--ds-radius-pill);
     background-color: var(--_radio-group-dot);
     opacity: 0;
-    transform: scale(0.4);
+    transform: scale(var(--_radio-group-dot-from));
     transition:
-      opacity var(--ds-duration-fast) var(--ds-ease-default),
-      transform var(--ds-duration-fast) var(--ds-ease-default);
+      opacity var(--ds-duration-quick) var(--ds-ease-exit),
+      transform var(--ds-duration-quick) var(--ds-ease-exit);
   }
 
   [data-ds='radio-group'] [data-part='item'] > [data-part='label'] {
@@ -268,7 +288,10 @@
 
   [data-ds='radio-group'] [data-part='item'][data-state='checked'] [data-part='indicator'] {
     opacity: 1;
-    transform: scale(1);
+    transform: none;
+    transition:
+      opacity var(--ds-duration-quick) var(--ds-ease-out),
+      transform var(--ds-duration-spring-bouncy) var(--ds-ease-spring-bouncy);
   }
 
   /* Invalid: the danger border on every unchecked circle; the error text says what to do. */
@@ -295,16 +318,29 @@
     cursor: not-allowed;
   }
 
+  /* Reduced motion, from the media query or the page setting: the dot appears at once, the circle does not dip. */
   @media (prefers-reduced-motion: reduce) {
-    [data-ds='radio-group'] [data-part='control']::before,
-    [data-ds='radio-group'] [data-part='control']::after,
-    [data-ds='radio-group'] [data-part='indicator'] {
-      transition: none;
+    [data-ds='radio-group'] {
+      --_radio-group-press-scale: 1;
+      --_radio-group-dot-from: 1;
     }
 
-    [data-ds='radio-group'] [data-part='indicator'] {
-      transform: none;
+    [data-ds='radio-group'] [data-part='control'],
+    [data-ds='radio-group'] [data-part='control']::after,
+    [data-ds='radio-group'] [data-part='item'] [data-part='indicator'] {
+      transition: none;
     }
+  }
+
+  :root[data-motion='reduce'] [data-ds='radio-group'] {
+    --_radio-group-press-scale: 1;
+    --_radio-group-dot-from: 1;
+  }
+
+  :root[data-motion='reduce'] [data-ds='radio-group'] [data-part='control'],
+  :root[data-motion='reduce'] [data-ds='radio-group'] [data-part='control']::after,
+  :root[data-motion='reduce'] [data-ds='radio-group'] [data-part='item'] [data-part='indicator'] {
+    transition: none;
   }
 
   /*

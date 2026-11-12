@@ -42,6 +42,12 @@
 // the tour. A click on the page does not end it. On close, focus returns to
 // the element that had it when the tour started.
 //
+// Motion, interaction "tour-spotlight" (order 1.22, proposed): on each step
+// the ring travels from the old target to the new one (a FLIP of its box on
+// the snappy spring), the panel follows one stagger step later on the soft
+// spring, and the new title, body and footer arrive in order. Focus moves
+// to the panel at once; only the drawing travels.
+//
 // The target scrolls into view on each step: smoothly, or at once under
 // reduced motion.
 import {
@@ -57,6 +63,8 @@ import {
   type RefObject,
 } from 'react';
 import { Popover as RadixPopover } from 'radix-ui';
+import { flipPlay, invert, moveFrames, play, rectOf, staggerGroup, type MotionRect } from '@the-system/motion';
+import { useMotion } from '../../internal/motion';
 import type { Size } from '@the-system/shared';
 import { useTheme } from '../../theme/hooks';
 import { Button } from '../Button';
@@ -302,6 +310,56 @@ export function Tour({
     [target],
   );
 
+  // Interaction "tour-spotlight": the ring and then the panel move to the new step.
+  const motion = useMotion();
+  const highlightRef = useRef<HTMLDivElement | null>(null);
+  const ringBefore = useRef<MotionRect | null>(null);
+  const stepMoved = useRef(false);
+  const lastIndex = useRef(index);
+  useLayoutEffect(() => {
+    if (lastIndex.current === index) return;
+    lastIndex.current = index;
+    const panel = panelRef.current;
+    const mode = motion.mode('tour-spotlight');
+    if (!shown || !panel || mode === 'none') return;
+    stepMoved.current = true;
+    // The new title, body and footer arrive in order; a part with focus is there at once.
+    const active = panel.ownerDocument.activeElement;
+    const parts = Array.from(panel.querySelectorAll<HTMLElement>(':scope > :is([data-part="title"], [data-part="body"], [data-part="footer"])'));
+    staggerGroup(
+      parts.filter((el) => !(active && el.contains(active))),
+      { mode, offset: 1 },
+    );
+    if (mode !== 'full') return;
+    // The panel follows the ring one step later, once Radix has placed it at the new target.
+    const before = rectOf(panel);
+    let frames = 0;
+    const follow = () => {
+      if (!panel.isConnected) return;
+      const now = rectOf(panel);
+      const from = invert(before, now, false);
+      if (!from) {
+        if (frames++ < 30) requestAnimationFrame(follow);
+        return;
+      }
+      play(
+        panel,
+        { keyframes: moveFrames(from, null), duration: 'duration.spring-soft', easing: 'ease.spring-soft', fill: 'backwards', origin: '50% 50%', delay: 'delay.stagger', delaySteps: 1 },
+        'flip',
+      );
+    };
+    requestAnimationFrame(follow);
+  }, [index, shown, motion]);
+  // The ring moves from where it was drawn (a move still in flight included) once its new box is set.
+  useLayoutEffect(() => {
+    const el = highlightRef.current;
+    if (stepMoved.current && el && ring && ringBefore.current) {
+      stepMoved.current = false;
+      flipPlay({ rects: new Map([[el, ringBefore.current]]) }, { items: [el], scale: true, spring: 'snappy', mode: motion.mode('tour-spotlight') });
+    }
+    ringBefore.current = el ? rectOf(el) : null;
+  }, [ring, motion]);
+
   // Each new step: focus moves to the panel, so its title and body are read,
   // unless the person is working in the page (focus outside the panel).
   useEffect(() => {
@@ -339,7 +397,7 @@ export function Tour({
   return (
     <ThemedPortal layer="tour">
       <div ref={layerRef} className={className} style={style} data-ds="tour" data-size={size} data-state={shown ? 'open' : 'closed'}>
-        {ring && <div data-part="highlight" aria-hidden="true" style={ringStyle} />}
+        {ring && <div ref={highlightRef} data-part="highlight" aria-hidden="true" style={ringStyle} />}
         <RadixPopover.Root open={shown} onOpenChange={(next) => !next && end()} modal={false}>
           <RadixPopover.Anchor virtualRef={anchor} />
           <RadixPopover.Content

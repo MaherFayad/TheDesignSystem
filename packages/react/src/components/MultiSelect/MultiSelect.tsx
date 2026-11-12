@@ -54,6 +54,10 @@ import { useField, useFieldControl } from '../Field/Field';
 import { FieldContext } from '../Field/context';
 import { ListBox, filterListBoxItems, flattenListBoxItems, type ListBoxItem } from '../ListBox';
 import { SearchField } from '../SearchField';
+import { useFlipGroup, useStaggerOnOpen } from '../ListBox/selectionMotion';
+
+/** The tags of the trigger summary. */
+const tagsOf = (value: Element) => Array.from(value.querySelectorAll(":scope > [data-part='tag']"));
 import { usePopupLayer } from '../Select/popupLayer';
 import { Spinner } from '../Spinner';
 import { useControllable } from '../../internal/useControllable';
@@ -318,13 +322,18 @@ export function MultiSelect({
   };
 
   const layer = usePopupLayer(popupOpen);
+  // menu-rows: the options arrive one stagger step after the popup surface, each time it opens.
+  const popupRef = useStaggerOnOpen("[data-ds='list-box'] [data-part='option']", layer.onContent);
+  // collection-flip: the tags in the trigger move, pop in and shrink out as the selection changes.
+  const valueRef = useRef<HTMLSpanElement>(null);
+  useFlipGroup(valueRef, { items: tagsOf });
   const labelledBy = ariaLabelledBy ?? (ariaLabel ? undefined : field?.labelId);
   const listSize = size === 'sm' ? 'sm' : 'md';
   const hasOptions = all.length > 0;
 
   const popup = (
     <Popover.Content
-      ref={layer.onContent}
+      ref={popupRef}
       side="bottom"
       align="start"
       sideOffset={TRIGGER_GAP}
@@ -456,7 +465,7 @@ export function MultiSelect({
               setOpenState(!popupOpen);
             }}
           >
-            <span data-part="value">
+            <span data-part="value" ref={valueRef}>
               {chosen.length === 0 && (placeholder ?? t.placeholder)}
               {chosen.length > 0 && summary === 'count' && countText}
               {chosen.length > 0 && summary === 'tags' && (

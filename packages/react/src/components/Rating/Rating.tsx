@@ -11,22 +11,24 @@
 // them stays outside it, so it is read. Half stars
 // show only in this form; the star-half icon mirrors in right to left.
 //
-// Interaction rating-fill (order 1.21, proposed): when a person picks a
-// score, the stars from the first to the chosen one pop in a short run (the
-// pop pattern with its index, capped at POP_MAX_STEPS). It plays after the
-// score is set and a new pick cancels the run, so it never holds back the
-// next pick. The hover preview stays instant (CSS, no transition).
+// Interactions (orders 1.21 and 1.22, proposed): rating-fill, when a person
+// picks a score, moves only the stars whose state changed: stars that fill
+// land from scale.morph past full size as one short run (two stagger steps
+// at most), the chosen one on the bouncy spring; stars that empty dip and
+// spring back. It plays after the score is set and a new pick restarts it,
+// so it never holds back the next pick. rating-preview (CSS): the stars
+// that join the hover preview dip and spring back, toward the pointer.
 //
 // Source: GoBanana admin FeedbackList could not be fetched in the lane
 // session. Designed from the dials table in PLAN.md 3.7 and RadioGroup.
 import { useId, useLayoutEffect, useRef, type ComponentProps, type KeyboardEvent, type ReactNode } from 'react';
-import { POP_MAX_STEPS } from '@the-system/motion';
 import { RadioGroup as RadixRadioGroup } from 'radix-ui';
 import { Icon } from '@the-system/icons/react';
 import type { Size, Tone } from '@the-system/shared';
 import { useMotion } from '../../internal/motion';
 import { useControllable } from '../../internal/useControllable';
 import { useTheme } from '../../theme';
+import { dipPop, landPop, playBeat, runStep } from '../Input/fieldMotion';
 
 export type RatingSize = Extract<Size, 'sm' | 'md' | 'lg'>;
 export type RatingTone = Extract<Tone, 'accent' | 'warning'>;
@@ -122,25 +124,42 @@ export function Rating({
   const whole = Math.round(current);
   const motion = useMotion();
   const items = useRef<(HTMLButtonElement | null)[]>([]);
-  const running = useRef<Animation[]>([]);
-  // Set by a pick, read once the new score is drawn.
-  const picked = useRef(false);
+  // Set by a pick, read once the new score is drawn: the score before it.
+  const picked = useRef<number | null>(null);
   const pick = (next: number) => {
-    if (next !== whole) picked.current = true;
+    if (next !== whole) picked.current = whole;
     setCurrent(next);
   };
   const valueId = useId();
   const starsId = useId();
   const scores = Array.from({ length: max }, (_, i) => i + 1);
+  // rating-fill: only the stars whose state changed move. Stars that fill land from scale.morph
+  // past full size, as one run spread over two stagger steps from the first; the chosen star
+  // lands on the bouncy spring. Stars that empty dip and spring back. A new pick restarts the run.
   useLayoutEffect(() => {
-    if (!picked.current) return;
-    picked.current = false;
-    for (const a of running.current) a.cancel();
-    running.current = [];
-    for (let i = 0; i < whole; i++) {
-      const icon = items.current[i]?.querySelector('[data-part="icon"]');
-      const a = motion.play(icon, 'pop', 'rating-fill', { index: Math.min(i, POP_MAX_STEPS) });
-      if (a) running.current.push(a);
+    const before = picked.current;
+    picked.current = null;
+    if (before === null || before === whole) return;
+    const mode = motion.mode('rating-fill');
+    const lo = Math.min(before, whole);
+    const hi = Math.max(before, whole);
+    const n = hi - lo;
+    for (let score = lo + 1; score <= hi; score++) {
+      const icon = items.current[score - 1]?.querySelector('[data-part="icon"]');
+      const i = score - lo - 1;
+      const wait = { delay: 'delay.stagger' as const, steps: runStep(i, n) };
+      if (whole > before) {
+        const last = score === whole;
+        const timing = last
+          ? {}
+          : {
+              duration: 'duration.spring-snappy' as const,
+              easing: 'ease.spring-snappy' as const,
+            };
+        playBeat(icon, landPop(undefined, { ...timing, ...wait }), 'rating-fill', mode);
+      } else {
+        playBeat(icon, dipPop(wait), 'rating-fill', mode, null);
+      }
     }
   }, [whole, motion]);
 

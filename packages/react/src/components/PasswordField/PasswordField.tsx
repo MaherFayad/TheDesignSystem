@@ -12,11 +12,17 @@
 // toggle is an IconButton with aria-pressed; its name also says what a
 // press does, as the order asks.
 //
-// Motion (order 1.21): a press on the toggle swaps its glyph and fades the
-// text back in (password-reveal); the type changes at once, the motion only
-// decorates it. The box shakes when the field turns invalid (error-shake).
+// Motion (orders 1.21 and 1.22): a press on the toggle morphs the eye into
+// the eye off glyph or back (password-reveal, the icon morph primitive): the
+// old glyph turns and shrinks out while the new one turns in and lands past
+// full size on the bouncy spring, in one grid cell so the button keeps its
+// size. The field text fades back in. The type changes at once; the motion
+// only decorates it. The box shakes when the field turns invalid
+// (error-shake).
 import { flushSync } from 'react-dom';
 import { useCallback, useEffect, useId, useLayoutEffect, useRef, useState, type ComponentProps, type MouseEvent, type Ref } from 'react';
+import { iconMorph, settled } from '@the-system/motion';
+import { Icon } from '@the-system/icons/react';
 import type { Shape, Size } from '@the-system/shared';
 import { useField } from '../Field/Field';
 import { IconButton } from '../IconButton/IconButton';
@@ -95,16 +101,36 @@ export function PasswordField({
   const motion = useMotion();
   // Set by a press on the toggle, read once the new type is drawn.
   const toggled = useRef(false);
+  // The glyph that leaves, kept for one morph in an aria-hidden span after the new one.
+  const [leaving, setLeaving] = useState<{
+    id: number;
+    icon: 'eye' | 'eye-off';
+  } | null>(null);
+  const morphs = useRef(0);
   useErrorShake(inner, isInvalid, fieldBox);
 
-  // password-reveal: after the type changed, the new glyph rolls in and the text fades back in.
+  // password-reveal: after the type changed, the eye morphs and the text fades back in.
   useLayoutEffect(() => {
     if (!toggled.current) return;
     toggled.current = false;
     const input = inner.current;
-    const glyph = input?.closest("[data-ds='password-field']")?.querySelector(":scope > [data-part='toggle'] > [data-part='icon']");
-    motion.play(glyph, 'swap', 'password-reveal', { phase: 'enter', direction: shown ? 'up' : 'down' });
+    const part = input?.closest("[data-ds='password-field']")?.querySelector(":scope > [data-part='toggle'] > [data-part='icon']");
+    const mode = motion.mode('password-reveal');
+    const anims = iconMorph({
+      from: part?.querySelector(':scope > span[aria-hidden="true"]'),
+      to: part?.firstElementChild,
+      turn: shown ? 90 : -90,
+      mode,
+    });
     motion.play(input, 'fade', 'password-reveal');
+    const id = morphs.current;
+    let live = true;
+    void Promise.all(anims.map((a) => settled(a))).then(() => {
+      if (live) setLeaving((l) => (l?.id === id ? null : l));
+    });
+    return () => {
+      live = false;
+    };
   }, [shown, motion]);
 
   const setShown = useCallback(
@@ -191,7 +217,16 @@ export function PasswordField({
       />
       <IconButton
         data-part="toggle"
-        icon={shown ? 'eye-off' : 'eye'}
+        icon={
+          <>
+            <Icon name={shown ? 'eye-off' : 'eye'} size="md" />
+            {leaving && (
+              <span key={leaving.id} aria-hidden="true">
+                <Icon name={leaving.icon} size="md" />
+              </span>
+            )}
+          </>
+        }
         label={shown ? hideLabel : showLabel}
         aria-pressed={shown}
         aria-controls={controls}
@@ -200,6 +235,10 @@ export function PasswordField({
         disabled={isDisabled}
         onClick={() => {
           toggled.current = true;
+          if (typeof inner.current?.animate === 'function' && motion.mode('password-reveal') !== 'none') {
+            morphs.current += 1;
+            setLeaving({ id: morphs.current, icon: shown ? 'eye-off' : 'eye' });
+          }
           setShown(!shown);
         }}
       />

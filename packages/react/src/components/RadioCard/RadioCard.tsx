@@ -151,7 +151,10 @@ export function RadioCardItem({
       disabled={disabled}
       data-part="item"
     >
-      <RadixRadioGroup.Indicator forceMount data-part="indicator" />
+      <RadixRadioGroup.Indicator forceMount data-part="indicator">
+        {/* The dot that pops in (radio-card-lift). Decorative, no part name. */}
+        <span aria-hidden="true" />
+      </RadixRadioGroup.Indicator>
       {has(icon) && (
         <span data-part="icon" aria-hidden="true">
           {typeof icon === 'string' && isIconName(icon) ? <Icon name={icon} size={group?.size === 'sm' ? 'md' : 'lg'} /> : icon}

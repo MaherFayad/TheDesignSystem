@@ -32,6 +32,13 @@
 // While zoomed the arrows pan the image instead. A swipe on the stage moves
 // too; the buttons and the arrows are its key path (WCAG 2.5.7).
 //
+// Motion, interaction "lightbox-zoom" (order 1.22, proposed): on open the
+// image grows out of the thumbnail that opened it (a FLIP with size, on the
+// soft spring; once it has loaded when it was not cached) and on close it
+// shrinks back into it while the panel fades, faster than it came. Focus
+// moves in at once; only the drawing travels. Lightbox.css staggers the
+// toolbar, the arrows and the caption.
+//
 // Zoom shows the image at twice the fitted width, in a stage that scrolls.
 // The fitted width is measured when zooming, so the zoom is the same for a
 // wide and a tall image.
@@ -41,6 +48,7 @@ import {
   useCallback,
   useEffect,
   useId,
+  useLayoutEffect,
   useMemo,
   useRef,
   useState,
@@ -53,6 +61,8 @@ import {
   type ReactNode,
 } from 'react';
 import { Dialog as RadixDialog } from 'radix-ui';
+import { between, flipPlay, play, rectOf, usableRect, type MotionRect } from '@the-system/motion';
+import { useMotion } from '../../internal/motion';
 import { useTheme } from '../../theme/hooks';
 import { useControllable } from '../../internal/useControllable';
 import { DialogBase, assignRef, type DialogBaseState } from '../Dialog/DialogBase';
@@ -312,6 +322,42 @@ export function Lightbox({
     stage.scrollLeft = rtl ? -middle : middle;
   }, [zoomed, rtl]);
 
+  // Interaction "lightbox-zoom": from the thumbnail and back.
+  const motion = useMotion();
+  const zoomPending = useRef(false);
+  const thumbRect = useCallback((): MotionRect | null => {
+    const trigger = triggerRef.current;
+    if (!trigger?.isConnected) return null;
+    const box = rectOf(trigger.querySelector('img') ?? trigger);
+    return usableRect(box) ? box : null;
+  }, []);
+  const zoomFromThumb = useCallback(() => {
+    const img = imageRef.current;
+    if (!zoomPending.current || !img) return;
+    const from = thumbRect();
+    if (!from) {
+      zoomPending.current = false;
+      return;
+    }
+    // Not laid out yet (still loading with no size): try again on load.
+    if (!usableRect(rectOf(img))) return;
+    zoomPending.current = false;
+    flipPlay({ rects: new Map([[img, from]]) }, { items: [img], scale: true, spring: 'soft', mode: motion.mode('lightbox-zoom') });
+  }, [thumbRect, motion]);
+  useLayoutEffect(() => {
+    if (open) {
+      zoomPending.current = true;
+      zoomFromThumb();
+      return;
+    }
+    zoomPending.current = false;
+    const img = imageRef.current;
+    const to = thumbRect();
+    if (!img?.isConnected || !to || motion.mode('lightbox-zoom') !== 'full') return;
+    play(img, { keyframes: [{ transform: 'none' }, { transform: between(to, rectOf(img)) }], duration: 'duration.base', easing: 'ease.exit', fill: 'forwards', origin: '0 0' }, 'flip-exit');
+    // Runs on open changes only.
+  }, [open]);
+
   const onPanelKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
     if (event.defaultPrevented || event.altKey || event.ctrlKey || event.metaKey) return;
     const key = event.key;
@@ -440,7 +486,10 @@ export function Lightbox({
               alt={image.alt}
               draggable={false}
               style={imageStyle}
-              onLoad={() => setLoadState('loaded')}
+              onLoad={() => {
+                setLoadState('loaded');
+                zoomFromThumb();
+              }}
               onError={() => setLoadState('error')}
             />
             {loadState === 'loading' && <Spinner data-part="spinner" size="lg" label={words.loading} />}

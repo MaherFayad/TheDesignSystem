@@ -29,6 +29,15 @@
  * Motion, pattern "menu-scale": the popup scales up from the side Radix
  * computes and fades in; it leaves faster on the exit ease. Under reduced
  * motion both are none and Radix removes it at once.
+ *
+ * Order 1.22 (proposed):
+ * - picker-chevron-turn: the trigger's chevron turns half a turn while the
+ *   list is open, on the snappy spring, and back on close.
+ *   --_combobox-turn is the open angle (0deg turns it off), a name beyond
+ *   the convention's list.
+ * - menu-rows (ComboboxBase.tsx): the options arrive one stagger step after
+ *   the surface each time the popup opens. row-glide (ListBox): the lit
+ *   row's fill travels from the last lit row.
  */
 @layer ds.base {
   /* ------------------------------------------------------------ the field */
@@ -38,6 +47,7 @@
     --_combobox-padding-inline: var(--ds-space-m);
     --_combobox-gap: var(--ds-space-3xs);
     --_combobox-font-size: var(--ds-font-size-s);
+    --_combobox-turn: 180deg;
     --_combobox-radius: var(--ds-radius-control);
     --_combobox-bg: transparent;
     --_combobox-fg: var(--ds-color-text-default);
@@ -130,6 +140,15 @@
   :is([data-ds='combobox'], [data-ds='autocomplete']) > :is([data-part='clear'], [data-part='trigger']) {
     flex: none;
     color: var(--ds-color-text-muted);
+  }
+
+  /* picker-chevron-turn. */
+  :is([data-ds='combobox'], [data-ds='autocomplete']) > [data-part='trigger'] [data-ds='icon'] {
+    transition: transform var(--ds-duration-spring-snappy) var(--ds-ease-spring-snappy);
+  }
+
+  :is([data-ds='combobox'], [data-ds='autocomplete']) > [data-part='trigger'][aria-expanded='true'] [data-ds='icon'] {
+    transform: rotate(var(--_combobox-turn));
   }
 
   /* The result count: read by screen readers, not drawn. */
@@ -291,9 +310,19 @@
       animation: none;
     }
 
-    :is([data-ds='combobox'], [data-ds='autocomplete']):not([data-part='popup'])::before {
+    :is([data-ds='combobox'], [data-ds='autocomplete']):not([data-part='popup'])::before,
+    :is([data-ds='combobox'], [data-ds='autocomplete']) > [data-part='trigger'] [data-ds='icon'] {
       transition: none;
     }
+  }
+
+  :root[data-motion='reduce'] :is([data-ds='combobox'], [data-ds='autocomplete'])[data-part='popup'][data-state] {
+    animation: none;
+  }
+
+  :root[data-motion='reduce'] :is([data-ds='combobox'], [data-ds='autocomplete']):not([data-part='popup'])::before,
+  :root[data-motion='reduce'] :is([data-ds='combobox'], [data-ds='autocomplete']) > [data-part='trigger'] [data-ds='icon'] {
+    transition: none;
   }
 
   /* ------------------------------------------------------------ transparency, contrast, forced colors */

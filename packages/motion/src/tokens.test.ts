@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { tokenValue } from './testing/base-tokens';
-import { durationMs, easeBezier, scaleValue, spacePx, springValue } from './tokens';
+import { distancePx, durationMs, easeBezier, scaleValue, spacePx, springValue } from './tokens';
 
 describe('the token values the catalog copies match packages/tokens/src/base', () => {
   it.each(Object.entries(durationMs))('%s is %d ms', (path, ms) => {
@@ -13,6 +13,9 @@ describe('the token values the catalog copies match packages/tokens/src/base', (
     expect(tokenValue(path)).toBe(n);
   });
   it.each(Object.entries(spacePx))('%s is %d px', (path, px) => {
+    expect(tokenValue(path)).toBe(px);
+  });
+  it.each(Object.entries(distancePx))('%s is %d px', (path, px) => {
     expect(tokenValue(path)).toBe(px);
   });
   it.each(Object.entries(springValue))('%s', (path, spring) => {

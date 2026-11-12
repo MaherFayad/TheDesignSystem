@@ -68,6 +68,7 @@ import {
 } from '@the-system/shared';
 import { useTheme } from '../../theme/hooks';
 import { useControllable } from '../../internal/useControllable';
+import { useRowGlide } from './selectionMotion';
 
 /** Row sizes: sm 24px rows, md list.row.height (28px at default density). */
 export type ListBoxSize = Extract<Size, 'sm' | 'md'>;
@@ -272,6 +273,8 @@ export function ListBox(props: ListBoxProps) {
   }, [highlightIndex, options, selected]);
 
   const rootRef = useRef<HTMLDivElement | null>(null);
+  // row-glide: the fill of the highlighted row travels from the row lit before.
+  const glideRef = useRowGlide({ rows: "[data-part='option']", lit: { attribute: 'data-highlighted' } });
   const fromKeyboard = useRef(false);
   const fromPointer = useRef(false);
   const typeahead = useMemo(() => createTypeahead(), []);
@@ -385,6 +388,8 @@ export function ListBox(props: ListBoxProps) {
         onMouseDown={virtualFocus ? (event) => event.preventDefault() : undefined}
         onClick={() => choose(option)}
       >
+        {/* The row's fill, which glides from the last lit row (row-glide). Decorative, no part name. */}
+        <span aria-hidden="true" />
         <span data-part="indicator" aria-hidden="true">
           {isSelected && <Icon name="check" size="md" />}
         </span>
@@ -407,12 +412,17 @@ export function ListBox(props: ListBoxProps) {
 
   const isEmpty = options.length === 0;
 
-  const setRootRef = (node: HTMLDivElement | null) => {
-    rootRef.current = node;
-    const ref = rest.ref;
-    if (typeof ref === 'function') ref(node);
-    else if (ref) ref.current = node;
-  };
+  // Stable, so the glide keeps watching across renders (a new ref callback would drop its pending records).
+  const forwardRef = rest.ref;
+  const setRootRef = useCallback(
+    (node: HTMLDivElement | null) => {
+      rootRef.current = node;
+      glideRef(node);
+      if (typeof forwardRef === 'function') forwardRef(node);
+      else if (forwardRef) forwardRef.current = node;
+    },
+    [forwardRef, glideRef],
+  );
 
   return (
     <div

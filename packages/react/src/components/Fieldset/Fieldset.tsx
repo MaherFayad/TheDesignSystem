@@ -1,5 +1,5 @@
 'use client';
-import { useId, useMemo, type ComponentProps, type ReactNode } from 'react';
+import { useEffect, useId, useMemo, useRef, type ComponentProps, type ReactNode } from 'react';
 import type { Size } from '@the-system/shared';
 import { FieldContext, type FieldContextValue } from '../Field/context';
 import { FieldError } from '../FieldError/FieldError';
@@ -72,6 +72,12 @@ export function Fieldset({
   const isInvalid = invalid ?? showError;
   const showDescription = hasContent(description);
 
+  // An error that shows after the first paint slides in (order 1.22).
+  const settled = useRef(false);
+  useEffect(() => {
+    settled.current = true;
+  }, []);
+
   const errorContext = useMemo<FieldContextValue>(
     () => ({
       controlId: `${base}group`,
@@ -87,6 +93,7 @@ export function Fieldset({
       hasError: showError,
       register: noop,
       setControlId: () => undefined,
+      settled,
     }),
     [base, descriptionId, errorId, isInvalid, invalid, disabled, showDescription, showError],
   );

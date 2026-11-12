@@ -28,8 +28,15 @@
  * under breakpoint.phone, so it never scrolls sideways (WCAG 1.4.10).
  *
  * The connector is a border, so it stays in forced colors. Its fill is the
- * ::before layer, scaled along the line from the start side (motion pattern
- * tab-indicator). Only transform animates.
+ * ::before layer, scaled along the line from the start side on the soft
+ * spring (interaction stepper-travel, order 1.22, proposed). Only transform
+ * and opacity animate.
+ *
+ * The travel ring of stepper-travel is the indicator's ::after: a ring in
+ * the current step's border color, at opacity 0 at rest. Stepper.tsx slides
+ * it from the old current indicator to the new one and fades it as it lands
+ * (react/src/internal/indicator.ts), so it is only seen while it travels. It
+ * keeps the default transform origin the slide is worked out for.
  *
  * A step the user may reach holds a system Button as its title part
  * (`data-ds='button' data-part='title'`). This file restyles it through its
@@ -129,6 +136,7 @@
     box-sizing: border-box;
     inline-size: var(--_stepper-indicator-size);
     block-size: var(--_stepper-indicator-size);
+    position: relative;
     border: var(--ds-border-width-strong) solid var(--_stepper-indicator-border-color);
     border-radius: var(--ds-radius-pill);
     background-color: var(--_stepper-indicator-bg);
@@ -194,6 +202,18 @@
     white-space: nowrap;
   }
 
+  /* The travel ring: drawn only while it slides to the new current step. */
+  [data-ds='stepper'] > [data-part='step'] > [data-part='indicator']::after {
+    content: '';
+    position: absolute;
+    inset: calc(-2 * var(--ds-border-width-strong));
+    box-sizing: border-box;
+    border: var(--ds-border-width-strong) solid var(--ds-color-primary-on-surface);
+    border-radius: var(--ds-radius-pill);
+    opacity: 0;
+    pointer-events: none;
+  }
+
   [data-ds='stepper'] > [data-part='step'] > [data-part='connector'] {
     position: relative;
     box-sizing: border-box;
@@ -204,7 +224,7 @@
     position: absolute;
     transform: scale(0, 1);
     transform-origin: 0 50%;
-    transition: transform var(--ds-duration-base) var(--ds-ease-out);
+    transition: transform var(--ds-duration-spring-soft) var(--ds-ease-spring-soft);
   }
 
   [data-ds='stepper']:dir(rtl) > [data-part='step'] > [data-part='connector']::before {
@@ -374,7 +394,16 @@
     }
   }
 
+  /* The same under the page setting (review B2). */
+  :root[data-motion='reduce'] [data-ds='stepper'] > [data-part='step'] > [data-part='connector']::before {
+    transition: none;
+  }
+
   @media (forced-colors: active) {
+    [data-ds='stepper'] > [data-part='step'] > [data-part='indicator']::after {
+      display: none;
+    }
+
     [data-ds='stepper'] > [data-part='step'] {
       --_stepper-indicator-border-color: CanvasText;
       --_stepper-connector-color: GrayText;

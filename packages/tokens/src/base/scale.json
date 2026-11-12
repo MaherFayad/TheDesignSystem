@@ -19,6 +19,36 @@
       "$type": "number",
       "$value": 0.97,
       "$description": "A menu or list popup grows from this scale as it opens. GB st-menu-in."
+    },
+    "pop": {
+      "$type": "number",
+      "$value": 1.05,
+      "$description": "Peak scale of a mark, badge or chip that lands with an overshoot (keyframe form of the bouncy spring). Order 1.22, proposed."
+    },
+    "stretch": {
+      "$type": "number",
+      "$value": 1.15,
+      "$description": "How far a thumb or indicator stretches along its travel while it moves or is held. Order 1.22, proposed."
+    },
+    "lift": {
+      "$type": "number",
+      "$value": 1.01,
+      "$description": "Scale of a card or tile that lifts under the pointer. Order 1.22, proposed."
+    },
+    "anticipate": {
+      "$type": "number",
+      "$value": 0.95,
+      "$description": "Scale of the wind up before an action plays: a press that gathers before it releases. Order 1.22, proposed."
+    },
+    "enter": {
+      "$type": "number",
+      "$value": 0.97,
+      "$description": "Start scale of content that enters inside an overlay or a list. Order 1.22, proposed."
+    },
+    "morph": {
+      "$type": "number",
+      "$value": 0.5,
+      "$description": "Scale a part shrinks to as it leaves an icon or button morph. Order 1.22, proposed."
     }
   }
 }

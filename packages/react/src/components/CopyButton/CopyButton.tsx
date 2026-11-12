@@ -5,18 +5,23 @@
 // the button returns to idle. Source: GoBanana site `CopyButton.tsx`,
 // `CodeBlock.tsx` and `copy-text.ts` (the failure selects the visible text).
 //
-// The icon swap (interaction copy-swap, pattern swap): when the icon changes,
-// the old icon stays for one swap in an unnamed aria-hidden span after the
-// new one, inside the icon part. The old rolls out while the new rolls in,
-// both at once, and the span goes when its exit settles. The clipboard
-// write, the state and the status are never held back by it. With no Web
-// Animations API, or a style that turns the swap off, no span is added.
-import { useEffect, useLayoutEffect, useRef, useState, type MouseEvent, type Ref } from 'react';
+// The result morph (interaction copy-swap, order 1.22, primitive
+// buttonMorph): when the icon changes, the old icon stays for one morph in
+// an unnamed aria-hidden span after the new one, inside the icon part. The
+// old icon rolls out while the new one arrives one stagger step later: the
+// check turns in from a quarter turn back, grows past rest and settles, and
+// the button swells once (scale.pop over duration.celebrate); the warning
+// pops in and the button shakes once along the inline axis; the copy icon
+// rolls back in from above when the result ends. The span rests at opacity
+// 0 (Button.css) and goes when its exit settles. The clipboard write, the
+// state and the status are never held back by it. With no Web Animations
+// API, or a style that turns the morph off, no span is added.
+import { useEffect, useLayoutEffect, useRef, useState, type MouseEvent } from 'react';
 import type { IconName } from '@the-system/icons';
-import { settled } from '@the-system/motion';
+import { buttonMorph, settled, type MorphParts, type MorphState } from '@the-system/motion';
 import { useMotion } from '../../internal/motion';
 import { useTheme } from '../../theme/hooks';
-import { ButtonRoot, renderSlotContent, type ButtonBaseProps } from '../Button/ButtonBase';
+import { ButtonRoot, renderSlotContent, setRef, type ButtonBaseProps } from '../Button/ButtonBase';
 import { copyToClipboard, readTimeToken, selectTextOf } from './copy';
 
 export type CopyButtonState = 'idle' | 'copied' | 'failed';
@@ -62,17 +67,18 @@ export interface CopyButtonProps
   emphasis?: ButtonBaseProps['emphasis'];
 }
 
-/** The icon that leaves during a swap. `back` is the return to idle, which rolls the other way. */
+/** The icon that leaves during a morph, and the states the morph goes between. */
 interface Leaving {
   id: number;
   icon: IconName;
-  back: boolean;
+  from: CopyButtonState;
+  to: CopyButtonState;
 }
 
-function setRef<T>(ref: Ref<T> | undefined, value: T | null): void {
-  if (typeof ref === 'function') ref(value);
-  else if (ref && typeof ref === 'object') (ref as { current: T | null }).current = value;
-}
+/** The morph state of each copy state. */
+const morphStates: Record<CopyButtonState, MorphState> = { idle: 'idle', copied: 'success', failed: 'error' };
+/** The morph part that shows in each copy state. */
+const morphSlots: Record<CopyButtonState, 'label' | 'success' | 'error'> = { idle: 'label', copied: 'success', failed: 'error' };
 
 /** A button that copies `value`, with `data-state` idle, copied or failed. */
 export function CopyButton({
@@ -108,22 +114,24 @@ export function CopyButton({
     current.current = next;
     if (icons[prev] !== icons[next] && typeof el.current?.animate === 'function' && motion.mode('copy-swap') !== 'none') {
       swaps.current += 1;
-      setLeaving({ id: swaps.current, icon: icons[prev], back: next === 'idle' });
+      setLeaving({ id: swaps.current, icon: icons[prev], from: prev, to: next });
     }
     setState(next);
   };
 
-  // Plays the swap on the committed icons, before paint, so the old icon never
-  // shows over the new one at rest. The new icon is the first child of the
-  // icon part, the leaving copy the last.
+  // Plays the morph on the committed icons, before paint, so the old icon
+  // never shows over the new one at rest. The new icon is the first child of
+  // the icon part, the leaving copy the last.
   useLayoutEffect(() => {
     const part = iconPart.current;
     if (!leaving || !part) return;
-    const direction = leaving.back ? 'down' : 'up';
     const incoming = part.firstElementChild;
     const outgoing = part.lastElementChild;
-    if (incoming && incoming !== outgoing) motion.play(incoming, 'swap', 'copy-swap', { phase: 'enter', direction });
-    const exit = outgoing && outgoing !== incoming ? motion.play(outgoing, 'swap', 'copy-swap', { phase: 'exit', direction }) : null;
+    const parts: MorphParts = { root: el.current };
+    if (outgoing && outgoing !== incoming) parts[morphSlots[leaving.from]] = outgoing;
+    if (incoming) parts[morphSlots[leaving.to]] = incoming;
+    const played = buttonMorph(parts, morphStates[leaving.from], morphStates[leaving.to], { mode: motion.mode('copy-swap') });
+    const exit = played.find((a) => (a.effect as KeyframeEffect | null)?.target === outgoing) ?? null;
     let live = true;
     void settled(exit).then(() => {
       if (live) setLeaving((l) => (l?.id === leaving.id ? null : l));

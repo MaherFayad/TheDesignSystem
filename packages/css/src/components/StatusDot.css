@@ -9,9 +9,19 @@
  *   --_status-dot-gap     between the dot and the label
  *   --_status-dot-font-size
  *
- * The pulse is a ring on the dot's ::before (the glow layer) that grows and
- * fades: transform and opacity only, three times, then it stops. Under
- * reduced motion it does not play.
+ * The pulse (interaction status-pulse, order 1.22, proposed) is two beats
+ * per loop: the dot itself beats (a dip to scale.anticipate, a pop to
+ * scale.pop, then rest, in the first third of the loop) while a ring on its
+ * ::before (the glow layer) grows from the dot and fades. Transform and
+ * opacity only, three loops of duration.pulse (4.2s at 1.4s), then it stops
+ * by itself before five seconds (WCAG 2.2.2), so it needs no pause control.
+ * Under reduced motion (media query or data-motion="reduce") it does not
+ * play.
+ *
+ *   --_status-dot-loops   how many loops play; a name outside the list in
+ *                         anatomy.md: an animation iteration count. A style
+ *                         that slows duration.pulse lowers it so the pulse
+ *                         still ends before five seconds; 0 turns it off.
  */
 @layer ds.base {
   [data-ds='status-dot'] {
@@ -19,6 +29,7 @@
     --_status-dot-bg: var(--ds-color-text-muted);
     --_status-dot-gap: var(--ds-space-xs);
     --_status-dot-font-size: var(--ds-font-size-m);
+    --_status-dot-loops: 3;
 
     display: inline-flex;
     align-items: flex-start;
@@ -103,7 +114,27 @@
     border-radius: inherit;
     background-color: var(--_status-dot-bg);
     opacity: 0;
-    animation: ds-status-dot-pulse var(--ds-duration-pulse) var(--ds-ease-out) 3;
+    animation: ds-status-dot-pulse var(--ds-duration-pulse) var(--ds-ease-out) var(--_status-dot-loops);
+  }
+
+  [data-ds='status-dot'][data-pulse] > [data-part='dot'] {
+    animation: ds-status-dot-beat var(--ds-duration-pulse) var(--ds-ease-standard) var(--_status-dot-loops);
+  }
+
+  @keyframes ds-status-dot-beat {
+    0%,
+    34%,
+    100% {
+      transform: none;
+    }
+
+    8% {
+      transform: scale(var(--ds-scale-anticipate));
+    }
+
+    18% {
+      transform: scale(var(--ds-scale-pop));
+    }
   }
 
   @keyframes ds-status-dot-pulse {
@@ -121,9 +152,15 @@
   /* ------------------------------------------------------------ reduced motion, forced colors */
 
   @media (prefers-reduced-motion: reduce) {
+    [data-ds='status-dot'][data-pulse] > [data-part='dot'],
     [data-ds='status-dot'][data-pulse] > [data-part='dot']::before {
       animation: none;
     }
+  }
+
+  :root[data-motion='reduce'] [data-ds='status-dot'][data-pulse] > [data-part='dot'],
+  :root[data-motion='reduce'] [data-ds='status-dot'][data-pulse] > [data-part='dot']::before {
+    animation: none;
   }
 
   /* The dot keeps a shape in forced colors: the system text color, no pulse. */
@@ -136,6 +173,7 @@
       forced-color-adjust: none;
     }
 
+    [data-ds='status-dot'][data-pulse] > [data-part='dot'],
     [data-ds='status-dot'][data-pulse] > [data-part='dot']::before {
       animation: none;
     }

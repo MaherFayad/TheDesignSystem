@@ -22,12 +22,25 @@
  *   --_accordion-radius          a section's corners (card)
  *   --_accordion-shift           where the content starts as it opens: -100% of its own height
  *   --_accordion-duration, --_accordion-ease   the accordion-reveal timing
+ *   --_accordion-icon-duration, -icon-ease      the chevron's turn
+ *   --_accordion-stagger         the step between the content's children; a
+ *                                name outside the list in anatomy.md: a delay
+ *   --_accordion-enter-y         how far each child of the content settles from
  *
- * accordion-reveal (pattern accordion-height): AccordionContent wraps its
- * children in one unnamed div. The content part takes its open height at
- * once and clips (overflow clip); the div slides down inside it from
- * --_accordion-shift while it fades in, so the text never scales. A style
- * turns it off with --_accordion-duration: 0s.
+ * accordion-reveal (pattern accordion-height, reworked in order 1.22,
+ * proposed): AccordionContent wraps its children in one unnamed div. The
+ * content part takes its open height at once and clips (overflow clip); the
+ * div slides down inside it from --_accordion-shift while it fades in, so
+ * the text never scales and the panel does not overshoot. Each element
+ * child of the div (paragraphs, a list) then settles from distance.nudge
+ * one stagger step after the last, on the soft spring, capped at six steps.
+ * Every child is at full opacity by 30% of its run, and no delay passes
+ * duration.base (120ms), so text never waits below its contrast for more
+ * than a moment (the lead's rule after the List contrast finding).
+ * The chevron turns on the snappy spring, so it lands a little past 180
+ * degrees in Desk and settles. A style turns all of it off with
+ * --_accordion-duration, --_accordion-icon-duration and --_accordion-stagger
+ * at 0s (review note N6: the chevron is covered too).
  */
 @layer ds.base {
   [data-ds='accordion'] {
@@ -41,6 +54,10 @@
     --_accordion-shift: -100%;
     --_accordion-duration: var(--ds-duration-slow);
     --_accordion-ease: var(--ds-ease-standard);
+    --_accordion-icon-duration: var(--ds-duration-spring-snappy);
+    --_accordion-icon-ease: var(--ds-ease-spring-snappy);
+    --_accordion-stagger: var(--ds-delay-stagger);
+    --_accordion-enter-y: var(--ds-distance-nudge);
 
     display: flex;
     flex-direction: column;
@@ -114,7 +131,7 @@
 
   [data-ds='accordion'] > [data-part='item'] > [data-part='header'] > [data-part='trigger'] [data-ds='icon'] {
     color: var(--ds-color-text-muted);
-    transition: transform var(--ds-duration-base) var(--ds-ease-default);
+    transition: transform var(--_accordion-icon-duration) var(--_accordion-icon-ease);
   }
 
   [data-ds='accordion'] > [data-part='item'] > [data-part='header'] > [data-part='trigger'][data-state='open'] [data-ds='icon'] {
@@ -144,6 +161,43 @@
     animation: ds-accordion-reveal var(--_accordion-duration) var(--_accordion-ease);
   }
 
+  /* The content's children settle one stagger step apart, after the slide starts. */
+  [data-ds='accordion'] > [data-part='item'] > [data-part='content'][data-state='open'] > div > * {
+    animation: ds-accordion-child var(--_accordion-duration) var(--ds-ease-spring-soft) var(--_accordion-stagger) backwards;
+  }
+
+  [data-ds='accordion'] > [data-part='item'] > [data-part='content'][data-state='open'] > div > :nth-child(2) {
+    animation-delay: min(calc(2 * var(--_accordion-stagger)), var(--ds-duration-base));
+  }
+
+  [data-ds='accordion'] > [data-part='item'] > [data-part='content'][data-state='open'] > div > :nth-child(3) {
+    animation-delay: min(calc(3 * var(--_accordion-stagger)), var(--ds-duration-base));
+  }
+
+  [data-ds='accordion'] > [data-part='item'] > [data-part='content'][data-state='open'] > div > :nth-child(4) {
+    animation-delay: min(calc(4 * var(--_accordion-stagger)), var(--ds-duration-base));
+  }
+
+  [data-ds='accordion'] > [data-part='item'] > [data-part='content'][data-state='open'] > div > :nth-child(5) {
+    animation-delay: min(calc(5 * var(--_accordion-stagger)), var(--ds-duration-base));
+  }
+
+  [data-ds='accordion'] > [data-part='item'] > [data-part='content'][data-state='open'] > div > :nth-child(n + 6) {
+    animation-delay: min(calc(6 * var(--_accordion-stagger)), var(--ds-duration-base));
+  }
+
+  @keyframes ds-accordion-child {
+    from {
+      opacity: 0;
+      transform: translateY(var(--_accordion-enter-y));
+    }
+
+    /* Readable early: full opacity by 30% of the run (READABLE_AT); the transform settles over all of it. */
+    30% {
+      opacity: 1;
+    }
+  }
+
   @keyframes ds-accordion-reveal {
     from {
       opacity: 0;
@@ -164,13 +218,23 @@
 
   @media (prefers-reduced-motion: reduce) {
     /* Reduced: no slide. The duration tokens are 0ms here too, so the content shows at once. */
-    [data-ds='accordion'] > [data-part='item'] > [data-part='content'][data-state='open'] > div {
+    [data-ds='accordion'] > [data-part='item'] > [data-part='content'][data-state='open'] > div,
+    [data-ds='accordion'] > [data-part='item'] > [data-part='content'][data-state='open'] > div > * {
       animation: none;
     }
 
     [data-ds='accordion'] > [data-part='item'] > [data-part='header'] > [data-part='trigger'] [data-ds='icon'] {
       transition: none;
     }
+  }
+
+  :root[data-motion='reduce'] [data-ds='accordion'] > [data-part='item'] > [data-part='content'][data-state='open'] > div,
+  :root[data-motion='reduce'] [data-ds='accordion'] > [data-part='item'] > [data-part='content'][data-state='open'] > div > * {
+    animation: none;
+  }
+
+  :root[data-motion='reduce'] [data-ds='accordion'] > [data-part='item'] > [data-part='header'] > [data-part='trigger'] [data-ds='icon'] {
+    transition: none;
   }
 
   /* Forced colors drop backgrounds: card sections and dividers keep a system line. */

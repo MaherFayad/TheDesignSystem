@@ -4,6 +4,7 @@ import { createRef } from 'react';
 import { fireEvent, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';
+import { getInteraction } from '@the-system/motion';
 import { Field } from '../Field/Field';
 import SwitchDemo from './Switch.demo';
 import { Switch } from './index';
@@ -126,5 +127,52 @@ describe('Switch', () => {
     const rule = css.slice(at, css.indexOf('}', at));
     // Without it, "Snap to grid" and "On" join one left to right run and read "Snap to gridOn".
     expect(rule).toMatch(/unicode-bidi:\s*isolate;/);
+  });
+});
+
+describe('Switch motion (interaction switch-stretch, order 1.22, and the round 1 review)', () => {
+  const css = readFileSync(join(process.cwd(), 'packages/css/src/components/Switch.css'), 'utf8');
+
+  it('renders the decorative on tint inside the track, before the thumb', () => {
+    render(<Switch label="Auto save" />);
+    const track = document.querySelector('[data-part="track"]');
+    const tint = track?.firstElementChild;
+    expect(tint?.tagName).toBe('SPAN');
+    expect(tint?.getAttribute('aria-hidden')).toBe('true');
+    expect(tint?.hasAttribute('data-part')).toBe(false);
+    expect(track?.lastElementChild?.getAttribute('data-part')).toBe('thumb');
+  });
+
+  it('shows the focus ring at once: the ring layer has no transition (B1)', () => {
+    const at = css.indexOf("[data-ds='switch'] > [data-part='control']::before {");
+    expect(at).toBeGreaterThan(0);
+    expect(css.slice(at, css.indexOf('}', at))).not.toContain('transition');
+  });
+
+  it('turns the stretch and the dip off under data-motion reduce as under the media query (B2)', () => {
+    const at = css.indexOf(":root[data-motion='reduce'] [data-ds='switch'] {");
+    expect(at).toBeGreaterThan(0);
+    const block = css.slice(at, css.indexOf('}', at));
+    expect(block).toContain('--_switch-stretch: 1;');
+    expect(block).toContain('--_switch-track-press: 1;');
+  });
+
+  it('turns every transition off with its off row (N6)', () => {
+    expect(getInteraction('switch-stretch')?.off?.["[data-ds='switch']"]).toMatchObject({ '--_switch-motion': '0' });
+    for (const m of css.matchAll(/transition:([^;]+);/g)) {
+      const value = m[1] ?? '';
+      if (value.trim() === 'none') continue;
+      for (const part of value.split(',')) expect(part, part).toContain('* var(--_switch-motion)');
+    }
+  });
+
+  it('stretches by the scale.stretch token (N10)', () => {
+    expect(css).toContain('--_switch-stretch: var(--ds-scale-stretch);');
+    expect(css).not.toContain('scale-window-enter');
+  });
+
+  it('travels on the bouncy spring', () => {
+    expect(css).toContain('--_switch-duration: var(--ds-duration-spring-bouncy);');
+    expect(css).toContain('--_switch-ease: var(--ds-ease-spring-bouncy);');
   });
 });

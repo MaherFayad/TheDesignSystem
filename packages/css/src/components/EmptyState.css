@@ -15,8 +15,19 @@
  *   --_empty-state-title-size, -body-size
  *   --_empty-state-measure            the widest line of the body (size.measure)
  *
- * Not interactive and no motion of its own: the parent decides how it
- * appears (fade-rise). The actions are system Buttons with their own states.
+ * Not interactive. The actions are system Buttons with their own states.
+ *
+ * Motion, interaction state-illustration (order 1.22, proposed), once on
+ * mount: the icon settles from a small lift (distance.lift above, scale.enter,
+ * faded) on the bouncy spring, so it lands with a little overshoot; then the
+ * title, the body and the actions follow one stagger step apart, each
+ * settling from distance.nudge below on the soft spring. Transform and
+ * opacity only.
+ *
+ *   --_empty-state-lift, --_empty-state-enter-scale   where the icon starts (motion names)
+ *   --_empty-state-shift                              how far the text settles from
+ * A style turns it off with these at rest, which leaves a fade. Under
+ * reduced motion (media query or data-motion="reduce") there is none.
  */
 @layer ds.base {
   [data-ds='empty-state'] {
@@ -29,6 +40,9 @@
     --_empty-state-title-size: var(--ds-font-size-xl);
     --_empty-state-body-size: var(--ds-font-size-m);
     --_empty-state-measure: var(--ds-size-measure);
+    --_empty-state-lift: calc(-1 * var(--ds-distance-lift));
+    --_empty-state-enter-scale: var(--ds-scale-enter);
+    --_empty-state-shift: var(--ds-distance-nudge);
 
     display: flex;
     flex-direction: column;
@@ -112,10 +126,66 @@
     margin-block-start: var(--ds-space-xs);
   }
 
+  /* ------------------------------------------------------------ motion: state-illustration */
+
+  [data-ds='empty-state'] > [data-part='icon'] {
+    animation: ds-empty-state-art var(--ds-duration-spring-bouncy) var(--ds-ease-spring-bouncy) backwards;
+  }
+
+  [data-ds='empty-state'] > :is([data-part='title'], [data-part='body'], [data-part='actions']) {
+    animation: ds-empty-state-text var(--ds-duration-spring-soft) var(--ds-ease-spring-soft) var(--ds-delay-stagger) backwards;
+  }
+
+  [data-ds='empty-state'] > [data-part='body'] {
+    animation-delay: min(calc(2 * var(--ds-delay-stagger)), var(--ds-duration-base));
+  }
+
+  [data-ds='empty-state'] > [data-part='actions'] {
+    animation-delay: min(calc(3 * var(--ds-delay-stagger)), var(--ds-duration-base));
+  }
+
+  @keyframes ds-empty-state-art {
+    from {
+      opacity: 0;
+      transform: translateY(var(--_empty-state-lift)) scale(var(--_empty-state-enter-scale));
+    }
+
+    /* Readable early: full opacity by 30% of the run (READABLE_AT); the transform settles over all of it. */
+    30% {
+      opacity: 1;
+    }
+  }
+
+  @keyframes ds-empty-state-text {
+    from {
+      opacity: 0;
+      transform: translateY(var(--_empty-state-shift));
+    }
+
+    /* Readable early: full opacity by 30% of the run (READABLE_AT); the transform settles over all of it. */
+    30% {
+      opacity: 1;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    [data-ds='empty-state'] > * {
+      animation: none;
+    }
+  }
+
+  :root[data-motion='reduce'] [data-ds='empty-state'] > * {
+    animation: none;
+  }
+
   /* Forced colors drop the icon fill: a system border keeps the box visible. */
   @media (forced-colors: active) {
     [data-ds='empty-state'] > [data-part='icon'] {
       border: var(--ds-border-width-default) solid CanvasText;
+    }
+
+    [data-ds='empty-state'] > * {
+      animation: none;
     }
   }
 }

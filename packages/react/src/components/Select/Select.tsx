@@ -38,7 +38,8 @@
 // Radix Select has no exit presence: the content leaves at once on close.
 // With no option the list does not open (an empty listbox is not valid): the
 // trigger is described by the empty words instead, as it is while loading.
-import { useId, useMemo, type ComponentProps, type ReactElement, type ReactNode, type Ref } from 'react';
+import { useId, useLayoutEffect, useMemo, useRef, type ComponentProps, type ReactElement, type ReactNode, type Ref } from 'react';
+import { staggerGroup } from '@the-system/motion';
 import { createPortal } from 'react-dom';
 import { Select as RadixSelect } from 'radix-ui';
 import { Icon, type IconName } from '@the-system/icons/react';
@@ -49,6 +50,8 @@ import { flattenListBoxItems, isListBoxSection, listBoxOptionId, type ListBoxIte
 import { Spinner } from '../Spinner';
 import { useControllable } from '../../internal/useControllable';
 import { useThemedLayer } from './popupLayer';
+import { useMotion } from '../../internal/motion';
+import { useRowGlide, useStaggerOnOpen } from '../ListBox/selectionMotion';
 
 export type SelectSize = Extract<Size, 'sm' | 'md' | 'lg'>;
 export type SelectShape = Extract<Shape, 'default' | 'pill'>;
@@ -174,6 +177,19 @@ export function Select({
   const shown = open && !inert;
   const listSize = size === 'sm' ? 'sm' : 'md';
 
+  // menu-rows: the rows arrive one stagger step after the surface. row-glide: the lit row's fill travels.
+  const glideRef = useRowGlide({ rows: "[data-part='item']", lit: { attribute: 'data-highlighted' } });
+  const contentRef = useStaggerOnOpen("[data-part='viewport'] [data-part='item']", glideRef);
+  // picker-value-roll: a new value rolls up into the trigger. Not on first paint.
+  const motion = useMotion();
+  const valueRef = useRef<HTMLSpanElement>(null);
+  const lastValue = useRef(value);
+  useLayoutEffect(() => {
+    if (lastValue.current === value) return;
+    lastValue.current = value;
+    staggerGroup([valueRef.current], { from: 'block', spring: 'snappy', mode: motion.mode('picker-value-roll') });
+  }, [value, motion]);
+
   const renderItem = (option: ListBoxOption) => {
     const descId = option.description ? `${listBoxOptionId(baseId, option.value)}-description` : undefined;
     return (
@@ -185,6 +201,8 @@ export function Select({
         data-part="item"
         aria-describedby={descId}
       >
+        {/* The row's fill, which glides from the last lit row (row-glide). Decorative, no part name. */}
+        <span aria-hidden="true" />
         <span data-part="indicator" aria-hidden="true">
           {value === option.value && <Icon name="check" size="md" />}
         </span>
@@ -208,6 +226,7 @@ export function Select({
   let drawn = 0;
   const content = (
     <RadixSelect.Content
+      ref={contentRef}
       position="popper"
       side="bottom"
       align="start"
@@ -291,7 +310,7 @@ export function Select({
           if (inert && (opens || types)) event.preventDefault();
         }}
       >
-        <RadixSelect.Value data-part="value" placeholder={placeholder ?? t.placeholder} />
+        <RadixSelect.Value ref={valueRef} data-part="value" placeholder={placeholder ?? t.placeholder} />
         <RadixSelect.Icon data-part="icon">
           {loading ? <Spinner size="sm" decorative /> : <Icon name="chevrons-up-down" size="md" />}
         </RadixSelect.Icon>

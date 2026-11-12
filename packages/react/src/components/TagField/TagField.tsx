@@ -66,6 +66,10 @@ import { FieldContext } from '../Field/context';
 import { FieldError } from '../FieldError/FieldError';
 import { ListBox, filterListBoxItems, flattenListBoxItems, listBoxOptionId, type ListBoxItem, type ListBoxOption } from '../ListBox';
 import { usePopupLayer } from '../Select/popupLayer';
+import { useFlipGroup, useStaggerOnOpen } from '../ListBox/selectionMotion';
+
+/** The tags and the input of the box, the items that move together. */
+const tagsAndInputOf = (root: Element) => Array.from(root.querySelectorAll(":scope > [data-part='tags'] > [data-part='tag'], :scope > [data-part='control']"));
 import { useControllable } from '../../internal/useControllable';
 
 export type TagFieldSize = Extract<Size, 'sm' | 'md' | 'lg'>;
@@ -418,12 +422,16 @@ export function TagField({
   };
 
   const layer = usePopupLayer(popupOpen);
+  // menu-rows: the suggestions arrive one stagger step after the popup surface, each time it opens.
+  const popupRef = useStaggerOnOpen("[data-ds='list-box'] [data-part='option']", layer.onContent);
+  // collection-flip: tags move, pop in and shrink out; the input closes the gap with them.
+  useFlipGroup(rootRef, { items: tagsAndInputOf });
   const activeId = popupOpen && highlightVisible && highlighted !== null ? listBoxOptionId(listId, highlighted) : undefined;
   const labelledBy = rest['aria-labelledby'] ?? (rest['aria-label'] ? undefined : field?.labelId);
 
   const popup = (
     <Popover.Content
-      ref={layer.onContent}
+      ref={popupRef}
       side="bottom"
       align="start"
       sideOffset={FIELD_GAP}
@@ -498,7 +506,8 @@ export function TagField({
               aria-disabled={control.disabled || undefined}
             >
               {tags.map((tag, i) => (
-                <span key={`${i}-${tag}`} data-part="tag">
+                // Keyed by the tag (tags are unique), so a removal keeps the elements of the tags after it.
+                <span key={tag} data-part="tag">
                   <span data-part="tag-label">{tag}</span>
                   {!control.readOnly && (
                     <CloseButton

@@ -147,6 +147,8 @@ export function Switch({
         data-part="control"
       >
         <span data-part="track">
+          {/* The on tint that crosses in (interaction switch-stretch, order 1.22): decorative, styled by Switch.css. */}
+          <span aria-hidden="true" />
           <RadixSwitch.Thumb data-part="thumb" />
         </span>
       </RadixSwitch.Root>

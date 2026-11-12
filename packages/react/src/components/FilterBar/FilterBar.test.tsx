@@ -37,7 +37,7 @@ describe('FilterBar', () => {
     expect(el.querySelector(':scope > [data-part="search"]')?.getAttribute('data-ds')).toBe('search-field');
     expect(screen.getByRole('group', { name: 'Filters' }).getAttribute('data-part')).toBe('filters');
     expect(el.querySelector(':scope > [data-part="more"]')?.getAttribute('data-ds')).toBe('button');
-    expect(el.querySelector(':scope > [data-part="count"]')?.textContent).toBe('4 results');
+    expect(el.querySelector(':scope > [data-part="count"] > [data-visually-hidden]')?.textContent).toBe('4 results');
     expect(el.querySelector(':scope > [data-part="clear"]')).toBeNull();
     expect(el.querySelector(':scope > [data-part="end"]')?.textContent).toBe('end');
   });
@@ -52,7 +52,7 @@ describe('FilterBar', () => {
     expect(onValueChange).toHaveBeenLastCalledWith(['boards']);
     const el = root(container);
     expect(el.hasAttribute('data-active')).toBe(true);
-    expect(el.querySelector(':scope > [data-part="count"]')?.textContent).toBe('1 filter on');
+    expect(el.querySelector(':scope > [data-part="count"] > [data-visually-hidden]')?.textContent).toBe('1 filter on');
     expect(el.querySelector(':scope > [data-part="clear"]')?.getAttribute('data-ds')).toBe('button');
   });
 
@@ -69,7 +69,7 @@ describe('FilterBar', () => {
   it('a search query counts as active; clear all empties both and moves focus to the search box', async () => {
     const onClear = vi.fn();
     const { container } = render(<FilterBar search={{ 'aria-label': 'Search files', defaultValue: 'tour' }} filters={kinds} defaultValue={['images']} onClear={onClear} />);
-    expect(root(container).querySelector(':scope > [data-part="count"]')?.textContent).toBe('2 filters on');
+    expect(root(container).querySelector(':scope > [data-part="count"] > [data-visually-hidden]')?.textContent).toBe('2 filters on');
     await userEvent.click(screen.getByRole('button', { name: 'Clear filters' }));
     expect(onClear).toHaveBeenCalled();
     const box = screen.getByRole('searchbox', { name: 'Search files' }) as HTMLInputElement;
@@ -149,7 +149,7 @@ describe('FilterBar', () => {
       </Theme>,
     );
     expect(root(container).getAttribute('data-size')).toBe('sm');
-    expect(root(container).querySelector(':scope > [data-part="count"]')?.textContent).toBe('فلترين مفعلين، نتيجتين');
+    expect(root(container).querySelector(':scope > [data-part="count"] > [data-visually-hidden]')?.textContent).toBe('فلترين مفعلين، نتيجتين');
     expect(screen.getByRole('button', { name: 'مسح الفلاتر' })).toBeTruthy();
   });
 

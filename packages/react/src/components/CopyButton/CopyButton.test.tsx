@@ -121,7 +121,7 @@ describe('CopyButton', () => {
   });
 });
 
-describe('CopyButton swap (interaction copy-swap)', () => {
+describe('CopyButton result morph (interaction copy-swap)', () => {
   interface Call {
     el: Element;
     frames: Keyframe[];
@@ -137,7 +137,7 @@ describe('CopyButton swap (interaction copy-swap)', () => {
         finish = resolve;
       });
       calls.push({ el: this, frames, finish: () => finish() });
-      return { id: '', playState: 'running', finished, cancel: vi.fn() } as unknown as Animation;
+      return { id: '', playState: 'running', finished, cancel: vi.fn(), effect: { target: this } } as unknown as Animation;
     });
     Object.defineProperty(Element.prototype, 'animate', { configurable: true, value: animate });
     return { calls, restore: () => Reflect.deleteProperty(Element.prototype, 'animate') };
@@ -150,7 +150,7 @@ describe('CopyButton swap (interaction copy-swap)', () => {
     mockClipboard(undefined);
   });
 
-  it('rolls the copy icon out and the check in at once, without holding back the state or the status', async () => {
+  it('morphs the copy icon into the check and swells once, without holding back the state or the status', async () => {
     const { calls, restore } = mockAnimate();
     mockClipboard(vi.fn().mockResolvedValue(undefined));
     try {
@@ -166,22 +166,43 @@ describe('CopyButton swap (interaction copy-swap)', () => {
       expect(leaving?.tagName).toBe('SPAN');
       expect(leaving?.getAttribute('aria-hidden')).toBe('true');
       expect(leaving?.hasAttribute('data-part')).toBe(false);
-      const swaps = calls.filter((c) => JSON.stringify(c.frames).includes('translateY'));
-      expect(swaps).toHaveLength(2);
-      expect(swaps[0]?.el).toBe(part?.firstElementChild);
-      expect(swaps[1]?.el).toBe(leaving);
+      // The copy icon rolls up and out; the check turns in; the button swells.
+      const out = calls.find((c) => c.el === leaving);
+      expect(JSON.stringify(out?.frames)).toContain('translateY');
+      const inn = calls.find((c) => c.el === part?.firstElementChild);
+      expect(JSON.stringify(inn?.frames)).toContain('rotate(-45deg)');
+      const swell = calls.find((c) => c.el === el);
+      expect(JSON.stringify(swell?.frames)).toContain('--ds-scale-pop');
       // The leaving copy goes once its exit settles.
       await act(async () => {
         for (const c of calls) c.finish();
         for (let i = 0; i < 5; i += 1) await Promise.resolve();
       });
       expect(part?.querySelectorAll('[data-ds="icon"]')).toHaveLength(1);
-      // The return to idle swaps back the other way.
+      // The return to idle rolls the copy icon back in from above.
+      calls.length = 0;
       await act(async () => {
         vi.advanceTimersByTime(5000);
       });
       expect(el.getAttribute('data-state')).toBe('idle');
       expect(Array.from(part?.querySelectorAll('[data-ds="icon"]') ?? []).map((i) => i.getAttribute('data-icon'))).toEqual(['copy', 'check']);
+      const back = calls.find((c) => c.el === part?.firstElementChild);
+      expect(JSON.stringify(back?.frames)).toContain('translateY(calc(-1 *');
+    } finally {
+      restore();
+    }
+  });
+
+  it('shakes once after a failure', async () => {
+    const { calls, restore } = mockAnimate();
+    mockClipboard(vi.fn().mockRejectedValue(new Error('denied')));
+    try {
+      render(<CopyButton value="abc" />);
+      const el = screen.getByRole('button');
+      await click(el);
+      expect(el.getAttribute('data-state')).toBe('failed');
+      const shake = calls.find((c) => c.el === el);
+      expect(JSON.stringify(shake?.frames)).toContain('translateX');
     } finally {
       restore();
     }

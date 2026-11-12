@@ -27,14 +27,17 @@
 // inside a Button root they would belong to Button). No `<button>` is
 // written here.
 //
-// Motion, interaction "tab-slide" on the catalog pattern "tab-indicator":
-// the indicator lives in the active trigger. When the value changes, the
-// new indicator plays a FLIP through useMotion().play, so the active
-// style's preset sets its timing or turns it off: from the box it would
-// have in the previous trigger to its own, a translate and a scale with
-// origin 0 0, nothing else (no width or left). Boxes are measured, so RTL
-// needs nothing. Under reduced motion the pattern plays no motion and the
-// indicator jumps. Nothing waits for an animation event.
+// Motion, interaction "tab-slide" (order 1.22, proposed), the shared pill of
+// react/src/internal/indicator.ts: the indicator lives in the active
+// trigger. When the value changes, the new indicator slides from the box the
+// old one was drawn in (live, so a second change mid travel starts where
+// the pill is), stretching along its travel on the snappy spring, a
+// translate and a scale with the center origin, nothing else (no width or
+// left). The label it leaves dips to scale.anticipate and the label it
+// reaches pops past rest and settles. Boxes are measured relative to the
+// list (its scroll included), so RTL needs nothing. useMotion().mode lets
+// the style tune or turn it off; under reduced motion the indicator jumps.
+// Nothing waits for an animation event.
 import {
   createContext,
   use,
@@ -49,6 +52,7 @@ import {
 import { Tabs as RadixTabs } from 'radix-ui';
 import type { Emphasis, Size } from '@the-system/shared';
 import { renderSlotContent, type ButtonSlotContent } from '../Button/ButtonBase';
+import { followIndicator, useIndicatorTrack, type IndicatorTrack } from '../../internal/indicator';
 import { useMotion } from '../../internal/motion';
 import { useControllable } from '../../internal/useControllable';
 
@@ -69,6 +73,8 @@ interface TabsContextValue {
   triggers: Map<string, HTMLElement>;
   /** The value shown before the last change, or null on the first render. */
   previous: { current: string | null };
+  /** Where the indicator was last drawn, for the slide. */
+  track: IndicatorTrack;
 }
 
 const TabsContext = createContext<TabsContextValue | null>(null);
@@ -121,7 +127,8 @@ export function Tabs({
   const [value, setValue] = useControllable(valueProp, defaultValue, onValueChange);
   const triggers = useRef(new Map<string, HTMLElement>()).current;
   const previous = useRef<string | null>(null);
-  const ctx = useMemo<TabsContextValue>(() => ({ value, orientation, triggers, previous }), [value, orientation, triggers]);
+  const track = useIndicatorTrack();
+  const ctx = useMemo<TabsContextValue>(() => ({ value, orientation, triggers, previous, track }), [value, orientation, triggers, track]);
 
   return (
     <RadixTabs.Root
@@ -216,14 +223,13 @@ export function TabsTrigger({ value, start, count, children, ref, ...rest }: Tab
       }
     }
     const indicator = indicatorRef.current;
-    const prev = from !== null && from !== value ? ctx.triggers.get(from) : undefined;
-    if (!indicator || !prev) return;
-    // The trigger boxes stand in for the indicator's: it fills its trigger
-    // along the list (inset-inline 0 when horizontal, inset-block 0 when
-    // vertical), so the FLIP from one trigger box to the other moves it
-    // exactly, and a 2px line would be under the catalog's 4px minimum box.
-    motion.play(indicator, 'tab-indicator', 'tab-slide', { from: prev.getBoundingClientRect(), to: node.getBoundingClientRect() });
-  }, [active, value, ctx.previous, ctx.triggers, ctx.orientation, motion]);
+    if (!indicator || !list) return;
+    followIndicator(ctx.track, value, { el: indicator }, {
+      mode: motion.mode('tab-slide'),
+      anchor: list,
+      label: node.querySelector(':scope > [data-part="label"]'),
+    });
+  }, [active, value, ctx.previous, ctx.track, ctx.orientation, motion]);
 
   return (
     <RadixTabs.Trigger

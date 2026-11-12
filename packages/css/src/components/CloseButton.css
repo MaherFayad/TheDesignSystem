@@ -1,14 +1,35 @@
 /*
  * CloseButton: what differs from Button. The look is Button.css (the
- * neutral ghost of IconButton). Here: the square box.
+ * neutral ghost of IconButton). Here: the square box, and the turn of the
+ * glyph on hover.
+ *
+ * Private properties on the root:
+ *   --_close-button-turn   how far the close glyph turns on hover and
+ *                          keyboard focus (interaction close-turn), a
+ *                          quarter turn, so the glyph lands looking the
+ *                          same; a style sets it to 0deg to turn it off
  */
 @layer ds.base {
   /* [data-size][data-shape] are always present: they lift this rule over the Button size rules. */
   [data-ds='close-button'][data-size][data-shape] {
     --_button-padding-inline: 0;
+    --_close-button-turn: 0.25turn;
 
     flex: none;
     inline-size: max(var(--_button-height), var(--ds-size-target-min));
     min-inline-size: var(--ds-size-target-min);
+  }
+
+  /*
+   * The turn (interaction close-turn, order 1.22, proposed): on hover or
+   * keyboard focus the glyph turns a quarter turn on the snappy spring
+   * (Button.css times the icon part), passes its mark a little and
+   * settles; it turns back when the pointer leaves. The cross is the same
+   * after a quarter turn, so a fast move in and out never leaves it
+   * crooked. Under reduced motion the duration is 0ms and nothing is seen
+   * to move.
+   */
+  [data-ds='close-button'][data-size][data-shape]:is(:hover, :focus-visible):not([data-disabled]) {
+    --_button-turn: var(--_close-button-turn);
   }
 }

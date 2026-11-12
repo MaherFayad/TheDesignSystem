@@ -9,6 +9,11 @@
 // 200ms on an ease out. A field error shakes over duration.slow (180ms), not
 // duration.roll; marks land on ease.out; the list stagger, which would run
 // past 200ms, is a plain fade.
+//
+// Order 1.22 (proposed): Neutral's springs settle in 150 to 220ms with a small
+// overshoot on the bouncy spring (about 6%), a 24ms stagger step, a pop to
+// 1.05 and short travel. The rows above keep the catalog patterns on ease
+// out.
 import type { StyleMotionPreset } from '@the-system/motion';
 
 const motion: StyleMotionPreset = {
@@ -25,7 +30,7 @@ const motion: StyleMotionPreset = {
     dialog: { mode: 'full', enter: { easing: 'ease.out' } },
     'list-stagger': { mode: 'reduced' },
     swap: { mode: 'full', easing: 'ease.out' },
-    pop: { mode: 'full', easing: 'ease.out' },
+    pop: { mode: 'full', duration: 'duration.base', easing: 'ease.out' },
     shake: { mode: 'full', duration: 'duration.slow', easing: 'ease.out' },
   },
 };

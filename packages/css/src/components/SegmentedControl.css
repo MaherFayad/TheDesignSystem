@@ -26,8 +26,10 @@
  * height fits inside the track, the corners nest in the track's, the fill is
  * the ghost fill (no fill at rest) because the thumb draws the selection,
  * and the selected text is the bright text. Only the indicator moves, with
- * transform, through the `tab-indicator` pattern; it jumps under reduced
- * motion.
+ * transform, through the shared pill (interaction tab-slide, order 1.22,
+ * proposed): it slides on the snappy spring, stretched along its travel, and
+ * keeps the default transform origin the slide is worked out for. It jumps
+ * under reduced motion.
  */
 @layer ds.base {
   [data-ds='segmented-control'] {
@@ -137,7 +139,8 @@
     --_button-radius: var(--_segmented-control-item-radius);
     --_button-padding-inline: var(--ds-space-l);
 
-    min-inline-size: 0;
+    /* min-content: an item never shrinks below its longest word, so words stay whole (review B4). */
+    min-inline-size: min-content;
     block-size: auto;
     min-block-size: max(var(--_button-height), var(--ds-size-target-min));
     padding-block: var(--ds-space-4xs);
@@ -152,7 +155,8 @@
   [data-ds='segmented-control'] > [data-ds='toggle-button'][data-part='item'] > [data-part='label'] {
     overflow-x: visible;
     white-space: normal;
-    overflow-wrap: anywhere;
+    /* break-word keeps whole words when there is room (review B4): anywhere split "year" at 320px. */
+    overflow-wrap: break-word;
     text-align: center;
   }
 
@@ -162,6 +166,13 @@
 
   [data-ds='segmented-control'][data-size='lg'] > [data-ds='toggle-button'][data-part='item'] {
     --_button-padding-inline: var(--ds-space-xl);
+  }
+
+  /* On a phone the items trade padding for room, so five whole words fit at 320px (review B4). */
+  @media (width < 30rem) { /* breakpoint.phone */
+    [data-ds='segmented-control'] > [data-ds='toggle-button'][data-part='item'] {
+      --_button-padding-inline: var(--ds-space-2xs);
+    }
   }
 
   /* An icon only item stays square. */
@@ -195,11 +206,19 @@
 
   /* ------------------------------------------------------------ reduced motion, forced colors */
 
-  /* A guard: the thumb has no transition; it moves only through the motion catalog, which plays nothing under reduced motion. */
+  /*
+   * A guard: the thumb has no transition; it moves only through the shared
+   * pill, which plays nothing under reduced motion. Both the media query
+   * and the page setting (review B2).
+   */
   @media (prefers-reduced-motion: reduce) {
     [data-ds='segmented-control'] > [data-part='indicator'] {
       transition: none;
     }
+  }
+
+  :root[data-motion='reduce'] [data-ds='segmented-control'] > [data-part='indicator'] {
+    transition: none;
   }
 
   /*

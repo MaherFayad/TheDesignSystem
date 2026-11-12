@@ -29,7 +29,17 @@ import type { Size, Tone } from "@the-system/shared";
 import type { IconName } from "@the-system/icons";
 import { Icon } from "@the-system/icons/react";
 import { useTheme } from "../../theme";
+import { useMotion } from "../../internal/motion";
 import { Button } from "../Button";
+import { useFlipList } from "../AvatarGroup/useFlipList";
+import { popMark, useDigitRoll } from "../Stat/useDigitRoll";
+
+/** What moves when the list changes: the group labels and the entries, never a ghost on its way out. */
+const movers = (root: HTMLElement) => [
+  ...root.querySelectorAll(
+    '[data-part="group-label"]:not([inert] *), li[data-entry]:not([inert])',
+  ),
+];
 import {
   dayGroup,
   formatRelativeTime,
@@ -227,6 +237,7 @@ export function NotificationCenter({
   emptyBody,
   now: nowProp,
   lang,
+  ref,
   ...rest
 }: NotificationCenterProps) {
   const titleId = useId();
@@ -241,8 +252,32 @@ export function NotificationCenter({
   const Heading = `h${headingLevel}` as const;
   const GroupHeading = `h${headingLevel + 1}` as "h3" | "h4" | "h5" | "h6";
   const groups = groupItems(items, now, words.groups);
+  // notification-change (order 1.22): new entries pop in, removed ones shrink
+  // away, the rest slide to their place (FLIP); the unread count rolls.
+  const motion = useMotion();
+  const mode = motion.mode("notification-change");
+  const signature = groups
+    .map((g) => `${g.key}:${g.items.map((i) => i.id).join(",")}`)
+    .join("|");
+  const own = useFlipList<HTMLElement>(movers, signature, mode);
+  const countText = unread > 0 ? words.count(unread) : undefined;
+  // Only the number rolls: the words stay whole, so Arabic letters keep their joins.
+  const digits = String(unread);
+  const at = countText?.indexOf(digits) ?? -1;
+  const countRef = useDigitRoll<HTMLSpanElement>(
+    unread > 0 ? digits : undefined,
+    mode,
+    (_d, host) => popMark(host.closest("[data-part=\"count\"]"), mode),
+    unread,
+  );
+  const setRef = (node: HTMLElement | null) => {
+    own.current = node;
+    if (typeof ref === "function") return ref(node);
+    if (ref) ref.current = node;
+  };
   return (
     <section
+      ref={setRef}
       aria-labelledby={titleId}
       {...rest}
       lang={lang}
@@ -258,7 +293,20 @@ export function NotificationCenter({
         <Heading data-part="title" id={titleId} ref={titleRef} tabIndex={-1}>
           {title ?? words.title}
         </Heading>
-        {unread > 0 && <span data-part="count">{words.count(unread)}</span>}
+        {unread > 0 && (
+          <span data-part="count">
+            <span data-visually-hidden="">{countText}</span>
+            {at < 0 ? (
+              <span aria-hidden="true">{countText}</span>
+            ) : (
+              <span aria-hidden="true">
+                {countText?.slice(0, at)}
+                <span ref={countRef}>{digits}</span>
+                {countText?.slice(at + digits.length)}
+              </span>
+            )}
+          </span>
+        )}
         {onMarkAllRead !== undefined && unread > 0 && (
           <Button
             data-part="mark-all"

@@ -145,6 +145,46 @@
         "unit": "s"
       },
       "$description": "One loop of a status pulse. Three loops end before five seconds (SC 2.2.2)."
+    },
+    "spring-soft": {
+      "$type": "duration",
+      "$value": {
+        "value": 220,
+        "unit": "ms"
+      },
+      "$description": "Settle time of the soft spring: a reveal that eases in with no overshoot. Order 1.22, proposed."
+    },
+    "spring-snappy": {
+      "$type": "duration",
+      "$value": {
+        "value": 180,
+        "unit": "ms"
+      },
+      "$description": "Settle time of the snappy spring: a control answering a press or a toggle. Order 1.22, proposed."
+    },
+    "spring-bouncy": {
+      "$type": "duration",
+      "$value": {
+        "value": 220,
+        "unit": "ms"
+      },
+      "$description": "Settle time of the bouncy spring: a mark, a badge or a popover that lands with an overshoot. Order 1.22, proposed."
+    },
+    "morph": {
+      "$type": "duration",
+      "$value": {
+        "value": 200,
+        "unit": "ms"
+      },
+      "$description": "One beat of a morph: a stateful button or an icon that changes shape from parts. Order 1.22, proposed."
+    },
+    "celebrate": {
+      "$type": "duration",
+      "$value": {
+        "value": 220,
+        "unit": "ms"
+      },
+      "$description": "The one time beat when progress completes or a value is confirmed. Order 1.22, proposed."
     }
   },
   "delay": {
@@ -177,48 +217,111 @@
       "$extensions": {
         "ds.motion": false
       }
+    },
+    "stagger": {
+      "$type": "duration",
+      "$value": {
+        "value": 24,
+        "unit": "ms"
+      },
+      "$description": "Step between the parts of a staggered group (a title, a body, actions; the rows of a list). Capped at six steps in code. Order 1.22, proposed."
     }
   },
   "ease": {
     "default": {
       "$type": "cubicBezier",
-      "$value": [0.25, 0.1, 0.25, 1],
+      "$value": [
+        0.25,
+        0.1,
+        0.25,
+        1
+      ],
       "$description": "The CSS ease keyword as a curve."
     },
     "out": {
       "$type": "cubicBezier",
-      "$value": [0, 0, 0.58, 1],
+      "$value": [
+        0,
+        0,
+        0.58,
+        1
+      ],
       "$description": "The CSS ease-out keyword as a curve."
     },
     "in": {
       "$type": "cubicBezier",
-      "$value": [0.42, 0, 1, 1],
+      "$value": [
+        0.42,
+        0,
+        1,
+        1
+      ],
       "$description": "The CSS ease-in keyword as a curve."
     },
     "standard": {
       "$type": "cubicBezier",
-      "$value": [0.4, 0, 0.2, 1],
+      "$value": [
+        0.4,
+        0,
+        0.2,
+        1
+      ],
       "$description": "Zoom and pan animations."
     },
     "emphasized": {
       "$type": "cubicBezier",
-      "$value": [0.16, 1, 0.3, 1],
+      "$value": [
+        0.16,
+        1,
+        0.3,
+        1
+      ],
       "$description": "Menu enter."
     },
     "exit": {
       "$type": "cubicBezier",
-      "$value": [0.4, 0, 1, 1],
+      "$value": [
+        0.4,
+        0,
+        1,
+        1
+      ],
       "$description": "Menu exit."
     },
     "reveal": {
       "$type": "cubicBezier",
-      "$value": [0.22, 1, 0.36, 1],
+      "$value": [
+        0.22,
+        1,
+        0.36,
+        1
+      ],
       "$description": "Scroll reveals and the hero headline: a long ease out that settles softly."
     },
     "window": {
       "$type": "cubicBezier",
-      "$value": [0.2, 0.8, 0.2, 1],
+      "$value": [
+        0.2,
+        0.8,
+        0.2,
+        1
+      ],
       "$description": "Window open, close, zoom and minimize. A quick settle with a soft end."
+    },
+    "spring-soft": {
+      "$type": "string",
+      "$value": "linear(0, 0.056, 0.176, 0.314, 0.447, 0.564, 0.663, 0.742, 0.805, 0.854, 0.891, 0.92, 0.941, 0.957, 0.969, 0.977, 0.983, 0.988, 0.991, 0.994, 1)",
+      "$description": "The soft spring as a CSS linear() curve. Play it over duration.spring-soft. Order 1.22, proposed."
+    },
+    "spring-snappy": {
+      "$type": "string",
+      "$value": "linear(0, 0.054, 0.176, 0.326, 0.476, 0.611, 0.725, 0.816, 0.885, 0.935, 0.969, 0.992, 1.005, 1.012, 1.015, 1.015, 1.013, 1.011, 1.009, 1.007, 1)",
+      "$description": "The snappy spring as a CSS linear() curve. Play it over duration.spring-snappy. Order 1.22, proposed."
+    },
+    "spring-bouncy": {
+      "$type": "string",
+      "$value": "linear(0, 0.049, 0.168, 0.321, 0.48, 0.63, 0.76, 0.865, 0.945, 1.001, 1.036, 1.056, 1.063, 1.062, 1.056, 1.046, 1.036, 1.026, 1.018, 1.011, 1)",
+      "$description": "The bouncy spring as a CSS linear() curve, with an overshoot. Play it over duration.spring-bouncy. Order 1.22, proposed."
     }
   },
   "spring": {
@@ -266,6 +369,85 @@
         "$type": "number",
         "$value": 1
       }
+    },
+    "soft": {
+      "stiffness": {
+        "$type": "number",
+        "$value": 1176,
+        "$description": "Soft spring, no overshoot. Order 1.22, proposed."
+      },
+      "damping": {
+        "$type": "number",
+        "$value": 68.6
+      },
+      "mass": {
+        "$type": "number",
+        "$value": 1
+      }
+    },
+    "snappy": {
+      "stiffness": {
+        "$type": "number",
+        "$value": 1623,
+        "$description": "Snappy spring, a small overshoot. Order 1.22, proposed."
+      },
+      "damping": {
+        "$type": "number",
+        "$value": 64.5
+      },
+      "mass": {
+        "$type": "number",
+        "$value": 1
+      }
+    },
+    "bouncy": {
+      "stiffness": {
+        "$type": "number",
+        "$value": 980,
+        "$description": "Bouncy spring, the largest overshoot of a style. Order 1.22, proposed."
+      },
+      "damping": {
+        "$type": "number",
+        "$value": 41.3
+      },
+      "mass": {
+        "$type": "number",
+        "$value": 1
+      }
+    }
+  },
+  "distance": {
+    "nudge": {
+      "$type": "dimension",
+      "$value": {
+        "value": 2,
+        "unit": "px"
+      },
+      "$description": "Travel of a hover nudge: an end arrow or a chevron that leans toward its action. Order 1.22, proposed."
+    },
+    "shift": {
+      "$type": "dimension",
+      "$value": {
+        "value": 4,
+        "unit": "px"
+      },
+      "$description": "Travel of a label, helper or error line that slides into place. Order 1.22, proposed."
+    },
+    "enter": {
+      "$type": "dimension",
+      "$value": {
+        "value": 6,
+        "unit": "px"
+      },
+      "$description": "Travel of overlay content (title, body, actions) as it staggers in. Order 1.22, proposed."
+    },
+    "lift": {
+      "$type": "dimension",
+      "$value": {
+        "value": 2,
+        "unit": "px"
+      },
+      "$description": "How far a card or tile rises under the pointer. Order 1.22, proposed."
     }
   }
 }

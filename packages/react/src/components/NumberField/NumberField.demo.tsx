@@ -29,7 +29,8 @@ export default function NumberFieldDemo() {
         {shapes.map((shape) => (
           <DemoGrid key={shape} min="10rem">
             {sizes.map((size) => (
-              <NumberField key={size} size={size} shape={shape} aria-label={`Quantity, ${size}, ${shape}`} defaultValue={4} min={0} />
+              // English copy names its steppers in English too, in an Arabic page (the stepper word follows locale).
+              <NumberField key={size} size={size} shape={shape} locale="en" aria-label={`Quantity, ${size}, ${shape}`} defaultValue={4} min={0} />
             ))}
           </DemoGrid>
         ))}

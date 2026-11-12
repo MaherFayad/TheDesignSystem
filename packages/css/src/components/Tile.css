@@ -14,8 +14,22 @@
  *                 -border-color, -select and -ring (the selected and the
  *                 focus ring, inset, both drawn by ::before), -title-size
  *
+ *                 -lift, -lift-scale (a name outside the list in anatomy.md:
+ *                 the lift's scale), -duration, -ease, -glow, -glow-size,
+ *                 -glow-x and -glow-y (the pointer highlight; Tile.tsx writes
+ *                 the last two on the highlight span)
+ *
  * The grid clips its tiles to its own radius, so the focus ring and the
  * selected ring are drawn inside the tile, never outside.
+ *
+ * Motion, interaction card-lift (order 1.22, proposed), as on Card: an
+ * interactive tile rises distance.lift and grows to scale.lift on the soft
+ * spring (Studio's lift tokens are rest, so its tiles only change tone), and
+ * a soft highlight on a decorative span (aria-hidden, empty, the last child)
+ * follows the pointer by transform. A style turns it off with --_tile-lift
+ * 0px, --_tile-lift-scale 1 and --_tile-glow transparent. Under reduced
+ * motion (media query or data-motion="reduce") nothing moves and the
+ * highlight is not drawn.
  */
 @layer ds.base {
   [data-ds='tile'] {
@@ -28,6 +42,14 @@
     --_tile-select: 0 0 0 0 transparent;
     --_tile-ring: 0 0 0 0 transparent;
     --_tile-title-size: var(--ds-font-size-m);
+    --_tile-lift: calc(-1 * var(--ds-distance-lift));
+    --_tile-lift-scale: var(--ds-scale-lift);
+    --_tile-duration: var(--ds-duration-spring-soft);
+    --_tile-ease: var(--ds-ease-spring-soft);
+    --_tile-glow: var(--ds-color-bg-overlay-10);
+    --_tile-glow-size: calc(4 * var(--ds-size-control-lg));
+    --_tile-glow-x: 0px;
+    --_tile-glow-y: 0px;
 
     position: relative;
     display: grid;
@@ -51,6 +73,34 @@
     font-family: var(--ds-font-family-sans);
     font-size: var(--ds-font-size-s);
     line-height: var(--ds-font-leading-normal);
+    transition: transform var(--_tile-duration) var(--_tile-ease);
+  }
+
+  /* card-lift: the pointer highlight, a decorative span Tile.tsx adds as the last child. */
+  [data-ds='tile'] > span[aria-hidden='true']:empty:last-child {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    border-radius: inherit;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity var(--ds-duration-moderate) var(--ds-ease-out);
+  }
+
+  [data-ds='tile'] > span[aria-hidden='true']:empty:last-child::before {
+    content: '';
+    position: absolute;
+    inset-block-start: 0;
+    inset-inline-start: 0;
+    inline-size: var(--_tile-glow-size);
+    block-size: var(--_tile-glow-size);
+    border-radius: var(--ds-radius-pill);
+    background-image: radial-gradient(closest-side, var(--_tile-glow), transparent);
+    transform: translate(calc(var(--_tile-glow-x) - 50%), calc(var(--_tile-glow-y) - 50%));
+  }
+
+  [data-ds='tile']:is([data-interactive], :has(> [data-part='title'] > [data-part='link'])):hover > span[aria-hidden='true']:empty:last-child {
+    opacity: 1;
   }
 
   /*
@@ -153,6 +203,34 @@
 
   [data-ds='tile']:is([data-interactive], :has(> [data-part='title'] > [data-part='link'])):hover {
     --_tile-bg: var(--_tile-bg-hover);
+
+    transform: translateY(var(--_tile-lift)) scale(var(--_tile-lift-scale));
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    [data-ds='tile'] {
+      transition: none;
+    }
+
+    [data-ds='tile']:is([data-interactive], :has(> [data-part='title'] > [data-part='link'])):hover {
+      transform: none;
+    }
+
+    [data-ds='tile'] > span[aria-hidden='true']:empty:last-child {
+      display: none;
+    }
+  }
+
+  :root[data-motion='reduce'] [data-ds='tile'] {
+    transition: none;
+  }
+
+  :root[data-motion='reduce'] [data-ds='tile']:is([data-interactive], :has(> [data-part='title'] > [data-part='link'])):hover {
+    transform: none;
+  }
+
+  :root[data-motion='reduce'] [data-ds='tile'] > span[aria-hidden='true']:empty:last-child {
+    display: none;
   }
 
   /* Selected: one 2px ring. */
@@ -182,6 +260,11 @@
   @media (forced-colors: active) {
     [data-ds='tile'] {
       border-color: CanvasText;
+      transition: none;
+    }
+
+    [data-ds='tile'] > span[aria-hidden='true']:empty:last-child {
+      display: none;
     }
 
     [data-ds='tile'][data-selected] {

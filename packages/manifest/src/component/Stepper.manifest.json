@@ -184,7 +184,15 @@
     "opacity.disabled",
     "duration.base",
     "ease.out",
-    "breakpoint.phone"
+    "breakpoint.phone",
+    "duration.spring-snappy",
+    "ease.spring-snappy",
+    "duration.spring-bouncy",
+    "ease.spring-bouncy",
+    "duration.spring-soft",
+    "ease.spring-soft",
+    "scale.stretch",
+    "scale.anticipate"
   ],
   "motion": "tab-indicator",
   "frameworks": {
@@ -192,7 +200,7 @@
       "status": "ready",
       "behavior": "hand built ol; state from packages/shared/src/stepper.ts; reachable steps are system Buttons (asChild for links)",
       "example": "Stepper.demo.tsx",
-      "note": "Motion tab-indicator: the connector fill scales from the start side when a step completes; under reduced motion it swaps at once."
+      "note": "Motion tab-indicator: the connector fill scales from the start side when a step completes; under reduced motion it swaps at once. Round 2 (order 1.22, proposed), interaction stepper-travel: a ring on the indicator's ::after, drawn only while it travels, slides from the old current indicator to the new one (internal/indicator.ts, ghost form), the new indicator pops, and the connector fill moves on the soft spring."
     },
     "angular": {
       "status": "ready",

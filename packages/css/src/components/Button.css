@@ -22,11 +22,41 @@
  *   --_button-ring                           the focus ring, a box shadow
  *   --_button-decoration, -decoration-hover  the link underline color
  *   --_button-tone-*                         the colors of one tone
- *   --_button-duration, -ease                motion plumbing: the timing of
- *                                            the press (button-press)
+ *   --_button-duration-in, -ease-in          motion plumbing: the press of
+ *                                            the root (button-press), quick
+ *                                            and with no overshoot
+ *   --_button-duration-out, -ease-out        the release of the root: the
+ *                                            bouncy spring, so it passes rest
+ *                                            and settles
+ *   --_button-duration, -ease                the moves of the parts (the
+ *                                            nudge, the turn, the dip): the
+ *                                            snappy spring
  *   --_button-press-scale                    the scale of a pressed control,
  *                                            scale.press; a style sets it to
  *                                            1 to turn the press off
+ *   --_button-part-press                     the scale of the parts (icon,
+ *                                            start, end, label) while the
+ *                                            control is pressed. 1 on a lone
+ *                                            control; an attached segment
+ *                                            (ButtonGroup, SplitButton) keeps
+ *                                            its box still and dips its
+ *                                            parts to scale.anticipate
+ *   --_button-part-scale                     the parts' scale now: 1, or
+ *                                            -part-press while pressed
+ *   --_button-shift                          how far the end part nudges
+ *                                            toward its action on hover,
+ *                                            distance.nudge (button-nudge)
+ *   --_button-nudge                          the end part's nudge now: 0, or
+ *                                            -shift on hover
+ *   --_button-dir                            1, or -1 in right to left text
+ *   --_button-motion                         1 plays every transition of the
+ *                                            base, 0 turns them all off (a
+ *                                            style's off row): each duration
+ *                                            is multiplied by it
+ *   --_button-turn                           the angle of the icon part now.
+ *                                            A parent or a thin file sets it:
+ *                                            the open SplitButton chevron,
+ *                                            the CloseButton on hover
  *
  * Every rule that sets a rest color also sets its hover color: the hover
  * state assigns `--_button-bg: var(--_button-bg-hover)`, so a hover value
@@ -66,6 +96,15 @@
     --_button-shadow: 0 0 transparent;
     --_button-decoration: var(--ds-color-border-control);
     --_button-decoration-hover: currentColor;
+    --_button-duration: var(--ds-duration-spring-snappy);
+    --_button-ease: var(--ds-ease-spring-snappy);
+    --_button-part-press: 1;
+    --_button-part-scale: 1;
+    --_button-shift: var(--ds-distance-nudge);
+    --_button-nudge: 0px;
+    --_button-dir: 1;
+    --_button-turn: 0deg;
+    --_button-motion: 1;
 
     position: relative;
     display: inline-flex;
@@ -107,7 +146,28 @@
 
   :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button'], [data-ds='close-button'], [data-ds='copy-button'], [data-ds='floating-action-button']) > [data-part] {
     position: relative;
-    transition: opacity var(--ds-duration-fast) var(--ds-ease-default);
+    transition:
+      opacity calc(var(--ds-duration-fast) * var(--_button-motion)) var(--ds-ease-default),
+      transform calc(var(--_button-duration) * var(--_button-motion)) var(--_button-ease);
+  }
+
+  /*
+   * The parts that move (order 1.22, proposed): every one takes the part
+   * scale (the dip of a pressed segment); the icon takes the turn; the end
+   * part takes the nudge along the reading direction. One transform each,
+   * so the three never fight. The spinner and the status are not in the
+   * list: the spinner spins on its own keyframes.
+   */
+  :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button'], [data-ds='close-button'], [data-ds='copy-button'], [data-ds='floating-action-button']) > :is([data-part='start'], [data-part='label']) {
+    transform: scale(var(--_button-part-scale));
+  }
+
+  :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button'], [data-ds='close-button'], [data-ds='copy-button'], [data-ds='floating-action-button']) > [data-part='icon'] {
+    transform: rotate(var(--_button-turn)) scale(var(--_button-part-scale));
+  }
+
+  :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button'], [data-ds='close-button'], [data-ds='copy-button'], [data-ds='floating-action-button']) > [data-part='end'] {
+    transform: translateX(calc(var(--_button-nudge) * var(--_button-dir))) scale(var(--_button-part-scale));
   }
 
   /*
@@ -447,10 +507,10 @@
    * The icon tells the result: the success color after a copy, the danger
    * color after a failure. Not on a solid fill.
    *
-   * The icon swap (interaction copy-swap): while the result icon rolls in,
-   * CopyButton keeps the old icon for one swap in an unnamed aria-hidden
-   * span after it. Both sit in one grid cell, so they overlap and the width
-   * holds.
+   * The result morph (interaction copy-swap): while the result icon comes
+   * in, CopyButton keeps the old icon for one morph in an unnamed
+   * aria-hidden span after it. Both sit in one grid cell, so they overlap
+   * and the width holds.
    */
   [data-ds='copy-button'] > [data-part='icon'] {
     display: inline-grid;
@@ -460,6 +520,11 @@
 
   [data-ds='copy-button'] > [data-part='icon'] > * {
     grid-area: 1 / 1;
+  }
+
+  /* The leaving icon rests out of sight: the morph plays its way out and it never shows again before it goes. */
+  [data-ds='copy-button'] > [data-part='icon'] > span:not([data-ds]) {
+    opacity: 0;
   }
 
   [data-ds='copy-button'][data-state='copied']:not([data-emphasis='solid']) {
@@ -489,27 +554,64 @@
     --_button-height: max(var(--ds-size-control-lg), var(--ds-size-touch-android));
   }
 
-  /* ------------------------------------------------------------ press (interaction button-press, order 1.21) */
+  /* ------------------------------------------------------------ press (interaction button-press, orders 1.21 and 1.22) */
 
   /*
-   * Pointer down, or Space down (the browser keeps a button :active while
-   * Space is held), scales the control to scale.press from its center over
-   * duration.instant on ease.out. Release returns it the same way. ease.out
-   * has no overshoot, so a toggle settles in its new state with no second
-   * bounce. Enter activates on key down and draws no :active: ButtonRoot
+   * Anticipation: pointer down, or Space down (the browser keeps a button
+   * :active while Space is held), dips the control to scale.press from its
+   * center over duration.instant on ease.out. Action and settle: release
+   * springs it back on the bouncy spring (ease.spring-bouncy over
+   * duration.spring-bouncy), which passes rest a little and settles; Studio's
+   * spring is three steps. A rapid second press starts from wherever the
+   * spring is. Enter activates on key down and draws no :active: ButtonRoot
    * plays the press pattern for it. Never on a disabled or loading control.
+   * Every kind on the Button base presses: Button, IconButton, ToggleButton,
+   * CloseButton, CopyButton and FloatingActionButton.
    */
-  :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button'], [data-ds='copy-button']) {
+  :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button'], [data-ds='close-button'], [data-ds='copy-button'], [data-ds='floating-action-button']) {
     --_button-press-scale: var(--ds-scale-press);
-    --_button-duration: var(--ds-duration-instant);
-    --_button-ease: var(--ds-ease-out);
+    --_button-duration-in: var(--ds-duration-instant);
+    --_button-ease-in: var(--ds-ease-out);
+    --_button-duration-out: var(--ds-duration-spring-bouncy);
+    --_button-ease-out: var(--ds-ease-spring-bouncy);
 
+    /* scale(1) at rest, not none: with the press off (scale 1) the pressed value equals the rest value, so no empty transition starts. */
+    transform: scale(1);
     transform-origin: center;
-    transition: transform var(--_button-duration) var(--_button-ease);
+    transition: transform calc(var(--_button-duration-out) * var(--_button-motion)) var(--_button-ease-out);
   }
 
-  :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button'], [data-ds='copy-button']):active:not([data-disabled], [data-loading], [aria-disabled='true']) {
+  :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button'], [data-ds='close-button'], [data-ds='copy-button'], [data-ds='floating-action-button']):active:not([data-disabled], [data-loading], [aria-disabled='true']) {
+    --_button-part-scale: var(--_button-part-press);
+
     transform: scale(var(--_button-press-scale));
+    transition-duration: calc(var(--_button-duration-in) * var(--_button-motion));
+    transition-timing-function: var(--_button-ease-in);
+  }
+
+  :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button'], [data-ds='close-button'], [data-ds='copy-button'], [data-ds='floating-action-button']):dir(rtl) {
+    --_button-dir: -1;
+  }
+
+  /*
+   * The end nudge (interaction button-nudge, order 1.22): on hover or
+   * keyboard focus the end part (an arrow, a chevron) moves distance.nudge
+   * toward the inline end, the way the action goes, on the snappy spring,
+   * and springs back when the pointer leaves. Only the decorative part
+   * moves: the target stays still under the pointer.
+   */
+  [data-ds='button']:is(:hover, :focus-visible):not([data-disabled], [data-loading]) {
+    --_button-nudge: var(--_button-shift);
+  }
+
+  /*
+   * The loading morph (interaction button-morph, order 1.22). The rest look
+   * of each part per state: while loading the content sits at opacity 0
+   * under the spinner (below); once loading ends, a spinner that stays for
+   * its exit rests at opacity 0, so it never shows after the morph.
+   */
+  :is([data-ds='button'], [data-ds='icon-button'], [data-ds='floating-action-button']):not([data-loading]) > [data-part='spinner'] {
+    opacity: 0;
   }
 
   /* ------------------------------------------------------------ states: swap the private properties */
@@ -556,10 +658,24 @@
       animation: none;
     }
 
-    /* No press scale: the pressed color carries the state. */
-    :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button'], [data-ds='copy-button']) {
+    /* No press scale, no dip, no nudge, no turn: the pressed color carries the state. The duration tokens are 0ms here too. */
+    :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button'], [data-ds='close-button'], [data-ds='copy-button'], [data-ds='floating-action-button']) {
       --_button-press-scale: 1;
+      --_button-part-press: 1;
+      --_button-shift: 0px;
     }
+  }
+
+  /* The page's own reduced motion setting (data-motion="reduce" on the root) gets the same reduced form. */
+  :root[data-motion='reduce'] :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button'], [data-ds='close-button'], [data-ds='copy-button'], [data-ds='floating-action-button']) > [data-part='spinner'] {
+    animation: none;
+  }
+
+  /* No press scale, no dip, no nudge, no turn: the pressed color carries the state. The duration tokens are 0ms here too. */
+  :root[data-motion='reduce'] :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button'], [data-ds='close-button'], [data-ds='copy-button'], [data-ds='floating-action-button']) {
+    --_button-press-scale: 1;
+    --_button-part-press: 1;
+    --_button-shift: 0px;
   }
 
   /* Forced colors: the press scale and the icon swap draw the same in system colors, so they stay. */

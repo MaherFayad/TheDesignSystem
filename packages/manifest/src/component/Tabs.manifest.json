@@ -211,7 +211,15 @@
     "opacity.disabled",
     "scrollbar.thumb",
     "duration.medium",
-    "ease.standard"
+    "ease.standard",
+    "duration.spring-snappy",
+    "ease.spring-snappy",
+    "duration.spring-bouncy",
+    "ease.spring-bouncy",
+    "duration.spring-soft",
+    "ease.spring-soft",
+    "scale.stretch",
+    "scale.anticipate"
   ],
   "motion": "tab-indicator",
   "frameworks": {
@@ -219,7 +227,7 @@
       "status": "ready",
       "behavior": "radix:Tabs",
       "example": "Tabs.demo.tsx",
-      "note": "The indicator lives in the active trigger and plays a FLIP from the previous trigger with the Web Animations API (translate and scale only). It plays the tab-indicator catalog spec: duration.medium with ease.standard. Under reduced motion the duration token is 0ms and nothing plays."
+      "note": "The indicator lives in the active trigger. Round 2 (order 1.22, proposed), interaction tab-slide: the indicator slides with the shared pill of internal/indicator.ts, from the box the old one is drawn in to its own on the snappy spring, stretched along its travel by up to scale.stretch (translate and scale, center origin). The label it leaves dips and the one it reaches pops (scale.anticipate, added to its transform). Under reduced motion or a style's reduced mode nothing plays."
     },
     "angular": {
       "status": "planned",

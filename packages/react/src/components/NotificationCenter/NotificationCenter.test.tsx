@@ -47,7 +47,8 @@ describe('NotificationCenter', () => {
     const title = el.querySelector('[data-part="title"]');
     expect(title?.tagName).toBe('H2');
     expect(el.getAttribute('aria-labelledby')).toBe(title?.id);
-    expect(el.querySelector('[data-part="count"]')?.textContent).toBe('1 unread');
+    expect(el.querySelector('[data-part="count"] > [data-visually-hidden]')?.textContent).toBe('1 unread');
+    expect(el.querySelector('[data-part="count"] > [aria-hidden="true"]')?.textContent).toBe('1 unread');
     const labels = [...el.querySelectorAll('[data-part="group-label"]')].map((g) => [g.tagName, g.textContent]);
     expect(labels).toEqual([
       ['H3', 'Today'],
@@ -128,7 +129,7 @@ describe('NotificationCenter', () => {
     expect(el.getAttribute('data-size')).toBe('sm');
     expect([...el.querySelectorAll('[data-part="group-label"]')].map((g) => g.textContent)).toEqual(['الإشارات', 'النظام']);
     expect(el.querySelector('[data-part="title"]')?.textContent).toBe('التنبيهات');
-    expect(el.querySelector('[data-part="count"]')?.textContent).toBe('1 غير مقروءة');
+    expect(el.querySelector('[data-part="count"] > [data-visually-hidden]')?.textContent).toBe('1 غير مقروءة');
     expect(el.querySelector('[data-part="item-time"]')?.textContent).toMatch(/5/);
   });
 

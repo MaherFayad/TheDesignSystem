@@ -3,6 +3,7 @@ export * from './catalog';
 export * from './core';
 export * from './interactions';
 export * from './preset';
+export * from './primitives';
 export * from './spring';
 export * from './tokens';
 export * from './window';

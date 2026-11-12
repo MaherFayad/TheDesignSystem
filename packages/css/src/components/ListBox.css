@@ -35,7 +35,16 @@
  *   --_list-box-separator-color
  *   --_list-box-mark-weight                    the weight of the matched part
  *
- * No motion of its own: the popup that holds it carries the enter and exit.
+ * The popup that holds it carries the enter and exit.
+ *
+ * Interaction row-glide (order 1.22, proposed): each option holds an
+ * unnamed aria-hidden span as its first child, the glide layer. With it
+ * the row's fill (--_list-box-option-bg, the highlight) is drawn on the
+ * layer, under the row's content, and ListBox.tsx moves the new lit row's
+ * layer from the old one's box on the snappy spring with a stretch along
+ * the travel (flipPlay). The row never moves. Without the layer (a port
+ * that does not render it) the row draws its own fill as before. In forced
+ * colors the row keeps the system Highlight and the layer is hidden.
  */
 @layer ds.base {
   [data-ds='list-box'] {
@@ -153,9 +162,36 @@
     opacity: 1;
   }
 
+  /*
+   * The highlight is marked by the ring as well as the fill, so a row lit by
+   * virtual focus (a Combobox, Autocomplete or TagField popup) shows where
+   * the keys act (WCAG 2.4.7, 1.4.11): the fill alone is under 3:1.
+   */
   [data-ds='list-box'] [data-part='option'][data-highlighted] {
     --_list-box-option-bg: var(--_list-box-option-bg-highlight);
     --_list-box-option-fg: var(--_list-box-option-fg-highlight);
+    --_list-box-option-ring: inset 0 0 0 var(--ds-border-width-strong) var(--_list-box-option-ring-color);
+  }
+
+  /* row-glide: the layer under the row's content draws the fill; the row keeps its ring and veil. */
+  [data-ds='list-box'] [data-part='option']:has(> span[aria-hidden='true']:not([data-part])) {
+    isolation: isolate;
+  }
+
+  [data-ds='list-box'] [data-part='option'] > span[aria-hidden='true']:not([data-part]) {
+    position: absolute;
+    inset: 0;
+    /* Under the row's content, inside the row's own stacking context. */
+    z-index: calc(0 - var(--ds-z-raised));
+    border-radius: inherit;
+    background-color: var(--_list-box-option-bg);
+    pointer-events: none;
+  }
+
+  @media (forced-colors: none) {
+    [data-ds='list-box'] [data-part='option']:has(> span[aria-hidden='true']:not([data-part])) {
+      background-color: transparent;
+    }
   }
 
   /* The keyboard ring sits inside the row. The transparent outline shows in forced colors. */
@@ -295,7 +331,8 @@
       forced-color-adjust: none;
     }
 
-    [data-ds='list-box'] [data-part='option']::after {
+    [data-ds='list-box'] [data-part='option']::after,
+    [data-ds='list-box'] [data-part='option'] > span[aria-hidden='true']:not([data-part]) {
       display: none;
     }
 

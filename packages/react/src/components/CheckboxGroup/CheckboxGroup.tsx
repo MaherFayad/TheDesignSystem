@@ -1,5 +1,5 @@
 'use client';
-import { useCallback, useId, useMemo, useState, type ComponentProps, type ReactNode } from 'react';
+import { useCallback, useId, useMemo, useRef, useState, type ComponentProps, type ReactNode } from 'react';
 import { Icon } from '@the-system/icons/react';
 import { Checkbox, type CheckboxCheckedState, type CheckboxSize } from '../Checkbox/Checkbox';
 import { CheckboxGroupContext, type CheckboxGroupContextValue } from '../Checkbox/group-context';
@@ -50,6 +50,9 @@ function hasContent(node: ReactNode): boolean {
  * Items are Checkbox components with a `value`. They read their checked
  * state, size, name, disabled, invalid and read only from the group.
  */
+/** The most steps of the select all cascade: the last box starts within three delay.stagger. */
+const CASCADE_MAX_STEPS = 3;
+
 export function CheckboxGroup({
   legend,
   description,
@@ -87,12 +90,23 @@ export function CheckboxGroup({
     [valueProp, onValueChange],
   );
 
+  // check-draw stagger (capped at three steps, as list-stagger, so every mark shows within about 200ms): select all draws the boxes one delay.stagger apart (capped); one box alone draws at once.
+  const itemsRef = useRef<HTMLDivElement>(null);
+  const setSteps = useCallback((run: boolean) => {
+    const boxes = itemsRef.current?.querySelectorAll<HTMLElement>("[data-ds='checkbox']:not([data-part='select-all'])") ?? [];
+    boxes.forEach((box, i) => {
+      if (run) box.style.setProperty('--_checkbox-step', String(Math.min(i + 1, CASCADE_MAX_STEPS)));
+      else box.style.removeProperty('--_checkbox-step');
+    });
+  }, []);
+
   const toggle = useCallback(
     (itemValue: string, on: boolean) => {
+      setSteps(false);
       const without = value.filter((v) => v !== itemValue);
       commit(on ? [...without, itemValue] : without);
     },
-    [value, commit],
+    [value, commit, setSteps],
   );
 
   const register = useCallback((itemValue: string) => {
@@ -110,6 +124,7 @@ export function CheckboxGroup({
     checkedCount === 0 ? false : checkedCount === registered.length ? true : 'indeterminate';
 
   const onSelectAll = () => {
+    setSteps(true);
     if (allState === true) commit(value.filter((v) => !registered.includes(v)));
     else commit([...value, ...registered.filter((v) => !value.includes(v))]);
   };
@@ -136,7 +151,7 @@ export function CheckboxGroup({
             {description}
           </p>
         )}
-        <div data-part="items">
+        <div data-part="items" ref={itemsRef}>
           {hasContent(selectAll) && (
             <Checkbox
               label={selectAll}

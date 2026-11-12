@@ -483,7 +483,12 @@
         "window-zoom",
         "toast-enter",
         "toast-exit",
-        "pulse"
+        "pulse",
+        "spring-soft",
+        "spring-snappy",
+        "spring-bouncy",
+        "morph",
+        "celebrate"
       ]
     },
     {
@@ -493,7 +498,8 @@
       "added": [
         "peek-hide",
         "reveal-step",
-        "feedback"
+        "feedback",
+        "stagger"
       ]
     },
     {
@@ -513,6 +519,16 @@
       ]
     },
     {
+      "group": "ease",
+      "type": "string",
+      "names": [],
+      "added": [
+        "spring-soft",
+        "spring-snappy",
+        "spring-bouncy"
+      ]
+    },
+    {
       "group": "spring",
       "type": "number",
       "names": [
@@ -526,7 +542,17 @@
         "merge.damping",
         "merge.mass"
       ],
-      "added": []
+      "added": [
+        "soft.stiffness",
+        "soft.damping",
+        "soft.mass",
+        "snappy.stiffness",
+        "snappy.damping",
+        "snappy.mass",
+        "bouncy.stiffness",
+        "bouncy.damping",
+        "bouncy.mass"
+      ]
     },
     {
       "group": "opacity",
@@ -545,7 +571,24 @@
         "dialog-enter",
         "window-enter",
         "press",
-        "menu-enter"
+        "menu-enter",
+        "pop",
+        "stretch",
+        "lift",
+        "anticipate",
+        "enter",
+        "morph"
+      ]
+    },
+    {
+      "group": "distance",
+      "type": "dimension",
+      "names": [],
+      "added": [
+        "nudge",
+        "shift",
+        "enter",
+        "lift"
       ]
     },
     {

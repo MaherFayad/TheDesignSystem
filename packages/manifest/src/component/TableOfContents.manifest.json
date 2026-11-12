@@ -130,7 +130,10 @@
     "focus.shadow.ring",
     "dialog.height.max",
     "duration.medium",
-    "ease.standard"
+    "ease.standard",
+    "duration.spring-snappy",
+    "ease.spring-snappy",
+    "scale.stretch"
   ],
   "motion": "tab-indicator",
   "frameworks": {
@@ -138,7 +141,7 @@
       "status": "ready",
       "behavior": "nav with ol of anchors; IntersectionObserver in an effect; buildTree and activeHeading from @the-system/shared",
       "example": "TableOfContents.demo.tsx",
-      "note": "The indicator moves with a transform transition (tab-indicator); under reduced motion the duration is 0ms and the scroll is a jump."
+      "note": "The indicator moves with a transform transition (tab-indicator); under reduced motion the duration is 0ms and the scroll is a jump. Round 2 (order 1.22, proposed), interaction toc-travel: the bar moves on the snappy spring (CSS) and stretches along its travel from its trailing edge (a WAAPI stretch added to the transition)."
     },
     "angular": {
       "status": "planned",

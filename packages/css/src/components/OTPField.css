@@ -18,6 +18,15 @@
  *   time the glow in, --_otp-field-duration-out and --_otp-field-ease-out time
  *   it out, --_otp-field-enter-scale is the size it grows from.
  *
+ * Caret (interaction otp-caret, order 1.22, proposed): while the field has
+ * focus, the active empty cell draws a caret bar on its ::after, in
+ * --_otp-field-caret (the text color). The input's own caret is transparent,
+ * so this is the only caret. When focus moves on to the next cell, the bar
+ * arrives from --_otp-field-shift (distance.shift) toward the inline start
+ * and fades in on --_otp-field-duration and --_otp-field-ease (the snappy
+ * spring), so it reads as the caret moving on. It does not blink: nothing
+ * loops. A shift of 0px turns the travel off.
+ *
  * The ring is the active cell's own box shadow and shows at once (WCAG
  * 2.4.7). The glow sits on the cell's ::before: it fades in and grows, since
  * only transform and opacity may animate. A character pops into its cell
@@ -37,12 +46,16 @@
     --_otp-field-border-color-invalid: var(--ds-color-state-danger-text);
     --_otp-field-ring: var(--ds-focus-shadow-ring);
     --_otp-field-shadow-focus: var(--ds-elevation-input-focus);
-    --_otp-field-duration-in: var(--ds-duration-base);
-    --_otp-field-duration-out: var(--ds-duration-fast);
-    --_otp-field-ease-in: var(--ds-ease-out);
+    --_otp-field-duration-in: var(--ds-duration-spring-soft);
+    --_otp-field-duration-out: var(--ds-duration-quick);
+    --_otp-field-ease-in: var(--ds-ease-spring-soft);
     --_otp-field-ease-out: var(--ds-ease-exit);
-    --_otp-field-enter-scale: var(--ds-scale-dialog-enter);
+    --_otp-field-enter-scale: var(--ds-scale-enter);
     --_otp-field-separator-color: var(--ds-color-border-strong);
+    --_otp-field-caret: var(--ds-color-text-default);
+    --_otp-field-shift: var(--ds-distance-shift);
+    --_otp-field-duration: var(--ds-duration-spring-snappy);
+    --_otp-field-ease: var(--ds-ease-spring-snappy);
 
     position: relative;
     box-sizing: border-box;
@@ -168,6 +181,26 @@
       transform var(--_otp-field-duration-out) var(--_otp-field-ease-out);
   }
 
+  /* The caret of the active empty cell. The cells run left to right in every language, so it arrives from the left. */
+  [data-ds='otp-field']:focus-within > [data-part='cell'][data-active]:not([data-filled])::after {
+    content: '';
+    position: absolute;
+    inset-block: 25%;
+    inset-inline-start: calc(50% - var(--ds-border-width-strong) / 2);
+    inline-size: var(--ds-border-width-strong);
+    border-radius: var(--ds-radius-pill);
+    background-color: var(--_otp-field-caret);
+    pointer-events: none;
+    transition:
+      opacity var(--_otp-field-duration) var(--_otp-field-ease),
+      transform var(--_otp-field-duration) var(--_otp-field-ease);
+
+    @starting-style {
+      opacity: 0;
+      transform: translateX(calc(-1 * var(--_otp-field-shift)));
+    }
+  }
+
   [data-ds='otp-field'] > [data-part='separator'] {
     flex: none;
     inline-size: var(--ds-space-s);
@@ -234,7 +267,13 @@
   @media (prefers-reduced-motion: reduce) {
     [data-ds='otp-field'] {
       --_otp-field-enter-scale: 1;
+      --_otp-field-shift: 0px;
     }
+  }
+
+  :root[data-motion='reduce'] [data-ds='otp-field'] {
+    --_otp-field-enter-scale: 1;
+    --_otp-field-shift: 0px;
   }
 
   /*
@@ -250,6 +289,10 @@
 
     [data-ds='otp-field'] > [data-part='cell']::before {
       display: none;
+    }
+
+    [data-ds='otp-field'] > [data-part='cell']::after {
+      background-color: CanvasText;
     }
 
     [data-ds='otp-field'] > [data-part='separator'] {

@@ -14,12 +14,21 @@
  *   --_hover-card-bg, -fg, -border-color, -radius, -shadow, -blur
  *   --_hover-card-padding
  *   --_hover-card-arrow-width, -arrow-height
- *   --_hover-card-enter-x, -enter-y, -enter-scale
+ *   --_hover-card-enter-x, -enter-y, -enter-scale (enter-x is the inline twin of enter-y)
+ *   --_hover-card-shift        how far the card travels in from its trigger side
+ *   --_hover-card-item-shift   how far each piece of the preview rises as it arrives
  *   --_hover-card-duration-in, -duration-out, -ease-in, -ease-out
  *
- * Motion, pattern "menu-scale": as Popover, the card grows from 97% out of
- * the trigger side while it fades in. Only transform and opacity animate;
- * under reduced motion the animations are none.
+ * Motion, interaction "popover-spring" (pattern "menu-scale"), order 1.22,
+ * proposed: the same spring as Popover. The card travels distance.shift out
+ * of its trigger side and grows from scale.enter while it fades in, on the
+ * bouncy spring; the children of the body (a picture, a name, a line of
+ * text) then rise distance.shift one delay.stagger step apart on the soft
+ * spring, capped at four steps. Closing is faster (duration.fast) and all
+ * at once. Only transform and opacity animate. A style turns the travel and
+ * the scale off with --_hover-card-enter-scale: 1, --_hover-card-shift: 0px
+ * and --_hover-card-item-shift: 0px. Under reduced motion the animations are
+ * none.
  */
 @layer ds.base {
   [data-ds='theme'][data-hover-card-layer] {
@@ -37,12 +46,14 @@
     --_hover-card-padding: var(--ds-space-xl);
     --_hover-card-arrow-width: var(--ds-space-2xl);
     --_hover-card-arrow-height: calc(var(--ds-space-2xl) / 2);
-    --_hover-card-enter-x: 0;
-    --_hover-card-enter-y: 0;
-    --_hover-card-enter-scale: var(--ds-scale-press);
-    --_hover-card-duration-in: var(--ds-duration-base);
+    --_hover-card-enter-x: 0px;
+    --_hover-card-enter-y: 0px;
+    --_hover-card-enter-scale: var(--ds-scale-enter);
+    --_hover-card-shift: var(--ds-distance-shift);
+    --_hover-card-item-shift: var(--ds-distance-shift);
+    --_hover-card-duration-in: var(--ds-duration-spring-bouncy);
     --_hover-card-duration-out: var(--ds-duration-fast);
-    --_hover-card-ease-in: var(--ds-ease-out);
+    --_hover-card-ease-in: var(--ds-ease-spring-bouncy);
     --_hover-card-ease-out: var(--ds-ease-exit);
 
     position: relative;
@@ -74,23 +85,41 @@
   }
 
   [data-ds='hover-card'][data-side='bottom'] {
-    --_hover-card-enter-y: calc(var(--ds-space-2xs) * -1);
+    --_hover-card-enter-y: calc(var(--_hover-card-shift) * -1);
   }
 
   [data-ds='hover-card'][data-side='top'] {
-    --_hover-card-enter-y: var(--ds-space-2xs);
+    --_hover-card-enter-y: var(--_hover-card-shift);
   }
 
   [data-ds='hover-card'][data-side='right'] {
-    --_hover-card-enter-x: calc(var(--ds-space-2xs) * -1);
+    --_hover-card-enter-x: calc(var(--_hover-card-shift) * -1);
   }
 
   [data-ds='hover-card'][data-side='left'] {
-    --_hover-card-enter-x: var(--ds-space-2xs);
+    --_hover-card-enter-x: var(--_hover-card-shift);
   }
 
   [data-ds='hover-card'][data-state='open'] {
     animation: ds-hover-card-in var(--_hover-card-duration-in) var(--_hover-card-ease-in);
+  }
+
+  /* The pieces of the preview arrive in order after the card, capped at four steps. */
+  [data-ds='hover-card'][data-state='open'] > [data-part='body'] > * {
+    animation: ds-hover-card-part-in var(--ds-duration-spring-soft) var(--ds-ease-spring-soft) backwards;
+    animation-delay: min(calc(var(--ds-delay-stagger) * 4), var(--ds-duration-base));
+  }
+
+  [data-ds='hover-card'][data-state='open'] > [data-part='body'] > :nth-child(1) {
+    animation-delay: var(--ds-delay-stagger);
+  }
+
+  [data-ds='hover-card'][data-state='open'] > [data-part='body'] > :nth-child(2) {
+    animation-delay: min(calc(var(--ds-delay-stagger) * 2), var(--ds-duration-base));
+  }
+
+  [data-ds='hover-card'][data-state='open'] > [data-part='body'] > :nth-child(3) {
+    animation-delay: min(calc(var(--ds-delay-stagger) * 3), var(--ds-duration-base));
   }
 
   [data-ds='hover-card'][data-state='closed'] {
@@ -130,6 +159,18 @@
     }
   }
 
+  @keyframes ds-hover-card-part-in {
+    from {
+      opacity: 0;
+      transform: translateY(var(--_hover-card-item-shift));
+    }
+
+    /* Readable early: full opacity at 30%, the transform carries the rest. */
+    30% {
+      opacity: 1;
+    }
+  }
+
   @keyframes ds-hover-card-out {
     to {
       opacity: 0;
@@ -137,10 +178,17 @@
     }
   }
 
+  /* Reduced motion: the system setting and the page's own setting (data-motion="reduce" on the root element). */
   @media (prefers-reduced-motion: reduce) {
-    [data-ds='hover-card'][data-state] {
+    [data-ds='hover-card'][data-state],
+    [data-ds='hover-card'][data-state] > [data-part='body'] > * {
       animation: none;
     }
+  }
+
+  :root[data-motion='reduce'] [data-ds='hover-card'][data-state],
+  :root[data-motion='reduce'] [data-ds='hover-card'][data-state] > [data-part='body'] > * {
+    animation: none;
   }
 
   @media (prefers-contrast: more) {

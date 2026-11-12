@@ -28,6 +28,7 @@ import {
 } from 'react';
 import { Slot } from 'radix-ui';
 import type { Size } from '@the-system/shared';
+import { usePointerGlow } from '../Card/pointerGlow';
 
 export type TileSize = Extract<Size, 'sm' | 'md'>;
 export type TileHeadingLevel = 2 | 3 | 4 | 5 | 6;
@@ -77,16 +78,27 @@ export function Tile({ size = 'md', selected = false, asChild = false, children,
     [],
   );
   const Root = asChild ? Slot.Root : 'div';
+  const interactive = links > 0;
+  const { glow, onPointerMove } = usePointerGlow<HTMLDivElement>('tile', 'card-lift', rest.onPointerMove);
   return (
     <TileContext value={context}>
       <Root
         {...rest}
+        onPointerMove={interactive ? onPointerMove : rest.onPointerMove}
         data-ds="tile"
         data-size={size}
         data-interactive={links > 0 ? '' : undefined}
         data-selected={selected ? '' : undefined}
       >
-        {children}
+        {asChild ? (
+          children
+        ) : (
+          <>
+            {children}
+            {/* card-lift: the decorative highlight that follows the pointer (pointerGlow.ts). Not with asChild: the child owns its children. */}
+            {interactive && <span aria-hidden="true" ref={glow} />}
+          </>
+        )}
       </Root>
     </TileContext>
   );

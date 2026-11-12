@@ -34,13 +34,21 @@
 //   the reverse) keeps its own direction and truncates at its own end.
 // - Steps in the overflow menu are menu items: choosing one calls onNavigate,
 //   or, without it, sends the browser to the href.
-import type { HTMLAttributes, ReactElement, Ref } from 'react';
+// - Motion, interaction "nav-hover-follow" (order 1.22, proposed): each link
+//   step draws a hover pill on its ::before (Breadcrumbs.css). When the
+//   pointer moves from one step to the next, the shared pill
+//   (react/src/internal/indicator.ts) slides the new step's pill from the
+//   old one, stretched along the way, so the pill follows the pointer; the
+//   separator nudges toward the next step in CSS. No DOM is added.
+import { useCallback, useRef, type HTMLAttributes, type ReactElement, type Ref } from 'react';
 import { Icon } from '@the-system/icons/react';
 import type { Size } from '@the-system/shared';
 import { useTheme } from '../../theme';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '../DropdownMenu';
 import { IconButton } from '../IconButton';
 import { Link } from '../Link';
+import { useHoverFollow } from '../../internal/indicator';
+import { useMotion } from '../../internal/motion';
 
 export type BreadcrumbsSize = Extract<Size, 'sm' | 'md'>;
 
@@ -122,9 +130,20 @@ export function Breadcrumbs({
   const shown = new Set(plan.filter((p): p is number => p !== 'overflow'));
   const hidden = items.map((item, index) => ({ item, index })).filter(({ index }) => !shown.has(index));
   const last = items.length - 1;
+  const motion = useMotion();
+  const rootRef = useRef<HTMLElement | null>(null);
+  useHoverFollow(rootRef, { item: '[data-part="link"]:not([data-disabled])', pseudo: '::before', mode: () => motion.mode('nav-hover-follow') });
+  const setRootRef = useCallback(
+    (node: HTMLElement | null) => {
+      rootRef.current = node;
+      if (typeof ref === 'function') ref(node);
+      else if (ref) ref.current = node;
+    },
+    [ref],
+  );
 
   return (
-    <nav {...rest} ref={ref} data-ds="breadcrumbs" data-size={size} aria-label={label ?? rest['aria-label'] ?? t.label}>
+    <nav {...rest} ref={setRootRef} data-ds="breadcrumbs" data-size={size} aria-label={label ?? rest['aria-label'] ?? t.label}>
       <ol data-part="list">
         {plan.map((entry) => {
           if (entry === 'overflow') {

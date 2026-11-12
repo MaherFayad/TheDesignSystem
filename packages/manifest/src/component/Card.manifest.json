@@ -214,7 +214,7 @@
       "status": "ready",
       "behavior": "hand built, radix:Slot for asChild",
       "example": "Card.demo.tsx",
-      "note": "Motion: an interactive card rises by space.4xs on hover (transform only) and its hover veil fades in (opacity), off under reduced motion. Named fade-rise from the 1.11 catalog list; no catalog pattern covers a hover lift yet."
+      "note": "Motion (card-lift, order 1.22): an interactive card rises distance.lift and grows to scale.lift on the soft spring under the pointer, and a decorative aria-hidden span (last child, not with asChild) draws a highlight that follows the pointer by transform; off under reduced motion."
     },
     "angular": {
       "status": "planned",

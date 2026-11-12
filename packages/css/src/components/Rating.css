@@ -19,6 +19,16 @@
  *   --_rating-veil        the hover veil
  *   --_rating-now         on each item: the state rules point it at -fg, -fg-filled or -fg-hover
  *
+ * Motion (order 1.22, proposed):
+ *   rating-preview: a star that joins the hover preview dips to
+ *   scale.anticipate and springs back past rest on --_rating-duration and
+ *   --_rating-ease (the bouncy spring), so the fill runs toward the pointer.
+ *   --_rating-wait delays the star under the pointer by two stagger steps and
+ *   the one before it by one. A star that stays in the preview
+ *   does not replay. --_rating-enter-scale is the dip; 1 turns it off.
+ *   rating-fill: a pick pops the stars whose state changed, from code.
+ * The focus ring shows at once (WCAG 2.4.7); only the hover veil fades.
+ *
  * Never color alone: a filled star is a filled shape, an empty one an
  * outline. The filled colors keep 3:1 against the page (WCAG 1.4.11):
  * warning uses the warning text color, accent the primary border color.
@@ -33,6 +43,9 @@
     --_rating-fg-hover: var(--_rating-fg-filled);
     --_rating-ring: var(--ds-focus-shadow-ring);
     --_rating-veil: var(--ds-color-bg-overlay-10);
+    --_rating-duration: var(--ds-duration-spring-bouncy);
+    --_rating-ease: var(--ds-ease-spring-bouncy);
+    --_rating-enter-scale: var(--ds-scale-anticipate);
 
     display: inline-flex;
     flex-wrap: wrap;
@@ -113,7 +126,6 @@
     box-shadow: var(--_rating-ring);
     opacity: 0;
     pointer-events: none;
-    transition: opacity var(--ds-duration-base) var(--ds-ease-default);
   }
 
   /* The hover veil. */
@@ -155,11 +167,30 @@
     --_rating-now: var(--_rating-fg);
   }
 
+  /*
+   * rating-preview: the icons of the stars that join the preview dip and
+   * spring back. The star under the pointer waits two stagger steps and the
+   * one before it one step (--_rating-wait), so the fill reads as running
+   * toward the pointer.
+   */
+  [data-ds='rating']:not([data-readonly], [data-disabled]) > [data-part='item']:hover > [data-part='icon'],
+  [data-ds='rating']:not([data-readonly], [data-disabled]) > [data-part='item']:has(~ [data-part='item']:hover) > [data-part='icon'] {
+    animation: ds-rating-preview var(--_rating-duration) var(--_rating-ease) var(--_rating-wait, 0s) backwards;
+  }
+
+  [data-ds='rating']:not([data-readonly], [data-disabled]) > [data-part='item']:has(+ [data-part='item']:hover) {
+    --_rating-wait: var(--ds-delay-stagger);
+  }
+
+  [data-ds='rating']:not([data-readonly], [data-disabled]) > [data-part='item']:hover {
+    --_rating-wait: calc(2 * var(--ds-delay-stagger));
+  }
+
   [data-ds='rating']:not([data-readonly], [data-disabled]) > [data-part='item']:hover::after {
     opacity: 1;
   }
 
-  /* Focus: the ring fades in. The transparent outline shows in forced colors mode. */
+  /* Focus: the ring shows at once. The transparent outline shows in forced colors mode. */
   [data-ds='rating'] > [data-part='item']:focus-visible {
     outline: var(--ds-border-width-strong) solid transparent;
     outline-offset: calc(var(--ds-border-width-strong) * -1);
@@ -178,11 +209,33 @@
     cursor: not-allowed;
   }
 
+  @keyframes ds-rating-preview {
+    from {
+      transform: scale(var(--_rating-enter-scale));
+    }
+
+    to {
+      transform: none;
+    }
+  }
+
+  /* Reduced motion: the durations are 0ms, the veil does not fade and the stars do not dip. */
   @media (prefers-reduced-motion: reduce) {
-    [data-ds='rating'] > [data-part='item']::before,
+    [data-ds='rating'] {
+      --_rating-enter-scale: 1;
+    }
+
     [data-ds='rating'] > [data-part='item']::after {
       transition: none;
     }
+  }
+
+  :root[data-motion='reduce'] [data-ds='rating'] {
+    --_rating-enter-scale: 1;
+  }
+
+  :root[data-motion='reduce'] [data-ds='rating'] > [data-part='item']::after {
+    transition: none;
   }
 
   /*

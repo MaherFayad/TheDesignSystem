@@ -13,12 +13,22 @@
 // The status part is a StatusDot root carrying data-part="status", with its
 // label visually hidden. Avatar.css draws one shape per status on it, so the
 // status never rests on color alone (WCAG 1.4.1), forced colors included.
-import { useState, type CSSProperties, type HTMLAttributes, type ReactElement, type Ref } from 'react';
+//
+// Motion (order 1.22, interaction avatar-status, proposed): when the status
+// changes after the first paint, the status dot pops (scale.anticipate,
+// scale.pop, duration.celebrate) and a ring in the status color grows out of
+// it and fades, three loops of duration.pulse (4.2s), then it stops by
+// itself before five seconds; `pauseLoops()` also pauses it. A first paint
+// never pulses, so a page of avatars stays still.
+import { useLayoutEffect, useRef, useState, type CSSProperties, type HTMLAttributes, type ReactElement, type Ref } from 'react';
 import { Avatar as RadixAvatar } from 'radix-ui';
 import { Icon, type IconName } from '@the-system/icons/react';
 import { hasArabic, initials, toneIndex, type Shape, type Size, type Tone } from '@the-system/shared';
 import { useTheme } from '../../theme/hooks';
+import { play } from '@the-system/motion';
+import { useMotion } from '../../internal/motion';
 import { StatusDot } from '../StatusDot';
+import { popMark } from '../Stat/useDigitRoll';
 
 export type AvatarSize = Extract<Size, 'xs' | 'sm' | 'md' | 'lg'>;
 export type AvatarShape = Extract<Shape, 'default' | 'square'>;
@@ -113,6 +123,26 @@ export function Avatar({
   const accessibleName = statusWords ? `${name}${separator}${statusWords}` : name;
   const fallbackIcon: IconName | ReactElement | undefined = icon ?? (letters === '' ? 'user' : undefined);
 
+  const motion = useMotion();
+  const mode = motion.mode('avatar-status');
+  const statusRef = useRef<HTMLSpanElement>(null);
+  const lastStatus = useRef(status);
+  useLayoutEffect(() => {
+    const before = lastStatus.current;
+    lastStatus.current = status;
+    const dot = statusRef.current;
+    if (!dot || !status || before === status || mode !== 'full') return;
+    popMark(dot, mode);
+    const ring = dot.querySelector(':scope > [data-part="dot"]');
+    if (ring) {
+      play(
+        ring,
+        { keyframes: [{ opacity: 0.6, transform: 'none' }, { opacity: 0, transform: 'scale(2.5)' }], duration: 'duration.pulse', easing: 'ease.out', fill: 'none', origin: '50% 50%', iterations: 3, loopLimitMs: 5000 },
+        'avatar-status-pulse',
+      );
+    }
+  }, [status, mode]);
+
   const hueStyle = {
     '--_avatar-hue': `var(--ds-color-accent-${hue})`,
     ...style,
@@ -152,7 +182,7 @@ export function Avatar({
           fallbackIcon
         )}
       </RadixAvatar.Fallback>
-      {status && <StatusDot data-part="status" tone={status} size="sm" label={statusWords} hideLabel aria-hidden="true" />}
+      {status && <StatusDot ref={statusRef} data-part="status" tone={status} size="sm" label={statusWords} hideLabel aria-hidden="true" />}
     </RadixAvatar.Root>
   );
 }

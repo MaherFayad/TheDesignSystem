@@ -6,7 +6,10 @@
 import {
   cloneElement,
   isValidElement,
+  useCallback,
+  useLayoutEffect,
   useRef,
+  useState,
   type ButtonHTMLAttributes,
   type FocusEvent,
   type KeyboardEvent,
@@ -18,6 +21,7 @@ import {
 } from 'react';
 import { Slot } from 'radix-ui';
 import { Icon, type IconName } from '@the-system/icons/react';
+import { buttonMorph, settled } from '@the-system/motion';
 import type { Emphasis, Shape, Size, Tone } from '@the-system/shared';
 import { useButtonGroup } from '../ButtonGroup/ButtonGroupContext';
 import { NAVIGATION_KEYS } from '../../internal/keys';
@@ -80,7 +84,54 @@ export function ButtonLoading({ label }: { label: string }) {
 }
 
 /** The components that play the press (interaction button-press). Button.css scales them on :active. */
-const PRESS_DS: ReadonlySet<ButtonDs> = new Set(['button', 'icon-button', 'toggle-button', 'copy-button']);
+const PRESS_DS: ReadonlySet<ButtonDs> = new Set(['button', 'icon-button', 'toggle-button', 'close-button', 'copy-button', 'floating-action-button']);
+
+/** Sets a ref of any kind. */
+export function setRef<T>(ref: Ref<T> | undefined, value: T | null): void {
+  if (typeof ref === 'function') ref(value);
+  else if (ref && typeof ref === 'object') (ref as { current: T | null }).current = value;
+}
+
+/**
+ * The loading morph (interaction button-morph, order 1.22). When `loading`
+ * turns on, the button dips, the label (or the icon) rolls up and out and
+ * the spinner pops in; when it turns off, the spinner shrinks away and the
+ * label rolls back in. The width holds: every part stays in place and
+ * Button.css holds the rest look of each one per state. The spinner that
+ * leaves stays for its exit in `leaving` (aria-hidden, at opacity 0 at
+ * rest) and goes when the exit settles. Nothing waits for it: aria-busy,
+ * the status and activation change at once. With no Web Animations API,
+ * or a style that turns it off, nothing extra renders.
+ */
+function useLoadingMorph(root: { current: HTMLElement | null }, loading: boolean, interaction: string) {
+  const motion = useMotion();
+  const last = useRef(loading);
+  const [leaving, setLeaving] = useState(0);
+  const changed = last.current !== loading;
+  // The spinner's exit needs its element for one more render: decide during render, before commit.
+  if (changed && !loading && leaving === 0 && typeof root.current?.animate === 'function' && motion.mode(interaction) !== 'none') {
+    setLeaving((n) => n + 1);
+  }
+  useLayoutEffect(() => {
+    if (last.current === loading) return;
+    last.current = loading;
+    const el = root.current;
+    if (!el) return;
+    const label = el.querySelector(':scope > [data-part="label"]') ?? el.querySelector(':scope > [data-part="icon"]');
+    const spinner = el.querySelector(':scope > [data-part="spinner"]');
+    const played = buttonMorph({ root: el, label, spinner }, loading ? 'idle' : 'loading', loading ? 'loading' : 'idle', { mode: motion.mode(interaction) });
+    if (loading) return;
+    const exit = spinner ? played.find((a) => a.effect && (a.effect as KeyframeEffect).target === spinner) : undefined;
+    let live = true;
+    void settled(exit ?? null).then(() => {
+      if (live) setLeaving(0);
+    });
+    return () => {
+      live = false;
+    };
+  }, [loading, motion, root, interaction]);
+  return leaving > 0 && !loading;
+}
 
 /** The components built on ButtonRoot. */
 export type ButtonDs = 'button' | 'icon-button' | 'toggle-button' | 'close-button' | 'copy-button' | 'floating-action-button' | 'chip';
@@ -127,10 +178,29 @@ export function ButtonRoot({
 }: ButtonRootProps) {
   const inert = disabled || loading;
   const motion = useMotion();
+  const own = useRef<HTMLElement | null>(null);
+  const spinnerLeaving = useLoadingMorph(own, loading, 'button-morph');
+  const setOwn = useCallback(
+    (node: HTMLButtonElement | null) => {
+      own.current = node;
+      setRef(ref, node);
+    },
+    [ref],
+  );
   // The press for Enter (interaction button-press). Space and the pointer
   // press through :active in Button.css; Enter activates on key down and the
   // browser draws no :active for it, so the press pattern plays here. It
   // decorates only: the click has already happened.
+  // The spinner that leaves after loading ends, for its exit only. Decorative.
+  const withLeaving = (parts: ReactNode) =>
+    spinnerLeaving ? (
+      <>
+        {parts}
+        <span data-part="spinner" aria-hidden="true" />
+      </>
+    ) : (
+      parts
+    );
   const pressable = PRESS_DS.has(ds) && !inert && rest['aria-disabled'] !== true && rest['aria-disabled'] !== 'true';
   const pressed = useRef(false);
   const release = (el: Element) => {
@@ -148,7 +218,7 @@ export function ButtonRoot({
   const em = emphasis ?? groupEmphasis ?? defaultEmphasis;
   const attrs = {
     ...rest,
-    ref,
+    ref: setOwn,
     'data-ds': ds,
     'data-size': s,
     'data-tone': tone,
@@ -212,14 +282,14 @@ export function ButtonRoot({
         : children;
     return (
       <Slot.Root {...attrs}>
-        <Slot.Slottable child={child}>{(content: ReactNode) => render(content)}</Slot.Slottable>
+        <Slot.Slottable child={child}>{(content: ReactNode) => withLeaving(render(content))}</Slot.Slottable>
       </Slot.Root>
     );
   }
 
   return (
     <button type={type} {...attrs}>
-      {render(children)}
+      {withLeaving(render(children))}
     </button>
   );
 }

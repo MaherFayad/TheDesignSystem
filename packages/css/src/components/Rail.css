@@ -278,6 +278,11 @@
     }
   }
 
+  /* The same under the page setting (review B2). */
+  :root[data-motion='reduce'] [data-ds='rail'] [data-part='item']::after {
+    transition: none;
+  }
+
   @media (forced-colors: active) {
     [data-ds='rail'] [data-part='item']::after {
       display: none;

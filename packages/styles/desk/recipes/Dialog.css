@@ -30,7 +30,7 @@
     --_dialog-header-bg: transparent;
     --_dialog-footer-bg: transparent;
     --_dialog-divider-color: var(--ds-color-border-hairline);
-    --_dialog-duration-out: var(--ds-duration-window-close);
+    --_dialog-duration-out: var(--ds-duration-quick); /* Order 1.22: exits faster than entrances (review N4). */
   }
 
   /* The centered members grow like a window on its timing; Drawer and Sheet keep their slide and timing (pattern "sheet"). */

@@ -21,7 +21,16 @@
  * area and the focus layer. Actions come later in the DOM and are
  * positioned, so they paint above that layer without a z-index. Hover
  * swaps the row fill instead of a ::after veil, so no layer covers the
- * text or the actions. Colors swap at once: nothing animates.
+ * text or the actions. Colors swap at once.
+ *
+ * Order 1.22 (proposed), played by List.tsx: list-stagger on the first
+ * paint; collection-flip (rows added, removed or moved later travel from
+ * their old place, a new row pops in, a removed row is drawn once more by
+ * an inert clone that shrinks out while the rest close the gap); and
+ * row-glide: each row holds an unnamed aria-hidden span after the
+ * separator that draws the row fill under its content, and the hover fill
+ * of a linked row travels from the row the pointer left. Without the span
+ * the row draws its own fill. In forced colors the span is hidden.
  */
 @layer ds.base {
   [data-ds='list'] {
@@ -90,6 +99,27 @@
     padding-inline: var(--_list-padding-inline);
     border-radius: var(--_list-radius);
     background-color: var(--_list-item-bg);
+  }
+
+  /* row-glide: the layer under the row's content draws the fill. */
+  [data-ds='list'] > [data-part='item']:has(> span[aria-hidden='true']:not([data-part])) {
+    isolation: isolate;
+  }
+
+  [data-ds='list'] > [data-part='item'] > span[aria-hidden='true']:not([data-part]) {
+    position: absolute;
+    inset: 0;
+    /* Under the row's content, inside the row's own stacking context. */
+    z-index: calc(0 - var(--ds-z-raised));
+    border-radius: inherit;
+    background-color: var(--_list-item-bg);
+    pointer-events: none;
+  }
+
+  @media (forced-colors: none) {
+    [data-ds='list'] > [data-part='item']:has(> span[aria-hidden='true']:not([data-part])) {
+      background-color: transparent;
+    }
   }
 
   /* A row without a description centers the title on the row. */
@@ -237,6 +267,10 @@
 
     [data-ds='list'] > [data-part='item'] > [data-part='separator'] {
       background-color: CanvasText;
+    }
+
+    [data-ds='list'] > [data-part='item'] > span[aria-hidden='true']:not([data-part]) {
+      display: none;
     }
   }
 }

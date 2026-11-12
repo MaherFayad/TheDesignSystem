@@ -1,6 +1,6 @@
 import { render } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
-import { describe, expect, it, vi } from 'vitest';
+import { describe, expect, it, onTestFinished, vi } from 'vitest';
 import { Theme } from '../../theme/Theme';
 import StatDemo from './Stat.demo';
 import { Stat } from './index';
@@ -27,7 +27,8 @@ describe('Stat', () => {
     const { container } = render(<Stat label="Active users" value={12480} />);
     expect(root(container).getAttribute('data-size')).toBe('md');
     expect(part(container, 'label')?.textContent).toBe('Active users');
-    expect(part(container, 'value')?.textContent).toBe('12,480');
+    expect(part(container, 'value')?.querySelector('[data-visually-hidden]')?.textContent).toBe('12,480');
+    expect(part(container, 'value')?.querySelector('[aria-hidden="true"]')?.textContent).toBe('12,480');
     expect(part(container, 'delta')).toBeNull();
     expect(root(container).hasAttribute('data-tone')).toBe(false);
     expect(root(container).hasAttribute('data-trend')).toBe(false);
@@ -35,16 +36,16 @@ describe('Stat', () => {
 
   it('takes format options and a node value', () => {
     const { container, rerender } = render(<Stat label="Revenue" value={1500} format={{ style: 'currency', currency: 'USD' }} />);
-    expect(part(container, 'value')?.textContent).toBe('$1,500.00');
+    expect(part(container, 'value')?.querySelector('[data-visually-hidden]')?.textContent).toBe('$1,500.00');
     rerender(<Stat label="Time" value={14} format={{ style: 'unit', unit: 'minute' }} />);
-    expect(part(container, 'value')?.textContent).toBe('14 min');
+    expect(part(container, 'value')?.querySelector('[data-visually-hidden]')?.textContent).toBe('14 min');
     rerender(
       <Theme lang="fr">
         <Stat label="Prix" value={1234} format={{ style: 'currency', currency: 'EUR' }} />
       </Theme>,
     );
     // The digit group space stays no break; the space before the currency breaks.
-    expect(part(container, 'value')?.textContent).toMatch(/^1\u202f234,00 €$/);
+    expect(part(container, 'value')?.querySelector('[data-visually-hidden]')?.textContent).toMatch(/^1\u202f234,00 €$/);
     rerender(<Stat label="Revenue" value="No data" />);
     expect(part(container, 'value')?.textContent).toBe('No data');
   });
@@ -168,20 +169,20 @@ describe('Stat', () => {
       </Theme>
     );
 
-    it('rolls the number in with the catalog pattern when it changes, not on the first paint', () =>
+    const ids = (animate: ReturnType<typeof vi.fn>) => animate.mock.calls.map((c) => String((c as unknown as [Keyframe[], KeyframeAnimationOptions])[1].id));
+
+    it('rolls the changed digits with the digit-roll primitive when the number changes, not on the first paint', () =>
       withAnimate((animate) => {
         const { rerender, container } = render(desk(10));
         expect(animate).not.toHaveBeenCalled();
         rerender(desk(11));
-        expect(animate).toHaveBeenCalledTimes(1);
-        const [, timing] = animate.mock.calls[0] as unknown as [Keyframe[], KeyframeAnimationOptions];
-        expect(timing.id).toBe('ds-motion:number-roll');
+        // One changed column: the new digit rolls in, the old one rolls out.
+        expect(ids(animate)).toEqual(['ds-motion:digit-roll', 'ds-motion:digit-roll-out']);
         // Up: from below.
         expect(frames(animate, 0)[0]?.transform).toBe('translateY(100%)');
-        // The number's own span rolls; the value part stays put and clips it.
-        const layer = part(container, 'value')?.firstElementChild;
-        expect(layer?.tagName).toBe('SPAN');
-        expect(layer?.textContent).toBe('11');
+        // The number is read once, from the hidden copy; the drawn copy is aria-hidden.
+        expect(part(container, 'value')?.querySelector('[data-visually-hidden]')?.textContent).toBe('11');
+        expect(part(container, 'value')?.querySelector('[aria-hidden="true"]')).not.toBeNull();
       }));
 
     it('rolls down from above when the number falls', () =>
@@ -191,21 +192,49 @@ describe('Stat', () => {
         expect(frames(animate, 0)[0]?.transform).toBe('translateY(-100%)');
       }));
 
-    it('changes in place when the last roll started less than one roll ago', () =>
+    it('rolls at most three times a second: a change within 333ms of the last roll changes in place (review note N3)', () =>
       withAnimate((animate) => {
         const now = vi.spyOn(performance, 'now').mockReturnValue(1000);
         try {
-          const { rerender } = render(desk(1));
+          const { rerender, container } = render(desk(1));
           rerender(desk(2));
-          now.mockReturnValue(1100);
+          const first = animate.mock.calls.length;
+          expect(first).toBeGreaterThan(0);
+          // The mocked roll lasts 300ms, shorter than the window: the window holds.
+          now.mockReturnValue(1320);
           rerender(desk(3));
-          expect(animate).toHaveBeenCalledTimes(1);
-          now.mockReturnValue(1400);
+          expect(animate.mock.calls.length).toBe(first);
+          expect(part(container, 'value')?.querySelector('[aria-hidden="true"]')?.textContent).toBe('3');
+          now.mockReturnValue(1340);
           rerender(desk(4));
-          expect(animate).toHaveBeenCalledTimes(2);
+          expect(animate.mock.calls.length).toBeGreaterThan(first);
         } finally {
           now.mockRestore();
         }
+      }));
+
+    it('nudges the trend mark the way the number went', () =>
+      withAnimate((animate) => {
+        // The trend mark is an SVG icon: give SVG elements the same mock.
+        const svg = SVGElement.prototype as unknown as { animate?: unknown };
+        const before = svg.animate;
+        svg.animate = animate;
+        onTestFinished(() => {
+          svg.animate = before;
+        });
+        const { rerender } = render(
+          <Theme style="desk">
+            <Stat label="Users" value={10} delta={0.1} />
+          </Theme>,
+        );
+        rerender(
+          <Theme style="desk">
+            <Stat label="Users" value={12} delta={0.1} />
+          </Theme>,
+        );
+        const i = ids(animate).indexOf('ds-motion:stat-trend');
+        expect(i).toBeGreaterThanOrEqual(0);
+        expect(String(frames(animate, i)[1]?.transform)).toContain('-1 *');
       }));
 
     it('fades with no roll under reduced motion', () =>
@@ -215,7 +244,8 @@ describe('Stat', () => {
         try {
           const { rerender } = render(desk(1));
           rerender(desk(2));
-          expect(frames(animate, 0).every((f) => !('transform' in f))).toBe(true);
+          expect(animate.mock.calls.length).toBeGreaterThan(0);
+          for (let i = 0; i < animate.mock.calls.length; i++) expect(frames(animate, i).every((f) => !('transform' in f))).toBe(true);
         } finally {
           window.matchMedia = original;
         }

@@ -2479,5 +2479,165 @@
         "$value": "{color.bg.overlay-5}"
       }
     }
+  },
+  "duration": {
+    "spring-soft": {
+      "$type": "duration",
+      "$value": {
+        "value": 100,
+        "unit": "ms"
+      }
+    },
+    "spring-snappy": {
+      "$type": "duration",
+      "$value": {
+        "value": 80,
+        "unit": "ms"
+      }
+    },
+    "spring-bouncy": {
+      "$type": "duration",
+      "$value": {
+        "value": 120,
+        "unit": "ms"
+      }
+    },
+    "morph": {
+      "$type": "duration",
+      "$value": {
+        "value": 100,
+        "unit": "ms"
+      }
+    },
+    "celebrate": {
+      "$type": "duration",
+      "$value": {
+        "value": 120,
+        "unit": "ms"
+      }
+    }
+  },
+  "delay": {
+    "stagger": {
+      "$type": "duration",
+      "$value": {
+        "value": 0,
+        "unit": "ms"
+      }
+    }
+  },
+  "ease": {
+    "spring-soft": {
+      "$type": "string",
+      "$value": "cubic-bezier(0, 0, 0.2, 1)"
+    },
+    "spring-snappy": {
+      "$type": "string",
+      "$value": "steps(2, jump-end)"
+    },
+    "spring-bouncy": {
+      "$type": "string",
+      "$value": "steps(3, jump-end)"
+    }
+  },
+  "spring": {
+    "soft": {
+      "stiffness": {
+        "$type": "number",
+        "$value": 5521
+      },
+      "damping": {
+        "$type": "number",
+        "$value": 148.6
+      },
+      "mass": {
+        "$type": "number",
+        "$value": 1
+      }
+    },
+    "snappy": {
+      "stiffness": {
+        "$type": "number",
+        "$value": 8809
+      },
+      "damping": {
+        "$type": "number",
+        "$value": 187.7
+      },
+      "mass": {
+        "$type": "number",
+        "$value": 1
+      }
+    },
+    "bouncy": {
+      "stiffness": {
+        "$type": "number",
+        "$value": 2201
+      },
+      "damping": {
+        "$type": "number",
+        "$value": 84.4
+      },
+      "mass": {
+        "$type": "number",
+        "$value": 1
+      }
+    }
+  },
+  "scale": {
+    "pop": {
+      "$type": "number",
+      "$value": 1
+    },
+    "stretch": {
+      "$type": "number",
+      "$value": 1.08
+    },
+    "lift": {
+      "$type": "number",
+      "$value": 1
+    },
+    "anticipate": {
+      "$type": "number",
+      "$value": 0.97
+    },
+    "enter": {
+      "$type": "number",
+      "$value": 1
+    },
+    "morph": {
+      "$type": "number",
+      "$value": 0.8
+    }
+  },
+  "distance": {
+    "nudge": {
+      "$type": "dimension",
+      "$value": {
+        "value": 1,
+        "unit": "px"
+      }
+    },
+    "shift": {
+      "$type": "dimension",
+      "$value": {
+        "value": 2,
+        "unit": "px"
+      }
+    },
+    "enter": {
+      "$type": "dimension",
+      "$value": {
+        "value": 4,
+        "unit": "px"
+      }
+    },
+    "lift": {
+      "$type": "dimension",
+      "$value": {
+        "value": 0,
+        "unit": "px"
+      }
+    }
   }
 }

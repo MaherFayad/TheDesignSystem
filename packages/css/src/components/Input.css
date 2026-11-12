@@ -40,11 +40,11 @@
     --_input-ring: var(--ds-focus-shadow-ring);
     --_input-shadow-focus: var(--ds-elevation-input-focus);
     --_input-autofill-bg: var(--ds-color-bg-surface);
-    --_input-duration-in: var(--ds-duration-base);
-    --_input-duration-out: var(--ds-duration-fast);
-    --_input-ease-in: var(--ds-ease-out);
+    --_input-duration-in: var(--ds-duration-spring-soft);
+    --_input-duration-out: var(--ds-duration-quick);
+    --_input-ease-in: var(--ds-ease-spring-soft);
     --_input-ease-out: var(--ds-ease-exit);
-    --_input-enter-scale: var(--ds-scale-dialog-enter);
+    --_input-enter-scale: var(--ds-scale-enter);
 
     position: relative;
     box-sizing: border-box;
@@ -259,6 +259,10 @@
     [data-ds='input'] {
       --_input-enter-scale: 1;
     }
+  }
+
+  :root[data-motion='reduce'] [data-ds='input'] {
+    --_input-enter-scale: 1;
   }
 
   /*

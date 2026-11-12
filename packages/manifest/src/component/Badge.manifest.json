@@ -140,7 +140,7 @@
       "status": "ready",
       "behavior": "hand built, radix:VisuallyHidden",
       "example": "Badge.demo.tsx",
-      "note": "Motion: the badge has none of its own; fade-rise names the pattern a caller uses when a badge appears. A count that changes may use number-roll once the catalog (1.11) has it."
+      "note": "Motion (badge-count, order 1.22): when the count changes after the first paint its digits roll (digit-roll primitive) and the badge pops (scale.anticipate, scale.pop); a count is always drawn aria-hidden with a visually hidden copy; a dot only pops. Nothing under reduced motion but a fade of the digits."
     },
     "angular": { "status": "planned" },
     "native": { "status": "planned" }

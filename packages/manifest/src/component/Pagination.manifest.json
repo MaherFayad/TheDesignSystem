@@ -166,7 +166,18 @@
     "font.weight.regular",
     "font.weight.bold",
     "color.bg.overlay-10",
-    "color.bg.overlay-20"
+    "color.bg.overlay-20",
+    "duration.spring-snappy",
+    "ease.spring-snappy",
+    "duration.spring-bouncy",
+    "ease.spring-bouncy",
+    "duration.spring-soft",
+    "ease.spring-soft",
+    "scale.stretch",
+    "scale.anticipate",
+    "delay.stagger",
+    "distance.nudge",
+    "distance.shift"
   ],
   "motion": "press",
   "frameworks": {
@@ -174,7 +185,7 @@
       "status": "ready",
       "behavior": "nav of system Button and IconButton (asChild links with getHref); pageRange and itemRange from @the-system/shared",
       "example": "Pagination.demo.tsx",
-      "note": "The only motion is the Button press, reduced to none under reduced motion."
+      "note": "The only motion is the Button press, reduced to none under reduced motion. Round 2 (order 1.22, proposed), interaction pagination-roll: the current page holds an empty aria-hidden span (inside the page part) that draws its fill so the shared pill can slide it; page numbers sit in an aria-hidden span in the label (the page keeps its aria-label) and roll digit by digit with rollDigits when the window shifts; a pressed arrow winds up (back by distance.nudge, forward by distance.shift)."
     },
     "angular": {
       "status": "planned",

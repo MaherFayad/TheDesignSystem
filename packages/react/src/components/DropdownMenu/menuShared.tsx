@@ -11,12 +11,15 @@ import {
   useEffect,
   useRef,
   useState,
+  type FocusEvent,
   type ReactNode,
   type Ref,
   type RefObject,
 } from 'react';
 import { createPortal } from 'react-dom';
 import { Icon } from '@the-system/icons/react';
+import { ANIMATION_ID_PREFIX, readDuration, readEasing, type PatternMode } from '@the-system/motion';
+import { useMotion } from '../../internal/motion';
 import { Theme } from '../../theme/Theme';
 import { useTheme } from '../../theme/hooks';
 import { renderSlotContent, type ButtonSlotContent } from '../Button/ButtonBase';
@@ -54,6 +57,99 @@ export function physicalSide(side: MenuSide, dir: 'ltr' | 'rtl'): 'top' | 'botto
   return side === 'inline-end' ? end : start;
 }
 
+/** The id of the row highlight slide (interaction "menu-row-slide"). */
+export const ROW_SLIDE_ID = 'menu-row-slide';
+
+/** The rows a highlight slides between: menu items and the Menubar titles. */
+const ROW_SELECTOR = `${ITEM_SELECTOR}, [data-part='trigger']`;
+
+/** The row an event target is, or null. */
+function rowOf(target: EventTarget | null): Element | null {
+  return target instanceof Element && target.matches(ROW_SELECTOR) ? target : null;
+}
+
+/** The transform of an element's ::after as drawn now, a running slide included: x, y and the scale. */
+function drawnAfter(el: Element): { x: number; y: number; sx: number; sy: number } {
+  const id = { x: 0, y: 0, sx: 1, sy: 1 };
+  if (typeof getComputedStyle !== 'function' || typeof DOMMatrixReadOnly === 'undefined') return id;
+  const t = getComputedStyle(el, '::after').transform;
+  if (!t || t === 'none') return id;
+  try {
+    const m = new DOMMatrixReadOnly(t);
+    return { x: m.e, y: m.f, sx: m.a, sy: m.d };
+  } catch {
+    return id;
+  }
+}
+
+/**
+ * Interaction "menu-row-slide": the lit fill of a row is its ::after (the
+ * hover veil, DropdownMenu.css). When the highlight moves from one row to
+ * the next, the new row's fill starts over the old one (where it is drawn,
+ * so a slide still in flight hands over from where it is) and travels to its
+ * own row on the snappy spring. The highlight state itself changes at once:
+ * only the decorative fill moves, never the row, its text or its focus ring.
+ * Reduced and none: no slide, the fill is there at once. Returns the
+ * Animation, or null.
+ */
+export function slideHighlight(from: Element | null | undefined, to: Element, mode: PatternMode): Animation | null {
+  if (mode !== 'full' || !from || from === to || !from.isConnected || typeof to.animate !== 'function') return null;
+  const a = from.getBoundingClientRect();
+  const b = to.getBoundingClientRect();
+  if (b.width < 1 || b.height < 1) return null;
+  const drawn = drawnAfter(from);
+  const dx = a.left + drawn.x - b.left;
+  const dy = a.top + drawn.y - b.top;
+  const sx = (a.width * drawn.sx) / b.width;
+  const sy = (a.height * drawn.sy) / b.height;
+  if (Math.abs(dx) < 0.5 && Math.abs(dy) < 0.5 && Math.abs(sx - 1) < 0.01 && Math.abs(sy - 1) < 0.01) return null;
+  const duration = readDuration(to, 'duration.spring-snappy');
+  if (duration <= 0) return null;
+  const id = `${ANIMATION_ID_PREFIX}${ROW_SLIDE_ID}`;
+  for (const anim of to.getAnimations?.({ subtree: true } as GetAnimationsOptions) ?? []) if (String(anim.id) === id) anim.cancel();
+  const r = (n: number, d = 2) => Math.round(n * 10 ** d) / 10 ** d;
+  return to.animate([{ transform: `translate(${r(dx)}px, ${r(dy)}px) scale(${r(sx, 4)}, ${r(sy, 4)})` }, { transform: 'none' }], {
+    id,
+    duration,
+    easing: readEasing(to, 'ease.spring-snappy'),
+    pseudoElement: '::after',
+  });
+}
+
+/**
+ * Focus handlers for a layer that holds menus (or a Menubar row): when the
+ * highlight (Radix moves focus with it, for the pointer and the arrow keys)
+ * goes from one row to another of the same menu, the fill slides. A short
+ * hop over a separator or the menu padding, where focus rests on the menu
+ * for a moment, still slides: the last row is kept for two settle times of
+ * the snappy spring.
+ */
+export function useRowSlide() {
+  const motion = useMotion();
+  const last = useRef<{ row: Element; at: number } | null>(null);
+  const onFocus = useCallback(
+    (event: FocusEvent<HTMLElement>) => {
+      const to = rowOf(event.target);
+      if (!to) return;
+      const group = to.closest('[role="menu"], [role="menubar"]');
+      let from = rowOf(event.relatedTarget);
+      if (!from) {
+        const l = last.current;
+        const recent = l && performance.now() - l.at < 2 * readDuration(to, 'duration.spring-snappy');
+        from = recent ? l.row : null;
+      }
+      if (from && from.closest('[role="menu"], [role="menubar"]') === group) slideHighlight(from, to, motion.mode(ROW_SLIDE_ID));
+      last.current = { row: to, at: performance.now() };
+    },
+    [motion],
+  );
+  const onBlur = useCallback((event: FocusEvent<HTMLElement>) => {
+    const row = rowOf(event.target);
+    if (row) last.current = { row, at: performance.now() };
+  }, []);
+  return { onFocus, onBlur };
+}
+
 /**
  * Portals its child into <body> inside a Theme that copies every axis of the
  * Theme it is rendered in. Mounted while `open`, and until the content inside
@@ -77,6 +173,9 @@ export function useMenuLayer(open: boolean, kind = '') {
     if (!node && !openRef.current) setMounted(false);
   }, []);
 
+  // Interaction "menu-row-slide", for every menu in the layer (the root menu and its submenus).
+  const slide = useRowSlide();
+
   const render = (children: ReactNode) =>
     body && mounted
       ? createPortal(
@@ -90,6 +189,8 @@ export function useMenuLayer(open: boolean, kind = '') {
             dir={theme.dir}
             lang={theme.lang}
             data-menu-layer={kind}
+            onFocus={slide.onFocus}
+            onBlur={slide.onBlur}
           >
             {children}
           </Theme>,

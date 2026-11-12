@@ -15,6 +15,16 @@
  * (--_button-radius-start-start and friends), so the seam flips in RTL, and
  * pulls the focus ring inside an attached item. Where Button has no property
  * (the seam borders), it writes the logical border declarations.
+ *
+ * The pill (interaction tab-slide, order 1.22, proposed). In a single choice
+ * group (role radiogroup) ToggleGroup.tsx renders an empty aria-hidden span
+ * as the first child of each item, inside the existing item part. The span
+ * of the on item draws the on fill and ring of ToggleButton (its
+ * --_toggle-on-bg and --_toggle-on-ring), and that item drops its own, so
+ * the shared indicator (react/src/internal/indicator.ts) can slide the fill
+ * from the item it leaves on the snappy spring, stretched along its travel.
+ * Without the span (a port that has not added it) nothing changes: the item
+ * draws its own fill, the round 1 look. A solid item keeps its own fill.
  */
 @layer ds.base {
   [data-ds='toggle-group'] {
@@ -65,13 +75,15 @@
   [data-ds='toggle-group'][data-attached] > [data-part='item'] {
     block-size: auto;
     min-block-size: max(var(--_button-height), var(--ds-size-target-min));
-    padding-block: var(--ds-space-4xs);
+    /* No block padding: one line keeps the height of a spaced item (review N21, Arabic xs was 28.6px); more lines grow from the label. */
+    padding-block: 0;
   }
 
   [data-ds='toggle-group'][data-attached] > [data-part='item'] > [data-part='label'] {
     overflow-x: visible;
     white-space: normal;
-    overflow-wrap: anywhere;
+    /* break-word keeps whole words when there is room (review B4). */
+    overflow-wrap: break-word;
     text-align: center;
   }
 
@@ -141,7 +153,29 @@
     --_button-shadow: 0 0 transparent;
   }
 
-  /* No motion of its own: items keep Button's. Nothing to collapse under reduced motion. */
+  /* ------------------------------------------------------------ the pill */
+
+  [data-ds='toggle-group'] > [data-part='item'] > span[aria-hidden='true']:not([data-part]) {
+    position: absolute;
+    inset: calc(-1 * var(--ds-border-width-default));
+    border-radius: inherit;
+    pointer-events: none;
+    display: none;
+  }
+
+  [data-ds='toggle-group'] > [data-part='item'][data-state='on']:not([data-emphasis='solid']) > span[aria-hidden='true']:not([data-part]) {
+    display: block;
+    background-color: var(--_toggle-on-bg);
+    box-shadow: inset 0 0 0 var(--ds-border-width-strong) var(--_toggle-on-ring);
+  }
+
+  [data-ds='toggle-group'] > [data-part='item'][data-state='on']:not([data-emphasis='solid']):has(> span[aria-hidden='true']:not([data-part])) {
+    --_button-bg: transparent;
+    --_button-bg-hover: transparent;
+    --_button-bg-active: transparent;
+    --_button-shadow: 0 0 transparent;
+  }
+
 
   /*
    * Forced colors drop the box shadow ring and draw Button's focus outline.
@@ -149,6 +183,10 @@
    * on state is Highlight (Button.css), and the system draws every border.
    */
   @media (forced-colors: active) {
+    [data-ds='toggle-group'] > [data-part='item'] > span[aria-hidden='true']:not([data-part]) {
+      display: none;
+    }
+
     [data-ds='toggle-group'][data-attached] > [data-part='item']:focus-visible {
       outline-offset: calc(-2 * var(--ds-border-width-strong));
     }

@@ -124,6 +124,11 @@
     }
   }
 
+  :root[data-motion='reduce'] [data-ds='skeleton']::before {
+    animation: none;
+    opacity: 0;
+  }
+
   @media (forced-colors: active) {
     [data-ds='skeleton'] {
       outline: var(--ds-border-width-default) solid CanvasText;
@@ -134,5 +139,10 @@
       animation: none;
       opacity: 0;
     }
+  }
+
+  :root[data-motion='reduce'] [data-ds='skeleton']::before {
+    animation: none;
+    opacity: 0;
   }
 }

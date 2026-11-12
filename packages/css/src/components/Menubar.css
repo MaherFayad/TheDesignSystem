@@ -29,8 +29,16 @@
  * takes the open fill and the open weight. The text part lays out a hidden
  * copy of the title at the open weight, so the row never shifts.
  *
- * Motion: none on the row. Colors and weight swap at once; the menus play
- * "menu-scale" from DropdownMenu.css.
+ * Motion, order 1.22 (proposed). The row does not move; colors and weight
+ * swap at once; the menus play "menu-origin" from DropdownMenu.css.
+ * Interaction "menu-row-slide": the fill of a trigger (hover, lit, open) is
+ * its ::after, the hover veil of anatomy.md, under the title and the ring
+ * (its ::before, the focus layer).
+ * Menubar.tsx slides it from the old title to the new one when the arrow
+ * keys move along the row or the open menu changes (Web Animations, the
+ * snappy spring). Without the script the fill shows on the new title at
+ * once. A style turns the slide off through the preset row of the
+ * interaction, not here.
  */
 @layer ds.base {
   [data-ds='menubar'] {
@@ -84,6 +92,8 @@
     gap: var(--_menubar-gap);
     min-inline-size: 0;
     outline: none;
+    /* A stacking context, so the layers of the titles stay inside the row. */
+    isolation: isolate;
   }
 
   [data-ds='menubar'][data-size='sm'] {
@@ -121,8 +131,8 @@
     padding-inline: var(--_menubar-trigger-padding-inline);
     border: 0;
     border-radius: var(--_menubar-trigger-radius);
-    background-color: var(--_menubar-trigger-bg);
-    box-shadow: var(--_menubar-trigger-ring);
+    /* The fill is the ::after below and the ring the ::before; the element itself draws neither. */
+    background-color: transparent;
     color: var(--_menubar-trigger-fg);
     font: inherit;
     font-weight: var(--_menubar-trigger-weight);
@@ -131,6 +141,37 @@
     user-select: none;
     outline: none;
     -webkit-tap-highlight-color: transparent;
+  }
+
+  /*
+   * The fill (::after, the hover veil, on z.canvas) under the title and the
+   * keyboard ring (::before, the focus layer, on z.raised). The origin is
+   * the top left corner: Menubar.tsx measures the slide in screen px.
+   */
+  [data-ds='menubar'] [data-part='trigger']::after {
+    content: '';
+    position: absolute;
+    z-index: var(--ds-z-canvas);
+    inset: 0;
+    border-radius: inherit;
+    background-color: var(--_menubar-trigger-bg);
+    transform-origin: 0 0;
+    pointer-events: none;
+  }
+
+  [data-ds='menubar'] [data-part='trigger']::before {
+    content: '';
+    position: absolute;
+    z-index: var(--ds-z-raised);
+    inset: 0;
+    border-radius: inherit;
+    box-shadow: var(--_menubar-trigger-ring);
+    pointer-events: none;
+  }
+
+  [data-ds='menubar'] [data-part='trigger'] > [data-part='text'] {
+    position: relative;
+    z-index: var(--ds-z-raised);
   }
 
   @media (hover: hover) {
@@ -168,9 +209,8 @@
    * The title and, under it, a copy at the open weight that takes no
    * height: the trigger is as wide as its open title at rest too. The copy
    * has empty alternative text, so it is never read. It sits on the text
-   * part, not the root: the trigger keeps no ::before or ::after (its ring
-   * is a box shadow, its hover a fill), so the pseudo element rule of
-   * anatomy.md is not in play.
+   * part, not the trigger: the trigger's ::after is its fill (the hover
+   * veil of anatomy.md) and its ::before the ring (the focus layer).
    */
   [data-ds='menubar'] [data-part='trigger'] > [data-part='text'] {
     display: inline-flex;

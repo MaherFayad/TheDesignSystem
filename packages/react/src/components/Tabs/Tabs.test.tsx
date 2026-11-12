@@ -206,19 +206,24 @@ describe('Tabs', () => {
       });
     }
 
-    it('slides the indicator from the old tab with the catalog pattern, a transform only', () =>
+    it('slides the indicator from the old tab with the shared pill, stretching on the way, a transform only', () =>
       withAnimate(async (animate) => {
         const rects = boxes();
         try {
           render(<Example />);
           expect(animate).not.toHaveBeenCalled();
           await userEvent.click(screen.getByRole('tab', { name: 'Comments 12' }));
-          expect(animate).toHaveBeenCalledTimes(1);
-          const [frames, timing] = animate.mock.calls[0] as unknown as [Keyframe[], KeyframeAnimationOptions];
-          expect(timing.id).toBe('ds-motion:tab-indicator');
+          const slides = animate.mock.calls.filter((c) => (c as unknown as [Keyframe[], KeyframeAnimationOptions])[1].id === 'ds-motion:indicator-slide');
+          expect(slides).toHaveLength(1);
+          const [frames] = slides[0] as unknown as [Keyframe[], KeyframeAnimationOptions];
           expect(frames[0]?.transform).toBe('translate(-200px, 0px) scale(1, 1)');
+          expect(frames[1]?.transform).toMatch(/^translate\(-100px, 0px\) scale\(1\.\d+, 1\)$/);
           expect(frames.at(-1)?.transform).toBe('none');
           for (const f of frames) expect(Object.keys(f).filter((k) => k !== 'offset')).toEqual(['transform']);
+          // The labels answer: the one it leaves dips, the one it reaches pops, added to their own transform.
+          const answers = animate.mock.calls.filter((c) => (c as unknown as [Keyframe[], KeyframeAnimationOptions])[1].id === 'ds-motion:indicator-answer');
+          expect(answers).toHaveLength(2);
+          for (const a of answers) expect((a as unknown as [Keyframe[], KeyframeAnimationOptions])[1].composite).toBe('add');
         } finally {
           rects.mockRestore();
         }

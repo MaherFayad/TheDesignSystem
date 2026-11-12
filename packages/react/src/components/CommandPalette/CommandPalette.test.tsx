@@ -350,3 +350,65 @@ describe('matchShortcut', () => {
     await waitFor(() => expect(own('status')?.textContent).toBe('4 results'));
   });
 });
+
+// ------------------------------------------------------------------ motion, order 1.22
+
+/** Records every Web Animation started, with its element, keyframes and options. */
+function spyAnimate() {
+  const calls: { el: Element; frames: Keyframe[]; options: KeyframeAnimationOptions }[] = [];
+  const original = Element.prototype.animate;
+  Element.prototype.animate = function (this: Element, frames: Keyframe[] | PropertyIndexedKeyframes | null, options?: number | KeyframeAnimationOptions) {
+    calls.push({ el: this, frames: frames as Keyframe[], options: (options ?? {}) as KeyframeAnimationOptions });
+    return { cancel() {}, finished: Promise.resolve(), id: '', playState: 'finished' } as unknown as Animation;
+  };
+  return { calls, restore: () => (Element.prototype.animate = original) };
+}
+
+describe('motion (order 1.22)', () => {
+  it('command-palette-results: rows arrive in order on open, the lit row is there at once, and typing still filters at once', async () => {
+    const spy = spyAnimate();
+    try {
+      const user = userEvent.setup();
+      render(<Basic />);
+      await open(user);
+      const staggered = () => spy.calls.filter((c) => c.options.id === 'ds-motion:stagger').map((c) => c.el);
+      await waitFor(() => expect(staggered().length).toBeGreaterThan(0));
+      expect(staggered()).not.toContain(lit());
+      expect(staggered().every((el) => el.getAttribute('data-part') === 'item')).toBe(true);
+      spy.calls.length = 0;
+      await user.keyboard('export');
+      expect(items().map((el) => el.textContent)).toEqual([expect.stringContaining('Export as PDF')]);
+    } finally {
+      spy.restore();
+    }
+  });
+
+  it('command-palette-row-slide: the arrow keys move the highlight at once, and the fill slides on the row ::after', async () => {
+    const spy = spyAnimate();
+    try {
+      const user = userEvent.setup();
+      render(<Basic />);
+      await open(user);
+      const before = lit();
+      await user.keyboard('{ArrowDown}');
+      expect(lit()).not.toBe(before);
+      // jsdom has no layout: every row measures 0 by 0, so the slide has nothing to travel and does not play.
+      expect(spy.calls.filter((c) => c.options.id === 'ds-motion:menu-row-slide')).toHaveLength(0);
+    } finally {
+      spy.restore();
+    }
+  });
+
+  describe('CommandPalette.css', async () => {
+    const { readFileSync } = await import('node:fs');
+    const { join } = await import('node:path');
+    const css = readFileSync(join(process.cwd(), 'packages/css/src/components/CommandPalette.css'), 'utf8');
+    it('review N5: the panel is at full opacity within the first third, and the exit is faster', () => {
+      expect(css).toMatch(/@keyframes ds-command-palette-in \{[^@]*33% \{\s*opacity: 1;/);
+      expect(css).toContain('--_command-palette-duration-out: var(--ds-duration-quick);');
+    });
+    it('review B2: the reduced form applies under data-motion="reduce" too', () => {
+      expect(css).toContain(":root[data-motion='reduce'] [data-ds='command-palette'] > :is([data-part='panel'], [data-part='backdrop'])[data-state],");
+    });
+  });
+});

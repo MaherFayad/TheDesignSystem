@@ -23,9 +23,13 @@
  * to happen there. The root keeps every value a recipe overrides; the
  * trigger properties only point at them. Every selector reaches the parts
  * with child combinators, so a Tabs nested in a panel keeps its own look. Colors swap at once; only the indicator moves, with a
- * transform: the tab-slide interaction, played by Tabs.tsx through
- * useMotion() on the tab-indicator pattern, so its timing comes from the
- * catalog tokens and the style's motion preset, not from this file.
+ * transform: the tab-slide interaction (order 1.22, proposed), played by
+ * Tabs.tsx through the shared indicator (react/src/internal/indicator.ts):
+ * it slides on the snappy spring and stretches along its travel, and the
+ * labels it leaves and reaches dip and pop. Its timing comes from the spring
+ * tokens and the style's motion preset, not from this file. The indicator
+ * keeps the default transform origin (the center) the slide is worked out
+ * for, and the label is a flex item so it can scale.
  */
 @layer ds.base {
   [data-ds='tabs'] {
@@ -238,7 +242,6 @@
     border: var(--_tabs-indicator-border-width) solid var(--_tabs-indicator-border-color);
     border-radius: var(--ds-radius-pill);
     background-color: var(--_tabs-indicator-bg);
-    transform-origin: 0 0;
     pointer-events: none;
   }
 

@@ -373,6 +373,7 @@ export const deskLight: Theme = {
     feedback: 2000,
     'peek-hide': 600,
     'reveal-step': 80,
+    stagger: 45,
   },
   dialog: {
     height: {
@@ -386,12 +387,20 @@ export const deskLight: Theme = {
       xl: 640,
     },
   },
+  distance: {
+    enter: 12,
+    lift: 4,
+    nudge: 3,
+    shift: 6,
+  },
   duration: {
     base: 120,
+    celebrate: 480,
     fast: 80,
     instant: 70,
     medium: 140,
     moderate: 150,
+    morph: 320,
     pulse: 1400,
     quick: 100,
     reveal: 640,
@@ -399,6 +408,9 @@ export const deskLight: Theme = {
     shimmer: 1400,
     slow: 180,
     spin: 800,
+    'spring-bouncy': 440,
+    'spring-snappy': 300,
+    'spring-soft': 340,
     'toast-enter': 140,
     'toast-exit': 120,
     'window-close': 220,
@@ -414,6 +426,9 @@ export const deskLight: Theme = {
     in: [0.42, 0, 1, 1],
     out: [0, 0, 0.58, 1],
     reveal: [0.22, 1, 0.36, 1],
+    'spring-bouncy': 'linear(0, 0.146, 0.469, 0.814, 1.079, 1.222, 1.251, 1.201, 1.115, 1.031, 0.97, 0.94, 0.938, 0.953, 0.976, 0.996, 1.01, 1.016, 1.015, 1.011, 1)',
+    'spring-snappy': 'linear(0, 0.087, 0.285, 0.516, 0.73, 0.898, 1.014, 1.079, 1.105, 1.103, 1.086, 1.062, 1.038, 1.017, 1.003, 0.994, 0.989, 0.989, 0.99, 0.992, 1)',
+    'spring-soft': 'linear(0, 0.055, 0.182, 0.336, 0.49, 0.629, 0.745, 0.836, 0.904, 0.952, 0.984, 1.004, 1.015, 1.019, 1.02, 1.018, 1.016, 1.012, 1.009, 1.007, 1)',
     standard: [0.4, 0, 0.2, 1],
     window: [0.2, 0.8, 0.2, 1],
   },
@@ -866,9 +881,15 @@ export const deskLight: Theme = {
     xs: 3,
   },
   scale: {
+    anticipate: 0.9,
     'dialog-enter': 0.98,
+    enter: 0.9,
+    lift: 1.03,
     'menu-enter': 0.97,
+    morph: 0.3,
+    pop: 1.14,
     press: 0.97,
+    stretch: 1.3,
     'window-enter': 0.92,
   },
   scrollbar: {
@@ -962,6 +983,11 @@ export const deskLight: Theme = {
     width: 640,
   },
   spring: {
+    bouncy: {
+      damping: 21.7,
+      mass: 1,
+      stiffness: 733,
+    },
     merge: {
       damping: 24,
       mass: 1,
@@ -976,6 +1002,16 @@ export const deskLight: Theme = {
       damping: 30,
       mass: 1,
       stiffness: 300,
+    },
+    snappy: {
+      damping: 35.5,
+      mass: 1,
+      stiffness: 937,
+    },
+    soft: {
+      damping: 33.4,
+      mass: 1,
+      stiffness: 459,
     },
   },
   'title-bar': {

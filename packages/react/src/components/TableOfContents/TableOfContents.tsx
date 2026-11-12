@@ -34,8 +34,12 @@
 // - A heading counts as reached at the reading line: offset plus a fifth of
 //   the viewport, at most 64px. The observer watches that line; scrollend
 //   also measures, which marks the last section at the bottom of the page.
-// - The indicator moves with transform only (pattern "tab-indicator"); its
-//   length is set at once. Under reduced motion the duration token is 0ms.
+// - The indicator moves with transform only; its length is set at once.
+//   Interaction "toc-travel" (order 1.22, proposed): the CSS transition runs
+//   on the snappy spring, and the bar stretches along its travel with its
+//   trailing edge still (stretchAlong, react/src/internal/indicator.ts), so
+//   it travels with the direction of the change. Under reduced motion the
+//   duration tokens are 0ms and nothing stretches.
 import {
   useCallback,
   useEffect,
@@ -51,6 +55,8 @@ import {
 } from 'react';
 import { activeHeading, buildTree, type TocHeading, type TocNode, type Size } from '@the-system/shared';
 import { useTheme } from '../../theme';
+import { stretchAlong } from '../../internal/indicator';
+import { useMotion } from '../../internal/motion';
 
 export type TableOfContentsSize = Extract<Size, 'sm' | 'md'>;
 export type { TocHeading };
@@ -139,6 +145,7 @@ export function TableOfContents({
   const active = controlled ? activeProp : tracked;
   const rootRef = useRef<HTMLElement | null>(null);
   const indicatorRef = useRef<HTMLSpanElement | null>(null);
+  const motion = useMotion();
   const changeRef = useRef(onActiveChange);
   useEffect(() => {
     changeRef.current = onActiveChange;
@@ -238,13 +245,18 @@ export function TableOfContents({
     }
     const rootBox = root.getBoundingClientRect();
     const box = link.getBoundingClientRect();
-    bar.style.setProperty('--_toc-indicator-offset', `${box.top - rootBox.top + root.scrollTop}px`);
+    const before = Number.parseFloat(bar.style.getPropertyValue('--_toc-indicator-offset'));
+    const shown = Number.parseFloat(bar.style.getPropertyValue('--_toc-indicator-size')) > 0;
+    const offset = box.top - rootBox.top + root.scrollTop;
+    // toc-travel: the bar stretches along its travel while the CSS spring moves it, trailing edge first.
+    if (shown && Number.isFinite(before) && Math.abs(offset - before) >= 1) stretchAlong(bar, 'y', offset > before, motion.mode('toc-travel'));
+    bar.style.setProperty('--_toc-indicator-offset', `${offset}px`);
     bar.style.setProperty('--_toc-indicator-size', `${box.height}px`);
     if (sticky && root.scrollHeight > root.clientHeight) {
       if (box.top < rootBox.top) root.scrollTop -= rootBox.top - box.top;
       else if (box.bottom > rootBox.bottom) root.scrollTop += box.bottom - rootBox.bottom;
     }
-  }, [active, tree, sticky, layoutTick]);
+  }, [active, tree, sticky, layoutTick, motion]);
 
   const onLinkClick = (id: string) => (event: MouseEvent<HTMLAnchorElement>) => {
     if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;

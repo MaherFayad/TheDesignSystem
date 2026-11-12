@@ -5,6 +5,14 @@
  *
  * Private properties on the root:
  *   --_floating-action-button-inset the distance from the inline end and the block end
+ *   --_floating-action-button-turn  how far a plus glyph turns while the
+ *                                   button holds something open (interaction
+ *                                   fab-morph): an eighth of a turn, so the
+ *                                   plus reads as a close mark; a style sets
+ *                                   it to 0deg to turn it off
+ *   --_floating-action-button-enter-x  where the label of the extended form
+ *                                   comes from when it appears: distance.shift
+ *                                   back toward the icon
  */
 @layer ds.base {
   /*
@@ -39,5 +47,36 @@
 
     flex: none;
     inline-size: var(--_button-height);
+  }
+
+  /*
+   * Interaction fab-morph (order 1.22, proposed).
+   *
+   * Plus to close: when the button opens something (a menu or a popover
+   * trigger sets aria-expanded), a plus glyph turns an eighth of a turn into
+   * a close mark on the snappy spring (Button.css times the icon part),
+   * passing its mark a little and settling; it turns back when the panel
+   * closes. Other glyphs do not turn.
+   *
+   * The extended label: when the label appears (the extended form, on first
+   * paint or when a page turns it on), it slides out from behind the icon by
+   * distance.shift and fades in, on the snappy spring. The width changes at
+   * once: only the label moves. Reduced motion: the duration tokens are 0ms,
+   * so both show at once.
+   */
+  [data-ds='floating-action-button'] {
+    --_floating-action-button-turn: 0.125turn;
+    --_floating-action-button-enter-x: calc(-1 * var(--ds-distance-shift) * var(--_button-dir));
+  }
+
+  [data-ds='floating-action-button'][aria-expanded='true']:has(> [data-part='icon'] > [data-icon='plus']) {
+    --_button-turn: var(--_floating-action-button-turn);
+  }
+
+  [data-ds='floating-action-button'][data-extended] > [data-part='label'] {
+    @starting-style {
+      opacity: 0;
+      transform: translateX(var(--_floating-action-button-enter-x));
+    }
   }
 }

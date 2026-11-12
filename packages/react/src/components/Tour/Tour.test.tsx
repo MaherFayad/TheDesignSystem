@@ -240,3 +240,35 @@ describe('Tour', () => {
     expect(rootEl()?.getAttribute('data-state')).toBe('open');
   });
 });
+
+// ------------------------------------------------------------------ motion, order 1.22
+
+describe('motion (order 1.22): tour-spotlight', () => {
+  it('on Next the new title, body and footer arrive in order and focus is on the panel at once', async () => {
+    const calls: { el: Element; options: KeyframeAnimationOptions }[] = [];
+    const animate = Element.prototype.animate;
+    Element.prototype.animate = function (this: Element, _frames: Keyframe[] | PropertyIndexedKeyframes | null, options?: number | KeyframeAnimationOptions) {
+      calls.push({ el: this, options: (options ?? {}) as KeyframeAnimationOptions });
+      return { cancel() {}, finished: Promise.resolve(), id: '', playState: 'finished' } as unknown as Animation;
+    };
+    try {
+      const user = userEvent.setup();
+      render(<Basic />);
+      await start(user);
+      await user.click(screen.getByRole('button', { name: 'Next step' }));
+      await waitFor(() => expect(part('title')?.textContent).toBe('Share with your team'));
+      const parts = calls.filter((c) => c.options.id === 'ds-motion:stagger').map((c) => c.el.getAttribute('data-part'));
+      expect(parts).toEqual(expect.arrayContaining(['title', 'body']));
+      expect(document.activeElement).toBe(part('panel'));
+    } finally {
+      Element.prototype.animate = animate;
+    }
+  });
+
+  it('review B2: the reduced form applies under data-motion="reduce" too', async () => {
+    const { readFileSync } = await import('node:fs');
+    const { join } = await import('node:path');
+    const css = readFileSync(join(process.cwd(), 'packages/css/src/components/Tour.css'), 'utf8');
+    expect(css).toContain(":root[data-motion='reduce'] [data-ds='tour'] :is([data-part='panel'][data-state], [data-part='highlight']),");
+  });
+});

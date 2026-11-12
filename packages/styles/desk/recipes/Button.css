@@ -38,7 +38,7 @@
     transform: translateY(calc(-1 * var(--_button-height)));
   }
 
-  /* Off under reduced motion: duration.roll is 0ms there, and the label does not move at all. The fallbacks repeat the roll selectors so they match their specificity. */
+  /* Off under reduced motion, the system setting and the page's own (data-motion="reduce" on the root, WCAG 2.3.3): duration.roll is 0ms there, and the label does not move at all. The fallbacks repeat the roll selectors so they match their specificity. */
   @media (prefers-reduced-motion: reduce) {
     [data-style='desk'] [data-ds='button']:not([data-emphasis='link'], [data-wrap]) > [data-part='label'] {
       text-shadow: none;
@@ -47,6 +47,14 @@
     [data-style='desk'] [data-ds='button']:not([data-emphasis='link'], [data-wrap], [data-disabled], [data-loading]):is(:hover, :focus-visible) > [data-part='label'] {
       transform: none;
     }
+  }
+
+  :root[data-motion='reduce'] [data-style='desk'] [data-ds='button']:not([data-emphasis='link'], [data-wrap]) > [data-part='label'] {
+    text-shadow: none;
+  }
+
+  :root[data-motion='reduce'] [data-style='desk'] [data-ds='button']:not([data-emphasis='link'], [data-wrap], [data-disabled], [data-loading]):is(:hover, :focus-visible) > [data-part='label'] {
+    transform: none;
   }
 
   /* Forced colors: the system draws text in one color and the clip would leave a blank button mid roll. No roll. */

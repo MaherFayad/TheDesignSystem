@@ -21,15 +21,26 @@
  *   --_popover-padding, -gap, -title-fg
  *   --_popover-arrow-width, -arrow-height
  *   --_popover-enter-scale, -duration-in, -duration-out, -ease-in, -ease-out
+ *   --_popover-enter-x, -enter-y   the travel of the enter, set per side from -shift
+ *                                  (enter-x is the inline twin of the motion name enter-y)
+ *   --_popover-shift               how far the popover travels in from its trigger side
+ *   --_popover-item-shift          how far the title, body and footer rise as they arrive
  *
- * Motion, interaction "menu-origin" (pattern "menu-scale"), the same values
- * and plumbing as DropdownMenu: the root scales up from scale.menu-enter out
- * of the Radix transform origin (the trigger side) while it fades in, over
- * duration.base on ease.emphasized. Closing plays the reverse, faster
- * (duration.quick, ease.exit), and takes no pointer. Only transform and
- * opacity animate. A style turns the scale off with --_popover-enter-scale: 1,
- * which leaves a fade. Under reduced motion the animations are none, so
- * Radix removes a closed popover at once.
+ * Motion, interaction "popover-spring" (pattern "menu-scale"), order 1.22,
+ * proposed: a small surface that lands. The popover comes out of its
+ * trigger side (data-side): it travels distance.shift and grows from
+ * scale.enter out of the Radix transform origin while it fades in, on the
+ * bouncy spring (ease.spring-bouncy over duration.spring-bouncy), so it
+ * passes its size a little and settles. The title, the body and the footer
+ * then rise distance.shift and fade in on the soft spring, one
+ * delay.stagger step apart. A part that holds focus is there at once
+ * (:focus-within), so the focus ring never waits. Closing is faster
+ * (duration.quick, ease.exit), all at once, and takes no pointer. HoverCard
+ * plays the same spring. Only transform and opacity animate. A style turns
+ * the travel and the scale off with --_popover-enter-scale: 1,
+ * --_popover-shift: 0px and --_popover-item-shift: 0px, which leaves fades.
+ * Under reduced motion the animations are none, so Radix removes a closed
+ * popover at once.
  */
 @layer ds.base {
   /* ------------------------------------------------------------ portal layer */
@@ -54,10 +65,14 @@
     --_popover-gap: var(--ds-space-l);
     --_popover-arrow-width: var(--ds-space-2xl);
     --_popover-arrow-height: calc(var(--ds-space-2xl) / 2);
-    --_popover-enter-scale: var(--ds-scale-menu-enter);
-    --_popover-duration-in: var(--ds-duration-base);
+    --_popover-enter-scale: var(--ds-scale-enter);
+    --_popover-shift: var(--ds-distance-shift);
+    --_popover-enter-x: 0px;
+    --_popover-enter-y: 0px;
+    --_popover-item-shift: var(--ds-distance-shift);
+    --_popover-duration-in: var(--ds-duration-spring-bouncy);
     --_popover-duration-out: var(--ds-duration-quick);
-    --_popover-ease-in: var(--ds-ease-emphasized);
+    --_popover-ease-in: var(--ds-ease-spring-bouncy);
     --_popover-ease-out: var(--ds-ease-exit);
 
     position: relative;
@@ -96,8 +111,39 @@
     --_popover-padding: var(--ds-space-2xl);
   }
 
+  /* The travel comes from the trigger side: a popover below its trigger comes down out of it. */
+  [data-ds='popover'][data-side='bottom'] {
+    --_popover-enter-y: calc(var(--_popover-shift) * -1);
+  }
+
+  [data-ds='popover'][data-side='top'] {
+    --_popover-enter-y: var(--_popover-shift);
+  }
+
+  [data-ds='popover'][data-side='right'] {
+    --_popover-enter-x: calc(var(--_popover-shift) * -1);
+  }
+
+  [data-ds='popover'][data-side='left'] {
+    --_popover-enter-x: var(--_popover-shift);
+  }
+
   [data-ds='popover'][data-state='open'] {
     animation: ds-popover-in var(--_popover-duration-in) var(--_popover-ease-in);
+  }
+
+  /* The parts arrive one stagger step apart after the surface. A part with focus in it is there at once. */
+  [data-ds='popover'][data-state='open'] > :is([data-part='title'], [data-part='body'], [data-part='footer']):not(:focus-within) {
+    animation: ds-popover-part-in var(--ds-duration-spring-soft) var(--ds-ease-spring-soft) backwards;
+    animation-delay: var(--ds-delay-stagger);
+  }
+
+  [data-ds='popover'][data-state='open'] > [data-part='body']:not(:focus-within) {
+    animation-delay: min(calc(var(--ds-delay-stagger) * 2), var(--ds-duration-base));
+  }
+
+  [data-ds='popover'][data-state='open'] > [data-part='footer']:not(:focus-within) {
+    animation-delay: min(calc(var(--ds-delay-stagger) * 3), var(--ds-duration-base));
   }
 
   [data-ds='popover'][data-state='closed'] {
@@ -196,26 +242,45 @@
     vector-effect: non-scaling-stroke;
   }
 
-  /* ------------------------------------------------------------ motion: interaction "menu-origin", pattern "menu-scale" */
+  /* ------------------------------------------------------------ motion: interaction "popover-spring", pattern "menu-scale" */
 
   @keyframes ds-popover-in {
     from {
       opacity: 0;
-      transform: scale(var(--_popover-enter-scale));
+      transform: translate(var(--_popover-enter-x), var(--_popover-enter-y)) scale(var(--_popover-enter-scale));
     }
   }
 
   @keyframes ds-popover-out {
     to {
       opacity: 0;
-      transform: scale(var(--_popover-enter-scale));
+      transform: translate(var(--_popover-enter-x), var(--_popover-enter-y)) scale(var(--_popover-enter-scale));
     }
   }
 
+  @keyframes ds-popover-part-in {
+    from {
+      opacity: 0;
+      transform: translateY(var(--_popover-item-shift));
+    }
+
+    /* Readable early: full opacity at 30%, the transform carries the rest. */
+    30% {
+      opacity: 1;
+    }
+  }
+
+  /* Reduced motion: the system setting and the page's own setting (data-motion="reduce" on the root element). */
   @media (prefers-reduced-motion: reduce) {
-    [data-ds='popover'][data-state] {
+    [data-ds='popover'][data-state],
+    [data-ds='popover'][data-state] > :is([data-part='title'], [data-part='body'], [data-part='footer']) {
       animation: none;
     }
+  }
+
+  :root[data-motion='reduce'] [data-ds='popover'][data-state],
+  :root[data-motion='reduce'] [data-ds='popover'][data-state] > :is([data-part='title'], [data-part='body'], [data-part='footer']) {
+    animation: none;
   }
 
   /* ------------------------------------------------------------ transparency, contrast, forced colors */

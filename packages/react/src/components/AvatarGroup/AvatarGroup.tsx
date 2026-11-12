@@ -17,8 +17,14 @@ import {
   type ReactNode,
   type Ref,
 } from 'react';
+import { useMotion } from '../../internal/motion';
 import { Button } from '../Button';
 import type { AvatarProps, AvatarSize } from '../Avatar';
+import { popMark, useDigitRoll } from '../Stat/useDigitRoll';
+import { useFlipList } from './useFlipList';
+
+/** The items that move: the avatars and the overflow, never a ghost on its way out. */
+const movers = (root: HTMLElement) => [...root.querySelectorAll(':scope > [data-part]:not([inert])')];
 
 export interface AvatarGroupProps extends Omit<HTMLAttributes<HTMLDivElement>, 'title' | 'children'> {
   /**
@@ -71,9 +77,21 @@ export function AvatarGroup({
   // The plus stays before the digits in right to left layouts too: the count is isolated as left to right.
   const count = `+${hidden}`;
   const countWords = overflowLabel ? overflowLabel(hidden) : `${hidden} more`;
+  // avatar-group-change (order 1.22): avatars that join pop in, avatars that leave shrink away, the rest
+  // slide to their new place (FLIP), and the overflow count rolls and pops.
+  const motion = useMotion();
+  const mode = motion.mode('avatar-group-change');
+  const signature = `${shown.map((a) => String(a.key)).join('|')}|${hidden > 0 ? 'more' : ''}`;
+  const own = useFlipList<HTMLDivElement>(movers, signature, mode);
+  const countRef = useDigitRoll<HTMLElement>(hidden > 0 ? count : undefined, mode, (_d, host) => popMark(host.closest('[data-part="overflow"]'), mode), hidden);
+  const setRef = (node: HTMLDivElement | null) => {
+    own.current = node;
+    if (typeof ref === 'function') return ref(node);
+    if (ref) ref.current = node;
+  };
 
   return (
-    <div {...rest} ref={ref} data-ds="avatar-group" data-size={size} role="group" aria-label={label}>
+    <div {...rest} ref={setRef} data-ds="avatar-group" data-size={size} role="group" aria-label={label}>
       {shown.map((avatar) =>
         cloneElement(avatar, { size, 'data-part': 'item' } as Partial<AvatarProps> & { 'data-part': string }),
       )}
@@ -87,11 +105,13 @@ export function AvatarGroup({
             aria-label={`${count}, ${countWords}`}
             onClick={onOverflowClick}
           >
-            <bdi dir="ltr">{count}</bdi>
+            <bdi dir="ltr" ref={countRef}>
+              {count}
+            </bdi>
           </Button>
         ) : (
           <span data-part="overflow" role="img" aria-label={countWords}>
-            <bdi aria-hidden="true" dir="ltr">
+            <bdi aria-hidden="true" dir="ltr" ref={countRef}>
               {count}
             </bdi>
           </span>

@@ -20,14 +20,56 @@
  * a pane is a panel of the group, whose ::before is free, but a ring on a
  * layer would sit under the pane's own scrolling content.
  *
- * Motion: none of its own. The panes switch at once; the handle follows the
- * ResizablePanels motion ("drag-drop").
+ * Motion: the handle follows the ResizablePanels motion ("drag-drop",
+ * handle-grip). Interaction split-view-pane (order 1.22, proposed): while
+ * stacked, the pane that shows slides in from the side it comes from, the
+ * detail from the inline end and the list back from the inline start, by
+ * distance.enter on the soft spring. Transform only, no fade: focus moves
+ * into the pane, and its ring shows at once. The switch itself is at once.
+ *   --_split-view-shift   the slide's distance, signed for the reading direction
+ * A style turns it off with --_split-view-shift: 0px. Under reduced motion
+ * (media query or data-motion="reduce") the pane does not slide.
  */
 @layer ds.base {
   [data-ds='split-view'] {
     --_split-view-back-gap: var(--ds-space-s);
     --_split-view-ring-color: var(--ds-color-focus-ring);
     --_split-view-ring-width: var(--ds-border-width-strong);
+    --_split-view-shift: var(--ds-distance-enter);
+  }
+
+  [data-ds='split-view']:dir(rtl) {
+    --_split-view-shift: calc(-1 * var(--ds-distance-enter));
+  }
+
+  [data-ds='split-view'][data-state='secondary'] > [data-part='secondary'] {
+    animation: ds-split-view-from-end var(--ds-duration-spring-soft) var(--ds-ease-spring-soft);
+  }
+
+  [data-ds='split-view'][data-state='primary'] > [data-part='primary'] {
+    animation: ds-split-view-from-start var(--ds-duration-spring-soft) var(--ds-ease-spring-soft);
+  }
+
+  @keyframes ds-split-view-from-end {
+    from {
+      transform: translateX(var(--_split-view-shift));
+    }
+  }
+
+  @keyframes ds-split-view-from-start {
+    from {
+      transform: translateX(calc(-1 * var(--_split-view-shift)));
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    [data-ds='split-view'] > :is([data-part='primary'], [data-part='secondary']) {
+      animation: none;
+    }
+  }
+
+  :root[data-motion='reduce'] [data-ds='split-view'] > :is([data-part='primary'], [data-part='secondary']) {
+    animation: none;
   }
 
   [data-ds='split-view'] > :is([data-part='primary'], [data-part='secondary']) {
@@ -53,6 +95,10 @@
   }
 
   @media (forced-colors: active) {
+    [data-ds='split-view'] > :is([data-part='primary'], [data-part='secondary']) {
+      animation: none;
+    }
+
     [data-ds='split-view'] > :is([data-part='primary'], [data-part='secondary']):focus-visible {
       outline-color: Highlight;
     }

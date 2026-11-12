@@ -1,5 +1,7 @@
 'use client';
-import { useCallback, useId, useLayoutEffect, useMemo, useState, type ComponentProps, type ReactNode } from 'react';
+import { useCallback, useEffect, useId, useLayoutEffect, useMemo, useRef, useState, type ComponentProps, type ReactNode } from 'react';
+import { useMotion } from '../../internal/motion';
+import { playBeat, slideIn } from '../Input/fieldMotion';
 import { FieldError } from '../FieldError/FieldError';
 import { Label, type LabelProps } from '../Label/Label';
 import { FieldContext, useField, type FieldContextValue } from './context';
@@ -53,6 +55,11 @@ export function Field({
   const base = useId();
   const [ownControlId, setOwnControlId] = useState<string | undefined>(undefined);
   const [counts, setCounts] = useState({ description: 0, error: 0 });
+  // A description or an error that renders after the first paint slides in (order 1.22).
+  const settled = useRef(false);
+  useEffect(() => {
+    settled.current = true;
+  }, []);
 
   const register = useCallback((part: 'description' | 'error') => {
     setCounts((c) => ({ ...c, [part]: c[part] + 1 }));
@@ -75,6 +82,7 @@ export function Field({
       hasError,
       register,
       setControlId: setOwnControlId,
+      settled,
     }),
     [base, ownControlId, invalid, hasError, disabled, readOnly, required, counts.description, register],
   );
@@ -121,13 +129,36 @@ export interface FieldDescriptionProps extends Omit<ComponentProps<'p'>, 'title'
   children?: ReactNode;
 }
 
-/** A hint that helps fill the control. Joins aria-describedby. */
-export function FieldDescription({ children, ...rest }: FieldDescriptionProps) {
+/** The interaction id of the description and error entrances in the registry. */
+export const FIELD_MESSAGE_ENTER = 'field-message-enter';
+
+/**
+ * A hint that helps fill the control. Joins aria-describedby. One that
+ * renders after the Field's first paint slides in from distance.shift above
+ * and fades in on the soft spring (interaction field-message-enter).
+ */
+export function FieldDescription({ children, ref, ...rest }: FieldDescriptionProps) {
   const field = useField();
   const register = field?.register;
+  const motion = useMotion();
+  const el = useRef<HTMLParagraphElement | null>(null);
   useLayoutEffect(() => register?.('description'), [register]);
+  const settled = field?.settled;
+  useLayoutEffect(() => {
+    if (settled?.current) playBeat(el.current, slideIn(), FIELD_MESSAGE_ENTER, motion.mode(FIELD_MESSAGE_ENTER));
+    // Once, when the description mounts.
+  }, []);
   return (
-    <p {...rest} id={rest.id ?? field?.descriptionId} data-part="description">
+    <p
+      {...rest}
+      ref={(node: HTMLParagraphElement | null) => {
+        el.current = node;
+        if (typeof ref === 'function') ref(node);
+        else if (ref && typeof ref === 'object') (ref as { current: HTMLParagraphElement | null }).current = node;
+      }}
+      id={rest.id ?? field?.descriptionId}
+      data-part="description"
+    >
       {children}
     </p>
   );

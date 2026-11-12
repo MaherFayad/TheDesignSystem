@@ -16,8 +16,12 @@
 // data-part="item"; SegmentedControl.css restyles them through Button's
 // private properties. The indicator is measured from the selected item and
 // placed with logical private properties, so RTL needs nothing more. It
-// moves with `transform` only, through the motion catalog: no motion under
-// reduced motion, where it jumps.
+// moves with `transform` only: interaction "tab-slide" (order 1.22,
+// proposed), the shared pill of react/src/internal/indicator.ts, slides it
+// from where it is drawn (a second change mid travel starts there) on the
+// snappy spring, stretched along its travel, and the label it leaves dips
+// while the one it reaches pops. No motion under reduced motion, where it
+// jumps.
 import {
   createContext,
   use,
@@ -32,7 +36,9 @@ import {
   type Ref,
 } from 'react';
 import { ToggleGroup as RadixToggleGroup } from 'radix-ui';
-import { catalog, settle } from '@the-system/motion';
+import { settle } from '@the-system/motion';
+import { answerLabels, slideTo } from '../../internal/indicator';
+import { useMotion } from '../../internal/motion';
 import type { Shape, Size } from '@the-system/shared';
 import { ButtonGroupContext, type ButtonGroupContextValue } from '../ButtonGroup/ButtonGroupContext';
 import { ButtonRoot, renderSlotContent, type ButtonBaseProps, type ButtonSlotContent } from '../Button/ButtonBase';
@@ -123,6 +129,10 @@ export function SegmentedControl({
   const indicatorRef = useRef<HTMLSpanElement>(null);
   const placed = useRef<string | null>(null);
   const frame = useRef('');
+  const motion = useMotion();
+  const modeRef = useRef(motion.mode);
+  modeRef.current = motion.mode;
+  const lastLabel = useRef<Element | null>(null);
 
   const select = useCallback(
     (next: string) => {
@@ -159,7 +169,13 @@ export function SegmentedControl({
       thumb.style.setProperty('--_segmented-control-indicator-inline-size', `${f.inline}px`);
       thumb.style.setProperty('--_segmented-control-indicator-block-size', `${f.block}px`);
       thumb.hidden = false;
-      if (from) catalog['tab-indicator'].animate(thumb, { from, to: thumb.getBoundingClientRect() });
+      const label = item.querySelector(':scope > [data-part="label"], :scope > [data-part="icon"]');
+      if (from) {
+        const mode = modeRef.current('tab-slide');
+        slideTo({ el: thumb }, from, thumb.getBoundingClientRect(), { mode, axis: 'x' });
+        answerLabels(lastLabel.current, label, mode);
+      }
+      lastLabel.current = label;
     },
     [],
   );

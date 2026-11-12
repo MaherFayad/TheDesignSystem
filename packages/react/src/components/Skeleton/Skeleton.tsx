@@ -1,3 +1,4 @@
+'use client';
 // Skeleton: a placeholder shape while content loads.
 //
 // Sources: Figma-Killer-2 `ui/components/Skeleton/` (the shimmer bar, its
@@ -11,8 +12,19 @@
 // A skeleton is always aria-hidden: it carries no content. The container
 // that is loading carries aria-busy="true" and, where the wait is worth
 // saying, a status message; this component does not announce.
-import type { CSSProperties, HTMLAttributes, Ref } from 'react';
+//
+// Motion (order 1.22, interaction skeleton-swap, proposed): when the
+// consumer swaps the skeleton for its content, the skeleton leaves the DOM at
+// once (nothing waits), and just before the next paint a ghost of it is put
+// back where it was drawn and fades out over duration.morph on top of the
+// content that took its place: a cross fade from the placeholder to the
+// content, inside the existing contract (./Alert/ghost.ts). The fuller
+// form, a `loading` prop with the content as children that fades in under
+// the leaving shape, is proposed to the owner in the round 2 report.
+import { useLayoutEffect, useRef, type CSSProperties, type HTMLAttributes, type Ref } from 'react';
 import type { Size } from '@the-system/shared';
+import { useMotion } from '../../internal/motion';
+import { fadeAway, ghostOf, placeOf } from '../Alert/ghost';
 
 export type SkeletonVariant = 'text' | 'circle' | 'rect';
 export type SkeletonSize = Extract<Size, 'sm' | 'md' | 'lg'>;
@@ -35,7 +47,24 @@ function toLength(value: string | number | undefined): string | undefined {
 }
 
 /** One placeholder shape. Always hidden from assistive tech; the loading container carries aria-busy. */
-export function Skeleton({ variant = 'text', size = 'md', width, height, style, ...rest }: SkeletonProps) {
+export function Skeleton({ variant = 'text', size = 'md', width, height, style, ref, ...rest }: SkeletonProps) {
+  const own = useRef<HTMLSpanElement | null>(null);
+  const motion = useMotion();
+  const mode = motion.mode('skeleton-swap');
+  const modeRef = useRef(mode);
+  modeRef.current = mode;
+  // On unmount the node is still in the document: record where it is, and
+  // after the commit, if it is really gone (not a StrictMode rerun), fade its ghost.
+  useLayoutEffect(() => {
+    const el = own.current;
+    return () => {
+      if (!el || !el.isConnected || modeRef.current === 'none' || typeof requestAnimationFrame !== 'function') return;
+      const place = placeOf(el);
+      requestAnimationFrame(() => {
+        if (!el.isConnected) fadeAway(ghostOf(place), modeRef.current);
+      });
+    };
+  }, []);
   const vars: Record<string, string> = {};
   const w = toLength(width);
   const h = toLength(height);
@@ -44,6 +73,11 @@ export function Skeleton({ variant = 'text', size = 'md', width, height, style, 
   return (
     <span
       {...rest}
+      ref={(node) => {
+        own.current = node;
+        if (typeof ref === 'function') return ref(node);
+        if (ref) ref.current = node;
+      }}
       aria-hidden="true"
       data-ds="skeleton"
       data-variant={variant}

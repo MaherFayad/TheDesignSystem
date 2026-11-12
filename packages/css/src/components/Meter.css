@@ -21,13 +21,24 @@
  * data-tone comes from the thresholds (success, warning, danger) or is
  * accent with none. data-level (low, medium, high) is also written in the
  * value text, so the level is never only a color. The indicator scales with
- * scaleX from the inline start; a value change eases the transform, and
- * under reduced motion it moves at once.
+ * scaleX from the inline start; a value change eases the transform on the
+ * soft spring, and under reduced motion (media query or data-motion="reduce")
+ * it moves at once.
+ *
+ * Motion (order 1.22, interaction meter-fill, proposed): the first time a
+ * meter is seen (on mount, or when it scrolls into view), Meter.tsx plays the
+ * fill from the inline start to the value once, on ease.spring-soft over
+ * duration.reveal. Until then an inline scaleX(0) holds the fill empty;
+ * with no script it shows the value.
+ *
+ *   --_meter-duration, -ease   a value change (motion names)
  */
 @layer ds.base {
   [data-ds='meter'] {
     --_meter-height: var(--ds-space-fixed-m);
     --_meter-gap: var(--ds-space-2xs);
+    --_meter-duration: var(--ds-duration-spring-soft);
+    --_meter-ease: var(--ds-ease-spring-soft);
     --_meter-font-size: var(--ds-font-size-s);
     --_meter-radius: var(--ds-radius-pill);
     --_meter-track: var(--ds-color-bg-overlay-10);
@@ -110,7 +121,7 @@
     background-color: var(--_meter-fill);
     transform: scaleX(var(--_meter-fraction));
     transform-origin: 0 50%;
-    transition: transform var(--ds-duration-slow) var(--ds-ease-standard);
+    transition: transform var(--_meter-duration) var(--_meter-ease);
   }
 
   [data-ds='meter'] [data-part='indicator']:dir(rtl) {
@@ -121,6 +132,10 @@
     [data-ds='meter'] [data-part='indicator'] {
       transition: none;
     }
+  }
+
+  :root[data-motion='reduce'] [data-ds='meter'] [data-part='indicator'] {
+    transition: none;
   }
 
   @media (forced-colors: active) {

@@ -9,6 +9,12 @@
 // error does not shake (its color and message carry it), and numbers change
 // in place. CSS interactions follow the tokens; a row of `none` or
 // `reduced` turns their motion off through the recipe in packages/motion.
+//
+// Order 1.22 (proposed): Studio's character lives in its motion tokens. Its
+// spring eases are steps (`ease.spring-snappy` is two steps, `-bouncy` three)
+// and a plain curve (`-soft`), so moves land in hard cuts; its stagger step is
+// 0ms, so parts arrive together; `scale.pop` is 1 and `scale.enter` 1, so
+// nothing overshoots or grows; distances are the shortest of the three.
 import type { StyleMotionPreset } from '@the-system/motion';
 
 const motion: StyleMotionPreset = {
@@ -25,6 +31,15 @@ const motion: StyleMotionPreset = {
   interactions: {
     'error-shake': 'none',
     'field-step': 'reduced',
+    // Order 1.22 (proposed): Studio's spring eases are steps, so these play in
+    // full as hard cuts: a count or a page number flips in two or three steps
+    // instead of fading, and the tab bar and dock land in steps with no pop
+    // (scale.pop is 1 in Studio).
+    'stat-roll': 'full',
+    'badge-count': 'full',
+    'pagination-roll': 'full',
+    'tab-bar-pop': 'full',
+    'dock-lift': 'full',
   },
 };
 

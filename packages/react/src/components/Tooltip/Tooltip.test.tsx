@@ -180,3 +180,53 @@ describe('Tooltip', () => {
     expect(ids).toEqual(['variants', 'one', 'many', 'too-many', 'long-text', 'long-arabic', 'disabled']);
   });
 });
+
+// ------------------------------------------------------------------ motion, order 1.22
+
+describe('motion (order 1.22)', () => {
+  it('tooltip-follow: tabbing to the next control hides the last tooltip at once and keeps the next one open', async () => {
+    const calls: [Element, Keyframe[]][] = [];
+    const original = Element.prototype.animate;
+    Element.prototype.animate = function (this: Element, frames: Keyframe[] | PropertyIndexedKeyframes | null) {
+      calls.push([this, frames as Keyframe[]]);
+      return { cancel() {}, finished: Promise.resolve(), id: '' } as unknown as Animation;
+    };
+    try {
+      const user = userEvent.setup();
+      render(
+        <TooltipProvider delayDuration={0}>
+          <Tooltip content="Copy layer">
+            <IconButton icon="copy" label="Copy" />
+          </Tooltip>
+          <Tooltip content="Edit layer">
+            <IconButton icon="edit" label="Edit" />
+          </Tooltip>
+        </TooltipProvider>,
+      );
+      await user.tab();
+      const tips = () => Array.from(document.body.querySelectorAll<HTMLElement>('[data-ds="tooltip"]'));
+      await waitFor(() => expect(tips().some((el) => el.textContent?.includes('Copy layer'))).toBe(true));
+      const first = tips()[0];
+      await user.tab();
+      await waitFor(() => expect(tips().some((el) => el.textContent?.includes('Edit layer'))).toBe(true));
+      const next = tips().find((el) => el.textContent?.includes('Edit layer'));
+      expect(next?.getAttribute('data-state')).toBe('instant-open');
+      if (first?.isConnected) expect(calls.some(([el, frames]) => el === first && frames[0]?.opacity === 0)).toBe(true);
+    } finally {
+      Element.prototype.animate = original;
+    }
+  });
+
+  describe('Tooltip.css', async () => {
+    const { readFileSync } = await import('node:fs');
+    const { join } = await import('node:path');
+    const css = readFileSync(join(process.cwd(), 'packages/css/src/components/Tooltip.css'), 'utf8');
+    it('rises on the snappy spring and closes faster', () => {
+      expect(css).toContain('--_tooltip-duration-in: var(--ds-duration-spring-snappy);');
+      expect(css).toContain('--_tooltip-duration-out: var(--ds-duration-quick);');
+    });
+    it('review B2: the reduced form applies under data-motion="reduce" too', () => {
+      expect(css).toContain(":root[data-motion='reduce'] [data-ds='tooltip'][data-state],");
+    });
+  });
+});

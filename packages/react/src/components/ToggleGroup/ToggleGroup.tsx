@@ -16,12 +16,27 @@
 // behaves like a ToggleButton. The group passes size, emphasis and shape to
 // the items through ButtonGroupContext, which ButtonRoot reads; an item's
 // own prop wins.
-import { useMemo, type HTMLAttributes, type ReactNode, type Ref } from 'react';
+//
+// Motion, interaction "tab-slide" (order 1.22, proposed): in a single choice
+// group every item holds an empty aria-hidden span, inside the item part,
+// that draws the on fill of the on item (ToggleGroup.css). When the value
+// changes, the shared pill (react/src/internal/indicator.ts) slides that
+// fill from the item it leaves to the item it reaches on the snappy spring,
+// stretched along its travel, and the labels dip and pop. The value of a
+// single group is kept here (controlled or not) so the group knows when it
+// changes. A multiple group has no pill.
+import { createContext, use, useCallback, useLayoutEffect, useMemo, useRef, type HTMLAttributes, type ReactNode, type Ref } from 'react';
 import { ToggleGroup as RadixToggleGroup } from 'radix-ui';
 import { ButtonGroupContext, type ButtonGroupContextValue } from '../ButtonGroup/ButtonGroupContext';
 import { ButtonRoot, renderSlotContent, type ButtonBaseProps, type ButtonSlotContent } from '../Button/ButtonBase';
 import { useTheme } from '../../theme';
 import { GroupDisabledContext, moveFromInertItem, useGroupDisabled } from './inertItems';
+import { followIndicator, useIndicatorTrack } from '../../internal/indicator';
+import { useMotion } from '../../internal/motion';
+import { useControllable } from '../../internal/useControllable';
+
+/** True inside a single choice group: its items hold the pill span. */
+const PillContext = createContext(false);
 import type { Emphasis, Shape, Size } from '@the-system/shared';
 
 export type ToggleGroupSize = Extract<Size, 'xs' | 'sm' | 'md' | 'lg'>;
@@ -94,9 +109,44 @@ export function ToggleGroup({
 }: ToggleGroupProps) {
   const { dir } = useTheme();
   const axes = useMemo<ButtonGroupContextValue>(() => ({ size, emphasis, shape }), [size, emphasis, shape]);
+  const single = rest.type === 'single';
+  const singleProps = single ? (rest as ToggleGroupSingleProps) : null;
+  const [singleValue, setSingleValue] = useControllable<string>(singleProps?.value, singleProps?.defaultValue ?? '', singleProps?.onValueChange);
+  const rootRef = useRef<HTMLDivElement | null>(null);
+  const track = useIndicatorTrack();
+  const motion = useMotion();
+  const { ref, ...radixRest } = rest as typeof rest & { ref?: Ref<HTMLDivElement> };
+  const setRef = useCallback(
+    (node: HTMLDivElement | null) => {
+      rootRef.current = node;
+      if (typeof ref === 'function') ref(node);
+      else if (ref) ref.current = node;
+    },
+    [ref],
+  );
+
+  useLayoutEffect(() => {
+    const root = rootRef.current;
+    if (!single || !root) return;
+    const item = root.querySelector<HTMLElement>(':scope > [data-part="item"][data-state="on"]');
+    const pill = item?.querySelector(':scope > span[aria-hidden="true"]:not([data-part])');
+    if (!item || !pill) {
+      track.key = null;
+      return;
+    }
+    followIndicator(track, singleValue, { el: pill }, {
+      mode: motion.mode('tab-slide'),
+      anchor: root,
+      label: item.querySelector(':scope > [data-part="label"], :scope > [data-part="icon"]'),
+    });
+  }, [single, singleValue, track, motion]);
+
+  const controlled = single ? { value: singleValue, onValueChange: setSingleValue, defaultValue: undefined } : {};
   return (
     <RadixToggleGroup.Root
-      {...(rest as RadixToggleGroup.ToggleGroupSingleProps | RadixToggleGroup.ToggleGroupMultipleProps)}
+      {...(radixRest as RadixToggleGroup.ToggleGroupSingleProps | RadixToggleGroup.ToggleGroupMultipleProps)}
+      {...(controlled as object)}
+      ref={setRef}
       dir={dir}
       orientation={orientation}
       loop={loop}
@@ -114,7 +164,9 @@ export function ToggleGroup({
       data-disabled={disabled ? '' : undefined}
     >
       <GroupDisabledContext value={disabled}>
-        <ButtonGroupContext value={axes}>{children}</ButtonGroupContext>
+        <ButtonGroupContext value={axes}>
+          <PillContext value={single}>{children}</PillContext>
+        </ButtonGroupContext>
       </GroupDisabledContext>
     </RadixToggleGroup.Root>
   );
@@ -143,6 +195,7 @@ export interface ToggleGroupItemProps
  */
 export function ToggleGroupItem({ value, disabled = false, start, end, icon, label, children, ...rest }: ToggleGroupItemProps) {
   const groupDisabled = useGroupDisabled();
+  const pill = use(PillContext);
   const iconOnly = icon !== undefined;
   // Radix is not told about disabled: the item stays in the arrow order and
   // focusable. ButtonRoot makes it inert: aria-disabled, no click, no toggle.
@@ -158,9 +211,13 @@ export function ToggleGroupItem({ value, disabled = false, start, end, icon, lab
         aria-label={iconOnly ? label : rest['aria-label']}
         render={() =>
           iconOnly ? (
-            <span data-part="icon">{renderSlotContent(icon)}</span>
+            <>
+              {pill && <span aria-hidden="true" />}
+              <span data-part="icon">{renderSlotContent(icon)}</span>
+            </>
           ) : (
             <>
+              {pill && <span aria-hidden="true" />}
               {start !== undefined && <span data-part="start">{renderSlotContent(start)}</span>}
               <span data-part="label">{children}</span>
               {end !== undefined && <span data-part="end">{renderSlotContent(end)}</span>}

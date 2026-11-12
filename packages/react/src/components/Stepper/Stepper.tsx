@@ -18,7 +18,15 @@
 //   indicator number is not read twice.
 // - Vertical on narrow screens: a horizontal stepper lays out as vertical
 //   under breakpoint.phone, in CSS. data-orientation keeps the prop value.
-import { useState, type ComponentProps, type ReactNode, type Ref } from 'react';
+// - Motion, interaction "stepper-travel" (order 1.22, proposed): when the
+//   current step changes, a ring (the indicator's ::after, drawn only while
+//   it travels) slides from the old current indicator to the new one, in
+//   the direction of the change, stretched along the way on the snappy
+//   spring (react/src/internal/indicator.ts), and fades as it lands; the
+//   new current indicator pops from scale.anticipate past rest, and the
+//   connector fill grows or shrinks on the soft spring (CSS). No DOM is
+//   added.
+import { useCallback, useLayoutEffect, useRef, useState, type ComponentProps, type ReactNode, type Ref } from 'react';
 import { Icon } from '@the-system/icons/react';
 import {
   canGoTo,
@@ -30,6 +38,8 @@ import {
 } from '@the-system/shared';
 import { useTheme } from '../../theme';
 import { Button } from '../Button';
+import { followIndicator, popIn, useIndicatorTrack } from '../../internal/indicator';
+import { useMotion } from '../../internal/motion';
 
 export type StepperSize = Extract<Size, 'sm' | 'md'>;
 export type StepperOrientation = 'horizontal' | 'vertical';
@@ -130,6 +140,29 @@ export function Stepper({
     mode,
   });
 
+  const motion = useMotion();
+  const track = useIndicatorTrack();
+  const rootRef = useRef<HTMLOListElement | null>(null);
+  const setRootRef = useCallback(
+    (node: HTMLOListElement | null) => {
+      rootRef.current = node;
+      if (typeof ref === 'function') ref(node);
+      else if (ref) ref.current = node;
+    },
+    [ref],
+  );
+  useLayoutEffect(() => {
+    const root = rootRef.current;
+    const indicator = root?.querySelector(':scope > [data-part="step"][data-state="current"] > [data-part="indicator"]');
+    if (!root || !indicator) {
+      track.key = null;
+      return;
+    }
+    const mode = motion.mode('stepper-travel');
+    const moved = followIndicator(track, String(base.current), { el: indicator, pseudo: '::after' }, { mode, anchor: root, ghost: true });
+    if (moved) popIn(indicator, mode);
+  });
+
   const select = (index: number) => {
     if (currentProp === undefined) setOwn(index);
     onStepSelect?.(index);
@@ -139,7 +172,7 @@ export function Stepper({
     <ol
       aria-label={rest['aria-labelledby'] ? undefined : labels.list}
       {...rest}
-      ref={ref}
+      ref={setRootRef}
       data-ds="stepper"
       data-size={size}
       data-orientation={orientation}

@@ -17,18 +17,12 @@
 // - PageUp and PageDown step by ten steps (React Aria steps by one).
 // - Inside a Field it reads ids, invalid, disabled, read only and required.
 //
-// Motion (order 1.21): a step from a button or a key rolls the value in from
-// the side it came from (field-step), on the native input itself, since its
-// text cannot move alone; the caret and the selection are drawn inside the
-// input and move with the text, so they stay on it. Typing does not roll.
-// The box shakes when the value turns invalid (error-shake).
-//
-// field-step plays the short travel of the swap pattern (space.xs), not the
-// full height travel of number-roll: number-roll expects a clip around the
-// digits, and the input has none, so a full height roll would draw the text
-// outside the box for several frames. The style switches it as number-roll
-// (the interaction's pattern in the registry): Studio fades, Desk and
-// Neutral roll.
+// Motion (orders 1.21 and 1.22): a step from a button or a key rolls the
+// value digit by digit (field-step). The roll plays in a decorative layer
+// over the input (an unnamed aria-hidden span, empty at rest; see
+// useDigitLayer.ts), so the input keeps its text for editing and the roll
+// is clipped to the input's box. Typing never rolls and empties the layer at
+// once. The box shakes when the value turns invalid (error-shake).
 import {
   use,
   useEffect,
@@ -68,6 +62,7 @@ import { useTheme } from '../../theme/hooks';
 import { useField, useFieldControl } from '../Field/Field';
 import { IconButton, type IconButtonProps } from '../IconButton/IconButton';
 import { useErrorShake } from '../Input/useErrorShake';
+import { useDigitLayer, type DigitLayer } from './useDigitLayer';
 
 export type NumberFieldSize = Size;
 export type NumberFieldShape = Extract<Shape, 'default' | 'pill'>;
@@ -260,6 +255,8 @@ interface ControlProps {
   inner: { current: HTMLInputElement | null };
   /** Native input props React Aria leaves alone: placeholder, autoComplete, data and aria attributes. */
   native: ComponentProps<'input'>;
+  /** The digit roll layer over the input. */
+  digits: DigitLayer;
 }
 
 /** The keys that step the value. Typing never rolls. */
@@ -274,25 +271,41 @@ interface StepIntent {
   at: number;
   /** The way that step goes. */
   direction: 'up' | 'down';
+  /** The input text when the step began: where the roll starts. */
+  text: string;
 }
 
+/** The interaction id of the step roll in the registry and the style presets. */
+const FIELD_STEP = 'field-step';
+
 /**
- * field-step: rolls the input when the value changes because of a step key
- * or a step button. A step that comes while the last roll still plays
- * changes the value with no roll, so a held key or button does not flicker.
+ * field-step: rolls the value digit by digit in the layer over the input
+ * when it changes because of a step key or a step button. A step that comes
+ * while a roll still plays rolls on from the digits as drawn, so a held key
+ * never stacks rolls. Typing never rolls.
  */
-function useStepRoll(inner: { current: HTMLInputElement | null }, numberValue: number | undefined) {
+function useStepRoll(inner: { current: HTMLInputElement | null }, numberValue: number | undefined, digits: DigitLayer) {
   const motion = useMotion();
-  const intent = useRef<StepIntent>({ held: false, at: Number.NEGATIVE_INFINITY, direction: 'up' });
+  const intent = useRef<StepIntent>({
+    held: false,
+    at: Number.NEGATIVE_INFINITY,
+    direction: 'up',
+    text: '',
+  });
   const last = useRef(numberValue);
-  const running = useRef<Animation | null>(null);
 
   useEffect(() => {
     const input = inner.current;
     const root = input?.parentElement;
     if (!input || !root) return undefined;
+    // The text drawn before the step is where the roll starts.
     const mark = (direction: 'up' | 'down', held: boolean) => {
-      intent.current = { held, at: performance.now(), direction };
+      intent.current = {
+        held,
+        at: performance.now(),
+        direction,
+        text: input.value,
+      };
     };
     // A step button of this field: a child of the root with the increment or decrement part.
     const stepperOf = (event: Event) => {
@@ -330,21 +343,27 @@ function useStepRoll(inner: { current: HTMLInputElement | null }, numberValue: n
     };
   }, [inner]);
 
+  // After the step is drawn, the new text rolls in digit by digit in the layer over the input.
   useLayoutEffect(() => {
     const before = last.current;
     last.current = numberValue;
     if (before === numberValue || (Number.isNaN(before) && Number.isNaN(numberValue))) return;
-    const { held, at, direction } = intent.current;
+    const { held, at, direction, text } = intent.current;
     if (!held && performance.now() - at > STEP_WINDOW_MS) return;
-    if (running.current?.playState === 'running') return;
-    running.current = motion.play(inner.current, 'swap', 'field-step', { phase: 'enter', direction });
-  }, [numberValue, motion, inner]);
+    const input = inner.current;
+    if (!input) return;
+    digits.roll(input, text, input.value, {
+      mode: motion.mode(FIELD_STEP),
+      direction,
+    });
+    // The next step in a held run rolls on from this text.
+    intent.current = { ...intent.current, text: input.value };
+  }, [numberValue, motion, inner, digits]);
 }
 
-/** The native input, with Western digits on input and PageUp and PageDown by ten steps. */
-function Control({ locale, step, min, max, ref, inner, native }: ControlProps) {
+function Control({ locale, step, min, max, ref, inner, native, digits }: ControlProps) {
   const state = use(NumberFieldStateContext);
-  useStepRoll(inner, state?.numberValue);
+  useStepRoll(inner, state?.numberValue, digits);
   return (
     <AriaInput
       {...(native as Omit<ComponentProps<typeof AriaInput>, 'ref'>)}
@@ -450,6 +469,7 @@ export function NumberField({
   const stepperSize: IconButtonProps['size'] = size === 'lg' ? 'md' : 'xs';
   const showSteppers = steppers && !control.readOnly;
   useErrorShake(inner, Boolean(control['aria-invalid']));
+  const digits = useDigitLayer(inner);
 
   const onRootMouseDown = (event: MouseEvent<HTMLDivElement>) => {
     rootProps?.onMouseDown?.(event);
@@ -514,7 +534,9 @@ export function NumberField({
       >
         {showSteppers && <Stepper slot="decrement" size={stepperSize} shape={shape} label={decrementLabel} labelledBy={labelledBy} />}
         <Adornment part="start" value={start} />
-        <Control locale={tag} step={pageStep} min={min} max={max} ref={ref} inner={inner} native={{ ...rest, placeholder }} />
+        <Control locale={tag} step={pageStep} min={min} max={max} ref={ref} inner={inner} native={{ ...rest, placeholder }} digits={digits} />
+        {/* The digit roll layer (field-step): decorative, empty at rest. */}
+        <span aria-hidden="true" ref={digits.layer} />
         <Adornment part="end" value={end} />
         {showSteppers && <Stepper slot="increment" size={stepperSize} shape={shape} label={incrementLabel} labelledBy={labelledBy} />}
       </AriaNumberField>

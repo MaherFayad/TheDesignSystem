@@ -109,3 +109,25 @@ describe('WindowControls', () => {
     }
   });
 });
+
+// ------------------------------------------------------------------ motion, order 1.22
+
+describe('motion (order 1.22): window-lights in WindowControls.css', async () => {
+  const { readFileSync } = await import('node:fs');
+  const { join } = await import('node:path');
+  const css = readFileSync(join(process.cwd(), 'packages/css/src/components/WindowControls.css'), 'utf8');
+
+  it('pops the glyphs in one stagger step apart, and leaves together', () => {
+    expect(css).toContain("transform: scale(calc(var(--_window-controls-enter-scale) + (1 - var(--_window-controls-enter-scale)) * var(--_window-controls-glyph)));");
+    expect(css).toContain("> [data-part='zoom'] > [data-part='icon'] > [data-ds='icon'] {\n    transition-delay: calc(var(--ds-delay-stagger) * 2);");
+  });
+
+  it('review N13: a press dips only the dot, never the 24px target', () => {
+    expect(css).toContain(":active > [data-part='icon'] {\n    transform: scale(var(--_window-controls-press-scale));");
+    expect(css).not.toMatch(/\[data-ds='icon-button'\][^{]*:active \{/);
+  });
+
+  it('review B2: the reduced form applies under data-motion="reduce" too', () => {
+    expect(css).toContain(":root[data-motion='reduce'] [data-ds='window-controls'] > [data-ds='icon-button'] > [data-part='icon'],");
+  });
+});

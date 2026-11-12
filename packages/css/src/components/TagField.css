@@ -26,6 +26,12 @@
  * the Combobox popup values and hands the row values to the nested ListBox.
  *
  * Motion, pattern "menu-scale" on the popup. Under reduced motion it is none.
+ *
+ * Order 1.22 (proposed): menu-rows (the suggestions arrive one stagger step
+ * after the surface), row-glide (ListBox) and collection-flip (TagField.tsx:
+ * an added tag pops in, a removed tag shrinks out from its old place while
+ * the tags after it and the input close the gap). The box is positioned, so
+ * the clone of a removed tag is placed inside it.
  */
 @layer ds.base {
   /* ------------------------------------------------------------ the box */
@@ -278,16 +284,7 @@
     min-block-size: 0;
   }
 
-  /*
-   * The suggestions use virtual focus: DOM focus stays in the control and the
-   * active option is only data-highlighted, so it never matches ListBox's
-   * :focus-visible ring. The fill step alone is about 1.3:1, so the active
-   * option also takes the ListBox ring (the focus ring color, WCAG 2.4.7 and
-   * 1.4.11). Only ListBox private properties are set here.
-   */
-  [data-ds='tag-field'][data-part='popup'] > [data-ds='list-box'] [data-part='option'][data-highlighted] {
-    --_list-box-option-ring: inset 0 0 0 var(--ds-border-width-strong) var(--_list-box-option-ring-color);
-  }
+  /* The active suggestion's ring comes from ListBox.css, which rings every highlighted option. */
 
   [data-ds='tag-field'][data-part='popup']:lang(ar) {
     font-size: var(--ds-font-size-m);
@@ -327,6 +324,14 @@
     [data-ds='tag-field']:not([data-part])::before {
       transition: none;
     }
+  }
+
+  :root[data-motion='reduce'] [data-ds='tag-field'][data-part='popup'][data-state] {
+    animation: none;
+  }
+
+  :root[data-motion='reduce'] [data-ds='tag-field']:not([data-part])::before {
+    transition: none;
   }
 
   /* ------------------------------------------------------------ transparency, contrast, forced colors */

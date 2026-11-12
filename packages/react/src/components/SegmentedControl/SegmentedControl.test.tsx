@@ -181,7 +181,7 @@ describe('SegmentedControl', () => {
     expect(Array.from(grid.children).map((c) => c.getAttribute('data-part'))).toEqual(['icon']);
   });
 
-  it('places the indicator under the selected item and slides it with tab-indicator on a change', async () => {
+  it('places the indicator under the selected item and slides it with the shared pill on a change', async () => {
     const animate = vi.fn(() => ({ finished: Promise.resolve(), cancel: vi.fn() }) as unknown as Animation);
     const proto = HTMLElement.prototype as unknown as { animate?: unknown; getAnimations?: unknown };
     const saved = { animate: proto.animate, getAnimations: proto.getAnimations, rect: HTMLElement.prototype.getBoundingClientRect };
@@ -211,10 +211,11 @@ describe('SegmentedControl', () => {
       await user.click(screen.getByRole('radio', { name: 'Month' }));
       await act(async () => {});
       expect(indicator?.style.getPropertyValue('--_segmented-control-indicator-start')).toBe('123px');
-      expect(animate).toHaveBeenCalledTimes(1);
-      const [frames, options] = animate.mock.calls[0] as unknown as [Keyframe[], KeyframeAnimationOptions];
-      expect(options.id).toBe('ds-motion:tab-indicator');
-      expect(frames.flatMap((f) => Object.keys(f)).every((k) => k === 'transform')).toBe(true);
+      const slides = animate.mock.calls.filter((c) => (c as unknown as [Keyframe[], KeyframeAnimationOptions])[1].id === 'ds-motion:indicator-slide');
+      expect(slides).toHaveLength(1);
+      const [frames] = slides[0] as unknown as [Keyframe[], KeyframeAnimationOptions];
+      expect(frames).toHaveLength(3);
+      expect(frames.flatMap((f) => Object.keys(f)).every((k) => k === 'transform' || k === 'offset')).toBe(true);
     } finally {
       proto.animate = saved.animate;
       proto.getAnimations = saved.getAnimations;
@@ -225,7 +226,7 @@ describe('SegmentedControl', () => {
   it('a controlled slide is not cancelled when the parent re-renders', async () => {
     const running = { finished: Promise.resolve(), cancel: vi.fn() } as unknown as Animation;
     let cancelsAtStart = -1;
-    const animate = vi.fn(() => {
+    const animate = vi.fn((_frames?: Keyframe[], _options?: KeyframeAnimationOptions) => {
       cancelsAtStart = (running.cancel as ReturnType<typeof vi.fn>).mock.calls.length;
       return running;
     });
@@ -247,7 +248,10 @@ describe('SegmentedControl', () => {
         const i = Array.from(this.parentElement?.querySelectorAll('[data-part="item"]') ?? []).indexOf(this);
         return DOMRect.fromRect({ x: 3 + i * 60, y: 3, width: 60, height: 26 });
       }
-      if (this.getAttribute('data-part') === 'indicator') return DOMRect.fromRect({ x: 3, y: 3, width: 60, height: 26 });
+      if (this.getAttribute('data-part') === 'indicator') {
+        const x = Number.parseFloat(this.style.getPropertyValue('--_segmented-control-indicator-start')) || 0;
+        return DOMRect.fromRect({ x: x + 1, y: 3, width: 60, height: 26 });
+      }
       return DOMRect.fromRect({ x: 0, y: 0, width: 200, height: 34 });
     };
     function Controlled() {
@@ -259,7 +263,7 @@ describe('SegmentedControl', () => {
       render(<Controlled />);
       await user.click(screen.getByRole('radio', { name: 'Week' }));
       await act(async () => {});
-      expect(animate).toHaveBeenCalledTimes(1);
+      expect(animate.mock.calls.filter((c) => (c as unknown as [Keyframe[], KeyframeAnimationOptions])[1].id === 'ds-motion:indicator-slide')).toHaveLength(1);
       // No cancel after the slide started.
       expect((running.cancel as ReturnType<typeof vi.fn>).mock.calls.length).toBe(cancelsAtStart);
     } finally {
@@ -325,5 +329,12 @@ describe('SegmentedControl fix round', () => {
     const item = rule("[data-ds='segmented-control'] > [data-ds='toggle-button'][data-part='item']");
     expect(item).toMatch(/block-size:\s*auto/);
     expect(css).not.toMatch(/text-overflow:\s*ellipsis/);
+  });
+
+  it('keeps whole words in a wrapping label and resets the thumb under both reduced motion settings (review B4, B2)', () => {
+    const css = readFileSync(join(process.cwd(), 'packages/css/src/components/SegmentedControl.css'), 'utf8');
+    expect(css).not.toMatch(/overflow-wrap: anywhere/);
+    expect(css).toMatch(/overflow-wrap: break-word/);
+    expect(css).toMatch(/:root\[data-motion='reduce'\] \[data-ds='segmented-control'\] > \[data-part='indicator'\]/);
   });
 });

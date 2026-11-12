@@ -30,42 +30,53 @@ function mockAnimate() {
 }
 
 const rolls = (calls: Call[]) => calls.filter((c) => JSON.stringify(c.frames).includes('translateY'));
-const finishAll = (calls: Call[]) => {
-  for (const c of calls) c.anim.playState = 'finished';
-};
 
 describe('NumberField motion (interaction field-step)', () => {
   afterEach(() => vi.unstubAllGlobals());
 
-  it('rolls the value in from below on ArrowUp and from above on ArrowDown', () => {
+  it('rolls the new digits in the aria-hidden layer over the input, from below on ArrowUp and from above on ArrowDown', () => {
     const { calls, restore } = mockAnimate();
     try {
-      render(<NumberField aria-label="Guests" defaultValue={2} />);
-      const input = screen.getByRole('textbox', { name: 'Guests' });
+      const { container } = render(<NumberField aria-label="Guests" defaultValue={2} />);
+      const input = screen.getByRole('textbox', {
+        name: 'Guests',
+      }) as HTMLInputElement;
+      const layer = container.querySelector('[data-ds="number-field"] > span[aria-hidden="true"]:not([data-part])') as HTMLElement;
+      expect(layer).not.toBeNull();
+      expect(layer.childElementCount).toBe(0);
       fireEvent.keyDown(input, { key: 'ArrowUp' });
-      expect((input as HTMLInputElement).value).toBe('3');
-      expect(rolls(calls)).toHaveLength(1);
-      expect(rolls(calls)[0]?.el).toBe(input);
-      // A short roll: space.xs of travel, inside the box.
-      expect(rolls(calls)[0]?.frames[0]).toMatchObject({ transform: 'translateY(var(--ds-space-xs, 6px))', opacity: 0 });
-      finishAll(calls);
+      // The input keeps its text for editing; the layer draws the roll.
+      expect(input.value).toBe('3');
+      expect(layer.textContent).toContain('3');
+      expect(rolls(calls).every((c) => layer.contains(c.el))).toBe(true);
+      expect(rolls(calls)[0]?.frames[0]).toMatchObject({
+        transform: 'translateY(100%)',
+        opacity: 0,
+      });
       fireEvent.keyDown(input, { key: 'ArrowDown' });
-      expect(rolls(calls)[1]?.frames[0]).toMatchObject({ transform: 'translateY(calc(-1 * var(--ds-space-xs, 6px)))' });
+      const down = rolls(calls).filter((c) => (c.frames[0] as { transform?: string }).transform === 'translateY(-100%)');
+      expect(down.length).toBeGreaterThan(0);
     } finally {
       restore();
     }
   });
 
-  it('skips the roll while the last one still plays, so a held key does not flicker', () => {
+  it('rolls on from the digits as drawn on a held key, and typing empties the layer', () => {
     const { calls, restore } = mockAnimate();
     try {
-      render(<NumberField aria-label="Guests" defaultValue={2} />);
-      const input = screen.getByRole('textbox', { name: 'Guests' }) as HTMLInputElement;
+      const { container } = render(<NumberField aria-label="Guests" defaultValue={2} />);
+      const input = screen.getByRole('textbox', {
+        name: 'Guests',
+      }) as HTMLInputElement;
       fireEvent.keyDown(input, { key: 'ArrowUp' });
       fireEvent.keyDown(input, { key: 'ArrowUp', repeat: true });
       fireEvent.keyDown(input, { key: 'ArrowUp', repeat: true });
       expect(input.value).toBe('5');
-      expect(rolls(calls)).toHaveLength(1);
+      const layer = container.querySelector('[data-ds="number-field"] > span[aria-hidden="true"]:not([data-part])') as HTMLElement;
+      expect(layer.querySelector('[data-digit]')?.firstElementChild?.textContent).toBe('5');
+      fireEvent(input, new Event('beforeinput', { bubbles: true }));
+      expect(layer.childElementCount).toBe(0);
+      expect(rolls(calls).length).toBeGreaterThan(0);
     } finally {
       restore();
     }
@@ -76,10 +87,19 @@ describe('NumberField motion (interaction field-step)', () => {
     try {
       const { container } = render(<NumberField aria-label="Seats" defaultValue={1} />);
       const inc = container.querySelector('[data-part="increment"]') as HTMLElement;
-      fireEvent.pointerDown(inc, { pointerType: 'mouse', button: 0, pointerId: 1 });
-      fireEvent.pointerUp(inc, { pointerType: 'mouse', button: 0, pointerId: 1 });
-      expect(rolls(calls)).toHaveLength(1);
-      expect(rolls(calls)[0]?.el).toBe(screen.getByRole('textbox', { name: 'Seats' }));
+      fireEvent.pointerDown(inc, {
+        pointerType: 'mouse',
+        button: 0,
+        pointerId: 1,
+      });
+      fireEvent.pointerUp(inc, {
+        pointerType: 'mouse',
+        button: 0,
+        pointerId: 1,
+      });
+      expect(rolls(calls).length).toBeGreaterThan(0);
+      const layer = container.querySelector('[data-ds="number-field"] > span[aria-hidden="true"]:not([data-part])');
+      expect(rolls(calls).every((c) => layer?.contains(c.el))).toBe(true);
     } finally {
       restore();
     }

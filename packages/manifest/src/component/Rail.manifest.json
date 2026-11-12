@@ -206,14 +206,25 @@
     "size.touch.android",
     "font.family.sans",
     "font.leading.tight",
-    "font.leading.arabic.tight"
+    "font.leading.arabic.tight",
+    "duration.spring-snappy",
+    "ease.spring-snappy",
+    "duration.spring-bouncy",
+    "ease.spring-bouncy",
+    "duration.spring-soft",
+    "ease.spring-soft",
+    "scale.stretch",
+    "scale.anticipate",
+    "delay.stagger",
+    "distance.enter"
   ],
+  "motion": "tab-indicator",
   "frameworks": {
     "react": {
       "status": "ready",
       "behavior": "hand built nav, radix:Slot for asChild, Tooltip for hidden or cut labels",
       "example": "Rail.demo.tsx",
-      "note": "No motion pattern: nothing moves. The hover veil fades on duration.fast and is instant under reduced motion. The order names no motion pattern, so the manifest names none, as in Link and ButtonGroup."
+      "note": "The hover veil fades on duration.fast and is instant under reduced motion. Round 2 (order 1.22, proposed): nav-current-slide (the edge bar ::before slides along the column, the icons dip and pop), nav-hover-follow (the hover veil slides from the item the pointer left) and sidebar-collapse (hideLabels moves the icons with flipPlay and the labels rise in after them)."
     },
     "angular": {
       "status": "planned",

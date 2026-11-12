@@ -13,11 +13,23 @@
 // since only transform and opacity may animate; the indeterminate form turns
 // a quarter arc with transform: rotate. The ring fills clockwise in both
 // directions, like a clock face, which does not mirror in RTL.
-import { type CSSProperties, type HTMLAttributes, type Ref } from 'react';
+//
+// Motion (order 1.22, proposed). progress-spring: the mask cannot animate,
+// so the nearest transform form plays: the new arc starts turned back by the
+// change and turns into place on the soft spring, so its leading end sweeps
+// forward from the old value (a fall turns the other way), while the value
+// inside rolls digit by digit (it is aria-hidden; aria-valuetext reads the
+// value). progress-celebrate: reaching max after being below it pops the
+// ring once (scale.anticipate, scale.pop, duration.celebrate).
+import { useLayoutEffect, useRef, type CSSProperties, type HTMLAttributes, type Ref } from 'react';
+import { play } from '@the-system/motion';
 import { Progress } from 'radix-ui';
 import type { Size, Tone } from '@the-system/shared';
 import { useTheme } from '../../theme';
 import { clampValue, formatPercent, loadingLabelFor, validMax } from '../ProgressBar/format';
+import { useCelebrate } from '../ProgressBar/ProgressBar';
+import { useMotion } from '../../internal/motion';
+import { useDigitRoll } from '../Stat/useDigitRoll';
 
 export type ProgressCircleSize = Extract<Size, 'xs' | 'sm' | 'md' | 'lg'>;
 export type ProgressCircleTone = Extract<Tone, 'accent' | 'success' | 'warning' | 'danger'>;
@@ -66,13 +78,30 @@ export function ProgressCircle({
         : formatPercent(value / max, lang);
   const fraction = value === null ? 0 : value / max;
   const visibleValue = (showValue ?? (size === 'md' || size === 'lg')) && value !== null;
+  const motion = useMotion();
+  const mode = motion.mode('progress-spring');
+  const root = useCelebrate<HTMLDivElement>(value !== null && value >= max, 'both');
+  const indicator = useRef<HTMLSpanElement>(null);
+  const lastFraction = useRef(value === null ? null : fraction);
+  useLayoutEffect(() => {
+    const before = lastFraction.current;
+    lastFraction.current = value === null ? null : fraction;
+    if (!indicator.current || before === null || value === null || before === fraction || mode !== 'full') return;
+    const turn = Math.round((before - fraction) * 360);
+    play(indicator.current, { keyframes: [{ transform: `rotate(${turn}deg)` }, { transform: 'none' }], duration: 'duration.spring-soft', easing: 'ease.spring-soft', fill: 'none', origin: '50% 50%' }, 'progress-sweep');
+  }, [fraction, value, mode]);
+  const valueRef = useDigitRoll<HTMLSpanElement>(visibleValue ? text : undefined, mode, undefined, value ?? undefined);
 
   return (
     <Progress.Root
       aria-label={label}
       aria-valuetext={text}
       {...rest}
-      ref={ref}
+      ref={(node: HTMLDivElement | null) => {
+        root.current = node;
+        if (typeof ref === 'function') return ref(node);
+        if (ref) ref.current = node;
+      }}
       value={value}
       max={max}
       data-ds="progress-circle"
@@ -81,10 +110,10 @@ export function ProgressCircle({
     >
       <span data-part="track" />
       <Progress.Indicator asChild style={{ '--_progress-circle-fraction': fraction } as CSSProperties}>
-        <span data-part="indicator" />
+        <span data-part="indicator" ref={indicator} />
       </Progress.Indicator>
       {visibleValue && (
-        <span data-part="value" aria-hidden="true">
+        <span data-part="value" aria-hidden="true" ref={valueRef}>
           {text}
         </span>
       )}
