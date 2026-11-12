@@ -1874,6 +1874,231 @@
     "since": "0.1.0"
   },
   {
+    "name": "NotificationCenter",
+    "kind": "component",
+    "family": "feedback",
+    "summary": "The panel of notifications: a list grouped by day or by the consumer's groups, unread marks, mark all read, actions per item and an empty state. Placed by the consumer in a Popover or a Sheet.",
+    "useWhen": [
+      "A place where a person reviews what happened while they were away: mentions, invites, finished exports",
+      "Notifications that stay until read, with an unread count on a bell button",
+      "Notifications that carry their own actions, such as accepting an invite"
+    ],
+    "avoidWhen": [
+      "Telling the person about something that just happened while they watch",
+      "A full activity history with search and filters",
+      "A single message about the page"
+    ],
+    "insteadUse": {
+      "Something that just happened, said once": "Toast",
+      "A full history with search and filters": "Table",
+      "A message about the page or a section": "Alert",
+      "The panel itself, as an overlay": "Popover"
+    },
+    "anatomy": [
+      "root",
+      "header",
+      "title",
+      "count",
+      "mark-all",
+      "group",
+      "group-label",
+      "item",
+      "item-icon",
+      "item-title",
+      "item-body",
+      "item-time",
+      "item-actions",
+      "unread",
+      "empty"
+    ],
+    "slots": {
+      "item-actions": {
+        "accepts": [
+          "Button"
+        ],
+        "max": 2
+      }
+    },
+    "props": {
+      "items": {
+        "type": "object",
+        "required": true,
+        "description": "NotificationItem[]: { id, title, body?, time (Date, timestamp or ISO), unread?, tone?, icon?, actions? (up to two { label, onAction }), group? }. Rendered in the given order; the consumer sorts, newest first."
+      },
+      "title": {
+        "type": "node",
+        "default": "Notifications",
+        "description": "The panel heading. Arabic default under lang ar."
+      },
+      "headingLevel": {
+        "type": [
+          "2",
+          "3",
+          "4",
+          "5"
+        ],
+        "default": "2",
+        "description": "The title's heading level; group labels take the next level."
+      },
+      "onMarkAllRead": {
+        "type": "function",
+        "description": "Renders the mark all read Button (data-part mark-all) while any item is unread, and is called by it. The consumer clears unread on its items."
+      },
+      "markAllLabel": {
+        "type": "string",
+        "default": "Mark all as read",
+        "description": "A verb plus a noun. Arabic: تحديد الكل كمقروء."
+      },
+      "size": {
+        "type": [
+          "sm",
+          "md"
+        ],
+        "default": "md",
+        "description": "sm for a narrow popover: tighter padding and font.size.s."
+      },
+      "emptyTitle": {
+        "type": "node",
+        "default": "No notifications",
+        "description": "The empty state title."
+      },
+      "emptyBody": {
+        "type": "node",
+        "description": "What will show up here."
+      },
+      "now": {
+        "type": "object",
+        "description": "The clock for relative times and day groups. Default the time of render. The consumer re-renders to refresh the times."
+      }
+    },
+    "states": [
+      "data-empty",
+      "data-unread"
+    ],
+    "a11y": {
+      "role": "A section named by its title. Each group is a group named by its heading (a heading level below the title) holding a list; each item is an article in a list item, named by its title, with a time element. Not role feed.",
+      "focus": "Every item is a tab stop with a focus ring, so a keyboard user can reach and read each one; its actions follow it. No roving focus, no arrow keys.",
+      "keys": {
+        "Tab": "Moves to mark all read, then each item and its actions in order",
+        "Shift+Tab": "Moves back",
+        "Enter": "Runs the focused action",
+        "Space": "Runs the focused action"
+      },
+      "announce": "The panel never announces. A new notification is announced once by the consumer through toast(); the panel only lists it. The count is plain text.",
+      "native": {
+        "accessibilityRole": "list",
+        "accessibilityState": []
+      },
+      "notes": [
+        "Unread is never color alone: a dot, a bold title and a visually hidden word (Unread) before the title.",
+        "Times use Intl.RelativeTimeFormat with numeric auto; Arabic uses Western digits (nu-latn). The time element carries the ISO time.",
+        "Group headings come from the day of each time (Today, Yesterday, Earlier) unless items name a group."
+      ]
+    },
+    "content": {
+      "en": {
+        "item": "Who did what to which thing: Sara mentioned you in Launch plan. Sentence case.",
+        "actions": "A verb plus a noun: Accept invite, Open comment. Two at most.",
+        "empty": "Say what shows up here: Mentions, invites and comments on your boards show up here."
+      },
+      "ar": {
+        "item": "No diacritics; names as written: سارة أشارت لك في خطة الإطلاق.",
+        "actions": "Noun form labels: قبول الدعوة، فتح التعليق.",
+        "digits": "Western digits in times and counts."
+      }
+    },
+    "tokens": [
+      "space.4xs",
+      "space.xs",
+      "space.s",
+      "space.m",
+      "space.l",
+      "space.6xl",
+      "space.fixed-s",
+      "size.icon.md",
+      "radius.pill",
+      "border.width.default",
+      "border.width.strong",
+      "color.bg.overlay-5",
+      "color.bg.overlay-10",
+      "color.text.default",
+      "color.text.bright",
+      "color.text.muted",
+      "color.primary.border",
+      "color.state.info.border",
+      "color.state.success.border",
+      "color.state.warning.border",
+      "color.state.danger.border",
+      "font.family.sans",
+      "font.size.s",
+      "font.size.m",
+      "font.size.l",
+      "font.weight.medium",
+      "font.weight.semibold",
+      "font.leading.snug",
+      "focus.shadow.ring",
+      "duration.fast",
+      "ease.out"
+    ],
+    "motion": "list-stagger",
+    "frameworks": {
+      "react": {
+        "status": "ready",
+        "behavior": "hand built",
+        "example": "NotificationCenter.demo.tsx"
+      },
+      "angular": {
+        "status": "planned",
+        "behavior": "hand built"
+      },
+      "native": {
+        "status": "planned",
+        "behavior": "hand built",
+        "note": "A SectionList with a header per group; items as pressable rows."
+      }
+    },
+    "styles": {
+      "studio": "Tokens only: no surface of its own, hairline separators, unread rows on overlay-5.",
+      "desk": "Tokens only; the unread dot takes the yellow primary border.",
+      "neutral": "Tokens only."
+    },
+    "mistakes": [
+      {
+        "wrong": "The panel announcing each new item through a live region",
+        "right": "Announce once through toast(); the panel only lists"
+      },
+      {
+        "wrong": "Unread shown only by a tinted row",
+        "right": "The dot, the bold title and the hidden word come with unread"
+      },
+      {
+        "wrong": "Wrapping the panel in its own overlay",
+        "right": "Put it in a Popover from a bell IconButton, or a Sheet on phones"
+      },
+      {
+        "wrong": "Times written as 2026-11-12T14:55",
+        "right": "Pass the time; it renders 5 minutes ago with the ISO time in datetime"
+      }
+    ],
+    "contract": {
+      "optionalParts": [
+        "count",
+        "mark-all",
+        "group",
+        "group-label",
+        "item",
+        "item-icon",
+        "item-title",
+        "item-body",
+        "item-time",
+        "item-actions",
+        "unread",
+        "empty"
+      ]
+    },
+    "since": "0.1.0"
+  },
+  {
     "name": "Skeleton",
     "kind": "component",
     "family": "feedback",

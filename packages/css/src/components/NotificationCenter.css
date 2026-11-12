@@ -1,0 +1,277 @@
+/*
+ * NotificationCenter: the panel of notifications. It fills its container
+ * (a Popover or a Sheet) and draws no surface of its own, so the overlay
+ * owns the background, the radius and the scroll.
+ *
+ * Private plumbing (docs/contracts/anatomy.md, one convention), on the root:
+ *
+ *   --_notification-center-padding       the inline padding of every row
+ *   --_notification-center-item-gap      between an item's columns
+ *   --_notification-center-item-padding  the block padding of an item
+ *   --_notification-center-font-size     item title and body
+ *   --_notification-center-unread        the unread dot, primary border (3:1)
+ *   --_notification-center-item-bg       an item's fill at rest
+ *   --_notification-center-item-bg-unread
+ *   --_notification-center-item-bg-hover the hover veil on ::after
+ *   --_notification-center-ring          the focus ring of an item
+ *
+ * Unread is never color alone: the item gets a dot, a bold title and a
+ * hidden "Unread" word before the title.
+ */
+@layer ds.base {
+  [data-ds='notification-center'] {
+    --_notification-center-padding: var(--ds-space-l);
+    --_notification-center-item-gap: var(--ds-space-m);
+    --_notification-center-item-padding: var(--ds-space-m);
+    --_notification-center-font-size: var(--ds-font-size-m);
+    --_notification-center-unread: var(--ds-color-primary-border);
+    --_notification-center-item-bg: transparent;
+    --_notification-center-item-bg-unread: var(--ds-color-bg-overlay-5);
+    --_notification-center-item-bg-hover: var(--ds-color-bg-overlay-5);
+    --_notification-center-ring: var(--ds-focus-shadow-ring);
+
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+    inline-size: 100%;
+    min-inline-size: 0;
+    color: var(--ds-color-text-default);
+    font-family: var(--ds-font-family-sans);
+    font-size: var(--_notification-center-font-size);
+    line-height: var(--ds-font-leading-snug);
+  }
+
+  [data-ds='notification-center'][data-size='sm'] {
+    --_notification-center-padding: var(--ds-space-m);
+    --_notification-center-item-gap: var(--ds-space-s);
+    --_notification-center-item-padding: var(--ds-space-s);
+    --_notification-center-font-size: var(--ds-font-size-s);
+  }
+
+  /* ------------------------------------------------------------ header */
+
+  [data-ds='notification-center'] > [data-part='header'] {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--ds-space-xs);
+    padding-block: var(--ds-space-s);
+    padding-inline: var(--_notification-center-padding);
+    border-block-end: var(--ds-border-width-default) solid var(--ds-color-bg-overlay-10);
+  }
+
+  [data-ds='notification-center'] > [data-part='header'] > [data-part='title'] {
+    margin: 0;
+    color: var(--ds-color-text-bright);
+    font-size: var(--ds-font-size-l);
+    font-weight: var(--ds-font-weight-semibold);
+  }
+
+  [data-ds='notification-center'] > [data-part='header'] > [data-part='count'] {
+    padding-inline: var(--ds-space-xs);
+    border-radius: var(--ds-radius-pill);
+    background-color: var(--ds-color-bg-overlay-10);
+    color: var(--ds-color-text-default);
+    font-size: var(--ds-font-size-s);
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* The mark all read Button sits at the inline end of the header. */
+  [data-ds='notification-center'] > [data-part='header'] > [data-part='mark-all'] {
+    margin-inline-start: auto;
+  }
+
+  /* ------------------------------------------------------------ groups */
+
+  [data-ds='notification-center'] > [data-part='group'] {
+    padding-block: var(--ds-space-xs);
+  }
+
+  [data-ds='notification-center'] > [data-part='group'] + [data-part='group'] {
+    border-block-start: var(--ds-border-width-default) solid var(--ds-color-bg-overlay-10);
+  }
+
+  [data-ds='notification-center'] > [data-part='group'] > [data-part='group-label'] {
+    margin: 0;
+    padding-block: var(--ds-space-xs);
+    padding-inline: var(--_notification-center-padding);
+    color: var(--ds-color-text-muted);
+    font-size: var(--ds-font-size-s);
+    font-weight: var(--ds-font-weight-medium);
+  }
+
+  [data-ds='notification-center'] > [data-part='group'] > [data-list] {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  /* ------------------------------------------------------------ item */
+
+  [data-ds='notification-center'] [data-part='item'] {
+    position: relative;
+    display: grid;
+    grid-template-columns: var(--ds-size-icon-md) minmax(0, 1fr) auto;
+    grid-template-areas:
+      'icon title time'
+      'icon body body'
+      'icon actions actions';
+    column-gap: var(--_notification-center-item-gap);
+    padding-block: var(--_notification-center-item-padding);
+    padding-inline: var(--_notification-center-padding);
+    background-color: var(--_notification-center-item-bg);
+    overflow-wrap: anywhere;
+  }
+
+  [data-ds='notification-center'] [data-part='item'][data-unread] {
+    --_notification-center-item-bg: var(--_notification-center-item-bg-unread);
+  }
+
+  /* The hover veil: a light wash over the whole item, actions included; it takes no pointer. */
+  [data-ds='notification-center'] [data-part='item']::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-color: var(--_notification-center-item-bg-hover);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity var(--ds-duration-fast) var(--ds-ease-out);
+  }
+
+  [data-ds='notification-center'] [data-part='item']:hover::after {
+    opacity: 1;
+  }
+
+  [data-ds='notification-center'] [data-part='item']:focus-visible {
+    outline: var(--ds-border-width-strong) solid transparent;
+    outline-offset: calc(-1 * var(--ds-border-width-strong));
+    box-shadow: inset var(--_notification-center-ring);
+  }
+
+  [data-ds='notification-center'] [data-part='item'] > [data-part='item-icon'] {
+    grid-area: icon;
+    display: inline-flex;
+    align-items: center;
+    block-size: calc(var(--_notification-center-font-size) * var(--ds-font-leading-snug));
+    color: var(--ds-color-text-muted);
+  }
+
+  [data-ds='notification-center'] [data-part='item'][data-tone='info'] > [data-part='item-icon'] {
+    color: var(--ds-color-state-info-border);
+  }
+
+  [data-ds='notification-center'] [data-part='item'][data-tone='success'] > [data-part='item-icon'] {
+    color: var(--ds-color-state-success-border);
+  }
+
+  [data-ds='notification-center'] [data-part='item'][data-tone='warning'] > [data-part='item-icon'] {
+    color: var(--ds-color-state-warning-border);
+  }
+
+  [data-ds='notification-center'] [data-part='item'][data-tone='danger'] > [data-part='item-icon'] {
+    color: var(--ds-color-state-danger-border);
+  }
+
+  [data-ds='notification-center'] [data-part='item'][data-tone='accent'] > [data-part='item-icon'] {
+    color: var(--ds-color-primary-border);
+  }
+
+  [data-ds='notification-center'] [data-part='item'] > [data-part='item-title'] {
+    grid-area: title;
+    margin: 0;
+    color: var(--ds-color-text-default);
+  }
+
+  [data-ds='notification-center'] [data-part='item'][data-unread] > [data-part='item-title'] {
+    color: var(--ds-color-text-bright);
+    font-weight: var(--ds-font-weight-semibold);
+  }
+
+  /* The unread dot sits in the inline start padding, beside the icon. Its word is read, not drawn. */
+  [data-ds='notification-center'] [data-part='item'] [data-part='unread'] {
+    position: absolute;
+    inset-block-start: calc(var(--_notification-center-item-padding) + (var(--_notification-center-font-size) * var(--ds-font-leading-snug) - var(--ds-space-fixed-s)) / 2);
+    inset-inline-start: calc((var(--_notification-center-padding) - var(--ds-space-fixed-s)) / 2);
+    inline-size: var(--ds-space-fixed-s);
+    block-size: var(--ds-space-fixed-s);
+    border-radius: var(--ds-radius-pill);
+    background-color: var(--_notification-center-unread);
+  }
+
+  [data-ds='notification-center'] [data-part='unread'] > [data-unread-word] {
+    position: absolute;
+    inline-size: var(--ds-border-width-default);
+    block-size: var(--ds-border-width-default);
+    margin: calc(-1 * var(--ds-border-width-default));
+    padding: 0;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  [data-ds='notification-center'] [data-part='item'] > [data-part='item-body'] {
+    grid-area: body;
+    margin: 0;
+    margin-block-start: var(--ds-space-4xs);
+    color: var(--ds-color-text-muted);
+  }
+
+  [data-ds='notification-center'] [data-part='item'] > [data-part='item-time'] {
+    grid-area: time;
+    color: var(--ds-color-text-muted);
+    font-size: var(--ds-font-size-s);
+    white-space: nowrap;
+  }
+
+  [data-ds='notification-center'] [data-part='item'] > [data-part='item-actions'] {
+    grid-area: actions;
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--ds-space-xs);
+    margin-block-start: var(--ds-space-s);
+  }
+
+  /* ------------------------------------------------------------ empty */
+
+  [data-ds='notification-center'] > [data-part='empty'] {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--ds-space-xs);
+    padding-block: var(--ds-space-6xl);
+    padding-inline: var(--_notification-center-padding);
+    color: var(--ds-color-text-muted);
+    text-align: center;
+  }
+
+  [data-ds='notification-center'] > [data-part='empty'] > [data-empty-title] {
+    margin: 0;
+    color: var(--ds-color-text-bright);
+    font-size: var(--ds-font-size-l);
+    font-weight: var(--ds-font-weight-medium);
+  }
+
+  [data-ds='notification-center'] > [data-part='empty'] > [data-empty-body] {
+    margin: 0;
+  }
+
+  /* ------------------------------------------------------------ forced colors */
+
+  @media (forced-colors: active) {
+    [data-ds='notification-center'] {
+      --_notification-center-unread: CanvasText;
+    }
+
+    [data-ds='notification-center'] [data-part='unread'] {
+      forced-color-adjust: none;
+    }
+
+    [data-ds='notification-center'] [data-part='item']::after {
+      display: none;
+    }
+
+    [data-ds='notification-center'] [data-part='item']:focus-visible {
+      outline-color: Highlight;
+    }
+  }
+}

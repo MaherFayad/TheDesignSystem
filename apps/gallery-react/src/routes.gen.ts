@@ -15,6 +15,7 @@ export const routes: DemoRoute[] = [
   { name: 'Icon', slug: 'icon', load: () => import('../../../packages/react/src/components/Icon/Icon.demo') },
   { name: 'IconButton', slug: 'icon-button', load: () => import('../../../packages/react/src/components/IconButton/IconButton.demo') },
   { name: 'Input', slug: 'input', load: () => import('../../../packages/react/src/components/Input/Input.demo') },
+  { name: 'NotificationCenter', slug: 'notification-center', load: () => import('../../../packages/react/src/components/NotificationCenter/NotificationCenter.demo') },
   { name: 'Skeleton', slug: 'skeleton', load: () => import('../../../packages/react/src/components/Skeleton/Skeleton.demo') },
   { name: 'StatusDot', slug: 'status-dot', load: () => import('../../../packages/react/src/components/StatusDot/StatusDot.demo') },
   { name: 'TitleBar', slug: 'title-bar', load: () => import('../../../packages/react/src/components/TitleBar/TitleBar.demo') },
