@@ -204,6 +204,7 @@ again: commit the tree as wip, push, and resume the agents by id.
    for demo copy unless told otherwise.
 
 ## Owner answers
+- 2026-11-12 18:20 UTC: after the round 1 videos, the interactions are acceptable but need a further round of richer animations and micro interactions. Order 1.22 added.
 1. 2026-11-12: pushing. The owner approved pushing the session branch
    `claude/relaxed-hypatia-7gseap` to `origin` after each wave. No other
    branch, no pull request, no force push.

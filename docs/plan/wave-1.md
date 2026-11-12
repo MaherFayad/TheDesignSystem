@@ -613,6 +613,72 @@ Added on 2026-11-12 at the owner's request.
   `docs/reports/shots/interactions/`; the report lists what was added, what
   was rejected and why. New looks are proposed to the owner, not final.
 
+### 1.22 Interaction round 2: richer motion (ds-style with ds-component)
+
+Added on 2026-11-12. The owner watched the round 1 videos and said the result
+is acceptable but needs richer animations and micro interactions.
+
+- Installs: no. After 1.21 is merged.
+- Goal: raise every round 1 interaction from a single property change to a
+  small choreography, and cover the components round 1 left out. Study
+  `khagwal.com/interactions` and `bestdesignsonx.com` again, deeper: for at
+  least 40 clips, write down the beats (anticipation, action, overshoot,
+  settle), the stagger between parts, and what secondary element reacts.
+  Feel and timing only: no code, asset or name is taken.
+- Scope, at least:
+  - Springs: spring eases as `linear()` tokens (soft, snappy, bouncy), with
+    overshoot on toggles, thumbs, chips, badges, popovers, sheets and toasts.
+  - Stateful buttons: idle, loading, success and error as one morph (label
+    out, spinner in, check draws, label back), width kept by transform.
+  - Icon morphs: copy to check, eye to eye-off, plus to close, chevron
+    rotation, menu to close, play to pause, built from parts that rotate,
+    scale and cross fade.
+  - Shared indicators: one sliding pill for Tabs, SegmentedControl,
+    ToggleGroup, Navbar, Sidebar, Rail, Pagination and Breadcrumbs hover,
+    with stretch while it travels.
+  - Hover and focus micro feedback on every interactive part: icon nudge on
+    buttons with an end arrow, card lift with a moving highlight, row hover
+    in List, Menu and ListBox that follows the pointer, link underline that
+    draws in the reading direction.
+  - Entrances and exits for every overlay with staggered content (title,
+    body, actions), and matched exits that are faster than the entrance.
+  - Lists and collections: add, remove and reorder with FLIP for Chip,
+    TagField, Toast, List, NotificationCenter, FilterBar, AvatarGroup.
+  - Numbers and progress: digit by digit roll for Stat, NumberField and
+    Pagination, a ProgressBar and ProgressCircle that ease to the value and
+    celebrate completion once, a Meter that fills on first view.
+  - Forms: label and helper transitions, a field error that slides in under
+    the control, a success tick on valid, Form submit success, Stepper and
+    FormWizard step change with direction, ConsentField check, Rating hover
+    preview, Slider value bubble.
+  - Feedback: Alert and Banner entrance with an icon beat, Skeleton to
+    content cross fade, EmptyState illustration beat, CommandPalette result
+    stagger, Lightbox zoom from the thumbnail (FLIP), Tour spotlight move,
+    Accordion chevron and content stagger, Tooltip follow between adjacent
+    triggers, Avatar status pulse with a pause path.
+- Rules that do not bend: the same as 1.21. Only `transform` and `opacity`
+  animate; no animation library; values from tokens; a reduced motion form
+  for each; no more than three flashes a second; a pause path past five
+  seconds; never delay the action or block input; never wait on
+  `transitionend` or `animationend`; a style preset can tune or turn off
+  each one. Where an idea needs another property (`clip-path`, `filter`,
+  color), build the nearest transform and opacity form and list the idea in
+  the report for the owner to rule on.
+- Each style keeps its character, now further apart: Studio flat, fast, hard
+  cuts and steps; Desk rolls, window style scale and playful overshoot;
+  Neutral restrained springs at 150 to 220ms.
+- Owns: `packages/motion/**`, `packages/styles/*/motion.ts`, the motion
+  tokens in `packages/tokens` (durations, eases, springs, scales, with the
+  snapshots), the `/interactions` gallery page, and the motion block and the
+  small code changes an interaction needs in every React component.
+- Accept: `npm run check` green; the contract suite green for every touched
+  component; every interaction on `/interactions` with a reduced motion
+  switch and a replay control; a screen recording per family in
+  `docs/reports/shots/interactions-2/` in Neutral, Studio and Desk; the
+  report `docs/reports/interactions-2.md` lists each interaction with its
+  beats and timings, what was rejected, and the ideas that need a rule
+  change. Everything stays "proposed" until the owner approves.
+
 ## Schedule
 
 At most four agents at once. Never two installing orders at once (installs
