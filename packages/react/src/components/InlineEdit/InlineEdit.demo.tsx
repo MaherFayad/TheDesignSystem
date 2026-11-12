@@ -62,9 +62,9 @@ export default function InlineEditDemo() {
         </div>
       </DemoCase>
 
-      <DemoCase id="error" title="Invalid after a check from outside, open and closed">
-        <InlineEdit label="Board name" defaultValue="Spring launch" defaultEditing invalid />
-        <InlineEdit label="Board name" defaultValue="Spring launch" invalid />
+      <DemoCase id="error" title="Invalid with a message, open and closed">
+        <InlineEdit label="Board name" defaultValue="Spring launch" defaultEditing error="A board with this name exists. Add a word, for example Spring launch 2." />
+        <InlineEdit label="Board name" defaultValue="Spring launch" error="A board with this name exists. Add a word, for example Spring launch 2." />
       </DemoCase>
 
       <DemoCase id="disabled" title="Disabled">

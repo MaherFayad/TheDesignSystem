@@ -12,6 +12,7 @@
 // focus to the display. Leaving the editor saves, but never an invalid
 // value: the editor stays open with the message.
 import {
+  useCallback,
   useEffect,
   useId,
   useRef,
@@ -21,6 +22,7 @@ import {
   type FocusEvent,
   type KeyboardEvent,
   type MouseEvent,
+  type ReactNode,
   type Ref,
 } from 'react';
 import { Icon } from '@the-system/icons/react';
@@ -65,8 +67,14 @@ export interface InlineEditProps extends Omit<ComponentProps<'div'>, 'title' | '
   size?: InlineEditSize;
   /** The display cannot start editing; it keeps aria-disabled and stays focusable. */
   disabled?: boolean;
-  /** Marks the value invalid from outside, for example after a server check. */
+  /** Marks the value invalid from outside, for example after a server check. Pair it with error. */
   invalid?: boolean;
+  /**
+   * A message from outside (a server check) that says how to fix the value.
+   * Shown under the display or the editor and linked to both; it marks the
+   * value invalid.
+   */
+  error?: ReactNode;
   /** Goes to the native input while editing. */
   inputRef?: Ref<HTMLInputElement>;
   ref?: Ref<HTMLDivElement>;
@@ -89,6 +97,7 @@ export function InlineEdit({
   size = 'md',
   disabled = false,
   invalid = false,
+  error: outsideError,
   inputRef,
   ref,
   onBlur,
@@ -110,8 +119,11 @@ export function InlineEdit({
   const returnFocus = useRef(false);
 
   const empty = current === '';
-  const isInvalid = invalid || error !== null;
+  const hasOutside = outsideError !== undefined && outsideError !== null && outsideError !== false;
+  const message: ReactNode = error ?? (hasOutside ? outsideError : null);
+  const isInvalid = invalid || message !== null;
   const name = `${empty ? placeholder : current}, ${editLabel ?? `Edit ${label.toLowerCase()}`}`;
+  const describedBy = message !== null ? errorId : undefined;
 
   useEffect(() => {
     // Act only when editing starts or ends, never on the first render: a
@@ -178,13 +190,35 @@ export function InlineEdit({
     if (event.key === 'Enter') {
       event.preventDefault();
       save(true);
-    } else if (event.key === 'Escape') {
-      // Stops here, so a dialog around the editor stays open.
-      event.preventDefault();
-      event.stopPropagation();
-      cancel();
     }
   };
+
+  // Escape cancels. Radix layers (Dialog, Popover) listen for Escape on the
+  // document in the capture phase, before React sees the key, so the cancel
+  // runs in a window capture listener, which comes first, and marks the key
+  // handled: the dialog around the editor stays open.
+  const escape = useRef<(event: globalThis.KeyboardEvent) => void>(() => undefined);
+  escape.current = (event) => {
+    if (event.key !== 'Escape' || !editing || event.target !== input.current) return;
+    if (event.isComposing || event.keyCode === 229 || event.defaultPrevented) return;
+    event.preventDefault();
+    event.stopPropagation();
+    cancel();
+  };
+  useEffect(() => {
+    const listener = (event: globalThis.KeyboardEvent) => escape.current(event);
+    window.addEventListener('keydown', listener, { capture: true });
+    return () => window.removeEventListener('keydown', listener, { capture: true });
+  }, []);
+
+  const setInputRef = useCallback(
+    (node: HTMLInputElement | null) => {
+      input.current = node;
+      if (typeof inputRef === 'function') inputRef(node);
+      else if (inputRef) inputRef.current = node;
+    },
+    [inputRef],
+  );
 
   // Leaving the editor saves a valid value. Focus that moves to the save or
   // cancel button stays inside, so it does not count.
@@ -193,6 +227,12 @@ export function InlineEdit({
     if (!editing) return;
     const next = event.relatedTarget as Node | null;
     if (next && event.currentTarget.contains(next)) return;
+    // Nothing changed: close without a check, so an empty new item never traps the editor.
+    if (draft === current) {
+      setError(null);
+      setEditingState(false);
+      return;
+    }
     save(false);
   };
 
@@ -215,28 +255,18 @@ export function InlineEdit({
       {editing ? (
         <>
           <Input
-            ref={(node) => {
-              input.current = node;
-              if (typeof inputRef === 'function') inputRef(node);
-              else if (inputRef) inputRef.current = node;
-            }}
+            ref={setInputRef}
             aria-label={label}
             size={size}
             value={draft}
             onChange={onInputChange}
             onKeyDown={onInputKeyDown}
             invalid={isInvalid}
-            aria-describedby={error ? errorId : undefined}
+            aria-describedby={describedBy}
             rootProps={{ 'data-part': 'control' } as ComponentProps<'div'>}
           />
           <IconButton data-part="save" icon="check" label={saveLabel} size={iconSize} onMouseDown={keepFocus} onClick={() => save(true)} />
           <IconButton data-part="cancel" icon="close" label={cancelLabel} size={iconSize} onMouseDown={keepFocus} onClick={cancel} />
-          {error && (
-            <p data-part="error" id={errorId}>
-              <Icon name="danger" size="md" />
-              <span>{error}</span>
-            </p>
-          )}
         </>
       ) : (
         <Button
@@ -247,10 +277,17 @@ export function InlineEdit({
           end="edit"
           disabled={disabled}
           aria-label={name}
+          aria-describedby={describedBy}
           onClick={start}
         >
           {empty ? placeholder : current}
         </Button>
+      )}
+      {message !== null && (
+        <p data-part="error" id={errorId}>
+          <Icon name="danger" size="md" />
+          <span>{message}</span>
+        </p>
       )}
       <span data-part="status" role="status">
         {status}

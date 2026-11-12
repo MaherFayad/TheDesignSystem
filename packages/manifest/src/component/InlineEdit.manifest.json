@@ -101,7 +101,11 @@
     "invalid": {
       "type": "boolean",
       "default": false,
-      "description": "Marks the value invalid from outside, for example after a server check."
+      "description": "Marks the value invalid from outside. Pair it with error, so the state is never color alone."
+    },
+    "error": {
+      "type": "node",
+      "description": "A message from outside, such as a server check, that says how to fix the value. Shown under the display or the editor, linked to both by aria-describedby, and marks the value invalid."
     },
     "inputRef": {
       "type": "object",
@@ -117,13 +121,13 @@
   ],
   "a11y": {
     "role": "button for the display (a ghost Button), textbox for the editor, buttons for save and cancel, status for the saved message",
-    "focus": "Viewing, the display is one tab stop. Editing starts with focus in the input and its text selected; Tab moves to save, then cancel. Enter, Escape, save and cancel return focus to the display. Leaving the editor with Tab or a click saves a valid value and leaves focus where it went.",
+    "focus": "Viewing, the display is one tab stop. Editing starts with focus in the input and its text selected; the save and cancel buttons follow in the tab order where the browser puts buttons there. Enter, Escape, save and cancel return focus to the display. Leaving the editor with Tab or a click saves a changed valid value, closes an unchanged one, and leaves focus where it went.",
     "keys": {
       "Tab": "Moves focus to the display; while editing, from the input to save and cancel",
       "Shift+Tab": "Moves focus back",
       "Enter": "On the display: starts editing. In the input: saves and returns focus to the display; an invalid value keeps the editor open with its message",
       "Space": "On the display: starts editing",
-      "Escape": "In the input: drops the change and returns focus to the display. It stops there, so a dialog around it stays open"
+      "Escape": "In the input: drops the change and returns focus to the display. It is handled before a Dialog or Popover around it sees the key, so they stay open"
     },
     "announce": "The display is named by the value and the edit label: Spring launch, Edit board name. The input is named by label. After a save, a polite status says Saved once; a failed save says the message once, which also joins the input's aria-describedby.",
     "native": {
@@ -135,7 +139,9 @@
       "The display name starts with the visible text, so voice control works (WCAG 2.5.3).",
       "The save and cancel buttons keep focus in the input on press, so a press never reads as leaving the editor.",
       "The message is an icon plus text, never color alone, and says how to fix the value.",
-      "The edit icon at the end of the display shows on hover and focus; the name says edit at all times."
+      "The edit icon at the end of the display shows on hover and focus; the name says edit at all times.",
+      "In controlled use, Saved is said when onValueChange is called. A parent that rejects the value should pass error with the reason.",
+      "The default edit label lower cases the label and is English. Pass editLabel in other languages and for names with acronyms."
     ]
   },
   "content": {

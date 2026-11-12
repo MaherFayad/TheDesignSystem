@@ -1,5 +1,6 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
+import { Dialog, DialogContent, DialogTitle } from '../Dialog/Dialog';
 import InlineEditDemo from './InlineEdit.demo';
 import { InlineEdit } from './index';
 
@@ -137,6 +138,69 @@ describe('InlineEdit', () => {
     const { container } = render(<InlineEdit label="Board name" defaultValue="A" defaultEditing />);
     expect(root(container).getAttribute('data-state')).toBe('editing');
     expect(document.activeElement).toBe(document.body);
+  });
+
+  it('cancels inside a Dialog without closing it', () => {
+    const onOpenChange = vi.fn();
+    render(
+      <Dialog open onOpenChange={onOpenChange}>
+        <DialogContent>
+          <DialogTitle>Rename</DialogTitle>
+          <InlineEdit label="Board name" defaultValue="Spring launch" />
+        </DialogContent>
+      </Dialog>,
+    );
+    const input = startEditing();
+    fireEvent.change(input, { target: { value: 'Other' } });
+    fireEvent.keyDown(input, { key: 'Escape' });
+    expect(onOpenChange).not.toHaveBeenCalled();
+    expect(screen.getByRole('button', { name: 'Spring launch, Edit board name' })).toBeTruthy();
+  });
+
+  it('shows a message from outside in both states, linked to the display and the input', () => {
+    const { container } = render(<InlineEdit label="Board name" defaultValue="A" error="Pick another name." />);
+    expect(root(container).hasAttribute('data-invalid')).toBe(true);
+    const message = container.querySelector('[data-part="error"]');
+    expect(message?.textContent).toBe('Pick another name.');
+    const display = screen.getByRole('button', { name: 'A, Edit board name' });
+    expect(display.getAttribute('aria-describedby')).toBe(message?.id);
+    const input = startEditing();
+    expect(input.getAttribute('aria-describedby')).toBe(container.querySelector('[data-part="error"]')?.id);
+  });
+
+  it('closes on blur when nothing changed, even if the value is invalid', () => {
+    const { container } = render(
+      <>
+        <InlineEdit label="Board name" validate={required} />
+        <a href="#next">Next</a>
+      </>,
+    );
+    fireEvent.click(screen.getByRole('button', { name: /Edit board name/ }));
+    const input = screen.getByRole('textbox', { name: 'Board name' });
+    fireEvent.blur(input, { relatedTarget: screen.getByText('Next') });
+    expect(root(container).getAttribute('data-state')).toBe('viewing');
+  });
+
+  it('says Saved again on a second save', () => {
+    render(<InlineEdit label="Board name" defaultValue="A" />);
+    let input = startEditing();
+    fireEvent.change(input, { target: { value: 'B' } });
+    fireEvent.keyDown(input, { key: 'Enter' });
+    expect(screen.getByRole('status').textContent).toBe('Saved');
+    input = startEditing();
+    expect(screen.getByRole('status').textContent).toBe('');
+    fireEvent.change(input, { target: { value: 'C' } });
+    fireEvent.keyDown(input, { key: 'Enter' });
+    expect(screen.getByRole('status').textContent).toBe('Saved');
+  });
+
+  it('ignores an Enter that ends an IME composition', () => {
+    const onValueChange = vi.fn();
+    render(<InlineEdit label="Board name" defaultValue="A" onValueChange={onValueChange} />);
+    const input = startEditing();
+    fireEvent.change(input, { target: { value: 'B' } });
+    fireEvent.keyDown(input, { key: 'Enter', keyCode: 229 });
+    expect(onValueChange).not.toHaveBeenCalled();
   });
 
   it('renders the demo cases', () => {

@@ -12,6 +12,7 @@
 // 1.1.9) lands, it takes its place with the same part name.
 import {
   useCallback,
+  useEffect,
   useRef,
   useState,
   type ChangeEvent,
@@ -142,15 +143,28 @@ export function SearchField({
     // A key that ends an IME composition (keyCode 229 in Safari) is not a command.
     const composing = event.nativeEvent.isComposing || event.keyCode === 229;
     if (composing) return;
-    if (event.key === 'Escape' && !empty && !isReadOnly) {
-      // The first Escape clears. It stops here, so a dialog around the field stays open.
-      event.preventDefault();
-      event.stopPropagation();
-      clear();
-    } else if (event.key === 'Enter') {
+    if (event.key === 'Enter') {
       onSubmit?.(query);
     }
   };
+
+  // The first Escape clears. Radix layers (Dialog, Popover) listen for Escape
+  // on the document in the capture phase, before React sees the key, so the
+  // clear runs in a window capture listener, which comes first, and marks the
+  // key handled. An Escape on the empty box passes, so the layer closes.
+  const escape = useRef<(event: globalThis.KeyboardEvent) => void>(() => undefined);
+  escape.current = (event) => {
+    if (event.key !== 'Escape' || event.target !== inner.current) return;
+    if (event.isComposing || event.keyCode === 229 || empty || isReadOnly || event.defaultPrevented) return;
+    event.preventDefault();
+    event.stopPropagation();
+    clear();
+  };
+  useEffect(() => {
+    const listener = (event: globalThis.KeyboardEvent) => escape.current(event);
+    window.addEventListener('keydown', listener, { capture: true });
+    return () => window.removeEventListener('keydown', listener, { capture: true });
+  }, []);
 
   const onRootMouseDown = (event: MouseEvent<HTMLDivElement>) => {
     rootProps?.onMouseDown?.(event);

@@ -1,6 +1,7 @@
 import { createRef, useState } from 'react';
 import { fireEvent, render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
+import { Dialog, DialogContent, DialogTitle } from '../Dialog/Dialog';
 import { Field } from '../Field/Field';
 import { IconButton } from '../IconButton/IconButton';
 import SearchFieldDemo from './SearchField.demo';
@@ -62,6 +63,24 @@ describe('SearchField', () => {
     expect(outer).not.toHaveBeenCalled();
     fireEvent.keyDown(input, { key: 'Escape' });
     expect(outer).toHaveBeenCalledWith('Escape');
+  });
+
+  it('clears inside a Dialog without closing it; the second Escape closes it', () => {
+    const onOpenChange = vi.fn();
+    render(
+      <Dialog open onOpenChange={onOpenChange}>
+        <DialogContent>
+          <DialogTitle>Find a board</DialogTitle>
+          <SearchField aria-label="Search" defaultValue="launch" />
+        </DialogContent>
+      </Dialog>,
+    );
+    const input = screen.getByRole('searchbox') as HTMLInputElement;
+    fireEvent.keyDown(input, { key: 'Escape' });
+    expect(input.value).toBe('');
+    expect(onOpenChange).not.toHaveBeenCalled();
+    fireEvent.keyDown(input, { key: 'Escape' });
+    expect(onOpenChange).toHaveBeenCalledWith(false);
   });
 
   it('calls onSubmit with the query on Enter', () => {

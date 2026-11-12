@@ -126,7 +126,7 @@
     "keys": {
       "Tab": "Moves focus to the input, then to the clear button and the end content",
       "Shift+Tab": "Moves focus back",
-      "Escape": "Clears the query. On an empty box it does nothing here and bubbles, so a dialog or a menu around it closes",
+      "Escape": "Clears the query, before a Dialog or Popover around it sees the key, so they stay open. On an empty box it does nothing here, so the layer around it closes",
       "Enter": "Calls onSubmit with the query; a form around it submits. An Enter that ends an IME composition does nothing"
     },
     "announce": "Name from the Field label or aria-label. While loading, a polite status says the loading label once. The clear button is named by clearLabel.",

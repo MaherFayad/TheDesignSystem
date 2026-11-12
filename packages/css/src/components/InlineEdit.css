@@ -60,19 +60,27 @@
   [data-ds='inline-edit'] > [data-ds='button'][data-part='display'] {
     --_button-padding-inline: var(--_inline-edit-padding-inline);
     --_button-fg: var(--_inline-edit-fg);
+    --_button-fg-hover: var(--_inline-edit-fg);
+    --_button-fg-active: var(--_inline-edit-fg);
 
     justify-content: flex-start;
+    /* The editor's weight, so the text does not reflow when editing starts. */
+    font-weight: var(--ds-font-weight-regular);
     max-inline-size: 100%;
     min-inline-size: 0;
   }
 
   [data-ds='inline-edit'][data-empty] > [data-ds='button'][data-part='display'] {
     --_button-fg: var(--_inline-edit-fg-empty);
+    --_button-fg-hover: var(--_inline-edit-fg-empty);
+    --_button-fg-active: var(--_inline-edit-fg-empty);
   }
 
-  /* Invalid while viewing (a check from outside): the value in the danger color. */
+  /* Invalid while viewing (a check from outside): the value in the danger color, with the message under it. */
   [data-ds='inline-edit'][data-invalid] > [data-ds='button'][data-part='display'] {
     --_button-fg: var(--_inline-edit-error-fg);
+    --_button-fg-hover: var(--_inline-edit-error-fg);
+    --_button-fg-active: var(--_inline-edit-error-fg);
   }
 
   /* The edit icon shows while the display is hovered or focused. */
@@ -83,6 +91,13 @@
 
   [data-ds='inline-edit'] > [data-ds='button'][data-part='display']:is(:hover, :focus-visible) > [data-part='end'] {
     opacity: 1;
+  }
+
+  /* No hover on touch screens: the edit icon shows at all times. */
+  @media (hover: none) {
+    [data-ds='inline-edit'] > [data-ds='button'][data-part='display'] > [data-part='end'] {
+      opacity: 1;
+    }
   }
 
   /* ------------------------------------------------------------ editor */
