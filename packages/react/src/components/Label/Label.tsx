@@ -48,7 +48,7 @@ export function Label({ size = 'md', required, requiredText, optional, disabled,
   const isInvalid = invalid ?? field?.invalid ?? false;
   const hasOptional = optional !== undefined && optional !== null && optional !== false && !isRequired;
   // Inside a required Field the control carries aria-required, so the word would be read twice.
-  const word = field?.required ? undefined : (requiredText ?? (lang === 'ar' ? 'مطلوب' : 'required'));
+  const word = field?.required ? undefined : (requiredText ?? (lang.toLowerCase().startsWith('ar') ? 'مطلوب' : 'required'));
 
   return (
     <LabelPrimitive.Root {...rest} data-ds="label" data-size={size} data-disabled={isDisabled ? '' : undefined} data-invalid={isInvalid ? '' : undefined}>

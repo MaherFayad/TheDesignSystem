@@ -112,4 +112,16 @@ describe('Label', () => {
     expect(container.querySelector('button')).toBeNull();
     expect(container.querySelector('[title]')).toBeNull();
   });
+
+  it('says required in Arabic under a regional Arabic tag', () => {
+    render(
+      <Theme lang="ar-SA">
+        <Label htmlFor="mail" required>
+          البريد
+        </Label>
+        <input id="mail" />
+      </Theme>,
+    );
+    expect(document.body.textContent).toContain('مطلوب');
+  });
 });
