@@ -297,9 +297,14 @@ export function play(el: Element, spec: MotionSpec, id: string, prefix = 'ds'): 
   });
 }
 
-/** Resolves when the animation ends or is cancelled. Resolves at once for null. */
+/**
+ * Resolves when the animation ends or is cancelled. Resolves at once for
+ * null and for an animation that is already idle: after a cancel the browser
+ * puts a new `finished` promise in place that stays pending while the
+ * animation is idle, so awaiting it would never end.
+ */
 export async function settled(animation: Animation | null | undefined): Promise<void> {
-  if (!animation) return;
+  if (!animation || animation.playState === 'idle') return;
   try {
     await animation.finished;
   } catch {
