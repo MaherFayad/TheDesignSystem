@@ -202,14 +202,20 @@
    * the same ink on hover. Every value the Button state rules swap in is set
    * here, so hover and press keep the contrast too.
    */
+  [data-ds='alert'][data-emphasis='solid'] > [data-part='actions'] [data-ds='button']:not([data-emphasis='link']) {
+    --_button-border-color: var(--_alert-tone-on-solid);
+  }
+
+  /* The two color ring Button uses on its own solid fills: 3:1 on any tone fill (WCAG 1.4.11). */
   [data-ds='alert'][data-emphasis='solid'] > [data-part='actions'] [data-ds='button'] {
+    --_button-ring: var(--ds-focus-shadow-primary);
     --_button-bg: transparent;
     --_button-fg: var(--_alert-tone-on-solid);
-    --_button-border-color: var(--_alert-tone-on-solid);
     --_button-decoration: var(--_alert-tone-on-solid);
   }
 
   [data-ds='alert'][data-emphasis='solid'] > [data-ds='icon-button'][data-part='close'] {
+    --_button-ring: var(--ds-focus-shadow-primary);
     --_button-bg: transparent;
     --_button-fg: var(--_alert-tone-on-solid);
   }
@@ -224,6 +230,21 @@
     --_button-bg: color-mix(in srgb, var(--_alert-tone-on-solid) 20%, transparent);
   }
 
+  /* Links in the body of a solid alert take the alert ink and stay underlined, so they are not told by color. */
+  [data-ds='alert'][data-emphasis='solid'] > [data-part='body'] a {
+    color: inherit;
+    text-decoration-line: underline;
+  }
+
+  /* No close button: drop the empty third column and its gap. */
+  [data-ds='alert']:not(:has(> [data-part='close'])) {
+    grid-template-columns: var(--ds-size-icon-md) minmax(0, 1fr);
+    grid-template-areas:
+      'icon title'
+      'icon body'
+      'icon actions';
+  }
+
   /* ------------------------------------------------------------ reduced motion, forced colors */
 
   @media (prefers-reduced-motion: reduce) {
@@ -234,7 +255,7 @@
 
   /* Forced colors: the fill is dropped by the browser; the border becomes the system text color so the box keeps a boundary. */
   @media (forced-colors: active) {
-    [data-ds='alert'] {
+    [data-ds='alert'][data-emphasis] {
       --_alert-border-color: CanvasText;
       --_alert-icon: CanvasText;
 

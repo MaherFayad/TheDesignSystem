@@ -32,12 +32,12 @@ export const alertLabels = {
     tone: { neutral: 'Notice', accent: 'Notice', info: 'Information', success: 'Success', warning: 'Warning', danger: 'Error' },
   },
   ar: {
-    close: 'إغلاق التنبيه',
+    close: 'إغلاق الرسالة',
     tone: { neutral: 'إشعار', accent: 'إشعار', info: 'معلومة', success: 'نجاح', warning: 'تنبيه', danger: 'خطأ' },
   },
 } as const;
 
-/** No `title` attribute: the title prop is the alert's heading, and hints come from Tooltip. */
+/** No `title` attribute: the title prop is the alert's first line (a div, not a heading), and hints come from Tooltip. */
 export interface AlertProps extends Omit<HTMLAttributes<HTMLDivElement>, 'title' | 'role'> {
   /** The color, the icon and the tone word. Default neutral. */
   tone?: AlertTone;

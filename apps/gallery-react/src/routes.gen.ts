@@ -8,7 +8,9 @@ export interface DemoRoute {
 }
 
 export const routes: DemoRoute[] = [
+  { name: 'Alert', slug: 'alert', load: () => import('../../../packages/react/src/components/Alert/Alert.demo') },
   { name: 'Button', slug: 'button', load: () => import('../../../packages/react/src/components/Button/Button.demo') },
+  { name: 'Callout', slug: 'callout', load: () => import('../../../packages/react/src/components/Callout/Callout.demo') },
   { name: 'Dialog', slug: 'dialog', load: () => import('../../../packages/react/src/components/Dialog/Dialog.demo') },
   { name: 'Field', slug: 'field', load: () => import('../../../packages/react/src/components/Field/Field.demo') },
   { name: 'Icon', slug: 'icon', load: () => import('../../../packages/react/src/components/Icon/Icon.demo') },

@@ -1,5 +1,266 @@
 [
   {
+    "name": "Alert",
+    "kind": "component",
+    "family": "feedback",
+    "summary": "A message about the page or a section that stays until it is fixed or dismissed: a form error summary, a sync problem, a plan limit.",
+    "useWhen": [
+      "A form failed to save and the person needs the list of fields to fix, placed above the form",
+      "A section cannot do its job right now: sync paused, a feed failed to load, a quota is near",
+      "A result that must stay readable while the person works on it, such as an import with skipped rows",
+      "A message tied to one place on the page, with up to two actions that fix it"
+    ],
+    "avoidWhen": [
+      "The message is about the whole app, such as maintenance or a trial that ends",
+      "The person only needs to know that something finished, and nothing is left to do",
+      "The person must decide before going on",
+      "Static guidance that is part of the content, such as a tip in docs",
+      "An error that belongs to one field"
+    ],
+    "insteadUse": {
+      "A notice for the whole page or app": "Banner",
+      "A passing confirmation that leaves on its own": "Toast",
+      "A decision that blocks the task": "AlertDialog",
+      "Static guidance inside content": "Callout",
+      "An error on one field": "Field"
+    },
+    "anatomy": [
+      "root",
+      "icon",
+      "title",
+      "body",
+      "actions",
+      "close"
+    ],
+    "slots": {
+      "title": {
+        "accepts": "text",
+        "min": 1,
+        "max": 1
+      },
+      "body": {
+        "accepts": "any"
+      },
+      "actions": {
+        "accepts": [
+          "Button"
+        ],
+        "max": 2
+      }
+    },
+    "props": {
+      "tone": {
+        "type": [
+          "neutral",
+          "accent",
+          "success",
+          "warning",
+          "danger",
+          "info"
+        ],
+        "default": "neutral",
+        "description": "The color, the icon and the tone word the icon says to assistive tech."
+      },
+      "emphasis": {
+        "type": [
+          "soft",
+          "outline",
+          "solid"
+        ],
+        "default": "soft",
+        "description": "soft is a tinted box, outline a tone border on the surface, solid a full tone fill. Keep solid for the one alert that matters most on a page."
+      },
+      "size": {
+        "type": [
+          "sm",
+          "md"
+        ],
+        "default": "md",
+        "description": "sm for a dense panel or an inspector."
+      },
+      "title": {
+        "type": "node",
+        "required": true,
+        "description": "One line that names the problem or the result."
+      },
+      "children": {
+        "type": "node",
+        "description": "The body: what it means and what to do next. Text, paragraphs or a short list."
+      },
+      "actions": {
+        "type": "node",
+        "description": "Up to two Buttons, size sm, that fix the problem."
+      },
+      "icon": {
+        "type": "node",
+        "description": "A system icon name or a node in place of the tone icon. The tone word stays on the icon part."
+      },
+      "toneLabel": {
+        "type": "string",
+        "description": "The word the icon says. Default by tone and language: Notice, Information, Success, Warning, Error."
+      },
+      "live": {
+        "type": "boolean",
+        "default": false,
+        "description": "The alert is mounted after load and must be announced: role alert for danger, role status for the rest. Off for an alert that is on the page at load."
+      },
+      "onClose": {
+        "type": "function",
+        "description": "Renders the close button and is called by it. The consumer removes the alert."
+      },
+      "closeLabel": {
+        "type": "string",
+        "default": "Dismiss alert",
+        "description": "The accessible name of the close button. Arabic under lang ar: إغلاق الرسالة."
+      }
+    },
+    "states": [],
+    "a11y": {
+      "role": "No role when the alert is on the page at load. With live: role alert (assertive) for danger, role status (polite, atomic) for the other tones.",
+      "focus": "The alert takes no focus. Tab reaches its actions, then the close button. When the close button removes the alert, the consumer moves focus to the next sensible place, usually the control that the alert was about.",
+      "keys": {
+        "Tab": "Moves to the next action, then the close button",
+        "Shift+Tab": "Moves back",
+        "Enter": "Runs the focused action or close button",
+        "Space": "Runs the focused action or close button"
+      },
+      "announce": "Only with live. A role alert is read as soon as it mounts. A role status mounted with its text inside is not read by every screen reader (NVDA and JAWS can miss it), so for a polite message that must be heard, keep an empty live Alert mounted and fill it, or use a Toast. The icon is an image named with the tone word (Error, Warning), so the tone is read and never told by color alone.",
+      "native": {
+        "accessibilityRole": "none",
+        "accessibilityState": []
+      },
+      "notes": [
+        "Mount a live alert when the problem appears. Do not set live on an alert that renders with the page, or it is read twice.",
+        "The close button is 24 by 24 px at every size (WCAG 2.5.8).",
+        "Native: accessibilityRole alert and accessibilityLiveRegion assertive only for a live danger alert; polite live region for the other live tones; none at load."
+      ]
+    },
+    "content": {
+      "en": {
+        "title": "Name the problem or the result and the thing: Could not sync 3 files. Sentence case, no exclamation marks.",
+        "body": "What it means and what to do next, in one or two sentences, or a list of the fields to fix.",
+        "actions": "A verb plus a noun: Retry sync, Manage storage. Never OK, Continue, Confirm or Yes. Use Buttons of size sm in emphasis outline on a soft or outline alert: a soft Button on the tinted box can fall under 4.5:1. On a solid alert any Button takes the alert ink.",
+        "danger": "Say what failed and what is safe: The server did not answer. Your local copies are safe."
+      },
+      "ar": {
+        "title": "Name the problem in noun forms where you can: تعذر مزامنة 3 ملفات. No diacritics. Western digits.",
+        "actions": "Noun form labels, no diacritics: إعادة المزامنة، إدارة المساحة.",
+        "lang": "Under a Theme in Arabic the tone word and the close label switch to Arabic. Latin runs go through Bidi."
+      }
+    },
+    "tokens": [
+      "radius.card",
+      "space.3xs",
+      "space.2xs",
+      "space.xs",
+      "space.s",
+      "space.m",
+      "space.l",
+      "space.xl",
+      "size.icon.md",
+      "border.width.default",
+      "font.family.sans",
+      "font.size.m",
+      "font.size.s",
+      "font.leading.normal",
+      "font.weight.semibold",
+      "color.text.default",
+      "color.text.bright",
+      "color.text.muted",
+      "color.bg.overlay-5",
+      "color.bg.overlay-10",
+      "color.bg.surface-4",
+      "color.border.default",
+      "color.primary.on-surface",
+      "color.primary.tint",
+      "color.primary.tint-hover",
+      "color.primary.border",
+      "color.primary.fill",
+      "color.primary.text",
+      "color.state.info.text",
+      "color.state.info.tint-10",
+      "color.state.info.tint-20",
+      "color.state.info.border",
+      "color.state.info.solid",
+      "color.state.info.on-solid",
+      "color.state.success.text",
+      "color.state.success.tint-10",
+      "color.state.success.tint-20",
+      "color.state.success.border",
+      "color.state.success.solid",
+      "color.state.success.on-solid",
+      "color.state.warning.text",
+      "color.state.warning.tint-10",
+      "color.state.warning.tint-20",
+      "color.state.warning.border",
+      "color.state.warning.solid",
+      "color.state.warning.on-solid",
+      "color.state.danger.text",
+      "color.state.danger.tint-10",
+      "color.state.danger.tint-20",
+      "color.state.danger.border",
+      "color.state.danger.solid",
+      "color.state.danger.on-solid",
+      "duration.medium",
+      "ease.out",
+      "focus.shadow.primary"
+    ],
+    "motion": "fade-rise",
+    "frameworks": {
+      "react": {
+        "status": "ready",
+        "behavior": "hand built",
+        "example": "Alert.demo.tsx"
+      },
+      "angular": {
+        "status": "planned",
+        "behavior": "hand built",
+        "note": "The same DOM on Alert.css; the close part becomes CloseButton when it lands."
+      },
+      "native": {
+        "status": "planned",
+        "behavior": "hand built",
+        "note": "accessibilityLiveRegion assertive for a live danger alert, polite for the rest."
+      }
+    },
+    "styles": {
+      "studio": "A flat tinted box with a faint tone edge, card radius, achromatic accent.",
+      "desk": "The same box on the desk surface; the accent tone takes the yellow primary.",
+      "neutral": "Planned: tokens only, no recipe.",
+      "liquid": "Planned: a solid box, never glass, since an alert is content."
+    },
+    "mistakes": [
+      {
+        "wrong": "A red box with no icon or title word, only color",
+        "right": "tone danger: the icon says Error and the title names the problem"
+      },
+      {
+        "wrong": "live on an alert that renders with the page",
+        "right": "live only on an alert mounted after load"
+      },
+      {
+        "wrong": "An Alert pinned to the top for a maintenance window",
+        "right": "A Banner"
+      },
+      {
+        "wrong": "An Alert for Draft saved",
+        "right": "A Toast"
+      },
+      {
+        "wrong": "Three solid alerts stacked on one page",
+        "right": "One solid alert at most; soft for the rest, or one alert with a list"
+      }
+    ],
+    "contract": {
+      "optionalParts": [
+        "body",
+        "actions",
+        "close"
+      ]
+    },
+    "since": "0.1.0"
+  },
+  {
     "name": "Bidi",
     "kind": "component",
     "family": "foundations",
@@ -412,6 +673,200 @@
         "right": "IconButton with a label"
       }
     ],
+    "since": "0.1.0"
+  },
+  {
+    "name": "Callout",
+    "kind": "component",
+    "family": "feedback",
+    "summary": "A static note inside content: a tip, a caution or a fact to keep in mind, read in reading order with the text around it.",
+    "useWhen": [
+      "A tip or a caution inside docs, help or a settings page",
+      "A fact a reader should not miss before a step, such as Deleting a team deletes its boards",
+      "Side guidance next to a form that is true whatever the person does",
+      "A short list of steps set apart from running text"
+    ],
+    "avoidWhen": [
+      "The message is about a problem that appeared after load and must be announced",
+      "The message is about the whole app",
+      "The person must act on it before going on",
+      "The note holds actions or a close button"
+    ],
+    "insteadUse": {
+      "A live message about a problem on the page": "Alert",
+      "A passing confirmation": "Toast",
+      "A notice for the whole page or app": "Banner",
+      "A decision that blocks the task": "AlertDialog"
+    },
+    "anatomy": [
+      "root",
+      "icon",
+      "title",
+      "body"
+    ],
+    "slots": {
+      "title": {
+        "accepts": "text",
+        "max": 1
+      },
+      "body": {
+        "accepts": "any"
+      }
+    },
+    "props": {
+      "tone": {
+        "type": [
+          "neutral",
+          "accent",
+          "success",
+          "warning",
+          "danger",
+          "info"
+        ],
+        "default": "neutral",
+        "description": "The color, the icon and the tone word: Note, Tip, Information, Success, Warning, Caution."
+      },
+      "emphasis": {
+        "type": [
+          "soft",
+          "outline"
+        ],
+        "default": "soft",
+        "description": "soft is a tinted box, outline a tone border on the surface. Both keep the strong tone edge on the inline start side."
+      },
+      "title": {
+        "type": "node",
+        "description": "A short line that sums up the note. Optional: without it the tone word names the callout."
+      },
+      "children": {
+        "type": "node",
+        "description": "The note: text, paragraphs, a list, links or inline code."
+      },
+      "icon": {
+        "type": "node",
+        "description": "A system icon name or a node in place of the tone icon. The tone word stays on the icon part."
+      },
+      "toneLabel": {
+        "type": "string",
+        "description": "The word the icon says and the start of the callout's name. Default by tone and language."
+      },
+      "as": {
+        "type": [
+          "div",
+          "aside"
+        ],
+        "default": "div",
+        "description": "div renders role note inside running content. aside renders a complementary landmark, for a note beside the main content; keep it outside other landmarks."
+      }
+    },
+    "states": [],
+    "a11y": {
+      "role": "note (a div), or complementary (an aside). Named by the tone word on the icon and the title through aria-labelledby, for example Tip Move faster with the keyboard. An aria-label from the consumer wins.",
+      "focus": "None. The callout takes no focus; links inside it are in the normal tab order.",
+      "keys": {},
+      "announce": "Never. No live role: it is read in reading order with the content around it. The icon is an image named with the tone word, so the tone is never told by color alone.",
+      "native": {
+        "accessibilityRole": "summary",
+        "accessibilityState": []
+      },
+      "notes": [
+        "No motion: a callout never moves, so it needs no reduced motion form.",
+        "No actions or close part: a note the person can dismiss or act on is an Alert."
+      ]
+    },
+    "content": {
+      "en": {
+        "title": "A short line that sums up the note: Works offline. Sentence case, no exclamation marks.",
+        "body": "One or two sentences, or a short list. Name the mechanism: Press the slash key to search.",
+        "danger": "Say what is lost and how to avoid it: Deleting a team deletes its boards. Move them first."
+      },
+      "ar": {
+        "title": "Noun forms where you can: العمل بدون اتصال. No diacritics. Western digits.",
+        "lang": "Under a Theme in Arabic the tone word switches to Arabic. Latin runs and code go through Bidi."
+      }
+    },
+    "tokens": [
+      "radius.sm",
+      "radius.xs",
+      "space.3xs",
+      "space.xs",
+      "space.m",
+      "space.l",
+      "space.xl",
+      "size.icon.md",
+      "border.width.default",
+      "border.width.strong",
+      "font.family.sans",
+      "font.family.mono",
+      "font.size.m",
+      "font.leading.normal",
+      "font.weight.semibold",
+      "color.text.default",
+      "color.text.bright",
+      "color.text.muted",
+      "color.bg.overlay-5",
+      "color.bg.overlay-10",
+      "color.border.default",
+      "color.primary.on-surface",
+      "color.primary.tint",
+      "color.primary.border",
+      "color.state.info.text",
+      "color.state.info.tint-10",
+      "color.state.info.border",
+      "color.state.success.text",
+      "color.state.success.tint-10",
+      "color.state.success.border",
+      "color.state.warning.text",
+      "color.state.warning.tint-10",
+      "color.state.warning.border",
+      "color.state.danger.text",
+      "color.state.danger.tint-10",
+      "color.state.danger.border"
+    ],
+    "frameworks": {
+      "react": {
+        "status": "ready",
+        "behavior": "hand built",
+        "example": "Callout.demo.tsx"
+      },
+      "angular": {
+        "status": "planned",
+        "behavior": "hand built",
+        "note": "The same DOM on Callout.css, ids from the CDK id generator."
+      },
+      "native": {
+        "status": "planned",
+        "behavior": "hand built",
+        "note": "A View with accessibilityRole summary and the tone word in its label."
+      }
+    },
+    "styles": {
+      "studio": "A tinted box with small corners and a 2px tone edge on the inline start side; achromatic accent.",
+      "desk": "The same box; the accent tone takes the yellow primary edge.",
+      "neutral": "Planned: tokens only, no recipe.",
+      "liquid": "Planned: a solid box, never glass, since a callout is content."
+    },
+    "mistakes": [
+      {
+        "wrong": "A Callout for a sync error that appeared after load",
+        "right": "An Alert with live, so it is announced"
+      },
+      {
+        "wrong": "A Callout with a Retry button and a close button",
+        "right": "An Alert, which has actions and close"
+      },
+      {
+        "wrong": "Every paragraph of a page in a callout",
+        "right": "One callout per section at most; the rest is plain text"
+      },
+      {
+        "wrong": "as aside inside main content where it is not tangential",
+        "right": "The default div with role note"
+      }
+    ],
+    "contract": {
+      "optionalParts": []
+    },
     "since": "0.1.0"
   },
   {

@@ -1,0 +1,126 @@
+{
+  "name": "Callout",
+  "kind": "component",
+  "family": "feedback",
+  "summary": "A static note inside content: a tip, a caution or a fact to keep in mind, read in reading order with the text around it.",
+  "useWhen": [
+    "A tip or a caution inside docs, help or a settings page",
+    "A fact a reader should not miss before a step, such as Deleting a team deletes its boards",
+    "Side guidance next to a form that is true whatever the person does",
+    "A short list of steps set apart from running text"
+  ],
+  "avoidWhen": [
+    "The message is about a problem that appeared after load and must be announced",
+    "The message is about the whole app",
+    "The person must act on it before going on",
+    "The note holds actions or a close button"
+  ],
+  "insteadUse": {
+    "A live message about a problem on the page": "Alert",
+    "A passing confirmation": "Toast",
+    "A notice for the whole page or app": "Banner",
+    "A decision that blocks the task": "AlertDialog"
+  },
+  "anatomy": ["root", "icon", "title", "body"],
+  "slots": {
+    "title": { "accepts": "text", "max": 1 },
+    "body": { "accepts": "any" }
+  },
+  "props": {
+    "tone": {
+      "type": ["neutral", "accent", "success", "warning", "danger", "info"],
+      "default": "neutral",
+      "description": "The color, the icon and the tone word: Note, Tip, Information, Success, Warning, Caution."
+    },
+    "emphasis": { "type": ["soft", "outline"], "default": "soft", "description": "soft is a tinted box, outline a tone border on the surface. Both keep the strong tone edge on the inline start side." },
+    "title": { "type": "node", "description": "A short line that sums up the note. Optional: without it the tone word names the callout." },
+    "children": { "type": "node", "description": "The note: text, paragraphs, a list, links or inline code." },
+    "icon": { "type": "node", "description": "A system icon name or a node in place of the tone icon. The tone word stays on the icon part." },
+    "toneLabel": { "type": "string", "description": "The word the icon says and the start of the callout's name. Default by tone and language." },
+    "as": {
+      "type": ["div", "aside"],
+      "default": "div",
+      "description": "div renders role note inside running content. aside renders a complementary landmark, for a note beside the main content; keep it outside other landmarks."
+    }
+  },
+  "states": [],
+  "a11y": {
+    "role": "note (a div), or complementary (an aside). Named by the tone word on the icon and the title through aria-labelledby, for example Tip Move faster with the keyboard. An aria-label from the consumer wins.",
+    "focus": "None. The callout takes no focus; links inside it are in the normal tab order.",
+    "keys": {},
+    "announce": "Never. No live role: it is read in reading order with the content around it. The icon is an image named with the tone word, so the tone is never told by color alone.",
+    "native": { "accessibilityRole": "summary", "accessibilityState": [] },
+    "notes": [
+      "No motion: a callout never moves, so it needs no reduced motion form.",
+      "No actions or close part: a note the person can dismiss or act on is an Alert."
+    ]
+  },
+  "content": {
+    "en": {
+      "title": "A short line that sums up the note: Works offline. Sentence case, no exclamation marks.",
+      "body": "One or two sentences, or a short list. Name the mechanism: Press the slash key to search.",
+      "danger": "Say what is lost and how to avoid it: Deleting a team deletes its boards. Move them first."
+    },
+    "ar": {
+      "title": "Noun forms where you can: العمل بدون اتصال. No diacritics. Western digits.",
+      "lang": "Under a Theme in Arabic the tone word switches to Arabic. Latin runs and code go through Bidi."
+    }
+  },
+  "tokens": [
+    "radius.sm",
+    "radius.xs",
+    "space.3xs",
+    "space.xs",
+    "space.m",
+    "space.l",
+    "space.xl",
+    "size.icon.md",
+    "border.width.default",
+    "border.width.strong",
+    "font.family.sans",
+    "font.family.mono",
+    "font.size.m",
+    "font.leading.normal",
+    "font.weight.semibold",
+    "color.text.default",
+    "color.text.bright",
+    "color.text.muted",
+    "color.bg.overlay-5",
+    "color.bg.overlay-10",
+    "color.border.default",
+    "color.primary.on-surface",
+    "color.primary.tint",
+    "color.primary.border",
+    "color.state.info.text",
+    "color.state.info.tint-10",
+    "color.state.info.border",
+    "color.state.success.text",
+    "color.state.success.tint-10",
+    "color.state.success.border",
+    "color.state.warning.text",
+    "color.state.warning.tint-10",
+    "color.state.warning.border",
+    "color.state.danger.text",
+    "color.state.danger.tint-10",
+    "color.state.danger.border"
+  ],
+  "frameworks": {
+    "react": { "status": "ready", "behavior": "hand built", "example": "Callout.demo.tsx" },
+    "angular": { "status": "planned", "behavior": "hand built", "note": "The same DOM on Callout.css, ids from the CDK id generator." },
+    "native": { "status": "planned", "behavior": "hand built", "note": "A View with accessibilityRole summary and the tone word in its label." }
+  },
+  "styles": {
+    "studio": "A tinted box with small corners and a 2px tone edge on the inline start side; achromatic accent.",
+    "desk": "The same box; the accent tone takes the yellow primary edge.",
+    "neutral": "Planned: tokens only, no recipe.",
+    "liquid": "Planned: a solid box, never glass, since a callout is content."
+  },
+  "mistakes": [
+    { "wrong": "A Callout for a sync error that appeared after load", "right": "An Alert with live, so it is announced" },
+    { "wrong": "A Callout with a Retry button and a close button", "right": "An Alert, which has actions and close" },
+    { "wrong": "Every paragraph of a page in a callout", "right": "One callout per section at most; the rest is plain text" },
+    { "wrong": "as aside inside main content where it is not tangential", "right": "The default div with role note" }
+  ],
+  "contract": { "optionalParts": [] },
+  "since": "0.1.0"
+}

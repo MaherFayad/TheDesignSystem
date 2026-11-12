@@ -50,7 +50,7 @@ describe('Alert', () => {
       </Theme>,
     );
     expect(screen.getByRole('img', { name: 'تنبيه' })).toBeTruthy();
-    expect(screen.getByRole('button', { name: 'إغلاق التنبيه' })).toBeTruthy();
+    expect(screen.getByRole('button', { name: 'إغلاق الرسالة' })).toBeTruthy();
     rerender(<Alert tone="warning" toneLabel="Heads up" title="Storage almost full" />);
     expect(screen.getByRole('img', { name: 'Heads up' })).toBeTruthy();
   });

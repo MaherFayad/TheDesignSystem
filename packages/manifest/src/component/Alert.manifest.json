@@ -23,36 +23,95 @@
     "Static guidance inside content": "Callout",
     "An error on one field": "Field"
   },
-  "anatomy": ["root", "icon", "title", "body", "actions", "close"],
+  "anatomy": [
+    "root",
+    "icon",
+    "title",
+    "body",
+    "actions",
+    "close"
+  ],
   "slots": {
-    "title": { "accepts": "text", "min": 1, "max": 1 },
-    "body": { "accepts": "any" },
-    "actions": { "accepts": ["Button"], "max": 2 }
+    "title": {
+      "accepts": "text",
+      "min": 1,
+      "max": 1
+    },
+    "body": {
+      "accepts": "any"
+    },
+    "actions": {
+      "accepts": [
+        "Button"
+      ],
+      "max": 2
+    }
   },
   "props": {
     "tone": {
-      "type": ["neutral", "accent", "success", "warning", "danger", "info"],
+      "type": [
+        "neutral",
+        "accent",
+        "success",
+        "warning",
+        "danger",
+        "info"
+      ],
       "default": "neutral",
       "description": "The color, the icon and the tone word the icon says to assistive tech."
     },
     "emphasis": {
-      "type": ["soft", "outline", "solid"],
+      "type": [
+        "soft",
+        "outline",
+        "solid"
+      ],
       "default": "soft",
       "description": "soft is a tinted box, outline a tone border on the surface, solid a full tone fill. Keep solid for the one alert that matters most on a page."
     },
-    "size": { "type": ["sm", "md"], "default": "md", "description": "sm for a dense panel or an inspector." },
-    "title": { "type": "node", "required": true, "description": "One line that names the problem or the result." },
-    "children": { "type": "node", "description": "The body: what it means and what to do next. Text, paragraphs or a short list." },
-    "actions": { "type": "node", "description": "Up to two Buttons, size sm, that fix the problem." },
-    "icon": { "type": "node", "description": "A system icon name or a node in place of the tone icon. The tone word stays on the icon part." },
-    "toneLabel": { "type": "string", "description": "The word the icon says. Default by tone and language: Notice, Information, Success, Warning, Error." },
+    "size": {
+      "type": [
+        "sm",
+        "md"
+      ],
+      "default": "md",
+      "description": "sm for a dense panel or an inspector."
+    },
+    "title": {
+      "type": "node",
+      "required": true,
+      "description": "One line that names the problem or the result."
+    },
+    "children": {
+      "type": "node",
+      "description": "The body: what it means and what to do next. Text, paragraphs or a short list."
+    },
+    "actions": {
+      "type": "node",
+      "description": "Up to two Buttons, size sm, that fix the problem."
+    },
+    "icon": {
+      "type": "node",
+      "description": "A system icon name or a node in place of the tone icon. The tone word stays on the icon part."
+    },
+    "toneLabel": {
+      "type": "string",
+      "description": "The word the icon says. Default by tone and language: Notice, Information, Success, Warning, Error."
+    },
     "live": {
       "type": "boolean",
       "default": false,
       "description": "The alert is mounted after load and must be announced: role alert for danger, role status for the rest. Off for an alert that is on the page at load."
     },
-    "onClose": { "type": "function", "description": "Renders the close button and is called by it. The consumer removes the alert." },
-    "closeLabel": { "type": "string", "default": "Dismiss alert", "description": "The accessible name of the close button. Arabic under lang ar." }
+    "onClose": {
+      "type": "function",
+      "description": "Renders the close button and is called by it. The consumer removes the alert."
+    },
+    "closeLabel": {
+      "type": "string",
+      "default": "Dismiss alert",
+      "description": "The accessible name of the close button. Arabic under lang ar: إغلاق الرسالة."
+    }
   },
   "states": [],
   "a11y": {
@@ -64,11 +123,15 @@
       "Enter": "Runs the focused action or close button",
       "Space": "Runs the focused action or close button"
     },
-    "announce": "Only with live. A role alert is read as soon as it mounts; a role status at the next pause. The icon is an image named with the tone word (Error, Warning), so the tone is read and never told by color alone.",
-    "native": { "accessibilityRole": "alert", "accessibilityState": [] },
+    "announce": "Only with live. A role alert is read as soon as it mounts. A role status mounted with its text inside is not read by every screen reader (NVDA and JAWS can miss it), so for a polite message that must be heard, keep an empty live Alert mounted and fill it, or use a Toast. The icon is an image named with the tone word (Error, Warning), so the tone is read and never told by color alone.",
+    "native": {
+      "accessibilityRole": "none",
+      "accessibilityState": []
+    },
     "notes": [
       "Mount a live alert when the problem appears. Do not set live on an alert that renders with the page, or it is read twice.",
-      "The close button is 24 by 24 px at every size (WCAG 2.5.8)."
+      "The close button is 24 by 24 px at every size (WCAG 2.5.8).",
+      "Native: accessibilityRole alert and accessibilityLiveRegion assertive only for a live danger alert; polite live region for the other live tones; none at load."
     ]
   },
   "content": {
@@ -138,13 +201,26 @@
     "color.state.danger.solid",
     "color.state.danger.on-solid",
     "duration.medium",
-    "ease.out"
+    "ease.out",
+    "focus.shadow.primary"
   ],
   "motion": "fade-rise",
   "frameworks": {
-    "react": { "status": "ready", "behavior": "hand built", "example": "Alert.demo.tsx" },
-    "angular": { "status": "planned", "behavior": "hand built", "note": "The same DOM on Alert.css; the close part becomes CloseButton when it lands." },
-    "native": { "status": "planned", "behavior": "hand built", "note": "accessibilityLiveRegion assertive for a live danger alert, polite for the rest." }
+    "react": {
+      "status": "ready",
+      "behavior": "hand built",
+      "example": "Alert.demo.tsx"
+    },
+    "angular": {
+      "status": "planned",
+      "behavior": "hand built",
+      "note": "The same DOM on Alert.css; the close part becomes CloseButton when it lands."
+    },
+    "native": {
+      "status": "planned",
+      "behavior": "hand built",
+      "note": "accessibilityLiveRegion assertive for a live danger alert, polite for the rest."
+    }
   },
   "styles": {
     "studio": "A flat tinted box with a faint tone edge, card radius, achromatic accent.",
@@ -153,12 +229,33 @@
     "liquid": "Planned: a solid box, never glass, since an alert is content."
   },
   "mistakes": [
-    { "wrong": "A red box with no icon or title word, only color", "right": "tone danger: the icon says Error and the title names the problem" },
-    { "wrong": "live on an alert that renders with the page", "right": "live only on an alert mounted after load" },
-    { "wrong": "An Alert pinned to the top for a maintenance window", "right": "A Banner" },
-    { "wrong": "An Alert for Draft saved", "right": "A Toast" },
-    { "wrong": "Three solid alerts stacked on one page", "right": "One solid alert at most; soft for the rest, or one alert with a list" }
+    {
+      "wrong": "A red box with no icon or title word, only color",
+      "right": "tone danger: the icon says Error and the title names the problem"
+    },
+    {
+      "wrong": "live on an alert that renders with the page",
+      "right": "live only on an alert mounted after load"
+    },
+    {
+      "wrong": "An Alert pinned to the top for a maintenance window",
+      "right": "A Banner"
+    },
+    {
+      "wrong": "An Alert for Draft saved",
+      "right": "A Toast"
+    },
+    {
+      "wrong": "Three solid alerts stacked on one page",
+      "right": "One solid alert at most; soft for the rest, or one alert with a list"
+    }
   ],
-  "contract": { "optionalParts": [] },
+  "contract": {
+    "optionalParts": [
+      "body",
+      "actions",
+      "close"
+    ]
+  },
   "since": "0.1.0"
 }
