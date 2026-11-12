@@ -1,23 +1,23 @@
-import { DemoCase, DemoPage, DemoRow, sample } from "../../demo";
-import { Theme } from "../../theme";
-import { ProgressCircle } from "./index";
-import type { ProgressCircleSize, ProgressCircleTone } from "./index";
+import { DemoCase, DemoPage, DemoRow, sample } from '../../demo';
+import { Theme } from '../../theme';
+import { ProgressCircle } from './index';
+import type { ProgressCircleSize, ProgressCircleTone } from './index';
 
-const sizes: ProgressCircleSize[] = ["xs", "sm", "md", "lg"];
-const tones: ProgressCircleTone[] = ["accent", "success", "warning", "danger"];
+const sizes: ProgressCircleSize[] = ['xs', 'sm', 'md', 'lg'];
+const tones: ProgressCircleTone[] = ['accent', 'success', 'warning', 'danger'];
 
 const toneLabel: Record<ProgressCircleTone, string> = {
-  accent: "Uploading files",
-  success: "Backup finished",
-  warning: "Storage almost full",
-  danger: "Upload stopped",
+  accent: 'Uploading files',
+  success: 'Backup finished',
+  warning: 'Upload slowing down',
+  danger: 'Upload stopped',
 };
 
 const toneLabelAr: Record<ProgressCircleTone, string> = {
-  accent: "رفع الملفات",
-  success: "اكتمال النسخة الاحتياطية",
-  warning: "المساحة قربت تخلص",
-  danger: "توقف الرفع",
+  accent: 'رفع الملفات',
+  success: 'اكتمال النسخة الاحتياطية',
+  warning: 'بطء الرفع',
+  danger: 'توقف الرفع',
 };
 
 const toneValue: Record<ProgressCircleTone, number> = {
@@ -28,30 +28,21 @@ const toneValue: Record<ProgressCircleTone, number> = {
 };
 
 const files = [
-  ["board-cover.png", 100],
-  ["moodboard-v2.fig", 72],
-  ["brand-guide.pdf", 35],
-  ["interview-notes.md", 8],
-  ["launch-video.mp4", 0],
+  ['board-cover.png', 100],
+  ['moodboard-v2.fig', 72],
+  ['brand-guide.pdf', 35],
+  ['interview-notes.md', 8],
+  ['launch-video.mp4', 0],
 ] as const;
 
 export default function ProgressCircleDemo() {
   return (
     <DemoPage>
-      <DemoCase
-        id="variants"
-        title="Variants: each tone, each size, and the indeterminate form"
-      >
+      <DemoCase id="variants" title="Variants: each tone, each size, and the indeterminate form">
         {tones.map((tone) => (
           <DemoRow key={tone} label={tone}>
             {sizes.map((size) => (
-              <ProgressCircle
-                key={size}
-                size={size}
-                tone={tone}
-                value={toneValue[tone]}
-                label={toneLabel[tone]}
-              />
+              <ProgressCircle key={size} size={size} tone={tone} value={toneValue[tone]} label={toneLabel[tone]} />
             ))}
           </DemoRow>
         ))}
@@ -61,32 +52,15 @@ export default function ProgressCircleDemo() {
           ))}
         </DemoRow>
         <DemoRow label="Value on small sizes">
-          <ProgressCircle
-            size="sm"
-            value={46}
-            label="Uploading files"
-            showValue={false}
-          />
-          <ProgressCircle
-            size="lg"
-            value={7}
-            max={12}
-            label="Copying files"
-            valueText={(v, m) => `${v}/${m}`}
-          />
+          <ProgressCircle size="sm" value={46} label="Uploading files" showValue />
+          <ProgressCircle size="lg" value={7} max={12} label="Copying files" valueText={(v, m) => `${v}/${m}`} />
         </DemoRow>
         <h3 data-demo="title">Variants in Arabic</h3>
         <Theme lang="ar" data-demo="content">
           {tones.map((tone) => (
             <DemoRow key={tone} label={toneLabelAr[tone]}>
               {sizes.map((size) => (
-                <ProgressCircle
-                  key={size}
-                  size={size}
-                  tone={tone}
-                  value={toneValue[tone]}
-                  label={toneLabelAr[tone]}
-                />
+                <ProgressCircle key={size} size={size} tone={tone} value={toneValue[tone]} label={toneLabelAr[tone]} />
               ))}
             </DemoRow>
           ))}
@@ -105,12 +79,7 @@ export default function ProgressCircleDemo() {
 
       <DemoCase id="one" title="One ring, complete">
         <DemoRow>
-          <ProgressCircle
-            value={100}
-            tone="success"
-            size="lg"
-            label="Backup finished"
-          />
+          <ProgressCircle value={100} tone="success" size="lg" label="Backup finished" />
         </DemoRow>
       </DemoCase>
 
@@ -121,7 +90,7 @@ export default function ProgressCircleDemo() {
               size="sm"
               value={value}
               label={`Uploading ${name}`}
-              tone={value === 100 ? "success" : "accent"}
+              tone={value === 100 ? 'success' : 'accent'}
             />
             <span>{name}</span>
           </DemoRow>
@@ -157,15 +126,8 @@ export default function ProgressCircleDemo() {
 
       <DemoCase id="error" title="Error: the task stopped">
         <DemoRow>
-          <ProgressCircle
-            value={62}
-            tone="danger"
-            label="Upload stopped at 62%"
-          />
-          <span>
-            Upload stopped at 62%. Check the connection and upload the file
-            again.
-          </span>
+          <ProgressCircle value={62} tone="danger" label="Upload stopped" />
+          <span>Upload stopped at 62%. Check the connection and upload the file again.</span>
         </DemoRow>
       </DemoCase>
     </DemoPage>

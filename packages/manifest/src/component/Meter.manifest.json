@@ -1,0 +1,163 @@
+{
+  "name": "Meter",
+  "kind": "component",
+  "family": "feedback",
+  "summary": "A measured value in a known range, such as storage used or a score, with its level in words.",
+  "useWhen": [
+    "A value that sits in a fixed range and is not a task: storage used, a quota, a score, a signal strength",
+    "A value whose regions matter (plenty of room, filling up, almost full), set with low, high and optimum",
+    "A list of measures to compare, one small meter per row"
+  ],
+  "avoidWhen": ["A task that moves toward done", "A value with no known maximum", "A rating the person sets"],
+  "insteadUse": {
+    "A task that moves toward done": "ProgressBar",
+    "A value with no known maximum": "Stat",
+    "A rating the person sets": "Rating"
+  },
+  "anatomy": ["root", "label", "value", "track", "indicator"],
+  "props": {
+    "value": {
+      "type": "number",
+      "required": true,
+      "description": "The measured value. Clamped into [min, max]."
+    },
+    "min": {
+      "type": "number",
+      "default": 0,
+      "description": "The bottom of the range."
+    },
+    "max": {
+      "type": "number",
+      "default": 100,
+      "description": "The top of the range. A max at or below min falls back to min plus 100."
+    },
+    "low": {
+      "type": "number",
+      "description": "The top of the low region, as in the HTML meter element. Default: no low region."
+    },
+    "high": {
+      "type": "number",
+      "description": "The bottom of the high region. Default: no high region."
+    },
+    "optimum": {
+      "type": "number",
+      "description": "The best value. Its region gives tone success, the next region warning, the far region danger. Without it, or without low and high, the tone is accent."
+    },
+    "label": {
+      "type": "node",
+      "description": "Visible text that names the measure and labels the meter through aria-labelledby. Without it, pass aria-label."
+    },
+    "valueText": {
+      "type": "function",
+      "description": "(value, min, max) => string for the visible value and aria-valuetext: 72 GB of 100 GB. Default: a whole percent of the range, rounded down, Western digits."
+    },
+    "levelLabels": {
+      "type": "string",
+      "description": "An object of words per level, { low, medium, high }, said after the value: Almost full. Default Low, Medium, High; Arabic منخفض، متوسط، مرتفع under lang ar."
+    },
+    "showLevel": {
+      "type": "boolean",
+      "description": "Shows the level word after the value. Default true when low or high is set."
+    },
+    "tone": {
+      "type": ["accent", "success", "warning", "danger"],
+      "description": "Overrides the tone the thresholds give. Prefer thresholds, so tone and level agree."
+    },
+    "size": {
+      "type": ["sm", "md", "lg"],
+      "default": "md",
+      "description": "Track thickness 4, 8 and 12 px; the text steps from font.size.xs to m."
+    }
+  },
+  "states": [],
+  "a11y": {
+    "role": "meter, with aria-valuenow, aria-valuemin, aria-valuemax and aria-valuetext",
+    "focus": "Never focusable.",
+    "keys": {},
+    "announce": "Not a live region. A screen reader reads the label and aria-valuetext, which holds the value and the level word: 72 GB of 100 GB, Filling up.",
+    "native": {
+      "accessibilityRole": "progressbar",
+      "accessibilityState": []
+    },
+    "notes": [
+      "data-level on the root is low, medium or high. It is a valued attribute, so it is not listed in states: the contract suite reads every data-* entry there as a boolean (see the lane 5B report).",
+      "The level is in data-level, in the visible value text and in aria-valuetext, never only in the color.",
+      "Thresholds follow the HTML meter: low and high are clamped into the range, and high is never below low.",
+      "The indicator scales from the inline start: it fills from the right in Arabic.",
+      "Under forced colors the track has a CanvasText border and the indicator is Highlight."
+    ]
+  },
+  "content": {
+    "en": {
+      "label": "Name the measure as a noun: Storage used, Accessibility score.",
+      "value": "Say the amount in its own unit when it means more than a percent: 72 GB of 100 GB.",
+      "level": "Say what the level means for the person: Plenty of room, Filling up, Almost full."
+    },
+    "ar": {
+      "label": "Noun form labels, no diacritics: المساحة المستخدمة.",
+      "value": "Western digits: 72 من 100 جيجابايت.",
+      "level": "Short noun phrases: المساحة كافية، المساحة تقل، المساحة قربت تخلص."
+    }
+  },
+  "tokens": [
+    "space.fixed.2xs",
+    "space.fixed.m",
+    "space.fixed.xl",
+    "space.2xs",
+    "space.s",
+    "font.family.sans",
+    "font.size.xs",
+    "font.size.s",
+    "font.size.m",
+    "font.weight.medium",
+    "font.leading.snug",
+    "radius.pill",
+    "border.width.default",
+    "color.bg.overlay-10",
+    "color.text.default",
+    "color.text.muted",
+    "color.primary.on-surface",
+    "color.state.success.solid",
+    "color.state.warning.solid",
+    "color.state.danger.solid",
+    "color.state.danger.text",
+    "duration.slow",
+    "ease.standard"
+  ],
+  "motion": "number-roll",
+  "frameworks": {
+    "react": {
+      "status": "ready",
+      "behavior": "hand built, role meter",
+      "example": "Meter.demo.tsx",
+      "note": "Level and tone logic in level.ts (pure, to move to packages/shared). Values formatted by the ProgressBar format.ts helper until packages/shared/src/number.ts lands. Motion: a value change eases the scaleX transform over duration.slow; number-roll names that change until the 1.11 catalog has a fill pattern."
+    },
+    "angular": {
+      "status": "planned"
+    },
+    "native": {
+      "status": "planned"
+    }
+  },
+  "styles": {
+    "studio": "The ProgressBar track; with no thresholds the fill is the strongest text color.",
+    "desk": "The same track; with no thresholds the fill is yellow on dark and dark gold on light.",
+    "neutral": "Planned: the brand color with no thresholds.",
+    "liquid": "Planned: a solid track on content."
+  },
+  "mistakes": [
+    {
+      "wrong": "A Meter for an upload",
+      "right": "A ProgressBar: an upload is a task"
+    },
+    {
+      "wrong": "Only the red color when storage is almost full",
+      "right": "high and optimum thresholds and a level word such as Almost full"
+    },
+    {
+      "wrong": "tone set by hand that disagrees with the level",
+      "right": "low, high and optimum, and let the meter pick the tone"
+    }
+  ],
+  "since": "0.1.0"
+}

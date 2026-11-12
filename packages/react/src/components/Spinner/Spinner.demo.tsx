@@ -6,7 +6,14 @@ import type { SpinnerSize, SpinnerTone } from './index';
 const sizes: SpinnerSize[] = ['xs', 'sm', 'md', 'lg'];
 const tones: SpinnerTone[] = ['neutral', 'accent'];
 
-const tasks = ['Loading files', 'Syncing boards', 'Checking links', 'Building preview', 'Uploading images', 'Saving changes'];
+const tasks = [
+  'Loading files',
+  'Syncing boards',
+  'Checking links',
+  'Building preview',
+  'Uploading images',
+  'Saving changes',
+];
 const tasksAr = ['تحميل الملفات', 'مزامنة اللوحات', 'فحص الروابط', 'تجهيز المعاينة', 'رفع الصور', 'حفظ التغييرات'];
 
 export default function SpinnerDemo() {

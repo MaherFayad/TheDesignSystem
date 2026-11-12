@@ -14,6 +14,7 @@ export const routes: DemoRoute[] = [
   { name: 'Icon', slug: 'icon', load: () => import('../../../packages/react/src/components/Icon/Icon.demo') },
   { name: 'IconButton', slug: 'icon-button', load: () => import('../../../packages/react/src/components/IconButton/IconButton.demo') },
   { name: 'Input', slug: 'input', load: () => import('../../../packages/react/src/components/Input/Input.demo') },
+  { name: 'Meter', slug: 'meter', load: () => import('../../../packages/react/src/components/Meter/Meter.demo') },
   { name: 'ProgressBar', slug: 'progress-bar', load: () => import('../../../packages/react/src/components/ProgressBar/ProgressBar.demo') },
   { name: 'ProgressCircle', slug: 'progress-circle', load: () => import('../../../packages/react/src/components/ProgressCircle/ProgressCircle.demo') },
   { name: 'Spinner', slug: 'spinner', load: () => import('../../../packages/react/src/components/Spinner/Spinner.demo') },

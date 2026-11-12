@@ -52,7 +52,7 @@
     "size": {
       "type": ["xs", "sm", "md", "lg"],
       "default": "md",
-      "description": "Diameter 16 (size.icon.md), 24 (size.icon.lg), 44 (size.control.lg) and 68 px (size.control.lg plus size.icon.lg) at the default density; md and lg follow density. Ring 2, 3, 4 and 6 px."
+      "description": "Diameter 16 (size.icon.md), 24 (size.icon.lg), 44 (size.control.lg) and 68 px (size.control.lg plus size.icon.lg) at the default density; md and lg follow density. Ring 2, 3, 4 and 6 px. md is 44 px, not the 32 px control md: a percent must fit inside the ring."
     },
     "tone": {
       "type": ["accent", "success", "warning", "danger"],
@@ -72,12 +72,13 @@
     },
     "notes": [
       "The ring is a round border cut by a conic gradient mask; there is no SVG stroke and no stroke-dashoffset. A value change swaps the mask at once: only transform and opacity animate.",
-      "Indeterminate turns a quarter arc with transform: rotate. Under reduced motion it stops as a full, faded ring and aria-valuetext says Loading.",
+      "Indeterminate turns a quarter arc with transform: rotate. Under reduced motion it stops as a still quarter arc in the full tone color, like a still Spinner, and aria-valuetext says Loading.",
       "The ring fills clockwise from 12 o'clock in both directions: a clock face does not mirror in RTL.",
       "Ring contrast: every tone color is a solid mark color made for 3:1 against the surface (WCAG 1.4.11).",
       "Under forced colors the track is GrayText and the indicator Highlight.",
       "WCAG 2.2.2: the indeterminate loop has no pause control; a busy indicator is essential motion, and it stops under reduced motion.",
-      "The percent is rounded down, so an unfinished task never shows 100%."
+      "The percent is rounded down, so an unfinished task never shows 100%.",
+      "label is the accessible name, never shown: the ring has no label part (anatomy.md rule 7, the icon only exception). Put the same words in text next to the ring."
     ]
   },
   "content": {
@@ -104,7 +105,6 @@
     "font.weight.medium",
     "font.leading.tight",
     "radius.pill",
-    "opacity.disabled",
     "color.bg.overlay-10",
     "color.text.default",
     "color.primary.on-surface",

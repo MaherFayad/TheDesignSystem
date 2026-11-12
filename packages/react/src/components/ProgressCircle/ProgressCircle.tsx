@@ -1,4 +1,4 @@
-"use client";
+'use client';
 // ProgressCircle: compact progress in a ring, for a file chip, a card corner
 // or a table cell.
 //
@@ -13,27 +13,16 @@
 // since only transform and opacity may animate; the indeterminate form turns
 // a quarter arc with transform: rotate. The ring fills clockwise in both
 // directions, like a clock face, which does not mirror in RTL.
-import { type CSSProperties, type HTMLAttributes, type Ref } from "react";
-import { Progress } from "radix-ui";
-import type { Size, Tone } from "@the-system/shared";
-import { useTheme } from "../../theme";
-import {
-  clampValue,
-  formatPercent,
-  loadingLabelFor,
-  validMax,
-} from "../ProgressBar/format";
+import { type CSSProperties, type HTMLAttributes, type Ref } from 'react';
+import { Progress } from 'radix-ui';
+import type { Size, Tone } from '@the-system/shared';
+import { useTheme } from '../../theme';
+import { clampValue, formatPercent, loadingLabelFor, validMax } from '../ProgressBar/format';
 
-export type ProgressCircleSize = Extract<Size, "xs" | "sm" | "md" | "lg">;
-export type ProgressCircleTone = Extract<
-  Tone,
-  "accent" | "success" | "warning" | "danger"
->;
+export type ProgressCircleSize = Extract<Size, 'xs' | 'sm' | 'md' | 'lg'>;
+export type ProgressCircleTone = Extract<Tone, 'accent' | 'success' | 'warning' | 'danger'>;
 
-export interface ProgressCircleProps extends Omit<
-  HTMLAttributes<HTMLDivElement>,
-  "title" | "children" | "role"
-> {
+export interface ProgressCircleProps extends Omit<HTMLAttributes<HTMLDivElement>, 'title' | 'children' | 'role'> {
   /** Progress from 0 to max. null or undefined is the indeterminate form. Out of range values are clamped. */
   value?: number | null;
   /** The value that means done. Default 100. */
@@ -61,8 +50,8 @@ export function ProgressCircle({
   showValue,
   valueText,
   loadingLabel,
-  size = "md",
-  tone = "accent",
+  size = 'md',
+  tone = 'accent',
   ref,
   ...rest
 }: ProgressCircleProps) {
@@ -76,8 +65,7 @@ export function ProgressCircle({
         ? valueText(value, max)
         : formatPercent(value / max, lang);
   const fraction = value === null ? 0 : value / max;
-  const visibleValue =
-    (showValue ?? (size === "md" || size === "lg")) && value !== null;
+  const visibleValue = (showValue ?? (size === 'md' || size === 'lg')) && value !== null;
 
   return (
     <Progress.Root
@@ -92,10 +80,7 @@ export function ProgressCircle({
       data-tone={tone}
     >
       <span data-part="track" />
-      <Progress.Indicator
-        asChild
-        style={{ "--_progress-circle-fraction": fraction } as CSSProperties}
-      >
+      <Progress.Indicator asChild style={{ '--_progress-circle-fraction': fraction } as CSSProperties}>
         <span data-part="indicator" />
       </Progress.Indicator>
       {visibleValue && (

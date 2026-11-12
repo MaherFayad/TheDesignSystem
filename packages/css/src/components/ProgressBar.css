@@ -34,7 +34,8 @@
     --_progress-bar-fraction: 0;
 
     display: grid;
-    grid-template-columns: minmax(0, 1fr) auto;
+    /* The value column takes at most half the row and wraps past it, so a long value never squeezes the label. */
+    grid-template-columns: minmax(0, 1fr) fit-content(50%);
     align-items: baseline;
     column-gap: var(--ds-space-s);
     row-gap: var(--_progress-bar-gap);
@@ -81,8 +82,10 @@
   [data-ds='progress-bar'] > [data-part='value'] {
     grid-column: 2;
     color: var(--_progress-bar-value-fg);
+    min-inline-size: 0;
     font-variant-numeric: tabular-nums;
-    white-space: nowrap;
+    text-align: end;
+    overflow-wrap: anywhere;
     unicode-bidi: plaintext;
   }
 

@@ -3,4 +3,4 @@ export {
   type ProgressCircleProps,
   type ProgressCircleSize,
   type ProgressCircleTone,
-} from "./ProgressCircle";
+} from './ProgressCircle';

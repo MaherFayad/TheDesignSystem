@@ -11,12 +11,14 @@
   "avoidWhen": [
     "A measured value that is not a task, such as storage used or a score",
     "A short wait on a small area with no value",
-    "Little room, such as a card corner or a file chip"
+    "Little room, such as a card corner or a file chip",
+    "Steps the person moves through, such as a form wizard"
   ],
   "insteadUse": {
     "A measured value that is not a task": "Meter",
     "A short wait on a small area with no value": "Spinner",
-    "Little room": "ProgressCircle"
+    "Little room": "ProgressCircle",
+    "Steps the person moves through, such as a form wizard": "Stepper"
   },
   "anatomy": ["root", "label", "value", "track", "indicator"],
   "props": {

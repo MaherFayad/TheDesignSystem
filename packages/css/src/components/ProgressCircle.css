@@ -17,7 +17,7 @@
  * starts at 12 o'clock and runs clockwise. A value change swaps the mask at
  * once (only transform and opacity animate). Indeterminate shows a quarter
  * arc that turns with transform: rotate (motion pattern spinner); under
- * reduced motion it stops as a full, faded ring.
+ * reduced motion it stops as a still quarter arc.
  */
 @layer ds.base {
   [data-ds='progress-circle'] {
@@ -107,11 +107,12 @@
   }
 
   @media (prefers-reduced-motion: reduce) {
-    /* Stops: a full, faded ring. aria-valuetext says Loading. */
+    /*
+     * Stops as a still quarter arc, like the still Spinner, in the full tone
+     * color (a faded ring fell below 3:1). aria-valuetext says Loading.
+     */
     [data-ds='progress-circle'][data-state='indeterminate'] > [data-part='indicator'] {
-      mask-image: none;
       animation: none;
-      opacity: var(--ds-opacity-disabled);
     }
   }
 

@@ -6,6 +6,7 @@ export * from './components/Field/index';
 export * from './components/Icon/index';
 export * from './components/IconButton/index';
 export * from './components/Input/index';
+export * from './components/Meter/index';
 export * from './components/ProgressBar/index';
 export * from './components/ProgressCircle/index';
 export * from './components/Spinner/index';

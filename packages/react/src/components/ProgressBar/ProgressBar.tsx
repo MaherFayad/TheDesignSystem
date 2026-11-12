@@ -1,4 +1,4 @@
-"use client";
+'use client';
 // ProgressBar: how far a task has come, or that it runs with no known end.
 //
 // No source: designed from the dials table (section 3.7 of PLAN.md) and the
@@ -9,28 +9,16 @@
 // The indicator is the full width of the track and scales on the inline axis
 // with transform: scaleX(fraction), so only transform animates. Its origin is
 // the inline start: the left edge in LTR, the right edge in RTL.
-import {
-  useId,
-  type CSSProperties,
-  type HTMLAttributes,
-  type ReactNode,
-  type Ref,
-} from "react";
-import { Progress } from "radix-ui";
-import type { Size, Tone } from "@the-system/shared";
-import { useTheme } from "../../theme";
-import { clampValue, formatPercent, loadingLabelFor, validMax } from "./format";
+import { useId, type CSSProperties, type HTMLAttributes, type ReactNode, type Ref } from 'react';
+import { Progress } from 'radix-ui';
+import type { Size, Tone } from '@the-system/shared';
+import { useTheme } from '../../theme';
+import { clampValue, formatPercent, loadingLabelFor, validMax } from './format';
 
-export type ProgressBarSize = Extract<Size, "sm" | "md" | "lg">;
-export type ProgressBarTone = Extract<
-  Tone,
-  "accent" | "success" | "warning" | "danger"
->;
+export type ProgressBarSize = Extract<Size, 'sm' | 'md' | 'lg'>;
+export type ProgressBarTone = Extract<Tone, 'accent' | 'success' | 'warning' | 'danger'>;
 
-export interface ProgressBarProps extends Omit<
-  HTMLAttributes<HTMLDivElement>,
-  "title" | "children" | "role"
-> {
+export interface ProgressBarProps extends Omit<HTMLAttributes<HTMLDivElement>, 'title' | 'children' | 'role'> {
   /** Progress from 0 to max. null or undefined is the indeterminate form. Out of range values are clamped. */
   value?: number | null;
   /** The value that means done. Default 100. */
@@ -65,8 +53,8 @@ export function ProgressBar({
   showValue = true,
   valueText,
   loadingLabel,
-  size = "md",
-  tone = "accent",
+  size = 'md',
+  tone = 'accent',
   ref,
   ...rest
 }: ProgressBarProps) {
@@ -75,21 +63,13 @@ export function ProgressBar({
   const max = validMax(maxProp, 0, 100);
   const value = clampValue(valueProp, 0, max);
   const busy = loadingLabel ?? loadingLabelFor(lang);
-  const text =
-    value === null
-      ? busy
-      : valueText
-        ? valueText(value, max)
-        : formatPercent(value / max, lang);
+  const text = value === null ? busy : valueText ? valueText(value, max) : formatPercent(value / max, lang);
   const fraction = value === null ? 0 : value / max;
-  const hasLabel =
-    label !== undefined && label !== null && label !== false && label !== "";
+  const hasLabel = label !== undefined && label !== null && label !== false && label !== '';
 
   return (
     <Progress.Root
-      aria-labelledby={
-        hasLabel && rest["aria-label"] === undefined ? labelId : undefined
-      }
+      aria-labelledby={hasLabel && rest['aria-label'] === undefined ? labelId : undefined}
       aria-valuetext={text}
       {...rest}
       ref={ref}
@@ -106,10 +86,7 @@ export function ProgressBar({
       )}
       {showValue && <span data-part="value">{text}</span>}
       <span data-part="track">
-        <Progress.Indicator
-          asChild
-          style={{ "--_progress-bar-fraction": fraction } as CSSProperties}
-        >
+        <Progress.Indicator asChild style={{ '--_progress-bar-fraction': fraction } as CSSProperties}>
           <span data-part="indicator" />
         </Progress.Indicator>
       </span>
