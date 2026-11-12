@@ -79,6 +79,18 @@ describe('DsInlineEdit', () => {
     expect(document.activeElement).toBe(part('name', 'display'));
   });
 
+  it('stays open when the removed display button fires focusout, as Chromium does on Enter', async () => {
+    const { fixture, q, part, input } = await setup();
+    const display = part('name', 'display');
+    display.focus();
+    display.click();
+    // The display is still in the DOM until the next render: Chromium fires focusout on it then, with no relatedTarget.
+    display.dispatchEvent(new FocusEvent('focusout', { bubbles: true, relatedTarget: null }));
+    await fixture.whenStable();
+    expect(q('name').getAttribute('data-state')).toBe('editing');
+    expect(document.activeElement).toBe(input('name'));
+  });
+
   it('cancels on Escape and keeps the value', async () => {
     const { fixture, host, q, part, input } = await setup();
     part('name', 'display').click();
