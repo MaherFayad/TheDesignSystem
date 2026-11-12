@@ -72,7 +72,8 @@ describe('Meter', () => {
   it('clamps, hides the level on request and uses aria-label', () => {
     const el = root(render(<Meter value={140} {...storage} showLevel={false} aria-label="Storage" />).container);
     expect(el.getAttribute('aria-valuenow')).toBe('100');
-    expect(el.getAttribute('aria-valuetext')).toBe('100%');
+    expect(el.getAttribute('aria-valuetext')).toBe('100%, High');
+    expect(part(el, 'value')?.textContent).toBe('100%');
     expect(part(el, 'label')).toBeNull();
     expect(el.hasAttribute('aria-labelledby')).toBe(false);
   });

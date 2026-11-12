@@ -57,7 +57,7 @@
     },
     "showLevel": {
       "type": "boolean",
-      "description": "Shows the level word after the value. Default true when low or high is set."
+      "description": "Shows the level word after the value. Default true when low or high is set. aria-valuetext keeps the level word whenever low or high is set."
     },
     "tone": {
       "type": ["accent", "success", "warning", "danger"],
@@ -84,14 +84,16 @@
       "The level is in data-level, in the visible value text and in aria-valuetext, never only in the color.",
       "Thresholds follow the HTML meter: low and high are clamped into the range, and high is never below low.",
       "The indicator scales from the inline start: it fills from the right in Arabic.",
-      "Under forced colors the track has a CanvasText border and the indicator is Highlight."
+      "Under forced colors the track has a CanvasText border and the indicator is Highlight.",
+      "With no optimum the tone is accent: no region is better than another. The HTML meter would assume the midpoint; this is a deliberate choice for Angular to copy."
     ]
   },
   "content": {
     "en": {
       "label": "Name the measure as a noun: Storage used, Accessibility score.",
       "value": "Say the amount in its own unit when it means more than a percent: 72 GB of 100 GB.",
-      "level": "Say what the level means for the person: Plenty of room, Filling up, Almost full."
+      "level": "Say what the level means for the person: Plenty of room, Filling up, Almost full.",
+      "language": "Pass valueText and levelLabels in the same language: the default level words follow the theme lang, the caller's value text does not."
     },
     "ar": {
       "label": "Noun form labels, no diacritics: المساحة المستخدمة.",
@@ -157,6 +159,10 @@
     {
       "wrong": "tone set by hand that disagrees with the level",
       "right": "low, high and optimum, and let the meter pick the tone"
+    },
+    {
+      "wrong": "showLevel false, or a hand set tone, with no level in visible text",
+      "right": "Keep the level word visible, or say the level in text next to the meter"
     }
   ],
   "since": "0.1.0"

@@ -4,10 +4,11 @@
 // Pure logic with no React. Angular will need the same rule; the lane report
 // asks the lead to move it to packages/shared/src/meter.ts (it is not named
 // in this order, so it stays here for now).
+import type { Tone } from '@the-system/shared';
 import { isArabic } from '../ProgressBar/format';
 
 export type MeterLevel = 'low' | 'medium' | 'high';
-export type MeterTone = 'accent' | 'success' | 'warning' | 'danger';
+export type MeterTone = Extract<Tone, 'accent' | 'success' | 'warning' | 'danger'>;
 
 export interface MeterRange {
   min: number;

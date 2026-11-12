@@ -4,7 +4,7 @@ Branch `claude/ds-lane-5b`, built on `claude/relaxed-hypatia-7gseap`. One
 commit per component: `wo-1.5.9: Spinner`, `wo-1.5.5: ProgressBar`,
 `wo-1.5.6: ProgressCircle`, `wo-1.5.7: Meter`. Review fixes for a component
 ride in the next component's commit (the commit bodies say which), and the
-last review lands in a closing commit with this report.
+last review lands in a closing commit (`wo-1.5.7: Meter review fixes`).
 
 Baseline before any change: `npm run check` green.
 
@@ -204,7 +204,17 @@ Decisions:
 - Motion: `number-roll` names the eased value change until 1.11 has a fill
   pattern.
 
-Review: see the closing commit (the review ran after the Meter commit).
+Review (1 blocker, 12 notes), fixed in the closing commit. Blocker fixed:
+`MeterTone` now narrows the shared `Tone` (rule 9). Notes fixed: aria-valuetext
+keeps the level word whenever low or high is set, even with
+`showLevel={false}`; the comma follows the script of the level word; demo
+cases pass level words in the same language as the value text; "تقييم سهولة
+الوصول"; wider demo cells; a manifest note on the accent tone with no optimum
+(a deliberate difference from the HTML meter midpoint) and a mistake entry
+for a hidden level. Left open: no dev warning when a meter has no name; the
+manifest types `levelLabels` as string because the schema has no `object`
+prop type (see changes needed); `data-level` is not in `states` (see changes
+needed).
 
 ## Token gaps
 
@@ -239,7 +249,9 @@ Review: see the closing commit (the review ran after the Meter commit).
 4. Motion catalog (1.11): a bar pattern for the indeterminate slide and a
    fill pattern for value changes; today ProgressBar and ProgressCircle say
    `spinner` and Meter says `number-roll`.
-5. Decide whether rule 12 (md is 32 px) covers non controls: Spinner md is
+5. Manifest schema, `packages/manifest/schema.json` prop `type` enum (lines
+   128 to 134): add `object`, so Meter `levelLabels` can say what it is.
+6. Decide whether rule 12 (md is 32 px) covers non controls: Spinner md is
    24 px and ProgressCircle md 44 px. Log it in DECISIONS.md.
 
 ## Could not do

@@ -13,7 +13,7 @@
 import { useId, type CSSProperties, type HTMLAttributes, type ReactNode, type Ref } from 'react';
 import type { Size } from '@the-system/shared';
 import { useTheme } from '../../theme';
-import { formatPercent, isArabic, validMax } from '../ProgressBar/format';
+import { formatPercent, validMax } from '../ProgressBar/format';
 import { meterLevel, meterLevelLabelsFor, meterTone, type MeterLevel, type MeterTone } from './level';
 
 export type MeterSize = Extract<Size, 'sm' | 'md' | 'lg'>;
@@ -41,7 +41,7 @@ export interface MeterProps extends Omit<HTMLAttributes<HTMLDivElement>, 'title'
   valueText?: (value: number, min: number, max: number) => string;
   /** Words for each level, shown after the value and read in aria-valuetext: { high: 'Almost full' }. Default Low, Medium, High (Arabic under lang ar). */
   levelLabels?: Partial<Record<MeterLevel, string>>;
-  /** Shows the level word after the value. Default true when low or high is set. */
+  /** Shows the level word after the value. Default true when low or high is set. aria-valuetext keeps the word whenever low or high is set. */
   showLevel?: boolean;
   /** Overrides the tone the thresholds give. Prefer thresholds. */
   tone?: MeterTone;
@@ -78,14 +78,19 @@ export function Meter({
   const amount = valueText ? valueText(value, min, max) : formatPercent(fraction, lang);
   const levelWord = { ...meterLevelLabelsFor(lang), ...levelLabels }[level];
   const withLevel = showLevel ?? (low !== undefined || high !== undefined);
-  const text = withLevel ? `${amount}${isArabic(lang) ? '، ' : ', '}${levelWord}` : amount;
+  // The comma follows the script of the level word, not the page: an English value on an Arabic page keeps a Latin comma.
+  const spoken = `${amount}${/[\u0600-\u06FF]/.test(levelWord) ? '، ' : ', '}${levelWord}`;
+  // aria-valuetext always says the level when there are thresholds, so hiding the word never leaves it to color alone for a screen reader.
+  const hasRegions = low !== undefined || high !== undefined;
+  const text = withLevel ? spoken : amount;
+  const ariaText = withLevel || hasRegions ? spoken : amount;
   const hasLabel = label !== undefined && label !== null && label !== false && label !== '';
 
   return (
     <div
       role="meter"
       aria-labelledby={hasLabel && rest['aria-label'] === undefined ? labelId : undefined}
-      aria-valuetext={text}
+      aria-valuetext={ariaText}
       {...rest}
       ref={ref}
       aria-valuenow={value}
