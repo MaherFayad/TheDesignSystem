@@ -50,11 +50,13 @@
 //   its action is still there when the dialog closes.
 //
 // Escape closes a toast only when focus is inside the toaster, so Escape in
-// a Window or a form does not also close a toast. One exception: a toast is
-// the top Radix layer while it shows above an open Radix layer (a dialog or
-// a menu), and Radix gives Escape to the top layer only. Escape with focus
-// in that dialog then closes the newest toast first, and the next Escape
-// the dialog, instead of doing nothing.
+// a Window, a Dialog or a form never also closes a toast, a persistent
+// danger toast included. The key is not prevented, so the component that
+// has focus still gets it. Radix gives Escape to the top Radix layer only,
+// and a toast shown above an open dialog is that layer: the system Dialog
+// closes itself from its own keydown fallback, but a raw Radix Dialog from
+// a consumer does not see that Escape while a toast shows above it (the
+// manifest says so).
 import { useEffect, useRef, useState, useSyncExternalStore } from 'react';
 import { createPortal } from 'react-dom';
 import { Toast as RadixToast, VisuallyHidden } from 'radix-ui';
@@ -111,9 +113,6 @@ function swipeFor(position: ToasterPosition, dir: 'ltr' | 'rtl'): 'up' | 'down' 
   if (position === 'top-center') return 'up';
   return dir === 'rtl' ? 'left' : 'right';
 }
-
-/** An open Radix layer that Escape belongs to when focus is in it. */
-const OPEN_LAYER = ':is([role="dialog"], [role="alertdialog"], [role="menu"], [role="listbox"])[data-state="open"]';
 
 /** Mount once near the root, inside the root Theme. Renders the toasts of `toast()`. */
 export function Toaster({ position = 'bottom-end', label, hotkey = ['F8'], toastLabel, closeLabel, store = toastStore }: ToasterProps) {
@@ -185,12 +184,12 @@ export function Toaster({ position = 'bottom-end', label, hotkey = ['F8'], toast
   }, [layer]);
 
   // Escape closes a toast only from inside the toaster (see the header).
-  // This runs before Radix's document listener and marks the key press.
+  // This runs before Radix's document listener and only marks the key press.
   useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => {
       if (event.key !== 'Escape') return;
-      const target = event.target instanceof Element ? event.target : null;
-      keepOnEscape.current = !isInsideToaster(target) && !target?.closest(OPEN_LAYER);
+      // Never prevented here: the focused component (a Dialog's fallback) skips a prevented key.
+      keepOnEscape.current = !isInsideToaster(event.target);
       setTimeout(() => {
         keepOnEscape.current = false;
       }, 0);

@@ -147,7 +147,7 @@
       "Tab": "Moves to the next toast, action or close button",
       "Shift+Tab": "Moves back",
       "Enter": "Runs the focused action or close button",
-      "Escape": "Closes a toast when focus is inside the toaster: the focused toast, or the newest one from the list. Escape elsewhere on the page leaves the toasts alone. Above an open Radix dialog or menu, where the toast is the top layer, the first Escape closes the newest toast and the next one the dialog."
+      "Escape": "Closes a toast only when the key comes from inside the toaster: the focused toast, or the newest one from the list. Escape anywhere else, in a Window, a Dialog or a form, leaves every toast alone, a danger toast included, and is not prevented, so the system Dialog still closes itself. A raw Radix Dialog from a consumer does not get that Escape while a toast shows above it (Radix gives Escape to the top layer only), so use the system Dialog or close the toast first."
     },
     "announce": "Once per change (WCAG 4.1.3): when a toast shows, and again on each repeat or update, as \"Notification. Title. Description. Action alternative.\" with the toast's text in the toast's language. danger is assertive (role alert), the rest polite (role status). The toast itself has no live role and keeps its element across a repeat or update, so it is never read twice and focus stays. Radix's own announcer is muted. The close button is not read.",
     "native": {

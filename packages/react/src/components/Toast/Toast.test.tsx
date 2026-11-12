@@ -4,6 +4,7 @@ import { Dialog } from 'radix-ui';
 import { describe, expect, it, vi } from 'vitest';
 import { Theme } from '../../theme/Theme';
 import { Button } from '../Button';
+import { Dialog as SystemDialog, DialogContent } from '../Dialog';
 import ToastDemo from './Toast.demo';
 import { Toast, Toaster, isInsideToaster, createToastFunction, createToastStore, type ToastStoreOptions } from './index';
 
@@ -379,29 +380,49 @@ describe('Toaster', () => {
     expect(store.getSnapshot().visible[0]?.state).toBe('closed');
   });
 
-  it('Escape closes the newest toast first, then the dialog', async () => {
+  it('Escape in a system Dialog closes the dialog and keeps a danger toast', async () => {
     const user = userEvent.setup();
     const { store, toast, fire } = setup();
     render(
       <Theme>
         <Toaster store={store} />
-        <Dialog.Root defaultOpen>
-          <Dialog.Portal>
-            <Dialog.Content aria-describedby={undefined}>
-              <Dialog.Title>Publish page</Dialog.Title>
-              <Button>Publish page</Button>
-            </Dialog.Content>
-          </Dialog.Portal>
-        </Dialog.Root>
+        <SystemDialog defaultOpen>
+          <DialogContent title="Publish this board?">
+            <Button>Publish board</Button>
+          </DialogContent>
+        </SystemDialog>
       </Theme>,
     );
-    await screen.findByRole('dialog');
-    fire(() => toast('Draft saved'));
-    await user.keyboard('{Escape}');
-    expect(store.getSnapshot().visible[0]?.state).toBe('closed');
-    expect(screen.queryByRole('dialog')).not.toBeNull();
+    const dialog = await screen.findByRole('dialog');
+    await waitFor(() => expect(dialog.contains(document.activeElement)).toBe(true));
+    fire(() => toast.danger('Could not publish board'));
     await user.keyboard('{Escape}');
     await waitFor(() => expect(screen.queryByRole('dialog')).toBeNull());
+    expect(store.getSnapshot().visible[0]?.state).toBe('open');
+    expect(openToasts()).toHaveLength(1);
+  });
+
+  it('Escape in the toaster closes the toast and keeps the system Dialog', async () => {
+    const { store, toast, fire } = setup();
+    render(
+      <Theme>
+        <Toaster store={store} />
+        <SystemDialog defaultOpen>
+          <DialogContent title="Publish this board?">
+            <Button>Publish board</Button>
+          </DialogContent>
+        </SystemDialog>
+      </Theme>,
+    );
+    const dialog = await screen.findByRole('dialog');
+    await waitFor(() => expect(dialog.contains(document.activeElement)).toBe(true));
+    fire(() => toast.danger('Could not publish board'));
+    // The modal dialog's focus trap pulls real focus back, so the key is sent
+    // from the toast's close button: what counts is that the Escape comes
+    // from inside the toaster.
+    fireEvent.keyDown(screen.getByRole('button', { name: 'Close notification' }), { key: 'Escape', code: 'Escape' });
+    expect(store.getSnapshot().visible[0]?.state).toBe('closed');
+    expect(screen.getByRole('dialog')).toBe(dialog);
   });
 });
 
