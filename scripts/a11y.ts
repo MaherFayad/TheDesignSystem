@@ -1,4 +1,4 @@
-// npm run a11y -- [--framework react|angular] [--url http://...] [--component a,b] [--workers n]
+// npm run a11y -- [--framework react|angular] [--url http://...] [--component a,b] [--page /,/all] [--workers n]
 //
 // axe on every gallery page: `/`, `/all` and `/c/<kebab>` for every
 // component with a gallery route, in every style and scheme from
@@ -11,7 +11,11 @@
 // read from the rule's axe tags (wcag143 is 1.4.3), and the report sums them
 // up by criterion, rule and owning component. Writes
 // docs/reports/a11y-<framework>.json and .md and exits 1 on any violation.
-import { mkdirSync, writeFileSync } from 'node:fs';
+// A run narrowed with --component or --page merges its results into the
+// existing JSON report, so one page can be checked again without the rest.
+// `/all` renders every demo at once (about 850 cases) and can take 30s to
+// load, so the shell pages get 120s.
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, join, relative, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import AxeBuilder from '@axe-core/playwright';
@@ -66,11 +70,12 @@ interface Args {
   framework: string;
   url?: string;
   components: string[];
+  pages: string[];
   workers: number;
 }
 
 function parseArgs(argv: string[]): Args {
-  const out: Args = { framework: 'react', components: [], workers: 4 };
+  const out: Args = { framework: 'react', components: [], pages: [], workers: 4 };
   for (let i = 0; i < argv.length; i += 1) {
     const a = argv[i] ?? '';
     const [flag, inline] = a.includes('=') ? [a.slice(0, a.indexOf('=')), a.slice(a.indexOf('=') + 1)] : [a, undefined];
@@ -78,9 +83,10 @@ function parseArgs(argv: string[]): Args {
     if (flag === '--framework') out.framework = value();
     else if (flag === '--url') out.url = value().replace(/\/+$/, '');
     else if (flag === '--component') out.components.push(...value().split(',').map((s) => s.trim()).filter(Boolean));
+    else if (flag === '--page') out.pages.push(...value().split(',').map((s) => s.trim()).filter(Boolean));
     else if (flag === '--workers') out.workers = Math.max(1, Number(value()) || 1);
     else if (flag === '--help' || flag === '-h') {
-      console.log('npm run a11y -- [--framework react|angular] [--url URL] [--component a,b] [--workers N]');
+      console.log('npm run a11y -- [--framework react|angular] [--url URL] [--component a,b] [--page /,/all] [--workers N]');
       process.exit(0);
     } else {
       console.error(`Unknown argument: ${a}`);
@@ -151,10 +157,10 @@ async function run(browser: Browser, url: string, job: Job): Promise<Result> {
     const page = await context.newPage();
     await page.goto(`${url}${job.path}`);
     if (job.page === '/all') {
-      await page.locator('[data-gallery="sink"]').waitFor({ state: 'attached', timeout: 30_000 });
-      await page.waitForFunction(() => document.querySelector('[data-gallery="loading"]') === null, undefined, { timeout: 30_000 });
+      await page.locator('[data-gallery="sink"]').waitFor({ state: 'attached', timeout: 120_000 });
+      await page.waitForFunction(() => document.querySelector('[data-gallery="loading"]') === null, undefined, { timeout: 120_000 });
     } else if (job.page === '/') {
-      await page.locator('[data-gallery="index"], main').first().waitFor({ state: 'attached', timeout: 30_000 });
+      await page.locator('[data-gallery="index"], main').first().waitFor({ state: 'attached', timeout: 120_000 });
     } else {
       await page.locator('[data-demo-case]').first().waitFor({ state: 'attached', timeout: 20_000 });
     }
@@ -339,14 +345,17 @@ async function main(): Promise<number> {
       ]),
     );
     const jobs: Job[] = [];
-    if (wanted.length === 0) {
+    const shellPages = args.pages.filter((p) => p === '/' || p === '/all');
+    const wantedPages = args.pages.filter((p) => p.startsWith('/c/')).map((p) => p.slice(3));
+    if (args.components.length === 0 && (args.pages.length === 0 || shellPages.length > 0)) {
       const allSkips = [...new Set(routed.flatMap((m) => m.contract?.skipAxeRules ?? []))];
       for (const mode of modes) {
-        jobs.push({ page: '/', path: `/?${query(mode, true)}`, mode, skip: [] });
-        jobs.push({ page: '/all', path: `/all?${query(mode, true)}`, mode, skip: allSkips });
+        if (args.pages.length === 0 || shellPages.includes('/')) jobs.push({ page: '/', path: `/?${query(mode, true)}`, mode, skip: [] });
+        if (args.pages.length === 0 || shellPages.includes('/all')) jobs.push({ page: '/all', path: `/all?${query(mode, true)}`, mode, skip: allSkips });
       }
     }
-    for (const m of routed) {
+    // With --page, only the component pages it names run.
+    for (const m of routed.filter((x) => args.pages.length === 0 || args.components.length > 0 || wantedPages.includes(kebabCase(x.name)))) {
       const kebab = kebabCase(m.name);
       const skip = m.contract?.skipAxeRules ?? [];
       for (const mode of modes) {
@@ -361,6 +370,17 @@ async function main(): Promise<number> {
       results.push(r);
       if (!r.pass) console.log(`FAIL ${job.page} ${modeLabel(job.mode)}${r.error ? `: ${r.error}` : ''}${r.lines.map((l) => `\n      ${l}`).join('')}`);
     });
+    if (args.components.length > 0 || args.pages.length > 0) {
+      // A narrowed run replaces only its own runs in the existing report.
+      const prior = join(repo, 'docs/reports', `a11y-${args.framework}.json`);
+      if (existsSync(prior)) {
+        const key = (r: Result) => `${r.path}|${r.mode.open ? 1 : 0}`;
+        const fresh = new Set(results.map(key));
+        const old = (JSON.parse(readFileSync(prior, 'utf8')) as { results: Result[]; noRoute?: string[] });
+        results.push(...old.results.filter((r) => !fresh.has(key(r))));
+        noRoute.push(...(old.noRoute ?? []).filter((n) => !noRoute.includes(n)));
+      }
+    }
     const order = (r: Result) => `${r.page}|${r.mode.style}|${r.mode.scheme}|${r.mode.dir}|${r.mode.open ? 1 : 0}`;
     results.sort((a, b) => order(a).localeCompare(order(b)));
     const { json, md } = writeReports(args.framework, results, noRoute);
