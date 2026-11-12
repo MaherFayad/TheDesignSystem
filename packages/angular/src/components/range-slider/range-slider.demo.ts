@@ -53,7 +53,8 @@ const priceLabelsAr: [string, string] = ['أقل سعر', 'أعلى سعر'];
           label="Year"
           [min]="2000"
           [max]="2026"
-          [defaultValue]="[2019, 2020]"
+          [defaultValue]="[2019, 2022]"
+          [minStepsBetweenThumbs]="3"
           [formatOptions]="{ useGrouping: false }"
           [marks]="yearMarks"
           [thumbLabels]="['First year', 'Last year']"></div>
@@ -86,8 +87,8 @@ const priceLabelsAr: [string, string] = ['أقل سعر', 'أعلى سعر'];
       </section>
 
       <section data-demo="case" data-demo-case="error" heading="Invalid with a message">
-        <div dsField error="Leave at least 100 SAR between the two prices.">
-          <div dsRangeSlider label="Price" unit="SAR" [max]="1000" [step]="50" [minStepsBetweenThumbs]="2" [defaultValue]="[450, 500]" [thumbLabels]="priceLabels"></div>
+        <div dsField error="Leave at least 150 SAR between the two prices.">
+          <div dsRangeSlider label="Price" unit="SAR" [max]="1000" [step]="50" [defaultValue]="[400, 500]" [thumbLabels]="priceLabels"></div>
         </div>
       </section>
 
