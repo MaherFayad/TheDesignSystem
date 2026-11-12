@@ -1,8 +1,17 @@
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';
 import RailDemo from './Rail.demo';
 import { Rail, RailItem } from './index';
+
+// jsdom has no ResizeObserver, which Radix Popper reads for the tooltip arrow.
+globalThis.ResizeObserver ??= class {
+  observe() {}
+  unobserve() {}
+  disconnect() {}
+} as unknown as typeof ResizeObserver;
+
+const tooltip = () => document.body.querySelector<HTMLElement>('[data-ds="tooltip"]');
 
 function root(container: HTMLElement): HTMLElement {
   const el = container.querySelector<HTMLElement>('[data-ds="rail"]');
@@ -119,5 +128,47 @@ describe('Rail', () => {
   it('the demo sets no native title', () => {
     const { container } = render(<RailDemo />);
     expect(container.querySelector('[title]')).toBeNull();
+  });
+
+  it('with hideLabels, a focused item shows a Tooltip with its label (WCAG 1.4.13)', async () => {
+    const user = userEvent.setup();
+    render(
+      <Rail label="Main" hideLabels>
+        <RailItem href="#home" icon="home" label="Home" />
+        <RailItem href="#inbox" icon="inbox" label="Inbox" badge={3} />
+      </Rail>,
+    );
+    await user.tab();
+    await user.tab();
+    const inbox = screen.getByRole('link', { name: 'Inbox 3' });
+    expect(document.activeElement).toBe(inbox);
+    await waitFor(() => expect(tooltip()).not.toBeNull());
+    expect(tooltip()!.textContent).toContain('Inbox');
+    // The hint is the label: not the description too, and no tooltip state on the part.
+    expect(inbox.hasAttribute('aria-describedby')).toBe(false);
+    expect(inbox.hasAttribute('data-state')).toBe(false);
+  });
+
+  it('with labels shown, a label that fits shows no Tooltip and a cut one does', async () => {
+    const user = userEvent.setup();
+    const width = vi.spyOn(HTMLElement.prototype, 'scrollWidth', 'get').mockImplementation(function (this: HTMLElement) {
+      return this.textContent === 'Supercalifragilisticexpialidocious' ? 200 : 0;
+    });
+    try {
+      render(
+        <Rail label="Main">
+          <RailItem href="#home" icon="home" label="Home" />
+          <RailItem href="#long" icon="user" label="Supercalifragilisticexpialidocious" />
+        </Rail>,
+      );
+      await user.tab();
+      expect(document.activeElement).toBe(screen.getByRole('link', { name: 'Home' }));
+      expect(tooltip()).toBeNull();
+      await user.tab();
+      await waitFor(() => expect(tooltip()).not.toBeNull());
+      expect(tooltip()!.textContent).toContain('Supercalifragilisticexpialidocious');
+    } finally {
+      width.mockRestore();
+    }
   });
 });

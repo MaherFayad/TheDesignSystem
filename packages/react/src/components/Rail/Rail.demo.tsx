@@ -100,10 +100,10 @@ export default function RailDemo() {
         <Theme lang="ar" data-demo="content">
           <DemoRow>
             <Frame>
-              <AppRail entries={ar} label="التنقل الرئيسي" settings="الإعدادات" mark="ش" newActivity="نشاط جديد" />
+              <AppRail entries={ar} label="أقسام التطبيق" settings="الإعدادات" mark="ش" newActivity="نشاط جديد" />
             </Frame>
             <Frame>
-              <AppRail entries={ar} label="التنقل الرئيسي" settings="الإعدادات" mark="ش" newActivity="نشاط جديد" size="sm" hideLabels />
+              <AppRail entries={ar} label="أقسام التطبيق" settings="الإعدادات" mark="ش" newActivity="نشاط جديد" size="sm" hideLabels />
             </Frame>
           </DemoRow>
         </Theme>
@@ -148,7 +148,7 @@ export default function RailDemo() {
 
       <DemoCase id="long-arabic" title="Long Arabic labels" lang="ar">
         <Frame>
-          <Rail label="التنقل الرئيسي">
+          <Rail label="أقسام التطبيق">
             <RailItem href="#ar-a" icon="folder" label="المستندات المشتركة" active />
             <RailItem href="#ar-b" icon="user" label="الاشتراكات" badge={12} />
             <RailItem href="#ar-c" icon="settings" label="Settings" />

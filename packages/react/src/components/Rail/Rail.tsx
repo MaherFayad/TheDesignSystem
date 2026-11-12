@@ -10,10 +10,12 @@
 //   `aria-current="page"` plus weight, a fill and an edge bar on the active
 //   one, never color alone.
 // - Each item shows its icon and a short label under it. `hideLabels` keeps
-//   the label only as the accessible name. Tooltip (order 1.6.6) is built by
-//   another lane: once it lands, every item of a rail with hidden labels is
-//   wrapped in a Tooltip with its label, at the marked line in RailItem.
-//   Until then, prefer visible labels.
+//   the label only as the accessible name. Every item of a rail with hidden
+//   labels, and every item whose label is cut to an ellipsis, shows a
+//   Tooltip with the full label on hover and focus (WCAG 1.4.13). The
+//   Tooltip is always rendered and only turned off otherwise, so an item
+//   never remounts. The hint is the item's own label, so it is not wired as
+//   its description too.
 // - Targets: md items are size.control.md (32px), sm size.control.sm
 //   (28px), never under 24px. On data-platform ios and android they grow to
 //   size.touch.ios (44pt) and size.touch.android (48dp) for touch templates.
@@ -25,6 +27,8 @@ import {
   createContext,
   isValidElement,
   useContext,
+  useLayoutEffect,
+  useState,
   type AnchorHTMLAttributes,
   type HTMLAttributes,
   type KeyboardEvent,
@@ -36,6 +40,7 @@ import {
 import { Slot } from 'radix-ui';
 import { Icon, type IconName } from '@the-system/icons/react';
 import type { Size } from '@the-system/shared';
+import { Tooltip, TooltipProvider } from '../Tooltip';
 
 export type RailSize = Extract<Size, 'sm' | 'md'>;
 /** The icon of an item: a system icon name or a node. */
@@ -47,6 +52,9 @@ const BADGE_MAX = 99;
 /** True inside the rail's list, where an item is a list item. In start or end it is a bare link. */
 const ListContext = createContext(false);
 
+/** True when the rail draws icons only. */
+const HideLabelsContext = createContext(false);
+
 // ------------------------------------------------------------------ Rail
 
 /** No `title`: hints come from Tooltip, never the native title attribute. */
@@ -56,9 +64,8 @@ export interface RailProps extends Omit<HTMLAttributes<HTMLElement>, 'title'> {
   /** Item size: sm 28px, md 32px at default density; 44 or 48 on touch platforms. Default md. */
   size?: RailSize;
   /**
-   * Draws only the icons; each label stays as the accessible name. Pair
-   * with Tooltip once it exists (order 1.6.6). Default false. Sets
-   * data-hide-labels.
+   * Draws only the icons; each label stays as the accessible name and shows
+   * in a Tooltip on hover and focus. Default false. Sets data-hide-labels.
    */
   hideLabels?: boolean;
   /** The block start of the column: a brand mark or a workspace switcher. */
@@ -73,28 +80,57 @@ export interface RailProps extends Omit<HTMLAttributes<HTMLElement>, 'title'> {
 /** A `nav` landmark: a column of icon links with short labels, a start and an end. */
 export function Rail({ label, size = 'md', hideLabels = false, start, end, children, ref, ...rest }: RailProps) {
   return (
-    <nav
-      {...rest}
-      ref={ref}
-      aria-label={label}
-      data-ds="rail"
-      data-size={size}
-      data-hide-labels={hideLabels ? '' : undefined}
-    >
-      {start != null && <div data-part="start">{start}</div>}
-      <ul data-part="list">
-        <ListContext.Provider value={true}>{children}</ListContext.Provider>
-      </ul>
-      {end != null && (
-        <ul data-part="end">
-          <ListContext.Provider value={true}>{end}</ListContext.Provider>
-        </ul>
-      )}
-    </nav>
+    <HideLabelsContext.Provider value={hideLabels}>
+      <TooltipProvider>
+        <nav {...rest} ref={ref} aria-label={label} data-ds="rail" data-size={size} data-hide-labels={hideLabels ? '' : undefined}>
+          {start != null && <div data-part="start">{start}</div>}
+          <ul data-part="list">
+            <ListContext.Provider value={true}>{children}</ListContext.Provider>
+          </ul>
+          {end != null && (
+            <ul data-part="end">
+              <ListContext.Provider value={true}>{end}</ListContext.Provider>
+            </ul>
+          )}
+        </nav>
+      </TooltipProvider>
+    </HideLabelsContext.Provider>
   );
 }
 
 // ------------------------------------------------------------------ item
+
+/**
+ * Sits between the Tooltip trigger and the item. The hint is the item's own
+ * label, so the tooltip id is dropped from aria-describedby and the label is
+ * not read twice. Every other trigger prop (handlers, ref) merges onto the
+ * item through Slot; the item keeps its own aria-describedby.
+ */
+function WithoutHintDescription({
+  'aria-describedby': _hint,
+  ...rest
+}: { 'aria-describedby'?: string; children: ReactElement } & Record<string, unknown>) {
+  return <Slot.Root {...rest} />;
+}
+
+/** True while the element's text is cut short (an ellipsis). Measured again whenever it resizes. */
+function useTruncated(off: boolean): [(node: HTMLElement | null) => void, boolean] {
+  const [node, setNode] = useState<HTMLElement | null>(null);
+  const [truncated, setTruncated] = useState(false);
+  useLayoutEffect(() => {
+    if (!node || off) {
+      setTruncated(false);
+      return;
+    }
+    const measure = () => setTruncated(node.scrollWidth > node.clientWidth);
+    measure();
+    if (typeof ResizeObserver !== 'function') return;
+    const observer = new ResizeObserver(measure);
+    observer.observe(node);
+    return () => observer.disconnect();
+  }, [node, off]);
+  return [setNode, truncated];
+}
 
 /** No `title`: hints come from Tooltip, never the native title attribute. */
 export interface RailItemProps extends Omit<AnchorHTMLAttributes<HTMLAnchorElement>, 'title' | 'children'> {
@@ -135,6 +171,8 @@ export function RailItem({
   ...rest
 }: RailItemProps) {
   const inList = useContext(ListContext);
+  const hideLabels = useContext(HideLabelsContext);
+  const [labelRef, truncated] = useTruncated(hideLabels);
   const dot = badge === true;
   const shown = typeof badge === 'number' && badge > 0 ? (badge > BADGE_MAX ? `${BADGE_MAX}+` : String(badge)) : undefined;
 
@@ -150,6 +188,8 @@ export function RailItem({
     'data-disabled': disabled ? '' : undefined,
     'aria-current': active ? ('page' as const) : rest['aria-current'],
     'aria-disabled': disabled ? true : rest['aria-disabled'],
+    // Set on purpose, also when undefined: the item's own value wins over the Tooltip trigger's, so no tooltip state lands on the part.
+    'data-state': undefined,
     onClick: (event: MouseEvent<HTMLAnchorElement>) => {
       if (disabled) {
         event.preventDefault();
@@ -185,7 +225,7 @@ export function RailItem({
   const content = (
     <>
       {/* dir auto: a Latin label in an Arabic rail truncates at its own end. */}
-      <span data-part="item-label" dir="auto">
+      <span ref={labelRef} data-part="item-label" dir="auto">
         {label}
       </span>
       {badgePart && ' '}
@@ -196,8 +236,7 @@ export function RailItem({
     </>
   );
 
-  // Tooltip (1.6.6): when it lands, wrap the item below in a Tooltip with its label while labels are hidden.
-  let item: ReactNode;
+  let item: ReactElement;
   // A disabled item is always the plain anchor: a router child's own click handler would run first and navigate.
   if (asChild && !disabled) {
     if (!isValidElement(children)) {
@@ -212,5 +251,12 @@ export function RailItem({
     item = <a {...attrs}>{content}</a>;
   }
 
-  return inList ? <li>{item}</li> : item;
+  // The label is hidden or cut short: a Tooltip shows it. Always rendered, off otherwise, so the item never remounts.
+  const withHint = (
+    <Tooltip content={label} side="end" disabled={!(hideLabels || truncated)}>
+      <WithoutHintDescription>{item}</WithoutHintDescription>
+    </Tooltip>
+  );
+
+  return inList ? <li>{withHint}</li> : withHint;
 }

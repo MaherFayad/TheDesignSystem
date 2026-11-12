@@ -13,8 +13,7 @@
     "More than seven destinations, or destinations that fall into named groups",
     "Destinations whose names do not fit in one short word",
     "Three to five destinations on a phone layout",
-    "Actions that change data, such as Save or Delete",
-    "Hidden labels while no Tooltip is in place"
+    "Actions that change data, such as Save or Delete"
   ],
   "insteadUse": {
     "Groups, counts or long names": "Sidebar",
@@ -84,7 +83,7 @@
     "hideLabels": {
       "type": "boolean",
       "default": false,
-      "description": "Draws only the icons; each label stays the accessible name. Sets data-hide-labels. Pair it with Tooltip (1.6.6) once that exists."
+      "description": "Draws only the icons; each label stays the accessible name and shows in a Tooltip on hover and focus. Sets data-hide-labels."
     },
     "start": {
       "type": "node",
@@ -153,10 +152,10 @@
     },
     "announce": "The label is the accessible name, then the badge: Inbox 3, or Boards New activity with badgeLabel. The current item says current page.",
     "notes": [
-      "Every item has a visible label by default. hideLabels needs a Tooltip per item (WCAG 1.4.13, order 1.6.6); Tooltip is not built yet, so the place is marked in RailItem.",
+      "Every item has a visible label by default. With hideLabels, and for any label cut to an ellipsis, the item shows a Tooltip with the full label on hover and focus, at the inline end (WCAG 1.4.13). The hint repeats the name, so it is not wired as the description.",
       "The current page is shown by aria-current, a fill, a bold label and an edge bar, never by color alone (WCAG 1.4.1).",
       "Items in end form a second list after the main one, so a screen reader hears two lists.",
-      "Targets: 24px at least in compact (sm), 44px at md in default density for touch templates (WCAG 2.5.8).",
+      "Targets: md items are size.control.md (32px) and sm items size.control.sm (28px) at default density, never under 24px (WCAG 2.5.8). Only data-platform ios or android grows them to 44 or 48px for touch templates.",
       "The border and the active bar sit on logical sides, so they flip in RTL.",
       "No native title attribute.",
       "Labels carry dir auto, so a Latin label in an Arabic rail ends in its own ellipsis."
@@ -212,7 +211,7 @@
   "frameworks": {
     "react": {
       "status": "ready",
-      "behavior": "hand built nav, radix:Slot for asChild",
+      "behavior": "hand built nav, radix:Slot for asChild, Tooltip for hidden or cut labels",
       "example": "Rail.demo.tsx",
       "note": "No motion pattern: nothing moves. The hover veil fades on duration.fast and is instant under reduced motion. The order names no motion pattern, so the manifest names none, as in Link and ButtonGroup."
     },
