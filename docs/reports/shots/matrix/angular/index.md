@@ -2,7 +2,7 @@
 
 Made by `npm run shots`. Each shot is the `variants` case at `chrome=0`, 1280 by 800 viewport, full page, device scale factor 1, animations off, reduced motion, fonts loaded. File names: `<component>/<style>-<scheme>-<dir>[-<density>][-open].png`. Density is default unless named.
 
-40 shots, 3 components, 3.61 MB. Stable (two captures byte equal): 40; unstable: 0; not verified: 0.
+48 shots, 3 components, 3.97 MB. Stable (two captures byte equal): 48; unstable: 0; not verified: 0.
 
 The full list with sizes and hashes is in `captured.json`.
 
@@ -28,6 +28,8 @@ Densities, dark, ltr en:
 | --- | --- | --- | --- | --- | --- |
 | desk | dark | [ltr](dialog/desk-dark-ltr.png) | [rtl](dialog/desk-dark-rtl.png) | [ltr open](dialog/desk-dark-ltr-open.png) | [rtl open](dialog/desk-dark-rtl-open.png) |
 | desk | light | [ltr](dialog/desk-light-ltr.png) | [rtl](dialog/desk-light-rtl.png) | [ltr open](dialog/desk-light-ltr-open.png) | [rtl open](dialog/desk-light-rtl-open.png) |
+| neutral | dark | [ltr](dialog/neutral-dark-ltr.png) | [rtl](dialog/neutral-dark-rtl.png) | [ltr open](dialog/neutral-dark-ltr-open.png) | [rtl open](dialog/neutral-dark-rtl-open.png) |
+| neutral | light | [ltr](dialog/neutral-light-ltr.png) | [rtl](dialog/neutral-light-rtl.png) | [ltr open](dialog/neutral-light-ltr-open.png) | [rtl open](dialog/neutral-light-rtl-open.png) |
 | studio | dark | [ltr](dialog/studio-dark-ltr.png) | [rtl](dialog/studio-dark-rtl.png) | [ltr open](dialog/studio-dark-ltr-open.png) | [rtl open](dialog/studio-dark-rtl-open.png) |
 | studio | light | [ltr](dialog/studio-light-ltr.png) | [rtl](dialog/studio-light-rtl.png) | [ltr open](dialog/studio-light-ltr-open.png) | [rtl open](dialog/studio-light-rtl-open.png) |
 
