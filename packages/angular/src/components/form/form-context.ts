@@ -15,4 +15,10 @@ export abstract class DsFormContext {
   abstract readonly state: Signal<FormState>;
   /** Field errors shown now, by name. */
   abstract readonly errors: Signal<FormErrors>;
+  /**
+   * Sets the message the form gives a required control of this name left
+   * empty, in the field and in the summary. Returns a cleanup. Used by
+   * ConsentField `requiredError`. React's useFormRequiredMessage.
+   */
+  abstract setRequiredMessage(name: string, message: string): () => void;
 }
