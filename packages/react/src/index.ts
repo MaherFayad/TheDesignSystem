@@ -7,6 +7,7 @@ export * from './components/DropdownMenu/index';
 export * from './components/Field/index';
 export * from './components/Icon/index';
 export * from './components/IconButton/index';
+export * from './components/InlineEdit/index';
 export * from './components/Input/index';
 export * from './components/InputGroup/index';
 export * from './components/Link/index';

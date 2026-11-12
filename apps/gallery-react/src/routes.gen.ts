@@ -15,6 +15,7 @@ export const routes: DemoRoute[] = [
   { name: 'Field', slug: 'field', load: () => import('../../../packages/react/src/components/Field/Field.demo') },
   { name: 'Icon', slug: 'icon', load: () => import('../../../packages/react/src/components/Icon/Icon.demo') },
   { name: 'IconButton', slug: 'icon-button', load: () => import('../../../packages/react/src/components/IconButton/IconButton.demo') },
+  { name: 'InlineEdit', slug: 'inline-edit', load: () => import('../../../packages/react/src/components/InlineEdit/InlineEdit.demo') },
   { name: 'Input', slug: 'input', load: () => import('../../../packages/react/src/components/Input/Input.demo') },
   { name: 'InputGroup', slug: 'input-group', load: () => import('../../../packages/react/src/components/InputGroup/InputGroup.demo') },
   { name: 'Link', slug: 'link', load: () => import('../../../packages/react/src/components/Link/Link.demo') },
