@@ -15,7 +15,7 @@
  *       [data-part='item']                       role option, data-state checked|unchecked
  *         > [data-part='indicator'], [data-part='item-icon'], [data-part='item-label'], [data-part='item-description']
  *       [data-part='group'] > [data-part='label']
- *       [data-part='separator'], [data-part='empty']
+ *       [data-part='separator']
  *
  * Trigger private properties (Input's names under this component):
  *   --_select-height, -padding-inline, -gap, -font-size, -radius, -bg, -fg,
@@ -369,13 +369,6 @@
     margin-block: var(--ds-space-3xs);
     margin-inline: var(--ds-space-xs);
     background-color: var(--_menu-separator-color);
-  }
-
-  [data-ds='select'] [data-part='empty'] {
-    padding-block: var(--ds-space-s);
-    padding-inline: var(--_select-item-padding-inline);
-    color: var(--_menu-meta-fg);
-    overflow-wrap: anywhere;
   }
 
   /* ------------------------------------------------------------ motion: pattern "menu-scale" */

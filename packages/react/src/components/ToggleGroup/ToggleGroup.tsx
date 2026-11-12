@@ -96,7 +96,7 @@ export function ToggleGroup({
   const axes = useMemo<ButtonGroupContextValue>(() => ({ size, emphasis, shape }), [size, emphasis, shape]);
   return (
     <RadixToggleGroup.Root
-      {...(rest as RadixToggleGroup.ToggleGroupSingleProps)}
+      {...(rest as RadixToggleGroup.ToggleGroupSingleProps | RadixToggleGroup.ToggleGroupMultipleProps)}
       dir={dir}
       orientation={orientation}
       loop={loop}

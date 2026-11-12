@@ -134,8 +134,8 @@
       "description": "An error shown now, for a required consent left off."
     },
     "requiredError": {
-      "type": "node",
-      "description": "Inside a Form: the error when the Form finds this required consent left off. Default the Form's required message."
+      "type": "string",
+      "description": "Inside a Form, with name: the error when the Form finds this required consent left off. Registered with the Form by name, so the field and the summary show the same message. Default the Form's requiredChoice message, Tick this box to go on."
     },
     "size": {
       "type": [
@@ -178,18 +178,19 @@
       "Keep the record: store what onDecision returns (granted, the text version, the time) with the account. In a form that is sent, store the last record when the form is sent.",
       "The details link sits outside the label, so a click on it never toggles the consent.",
       "Do not mark a marketing consent required. Required is for a consent the service truly cannot work without.",
-      "checked and unchecked are on the control part, a Checkbox or Switch root that carries the consent field control part. The consent root says granted or denied."
+      "checked and unchecked are on the control part, a Checkbox or Switch root that carries the consent field control part. The consent root says granted or denied.",
+      "Development warnings catch what the types cannot: a stray defaultChecked, a controlled checked that starts true with no meta (show the record of the choice), disabled with checked true (a given consent must stay withdrawable), and no detailsHref when the surrounding Fieldset description has no link to the notice either."
     ]
   },
   "content": {
     "en": {
-      "purpose": "A first person sentence that names one use and who gets the data: Share my order history with the delivery partner to plan delivery times. Never a bundle joined with and.",
+      "purpose": "A first person sentence that names one use and who gets the data: Share my order history with the delivery partner to plan delivery times. A list of data items for that one use is fine; two uses are two ConsentFields. Never a bundle joined with and.",
       "details": "Names the page: How we use your data. Never Learn more.",
       "meta": "The version or the date of the choice: You agreed on 3 November 2026. Text version 2.1.",
       "error": "Why it is needed and the other way: The booking needs this consent. Tick the box, or book by phone instead."
     },
     "ar": {
-      "purpose": "جملة بصيغة المتكلم تبدأ بأوافق وتذكر استخدام واحد ومين يستلم البيانات: أوافق على مشاركة سجل طلباتي مع شريك التوصيل",
+      "purpose": "جملة بصيغة المتكلم تبدأ بأوافق وتذكر استخدام واحد ومين يستلم البيانات: أوافق على مشاركة سجل طلباتي مع شريك التوصيل. تقدر تعدد البيانات لنفس الاستخدام، لكن كل استخدام له موافقة لحاله",
       "details": "طريقة استخدام بياناتك",
       "meta": "الإصدار 2.1، آخر تحديث 1 نوفمبر 2026",
       "error": "يوضح ليش مطلوبة والبديل: الحجز يحتاج موافقتك على المشاركة. حدد المربع أو احجز بالاتصال"
@@ -252,6 +253,14 @@
     {
       "wrong": "A marketing consent marked required to finish sign up",
       "right": "Marketing consent optional; required only when the service cannot work without it"
+    },
+    {
+      "wrong": "A list of consents with no way to the privacy notice",
+      "right": "detailsHref on each consent, or a link to the notice in the description of the Fieldset around them"
+    },
+    {
+      "wrong": "A given consent shown disabled, so it cannot be withdrawn",
+      "right": "Keep a given consent enabled; disable only a consent that is off and waits on another"
     }
   ],
   "since": "0.1.0"

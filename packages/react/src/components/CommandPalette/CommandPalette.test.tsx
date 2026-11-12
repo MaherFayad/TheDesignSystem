@@ -159,6 +159,53 @@ describe('CommandPalette', () => {
     await waitFor(() => expect(rootEl()).toBeNull());
   });
 
+  it('never opens on a shortcut with no Ctrl, Meta or Alt while the person types in a field', async () => {
+    render(
+      <>
+        <input aria-label="Search the page" />
+        <textarea aria-label="Note" />
+        <select aria-label="Sort">
+          <option>Name</option>
+        </select>
+        <div contentEditable suppressContentEditableWarning aria-label="Draft">
+          <span>Text</span>
+        </div>
+        <Basic shortcut="/" />
+      </>,
+    );
+    for (const target of [
+      screen.getByRole('textbox', { name: 'Search the page' }),
+      screen.getByRole('textbox', { name: 'Note' }),
+      screen.getByRole('combobox', { name: 'Sort' }),
+      screen.getByText('Text'),
+    ]) {
+      const event = new KeyboardEvent('keydown', { key: '/', code: 'Slash', bubbles: true, cancelable: true });
+      act(() => {
+        target.dispatchEvent(event);
+      });
+      expect(event.defaultPrevented).toBe(false);
+      expect(rootEl()).toBeNull();
+    }
+    // Outside a field the same key opens it.
+    act(() => {
+      fireEvent.keyDown(screen.getByRole('button', { name: 'Page action' }), { key: '/', code: 'Slash' });
+    });
+    expect(await screen.findByRole('dialog')).toBeTruthy();
+  });
+
+  it('still opens on Mod+K from inside a field', async () => {
+    render(
+      <>
+        <input aria-label="Search the page" />
+        <Basic />
+      </>,
+    );
+    act(() => {
+      fireEvent.keyDown(screen.getByRole('textbox', { name: 'Search the page' }), { key: 'k', code: 'KeyK', ctrlKey: true });
+    });
+    expect(await screen.findByRole('dialog')).toBeTruthy();
+  });
+
   it('turns the shortcut off with null', () => {
     render(<Basic shortcut={null} />);
     fireEvent.keyDown(document.body, { key: 'k', code: 'KeyK', ctrlKey: true });
@@ -279,5 +326,27 @@ describe('matchShortcut', () => {
     expect(matchShortcut(ev('?', { shiftKey: true }), '?', 'other')).toBe(true);
     expect(matchShortcut(ev('Escape'), 'Esc', 'other')).toBe(true);
     expect(matchShortcut(ev('k'), 'Mod', 'other')).toBe(false);
+  });
+
+  it('uses the physical key only when the key typed is not a Latin letter or digit', () => {
+    // AZERTY: the key labelled A sits where Q is on QWERTY. Ctrl+A is select all, not Mod+Q.
+    expect(matchShortcut(ev('a', { ctrlKey: true }, 'KeyQ'), 'Mod+Q', 'other')).toBe(false);
+    expect(matchShortcut(ev('a', { ctrlKey: true }, 'KeyQ'), 'Mod+A', 'other')).toBe(true);
+    // Colemak: the key that types e sits where K is on QWERTY.
+    expect(matchShortcut(ev('e', { ctrlKey: true }, 'KeyK'), 'Mod+K', 'other')).toBe(false);
+    // AZERTY digits type symbols without Shift, so the physical key still counts.
+    expect(matchShortcut(ev('&', { ctrlKey: true }, 'Digit1'), 'Ctrl+1', 'other')).toBe(true);
+    // Option+K on a Mac types a symbol: the physical key counts.
+    expect(matchShortcut(ev('˚', { altKey: true }, 'KeyK'), 'Alt+K', 'mac')).toBe(true);
+  });
+
+  it('counts recent commands once in the result count', async () => {
+    render(
+      <Theme>
+        <CommandPalette items={commands} recent={['settings', 'create']} defaultOpen shortcut={null} />
+      </Theme>,
+    );
+    await screen.findByRole('dialog');
+    await waitFor(() => expect(own('status')?.textContent).toBe('4 results'));
   });
 });

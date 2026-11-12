@@ -163,6 +163,57 @@ describe('TagField', () => {
     await waitFor(() => expect(status()).toBe('You can add up to 1 tag'));
   });
 
+  it('text past max ended with a comma stays in the control', async () => {
+    const user = userEvent.setup();
+    render(<Tags max={12} defaultValue={['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j']} />);
+    await user.type(input(), 'Alpha, Beta, Gamma,');
+    expect(tagLabels()).toHaveLength(12);
+    expect(tagLabels().slice(-2)).toEqual(['Alpha', 'Beta']);
+    expect((input() as HTMLInputElement).value).toBe('Gamma');
+    await user.type(input(), '{Enter}');
+    expect(tagLabels()).toHaveLength(12);
+    expect((input() as HTMLInputElement).value).toBe('Gamma');
+  });
+
+  it('max and duplicates show a visible message the control is described by', async () => {
+    const user = userEvent.setup();
+    render(<Tags max={2} defaultValue={['Design']} />);
+    const message = () => {
+      const ids = input().getAttribute('aria-describedby')?.split(' ') ?? [];
+      return ids.map((i) => document.getElementById(i)).find((n) => n?.getAttribute('data-ds') === 'field-error') ?? null;
+    };
+    expect(message()).toBeNull();
+    await user.type(input(), 'design{Enter}');
+    expect(message()?.textContent).toBe('design is already added');
+    expect(message()?.hidden).toBe(false);
+    expect(message()?.closest('[data-ds="tag-field"]')).toBeNull();
+    // The next edit clears it.
+    await user.type(input(), 'C');
+    expect(message()).toBeNull();
+    await user.type(input(), '{Enter}D,');
+    expect(tagLabels()).toEqual(['Design', 'C']);
+    expect(message()?.textContent).toBe('You can add up to 2 tags');
+    // A Field error keeps its own id and the Field stays valid while the message shows.
+    expect(root().hasAttribute('data-invalid')).toBe(false);
+    await user.click(remove('C'));
+    expect(message()).toBeNull();
+  });
+
+  it('cancels pending frames on unmount', () => {
+    // Frames never run on their own here, so the ones a removal schedules are still pending at unmount.
+    let next = 0;
+    const raf = vi.spyOn(globalThis, 'requestAnimationFrame').mockImplementation(() => (next += 1));
+    const cancel = vi.spyOn(globalThis, 'cancelAnimationFrame').mockImplementation(() => undefined);
+    const { unmount } = render(<Tags defaultValue={['Design']} />);
+    fireEvent.click(remove('Design'));
+    const scheduled = raf.mock.results.map((r) => r.value as number);
+    expect(scheduled.length).toBeGreaterThan(0);
+    unmount();
+    expect(cancel.mock.calls.map((c) => c[0])).toEqual(expect.arrayContaining(scheduled));
+    raf.mockRestore();
+    cancel.mockRestore();
+  });
+
   it('read only shows no remove button; disabled blocks adding', async () => {
     const user = userEvent.setup();
     render(

@@ -26,10 +26,6 @@
     "body",
     "actions"
   ],
-  "parts": {
-    "FormField": "body",
-    "FormSubmit": "actions"
-  },
   "slots": {
     "summary": {
       "accepts": [
@@ -78,7 +74,7 @@
     },
     "validators": {
       "type": "Record<string, FormValidator | FormValidator[]>",
-      "description": "Custom checks by field name, run after the browser constraint check. Each returns a message or nothing."
+      "description": "Custom checks by field name. An empty required field keeps the required message; otherwise a validator message wins over the built in constraint copy, so a validator can name the format: Enter the 5 digit postal code."
     },
     "onSubmit": {
       "type": "function",
@@ -98,7 +94,7 @@
     },
     "labels": {
       "type": "Partial<FormLabels>",
-      "description": "Copy for the summary title and the built in errors. Default from the Theme language, English or Arabic."
+      "description": "Copy for the summary, the submitted announcement and the built in errors: required, requiredChoice (a box left off), requiredOption (a radio group with nothing picked), and one message per ValidityState flag (typeMismatch, patternMismatch, tooShort, tooLong, rangeUnderflow, rangeOverflow, stepMismatch, badInput). Default from the Theme language, English or Arabic. The browser validationMessage is never shown."
     }
   },
   "states": [
@@ -115,27 +111,28 @@
       "Tab": "Moves through the fields, then the actions. The form adds no stop of its own.",
       "Enter": "In a single line field, submits the form through its submit button. On a summary link, moves focus to that field."
     },
-    "announce": "Once per submit with errors, a polite status says how many fields to fix (WCAG 4.1.3). The summary itself is not a live region, so nothing is read twice. Each field reads its error through aria-describedby when focus lands on it.",
+    "announce": "Once per submit with errors, a polite status says how many fields to fix (WCAG 4.1.3). After a submit that passes, the same status says the form was sent (labels.submitted, empty to say nothing). The summary itself is not a live region, so nothing is read twice. Each field reads its error through aria-describedby when focus lands on it.",
     "native": {
       "accessibilityRole": "none"
     },
     "notes": [
-      "Hand built on the native form with noValidate: the browser bubble never shows, and type, pattern, min and maxLength still feed the check through checkValidity().",
-      "An empty control with native required or aria-required (Field sets aria-required) gets the required message.",
+      "Hand built on the native form with noValidate: the browser bubble never shows, and type, pattern, min and maxLength still feed the check through checkValidity(). Each failure is read from its ValidityState flag and gets copy from labels in the page language; the browser validationMessage is never used, since it is in the browser language and does not say how to fix the value.",
+      "An empty control with native required or aria-required (Field sets aria-required) gets the required message: requiredChoice for a checkbox or switch, requiredOption for a radio group, required for the rest. A ConsentField requiredError replaces it for that name, in the field and in the summary.",
       "After a submit, a change that fixes a field removes its error at once. A change never adds an error: checks run on submit.",
       "autocomplete is never changed and values are never cleared on an error, so nothing is asked twice (WCAG 3.3.7, 3.3.8).",
       "aria-busy is true while onSubmit runs, and FormSubmit shows its loading state.",
       "A form in a Dialog: the form sits in DialogBody with an id, and the submit Button in DialogFooter takes form set to that id and type submit. Enter in a field still submits. That footer Button is outside the Form context, so it shows no loading state: give it loading from your own state when onSubmit is slow.",
       "The action prop is not taken: the form checks before it sends, and React does not run an action on a submit that is stopped. Call the server action from onSubmit and return its errors.",
       "When onSubmit throws, the summary says the form could not be sent and focus moves to it. Values are kept.",
-      "Read only controls, hidden inputs and controls in a disabled Fieldset are not checked."
+      "Read only controls, hidden inputs and controls in a disabled Fieldset are not checked.",
+      "Several checkboxes or radios with one name are one group: the summary link takes the legend of the nearest Fieldset, and a Fieldset with the same name shows the error in its error part. Without that Fieldset name the error shows only in the summary."
     ]
   },
   "content": {
     "en": {
       "submit": "A verb plus a noun that names the result: Send request, Save address, Create account. Never Submit, OK or Continue.",
       "summary": "Fix 2 fields to send the form. Count the fields, name the goal.",
-      "errors": "Each says what to do with the field: Add your city. Use your work email, not a personal one.",
+      "errors": "Each says what to do with the field: Add your city. Use your work email, not a personal one. For a pattern, a validator that names the format: Enter the 5 digit postal code.",
       "required": "Say once, above the form, that fields marked * are required."
     },
     "ar": {

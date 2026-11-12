@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { DemoCase, DemoPage, DemoRow, sample } from '../../demo';
+import { Bidi } from '../../theme/Bidi';
 import { Theme } from '../../theme/Theme';
 import { Field } from '../Field';
 import type { ListBoxOption } from '../ListBox';
@@ -108,7 +109,8 @@ export default function TagFieldDemo() {
       </DemoCase>
 
       <DemoCase id="long-arabic" title="Long Arabic text" lang="ar">
-        <Field label={copy.ar.tags} description={copy.ar.hint} style={{ inlineSize: '18rem' }}>
+        {/* The Latin run "Enter" sits inside Arabic copy, so the hint goes through Bidi (PLAN.md section 12). */}
+        <Field label={copy.ar.tags} description={<Bidi>{copy.ar.hint}</Bidi>} style={{ inlineSize: '18rem' }}>
           <TagField defaultValue={[sample.ar.long, sample.ar.word]} placeholder={copy.ar.placeholder} />
         </Field>
       </DemoCase>

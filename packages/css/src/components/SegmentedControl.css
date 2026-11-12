@@ -138,6 +138,22 @@
     --_button-padding-inline: var(--ds-space-l);
 
     min-inline-size: 0;
+    block-size: auto;
+    min-block-size: max(var(--_button-height), var(--ds-size-target-min));
+    padding-block: var(--ds-space-4xs);
+  }
+
+  /*
+   * A label that does not fit wraps onto more lines; the item grows in height
+   * and the measured thumb follows it. It never ends in an ellipsis, so no
+   * word is lost at 320px (WCAG 1.4.10). This is Button's `wrap` form,
+   * written here for the nested ToggleButton roots.
+   */
+  [data-ds='segmented-control'] > [data-ds='toggle-button'][data-part='item'] > [data-part='label'] {
+    overflow-x: visible;
+    white-space: normal;
+    overflow-wrap: anywhere;
+    text-align: center;
   }
 
   [data-ds='segmented-control']:is([data-size='xs'], [data-size='sm']) > [data-ds='toggle-button'][data-part='item'] {

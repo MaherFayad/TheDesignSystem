@@ -1,7 +1,9 @@
-import { render, screen } from '@testing-library/react';
+import { render, screen, within } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';
+import { Fieldset } from '../Fieldset/Fieldset';
 import { Form, FormSubmit } from '../Form/Form';
+import { Link } from '../Link/Link';
 import ConsentFieldDemo from './ConsentField.demo';
 import { ConsentField, type ConsentFieldProps } from './index';
 
@@ -100,6 +102,80 @@ describe('ConsentField', () => {
     await userEvent.click(screen.getByRole('checkbox'));
     await userEvent.click(screen.getByRole('button', { name: 'Book appointment' }));
     expect(onSubmit).toHaveBeenCalledWith({ medical: 'granted' }, expect.anything());
+  });
+
+  it('in a Form: requiredError is the message in the field and in the summary', async () => {
+    const { container } = render(
+      <Form actions={<FormSubmit>Book appointment</FormSubmit>}>
+        <ConsentField
+          name="medical"
+          required
+          purpose="Share my medical history with the clinic."
+          detailsHref="/privacy"
+          requiredError="The booking needs this consent. Tick the box, or book by phone."
+        />
+      </Form>,
+    );
+    await userEvent.click(screen.getByRole('button', { name: 'Book appointment' }));
+    const message = 'The booking needs this consent. Tick the box, or book by phone.';
+    expect(root(container).querySelector('[data-part="error"]')?.textContent).toBe(message);
+    const summary = container.querySelector<HTMLElement>('[data-part="summary"]');
+    if (!summary) throw new Error('no summary');
+    expect(within(summary).getByRole('link').textContent).toBe(`Share my medical history with the clinic.: ${message}`);
+  });
+
+  it('in a Form without requiredError: a box left off asks to tick it, not to fill it in', async () => {
+    const { container } = render(
+      <Form actions={<FormSubmit>Book appointment</FormSubmit>}>
+        <ConsentField name="medical" required purpose="Share my medical history with the clinic." detailsHref="/privacy" />
+      </Form>,
+    );
+    await userEvent.click(screen.getByRole('button', { name: 'Book appointment' }));
+    expect(root(container).querySelector('[data-part="error"]')?.textContent).toBe('Tick this box to go on.');
+    expect(container.querySelector('[data-part="summary"] a')?.textContent).toBe('Share my medical history with the clinic.: Tick this box to go on.');
+  });
+
+  it('warns in development about pre-ticking, a locked consent and a missing details link', () => {
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => undefined);
+    const said = () => warn.mock.calls.map((c) => String(c[0]));
+    // @ts-expect-error defaultChecked is not a prop.
+    const stray: ConsentFieldProps = { purpose: 'Send me offers by email.', detailsHref: '/privacy', defaultChecked: true };
+    const first = render(<ConsentField {...stray} />);
+    expect(said().some((m) => m.includes('defaultChecked is ignored'))).toBe(true);
+    first.unmount();
+    warn.mockClear();
+    const second = render(<ConsentField purpose="Send me offers by email." detailsHref="/privacy" checked onCheckedChange={() => undefined} />);
+    expect(said().some((m) => m.includes('checked starts true with no meta'))).toBe(true);
+    second.unmount();
+    warn.mockClear();
+    const third = render(<ConsentField purpose="Send me offers by email." detailsHref="/privacy" meta="You agreed on 3 November 2026." checked disabled onCheckedChange={() => undefined} />);
+    expect(said()).toEqual([expect.stringContaining('cannot be withdrawn')]);
+    third.unmount();
+    warn.mockClear();
+    const fourth = render(<ConsentField purpose="Send me offers by email." />);
+    expect(said()).toEqual([expect.stringContaining('no detailsHref')]);
+    fourth.unmount();
+    warn.mockClear();
+    render(
+      <Fieldset legend="Privacy settings" description={<Link href="/privacy">Read how we use your data</Link>}>
+        <ConsentField control="switch" purpose="Send me offers by email." />
+      </Fieldset>,
+    );
+    expect(said()).toEqual([]);
+    warn.mockRestore();
+  });
+
+  it('the demo gives no warning, and each demo purpose names one use', () => {
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => undefined);
+    const { container } = render(<ConsentFieldDemo />);
+    expect(warn.mock.calls.filter((c) => String(c[0]).startsWith('ConsentField'))).toEqual([]);
+    warn.mockRestore();
+    for (const purpose of container.querySelectorAll('[data-part="purpose"]')) {
+      const text = purpose.textContent ?? '';
+      // The use comes after "so" or "عشان": one use, never two joined with and.
+      const use = text.split(/\bso they can\b|عشان/)[1] ?? '';
+      expect(use).not.toMatch(/\band\b| و/);
+    }
   });
 
   it('renders every demo case, and no consent in the demo starts given except the one on record', () => {

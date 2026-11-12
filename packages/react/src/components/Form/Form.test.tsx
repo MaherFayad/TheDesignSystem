@@ -173,7 +173,7 @@ describe('Form', () => {
       </Form>,
     );
     await userEvent.click(screen.getByRole('button', { name: 'Create account' }));
-    expect(onErrors).toHaveBeenCalledWith({ terms: 'Fill in this field.' });
+    expect(onErrors).toHaveBeenCalledWith({ terms: 'Tick this box to go on.' });
     expect(document.activeElement).toBe(screen.getByRole('checkbox', { name: 'I agree to the terms' }));
   });
 
@@ -256,6 +256,110 @@ describe('Form', () => {
     expect(container.querySelector('[data-ds="field"]')?.getAttribute('data-orientation')).toBe('horizontal');
     await userEvent.click(screen.getByRole('button', { name: 'إرسال الطلب' }));
     expect(el.querySelector('[data-part="summary"]')?.textContent).toContain('حقل واحد يحتاج تصحيح قبل الإرسال');
+  });
+
+  it('a constraint failure uses the Form copy in the page language, never the browser message', async () => {
+    const onErrors = vi.fn();
+    render(
+      <Theme lang="ar">
+        <Form onErrors={onErrors} actions={<FormSubmit>حفظ</FormSubmit>}>
+          <FormField name="email" label="البريد">
+            <Input name="email" type="email" defaultValue="sara" />
+          </FormField>
+          <FormField name="seats" label="المقاعد">
+            <Input name="seats" type="number" min="1" defaultValue="0" />
+          </FormField>
+          <FormField name="postal" label="الرمز البريدي">
+            <Input name="postal" pattern="[0-9]{5}" defaultValue="12" />
+          </FormField>
+        </Form>
+      </Theme>,
+    );
+    await userEvent.click(screen.getByRole('button', { name: 'حفظ' }));
+    expect(onErrors).toHaveBeenCalledWith({
+      email: 'اكتب بريد إلكتروني صحيح، مثل name@example.com.',
+      seats: 'اكتب 1 أو أكثر.',
+      postal: 'راجع صيغة القيمة في الحقل هذا.',
+    });
+  });
+
+  it('a validator message wins over the generic pattern copy, so it can name the format', async () => {
+    const onErrors = vi.fn();
+    render(
+      <Form
+        onErrors={onErrors}
+        validators={{ postal: (v) => (v === '12' ? 'Enter the 5 digit postal code.' : undefined) }}
+        actions={<FormSubmit>Save address</FormSubmit>}
+      >
+        <FormField name="postal" label="Postal code">
+          <Input name="postal" pattern="[0-9]{5}" defaultValue="12" />
+        </FormField>
+        <FormField name="site" label="Website">
+          <Input name="site" type="url" defaultValue="example" />
+        </FormField>
+      </Form>,
+    );
+    await userEvent.click(screen.getByRole('button', { name: 'Save address' }));
+    expect(onErrors).toHaveBeenCalledWith({ postal: 'Enter the 5 digit postal code.', site: 'Enter a web address that starts with https://.' });
+  });
+
+  it('a required radio group with nothing picked asks to pick an option', async () => {
+    const onErrors = vi.fn();
+    render(
+      <Form onErrors={onErrors} actions={<FormSubmit>Book table</FormSubmit>}>
+        <Fieldset legend="Seating">
+          <label>
+            <input type="radio" name="seat" value="in" required /> Inside
+          </label>
+          <label>
+            <input type="radio" name="seat" value="out" /> Outside
+          </label>
+        </Fieldset>
+      </Form>,
+    );
+    await userEvent.click(screen.getByRole('button', { name: 'Book table' }));
+    expect(onErrors).toHaveBeenCalledWith({ seat: 'Pick one option to go on.' });
+  });
+
+  it('a validator on a checkbox group names the group in the summary and shows in the Fieldset error part', async () => {
+    const { container } = render(
+      <Form validators={{ reach: (v) => (v === undefined ? 'Pick at least one way to reach you.' : undefined) }} actions={<FormSubmit>Save contact</FormSubmit>}>
+        <Fieldset legend="How should we reach you" name="reach">
+          <Checkbox name="reach" value="email" label="Email" />
+          <Checkbox name="reach" value="text" label="Text message" />
+        </Fieldset>
+      </Form>,
+    );
+    await userEvent.click(screen.getByRole('button', { name: 'Save contact' }));
+    const link = root(container).querySelector('[data-part="summary"] a');
+    expect(link?.textContent).toBe('How should we reach you: Pick at least one way to reach you.');
+    const group = screen.getByRole('group', { name: 'How should we reach you' });
+    const error = group.querySelector('[data-part="error"]');
+    expect(error?.textContent).toBe('Pick at least one way to reach you.');
+    expect(group.getAttribute('aria-describedby')).toContain(error?.id ?? 'missing');
+    expect(group.hasAttribute('data-invalid')).toBe(true);
+    await userEvent.click(screen.getByRole('checkbox', { name: 'Text message' }));
+    expect(group.querySelector('[data-part="error"]')).toBeNull();
+  });
+
+  it('announces a submit that passes', async () => {
+    render(<Contact onSubmit={() => undefined} />);
+    await userEvent.type(screen.getByRole('textbox', { name: 'Full name' }), 'Sara');
+    await userEvent.type(screen.getByRole('textbox', { name: 'Email' }), 'sara@example.com');
+    await userEvent.click(screen.getByRole('button', { name: 'Send request' }));
+    expect(screen.getByRole('status').textContent?.trim()).toBe('The form was sent.');
+  });
+
+  it('the demo postal code says which format it wants', async () => {
+    render(<FormDemo />);
+    const many = document.querySelector('[data-demo-case="many"]');
+    const postal = many?.querySelector<HTMLInputElement>('input[name="postal"]');
+    if (!postal) throw new Error('no postal field');
+    const form = postal.closest('form');
+    if (!form) throw new Error('no form');
+    await userEvent.type(postal, '12');
+    await userEvent.click(form.querySelector<HTMLElement>('[type="submit"]') ?? form);
+    expect(form.querySelector('[data-part="summary"]')?.textContent).toContain('Postal code: Enter the 5 digit postal code.');
   });
 
   it('renders every demo case', () => {

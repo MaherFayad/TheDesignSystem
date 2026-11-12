@@ -38,7 +38,6 @@
     "group",
     "label",
     "separator",
-    "empty",
     "scroll-down"
   ],
   "parts": {
@@ -139,7 +138,7 @@
     "empty": {
       "type": "node",
       "default": "No options to choose from yet.",
-      "description": "Shown in the list when there is no option. Arabic default: ما فيه خيارات للاختيار. Say what to do next."
+      "description": "With no option the list does not open and the trigger is described by these words (aria-describedby). Pass them: the default cannot know what to do next, so say why there is no option and the next step. Arabic default: ما فيه خيارات للاختيار."
     },
     "name": {
       "type": "string",
@@ -178,8 +177,8 @@
     "announce": "The trigger reads its Field label, the chosen label (or the placeholder), and that it opens a list. Moving through the list reads each option: its label, its description, selected or not, unavailable, and its position.",
     "notes": [
       "Tab does not move focus while the list is open (Radix keeps it in the list); Escape or a choice returns focus to the trigger.",
-      "The open listbox is named like the trigger: through the Field label, else aria-label or aria-labelledby on the Select. With no option, the list is described by its empty text.",
-      "Read only and loading block only the keys that open the list or choose by typeahead; Tab and browser shortcuts with a modifier pass.",
+      "The open listbox is named like the trigger: through the Field label, else aria-label or aria-labelledby on the Select. With no option the list does not open (an empty listbox is not valid): the trigger is described by the empty text, as it is by the loading words while loading.",
+      "Read only, loading and empty block only the keys that open the list or choose by typeahead; Tab and browser shortcuts with a modifier pass.",
       "The chosen item shows a check on every style, never color alone (WCAG 1.4.1). The check column is on every row so labels line up.",
       "Rows equal ListBox option rows: the same list.row.height (sm: size.control.xs), padding, gap, radius, type and highlight tokens. Rows and the scroll buttons are at least size.target-min (WCAG 2.5.8).",
       "The content is portaled into a Theme copied from the trigger's Theme and is its own root carrying data-part content, as the Combobox popup is; its z-index is z.menu so it shows over a Dialog.",
@@ -187,7 +186,7 @@
       "An option description is read through aria-describedby on the item.",
       "Contract: the variants case marks one trigger with data-demo-trigger. Enter, Space and ArrowDown on the trigger are checked as state changes (aria-expanded), because Radix opens on keydown and prevents the click. The closed trigger stamps no data-state (it reads as open through aria-expanded); data-state open is on the content root.",
       "contract.skipAxeRules aria-hidden-focus: while the list is open, Radix Select hides the rest of the page with aria-hidden and traps focus in the list (a focus scope, and pointer events off outside it), so the other triggers on the page cannot be reached until it closes. Axe flags those hidden triggers by shape. The closed pages passed axe with the rule on in the lane run before it was skipped (docs/reports/lanes/lane-3d.md).",
-      "States: open is data-state on the content root; closed means the content is not in the DOM (Radix Select has no exit presence). checked and unchecked are data-state on each item."
+      "States: open is data-state on the content root; when closed the content is not in the DOM (Radix Select has no exit presence), so no element stamps closed. closed stays in states because the contract suite treats a component as an overlay, and opens it, only when states lists both open and closed. checked and unchecked are data-state on each item."
     ]
   },
   "content": {
@@ -330,8 +329,7 @@
       "item-description",
       "group",
       "label",
-      "separator",
-      "empty"
+      "separator"
     ],
     "keys": {
       "Enter": {

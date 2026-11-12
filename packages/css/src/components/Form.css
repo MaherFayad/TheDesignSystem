@@ -42,6 +42,16 @@
     flex-direction: column;
     gap: var(--_form-body-gap);
     min-inline-size: 0;
+    /*
+     * Inside a form, a Radix Checkbox, Switch or Radio keeps a hidden input
+     * next to its control, moved with a transform. In RTL at 320px it can
+     * sit past the page edge and scroll the page sideways. The body is the
+     * containing block of those inputs and clips them on the inline axis;
+     * the margin keeps the focus rings and glows of the fields.
+     */
+    position: relative;
+    overflow-x: clip;
+    overflow-clip-margin: var(--ds-space-xs);
   }
 
   /* The summary list: one link per field, in form order. */

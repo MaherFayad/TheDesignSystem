@@ -28,6 +28,10 @@
  *   --_lightbox-image-max-inline, -image-max-block
  *   --_lightbox-image-inline-size the zoomed width; Lightbox.tsx sets the measured value inline on the image
  *   --_lightbox-cursor            zoom-in when fitted, zoom-out when zoomed
+ *   --_lightbox-nav-bg, -nav-bg-hover, -nav-bg-active, -nav-fg, -nav-border-color
+ *                                 the solid backing of previous and next ("nav" names the two
+ *                                 parts as a pair); they feed the IconButton's --_button-* so the
+ *                                 chevrons read on any image when the buttons sit over it
  *   --_lightbox-image-opacity     0 while the image loads
  *   --_lightbox-stage-touch-action  pan-y when fitted (a sideways swipe moves), auto when zoomed
  *   --_lightbox-enter-scale, -duration-in, -duration-out, -ease-in, -ease-out
@@ -45,6 +49,11 @@
     --_lightbox-image-max-block: 100%;
     --_lightbox-image-inline-size: auto;
     --_lightbox-cursor: zoom-in;
+    --_lightbox-nav-bg: var(--ds-color-bg-surface);
+    --_lightbox-nav-bg-hover: var(--ds-color-bg-surface-2);
+    --_lightbox-nav-bg-active: var(--ds-color-bg-surface-3);
+    --_lightbox-nav-fg: var(--ds-color-text-default);
+    --_lightbox-nav-border-color: var(--ds-color-border-default);
     --_lightbox-image-opacity: 1;
     --_lightbox-stage-touch-action: pan-y pinch-zoom;
     --_lightbox-enter-scale: var(--ds-scale-dialog-enter);
@@ -231,6 +240,37 @@
 
   [data-ds='lightbox'] > [data-part='panel'] > [data-part='next'] {
     inset-inline-end: var(--_lightbox-gutter);
+  }
+
+  /*
+   * A solid fill from the surface tokens, at rest, on hover and when
+   * pressed. On phones the buttons sit over the image, and a zoomed image
+   * can scroll under them at any width, so a ghost button would put the
+   * chevron straight on the photo (WCAG 1.4.11). The icon sits on its own
+   * opaque fill instead, whatever the image. The IconButton's private
+   * properties are set here, and its hover and press swaps are repeated so
+   * they still win over this rest value.
+   */
+  [data-ds='lightbox'] > [data-part='panel'] > [data-ds='icon-button']:is([data-part='previous'], [data-part='next']) {
+    --_button-bg: var(--_lightbox-nav-bg);
+    --_button-bg-hover: var(--_lightbox-nav-bg-hover);
+    --_button-bg-active: var(--_lightbox-nav-bg-active);
+    --_button-fg: var(--_lightbox-nav-fg);
+    --_button-fg-hover: var(--_lightbox-nav-fg);
+    --_button-fg-active: var(--_lightbox-nav-fg);
+    --_button-border-color: var(--_lightbox-nav-border-color);
+    --_button-border-color-hover: var(--_lightbox-nav-border-color);
+  }
+
+  [data-ds='lightbox'] > [data-part='panel'] > [data-ds='icon-button']:is([data-part='previous'], [data-part='next']):hover:not([data-disabled], [data-loading]) {
+    --_button-bg: var(--_button-bg-hover);
+    --_button-fg: var(--_button-fg-hover);
+    --_button-border-color: var(--_button-border-color-hover);
+  }
+
+  [data-ds='lightbox'] > [data-part='panel'] > [data-ds='icon-button']:is([data-part='previous'], [data-part='next']):active:not([data-disabled], [data-loading]) {
+    --_button-bg: var(--_button-bg-active);
+    --_button-fg: var(--_button-fg-active);
   }
 
   /* ------------------------------------------------------------ caption */

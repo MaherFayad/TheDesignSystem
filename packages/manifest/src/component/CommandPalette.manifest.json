@@ -97,7 +97,7 @@
     "shortcut": {
       "type": "string",
       "default": "Mod+K",
-      "description": "Opens and closes the palette from anywhere on the page. Mod is Command on a Mac and Control elsewhere. A letter also matches by its physical key, so it works on an Arabic layout. null turns it off. Only one palette on a page should keep it."
+      "description": "Opens and closes the palette from anywhere on the page. Mod is Command on a Mac and Control elsewhere. A letter also matches by its physical key when the key typed is not a Latin letter or digit, so it works on an Arabic layout. Without Ctrl, Meta or Alt it is ignored in text fields. null turns it off. Only one palette on a page should keep it."
     },
     "label": {
       "type": "string",
@@ -168,7 +168,7 @@
     "role": "dialog (the panel), modal: Radix hides the rest of the page and keeps focus inside. The search input is a combobox with aria-expanded, aria-controls and aria-activedescendant; the list is a listbox of options, in groups when the commands are grouped.",
     "focus": "On open, focus goes to the search input and stays there: the highlighted command is pointed at with aria-activedescendant, rows never take focus. On close, focus returns to the element that had it when the shortcut opened the palette, or to the trigger that opened it; when that element is gone, to its nearest connected focusable ancestor, else the first tab stop of main.",
     "keys": {
-      "Mod+K": "Opens the palette from anywhere on the page, and closes it. The shortcut prop changes or turns it off.",
+      "Mod+K": "Opens the palette from anywhere on the page, and closes it, also from inside a text field. The shortcut prop changes or turns it off. A shortcut with no Ctrl, Meta or Alt (such as / or ?) types a character, so it is ignored while focus is in an input, a textarea, a select or contenteditable content (WCAG 2.1.4). A letter or digit also matches by its physical key only when the key typed is not a Latin letter or digit, as on an Arabic layout.",
       "ArrowDown": "Highlights the next command, skipping disabled ones, and wraps from the last to the first",
       "ArrowUp": "Highlights the previous command and wraps from the first to the last",
       "Enter": "Runs the highlighted command and closes the palette",

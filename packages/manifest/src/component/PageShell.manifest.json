@@ -125,10 +125,6 @@
       "type": "boolean",
       "default": false,
       "description": "A preview of a page inside another page (a gallery, docs, a template picker): the same frame with no landmarks; main becomes a region named Main content."
-    },
-    "usePageShell": {
-      "type": "function",
-      "description": "Hook: { sidebar, wideSidebar, setSidebar, narrow, setDrawerOpen }. Pass collapsed={sidebar === 'collapsed'} and onCollapsedChange to the Sidebar so its toggle and the shell agree."
     }
   },
   "states": [
@@ -188,7 +184,7 @@
       "status": "ready",
       "behavior": "hand built",
       "example": "PageShell.demo.tsx",
-      "note": "Renders SkipLink, IconButton and Drawer; usePageShell() shares the column state."
+      "note": "Renders SkipLink, IconButton and Drawer. The hook usePageShell() shares the column state: { sidebar, wideSidebar, setSidebar, narrow, setDrawerOpen }. Pass collapsed={sidebar === 'collapsed'} and onCollapsedChange to the Sidebar so its toggle and the shell agree."
     },
     "angular": {
       "status": "planned",

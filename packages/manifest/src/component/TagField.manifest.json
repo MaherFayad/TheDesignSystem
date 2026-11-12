@@ -67,7 +67,7 @@
     },
     "max": {
       "type": "number",
-      "description": "The most tags. Text past it is not added and the status says so."
+      "description": "The most tags. Text past it is not added: it stays in the control, and a visible message under the box (You can add up to 12 tags) says why."
     },
     "size": {
       "type": [
@@ -147,7 +147,7 @@
       "ArrowDown": "With suggestions: opens them, then moves to the next suggestion",
       "ArrowUp": "With suggestions: moves to the previous suggestion. Escape closes the suggestions"
     },
-    "announce": "Each add, removal, duplicate and the max are read once from a polite status (Added tag design, Removed tag design, design is already added; Arabic أضفنا الوسم، حذفنا الوسم، الحد الأعلى للوسوم: 10). The status empties first, so the same words are read again.",
+    "announce": "Each add, removal, duplicate and the max are read once from a polite status (Added tag design, Removed tag design, design is already added; Arabic أضفنا الوسم، حذفنا الوسم، الحد الأعلى للوسوم: 10). The status empties first, so the same words are read again. A duplicate or the max also shows as visible text under the box (WCAG 3.3.1), a FieldError that the control is described by, until the next edit, add or removal.",
     "notes": [
       "Splitting and duplicates come from @the-system/shared tags.ts: the comma, the Arabic comma and new lines split; parts are trimmed; two tags are the same when their normalize() forms match (case, accents, Arabic diacritics, tatweel and alef forms ignored).",
       "Pasting text with a separator adds every part at once; a single line pastes as typed text.",
@@ -158,7 +158,8 @@
       "Disabled: the control is natively disabled and the tag group carries aria-disabled, so the faded tags read as unavailable (WCAG 1.4.3 exempts inactive components).",
       "Escape closes the suggestions (in the ArrowUp entry): the contract suite checks Escape only on an overlay with a trigger, and a TagField has none.",
       "Blur keeps typed text in the control and does not add it; only Enter, a separator or a paste adds. The control's text is not submitted with the form.",
-      "Text past max stays in the control; a paste replaces the selected text."
+      "Text past max stays in the control, whether it ends with Enter, a separator or a paste; a paste replaces the selected text.",
+      "The refusal message is a FieldError rendered right after the root (outside the Field wiring, so a Field error keeps its own id and the Field stays valid). The control's aria-describedby names it only while it shows."
     ]
   },
   "content": {
@@ -172,7 +173,7 @@
     "ar": {
       "label": "Noun form, no diacritics: الوسوم.",
       "placeholder": "Noun form: إضافة وسم.",
-      "hint": "اضغط Enter أو اكتب فاصلة لإضافة وسم.",
+      "hint": "اضغط Enter أو اكتب فاصلة لإضافة وسم. The Latin run Enter goes through Bidi.",
       "remove": "حذف الوسم <tag>. After removal: حذفنا الوسم <tag>.",
       "error": "أضف وسما واحدا على الأقل."
     }

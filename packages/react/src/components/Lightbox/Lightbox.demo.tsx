@@ -1,4 +1,5 @@
 import { DemoCase, DemoPage, DemoRow } from '../../demo';
+import { Theme } from '../../theme/Theme';
 import { Button } from '../Button';
 import { Lightbox, LightboxTrigger, type LightboxImage, type LightboxProps } from './index';
 
@@ -73,7 +74,9 @@ export default function LightboxDemo() {
           <Viewer trigger="loop" label="View photos in a loop" images={enImages} loop at={3} />
         </DemoRow>
         <DemoRow label="Arabic">
-          <Viewer trigger="ar" label="عرض الصور" images={arImages} />
+          <Theme lang="ar" dir="rtl">
+            <Viewer trigger="ar" label="عرض الصور" images={arImages} />
+          </Theme>
         </DemoRow>
       </DemoCase>
 

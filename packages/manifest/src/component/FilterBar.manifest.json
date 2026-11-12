@@ -117,8 +117,7 @@
     "closed",
     "data-active",
     "data-overflow-start",
-    "data-overflow-end",
-    "data-selected"
+    "data-overflow-end"
   ],
   "a11y": {
     "role": "none on the root. The chips sit in a role group named Filters; each chip is a toggle button with aria-pressed.",
@@ -136,16 +135,16 @@
       "The order names ToggleGroup, MultiSelect and Select. They do not exist yet, so filters are Chips in a role group and more is a DropdownMenu with checkbox items. Arrow keys do not move between chips: each chip is a tab stop, as in the Figma-Killer-2 source. The anatomy stays when ToggleGroup lands.",
       "The chip strip scrolls sideways inside itself and never scrolls the page at 320px (WCAG 1.4.10). The root carries data-overflow-start and data-overflow-end in logical terms, so the edge fades flip in RTL.",
       "A selected chip shows a check, not color alone.",
-      "data-selected is on each selected Chip root inside the filters part.",
-      "open and closed are on the more part, the Button that opens the DropdownMenu. Escape in the search box clears the query; Escape in the more menu closes it and returns focus to the more button.",
+      "Each selected chip carries data-selected on its own Chip root; that state belongs to the Chip manifest, not to this one.",
+      "open and closed are data-state on the more part, the Button that opens the DropdownMenu; they stay in states because the contract suite reads data-state on every part. Escape in the search box clears the query; Escape in the more menu closes it and returns focus to the more button.",
       "A search query counts as one filter on in the count part, and clear all empties it too.",
-      "The more part is the Button that opens the DropdownMenu. open, closed and data-selected in states sit on nested roots (the more Button and the selected Chips); the FilterBar root carries data-active and the overflow states."
+      "The FilterBar root carries data-active and the overflow states; open and closed are on the more part. data-selected sits on the Chip roots and belongs to the Chip manifest."
     ]
   },
   "content": {
     "en": {
       "filters": "One to three words in sentence case, a noun: Images, Shared with me. Never a verb.",
-      "more": "More filters, with the number on in brackets: More filters (2).",
+      "more": "More filters, with the number on in brackets: More filters (2). An agreed exception to the verb plus noun rule: it is the usual name for a menu trigger, like Next page.",
       "clear": "Clear filters. Never Reset.",
       "count": "1 filter on, 2 filters on (a search query counts as one), then the results: 24 results. No results when none."
     },

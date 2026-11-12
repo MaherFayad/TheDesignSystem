@@ -29,7 +29,6 @@
 //             <div data-part="group" role="group">
 //               <div data-part="label">            the group title
 //             <div data-part="separator">           between groups
-//             <div data-part="empty">               no option to choose
 //           <div data-part="scroll-down">
 //
 // The content is its own root carrying the parent's part name (anatomy.md,
@@ -37,6 +36,8 @@
 // data-state (open) is on the content only: the trigger reads as open
 // through aria-expanded, so the closed trigger stamps no data-state.
 // Radix Select has no exit presence: the content leaves at once on close.
+// With no option the list does not open (an empty listbox is not valid): the
+// trigger is described by the empty words instead, as it is while loading.
 import { useId, useMemo, type ComponentProps, type ReactElement, type ReactNode, type Ref } from 'react';
 import { createPortal } from 'react-dom';
 import { Select as RadixSelect } from 'radix-ui';
@@ -98,7 +99,12 @@ export interface SelectProps
   loading?: boolean;
   /** Read and shown while loading. Default "Loading options". */
   loadingLabel?: string;
-  /** Shown in the list when there is no option. Default "No options to choose from yet.". */
+  /**
+   * With no option the list does not open and the trigger is described by
+   * these words. Pass them: say why there is no option and what to do next
+   * ("No statuses yet. Add one from Settings."). The default, "No options to
+   * choose from yet.", cannot know the next step.
+   */
   empty?: ReactNode;
   /** Submits the value under this name in a form (Radix renders a hidden native select). */
   name?: string;
@@ -143,11 +149,14 @@ export function Select({
   ...rest
 }: SelectProps) {
   const field = useField();
-  const loadingId = `ds-select-loading-${useId().replace(/:/g, '')}`;
+  const noteId = `ds-select-note-${useId().replace(/:/g, '')}`;
+  const options = useMemo(() => flattenListBoxItems(items), [items]);
+  const isEmpty = options.length === 0;
+  // While loading, or with no option, the trigger is described by those words (the list cannot open to say them).
+  const hasNote = loading || isEmpty;
   const control = useFieldControl({
     id,
-    // While loading, the trigger is described by the loading words (the list cannot open to say them).
-    'aria-describedby': [describedBy, loading ? loadingId : undefined].filter(Boolean).join(' ') || undefined,
+    'aria-describedby': [describedBy, hasNote ? noteId : undefined].filter(Boolean).join(' ') || undefined,
     invalid,
     disabled,
     readOnly,
@@ -161,9 +170,8 @@ export function Select({
 
   const [value, setValue] = useControllable<string | null>(valueProp, defaultValue, onValueChange);
   const [open, setOpen] = useControllable(openProp, defaultOpen, onOpenChange);
-  const inert = Boolean(controlReadOnly || loading);
+  const inert = Boolean(controlReadOnly || loading || isEmpty);
   const shown = open && !inert;
-  const options = useMemo(() => flattenListBoxItems(items), [items]);
   const listSize = size === 'sm' ? 'sm' : 'md';
 
   const renderItem = (option: ListBoxOption) => {
@@ -209,18 +217,12 @@ export function Select({
       data-part="content"
       aria-labelledby={rest['aria-labelledby'] ?? (rest['aria-label'] ? undefined : field?.labelId)}
       aria-label={rest['aria-label']}
-      aria-describedby={options.length === 0 ? `${baseId}-empty` : undefined}
       data-size={listSize}
     >
       <RadixSelect.ScrollUpButton data-part="scroll-up">
         <Icon name="chevron-up" size="md" />
       </RadixSelect.ScrollUpButton>
       <RadixSelect.Viewport data-part="viewport">
-        {options.length === 0 && (
-          <div data-part="empty" role="presentation" id={`${baseId}-empty`}>
-            {loading ? (loadingLabel ?? t.loading) : (empty ?? t.empty)}
-          </div>
-        )}
         {items.map((item) => {
           if (!isListBoxSection(item)) {
             drawn += 1;
@@ -277,12 +279,12 @@ export function Select({
         aria-busy={loading || undefined}
         onPointerDown={(event) => {
           onPointerDown?.(event);
-          // Read only and loading: the pointer does not open the list (Radix skips its handler).
+          // Read only, loading and empty: the pointer does not open the list (Radix skips its handler).
           if (inert) event.preventDefault();
         }}
         onKeyDown={(event) => {
           onKeyDown?.(event);
-          // Read only and loading: no key opens the list or changes the value by typeahead.
+          // Read only, loading and empty: no key opens the list or changes the value by typeahead.
           // Other keys (Tab, browser shortcuts with a modifier) pass.
           const opens = ['Enter', ' ', 'ArrowDown', 'ArrowUp', 'Home', 'End'].includes(event.key);
           const types = event.key.length === 1 && !event.ctrlKey && !event.metaKey && !event.altKey;
@@ -294,9 +296,9 @@ export function Select({
           {loading ? <Spinner size="sm" decorative /> : <Icon name="chevrons-up-down" size="md" />}
         </RadixSelect.Icon>
       </RadixSelect.Trigger>
-      {loading && (
-        <span id={loadingId} hidden>
-          {loadingLabel ?? t.loading}
+      {hasNote && (
+        <span id={noteId} hidden>
+          {loading ? (loadingLabel ?? t.loading) : (empty ?? t.empty)}
         </span>
       )}
       {shown && typeof document !== 'undefined' ? createPortal(layer(content), document.body) : content}

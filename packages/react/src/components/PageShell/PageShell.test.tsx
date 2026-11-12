@@ -1,3 +1,5 @@
+import { readFileSync } from 'node:fs';
+import { join } from 'node:path';
 import { act, render, screen, waitFor } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 import { afterEach, describe, expect, it, vi } from 'vitest';
@@ -188,5 +190,27 @@ describe('PageShell', () => {
     expect(new Set(Array.from(document.querySelectorAll('[data-part="main"]')).map((m) => m.id)).size).toBe(
       document.querySelectorAll('[data-part="main"]').length,
     );
+  });
+
+  it('names the Arabic navigation apart from its Home link', () => {
+    render(
+      <Theme>
+        <PageShellDemo />
+      </Theme>,
+    );
+    const navs = Array.from(document.querySelectorAll<HTMLElement>('[lang="ar"] nav[aria-label]'));
+    expect(navs.length).toBeGreaterThan(0);
+    for (const nav of navs) {
+      const links = Array.from(nav.querySelectorAll('a')).map((a) => a.textContent?.trim());
+      expect(links).not.toContain(nav.getAttribute('aria-label'));
+    }
+  });
+
+  it('draws the footer text through a private property a recipe can override', () => {
+    const css = readFileSync(join(process.cwd(), 'packages/css/src/components/PageShell.css'), 'utf8');
+    expect(css).toContain('--_page-shell-footer-fg: var(--ds-color-text-muted);');
+    const footer = /\[data-part='footer'\] \{([^}]*)\}/.exec(css)?.[1] ?? '';
+    expect(footer).toContain('color: var(--_page-shell-footer-fg);');
+    expect(footer).not.toContain('--ds-color');
   });
 });

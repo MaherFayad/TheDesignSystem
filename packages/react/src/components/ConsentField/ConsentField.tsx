@@ -20,13 +20,18 @@
 //   `name` shows there.
 // - onDecision hands back a record: name, granted, version and the time, so
 //   the app can store who agreed to what and when.
-import { useId, useMemo, useState, type ComponentProps, type ReactNode } from 'react';
+// - requiredError is registered with the Form by name, so the Form puts the
+//   same message in the field and in the summary.
+// - Development warnings catch the misuses the types cannot: a stray
+//   defaultChecked, a controlled consent that starts given with no record
+//   line, a given consent locked by disabled, and no way to the details.
+import { useEffect, useId, useMemo, useRef, useState, type ComponentProps, type ReactNode } from 'react';
 import type { Size } from '@the-system/shared';
 import { useTheme } from '../../theme';
 import { Checkbox } from '../Checkbox/Checkbox';
 import { FieldContext, type FieldContextValue } from '../Field/context';
 import { FieldError } from '../FieldError/FieldError';
-import { useFormFieldError } from '../Form/Form';
+import { useFormFieldError, useFormRequiredMessage } from '../Form/Form';
 import { Link } from '../Link/Link';
 import { Switch } from '../Switch/Switch';
 
@@ -81,11 +86,12 @@ interface ConsentFieldBaseProps extends Omit<ComponentProps<'div'>, 'title' | 'o
   /** An error shown now, for a required consent left denied. */
   error?: ReactNode;
   /**
-   * Inside a Form: what the error says when the Form finds this required
-   * consent left off. Say why it is needed and the other way. Default the
-   * Form's own required message.
+   * Inside a Form, with `name`: what the error says when the Form finds this
+   * required consent left off. The Form shows it in the field and in the
+   * summary. Say why it is needed and the other way. Default the Form's
+   * own message for a box left off.
    */
-  requiredError?: ReactNode;
+  requiredError?: string;
   /** Control and text size. Default md. */
   size?: ConsentFieldSize;
 }
@@ -137,7 +143,7 @@ export function ConsentField({
   ...props
 }: ConsentFieldProps) {
   // A caller without types could still pass defaultChecked: it is dropped, never forwarded.
-  const { defaultChecked: _dropped, ...rest } = props as typeof props & { defaultChecked?: unknown };
+  const { defaultChecked: strayDefault, ...rest } = props as typeof props & { defaultChecked?: unknown };
   const { lang } = useTheme();
   const base = useId();
   const controlId = `${base}control`;
@@ -148,10 +154,38 @@ export function ConsentField({
   const granted = checkedProp ?? own;
 
   const formError = useFormFieldError(name);
-  const shownError = formError !== undefined ? (requiredError ?? formError) : error;
+  useFormRequiredMessage(name, requiredError);
+  const shownError = formError ?? error;
   const showError = hasContent(shownError) && invalid !== false;
   const isInvalid = invalid ?? showError;
   const showMeta = hasContent(meta);
+
+  // The first controlled value, for the warning about a consent that starts given.
+  const startedGranted = useRef(checkedProp === true);
+  useEffect(() => {
+    if (process.env.NODE_ENV === 'production') return;
+    if (strayDefault !== undefined) {
+      console.warn('ConsentField: defaultChecked is ignored. A consent never starts given; pass checked only for a choice already on record.');
+    }
+    if (startedGranted.current && !showMeta) {
+      console.warn('ConsentField: checked starts true with no meta. Show the record of the choice in meta, such as the date and the text version, or start denied.');
+    }
+    // Warn once, on mount: these describe how the consent was set up.
+  }, []);
+  useEffect(() => {
+    if (process.env.NODE_ENV === 'production') return;
+    if (disabled && granted) {
+      console.warn('ConsentField: a given consent is disabled, so it cannot be withdrawn. Keep a given consent enabled.');
+    }
+  }, [disabled, granted]);
+  useEffect(() => {
+    // A disabled consent cannot be given yet: the link is asked for once it can.
+    if (process.env.NODE_ENV === 'production' || detailsHref !== undefined || disabled) return;
+    // A link in the description of the surrounding Fieldset counts as the way to the details.
+    const fieldset = document.getElementById(purposeId)?.closest('fieldset');
+    if (fieldset?.querySelector(':scope > [data-part="description"] a[href]')) return;
+    console.warn('ConsentField: no detailsHref. Link the privacy notice from the consent, or from the description of the surrounding Fieldset.');
+  }, [detailsHref, purposeId, disabled]);
 
   const decide = (next: boolean) => {
     if (checkedProp === undefined) setOwn(next);

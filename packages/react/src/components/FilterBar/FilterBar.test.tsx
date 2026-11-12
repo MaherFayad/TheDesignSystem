@@ -118,6 +118,30 @@ describe('FilterBar', () => {
     expect(status.textContent?.trim()).toBe('2 results');
   });
 
+  // Inline labels are a new object every render. A parent render inside the
+  // wait used to cancel the timer, so the count was never read (WCAG 4.1.3).
+  it('announces the count with inline labels when the parent renders during the wait', () => {
+    vi.useFakeTimers();
+    const results = (n: number) => `${n} hits`;
+    const { rerender } = render(<FilterBar filters={kinds} value={[]} resultCount={6} labels={{ results }} />);
+    const status = screen.getByRole('status');
+    rerender(<FilterBar filters={kinds} value={['boards']} resultCount={3} labels={{ results: (n) => results(n) }} />);
+    act(() => vi.advanceTimersByTime(200));
+    rerender(<FilterBar filters={kinds} value={['boards']} resultCount={3} labels={{ results: (n) => results(n) }} />);
+    act(() => vi.advanceTimersByTime(1000));
+    expect(status.textContent?.trim()).toBe('3 hits');
+  });
+
+  it('the demo view toggles follow a press', async () => {
+    render(<FilterBarDemo />);
+    const [list] = screen.getAllByRole('button', { name: 'Show as list' }) as [HTMLElement];
+    const [grid] = screen.getAllByRole('button', { name: 'Show as grid' }) as [HTMLElement];
+    expect(list.getAttribute('aria-pressed')).toBe('false');
+    await userEvent.click(list);
+    expect(list.getAttribute('aria-pressed')).toBe('true');
+    expect(grid.getAttribute('aria-pressed')).toBe('false');
+  });
+
   it('Arabic copy and size', () => {
     const { container } = render(
       <Theme lang="ar">

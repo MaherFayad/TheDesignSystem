@@ -3,6 +3,7 @@ import { useId, useMemo, type ComponentProps, type ReactNode } from 'react';
 import type { Size } from '@the-system/shared';
 import { FieldContext, type FieldContextValue } from '../Field/context';
 import { FieldError } from '../FieldError/FieldError';
+import { useFormFieldError } from '../Form/Form';
 
 export type FieldsetSize = Extract<Size, 'sm' | 'md' | 'lg'>;
 
@@ -13,6 +14,12 @@ export interface FieldsetProps extends Omit<ComponentProps<'fieldset'>, 'title'>
   description?: ReactNode;
   /** What is wrong with the group as a whole and how to fix it. A FieldError root with data-part error. */
   error?: ReactNode;
+  /**
+   * The name the controls of a group share (a checkbox or radio group).
+   * Inside a Form, the Form's error for that name shows in the error part,
+   * in place of `error`. Rendered as data-name.
+   */
+  name?: string;
   /** Legend size and the space between the fields. Default md. */
   size?: FieldsetSize;
   /** Native disabled: disables every control inside, buttons included. */
@@ -47,7 +54,8 @@ const noop = () => () => undefined;
 export function Fieldset({
   legend,
   description,
-  error,
+  error: errorProp,
+  name,
   size = 'md',
   disabled = false,
   invalid,
@@ -58,6 +66,8 @@ export function Fieldset({
   const base = useId();
   const descriptionId = `${base}description`;
   const errorId = `${base}error`;
+  const formError = useFormFieldError(name);
+  const error = formError ?? errorProp;
   const showError = hasContent(error) && invalid !== false;
   const isInvalid = invalid ?? showError;
   const showDescription = hasContent(description);
@@ -91,6 +101,7 @@ export function Fieldset({
       disabled={disabled || undefined}
       aria-describedby={ariaDescribedBy}
       data-ds="fieldset"
+      data-name={name}
       data-size={size}
       data-disabled={disabled ? '' : undefined}
       data-invalid={isInvalid ? '' : undefined}

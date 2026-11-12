@@ -1,3 +1,5 @@
+import { readFileSync } from 'node:fs';
+import { join } from 'node:path';
 import { act, fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';
@@ -146,6 +148,68 @@ describe('Lightbox', () => {
     expect(rootEl()?.hasAttribute('data-loading')).toBe(true);
   });
 
+  it('toggles the zoom on a double click on the image, also when pointer capture sends it to the stage', async () => {
+    const user = userEvent.setup();
+    render(<Basic />);
+    await open(user);
+    const image = img() as HTMLImageElement;
+    const stage = part('stage') as HTMLElement;
+    act(() => {
+      fireEvent.load(image);
+    });
+    fireEvent.doubleClick(image);
+    expect(rootEl()?.getAttribute('data-zoomed')).toBe('');
+    fireEvent.doubleClick(image);
+    expect(rootEl()?.hasAttribute('data-zoomed')).toBe(false);
+    // Chromium retargets the double click to the stage that holds the pointer capture; the point under the pointer decides.
+    const doc = document as Document & { elementFromPoint: (x: number, y: number) => Element | null };
+    const original = doc.elementFromPoint;
+    doc.elementFromPoint = () => image;
+    try {
+      fireEvent.doubleClick(stage, { clientX: 100, clientY: 100 });
+      expect(rootEl()?.getAttribute('data-zoomed')).toBe('');
+      fireEvent.doubleClick(stage, { clientX: 100, clientY: 100 });
+      expect(rootEl()?.hasAttribute('data-zoomed')).toBe(false);
+      // A double click on the stage around the image does nothing.
+      doc.elementFromPoint = () => stage;
+      fireEvent.doubleClick(stage, { clientX: 5, clientY: 5 });
+      expect(rootEl()?.hasAttribute('data-zoomed')).toBe(false);
+    } finally {
+      doc.elementFromPoint = original;
+    }
+  });
+
+  it('lets go of the pointer capture on pointer up, so the click lands on the image', async () => {
+    const user = userEvent.setup();
+    render(<Basic />);
+    await open(user);
+    const stage = part('stage') as HTMLElement;
+    const captured = new Set<number>();
+    stage.setPointerCapture = (id: number) => void captured.add(id);
+    stage.hasPointerCapture = (id: number) => captured.has(id);
+    stage.releasePointerCapture = (id: number) => void captured.delete(id);
+    fireEvent.pointerDown(stage, { clientX: 100, clientY: 100, pointerId: 7, button: 0 });
+    expect(captured.has(7)).toBe(true);
+    fireEvent.pointerUp(stage, { clientX: 100, clientY: 100, pointerId: 7 });
+    expect(captured.has(7)).toBe(false);
+  });
+
+  it('gives previous and next a solid fill from the surface tokens, at rest, on hover and when pressed', () => {
+    // On phones the buttons sit over the image: a ghost fill would put the chevron on the photo (WCAG 1.4.11).
+    const css = readFileSync(join(process.cwd(), 'packages/css/src/components/Lightbox.css'), 'utf8');
+    for (const [name, token] of [
+      ['nav-bg', 'bg-surface'],
+      ['nav-bg-hover', 'bg-surface-2'],
+      ['nav-bg-active', 'bg-surface-3'],
+    ]) {
+      expect(css).toContain(`--_lightbox-${name}: var(--ds-color-${token});`);
+    }
+    const rule = /\[data-ds='icon-button'\]:is\(\[data-part='previous'\], \[data-part='next'\]\) \{([^}]*)\}/.exec(css)?.[1] ?? '';
+    expect(rule).toContain('--_button-bg: var(--_lightbox-nav-bg);');
+    expect(rule).toContain('--_button-bg-hover: var(--_lightbox-nav-bg-hover);');
+    expect(rule).toContain('--_button-bg-active: var(--_lightbox-nav-bg-active);');
+  });
+
   it('shows the error part when an image fails', async () => {
     const user = userEvent.setup();
     render(<Basic />);
@@ -226,5 +290,10 @@ describe('Lightbox', () => {
     );
     const cases = Array.from(document.querySelectorAll('[data-demo-case]')).map((c) => c.getAttribute('data-demo-case'));
     expect(cases).toEqual(['variants', 'empty', 'one', 'many', 'too-many', 'long-text', 'long-arabic', 'error']);
+    // The Arabic row of the variants case sits in an Arabic, right to left theme.
+    const ar = document.querySelector('[data-demo-trigger="ar"]');
+    const theme = ar?.closest('[data-ds="theme"]');
+    expect(theme?.getAttribute('lang')).toBe('ar');
+    expect(theme?.getAttribute('dir')).toBe('rtl');
   });
 });

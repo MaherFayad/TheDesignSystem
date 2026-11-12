@@ -6,7 +6,7 @@
   "useWhen": [
     "Several fields that answer one question together, such as a delivery address or a date of birth in three parts",
     "A long form split into named sections, each with its own legend",
-    "A group of Checkbox or Switch items that needs a group level error, such as Pick at least one",
+    "A group of Checkbox or Switch items that needs a group level error, such as Pick at least one. Inside a Form, set name to the name the controls share.",
     "Turning off a whole section at once with native disabled"
   ],
   "avoidWhen": [
@@ -70,6 +70,10 @@
       "type": "node",
       "description": "What is wrong with the group as a whole and how to fix it. Renders a FieldError root with data-part error, above the body."
     },
+    "name": {
+      "type": "string",
+      "description": "The name the controls of a checkbox or radio group share. Inside a Form, the Form's error for that name shows in the error part, in place of error. Rendered as data-name, not as the fieldset name attribute."
+    },
     "size": {
       "type": [
         "sm",
@@ -108,9 +112,10 @@
     },
     "notes": [
       "The legend is a native legend, the first child of the fieldset, so every browser and screen reader takes it as the group name.",
-      "The group error sits above the body, so it is seen before a long list of choices. A form that checks on submit moves focus to the first control of the invalid group.",
+      "The group error sits above the body, so it is seen before a long list of choices. Inside a Form, give the Fieldset the name its controls share: a Form validator error for that name then shows in the error part, the summary link names the group by its legend, and focus on submit moves to the first control of the group.",
       "Native disabled reaches every control inside, including the Radix Checkbox and Switch buttons, without a prop on each.",
-      "Keep the legend short: some screen readers read it again before every control in the group."
+      "Keep the legend short: some screen readers read it again before every control in the group.",
+      "The controls inside do not get aria-invalid from the group yet. The error reaches a screen reader through the group's aria-describedby, which some readers skip on entry."
     ]
   },
   "content": {

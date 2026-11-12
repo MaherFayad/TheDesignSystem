@@ -26,11 +26,13 @@ const files = [
   { name: 'Logo sketches', tags: ['images', 'this-week'] },
 ];
 
-function viewToggles(size: FilterBarSize = 'md') {
+/** Grid or list: one pressed at a time, wired to state so the demo does not show a toggle that lies. */
+function ViewToggles({ size = 'md' }: { size?: FilterBarSize }) {
+  const [view, setView] = useState<'grid' | 'list'>('grid');
   return (
     <>
-      <IconButton icon="grid" label="Show as grid" size={size} emphasis="ghost" aria-pressed />
-      <IconButton icon="list" label="Show as list" size={size} emphasis="ghost" aria-pressed={false} />
+      <IconButton icon="grid" label="Show as grid" size={size} emphasis="ghost" aria-pressed={view === 'grid'} onClick={() => setView('grid')} />
+      <IconButton icon="list" label="Show as list" size={size} emphasis="ghost" aria-pressed={view === 'list'} onClick={() => setView('list')} />
     </>
   );
 }
@@ -51,7 +53,7 @@ function LiveBar({ size, initial = [] }: { size?: FilterBarSize; initial?: strin
       value={value}
       onValueChange={setValue}
       resultCount={count}
-      end={viewToggles(size)}
+      end={<ViewToggles size={size} />}
     />
   );
 }
@@ -78,7 +80,7 @@ export default function FilterBarDemo() {
             ]}
             defaultValue={['images']}
             resultCount={12}
-            end={viewToggles()}
+            end={<ViewToggles />}
           />
         </Theme>
       </DemoCase>
@@ -98,7 +100,7 @@ export default function FilterBarDemo() {
           more={more}
           defaultValue={['boards', 'shared', 'starred', 'this-week']}
           resultCount={1}
-          end={viewToggles()}
+          end={<ViewToggles />}
         />
       </DemoCase>
 
