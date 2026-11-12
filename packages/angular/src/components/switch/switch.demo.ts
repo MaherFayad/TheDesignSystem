@@ -132,6 +132,6 @@ export default class SwitchDemo {
   protected readonly settings = settings;
   protected readonly sample = sample;
   protected readonly onOff = { on: 'On', off: 'Off' };
-  protected readonly onOffAr = { on: 'مفعل', off: 'متوقف' };
+  protected readonly onOffAr = { on: 'مفعل', off: 'غير مفعل' };
   protected readonly autoSave = signal<boolean | undefined>(true);
 }
