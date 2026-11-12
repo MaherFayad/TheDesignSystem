@@ -18,6 +18,7 @@ import {
   Directive,
   ElementRef,
   afterNextRender,
+  afterRenderEffect,
   computed,
   effect,
   inject,
@@ -31,6 +32,7 @@ import {
 } from '@angular/core';
 import { Directionality } from '@angular/cdk/bidi';
 import type { Size, Tone } from '@the-system/shared';
+import { BubbleEvent } from '../../internal/bubble-event';
 import { optionalBoolean } from '../../internal/optional-boolean';
 import type { OrderedStyle } from '../../internal/ordered-style';
 import { DsThemeService } from '../../theme/theme';
@@ -89,7 +91,7 @@ export const sliderTemplate = `@if (hasLabel()) {<span [id]="labelId" data-part=
       [attr.aria-describedby]="describedBy() ?? null"
       [attr.aria-invalid]="isInvalid() ? 'true' : null"
       (focus)="onThumbFocus(i)"
-      (blur)="onTouched()"></span></span>@if (isFormControl()) {<input [dsOrderedStyle]="hiddenStyle" [attr.name]="inputName() ?? null" [attr.value]="v" [value]="v" />}}</span>@if (showMarks()) {<div data-part="marks" aria-hidden="true">@for (mark of markList(); track mark.value; let m = $index) {<span data-mark="" [dsOrderedStyle]="markStyles()[m]">{{ mark.label }}</span>}</div>}`;
+      (blur)="onTouched()"></span></span>@if (isFormControl()) {<input #bubble [dsOrderedStyle]="hiddenStyle" [attr.name]="inputName() ?? null" [attr.value]="v" [value]="v" />}}</span>@if (showMarks()) {<div data-part="marks" aria-hidden="true">@for (mark of markList(); track mark.value; let m = $index) {<span data-mark="" [dsOrderedStyle]="markStyles()[m]">{{ mark.label }}</span>}</div>}`;
 
 /** The input names both components consume from the host. */
 export const sliderHostInputs = [
@@ -231,6 +233,7 @@ export abstract class DsSliderBase {
   private readonly directionality = inject(Directionality, { optional: true });
   private readonly control = viewChildren<ElementRef<HTMLElement>>('control');
   private readonly thumbs = viewChildren<ElementRef<HTMLElement>>('thumb');
+  private readonly bubbles = viewChildren<ElementRef<HTMLInputElement>>('bubble');
 
   protected readonly labelId = `ds-slider-${++nextId}-label`;
   readonly dragging = signal(false);
@@ -371,6 +374,11 @@ export abstract class DsSliderBase {
       const reset = () => this.change(initial);
       form.addEventListener('reset', reset);
       destroyRef.onDestroy(() => form.removeEventListener('reset', reset));
+    });    // Radix dispatches `input` on the hidden input after the value changes.
+    const bubbleInput = new BubbleEvent<string>('input');
+    afterRenderEffect(() => {
+      const values = this.values();
+      this.bubbles().forEach((ref, i) => bubbleInput.update(ref.nativeElement, String(values[i])));
     });
   }
 
