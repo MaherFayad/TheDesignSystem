@@ -1,0 +1,216 @@
+{
+  "name": "Textarea",
+  "kind": "component",
+  "family": "forms",
+  "summary": "Multi line text in a bordered box that grows with the text, with an optional character count that never cuts the text.",
+  "useWhen": [
+    "Free text longer than one line: a message, a description, notes",
+    "Text with a character limit the person should see while typing",
+    "A value where Enter must add a new line"
+  ],
+  "avoidWhen": [
+    "A short value on one line: a name, an email, a link",
+    "Formatted text with bold, lists or links",
+    "A list of separate values such as tags"
+  ],
+  "insteadUse": {
+    "A short value on one line": "Input",
+    "A list of separate values": "TagField",
+    "Formatted text": "RichTextEditor",
+    "A chat message that sends on Enter": "PromptInput"
+  },
+  "anatomy": [
+    "root",
+    "control",
+    "count"
+  ],
+  "slots": {
+    "control": {
+      "accepts": "text"
+    }
+  },
+  "props": {
+    "size": {
+      "type": [
+        "xs",
+        "sm",
+        "md",
+        "lg"
+      ],
+      "default": "md",
+      "description": "Padding and text size in step with Input. lg uses a fixed 16px text, so phones do not zoom on focus."
+    },
+    "shape": {
+      "type": [
+        "default"
+      ],
+      "default": "default",
+      "description": "default only, radius.field. A pill never wraps lines."
+    },
+    "rows": {
+      "type": "number",
+      "default": 3,
+      "description": "Lines shown when empty, the floor of the auto height."
+    },
+    "maxRows": {
+      "type": "number",
+      "description": "Lines the auto height grows to before the text scrolls inside. No cap when unset."
+    },
+    "autoHeight": {
+      "type": "boolean",
+      "default": true,
+      "description": "Grows with the text through CSS field-sizing content, with a measuring fallback. false keeps rows lines and a vertical resize handle."
+    },
+    "limit": {
+      "type": "number",
+      "description": "The character limit for the count. Past it the value is invalid and the count turns danger. The text is never cut; there is no native maxlength."
+    },
+    "showCount": {
+      "type": "boolean",
+      "description": "Shows the count. Default true when limit is set. Without a limit it shows the plain number."
+    },
+    "countMessage": {
+      "type": "function",
+      "description": "(left) => string, the words announced near and past the limit. left is negative past it. Default English, or Arabic under an Arabic Theme."
+    },
+    "invalid": {
+      "type": "boolean",
+      "description": "Marks the value invalid. Inside a Field it follows the Field. Past the limit it is always invalid."
+    },
+    "disabled": {
+      "type": "boolean",
+      "description": "Native disabled. Inside a Field it follows the Field."
+    },
+    "readOnly": {
+      "type": "boolean",
+      "description": "Still focusable, selectable and readable. Inside a Field it follows the Field."
+    },
+    "required": {
+      "type": "boolean",
+      "description": "Sets aria-required. Inside a Field it follows the Field."
+    },
+    "rootProps": {
+      "type": "object",
+      "description": "Props for the root box. className and style also go to the root; every other native prop and the ref go to the textarea."
+    }
+  },
+  "states": [
+    "data-invalid",
+    "data-disabled",
+    "data-readonly",
+    "data-over",
+    "data-auto-height"
+  ],
+  "a11y": {
+    "role": "textbox, multi line, from the native textarea",
+    "focus": "The textarea is the only tab stop. A press anywhere in the box focuses it. Focus shows the glow and a 2px ring around the box.",
+    "keys": {
+      "Tab": "Moves focus to the textarea, and on to the next control",
+      "Shift+Tab": "Moves focus back",
+      "Enter": "Adds a new line. It never submits the form."
+    },
+    "announce": "Name from the Field label. The Field description, the error and the count through aria-describedby. A polite live region speaks once when the count enters the last tenth before the limit (at least the last 10 characters) and once when it goes past the limit, never on every key.",
+    "native": {
+      "accessibilityState": [
+        "disabled"
+      ]
+    },
+    "notes": [
+      "Past the limit the text stays: no native maxlength, which would cut a paste without a word. The value turns invalid, the count turns danger and the Field error says how many characters to remove.",
+      "The count is shown as digits that run left to right in every language, at the inline end of the box.",
+      "Auto height uses CSS field-sizing content with a rows floor and a maxRows cap, so there is no script measuring where the browser supports it.",
+      "Read only looks different from disabled: a dashed border and a quiet fill, full contrast text, and it stays focusable.",
+      "Disabled uses native disabled and draws with opacity.disabled, like every control.",
+      "Say the limit in the Field description, for example Up to 200 characters, so it is known before typing."
+    ]
+  },
+  "content": {
+    "en": {
+      "label": "A visible Field label, a noun in sentence case: Brief, Message to the team.",
+      "placeholder": "An example at most: For example, the review is moved to Thursday. Never the label.",
+      "limit": "State it in the description: Up to 200 characters. Past it the error says how many to remove."
+    },
+    "ar": {
+      "label": "عنوان ظاهر دايم، بصيغة الاسم وبدون تشكيل: وصف اللوحة، ملاحظات",
+      "placeholder": "مثال بس، مو بديل عن العنوان",
+      "limit": "الحد يظهر في الوصف: بحد أقصى 200 حرف. والأرقام بالأرقام الغربية"
+    }
+  },
+  "tokens": [
+    "space.3xs",
+    "space.2xs",
+    "space.xs",
+    "space.s",
+    "space.m",
+    "space.2xl",
+    "font.family.sans",
+    "font.size.s",
+    "font.size.xs",
+    "font.size.fixed-m",
+    "font.weight.regular",
+    "font.leading.normal",
+    "font.leading.snug",
+    "radius.field",
+    "border.width.default",
+    "border.width.strong",
+    "color.border.control",
+    "color.border.control-hover",
+    "color.bg.overlay-5",
+    "color.text.default",
+    "color.text.muted",
+    "color.text.placeholder",
+    "color.state.danger.text",
+    "elevation.input-focus",
+    "focus.shadow.ring",
+    "duration.base",
+    "ease.default",
+    "opacity.disabled"
+  ],
+  "motion": "fade",
+  "frameworks": {
+    "react": {
+      "status": "ready",
+      "behavior": "native textarea, CSS field-sizing",
+      "example": "Textarea.demo.tsx",
+      "note": "Motion is the focus glow fade of Input, named fade like Input; under reduced motion the duration token is 0ms."
+    },
+    "angular": {
+      "status": "planned",
+      "behavior": "a dsTextarea component around textarea, host bindings, reads the dsField context"
+    },
+    "native": {
+      "status": "planned",
+      "behavior": "react-native:TextInput multiline",
+      "note": "Grows with onContentSizeChange between the rows floor and the maxRows cap."
+    }
+  },
+  "styles": {
+    "studio": "The Input border and glow, radius.field corners instead of a pill",
+    "desk": "The same, in Instrument Sans",
+    "neutral": "Takes the tokens of the Neutral style, no recipe."
+  },
+  "mistakes": [
+    {
+      "wrong": "maxLength on a textarea, which cuts a paste without a word",
+      "right": "limit, which shows the count, marks the value invalid past it and keeps the text"
+    },
+    {
+      "wrong": "A pill shaped textarea",
+      "right": "The default shape: lines wrap, so the corners are radius.field"
+    },
+    {
+      "wrong": "Enter that submits the form from a textarea",
+      "right": "Enter adds a line; a Button submits"
+    },
+    {
+      "wrong": "A count announced on every key",
+      "right": "The built in live region, which speaks near the limit and past it"
+    }
+  ],
+  "contract": {
+    "optionalParts": [
+      "count"
+    ]
+  },
+  "since": "0.1.0"
+}

@@ -1,0 +1,202 @@
+/*
+ * Textarea: a bordered box (the root) around a native <textarea> (the
+ * control part) and an optional character count (the count part).
+ * Sources: the Input of wave 0 (the control border, hover, the focus glow
+ * and ring, invalid, read only and disabled looks) and GoBanana `.st-input`
+ * through it. GoBanana itself could not be read in this session.
+ *
+ * Private properties on the root (docs/contracts/anatomy.md, one convention).
+ * Recipes override these; states only swap them:
+ *   --_textarea-padding-inline, --_textarea-padding-block, --_textarea-font-size,
+ *   --_textarea-radius, --_textarea-bg, --_textarea-fg, --_textarea-border-color
+ *   (at rest, -hover, -focus, -invalid), --_textarea-ring (the focus glow and
+ *   ring), --_textarea-count-fg (the count, -over past the limit).
+ *   --_textarea-line (one line of text), --_textarea-rows (the floor of the
+ *   auto height) and --_textarea-max-rows (the cap; none, an invalid number,
+ *   leaves max-block-size at none). The component sets the last two inline
+ *   from the rows and maxRows props.
+ *
+ * A pill never wraps lines, so the radius is radius.field in every shape.
+ * The glow and ring sit on ::before, whose opacity fades, since only
+ * transform and opacity may animate.
+ */
+@layer ds.base {
+  [data-ds='textarea'] {
+    --_textarea-padding-inline: var(--ds-space-m);
+    --_textarea-padding-block: var(--ds-space-s);
+    --_textarea-font-size: var(--ds-font-size-s);
+    --_textarea-line: calc(var(--_textarea-font-size) * var(--ds-font-leading-normal));
+    --_textarea-rows: 3;
+    --_textarea-max-rows: none;
+    --_textarea-radius: var(--ds-radius-field);
+    --_textarea-bg: transparent;
+    --_textarea-fg: var(--ds-color-text-default);
+    --_textarea-border-color: var(--ds-color-border-control);
+    --_textarea-border-color-hover: var(--ds-color-border-control-hover);
+    --_textarea-border-color-focus: var(--ds-color-border-control-hover);
+    --_textarea-border-color-invalid: var(--ds-color-state-danger-text);
+    --_textarea-ring: var(--ds-elevation-input-focus), var(--ds-focus-shadow-ring);
+    --_textarea-count-fg: var(--ds-color-text-muted);
+    --_textarea-count-fg-over: var(--ds-color-state-danger-text);
+
+    position: relative;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    inline-size: 100%;
+    min-inline-size: 0;
+    border: var(--ds-border-width-default) solid var(--_textarea-border-color);
+    border-radius: var(--_textarea-radius);
+    background-color: var(--_textarea-bg);
+    color: var(--_textarea-fg);
+    font-family: var(--ds-font-family-sans);
+    font-size: var(--_textarea-font-size);
+    font-weight: var(--ds-font-weight-regular);
+    line-height: var(--ds-font-leading-normal);
+    cursor: text;
+  }
+
+  /* The glow and the ring, just outside the border. */
+  [data-ds='textarea']::before {
+    content: '';
+    position: absolute;
+    inset: calc(var(--ds-border-width-default) * -1);
+    border-radius: inherit;
+    box-shadow: var(--_textarea-ring);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity var(--ds-duration-base) var(--ds-ease-default);
+  }
+
+  [data-ds='textarea'] > * {
+    position: relative;
+  }
+
+  [data-ds='textarea'][data-size='xs'] {
+    --_textarea-padding-inline: var(--ds-space-xs);
+    --_textarea-padding-block: var(--ds-space-3xs);
+  }
+
+  [data-ds='textarea'][data-size='sm'] {
+    --_textarea-padding-inline: var(--ds-space-s);
+    --_textarea-padding-block: var(--ds-space-2xs);
+  }
+
+  /* Site fields: a fixed 16px, so phones do not zoom on focus. Arabic too. */
+  [data-ds='textarea'][data-size='lg'],
+  [data-ds='textarea'][data-size='lg']:lang(ar) {
+    --_textarea-padding-inline: var(--ds-space-2xl);
+    --_textarea-padding-block: var(--ds-space-m);
+    --_textarea-font-size: var(--ds-font-size-fixed-m);
+  }
+
+  /*
+   * The native textarea: no box of its own. It holds the padding, so the
+   * scroll area runs to the border. The floor is rows lines, the cap
+   * maxRows lines (none when unset), in the line height of the text.
+   */
+  [data-ds='textarea'] > [data-part='control'] {
+    box-sizing: border-box;
+    inline-size: 100%;
+    min-inline-size: 0;
+    min-block-size: calc(var(--_textarea-rows) * var(--_textarea-line) + var(--_textarea-padding-block) * 2);
+    max-block-size: calc(var(--_textarea-max-rows) * var(--_textarea-line) + var(--_textarea-padding-block) * 2);
+    margin: 0;
+    padding-block: var(--_textarea-padding-block);
+    padding-inline: var(--_textarea-padding-inline);
+    border: 0;
+    border-radius: inherit;
+    background: transparent;
+    color: inherit;
+    font: inherit;
+    letter-spacing: inherit;
+    outline: none;
+    resize: vertical;
+    field-sizing: fixed;
+  }
+
+  /* Auto height: grows with the text between the floor and the cap. */
+  [data-ds='textarea'][data-auto-height] > [data-part='control'] {
+    field-sizing: content;
+    resize: none;
+  }
+
+  [data-ds='textarea'] > [data-part='control']::placeholder {
+    color: var(--ds-color-text-placeholder);
+    opacity: 1;
+  }
+
+  /* The count: digits run left to right in every language, at the inline end. */
+  [data-ds='textarea'] > [data-part='count'] {
+    align-self: end;
+    padding-inline: var(--_textarea-padding-inline);
+    padding-block-end: var(--_textarea-padding-block);
+    color: var(--_textarea-count-fg);
+    font-size: var(--ds-font-size-xs);
+    font-variant-numeric: tabular-nums;
+    line-height: var(--ds-font-leading-snug);
+    direction: ltr;
+    unicode-bidi: isolate;
+    cursor: default;
+  }
+
+  [data-ds='textarea'][data-over] {
+    --_textarea-count-fg: var(--_textarea-count-fg-over);
+  }
+
+  [data-ds='textarea']:hover:not([data-disabled], [data-readonly], [data-invalid], :focus-within) {
+    --_textarea-border-color: var(--_textarea-border-color-hover);
+  }
+
+  /* Focus: the glow and the 2px ring fade in. The transparent outline shows in forced colors mode. */
+  [data-ds='textarea']:focus-within {
+    --_textarea-border-color: var(--_textarea-border-color-focus);
+
+    outline: var(--ds-border-width-strong) solid transparent;
+    outline-offset: var(--ds-border-width-default);
+  }
+
+  [data-ds='textarea']:focus-within::before {
+    opacity: 1;
+  }
+
+  [data-ds='textarea'][data-invalid],
+  [data-ds='textarea'][data-invalid]:focus-within {
+    --_textarea-border-color: var(--_textarea-border-color-invalid);
+  }
+
+  /* Read only: readable and focusable. A dashed border and a quiet fill tell it apart. */
+  [data-ds='textarea'][data-readonly] {
+    --_textarea-bg: var(--ds-color-bg-overlay-5);
+
+    border-style: dashed;
+    cursor: default;
+  }
+
+  [data-ds='textarea'][data-readonly] > [data-part='control'] {
+    cursor: default;
+    resize: none;
+  }
+
+  [data-ds='textarea'][data-disabled] {
+    opacity: var(--ds-opacity-disabled);
+    cursor: not-allowed;
+  }
+
+  [data-ds='textarea'][data-disabled] > [data-part='control'] {
+    cursor: not-allowed;
+    resize: none;
+  }
+
+  @media (forced-colors: active) {
+    [data-ds='textarea']::before {
+      display: none;
+    }
+
+    [data-ds='textarea'][data-disabled] {
+      --_textarea-border-color: GrayText;
+
+      color: GrayText;
+    }
+  }
+}
