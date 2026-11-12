@@ -1,0 +1,143 @@
+/*
+ * StatusDot: a small state marker next to its label. The label takes the
+ * font family and color of the text around it; the size axis sets its size.
+ *
+ * Private plumbing (docs/contracts/anatomy.md, one convention), on the root:
+ *
+ *   --_status-dot-size    the dot diameter (fixed space, density does not change it)
+ *   --_status-dot-bg      the dot color, a state border token: 3:1 on body, surface and surface-2
+ *   --_status-dot-gap     between the dot and the label
+ *   --_status-dot-font-size
+ *
+ * The pulse is a ring on the dot's ::before (the glow layer) that grows and
+ * fades: transform and opacity only, three times, then it stops. Under
+ * reduced motion it does not play.
+ */
+@layer ds.base {
+  [data-ds='status-dot'] {
+    --_status-dot-size: var(--ds-space-fixed-m);
+    --_status-dot-bg: var(--ds-color-text-muted);
+    --_status-dot-gap: var(--ds-space-xs);
+    --_status-dot-font-size: var(--ds-font-size-m);
+
+    display: inline-flex;
+    align-items: flex-start;
+    gap: var(--_status-dot-gap);
+    min-inline-size: 0;
+    font-size: var(--_status-dot-font-size);
+    line-height: var(--ds-font-leading-snug);
+    vertical-align: middle;
+  }
+
+  [data-ds='status-dot'][data-size='sm'] {
+    --_status-dot-size: var(--ds-space-fixed-s);
+    --_status-dot-gap: var(--ds-space-2xs);
+    --_status-dot-font-size: var(--ds-font-size-s);
+  }
+
+  [data-ds='status-dot'] > [data-part='dot'] {
+    position: relative;
+    flex: none;
+    inline-size: var(--_status-dot-size);
+    block-size: var(--_status-dot-size);
+    /* Centered on the first line of the label, so a wrapping label keeps the dot at its start. */
+    margin-block-start: calc((var(--_status-dot-font-size) * var(--ds-font-leading-snug) - var(--_status-dot-size)) / 2);
+    border-radius: var(--ds-radius-pill);
+    background-color: var(--_status-dot-bg);
+  }
+
+  [data-ds='status-dot'] > [data-part='label'] {
+    min-inline-size: 0;
+    overflow-wrap: anywhere;
+  }
+
+  /* Only the dot is drawn: center it on the line it sits in. */
+  [data-ds='status-dot'][data-hide-label] {
+    align-items: center;
+  }
+
+  [data-ds='status-dot'][data-hide-label] > [data-part='dot'] {
+    margin-block-start: 0;
+  }
+
+  /* Read by screen readers, not drawn. */
+  [data-ds='status-dot'][data-hide-label] > [data-part='label'] {
+    position: absolute;
+    inline-size: var(--ds-border-width-default);
+    block-size: var(--ds-border-width-default);
+    margin: calc(-1 * var(--ds-border-width-default));
+    padding: 0;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  /* ------------------------------------------------------------ tones */
+
+  [data-ds='status-dot'][data-tone='accent'] {
+    --_status-dot-bg: var(--ds-color-primary-border);
+  }
+
+  [data-ds='status-dot'][data-tone='info'] {
+    --_status-dot-bg: var(--ds-color-state-info-border);
+  }
+
+  [data-ds='status-dot'][data-tone='success'] {
+    --_status-dot-bg: var(--ds-color-state-success-border);
+  }
+
+  [data-ds='status-dot'][data-tone='warning'] {
+    --_status-dot-bg: var(--ds-color-state-warning-border);
+  }
+
+  [data-ds='status-dot'][data-tone='danger'] {
+    --_status-dot-bg: var(--ds-color-state-danger-border);
+  }
+
+  /* ------------------------------------------------------------ pulse */
+
+  [data-ds='status-dot'][data-pulse] > [data-part='dot']::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background-color: var(--_status-dot-bg);
+    opacity: 0;
+    animation: ds-status-dot-pulse var(--ds-duration-shimmer) var(--ds-ease-out) 3;
+  }
+
+  @keyframes ds-status-dot-pulse {
+    from {
+      opacity: 0.6;
+      transform: scale(1);
+    }
+
+    to {
+      opacity: 0;
+      transform: scale(2.5);
+    }
+  }
+
+  /* ------------------------------------------------------------ reduced motion, forced colors */
+
+  @media (prefers-reduced-motion: reduce) {
+    [data-ds='status-dot'][data-pulse] > [data-part='dot']::before {
+      animation: none;
+    }
+  }
+
+  /* The dot keeps a shape in forced colors: the system text color, no pulse. */
+  @media (forced-colors: active) {
+    [data-ds='status-dot'] {
+      --_status-dot-bg: CanvasText;
+    }
+
+    [data-ds='status-dot'] > [data-part='dot'] {
+      forced-color-adjust: none;
+    }
+
+    [data-ds='status-dot'][data-pulse] > [data-part='dot']::before {
+      animation: none;
+    }
+  }
+}

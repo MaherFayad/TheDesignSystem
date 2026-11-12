@@ -1608,6 +1608,166 @@
     "since": "0.1.0"
   },
   {
+    "name": "StatusDot",
+    "kind": "component",
+    "family": "feedback",
+    "summary": "A small colored dot with the state in words next to it: Online, Sync failed, Syncing.",
+    "useWhen": [
+      "The live state of a person, a service or a device, next to its name",
+      "A row in a list or table that needs its state at a glance, with the words in the label",
+      "A state that is going on now, such as syncing or recording, with pulse"
+    ],
+    "avoidWhen": [
+      "The state is the only thing on the line and needs a filled shape to read as a tag",
+      "A count of unread or new items",
+      "A message that explains what happened or what to do",
+      "The dot would be the only sign of the state, with no words anywhere"
+    ],
+    "insteadUse": {
+      "A state as a tag with a filled shape": "Badge",
+      "A count of new items": "Badge",
+      "A message about a section that needs action": "Alert",
+      "Progress of a task": "ProgressBar",
+      "A small busy sign with no state word": "Spinner"
+    },
+    "anatomy": [
+      "root",
+      "dot",
+      "label"
+    ],
+    "slots": {
+      "label": {
+        "accepts": "text",
+        "min": 1,
+        "max": 1
+      }
+    },
+    "props": {
+      "label": {
+        "type": "node",
+        "required": true,
+        "description": "The state in words. Always rendered: visible, or visually hidden with hideLabel."
+      },
+      "tone": {
+        "type": [
+          "neutral",
+          "accent",
+          "success",
+          "warning",
+          "danger",
+          "info"
+        ],
+        "default": "neutral",
+        "description": "The dot color, from the state border tokens (3:1 against body, surface and surface-2). accent takes color.primary.border."
+      },
+      "size": {
+        "type": [
+          "sm",
+          "md"
+        ],
+        "default": "md",
+        "description": "md is an 8px dot with font.size.m text, sm a 6px dot with font.size.s. Fixed sizes: density does not change the dot."
+      },
+      "pulse": {
+        "type": "boolean",
+        "default": false,
+        "description": "A ring grows from the dot and fades, three times, then stops (under five seconds, WCAG 2.2.2). Only for a live state. Sets data-pulse."
+      },
+      "hideLabel": {
+        "type": "boolean",
+        "default": false,
+        "description": "Hides the label visually and keeps it for screen readers. Only where visible text nearby already names the same state, such as a group heading Online now; otherwise the dot would be color alone. Sets data-hide-label."
+      }
+    },
+    "states": [
+      "data-pulse",
+      "data-hide-label"
+    ],
+    "a11y": {
+      "role": "None: a span with the label as text. The dot is aria-hidden.",
+      "focus": "Not focusable.",
+      "keys": {},
+      "announce": "Not announced. The label is read in reading order. A consumer that changes the state live and needs it read puts role status on the root or on a parent.",
+      "native": {
+        "accessibilityRole": "text",
+        "accessibilityState": []
+      },
+      "notes": [
+        "Never color alone (WCAG 1.4.1): the label is required.",
+        "The dot is a non text mark at 3:1 against the surfaces it sits on (WCAG 1.4.11).",
+        "The pulse plays three times and stops; it does not restart on a re-render. The label carries the live state after that."
+      ]
+    },
+    "content": {
+      "en": {
+        "label": "One to three words, sentence case, the state not the color: Online, Sync failed, Waiting for review."
+      },
+      "ar": {
+        "label": "Noun or adjective forms, no diacritics: متصل، فشل المزامنة، في الانتظار."
+      }
+    },
+    "tokens": [
+      "space.fixed-s",
+      "space.fixed-m",
+      "space.2xs",
+      "space.xs",
+      "radius.pill",
+      "color.text.muted",
+      "color.primary.border",
+      "color.state.info.border",
+      "color.state.success.border",
+      "color.state.warning.border",
+      "color.state.danger.border",
+      "font.size.s",
+      "font.size.m",
+      "font.leading.snug",
+      "border.width.default",
+      "duration.shimmer",
+      "ease.out"
+    ],
+    "motion": "thinking",
+    "frameworks": {
+      "react": {
+        "status": "ready",
+        "behavior": "hand built",
+        "example": "StatusDot.demo.tsx"
+      },
+      "angular": {
+        "status": "planned",
+        "behavior": "hand built"
+      },
+      "native": {
+        "status": "planned",
+        "behavior": "hand built",
+        "note": "A View dot and a Text label; the pulse through Reanimated, off under reduce motion."
+      }
+    },
+    "styles": {
+      "studio": "Tokens only: state colors on a flat surface.",
+      "desk": "Tokens only: the same dot; accent is the yellow primary border.",
+      "neutral": "Tokens only."
+    },
+    "mistakes": [
+      {
+        "wrong": "A green dot with no words",
+        "right": "A green dot with the label Online, or hideLabel with the label still set"
+      },
+      {
+        "wrong": "pulse on every dot in a list",
+        "right": "pulse only on a state that is going on now, such as Syncing"
+      },
+      {
+        "wrong": "Naming the color: Green",
+        "right": "Naming the state: Online"
+      },
+      {
+        "wrong": "hideLabel in a mixed list where only the color tells states apart",
+        "right": "Visible labels, or group the rows under headings that name the state"
+      }
+    ],
+    "since": "0.1.0"
+  },
+  {
     "name": "Theme",
     "kind": "component",
     "family": "foundations",
