@@ -1,0 +1,22 @@
+{
+  "name": "@the-system/styles",
+  "version": "0.0.0",
+  "private": true,
+  "license": "UNLICENSED",
+  "type": "module",
+  "exports": {
+    ".": "./index.css",
+    "./index.css": "./index.css",
+    "./*/style.json": "./*/style.json",
+    "./*/icons": "./*/icons.ts",
+    "./*/motion": "./*/motion.ts",
+    "./*/native/*": "./*/native/*.ts",
+    "./*": "./*/index.css",
+    "./registry": "./registry.gen.ts"
+  },
+  "dependencies": {
+    "@fontsource-variable/inter": "^5.3.0",
+    "@fontsource/ibm-plex-sans-arabic": "^5.3.0",
+    "@fontsource/instrument-sans": "^5.3.0"
+  }
+}

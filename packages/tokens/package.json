@@ -1,0 +1,19 @@
+{
+  "name": "@the-system/tokens",
+  "version": "0.0.0",
+  "private": true,
+  "license": "UNLICENSED",
+  "type": "module",
+  "exports": {
+    ".": "./dist/native/index.ts",
+    "./css": "./dist/css/tokens.css",
+    "./css/*": "./dist/css/*",
+    "./native": "./dist/native/index.ts",
+    "./tailwind": "./dist/tailwind/theme.css",
+    "./figma/*": "./dist/figma/*",
+    "./contract": "./src/contract.json"
+  },
+  "scripts": {
+    "build": "tsx build.ts"
+  }
+}
