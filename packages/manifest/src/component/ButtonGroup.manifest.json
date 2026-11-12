@@ -1,0 +1,168 @@
+{
+  "name": "ButtonGroup",
+  "kind": "component",
+  "family": "actions",
+  "summary": "A labelled row or column of two to five related actions, spaced apart or attached into one seamed control.",
+  "useWhen": [
+    "Two to five actions on the same object that belong together: save, preview and share a page",
+    "A compact set of icon actions in a toolbar, attached: zoom in and zoom out, previous and next page",
+    "The actions of a form or a card footer, spaced, so they share one size and wrap together",
+    "The base of a split control: a main action joined to its menu trigger (SplitButton)"
+  ],
+  "avoidWhen": [
+    "Choosing one value or view from a set, where one option stays selected",
+    "Turning options on and off, alone or several at once",
+    "More than five actions, or actions that are rarely used",
+    "Actions that do not relate to each other, only placed near each other"
+  ],
+  "insteadUse": {
+    "One choice among views or modes": "SegmentedControl",
+    "Options that stay on or off": "ToggleGroup",
+    "More than five actions, or rare ones": "DropdownMenu, or one main Button plus a DropdownMenu",
+    "A main action with related variants": "SplitButton",
+    "A bar of mixed controls with arrow key navigation": "Toolbar",
+    "Navigation between pages": "Pagination or Link"
+  },
+  "anatomy": ["root"],
+  "slots": {
+    "root": {
+      "accepts": ["Button", "IconButton", "ToggleButton", "SplitButton"],
+      "min": 1,
+      "max": 5
+    }
+  },
+  "props": {
+    "aria-label": {
+      "type": "string",
+      "description": "The group's name, for example Page actions. Required unless aria-labelledby is set."
+    },
+    "aria-labelledby": {
+      "type": "string",
+      "description": "The id of a visible heading that names the group. Required unless aria-label is set."
+    },
+    "size": {
+      "type": ["xs", "sm", "md", "lg"],
+      "default": "md",
+      "description": "Passed to every child that does not set its own size. Spaced xs and sm groups use the smaller gap."
+    },
+    "emphasis": {
+      "type": ["solid", "soft", "outline", "ghost"],
+      "description": "Passed to every child that does not set its own. No default: each child keeps its own default (soft for Button, ghost for IconButton). No link: links are not grouped."
+    },
+    "shape": {
+      "type": ["default", "pill", "square"],
+      "description": "Passed to every child that does not set its own. No default. Attached, only the outer corners take the shape."
+    },
+    "orientation": {
+      "type": ["horizontal", "vertical"],
+      "default": "horizontal",
+      "description": "A row or a column. Sets data-orientation. A spaced row wraps; a column stretches its children to the widest."
+    },
+    "attached": {
+      "type": "boolean",
+      "default": false,
+      "description": "Joins the children: no gap, inner corners square on the logical sides (they flip in RTL), a 1px divider. Sets data-attached. An attached row never wraps; its labels end in an ellipsis when squeezed."
+    },
+    "fullWidth": {
+      "type": "boolean",
+      "default": false,
+      "description": "Fills the width of its container; Buttons in a row share it equally, IconButtons keep their square. Sets data-full-width."
+    },
+    "children": {
+      "type": "node",
+      "required": true,
+      "description": "Two to five Buttons, IconButtons, ToggleButtons or SplitButtons. Tone stays per child."
+    }
+  },
+  "states": ["data-orientation", "data-attached", "data-full-width"],
+  "a11y": {
+    "role": "group, named by aria-label or aria-labelledby",
+    "focus": "No roving focus: every child is its own tab stop, disabled children included (they use aria-disabled). Attached children draw the focus ring inside their box, so the next child never covers it.",
+    "keys": {
+      "Tab": "Moves focus to the next child, then out of the group",
+      "Shift+Tab": "Moves focus to the previous child"
+    },
+    "announce": "Screen readers announce the group name when focus enters it, then each child by its own name.",
+    "native": {
+      "accessibilityRole": "none"
+    },
+    "notes": [
+      "The group adds no keys. Arrow keys do nothing here; a set that should move with arrows is a Toolbar, a ToggleGroup or a SegmentedControl.",
+      "Every IconButton child needs its own label: the group name does not name its children.",
+      "Tone stays on each child, so a danger action in a group stays danger.",
+      "Under forced colors the system draws every child's border, so the seam stays visible, and the focus outline is pulled inside the child."
+    ]
+  },
+  "content": {
+    "en": {
+      "name": "Name the group by what its actions act on: Page actions, Board view. Sentence case.",
+      "labels": "Each Button is a verb plus a noun in sentence case: Save draft, Preview page. Never OK, Continue, Confirm or Yes.",
+      "order": "The most used action first, in the reading direction. A destructive action last, or apart."
+    },
+    "ar": {
+      "name": "Noun form, no diacritics: إجراءات الصفحة.",
+      "labels": "Noun form labels, no diacritics: حفظ المسودة، معاينة الصفحة. Never the imperative.",
+      "order": "The same order as English: it flips with the direction, so the first action sits on the right."
+    }
+  },
+  "tokens": [
+    "space.xs",
+    "space.2xs",
+    "border.width.default",
+    "border.width.strong",
+    "color.border.default",
+    "color.focus.ring",
+    "color.focus.ring-on-primary-inner",
+    "color.focus.ring-on-primary-outer"
+  ],
+  "frameworks": {
+    "react": {
+      "status": "ready",
+      "behavior": "hand built, role group",
+      "example": "ButtonGroup.demo.tsx",
+      "note": "No motion: the group itself never moves; the children keep their own (Button press). The axes reach the children through ButtonGroupContext and, for direct children, as props they leave unset."
+    },
+    "angular": {
+      "status": "planned",
+      "behavior": "[dsButtonGroup] host bindings, an injection token for the axes",
+      "note": "The host div is the root. Grouped dsButton directives read the axes from the token and let their own inputs win. ButtonGroup.css is used as is."
+    },
+    "native": {
+      "status": "planned",
+      "behavior": "react-native:View with accessibilityRole none and an accessibilityLabel",
+      "note": "Attached corners through the style function, flipped by I18nManager."
+    }
+  },
+  "styles": {
+    "studio": "Overlay filled children. Attached, the seam is color.border.default over the overlay fill; the control radius rounds only the outer corners.",
+    "desk": "Children are pills, so an attached group reads as one pill with square inner corners. The roll label runs in each child as usual.",
+    "neutral": "Takes the tokens of the Neutral style, no recipe."
+  },
+  "mistakes": [
+    {
+      "wrong": "A ButtonGroup with one button marked as the selected view",
+      "right": "SegmentedControl, which keeps one option selected and says so"
+    },
+    {
+      "wrong": "Eight actions in one attached group",
+      "right": "At most five; the rest in a DropdownMenu behind a More actions IconButton"
+    },
+    {
+      "wrong": "A group with no aria-label or aria-labelledby",
+      "right": "A name that says what the actions act on: Page actions"
+    },
+    {
+      "wrong": "Two solid accent buttons attached side by side as two main actions",
+      "right": "One main action, or a SplitButton for a main action with variants"
+    },
+    {
+      "wrong": "An attached group of Buttons and IconButtons with no emphasis, so soft Buttons sit next to a ghost IconButton",
+      "right": "Set emphasis on the attached group, so every child shares one fill"
+    },
+    {
+      "wrong": "Arrow keys wired to move between the children",
+      "right": "Leave each child in the tab order, or use Toolbar for arrow key navigation"
+    }
+  ],
+  "since": "0.1.0"
+}

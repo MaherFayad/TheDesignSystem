@@ -1,0 +1,139 @@
+/*
+ * Link: a text link, in a sentence or on its own line. Source: GoBanana
+ * `.st-alert a` in studio-components.css (always underlined). Follows "One
+ * convention for component CSS and props" in docs/contracts/anatomy.md.
+ *
+ * Private properties on the root (recipes override these):
+ *
+ *   --_link-fg, -fg-hover                        the text color
+ *   --_link-decoration, -decoration-hover        the underline color
+ *   --_link-thickness, -thickness-hover          the underline thickness
+ *   --_link-font-size                            used only when data-size is set
+ *   --_link-gap, -radius, -ring
+ *
+ * The underline is drawn at rest and on hover, so a link in running text
+ * never relies on color alone (WCAG 1.4.1). Hover makes it thicker and
+ * brighter. Colors swap at once: nothing animates.
+ */
+@layer ds.base {
+  [data-ds='link'] {
+    --_link-fg: var(--ds-color-text-link);
+    --_link-fg-hover: var(--ds-color-text-bright);
+    --_link-decoration: var(--ds-color-border-control);
+    --_link-decoration-hover: currentColor;
+    --_link-thickness: var(--ds-border-width-default);
+    --_link-thickness-hover: var(--ds-border-width-strong);
+    --_link-font-size: var(--ds-font-size-m);
+    --_link-gap: var(--ds-space-3xs);
+    --_link-radius: var(--ds-radius-xs);
+    --_link-ring: var(--ds-focus-shadow-ring);
+
+    border-radius: var(--_link-radius);
+    color: var(--_link-fg);
+    text-decoration-line: none;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    /* The focus ring wraps every line of a link that breaks. */
+    -webkit-box-decoration-break: clone;
+    box-decoration-break: clone;
+  }
+
+  [data-ds='link'] > [data-part='label'] {
+    text-decoration-line: underline;
+    text-decoration-color: var(--_link-decoration);
+    text-decoration-thickness: var(--_link-thickness);
+    text-underline-offset: var(--ds-space-3xs);
+    text-decoration-skip-ink: auto;
+  }
+
+  /* The external marker: a 12px icon that never wraps away from the last word's line on its own. */
+  [data-ds='link'] > [data-part='end'] {
+    margin-inline-start: var(--_link-gap);
+    white-space: nowrap;
+  }
+
+  /* "opens in a new tab": read by screen readers, not drawn. */
+  [data-ds='link'] > [data-part='end'] > :not([data-ds='icon']) {
+    position: absolute;
+    inline-size: var(--ds-border-width-default);
+    block-size: var(--ds-border-width-default);
+    margin: calc(-1 * var(--ds-border-width-default));
+    padding: 0;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  /* ------------------------------------------------------------ sizes: none inherits the text around it */
+
+  [data-ds='link'][data-size] {
+    font-size: var(--_link-font-size);
+  }
+
+  [data-ds='link'][data-size='xs'] {
+    --_link-font-size: var(--ds-font-size-xs);
+  }
+
+  [data-ds='link'][data-size='sm'] {
+    --_link-font-size: var(--ds-font-size-s);
+  }
+
+  [data-ds='link'][data-size='lg'] {
+    --_link-font-size: var(--ds-font-size-l);
+  }
+
+  /* ------------------------------------------------------------ standalone: a 24px target on its own line */
+
+  /* Each line is a target tall. An inline block, not flex, so the external icon follows the last word when the text wraps. */
+  [data-ds='link'][data-standalone] {
+    display: inline-block;
+    max-inline-size: 100%;
+    line-height: var(--ds-size-target-min);
+    vertical-align: middle;
+  }
+
+  /* ------------------------------------------------------------ tones */
+
+  [data-ds='link'][data-tone='accent'] {
+    --_link-fg: var(--ds-color-primary-on-surface);
+    --_link-fg-hover: var(--ds-color-primary-on-surface);
+    --_link-decoration: var(--ds-color-primary-border);
+  }
+
+  /* ------------------------------------------------------------ states: swap the private properties */
+
+  [data-ds='link']:hover:not([data-disabled]) {
+    --_link-fg: var(--_link-fg-hover);
+    --_link-decoration: var(--_link-decoration-hover);
+    --_link-thickness: var(--_link-thickness-hover);
+  }
+
+  /* The transparent outline is set only here, so forced colors mode draws it on focus and nowhere else. */
+  [data-ds='link']:focus-visible {
+    outline: var(--ds-border-width-strong) solid transparent;
+    outline-offset: var(--ds-border-width-strong);
+    box-shadow: var(--_link-ring);
+  }
+
+  /* Disabled keeps focus (aria-disabled), dims and stops reacting. The underline stays. */
+  [data-ds='link'][data-disabled] {
+    opacity: var(--ds-opacity-disabled);
+    cursor: not-allowed;
+  }
+
+  /* ------------------------------------------------------------ forced colors */
+
+  @media (forced-colors: active) {
+    [data-ds='link'] > [data-part='label'] {
+      text-decoration-color: currentColor;
+    }
+
+    [data-ds='link']:focus-visible {
+      outline-color: Highlight;
+    }
+
+    [data-ds='link'][data-disabled] {
+      color: GrayText;
+    }
+  }
+}

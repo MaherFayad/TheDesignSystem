@@ -1,0 +1,191 @@
+{
+  "name": "Link",
+  "kind": "component",
+  "family": "actions",
+  "summary": "Navigation to another page, place or site, inside a sentence or on its own line. Always underlined.",
+  "useWhen": [
+    "Navigation inside running text: a sentence that points to a guide, a policy or a setting",
+    "A link that stands on its own line under a card, a form or an empty state, with standalone",
+    "A link to another site, with external, so it opens a new tab and says so",
+    "A router link that must look like text, through asChild"
+  ],
+  "avoidWhen": [
+    "An action that changes data or starts a task on this page (save, send, delete)",
+    "The main call to action of a view that must read as a button",
+    "Navigation between sections of the app shell or between tabs of one view",
+    "Link text that only says Click here, Here or More"
+  ],
+  "insteadUse": {
+    "An action on this page": "Button",
+    "A link that must look like a button": "Button with asChild",
+    "A quiet action that reads like text but does not navigate": "Button with emphasis link",
+    "Only an icon": "IconButton with asChild",
+    "App navigation": "NavigationMenu or Sidebar",
+    "Views of one page": "Tabs"
+  },
+  "anatomy": ["root", "label", "end"],
+  "slots": {
+    "label": {
+      "accepts": "text",
+      "min": 1,
+      "max": 1
+    },
+    "end": {
+      "accepts": ["Icon"],
+      "max": 1
+    }
+  },
+  "props": {
+    "href": {
+      "type": "string",
+      "description": "Where the link goes. Removed while disabled."
+    },
+    "tone": {
+      "type": ["neutral", "accent"],
+      "default": "neutral",
+      "description": "neutral reads as color.text.link, accent as color.primary.on-surface (the yellow family in Desk)."
+    },
+    "size": {
+      "type": ["xs", "sm", "md", "lg"],
+      "description": "Font size from font.size xs, s, m and l. No default: without size the link inherits the font size of the text around it, which is what a link in a sentence wants."
+    },
+    "external": {
+      "type": "boolean",
+      "default": false,
+      "description": "Opens a new tab (target _blank, rel noopener noreferrer unless passed) and renders the end part: the external icon, mirrored in RTL, and visually hidden words after a comma."
+    },
+    "externalLabel": {
+      "type": "string",
+      "default": "opens in a new tab",
+      "description": "The hidden words of an external link. Under an Arabic Theme the default is يفتح في تبويب جديد."
+    },
+    "standalone": {
+      "type": "boolean",
+      "default": false,
+      "description": "A link on its own line: an inline flex box at least size.target-min (24px) tall. Sets data-standalone. Leave it off inside a sentence, where the inline target exception of WCAG 2.5.8 applies."
+    },
+    "disabled": {
+      "type": "boolean",
+      "default": false,
+      "description": "Removes the href, sets role link, aria-disabled and data-disabled, and keeps the link in the tab order so a Tooltip can say why. Click and middle click do nothing."
+    },
+    "asChild": {
+      "type": "boolean",
+      "default": false,
+      "description": "Renders the single child element, for example a router link, as the link. A disabled child loses its href."
+    },
+    "children": {
+      "type": "node",
+      "required": true,
+      "description": "The link text. It names the place, not the gesture."
+    }
+  },
+  "states": ["data-disabled", "data-standalone"],
+  "a11y": {
+    "role": "link (native a with href; role link is set while disabled, when the href is gone)",
+    "focus": "In the tab order, disabled included. A 2px ring from focus.shadow.ring on keyboard focus, drawn around every line of a link that wraps.",
+    "keys": {
+      "Enter": "Follows the link",
+      "Tab": "Moves focus to the next control"
+    },
+    "announce": "The label is the accessible name. An external link adds the hidden words after a comma: Open the docs, opens in a new tab.",
+    "native": {
+      "accessibilityRole": "link",
+      "accessibilityState": ["disabled"]
+    },
+    "notes": [
+      "The underline is drawn at rest and on hover, so a link in running text is never told apart by color alone (WCAG 1.4.1). Hover makes it thicker.",
+      "Inline target exception (WCAG 2.5.8): a link inside a sentence keeps the line height of the text and may be under 24px tall. A link on its own line takes standalone and is at least 24px tall.",
+      "Space does not follow a link, only Enter, as in the browser.",
+      "The external icon is hidden from assistive tech; the hidden words carry the meaning.",
+      "Under forced colors the system link color applies, the underline takes the text color and the focus outline uses Highlight.",
+      "No native title attribute. Hints come from Tooltip."
+    ]
+  },
+  "content": {
+    "en": {
+      "label": "Name the destination in sentence case: Read the pricing guide, the sharing guide. Never Click here, Here, More or Learn more on its own.",
+      "sentence": "Put the link on the words that say where it goes, not on a whole sentence.",
+      "external": "Do not write opens in a new tab in the visible text: external adds it for screen readers and the icon shows it."
+    },
+    "ar": {
+      "label": "Noun form, no diacritics: دليل المشاركة، سياسة الخصوصية. Never اضغط هنا.",
+      "sentence": "Link only the words that name the place, and keep Latin runs in Bidi.",
+      "digits": "Western digits."
+    }
+  },
+  "tokens": [
+    "color.text.link",
+    "color.text.bright",
+    "color.border.control",
+    "color.primary.on-surface",
+    "color.primary.border",
+    "border.width.default",
+    "border.width.strong",
+    "font.size.xs",
+    "font.size.s",
+    "font.size.m",
+    "font.size.l",
+    "space.3xs",
+    "radius.xs",
+    "size.target-min",
+    "size.icon.sm",
+    "focus.shadow.ring",
+    "color.focus.ring",
+    "opacity.disabled"
+  ],
+  "frameworks": {
+    "react": {
+      "status": "ready",
+      "behavior": "native a, radix:Slot",
+      "example": "Link.demo.tsx",
+      "note": "No motion: color and underline swap at once on hover, so there is no pattern to name and nothing to reduce."
+    },
+    "angular": {
+      "status": "planned",
+      "behavior": "a[dsLink], host bindings",
+      "note": "The host anchor is the root. No asChild: a[dsLink] on a routerLink anchor is the router form."
+    },
+    "native": {
+      "status": "planned",
+      "behavior": "react-native:Text with accessibilityRole link",
+      "note": "A pressable Text inside running text; Linking.openURL for external links."
+    }
+  },
+  "styles": {
+    "studio": "Bright text (color.text.link) with a soft control colored underline that turns to the text color and thickens on hover. Accent reads the same as neutral in Studio, since its primary is the neutral fill.",
+    "desk": "Accent is the yellow family: color.primary.on-surface, yellow on dark and a dark gold on light, with a yellow underline. Neutral matches Studio.",
+    "neutral": "Takes the tokens of the Neutral style, no recipe."
+  },
+  "mistakes": [
+    {
+      "wrong": "Link text Click here or Learn more",
+      "right": "Link text that names the place: Read the pricing guide"
+    },
+    {
+      "wrong": "A link told apart from the sentence by color only",
+      "right": "Link, which keeps the underline at rest"
+    },
+    {
+      "wrong": "A Link that saves, sends or deletes",
+      "right": "A Button; a link only navigates"
+    },
+    {
+      "wrong": "target _blank with no hint",
+      "right": "external, which adds the icon and the hidden words"
+    },
+    {
+      "wrong": "A standalone link row under 24px tall",
+      "right": "standalone on links that sit on their own line"
+    }
+  ],
+  "contract": {
+    "optionalParts": ["end"],
+    "keys": {
+      "Enter": {
+        "expect": "click"
+      }
+    }
+  },
+  "since": "0.1.0"
+}

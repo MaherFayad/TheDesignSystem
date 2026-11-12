@@ -1,0 +1,126 @@
+/*
+ * ButtonGroup: a row or a column of related actions, spaced or attached.
+ * Source: Figma-Killer-2 `SplitButton.module.css` (the seam). Follows "One
+ * convention for component CSS and props" in docs/contracts/anatomy.md.
+ *
+ * Private properties on the root (recipes override these):
+ *
+ *   --_button-group-gap       the space between spaced children
+ *   --_button-group-divider   the 1px seam between attached children
+ *
+ * The group has no parts of its own. Its children are Button and IconButton
+ * roots (and later ToggleButton and SplitButton), styled by their own files.
+ * As the parent of a nested component, this file sets Button's private
+ * focus ring and, where Button has no property for it, the corner radii
+ * and the seam borders of attached children. Every one is a
+ * logical property, so the seam flips in RTL.
+ */
+@layer ds.base {
+  [data-ds='button-group'] {
+    --_button-group-gap: var(--ds-space-xs);
+    --_button-group-divider: var(--ds-color-border-default);
+
+    display: inline-flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--_button-group-gap);
+    box-sizing: border-box;
+    max-inline-size: 100%;
+    vertical-align: middle;
+  }
+
+  [data-ds='button-group']:is([data-size='xs'], [data-size='sm']) {
+    --_button-group-gap: var(--ds-space-2xs);
+  }
+
+  [data-ds='button-group'][data-orientation='vertical'] {
+    flex-direction: column;
+    flex-wrap: nowrap;
+    align-items: stretch;
+  }
+
+  /* ------------------------------------------------------------ full width */
+
+  [data-ds='button-group'][data-full-width] {
+    display: flex;
+    inline-size: 100%;
+  }
+
+  /* Buttons share the row. IconButtons keep their square. */
+  [data-ds='button-group'][data-full-width][data-orientation='horizontal'] > [data-ds='button'] {
+    flex: 1 1 0;
+  }
+
+  /* ------------------------------------------------------------ attached: one seamed control */
+
+  [data-ds='button-group'][data-attached] {
+    flex-wrap: nowrap;
+    gap: 0;
+  }
+
+  /*
+   * The seam. Each child but the last draws the divider with its end border;
+   * each child but the first drops its start border, so two borders never
+   * meet and the line stays one hairline. No child overlaps another, so
+   * every target keeps its full size. An outline child keeps its own border
+   * color as the seam.
+   */
+  [data-ds='button-group'][data-attached][data-orientation='horizontal'] > :not(:first-child) {
+    border-inline-start-width: 0;
+    border-start-start-radius: 0;
+    border-end-start-radius: 0;
+  }
+
+  [data-ds='button-group'][data-attached][data-orientation='horizontal'] > :not(:last-child) {
+    border-inline-end-color: var(--_button-group-divider);
+    border-start-end-radius: 0;
+    border-end-end-radius: 0;
+  }
+
+  [data-ds='button-group'][data-attached][data-orientation='vertical'] > :not(:first-child) {
+    border-block-start-width: 0;
+    border-start-start-radius: 0;
+    border-start-end-radius: 0;
+  }
+
+  [data-ds='button-group'][data-attached][data-orientation='vertical'] > :not(:last-child) {
+    border-block-end-color: var(--_button-group-divider);
+    border-end-start-radius: 0;
+    border-end-end-radius: 0;
+  }
+
+  [data-ds='button-group'][data-attached][data-orientation='horizontal'] > [data-emphasis='outline']:not(:last-child) {
+    border-inline-end-color: var(--_button-border-color);
+  }
+
+  [data-ds='button-group'][data-attached][data-orientation='vertical'] > [data-emphasis='outline']:not(:last-child) {
+    border-block-end-color: var(--_button-border-color);
+  }
+
+  /*
+   * The focus ring goes inside the child: a ring outside would sit under the
+   * next child, which paints later. The same widths and colors as the focus
+   * tokens; the doubled ring for solid fills keeps the outer color at the edge.
+   */
+  [data-ds='button-group'][data-attached] > :is([data-ds='button'], [data-ds='icon-button']) {
+    --_button-ring: inset 0 0 0 var(--ds-border-width-strong) var(--ds-color-focus-ring);
+  }
+
+  [data-ds='button-group'][data-attached] > :is([data-ds='button'], [data-ds='icon-button'])[data-emphasis='solid'] {
+    --_button-ring:
+      inset 0 0 0 var(--ds-border-width-strong) var(--ds-color-focus-ring-on-primary-outer),
+      inset 0 0 0 calc(2 * var(--ds-border-width-strong)) var(--ds-color-focus-ring-on-primary-inner);
+  }
+
+  /*
+   * Forced colors drop the box shadow ring and draw Button's focus outline
+   * instead (Button.css). Pull it inside the child too, so the next child
+   * does not cover it. The seam needs nothing: the system draws every
+   * border, transparent ones included.
+   */
+  @media (forced-colors: active) {
+    [data-ds='button-group'][data-attached] > :is([data-ds='button'], [data-ds='icon-button']):focus-visible {
+      outline-offset: calc(-2 * var(--ds-border-width-strong));
+    }
+  }
+}
