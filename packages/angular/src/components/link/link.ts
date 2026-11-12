@@ -11,6 +11,7 @@
 import { ChangeDetectionStrategy, Component, booleanAttribute, computed, inject, input } from '@angular/core';
 import { DsIcon } from '@the-system/icons/angular';
 import type { Size, Tone } from '@the-system/shared';
+import { ownAttribute } from '../../internal/own-attribute';
 import { consumeHostAttributes } from '../../internal/host';
 import { DsThemeService } from '../../theme/theme';
 
@@ -39,12 +40,10 @@ function toTabIndex(value: unknown): number | undefined {
     '[attr.data-size]': 'size() ?? null',
     '[attr.data-standalone]': 'standalone() ? "" : null',
     '[attr.data-disabled]': 'disabled() ? "" : null',
-    '[attr.aria-disabled]': 'disabled() ? "true" : (ariaDisabled() ?? null)',
     '[attr.href]': 'disabled() ? null : (href() ?? null)',
     '[attr.target]': 'opensOut() ? (target() ?? "_blank") : (target() ?? null)',
     '[attr.rel]': 'opensOut() ? (rel() ?? "noopener noreferrer") : (rel() ?? null)',
     '[attr.role]': 'disabled() ? (role() ?? "link") : (role() ?? null)',
-    '[attr.tabindex]': 'disabled() ? (ownTabIndex() ?? 0) : (ownTabIndex() ?? null)',
   },
   template: `
     <span data-part="label"><ng-content /></span>
@@ -100,5 +99,12 @@ export class DsLink {
       event.stopImmediatePropagation();
     };
     for (const type of BLOCKED) this.host.addEventListener(type, block, { capture: true });
+    // Written only while the link has a value, so a caller's [attr.tabindex] or
+    // [attr.aria-disabled] stays (review angular-2 R2, WCAG 2.4.3).
+    ownAttribute(this.host, 'aria-disabled', () => (this.disabled() ? 'true' : this.ariaDisabled()));
+    ownAttribute(this.host, 'tabindex', () => {
+      const own = this.ownTabIndex();
+      return this.disabled() ? String(own ?? 0) : own === undefined ? undefined : String(own);
+    });
   }
 }
