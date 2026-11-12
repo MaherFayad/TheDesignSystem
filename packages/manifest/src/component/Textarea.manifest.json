@@ -170,8 +170,10 @@
       "note": "Motion is the focus glow fade of Input, named fade like Input; under reduced motion the duration token is 0ms."
     },
     "angular": {
-      "status": "planned",
-      "behavior": "a dsTextarea component around textarea, host bindings, reads the dsField context"
+      "status": "ready",
+      "behavior": "div[dsTextarea] around a native textarea, ControlValueAccessor, CSS field-sizing",
+      "example": "textarea.demo.ts",
+      "note": "The host box is the root. The value is a model and, as in React, also the text content of the native textarea. The count and the live region use the Radix VisuallyHidden inline style. countMessage is a function input."
     },
     "native": {
       "status": "planned",
