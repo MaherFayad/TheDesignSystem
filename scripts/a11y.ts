@@ -1,4 +1,4 @@
-// npm run a11y -- [--framework react|angular] [--url http://...] [--component a,b] [--workers n]
+// npm run a11y -- [--framework react|angular] [--url http://...] [--component a,b] [--page /,/all] [--workers n]
 //
 // axe on every gallery page: `/`, `/all` and `/c/<kebab>` for every
 // component with a gallery route, in every style and scheme from
@@ -7,9 +7,15 @@
 // contract.skipAxeRules. Overlays (states open and closed, and a trigger in
 // the demo) are also checked with the first trigger's root open. `/` and
 // `/all` keep the gallery shell; component pages use chrome=0, as the
-// contract suite does. Writes docs/reports/a11y-<framework>.json and .md and
-// exits 1 on any violation.
-import { mkdirSync, writeFileSync } from 'node:fs';
+// contract suite does. Every violation names its WCAG success criterion,
+// read from the rule's axe tags (wcag143 is 1.4.3), and the report sums them
+// up by criterion, rule and owning component. Writes
+// docs/reports/a11y-<framework>.json and .md and exits 1 on any violation.
+// A run narrowed with --component or --page merges its results into the
+// existing JSON report, so one page can be checked again without the rest.
+// `/all` renders every demo at once (about 850 cases) and can take 30s to
+// load, so the shell pages get 120s.
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, join, relative, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import AxeBuilder from '@axe-core/playwright';
@@ -21,15 +27,55 @@ import { galleryExists, launchGallery, probeRoutes, type Gallery } from '../pack
 const repo = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const TAGS = ['wcag2a', 'wcag2aa', 'wcag21aa', 'wcag22aa'];
 
+/** Names of the WCAG 2.2 success criteria axe tags most often. */
+const CRITERIA: Record<string, string> = {
+  '1.1.1': 'Non-text content',
+  '1.3.1': 'Info and relationships',
+  '1.3.5': 'Identify input purpose',
+  '1.4.1': 'Use of color',
+  '1.4.2': 'Audio control',
+  '1.4.3': 'Contrast (minimum)',
+  '1.4.4': 'Resize text',
+  '1.4.10': 'Reflow',
+  '1.4.11': 'Non-text contrast',
+  '1.4.12': 'Text spacing',
+  '2.1.1': 'Keyboard',
+  '2.2.1': 'Timing adjustable',
+  '2.4.1': 'Bypass blocks',
+  '2.4.2': 'Page titled',
+  '2.4.4': 'Link purpose (in context)',
+  '2.4.7': 'Focus visible',
+  '2.5.3': 'Label in name',
+  '2.5.8': 'Target size (minimum)',
+  '3.1.1': 'Language of page',
+  '3.1.2': 'Language of parts',
+  '3.3.2': 'Labels or instructions',
+  '4.1.1': 'Parsing',
+  '4.1.2': 'Name, role, value',
+};
+
+/** WCAG success criteria from axe tags: wcag143 is 1.4.3, wcag2411 is 2.4.11. Level tags (wcag2aa) are left out. */
+function criteriaOf(tags: readonly string[]): string[] {
+  const out: string[] = [];
+  for (const t of tags) {
+    const m = /^wcag(\d)(\d)(\d{1,2})$/.exec(t);
+    if (m) out.push(`${m[1]}.${m[2]}.${m[3]}`);
+  }
+  return out;
+}
+
+const criterionLabel = (c: string[]) => (c.length ? c.map((x) => `${x}${CRITERIA[x] ? ` ${CRITERIA[x]}` : ''}`).join(', ') : 'best practice, no criterion');
+
 interface Args {
   framework: string;
   url?: string;
   components: string[];
+  pages: string[];
   workers: number;
 }
 
 function parseArgs(argv: string[]): Args {
-  const out: Args = { framework: 'react', components: [], workers: 4 };
+  const out: Args = { framework: 'react', components: [], pages: [], workers: 4 };
   for (let i = 0; i < argv.length; i += 1) {
     const a = argv[i] ?? '';
     const [flag, inline] = a.includes('=') ? [a.slice(0, a.indexOf('=')), a.slice(a.indexOf('=') + 1)] : [a, undefined];
@@ -37,9 +83,10 @@ function parseArgs(argv: string[]): Args {
     if (flag === '--framework') out.framework = value();
     else if (flag === '--url') out.url = value().replace(/\/+$/, '');
     else if (flag === '--component') out.components.push(...value().split(',').map((s) => s.trim()).filter(Boolean));
+    else if (flag === '--page') out.pages.push(...value().split(',').map((s) => s.trim()).filter(Boolean));
     else if (flag === '--workers') out.workers = Math.max(1, Number(value()) || 1);
     else if (flag === '--help' || flag === '-h') {
-      console.log('npm run a11y -- [--framework react|angular] [--url URL] [--component a,b] [--workers N]');
+      console.log('npm run a11y -- [--framework react|angular] [--url URL] [--component a,b] [--page /,/all] [--workers N]');
       process.exit(0);
     } else {
       console.error(`Unknown argument: ${a}`);
@@ -86,7 +133,7 @@ interface Result {
   skippedRules: string[];
   pass: boolean;
   error?: string;
-  violations: { rule: string; impact: string | null; help: string; nodes: NodeResult[] }[];
+  violations: { rule: string; criteria: string[]; impact: string | null; help: string; nodes: NodeResult[] }[];
   lines: string[];
 }
 
@@ -110,10 +157,10 @@ async function run(browser: Browser, url: string, job: Job): Promise<Result> {
     const page = await context.newPage();
     await page.goto(`${url}${job.path}`);
     if (job.page === '/all') {
-      await page.locator('[data-gallery="sink"]').waitFor({ state: 'attached', timeout: 30_000 });
-      await page.waitForFunction(() => document.querySelector('[data-gallery="loading"]') === null, undefined, { timeout: 30_000 });
+      await page.locator('[data-gallery="sink"]').waitFor({ state: 'attached', timeout: 120_000 });
+      await page.waitForFunction(() => document.querySelector('[data-gallery="loading"]') === null, undefined, { timeout: 120_000 });
     } else if (job.page === '/') {
-      await page.locator('[data-gallery="index"], main').first().waitFor({ state: 'attached', timeout: 30_000 });
+      await page.locator('[data-gallery="index"], main').first().waitFor({ state: 'attached', timeout: 120_000 });
     } else {
       await page.locator('[data-demo-case]').first().waitFor({ state: 'attached', timeout: 20_000 });
     }
@@ -123,15 +170,24 @@ async function run(browser: Browser, url: string, job: Job): Promise<Result> {
       const trigger = triggerSelector(job.manifest);
       // No trigger in the demo (Section, Accordion): the open pass would only
       // repeat the closed one, as in contract.spec.ts. It is skipped, not failed.
-      if ((await page.locator(trigger).count()) === 0) {
+      if ((await page.locator(`:is(${trigger}) >> visible=true`).count()) === 0) {
         base.pass = true;
-        base.lines = ['open pass skipped: no contract.trigger and no [data-demo-trigger] in the demo'];
+        base.lines = ['open pass skipped: no visible contract.trigger or [data-demo-trigger] in the demo'];
         return base;
       }
-      const inVariants = `[data-demo-case="variants"] :is(${trigger})`;
-      const selector = (await page.locator(inVariants).count()) > 0 ? inVariants : trigger;
+      // The first visible trigger, in the variants case when it has one.
+      const inVariants = `[data-demo-case="variants"] :is(${trigger}) >> visible=true`;
+      const selector = (await page.locator(inVariants).count()) > 0 ? inVariants : `:is(${trigger}) >> visible=true`;
       await page.evaluate(markSeen, kebab);
-      await page.locator(selector).first().click();
+      // A covered trigger (a Menubar demo with a menu open at load) opens from the keyboard.
+      await page
+        .locator(selector)
+        .first()
+        .click({ timeout: 5_000 })
+        .catch(async () => {
+          await page.locator(selector).first().focus();
+          await page.keyboard.press('Enter');
+        });
       const deadline = Date.now() + 5_000;
       while ((await page.evaluate(freshOpen, kebab)) === 0) {
         if (Date.now() > deadline) throw new Error(`the first trigger opens no [data-ds=${kebab}]`);
@@ -147,9 +203,11 @@ async function run(browser: Browser, url: string, job: Job): Promise<Result> {
     const violations = result.violations as unknown as AxeViolation[];
     const targets = violations.flatMap((v) => v.nodes.map((n) => n.target.map(String).join(' ')));
     const owners = targets.length ? await page.evaluate(axeOwners, targets) : {};
-    base.lines = formatAxe(violations, owners);
+    const tagsOf = (v: AxeViolation) => criteriaOf((v as unknown as { tags?: string[] }).tags ?? []);
+    base.lines = violations.flatMap((v) => formatAxe([v], owners).map((l) => `WCAG ${criterionLabel(tagsOf(v))}: ${l}`));
     base.violations = violations.map((v) => ({
       rule: v.id,
+      criteria: tagsOf(v),
       impact: v.impact ?? null,
       help: v.help,
       nodes: v.nodes.map((n) => {
@@ -218,6 +276,35 @@ function writeReports(framework: string, results: Result[], skippedNoRoute: stri
     });
     lines.push(`| ${p} | ${cells.join(' | ')} |`);
   }
+  // Sum up by criterion, rule and owner: one row per kind of failure.
+  const sums = new Map<string, { criteria: string; rule: string; owner: string; runs: Set<string>; nodes: number; modes: Set<string> }>();
+  for (const r of failing) {
+    for (const v of r.violations) {
+      for (const n of v.nodes) {
+        const owner = n.owner ?? r.page;
+        const key = `${v.rule}|${owner}`;
+        const row = sums.get(key) ?? { criteria: criterionLabel(v.criteria), rule: v.rule, owner, runs: new Set<string>(), nodes: 0, modes: new Set<string>() };
+        row.runs.add(`${r.page} ${modeLabel(r.mode)}`);
+        row.modes.add(modeLabel(r.mode));
+        row.nodes += 1;
+        sums.set(key, row);
+      }
+    }
+    if (r.error) {
+      const key = `error|${r.page}`;
+      const row = sums.get(key) ?? { criteria: 'none (the run did not finish)', rule: 'error', owner: r.page, runs: new Set<string>(), nodes: 0, modes: new Set<string>() };
+      row.runs.add(`${r.page} ${modeLabel(r.mode)}`);
+      row.modes.add(modeLabel(r.mode));
+      sums.set(key, row);
+    }
+  }
+  if (sums.size) {
+    lines.push('', '## Violations by criterion, rule and owner', '', '| WCAG criterion | Rule | Owner | Runs | Nodes | Modes |', '| --- | --- | --- | ---: | ---: | --- |');
+    for (const row of [...sums.values()].sort((a, b) => a.criteria.localeCompare(b.criteria) || a.owner.localeCompare(b.owner))) {
+      const modes = [...row.modes];
+      lines.push(`| ${row.criteria} | ${row.rule} | ${row.owner} | ${row.runs.size} | ${row.nodes} | ${modes.length > 4 ? `${modes.slice(0, 4).join('; ')} and ${modes.length - 4} more` : modes.join('; ')} |`);
+    }
+  }
   for (const r of failing) {
     lines.push('', `## ${r.page}, ${modeLabel(r.mode)}`, '', `\`${r.path}\``, '');
     if (r.error) lines.push(`- error: ${r.error}`);
@@ -258,14 +345,17 @@ async function main(): Promise<number> {
       ]),
     );
     const jobs: Job[] = [];
-    if (wanted.length === 0) {
+    const shellPages = args.pages.filter((p) => p === '/' || p === '/all');
+    const wantedPages = args.pages.filter((p) => p.startsWith('/c/')).map((p) => p.slice(3));
+    if (args.components.length === 0 && (args.pages.length === 0 || shellPages.length > 0)) {
       const allSkips = [...new Set(routed.flatMap((m) => m.contract?.skipAxeRules ?? []))];
       for (const mode of modes) {
-        jobs.push({ page: '/', path: `/?${query(mode, true)}`, mode, skip: [] });
-        jobs.push({ page: '/all', path: `/all?${query(mode, true)}`, mode, skip: allSkips });
+        if (args.pages.length === 0 || shellPages.includes('/')) jobs.push({ page: '/', path: `/?${query(mode, true)}`, mode, skip: [] });
+        if (args.pages.length === 0 || shellPages.includes('/all')) jobs.push({ page: '/all', path: `/all?${query(mode, true)}`, mode, skip: allSkips });
       }
     }
-    for (const m of routed) {
+    // With --page, only the component pages it names run.
+    for (const m of routed.filter((x) => args.pages.length === 0 || args.components.length > 0 || wantedPages.includes(kebabCase(x.name)))) {
       const kebab = kebabCase(m.name);
       const skip = m.contract?.skipAxeRules ?? [];
       for (const mode of modes) {
@@ -280,6 +370,17 @@ async function main(): Promise<number> {
       results.push(r);
       if (!r.pass) console.log(`FAIL ${job.page} ${modeLabel(job.mode)}${r.error ? `: ${r.error}` : ''}${r.lines.map((l) => `\n      ${l}`).join('')}`);
     });
+    if (args.components.length > 0 || args.pages.length > 0) {
+      // A narrowed run replaces only its own runs in the existing report.
+      const prior = join(repo, 'docs/reports', `a11y-${args.framework}.json`);
+      if (existsSync(prior)) {
+        const key = (r: Result) => `${r.path}|${r.mode.open ? 1 : 0}`;
+        const fresh = new Set(results.map(key));
+        const old = (JSON.parse(readFileSync(prior, 'utf8')) as { results: Result[]; noRoute?: string[] });
+        results.push(...old.results.filter((r) => !fresh.has(key(r))));
+        noRoute.push(...(old.noRoute ?? []).filter((n) => !noRoute.includes(n)));
+      }
+    }
     const order = (r: Result) => `${r.page}|${r.mode.style}|${r.mode.scheme}|${r.mode.dir}|${r.mode.open ? 1 : 0}`;
     results.sort((a, b) => order(a).localeCompare(order(b)));
     const { json, md } = writeReports(args.framework, results, noRoute);
