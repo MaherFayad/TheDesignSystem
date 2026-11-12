@@ -184,7 +184,19 @@ read poorly in every style, which is the gallery's look, not Liquid's.
 
 ## Contract suite
 
-CONTRACT_RESULT
+`npm run contract -- --framework react --component <twenty>`: the suite runs
+every discovered style, Liquid included (both schemes, LTR and Arabic RTL,
+three densities for target size, axe, open checks for overlays).
+
+Button, Card, Checkbox, Dialog, Drawer, DropdownMenu, FloatingActionButton,
+IconButton, Popover, RadioGroup, SegmentedControl, Select, Sheet, Slider,
+Switch, TabBar, Tabs, Toast, Toolbar, Tooltip: all pass (37 or 57 tests each,
+Toolbar 37 with 20 skipped for no open state).
+
+The first run failed Toolbar's axe in Liquid dark (both directions): the on
+item's tint text on the lens measured 3.8:1. Fixed in `recipes/Toolbar.css`:
+in dark the on item takes `color.text.bright`; the lens, its rim and the item
+border still mark it. Rerun green.
 
 ## Open choices, each with a recommendation
 
