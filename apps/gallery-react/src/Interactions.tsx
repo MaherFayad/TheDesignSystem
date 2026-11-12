@@ -163,6 +163,22 @@ function InvalidToggle({ children }: { children: (invalid: boolean) => ReactNode
   );
 }
 
+/** Each press shows a toast with its own title, so the stack grows instead of updating one toast. */
+function ToastStackStage() {
+  const [n, setN] = useState(1);
+  return (
+    <Button
+      data-interaction-trigger=""
+      onClick={() => {
+        toast({ lang: 'en', tone: 'success', title: `Draft ${n} saved`, description: 'Saved a moment ago.' });
+        setN((v) => v + 1);
+      }}
+    >
+      Show a toast
+    </Button>
+  );
+}
+
 function StatStage() {
   const [value, setValue] = useState(1240);
   return (
@@ -266,8 +282,9 @@ const stages: Record<string, () => ReactNode> = {
       <IconButton icon="copy" label="Copy layer" data-interaction-trigger="" />
     </Tooltip>
   ),
-  'toast-stack': () => (
-    <Button data-interaction-trigger="" onClick={() => toast({ lang: 'en', tone: 'success', title: 'Draft saved', description: 'Saved a moment ago.' })}>
+  'toast-stack': () => <ToastStackStage />,
+  'toast-enter': () => (
+    <Button data-interaction-trigger="" onClick={() => toast({ lang: 'en', tone: 'info', title: 'New version ready', description: 'Reload the page to get it.' })}>
       Show a toast
     </Button>
   ),
@@ -347,6 +364,11 @@ const stages: Record<string, () => ReactNode> = {
     </div>
   ),
   'skeleton-swap': () => <SkeletonStage />,
+  'slider-nudge': () => (
+    <div style={{ inlineSize: '100%' }}>
+      <Slider label="Volume" unit="%" defaultValue={100} data-interaction-trigger="" />
+    </div>
+  ),
   'list-stagger': () => <ListStage />,
   'stat-roll': () => <StatStage />,
   'slider-pull': () => (
