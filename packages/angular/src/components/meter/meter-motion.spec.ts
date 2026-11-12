@@ -17,25 +17,37 @@ interface Call {
 function stage() {
   const calls: Call[] = [];
   const frames: FrameRequestCallback[] = [];
-  const proto = Element.prototype as unknown as Record<string, unknown>;
-  const had = { animate: proto['animate'], rect: proto['getBoundingClientRect'], raf: window.requestAnimationFrame };
-  proto['animate'] = function (this: Element, keyframes: Keyframe[], options: KeyframeAnimationOptions) {
+  // Stub on Element and HTMLElement: another spec may have left an own property on HTMLElement.prototype.
+  const protos = [Element.prototype, HTMLElement.prototype];
+  const names = ['animate', 'getBoundingClientRect'];
+  const saved = protos.map((p) => names.map((n) => Object.getOwnPropertyDescriptor(p, n)));
+  const raf = window.requestAnimationFrame;
+  const animate = function (this: Element, keyframes: Keyframe[], options: KeyframeAnimationOptions) {
     calls.push({ target: this, keyframes, options });
     return { id: options.id, playState: 'running', finished: Promise.resolve(), cancel() {}, effect: { getTiming: () => options } };
   };
-  proto['getBoundingClientRect'] = function (this: Element) {
+  const rect = function (this: Element) {
     const siblings = this.parentElement ? [...this.parentElement.children] : [];
     const y = this.hasAttribute('inert') ? 0 : siblings.slice(0, siblings.indexOf(this)).filter((c) => !c.hasAttribute('inert')).length * 50;
     return { x: 0, y, top: y, left: 0, width: 100, height: 40, right: 100, bottom: y + 40, toJSON() {} } as DOMRect;
   };
+  for (const p of protos) {
+    Object.defineProperty(p, 'animate', { configurable: true, writable: true, value: animate });
+    Object.defineProperty(p, 'getBoundingClientRect', { configurable: true, writable: true, value: rect });
+  }
   window.requestAnimationFrame = (cb) => frames.push(cb);
   return {
     take: () => calls.splice(0),
     flush: () => frames.splice(0).forEach((f) => f(0)),
     restore: () => {
-      proto['animate'] = had.animate;
-      proto['getBoundingClientRect'] = had.rect;
-      window.requestAnimationFrame = had.raf;
+      protos.forEach((p, i) =>
+        names.forEach((n, j) => {
+          const d = saved[i]![j];
+          if (d) Object.defineProperty(p, n, d);
+          else delete (p as unknown as Record<string, unknown>)[n];
+        }),
+      );
+      window.requestAnimationFrame = raf;
       document.documentElement.removeAttribute('data-motion');
     },
   };
@@ -83,7 +95,7 @@ describe('DsMeter motion', () => {
   });
 
   it('off screen: held at scaleX(0) until seen, then fills', async () => {
-    const proto = Element.prototype as unknown as Record<string, unknown>;
+    const proto = HTMLElement.prototype as unknown as Record<string, unknown>;
     const rect = proto['getBoundingClientRect'];
     proto['getBoundingClientRect'] = () => ({ top: 5000, bottom: 5040 }) as DOMRect;
     const fixture = TestBed.createComponent(Host);

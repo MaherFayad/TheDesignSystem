@@ -41,8 +41,6 @@ function recordAnimate() {
   };
 }
 
-const byId = (calls: Recorded[], id: string) => calls.filter((c) => c.options.id?.startsWith(`ds-motion:${id}`));
-
 /** What rollDigits plays for these arguments, replayed on a spare host. */
 function expectedRoll(rec: ReturnType<typeof recordAnimate>, from: string, to: string, opts: DigitRollOptions) {
   const spare = document.createElement('span');

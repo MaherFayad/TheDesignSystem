@@ -21,7 +21,6 @@ const take = (): Call[] => {
   calls = [];
   return out;
 };
-const ids = (list: Call[], id: string) => list.filter((c) => String(c.opts.id) === `ds-motion:${id}`);
 
 beforeEach(() => {
   calls = [];

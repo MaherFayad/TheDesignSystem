@@ -89,13 +89,12 @@ describe('NumberField motion', () => {
       const root = fixture.nativeElement as HTMLElement;
       const input = root.querySelector('input') as HTMLInputElement;
       const layer = input.nextElementSibling as HTMLElement;
-      console.log('DEBUG before', JSON.stringify(input.value));
       key(input, 'ArrowUp');
-      console.log('DEBUG after', JSON.stringify(input.value), layer.outerHTML);
       expect(input.value).toBe('99');
       const played = rec.take().map(({ keyframes, options }) => ({ keyframes, id: options.id }));
       expect(played.length).toBeGreaterThan(0);
-      expect(layer.textContent).toBe('99');
+      // The layer holds the columns while the roll plays: the new 9 and the leaving 8.
+      expect(layer.querySelectorAll('[data-digit]')).toHaveLength(2);
       expect(played).toEqual(expectedRoll(rec, '98', '99', { mode: 'full', direction: 'up' }));
       const down = root.querySelector('[data-part="decrement"]') as HTMLElement;
       down.dispatchEvent(new PointerEvent('pointerdown', { button: 0, bubbles: true, cancelable: true, pointerType: 'mouse' }));

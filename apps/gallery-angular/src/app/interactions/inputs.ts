@@ -67,9 +67,7 @@ class FocusGlowStage {
   host: { style: 'display: contents' },
   template: `
     <div dsInput aria-label="Email" value="sara@" [invalid]="invalid()"></div>
-    <button dsButton size="sm" emphasis="soft" data-interaction-trigger="" (click)="invalid.set(!invalid())">
-      {{ invalid() ? 'Clear the error' : 'Show an error' }}
-    </button>
+    <button dsButton size="sm" emphasis="soft" data-interaction-trigger="" (click)="invalid.set(!invalid())">{{ invalid() ? 'Clear the error' : 'Show an error' }}</button>
   `,
 })
 class ErrorShakeStage {
