@@ -34,14 +34,29 @@ function recordAnimate() {
 }
 
 @Component({
-  imports: [DsTheme],
-  template: `<div dsTheme="neutral"><div id="box"><input #input /></div></div>`,
+  selector: 'ds-shake-probe',
+  template: `<div id="box"><input #input /></div>`,
 })
-class ShakeHost {
+class ShakeProbe {
   readonly invalid = signal(true);
   readonly input = viewChild.required<ElementRef<HTMLInputElement>>('input');
   constructor() {
     errorShake(() => this.input().nativeElement, () => this.invalid());
+  }
+}
+
+/** The probe inside a theme whose style plays the shake in full. */
+@Component({
+  imports: [DsTheme, ShakeProbe],
+  template: `<div dsTheme="neutral"><ds-shake-probe /></div>`,
+})
+class ShakeHost {
+  readonly probe = viewChild.required(ShakeProbe);
+  get invalid() {
+    return this.probe().invalid;
+  }
+  input() {
+    return this.probe().input();
   }
 }
 
@@ -90,7 +105,6 @@ describe('motion-fields', () => {
       await fixture.whenStable();
       fixture.componentInstance.invalid.set(true);
       await fixture.whenStable();
-      console.log('DEBUG', document.documentElement.getAttribute('data-motion'), fixture.nativeElement.innerHTML);
       const box = (fixture.nativeElement as HTMLElement).querySelector('#box');
       expect(rec.calls).toHaveLength(1);
       expect(rec.calls[0]?.target).toBe(box);

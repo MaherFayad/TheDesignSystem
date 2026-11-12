@@ -59,7 +59,8 @@ describe('DsNotificationCenter', () => {
     expect(title.tagName).toBe('H2');
     expect(title.textContent).toBe('Notifications');
     expect(el.getAttribute('aria-labelledby')).toBe(title.id);
-    expect(el.querySelector('[data-part="count"]')?.textContent).toBe('1 unread');
+    expect(el.querySelector('[data-part="count"] > [data-visually-hidden]')?.textContent).toBe('1 unread');
+    expect(el.querySelector('[data-part="count"] > [aria-hidden="true"]')?.textContent).toBe('1 unread');
     const labels = [...el.querySelectorAll('[data-part="group-label"]')].map((h) => [h.tagName, h.textContent]);
     expect(labels).toEqual([['H3', 'Today'], ['H3', 'Yesterday'], ['H3', 'Earlier']]);
     el.querySelectorAll('[data-part="group"]').forEach((g) => {

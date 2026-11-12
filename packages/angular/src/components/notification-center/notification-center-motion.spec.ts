@@ -57,7 +57,7 @@ class Host {
   readonly now = now;
 }
 
-const name = (el: Element) => (el.hasAttribute('inert') ? 'ghost' : (el.textContent ?? '').trim().slice(-8));
+const name = (el: Element) => el.querySelector('[data-part="item-title"]')?.textContent?.replace('Unread: ', '');
 
 describe('DsNotificationCenter motion', () => {
   let s: ReturnType<typeof stage>;
@@ -83,7 +83,9 @@ describe('DsNotificationCenter motion', () => {
     const played = s.take();
     const count = fixture.nativeElement.querySelector('[data-part="count"]');
     const flips = played.filter((p) => p.options.id === 'ds-motion:flip');
-    expect(flips.map((p) => (p.target.matches('li') ? name(p.target) : 'label'))).toEqual(['label', 'd passed', 'commented', 'invited you'.slice(-8)]);
+    // The new entry pops in (it fades and grows); the two below it move down.
+    expect(flips.map((p) => name(p.target))).toEqual(['Build passed', 'Omar commented', 'Lina invited you']);
+    expect(flips.map((p) => p.keyframes.some((k) => k.opacity !== undefined))).toEqual([true, false, false]);
     expect(played.some((p) => p.options.id === 'ds-motion:digit-roll')).toBe(true);
     const pop = played.find((p) => p.options.id === 'ds-motion:pop-mark')!;
     expect(pop.target).toBe(count);
