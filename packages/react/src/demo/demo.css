@@ -5,17 +5,20 @@
 @layer ds.overrides {
   [data-demo='page'] {
     display: grid;
+    grid-template-columns: minmax(0, 1fr);
     gap: var(--ds-space-4xl);
   }
 
   [data-demo='case'] {
     display: grid;
+    grid-template-columns: minmax(0, 1fr);
     gap: var(--ds-space-l);
     align-content: start;
   }
 
   [data-demo='content'] {
     display: grid;
+    grid-template-columns: minmax(0, 1fr);
     gap: var(--ds-space-l);
     align-content: start;
   }

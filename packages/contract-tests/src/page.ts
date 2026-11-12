@@ -1,0 +1,351 @@
+// Functions that run inside the gallery page through page.evaluate. Each one
+// is self contained (no reference to anything outside its own body), because
+// Playwright sends the function source to the browser. They read only the
+// anatomy attributes (data-ds, data-part, data-*) and plain DOM, never
+// framework internals. page.test.ts runs the scans on jsdom.
+import type { AnatomyScan, StateHit, VariantRoot } from './lib';
+
+/**
+ * The part ownership walk: every data-part under a root, kept only when the
+ * nearest ancestor with data-ds is that root. A part on an element that is
+ * itself a nested root belongs to the parent, so the walk starts at the
+ * parent element.
+ */
+export function scanAnatomy(kebab: string): AnatomyScan {
+  const describe = (el: Element): string => {
+    const tag = el.tagName.toLowerCase();
+    const ds = el.getAttribute('data-ds');
+    const part = el.getAttribute('data-part');
+    const demo = el.closest('[data-demo-case]')?.getAttribute('data-demo-case');
+    return `${tag}${ds ? `[data-ds=${ds}]` : ''}${part ? `[data-part=${part}]` : ''}${demo ? ` in case ${demo}` : ''}`;
+  };
+  const roots = Array.from(document.querySelectorAll(`[data-ds="${kebab}"]`));
+  const parts: AnatomyScan['parts'] = [];
+  const rootPart: string[] = [];
+  roots.forEach((root, i) => {
+    if (root.getAttribute('data-part') === 'root') rootPart.push(describe(root));
+    for (const el of Array.from(root.querySelectorAll('[data-part]'))) {
+      const owner = el.parentElement ? el.parentElement.closest('[data-ds]') : null;
+      if (owner !== root) continue;
+      parts.push({ root: i, part: el.getAttribute('data-part') ?? '', where: describe(el) });
+    }
+  });
+  return { roots: roots.length, rootPart, parts };
+}
+
+/** Variant attributes on every root, and whether the root sits in the variants case. */
+export function scanVariants(kebab: string): { roots: VariantRoot[]; hasVariantsCase: boolean } {
+  const axes = ['size', 'tone', 'emphasis', 'shape'];
+  const roots = Array.from(document.querySelectorAll(`[data-ds="${kebab}"]`)).map((root) => {
+    const attrs: Record<string, string> = {};
+    for (const axis of axes) {
+      const v = root.getAttribute(`data-${axis}`);
+      if (v !== null) attrs[axis] = v;
+    }
+    const demo = root.closest('[data-demo-case]')?.getAttribute('data-demo-case');
+    return { attrs, inVariants: demo === 'variants', where: `${root.tagName.toLowerCase()}[data-ds=${kebab}]${demo ? ` in case ${demo}` : ''}` };
+  });
+  return { roots, hasVariantsCase: document.querySelector('[data-demo-case="variants"]') !== null };
+}
+
+/** State attributes, data-state and class names on every root and every part the root owns. */
+export function scanStates(arg: { kebab: string; booleans: string[] }): StateHit[] {
+  const out: StateHit[] = [];
+  const roots = Array.from(document.querySelectorAll(`[data-ds="${arg.kebab}"]`));
+  for (const root of roots) {
+    const owned = Array.from(root.querySelectorAll('[data-part]')).filter((el) => (el.parentElement ? el.parentElement.closest('[data-ds]') : null) === root);
+    for (const el of [root, ...owned]) {
+      const booleans: Record<string, string> = {};
+      for (const attr of arg.booleans) {
+        const v = el.getAttribute(attr);
+        if (v !== null) booleans[attr] = v;
+      }
+      const part = el.getAttribute('data-part');
+      const demo = el.closest('[data-demo-case]')?.getAttribute('data-demo-case');
+      out.push({
+        where: `${el.tagName.toLowerCase()}${part ? `[data-part=${part}]` : `[data-ds=${arg.kebab}]`}${demo ? ` in case ${demo}` : ''}`,
+        booleans,
+        dataState: el.getAttribute('data-state'),
+        className: el.getAttribute('class') ?? '',
+      });
+    }
+  }
+  return out;
+}
+
+/**
+ * Disabled roots: the root and everything in it is either out of the tab
+ * order or carries aria-disabled="true" (on itself or an ancestor inside the
+ * root). Returns failures.
+ */
+export function scanDisabled(kebab: string): { disabledRoots: number; failures: string[] } {
+  const FOCUSABLE = 'a[href], button, input:not([type="hidden"]), select, textarea, summary, iframe, [tabindex], [contenteditable=""], [contenteditable="true"]';
+  const roots = Array.from(document.querySelectorAll(`[data-ds="${kebab}"][data-disabled]`));
+  const failures: string[] = [];
+  for (const root of roots) {
+    const els = [root, ...Array.from(root.querySelectorAll(FOCUSABLE))].filter((el) => el.matches(FOCUSABLE));
+    for (const el of els) {
+      const h = el as HTMLElement;
+      if (h.tabIndex < 0 || el.matches(':disabled') || el.closest('[inert]')) continue;
+      const flagged = el.closest('[aria-disabled="true"]');
+      if (flagged && (flagged === root || root.contains(flagged))) continue;
+      const demo = root.closest('[data-demo-case]')?.getAttribute('data-demo-case');
+      failures.push(`${el.tagName.toLowerCase()}${el.getAttribute('data-part') ? `[data-part=${el.getAttribute('data-part')}]` : ''} in a disabled root${demo ? ` in case ${demo}` : ''} is in the tab order without aria-disabled="true"`);
+    }
+  }
+  return { disabledRoots: roots.length, failures };
+}
+
+/**
+ * Marks with data-contract-target the first enabled root that holds a tab
+ * stop (the root itself or a control inside it). With `button` set, only a
+ * root that is a button (a button element or role button) counts.
+ * Returns a description, or null when there is none.
+ */
+export function markTarget(arg: { kebab: string; button: boolean; within?: string }): string | null {
+  const FOCUSABLE = 'a[href], button, input:not([type="hidden"]), select, textarea, summary, [tabindex], [contenteditable=""], [contenteditable="true"]';
+  for (const old of Array.from(document.querySelectorAll('[data-contract-target]'))) old.removeAttribute('data-contract-target');
+  const scope = arg.within ? document.querySelector(arg.within) : document;
+  if (!scope) return null;
+  const enabled = (el: Element) =>
+    !el.hasAttribute('data-disabled') && !el.hasAttribute('data-loading') && el.getAttribute('aria-disabled') !== 'true' && !el.matches(':disabled');
+  const visible = (el: Element) => (typeof el.checkVisibility === 'function' ? el.checkVisibility({ visibilityProperty: true }) : true);
+  const tabbable = (el: Element) => el.matches(FOCUSABLE) && (el as HTMLElement).tabIndex >= 0 && !el.matches(':disabled') && visible(el);
+  for (const root of Array.from(scope.querySelectorAll(`[data-ds="${arg.kebab}"]`))) {
+    if (!enabled(root) || !visible(root)) continue;
+    if (arg.button && !(root.tagName === 'BUTTON' || root.getAttribute('role') === 'button')) continue;
+    const stop = tabbable(root) ? root : Array.from(root.querySelectorAll(FOCUSABLE)).find(tabbable);
+    if (!stop) continue;
+    root.setAttribute('data-contract-target', '');
+    stop.setAttribute('data-contract-stop', '');
+    const demo = root.closest('[data-demo-case]')?.getAttribute('data-demo-case');
+    return `${root.tagName.toLowerCase()}[data-ds=${arg.kebab}]${demo ? ` in case ${demo}` : ''}`;
+  }
+  return null;
+}
+
+/** Where focus is, relative to the marked target root. */
+export function focusState(): { inTarget: boolean; active: string } {
+  const a = document.activeElement;
+  const t = document.querySelector('[data-contract-target]');
+  const desc = a ? `${a.tagName.toLowerCase()}${a.getAttribute('data-ds') ? `[data-ds=${a.getAttribute('data-ds')}]` : ''}${a.getAttribute('data-part') ? `[data-part=${a.getAttribute('data-part')}]` : ''}` : 'nothing';
+  return { inTarget: !!(a && t && (a === t || t.contains(a))), active: desc };
+}
+
+/** A snapshot of what a key press may change, read from the focused element and its root. */
+export function keySnapshot(kebab: string): { active: string; value: string | null; states: string } {
+  const a = document.activeElement as HTMLElement | null;
+  const root = a ? a.closest(`[data-ds="${kebab}"]`) : null;
+  const read = (el: Element | null) =>
+    el ? ['data-state', 'aria-checked', 'aria-selected', 'aria-expanded', 'aria-pressed', 'aria-valuenow', 'data-selected'].map((n) => `${n}=${el.getAttribute(n)}`).join(';') : '';
+  let id = a?.getAttribute('data-contract-id');
+  if (a && !id) {
+    id = String(Math.random()).slice(2);
+    a.setAttribute('data-contract-id', id);
+  }
+  const value = a && 'value' in a ? String((a as HTMLInputElement).value) : a?.getAttribute('aria-valuenow') ?? null;
+  return { active: id ?? 'none', value, states: `${read(a)}|${read(root)}|${Array.from(document.querySelectorAll(`[data-ds="${kebab}"]`)).map((r) => r.getAttribute('data-state')).join(',')}` };
+}
+
+/** Counts click events on an element marked with data-contract-stop. */
+export function listenClicks(): boolean {
+  const el = document.querySelector('[data-contract-stop]');
+  if (!el) return false;
+  const w = window as unknown as { __dsClicks: number };
+  w.__dsClicks = 0;
+  el.addEventListener('click', () => {
+    w.__dsClicks += 1;
+  });
+  return true;
+}
+
+export function clickCount(): number {
+  return (window as unknown as { __dsClicks?: number }).__dsClicks ?? 0;
+}
+
+/** Number of roots with data-state="open". */
+export function openRoots(kebab: string): number {
+  return document.querySelectorAll(`[data-ds="${kebab}"][data-state="open"]`).length;
+}
+
+export interface TargetProbe {
+  id: string;
+  what: string;
+  owner: string;
+  w: number;
+  h: number;
+  /** The element is the only interactive element of a root that is 24px or more, so a click in the root may reach it. */
+  probeable: boolean;
+}
+
+/**
+ * Target size (WCAG 2.5.8), ported from GoBanana's design-target-size gate.
+ * Every interactive element inside a demo case is at least 24 by 24 CSS px,
+ * counting padding and an absolutely positioned ::before or ::after hit area.
+ * The inline exception holds for a link inside a sentence. The spacing
+ * exception is not taken: the anatomy contract asks for 24px controls.
+ * An undersized element that is the only interactive element of its root
+ * is marked probeable: the suite clicks in the root outside the element and
+ * counts the root as the hit area only when that click focuses the element
+ * (an input inside its box).
+ */
+export function undersizedTargets(): TargetProbe[] {
+  const MIN = 24;
+  const SELECTOR = 'a[href], button, input:not([type="hidden"]), select, textarea, summary, [role="button"], [tabindex], [contenteditable=""], [contenteditable="true"]';
+  const NATIVE = /^(A|BUTTON|INPUT|SELECT|TEXTAREA|SUMMARY)$/;
+  const describe = (el: Element) => {
+    const name = (el.getAttribute('aria-label') ?? (el.textContent ?? '').trim()).slice(0, 40);
+    const ds = el.getAttribute('data-ds');
+    const part = el.getAttribute('data-part');
+    const demo = el.closest('[data-demo-case]')?.getAttribute('data-demo-case');
+    return `${el.tagName.toLowerCase()}${ds ? `[data-ds=${ds}]` : ''}${part ? `[data-part=${part}]` : ''} "${name}"${demo ? ` in case ${demo}` : ''}`;
+  };
+  const hitRect = (el: Element) => {
+    const r = el.getBoundingClientRect();
+    let { left, top, right, bottom } = r;
+    for (const pseudo of ['::before', '::after']) {
+      const s = getComputedStyle(el, pseudo);
+      if (s.content === 'none' || s.content === 'normal' || s.position !== 'absolute' || s.pointerEvents === 'none') continue;
+      const w = parseFloat(s.width);
+      const h = parseFloat(s.height);
+      const x = parseFloat(s.left);
+      const y = parseFloat(s.top);
+      if ([w, h, x, y].some((n) => Number.isNaN(n))) continue;
+      left = Math.min(left, r.left + x);
+      top = Math.min(top, r.top + y);
+      right = Math.max(right, r.left + x + w);
+      bottom = Math.max(bottom, r.top + y + h);
+    }
+    return { left, top, right, bottom, width: right - left, height: bottom - top };
+  };
+  const candidates = Array.from(document.querySelectorAll(`[data-demo-case] :is(${SELECTOR})`)).filter((el) => {
+    if (!NATIVE.test(el.tagName) && el.getAttribute('tabindex') === '-1' && el.getAttribute('role') !== 'button') return false;
+    if (el.matches(':disabled')) return false;
+    if (el.closest('[inert], [hidden], dialog:not([open])')) return false;
+    if (typeof el.checkVisibility === 'function' && !el.checkVisibility({ visibilityProperty: true })) return false;
+    return true;
+  });
+  const out: TargetProbe[] = [];
+  candidates.forEach((el, i) => {
+    let rect = hitRect(el);
+    // Visually hidden until focused (a skip link): measure it focused.
+    if (rect.width <= 2 || rect.height <= 2) {
+      (el as HTMLElement).focus({ preventScroll: true });
+      rect = hitRect(el);
+      (el as HTMLElement).blur();
+    }
+    // Still tiny: a visually hidden control whose pointer target is its label.
+    if (rect.width <= 2 || rect.height <= 2) return;
+    if (rect.width >= MIN - 0.01 && rect.height >= MIN - 0.01) return;
+    // Inline exception: a link in running text.
+    if (el.tagName === 'A' && getComputedStyle(el).display === 'inline') {
+      let block: Element | null = el.parentElement;
+      while (block && getComputedStyle(block).display.startsWith('inline')) block = block.parentElement;
+      const own = (el.textContent ?? '').trim().length;
+      const all = (block?.textContent ?? '').trim().length;
+      if (all > own + 10) return;
+    }
+    const id = `t${i}`;
+    el.setAttribute('data-contract-probe', id);
+    const ownerRoot = el.hasAttribute('data-ds') ? el : el.closest('[data-ds]');
+    const owner = ownerRoot?.getAttribute('data-ds') ?? 'none';
+    const item: TargetProbe = { id, what: describe(el), owner, w: Math.round(rect.width * 10) / 10, h: Math.round(rect.height * 10) / 10, probeable: false };
+    if (ownerRoot && ownerRoot !== el) {
+      const inRoot = Array.from(ownerRoot.querySelectorAll(SELECTOR)).filter((o) => !o.matches(':disabled'));
+      const rr = ownerRoot.getBoundingClientRect();
+      item.probeable = inRoot.length === 1 && inRoot[0] === el && rr.width >= MIN - 0.01 && rr.height >= MIN - 0.01;
+    }
+    out.push(item);
+  });
+  return out;
+}
+
+/**
+ * A point inside the root that owns the probed element and outside the
+ * element itself, on its short side. Call after scrolling it into view.
+ */
+export function probePoint(id: string): { x: number; y: number; rootW: number; rootH: number } | null {
+  const el = document.querySelector(`[data-contract-probe="${id}"]`);
+  const root = el?.parentElement?.closest('[data-ds]');
+  if (!el || !root) return null;
+  (document.activeElement as HTMLElement | null)?.blur();
+  const r = el.getBoundingClientRect();
+  const rr = root.getBoundingClientRect();
+  const cx = r.left + r.width / 2;
+  const cy = r.top + r.height / 2;
+  const size = { rootW: Math.round(rr.width * 10) / 10, rootH: Math.round(rr.height * 10) / 10 };
+  if (r.height < 24 && rr.top < r.top - 0.4) return { x: cx, y: (rr.top + r.top) / 2, ...size };
+  if (r.height < 24 && rr.bottom > r.bottom + 0.4) return { x: cx, y: (rr.bottom + r.bottom) / 2, ...size };
+  if (rr.left < r.left - 0.4) return { x: (rr.left + r.left) / 2, y: cy, ...size };
+  if (rr.right > r.right + 0.4) return { x: (rr.right + r.right) / 2, y: cy, ...size };
+  return null;
+}
+
+/** True when the focused element carries the probe id. */
+export function probeFocused(id: string): boolean {
+  return document.activeElement?.getAttribute('data-contract-probe') === id;
+}
+
+/**
+ * Sideways scroll and native title attributes. When the page scrolls
+ * sideways, each demo case is shown alone in turn to find the cases that
+ * cause it, and the widest text or leaf elements in those cases are named.
+ */
+export function reflowAndTitles(): { overflow: number; wide: string[]; titles: string[] } {
+  const doc = document.documentElement;
+  const measure = () => Math.max(doc.scrollWidth, document.body.scrollWidth) - doc.clientWidth;
+  const overflow = measure();
+  const wide: string[] = [];
+  if (overflow > 1) {
+    const cases = Array.from(document.querySelectorAll<HTMLElement>('[data-demo-case]'));
+    const saved = cases.map((c) => c.style.display);
+    for (const c of cases) {
+      cases.forEach((o) => (o.style.display = o === c ? saved[cases.indexOf(o)] ?? '' : 'none'));
+      const own = measure();
+      if (own <= 1) continue;
+      const leaves = Array.from(c.querySelectorAll('*'))
+        .filter((el) => el.children.length === 0 || Array.from(el.childNodes).some((n) => n.nodeType === 3 && (n.textContent ?? '').trim().length > 0))
+        .map((el) => ({ el, w: el.getBoundingClientRect().width }))
+        .filter((x) => {
+          if (x.w < 1) return false;
+          // A block stretched to its parent's content box is a symptom, not the cause.
+          const parent = x.el.parentElement;
+          if (!parent) return true;
+          const ps = getComputedStyle(parent);
+          const inner = parent.clientWidth - parseFloat(ps.paddingInlineStart) - parseFloat(ps.paddingInlineEnd);
+          return Math.abs(inner - x.w) > 1;
+        })
+        .sort((x, y) => y.w - x.w)
+        .slice(0, 2)
+        .map(({ el, w }) => {
+          const owner = el.closest('[data-ds]:not([data-ds="theme"])');
+          const part = el.getAttribute('data-part');
+          return `${el.tagName.toLowerCase()}${part ? `[data-part=${part}]` : ''}${owner ? ` in [data-ds=${owner.getAttribute('data-ds')}]` : ''} is ${Math.round(w)}px wide, white-space ${getComputedStyle(el).whiteSpace}`;
+        });
+      wide.push(`case ${c.getAttribute('data-demo-case')} alone scrolls sideways by ${Math.round(own)}px${leaves.length ? `: ${leaves.join('; ')}` : ''}`);
+    }
+    cases.forEach((c, i) => (c.style.display = saved[i] ?? ''));
+  }
+  const titles = Array.from(document.querySelectorAll('body [title]')).map((el) => {
+    const owner = el.closest('[data-ds]')?.getAttribute('data-ds');
+    return `${el.tagName.toLowerCase()} title="${(el.getAttribute('title') ?? '').slice(0, 40)}"${owner ? ` in ${owner}` : ''}`;
+  });
+  return { overflow, wide, titles };
+}
+
+/** The component that owns each axe target, for the report. */
+export function axeOwners(targets: string[]): Record<string, string> {
+  const out: Record<string, string> = {};
+  for (const t of targets) {
+    let el: Element | null = null;
+    try {
+      el = document.querySelector(t);
+    } catch {
+      el = null;
+    }
+    const root = el ? el.closest('[data-ds]:not([data-ds="theme"])') : null;
+    const demo = el?.closest('[data-demo-case]')?.getAttribute('data-demo-case');
+    if (root || demo) out[t] = `${root ? `[data-ds=${root.getAttribute('data-ds')}]` : 'page'}${demo ? ` case ${demo}` : ''}`;
+  }
+  return out;
+}

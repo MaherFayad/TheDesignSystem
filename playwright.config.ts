@@ -4,6 +4,7 @@ import { defineConfig } from '@playwright/test';
 // React gallery and the Angular gallery.
 export default defineConfig({
   testDir: 'packages/contract-tests/src',
+  testMatch: /.*\.spec\.ts$/,
   outputDir: 'test-results',
   reporter: [['list']],
   use: {
