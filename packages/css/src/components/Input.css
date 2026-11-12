@@ -1,0 +1,195 @@
+/*
+ * Input: a bordered transparent box (the root) around a native <input> (the
+ * control part) and two adornment slots (start, end).
+ * Source: GoBanana `studio-components.css` `.st-input` (sizes, padding,
+ * the control border, the pill radius, the focus glow plus the 2px ring) and
+ * Figma-Killer-2 `Input.module.css` (the affix wrapper owns the border).
+ *
+ * The focus glow and ring live on a pseudo element whose opacity fades, since
+ * only transform and opacity may animate. Border colors change at once.
+ *
+ * Component custom properties on the root, for recipes to override:
+ *   --ds-input-height          block size
+ *   --ds-input-padding-inline  space between the border and the content
+ *   --ds-input-gap             space between an adornment and the value
+ *   --ds-input-font-size       size of the value and the placeholder
+ *   --ds-input-radius          corner radius
+ *   --ds-input-border-color    border at rest
+ *   --ds-input-fill            background
+ *   --ds-input-glow            the focus glow and ring
+ */
+@layer ds.base {
+  [data-ds='input'] {
+    --ds-input-height: var(--ds-size-control-md);
+    --ds-input-padding-inline: var(--ds-space-m);
+    --ds-input-gap: var(--ds-space-xs);
+    --ds-input-font-size: var(--ds-font-size-s);
+    --ds-input-radius: var(--ds-radius-control);
+    --ds-input-border-color: var(--ds-color-border-control);
+    --ds-input-fill: transparent;
+    --ds-input-glow: var(--ds-elevation-input-focus), var(--ds-focus-shadow-ring);
+
+    position: relative;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    gap: var(--ds-input-gap);
+    inline-size: 100%;
+    min-inline-size: 0;
+    block-size: var(--ds-input-height);
+    min-block-size: var(--ds-size-target-min);
+    padding-block: 0;
+    padding-inline: var(--ds-input-padding-inline);
+    border: var(--ds-border-width-default) solid var(--ds-input-border-color);
+    border-radius: var(--ds-input-radius);
+    background-color: var(--ds-input-fill);
+    color: var(--ds-color-text-default);
+    font-family: var(--ds-font-family-sans);
+    font-size: var(--ds-input-font-size);
+    font-weight: var(--ds-font-weight-regular);
+    line-height: var(--ds-font-leading-snug);
+    cursor: text;
+  }
+
+  /* The glow and the ring. Covers the border box, so the ring sits just outside the border. */
+  [data-ds='input']::before {
+    content: '';
+    position: absolute;
+    inset: calc(var(--ds-border-width-default) * -1);
+    border-radius: inherit;
+    box-shadow: var(--ds-input-glow);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity var(--ds-duration-base) var(--ds-ease-default);
+  }
+
+  /* Content paints above the glow. */
+  [data-ds='input'] > * {
+    position: relative;
+  }
+
+  [data-ds='input'][data-size='xs'] {
+    --ds-input-height: var(--ds-size-control-xs);
+    --ds-input-padding-inline: var(--ds-space-xs);
+    --ds-input-gap: var(--ds-space-2xs);
+  }
+
+  [data-ds='input'][data-size='sm'] {
+    --ds-input-height: var(--ds-size-control-sm);
+    --ds-input-padding-inline: var(--ds-space-s);
+    --ds-input-gap: var(--ds-space-2xs);
+  }
+
+  /* Site fields: 44px and the largest body text. */
+  [data-ds='input'][data-size='lg'] {
+    --ds-input-height: var(--ds-size-control-lg);
+    --ds-input-padding-inline: var(--ds-space-2xl);
+    --ds-input-gap: var(--ds-space-s);
+    --ds-input-font-size: var(--ds-font-size-xl);
+  }
+
+  [data-ds='input'][data-shape='pill'] {
+    --ds-input-radius: var(--ds-radius-pill);
+  }
+
+  /* The native input: no box of its own. Long values scroll inside, never cut with an ellipsis. */
+  [data-ds='input'] > [data-part='control'] {
+    flex: 1 1 auto;
+    box-sizing: border-box;
+    inline-size: 100%;
+    min-inline-size: 0;
+    block-size: 100%;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: inherit;
+    font: inherit;
+    letter-spacing: inherit;
+    text-overflow: clip;
+    outline: none;
+  }
+
+  [data-ds='input'] > [data-part='control']::placeholder {
+    color: var(--ds-color-text-placeholder);
+    opacity: 1;
+  }
+
+  [data-ds='input'] > :is([data-part='start'], [data-part='end']) {
+    display: inline-flex;
+    flex: none;
+    align-items: center;
+    color: var(--ds-color-text-muted);
+    white-space: nowrap;
+    cursor: default;
+  }
+
+  /* Hover: a stronger border, only while the value can change. */
+  [data-ds='input']:hover:not([data-disabled], [data-readonly], [data-invalid], :focus-within) {
+    border-color: var(--ds-color-border-control-hover);
+  }
+
+  /* Focus: the glow and the 2px ring fade in. The transparent outline shows in forced colors mode. */
+  [data-ds='input']:focus-within {
+    border-color: var(--ds-color-bg-overlay-50);
+    outline: var(--ds-border-width-strong) solid transparent;
+    outline-offset: var(--ds-border-width-default);
+  }
+
+  [data-ds='input']:focus-within::before {
+    opacity: 1;
+  }
+
+  /* Invalid: the danger border, at 3:1 on the surface. The Field error says what to do. */
+  [data-ds='input'][data-invalid],
+  [data-ds='input'][data-invalid]:focus-within {
+    border-color: var(--ds-color-state-danger-border);
+  }
+
+  /* Read only: still readable and focusable. A dashed border and a quiet fill tell it apart. */
+  [data-ds='input'][data-readonly] {
+    --ds-input-fill: var(--ds-color-bg-overlay-5);
+
+    border-style: dashed;
+    cursor: default;
+  }
+
+  [data-ds='input'][data-readonly] > [data-part='control'] {
+    cursor: default;
+  }
+
+  /* Disabled: dim text and border, no focus, no hover. */
+  [data-ds='input'][data-disabled] {
+    border-color: var(--ds-color-border-strong);
+    color: var(--ds-color-text-disabled);
+    cursor: not-allowed;
+  }
+
+  [data-ds='input'][data-disabled] > [data-part='control'] {
+    cursor: not-allowed;
+  }
+
+  [data-ds='input'][data-disabled] > [data-part='control']::placeholder,
+  [data-ds='input'][data-disabled] > :is([data-part='start'], [data-part='end']) {
+    color: var(--ds-color-text-disabled);
+  }
+
+  /*
+   * Email, url, tel and number values run left to right in every language.
+   * The value stays on the reading side of the form (text-align end of a
+   * left to right box is the right edge in an Arabic form).
+   */
+  [data-ds='input'] > [data-part='control']:is([type='email'], [type='url'], [type='tel'], [type='number']) {
+    direction: ltr;
+    text-align: start;
+  }
+
+  [data-ds='input']:dir(rtl) > [data-part='control']:is([type='email'], [type='url'], [type='tel'], [type='number']) {
+    text-align: end;
+  }
+
+  /* The placeholder takes its direction from its own first letter: an Arabic hint runs right to left, +966 stays left to right. */
+  [data-ds='input'] > [data-part='control']:is([type='email'], [type='url'], [type='tel'], [type='number']):placeholder-shown {
+    unicode-bidi: plaintext;
+  }
+}

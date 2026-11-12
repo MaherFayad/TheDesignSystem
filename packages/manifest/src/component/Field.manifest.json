@@ -1,0 +1,106 @@
+{
+  "name": "Field",
+  "kind": "component",
+  "family": "forms",
+  "summary": "Wires one label, one description and one error message to one form control, and passes the invalid, disabled, read only and required state to it.",
+  "useWhen": [
+    "Any form control that needs a visible label",
+    "A control with a hint that helps fill it, or an error that says how to fix the value",
+    "A settings row with the label at the start and the control at the end (orientation horizontal)"
+  ],
+  "avoidWhen": [
+    "A search box in a toolbar whose purpose is plain from an icon and an aria-label",
+    "A group of checkboxes or radios that shares one question",
+    "Read only text that is not a control"
+  ],
+  "insteadUse": {
+    "A group of choices under one question": "Fieldset",
+    "Read only text that is not a control": "a description list",
+    "A message about the whole form": "Alert"
+  },
+  "anatomy": ["root", "label", "required", "description", "error"],
+  "parts": {
+    "FieldLabel": "label",
+    "FieldDescription": "description",
+    "FieldError": "error"
+  },
+  "slots": {
+    "root": { "accepts": ["Input", "Select", "Textarea", "Combobox"], "min": 1, "max": 1 },
+    "label": { "accepts": "text" },
+    "description": { "accepts": "text" },
+    "error": { "accepts": "text" }
+  },
+  "props": {
+    "orientation": { "type": ["vertical", "horizontal"], "default": "vertical", "description": "vertical: label above the control. horizontal: label at the start of the control's line." },
+    "invalid": { "type": "boolean", "description": "Marks the control invalid. When not passed, the field is invalid while an error message shows. false hides the error." },
+    "disabled": { "type": "boolean", "default": false, "description": "Passed to the control." },
+    "readOnly": { "type": "boolean", "default": false, "description": "Passed to the control. Still focusable and readable." },
+    "required": { "type": "boolean", "default": false, "description": "Shows the required mark and sets aria-required on the control." },
+    "label": { "type": "node", "description": "One line API: renders FieldLabel." },
+    "description": { "type": "node", "description": "One line API: renders FieldDescription." },
+    "error": { "type": "node", "description": "One line API: renders FieldError." }
+  },
+  "states": ["data-invalid", "data-disabled", "data-readonly", "data-orientation"],
+  "a11y": {
+    "role": "none on the root. The label is a native label bound to the control with for and id.",
+    "focus": "The root is never focusable. Clicking the label focuses the control.",
+    "keys": {
+      "Tab": "Moves to the control. The field adds no stop of its own."
+    },
+    "announce": "The description, then the error, are read with the control through aria-describedby when focus lands there. The error is not a live region and never role alert, so an error that is there when the page loads does not interrupt.",
+    "native": { "accessibilityRole": "none", "accessibilityState": ["disabled"] },
+    "notes": [
+      "The required mark is an asterisk glyph, so it does not rely on color, and it is aria-hidden. The control carries aria-required, not the native required attribute, so the browser shows no validation bubble.",
+      "The error starts with a danger icon, so it does not rely on color.",
+      "Controls read the wiring with useFieldControl(): id, aria-describedby, aria-invalid, aria-required, disabled and readOnly. A value the control passes itself wins.",
+      "A form that checks on submit moves focus to the first invalid control."
+    ]
+  },
+  "content": {
+    "en": {
+      "label": "A noun in sentence case that names the value: Email, Board name. No colon, no question.",
+      "description": "One sentence that helps fill the field or says where the value shows. Not a repeat of the label.",
+      "error": "Says what to do, in plain words: Add the part after the @. Never only Invalid or Required.",
+      "placeholder": "Never the label. An example value at most: For example, spring launch."
+    },
+    "ar": {
+      "label": "اسم بصيغة المصدر أو الاسم، بدون تشكيل: البريد الإلكتروني، اسم اللوحة",
+      "description": "جملة وحدة توضح وش يكتب أو وين تظهر القيمة",
+      "error": "يقول وش يسوي عشان يصلحها: البريد ناقص، اكتبه كامل. مو بس غلط",
+      "placeholder": "ما يكون بديل عن العنوان. مثال على القيمة بس",
+      "latin": "النص اللاتيني داخل العربي يمر عبر Bidi"
+    }
+  },
+  "tokens": [
+    "space.xs",
+    "space.3xs",
+    "space.2xs",
+    "space.l",
+    "control-row.label.width",
+    "font.size.s",
+    "font.weight.semibold",
+    "font.weight.regular",
+    "font.leading.snug",
+    "font.leading.normal",
+    "color.text.default",
+    "color.text.muted",
+    "color.state.danger.text"
+  ],
+  "frameworks": {
+    "react": { "status": "ready", "behavior": "radix:Label, native label wiring", "example": "Field.demo.tsx" },
+    "angular": { "status": "planned" },
+    "native": { "status": "planned" }
+  },
+  "styles": {
+    "studio": "Semibold label, muted description, danger text error with an icon",
+    "desk": "The same, in Instrument Sans"
+  },
+  "mistakes": [
+    { "wrong": "A placeholder used as the label", "right": "A FieldLabel above the control, and an example value in the placeholder at most" },
+    { "wrong": "An error that only says Invalid email", "right": "An error that says how to fix it: Add the part after the @, for example name@example.com" },
+    { "wrong": "role alert on an inline error that is there when the page loads", "right": "FieldError, read through aria-describedby when focus lands on the control" },
+    { "wrong": "A red asterisk as the only sign of a required field", "right": "required on Field: an aria-hidden asterisk glyph plus aria-required on the control" },
+    { "wrong": "A label with an id written by hand and a control with a different id", "right": "Field gives both ids. A control id of its own is picked up by the label." }
+  ],
+  "since": "0.1.0"
+}

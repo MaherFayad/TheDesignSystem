@@ -1,0 +1,79 @@
+/*
+ * Field: a label, a control, a description and an error, in that DOM order.
+ * Sources: GoBanana `studio-components.css` (readable text never below
+ * text s) and Figma-Killer-2 `FormField.module.css` (stacked gap, a semibold
+ * label, a quiet description).
+ *
+ * Component custom properties on the root, for recipes to override:
+ *   --ds-field-gap            space between the parts
+ *   --ds-field-label-width    label column in the horizontal orientation
+ */
+@layer ds.base {
+  [data-ds='field'] {
+    --ds-field-gap: var(--ds-space-xs);
+    --ds-field-label-width: var(--ds-control-row-label-width);
+
+    display: flex;
+    flex-direction: column;
+    gap: var(--ds-field-gap);
+    min-inline-size: 0;
+  }
+
+  /* Horizontal: the label sits at the start of the control's line, the rest stacks at the end. */
+  [data-ds='field'][data-orientation='horizontal'] {
+    display: grid;
+    grid-template-columns: minmax(0, var(--ds-field-label-width)) minmax(0, 1fr);
+    column-gap: var(--ds-space-l);
+    row-gap: var(--ds-field-gap);
+    align-items: center;
+  }
+
+  [data-ds='field'][data-orientation='horizontal'] > * {
+    grid-column: 2;
+  }
+
+  [data-ds='field'][data-orientation='horizontal'] > [data-part='label'] {
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  [data-ds='field'] > [data-part='label'] {
+    color: var(--ds-color-text-default);
+    font-size: var(--ds-font-size-s);
+    font-weight: var(--ds-font-weight-semibold);
+    line-height: var(--ds-font-leading-snug);
+    overflow-wrap: anywhere;
+  }
+
+  /* The required mark: a glyph, so it does not rely on color. Hidden from the accessible name. */
+  [data-ds='field'] > [data-part='label'] > [data-part='required'] {
+    margin-inline-start: var(--ds-space-3xs);
+    color: var(--ds-color-text-muted);
+    font-weight: var(--ds-font-weight-regular);
+  }
+
+  [data-ds='field'] > [data-part='description'],
+  [data-ds='field'] > [data-part='error'] {
+    margin: 0;
+    font-size: var(--ds-font-size-s);
+    line-height: var(--ds-font-leading-normal);
+    overflow-wrap: anywhere;
+  }
+
+  [data-ds='field'] > [data-part='description'] {
+    color: var(--ds-color-text-muted);
+  }
+
+  /* The error says what to do. The icon keeps it from being color only. */
+  [data-ds='field'] > [data-part='error'] {
+    display: flex;
+    align-items: start;
+    gap: var(--ds-space-2xs);
+    color: var(--ds-color-state-danger-text);
+  }
+
+  /* Disabled: the words stay readable; the control itself carries the disabled look. */
+  [data-ds='field'][data-disabled] > [data-part='label'] {
+    color: var(--ds-color-text-muted);
+  }
+}
