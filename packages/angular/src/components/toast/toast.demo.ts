@@ -45,7 +45,7 @@ const longDescription =
         <button dsButton data-demo-trigger="" (click)="showAction()">Show toast with action</button>
         <button dsButton data-demo-trigger="" (click)="showDescription()">Show toast with description</button>
       </div>
-      <div data-demo="grid" style="grid-template-columns: repeat(auto-fill, minmax(18rem, 1fr))">
+      <div data-demo="grid" style="grid-template-columns: repeat(auto-fill, minmax(min(18rem, 100%), 1fr))">
         @for (tone of tones; track tone) {
           @if (open()[tone]) {
             <div dsToast lang="en" [tone]="tone" [title]="copy[tone].title" [description]="copy[tone].description"

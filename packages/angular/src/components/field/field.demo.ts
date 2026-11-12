@@ -31,7 +31,7 @@ const formFields: [string, string][] = [
   template: `
     <section data-demo="case" data-demo-case="variants" heading="Orientations, required, compound parts">
       <div dsTheme [lang]="'en'" data-demo="content">
-        <div data-demo="grid" style="grid-template-columns: repeat(auto-fill, minmax(18rem, 1fr));">
+        <div data-demo="grid" style="grid-template-columns: repeat(auto-fill, minmax(min(18rem, 100%), 1fr));">
           <div dsField label="Board name" description="Shown on the board card.">
             <div dsInput placeholder="For example, spring launch"></div>
           </div>
@@ -74,7 +74,7 @@ const formFields: [string, string][] = [
     <section data-demo="case" data-demo-case="many" heading="A short form">
       <div dsTheme [lang]="'en'" data-demo="content">
         <p data-demo="label">Fields marked * are required.</p>
-        <div data-demo="grid" style="grid-template-columns: repeat(auto-fill, minmax(16rem, 1fr));">
+        <div data-demo="grid" style="grid-template-columns: repeat(auto-fill, minmax(min(16rem, 100%), 1fr));">
           <div dsField label="First name" required>
             <div dsInput autoComplete="given-name"></div>
           </div>

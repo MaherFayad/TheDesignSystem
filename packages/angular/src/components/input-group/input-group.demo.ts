@@ -26,7 +26,7 @@ const longPath = 'team/design/reviews/2026/november/landing-page-hero-directions
   template: `
     <section data-demo="case" data-demo-case="variants" heading="Sizes and shapes">
       @for (shape of shapes; track shape) {
-        <div data-demo="grid" style="grid-template-columns: repeat(auto-fill, minmax(16rem, 1fr));">
+        <div data-demo="grid" style="grid-template-columns: repeat(auto-fill, minmax(min(16rem, 100%), 1fr));">
           @for (size of sizes; track size) {
             <div dsInputGroup [size]="size" [shape]="shape">
               <span dsInputGroupAddon>https://</span>
@@ -36,7 +36,7 @@ const longPath = 'team/design/reviews/2026/november/landing-page-hero-directions
           }
         </div>
       }
-      <div data-demo="grid" style="grid-template-columns: repeat(auto-fill, minmax(16rem, 1fr));">
+      <div data-demo="grid" style="grid-template-columns: repeat(auto-fill, minmax(min(16rem, 100%), 1fr));">
         <div dsInputGroup>
           <span dsInputGroupAddon>SAR</span>
           <div dsInput aria-label="Price" type="number" value="249"></div>
@@ -85,7 +85,7 @@ const longPath = 'team/design/reviews/2026/november/landing-page-hero-directions
     </section>
 
     <section data-demo="case" data-demo-case="many" heading="Add ons and actions">
-      <div data-demo="grid" style="grid-template-columns: repeat(auto-fill, minmax(18rem, 1fr));">
+      <div data-demo="grid" style="grid-template-columns: repeat(auto-fill, minmax(min(18rem, 100%), 1fr));">
         <div dsField label="Share link">
           <div dsInputGroup>
             <span dsInputGroupAddon>https://</span>

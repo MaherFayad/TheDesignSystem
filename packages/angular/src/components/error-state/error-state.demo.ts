@@ -21,7 +21,7 @@ type Key = (typeof keys)[number];
     <ng-template #requestAccess><button dsButton tone="accent" emphasis="solid">Request access</button></ng-template>
 
     <section data-demo="case" data-demo-case="variants" heading="Variants: sm in a card, md for a section, lg for a page">
-      <div data-demo="grid" style="grid-template-columns: repeat(auto-fill, minmax(18rem, 1fr));">
+      <div data-demo="grid" style="grid-template-columns: repeat(auto-fill, minmax(min(18rem, 100%), 1fr));">
         <div style="${PANEL}">
           <div dsErrorState lang="en" size="sm" title="Could not load activity" body="Check your connection, then retry." [headingLevel]="3" [retrying]="retrying().sm" [onRetry]="retry.sm"></div>
         </div>

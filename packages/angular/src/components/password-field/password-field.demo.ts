@@ -18,7 +18,7 @@ const shapes: PasswordFieldShape[] = ['default', 'pill'];
   template: `
     <section data-demo="case" data-demo-case="variants" heading="Sizes, shapes, hidden and shown">
       @for (shape of shapes; track shape) {
-        <div data-demo="grid" style="grid-template-columns: repeat(auto-fill, minmax(14rem, 1fr));">
+        <div data-demo="grid" style="grid-template-columns: repeat(auto-fill, minmax(min(14rem, 100%), 1fr));">
           @for (size of sizes; track size) {
             <div
               dsPasswordField
@@ -66,7 +66,7 @@ const shapes: PasswordFieldShape[] = ['default', 'pill'];
     </section>
 
     <section data-demo="case" data-demo-case="many" heading="Change password">
-      <div data-demo="grid" style="grid-template-columns: repeat(auto-fill, minmax(16rem, 1fr));">
+      <div data-demo="grid" style="grid-template-columns: repeat(auto-fill, minmax(min(16rem, 100%), 1fr));">
         <div dsField label="Current password">
           <div dsPasswordField value="spring-launch-26"></div>
         </div>

@@ -17,7 +17,7 @@ const nearLimit = 'The board opens on the spring launch frame, with the hero and
   template: `
     <section data-demo="case" data-demo-case="variants" heading="Sizes, count, fixed height">
       <div dsTheme [lang]="'en'" data-demo="content">
-        <div data-demo="grid" style="grid-template-columns: repeat(auto-fill, minmax(16rem, 1fr));">
+        <div data-demo="grid" style="grid-template-columns: repeat(auto-fill, minmax(min(16rem, 100%), 1fr));">
           @for (size of sizes; track size) {
             <div dsField [label]="'Notes, size ' + size">
               <div dsTextarea [size]="size" [rows]="2" placeholder="For example, the hero needs a new photo"></div>
@@ -31,7 +31,7 @@ const nearLimit = 'The board opens on the spring launch frame, with the hero and
           </div>
         </div>
         <div dsTheme [lang]="'ar'" data-demo="content">
-          <div data-demo="grid" style="grid-template-columns: repeat(auto-fill, minmax(16rem, 1fr));">
+          <div data-demo="grid" style="grid-template-columns: repeat(auto-fill, minmax(min(16rem, 100%), 1fr));">
             <div dsField label="ملاحظات" description="بحد أقصى 200 حرف.">
               <div dsTextarea [limit]="200" value="مسودة أولى لصفحة إطلاق الربيع."></div>
             </div>
@@ -95,7 +95,7 @@ const nearLimit = 'The board opens on the spring launch frame, with the hero and
 
     <section data-demo="case" data-demo-case="error" heading="Near and past the limit">
       <div dsTheme [lang]="'en'" data-demo="content">
-        <div data-demo="grid" style="grid-template-columns: repeat(auto-fill, minmax(16rem, 1fr));">
+        <div data-demo="grid" style="grid-template-columns: repeat(auto-fill, minmax(min(16rem, 100%), 1fr));">
           <div dsField label="Board summary" description="Up to 100 characters.">
             <div dsTextarea [limit]="100" [value]="nearLimit"></div>
           </div>

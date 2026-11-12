@@ -13,7 +13,7 @@ import { DsLabel } from './label';
   template: `
     <section data-demo="case" data-demo-case="variants" heading="Sizes, required, optional">
       <div dsTheme [lang]="'en'" data-demo="content">
-        <div data-demo="grid" style="grid-template-columns: repeat(auto-fill, minmax(14rem, 1fr));">
+        <div data-demo="grid" style="grid-template-columns: repeat(auto-fill, minmax(min(14rem, 100%), 1fr));">
           <div style="display: grid; gap: var(--ds-space-xs); align-content: start;">
             <label dsLabel for="label-md">Board name</label>
             <div dsInput id="label-md"></div>
@@ -32,7 +32,7 @@ import { DsLabel } from './label';
           </div>
         </div>
         <div dsTheme [lang]="'ar'" data-demo="content">
-          <div data-demo="grid" style="grid-template-columns: repeat(auto-fill, minmax(14rem, 1fr));">
+          <div data-demo="grid" style="grid-template-columns: repeat(auto-fill, minmax(min(14rem, 100%), 1fr));">
             <div style="display: grid; gap: var(--ds-space-xs); align-content: start;">
               <label dsLabel for="label-ar" required>البريد الإلكتروني</label>
               <div dsInput id="label-ar" type="email"></div>

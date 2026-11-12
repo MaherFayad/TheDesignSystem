@@ -62,7 +62,7 @@ const copy = {
       </section>
 
       <section data-demo="case" data-demo-case="too-many" heading="Too many options, the list scrolls inside">
-        <div data-demo="grid" style="grid-template-columns: repeat(auto-fill, minmax(16rem, 1fr));">
+        <div data-demo="grid" style="grid-template-columns: repeat(auto-fill, minmax(min(16rem, 100%), 1fr));">
           <div dsListBox [attr.aria-label]="copy.en.cities" [items]="sectionsEn" defaultValue="abha"></div>
         </div>
       </section>
