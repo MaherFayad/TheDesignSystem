@@ -1,0 +1,19 @@
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+[field] checkbox {"labelFor":"button role=checkbox","labelId":"yes","control":"button role=checkbox","labelledby":null,"describedby":"p[description] p[error]","invalid":"true","required":"true","dataInvalid":true,"firstItemInvalid":"true"}
+[field] switch {"labelFor":"button role=switch","labelId":"yes","control":"button role=switch","labelledby":null,"describedby":"p[description] p[error]","invalid":"true","required":"true","dataInvalid":true,"firstItemInvalid":null}
+[field] slider {"labelFor":"span role=slider","labelId":"yes","control":"span role=slider","labelledby":"label[label]","describedby":"p[description] p[error]","invalid":"true","required":null,"dataInvalid":true,"firstItemInvalid":null}
+[field] range {"labelFor":"span role=slider","labelId":"yes","control":"span role=slider","labelledby":null,"describedby":"p[description] p[error]","invalid":"true","required":null,"dataInvalid":true,"firstItemInvalid":null}
+[field] cgroup {"labelFor":"button role=checkbox","labelId":"yes","control":"fieldset role=null","labelledby":null,"describedby":null,"invalid":null,"required":null,"dataInvalid":false,"firstItemInvalid":null}
+[field] rgroup {"labelFor":"points at nothing","labelId":"yes","control":"div role=radiogroup","labelledby":null,"describedby":null,"invalid":null,"required":"false","dataInvalid":false,"firstItemInvalid":null}
+[field] rcard {"labelFor":"points at nothing","labelId":"yes","control":"div role=radiogroup","labelledby":null,"describedby":null,"invalid":null,"required":"false","dataInvalid":false,"firstItemInvalid":null}
+[field] rating {"labelFor":"points at nothing","labelId":"yes","control":"div role=radiogroup","labelledby":null,"describedby":null,"invalid":null,"required":"false","dataInvalid":false,"firstItemInvalid":null}
+[form] start volume=30&price[]=20&price[]=80&view=a&score=2
+[form] after terms=yes&sounds=on&volume=31&price[]=21&price[]=80&channels=a&channels=b&view=b&plan=a&score=4
+[form] events click:terms click:sounds input:volume input:price[] click:(no name) click:channels click:channels click:view click:view click:plan click:score click:score
+[form] after reset volume=30&price[]=20&price[]=80&view=a&score=2
+[form] hidden inputs checkbox|terms|true|-1|false ; checkbox|sounds|true|-1|false ; text|volume|null|null|false ; text|price[]|null|null|false ; text|price[]|null|null|false ; checkbox||true|-1|false ; checkbox|channels|true|-1|false ; checkbox|channels|true|-1|false ; radio|view|true|-1|false ; radio|view|true|-1|false ; radio|plan|true|-1|false ; radio|plan|true|-1|false ; radio|score|true|-1|false ; radio|score|true|-1|false ; radio|score|true|-1|false ; radio|score|true|-1|false ; radio|score|true|-1|false
+[Form] after submit: Terms: Tick this box to go on. | Pick 10 or more. | Pick one option to go on. | Pick one option to go on. | Pick one option to go on.
+[Form] after checking terms: Pick 10 or more. | Pick one option to go on. | Pick one option to go on. | Pick one option to go on.
+[Form] after volume 12: Pick 10 or more. | Pick one option to go on. | Pick one option to go on. | Pick one option to go on.
+[Form] after picking view, plan and score: Pick 10 or more.
+      Tests  1 failed | 3 passed (4)

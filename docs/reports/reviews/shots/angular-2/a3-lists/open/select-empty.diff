@@ -1,0 +1,40 @@
+1,16c1,22
+< node:internal/modules/run_main:123
+<     triggerUncaughtException(
+<     ^
+< 
+< page.goto: Timeout 30000ms exceeded.
+< Call log:
+< [2m  - navigating to "http://localhost:5301/c/select?style=studio", waiting until "load"[22m
+< 
+<     at /home/user/TheDesignSystem/docs/reports/reviews/shots/angular-2/a3-lists/probe.mjs:9:9 {
+<   log: [
+<     '  - navigating to "http://localhost:5301/c/select?style=studio", waiting until "load"'
+<   ],
+<   name: 'TimeoutError'
+< }
+< 
+< Node.js v22.23.4
+---
+> # owner
+> <div data-ds="field" data-orientation="vertical" style="inline-size: 14rem;">
+>   <label data-ds="label" data-part="label" data-size="md" for="ID1" id="ID0">
+>     "Status"
+>   <button aria-autocomplete="none" aria-controls="ID2" aria-expanded="true" data-ds="select" data-placeholder="" data-radix-popper-align="start" data-radix-popper-side="bottom" data-shape="default" data-size="md" dir="ltr" id="ID1" role="combobox" type="button">
+>     <span data-part="value" style="pointer-events: none;">
+>       "Choose an option"
+>     <span aria-hidden="true" data-part="icon">
+>       <svg aria-hidden="true" data-ds="icon" data-icon="chevrons-up-down" data-set="pixel" data-size="md" fill="currentColor" focusable="false" height="16" viewBox="0 0 24 24" width="16" xmlns="http://www.w3.org/2000/svg">
+>         <path d="M13 20h-2v-2h2v2Zm-2-2H9v-2h2v2Zm4 0h-2v-2h2v2Zm-6-2H7v-2h2v2Zm8-2v2h-2v-2h2Zm-8-4H7V8h2v2Zm8 0h-2V8h2v2Zm-6-2H9V6h2v2Zm4 0h-2V6h2v2Zm-2-2h-2V4h2v2Z">
+> # layers
+> <div data-contrast="default" data-density="default" data-ds="theme" data-glass="regular" data-menu-layer="" data-platform="web" data-scheme="dark" data-style="studio" dir="ltr" lang="en">
+>   <div data-radix-popper-content-wrapper="" dir="ltr" style="position: fixed; left: 0px; top: 0px; transform: translate(16px, 450px); min-width: max-content; --radix-popper-transform-origin: 0% 0px; z-index: 9800; --radix-popper-available-width: 1264px; --radix-popper-available-height: 342.3125px; --radix-popper-anchor-width: 224px; --radix-popper-anchor-height: 32px;">
+>     <div aria-describedby="ID3" aria-labelledby="ID0" data-align="start" data-ds="select" data-part="content" data-side="bottom" data-size="md" data-state="open" dir="ltr" id="ID2" role="listbox" style="box-sizing: border-box; display: flex; flex-direction: column; outline: none; --radix-select-content-transform-origin: var(--radix-popper-transform-origin); --radix-select-content-available-width: var(--radix-popper-available-width); --radix-select-content-available-height: var(--radix-popper-available-height); --radix-select-trigger-width: var(--radix-popper-anchor-width); --radix-select-trigger-height: var(--radix-popper-anchor-height); pointer-events: auto;" tabindex="-1">
+>       <style >
+>         "[data-radix-select-viewport]{scrollbar-width:none;-ms-overflow-style:none;-webkit-overflow-scrolling:touch;}[data-radix-select-viewport]::-webkit-scrollbar{display:none}"
+>       <div data-part="viewport" data-radix-select-viewport="" role="presentation" style="position: relative; flex: 1 1 0%; overflow: hidden auto;">
+>         <div data-part="empty" id="ID3" role="presentation">
+>           "No statuses yet. Add one from Settings."
+> # active: div role=listbox part=content id=ID2 text=[data-radix-select-viewport]{s
+> # body style: pointer-events: none; overflow: hidden;
+> # aria-hidden siblings: 1

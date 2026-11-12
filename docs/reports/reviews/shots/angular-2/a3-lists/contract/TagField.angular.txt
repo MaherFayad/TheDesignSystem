@@ -1,0 +1,59 @@
+
+> the-system@0.0.0 contract
+> tsx packages/contract-tests/run.ts --framework angular --url http://localhost:5302 --component TagField
+
+
+Running 44 tests using 4 workers
+
+  ✓   2 packages/contract-tests/src/contract.spec.ts:354:5 › TagField: anatomy, neutral (2.8s)
+  ✓   1 packages/contract-tests/src/contract.spec.ts:376:3 › TagField: variant attributes (3.0s)
+  ✓   3 packages/contract-tests/src/contract.spec.ts:354:5 › TagField: anatomy, studio (3.5s)
+  ✓   4 packages/contract-tests/src/contract.spec.ts:354:5 › TagField: anatomy, desk (3.6s)
+  ✓   5 packages/contract-tests/src/contract.spec.ts:393:3 › TagField: state attributes (3.0s)
+  ✓   9 packages/contract-tests/src/contract.spec.ts:543:7 › TagField: target size, desk comfortable (2.1s)
+  ✓   7 packages/contract-tests/src/contract.spec.ts:543:7 › TagField: target size, desk compact (3.0s)
+  ✓   8 packages/contract-tests/src/contract.spec.ts:543:7 › TagField: target size, desk default (3.2s)
+  ✓  11 packages/contract-tests/src/contract.spec.ts:543:7 › TagField: target size, neutral compact (1.5s)
+  -  10 packages/contract-tests/src/contract.spec.ts:553:7 › TagField: target size open, desk
+  ✓  12 packages/contract-tests/src/contract.spec.ts:543:7 › TagField: target size, neutral default (2.2s)
+  ✓  13 packages/contract-tests/src/contract.spec.ts:543:7 › TagField: target size, neutral comfortable (2.1s)
+  -  14 packages/contract-tests/src/contract.spec.ts:553:7 › TagField: target size open, neutral
+  ✓  15 packages/contract-tests/src/contract.spec.ts:543:7 › TagField: target size, studio compact (2.7s)
+  ✓  16 packages/contract-tests/src/contract.spec.ts:543:7 › TagField: target size, studio default (2.1s)
+  ✓  17 packages/contract-tests/src/contract.spec.ts:543:7 › TagField: target size, studio comfortable (2.5s)
+  -  18 packages/contract-tests/src/contract.spec.ts:553:7 › TagField: target size open, studio
+  ✓  19 packages/contract-tests/src/contract.spec.ts:574:5 › TagField: no sideways scroll at 320px and no title attribute, en ltr (2.9s)
+  ✓  20 packages/contract-tests/src/contract.spec.ts:574:5 › TagField: no sideways scroll at 320px and no title attribute, ar rtl (2.2s)
+  -  22 packages/contract-tests/src/contract.spec.ts:593:7 › TagField: axe open, desk dark en ltr
+  -  24 packages/contract-tests/src/contract.spec.ts:593:7 › TagField: axe open, desk dark ar rtl
+  ✓   6 packages/contract-tests/src/contract.spec.ts:412:3 › TagField: keyboard map (18.7s)
+  ✓  23 packages/contract-tests/src/contract.spec.ts:587:5 › TagField: axe, desk dark ar rtl (5.7s)
+  ✓  21 packages/contract-tests/src/contract.spec.ts:587:5 › TagField: axe, desk dark en ltr (7.0s)
+  -  26 packages/contract-tests/src/contract.spec.ts:593:7 › TagField: axe open, desk light en ltr
+  -  28 packages/contract-tests/src/contract.spec.ts:593:7 › TagField: axe open, desk light ar rtl
+  ✓  25 packages/contract-tests/src/contract.spec.ts:587:5 › TagField: axe, desk light en ltr (5.5s)
+  -  30 packages/contract-tests/src/contract.spec.ts:593:7 › TagField: axe open, neutral light en ltr
+  ✓  27 packages/contract-tests/src/contract.spec.ts:587:5 › TagField: axe, desk light ar rtl (7.1s)
+  ✓  29 packages/contract-tests/src/contract.spec.ts:587:5 › TagField: axe, neutral light en ltr (7.5s)
+  -  32 packages/contract-tests/src/contract.spec.ts:593:7 › TagField: axe open, neutral light ar rtl
+  ✓  31 packages/contract-tests/src/contract.spec.ts:587:5 › TagField: axe, neutral light ar rtl (5.8s)
+  -  34 packages/contract-tests/src/contract.spec.ts:593:7 › TagField: axe open, neutral dark en ltr
+  -  36 packages/contract-tests/src/contract.spec.ts:593:7 › TagField: axe open, neutral dark ar rtl
+  ✓  33 packages/contract-tests/src/contract.spec.ts:587:5 › TagField: axe, neutral dark en ltr (6.2s)
+  -  38 packages/contract-tests/src/contract.spec.ts:593:7 › TagField: axe open, studio dark en ltr
+  ✓  35 packages/contract-tests/src/contract.spec.ts:587:5 › TagField: axe, neutral dark ar rtl (5.7s)
+  -  40 packages/contract-tests/src/contract.spec.ts:593:7 › TagField: axe open, studio dark ar rtl
+  ✓  37 packages/contract-tests/src/contract.spec.ts:587:5 › TagField: axe, studio dark en ltr (6.3s)
+  ✓  39 packages/contract-tests/src/contract.spec.ts:587:5 › TagField: axe, studio dark ar rtl (4.6s)
+  -  42 packages/contract-tests/src/contract.spec.ts:593:7 › TagField: axe open, studio light en ltr
+  -  44 packages/contract-tests/src/contract.spec.ts:593:7 › TagField: axe open, studio light ar rtl
+  ✓  41 packages/contract-tests/src/contract.spec.ts:587:5 › TagField: axe, studio light en ltr (6.3s)
+  ✓  43 packages/contract-tests/src/contract.spec.ts:587:5 › TagField: axe, studio light ar rtl (5.8s)
+
+  15 skipped
+  29 passed (51.1s)
+
+Contract summary
+pass  TagField: 29 passed, 0 failed, 15 skipped
+
+JSON report: /home/user/TheDesignSystem/packages/contract-tests/.out/19523/contract-angular.partial.json (partial run: the full report in docs/reports is untouched)

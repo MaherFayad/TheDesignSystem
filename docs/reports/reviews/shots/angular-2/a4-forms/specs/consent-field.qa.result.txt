@@ -1,0 +1,79 @@
+❯ Building...
+✔ Building...
+Application bundle generation complete. [3.654 seconds] - 2026-11-12T18:08:53.637Z
+
+
+ RUN  v5.1.0 /home/user/TheDesignSystem/packages/angular
+
+ ❯  angular  src/components/consent-field/consent-field.qa.spec.ts (2 tests | 2 failed) 268ms
+   ❯ QA A4: ConsentField forms and host hygiene (2)
+     × FormControl and ngModel, disable, touched on blur 195ms
+     × static inputs leave nothing on the hosts 70ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL   angular  src/components/consent-field/consent-field.qa.spec.ts > QA A4: ConsentField forms and host hygiene > FormControl and ngModel, disable, touched on blur
+AssertionError: expected [ …(10) ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   "reactive model to view (true): granted true",
++   "reactive view to model (click): false dirty true touched after click true",
++   "reactive touched on blur without a change: false",
++   "disable(): root data-disabled=true button disabled=true aria-disabled=null data-disabled=true",
++   "enable(): root data-disabled=false button disabled=false data-disabled=false",
++   "ngModel model to view (true): denied",
++   "ngModel initial true renders: granted",
++   "ngModel model to view with detectChanges: consent-field denied",
++   "ngModel model to view with detectChanges: checkbox unchecked",
++   "ngModel view to model (click): true",
++ ]
+
+ ❯ src/components/consent-field/consent-field.qa.spec.ts:128:18
+    126|     await t.whenStable();
+    127|     dump('ngModel view to model (click):', t.componentInstance.granted…
+    128|     expect(DUMP).toEqual([]);
+       |                  ^
+    129|   });
+    130|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL   angular  src/components/consent-field/consent-field.qa.spec.ts > QA A4: ConsentField forms and host hygiene > static inputs leave nothing on the hosts
+AssertionError: expected [ …(9) ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   "fieldset aria-describedby=\"ds-fieldset-1-description ds-fieldset-1-error\" data-disabled=\"\" data-ds=\"fieldset\" data-invalid=\"\" data-size=\"sm\" disabled=\"\" id=\"f1\" name=\"reach\"",
++   "fieldset body inputs disabled by native fieldset: true",
++   "consent data-disabled=\"\" data-ds=\"consent-field\" data-required=\"\" data-size=\"lg\" data-state=\"denied\" id=\"c3\"",
++   "consent control aria-checked=\"false\" aria-describedby=\"ds-consent-5-meta\" aria-labelledby=\"ds-consent-5-purpose\" aria-required=\"true\" data-disabled=\"\" data-part=\"control\" data-state=\"unchecked\" disabled=\"\" id=\"ds-consent-5-control\" role=\"switch\" type=\"button\" value=\"yes\"",
++   "stepper aria-label=\"Checkout steps\" data-ds=\"stepper\" data-orientation=\"vertical\" data-size=\"sm\" id=\"s1\"",
++   "stepper current li ,step",
++   "filterbar data-ds=\"filter-bar\" data-size=\"sm\" id=\"fb\"",
++   "form data-ds=\"form\" data-orientation=\"horizontal\" data-size=\"sm\" data-state=\"idle\" id=\"fm\" novalidate=\"\"",
++   "formfield data-ds=\"field\" data-name=\"a\" data-orientation=\"vertical\"",
++ ]
+
+ ❯ src/components/consent-field/consent-field.qa.spec.ts:147:18
+    145|     dump('form', attrs(n.querySelector('#fm')));
+    146|     dump('formfield', attrs(n.querySelector('#fm [data-ds="field"]')));
+    147|     expect(DUMP).toEqual([]);
+       |                  ^
+    148|   });
+    149| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed (2)
+   Start at  18:08:53
+   Duration  1.89s (transform 34%, environment 25%, tests 15%, setup 14%, import 11%)
+

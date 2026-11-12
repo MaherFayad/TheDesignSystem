@@ -1,0 +1,42 @@
+
+## style=studio
+same    stepper tab(variants): button{title}"Account, complete" > button{title}"Address, complete" > button{title}"Account, complete" > button{title}"Address, complete" > button{title}"Review"
+same    stepper Enter on first action: current=0 focus=body
+same    stepper Space on first action: current=1 focus=body
+same    stepper ArrowRight: focus=body
+same    wizard tab(many): button{title}"Account, complete" > button{title}"Address, complete" > button{title}"Delivery, complete" > button{back}"Edit delivery" > button{submit}"Place order" > button{title}"الحساب، مكتملة"
+same    wizard next on empty step: focus=button{submit}"Place orderSending" status="" invalid steps=0 describedby=
+same    wizard Enter after fill: focus=h2{title}"Order placed" status="Order placed" current=3
+same    wizard Back: focus=h2{title}"Order placed" status="Order placed" kept value=Sara Alharbi
+same    filterbar tab(variants): input{control}"Search files" > button"Boards" > button"Images" > button"Videos" > button"Shared with me" > button{more}"More filters" > button"Show as grid"
+same    chip Space: pressed=true count="1 filter on, 3 results"
+same    chip Enter: pressed=false
+same    more Enter: focus=div[menuitemcheckbox]{checkbox-item}"Starred"
+REACT   more Space on item: focus=div[menuitemcheckbox]{checkbox-item}"Archived" checked=false
+ANGULAR more Space on item: focus=div[menuitemcheckbox]{checkbox-item}"Archived" checked=true
+same    more Escape: focus=button{more}"More filters (1)" label="More filters (1)"
+same    clear all Enter: focus=input{control}"Search files" active=null clear shown=0
+same    consent tab(variants): button[checkbox]{control}"" > a{details}"How we use your data" > button[checkbox]{control}"" > a{details}"How we use your data"
+same    consent Space: granted
+same    consent purpose click: denied focus=button[checkbox]{control}""
+
+## style=desk&dir=rtl&lang=ar
+same    stepper tab(variants): button{title}"Account، مكتملة" > button{title}"Address، مكتملة" > button{title}"Account، مكتملة" > button{title}"Address، مكتملة" > button{title}"Review"
+same    stepper Enter on first action: current=0 focus=body
+same    stepper Space on first action: current=1 focus=body
+same    stepper ArrowRight: focus=body
+same    wizard tab(many): button{title}"Account، مكتملة" > button{title}"Address، مكتملة" > button{title}"Delivery، مكتملة" > button{back}"Edit delivery" > button{submit}"Place order" > button{title}"الحساب، مكتملة"
+same    wizard next on empty step: focus=button{submit}"Place orderجار الإرسال" status="" invalid steps=0 describedby=
+same    wizard Enter after fill: focus=h2{title}"Order placed" status="Order placed" current=3
+same    wizard Back: focus=h2{title}"Order placed" status="Order placed" kept value=Sara Alharbi
+same    filterbar tab(variants): input{control}"Search files" > button"Boards" > button"Images" > button"Videos" > button"Shared with me" > button{more}"More filters" > button"Show as grid"
+same    chip Space: pressed=true count="1 filter on, 3 results"
+same    chip Enter: pressed=false
+same    more Enter: focus=div[menuitemcheckbox]{checkbox-item}"Starred"
+REACT   more Space on item: focus=div[menuitemcheckbox]{checkbox-item}"Archived" checked=false
+ANGULAR more Space on item: focus=div[menuitemcheckbox]{checkbox-item}"Archived" checked=true
+same    more Escape: focus=button{more}"More filters (1)" label="More filters (1)"
+same    clear all Enter: focus=input{control}"Search files" active=null clear shown=0
+same    consent tab(variants): button[checkbox]{control}"" > a{details}"How we use your data" > button[checkbox]{control}"" > a{details}"How we use your data"
+same    consent Space: granted
+same    consent purpose click: denied focus=button[checkbox]{control}""

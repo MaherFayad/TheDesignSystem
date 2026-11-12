@@ -1,0 +1,38 @@
+style=studio differing pixels 0 0.000%
+style=desk&dir=rtl&lang=ar differing pixels 0 0.000%
+{
+ "react style=studio": [
+  "span t=none o=1",
+  "span t=none o=1",
+  "span t=none o=1",
+  "span t=none o=1",
+  "span t=none o=1",
+  "span t=none o=1"
+ ],
+ "react style=desk&dir=rtl&lang=ar": [
+  "span t=none o=1",
+  "span t=none o=1",
+  "span t=none o=1",
+  "span t=none o=1",
+  "span t=none o=1",
+  "span t=none o=1"
+ ],
+ "angular style=studio": [
+  "svg t=none o=1",
+  "svg t=none o=1",
+  "svg t=none o=1",
+  "svg t=none o=1",
+  "svg t=none o=1",
+  "svg t=none o=1"
+ ],
+ "angular style=desk&dir=rtl&lang=ar": [
+  "svg t=none o=1",
+  "svg t=none o=1",
+  "svg t=none o=1",
+  "svg t=none o=1",
+  "svg t=none o=1",
+  "svg t=none o=1"
+ ]
+}
+react ["check: CSSTransition:transform:SPAN, CSSTransition:transform:svg","uncheck: CSSTransition:opacity:SPAN, CSSTransition:transform:SPAN, CSSTransition:transform:svg"]
+angular ["check: no animations","uncheck: no animations"]

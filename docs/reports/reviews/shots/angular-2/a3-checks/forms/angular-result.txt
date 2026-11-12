@@ -1,0 +1,48 @@
+     × prints the log (fails on purpose so the runner shows it) 31ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+[reactive] checkbox: touched before the blur check false
+[reactive] checkbox: invalid at start true, ng classes "ng-dirty ng-invalid ng-touched"
+[reactive] switch: touched before the blur check false
+[reactive] switch: invalid at start true, ng classes "ng-dirty ng-invalid ng-touched"
+[reactive] slider: touched before the blur check true
+[reactive] slider: invalid at start false, ng classes "ng-dirty ng-touched ng-valid"
+[reactive] range: touched before the blur check false
+[reactive] range: invalid at start false, ng classes "ng-dirty ng-valid ng-touched"
+[reactive] cgroup: touched before the blur check false
+[reactive] cgroup: invalid at start true, ng classes "ng-dirty ng-valid ng-touched"
+[reactive] rgroup: touched before the blur check false
+[reactive] rgroup: invalid at start true, ng classes "ng-dirty ng-valid ng-touched"
+[reactive] rcard: touched before the blur check false
+[reactive] rcard: invalid at start true, ng classes "ng-dirty ng-valid ng-touched"
+[reactive] rating: touched before the blur check false
+[reactive] rating: invalid at start true, ng classes "ng-dirty ng-valid ng-touched"
+[field] checkbox {"labelFor":"button role=checkbox","labelId":"yes","control":"button role=checkbox","labelledby":null,"describedby":"p[description] p[error]","invalid":"true","required":"true","dataInvalid":true,"firstItemInvalid":"true"}
+[field] switch {"labelFor":"button role=switch","labelId":"yes","control":"button role=switch","labelledby":null,"describedby":"p[description] p[error]","invalid":"true","required":"true","dataInvalid":true,"firstItemInvalid":null}
+[field] slider {"labelFor":"span role=slider","labelId":"yes","control":"span role=slider","labelledby":"label[label]","describedby":"p[description] p[error]","invalid":"true","required":null,"dataInvalid":true,"firstItemInvalid":null}
+[field] range {"labelFor":"span role=slider","labelId":"yes","control":"span role=slider","labelledby":null,"describedby":"p[description] p[error]","invalid":"true","required":null,"dataInvalid":true,"firstItemInvalid":null}
+[field] cgroup {"labelFor":"button role=checkbox","labelId":"yes","control":"fieldset role=null","labelledby":null,"describedby":null,"invalid":null,"required":null,"dataInvalid":false,"firstItemInvalid":null}
+[html] <div data-ds="field" data-orientation="vertical" data-invalid=""><label data-ds="label" data-size="md" data-invalid="" data-part="label" id="ds-field-5-label" for="ds-field-5-control"> L <span data-part="required" aria-hidden="true">*</span></label><fieldset data-ds="checkbox-group" data-size="md" data-orientation="vertical"><legend data-part="legend">G</legend><div data-part="items"><div data-ds="checkbox" data-size="md" data-tone="neutral" data-state="unchecked"><button type="button" role="checkbox" data-part="control" aria-checked="false" aria-required="true" data-state="unchecked" value="a" id="ds-field-5-control" aria-describedby="ds-field-5-description ds-field-5-error"><span data-part="indicator" data-state="unchecked"></span></button><label data-part="label" for="ds-field-5-control">A</label></div></div></fieldset><p data-part="description" id="ds-field-5-description"> D </p><p data-ds="field-error" id="ds-field-5-error" data-part="error" data-size="md"><svg xmlns="http://www.w3.org/2000/svg" data-ds="icon" focusable="false" data-part="icon" fill="currentColor" data-icon="danger" data-size="md" data-set="pixel" viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M4 2h16v2H4zm0 18h16v2H4zM20 4h2v16h-2zM2 4h2v16H2zm9 2h2v8h-2zm0 10h2v2h-2z"></path></svg><span data-part="message"> E </span></p></div>
+[field] rgroup {"labelFor":"points at nothing","labelId":"yes","control":"div role=radiogroup","labelledby":null,"describedby":null,"invalid":null,"required":"false","dataInvalid":false,"firstItemInvalid":null}
+[html] <div data-ds="field" data-orientation="vertical" data-invalid=""><label data-ds="label" data-size="md" data-invalid="" data-part="label" id="ds-field-6-label" for="ds-field-6-control"> L <span data-part="required" aria-hidden="true">*</span></label><div role="radiogroup" data-ds="radio-group" tabindex="0" aria-required="false" aria-orientation="vertical" data-orientation="vertical" dir="ltr" data-size="md" data-tone="neutral" style="outline: medium;"><div data-part="items"><div data-part="item" data-state="unchecked"><button type="button" role="radio" data-part="control" data-radix-collection-item="" aria-checked="false" data-state="unchecked" value="a" tabindex="-1" id="ds-radio-group-item-50-control"><span data-part="indicator" data-state="unchecked"></span></button><label data-part="label" for="ds-radio-group-item-50-control">A</label></div></div></div><p data-part="description" id="ds-field-6-description"> D </p><p data-ds="field-error" id="ds-field-6-error" data-part="error" data-size="md"><svg xmlns="http://www.w3.org/2000/svg" data-ds="icon" focusable="false" data-part="icon" fill="currentColor" data-icon="danger" data-size="md" data-set="pixel" viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M4 2h16v2H4zm0 18h16v2H4zM20 4h2v16h-2zM2 4h2v16H2zm9 2h2v8h-2zm0 10h2v2h-2z"></path></svg><span data-part="message"> E </span></p></div>
+[field] rcard {"labelFor":"points at nothing","labelId":"yes","control":"div role=radiogroup","labelledby":null,"describedby":null,"invalid":null,"required":"false","dataInvalid":false,"firstItemInvalid":null}
+[field] rating {"labelFor":"points at nothing","labelId":"yes","control":"div role=radiogroup","labelledby":null,"describedby":null,"invalid":null,"required":"false","dataInvalid":false,"firstItemInvalid":null}
+[form] start volume=30&price[]=20&price[]=80&view=a&score=2
+[form] after terms=yes&sounds=on&volume=31&price[]=21&price[]=80&channels=on&channels=a&channels=b&view=b&plan=a&score=4
+[form] events click:channels click:terms click:sounds click:channels click:channels
+[form] after reset volume=30&price[]=20&price[]=80&view=a&score=2
+[form] hidden inputs checkbox|terms|true|-1|false ; checkbox|sounds|true|-1|false ; text|volume|null|null|false ; text|price[]|null|null|false ; text|price[]|null|null|false ; checkbox|channels|true|-1|false ; checkbox|channels|true|-1|false ; checkbox|channels|true|-1|false ; radio|view|true|-1|false ; radio|view|true|-1|false ; radio|plan|true|-1|false ; radio|plan|true|-1|false ; radio|score|true|-1|false ; radio|score|true|-1|false ; radio|score|true|-1|false ; radio|score|true|-1|false ; radio|score|true|-1|false
+[dsForm] after submit: Terms: Fill in this field. | Pick 10 or more. | Fill in this field. | Fill in this field. | Fill in this field.
+[dsForm] after checking terms: Pick 10 or more. | Fill in this field. | Fill in this field. | Fill in this field.
+[dsForm] after volume 12: Pick 10 or more. | Fill in this field. | Fill in this field. | Fill in this field.
+[dsForm] after picking view, plan and score: Pick 10 or more. | Fill in this field. | Fill in this field. | Fill in this field.
+[dsForm] after a second submit: 
+[probe] checkbox: data-ds data-size data-tone data-state data-invalid data-disabled data-readonly || inner button(disabled,value,id)
+[probe] switch: data-ds data-size data-tone data-state data-invalid data-disabled data-readonly || inner button(disabled,value,id)
+[probe] slider: data-ds data-size data-tone data-orientation data-invalid data-disabled || inner 
+[probe] range: data-ds role aria-labelledby data-size data-tone data-orientation data-invalid data-disabled || inner 
+[probe] cgroup: data-ds aria-describedby data-size data-orientation data-disabled data-invalid data-readonly || inner button(disabled,value,id) button(disabled,value,id)
+[probe] rgroup: role data-ds tabindex aria-required aria-orientation data-orientation dir aria-labelledby aria-describedby aria-invalid data-size data-tone data-invalid data-disabled style || inner button(disabled,value,id)
+[probe] rcard: role data-ds aria-label tabindex aria-required aria-orientation data-orientation dir aria-invalid data-size data-tone data-invalid data-disabled style || inner button(disabled,value)
+[probe] rating: data-ds tabindex role aria-required aria-orientation data-orientation dir aria-label aria-describedby data-size data-tone data-disabled style || inner button(disabled,value) button(disabled,value) button(disabled,value) button(disabled,value) button(disabled,value)
+[probe] rating-ro: data-ds data-size data-tone data-readonly || inner 
+      Tests  1 failed | 20 passed (21)

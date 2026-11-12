@@ -1,0 +1,43 @@
+
+> the-system@0.0.0 contract
+> tsx packages/contract-tests/run.ts --framework angular --url http://localhost:5302 --component RadioCard
+
+
+Running 29 tests using 4 workers
+
+  ✓   1 packages/contract-tests/src/contract.spec.ts:354:5 › RadioCard: anatomy, desk (4.0s)
+  ✓   2 packages/contract-tests/src/contract.spec.ts:376:3 › RadioCard: variant attributes (4.2s)
+  ✓   3 packages/contract-tests/src/contract.spec.ts:354:5 › RadioCard: anatomy, studio (3.9s)
+  ✓   4 packages/contract-tests/src/contract.spec.ts:354:5 › RadioCard: anatomy, neutral (3.5s)
+  ✓   5 packages/contract-tests/src/contract.spec.ts:393:3 › RadioCard: state attributes (3.1s)
+  ✓   8 packages/contract-tests/src/contract.spec.ts:543:7 › RadioCard: target size, desk default (3.2s)
+  ✓   7 packages/contract-tests/src/contract.spec.ts:543:7 › RadioCard: target size, desk compact (3.3s)
+  ✓   9 packages/contract-tests/src/contract.spec.ts:543:7 › RadioCard: target size, desk comfortable (3.4s)
+  ✓  10 packages/contract-tests/src/contract.spec.ts:543:7 › RadioCard: target size, neutral compact (3.0s)
+  ✓  11 packages/contract-tests/src/contract.spec.ts:543:7 › RadioCard: target size, neutral default (3.3s)
+  ✓  12 packages/contract-tests/src/contract.spec.ts:543:7 › RadioCard: target size, neutral comfortable (2.4s)
+  ✓  14 packages/contract-tests/src/contract.spec.ts:543:7 › RadioCard: target size, studio default (2.0s)
+  ✓  13 packages/contract-tests/src/contract.spec.ts:543:7 › RadioCard: target size, studio compact (3.0s)
+  ✓  15 packages/contract-tests/src/contract.spec.ts:543:7 › RadioCard: target size, studio comfortable (3.0s)
+  ✓  16 packages/contract-tests/src/contract.spec.ts:574:5 › RadioCard: no sideways scroll at 320px and no title attribute, en ltr (4.0s)
+  ✓  17 packages/contract-tests/src/contract.spec.ts:574:5 › RadioCard: no sideways scroll at 320px and no title attribute, ar rtl (4.0s)
+  ✓  18 packages/contract-tests/src/contract.spec.ts:587:5 › RadioCard: axe, desk dark en ltr (6.8s)
+  ✓  19 packages/contract-tests/src/contract.spec.ts:587:5 › RadioCard: axe, desk dark ar rtl (6.2s)
+  ✓  20 packages/contract-tests/src/contract.spec.ts:587:5 › RadioCard: axe, desk light en ltr (8.4s)
+  ✓   6 packages/contract-tests/src/contract.spec.ts:412:3 › RadioCard: keyboard map (24.5s)
+  ✓  21 packages/contract-tests/src/contract.spec.ts:587:5 › RadioCard: axe, desk light ar rtl (6.4s)
+  ✓  22 packages/contract-tests/src/contract.spec.ts:587:5 › RadioCard: axe, neutral light en ltr (6.7s)
+  ✓  23 packages/contract-tests/src/contract.spec.ts:587:5 › RadioCard: axe, neutral light ar rtl (7.3s)
+  ✓  24 packages/contract-tests/src/contract.spec.ts:587:5 › RadioCard: axe, neutral dark en ltr (6.7s)
+  ✓  25 packages/contract-tests/src/contract.spec.ts:587:5 › RadioCard: axe, neutral dark ar rtl (6.4s)
+  ✓  26 packages/contract-tests/src/contract.spec.ts:587:5 › RadioCard: axe, studio dark en ltr (5.6s)
+  ✓  27 packages/contract-tests/src/contract.spec.ts:587:5 › RadioCard: axe, studio dark ar rtl (5.9s)
+  ✓  29 packages/contract-tests/src/contract.spec.ts:587:5 › RadioCard: axe, studio light ar rtl (6.7s)
+  ✓  28 packages/contract-tests/src/contract.spec.ts:587:5 › RadioCard: axe, studio light en ltr (7.7s)
+
+  29 passed (48.4s)
+
+Contract summary
+pass  RadioCard: 29 passed, 0 failed, 0 skipped
+
+JSON report: /home/user/TheDesignSystem/packages/contract-tests/.out/12032/contract-angular.partial.json (partial run: the full report in docs/reports is untouched)

@@ -1,0 +1,43 @@
+
+> the-system@0.0.0 contract
+> tsx packages/contract-tests/run.ts --framework angular --url http://localhost:5302 --component Rating
+
+
+Running 29 tests using 4 workers
+
+  ✓   1 packages/contract-tests/src/contract.spec.ts:376:3 › Rating: variant attributes (1.4s)
+  ✓   2 packages/contract-tests/src/contract.spec.ts:354:5 › Rating: anatomy, neutral (1.4s)
+  ✓   5 packages/contract-tests/src/contract.spec.ts:393:3 › Rating: state attributes (1.6s)
+  ✓   3 packages/contract-tests/src/contract.spec.ts:354:5 › Rating: anatomy, desk (2.4s)
+  ✓   4 packages/contract-tests/src/contract.spec.ts:354:5 › Rating: anatomy, studio (2.4s)
+  ✓   7 packages/contract-tests/src/contract.spec.ts:543:7 › Rating: target size, desk compact (1.5s)
+  ✓   8 packages/contract-tests/src/contract.spec.ts:543:7 › Rating: target size, desk default (1.6s)
+  ✓   9 packages/contract-tests/src/contract.spec.ts:543:7 › Rating: target size, desk comfortable (1.6s)
+  ✓  10 packages/contract-tests/src/contract.spec.ts:543:7 › Rating: target size, neutral compact (1.8s)
+  ✓  11 packages/contract-tests/src/contract.spec.ts:543:7 › Rating: target size, neutral default (2.0s)
+  ✓  12 packages/contract-tests/src/contract.spec.ts:543:7 › Rating: target size, neutral comfortable (1.9s)
+  ✓  13 packages/contract-tests/src/contract.spec.ts:543:7 › Rating: target size, studio compact (1.3s)
+  ✓  14 packages/contract-tests/src/contract.spec.ts:543:7 › Rating: target size, studio default (1.3s)
+  ✓  15 packages/contract-tests/src/contract.spec.ts:543:7 › Rating: target size, studio comfortable (1.8s)
+  ✓  16 packages/contract-tests/src/contract.spec.ts:574:5 › Rating: no sideways scroll at 320px and no title attribute, en ltr (2.0s)
+  ✓  17 packages/contract-tests/src/contract.spec.ts:574:5 › Rating: no sideways scroll at 320px and no title attribute, ar rtl (2.0s)
+  ✓   6 packages/contract-tests/src/contract.spec.ts:412:3 › Rating: keyboard map (12.4s)
+  ✓  19 packages/contract-tests/src/contract.spec.ts:587:5 › Rating: axe, desk dark ar rtl (6.3s)
+  ✓  18 packages/contract-tests/src/contract.spec.ts:587:5 › Rating: axe, desk dark en ltr (7.5s)
+  ✓  20 packages/contract-tests/src/contract.spec.ts:587:5 › Rating: axe, desk light en ltr (6.5s)
+  ✓  21 packages/contract-tests/src/contract.spec.ts:587:5 › Rating: axe, desk light ar rtl (4.8s)
+  ✓  22 packages/contract-tests/src/contract.spec.ts:587:5 › Rating: axe, neutral light en ltr (4.4s)
+  ✓  23 packages/contract-tests/src/contract.spec.ts:587:5 › Rating: axe, neutral dark en ltr (4.6s)
+  ✓  24 packages/contract-tests/src/contract.spec.ts:587:5 › Rating: axe, neutral light ar rtl (5.1s)
+  ✓  25 packages/contract-tests/src/contract.spec.ts:587:5 › Rating: axe, neutral dark ar rtl (4.4s)
+  ✓  26 packages/contract-tests/src/contract.spec.ts:587:5 › Rating: axe, studio dark en ltr (4.3s)
+  ✓  27 packages/contract-tests/src/contract.spec.ts:587:5 › Rating: axe, studio dark ar rtl (3.8s)
+  ✓  28 packages/contract-tests/src/contract.spec.ts:587:5 › Rating: axe, studio light en ltr (3.7s)
+  ✓  29 packages/contract-tests/src/contract.spec.ts:587:5 › Rating: axe, studio light ar rtl (3.1s)
+
+  29 passed (30.2s)
+
+Contract summary
+pass  Rating: 29 passed, 0 failed, 0 skipped
+
+JSON report: /home/user/TheDesignSystem/packages/contract-tests/.out/15713/contract-angular.partial.json (partial run: the full report in docs/reports is untouched)

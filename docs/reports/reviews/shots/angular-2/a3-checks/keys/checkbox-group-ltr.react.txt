@@ -1,0 +1,43 @@
+Tab                    a role=null name="" root=theme
+Tab                    a role=null name="" root=theme
+Tab                    a role=null name="" root=theme
+Tab                    select role=null name="" root=theme
+Tab                    select role=null name="" root=theme
+Tab                    select role=null name="" root=theme
+Tab                    select role=null name="" root=theme
+Tab                    select role=null name="" root=theme
+Tab                    select role=null name="" root=theme
+Tab                    select role=null name="" root=theme
+Tab                    select role=null name="" root=theme
+Tab                    button role=checkbox name="Email" aria-checked=true root=checkbox
+Tab                    button role=checkbox name="Push notifications" aria-checked=false root=checkbox
+Tab                    button role=checkbox name="Text messages" aria-checked=false root=checkbox
+Shift+Tab              button role=checkbox name="Push notifications" aria-checked=false root=checkbox
+Shift+Tab              button role=checkbox name="Email" aria-checked=true root=checkbox
+focus [data-demo-case=variants] [role=checkbox]:not([disabled])#0 button role=checkbox name="Email" aria-checked=true root=checkbox
+Space                  button role=checkbox name="Email" aria-checked=false root=checkbox
+Space                  button role=checkbox name="Email" aria-checked=true root=checkbox
+Enter                  button role=checkbox name="Email" aria-checked=true root=checkbox
+Tab                    button role=checkbox name="Push notifications" aria-checked=false root=checkbox
+Space                  button role=checkbox name="Push notifications" aria-checked=true root=checkbox
+focus [data-demo-case=one] [role=checkbox]:not([disabled])#0 button role=checkbox name="I agree to the terms of use" aria-checked=true root=checkbox
+Space                  button role=checkbox name="I agree to the terms of use" aria-checked=false root=checkbox
+Space                  button role=checkbox name="I agree to the terms of use" aria-checked=true root=checkbox
+Enter                  button role=checkbox name="I agree to the terms of use" aria-checked=true root=checkbox
+Tab                    button role=checkbox name="All notifications" aria-checked=mixed root=checkbox
+Space                  button role=checkbox name="All notifications" aria-checked=true root=checkbox
+focus [data-demo-case=readonly] [role=checkbox]:not([disabled])#0 button role=checkbox name="Email" aria-checked=true root=checkbox
+Space                  button role=checkbox name="Email" aria-checked=true root=checkbox
+Space                  button role=checkbox name="Email" aria-checked=true root=checkbox
+Enter                  button role=checkbox name="Email" aria-checked=true root=checkbox
+Tab                    button role=checkbox name="Push notifications" aria-checked=true root=checkbox
+Space                  button role=checkbox name="Push notifications" aria-checked=true root=checkbox
+focus [data-demo-case=many] [role=checkbox]:not([disabled])#0 button role=checkbox name="All notifications" aria-checked=true root=checkbox
+Space                  button role=checkbox name="All notifications" aria-checked=false root=checkbox
+Space                  button role=checkbox name="All notifications" aria-checked=true root=checkbox
+Enter                  button role=checkbox name="All notifications" aria-checked=true root=checkbox
+Tab                    button role=checkbox name="Comments" aria-checked=true root=checkbox
+Space                  button role=checkbox name="Comments" aria-checked=false root=checkbox
+click label            button role=checkbox name="I agree to the terms of use" aria-checked=false root=checkbox
+click mixed            button role=checkbox name="All channels" aria-checked=true root=checkbox
+Space                  button role=checkbox name="All channels" aria-checked=false root=checkbox

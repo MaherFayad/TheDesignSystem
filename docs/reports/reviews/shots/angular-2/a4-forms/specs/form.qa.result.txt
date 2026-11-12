@@ -1,0 +1,251 @@
+❯ Building...
+✔ Building...
+Application bundle generation complete. [19.212 seconds] - 2026-11-12T17:59:32.262Z
+
+
+ RUN  v5.1.0 /home/user/TheDesignSystem/packages/angular
+
+ ❯  angular  src/components/form/form.qa.spec.ts (5 tests | 5 failed) 2667ms
+   ❯ QA A4: Form with Angular forms (5)
+     × reactive FormGroup: errors reach the summary, focus and links 1576ms
+     × template NgForm: errors reach the summary, focus and links 627ms
+     × a Fieldset name shows the group error and names the group in the summary (React test parity) 38ms
+     × ConsentField requiredError says the same in the field and the summary (React parity) 184ms
+     × a submit that passes is announced (React says "The form was sent.") 124ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 5 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL   angular  src/components/form/form.qa.spec.ts > QA A4: Form with Angular forms > reactive FormGroup: errors reach the summary, focus and links
+AssertionError: expected [ …(5) ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   "REACTIVE first focus input#ds-form-field-1-control",
++   "REACTIVE summary [
++  {
++   \"text\": \"Work email: Fill in this field.\",
++   \"href\": \"#ds-form-field-1-control\",
++   \"target\": \"input\"
++  },
++  {
++   \"text\": \"I agree to the terms: Fill in this field.\",
++   \"href\": \"#ds-form-field-2-control\",
++   \"target\": \"button[role=checkbox]\"
++  },
++  {
++   \"text\": \"Inside: Fill in this field.\",
++   \"href\": \"#ds-radio-group-item-2-control\",
++   \"target\": \"button[role=radio]\"
++  },
++  {
++   \"text\": \"City: Fill in this field.\",
++   \"href\": \"#ds-form-field-3-control\",
++   \"target\": \"button[role=combobox]\"
++  },
++  {
++   \"text\": \"Check the value in this field.\",
++   \"href\": \"#ds-form-field-4-control\",
++   \"target\": \"span[role=slider]\"
++  },
++  {
++   \"text\": \"Send alerts: Fill in this field.\",
++   \"href\": \"#ds-form-field-5-control\",
++   \"target\": \"button[role=switch]\"
++  },
++  {
++   \"text\": \"Share my order with the courier.: Fill in this field.\",
++   \"href\": \"#ds-consent-1-control\",
++   \"target\": \"button[role=checkbox]\"
++  }
++ ]",
++   "REACTIVE link focus [
++  \"Work email: Fill in this field. -> input#ds-form-field-1-control\",
++  \"I agree to the terms: Fill in this field. -> button[role=checkbox]#ds-form-field-2-control\",
++  \"Inside: Fill in this field. -> button[role=radio]#ds-radio-group-item-2-control\",
++  \"City: Fill in this field. -> button[role=combobox]#ds-form-field-3-control\",
++  \"Check the value in this field. -> span[role=slider]#ds-form-field-4-control\",
++  \"Send alerts: Fill in this field. -> button[role=switch]#ds-form-field-5-control\",
++  \"Share my order with the courier.: Fill in this field. -> button[role=checkbox]#ds-consent-1-control\"
++ ]",
++   "REACTIVE consent error part Tick this so the courier can reach you.",
++   "REACTIVE touched {\"email\":true,\"terms\":true,\"seat\":true,\"city\":true,\"budget\":true,\"alerts\":true,\"consent\":true}",
++ ]
+
+ ❯ src/components/form/form.qa.spec.ts:169:18
+    167|     dump('REACTIVE touched', JSON.stringify(Object.fromEntries(Object.…
+    168|     fixture.nativeElement.remove();
+    169|     expect(DUMP).toEqual([]);
+       |                  ^
+    170|   });
+    171|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/5]⎯
+
+ FAIL   angular  src/components/form/form.qa.spec.ts > QA A4: Form with Angular forms > template NgForm: errors reach the summary, focus and links
+AssertionError: expected [ …(11) ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   "REACTIVE first focus input#ds-form-field-1-control",
++   "REACTIVE summary [
++  {
++   \"text\": \"Work email: Fill in this field.\",
++   \"href\": \"#ds-form-field-1-control\",
++   \"target\": \"input\"
++  },
++  {
++   \"text\": \"I agree to the terms: Fill in this field.\",
++   \"href\": \"#ds-form-field-2-control\",
++   \"target\": \"button[role=checkbox]\"
++  },
++  {
++   \"text\": \"Inside: Fill in this field.\",
++   \"href\": \"#ds-radio-group-item-2-control\",
++   \"target\": \"button[role=radio]\"
++  },
++  {
++   \"text\": \"City: Fill in this field.\",
++   \"href\": \"#ds-form-field-3-control\",
++   \"target\": \"button[role=combobox]\"
++  },
++  {
++   \"text\": \"Check the value in this field.\",
++   \"href\": \"#ds-form-field-4-control\",
++   \"target\": \"span[role=slider]\"
++  },
++  {
++   \"text\": \"Send alerts: Fill in this field.\",
++   \"href\": \"#ds-form-field-5-control\",
++   \"target\": \"button[role=switch]\"
++  },
++  {
++   \"text\": \"Share my order with the courier.: Fill in this field.\",
++   \"href\": \"#ds-consent-1-control\",
++   \"target\": \"button[role=checkbox]\"
++  }
++ ]",
++   "REACTIVE link focus [
++  \"Work email: Fill in this field. -> input#ds-form-field-1-control\",
++  \"I agree to the terms: Fill in this field. -> button[role=checkbox]#ds-form-field-2-control\",
++  \"Inside: Fill in this field. -> button[role=radio]#ds-radio-group-item-2-control\",
++  \"City: Fill in this field. -> button[role=combobox]#ds-form-field-3-control\",
++  \"Check the value in this field. -> span[role=slider]#ds-form-field-4-control\",
++  \"Send alerts: Fill in this field. -> button[role=switch]#ds-form-field-5-control\",
++  \"Share my order with the courier.: Fill in this field. -> button[role=checkbox]#ds-consent-1-control\"
++ ]",
++   "REACTIVE consent error part Tick this so the courier can reach you.",
++   "REACTIVE touched {\"email\":true,\"terms\":true,\"seat\":true,\"city\":true,\"budget\":true,\"alerts\":true,\"consent\":true}",
++   "TEMPLATE first focus input#ds-form-field-6-control",
++   "TEMPLATE summary [
++  {
++   \"text\": \"Work email: Fill in this field.\",
++   \"href\": \"#ds-form-field-6-control\",
++   \"target\": \"input\"
++  },
++  {
++   \"text\": \"I agree to the terms: Fill in this field.\",
++   \"href\": \"#ds-form-field-7-control\",
++   \"target\": \"button[role=checkbox]\"
++  },
++  {
++   \"text\": \"Fill in this field.\",
++   \"href\": null,
++   \"target\": null
++  },
++  {
++   \"text\": \"City: Fill in this field.\",
++   \"href\": \"#ds-form-field-8-control\",
++   \"target\": \"button[role=combobox]\"
++  },
++  {
++   \"text\": \"Share my order with the courier.: Fill in this field.\",
++   \"href\": \"#ds-consent-2-control\",
++   \"target\": \"button[role=checkbox]\"
++  }
++ ]",
++   "TEMPLATE link focus [
++  \"Work email: Fill in this field. -> input#ds-form-field-6-control\",
++  \"I agree to the terms: Fill in this field. -> button[role=checkbox]#ds-form-field-7-control\",
++  \"City: Fill in this field. -> button[role=combobox]#ds-form-field-8-control\",
++  \"Share my order with the courier.: Fill in this field. -> button[role=checkbox]#ds-consent-2-control\"
++ ]",
++   "TEMPLATE radio DOM BUTTON:-1:null:ds-radio-group-item-5-control | INPUT:-1:true: | BUTTON:-1:null:ds-radio-group-item-6-control | INPUT:-1:true:",
++   "TEMPLATE hidden radio input focusable by script input[aria-hidden]#",
++   "TEMPLATE consent error part Tick this so the courier can reach you.",
++ ]
+
+ ❯ src/components/form/form.qa.spec.ts:191:18
+    189|     dump('TEMPLATE consent error part', form.querySelector('[data-ds="…
+    190|     fixture.nativeElement.remove();
+    191|     expect(DUMP).toEqual([]);
+       |                  ^
+    192|   });
+    193|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/5]⎯
+
+ FAIL   angular  src/components/form/form.qa.spec.ts > QA A4: Form with Angular forms > a Fieldset name shows the group error and names the group in the summary (React test parity)
+AssertionError: expected null to be 'reach' // Object.is equality
+
+- Expected:
+"reach"
+
++ Received:
+null
+
+ ❯ src/components/form/form.qa.spec.ts:211:48
+    209|       describedby: fieldset.getAttribute('aria-describedby'),
+    210|     }));
+    211|     expect(fieldset.getAttribute('data-name')).toBe('reach');
+       |                                                ^
+    212|     fixture.nativeElement.remove();
+    213|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/5]⎯
+
+ FAIL   angular  src/components/form/form.qa.spec.ts > QA A4: Form with Angular forms > ConsentField requiredError says the same in the field and the summary (React parity)
+AssertionError: expected 'I agree to the terms.: Fill in this f…' to contain 'Agree to the terms to open an account.'
+
+Expected: "Agree to the terms to open an account."
+Received: "I agree to the terms.: Fill in this field."
+
+ ❯ src/components/form/form.qa.spec.ts:226:24
+    224|     const field = form.querySelector('[data-ds="consent-field"] [data-…
+    225|     dump('CONSENT summary', JSON.stringify(summary), 'field', field, '…
+    226|     expect(summary[0]).toContain('Agree to the terms to open an accoun…
+       |                        ^
+    227|     fixture.nativeElement.remove();
+    228|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/5]⎯
+
+ FAIL   angular  src/components/form/form.qa.spec.ts > QA A4: Form with Angular forms > a submit that passes is announced (React says "The form was sent.")
+AssertionError: expected '' to be 'The form was sent.' // Object.is equality
+
+- Expected
++ Received
+
+- The form was sent.
+
+ ❯ src/components/form/form.qa.spec.ts:240:28
+    238|     const status = form.querySelector(':scope > [role="status"]')?.tex…
+    239|     dump('PASS state', form.getAttribute('data-state'), 'status', JSON…
+    240|     expect(status?.trim()).toBe('The form was sent.');
+       |                            ^
+    241|   });
+    242| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/5]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  5 failed (5)
+   Start at  17:59:33
+   Duration  8.86s (tests 32%, environment 27%, transform 23%, setup 15%, import 3%)
+

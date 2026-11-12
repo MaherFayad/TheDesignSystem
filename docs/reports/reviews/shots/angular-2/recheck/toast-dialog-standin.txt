@@ -1,0 +1,14 @@
+== react
+with data-toaster-layer: focus() on Undo: focus=BUTTON "Keep draft" dialogs=1
+  pointer click on Undo: focus=BUTTON "Keep draft" dialogs=1
+  Escape with focus on Undo: focus=BUTTON "Open md dialog" dialogs=0
+control, no attribute: focus() on Undo: focus=BUTTON "Keep draft" dialogs=1
+  pointer click on Undo: focus=BUTTON "Open md dialog" dialogs=0
+  Escape with focus on Undo: focus=qa-undo dialogs=0
+== angular
+with data-toaster-layer: focus() on Undo: focus=qa-undo dialogs=1
+  pointer click on Undo: focus=qa-undo dialogs=1
+  Escape with focus on Undo: focus=qa-undo dialogs=1
+control, no attribute: focus() on Undo: focus=BUTTON "" dialogs=1
+  pointer click on Undo: focus=BUTTON "" dialogs=1
+  Escape with focus on Undo: focus=BUTTON "Open md dialog" dialogs=0

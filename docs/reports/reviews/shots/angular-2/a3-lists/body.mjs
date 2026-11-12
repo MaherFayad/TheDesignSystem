@@ -1,0 +1,11 @@
+import { chromium } from '@playwright/test';
+const [base, path] = process.argv.slice(2);
+const b = await chromium.launch();
+const p = await b.newPage();
+await p.goto(base + path);
+await p.waitForSelector('[data-demo-case]');
+await p.locator('button[data-ds=select]').nth(1).click();
+await p.waitForTimeout(400);
+console.log(await p.evaluate(() => [...document.body.children].map((c) => `${c.tagName} ${c.id} ${c.getAttribute('data-ds')} hidden=${c.getAttribute('aria-hidden')} ${c.hasAttribute('data-menu-layer')?'layer':''}`).join('\n')));
+console.log(await p.evaluate(() => [document.documentElement.getAttribute('style'), getComputedStyle(document.body).overflow, getComputedStyle(document.documentElement).overflow, document.body.getAttribute('data-scroll-locked')].join(' | ')));
+await b.close();

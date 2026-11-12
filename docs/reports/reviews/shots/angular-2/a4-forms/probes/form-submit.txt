@@ -1,0 +1,28 @@
+
+## react style=studio
+empty submit, focus: input[name=email][part=control] "Email*" {"title":"Fix 1 field to send the form","items":["Email: Fill in this field."],"status":"Fix 1 field to send the form "}
+email "abc" submit, focus: input[name=email][part=control] "Email*" {"title":"Fix 1 field to send the form","items":["Email: Enter an email address, like name@example.com."],"status":"Fix 1 field to send the form"}
+summary link Enter, focus: input[name=email][part=control] "Email*"
+many with postal "12", focus: input[name=name][part=control] "Full name*" {"title":"Fix 4 fields to send the form","items":["Full name: Fill in this field.","City: Fill in this field.","Postal code: Enter the 5 digit postal code.","How should we reach you: Pick at least one way to reach you."],"status":"Fix 4 fields to send the form "}
+one passing submit: {"items":[],"status":"The form was sent. "} form state submitted
+
+## react style=desk&dir=rtl&lang=ar
+empty submit, focus: input[name=email][part=control] "Email*" {"title":"Fix 1 field to send the form","items":["Email: Fill in this field."],"status":"Fix 1 field to send the form "}
+email "abc" submit, focus: input[name=email][part=control] "Email*" {"title":"Fix 1 field to send the form","items":["Email: Enter an email address, like name@example.com."],"status":"Fix 1 field to send the form"}
+summary link Enter, focus: input[name=email][part=control] "Email*"
+many with postal "12", focus: input[name=name][part=control] "Full name*" {"title":"Fix 4 fields to send the form","items":["Full name: Fill in this field.","City: Fill in this field.","Postal code: Enter the 5 digit postal code.","How should we reach you: Pick at least one way to reach you."],"status":"Fix 4 fields to send the form "}
+one passing submit: {"items":[],"status":"The form was sent. "} form state submitted
+
+## angular style=studio
+empty submit, focus: input[name=email][part=control] "Email*" {"title":"Fix 1 field to send the form","items":["Email: Fill in this field."],"status":"Fix 1 field to send the form "}
+email "abc" submit, focus: input[name=email][part=control] "Email*" {"title":"Fix 1 field to send the form","items":["Email: Please include an '@' in the email address. 'abc' is missing an '@'."],"status":"Fix 1 field to send the form"}
+summary link Enter, focus: input[name=email][part=control] "Email*"
+many with postal "12", focus: input[name=name][part=control] "Full name*" {"title":"Fix 3 fields to send the form","items":["Full name: Fill in this field.","City: Fill in this field.","Postal code: Please match the requested format."],"status":"Fix 3 fields to send the form "}
+one passing submit: {"items":[],"status":""} form state submitted
+
+## angular style=desk&dir=rtl&lang=ar
+empty submit, focus: input[name=email][part=control] "Email*" {"title":"Fix 1 field to send the form","items":["Email: Fill in this field."],"status":"Fix 1 field to send the form "}
+email "abc" submit, focus: input[name=email][part=control] "Email*" {"title":"Fix 1 field to send the form","items":["Email: Please include an '@' in the email address. 'abc' is missing an '@'."],"status":"Fix 1 field to send the form"}
+summary link Enter, focus: input[name=email][part=control] "Email*"
+many with postal "12", focus: input[name=name][part=control] "Full name*" {"title":"Fix 3 fields to send the form","items":["Full name: Fill in this field.","City: Fill in this field.","Postal code: Please match the requested format."],"status":"Fix 3 fields to send the form "}
+one passing submit: {"items":[],"status":""} form state submitted
