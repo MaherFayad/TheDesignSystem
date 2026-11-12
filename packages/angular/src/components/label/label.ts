@@ -109,7 +109,7 @@ export class DsLabel {
   /** Inside a required Field the control carries aria-required, so the word would be read twice. */
   protected readonly word = computed(() => {
     if (this.field?.required()) return undefined;
-    return this.requiredText() ?? (this.theme.value().lang === 'ar' ? 'مطلوب' : 'required');
+    return this.requiredText() ?? (this.theme.value().lang.toLowerCase().startsWith('ar') ? 'مطلوب' : 'required');
   });
 
   protected readonly hostId = computed(() => this.id() ?? (this.fieldLabel ? this.field?.labelId : undefined) ?? null);
