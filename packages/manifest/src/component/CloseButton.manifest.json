@@ -137,8 +137,10 @@
       "example": "CloseButton.demo.tsx"
     },
     "angular": {
-      "status": "planned",
-      "behavior": "button[dsCloseButton] on the shared Button.css"
+      "status": "ready",
+      "behavior": "button[dsCloseButton] and a[dsCloseButton] on DsButtonBase",
+      "example": "close-button.demo.ts",
+      "note": "No asChild: a[dsCloseButton] is the link form. The default name follows the lang of the nearest dsTheme. tone and loading are inherited inputs of the base; leave them unset."
     },
     "native": {
       "status": "planned",

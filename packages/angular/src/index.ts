@@ -3,6 +3,7 @@ export * from './theme/index';
 export * from './behavior/index';
 export * from './components/button/index';
 export * from './components/button-group/index';
+export * from './components/close-button/index';
 export * from './components/dialog/index';
 export * from './components/field/index';
 export * from './components/icon-button/index';
