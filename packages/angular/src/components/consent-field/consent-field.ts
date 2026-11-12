@@ -293,7 +293,18 @@ export class DsConsentField implements ControlValueAccessor, OnInit {
     this.decision.emit({ name: this.name(), granted: next, version: this.version(), at: new Date().toISOString() });
   }
 
+  private firstWrite = true;
+
   writeValue(value: unknown): void {
+    // PDPL: a consent is never pre ticked. A FormControl that starts true must come from a stored decision with a record line.
+    if (this.firstWrite && isDevMode() && value === true) {
+      const meta = this.meta();
+      const text = typeof meta === 'string' ? meta : '';
+      if (meta === undefined || meta === null || meta === '' || (typeof meta === 'string' && !/\d/.test(text))) {
+        console.warn('ConsentField: FormControl starts true with no dated meta. A given consent comes from a stored decision: show when it was given in meta, or start denied.');
+      }
+    }
+    this.firstWrite = false;
     this.checked.set(value === true);
   }
 
