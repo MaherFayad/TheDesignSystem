@@ -12,5 +12,6 @@ export * from './components/Link/index';
 export * from './components/Tabs/index';
 export * from './components/TitleBar/index';
 export * from './components/Toast/index';
+export * from './components/Toolbar/index';
 export * from './components/Window/index';
 export * from './components/WindowControls/index';

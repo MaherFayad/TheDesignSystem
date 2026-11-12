@@ -20,6 +20,7 @@ export const routes: DemoRoute[] = [
   { name: 'Tabs', slug: 'tabs', load: () => import('../../../packages/react/src/components/Tabs/Tabs.demo') },
   { name: 'TitleBar', slug: 'title-bar', load: () => import('../../../packages/react/src/components/TitleBar/TitleBar.demo') },
   { name: 'Toast', slug: 'toast', load: () => import('../../../packages/react/src/components/Toast/Toast.demo') },
+  { name: 'Toolbar', slug: 'toolbar', load: () => import('../../../packages/react/src/components/Toolbar/Toolbar.demo') },
   { name: 'Window', slug: 'window', load: () => import('../../../packages/react/src/components/Window/Window.demo') },
   { name: 'WindowControls', slug: 'window-controls', load: () => import('../../../packages/react/src/components/WindowControls/WindowControls.demo') },
 ];

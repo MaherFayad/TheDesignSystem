@@ -1,0 +1,140 @@
+/*
+ * Toolbar: a labelled row (or column) of controls with one tab stop.
+ * Source: Figma-Killer-2 `AlignBar.module.css` (a tight row of icon
+ * buttons). Follows "One convention for component CSS and props" in
+ * docs/contracts/anatomy.md.
+ *
+ * Private properties on the root (recipes override these):
+ *
+ *   --_toolbar-gap, -padding, -radius
+ *   --_toolbar-bg, -border-color
+ *   --_toolbar-separator-color
+ *
+ * The items are system Buttons, IconButtons and Links carrying
+ * data-part="item", styled by their own files. As their parent this file
+ * sets Button's private properties for the on state of a toggle item, and
+ * nothing else of theirs.
+ *
+ * Overflow (Toolbar.tsx): children that do not fit carry data-overflowed
+ * and are hidden; the root carries data-overflowing while the "More tools"
+ * trigger (data-part="more") is shown. data-measuring is set for one
+ * synchronous read, so everything is laid out while the toolbar measures.
+ */
+@layer ds.base {
+  [data-ds='toolbar'] {
+    --_toolbar-gap: var(--ds-space-4xs);
+    --_toolbar-padding: var(--ds-space-4xs);
+    --_toolbar-radius: var(--ds-radius-panel);
+    --_toolbar-bg: var(--ds-color-bg-surface-2);
+    --_toolbar-border-color: var(--ds-color-border-subtle);
+    --_toolbar-separator-color: var(--ds-color-border-default);
+
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+    gap: var(--_toolbar-gap);
+    box-sizing: border-box;
+    inline-size: max-content;
+    min-inline-size: 0;
+    max-inline-size: 100%;
+    padding: var(--_toolbar-padding);
+    border: var(--ds-border-width-default) solid var(--_toolbar-border-color);
+    border-radius: var(--_toolbar-radius);
+    background-color: var(--_toolbar-bg);
+    vertical-align: middle;
+  }
+
+  [data-ds='toolbar']:is([data-size='md'], [data-size='lg']) {
+    --_toolbar-gap: var(--ds-space-3xs);
+  }
+
+  [data-ds='toolbar'][data-size='lg'] {
+    --_toolbar-padding: var(--ds-space-2xs);
+    --_toolbar-radius: var(--ds-radius-card);
+  }
+
+  [data-ds='toolbar'][data-orientation='vertical'] {
+    flex-direction: column;
+    inline-size: auto;
+    block-size: max-content;
+    max-block-size: 100%;
+  }
+
+  /* wrap: the row breaks onto more lines instead of moving items into the menu. */
+  [data-ds='toolbar'][data-overflow='wrap'] {
+    flex-wrap: wrap;
+    inline-size: auto;
+  }
+
+  /* ------------------------------------------------------------ items, groups, separators */
+
+  [data-ds='toolbar'] > *,
+  [data-ds='toolbar'] > [data-part='group'] > * {
+    flex: none;
+  }
+
+  [data-ds='toolbar'] > [data-part='group'] {
+    display: flex;
+    align-items: center;
+    gap: var(--_toolbar-gap);
+  }
+
+  [data-ds='toolbar'][data-orientation='vertical'] > [data-part='group'] {
+    flex-direction: column;
+  }
+
+  /* A line across the toolbar's direction: Radix gives the separator the other orientation. */
+  [data-ds='toolbar'] > [data-part='separator'] {
+    flex: none;
+    align-self: stretch;
+    background-color: var(--_toolbar-separator-color);
+  }
+
+  [data-ds='toolbar'] > [data-part='separator'][data-orientation='vertical'] {
+    inline-size: var(--ds-border-width-default);
+    margin-block: var(--ds-space-2xs);
+    margin-inline: var(--ds-space-4xs);
+  }
+
+  [data-ds='toolbar'] > [data-part='separator'][data-orientation='horizontal'] {
+    block-size: var(--ds-border-width-default);
+    margin-block: var(--ds-space-4xs);
+    margin-inline: var(--ds-space-2xs);
+  }
+
+  /* ------------------------------------------------------------ toggle items: the on state */
+
+  [data-ds='toolbar'] [data-part='item'][data-state='on'] {
+    --_button-bg: var(--ds-color-bg-overlay-20);
+    --_button-fg: var(--ds-color-text-bright);
+    --_button-fg-hover: var(--ds-color-text-bright);
+  }
+
+  [data-ds='toolbar'] [data-part='item'][data-state='on']:hover:not([data-disabled]) {
+    --_button-bg: var(--ds-color-bg-overlay-30);
+  }
+
+  /* ------------------------------------------------------------ overflow */
+
+  [data-ds='toolbar']:not([data-measuring]) > [data-overflowed] {
+    display: none;
+  }
+
+  [data-ds='toolbar']:not([data-overflowing], [data-measuring]) > [data-part='more'] {
+    display: none;
+  }
+
+  /* ------------------------------------------------------------ forced colors */
+
+  /* The on fill is replaced by Canvas, so a Highlight frame marks the on state. */
+  @media (forced-colors: active) {
+    [data-ds='toolbar'] [data-part='item'][data-state='on'] {
+      --_button-border-color: Highlight;
+      --_button-border-color-hover: Highlight;
+    }
+
+    [data-ds='toolbar'] > [data-part='separator'] {
+      background-color: CanvasText;
+    }
+  }
+}
