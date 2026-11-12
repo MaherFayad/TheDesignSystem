@@ -291,9 +291,10 @@
       "note": "Host bindings set the same data attributes; Button.css is used as is."
     },
     "native": {
-      "status": "planned",
-      "behavior": "rn-primitives:slot and Pressable",
-      "note": "44pt on iOS, 48dp on Android. No roll label."
+      "status": "ready",
+      "behavior": "react-native:Pressable",
+      "example": "Button.demo.tsx",
+      "note": "Styles from createButtonStyles(theme, variants) on the generated theme objects; Desk pill through packages/styles/desk/native/Button.ts. hitSlop reaches 44pt on iOS and 48dp on Android at every size. Press feedback: a Reanimated spring scale from spring.press, off under reduce motion. The Desk roll label is a web hover effect with no touch equivalent: not on native. No asChild and no token focus ring yet (the platform draws keyboard focus)."
     }
   },
   "styles": {

@@ -250,9 +250,10 @@
       "note": "Uses Button.css and IconButton.css as is."
     },
     "native": {
-      "status": "planned",
-      "behavior": "rn-primitives:slot and Pressable",
-      "note": "44pt on iOS, 48dp on Android, accessibilityLabel from label."
+      "status": "ready",
+      "behavior": "react-native:Pressable",
+      "example": "IconButton.demo.tsx",
+      "note": "Built on the Button internals and Button.styles.ts. label becomes accessibilityLabel and is required. hitSlop reaches 44pt on iOS and 48dp on Android at every size. Directional icons mirror from the theme dir. No asChild yet."
     }
   },
   "styles": {

@@ -60,7 +60,10 @@ export function Icon({ name, size, set, label, color, style, ...rest }: IconProp
       accessible: label !== undefined,
       accessibilityRole: label !== undefined ? 'image' : undefined,
       accessibilityLabel: label,
+      // Unlabeled icons are hidden on both platforms: importantForAccessibility
+      // on Android, accessibilityElementsHidden on iOS.
       importantForAccessibility: label !== undefined ? 'yes' : 'no-hide-descendants',
+      accessibilityElementsHidden: label === undefined,
       style: flip ? [{ transform: [{ scaleX: -1 }] }, style] : style,
     },
     parseBody(glyph.body).map(([tag, attrs], i) => {
