@@ -69,11 +69,6 @@
     cursor: text;
   }
 
-  /* Autocomplete has no buttons at the end: even padding on both sides. */
-  [data-ds='autocomplete']:not([data-part='popup']) {
-    padding-inline: var(--_combobox-padding-inline);
-  }
-
   /* The glow and the ring, as Input: they fade in on focus. */
   :is([data-ds='combobox'], [data-ds='autocomplete']):not([data-part='popup'])::before {
     content: '';

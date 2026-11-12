@@ -145,7 +145,7 @@ interface ModeProps {
   selectedLabel: string;
   triggerLabel?: string;
   clearLabel?: string;
-  /** A hidden input with this name submits the value (select mode). */
+  /** Submits the value under this name: a hidden input in select mode, the input itself in free mode. */
   name?: string;
   /** free mode: Enter with nothing highlighted, with the typed text. */
   onCommit?: (text: string) => void;
@@ -505,6 +505,8 @@ export function ComboboxBase({
             {...control}
             ref={setInputRef}
             type="text"
+            // free mode: the text is the value, so the input itself submits it.
+            name={mode === 'free' ? name : undefined}
             role="combobox"
             data-part="control"
             autoComplete="off"
@@ -526,7 +528,7 @@ export function ComboboxBase({
               if (!event.defaultPrevented && !open && mode === 'select') openList('selected');
             }}
           />
-          {name !== undefined && <input type="hidden" name={name} value={value ?? ''} disabled={control.disabled} />}
+          {mode === 'select' && name !== undefined && <input type="hidden" name={name} value={value ?? ''} disabled={control.disabled} />}
           {showClear && (
             <IconButton
               data-part="clear"

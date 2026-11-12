@@ -1,0 +1,17 @@
+/*
+ * Autocomplete: built on the Combobox base (anatomy.md rule 10). The field,
+ * the popup surface, the motion, contrast and forced colors rules live in
+ * Combobox.css under :is([data-ds='combobox'], [data-ds='autocomplete']).
+ * This file holds only what differs.
+ *
+ *   [data-ds='autocomplete']                    root: the bordered box
+ *     > [data-part='control']                   the native input, role combobox
+ *     > [data-part='status']                    the result count, visually hidden
+ *   [data-ds='autocomplete'][data-part='popup'] the suggestions, its own root
+ */
+@layer ds.base {
+  /* No buttons at the end: the same padding on both sides. */
+  [data-ds='autocomplete']:not([data-part='popup']) {
+    padding-inline: var(--_combobox-padding-inline);
+  }
+}
