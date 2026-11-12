@@ -16,9 +16,23 @@
 //   Western ones as they are typed, so the value never jumps on blur.
 // - PageUp and PageDown step by ten steps (React Aria steps by one).
 // - Inside a Field it reads ids, invalid, disabled, read only and required.
+//
+// Motion (order 1.21): a step from a button or a key rolls the value in from
+// the side it came from (field-step), on the native input itself, since its
+// text cannot move alone; the caret and the selection are drawn inside the
+// input and move with the text, so they stay on it. Typing does not roll.
+// The box shakes when the value turns invalid (error-shake).
+//
+// field-step plays the short travel of the swap pattern (space.xs), not the
+// full height travel of number-roll: number-roll expects a clip around the
+// digits, and the input has none, so a full height roll would draw the text
+// outside the box for several frames. The style switches it as number-roll
+// (the interaction's pattern in the registry): Studio fades, Desk and
+// Neutral roll.
 import {
   use,
   useEffect,
+  useLayoutEffect,
   useRef,
   type ChangeEvent,
   type ComponentProps,
@@ -49,9 +63,11 @@ import {
   type Shape,
   type Size,
 } from '@the-system/shared';
+import { useMotion } from '../../internal/motion';
 import { useTheme } from '../../theme/hooks';
 import { useField, useFieldControl } from '../Field/Field';
 import { IconButton, type IconButtonProps } from '../IconButton/IconButton';
+import { useErrorShake } from '../Input/useErrorShake';
 
 export type NumberFieldSize = Size;
 export type NumberFieldShape = Extract<Shape, 'default' | 'pill'>;
@@ -246,9 +262,89 @@ interface ControlProps {
   native: ComponentProps<'input'>;
 }
 
+/** The keys that step the value. Typing never rolls. */
+const STEP_KEYS: Readonly<Record<string, 'up' | 'down'>> = { ArrowUp: 'up', PageUp: 'up', ArrowDown: 'down', PageDown: 'down' };
+/** A step button press or a key changes the value within this many ms, or it was not a step (a commit after typing). */
+const STEP_WINDOW_MS = 250;
+
+interface StepIntent {
+  /** A step key or a step button is held down: auto repeat steps count. */
+  held: boolean;
+  /** When the last step key or press came, from performance.now(). */
+  at: number;
+  /** The way that step goes. */
+  direction: 'up' | 'down';
+}
+
+/**
+ * field-step: rolls the input when the value changes because of a step key
+ * or a step button. A step that comes while the last roll still plays
+ * changes the value with no roll, so a held key or button does not flicker.
+ */
+function useStepRoll(inner: { current: HTMLInputElement | null }, numberValue: number | undefined) {
+  const motion = useMotion();
+  const intent = useRef<StepIntent>({ held: false, at: Number.NEGATIVE_INFINITY, direction: 'up' });
+  const last = useRef(numberValue);
+  const running = useRef<Animation | null>(null);
+
+  useEffect(() => {
+    const input = inner.current;
+    const root = input?.parentElement;
+    if (!input || !root) return undefined;
+    const mark = (direction: 'up' | 'down', held: boolean) => {
+      intent.current = { held, at: performance.now(), direction };
+    };
+    // A step button of this field: a child of the root with the increment or decrement part.
+    const stepperOf = (event: Event) => {
+      const el = event.target instanceof Element ? event.target.closest('[data-part="increment"], [data-part="decrement"]') : null;
+      return el?.parentElement === root ? el : null;
+    };
+    const onKeyDown = (event: globalThis.KeyboardEvent) => {
+      const direction = STEP_KEYS[event.key];
+      if (direction && event.target === input) mark(direction, true);
+    };
+    const release = () => {
+      intent.current = { ...intent.current, held: false };
+    };
+    const onPointerDown = (event: PointerEvent) => {
+      const el = stepperOf(event);
+      if (el) mark(el.getAttribute('data-part') === 'increment' ? 'up' : 'down', true);
+    };
+    const onClick = (event: globalThis.MouseEvent) => {
+      const el = stepperOf(event);
+      if (el && !intent.current.held) mark(el.getAttribute('data-part') === 'increment' ? 'up' : 'down', false);
+    };
+    root.addEventListener('keydown', onKeyDown, true);
+    root.addEventListener('keyup', release, true);
+    root.addEventListener('pointerdown', onPointerDown, true);
+    root.addEventListener('click', onClick, true);
+    window.addEventListener('pointerup', release, true);
+    window.addEventListener('pointercancel', release, true);
+    return () => {
+      root.removeEventListener('keydown', onKeyDown, true);
+      root.removeEventListener('keyup', release, true);
+      root.removeEventListener('pointerdown', onPointerDown, true);
+      root.removeEventListener('click', onClick, true);
+      window.removeEventListener('pointerup', release, true);
+      window.removeEventListener('pointercancel', release, true);
+    };
+  }, [inner]);
+
+  useLayoutEffect(() => {
+    const before = last.current;
+    last.current = numberValue;
+    if (before === numberValue || (Number.isNaN(before) && Number.isNaN(numberValue))) return;
+    const { held, at, direction } = intent.current;
+    if (!held && performance.now() - at > STEP_WINDOW_MS) return;
+    if (running.current?.playState === 'running') return;
+    running.current = motion.play(inner.current, 'swap', 'field-step', { phase: 'enter', direction });
+  }, [numberValue, motion, inner]);
+}
+
 /** The native input, with Western digits on input and PageUp and PageDown by ten steps. */
 function Control({ locale, step, min, max, ref, inner, native }: ControlProps) {
   const state = use(NumberFieldStateContext);
+  useStepRoll(inner, state?.numberValue);
   return (
     <AriaInput
       {...(native as Omit<ComponentProps<typeof AriaInput>, 'ref'>)}
@@ -353,6 +449,7 @@ export function NumberField({
   useWesternInput(rootEl, tag);
   const stepperSize: IconButtonProps['size'] = size === 'lg' ? 'md' : 'xs';
   const showSteppers = steppers && !control.readOnly;
+  useErrorShake(inner, Boolean(control['aria-invalid']));
 
   const onRootMouseDown = (event: MouseEvent<HTMLDivElement>) => {
     rootProps?.onMouseDown?.(event);

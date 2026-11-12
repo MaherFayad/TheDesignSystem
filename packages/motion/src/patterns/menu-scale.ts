@@ -12,10 +12,10 @@ export interface MenuScaleInput extends MotionInput {
 
 export const menuScale = definePattern<MenuScaleInput>({
   id: 'menu-scale',
-  tokens: ['duration.base', 'duration.quick', 'ease.emphasized', 'ease.exit', 'ease.out', 'scale.press'],
+  tokens: ['duration.base', 'duration.quick', 'ease.emphasized', 'ease.exit', 'ease.out', 'scale.menu-enter'],
   spec: ({ phase, origin = '50% 0' }) => ({
     keyframes: byPhase(phase, [
-      { transform: `scale(${scale('scale.press')})`, opacity: 0 },
+      { transform: `scale(${scale('scale.menu-enter')})`, opacity: 0 },
       { transform: 'none', opacity: 1 },
     ]),
     duration: phase === 'exit' ? 'duration.quick' : 'duration.base',
@@ -29,6 +29,6 @@ export const menuScale = definePattern<MenuScaleInput>({
     exitDuration: durationMs['duration.quick'],
     easing: easeBezier['ease.emphasized'],
     reducedDuration: durationMs['duration.base'],
-    fromScale: scaleValue['scale.press'],
+    fromScale: scaleValue['scale.menu-enter'],
   },
 });

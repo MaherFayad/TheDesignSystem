@@ -11,12 +11,18 @@
 // CSS clears its own box through its private --_input-* properties. The
 // toggle is an IconButton with aria-pressed; its name also says what a
 // press does, as the order asks.
+//
+// Motion (order 1.21): a press on the toggle swaps its glyph and fades the
+// text back in (password-reveal); the type changes at once, the motion only
+// decorates it. The box shakes when the field turns invalid (error-shake).
 import { flushSync } from 'react-dom';
-import { useCallback, useEffect, useId, useRef, useState, type ComponentProps, type MouseEvent, type Ref } from 'react';
+import { useCallback, useEffect, useId, useLayoutEffect, useRef, useState, type ComponentProps, type MouseEvent, type Ref } from 'react';
 import type { Shape, Size } from '@the-system/shared';
 import { useField } from '../Field/Field';
 import { IconButton } from '../IconButton/IconButton';
 import { Input, type InputProps } from '../Input/Input';
+import { useErrorShake, type ShakeBox } from '../Input/useErrorShake';
+import { useMotion } from '../../internal/motion';
 
 export type PasswordFieldSize = Size;
 export type PasswordFieldShape = Extract<Shape, 'default' | 'pill'>;
@@ -46,6 +52,9 @@ export interface PasswordFieldProps extends Omit<InputProps, 'type' | 'start' | 
 }
 
 const INTERACTIVE = 'a[href], button, input, select, textarea, [tabindex], [contenteditable="true"]';
+
+/** The bordered box: the root, around the nested Input. */
+const fieldBox: ShakeBox = (input) => input.closest("[data-ds='password-field']");
 
 /**
  * A password input. The toggle shows or hides the value; focus stays on
@@ -83,6 +92,20 @@ export function PasswordField({
   // Inside a Field the Field gives the id; alone, the toggle needs one to point at.
   const inputId = id ?? (field ? undefined : generated);
   const controls = inputId ?? field?.controlId;
+  const motion = useMotion();
+  // Set by a press on the toggle, read once the new type is drawn.
+  const toggled = useRef(false);
+  useErrorShake(inner, isInvalid, fieldBox);
+
+  // password-reveal: after the type changed, the new glyph rolls in and the text fades back in.
+  useLayoutEffect(() => {
+    if (!toggled.current) return;
+    toggled.current = false;
+    const input = inner.current;
+    const glyph = input?.closest("[data-ds='password-field']")?.querySelector(":scope > [data-part='toggle'] > [data-part='icon']");
+    motion.play(glyph, 'swap', 'password-reveal', { phase: 'enter', direction: shown ? 'up' : 'down' });
+    motion.play(input, 'fade', 'password-reveal');
+  }, [shown, motion]);
 
   const setShown = useCallback(
     (next: boolean) => {
@@ -175,7 +198,10 @@ export function PasswordField({
         size={size === 'lg' ? 'sm' : 'xs'}
         shape="pill"
         disabled={isDisabled}
-        onClick={() => setShown(!shown)}
+        onClick={() => {
+          toggled.current = true;
+          setShown(!shown);
+        }}
       />
     </div>
   );

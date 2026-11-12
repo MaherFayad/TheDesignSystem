@@ -10,11 +10,18 @@
  *   --_otp-field-height (a cell is as wide as it is tall), --_otp-field-gap,
  *   --_otp-field-font-size, --_otp-field-radius, --_otp-field-bg,
  *   --_otp-field-fg, --_otp-field-border-color (at rest, -hover, -focus,
- *   -invalid), --_otp-field-ring (the glow and ring of the active cell),
- *   --_otp-field-separator-color.
+ *   -invalid), --_otp-field-ring (the focus ring of the active cell),
+ *   --_otp-field-shadow-focus (its focus glow), --_otp-field-separator-color.
  *
- * The ring sits on the active cell's ::before, whose opacity fades, since
- * only transform and opacity may animate.
+ * Motion plumbing (order 1.21):
+ *   focus-glow, as on Input: --_otp-field-duration-in and --_otp-field-ease-in
+ *   time the glow in, --_otp-field-duration-out and --_otp-field-ease-out time
+ *   it out, --_otp-field-enter-scale is the size it grows from.
+ *
+ * The ring is the active cell's own box shadow and shows at once (WCAG
+ * 2.4.7). The glow sits on the cell's ::before: it fades in and grows, since
+ * only transform and opacity may animate. A character pops into its cell
+ * from code (interaction otp-fill), on an unnamed span inside the cell.
  */
 @layer ds.base {
   [data-ds='otp-field'] {
@@ -28,7 +35,13 @@
     --_otp-field-border-color-hover: var(--ds-color-border-control-hover);
     --_otp-field-border-color-focus: var(--ds-color-border-control-hover);
     --_otp-field-border-color-invalid: var(--ds-color-state-danger-text);
-    --_otp-field-ring: var(--ds-elevation-input-focus), var(--ds-focus-shadow-ring);
+    --_otp-field-ring: var(--ds-focus-shadow-ring);
+    --_otp-field-shadow-focus: var(--ds-elevation-input-focus);
+    --_otp-field-duration-in: var(--ds-duration-base);
+    --_otp-field-duration-out: var(--ds-duration-fast);
+    --_otp-field-ease-in: var(--ds-ease-out);
+    --_otp-field-ease-out: var(--ds-ease-exit);
+    --_otp-field-enter-scale: var(--ds-scale-dialog-enter);
     --_otp-field-separator-color: var(--ds-color-border-strong);
 
     position: relative;
@@ -140,16 +153,19 @@
     user-select: none;
   }
 
-  /* The ring of the active cell. Covers the border box, so the ring sits just outside the border. */
+  /* The glow of the active cell. Covers the border box. It leaves with the out timing. */
   [data-ds='otp-field'] > [data-part='cell']::before {
     content: '';
     position: absolute;
     inset: calc(var(--ds-border-width-default) * -1);
     border-radius: inherit;
-    box-shadow: var(--_otp-field-ring);
+    box-shadow: var(--_otp-field-shadow-focus);
     opacity: 0;
+    transform: scale(var(--_otp-field-enter-scale));
     pointer-events: none;
-    transition: opacity var(--ds-duration-base) var(--ds-ease-default);
+    transition:
+      opacity var(--_otp-field-duration-out) var(--_otp-field-ease-out),
+      transform var(--_otp-field-duration-out) var(--_otp-field-ease-out);
   }
 
   [data-ds='otp-field'] > [data-part='separator'] {
@@ -166,16 +182,24 @@
     --_otp-field-border-color: var(--_otp-field-border-color-hover);
   }
 
-  /* Focus: the active cell gets the focus border, the glow and the 2px ring. The transparent outline shows in forced colors mode. */
+  /*
+   * Focus: the active cell gets the focus border and the ring at once, and
+   * its glow fades in and grows. The transparent outline shows in forced
+   * colors mode.
+   */
   [data-ds='otp-field']:focus-within > [data-part='cell'][data-active] {
     --_otp-field-border-color: var(--_otp-field-border-color-focus);
 
+    box-shadow: var(--_otp-field-ring);
     outline: var(--ds-border-width-strong) solid transparent;
     outline-offset: var(--ds-border-width-default);
   }
 
   [data-ds='otp-field']:focus-within > [data-part='cell'][data-active]::before {
     opacity: 1;
+    transform: none;
+    transition-duration: var(--_otp-field-duration-in);
+    transition-timing-function: var(--_otp-field-ease-in);
   }
 
   /* Invalid: the danger color on every cell, at 3:1 or more. The Field error says what to do. */
@@ -206,8 +230,15 @@
     cursor: not-allowed;
   }
 
+  /* Reduced motion: the duration tokens are 0ms, and the glow does not grow. */
+  @media (prefers-reduced-motion: reduce) {
+    [data-ds='otp-field'] {
+      --_otp-field-enter-scale: 1;
+    }
+  }
+
   /*
-   * Forced colors: box shadows go, so the ring layer goes and the transparent
+   * Forced colors: box shadows go, so the ring and the glow go and the transparent
    * outline of the active cell in the focus rule above shows focus. The
    * separator is drawn in the text color. Disabled reads as GrayText.
    */

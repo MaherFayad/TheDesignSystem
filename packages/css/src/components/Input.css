@@ -9,11 +9,19 @@
  * Recipes override these; states only swap them:
  *   --_input-height, --_input-padding-inline, --_input-gap, --_input-font-size,
  *   --_input-radius, --_input-bg, --_input-fg, --_input-border-color (at rest,
- *   -hover, -focus, -invalid), --_input-ring (the focus glow and ring),
- *   --_input-autofill-bg (the fill a browser autofill gets).
+ *   -hover, -focus, -invalid), --_input-ring (the focus ring),
+ *   --_input-shadow-focus (the focus glow), --_input-autofill-bg (the fill a
+ *   browser autofill gets).
  *
- * The glow and ring sit on ::before, whose opacity fades, since only
- * transform and opacity may animate. Border colors change at once.
+ * Motion plumbing of the focus glow (interaction focus-glow, order 1.21):
+ *   --_input-duration-in and --_input-ease-in time the glow in on focus,
+ *   --_input-duration-out and --_input-ease-out time it out on blur,
+ *   --_input-enter-scale is the size the glow grows from.
+ *
+ * The focus ring is the root's own box shadow and shows at once (WCAG
+ * 2.4.7). The glow sits on ::before: it fades in and grows from just under
+ * full size, since only transform and opacity may animate. Border colors
+ * change at once.
  */
 @layer ds.base {
   [data-ds='input'] {
@@ -29,8 +37,14 @@
     /* Focus is never weaker than hover: the hover border, plus the ring. */
     --_input-border-color-focus: var(--ds-color-border-control-hover);
     --_input-border-color-invalid: var(--ds-color-state-danger-text);
-    --_input-ring: var(--ds-elevation-input-focus), var(--ds-focus-shadow-ring);
+    --_input-ring: var(--ds-focus-shadow-ring);
+    --_input-shadow-focus: var(--ds-elevation-input-focus);
     --_input-autofill-bg: var(--ds-color-bg-surface);
+    --_input-duration-in: var(--ds-duration-base);
+    --_input-duration-out: var(--ds-duration-fast);
+    --_input-ease-in: var(--ds-ease-out);
+    --_input-ease-out: var(--ds-ease-exit);
+    --_input-enter-scale: var(--ds-scale-dialog-enter);
 
     position: relative;
     box-sizing: border-box;
@@ -54,16 +68,24 @@
     cursor: text;
   }
 
-  /* The glow and the ring. Covers the border box, so the ring sits just outside the border. */
+  /* The glow. Covers the border box. It leaves on blur with the out timing. */
   [data-ds='input']::before {
     content: '';
     position: absolute;
     inset: calc(var(--ds-border-width-default) * -1);
     border-radius: inherit;
-    box-shadow: var(--_input-ring);
+    box-shadow: var(--_input-shadow-focus);
     opacity: 0;
+    transform: scale(var(--_input-enter-scale));
     pointer-events: none;
-    transition: opacity var(--ds-duration-base) var(--ds-ease-default);
+    transition:
+      opacity var(--_input-duration-out) var(--_input-ease-out),
+      transform var(--_input-duration-out) var(--_input-ease-out);
+  }
+
+  /* An Input that is the control part of another component draws no glow: the outer box draws it. */
+  [data-ds='input'][data-part='control'] {
+    --_input-shadow-focus: none;
   }
 
   /* Content paints above the glow. */
@@ -166,16 +188,23 @@
     --_input-border-color: var(--_input-border-color-hover);
   }
 
-  /* Focus: the glow and the 2px ring fade in. The transparent outline shows in forced colors mode. */
+  /*
+   * Focus: the ring shows at once, the glow fades in and grows to full size.
+   * The transparent outline shows in forced colors mode.
+   */
   [data-ds='input']:focus-within {
     --_input-border-color: var(--_input-border-color-focus);
 
+    box-shadow: var(--_input-ring);
     outline: var(--ds-border-width-strong) solid transparent;
     outline-offset: var(--ds-border-width-default);
   }
 
   [data-ds='input']:focus-within::before {
     opacity: 1;
+    transform: none;
+    transition-duration: var(--_input-duration-in);
+    transition-timing-function: var(--_input-ease-in);
   }
 
   /* Invalid: the danger color of the source (danger fg), at 3:1 or more. The Field error says what to do. */
@@ -225,10 +254,17 @@
     unicode-bidi: plaintext;
   }
 
+  /* Reduced motion: the duration tokens are 0ms, and the glow does not grow. */
+  @media (prefers-reduced-motion: reduce) {
+    [data-ds='input'] {
+      --_input-enter-scale: 1;
+    }
+  }
+
   /*
    * Forced colors: the browser drops box shadows and forces border colors,
-   * so the glow layer goes away and the transparent outline in the focus
-   * rule above shows focus. Disabled reads as GrayText.
+   * so the ring and the glow layer go away and the transparent outline in
+   * the focus rule above shows focus. Disabled reads as GrayText.
    */
   @media (forced-colors: active) {
     [data-ds='input']::before {

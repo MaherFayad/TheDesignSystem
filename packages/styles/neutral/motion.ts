@@ -22,6 +22,7 @@ const motion: StyleMotionPreset = {
     'drag-drop': { mode: 'full', easing: 'ease.out' },
     'accordion-height': { mode: 'full', enter: { easing: 'ease.out' } },
     'tab-indicator': { mode: 'full', easing: 'ease.out' },
+    dialog: { mode: 'full', enter: { easing: 'ease.out' } },
     'list-stagger': { mode: 'reduced' },
     swap: { mode: 'full', easing: 'ease.out' },
     pop: { mode: 'full', easing: 'ease.out' },

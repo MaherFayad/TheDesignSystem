@@ -144,6 +144,7 @@ describe('animate', () => {
       '--ds-duration-base': '120ms',
       '--ds-duration-slow': '180ms',
       '--ds-ease-out': 'cubic-bezier(0, 0, 0.58, 1)',
+      '--ds-ease-emphasized': 'cubic-bezier(0.16, 1, 0.3, 1)',
       '--ds-ease-reveal': 'cubic-bezier(0.22, 1, 0.36, 1)',
       '--ds-delay-reveal-step': '80ms',
     };
@@ -158,7 +159,7 @@ describe('animate', () => {
     expect(animate).toHaveBeenCalledWith(catalog.dialog.keyframes(), {
       id: 'ds-motion:dialog',
       duration: 120,
-      easing: 'cubic-bezier(0, 0, 0.58, 1)',
+      easing: 'cubic-bezier(0.16, 1, 0.3, 1)',
       fill: 'none',
       iterations: 1,
       delay: 0,

@@ -24,6 +24,7 @@ const motion: StyleMotionPreset = {
   },
   interactions: {
     'error-shake': 'none',
+    'field-step': 'reduced',
   },
 };
 

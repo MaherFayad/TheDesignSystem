@@ -42,6 +42,7 @@ export const easeBezier = {
 /** Scale tokens. */
 export const scaleValue = {
   'scale.dialog-enter': 0.98,
+  'scale.menu-enter': 0.97,
   'scale.window-enter': 0.92,
   'scale.press': 0.97,
 } as const;
