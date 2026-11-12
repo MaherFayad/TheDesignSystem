@@ -134,7 +134,7 @@ async function run(browser: Browser, url: string, job: Job): Promise<Result> {
       await settle(page);
     }
     // @axe-core/playwright types its Page against its own playwright-core copy.
-    let builder = new AxeBuilder({ page } as unknown as ConstructorParameters<typeof AxeBuilder>[0]).withTags(TAGS);
+    let builder = new AxeBuilder({ page }).withTags(TAGS);
     if (job.skip.length) builder = builder.disableRules(job.skip);
     const result = await builder.analyze();
     const violations = result.violations as unknown as AxeViolation[];

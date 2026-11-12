@@ -37,13 +37,9 @@ async function expectHtml(page: Page, attrs: Record<string, string>) {
   for (const [name, value] of Object.entries(attrs)) await expect(html).toHaveAttribute(name, value);
 }
 
-/**
- * axe for the page. @axe-core/playwright brings its own playwright-core
- * (1.65) while the repo pins @playwright/test 1.63, so the Page types
- * differ by two members; the cast bridges them, as the contract suite does.
- */
+/** axe for the page: the violations as `id: targets` lines. */
 async function axe(page: Page): Promise<string[]> {
-  const builder = new AxeBuilder({ page } as unknown as ConstructorParameters<typeof AxeBuilder>[0]);
+  const builder = new AxeBuilder({ page });
   const results = await builder.analyze();
   return results.violations.map((v) => `${v.id}: ${v.nodes.map((n) => n.target.join(' ')).join(', ')}`);
 }

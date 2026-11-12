@@ -158,7 +158,7 @@ async function runAxe(page: Page, m: Manifest): Promise<string[]> {
   const skip = m.contract?.skipAxeRules ?? [];
   if (skip.length) note(`axe rules skipped by the manifest: ${skip.join(', ')}`);
   // @axe-core/playwright types its Page against its own playwright-core copy.
-  let builder = new AxeBuilder({ page } as unknown as ConstructorParameters<typeof AxeBuilder>[0]).withTags(AXE_TAGS);
+  let builder = new AxeBuilder({ page }).withTags(AXE_TAGS);
   if (skip.length) builder = builder.disableRules(skip);
   const result = await builder.analyze();
   const violations = result.violations as unknown as AxeViolation[];
