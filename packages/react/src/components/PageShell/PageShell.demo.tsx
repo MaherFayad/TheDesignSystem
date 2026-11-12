@@ -1,6 +1,7 @@
 import type { CSSProperties, ReactNode } from 'react';
 import type { IconName } from '@the-system/icons/react';
 import { DemoCase, DemoPage, DemoRow } from '../../demo';
+import { Theme } from '../../theme/Theme';
 import { sample } from '../../demo';
 import { Button } from '../Button';
 import { Rail, RailItem } from '../Rail';
@@ -90,30 +91,22 @@ export default function PageShellDemo() {
   return (
     <DemoPage>
       <DemoCase id="variants" title="Variants">
-        <DemoRow label="Expanded, with an aside">
-          <span />
-        </DemoRow>
+        <p data-demo="label">Expanded, with an aside</p>
         <Shell id="shell-expanded" aside={<p>3 people are viewing this board.</p>}>
           <h3>Boards</h3>
           <p>Pick a board to open it.</p>
         </Shell>
-        <DemoRow label="Collapsed">
-          <span />
-        </DemoRow>
+        <p data-demo="label">Collapsed</p>
         <Shell id="shell-collapsed" sidebar="collapsed">
           <h3>Boards</h3>
           <p>The column keeps only the icons.</p>
         </Shell>
-        <DemoRow label="Hidden: the menu button opens the navigation">
-          <span />
-        </DemoRow>
+        <p data-demo="label">Hidden: the menu button opens the navigation</p>
         <Shell id="shell-hidden" sidebar="hidden">
           <h3>Boards</h3>
           <p>The navigation opens in a drawer from the menu button.</p>
         </Shell>
-        <DemoRow label="Rail">
-          <span />
-        </DemoRow>
+        <p data-demo="label">Rail</p>
         <Shell
           id="shell-rail"
           nav={
@@ -127,23 +120,23 @@ export default function PageShellDemo() {
           <h3>Home</h3>
           <p>A rail keeps the page wide.</p>
         </Shell>
-        <DemoRow label="Arabic">
-          <span />
-        </DemoRow>
-        <Frame>
-          <PageShell
-            embedded
-            mainId="shell-ar"
-            nav={<ShellSidebar items={arNav} label="الرئيسية" prefix="shell-ar" />}
-            header={<Header title="استوديو الشمال" action="إنشاء لوحة" />}
-            aside={<p>3 أعضاء يشوفون اللوحة الحين.</p>}
-            footer="استوديو الشمال، 2026"
-            skipLabel="الانتقال للمحتوى الرئيسي"
-          >
-            <h3>اللوحات</h3>
-            <p>اختر لوحة عشان تفتحها.</p>
-          </PageShell>
-        </Frame>
+        <p data-demo="label">Arabic</p>
+        <Theme lang="ar" dir="rtl">
+          <Frame>
+            <PageShell
+              embedded
+              mainId="shell-ar"
+              nav={<ShellSidebar items={arNav} label="الرئيسية" prefix="shell-ar" />}
+              header={<Header title="استوديو الشمال" action="إنشاء لوحة" />}
+              aside={<p>3 أعضاء يشوفون اللوحة الحين.</p>}
+              footer="استوديو الشمال، 2026"
+              skipLabel="الانتقال للمحتوى الرئيسي"
+            >
+              <h3>اللوحات</h3>
+              <p>اختر لوحة عشان تفتحها.</p>
+            </PageShell>
+          </Frame>
+        </Theme>
       </DemoCase>
 
       <DemoCase id="empty" title="Empty">
@@ -177,15 +170,11 @@ export default function PageShellDemo() {
         <Shell
           id="shell-too-many"
           nav={
-            <Sidebar label="Main">
-              <SidebarGroup label="Boards">
-                {Array.from({ length: 40 }, (_, i) => (
-                  <SidebarItem key={i} href={`#too-many-${i}`} start="file">
-                    {`Board ${i + 1}`}
-                  </SidebarItem>
-                ))}
-              </SidebarGroup>
-            </Sidebar>
+            <ShellSidebar
+              items={Array.from({ length: 40 }, (_, i): [IconName, string] => ['file', `Board ${i + 1}`])}
+              label="Main"
+              prefix="too-many"
+            />
           }
         >
           {Array.from({ length: 12 }, (_, i) => (
@@ -197,7 +186,12 @@ export default function PageShellDemo() {
       <DemoCase id="long-text" title="Long text">
         <Shell
           id="shell-long"
-          header={<Header title="Northwind studio and the Spring launch planning workspace for the brand team" action="Create board" />}
+          header={
+            <Header
+              title="Northwind studio and the Spring launch planning workspace for the brand team"
+              action="Create board"
+            />
+          }
           aside={<p>{sample.en.long}</p>}
           footer={sample.en.long}
         >

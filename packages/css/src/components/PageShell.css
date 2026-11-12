@@ -22,7 +22,7 @@
  *   narrow (under breakpoint.tablet)     one column; the navigation is in a Drawer
  *
  * Private properties on the root. Recipes override them:
- *   --_page-shell-bg, -fg, -divider-color
+ *   --_page-shell-bg, -fg, -border-color
  *   --_page-shell-header-height, -header-padding-inline, -header-gap
  *   --_page-shell-main-padding, -aside-width, -aside-padding, -footer-padding
  *
@@ -33,11 +33,12 @@
   [data-ds='page-shell'] {
     --_page-shell-bg: var(--ds-color-bg-body);
     --_page-shell-fg: var(--ds-color-text-default);
-    --_page-shell-divider-color: var(--ds-color-border-default);
+    --_page-shell-border-color: var(--ds-color-border-default);
     --_page-shell-header-height: var(--ds-size-control-lg);
     --_page-shell-header-padding-inline: var(--ds-space-l);
     --_page-shell-header-gap: var(--ds-space-s);
     --_page-shell-main-padding: var(--ds-space-2xl);
+    /* No layout width token yet (see the lane report): the small dialog width, 360px, the nearest step. */
     --_page-shell-aside-width: var(--ds-dialog-width-sm);
     --_page-shell-aside-padding: var(--ds-space-xl);
     --_page-shell-footer-padding: var(--ds-space-l);
@@ -68,7 +69,7 @@
     min-block-size: var(--_page-shell-header-height);
     min-inline-size: 0;
     padding-inline: var(--_page-shell-header-padding-inline);
-    border-block-end: var(--ds-border-width-default) solid var(--_page-shell-divider-color);
+    border-block-end: var(--ds-border-width-default) solid var(--_page-shell-border-color);
   }
 
   /* The header content takes the rest of the row, so a Navbar spans it. */
@@ -94,7 +95,7 @@
     grid-area: nav;
     flex-direction: column;
     min-block-size: 0;
-    border-inline-end: var(--ds-border-width-default) solid var(--_page-shell-divider-color);
+    border-inline-end: var(--ds-border-width-default) solid var(--_page-shell-border-color);
   }
 
   [data-ds='page-shell'] > [data-part='nav'][hidden] {
@@ -133,7 +134,7 @@
     inline-size: var(--_page-shell-aside-width);
     min-inline-size: 0;
     padding: var(--_page-shell-aside-padding);
-    border-inline-start: var(--ds-border-width-default) solid var(--_page-shell-divider-color);
+    border-inline-start: var(--ds-border-width-default) solid var(--_page-shell-border-color);
     overflow-wrap: break-word;
   }
 
@@ -144,7 +145,7 @@
     box-sizing: border-box;
     min-inline-size: 0;
     padding: var(--_page-shell-footer-padding) var(--_page-shell-main-padding);
-    border-block-start: var(--ds-border-width-default) solid var(--_page-shell-divider-color);
+    border-block-start: var(--ds-border-width-default) solid var(--_page-shell-border-color);
     color: var(--ds-color-text-muted);
     font-size: var(--ds-font-size-s);
     overflow-wrap: break-word;
@@ -167,7 +168,7 @@
     [data-ds='page-shell'] > [data-part='aside'] {
       inline-size: auto;
       border-inline-start: 0;
-      border-block-start: var(--ds-border-width-default) solid var(--_page-shell-divider-color);
+      border-block-start: var(--ds-border-width-default) solid var(--_page-shell-border-color);
     }
   }
 
@@ -202,19 +203,19 @@
 
   @media (prefers-contrast: more) {
     [data-ds='page-shell'] {
-      --_page-shell-divider-color: var(--ds-color-border-strong);
+      --_page-shell-border-color: var(--ds-color-border-strong);
     }
   }
 
   [data-contrast='more'] [data-ds='page-shell'] {
-    --_page-shell-divider-color: var(--ds-color-border-strong);
+    --_page-shell-border-color: var(--ds-color-border-strong);
   }
 
   @media (forced-colors: active) {
     [data-ds='page-shell'] {
       --_page-shell-bg: Canvas;
       --_page-shell-fg: CanvasText;
-      --_page-shell-divider-color: CanvasText;
+      --_page-shell-border-color: CanvasText;
     }
   }
 }

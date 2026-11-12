@@ -13834,7 +13834,7 @@
       "role": "No role on the root. header is the banner, main the main landmark (one per page, id main), aside a complementary landmark with a label, footer the contentinfo. The navigation landmark is the Sidebar or Rail inside the nav part.",
       "focus": "The skip link is the first tab stop; Enter moves focus to main. The menu button opens the navigation Drawer, and focus returns to it when the Drawer closes.",
       "keys": {
-        "Tab": "The first press reaches the skip link, then the header, the navigation, main, the aside and the footer in that order",
+        "Tab": "The first press reaches the skip link, then the menu button (only while the column is hidden), the header, the navigation, main, the aside and the footer in that order",
         "Shift+Tab": "Moves back through the same order",
         "Enter": "On the skip link, moves focus to main"
       },
@@ -13842,6 +13842,7 @@
       "notes": [
         "The reading order equals the visual order in every width: header, navigation, main, aside, footer.",
         "Under breakpoint.tablet the column is not rendered, so its links are never in the page twice; the Drawer renders them while open. A media query hides the column from the first paint, before hydration.",
+        "A click on a link inside the navigation Drawer closes it, so a client routed page does not open under it.",
         "While the column is hidden on a wide screen (sidebar hidden), the menu button and the Drawer are the way to the navigation, as on phones.",
         "No motion: the column swaps at once. The Drawer brings its own motion (pattern sheet).",
         "The shell takes the height of its parent (min-block-size 100%). Give html and body a height for a full screen frame; no viewport height token exists yet.",

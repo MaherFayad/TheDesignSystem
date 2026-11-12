@@ -194,7 +194,14 @@ capture on swipe; `scrollIntoView` moving the page behind; neighbours across
 the wrap not preloaded; focus opening on a disabled Next; a stale trigger
 after a programmatic open; manifest keys and style entries.
 
-PageShell: its review was still running at this commit; findings and fixes follow in a later commit on this branch.
+PageShell, fixed (in the commit after `wo-1.8.12`, which went out with an
+unused import that failed eslint): the unused `DrawerTrigger` import; the
+Arabic demo row not in an RTL theme; an empty banner when there is a nav and
+no header; the Drawer staying open after a link in it is followed; the skip
+link English under `ar-SA` (the shell now passes its own word); the private
+name `divider-color` renamed `border-color`; the too many demo Sidebar not
+wired to `usePageShell`; demo captions; tests for no duplicate links while
+the Drawer is open and for the empty banner; the Tab order in the manifest.
 
 Left open (notes):
 
@@ -202,6 +209,12 @@ Left open (notes):
   (see "Changes needed").
 - Both overlays cast their kind: `'command-palette' as string as DialogKind`
   (see "Changes needed").
+- PageShell: the aside width borrows `dialog.width.sm`, a component token,
+  where batch 8 asks layout to use only space, size and breakpoint tokens.
+  Commented in the CSS; see "Token gaps".
+- PageShell: no server render test (`renderToString`). The hook reads
+  `window` only in an effect, and the first paint on narrow screens comes from
+  the media query.
 
 ## Changes needed from the lead
 
