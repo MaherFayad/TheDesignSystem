@@ -62,6 +62,7 @@ Nothing.
    branch, no pull request, no force push.
 
 ## Contract changes
+2026-11-12: anatomy.md: a nested component may carry its parent's `data-part`; a part belongs to the nearest ancestor root; a component may add its own boolean state attributes when the manifest lists them. Reason: review of Toast and Window.
 2026-11-12: anatomy.md gained "One convention for component CSS and props" (12 rules: private `--_c-*` properties, state swaps, pseudo element roles, focus, disabled, `start` and `end`, prop spread, shared axis types). Reason: Button and Input were built with different habits.
 2026-11-12: frameworks.md: Theme uses `css` for inline styles; never wait on transitionend. style-pack.md: `status` and `proposedSchemes` in style.json. Reason: review of order 0.7.
 2026-11-12: tokens.md gained the DTCG 2025.10 differences and the `added` list in contract.json (64 names). Reason: the spec wins on format, and no source token may be dropped.

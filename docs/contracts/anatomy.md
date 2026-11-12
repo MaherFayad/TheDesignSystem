@@ -18,8 +18,20 @@ DOM and nothing else. Full detail: section 3.5 of PLAN.md.
 - No component invents another word for size, tone, emphasis or shape.
 - Boolean state attributes are present with an empty value when true and
   absent when false.
-- The root part is the element with `data-ds`. It does not also carry
-  `data-part`.
+- The root part is the element with `data-ds`. It does not carry
+  `data-part="root"`.
+- A component used as a named part of a parent may carry both: its own
+  `data-ds` and the parent's `data-part` (for example the close IconButton of
+  a Window: `data-ds="icon-button" data-part="close"`).
+- A part belongs to the nearest ancestor root, not counting the element
+  itself. A manifest lists only its own parts. Parts of a nested component
+  (the `title` inside a TitleBar inside a Window) belong to that component's
+  manifest.
+- A component may add boolean state attributes of its own (for example
+  `data-zoomed`, `data-minimized`) when its manifest lists them under
+  `states`. They follow the same rule: present and empty when true.
+- A presentational example that has no open or closed behavior does not
+  stamp `data-state`.
 - Every interactive element comes from the system. No bare `<button>` outside
   the Button implementation.
 - Controls are at least 24 by 24 CSS px (`size.target-min`). `lg` is 44px.
