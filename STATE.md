@@ -122,7 +122,7 @@ components, a fresh review, then commit.
 | 1.0.i | Consolidation 2: follow ups round 2, tokens, contract text | claude/ds-consolidation-2 | session_01ErLBsasj4xo1JcwWMq49Dd | merged |
 | 1.21 | Interaction round (proposed) | claude/ds-order-1-21 | session_01ErLBsbZ3wQ2RMr25bxi1QU | merged, proposed, review open |
 | 1.22 | Interaction round 2, richer motion (proposed); also takes the 6 blockers of the interaction review | claude/ds-order-1-22 | session_01ErLBsaXB3wXF8YHpuV9bS5 | running |
-| 1.17 | Full matrix, contract suites, a11y sweep, size report | claude/ds-order-1-17 | session_01ErLBsa6pbDJmysTT7fLpsV | running |
+| 1.17 | Full matrix, contract suites, a11y sweep, size report | claude/ds-order-1-17 | session_01ErLBsa6pbDJmysTT7fLpsV | merged |
 | 1.18, 1.19 | Consumers on wave 1, adoption guides | claude/ds-order-1-18 | session_01ErLBsZSfR7PvXto2uEYenL | merged |
 
 React Aria Components 1.22.1 is installed (order 1.2.0). Not started yet:
@@ -167,6 +167,8 @@ Fix round sessions (round 1 of 3), reports in `docs/reports/fixes/`:
 Requests from the lanes are collected in `docs/plan/wave-1-followups.md`.
 
 ## Coverage
+Gate 1 status and evidence: `docs/reports/wave-1.md` (not passed yet: 4 React contract tests, order 1.22 running, Angular fix round 2 not rechecked).
+
 As of 2026-11-12 14:35 UTC: 111 component manifests, all built in React
 (`packages/manifest/src/component/`). Angular has 59 marked ready (17:30 UTC). React
 Native has 2. The per family table comes back with the matrix
