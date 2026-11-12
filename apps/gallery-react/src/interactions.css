@@ -107,4 +107,45 @@
     border-radius: var(--ds-radius-field);
     background-color: var(--ds-color-bg-body);
   }
+
+  /* Stage only mode for recordings: /interactions?focus=<id>. */
+  [data-gallery='interactions-focus'] {
+    display: grid;
+    place-items: center;
+    min-block-size: 100dvh;
+    background-color: var(--ds-color-bg-body);
+    overflow: clip;
+  }
+
+  [data-gallery='interactions-focus-stage'] {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: var(--ds-space-s);
+    max-inline-size: 22rem;
+    zoom: 2.5;
+    background-color: transparent;
+  }
+
+  [data-gallery='pointer-dot'] {
+    position: fixed;
+    inset-block-start: 0;
+    inset-inline-start: 0;
+    z-index: var(--ds-z-tooltip);
+    inline-size: var(--ds-space-m);
+    block-size: var(--ds-space-m);
+    margin-block-start: calc(-0.5 * var(--ds-space-m));
+    margin-inline-start: calc(-0.5 * var(--ds-space-m));
+    border: var(--ds-border-width-default) solid var(--ds-color-bg-body);
+    border-radius: var(--ds-radius-pill);
+    background-color: var(--ds-color-text-default);
+    opacity: 0.7;
+    pointer-events: none;
+    transform: translate(-100px, -100px);
+  }
+
+  [data-gallery='pointer-dot'][data-down] {
+    opacity: 1;
+  }
 }

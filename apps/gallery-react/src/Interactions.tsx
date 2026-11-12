@@ -39,7 +39,64 @@ function useReducedSwitch(): [boolean, (on: boolean) => void] {
   return [on, setOn];
 }
 
+/**
+ * Stage only mode for recordings (order 1.22, lead request):
+ * `/interactions?focus=<interaction id>` hides every description and shows
+ * that one stage, centred and drawn large, on the style's own background,
+ * with a dot that follows the pointer (headless Chromium draws no cursor).
+ * The page's controls stay real: the recorder presses them.
+ */
+function focusId(): string | null {
+  try {
+    return new URLSearchParams(window.location.search).get('focus');
+  } catch {
+    return null;
+  }
+}
+
+function PointerDot() {
+  const ref = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    const move = (e: PointerEvent) => {
+      if (ref.current) ref.current.style.transform = `translate(${e.clientX}px, ${e.clientY}px)`;
+    };
+    const down = () => ref.current?.setAttribute('data-down', '');
+    const up = () => ref.current?.removeAttribute('data-down');
+    window.addEventListener('pointermove', move, true);
+    window.addEventListener('pointerdown', down, true);
+    window.addEventListener('pointerup', up, true);
+    return () => {
+      window.removeEventListener('pointermove', move, true);
+      window.removeEventListener('pointerdown', down, true);
+      window.removeEventListener('pointerup', up, true);
+    };
+  }, []);
+  return <div data-gallery="pointer-dot" ref={ref} aria-hidden="true" />;
+}
+
+function FocusStage({ id }: { id: string }) {
+  const stage = stages[id];
+  return (
+    <TooltipProvider>
+      <div data-gallery="interactions-focus" data-focus={id}>
+        <style>{recipes}</style>
+        <div data-gallery="interactions-focus-stage" data-interaction-stage="">
+          {stage ? stage() : <p>No stage for {id}.</p>}
+        </div>
+        <PointerDot />
+        <Toaster />
+      </div>
+    </TooltipProvider>
+  );
+}
+
 export default function InteractionsPage() {
+  const focus = focusId();
+  if (focus) return <FocusStage id={focus} />;
+  return <InteractionsList />;
+}
+
+function InteractionsList() {
   const [reduced, setReduced] = useReducedSwitch();
   const { style } = useTheme();
   const [replayAll, setReplayAll] = useState(0);
