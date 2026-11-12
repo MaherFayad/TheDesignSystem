@@ -23,50 +23,141 @@
     "A condition that lasts, for the whole page": "Banner",
     "An error on a field": "Field"
   },
-  "anatomy": ["root", "icon", "title", "count", "description", "action", "close"],
+  "anatomy": [
+    "root",
+    "icon",
+    "title",
+    "count",
+    "description",
+    "action",
+    "close"
+  ],
   "parts": {
     "Toaster": "viewport, data-ds=\"toaster\" with data-position",
-    "Toast": "root, without behavior"
+    "Toast": "root, without behavior and without data-state",
+    "isInsideToaster": "helper for overlays: true for a target inside the toaster"
   },
   "slots": {
-    "title": { "accepts": "text", "max": 1 },
-    "description": { "accepts": "text", "max": 1 },
-    "action": { "accepts": ["Button"], "max": 1 }
+    "title": {
+      "accepts": "text",
+      "max": 1
+    },
+    "description": {
+      "accepts": "text",
+      "max": 1
+    },
+    "action": {
+      "accepts": [
+        "Button"
+      ],
+      "max": 1
+    }
   },
   "props": {
-    "tone": { "type": ["neutral", "success", "warning", "danger", "info"], "default": "neutral", "description": "The color and icon, and the timing: neutral, info and success close after 4s, warning after 6s, danger stays until closed." },
-    "title": { "type": "string", "description": "One line: what happened, naming the thing." },
-    "description": { "type": "string", "description": "More detail. Shown up to three lines; the announcement reads all of it." },
-    "duration": { "type": "number", "description": "toast() option. Milliseconds before it closes; Infinity keeps it. Default by tone. Ignored for danger." },
-    "action": { "type": "object", "description": "toast() option. One button: { label, onAction, altText }. altText is what a screen reader hears in its place, for example where else the same action lives." },
-    "dedupeKey": { "type": ["string", "false"], "description": "toast() option. A toast that reads the same as an open one bumps its count instead of stacking; a key groups repeats with other copy; false turns it off." },
-    "id": { "type": "string", "description": "toast() option. A call with the id of an open toast updates it." },
-    "lang": { "type": "string", "description": "toast() option. The language of the copy when it differs from the page. The root gets lang and dir." },
-    "count": { "type": "number", "description": "Toast prop. The repeat count; the Toaster passes it from the store." },
-    "onClose": { "type": "function", "description": "Toast prop. Renders the close button and is called by it. The Toaster always renders it." },
-    "closeLabel": { "type": "string", "default": "Close notification", "description": "The accessible name of the close button. Arabic under lang ar." },
-    "position": { "type": ["bottom-end", "bottom-center", "top-end", "top-center"], "default": "bottom-end", "description": "Toaster prop. end is the inline end: right in English, left in Arabic." },
-    "label": { "type": "string", "default": "Notifications", "description": "Toaster prop. The name of the region. {hotkey} in it is replaced by the hotkey." },
-    "hotkey": { "type": "string", "default": "F8", "description": "Toaster prop. The keys that move focus to the toasts." },
-    "store": { "type": "object", "description": "Toaster prop. The store to render. Default the app wide store behind toast()." }
+    "tone": {
+      "type": [
+        "neutral",
+        "success",
+        "warning",
+        "danger",
+        "info"
+      ],
+      "default": "neutral",
+      "description": "The color and icon, and the timing: neutral, info and success close after 4s, warning after 6s, danger stays until closed."
+    },
+    "title": {
+      "type": "string",
+      "description": "One line: what happened, naming the thing."
+    },
+    "description": {
+      "type": "string",
+      "description": "More detail. Long text wraps in full; keep it to one or two sentences."
+    },
+    "duration": {
+      "type": "number",
+      "description": "toast() option. Milliseconds before it closes; Infinity keeps it. Default by tone. Ignored for danger and for a toast with an action, which stay until closed. toast.configure({ durations, max }) lengthens them for the whole app."
+    },
+    "action": {
+      "type": "object",
+      "description": "toast() option. One button: { label, onAction, altText }. A toast with an action never times out. altText is read in place of the button, for example where else the same action lives."
+    },
+    "dedupeKey": {
+      "type": [
+        "string",
+        "false"
+      ],
+      "description": "toast() option. A toast that reads the same as an open one bumps its count instead of stacking; a key groups repeats with other copy; false turns it off."
+    },
+    "id": {
+      "type": "string",
+      "description": "toast() option. A call with the id of an open toast updates it."
+    },
+    "lang": {
+      "type": "string",
+      "description": "toast() option. The language of the copy when it differs from the page. The root gets lang and dir."
+    },
+    "count": {
+      "type": "number",
+      "description": "Toast prop. The repeat count; the Toaster passes it from the store."
+    },
+    "onClose": {
+      "type": "function",
+      "description": "Toast prop. Renders the close button and is called by it. The Toaster always renders it."
+    },
+    "closeLabel": {
+      "type": "string",
+      "default": "Close notification",
+      "description": "The accessible name of the close button. Arabic under lang ar."
+    },
+    "position": {
+      "type": [
+        "bottom-end",
+        "bottom-center",
+        "top-end",
+        "top-center"
+      ],
+      "default": "bottom-end",
+      "description": "Toaster prop. end is the inline end: right in English, left in Arabic."
+    },
+    "label": {
+      "type": "string",
+      "default": "Notifications",
+      "description": "Toaster prop. The name of the region. {hotkey} in it is replaced by the hotkey."
+    },
+    "hotkey": {
+      "type": "string",
+      "default": "F8",
+      "description": "Toaster prop. The keys that move focus to the toasts."
+    },
+    "store": {
+      "type": "object",
+      "description": "Toaster prop. The store to render. Default the app wide store behind toast()."
+    }
   },
-  "states": ["open", "closed", "data-swipe"],
+  "states": [
+    "open",
+    "closed",
+    "data-swipe"
+  ],
   "a11y": {
-    "role": "The Toaster is a region (named Notifications) holding a list; each toast is a list item. The announcement goes through a separate visually hidden role status region.",
-    "focus": "Toasts never take focus on their own. F8 moves focus to the list; Tab moves through the toasts, newest first, and each toast's action and close button. Closing the focused toast puts focus on the list.",
+    "role": "The Toaster is a region (named Notifications) holding a list; each toast is a list item. Announcements go through two visually hidden regions owned by the Toaster: role status (polite) and role alert (assertive, for danger).",
+    "focus": "Not modal: toasts never take focus on their own. F8 moves focus to the list, which shows the focus ring; Tab moves through the toasts, newest first, and each toast's action and close button. Closing the focused toast puts focus on the list. While a dialog with a focus trap is open, keyboard focus stays in the dialog: the toasts stay visible, readable and clickable, and a toast with an action waits until the dialog closes.",
     "keys": {
       "F8": "Moves focus to the notifications list",
       "Tab": "Moves to the next toast, action or close button",
       "Shift+Tab": "Moves back",
       "Enter": "Runs the focused action or close button",
-      "Escape": "Closes the focused toast, or the newest one. Above an open dialog the first Escape closes the toast and the next one the dialog."
+      "Escape": "Closes a toast when focus is inside the toaster: the focused toast, or the newest one from the list. Escape elsewhere on the page leaves the toasts alone. Above an open Radix dialog or menu, where the toast is the top layer, the first Escape closes the newest toast and the next one the dialog."
     },
-    "announce": "Once per toast (WCAG 4.1.3), when it appears: the toast label and its text, through a status region that Radix removes after reading. danger is assertive (Radix type foreground), the rest polite (background). The toast itself has no live role, so it is never read twice. A repeat or an update is read once more. The action is read as its altText, the close button not at all.",
-    "native": { "accessibilityRole": "alert", "accessibilityState": [] },
+    "announce": "Once per change (WCAG 4.1.3): when a toast shows, and again on each repeat or update, as \"Notification. Title. Description. Action alternative.\" with the toast's text in the toast's language. danger is assertive (role alert), the rest polite (role status). The toast itself has no live role and keeps its element across a repeat or update, so it is never read twice and focus stays. Radix's own announcer is muted. The close button is not read.",
+    "native": {
+      "accessibilityRole": "alert",
+      "accessibilityState": []
+    },
     "notes": [
-      "danger toasts stay until closed. The others pause while the pointer is over them, while focus is inside, and while the window is blurred or the tab hidden (WCAG 2.2.1).",
+      "danger toasts and toasts with an action stay until closed. The others pause while the pointer is over them, while focus is inside, and while the window is blurred or the tab hidden (WCAG 2.2.1). toast.configure({ durations }) lengthens them for the whole app.",
       "Swipe toward the edge closes a toast; the close button is the button path for the same action (WCAG 2.5.7).",
-      "Above an open modal dialog the toasts stay visible (z.toast is above z.dialog), stay in the accessibility tree and can be reached with F8, Tab and the pointer.",
+      "Above an open modal dialog the toasts stay visible (z.toast is above z.dialog), stay in the accessibility tree and take the pointer. A dialog calls isInsideToaster(event.target) in onFocusOutside, onPointerDownOutside and onInteractOutside and prevents the default, so a toast never closes it.",
       "At most three toasts show at once; the rest wait their turn, so a burst never covers the page.",
       "No native title attribute anywhere."
     ]
@@ -74,8 +165,8 @@
   "content": {
     "en": {
       "title": "Say what happened and name the thing: Draft saved, Could not upload photo.jpg. Sentence case, no exclamation marks.",
-      "description": "Optional. What it means or what to do next, in one or two short sentences.",
-      "action": "A verb plus a noun: Retry upload, Undo move, Open draft. Never OK, Continue, Confirm or Yes. One action at most.",
+      "description": "Optional. What it means or what to do next, in one or two short sentences. Long text wraps in full, so keep it short.",
+      "action": "A verb plus a noun: Retry upload, Undo move, Open draft. Never OK, Continue, Confirm or Yes. One action at most. The toast then stays until closed.",
       "danger": "Name the failure and what is safe: Could not publish page. Your draft is safe.",
       "repeats": "Keep the copy the same for the same event, so repeats fold into one toast with a count."
     },
@@ -126,13 +217,27 @@
     "duration.medium",
     "duration.base",
     "ease.out",
-    "ease.exit"
+    "ease.exit",
+    "focus.shadow.ring"
   ],
   "motion": "toast",
   "frameworks": {
-    "react": { "status": "ready", "behavior": "radix:Toast", "example": "Toast.demo.tsx", "note": "Toaster renders the shared store from @the-system/shared; toast is re-exported from @the-system/react." },
-    "angular": { "status": "planned", "behavior": "the shared toast store with cdk:a11y LiveAnnouncer", "note": "Reuses the store, its timers and Toast.css as is; reports pause and resume like the React Toaster." },
-    "native": { "status": "planned", "behavior": "rn-primitives:toast", "note": "The same store. Safe areas and reduce motion from the platform." }
+    "react": {
+      "status": "ready",
+      "behavior": "radix:Toast",
+      "example": "Toast.demo.tsx",
+      "note": "Toaster renders the shared store from @the-system/shared; toast is re-exported from @the-system/react."
+    },
+    "angular": {
+      "status": "planned",
+      "behavior": "the shared toast store with cdk:a11y LiveAnnouncer",
+      "note": "Reuses the store, its timers and Toast.css as is; reports pause and resume like the React Toaster."
+    },
+    "native": {
+      "status": "planned",
+      "behavior": "rn-primitives:toast",
+      "note": "The same store. Safe areas and reduce motion from the platform."
+    }
   },
   "styles": {
     "studio": "A flat surface card with a hairline border and a 2px edge in the tone color on the inline start side.",
@@ -141,17 +246,47 @@
     "liquid": "Planned: a glass capsule at the top center."
   },
   "mistakes": [
-    { "wrong": "A toast for an error that blocks the task, such as a lost session", "right": "An AlertDialog that says what happened and how to go on" },
-    { "wrong": "A danger toast that closes itself after a few seconds", "right": "danger stays until closed; the store ignores a duration for it" },
-    { "wrong": "A toast with two buttons, or an action labelled OK", "right": "One action at most, a verb plus a noun: Retry upload" },
-    { "wrong": "The same toast stacked five times by a retry loop", "right": "Same copy, one toast with a count. Dedupe is on by default." },
-    { "wrong": "A second Toaster for Arabic copy", "right": "One Toaster per page; pass lang: \"ar\" on the toast" },
-    { "wrong": "A toast as the only place a result lives", "right": "Show the result on the page too; the toast only says it happened" },
-    { "wrong": "Mounting the Toaster inside a dialog or outside the root Theme", "right": "Mount it once inside the root Theme, before any dialog can open" }
+    {
+      "wrong": "A toast for an error that blocks the task, such as a lost session",
+      "right": "An AlertDialog that says what happened and how to go on"
+    },
+    {
+      "wrong": "A danger toast that closes itself after a few seconds",
+      "right": "danger stays until closed; the store ignores a duration for it"
+    },
+    {
+      "wrong": "A toast with two buttons, or an action labelled OK",
+      "right": "One action at most, a verb plus a noun: Retry upload"
+    },
+    {
+      "wrong": "The same toast stacked five times by a retry loop",
+      "right": "Same copy, one toast with a count. Dedupe is on by default."
+    },
+    {
+      "wrong": "A second Toaster for Arabic copy",
+      "right": "One Toaster per page; pass lang: \"ar\" on the toast"
+    },
+    {
+      "wrong": "A toast as the only place a result lives",
+      "right": "Show the result on the page too; the toast only says it happened"
+    },
+    {
+      "wrong": "Mounting the Toaster inside a dialog or outside the root Theme",
+      "right": "Mount it once inside the root Theme, before any dialog can open"
+    },
+    {
+      "wrong": "A dialog that closes when the person clicks a toast above it",
+      "right": "Call isInsideToaster(event.target) in the dialog's outside handlers and prevent the default"
+    }
   ],
   "contract": {
     "trigger": "[data-demo-trigger]",
-    "optionalParts": ["count", "action", "description", "title"]
+    "optionalParts": [
+      "count",
+      "action",
+      "description",
+      "title"
+    ]
   },
   "since": "0.1.0"
 }

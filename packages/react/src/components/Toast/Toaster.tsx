@@ -7,14 +7,19 @@
 // Radix timer never runs. The store keeps one timer per open toast through
 // its clock, and this component only tells it when to pause: while the
 // pointer is over the toasts, while focus is inside them, and while the
-// window is blurred or the tab hidden. Angular reuses the same store and
-// reports the same pauses, so both frameworks time toasts the same way.
+// window is blurred or the tab hidden. The pointer and focus listeners are
+// native listeners on the portal layer, so they fire whatever the pointer
+// comes from. Angular reuses the same store and reports the same pauses.
 //
-// Announce once (WCAG 4.1.3): Radix reads each toast through its own
-// visually hidden status region when the toast mounts, assertive for danger
-// (type "foreground") and polite for the rest (type "background"). The toast
-// itself has no live role, so it is not read twice. A repeat or an update
-// remounts the toast (its key holds the version), which reads it once more.
+// Announce once per change (WCAG 4.1.3): the Toaster owns two visually
+// hidden live regions inside its layer, polite (role status) and assertive
+// (role alert, for danger). A toast is read when it shows, and again on each
+// repeat or update (its version goes up), as "label. title. description.
+// action alternative", the toast's own text in the toast's language. The
+// toast keeps its element across a repeat or an update (it is keyed by id),
+// so focus stays and the enter does not replay. Radix's own announcer is
+// sent to a detached element, so nothing is read twice; the toast itself has
+// no live role.
 //
 // The themed portal. The viewport is portaled to <body>, outside every Theme
 // element, where the token selectors would not reach it. So the portal
@@ -28,26 +33,35 @@
 //
 // Above a modal dialog. The viewport sits on z.toast (10000), over z.dialog
 // (9500). A modal Radix Dialog then does three things to the rest of the
-// page, and each is handled here:
+// page:
 // - aria-hidden on every other child of <body>: the library Radix uses
 //   (aria-hidden) never hides an element with an aria-live attribute, so the
 //   portal Theme carries aria-live="off" (off is the default, so nothing is
-//   announced through it) and stays in the accessibility tree.
+//   announced through it) and the toasts stay in the accessibility tree.
 // - pointer-events: none on <body>: Radix gives every toast layer
-//   pointer-events auto, and Toast.css sets it on the toasts as well.
-// - a focus trap: its FocusScope listens for focusin and focusout on the
-//   document and pulls focus back. The Toaster listens on the document too,
-//   from its mount (so before any dialog opens), and stops those events
-//   from going further when focus moves into the toasts. Mount the Toaster
-//   before any dialog can open. F8 and Tab then reach the toasts.
-// Escape closes the newest toast first (it is the top Radix layer), and the
-// next Escape closes the dialog.
-import { useEffect, useState, useSyncExternalStore, type FocusEvent } from 'react';
+//   pointer-events auto, and Toast.css sets it on the toasts as well, so
+//   the toasts take the pointer and their buttons work.
+// - a focus trap. The Toaster does not fight it. A dialog built on Radix
+//   calls `isInsideToaster(event.target)` in onFocusOutside,
+//   onPointerDownOutside and onInteractOutside and prevents the default, so
+//   working with a toast never closes the dialog. The limit: while a modal
+//   dialog is open, keyboard focus stays in the dialog, so F8 and Tab do not
+//   reach the toasts. That is why a toast with an action never times out:
+//   its action is still there when the dialog closes.
+//
+// Escape closes a toast only when focus is inside the toaster, so Escape in
+// a Window or a form does not also close a toast. One exception: a toast is
+// the top Radix layer while it shows above an open Radix layer (a dialog or
+// a menu), and Radix gives Escape to the top layer only. Escape with focus
+// in that dialog then closes the newest toast first, and the next Escape
+// the dialog, instead of doing nothing.
+import { useEffect, useRef, useState, useSyncExternalStore } from 'react';
 import { createPortal } from 'react-dom';
-import { Toast as RadixToast } from 'radix-ui';
+import { Toast as RadixToast, VisuallyHidden } from 'radix-ui';
 import { toastStore, toastUrgency, type ToastItem, type ToastStore } from '@the-system/shared';
 import { Theme } from '../../theme/Theme';
 import { useTheme } from '../../theme/hooks';
+import { isInsideToaster } from './isInsideToaster';
 import { ToastParts, toastDirFor, toastLabelsFor } from './Toast';
 
 /** Where the toasts sit. end is the inline end: right in English, left in Arabic. */
@@ -72,6 +86,25 @@ export interface ToasterProps {
   store?: ToastStore;
 }
 
+/** One announcement: the toast label in the page language, then the toast's text in its own. */
+interface Line {
+  key: string;
+  label: string;
+  text: string;
+  lang?: string;
+  urgent: boolean;
+}
+
+/** The text a screen reader hears for a toast, after the label. */
+export function toastAnnouncement(item: Pick<ToastItem, 'title' | 'description' | 'action'>): string {
+  const parts = [item.title, item.description, item.action ? (item.action.altText ?? item.action.label) : undefined];
+  return parts
+    .map((p) => p?.trim())
+    .filter((p): p is string => !!p)
+    .map((p) => (/[.!?؟。]$/.test(p) ? p : `${p}.`))
+    .join(' ');
+}
+
 /** The swipe that closes a toast: toward the edge it sits on. */
 function swipeFor(position: ToasterPosition, dir: 'ltr' | 'rtl'): 'up' | 'down' | 'left' | 'right' {
   if (position === 'bottom-center') return 'down';
@@ -79,20 +112,35 @@ function swipeFor(position: ToasterPosition, dir: 'ltr' | 'rtl'): 'up' | 'down' 
   return dir === 'rtl' ? 'left' : 'right';
 }
 
+/** An open Radix layer that Escape belongs to when focus is in it. */
+const OPEN_LAYER = ':is([role="dialog"], [role="alertdialog"], [role="menu"], [role="listbox"])[data-state="open"]';
+
 /** Mount once near the root, inside the root Theme. Renders the toasts of `toast()`. */
 export function Toaster({ position = 'bottom-end', label, hotkey = ['F8'], toastLabel, closeLabel, store = toastStore }: ToasterProps) {
   const theme = useTheme();
   const words = toastLabelsFor(theme.lang);
   const snapshot = useSyncExternalStore(store.subscribe, store.getSnapshot, store.getServerSnapshot);
   const [body, setBody] = useState<HTMLElement | null>(null);
+  const [mute, setMute] = useState<HTMLElement | null>(null);
   const [layer, setLayer] = useState<HTMLElement | null>(null);
   const [hovered, setHovered] = useState(false);
   const [focused, setFocused] = useState(false);
   const [away, setAway] = useState(false);
   const [hidden, setHidden] = useState(false);
+  const [lines, setLines] = useState<Line[]>([]);
+  const seen = useRef(new Map<string, number>());
+  const pending = useRef<Line[]>([]);
+  const flush = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const clear = useRef<ReturnType<typeof setTimeout> | null>(null);
+  /** Set while an Escape that must not close a toast is being handled. */
+  const keepOnEscape = useRef(false);
 
   // The portal needs the document, so it renders after the first commit (safe on the server).
-  useEffect(() => setBody(document.body), []);
+  // Radix announces each toast through a portal of its own; it goes to a detached element.
+  useEffect(() => {
+    setBody(document.body);
+    setMute(document.createElement('div'));
+  }, []);
 
   // Window blurred and tab hidden pause the timers, as Radix does.
   useEffect(() => {
@@ -109,7 +157,49 @@ export function Toaster({ position = 'bottom-end', label, hotkey = ['F8'], toast
     };
   }, []);
 
-  // An emptied stack gives no pointerleave, so the hover flag resets with it.
+  // Pointer and focus inside the layer, as native listeners (a React handler
+  // on a portaled element misses a pointer that comes from the page).
+  useEffect(() => {
+    if (!layer) return;
+    const onOver = (event: PointerEvent) => {
+      if ((event.target as Element | null)?.closest?.('[data-ds="toast"]')) setHovered(true);
+    };
+    const onOut = (event: PointerEvent) => {
+      const next = event.relatedTarget as Element | null;
+      if (!next?.closest?.('[data-ds="toaster"] > [data-ds="toast"]')) setHovered(false);
+    };
+    const onFocusIn = () => setFocused(true);
+    const onFocusOut = (event: FocusEvent) => {
+      if (!(event.relatedTarget instanceof Node && layer.contains(event.relatedTarget))) setFocused(false);
+    };
+    layer.addEventListener('pointerover', onOver);
+    layer.addEventListener('pointerout', onOut);
+    layer.addEventListener('focusin', onFocusIn);
+    layer.addEventListener('focusout', onFocusOut);
+    return () => {
+      layer.removeEventListener('pointerover', onOver);
+      layer.removeEventListener('pointerout', onOut);
+      layer.removeEventListener('focusin', onFocusIn);
+      layer.removeEventListener('focusout', onFocusOut);
+    };
+  }, [layer]);
+
+  // Escape closes a toast only from inside the toaster (see the header).
+  // This runs before Radix's document listener and marks the key press.
+  useEffect(() => {
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key !== 'Escape') return;
+      const target = event.target instanceof Element ? event.target : null;
+      keepOnEscape.current = !isInsideToaster(target) && !target?.closest(OPEN_LAYER);
+      setTimeout(() => {
+        keepOnEscape.current = false;
+      }, 0);
+    };
+    window.addEventListener('keydown', onKeyDown, true);
+    return () => window.removeEventListener('keydown', onKeyDown, true);
+  }, []);
+
+  // An emptied stack gives no pointerout, so the hover flag resets with it.
   const anyOpen = snapshot.visible.some((t) => t.state === 'open');
   useEffect(() => {
     if (!anyOpen) setHovered(false);
@@ -122,29 +212,55 @@ export function Toaster({ position = 'bottom-end', label, hotkey = ['F8'], toast
   }, [paused, store]);
   useEffect(() => () => store.resume(), [store]);
 
-  // Focus into the toasts must not be pulled back by a modal dialog's focus trap. See the header.
+  // Announce each toast once when it shows, and once per repeat or update.
+  const announceLabel = toastLabel ?? words.toast;
   useEffect(() => {
-    if (!layer) return;
-    const inside = (node: EventTarget | null) => node instanceof Node && layer.contains(node);
-    const onFocusIn = (event: globalThis.FocusEvent) => {
-      if (inside(event.target)) event.stopImmediatePropagation();
-    };
-    const onFocusOut = (event: globalThis.FocusEvent) => {
-      if (inside(event.relatedTarget)) event.stopImmediatePropagation();
-    };
-    document.addEventListener('focusin', onFocusIn);
-    document.addEventListener('focusout', onFocusOut);
-    return () => {
-      document.removeEventListener('focusin', onFocusIn);
-      document.removeEventListener('focusout', onFocusOut);
-    };
-  }, [layer]);
+    const live = new Set(snapshot.visible.map((t) => t.id));
+    for (const id of [...seen.current.keys()]) if (!live.has(id)) seen.current.delete(id);
+    const fresh = snapshot.visible.filter((t) => t.state === 'open' && seen.current.get(t.id) !== t.version);
+    if (fresh.length === 0) return;
+    for (const t of fresh) {
+      seen.current.set(t.id, t.version);
+      pending.current.push({
+        key: `${t.id}:${t.version}`,
+        label: t.lang !== undefined ? toastLabelsFor(t.lang).toast : announceLabel,
+        text: toastAnnouncement(t),
+        lang: t.lang,
+        urgent: toastUrgency(t.tone) === 'assertive',
+      });
+    }
+    if (flush.current !== null) return;
+    // Empty the regions first, so the same words are read again on a repeat.
+    setLines([]);
+    flush.current = setTimeout(() => {
+      flush.current = null;
+      setLines(pending.current);
+      pending.current = [];
+      if (clear.current !== null) clearTimeout(clear.current);
+      clear.current = setTimeout(() => setLines([]), 5000);
+    }, 100);
+  }, [snapshot, announceLabel]);
+  useEffect(
+    () => () => {
+      if (flush.current !== null) clearTimeout(flush.current);
+      if (clear.current !== null) clearTimeout(clear.current);
+    },
+    [],
+  );
 
-  if (!body) return null;
+  if (!body || !mute) return null;
 
-  const onBlur = (event: FocusEvent<HTMLElement>) => {
-    if (!event.currentTarget.contains(event.relatedTarget as Node | null)) setFocused(false);
-  };
+  const region = (urgent: boolean) =>
+    lines
+      .filter((l) => l.urgent === urgent)
+      .map((l) => (
+        <p key={l.key}>
+          {l.label}.{' '}
+          <span lang={l.lang} dir={toastDirFor(l.lang)}>
+            {l.text}
+          </span>
+        </p>
+      ));
 
   return createPortal(
     <Theme
@@ -159,28 +275,41 @@ export function Toaster({ position = 'bottom-end', label, hotkey = ['F8'], toast
       ref={setLayer}
       aria-live="off"
       data-toaster-layer=""
-      onFocus={() => setFocused(true)}
-      onBlur={onBlur}
     >
-      <RadixToast.Provider label={toastLabel ?? words.toast} duration={Infinity} swipeDirection={swipeFor(position, theme.dir)}>
+      <VisuallyHidden.Root role="status" aria-live="polite" aria-atomic="false" data-toaster-announce="polite">
+        {region(false)}
+      </VisuallyHidden.Root>
+      <VisuallyHidden.Root role="alert" aria-live="assertive" aria-atomic="false" data-toaster-announce="assertive">
+        {region(true)}
+      </VisuallyHidden.Root>
+      <RadixToast.Provider label={announceLabel} duration={Infinity} swipeDirection={swipeFor(position, theme.dir)} announcerContainer={mute}>
         {snapshot.visible.map((item) => (
-          <ToasterItem key={`${item.id}:${item.version}`} item={item} store={store} closeLabel={closeLabel ?? words.close} />
+          <ToasterItem
+            key={item.id}
+            item={item}
+            store={store}
+            closeLabel={closeLabel ?? words.close}
+            keepOnEscape={keepOnEscape}
+          />
         ))}
-        <RadixToast.Viewport
-          data-ds="toaster"
-          data-position={position}
-          label={label ?? words.region}
-          hotkey={hotkey}
-          onPointerEnter={() => setHovered(true)}
-          onPointerLeave={() => setHovered(false)}
-        />
+        <RadixToast.Viewport data-ds="toaster" data-position={position} label={label ?? words.region} hotkey={hotkey} />
       </RadixToast.Provider>
     </Theme>,
     body,
   );
 }
 
-function ToasterItem({ item, store, closeLabel }: { item: ToastItem; store: ToastStore; closeLabel: string }) {
+function ToasterItem({
+  item,
+  store,
+  closeLabel,
+  keepOnEscape,
+}: {
+  item: ToastItem;
+  store: ToastStore;
+  closeLabel: string;
+  keepOnEscape: { current: boolean };
+}) {
   return (
     <RadixToast.Root
       asChild
@@ -188,7 +317,8 @@ function ToasterItem({ item, store, closeLabel }: { item: ToastItem; store: Toas
       duration={Infinity}
       type={toastUrgency(item.tone) === 'assertive' ? 'foreground' : 'background'}
       onOpenChange={(open) => {
-        if (!open) store.dismiss(item.id);
+        // Radix closes the newest toast on Escape from anywhere; only an Escape from inside the toaster counts.
+        if (!open && !keepOnEscape.current) store.dismiss(item.id);
       }}
     >
       <li data-ds="toast" data-tone={item.tone} lang={item.lang} dir={toastDirFor(item.lang)}>

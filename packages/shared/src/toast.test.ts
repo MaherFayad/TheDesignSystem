@@ -292,4 +292,39 @@ describe('toast store', () => {
     toast.danger('Could not publish page');
     expect(pending()).toBe(0);
   });
+
+  it('a toast with an action never times out, and loses that when the action goes', () => {
+    const { toast, advance, open } = setup();
+    const id = toast({ title: 'Card moved to Archive', duration: 2000, action: { label: 'Undo move', onAction: () => undefined } });
+    expect(open()[0]?.duration).toBe(Infinity);
+    advance(60 * 60 * 1000);
+    expect(open()).toHaveLength(1);
+    toast.update(id, { action: undefined });
+    expect(open()[0]?.duration).toBe(TOAST_DURATIONS.neutral);
+    advance(TOAST_DURATIONS.neutral);
+    expect(open()).toHaveLength(0);
+  });
+
+  it('a repeat that brings an action makes the toast persistent', () => {
+    const { toast, advance, open } = setup();
+    toast('Could not sync board');
+    toast('Could not sync board', { action: { label: 'Sync board', onAction: () => undefined } });
+    advance(60_000);
+    expect(open()).toHaveLength(1);
+  });
+
+  it('configure changes the max and the durations', () => {
+    const { toast, advance, open } = setup();
+    toast.configure({ max: 1, durations: { neutral: 10_000 } });
+    toast('One');
+    toast('Two');
+    expect(open()).toHaveLength(1);
+    advance(9999);
+    expect(open().map((t) => t.title)).toEqual(['One']);
+    advance(1);
+    expect(open().map((t) => t.title)).toEqual(['Two']);
+    toast.configure({ max: 5 });
+    toast.danger('Could not publish page');
+    expect(open()).toHaveLength(2);
+  });
 });

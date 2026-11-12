@@ -129,7 +129,7 @@ export default function ToastDemo() {
         </DemoRow>
       </DemoCase>
 
-      <DemoCase id="long-text" title="Long text: the description stops at three lines">
+      <DemoCase id="long-text" title="Long text: the toast grows and the text wraps in full">
         <DemoRow>
           <Button
             data-demo-trigger=""

@@ -58,6 +58,20 @@
     pointer-events: none;
   }
 
+  /*
+   * F8 focuses the list: it shows the focus ring around the toasts. The
+   * transparent outline is for forced colors, where the box shadow is not
+   * drawn and the outline takes the system color.
+   */
+  [data-ds='toaster']:focus-visible {
+    --_toaster-ring: var(--ds-focus-shadow-ring);
+
+    border-radius: var(--ds-radius-panel);
+    outline: var(--ds-border-width-strong) solid transparent;
+    outline-offset: var(--ds-border-width-strong);
+    box-shadow: var(--_toaster-ring);
+  }
+
   [data-ds='toaster'][data-position='bottom-end'] {
     inset-block-end: var(--_toaster-inset-block-end);
     inset-inline-end: var(--_toaster-inset-inline);
@@ -125,7 +139,7 @@
     overflow-wrap: anywhere;
   }
 
-  /* Inside a toaster: the enter, and the focus ring of the toast itself (Radix makes it a tab stop). */
+  /* Inside a toaster: the enter and the exit. The toast's own focus ring is the base :focus-visible outline (Radix makes it a tab stop). */
   [data-ds='toaster'] > [data-ds='toast'][data-state='open'] {
     animation: ds-toast-in var(--ds-duration-medium) var(--ds-ease-out);
   }
@@ -208,33 +222,27 @@
     font-weight: var(--ds-font-weight-semibold);
   }
 
-  /* Three lines at most, so a long message cannot fill the screen. The announcement reads all of it. */
+  /* Long text wraps in full: nothing is hidden from sighted readers. Keep the copy short instead. */
   [data-ds='toast'] > [data-part='description'] {
     grid-area: description;
-    display: -webkit-box;
     margin: 0;
-    overflow: hidden;
     color: var(--ds-color-text-muted);
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 3;
-    line-clamp: 3;
   }
 
   [data-ds='toast'] > [data-part='title'] + [data-part='description'] {
     margin-block-start: var(--ds-space-4xs);
   }
 
+  /* The action is a Button carrying data-part="action". */
   [data-ds='toast'] > [data-part='action'] {
     grid-area: action;
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--ds-space-xs);
+    justify-self: start;
     margin-block-start: var(--ds-space-s);
   }
 
+  /* The close button is an IconButton carrying data-part="close". */
   [data-ds='toast'] > [data-part='close'] {
     grid-area: close;
-    display: inline-flex;
     /* Pull the 24px target into the padding, so the card does not grow for it. */
     margin-block: calc(-1 * var(--ds-space-2xs));
   }
@@ -288,6 +296,10 @@
    * card keeps a boundary, and the toasts do not animate.
    */
   @media (forced-colors: active) {
+    [data-ds='toaster']:focus-visible {
+      outline-color: Highlight;
+    }
+
     [data-ds='toast'] {
       --_toast-border-color: CanvasText;
       --_toast-edge: CanvasText;

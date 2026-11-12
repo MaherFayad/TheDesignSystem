@@ -7,11 +7,12 @@
 // Sources: GoBanana `components/studio/Toast.tsx` and the `.st-toast` block
 // of studio-components.css, Figma-Killer-2 `ui/components/Toast/`.
 //
-// Anatomy: root [data-ds=toast] with data-tone and data-state, and the parts
-// icon, title (holding count), description, action and close. The parts are
-// Radix Toast parts, so inside a Toaster the close and action buttons close
-// the toast and Radix leaves them out of the announcement. Outside a Toaster
-// they are plain elements.
+// Anatomy: root [data-ds=toast] with data-tone (and data-state inside a
+// Toaster), and the parts icon, title (holding count), description, action
+// and close. action is a Button and close an IconButton, each carrying the
+// toast's data-part next to its own data-ds. The parts are Radix Toast
+// parts, so inside a Toaster the close and action buttons close the toast.
+// Outside a Toaster they are plain elements.
 import type { HTMLAttributes, ReactNode, Ref } from 'react';
 import { Toast as RadixToast } from 'radix-ui';
 import type { ToastAction, ToastTone } from '@the-system/shared';
@@ -85,20 +86,16 @@ export function ToastParts({ tone, title, description, count = 1, action, closeL
         <RadixToast.Description data-part="description">{description}</RadixToast.Description>
       )}
       {action && (
-        <div data-part="action">
-          <RadixToast.Action asChild altText={action.altText ?? action.label}>
-            <Button size="sm" emphasis="soft" onClick={() => action.onAction()}>
-              {action.label}
-            </Button>
-          </RadixToast.Action>
-        </div>
+        <RadixToast.Action asChild altText={action.altText ?? action.label}>
+          <Button data-part="action" size="sm" emphasis="soft" onClick={() => action.onAction()}>
+            {action.label}
+          </Button>
+        </RadixToast.Action>
       )}
       {closable && (
-        <span data-part="close">
-          <RadixToast.Close asChild>
-            <IconButton icon="close" label={closeLabel} size="xs" onClick={onClose} />
-          </RadixToast.Close>
-        </span>
+        <RadixToast.Close asChild>
+          <IconButton data-part="close" icon="close" label={closeLabel} size="xs" onClick={onClose} />
+        </RadixToast.Close>
       )}
     </>
   );
@@ -124,13 +121,14 @@ export interface ToastProps extends Omit<HTMLAttributes<HTMLDivElement>, 'title'
 }
 
 /**
- * One notice, drawn as a toast, with no timer, queue or live region. Use
- * `toast()` with a mounted `Toaster` for real notifications; this is for a
- * notice placed by hand.
+ * One notice, drawn as a toast, with no timer, queue or live region, and no
+ * data-state (it does not open or close by itself). Use `toast()` with a
+ * mounted `Toaster` for real notifications; this is for a notice placed by
+ * hand.
  */
 export function Toast({ tone = 'neutral', title, description, count, action, onClose, closeLabel, lang, ...rest }: ToastProps) {
   return (
-    <div {...rest} lang={lang} dir={rest.dir ?? toastDirFor(lang)} data-ds="toast" data-tone={tone} data-state="open">
+    <div {...rest} lang={lang} dir={rest.dir ?? toastDirFor(lang)} data-ds="toast" data-tone={tone}>
       <ToastParts
         tone={tone}
         title={title}

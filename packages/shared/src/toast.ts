@@ -18,7 +18,10 @@
  *   that toast's `count` and restarts its timer instead of stacking a copy.
  *   `dedupeKey: false` turns it off for one call.
  * - Durations by tone: neutral, info and success 4s, warning 6s. A danger
- *   toast is persistent (duration Infinity) and stays until it is closed.
+ *   toast is persistent (duration Infinity) and stays until it is closed,
+ *   and so is a toast with an action (WCAG 2.2.1: nobody has to race a
+ *   timer to reach a button). `configure()` lengthens the durations and
+ *   changes the max for the whole app.
  * - The store owns time. Each open toast with a finite duration has one
  *   timer, run through an injectable clock, so tests use a fake clock. The
  *   view only reports when to pause (hover, focus inside, window blurred) by
@@ -59,7 +62,7 @@ export interface ToastOptions {
   title?: string;
   /** More detail, up to three lines. */
   description?: string;
-  /** Milliseconds before it closes itself. Infinity keeps it. Default by tone. Ignored for danger. */
+  /** Milliseconds before it closes itself. Infinity keeps it. Default by tone. Ignored for danger and for a toast with an action. */
   duration?: number;
   action?: ToastAction;
   /** Same key, same toast: the count goes up. false turns dedupe off. Default: tone, title and description. */
@@ -116,7 +119,12 @@ export interface ToastStoreOptions {
   exitTimeout?: number;
 }
 
+/** What `configure()` changes. */
+export type ToastConfig = Pick<ToastStoreOptions, 'max' | 'durations'>;
+
 export interface ToastStore {
+  /** Changes the max and the durations by tone. New durations apply to toasts added after. */
+  configure(config: ToastConfig): void;
   /** Adds a toast, or bumps or updates an existing one. Returns its id. */
   add(input: string | ToastOptions, options?: ToastOptions): string;
   /** Changes an open or waiting toast. Restarts its timer. False when there is no such toast. */
@@ -196,10 +204,10 @@ function normalize(input: string | ToastOptions, options?: ToastOptions): ToastO
 
 /** Creates a toast store. Most apps use the default one behind `toast()`. */
 export function createToastStore(options: ToastStoreOptions = {}): ToastStore {
-  const max = Math.max(1, options.max ?? TOAST_MAX_VISIBLE);
+  let max = Math.max(1, options.max ?? TOAST_MAX_VISIBLE);
   const clock = options.clock ?? realClock;
   const exitTimeout = options.exitTimeout ?? TOAST_EXIT_TIMEOUT;
-  const durations: Record<ToastTone, number> = { ...TOAST_DURATIONS, ...options.durations, danger: Infinity };
+  let durations: Record<ToastTone, number> = { ...TOAST_DURATIONS, ...options.durations, danger: Infinity };
 
   /** Every toast in the store, oldest first: open (shown or waiting) and closed. */
   let entries: Entry[] = [];
@@ -209,8 +217,8 @@ export function createToastStore(options: ToastStoreOptions = {}): ToastStore {
   const exits = new Map<string, unknown>();
   const listeners = new Set<() => void>();
 
-  const durationFor = (tone: ToastTone, asked: number | undefined): number => {
-    if (tone === 'danger') return Infinity;
+  const durationFor = (tone: ToastTone, asked: number | undefined, action: ToastAction | undefined): number => {
+    if (tone === 'danger' || action !== undefined) return Infinity;
     if (asked === undefined || Number.isNaN(asked) || asked <= 0) return durations[tone];
     return asked;
   };
@@ -300,9 +308,13 @@ export function createToastStore(options: ToastStoreOptions = {}): ToastStore {
     const has = (k: keyof ToastPatch) => Object.prototype.hasOwnProperty.call(patch, k);
     const title = has('title') ? patch.title : prev.title;
     const description = has('description') ? patch.description : prev.description;
-    // A new tone takes its own duration unless the patch names one.
-    const duration =
-      tone === 'danger' ? Infinity : has('duration') ? durationFor(tone, patch.duration) : tone !== prev.tone ? durations[tone] : prev.duration;
+    const action = has('action') ? patch.action : prev.action;
+    // A new tone, or an action taken away, brings the tone's own duration back, unless the patch names one.
+    let duration: number;
+    if (tone === 'danger' || action !== undefined) duration = Infinity;
+    else if (has('duration')) duration = durationFor(tone, patch.duration, undefined);
+    else if (tone !== prev.tone || prev.action !== undefined) duration = durations[tone];
+    else duration = prev.duration;
     const key = e.keyMode === 'auto' ? toastDedupeKey({ tone, title, description }) : prev.key;
     e.item = {
       ...prev,
@@ -310,7 +322,7 @@ export function createToastStore(options: ToastStoreOptions = {}): ToastStore {
       title,
       description,
       duration,
-      action: has('action') ? patch.action : prev.action,
+      action,
       lang: has('lang') ? patch.lang : prev.lang,
       key,
       version: prev.version + 1,
@@ -340,11 +352,13 @@ export function createToastStore(options: ToastStoreOptions = {}): ToastStore {
     const key = toastDedupeKey({ ...o, tone });
     const existing = key === null ? undefined : entries.find((e) => e.item.state === 'open' && e.item.key === key);
     if (existing) {
+      const action = o.action ?? existing.item.action;
       existing.item = {
         ...existing.item,
         count: existing.item.count + 1,
         version: existing.item.version + 1,
-        action: o.action ?? existing.item.action,
+        action,
+        duration: action !== undefined ? Infinity : existing.item.duration,
       };
       if (existing.shown) restartTimer(existing);
       commit();
@@ -352,7 +366,7 @@ export function createToastStore(options: ToastStoreOptions = {}): ToastStore {
     }
     seq += 1;
     const id = o.id ?? `toast-${seq}`;
-    const duration = durationFor(tone, o.duration);
+    const duration = durationFor(tone, o.duration, o.action);
     const item: ToastItem = {
       id,
       tone,
@@ -382,6 +396,11 @@ export function createToastStore(options: ToastStoreOptions = {}): ToastStore {
   }
 
   return {
+    configure(config) {
+      if (config.max !== undefined) max = Math.max(1, config.max);
+      if (config.durations) durations = { ...durations, ...config.durations, danger: Infinity };
+      commit();
+    },
     add,
     update,
     remove,
@@ -432,6 +451,8 @@ export interface ToastFunction {
   dismiss(id?: string): void;
   /** Changes a toast in place, for example "Saving draft" to "Draft saved". */
   update(id: string, patch: ToastPatch): boolean;
+  /** Changes the max and the durations of the store, for example longer toasts for the whole app. */
+  configure(config: ToastConfig): void;
   /** The store behind this function, for a view to subscribe to. */
   readonly store: ToastStore;
 }
@@ -447,6 +468,7 @@ export function createToastFunction(store: ToastStore): ToastFunction {
     info: withTone('info'),
     dismiss: (id?: string) => store.dismiss(id),
     update: (id: string, patch: ToastPatch) => store.update(id, patch),
+    configure: (config: ToastConfig) => store.configure(config),
     store,
   });
 }

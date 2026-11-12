@@ -7,7 +7,7 @@
  *
  * Glass turns solid by itself: under prefers-reduced-transparency,
  * prefers-contrast more and data-contrast more the material tokens resolve
- * to the solid glass color, and Toast.css drops the blur.
+ * to the solid glass color, and Toast.css and the rules below drop the blur.
  *
  * Only the private --_toast-* properties are declared here, so the toast markup and the base
  * rules stay the same in every style.
@@ -19,5 +19,20 @@
     --_toast-radius: var(--ds-radius-window);
     --_toast-shadow: var(--ds-elevation-window-soft);
     --_toast-blur: var(--ds-blur-window);
+  }
+
+  /*
+   * The recipe layer wins over the base layer, so the blur is dropped here
+   * again where the glass turns solid.
+   */
+  @media (prefers-reduced-transparency: reduce), (prefers-contrast: more), (forced-colors: active) {
+    [data-style='desk'] [data-ds='toast'] {
+      --_toast-blur: 0;
+    }
+  }
+
+  [data-style='desk'][data-contrast='more'] [data-ds='toast'],
+  [data-style='desk'] [data-contrast='more'] [data-ds='toast'] {
+    --_toast-blur: 0;
   }
 }
