@@ -1,0 +1,69 @@
+/*
+ * LanguageSwitch: a link pair for two languages, a menu trigger for more.
+ * Follows "One convention for component CSS and props" in
+ * docs/contracts/anatomy.md.
+ *
+ * Private properties on the root (recipes override these):
+ *
+ *   --_language-switch-font-size        the type size of the pair
+ *   --_language-switch-gap              the space between the two links
+ *   --_language-switch-fg               a language that is not active
+ *   --_language-switch-fg-active        the active language
+ *
+ * The items are system Links (data-ds="link" data-part="item"), restyled
+ * only through Link's private properties. The trigger is a system Button
+ * and the menu a DropdownMenu, styled by their own files. Nothing animates
+ * here; the menu plays DropdownMenu's menu-scale.
+ */
+@layer ds.base {
+  [data-ds='language-switch'] {
+    --_language-switch-font-size: var(--ds-font-size-s);
+    --_language-switch-gap: var(--ds-space-m);
+    --_language-switch-fg: var(--ds-color-text-muted);
+    --_language-switch-fg-active: var(--ds-color-text-bright);
+
+    display: inline-flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--_language-switch-gap);
+    min-inline-size: 0;
+    font-size: var(--_language-switch-font-size);
+  }
+
+  [data-ds='language-switch'][data-size='sm'] {
+    --_language-switch-font-size: var(--ds-font-size-xs);
+    --_language-switch-gap: var(--ds-space-s);
+  }
+
+  /* An item: muted until hovered. Each name keeps its own language's font through lang. */
+  [data-ds='language-switch'] > [data-part='item'] {
+    --_link-fg: var(--_language-switch-fg);
+    --_link-fg-hover: var(--_language-switch-fg-active);
+  }
+
+  /* Arabic names: one step up, as small Arabic text is everywhere. */
+  [data-ds='language-switch'] > [data-part='item']:lang(ar) {
+    font-size: var(--ds-font-size-m);
+  }
+
+  [data-ds='language-switch'][data-size='sm'] > [data-part='item']:lang(ar) {
+    font-size: var(--ds-font-size-s);
+  }
+
+  /* The active language: bright and medium weight with no underline, plus aria-current. Not color alone. */
+  [data-ds='language-switch'] > [data-part='item'][data-active] {
+    --_link-fg: var(--_language-switch-fg-active);
+    --_link-decoration: transparent;
+    --_link-decoration-hover: transparent;
+
+    font-weight: var(--ds-font-weight-medium);
+  }
+
+  /* ------------------------------------------------------------ forced colors */
+
+  @media (forced-colors: active) {
+    [data-ds='language-switch'] > [data-part='item'][data-active] {
+      color: CanvasText;
+    }
+  }
+}

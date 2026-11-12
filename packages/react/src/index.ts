@@ -9,6 +9,7 @@ export * from './components/Field/index';
 export * from './components/Icon/index';
 export * from './components/IconButton/index';
 export * from './components/Input/index';
+export * from './components/LanguageSwitch/index';
 export * from './components/Link/index';
 export * from './components/Pagination/index';
 export * from './components/SkipLink/index';

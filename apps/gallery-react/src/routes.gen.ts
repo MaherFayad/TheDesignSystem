@@ -17,6 +17,7 @@ export const routes: DemoRoute[] = [
   { name: 'Icon', slug: 'icon', load: () => import('../../../packages/react/src/components/Icon/Icon.demo') },
   { name: 'IconButton', slug: 'icon-button', load: () => import('../../../packages/react/src/components/IconButton/IconButton.demo') },
   { name: 'Input', slug: 'input', load: () => import('../../../packages/react/src/components/Input/Input.demo') },
+  { name: 'LanguageSwitch', slug: 'language-switch', load: () => import('../../../packages/react/src/components/LanguageSwitch/LanguageSwitch.demo') },
   { name: 'Link', slug: 'link', load: () => import('../../../packages/react/src/components/Link/Link.demo') },
   { name: 'Pagination', slug: 'pagination', load: () => import('../../../packages/react/src/components/Pagination/Pagination.demo') },
   { name: 'SkipLink', slug: 'skip-link', load: () => import('../../../packages/react/src/components/SkipLink/SkipLink.demo') },
