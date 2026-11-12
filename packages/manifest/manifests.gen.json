@@ -8113,6 +8113,215 @@
     "since": "0.1.0"
   },
   {
+    "name": "FilterBar",
+    "kind": "component",
+    "family": "forms",
+    "summary": "The row above a list: a search box, quick filter chips, more filters in a menu, the active filter count, clear all, and an end slot for view toggles. One value array holds every filter that is on.",
+    "useWhen": [
+      "A list, grid or table the person narrows with a search and a few filters",
+      "Quick filters that are on or off, with rarer ones tucked in a menu",
+      "A gallery or file browser with view toggles at the end of the filter row"
+    ],
+    "avoidWhen": [
+      "Picking one view from a few, such as All, Mine, Shared",
+      "Filters that each need a range, a date or a typed value",
+      "A search that opens a list of suggestions to pick from"
+    ],
+    "insteadUse": {
+      "One view from a few": "Tabs",
+      "Filters with ranges, dates or typed values": "Form in a Sheet",
+      "A search with suggestions": "Combobox",
+      "A search box alone": "SearchField"
+    },
+    "anatomy": [
+      "root",
+      "search",
+      "filters",
+      "more",
+      "count",
+      "clear",
+      "end"
+    ],
+    "slots": {
+      "search": {
+        "accepts": [
+          "SearchField"
+        ],
+        "max": 1
+      },
+      "filters": {
+        "accepts": [
+          "Chip"
+        ]
+      },
+      "more": {
+        "accepts": [
+          "Button"
+        ],
+        "max": 1
+      },
+      "clear": {
+        "accepts": [
+          "Button"
+        ],
+        "max": 1
+      },
+      "end": {
+        "accepts": [
+          "IconButton",
+          "ToggleButton",
+          "DropdownMenu"
+        ],
+        "max": 3
+      }
+    },
+    "props": {
+      "search": {
+        "type": "SearchFieldProps",
+        "description": "Props for the search box, aria-label included. Leave it out for no search."
+      },
+      "filters": {
+        "type": "FilterBarFilter[]",
+        "description": "Quick filters as chips: value, label, textValue, disabled."
+      },
+      "more": {
+        "type": "FilterBarFilter[]",
+        "description": "Rarer filters, as checkbox items in the more menu. The menu stays open while the person picks."
+      },
+      "value": {
+        "type": "string[]",
+        "description": "Controlled: the values of every filter that is on, from the chips and the menu."
+      },
+      "defaultValue": {
+        "type": "string[]",
+        "default": "[]",
+        "description": "Uncontrolled starting value."
+      },
+      "onValueChange": {
+        "type": "function",
+        "description": "Called with the new list of values."
+      },
+      "onClear": {
+        "type": "function",
+        "description": "Called by clear all, after the value and the search box are cleared."
+      },
+      "resultCount": {
+        "type": "number",
+        "description": "The results the filters leave. Shown in the count part, and announced once when it changes after a filter or search change."
+      },
+      "end": {
+        "type": "node",
+        "description": "View toggles or a sort menu, at the end of the row."
+      },
+      "size": {
+        "type": [
+          "sm",
+          "md"
+        ],
+        "default": "md",
+        "description": "Height of the search box, the chips and the buttons."
+      },
+      "labels": {
+        "type": "Partial<FilterBarLabels>",
+        "description": "Copy for the group name, more, clear and the counts. Default from the Theme language, English or Arabic."
+      }
+    },
+    "states": [
+      "open",
+      "closed",
+      "data-active",
+      "data-overflow-start",
+      "data-overflow-end",
+      "data-selected"
+    ],
+    "a11y": {
+      "role": "none on the root. The chips sit in a role group named Filters; each chip is a toggle button with aria-pressed.",
+      "focus": "Each part is a tab stop in DOM order: search, each chip, more, clear, then the end slot. When clear all is used it hides, and focus moves to the search box, else the first chip.",
+      "keys": {
+        "Tab": "Moves to the next part, and to each chip in turn",
+        "Shift+Tab": "Moves to the part before",
+        "Space": "Turns the focused chip on or off"
+      },
+      "announce": "The result count is read once, politely, when resultCount changes after a filter or search change, 600ms after the last such change: typing does not read every count, and a slow count is not read stale. A change that leaves the count the same is not announced. Each chip says pressed or not pressed.",
+      "native": {
+        "accessibilityRole": "none"
+      },
+      "notes": [
+        "The order names ToggleGroup, MultiSelect and Select. They do not exist yet, so filters are Chips in a role group and more is a DropdownMenu with checkbox items. Arrow keys do not move between chips: each chip is a tab stop, as in the Figma-Killer-2 source. The anatomy stays when ToggleGroup lands.",
+        "The chip strip scrolls sideways inside itself and never scrolls the page at 320px (WCAG 1.4.10). The root carries data-overflow-start and data-overflow-end in logical terms, so the edge fades flip in RTL.",
+        "A selected chip shows a check, not color alone.",
+        "data-selected is on each selected Chip root inside the filters part.",
+        "open and closed are on the more part, the Button that opens the DropdownMenu. Escape in the search box clears the query; Escape in the more menu closes it and returns focus to the more button.",
+        "A search query counts as one filter on in the count part, and clear all empties it too.",
+        "The more part is the Button that opens the DropdownMenu. open, closed and data-selected in states sit on nested roots (the more Button and the selected Chips); the FilterBar root carries data-active and the overflow states."
+      ]
+    },
+    "content": {
+      "en": {
+        "filters": "One to three words in sentence case, a noun: Images, Shared with me. Never a verb.",
+        "more": "More filters, with the number on in brackets: More filters (2).",
+        "clear": "Clear filters. Never Reset.",
+        "count": "1 filter on, 2 filters on (a search query counts as one), then the results: 24 results. No results when none."
+      },
+      "ar": {
+        "filters": "اسم قصير: الصور، المشاركة معي",
+        "more": "فلاتر إضافية (2)",
+        "clear": "مسح الفلاتر",
+        "count": "فلتر واحد مفعل، فلترين مفعلين، 3 فلاتر مفعلة، ثم النتائج: نتيجتين، 24 نتيجة، ما فيه نتائج"
+      }
+    },
+    "tokens": [
+      "space.4xs",
+      "space.3xs",
+      "space.2xs",
+      "space.xs",
+      "space.xl",
+      "dialog.width.sm",
+      "field.label.width",
+      "font.size.s",
+      "font.leading.snug",
+      "color.text.muted"
+    ],
+    "motion": "none",
+    "frameworks": {
+      "react": {
+        "status": "ready",
+        "behavior": "hand built on SearchField, Chip, DropdownMenu and Button",
+        "example": "FilterBar.demo.tsx"
+      },
+      "angular": {
+        "status": "planned"
+      },
+      "native": {
+        "status": "planned"
+      }
+    },
+    "styles": {
+      "studio": "One wrapping row: the search box takes the free room, the chip strip scrolls with soft edge fades, a muted count and a ghost clear button. The strip takes a line of its own below dialog.width.sm (a borrowed token until a filter-bar token exists).",
+      "desk": "The same layout, with the Desk pill chips and buttons",
+      "neutral": "Takes the tokens of the Neutral style, no recipe."
+    },
+    "mistakes": [
+      {
+        "wrong": "Chips that only change color when on",
+        "right": "Chips with aria-pressed and a check, which FilterBar uses"
+      },
+      {
+        "wrong": "Announcing the result count on every key press in the search box",
+        "right": "One polite announcement after the last change"
+      },
+      {
+        "wrong": "A filter row that makes the page scroll sideways on a phone",
+        "right": "The chip strip scrolls inside itself, with edge fades"
+      },
+      {
+        "wrong": "Twelve chips for filters people rarely use",
+        "right": "Three or four chips, and the rest under more"
+      }
+    ],
+    "since": "0.1.0"
+  },
+  {
     "name": "FloatingActionButton",
     "kind": "component",
     "family": "actions",

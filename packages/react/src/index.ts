@@ -34,6 +34,7 @@ export * from './components/ErrorState/index';
 export * from './components/Field/index';
 export * from './components/FieldError/index';
 export * from './components/Fieldset/index';
+export * from './components/FilterBar/index';
 export * from './components/FloatingActionButton/index';
 export * from './components/Form/index';
 export * from './components/FormWizard/index';

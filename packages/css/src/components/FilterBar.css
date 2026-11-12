@@ -1,0 +1,126 @@
+/*
+ * FilterBar: search, filters, more, count, clear and end on one row that
+ * wraps. The search box, the Chips, the more Button and the clear Button
+ * keep their own files; this one lays them out and draws the edge fades of
+ * the chip strip.
+ * Source: Figma-Killer-2 `FilterBar.module.css` (a chip strip that scrolls
+ * sideways with no scrollbar, edge fades only on a clipped edge, a gap of
+ * space xs between parts and 3xs between chips). GoBanana
+ * `GalleryFilter.tsx` could not be read in the lane 4A session.
+ *
+ * Private properties on the root (docs/contracts/anatomy.md, one
+ * convention), for recipes to override:
+ *   --_filter-bar-gap         space between the parts
+ *   --_filter-bar-chip-gap    space between the chips
+ *   --_filter-bar-fade        length of an edge fade
+ *   --_filter-bar-search-min  the narrowest the search box gets before the row wraps
+ *   --_filter-bar-strip-min   the narrowest the chip strip gets before it wraps to a line of its own
+ *   --_filter-bar-fade-angle  the reading direction of the strip, flipped in RTL
+ *
+ * The mask reads only alpha: currentColor is an opaque stop, transparent the faded one.
+ */
+@layer ds.base {
+  [data-ds='filter-bar'] {
+    --_filter-bar-gap: var(--ds-space-xs);
+    --_filter-bar-chip-gap: var(--ds-space-3xs);
+    --_filter-bar-fade: var(--ds-space-xl);
+    --_filter-bar-search-min: var(--ds-field-label-width);
+    --_filter-bar-strip-min: var(--ds-dialog-width-sm);
+    --_filter-bar-fade-angle: 90deg;
+    --_filter-bar-fade-start: currentColor;
+    --_filter-bar-fade-end: currentColor;
+
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--_filter-bar-gap);
+    min-inline-size: 0;
+    font-family: var(--ds-font-family-sans);
+  }
+
+  [data-ds='filter-bar']:dir(rtl) {
+    --_filter-bar-fade-angle: 270deg;
+  }
+
+  [data-ds='filter-bar'][data-size='sm'] {
+    --_filter-bar-gap: var(--ds-space-2xs);
+    --_filter-bar-chip-gap: var(--ds-space-4xs);
+  }
+
+  /* The search box takes the free room and wraps to its own line when the row is narrow. */
+  [data-ds='filter-bar'] > [data-part='search'] {
+    flex: 1 1 var(--_filter-bar-search-min);
+    min-inline-size: 0;
+  }
+
+  /*
+   * The chip strip: scrolls sideways inside itself, never the page. Y is
+   * clipped so a sub pixel overflow does not let the row drift.
+   */
+  [data-ds='filter-bar'] > [data-part='filters'] {
+    display: flex;
+    /* Below this basis the strip takes a line of its own, and scrolls there. */
+    flex: 1 1 var(--_filter-bar-strip-min);
+    align-items: center;
+    gap: var(--_filter-bar-chip-gap);
+    min-inline-size: 0;
+    overflow-x: auto;
+    overflow-y: hidden;
+    overscroll-behavior-inline: contain;
+    scrollbar-width: none;
+    /* The ring of a focused chip stays inside the clip. */
+    padding-block: var(--ds-space-3xs);
+    padding-inline: var(--ds-space-3xs);
+    mask-image: linear-gradient(
+      var(--_filter-bar-fade-angle),
+      var(--_filter-bar-fade-start) 0,
+      currentColor var(--_filter-bar-fade),
+      currentColor calc(100% - var(--_filter-bar-fade)),
+      var(--_filter-bar-fade-end) 100%
+    );
+  }
+
+  [data-ds='filter-bar'] > [data-part='filters']::-webkit-scrollbar {
+    display: none;
+  }
+
+  [data-ds='filter-bar'] > [data-part='filters'] > * {
+    flex: none;
+  }
+
+  /* An edge fades only while content is clipped there, read in logical terms, so it flips in RTL. */
+  [data-ds='filter-bar'][data-overflow-start] {
+    --_filter-bar-fade-start: transparent;
+  }
+
+  [data-ds='filter-bar'][data-overflow-end] {
+    --_filter-bar-fade-end: transparent;
+  }
+
+  [data-ds='filter-bar'] > [data-part='count'] {
+    color: var(--ds-color-text-muted);
+    font-size: var(--ds-font-size-s);
+    line-height: var(--ds-font-leading-snug);
+    white-space: nowrap;
+  }
+
+  [data-ds='filter-bar'] > [data-part='more'],
+  [data-ds='filter-bar'] > [data-part='clear'] {
+    flex: none;
+  }
+
+  [data-ds='filter-bar'] > [data-part='end'] {
+    display: flex;
+    flex: none;
+    align-items: center;
+    gap: var(--ds-space-4xs);
+    margin-inline-start: auto;
+  }
+
+  /* Forced colors: a mask is not drawn, and the strip still scrolls; nothing else to change. */
+  @media (forced-colors: active) {
+    [data-ds='filter-bar'] > [data-part='filters'] {
+      mask-image: none;
+    }
+  }
+}
