@@ -3,6 +3,7 @@ import type { FormValidators } from '@the-system/shared';
 import { Theme } from '../../theme';
 import { DemoCase, DemoGrid, DemoPage, DemoRow, sample } from '../../demo';
 import { Button } from '../Button';
+import { Checkbox } from '../Checkbox/Checkbox';
 import { Dialog, DialogBody, DialogClose, DialogContent, DialogFooter, DialogTrigger } from '../Dialog';
 import { Fieldset } from '../Fieldset/Fieldset';
 import { Input } from '../Input/Input';
@@ -12,6 +13,11 @@ const wait = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 const workEmail: FormValidators = {
   email: (v) => (typeof v === 'string' && /@(gmail|hotmail|yahoo)\./i.test(v) ? 'Use your work email, not a personal one.' : undefined),
+};
+
+const addressChecks: FormValidators = {
+  postal: (v) => (typeof v === 'string' && v !== '' && !/^[0-9]{5}$/.test(v) ? 'Enter the 5 digit postal code.' : undefined),
+  reach: (v) => (v === undefined ? 'Pick at least one way to reach you.' : undefined),
 };
 
 function ContactForm({ size, orientation }: { size?: FormSize; orientation?: 'vertical' | 'horizontal' }) {
@@ -119,6 +125,7 @@ export default function FormDemo() {
               <Button type="reset">Clear form</Button>
             </>
           }
+          validators={addressChecks}
           onSubmit={() => wait(600)}
         >
           <Fieldset legend="Contact">
@@ -133,9 +140,14 @@ export default function FormDemo() {
             <FormField name="city" label="City" required>
               <Input name="city" autoComplete="address-level2" />
             </FormField>
-            <FormField name="postal" label="Postal code">
+            <FormField name="postal" label="Postal code" description="5 digits, such as 12211.">
               <Input name="postal" autoComplete="postal-code" inputMode="numeric" pattern="[0-9]{5}" />
             </FormField>
+          </Fieldset>
+          <Fieldset legend="How should we reach you" name="reach">
+            <Checkbox name="reach" value="email" label="Email" />
+            <Checkbox name="reach" value="text" label="Text message" />
+            <Checkbox name="reach" value="call" label="Phone call" />
           </Fieldset>
         </Form>
       </DemoCase>
