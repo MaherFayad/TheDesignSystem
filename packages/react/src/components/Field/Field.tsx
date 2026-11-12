@@ -1,43 +1,14 @@
 'use client';
-import {
-  createContext,
-  use,
-  useCallback,
-  useId,
-  useLayoutEffect,
-  useMemo,
-  useState,
-  type ComponentProps,
-  type ReactNode,
-} from 'react';
-import { Label } from 'radix-ui';
-import { Icon } from '@the-system/icons/react';
+import { useCallback, useId, useLayoutEffect, useMemo, useState, type ComponentProps, type ReactNode } from 'react';
+import { FieldError } from '../FieldError/FieldError';
+import { Label, type LabelProps } from '../Label/Label';
+import { FieldContext, useField, type FieldContextValue } from './context';
+
+export { useField };
+export { FieldError };
+export type { FieldErrorProps } from '../FieldError/FieldError';
 
 export type FieldOrientation = 'vertical' | 'horizontal';
-
-interface FieldContextValue {
-  controlId: string;
-  labelId: string;
-  descriptionId: string;
-  errorId: string;
-  invalid: boolean;
-  /** The invalid prop as passed. `false` hides every error message. */
-  invalidProp: boolean | undefined;
-  disabled: boolean;
-  readOnly: boolean;
-  required: boolean;
-  hasDescription: boolean;
-  hasError: boolean;
-  register: (part: 'description' | 'error') => () => void;
-  setControlId: (id: string | undefined) => void;
-}
-
-const FieldContext = createContext<FieldContextValue | null>(null);
-
-/** The nearest Field, or null outside one. */
-export function useField(): FieldContextValue | null {
-  return use(FieldContext);
-}
 
 export interface FieldProps extends Omit<ComponentProps<'div'>, 'title'> {
   /**
@@ -127,26 +98,22 @@ export function Field({
   );
 }
 
-export interface FieldLabelProps extends Omit<ComponentProps<'label'>, 'title'> {
+export interface FieldLabelProps extends LabelProps {
   children?: ReactNode;
 }
 
 /**
- * The visible name of the control: a `<label>` bound with htmlFor. When the
- * field is required it adds a mark that is a glyph, not a color, and is
- * hidden from the accessible name. The control carries aria-required.
+ * The visible name of the control: the system Label, bound with htmlFor and
+ * carrying `data-part="label"`. When the field is required the Label adds a
+ * mark that is a glyph, not a color, and is hidden from the accessible name.
+ * The control carries aria-required.
  */
 export function FieldLabel({ children, htmlFor, ...rest }: FieldLabelProps) {
   const field = useField();
   return (
-    <Label.Root {...rest} id={rest.id ?? field?.labelId} htmlFor={htmlFor ?? field?.controlId} data-part="label">
+    <Label {...rest} id={rest.id ?? field?.labelId} htmlFor={htmlFor ?? field?.controlId} data-part="label">
       {children}
-      {field?.required && (
-        <span data-part="required" aria-hidden="true">
-          *
-        </span>
-      )}
-    </Label.Root>
+    </Label>
   );
 }
 
@@ -162,34 +129,6 @@ export function FieldDescription({ children, ...rest }: FieldDescriptionProps) {
   return (
     <p {...rest} id={rest.id ?? field?.descriptionId} data-part="description">
       {children}
-    </p>
-  );
-}
-
-export interface FieldErrorProps extends Omit<ComponentProps<'p'>, 'title'> {
-  children?: ReactNode;
-}
-
-/**
- * What is wrong and how to fix it. Renders only when it has content and the
- * Field is not marked `invalid={false}`. While it renders, the field is
- * invalid and the message joins aria-describedby.
- *
- * It is not a live region and never role="alert": an error that is on the
- * page when it loads must not interrupt. A screen reader reads it with the
- * control, through aria-describedby, when focus lands there. A form that
- * checks on submit moves focus to the first invalid control.
- */
-export function FieldError({ children, ...rest }: FieldErrorProps) {
-  const field = useField();
-  const shown = children !== undefined && children !== null && children !== false && field?.invalidProp !== false;
-  const register = field?.register;
-  useLayoutEffect(() => (shown ? register?.('error') : undefined), [shown, register]);
-  if (!shown) return null;
-  return (
-    <p {...rest} id={rest.id ?? field?.errorId} data-part="error">
-      <Icon name="danger" size="md" />
-      <span>{children}</span>
     </p>
   );
 }
@@ -235,11 +174,7 @@ export function useFieldControl(own: FieldControlOptions = {}): FieldControlProp
   const disabled = own.disabled ?? field?.disabled ?? false;
   const readOnly = own.readOnly ?? field?.readOnly ?? false;
   const required = own.required ?? field?.required ?? false;
-  const describedBy = [
-    field?.hasDescription ? field.descriptionId : undefined,
-    field?.hasError ? field.errorId : undefined,
-    own['aria-describedby'],
-  ]
+  const describedBy = [field?.hasDescription ? field.descriptionId : undefined, field?.hasError ? field.errorId : undefined, own['aria-describedby']]
     .filter(Boolean)
     .join(' ');
 

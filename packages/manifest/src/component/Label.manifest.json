@@ -1,0 +1,167 @@
+{
+  "name": "Label",
+  "kind": "component",
+  "family": "forms",
+  "summary": "The visible name of one control: a native label that focuses or toggles the control on click, with an optional required mark or optional text.",
+  "useWhen": [
+    "A control outside a Field that needs a visible name: a Switch, a Checkbox or a Slider in a settings row",
+    "A small inspector control with a short name above or beside it, at size sm",
+    "Inside Field, which renders it as its label part through FieldLabel or the label prop"
+  ],
+  "avoidWhen": [
+    "A text control with a hint or an error message, where Field wires every id for you",
+    "A heading for a group of controls",
+    "A name for something that is not a form control"
+  ],
+  "insteadUse": {
+    "A text control with a hint or an error": "Field",
+    "A group of choices under one question": "Fieldset",
+    "A heading for a section of a form": "a heading element",
+    "An icon only control": "IconButton with its label prop"
+  },
+  "anatomy": [
+    "root",
+    "required",
+    "optional"
+  ],
+  "slots": {
+    "root": {
+      "accepts": "text"
+    },
+    "optional": {
+      "accepts": "text"
+    }
+  },
+  "props": {
+    "size": {
+      "type": [
+        "sm",
+        "md"
+      ],
+      "default": "md",
+      "description": "md is font.size.s, the label of a Field. sm is font.size.xs, for a small inspector control."
+    },
+    "htmlFor": {
+      "type": "string",
+      "description": "The id of the control. Not needed when the label wraps the control, or inside a Field."
+    },
+    "required": {
+      "type": "boolean",
+      "default": false,
+      "description": "Shows an aria-hidden asterisk. Outside a Field the word in requiredText joins the accessible name. Inside a Field it follows the Field."
+    },
+    "requiredText": {
+      "type": "string",
+      "default": "required",
+      "description": "The word read after the label outside a Field. Default required, or مطلوب when the language is Arabic."
+    },
+    "optional": {
+      "type": "node",
+      "description": "Text after the label for a value that may stay empty, for example Optional. Never shown together with required."
+    },
+    "disabled": {
+      "type": "boolean",
+      "default": false,
+      "description": "Draws the label as disabled. Inside a Field it follows the Field."
+    },
+    "invalid": {
+      "type": "boolean",
+      "default": false,
+      "description": "Marks the label of an invalid control, for recipes. Draws nothing in the base. Inside a Field it follows the Field."
+    }
+  },
+  "states": [
+    "data-disabled",
+    "data-invalid"
+  ],
+  "a11y": {
+    "role": "none: a native label element, which names the control it points at",
+    "focus": "Never focusable. A click on it focuses a text control, or toggles a checkbox or a switch.",
+    "keys": {},
+    "announce": "Read as the control's name. The required mark is aria-hidden: inside a Field the control says required through aria-required, outside a Field a visually hidden word says it.",
+    "native": {
+      "accessibilityRole": "text"
+    },
+    "notes": [
+      "No keys of its own: the control it names has the keyboard map.",
+      "Required is never a lone asterisk: the asterisk is a glyph that does not rely on color, plus aria-required on the control or the hidden word in the name.",
+      "Disabled keeps the words readable, in color.text.muted. The control carries opacity.disabled.",
+      "Radix Label keeps a double click on the label from selecting its text."
+    ]
+  },
+  "content": {
+    "en": {
+      "label": "A noun in sentence case that names the value: Email, Board name. No colon, no question.",
+      "optional": "Optional, in sentence case. Mark the few optional fields, or the few required ones, never both in one form.",
+      "required": "Mark required fields with * and say once, above the form, that fields marked * are required."
+    },
+    "ar": {
+      "label": "اسم بدون تشكيل يوصف القيمة: البريد الإلكتروني، اسم اللوحة. بدون نقطتين وبدون سؤال",
+      "optional": "اختياري",
+      "required": "سطر واحد فوق النموذج: الحقول اللي عليها * مطلوبة"
+    }
+  },
+  "tokens": [
+    "color.text.default",
+    "color.text.muted",
+    "font.family.sans",
+    "font.size.s",
+    "font.size.xs",
+    "font.weight.semibold",
+    "font.weight.regular",
+    "font.leading.snug",
+    "space.3xs"
+  ],
+  "frameworks": {
+    "react": {
+      "status": "ready",
+      "behavior": "radix:Label",
+      "example": "Label.demo.tsx",
+      "note": "No motion: nothing on a label moves or fades, so there is no pattern to name and nothing to reduce."
+    },
+    "angular": {
+      "status": "planned",
+      "behavior": "label[dsLabel], host bindings",
+      "note": "The host label is the root. Inside dsField the directive reads the field ids and state."
+    },
+    "native": {
+      "status": "planned",
+      "behavior": "react-native:Text with nativeID, named by accessibilityLabelledBy on the control",
+      "note": "A press on the text focuses or toggles the control."
+    }
+  },
+  "styles": {
+    "studio": "Semibold text in color.text.default, the mark and the optional text in color.text.muted",
+    "desk": "The same, in Instrument Sans",
+    "neutral": "Takes the tokens of the Neutral style, no recipe."
+  },
+  "mistakes": [
+    {
+      "wrong": "A red asterisk as the only sign of a required control",
+      "right": "required on Label or Field: an aria-hidden glyph plus the word or aria-required"
+    },
+    {
+      "wrong": "A Label with no htmlFor next to a control that has no id",
+      "right": "htmlFor pointing at the control's id, or the control inside a Field"
+    },
+    {
+      "wrong": "A Label used as a section heading",
+      "right": "A heading element, or Fieldset with its legend for a group of controls"
+    },
+    {
+      "wrong": "A placeholder instead of a Label",
+      "right": "A visible Label, and an example value in the placeholder at most"
+    },
+    {
+      "wrong": "required on a Label outside a Field and aria-required on its control",
+      "right": "One of the two: the hidden word already says required, so the state would be read twice"
+    }
+  ],
+  "contract": {
+    "optionalParts": [
+      "required",
+      "optional"
+    ]
+  },
+  "since": "0.1.0"
+}

@@ -1,0 +1,50 @@
+/*
+ * FieldError: a danger icon and a message that says how to fix the value.
+ * Sources: the error part of Field from wave 0 (danger text, an icon so it
+ * is never color alone, text s) and Figma-Killer-2 `FormField.module.css`
+ * (a quiet line under the control). GoBanana `.st-alert` could not be read
+ * in this session.
+ *
+ * Private properties on the root (docs/contracts/anatomy.md, one
+ * convention), for recipes and for a parent such as Field to override:
+ *   --_field-error-fg          text and icon color
+ *   --_field-error-font-size   text size, from the size axis
+ *   --_field-error-gap         space between the icon and the message
+ */
+@layer ds.base {
+  [data-ds='field-error'] {
+    --_field-error-fg: var(--ds-color-state-danger-text);
+    --_field-error-font-size: var(--ds-font-size-s);
+    --_field-error-gap: var(--ds-space-2xs);
+
+    display: flex;
+    align-items: start;
+    gap: var(--_field-error-gap);
+    margin: 0;
+    color: var(--_field-error-fg);
+    font-family: var(--ds-font-family-sans);
+    font-size: var(--_field-error-font-size);
+    line-height: var(--ds-font-leading-normal);
+    overflow-wrap: anywhere;
+  }
+
+  [data-ds='field-error'][data-size='sm'] {
+    --_field-error-font-size: var(--ds-font-size-xs);
+  }
+
+  /* Arabic small text one step up (PLAN.md section 12): base.css raises only s, so sm takes s. */
+  [data-ds='field-error'][data-size='sm']:lang(ar) {
+    --_field-error-font-size: var(--ds-font-size-s);
+  }
+
+  /* The icon keeps its size when the message wraps. */
+  [data-ds='field-error'] > [data-part='icon'] {
+    flex: none;
+  }
+
+  [data-ds='field-error'] > [data-part='message'] {
+    min-inline-size: 0;
+  }
+
+  /* Forced colors: the browser forces the text color; the icon and the words still carry the error. */
+}

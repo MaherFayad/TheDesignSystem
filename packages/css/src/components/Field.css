@@ -1,5 +1,7 @@
 /*
  * Field: a label, a control, a description and an error, in that DOM order.
+ * The label part is the Label component (Label.css) and the error part is
+ * the FieldError component (FieldError.css); this file lays them out.
  * Sources: GoBanana `studio-components.css` (readable text never below
  * text s) and Figma-Killer-2 `FormField.module.css` (stacked gap, a semibold
  * label, a quiet description).
@@ -8,7 +10,7 @@
  * convention), for recipes to override:
  *   --_field-gap            space between the parts
  *   --_field-label-width    label column in the horizontal orientation
- *   --_field-fg             label color, --_field-fg-disabled when disabled
+ *   --_field-fg             label color, --_field-fg-disabled when the label is disabled
  */
 @layer ds.base {
   [data-ds='field'] {
@@ -41,43 +43,23 @@
     grid-row: 1;
   }
 
+  /*
+   * The label is the system Label. The field passes its two colors through
+   * the Label's private properties; the Label picks one from its own
+   * data-disabled, so a Label with disabled false stays at full color.
+   */
   [data-ds='field'] > [data-part='label'] {
-    color: var(--_field-fg);
-    font-size: var(--ds-font-size-s);
-    font-weight: var(--ds-font-weight-semibold);
-    line-height: var(--ds-font-leading-snug);
-    overflow-wrap: anywhere;
+    --_label-fg: var(--_field-fg);
+    --_label-fg-disabled: var(--_field-fg-disabled);
   }
 
-  /* The required mark: a glyph, so it does not rely on color. Hidden from the accessible name. */
-  [data-ds='field'] > [data-part='label'] > [data-part='required'] {
-    margin-inline-start: var(--ds-space-3xs);
-    color: var(--ds-color-text-muted);
-    font-weight: var(--ds-font-weight-regular);
-  }
-
-  [data-ds='field'] > [data-part='description'],
-  [data-ds='field'] > [data-part='error'] {
+  [data-ds='field'] > [data-part='description'] {
     margin: 0;
     font-size: var(--ds-font-size-s);
     line-height: var(--ds-font-leading-normal);
     overflow-wrap: anywhere;
-  }
-
-  [data-ds='field'] > [data-part='description'] {
     color: var(--ds-color-text-muted);
   }
 
-  /* The error says what to do. The icon keeps it from being color only. */
-  [data-ds='field'] > [data-part='error'] {
-    display: flex;
-    align-items: start;
-    gap: var(--ds-space-2xs);
-    color: var(--ds-color-state-danger-text);
-  }
-
-  /* Disabled: the words stay readable; the control itself carries the disabled look. */
-  [data-ds='field'][data-disabled] {
-    --_field-fg: var(--_field-fg-disabled);
-  }
+  /* The error part is the system FieldError, styled in FieldError.css. */
 }
