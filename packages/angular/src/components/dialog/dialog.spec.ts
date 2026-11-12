@@ -169,3 +169,67 @@ describe('DsDialog', () => {
     expect(document.activeElement?.getAttribute('data-part')).toBe('close');
   });
 });
+
+@Component({
+  imports: [DS_DIALOG, DsButton],
+  template: `
+    <main>
+      <button id="first-stop" dsButton>Open settings</button>
+      <ng-container dsDialog [(open)]="open">
+        @if (showRow()) {
+          <div id="row" tabindex="-1">
+            @if (showTrigger()) {
+              <button id="gone" dsButton dsDialogTrigger>Delete row</button>
+            }
+          </div>
+        }
+        <ng-template dsDialogContent title="Delete this row?">
+          <div dsDialogFooter>
+            <button id="keep" dsButton dsDialogClose>Keep row</button>
+          </div>
+        </ng-template>
+      </ng-container>
+    </main>
+  `,
+})
+class FallbackHost {
+  readonly open = signal(false);
+  readonly showRow = signal(true);
+  readonly showTrigger = signal(true);
+}
+
+describe('DsDialog focus return fallback', () => {
+  async function openThenRemove(removeRow: boolean) {
+    const fixture = TestBed.createComponent(FallbackHost);
+    document.body.appendChild(fixture.nativeElement);
+    await fixture.whenStable();
+    const trigger = fixture.nativeElement.querySelector('#gone') as HTMLElement;
+    trigger.focus();
+    trigger.click();
+    await fixture.whenStable();
+    await new Promise((r) => setTimeout(r, 0));
+    await fixture.whenStable();
+    expect(layer()).not.toBeNull();
+    fixture.componentInstance.showTrigger.set(false);
+    if (removeRow) fixture.componentInstance.showRow.set(false);
+    await fixture.whenStable();
+    (document.getElementById('keep') as HTMLElement).click();
+    await fixture.whenStable();
+    await new Promise((r) => setTimeout(r, 0));
+    await fixture.whenStable();
+    expect(layer()).toBeNull();
+    return fixture;
+  }
+
+  it('the trigger is gone: focus goes to its nearest connected focusable ancestor', async () => {
+    const fixture = await openThenRemove(false);
+    expect(document.activeElement?.id).toBe('row');
+    fixture.destroy();
+  });
+
+  it('the trigger and its ancestors are gone: focus goes to the first tab stop of main', async () => {
+    const fixture = await openThenRemove(true);
+    expect(document.activeElement?.id).toBe('first-stop');
+    fixture.destroy();
+  });
+});

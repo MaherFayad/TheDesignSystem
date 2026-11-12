@@ -292,9 +292,54 @@
       "footer"
     ],
     "keys": {
+      "ArrowLeft": {
+        "case": "many",
+        "focus": "[data-part='move']",
+        "expect": "moves"
+      },
+      "ArrowRight": {
+        "case": "many",
+        "focus": "[data-part='move']",
+        "expect": "moves"
+      },
+      "ArrowUp": {
+        "case": "many",
+        "focus": "[data-part='move']",
+        "expect": "moves"
+      },
+      "ArrowDown": {
+        "case": "many",
+        "focus": "[data-part='move']",
+        "expect": "moves"
+      },
+      "Shift+ArrowLeft": {
+        "case": "many",
+        "focus": "[data-part='move']",
+        "expect": "moves"
+      },
+      "Shift+ArrowRight": {
+        "case": "many",
+        "focus": "[data-part='move']",
+        "expect": "moves"
+      },
+      "Shift+ArrowUp": {
+        "case": "many",
+        "focus": "[data-part='move']",
+        "expect": "moves"
+      },
+      "Shift+ArrowDown": {
+        "case": "many",
+        "focus": "[data-part='move']",
+        "expect": "moves"
+      },
       "Escape": {
         "case": "many",
-        "focus": "#demo-tokens",
+        "focus": "[data-part='move']",
+        "expect": "closes"
+      },
+      "Enter": {
+        "case": "many",
+        "focus": "[data-part='move']",
         "expect": "state-changes"
       }
     }

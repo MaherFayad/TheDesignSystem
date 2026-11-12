@@ -981,7 +981,49 @@
           "sun",
           "moon",
           "globe",
-          "drag"
+          "drag",
+          "mail",
+          "dot",
+          "chevrons-up-down",
+          "chevrons-forward",
+          "chevrons-back",
+          "check-circle",
+          "x-circle",
+          "alert-circle",
+          "check-double",
+          "star-filled",
+          "star-half",
+          "grip",
+          "sidebar",
+          "panel-start",
+          "panel-end",
+          "phone",
+          "key",
+          "lock-open",
+          "refresh",
+          "history",
+          "inbox",
+          "bell-off",
+          "image",
+          "zoom-in",
+          "zoom-out",
+          "maximize",
+          "command",
+          "keyboard",
+          "language",
+          "list",
+          "grid",
+          "columns",
+          "filter-x",
+          "tag",
+          "file",
+          "folder",
+          "user-plus",
+          "log-out",
+          "shield",
+          "spinner",
+          "trend-up",
+          "trend-down"
         ],
         "required": true,
         "description": "A system icon name. Directional names say forward and back."
@@ -2529,9 +2571,54 @@
         "footer"
       ],
       "keys": {
+        "ArrowLeft": {
+          "case": "many",
+          "focus": "[data-part='move']",
+          "expect": "moves"
+        },
+        "ArrowRight": {
+          "case": "many",
+          "focus": "[data-part='move']",
+          "expect": "moves"
+        },
+        "ArrowUp": {
+          "case": "many",
+          "focus": "[data-part='move']",
+          "expect": "moves"
+        },
+        "ArrowDown": {
+          "case": "many",
+          "focus": "[data-part='move']",
+          "expect": "moves"
+        },
+        "Shift+ArrowLeft": {
+          "case": "many",
+          "focus": "[data-part='move']",
+          "expect": "moves"
+        },
+        "Shift+ArrowRight": {
+          "case": "many",
+          "focus": "[data-part='move']",
+          "expect": "moves"
+        },
+        "Shift+ArrowUp": {
+          "case": "many",
+          "focus": "[data-part='move']",
+          "expect": "moves"
+        },
+        "Shift+ArrowDown": {
+          "case": "many",
+          "focus": "[data-part='move']",
+          "expect": "moves"
+        },
         "Escape": {
           "case": "many",
-          "focus": "#demo-tokens",
+          "focus": "[data-part='move']",
+          "expect": "closes"
+        },
+        "Enter": {
+          "case": "many",
+          "focus": "[data-part='move']",
           "expect": "state-changes"
         }
       }

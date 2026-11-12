@@ -64,8 +64,7 @@
     --_dialog-scrim: var(--ds-color-bg-scrim);
     --_dialog-scrim-filter: blur(var(--ds-blur-backdrop));
     --_dialog-enter-y: var(--ds-space-2xs);
-    /* Token gap: no scale token yet (suggested scale.dialog-enter). */
-    --_dialog-enter-scale: 0.98;
+    --_dialog-enter-scale: var(--ds-scale-dialog-enter);
     --_dialog-duration-in: var(--ds-duration-base);
     --_dialog-duration-out: var(--ds-duration-base);
     --_dialog-ease-in: var(--ds-ease-out);
@@ -111,10 +110,10 @@
   }
 
   /*
-   * Phones: under 480px wide the panel fills the inline size with a small
-   * gutter. There is no breakpoint token yet, so the query names 30rem.
+   * Phones: under breakpoint.phone (480px) the panel fills the inline size
+   * with a small gutter.
    */
-  @media (width < 30rem) {
+  @media (width < 30rem) { /* breakpoint.phone */
     [data-ds='dialog'] {
       --_dialog-gutter: var(--ds-space-s);
       --_dialog-padding: var(--ds-space-xl);
@@ -292,10 +291,11 @@
   /*
    * Short viewports (a phone on its side, 400% zoom): the body stops
    * scrolling on its own and the whole panel scrolls, title, body and
-   * footer together. The token has no dvh form yet; 100% of the fixed root
-   * follows the visible viewport.
+   * footer together. dialog.height.max is 80dvh where dvh exists, and the
+   * 100% cap of the fixed root follows the visible viewport too. The height
+   * query reuses the phone breakpoint value.
    */
-  @media (height < 30rem) {
+  @media (height < 30rem) { /* breakpoint.phone */
     [data-ds='dialog'] > [data-part='panel'] > [data-part='body'] {
       flex: none;
       overflow: visible;

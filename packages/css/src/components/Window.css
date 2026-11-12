@@ -45,11 +45,9 @@
     --_window-radius: var(--ds-radius-window);
     --_window-shadow: var(--ds-elevation-window);
     --_window-ring: 0 0 transparent;
-    /* Token gap: no backdrop saturation token (suggested blur.window-saturation); 1.3 is the source value. */
-    --_window-backdrop: blur(var(--ds-blur-window)) saturate(1.3);
+    --_window-backdrop: blur(var(--ds-blur-window)) saturate(var(--ds-blur-window-saturation));
     --_window-edge: var(--ds-space-8xl);
-    /* Token gap: no window.width.settings (the source is 56rem); 20 large controls, 880px, is the nearest. */
-    --_window-settings-size: calc(var(--ds-size-control-lg) * 20);
+    --_window-settings-size: var(--ds-window-width-settings);
     --_window-padding: var(--ds-space-5xl);
     --_window-cursor: auto;
 
@@ -146,10 +144,12 @@
     inset: var(--_window-edge);
   }
 
-  /* The finder: as wide as the layer allows, under the top edge. Token gap: no window.width.finder-max (the source caps it at 104rem). */
+  /* The finder: as wide as the layer allows up to window.width.finder-max, centered, under the top edge. */
   [data-ds='window'][data-layered][data-kind='finder'] {
     inset-block: var(--_window-edge);
-    inset-inline: var(--_window-edge);
+    inset-inline: 0;
+    inline-size: min(var(--ds-window-width-finder-max), 100% - 2 * var(--_window-edge));
+    margin-inline: auto;
   }
 
   /* Settings: centered, as tall as its content, scrolls inside. */

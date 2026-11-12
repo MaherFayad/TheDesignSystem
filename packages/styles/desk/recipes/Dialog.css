@@ -25,15 +25,13 @@
     --_dialog-border-color: var(--ds-color-border-hairline);
     --_dialog-radius: var(--ds-radius-window);
     --_dialog-shadow: var(--ds-elevation-window);
-    /* Token gap: no saturation token yet (suggested blur.window-saturation), the same 1.3 as Window. */
-    --_dialog-backdrop: blur(var(--ds-blur-window)) saturate(1.3);
+    --_dialog-backdrop: blur(var(--ds-blur-window)) saturate(var(--ds-blur-window-saturation));
     --_dialog-header-bg: transparent;
     --_dialog-footer-bg: transparent;
     --_dialog-divider-color: var(--ds-color-border-hairline);
     --_dialog-padding: var(--ds-space-5xl);
     --_dialog-enter-y: 0;
-    /* Token gap: no scale token yet (suggested scale.window-enter), WINDOW_REST_SCALE in packages/motion. */
-    --_dialog-enter-scale: 0.92;
+    --_dialog-enter-scale: var(--ds-scale-window-enter);
     --_dialog-duration-in: var(--ds-duration-window-open);
     --_dialog-duration-out: var(--ds-duration-window-close);
     --_dialog-ease-in: var(--ds-ease-window);

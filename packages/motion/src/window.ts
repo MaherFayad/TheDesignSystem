@@ -65,7 +65,12 @@ const TOP_START = '0 0';
 const CENTER = '50% 50%';
 const BOTTOM_CENTER = '50% 100%';
 
-/** The scale a window grows from, or shrinks to, when there is no trigger. */
+/**
+ * The scale a window grows from, or shrinks to, when there is no trigger:
+ * the value of the token scale.window-enter. Keyframes are built without an
+ * element, so the number lives here too; window.test.ts checks it against
+ * packages/tokens/src/base/scale.json.
+ */
 export const WINDOW_REST_SCALE = 0.92;
 
 const usable = (r: MotionRect | null | undefined): r is MotionRect => Boolean(r && r.width > MIN_SIDE && r.height > MIN_SIDE);
@@ -147,7 +152,7 @@ export function windowClose({ from, to, reduced = false }: WindowMotionInput = {
  * and is drawn over its old frame `from` first. Reduced: no motion.
  */
 export function windowZoom({ from, to, reduced = false }: WindowMotionInput = {}): WindowMotionSpec {
-  const base = { name: 'window-zoom', duration: 'duration.zoom', easing: 'ease.window', fill: 'none', origin: TOP_START } as const;
+  const base = { name: 'window-zoom', duration: 'duration.window-zoom', easing: 'ease.window', fill: 'none', origin: TOP_START } as const;
   if (reduced || !usable(from) || !usable(to)) return { ...base, keyframes: [] };
   return {
     ...base,
@@ -164,8 +169,7 @@ export function windowZoom({ from, to, reduced = false }: WindowMotionInput = {}
  * target it scales down and fades in place. Reduced: a fade out.
  */
 export function windowMinimize({ from, to, reduced = false }: WindowMotionInput = {}): WindowMotionSpec {
-  // Token gap: no duration.window-minimize (the source is 320ms); duration.window-open (300ms) is the nearest.
-  const base = { name: 'window-minimize', duration: 'duration.window-open', easing: 'ease.window', fill: 'forwards', origin: BOTTOM_CENTER } as const;
+  const base = { name: 'window-minimize', duration: 'duration.window-minimize', easing: 'ease.window', fill: 'forwards', origin: BOTTOM_CENTER } as const;
   if (reduced) return { ...base, duration: 'duration.base', keyframes: fadeOut };
   if (!usable(from) || !usable(to)) {
     return {

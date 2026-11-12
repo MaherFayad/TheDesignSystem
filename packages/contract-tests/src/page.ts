@@ -138,7 +138,10 @@ export function focusState(): { inTarget: boolean; active: string } {
 }
 
 /** A snapshot of what a key press may change, read from the focused element and its root. */
-export function keySnapshot(kebab: string): { active: string; value: string | null; states: string } {
+export function keySnapshot(arg: string | { kebab: string; attrs?: string[] }): { active: string; value: string | null; states: string } {
+  const kebab = typeof arg === 'string' ? arg : arg.kebab;
+  // Boolean state attributes the manifest lists (data-zoomed) count as state too.
+  const extra = typeof arg === 'string' ? [] : (arg.attrs ?? []);
   const a = document.activeElement as HTMLElement | null;
   const root = a ? a.closest(`[data-ds="${kebab}"]`) : null;
   const read = (el: Element | null) =>
@@ -149,7 +152,9 @@ export function keySnapshot(kebab: string): { active: string; value: string | nu
     a.setAttribute('data-contract-id', id);
   }
   const value = a && 'value' in a ? String((a as HTMLInputElement).value) : a?.getAttribute('aria-valuenow') ?? null;
-  return { active: id ?? 'none', value, states: `${read(a)}|${read(root)}|${Array.from(document.querySelectorAll(`[data-ds="${kebab}"]`)).map((r) => r.getAttribute('data-state')).join(',')}` };
+  return { active: id ?? 'none', value, states: `${read(a)}|${read(root)}|${Array.from(document.querySelectorAll(`[data-ds="${kebab}"]`))
+      .map((r) => [r.getAttribute('data-state'), ...extra.map((n) => `${n}=${r.getAttribute(n)}`)].join(';'))
+      .join(',')}` };
 }
 
 /** Counts click events on an element marked with data-contract-stop. */
@@ -409,4 +414,45 @@ export async function finiteAnimationsDone(): Promise<number> {
   });
   await Promise.all(finite.map((a) => a.finished.catch(() => undefined)));
   return finite.length;
+}
+
+/**
+ * Marks the root that holds focus (the nearest root of this component above
+ * the focused element) and returns its box, for the `moves` expectation.
+ */
+export function markFocusedRoot(kebab: string): { x: number; y: number; dir: 'ltr' | 'rtl' } | null {
+  for (const old of Array.from(document.querySelectorAll('[data-contract-moving]'))) old.removeAttribute('data-contract-moving');
+  const root = document.activeElement?.closest(`[data-ds="${kebab}"]`);
+  if (!root) return null;
+  root.setAttribute('data-contract-moving', '');
+  const r = root.getBoundingClientRect();
+  return { x: r.left, y: r.top, dir: getComputedStyle(root).direction === 'rtl' ? 'rtl' : 'ltr' };
+}
+
+/** The box of the root marked by markFocusedRoot, or null when it left the page. */
+export function movingRootBox(): { x: number; y: number } | null {
+  const root = document.querySelector('[data-contract-moving]');
+  if (!root) return null;
+  const r = root.getBoundingClientRect();
+  return { x: r.left, y: r.top };
+}
+
+/**
+ * Marks the root that holds focus for the `closes` expectation. Returns false
+ * when focus is in no root of this component.
+ */
+export function markClosing(kebab: string): boolean {
+  for (const old of Array.from(document.querySelectorAll('[data-contract-closing]'))) old.removeAttribute('data-contract-closing');
+  const root = document.activeElement?.closest(`[data-ds="${kebab}"]`);
+  if (!root) return false;
+  root.setAttribute('data-contract-closing', '');
+  return true;
+}
+
+/** True when the marked root left the page, is hidden, or says data-state="closed". */
+export function closingDone(): boolean {
+  const root = document.querySelector('[data-contract-closing]');
+  if (!root) return true;
+  if (root.getAttribute('data-state') === 'closed') return true;
+  return typeof root.checkVisibility === 'function' ? !root.checkVisibility({ visibilityProperty: true }) : false;
 }

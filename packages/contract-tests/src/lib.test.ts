@@ -14,10 +14,14 @@ import {
   kebabCase,
   keyCheckFor,
   manifestAxes,
+  moveDirection,
+  moveDistance,
+  moveFinding,
   optionalParts,
   propValues,
   readyComponents,
   reportFile,
+  shiftMovesFurther,
   splitKeys,
   stateClasses,
   stateFindings,
@@ -232,5 +236,44 @@ describe('formatAxe', () => {
     expect(lines[0]).toContain('text #777777 on #000000, 4.1:1, needs 4.5:1');
     expect(lines[0]).toContain('in [data-ds=button] case variants');
     expect(lines[1]).toContain('button-name (critical)');
+  });
+});
+
+describe('the moves expectation', () => {
+  it('reads the direction from the key, flipping inline keys in rtl', () => {
+    expect(moveDirection('ArrowRight', 'ltr')).toEqual({ dx: 1, dy: 0 });
+    expect(moveDirection('ArrowRight', 'rtl')).toEqual({ dx: -1, dy: 0 });
+    expect(moveDirection('Shift+ArrowLeft', 'rtl')).toEqual({ dx: 1, dy: 0 });
+    expect(moveDirection('ArrowUp', 'rtl')).toEqual({ dx: 0, dy: -1 });
+    expect(moveDirection('Enter', 'ltr')).toBeUndefined();
+  });
+
+  it('fails a root that does not move, moves the wrong way, or leaves', () => {
+    const at = { x: 40, y: 300 };
+    expect(moveFinding('ArrowRight', 'ltr', at, { x: 40, y: 300 })).toMatch(/moved by x 0, y 0/);
+    expect(moveFinding('ArrowRight', 'ltr', at, { x: 24, y: 300 })).toMatch(/moved by x -16/);
+    expect(moveFinding('ArrowDown', 'ltr', at, { x: 56, y: 300 })).not.toBeNull();
+    expect(moveFinding('ArrowRight', 'ltr', at, null)).toMatch(/left the page/);
+    expect(moveFinding('ArrowRight', 'ltr', null, at)).toMatch(/not in a root/);
+    expect(moveFinding('Enter', 'ltr', at, at)).toMatch(/names no direction/);
+  });
+
+  it('passes a root that moves in the key direction', () => {
+    const at = { x: 40, y: 300 };
+    expect(moveFinding('ArrowRight', 'ltr', at, { x: 56, y: 300 })).toBeNull();
+    expect(moveFinding('ArrowRight', 'rtl', at, { x: 24, y: 300 })).toBeNull();
+    expect(moveFinding('ArrowUp', 'ltr', at, { x: 40, y: 284 })).toBeNull();
+    expect(moveDistance('Shift+ArrowRight', 'ltr', at, { x: 104, y: 300 })).toBe(64);
+  });
+
+  it('reads from the keyboard map whether Shift moves further', () => {
+    const win: Manifest = {
+      ...button,
+      a11y: { keys: { ArrowRight: 'Moves the window 16px to the right', 'Shift+ArrowUp, Shift+ArrowRight': 'Moves the window 64px' } },
+    };
+    expect(shiftMovesFurther(win, 'Shift+ArrowRight')).toBe(true);
+    expect(shiftMovesFurther(win, 'ArrowRight')).toBe(false);
+    expect(shiftMovesFurther({ ...win, a11y: { keys: { ArrowUp: 'Moves up', 'Shift+ArrowUp': 'Moves further up' } } }, 'Shift+ArrowUp')).toBe(true);
+    expect(shiftMovesFurther({ ...win, a11y: { keys: { ArrowUp: 'Moves up 16px', 'Shift+ArrowUp': 'Moves up 16px' } } }, 'Shift+ArrowUp')).toBe(false);
   });
 });

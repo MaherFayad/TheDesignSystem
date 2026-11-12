@@ -2,7 +2,7 @@
 // The in-page scans on a small DOM. Layout based functions (target size,
 // reflow) need a real browser and run only in the Playwright suite.
 import { beforeEach, describe, expect, it } from 'vitest';
-import { freshOpen, markSeen, markTarget, scanAnatomy, scanDisabled, scanStates, scanVariants, staticDataState } from './page';
+import { closingDone, freshOpen, keySnapshot, markClosing, markFocusedRoot, movingRootBox, markSeen, markTarget, scanAnatomy, scanDisabled, scanStates, scanVariants, staticDataState } from './page';
 
 beforeEach(() => {
   document.body.innerHTML = `
@@ -120,5 +120,36 @@ describe('overlays: roots a trigger adds', () => {
   it('flags a static example that stamps data-state', () => {
     document.body.innerHTML = '<section data-demo-case="one"><div data-ds="toast" data-state="open"></div><div data-ds="toast"></div></section>';
     expect(staticDataState('toast')).toEqual(['div[data-ds=toast][data-state=open] in case one']);
+  });
+});
+
+describe('moves and closes fixtures', () => {
+  it('a root that does not move fails the moves check', async () => {
+    const { moveFinding } = await import('./lib');
+    document.body.innerHTML = '<div data-ds="window"><div data-part="move" tabindex="0"></div></div>';
+    (document.querySelector('[data-part="move"]') as HTMLElement).focus();
+    const start = markFocusedRoot('window');
+    expect(start).toMatchObject({ x: 0, y: 0, dir: 'ltr' });
+    expect(moveFinding('ArrowRight', 'ltr', start, movingRootBox())).toMatch(/moved by x 0, y 0/);
+  });
+
+  it('closes: the root that held focus leaves or hides', () => {
+    document.body.innerHTML = '<div data-ds="window"><button>Close</button></div>';
+    expect(markClosing('window')).toBe(false);
+    document.querySelector('button')!.focus();
+    expect(markClosing('window')).toBe(true);
+    expect(closingDone()).toBe(false);
+    document.querySelector('[data-ds="window"]')!.setAttribute('data-state', 'closed');
+    expect(closingDone()).toBe(true);
+    document.body.innerHTML = '';
+    expect(closingDone()).toBe(true);
+  });
+
+  it('state-changes sees a boolean state the manifest lists', () => {
+    document.body.innerHTML = '<div data-ds="window" data-state="active"><button>Zoom</button></div>';
+    document.querySelector('button')!.focus();
+    const before = keySnapshot({ kebab: 'window', attrs: ['data-zoomed'] });
+    document.querySelector('[data-ds="window"]')!.setAttribute('data-zoomed', '');
+    expect(keySnapshot({ kebab: 'window', attrs: ['data-zoomed'] }).states).not.toBe(before.states);
   });
 });

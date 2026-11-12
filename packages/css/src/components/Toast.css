@@ -211,8 +211,14 @@
     font-weight: var(--ds-font-weight-medium);
   }
 
+  /*
+   * Inline, not inline-block, and with no space before it in the markup: the
+   * line can break before the title's last word but not between that word
+   * and the badge, so the badge never wraps onto a line alone.
+   */
   [data-ds='toast'] > [data-part='title'] > [data-part='count'] {
-    display: inline-block;
+    display: inline;
+    white-space: nowrap;
     margin-inline-start: var(--ds-space-xs);
     padding-inline: var(--ds-space-2xs);
     border-radius: var(--ds-radius-sm);

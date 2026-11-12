@@ -14,8 +14,7 @@
  */
 @layer ds.base {
   [data-ds='title-bar'] {
-    /* Token gap: no title bar height token; one md control plus a 2xs step is the source 36px. */
-    --_title-bar-height: calc(var(--ds-size-control-md) + var(--ds-space-2xs));
+    --_title-bar-height: var(--ds-title-bar-height);
     --_title-bar-padding-inline: var(--ds-space-l);
     --_title-bar-gap: var(--ds-space-l);
     --_title-bar-bg: transparent;

@@ -9,7 +9,6 @@ export {
   DsDialogLayer,
   DsDialogTitle,
   DsDialogTrigger,
-  initialFocus,
   type DialogSize,
   type DialogTone,
 } from './dialog';

@@ -20,8 +20,6 @@ export const RAW_COLOR_ALLOW: readonly AllowEntry[] = [];
 export const RAW_VALUE_ALLOW: readonly AllowEntry[] = [
   // Order 1.0.a made conditions strict. Dialog.css (owned by another order)
   // writes the literal without the breakpoint comment; order 1.0.b adds it.
-  { key: 'packages/css/src/components/Dialog.css|@media (width < 30rem)|@media|30rem', reason: 'breakpoint comment pending, order 1.0.b' },
-  { key: 'packages/css/src/components/Dialog.css|@media (height < 30rem)|@media|30rem', reason: 'breakpoint comment pending, order 1.0.b' },
 ];
 
 export const BUTTON_PRIMITIVE_ALLOW: readonly AllowEntry[] = [];

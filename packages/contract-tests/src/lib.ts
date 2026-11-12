@@ -7,7 +7,7 @@ import { join } from 'node:path';
 export type Framework = 'react' | 'angular' | 'native';
 
 /** What a contract.keys entry asks the suite to check after one key press. */
-export type KeyExpect = 'focus-moves' | 'value-changes' | 'state-changes' | 'click' | 'closes';
+export type KeyExpect = 'focus-moves' | 'value-changes' | 'state-changes' | 'click' | 'closes' | 'moves';
 
 export interface KeyHint {
   /** A selector inside the demo to focus first. Default: the first enabled root, or its first tab stop. */
@@ -413,4 +413,64 @@ export function formatAxe(violations: AxeViolation[], owners: Record<string, str
     }
   }
   return out;
+}
+
+/** A box as getBoundingClientRect gives it. */
+export interface Box {
+  x: number;
+  y: number;
+}
+
+/**
+ * The direction an arrow key names, as a screen vector: x +1 is toward the
+ * inline end in the reading direction (to the right in ltr, to the left in
+ * rtl), y +1 is down. Shift and other modifiers do not change it. Undefined
+ * for a key that names no direction.
+ */
+export function moveDirection(key: string, dir: 'ltr' | 'rtl'): { dx: number; dy: number } | undefined {
+  const base = key.split('+').pop() ?? key;
+  const flip = dir === 'rtl' ? -1 : 1;
+  if (base === 'ArrowRight') return { dx: flip, dy: 0 };
+  if (base === 'ArrowLeft') return { dx: -flip, dy: 0 };
+  if (base === 'ArrowUp') return { dx: 0, dy: -1 };
+  if (base === 'ArrowDown') return { dx: 0, dy: 1 };
+  return undefined;
+}
+
+/** How far the box moved along the key's direction, in px (negative: the wrong way). */
+export function moveDistance(key: string, dir: 'ltr' | 'rtl', before: Box, after: Box): number | undefined {
+  const d = moveDirection(key, dir);
+  if (!d) return undefined;
+  return (after.x - before.x) * d.dx + (after.y - before.y) * d.dy;
+}
+
+/**
+ * The `moves` expectation: the focused root's box moved at least 1px in the
+ * direction the key names. Returns a failure, or null when it passes.
+ */
+export function moveFinding(key: string, dir: 'ltr' | 'rtl', before: Box | null, after: Box | null): string | null {
+  if (!before) return `${key}: expected moves, but focus is not in a root`;
+  if (!after) return `${key}: expected moves, but the root left the page`;
+  const dist = moveDistance(key, dir, before, after);
+  if (dist === undefined) return `${key}: expected moves, but ${key} names no direction (use an arrow key)`;
+  const dx = Math.round((after.x - before.x) * 10) / 10;
+  const dy = Math.round((after.y - before.y) * 10) / 10;
+  if (dist < 1) return `${key}: expected the root to move ${dir === 'rtl' && key.includes('Arrow') && /Left|Right/.test(key) ? '(rtl) ' : ''}in the key's direction, it moved by x ${dx}, y ${dy}`;
+  return null;
+}
+
+/**
+ * True when the keyboard map says the Shift form of an arrow moves further
+ * than the plain arrow: the entry for the Shift key names a larger px number
+ * than the plain entry, or says "further".
+ */
+export function shiftMovesFurther(m: Manifest, key: string): boolean {
+  if (!key.startsWith('Shift+')) return false;
+  const plain = key.slice('Shift+'.length);
+  const entries = Object.entries(m.a11y?.keys ?? {});
+  const shiftText = entries.find(([k]) => splitKeys(k).includes(key))?.[1] ?? '';
+  const plainText = entries.find(([k]) => splitKeys(k).includes(plain))?.[1] ?? '';
+  if (/\bfurther\b/i.test(shiftText)) return true;
+  const px = (t: string) => Number(/(\d+(?:\.\d+)?)\s*px/.exec(t)?.[1] ?? NaN);
+  return px(shiftText) > px(plainText);
 }

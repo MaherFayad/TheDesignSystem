@@ -19,9 +19,12 @@ import {
   kebabCase,
   keyCheckFor,
   loadManifests,
+  moveDistance,
+  moveFinding,
   opensAndCloses,
   optionalParts,
   readyComponents,
+  shiftMovesFurther,
   splitKeys,
   stateFindings,
   trapsFocus,
@@ -29,6 +32,7 @@ import {
   variantFindings,
   type Axes,
   type AxeViolation,
+  type Box,
   type KeyHint,
   type Manifest,
 } from './lib';
@@ -37,6 +41,10 @@ import {
   clickCount,
   focusState,
   keySnapshot,
+  markClosing,
+  closingDone,
+  markFocusedRoot,
+  movingRootBox,
   listenClicks,
   markTarget,
   freshOpen,
@@ -167,7 +175,7 @@ async function runAxe(page: Page, m: Manifest): Promise<string[]> {
   return formatAxe(violations, owners);
 }
 
-async function checkHint(page: Page, kebab: string, key: string, hint: KeyHint, failures: string[]): Promise<void> {
+async function checkHint(page: Page, m: Manifest, kebab: string, key: string, hint: KeyHint, failures: string[]): Promise<void> {
   const scope = hint.case ? `[data-demo-case="${hint.case}"]` : undefined;
   if (hint.focus) {
     const sel = scope ? `${scope} ${hint.focus}` : hint.focus;
@@ -186,12 +194,28 @@ async function checkHint(page: Page, kebab: string, key: string, hint: KeyHint, 
     }
     await page.locator('[data-contract-stop]').first().focus();
   }
+  if (hint.expect === 'moves') {
+    await checkMoves(page, m, kebab, key, failures);
+    return;
+  }
   if (hint.expect === 'click') await page.evaluate(listenClicks);
-  const before = await page.evaluate(keySnapshot, kebab);
+  const snapArg = { kebab, attrs: booleanStates(m) };
+  const before = await page.evaluate(keySnapshot, snapArg);
   const openBefore = await page.evaluate(openRoots, kebab);
+  const closing = hint.expect === 'closes' ? await page.evaluate(markClosing, kebab) : false;
   await page.keyboard.press(key);
+  if (hint.expect === 'closes') {
+    // Closed: the root that held focus left the page, hid, or says closed; or every open root closed.
+    const closed = await expect
+      .poll(async () => (closing && (await page.evaluate(closingDone))) || (openBefore > 0 && (await page.evaluate(openRoots, kebab)) === 0), { timeout: 3_000 })
+      .toBe(true)
+      .then(() => true)
+      .catch(() => false);
+    if (!closed) failures.push(`${key}: expected closes, the root stays open`);
+    return;
+  }
   await page.waitForTimeout(100);
-  const after = await page.evaluate(keySnapshot, kebab);
+  const after = await page.evaluate(keySnapshot, snapArg);
   const ok =
     hint.expect === 'focus-moves'
       ? after.active !== before.active
@@ -199,10 +223,52 @@ async function checkHint(page: Page, kebab: string, key: string, hint: KeyHint, 
         ? after.value !== before.value
         : hint.expect === 'state-changes'
           ? after.states !== before.states
-          : hint.expect === 'click'
-            ? (await page.evaluate(clickCount)) > 0
-            : openBefore > 0 && (await page.evaluate(openRoots, kebab)) === 0;
+          : (await page.evaluate(clickCount)) > 0;
   if (!ok) failures.push(`${key}: expected ${hint.expect}, nothing changed`);
+}
+
+/** Presses `key` and waits up to 1.5s for the marked root to move; returns the box after. */
+async function pressAndMove(page: Page, key: string, dir: 'ltr' | 'rtl', from: Box): Promise<Box | null> {
+  await page.keyboard.press(key);
+  let box: Box | null = null;
+  await expect
+    .poll(
+      async () => {
+        box = await page.evaluate(movingRootBox);
+        return moveFinding(key, dir, from, box);
+      },
+      { timeout: 1_500 },
+    )
+    .toBeNull()
+    .catch(() => undefined);
+  return box;
+}
+
+/**
+ * The `moves` expectation: the root that holds focus moves at least 1px in
+ * the direction the key names (inline end for ArrowRight, flipped in rtl).
+ * For a Shift arrow, when the keyboard map says Shift moves further, the
+ * Shift press must move further than the plain arrow from the same place.
+ */
+async function checkMoves(page: Page, m: Manifest, kebab: string, key: string, failures: string[]): Promise<void> {
+  const start = await page.evaluate(markFocusedRoot, kebab);
+  if (!start) {
+    failures.push(`${key}: expected moves, but focus is not in a [data-ds=${kebab}]`);
+    return;
+  }
+  const after = await pressAndMove(page, key, start.dir, start);
+  const finding = moveFinding(key, start.dir, start, after);
+  if (finding) {
+    failures.push(finding);
+    return;
+  }
+  if (shiftMovesFurther(m, key) && after) {
+    const plain = key.slice('Shift+'.length);
+    const shiftDist = moveDistance(key, start.dir, start, after) ?? 0;
+    const plainAfter = await pressAndMove(page, plain, start.dir, after);
+    const plainDist = plainAfter ? (moveDistance(plain, start.dir, after, plainAfter) ?? 0) : 0;
+    if (!(shiftDist > plainDist)) failures.push(`${key}: moved ${Math.round(shiftDist)}px, not further than ${plain} (${Math.round(plainDist)}px), but the keyboard map says Shift moves further`);
+  }
 }
 
 /**
@@ -425,7 +491,7 @@ for (const m of components) {
 
       const hint = m.contract?.keys?.[key];
       if (check === 'hint' && hint) {
-        await checkHint(page, kebab, key, hint, failures);
+        await checkHint(page, m, kebab, key, hint, failures);
         continue;
       }
       note(`${key}: not checked, no generic check fits and no contract.keys hint`);

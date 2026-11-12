@@ -1,3 +1,4 @@
+import { readFileSync } from 'node:fs';
 import { describe, expect, it, vi } from 'vitest';
 import {
   animateWindow,
@@ -10,6 +11,7 @@ import {
   windowMinimize,
   windowMotionFor,
   windowZoom,
+  WINDOW_REST_SCALE,
 } from './window';
 
 const trigger = { x: 20, y: 30, width: 100, height: 40 };
@@ -52,7 +54,7 @@ describe('window patterns', () => {
 
   it('zoom is a FLIP from the old frame, and nothing when reduced', () => {
     const spec = windowZoom({ from: trigger, to: win });
-    expect(spec.duration).toBe('duration.zoom');
+    expect(spec.duration).toBe('duration.window-zoom');
     expect(spec.keyframes[0]?.transform).toBe(between(trigger, win));
     expect(windowZoom({ from: trigger, to: win, reduced: true }).keyframes).toEqual([]);
   });
@@ -116,5 +118,19 @@ describe('web helper', () => {
     await expect(settled(null)).resolves.toBeUndefined();
     await expect(settled({ finished: Promise.resolve() } as unknown as Animation)).resolves.toBeUndefined();
     await expect(settled({ finished: Promise.reject(new Error('AbortError')) } as unknown as Animation)).resolves.toBeUndefined();
+  });
+});
+
+describe('window motion tokens', () => {
+  it('WINDOW_REST_SCALE equals the token scale.window-enter', () => {
+    const json = JSON.parse(readFileSync(new URL('../../tokens/src/base/scale.json', import.meta.url), 'utf8')) as {
+      scale: Record<string, { $value: number }>;
+    };
+    expect(WINDOW_REST_SCALE).toBe(json.scale['window-enter']?.$value);
+  });
+
+  it('minimize and zoom read their own duration tokens', () => {
+    expect(windowMinimize({ from: win, to: trigger }).duration).toBe('duration.window-minimize');
+    expect(windowZoom({ from: trigger, to: win }).duration).toBe('duration.window-zoom');
   });
 });

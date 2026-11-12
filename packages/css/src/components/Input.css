@@ -71,9 +71,14 @@
     position: relative;
   }
 
+  /*
+   * At xs the text would crowd the rounded end: the inline padding is at
+   * least the end radius, the smaller of the corner radius and half the
+   * height (a pill's corner is half the height).
+   */
   [data-ds='input'][data-size='xs'] {
     --_input-height: var(--ds-size-control-xs);
-    --_input-padding-inline: var(--ds-space-xs);
+    --_input-padding-inline: max(var(--ds-space-xs), min(var(--_input-radius), var(--_input-height) / 2));
     --_input-gap: var(--ds-space-2xs);
   }
 
@@ -144,6 +149,16 @@
     color: var(--ds-color-text-muted);
     white-space: nowrap;
     cursor: default;
+  }
+
+  /*
+   * Text adornments ($, USD, px) sit on the value's baseline. The control is
+   * as tall as the root, so baseline alignment does not move it. Icon
+   * adornments stay centered.
+   */
+  [data-ds='input'] > [data-part='control'],
+  [data-ds='input'] > :is([data-part='start'], [data-part='end']):not(:has(svg)) {
+    align-self: baseline;
   }
 
   /* Hover: a stronger border, only while the value can change. */

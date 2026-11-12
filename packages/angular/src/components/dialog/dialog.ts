@@ -67,13 +67,21 @@ import { DOCUMENT, NgTemplateOutlet } from '@angular/common';
 import { ComponentPortal, DomPortalOutlet } from '@angular/cdk/portal';
 import { InteractivityChecker } from '@angular/cdk/a11y';
 import { Directionality } from '@angular/cdk/bidi';
-import type { OverlaySize, Tone } from '@the-system/shared';
+import {
+  DIALOG_ACTION_SELECTOR,
+  captureFocusReturn,
+  dialogInitialFocus,
+  focusReturnTarget,
+  type FocusReturn,
+  type OverlaySize,
+  type Tone,
+} from '@the-system/shared';
 import { consumeHostAttributes } from '../../internal/host';
-import { animationsDone, hideOthers, lockScroll, shown, tabbables, wrapTab } from '../../behavior';
+import { animationsDone, hideOthers, lockScroll, tabbables, wrapTab } from '../../behavior';
 import { DsThemeScope, DsThemeService, attributesOf, syncDirectionality, themeScopeProviders } from '../../theme';
 import type { ThemeValue } from '../../theme';
 import { DsIconButton } from '../icon-button/icon-button';
-import { DsTitleBar, DsTitleBarTitle } from '../title-bar/title-bar';
+import { DsTitleBar } from '../title-bar/title-bar';
 import { DsWindowControls } from '../window-controls/window-controls';
 
 export type DialogSize = Extract<OverlaySize, 'sm' | 'md' | 'lg' | 'xl' | '2xl'>;
@@ -235,53 +243,8 @@ export class DsDialogFooter {
 
 // ------------------------------------------------------------------ focus rule
 
-const FIELD = 'input:not([type="hidden"]), select, textarea';
-const ACTION = 'button, a[href], [tabindex]:not([tabindex="-1"])';
-
-function usable(el: Element): el is HTMLElement {
-  if (!(el instanceof HTMLElement)) return false;
-  if (el.matches(':disabled')) return false;
-  return shown(el);
-}
-
-function first(scope: Element | null, selector: string, enabledOnly = false): HTMLElement | null {
-  if (!scope) return null;
-  for (const el of Array.from(scope.querySelectorAll(selector))) {
-    if (!usable(el)) continue;
-    if (enabledOnly && el.getAttribute('aria-disabled') === 'true') continue;
-    return el;
-  }
-  return null;
-}
-
-/**
- * The focus rule (manifest a11y.focus): an element marked data-autofocus;
- * else the first field in the body; else the first footer action that is
- * not tone danger, and in a danger dialog the Cancel action (dsDialogClose)
- * first and never a tone danger action; else the close control. Null: the
- * first tab stop, else the panel.
- */
-export function initialFocus(panel: HTMLElement, tone: DialogTone): HTMLElement | null {
-  const mine = (el: Element | null) => el !== null && el.closest('[data-part="panel"]') === panel;
-  const marked = first(panel, '[data-autofocus]');
-  if (marked) return marked;
-  const body = Array.from(panel.querySelectorAll('[data-part="body"]')).find(mine) ?? null;
-  const field = first(body, FIELD);
-  if (field) return field;
-  const footer = Array.from(panel.querySelectorAll('[data-part="footer"]')).find(mine) ?? null;
-  // Never a destructive action first: footer actions with tone danger are skipped.
-  const safe = first(footer, `:is(${ACTION}):not([data-tone="danger"])`, true);
-  if (tone === 'danger') {
-    // The Cancel action, else a footer action that is not tone danger.
-    const cancel = first(panel, '[data-dialog-cancel]') ?? safe;
-    if (cancel) return cancel;
-  } else {
-    const action = safe ?? first(footer, ACTION, true) ?? first(footer, ACTION);
-    if (action) return action;
-  }
-  const close = Array.from(panel.querySelectorAll<HTMLElement>('[data-part="close"]')).find(usable);
-  return close ?? null;
-}
+// The focus rule and the focus return come from packages/shared
+// (dialog-focus.ts), the same code React runs.
 
 /** Development only: says what a dialog is missing when it opens. */
 function warnInDev(panel: HTMLElement): void {
@@ -291,7 +254,7 @@ function warnInDev(panel: HTMLElement): void {
     panel.querySelector('[data-part="title"]:not(:empty), [data-dialog-title]:not(:empty)') !== null;
   if (!named) console.warn('Dialog: opened with no title. Use the title input of dsDialogContent, or a dsDialogTitle.');
   const footer = Array.from(panel.querySelectorAll('[data-part="footer"]')).find((el) => el.closest('[data-part="panel"]') === panel);
-  const actions = footer ? footer.querySelectorAll(ACTION).length : 0;
+  const actions = footer ? footer.querySelectorAll(DIALOG_ACTION_SELECTOR).length : 0;
   if (actions > 3) console.warn(`Dialog: the footer holds ${actions} actions. Keep it to three at most.`);
 }
 
@@ -314,7 +277,7 @@ const stack: DsDialogLayer[] = [];
  */
 @Component({
   selector: 'div[data-dialog-layer]',
-  imports: [NgTemplateOutlet, DsIconButton, DsTitleBar, DsTitleBarTitle, DsWindowControls],
+  imports: [NgTemplateOutlet, DsIconButton, DsTitleBar, DsWindowControls],
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: themeScopeProviders(() => new DsThemeScope(inject(DIALOG_LAYER).theme)),
   host: {
@@ -337,12 +300,9 @@ const stack: DsDialogLayer[] = [];
         [attr.aria-describedby]="hasDescription() ? dialog.descriptionId : null">
         @if (titlebarOn()) {
           <div dsTitleBar data-part="titlebar" [as]="content.title() !== undefined ? 'h2' : 'div'"
+            [title]="content.title() !== undefined ? barTitle : undefined"
             [controls]="controlsOn() ? lights : undefined"
-            [actions]="controlsOn() ? undefined : closeButton">
-            @if (content.title() !== undefined) {
-              <ng-template dsTitleBarTitle><span data-dialog-title [id]="dialog.titleId">{{ content.title() }}</span></ng-template>
-            }
-          </div>
+            [actions]="controlsOn() ? undefined : closeButton"></div>
         } @else {
           @if (content.title() !== undefined) {
             <h2 [id]="dialog.titleId" data-part="title">{{ content.title() }}</h2>
@@ -355,6 +315,7 @@ const stack: DsDialogLayer[] = [];
         <ng-container [ngTemplateOutlet]="content.template" />
       </div>
     </div>
+    <ng-template #barTitle><span data-dialog-title [id]="dialog.titleId">{{ content.title() }}</span></ng-template>
     <ng-template #lights>
       <div dsWindowControls [label]="content.controlsLabel() ?? words().controls" [closeLabel]="closeName()"
         [minimizeLabel]="words().minimize" [zoomLabel]="words().zoom"
@@ -434,7 +395,7 @@ export class DsDialogLayer {
   focusInitial(): void {
     const panel = this.panel().nativeElement;
     warnInDev(panel);
-    const target = initialFocus(panel, this.dialog.tone()) ?? tabbables(panel, this.checker)[0] ?? panel;
+    const target = dialogInitialFocus(panel, this.dialog.tone()) ?? tabbables(panel, this.checker)[0] ?? panel;
     target.focus();
   }
 
@@ -482,7 +443,8 @@ export class DsDialogContent {
   private outlet: DomPortalOutlet | null = null;
   private layer: DsDialogLayer | null = null;
   private undo: (() => void)[] = [];
-  private returnTo: HTMLElement | null = null;
+  /** Where focus goes back, captured on open (shared dialog-focus.ts). */
+  private returnTo: { active: FocusReturn; trigger: FocusReturn } | null = null;
   private generation = 0;
 
   constructor() {
@@ -500,8 +462,10 @@ export class DsDialogContent {
       this.layer.closing.set(false);
       return;
     }
-    const active = this.doc.activeElement;
-    this.returnTo = active instanceof HTMLElement && active !== this.doc.body ? active : null;
+    this.returnTo = {
+      active: captureFocusReturn(this.doc.activeElement),
+      trigger: captureFocusReturn(this.dialog.trigger),
+    };
 
     // Every axis of the theme the dialog is opened in, copied onto the portal.
     const theme = this.theme.value;
@@ -556,9 +520,16 @@ export class DsDialogContent {
     this.layer = null;
     if (!returnFocus) return;
     // Back to the trigger, else to what had focus before the dialog opened.
+    // When that is gone too: its nearest connected focusable ancestor, else
+    // the first tab stop of main, else the body (focusReturnTarget).
     const trigger = this.dialog.trigger;
-    const target = trigger?.isConnected ? trigger : this.returnTo;
+    const memo = this.returnTo;
     this.returnTo = null;
+    const target = trigger?.isConnected
+      ? trigger
+      : memo
+        ? focusReturnTarget(memo.active.target ? memo.active : memo.trigger, this.doc)
+        : null;
     if (target?.isConnected) target.focus();
   }
 }
