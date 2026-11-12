@@ -72,6 +72,33 @@ No adb. No iOS build.
 | 1.20 | Gate 1 report | lead | all | open | |
 | 1.21 | Interaction round | ds-style, ds-component | all | open | |
 
+## Cloud sessions (lanes on their own branches)
+Each was started from `claude/relaxed-hypatia-7gseap` with the brief in
+`docs/plan/lane-session-brief.md`, runs as claude-opus-5-5 at medium, pushes
+to its own branch and writes `docs/reports/lanes/<lane id>.md`. The lead
+checks them with get_session and list_events, then merges: fetch the branch,
+merge, run `npm run gen`, `npm run check`, the contract suite for the new
+components, a fresh review, then commit.
+
+| Lane | Components | Branch | Session | Status |
+| --- | --- | --- | --- | --- |
+| 5A | Alert, Callout, Banner | claude/ds-lane-5a | session_01ErLBsbefnDBtEpkCj3GvTS | running |
+| 5B | Spinner, ProgressBar, ProgressCircle, Meter | claude/ds-lane-5b | session_01ErLBsbQkcpmsu3TmHi5rBc | running |
+| 5C | StatusDot, Skeleton, ErrorState, NotificationCenter | claude/ds-lane-5c | session_01ErLBscJqT26iQKYXWfvW2v | running |
+| 8A | Stack, Grid, Container, AspectRatio, Separator | claude/ds-lane-8a | session_01ErLBsatk6FvhTqt28raxGW | running |
+| 8B | Surface, Section, Bento | claude/ds-lane-8b | session_01ErLBsaksJtMzavzrmJEa6t | running |
+| 8C | ScrollArea, ResizablePanels, SplitView, PageShell | claude/ds-lane-8c | session_01ErLBsa8BSXjHaR4V3oZ3Ey | running |
+| 9A | Avatar, AvatarGroup, Badge, Chip | claude/ds-lane-9a | session_01ErLBsdSNQd8GYQXKyPnFtx | running |
+| 9B | Kbd, Stat, DescriptionList, List | claude/ds-lane-9b | session_01ErLBsbn61TreoYiaJyiVHH | running |
+| 9C | Card, Tile, Accordion, EmptyState | claude/ds-lane-9c | session_01ErLBsckjBZHg8VUHK6mfMB | running |
+| 6B | Popover, Tooltip, HoverCard, Tour | claude/ds-lane-6b | session_01ErLBscFPqJJ34KeEwkLV3n | running |
+| 3A | Checkbox, CheckboxGroup, Switch, Slider, RangeSlider | claude/ds-lane-3a | session_01ErLBsa24qpzHgQodUJrTe8 | running |
+| 3B | RadioGroup, RadioCard, Rating | claude/ds-lane-3b | session_01ErLBsdLpnMMa2v2FtGkhme | running |
+| 1.11 | Motion catalog | claude/ds-order-1-11 | session_01ErLBscxhmd1nrS2SH4V1nU | running |
+
+Local subagents in the lead's tree: lane 1B (Link, ButtonGroup), lane 1C
+(DropdownMenu), 1.10 Neutral, 1.12 checker.
+
 ## Coverage
 | Family | React | Angular | Native |
 | --- | --- | --- | --- |
