@@ -93,7 +93,23 @@ describe('SearchField', () => {
     expect(root(container).hasAttribute('data-loading')).toBe(true);
     expect(container.querySelector('[data-part="end"] [data-part="spinner"]')).not.toBeNull();
     expect(screen.getByRole('status').textContent).toBe('Searching boards');
-    expect(screen.getByRole('searchbox').getAttribute('aria-busy')).toBe('true');
+  });
+
+  it('keeps the end content while loading, after the spinner', () => {
+    const { container } = render(<SearchField aria-label="Search" loading end={<button type="button">Filter</button>} />);
+    const end = container.querySelector('[data-part="end"]');
+    expect(end?.children[0]?.getAttribute('data-part')).toBe('spinner');
+    expect(end?.textContent).toBe('Filter');
+  });
+
+  it('ignores Enter and Escape that end an IME composition', () => {
+    const onSubmit = vi.fn();
+    render(<SearchField aria-label="Search" defaultValue="كلمة" onSubmit={onSubmit} />);
+    const input = screen.getByRole('searchbox') as HTMLInputElement;
+    fireEvent.keyDown(input, { key: 'Enter', keyCode: 229 });
+    fireEvent.keyDown(input, { key: 'Escape', keyCode: 229 });
+    expect(onSubmit).not.toHaveBeenCalled();
+    expect(input.value).toBe('كلمة');
   });
 
   it('follows the Field and hides clear while disabled or read only', () => {

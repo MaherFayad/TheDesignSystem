@@ -32,7 +32,6 @@
     "end": {
       "accepts": [
         "IconButton",
-        "Kbd",
         "text"
       ],
       "max": 1
@@ -86,7 +85,7 @@
     "loading": {
       "type": "boolean",
       "default": false,
-      "description": "Results are on their way: a spinner in the end slot, aria-busy on the input and a polite status."
+      "description": "Results are on their way: a spinner at the start of the end slot and a polite status. The end content stays, so a focused end button keeps focus."
     },
     "loadingLabel": {
       "type": "string",
@@ -95,7 +94,7 @@
     },
     "end": {
       "type": "node",
-      "description": "Content after the clear button: a filter IconButton at size xs, a keyboard hint. Replaced by the spinner while loading."
+      "description": "Content after the clear button: a filter IconButton at size xs, or a keyboard hint (Kbd, once that component lands). The spinner shows before it while loading."
     },
     "invalid": {
       "type": "boolean",
@@ -128,21 +127,21 @@
       "Tab": "Moves focus to the input, then to the clear button and the end content",
       "Shift+Tab": "Moves focus back",
       "Escape": "Clears the query. On an empty box it does nothing here and bubbles, so a dialog or a menu around it closes",
-      "Enter": "Calls onSubmit with the query; a form around it submits"
+      "Enter": "Calls onSubmit with the query; a form around it submits. An Enter that ends an IME composition does nothing"
     },
-    "announce": "Name from the Field label or aria-label. While loading, a polite status says the loading label once, and the input is aria-busy. The clear button is named by clearLabel.",
+    "announce": "Name from the Field label or aria-label. While loading, a polite status says the loading label once. The clear button is named by clearLabel.",
     "native": {
       "accessibilityRole": "search",
       "accessibilityState": [
-        "disabled",
-        "busy"
+        "disabled"
       ]
     },
     "notes": [
       "The browser's own clear button is hidden, so only one clear button shows.",
       "No native title attribute. A placeholder says what is searched, never instead of a name.",
       "Results that update as the person types: announce the count in a polite status of the page, after typing pauses, not on every key.",
-      "The clear part is an IconButton until CloseButton (order 1.1.9) lands; the part name stays clear."
+      "The clear part is an IconButton until CloseButton (order 1.1.9) lands; the part name stays clear.",
+      "The control part is the nested Input root; the native input inside it is that Input's own control part."
     ]
   },
   "content": {
@@ -156,7 +155,7 @@
       "label": "البحث في اللوحات، البحث في الأعضاء",
       "placeholder": "ابحث بالاسم أو البريد",
       "clearLabel": "مسح البحث",
-      "loadingLabel": "جار البحث"
+      "loadingLabel": "جاري البحث"
     }
   },
   "tokens": [

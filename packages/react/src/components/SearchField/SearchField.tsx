@@ -48,9 +48,9 @@ export interface SearchFieldProps
   onClear?: () => void;
   /** The accessible name of the clear button. Default "Clear search". Arabic: "مسح البحث". */
   clearLabel?: string;
-  /** Results are on their way: a spinner in the end slot and a polite status. */
+  /** Results are on their way: a spinner at the start of the end slot and a polite status. */
   loading?: boolean;
-  /** What the status says while loading. Default "Searching". Arabic: "جار البحث". */
+  /** What the status says while loading. Default "Searching". Arabic: "جاري البحث". */
   loadingLabel?: string;
   /** Content at the end of the box, after the clear button: a filter IconButton, a keyboard hint. */
   end?: ReactNode;
@@ -139,12 +139,15 @@ export function SearchField({
   const onInputKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
     onKeyDown?.(event);
     if (event.defaultPrevented) return;
+    // A key that ends an IME composition (keyCode 229 in Safari) is not a command.
+    const composing = event.nativeEvent.isComposing || event.keyCode === 229;
+    if (composing) return;
     if (event.key === 'Escape' && !empty && !isReadOnly) {
       // The first Escape clears. It stops here, so a dialog around the field stays open.
       event.preventDefault();
       event.stopPropagation();
       clear();
-    } else if (event.key === 'Enter' && !event.nativeEvent.isComposing) {
+    } else if (event.key === 'Enter') {
       onSubmit?.(query);
     }
   };
@@ -195,7 +198,6 @@ export function SearchField({
         invalid={invalid}
         disabled={disabled}
         readOnly={readOnly}
-        aria-busy={loading || undefined}
         rootProps={{ 'data-part': 'control' } as ComponentProps<'div'>}
       />
       {!empty && !isDisabled && !isReadOnly && (
@@ -203,7 +205,9 @@ export function SearchField({
       )}
       {(loading || hasEnd) && (
         <span data-part="end">
-          {loading ? <span data-part="spinner" aria-hidden="true" /> : end}
+          {/* The spinner goes before the end content, never in its place, so a focused end button keeps focus. */}
+          {loading && <span data-part="spinner" aria-hidden="true" />}
+          {end}
         </span>
       )}
       <span data-part="status" role="status">

@@ -130,7 +130,11 @@
     opacity: 1;
   }
 
-  /* One clear button: the browser's own is hidden. */
+  /* No native search look (Safari pads it), and one clear button: the browser's own is hidden. */
+  [data-ds='search-field'] > [data-ds='input'] > [data-part='control'] {
+    appearance: none;
+  }
+
   [data-ds='search-field'] > [data-ds='input'] > [data-part='control']::-webkit-search-cancel-button,
   [data-ds='search-field'] > [data-ds='input'] > [data-part='control']::-webkit-search-decoration {
     appearance: none;
@@ -240,6 +244,12 @@
 
     [data-ds='search-field'] > [data-ds='input'][data-part='control'] {
       outline-style: none;
+    }
+
+    /* The system colors every border alike, so the strong quarter gets its own color to show the turn. */
+    [data-ds='search-field'] > [data-part='end'] > [data-part='spinner'] {
+      border-color: GrayText;
+      border-block-start-color: CanvasText;
     }
 
     [data-ds='search-field'][data-disabled] {
