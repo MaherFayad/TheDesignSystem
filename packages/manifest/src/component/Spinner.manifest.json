@@ -94,7 +94,10 @@
       "note": "Motion: the spinner pattern from the 1.11 catalog list, today a CSS rotate keyframe on duration.spin, none under reduced motion."
     },
     "angular": {
-      "status": "planned"
+      "status": "ready",
+      "behavior": "span[dsSpinner], hand built, role status",
+      "example": "spinner.demo.ts",
+      "note": "The host element is the root. Inputs take the React prop names. React types label and decorative as a union; Angular cannot, so a labelled spinner without a label warns in development. Spinner.css is used as is."
     },
     "native": {
       "status": "planned",
