@@ -28,7 +28,12 @@
 //   again, so nothing runs on every scroll frame.
 // - Enter or a click scrolls to the heading (smooth, or a jump under reduced
 //   motion), moves focus to it (tabindex -1 only when it is not focusable)
-//   and sets the URL fragment without a second jump.
+//   and sets the URL fragment with history.pushState, so there is no second
+//   jump (and no hashchange event). While that scroll plays, the sections
+//   passed on the way are not marked; scrollend lifts the hold.
+// - A heading counts as reached at the reading line: offset plus a fifth of
+//   the viewport, at most 64px. The observer watches that line; scrollend
+//   also measures, which marks the last section at the bottom of the page.
 // - The indicator moves with transform only (pattern "tab-indicator"); its
 //   length is set at once. Under reduced motion the duration token is 0ms.
 import {
@@ -120,6 +125,10 @@ export function TableOfContents({
   useEffect(() => {
     changeRef.current = onActiveChange;
   });
+  // Set while a link's scroll plays: the sections passed on the way are not marked.
+  const lockRef = useRef<string | null>(null);
+  // Bumped when the list resizes, so the indicator is measured again.
+  const [layoutTick, setLayoutTick] = useState(0);
 
   const lastRef = useRef<string | null>(tracked);
   const setActive = useCallback((id: string | null) => {
@@ -131,6 +140,14 @@ export function TableOfContents({
 
   const ids = useMemo(() => items.map((i) => i.id).join(' '), [items]);
 
+  // New headings: start from the fragment of the URL when it names one, else the first.
+  useEffect(() => {
+    const view = rootRef.current?.ownerDocument.defaultView;
+    const list = ids ? ids.split(' ') : [];
+    const fromHash = view ? decodeURIComponent(view.location.hash.slice(1)) : '';
+    setActive(list.includes(fromHash) ? fromHash : (list[0] ?? null));
+  }, [ids, setActive]);
+
   // Track the section in view. The observer only says "measure again"; activeHeading decides.
   useEffect(() => {
     const doc = rootRef.current?.ownerDocument;
@@ -141,30 +158,51 @@ export function TableOfContents({
       .map((id) => (id ? doc.getElementById(id) : null))
       .filter((el): el is HTMLElement => el !== null);
     if (headings.length === 0) return;
+    // The reading line: the offset plus a fifth of the viewport (at most 64px), so a heading just scrolled to counts as reached.
+    const line = offset + Math.min(64, Math.round(view.innerHeight / 5));
     let frame = 0;
     const measure = () => {
       frame = 0;
+      if (lockRef.current !== null) return;
       const scroller = doc.scrollingElement;
       const atEnd = scroller ? scroller.scrollTop > 0 && scroller.scrollTop + view.innerHeight >= scroller.scrollHeight - 2 : false;
       const rects = headings.map((el) => ({ id: el.id, top: el.getBoundingClientRect().top }));
-      // The reading line: the offset plus a fifth of the viewport (at most 64px), so a heading just scrolled to counts as reached.
-      setActive(activeHeading(rects, offset + Math.min(64, Math.round(view.innerHeight / 5)), atEnd));
+      setActive(activeHeading(rects, line, atEnd));
     };
     const schedule = () => {
       if (!frame) frame = view.requestAnimationFrame(measure);
     };
+    // A heading crossing the reading line fires the observer.
     const observer = new view.IntersectionObserver(schedule, {
-      rootMargin: `${-offset}px 0px 0px 0px`,
+      rootMargin: `${-line}px 0px 0px 0px`,
       threshold: [0, 1],
     });
     for (const el of headings) observer.observe(el);
+    // The end of a scroll: lifts the lock of a link jump, and catches the page bottom, where no heading crosses the line.
+    const onScrollEnd = () => {
+      lockRef.current = null;
+      schedule();
+    };
+    view.addEventListener('scrollend', onScrollEnd);
     return () => {
       observer.disconnect();
+      view.removeEventListener('scrollend', onScrollEnd);
       if (frame) view.cancelAnimationFrame(frame);
     };
   }, [ids, offset, setActive]);
 
+  // Measure again when the list resizes (wrapping, fonts loading).
+  useEffect(() => {
+    const root = rootRef.current;
+    const view = root?.ownerDocument.defaultView;
+    if (!root || !view || typeof view.ResizeObserver !== 'function') return;
+    const observer = new view.ResizeObserver(() => setLayoutTick((n) => n + 1));
+    observer.observe(root);
+    return () => observer.disconnect();
+  }, []);
+
   // Place the indicator beside the active link: transform moves it, block-size is set at once.
+  // In the sticky form, the active link is also kept in view inside the list, without scrolling the page.
   useLayoutEffect(() => {
     const root = rootRef.current;
     const bar = indicatorRef.current;
@@ -180,14 +218,36 @@ export function TableOfContents({
     const box = link.getBoundingClientRect();
     bar.style.setProperty('--_toc-indicator-offset', `${box.top - rootBox.top + root.scrollTop}px`);
     bar.style.setProperty('--_toc-indicator-size', `${box.height}px`);
-  }, [active, tree]);
+    if (sticky && root.scrollHeight > root.clientHeight) {
+      if (box.top < rootBox.top) root.scrollTop -= rootBox.top - box.top;
+      else if (box.bottom > rootBox.bottom) root.scrollTop += box.bottom - rootBox.bottom;
+    }
+  }, [active, tree, sticky, layoutTick]);
 
   const onLinkClick = (id: string) => (event: MouseEvent<HTMLAnchorElement>) => {
     if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
-    if (!jumpTo(id, event.currentTarget.ownerDocument)) return;
+    const doc = event.currentTarget.ownerDocument;
+    // Hold the mark on the chosen section while the scroll plays; scrollend lifts it.
+    lockRef.current = id;
+    if (!jumpTo(id, doc)) {
+      lockRef.current = null;
+      return;
+    }
     event.preventDefault();
     setActive(id);
+    // A page that cannot scroll there fires no scrollend: lift the lock after the longest smooth scroll.
+    doc.defaultView?.setTimeout(() => {
+      if (lockRef.current === id) lockRef.current = null;
+    }, 1000);
   };
+
+  const setRootRef = useCallback(
+    (node: HTMLElement | null) => {
+      rootRef.current = node;
+      assignRef(ref, node);
+    },
+    [ref],
+  );
 
   const renderList = (nodes: readonly TocNode[]): ReactNode => (
     <ol data-part="list">
@@ -216,13 +276,11 @@ export function TableOfContents({
   return (
     <nav
       {...rest}
-      ref={(node: HTMLElement | null) => {
-        rootRef.current = node;
-        assignRef(ref, node);
-      }}
+      ref={setRootRef}
       data-ds="table-of-contents"
       data-size={size}
       data-sticky={sticky ? '' : undefined}
+      style={sticky && offset ? { ...rest.style, ['--_toc-sticky-offset' as string]: `calc(${offset}px + var(--ds-space-l))` } : rest.style}
       aria-labelledby={titleText === false ? rest['aria-labelledby'] : titleId}
     >
       {titleText !== false && (

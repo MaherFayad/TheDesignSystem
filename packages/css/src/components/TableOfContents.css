@@ -12,7 +12,7 @@
  *   --_toc-indent                        the inset of each nested level
  *   --_toc-rail                          the hairline the indicator runs along
  *   --_toc-indicator-bg                  the indicator bar
- *   --_toc-sticky-offset                 the gap above the sticky form
+ *   --_toc-sticky-offset                 the gap above the sticky form; the component sets it to offset plus space.l when offset is given
  *   --_toc-ring                          the focus ring, a box shadow
  *
  * The indicator offset and length (--_toc-indicator-offset, -size) are set
@@ -71,10 +71,13 @@
     max-block-size: var(--ds-dialog-height-max);
     overflow-y: auto;
     overscroll-behavior: contain;
+    /* The active link is kept in view inside the list; keep a row of room around it. */
+    scroll-padding-block: var(--ds-size-target-min);
   }
 
   [data-ds='table-of-contents'] > [data-part='title'] {
-    margin: 0 0 var(--ds-space-s);
+    margin-block: 0 var(--ds-space-s);
+    margin-inline: 0;
     color: var(--_toc-title-fg);
     font-weight: var(--ds-font-weight-semibold);
   }
@@ -169,6 +172,7 @@
 
   @media (forced-colors: active) {
     [data-ds='table-of-contents'] > [data-part='indicator'] {
+      forced-color-adjust: none;
       background-color: Highlight;
     }
 

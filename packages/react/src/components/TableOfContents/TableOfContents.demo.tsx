@@ -111,7 +111,7 @@ export default function TableOfContentsDemo() {
       </DemoCase>
 
       <DemoCase id="too-many" title="Too many: the sticky list scrolls inside">
-        <div style={{ blockSize: 'var(--ds-shell-sidebar-width-start)', display: 'grid' }}>
+        <div style={{ blockSize: 'calc(8 * var(--ds-size-control-lg))', display: 'grid' }}>
           <TableOfContents items={tooMany} sticky active="too-many-3" />
         </div>
       </DemoCase>

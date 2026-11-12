@@ -3173,7 +3173,7 @@
       "sticky": {
         "type": "boolean",
         "default": false,
-        "description": "Keeps the list in view as the page scrolls (position sticky), and scrolls inside when taller than dialog.height.max. Sets data-sticky."
+        "description": "Keeps the list in view as the page scrolls (position sticky, below offset plus space.l), scrolls inside when taller than dialog.height.max, and keeps the active link in view inside the list without scrolling the page. Sets data-sticky."
       },
       "active": {
         "type": "string | null",
@@ -3204,12 +3204,13 @@
       },
       "notes": [
         "The section in view is marked by medium weight, the indicator bar and aria-current location, never color alone (WCAG 1.4.1).",
-        "Items carry data-level (1, 2, 3 and deeper) for their nesting depth, which sets the indent.",
-        "Scrolling is smooth, and a jump under prefers-reduced-motion. The URL fragment is set without a second jump.",
+        "Items carry data-level (1, 2, 3 and deeper) for their nesting depth, which sets the indent. It is not listed under states because it holds a number, not an empty boolean.",
+        "Scrolling is smooth, and a jump under prefers-reduced-motion. The URL fragment is set with history.pushState, so there is no second jump; hashchange does not fire and :target does not update. While the scroll plays, sections passed on the way are not marked; scrollend lifts the hold.",
         "A click with a modifier key or a middle click is left to the browser.",
-        "The active section comes from activeHeading in @the-system/shared. An IntersectionObserver on the headings triggers a new measure once per frame at most; nothing runs on every scroll event.",
-        "Sticky form (WCAG 2.4.11): give the headings scroll-margin-block-start equal to any sticky page header and pass the same height as offset, so a heading never lands under the header.",
-        "Under forced colors the indicator uses Highlight and the focus outline uses Highlight."
+        "The active section comes from activeHeading in @the-system/shared at the reading line (offset plus a fifth of the viewport, at most 64px). An IntersectionObserver on that line and the scrollend event trigger a new measure, once per frame at most; nothing runs on every scroll event. A ResizeObserver keeps the indicator on its link when the list reflows.",
+        "Sticky form (WCAG 2.4.11): the list sits below offset plus space.l and keeps scroll padding around the active link. Give the headings scroll-margin-block-start equal to any sticky page header and pass the same height as offset, so a heading never lands under the header.",
+        "Under forced colors the indicator uses Highlight and the focus outline uses Highlight.",
+        "On load, the section named by the URL fragment is marked first, when there is one."
       ]
     },
     "content": {
@@ -3219,7 +3220,7 @@
       },
       "ar": {
         "title": "محتوى الصفحة, noun form, no diacritics.",
-        "labels": "The heading text as on the page. Latin terms inside go through Bidi; each link has dir auto."
+        "labels": "The heading text as on the page. Each link text has dir auto, so a Latin term or name keeps its own direction."
       }
     },
     "tokens": [

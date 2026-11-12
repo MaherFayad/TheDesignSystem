@@ -130,6 +130,65 @@ describe('TableOfContents', () => {
     expect(screen.getByRole('link', { name: 'Theming' }).getAttribute('aria-current')).toBe('location');
   });
 
+  it('holds the clicked section while the scroll plays, until scrollend', () => {
+    let callback: (() => void) | undefined;
+    vi.stubGlobal(
+      'IntersectionObserver',
+      class {
+        constructor(cb: () => void) {
+          callback = cb;
+        }
+        observe() {}
+        disconnect() {}
+      },
+    );
+    vi.stubGlobal('requestAnimationFrame', (cb: FrameRequestCallback) => {
+      cb(0);
+      return 1;
+    });
+    Element.prototype.scrollIntoView = vi.fn();
+    const onActiveChange = vi.fn();
+    render(<Page onActiveChange={onActiveChange} />);
+    const tops: Record<string, number> = { a: -100, a1: 10, b: 400 };
+    for (const id of Object.keys(tops)) {
+      document.getElementById(id)!.getBoundingClientRect = () => ({ top: tops[id] }) as DOMRect;
+    }
+    fireEvent.click(screen.getByRole('link', { name: 'Theming' }));
+    expect(onActiveChange).toHaveBeenLastCalledWith('b');
+    // On the way down, a1 crosses the line: the mark stays on b.
+    act(() => callback?.());
+    expect(onActiveChange).toHaveBeenLastCalledWith('b');
+    // The scroll ends with b at the top.
+    tops.a1 = -300;
+    tops.b = 0;
+    act(() => {
+      window.dispatchEvent(new Event('scrollend'));
+    });
+    expect(onActiveChange).toHaveBeenLastCalledWith('b');
+    expect(onActiveChange).not.toHaveBeenCalledWith('a1');
+  });
+
+  it('marks the section the URL fragment names on load, and disconnects on unmount', () => {
+    const disconnect = vi.fn();
+    vi.stubGlobal(
+      'IntersectionObserver',
+      class {
+        observe() {}
+        disconnect = disconnect;
+      },
+    );
+    window.history.replaceState(null, '', '#a1');
+    const { unmount } = render(<Page />);
+    expect(screen.getByRole('link', { name: 'Install' }).getAttribute('aria-current')).toBe('location');
+    unmount();
+    expect(disconnect).toHaveBeenCalled();
+  });
+
+  it('sets the sticky top from offset', () => {
+    const { container } = render(<Page sticky offset={56} />);
+    expect(root(container).style.getPropertyValue('--_toc-sticky-offset')).toBe('calc(56px + var(--ds-space-l))');
+  });
+
   it('sets size, sticky, a custom title, and the Arabic default title', () => {
     const { container, rerender } = render(<Page size="sm" sticky title="In this guide" />);
     expect(root(container).getAttribute('data-size')).toBe('sm');
