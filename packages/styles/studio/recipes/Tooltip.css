@@ -1,0 +1,31 @@
+/*
+ * Studio recipe for Tooltip (order 1.24, proposed): a small flat inverted
+ * chip, light on dark and dark on light, square, no arrow, no shadow. It
+ * appears by an opacity step in place. The inverted colors come from the
+ * text and body tokens, so the text keeps the body text contrast. Colors
+ * swap only where forced colors are off.
+ */
+@layer ds.recipes {
+  [data-style='studio'] [data-ds='tooltip'] {
+    --_tooltip-radius: var(--ds-radius-xs);
+    --_tooltip-shadow: none;
+    --_tooltip-blur: 0;
+    --_tooltip-padding-block: var(--ds-space-3xs);
+    --_tooltip-padding-inline: var(--ds-space-s);
+    --_tooltip-arrow-width: 0px;
+    --_tooltip-arrow-height: 0px;
+    --_tooltip-shift: 0px;
+    --_tooltip-enter-scale: 1;
+
+    font-weight: var(--ds-font-weight-medium);
+  }
+
+  @media (forced-colors: none) {
+    [data-style='studio'] [data-ds='tooltip'] {
+      --_tooltip-bg: var(--ds-color-text-bright);
+      --_tooltip-fg: var(--ds-color-bg-body);
+      --_tooltip-muted: var(--ds-color-bg-surface-4);
+      --_tooltip-border-color: var(--ds-color-text-bright);
+    }
+  }
+}

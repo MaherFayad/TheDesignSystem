@@ -1,0 +1,171 @@
+/*
+ * Studio recipe for Dialog and the family on DialogBase (AlertDialog,
+ * Drawer, Sheet), order 1.24, proposed. A flat tile with a hard edge: a
+ * square cornered panel on the flat surface, a 1px hairline, no shadow and
+ * no blur, on a flat scrim. The header band and the footer band sit one
+ * tone step off, each cut from the body by a 1px line. Paddings are dense.
+ * The panel appears by an opacity step in place: it never grows, rises or
+ * slides (the scale and distance tokens are 1 and 0 in Studio; a Drawer
+ * and a Sheet turn their slide into the same step here).
+ *
+ * The footer holds the decision, so its buttons are drawn here whatever
+ * emphasis a page passes: the main action (accent, or the AlertDialog
+ * action) is the filled pill, the neutral one the transparent bordered
+ * pill, a destructive main action the red fill.
+ *
+ * Colors swap only where forced colors are off: in forced colors this
+ * layer would otherwise win over the base system colors.
+ */
+@layer ds.recipes {
+  [data-style='studio'] :is([data-ds='dialog'], [data-ds='alert-dialog'], [data-ds='drawer'], [data-ds='sheet']) {
+    --_dialog-radius: var(--ds-radius-xs);
+    --_dialog-shadow: 0 0 transparent;
+    --_dialog-backdrop: none;
+    --_dialog-scrim-filter: none;
+    --_dialog-padding: var(--ds-space-l);
+    --_dialog-band-padding-block: var(--ds-space-s);
+    --_dialog-band-padding-inline: var(--ds-space-l);
+    --_dialog-enter-y: 0px;
+    --_dialog-enter-scale: 1;
+    --_dialog-shift: 0px;
+    --_dialog-slide: 0%;
+    --_dialog-enter-opacity: 0;
+    --_dialog-duration-in: var(--ds-duration-quick);
+    --_dialog-duration-out: var(--ds-duration-instant);
+  }
+
+  /* A Sheet and a Drawer run edge to edge: square, the sheet radius is 0 in Studio. */
+  [data-style='studio'] :is([data-ds='drawer'], [data-ds='sheet']) {
+    --_dialog-radius: var(--ds-radius-sheet);
+  }
+
+  @media (forced-colors: none) {
+    [data-style='studio'] :is([data-ds='dialog'], [data-ds='alert-dialog'], [data-ds='drawer'], [data-ds='sheet']) {
+      --_dialog-bg: var(--ds-color-bg-surface);
+      --_dialog-border-color: var(--ds-color-border-strong);
+      --_dialog-header-bg: var(--ds-color-bg-surface-2);
+      --_dialog-footer-bg: var(--ds-color-bg-surface-2);
+      --_dialog-divider-color: var(--ds-color-border-default);
+    }
+
+    /* The sheet header is a band here too (the base leaves it transparent). */
+    [data-style='studio'] [data-ds='sheet'] {
+      --_dialog-header-bg: var(--ds-color-bg-surface-2);
+    }
+
+    /* The AlertDialog: the icon and the title make the header band, the description the body. */
+    [data-style='studio'] [data-ds='alert-dialog'] {
+      --_dialog-bg: var(--ds-color-bg-surface-2);
+      --_dialog-icon-bg: var(--ds-color-bg-surface-3);
+    }
+
+    [data-style='studio'] [data-ds='alert-dialog'] > [data-part='panel'] > [data-part='description'] {
+      background-color: var(--ds-color-bg-surface);
+    }
+  }
+
+  /* Dense type: the titles one step down. */
+  [data-style='studio'] :is([data-ds='dialog'], [data-ds='alert-dialog']) > [data-part='panel'] > [data-part='title'],
+  [data-style='studio'] :is([data-ds='drawer'], [data-ds='sheet']) > [data-part='panel'] > [data-part='header'] > [data-part='title'] {
+    font-size: var(--ds-font-size-l);
+  }
+
+  /* The close control: a small square ghost. */
+  [data-style='studio'] :is([data-ds='dialog'], [data-ds='drawer'], [data-ds='sheet']) [data-part='close'] {
+    --_button-radius: var(--ds-radius-xs);
+  }
+
+  /*
+   * AlertDialog layout: a two column grid, the icon at the start of the
+   * title row, everything else across the panel. The icon is a small
+   * square chip, not a disc.
+   */
+  [data-style='studio'] [data-ds='alert-dialog'] > [data-part='panel'] {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    align-content: start;
+  }
+
+  [data-style='studio'] [data-ds='alert-dialog'] > [data-part='panel'] > * {
+    grid-column: 1 / -1;
+  }
+
+  [data-style='studio'] [data-ds='alert-dialog'] > [data-part='panel'] > [data-part='icon'] {
+    grid-column: 1;
+    align-self: start;
+    inline-size: var(--ds-size-control-sm);
+    block-size: var(--ds-size-control-sm);
+    margin-block: var(--_dialog-padding);
+    margin-inline: var(--_dialog-padding) 0;
+    border-radius: var(--ds-radius-xs);
+  }
+
+  [data-style='studio'] [data-ds='alert-dialog'] > [data-part='panel'] > [data-part='icon'] + [data-part='title'] {
+    grid-column: 2;
+    align-self: center;
+    padding-block: var(--_dialog-padding);
+    padding-inline-start: var(--ds-space-s);
+  }
+
+  [data-style='studio'] [data-ds='alert-dialog'] > [data-part='panel'] > [data-part='title'] {
+    padding-block-end: var(--_dialog-padding);
+  }
+
+  [data-style='studio'] [data-ds='alert-dialog'] > [data-part='panel'] > [data-part='title'] + [data-part='description'] {
+    padding-block: var(--_dialog-padding);
+    border-block-start: var(--ds-border-width-default) solid var(--_dialog-divider-color);
+  }
+
+  /* ------------------------------------------------------------ footer actions */
+
+  /* Every footer button is a compact pill. The neutral one: transparent with the control border. */
+  [data-style='studio'] :is([data-ds='dialog'], [data-ds='alert-dialog'], [data-ds='drawer'], [data-ds='sheet']) > [data-part='panel'] > [data-part='footer'] [data-ds='button'] {
+    --_button-radius: var(--ds-radius-pill);
+    --_button-bg: transparent;
+    --_button-fg: var(--ds-color-text-default);
+    --_button-border-color: var(--ds-color-border-control);
+    --_button-bg-hover: var(--ds-color-bg-overlay-5);
+    --_button-fg-hover: var(--ds-color-text-bright);
+    --_button-border-color-hover: var(--ds-color-border-control-hover);
+    --_button-bg-active: var(--ds-color-bg-overlay-10);
+    --_button-fg-active: var(--ds-color-text-bright);
+  }
+
+  /* The main action: the flat primary pill, white in dark and black in light. */
+  [data-style='studio'] :is([data-ds='dialog'], [data-ds='alert-dialog'], [data-ds='drawer'], [data-ds='sheet']) > [data-part='panel'] > [data-part='footer'] :is([data-ds='button'][data-tone='accent'], [data-ds='button'][data-part='action']:not([data-tone='danger'])) {
+    --_button-bg: var(--ds-color-primary-fill);
+    --_button-fg: var(--ds-color-primary-text);
+    --_button-border-color: var(--ds-color-primary-border);
+    --_button-bg-hover: var(--ds-color-primary-fill-hover);
+    --_button-fg-hover: var(--ds-color-primary-text);
+    --_button-border-color-hover: var(--ds-color-primary-fill-hover);
+    --_button-bg-active: var(--ds-color-primary-fill-pressed);
+    --_button-fg-active: var(--ds-color-primary-text);
+    --_button-ring: var(--ds-focus-shadow-primary);
+  }
+
+  /* A destructive main action: the flat red pill with dark text. */
+  [data-style='studio'] :is([data-ds='dialog'], [data-ds='alert-dialog'], [data-ds='drawer'], [data-ds='sheet']) > [data-part='panel'] > [data-part='footer'] [data-ds='button'][data-tone='danger'] {
+    --_button-bg: var(--ds-color-state-danger-solid);
+    --_button-fg: var(--ds-color-state-danger-on-solid);
+    --_button-border-color: var(--ds-color-state-danger-solid);
+    --_button-bg-hover: var(--ds-color-state-danger-solid-hover);
+    --_button-fg-hover: var(--ds-color-state-danger-on-solid);
+    --_button-border-color-hover: var(--ds-color-state-danger-solid-hover);
+    --_button-bg-active: var(--ds-color-state-danger-solid-hover);
+    --_button-fg-active: var(--ds-color-state-danger-on-solid);
+    --_button-ring: var(--ds-focus-shadow-primary);
+  }
+
+  /* This layer wins over the base state rules: the swaps again, for the footer buttons. */
+  [data-style='studio'] :is([data-ds='dialog'], [data-ds='alert-dialog'], [data-ds='drawer'], [data-ds='sheet']) > [data-part='panel'] > [data-part='footer'] [data-ds='button']:hover:not([data-disabled], [data-loading]) {
+    --_button-bg: var(--_button-bg-hover);
+    --_button-fg: var(--_button-fg-hover);
+    --_button-border-color: var(--_button-border-color-hover);
+  }
+
+  [data-style='studio'] :is([data-ds='dialog'], [data-ds='alert-dialog'], [data-ds='drawer'], [data-ds='sheet']) > [data-part='panel'] > [data-part='footer'] [data-ds='button']:active:not([data-disabled], [data-loading]) {
+    --_button-bg: var(--_button-bg-active);
+    --_button-fg: var(--_button-fg-active);
+  }
+}
