@@ -53,6 +53,11 @@ export interface Copy {
   dark: string;
   light: string;
   settings: string;
+  sortByName: string;
+  rowActions: (name: string) => string;
+  duplicateBoard: string;
+  boardDuplicated: string;
+  copyName: (name: string) => string;
 }
 
 export const copy: Record<Locale, Copy> = {
@@ -87,6 +92,11 @@ export const copy: Record<Locale, Copy> = {
     dark: 'Dark',
     light: 'Light',
     settings: 'Display settings',
+    sortByName: 'Sort by name',
+    rowActions: (name) => `Actions for ${name}`,
+    duplicateBoard: 'Duplicate board',
+    boardDuplicated: 'Board duplicated',
+    copyName: (name) => `${name} copy`,
   },
   ar: {
     pageTitle: 'اللوحات',
@@ -119,6 +129,11 @@ export const copy: Record<Locale, Copy> = {
     dark: 'داكن',
     light: 'فاتح',
     settings: 'إعدادات العرض',
+    sortByName: 'الترتيب حسب الاسم',
+    rowActions: (name) => `إجراءات ${name}`,
+    duplicateBoard: 'تكرار اللوحة',
+    boardDuplicated: 'نسخة اللوحة جاهزة',
+    copyName: (name) => `نسخة من ${name}`,
   },
 };
 

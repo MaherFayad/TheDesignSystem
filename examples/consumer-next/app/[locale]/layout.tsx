@@ -16,7 +16,7 @@ import type { Metadata } from 'next';
 import type { ReactNode } from 'react';
 import { cookies } from 'next/headers';
 import { notFound } from 'next/navigation';
-import { Theme, Toaster, themeAttributes } from '@the-system/react';
+import { Theme, Toaster, TooltipProvider, themeAttributes } from '@the-system/react';
 import { copy, isLocale, locales } from '../../lib/copy';
 import { readThemeChoice } from '../../lib/theme-cookie';
 
@@ -48,10 +48,11 @@ export default async function LocaleLayout({ children, params }: LayoutProps) {
       <body>
         {/* The root Theme gives client components their axes (useTheme), and
             the Dialog and Toaster portals copy them. The Toaster is mounted
-            once, here, before any dialog can open. */}
+            once, here, before any dialog can open. One TooltipProvider shares
+            the tooltip delays across the page. */}
         <Theme style={style} scheme={scheme} lang={locale} className="app-root">
           <Toaster />
-          {children}
+          <TooltipProvider>{children}</TooltipProvider>
         </Theme>
       </body>
     </html>
