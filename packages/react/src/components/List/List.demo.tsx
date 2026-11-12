@@ -2,6 +2,7 @@
 // long-arabic, disabled. No loading, error or readonly: a list that loads
 // shows Skeleton rows, and a failed load is the page's message.
 import { DemoCase, DemoGrid, DemoPage } from '../../demo';
+import { Bidi } from '../../theme/Bidi';
 import { Theme } from '../../theme/Theme';
 import { IconButton } from '../IconButton';
 import { List, ListItem, type ListSize, type ListVariant } from './index';
@@ -117,7 +118,12 @@ export default function ListDemo() {
             href="#long-ar"
             start="file"
             title="مراجعة دليل الهوية للربع الرابع مع فرق التسويق في المناطق والوكالة"
-            description="لو خلصت من تعديل الملف، احفظه وارجع للوحة عشان تشوف كل التغييرات في مكان واحد. وإذا تبي تشاركه مع فريقك، نزله بصيغة JSON وأرسله لهم."
+            description={
+              <>
+                لو خلصت من تعديل الملف، احفظه وارجع للوحة عشان تشوف كل التغييرات في مكان واحد. وإذا تبي تشاركه مع فريقك، نزله
+                بصيغة <Bidi>JSON</Bidi> وأرسله لهم.
+              </>
+            }
             end="12:40"
             actions={<IconButton size="xs" icon="more" label="عرض خيارات مراجعة الدليل" />}
           />
