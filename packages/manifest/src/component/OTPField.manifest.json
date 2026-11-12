@@ -1,0 +1,241 @@
+{
+  "name": "OTPField",
+  "kind": "component",
+  "family": "forms",
+  "summary": "A one time code shown in separate cells: one native input holds the code, the cells draw it.",
+  "useWhen": [
+    "A verification code sent by text message or email, usually 4 to 8 digits",
+    "A pairing code shown on another device",
+    "A backup code of letters and digits with a fixed length"
+  ],
+  "avoidWhen": [
+    "A password or a passphrase the person made up",
+    "A value with no fixed length, such as an amount or an order number",
+    "A phone number, a card number or a date"
+  ],
+  "insteadUse": {
+    "A password the person made up": "PasswordField",
+    "A number of any length": "NumberField",
+    "A phone number": "PhoneField",
+    "A short value with no fixed length": "Input"
+  },
+  "anatomy": [
+    "root",
+    "control",
+    "cell",
+    "separator"
+  ],
+  "props": {
+    "length": {
+      "type": "number",
+      "default": 6,
+      "description": "Number of cells and characters in a full code."
+    },
+    "groups": {
+      "type": "number[]",
+      "description": "Group sizes, for a separator between groups: [3, 3] shows 123 456. Ignored when they do not add up to length."
+    },
+    "charset": {
+      "type": [
+        "numeric",
+        "alphanumeric"
+      ],
+      "default": "numeric",
+      "description": "numeric: digits and the number keypad. alphanumeric: Latin letters, upper cased, and digits."
+    },
+    "value": {
+      "type": "string",
+      "description": "The code, controlled."
+    },
+    "defaultValue": {
+      "type": "string",
+      "description": "The first code, uncontrolled."
+    },
+    "onValueChange": {
+      "type": "(value: string) => void",
+      "description": "Called with the parsed code each time it changes."
+    },
+    "onComplete": {
+      "type": "(value: string) => void",
+      "description": "Called each time the code becomes a new full code: the last cell typed, a paste, an autofill, or one cell of a full code changed."
+    },
+    "size": {
+      "type": [
+        "xs",
+        "sm",
+        "md",
+        "lg"
+      ],
+      "default": "md",
+      "description": "Cell height and width from size.control: 24, 28, 32 and 44 px at default density."
+    },
+    "shape": {
+      "type": [
+        "default",
+        "pill"
+      ],
+      "default": "default",
+      "description": "default takes radius.field from the style. pill draws round cells."
+    },
+    "invalid": {
+      "type": "boolean",
+      "description": "Marks the code invalid. Inside a Field it follows the Field."
+    },
+    "disabled": {
+      "type": "boolean",
+      "description": "Native disabled on the input. Inside a Field it follows the Field."
+    },
+    "readOnly": {
+      "type": "boolean",
+      "description": "Still focusable and readable. Inside a Field it follows the Field."
+    },
+    "required": {
+      "type": "boolean",
+      "description": "Sets aria-required. Inside a Field it follows the Field."
+    },
+    "autoComplete": {
+      "type": "string",
+      "default": "one-time-code",
+      "description": "Lets the SMS autofill of iOS and Android and password managers fill the code."
+    },
+    "rootProps": {
+      "type": "object",
+      "description": "Props for the root. className and style also go to the root; every other native prop and the ref go to the input."
+    }
+  },
+  "states": [
+    "data-invalid",
+    "data-disabled",
+    "data-readonly",
+    "data-complete",
+    "data-active",
+    "data-filled"
+  ],
+  "a11y": {
+    "role": "textbox, from the one native input. The cells and separators are aria-hidden drawings of its value.",
+    "focus": "The input is the only tab stop. Tab lands on the first empty cell, or the last cell of a full code. A click picks the cell under the pointer. The active cell shows the glow and a 2px ring.",
+    "keys": {
+      "Tab": "Moves focus to the code, and on to the next control",
+      "Shift+Tab": "Moves focus back",
+      "ArrowLeft, ArrowRight": "Move one cell back or on. The cells run left to right in every language, so ArrowLeft is always the previous cell: inside the left to right group the physical direction is the reading direction",
+      "Home, End": "Move to the first cell, or to the first empty cell",
+      "Shift+ArrowLeft, Shift+ArrowRight": "Extend the selection over several cells, as in any text field",
+      "Backspace": "Clears the active cell, the cells after it move back one place, and the cell before it becomes active",
+      "Delete": "Clears the active cell; the cells after it move back"
+    },
+    "announce": "One name for the whole code, from the Field label or aria-label. The Field description and error through aria-describedby. The value reads as the code.",
+    "native": {
+      "accessibilityState": [
+        "disabled"
+      ]
+    },
+    "notes": [
+      "One input, not one per cell: the SMS autofill of iOS and Android and password managers fill one field with the whole code, a paste lands in one field, and a screen reader meets one named field instead of six unnamed boxes. This keeps paste and autofill working (WCAG 2.2, 3.3.8 accessible authentication).",
+      "Paste is never blocked. A paste replaces the whole code. Spaces, dashes and Arabic Indic digits are read, and the one code in a pasted SMS sentence is found (parseCode in @the-system/shared).",
+      "autocomplete one-time-code and inputmode numeric are set; the number keypad opens on phones. The input uses a 16px font, so phones do not zoom on focus.",
+      "No maxlength: a pasted code with spaces would be cut before it is read. The code is cut to length after it is read.",
+      "The root has dir ltr: a code reads left to right in Arabic too, like a phone number.",
+      "Check the code when onComplete fires, and say the result in the Field error or description. Never clear the code on an error: the person may want to fix one digit.",
+      "Do not put a time limit on entry without a way to ask for a new code (WCAG 2.2.1)."
+    ]
+  },
+  "content": {
+    "en": {
+      "label": "A noun in sentence case: Verification code, Pairing code, Backup code. One label for the whole field.",
+      "description": "Where the code was sent, and how long it lasts: We sent a 6 digit code to the number ending in 1234.",
+      "error": "What happened and what to do: This code has expired. Send a new code and enter it here."
+    },
+    "ar": {
+      "label": "رمز التحقق، رمز الربط، الرمز الاحتياطي",
+      "description": "وين وصل الرمز وكم مدته، بالأرقام اللاتينية",
+      "error": "وش صار ووش يسوي: الرمز انتهت صلاحيته، اطلب رمز جديد"
+    }
+  },
+  "tokens": [
+    "size.control.xs",
+    "size.control.sm",
+    "size.control.md",
+    "size.control.lg",
+    "size.target-min",
+    "space.2xs",
+    "space.xs",
+    "space.s",
+    "font.family.sans",
+    "font.family.mono",
+    "font.size.m",
+    "font.size.l",
+    "font.size.xl",
+    "font.size.3xl",
+    "font.size.fixed-m",
+    "font.weight.medium",
+    "font.leading.tight",
+    "radius.field",
+    "radius.pill",
+    "border.width.default",
+    "border.width.strong",
+    "color.border.control",
+    "color.border.control-hover",
+    "color.border.strong",
+    "color.bg.overlay-5",
+    "color.text.default",
+    "color.state.danger.text",
+    "elevation.input-focus",
+    "focus.shadow.ring",
+    "duration.base",
+    "ease.default",
+    "opacity.disabled"
+  ],
+  "motion": "fade",
+  "frameworks": {
+    "react": {
+      "status": "ready",
+      "behavior": "hand built on one native input (Radix One Time Password Field is Preview)",
+      "example": "OTPField.demo.tsx"
+    },
+    "angular": {
+      "status": "planned"
+    },
+    "native": {
+      "status": "planned"
+    }
+  },
+  "styles": {
+    "studio": "Square cells with the field radius and the control border; the active cell takes the soft glow and the 2px achromatic ring",
+    "desk": "The same cells and ring, digits in Instrument Sans with tabular figures"
+  },
+  "mistakes": [
+    {
+      "wrong": "Six separate inputs, one per digit",
+      "right": "One OTPField: autofill, paste and screen readers see one field"
+    },
+    {
+      "wrong": "Blocking paste or autofill on the code",
+      "right": "Leave both on; OTPField reads spaces, dashes and SMS text"
+    },
+    {
+      "wrong": "A label on each cell, or no label",
+      "right": "One Field label for the whole code"
+    },
+    {
+      "wrong": "Cells that run right to left in an Arabic form",
+      "right": "OTPField keeps the code left to right through dir ltr on the root"
+    },
+    {
+      "wrong": "Clearing the code when it is wrong",
+      "right": "Keep it, mark the Field invalid and say what to do"
+    }
+  ],
+  "contract": {
+    "optionalParts": [
+      "separator"
+    ],
+    "keys": {
+      "Backspace": {
+        "focus": "[data-part='control']",
+        "case": "many",
+        "expect": "value-changes"
+      }
+    }
+  },
+  "since": "0.1.0"
+}

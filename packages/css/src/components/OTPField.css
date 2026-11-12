@@ -1,0 +1,228 @@
+/*
+ * OTPField: a row of cells (aria-hidden spans) that draw the value of one
+ * native <input> (the control part). The input covers the whole row with a
+ * transparent text, caret and selection, so taps, autofill, paste and
+ * password managers all reach one real field. Cells take no pointer events.
+ * No source: designed from the dials table and Input (border, radius, ring).
+ *
+ * Private properties on the root (docs/contracts/anatomy.md, one convention).
+ * Recipes override these; states only swap them:
+ *   --_otp-field-height (a cell is as wide as it is tall), --_otp-field-gap,
+ *   --_otp-field-font-size, --_otp-field-radius, --_otp-field-bg,
+ *   --_otp-field-fg, --_otp-field-border-color (at rest, -hover, -focus,
+ *   -invalid), --_otp-field-ring (the glow and ring of the active cell),
+ *   --_otp-field-separator-color.
+ *
+ * The ring sits on the active cell's ::before, whose opacity fades, since
+ * only transform and opacity may animate.
+ */
+@layer ds.base {
+  [data-ds='otp-field'] {
+    --_otp-field-height: var(--ds-size-control-md);
+    --_otp-field-gap: var(--ds-space-xs);
+    --_otp-field-font-size: var(--ds-font-size-xl);
+    --_otp-field-radius: var(--ds-radius-field);
+    --_otp-field-bg: transparent;
+    --_otp-field-fg: var(--ds-color-text-default);
+    --_otp-field-border-color: var(--ds-color-border-control);
+    --_otp-field-border-color-hover: var(--ds-color-border-control-hover);
+    --_otp-field-border-color-focus: var(--ds-color-border-control-hover);
+    --_otp-field-border-color-invalid: var(--ds-color-state-danger-text);
+    --_otp-field-ring: var(--ds-elevation-input-focus), var(--ds-focus-shadow-ring);
+    --_otp-field-separator-color: var(--ds-color-border-strong);
+
+    position: relative;
+    box-sizing: border-box;
+    display: inline-flex;
+    flex-wrap: nowrap;
+    align-items: center;
+    gap: var(--_otp-field-gap);
+    /*
+     * As wide as the cells, never stretched by a flex or grid parent: the
+     * root is dir ltr, so a stretched root would push the cells to the left
+     * edge of an Arabic form. Sized to its cells it sits on the reading side.
+     */
+    inline-size: fit-content;
+    max-inline-size: 100%;
+    color: var(--_otp-field-fg);
+    font-family: var(--ds-font-family-sans);
+    font-size: var(--_otp-field-font-size);
+    font-weight: var(--ds-font-weight-medium);
+    font-variant-numeric: tabular-nums;
+    line-height: var(--ds-font-leading-tight);
+    vertical-align: middle;
+  }
+
+  [data-ds='otp-field'][data-size='xs'] {
+    --_otp-field-height: var(--ds-size-control-xs);
+    --_otp-field-gap: var(--ds-space-2xs);
+    --_otp-field-font-size: var(--ds-font-size-m);
+  }
+
+  [data-ds='otp-field'][data-size='sm'] {
+    --_otp-field-height: var(--ds-size-control-sm);
+    --_otp-field-gap: var(--ds-space-2xs);
+    --_otp-field-font-size: var(--ds-font-size-l);
+  }
+
+  /* Site fields: 44px cells and a larger digit. */
+  [data-ds='otp-field'][data-size='lg'] {
+    --_otp-field-height: var(--ds-size-control-lg);
+    --_otp-field-gap: var(--ds-space-s);
+    --_otp-field-font-size: var(--ds-font-size-3xl);
+  }
+
+  [data-ds='otp-field'][data-shape='pill'] {
+    --_otp-field-radius: var(--ds-radius-pill);
+  }
+
+  /*
+   * The real input: covers the row and takes every tap. Its text, caret and
+   * selection are transparent; the cells draw the value. 16px stops phones
+   * from zooming on focus.
+   */
+  [data-ds='otp-field'] > [data-part='control'] {
+    position: absolute;
+    inset: 0;
+    box-sizing: border-box;
+    inline-size: 100%;
+    block-size: 100%;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: transparent;
+    caret-color: transparent;
+    font-family: var(--ds-font-family-mono);
+    font-size: var(--ds-font-size-fixed-m);
+    text-align: start;
+    outline: none;
+    cursor: text;
+  }
+
+  [data-ds='otp-field'] > [data-part='control']::selection {
+    background: transparent;
+    color: transparent;
+  }
+
+  /* Browser autofill paints the input: clip its fill to the transparent text, so the cells show through. */
+  [data-ds='otp-field'] > [data-part='control']:autofill {
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  [data-ds='otp-field'] > [data-part='control']:-webkit-autofill {
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  [data-ds='otp-field'] > [data-part='cell'] {
+    position: relative;
+    box-sizing: border-box;
+    display: inline-grid;
+    /* In a narrow container the cells shrink, never below the 24px target. */
+    flex: 0 1 auto;
+    place-items: center;
+    inline-size: var(--_otp-field-height);
+    block-size: var(--_otp-field-height);
+    min-inline-size: var(--ds-size-target-min);
+    min-block-size: var(--ds-size-target-min);
+    border: var(--ds-border-width-default) solid var(--_otp-field-border-color);
+    border-radius: var(--_otp-field-radius);
+    background-color: var(--_otp-field-bg);
+    pointer-events: none;
+    user-select: none;
+  }
+
+  /* The ring of the active cell. Covers the border box, so the ring sits just outside the border. */
+  [data-ds='otp-field'] > [data-part='cell']::before {
+    content: '';
+    position: absolute;
+    inset: calc(var(--ds-border-width-default) * -1);
+    border-radius: inherit;
+    box-shadow: var(--_otp-field-ring);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity var(--ds-duration-base) var(--ds-ease-default);
+  }
+
+  [data-ds='otp-field'] > [data-part='separator'] {
+    flex: none;
+    inline-size: var(--ds-space-s);
+    block-size: var(--ds-border-width-strong);
+    border-radius: var(--ds-radius-pill);
+    background-color: var(--_otp-field-separator-color);
+    pointer-events: none;
+  }
+
+  /* Hover: a stronger border on every cell, only while the code can change. */
+  [data-ds='otp-field']:hover:not([data-disabled], [data-readonly], [data-invalid], :focus-within) {
+    --_otp-field-border-color: var(--_otp-field-border-color-hover);
+  }
+
+  /* Focus: the active cell gets the focus border, the glow and the 2px ring. The transparent outline shows in forced colors mode. */
+  [data-ds='otp-field']:focus-within > [data-part='cell'][data-active] {
+    --_otp-field-border-color: var(--_otp-field-border-color-focus);
+
+    outline: var(--ds-border-width-strong) solid transparent;
+    outline-offset: var(--ds-border-width-default);
+  }
+
+  [data-ds='otp-field']:focus-within > [data-part='cell'][data-active]::before {
+    opacity: 1;
+  }
+
+  /* Invalid: the danger color on every cell, at 3:1 or more. The Field error says what to do. */
+  [data-ds='otp-field'][data-invalid],
+  [data-ds='otp-field'][data-invalid]:focus-within > [data-part='cell'][data-active] {
+    --_otp-field-border-color: var(--_otp-field-border-color-invalid);
+  }
+
+  /* Read only: still readable and focusable. A dashed border and a quiet fill tell it apart. */
+  [data-ds='otp-field'][data-readonly] {
+    --_otp-field-bg: var(--ds-color-bg-overlay-5);
+  }
+
+  [data-ds='otp-field'][data-readonly] > [data-part='cell'] {
+    border-style: dashed;
+  }
+
+  [data-ds='otp-field'][data-readonly] > [data-part='control'] {
+    cursor: default;
+  }
+
+  /* Disabled: one disabled look for every control, opacity.disabled. Native disabled on the input. */
+  [data-ds='otp-field'][data-disabled] {
+    opacity: var(--ds-opacity-disabled);
+  }
+
+  [data-ds='otp-field'][data-disabled] > [data-part='control'] {
+    cursor: not-allowed;
+  }
+
+  /*
+   * Forced colors: box shadows go, so the ring layer goes and the transparent
+   * outline of the active cell in the focus rule above shows focus. The
+   * separator is drawn in the text color. Disabled reads as GrayText.
+   */
+  @media (forced-colors: active) {
+    /* Keep the input text, caret and selection transparent: forced colors would paint the code over the cells. */
+    [data-ds='otp-field'] > [data-part='control'] {
+      forced-color-adjust: none;
+    }
+
+    [data-ds='otp-field'] > [data-part='cell']::before {
+      display: none;
+    }
+
+    [data-ds='otp-field'] > [data-part='separator'] {
+      background-color: CanvasText;
+    }
+
+    [data-ds='otp-field'][data-disabled] {
+      --_otp-field-border-color: GrayText;
+
+      color: GrayText;
+    }
+  }
+}

@@ -1,0 +1,358 @@
+'use client';
+import {
+  Fragment,
+  useCallback,
+  useLayoutEffect,
+  useRef,
+  useState,
+  type ChangeEvent,
+  type ClipboardEvent,
+  type ComponentProps,
+  type FocusEvent,
+  type KeyboardEvent,
+  type MouseEvent,
+  type Ref,
+  type SyntheticEvent,
+} from 'react';
+import { codeInputHints, codeSeparatorIndexes, parseCode, type CodeCharset, type Shape, type Size } from '@the-system/shared';
+import { useFieldControl } from '../Field/Field';
+
+export type OTPFieldSize = Size;
+export type OTPFieldShape = Extract<Shape, 'default' | 'pill'>;
+export type OTPFieldCharset = CodeCharset;
+
+export interface OTPFieldProps
+  extends Omit<
+    ComponentProps<'input'>,
+    'size' | 'type' | 'value' | 'defaultValue' | 'maxLength' | 'minLength' | 'pattern' | 'title' | 'ref' | 'className' | 'style' | 'children'
+  > {
+  /** Number of cells. Default 6. */
+  length?: number;
+  /**
+   * Group sizes, for a separator between groups: `[3, 3]` shows 123 456.
+   * Ignored when the sizes do not add up to `length`.
+   */
+  groups?: number[];
+  /** numeric: digits and the number keypad. alphanumeric: letters and digits, upper cased. Default numeric. */
+  charset?: OTPFieldCharset;
+  /** The code (controlled). */
+  value?: string;
+  /** The first code (uncontrolled). */
+  defaultValue?: string;
+  /** Called with the parsed code each time it changes. */
+  onValueChange?: (value: string) => void;
+  /** Called once each time the code becomes complete, with the full code. */
+  onComplete?: (value: string) => void;
+  /** Cell height from size.control. Default md. */
+  size?: OTPFieldSize;
+  /** default: radius.field from the style. pill: fully round cells. */
+  shape?: OTPFieldShape;
+  /** Marks the code invalid. Inside a Field it follows the Field. */
+  invalid?: boolean;
+  /** Class name of the root. */
+  className?: string;
+  /** Inline style of the root. */
+  style?: ComponentProps<'div'>['style'];
+  /** Any other prop for the root element. */
+  rootProps?: Omit<ComponentProps<'div'>, 'title' | 'children'>;
+  /** Goes to the native input that holds the code. */
+  ref?: Ref<HTMLInputElement>;
+}
+
+interface Selection {
+  start: number;
+  end: number;
+}
+
+/**
+ * The selection the field keeps: one character selected, so the next key
+ * replaces the character in the active cell, or a caret after the last
+ * character while the code is not full.
+ */
+function cellSelection(pos: number, valueLength: number, length: number): Selection {
+  const at = Math.max(0, Math.min(pos, valueLength, length - 1));
+  if (at < valueLength) return { start: at, end: at + 1 };
+  return { start: at, end: at };
+}
+
+/**
+ * A one time code shown in separate cells.
+ *
+ * One real `<input>` holds the whole code and sits on top of the cells with
+ * a transparent text and caret. The cells are a drawing of its value
+ * (`aria-hidden`). One input, not one per cell, because:
+ *
+ * - the SMS autofill of iOS and Android (`autocomplete="one-time-code"`) and
+ *   password managers fill one field with the whole code;
+ * - a paste lands in one field, with no script that splits it;
+ * - a screen reader meets one field with one name ("Verification code") and
+ *   the code as its value, not six unnamed boxes;
+ * - a Field label points at it with `htmlFor`, like any other control.
+ *
+ * The field keeps one character selected, so typing replaces the active cell
+ * and moves on. Backspace clears and moves back. ArrowLeft and ArrowRight
+ * move one cell, Home and End to the ends. A paste replaces the whole code.
+ * Spaces, dashes and Arabic Indic digits are read (`parseCode`). A code runs
+ * left to right in every language, so the root carries `dir="ltr"`.
+ */
+export function OTPField({
+  length: lengthProp = 6,
+  groups,
+  charset = 'numeric',
+  value: valueProp,
+  defaultValue,
+  onValueChange,
+  onComplete,
+  size = 'md',
+  shape = 'default',
+  invalid,
+  disabled,
+  readOnly,
+  required,
+  className,
+  style,
+  rootProps,
+  id,
+  ref,
+  autoComplete = 'one-time-code',
+  'aria-describedby': describedBy,
+  onChange,
+  onFocus,
+  onBlur,
+  onKeyDown,
+  onPaste,
+  onSelect,
+  onClick,
+  ...rest
+}: OTPFieldProps) {
+  const length = Math.max(1, Math.floor(lengthProp));
+  const control = useFieldControl({ id, 'aria-describedby': describedBy, invalid, disabled, readOnly, required });
+  const options = { length, charset };
+  const [own, setOwn] = useState(() => parseCode(defaultValue ?? '', options).value);
+  const value = valueProp !== undefined ? parseCode(valueProp, options).value : own;
+  const [focused, setFocused] = useState(false);
+  const [sel, setSel] = useState<Selection>({ start: 0, end: 0 });
+  const inner = useRef<HTMLInputElement | null>(null);
+  const pending = useRef<number | null>(null);
+  const lastSel = useRef<Selection>({ start: 0, end: 0 });
+  // Bumped when a change is refused, so the selection effect runs although the value did not change.
+  const [refused, setRefused] = useState(0);
+
+  const setRef = useCallback(
+    (node: HTMLInputElement | null): (() => void) | undefined => {
+      inner.current = node;
+      if (typeof ref === 'function') {
+        const cleanup = ref(node);
+        return () => {
+          if (typeof cleanup === 'function') cleanup();
+          else ref(null);
+        };
+      }
+      if (ref) {
+        ref.current = node;
+        return () => {
+          ref.current = null;
+        };
+      }
+      return undefined;
+    },
+    [ref],
+  );
+
+  /** Puts the selection on the cell at `pos` and draws it. */
+  const place = useCallback(
+    (pos: number, valueLength: number) => {
+      const input = inner.current;
+      const next = cellSelection(pos, valueLength, length);
+      lastSel.current = next;
+      setSel(next);
+      if (!input || input.ownerDocument.activeElement !== input) return;
+      if (input.selectionStart !== next.start || input.selectionEnd !== next.end) {
+        input.setSelectionRange(next.start, next.end);
+      }
+    },
+    [length],
+  );
+
+  // After a change React writes the value; then the selection goes where the change asked.
+  useLayoutEffect(() => {
+    if (pending.current === null) return;
+    const pos = pending.current;
+    pending.current = null;
+    place(pos, value.length);
+  }, [value, refused, place]);
+
+  const commit = (next: string, caret: number) => {
+    // A caret asked for by the key that caused the change (Backspace) wins.
+    pending.current ??= caret;
+    if (next !== value) {
+      if (valueProp === undefined) setOwn(next);
+      onValueChange?.(next);
+      // A full code that is new: typed to the end, pasted, filled, or one digit of a full code fixed.
+      if (next.length === length) onComplete?.(next);
+    }
+    // Always run the selection effect: the value may stay the same (a refused key, the same digit
+    // typed again, or a controlled parent that keeps its value), and the pending caret must not go stale.
+    setRefused((n) => n + 1);
+  };
+
+  const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
+    onChange?.(event);
+    if (event.defaultPrevented) return;
+    const input = event.currentTarget;
+    const raw = input.value;
+    const parsed = parseCode(raw, options);
+    // One key the code cannot hold (a letter in a numeric code, typed over a cell or at the end) is
+    // refused: the cell keeps its character and stays active. A longer insert keeps what it can.
+    if (parsed.rejected && raw.length <= value.length + 1) {
+      pending.current = null;
+      commit(value, lastSel.current.start);
+      return;
+    }
+    // The native caret sits after what was typed, pasted or filled. Separators the parse dropped can push it past the end.
+    const caret = Math.min(input.selectionStart ?? parsed.value.length, parsed.value.length);
+    commit(parsed.value, caret);
+  };
+
+  const handleKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
+    onKeyDown?.(event);
+    // Shift with an arrow keeps its native meaning: it extends the selection.
+    if (event.defaultPrevented || event.altKey || event.ctrlKey || event.metaKey || event.shiftKey) return;
+    const at = lastSel.current.start;
+    // The cells always run left to right, so ArrowLeft is the previous cell in every language.
+    switch (event.key) {
+      case 'ArrowLeft':
+        event.preventDefault();
+        place(at - 1, value.length);
+        return;
+      case 'ArrowRight':
+        event.preventDefault();
+        place(at + 1, value.length);
+        return;
+      case 'Home':
+        event.preventDefault();
+        place(0, value.length);
+        return;
+      case 'End':
+        event.preventDefault();
+        place(value.length, value.length);
+        return;
+      case 'Backspace': {
+        if (readOnly || control.readOnly) return;
+        const { start, end } = lastSel.current;
+        // A selected character is cleared and the cell before it becomes active.
+        if (end > start && start > 0) pending.current = start - 1;
+        // The native delete runs and fires the input event, so forms hear it.
+        return;
+      }
+      default:
+    }
+  };
+
+  const handleSelect = (event: SyntheticEvent<HTMLInputElement>) => {
+    onSelect?.(event);
+    const input = event.currentTarget;
+    if (pending.current !== null) return;
+    const start = input.selectionStart ?? value.length;
+    const end = input.selectionEnd ?? start;
+    // A selection the person drags over several cells stays as it is.
+    if (end - start > 1) {
+      lastSel.current = { start, end };
+      setSel({ start, end });
+      return;
+    }
+    place(start, value.length);
+  };
+
+  const handleFocus = (event: FocusEvent<HTMLInputElement>) => {
+    onFocus?.(event);
+    setFocused(true);
+    // Tab lands on the first empty cell, or the last cell of a full code.
+    place(value.length, value.length);
+  };
+
+  const handleBlur = (event: FocusEvent<HTMLInputElement>) => {
+    onBlur?.(event);
+    setFocused(false);
+  };
+
+  const handlePaste = (event: ClipboardEvent<HTMLInputElement>) => {
+    onPaste?.(event);
+    if (event.defaultPrevented) return;
+    // A paste replaces the whole code: select all, then let the native paste run.
+    const input = event.currentTarget;
+    input.setSelectionRange(0, input.value.length);
+  };
+
+  // A click picks the cell under the pointer: the text is transparent, so the native caret position means nothing.
+  const handleClick = (event: MouseEvent<HTMLInputElement>) => {
+    onClick?.(event);
+    const root = event.currentTarget.parentElement;
+    if (!root) return;
+    const cells = Array.from(root.querySelectorAll<HTMLElement>(':scope > [data-part="cell"]'));
+    let index = cells.findIndex((cell) => {
+      const r = cell.getBoundingClientRect();
+      return r.width > 0 && event.clientX <= r.right;
+    });
+    if (index < 0) index = cells.length - 1;
+    place(index, value.length);
+  };
+
+  const separators = codeSeparatorIndexes(length, groups);
+  const hints = codeInputHints(charset);
+  const complete = value.length === length;
+  const activeStart = sel.start;
+  const activeEnd = Math.max(sel.end, sel.start + 1);
+
+  return (
+    <div
+      {...rootProps}
+      className={className}
+      style={style}
+      dir="ltr"
+      data-ds="otp-field"
+      data-size={size}
+      data-shape={shape}
+      data-invalid={control['aria-invalid'] ? '' : undefined}
+      data-disabled={control.disabled ? '' : undefined}
+      data-readonly={control.readOnly ? '' : undefined}
+      data-complete={complete ? '' : undefined}
+    >
+      <input
+        {...rest}
+        {...control}
+        ref={setRef}
+        type="text"
+        data-part="control"
+        value={value}
+        autoComplete={autoComplete}
+        inputMode={rest.inputMode ?? hints.inputMode}
+        pattern={hints.pattern}
+        autoCapitalize={charset === 'alphanumeric' ? 'characters' : 'off'}
+        autoCorrect="off"
+        spellCheck={false}
+        enterKeyHint={rest.enterKeyHint ?? 'done'}
+        onChange={handleChange}
+        onKeyDown={handleKeyDown}
+        onSelect={handleSelect}
+        onFocus={handleFocus}
+        onBlur={handleBlur}
+        onPaste={handlePaste}
+        onClick={handleClick}
+      />
+      {Array.from({ length }, (_, i) => (
+        <Fragment key={i}>
+          {separators.includes(i) && <span data-part="separator" aria-hidden="true" />}
+          <span
+            data-part="cell"
+            aria-hidden="true"
+            data-active={focused && i >= activeStart && i < activeEnd ? '' : undefined}
+            data-filled={i < value.length ? '' : undefined}
+          >
+            {value[i] ?? ''}
+          </span>
+        </Fragment>
+      ))}
+    </div>
+  );
+}
