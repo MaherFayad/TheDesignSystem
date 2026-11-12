@@ -21,10 +21,25 @@
     "A guided walk through the interface": "Tour",
     "Where the page sits in a hierarchy": "Breadcrumbs"
   },
-  "anatomy": ["root", "step", "indicator", "title", "description", "connector", "status"],
+  "anatomy": [
+    "root",
+    "step",
+    "indicator",
+    "title",
+    "description",
+    "connector",
+    "status"
+  ],
   "slots": {
-    "title": { "accepts": "text", "min": 1, "max": 1 },
-    "description": { "accepts": "text", "max": 1 }
+    "title": {
+      "accepts": "text",
+      "min": 1,
+      "max": 1
+    },
+    "description": {
+      "accepts": "text",
+      "max": 1
+    }
   },
   "props": {
     "steps": {
@@ -46,7 +61,10 @@
       "description": "Indexes of the complete steps. Default every step before the furthest step reached, so going back keeps them complete."
     },
     "mode": {
-      "type": ["linear", "free"],
+      "type": [
+        "linear",
+        "free"
+      ],
       "default": "linear",
       "description": "linear: earlier steps can be reached, a later step only when every step before it is complete. free: any step that is not disabled. The rule lives in packages/shared/src/stepper.ts."
     },
@@ -55,12 +73,18 @@
       "description": "Called when the user picks a step. When it is passed, or a step has href, every step the user may reach, other than the current one, renders its title as a system Button."
     },
     "orientation": {
-      "type": ["horizontal", "vertical"],
+      "type": [
+        "horizontal",
+        "vertical"
+      ],
       "default": "horizontal",
       "description": "Sets data-orientation. A horizontal stepper takes the vertical layout under breakpoint.phone (30rem), so it never scrolls sideways."
     },
     "size": {
-      "type": ["sm", "md"],
+      "type": [
+        "sm",
+        "md"
+      ],
       "default": "md",
       "description": "md: a 32px indicator (size.control.sm) and text s. sm: a 24px indicator (size.icon.lg) and text xs."
     },
@@ -74,7 +98,14 @@
       "description": "The name of the list. Name the process: Checkout steps."
     }
   },
-  "states": ["complete", "current", "upcoming", "data-orientation", "data-invalid", "data-disabled"],
+  "states": [
+    "complete",
+    "current",
+    "upcoming",
+    "data-orientation",
+    "data-invalid",
+    "data-disabled"
+  ],
   "a11y": {
     "role": "list (an ol), each step a listitem; a step the user may reach holds a button or a link",
     "focus": "Only steps the user may reach are tab stops, each a system Button with the focus ring from focus.shadow.ring. Static steps and the current step are not focusable.",
@@ -87,7 +118,9 @@
     "announce": "The list name, then each step with its position from the list (2 of 4), its title and hidden words: current step, complete, has errors, unavailable. The current step also carries aria-current=\"step\".",
     "native": {
       "accessibilityRole": "list",
-      "accessibilityState": ["disabled"]
+      "accessibilityState": [
+        "disabled"
+      ]
     },
     "notes": [
       "Complete shows a check and invalid shows a danger glyph, never color alone (WCAG 1.4.1). The indicator is hidden from assistive tech; the hidden status words carry the state.",
@@ -162,9 +195,10 @@
       "note": "Motion tab-indicator: the connector fill scales from the start side when a step completes; under reduced motion it swaps at once."
     },
     "angular": {
-      "status": "planned",
+      "status": "ready",
       "behavior": "ol[dsStepper] host bindings, state from packages/shared/src/stepper.ts, reachable steps as button[dsButton] or a[dsButton]",
-      "note": "Stepper.css is used as is."
+      "example": "stepper.demo.ts",
+      "note": "onStepSelect is a function input: steps become actions only when it is set, as in React. Step title and description take a string or a TemplateRef. Stepper.css is used as is."
     },
     "native": {
       "status": "planned",
@@ -200,11 +234,26 @@
     }
   ],
   "contract": {
-    "optionalParts": ["description", "status", "connector"],
+    "optionalParts": [
+      "description",
+      "status",
+      "connector"
+    ],
     "keys": {
-      "Tab": { "focus": "[data-ds='stepper'] [data-ds='button'][data-part='title']", "expect": "focus-moves" },
-      "Enter": { "focus": "[data-ds='stepper'] [data-ds='button'][data-part='title']", "case": "variants", "expect": "click" },
-      "Space": { "focus": "[data-ds='stepper'] button[data-part='title']", "case": "variants", "expect": "click" }
+      "Tab": {
+        "focus": "[data-ds='stepper'] [data-ds='button'][data-part='title']",
+        "expect": "focus-moves"
+      },
+      "Enter": {
+        "focus": "[data-ds='stepper'] [data-ds='button'][data-part='title']",
+        "case": "variants",
+        "expect": "click"
+      },
+      "Space": {
+        "focus": "[data-ds='stepper'] button[data-part='title']",
+        "case": "variants",
+        "expect": "click"
+      }
     }
   },
   "since": "0.1.0"

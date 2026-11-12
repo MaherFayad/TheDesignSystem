@@ -35,6 +35,7 @@ export * from './components/skeleton/index';
 export * from './components/spinner/index';
 export * from './components/split-button/index';
 export * from './components/status-dot/index';
+export * from './components/stepper/index';
 export * from './components/textarea/index';
 export * from './components/title-bar/index';
 export * from './components/toast/index';

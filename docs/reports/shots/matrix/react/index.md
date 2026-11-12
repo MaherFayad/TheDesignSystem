@@ -2,7 +2,7 @@
 
 Made by `npm run shots`. Each shot is the `variants` case at `chrome=0`, 1280 by 800 viewport, full page, device scale factor 1, animations off, reduced motion, fonts loaded. File names: `<component>/<style>-<scheme>-<dir>[-<density>][-open].png`. Density is default unless named.
 
-300 shots, 21 components, 20.71 MB. Stable (two captures byte equal): 300; unstable: 0; not verified: 0.
+312 shots, 22 components, 22.37 MB. Stable (two captures byte equal): 312; unstable: 0; not verified: 0.
 
 The full list with sizes and hashes is in `captured.json`.
 
@@ -246,6 +246,17 @@ Densities, dark, ltr en:
 | neutral | light | [ltr](split-button/neutral-light-ltr.png) | [rtl](split-button/neutral-light-rtl.png) |
 | studio | dark | [ltr](split-button/studio-dark-ltr.png) | [rtl](split-button/studio-dark-rtl.png) |
 | studio | light | [ltr](split-button/studio-light-ltr.png) | [rtl](split-button/studio-light-rtl.png) |
+
+## Stepper
+
+| Style | Scheme | ltr en | rtl ar |
+| --- | --- | --- | --- |
+| desk | dark | [ltr](stepper/desk-dark-ltr.png) | [rtl](stepper/desk-dark-rtl.png) |
+| desk | light | [ltr](stepper/desk-light-ltr.png) | [rtl](stepper/desk-light-rtl.png) |
+| neutral | dark | [ltr](stepper/neutral-dark-ltr.png) | [rtl](stepper/neutral-dark-rtl.png) |
+| neutral | light | [ltr](stepper/neutral-light-ltr.png) | [rtl](stepper/neutral-light-rtl.png) |
+| studio | dark | [ltr](stepper/studio-dark-ltr.png) | [rtl](stepper/studio-dark-rtl.png) |
+| studio | light | [ltr](stepper/studio-light-ltr.png) | [rtl](stepper/studio-light-rtl.png) |
 
 ## TitleBar
 

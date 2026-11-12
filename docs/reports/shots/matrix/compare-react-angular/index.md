@@ -2,7 +2,7 @@
 
 Made by `npm run shots -- --compare react angular`. pixelmatch threshold 0.1; a pair passes when at most 0.5 percent of pixels differ and the sizes match.
 
-586 pairs, 586 pass, 0 fail. Only in react: 32. Only in angular: 0.
+598 pairs, 598 pass, 0 fail. Only in react: 32. Only in angular: 0.
 
 | File | Result | Differing pixels | Where | Diff |
 | --- | --- | --- | --- | --- |
@@ -532,6 +532,18 @@ Made by `npm run shots -- --compare react angular`. pixelmatch threshold 0.1; a 
 | status-dot/studio-dark-rtl.png | pass | 0 (0.000 percent) |  | none |
 | status-dot/studio-light-ltr.png | pass | 0 (0.000 percent) |  | none |
 | status-dot/studio-light-rtl.png | pass | 0 (0.000 percent) |  | none |
+| stepper/desk-dark-ltr.png | pass | 0 (0.000 percent) |  | none |
+| stepper/desk-dark-rtl.png | pass | 0 (0.000 percent) |  | none |
+| stepper/desk-light-ltr.png | pass | 0 (0.000 percent) |  | none |
+| stepper/desk-light-rtl.png | pass | 0 (0.000 percent) |  | none |
+| stepper/neutral-dark-ltr.png | pass | 0 (0.000 percent) |  | none |
+| stepper/neutral-dark-rtl.png | pass | 0 (0.000 percent) |  | none |
+| stepper/neutral-light-ltr.png | pass | 0 (0.000 percent) |  | none |
+| stepper/neutral-light-rtl.png | pass | 0 (0.000 percent) |  | none |
+| stepper/studio-dark-ltr.png | pass | 0 (0.000 percent) |  | none |
+| stepper/studio-dark-rtl.png | pass | 0 (0.000 percent) |  | none |
+| stepper/studio-light-ltr.png | pass | 0 (0.000 percent) |  | none |
+| stepper/studio-light-rtl.png | pass | 0 (0.000 percent) |  | none |
 | textarea/desk-dark-ltr-comfortable.png | pass | 0 (0.000 percent) |  | none |
 | textarea/desk-dark-ltr-compact.png | pass | 0 (0.000 percent) |  | none |
 | textarea/desk-dark-ltr.png | pass | 0 (0.000 percent) |  | none |

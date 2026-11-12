@@ -22101,9 +22101,10 @@
         "note": "Motion tab-indicator: the connector fill scales from the start side when a step completes; under reduced motion it swaps at once."
       },
       "angular": {
-        "status": "planned",
+        "status": "ready",
         "behavior": "ol[dsStepper] host bindings, state from packages/shared/src/stepper.ts, reachable steps as button[dsButton] or a[dsButton]",
-        "note": "Stepper.css is used as is."
+        "example": "stepper.demo.ts",
+        "note": "onStepSelect is a function input: steps become actions only when it is set, as in React. Step title and description take a string or a TemplateRef. Stepper.css is used as is."
       },
       "native": {
         "status": "planned",

@@ -41,6 +41,7 @@ export const routes: DemoRoute[] = [
   { slug: 'spinner', load: () => import('../../../../packages/angular/src/components/spinner/spinner.demo').then((m) => m.default) },
   { slug: 'split-button', load: () => import('../../../../packages/angular/src/components/split-button/split-button.demo').then((m) => m.default) },
   { slug: 'status-dot', load: () => import('../../../../packages/angular/src/components/status-dot/status-dot.demo').then((m) => m.default) },
+  { slug: 'stepper', load: () => import('../../../../packages/angular/src/components/stepper/stepper.demo').then((m) => m.default) },
   { slug: 'textarea', load: () => import('../../../../packages/angular/src/components/textarea/textarea.demo').then((m) => m.default) },
   { slug: 'toast', load: () => import('../../../../packages/angular/src/components/toast/toast.demo').then((m) => m.default) },
   { slug: 'toggle-button', load: () => import('../../../../packages/angular/src/components/toggle-button/toggle-button.demo').then((m) => m.default) },
