@@ -283,7 +283,8 @@ export interface DropdownMenuItemProps
 /**
  * An action. onSelect runs on click, Enter and Space, then the menu closes
  * (call event.preventDefault() in onSelect to keep it open). `disabled`
- * keeps it focusable with aria-disabled and skips it on select.
+ * sets aria-disabled, skips it on select, and the arrow keys pass over it
+ * (Radix behavior, as the manifest says).
  */
 export function DropdownMenuItem({ start, end, shortcut, tone = 'neutral', textValue, children, ...rest }: DropdownMenuItemProps) {
   return (
