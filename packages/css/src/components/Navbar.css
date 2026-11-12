@@ -421,6 +421,17 @@
     }
   }
 
+  /* The same under the page setting (review B2). */
+  :root[data-motion='reduce'] [data-ds='navbar'] > [data-part='viewport'][data-state] {
+    animation: none;
+  }
+
+  :root[data-motion='reduce'] [data-ds='navbar'] [data-part='indicator'],
+  :root[data-motion='reduce'] [data-ds='navbar'] [data-part='link']::after,
+  :root[data-motion='reduce'] [data-ds='navbar'] [data-part='trigger'][data-emphasis] > [data-part='end'] {
+    transition: none;
+  }
+
   @media (forced-colors: active) {
     [data-ds='navbar'] [data-part='link']::after {
       display: none;

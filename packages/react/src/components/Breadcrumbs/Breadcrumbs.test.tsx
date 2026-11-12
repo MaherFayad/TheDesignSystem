@@ -248,4 +248,49 @@ describe('Breadcrumbs', () => {
       expect(container.querySelector(`[data-demo-case="variants"] [data-ds="breadcrumbs"][data-size="${size}"]`)).not.toBeNull();
     }
   });
+
+  it('draws a hover pill on each link step and nudges the separator, still under both reduced motion settings', () => {
+    const css = readFileSync(join(process.cwd(), 'packages/css/src/components/Breadcrumbs.css'), 'utf8');
+    expect(css).toMatch(/\[data-ds='breadcrumbs'\] \[data-part='link'\]::before \{[^}]*opacity: var\(--_breadcrumbs-pill-opacity\)/);
+    expect(css).toMatch(/--_breadcrumbs-separator-shift: var\(--_breadcrumbs-shift\)/);
+    expect(css).toMatch(/:root\[data-motion='reduce'\] \[data-ds='breadcrumbs'\] \{\s*--_breadcrumbs-shift: 0px;/);
+  });
+
+  it('every reduced motion rule of the navigation family also applies under data-motion="reduce" (review B2)', () => {
+    const names = ['Breadcrumbs', 'Dock', 'Navbar', 'Rail', 'SegmentedControl', 'Sidebar', 'SkipLink', 'Stepper', 'TabBar', 'TableOfContents', 'Toolbar'];
+    for (const name of names) {
+      const css = readFileSync(join(process.cwd(), `packages/css/src/components/${name}.css`), 'utf8');
+      const blocks = css.split('@media (prefers-reduced-motion: reduce) {').slice(1);
+      expect(blocks.length, name).toBeGreaterThan(0);
+      for (const block of blocks) {
+        const body = block.slice(0, block.indexOf('\n  }\n'));
+        for (const m of body.matchAll(/^    ([^{}\n][^{}]*?) \{$/gm)) {
+          for (const sel of m[1]!.split(/,\n\s*/)) expect(css, `${name}: ${sel}`).toContain(`:root[data-motion='reduce'] ${sel.trim()}`);
+        }
+      }
+    }
+  });
+
+  it('a link step plays the hover follow: the pill of the step it reaches slides from the step it left', async () => {
+    const calls: [Keyframe[], KeyframeAnimationOptions][] = [];
+    const proto = Element.prototype as unknown as { animate?: unknown };
+    const saved = proto.animate;
+    proto.animate = function (frames: Keyframe[], options: KeyframeAnimationOptions) {
+      calls.push([frames, options]);
+      return { finished: Promise.resolve(), cancel() {} } as unknown as Animation;
+    };
+    try {
+      render(<Breadcrumbs items={items} />);
+      const [a, b] = screen.getAllByRole('link');
+      vi.spyOn(a!, 'getBoundingClientRect').mockReturnValue(DOMRect.fromRect({ x: 0, y: 0, width: 40, height: 24 }));
+      vi.spyOn(b!, 'getBoundingClientRect').mockReturnValue(DOMRect.fromRect({ x: 60, y: 0, width: 70, height: 24 }));
+      a!.dispatchEvent(new MouseEvent('pointerover', { bubbles: true }));
+      a!.dispatchEvent(new MouseEvent('pointerout', { bubbles: true, relatedTarget: document.body }));
+      b!.dispatchEvent(new MouseEvent('pointerover', { bubbles: true }));
+      expect(calls.filter(([, o]) => o.id === 'ds-motion:indicator-slide' && o.pseudoElement === '::before')).toHaveLength(1);
+    } finally {
+      proto.animate = saved;
+      vi.restoreAllMocks();
+    }
+  });
 });

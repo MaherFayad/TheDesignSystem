@@ -18,7 +18,17 @@
  * covers. The current page has a border in the muted text color (3:1 or
  * more against the page in every style, WCAG 1.4.11), a heavier weight than
  * the other pages, a soft fill and aria-current, so it is never told apart
- * by color alone. Nothing animates beyond the Button press.
+ * by color alone.
+ *
+ * Motion, interaction pagination-roll (order 1.22, proposed), played by
+ * Pagination.tsx: the current page holds an empty aria-hidden span, inside
+ * the page part, that draws the current fill and border while the page
+ * drops its own, so the shared pill can slide it from the page it leaves on
+ * the snappy spring (react/src/internal/indicator.ts). The page numbers sit
+ * in an aria-hidden host in the label (the accessible name is the page's
+ * aria-label) and roll digit by digit when the window of pages shifts. The
+ * end arrows wind up and go. Without the span (a port that has not added
+ * it) the page draws its own fill, the round 1 look.
  */
 @layer ds.base {
   [data-ds='pagination'] {
@@ -81,6 +91,24 @@
     --_pagination-weight: var(--_pagination-weight-active);
   }
 
+  /* The pill: the current fill and border, drawn by the span so it can slide. */
+  [data-ds='pagination'] > [data-part='page'] > span[aria-hidden='true']:not([data-part]) {
+    position: absolute;
+    inset: calc(-1 * var(--ds-border-width-default));
+    box-sizing: border-box;
+    border: var(--ds-border-width-default) solid var(--_pagination-border-color-active);
+    border-radius: inherit;
+    background-color: var(--_pagination-bg-active);
+    pointer-events: none;
+  }
+
+  [data-ds='pagination'] > [data-part='page'][data-active]:has(> span[aria-hidden='true']:not([data-part])) {
+    --_button-bg: transparent;
+    --_button-bg-hover: var(--_pagination-bg-active);
+    --_button-border-color: transparent;
+    --_button-border-color-hover: transparent;
+  }
+
   [data-ds='pagination'] > [data-part='ellipsis'] {
     display: inline-flex;
     align-items: center;
@@ -125,6 +153,10 @@
   /* ------------------------------------------------------------ forced colors */
 
   @media (forced-colors: active) {
+    [data-ds='pagination'] > [data-part='page'] > span[aria-hidden='true']:not([data-part]) {
+      display: none;
+    }
+
     [data-ds='pagination'] > [data-part='page'][data-active] {
       --_button-border-color: Highlight;
       --_button-border-color-hover: Highlight;

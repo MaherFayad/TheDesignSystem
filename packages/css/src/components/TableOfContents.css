@@ -156,7 +156,8 @@
     border-radius: var(--ds-radius-pill);
     background-color: var(--_toc-indicator-bg);
     transform: translateY(var(--_toc-indicator-offset));
-    transition: transform var(--ds-duration-medium) var(--ds-ease-standard);
+    /* toc-travel (order 1.22, proposed): the snappy spring; TableOfContents.tsx adds the stretch. */
+    transition: transform var(--ds-duration-spring-snappy) var(--ds-ease-spring-snappy);
     pointer-events: none;
     /* Centered on the rail, so the wider bar covers it. */
     margin-inline-start: calc((var(--ds-border-width-default) - var(--ds-border-width-strong)) / 2);
@@ -166,6 +167,11 @@
     [data-ds='table-of-contents'] > [data-part='indicator'] {
       transition: none;
     }
+  }
+
+  /* The same under the page setting (review B2). */
+  :root[data-motion='reduce'] [data-ds='table-of-contents'] > [data-part='indicator'] {
+    transition: none;
   }
 
   /* ------------------------------------------------------------ forced colors */

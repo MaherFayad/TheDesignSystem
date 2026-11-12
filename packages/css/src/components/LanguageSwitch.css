@@ -12,8 +12,14 @@
  *
  * The items are system Links (data-ds="link" data-part="item"), restyled
  * only through Link's private properties. The trigger is a system Button
- * and the menu a DropdownMenu, styled by their own files. Nothing animates
- * here; the menu plays DropdownMenu's menu-scale.
+ * and the menu a DropdownMenu, styled by their own files. The menu plays
+ * DropdownMenu's menu-scale.
+ *
+ * Motion, interaction language-roll (order 1.22, proposed), played by
+ * LanguageSwitch.tsx: the trigger's name rolls to the new language (the old
+ * name rolls out in an aria-hidden copy positioned in the label). The name
+ * is a box here so it can move. In the pair the names dip and pop; each Link
+ * is a flex item of the root, so it scales as it is.
  */
 @layer ds.base {
   [data-ds='language-switch'] {
@@ -57,6 +63,11 @@
     --_link-decoration-hover: transparent;
 
     font-weight: var(--ds-font-weight-medium);
+  }
+
+  /* language-roll: the trigger's name is a box, so it can roll. */
+  [data-ds='language-switch'] > [data-part='trigger'] > [data-part='label'] > span:not([data-part]) {
+    display: inline-block;
   }
 
   /* ------------------------------------------------------------ forced colors */

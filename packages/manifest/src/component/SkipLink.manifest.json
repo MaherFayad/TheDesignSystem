@@ -18,7 +18,9 @@
     "A visible link in running text or on its own line": "Link",
     "The path to the current page": "Breadcrumbs"
   },
-  "anatomy": ["root"],
+  "anatomy": [
+    "root"
+  ],
   "props": {
     "href": {
       "type": "string",
@@ -84,14 +86,18 @@
     "border.width.strong",
     "elevation.menu",
     "focus.shadow.ring",
-    "z.spotlight"
+    "z.spotlight",
+    "duration.spring-bouncy",
+    "ease.spring-bouncy",
+    "distance.enter"
   ],
+  "motion": "fade-rise",
   "frameworks": {
     "react": {
       "status": "ready",
       "behavior": "native a, focus moved by hand",
       "example": "SkipLink.demo.tsx",
-      "note": "No motion: the link appears at once on focus, so there is no pattern to name and nothing to reduce."
+      "note": "No motion: the link appears at once on focus, so there is no pattern to name and nothing to reduce. Round 2 (order 1.22, proposed), interaction skip-link-slide: drawn at once with its ring on focus, it slides down from distance.enter above on the bouncy spring. Reduced motion: it appears in place."
     },
     "angular": {
       "status": "planned",

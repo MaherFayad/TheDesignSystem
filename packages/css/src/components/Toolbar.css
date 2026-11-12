@@ -15,6 +15,18 @@
  * sets Button's private properties for the on state of a toggle item, and
  * nothing else of theirs.
  *
+ * Motion, interaction toolbar-press (order 1.22, proposed): items are tight,
+ * so a pressed item keeps Button's press and also dips its parts to
+ * scale.anticipate (Button's --_button-part-press, the attached segment
+ * form), and the release springs back on Button's bouncy spring. A toggle
+ * item that turns on pops its icon from scale.anticipate past rest on the
+ * bouncy spring (a keyframe animation added to the icon's own transform).
+ * Under reduced motion (the media query and :root[data-motion='reduce'])
+ * the dip is 1 and nothing pops. A style turns it off with
+ * --_toolbar-duration 0ms and --_button-part-press 1 on the items.
+ *
+ *   --_toolbar-duration, -ease    motion plumbing: the pop of an on toggle item
+ *
  * Overflow (Toolbar.tsx): children that do not fit carry data-overflowed
  * and are hidden; the root carries data-overflowing while the "More tools"
  * trigger (data-part="more") is shown. data-measuring is set for one
@@ -28,6 +40,8 @@
     --_toolbar-bg: var(--ds-color-bg-surface-2);
     --_toolbar-border-color: var(--ds-color-border-subtle);
     --_toolbar-separator-color: var(--ds-color-border-default);
+    --_toolbar-duration: var(--ds-duration-spring-bouncy);
+    --_toolbar-ease: var(--ds-ease-spring-bouncy);
 
     display: flex;
     flex-wrap: nowrap;
@@ -126,6 +140,36 @@
     --_button-bg: var(--ds-color-bg-overlay-40);
   }
 
+  /* ------------------------------------------------------------ press (toolbar-press) */
+
+  [data-ds='toolbar'] [data-part='item'] {
+    --_button-part-press: var(--ds-scale-anticipate);
+  }
+
+  [data-ds='toolbar'] [data-part='item'][data-state='on'] > [data-part='icon'] {
+    animation: ds-toolbar-pop var(--_toolbar-duration) var(--_toolbar-ease);
+    animation-composition: add;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    [data-ds='toolbar'] [data-part='item'] {
+      --_button-part-press: 1;
+    }
+
+    [data-ds='toolbar'] [data-part='item'] > [data-part='icon'] {
+      animation: none;
+    }
+  }
+
+  /* The same under the page setting (review B2). */
+  :root[data-motion='reduce'] [data-ds='toolbar'] [data-part='item'] {
+    --_button-part-press: 1;
+  }
+
+  :root[data-motion='reduce'] [data-ds='toolbar'] [data-part='item'] > [data-part='icon'] {
+    animation: none;
+  }
+
   /* ------------------------------------------------------------ disabled items */
 
   /*
@@ -158,6 +202,16 @@
 
     [data-ds='toolbar'] > [data-part='separator'] {
       background-color: CanvasText;
+    }
+  }
+
+  @keyframes ds-toolbar-pop {
+    from {
+      transform: scale(var(--ds-scale-anticipate));
+    }
+
+    to {
+      transform: none;
     }
   }
 }

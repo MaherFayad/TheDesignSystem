@@ -150,7 +150,12 @@
     "border.width.default",
     "border.width.strong",
     "size.touch-ios",
-    "font.size.s"
+    "font.size.s",
+    "duration.spring-bouncy",
+    "ease.spring-bouncy",
+    "scale.anticipate",
+    "distance.nudge",
+    "delay.stagger"
   ],
   "motion": "fade-rise",
   "frameworks": {
@@ -158,7 +163,7 @@
       "status": "ready",
       "behavior": "hand built nav of links",
       "example": "TabBar.demo.tsx",
-      "note": "No motion of its own: the current item's colors swap at once. fade-rise is the pattern a layout uses if it reveals the bar."
+      "note": "No motion of its own: the current item's colors swap at once. fade-rise is the pattern a layout uses if it reveals the bar. Round 2 (order 1.22, proposed), interaction tab-bar-pop: when an item becomes current its icon and pill pop from scale.anticipate past rest and its label rises a stagger step later (CSS keyframes that start with data-active). Reduced motion: nothing moves."
     },
     "angular": {
       "status": "planned",

@@ -196,7 +196,15 @@
     "ease.default",
     "ease.out",
     "ease.emphasized",
-    "ease.exit"
+    "ease.exit",
+    "duration.spring-snappy",
+    "ease.spring-snappy",
+    "duration.spring-bouncy",
+    "ease.spring-bouncy",
+    "duration.spring-soft",
+    "ease.spring-soft",
+    "scale.stretch",
+    "scale.anticipate"
   ],
   "motion": "menu-scale",
   "frameworks": {
@@ -204,7 +212,7 @@
       "status": "ready",
       "behavior": "radix:NavigationMenu; the phone list is a Drawer holding a Sidebar",
       "example": "Navbar.demo.tsx",
-      "note": "menu-scale: the viewport scales from 0.97 and fades in, the reverse on close, faster; the indicator slides under the open trigger. Reduced motion: none, and Radix removes the closed viewport at once. The phone Drawer plays Drawer's own slide from the inline start."
+      "note": "menu-scale: the viewport scales from 0.97 and fades in, the reverse on close, faster; the indicator slides under the open trigger. Reduced motion: none, and Radix removes the closed viewport at once. The phone Drawer plays Drawer's own slide from the inline start. Round 2 (order 1.22, proposed): nav-current-slide, the current link's bar (::before) slides from the old current link on the snappy spring, stretched along its travel; nav-hover-follow, the hover veil (::after) slides from the link the pointer left. Both from internal/indicator.ts, WAAPI on the pseudo elements."
     },
     "angular": {
       "status": "planned",

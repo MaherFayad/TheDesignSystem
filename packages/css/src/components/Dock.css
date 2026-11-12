@@ -16,10 +16,22 @@
  *   --_dock-ring                 the focus ring, on the tile
  *   --_dock-scale, -neighbor-scale, -lift   the hover transform of the tile and its neighbors
  *                                (the lift is a length, 0px at rest: the label offset adds it)
- *                                (1, 1 and 0 here; Desk magnifies)
+ *                                (here scale.lift, 1 and distance.lift; Desk magnifies)
+ *   --_dock-duration, -ease      motion plumbing: the tile's spring (dock-lift)
  *
  * Items swap their own --_dock-item-* properties for the states (the state
  * is on the item). Only the label's opacity and the tile's transform move.
+ *
+ * Motion, interaction dock-lift (order 1.22, proposed): the tile under the
+ * pointer lifts toward it by --_dock-lift and grows to --_dock-scale on the
+ * bouncy spring, so it passes its place and settles; the next tile on each
+ * side follows at half the lift, and the one after that at a quarter, so the
+ * row swells around the pointer. When an item becomes current its tile pops
+ * from scale.anticipate past rest (a keyframe animation added to the hover
+ * transform with animation-composition). Studio's lift and scale tokens are
+ * 0 and 1, so it only pops, in steps. Under reduced motion (the media query
+ * and :root[data-motion='reduce']) nothing moves. A style turns it off by
+ * setting --_dock-duration to 0ms.
  */
 @layer ds.base {
   [data-ds='dock'] {
@@ -41,9 +53,11 @@
     --_dock-current-color: var(--ds-color-text-default);
     --_dock-indicator: var(--ds-color-text-default);
     --_dock-ring: var(--ds-focus-shadow-ring);
-    --_dock-scale: 1;
+    --_dock-scale: var(--ds-scale-lift);
     --_dock-neighbor-scale: 1;
-    --_dock-lift: 0px;
+    --_dock-lift: var(--ds-distance-lift);
+    --_dock-duration: var(--ds-duration-spring-bouncy);
+    --_dock-ease: var(--ds-ease-spring-bouncy);
 
     display: inline-flex;
     flex-wrap: wrap;
@@ -106,7 +120,13 @@
     box-shadow: var(--_dock-item-tile-ring);
     transform: var(--_dock-item-transform);
     transform-origin: 50% 100%;
-    transition: transform var(--ds-duration-base) var(--ds-ease-emphasized);
+    transition: transform var(--_dock-duration) var(--_dock-ease);
+  }
+
+  /* dock-lift: the current tile pops when it becomes current, on top of any hover transform. */
+  [data-ds='dock'] > [data-part='item'][data-active] > [data-part='item-icon'] {
+    animation: ds-dock-pop var(--_dock-duration) var(--_dock-ease);
+    animation-composition: add;
   }
 
   /* An app image fills its tile. */
@@ -248,6 +268,12 @@
     [data-ds='dock'] > [data-part='item']:hover + [data-part='item'] {
       --_dock-item-transform: translateY(calc(-0.5 * var(--_dock-lift))) scale(var(--_dock-neighbor-scale));
     }
+
+    /* The second neighbors react a little: a quarter of the lift and half the neighbor growth. */
+    [data-ds='dock'] > [data-part='item']:has(+ [data-part='item'] + [data-part='item']:hover),
+    [data-ds='dock'] > [data-part='item']:hover + [data-part='item'] + [data-part='item'] {
+      --_dock-item-transform: translateY(calc(-0.25 * var(--_dock-lift))) scale(calc((1 + var(--_dock-neighbor-scale)) / 2));
+    }
   }
 
   /*
@@ -298,7 +324,20 @@
 
     [data-ds='dock'] > [data-part='item'] > :is([data-part='item-icon'], [data-part='item-label']) {
       transition: none;
+      animation: none;
     }
+  }
+
+  /* The same under the page setting (review B2). */
+  :root[data-motion='reduce'] [data-ds='dock'] {
+    --_dock-scale: 1;
+    --_dock-neighbor-scale: 1;
+    --_dock-lift: 0px;
+  }
+
+  :root[data-motion='reduce'] [data-ds='dock'] > [data-part='item'] > :is([data-part='item-icon'], [data-part='item-label']) {
+    transition: none;
+    animation: none;
   }
 
   @media (forced-colors: active) {
@@ -319,6 +358,16 @@
 
     [data-ds='dock'] > [data-part='item'] > [data-part='item-label'] {
       border: var(--ds-border-width-default) solid CanvasText;
+    }
+  }
+
+  @keyframes ds-dock-pop {
+    from {
+      transform: scale(var(--ds-scale-anticipate));
+    }
+
+    to {
+      transform: none;
     }
   }
 }

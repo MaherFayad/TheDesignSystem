@@ -13,8 +13,17 @@
  * one pixel) but stays in the tab order and the accessibility tree. The
  * focus rule only lifts the clip and sets the box. It is drawn at the block
  * start and inline start corner of its containing block, above the page
- * chrome. Nothing animates: it appears at once, so there is no motion to
- * reduce.
+ * chrome.
+ *
+ * Motion, interaction skip-link-slide (order 1.22, proposed): it is drawn at
+ * once on focus, ring included, and slides down into place from
+ * distance.enter above on the bouncy spring, so it passes its place and
+ * settles. Only transform moves; the ring is the link's own box shadow and
+ * never fades or scales. Under reduced motion (the media query and
+ * :root[data-motion='reduce']) it does not move. A style turns it off by
+ * setting --_skip-link-enter-y to 0px.
+ *
+ *   --_skip-link-enter-y, -duration, -ease   motion plumbing of the slide
  */
 @layer ds.base {
   [data-ds='skip-link'] {
@@ -29,6 +38,9 @@
     --_skip-link-shadow: var(--ds-elevation-menu);
     --_skip-link-offset: var(--ds-space-s);
     --_skip-link-ring: var(--ds-focus-shadow-ring);
+    --_skip-link-enter-y: calc(-1 * var(--ds-distance-enter));
+    --_skip-link-duration: var(--ds-duration-spring-bouncy);
+    --_skip-link-ease: var(--ds-ease-spring-bouncy);
 
     position: absolute;
     inset-block-start: var(--_skip-link-offset);
@@ -73,6 +85,7 @@
     overflow: visible;
     clip-path: none;
     white-space: normal;
+    animation: ds-skip-link-in var(--_skip-link-duration) var(--_skip-link-ease);
   }
 
   /* The transparent outline is set only here, so forced colors mode draws it on focus and nowhere else. */
@@ -88,6 +101,27 @@
     --_skip-link-font-size: var(--ds-font-size-m);
 
     line-height: var(--ds-font-leading-arabic-snug);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    [data-ds='skip-link']:focus {
+      animation: none;
+    }
+  }
+
+  /* The same under the page setting (review B2). */
+  :root[data-motion='reduce'] [data-ds='skip-link']:focus {
+    animation: none;
+  }
+
+  @keyframes ds-skip-link-in {
+    from {
+      transform: translateY(var(--_skip-link-enter-y));
+    }
+
+    to {
+      transform: none;
+    }
   }
 
   /* ------------------------------------------------------------ forced colors */

@@ -13,8 +13,19 @@
  *   --_tab-bar-badge-bg, -badge-fg
  *   --_tab-bar-ring               the focus ring
  *
+ *   --_tab-bar-duration, -ease    motion plumbing: the pop of tab-bar-pop
+ *
  * Items swap their own --_tab-bar-item-* properties for the states (the
- * state is on the item, not the root). Nothing animates: colors swap.
+ * state is on the item, not the root). Colors swap at once.
+ *
+ * Motion, interaction tab-bar-pop (order 1.22, proposed): when an item
+ * becomes current, its icon and pill pop from scale.anticipate past rest and
+ * settle on the bouncy spring, and its label rises by distance.nudge on the
+ * same spring a stagger step later. A keyframe animation that starts when
+ * data-active appears, so a router page that mounts a new bar pops the
+ * current item as the page lands. Transform only; under reduced motion (the
+ * media query and :root[data-motion='reduce']) nothing plays. A style turns
+ * it off by setting --_tab-bar-duration to 0ms.
  */
 @layer ds.base {
   [data-ds='tab-bar'] {
@@ -31,6 +42,8 @@
     --_tab-bar-weight: var(--ds-font-weight-medium);
     --_tab-bar-weight-active: var(--ds-font-weight-bold);
     --_tab-bar-ring: inset 0 0 0 var(--ds-border-width-strong) var(--ds-color-focus-ring);
+    --_tab-bar-duration: var(--ds-duration-spring-bouncy);
+    --_tab-bar-ease: var(--ds-ease-spring-bouncy);
 
     display: flex;
     align-items: stretch;
@@ -162,11 +175,33 @@
     --_tab-bar-item-weight: var(--_tab-bar-weight-active);
   }
 
+  /* tab-bar-pop: the icon and its pill pop, the label rises a beat later. */
+  [data-ds='tab-bar'] > [data-part='item'][data-active] > [data-part='item-icon'] {
+    animation: ds-tab-bar-pop var(--_tab-bar-duration) var(--_tab-bar-ease);
+  }
+
+  [data-ds='tab-bar'] > [data-part='item'][data-active] > [data-part='item-label'] {
+    animation: ds-tab-bar-rise var(--_tab-bar-duration) var(--_tab-bar-ease) var(--ds-delay-stagger) backwards;
+  }
+
   /* The transparent outline is set only here, so forced colors mode draws it on focus and nowhere else. */
   [data-ds='tab-bar'] > [data-part='item']:focus-visible {
     outline: var(--ds-border-width-strong) solid transparent;
     outline-offset: calc(-1 * var(--ds-border-width-strong));
     box-shadow: var(--_tab-bar-ring);
+  }
+
+  /* ------------------------------------------------------------ reduced motion */
+
+  @media (prefers-reduced-motion: reduce) {
+    [data-ds='tab-bar'] > [data-part='item'] > :is([data-part='item-icon'], [data-part='item-label']) {
+      animation: none;
+    }
+  }
+
+  /* The same under the page setting (review B2). */
+  :root[data-motion='reduce'] [data-ds='tab-bar'] > [data-part='item'] > :is([data-part='item-icon'], [data-part='item-label']) {
+    animation: none;
   }
 
   /* ------------------------------------------------------------ forced colors */
@@ -178,6 +213,26 @@
 
     [data-ds='tab-bar'] [data-part='item-badge'] {
       border: var(--ds-border-width-default) solid CanvasText;
+    }
+  }
+
+  @keyframes ds-tab-bar-pop {
+    from {
+      transform: scale(var(--ds-scale-anticipate));
+    }
+
+    to {
+      transform: none;
+    }
+  }
+
+  @keyframes ds-tab-bar-rise {
+    from {
+      transform: translateY(var(--ds-distance-nudge));
+    }
+
+    to {
+      transform: none;
     }
   }
 }

@@ -14,7 +14,26 @@
  *
  * Link steps are system Links (data-ds="link" data-part="link"). This file
  * restyles them through Link's private properties, and sets their box for
- * truncation, which no property covers. Nothing animates.
+ * truncation, which no property covers.
+ *
+ * Motion, interaction nav-hover-follow (order 1.22, proposed). A link step
+ * draws a hover pill on its ::before, under its label (Link's standalone
+ * label is positioned and comes later, so it paints over the pill; no
+ * z-index). ::after is not used: the pill would cover the text.
+ * it fades in on hover, and Breadcrumbs.tsx slides it from the step the
+ * pointer just left on the snappy spring, stretched along the way (the
+ * shared pill, react/src/internal/indicator.ts), so one pill seems to follow
+ * the pointer. The separator after a hovered step nudges toward the next
+ * step by distance.nudge on the snappy spring. Private names beyond the
+ * base list:
+ *
+ *   --_breadcrumbs-pill                   the hover pill fill
+ *   --_breadcrumbs-pill-opacity           0 at rest, 1 on hover
+ *   --_breadcrumbs-separator-shift        the separator nudge now, 0 at rest
+ *
+ * The pill keeps the default transform origin the slide is worked out for.
+ * Under reduced motion (the media query and :root[data-motion='reduce']) the
+ * pill fades with no slide and the separator stays still.
  */
 @layer ds.base {
   [data-ds='breadcrumbs'] {
@@ -25,6 +44,10 @@
     --_breadcrumbs-current-fg: var(--ds-color-text-bright);
     --_breadcrumbs-separator-fg: var(--ds-color-text-subtle);
     --_breadcrumbs-item-max: var(--ds-menu-width-min);
+    --_breadcrumbs-pill: var(--ds-color-bg-overlay-10);
+    --_breadcrumbs-shift: var(--ds-distance-nudge);
+    --_breadcrumbs-duration: var(--ds-duration-spring-snappy);
+    --_breadcrumbs-ease: var(--ds-ease-spring-snappy);
 
     display: block;
     min-inline-size: 0;
@@ -72,7 +95,9 @@
   [data-ds='breadcrumbs'] [data-part='link'] {
     --_link-fg: var(--_breadcrumbs-fg);
     --_link-fg-hover: var(--_breadcrumbs-fg-hover);
+    --_breadcrumbs-pill-opacity: 0;
 
+    position: relative;
     flex: 0 1 auto;
     min-inline-size: 0;
     overflow-wrap: anywhere;
@@ -117,10 +142,63 @@
   }
 
   [data-ds='breadcrumbs'] [data-part='separator'] {
+    --_breadcrumbs-separator-shift: 0px;
+
     display: inline-flex;
     flex: none;
     margin-inline: var(--_breadcrumbs-gap);
     color: var(--_breadcrumbs-separator-fg);
+    transform: translateX(var(--_breadcrumbs-separator-shift));
+    transition: transform var(--_breadcrumbs-duration) var(--_breadcrumbs-ease);
+  }
+
+  /* ------------------------------------------------------------ hover pill and separator nudge */
+
+  /* The hover pill: under the step's label, a little wider than it. */
+  [data-ds='breadcrumbs'] [data-part='link']::before {
+    content: '';
+    position: absolute;
+    inset-block: 0;
+    inset-inline: calc(-1 * var(--ds-space-3xs));
+    border-radius: var(--ds-radius-sm);
+    background-color: var(--_breadcrumbs-pill);
+    opacity: var(--_breadcrumbs-pill-opacity);
+    pointer-events: none;
+    transition: opacity var(--ds-duration-fast) var(--ds-ease-default);
+  }
+
+  @media (hover: hover) {
+    [data-ds='breadcrumbs'] [data-part='link']:hover:not([data-disabled]) {
+      --_breadcrumbs-pill-opacity: 1;
+    }
+
+    /* The separator after a hovered step leans toward the next step, in the reading direction. */
+    [data-ds='breadcrumbs'] [data-part='item']:has(> [data-part='link']:hover:not([data-disabled])) > [data-part='separator'] {
+      --_breadcrumbs-separator-shift: var(--_breadcrumbs-shift);
+    }
+
+    [data-ds='breadcrumbs']:dir(rtl) [data-part='item']:has(> [data-part='link']:hover:not([data-disabled])) > [data-part='separator'] {
+      --_breadcrumbs-separator-shift: calc(-1 * var(--_breadcrumbs-shift));
+    }
+  }
+
+  /* Reduced motion: the pill fades, nothing moves (the media query and the page setting). */
+  @media (prefers-reduced-motion: reduce) {
+    [data-ds='breadcrumbs'] {
+      --_breadcrumbs-shift: 0px;
+    }
+
+    [data-ds='breadcrumbs'] [data-part='separator'] {
+      transition: none;
+    }
+  }
+
+  :root[data-motion='reduce'] [data-ds='breadcrumbs'] {
+    --_breadcrumbs-shift: 0px;
+  }
+
+  :root[data-motion='reduce'] [data-ds='breadcrumbs'] [data-part='separator'] {
+    transition: none;
   }
 
   [data-ds='breadcrumbs'] [data-part='overflow'] {
@@ -136,6 +214,10 @@
 
     [data-ds='breadcrumbs'] [data-part='separator'] {
       color: GrayText;
+    }
+
+    [data-ds='breadcrumbs'] [data-part='link']::before {
+      display: none;
     }
   }
 }

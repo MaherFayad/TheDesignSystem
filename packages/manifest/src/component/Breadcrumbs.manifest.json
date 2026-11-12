@@ -114,14 +114,23 @@
     "menu.width.min",
     "color.text.muted",
     "color.text.bright",
-    "color.text.subtle"
+    "color.text.subtle",
+    "duration.spring-snappy",
+    "ease.spring-snappy",
+    "scale.stretch",
+    "distance.nudge",
+    "color.bg.overlay-10",
+    "radius.sm",
+    "duration.fast",
+    "ease.default"
   ],
+  "motion": "tab-indicator",
   "frameworks": {
     "react": {
       "status": "ready",
       "behavior": "nav and ol, system Link, IconButton and radix:DropdownMenu for the overflow",
       "example": "Breadcrumbs.demo.tsx",
-      "note": "No motion of its own: the overflow menu plays DropdownMenu's menu-scale."
+      "note": "The overflow menu plays DropdownMenu's menu-scale. Round 2 (order 1.22, proposed), interaction nav-hover-follow: each link step draws a hover pill on its ::before, under its label, that fades in on hover and slides from the step the pointer left (internal/indicator.ts); the separator after a hovered step nudges by distance.nudge toward the next step in CSS. Reduced motion: the pill fades in place."
     },
     "angular": {
       "status": "planned",

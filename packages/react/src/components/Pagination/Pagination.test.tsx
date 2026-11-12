@@ -268,4 +268,37 @@ describe('Pagination', () => {
     for (const shape of ['default', 'pill', 'square']) expect(variants?.querySelector(`[data-ds="pagination"][data-shape="${shape}"]`)).not.toBeNull();
     expect(variants?.querySelector('[data-ds="theme"][lang="ar"] [data-ds="pagination"]')).not.toBeNull();
   });
+
+  it('pagination-roll: the current page holds a decorative pill, numbers sit in an aria-hidden host, and a shifted window rolls', async () => {
+    const calls: [Keyframe[], KeyframeAnimationOptions][] = [];
+    const proto = Element.prototype as unknown as { animate?: unknown; getAnimations?: unknown };
+    const saved = { animate: proto.animate, getAnimations: proto.getAnimations };
+    proto.animate = function (frames: Keyframe[], options: KeyframeAnimationOptions) {
+      calls.push([frames, options]);
+      return { finished: Promise.resolve(), cancel() {}, playState: 'running', currentTime: 0, effect: null } as unknown as Animation;
+    };
+    proto.getAnimations = () => [];
+    try {
+      // Neutral plays number-roll in full (Studio, the default style, plays it reduced).
+      const { container } = render(
+        <Theme style="neutral">
+          <Pagination pageCount={20} defaultPage={8} />
+        </Theme>,
+      );
+      const current = screen.getByRole('button', { name: 'Page 8' });
+      expect(current.firstElementChild?.getAttribute('aria-hidden')).toBe('true');
+      expect(current.firstElementChild?.hasAttribute('data-part')).toBe(false);
+      expect(current.querySelector('[data-part="label"] > span[aria-hidden="true"]')?.textContent).toBe('8');
+      expect(screen.getByRole('button', { name: 'Page 7' }).querySelector(':scope > span:not([data-part])')).toBeNull();
+      await userEvent.click(screen.getByRole('button', { name: 'Next page' }));
+      expect(screen.getByRole('button', { name: 'Page 9' }).getAttribute('aria-current')).toBe('page');
+      // The window shifted: every middle slot rolls (digit-roll), and the arrow winds up.
+      expect(calls.filter(([, o]) => o.id === 'ds-motion:digit-roll').length).toBeGreaterThan(0);
+      expect(calls.some(([f, o]) => o.id === 'ds-motion:indicator-answer' && f[1]?.transform === 'translateX(-2px)')).toBe(true);
+      expect(root(container).querySelectorAll('[data-part="page"] > span[aria-hidden="true"]:not([data-part])')).toHaveLength(1);
+    } finally {
+      proto.animate = saved.animate;
+      proto.getAnimations = saved.getAnimations;
+    }
+  });
 });

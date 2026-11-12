@@ -164,7 +164,15 @@
     "ease.standard",
     "color.bg.overlay-50",
     "border.width.strong",
-    "color.border.subtle"
+    "color.border.subtle",
+    "duration.spring-snappy",
+    "ease.spring-snappy",
+    "duration.spring-bouncy",
+    "ease.spring-bouncy",
+    "duration.spring-soft",
+    "ease.spring-soft",
+    "scale.stretch",
+    "scale.anticipate"
   ],
   "motion": "tab-indicator",
   "frameworks": {
@@ -172,7 +180,7 @@
       "status": "ready",
       "behavior": "radix:ToggleGroup type single, the value never empty, selection follows focus; items are ToggleButton roots on ButtonBase",
       "example": "SegmentedControl.demo.tsx",
-      "note": "The indicator is measured from the selected item (logical start, top, inline and block size) and slides with catalog['tab-indicator'], transform only. Reduced motion plays nothing: it jumps. A ResizeObserver re-places it, without motion, when density, fonts or labels change the size."
+      "note": "The indicator is measured from the selected item (logical start, top, inline and block size) and slides with transform only. Reduced motion plays nothing: it jumps. A ResizeObserver re-places it, without motion, when density, fonts or labels change the size. Round 2 (order 1.22, proposed), interaction tab-slide: the thumb slides with the shared pill (internal/indicator.ts) on the snappy spring, stretched along its travel, and the labels dip and pop. Reduced motion: it jumps."
     },
     "angular": {
       "status": "ready",

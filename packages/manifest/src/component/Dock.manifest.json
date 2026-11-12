@@ -167,7 +167,12 @@
     "ease.default",
     "tooltip.width-max",
     "space.3xl",
-    "font.size.s"
+    "font.size.s",
+    "duration.spring-bouncy",
+    "ease.spring-bouncy",
+    "scale.anticipate",
+    "scale.lift",
+    "distance.lift"
   ],
   "motion": "fade-rise",
   "frameworks": {
@@ -175,7 +180,7 @@
       "status": "ready",
       "behavior": "hand built nav of links",
       "example": "Dock.demo.tsx",
-      "note": "The name fades in on hover and focus (the opacity half of fade-rise; the rise is left out so the name sits still over a moving tile). Desk magnifies the tile with a transform. Both collapse under reduced motion."
+      "note": "The name fades in on hover and focus (the opacity half of fade-rise; the rise is left out so the name sits still over a moving tile). Desk magnifies the tile with a transform. Both collapse under reduced motion. Round 2 (order 1.22, proposed), interaction dock-lift: the tile lifts toward the pointer on the bouncy spring, the next tiles follow at a half and a quarter, and a tile that becomes current pops (animation-composition add). Reduced motion: nothing moves."
     },
     "angular": {
       "status": "planned",

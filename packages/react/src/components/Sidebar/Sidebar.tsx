@@ -28,6 +28,15 @@
 //   is never hidden (WCAG 2.4.11) and no footer link covers part of an item.
 // - The width never animates (only transform and opacity may), so collapse
 //   is instant. An opened group fades in (pattern "fade-rise").
+// - Motion of order 1.22 (proposed), from react/src/internal/indicator.ts:
+//   "nav-current-slide": when another item becomes current, its edge bar
+//   (the item's ::before) slides from the old one along the column on the
+//   snappy spring, stretched on the way, and the labels dip and pop.
+//   "nav-hover-follow": the hover veil (::after) slides from the item the
+//   pointer just left. "sidebar-collapse": the width still changes at once;
+//   on expand the labels, counts and group titles come in from the inline
+//   start after the panel, a stagger step apart (staggerGroup), and on
+//   collapse the icons gather (scale.anticipate) and settle. No DOM is added.
 import {
   Children,
   Fragment,
@@ -37,6 +46,7 @@ import {
   useContext,
   useId,
   useLayoutEffect,
+  useRef,
   useState,
   type AnchorHTMLAttributes,
   type HTMLAttributes,
@@ -48,8 +58,11 @@ import {
 } from 'react';
 import { Collapsible, Slot } from 'radix-ui';
 import { Icon, type IconName } from '@the-system/icons/react';
+import { staggerGroup } from '@the-system/motion';
 import type { Size } from '@the-system/shared';
 import { useTheme } from '../../theme';
+import { followIndicator, popIn, useHoverFollow, useIndicatorTrack, type IndicatorTrack } from '../../internal/indicator';
+import { useMotion } from '../../internal/motion';
 import { Button } from '../Button';
 import { IconButton } from '../IconButton';
 import { Tooltip, TooltipProvider } from '../Tooltip';
@@ -78,6 +91,9 @@ interface SidebarContextValue {
 }
 
 const SidebarContext = createContext<SidebarContextValue | null>(null);
+
+/** Where the current item's edge bar was last drawn, for the slide. */
+const TrackContext = createContext<IndicatorTrack | null>(null);
 
 /** True inside a group's list, where an item is a list item. In the header or footer it is a bare link. */
 const ListContext = createContext(false);
@@ -160,6 +176,42 @@ export function Sidebar({
     setHeaders((n) => n + 1);
     return () => setHeaders((n) => n - 1);
   }, []);
+  const track = useIndicatorTrack();
+  const motion = useMotion();
+  const rootRef = useRef<HTMLElement | null>(null);
+  const setRootRef = useCallback(
+    (node: HTMLElement | null) => {
+      rootRef.current = node;
+      if (typeof ref === 'function') ref(node);
+      else if (ref) ref.current = node;
+    },
+    [ref],
+  );
+  useHoverFollow(rootRef, {
+    item: '[data-part="item"]:not([data-disabled])',
+    pseudo: '::after',
+    mode: () => motion.mode('nav-hover-follow'),
+  });
+
+  // Collapse and expand: the width changes at once; the parts answer after it.
+  const wasCollapsed = useRef(collapsed);
+  useLayoutEffect(() => {
+    const root = rootRef.current;
+    const before = wasCollapsed.current;
+    wasCollapsed.current = collapsed;
+    if (!root || before === collapsed) return;
+    const mode = motion.mode('sidebar-collapse');
+    if (collapsed) {
+      for (const icon of root.querySelectorAll('[data-part="item-icon"]')) popIn(icon, mode);
+      return;
+    }
+    staggerGroup(root.querySelectorAll('[data-part="item-label"], [data-part="item-count"], [data-part="group-label"]'), {
+      mode,
+      from: 'inline',
+      offset: 2,
+      spring: 'soft',
+    });
+  }, [collapsed, motion]);
 
   // The header goes first and the footer last; everything else goes in the scrolling body.
   const head: ReactNode[] = [];
@@ -182,16 +234,18 @@ export function Sidebar({
       }}
     >
       <TooltipProvider>
-        <nav {...rest} ref={ref} aria-label={label} data-ds="sidebar" data-size={size} data-state={collapsed ? 'collapsed' : 'expanded'}>
-          {collapsible && headers === 0 && (
-            <div data-part="header">
-              <SidebarToggle />
-            </div>
-          )}
-          {head}
-          {body.length > 0 && <div data-part="body">{body}</div>}
-          {foot}
-        </nav>
+        <TrackContext value={track}>
+          <nav {...rest} ref={setRootRef} aria-label={label} data-ds="sidebar" data-size={size} data-state={collapsed ? 'collapsed' : 'expanded'}>
+            {collapsible && headers === 0 && (
+              <div data-part="header">
+                <SidebarToggle />
+              </div>
+            )}
+            {head}
+            {body.length > 0 && <div data-part="body">{body}</div>}
+            {foot}
+          </nav>
+        </TrackContext>
       </TooltipProvider>
     </SidebarContext.Provider>
   );
@@ -375,11 +429,44 @@ export function SidebarItem({
 }: SidebarItemProps) {
   const inList = useContext(ListContext);
   const { collapsed } = useSidebar();
+  const track = useContext(TrackContext);
+  const motion = useMotion();
   const shown = !count ? undefined : count > COUNT_MAX ? `${COUNT_MAX}+` : String(count);
+  const key = useId();
+  const itemRef = useRef<HTMLAnchorElement | null>(null);
+  const setItemRef = useCallback(
+    (node: HTMLAnchorElement | null) => {
+      itemRef.current = node;
+      if (typeof ref === 'function') ref(node);
+      else if (ref) ref.current = node;
+    },
+    [ref],
+  );
+
+  // The current item: its edge bar slides from the item that was current (nav-current-slide).
+  useLayoutEffect(() => {
+    const el = itemRef.current;
+    const root = el?.closest('[data-ds="sidebar"]');
+    if (!active || !el || !root || !track) return;
+    const other = track.el;
+    followIndicator(
+      track,
+      key,
+      { el, pseudo: '::before' },
+      {
+        mode: motion.mode('nav-current-slide'),
+        anchor: root,
+        axis: 'y',
+        label: el.querySelector(':scope > [data-part="item-label"]'),
+        // Two items marked current at once: the bar does not jump between them.
+        slide: !(other && other !== el && other.isConnected && other.hasAttribute('data-active')),
+      },
+    );
+  });
 
   const attrs = {
     ...rest,
-    ref,
+    ref: setItemRef,
     href: disabled ? undefined : href,
     // Without href an <a> has no role and no tab stop: give both back.
     role: disabled ? (rest.role ?? 'link') : rest.role,

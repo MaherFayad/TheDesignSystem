@@ -262,7 +262,17 @@
     "duration.base",
     "ease.default",
     "ease.out",
-    "opacity.disabled"
+    "opacity.disabled",
+    "duration.spring-snappy",
+    "ease.spring-snappy",
+    "duration.spring-bouncy",
+    "ease.spring-bouncy",
+    "duration.spring-soft",
+    "ease.spring-soft",
+    "scale.stretch",
+    "scale.anticipate",
+    "delay.stagger",
+    "distance.shift"
   ],
   "motion": "fade-rise",
   "frameworks": {
@@ -270,7 +280,7 @@
       "status": "ready",
       "behavior": "hand built nav, radix:Collapsible for groups, radix:Slot for asChild, Tooltip for collapsed items",
       "example": "Sidebar.demo.tsx",
-      "note": "fade-rise: an opened group's list fades in and rises one step from below; closing is instant. Reduced motion: no animation, the list shows at once. The width never animates, so collapse is instant."
+      "note": "fade-rise: an opened group's list fades in and rises one step from below; closing is instant. Reduced motion: no animation, the list shows at once. The width never animates, so collapse is instant. Round 2 (order 1.22, proposed): nav-current-slide (the edge bar ::before slides along the column, labels dip and pop), nav-hover-follow (the hover veil ::after slides from the item the pointer left) and sidebar-collapse (the width changes at once; on expand the labels come in from the inline start after it with staggerGroup, on collapse the icons pop)."
     },
     "angular": {
       "status": "planned",

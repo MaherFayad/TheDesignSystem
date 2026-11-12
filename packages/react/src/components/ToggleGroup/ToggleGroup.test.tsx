@@ -190,7 +190,57 @@ describe('ToggleGroup', () => {
       </ToggleGroup>,
     );
     const item = screen.getByRole('radio', { name: 'Grid view' });
-    expect(Array.from(item.children).map((c) => c.getAttribute('data-part'))).toEqual(['icon']);
+    expect(Array.from(item.children).map((c) => c.getAttribute('data-part'))).toEqual([null, 'icon']);
+    expect(item.firstElementChild?.getAttribute('aria-hidden')).toBe('true');
+  });
+
+  it('a single group gives each item a decorative pill span and slides it to the new item', async () => {
+    const animate = vi.fn((_frames?: Keyframe[], _options?: KeyframeAnimationOptions) => ({ finished: Promise.resolve(), cancel() {}, playState: 'running' }) as unknown as Animation);
+    const proto = HTMLElement.prototype as unknown as { animate?: unknown };
+    const saved = { animate: proto.animate, rect: HTMLElement.prototype.getBoundingClientRect };
+    proto.animate = animate;
+    HTMLElement.prototype.getBoundingClientRect = function (this: HTMLElement) {
+      const item = this.closest('[data-part="item"]') as HTMLElement | null;
+      if (!item) return DOMRect.fromRect({ x: 0, y: 0, width: 300, height: 32 });
+      const i = Array.from(item.parentElement?.children ?? []).indexOf(item);
+      return DOMRect.fromRect({ x: i * 80, y: 0, width: 72, height: 32 });
+    };
+    try {
+      const onValueChange = vi.fn();
+      render(
+        <ToggleGroup type="single" aria-label="Align" defaultValue="start" onValueChange={onValueChange}>
+          <ToggleGroupItem value="start">Start</ToggleGroupItem>
+          <ToggleGroupItem value="center">Center</ToggleGroupItem>
+        </ToggleGroup>,
+      );
+      for (const r of screen.getAllByRole('radio')) expect(r.querySelector(':scope > span[aria-hidden="true"]:not([data-part])')).not.toBeNull();
+      expect(animate).not.toHaveBeenCalled();
+      await userEvent.click(screen.getByRole('radio', { name: 'Center' }));
+      expect(onValueChange).toHaveBeenCalledWith('center');
+      expect(screen.getByRole('radio', { name: 'Center' }).getAttribute('data-state')).toBe('on');
+      const slide = animate.mock.calls.find((c) => c[1]?.id === 'ds-motion:indicator-slide');
+      expect(slide?.[0]?.[0]?.transform).toBe('translate(-80px, 0px) scale(1, 1)');
+    } finally {
+      proto.animate = saved.animate;
+      HTMLElement.prototype.getBoundingClientRect = saved.rect;
+    }
+  });
+
+  it('a multiple group has no pill span', () => {
+    render(
+      <ToggleGroup type="multiple" aria-label="Style">
+        <ToggleGroupItem value="bold">Bold</ToggleGroupItem>
+      </ToggleGroup>,
+    );
+    expect(screen.getByRole('button', { name: 'Bold' }).querySelector(':scope > span:not([data-part])')).toBeNull();
+  });
+
+  it('attached labels keep whole words and carry no block padding (review B4, N21)', () => {
+    const css = readFileSync(join(process.cwd(), 'packages/css/src/components/ToggleGroup.css'), 'utf8');
+    expect(css).not.toMatch(/overflow-wrap: anywhere/);
+    expect(css).toMatch(/overflow-wrap: break-word/);
+    const attached = css.slice(css.indexOf("[data-ds='toggle-group'][data-attached] > [data-part='item'] {"));
+    expect(attached.slice(0, attached.indexOf('}'))).toMatch(/padding-block: 0;/);
   });
 
   it('a disabled item keeps aria-disabled and focus, does not toggle, and the arrows pass through it', async () => {

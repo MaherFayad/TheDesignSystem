@@ -21,13 +21,23 @@
 //   size.touch.ios (44pt) and size.touch.android (48dp) for touch templates.
 // - `start` and `end` hold the brand and the account or settings items, at
 //   the block start and the block end of the column.
-// - No motion: the hover veil fades on duration.fast and collapses under
-//   reduced motion; nothing moves, so there is no pattern to name.
+// - Motion of order 1.22 (proposed), from react/src/internal/indicator.ts:
+//   "nav-current-slide": when another item becomes current, its edge bar
+//   (the item's ::before) slides from the old one along the column on the
+//   snappy spring, stretched on the way, and the labels dip and pop.
+//   "nav-hover-follow": the hover veil (::after, which fades on
+//   duration.fast) slides from the item the pointer just left.
+//   "sidebar-collapse": when hideLabels changes, the icons travel to their
+//   new places (flipPlay) and, when the labels come back, they rise in after
+//   the icons, a stagger step apart. No DOM is added.
 import {
   createContext,
   isValidElement,
+  useCallback,
   useContext,
+  useId,
   useLayoutEffect,
+  useRef,
   useState,
   type AnchorHTMLAttributes,
   type HTMLAttributes,
@@ -39,8 +49,11 @@ import {
 } from 'react';
 import { Slot } from 'radix-ui';
 import { Icon, type IconName } from '@the-system/icons/react';
+import { flipPlay, staggerGroup, type MotionRect } from '@the-system/motion';
 import type { Size } from '@the-system/shared';
 import { Tooltip, TooltipProvider } from '../Tooltip';
+import { followIndicator, fromLocal, layerRect, toLocal, useHoverFollow, useIndicatorTrack, type IndicatorTrack } from '../../internal/indicator';
+import { useMotion } from '../../internal/motion';
 
 export type RailSize = Extract<Size, 'sm' | 'md'>;
 /** The icon of an item: a system icon name or a node. */
@@ -54,6 +67,9 @@ const ListContext = createContext(false);
 
 /** True when the rail draws icons only. */
 const HideLabelsContext = createContext(false);
+
+/** Where the current item's edge bar was last drawn, for the slide. */
+const TrackContext = createContext<IndicatorTrack | null>(null);
 
 // ------------------------------------------------------------------ Rail
 
@@ -79,20 +95,59 @@ export interface RailProps extends Omit<HTMLAttributes<HTMLElement>, 'title'> {
 
 /** A `nav` landmark: a column of icon links with short labels, a start and an end. */
 export function Rail({ label, size = 'md', hideLabels = false, start, end, children, ref, ...rest }: RailProps) {
+  const track = useIndicatorTrack();
+  const motion = useMotion();
+  const rootRef = useRef<HTMLElement | null>(null);
+  const setRootRef = useCallback(
+    (node: HTMLElement | null) => {
+      rootRef.current = node;
+      if (typeof ref === 'function') ref(node);
+      else if (ref) ref.current = node;
+    },
+    [ref],
+  );
+  useHoverFollow(rootRef, { item: '[data-part="item"]:not([data-disabled])', pseudo: '::after', mode: () => motion.mode('nav-hover-follow') });
+
+  // The icons' boxes after each commit, relative to the rail, so a change of hideLabels can move them from there.
+  const icons = useRef<{ hide: boolean; rects: Map<Element, MotionRect> } | null>(null);
+  useLayoutEffect(() => {
+    const root = rootRef.current;
+    if (!root) return;
+    const list = Array.from(root.querySelectorAll('[data-part="item-icon"]'));
+    const before = icons.current;
+    const changed = before !== null && before.hide !== hideLabels;
+    // Measured at rest, before any move starts (a running move is cancelled first by flipPlay, so read after cancel on the next change).
+    const rects = new Map<Element, MotionRect>();
+    for (const el of list) {
+      for (const a of el.getAnimations?.() ?? []) if (String(a.id) === 'ds-motion:flip') a.cancel();
+      rects.set(el, toLocal(layerRect({ el }), root));
+    }
+    if (before && changed) {
+      const mode = motion.mode('sidebar-collapse');
+      const first = new Map<Element, MotionRect>();
+      for (const [el, r] of before.rects) if (el.isConnected) first.set(el, fromLocal(r, root));
+      flipPlay({ rects: first }, { items: list, mode, spring: 'snappy', enter: 'none' });
+      if (!hideLabels) staggerGroup(root.querySelectorAll('[data-part="item-label"]'), { mode, from: 'block', offset: 1, spring: 'soft' });
+    }
+    icons.current = { hide: hideLabels, rects };
+  });
+
   return (
     <HideLabelsContext.Provider value={hideLabels}>
       <TooltipProvider>
-        <nav {...rest} ref={ref} aria-label={label} data-ds="rail" data-size={size} data-hide-labels={hideLabels ? '' : undefined}>
-          {start != null && <div data-part="start">{start}</div>}
-          <ul data-part="list">
-            <ListContext.Provider value={true}>{children}</ListContext.Provider>
-          </ul>
-          {end != null && (
-            <ul data-part="end">
-              <ListContext.Provider value={true}>{end}</ListContext.Provider>
+        <TrackContext value={track}>
+          <nav {...rest} ref={setRootRef} aria-label={label} data-ds="rail" data-size={size} data-hide-labels={hideLabels ? '' : undefined}>
+            {start != null && <div data-part="start">{start}</div>}
+            <ul data-part="list">
+              <ListContext.Provider value={true}>{children}</ListContext.Provider>
             </ul>
-          )}
-        </nav>
+            {end != null && (
+              <ul data-part="end">
+                <ListContext.Provider value={true}>{end}</ListContext.Provider>
+              </ul>
+            )}
+          </nav>
+        </TrackContext>
       </TooltipProvider>
     </HideLabelsContext.Provider>
   );
@@ -172,13 +227,45 @@ export function RailItem({
 }: RailItemProps) {
   const inList = useContext(ListContext);
   const hideLabels = useContext(HideLabelsContext);
+  const track = useContext(TrackContext);
+  const motion = useMotion();
+  const key = useId();
+  const itemRef = useRef<HTMLAnchorElement | null>(null);
+  const setItemRef = useCallback(
+    (node: HTMLAnchorElement | null) => {
+      itemRef.current = node;
+      if (typeof ref === 'function') ref(node);
+      else if (ref) ref.current = node;
+    },
+    [ref],
+  );
+
+  // The current item: its edge bar slides from the item that was current (nav-current-slide).
+  useLayoutEffect(() => {
+    const el = itemRef.current;
+    const root = el?.closest('[data-ds="rail"]');
+    if (!active || !el || !root || !track) return;
+    const other = track.el;
+    followIndicator(
+      track,
+      key,
+      { el, pseudo: '::before' },
+      {
+        mode: motion.mode('nav-current-slide'),
+        anchor: root,
+        axis: 'y',
+        label: el.querySelector(':scope > [data-part="item-icon"]'),
+        slide: !(other && other !== el && other.isConnected && other.hasAttribute('data-active')),
+      },
+    );
+  });
   const [labelRef, truncated] = useTruncated(hideLabels);
   const dot = badge === true;
   const shown = typeof badge === 'number' && badge > 0 ? (badge > BADGE_MAX ? `${BADGE_MAX}+` : String(badge)) : undefined;
 
   const attrs = {
     ...rest,
-    ref,
+    ref: setItemRef,
     href: disabled ? undefined : href,
     // Without href an <a> has no role and no tab stop: give both back.
     role: disabled ? (rest.role ?? 'link') : rest.role,
