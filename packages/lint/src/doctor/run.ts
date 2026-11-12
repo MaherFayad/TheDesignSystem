@@ -32,7 +32,11 @@ export interface DoctorConfig {
   touch?: string[];
   /** Turn a rule off or change its severity. */
   rules?: Record<string, 'off' | Severity>;
-  /** Modules that export the React system components. Default `@the-system/react`. */
+  /**
+   * Modules that export the React system components, or path patterns (`*` in one segment, `**`
+   * across segments). Default `@the-system/react` and the registry path of `ds add`
+   * (any folder, then `ds/react/components/<Name>`).
+   */
   packages?: string[];
   /** Modules that export the React Native system components. Default `@the-system/native`. */
   nativePackages?: string[];
@@ -209,7 +213,8 @@ export async function runDoctor(options: DoctorOptions): Promise<DoctorReport> {
     ...(titleHosts ? { titleHosts } : {}),
     angular,
     prefix: prefixOf(root),
-    packages: config.packages ?? ['@the-system/react'],
+    // The second entry covers components copied from the registry (`ds add`), imported by path.
+    packages: config.packages ?? ['@the-system/react', '**/ds/react/components/*'],
     nativePackages: config.nativePackages ?? ['@the-system/native'],
   };
 

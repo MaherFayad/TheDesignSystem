@@ -55,6 +55,25 @@ Recorded by the second consolidation pass. Report:
     `none` is written for a component with no motion; only layout
     components leave the key out. On the web Button does not play `press`
     yet; the id names the pattern the component owes.
+11. **`npm run gen` writes everything generated:** barrels and routes
+    (`scripts/gen-index.ts`), the token build, the registry
+    (`packages/registry/build.ts`, which reads the token CSS) and the docs
+    pages and llms files (`npm run gen -w @the-system/docs`). `npm run
+    check` runs the same `npm run gen`, so `registry.json` stays fresh the
+    way `manifests.gen.json` does.
+12. **Root engines: Node `>=22.23.4`**, what astro 7.4.11 needs.
+13. **The CLI declares its workspace packages** (`@the-system/icons`,
+    `lint`, `registry`) as dependencies. `tsx` and `typescript` stay
+    undeclared while packages export source: as runtime dependencies of a
+    published CLI they are a question for the owner at the release wave.
+14. **The doctor knows copied components.** Its `packages` entries take
+    path patterns, and the default adds `**/ds/react/components/*`, so an
+    app on registry files is checked like one on `@the-system/react`.
+15. **Docs (order 1.15):** English at the root and Arabic under `/ar/`;
+    generated pages and twins are not committed; the preview points at
+    `DOCS_GALLERY_URL`; plain Markdown, not MDX; smart punctuation off; the
+    search shortcut chip is hidden (WCAG 2.5.3). `llms.txt` is served at
+    the docs root, where `ds init` points.
 
 ## Environment (2026-11-12)
 

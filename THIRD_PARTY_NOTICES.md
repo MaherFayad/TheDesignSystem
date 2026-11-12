@@ -11,5 +11,6 @@ with its license. Dev only tools are not listed.
 | @fontsource/ibm-plex-sans-arabic | OFL-1.1 | Arabic font files, every style |
 | @fontsource/instrument-sans | OFL-1.1 | Instrument Sans font files (Desk) |
 | radix-ui | MIT | Behavior primitives in `packages/react` |
+| shadcn/ui registry schemas | MIT | `packages/registry/schema/registry.json` and `registry-item.json`, fetched 2026-11-12 from `ui.shadcn.com/schema/`, to validate the registry build |
 
 Entries are added by the work order that brings the dependency in.

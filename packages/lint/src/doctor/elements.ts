@@ -69,14 +69,32 @@ export interface SystemImports {
   radix: { module: string; index: number }[];
 }
 
+/**
+ * True when a module specifier names one of the system packages. An entry is
+ * a module name, or a path pattern for an app that copied the components from
+ * the registry: `*` matches inside one path segment and `**` matches any
+ * number of segments. The default registry pattern (see run.ts) matches
+ * `@/components/ds/react/components/Button` and `../ds/react/components/Button`.
+ */
+export function matchesModule(mod: string, patterns: readonly string[]): boolean {
+  return patterns.some((p) => {
+    if (!p.includes('*')) return p === mod;
+    const re = p
+      .split('**')
+      .map((part) => part.split('*').map((s) => s.replace(/[.+?^${}()|[\]\\/]/g, '\\$&')).join('[^/]*'))
+      .join('.*');
+    return new RegExp(`^${re}$`).test(mod);
+  });
+}
+
 export function readImports(source: ts.SourceFile, packages: readonly string[], nativePackages: readonly string[]): SystemImports {
   const out: SystemImports = { named: new Map(), namespaces: new Set(), native: false, radix: [] };
   for (const st of source.statements) {
     if (!ts.isImportDeclaration(st) || !ts.isStringLiteral(st.moduleSpecifier)) continue;
     const mod = st.moduleSpecifier.text;
-    if (mod === 'react-native' || nativePackages.includes(mod)) out.native = true;
+    if (mod === 'react-native' || matchesModule(mod, nativePackages)) out.native = true;
     if (mod === 'radix-ui' || mod.startsWith('@radix-ui/')) out.radix.push({ module: mod, index: st.getStart(source) });
-    if (!packages.includes(mod) && !nativePackages.includes(mod)) continue;
+    if (!matchesModule(mod, packages) && !matchesModule(mod, nativePackages)) continue;
     const clause = st.importClause;
     if (!clause || clause.isTypeOnly) continue;
     const b = clause.namedBindings;

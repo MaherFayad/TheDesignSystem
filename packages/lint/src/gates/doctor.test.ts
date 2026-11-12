@@ -1,6 +1,7 @@
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { DOCTOR_RULES, main, runDoctor, type DoctorReport } from '../doctor';
+import { matchesModule } from '../doctor/elements';
 import { ROOT } from './harness';
 
 const FIXTURES = join(ROOT, 'packages/lint/fixtures/doctor');
@@ -119,5 +120,21 @@ describe('ds doctor: command line', () => {
     const r = await runDoctor({ path: join(FIXTURES, 'native/wrong'), config: { rules: { 'ds/copy': 'off', 'ds/direction': 'warning' } } });
     expect(r.data.summary.byRule['ds/copy']).toBeUndefined();
     expect(r.data.findings.filter((f) => f.ruleId === 'ds/direction').every((f) => f.severity === 'warning')).toBe(true);
+  });
+});
+
+describe('ds doctor: system modules', () => {
+  const defaults = ['@the-system/react', '**/ds/react/components/*'];
+
+  it('matches the package name and the registry path of copied components', () => {
+    expect(matchesModule('@the-system/react', defaults)).toBe(true);
+    expect(matchesModule('@/components/ds/react/components/Button', defaults)).toBe(true);
+    expect(matchesModule('../ds/react/components/Dialog', defaults)).toBe(true);
+  });
+
+  it('does not match other modules or deeper paths', () => {
+    expect(matchesModule('@the-system/react-extra', defaults)).toBe(false);
+    expect(matchesModule('@/components/ds/react/components/Button/Button', defaults)).toBe(false);
+    expect(matchesModule('radix-ui', defaults)).toBe(false);
   });
 });
