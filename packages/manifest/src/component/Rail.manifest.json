@@ -1,0 +1,265 @@
+{
+  "name": "Rail",
+  "kind": "component",
+  "family": "navigation",
+  "summary": "A narrow column of icon destinations with short labels, a start and an end: the Studio rail.",
+  "useWhen": [
+    "Three to seven top level destinations of a tool or editor, beside a canvas that needs the width",
+    "Destinations that each have a clear icon and a one word name",
+    "A column that switches the panel next to it (layers, assets, comments)",
+    "The collapsed form of app navigation that never needs groups or long names"
+  ],
+  "avoidWhen": [
+    "More than seven destinations, or destinations that fall into named groups",
+    "Destinations whose names do not fit in one short word",
+    "Three to five destinations on a phone layout",
+    "Actions that change data, such as Save or Delete",
+    "Hidden labels while no Tooltip is in place"
+  ],
+  "insteadUse": {
+    "Groups, counts or long names": "Sidebar",
+    "Three to five destinations on phones": "TabBar",
+    "Actions for one context, such as a text editor": "Toolbar",
+    "Views of one page": "Tabs",
+    "The top bar of a site or app": "Navbar"
+  },
+  "anatomy": [
+    "root",
+    "start",
+    "list",
+    "item",
+    "item-icon",
+    "item-label",
+    "item-badge",
+    "end"
+  ],
+  "parts": {
+    "RailItem": "item"
+  },
+  "slots": {
+    "start": {
+      "accepts": "any",
+      "max": 1
+    },
+    "list": {
+      "accepts": [
+        "RailItem"
+      ],
+      "min": 1
+    },
+    "end": {
+      "accepts": [
+        "RailItem",
+        "IconButton",
+        "DropdownMenu"
+      ]
+    },
+    "item-icon": {
+      "accepts": [
+        "Icon"
+      ],
+      "min": 1,
+      "max": 1
+    },
+    "item-label": {
+      "accepts": "text",
+      "min": 1,
+      "max": 1
+    }
+  },
+  "props": {
+    "label": {
+      "type": "string",
+      "required": true,
+      "description": "The accessible name of the nav landmark: Main, Tools. Not drawn."
+    },
+    "size": {
+      "type": [
+        "sm",
+        "md"
+      ],
+      "default": "md",
+      "description": "Item height from size.control: md is size.control.md (32px, 28px compact, 36px comfortable), sm is size.control.sm (28px). Under data-platform ios or android items grow to size.touch.ios (44pt) or size.touch.android (48dp) for touch templates. Never under size.target-min."
+    },
+    "hideLabels": {
+      "type": "boolean",
+      "default": false,
+      "description": "Draws only the icons; each label stays the accessible name. Sets data-hide-labels. Pair it with Tooltip (1.6.6) once that exists."
+    },
+    "start": {
+      "type": "node",
+      "description": "The block start of the column: a brand mark or a workspace switcher."
+    },
+    "end": {
+      "type": "node",
+      "description": "The block end of the column: account, help or settings RailItems, rendered as a second list."
+    },
+    "children": {
+      "type": "node",
+      "required": true,
+      "description": "RailItems, rendered as a list."
+    },
+    "RailItem.href": {
+      "type": "string",
+      "description": "Where the item goes. Removed while disabled."
+    },
+    "RailItem.icon": {
+      "type": "icon | node",
+      "required": true,
+      "description": "A system icon name or a node. Hidden from assistive tech."
+    },
+    "RailItem.label": {
+      "type": "string",
+      "required": true,
+      "description": "One short word, shown under the icon and used as the accessible name. A longer one ends in an ellipsis."
+    },
+    "RailItem.badge": {
+      "type": "number | boolean",
+      "description": "A count on the icon's corner (over 99 shows 99+, 0 and false draw nothing), or true for a dot. A dot needs badgeLabel."
+    },
+    "RailItem.badgeLabel": {
+      "type": "string",
+      "description": "What the badge means, read after the label: 3 new. Needed for a dot."
+    },
+    "RailItem.active": {
+      "type": "boolean",
+      "default": false,
+      "description": "The current page: aria-current page, data-active, a fill, bold label and an edge bar."
+    },
+    "RailItem.disabled": {
+      "type": "boolean",
+      "default": false,
+      "description": "Removes the href, sets role link, aria-disabled and data-disabled, and stays in the tab order. With asChild the plain anchor renders instead of the router child, so the child's own click never runs."
+    },
+    "RailItem.asChild": {
+      "type": "boolean",
+      "default": false,
+      "description": "Renders the single child element, a router link with no children, as the item."
+    }
+  },
+  "states": [
+    "data-active",
+    "data-disabled",
+    "data-hide-labels",
+    "data-dot"
+  ],
+  "a11y": {
+    "role": "navigation (nav with aria-label) holding a list of links",
+    "focus": "Every item is a tab stop, disabled ones included. An inset 2px ring from color.focus.ring.",
+    "keys": {
+      "Tab": "Moves to the next item",
+      "Shift+Tab": "Moves to the previous item",
+      "Enter": "Follows the item"
+    },
+    "announce": "The label is the accessible name, then the badge: Inbox 3, or Boards New activity with badgeLabel. The current item says current page.",
+    "notes": [
+      "Every item has a visible label by default. hideLabels needs a Tooltip per item (WCAG 1.4.13, order 1.6.6); Tooltip is not built yet, so the place is marked in RailItem.",
+      "The current page is shown by aria-current, a fill, a bold label and an edge bar, never by color alone (WCAG 1.4.1).",
+      "Items in end form a second list after the main one, so a screen reader hears two lists.",
+      "Targets: 24px at least in compact (sm), 44px at md in default density for touch templates (WCAG 2.5.8).",
+      "The border and the active bar sit on logical sides, so they flip in RTL.",
+      "No native title attribute.",
+      "Labels carry dir auto, so a Latin label in an Arabic rail ends in its own ellipsis."
+    ]
+  },
+  "content": {
+    "en": {
+      "label": "One noun in sentence case: Home, Files, Search.",
+      "badge": "A plain number. A dot needs badgeLabel: New activity."
+    },
+    "ar": {
+      "label": "One noun, no diacritics: الرئيسية، الملفات، البحث.",
+      "badge": "Western digits."
+    }
+  },
+  "tokens": [
+    "size.control.md",
+    "size.target-min",
+    "size.icon.sm",
+    "radius.field",
+    "color.bg.surface",
+    "color.bg.overlay-10",
+    "color.text.default",
+    "color.text.bright",
+    "color.text.muted",
+    "color.text.on-primary",
+    "color.primary.fill",
+    "color.primary.on-surface",
+    "color.border.hairline",
+    "color.focus.ring",
+    "border.width.default",
+    "border.width.strong",
+    "font.size.3xs",
+    "font.size.2xs",
+    "font.size.xs",
+    "font.weight.medium",
+    "font.weight.bold",
+    "space.4xs",
+    "space.3xs",
+    "space.xs",
+    "radius.pill",
+    "duration.fast",
+    "ease.default",
+    "opacity.disabled",
+    "shell.rail-width",
+    "size.control.sm",
+    "size.touch.ios",
+    "size.touch.android",
+    "font.family.sans",
+    "font.leading.tight",
+    "font.leading.arabic.tight"
+  ],
+  "frameworks": {
+    "react": {
+      "status": "ready",
+      "behavior": "hand built nav, radix:Slot for asChild",
+      "example": "Rail.demo.tsx",
+      "note": "No motion pattern: nothing moves. The hover veil fades on duration.fast and is instant under reduced motion. The order names no motion pattern, so the manifest names none, as in Link and ButtonGroup."
+    },
+    "angular": {
+      "status": "planned",
+      "behavior": "nav[dsRail], a[dsRailItem]"
+    },
+    "native": {
+      "status": "not-applicable",
+      "note": "Phones use TabBar; a tablet navigation rail comes with the touch templates in wave 2."
+    }
+  },
+  "styles": {
+    "studio": "Flat surface with a hairline on the inline end edge; the active item takes an overlay fill, bright text and a white edge bar.",
+    "desk": "The same layout; the edge bar and the badge take the yellow primary.",
+    "neutral": "Takes the tokens of the Neutral style, no recipe."
+  },
+  "mistakes": [
+    {
+      "wrong": "Icons with no label and no Tooltip",
+      "right": "Visible labels, or hideLabels with a Tooltip on each item"
+    },
+    {
+      "wrong": "Two word labels that end in an ellipsis",
+      "right": "One word, or a Sidebar"
+    },
+    {
+      "wrong": "A dot badge with no badgeLabel",
+      "right": "badgeLabel that says what the dot means"
+    },
+    {
+      "wrong": "Buttons that save or delete in the rail",
+      "right": "Items only navigate; actions go in a Toolbar"
+    }
+  ],
+  "contract": {
+    "optionalParts": [
+      "start",
+      "end",
+      "item-badge"
+    ],
+    "keys": {
+      "Enter": {
+        "focus": "[data-part='item']:not([data-disabled])",
+        "expect": "click"
+      }
+    }
+  },
+  "since": "0.1.0"
+}

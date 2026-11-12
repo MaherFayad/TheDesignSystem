@@ -1,0 +1,297 @@
+{
+  "name": "Navbar",
+  "kind": "component",
+  "family": "navigation",
+  "summary": "The top bar of a site or app: a brand, primary links and menus with panels, actions at the end, and a menu button with a list on phones.",
+  "useWhen": [
+    "The main navigation of a marketing site, docs site or small app, across the top of every page",
+    "Up to about seven top level destinations, some of which open a panel of related links",
+    "A brand, a few links and one or two actions (Sign in, Start a trial) in one bar",
+    "A layout that must collapse to a menu button on phones"
+  ],
+  "avoidWhen": [
+    "An app with many destinations in named groups, kept in view at the side",
+    "A desktop app menu of commands (File, Edit, View)",
+    "Switching between views of one page",
+    "A bar of tools for one context, such as a text editor",
+    "Commands that run actions from a menu"
+  ],
+  "insteadUse": {
+    "Many grouped destinations at the side": "Sidebar",
+    "A narrow column of icon destinations": "Rail",
+    "Commands in File, Edit, View menus": "Menubar",
+    "Views of one page": "Tabs",
+    "Tools for one context": "Toolbar",
+    "A list of actions behind one button": "DropdownMenu"
+  },
+  "anatomy": [
+    "root",
+    "brand",
+    "list",
+    "item",
+    "link",
+    "link-label",
+    "link-description",
+    "trigger",
+    "trigger-icon",
+    "content",
+    "content-list",
+    "indicator",
+    "viewport",
+    "end",
+    "menu-button",
+    "mobile"
+  ],
+  "slots": {
+    "brand": {
+      "accepts": "any",
+      "max": 1
+    },
+    "end": {
+      "accepts": [
+        "Button",
+        "IconButton",
+        "DropdownMenu",
+        "LanguageSwitch"
+      ],
+      "max": 3
+    }
+  },
+  "props": {
+    "label": {
+      "type": "string",
+      "required": true,
+      "description": "The accessible name of the nav landmark: Main. Not drawn."
+    },
+    "size": {
+      "type": [
+        "md",
+        "lg"
+      ],
+      "default": "md",
+      "description": "Link and trigger height from size.control: md 32px, lg 44px; the bar adds space.s above and below."
+    },
+    "brand": {
+      "type": "node",
+      "description": "The logo link to the home page, at the inline start. Use Link with standalone (or an IconButton with asChild) so it is a 24px target."
+    },
+    "items": {
+      "type": "Array<NavbarLink | NavbarMenu>",
+      "required": true,
+      "description": "A link is { label, href, active?, start?, description? }. A menu is { label, links }: a trigger in the bar that opens a panel of links. The same data draws the phone list. With no items the menu button is not drawn."
+    },
+    "end": {
+      "type": "node",
+      "description": "Actions at the inline end. They stay in the bar on phones, so keep them to one or two."
+    },
+    "sticky": {
+      "type": "boolean",
+      "default": false,
+      "description": "Sticks the bar to the top (z.topbar) and sets scroll-padding-block-start on the page to one row of the bar plus its border, at the density of :root (WCAG 2.4.11). A bar that wraps to two rows, or a denser nested Theme, covers more. Under breakpoint.tablet the open phone list scrolls inside the bar, never past the screen. Sets data-sticky."
+    },
+    "linkAs": {
+      "type": "component",
+      "default": "a",
+      "description": "The component every link renders as, for a router. It receives href, children and the link attributes."
+    },
+    "menuLabels": {
+      "type": "object",
+      "default": "{ button: 'Menu', panel: 'Site menu' }",
+      "description": "The menu button's one stable name (aria-expanded carries the state) and the phone list's landmark name. Under an Arabic Theme: القائمة، قائمة الموقع."
+    },
+    "defaultOpenMenu": {
+      "type": "string",
+      "description": "The label of a menu whose panel is open at first render. Default none."
+    }
+  },
+  "states": [
+    "open",
+    "closed",
+    "visible",
+    "hidden",
+    "horizontal",
+    "data-active",
+    "data-sticky"
+  ],
+  "a11y": {
+    "role": "navigation (Radix NavigationMenu nav with aria-label); the list is a list of links and buttons; the phone list is a nested Sidebar nav named Menu",
+    "focus": "Links and triggers are tab stops. Focus moves into an open panel with ArrowDown or Tab. The menu button sits in the tab order on phones only. Escape in the phone list returns focus to the menu button. Following a link in the phone list closes it. When the window grows past breakpoint.tablet with focus in the list, focus moves to the first item of the bar.",
+    "keys": {
+      "Tab": "Moves to the next link, trigger or action",
+      "Shift+Tab": "Moves to the previous one",
+      "Enter": "Follows a link, or opens and closes a trigger's panel",
+      "Space": "Opens and closes a trigger's panel, and the phone list from the menu button",
+      "ArrowDown": "From an open trigger, moves into its panel",
+      "ArrowRight, ArrowLeft": "Move between links and triggers in the bar, in the reading direction (flipped in RTL)",
+      "Home, End": "Move to the first or last item in the bar",
+      "Escape": "Closes the open panel and returns focus to its trigger, or closes the phone list from inside it or from the menu button"
+    },
+    "announce": "The current link says current page. A trigger is a button with aria-expanded and aria-controls from Radix. The menu button keeps one name, Menu, with aria-expanded and aria-controls.",
+    "notes": [
+      "The current page is shown by aria-current page, a bold weight and a bar under the link, never by color alone (WCAG 1.4.1). A trigger whose panel holds the current page takes the bold weight.",
+      "Under breakpoint.tablet (48rem) the bar hides the list and shows the menu button; nothing scrolls sideways at 320px (WCAG 1.4.10).",
+      "The phone list is built from items: plain links in one unnamed group, each menu as a named group. It is a Sidebar nav named Site menu nested in the Main nav until Drawer replaces it.",
+      "The mobile part should be a Drawer root (order 1.6.3). Drawer is not built yet, so it is a disclosure panel under the bar holding a Sidebar; swap it when Drawer lands.",
+      "No native title attribute.",
+      "contract.skipAxeRules aria-hidden-focus: while a panel is open, Radix NavigationMenu renders a visually hidden, aria-hidden focus proxy span (tabindex 0) beside the trigger. It catches Tab and forwards focus into the panel in the viewport, so it is never a stop a user rests on. Axe flags it by shape. Only the open panel in the long-arabic case shows it.",
+      "data-orientation horizontal comes from Radix on the root and the list."
+    ]
+  },
+  "content": {
+    "en": {
+      "link": "Nouns in sentence case: Pricing, Docs, Customers. One or two words.",
+      "description": "One short line that says what is there: Plan work on one shared canvas.",
+      "end": "Verb plus noun on buttons: Sign in, Start a trial."
+    },
+    "ar": {
+      "link": "Noun form, no diacritics: الأسعار، المستندات، العملاء.",
+      "description": "One short line in white Saudi dialect: كل التعليقات في مكان واحد.",
+      "end": "Noun form on buttons: تسجيل الدخول، تجربة مجانية."
+    }
+  },
+  "tokens": [
+    "size.control.md",
+    "size.control.lg",
+    "size.target-min",
+    "space.3xs",
+    "space.4xs",
+    "space.xs",
+    "space.s",
+    "space.m",
+    "space.l",
+    "space.xl",
+    "color.bg.surface",
+    "color.bg.surface-3",
+    "color.bg.overlay-10",
+    "color.text.default",
+    "color.text.bright",
+    "color.text.muted",
+    "color.border.hairline",
+    "color.primary.on-surface",
+    "color.focus.ring",
+    "focus.shadow.ring",
+    "border.width.default",
+    "border.width.strong",
+    "font.family.sans",
+    "font.size.xs",
+    "font.size.s",
+    "font.size.m",
+    "font.size.l",
+    "font.weight.regular",
+    "font.weight.medium",
+    "font.weight.bold",
+    "font.leading.snug",
+    "font.leading.arabic.snug",
+    "radius.control",
+    "radius.field",
+    "radius.card",
+    "radius.pill",
+    "elevation.menu",
+    "menu.width-min",
+    "scale.press",
+    "z.topbar",
+    "z.menu",
+    "duration.fast",
+    "duration.base",
+    "duration.quick",
+    "ease.default",
+    "ease.out",
+    "ease.emphasized",
+    "ease.exit"
+  ],
+  "motion": "menu-scale",
+  "frameworks": {
+    "react": {
+      "status": "ready",
+      "behavior": "radix:NavigationMenu; the phone list is a disclosure holding a Sidebar",
+      "example": "Navbar.demo.tsx",
+      "note": "menu-scale: the viewport scales from 0.97 and fades in, the reverse on close, faster; the indicator slides under the open trigger. Reduced motion: none, and Radix removes the closed viewport at once."
+    },
+    "angular": {
+      "status": "planned",
+      "behavior": "nav[dsNavbar], cdk:menu for the panels, a disclosure directive for the phone list"
+    },
+    "native": {
+      "status": "not-applicable",
+      "note": "Apps on phones use a stack header and TabBar; a web top bar has no native form."
+    }
+  },
+  "styles": {
+    "studio": "A flat bar on the surface with a hairline under it; panels on surface-3 with the menu shadow. The current link has a white bar under it.",
+    "desk": "The same structure; the bar under the current link and the indicator take the yellow primary. A menu bar recipe in the GoBanana style is a later addition (desk/recipes/Navbar.css).",
+    "neutral": "Takes the tokens of the Neutral style, no recipe."
+  },
+  "mistakes": [
+    {
+      "wrong": "The current page shown only by a different color",
+      "right": "active on the link, which adds aria-current, weight and a bar"
+    },
+    {
+      "wrong": "A trigger that is also a link to a page",
+      "right": "A trigger opens a panel; put the overview page as the first link in the panel"
+    },
+    {
+      "wrong": "Five buttons in end",
+      "right": "One or two actions; the rest go in the links or an account DropdownMenu"
+    },
+    {
+      "wrong": "A sticky bar with no scroll padding, so focused headings hide under it",
+      "right": "sticky, which reserves the bar height as scroll padding"
+    },
+    {
+      "wrong": "File, Edit and View commands in a Navbar",
+      "right": "Menubar"
+    }
+  ],
+  "contract": {
+    "optionalParts": [
+      "brand",
+      "end",
+      "content",
+      "content-list",
+      "link-label",
+      "link-description",
+      "indicator",
+      "viewport",
+      "mobile",
+      "trigger",
+      "trigger-icon",
+      "menu-button"
+    ],
+    "keys": {
+      "Enter": {
+        "focus": "[data-part='trigger']",
+        "expect": "state-changes"
+      },
+      "Space": {
+        "focus": "[data-part='trigger']",
+        "expect": "state-changes"
+      },
+      "ArrowRight": {
+        "focus": "[data-part='list'] [data-part='link']",
+        "expect": "focus-moves"
+      },
+      "ArrowLeft": {
+        "focus": "[data-part='trigger']",
+        "expect": "focus-moves"
+      },
+      "Home": {
+        "focus": "[data-part='trigger']",
+        "expect": "focus-moves"
+      },
+      "End": {
+        "focus": "[data-part='list'] [data-part='link']",
+        "expect": "focus-moves"
+      },
+      "Escape": {
+        "case": "long-arabic",
+        "focus": "[data-part='trigger']",
+        "expect": "state-changes"
+      }
+    },
+    "skipAxeRules": [
+      "aria-hidden-focus"
+    ]
+  },
+  "since": "0.1.0"
+}

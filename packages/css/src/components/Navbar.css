@@ -1,0 +1,453 @@
+/*
+ * Navbar: the top bar of a site or app. No source could be fetched in the
+ * lane session: the bar follows the dials table (Neutral: top bar, 1px
+ * borders; Studio: flat tone steps) and the panel reuses the DropdownMenu
+ * surface tokens. Follows "One convention for component CSS and props" in
+ * docs/contracts/anatomy.md.
+ *
+ *   [data-ds='navbar']                          root: Radix NavigationMenu nav, data-sticky
+ *     [data-part='brand']                       logo link
+ *     [data-part='list']                        Radix List ul (inside Radix's unstyled track div)
+ *       [data-part='item']                      li
+ *         [data-part='link']                    a, data-active and aria-current page
+ *         [data-part='trigger']                 a ghost Button root, data-state open or closed
+ *           [data-part='trigger-icon']          the chevron, in the Button's end slot
+ *         [data-part='content']                 the panel of one menu, shown in the viewport
+ *           [data-part='content-list']          ul of panel links
+ *             [data-part='link']                > [data-part='link-label'], [data-part='link-description']
+ *       [data-part='indicator']                 the bar under the open trigger
+ *     [data-part='viewport']                    the surface the open panel renders in
+ *     [data-part='end']                         actions
+ *     [data-part='menu-button']                 an IconButton root, phones only
+ *     [data-part='mobile']                      the phone list, data-state open or closed
+ *
+ * Private properties on the root (recipes override these):
+ *
+ *   --_navbar-height, -padding-inline, -gap, -bg, -fg, -border-color
+ *   --_navbar-control-height, -link-padding-inline, -link-radius, -font-size
+ *   --_navbar-link-font-weight, -link-font-weight-active
+ *   --_navbar-link-bg, -link-fg, -link-edge     one link, swapped by state
+ *   --_navbar-link-fg-active, -link-edge-active
+ *   --_navbar-link-veil, -link-ring
+ *   --_navbar-panel-bg, -panel-radius, -panel-shadow, -panel-padding, -panel-width
+ *
+ * Motion, pattern "menu-scale": the viewport scales up from the block start
+ * while it fades in, and plays the reverse on close; the indicator slides
+ * under the open trigger. Only transform and opacity animate. Under reduced
+ * motion the animations are none, so Radix removes the closed viewport at
+ * once and never waits for an animationend.
+ */
+@layer ds.base {
+  [data-ds='navbar'] {
+    --_navbar-control-height: var(--ds-size-control-md);
+    --_navbar-height: calc(var(--_navbar-control-height) + 2 * var(--ds-space-s));
+    --_navbar-padding-inline: var(--ds-space-xl);
+    --_navbar-gap: var(--ds-space-l);
+    --_navbar-bg: var(--ds-color-bg-surface);
+    --_navbar-fg: var(--ds-color-text-default);
+    --_navbar-border-color: var(--ds-color-border-hairline);
+    --_navbar-font-size: var(--ds-font-size-s);
+    --_navbar-link-padding-inline: var(--ds-space-m);
+    --_navbar-link-radius: var(--ds-radius-control);
+    --_navbar-link-font-weight: var(--ds-font-weight-medium);
+    --_navbar-link-font-weight-active: var(--ds-font-weight-bold);
+    --_navbar-link-bg: transparent;
+    --_navbar-link-fg: var(--_navbar-fg);
+    --_navbar-link-edge: transparent;
+    --_navbar-link-fg-active: var(--ds-color-text-bright);
+    --_navbar-link-edge-active: var(--ds-color-primary-on-surface);
+    --_navbar-link-veil: var(--ds-color-bg-overlay-10);
+    --_navbar-link-ring: 0 0 transparent;
+    --_navbar-panel-bg: var(--ds-color-bg-surface-3);
+    --_navbar-panel-radius: var(--ds-radius-card);
+    --_navbar-panel-shadow: var(--ds-elevation-menu);
+    --_navbar-panel-padding: var(--ds-space-3xs);
+    --_navbar-panel-width: calc(var(--ds-menu-width-min) * 2);
+    /* No scale.menu-enter token yet: scale.press is the same 0.97 DropdownMenu uses. */
+    --_navbar-enter-scale: var(--ds-scale-press);
+
+    position: relative;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--_navbar-gap);
+    box-sizing: border-box;
+    inline-size: 100%;
+    min-block-size: var(--_navbar-height);
+    margin: 0;
+    padding-inline: var(--_navbar-padding-inline);
+    border-block-end: var(--ds-border-width-default) solid var(--_navbar-border-color);
+    background-color: var(--_navbar-bg);
+    color: var(--_navbar-fg);
+    font-family: var(--ds-font-family-sans);
+    font-size: var(--_navbar-font-size);
+    line-height: var(--ds-font-leading-snug);
+  }
+
+  [data-ds='navbar'][data-size='lg'] {
+    --_navbar-control-height: var(--ds-size-control-lg);
+    --_navbar-font-size: var(--ds-font-size-m);
+    --_navbar-link-padding-inline: var(--ds-space-l);
+  }
+
+  /* Arabic: small text one step up. */
+  [data-ds='navbar']:lang(ar) {
+    --_navbar-font-size: var(--ds-font-size-m);
+
+    line-height: var(--ds-font-leading-arabic-snug);
+  }
+
+  [data-ds='navbar'][data-size='lg']:lang(ar) {
+    --_navbar-font-size: var(--ds-font-size-l);
+  }
+
+  /* Sticky: the bar stays at the top, and the page keeps the same room as scroll padding, so focus is never hidden under it (WCAG 2.4.11). */
+  [data-ds='navbar'][data-sticky] {
+    position: sticky;
+    inset-block-start: 0;
+    z-index: var(--ds-z-topbar);
+  }
+
+  /* One row of the bar and its border, at the density of :root. A bar that wraps to two rows covers more. */
+  :root:has([data-ds='navbar'][data-sticky]) {
+    scroll-padding-block-start: calc(var(--ds-size-control-md) + 2 * var(--ds-space-s) + var(--ds-border-width-default));
+  }
+
+  :root:has([data-ds='navbar'][data-sticky][data-size='lg']) {
+    scroll-padding-block-start: calc(var(--ds-size-control-lg) + 2 * var(--ds-space-s) + var(--ds-border-width-default));
+  }
+
+  /* ------------------------------------------------------------ brand, end */
+
+  [data-ds='navbar'] > [data-part='brand'] {
+    display: flex;
+    flex: none;
+    align-items: center;
+    min-block-size: var(--ds-size-target-min);
+    font-weight: var(--ds-font-weight-bold);
+  }
+
+  [data-ds='navbar'] > [data-part='end'] {
+    display: flex;
+    flex: 0 1 auto;
+    align-items: center;
+    gap: var(--ds-space-xs);
+    min-inline-size: 0;
+    margin-inline-start: auto;
+  }
+
+  /* ------------------------------------------------------------ list, links, triggers */
+
+  /* Not inside the phone list: the Sidebar there has a list part of its own. */
+  [data-ds='navbar'] [data-part='list']:not([data-part='mobile'] *) {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--ds-space-3xs);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  [data-ds='navbar'] [data-part='link'] {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    box-sizing: border-box;
+    min-block-size: max(var(--_navbar-control-height), var(--ds-size-target-min));
+    padding-inline: var(--_navbar-link-padding-inline);
+    border-radius: var(--_navbar-link-radius);
+    background-color: var(--_navbar-link-bg);
+    box-shadow: var(--_navbar-link-ring);
+    color: var(--_navbar-link-fg);
+    font-weight: var(--_navbar-link-font-weight);
+    text-decoration-line: none;
+    white-space: nowrap;
+    cursor: pointer;
+    outline: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  /* The glow layer: the current page's bar under the link in the bar, at the inline start edge in a panel. */
+  [data-ds='navbar'] [data-part='link']::before {
+    content: '';
+    position: absolute;
+    inset-block-end: 0;
+    inset-inline: var(--_navbar-link-padding-inline);
+    block-size: var(--ds-border-width-strong);
+    border-radius: var(--ds-radius-pill);
+    background-color: var(--_navbar-link-edge);
+    pointer-events: none;
+  }
+
+  /* The hover veil. */
+  [data-ds='navbar'] [data-part='link']::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background-color: var(--_navbar-link-veil);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity var(--ds-duration-fast) var(--ds-ease-default);
+  }
+
+  [data-ds='navbar'] [data-part='link']:hover::after {
+    opacity: 1;
+  }
+
+  [data-ds='navbar'] [data-part='link'][data-active] {
+    --_navbar-link-fg: var(--_navbar-link-fg-active);
+    --_navbar-link-edge: var(--_navbar-link-edge-active);
+    --_navbar-link-font-weight: var(--_navbar-link-font-weight-active);
+  }
+
+  /* The ring. The transparent outline is set only here, so forced colors draws it on focus. */
+  [data-ds='navbar'] [data-part='link']:focus-visible {
+    --_navbar-link-ring: var(--ds-focus-shadow-ring);
+
+    outline: var(--ds-border-width-strong) solid transparent;
+    outline-offset: var(--ds-border-width-strong);
+  }
+
+  /* The trigger is a ghost Button: the navbar sets its private properties and the link weight. [data-emphasis] outranks Button's ghost rule. */
+  [data-ds='navbar'] [data-part='trigger'][data-emphasis] {
+    --_button-padding-inline: var(--_navbar-link-padding-inline);
+    --_button-font-size: var(--_navbar-font-size);
+    --_button-fg: var(--_navbar-fg);
+    --_button-height: var(--_navbar-control-height);
+    --_navbar-trigger-turn: 0deg;
+
+    font-weight: var(--_navbar-link-font-weight);
+  }
+
+  /* A menu that holds the current page: the weight and color of the current link. */
+  [data-ds='navbar'] [data-part='trigger'][data-emphasis][data-active] {
+    --_button-fg: var(--_navbar-link-fg-active);
+    --_navbar-link-font-weight: var(--_navbar-link-font-weight-active);
+  }
+
+  [data-ds='navbar'] [data-part='trigger'][data-state='open'] {
+    --_navbar-trigger-turn: 180deg;
+  }
+
+  /* The chevron, in a part the navbar owns, turns over while the panel is open. */
+  [data-ds='navbar'] [data-part='trigger-icon'] {
+    display: inline-flex;
+    transform: rotate(var(--_navbar-trigger-turn));
+    transition: transform var(--ds-duration-fast) var(--ds-ease-default);
+  }
+
+  /* The bar under the open trigger. Radix sets its inline position and width. */
+  [data-ds='navbar'] [data-part='indicator'] {
+    inset-block-end: 0;
+    z-index: var(--ds-z-menu);
+    block-size: var(--ds-border-width-strong);
+    border-radius: var(--ds-radius-pill);
+    background-color: var(--_navbar-link-edge-active);
+    transition:
+      transform var(--ds-duration-base) var(--ds-ease-out),
+      opacity var(--ds-duration-fast) var(--ds-ease-default);
+  }
+
+  [data-ds='navbar'] [data-part='indicator'][data-state='hidden'] {
+    opacity: 0;
+  }
+
+  /* ------------------------------------------------------------ viewport and panels */
+
+  [data-ds='navbar'] > [data-part='viewport'] {
+    position: absolute;
+    inset-block-start: 100%;
+    inset-inline-start: var(--_navbar-padding-inline);
+    z-index: var(--ds-z-menu);
+    box-sizing: border-box;
+    inline-size: var(--radix-navigation-menu-viewport-width);
+    max-inline-size: calc(100% - 2 * var(--_navbar-padding-inline));
+    block-size: var(--radix-navigation-menu-viewport-height);
+    margin-block-start: var(--ds-space-3xs);
+    overflow: hidden;
+    border-radius: var(--_navbar-panel-radius);
+    background-color: var(--_navbar-panel-bg);
+    box-shadow: var(--_navbar-panel-shadow);
+    transform-origin: top;
+  }
+
+  [data-ds='navbar'] > [data-part='viewport'][data-state='open'] {
+    animation: ds-navbar-in var(--ds-duration-base) var(--ds-ease-emphasized);
+  }
+
+  [data-ds='navbar'] > [data-part='viewport'][data-state='closed'] {
+    animation: ds-navbar-out var(--ds-duration-quick) var(--ds-ease-exit) forwards;
+  }
+
+  @keyframes ds-navbar-in {
+    from {
+      opacity: 0;
+      transform: scale(var(--_navbar-enter-scale));
+    }
+  }
+
+  @keyframes ds-navbar-out {
+    to {
+      opacity: 0;
+      transform: scale(var(--_navbar-enter-scale));
+    }
+  }
+
+  [data-ds='navbar'] [data-part='content'] {
+    box-sizing: border-box;
+    inline-size: var(--_navbar-panel-width);
+    max-inline-size: 100%;
+    padding: var(--_navbar-panel-padding);
+  }
+
+  [data-ds='navbar'] [data-part='content-list'] {
+    display: grid;
+    /* Two columns, or one when the menu holds a single link. */
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, var(--ds-menu-width-min)), 1fr));
+    gap: var(--_navbar-panel-padding);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  [data-ds='navbar'] [data-part='content-list'] [data-part='link'] {
+    --_navbar-link-radius: var(--ds-radius-field);
+
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    gap: var(--ds-space-4xs);
+    inline-size: 100%;
+    padding-block: var(--ds-space-s);
+    white-space: normal;
+  }
+
+  /* In a panel the current page's bar runs down the inline start edge. */
+  [data-ds='navbar'] [data-part='content-list'] [data-part='link']::before {
+    inset-block: var(--ds-space-s);
+    inset-inline: 0 auto;
+    inline-size: var(--ds-border-width-strong);
+    block-size: auto;
+  }
+
+  /* Inside a panel the ring sits inside the link, so the panel's clip never cuts it. */
+  [data-ds='navbar'] [data-part='content-list'] [data-part='link']:focus-visible {
+    --_navbar-link-ring: inset 0 0 0 var(--ds-border-width-strong) var(--ds-color-focus-ring);
+
+    outline-offset: calc(-1 * var(--ds-border-width-strong));
+  }
+
+  [data-ds='navbar'] [data-part='link-label'] {
+    overflow-wrap: anywhere;
+  }
+
+  [data-ds='navbar'] [data-part='link-description'] {
+    color: var(--ds-color-text-muted);
+    font-size: var(--ds-font-size-xs);
+    font-weight: var(--ds-font-weight-regular);
+    overflow-wrap: anywhere;
+  }
+
+  [data-ds='navbar']:lang(ar) [data-part='link-description'] {
+    font-size: var(--ds-font-size-s);
+  }
+
+  /* ------------------------------------------------------------ phones: the menu button and the list */
+
+  [data-ds='navbar'] > [data-part='menu-button'] {
+    display: none;
+  }
+
+  [data-ds='navbar'] > [data-part='mobile'] {
+    display: none;
+  }
+
+  @media (width < 48rem) { /* breakpoint.tablet */
+    [data-ds='navbar'] [data-part='list']:not([data-part='mobile'] *),
+    [data-ds='navbar'] > [data-part='viewport'] {
+      display: none;
+    }
+
+    [data-ds='navbar'] > [data-part='menu-button'] {
+      display: inline-flex;
+      flex: none;
+    }
+
+    /* One row on phones: the brand gives way before the actions or the button wrap. */
+    [data-ds='navbar'] {
+      flex-wrap: nowrap;
+    }
+
+    /* A long brand wraps between its words, never inside one; the actions shrink to an ellipsis first. */
+    [data-ds='navbar'] > [data-part='brand'] {
+      flex: 0 1 auto;
+    }
+
+    /* With no actions, the menu button takes the inline end itself. */
+    [data-ds='navbar'] > [data-part='brand'] + [data-part='menu-button'] {
+      margin-inline-start: auto;
+    }
+
+    /* The open list takes a row of its own: the root wraps again. */
+    [data-ds='navbar']:has(> [data-part='mobile'][data-state='open']) {
+      flex-wrap: wrap;
+    }
+
+    [data-ds='navbar'] > [data-part='mobile'][data-state='open'] {
+      display: block;
+      flex: 1 0 100%;
+      padding-block-end: var(--ds-space-s);
+    }
+
+    /* A sticky bar never grows past the screen: the list scrolls inside it, so every link stays reachable. */
+    [data-ds='navbar'][data-sticky] > [data-part='mobile'][data-state='open'] {
+      /* No viewport height token: dialog.height-max (80dvh) caps the list well inside the screen under the bar. */
+      max-block-size: var(--ds-dialog-height-max);
+      overflow-y: auto;
+      overscroll-behavior: contain;
+    }
+
+    /* The phone list is a Sidebar that fills the row: no width, no edge, the bar's surface. */
+    [data-ds='navbar'] > [data-part='mobile'] > [data-ds='sidebar'] {
+      --_sidebar-width: 100%;
+      --_sidebar-bg: transparent;
+      --_sidebar-border-end-color: transparent;
+      --_sidebar-item-height: var(--ds-size-control-lg);
+    }
+  }
+
+  /* ------------------------------------------------------------ reduced motion, forced colors */
+
+  @media (prefers-reduced-motion: reduce) {
+    [data-ds='navbar'] > [data-part='viewport'][data-state] {
+      animation: none;
+    }
+
+    [data-ds='navbar'] [data-part='indicator'],
+    [data-ds='navbar'] [data-part='link']::after,
+    [data-ds='navbar'] [data-part='trigger-icon'] {
+      transition: none;
+    }
+  }
+
+  @media (forced-colors: active) {
+    [data-ds='navbar'] [data-part='link']::after {
+      display: none;
+    }
+
+    [data-ds='navbar'] [data-part='link'][data-active]::before,
+    [data-ds='navbar'] [data-part='indicator'] {
+      background-color: Highlight;
+    }
+
+    [data-ds='navbar'] [data-part='link']:focus-visible {
+      outline-color: Highlight;
+    }
+
+    [data-ds='navbar'] > [data-part='viewport'] {
+      border: var(--ds-border-width-default) solid CanvasText;
+    }
+  }
+}

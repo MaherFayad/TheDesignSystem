@@ -1,0 +1,302 @@
+/*
+ * Rail: a narrow column of icon destinations (Studio dial 10). No source:
+ * designed from the dials table and Sidebar, whose item states and active
+ * bar it shares. Follows "One convention for component CSS and props" in
+ * docs/contracts/anatomy.md.
+ *
+ *   [data-ds='rail']                            root: nav, data-hide-labels
+ *     [data-part='start']                       brand or workspace, block start
+ *     [data-part='list']                        the ul of items
+ *       [data-part='item']                      a link, data-active, data-disabled
+ *         [data-part='item-label']              short, drawn under the icon (first in the DOM for the name)
+ *         [data-part='item-icon']               drawn first with order -1
+ *           [data-part='item-badge']            a count or a dot (data-dot) on the icon's corner
+ *     [data-part='end']                         a second ul: account or settings, block end
+ *
+ * Private properties on the root (recipes override these):
+ *
+ *   --_rail-padding, -gap, -bg, -fg, -border-color
+ *   --_rail-item-size                           the icon box and the least item height
+ *   --_rail-item-width                          the item width, wider while labels show
+ *   --_rail-item-radius, -label-font-size
+ *   --_rail-item-bg, -item-fg, -item-icon-fg    one item, swapped by state
+ *   --_rail-item-bg-active, -item-fg-active, -item-edge, -item-edge-active
+ *   --_rail-item-veil                           the hover veil color
+ *   --_rail-item-ring                           the focus ring, an inset box shadow
+ *   --_rail-badge-bg, -badge-fg
+ *
+ * Nothing moves: the hover veil fades on duration.fast, none under reduced
+ * motion.
+ */
+@layer ds.base {
+  [data-ds='rail'] {
+    --_rail-padding: var(--ds-space-3xs);
+    --_rail-gap: var(--ds-space-3xs);
+    --_rail-bg: var(--ds-color-bg-surface);
+    --_rail-fg: var(--ds-color-text-default);
+    --_rail-border-color: var(--ds-color-border-hairline);
+    --_rail-item-size: var(--ds-size-control-md);
+    /* Room for a one word label under the icon: half again the Studio rail width, or the item, whichever is wider. */
+    --_rail-item-width: max(calc(var(--ds-shell-rail-width) * 1.5), var(--_rail-item-size));
+    --_rail-item-radius: var(--ds-radius-field);
+    --_rail-label-font-size: var(--ds-font-size-2xs);
+    --_rail-item-bg: transparent;
+    --_rail-item-fg: var(--ds-color-text-muted);
+    --_rail-item-icon-fg: var(--ds-color-text-default);
+    --_rail-item-edge: transparent;
+    --_rail-item-bg-active: var(--ds-color-bg-overlay-10);
+    --_rail-item-fg-active: var(--ds-color-text-bright);
+    --_rail-item-edge-active: var(--ds-color-primary-on-surface);
+    --_rail-item-veil: var(--ds-color-bg-overlay-10);
+    --_rail-item-ring: 0 0 transparent;
+    --_rail-badge-bg: var(--ds-color-primary-fill);
+    --_rail-badge-fg: var(--ds-color-text-on-primary);
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--_rail-gap);
+    box-sizing: border-box;
+    block-size: 100%;
+    margin: 0;
+    padding: var(--_rail-padding);
+    overflow: hidden;
+    border-inline-end: var(--ds-border-width-default) solid var(--_rail-border-color);
+    background-color: var(--_rail-bg);
+    color: var(--_rail-fg);
+    font-family: var(--ds-font-family-sans);
+    line-height: var(--ds-font-leading-tight);
+  }
+
+  [data-ds='rail'][data-size='sm'] {
+    --_rail-item-size: var(--ds-size-control-sm);
+  }
+
+  /* Touch templates: 44pt on iOS, 48dp on Android (WCAG 2.5.8 and the platform guides). */
+  [data-platform='ios'] [data-ds='rail'] {
+    --_rail-item-size: var(--ds-size-touch-ios);
+  }
+
+  [data-platform='android'] [data-ds='rail'] {
+    --_rail-item-size: var(--ds-size-touch-android);
+  }
+
+  [data-ds='rail'][data-hide-labels] {
+    --_rail-item-width: var(--_rail-item-size);
+  }
+
+  /* Arabic: small text one step up. */
+  [data-ds='rail']:lang(ar) {
+    --_rail-label-font-size: var(--ds-font-size-xs);
+
+    line-height: var(--ds-font-leading-arabic-tight);
+  }
+
+  /* ------------------------------------------------------------ start, list, end */
+
+  [data-ds='rail'] > :is([data-part='start'], [data-part='end']) {
+    display: flex;
+    flex: none;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--_rail-gap);
+  }
+
+  [data-ds='rail'] > [data-part='start'] {
+    padding-block-end: var(--_rail-gap);
+  }
+
+  [data-ds='rail'] > [data-part='end'] {
+    margin-block: auto 0;
+    padding: var(--_rail-gap) 0 0;
+    list-style: none;
+  }
+
+  /* The list scrolls when it runs out of room; start and end stay in view. */
+  [data-ds='rail'] > [data-part='list'] {
+    display: flex;
+    flex: 0 1 auto;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--_rail-gap);
+    min-block-size: 0;
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    scrollbar-width: thin;
+    list-style: none;
+  }
+
+  /* ------------------------------------------------------------ items */
+
+  [data-ds='rail'] [data-part='item'] {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: var(--ds-space-4xs);
+    box-sizing: border-box;
+    inline-size: var(--_rail-item-width);
+    min-inline-size: var(--ds-size-target-min);
+    min-block-size: max(var(--_rail-item-size), var(--ds-size-target-min));
+    padding-block: var(--ds-space-3xs);
+    padding-inline: var(--ds-space-4xs);
+    border-radius: var(--_rail-item-radius);
+    background-color: var(--_rail-item-bg);
+    box-shadow: var(--_rail-item-ring);
+    color: var(--_rail-item-fg);
+    text-decoration-line: none;
+    cursor: pointer;
+    outline: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  /* The glow layer: the active bar on the inline start edge, transparent at rest. */
+  [data-ds='rail'] [data-part='item']::before {
+    content: '';
+    position: absolute;
+    inset-block: var(--ds-space-xs);
+    inset-inline-start: 0;
+    inline-size: var(--ds-border-width-strong);
+    border-radius: var(--ds-radius-pill);
+    background-color: var(--_rail-item-edge);
+    pointer-events: none;
+  }
+
+  /* The hover veil. */
+  [data-ds='rail'] [data-part='item']::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background-color: var(--_rail-item-veil);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity var(--ds-duration-fast) var(--ds-ease-default);
+  }
+
+  [data-ds='rail'] [data-part='item-icon'] {
+    position: relative;
+    order: -1;
+    display: inline-flex;
+    flex: none;
+    align-items: center;
+    justify-content: center;
+    color: var(--_rail-item-icon-fg);
+  }
+
+  /* One short word. A longer one ends in an ellipsis; the full label stays the accessible name. */
+  [data-ds='rail'] [data-part='item-label'] {
+    max-inline-size: 100%;
+    overflow: hidden;
+    font-size: var(--_rail-label-font-size);
+    font-weight: var(--ds-font-weight-medium);
+    text-align: center;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  /* On the icon's top end corner, half outside it. */
+  [data-ds='rail'] [data-part='item-badge'] {
+    position: absolute;
+    inset-block-start: calc(-1 * var(--ds-space-xs));
+    inset-inline-start: calc(100% - var(--ds-space-xs));
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    min-inline-size: var(--ds-size-icon-sm);
+    block-size: var(--ds-size-icon-sm);
+    padding-inline: var(--ds-space-4xs);
+    border-radius: var(--ds-radius-pill);
+    background-color: var(--_rail-badge-bg);
+    color: var(--_rail-badge-fg);
+    font-size: var(--ds-font-size-3xs);
+    font-weight: var(--ds-font-weight-bold);
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+    unicode-bidi: isolate;
+  }
+
+  [data-ds='rail'] [data-part='item-badge'][data-dot] {
+    min-inline-size: var(--ds-space-xs);
+    block-size: var(--ds-space-xs);
+    padding: 0;
+  }
+
+  /* Words for screen readers only: badgeLabel, and the labels of a rail with hideLabels. */
+  [data-ds='rail'] [data-visually-hidden],
+  [data-ds='rail'][data-hide-labels] [data-part='item-label'] {
+    position: absolute;
+    inline-size: var(--ds-border-width-default);
+    block-size: var(--ds-border-width-default);
+    margin: calc(-1 * var(--ds-border-width-default));
+    padding: 0;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  /* ------------------------------------------------------------ states: swap the private properties */
+
+  [data-ds='rail'] [data-part='item']:hover:not([data-disabled])::after {
+    opacity: 1;
+  }
+
+  [data-ds='rail'] [data-part='item'][data-active] {
+    --_rail-item-bg: var(--_rail-item-bg-active);
+    --_rail-item-fg: var(--_rail-item-fg-active);
+    --_rail-item-icon-fg: var(--_rail-item-fg-active);
+    --_rail-item-edge: var(--_rail-item-edge-active);
+  }
+
+  [data-ds='rail'] [data-part='item'][data-active] > [data-part='item-label'] {
+    font-weight: var(--ds-font-weight-bold);
+  }
+
+  /* The ring sits inside the item. The transparent outline is set only here, so forced colors draws it on focus. */
+  [data-ds='rail'] [data-part='item']:focus-visible {
+    --_rail-item-ring: inset 0 0 0 var(--ds-border-width-strong) var(--ds-color-focus-ring);
+
+    outline: var(--ds-border-width-strong) solid transparent;
+    outline-offset: calc(-1 * var(--ds-border-width-strong));
+  }
+
+  [data-ds='rail'] [data-part='item'][data-disabled] {
+    opacity: var(--ds-opacity-disabled);
+    cursor: not-allowed;
+  }
+
+  /* ------------------------------------------------------------ reduced motion, forced colors */
+
+  @media (prefers-reduced-motion: reduce) {
+    [data-ds='rail'] [data-part='item']::after {
+      transition: none;
+    }
+  }
+
+  @media (forced-colors: active) {
+    [data-ds='rail'] [data-part='item']::after {
+      display: none;
+    }
+
+    [data-ds='rail'] [data-part='item'][data-active]::before {
+      background-color: Highlight;
+    }
+
+    [data-ds='rail'] [data-part='item']:focus-visible {
+      outline-color: Highlight;
+    }
+
+    [data-ds='rail'] [data-part='item'][data-disabled] {
+      color: GrayText;
+    }
+
+    [data-ds='rail'] [data-part='item-badge'] {
+      border: var(--ds-border-width-default) solid CanvasText;
+    }
+  }
+}

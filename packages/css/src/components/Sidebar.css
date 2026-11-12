@@ -1,0 +1,416 @@
+/*
+ * Sidebar: the side navigation of an app. No source could be fetched in the
+ * lane session: the look follows the dials table (Studio dial 10, rail and
+ * sidebars on flat tone steps; Neutral, a sidebar with 1px borders) and the
+ * rows of DropdownMenu. Follows "One convention for component CSS and props"
+ * in docs/contracts/anatomy.md.
+ *
+ *   [data-ds='sidebar']                         root: nav, data-state expanded or collapsed
+ *     [data-part='header']                      brand and the toggle, stays at the top
+ *       [data-part='toggle']                    an IconButton root, icon sidebar
+ *     [data-part='group']                       data-state open or closed when collapsible
+ *       [data-part='group-label']               the heading of a plain group
+ *       [data-part='group-trigger']             a Button root, the heading of a collapsible group
+ *       [data-part='list']                      the ul of items
+ *         [data-part='item']                    a link, data-active, data-disabled
+ *           [data-part='item-icon']
+ *           [data-part='item-label']
+ *           [data-part='item-count']
+ *     [data-part='footer']                      stays at the bottom
+ *
+ * Private properties on the root (recipes override these):
+ *
+ *   --_sidebar-width, -width-collapsed, -padding, -gap
+ *   --_sidebar-bg, -fg, -border-color, -border-start-color, -border-end-color
+ *   --_sidebar-meta-fg, -meta-font-size              group headings and counts
+ *   --_sidebar-item-height, -item-padding-inline, -item-gap, -item-radius
+ *   --_sidebar-item-font-size, -item-font-weight, -item-font-weight-active
+ *   --_sidebar-item-bg, -item-fg, -item-icon-fg       one item, swapped by state
+ *   --_sidebar-item-bg-active, -item-fg-active, -item-edge-active
+ *   --_sidebar-item-veil                             the hover veil color
+ *   --_sidebar-item-ring                             the focus ring, an inset box shadow
+ *   --_sidebar-meta-fg                               labels and counts
+ *   --_sidebar-chevron-closed                        the turn of a closed group's chevron
+ *
+ * The active item is told apart by weight, a fill and a bar on the inline
+ * start edge (the ::before glow layer), never by color alone. The width never animates: collapse is
+ * instant. Motion, pattern "fade-rise": an opened group's list fades in and
+ * rises a step; closing is instant, so Radix never waits for an animation.
+ */
+@layer ds.base {
+  [data-ds='sidebar'] {
+    --_sidebar-width: var(--ds-shell-sidebar-width-min);
+    --_sidebar-padding: var(--ds-space-xs);
+    --_sidebar-gap: var(--ds-space-l);
+    --_sidebar-bg: var(--ds-color-bg-surface);
+    --_sidebar-fg: var(--ds-color-text-default);
+    --_sidebar-border-color: var(--ds-color-border-hairline);
+    /* The edge that meets the page. A sidebar at the inline end swaps these two. */
+    --_sidebar-border-start-color: transparent;
+    --_sidebar-border-end-color: var(--_sidebar-border-color);
+    --_sidebar-item-height: var(--ds-size-control-md);
+    --_sidebar-item-padding-inline: var(--ds-space-m);
+    --_sidebar-item-gap: var(--ds-space-m);
+    --_sidebar-item-radius: var(--ds-radius-field);
+    --_sidebar-item-font-size: var(--ds-font-size-s);
+    --_sidebar-item-font-weight: var(--ds-font-weight-medium);
+    --_sidebar-item-font-weight-active: var(--ds-font-weight-bold);
+    --_sidebar-item-bg: transparent;
+    --_sidebar-item-fg: var(--_sidebar-fg);
+    --_sidebar-item-icon-fg: var(--ds-color-text-muted);
+    --_sidebar-item-edge: transparent;
+    --_sidebar-item-bg-active: var(--ds-color-bg-overlay-10);
+    --_sidebar-item-fg-active: var(--ds-color-text-bright);
+    --_sidebar-item-edge-active: var(--ds-color-primary-on-surface);
+    --_sidebar-item-veil: var(--ds-color-bg-overlay-10);
+    --_sidebar-item-ring: 0 0 transparent;
+    --_sidebar-meta-fg: var(--ds-color-text-muted);
+    --_sidebar-meta-font-size: var(--ds-font-size-xs);
+    --_sidebar-chevron-closed: -90deg;
+    --_sidebar-width-collapsed: calc(var(--_sidebar-item-height) + 2 * var(--_sidebar-padding) + var(--ds-border-width-default));
+
+    display: flex;
+    flex-direction: column;
+    gap: var(--_sidebar-gap);
+    box-sizing: border-box;
+    inline-size: var(--_sidebar-width);
+    max-inline-size: 100%;
+    block-size: 100%;
+    margin: 0;
+    padding-inline: var(--_sidebar-padding);
+    overflow-x: hidden;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    isolation: isolate;
+    border-inline-start: var(--ds-border-width-default) solid var(--_sidebar-border-start-color);
+    border-inline-end: var(--ds-border-width-default) solid var(--_sidebar-border-end-color);
+    background-color: var(--_sidebar-bg);
+    color: var(--_sidebar-fg);
+    font-family: var(--ds-font-family-sans);
+    font-size: var(--_sidebar-item-font-size);
+    line-height: var(--ds-font-leading-snug);
+  }
+
+  [data-ds='sidebar']:dir(rtl) {
+    --_sidebar-chevron-closed: 90deg;
+  }
+
+  [data-ds='sidebar'][data-size='sm'] {
+    --_sidebar-item-height: var(--ds-size-control-sm);
+    --_sidebar-item-padding-inline: var(--ds-space-s);
+    --_sidebar-item-gap: var(--ds-space-s);
+    --_sidebar-item-font-size: var(--ds-font-size-xs);
+    --_sidebar-gap: var(--ds-space-m);
+  }
+
+  /* Arabic: small text one step up (base.css does the same for running text). */
+  [data-ds='sidebar']:lang(ar) {
+    --_sidebar-item-font-size: var(--ds-font-size-m);
+    --_sidebar-meta-font-size: var(--ds-font-size-s);
+
+    line-height: var(--ds-font-leading-arabic-snug);
+  }
+
+  [data-ds='sidebar'][data-size='sm']:lang(ar) {
+    --_sidebar-item-font-size: var(--ds-font-size-s);
+  }
+
+  /* ------------------------------------------------------------ header and footer */
+
+  [data-ds='sidebar'] > :is([data-part='header'], [data-part='footer']) {
+    position: sticky;
+    /* Above the scrolling items. The root isolates, so this stays inside the sidebar. */
+    z-index: var(--ds-z-sidebar);
+    display: flex;
+    flex: none;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--ds-space-xs);
+    min-block-size: var(--ds-shell-topbar-height);
+    padding-block: var(--_sidebar-padding);
+    background-color: var(--_sidebar-bg);
+  }
+
+  [data-ds='sidebar'] > [data-part='header'] {
+    inset-block-start: 0;
+    justify-content: space-between;
+  }
+
+  /* The toggle keeps the inline end, even alone. */
+  [data-ds='sidebar'] > [data-part='header'] > [data-part='toggle'] {
+    margin-inline-start: auto;
+  }
+
+  [data-ds='sidebar'] > [data-part='footer'] {
+    inset-block-end: 0;
+    flex-direction: column;
+    align-items: stretch;
+    margin-block-start: auto;
+    border-block-start: var(--ds-border-width-default) solid var(--_sidebar-border-color);
+  }
+
+  /* ------------------------------------------------------------ groups */
+
+  [data-ds='sidebar'] > [data-part='group'] {
+    display: flex;
+    flex: none;
+    flex-direction: column;
+    gap: var(--ds-space-4xs);
+    min-inline-size: 0;
+  }
+
+  [data-ds='sidebar'] > [data-part='group'] > [data-part='group-label'] {
+    padding-block: var(--ds-space-3xs);
+    padding-inline: var(--_sidebar-item-padding-inline);
+    color: var(--_sidebar-meta-fg);
+    font-size: var(--_sidebar-meta-font-size);
+    font-weight: var(--ds-font-weight-semibold);
+    overflow-wrap: anywhere;
+  }
+
+  /* The trigger is a ghost Button: the sidebar sets its private properties and stretches it across the row. */
+  [data-ds='sidebar'] > [data-part='group'] > [data-part='group-trigger'] {
+    --_button-padding-inline: var(--_sidebar-item-padding-inline);
+    --_button-radius: var(--_sidebar-item-radius);
+    --_button-font-size: var(--_sidebar-meta-font-size);
+    --_button-fg: var(--_sidebar-meta-fg);
+
+    justify-content: space-between;
+    inline-size: 100%;
+  }
+
+  /* A long heading wraps (Button wrap) and reads from the start edge like the items. */
+  [data-ds='sidebar'] > [data-part='group'] > [data-part='group-trigger'][data-wrap] > [data-part='label'] {
+    text-align: start;
+  }
+
+  [data-ds='sidebar'] > [data-part='group'] > [data-part='group-trigger'] > [data-part='end'] {
+    transition: transform var(--ds-duration-fast) var(--ds-ease-default);
+  }
+
+  [data-ds='sidebar'] > [data-part='group'][data-state='closed'] > [data-part='group-trigger'] > [data-part='end'] {
+    transform: rotate(var(--_sidebar-chevron-closed));
+  }
+
+  [data-ds='sidebar'] > [data-part='group'] > [data-part='list'] {
+    display: flex;
+    flex-direction: column;
+    gap: var(--ds-space-4xs);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  [data-ds='sidebar'] > [data-part='group'][data-state='open'] > [data-part='list'] {
+    animation: ds-sidebar-group-in var(--ds-duration-base) var(--ds-ease-out);
+  }
+
+  @keyframes ds-sidebar-group-in {
+    from {
+      opacity: 0;
+      transform: translateY(calc(-1 * var(--ds-space-xs)));
+    }
+  }
+
+  /* ------------------------------------------------------------ items */
+
+  [data-ds='sidebar'] [data-part='item'] {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: var(--_sidebar-item-gap);
+    box-sizing: border-box;
+    min-block-size: max(var(--_sidebar-item-height), var(--ds-size-target-min));
+    padding-block: var(--ds-space-4xs);
+    padding-inline: var(--_sidebar-item-padding-inline);
+    border-radius: var(--_sidebar-item-radius);
+    background-color: var(--_sidebar-item-bg);
+    box-shadow: var(--_sidebar-item-ring);
+    color: var(--_sidebar-item-fg);
+    font-weight: var(--_sidebar-item-font-weight);
+    text-decoration-line: none;
+    cursor: pointer;
+    outline: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  /* The glow layer: the active bar on the inline start edge, transparent at rest. */
+  [data-ds='sidebar'] [data-part='item']::before {
+    content: '';
+    position: absolute;
+    inset-block: var(--ds-space-xs);
+    inset-inline-start: 0;
+    inline-size: var(--ds-border-width-strong);
+    border-radius: var(--ds-radius-pill);
+    background-color: var(--_sidebar-item-edge);
+    pointer-events: none;
+  }
+
+  /* The hover veil. */
+  [data-ds='sidebar'] [data-part='item']::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background-color: var(--_sidebar-item-veil);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity var(--ds-duration-fast) var(--ds-ease-default);
+  }
+
+  [data-ds='sidebar'] [data-part='item-icon'] {
+    display: inline-flex;
+    flex: none;
+    align-items: center;
+    justify-content: center;
+    min-inline-size: var(--ds-size-icon-md);
+    color: var(--_sidebar-item-icon-fg);
+  }
+
+  [data-ds='sidebar'] [data-part='item-label'] {
+    flex: 1 1 auto;
+    min-inline-size: 0;
+    overflow-wrap: anywhere;
+  }
+
+  [data-ds='sidebar'] [data-part='item-count'] {
+    flex: none;
+    min-inline-size: var(--ds-size-icon-md);
+    color: var(--_sidebar-meta-fg);
+    font-size: var(--_sidebar-meta-font-size);
+    font-weight: var(--ds-font-weight-medium);
+    font-variant-numeric: tabular-nums;
+    text-align: end;
+    white-space: nowrap;
+    /* The markup sets dir ltr, so 99+ keeps its order in Arabic. */
+    unicode-bidi: isolate;
+  }
+
+  /* The words of countLabel: read by screen readers, not drawn. */
+  [data-ds='sidebar'] [data-visually-hidden],
+  [data-ds='sidebar'][data-state='collapsed'] [data-part='item-label'],
+  [data-ds='sidebar'][data-state='collapsed'] > [data-part='group'] > [data-part='group-label'] {
+    position: absolute;
+    inline-size: var(--ds-border-width-default);
+    block-size: var(--ds-border-width-default);
+    margin: calc(-1 * var(--ds-border-width-default));
+    padding: 0;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  /* ------------------------------------------------------------ states: swap the private properties */
+
+  [data-ds='sidebar'] [data-part='item']:hover:not([data-disabled])::after {
+    opacity: 1;
+  }
+
+  [data-ds='sidebar'] [data-part='item'][data-active] {
+    --_sidebar-item-bg: var(--_sidebar-item-bg-active);
+    --_sidebar-item-fg: var(--_sidebar-item-fg-active);
+    --_sidebar-item-icon-fg: var(--_sidebar-item-fg-active);
+    --_sidebar-item-edge: var(--_sidebar-item-edge-active);
+    --_sidebar-item-font-weight: var(--_sidebar-item-font-weight-active);
+  }
+
+  /* The ring sits inside the row. The transparent outline is set only here, so forced colors draws it on focus. */
+  [data-ds='sidebar'] [data-part='item']:focus-visible {
+    --_sidebar-item-ring: inset 0 0 0 var(--ds-border-width-strong) var(--ds-color-focus-ring);
+
+    outline: var(--ds-border-width-strong) solid transparent;
+    outline-offset: calc(-1 * var(--ds-border-width-strong));
+  }
+
+  [data-ds='sidebar'] [data-part='item'][data-disabled] {
+    opacity: var(--ds-opacity-disabled);
+    cursor: not-allowed;
+  }
+
+  /* ------------------------------------------------------------ collapsed: an icon column */
+
+  [data-ds='sidebar'][data-state='collapsed'] {
+    inline-size: var(--_sidebar-width-collapsed);
+  }
+
+  [data-ds='sidebar'][data-state='collapsed'] > [data-part='header'] {
+    flex-direction: column;
+  }
+
+  [data-ds='sidebar'][data-state='collapsed'] > [data-part='header'] > [data-part='toggle'] {
+    margin-inline-start: 0;
+  }
+
+  /* A collapsed sidebar holds every group open and hides the heading button; its id still names the list. */
+  [data-ds='sidebar'][data-state='collapsed'] > [data-part='group'] > [data-part='group-trigger'] {
+    display: none;
+  }
+
+  /* Groups part with a hairline instead of a heading. */
+  [data-ds='sidebar'][data-state='collapsed'] > [data-part='group'] + [data-part='group'] {
+    padding-block-start: var(--_sidebar-gap);
+    border-block-start: var(--ds-border-width-default) solid var(--_sidebar-border-color);
+  }
+
+  [data-ds='sidebar'][data-state='collapsed'] [data-part='item'] {
+    justify-content: center;
+    inline-size: var(--_sidebar-item-height);
+    min-inline-size: var(--ds-size-target-min);
+    padding-inline: 0;
+  }
+
+  /*
+   * The count becomes a dot on the icon's corner. The digits stay in the
+   * accessible name; they are drawn in a transparent color and clipped.
+   */
+  [data-ds='sidebar'][data-state='collapsed'] [data-part='item-count'] {
+    position: absolute;
+    inset-block-start: var(--ds-space-3xs);
+    inset-inline-end: var(--ds-space-3xs);
+    box-sizing: border-box;
+    inline-size: var(--ds-space-xs);
+    min-inline-size: 0;
+    block-size: var(--ds-space-xs);
+    overflow: hidden;
+    border-radius: var(--ds-radius-pill);
+    background-color: var(--_sidebar-item-edge-active);
+    color: transparent;
+    font-size: var(--ds-font-size-3xs);
+    line-height: var(--ds-font-leading-tight);
+  }
+
+  /* ------------------------------------------------------------ reduced motion, forced colors */
+
+  @media (prefers-reduced-motion: reduce) {
+    [data-ds='sidebar'] > [data-part='group'][data-state='open'] > [data-part='list'] {
+      animation: none;
+    }
+
+    [data-ds='sidebar'] [data-part='item']::after,
+    [data-ds='sidebar'] > [data-part='group'] > [data-part='group-trigger'] > [data-part='end'] {
+      transition: none;
+    }
+  }
+
+  @media (forced-colors: active) {
+    [data-ds='sidebar'] [data-part='item']::after {
+      display: none;
+    }
+
+    [data-ds='sidebar'] [data-part='item'][data-active]::before {
+      background-color: Highlight;
+    }
+
+    [data-ds='sidebar'][data-state='collapsed'] [data-part='item-count'] {
+      background-color: CanvasText;
+    }
+
+    [data-ds='sidebar'] [data-part='item']:focus-visible {
+      outline-color: Highlight;
+    }
+
+    [data-ds='sidebar'] [data-part='item'][data-disabled] {
+      color: GrayText;
+    }
+  }
+}
