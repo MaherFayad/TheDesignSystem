@@ -51,6 +51,7 @@ export const routes: DemoRoute[] = [
   { slug: 'rating', load: () => import('../../../../packages/angular/src/components/rating/rating.demo').then((m) => m.default) },
   { slug: 'scrub-input', load: () => import('../../../../packages/angular/src/components/scrub-input/scrub-input.demo').then((m) => m.default) },
   { slug: 'search-field', load: () => import('../../../../packages/angular/src/components/search-field/search-field.demo').then((m) => m.default) },
+  { slug: 'segmented-control', load: () => import('../../../../packages/angular/src/components/segmented-control/segmented-control.demo').then((m) => m.default) },
   { slug: 'select', load: () => import('../../../../packages/angular/src/components/select/select.demo').then((m) => m.default) },
   { slug: 'skeleton', load: () => import('../../../../packages/angular/src/components/skeleton/skeleton.demo').then((m) => m.default) },
   { slug: 'slider', load: () => import('../../../../packages/angular/src/components/slider/slider.demo').then((m) => m.default) },
@@ -63,4 +64,5 @@ export const routes: DemoRoute[] = [
   { slug: 'textarea', load: () => import('../../../../packages/angular/src/components/textarea/textarea.demo').then((m) => m.default) },
   { slug: 'toast', load: () => import('../../../../packages/angular/src/components/toast/toast.demo').then((m) => m.default) },
   { slug: 'toggle-button', load: () => import('../../../../packages/angular/src/components/toggle-button/toggle-button.demo').then((m) => m.default) },
+  { slug: 'toggle-group', load: () => import('../../../../packages/angular/src/components/toggle-group/toggle-group.demo').then((m) => m.default) },
 ];
