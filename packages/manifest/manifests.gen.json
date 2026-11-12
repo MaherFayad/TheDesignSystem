@@ -905,6 +905,274 @@
     "since": "0.1.0"
   },
   {
+    "name": "Grid",
+    "kind": "component",
+    "family": "layout",
+    "summary": "Lays out children in columns and rows: a fixed column count, or as many columns as fit at a minimum item size.",
+    "useWhen": [
+      "Cards, files or tiles of the same kind that line up in columns and rows",
+      "A form or settings page with two or three columns on wide screens and one on phones",
+      "A twelve column page layout where some cells span more columns"
+    ],
+    "avoidWhen": [
+      "Items in one line or one column only",
+      "Tiles of deliberately mixed sizes on an overview or landing section",
+      "Tabular data a person compares across rows",
+      "A visual order that differs from the reading order"
+    ],
+    "insteadUse": {
+      "One direction only": "Stack",
+      "Mixed tile sizes for an overview": "Bento",
+      "Rows of data with headers": "Table",
+      "A centered page width": "Container"
+    },
+    "anatomy": [
+      "root",
+      "item"
+    ],
+    "parts": {
+      "GridItem": "item"
+    },
+    "slots": {
+      "root": {
+        "accepts": "any"
+      },
+      "item": {
+        "accepts": "any"
+      }
+    },
+    "props": {
+      "columns": {
+        "type": [
+          "1",
+          "2",
+          "3",
+          "4",
+          "5",
+          "6",
+          "7",
+          "8",
+          "9",
+          "10",
+          "11",
+          "12",
+          "auto-fit"
+        ],
+        "default": "auto-fit",
+        "description": "A number from 1 to 12 gives equal tracks. auto-fit fits as many columns as minItemSize allows and grows them to fill the row. Fixed counts fall to one column under breakpoint.phone unless keepColumns is set. Sets data-columns."
+      },
+      "minItemSize": {
+        "type": [
+          "sm",
+          "md",
+          "lg"
+        ],
+        "default": "md",
+        "description": "The smallest item width with auto-fit: sm 10rem, md 15rem, lg 24rem, derived from the breakpoint tokens until a size.grid scale exists. Capped at 100% of the grid, so one item never overflows at 320px. Sets data-min."
+      },
+      "gap": {
+        "type": [
+          "none",
+          "4xs",
+          "3xs",
+          "2xs",
+          "xs",
+          "s",
+          "m",
+          "l",
+          "xl",
+          "2xl",
+          "3xl",
+          "4xl",
+          "5xl",
+          "6xl",
+          "7xl",
+          "8xl",
+          "9xl",
+          "10xl",
+          "11xl",
+          "12xl"
+        ],
+        "default": "l",
+        "description": "Space between cells on both axes, a space.* step."
+      },
+      "rowGap": {
+        "type": [
+          "none",
+          "4xs",
+          "3xs",
+          "2xs",
+          "xs",
+          "s",
+          "m",
+          "l",
+          "xl",
+          "2xl",
+          "3xl",
+          "4xl",
+          "5xl",
+          "6xl",
+          "7xl",
+          "8xl",
+          "9xl",
+          "10xl",
+          "11xl",
+          "12xl"
+        ],
+        "description": "Space between rows when it differs from gap."
+      },
+      "keepColumns": {
+        "type": "boolean",
+        "default": false,
+        "description": "Keeps a fixed column count on phones. Sets data-keep-columns. Only for short cells, such as a calendar or a keypad."
+      },
+      "as": {
+        "type": [
+          "div",
+          "section",
+          "ul",
+          "ol"
+        ],
+        "default": "div",
+        "description": "The element to render. ul and ol get role list and lose their bullets; use GridItem as li inside."
+      },
+      "GridItem.span": {
+        "type": [
+          "1",
+          "2",
+          "3",
+          "4",
+          "5",
+          "6",
+          "7",
+          "8",
+          "9",
+          "10",
+          "11",
+          "12",
+          "full"
+        ],
+        "default": "1",
+        "description": "Columns the item spans; full spans the whole row. Sets data-span. On phones every item fills the one column."
+      },
+      "GridItem.rowSpan": {
+        "type": [
+          "1",
+          "2",
+          "3",
+          "4"
+        ],
+        "default": "1",
+        "description": "Rows the item spans. Sets data-row-span."
+      },
+      "GridItem.as": {
+        "type": [
+          "div",
+          "li",
+          "article",
+          "section"
+        ],
+        "default": "div",
+        "description": "The element of the item. li inside a list Grid."
+      },
+      "children": {
+        "type": "node",
+        "description": "The cells, plain elements or GridItem."
+      }
+    },
+    "states": [
+      "data-keep-columns"
+    ],
+    "a11y": {
+      "role": "none of its own: a div, or list on ul and ol",
+      "focus": "Never focusable. Focus and reading order are the DOM order: cells fill from the start side, the right in Arabic.",
+      "keys": {},
+      "announce": "Nothing. A Grid is layout only.",
+      "native": {
+        "accessibilityRole": "none"
+      },
+      "notes": [
+        "This is a layout grid, not role grid. A grid of interactive cells with arrow key navigation is a different component (DataGrid).",
+        "No dense packing and no order property: the visual order must match the DOM order (WCAG 1.3.2, 2.4.3).",
+        "One column under breakpoint.phone and capped track minimums keep the page free of sideways scroll at 320px (WCAG 1.4.10)."
+      ]
+    },
+    "content": {
+      "en": {
+        "items": "No copy of its own. Cells carry their own labels."
+      },
+      "ar": {
+        "items": "No copy of its own. Cells fill from the right in Arabic because the tracks follow dir."
+      }
+    },
+    "tokens": [
+      "space.4xs",
+      "space.3xs",
+      "space.2xs",
+      "space.xs",
+      "space.s",
+      "space.m",
+      "space.l",
+      "space.xl",
+      "space.2xl",
+      "space.3xl",
+      "space.4xl",
+      "space.5xl",
+      "space.6xl",
+      "space.7xl",
+      "space.8xl",
+      "space.9xl",
+      "space.10xl",
+      "space.11xl",
+      "space.12xl",
+      "breakpoint.phone",
+      "breakpoint.tablet"
+    ],
+    "frameworks": {
+      "react": {
+        "status": "ready",
+        "behavior": "hand built CSS grid",
+        "example": "Grid.demo.tsx",
+        "note": "No motion: a static layout has nothing to animate, so no pattern from the catalog applies. The phone fallback is a viewport media query; a Grid in a narrow sidebar on a wide screen keeps its columns, so use auto-fit there."
+      },
+      "angular": {
+        "status": "planned",
+        "behavior": "[dsGrid] and [dsGridItem] attribute directives",
+        "note": "The host element is the root and the item, so as is not needed."
+      },
+      "native": {
+        "status": "planned",
+        "behavior": "react-native:View rows with flexWrap",
+        "note": "No CSS grid in React Native: fixed columns map to a percentage basis per item and auto-fit to a basis from onLayout width."
+      }
+    },
+    "styles": {
+      "studio": "Layout only. The gap follows density.",
+      "desk": "Layout only. The gap follows density.",
+      "neutral": "Layout only. The gap follows density.",
+      "liquid": "Layout only. The gap follows density."
+    },
+    "mistakes": [
+      {
+        "wrong": "columns 4 with fixed pixel widths on each cell",
+        "right": "columns 4, or auto-fit with minItemSize, so tracks shrink and fall to one column on phones"
+      },
+      {
+        "wrong": "A GridItem span larger than an auto-fit grid has tracks",
+        "right": "span full, or a fixed column count, since auto-fit has fewer tracks on narrow screens"
+      },
+      {
+        "wrong": "keepColumns on a grid of cards with text",
+        "right": "Leave the phone fallback on; keepColumns is for short cells like a keypad"
+      },
+      {
+        "wrong": "role grid on a layout Grid",
+        "right": "No role; arrow key navigation between cells belongs to DataGrid"
+      }
+    ],
+    "since": "0.1.0"
+  },
+  {
     "name": "Icon",
     "kind": "component",
     "family": "media",
@@ -1723,7 +1991,7 @@
       "asChild": {
         "type": "boolean",
         "default": false,
-        "description": "Renders the single child element as the Stack through Radix Slot. Wins over as."
+        "description": "Renders the single child element as the Stack through Radix Slot. Wins over as. A ul or ol child loses its bullets, so give it role list yourself."
       },
       "children": {
         "type": "node",
@@ -1807,7 +2075,7 @@
       },
       {
         "wrong": "A gap of 12 as a number",
-        "right": "gap xl, a space step that follows density"
+        "right": "gap l (12px in the default density on a wide screen), a space step that follows density"
       },
       {
         "wrong": "A Stack used to make a two dimension card grid with nested rows",

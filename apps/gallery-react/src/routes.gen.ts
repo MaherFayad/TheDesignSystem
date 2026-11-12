@@ -11,6 +11,7 @@ export const routes: DemoRoute[] = [
   { name: 'Button', slug: 'button', load: () => import('../../../packages/react/src/components/Button/Button.demo') },
   { name: 'Dialog', slug: 'dialog', load: () => import('../../../packages/react/src/components/Dialog/Dialog.demo') },
   { name: 'Field', slug: 'field', load: () => import('../../../packages/react/src/components/Field/Field.demo') },
+  { name: 'Grid', slug: 'grid', load: () => import('../../../packages/react/src/components/Grid/Grid.demo') },
   { name: 'Icon', slug: 'icon', load: () => import('../../../packages/react/src/components/Icon/Icon.demo') },
   { name: 'IconButton', slug: 'icon-button', load: () => import('../../../packages/react/src/components/IconButton/IconButton.demo') },
   { name: 'Input', slug: 'input', load: () => import('../../../packages/react/src/components/Input/Input.demo') },

@@ -1,0 +1,333 @@
+/*
+ * Grid: a two dimension layout. A fixed column count of equal tracks, or
+ * auto-fit columns at a minimum item size. Fixed counts fall to one column
+ * under breakpoint.phone unless data-keep-columns is set. Tracks are
+ * minmax(0, 1fr) and the auto-fit minimum is capped at 100%, so the grid
+ * never scrolls sideways at 320px. Layout only: no color and no motion.
+ *
+ * The minimum item sizes are derived from the breakpoint tokens until the
+ * token build has a size.grid scale (asked of the lead in the lane report).
+ */
+@layer ds.base {
+  [data-ds='grid'] {
+    --_grid-gap: var(--ds-space-l);
+    --_grid-row-gap: var(--_grid-gap);
+    --_grid-columns: 1;
+    --_grid-min: calc(var(--ds-breakpoint-phone) / 2);
+    --_grid-template: repeat(var(--_grid-columns), minmax(0, 1fr));
+
+    display: grid;
+    grid-template-columns: var(--_grid-template);
+    column-gap: var(--_grid-gap);
+    row-gap: var(--_grid-row-gap);
+    min-inline-size: 0;
+    box-sizing: border-box;
+  }
+
+  /* A list rendered as a Grid keeps its role (set in markup) but no bullets. */
+  :is(ul, ol)[data-ds='grid'] {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  [data-ds='grid'][data-columns='auto-fit'] {
+    --_grid-template: repeat(auto-fit, minmax(min(var(--_grid-min), 100%), 1fr));
+  }
+
+  [data-ds='grid'][data-min='sm'] {
+    --_grid-min: calc(var(--ds-breakpoint-phone) / 3);
+  }
+
+  [data-ds='grid'][data-min='lg'] {
+    --_grid-min: calc(var(--ds-breakpoint-tablet) / 2);
+  }
+
+  [data-ds='grid'][data-columns='1'] {
+    --_grid-columns: 1;
+  }
+
+  [data-ds='grid'][data-columns='2'] {
+    --_grid-columns: 2;
+  }
+
+  [data-ds='grid'][data-columns='3'] {
+    --_grid-columns: 3;
+  }
+
+  [data-ds='grid'][data-columns='4'] {
+    --_grid-columns: 4;
+  }
+
+  [data-ds='grid'][data-columns='5'] {
+    --_grid-columns: 5;
+  }
+
+  [data-ds='grid'][data-columns='6'] {
+    --_grid-columns: 6;
+  }
+
+  [data-ds='grid'][data-columns='7'] {
+    --_grid-columns: 7;
+  }
+
+  [data-ds='grid'][data-columns='8'] {
+    --_grid-columns: 8;
+  }
+
+  [data-ds='grid'][data-columns='9'] {
+    --_grid-columns: 9;
+  }
+
+  [data-ds='grid'][data-columns='10'] {
+    --_grid-columns: 10;
+  }
+
+  [data-ds='grid'][data-columns='11'] {
+    --_grid-columns: 11;
+  }
+
+  [data-ds='grid'][data-columns='12'] {
+    --_grid-columns: 12;
+  }
+
+  [data-ds='grid'][data-gap='none'] {
+    --_grid-gap: 0;
+  }
+
+  [data-ds='grid'][data-gap='4xs'] {
+    --_grid-gap: var(--ds-space-4xs);
+  }
+
+  [data-ds='grid'][data-gap='3xs'] {
+    --_grid-gap: var(--ds-space-3xs);
+  }
+
+  [data-ds='grid'][data-gap='2xs'] {
+    --_grid-gap: var(--ds-space-2xs);
+  }
+
+  [data-ds='grid'][data-gap='xs'] {
+    --_grid-gap: var(--ds-space-xs);
+  }
+
+  [data-ds='grid'][data-gap='s'] {
+    --_grid-gap: var(--ds-space-s);
+  }
+
+  [data-ds='grid'][data-gap='m'] {
+    --_grid-gap: var(--ds-space-m);
+  }
+
+  [data-ds='grid'][data-gap='l'] {
+    --_grid-gap: var(--ds-space-l);
+  }
+
+  [data-ds='grid'][data-gap='xl'] {
+    --_grid-gap: var(--ds-space-xl);
+  }
+
+  [data-ds='grid'][data-gap='2xl'] {
+    --_grid-gap: var(--ds-space-2xl);
+  }
+
+  [data-ds='grid'][data-gap='3xl'] {
+    --_grid-gap: var(--ds-space-3xl);
+  }
+
+  [data-ds='grid'][data-gap='4xl'] {
+    --_grid-gap: var(--ds-space-4xl);
+  }
+
+  [data-ds='grid'][data-gap='5xl'] {
+    --_grid-gap: var(--ds-space-5xl);
+  }
+
+  [data-ds='grid'][data-gap='6xl'] {
+    --_grid-gap: var(--ds-space-6xl);
+  }
+
+  [data-ds='grid'][data-gap='7xl'] {
+    --_grid-gap: var(--ds-space-7xl);
+  }
+
+  [data-ds='grid'][data-gap='8xl'] {
+    --_grid-gap: var(--ds-space-8xl);
+  }
+
+  [data-ds='grid'][data-gap='9xl'] {
+    --_grid-gap: var(--ds-space-9xl);
+  }
+
+  [data-ds='grid'][data-gap='10xl'] {
+    --_grid-gap: var(--ds-space-10xl);
+  }
+
+  [data-ds='grid'][data-gap='11xl'] {
+    --_grid-gap: var(--ds-space-11xl);
+  }
+
+  [data-ds='grid'][data-gap='12xl'] {
+    --_grid-gap: var(--ds-space-12xl);
+  }
+
+  [data-ds='grid'][data-row-gap='none'] {
+    --_grid-row-gap: 0;
+  }
+
+  [data-ds='grid'][data-row-gap='4xs'] {
+    --_grid-row-gap: var(--ds-space-4xs);
+  }
+
+  [data-ds='grid'][data-row-gap='3xs'] {
+    --_grid-row-gap: var(--ds-space-3xs);
+  }
+
+  [data-ds='grid'][data-row-gap='2xs'] {
+    --_grid-row-gap: var(--ds-space-2xs);
+  }
+
+  [data-ds='grid'][data-row-gap='xs'] {
+    --_grid-row-gap: var(--ds-space-xs);
+  }
+
+  [data-ds='grid'][data-row-gap='s'] {
+    --_grid-row-gap: var(--ds-space-s);
+  }
+
+  [data-ds='grid'][data-row-gap='m'] {
+    --_grid-row-gap: var(--ds-space-m);
+  }
+
+  [data-ds='grid'][data-row-gap='l'] {
+    --_grid-row-gap: var(--ds-space-l);
+  }
+
+  [data-ds='grid'][data-row-gap='xl'] {
+    --_grid-row-gap: var(--ds-space-xl);
+  }
+
+  [data-ds='grid'][data-row-gap='2xl'] {
+    --_grid-row-gap: var(--ds-space-2xl);
+  }
+
+  [data-ds='grid'][data-row-gap='3xl'] {
+    --_grid-row-gap: var(--ds-space-3xl);
+  }
+
+  [data-ds='grid'][data-row-gap='4xl'] {
+    --_grid-row-gap: var(--ds-space-4xl);
+  }
+
+  [data-ds='grid'][data-row-gap='5xl'] {
+    --_grid-row-gap: var(--ds-space-5xl);
+  }
+
+  [data-ds='grid'][data-row-gap='6xl'] {
+    --_grid-row-gap: var(--ds-space-6xl);
+  }
+
+  [data-ds='grid'][data-row-gap='7xl'] {
+    --_grid-row-gap: var(--ds-space-7xl);
+  }
+
+  [data-ds='grid'][data-row-gap='8xl'] {
+    --_grid-row-gap: var(--ds-space-8xl);
+  }
+
+  [data-ds='grid'][data-row-gap='9xl'] {
+    --_grid-row-gap: var(--ds-space-9xl);
+  }
+
+  [data-ds='grid'][data-row-gap='10xl'] {
+    --_grid-row-gap: var(--ds-space-10xl);
+  }
+
+  [data-ds='grid'][data-row-gap='11xl'] {
+    --_grid-row-gap: var(--ds-space-11xl);
+  }
+
+  [data-ds='grid'][data-row-gap='12xl'] {
+    --_grid-row-gap: var(--ds-space-12xl);
+  }
+
+  [data-ds='grid'] > [data-part='item'] {
+    --_grid-item-span: 1;
+    --_grid-item-row-span: 1;
+
+    grid-column: span var(--_grid-item-span);
+    grid-row: span var(--_grid-item-row-span);
+    min-inline-size: 0;
+  }
+
+  [data-ds='grid'] > [data-part='item'][data-span='2'] {
+    --_grid-item-span: 2;
+  }
+
+  [data-ds='grid'] > [data-part='item'][data-span='3'] {
+    --_grid-item-span: 3;
+  }
+
+  [data-ds='grid'] > [data-part='item'][data-span='4'] {
+    --_grid-item-span: 4;
+  }
+
+  [data-ds='grid'] > [data-part='item'][data-span='5'] {
+    --_grid-item-span: 5;
+  }
+
+  [data-ds='grid'] > [data-part='item'][data-span='6'] {
+    --_grid-item-span: 6;
+  }
+
+  [data-ds='grid'] > [data-part='item'][data-span='7'] {
+    --_grid-item-span: 7;
+  }
+
+  [data-ds='grid'] > [data-part='item'][data-span='8'] {
+    --_grid-item-span: 8;
+  }
+
+  [data-ds='grid'] > [data-part='item'][data-span='9'] {
+    --_grid-item-span: 9;
+  }
+
+  [data-ds='grid'] > [data-part='item'][data-span='10'] {
+    --_grid-item-span: 10;
+  }
+
+  [data-ds='grid'] > [data-part='item'][data-span='11'] {
+    --_grid-item-span: 11;
+  }
+
+  [data-ds='grid'] > [data-part='item'][data-span='12'] {
+    --_grid-item-span: 12;
+  }
+
+  [data-ds='grid'] > [data-part='item'][data-span='full'] {
+    grid-column: 1 / -1;
+  }
+
+  [data-ds='grid'] > [data-part='item'][data-row-span='2'] {
+    --_grid-item-row-span: 2;
+  }
+
+  [data-ds='grid'] > [data-part='item'][data-row-span='3'] {
+    --_grid-item-row-span: 3;
+  }
+
+  [data-ds='grid'] > [data-part='item'][data-row-span='4'] {
+    --_grid-item-row-span: 4;
+  }
+
+  /* Phones: one column, and every item fills it, so a span never adds a track. */
+  @media (width < 30rem) { /* breakpoint.phone */
+    [data-ds='grid']:not([data-keep-columns]) {
+      --_grid-columns: 1;
+    }
+
+    [data-ds='grid']:not([data-keep-columns]) > [data-part='item'] {
+      grid-column: 1 / -1;
+    }
+  }
+}
