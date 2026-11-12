@@ -1,0 +1,136 @@
+{
+  "name": "SkipLink",
+  "kind": "component",
+  "family": "navigation",
+  "summary": "The first link of a page. Hidden until it takes keyboard focus, then Enter moves focus past the header and navigation to the main content.",
+  "useWhen": [
+    "Every page that has a header, a navigation or other blocks repeated before its main content (WCAG 2.4.1)",
+    "A long region a keyboard user may want to jump past, such as a search panel or a footer, with one extra link per target",
+    "An app shell: PageShell renders it first"
+  ],
+  "avoidWhen": [
+    "Navigation between sections of the same article, which readers use with a pointer too",
+    "A link that must always be visible",
+    "A page with no repeated block before the main content"
+  ],
+  "insteadUse": {
+    "Links to the headings of a long page": "TableOfContents",
+    "A visible link in running text or on its own line": "Link",
+    "The path to the current page": "Breadcrumbs"
+  },
+  "anatomy": ["root"],
+  "props": {
+    "href": {
+      "type": "string",
+      "default": "#main",
+      "description": "The fragment of the element to jump to. The target is found by id."
+    },
+    "children": {
+      "type": "node",
+      "default": "Skip to main content",
+      "description": "The visible text. Under an Arabic Theme the default is الانتقال للمحتوى الرئيسي."
+    }
+  },
+  "states": [],
+  "a11y": {
+    "role": "link (native a with href)",
+    "focus": "Placed first in body, it is the first tab stop of the page. Visually hidden at rest, drawn at the block start and inline start corner on focus, with a 2px ring from focus.shadow.ring on keyboard focus.",
+    "keys": {
+      "Tab": "Moves focus to the skip link from the top of the page, which draws it",
+      "Enter": "Moves focus to the target and scrolls it into view"
+    },
+    "announce": "The link text is the accessible name. After Enter, the screen reader reads the target from the start.",
+    "native": {
+      "accessibilityRole": "link"
+    },
+    "notes": [
+      "WCAG 2.4.1 Bypass blocks.",
+      "The target gets tabindex -1 only when it is not focusable already. A link, a button, a field or an element with its own tabindex keeps what it has.",
+      "Focus moves to the target itself, not only the scroll position, so the next Tab continues from the main content in every browser.",
+      "The URL fragment changes through history, as a plain fragment link would. When the target is missing the browser handles the link.",
+      "Drawn on any focus, keyboard or pointer, so it never vanishes under the pointer that clicked it. At 24px or more tall when shown (WCAG 2.5.8).",
+      "Under forced colors it is drawn in LinkText on Canvas with a LinkText border, and the focus outline uses Highlight.",
+      "No native title attribute."
+    ]
+  },
+  "content": {
+    "en": {
+      "label": "Skip to plus the place: Skip to main content, Skip to search. Sentence case.",
+      "many": "One link per target, in the order the targets appear on the page."
+    },
+    "ar": {
+      "label": "Noun form, no diacritics: الانتقال للمحتوى الرئيسي، الانتقال للبحث.",
+      "digits": "Western digits."
+    }
+  },
+  "tokens": [
+    "size.control.md",
+    "size.target-min",
+    "space.xl",
+    "space.s",
+    "space.2xs",
+    "space.3xs",
+    "font.size.s",
+    "font.size.m",
+    "font.weight.bold",
+    "font.leading.tight",
+    "font.leading.arabic-snug",
+    "radius.control",
+    "color.bg.surface-3",
+    "color.text.bright",
+    "color.border.control",
+    "border.width.default",
+    "border.width.strong",
+    "elevation.menu",
+    "focus.shadow.ring",
+    "z.spotlight"
+  ],
+  "frameworks": {
+    "react": {
+      "status": "ready",
+      "behavior": "native a, focus moved by hand",
+      "example": "SkipLink.demo.tsx",
+      "note": "No motion: the link appears at once on focus, so there is no pattern to name and nothing to reduce."
+    },
+    "angular": {
+      "status": "planned",
+      "behavior": "a[dsSkipLink], host bindings, a click handler that moves focus"
+    },
+    "native": {
+      "status": "not-applicable",
+      "note": "Native screen readers move by headings and containers, and there is no tab order to bypass. Mark the main region with accessibilityRole header or a container label instead."
+    }
+  },
+  "styles": {
+    "studio": "A surface-3 pill with bright text, a control border and the menu shadow.",
+    "desk": "The same look from the Desk tokens, on a solid surface so it reads over any backdrop.",
+    "neutral": "Takes the tokens of the Neutral style, no recipe."
+  },
+  "mistakes": [
+    {
+      "wrong": "A skip link with display none at rest",
+      "right": "SkipLink, which stays in the tab order and the accessibility tree while hidden"
+    },
+    {
+      "wrong": "A skip link that only scrolls, so the next Tab starts from the header again",
+      "right": "SkipLink, which moves focus to the target"
+    },
+    {
+      "wrong": "tabindex 0 on the main region so it can take focus",
+      "right": "Nothing: the skip link adds tabindex -1 when it is needed, which keeps the region out of the tab order"
+    },
+    {
+      "wrong": "A skip link placed after the navigation",
+      "right": "The first element in body"
+    }
+  ],
+  "contract": {
+    "keys": {
+      "Enter": {
+        "case": "variants",
+        "expect": "focus-moves"
+      }
+    }
+  },
+  "since": "0.1.0"
+}
