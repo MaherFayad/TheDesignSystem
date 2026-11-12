@@ -235,6 +235,11 @@
           "target": "@components/ds/shared/filter.ts"
         },
         {
+          "path": "packages/shared/src/form.ts",
+          "type": "registry:lib",
+          "target": "@components/ds/shared/form.ts"
+        },
+        {
           "path": "packages/shared/src/index.ts",
           "type": "registry:lib",
           "target": "@components/ds/shared/index.ts"
@@ -902,6 +907,7 @@
       ],
       "registryDependencies": [
         "@ds/core",
+        "@ds/status-dot",
         "@ds/theme"
       ],
       "files": [
@@ -1377,8 +1383,8 @@
       "description": "A compact pill you press (a filter, toggled with selected) or remove (a picked value).",
       "registryDependencies": [
         "@ds/button",
+        "@ds/close-button",
         "@ds/core",
-        "@ds/icon-button",
         "@ds/theme"
       ],
       "files": [
@@ -1538,6 +1544,47 @@
       }
     },
     {
+      "name": "consent-field",
+      "type": "registry:ui",
+      "title": "ConsentField",
+      "description": "One consent: a Checkbox or Switch whose label is one purpose, a link to the details, an optional record line, and a record of the choice handed to the app. Never ticked in advance.",
+      "registryDependencies": [
+        "@ds/checkbox",
+        "@ds/core",
+        "@ds/field",
+        "@ds/field-error",
+        "@ds/form",
+        "@ds/link",
+        "@ds/switch",
+        "@ds/theme"
+      ],
+      "files": [
+        {
+          "path": "packages/react/src/components/ConsentField/ConsentField.tsx",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/ConsentField/ConsentField.tsx"
+        },
+        {
+          "path": "packages/react/src/components/ConsentField/index.ts",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/ConsentField/index.ts"
+        },
+        {
+          "path": "packages/css/src/components/ConsentField.css",
+          "type": "registry:file",
+          "target": "@components/ds/css/components/ConsentField.css"
+        }
+      ],
+      "categories": [
+        "forms"
+      ],
+      "meta": {
+        "manifest": "ConsentField",
+        "framework": "react",
+        "since": "0.1.0"
+      }
+    },
+    {
       "name": "container",
       "type": "registry:ui",
       "title": "Container",
@@ -1692,8 +1739,8 @@
         "radix-ui@^1.8.1"
       ],
       "registryDependencies": [
+        "@ds/close-button",
         "@ds/core",
-        "@ds/icon-button",
         "@ds/theme",
         "@ds/title-bar",
         "@ds/toast",
@@ -1777,9 +1824,9 @@
         "radix-ui@^1.8.1"
       ],
       "registryDependencies": [
+        "@ds/close-button",
         "@ds/core",
         "@ds/dialog",
-        "@ds/icon-button",
         "@ds/theme"
       ],
       "files": [
@@ -1996,6 +2043,85 @@
       }
     },
     {
+      "name": "fieldset",
+      "type": "registry:ui",
+      "title": "Fieldset",
+      "description": "A group of fields or choices under one legend: a native fieldset, so the legend names the group and native disabled disables everything inside.",
+      "registryDependencies": [
+        "@ds/core",
+        "@ds/field",
+        "@ds/field-error",
+        "@ds/theme"
+      ],
+      "files": [
+        {
+          "path": "packages/react/src/components/Fieldset/Fieldset.tsx",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/Fieldset/Fieldset.tsx"
+        },
+        {
+          "path": "packages/react/src/components/Fieldset/index.ts",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/Fieldset/index.ts"
+        },
+        {
+          "path": "packages/css/src/components/Fieldset.css",
+          "type": "registry:file",
+          "target": "@components/ds/css/components/Fieldset.css"
+        }
+      ],
+      "categories": [
+        "forms"
+      ],
+      "meta": {
+        "manifest": "Fieldset",
+        "framework": "react",
+        "since": "0.1.0"
+      }
+    },
+    {
+      "name": "filter-bar",
+      "type": "registry:ui",
+      "title": "FilterBar",
+      "description": "The row above a list: a search box, quick filter chips, more filters in a menu, the active filter count, clear all, and an end slot for view toggles. One value array holds every filter that is on.",
+      "dependencies": [
+        "radix-ui@^1.8.1"
+      ],
+      "registryDependencies": [
+        "@ds/button",
+        "@ds/chip",
+        "@ds/core",
+        "@ds/dropdown-menu",
+        "@ds/search-field",
+        "@ds/theme"
+      ],
+      "files": [
+        {
+          "path": "packages/react/src/components/FilterBar/FilterBar.tsx",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/FilterBar/FilterBar.tsx"
+        },
+        {
+          "path": "packages/react/src/components/FilterBar/index.ts",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/FilterBar/index.ts"
+        },
+        {
+          "path": "packages/css/src/components/FilterBar.css",
+          "type": "registry:file",
+          "target": "@components/ds/css/components/FilterBar.css"
+        }
+      ],
+      "categories": [
+        "forms"
+      ],
+      "meta": {
+        "manifest": "FilterBar",
+        "framework": "react",
+        "since": "0.1.0"
+      }
+    },
+    {
       "name": "floating-action-button",
       "type": "registry:ui",
       "title": "FloatingActionButton",
@@ -2029,6 +2155,48 @@
         "manifest": "FloatingActionButton",
         "framework": "react",
         "since": "0.2.0"
+      }
+    },
+    {
+      "name": "form",
+      "type": "registry:ui",
+      "title": "Form",
+      "description": "A native form that checks on submit, lists the errors in a summary with links to the fields, moves focus to the first invalid field, announces the result once and maps server errors to fields by name.",
+      "dependencies": [
+        "radix-ui@^1.8.1"
+      ],
+      "registryDependencies": [
+        "@ds/alert",
+        "@ds/button",
+        "@ds/core",
+        "@ds/field",
+        "@ds/link",
+        "@ds/theme"
+      ],
+      "files": [
+        {
+          "path": "packages/react/src/components/Form/Form.tsx",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/Form/Form.tsx"
+        },
+        {
+          "path": "packages/react/src/components/Form/index.ts",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/Form/index.ts"
+        },
+        {
+          "path": "packages/css/src/components/Form.css",
+          "type": "registry:file",
+          "target": "@components/ds/css/components/Form.css"
+        }
+      ],
+      "categories": [
+        "forms"
+      ],
+      "meta": {
+        "manifest": "Form",
+        "framework": "react",
+        "since": "0.1.0"
       }
     },
     {
@@ -2710,6 +2878,7 @@
       "registryDependencies": [
         "@ds/button",
         "@ds/core",
+        "@ds/drawer",
         "@ds/icon-button",
         "@ds/sidebar",
         "@ds/theme"
@@ -3016,8 +3185,8 @@
         "radix-ui@^1.8.1"
       ],
       "registryDependencies": [
+        "@ds/close-button",
         "@ds/core",
-        "@ds/icon-button",
         "@ds/theme"
       ],
       "files": [
@@ -3219,7 +3388,8 @@
       ],
       "registryDependencies": [
         "@ds/core",
-        "@ds/theme"
+        "@ds/theme",
+        "@ds/tooltip"
       ],
       "files": [
         {
@@ -3677,7 +3847,8 @@
         "@ds/button",
         "@ds/core",
         "@ds/icon-button",
-        "@ds/theme"
+        "@ds/theme",
+        "@ds/tooltip"
       ],
       "files": [
         {
