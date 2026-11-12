@@ -2,7 +2,7 @@
 
 Made by `npm run shots -- --compare react angular`. pixelmatch threshold 0.1; a pair passes when at most 0.5 percent of pixels differ and the sizes match.
 
-616 pairs, 616 pass, 0 fail. Only in react: 32. Only in angular: 0.
+628 pairs, 628 pass, 0 fail. Only in react: 32. Only in angular: 0.
 
 | File | Result | Differing pixels | Where | Diff |
 | --- | --- | --- | --- | --- |
@@ -226,6 +226,18 @@ Made by `npm run shots -- --compare react angular`. pixelmatch threshold 0.1; a 
 | fieldset/studio-dark-rtl.png | pass | 0 (0.000 percent) |  | none |
 | fieldset/studio-light-ltr.png | pass | 0 (0.000 percent) |  | none |
 | fieldset/studio-light-rtl.png | pass | 0 (0.000 percent) |  | none |
+| filter-bar/desk-dark-ltr.png | pass | 0 (0.000 percent) |  | none |
+| filter-bar/desk-dark-rtl.png | pass | 0 (0.000 percent) |  | none |
+| filter-bar/desk-light-ltr.png | pass | 0 (0.000 percent) |  | none |
+| filter-bar/desk-light-rtl.png | pass | 0 (0.000 percent) |  | none |
+| filter-bar/neutral-dark-ltr.png | pass | 0 (0.000 percent) |  | none |
+| filter-bar/neutral-dark-rtl.png | pass | 0 (0.000 percent) |  | none |
+| filter-bar/neutral-light-ltr.png | pass | 0 (0.000 percent) |  | none |
+| filter-bar/neutral-light-rtl.png | pass | 0 (0.000 percent) |  | none |
+| filter-bar/studio-dark-ltr.png | pass | 0 (0.000 percent) |  | none |
+| filter-bar/studio-dark-rtl.png | pass | 0 (0.000 percent) |  | none |
+| filter-bar/studio-light-ltr.png | pass | 0 (0.000 percent) |  | none |
+| filter-bar/studio-light-rtl.png | pass | 0 (0.000 percent) |  | none |
 | floating-action-button/desk-dark-ltr-comfortable.png | pass | 0 (0.000 percent) |  | none |
 | floating-action-button/desk-dark-ltr-compact.png | pass | 0 (0.000 percent) |  | none |
 | floating-action-button/desk-dark-ltr.png | pass | 0 (0.000 percent) |  | none |

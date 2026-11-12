@@ -21,6 +21,7 @@ export const routes: DemoRoute[] = [
   { slug: 'field', load: () => import('../../../../packages/angular/src/components/field/field.demo').then((m) => m.default) },
   { slug: 'field-error', load: () => import('../../../../packages/angular/src/components/field-error/field-error.demo').then((m) => m.default) },
   { slug: 'fieldset', load: () => import('../../../../packages/angular/src/components/fieldset/fieldset.demo').then((m) => m.default) },
+  { slug: 'filter-bar', load: () => import('../../../../packages/angular/src/components/filter-bar/filter-bar.demo').then((m) => m.default) },
   { slug: 'floating-action-button', load: () => import('../../../../packages/angular/src/components/floating-action-button/floating-action-button.demo').then((m) => m.default) },
   { slug: 'form', load: () => import('../../../../packages/angular/src/components/form/form.demo').then((m) => m.default) },
   { slug: 'form-wizard', load: () => import('../../../../packages/angular/src/components/form-wizard/form-wizard.demo').then((m) => m.default) },

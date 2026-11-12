@@ -2,7 +2,7 @@
 
 Made by `npm run shots`. Each shot is the `variants` case at `chrome=0`, 1280 by 800 viewport, full page, device scale factor 1, animations off, reduced motion, fonts loaded. File names: `<component>/<style>-<scheme>-<dir>[-<density>][-open].png`. Density is default unless named.
 
-262 shots, 16 components, 20.19 MB. Stable (two captures byte equal): 262; unstable: 0; not verified: 0.
+274 shots, 17 components, 20.66 MB. Stable (two captures byte equal): 274; unstable: 0; not verified: 0.
 
 The full list with sizes and hashes is in `captured.json`.
 
@@ -128,6 +128,17 @@ Densities, dark, ltr en:
 | neutral | light | [ltr](fieldset/neutral-light-ltr.png) | [rtl](fieldset/neutral-light-rtl.png) |
 | studio | dark | [ltr](fieldset/studio-dark-ltr.png) | [rtl](fieldset/studio-dark-rtl.png) |
 | studio | light | [ltr](fieldset/studio-light-ltr.png) | [rtl](fieldset/studio-light-rtl.png) |
+
+## FilterBar
+
+| Style | Scheme | ltr en | rtl ar |
+| --- | --- | --- | --- |
+| desk | dark | [ltr](filter-bar/desk-dark-ltr.png) | [rtl](filter-bar/desk-dark-rtl.png) |
+| desk | light | [ltr](filter-bar/desk-light-ltr.png) | [rtl](filter-bar/desk-light-rtl.png) |
+| neutral | dark | [ltr](filter-bar/neutral-dark-ltr.png) | [rtl](filter-bar/neutral-dark-rtl.png) |
+| neutral | light | [ltr](filter-bar/neutral-light-ltr.png) | [rtl](filter-bar/neutral-light-rtl.png) |
+| studio | dark | [ltr](filter-bar/studio-dark-ltr.png) | [rtl](filter-bar/studio-dark-rtl.png) |
+| studio | light | [ltr](filter-bar/studio-light-ltr.png) | [rtl](filter-bar/studio-light-rtl.png) |
 
 ## FloatingActionButton
 

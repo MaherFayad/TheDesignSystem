@@ -15,6 +15,7 @@ export * from './components/error-state/index';
 export * from './components/field/index';
 export * from './components/field-error/index';
 export * from './components/fieldset/index';
+export * from './components/filter-bar/index';
 export * from './components/floating-action-button/index';
 export * from './components/form/index';
 export * from './components/form-wizard/index';
