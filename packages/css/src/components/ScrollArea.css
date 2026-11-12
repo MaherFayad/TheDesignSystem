@@ -1,0 +1,189 @@
+/*
+ * ScrollArea: a scroll container with styled scrollbars over native
+ * scrolling (Radix ScrollArea). Sources: Figma-Killer-2 FilterBar (edge
+ * fades only on the side that still has content), the scrollbar tokens of
+ * the Studio source (6px thumb on a clear track).
+ *
+ *   [data-ds='scroll-area']        root: a flex column that clips; give it a size
+ *     > [data-part='viewport']     scrolls natively, fills the root
+ *     > [data-part='fade-start']   edge fade before the start of the main axis
+ *     > [data-part='fade-end']     edge fade after its end
+ *     > [data-part='scrollbar']    Radix places it on the inline end, so on
+ *                                  the left in RTL
+ *         > [data-part='thumb']
+ *     > [data-part='corner']       where two scrollbars meet
+ *
+ * Private properties on the root (docs/contracts/anatomy.md, one convention):
+ *   --_scroll-area-bar-size        the thumb thickness (size sm, md)
+ *   --_scroll-area-bar-padding     the track padding around the thumb
+ *   --_scroll-area-track           the track color
+ *   --_scroll-area-thumb, -thumb-hover
+ *   --_scroll-area-fade-size       how far an edge fade reaches
+ *   --_scroll-area-fade-color      the color the content fades into. It
+ *                                  defaults to the body color. A parent on
+ *                                  another surface sets it to its own fill.
+ *   --_scroll-area-ring-color, -ring-width   the focus outline of the viewport
+ *   --_scroll-area-duration, -ease  the fade motion
+ *
+ * Motion, pattern "fade-rise" (its opacity half): an edge fade fades in when
+ * content passes that edge and out when the edge is reached. Only opacity
+ * animates. Under reduced motion the fades switch at once.
+ *
+ * Focus: the viewport takes focus only when no child can. Its ring is an
+ * outline drawn inside the viewport, because the root clips everything
+ * outside it. A real outline color also shows in forced colors mode.
+ */
+@layer ds.base {
+  [data-ds='scroll-area'] {
+    --_scroll-area-bar-size: var(--ds-scrollbar-size);
+    --_scroll-area-bar-padding: var(--ds-space-4xs);
+    --_scroll-area-track: var(--ds-scrollbar-track);
+    --_scroll-area-thumb: var(--ds-scrollbar-thumb);
+    --_scroll-area-thumb-hover: var(--ds-scrollbar-thumb-hover);
+    --_scroll-area-fade-size: var(--ds-space-3xl);
+    --_scroll-area-fade-color: var(--ds-color-bg-body);
+    --_scroll-area-ring-color: var(--ds-color-focus-ring);
+    --_scroll-area-ring-width: var(--ds-border-width-strong);
+    --_scroll-area-duration: var(--ds-duration-base);
+    --_scroll-area-ease: var(--ds-ease-out);
+
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+    min-block-size: 0;
+    min-inline-size: 0;
+    overflow: hidden;
+  }
+
+  /* sm: two thirds of the source thumb, 4px at the 6px token. */
+  [data-ds='scroll-area'][data-size='sm'] {
+    --_scroll-area-bar-size: calc(var(--ds-scrollbar-size) * 2 / 3);
+  }
+
+  [data-ds='scroll-area'] > [data-part='viewport'] {
+    flex: 1 1 auto;
+    box-sizing: border-box;
+    inline-size: 100%;
+    min-block-size: 0;
+    max-block-size: 100%;
+    border-radius: inherit;
+  }
+
+  [data-ds='scroll-area'] > [data-part='viewport']:focus-visible {
+    outline: var(--_scroll-area-ring-width) solid var(--_scroll-area-ring-color);
+    outline-offset: calc(var(--_scroll-area-ring-width) * -1);
+  }
+
+  /* ------------------------------------------------------------ edge fades */
+
+  [data-ds='scroll-area'] > :is([data-part='fade-start'], [data-part='fade-end']) {
+    position: absolute;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity var(--_scroll-area-duration) var(--_scroll-area-ease);
+  }
+
+  /* vertical and both: the fades sit on the block edges. */
+  [data-ds='scroll-area']:not([data-orientation='horizontal']) > :is([data-part='fade-start'], [data-part='fade-end']) {
+    inset-inline: 0;
+    block-size: var(--_scroll-area-fade-size);
+  }
+
+  [data-ds='scroll-area']:not([data-orientation='horizontal']) > [data-part='fade-start'] {
+    inset-block-start: 0;
+    background: linear-gradient(to bottom, var(--_scroll-area-fade-color), transparent);
+  }
+
+  [data-ds='scroll-area']:not([data-orientation='horizontal']) > [data-part='fade-end'] {
+    inset-block-end: 0;
+    background: linear-gradient(to top, var(--_scroll-area-fade-color), transparent);
+  }
+
+  /* horizontal: the fades sit on the inline edges and mirror in RTL. */
+  [data-ds='scroll-area'][data-orientation='horizontal'] > :is([data-part='fade-start'], [data-part='fade-end']) {
+    inset-block: 0;
+    inline-size: var(--_scroll-area-fade-size);
+  }
+
+  [data-ds='scroll-area'][data-orientation='horizontal'] > [data-part='fade-start'] {
+    inset-inline-start: 0;
+    background: linear-gradient(to right, var(--_scroll-area-fade-color), transparent);
+  }
+
+  [data-ds='scroll-area'][data-orientation='horizontal'] > [data-part='fade-end'] {
+    inset-inline-end: 0;
+    background: linear-gradient(to left, var(--_scroll-area-fade-color), transparent);
+  }
+
+  [data-ds='scroll-area'][data-orientation='horizontal'][dir='rtl'] > [data-part='fade-start'] {
+    background: linear-gradient(to left, var(--_scroll-area-fade-color), transparent);
+  }
+
+  [data-ds='scroll-area'][data-orientation='horizontal'][dir='rtl'] > [data-part='fade-end'] {
+    background: linear-gradient(to right, var(--_scroll-area-fade-color), transparent);
+  }
+
+  [data-ds='scroll-area'][data-overflow-start] > [data-part='fade-start'],
+  [data-ds='scroll-area'][data-overflow-end] > [data-part='fade-end'] {
+    opacity: 1;
+  }
+
+  /* ------------------------------------------------------------ scrollbars */
+
+  [data-ds='scroll-area'] > [data-part='scrollbar'] {
+    display: flex;
+    box-sizing: content-box;
+    padding: var(--_scroll-area-bar-padding);
+    background: var(--_scroll-area-track);
+    user-select: none;
+    touch-action: none;
+  }
+
+  [data-ds='scroll-area'] > [data-part='scrollbar'][data-orientation='vertical'] {
+    inline-size: var(--_scroll-area-bar-size);
+  }
+
+  [data-ds='scroll-area'] > [data-part='scrollbar'][data-orientation='horizontal'] {
+    flex-direction: column;
+    block-size: var(--_scroll-area-bar-size);
+  }
+
+  [data-ds='scroll-area'] > [data-part='scrollbar'] > [data-part='thumb'] {
+    position: relative;
+    flex: 1;
+    border-radius: var(--ds-radius-pill);
+    background: var(--_scroll-area-thumb);
+  }
+
+  [data-ds='scroll-area'] > [data-part='scrollbar'] > [data-part='thumb']:hover {
+    background: var(--_scroll-area-thumb-hover);
+  }
+
+  [data-ds='scroll-area'] > [data-part='corner'] {
+    background: var(--_scroll-area-track);
+  }
+
+  /* ------------------------------------------------------------ reduced motion, forced colors */
+
+  @media (prefers-reduced-motion: reduce) {
+    [data-ds='scroll-area'] > :is([data-part='fade-start'], [data-part='fade-end']) {
+      transition: none;
+    }
+  }
+
+  /* The fades are decoration that could hide text; the thumb draws in the text color. */
+  @media (forced-colors: active) {
+    [data-ds='scroll-area'] > :is([data-part='fade-start'], [data-part='fade-end']) {
+      display: none;
+    }
+
+    [data-ds='scroll-area'] > [data-part='scrollbar'] > [data-part='thumb'] {
+      background: CanvasText;
+    }
+
+    [data-ds='scroll-area'] > [data-part='viewport']:focus-visible {
+      outline-color: Highlight;
+    }
+  }
+}

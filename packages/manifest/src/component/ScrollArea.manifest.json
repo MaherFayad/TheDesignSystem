@@ -1,0 +1,195 @@
+{
+  "name": "ScrollArea",
+  "kind": "component",
+  "family": "layout",
+  "summary": "A scroll container with thin styled scrollbars over native scrolling, and edge fades on the side that still has content.",
+  "useWhen": [
+    "A panel, a sidebar or a list that scrolls inside a fixed height while the page stays put",
+    "A row of chips or tags that scrolls sideways inside its line",
+    "A wide table that scrolls on both axes inside a card"
+  ],
+  "avoidWhen": [
+    "The whole page scrolls: the browser scrollbar is the right one",
+    "A short list that fits: let it grow instead",
+    "Content that must all be seen at once, such as a form someone fills in"
+  ],
+  "insteadUse": {
+    "The page itself scrolls": "the native page scroll, no component",
+    "Long content in a modal task": "Dialog (its body scrolls)",
+    "Side content that stays docked": "Drawer",
+    "Many rows of data with sorting and paging": "DataTable"
+  },
+  "anatomy": [
+    "root",
+    "viewport",
+    "scrollbar",
+    "thumb",
+    "corner",
+    "fade-start",
+    "fade-end"
+  ],
+  "slots": {
+    "viewport": {
+      "accepts": "any"
+    }
+  },
+  "props": {
+    "orientation": {
+      "type": [
+        "vertical",
+        "horizontal",
+        "both"
+      ],
+      "default": "vertical",
+      "description": "Which axes scroll. Sets data-orientation. both adds the corner part."
+    },
+    "size": {
+      "type": [
+        "sm",
+        "md"
+      ],
+      "default": "md",
+      "description": "The scrollbar thickness: md is scrollbar.size (6px), sm two thirds of it. The track adds space.4xs on each side."
+    },
+    "scrollbars": {
+      "type": [
+        "auto",
+        "always",
+        "scroll",
+        "hover"
+      ],
+      "default": "auto",
+      "description": "When the scrollbars show (the Radix type). auto: while content overflows. always: always. scroll: while scrolling. hover: while the pointer is over the area."
+    },
+    "fades": {
+      "type": "boolean",
+      "default": true,
+      "description": "Edge fades on the side that still has content."
+    },
+    "label": {
+      "type": "string",
+      "default": "Scrollable content",
+      "description": "The name of the viewport when it takes focus. Under lang=\"ar\" the default is محتوى قابل للتمرير. Name what scrolls."
+    },
+    "focusable": {
+      "type": [
+        "auto",
+        "true",
+        "false"
+      ],
+      "default": "auto",
+      "description": "auto: the viewport joins the tab order (tabindex 0, role region, named) only when it holds no focusable child."
+    },
+    "viewportRef": {
+      "type": "ref",
+      "description": "A ref to the viewport, the element that scrolls, for scrollTo and scroll restore."
+    },
+    "onScroll": {
+      "type": "function",
+      "description": "Called on every scroll of the viewport."
+    }
+  },
+  "states": [
+    "data-orientation",
+    "data-overflow-start",
+    "data-overflow-end",
+    "visible",
+    "hidden"
+  ],
+  "a11y": {
+    "role": "none on the root. The viewport is a region named by label while it takes focus.",
+    "focus": "The viewport takes focus (tabindex 0) only when it has no focusable child, so a keyboard user can reach it and scroll. With focusable children, Tab moves through them and the browser scrolls each into view.",
+    "keys": {
+      "Tab": "Moves to the viewport when it takes focus, else to the first focusable child",
+      "ArrowUp, ArrowDown": "Native scrolling of the focused viewport by a line",
+      "ArrowLeft, ArrowRight": "Native scrolling along the inline axis when it scrolls",
+      "PageUp, PageDown": "Native scrolling by a page",
+      "Home, End": "Native scrolling to the start and the end"
+    },
+    "announce": "Nothing. The scrollbars and the fades are hidden from assistive technology, which reads the content in order.",
+    "native": {
+      "accessibilityRole": "none",
+      "accessibilityState": []
+    },
+    "notes": [
+      "Scrolling stays native: wheel, touch, keys, find in page and scroll into view all work. No custom wheel handling.",
+      "The vertical scrollbar sits on the inline end, so on the left in right to left layouts. Horizontal fades mirror too.",
+      "The keys are the browser's own scrolling of a focused scroll container, so the contract suite notes them; ScrollArea.test.tsx covers the focus rule and the overflow states.",
+      "Edge fades fade into --_scroll-area-fade-color, the body color by default. A parent on another surface sets that private property to its own fill from its own CSS."
+    ]
+  },
+  "content": {
+    "en": {
+      "label": "Name what scrolls, in sentence case: Release notes, Activity, Board tags."
+    },
+    "ar": {
+      "label": "Noun form, no diacritics: الملاحظات، النشاط، الوسوم."
+    }
+  },
+  "tokens": [
+    "scrollbar.size",
+    "scrollbar.track",
+    "scrollbar.thumb",
+    "scrollbar.thumb-hover",
+    "space.4xs",
+    "space.3xl",
+    "radius.pill",
+    "color.bg.body",
+    "color.focus.ring",
+    "border.width.strong",
+    "duration.base",
+    "ease.out"
+  ],
+  "motion": "fade-rise",
+  "frameworks": {
+    "react": {
+      "status": "ready",
+      "behavior": "radix:ScrollArea",
+      "example": "ScrollArea.demo.tsx"
+    },
+    "angular": {
+      "status": "planned",
+      "behavior": "own: native overflow with the same parts drawn over it, cdk:bidi for the side",
+      "note": "ScrollArea.css is used as is."
+    },
+    "native": {
+      "status": "planned",
+      "behavior": "ScrollView with the platform scrollbar",
+      "note": "The platform draws its own scroll indicators; fades use a gradient overlay."
+    }
+  },
+  "styles": {
+    "studio": "A 6px thumb on a clear track, from the scrollbar tokens. Fades into the body color.",
+    "desk": "The same thumb, a little lighter on the dark desk, from the Desk scrollbar tokens.",
+    "neutral": "The same parts on the Neutral scrollbar tokens once 1.10 lands.",
+    "liquid": "Planned: content scrolls under glass bars, with the scroll edge fade."
+  },
+  "mistakes": [
+    {
+      "wrong": "A scroll box with no way in for the keyboard",
+      "right": "ScrollArea gives the viewport tabindex 0 and a name when nothing inside can take focus"
+    },
+    {
+      "wrong": "Replacing wheel scrolling with a script for smooth scroll",
+      "right": "ScrollArea keeps native scrolling; only the bars are drawn"
+    },
+    {
+      "wrong": "A ScrollArea with no size from its parent, so it grows and never scrolls",
+      "right": "Give the root a block size, a max block size or a flex or grid cell"
+    },
+    {
+      "wrong": "Wrapping the whole page in a ScrollArea",
+      "right": "Let the page scroll natively; use ScrollArea for panels inside it"
+    }
+  ],
+  "contract": {
+    "optionalParts": [
+      "corner",
+      "scrollbar",
+      "thumb",
+      "fade-start",
+      "fade-end"
+    ]
+  },
+  "since": "0.1.0"
+}

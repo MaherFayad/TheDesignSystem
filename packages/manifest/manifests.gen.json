@@ -102,7 +102,8 @@
       "Navigation inside text": "Link",
       "A setting that stays on or off": "Switch",
       "One of several options": "SegmentedControl",
-      "A list of actions behind one control": "DropdownMenu"
+      "A list of actions behind one control": "DropdownMenu",
+      "A pressed or toggled state": "ToggleButton (order 1.1.5). Until it lands, use a Button with aria-pressed and swap its emphasis between solid and ghost"
     },
     "anatomy": [
       "root",
@@ -534,7 +535,7 @@
       },
       "rootProps": {
         "type": "object",
-        "description": "DialogContent: props for the root layer. className and style go to the root too; ref and every other prop go to the panel, the element with role dialog."
+        "description": "DialogContent: props for the root layer. className and style go to the root too; ref and every other prop go to the panel, the element with role dialog, Radix Content props included. The useful ones: onOpenAutoFocus (preventDefault to place focus yourself), onCloseAutoFocus (preventDefault and focus another element when the trigger is gone, for example after a delete), onEscapeKeyDown (preventDefault to keep the dialog open, for example while a field holds unsaved text)."
       },
       "DialogTrigger": {
         "type": "node",
@@ -555,7 +556,7 @@
     ],
     "a11y": {
       "role": "dialog (the panel), modal: Radix hides the rest of the page from assistive tech and keeps focus inside. Named by the title (aria-labelledby), described by the description (aria-describedby).",
-      "focus": "On open, focus goes to an element marked data-autofocus; else to the first field in the body; else to the first footer action that is not tone danger; when tone is danger, to the Cancel action (the DialogClose) or else the first footer action that is not tone danger, never a destructive one; else to the close control. On close, focus returns to the trigger, or to the element that had focus before the dialog opened.",
+      "focus": "On open, focus goes to an element marked data-autofocus; else to the first field in the body; else to the first footer action that is not tone danger; when tone is danger, to the Cancel action (the DialogClose) or else the first footer action that is not tone danger, never a destructive one; else to the close control. On close, focus returns to the trigger, or to the element that had focus before the dialog opened; when that element is gone, to its nearest connected focusable ancestor, else the first tab stop of main, else the body.",
       "keys": {
         "Escape": "Closes the dialog, unless dismissible is false. Escape from inside the dialog closes the dialog even while a toast shows above it. A nested dialog or a menu on top closes first.",
         "Tab": "Moves to the next control inside the dialog and wraps from the last to the first",
@@ -573,7 +574,8 @@
         "No native title attribute.",
         "In Desk the title and the close control sit inside the title bar, so they are parts of TitleBar and WindowControls there (a part belongs to the nearest root). The dialog's own parts in Desk are titlebar, description, body and footer; title, close and controls are listed here for Studio and for style.json optionalParts.",
         "dismissible false is for short waits, while the dialog's own action runs. The app must set it back to true when the action ends, success or failure. The close control (the Studio IconButton or the Desk close light) is aria-disabled and stays focusable.",
-        "Development builds warn in the console when a dialog opens with no title, and when its footer holds more than three actions."
+        "Development builds warn in the console when a dialog opens with no title, and when its footer holds more than three actions.",
+        "A form in a dialog: the form element lives in DialogBody with an id and an onSubmit; the submit Button sits in DialogFooter with type=\"submit\" and form={id}, so Enter in a field and the button both submit. Close the dialog from onSubmit when the save succeeds, not from a DialogClose around the submit button."
       ]
     },
     "content": {
@@ -695,6 +697,10 @@
       {
         "wrong": "Waiting for animationend before removing a closed dialog",
         "right": "Dialog.css sets the animations to none under reduced motion, so Radix removes the dialog at once"
+      },
+      {
+        "wrong": "A <form> that wraps the whole DialogContent, or a submit Button inside DialogClose",
+        "right": "<form id=\"rename\" onSubmit={save}> inside DialogBody; <Button type=\"submit\" form=\"rename\" tone=\"accent\" emphasis=\"solid\"> in DialogFooter; close on success"
       }
     ],
     "contract": {
@@ -1608,6 +1614,201 @@
     "since": "0.1.0"
   },
   {
+    "name": "ScrollArea",
+    "kind": "component",
+    "family": "layout",
+    "summary": "A scroll container with thin styled scrollbars over native scrolling, and edge fades on the side that still has content.",
+    "useWhen": [
+      "A panel, a sidebar or a list that scrolls inside a fixed height while the page stays put",
+      "A row of chips or tags that scrolls sideways inside its line",
+      "A wide table that scrolls on both axes inside a card"
+    ],
+    "avoidWhen": [
+      "The whole page scrolls: the browser scrollbar is the right one",
+      "A short list that fits: let it grow instead",
+      "Content that must all be seen at once, such as a form someone fills in"
+    ],
+    "insteadUse": {
+      "The page itself scrolls": "the native page scroll, no component",
+      "Long content in a modal task": "Dialog (its body scrolls)",
+      "Side content that stays docked": "Drawer",
+      "Many rows of data with sorting and paging": "DataTable"
+    },
+    "anatomy": [
+      "root",
+      "viewport",
+      "scrollbar",
+      "thumb",
+      "corner",
+      "fade-start",
+      "fade-end"
+    ],
+    "slots": {
+      "viewport": {
+        "accepts": "any"
+      }
+    },
+    "props": {
+      "orientation": {
+        "type": [
+          "vertical",
+          "horizontal",
+          "both"
+        ],
+        "default": "vertical",
+        "description": "Which axes scroll. Sets data-orientation. both adds the corner part."
+      },
+      "size": {
+        "type": [
+          "sm",
+          "md"
+        ],
+        "default": "md",
+        "description": "The scrollbar thickness: md is scrollbar.size (6px), sm two thirds of it. The track adds space.4xs on each side."
+      },
+      "scrollbars": {
+        "type": [
+          "auto",
+          "always",
+          "scroll",
+          "hover"
+        ],
+        "default": "auto",
+        "description": "When the scrollbars show (the Radix type). auto: while content overflows. always: always. scroll: while scrolling. hover: while the pointer is over the area."
+      },
+      "fades": {
+        "type": "boolean",
+        "default": true,
+        "description": "Edge fades on the side that still has content."
+      },
+      "label": {
+        "type": "string",
+        "default": "Scrollable content",
+        "description": "The name of the viewport when it takes focus. Under lang=\"ar\" the default is محتوى قابل للتمرير. Name what scrolls."
+      },
+      "focusable": {
+        "type": [
+          "auto",
+          "true",
+          "false"
+        ],
+        "default": "auto",
+        "description": "auto: the viewport joins the tab order (tabindex 0, role region, named) only when it holds no focusable child."
+      },
+      "viewportRef": {
+        "type": "ref",
+        "description": "A ref to the viewport, the element that scrolls, for scrollTo and scroll restore."
+      },
+      "onScroll": {
+        "type": "function",
+        "description": "Called on every scroll of the viewport."
+      }
+    },
+    "states": [
+      "data-orientation",
+      "data-overflow-start",
+      "data-overflow-end",
+      "visible",
+      "hidden"
+    ],
+    "a11y": {
+      "role": "none on the root. The viewport is a region named by label while it takes focus.",
+      "focus": "The viewport takes focus (tabindex 0) only when it has no focusable child, so a keyboard user can reach it and scroll. With focusable children, Tab moves through them and the browser scrolls each into view.",
+      "keys": {
+        "Tab": "Moves to the viewport when it takes focus, else to the first focusable child",
+        "ArrowUp, ArrowDown": "Native scrolling of the focused viewport by a line",
+        "ArrowLeft, ArrowRight": "Native scrolling along the inline axis when it scrolls",
+        "PageUp, PageDown": "Native scrolling by a page",
+        "Home, End": "Native scrolling to the start and the end"
+      },
+      "announce": "Nothing. The scrollbars and the fades are hidden from assistive technology, which reads the content in order.",
+      "native": {
+        "accessibilityRole": "none",
+        "accessibilityState": []
+      },
+      "notes": [
+        "Scrolling stays native: wheel, touch, keys, find in page and scroll into view all work. No custom wheel handling.",
+        "The vertical scrollbar sits on the inline end, so on the left in right to left layouts. Horizontal fades mirror too.",
+        "The keys are the browser's own scrolling of a focused scroll container, so the contract suite notes them; ScrollArea.test.tsx covers the focus rule and the overflow states.",
+        "Edge fades fade into --_scroll-area-fade-color, the body color by default. A parent on another surface sets that private property to its own fill from its own CSS."
+      ]
+    },
+    "content": {
+      "en": {
+        "label": "Name what scrolls, in sentence case: Release notes, Activity, Board tags."
+      },
+      "ar": {
+        "label": "Noun form, no diacritics: الملاحظات، النشاط، الوسوم."
+      }
+    },
+    "tokens": [
+      "scrollbar.size",
+      "scrollbar.track",
+      "scrollbar.thumb",
+      "scrollbar.thumb-hover",
+      "space.4xs",
+      "space.3xl",
+      "radius.pill",
+      "color.bg.body",
+      "color.focus.ring",
+      "border.width.strong",
+      "duration.base",
+      "ease.out"
+    ],
+    "motion": "fade-rise",
+    "frameworks": {
+      "react": {
+        "status": "ready",
+        "behavior": "radix:ScrollArea",
+        "example": "ScrollArea.demo.tsx"
+      },
+      "angular": {
+        "status": "planned",
+        "behavior": "own: native overflow with the same parts drawn over it, cdk:bidi for the side",
+        "note": "ScrollArea.css is used as is."
+      },
+      "native": {
+        "status": "planned",
+        "behavior": "ScrollView with the platform scrollbar",
+        "note": "The platform draws its own scroll indicators; fades use a gradient overlay."
+      }
+    },
+    "styles": {
+      "studio": "A 6px thumb on a clear track, from the scrollbar tokens. Fades into the body color.",
+      "desk": "The same thumb, a little lighter on the dark desk, from the Desk scrollbar tokens.",
+      "neutral": "The same parts on the Neutral scrollbar tokens once 1.10 lands.",
+      "liquid": "Planned: content scrolls under glass bars, with the scroll edge fade."
+    },
+    "mistakes": [
+      {
+        "wrong": "A scroll box with no way in for the keyboard",
+        "right": "ScrollArea gives the viewport tabindex 0 and a name when nothing inside can take focus"
+      },
+      {
+        "wrong": "Replacing wheel scrolling with a script for smooth scroll",
+        "right": "ScrollArea keeps native scrolling; only the bars are drawn"
+      },
+      {
+        "wrong": "A ScrollArea with no size from its parent, so it grows and never scrolls",
+        "right": "Give the root a block size, a max block size or a flex or grid cell"
+      },
+      {
+        "wrong": "Wrapping the whole page in a ScrollArea",
+        "right": "Let the page scroll natively; use ScrollArea for panels inside it"
+      }
+    ],
+    "contract": {
+      "optionalParts": [
+        "corner",
+        "scrollbar",
+        "thumb",
+        "fade-start",
+        "fade-end"
+      ]
+    },
+    "since": "0.1.0"
+  },
+  {
     "name": "Theme",
     "kind": "component",
     "family": "foundations",
@@ -1723,7 +1924,8 @@
       "notes": [
         "dir and lang on the element let screen readers pick the right voice and let CSS mirror the layout.",
         "The Radix direction provider follows dir, so menus, sliders and arrow keys mirror in right to left.",
-        "Arabic text gets IBM Plex Sans Arabic, zero tracking, taller lines and small text one step up through base.css. Body text keeps its size."
+        "Arabic text gets IBM Plex Sans Arabic, zero tracking, taller lines and small text one step up through base.css. Body text keeps its size.",
+        "A root Theme is needed even when <html> is stamped with themeAttributes(): attributes give the CSS its axes but no React context, so useTheme, useOptionalPart and the Dialog and Toaster portals would fall back to the root defaults (Studio dark, English). Stamp <html> for the first paint and wrap the app in <Theme> with the same axes."
       ],
       "native": {
         "accessibilityRole": "none"
@@ -1771,7 +1973,7 @@
       "react": {
         "status": "ready",
         "behavior": "radix-ui Direction.Provider",
-        "note": "Exports Theme, useTheme, useOptionalPart, themeAttributes and resolveTheme from packages/react/src/theme."
+        "note": "Exports Theme, useTheme, useOptionalPart, themeAttributes and resolveTheme from packages/react/src/theme. themeAttributes() on <html> does not replace the root <Theme>: attributes carry no React context."
       },
       "angular": {
         "status": "ready",
@@ -1799,6 +2001,10 @@
       {
         "wrong": "Reading data-style from the DOM to pick a branch",
         "right": "useTheme().style, or useOptionalPart for a part only one style shows"
+      },
+      {
+        "wrong": "<html {...themeAttributes({ style: \"desk\", lang: \"ar\" })}> with no Theme around the app",
+        "right": "Stamp <html> and also wrap the app in <Theme style=\"desk\" lang=\"ar\">: portals and useTheme read the React context, not the html attributes"
       }
     ],
     "since": "0.1.0"
@@ -1893,7 +2099,7 @@
       "moveHint": {
         "type": "string",
         "default": "Arrow keys move the window. Shift moves it further.",
-        "description": "Description of the move handle, through aria-describedby."
+        "description": "Description of the move handle, through aria-describedby. Under lang=\"ar\" the default is مفاتيح الأسهم لتحريك النافذة، ومع Shift لمسافة أبعد."
       }
     },
     "states": [
@@ -1989,7 +2195,7 @@
     "name": "Toast",
     "kind": "component",
     "family": "feedback",
-    "summary": "A short notice that something happened, shown in a corner and gone on its own. Called from anywhere with toast(); one Toaster renders them.",
+    "summary": "A short notice that something happened, shown in a corner and gone on its own. Called from anywhere with toast(); one Toaster renders them. Call shape: toast(title, options) or toast(options); toast.success, toast.warning, toast.danger and toast.info set the tone; each returns the id; toast.dismiss(id) closes one (or all, without an id), toast.update(id, patch) changes one in place, toast.configure(config) sets the max and the durations for the app.",
     "useWhen": [
       "Confirming that an action the person took has finished: Draft saved, Link copied",
       "A failure the person can fix later or retry from the toast, as tone danger with one action",
@@ -2213,7 +2419,7 @@
         "status": "ready",
         "behavior": "radix:Toast",
         "example": "Toast.demo.tsx",
-        "note": "Toaster renders the shared store from @the-system/shared; toast is re-exported from @the-system/react."
+        "note": "Toaster renders the shared store from @the-system/shared; toast is re-exported from @the-system/react. Call shape: toast(title: string, options?) or toast(options) with title inside; toast.success, toast.warning, toast.danger and toast.info take the same arguments and set tone; toast.dismiss(id?), toast.update(id, { tone, title, description }), toast.configure({ max, durations }). From packages/shared/src/toast.ts."
       },
       "angular": {
         "status": "planned",
@@ -2264,6 +2470,10 @@
       {
         "wrong": "A dialog that closes when the person clicks a toast above it",
         "right": "Call isInsideToaster(event.target) in the dialog's outside handlers and prevent the default"
+      },
+      {
+        "wrong": "toast({ type: \"success\", message: \"Draft saved\" }), or a toast component rendered by hand for a one off notice",
+        "right": "toast.success(\"Draft saved\"), or toast(\"Draft saved\", { tone: \"success\", lang: \"en\" }); keep the id to call toast.update(id, patch) or toast.dismiss(id)"
       }
     ],
     "contract": {
@@ -2306,7 +2516,8 @@
       "footer"
     ],
     "parts": {
-      "TitleBar": "titlebar"
+      "TitleBar": "titlebar",
+      "WindowLayer": "none: the positioned layer that hosts windows (data-ds window-layer, a region named Windows, النوافذ in Arabic). Not a part of a window; see a11y notes"
     },
     "slots": {
       "body": {
@@ -2357,7 +2568,7 @@
       },
       "open": {
         "type": "boolean",
-        "description": "Controlled open state, with onOpenChange. Closing plays window-close, then unmounts."
+        "description": "Controlled open state, with onOpenChange. Keep rendering the Window with open={false}: it stays mounted while window-close plays, then renders nothing. Unmounting it instead (a conditional render) skips the close motion."
       },
       "defaultOpen": {
         "type": "boolean",
@@ -2403,7 +2614,7 @@
       },
       "movable": {
         "type": "boolean",
-        "description": "Drag by the title bar and move with the arrow keys. Default true inside a WindowLayer or with a frame, false for a window placed by its parent."
+        "description": "Drag by the title bar and move with the arrow keys. Default true inside a WindowLayer or with a frame. A Window outside a WindowLayer sits in the page flow (position relative), has no frame and does not move unless it gets a frame."
       },
       "origin": {
         "type": "node",
@@ -2420,28 +2631,32 @@
       },
       "closeLabel": {
         "type": "string",
-        "default": "Close window"
+        "default": "Close window",
+        "description": "Under lang=\"ar\" the default is إغلاق النافذة. A prop always wins."
       },
       "minimizeLabel": {
         "type": "string",
-        "default": "Minimize window"
+        "default": "Minimize window",
+        "description": "Under lang=\"ar\" the default is تصغير النافذة. A prop always wins."
       },
       "zoomLabel": {
         "type": "string",
-        "default": "Zoom window"
+        "default": "Zoom window",
+        "description": "Under lang=\"ar\" the default is تكبير النافذة. A prop always wins."
       },
       "controlsLabel": {
         "type": "string",
-        "default": "Window controls"
+        "default": "Window controls",
+        "description": "Under lang=\"ar\" the default is أزرار النافذة. A prop always wins."
       },
       "moveLabel": {
         "type": "string",
         "default": "Move window",
-        "description": "Name of the move handle: the title of a window that can move, focusable, a TitleBar part."
+        "description": "Name of the move handle: the title of a window that can move, focusable, a TitleBar part. Under lang=\"ar\" the default is تحريك النافذة."
       },
       "moveHint": {
         "type": "string",
-        "description": "Description of the move handle. Default names the arrow keys, Shift, and Enter when zoom works."
+        "description": "Description of the move handle. Default names the arrow keys, Shift, and Enter when zoom works, in Arabic under lang=\"ar\"."
       }
     },
     "states": [
@@ -2479,6 +2694,9 @@
         "Tab order follows the DOM order of the windows, not their stacking. Moving focus into a window with Tab brings it to the front.",
         "A long title truncates with an ellipsis; the full text is the accessible name, and keyboard focus on the move handle wraps the title to show it in full.",
         "No native title attribute.",
+        "WindowLayer is the container for windows, not a part of one: a positioned region (tabindex -1, named Windows) that stacks its windows, tracks the active one through the shared window manager and takes focus when its last window leaves. useWindowLayer() returns that manager, for a dock that restores minimized windows.",
+        "A Window outside a WindowLayer sits in the page flow (position relative), takes the size its parent gives it, has no frame and does not move. Give it a frame (and a positioned parent) to place and move it.",
+        "The five chrome labels (close, minimize, zoom, the controls group, the move handle) and the move hint default to Arabic under lang=\"ar\", as Dialog and Toast do. A prop always wins.",
         "Contract suite: Escape is checked in the many case, where closing the front window makes the next one active (data-state changes). The arrow keys move the frame (inline position), which no contract.keys expectation reads yet, so the suite notes them; Window.test.tsx covers them."
       ]
     },
@@ -2489,7 +2707,7 @@
       },
       "ar": {
         "title": "Noun form, no diacritics: إعدادات الحساب. Latin file names inside Arabic go through Bidi.",
-        "labels": "إغلاق النافذة، تصغير النافذة، تكبير النافذة."
+        "labels": "The defaults under lang=\"ar\": إغلاق النافذة، تصغير النافذة، تكبير النافذة، أزرار النافذة، تحريك النافذة."
       }
     },
     "tokens": [
@@ -2677,20 +2895,23 @@
       },
       "closeLabel": {
         "type": "string",
-        "default": "Close window"
+        "default": "Close window",
+        "description": "Under lang=\"ar\" the default is إغلاق النافذة. A prop always wins."
       },
       "minimizeLabel": {
         "type": "string",
-        "default": "Minimize window"
+        "default": "Minimize window",
+        "description": "Under lang=\"ar\" the default is تصغير النافذة. A prop always wins."
       },
       "zoomLabel": {
         "type": "string",
-        "default": "Zoom window"
+        "default": "Zoom window",
+        "description": "Under lang=\"ar\" the default is تكبير النافذة. A prop always wins."
       },
       "label": {
         "type": "string",
         "default": "Window controls",
-        "description": "The name of the group."
+        "description": "The name of the group. Under lang=\"ar\" the default is أزرار النافذة. A prop always wins."
       },
       "active": {
         "type": "boolean",
@@ -2728,7 +2949,7 @@
         "labels": "Close window, Minimize window, Zoom window. Name the window when several are open: Close notes.txt."
       },
       "ar": {
-        "labels": "إغلاق النافذة، تصغير النافذة، تكبير النافذة."
+        "labels": "The defaults under lang=\"ar\": إغلاق النافذة، تصغير النافذة، تكبير النافذة، أزرار النافذة."
       }
     },
     "tokens": [
