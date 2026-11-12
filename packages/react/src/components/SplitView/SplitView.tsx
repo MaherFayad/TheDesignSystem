@@ -65,7 +65,7 @@ export interface SplitViewProps extends Omit<ComponentProps<'div'>, 'dir'> {
   showSecondary?: boolean;
   /** Default false. */
   defaultShowSecondary?: boolean;
-  /** Called with true when the app opens the detail through it, and with false by the back Button. */
+  /** Called with false when the back Button closes the detail. Opening is the app's: set showSecondary to true. */
   onShowSecondaryChange?: (show: boolean) => void;
   /** auto (default): split from breakpoint.tablet (48rem) of the root's own width up, stacked below. */
   layout?: SplitViewLayout;
