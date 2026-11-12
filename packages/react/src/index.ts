@@ -9,6 +9,7 @@ export * from './components/Grid/index';
 export * from './components/Icon/index';
 export * from './components/IconButton/index';
 export * from './components/Input/index';
+export * from './components/Separator/index';
 export * from './components/Stack/index';
 export * from './components/TitleBar/index';
 export * from './components/Toast/index';

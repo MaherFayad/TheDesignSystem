@@ -1,0 +1,91 @@
+/*
+ * Separator: a line between groups. The line is a border, not a background,
+ * so it stays visible under forced colors. A plain separator is the line
+ * itself; a labelled one is a row (or a column) of line, label, line.
+ * No motion and no interaction.
+ */
+@layer ds.base {
+  [data-ds='separator'] {
+    --_separator-border-color: var(--ds-color-border-control);
+    --_separator-thickness: var(--ds-border-width-default);
+    --_separator-gap: var(--ds-space-m);
+
+    flex: none;
+    box-sizing: border-box;
+    margin: 0;
+    border: 0 solid var(--_separator-border-color);
+  }
+
+  [data-ds='separator'][data-decorative] {
+    --_separator-border-color: var(--ds-color-border-subtle);
+  }
+
+  /* Plain line: horizontal fills the inline size, vertical stretches in its row. */
+  [data-ds='separator'][data-orientation='horizontal']:not([data-labelled]) {
+    inline-size: 100%;
+    border-block-start-width: var(--_separator-thickness);
+  }
+
+  [data-ds='separator'][data-orientation='vertical']:not([data-labelled]) {
+    align-self: stretch;
+    min-block-size: var(--ds-size-icon-md);
+    border-inline-start-width: var(--_separator-thickness);
+  }
+
+  /* Labelled: line, label, line. */
+  [data-ds='separator'][data-labelled] {
+    display: flex;
+    align-items: center;
+    gap: var(--_separator-gap);
+  }
+
+  [data-ds='separator'][data-labelled][data-orientation='horizontal'] {
+    inline-size: 100%;
+  }
+
+  [data-ds='separator'][data-labelled][data-orientation='vertical'] {
+    flex-direction: column;
+    align-self: stretch;
+  }
+
+  [data-ds='separator'] > [data-part='line'] {
+    flex: 1 1 0;
+    min-inline-size: 0;
+    min-block-size: 0;
+    border: 0 solid var(--_separator-border-color);
+  }
+
+  [data-ds='separator'][data-orientation='horizontal'] > [data-part='line'] {
+    border-block-start-width: var(--_separator-thickness);
+  }
+
+  [data-ds='separator'][data-orientation='vertical'] > [data-part='line'] {
+    border-inline-start-width: var(--_separator-thickness);
+  }
+
+  [data-ds='separator'] > [data-part='label'] {
+    flex: none;
+    max-inline-size: 100%;
+    color: var(--ds-color-text-muted);
+    font-family: var(--ds-font-family-sans);
+    font-size: var(--ds-font-size-s);
+    line-height: var(--ds-font-leading-snug);
+    overflow-wrap: anywhere;
+    text-align: center;
+  }
+
+  /* A long label takes what it needs and the lines shrink, never past the row. */
+  [data-ds='separator'][data-orientation='horizontal'] > [data-part='label'] {
+    flex: 0 1 auto;
+  }
+
+  @media (forced-colors: active) {
+    [data-ds='separator'] {
+      --_separator-border-color: CanvasText;
+    }
+
+    [data-ds='separator'][data-decorative] {
+      --_separator-border-color: GrayText;
+    }
+  }
+}
