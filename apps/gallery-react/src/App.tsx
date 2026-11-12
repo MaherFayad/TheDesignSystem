@@ -5,6 +5,8 @@ import { Link, navigate, useUrl } from './router';
 import { routes } from './routes.gen';
 
 const InteractionsPage = lazy(() => import('./Interactions'));
+const PlatformsPage = lazy(() => import('./Platforms').then((m) => ({ default: m.PlatformsPage })));
+const PlatformScreen = lazy(() => import('./Platforms').then((m) => ({ default: m.PlatformScreen })));
 
 const demos = new Map<string, LazyExoticComponent<ComponentType>>(routes.map((r) => [r.slug, lazy(r.load)]));
 
@@ -35,13 +37,15 @@ export function App() {
   useDocumentTheme(axes);
 
   useEffect(() => {
-    document.title = route ? `${route.name}, gallery` : path === '/all' ? 'Every demo, gallery' : path === '/interactions' ? 'Interactions, gallery' : 'Gallery';
+    document.title = route ? `${route.name}, gallery` : path === '/all' ? 'Every demo, gallery' : path === '/interactions' ? 'Interactions, gallery' : path.startsWith('/platforms') ? 'Platforms, gallery' : 'Gallery';
   }, [route, path]);
 
   let page;
   if (path === '/') page = <Index query={axisQuery(params)} />;
   else if (path === '/all') page = <KitchenSink />;
   else if (path === '/interactions') page = <InteractionsPage />;
+  else if (path === '/platforms') page = <PlatformsPage params={params} />;
+  else if (path === '/platforms/screen') page = <PlatformScreen params={params} />;
   else if (route) page = <DemoView slug={route.slug} name={route.name} />;
   else page = <NotFound />;
 
@@ -84,6 +88,7 @@ function Shell({ params, title }: { params: URLSearchParams; title: string | und
         <Link href={`/${query}`}>Components</Link>
         <Link href={`/all${query}`}>Every demo</Link>
         <Link href={`/interactions${query}`}>Interactions</Link>
+        <Link href={`/platforms${query}`}>Platforms</Link>
         {title && <span data-gallery="current">{title}</span>}
       </nav>
       <form data-gallery="axes" aria-label="Theme axes" onSubmit={(e) => e.preventDefault()}>
