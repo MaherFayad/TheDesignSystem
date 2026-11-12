@@ -53,6 +53,7 @@ export const routes: DemoRoute[] = [
   { name: 'TitleBar', slug: 'title-bar', load: () => import('../../../packages/react/src/components/TitleBar/TitleBar.demo') },
   { name: 'Toast', slug: 'toast', load: () => import('../../../packages/react/src/components/Toast/Toast.demo') },
   { name: 'ToggleButton', slug: 'toggle-button', load: () => import('../../../packages/react/src/components/ToggleButton/ToggleButton.demo') },
+  { name: 'ToggleGroup', slug: 'toggle-group', load: () => import('../../../packages/react/src/components/ToggleGroup/ToggleGroup.demo') },
   { name: 'Window', slug: 'window', load: () => import('../../../packages/react/src/components/Window/Window.demo') },
   { name: 'WindowControls', slug: 'window-controls', load: () => import('../../../packages/react/src/components/WindowControls/WindowControls.demo') },
 ];

@@ -1,0 +1,124 @@
+/*
+ * ToggleGroup: a set of ToggleButtons, spaced or attached, with one tab stop.
+ * Sources: Figma-Killer-2 `FilterBar` (spaced chips), GoBanana admin
+ * `PeriodSwitch` (an attached switch). Follows "One convention for component
+ * CSS and props" in docs/contracts/anatomy.md.
+ *
+ * Private properties on the root (recipes override these):
+ *
+ *   --_toggle-group-gap       the space between spaced items
+ *   --_toggle-group-divider   the 1px seam between attached items
+ *
+ * The items are ToggleButton roots carrying data-part="item", styled by
+ * Button.css. As their parent, this file squares the inner corners of
+ * attached items through Button's four logical corner properties
+ * (--_button-radius-start-start and friends), so the seam flips in RTL, and
+ * pulls the focus ring inside an attached item. Where Button has no property
+ * (the seam borders), it writes the logical border declarations.
+ */
+@layer ds.base {
+  [data-ds='toggle-group'] {
+    --_toggle-group-gap: var(--ds-space-xs);
+    --_toggle-group-divider: var(--ds-color-border-default);
+
+    display: inline-flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--_toggle-group-gap);
+    box-sizing: border-box;
+    max-inline-size: 100%;
+    vertical-align: middle;
+  }
+
+  [data-ds='toggle-group']:is([data-size='xs'], [data-size='sm']) {
+    --_toggle-group-gap: var(--ds-space-2xs);
+  }
+
+  [data-ds='toggle-group'][data-orientation='vertical'] {
+    flex-direction: column;
+    flex-wrap: nowrap;
+    align-items: stretch;
+  }
+
+  /* A column of text items lines its labels up on the start edge. */
+  [data-ds='toggle-group'][data-orientation='vertical'] > [data-part='item'] {
+    justify-content: flex-start;
+  }
+
+  /* ------------------------------------------------------------ attached: one seamed control */
+
+  [data-ds='toggle-group'][data-attached] {
+    flex-wrap: nowrap;
+    gap: 0;
+  }
+
+  /*
+   * The seam. Each item but the last draws the divider with its end border;
+   * each item but the first drops its start border, so the line stays one
+   * hairline and no item overlaps another.
+   */
+  [data-ds='toggle-group'][data-attached][data-orientation='horizontal'] > [data-part='item']:not(:first-child) {
+    --_button-radius-start-start: 0;
+    --_button-radius-end-start: 0;
+
+    border-inline-start-width: 0;
+  }
+
+  [data-ds='toggle-group'][data-attached][data-orientation='horizontal'] > [data-part='item']:not(:last-child) {
+    --_button-radius-start-end: 0;
+    --_button-radius-end-end: 0;
+
+    border-inline-end-color: var(--_toggle-group-divider);
+  }
+
+  [data-ds='toggle-group'][data-attached][data-orientation='vertical'] > [data-part='item']:not(:first-child) {
+    --_button-radius-start-start: 0;
+    --_button-radius-start-end: 0;
+
+    border-block-start-width: 0;
+  }
+
+  [data-ds='toggle-group'][data-attached][data-orientation='vertical'] > [data-part='item']:not(:last-child) {
+    --_button-radius-end-start: 0;
+    --_button-radius-end-end: 0;
+
+    border-block-end-color: var(--_toggle-group-divider);
+  }
+
+  /* An outline item keeps its own border color as the seam. */
+  [data-ds='toggle-group'][data-attached][data-orientation='horizontal'] > [data-part='item'][data-emphasis='outline']:not(:last-child) {
+    border-inline-end-color: var(--_button-border-color);
+  }
+
+  [data-ds='toggle-group'][data-attached][data-orientation='vertical'] > [data-part='item'][data-emphasis='outline']:not(:last-child) {
+    border-block-end-color: var(--_button-border-color);
+  }
+
+  /*
+   * The focus ring goes inside an attached item: a ring outside would sit
+   * under the next item, which paints later. Same widths and colors as the
+   * focus tokens; a solid item keeps the doubled ring.
+   */
+  [data-ds='toggle-group'][data-attached] > [data-part='item'] {
+    --_button-ring: inset 0 0 0 var(--ds-border-width-strong) var(--ds-color-focus-ring);
+  }
+
+  [data-ds='toggle-group'][data-attached] > [data-part='item'][data-emphasis='solid'] {
+    --_button-ring:
+      inset 0 0 0 var(--ds-border-width-strong) var(--ds-color-focus-ring-on-primary-outer),
+      inset 0 0 0 calc(2 * var(--ds-border-width-strong)) var(--ds-color-focus-ring-on-primary-inner);
+  }
+
+  /* No motion of its own: items keep Button's. Nothing to collapse under reduced motion. */
+
+  /*
+   * Forced colors drop the box shadow ring and draw Button's focus outline.
+   * Pull it inside an attached item, so the next item does not cover it. The
+   * on state is Highlight (Button.css), and the system draws every border.
+   */
+  @media (forced-colors: active) {
+    [data-ds='toggle-group'][data-attached] > [data-part='item']:focus-visible {
+      outline-offset: calc(-2 * var(--ds-border-width-strong));
+    }
+  }
+}

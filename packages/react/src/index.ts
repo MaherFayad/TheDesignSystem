@@ -45,5 +45,6 @@ export * from './components/Tile/index';
 export * from './components/TitleBar/index';
 export * from './components/Toast/index';
 export * from './components/ToggleButton/index';
+export * from './components/ToggleGroup/index';
 export * from './components/Window/index';
 export * from './components/WindowControls/index';
