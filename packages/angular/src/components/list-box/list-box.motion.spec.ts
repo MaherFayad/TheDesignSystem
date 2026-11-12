@@ -22,19 +22,28 @@ const take = (): Call[] => {
   return out;
 };
 
+const PROTOS = [Element.prototype, HTMLElement.prototype, SVGElement.prototype];
+const saved = new Map<object, PropertyDescriptor | undefined>();
+
 beforeEach(() => {
   calls = [];
-  Object.defineProperty(Element.prototype, 'animate', {
-    configurable: true,
-    value: vi.fn(function (this: Element, frames: Keyframe[], opts: KeyframeAnimationOptions) {
+  // On every prototype a spec may stub, so a stub another spec file left on HTMLElement does not shadow this one.
+  const record = vi.fn(function (this: Element, frames: Keyframe[], opts: KeyframeAnimationOptions) {
       calls.push({ el: this, frames, opts });
       return { id: String(opts?.id ?? ''), finished: new Promise(() => undefined), cancel: vi.fn() } as unknown as Animation;
-    }),
-  });
+    });
+  for (const proto of PROTOS) {
+    saved.set(proto, Object.getOwnPropertyDescriptor(proto, 'animate'));
+    Object.defineProperty(proto, 'animate', { configurable: true, writable: true, value: record });
+  }
 });
 
 afterEach(() => {
-  Reflect.deleteProperty(Element.prototype, 'animate');
+  for (const proto of PROTOS) {
+    const before = saved.get(proto);
+    if (before) Object.defineProperty(proto, 'animate', before);
+    else Reflect.deleteProperty(proto, 'animate');
+  }
   document.documentElement.removeAttribute('data-motion');
   vi.restoreAllMocks();
   for (const el of Array.from(document.querySelectorAll('[data-menu-layer]'))) el.remove();

@@ -22,9 +22,10 @@ interface Recorded {
 /** Records every el.animate call and returns a stand in Animation. */
 function recordAnimate() {
   const calls: Recorded[] = [];
-  const proto = Element.prototype as unknown as { animate?: unknown };
-  const had = proto.animate;
-  proto.animate = function (this: Element, keyframes: unknown, options: KeyframeAnimationOptions) {
+  // On every prototype a spec may stub, so no leftover own property shadows it.
+  const protos = [Element.prototype, HTMLElement.prototype, SVGElement.prototype];
+  const had = protos.map((p) => Object.getOwnPropertyDescriptor(p, 'animate'));
+  const animate = function (this: Element, keyframes: unknown, options: KeyframeAnimationOptions) {
     let done: () => void = () => undefined;
     const anim = {
       id: options.id,
@@ -36,13 +37,16 @@ function recordAnimate() {
     calls.push({ target: this, keyframes, options, finish: () => ((anim.playState = 'finished'), done()) });
     return anim;
   };
+  for (const p of protos) Object.defineProperty(p, 'animate', { configurable: true, writable: true, value: animate });
   return {
     calls,
     take: () => calls.splice(0).map(({ target, keyframes, options }) => ({ target, keyframes, options })),
-    restore: () => {
-      if (had === undefined) delete proto.animate;
-      else proto.animate = had;
-    },
+    restore: () =>
+      protos.forEach((p, i) => {
+        const d = had[i];
+        if (d) Object.defineProperty(p, 'animate', d);
+        else Reflect.deleteProperty(p, 'animate');
+      }),
   };
 }
 
@@ -152,7 +156,9 @@ describe('DsButton motion', () => {
   });
 
   it('with no Web Animations API, no leaving spinner renders', async () => {
-    rec.restore();
+    for (const p of [Element.prototype, HTMLElement.prototype, SVGElement.prototype]) {
+      Object.defineProperty(p, 'animate', { configurable: true, writable: true, value: undefined });
+    }
     const { host, fixture, q } = await setup();
     host.loading.set(true);
     await fixture.whenStable();

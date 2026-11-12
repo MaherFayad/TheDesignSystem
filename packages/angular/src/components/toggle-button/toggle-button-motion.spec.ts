@@ -12,18 +12,22 @@ import { DsToggleButton } from './toggle-button';
 /** Records every el.animate call. */
 function recordAnimate() {
   const calls: { target: Element; keyframes: unknown; options: unknown }[] = [];
-  const proto = Element.prototype as unknown as { animate?: unknown };
-  const had = proto.animate;
-  proto.animate = function (this: Element, keyframes: unknown, options: KeyframeAnimationOptions) {
+  // On every prototype a spec may stub, so no leftover own property shadows it.
+  const protos = [Element.prototype, HTMLElement.prototype, SVGElement.prototype];
+  const had = protos.map((p) => Object.getOwnPropertyDescriptor(p, 'animate'));
+  const animate = function (this: Element, keyframes: unknown, options: KeyframeAnimationOptions) {
     calls.push({ target: this, keyframes, options });
     return { id: options.id, playState: 'running', finished: Promise.resolve(), cancel() {} };
   };
+  for (const p of protos) Object.defineProperty(p, 'animate', { configurable: true, writable: true, value: animate });
   return {
     take: () => calls.splice(0),
-    restore: () => {
-      if (had === undefined) delete proto.animate;
-      else proto.animate = had;
-    },
+    restore: () =>
+      protos.forEach((p, i) => {
+        const d = had[i];
+        if (d) Object.defineProperty(p, 'animate', d);
+        else Reflect.deleteProperty(p, 'animate');
+      }),
   };
 }
 

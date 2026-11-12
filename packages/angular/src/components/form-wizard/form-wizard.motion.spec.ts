@@ -95,12 +95,16 @@ async function setup(start = 0) {
 
 // jsdom lays nothing out: give every element a box, so the leaving step has one to copy.
 const box = { x: 0, y: 0, top: 0, left: 0, right: 320, bottom: 80, width: 320, height: 80, toJSON: () => ({}) } as DOMRect;
+// On HTMLElement, where an own property another spec left would shadow Element; put back as found.
+let ownRect: PropertyDescriptor | undefined;
 beforeEach(() => {
-  vi.spyOn(Element.prototype, 'getBoundingClientRect').mockReturnValue(box);
+  ownRect = Object.getOwnPropertyDescriptor(HTMLElement.prototype, 'getBoundingClientRect');
+  Object.defineProperty(HTMLElement.prototype, 'getBoundingClientRect', { configurable: true, writable: true, value: () => box });
 });
 
 afterEach(() => {
-  vi.restoreAllMocks();
+  if (ownRect) Object.defineProperty(HTMLElement.prototype, 'getBoundingClientRect', ownRect);
+  else Reflect.deleteProperty(HTMLElement.prototype, 'getBoundingClientRect');
   document.body.innerHTML = '';
 });
 

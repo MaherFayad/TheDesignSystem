@@ -26,16 +26,21 @@ const take = (): Call[] => {
 /** A call without its element, to compare a replay on another element. */
 const shape = (c: Call) => ({ frames: c.frames, opts: c.opts });
 
+const PROTOS = [Element.prototype, HTMLElement.prototype, SVGElement.prototype];
+const saved = new Map<object, PropertyDescriptor | undefined>();
+
 beforeEach(() => {
   calls = [];
-  Object.defineProperty(Element.prototype, 'animate', {
-    configurable: true,
-    value: vi.fn(function (this: Element, frames: Keyframe[], opts: KeyframeAnimationOptions) {
+  // On every prototype a spec may stub, so a stub another spec file left on HTMLElement does not shadow this one.
+  const record = vi.fn(function (this: Element, frames: Keyframe[], opts: KeyframeAnimationOptions) {
       calls.push({ el: this, frames, opts });
       const effect = { composite: 'replace', getTiming: () => ({ duration: Number(opts?.duration ?? 0) }) };
       return { id: String(opts?.id ?? ''), effect, finished: new Promise(() => undefined), cancel: vi.fn() } as unknown as Animation;
-    }),
-  });
+    });
+  for (const proto of PROTOS) {
+    saved.set(proto, Object.getOwnPropertyDescriptor(proto, 'animate'));
+    Object.defineProperty(proto, 'animate', { configurable: true, writable: true, value: record });
+  }
   const proto = Element.prototype as unknown as Record<string, unknown>;
   proto['hasPointerCapture'] = () => true;
   proto['setPointerCapture'] = () => undefined;
@@ -43,7 +48,11 @@ beforeEach(() => {
 });
 
 afterEach(() => {
-  Reflect.deleteProperty(Element.prototype, 'animate');
+  for (const proto of PROTOS) {
+    const before = saved.get(proto);
+    if (before) Object.defineProperty(proto, 'animate', before);
+    else Reflect.deleteProperty(proto, 'animate');
+  }
   const proto = Element.prototype as unknown as Record<string, unknown>;
   for (const k of ['hasPointerCapture', 'setPointerCapture', 'releasePointerCapture']) Reflect.deleteProperty(proto, k);
   document.documentElement.removeAttribute('data-motion');
