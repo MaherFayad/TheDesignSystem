@@ -6,9 +6,17 @@ import { IconButton } from '../IconButton';
 import { Icon } from '../Icon';
 import {
   DropdownMenu,
+  DropdownMenuCheckboxItem,
   DropdownMenuContent,
+  DropdownMenuGroup,
   DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuRadioGroup,
+  DropdownMenuRadioItem,
   DropdownMenuSeparator,
+  DropdownMenuSub,
+  DropdownMenuSubContent,
+  DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from '../DropdownMenu';
 import {
@@ -28,41 +36,42 @@ import {
   type ContextMenuSize,
 } from './index';
 
-/** The copy of the file menu, in both languages. Arabic: noun form labels, no diacritics. */
-const copy = {
-  en: {
-    file: 'Q3 roadmap',
-    meta: 'Board, edited today',
-    more: 'More actions for Q3 roadmap',
-    show: 'Show menu for Q3 roadmap',
-    heading: 'Board',
-    open: 'Open board',
-    rename: 'Rename board',
-    duplicate: 'Duplicate board',
-    share: 'Share board',
-    copyLink: 'Copy link',
-    invite: 'Invite people',
-    star: 'Add to starred',
-    remove: 'Delete board',
-  },
-  ar: {
-    file: 'خطة الربع الثالث',
-    meta: 'لوحة، تعديل اليوم',
-    more: 'إجراءات أكثر لخطة الربع الثالث',
-    show: 'عرض قائمة خطة الربع الثالث',
-    heading: 'اللوحة',
-    open: 'فتح اللوحة',
-    rename: 'إعادة تسمية اللوحة',
-    duplicate: 'تكرار اللوحة',
-    share: 'مشاركة اللوحة',
-    copyLink: 'نسخ الرابط',
-    invite: 'دعوة أشخاص',
-    star: 'إضافة للمميزة',
-    remove: 'حذف اللوحة',
-  },
-} as const;
+/**
+ * One set of menu parts. Each case writes its menu once as a function of a
+ * kit, and the demo renders it twice: as the context menu and as the
+ * DropdownMenu on the tile. So every action is reachable without a right
+ * click, with the same words in the same order.
+ */
+const contextKit = {
+  Item: ContextMenuItem,
+  CheckboxItem: ContextMenuCheckboxItem,
+  RadioGroup: ContextMenuRadioGroup,
+  RadioItem: ContextMenuRadioItem,
+  Label: ContextMenuLabel,
+  Group: ContextMenuGroup,
+  Separator: ContextMenuSeparator,
+  Sub: ContextMenuSub,
+  SubTrigger: ContextMenuSubTrigger,
+  SubContent: ContextMenuSubContent,
+};
 
-type Lang = keyof typeof copy;
+type Kit = typeof contextKit;
+
+// The DropdownMenu parts take the same props; only the Radix event types differ.
+const dropdownKit = {
+  Item: DropdownMenuItem,
+  CheckboxItem: DropdownMenuCheckboxItem,
+  RadioGroup: DropdownMenuRadioGroup,
+  RadioItem: DropdownMenuRadioItem,
+  Label: DropdownMenuLabel,
+  Group: DropdownMenuGroup,
+  Separator: DropdownMenuSeparator,
+  Sub: DropdownMenuSub,
+  SubTrigger: DropdownMenuSubTrigger,
+  SubContent: DropdownMenuSubContent,
+} as unknown as Kit;
+
+type MenuBody = (k: Kit) => ReactNode;
 
 const tile: CSSProperties = {
   display: 'flex',
@@ -84,13 +93,13 @@ const tileMeta: CSSProperties = { color: 'var(--ds-color-text-muted)', fontSize:
 /**
  * A file tile: the item the menu acts on. It takes focus, so Shift+F10 and
  * the Menu key reach the menu, and it carries a DropdownMenu with the same
- * actions, so nothing is reachable only by right click.
+ * actions as its context menu.
  */
 function FileTile({
   name,
   meta,
   more,
-  lang,
+  menu,
   disabled,
   target,
   style,
@@ -99,11 +108,10 @@ function FileTile({
   name: string;
   meta: string;
   more: string;
-  lang: Lang;
+  menu: MenuBody;
   disabled?: boolean;
   target?: string;
 } & HTMLAttributes<HTMLDivElement> & { ref?: Ref<HTMLDivElement> }) {
-  const t = copy[lang];
   return (
     <div {...rest} tabIndex={0} role="group" aria-label={name} data-demo-target={target} style={{ ...tile, ...style }}>
       <Icon name="file" size="md" />
@@ -115,25 +123,16 @@ function FileTile({
         <DropdownMenuTrigger disabled={disabled}>
           <IconButton icon="more" label={more} emphasis="ghost" />
         </DropdownMenuTrigger>
-        <DropdownMenuContent align="end">
-          <DropdownMenuItem start="external">{t.open}</DropdownMenuItem>
-          <DropdownMenuItem start="edit">{t.rename}</DropdownMenuItem>
-          <DropdownMenuItem start="copy">{t.duplicate}</DropdownMenuItem>
-          <DropdownMenuItem start="link">{t.copyLink}</DropdownMenuItem>
-          <DropdownMenuSeparator />
-          <DropdownMenuItem start="trash" tone="danger">
-            {t.remove}
-          </DropdownMenuItem>
-        </DropdownMenuContent>
+        <DropdownMenuContent align="end">{menu(dropdownKit)}</DropdownMenuContent>
       </DropdownMenu>
     </div>
   );
 }
 
 /**
- * Opens the menu of the tile before it the way the keyboard does: focus on
- * the tile, then Shift+F10. A pointer stand in for a right click, so the
- * gallery and the contract suite can open the menu with a plain click.
+ * Opens the menu of the tile next to it the way the keyboard does: focus on
+ * the tile, then Shift+F10. It stands in for a right click, so the gallery
+ * and the contract suite can open the menu with a plain click.
  */
 function ShowMenu({ label, demoTrigger, size }: { label: string; demoTrigger: string; size?: ContextMenuSize }) {
   const ref = useRef<HTMLSpanElement>(null);
@@ -144,10 +143,10 @@ function ShowMenu({ label, demoTrigger, size }: { label: string; demoTrigger: st
         size={size}
         emphasis="soft"
         onClick={() => {
-          const tile = ref.current?.parentElement?.querySelector<HTMLElement>('[role="group"]');
-          if (!tile) return;
-          tile.focus();
-          tile.dispatchEvent(new KeyboardEvent('keydown', { key: 'F10', shiftKey: true, bubbles: true, cancelable: true }));
+          const target = ref.current?.parentElement?.querySelector<HTMLElement>('[role="group"]');
+          if (!target) return;
+          target.focus();
+          target.dispatchEvent(new KeyboardEvent('keydown', { key: 'F10', shiftKey: true, bubbles: true, cancelable: true }));
         }}
       >
         {label}
@@ -156,47 +155,125 @@ function ShowMenu({ label, demoTrigger, size }: { label: string; demoTrigger: st
   );
 }
 
+/** A tile, its context menu, its DropdownMenu and its Show menu button, all from one menu body. */
+function FileMenu({
+  name,
+  meta,
+  more,
+  show,
+  menu,
+  size,
+  label,
+  demoTrigger = '',
+  target,
+  disabled,
+}: {
+  name: string;
+  meta: string;
+  more: string;
+  show: string;
+  menu: MenuBody;
+  size?: ContextMenuSize;
+  label?: string;
+  demoTrigger?: string;
+  target?: string;
+  disabled?: boolean;
+}) {
+  return (
+    <DemoRow label={label}>
+      <ContextMenu size={size}>
+        <ContextMenuTrigger disabled={disabled}>
+          <FileTile name={name} meta={meta} more={more} menu={menu} target={target} disabled={disabled} />
+        </ContextMenuTrigger>
+        <ContextMenuContent>{menu(contextKit)}</ContextMenuContent>
+      </ContextMenu>
+      {!disabled && <ShowMenu label={show} demoTrigger={demoTrigger} size={size} />}
+    </DemoRow>
+  );
+}
+
+/** The copy of the board menu, in both languages. Arabic: noun form labels, no diacritics. */
+const copy = {
+  en: {
+    file: 'Q3 roadmap',
+    meta: 'Board, edited today',
+    more: 'More actions for Q3 roadmap',
+    show: 'Show menu for Q3 roadmap',
+    heading: 'Board',
+    open: 'Open board',
+    rename: 'Rename board',
+    duplicate: 'Duplicate board',
+    share: 'Share board',
+    copyLink: 'Copy link',
+    invite: 'Invite people',
+    star: 'Add to favorites',
+    remove: 'Delete board',
+  },
+  ar: {
+    file: 'خطة الربع الثالث',
+    meta: 'لوحة، تعديل اليوم',
+    more: 'إجراءات أكثر لخطة الربع الثالث',
+    show: 'عرض قائمة خطة الربع الثالث',
+    heading: 'اللوحة',
+    open: 'فتح اللوحة',
+    rename: 'إعادة تسمية اللوحة',
+    duplicate: 'تكرار اللوحة',
+    share: 'مشاركة اللوحة',
+    copyLink: 'نسخ الرابط',
+    invite: 'دعوة أشخاص',
+    star: 'إضافة للمفضلة',
+    remove: 'حذف اللوحة',
+  },
+} as const;
+
+type Lang = keyof typeof copy;
+
 /** Every part: a label, items with icons and shortcuts, a submenu, a checkbox item, a danger item. */
-function FileMenu({ size, lang = 'en', demoTrigger, target }: { size?: ContextMenuSize; lang?: Lang; demoTrigger: string; target?: string }) {
+function BoardMenu({ size, lang = 'en', demoTrigger, target, label }: { size?: ContextMenuSize; lang?: Lang; demoTrigger: string; target?: string; label: string }) {
   const t = copy[lang];
   const [starred, setStarred] = useState(false);
+  const menu: MenuBody = (k) => (
+    <>
+      <k.Label>{t.heading}</k.Label>
+      <k.Item start="external" shortcut="Enter">
+        {t.open}
+      </k.Item>
+      <k.Item start="edit" shortcut="F2">
+        {t.rename}
+      </k.Item>
+      <k.Item start="copy" shortcut="Ctrl+D">
+        {t.duplicate}
+      </k.Item>
+      <k.Sub>
+        <k.SubTrigger start="link">{t.share}</k.SubTrigger>
+        <k.SubContent>
+          <k.Item start="copy" shortcut="Ctrl+L">
+            {t.copyLink}
+          </k.Item>
+          <k.Item start="user-plus">{t.invite}</k.Item>
+        </k.SubContent>
+      </k.Sub>
+      <k.CheckboxItem checked={starred} onCheckedChange={setStarred}>
+        {t.star}
+      </k.CheckboxItem>
+      <k.Separator />
+      <k.Item start="trash" tone="danger" shortcut="Del">
+        {t.remove}
+      </k.Item>
+    </>
+  );
   return (
-    <DemoRow label={size === 'sm' ? 'Size sm' : lang === 'ar' ? 'عربي' : 'Size md'}>
-      <ContextMenu size={size}>
-        <ContextMenuTrigger>
-          <FileTile name={t.file} meta={t.meta} more={t.more} lang={lang} target={target} />
-        </ContextMenuTrigger>
-        <ContextMenuContent>
-          <ContextMenuLabel>{t.heading}</ContextMenuLabel>
-          <ContextMenuItem start="external" shortcut="Enter">
-            {t.open}
-          </ContextMenuItem>
-          <ContextMenuItem start="edit" shortcut="F2">
-            {t.rename}
-          </ContextMenuItem>
-          <ContextMenuItem start="copy" shortcut="Ctrl+D">
-            {t.duplicate}
-          </ContextMenuItem>
-          <ContextMenuSub>
-            <ContextMenuSubTrigger start="link">{t.share}</ContextMenuSubTrigger>
-            <ContextMenuSubContent>
-              <ContextMenuItem start="copy" shortcut="Ctrl+L">
-                {t.copyLink}
-              </ContextMenuItem>
-              <ContextMenuItem start="user-plus">{t.invite}</ContextMenuItem>
-            </ContextMenuSubContent>
-          </ContextMenuSub>
-          <ContextMenuCheckboxItem checked={starred} onCheckedChange={setStarred}>
-            {t.star}
-          </ContextMenuCheckboxItem>
-          <ContextMenuSeparator />
-          <ContextMenuItem start="trash" tone="danger" shortcut="Del">
-            {t.remove}
-          </ContextMenuItem>
-        </ContextMenuContent>
-      </ContextMenu>
-      <ShowMenu label={t.show} demoTrigger={demoTrigger} size={size} />
-    </DemoRow>
+    <FileMenu
+      name={t.file}
+      meta={t.meta}
+      more={t.more}
+      show={t.show}
+      menu={menu}
+      size={size}
+      label={label}
+      demoTrigger={demoTrigger}
+      target={target}
+    />
   );
 }
 
@@ -208,150 +285,157 @@ const boards = [
   'Partners', 'Docs home', 'API reference', 'Changelog', 'Roadmap', 'Status page', 'Legal', 'Archive',
 ];
 
-/** A plain tile with a menu built from `items`, for the content cases. */
-function CaseMenu({
-  name,
-  meta,
-  more,
-  lang = 'en',
-  show,
-  disabled,
-  children,
-}: {
-  name: string;
-  meta: string;
-  more: string;
-  lang?: Lang;
-  show: string;
-  disabled?: boolean;
-  children: ReactNode;
-}) {
-  return (
-    <DemoRow>
-      <ContextMenu>
-        <ContextMenuTrigger disabled={disabled}>
-          <FileTile name={name} meta={meta} more={more} lang={lang} disabled={disabled} />
-        </ContextMenuTrigger>
-        <ContextMenuContent>{children}</ContextMenuContent>
-      </ContextMenu>
-      {!disabled && <ShowMenu label={show} demoTrigger="" />}
-    </DemoRow>
-  );
-}
-
 export default function ContextMenuDemo() {
   const [sort, setSort] = useState('edited');
   const [grid, setGrid] = useState(true);
   return (
     <DemoPage>
       <DemoCase id="variants" title="Variants: right click the tile, long press it, or focus it and press Shift+F10">
-        <FileMenu demoTrigger="md" target="md" />
-        <FileMenu demoTrigger="sm" size="sm" />
+        <BoardMenu label="Size md" demoTrigger="md" target="md" />
+        <BoardMenu label="Size sm" demoTrigger="sm" size="sm" />
         <Theme lang="ar" data-demo="content">
-          <FileMenu demoTrigger="ar" lang="ar" />
+          <BoardMenu label="عربي" demoTrigger="ar" lang="ar" />
         </Theme>
       </DemoCase>
 
       <DemoCase id="one" title="One item">
-        <CaseMenu name="Logo.svg" meta="Image, 12 KB" more="More actions for Logo.svg" show="Show menu for Logo.svg">
-          <ContextMenuItem start="download">Download image</ContextMenuItem>
-        </CaseMenu>
+        <FileMenu
+          name="Logo.svg"
+          meta="Image, 12 KB"
+          more="More actions for Logo.svg"
+          show="Show menu for Logo.svg"
+          menu={(k) => <k.Item start="download">Download image</k.Item>}
+        />
       </DemoCase>
 
       <DemoCase id="many" title="Many items, grouped">
-        <CaseMenu name="Hero frame" meta="Frame, 1440 by 900" more="More actions for Hero frame" show="Show menu for Hero frame">
-          <ContextMenuGroup>
-            <ContextMenuItem shortcut="Ctrl+X">Cut frame</ContextMenuItem>
-            <ContextMenuItem start="copy" shortcut="Ctrl+C">
-              Copy frame
-            </ContextMenuItem>
-            <ContextMenuItem shortcut="Ctrl+V">Paste over frame</ContextMenuItem>
-          </ContextMenuGroup>
-          <ContextMenuSeparator />
-          <ContextMenuSub>
-            <ContextMenuSubTrigger start="grid">Arrange</ContextMenuSubTrigger>
-            <ContextMenuSubContent>
-              <ContextMenuItem shortcut="Ctrl+]">Bring to front</ContextMenuItem>
-              <ContextMenuItem shortcut="Ctrl+[">Send to back</ContextMenuItem>
-            </ContextMenuSubContent>
-          </ContextMenuSub>
-          <ContextMenuCheckboxItem checked={grid} onCheckedChange={setGrid} shortcut="Ctrl+G">
-            Show layout grid
-          </ContextMenuCheckboxItem>
-          <ContextMenuSeparator />
-          <ContextMenuRadioGroup value={sort} onValueChange={setSort}>
-            <ContextMenuLabel>Sort layers by</ContextMenuLabel>
-            <ContextMenuRadioItem value="name">Name</ContextMenuRadioItem>
-            <ContextMenuRadioItem value="edited">Date edited</ContextMenuRadioItem>
-          </ContextMenuRadioGroup>
-          <ContextMenuSeparator />
-          <ContextMenuItem start="trash" tone="danger" shortcut="Del">
-            Delete frame
-          </ContextMenuItem>
-        </CaseMenu>
+        <FileMenu
+          name="Hero frame"
+          meta="Frame, 1440 by 900"
+          more="More actions for Hero frame"
+          show="Show menu for Hero frame"
+          menu={(k) => (
+            <>
+              <k.Group>
+                <k.Item shortcut="Ctrl+X">Cut frame</k.Item>
+                <k.Item start="copy" shortcut="Ctrl+C">
+                  Copy frame
+                </k.Item>
+                <k.Item shortcut="Ctrl+V">Paste over frame</k.Item>
+              </k.Group>
+              <k.Separator />
+              <k.Sub>
+                <k.SubTrigger start="grid">Arrange frame</k.SubTrigger>
+                <k.SubContent>
+                  <k.Item shortcut="Ctrl+]">Bring to front</k.Item>
+                  <k.Item shortcut="Ctrl+[">Send to back</k.Item>
+                </k.SubContent>
+              </k.Sub>
+              <k.CheckboxItem checked={grid} onCheckedChange={setGrid} shortcut="Ctrl+G">
+                Show layout grid
+              </k.CheckboxItem>
+              <k.Separator />
+              <k.RadioGroup value={sort} onValueChange={setSort}>
+                <k.Label>Sort layers by</k.Label>
+                <k.RadioItem value="name">Name</k.RadioItem>
+                <k.RadioItem value="edited">Date edited</k.RadioItem>
+              </k.RadioGroup>
+              <k.Separator />
+              <k.Item start="trash" tone="danger" shortcut="Del">
+                Delete frame
+              </k.Item>
+            </>
+          )}
+        />
       </DemoCase>
 
       <DemoCase id="too-many" title="Too many items: the menu scrolls inside">
-        <CaseMenu name="Selected frame" meta="Frame, 3 layers" more="More actions for Selected frame" show="Show menu for Selected frame">
-          <ContextMenuLabel>Move to board</ContextMenuLabel>
-          {boards.map((name) => (
-            <ContextMenuItem key={name} start="folder">
-              {name}
-            </ContextMenuItem>
-          ))}
-        </CaseMenu>
+        <FileMenu
+          name="Selected frame"
+          meta="Frame, 3 layers"
+          more="More actions for Selected frame"
+          show="Show menu for Selected frame"
+          menu={(k) => (
+            <>
+              <k.Label>Move to board</k.Label>
+              {boards.map((name) => (
+                <k.Item key={name} start="folder">
+                  {name}
+                </k.Item>
+              ))}
+            </>
+          )}
+        />
       </DemoCase>
 
       <DemoCase id="long-text" title="Long text">
-        <CaseMenu
+        <FileMenu
           name="Supercalifragilisticexpialidocious final export.pdf"
           meta="PDF, 4 MB, shared with the whole design team"
           more="More actions for the export"
           show="Show menu for the export"
-        >
-          <ContextMenuLabel>Export the selected frames of Spring launch as one file</ContextMenuLabel>
-          <ContextMenuItem start="download" shortcut="Ctrl+E">
-            Export every frame as a PDF with comments and the version history attached
-          </ContextMenuItem>
-          <ContextMenuItem start="file">Export Supercalifragilisticexpialidocious.json</ContextMenuItem>
-        </CaseMenu>
+          menu={(k) => (
+            <>
+              <k.Label>Export the selected frames of Spring launch as one file</k.Label>
+              <k.Item start="download" shortcut="Ctrl+E">
+                Export every frame as a PDF with comments and the version history attached
+              </k.Item>
+              <k.Item start="file">Export Supercalifragilisticexpialidocious.json</k.Item>
+            </>
+          )}
+        />
       </DemoCase>
 
       <DemoCase id="long-arabic" title="Long Arabic text" lang="ar">
-        <CaseMenu
+        <FileMenu
           name="ملف التصدير النهائي لإطلاق الربيع"
-          meta="ملف PDF، حجمه 4 ميجابايت، مشترك مع فريق التصميم كامل"
+          meta="ملف PDF، حجمه 4 ميجابايت، مشترك مع كل فريق التصميم"
           more="إجراءات أكثر لملف التصدير"
           show="عرض قائمة ملف التصدير"
-          lang="ar"
-        >
-          <ContextMenuLabel>تصدير الإطارات المحددة من لوحة إطلاق الربيع في ملف واحد</ContextMenuLabel>
-          <ContextMenuItem start="download" shortcut="Ctrl+E">
-            تصدير كل الإطارات بصيغة PDF مع التعليقات وسجل النسخ
-          </ContextMenuItem>
-          <ContextMenuItem start="trash" tone="danger">
-            حذف كل الإطارات المحددة من اللوحة والمسودات
-          </ContextMenuItem>
-        </CaseMenu>
+          menu={(k) => (
+            <>
+              <k.Label>تصدير الإطارات المحددة من لوحة إطلاق الربيع في ملف واحد</k.Label>
+              <k.Item start="download" shortcut="Ctrl+E">
+                تصدير كل الإطارات بصيغة PDF مع التعليقات وسجل النسخ
+              </k.Item>
+              <k.Item start="trash" tone="danger">
+                حذف كل الإطارات المحددة من اللوحة والمسودات
+              </k.Item>
+            </>
+          )}
+        />
       </DemoCase>
 
       <DemoCase id="disabled" title="Disabled">
-        <CaseMenu name="Archive 2024" meta="Folder, read only" more="More actions for Archive 2024" show="Show menu for Archive 2024">
-          <ContextMenuItem start="external">Open folder</ContextMenuItem>
-          <ContextMenuItem start="edit" disabled>
-            Rename folder
-          </ContextMenuItem>
-          <ContextMenuCheckboxItem checked disabled>
-            Sync to this device
-          </ContextMenuCheckboxItem>
-          <ContextMenuSeparator />
-          <ContextMenuItem start="trash" tone="danger" disabled>
-            Delete folder
-          </ContextMenuItem>
-        </CaseMenu>
-        <CaseMenu name="Shared with you" meta="Folder, no menu here" more="More actions for Shared with you" show="" disabled>
-          <ContextMenuItem>Open folder</ContextMenuItem>
-        </CaseMenu>
+        <FileMenu
+          name="Archive 2024"
+          meta="Folder, read only"
+          more="More actions for Archive 2024"
+          show="Show menu for Archive 2024"
+          menu={(k) => (
+            <>
+              <k.Item start="external">Open folder</k.Item>
+              <k.Item start="edit" disabled>
+                Rename folder
+              </k.Item>
+              <k.CheckboxItem checked disabled>
+                Sync to this device
+              </k.CheckboxItem>
+              <k.Separator />
+              <k.Item start="trash" tone="danger" disabled>
+                Delete folder
+              </k.Item>
+            </>
+          )}
+        />
+        <FileMenu
+          name="Shared with you"
+          meta="Folder, no menu here"
+          more="More actions for Shared with you"
+          show=""
+          disabled
+          menu={(k) => <k.Item>Open folder</k.Item>}
+        />
       </DemoCase>
     </DemoPage>
   );

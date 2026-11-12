@@ -239,14 +239,42 @@ describe('ContextMenu', () => {
     expect(item.querySelector('[data-part="indicator"] svg')).not.toBeNull();
   });
 
-  it('the demo renders every case; every tile has a DropdownMenu with the same actions', () => {
+  it('the demo renders every case; each tile has a DropdownMenu with the same actions, in the same order', async () => {
+    const user = userEvent.setup();
     render(<ContextMenuDemo />);
     const cases = Array.from(document.querySelectorAll('[data-demo-case]')).map((c) => c.getAttribute('data-demo-case'));
     expect(cases).toEqual(['variants', 'one', 'many', 'too-many', 'long-text', 'long-arabic', 'disabled']);
-    const tiles = Array.from(document.querySelectorAll('[data-demo-case] [role="group"][tabindex="0"]'));
-    expect(tiles.length).toBeGreaterThan(0);
-    for (const t of tiles) expect(t.querySelector('[aria-haspopup="menu"]')).not.toBeNull();
     expect(document.querySelectorAll('[data-demo-case="variants"] [data-demo-trigger]')).toHaveLength(3);
+    const labels = (root: Element) =>
+      Array.from(root.querySelectorAll('[data-part="text"], [data-part="label"]')).map((el) => el.textContent);
+    for (const id of ['variants', 'many']) {
+      const tile = document.querySelector<HTMLElement>(`[data-demo-case="${id}"] [role="group"][tabindex="0"]`)!;
+      fireEvent.contextMenu(tile);
+      await waitFor(() => expect(rootEl()).not.toBeNull());
+      const fromContext = labels(rootEl()!);
+      await user.keyboard('{Escape}');
+      await waitFor(() => expect(rootEl()).toBeNull());
+      await user.click(tile.querySelector<HTMLElement>('[aria-haspopup="menu"]')!);
+      const dropdown = await waitFor(() => {
+        const el = document.querySelector('[data-ds="dropdown-menu"]');
+        expect(el).not.toBeNull();
+        return el!;
+      });
+      expect(labels(dropdown)).toEqual(fromContext);
+      await user.keyboard('{Escape}');
+      await waitFor(() => expect(document.querySelector('[data-ds="dropdown-menu"]')).toBeNull());
+    }
+  });
+
+  it('keys and right clicks inside an open DropdownMenu on the item do not open the context menu', async () => {
+    const user = userEvent.setup();
+    render(<ContextMenuDemo />);
+    const tile = document.querySelector<HTMLElement>('[data-demo-case="one"] [role="group"][tabindex="0"]')!;
+    await user.click(tile.querySelector<HTMLElement>('[aria-haspopup="menu"]')!);
+    const item = await screen.findByRole('menuitem', { name: /Download image/ });
+    fireEvent.contextMenu(item);
+    fireEvent.keyDown(item, { key: 'F10', shiftKey: true });
+    expect(rootEl()).toBeNull();
   });
 
   it('a demo Show menu button opens the menu of its tile', async () => {

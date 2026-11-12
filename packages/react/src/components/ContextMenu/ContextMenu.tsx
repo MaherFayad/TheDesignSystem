@@ -38,6 +38,9 @@ import {
   useMemo,
   type ComponentProps,
   type KeyboardEvent,
+  type MouseEvent,
+  type PointerEvent,
+  type SyntheticEvent,
   type ReactElement,
   type ReactNode,
 } from 'react';
@@ -133,15 +136,30 @@ function isMenuKey(event: KeyboardEvent): boolean {
 }
 
 /**
+ * True when the event reached the trigger through React from a portal (an
+ * open DropdownMenu inside the item), not from the item in the page.
+ */
+function fromPortal(event: SyntheticEvent): boolean {
+  return !(event.currentTarget as Node).contains(event.target as Node);
+}
+
+/**
  * The area that opens the menu: right click, a long press, or Shift+F10 and
  * the Menu key on the focused element inside it. Renders its child with
  * data-state open or closed.
  */
-export function ContextMenuTrigger({ children, onKeyDown, disabled = false, ...rest }: ContextMenuTriggerProps) {
+export function ContextMenuTrigger({
+  children,
+  onKeyDown,
+  onContextMenu,
+  onPointerDown,
+  disabled = false,
+  ...rest
+}: ContextMenuTriggerProps) {
   const onKey = useCallback(
     (event: KeyboardEvent<HTMLSpanElement>) => {
       onKeyDown?.(event);
-      if (event.defaultPrevented || disabled || !isMenuKey(event)) return;
+      if (event.defaultPrevented || disabled || !isMenuKey(event) || fromPortal(event)) return;
       event.preventDefault();
       const from = event.target as HTMLElement;
       const box = from.getBoundingClientRect();
@@ -159,7 +177,22 @@ export function ContextMenuTrigger({ children, onKeyDown, disabled = false, ...r
     [onKeyDown, disabled],
   );
   return (
-    <RadixMenu.Trigger {...rest} asChild disabled={disabled} onKeyDown={onKey}>
+    <RadixMenu.Trigger
+      {...rest}
+      asChild
+      disabled={disabled}
+      onKeyDown={onKey}
+      onContextMenu={(event: MouseEvent<HTMLSpanElement>) => {
+        onContextMenu?.(event);
+        // A right click inside a portal (an open DropdownMenu on the item) is not on the item: Radix skips a prevented event.
+        if (fromPortal(event)) event.preventDefault();
+      }}
+      onPointerDown={(event: PointerEvent<HTMLSpanElement>) => {
+        onPointerDown?.(event);
+        // The same for a long press: no context menu over another menu.
+        if (fromPortal(event) && event.pointerType !== 'mouse') event.preventDefault();
+      }}
+    >
       {children}
     </RadixMenu.Trigger>
   );
