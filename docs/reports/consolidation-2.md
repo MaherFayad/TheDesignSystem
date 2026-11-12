@@ -189,8 +189,68 @@ Declined, with the reason:
 
 ## Item 7. Contract suite
 
-RESULTS_PLACEHOLDER
+Full runs on the tree after item 6. Reports committed:
+`docs/reports/contract-react.json` and `docs/reports/contract-angular.json`.
+
+| Framework | Components | Passed | Failed | Skipped | Time |
+| --- | --- | --- | --- | --- | --- |
+| React | 107 manifests: 103 pass, 2 fail, 2 skip (Bidi, Theme) | 3291 | 3 | 143 | 44 min |
+| Angular | Button, Dialog, IconButton pass; Theme skips | 102 | 0 | 1 | 38 s |
+
+Consolidation 1 had 6 React failures (reflow at 320px for Meter,
+NotificationCenter and ScrollArea). All 6 pass now.
+
+Failures, with their owners:
+
+| Test | Failure | Owner | Notes |
+| --- | --- | --- | --- |
+| Popover: anatomy, neutral | Trigger 7, "Open popover on end", adds no open `[data-ds=popover]` | Popover owner (lane 6B) | Flaky: a rerun of Popover alone passes 44 of 44. The end placed trigger is the one to look at; it may open after the 5s poll or close on the scroll that brings it into view. |
+| Sidebar: axe, neutral light ar rtl | `target-size` (serious): the `#folder-8` item link in the `too-many` case is under 24px or too close to its neighbors | Sidebar owner (lane 7A) | Fails the same way in two reruns. Only in Neutral and only in rtl: Neutral opens at comfortable density. Not caused by this pass: the failure stays with the DemoGrid change reverted, Sidebar.css was not touched, and the token changes here keep the values each component had. The old report has no Sidebar, so this is its first full run. |
+| Sidebar: axe, neutral dark ar rtl | The same | Sidebar owner (lane 7A) | The same |
+
+The Angular gallery has field, input, title-bar and window-controls folders,
+but their manifests do not mark Angular `ready`, so the suite runs three
+components.
 
 ## For the lead
 
-LEAD_PLACEHOLDER
+- **Waiting on the owner:** whether `tsx` and `typescript` become runtime
+  dependencies of the CLI (item 4); the Arabic register for built in words
+  and a `text.ar` manifest key (HUMAN GATE 4); approval of Neutral, after
+  which it joins the contract suite's single runs.
+- **Orders to write:**
+  - List family popups: fold the MultiSelect and TagField popup CSS into
+    Combobox.css and its Desk recipe (lane 3D 1), with before and after
+    shots. Move `usePopupLayer` to `packages/react/src/internal/`.
+  - Small moves: `filterListBoxItems` and `matchShortcut` to
+    `packages/shared`, export `MarkedLabel` from ListBox and drop the
+    CommandPalette copy, the ProgressBar contrast test helper to a shared
+    test folder.
+  - Button family: `--_button-font-weight` and `--_button-decoration`, then
+    Sidebar, Navbar, Accordion and Stepper set them instead of writing
+    declarations; `label` required with `icon` on ToggleButton,
+    ToggleGroupItem and SegmentedControlItem.
+  - Tooltips where lanes marked them (IconButton default, Sidebar and Rail
+    collapsed items, Toolbar icon items, cut Tabs labels), with the Angular
+    Tooltip so the IconButton DOM stays equal in both frameworks.
+  - CloseButton swaps: Dialog and Drawer (with the Angular Dialog), SearchField
+    clear, Chip remove, Window close.
+  - Toolbar: pass the system `disabled` now that inert Buttons hand on
+    navigation keys, and drop `inertProps`.
+  - Button plays `press` on the web (the manifests now name it).
+  - Motion owner: the Neutral 150 to 200ms preset test; Stat plays
+    `number-roll`; loops get `pauseLoops` (order 1.21).
+- **For the owners named in item 7:** the Sidebar target size in Neutral rtl
+  and the flaky Popover end trigger.
+- **Gallery, outside this pass's files:** `gallery.css` should leave
+  `[data-part='link']` alone (batch 8-9, 2); a base path for the React
+  gallery so the docs can ship it (order 1.15, 2); `data-demo="narrow"`; a
+  ruling on English demo copy in rtl pages (the Dialog way is the
+  candidate).
+- **Routed:** `process.env.NODE_ENV` in DialogBase and Tooltip (order 1.13,
+  4); Slider on `formatNumber`; the Toast language gap; the ErrorState native
+  role; SkeletonGroup needs an order.
+- **STATE.md:** this pass changed no order's status. Orders 1.13 to 1.15
+  asked for STATE lines; they are yours.
+- **GoBanana is not in this container**, so no copy or source check against
+  it was possible (lanes 1D and 7C asked).
