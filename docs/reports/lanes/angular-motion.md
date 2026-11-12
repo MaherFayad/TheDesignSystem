@@ -312,7 +312,23 @@ What differs, and why:
 
 ## 6. Screenshots
 
-SHOTS_PLACEHOLDER
+Fresh captures of both galleries, after every port and fix:
+`npm run shots -- --framework angular --url http://localhost:5302 --ready --no-verify`
+(984 shots), the same for React on 5301 (1782 shots), then
+`npm run shots -- --compare react angular`:
+
+- 984 pairs, 984 pass, 0 fail. Every pair has 0 differing pixels (0.000
+  percent); there is no difference to explain.
+- Only in React: 798, the components Angular does not have. Only in
+  Angular: 0.
+- Table: `docs/reports/shots/matrix/compare-react-angular/index.md`. The kept
+  subsets of both matrix folders are refreshed with these captures.
+
+The matrix runs with animations off and reduced motion, so it proves the new
+DOM hooks (the switch track span, the ToggleGroup pill span, the row fill
+spans, the RadioCard dot, the digit layers, the bubble spans, the hidden
+count copies) draw nothing at rest that React does not. The motion itself is
+proven by the timing table in section 5.
 
 ## 7. Not ported, and why
 
