@@ -61,7 +61,7 @@ No adb. No iOS build.
 | A1 to A5 | Angular batches 1 to 5 | ds-angular | angular | open | |
 | 1.10 | Neutral style | ds-style | all | running | |
 | 1.11 | Motion catalog | ds-style | all | open | |
-| 1.12 | Checker | ds-qa | all | running | |
+| 1.12 | Checker | ds-qa | all | built, review open | f6f29a5 |
 | 1.13 | Registry | ds-docs | react | open | |
 | 1.14 | CLI | ds-docs | all | open | |
 | 1.15 | Docs site | ds-docs | all | open | |
