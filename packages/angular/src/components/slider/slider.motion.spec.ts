@@ -127,6 +127,24 @@ describe('slider motion, order 1.22', () => {
     });
   }
 
+  it('slider-bubble: a quick click on the track rolls, as React, even when the pointer lets go before the render', async () => {
+    const { root, settle } = await setup();
+    const control = root('one').querySelector('[data-part="control"]') as HTMLElement;
+    const rect = { x: 0, y: 0, left: 0, top: 0, width: 100, height: 20, right: 100, bottom: 20, toJSON: () => ({}) } as DOMRect;
+    vi.spyOn(control, 'getBoundingClientRect').mockReturnValue(rect);
+    vi.spyOn(control.querySelector('[data-part="track"]') as HTMLElement, 'getBoundingClientRect').mockReturnValue(rect);
+    const track = control.querySelector('[data-part="track"]') as HTMLElement;
+    take();
+    // Down and up in one task: no render runs while the pointer is held.
+    pointer(track, 'pointerdown', 70);
+    pointer(track, 'pointerup', 70);
+    await settle();
+    const thumb = root('one').querySelector('[role="slider"]') as HTMLElement;
+    expect(thumb.getAttribute('aria-valuenow')).toBe('70');
+    const bubble = thumb.querySelector(':scope > span') as HTMLElement;
+    expect(take().some((c) => bubble.contains(c.el))).toBe(true);
+  });
+
   it("slider-nudge: a key past the end nudges the thumb with React's shake arguments, added to the lift", async () => {
     const { root, settle, motion } = await setup();
     const thumb = root('range').querySelector('[data-thumb="end"]') as HTMLElement;

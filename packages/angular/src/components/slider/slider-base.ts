@@ -269,6 +269,12 @@ export abstract class DsSliderBase {
   /** slider-bubble: the value and text each bubble shows, and when the last roll started. */
   private shownDigits: { value: number; text: string }[] = [];
   private lastRoll = -Infinity;
+  /**
+   * True when the last value change came from a held pointer. React reads
+   * `dragging` in the same render as the change; the render effect here can
+   * run after a quick click has already let go, so the change remembers it.
+   */
+  private changedByPointer = false;
 
   protected readonly labelId = `ds-slider-${++nextId}-label`;
   readonly dragging = signal(false);
@@ -418,7 +424,9 @@ export abstract class DsSliderBase {
       const format = this.format();
       const dragging = this.dragging();
       const hosts = this.digitHosts().map((r) => r.nativeElement);
-      untracked(() => this.syncBubbles(values, format, dragging, hosts));
+      const held = dragging || this.changedByPointer;
+      this.changedByPointer = false;
+      untracked(() => this.syncBubbles(values, format, held, hosts));
     });
     afterRenderEffect(() => {
       const values = this.values();
@@ -604,6 +612,7 @@ export abstract class DsSliderBase {
       const value = this.valueFromPointer(event);
       const index = closestValueIndex(this.values(), value);
       if (this.raiseActiveThumb) this.activeThumb.set(index);
+      this.changedByPointer = true;
       this.updateValues(value, index, false);
     }
   }
@@ -612,6 +621,7 @@ export abstract class DsSliderBase {
     this.nudgePastEnd(event);
     const target = event.target as HTMLElement;
     if (this.isDisabled() || !target.hasPointerCapture?.(event.pointerId)) return;
+    this.changedByPointer = true;
     this.updateValues(this.valueFromPointer(event), this.valueIndexToChange, false);
   }
 
