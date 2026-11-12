@@ -2608,6 +2608,255 @@
     "since": "0.1.0"
   },
   {
+    "name": "SearchField",
+    "kind": "component",
+    "family": "forms",
+    "summary": "A search box: a search icon, a search input, a clear button while there is a query, an optional end slot and a loading state.",
+    "useWhen": [
+      "Filtering a list, a table or a grid on the same page as the person types",
+      "A search box in a toolbar, a sidebar or a menu that runs a search on Enter",
+      "A query the person often clears and types again"
+    ],
+    "avoidWhen": [
+      "Picking one value from a list of known options while typing",
+      "A command palette that runs actions",
+      "A plain text value that is not a query"
+    ],
+    "insteadUse": {
+      "Picking one value from a list of known options while typing": "Combobox",
+      "Typing with suggestions that fill the box": "Autocomplete",
+      "A command palette that runs actions": "CommandMenu",
+      "A plain text value that is not a query": "Input"
+    },
+    "anatomy": [
+      "root",
+      "icon",
+      "control",
+      "clear",
+      "end",
+      "spinner",
+      "status"
+    ],
+    "slots": {
+      "end": {
+        "accepts": [
+          "IconButton",
+          "Kbd",
+          "text"
+        ],
+        "max": 1
+      }
+    },
+    "props": {
+      "size": {
+        "type": [
+          "xs",
+          "sm",
+          "md",
+          "lg"
+        ],
+        "default": "md",
+        "description": "Height from size.control: 24, 28, 32 and 44 px at default density. The clear button is xs, and sm at lg."
+      },
+      "shape": {
+        "type": [
+          "default",
+          "pill"
+        ],
+        "default": "default",
+        "description": "default takes radius.control from the style, a pill in Studio and Desk. pill is always fully round."
+      },
+      "value": {
+        "type": "string",
+        "description": "The query, controlled. Pair it with onValueChange."
+      },
+      "defaultValue": {
+        "type": "string",
+        "default": "",
+        "description": "The first query, uncontrolled."
+      },
+      "onValueChange": {
+        "type": "function",
+        "description": "Called with the new query on every edit, and with an empty string when the clear button or Escape clears it."
+      },
+      "onSubmit": {
+        "type": "function",
+        "description": "Called with the query on Enter. A form around the field still submits as usual."
+      },
+      "onClear": {
+        "type": "function",
+        "description": "Called after the clear button or Escape clears the query."
+      },
+      "clearLabel": {
+        "type": "string",
+        "default": "Clear search",
+        "description": "The accessible name of the clear button."
+      },
+      "loading": {
+        "type": "boolean",
+        "default": false,
+        "description": "Results are on their way: a spinner in the end slot, aria-busy on the input and a polite status."
+      },
+      "loadingLabel": {
+        "type": "string",
+        "default": "Searching",
+        "description": "What the status says while loading."
+      },
+      "end": {
+        "type": "node",
+        "description": "Content after the clear button: a filter IconButton at size xs, a keyboard hint. Replaced by the spinner while loading."
+      },
+      "invalid": {
+        "type": "boolean",
+        "description": "Inside a Field it follows the Field."
+      },
+      "disabled": {
+        "type": "boolean",
+        "description": "Native disabled on the input. Inside a Field it follows the Field. Hides the clear button."
+      },
+      "readOnly": {
+        "type": "boolean",
+        "description": "Inside a Field it follows the Field. Hides the clear button; Escape does not clear."
+      },
+      "rootProps": {
+        "type": "object",
+        "description": "Props for the root box. className and style also go to the root; every other native prop and the ref go to the input."
+      }
+    },
+    "states": [
+      "data-empty",
+      "data-invalid",
+      "data-disabled",
+      "data-readonly",
+      "data-loading"
+    ],
+    "a11y": {
+      "role": "searchbox, from the native input with type search. Wrap a site or app search in a form or an element with role search; a filter for one list needs no landmark.",
+      "focus": "The input is a tab stop, then the clear button while it shows, then any end content. Clicking the box outside a button focuses the input. Clearing returns focus to the input.",
+      "keys": {
+        "Tab": "Moves focus to the input, then to the clear button and the end content",
+        "Shift+Tab": "Moves focus back",
+        "Escape": "Clears the query. On an empty box it does nothing here and bubbles, so a dialog or a menu around it closes",
+        "Enter": "Calls onSubmit with the query; a form around it submits"
+      },
+      "announce": "Name from the Field label or aria-label. While loading, a polite status says the loading label once, and the input is aria-busy. The clear button is named by clearLabel.",
+      "native": {
+        "accessibilityRole": "search",
+        "accessibilityState": [
+          "disabled",
+          "busy"
+        ]
+      },
+      "notes": [
+        "The browser's own clear button is hidden, so only one clear button shows.",
+        "No native title attribute. A placeholder says what is searched, never instead of a name.",
+        "Results that update as the person types: announce the count in a polite status of the page, after typing pauses, not on every key.",
+        "The clear part is an IconButton until CloseButton (order 1.1.9) lands; the part name stays clear."
+      ]
+    },
+    "content": {
+      "en": {
+        "label": "Search plus what is searched: Search boards, Search members.",
+        "placeholder": "The same words as the name, or what can be typed: Search by name or email.",
+        "clearLabel": "Clear search.",
+        "loadingLabel": "Searching."
+      },
+      "ar": {
+        "label": "البحث في اللوحات، البحث في الأعضاء",
+        "placeholder": "ابحث بالاسم أو البريد",
+        "clearLabel": "مسح البحث",
+        "loadingLabel": "جار البحث"
+      }
+    },
+    "tokens": [
+      "size.control.xs",
+      "size.control.sm",
+      "size.control.md",
+      "size.control.lg",
+      "size.target-min",
+      "size.icon.sm",
+      "space.3xs",
+      "space.2xs",
+      "space.xs",
+      "space.s",
+      "space.m",
+      "space.2xl",
+      "font.size.s",
+      "font.size.fixed-m",
+      "font.leading.snug",
+      "font.family.sans",
+      "radius.control",
+      "radius.pill",
+      "border.width.default",
+      "border.width.strong",
+      "color.border.control",
+      "color.border.control-hover",
+      "color.state.danger.text",
+      "color.text.default",
+      "color.text.muted",
+      "color.bg.overlay-5",
+      "color.bg.overlay-20",
+      "elevation.input-focus",
+      "focus.shadow.ring",
+      "duration.base",
+      "duration.spin",
+      "ease.default",
+      "opacity.disabled"
+    ],
+    "motion": "spinner",
+    "frameworks": {
+      "react": {
+        "status": "ready",
+        "behavior": "hand built on Input with type search",
+        "example": "SearchField.demo.tsx",
+        "note": "The root is the bordered box; the nested Input is the control part and keeps the Field wiring and the ref. The focus glow fades in as on Input; the spinner stops under reduced motion."
+      },
+      "angular": {
+        "status": "planned"
+      },
+      "native": {
+        "status": "planned"
+      }
+    },
+    "styles": {
+      "studio": "The Input look: a bordered transparent pill, the soft glow and the 2px ring on focus, a muted search icon at the start.",
+      "desk": "The same pill and glow, in Instrument Sans.",
+      "neutral": "Takes the tokens of the Neutral style, no recipe."
+    },
+    "mistakes": [
+      {
+        "wrong": "An Input with type search and a second clear button next to the browser's own",
+        "right": "SearchField, which hides the native one"
+      },
+      {
+        "wrong": "Escape that clears and closes the dialog around the field in one press",
+        "right": "The first Escape clears; only an Escape on the empty box reaches the dialog"
+      },
+      {
+        "wrong": "A placeholder as the only name",
+        "right": "aria-label in a toolbar, a Field label in a form"
+      },
+      {
+        "wrong": "Announcing the result count on every key",
+        "right": "One polite status after typing pauses"
+      }
+    ],
+    "contract": {
+      "optionalParts": [
+        "spinner",
+        "status"
+      ],
+      "keys": {
+        "Escape": {
+          "focus": "input",
+          "case": "one",
+          "expect": "value-changes"
+        }
+      }
+    },
+    "since": "0.1.0"
+  },
+  {
     "name": "Theme",
     "kind": "component",
     "family": "foundations",

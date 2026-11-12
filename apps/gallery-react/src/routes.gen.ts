@@ -18,6 +18,7 @@ export const routes: DemoRoute[] = [
   { name: 'Input', slug: 'input', load: () => import('../../../packages/react/src/components/Input/Input.demo') },
   { name: 'InputGroup', slug: 'input-group', load: () => import('../../../packages/react/src/components/InputGroup/InputGroup.demo') },
   { name: 'Link', slug: 'link', load: () => import('../../../packages/react/src/components/Link/Link.demo') },
+  { name: 'SearchField', slug: 'search-field', load: () => import('../../../packages/react/src/components/SearchField/SearchField.demo') },
   { name: 'TitleBar', slug: 'title-bar', load: () => import('../../../packages/react/src/components/TitleBar/TitleBar.demo') },
   { name: 'Toast', slug: 'toast', load: () => import('../../../packages/react/src/components/Toast/Toast.demo') },
   { name: 'Window', slug: 'window', load: () => import('../../../packages/react/src/components/Window/Window.demo') },
