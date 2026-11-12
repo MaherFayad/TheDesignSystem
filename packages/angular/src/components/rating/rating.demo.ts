@@ -17,7 +17,7 @@ const arValueLabel = (value: number, max: number) => (value > 0 ? `${value} من
   template: `
     <div data-demo="page">
       <section data-demo="case" data-demo-case="variants" heading="Sizes, tones, ten stars and Arabic">
-        <div data-demo="grid" style="grid-template-columns: repeat(auto-fill, minmax(18rem, 1fr));">
+        <div data-demo="grid" style="grid-template-columns: repeat(auto-fill, minmax(min(18rem, 100%), 1fr));">
           @for (tone of tones; track tone) {
             @for (size of sizes; track size) {
               <div style="display: grid; align-content: start; gap: var(--ds-space-2xs); justify-items: start;">

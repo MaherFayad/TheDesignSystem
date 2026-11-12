@@ -204,4 +204,18 @@ describe('DsRating', () => {
     await settle();
     expect(inputs[3]?.checked).toBe(true);
   });
+
+  it('dispatches a click on the hidden radio after a pick, as Radix, so a form sees the change', async () => {
+    const { fixture, stars, settle } = await setup();
+    const form = fixture.nativeElement.querySelector('form') as HTMLFormElement;
+    const seen: string[] = [];
+    form.addEventListener('click', (e) => {
+      const t = e.target as HTMLInputElement;
+      if (t.type === 'radio') seen.push(`${t.value}:${t.checked}`);
+    });
+    stars('inform')[3]?.click();
+    await settle();
+    expect(seen).toContain('4:true');
+    expect(seen).toContain('2:false');
+  });
 });
