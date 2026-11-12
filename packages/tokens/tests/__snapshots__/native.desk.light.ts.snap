@@ -280,13 +280,19 @@ export const deskLight: Theme = {
       fill: '#ffd84d',
       'fill-hover': '#ffcf26',
       'fill-pressed': '#f5c400',
+      'on-surface': '#7a5c00',
       text: '#111827',
+      tint: 'rgba(255, 216, 77, 0.24)',
+      'tint-hover': 'rgba(255, 216, 77, 0.36)',
     },
     state: {
       danger: {
         border: '#dc2626',
         fill: '#ef4444',
+        'on-solid': '#ffffff',
         'on-tint': '#991b1b',
+        solid: '#b91c1c',
+        'solid-hover': '#991b1b',
         text: '#b91c1c',
         'tint-10': 'rgba(239, 68, 68, 0.1)',
         'tint-20': 'rgba(239, 68, 68, 0.2)',
@@ -294,7 +300,10 @@ export const deskLight: Theme = {
       info: {
         border: '#4338ca',
         fill: '#4338ca',
+        'on-solid': '#ffffff',
         'on-tint': '#4338ca',
+        solid: '#4338ca',
+        'solid-hover': '#3730a3',
         text: '#4338ca',
         'tint-10': 'rgba(67, 56, 202, 0.1)',
         'tint-20': 'rgba(67, 56, 202, 0.2)',
@@ -302,7 +311,10 @@ export const deskLight: Theme = {
       success: {
         border: '#047857',
         fill: '#047857',
-        'on-tint': '#047857',
+        'on-solid': '#ffffff',
+        'on-tint': '#065f46',
+        solid: '#047857',
+        'solid-hover': '#065f46',
         text: '#065f46',
         'tint-10': 'rgba(52, 211, 153, 0.1)',
         'tint-20': 'rgba(52, 211, 153, 0.2)',
@@ -310,7 +322,10 @@ export const deskLight: Theme = {
       warning: {
         border: '#b45309',
         fill: '#b45309',
+        'on-solid': '#ffffff',
         'on-tint': '#92400e',
+        solid: '#b45309',
+        'solid-hover': '#92400e',
         text: '#92400e',
         'tint-10': 'rgba(245, 158, 11, 0.1)',
         'tint-20': 'rgba(245, 158, 11, 0.2)',
@@ -492,6 +507,11 @@ export const deskLight: Theme = {
       shadowRadius: 16,
     },
   },
+  field: {
+    label: {
+      width: 100,
+    },
+  },
   focus: {
     shadow: {
       halo: {
@@ -556,6 +576,9 @@ export const deskLight: Theme = {
       '5xl': 28,
       '6xl': 40,
       '7xl': 56,
+      fixed: {
+        m: 16,
+      },
       l: 14,
       m: 13,
       s: 12,
@@ -637,6 +660,9 @@ export const deskLight: Theme = {
     width: {
       min: 200,
     },
+  },
+  opacity: {
+    disabled: 0.38,
   },
   palette: {
     art: {

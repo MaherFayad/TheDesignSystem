@@ -378,7 +378,7 @@ Value conversions:
 | `--st-spotlight-w` | `spotlight.width` | `640px` | GB studio-tokens.css (theme free) |  |
 | `--st-success` | `color.state.success.fill` | dark `#34d399`, light `#047857` | GB studio-tokens.css (dark and light) | Dark: color.state.success.text aliases the fill. Light: the text is #065f46 (FK2 --success-text-muted, A11y change). |
 | `--st-success-10` | `color.state.success.tint-10` | `rgba(52, 211, 153, 0.1)` | GB studio-tokens.css (dark and light) |  |
-| `--st-success-text` | `color.state.success.on-tint` | dark `#d1fae5`, light `#047857` | GB studio-tokens.css (dark and light) | Text placed on the 10% tint. |
+| `--st-success-text` | `color.state.success.on-tint` | dark `#d1fae5`, light `#047857` | GB studio-tokens.css (dark and light) | Text placed on the tint. Light: #065f46 (FK2 --success-text-muted), A11y change: the GB light value measured 3.99:1 on the 20% hover tint. |
 | `--st-target-min` | `size.target-min` | `24px` | GB studio-tokens.css (theme free) |  |
 | `--st-text` | `color.text.default` | dark `#ededed`, light `#1f2937` | GB studio-tokens.css (dark and light) |  |
 | `--st-text-2xl` | `font.size.2xl` | `clamp(16px, calc(15.257px + 0.19vw), 18px)` | GB studio-tokens.css (theme free) | Fluid. The build rebuilds the clamp() from min and max between the 380px and 1440px viewports, so the middle term can differ in the third decimal. |
@@ -519,6 +519,14 @@ not part of the system yet.
 | `--chart-segment-empty` | `chart.segment.empty` | `var(--overlay-5)` | FK2 globals.css | Alias. --chart-segment-empty-border has the same value and folds in. |
 | `--chart-track-bg` | `chart.track.bg` | `var(--overlay-5)` | FK2 globals.css | Alias. |
 
+## Other sources
+
+Values taken from source CSS that is not a token file.
+
+| Old name | New name | Value | Source | Notes |
+| --- | --- | --- | --- | --- |
+| `.st-btn:disabled, .st-btn[aria-disabled=true] { opacity: 0.38 }` | `opacity.disabled` | `0.38` | GB studio-components.css | Also .st-menu-item disabled. Actions use aria-disabled, text entry native disabled; both draw with it. |
+
 ## Names added to the contract
 
 Names `packages/tokens/src/contract.json` adds to the table in section 3.6 of
@@ -528,11 +536,14 @@ PLAN.md, so every source token has a home:
 - `color.material`: `glass-flat`, `glass-border`, `glass-hover`
 - `color.border`: `control-hover`
 - `color.text`: `placeholder`, `dim`
-- `color.state`: `danger.on-tint`, `warning.on-tint`, `success.on-tint`, `info.on-tint`
+- `color.primary`: `tint`, `tint-hover`, `on-surface`
+- `color.state`: `danger.on-tint`, `danger.solid`, `danger.solid-hover`, `danger.on-solid`, `warning.on-tint`, `warning.solid`, `warning.solid-hover`, `warning.on-solid`, `success.on-tint`, `success.solid`, `success.solid-hover`, `success.on-solid`, `info.on-tint`, `info.solid`, `info.solid-hover`, `info.on-solid`
 - `color.chart`: `muted`, `ordinal.1`, `ordinal.2`, `ordinal.3`, `ordinal.4`, `ordinal.5`, `ordinal.6`, `on-dark`, `on-light`
 - `space`: `px`
+- `font.size`: `fixed.m`
 - `font.leading`: `display`, `arabic.tight`, `arabic.snug`, `arabic.normal`, `arabic.relaxed`
 - `font.tracking`: `display`, `none`
 - `duration`: `shimmer`, `spin`, `roll`
 - `delay`: `peek-hide`, `reveal-step`
 - `ease`: `default`, `in`, `out`
+- `opacity`: `disabled`

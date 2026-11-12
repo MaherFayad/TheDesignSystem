@@ -139,10 +139,30 @@ export const CONTRAST_PAIRS: ContrastData = {
       (s): PairGroup => ({
         use: `${s} text on its tint (alerts, chips)`,
         fg: [`color.state.${s}.on-tint`],
-        bg: over([`color.state.${s}.tint-10`, `color.state.${s}.tint-20`], ['color.bg.surface', 'color.bg.surface-2']),
+        bg: over([`color.state.${s}.tint-10`, `color.state.${s}.tint-20`], ['color.bg.body', 'color.bg.surface', 'color.bg.surface-2']),
         min: 4.5,
       }),
     ),
+    ...STATES.map(
+      (s): PairGroup => ({
+        use: `${s} solid button label`,
+        fg: [`color.state.${s}.on-solid`],
+        bg: [`color.state.${s}.solid`, `color.state.${s}.solid-hover`],
+        min: 4.5,
+      }),
+    ),
+    {
+      use: 'primary as text and icon colour on a surface',
+      fg: ['color.primary.on-surface'],
+      bg: CONTROL_SURFACES,
+      min: 4.5,
+    },
+    {
+      use: 'text on the soft primary fill (emphasis soft)',
+      fg: ['color.text.default', 'color.primary.on-surface'],
+      bg: over(['color.primary.tint', 'color.primary.tint-hover'], ['color.bg.body', 'color.bg.surface']),
+      min: 4.5,
+    },
     {
       use: 'destructive button label at rest',
       fg: ['color.state.danger.text'],

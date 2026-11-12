@@ -280,13 +280,19 @@ export const deskDark: Theme = {
       fill: '#ffd84d',
       'fill-hover': '#ffe170',
       'fill-pressed': '#f2c832',
+      'on-surface': '#ffd84d',
       text: '#111827',
+      tint: 'rgba(255, 216, 77, 0.12)',
+      'tint-hover': 'rgba(255, 216, 77, 0.2)',
     },
     state: {
       danger: {
         border: '#f87171',
         fill: '#ef4444',
+        'on-solid': '#111827',
         'on-tint': '#fecaca',
+        solid: '#f87171',
+        'solid-hover': '#fca5a5',
         text: '#f87171',
         'tint-10': 'rgba(239, 68, 68, 0.1)',
         'tint-20': 'rgba(239, 68, 68, 0.2)',
@@ -294,7 +300,10 @@ export const deskDark: Theme = {
       info: {
         border: '#a78bfa',
         fill: '#a78bfa',
+        'on-solid': '#111827',
         'on-tint': '#c4b5fd',
+        solid: '#a78bfa',
+        'solid-hover': '#c4b5fd',
         text: '#c4b5fd',
         'tint-10': 'rgba(167, 139, 250, 0.1)',
         'tint-20': 'rgba(167, 139, 250, 0.2)',
@@ -302,7 +311,10 @@ export const deskDark: Theme = {
       success: {
         border: '#34d399',
         fill: '#34d399',
+        'on-solid': '#111827',
         'on-tint': '#d1fae5',
+        solid: '#34d399',
+        'solid-hover': '#6ee7b7',
         text: '#34d399',
         'tint-10': 'rgba(52, 211, 153, 0.1)',
         'tint-20': 'rgba(52, 211, 153, 0.2)',
@@ -310,7 +322,10 @@ export const deskDark: Theme = {
       warning: {
         border: '#f59e0b',
         fill: '#f59e0b',
+        'on-solid': '#111827',
         'on-tint': '#fde68a',
+        solid: '#f59e0b',
+        'solid-hover': '#fbbf24',
         text: '#f59e0b',
         'tint-10': 'rgba(245, 158, 11, 0.1)',
         'tint-20': 'rgba(245, 158, 11, 0.2)',
@@ -492,6 +507,11 @@ export const deskDark: Theme = {
       shadowRadius: 16,
     },
   },
+  field: {
+    label: {
+      width: 100,
+    },
+  },
   focus: {
     shadow: {
       halo: {
@@ -556,6 +576,9 @@ export const deskDark: Theme = {
       '5xl': 28,
       '6xl': 40,
       '7xl': 56,
+      fixed: {
+        m: 16,
+      },
       l: 14,
       m: 13,
       s: 12,
@@ -637,6 +660,9 @@ export const deskDark: Theme = {
     width: {
       min: 200,
     },
+  },
+  opacity: {
+    disabled: 0.38,
   },
   palette: {
     art: {

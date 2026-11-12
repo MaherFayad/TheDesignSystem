@@ -571,6 +571,35 @@
           "alpha": 1,
           "hex": "#7a5c00"
         }
+      },
+      "tint": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [1, 0.8471, 0.302],
+          "alpha": 0.24,
+          "hex": "#ffd84d"
+        },
+        "$description": "Soft fill of the yellow primary on light (emphasis soft)."
+      },
+      "tint-hover": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [1, 0.8471, 0.302],
+          "alpha": 0.36,
+          "hex": "#ffd84d"
+        }
+      },
+      "on-surface": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [0.4784, 0.3608, 0],
+          "alpha": 1,
+          "hex": "#7a5c00"
+        },
+        "$description": "The yellow fails as text on light, so the dark gold of the primary border (GB light) carries it: 5.10:1 or more on body to surface-3, 4.82:1 or more on the tints."
       }
     },
     "accent": {
@@ -813,6 +842,35 @@
             "alpha": 1,
             "hex": "#991b1b"
           }
+        },
+        "solid": {
+          "$type": "color",
+          "$value": {
+            "colorSpace": "srgb",
+            "components": [0.7255, 0.1098, 0.1098],
+            "alpha": 1,
+            "hex": "#b91c1c"
+          },
+          "$description": "Solid fill for a button. Light: a deep tone with white text."
+        },
+        "solid-hover": {
+          "$type": "color",
+          "$value": {
+            "colorSpace": "srgb",
+            "components": [0.6, 0.1059, 0.1059],
+            "alpha": 1,
+            "hex": "#991b1b"
+          }
+        },
+        "on-solid": {
+          "$type": "color",
+          "$value": {
+            "colorSpace": "srgb",
+            "components": [1, 1, 1],
+            "alpha": 1,
+            "hex": "#ffffff"
+          },
+          "$description": "Text and icons on the solid fill, 4.5:1 or more on solid and solid-hover."
         }
       },
       "warning": {
@@ -866,6 +924,33 @@
             "alpha": 1,
             "hex": "#92400e"
           }
+        },
+        "solid": {
+          "$type": "color",
+          "$value": {
+            "colorSpace": "srgb",
+            "components": [0.7059, 0.3255, 0.0353],
+            "alpha": 1,
+            "hex": "#b45309"
+          }
+        },
+        "solid-hover": {
+          "$type": "color",
+          "$value": {
+            "colorSpace": "srgb",
+            "components": [0.5725, 0.251, 0.0549],
+            "alpha": 1,
+            "hex": "#92400e"
+          }
+        },
+        "on-solid": {
+          "$type": "color",
+          "$value": {
+            "colorSpace": "srgb",
+            "components": [1, 1, 1],
+            "alpha": 1,
+            "hex": "#ffffff"
+          }
         }
       },
       "success": {
@@ -915,13 +1000,68 @@
           "$type": "color",
           "$value": {
             "colorSpace": "srgb",
+            "components": [0.0235, 0.3725, 0.2745],
+            "alpha": 1,
+            "hex": "#065f46"
+          },
+          "$description": "A11y change. GB light --st-success-text (#047857) measured 3.99:1 on the 20% hover tint over the light body; FK2 --success-text-muted reaches 5.58:1 or more on both tints."
+        },
+        "solid": {
+          "$type": "color",
+          "$value": {
+            "colorSpace": "srgb",
             "components": [0.0157, 0.4706, 0.3412],
             "alpha": 1,
             "hex": "#047857"
           }
+        },
+        "solid-hover": {
+          "$type": "color",
+          "$value": {
+            "colorSpace": "srgb",
+            "components": [0.0235, 0.3725, 0.2745],
+            "alpha": 1,
+            "hex": "#065f46"
+          }
+        },
+        "on-solid": {
+          "$type": "color",
+          "$value": {
+            "colorSpace": "srgb",
+            "components": [1, 1, 1],
+            "alpha": 1,
+            "hex": "#ffffff"
+          }
         }
       },
       "info": {
+        "solid": {
+          "$type": "color",
+          "$value": {
+            "colorSpace": "srgb",
+            "components": [0.2627, 0.2196, 0.7922],
+            "alpha": 1,
+            "hex": "#4338ca"
+          }
+        },
+        "solid-hover": {
+          "$type": "color",
+          "$value": {
+            "colorSpace": "srgb",
+            "components": [0.2157, 0.1882, 0.6392],
+            "alpha": 1,
+            "hex": "#3730a3"
+          }
+        },
+        "on-solid": {
+          "$type": "color",
+          "$value": {
+            "colorSpace": "srgb",
+            "components": [1, 1, 1],
+            "alpha": 1,
+            "hex": "#ffffff"
+          }
+        },
         "fill": {
           "$type": "color",
           "$value": {
