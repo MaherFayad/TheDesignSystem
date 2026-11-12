@@ -3,8 +3,9 @@ import { userEvent } from '@testing-library/user-event';
 import { useState } from 'react';
 import { beforeAll, describe, expect, it, vi } from 'vitest';
 import { Theme } from '../../theme/Theme';
+import { Button } from '../Button';
 import ListBoxDemo from './ListBox.demo';
-import { ListBox, listBoxOptionId, type ListBoxOption } from './index';
+import { ListBox, filterListBoxItems, listBoxOptionId, type ListBoxOption } from './index';
 import { sortOptions } from './samples';
 
 beforeAll(() => {
@@ -196,6 +197,86 @@ describe('ListBox', () => {
 
   it('gives stable safe ids for any value', () => {
     expect(listBoxOptionId('l', 'a b/é')).toBe('l-option-a_20b_2f_e9');
+    expect(listBoxOptionId('l', 'a ')).not.toBe(listBoxOptionId('l', 'a_20'));
+  });
+
+  it('with virtualFocus, scrolls the option the owner highlights into view, not one the pointer lit', async () => {
+    const user = userEvent.setup();
+    const spy = vi.spyOn(Element.prototype, 'scrollIntoView');
+    function Owner({ value }: { value: string }) {
+      const [hl, setHl] = useState<string | null>(value);
+      return <ListBox aria-label="Folders" items={rows} virtualFocus highlightedValue={hl} onHighlightedValueChange={setHl} />;
+    }
+    const { rerender } = render(<Owner value="inbox" />);
+    spy.mockClear();
+    rerender(<Owner value="inbox" />);
+    await user.hover(option('Spam'));
+    expect(spy).not.toHaveBeenCalled();
+    spy.mockRestore();
+    const spy2 = vi.spyOn(Element.prototype, 'scrollIntoView');
+    function Keyed() {
+      const [hl, setHl] = useState<string | null>(null);
+      return (
+        <>
+          <Button onClick={() => setHl('spam')}>
+            Move
+          </Button>
+          <ListBox aria-label="Folders" items={rows} virtualFocus highlightedValue={hl} />
+        </>
+      );
+    }
+    render(<Keyed />);
+    await user.click(screen.getByRole('button', { name: 'Move' }));
+    expect(spy2).toHaveBeenCalled();
+    spy2.mockRestore();
+  });
+
+  it('can be moved through when disabled', async () => {
+    const user = userEvent.setup();
+    render(<ListBox aria-label="Folders" items={rows} disabled />);
+    await user.tab();
+    await user.keyboard('{End}');
+    expect(document.activeElement).toBe(option('Spam'));
+  });
+
+  it('clears the highlight when focus leaves, and Tab comes back to the selected option', async () => {
+    const user = userEvent.setup();
+    render(
+      <>
+        <ListBox aria-label="Folders" items={rows} defaultValue="sent" />
+        <Button>After</Button>
+      </>,
+    );
+    await user.tab();
+    await user.keyboard('{End}');
+    await user.tab();
+    expect(option('Spam').hasAttribute('data-highlighted')).toBe(false);
+    await user.tab({ shift: true });
+    expect(document.activeElement).toBe(option('Sent'));
+  });
+
+  it('ignores keys with virtualFocus', () => {
+    const onHighlight = vi.fn();
+    render(<ListBox aria-label="Folders" items={rows} virtualFocus onHighlightedValueChange={onHighlight} />);
+    screen.getByRole('listbox').dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: true }));
+    expect(onHighlight).not.toHaveBeenCalled();
+  });
+
+  it('filters items with groups kept and empty groups dropped', () => {
+    const out = filterListBoxItems(
+      [
+        { label: 'Saudi Arabia', options: [{ value: 'abha', label: 'Abha' }, { value: 'taif', label: 'Taif' }] },
+        { label: 'Gulf', options: [{ value: 'doha', label: 'Doha' }] },
+        { value: 'tabuk', label: 'Tabuk' },
+        { value: 'ruh', label: 'Riyadh', keywords: ['RUH'] },
+      ],
+      'ab',
+    );
+    expect(out).toEqual([
+      { label: 'Saudi Arabia', options: [{ value: 'abha', label: 'Abha' }] },
+      { value: 'tabuk', label: 'Tabuk' },
+    ]);
+    expect(filterListBoxItems([{ value: 'ruh', label: 'Riyadh', keywords: ['RUH'] }], 'ruh').length).toBe(1);
   });
 
   it('renders the demo', () => {

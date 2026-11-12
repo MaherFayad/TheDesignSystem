@@ -1,0 +1,348 @@
+/*
+ * Combobox, and the list family popup Autocomplete shares (built on the same
+ * base, anatomy.md rule 10; MultiSelect and TagField add their names to the
+ * lists below). The field is a bordered box like Input (the same height,
+ * padding, border, radius, glow and ring, from the same tokens); the popup
+ * is the menu surface of DropdownMenu.css with a ListBox inside.
+ *
+ *   [data-ds='combobox']                        root: the bordered box (open shows as aria-expanded on the input)
+ *     > [data-part='control']                   the native input, role combobox
+ *     > [data-part='clear']                     IconButton, clears the value
+ *     > [data-part='trigger']                   IconButton, opens the list
+ *     > [data-part='status']                    the result count, visually hidden
+ *   [data-ds='theme'][data-menu-layer]          the portal Theme (DropdownMenu.css draws it as contents)
+ *   [data-ds='combobox'][data-part='popup']     the popup, its own root: Radix Popover Content, data-state open|closed
+ *     > [data-ds='list-box']                    the options
+ *     > [data-part='empty']                     no match, or loading
+ *
+ * Field private properties (Input's names under this component):
+ *   --_combobox-height, -padding-inline, -gap, -font-size, -radius, -bg, -fg,
+ *   --_combobox-border-color (at rest, -hover, -focus, -invalid), -ring
+ *
+ * The popup sets the menu surface properties DropdownMenu.css names for the
+ * shared surface (--_menu-bg, -fg, -border-color, -radius, -shadow,
+ * -backdrop, -padding, -item-bg-highlight, -item-fg-highlight,
+ * -item-ring-color, -separator-color, -meta-fg, -enter-scale, -duration-in,
+ * -duration-out, -ease-in, -ease-out) to the same values, so the Desk recipe
+ * draws the same glass, and hands the row values to the nested ListBox.
+ *
+ * Motion, pattern "menu-scale": the popup scales up from the side Radix
+ * computes and fades in; it leaves faster on the exit ease. Under reduced
+ * motion both are none and Radix removes it at once.
+ */
+@layer ds.base {
+  /* ------------------------------------------------------------ the field */
+
+  :is([data-ds='combobox'], [data-ds='autocomplete']):not([data-part='popup']) {
+    --_combobox-height: var(--ds-size-control-md);
+    --_combobox-padding-inline: var(--ds-space-m);
+    --_combobox-gap: var(--ds-space-3xs);
+    --_combobox-font-size: var(--ds-font-size-s);
+    --_combobox-radius: var(--ds-radius-control);
+    --_combobox-bg: transparent;
+    --_combobox-fg: var(--ds-color-text-default);
+    --_combobox-border-color: var(--ds-color-border-control);
+    --_combobox-border-color-hover: var(--ds-color-border-control-hover);
+    --_combobox-border-color-focus: var(--ds-color-border-control-hover);
+    --_combobox-border-color-invalid: var(--ds-color-state-danger-text);
+    --_combobox-ring: var(--ds-elevation-input-focus), var(--ds-focus-shadow-ring);
+
+    position: relative;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    gap: var(--_combobox-gap);
+    inline-size: 100%;
+    min-inline-size: 0;
+    block-size: var(--_combobox-height);
+    min-block-size: var(--ds-size-target-min);
+    padding-block: 0;
+    padding-inline: var(--_combobox-padding-inline) var(--ds-space-3xs);
+    border: var(--ds-border-width-default) solid var(--_combobox-border-color);
+    border-radius: var(--_combobox-radius);
+    background-color: var(--_combobox-bg);
+    color: var(--_combobox-fg);
+    font-family: var(--ds-font-family-sans);
+    font-size: var(--_combobox-font-size);
+    font-weight: var(--ds-font-weight-regular);
+    line-height: var(--ds-font-leading-snug);
+    cursor: text;
+  }
+
+  /* Autocomplete has no buttons at the end: even padding on both sides. */
+  [data-ds='autocomplete']:not([data-part='popup']) {
+    padding-inline: var(--_combobox-padding-inline);
+  }
+
+  /* The glow and the ring, as Input: they fade in on focus. */
+  :is([data-ds='combobox'], [data-ds='autocomplete']):not([data-part='popup'])::before {
+    content: '';
+    position: absolute;
+    inset: calc(var(--ds-border-width-default) * -1);
+    border-radius: inherit;
+    box-shadow: var(--_combobox-ring);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity var(--ds-duration-base) var(--ds-ease-default);
+  }
+
+  :is([data-ds='combobox'], [data-ds='autocomplete']):not([data-part='popup']) > * {
+    position: relative;
+  }
+
+  :is([data-ds='combobox'], [data-ds='autocomplete'])[data-size='sm']:not([data-part='popup']) {
+    --_combobox-height: var(--ds-size-control-sm);
+    --_combobox-padding-inline: var(--ds-space-s);
+  }
+
+  /* Site fields: 44px and a fixed 16px, so phones do not zoom on focus. */
+  :is([data-ds='combobox'], [data-ds='autocomplete'])[data-size='lg']:not([data-part='popup']),
+  :is([data-ds='combobox'], [data-ds='autocomplete'])[data-size='lg']:not([data-part='popup']):lang(ar) {
+    --_combobox-height: var(--ds-size-control-lg);
+    --_combobox-padding-inline: var(--ds-space-2xl);
+    --_combobox-font-size: var(--ds-font-size-fixed-m);
+  }
+
+  :is([data-ds='combobox'], [data-ds='autocomplete'])[data-shape='pill']:not([data-part='popup']) {
+    --_combobox-radius: var(--ds-radius-pill);
+  }
+
+  /* The native input: no box of its own. Long values scroll inside. */
+  :is([data-ds='combobox'], [data-ds='autocomplete']) > [data-part='control'] {
+    flex: 1 1 auto;
+    box-sizing: border-box;
+    inline-size: 100%;
+    min-inline-size: 0;
+    block-size: 100%;
+    /* At least the 24px target, even in a compact box: it overlaps the border by a pixel, which draws nothing. */
+    min-block-size: var(--ds-size-target-min);
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: inherit;
+    font: inherit;
+    letter-spacing: inherit;
+    text-overflow: clip;
+    outline: none;
+  }
+
+  :is([data-ds='combobox'], [data-ds='autocomplete']) > [data-part='control']::placeholder {
+    color: var(--ds-color-text-placeholder);
+    opacity: 1;
+  }
+
+  :is([data-ds='combobox'], [data-ds='autocomplete']) > :is([data-part='clear'], [data-part='trigger']) {
+    flex: none;
+    color: var(--ds-color-text-muted);
+  }
+
+  /* The result count: read by screen readers, not drawn. */
+  :is([data-ds='combobox'], [data-ds='autocomplete']) > [data-part='status'] {
+    position: absolute;
+    inline-size: var(--ds-border-width-default);
+    block-size: var(--ds-border-width-default);
+    margin: calc(-1 * var(--ds-border-width-default));
+    padding: 0;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  :is([data-ds='combobox'], [data-ds='autocomplete']):not([data-part='popup']):hover:not([data-disabled], [data-readonly], [data-invalid], :focus-within) {
+    --_combobox-border-color: var(--_combobox-border-color-hover);
+  }
+
+  /* Focus: the glow and the ring. The transparent outline shows in forced colors mode. */
+  :is([data-ds='combobox'], [data-ds='autocomplete']):not([data-part='popup']):focus-within {
+    --_combobox-border-color: var(--_combobox-border-color-focus);
+
+    outline: var(--ds-border-width-strong) solid transparent;
+    outline-offset: var(--ds-border-width-default);
+  }
+
+  :is([data-ds='combobox'], [data-ds='autocomplete']):not([data-part='popup']):focus-within::before {
+    opacity: 1;
+  }
+
+  :is([data-ds='combobox'], [data-ds='autocomplete'])[data-invalid],
+  :is([data-ds='combobox'], [data-ds='autocomplete'])[data-invalid]:focus-within {
+    --_combobox-border-color: var(--_combobox-border-color-invalid);
+  }
+
+  :is([data-ds='combobox'], [data-ds='autocomplete'])[data-readonly] {
+    --_combobox-bg: var(--ds-color-bg-overlay-5);
+
+    border-style: dashed;
+    cursor: default;
+  }
+
+  :is([data-ds='combobox'], [data-ds='autocomplete'])[data-disabled] {
+    opacity: var(--ds-opacity-disabled);
+    cursor: not-allowed;
+  }
+
+  :is([data-ds='combobox'], [data-ds='autocomplete'])[data-disabled] > [data-part='control'] {
+    cursor: not-allowed;
+  }
+
+  /* ------------------------------------------------------------ the popup: the menu surface */
+
+  :is([data-ds='combobox'], [data-ds='autocomplete'])[data-part='popup'] {
+    --_menu-bg: var(--ds-color-bg-surface-3);
+    --_menu-fg: var(--ds-color-text-default);
+    --_menu-border-color: transparent;
+    --_menu-radius: var(--ds-radius-card);
+    --_menu-shadow: var(--ds-elevation-menu);
+    --_menu-backdrop: none;
+    --_menu-padding: var(--ds-space-3xs);
+    --_menu-item-bg-highlight: var(--ds-color-bg-overlay-10);
+    --_menu-item-fg-highlight: var(--ds-color-text-default);
+    --_menu-item-ring-color: var(--ds-color-focus-ring);
+    --_menu-meta-fg: var(--ds-color-text-muted);
+    --_menu-separator-color: var(--ds-color-bg-surface-2);
+    --_menu-enter-scale: var(--ds-scale-press);
+    --_menu-duration-in: var(--ds-duration-base);
+    --_menu-duration-out: var(--ds-duration-quick);
+    --_menu-ease-in: var(--ds-ease-emphasized);
+    --_menu-ease-out: var(--ds-ease-exit);
+
+    position: relative;
+    z-index: var(--ds-z-menu);
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+    /* As wide as the field, never wider than the room Radix measures. */
+    inline-size: var(--radix-popover-trigger-width);
+    min-inline-size: min(var(--ds-menu-width-min), var(--radix-popover-content-available-width));
+    max-inline-size: var(--radix-popover-content-available-width);
+    max-block-size: min(var(--_combobox-popup-max-height), var(--radix-popover-content-available-height));
+    margin: 0;
+    padding: var(--_menu-padding);
+    overflow: hidden;
+    border: var(--ds-border-width-default) solid var(--_menu-border-color);
+    border-radius: var(--_menu-radius);
+    background-color: var(--_menu-bg);
+    -webkit-backdrop-filter: var(--_menu-backdrop);
+    backdrop-filter: var(--_menu-backdrop);
+    box-shadow: var(--_menu-shadow);
+    color: var(--_menu-fg);
+    font-family: var(--ds-font-family-sans);
+    font-size: var(--ds-font-size-s);
+    line-height: var(--ds-font-leading-snug);
+    transform-origin: var(--radix-popover-content-transform-origin);
+    outline: none;
+
+    /* Eight rows show before the list scrolls inside. */
+    --_combobox-popup-max-height: calc(var(--ds-list-row-height) * 8 + var(--ds-space-3xs) * 2);
+  }
+
+  /* The nested ListBox: no box of its own, the menu row colors, and it fills the popup and scrolls. */
+  :is([data-ds='combobox'], [data-ds='autocomplete'])[data-part='popup'] > [data-ds='list-box'] {
+    --_list-box-bg: transparent;
+    --_list-box-border-color: transparent;
+    --_list-box-padding: 0;
+    --_list-box-radius: 0;
+    --_list-box-max-height: none;
+    --_list-box-option-bg-highlight: var(--_menu-item-bg-highlight);
+    --_list-box-option-fg-highlight: var(--_menu-item-fg-highlight);
+    --_list-box-option-ring-color: var(--_menu-item-ring-color);
+    --_list-box-meta-fg: var(--_menu-meta-fg);
+    --_list-box-separator-color: var(--_menu-separator-color);
+
+    flex: 1 1 auto;
+    min-block-size: 0;
+  }
+
+  :is([data-ds='combobox'], [data-ds='autocomplete'])[data-part='popup'] > [data-part='empty'] {
+    padding-block: var(--ds-space-s);
+    padding-inline: var(--ds-space-m);
+    color: var(--_menu-meta-fg);
+    overflow-wrap: anywhere;
+  }
+
+  :is([data-ds='combobox'], [data-ds='autocomplete'])[data-part='popup']:lang(ar) {
+    font-size: var(--ds-font-size-m);
+    line-height: var(--ds-font-leading-arabic-snug);
+  }
+
+  /* ------------------------------------------------------------ motion: pattern "menu-scale" */
+
+  :is([data-ds='combobox'], [data-ds='autocomplete'])[data-part='popup'][data-state='open'] {
+    animation: ds-list-popup-in var(--_menu-duration-in) var(--_menu-ease-in);
+  }
+
+  :is([data-ds='combobox'], [data-ds='autocomplete'])[data-part='popup'][data-state='closed'] {
+    animation: ds-list-popup-out var(--_menu-duration-out) var(--_menu-ease-out) forwards;
+    pointer-events: none;
+  }
+
+  @keyframes ds-list-popup-in {
+    from {
+      opacity: 0;
+      transform: scale(var(--_menu-enter-scale));
+    }
+  }
+
+  @keyframes ds-list-popup-out {
+    to {
+      opacity: 0;
+      transform: scale(var(--_menu-enter-scale));
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    :is([data-ds='combobox'], [data-ds='autocomplete'])[data-part='popup'][data-state] {
+      animation: none;
+    }
+
+    :is([data-ds='combobox'], [data-ds='autocomplete']):not([data-part='popup'])::before {
+      transition: none;
+    }
+  }
+
+  /* ------------------------------------------------------------ transparency, contrast, forced colors */
+
+  @media (prefers-reduced-transparency: reduce) {
+    :is([data-ds='combobox'], [data-ds='autocomplete'])[data-part='popup'] {
+      --_menu-backdrop: none;
+    }
+  }
+
+  @media (prefers-contrast: more) {
+    :is([data-ds='combobox'], [data-ds='autocomplete'])[data-part='popup'] {
+      --_menu-backdrop: none;
+      --_menu-border-color: var(--ds-color-border-strong);
+      --_menu-separator-color: var(--ds-color-border-strong);
+    }
+  }
+
+  [data-contrast='more'] :is([data-ds='combobox'], [data-ds='autocomplete'])[data-part='popup'] {
+    --_menu-backdrop: none;
+    --_menu-border-color: var(--ds-color-border-strong);
+    --_menu-separator-color: var(--ds-color-border-strong);
+  }
+
+  /* Forced colors: no shadows or glow; a border draws the popup, system colors the lit row. */
+  @media (forced-colors: active) {
+    :is([data-ds='combobox'], [data-ds='autocomplete']):not([data-part='popup'])::before {
+      display: none;
+    }
+
+    :is([data-ds='combobox'], [data-ds='autocomplete'])[data-disabled] {
+      --_combobox-border-color: GrayText;
+
+      color: GrayText;
+    }
+
+    :is([data-ds='combobox'], [data-ds='autocomplete'])[data-part='popup'] {
+      --_menu-bg: Canvas;
+      --_menu-backdrop: none;
+      --_menu-border-color: CanvasText;
+      --_menu-separator-color: CanvasText;
+      --_menu-meta-fg: CanvasText;
+      --_menu-item-bg-highlight: Highlight;
+      --_menu-item-fg-highlight: HighlightText;
+    }
+  }
+}

@@ -57,6 +57,7 @@ import { Icon, type IconName } from '@the-system/icons/react';
 import {
   createTypeahead,
   edgeEnabledIndex,
+  filterItems,
   matchRanges,
   nextEnabledIndex,
   selectAllValues,
@@ -119,7 +120,7 @@ export function flattenListBoxItems(items: readonly ListBoxItem[]): ListBoxOptio
 /** The DOM id of an option, for aria-activedescendant. Stable for a value, safe for any characters. */
 export function listBoxOptionId(listId: string, value: string): string {
   let safe = '';
-  for (const ch of value) safe += /[A-Za-z0-9_-]/.test(ch) ? ch : `_${(ch.codePointAt(0) ?? 0).toString(16)}`;
+  for (const ch of value) safe += /[A-Za-z0-9-]/.test(ch) ? ch : `_${(ch.codePointAt(0) ?? 0).toString(16)}`;
   return `${listId}-option-${safe}`;
 }
 
@@ -252,7 +253,8 @@ export function ListBox(props: ListBoxProps) {
   // A group with no option left (after a filter) is not drawn.
   const shown = useMemo(() => items.filter((item) => !isListBoxSection(item) || item.options.length > 0), [items]);
   const options = useMemo(() => flattenListBoxItems(shown), [shown]);
-  const isDisabled = useCallback((i: number) => disabled || (options[i]?.disabled ?? false), [disabled, options]);
+  // A disabled list can still be read and moved through; only the options marked disabled are skipped.
+  const isDisabled = useCallback((i: number) => options[i]?.disabled ?? false, [options]);
   const [highlighted, setHighlightedState] = useControllable<string | null>(
     highlightedProp,
     null,
@@ -271,6 +273,7 @@ export function ListBox(props: ListBoxProps) {
 
   const rootRef = useRef<HTMLDivElement | null>(null);
   const fromKeyboard = useRef(false);
+  const fromPointer = useRef(false);
   const typeahead = useMemo(() => createTypeahead(), []);
 
   const highlight = (index: number, focus: boolean) => {
@@ -284,12 +287,15 @@ export function ListBox(props: ListBoxProps) {
   };
 
   // Keep the highlighted option in view when the keys move it (the list scrolls inside).
+  // With virtualFocus the owner moves the highlight, so every change scrolls except one made by the pointer.
   useEffect(() => {
-    if (!fromKeyboard.current || highlighted === null) return;
+    const scroll = virtualFocus ? !fromPointer.current : fromKeyboard.current;
     fromKeyboard.current = false;
+    fromPointer.current = false;
+    if (!scroll || highlighted === null) return;
     const el = rootRef.current?.querySelector<HTMLElement>(`#${CSS.escape(listBoxOptionId(id, highlighted))}`);
     el?.scrollIntoView?.({ block: 'nearest', inline: 'nearest' });
-  }, [highlighted, id]);
+  }, [highlighted, id, virtualFocus]);
 
   const choose = (option: ListBoxOption) => {
     if (disabled || readOnly || option.disabled) return;
@@ -367,7 +373,14 @@ export function ListBox(props: ListBoxProps) {
         data-selected={isSelected ? '' : undefined}
         data-disabled={off ? '' : undefined}
         onFocus={virtualFocus ? undefined : () => setHighlightedState(option.value)}
-        onPointerMove={virtualFocus && !off && !isHighlighted ? () => setHighlightedState(option.value) : undefined}
+        onPointerMove={
+          virtualFocus && !off && !isHighlighted
+            ? () => {
+                fromPointer.current = true;
+                setHighlightedState(option.value);
+              }
+            : undefined
+        }
         // An owner keeps focus: a press on an option must not move it.
         onMouseDown={virtualFocus ? (event) => event.preventDefault() : undefined}
         onClick={() => choose(option)}
@@ -418,6 +431,13 @@ export function ListBox(props: ListBoxProps) {
       aria-disabled={disabled || undefined}
       aria-readonly={(!isEmpty && readOnly) || undefined}
       onKeyDown={onRootKeyDown}
+      onBlur={(event) => {
+        rest.onBlur?.(event);
+        // Alone: leaving the list clears the highlight, so no second lit row stays and Tab comes back to the selected option.
+        if (virtualFocus || highlightedProp !== undefined) return;
+        const next = event.relatedTarget as Node | null;
+        if (!next || !event.currentTarget.contains(next)) setHighlightedState(null);
+      }}
     >
       {isEmpty && empty !== undefined && <div data-part="empty">{empty}</div>}
       {shown.map((item, i) => {
@@ -438,4 +458,32 @@ export function ListBox(props: ListBoxProps) {
       })}
     </div>
   );
+}
+
+/**
+ * The items that match `query`, groups kept, best matches first inside each
+ * group (filterItems from @the-system/shared, on the label then the
+ * keywords). An empty query returns the items as they are. Owners pass the
+ * result as `items` and the query as `query`.
+ */
+export function filterListBoxItems(items: readonly ListBoxItem[], query: string): ListBoxItem[] {
+  if (!query.trim()) return items.slice();
+  const text = (o: ListBoxOption) => [o.label, ...(o.keywords ?? [])];
+  const out: ListBoxItem[] = [];
+  let loose: ListBoxOption[] = [];
+  const flush = () => {
+    if (loose.length) out.push(...filterItems(loose, query, text));
+    loose = [];
+  };
+  for (const item of items) {
+    if (!isListBoxSection(item)) {
+      loose.push(item);
+      continue;
+    }
+    flush();
+    const options = filterItems(item.options, query, text);
+    if (options.length) out.push({ ...item, options });
+  }
+  flush();
+  return out;
 }

@@ -1,5 +1,6 @@
 export {
   ListBox,
+  filterListBoxItems,
   flattenListBoxItems,
   isListBoxSection,
   listBoxOptionId,

@@ -10,6 +10,7 @@ export interface DemoRoute {
 export const routes: DemoRoute[] = [
   { name: 'Button', slug: 'button', load: () => import('../../../packages/react/src/components/Button/Button.demo') },
   { name: 'ButtonGroup', slug: 'button-group', load: () => import('../../../packages/react/src/components/ButtonGroup/ButtonGroup.demo') },
+  { name: 'Combobox', slug: 'combobox', load: () => import('../../../packages/react/src/components/Combobox/Combobox.demo') },
   { name: 'Dialog', slug: 'dialog', load: () => import('../../../packages/react/src/components/Dialog/Dialog.demo') },
   { name: 'DropdownMenu', slug: 'dropdown-menu', load: () => import('../../../packages/react/src/components/DropdownMenu/DropdownMenu.demo') },
   { name: 'Field', slug: 'field', load: () => import('../../../packages/react/src/components/Field/Field.demo') },

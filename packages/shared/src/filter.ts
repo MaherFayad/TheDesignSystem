@@ -34,7 +34,7 @@ export interface Folded {
 }
 
 /** Arabic diacritics, Quranic marks and the tatweel: dropped. */
-const ARABIC_DROP = /[ؐ-ًؚ-ٰٟۖ-ۜ۟-۪ۨ-ۭـ]/;
+const ARABIC_DROP = /[\u0610-\u061A\u064B-\u065F\u0670\u06D6-\u06DC\u06DF-\u06E8\u06EA-\u06ED\u0640]/;
 /** Combining marks left by NFD on Latin, Greek and Cyrillic letters: dropped. */
 const COMBINING = /\p{M}/u;
 const WHITE = /\s/;
@@ -136,7 +136,12 @@ export function matchRanges(source: string, query: string): MatchRange[] {
   }
   if (at === -1) return [];
   const start = f.from[at] ?? 0;
-  const end = f.to[at + q.length - 1] ?? source.length;
+  let end = f.to[at + q.length - 1] ?? source.length;
+  // Marks after the last matched letter fold to nothing: keep them inside the range, so a mark never splits a letter from its harakat.
+  for (const ch of source.slice(end)) {
+    if (WHITE.test(ch) || foldChar(ch) !== '') break;
+    end += ch.length;
+  }
   return [{ start, end }];
 }
 
