@@ -3883,7 +3883,10 @@
         "example": "CheckboxGroup.demo.tsx"
       },
       "angular": {
-        "status": "planned"
+        "status": "ready",
+        "behavior": "fieldset[dsCheckboxGroup], hand built on DsCheckbox through DS_CHECKBOX_GROUP, ControlValueAccessor",
+        "example": "checkbox-group.demo.ts",
+        "note": "The host is the root. Inputs take the React prop names; onValueChange is the valueChange output of [(value)]. legend, description, error and selectAll take text. aria-describedby is an input, joined with the group's own ids. Items are div[dsCheckbox] with a value; they read the value, size, name, disabled, invalid and read only from the group through DI. The select all item renders as React does it, a DsCheckbox with data-part select-all first in the items. The group is the ControlValueAccessor for the string array. CheckboxGroup.css is used as is."
       },
       "native": {
         "status": "planned"
@@ -16318,7 +16321,10 @@
         "example": "RangeSlider.demo.tsx"
       },
       "angular": {
-        "status": "planned"
+        "status": "ready",
+        "behavior": "div[dsRangeSlider], on the DsSlider body with two thumbs, ControlValueAccessor",
+        "example": "range-slider.demo.ts",
+        "note": "The host is the root. Inputs take the React prop names; onValueChange is the valueChange output of [(value)] and onValueCommit the valueCommit output. thumbLabels and defaultValue also take a plain array, because a template array literal is not typed as a pair. aria-describedby is an input. Same keys, pointer and DOM as Slider; the thumbs never cross and Home and End stop at the other thumb. One difference from React, the batch 3 and 4 review fix: the thumb that last had focus or a press carries data-active and its wrapper gets z-index 1 in its inline position style, so overlapping thumbs at 320px keep the target a press reaches. Slider.css and RangeSlider.css are used as is."
       },
       "native": {
         "status": "planned"
@@ -19618,7 +19624,10 @@
         "example": "Slider.demo.tsx"
       },
       "angular": {
-        "status": "planned"
+        "status": "ready",
+        "behavior": "div[dsSlider], keys and pointer hand built with the Radix Slider DOM and arithmetic, CDK Directionality, ControlValueAccessor",
+        "example": "slider.demo.ts",
+        "note": "The host is the root. Inputs take the React prop names; onValueChange is the valueChange output of [(value)] and onValueCommit the valueCommit output. aria-label, aria-labelledby and aria-describedby are inputs, as React sends them to the thumb. label and mark labels take text; formatValue is a function input. No CDK slider: the Radix DOM is copied, with the control dir and aria-disabled, the thumb wrapper and its inline position style, data-radix-collection-item on the thumb and a hidden input per thumb in a form. Arrows follow the reading direction of the nearest dsTheme through the CDK Directionality. Value text from formatNumber in packages/shared. Slider.css is used as is."
       },
       "native": {
         "status": "planned"
@@ -21643,7 +21652,10 @@
         "example": "Switch.demo.tsx"
       },
       "angular": {
-        "status": "planned"
+        "status": "ready",
+        "behavior": "div[dsSwitch], hand built on a native button with the Radix Switch DOM, ControlValueAccessor",
+        "example": "switch.demo.ts",
+        "note": "The host is the root. Inputs take the React prop names; onCheckedChange is the checkedChange output of [(checked)]. stateText takes { on, off } text. aria-label, aria-labelledby and aria-describedby are inputs, as React spreads them on the control. Behavior by hand with the Radix DOM: Space and Enter toggle, read only keeps the value and focus, a hidden native checkbox inside a form. Works with reactive and template forms. Switch.css is used as is."
       },
       "native": {
         "status": "planned"

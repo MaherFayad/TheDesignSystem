@@ -211,7 +211,10 @@
       "example": "RangeSlider.demo.tsx"
     },
     "angular": {
-      "status": "planned"
+      "status": "ready",
+      "behavior": "div[dsRangeSlider], on the DsSlider body with two thumbs, ControlValueAccessor",
+      "example": "range-slider.demo.ts",
+      "note": "The host is the root. Inputs take the React prop names; onValueChange is the valueChange output of [(value)] and onValueCommit the valueCommit output. thumbLabels and defaultValue also take a plain array, because a template array literal is not typed as a pair. aria-describedby is an input. Same keys, pointer and DOM as Slider; the thumbs never cross and Home and End stop at the other thumb. One difference from React, the batch 3 and 4 review fix: the thumb that last had focus or a press carries data-active and its wrapper gets z-index 1 in its inline position style, so overlapping thumbs at 320px keep the target a press reaches. Slider.css and RangeSlider.css are used as is."
     },
     "native": {
       "status": "planned"
