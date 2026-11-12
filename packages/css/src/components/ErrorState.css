@@ -1,0 +1,183 @@
+/*
+ * ErrorState: a section or page that failed to load. A centered column:
+ * icon, title, body, actions, then a details disclosure with the error code.
+ * Source: Figma-Killer-2 `EmptyState.module.css` (variant centered).
+ *
+ * Private plumbing (docs/contracts/anatomy.md, one convention), on the root:
+ *
+ *   --_error-state-gap          between the parts
+ *   --_error-state-padding      around the column
+ *   --_error-state-icon-box     the tile behind the icon
+ *   --_error-state-icon-bg, -icon-fg
+ *   --_error-state-title-size
+ *   --_error-state-body-size
+ *   --_error-state-max          the line length of the column (dialog.width.md
+ *                               until a measure token exists)
+ *   --_error-state-ring         the focus ring of the summary
+ *
+ * Motion: fade-rise on mount (transform and opacity), and the details chevron
+ * turns. Both are off under reduced motion.
+ *
+ * Retrying dims nothing: the retry Button shows its own loading state, and
+ * the copy stays readable.
+ */
+@layer ds.base {
+  [data-ds='error-state'] {
+    --_error-state-gap: var(--ds-space-s);
+    --_error-state-padding: var(--ds-space-2xl);
+    --_error-state-icon-box: var(--ds-size-control-md);
+    --_error-state-icon-bg: var(--ds-color-state-danger-tint-10);
+    --_error-state-icon-fg: var(--ds-color-state-danger-text);
+    --_error-state-title-size: var(--ds-font-size-xl);
+    --_error-state-body-size: var(--ds-font-size-m);
+    --_error-state-max: var(--ds-dialog-width-md);
+    --_error-state-ring: var(--ds-focus-shadow-ring);
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--_error-state-gap);
+    box-sizing: border-box;
+    inline-size: 100%;
+    padding: var(--_error-state-padding);
+    color: var(--ds-color-text-muted);
+    font-family: var(--ds-font-family-sans);
+    font-size: var(--_error-state-body-size);
+    line-height: var(--ds-font-leading-normal);
+    text-align: center;
+    overflow-wrap: anywhere;
+    animation: ds-error-state-in var(--ds-duration-medium) var(--ds-ease-out);
+  }
+
+  /* fade-rise: the error fades in and rises a little when it replaces content. */
+  @keyframes ds-error-state-in {
+    from {
+      opacity: 0;
+      transform: translateY(var(--ds-space-2xs));
+    }
+  }
+
+  [data-ds='error-state'][data-size='sm'] {
+    --_error-state-gap: var(--ds-space-xs);
+    --_error-state-padding: var(--ds-space-l);
+    --_error-state-icon-box: var(--ds-size-control-xs);
+    --_error-state-title-size: var(--ds-font-size-l);
+    --_error-state-body-size: var(--ds-font-size-s);
+  }
+
+  [data-ds='error-state'][data-size='lg'] {
+    --_error-state-gap: var(--ds-space-m);
+    --_error-state-padding: var(--ds-space-9xl);
+    --_error-state-icon-box: var(--ds-size-control-lg);
+    --_error-state-title-size: var(--ds-font-size-4xl);
+    --_error-state-body-size: var(--ds-font-size-l);
+  }
+
+  /* ------------------------------------------------------------ parts */
+
+  [data-ds='error-state'] > [data-part='icon'] {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    inline-size: var(--_error-state-icon-box);
+    block-size: var(--_error-state-icon-box);
+    border-radius: var(--ds-radius-pill);
+    background-color: var(--_error-state-icon-bg);
+    color: var(--_error-state-icon-fg);
+  }
+
+  [data-ds='error-state'] > [data-part='title'] {
+    max-inline-size: var(--_error-state-max);
+    margin: 0;
+    color: var(--ds-color-text-bright);
+    font-size: var(--_error-state-title-size);
+    font-weight: var(--ds-font-weight-semibold);
+    line-height: var(--ds-font-leading-snug);
+    text-wrap: balance;
+  }
+
+  [data-ds='error-state'] > [data-part='body'] {
+    max-inline-size: var(--_error-state-max);
+    margin: 0;
+    text-wrap: pretty;
+  }
+
+  [data-ds='error-state'] > [data-part='actions'] {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: var(--ds-space-xs);
+    max-inline-size: 100%;
+    margin-block-start: var(--ds-space-2xs);
+  }
+
+  [data-ds='error-state'] > [data-part='details'] {
+    max-inline-size: var(--_error-state-max);
+    color: var(--ds-color-text-muted);
+    font-size: var(--ds-font-size-s);
+  }
+
+  [data-ds='error-state'] > [data-part='details'] > [data-part='summary'] {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--ds-space-2xs);
+    min-block-size: var(--ds-size-target-min);
+    padding-inline: var(--ds-space-xs);
+    border-radius: var(--ds-radius-sm);
+    color: var(--ds-color-text-default);
+    list-style: none;
+    cursor: pointer;
+  }
+
+  /* The native marker is gone with display flex; the chevron turns when open. */
+  [data-ds='error-state'] > [data-part='details'] > [data-part='summary'] > [data-ds='icon'] {
+    transition: transform var(--ds-duration-base) var(--ds-ease-out);
+  }
+
+  [data-ds='error-state'] > [data-part='details'][open] > [data-part='summary'] > [data-ds='icon'] {
+    transform: rotate(180deg);
+  }
+
+  [data-ds='error-state'] > [data-part='details'] > [data-part='summary']::-webkit-details-marker {
+    display: none;
+  }
+
+  [data-ds='error-state'] > [data-part='details'] > [data-part='summary']:focus-visible {
+    outline: var(--ds-border-width-strong) solid transparent;
+    outline-offset: var(--ds-border-width-strong);
+    box-shadow: var(--_error-state-ring);
+  }
+
+  [data-ds='error-state'] > [data-part='details'] > [data-part='code'] {
+    margin: 0;
+    margin-block-start: var(--ds-space-2xs);
+    font-family: var(--ds-font-family-mono);
+    user-select: all;
+  }
+
+  /* ------------------------------------------------------------ reduced motion, forced colors */
+
+  @media (prefers-reduced-motion: reduce) {
+    [data-ds='error-state'],
+    [data-ds='error-state'] > [data-part='details'] > [data-part='summary'] > [data-ds='icon'] {
+      animation: none;
+      transition: none;
+    }
+  }
+
+  @media (forced-colors: active) {
+    [data-ds='error-state'] {
+      animation: none;
+      --_error-state-icon-bg: Canvas;
+      --_error-state-icon-fg: CanvasText;
+    }
+
+    [data-ds='error-state'] > [data-part='icon'] {
+      border: var(--ds-border-width-default) solid CanvasText;
+    }
+
+    [data-ds='error-state'] > [data-part='details'] > [data-part='summary']:focus-visible {
+      outline-color: Highlight;
+    }
+  }
+}

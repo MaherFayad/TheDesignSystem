@@ -2,6 +2,7 @@
 export * from './theme/index';
 export * from './components/Button/index';
 export * from './components/Dialog/index';
+export * from './components/ErrorState/index';
 export * from './components/Field/index';
 export * from './components/Icon/index';
 export * from './components/IconButton/index';

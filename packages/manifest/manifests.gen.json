@@ -712,6 +712,272 @@
     "since": "0.1.0"
   },
   {
+    "name": "ErrorState",
+    "kind": "component",
+    "family": "feedback",
+    "summary": "Stands in for a section or a page that failed to load: says what happened, what to do next, and offers a retry, with the error code behind a disclosure.",
+    "useWhen": [
+      "A section, a panel or a page could not load its content",
+      "A load can be retried, or there is another way forward such as going back",
+      "Replacing skeletons after a load failed"
+    ],
+    "avoidWhen": [
+      "The content loaded but is empty",
+      "An action the person took failed and the page still works",
+      "A problem with one form field",
+      "A page wide notice that stays while the rest of the page works"
+    ],
+    "insteadUse": {
+      "The content loaded and is empty": "EmptyState",
+      "An action failed and the page still works": "Toast",
+      "A problem about a section that still shows its content": "Alert",
+      "A problem with one field": "Field",
+      "A page wide condition, such as maintenance": "Banner"
+    },
+    "anatomy": [
+      "root",
+      "icon",
+      "title",
+      "body",
+      "actions",
+      "retry",
+      "details",
+      "summary",
+      "code"
+    ],
+    "slots": {
+      "title": {
+        "accepts": "text",
+        "min": 1,
+        "max": 1
+      },
+      "body": {
+        "accepts": "text",
+        "max": 1
+      },
+      "actions": {
+        "accepts": [
+          "Button"
+        ],
+        "max": 3
+      },
+      "details": {
+        "accepts": "any"
+      }
+    },
+    "props": {
+      "title": {
+        "type": "node",
+        "required": true,
+        "description": "What happened, naming the thing: Could not load members."
+      },
+      "body": {
+        "type": "node",
+        "description": "What to do next and what is safe."
+      },
+      "icon": {
+        "type": [
+          "string",
+          "node",
+          "false"
+        ],
+        "default": "alert-circle",
+        "description": "A system icon name, a node, or false for none. Hidden from assistive tech."
+      },
+      "size": {
+        "type": [
+          "sm",
+          "md",
+          "lg"
+        ],
+        "default": "md",
+        "description": "sm inside a card or panel, md for a section, lg for a whole page."
+      },
+      "headingLevel": {
+        "type": [
+          "2",
+          "3",
+          "4",
+          "5",
+          "6"
+        ],
+        "default": "2",
+        "description": "The heading level of the title, to fit the page outline."
+      },
+      "onRetry": {
+        "type": "function",
+        "description": "Renders the retry Button first in the actions (accent solid, refresh icon, data-part retry) and is called by it."
+      },
+      "retryLabel": {
+        "type": "string",
+        "default": "Retry loading",
+        "description": "A verb plus a noun. Arabic default under lang ar: إعادة التحميل."
+      },
+      "retrying": {
+        "type": "boolean",
+        "default": false,
+        "description": "A retry is in flight: data-state retrying, and the retry Button shows loading with a hidden status."
+      },
+      "retryingLabel": {
+        "type": "string",
+        "default": "Retrying",
+        "description": "What the retry Button's hidden status says while retrying."
+      },
+      "actions": {
+        "type": "node",
+        "description": "More Buttons after retry, a verb plus a noun: Open boards."
+      },
+      "code": {
+        "type": "string",
+        "description": "The error code, inside the details disclosure, left to right in every language."
+      },
+      "details": {
+        "type": "node",
+        "description": "More detail inside the disclosure, after the code: a request id to send to support."
+      },
+      "detailsLabel": {
+        "type": "string",
+        "default": "Error details",
+        "description": "The disclosure toggle."
+      },
+      "detailsOpen": {
+        "type": "boolean",
+        "default": false,
+        "description": "Renders the details open at first."
+      },
+      "live": {
+        "type": "boolean",
+        "default": true,
+        "description": "role alert on the root, so an error that replaces content after load is read once. false for an error present at page load: the root is then role group named by its title, with no live role."
+      }
+    },
+    "states": [
+      "error",
+      "retrying"
+    ],
+    "a11y": {
+      "role": "alert while live (default), with aria-atomic false; otherwise a group named by its title. The title is a real heading (h2 by default). The details part is a native details element.",
+      "focus": "Focus does not move to it. Tab reaches the retry Button, the other actions, then the details summary.",
+      "keys": {
+        "Tab": "Moves to the retry Button, the other actions, then the details summary",
+        "Shift+Tab": "Moves back",
+        "Enter": "Runs the focused action, or opens and closes the details",
+        "Space": "Runs the focused action, or opens and closes the details"
+      },
+      "announce": "With live, the role alert (aria-atomic false, so a retry does not read it all again) reads the title, body and actions once when the error replaces content after load. Retrying is said by the retry Button's hidden status (Retrying). An error present at page load is not announced; pass live false there.",
+      "native": {
+        "accessibilityRole": "alert",
+        "accessibilityState": []
+      },
+      "notes": [
+        "The retry Button stays focusable while retrying (aria-disabled through loading), so focus is not lost.",
+        "The summary is at least 24px tall (WCAG 2.5.8) and draws the focus ring from the focus tokens."
+      ]
+    },
+    "content": {
+      "en": {
+        "title": "Say what failed and name the thing: Could not load members. Not Oops or Something went wrong alone.",
+        "body": "What to do next and what is safe: Check your connection, then retry. Your draft is safe.",
+        "actions": "A verb plus a noun: Retry loading, Open boards. Never OK, Continue, Confirm or Yes.",
+        "code": "The code as the system gives it, for support. Not the only explanation."
+      },
+      "ar": {
+        "title": "Noun forms, no diacritics: تعذر تحميل الأعضاء.",
+        "actions": "Noun form labels: إعادة التحميل، فتح اللوحات.",
+        "code": "The code stays left to right; Western digits."
+      }
+    },
+    "tokens": [
+      "space.2xs",
+      "space.xs",
+      "space.s",
+      "space.m",
+      "space.l",
+      "space.2xl",
+      "space.9xl",
+      "size.control.xs",
+      "size.control.md",
+      "size.control.lg",
+      "size.target-min",
+      "dialog.width.md",
+      "radius.pill",
+      "radius.sm",
+      "color.state.danger.tint-10",
+      "color.state.danger.text",
+      "color.text.bright",
+      "color.text.default",
+      "color.text.muted",
+      "font.family.sans",
+      "font.family.mono",
+      "font.size.s",
+      "font.size.m",
+      "font.size.l",
+      "font.size.xl",
+      "font.size.4xl",
+      "font.weight.semibold",
+      "font.leading.snug",
+      "font.leading.normal",
+      "border.width.default",
+      "border.width.strong",
+      "focus.shadow.ring",
+      "duration.medium",
+      "duration.base",
+      "ease.out"
+    ],
+    "motion": "fade-rise",
+    "frameworks": {
+      "react": {
+        "status": "ready",
+        "behavior": "hand built",
+        "example": "ErrorState.demo.tsx"
+      },
+      "angular": {
+        "status": "planned",
+        "behavior": "hand built"
+      },
+      "native": {
+        "status": "planned",
+        "behavior": "hand built",
+        "note": "The details disclosure becomes a pressable row that shows the code."
+      }
+    },
+    "styles": {
+      "studio": "Tokens only: a danger tint tile behind the icon, muted body text.",
+      "desk": "Tokens only; the retry Button is the yellow primary.",
+      "neutral": "Tokens only."
+    },
+    "mistakes": [
+      {
+        "wrong": "Something went wrong, with nothing else",
+        "right": "Could not load members. Check your connection, then retry."
+      },
+      {
+        "wrong": "The error code as the only message",
+        "right": "Plain words first; the code behind Error details"
+      },
+      {
+        "wrong": "A retry that blanks the section while it runs",
+        "right": "Keep the ErrorState with retrying set, then swap in skeletons or content"
+      },
+      {
+        "wrong": "ErrorState for a list that loaded with no items",
+        "right": "EmptyState"
+      }
+    ],
+    "contract": {
+      "optionalParts": [
+        "icon",
+        "body",
+        "actions",
+        "retry",
+        "details",
+        "summary",
+        "code"
+      ]
+    },
+    "since": "0.1.0"
+  },
+  {
     "name": "Field",
     "kind": "component",
     "family": "forms",
