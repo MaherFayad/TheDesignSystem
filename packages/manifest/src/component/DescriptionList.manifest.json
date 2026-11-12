@@ -1,0 +1,87 @@
+{
+  "name": "DescriptionList",
+  "kind": "component",
+  "family": "data-display",
+  "summary": "Term and value pairs on a dl: the details of an order, a summary of settings, the facts about a record.",
+  "useWhen": [
+    "Read only facts about one thing: order number, date, payment, total",
+    "A summary of settings before people confirm or edit them",
+    "Metadata in a side panel or a card: owner, created on, size"
+  ],
+  "avoidWhen": [
+    "Values people edit in place",
+    "Many records with the same fields, compared row by row",
+    "A single headline number",
+    "A list of rows people open or act on"
+  ],
+  "insteadUse": {
+    "Values people edit": "Field with the matching control, in a form",
+    "Many records with the same fields": "Table (wave 2)",
+    "A single headline number with its change": "Stat",
+    "Rows people open or act on": "List"
+  },
+  "anatomy": ["root", "item", "term", "details"],
+  "parts": { "DescriptionListItem": "item" },
+  "slots": {
+    "item": { "accepts": ["DescriptionListItem"], "min": 1 },
+    "term": { "accepts": "text", "min": 1, "max": 1 },
+    "details": { "accepts": "any", "min": 1 }
+  },
+  "props": {
+    "orientation": {
+      "type": ["horizontal", "vertical"],
+      "default": "horizontal",
+      "description": "horizontal: terms in a column at the start, values beside them; the column takes the longest term up to 40 percent and every item stacks under breakpoint.phone. vertical: each term above its value. Sets data-orientation."
+    },
+    "size": { "type": ["sm", "md"], "default": "md", "description": "Text size font.size s or m, with the gaps to match." },
+    "items": { "type": "string", "description": "The pairs as data: an array of { key?, term, details }. Rendered before children." },
+    "children": { "type": "node", "description": "DescriptionListItem elements: term, and the value as children or several values as details (each in its own dd)." }
+  },
+  "states": [],
+  "a11y": {
+    "role": "None beyond the native dl, dt and dd. Each pair sits in a div, which HTML allows inside dl.",
+    "focus": "Never focusable itself. Links or buttons inside a value keep their own focus.",
+    "keys": {},
+    "announce": "Screen readers read the list with its term and value pairs and their count.",
+    "native": { "accessibilityRole": "list" },
+    "notes": [
+      "Terms are nouns without a colon; the layout shows the pairing.",
+      "Values wrap anywhere, so a long URL or a long Arabic address never scrolls sideways at 320px.",
+      "Terms are muted text; check that a recipe keeps 4.5:1 on the surface the list sits on."
+    ]
+  },
+  "content": {
+    "en": {
+      "term": "A noun in sentence case, no colon: Order number, Delivery address.",
+      "details": "The value as people read it: dates in words, amounts with the currency. An unset value says Not set."
+    },
+    "ar": {
+      "term": "Noun form, no diacritics, no colon: رقم الطلب، عنوان التوصيل.",
+      "details": "Western digits. Latin codes such as GB-20481 stay left to right inside the value."
+    }
+  },
+  "tokens": [
+    "space.4xs", "space.2xs", "space.s", "space.l", "space.2xl",
+    "font.family.sans", "font.size.s", "font.size.m", "font.weight.medium",
+    "font.leading.normal", "font.leading.arabic-normal",
+    "color.text.muted", "color.text.default",
+    "breakpoint.phone"
+  ],
+  "frameworks": {
+    "react": { "status": "ready", "behavior": "hand built dl", "example": "DescriptionList.demo.tsx" },
+    "angular": { "status": "planned", "behavior": "dl[dsDescriptionList] and [dsDescriptionListItem], hand built" },
+    "native": { "status": "planned", "note": "Rows of Text with the same props; no dl on native, so the role is text and pairs are read in order." }
+  },
+  "styles": {
+    "studio": "Muted terms, default text values, compact gaps.",
+    "desk": "The same on the Desk tokens in Instrument Sans.",
+    "neutral": "The same on the Neutral tokens; no recipe."
+  },
+  "mistakes": [
+    { "wrong": "Terms written as Order number: with a colon", "right": "Order number; the columns pair the term and the value" },
+    { "wrong": "A table of two columns for one record's details", "right": "DescriptionList, which screen readers read as pairs" },
+    { "wrong": "Inputs inside details to edit values in place", "right": "A form with Field, or an edit button that opens one" },
+    { "wrong": "An empty dd for a missing value", "right": "Not set, or leave the pair out" }
+  ],
+  "since": "0.1.0"
+}

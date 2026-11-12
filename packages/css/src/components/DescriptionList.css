@@ -1,0 +1,100 @@
+/*
+ * DescriptionList: term and value pairs on dl. Sources: Figma-Killer-2
+ * `ControlRow.module.css` (a label column next to the value, stacked on its
+ * own line when narrow) and `PropertyList.module.css` (rows of opaque
+ * content). Follows "One convention for component CSS and props" in
+ * docs/contracts/anatomy.md.
+ *
+ * Private properties on the root (recipes override these):
+ *
+ *   --_description-list-gap            between pairs
+ *   --_description-list-column-gap     between a term and its value
+ *   --_description-list-term-width     the most a term column takes
+ *   --_description-list-font-size, --_description-list-term-fg, --_description-list-fg
+ *
+ * Horizontal: the root is a two column grid and each item is a subgrid
+ * row, so every term lines up with the longest one, up to the term width.
+ * Under breakpoint.phone each item stacks, term above value. Vertical: every
+ * item stacks.
+ */
+@layer ds.base {
+  [data-ds='description-list'] {
+    --_description-list-gap: var(--ds-space-s);
+    --_description-list-column-gap: var(--ds-space-2xl);
+    --_description-list-term-width: 40%;
+    --_description-list-font-size: var(--ds-font-size-m);
+    --_description-list-term-fg: var(--ds-color-text-muted);
+    --_description-list-fg: var(--ds-color-text-default);
+
+    display: grid;
+    grid-template-columns: fit-content(var(--_description-list-term-width)) minmax(0, 1fr);
+    align-content: start;
+    row-gap: var(--_description-list-gap);
+    column-gap: var(--_description-list-column-gap);
+    min-inline-size: 0;
+    margin: 0;
+    padding: 0;
+    color: var(--_description-list-fg);
+    font-family: var(--ds-font-family-sans);
+    font-size: var(--_description-list-font-size);
+    line-height: var(--ds-font-leading-normal);
+  }
+
+  [data-ds='description-list'][data-size='sm'] {
+    --_description-list-gap: var(--ds-space-2xs);
+    --_description-list-column-gap: var(--ds-space-l);
+    --_description-list-font-size: var(--ds-font-size-s);
+  }
+
+  /* ------------------------------------------------------------ parts */
+
+  [data-ds='description-list'] > [data-part='item'] {
+    display: grid;
+    grid-template-columns: subgrid;
+    grid-column: 1 / -1;
+    row-gap: var(--ds-space-4xs);
+    align-items: baseline;
+    min-inline-size: 0;
+  }
+
+  [data-ds='description-list'] > [data-part='item'] > [data-part='term'] {
+    grid-column: 1;
+    min-inline-size: 0;
+    margin: 0;
+    color: var(--_description-list-term-fg);
+    font-weight: var(--ds-font-weight-medium);
+    overflow-wrap: break-word;
+  }
+
+  [data-ds='description-list'] > [data-part='item'] > [data-part='details'] {
+    grid-column: 2;
+    min-inline-size: 0;
+    margin: 0;
+    overflow-wrap: anywhere;
+  }
+
+  /* ------------------------------------------------------ orientation */
+
+  [data-ds='description-list'][data-orientation='vertical'] {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  [data-ds='description-list'][data-orientation='vertical'] > [data-part='item'] > :is([data-part='term'], [data-part='details']) {
+    grid-column: 1;
+  }
+
+  @media (width < 30rem) { /* breakpoint.phone */
+    [data-ds='description-list'] {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    [data-ds='description-list'] > [data-part='item'] > :is([data-part='term'], [data-part='details']) {
+      grid-column: 1;
+    }
+  }
+
+  /* Arabic: a taller line, so wrapped values do not touch. */
+  [data-ds='description-list']:lang(ar) {
+    line-height: var(--ds-font-leading-arabic-normal);
+  }
+}
