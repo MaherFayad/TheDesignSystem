@@ -41,13 +41,21 @@ import {
   type TemplateRef,
 } from '@angular/core';
 import type { Size } from '@the-system/shared';
+import { renderDigits, rollDigits } from '@the-system/motion';
 import { consumeHostAttributes } from '../../internal/host';
+import { injectMotion } from '../../internal/motion';
+import { injectFlipGroup } from '../../internal/motion-selection';
 import { VISUALLY_HIDDEN } from '../../internal/visually-hidden';
 import { DsThemeService } from '../../theme/theme';
 import { DsButton } from '../button/button';
 import { DS_DROPDOWN_MENU } from '../dropdown-menu/dropdown-menu';
 import { DsSearchField } from '../search-field/search-field';
 import { StandInChip } from './stand-in-chip';
+
+/** The parts of the bar that make room for each other: count and clear come and go. */
+const barPartsOf = (root: Element) => Array.from(root.querySelectorAll(':scope > [data-part]'));
+/** The chips of the strip: a selected chip grows by its check and the chips after it make room. */
+const chipsOf = (strip: Element) => Array.from(strip.querySelectorAll(":scope > [data-ds='chip']"));
 
 export type FilterBarSize = Extract<Size, 'sm' | 'md'>;
 /** A node prop in Angular: text, or a template. */
@@ -157,7 +165,7 @@ export function filterBarLabels(lang: string | undefined): FilterBarLabels {
       </ng-container>
     }
     @if (countText() !== '') {
-      <span data-part="count">{{ countText() }}</span>
+      <span data-part="count"><span data-visually-hidden="">{{ countText() }}</span><span #roll aria-hidden="true"></span></span>
     }
     @if (active()) {
       <button dsButton [size]="size()" emphasis="ghost" start="close" (click)="clearAll()" data-part="clear">{{ words().clear }}</button>
@@ -199,6 +207,8 @@ export class DsFilterBar {
   private readonly ownQuery = signal<string | undefined>(undefined);
   private readonly strip = viewChild<ElementRef<HTMLElement>>('strip');
   private readonly searchHost = viewChild(DsSearchField, { read: ElementRef });
+  private readonly roll = viewChild<ElementRef<HTMLSpanElement>>('roll');
+  private readonly motion = injectMotion();
 
   protected readonly current = computed<readonly string[]>(() => this.value() ?? this.ownValue() ?? this.defaultValue());
   protected readonly query = computed(() => this.search()?.value ?? this.ownQuery() ?? this.search()?.defaultValue ?? '');
@@ -260,6 +270,41 @@ export class DsFilterBar {
     inject(DestroyRef).onDestroy(() => {
       watched?.removeEventListener('scroll', measure);
       observer?.disconnect();
+    });
+
+    // collection-flip: the bar's parts and the chips make room as clear, the count and checks come and go.
+    const flipBar = injectFlipGroup({ items: barPartsOf });
+    const flipChips = injectFlipGroup({ items: chipsOf, ghosts: false });
+    afterRenderEffect(() => {
+      this.current();
+      this.query();
+      this.countText();
+      this.filters();
+      this.more();
+      const strip = this.strip()?.nativeElement;
+      untracked(() => {
+        flipBar.update(this.host);
+        flipChips.update(strip);
+      });
+    });
+
+    // filter-count-roll: the count rolls digit by digit in a decorative copy; the real text is visually hidden beside it.
+    let shownCount: { text: string; n: number } | null = null;
+    afterRenderEffect(() => {
+      const host = this.roll()?.nativeElement;
+      const text = this.countText();
+      const n = (this.resultCount() ?? 0) + this.activeCount();
+      untracked(() => {
+        if (!host) {
+          shownCount = null;
+          return;
+        }
+        const last = shownCount;
+        shownCount = { text, n };
+        if (last && last.text === text && host.childElementCount > 0) return;
+        if (!last) renderDigits(host, text);
+        else rollDigits(host, last.text, text, { direction: n < last.n ? 'down' : 'up', mode: this.motion.mode('filter-count-roll') });
+      });
     });
 
     // The result count, read once when it changes after a filter or search change.

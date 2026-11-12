@@ -246,7 +246,7 @@ describe('DsSegmentedControl', () => {
     expect(day!.getAttribute('aria-checked')).toBe('true');
   });
 
-  it('places the indicator under the selected item and slides it with tab-indicator on a change', async () => {
+  it('places the indicator under the selected item and slides it with tab-slide on a change, as React', async () => {
     const animate = vi.fn(() => ({ finished: Promise.resolve(), cancel: vi.fn() }) as unknown as Animation);
     const proto = HTMLElement.prototype as unknown as { animate?: unknown; getAnimations?: unknown };
     const saved = { animate: proto.animate, getAnimations: proto.getAnimations, rect: HTMLElement.prototype.getBoundingClientRect };
@@ -274,11 +274,24 @@ describe('DsSegmentedControl', () => {
       items('range')[2]!.click();
       await settle();
       expect(indicator?.style.getPropertyValue('--_segmented-control-indicator-start')).toBe('123px');
-      expect(animate).toHaveBeenCalledTimes(1);
-      const [frames, options] = animate.mock.calls[0] as unknown as [Keyframe[], KeyframeAnimationOptions];
-      expect(options.id).toBe('ds-motion:tab-indicator');
-      expect(frames.flatMap((f) => Object.keys(f)).every((k) => k === 'transform')).toBe(true);
+      // The thumb slides (shared pill, x axis), then the label it leaves dips and the one it reaches pops.
+      expect(animate).toHaveBeenCalledTimes(3);
+      const calls = animate.mock.calls as unknown as [Keyframe[], KeyframeAnimationOptions][];
+      const [frames, options] = calls[0]!;
+      expect(options.id).toBe('ds-motion:indicator-slide');
+      expect(frames[0]?.transform).toBe('translate(-120px, 0px) scale(1, 1)');
+      expect(frames[1]?.transform).toBe('translate(-60px, 0px) scale(1.15, 1)');
+      expect(frames.flatMap((f) => Object.keys(f)).every((k) => k === 'transform' || k === 'offset')).toBe(true);
+      expect(calls[1]![1]).toMatchObject({ id: 'ds-motion:indicator-answer', composite: 'add' });
+      expect(calls[2]![0]).toEqual([{ transform: 'scale(0.95)' }, { transform: 'none' }]);
+      // Reduced: the thumb jumps and no label moves.
+      document.documentElement.setAttribute('data-motion', 'reduce');
+      items('range')[0]!.click();
+      await settle();
+      expect(indicator?.style.getPropertyValue('--_segmented-control-indicator-start')).toBe('3px');
+      expect(animate).toHaveBeenCalledTimes(3);
     } finally {
+      document.documentElement.removeAttribute('data-motion');
       proto.animate = saved.animate;
       proto.getAnimations = saved.getAnimations;
       HTMLElement.prototype.getBoundingClientRect = saved.rect;

@@ -18,6 +18,10 @@
 //
 // It implements ControlValueAccessor, so ngModel, formControl and
 // formControlName work on the host.
+//
+// Motion: the box shakes when the field turns invalid (error-shake), as in
+// React. As the control part of another field it leaves the shake to that
+// field's box.
 import { NgTemplateOutlet } from '@angular/common';
 import {
   ChangeDetectionStrategy,
@@ -42,6 +46,7 @@ import { isIconName, type IconName } from '@the-system/icons';
 import { DsIcon } from '@the-system/icons/angular';
 import type { Shape, Size } from '@the-system/shared';
 import { consumeHostAttributes } from '../../internal/host';
+import { errorShake, type ShakeBox } from '../../internal/motion-fields';
 import { DsFieldContext, fieldControl } from '../field/field-context';
 import { DsInputGroupContext } from '../input-group/input-group-context';
 
@@ -53,6 +58,12 @@ export type InputType = 'text' | 'email' | 'url' | 'tel' | 'number' | 'password'
 export type InputAdornment = IconName | (string & {}) | TemplateRef<unknown>;
 
 const INTERACTIVE = 'a[href], button, input, select, textarea, [tabindex], [contenteditable="true"]';
+
+/** The box that shakes: the root, unless it is the control part of another field, which shakes its own box. */
+const ownBox: ShakeBox = (input) => {
+  const root = input.parentElement;
+  return root?.hasAttribute('data-part') ? null : root;
+};
 
 /** A boolean input that stays undefined when not written, so a Field or a group can fill it. */
 export function optionalBoolean(value: unknown): boolean | undefined {
@@ -221,6 +232,8 @@ export class DsInput implements ControlValueAccessor {
   protected readonly isText = (content: unknown): content is string => typeof content === 'string';
 
   constructor() {
+    // error-shake: the box shakes once when the field turns invalid, or when the browser refuses a submit.
+    errorShake(() => this.controlRef().nativeElement, () => Boolean(this.state().invalid), ownBox);
     // The native value is written only when it differs, as React does: a half typed number ("1e", "-")
     // reads as "" in the browser and must not be wiped by writing "" back.
     afterRenderEffect(() => {

@@ -47,6 +47,9 @@ import { DsButtonBase, isIconName, type ButtonEmphasis, type ButtonSlotContent }
       <span data-part="spinner" aria-hidden="true"></span>
       <span data-part="status" role="status">{{ loadingLabel() }}</span>
     }
+    @if (spinnerLeaving()) {
+      <span data-part="spinner" aria-hidden="true"></span>
+    }
   `,
 })
 export class DsButton extends DsButtonBase {

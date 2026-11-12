@@ -19,11 +19,18 @@
 // React's value, defaultValue and onValueChange are the value model;
 // onComplete is the complete output. Native props of the input are inputs
 // with the React names. It implements ControlValueAccessor.
+//
+// Motion (orders 1.21 and 1.22), as in React: each new character lands in
+// its cell on an unnamed span (otp-fill), a paste or an SMS fill as one run
+// spread over two stagger steps; when the code turns full the cells lift and
+// settle as one short wave (otp-complete). The row shakes when the code
+// turns invalid (error-shake).
 import {
   ChangeDetectionStrategy,
   Component,
   DestroyRef,
   ElementRef,
+  afterRenderEffect,
   booleanAttribute,
   computed,
   effect,
@@ -39,6 +46,8 @@ import {
 import { NG_VALUE_ACCESSOR, type ControlValueAccessor } from '@angular/forms';
 import { codeInputHints, codeSeparatorIndexes, parseCode, type CodeCharset, type Shape, type Size } from '@the-system/shared';
 import { consumeHostAttributes } from '../../internal/host';
+import { injectMotion } from '../../internal/motion';
+import { errorShake, landPop, playBeat, runStep, token } from '../../internal/motion-fields';
 import { DsFieldContext, fieldControl } from '../field/field-context';
 
 export type OTPFieldSize = Size;
@@ -182,7 +191,8 @@ export class DsOTPField implements ControlValueAccessor {
   readonly complete = output<string>();
 
   private readonly field = inject(DsFieldContext, { optional: true });
-  private readonly _consumed = consumeHostAttributes(ATTRIBUTES);
+  private readonly host = consumeHostAttributes(ATTRIBUTES);
+  private readonly motion = injectMotion();
   private readonly nativeRef = viewChild.required<ElementRef<HTMLInputElement>>('native');
   private readonly formDisabled = signal(false);
   private onChange: (value: string) => void = () => undefined;
@@ -211,6 +221,21 @@ export class DsOTPField implements ControlValueAccessor {
   private pending: number | null = null;
 
   constructor() {
+    errorShake(() => this.nativeInput, () => Boolean(this.state().invalid));
+    // otp-fill and otp-complete play after the cells are drawn.
+    let drawn: string | undefined;
+    let wasComplete: boolean | undefined;
+    afterRenderEffect(() => {
+      const value = this.code();
+      const length = this.cellCount();
+      const invalid = Boolean(this.state().invalid);
+      const before = drawn ?? value;
+      drawn = value;
+      const was = wasComplete ?? value.length === length;
+      wasComplete = value.length === length;
+      if (value === before) return;
+      untracked(() => this.playFill(before, value, length, was, invalid));
+    });
     if (this.field) {
       const field = this.field;
       effect(() => {
@@ -221,6 +246,53 @@ export class DsOTPField implements ControlValueAccessor {
         if (untracked(this.id) !== undefined) field.setControlId(undefined);
       });
     }
+  }
+
+  /**
+   * otp-fill: each character that is new in its cell lands. One character grows
+   * from scale.morph past full size on the bouncy spring; a paste or an SMS fill
+   * lands as one run on the snappy spring, spread over two stagger steps.
+   * otp-complete: when the code turns full, the cells lift by distance.lift and
+   * settle as one short wave from the first cell (never while invalid).
+   */
+  private playFill(before: string, value: string, length: number, was: boolean, invalid: boolean): void {
+    const cells = [...this.host.querySelectorAll(':scope > [data-part="cell"]')];
+    const changed: number[] = [];
+    for (let i = 0; i < value.length; i++) if (value[i] !== before[i]) changed.push(i);
+    const fill = this.motion.mode('otp-fill');
+    const run = changed.length > 1;
+    changed.forEach((cell, i) => {
+      const extra = run
+        ? {
+            duration: 'duration.spring-snappy' as const,
+            easing: 'ease.spring-snappy' as const,
+            delay: 'delay.stagger' as const,
+            steps: runStep(i, changed.length),
+          }
+        : {};
+      playBeat(cells[cell]?.firstElementChild, landPop(undefined, extra), 'otp-fill', fill);
+    });
+    if (value.length !== length || was || invalid) return;
+    const wave = this.motion.mode('otp-complete');
+    cells.forEach((cell, i) => {
+      playBeat(
+        cell,
+        {
+          keyframes: [
+            { transform: 'none', easing: 'ease.out' },
+            { transform: `translateY(calc(-1 * ${token.lift}))`, offset: 0.35, easing: 'ease.spring-soft' },
+            { transform: 'none' },
+          ],
+          duration: 'duration.celebrate',
+          easing: 'linear',
+          delay: 'delay.stagger',
+          steps: runStep(i, cells.length),
+        },
+        'otp-complete',
+        wave,
+        null,
+      );
+    });
   }
 
   /** The native input that holds the code. */

@@ -1,7 +1,7 @@
 import { Component, signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import { DsTheme } from '../../theme/theme';
 import ToggleGroupDemo from './toggle-group.demo';
 import { DsToggleGroup, DsToggleGroupItem, type ToggleGroupValue } from './toggle-group';
@@ -100,6 +100,47 @@ async function setup() {
 }
 
 describe('DsToggleGroup', () => {
+  it('tab-slide: the on fill slides from the item it leaves, the labels answer; none in a multiple group or when reduced', async () => {
+    const animate = vi.fn(() => ({ playState: 'running', cancel: vi.fn() }) as unknown as Animation);
+    const proto = HTMLElement.prototype as unknown as { animate?: unknown; getAnimations?: unknown };
+    const saved = { animate: proto.animate, getAnimations: proto.getAnimations, rect: HTMLElement.prototype.getBoundingClientRect };
+    proto.animate = animate;
+    proto.getAnimations = () => [];
+    // A fake layout: each item is 60 by 28 px, side by side; its fill and label inside it.
+    HTMLElement.prototype.getBoundingClientRect = function (this: HTMLElement) {
+      const item = this.closest<HTMLElement>('[data-part="item"]');
+      if (!item) return DOMRect.fromRect({ x: 0, y: 0, width: 200, height: 28 });
+      const i = Array.from(item.parentElement?.querySelectorAll('[data-part="item"]') ?? []).indexOf(item);
+      return DOMRect.fromRect({ x: i * 60, y: 0, width: 60, height: 28 });
+    };
+    try {
+      const { items, settle } = await setup();
+      expect(animate).not.toHaveBeenCalled();
+      const multiple = items('style');
+      expect(multiple[0]!.querySelector(':scope > span[aria-hidden="true"]')).toBeNull();
+      multiple[0]!.click();
+      await settle();
+      expect(animate).not.toHaveBeenCalled();
+      items('single')[1]!.click();
+      await settle();
+      const calls = animate.mock.calls as unknown as [Keyframe[], KeyframeAnimationOptions][];
+      expect(calls.length).toBe(3);
+      expect(calls[0]![0][0]?.transform).toBe('translate(-60px, 0px) scale(1, 1)');
+      expect(calls[0]![1]).toMatchObject({ id: 'ds-motion:indicator-slide' });
+      expect(calls[1]![1]).toMatchObject({ id: 'ds-motion:indicator-answer', composite: 'add' });
+      expect(calls[2]![1]).toMatchObject({ id: 'ds-motion:indicator-answer', composite: 'add' });
+      document.documentElement.setAttribute('data-motion', 'reduce');
+      items('single')[0]!.click();
+      await settle();
+      expect(animate).toHaveBeenCalledTimes(3);
+    } finally {
+      document.documentElement.removeAttribute('data-motion');
+      proto.animate = saved.animate;
+      proto.getAnimations = saved.getAnimations;
+      HTMLElement.prototype.getBoundingClientRect = saved.rect;
+    }
+  });
+
   it('renders the Radix root and items; single is a radiogroup of radios, with no stray attributes', async () => {
     const { root, items } = await setup();
     const el = root('views');
@@ -134,7 +175,9 @@ describe('DsToggleGroup', () => {
       expect(item.hasAttribute('value')).toBe(false);
       expect(item.hasAttribute('dstogglegroupitem')).toBe(false);
     }
-    expect(Array.from(list[0]!.children).map((c) => c.getAttribute('data-part'))).toEqual(['label']);
+    // A single group draws the on fill in an empty aria-hidden span first, as React (tab-slide).
+    expect(Array.from(list[0]!.children).map((c) => c.getAttribute('data-part'))).toEqual([null, 'label']);
+    expect(list[0]!.firstElementChild?.outerHTML).toBe('<span aria-hidden="true"></span>');
   });
 
   it('type multiple is a toolbar of pressed buttons', async () => {
@@ -274,7 +317,7 @@ describe('DsToggleGroup', () => {
     expect(grid!.getAttribute('aria-label')).toBe('Grid view');
     expect(grid!.hasAttribute('label')).toBe(false);
     expect(grid!.hasAttribute('icon')).toBe(false);
-    expect(Array.from(grid!.children).map((c) => c.getAttribute('data-part'))).toEqual(['icon']);
+    expect(Array.from(grid!.children).map((c) => c.getAttribute('data-part'))).toEqual([null, 'icon']);
     expect(bold!.getAttribute('aria-label')).toBe('Bold text');
   });
 

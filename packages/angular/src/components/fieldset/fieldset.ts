@@ -19,7 +19,7 @@ import { NgTemplateOutlet } from '@angular/common';
 import { ChangeDetectionStrategy, Component, booleanAttribute, computed, inject, input, type TemplateRef } from '@angular/core';
 import type { Size } from '@the-system/shared';
 import { consumeHostAttributes } from '../../internal/host';
-import { DsFieldContext } from '../field/field-context';
+import { DsFieldContext, settleAfterFirstRender } from '../field/field-context';
 import { DsFieldError } from '../field-error/field-error';
 import { DsFormContext } from '../form/form-context';
 import { DsErrorContext, hasContent } from './error-context';
@@ -118,6 +118,8 @@ export class DsFieldset {
   protected readonly isText = (v: unknown): v is string => typeof v === 'string';
 
   constructor() {
+    // An error that shows after the first render slides in (order 1.22).
+    settleAfterFirstRender(this.errorContext);
     consumeHostAttributes(['dsFieldset', 'legend', 'description', 'error', 'name', 'size', 'disabled', 'invalid', 'aria-describedby']);
   }
 }

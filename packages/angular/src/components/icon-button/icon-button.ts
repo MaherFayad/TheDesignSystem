@@ -36,6 +36,9 @@ export type IconButtonEmphasis = Exclude<ButtonEmphasis, 'link'>;
       <span data-part="spinner" aria-hidden="true"></span>
       <span data-part="status" role="status">{{ loadingLabel() }}</span>
     }
+    @if (spinnerLeaving()) {
+      <span data-part="spinner" aria-hidden="true"></span>
+    }
   `,
 })
 export class DsIconButton extends DsButtonBase {

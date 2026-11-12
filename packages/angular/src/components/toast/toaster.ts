@@ -36,6 +36,14 @@
 // toasts newest first through two focus proxies; Escape closes a toast only
 // when the key comes from inside the toaster (the focused toast, or the
 // newest from the list) and is never prevented.
+//
+// Motion (order 1.21, interaction toast-stack): a toast enters and leaves
+// with the CSS of Toast.css. When one joins or leaves, the toasts that stay
+// move to their new place with a transform played from where they were (a
+// MutationObserver on the list, as React's stackShift.ts; the flip primitive
+// on the snappy spring with the style's mode, internal/motion-feedback.ts).
+// Layout never animates, the store never waits, and the pause on hover and
+// focus is untouched.
 import {
   ApplicationRef,
   ChangeDetectionStrategy,
@@ -59,6 +67,8 @@ import { DOCUMENT } from '@angular/common';
 import { ComponentPortal, DomPortalOutlet } from '@angular/cdk/portal';
 import { toastStore, toastUrgency, type ToastAction, type ToastItem, type ToastSnapshot, type ToastStore } from '@the-system/shared';
 import { consumeHostAttributes } from '../../internal/host';
+import { injectMotion } from '../../internal/motion';
+import { shiftToast, watchStackShift } from '../../internal/motion-feedback';
 import { animationsDone } from '../../behavior';
 import { DsThemeScope, DsThemeService, attributesOf, themeScopeProviders } from '../../theme';
 import type { ThemeValue } from '../../theme';
@@ -444,6 +454,14 @@ export class DsToasterLayer {
       untracked(() => this.announce(snapshot, label));
     });
 
+    // The toasts that stay move to make room, with a transform (toast-stack).
+    const motion = injectMotion();
+    let stopShift: (() => void) | null = null;
+    afterNextRender(() => {
+      const viewport = this.viewport()?.nativeElement;
+      if (viewport) stopShift = watchStackShift(viewport, (el, from, to) => shiftToast(el, from, to, motion.mode('toast-stack')));
+    });
+
     const win = this.doc.defaultView;
     const onBlur = () => this.away.set(true);
     const onFocus = () => this.away.set(false);
@@ -466,6 +484,7 @@ export class DsToasterLayer {
       this.doc.removeEventListener('keydown', onHotkey);
       if (this.flush !== null) clearTimeout(this.flush);
       if (this.clear !== null) clearTimeout(this.clear);
+      stopShift?.();
       this.store().resume();
     });
   }

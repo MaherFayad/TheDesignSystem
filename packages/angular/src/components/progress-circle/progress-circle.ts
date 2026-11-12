@@ -10,9 +10,27 @@
 //     <span data-part="value" aria-hidden="true">     md and lg, with a value
 //
 //   <div dsProgressCircle [value]="46" label="Uploading files"></div>
-import { ChangeDetectionStrategy, Component, booleanAttribute, computed, inject, input } from '@angular/core';
+//
+// Motion (order 1.22), as React plays it (internal/motion-feedback.ts).
+// progress-spring: the new arc starts turned back by the change and turns
+// into place on the soft spring, while the value inside rolls digit by
+// digit. progress-celebrate: reaching max after being below it pops the
+// ring once.
+import {
+  ChangeDetectionStrategy,
+  Component,
+  ElementRef,
+  afterRenderEffect,
+  booleanAttribute,
+  computed,
+  inject,
+  input,
+  viewChild,
+} from '@angular/core';
 import type { Size, Tone } from '@the-system/shared';
 import { consumeHostAttributes } from '../../internal/host';
+import { injectMotion } from '../../internal/motion';
+import { Celebrate, DigitRoller, sweepRing } from '../../internal/motion-feedback';
 import { DsThemeService } from '../../theme';
 import { clampValue, formatPercent, loadingLabelFor, progressState, validMax } from '../progress-bar/format';
 
@@ -45,9 +63,9 @@ function optionalBoolean(value: unknown): boolean | undefined {
   template: `
     <span data-part="track"></span>
     <span [attr.data-state]="state()" [attr.data-value]="clamped()" [attr.data-max]="max()"
-      [style.--_progress-circle-fraction]="fraction()" data-part="indicator"></span>
+      [style.--_progress-circle-fraction]="fraction()" data-part="indicator" #indicator></span>
     @if (visibleValue()) {
-      <span data-part="value" aria-hidden="true">{{ text() }}</span>
+      <span data-part="value" aria-hidden="true" #valueEl>{{ text() }}</span>
     }
   `,
 })
@@ -72,6 +90,9 @@ export class DsProgressCircle {
   readonly ariaLabel = input<string | undefined>(undefined, { alias: 'aria-label' });
 
   private readonly theme = inject(DsThemeService);
+  private readonly motion = injectMotion();
+  private readonly indicator = viewChild.required<ElementRef<HTMLElement>>('indicator');
+  private readonly valueEl = viewChild<ElementRef<HTMLElement>>('valueEl');
 
   readonly max = computed(() => validMax(this.maxInput(), 0, 100));
   readonly clamped = computed(() => clampValue(this.value(), 0, this.max()));
@@ -94,6 +115,22 @@ export class DsProgressCircle {
   });
 
   constructor() {
+    const host = inject<ElementRef<HTMLElement>>(ElementRef).nativeElement;
+    const celebrate = new Celebrate();
+    const roller = new DigitRoller();
+    let lastFraction: number | null | undefined;
+    afterRenderEffect(() => {
+      const value = this.clamped();
+      const fraction = this.fraction();
+      const text = this.text();
+      const visible = this.visibleValue();
+      celebrate.update(host, value !== null && value >= this.max(), this.motion.mode('progress-celebrate'), 'both');
+      const mode = this.motion.mode('progress-spring');
+      const before = lastFraction === undefined ? (value === null ? null : fraction) : lastFraction;
+      lastFraction = value === null ? null : fraction;
+      if (before !== null && value !== null && before !== fraction && mode === 'full') sweepRing(this.indicator().nativeElement, before, fraction);
+      roller.update(this.valueEl()?.nativeElement, visible ? text : undefined, mode, value ?? undefined);
+    });
     consumeHostAttributes(['dsProgressCircle', 'value', 'max', 'label', 'showValue', 'valueText', 'loadingLabel', 'size', 'tone', 'aria-label']);
   }
 }

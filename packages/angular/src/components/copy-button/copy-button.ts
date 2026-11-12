@@ -8,18 +8,28 @@
 //
 // The twin of packages/react/src/components/CopyButton/CopyButton.tsx.
 // `onCopied` and `onCopyFailed` are the `copied` and `copyFailed` outputs.
+//
+// The result morph (interaction copy-swap, primitive buttonMorph): when the
+// icon changes, the old icon stays for one morph in an unnamed aria-hidden
+// span after the new one, inside the icon part. The span rests at opacity 0
+// (Button.css) and goes when its exit settles. The clipboard write, the
+// state and the status are never held back by it. With no Web Animations
+// API, or a style that turns the morph off, no span is added.
 import {
   ChangeDetectionStrategy,
   Component,
   DestroyRef,
+  afterRenderEffect,
   booleanAttribute,
   computed,
   inject,
   input,
   output,
   signal,
+  untracked,
 } from '@angular/core';
 import type { IconName } from '@the-system/icons';
+import { buttonMorph, settled, type MorphParts, type MorphState } from '@the-system/motion';
 import { DsIcon } from '@the-system/icons/angular';
 import { consumeHostAttributes } from '../../internal/host';
 import { listenAfterCallers } from '../../internal/late-listener';
@@ -40,6 +50,19 @@ const HOLD_TOKEN = '--ds-delay-feedback';
 
 const icons: Record<CopyButtonState, IconName> = { idle: 'copy', copied: 'check', failed: 'warning' };
 
+/** The icon that leaves during a morph, and the states the morph goes between. */
+interface Leaving {
+  id: number;
+  icon: IconName;
+  from: CopyButtonState;
+  to: CopyButtonState;
+}
+
+/** The morph state of each copy state. */
+const morphStates: Record<CopyButtonState, MorphState> = { idle: 'idle', copied: 'success', failed: 'error' };
+/** The morph part that shows in each copy state. */
+const morphSlots: Record<CopyButtonState, 'label' | 'success' | 'error'> = { idle: 'label', copied: 'success', failed: 'error' };
+
 @Component({
   selector: 'button[dsCopyButton]',
   exportAs: 'dsCopyButton',
@@ -51,7 +74,12 @@ const icons: Record<CopyButtonState, IconName> = { idle: 'copy', copied: 'check'
     '[attr.aria-label]': 'iconOnly() ? name() : null',
   },
   template: `
-    <span data-part="icon"><svg dsIcon [name]="icon()" size="md"></svg></span>
+    <span data-part="icon">
+      <svg dsIcon [name]="icon()" size="md"></svg>
+      @for (l of leavingList(); track l.id) {
+        <span aria-hidden="true"><svg dsIcon [name]="l.icon" size="md"></svg></span>
+      }
+    </span>
     @if (!iconOnly()) {
       <span data-part="label">{{ name() }}</span>
     }
@@ -90,6 +118,14 @@ export class DsCopyButton extends DsButtonBase {
     if (s === 'failed') return this.failedLabel() ?? this.words().failed;
     return '';
   });
+  /** The old icon of the running morph, or none. */
+  private readonly leaving = signal<Leaving | null>(null);
+  /** The leaving icon as a list, so each swap renders a new span, as React's key. */
+  protected readonly leavingList = computed(() => {
+    const l = this.leaving();
+    return l ? [l] : [];
+  });
+  private swaps = 0;
   private timer: ReturnType<typeof setTimeout> | undefined;
   private destroyed = false;
 
@@ -101,6 +137,36 @@ export class DsCopyButton extends DsButtonBase {
       this.destroyed = true;
       clearTimeout(this.timer);
     });
+    // Plays the morph on the rendered icons: the new icon is the first child
+    // of the icon part, the leaving copy the last.
+    afterRenderEffect({
+      write: () => {
+        const leaving = this.leaving();
+        const part = this.host.querySelector(':scope > [data-part="icon"]');
+        if (!leaving || !part) return;
+        const incoming = part.firstElementChild;
+        const outgoing = part.lastElementChild;
+        const parts: MorphParts = { root: this.host };
+        if (outgoing && outgoing !== incoming) parts[morphSlots[leaving.from]] = outgoing;
+        if (incoming) parts[morphSlots[leaving.to]] = incoming;
+        const mode = untracked(() => this.motion.mode('copy-swap'));
+        const played = buttonMorph(parts, morphStates[leaving.from], morphStates[leaving.to], { mode });
+        const exit = played.find((a) => (a.effect as KeyframeEffect | null)?.target === outgoing) ?? null;
+        void settled(exit).then(() => {
+          if (!this.destroyed) this.leaving.update((l) => (l?.id === leaving.id ? null : l));
+        });
+      },
+    });
+  }
+
+  /** Sets the state at once and, when the icon changes and motion can play, keeps the old icon for the swap. */
+  private change(next: CopyButtonState): void {
+    const prev = this.state();
+    if (icons[prev] !== icons[next] && typeof this.host.animate === 'function' && this.motion.mode('copy-swap') !== 'none') {
+      this.swaps += 1;
+      this.leaving.set({ id: this.swaps, icon: icons[prev], from: prev, to: next });
+    }
+    this.state.set(next);
   }
 
   protected override isIconOnly(): boolean {
@@ -122,8 +188,8 @@ export class DsCopyButton extends DsButtonBase {
       selectTextOf(this.target());
       this.copyFailed.emit(value);
     }
-    this.state.set(ok ? 'copied' : 'failed');
+    this.change(ok ? 'copied' : 'failed');
     clearTimeout(this.timer);
-    this.timer = setTimeout(() => this.state.set('idle'), readTimeToken(this.host, HOLD_TOKEN));
+    this.timer = setTimeout(() => this.change('idle'), readTimeToken(this.host, HOLD_TOKEN));
   }
 }

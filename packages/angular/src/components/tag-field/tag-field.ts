@@ -45,6 +45,7 @@ import {
   ViewContainerRef,
   type ComponentRef,
   afterNextRender,
+  afterRenderEffect,
   computed,
   effect,
   forwardRef,
@@ -62,6 +63,8 @@ import { consumeHostAttributes } from '../../internal/host';
 import { ListHighlight } from '../../internal/list-highlight';
 import { optionalBoolean } from '../../internal/optional-boolean';
 import { PopupLayer } from '../../internal/popper';
+import { injectMotion } from '../../internal/motion';
+import { POPUP_LIST_ROWS, injectFlipGroup, openStaggered } from '../../internal/motion-selection';
 import { DsThemeService } from '../../theme';
 import { DsCloseButton } from '../close-button/close-button';
 import { DsFieldContext, fieldControl } from '../field/field-context';
@@ -99,6 +102,9 @@ const words = {
   },
 } as const;
 
+/** The tags and the input of the box, the items that move together. */
+const tagsAndInputOf = (root: Element) => Array.from(root.querySelectorAll(":scope > [data-part='tags'] > [data-part='tag'], :scope > [data-part='control']"));
+
 let nextId = 0;
 
 @Component({
@@ -116,7 +122,7 @@ let nextId = 0;
     '[attr.data-readonly]': 'isReadOnly() ? "" : null',
     '(mousedown)': 'onRootMousedown($event)',
   },
-  template: `@if (tags().length > 0) {<div data-part="tags" role="group" [attr.aria-labelledby]="labelledBy() ?? null" [attr.aria-label]="ariaLabel() ?? null" [attr.aria-disabled]="isDisabled() ? 'true' : null">@for (tag of tags(); track $index + '-' + tag; let i = $index) {<span data-part="tag"><span data-part="tag-label">{{ tag }}</span>@if (!isReadOnly()) {<button dsCloseButton data-part="tag-remove" size="xs" tabindex="-1"
+  template: `@if (tags().length > 0) {<div data-part="tags" role="group" [attr.aria-labelledby]="labelledBy() ?? null" [attr.aria-label]="ariaLabel() ?? null" [attr.aria-disabled]="isDisabled() ? 'true' : null">@for (tag of tags(); track tag; let i = $index) {<span data-part="tag"><span data-part="tag-label">{{ tag }}</span>@if (!isReadOnly()) {<button dsCloseButton data-part="tag-remove" size="xs" tabindex="-1"
   [label]="removeText(tag)"
   [disabled]="isDisabled()"
   (click)="onRemoveClick(i)" (keydown)="onRemoveKeydown($event, i)"></button>}</span>}</div>}<input #control
@@ -249,6 +255,7 @@ export class DsTagField implements ControlValueAccessor {
   });
   protected readonly highlight = new ListHighlight(this.options, this.highlighted, this.injector);
 
+  protected readonly motion = injectMotion();
   protected readonly layer = new PopupLayer({
     template: () => this.popupTemplate(),
     anchor: () => this.host,
@@ -262,6 +269,13 @@ export class DsTagField implements ControlValueAccessor {
   private onTouched: () => void = () => {};
 
   constructor() {
+    // collection-flip: tags move, pop in and shrink out; the input closes the gap with them.
+    // Tags are tracked by their text (they are unique), so a removal keeps the elements of the tags after it.
+    const flip = injectFlipGroup({ items: tagsAndInputOf });
+    afterRenderEffect(() => {
+      this.tags();
+      untracked(() => flip.update(this.host));
+    });
     // The field root is the Radix Anchor, which renders class="".
     if (!this.host.hasAttribute('class')) this.host.setAttribute('class', '');
     const destroyRef = inject(DestroyRef);
@@ -309,7 +323,8 @@ export class DsTagField implements ControlValueAccessor {
 
     effect(() => {
       const open = this.popupOpen();
-      untracked(() => (open ? this.layer.open() : this.layer.close()));
+      // menu-rows: the suggestions arrive one stagger step after the popup surface, each time it opens.
+      untracked(() => (open ? openStaggered(this.layer, POPUP_LIST_ROWS, () => this.motion.mode('menu-rows')) : this.layer.close()));
     });
 
     effect(() => {

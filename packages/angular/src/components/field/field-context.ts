@@ -4,7 +4,7 @@
 //
 // DsField provides itself as DsFieldContext. A control injects it with
 // `inject(DsFieldContext, { optional: true })`.
-import { computed, type Signal } from '@angular/core';
+import { afterNextRender, computed, type Signal } from '@angular/core';
 
 export type FieldPart = 'description' | 'error';
 
@@ -25,6 +25,18 @@ export abstract class DsFieldContext {
   abstract register(part: FieldPart): () => void;
   /** A control with its own id tells the field, so the label points at it. */
   abstract setControlId(id: string | undefined): void;
+  /**
+   * True once the field's first render is done (order 1.22), the twin of
+   * React's `settled` ref. A description or an error created after it
+   * slides in; one that is there on the first render does not move. The
+   * owner sets it with `settleAfterFirstRender`.
+   */
+  settled = false;
+}
+
+/** Marks a field context settled after the owner's first render. Call in an injection context. */
+export function settleAfterFirstRender(context: DsFieldContext): void {
+  afterNextRender(() => (context.settled = true));
 }
 
 export interface FieldControlOwn {

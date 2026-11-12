@@ -3,6 +3,9 @@
 // (`div[dsSwitch]`); the template renders the parts in the React order: the
 // control (the Radix button with role switch) holding the track and the
 // thumb, then the label with the optional state text, then the description.
+// The first child of the track is an aria-hidden span: the on tint that
+// crosses in behind the thumb (interaction switch-stretch), styled by
+// Switch.css.
 //
 //   <div dsSwitch label="Auto save" [(checked)]="autoSave"></div>
 //   <div dsSwitch label="Show rulers" [formControl]="rulers"></div>
@@ -88,7 +91,7 @@ let nextId = 0;
       [attr.aria-readonly]="isReadOnly() ? 'true' : null"
       data-part="control"
       (click)="onClick($event)"
-      (blur)="onTouched()"><span data-part="track"><span [attr.data-state]="state()" [attr.data-disabled]="isDisabled() ? '' : null" data-part="thumb"></span></span></button>@if (isFormControl()) {<input #bubble
+      (blur)="onTouched()"><span data-part="track"><span aria-hidden="true"></span><span [attr.data-state]="state()" [attr.data-disabled]="isDisabled() ? '' : null" data-part="thumb"></span></span></button>@if (isFormControl()) {<input #bubble
       type="checkbox"
       aria-hidden="true"
       [attr.checked]="initialChecked() ? '' : null"

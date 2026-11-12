@@ -14,6 +14,9 @@
 //
 // Behavior: hand built (Radix Progress is attributes only). The state words
 // are the Radix ones: indeterminate, loading, complete.
+//
+// Motion (order 1.22): progress-spring is CSS (ProgressBar.css);
+// progress-celebrate pops the track once per completion, as React plays it.
 import {
   ChangeDetectionStrategy,
   Component,
@@ -23,11 +26,16 @@ import {
   input,
   isDevMode,
   afterNextRender,
+  afterRenderEffect,
+  viewChild,
+  type ElementRef,
   type TemplateRef,
 } from '@angular/core';
 import { NgTemplateOutlet } from '@angular/common';
 import type { Size, Tone } from '@the-system/shared';
 import { consumeHostAttributes } from '../../internal/host';
+import { injectMotion } from '../../internal/motion';
+import { Celebrate } from '../../internal/motion-feedback';
 import { DsThemeService } from '../../theme';
 import { clampValue, formatPercent, loadingLabelFor, progressState, validMax } from './format';
 
@@ -65,7 +73,7 @@ let nextId = 0;
     @if (showValue()) {
       <span data-part="value">{{ text() }}</span>
     }
-    <span data-part="track">
+    <span data-part="track" #track>
       <span [attr.data-state]="state()" [attr.data-value]="clamped()" [attr.data-max]="max()"
         [style.--_progress-bar-fraction]="fraction()" data-part="indicator"></span>
     </span>
@@ -94,6 +102,8 @@ export class DsProgressBar {
   readonly ariaLabelledby = input<string | undefined>(undefined, { alias: 'aria-labelledby' });
 
   private readonly theme = inject(DsThemeService);
+  private readonly motion = injectMotion();
+  private readonly track = viewChild.required<ElementRef<HTMLElement>>('track');
   protected readonly labelId = `ds-progress-bar-label-${++nextId}`;
 
   readonly max = computed(() => validMax(this.maxInput(), 0, 100));
@@ -128,6 +138,13 @@ export class DsProgressBar {
   );
 
   constructor() {
+    // progress-celebrate (order 1.22): the track dips and pops on the block axis once per completion, never on a first paint at max.
+    const celebrate = new Celebrate();
+    afterRenderEffect(() => {
+      const value = this.clamped();
+      const done = value !== null && value >= this.max();
+      celebrate.update(this.track().nativeElement, done, this.motion.mode('progress-celebrate'), 'block');
+    });
     consumeHostAttributes(['dsProgressBar', 'value', 'max', 'label', 'showValue', 'valueText', 'loadingLabel', 'size', 'tone', 'aria-label', 'aria-labelledby']);
     if (isDevMode()) {
       afterNextRender(() => {

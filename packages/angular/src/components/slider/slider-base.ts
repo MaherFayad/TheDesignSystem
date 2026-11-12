@@ -14,6 +14,13 @@
 // dsTheme provides. Angular Aria has no slider pattern today; this stays
 // hand built. The thumb carries `data-radix-collection-item` and an empty
 // `style` attribute, as the Radix thumb does, so the DOM is the same.
+//
+// Motion, as React: slider-pull is CSS on the thumb (data-dragging).
+// slider-bubble: each thumb holds an unnamed aria-hidden span, the value
+// bubble, whose digits roll (rollDigits) while a pointer holds the slider.
+// slider-nudge (pattern shake, one swing toward the end): a key or a drag
+// that pushes a thumb past the minimum or the maximum of a horizontal slider
+// nudges it toward that end and back once. A held key nudges once.
 import {
   Directive,
   ElementRef,
@@ -31,8 +38,10 @@ import {
   type WritableSignal,
 } from '@angular/core';
 import { Directionality } from '@angular/cdk/bidi';
+import { renderDigits, rollDigits } from '@the-system/motion';
 import type { Size, Tone } from '@the-system/shared';
 import { BubbleEvent } from '../../internal/bubble-event';
+import { injectMotion } from '../../internal/motion';
 import { optionalBoolean } from '../../internal/optional-boolean';
 import type { OrderedStyle } from '../../internal/ordered-style';
 import { DsThemeService } from '../../theme/theme';
@@ -70,7 +79,7 @@ export const sliderTemplate = `@if (hasLabel()) {<span [id]="labelId" data-part=
       (pointerdown)="onPointerDown($event)"
       (pointermove)="onPointerMove($event)"
       (pointerup)="onPointerUp($event)"
-      (lostpointercapture)="dragging.set(false)"><span data-part="track" [attr.data-disabled]="isDisabled() ? '' : null" [attr.data-orientation]="orientation()"><span data-part="range" [attr.data-orientation]="orientation()" [attr.data-disabled]="isDisabled() ? '' : null" [dsOrderedStyle]="rangeStyle()"></span></span>@for (v of values(); track $index; let i = $index) {<span [dsOrderedStyle]="thumbWrapStyles()[i]"><span #thumb
+      (lostpointercapture)="onLostPointerCapture()"><span data-part="track" [attr.data-disabled]="isDisabled() ? '' : null" [attr.data-orientation]="orientation()"><span data-part="range" [attr.data-orientation]="orientation()" [attr.data-disabled]="isDisabled() ? '' : null" [dsOrderedStyle]="rangeStyle()"></span></span>@for (v of values(); track $index; let i = $index) {<span [dsOrderedStyle]="thumbWrapStyles()[i]"><span #thumb
       role="slider"
       [attr.aria-label]="thumbAriaLabels()[i] ?? null"
       [attr.aria-valuemin]="min()"
@@ -91,7 +100,7 @@ export const sliderTemplate = `@if (hasLabel()) {<span [id]="labelId" data-part=
       [attr.aria-describedby]="describedBy() ?? null"
       [attr.aria-invalid]="isInvalid() ? 'true' : null"
       (focus)="onThumbFocus(i)"
-      (blur)="onTouched()"></span></span>@if (isFormControl()) {<input #bubble [dsOrderedStyle]="hiddenStyle" [attr.name]="inputName() ?? null" [attr.value]="v" [value]="v" />}}</span>@if (showMarks()) {<div data-part="marks" aria-hidden="true">@for (mark of markList(); track mark.value; let m = $index) {<span data-mark="" [dsOrderedStyle]="markStyles()[m]">{{ mark.label }}</span>}</div>}`;
+      (blur)="onTouched()"><span #digits aria-hidden="true"></span></span></span>@if (isFormControl()) {<input #bubble [dsOrderedStyle]="hiddenStyle" [attr.name]="inputName() ?? null" [attr.value]="v" [value]="v" />}}</span>@if (showMarks()) {<div data-part="marks" aria-hidden="true">@for (mark of markList(); track mark.value; let m = $index) {<span data-mark="" [dsOrderedStyle]="markStyles()[m]">{{ mark.label }}</span>}</div>}`;
 
 /** The input names both components consume from the host. */
 export const sliderHostInputs = [
@@ -162,6 +171,22 @@ function hasMinStepsBetween(values: readonly number[], distance: number): boolea
   const steps = values.slice(0, -1).map((v, i) => (values[i + 1] ?? v) - v);
   return Math.min(...steps) >= distance;
 }
+
+type SliderEnd = 'start' | 'end';
+
+/** The end a key moves a thumb toward, as Radix reads the keys (horizontal only). */
+function keyEnd(key: string, dir: 'ltr' | 'rtl'): SliderEnd | null {
+  if (key === 'Home' || key === 'PageDown' || key === 'ArrowDown') return 'start';
+  if (key === 'End' || key === 'PageUp' || key === 'ArrowUp') return 'end';
+  if (key === 'ArrowLeft') return dir === 'rtl' ? 'end' : 'start';
+  if (key === 'ArrowRight') return dir === 'rtl' ? 'start' : 'end';
+  return null;
+}
+
+/** The least time between two rolls of the bubble, in ms (a behavior gap, not a motion timing). */
+const ROLL_GAP = 120;
+
+const now = (): number => (typeof performance === 'undefined' ? Date.now() : performance.now());
 
 function toMark(mark: number | SliderMark): SliderMark {
   return typeof mark === 'number' ? { value: mark } : mark;
@@ -234,6 +259,16 @@ export abstract class DsSliderBase {
   private readonly control = viewChildren<ElementRef<HTMLElement>>('control');
   private readonly thumbs = viewChildren<ElementRef<HTMLElement>>('thumb');
   private readonly bubbles = viewChildren<ElementRef<HTMLInputElement>>('bubble');
+  /** The value bubble of each thumb (slider-bubble). */
+  private readonly digitHosts = viewChildren<ElementRef<HTMLSpanElement>>('digits');
+  private readonly motion = injectMotion();
+  /** slider-nudge: no new nudge while one plays. */
+  private nudgeBusyUntil = 0;
+  /** The end the pointer went past during this drag, so a drag nudges once per excursion. */
+  private pastEnd: SliderEnd | null = null;
+  /** slider-bubble: the value and text each bubble shows, and when the last roll started. */
+  private shownDigits: { value: number; text: string }[] = [];
+  private lastRoll = -Infinity;
 
   protected readonly labelId = `ds-slider-${++nextId}-label`;
   readonly dragging = signal(false);
@@ -376,10 +411,63 @@ export abstract class DsSliderBase {
       destroyRef.onDestroy(() => form.removeEventListener('reset', reset));
     });    // Radix dispatches `input` on the hidden input after the value changes.
     const bubbleInput = new BubbleEvent<string>('input');
+    // slider-bubble: keeps the decorative bubble of each thumb in step with the value. While a pointer
+    // holds the slider the digits roll (up when the value grows); otherwise they are written still.
+    afterRenderEffect(() => {
+      const values = this.values();
+      const format = this.format();
+      const dragging = this.dragging();
+      const hosts = this.digitHosts().map((r) => r.nativeElement);
+      untracked(() => this.syncBubbles(values, format, dragging, hosts));
+    });
     afterRenderEffect(() => {
       const values = this.values();
       this.bubbles().forEach((ref, i) => bubbleInput.update(ref.nativeElement, String(values[i])));
     });
+  }
+
+  private syncBubbles(values: readonly number[], format: (v: number) => string, dragging: boolean, hosts: HTMLSpanElement[]): void {
+    values.forEach((value, i) => {
+      const host = hosts[i];
+      const text = format(value);
+      if (!host) return;
+      const last = this.shownDigits[i];
+      this.shownDigits[i] = { value, text };
+      if (last && last.text === text && host.childElementCount > 0) return;
+      // A fast drag changes the value every frame: a roll starts at most once per ROLL_GAP, the steps between are written still.
+      const t = now();
+      if (!last || !dragging || t - this.lastRoll < ROLL_GAP) {
+        renderDigits(host, text);
+        return;
+      }
+      this.lastRoll = t;
+      rollDigits(host, last.text, text, { direction: value < last.value ? 'down' : 'up', mode: this.motion.mode('slider-bubble') });
+    });
+  }
+
+  /** slider-nudge: plays the shake pattern, one swing toward `end`, on a thumb that cannot go further. */
+  private nudge(thumb: Element | null | undefined, end: SliderEnd): void {
+    const t = now();
+    if (!thumb || t < this.nudgeBusyUntil) return;
+    const nudge = this.motion.play(thumb, 'shake', 'slider-nudge', { swings: 1, toward: end });
+    if (!nudge) return;
+    // Added to the lift of a grabbed thumb instead of replacing it.
+    if (nudge.effect && 'composite' in nudge.effect) (nudge.effect as KeyframeEffect).composite = 'add';
+    const duration = nudge.effect?.getTiming().duration;
+    this.nudgeBusyUntil = t + (typeof duration === 'number' ? duration : 0);
+  }
+
+  /** The thumb that has focus in this slider, and its index. */
+  private focusedThumb(): [HTMLElement, number] | null {
+    const thumbs = this.nativeThumbs;
+    const i = thumbs.findIndex((t) => t === t.ownerDocument.activeElement);
+    const thumb = thumbs[i];
+    return thumb ? [thumb, i] : null;
+  }
+
+  protected onLostPointerCapture(): void {
+    this.dragging.set(false);
+    this.pastEnd = null;
   }
 
   /** The thumb elements, start first. */
@@ -398,6 +486,7 @@ export abstract class DsSliderBase {
 
   private commit(next: number[]): void {
     this.dragging.set(false);
+    this.pastEnd = null;
     this.emitCommit(next);
   }
 
@@ -439,6 +528,10 @@ export abstract class DsSliderBase {
     const min = this.min();
     const max = this.max();
     const step = this.step();
+    // slider-nudge: a key that pushes a thumb past the minimum or the maximum.
+    const end = this.orientation() === 'horizontal' && !event.repeat && !this.isDisabled() ? keyEnd(event.key, this.dir()) : null;
+    const found = end ? this.focusedThumb() : null;
+    if (end && found && values[found[1]] === (end === 'start' ? min : max)) this.nudge(found[0], end);
     // React SliderBase: with two thumbs, Home and End move the focused thumb as far as the other allows.
     if (values.length >= 2 && (event.key === 'Home' || event.key === 'End')) {
       const index = (event.target as HTMLElement).getAttribute('data-thumb') === 'end' ? 1 : 0;
@@ -516,9 +609,25 @@ export abstract class DsSliderBase {
   }
 
   protected onPointerMove(event: PointerEvent): void {
+    this.nudgePastEnd(event);
     const target = event.target as HTMLElement;
     if (this.isDisabled() || !target.hasPointerCapture?.(event.pointerId)) return;
     this.updateValues(this.valueFromPointer(event), this.valueIndexToChange, false);
+  }
+
+  /** slider-nudge: the pointer went past the start or the end of the track. */
+  private nudgePastEnd(event: PointerEvent): void {
+    if (!this.dragging() || this.orientation() !== 'horizontal') return;
+    const track = this.control()[0]?.nativeElement.querySelector('[data-part="track"]')?.getBoundingClientRect();
+    if (!track) return;
+    const beforeLeft = event.clientX < track.left;
+    const pastRight = event.clientX > track.right;
+    const end: SliderEnd | null = beforeLeft || pastRight ? (beforeLeft === (this.dir() === 'rtl') ? 'end' : 'start') : null;
+    if (end === this.pastEnd) return;
+    this.pastEnd = end;
+    const found = end ? this.focusedThumb() : null;
+    // Only the outer thumb of that end: the start thumb of a range stops at the end thumb, not at the maximum.
+    if (end && found && found[1] === (end === 'start' ? 0 : this.values().length - 1)) this.nudge(found[0], end);
   }
 
   protected onPointerUp(event: PointerEvent): void {

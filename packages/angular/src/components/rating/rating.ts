@@ -27,11 +27,18 @@
 // inputs, because React moves them (to the stars in the read only form) and
 // merges them with its own ids. The text after the stars, React's children,
 // is the projected content; it is read once, after the first render.
+//
+// Motion (interaction rating-fill, order 1.22, proposed), as React: after a
+// pick, only the stars whose state changed move. Stars that fill land from
+// scale.morph past full size as one run over two stagger steps (the chosen
+// star on the bouncy spring); stars that empty dip and spring back. The
+// hover preview (rating-preview) is the shared CSS.
 import {
   ChangeDetectionStrategy,
   Component,
   DestroyRef,
   ElementRef,
+  Injector,
   afterNextRender,
   afterRenderEffect,
   booleanAttribute,
@@ -54,6 +61,8 @@ import type { Size, Tone } from '@the-system/shared';
 import { RovingRadioGroup, bubbleInputStyle, rovingItem, type RovingRadioItem } from '../../behavior/roving-radio';
 import { BubbleEvent } from '../../internal/bubble-event';
 import { consumeHostAttributes } from '../../internal/host';
+import { injectMotion } from '../../internal/motion';
+import { dipPop, landPop, playBeat, runStep } from '../../internal/motion-fields';
 import { DsNativeButton } from '../../internal/native-button';
 import { DsThemeService } from '../../theme/theme';
 import type { Lang } from '../../theme/types';
@@ -246,6 +255,10 @@ export class DsRating implements ControlValueAccessor {
     );
   });
 
+  private readonly motion = injectMotion();
+  private readonly injector = inject(Injector);
+  /** Set by a pick, read once the new score is drawn: the score before it. */
+  private pickedFrom: number | null = null;
   private onChange: (value: number) => void = () => {};
   private onTouched: () => void = () => {};
 
@@ -303,10 +316,44 @@ export class DsRating implements ControlValueAccessor {
 
   private select(next: number): void {
     const changed = !Object.is(next, untracked(this.current));
+    const before = untracked(this.whole);
+    if (Math.round(next) !== before && this.pickedFrom === null) {
+      this.pickedFrom = before;
+      afterNextRender(() => this.playFill(), { injector: this.injector });
+    }
     this.current.set(next);
     if (!changed) return;
     this.value.set(next);
     this.onChange(next);
+  }
+
+  /**
+   * rating-fill: only the stars whose state changed move. Stars that fill
+   * land from scale.morph past full size, as one run spread over two stagger
+   * steps from the first; the chosen star lands on the bouncy spring. Stars
+   * that empty dip and spring back. A new pick restarts the run.
+   */
+  private playFill(): void {
+    const before = this.pickedFrom;
+    this.pickedFrom = null;
+    const whole = untracked(this.whole);
+    if (before === null || before === whole) return;
+    const mode = this.motion.mode('rating-fill');
+    const stars = this.stars();
+    const lo = Math.min(before, whole);
+    const hi = Math.max(before, whole);
+    const n = hi - lo;
+    for (let score = lo + 1; score <= hi; score++) {
+      const icon = stars[score - 1]?.nativeElement.querySelector('[data-part="icon"]');
+      const i = score - lo - 1;
+      const wait = { delay: 'delay.stagger' as const, steps: runStep(i, n) };
+      if (whole > before) {
+        const timing = score === whole ? {} : { duration: 'duration.spring-snappy' as const, easing: 'ease.spring-snappy' as const };
+        playBeat(icon, landPop(undefined, { ...timing, ...wait }), 'rating-fill', mode);
+      } else {
+        playBeat(icon, dipPop(wait), 'rating-fill', mode, null);
+      }
+    }
   }
 
   protected onRootKeydown(event: KeyboardEvent): void {

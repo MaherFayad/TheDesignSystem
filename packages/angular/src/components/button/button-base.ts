@@ -4,9 +4,23 @@
 //
 // The host element is the root: `button[dsButton]` or `a[dsButton]`, so no
 // wrapper sits between the root and its parts and Button.css applies as is.
-import { Directive, booleanAttribute, computed, inject, input, type Signal, type TemplateRef } from '@angular/core';
+import {
+  DestroyRef,
+  Directive,
+  afterRenderEffect,
+  booleanAttribute,
+  computed,
+  inject,
+  input,
+  linkedSignal,
+  untracked,
+  type Signal,
+  type TemplateRef,
+} from '@angular/core';
 import type { IconName } from '@the-system/icons';
+import { buttonMorph, settled } from '@the-system/motion';
 import { consumeHostAttributes } from '../../internal/host';
+import { injectMotion } from '../../internal/motion';
 import { DS_BUTTON_GROUP } from '../button-group/button-group-context';
 import type { Emphasis, Shape, Size, Tone } from '@the-system/shared';
 
@@ -23,6 +37,9 @@ export function isIconName(content: ButtonSlotContent | undefined): content is I
 }
 
 const BLOCKED = ['click', 'auxclick'] as const;
+
+/** The components that play the press (interaction button-press). Button.css scales them on :active. */
+const PRESS_DS: ReadonlySet<string> = new Set(['button', 'icon-button', 'toggle-button', 'close-button', 'copy-button', 'floating-action-button']);
 
 /** Input attributes the base consumes (see internal/host.ts). href, type and role are stamped back by host bindings. */
 const BASE_INPUTS = ['dsButton', 'dsIconButton', 'size', 'tone', 'shape', 'loading', 'loadingLabel', 'disabled', 'emphasis'];
@@ -99,6 +116,35 @@ export abstract class DsButtonBase {
     return this.role() ?? null;
   });
 
+  protected readonly motion = injectMotion();
+
+  /**
+   * The spinner that leaves after loading ends, kept for its exit only
+   * (interaction button-loading, primitive buttonMorph). Set in the same
+   * change as loading, so the template renders it in place of the spinner;
+   * it goes when the exit settles. With no Web Animations API, or a style
+   * that turns the morph off, nothing extra renders. As useLoadingMorph in
+   * React's ButtonBase.tsx.
+   */
+  private readonly spinnerExit = linkedSignal<boolean, boolean>({
+    source: () => this.loading(),
+    computation: (loading, previous) =>
+      untracked(
+        () =>
+          previous !== undefined &&
+          previous.source &&
+          !loading &&
+          typeof this.host.animate === 'function' &&
+          this.motion.mode('button-morph') !== 'none',
+      ),
+  });
+  /**
+   * Renders the leaving spinner: an aria-hidden span[data-part="spinner"]
+   * after the parts, at opacity 0 at rest (Button.css). Templates read it in
+   * its own @if on every check, so the linked signal sees each loading change.
+   */
+  readonly spinnerLeaving = computed(() => this.spinnerExit() && !this.loading());
+
   constructor() {
     const block = (event: Event) => {
       if (!this.inert()) return;
@@ -106,5 +152,70 @@ export abstract class DsButtonBase {
       event.stopImmediatePropagation();
     };
     for (const type of BLOCKED) this.host.addEventListener(type, block, { capture: true });
+    this.pressOnEnter();
+    this.morphOnLoading();
+  }
+
+  /**
+   * The press for Enter (interaction button-press). Space and the pointer
+   * press through :active in Button.css; Enter activates on key down and the
+   * browser draws no :active for it, so the press pattern plays here. It
+   * decorates only: the click has already happened.
+   */
+  private pressOnEnter(): void {
+    let pressed = false;
+    const release = () => {
+      if (!pressed) return;
+      pressed = false;
+      this.motion.play(this.host, 'press', 'button-press', { phase: 'exit' });
+    };
+    const keydown = (event: KeyboardEvent) => {
+      const pressable = PRESS_DS.has(this.host.getAttribute('data-ds') ?? '') && !this.inert() && this.host.getAttribute('aria-disabled') !== 'true';
+      if (pressable && event.key === 'Enter' && !event.repeat) {
+        pressed = this.motion.play(this.host, 'press', 'button-press', { phase: 'enter' }) !== null;
+      }
+    };
+    const keyup = (event: KeyboardEvent) => {
+      if (event.key === 'Enter') release();
+    };
+    this.host.addEventListener('keydown', keydown);
+    this.host.addEventListener('keyup', keyup);
+    this.host.addEventListener('blur', release);
+  }
+
+  /**
+   * The loading morph. When loading turns on, the button dips, the label
+   * (or the icon) rolls up and out and the spinner pops in; when it turns
+   * off, the leaving spinner shrinks away and the label rolls back in.
+   * Plays after the render that changed the parts, so the spinner of each
+   * state is in the DOM. aria-busy, the status and activation never wait.
+   */
+  private morphOnLoading(): void {
+    // The first run only records the state: a button that starts loading
+    // does not morph, as React's useRef(loading). Inputs are not set yet in
+    // the constructor, so the first value is read here.
+    let last: boolean | undefined;
+    let run = 0;
+    inject(DestroyRef).onDestroy(() => (run += 1));
+    afterRenderEffect({
+      write: () => {
+        const loading = this.loading();
+        const first = last === undefined;
+        if (loading === last) return;
+        last = loading;
+        if (first) return;
+        const el = this.host;
+        const label = el.querySelector(':scope > [data-part="label"]') ?? el.querySelector(':scope > [data-part="icon"]');
+        const spinner = el.querySelector(':scope > [data-part="spinner"]');
+        const mode = untracked(() => this.motion.mode('button-morph'));
+        const played = buttonMorph({ root: el, label, spinner }, loading ? 'idle' : 'loading', loading ? 'loading' : 'idle', { mode });
+        const id = ++run;
+        if (loading) return;
+        const exit = spinner ? played.find((a) => a.effect && (a.effect as KeyframeEffect).target === spinner) : undefined;
+        void settled(exit ?? null).then(() => {
+          if (id === run) this.spinnerExit.set(false);
+        });
+      },
+    });
   }
 }

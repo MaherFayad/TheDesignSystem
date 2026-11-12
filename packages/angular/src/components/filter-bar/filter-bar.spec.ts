@@ -61,7 +61,7 @@ describe('DsFilterBar', () => {
     expect(q('#bar [data-part="search"]').getAttribute('data-ds')).toBe('search-field');
     expect(q('#bar [data-part="filters"]').getAttribute('role')).toBe('group');
     expect(q('#bar [data-part="filters"]').getAttribute('aria-label')).toBe('Filters');
-    expect(q('#bar [data-part="count"]').textContent).toBe('1 filter on, 3 results');
+    expect(q('#bar [data-part="count"] > [data-visually-hidden]').textContent).toBe('1 filter on, 3 results');
     expect(q('#end-slot')).not.toBeNull();
     fixture.nativeElement.remove();
   });
@@ -83,7 +83,7 @@ describe('DsFilterBar', () => {
     qa('#bar [data-part="filters"] > button')[1]!.click();
     await fixture.whenStable();
     expect(host.value()).toEqual(['boards', 'images']);
-    expect(q('#bar [data-part="count"]').textContent).toBe('2 filters on, 3 results');
+    expect(q('#bar [data-part="count"] > [data-visually-hidden]').textContent).toBe('2 filters on, 3 results');
     qa('#bar [data-part="filters"] > button')[0]!.click();
     await fixture.whenStable();
     expect(host.value()).toEqual(['images']);
@@ -101,7 +101,7 @@ describe('DsFilterBar', () => {
     input.dispatchEvent(new Event('input', { bubbles: true }));
     await fixture.whenStable();
     expect(host.query()).toBe('hero');
-    expect(q('#bar [data-part="count"]').textContent).toBe('2 filters on, 3 results');
+    expect(q('#bar [data-part="count"] > [data-visually-hidden]').textContent).toBe('2 filters on, 3 results');
     q('#bar > [data-part="clear"]').click();
     await fixture.whenStable();
     expect(host.value()).toEqual([]);
@@ -138,8 +138,8 @@ describe('DsFilterBar', () => {
     expect(qa('#plain [data-part="filters"] > button').map((c) => c.getAttribute('aria-pressed'))).toEqual(['false', 'true', 'false']);
     qa('#plain [data-part="filters"] > button')[0]!.click();
     await fixture.whenStable();
-    expect(q('#plain [data-part="count"]').textContent).toBe('2 filters on');
-    expect(q('#ar [data-part="count"]').textContent).toBe('فلترين مفعلين، نتيجتين');
+    expect(q('#plain [data-part="count"] > [data-visually-hidden]').textContent).toBe('2 filters on');
+    expect(q('#ar [data-part="count"] > [data-visually-hidden]').textContent).toBe('فلترين مفعلين، نتيجتين');
     expect(q('#ar [data-part="clear"]').textContent?.trim()).toBe('مسح الفلاتر');
     fixture.nativeElement.remove();
   });

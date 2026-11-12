@@ -19,6 +19,11 @@
 //
 // It implements ControlValueAccessor, so ngModel, formControl and
 // formControlName work on the host.
+//
+// Motion (order 1.22), as in React: a drag or an arrow nudge rolls the new
+// value digit by digit (scrub-roll) in the same decorative layer as
+// NumberField, an unnamed aria-hidden span after the input, empty at rest.
+// Typing never rolls. The handle lift is CSS.
 import { NgTemplateOutlet } from '@angular/common';
 import {
   ChangeDetectionStrategy,
@@ -44,6 +49,8 @@ import { isIconName, type IconName } from '@the-system/icons';
 import { DsIcon } from '@the-system/icons/angular';
 import { formatScrub, nudgeStepFor, nudgeValue, resolveCommit, scrubValue, type Size } from '@the-system/shared';
 import { consumeHostAttributes } from '../../internal/host';
+import { injectMotion } from '../../internal/motion';
+import { digitLayer } from '../../internal/motion-fields';
 import { optionalBoolean } from '../../internal/optional-boolean';
 import { DsFieldContext, fieldControl } from '../field/field-context';
 
@@ -153,6 +160,8 @@ const SCRUB_INPUT_ATTRIBUTES = [
       (keydown)="onKeyDown($event)"
       (blur)="onBlur()"
     />
+    <!-- The digit roll layer (scrub-roll): decorative, empty at rest. -->
+    <span aria-hidden="true" #layer></span>
     @if (unit()) {
       <!-- Read once, as the description of the input, not again as page text. -->
       <span data-part="unit" aria-hidden="true" [attr.id]="unitId">{{ unit() }}</span>
@@ -206,6 +215,12 @@ export class DsScrubInput implements ControlValueAccessor {
 
   private readonly field = inject(DsFieldContext, { optional: true });
   private readonly controlRef = viewChild.required<ElementRef<HTMLInputElement>>('native');
+  private readonly layerRef = viewChild.required<ElementRef<HTMLSpanElement>>('layer');
+  private readonly motion = injectMotion();
+  private readonly digits = digitLayer(
+    () => this.layerRef().nativeElement,
+    () => this.nativeInput,
+  );
   private readonly formDisabled = signal(false);
   private onChange: (value: number) => void = () => undefined;
   private onTouched: () => void = () => undefined;
@@ -287,6 +302,15 @@ export class DsScrubInput implements ControlValueAccessor {
     this.show();
   }
 
+  /** scrub-roll: a commit from a drag or a nudge rolls the new text in digit by digit from the text drawn before it. */
+  private rollTo(next: number, finish: boolean): void {
+    const from = this.nativeInput.value;
+    if (finish) this.finish(next);
+    else this.commit(next);
+    const to = this.nativeInput.value;
+    if (from !== to) this.digits.roll(this.nativeInput, from, to, { mode: this.motion.mode('scrub-roll') });
+  }
+
   /** Shows the value now, as React does on a commit, so code that reads the input after the event sees it. */
   private show(): void {
     const el = this.nativeInput;
@@ -329,7 +353,7 @@ export class DsScrubInput implements ControlValueAccessor {
       const from = this.mixed() && this.draft() === null ? null : (this.baseline() ?? 0);
       if (from === null) return;
       this.draft.set(null);
-      this.finish(nudgeValue(from, event.key === 'ArrowUp' ? 1 : -1, event, this.step(), this.options()));
+      this.rollTo(nudgeValue(from, event.key === 'ArrowUp' ? 1 : -1, event, this.step(), this.options()), true);
       return;
     }
     if (event.key === 'Enter') {
@@ -394,7 +418,7 @@ export class DsScrubInput implements ControlValueAccessor {
     // Compare with the last value sent, not the shown value: two moves can land before a render.
     if (next === d.last) return;
     d.last = next;
-    this.commit(next);
+    this.rollTo(next, false);
   }
 
   protected endDrag(event: PointerEvent): void {

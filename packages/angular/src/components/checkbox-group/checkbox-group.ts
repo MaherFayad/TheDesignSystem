@@ -34,6 +34,9 @@ function hasText(text: string | null | undefined): boolean {
   return text !== undefined && text !== null;
 }
 
+/** The most steps of the select all cascade: the last box starts within three delay.stagger. */
+const CASCADE_MAX_STEPS = 3;
+
 let nextId = 0;
 
 @Component({
@@ -89,8 +92,10 @@ export class DsCheckboxGroup implements ControlValueAccessor {
   readonly selectAll = input<string | undefined>(undefined);
   readonly ariaDescribedby = input<string | undefined>(undefined, { alias: 'aria-describedby' });
 
+  private readonly host: HTMLElement;
+
   constructor() {
-    consumeHostAttributes([
+    this.host = consumeHostAttributes([
       'dsCheckboxGroup', 'legend', 'description', 'error', 'value', 'defaultValue', 'size', 'orientation', 'name',
       'disabled', 'invalid', 'readOnly', 'selectAll', 'aria-describedby',
     ]);
@@ -149,7 +154,19 @@ export class DsCheckboxGroup implements ControlValueAccessor {
     this.onChange(next);
   }
 
+  // check-draw stagger (capped at three steps, as list-stagger, so every mark shows within about 200ms):
+  // select all draws the boxes one delay.stagger apart (capped); one box alone draws at once. As React.
+  private setSteps(run: boolean): void {
+    const items = this.host.querySelector?.(":scope > [data-part='items']");
+    const boxes = items?.querySelectorAll<HTMLElement>("[data-ds='checkbox']:not([data-part='select-all'])") ?? [];
+    boxes.forEach((box, i) => {
+      if (run) box.style.setProperty('--_checkbox-step', String(Math.min(i + 1, CASCADE_MAX_STEPS)));
+      else box.style.removeProperty('--_checkbox-step');
+    });
+  }
+
   toggle(itemValue: string, on: boolean): void {
+    this.setSteps(false);
     const without = this.own().filter((v) => v !== itemValue);
     this.commit(on ? [...without, itemValue] : without);
   }
@@ -160,6 +177,7 @@ export class DsCheckboxGroup implements ControlValueAccessor {
   }
 
   protected onSelectAll(): void {
+    this.setSteps(true);
     const value = this.own();
     const registered = this.registered();
     if (this.allState() === true) this.commit(value.filter((v) => !registered.includes(v)));

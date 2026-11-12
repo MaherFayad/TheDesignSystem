@@ -42,6 +42,11 @@
 // element the React DOM does not have. Angular Aria is not installed (A3.0
 // installs it). So the behavior is written here, the way the Dialog port does
 // it, with the CDK Portal for the layer.
+//
+// Motion: menu-origin and menu-submenu-nudge are CSS (DropdownMenu.css) and
+// play on this DOM as is. menu-row-slide (the lit fill, a row's ::after,
+// travels from the last lit row) plays from the layer's focusin and
+// focusout, see ./row-slide.ts.
 import {
   ApplicationRef,
   ChangeDetectionStrategy,
@@ -73,11 +78,13 @@ import { Directionality } from '@angular/cdk/bidi';
 import { DsIcon } from '@the-system/icons/angular';
 import type { Size, Tone } from '@the-system/shared';
 import { consumeHostAttributes } from '../../internal/host';
+import { injectMotion } from '../../internal/motion';
 import { animationsDone, hideOthers } from '../../behavior';
 import { autoPlace, computePopper, writePopper, type PopperAlign, type PopperSide } from '../../behavior/popper';
 import { DsThemeScope, DsThemeService, attributesOf, syncDirectionality, themeScopeProviders } from '../../theme';
 import type { ThemeValue } from '../../theme';
 import { isIconName, type ButtonSlotContent } from '../button/button-base';
+import { ROW_SLIDE_ID, rowSlide } from './row-slide';
 
 /** Menu sizes: sm rows are 24px, md rows follow menu.item.height (28px at default density). */
 export type DropdownMenuSize = Extract<Size, 'sm' | 'md'>;
@@ -404,6 +411,8 @@ const MENU_LAYER = new InjectionToken<LayerData>('DS_MENU_LAYER');
     '[attr.data-glass]': 'attrs()["data-glass"]',
     '[attr.dir]': 'attrs().dir',
     '[attr.lang]': 'attrs().lang',
+    '(focusin)': 'slide.focusin($event)',
+    '(focusout)': 'slide.focusout($event)',
   },
   template: `
     <div #wrapper data-radix-popper-content-wrapper="" [attr.dir]="attrs().dir">
@@ -427,6 +436,9 @@ export class DsMenuLayer {
   readonly state = computed(() => (this.panel.isOpen() && !this.closing() ? 'open' : 'closed'));
   readonly side = signal<PopperSide>('bottom');
   readonly align = signal<PopperAlign>('start');
+  // Interaction "menu-row-slide", for every menu row in the layer.
+  private readonly motion = injectMotion();
+  protected readonly slide = rowSlide(() => this.motion.mode(ROW_SLIDE_ID));
 
   constructor() {
     // The host comes from the selector, so it already carries data-menu-layer="".
