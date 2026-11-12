@@ -7,6 +7,7 @@
 //   ds style list
 //   ds style check <id>
 //   ds doctor [path]
+//   ds init [--force]
 //
 // Every command takes --json and then prints { apiVersion, type, data }.
 // Exit codes: 0 done, 1 the answer is a failure (findings, a failing style,
@@ -17,6 +18,7 @@ import { main as doctorMain } from '@the-system/lint/doctor';
 import { add } from './commands/add';
 import { docs, manifest, search } from './commands/catalog';
 import { styleCheck, styleList } from './commands/style';
+import { init } from './init/init';
 import { FRAMEWORKS, loadConfig, type Framework } from './manifests';
 import { API_VERSION, CliError, errorEnvelope, type Io, type Result } from './output';
 
@@ -34,6 +36,7 @@ Commands:
   style list                The style packs
   style check <id>          Contract, contrast, icon and font checks of a style
   doctor [path]             Check app code against the system rules
+  init [--force]            Write AGENTS.md and DESIGN.md for this app
 
 Options:
   --json                    Print { apiVersion, type, data }
@@ -70,6 +73,7 @@ async function dispatch(argv: string[], io: Io): Promise<Result> {
         registry: { type: 'string' },
         overwrite: { type: 'boolean' },
         'dry-run': { type: 'boolean' },
+        force: { type: 'boolean' },
       },
     });
   } catch (e) {
@@ -103,6 +107,9 @@ async function dispatch(argv: string[], io: Io): Promise<Result> {
       if (sub === 'check') return styleCheck(one(ids, 'style id', 'style check <id>'));
       throw new CliError('DS_E_USAGE', `Usage: ${bin} style list | ${bin} style check <id>`);
     }
+    case 'init':
+      if (rest.length) throw new CliError('DS_E_USAGE', `Usage: ${bin} init [--force]`);
+      return init({ cwd: io.cwd, force: values.force });
     default:
       throw new CliError('DS_E_USAGE', `Unknown command "${command}". Run ${bin} --help.`);
   }

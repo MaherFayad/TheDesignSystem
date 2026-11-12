@@ -16,6 +16,7 @@ node packages/cli/bin/ds.mjs --help    # runs the TypeScript source through tsx
 | `ds style list` | The style packs | `style.list` |
 | `ds style check <id>` | Contract, contrast, icon map and font checks | `style.check` |
 | `ds doctor [path]` | The checker of order 1.12 | `doctor.report` |
+| `ds init [--force]` | Writes AGENTS.md and DESIGN.md for the app (see `src/init/`) | `init.result` |
 
 Every command takes `--json` and prints `{ "apiVersion": 1, "type", "data" }`.
 Errors print `{ "apiVersion": 1, "type": "error", "data": { "code", "message" } }`.
@@ -45,3 +46,17 @@ style, files that differ in `ds add`); 2 a usage or lookup error.
   through relative imports to `src/ds/<framework>/`, and prints the CSS and
   theme imports. Imports of `@the-system/*` packages stay.
 - `--dry-run` lists the files without writing.
+
+## ds init
+
+Detects the framework from the app's `package.json` (first match: `expo`,
+`@angular/core`, `next`, `vite` with `react`, `react`) and whether the app
+uses the packages or copied registry files, then writes `AGENTS.md` and
+`DESIGN.md`. The text sits between `<!-- ds:init start ... -->` and
+`<!-- ds:init end -->`: a second run replaces only that block, so it changes
+nothing when nothing changed and keeps what the team wrote around it.
+`--force` replaces the whole file. `llms.txt` is given as `/llms.txt` on the
+docs site root.
+
+Skills for agents: `skills/build-a-screen/SKILL.md` and
+`skills/review-a-screen/SKILL.md`.

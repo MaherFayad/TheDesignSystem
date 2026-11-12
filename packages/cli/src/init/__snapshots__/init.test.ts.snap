@@ -1,0 +1,543 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`ds init > writes AGENTS.md and DESIGN.md for angular > AGENTS.md 1`] = `
+"<!-- ds:init start. Written by \`ds init\`. A new run replaces the text up to the end marker. -->
+
+# Agent rules: The system
+
+This app is Angular on The system. DESIGN.md holds the setup. The full reference for agents is \`/llms.txt\` on the docs site.
+
+## Before you write UI
+
+1. Find the component: \`npx ds search <what it is for>\`.
+2. Read it: \`npx ds docs <Name>\` (use when, avoid when, use instead, keys, mistakes).
+3. Add it if the app does not have it: \`npx ds add <Name> --framework angular\`.
+
+## Rules
+
+- System components only. No bare \`<button>\`, \`<input>\`, \`<select>\` or \`<dialog>\` where a system component exists: use \`button[dsButton]\`, \`[dsInput]\` and the rest.
+- Never import \`@angular/aria\` or CDK overlays to rebuild a system component.
+- Tokens only. Colors, spacing, radius, font sizes, shadows, durations and z-index come from \`--ds-*\` variables (or the native theme). No raw values.
+- Never declare a \`--ds-*\` variable in app CSS. Change a style through its pack, not by overriding tokens.
+- Logical properties only: \`margin-inline-start\`, \`inset-inline-end\`, \`padding-block\`. Never \`left\`, \`right\`, \`margin-left\` and the like.
+- Props for size, tone, emphasis and shape take only the values in the component manifest.
+- No native \`title\` attribute for hints. Use Tooltip.
+- Only \`transform\` and \`opacity\` animate. No animation library on the web.
+
+## Copy
+
+- English: sentence case. Buttons are a verb plus a noun: "Save draft", "Delete board". Never "OK", "Continue", "Confirm" or "Yes".
+- An empty state says what to do next. An error names what happened and how to fix it.
+- Never an em dash or an en dash. No exclamation marks.
+
+## Arabic
+
+- Pick one register for the product and keep it: Gulf modern standard Arabic or white Saudi dialect.
+- Noun form labels, no diacritics, Western digits, the Arabic comma in running text.
+- Set \`lang="ar"\` on the theme root; the direction follows. Latin runs inside Arabic text go through \`Bidi\`.
+- No uppercase or italics for emphasis, no letter spacing. Directional icons mirror; brand marks, clocks and media controls do not.
+
+## Accessibility (WCAG 2.2 AA)
+
+- Targets at least 24 by 24 px on the web, 44 px in touch layouts. Every drag has a button or key path.
+- Text at 4.5:1, control borders and focus rings at 3:1. Never remove the focus ring.
+- Toasts and status changes announce once. A dialog has a title.
+
+## Check your work
+
+\`\`\`sh
+npx ds doctor
+npx ds doctor --json   # { apiVersion, type: "doctor.report", data: { findings, summary } }
+\`\`\`
+
+Exit code 0 is clean, 1 means an error finding: fix every error before you finish. Then run the app in English and in Arabic, dark and light.
+
+<!-- ds:init end -->
+"
+`;
+
+exports[`ds init > writes AGENTS.md and DESIGN.md for angular > DESIGN.md 1`] = `
+"<!-- ds:init start. Written by \`ds init\`. A new run replaces the text up to the end marker. -->
+
+# Design: The system
+
+Framework: Angular. System source: the \`@the-system/*\` packages.
+
+## Setup
+
+In the global stylesheet (\`styles.css\`), the system first:
+
+\`\`\`css
+@import '@the-system/tokens/css';
+@import '@the-system/css';
+@import '@the-system/styles';
+\`\`\`
+
+Wrap the app once in the theme directive. Write the style as \`dsTheme="<id>"\`; a static \`style="..."\` is read as inline CSS.
+
+\`\`\`html
+<div dsTheme="studio" scheme="dark" lang="en">
+  <router-outlet />
+</div>
+\`\`\`
+
+Components come from \`@the-system/angular\`: standalone, attribute selectors on the host (\`button[dsButton]\`), inputs with the React prop names.
+
+## Theme axes
+
+Set them on the one root theme. Nested themes may change any axis for a part of the page.
+
+| Axis | Values |
+| --- | --- |
+| style | \`desk\`, \`neutral\`, \`studio\` (\`npx ds style list\`) |
+| scheme | \`dark\`, \`light\` |
+| density | \`compact\`, \`default\`, \`comfortable\` |
+| contrast | \`default\`, \`more\` |
+| platform | \`web\`, \`ios\`, \`android\` |
+| dir, lang | \`ltr\` or \`rtl\`, \`en\` or \`ar\` |
+
+## Where to look
+
+- \`/llms.txt\` on the docs site root: every component, for agents. \`/llms-full.txt\` has the full text.
+- \`npx ds docs <Name>\` and \`npx ds manifest <Name>\`: one component, from its manifest.
+- \`npx ds doctor\`: checks this app against the rules in AGENTS.md.
+
+<!-- ds:init end -->
+"
+`;
+
+exports[`ds init > writes AGENTS.md and DESIGN.md for expo > AGENTS.md 1`] = `
+"<!-- ds:init start. Written by \`ds init\`. A new run replaces the text up to the end marker. -->
+
+# Agent rules: The system
+
+This app is React Native with Expo on The system. DESIGN.md holds the setup. The full reference for agents is \`/llms.txt\` on the docs site.
+
+## Before you write UI
+
+1. Find the component: \`npx ds search <what it is for>\`.
+2. Read it: \`npx ds docs <Name>\` (use when, avoid when, use instead, keys, mistakes).
+3. Add it if the app does not have it: \`npx ds add <Name> --framework native\`.
+
+## Rules
+
+- System components only, from \`@the-system/native\`. No raw \`Pressable\` or \`TextInput\` where a system component exists.
+- No inline color or size literals in styles: read the theme object.
+- Touch targets: 44pt on iOS, 48dp on Android. Respect safe areas, font scale to 200% and reduce motion.
+- Tokens only. Colors, spacing, radius, font sizes, shadows, durations and z-index come from \`--ds-*\` variables (or the native theme). No raw values.
+- Never declare a \`--ds-*\` variable in app CSS. Change a style through its pack, not by overriding tokens.
+- Logical properties only: \`margin-inline-start\`, \`inset-inline-end\`, \`padding-block\`. Never \`left\`, \`right\`, \`margin-left\` and the like.
+- Props for size, tone, emphasis and shape take only the values in the component manifest.
+- No native \`title\` attribute for hints. Use Tooltip.
+- Only \`transform\` and \`opacity\` animate. No animation library on the web.
+
+## Copy
+
+- English: sentence case. Buttons are a verb plus a noun: "Save draft", "Delete board". Never "OK", "Continue", "Confirm" or "Yes".
+- An empty state says what to do next. An error names what happened and how to fix it.
+- Never an em dash or an en dash. No exclamation marks.
+
+## Arabic
+
+- Pick one register for the product and keep it: Gulf modern standard Arabic or white Saudi dialect.
+- Noun form labels, no diacritics, Western digits, the Arabic comma in running text.
+- Set \`lang="ar"\` on the theme root; the direction follows. Latin runs inside Arabic text go through \`Bidi\`.
+- No uppercase or italics for emphasis, no letter spacing. Directional icons mirror; brand marks, clocks and media controls do not.
+
+## Accessibility (WCAG 2.2 AA)
+
+- Targets at least 24 by 24 px on the web, 44 px in touch layouts. Every drag has a button or key path.
+- Text at 4.5:1, control borders and focus rings at 3:1. Never remove the focus ring.
+- Toasts and status changes announce once. A dialog has a title.
+
+## Check your work
+
+\`\`\`sh
+npx ds doctor
+npx ds doctor --json   # { apiVersion, type: "doctor.report", data: { findings, summary } }
+\`\`\`
+
+Exit code 0 is clean, 1 means an error finding: fix every error before you finish. Then run the app in English and in Arabic, dark and light.
+
+<!-- ds:init end -->
+"
+`;
+
+exports[`ds init > writes AGENTS.md and DESIGN.md for expo > DESIGN.md 1`] = `
+"<!-- ds:init start. Written by \`ds init\`. A new run replaces the text up to the end marker. -->
+
+# Design: The system
+
+Framework: React Native with Expo. System source: the \`@the-system/*\` packages.
+
+## Setup
+
+Wrap the app once in the theme provider. React Native never imports the web CSS.
+
+\`\`\`tsx
+import { ThemeProvider } from '@the-system/native';
+
+export default function App() {
+  return (
+    <ThemeProvider style="studio" scheme="dark" lang="en">
+      {/* screens */}
+    </ThemeProvider>
+  );
+}
+\`\`\`
+
+Right to left comes from \`I18nManager\`; a direction change needs an app restart.
+
+## Theme axes
+
+Set them on the one root theme. Nested themes may change any axis for a part of the page.
+
+| Axis | Values |
+| --- | --- |
+| style | \`desk\`, \`neutral\`, \`studio\` (\`npx ds style list\`) |
+| scheme | \`dark\`, \`light\` |
+| density | \`compact\`, \`default\`, \`comfortable\` |
+| contrast | \`default\`, \`more\` |
+| platform | \`web\`, \`ios\`, \`android\` |
+| dir, lang | \`ltr\` or \`rtl\`, \`en\` or \`ar\` |
+
+## Where to look
+
+- \`/llms.txt\` on the docs site root: every component, for agents. \`/llms-full.txt\` has the full text.
+- \`npx ds docs <Name>\` and \`npx ds manifest <Name>\`: one component, from its manifest.
+- \`npx ds doctor\`: checks this app against the rules in AGENTS.md.
+
+<!-- ds:init end -->
+"
+`;
+
+exports[`ds init > writes AGENTS.md and DESIGN.md for next > AGENTS.md 1`] = `
+"<!-- ds:init start. Written by \`ds init\`. A new run replaces the text up to the end marker. -->
+
+# Agent rules: The system
+
+This app is React with Next.js on The system. DESIGN.md holds the setup. The full reference for agents is \`/llms.txt\` on the docs site.
+
+## Before you write UI
+
+1. Find the component: \`npx ds search <what it is for>\`.
+2. Read it: \`npx ds docs <Name>\` (use when, avoid when, use instead, keys, mistakes).
+3. Add it if the app does not have it: \`npx ds add <Name> --framework react\`.
+
+## Rules
+
+- System components only. No bare \`<button>\`, \`<input>\`, \`<select>\` or \`<dialog>\` where a system component exists.
+- Never import \`radix-ui\` or \`react-aria-components\` in app code. The system component wires the behavior, the anatomy and the tokens.
+- Tokens only. Colors, spacing, radius, font sizes, shadows, durations and z-index come from \`--ds-*\` variables (or the native theme). No raw values.
+- Never declare a \`--ds-*\` variable in app CSS. Change a style through its pack, not by overriding tokens.
+- Logical properties only: \`margin-inline-start\`, \`inset-inline-end\`, \`padding-block\`. Never \`left\`, \`right\`, \`margin-left\` and the like.
+- Props for size, tone, emphasis and shape take only the values in the component manifest.
+- No native \`title\` attribute for hints. Use Tooltip.
+- Only \`transform\` and \`opacity\` animate. No animation library on the web.
+
+## Copy
+
+- English: sentence case. Buttons are a verb plus a noun: "Save draft", "Delete board". Never "OK", "Continue", "Confirm" or "Yes".
+- An empty state says what to do next. An error names what happened and how to fix it.
+- Never an em dash or an en dash. No exclamation marks.
+
+## Arabic
+
+- Pick one register for the product and keep it: Gulf modern standard Arabic or white Saudi dialect.
+- Noun form labels, no diacritics, Western digits, the Arabic comma in running text.
+- Set \`lang="ar"\` on the theme root; the direction follows. Latin runs inside Arabic text go through \`Bidi\`.
+- No uppercase or italics for emphasis, no letter spacing. Directional icons mirror; brand marks, clocks and media controls do not.
+
+## Accessibility (WCAG 2.2 AA)
+
+- Targets at least 24 by 24 px on the web, 44 px in touch layouts. Every drag has a button or key path.
+- Text at 4.5:1, control borders and focus rings at 3:1. Never remove the focus ring.
+- Toasts and status changes announce once. A dialog has a title.
+
+## Check your work
+
+\`\`\`sh
+npx ds doctor src
+npx ds doctor --json   # { apiVersion, type: "doctor.report", data: { findings, summary } }
+\`\`\`
+
+Exit code 0 is clean, 1 means an error finding: fix every error before you finish. Then run the app in English and in Arabic, dark and light.
+
+<!-- ds:init end -->
+"
+`;
+
+exports[`ds init > writes AGENTS.md and DESIGN.md for next > DESIGN.md 1`] = `
+"<!-- ds:init start. Written by \`ds init\`. A new run replaces the text up to the end marker. -->
+
+# Design: The system
+
+Framework: React with Next.js. System source: the \`@the-system/*\` packages.
+
+## Setup
+
+In the root layout, the system CSS first, then the app CSS. Stamp the theme on \`<html>\` on the server so the first paint is themed:
+
+\`\`\`tsx
+import '@the-system/tokens/css';
+import '@the-system/css';
+import '@the-system/styles';
+import './app.css';
+import { Theme, Toaster, themeAttributes } from '@the-system/react';
+
+export default function RootLayout({ children }: { children: React.ReactNode }) {
+  return (
+    <html {...themeAttributes({ style: 'studio', scheme: 'dark', lang: 'en' })}>
+      <body>
+        <Theme style="studio" scheme="dark" lang="en">
+          <Toaster />
+          {children}
+        </Theme>
+      </body>
+    </html>
+  );
+}
+\`\`\`
+
+The packages export TypeScript and CSS source, so list them in \`transpilePackages\` in \`next.config.ts\`:
+
+\`\`\`ts
+transpilePackages: ['@the-system/react', '@the-system/shared', '@the-system/icons', '@the-system/motion', '@the-system/styles', '@the-system/css', '@the-system/tokens'],
+\`\`\`
+
+## Theme axes
+
+Set them on the one root theme. Nested themes may change any axis for a part of the page.
+
+| Axis | Values |
+| --- | --- |
+| style | \`desk\`, \`neutral\`, \`studio\` (\`npx ds style list\`) |
+| scheme | \`dark\`, \`light\` |
+| density | \`compact\`, \`default\`, \`comfortable\` |
+| contrast | \`default\`, \`more\` |
+| platform | \`web\`, \`ios\`, \`android\` |
+| dir, lang | \`ltr\` or \`rtl\`, \`en\` or \`ar\` |
+
+## Where to look
+
+- \`/llms.txt\` on the docs site root: every component, for agents. \`/llms-full.txt\` has the full text.
+- \`npx ds docs <Name>\` and \`npx ds manifest <Name>\`: one component, from its manifest.
+- \`npx ds doctor\`: checks this app against the rules in AGENTS.md.
+
+<!-- ds:init end -->
+"
+`;
+
+exports[`ds init > writes AGENTS.md and DESIGN.md for react > AGENTS.md 1`] = `
+"<!-- ds:init start. Written by \`ds init\`. A new run replaces the text up to the end marker. -->
+
+# Agent rules: The system
+
+This app is React on The system. DESIGN.md holds the setup. The full reference for agents is \`/llms.txt\` on the docs site.
+
+## Before you write UI
+
+1. Find the component: \`npx ds search <what it is for>\`.
+2. Read it: \`npx ds docs <Name>\` (use when, avoid when, use instead, keys, mistakes).
+3. Add it if the app does not have it: \`npx ds add <Name> --framework react\`.
+
+## Rules
+
+- System components only. No bare \`<button>\`, \`<input>\`, \`<select>\` or \`<dialog>\` where a system component exists.
+- Never import \`radix-ui\` or \`react-aria-components\` in app code. The system component wires the behavior, the anatomy and the tokens.
+- Tokens only. Colors, spacing, radius, font sizes, shadows, durations and z-index come from \`--ds-*\` variables (or the native theme). No raw values.
+- Never declare a \`--ds-*\` variable in app CSS. Change a style through its pack, not by overriding tokens.
+- Logical properties only: \`margin-inline-start\`, \`inset-inline-end\`, \`padding-block\`. Never \`left\`, \`right\`, \`margin-left\` and the like.
+- Props for size, tone, emphasis and shape take only the values in the component manifest.
+- No native \`title\` attribute for hints. Use Tooltip.
+- Only \`transform\` and \`opacity\` animate. No animation library on the web.
+
+## Copy
+
+- English: sentence case. Buttons are a verb plus a noun: "Save draft", "Delete board". Never "OK", "Continue", "Confirm" or "Yes".
+- An empty state says what to do next. An error names what happened and how to fix it.
+- Never an em dash or an en dash. No exclamation marks.
+
+## Arabic
+
+- Pick one register for the product and keep it: Gulf modern standard Arabic or white Saudi dialect.
+- Noun form labels, no diacritics, Western digits, the Arabic comma in running text.
+- Set \`lang="ar"\` on the theme root; the direction follows. Latin runs inside Arabic text go through \`Bidi\`.
+- No uppercase or italics for emphasis, no letter spacing. Directional icons mirror; brand marks, clocks and media controls do not.
+
+## Accessibility (WCAG 2.2 AA)
+
+- Targets at least 24 by 24 px on the web, 44 px in touch layouts. Every drag has a button or key path.
+- Text at 4.5:1, control borders and focus rings at 3:1. Never remove the focus ring.
+- Toasts and status changes announce once. A dialog has a title.
+
+## Check your work
+
+\`\`\`sh
+npx ds doctor src
+npx ds doctor --json   # { apiVersion, type: "doctor.report", data: { findings, summary } }
+\`\`\`
+
+Exit code 0 is clean, 1 means an error finding: fix every error before you finish. Then run the app in English and in Arabic, dark and light.
+
+<!-- ds:init end -->
+"
+`;
+
+exports[`ds init > writes AGENTS.md and DESIGN.md for react > DESIGN.md 1`] = `
+"<!-- ds:init start. Written by \`ds init\`. A new run replaces the text up to the end marker. -->
+
+# Design: The system
+
+Framework: React. System source: the \`@the-system/*\` packages.
+
+## Setup
+
+In the entry file (\`src/main.tsx\`), the system CSS first, then the app CSS:
+
+\`\`\`ts
+import '@the-system/tokens/css';
+import '@the-system/css';
+import '@the-system/styles';
+\`\`\`
+
+Wrap the app once in \`Theme\`, and mount \`Toaster\` once inside it:
+
+\`\`\`tsx
+import { Theme, Toaster } from '@the-system/react';
+
+<Theme style="studio" scheme="dark" lang="en">
+  <Toaster />
+  {/* the app */}
+</Theme>
+\`\`\`
+
+## Theme axes
+
+Set them on the one root theme. Nested themes may change any axis for a part of the page.
+
+| Axis | Values |
+| --- | --- |
+| style | \`desk\`, \`neutral\`, \`studio\` (\`npx ds style list\`) |
+| scheme | \`dark\`, \`light\` |
+| density | \`compact\`, \`default\`, \`comfortable\` |
+| contrast | \`default\`, \`more\` |
+| platform | \`web\`, \`ios\`, \`android\` |
+| dir, lang | \`ltr\` or \`rtl\`, \`en\` or \`ar\` |
+
+## Where to look
+
+- \`/llms.txt\` on the docs site root: every component, for agents. \`/llms-full.txt\` has the full text.
+- \`npx ds docs <Name>\` and \`npx ds manifest <Name>\`: one component, from its manifest.
+- \`npx ds doctor\`: checks this app against the rules in AGENTS.md.
+
+<!-- ds:init end -->
+"
+`;
+
+exports[`ds init > writes AGENTS.md and DESIGN.md for vite > AGENTS.md 1`] = `
+"<!-- ds:init start. Written by \`ds init\`. A new run replaces the text up to the end marker. -->
+
+# Agent rules: The system
+
+This app is React with Vite on The system. DESIGN.md holds the setup. The full reference for agents is \`/llms.txt\` on the docs site.
+
+## Before you write UI
+
+1. Find the component: \`npx ds search <what it is for>\`.
+2. Read it: \`npx ds docs <Name>\` (use when, avoid when, use instead, keys, mistakes).
+3. Add it if the app does not have it: \`npx ds add <Name> --framework react\`.
+
+## Rules
+
+- System components only. No bare \`<button>\`, \`<input>\`, \`<select>\` or \`<dialog>\` where a system component exists.
+- Never import \`radix-ui\` or \`react-aria-components\` in app code. The system component wires the behavior, the anatomy and the tokens.
+- Tokens only. Colors, spacing, radius, font sizes, shadows, durations and z-index come from \`--ds-*\` variables (or the native theme). No raw values.
+- Never declare a \`--ds-*\` variable in app CSS. Change a style through its pack, not by overriding tokens.
+- Logical properties only: \`margin-inline-start\`, \`inset-inline-end\`, \`padding-block\`. Never \`left\`, \`right\`, \`margin-left\` and the like.
+- Props for size, tone, emphasis and shape take only the values in the component manifest.
+- No native \`title\` attribute for hints. Use Tooltip.
+- Only \`transform\` and \`opacity\` animate. No animation library on the web.
+
+## Copy
+
+- English: sentence case. Buttons are a verb plus a noun: "Save draft", "Delete board". Never "OK", "Continue", "Confirm" or "Yes".
+- An empty state says what to do next. An error names what happened and how to fix it.
+- Never an em dash or an en dash. No exclamation marks.
+
+## Arabic
+
+- Pick one register for the product and keep it: Gulf modern standard Arabic or white Saudi dialect.
+- Noun form labels, no diacritics, Western digits, the Arabic comma in running text.
+- Set \`lang="ar"\` on the theme root; the direction follows. Latin runs inside Arabic text go through \`Bidi\`.
+- No uppercase or italics for emphasis, no letter spacing. Directional icons mirror; brand marks, clocks and media controls do not.
+
+## Accessibility (WCAG 2.2 AA)
+
+- Targets at least 24 by 24 px on the web, 44 px in touch layouts. Every drag has a button or key path.
+- Text at 4.5:1, control borders and focus rings at 3:1. Never remove the focus ring.
+- Toasts and status changes announce once. A dialog has a title.
+
+## Check your work
+
+\`\`\`sh
+npx ds doctor src
+npx ds doctor --json   # { apiVersion, type: "doctor.report", data: { findings, summary } }
+\`\`\`
+
+Exit code 0 is clean, 1 means an error finding: fix every error before you finish. Then run the app in English and in Arabic, dark and light.
+
+<!-- ds:init end -->
+"
+`;
+
+exports[`ds init > writes AGENTS.md and DESIGN.md for vite > DESIGN.md 1`] = `
+"<!-- ds:init start. Written by \`ds init\`. A new run replaces the text up to the end marker. -->
+
+# Design: The system
+
+Framework: React with Vite. System source: the \`@the-system/*\` packages.
+
+## Setup
+
+In the entry file (\`src/main.tsx\`), the system CSS first, then the app CSS:
+
+\`\`\`ts
+import '@the-system/tokens/css';
+import '@the-system/css';
+import '@the-system/styles';
+\`\`\`
+
+Wrap the app once in \`Theme\`, and mount \`Toaster\` once inside it:
+
+\`\`\`tsx
+import { Theme, Toaster } from '@the-system/react';
+
+<Theme style="studio" scheme="dark" lang="en">
+  <Toaster />
+  {/* the app */}
+</Theme>
+\`\`\`
+
+## Theme axes
+
+Set them on the one root theme. Nested themes may change any axis for a part of the page.
+
+| Axis | Values |
+| --- | --- |
+| style | \`desk\`, \`neutral\`, \`studio\` (\`npx ds style list\`) |
+| scheme | \`dark\`, \`light\` |
+| density | \`compact\`, \`default\`, \`comfortable\` |
+| contrast | \`default\`, \`more\` |
+| platform | \`web\`, \`ios\`, \`android\` |
+| dir, lang | \`ltr\` or \`rtl\`, \`en\` or \`ar\` |
+
+## Where to look
+
+- \`/llms.txt\` on the docs site root: every component, for agents. \`/llms-full.txt\` has the full text.
+- \`npx ds docs <Name>\` and \`npx ds manifest <Name>\`: one component, from its manifest.
+- \`npx ds doctor\`: checks this app against the rules in AGENTS.md.
+
+<!-- ds:init end -->
+"
+`;
