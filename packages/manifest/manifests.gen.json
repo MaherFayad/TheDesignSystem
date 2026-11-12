@@ -2078,6 +2078,242 @@
     "since": "0.1.0"
   },
   {
+    "name": "Switch",
+    "kind": "component",
+    "family": "selection",
+    "summary": "An on or off setting that takes effect the moment it changes.",
+    "useWhen": [
+      "A setting that applies at once, with no save button, such as dark mode or auto save",
+      "A list of preferences where each row turns one feature on or off",
+      "Turning a service or a sync on or off where the result shows right away"
+    ],
+    "avoidWhen": [
+      "A value in a form that is saved later with a submit button",
+      "Several choices under one question",
+      "An action that runs once, such as sending or deleting"
+    ],
+    "insteadUse": {
+      "A form value that saves later": "Checkbox",
+      "Several choices under one question": "CheckboxGroup",
+      "One choice among a few options": "RadioGroup",
+      "A one time action": "Button",
+      "A pressed or not pressed tool in a toolbar": "ToggleButton"
+    },
+    "anatomy": [
+      "root",
+      "control",
+      "track",
+      "thumb",
+      "label",
+      "description",
+      "state-text"
+    ],
+    "slots": {
+      "label": {
+        "accepts": "text",
+        "max": 1
+      },
+      "description": {
+        "accepts": "text",
+        "max": 1
+      }
+    },
+    "props": {
+      "size": {
+        "type": [
+          "sm",
+          "md",
+          "lg"
+        ],
+        "default": "md",
+        "description": "Track of 16, 24 and 32 px high, 1.75 times as wide, in a target of 24 px, 24 px and the lg control height (40 to 48 px by density)."
+      },
+      "tone": {
+        "type": [
+          "accent"
+        ],
+        "default": "accent",
+        "description": "The track fill while on: the primary fill of the style."
+      },
+      "checked": {
+        "type": "boolean",
+        "description": "Controlled state. Pair with onCheckedChange."
+      },
+      "defaultChecked": {
+        "type": "boolean",
+        "default": "false",
+        "description": "Uncontrolled starting state."
+      },
+      "onCheckedChange": {
+        "type": "function",
+        "description": "Called with the new state. Apply the setting here, at once. Never called while read only."
+      },
+      "label": {
+        "type": "node",
+        "description": "Visible text after the switch, a native label bound to the control. Without it, pass aria-label."
+      },
+      "description": {
+        "type": "node",
+        "description": "A hint under the label. Joins aria-describedby."
+      },
+      "stateText": {
+        "type": "object",
+        "description": "{ on, off }: words shown after the label for the current state, such as On and Off. Hidden from assistive tech."
+      },
+      "name": {
+        "type": "string",
+        "description": "The form name, when the switch sits in a form."
+      },
+      "invalid": {
+        "type": "boolean",
+        "description": "Danger border and aria-invalid. Inside a Field it follows the Field."
+      },
+      "disabled": {
+        "type": "boolean",
+        "description": "Native disabled on the control. Inside a Field it follows the Field."
+      },
+      "readOnly": {
+        "type": "boolean",
+        "description": "Keeps the value and focus, ignores clicks, Space and Enter, sets aria-readonly."
+      },
+      "required": {
+        "type": "boolean",
+        "description": "Sets aria-required. Inside a Field it follows the Field."
+      },
+      "rootProps": {
+        "type": "object",
+        "description": "Props for the root element. className and style also go to the root; the ref and every other prop go to the control."
+      }
+    },
+    "states": [
+      "checked",
+      "unchecked",
+      "data-disabled",
+      "data-invalid",
+      "data-readonly"
+    ],
+    "a11y": {
+      "role": "switch, on the control (a Radix button). aria-checked is true or false.",
+      "focus": "The control is the one tab stop. Focus shows the glow and a 2px ring around the track.",
+      "keys": {
+        "Tab": "Moves focus to the control, and on to the next control",
+        "Shift+Tab": "Moves focus back",
+        "Space": "Toggles the switch",
+        "Enter": "Toggles the switch"
+      },
+      "announce": "Name from the label (or aria-label), the state as on or off, the description through aria-describedby. The state text is hidden, so it is not read twice.",
+      "native": {
+        "accessibilityRole": "switch",
+        "accessibilityState": [
+          "checked",
+          "disabled"
+        ]
+      },
+      "notes": [
+        "The anatomy adds a control part to the order's list: the 24px target that holds the track, so a 16px track still meets WCAG 2.5.8.",
+        "On: the thumb moves to the inline end and the track fills. Two signals, so the state never relies on color alone. In right to left text the thumb moves to the left.",
+        "Read only is not part of Radix: clicks are prevented, aria-readonly is set and the track draws dashed.",
+        "A switch applies its setting at once. If the change fails, set it back and say why in a Toast."
+      ]
+    },
+    "content": {
+      "en": {
+        "label": "The name of the setting, a noun in sentence case: Auto save. Never a question, never On or Off in the label.",
+        "stateText": "On and Off, or a pair that fits the setting: Visible and Hidden.",
+        "description": "What changes when it is on, in one sentence."
+      },
+      "ar": {
+        "label": "اسم الإعداد بصيغة الاسم، بدون تشكيل: الحفظ التلقائي",
+        "stateText": "مفعل ومتوقف"
+      }
+    },
+    "tokens": [
+      "size.target-min",
+      "size.control.lg",
+      "size.control.md",
+      "size.icon.md",
+      "size.icon.lg",
+      "space.xs",
+      "font.size.s",
+      "font.size.m",
+      "font.leading.snug",
+      "font.leading.normal",
+      "radius.pill",
+      "border.width.default",
+      "border.width.strong",
+      "color.border.control",
+      "color.border.control-hover",
+      "color.text.default",
+      "color.text.muted",
+      "color.primary.fill",
+      "color.primary.border",
+      "color.text.on-primary",
+      "color.bg.overlay-40",
+      "color.state.danger.text",
+      "elevation.input-focus",
+      "focus.shadow.ring",
+      "duration.base",
+      "ease.default",
+      "opacity.disabled"
+    ],
+    "motion": "fade",
+    "frameworks": {
+      "react": {
+        "status": "ready",
+        "behavior": "radix:Switch",
+        "example": "Switch.demo.tsx"
+      },
+      "angular": {
+        "status": "planned"
+      },
+      "native": {
+        "status": "planned"
+      }
+    },
+    "styles": {
+      "studio": "Achromatic: a bordered pill with a muted thumb while off, a quiet overlay fill and a bright thumb while on",
+      "desk": "The same pill. On fills with the yellow primary and a dark thumb."
+    },
+    "mistakes": [
+      {
+        "wrong": "A switch in a form that only applies after Save",
+        "right": "A Checkbox"
+      },
+      {
+        "wrong": "A label that says On or Off, or changes with the state",
+        "right": "A fixed setting name as the label, and stateText for the words"
+      },
+      {
+        "wrong": "Color alone shows the state",
+        "right": "The thumb side and the track fill, which this component draws"
+      },
+      {
+        "wrong": "A switch that runs a one time action, such as Send report",
+        "right": "A Button"
+      }
+    ],
+    "contract": {
+      "optionalParts": [
+        "label",
+        "description",
+        "state-text"
+      ],
+      "keys": {
+        "Space": {
+          "focus": "[data-ds='switch'] [data-part='control']",
+          "case": "one",
+          "expect": "state-changes"
+        },
+        "Enter": {
+          "focus": "[data-ds='switch'] [data-part='control']",
+          "case": "one",
+          "expect": "state-changes"
+        }
+      }
+    },
+    "since": "0.1.0"
+  },
+  {
     "name": "Theme",
     "kind": "component",
     "family": "foundations",
