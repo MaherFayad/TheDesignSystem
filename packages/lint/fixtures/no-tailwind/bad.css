@@ -1,0 +1,6 @@
+/* Fixture for ds/no-tailwind. Lines 2, 3 and 5 fail. @apply in a comment does not. */
+@import 'tailwindcss';
+@tailwind utilities;
+[data-ds='sample'] {
+  @apply flex gap-2;
+}

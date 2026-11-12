@@ -1,0 +1,20 @@
+/* Fixture for ds/animate-transform-opacity-only. Lines 4, 5, 6, 7 and 14 fail. */
+@layer ds.base {
+  [data-ds='sample'] {
+    transition: all var(--ds-duration-base);
+    transition-property: opacity, background-color;
+    transition: transform var(--ds-duration-base), inline-size var(--ds-duration-base);
+    transition: 0.2s;
+    transition: transform var(--ds-duration-base) var(--ds-ease-standard), opacity var(--ds-duration-base);
+    transition: opacity var(--ds-duration-base), display var(--ds-duration-base) allow-discrete;
+    transition: none;
+  }
+  @keyframes ds-sample-in {
+    from { opacity: 0; transform: scale(0.98); }
+    to { opacity: 1; inline-size: var(--ds-size-control-md); }
+  }
+  [data-ds='sample'][data-state='open'] {
+    transition-property: opacity, overlay;
+    transition-behavior: allow-discrete;
+  }
+}

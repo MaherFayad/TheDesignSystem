@@ -1,0 +1,16 @@
+/* Fixture for ds/no-raw-color. Lines 4, 5, 6, 7 and 9 fail. #fff in a comment does not. */
+@layer ds.base {
+  [data-ds='sample'] {
+    color: #1b1b1b;
+    background: rgb(0 0 0 / 50%);
+    border-color: white;
+    --_ring: oklch(70% 0.1 250);
+    outline-color: currentColor;
+    box-shadow: 0 0 0 var(--ds-size-1) hsl(0 0% 0%);
+    font-family: 'Olive Sans', sans-serif;
+    background-image: url('#fff.svg');
+    color: var(--ds-color-text-primary);
+    border-color: transparent;
+    fill: Canvas;
+  }
+}

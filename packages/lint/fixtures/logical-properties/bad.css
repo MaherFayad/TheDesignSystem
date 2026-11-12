@@ -1,0 +1,22 @@
+/* Fixture for ds/logical-properties. Lines 4 to 12 fail. */
+@layer ds.base {
+  [data-ds='sample'] {
+    left: 0;
+    margin-right: var(--ds-space-2);
+    padding-left: var(--ds-space-2);
+    border-left: var(--ds-border-width) solid;
+    text-align: left;
+    top: 0;
+    margin: 0 var(--ds-space-1) 0 var(--ds-space-2);
+    border-top-left-radius: var(--ds-radius-sm);
+    border-radius: var(--ds-radius-sm) 0 0 var(--ds-radius-sm);
+    inset-inline-start: 0;
+    margin-inline-end: var(--ds-space-2);
+    text-align: start;
+    margin: 0 var(--ds-space-1);
+    margin-block-start: var(--ds-space-1);
+    border-radius: var(--ds-radius-sm);
+    padding: var(--ds-space-1) var(--ds-space-2) var(--ds-space-1) var(--ds-space-2);
+    --left: 0;
+  }
+}

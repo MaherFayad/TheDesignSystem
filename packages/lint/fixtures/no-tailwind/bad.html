@@ -1,0 +1,7 @@
+<!-- Fixture for ds/no-tailwind, an Angular template. Lines 3, 4 and 5 fail. -->
+<div class="sample-row">
+  <div class="flex gap-4"></div>
+  <div [class]="'bg-red-500'"></div>
+  <div [ngClass]="{ 'text-[14px]': big, 'sample-big': big }"></div>
+  <div [class.sample-open]="open"></div>
+</div>

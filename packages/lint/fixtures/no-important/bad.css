@@ -1,0 +1,8 @@
+/* Fixture for ds/no-important. Lines 4 and 5 fail. !important in a comment does not. */
+@layer ds.base {
+  [data-ds='sample'] {
+    color: var(--ds-color-text-primary) !important;
+    padding: var(--ds-space-2) ! important;
+    margin: 0;
+  }
+}

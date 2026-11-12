@@ -1,0 +1,11 @@
+/* Fixture for ds/token-vocabulary. Lines 6 and 7 fail. var(--ds-in-a-comment) does not. */
+@layer ds.base {
+  [data-ds='sample'] {
+    --ds-sample-local: var(--ds-space-2);
+    background: var(--ds-color-bg-surface);
+    color: var(--ds-color-text-made-up);
+    padding: var( --ds-space-99 );
+    margin: var(--ds-sample-local);
+    gap: var(--_not-a-system-token);
+  }
+}

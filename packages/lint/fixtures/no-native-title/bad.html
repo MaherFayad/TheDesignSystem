@@ -1,0 +1,9 @@
+<!-- Fixture for ds/no-native-title. Lines 3, 4 and 5 fail. <a title="in a comment"> does not. -->
+<div>
+  <a href="/x" title="Open">Open</a>
+  <span [title]="hint">x</span>
+  <img alt="" [attr.title]="hint" />
+  <ds-dialog title="Share canvas"></ds-dialog>
+  <svg><title>Logo</title></svg>
+  <iframe title="Post preview"></iframe>
+</div>
