@@ -38,6 +38,7 @@ import {
 } from 'react';
 import { Slot } from 'radix-ui';
 import type { Emphasis, Size } from '@the-system/shared';
+import { usePointerGlow } from './pointerGlow';
 
 export type CardSize = Extract<Size, 'sm' | 'md' | 'lg'>;
 export type CardEmphasis = Extract<Emphasis, 'outline' | 'soft' | 'solid'>;
@@ -89,10 +90,13 @@ export function Card({
   }, []);
   const context = useMemo<CardContextValue>(() => ({ disabled, registerLink }), [disabled, registerLink]);
   const Root = asChild ? Slot.Root : 'div';
+  const interactive = links > 0 && !disabled;
+  const { glow, onPointerMove } = usePointerGlow<HTMLDivElement>('card', 'card-lift', rest.onPointerMove);
   return (
     <CardContext value={context}>
       <Root
         {...rest}
+        onPointerMove={interactive ? onPointerMove : rest.onPointerMove}
         data-ds="card"
         data-emphasis={emphasis}
         data-size={size}
@@ -100,7 +104,15 @@ export function Card({
         data-selected={selected ? '' : undefined}
         data-disabled={disabled ? '' : undefined}
       >
-        {children}
+        {asChild ? (
+          children
+        ) : (
+          <>
+            {children}
+            {/* card-lift: the decorative highlight that follows the pointer (pointerGlow.ts). Not with asChild: the child owns its children. */}
+            {interactive && <span aria-hidden="true" ref={glow} />}
+          </>
+        )}
       </Root>
     </CardContext>
   );

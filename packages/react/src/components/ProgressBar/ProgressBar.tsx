@@ -9,10 +9,17 @@
 // The indicator is the full width of the track and scales on the inline axis
 // with transform: scaleX(fraction), so only transform animates. Its origin is
 // the inline start: the left edge in LTR, the right edge in RTL.
-import { useId, type CSSProperties, type HTMLAttributes, type ReactNode, type Ref } from 'react';
+//
+// Motion (order 1.22, proposed): progress-spring eases each new value on the
+// soft spring (ProgressBar.css); progress-celebrate plays once per
+// completion, when the value reaches max after being below it (not on a
+// first paint at max): the track dips and pops on the block axis.
+import { useId, useLayoutEffect, useRef, type CSSProperties, type HTMLAttributes, type ReactNode, type Ref } from 'react';
 import { Progress } from 'radix-ui';
 import type { Size, Tone } from '@the-system/shared';
 import { useTheme } from '../../theme';
+import { useMotion } from '../../internal/motion';
+import { popMark } from '../Stat/useDigitRoll';
 import { clampValue, formatPercent, loadingLabelFor, validMax } from './format';
 
 export type ProgressBarSize = Extract<Size, 'sm' | 'md' | 'lg'>;
@@ -66,6 +73,7 @@ export function ProgressBar({
   const text = value === null ? busy : valueText ? valueText(value, max) : formatPercent(value / max, lang);
   const fraction = value === null ? 0 : value / max;
   const hasLabel = label !== undefined && label !== null && label !== false && label !== '';
+  const track = useCelebrate<HTMLSpanElement>(value !== null && value >= max);
   if (
     process.env.NODE_ENV !== 'production' &&
     !hasLabel &&
@@ -93,11 +101,28 @@ export function ProgressBar({
         </span>
       )}
       {showValue && <span data-part="value">{text}</span>}
-      <span data-part="track">
+      <span data-part="track" ref={track}>
         <Progress.Indicator asChild style={{ '--_progress-bar-fraction': fraction } as CSSProperties}>
           <span data-part="indicator" />
         </Progress.Indicator>
       </span>
     </Progress.Root>
   );
+}
+
+/**
+ * progress-celebrate: pops the element once each time `done` turns true
+ * after the first paint. Returns its ref. Shared with ProgressCircle.
+ */
+export function useCelebrate<T extends HTMLElement>(done: boolean, axis: 'both' | 'block' = 'block') {
+  const ref = useRef<T>(null);
+  const motion = useMotion();
+  const mode = motion.mode('progress-celebrate');
+  const was = useRef(done);
+  useLayoutEffect(() => {
+    const before = was.current;
+    was.current = done;
+    if (done && !before) popMark(ref.current, mode, axis);
+  }, [done, mode, axis]);
+  return ref;
 }

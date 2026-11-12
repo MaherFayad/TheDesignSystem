@@ -4,8 +4,18 @@
  * this repo. GoBanana `.st-alert` could not be read in this session.
  *
  * It reads as part of the page, not as a message about it: a strong tone
- * edge on the inline start side, the tone tint or a tone border, and no
- * motion. It never moves, so it has no animation and no reduced motion form.
+ * edge on the inline start side, the tone tint or a tone border.
+ *
+ * Motion, interaction alert-entrance (order 1.22, proposed), once on mount
+ * and quieter than an Alert, since a callout is part of the content: the box
+ * only fades in (no travel, so the text column never jumps), one stagger
+ * step later the icon pops from scale.morph on the bouncy spring, two steps
+ * later the title and body settle from distance.nudge on the soft spring.
+ *
+ *   --_callout-icon-enter-scale   where the icon pops from
+ *   --_callout-shift              how far the text settles from
+ * A style turns it off with both at rest, which leaves a fade. Under reduced
+ * motion (media query or data-motion="reduce") there is no animation.
  *
  * Private plumbing (docs/contracts/anatomy.md, one convention):
  *
@@ -30,6 +40,8 @@
     --_callout-border-color: transparent;
     --_callout-edge: var(--_callout-tone-border);
     --_callout-icon: var(--_callout-tone-text);
+    --_callout-icon-enter-scale: var(--ds-scale-morph);
+    --_callout-shift: var(--ds-distance-nudge);
 
     display: grid;
     grid-template-columns: var(--ds-size-icon-md) minmax(0, 1fr);
@@ -52,6 +64,61 @@
     font-size: var(--_callout-font-size);
     line-height: var(--ds-font-leading-normal);
     overflow-wrap: anywhere;
+    animation: ds-callout-in var(--ds-duration-spring-soft) var(--ds-ease-out);
+  }
+
+  @keyframes ds-callout-in {
+    from {
+      opacity: 0;
+    }
+
+    /* Readable early: full opacity by 30% of the run (READABLE_AT); the transform settles over all of it. */
+    30% {
+      opacity: 1;
+    }
+  }
+
+  [data-ds='callout'] > [data-part='icon'] {
+    animation: ds-callout-icon-in var(--ds-duration-spring-bouncy) var(--ds-ease-spring-bouncy) var(--ds-delay-stagger) backwards;
+  }
+
+  @keyframes ds-callout-icon-in {
+    from {
+      opacity: 0;
+      transform: scale(var(--_callout-icon-enter-scale));
+    }
+
+    /* Readable early: full opacity by 30% of the run (READABLE_AT); the transform settles over all of it. */
+    30% {
+      opacity: 1;
+    }
+  }
+
+  [data-ds='callout'] > :is([data-part='title'], [data-part='body']) {
+    animation: ds-callout-text-in var(--ds-duration-spring-soft) var(--ds-ease-spring-soft) calc(2 * var(--ds-delay-stagger)) backwards;
+  }
+
+  @keyframes ds-callout-text-in {
+    from {
+      opacity: 0;
+      transform: translateY(var(--_callout-shift));
+    }
+
+    /* Readable early: full opacity by 30% of the run (READABLE_AT); the transform settles over all of it. */
+    30% {
+      opacity: 1;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    [data-ds='callout'],
+    [data-ds='callout'] > :is([data-part='icon'], [data-part='title'], [data-part='body']) {
+      animation: none;
+    }
+  }
+
+  :root[data-motion='reduce'] :is([data-ds='callout'], [data-ds='callout'] > :is([data-part='icon'], [data-part='title'], [data-part='body'])) {
+    animation: none;
   }
 
   /* ------------------------------------------------------------ parts */
@@ -152,6 +219,11 @@
       --_callout-border-color: CanvasText;
       --_callout-edge: CanvasText;
       --_callout-icon: CanvasText;
+    }
+
+    [data-ds='callout'],
+    [data-ds='callout'] > :is([data-part='icon'], [data-part='title'], [data-part='body']) {
+      animation: none;
     }
   }
 }

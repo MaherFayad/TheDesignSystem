@@ -207,7 +207,7 @@
       "status": "ready",
       "behavior": "hand built",
       "example": "Stat.demo.tsx",
-      "note": "number-roll plays through the Web Animations API on duration.roll and ease.reveal when a numeric value changes after the first paint; opacity only under reduced motion. Numbers go through a private formatStatNumber until packages/shared/src/number.ts (order 1.2.5) lands."
+      "note": "stat-roll (order 1.22): the drawn number is aria-hidden and rolls digit by digit with the digit-roll primitive when a numeric value changes after the first paint, the trend mark nudges the same way, and a visually hidden copy carries the number; at most three rolls a second; a fade of the new digits under reduced motion. Numbers go through a private formatStatNumber until packages/shared/src/number.ts (order 1.2.5) lands."
     },
     "angular": {
       "status": "planned",

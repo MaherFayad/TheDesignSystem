@@ -10,9 +10,18 @@
 // The level (low, medium, high) comes from the low and high thresholds and
 // sits in data-level, in the visible value text and in aria-valuetext, so it
 // is never only a color. The tone follows the optimum.
-import { useId, type CSSProperties, type HTMLAttributes, type ReactNode, type Ref } from 'react';
+//
+// Motion (order 1.22, interaction meter-fill, proposed): the fill plays from
+// the inline start to the value once, the first time the meter is seen: at
+// once when it is on screen at mount, else when an IntersectionObserver sees
+// it enter the viewport. Until then an inline scaleX(0) holds the fill empty
+// (set before the first paint, so a meter in view never flashes full). A
+// value change before that cancels it. Reduced and none: the value at once.
+import { useId, useLayoutEffect, useRef, type CSSProperties, type HTMLAttributes, type ReactNode, type Ref } from 'react';
 import { meterLevel, meterLevelLabelsFor, meterTone, type MeterLevel, type MeterTone, type Size } from '@the-system/shared';
+import { readDuration } from '@the-system/motion';
 import { useTheme } from '../../theme';
+import { useMotion } from '../../internal/motion';
 import { formatPercent, validMax } from '../ProgressBar/format';
 
 export type MeterSize = Extract<Size, 'sm' | 'md' | 'lg'>;
@@ -84,6 +93,7 @@ export function Meter({
   const text = withLevel ? spoken : amount;
   const ariaText = withLevel || hasRegions ? spoken : amount;
   const hasLabel = label !== undefined && label !== null && label !== false && label !== '';
+  const indicator = useFillOnView(fraction);
 
   return (
     <div
@@ -107,8 +117,67 @@ export function Meter({
       )}
       <span data-part="value">{text}</span>
       <span data-part="track">
-        <span data-part="indicator" style={{ '--_meter-fraction': fraction } as CSSProperties} />
+        <span data-part="indicator" ref={indicator} style={{ '--_meter-fraction': fraction } as CSSProperties} />
       </span>
     </div>
   );
+}
+
+/**
+ * meter-fill: fills the indicator once on first view. Returns its ref.
+ *
+ * The hold is an inline scaleX(0) with no transition, set before the first
+ * paint; it is a style, not a paused animation, so nothing waits on a
+ * finite animation that never ends. On view the inline transform goes and
+ * the indicator's transition, set inline to ease.spring-soft over
+ * duration.reveal for that one change, plays the fill. The inline
+ * transition is dropped after that duration, so later changes use the CSS.
+ */
+function useFillOnView(fraction: number) {
+  const ref = useRef<HTMLSpanElement>(null);
+  const motion = useMotion();
+  const mode = motion.mode('meter-fill');
+  const seen = useRef(false);
+  const release = useRef<() => void>(() => undefined);
+  useLayoutEffect(() => {
+    const el = ref.current;
+    if (!el || seen.current || mode !== 'full' || typeof IntersectionObserver === 'undefined') {
+      seen.current = true;
+      return;
+    }
+    el.style.transition = 'none';
+    el.style.transform = 'scaleX(0)';
+    let timer: ReturnType<typeof setTimeout> | undefined;
+    const show = (animate: boolean) => {
+      seen.current = true;
+      observer.disconnect();
+      // Flush the held frame, so the change below starts a transition from it.
+      void getComputedStyle(el).transform;
+      el.style.transition = animate ? 'transform var(--ds-duration-reveal) var(--ds-ease-spring-soft)' : '';
+      el.style.removeProperty('transform');
+      if (animate) timer = setTimeout(() => el.style.removeProperty('transition'), readDuration(el, 'duration.reveal') + 50);
+    };
+    release.current = () => show(false);
+    const observer = new IntersectionObserver((entries) => {
+      if (entries.some((e) => e.isIntersecting)) show(true);
+    });
+    const r = el.getBoundingClientRect();
+    if (r.bottom > 0 && r.top < window.innerHeight) show(true);
+    else observer.observe(el);
+    return () => {
+      observer.disconnect();
+      if (timer) clearTimeout(timer);
+      if (!seen.current) {
+        el.style.removeProperty('transform');
+        el.style.removeProperty('transition');
+      }
+    };
+  }, [mode]);
+  // A new value before the first view: show it, the fill is no longer news.
+  const first = useRef(fraction);
+  useLayoutEffect(() => {
+    if (fraction === first.current || seen.current) return;
+    release.current();
+  }, [fraction]);
+  return ref;
 }

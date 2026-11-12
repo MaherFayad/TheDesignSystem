@@ -10,12 +10,14 @@
 // The change is never color alone (WCAG 1.4.1): an arrow icon draws the
 // trend and a visually hidden word says it, so a screen reader hears
 // "Up 12%".
-import { isValidElement, useEffect, useRef, type HTMLAttributes, type ReactElement, type ReactNode, type Ref } from 'react';
+import { isValidElement, useCallback, useEffect, type HTMLAttributes, type ReactElement, type ReactNode, type Ref } from 'react';
 import { Icon, type IconName } from '@the-system/icons/react';
 import type { Size, Tone } from '@the-system/shared';
+import { play } from '@the-system/motion';
 import { useMotion } from '../../internal/motion';
 import { useTheme } from '../../theme/hooks';
 import { breakableValue, formatStatNumber } from './formatStatNumber';
+import { useDigitRoll } from './useDigitRoll';
 
 export type StatSize = Extract<Size, 'sm' | 'md' | 'lg'>;
 export type StatTone = Extract<Tone, 'success' | 'danger' | 'neutral'>;
@@ -96,9 +98,14 @@ const toneOf: Record<StatTrend, StatTone> = { up: 'success', down: 'danger', fla
 const defaultDeltaFormat: Intl.NumberFormatOptions = { style: 'percent', maximumFractionDigits: 1 };
 
 /**
- * A KPI: label, value, change, hint. A number rolls in when it changes
- * (stat-roll on the number-roll pattern, a fade under reduced motion). It does not announce changes: a page of KPIs that
- * refresh would talk over everything.
+ * A KPI: label, value, change, hint. When the number changes it rolls digit
+ * by digit (stat-roll, the digit-roll primitive of order 1.22: each changed
+ * digit rolls in its own column, the last digit first, up when the number
+ * grew and down when it fell), and the trend mark nudges the same way one
+ * stagger step later. The number is read once from a visually hidden copy;
+ * the drawn copy is aria-hidden. A change less than one roll after the last
+ * changes in place, so a live counter never flashes. It does not announce
+ * changes: a page of KPIs that refresh would talk over everything.
  */
 export function Stat({
   label,
@@ -135,7 +142,19 @@ export function Stat({
   const hasDelta = !loading && delta !== undefined && delta !== null && !(typeof delta === 'number' && !Number.isFinite(delta));
 
   const numeric = typeof value === 'number' && !empty && !loading;
-  const valueRef = useRollOnChange(numeric ? (value as number) : undefined, numeric ? (shownValue as string) : undefined);
+  const motion = useMotion();
+  const mode = motion.mode('stat-roll');
+  // The trend mark nudges the way the number went, a beat after the digits start.
+  const nudgeTrend = useCallback(
+    (direction: 'up' | 'down', host: HTMLElement) => {
+      const mark = host.closest('[data-ds="stat"]')?.querySelector(':scope > [data-part="delta"] > [data-ds="icon"]');
+      if (!mark || mode !== 'full') return;
+      const y = `calc(${direction === 'up' ? -1 : 1} * var(--ds-distance-nudge))`;
+      play(mark, { keyframes: [{ transform: 'none' }, { transform: `translateY(${y})`, offset: 0.35 }, { transform: 'none' }], duration: 'duration.spring-bouncy', easing: 'ease.out', fill: 'none', origin: '50% 50%', delay: 'delay.stagger' }, 'stat-trend');
+    },
+    [mode],
+  );
+  const valueRef = useDigitRoll<HTMLSpanElement>(numeric ? (shownValue as string) : undefined, mode, nudgeTrend, numeric ? (value as number) : undefined);
 
   // Development only: a node change with no trend is neither colored nor named.
   const nodeDeltaWithoutTrend = hasDelta && typeof delta !== 'number' && trendProp === undefined;
@@ -165,8 +184,13 @@ export function Stat({
         {loading ? (
           <span data-loading-label="">{loadingLabel ?? loadingLabels[langKey]}</span>
         ) : numeric ? (
-          // The layer that rolls (stat-roll); the value part clips it.
-          <span ref={valueRef}>{shownValue}</span>
+          // The number is read from the hidden copy; the drawn copy rolls digit by digit (stat-roll).
+          <>
+            <span data-visually-hidden="">{shownValue}</span>
+            <span aria-hidden="true" ref={valueRef}>
+              {shownValue}
+            </span>
+          </>
         ) : (
           shownValue
         )}
@@ -181,34 +205,4 @@ export function Stat({
       {hint !== undefined && hint !== null && <span data-part="hint">{hint}</span>}
     </div>
   );
-}
-
-/**
- * stat-roll: plays the catalog number-roll pattern through useMotion() on
- * the number's span when the shown number changes after the first paint:
- * up from below when it grew, down from above when it fell. A change that
- * comes less than one roll after the last roll started changes in place
- * (motion catalog note N11), so a live counter never flashes the same area
- * more than about three times a second. The reduced form is a fade, and
- * under reduced motion the duration tokens are 0ms. Never awaits
- * animationend.
- */
-function useRollOnChange(n: number | undefined, text: string | undefined) {
-  const ref = useRef<HTMLSpanElement>(null);
-  const motion = useMotion();
-  const previous = useRef({ n, text });
-  const busyUntil = useRef(0);
-  useEffect(() => {
-    const before = previous.current;
-    previous.current = { n, text };
-    const el = ref.current;
-    if (!el || text === undefined || before.text === undefined || before.text === text) return;
-    const now = typeof performance === 'undefined' ? Date.now() : performance.now();
-    if (now < busyUntil.current) return;
-    const direction = n !== undefined && before.n !== undefined && n < before.n ? 'down' : 'up';
-    const roll = motion.play(el, 'number-roll', 'stat-roll', { direction });
-    const duration = roll?.effect?.getTiming().duration;
-    busyUntil.current = roll ? now + (typeof duration === 'number' ? duration : 0) : 0;
-  }, [n, text, motion]);
-  return ref;
 }

@@ -125,6 +125,17 @@
     background-size: var(--_avatar-status-shape-size);
   }
 
+  /*
+   * avatar-status (order 1.22): the ring that pulses when the status changes.
+   * StatusDot's own dot, filled in the status color, at rest invisible;
+   * Avatar.tsx plays its growth and fade with the Web Animations API.
+   */
+  [data-ds='avatar'] > [data-ds='status-dot'][data-part='status'] > [data-part='dot'] {
+    --_status-dot-bg: var(--_avatar-status-bg);
+
+    opacity: 0;
+  }
+
   [data-ds='avatar'] > [data-ds='status-dot'][data-part='status'][data-tone='warning'] {
     --_avatar-status-bg: var(--ds-color-state-warning-solid);
     --_avatar-status-shape:
@@ -175,6 +186,10 @@
     [data-ds='avatar'] > [data-part='image'] {
       transition: none;
     }
+  }
+
+  :root[data-motion='reduce'] [data-ds='avatar'] > [data-part='image'] {
+    transition: none;
   }
 
   @media (forced-colors: active) {

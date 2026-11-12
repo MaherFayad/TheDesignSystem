@@ -1,3 +1,4 @@
+'use client';
 // Badge: a small count or status label attached to something (unread 3,
 // Beta). Not interactive: a pressable or removable token is a Chip.
 //
@@ -6,10 +7,19 @@
 // SiteNav.tsx could not be read in the lane session (no access to the
 // repo). The tones and emphases follow Button so a badge and a button of
 // the same tone read as one family.
-import type { HTMLAttributes, ReactElement, ReactNode, Ref } from 'react';
+//
+// Motion (order 1.22, interaction badge-count, proposed): when the count
+// changes after the first paint, its digits roll (the digit-roll primitive,
+// up when it grew and down when it fell) and the badge pops: a dip to
+// scale.anticipate, past rest to scale.pop, then rest. The drawn count is
+// aria-hidden and the full count is read from a visually hidden copy, so a
+// count is always drawn in the split form. A dot pops without a roll.
+import { useCallback, useLayoutEffect, useRef, type HTMLAttributes, type ReactElement, type ReactNode, type Ref } from 'react';
 import { VisuallyHidden } from 'radix-ui';
 import { Icon, type IconName } from '@the-system/icons/react';
 import type { Emphasis, Size, Tone } from '@the-system/shared';
+import { useMotion } from '../../internal/motion';
+import { popMark, useDigitRoll } from '../Stat/useDigitRoll';
 
 export type BadgeSize = Extract<Size, 'xs' | 'sm'>;
 export type BadgeTone = Extract<Tone, 'neutral' | 'accent' | 'success' | 'warning' | 'danger' | 'info'>;
@@ -65,12 +75,37 @@ export function Badge({
   ...rest
 }: BadgeProps) {
   const hasCount = typeof count === 'number' && Number.isFinite(count);
-  // A count is isolated as left to right, so "99+" keeps the plus after the digits in Arabic too.
-  const visible: ReactNode = hasCount ? <bdi dir="ltr">{formatBadgeCount(count, max)}</bdi> : children;
   const whole = hasCount ? Math.max(0, Math.floor(count)) : 0;
+  const shown = hasCount ? formatBadgeCount(count, max) : undefined;
+  const motion = useMotion();
+  const mode = motion.mode('badge-count');
+  const own = useRef<HTMLSpanElement>(null);
+  // The badge pops with the roll. A badge placed with a transform of its own pops its label instead, so its place holds.
+  const popBadge = useCallback(() => {
+    const root = own.current;
+    if (!root) return;
+    const placed = typeof getComputedStyle === 'function' && getComputedStyle(root).transform !== 'none';
+    popMark(placed ? root.querySelector(':scope > [data-part="label"]') : root, mode);
+  }, [mode]);
+  const countRef = useDigitRoll<HTMLElement>(hasCount && !dot ? shown : undefined, mode, popBadge, hasCount ? whole : undefined);
+  // A dot has no digits: it only pops when the count changes.
+  const lastCount = useRef(hasCount ? whole : undefined);
+  useLayoutEffect(() => {
+    const before = lastCount.current;
+    lastCount.current = hasCount ? whole : undefined;
+    if (dot && before !== undefined && hasCount && before !== whole) popBadge();
+  }, [dot, hasCount, whole, popBadge]);
+  // A count is isolated as left to right, so "99+" keeps the plus after the digits in Arabic too.
+  const visible: ReactNode = hasCount ? (
+    <bdi dir="ltr" ref={countRef}>
+      {shown}
+    </bdi>
+  ) : (
+    children
+  );
   const spoken: ReactNode = hasCount ? (countLabel ? countLabel(whole) : String(whole)) : children;
-  // The visible text and the spoken text differ for a capped count or a count with words.
-  const split = hasCount && spoken !== formatBadgeCount(count, max);
+  // A count is always split: the drawn digits roll, so they are hidden, and the full count is read.
+  const split = hasCount;
 
   let label: ReactNode;
   if (dot) {
@@ -89,7 +124,11 @@ export function Badge({
   return (
     <span
       {...rest}
-      ref={ref}
+      ref={(node) => {
+        own.current = node;
+        if (typeof ref === 'function') return ref(node);
+        if (ref) ref.current = node;
+      }}
       data-ds="badge"
       data-tone={tone}
       data-emphasis={emphasis}

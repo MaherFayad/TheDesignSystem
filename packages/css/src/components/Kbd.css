@@ -12,7 +12,10 @@
  *   --_kbd-separator-fg the plus between keycaps
  *   --_kbd-shadow      the depth stack: top highlight, bottom edge, drop
  *
- * A keycap is text, not a control: no hover, press, focus or motion. The
+ * A keycap is text, not a control: no hover, pointer press or focus. One
+ * motion (kbd-press, order 1.22, proposed) is played from Kbd.tsx with the
+ * Web Animations API: a keycap goes down while its real key is held and
+ * springs back on release; none under reduced motion. The
  * root is `dir="ltr"` and isolated, so a shortcut reads Ctrl then K inside
  * Arabic too.
  */

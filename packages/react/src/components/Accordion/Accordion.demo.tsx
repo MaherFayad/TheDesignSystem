@@ -1,4 +1,6 @@
+import { useState } from 'react';
 import { DemoCase, DemoPage, DemoRow, sample } from '../../demo';
+import { Button } from '../Button';
 import { Theme } from '../../theme';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger, type AccordionSize, type AccordionVariant } from './index';
 
@@ -25,6 +27,41 @@ const sectionsAr = [
   ['الأعضاء', 'أرسل دعوة بالإيميل، وكل شخص ياخذ الدور اللي تختاره وتقدر تغيره بعدين.'],
   ['التنبيهات', 'اختر الأحداث اللي توصلك بالإيميل والأحداث اللي تظهر في قائمة الجرس بس.'],
 ] as const;
+
+/**
+ * The contract suite's open checks (axe, target size) need a trigger that
+ * adds an accordion with a section open (review note N12): this one mounts
+ * one with a list in the open section, so the child stagger plays too.
+ */
+function OpenOnDemand() {
+  const [shown, setShown] = useState(false);
+  return (
+    <>
+      <Button data-demo-trigger="" onClick={() => setShown(true)}>
+        Show the plan details
+      </Button>
+      {shown && (
+        <Accordion defaultValue="plan">
+          <AccordionItem value="plan">
+            <AccordionTrigger>Plan details</AccordionTrigger>
+            <AccordionContent>
+              <p>Your plan renews on 12 March.</p>
+              <ul>
+                <li>Ten members</li>
+                <li>Unlimited boards</li>
+              </ul>
+              <p>Change the card on file from the billing page.</p>
+            </AccordionContent>
+          </AccordionItem>
+          <AccordionItem value="members">
+            <AccordionTrigger>Members</AccordionTrigger>
+            <AccordionContent>{sections[1][1]}</AccordionContent>
+          </AccordionItem>
+        </Accordion>
+      )}
+    </>
+  );
+}
 
 function Sections({ items, count = 3 }: { items: readonly (readonly [string, string])[]; count?: number }) {
   return items.slice(0, count).map(([title, body]) => (
@@ -106,6 +143,10 @@ export default function AccordionDemo() {
             <AccordionContent>{sectionsAr[1][1]}</AccordionContent>
           </AccordionItem>
         </Accordion>
+      </DemoCase>
+
+      <DemoCase id="open" title="Opened on demand: a section open with a paragraph, a list and a paragraph that arrive one after another">
+        <OpenOnDemand />
       </DemoCase>
 
       <DemoCase id="disabled" title="Disabled: a section that cannot open stays focusable">

@@ -57,9 +57,11 @@ describe('Badge', () => {
     expect(label.textContent).toBe('33 unread messages');
   });
 
-  it('a plain count is one text node', () => {
+  it('a count is drawn aria-hidden, so its digits can roll, and read once from a hidden copy', () => {
     const el = root(render(<Badge count={7} />).container);
-    expect(el.querySelector('[data-part="label"]')?.innerHTML).toBe('<bdi dir="ltr">7</bdi>');
+    const label = el.querySelector('[data-part="label"]');
+    expect(label?.querySelector('[aria-hidden="true"] > bdi')?.textContent).toBe('7');
+    expect(label?.textContent).toBe('77');
   });
 
   it('the dot form hides the label visually, keeps it for assistive tech and drops the icon', () => {

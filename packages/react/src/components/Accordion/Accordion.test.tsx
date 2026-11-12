@@ -1,5 +1,8 @@
-import { render, screen } from '@testing-library/react';
+import { act, render, screen } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
+import { readFileSync } from 'node:fs';
+import { join } from 'node:path';
+import { getInteraction } from '@the-system/motion';
 import { describe, expect, it } from 'vitest';
 import AccordionDemo from './Accordion.demo';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger, type AccordionProps } from './index';
@@ -112,6 +115,28 @@ describe('Accordion', () => {
   it('renders the demo cases', () => {
     const { container } = render(<AccordionDemo />);
     const cases = Array.from(container.querySelectorAll('[data-demo-case]')).map((c) => c.getAttribute('data-demo-case'));
-    expect(cases).toEqual(['variants', 'one', 'many', 'too-many', 'long-text', 'long-arabic', 'disabled']);
+    expect(cases).toEqual(['variants', 'one', 'many', 'too-many', 'long-text', 'long-arabic', 'open', 'disabled']);
+  });
+
+  it('has a demo trigger that adds an accordion with a section open, for the contract suite (review note N12)', () => {
+    const { container } = render(<AccordionDemo />);
+    const trigger = container.querySelector<HTMLElement>('[data-demo-trigger]');
+    expect(trigger).not.toBeNull();
+    const before = container.querySelectorAll('[data-ds="accordion"]').length;
+    act(() => trigger?.click());
+    expect(container.querySelectorAll('[data-ds="accordion"]').length).toBe(before + 1);
+    expect(container.querySelector('[data-demo-case="open"] [data-ds="accordion"] [data-part="content"][data-state="open"]')).not.toBeNull();
+  });
+
+  it('turns the chevron off with the rest of accordion-reveal (review note N6)', () => {
+    const off = getInteraction('accordion-reveal')?.off?.["[data-ds='accordion']"] ?? {};
+    const css = readFileSync(join(process.cwd(), 'packages/css/src/components/Accordion.css'), 'utf8');
+    // The chevron's transition reads a property the off row sets to 0s.
+    const chevron = /\[data-part='trigger'\] \[data-ds='icon'\] \{[^}]*transition: transform var\((--_accordion-[\w-]+)\)/.exec(css);
+    expect(chevron?.[1]).toBeDefined();
+    expect(off[chevron?.[1] as `--_${string}`]).toBe('0s');
+    // So do the content slide and the child stagger.
+    expect(off['--_accordion-duration']).toBe('0s');
+    expect(off['--_accordion-stagger']).toBe('0s');
   });
 });

@@ -15,8 +15,18 @@
  *                               until a measure token exists)
  *   --_error-state-ring         the focus ring of the summary
  *
- * Motion: fade-rise on mount (transform and opacity), and the details chevron
- * turns. Both are off under reduced motion.
+ * Motion (order 1.22, proposed), transform and opacity only:
+ * - state-illustration, once on mount: the column fades in; the icon settles
+ *   from a small lift (distance.lift above, scale.enter) on the bouncy
+ *   spring; the title, body, actions and details follow one stagger step
+ *   apart, each from distance.nudge below on the soft spring.
+ * - error-state-details: the details chevron turns on the snappy spring,
+ *   with its overshoot.
+ *
+ *   --_error-state-lift, -enter-scale   where the icon starts (motion names)
+ *   --_error-state-shift                how far the text settles from
+ *   --_error-state-duration, -ease      the chevron's turn
+ * Both are off under reduced motion (media query or data-motion="reduce").
  *
  * Retrying dims nothing: the retry Button shows its own loading state, and
  * the copy stays readable.
@@ -32,6 +42,11 @@
     --_error-state-body-size: var(--ds-font-size-m);
     --_error-state-max: var(--ds-dialog-width-md);
     --_error-state-ring: var(--ds-focus-shadow-ring);
+    --_error-state-lift: calc(-1 * var(--ds-distance-lift));
+    --_error-state-enter-scale: var(--ds-scale-enter);
+    --_error-state-shift: var(--ds-distance-nudge);
+    --_error-state-duration: var(--ds-duration-spring-snappy);
+    --_error-state-ease: var(--ds-ease-spring-snappy);
 
     display: flex;
     flex-direction: column;
@@ -46,14 +61,62 @@
     line-height: var(--ds-font-leading-normal);
     text-align: center;
     overflow-wrap: anywhere;
-    animation: ds-error-state-in var(--ds-duration-medium) var(--ds-ease-out);
+    animation: ds-error-state-in var(--ds-duration-spring-soft) var(--ds-ease-out);
   }
 
-  /* fade-rise: the error fades in and rises a little when it replaces content. */
+  /* The column fades in; its parts bring the movement. */
   @keyframes ds-error-state-in {
     from {
       opacity: 0;
-      transform: translateY(var(--ds-space-2xs));
+    }
+
+    /* Readable early: full opacity by 30% of the run (READABLE_AT); the transform settles over all of it. */
+    30% {
+      opacity: 1;
+    }
+  }
+
+  [data-ds='error-state'] > [data-part='icon'] {
+    animation: ds-error-state-art var(--ds-duration-spring-bouncy) var(--ds-ease-spring-bouncy) backwards;
+  }
+
+  [data-ds='error-state'] > :is([data-part='title'], [data-part='body'], [data-part='actions'], [data-part='details']) {
+    animation: ds-error-state-text var(--ds-duration-spring-soft) var(--ds-ease-spring-soft) var(--ds-delay-stagger) backwards;
+  }
+
+  [data-ds='error-state'] > [data-part='body'] {
+    animation-delay: min(calc(2 * var(--ds-delay-stagger)), var(--ds-duration-base));
+  }
+
+  [data-ds='error-state'] > [data-part='actions'] {
+    animation-delay: min(calc(3 * var(--ds-delay-stagger)), var(--ds-duration-base));
+  }
+
+  [data-ds='error-state'] > [data-part='details'] {
+    animation-delay: min(calc(4 * var(--ds-delay-stagger)), var(--ds-duration-base));
+  }
+
+  @keyframes ds-error-state-art {
+    from {
+      opacity: 0;
+      transform: translateY(var(--_error-state-lift)) scale(var(--_error-state-enter-scale));
+    }
+
+    /* Readable early: full opacity by 30% of the run (READABLE_AT); the transform settles over all of it. */
+    30% {
+      opacity: 1;
+    }
+  }
+
+  @keyframes ds-error-state-text {
+    from {
+      opacity: 0;
+      transform: translateY(var(--_error-state-shift));
+    }
+
+    /* Readable early: full opacity by 30% of the run (READABLE_AT); the transform settles over all of it. */
+    30% {
+      opacity: 1;
     }
   }
 
@@ -131,7 +194,7 @@
 
   /* The native marker is gone with display flex; the chevron turns when open. */
   [data-ds='error-state'] > [data-part='details'] > [data-part='summary'] > [data-ds='icon'] {
-    transition: transform var(--ds-duration-base) var(--ds-ease-out);
+    transition: transform var(--_error-state-duration) var(--_error-state-ease);
   }
 
   [data-ds='error-state'] > [data-part='details'][open] > [data-part='summary'] > [data-ds='icon'] {
@@ -159,13 +222,23 @@
 
   @media (prefers-reduced-motion: reduce) {
     [data-ds='error-state'],
+    [data-ds='error-state'] > *,
     [data-ds='error-state'] > [data-part='details'] > [data-part='summary'] > [data-ds='icon'] {
       animation: none;
       transition: none;
     }
   }
 
+  :root[data-motion='reduce'] :is([data-ds='error-state'], [data-ds='error-state'] > *, [data-ds='error-state'] > [data-part='details'] > [data-part='summary'] > [data-ds='icon']) {
+    animation: none;
+    transition: none;
+  }
+
   @media (forced-colors: active) {
+    [data-ds='error-state'] > * {
+      animation: none;
+    }
+
     [data-ds='error-state'] {
       animation: none;
       --_error-state-icon-bg: Canvas;

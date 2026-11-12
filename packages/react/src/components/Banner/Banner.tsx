@@ -22,7 +22,9 @@ import { Icon } from '@the-system/icons/react';
 import type { IconName } from '@the-system/icons';
 import type { Emphasis, Tone } from '@the-system/shared';
 import { useTheme } from '../../theme/hooks';
+import { useMotion } from '../../internal/motion';
 import { CloseButton } from '../CloseButton';
+import { dismissWithExit } from '../Alert/ghost';
 import { messageIcons, wordsFor } from '../Alert/messageTones';
 
 export type BannerTone = Tone;
@@ -120,6 +122,7 @@ export function Banner({
   // An empty toneLabel falls back to the tone word: the icon always has a name.
   const word = toneLabel || words.tone[tone];
   const own = useRef<HTMLElement | null>(null);
+  const motion = useMotion();
 
   // Layout effect: the padding is in place before the first paint.
   useLayoutEffect(() => {
@@ -174,7 +177,8 @@ export function Banner({
           size="xs"
           onClick={(event) => {
             focusTarget(event.currentTarget.ownerDocument, returnFocus);
-            onDismiss();
+            // alert-dismiss (order 1.22): the banner goes at once; a ghost of it shrinks away while the page slides up.
+            dismissWithExit(own.current, motion.mode('alert-dismiss'), onDismiss);
           }}
         />
       )}

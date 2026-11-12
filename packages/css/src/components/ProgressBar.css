@@ -25,6 +25,17 @@
  * track, in the full tone color. No determinate value has that shape (a
  * value always starts at the inline start), so it never reads as done or as
  * a part done. The value text says Loading.
+ *
+ * Motion (order 1.22, interaction progress-spring, proposed): a new value
+ * eases the indicator's scaleX on the soft spring, so it lands a little past
+ * the value in Desk and settles. Reaching max plays a celebrate once per
+ * completion from ProgressBar.tsx: the track dips and pops on the block axis
+ * (scale.anticipate, scale.pop) over duration.celebrate.
+ *
+ *   --_progress-bar-duration, -ease   the value change (motion names)
+ * A style turns it off with --_progress-bar-duration: 0s. Under reduced
+ * motion (media query or data-motion="reduce") there is no transition and
+ * the indeterminate form stops still.
  */
 @layer ds.base {
   [data-ds='progress-bar'] {
@@ -33,6 +44,8 @@
     --_progress-bar-font-size: var(--ds-font-size-s);
     --_progress-bar-radius: var(--ds-radius-pill);
     --_progress-bar-track: var(--ds-color-bg-overlay-10);
+    --_progress-bar-duration: var(--ds-duration-spring-soft);
+    --_progress-bar-ease: var(--ds-ease-spring-soft);
     --_progress-bar-fill: var(--ds-color-primary-on-surface);
     --_progress-bar-fg: var(--ds-color-text-default);
     --_progress-bar-value-fg: var(--ds-color-text-muted);
@@ -111,7 +124,7 @@
     background-color: var(--_progress-bar-fill);
     transform: scaleX(var(--_progress-bar-fraction));
     transform-origin: 0 50%;
-    transition: transform var(--ds-duration-slow) var(--ds-ease-standard);
+    transition: transform var(--_progress-bar-duration) var(--_progress-bar-ease);
   }
 
   [data-ds='progress-bar'] [data-part='indicator']:dir(rtl) {
@@ -171,6 +184,20 @@
       transform: translateX(-75%);
       animation: none;
     }
+  }
+
+  :root[data-motion='reduce'] [data-ds='progress-bar'] [data-part='indicator'] {
+    transition: none;
+  }
+
+  :root[data-motion='reduce'] [data-ds='progress-bar'][data-state='indeterminate'] [data-part='indicator'] {
+    transform: translateX(75%);
+    animation: none;
+  }
+
+  :root[data-motion='reduce'] [data-ds='progress-bar'][data-state='indeterminate'] [data-part='indicator']:dir(rtl) {
+    transform: translateX(-75%);
+    animation: none;
   }
 
   @media (forced-colors: active) {

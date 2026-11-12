@@ -182,6 +182,10 @@
     }
   }
 
+  :root[data-motion='reduce'] [data-ds='scroll-area'] > :is([data-part='fade-start'], [data-part='fade-end']) {
+    transition: none;
+  }
+
   /* The fades are decoration that could hide text; the thumb draws in the text color. */
   @media (forced-colors: active) {
     [data-ds='scroll-area'] > :is([data-part='fade-start'], [data-part='fade-end']) {

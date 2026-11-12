@@ -13,12 +13,20 @@
 // Live role: none by default, because an alert that is on the page when it
 // loads is read with the page. `live` is for an alert mounted after load:
 // role alert (assertive) for danger, role status (polite) for the rest.
-import type { HTMLAttributes, ReactElement, ReactNode, Ref } from 'react';
+//
+// Motion (order 1.22, proposed). alert-entrance, in Alert.css: the surface
+// arrives, the icon pops one stagger step later, the text settles after it.
+// alert-dismiss, here: the close button calls onClose at once, and a ghost
+// of the alert shrinks away faster than it came while the content under it
+// slides up into the gap (./ghost.ts).
+import { useRef, type HTMLAttributes, type ReactElement, type ReactNode, type Ref } from 'react';
 import { Icon } from '@the-system/icons/react';
 import type { IconName } from '@the-system/icons';
 import type { Emphasis, Size, Tone } from '@the-system/shared';
 import { useTheme } from '../../theme/hooks';
+import { useMotion } from '../../internal/motion';
 import { CloseButton } from '../CloseButton';
+import { dismissWithExit } from './ghost';
 import { messageIcons, wordsFor } from './messageTones';
 
 export type AlertTone = Tone;
@@ -82,9 +90,17 @@ export function Alert({
   onClose,
   closeLabel,
   lang,
+  ref,
   ...rest
 }: AlertProps) {
   const theme = useTheme();
+  const motion = useMotion();
+  const own = useRef<HTMLDivElement | null>(null);
+  const setRef = (node: HTMLDivElement | null) => {
+    own.current = node;
+    if (typeof ref === 'function') return ref(node);
+    if (ref) ref.current = node;
+  };
   const words = wordsFor(alertLabels, lang ?? theme.lang);
   const role = live ? (tone === 'danger' ? 'alert' : 'status') : undefined;
   // An empty toneLabel falls back to the tone word: the icon always has a name.
@@ -92,6 +108,7 @@ export function Alert({
   return (
     <div
       {...rest}
+      ref={setRef}
       lang={lang}
       role={role}
       aria-atomic={role === 'status' ? true : rest['aria-atomic']}
@@ -114,7 +131,7 @@ export function Alert({
       {children !== undefined && children !== null && children !== '' && <div data-part="body">{children}</div>}
       {actions !== undefined && actions !== null && <div data-part="actions">{actions}</div>}
       {onClose && (
-        <CloseButton data-part="close" label={closeLabel ?? words.close} size="xs" onClick={onClose} />
+        <CloseButton data-part="close" label={closeLabel ?? words.close} size="xs" onClick={() => dismissWithExit(own.current, motion.mode('alert-dismiss'), onClose)} />
       )}
     </div>
   );

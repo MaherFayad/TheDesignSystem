@@ -15,8 +15,23 @@
  *   --_alert-radius, -padding-block, -padding-inline, -gap, -font-size
  *   --_alert-tone-*                   the colors of one tone, read by the emphasis rules
  *
- * Motion: the fade-rise pattern plays once when an alert mounts, transform
- * and opacity only. Under reduced motion it is none.
+ * Motion, interaction alert-entrance (order 1.22, proposed), played once
+ * when an alert mounts, transform and opacity only, in three beats:
+ *   1. the surface rises distance.enter and grows from scale.enter while it
+ *      fades in, on the soft spring (no overshoot on a panel in Neutral);
+ *   2. one stagger step later the icon pops from scale.morph past its rest
+ *      on the bouncy spring and settles;
+ *   3. two steps later the title, body and actions settle from
+ *      distance.nudge below, on the soft spring.
+ * The dismiss (alert-dismiss) is a ghost played from Alert.tsx.
+ *
+ *   --_alert-enter-y, -enter-scale   the surface's travel and scale (motion names)
+ *   --_alert-duration-in, -ease-in   the surface's spring
+ *   --_alert-icon-enter-scale        where the icon pops from (a part name and a motion name)
+ *   --_alert-shift                   how far the text settles from
+ * A style turns the motion off with the enter values at rest (enter-y and
+ * shift 0px, the scales 1), which leaves a fade. Under reduced motion, as a
+ * media query or data-motion="reduce" on the root, there is no animation.
  *
  * Inside a solid alert the nested Buttons and the close CloseButton take the
  * alert's ink through their own private --_button-* properties, so their
@@ -40,6 +55,12 @@
     --_alert-title-fg: var(--ds-color-text-bright);
     --_alert-border-color: var(--_alert-tone-edge);
     --_alert-icon: var(--_alert-tone-text);
+    --_alert-enter-y: var(--ds-distance-enter);
+    --_alert-enter-scale: var(--ds-scale-enter);
+    --_alert-duration-in: var(--ds-duration-spring-soft);
+    --_alert-ease-in: var(--ds-ease-spring-soft);
+    --_alert-icon-enter-scale: var(--ds-scale-morph);
+    --_alert-shift: var(--ds-distance-nudge);
 
     display: grid;
     grid-template-columns: var(--ds-size-icon-md) minmax(0, 1fr) auto;
@@ -63,13 +84,52 @@
     font-size: var(--_alert-font-size);
     line-height: var(--ds-font-leading-normal);
     overflow-wrap: anywhere;
-    animation: ds-alert-in var(--ds-duration-medium) var(--ds-ease-out);
+    animation: ds-alert-in var(--_alert-duration-in) var(--_alert-ease-in);
   }
 
   @keyframes ds-alert-in {
     from {
       opacity: 0;
-      transform: translateY(var(--ds-space-3xs));
+      transform: translateY(var(--_alert-enter-y)) scale(var(--_alert-enter-scale));
+    }
+
+    /* Readable early: full opacity by 30% of the run (READABLE_AT); the transform settles over all of it. */
+    30% {
+      opacity: 1;
+    }
+  }
+
+  /* Beat 2: the icon pops one stagger step after the surface. */
+  [data-ds='alert'] > [data-part='icon'] {
+    animation: ds-alert-icon-in var(--ds-duration-spring-bouncy) var(--ds-ease-spring-bouncy) var(--ds-delay-stagger) backwards;
+  }
+
+  @keyframes ds-alert-icon-in {
+    from {
+      opacity: 0;
+      transform: scale(var(--_alert-icon-enter-scale));
+    }
+
+    /* Readable early: full opacity by 30% of the run (READABLE_AT); the transform settles over all of it. */
+    30% {
+      opacity: 1;
+    }
+  }
+
+  /* Beat 3: the text settles two steps after the surface. */
+  [data-ds='alert'] > :is([data-part='title'], [data-part='body'], [data-part='actions']) {
+    animation: ds-alert-text-in var(--ds-duration-spring-soft) var(--ds-ease-spring-soft) calc(2 * var(--ds-delay-stagger)) backwards;
+  }
+
+  @keyframes ds-alert-text-in {
+    from {
+      opacity: 0;
+      transform: translateY(var(--_alert-shift));
+    }
+
+    /* Readable early: full opacity by 30% of the run (READABLE_AT); the transform settles over all of it. */
+    30% {
+      opacity: 1;
     }
   }
 
@@ -248,9 +308,14 @@
   /* ------------------------------------------------------------ reduced motion, forced colors */
 
   @media (prefers-reduced-motion: reduce) {
-    [data-ds='alert'] {
+    [data-ds='alert'],
+    [data-ds='alert'] > :is([data-part='icon'], [data-part='title'], [data-part='body'], [data-part='actions']) {
       animation: none;
     }
+  }
+
+  :root[data-motion='reduce'] :is([data-ds='alert'], [data-ds='alert'] > :is([data-part='icon'], [data-part='title'], [data-part='body'], [data-part='actions'])) {
+    animation: none;
   }
 
   /* Forced colors: the fill is dropped by the browser; the border becomes the system text color so the box keeps a boundary. */
@@ -259,6 +324,10 @@
       --_alert-border-color: CanvasText;
       --_alert-icon: CanvasText;
 
+      animation: none;
+    }
+
+    [data-ds='alert'] > :is([data-part='icon'], [data-part='title'], [data-part='body'], [data-part='actions']) {
       animation: none;
     }
   }

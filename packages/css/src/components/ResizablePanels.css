@@ -25,12 +25,22 @@
  *   --_resizable-panels-grip-opacity                      the grip at rest, swapped on hover and focus
  *   --_resizable-panels-ring, -radius                     the focus ring of the handle
  *   --_resizable-panels-duration, -ease                   the grip fade
+ *   --_resizable-panels-grip-scale                        the grip's length as a scale: a name
+ *                                                         outside the list in anatomy.md
+ *   --_resizable-panels-grip-duration, -grip-ease         the grip's spring
  * On each panel, set inline by the component:
  *   --_resizable-panels-size                              its size in percent
  *
  * Motion, pattern "drag-drop": the panels follow the pointer and the keys at
  * once, with no tween (sizes are layout, which never animates). Only the grip
- * fades in on hover and focus. Under reduced motion it switches at once.
+ * fades in on hover and focus.
+ *
+ * Interaction handle-grip (order 1.22, proposed): the grip also grows along
+ * the line from scale.morph to its length on the bouncy spring as it fades
+ * in, and while the handle is dragged it stretches to scale.stretch and
+ * springs back on release. A style turns the growth off with
+ * --_resizable-panels-grip-duration: 0s. Under reduced motion (media query
+ * or data-motion="reduce") it switches at once and does not stretch.
  */
 @layer ds.base {
   :is([data-ds='resizable-panels'], [data-ds='split-view']) {
@@ -43,6 +53,9 @@
     --_resizable-panels-grip-length: var(--ds-space-3xl);
     --_resizable-panels-grip-thickness: var(--ds-space-3xs);
     --_resizable-panels-grip-opacity: 0;
+    --_resizable-panels-grip-scale: var(--ds-scale-morph);
+    --_resizable-panels-grip-duration: var(--ds-duration-spring-bouncy);
+    --_resizable-panels-grip-ease: var(--ds-ease-spring-bouncy);
     --_resizable-panels-ring: var(--ds-focus-shadow-ring);
     --_resizable-panels-radius: var(--ds-radius-xs);
     --_resizable-panels-duration: var(--ds-duration-base);
@@ -118,17 +131,20 @@
   :is([data-ds='resizable-panels'], [data-ds='split-view']) > [data-part='handle']:hover {
     --_resizable-panels-line-now: var(--_resizable-panels-line-hover);
     --_resizable-panels-grip-opacity: 1;
+    --_resizable-panels-grip-scale: 1;
   }
 
   :is([data-ds='resizable-panels'], [data-ds='split-view']) > [data-part='handle'][data-dragging] {
     --_resizable-panels-line-now: var(--_resizable-panels-line-active);
     --_resizable-panels-grip-opacity: 1;
+    --_resizable-panels-grip-scale: var(--ds-scale-stretch);
   }
 
   /* The transparent outline is set only here, so forced colors mode draws it on focus and nowhere else. */
   :is([data-ds='resizable-panels'], [data-ds='split-view']) > [data-part='handle']:focus-visible {
     --_resizable-panels-line-now: var(--_resizable-panels-line-active);
     --_resizable-panels-grip-opacity: 1;
+    --_resizable-panels-grip-scale: 1;
 
     outline: var(--ds-border-width-strong) solid transparent;
     outline-offset: calc(var(--ds-border-width-strong) * -1);
@@ -152,26 +168,38 @@
     border-radius: var(--ds-radius-pill);
     background: var(--_resizable-panels-grip);
     opacity: var(--_resizable-panels-grip-opacity);
-    transition: opacity var(--_resizable-panels-duration) var(--_resizable-panels-ease);
+    transition:
+      opacity var(--_resizable-panels-duration) var(--_resizable-panels-ease),
+      transform var(--_resizable-panels-grip-duration) var(--_resizable-panels-grip-ease);
     pointer-events: none;
   }
 
   :is([data-ds='resizable-panels'], [data-ds='split-view'])[data-orientation='horizontal'] > [data-part='handle'] > [data-part='handle-grip'] {
     inline-size: var(--_resizable-panels-grip-thickness);
     block-size: var(--_resizable-panels-grip-length);
+    transform: scale(1, var(--_resizable-panels-grip-scale));
   }
 
   :is([data-ds='resizable-panels'], [data-ds='split-view'])[data-orientation='vertical'] > [data-part='handle'] > [data-part='handle-grip'] {
     inline-size: var(--_resizable-panels-grip-length);
     block-size: var(--_resizable-panels-grip-thickness);
+    transform: scale(var(--_resizable-panels-grip-scale), 1);
   }
 
   /* ------------------------------------------------------------ reduced motion, forced colors */
 
   @media (prefers-reduced-motion: reduce) {
     :is([data-ds='resizable-panels'], [data-ds='split-view']) > [data-part='handle'] > [data-part='handle-grip'] {
+      --_resizable-panels-grip-scale: 1;
+
       transition: none;
     }
+  }
+
+  :root[data-motion='reduce'] :is([data-ds='resizable-panels'], [data-ds='split-view']) > [data-part='handle'] > [data-part='handle-grip'] {
+    --_resizable-panels-grip-scale: 1;
+
+    transition: none;
   }
 
   @media (forced-colors: active) {

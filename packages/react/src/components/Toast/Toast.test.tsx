@@ -528,7 +528,7 @@ describe('the toast stack shift (interaction toast-stack)', () => {
     el.remove();
   });
 
-  it('plays the shift through the style preset in the Toaster, and nothing under reduced motion', async () => {
+  it('plays the shift with the flip primitive in the Toaster, and nothing under reduced motion', async () => {
     const restore = fakeStackLayout();
     const animate = vi.fn(() => ({ playState: 'running', cancel() {}, id: '' }) as unknown as Animation);
     const proto = HTMLElement.prototype as unknown as { animate?: unknown };
@@ -549,8 +549,9 @@ describe('the toast stack shift (interaction toast-stack)', () => {
       fire(() => toast({ title: 'File 2 uploaded', dedupeKey: false }));
       await act(async () => undefined);
       expect(animate).toHaveBeenCalledTimes(1);
-      const [keyframes] = animate.mock.calls[0] as unknown as [Keyframe[]];
-      expect(keyframes[0]?.transform).toBe('translate(0px, 48px) scale(1, 1)');
+      const [keyframes, timing] = animate.mock.calls[0] as unknown as [Keyframe[], KeyframeAnimationOptions];
+      expect(timing.id).toBe('ds-motion:flip');
+      expect(keyframes[0]?.transform).toBe('translate(0px, 48px)');
       expect(keyframes[1]?.transform).toBe('none');
       expect(toasts()[0]?.style.transformOrigin).toBe('');
       view.unmount();
