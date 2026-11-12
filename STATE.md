@@ -41,13 +41,13 @@ No adb. No iOS build.
 | Id | Title | Owner | Framework | Status | Commit |
 | --- | --- | --- | --- | --- | --- |
 | 1.0.a | Lint gate changes | ds-qa | all | done | e6d3b58 |
-| 1.0.b | Token adoption in wave 0 components | ds-component | react | open | |
+| 1.0.b | Token adoption in wave 0 components | ds-component | react | running, partly in e861fe6 | |
 | 1.0.c1 | Shared theme and dialog focus, React | ds-component | react | done | 6f0b589 |
-| 1.0.c2 | Shared logic in Angular | ds-angular | angular | open | |
+| 1.0.c2 | Shared logic in Angular | ds-angular | angular | done | e861fe6 (inside the wip commit) |
 | 1.0.c3 | Shared logic in native | ds-native | native | done | e360d28 |
 | 1.0.d | Package fixes from the consumers report | ds-docs | all | done | a85837c |
-| 1.0.e | Contract `moves` expectation, Window key hints | ds-qa | all | open | |
-| 1.0.f | Manifest gaps and visual findings | ds-component | react | open | |
+| 1.0.e | Contract `moves` expectation, Window key hints | ds-qa | all | running, partly in e861fe6 | |
+| 1.0.f | Manifest gaps and visual findings | ds-component | react | running | |
 | 1.0.g | Icons for wave 1 | ds-style | all | done | 24b8a20 |
 | 1.1 | Batch 1 actions (11) | ds-component | react | open | |
 | 1.2 | Batch 2 text inputs (12) | ds-component | react | open | |
@@ -59,9 +59,9 @@ No adb. No iOS build.
 | 1.8 | Batch 8 layout (12) | ds-component | react | open | |
 | 1.9 | Batch 9 data display A (12) | ds-component | react | open | |
 | A1 to A5 | Angular batches 1 to 5 | ds-angular | angular | open | |
-| 1.10 | Neutral style | ds-style | all | open | |
+| 1.10 | Neutral style | ds-style | all | running | |
 | 1.11 | Motion catalog | ds-style | all | open | |
-| 1.12 | Checker | ds-qa | all | open | |
+| 1.12 | Checker | ds-qa | all | running | |
 | 1.13 | Registry | ds-docs | react | open | |
 | 1.14 | CLI | ds-docs | all | open | |
 | 1.15 | Docs site | ds-docs | all | open | |
@@ -82,6 +82,13 @@ No adb. No iOS build.
 
 ## Blocked
 Nothing.
+
+## Incidents
+2026-11-12 11:20 UTC: four subagents stopped on the Opus 5.5 weekly limit
+(the error named a reset on 15 November 08:00 UTC). Their partial work was
+saved in wip commit e861fe6, where the full check passed. Requests were
+accepted again minutes later and the agents were resumed. If it happens
+again: commit the tree as wip, push, and resume the agents by id.
 
 ## Waiting on owner
 1. Desk Light approval (HUMAN GATE). Proposal and screenshots:
@@ -107,6 +114,10 @@ Nothing.
 1. 2026-11-12: pushing. The owner approved pushing the session branch
    `claude/relaxed-hypatia-7gseap` to `origin` after each wave. No other
    branch, no pull request, no force push.
+2. 2026-11-12: more parallel agents. The owner asked for more agents at
+   once, in other sessions too. The limit of four from the plan no longer
+   applies. Local subagents share one working tree, so lanes still may not
+   overlap in files, and only one order installs packages at a time.
 
 ## Contract changes
 2026-11-12: frameworks.md gained the Angular rules found by the proof (`dsTheme="<id>"`, host attribute removal, name mapping, no CDK Dialog or FocusTrap). Reason: order 0.15.
