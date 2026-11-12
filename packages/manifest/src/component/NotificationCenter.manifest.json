@@ -45,9 +45,9 @@
       "required": true,
       "description": "NotificationItem[]: { id, title, body?, time (Date, timestamp or ISO), unread?, tone?, icon?, actions? (up to two { label, onAction }), group? }. Rendered in the given order; the consumer sorts, newest first."
     },
-    "title": { "type": "node", "default": "Notifications", "description": "The panel heading. Arabic default under lang ar." },
+    "title": { "type": "node", "default": "Notifications", "description": "The panel heading. Arabic default under lang ar, from the prop or else the Theme language." },
     "headingLevel": { "type": ["2", "3", "4", "5"], "default": "2", "description": "The title's heading level; group labels take the next level." },
-    "onMarkAllRead": { "type": "function", "description": "Renders the mark all read Button (data-part mark-all) while any item is unread, and is called by it. The consumer clears unread on its items." },
+    "onMarkAllRead": { "type": "function", "description": "Renders the mark all read Button (data-part mark-all) while any item is unread, and is called by it. The consumer clears unread on its items. Before the call, focus moves to the panel title (tabIndex -1), since the Button removes itself once nothing is unread." },
     "markAllLabel": { "type": "string", "default": "Mark all as read", "description": "A verb plus a noun. Arabic: تحديد الكل كمقروء." },
     "size": { "type": ["sm", "md"], "default": "md", "description": "sm for a narrow popover: tighter padding and font.size.s." },
     "emptyTitle": { "type": "node", "default": "No notifications", "description": "The empty state title." },
@@ -113,7 +113,7 @@
     "font.weight.medium",
     "font.weight.semibold",
     "font.leading.snug",
-    "focus.shadow.ring",
+    "color.focus.ring",
     "duration.fast",
     "ease.out"
   ],

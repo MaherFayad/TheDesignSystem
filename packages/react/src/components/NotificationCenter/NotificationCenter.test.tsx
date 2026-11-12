@@ -2,6 +2,8 @@ import { fireEvent, render, screen } from '@testing-library/react';
 import { createRef } from 'react';
 import { describe, expect, it, vi } from 'vitest';
 import NotificationCenterDemo from './NotificationCenter.demo';
+import { useState } from 'react';
+import { Theme } from '../../theme';
 import { NotificationCenter, type NotificationItem } from './index';
 
 const now = new Date(2026, 10, 12, 15, 0, 0);
@@ -154,5 +156,59 @@ describe('NotificationCenter', () => {
     const { container } = render(<NotificationCenterDemo />);
     const ids = [...container.querySelectorAll('[data-demo-case]')].map((c) => c.getAttribute('data-demo-case'));
     expect(ids).toEqual(['variants', 'empty', 'one', 'many', 'too-many', 'long-text', 'long-arabic']);
+  });
+});
+
+describe('NotificationCenter focus, language and demo reflow', () => {
+  const now = new Date('2026-11-12T12:00:00Z');
+  const unreadItems: NotificationItem[] = [
+    { id: 'a', title: 'Sara mentioned you in Launch plan', time: new Date('2026-11-12T11:00:00Z'), unread: true },
+  ];
+
+  function Panel() {
+    const [items, setItems] = useState(unreadItems);
+    return (
+      <NotificationCenter
+        items={items}
+        now={now}
+        onMarkAllRead={() => setItems((list) => list.map((i) => ({ ...i, unread: false })))}
+      />
+    );
+  }
+
+  // WCAG 2.4.3: the button removes itself when it works. Focus must land on
+  // the panel, never on the page body.
+  it('moves focus to the panel title when mark all read removes its button', () => {
+    const { container } = render(<Panel />);
+    const button = container.querySelector<HTMLElement>('[data-part="mark-all"]')!;
+    button.focus();
+    fireEvent.click(button);
+    expect(container.querySelector('[data-part="mark-all"]')).toBeNull();
+    const title = container.querySelector('[data-part="title"]');
+    expect(document.activeElement).toBe(title);
+    expect(title?.getAttribute('tabindex')).toBe('-1');
+  });
+
+  it('takes its words from the Theme language and sets no lang or dir of its own', () => {
+    const { container } = render(
+      <Theme lang="ar">
+        <NotificationCenter items={[]} now={now} />
+      </Theme>,
+    );
+    const el = container.querySelector('[data-ds="notification-center"]')!;
+    expect(el.querySelector('[data-part="title"]')?.textContent).not.toBe('Notifications');
+    expect(el.textContent).not.toContain('No notifications');
+    expect(el.hasAttribute('lang')).toBe(false);
+    expect(el.hasAttribute('dir')).toBe(false);
+  });
+
+  // WCAG 1.4.10: a fixed grid minimum wider than the 292px column at 320px scrolls the page sideways.
+  it('no demo grid cell has a fixed minimum wider than a 320px page', () => {
+    const { container } = render(<NotificationCenterDemo />);
+    for (const grid of container.querySelectorAll<HTMLElement>('[data-demo="grid"]')) {
+      const min = /minmax\((.+), 1fr\)/.exec(grid.getAttribute('style') ?? '')?.[1] ?? '';
+      const rem = /^([\d.]+)rem$/.exec(min);
+      expect(min.startsWith('min(') || (rem !== null && Number(rem[1]) <= 18), min).toBe(true);
+    }
   });
 });
