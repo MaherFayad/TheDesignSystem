@@ -70,6 +70,25 @@ describe('WindowControls', () => {
     expect(document.activeElement).toBe(document.body);
   });
 
+  it('closeDisabled keeps the close light focusable but aria-disabled, and blocks activation', async () => {
+    const user = userEvent.setup();
+    const onClose = vi.fn();
+    render(<WindowControls onClose={onClose} closeDisabled onZoom={() => undefined} />);
+    const close = screen.getByRole('button', { name: 'Close window' });
+    expect(close.getAttribute('aria-disabled')).toBe('true');
+    expect(close.hasAttribute('data-disabled')).toBe(true);
+    expect(close.hasAttribute('tabindex')).toBe(false);
+    await user.tab();
+    expect(document.activeElement).toBe(close);
+    await user.keyboard('{Enter}');
+    await user.keyboard(' ');
+    await user.click(close);
+    expect(onClose).not.toHaveBeenCalled();
+    // Without a handler closeDisabled changes nothing: the light stays inert decoration.
+    const { container } = render(<WindowControls closeDisabled />);
+    expect(container.querySelector<HTMLElement>('[data-part="close"]')?.tabIndex).toBe(-1);
+  });
+
   it('renders every demo case', () => {
     const { container } = render(<WindowControlsDemo />);
     for (const id of ['variants', 'one', 'long-arabic', 'disabled']) {

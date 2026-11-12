@@ -183,7 +183,7 @@
       "ArrowDown": "Moves the window down 16px, from the same places",
       "ArrowLeft": "Moves the window 16px to the left on screen, in both directions",
       "ArrowRight": "Moves the window 16px to the right on screen, in both directions",
-      "Shift+Arrow": "Moves the window 64px",
+      "Shift+ArrowUp, Shift+ArrowDown, Shift+ArrowLeft, Shift+ArrowRight": "Moves the window 64px, from the same places",
       "Enter": "On the move handle: zooms the window or puts it back, when zoom works",
       "Tab": "Moves through the lights or the title bar buttons, the move handle, the title bar actions, the body and the footer. With modal, Tab stays inside the window."
     },
@@ -199,7 +199,8 @@
       "Moving is off while the window is zoomed, and for a window placed by its parent with no frame. The move handle is rendered only while the window can move.",
       "Tab order follows the DOM order of the windows, not their stacking. Moving focus into a window with Tab brings it to the front.",
       "A long title truncates with an ellipsis; the full text is the accessible name, and keyboard focus on the move handle wraps the title to show it in full.",
-      "No native title attribute."
+      "No native title attribute.",
+      "Contract suite: Escape is checked in the many case, where closing the front window makes the next one active (data-state changes). The arrow keys move the frame (inline position), which no contract.keys expectation reads yet, so the suite notes them; Window.test.tsx covers them."
     ]
   },
   "content": {
@@ -289,7 +290,14 @@
   "contract": {
     "optionalParts": [
       "footer"
-    ]
+    ],
+    "keys": {
+      "Escape": {
+        "case": "many",
+        "focus": "#demo-tokens",
+        "expect": "state-changes"
+      }
+    }
   },
   "since": "0.1.0",
   "uses": [

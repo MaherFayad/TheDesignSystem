@@ -50,10 +50,13 @@ export default function WindowControlsDemo() {
         </DemoRow>
       </DemoCase>
 
-      <DemoCase id="disabled" title="Disabled: lights with no handler are idle and out of the tab order">
+      <DemoCase id="disabled" title="Disabled: lights with no handler are idle and out of the tab order; a disabled close keeps its tab stop">
         <DemoRow>
           <WindowControls />
           <WindowControls onClose={() => undefined} />
+        </DemoRow>
+        <DemoRow label="Close disabled, still focusable">
+          <WindowControls onClose={() => undefined} closeDisabled onZoom={() => undefined} />
         </DemoRow>
       </DemoCase>
     </DemoPage>

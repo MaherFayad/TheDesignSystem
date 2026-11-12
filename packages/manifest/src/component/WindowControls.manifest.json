@@ -26,6 +26,11 @@
       "type": "function",
       "description": "Without it the close light is disabled."
     },
+    "closeDisabled": {
+      "type": "boolean",
+      "default": false,
+      "description": "With onClose: the close light is aria-disabled and data-disabled, stays in the tab order, blocks activation and draws as an idle dot; its glyph still shows on hover and focus. For a window or dialog that cannot be dismissed right now."
+    },
     "onMinimize": {
       "type": "function",
       "description": "Without it the minimize light is disabled."
@@ -68,9 +73,9 @@
   ],
   "a11y": {
     "role": "group, named by label. Each light is a native button (IconButton).",
-    "focus": "Each light with a handler is in the tab order with the 2px ring around its 24px target. A light with no handler is aria-disabled and out of the tab order (tabIndex -1): an accepted exception to the rule that disabled actions stay focusable, because a dead light is inert decoration of the window chrome. A screen reader still finds it, dimmed.",
+    "focus": "Each light with a handler is in the tab order with the 2px ring around its 24px target. A light with no handler is aria-disabled and out of the tab order (tabIndex -1): an accepted exception to the rule that disabled actions stay focusable, because a dead light is inert decoration of the window chrome; a screen reader still finds it, dimmed. A close light disabled through closeDisabled is an action that cannot run now: it stays focusable with aria-disabled, like any disabled Button.",
     "keys": {
-      "Enter": "Presses the focused light",
+      "Enter": "Presses the focused light. Nothing happens on a disabled light.",
       "Space": "Presses the focused light",
       "Tab": "Moves to the next light with a handler"
     },
