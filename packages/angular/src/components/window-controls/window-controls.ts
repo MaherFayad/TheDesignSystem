@@ -9,10 +9,21 @@
 // with no listener must be disabled.
 //
 //   <div dsWindowControls [onClose]="close"></div>
-import { ChangeDetectionStrategy, Component, booleanAttribute, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, booleanAttribute, computed, inject, input } from '@angular/core';
 import { DsIcon } from '@the-system/icons/angular';
 import { consumeHostAttributes } from '../../internal/host';
+import { DsThemeService } from '../../theme/theme';
 import { DsIconButton } from '../icon-button/icon-button';
+
+/** The built in labels, per language. An input always wins. Arabic: noun form, no diacritics. */
+export const windowControlsLabels = {
+  en: { close: 'Close window', minimize: 'Minimize window', zoom: 'Zoom window', group: 'Window controls' },
+  ar: { close: 'إغلاق النافذة', minimize: 'تصغير النافذة', zoom: 'تكبير النافذة', group: 'أزرار النافذة' },
+} as const;
+
+function labelsFor(lang: string) {
+  return lang === 'ar' || lang.startsWith('ar-') ? windowControlsLabels.ar : windowControlsLabels.en;
+}
 
 export type WindowControlsHandler = (event: MouseEvent) => void;
 
@@ -25,14 +36,14 @@ export type WindowControlsHandler = (event: MouseEvent) => void;
     'data-ds': 'window-controls',
     role: 'group',
     '[attr.data-state]': 'active() ? "active" : "inactive"',
-    '[attr.aria-label]': 'label()',
+    '[attr.aria-label]': 'label() ?? words().group',
   },
   template: `
-    <button dsIconButton data-part="close" [icon]="closeIcon" [label]="closeLabel()" size="xs" shape="pill"
+    <button dsIconButton data-part="close" [icon]="closeIcon" [label]="closeLabel() ?? words().close" size="xs" shape="pill"
       [disabled]="!onClose()" [attr.tabindex]="onClose() ? null : -1" (click)="run(onClose(), $event)"></button>
-    <button dsIconButton data-part="minimize" [icon]="minimizeIcon" [label]="minimizeLabel()" size="xs" shape="pill"
+    <button dsIconButton data-part="minimize" [icon]="minimizeIcon" [label]="minimizeLabel() ?? words().minimize" size="xs" shape="pill"
       [disabled]="!onMinimize()" [attr.tabindex]="onMinimize() ? null : -1" (click)="run(onMinimize(), $event)"></button>
-    <button dsIconButton data-part="zoom" [icon]="zoomIcon" [label]="zoomLabel()" size="xs" shape="pill"
+    <button dsIconButton data-part="zoom" [icon]="zoomIcon" [label]="zoomLabel() ?? words().zoom" size="xs" shape="pill"
       [disabled]="!onZoom()" [attr.tabindex]="onZoom() ? null : -1"
       [attr.aria-pressed]="onZoom() && zoomed() !== undefined ? zoomed() : null" (click)="run(onZoom(), $event)"></button>
     <ng-template #closeIcon><svg dsIcon name="close" size="sm"></svg></ng-template>
@@ -49,13 +60,19 @@ export class DsWindowControls {
   readonly onZoom = input<WindowControlsHandler | undefined>(undefined);
   /** The zoom state, set as aria-pressed on the zoom light. */
   readonly zoomed = input<boolean | undefined>(undefined);
-  readonly closeLabel = input('Close window');
-  readonly minimizeLabel = input('Minimize window');
-  readonly zoomLabel = input('Zoom window');
-  /** Accessible name of the group. */
-  readonly label = input('Window controls');
+  /** Accessible name of the close light. Default "Close window", in Arabic "إغلاق النافذة". */
+  readonly closeLabel = input<string | undefined>(undefined);
+  /** Accessible name of the minimize light. Default "Minimize window", in Arabic "تصغير النافذة". */
+  readonly minimizeLabel = input<string | undefined>(undefined);
+  /** Accessible name of the zoom light. Default "Zoom window", in Arabic "تكبير النافذة". */
+  readonly zoomLabel = input<string | undefined>(undefined);
+  /** Accessible name of the group. Default "Window controls", in Arabic "أزرار النافذة". */
+  readonly label = input<string | undefined>(undefined);
   /** Whether the window these lights belong to has focus. Default true. */
   readonly active = input(true, { transform: booleanAttribute });
+
+  private readonly theme = inject(DsThemeService);
+  protected readonly words = computed(() => labelsFor(this.theme.value().lang));
 
   constructor() {
     consumeHostAttributes(['dsWindowControls', 'onClose', 'onMinimize', 'onZoom', 'zoomed', 'closeLabel', 'minimizeLabel', 'zoomLabel', 'label', 'active']);
