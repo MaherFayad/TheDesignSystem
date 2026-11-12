@@ -44,7 +44,7 @@ No adb. No iOS build.
 | 1.0.b | Token adoption in wave 0 components | ds-component | react | open | |
 | 1.0.c1 | Shared theme and dialog focus, React | ds-component | react | done | 6f0b589 |
 | 1.0.c2 | Shared logic in Angular | ds-angular | angular | open | |
-| 1.0.c3 | Shared logic in native | ds-native | native | open | |
+| 1.0.c3 | Shared logic in native | ds-native | native | done | e360d28 |
 | 1.0.d | Package fixes from the consumers report | ds-docs | all | done | a85837c |
 | 1.0.e | Contract `moves` expectation, Window key hints | ds-qa | all | open | |
 | 1.0.f | Manifest gaps and visual findings | ds-component | react | open | |
