@@ -1,0 +1,17 @@
+/*
+ * Neutral fonts, self hosted through fontsource, the same files as Studio.
+ *
+ * - Inter Variable (SIL OFL 1.1) through fontsource's own `wght.css`: one
+ *   variable file per subset covers every weight the tokens use. Each subset
+ *   has a unicode range, so a browser downloads only what a page uses.
+ * - IBM Plex Sans Arabic (SIL OFL 1.1): the Arabic subset only, weights 400,
+ *   500, 600 and 700.
+ *
+ * When Studio and Neutral both load, identical @font-face rules are harmless:
+ * the browser fetches one url once.
+ */
+@import '@fontsource-variable/inter/wght.css';
+@import '@fontsource/ibm-plex-sans-arabic/arabic-400.css';
+@import '@fontsource/ibm-plex-sans-arabic/arabic-500.css';
+@import '@fontsource/ibm-plex-sans-arabic/arabic-600.css';
+@import '@fontsource/ibm-plex-sans-arabic/arabic-700.css';

@@ -1,0 +1,18 @@
+/*
+ * Neutral recipe for Input. Why not a token: Input.css sets the field fill
+ * to `transparent` with no token behind it, so no token can make a Neutral
+ * field white on the gray page. The focus border takes the brand edge so
+ * the boundary and the ring agree; the border token for focus is shared
+ * with hover (border.control-hover), so a token cannot split the two.
+ *
+ * Read only keeps its own quiet fill from Input.css, so it is left out here.
+ */
+@layer ds.recipes {
+  [data-style='neutral'] [data-ds='input']:not([data-readonly]) {
+    --_input-bg: var(--ds-color-bg-surface);
+  }
+
+  [data-style='neutral'] [data-ds='input'] {
+    --_input-border-color-focus: var(--ds-color-primary-border);
+  }
+}

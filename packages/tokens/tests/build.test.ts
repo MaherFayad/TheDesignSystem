@@ -8,8 +8,13 @@ const root = join(import.meta.dirname, '..', '..', '..');
 const result = buildTokens({ root });
 
 describe('token build', () => {
-  it('discovers studio and desk, dark and light', () => {
-    expect(result.modes.map((m) => m.id)).toEqual(['desk.dark', 'desk.light', 'studio.dark', 'studio.light']);
+  it('discovers every style folder, dark and light, in sorted order', () => {
+    const ids = result.modes.map((m) => m.id);
+    // A new style pack must not need a change here, so the test checks the
+    // shape and the two source styles, not a fixed list.
+    expect(ids).toEqual([...ids].sort());
+    for (const id of ['desk.dark', 'desk.light', 'studio.dark', 'studio.light']) expect(ids).toContain(id);
+    for (const id of ids) expect(id).toMatch(/^[a-z][a-z0-9-]*\.(dark|light)$/);
   });
 
   it('writes the five outputs', () => {

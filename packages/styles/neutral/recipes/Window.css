@@ -1,0 +1,11 @@
+/*
+ * Neutral recipe for Window: a bordered card with a header. Why not a token:
+ * the line under the title bar is a private property of TitleBar.css that
+ * defaults to transparent, with no token behind it. The tokens already make
+ * the window solid (materials map to surfaces, blur is 0px).
+ */
+@layer ds.recipes {
+  [data-style='neutral'] [data-ds='window'] > [data-ds='title-bar'] {
+    --_title-bar-border-color: var(--ds-color-border-default);
+  }
+}
