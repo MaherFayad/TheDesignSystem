@@ -21,4 +21,10 @@ export default tseslint.config(
       '@typescript-eslint/consistent-type-imports': 'error',
     },
   },
+  {
+    // Angular resolves constructor injection from value imports, so a type
+    // only import can break dependency injection at run time.
+    files: ['packages/{angular,charts-angular,ai-angular}/**/*.ts', 'apps/gallery-angular/**/*.ts', 'packages/icons/src/angular/**/*.ts'],
+    rules: { '@typescript-eslint/consistent-type-imports': 'off' },
+  },
 );
