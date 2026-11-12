@@ -1,0 +1,56 @@
+/*
+ * SplitView: a list and its detail. Built on the ResizablePanels group: the
+ * root, the panes, the handle and its grip are styled in
+ * ResizablePanels.css (anatomy.md rule 10). This file holds what differs.
+ *
+ *   [data-ds='split-view'][data-state]     split, primary or secondary
+ *     > [data-part='primary']              the list
+ *     > [data-part='handle']               split only
+ *     > [data-part='secondary']            the detail
+ *         > [data-part='back']             a Button, stacked only
+ *
+ * Stacked (data-state primary or secondary): the other pane is hidden, so
+ * the one left fills the row on its own flex grow.
+ *
+ * Private properties on the root:
+ *   --_split-view-back-gap      the space around the back Button
+ *   --_split-view-ring-color, -ring-width   the outline of a pane that took focus
+ *
+ * Motion: none of its own. The panes switch at once; the handle follows the
+ * ResizablePanels motion ("drag-drop").
+ */
+@layer ds.base {
+  [data-ds='split-view'] {
+    --_split-view-back-gap: var(--ds-space-s);
+    --_split-view-ring-color: var(--ds-color-focus-ring);
+    --_split-view-ring-width: var(--ds-border-width-strong);
+  }
+
+  [data-ds='split-view'] > :is([data-part='primary'], [data-part='secondary']) {
+    display: flex;
+    flex-direction: column;
+  }
+
+  [data-ds='split-view'] > :is([data-part='primary'], [data-part='secondary'])[hidden] {
+    display: none;
+  }
+
+  /* A pane takes focus when the detail opens or closes while stacked: draw where focus went, inside the pane. */
+  [data-ds='split-view'] > :is([data-part='primary'], [data-part='secondary']):focus-visible {
+    outline: var(--_split-view-ring-width) solid var(--_split-view-ring-color);
+    outline-offset: calc(var(--_split-view-ring-width) * -1);
+  }
+
+  [data-ds='split-view'] > [data-part='secondary'] > [data-part='back'] {
+    flex: 0 0 auto;
+    align-self: flex-start;
+    margin-block-start: var(--_split-view-back-gap);
+    margin-inline-start: var(--_split-view-back-gap);
+  }
+
+  @media (forced-colors: active) {
+    [data-ds='split-view'] > :is([data-part='primary'], [data-part='secondary']):focus-visible {
+      outline-color: Highlight;
+    }
+  }
+}
