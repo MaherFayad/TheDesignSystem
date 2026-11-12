@@ -2,7 +2,7 @@
 
 Made by `npm run shots -- --compare react angular`. pixelmatch threshold 0.1; a pair passes when at most 0.5 percent of pixels differ and the sizes match.
 
-40 pairs, 40 pass, 0 fail. Only in react: 68. Only in angular: 0.
+58 pairs, 58 pass, 0 fail. Only in react: 68. Only in angular: 0.
 
 | File | Result | Differing pixels | Where | Diff |
 | --- | --- | --- | --- | --- |
@@ -18,6 +18,24 @@ Made by `npm run shots -- --compare react angular`. pixelmatch threshold 0.1; a 
 | button/studio-dark-rtl.png | pass | 0 (0.000 percent) |  | none |
 | button/studio-light-ltr.png | pass | 0 (0.000 percent) |  | none |
 | button/studio-light-rtl.png | pass | 0 (0.000 percent) |  | none |
+| checkbox/desk-dark-ltr-comfortable.png | pass | 0 (0.000 percent) |  | none |
+| checkbox/desk-dark-ltr-compact.png | pass | 0 (0.000 percent) |  | none |
+| checkbox/desk-dark-ltr.png | pass | 0 (0.000 percent) |  | none |
+| checkbox/desk-dark-rtl.png | pass | 0 (0.000 percent) |  | none |
+| checkbox/desk-light-ltr.png | pass | 0 (0.000 percent) |  | none |
+| checkbox/desk-light-rtl.png | pass | 0 (0.000 percent) |  | none |
+| checkbox/neutral-dark-ltr-comfortable.png | pass | 0 (0.000 percent) |  | none |
+| checkbox/neutral-dark-ltr-compact.png | pass | 0 (0.000 percent) |  | none |
+| checkbox/neutral-dark-ltr.png | pass | 0 (0.000 percent) |  | none |
+| checkbox/neutral-dark-rtl.png | pass | 0 (0.000 percent) |  | none |
+| checkbox/neutral-light-ltr.png | pass | 0 (0.000 percent) |  | none |
+| checkbox/neutral-light-rtl.png | pass | 0 (0.000 percent) |  | none |
+| checkbox/studio-dark-ltr-comfortable.png | pass | 0 (0.000 percent) |  | none |
+| checkbox/studio-dark-ltr-compact.png | pass | 0 (0.000 percent) |  | none |
+| checkbox/studio-dark-ltr.png | pass | 0 (0.000 percent) |  | none |
+| checkbox/studio-dark-rtl.png | pass | 0 (0.000 percent) |  | none |
+| checkbox/studio-light-ltr.png | pass | 0 (0.000 percent) |  | none |
+| checkbox/studio-light-rtl.png | pass | 0 (0.000 percent) |  | none |
 | dialog/desk-dark-ltr-open.png | pass | 0 (0.000 percent) |  | none |
 | dialog/desk-dark-ltr.png | pass | 0 (0.000 percent) |  | none |
 | dialog/desk-dark-rtl-open.png | pass | 0 (0.000 percent) |  | none |

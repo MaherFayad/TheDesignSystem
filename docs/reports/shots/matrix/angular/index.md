@@ -2,7 +2,7 @@
 
 Made by `npm run shots`. Each shot is the `variants` case at `chrome=0`, 1280 by 800 viewport, full page, device scale factor 1, animations off, reduced motion, fonts loaded. File names: `<component>/<style>-<scheme>-<dir>[-<density>][-open].png`. Density is default unless named.
 
-40 shots, 3 components, 3.61 MB. Stable (two captures byte equal): 40; unstable: 0; not verified: 0.
+58 shots, 4 components, 4.03 MB. Stable (two captures byte equal): 58; unstable: 0; not verified: 0.
 
 The full list with sizes and hashes is in `captured.json`.
 
@@ -21,6 +21,25 @@ Densities, dark, ltr en:
 | --- | --- | --- | --- |
 | desk | [compact](button/desk-dark-ltr-compact.png) | [default](button/desk-dark-ltr.png) | [comfortable](button/desk-dark-ltr-comfortable.png) |
 | studio | [compact](button/studio-dark-ltr-compact.png) | [default](button/studio-dark-ltr.png) | [comfortable](button/studio-dark-ltr-comfortable.png) |
+
+## Checkbox
+
+| Style | Scheme | ltr en | rtl ar |
+| --- | --- | --- | --- |
+| desk | dark | [ltr](checkbox/desk-dark-ltr.png) | [rtl](checkbox/desk-dark-rtl.png) |
+| desk | light | [ltr](checkbox/desk-light-ltr.png) | [rtl](checkbox/desk-light-rtl.png) |
+| neutral | dark | [ltr](checkbox/neutral-dark-ltr.png) | [rtl](checkbox/neutral-dark-rtl.png) |
+| neutral | light | [ltr](checkbox/neutral-light-ltr.png) | [rtl](checkbox/neutral-light-rtl.png) |
+| studio | dark | [ltr](checkbox/studio-dark-ltr.png) | [rtl](checkbox/studio-dark-rtl.png) |
+| studio | light | [ltr](checkbox/studio-light-ltr.png) | [rtl](checkbox/studio-light-rtl.png) |
+
+Densities, dark, ltr en:
+
+| Style | compact | default | comfortable |
+| --- | --- | --- | --- |
+| desk | [compact](checkbox/desk-dark-ltr-compact.png) | [default](checkbox/desk-dark-ltr.png) | [comfortable](checkbox/desk-dark-ltr-comfortable.png) |
+| neutral | [compact](checkbox/neutral-dark-ltr-compact.png) | [default](checkbox/neutral-dark-ltr.png) | [comfortable](checkbox/neutral-dark-ltr-comfortable.png) |
+| studio | [compact](checkbox/studio-dark-ltr-compact.png) | [default](checkbox/studio-dark-ltr.png) | [comfortable](checkbox/studio-dark-ltr-comfortable.png) |
 
 ## Dialog
 

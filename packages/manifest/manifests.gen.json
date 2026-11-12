@@ -3658,7 +3658,10 @@
         "example": "Checkbox.demo.tsx"
       },
       "angular": {
-        "status": "planned"
+        "status": "ready",
+        "behavior": "div[dsCheckbox], hand built on a native button, ControlValueAccessor",
+        "example": "checkbox.demo.ts",
+        "note": "The host is the root. Inputs take the React prop names; onCheckedChange is the checkedChange output of [(checked)]. aria-label, aria-labelledby and aria-describedby are inputs, as React spreads them on the control. label and description take text. Behavior by hand with the Radix DOM: Space toggles, Enter does nothing, a hidden native checkbox inside a form. Works with reactive and template forms. Checkbox.css is used as is."
       },
       "native": {
         "status": "planned"
