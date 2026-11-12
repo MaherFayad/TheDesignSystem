@@ -193,7 +193,10 @@
       "example": "OTPField.demo.tsx"
     },
     "angular": {
-      "status": "planned"
+      "status": "ready",
+      "behavior": "div[dsOTPField] around one native input, hand built on packages/shared otp.ts, ControlValueAccessor",
+      "example": "otp-field.demo.ts",
+      "note": "Same DOM and keys as React: one input with autocomplete one-time-code over aria-hidden cells. value is a model (defaultValue is value); onComplete is the complete output. The input shows the parsed code at once, so a refused key leaves no trace. The React gallery routes it at /c/otpfield, the contract and the Angular gallery at /c/otp-field (see the lane report)."
     },
     "native": {
       "status": "planned"
