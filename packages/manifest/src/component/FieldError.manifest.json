@@ -90,9 +90,10 @@
       "note": "No motion: the message appears and leaves at once, so the layout does not move under the pointer. There is no pattern to name and nothing to reduce."
     },
     "angular": {
-      "status": "planned",
+      "status": "ready",
       "behavior": "p[dsFieldError], host bindings, reads the dsField context",
-      "note": "The host paragraph is the root. Inside dsField it takes the error id and registers with the field."
+      "example": "field-error.demo.ts",
+      "note": "The host paragraph is the root. Inside dsField it takes the error id and registers with the field while it exists. React renders nothing for a FieldError without children; an Angular host cannot leave the DOM by itself, so the caller wraps it in @if (the one line error input of dsField does that and follows invalid false)."
     },
     "native": {
       "status": "planned",
