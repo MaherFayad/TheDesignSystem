@@ -65,7 +65,7 @@ describe('Badge', () => {
   it('the dot form hides the label visually, keeps it for assistive tech and drops the icon', () => {
     const el = root(
       render(
-        <Badge dot icon="check" tone="success">
+        <Badge dot start="check" tone="success">
           Online
         </Badge>,
       ).container,
@@ -78,8 +78,18 @@ describe('Badge', () => {
     expect(root(render(<Badge>Beta</Badge>).container).hasAttribute('data-dot')).toBe(false);
   });
 
+  it('the dot form with a count keeps the count words', () => {
+    const el = root(render(<Badge dot count={3} countLabel={(n) => `${n} unread messages`} />).container);
+    expect(el.querySelector('[data-part="label"]')?.textContent).toBe('3 unread messages');
+  });
+
+  it('a negative count shows and reads zero', () => {
+    const el = root(render(<Badge count={-3} countLabel={(n) => `${n} new`} />).container);
+    expect(el.querySelector('[data-part="label"]')?.textContent).toBe('00 new');
+  });
+
   it('renders the icon part hidden from assistive tech', () => {
-    const el = root(render(<Badge icon="check">Verified</Badge>).container);
+    const el = root(render(<Badge start="check">Verified</Badge>).container);
     const icon = el.querySelector('[data-part="icon"]');
     expect(icon?.getAttribute('aria-hidden')).toBe('true');
     expect(icon?.querySelector('[data-icon="check"]')).not.toBeNull();

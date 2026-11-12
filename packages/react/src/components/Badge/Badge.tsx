@@ -31,10 +31,10 @@ export interface BadgeProps extends Omit<HTMLAttributes<HTMLSpanElement>, 'title
   tone?: BadgeTone;
   /** solid is the loudest (an unread count), soft the default, outline the quietest. */
   emphasis?: BadgeEmphasis;
-  /** xs 16, sm 20 px tall. Default sm. A badge is not a control, so it has no md. */
+  /** About 16 (xs) and 20 (sm) px tall at default density; it follows the space tokens. Default sm. A badge is not a control, so it has no md. */
   size?: BadgeSize;
-  /** A leading icon: a system icon name or a node. Hidden in the dot form. */
-  icon?: IconName | ReactElement;
+  /** Leading content in the icon part: a system icon name or a node. Hidden in the dot form. */
+  start?: IconName | ReactElement;
   /** Draws only a dot. The label (or count words) stays for assistive tech. Default false. */
   dot?: boolean;
   ref?: Ref<HTMLSpanElement>;
@@ -59,7 +59,7 @@ export function Badge({
   tone = 'neutral',
   emphasis = 'soft',
   size = 'sm',
-  icon,
+  start,
   dot = false,
   ref,
   ...rest
@@ -67,7 +67,8 @@ export function Badge({
   const hasCount = typeof count === 'number' && Number.isFinite(count);
   // A count is isolated as left to right, so "99+" keeps the plus after the digits in Arabic too.
   const visible: ReactNode = hasCount ? <bdi dir="ltr">{formatBadgeCount(count, max)}</bdi> : children;
-  const spoken: ReactNode = hasCount ? (countLabel ? countLabel(Math.floor(count)) : String(Math.floor(count))) : children;
+  const whole = hasCount ? Math.max(0, Math.floor(count)) : 0;
+  const spoken: ReactNode = hasCount ? (countLabel ? countLabel(whole) : String(whole)) : children;
   // The visible text and the spoken text differ for a capped count or a count with words.
   const split = hasCount && spoken !== formatBadgeCount(count, max);
 
@@ -95,9 +96,9 @@ export function Badge({
       data-size={size}
       data-dot={dot ? '' : undefined}
     >
-      {icon !== undefined && !dot && (
+      {start !== undefined && !dot && (
         <span data-part="icon" aria-hidden="true">
-          {typeof icon === 'string' ? <Icon name={icon} size="sm" /> : icon}
+          {typeof start === 'string' ? <Icon name={start} size="sm" /> : start}
         </span>
       )}
       {label}

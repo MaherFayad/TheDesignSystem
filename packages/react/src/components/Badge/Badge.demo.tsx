@@ -29,8 +29,8 @@ const unread = (n: number) => (n === 1 ? '1 unread message' : `${n} unread messa
 /** Arabic plural for small counts, Western digits. */
 const unreadAr = (n: number) => {
   if (n === 1) return 'رسالة وحدة غير مقروءة';
-  if (n === 2) return 'رسالتين غير مقروءة';
-  if (n <= 10) return `${n} رسائل غير مقروءة`;
+  if (n === 2) return 'رسالتين غير مقروءتين';
+  if (n % 100 >= 3 && n % 100 <= 10) return `${n} رسائل غير مقروءة`;
   return `${n} رسالة غير مقروءة`;
 };
 
@@ -60,13 +60,13 @@ export default function BadgeDemo() {
           </DemoRow>
         ))}
         <DemoRow label="Icon">
-          <Badge tone="success" icon="check">
+          <Badge tone="success" start="check">
             Verified
           </Badge>
-          <Badge tone="warning" icon="clock" emphasis="outline">
+          <Badge tone="warning" start="clock" emphasis="outline">
             Pending review
           </Badge>
-          <Badge tone="info" icon="star" size="xs">
+          <Badge tone="info" start="star" size="xs">
             Pro
           </Badge>
         </DemoRow>
@@ -122,7 +122,7 @@ export default function BadgeDemo() {
             <Badge tone="info">متاح لكل أعضاء مساحة العمل بدون استثناء</Badge>
           </div>
           <Badge tone="danger" emphasis="solid" count={348} countLabel={unreadAr} />
-          <Badge tone="warning" icon="clock">
+          <Badge tone="warning" start="clock">
             بانتظار المراجعة
           </Badge>
         </DemoRow>

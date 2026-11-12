@@ -48,9 +48,12 @@
     "size": {
       "type": ["xs", "sm"],
       "default": "sm",
-      "description": "sm 20 px tall, xs 16 px at default density. A badge is not a control, so there is no md; the default md rule of anatomy.md applies to controls."
+      "description": "About 20 px (sm) and 16 px (xs) tall at default density; the height follows the space tokens, so it moves a pixel or two with viewport and density. A badge is not a control, so there is no md; the default md rule of anatomy.md applies to controls."
     },
-    "icon": { "type": "node", "description": "A leading system icon name or node, hidden from assistive tech. Not drawn in the dot form." },
+    "start": {
+      "type": "node",
+      "description": "Leading content, drawn in the icon part: a system icon name or an Icon node, hidden from assistive tech. Not drawn in the dot form. Named start by rule 6 of anatomy.md; the part keeps the order's name icon."
+    },
     "dot": {
       "type": "boolean",
       "default": false,
@@ -78,7 +81,7 @@
     },
     "ar": {
       "label": "Noun form, no diacritics: تجريبي، مسودة، بانتظار المراجعة.",
-      "countLabel": "With the Arabic plural, Western digits: 3 رسائل غير مقروءة، 12 رسالة غير مقروءة."
+      "countLabel": "With the Arabic plural, Western digits: رسالتين غير مقروءتين، 3 رسائل غير مقروءة، 12 رسالة غير مقروءة."
     }
   },
   "tokens": [
@@ -137,7 +140,7 @@
       "status": "ready",
       "behavior": "hand built, radix:VisuallyHidden",
       "example": "Badge.demo.tsx",
-      "note": "Motion: none today; a badge that appears may use fade-rise from the caller. A count that changes may use number-roll once the catalog (1.11) has it."
+      "note": "Motion: the badge has none of its own; fade-rise names the pattern a caller uses when a badge appears. A count that changes may use number-roll once the catalog (1.11) has it."
     },
     "angular": { "status": "planned" },
     "native": { "status": "planned" }
