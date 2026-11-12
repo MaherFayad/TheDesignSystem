@@ -16,7 +16,7 @@ export function useGroupDisabled(): boolean {
 
 const ITEM = ":scope > [data-part='item']";
 
-/** Arrow, Home and End keys from a disabled item: the same moves Radix makes from an enabled one. */
+/** Arrow, Home, End and Shift+Tab from a disabled item: the same moves Radix makes from an enabled one. */
 export function moveFromInertItem(
   event: KeyboardEvent<HTMLElement>,
   opts: { orientation: 'horizontal' | 'vertical'; dir: 'ltr' | 'rtl'; loop: boolean },
@@ -24,6 +24,17 @@ export function moveFromInertItem(
   const root = event.currentTarget;
   const target = event.target as HTMLElement;
   if (target.parentElement !== root || target.getAttribute('data-part') !== 'item' || target.getAttribute('aria-disabled') !== 'true') return;
+  if (event.key === 'Tab' && event.shiftKey) {
+    // Radix's own Shift+Tab handler did not run: take the root out of the tab
+    // order for this one move, so focus leaves the group backward.
+    const was = root.getAttribute('tabindex');
+    root.setAttribute('tabindex', '-1');
+    setTimeout(() => {
+      if (was === null) root.removeAttribute('tabindex');
+      else root.setAttribute('tabindex', was);
+    }, 0);
+    return;
+  }
   const items = Array.from(root.querySelectorAll<HTMLElement>(ITEM));
   const at = items.indexOf(target);
   const forward = opts.dir === 'rtl' ? 'ArrowLeft' : 'ArrowRight';

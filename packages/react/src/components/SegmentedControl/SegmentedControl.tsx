@@ -75,19 +75,27 @@ const SegmentedContext = createContext<SegmentedContextValue | null>(null);
 
 const ITEM = ":scope > [data-part='item']";
 
-/** The frame of the selected item inside the root, in logical px from the root's padding box. */
+/**
+ * The frame of the selected item inside the root, in logical px from the
+ * root's padding box. Read from the rects, then divided by the root's scale,
+ * so a parent that animates scale (a Dialog opening) does not skew it.
+ */
 function measure(root: HTMLElement, item: HTMLElement) {
   const rr = root.getBoundingClientRect();
   const ir = item.getBoundingClientRect();
+  // offsetWidth is a whole number: a ratio within 2% of 1 is rounding, not a scale.
+  const ratio = (a: number, b: number) => (b > 0 && a > 0 && Math.abs(a / b - 1) > 0.02 ? a / b : 1);
+  const sx = ratio(rr.width, root.offsetWidth);
+  const sy = ratio(rr.height, root.offsetHeight);
   const cs = getComputedStyle(root);
   const rtl = cs.direction === 'rtl';
   const borderStart = Number.parseFloat(cs.borderInlineStartWidth) || 0;
   const borderTop = Number.parseFloat(cs.borderBlockStartWidth) || 0;
   return {
-    start: rtl ? rr.right - borderStart - ir.right : ir.left - rr.left - borderStart,
-    top: ir.top - rr.top - borderTop,
-    inline: ir.width,
-    block: ir.height,
+    start: (rtl ? rr.right - ir.right : ir.left - rr.left) / sx - borderStart,
+    top: (ir.top - rr.top) / sy - borderTop,
+    inline: ir.width / sx,
+    block: ir.height / sy,
   };
 }
 
@@ -114,6 +122,7 @@ export function SegmentedControl({
   const rootRef = useRef<HTMLDivElement | null>(null);
   const indicatorRef = useRef<HTMLSpanElement>(null);
   const placed = useRef<string | null>(null);
+  const frame = useRef('');
 
   const select = useCallback(
     (next: string) => {
@@ -135,12 +144,16 @@ export function SegmentedControl({
       const item = Array.from(root.querySelectorAll<HTMLElement>(ITEM)).find((el) => el.getAttribute('data-state') === 'on');
       if (!item) {
         thumb.hidden = true;
-        placed.current = null;
+        frame.current = '';
         return;
       }
+      const f = measure(root, item);
+      const key = `${f.start} ${f.top} ${f.inline} ${f.block}`;
+      // Same frame and no slide asked: leave a running slide alone.
+      if (!slide && key === frame.current && !thumb.hidden) return;
+      frame.current = key;
       const from = slide && !thumb.hidden ? thumb.getBoundingClientRect() : null;
       settle(thumb);
-      const f = measure(root, item);
       thumb.style.setProperty('--_segmented-control-indicator-start', `${f.start}px`);
       thumb.style.setProperty('--_segmented-control-indicator-top', `${f.top}px`);
       thumb.style.setProperty('--_segmented-control-indicator-inline-size', `${f.inline}px`);
@@ -231,7 +244,8 @@ export interface SegmentedControlItemProps
  */
 export function SegmentedControlItem({ value, disabled = false, start, icon, label, children, onFocus, ...rest }: SegmentedControlItemProps) {
   const seg = use(SegmentedContext);
-  const inert = disabled || useGroupDisabled();
+  const groupDisabled = useGroupDisabled();
+  const inert = disabled || groupDisabled;
   const iconOnly = icon !== undefined;
   // Radix is not told about disabled: the item stays focusable and in the
   // arrow order (anatomy rule 5). ButtonRoot makes it inert, and focus on it

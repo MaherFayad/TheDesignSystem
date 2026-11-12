@@ -1,6 +1,6 @@
 import { act, render, screen } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
-import { createRef } from 'react';
+import { createRef, useState } from 'react';
 import { describe, expect, it, vi } from 'vitest';
 import { Theme } from '../../theme';
 import SegmentedControlDemo from './SegmentedControl.demo';
@@ -218,6 +218,72 @@ describe('SegmentedControl', () => {
       proto.getAnimations = saved.getAnimations;
       HTMLElement.prototype.getBoundingClientRect = saved.rect;
     }
+  });
+
+  it('a controlled slide is not cancelled when the parent re-renders', async () => {
+    const running = { finished: Promise.resolve(), cancel: vi.fn() } as unknown as Animation;
+    let cancelsAtStart = -1;
+    const animate = vi.fn(() => {
+      cancelsAtStart = (running.cancel as ReturnType<typeof vi.fn>).mock.calls.length;
+      return running;
+    });
+    const proto = HTMLElement.prototype as unknown as { animate?: unknown; getAnimations?: unknown };
+    const g = globalThis as unknown as { ResizeObserver?: unknown };
+    const saved = { animate: proto.animate, getAnimations: proto.getAnimations, rect: HTMLElement.prototype.getBoundingClientRect, ro: g.ResizeObserver };
+    proto.animate = animate;
+    proto.getAnimations = () => [running];
+    // A ResizeObserver that reports at once on every observe, as browsers do.
+    g.ResizeObserver = class {
+      constructor(private cb: () => void) {}
+      observe() {
+        this.cb();
+      }
+      disconnect() {}
+    };
+    HTMLElement.prototype.getBoundingClientRect = function (this: HTMLElement) {
+      if (this.getAttribute('data-part') === 'item') {
+        const i = Array.from(this.parentElement?.querySelectorAll('[data-part="item"]') ?? []).indexOf(this);
+        return DOMRect.fromRect({ x: 3 + i * 60, y: 3, width: 60, height: 26 });
+      }
+      if (this.getAttribute('data-part') === 'indicator') return DOMRect.fromRect({ x: 3, y: 3, width: 60, height: 26 });
+      return DOMRect.fromRect({ x: 0, y: 0, width: 200, height: 34 });
+    };
+    function Controlled() {
+      const [v, setV] = useState('day');
+      return <Range value={v} onValueChange={setV} />;
+    }
+    try {
+      const user = userEvent.setup();
+      render(<Controlled />);
+      await user.click(screen.getByRole('radio', { name: 'Week' }));
+      await act(async () => {});
+      expect(animate).toHaveBeenCalledTimes(1);
+      // No cancel after the slide started.
+      expect((running.cancel as ReturnType<typeof vi.fn>).mock.calls.length).toBe(cancelsAtStart);
+    } finally {
+      proto.animate = saved.animate;
+      proto.getAnimations = saved.getAnimations;
+      HTMLElement.prototype.getBoundingClientRect = saved.rect;
+      g.ResizeObserver = saved.ro;
+    }
+  });
+
+  it('Shift+Tab leaves a disabled control', async () => {
+    const user = userEvent.setup();
+    render(
+      <>
+        <input aria-label="Before" />
+        <SegmentedControl aria-label="Calendar range" defaultValue="week" disabled>
+          <SegmentedControlItem value="day">Day</SegmentedControlItem>
+          <SegmentedControlItem value="week">Week</SegmentedControlItem>
+        </SegmentedControl>
+      </>,
+    );
+    await user.tab();
+    await user.tab();
+    expect(document.activeElement).toBe(screen.getByRole('radio', { name: 'Week' }));
+    await user.tab({ shift: true });
+    expect(document.activeElement).toBe(screen.getByRole('textbox', { name: 'Before' }));
   });
 
   it('passes ref, className and id to the root', () => {

@@ -7611,7 +7611,7 @@
           "lg"
         ],
         "default": "md",
-        "description": "Height of the whole control from size.control: 24, 28, 32 and 44 px in the default density. The items fit inside the track, never under 24px."
+        "description": "Height of the whole control: md 32 and lg 44 px from size.control in the default density, sm 28 px, xs 26 px (xs and sm drop the inset so every item keeps its 24px target)."
       },
       "shape": {
         "type": [
@@ -7630,7 +7630,7 @@
       "fullWidth": {
         "type": "boolean",
         "default": false,
-        "description": "Fills the width of its container; the items share it equally and long labels end in an ellipsis. Sets data-full-width."
+        "description": "Fills the width of its container; the items share it equally. Long labels end in an ellipsis, so five options need room: keep labels short. Sets data-full-width."
       },
       "children": {
         "type": "node",
@@ -7667,11 +7667,12 @@
         ]
       },
       "notes": [
-        "Selected is not told by color alone: the thumb is a filled shape under the item and the text is the bright text.",
+        "Selected is not told by color alone: the thumb is a filled shape with a 2px inner ring (as ToggleButton's on ring), and the text is the bright text.",
         "The indicator is aria-hidden: the radio state carries the selection.",
         "In forced colors the thumb hides and the selected item is drawn in Highlight and HighlightText.",
         "Every icon only item needs its own label.",
-        "The contract suite checks the arrows, Home and End as focus-moves; that the selection follows focus, and that Space and Enter select, are unit tests (SegmentedControl.test.tsx), since focusing an item already selects it."
+        "The contract suite checks the arrows, Home and End as focus-moves; that the selection follows focus, and that Space and Enter select, are unit tests (SegmentedControl.test.tsx), since focusing an item already selects it.",
+        "Disabled items stay focusable; Shift+Tab from one leaves the control backward."
       ]
     },
     "content": {
@@ -7704,7 +7705,10 @@
       "color.text.bright",
       "opacity.disabled",
       "duration.medium",
-      "ease.standard"
+      "ease.standard",
+      "color.bg.overlay-50",
+      "border.width.strong",
+      "color.border.subtle"
     ],
     "motion": "tab-indicator",
     "frameworks": {

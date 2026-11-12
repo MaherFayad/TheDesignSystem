@@ -14,7 +14,8 @@
  *   --_segmented-control-bg            the track fill
  *   --_segmented-control-border-color  the track hairline
  *   --_segmented-control-thumb-bg      the indicator fill
- *   --_segmented-control-thumb-shadow  the indicator lift
+ *   --_segmented-control-thumb-shadow  the indicator's 2px inner ring, so selected is not told
+ *                                      by the fill alone (as ToggleButton's on ring)
  *
  * The indicator reads four more, written by the component from the measured
  * frame of the selected item: --_segmented-control-indicator-start, -top,
@@ -37,7 +38,7 @@
     --_segmented-control-bg: var(--ds-color-bg-overlay-5);
     --_segmented-control-border-color: var(--ds-color-border-default);
     --_segmented-control-thumb-bg: var(--ds-color-bg-overlay-20);
-    --_segmented-control-thumb-shadow: 0 0 transparent;
+    --_segmented-control-thumb-shadow: inset 0 0 0 var(--ds-border-width-strong) var(--ds-color-bg-overlay-50);
     --_segmented-control-item-height: calc(
       var(--_segmented-control-height) - 2 * (var(--_segmented-control-inset) + var(--ds-border-width-default))
     );
@@ -61,12 +62,20 @@
 
   /* ------------------------------------------------------------ sizes */
 
+  /*
+   * xs and sm drop the inset and the gap, so an item keeps its 24px target
+   * inside the track: sm is 28px, xs 26px (24px items plus the hairline).
+   */
   [data-ds='segmented-control'][data-size='xs'] {
     --_segmented-control-height: var(--ds-size-control-xs);
+    --_segmented-control-inset: 0px;
+    --_segmented-control-gap: 0px;
   }
 
   [data-ds='segmented-control'][data-size='sm'] {
     --_segmented-control-height: var(--ds-size-control-sm);
+    --_segmented-control-inset: 0px;
+    --_segmented-control-gap: 0px;
   }
 
   [data-ds='segmented-control'][data-size='lg'] {
@@ -159,14 +168,18 @@
 
   /* ------------------------------------------------------------ disabled */
 
-  /* The items dim themselves (Button.css); the track and the thumb dim with them. */
-  [data-ds='segmented-control'][data-disabled] > [data-part='indicator'] {
+  /* The items dim themselves (Button.css). The thumb dims with a disabled control, or under a disabled selected item; the track's hairline softens. */
+  [data-ds='segmented-control'][data-disabled] {
+    --_segmented-control-border-color: var(--ds-color-border-subtle);
+  }
+
+  [data-ds='segmented-control']:is([data-disabled], :has(> [data-part='item'][data-state='on'][data-disabled])) > [data-part='indicator'] {
     opacity: var(--ds-opacity-disabled);
   }
 
   /* ------------------------------------------------------------ reduced motion, forced colors */
 
-  /* The thumb moves only through the motion catalog, which plays no motion under reduced motion. Nothing else animates here. */
+  /* A guard: the thumb has no transition; it moves only through the motion catalog, which plays nothing under reduced motion. */
   @media (prefers-reduced-motion: reduce) {
     [data-ds='segmented-control'] > [data-part='indicator'] {
       transition: none;
