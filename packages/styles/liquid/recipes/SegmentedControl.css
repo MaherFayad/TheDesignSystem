@@ -1,0 +1,62 @@
+/*
+ * Liquid recipe for SegmentedControl: a solid capsule track, and the thumb
+ * under the selected item is a glass lens (PLAN.md 3.7, Liquid). Why not
+ * tokens alone: SegmentedControl.css draws the track as an overlay with a
+ * hairline and the thumb as an overlay with a 2px ring, and the lens is a
+ * translucent fill, a bright rim, a soft shadow and a backdrop filter on the
+ * indicator part. The slide on the snappy spring and the stretch by
+ * scale.stretch come from the tokens through the shared pill.
+ *
+ * Glass is never the only signal: the items that are not selected take the
+ * muted text, the selected one keeps the bright text.
+ * Fallbacks: where backdrop-filter is unsupported, under reduced
+ * transparency, more contrast and forced colors the lens drops its filter
+ * and rim; under more contrast it takes the control edge.
+ */
+@layer ds.recipes {
+  [data-style='liquid'] [data-ds='segmented-control'] {
+    --_segmented-control-bg: var(--ds-color-bg-surface-3);
+    --_segmented-control-border-color: transparent;
+    --_segmented-control-thumb-bg: var(--ds-color-glass-lens);
+    --_segmented-control-thumb-shadow: inset 0 0 0 var(--ds-border-width-default) var(--ds-color-glass-highlight), var(--ds-elevation-tooltip);
+  }
+
+  [data-style='liquid'] [data-ds='segmented-control'] > [data-part='indicator'] {
+    -webkit-backdrop-filter: brightness(1.12) saturate(1.6);
+    backdrop-filter: brightness(1.12) saturate(1.6);
+  }
+
+  [data-style='liquid'] [data-ds='segmented-control'] > [data-part='item']:not([data-state='on']) {
+    --_button-fg: var(--ds-color-text-muted);
+  }
+
+  /* ------------------------------------------------------------ fallbacks: no filter, no rim */
+
+  @media (prefers-reduced-transparency: reduce), (prefers-contrast: more), (forced-colors: active) {
+    [data-style='liquid'] [data-ds='segmented-control'] {
+      --_segmented-control-thumb-shadow: var(--ds-elevation-tooltip);
+    }
+
+    [data-style='liquid'] [data-ds='segmented-control'] > [data-part='indicator'] {
+      -webkit-backdrop-filter: none;
+      backdrop-filter: none;
+    }
+  }
+
+  @media (prefers-contrast: more) {
+    [data-style='liquid'] [data-ds='segmented-control'] {
+      --_segmented-control-thumb-shadow: inset 0 0 0 var(--ds-border-width-default) var(--ds-color-border-control);
+    }
+  }
+
+  [data-style='liquid'][data-contrast='more'] [data-ds='segmented-control'] {
+    --_segmented-control-thumb-shadow: inset 0 0 0 var(--ds-border-width-default) var(--ds-color-border-control);
+  }
+
+  [data-style='liquid'][data-contrast='more'] [data-ds='segmented-control'] > [data-part='indicator'] {
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+
+  /* Forced colors: SegmentedControl.css hides the indicator and draws the track border; the system takes the fills. */
+}

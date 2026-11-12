@@ -1,0 +1,88 @@
+/*
+ * Liquid recipe for Switch: a capsule track with a white thumb that turns
+ * into a glass lens while pressed (PLAN.md 3.7, Liquid). Why not tokens
+ * alone: the thumb takes the off color of text.muted and has no shadow
+ * property, and the lens is a translucent fill, a bright rim and a backdrop
+ * filter on the thumb part only while the control is held. The off track
+ * fill is drawn on the track part, since Switch.tsx clears it to show its
+ * tint layer.
+ *
+ * The stretch (scale.stretch) and the travel on the bouncy spring come from
+ * the tokens through Switch.css, so this file sets neither.
+ * Fallbacks: where backdrop-filter is unsupported, under reduced
+ * transparency, more contrast and forced colors the pressed thumb stays a
+ * solid white thumb with no filter.
+ */
+@layer ds.recipes {
+  [data-style='liquid'] [data-ds='switch'] {
+    --_switch-thumb-off: var(--ds-color-primary-text);
+    --_switch-on-fill: var(--ds-color-primary-text);
+  }
+
+  /* Off: a solid quiet fill inside the control border. With the tint layer the track keeps it, and the layer covers it when on. */
+  [data-style='liquid'] [data-ds='switch'][data-state='unchecked'] {
+    --_switch-bg: var(--ds-color-bg-surface-4);
+  }
+
+  [data-style='liquid'] [data-ds='switch'] > [data-part='control'] > [data-part='track']:has(> span:not([data-part])) {
+    background-color: var(--ds-color-bg-surface-4);
+  }
+
+  [data-style='liquid'] [data-ds='switch'] > [data-part='control'] > [data-part='track'] > [data-part='thumb'] {
+    box-shadow: var(--ds-elevation-tooltip);
+  }
+
+  /* White on the light off track is under 3:1, so the off thumb carries the control edge in light. */
+  [data-style='liquid'][data-scheme='light'] [data-ds='switch'][data-state='unchecked'] > [data-part='control'] > [data-part='track'] > [data-part='thumb'] {
+    box-shadow: 0 0 0 var(--ds-border-width-default) var(--ds-color-border-control), var(--ds-elevation-tooltip);
+  }
+
+  /* Pressed: the thumb becomes a lens that brightens the track under it. */
+  [data-style='liquid'] [data-ds='switch']:not([data-disabled], [data-readonly]) > [data-part='control']:active {
+    --_switch-thumb-bg: var(--ds-color-glass-lens);
+  }
+
+  [data-style='liquid'] [data-ds='switch']:not([data-disabled], [data-readonly]) > [data-part='control']:active > [data-part='track'] > [data-part='thumb'] {
+    box-shadow: inset 0 0 0 var(--ds-border-width-default) var(--ds-color-glass-highlight), var(--ds-elevation-tooltip);
+
+    -webkit-backdrop-filter: brightness(1.12) saturate(1.6);
+    backdrop-filter: brightness(1.12) saturate(1.6);
+  }
+
+  [data-style='liquid'][data-scheme='light'] [data-ds='switch'][data-state='unchecked']:not([data-disabled], [data-readonly]) > [data-part='control']:active > [data-part='track'] > [data-part='thumb'] {
+    box-shadow:
+      0 0 0 var(--ds-border-width-default) var(--ds-color-border-control),
+      inset 0 0 0 var(--ds-border-width-default) var(--ds-color-glass-highlight),
+      var(--ds-elevation-tooltip);
+  }
+
+  /* ------------------------------------------------------------ fallbacks: a solid white thumb, no filter */
+
+  @supports not ((backdrop-filter: blur(0)) or (-webkit-backdrop-filter: blur(0))) {
+    [data-style='liquid'] [data-ds='switch']:not([data-disabled], [data-readonly]) > [data-part='control']:active {
+      --_switch-thumb-bg: var(--_switch-thumb-off);
+    }
+  }
+
+  @media (prefers-reduced-transparency: reduce), (prefers-contrast: more), (forced-colors: active) {
+    [data-style='liquid'] [data-ds='switch']:not([data-disabled], [data-readonly]) > [data-part='control']:active {
+      --_switch-thumb-bg: var(--_switch-thumb-off);
+    }
+
+    [data-style='liquid'] [data-ds='switch']:not([data-disabled], [data-readonly]) > [data-part='control']:active > [data-part='track'] > [data-part='thumb'] {
+      -webkit-backdrop-filter: none;
+      backdrop-filter: none;
+    }
+  }
+
+  [data-style='liquid'][data-contrast='more'] [data-ds='switch']:not([data-disabled], [data-readonly]) > [data-part='control']:active {
+    --_switch-thumb-bg: var(--_switch-thumb-off);
+  }
+
+  [data-style='liquid'][data-contrast='more'] [data-ds='switch']:not([data-disabled], [data-readonly]) > [data-part='control']:active > [data-part='track'] > [data-part='thumb'] {
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+
+  /* Forced colors: the system draws the track border and Switch.css draws the thumb; the filter is gone above. */
+}

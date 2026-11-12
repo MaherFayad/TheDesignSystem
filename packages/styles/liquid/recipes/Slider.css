@@ -1,0 +1,104 @@
+/*
+ * Liquid recipe for Slider, and RangeSlider through the same rules (both
+ * roots share Slider.css): a capsule track, the tint as the range, a white
+ * thumb with a soft shadow that turns into a glass lens while it is held
+ * (PLAN.md 3.7, Liquid). Why not tokens alone: Slider.css paints the range
+ * and the thumb in one color and has no thumb shadow, and the lens is a
+ * translucent fill, a bright rim and a backdrop filter on the drawn circle
+ * (the thumb's ::after) only while the thumb is held. The lift while held is
+ * Slider.css's own scale.stretch.
+ *
+ * Fallbacks: where backdrop-filter is unsupported, under reduced
+ * transparency, more contrast and forced colors the held thumb stays a
+ * solid white circle with no filter.
+ */
+@layer ds.recipes {
+  [data-style='liquid'] :is([data-ds='slider'], [data-ds='range-slider']) {
+    --_slider-fill: var(--ds-color-primary-fill);
+  }
+
+  [data-style='liquid'] :is([data-ds='slider'], [data-ds='range-slider']):not([data-invalid]) {
+    --_slider-bg: var(--ds-color-bg-surface-5);
+  }
+
+  /* White on the light page is under 3:1, so the thumb carries the control edge in light. */
+  [data-style='liquid'][data-scheme='light'] :is([data-ds='slider'], [data-ds='range-slider']) {
+    --_slider-thumb-border: var(--ds-color-border-control);
+  }
+
+  [data-style='liquid'] :is([data-ds='slider'], [data-ds='range-slider']) [data-part='thumb'] {
+    background-color: var(--ds-color-primary-text);
+  }
+
+  [data-style='liquid'] :is([data-ds='slider'], [data-ds='range-slider']) [data-part='thumb']::after {
+    box-shadow: 0 0 0 var(--ds-border-width-default) var(--_slider-thumb-border), var(--ds-elevation-tooltip);
+  }
+
+  /* A press on the thumb lifts it at once, before the drag starts. */
+  [data-style='liquid'] :is([data-ds='slider'], [data-ds='range-slider']):not([data-disabled]) [data-part='thumb']:active {
+    --_slider-lift-now: var(--_slider-lift);
+  }
+
+  /* Held: the circle becomes a lens that brightens the track and the page under it. */
+  [data-style='liquid'] :is([data-ds='slider'], [data-ds='range-slider']):not([data-disabled]) [data-part='thumb']:active,
+  [data-style='liquid'] :is([data-ds='slider'], [data-ds='range-slider'])[data-dragging]:not([data-disabled]) [data-part='thumb']:focus {
+    background-color: transparent;
+  }
+
+  [data-style='liquid'] :is([data-ds='slider'], [data-ds='range-slider']):not([data-disabled]) [data-part='thumb']:active::after,
+  [data-style='liquid'] :is([data-ds='slider'], [data-ds='range-slider'])[data-dragging]:not([data-disabled]) [data-part='thumb']:focus::after {
+    background-color: var(--ds-color-glass-lens);
+    box-shadow:
+      0 0 0 var(--ds-border-width-default) var(--_slider-thumb-border),
+      inset 0 0 0 var(--ds-border-width-default) var(--ds-color-glass-highlight),
+      var(--ds-elevation-tooltip);
+
+    -webkit-backdrop-filter: brightness(1.12) saturate(1.6);
+    backdrop-filter: brightness(1.12) saturate(1.6);
+  }
+
+  /* ------------------------------------------------------------ fallbacks: a solid white circle, no filter */
+
+  @supports not ((backdrop-filter: blur(0)) or (-webkit-backdrop-filter: blur(0))) {
+    [data-style='liquid'] :is([data-ds='slider'], [data-ds='range-slider']):not([data-disabled]) [data-part='thumb']:active::after,
+    [data-style='liquid'] :is([data-ds='slider'], [data-ds='range-slider'])[data-dragging]:not([data-disabled]) [data-part='thumb']:focus::after {
+      background-color: var(--ds-color-primary-text);
+    }
+  }
+
+  @media (prefers-reduced-transparency: reduce), (prefers-contrast: more), (forced-colors: active) {
+    [data-style='liquid'] :is([data-ds='slider'], [data-ds='range-slider']):not([data-disabled]) [data-part='thumb']:active::after,
+    [data-style='liquid'] :is([data-ds='slider'], [data-ds='range-slider'])[data-dragging]:not([data-disabled]) [data-part='thumb']:focus::after {
+      background-color: var(--ds-color-primary-text);
+
+      -webkit-backdrop-filter: none;
+      backdrop-filter: none;
+    }
+  }
+
+  [data-style='liquid'][data-contrast='more'] :is([data-ds='slider'], [data-ds='range-slider']):not([data-disabled]) [data-part='thumb']:active::after,
+  [data-style='liquid'][data-contrast='more'] :is([data-ds='slider'], [data-ds='range-slider'])[data-dragging]:not([data-disabled]) [data-part='thumb']:focus::after {
+    background-color: var(--ds-color-primary-text);
+
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+
+  /* Forced colors: the thumb goes back to Highlight (GrayText while disabled), as in Slider.css, held or not. */
+  @media (forced-colors: active) {
+    [data-style='liquid'] :is([data-ds='slider'], [data-ds='range-slider']) [data-part='thumb'],
+    [data-style='liquid'] :is([data-ds='slider'], [data-ds='range-slider']):not([data-disabled]) [data-part='thumb']:active,
+    [data-style='liquid'] :is([data-ds='slider'], [data-ds='range-slider'])[data-dragging]:not([data-disabled]) [data-part='thumb']:focus {
+      background-color: Highlight;
+    }
+
+    [data-style='liquid'] :is([data-ds='slider'], [data-ds='range-slider'])[data-disabled] [data-part='thumb'] {
+      background-color: GrayText;
+    }
+
+    [data-style='liquid'] :is([data-ds='slider'], [data-ds='range-slider']):not([data-disabled]) [data-part='thumb']:active::after,
+    [data-style='liquid'] :is([data-ds='slider'], [data-ds='range-slider'])[data-dragging]:not([data-disabled]) [data-part='thumb']:focus::after {
+      background-color: transparent;
+    }
+  }
+}
