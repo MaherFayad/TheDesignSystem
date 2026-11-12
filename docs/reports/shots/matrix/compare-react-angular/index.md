@@ -2,7 +2,7 @@
 
 Made by `npm run shots -- --compare react angular`. pixelmatch threshold 0.1; a pair passes when at most 0.5 percent of pixels differ and the sizes match.
 
-40 pairs, 40 pass, 0 fail. Only in react: 68. Only in angular: 0.
+130 pairs, 130 pass, 0 fail. Only in react: 48. Only in angular: 0.
 
 | File | Result | Differing pixels | Where | Diff |
 | --- | --- | --- | --- | --- |
@@ -34,6 +34,30 @@ Made by `npm run shots -- --compare react angular`. pixelmatch threshold 0.1; a 
 | dialog/studio-light-ltr.png | pass | 0 (0.000 percent) |  | none |
 | dialog/studio-light-rtl-open.png | pass | 0 (0.000 percent) |  | none |
 | dialog/studio-light-rtl.png | pass | 0 (0.000 percent) |  | none |
+| field-error/desk-dark-ltr.png | pass | 0 (0.000 percent) |  | none |
+| field-error/desk-dark-rtl.png | pass | 0 (0.000 percent) |  | none |
+| field-error/desk-light-ltr.png | pass | 0 (0.000 percent) |  | none |
+| field-error/desk-light-rtl.png | pass | 0 (0.000 percent) |  | none |
+| field-error/neutral-dark-ltr.png | pass | 0 (0.000 percent) |  | none |
+| field-error/neutral-dark-rtl.png | pass | 0 (0.000 percent) |  | none |
+| field-error/neutral-light-ltr.png | pass | 0 (0.000 percent) |  | none |
+| field-error/neutral-light-rtl.png | pass | 0 (0.000 percent) |  | none |
+| field-error/studio-dark-ltr.png | pass | 0 (0.000 percent) |  | none |
+| field-error/studio-dark-rtl.png | pass | 0 (0.000 percent) |  | none |
+| field-error/studio-light-ltr.png | pass | 0 (0.000 percent) |  | none |
+| field-error/studio-light-rtl.png | pass | 0 (0.000 percent) |  | none |
+| field/desk-dark-ltr.png | pass | 0 (0.000 percent) |  | none |
+| field/desk-dark-rtl.png | pass | 0 (0.000 percent) |  | none |
+| field/desk-light-ltr.png | pass | 0 (0.000 percent) |  | none |
+| field/desk-light-rtl.png | pass | 0 (0.000 percent) |  | none |
+| field/neutral-dark-ltr.png | pass | 0 (0.000 percent) |  | none |
+| field/neutral-dark-rtl.png | pass | 0 (0.000 percent) |  | none |
+| field/neutral-light-ltr.png | pass | 0 (0.000 percent) |  | none |
+| field/neutral-light-rtl.png | pass | 0 (0.000 percent) |  | none |
+| field/studio-dark-ltr.png | pass | 0 (0.000 percent) |  | none |
+| field/studio-dark-rtl.png | pass | 0 (0.000 percent) |  | none |
+| field/studio-light-ltr.png | pass | 0 (0.000 percent) |  | none |
+| field/studio-light-rtl.png | pass | 0 (0.000 percent) |  | none |
 | icon-button/desk-dark-ltr-comfortable.png | pass | 0 (0.000 percent) |  | none |
 | icon-button/desk-dark-ltr-compact.png | pass | 0 (0.000 percent) |  | none |
 | icon-button/desk-dark-ltr.png | pass | 0 (0.000 percent) |  | none |
@@ -46,5 +70,71 @@ Made by `npm run shots -- --compare react angular`. pixelmatch threshold 0.1; a 
 | icon-button/studio-dark-rtl.png | pass | 0 (0.000 percent) |  | none |
 | icon-button/studio-light-ltr.png | pass | 0 (0.000 percent) |  | none |
 | icon-button/studio-light-rtl.png | pass | 0 (0.000 percent) |  | none |
+| input-group/desk-dark-ltr-comfortable.png | pass | 0 (0.000 percent) |  | none |
+| input-group/desk-dark-ltr-compact.png | pass | 0 (0.000 percent) |  | none |
+| input-group/desk-dark-ltr.png | pass | 0 (0.000 percent) |  | none |
+| input-group/desk-dark-rtl.png | pass | 0 (0.000 percent) |  | none |
+| input-group/desk-light-ltr.png | pass | 0 (0.000 percent) |  | none |
+| input-group/desk-light-rtl.png | pass | 0 (0.000 percent) |  | none |
+| input-group/neutral-dark-ltr-comfortable.png | pass | 0 (0.000 percent) |  | none |
+| input-group/neutral-dark-ltr-compact.png | pass | 0 (0.000 percent) |  | none |
+| input-group/neutral-dark-ltr.png | pass | 0 (0.000 percent) |  | none |
+| input-group/neutral-dark-rtl.png | pass | 0 (0.000 percent) |  | none |
+| input-group/neutral-light-ltr.png | pass | 0 (0.000 percent) |  | none |
+| input-group/neutral-light-rtl.png | pass | 0 (0.000 percent) |  | none |
+| input-group/studio-dark-ltr-comfortable.png | pass | 0 (0.000 percent) |  | none |
+| input-group/studio-dark-ltr-compact.png | pass | 0 (0.000 percent) |  | none |
+| input-group/studio-dark-ltr.png | pass | 0 (0.000 percent) |  | none |
+| input-group/studio-dark-rtl.png | pass | 0 (0.000 percent) |  | none |
+| input-group/studio-light-ltr.png | pass | 0 (0.000 percent) |  | none |
+| input-group/studio-light-rtl.png | pass | 0 (0.000 percent) |  | none |
+| input/desk-dark-ltr-comfortable.png | pass | 0 (0.000 percent) |  | none |
+| input/desk-dark-ltr-compact.png | pass | 0 (0.000 percent) |  | none |
+| input/desk-dark-ltr.png | pass | 0 (0.000 percent) |  | none |
+| input/desk-dark-rtl.png | pass | 0 (0.000 percent) |  | none |
+| input/desk-light-ltr.png | pass | 0 (0.000 percent) |  | none |
+| input/desk-light-rtl.png | pass | 0 (0.000 percent) |  | none |
+| input/neutral-dark-ltr-comfortable.png | pass | 0 (0.000 percent) |  | none |
+| input/neutral-dark-ltr-compact.png | pass | 0 (0.000 percent) |  | none |
+| input/neutral-dark-ltr.png | pass | 0 (0.000 percent) |  | none |
+| input/neutral-dark-rtl.png | pass | 0 (0.000 percent) |  | none |
+| input/neutral-light-ltr.png | pass | 0 (0.000 percent) |  | none |
+| input/neutral-light-rtl.png | pass | 0 (0.000 percent) |  | none |
+| input/studio-dark-ltr-comfortable.png | pass | 0 (0.000 percent) |  | none |
+| input/studio-dark-ltr-compact.png | pass | 0 (0.000 percent) |  | none |
+| input/studio-dark-ltr.png | pass | 0 (0.000 percent) |  | none |
+| input/studio-dark-rtl.png | pass | 0 (0.000 percent) |  | none |
+| input/studio-light-ltr.png | pass | 0 (0.000 percent) |  | none |
+| input/studio-light-rtl.png | pass | 0 (0.000 percent) |  | none |
+| label/desk-dark-ltr.png | pass | 0 (0.000 percent) |  | none |
+| label/desk-dark-rtl.png | pass | 0 (0.000 percent) |  | none |
+| label/desk-light-ltr.png | pass | 0 (0.000 percent) |  | none |
+| label/desk-light-rtl.png | pass | 0 (0.000 percent) |  | none |
+| label/neutral-dark-ltr.png | pass | 0 (0.000 percent) |  | none |
+| label/neutral-dark-rtl.png | pass | 0 (0.000 percent) |  | none |
+| label/neutral-light-ltr.png | pass | 0 (0.000 percent) |  | none |
+| label/neutral-light-rtl.png | pass | 0 (0.000 percent) |  | none |
+| label/studio-dark-ltr.png | pass | 0 (0.000 percent) |  | none |
+| label/studio-dark-rtl.png | pass | 0 (0.000 percent) |  | none |
+| label/studio-light-ltr.png | pass | 0 (0.000 percent) |  | none |
+| label/studio-light-rtl.png | pass | 0 (0.000 percent) |  | none |
+| textarea/desk-dark-ltr-comfortable.png | pass | 0 (0.000 percent) |  | none |
+| textarea/desk-dark-ltr-compact.png | pass | 0 (0.000 percent) |  | none |
+| textarea/desk-dark-ltr.png | pass | 0 (0.000 percent) |  | none |
+| textarea/desk-dark-rtl.png | pass | 0 (0.000 percent) |  | none |
+| textarea/desk-light-ltr.png | pass | 0 (0.000 percent) |  | none |
+| textarea/desk-light-rtl.png | pass | 0 (0.000 percent) |  | none |
+| textarea/neutral-dark-ltr-comfortable.png | pass | 0 (0.000 percent) |  | none |
+| textarea/neutral-dark-ltr-compact.png | pass | 0 (0.000 percent) |  | none |
+| textarea/neutral-dark-ltr.png | pass | 0 (0.000 percent) |  | none |
+| textarea/neutral-dark-rtl.png | pass | 0 (0.000 percent) |  | none |
+| textarea/neutral-light-ltr.png | pass | 0 (0.000 percent) |  | none |
+| textarea/neutral-light-rtl.png | pass | 0 (0.000 percent) |  | none |
+| textarea/studio-dark-ltr-comfortable.png | pass | 0 (0.000 percent) |  | none |
+| textarea/studio-dark-ltr-compact.png | pass | 0 (0.000 percent) |  | none |
+| textarea/studio-dark-ltr.png | pass | 0 (0.000 percent) |  | none |
+| textarea/studio-dark-rtl.png | pass | 0 (0.000 percent) |  | none |
+| textarea/studio-light-ltr.png | pass | 0 (0.000 percent) |  | none |
+| textarea/studio-light-rtl.png | pass | 0 (0.000 percent) |  | none |
 
-Only in react: field/desk-dark-ltr.png, field/desk-dark-rtl.png, field/desk-light-ltr.png, field/desk-light-rtl.png, field/studio-dark-ltr.png, field/studio-dark-rtl.png, field/studio-light-ltr.png, field/studio-light-rtl.png, icon/desk-dark-ltr.png, icon/desk-dark-rtl.png, icon/desk-light-ltr.png, icon/desk-light-rtl.png, icon/studio-dark-ltr.png, icon/studio-dark-rtl.png, icon/studio-light-ltr.png, icon/studio-light-rtl.png, input/desk-dark-ltr-comfortable.png, input/desk-dark-ltr-compact.png, input/desk-dark-ltr.png, input/desk-dark-rtl.png, input/desk-light-ltr.png, input/desk-light-rtl.png, input/studio-dark-ltr-comfortable.png, input/studio-dark-ltr-compact.png, input/studio-dark-ltr.png, input/studio-dark-rtl.png, input/studio-light-ltr.png, input/studio-light-rtl.png, title-bar/desk-dark-ltr.png, title-bar/desk-dark-rtl.png, title-bar/desk-light-ltr.png, title-bar/desk-light-rtl.png, title-bar/studio-dark-ltr.png, title-bar/studio-dark-rtl.png, title-bar/studio-light-ltr.png, title-bar/studio-light-rtl.png, toast/desk-dark-ltr-open.png, toast/desk-dark-ltr.png, toast/desk-dark-rtl-open.png, toast/desk-dark-rtl.png, toast/desk-light-ltr-open.png, toast/desk-light-ltr.png, toast/desk-light-rtl-open.png, toast/desk-light-rtl.png, toast/studio-dark-ltr-open.png, toast/studio-dark-ltr.png, toast/studio-dark-rtl-open.png, toast/studio-dark-rtl.png, toast/studio-light-ltr-open.png, toast/studio-light-ltr.png, toast/studio-light-rtl-open.png, toast/studio-light-rtl.png, window-controls/desk-dark-ltr.png, window-controls/desk-dark-rtl.png, window-controls/desk-light-ltr.png, window-controls/desk-light-rtl.png, window-controls/studio-dark-ltr.png, window-controls/studio-dark-rtl.png, window-controls/studio-light-ltr.png, window-controls/studio-light-rtl.png, window/desk-dark-ltr.png, window/desk-dark-rtl.png, window/desk-light-ltr.png, window/desk-light-rtl.png, window/studio-dark-ltr.png, window/studio-dark-rtl.png, window/studio-light-ltr.png, window/studio-light-rtl.png
+Only in react: icon/desk-dark-ltr.png, icon/desk-dark-rtl.png, icon/desk-light-ltr.png, icon/desk-light-rtl.png, icon/studio-dark-ltr.png, icon/studio-dark-rtl.png, icon/studio-light-ltr.png, icon/studio-light-rtl.png, title-bar/desk-dark-ltr.png, title-bar/desk-dark-rtl.png, title-bar/desk-light-ltr.png, title-bar/desk-light-rtl.png, title-bar/studio-dark-ltr.png, title-bar/studio-dark-rtl.png, title-bar/studio-light-ltr.png, title-bar/studio-light-rtl.png, toast/desk-dark-ltr-open.png, toast/desk-dark-ltr.png, toast/desk-dark-rtl-open.png, toast/desk-dark-rtl.png, toast/desk-light-ltr-open.png, toast/desk-light-ltr.png, toast/desk-light-rtl-open.png, toast/desk-light-rtl.png, toast/studio-dark-ltr-open.png, toast/studio-dark-ltr.png, toast/studio-dark-rtl-open.png, toast/studio-dark-rtl.png, toast/studio-light-ltr-open.png, toast/studio-light-ltr.png, toast/studio-light-rtl-open.png, toast/studio-light-rtl.png, window-controls/desk-dark-ltr.png, window-controls/desk-dark-rtl.png, window-controls/desk-light-ltr.png, window-controls/desk-light-rtl.png, window-controls/studio-dark-ltr.png, window-controls/studio-dark-rtl.png, window-controls/studio-light-ltr.png, window-controls/studio-light-rtl.png, window/desk-dark-ltr.png, window/desk-dark-rtl.png, window/desk-light-ltr.png, window/desk-light-rtl.png, window/studio-dark-ltr.png, window/studio-dark-rtl.png, window/studio-light-ltr.png, window/studio-light-rtl.png
