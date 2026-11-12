@@ -7,9 +7,11 @@ import { ScrollArea, type ScrollAreaSize } from './index';
 const sizes: ScrollAreaSize[] = ['sm', 'md'];
 
 /** A framed box of a fixed block size, so the area has something to scroll. */
-const box = (blockSize: string, inlineSize = '100%'): CSSProperties => ({
+const box = (blockSize: string, maxInlineSize = '100%'): CSSProperties => ({
   blockSize,
-  inlineSize,
+  // A max, not a fixed size: a fixed 20rem with the page padding is wider than a 320px screen.
+  inlineSize: '100%',
+  maxInlineSize,
   border: 'var(--ds-border-width-default) solid var(--ds-color-border-default)',
   borderRadius: 'var(--ds-radius-card)',
 });
@@ -113,7 +115,7 @@ export default function ScrollAreaDemo() {
       </DemoCase>
 
       <DemoCase id="many" title="Many items with buttons inside">
-        <ScrollArea style={box('12rem', '20rem')}>
+        <ScrollArea label="Folders" style={box('12rem', '20rem')}>
           <div style={{ display: 'grid', gap: 'var(--ds-space-s)', padding: 'var(--ds-space-l)' }}>
             {sample.en.items.map((item) => (
               <Button key={item} emphasis="ghost" fullWidth>

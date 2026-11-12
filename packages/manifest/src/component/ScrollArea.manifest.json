@@ -117,7 +117,9 @@
       "The keys are the browser's own scrolling of a focused scroll container, so the contract suite notes them; ScrollArea.test.tsx covers the focus rule and the overflow states.",
       "visible and hidden are the data-state of the Radix scrollbar and thumb parts under scrollbars scroll or hover.",
       "With orientation both, the fades and the overflow states follow the block axis only.",
-      "The thumb tokens (scrollbar.thumb) measure under 3:1 on some surfaces; the thumb is a pointer aid, the keyboard and the native scroll carry the function. Raised with the lead as a token question.",
+      "The scrollbar.thumb token measures under 3:1 on every surface (1.5 to 2.7), so the thumb draws in color.text.muted, which meets 3:1 on body and surface 1 to 4 in every style and scheme. It does not on surface 5 in Studio and Desk dark (2.5): keep a ScrollArea off surface 5 there until the thumb token is fixed.",
+      "The 4px and 6px thumbs are under the 24px target of WCAG 2.5.8; the equivalent exception applies, since wheel, touch and the keys on the focusable viewport scroll the same content.",
+      "A focusable viewport is a region named by label, with a built in default name. Several areas with the default give several regions of the same name, so always pass label.",
       "Edge fades fade into --_scroll-area-fade-color, the body color by default. A parent on another surface sets that private property to its own fill from its own CSS."
     ]
   },
@@ -132,8 +134,8 @@
   "tokens": [
     "scrollbar.size",
     "scrollbar.track",
-    "scrollbar.thumb",
-    "scrollbar.thumb-hover",
+    "color.text.muted",
+    "color.text.default",
     "space.4xs",
     "space.3xl",
     "radius.pill",
@@ -162,9 +164,9 @@
     }
   },
   "styles": {
-    "studio": "A 6px thumb on a clear track, from the scrollbar tokens. Fades into the body color.",
-    "desk": "The same thumb, a little lighter on the dark desk, from the Desk scrollbar tokens.",
-    "neutral": "The same parts on the Neutral scrollbar tokens once 1.10 lands.",
+    "studio": "A 6px thumb in the muted text color on a clear track. Fades into the body color.",
+    "desk": "The same thumb in the Desk muted text color.",
+    "neutral": "The same thumb in the Neutral muted text color.",
     "liquid": "Planned: content scrolls under glass bars, with the scroll edge fade."
   },
   "mistakes": [
@@ -183,6 +185,14 @@
     {
       "wrong": "Wrapping the whole page in a ScrollArea",
       "right": "Let the page scroll natively; use ScrollArea for panels inside it"
+    },
+    {
+      "wrong": "scrollbars scroll or hover with fades false, so nothing at rest shows that the area scrolls",
+      "right": "Keep fades on when the bars hide at rest, or use scrollbars auto or always"
+    },
+    {
+      "wrong": "Two ScrollAreas on one page with no label, both announced as Scrollable content",
+      "right": "A label on every ScrollArea that names what scrolls"
     }
   ],
   "contract": {

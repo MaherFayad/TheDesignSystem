@@ -39,8 +39,15 @@
     --_scroll-area-bar-size: var(--ds-scrollbar-size);
     --_scroll-area-bar-padding: var(--ds-space-4xs);
     --_scroll-area-track: var(--ds-scrollbar-track);
-    --_scroll-area-thumb: var(--ds-scrollbar-thumb);
-    --_scroll-area-thumb-hover: var(--ds-scrollbar-thumb-hover);
+    /*
+     * The scrollbar.thumb token measures 1.5 to 2.7 to 1 on every surface,
+     * under the 3:1 of WCAG 1.4.11. The muted text color meets 3:1 on body
+     * and surface 1 to 4 in every style and scheme (lowest 3.46), and the
+     * default text color on hover. Back to scrollbar.thumb once that token
+     * meets 3:1 (requested in docs/reports/fixes/batch-8-9.md).
+     */
+    --_scroll-area-thumb: var(--ds-color-text-muted);
+    --_scroll-area-thumb-hover: var(--ds-color-text-default);
     --_scroll-area-fade-size: var(--ds-space-3xl);
     --_scroll-area-fade-color: var(--ds-color-bg-body);
     --_scroll-area-ring-color: var(--ds-color-focus-ring);
