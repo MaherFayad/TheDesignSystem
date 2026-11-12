@@ -14311,7 +14311,10 @@
         "note": "Motion: fade. Only the focus glow fades (an opacity transition), and the value changes at once: number-roll is for a value someone reads, not one they type."
       },
       "angular": {
-        "status": "planned"
+        "status": "ready",
+        "behavior": "div[dsNumberField] with a native input and two dsIconButton steppers, hand built on packages/shared number.ts with React Aria's rules, CDK LiveAnnouncer, ControlValueAccessor",
+        "example": "number-field.demo.ts",
+        "note": "Same DOM, keys and words as React (React Aria's English and Arabic stepper names and role description). value is a model: [(value)]; defaultValue is value and onChange is valueChange, fired with each committed change. start and end take an icon name, a short text or a TemplateRef. rootProps, className and style have no input: attributes on the host already land on the root. The hidden input named name sits after the root, as in React. Stepper words exist in English and Arabic only. The mouse wheel never changes the value."
       },
       "native": {
         "status": "planned"
@@ -18239,7 +18242,10 @@
         "note": "Motion: fade, for the focus ring. The value follows the pointer with no animation; only the focus ring fades (an opacity transition)."
       },
       "angular": {
-        "status": "planned"
+        "status": "ready",
+        "behavior": "div[dsScrubInput], hand built, pointer capture for the scrub; logic in packages/shared scrub.ts and number.ts, ControlValueAccessor",
+        "example": "scrub-input.demo.ts",
+        "note": "Same DOM and keys as React. value is a model: [(value)]; defaultValue is value, onChange is valueChange (every drag move) and onChangeEnd is the changeEnd output (once per gesture). label takes a letter, an icon name or a TemplateRef. rootProps, className and style have no input: attributes on the host already land on the root."
       },
       "native": {
         "status": "planned"
