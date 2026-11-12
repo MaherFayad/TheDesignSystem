@@ -1,0 +1,47 @@
+/*
+ * Desk recipe for Tooltip: floating surfaces on the desk are glass (the
+ * dials table of PLAN.md 3.7, depth "glass"), the same material as the Desk
+ * toasts and popovers: the strong glass fill, the glass border and the
+ * window blur. The shadow stays the tooltip shadow and the radius the small
+ * radius: a tooltip is the smallest floating surface.
+ *
+ * Glass turns solid by itself: under prefers-reduced-transparency,
+ * prefers-contrast more and data-contrast more the material tokens resolve
+ * to the solid glass color, and the rules below drop the blur.
+ *
+ * Only the private --_tooltip-* properties are declared here, so the markup
+ * and the base rules stay the same in every style.
+ */
+@layer ds.recipes {
+  [data-style='desk'] [data-ds='tooltip'] {
+    --_tooltip-bg: var(--ds-color-material-glass-strong);
+    --_tooltip-border-color: var(--ds-color-material-glass-border);
+    --_tooltip-blur: var(--ds-blur-window);
+  }
+
+  /* The recipe layer wins over the base layer, so the blur is dropped here again where the glass turns solid. */
+  @media (prefers-reduced-transparency: reduce), (prefers-contrast: more), (forced-colors: active) {
+    [data-style='desk'] [data-ds='tooltip'] {
+      --_tooltip-blur: 0;
+    }
+  }
+
+  @media (prefers-contrast: more) {
+    [data-style='desk'] [data-ds='tooltip'] {
+      --_tooltip-border-color: var(--ds-color-border-strong);
+    }
+  }
+
+  @media (forced-colors: active) {
+    [data-style='desk'] [data-ds='tooltip'] {
+      --_tooltip-bg: Canvas;
+      --_tooltip-border-color: CanvasText;
+    }
+  }
+
+  [data-style='desk'][data-contrast='more'] [data-ds='tooltip'],
+  [data-style='desk'] [data-contrast='more'] [data-ds='tooltip'] {
+    --_tooltip-blur: 0;
+    --_tooltip-border-color: var(--ds-color-border-strong);
+  }
+}

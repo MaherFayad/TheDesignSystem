@@ -1,0 +1,216 @@
+{
+  "name": "Tooltip",
+  "kind": "component",
+  "family": "overlays",
+  "summary": "A short hint for a control, shown on hover and on keyboard focus. The only way to show a hint in the system: never the native title attribute.",
+  "useWhen": [
+    "The label of an IconButton or another icon only control, shown on hover and focus",
+    "A keyboard shortcut for a control",
+    "Why a disabled action is disabled, on a control that stays focusable"
+  ],
+  "avoidWhen": [
+    "The only name of a control: the control needs its own label",
+    "Content with a link, a button or a field inside it",
+    "Information a person needs to finish a task, which must be visible without hovering",
+    "Touch first screens, where nothing hovers",
+    "Text longer than one or two short lines"
+  ],
+  "insteadUse": {
+    "Interactive content": "Popover",
+    "Preview of a link or a person": "HoverCard",
+    "Information needed to finish a task": "Field description",
+    "A message after an action": "Toast",
+    "Guided steps over the page": "Tour"
+  },
+  "anatomy": [
+    "root",
+    "arrow",
+    "shortcut"
+  ],
+  "slots": {
+    "shortcut": {
+      "accepts": "text",
+      "max": 1
+    }
+  },
+  "props": {
+    "content": {
+      "type": "node",
+      "required": true,
+      "description": "The hint: short text, 240px wide at most (tooltip.width.max). It describes the control and never names it."
+    },
+    "shortcut": {
+      "type": "string",
+      "description": "A keyboard shortcut shown after the hint, for example Ctrl+C. Always left to right, also in Arabic. Text until Kbd (1.9.5) exists."
+    },
+    "side": {
+      "type": [
+        "top",
+        "bottom",
+        "start",
+        "end"
+      ],
+      "default": "top",
+      "description": "The preferred side. start and end follow the reading direction. It flips when there is no room."
+    },
+    "align": {
+      "type": [
+        "start",
+        "center",
+        "end"
+      ],
+      "default": "center",
+      "description": "Alignment along the trigger, mirrored in right to left layouts."
+    },
+    "sideOffset": {
+      "type": "number",
+      "default": 6,
+      "description": "Distance from the trigger in px, the arrow included."
+    },
+    "arrow": {
+      "type": "boolean",
+      "default": true
+    },
+    "open": {
+      "type": "boolean",
+      "description": "Controlled open state, with onOpenChange."
+    },
+    "defaultOpen": {
+      "type": "boolean",
+      "default": false
+    },
+    "onOpenChange": {
+      "type": "function"
+    },
+    "delayDuration": {
+      "type": "number",
+      "default": 500,
+      "description": "Open delay on hover in ms. Focus opens at once."
+    },
+    "disabled": {
+      "type": "boolean",
+      "default": false,
+      "description": "Renders the trigger alone, with no tooltip."
+    },
+    "contentProps": {
+      "type": "object",
+      "description": "Any other prop for the root (the Radix Content)."
+    }
+  },
+  "states": [
+    "delayed-open",
+    "instant-open",
+    "closed"
+  ],
+  "a11y": {
+    "role": "tooltip (the root). The trigger points at it with aria-describedby while it shows: it is the trigger's description, the trigger keeps its own name.",
+    "focus": "Never takes focus. Keyboard focus on the trigger shows it at once, with no delay; blur hides it.",
+    "keys": {
+      "Escape": "Hides the tooltip without moving focus; the trigger keeps focus"
+    },
+    "announce": "Read as the description of the focused control, after its name and role. When the hint is the same string as the control's label (an IconButton), it is not wired as the description, so it is not read twice.",
+    "notes": [
+      "WCAG 1.4.13: hoverable (the pointer can move onto the tooltip and it stays), dismissable (Escape hides it without moving the pointer or focus), persistent (it stays until the pointer leaves both, focus leaves, or Escape).",
+      "Never the only name of a control. An IconButton keeps its label prop as its name; the tooltip shows the same words to sighted pointer users. Development builds warn when the trigger has no name.",
+      "A disabled action uses aria-disabled and stays focusable, so its tooltip can say why it is disabled.",
+      "No native title attribute, anywhere in the system.",
+      "The root carries data-side and data-align from Radix; data-side is physical after the logical side prop is mapped by direction.",
+      "Pointer down on the trigger hides the tooltip, so a click never leaves it covering what the click opened. On a disabled Button the press is swallowed, so the tooltip stays and keeps saying why.",
+      "The gallery shows some tooltips open with the open prop, so the contract suite and screenshots can read them; a tooltip is never open on load in a product.",
+      "disabled true keeps the trigger mounted (focus stays) and closes the tooltip."
+    ]
+  },
+  "content": {
+    "en": {
+      "hint": "The control's action, verb plus noun, sentence case, no period: Copy link, Close panel. For a disabled action, what to do: Select a layer to delete it.",
+      "shortcut": "The keys as printed on the keyboard, joined with a plus: Ctrl+C, Shift+Ctrl+P."
+    },
+    "ar": {
+      "hint": "Noun form, no diacritics: نسخ الرابط، إغلاق اللوحة.",
+      "shortcut": "Latin key names, left to right inside the Arabic text: Ctrl+C."
+    }
+  },
+  "tokens": [
+    "tooltip.width.max",
+    "color.bg.surface",
+    "color.text.bright",
+    "color.text.muted",
+    "color.text.default",
+    "color.border.default",
+    "color.border.strong",
+    "color.material.glass-strong",
+    "color.material.glass-border",
+    "radius.sm",
+    "elevation.tooltip",
+    "blur.window",
+    "border.width.default",
+    "space.3xs",
+    "space.xs",
+    "space.s",
+    "space.m",
+    "space.l",
+    "font.family.sans",
+    "font.family.mono",
+    "font.size.s",
+    "font.weight.medium",
+    "font.weight.regular",
+    "font.leading.snug",
+    "duration.fast",
+    "duration.instant",
+    "ease.out",
+    "ease.exit",
+    "z.tooltip"
+  ],
+  "motion": "fade-rise",
+  "frameworks": {
+    "react": {
+      "status": "ready",
+      "behavior": "radix:Tooltip",
+      "example": "Tooltip.demo.tsx",
+      "note": "The portal is a Theme that copies the axes of the Theme the Tooltip is in. A Tooltip with no TooltipProvider above it renders its own provider. Exports TooltipProvider (delayDuration 500 ms, skipDelayDuration 300 ms): one near the app root, inside Theme, shares the delays so the next tooltip along a toolbar opens at once."
+    },
+    "angular": {
+      "status": "planned",
+      "behavior": "cdk:overlay"
+    },
+    "native": {
+      "status": "not-applicable",
+      "note": "Nothing hovers on touch screens. Native controls show their label in an accessibility hint and a long press shows the label."
+    }
+  },
+  "styles": {
+    "studio": "A small bubble on the raised surface with the default border, the small radius and the tooltip shadow. Fades in on duration.fast while it moves 4px (space.3xs) away from the trigger.",
+    "desk": "Glass: the strong glass fill, the glass border and the window blur (recipe); turns solid under reduced transparency and more contrast.",
+    "neutral": "Planned.",
+    "liquid": "Planned."
+  },
+  "mistakes": [
+    {
+      "wrong": "An IconButton named only by its Tooltip",
+      "right": "The IconButton label prop names it; the Tooltip shows the same words"
+    },
+    {
+      "wrong": "title=\"Copy link\" on a button",
+      "right": "A Tooltip around the button"
+    },
+    {
+      "wrong": "A link or a button inside a tooltip",
+      "right": "A Popover"
+    },
+    {
+      "wrong": "A disabled button with the disabled attribute and a tooltip that never shows",
+      "right": "The system Button disabled prop (aria-disabled), which stays focusable"
+    },
+    {
+      "wrong": "A paragraph of help text in a tooltip",
+      "right": "A Field description or a HoverCard"
+    }
+  ],
+  "contract": {
+    "optionalParts": [
+      "shortcut",
+      "arrow"
+    ]
+  },
+  "since": "0.1.0"
+}
