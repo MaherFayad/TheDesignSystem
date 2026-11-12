@@ -226,6 +226,74 @@ describe('Combobox', () => {
     expect(defaultResultCount(12, 'ar')).toBe('12 نتيجة');
   });
 
+  it('a press on the popup outside an option keeps the list open and focus in the input', async () => {
+    const user = userEvent.setup();
+    render(<City items={citySections('en')} />);
+    await user.click(input());
+    await user.click(popup()!.querySelector<HTMLElement>('[data-part="group-label"]')!);
+    expect(input().getAttribute('aria-expanded')).toBe('true');
+    expect(document.activeElement).toBe(input());
+  });
+
+  it('Alt+ArrowUp on a closed list does nothing', async () => {
+    const user = userEvent.setup();
+    render(<City />);
+    input().focus();
+    await user.keyboard('{Alt>}{ArrowUp}{/Alt}');
+    expect(input().getAttribute('aria-expanded')).toBe('false');
+  });
+
+  it('ignores an Enter that confirms an IME composition', async () => {
+    const user = userEvent.setup();
+    const onValueChange = vi.fn();
+    render(<City onValueChange={onValueChange} />);
+    await user.type(input(), 'ab');
+    act(() => {
+      input().dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', keyCode: 229, bubbles: true }));
+    });
+    expect(onValueChange).not.toHaveBeenCalled();
+  });
+
+  it('Enter on an option does not submit the form', async () => {
+    const user = userEvent.setup();
+    const onSubmit = vi.fn((e: Event) => e.preventDefault());
+    render(
+      <form onSubmit={(e) => onSubmit(e.nativeEvent)}>
+        <City />
+      </form>,
+    );
+    await user.type(input(), 'ab');
+    await user.keyboard('{Enter}');
+    expect(onSubmit).not.toHaveBeenCalled();
+    expect((input() as HTMLInputElement).value).toBe('Abha');
+  });
+
+  it('matches Arabic typed with diacritics and the tatweel', async () => {
+    const user = userEvent.setup();
+    render(
+      <Theme lang="ar" dir="rtl">
+        <Field label="المدينة">
+          <Combobox items={cityOptions('ar')} />
+        </Field>
+      </Theme>,
+    );
+    await user.type(screen.getByRole('combobox', { name: 'المدينة' }), 'جِـــدَّة');
+    expect(Array.from(popup()!.querySelectorAll('[role="option"]')).map((o) => o.textContent)).toEqual(['جدة']);
+  });
+
+  it('controlled open and inputValue follow their props', async () => {
+    const user = userEvent.setup();
+    const onOpenChange = vi.fn();
+    const onInputValueChange = vi.fn();
+    render(<City open inputValue="ja" onOpenChange={onOpenChange} onInputValueChange={onInputValueChange} />);
+    expect(input().getAttribute('aria-expanded')).toBe('true');
+    expect((input() as HTMLInputElement).value).toBe('ja');
+    input().focus();
+    await user.keyboard('z');
+    expect(onInputValueChange).toHaveBeenLastCalledWith('jaz');
+    expect((input() as HTMLInputElement).value).toBe('ja');
+  });
+
   it('renders the demo', () => {
     render(<ComboboxDemo />);
     expect(document.querySelectorAll('[data-ds="combobox"]').length).toBeGreaterThan(8);

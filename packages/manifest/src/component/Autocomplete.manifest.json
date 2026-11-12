@@ -157,7 +157,7 @@
       "Alt+ArrowDown": "Opens the suggestions without moving the highlight",
       "Alt+ArrowUp": "Puts the highlighted suggestion in the field and closes the list",
       "Enter": "With a suggestion highlighted: puts it in the field and closes the list. With none: keeps the typed text, calls onCommit and lets the form submit",
-      "Escape": "Open: closes the list, the text stays. Closed: clears the text",
+      "Escape": "Open: closes the list, the text stays. Closed: clears the text. Inside a Dialog, the Escape after the list closed closes the Dialog (Radix handles Escape on the document first); clear with the clear button or by selecting the text there",
       "Typing": "Filters the suggestions and opens the list when some match; nothing is highlighted"
     },
     "announce": "The input reads its Field label, its text, and that it has suggestions. Moving through the list reads each suggestion. After each query the count is read once, politely, from a visually hidden status.",
@@ -165,7 +165,8 @@
       "Matching ignores case, accents, Arabic diacritics and the tatweel, and unifies alef forms (normalize in @the-system/shared filter.ts). The matched part is wrapped in mark, drawn heavier and underlined, never by color alone (WCAG 1.4.1).",
       "No trigger and no clear button: the field is a text field that suggests. The list opens with typing or ArrowDown.",
       "The popup is portaled into a Theme copied from the field's Theme and is its own root carrying data-part popup; data-state open and closed is on the popup only.",
-      "Contract: read as a field, not an overlay, as Combobox. ArrowDown is checked on the input of the many case (aria-expanded changes), Escape there with the list closed (the text clears). The open popup is covered by the unit tests and a lane axe run."
+      "Contract: read as a field, not an overlay, as Combobox. ArrowDown is checked on the input of the many case (aria-expanded changes), Escape there with the list closed (the text clears). The open popup is covered by the unit tests and a lane axe run.",
+      "The list is named like the field: through the Field label, else aria-label or aria-labelledby on the Autocomplete. Without a Field, pass one of them."
     ]
   },
   "content": {
@@ -280,6 +281,10 @@
     {
       "wrong": "Filtering only the exact spelling of Arabic words",
       "right": "The shared normalize: إمكانية matches امكانية"
+    },
+    {
+      "wrong": "A Autocomplete with no Field and no aria-label",
+      "right": "A Field label, or aria-label: the input and its list both need a name"
     }
   ],
   "contract": {

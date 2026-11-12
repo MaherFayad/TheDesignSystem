@@ -175,7 +175,7 @@
       "Alt+ArrowDown": "Opens the list without moving the highlight",
       "Alt+ArrowUp": "Chooses the highlighted option and closes the list",
       "Enter": "Chooses the highlighted option and closes the list; it does not submit the form while an option is highlighted",
-      "Escape": "Open: closes the list and puts the chosen label back. Closed: clears the field and the value",
+      "Escape": "Open: closes the list and puts the chosen label back. Closed: clears the field and the value. Inside a Dialog, the Escape after the list closed closes the Dialog (Radix handles Escape on the document first); clear with the clear button or by selecting the text there",
       "Typing": "Filters the list and opens it; the first match is highlighted so Enter picks it"
     },
     "announce": "The input reads its Field label, its value, and that it has a list. Moving through the list reads each option (label, description, selected, position). After each query the count is read once, politely, from a visually hidden status (3 results; in Arabic 3 نتائج).",
@@ -184,7 +184,8 @@
       "The matched part of each option is wrapped in mark, drawn heavier and underlined, never by color alone (WCAG 1.4.1).",
       "The trigger and clear buttons are 24px IconButtons (WCAG 2.5.8) with names; the list can also be opened with the keys.",
       "The popup is portaled into a Theme copied from the field's Theme and is its own root carrying data-part popup, as a DropdownMenu submenu is; its z-index is z.menu so it shows over a Dialog.",
-      "Contract: the suite reads Combobox as a field, not an overlay: its popup never holds a tab stop (focus stays in the input), which the overlay checks require. data-state open and closed is on the popup root only. ArrowDown is checked on the input of the many case (aria-expanded changes) and Escape there with the list closed (the value clears). Opening, the popup anatomy and axe on the open popup are covered by the unit tests and a lane axe run (docs/reports/lanes/lane-3c.md)."
+      "Contract: the suite reads Combobox as a field, not an overlay: its popup never holds a tab stop (focus stays in the input), which the overlay checks require. data-state open and closed is on the popup root only. ArrowDown is checked on the input of the many case (aria-expanded changes) and Escape there with the list closed (the value clears). Opening, the popup anatomy and axe on the open popup are covered by the unit tests and a lane axe run (docs/reports/lanes/lane-3c.md).",
+      "The list is named like the field: through the Field label, else aria-label or aria-labelledby on the Combobox. Without a Field, pass one of them."
     ]
   },
   "content": {
@@ -306,6 +307,10 @@
     {
       "wrong": "Announcing the result count on every keystroke",
       "right": "Once per query after typing pauses, in a polite status (built in)"
+    },
+    {
+      "wrong": "A Combobox with no Field and no aria-label",
+      "right": "A Field label, or aria-label: the input and its list both need a name"
     }
   ],
   "contract": {

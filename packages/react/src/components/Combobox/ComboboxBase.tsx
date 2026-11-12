@@ -269,20 +269,29 @@ export function ComboboxBase({
     if (highlighted !== null && !highlightVisible) setHighlighted(mode === 'select' && typed ? firstEnabled() : null);
   }, [open, highlighted, highlightVisible, mode, typed, firstEnabled]);
 
-  // The result count, once per query, after typing pauses.
+  // The highlight lands on the first match after each keystroke in select mode, from the filtered list itself.
+  const highlightFirst = useRef(false);
+  useEffect(() => {
+    if (!highlightFirst.current) return;
+    highlightFirst.current = false;
+    setHighlighted(firstEnabled());
+  }, [options, firstEnabled]);
+
+  // The result count, once per query, after typing pauses. The status empties first, so the same count
+  // after a new query is read again. formatCount is read through a ref, so an inline function does not restart the timer.
   const [status, setStatus] = useState('');
   const count = options.length;
+  const formatRef = useRef(formatCount);
+  formatRef.current = formatCount;
   useEffect(() => {
-    if (!open) {
-      setStatus('');
-      return undefined;
-    }
+    setStatus('');
+    if (!open) return undefined;
     const timer = setTimeout(() => {
       if (loading) setStatus(loadingLabel ?? t.loading);
-      else setStatus(formatCount ? formatCount(count) : defaultResultCount(count, lang));
+      else setStatus(formatRef.current ? formatRef.current(count) : defaultResultCount(count, lang));
     }, ANNOUNCE_DELAY);
     return () => clearTimeout(timer);
-  }, [open, query, count, loading, loadingLabel, formatCount, lang, t.loading]);
+  }, [open, query, count, loading, loadingLabel, lang, t.loading]);
 
   const openList = (highlight: 'selected' | 'first' | 'last' | 'none') => {
     if (inert) return;
@@ -325,11 +334,14 @@ export function ComboboxBase({
 
   const onInputKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
     onKeyDown?.(event);
-    if (event.defaultPrevented || event.nativeEvent.isComposing) return;
+    // keyCode 229: Safari confirms an IME composition with an Enter that says isComposing false.
+    if (event.defaultPrevented || event.nativeEvent.isComposing || event.keyCode === 229) return;
     const key = event.key;
     if (key === 'ArrowDown' || key === 'ArrowUp') {
       event.preventDefault();
-      if (!open) {
+      if (!popupOpen) {
+        // Alt+ArrowUp closes in APG; on a closed list it does nothing.
+        if (event.altKey && key === 'ArrowUp') return;
         if (event.altKey) openList('none');
         else openList(key === 'ArrowDown' ? (mode === 'select' ? 'selected' : 'first') : 'last');
         return;
@@ -361,13 +373,15 @@ export function ComboboxBase({
       return;
     }
     if (key === 'Escape') {
-      if (open) {
+      // What counts is what the person sees: an open state with nothing to show closes and clears at once.
+      if (popupOpen) {
         event.preventDefault();
         close();
         if (mode === 'select') restore();
         return;
       }
       // A second Escape clears the field.
+      if (open) close();
       if (text !== '' || (mode === 'select' && value !== null)) {
         event.preventDefault();
         if (inert) return;
@@ -383,22 +397,16 @@ export function ComboboxBase({
     setText(next);
     setTyped(true);
     if (!open) setOpenState(true);
-    if (mode === 'select') {
-      // The first match is highlighted after the list filters (effect above keeps it on a visible option).
-      const q = filterListBoxItems(items, next);
-      const flat = flattenListBoxItems(q);
-      const i = edgeEnabledIndex(flat.length, 'first', (k) => flat[k]?.disabled ?? false);
-      setHighlighted(i === -1 ? null : (flat[i]?.value ?? null));
-    } else {
-      setHighlighted(null);
-    }
+    // select mode: the first match is highlighted once the list has filtered (the effect below), so Enter picks it.
+    highlightFirst.current = mode === 'select';
+    setHighlighted(null);
   };
 
   const onInputBlur = (event: FocusEvent<HTMLInputElement>) => {
     onBlur?.(event);
     const next = event.relatedTarget as Node | null;
     // Focus that stays in the field (its buttons) or in the popup is not a blur of the combobox.
-    if (next && rootRef.current?.contains(next)) return;
+    if (next && (rootRef.current?.contains(next) || document.getElementById(popupId)?.contains(next))) return;
     if (open) close();
     if (mode === 'select') {
       if (typed && text.trim() === '') onSelect(null);
@@ -438,6 +446,8 @@ export function ComboboxBase({
       id={popupId}
       data-part="popup"
       data-size={size}
+      // A press anywhere in the popup (padding, a group label, the scrollbar) keeps focus in the input.
+      onMouseDown={(e) => e.preventDefault()}
       onOpenAutoFocus={(e) => e.preventDefault()}
       onCloseAutoFocus={(e) => e.preventDefault()}
       onInteractOutside={(e) => {

@@ -5,10 +5,10 @@
 // highlighted option. Behavior in ComboboxBase (shared with Autocomplete),
 // the popup on Radix Popover.
 //
-// Sources: Figma-Killer-2 `Select/SelectMenu.tsx` (the list under a field,
-// the chosen value shown in the field) and `ContextMenu/MenuSearchHeader.tsx`
-// (the query lives in the field, the list renders the matches). The field
-// follows Input, the popup the DropdownMenu surface.
+// The order names Figma-Killer-2 `Select/SelectMenu.tsx` and
+// `ContextMenu/MenuSearchHeader.tsx` as sources; they were not reachable in
+// the lane session and were not read. The field follows Input, the popup the
+// DropdownMenu surface, the keys the ARIA 1.2 combobox pattern.
 import { useMemo } from 'react';
 import { flattenListBoxItems, type ListBoxItem } from '../ListBox';
 import { useControllable } from '../Window/useControllable';
