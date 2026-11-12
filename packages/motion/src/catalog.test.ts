@@ -33,6 +33,9 @@ const inputs: Record<PatternId, MotionInput[]> = {
   'streaming-text': [{}],
   fade: [{}, { phase: 'exit' }],
   press: [{}, { phase: 'exit' }],
+  shake: [{}, { swings: 1 } as MotionInput, { swings: 3, dir: 'rtl' } as MotionInput, { swings: 1, toward: 'end' } as MotionInput, { swings: 2, toward: 'start', dir: 'rtl' } as MotionInput],
+  pop: [{}, { phase: 'exit' }, { index: 3 } as MotionInput, { index: 40 } as MotionInput],
+  swap: [{}, { phase: 'exit' }, { direction: 'down' } as MotionInput, { direction: 'down', phase: 'exit' } as MotionInput],
 };
 
 const entries = Object.entries(catalog) as [PatternId, MotionPattern<MotionInput>][];
@@ -50,9 +53,9 @@ function tokensOf(spec: MotionSpec): string[] {
 }
 
 describe('the catalog', () => {
-  it('holds the 18 ids of order 1.11 plus fade and press, each under its own id', () => {
+  it('holds the 18 ids of order 1.11, fade and press, and the three of order 1.21, each under its own id', () => {
     expect(Object.keys(catalog).sort()).toEqual([...PATTERN_IDS].sort());
-    expect(PATTERN_IDS).toHaveLength(20);
+    expect(PATTERN_IDS).toHaveLength(23);
     for (const [id, p] of entries) expect(p.id).toBe(id);
     expect(isPatternId('spinner')).toBe(true);
     expect(isPatternId('fade')).toBe(true);
@@ -213,5 +216,31 @@ describe('manifests name catalog patterns', () => {
   it('every motion value is a catalog id or none', () => {
     const unknown = manifests.filter((m) => typeof m.motion === 'string' && m.motion !== 'none' && !isPatternId(m.motion));
     expect(unknown.map((m) => `${m.name}: ${m.motion}`)).toEqual([]);
+  });
+});
+
+describe('the patterns of order 1.21', () => {
+  it('shake swings at most three times, flips in RTL and plays once', () => {
+    const frames = catalog.shake.keyframes({ swings: 3 });
+    expect(frames).toHaveLength(8);
+    expect(catalog.shake.keyframes({ swings: 9 as 3 })).toHaveLength(8);
+    expect(catalog.shake.spec().iterations ?? 1).toBe(1);
+    expect(String(catalog.shake.keyframes({ swings: 1, toward: 'end' })[1]?.transform)).toContain('calc(1 *');
+    expect(String(catalog.shake.keyframes({ swings: 1, toward: 'end', dir: 'rtl' })[1]?.transform)).toContain('calc(-1 *');
+    expect(catalog.shake.reduced()).toEqual([]);
+  });
+
+  it('pop waits at most six half steps in a run', () => {
+    expect(catalog.pop.spec({ index: 2 }).delaySteps).toBe(1);
+    expect(catalog.pop.spec({ index: 40 }).delaySteps).toBe(3);
+    expect(catalog.pop.spec().delay).toBeUndefined();
+  });
+
+  it('swap moves the old content out one way and the new in from the other', () => {
+    const outUp = String(catalog.swap.keyframes({ phase: 'exit' })[1]?.transform);
+    const inUp = String(catalog.swap.keyframes()[0]?.transform);
+    expect(outUp).toContain('calc(-1 *');
+    expect(inUp).not.toContain('calc(-1 *');
+    expect(catalog.swap.spec({ phase: 'exit' }).fill).toBe('forwards');
   });
 });

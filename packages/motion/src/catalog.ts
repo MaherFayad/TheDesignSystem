@@ -12,11 +12,14 @@ import { fadeRise } from './patterns/fade-rise';
 import { listStagger } from './patterns/list-stagger';
 import { menuScale } from './patterns/menu-scale';
 import { numberRoll } from './patterns/number-roll';
+import { pop } from './patterns/pop';
 import { press } from './patterns/press';
+import { shake } from './patterns/shake';
 import { sheet } from './patterns/sheet';
 import { skeletonShimmer } from './patterns/skeleton-shimmer';
 import { spinner } from './patterns/spinner';
 import { streamingText } from './patterns/streaming-text';
+import { swap } from './patterns/swap';
 import { tabIndicator } from './patterns/tab-indicator';
 import { thinking } from './patterns/thinking';
 import { toast } from './patterns/toast';
@@ -29,11 +32,16 @@ export type { DragDropInput } from './patterns/drag-drop';
 export type { ListStaggerInput } from './patterns/list-stagger';
 export type { MenuScaleInput } from './patterns/menu-scale';
 export type { NumberRollInput } from './patterns/number-roll';
+export type { PopInput } from './patterns/pop';
+export type { ShakeInput } from './patterns/shake';
+export type { SwapInput } from './patterns/swap';
 export type { SheetInput, SheetSide } from './patterns/sheet';
 export type { TabIndicatorInput } from './patterns/tab-indicator';
 export type { ThinkingInput } from './patterns/thinking';
 export type { ToastInput } from './patterns/toast';
 export { LIST_STAGGER_MAX_STEPS } from './patterns/list-stagger';
+export { POP_MAX_STEPS } from './patterns/pop';
+export { SHAKE_MAX_SWINGS } from './patterns/shake';
 export { sheetOffset } from './patterns/sheet';
 export { SHIMMER_ITERATIONS } from './patterns/skeleton-shimmer';
 export { THINKING_DOT_STEP } from './patterns/thinking';
@@ -60,6 +68,9 @@ export const catalog = {
   'streaming-text': streamingText,
   fade,
   press,
+  shake,
+  pop,
+  swap,
 } as const satisfies Record<PatternId, MotionPattern<never>>;
 
 export type Catalog = typeof catalog;
@@ -84,11 +95,14 @@ export {
   listStagger,
   menuScale,
   numberRoll,
+  pop as popMotion,
   press as pressMotion,
+  shake as shakeMotion,
   sheet as sheetMotion,
   skeletonShimmer,
   spinner as spinnerMotion,
   streamingText,
+  swap as swapMotion,
   tabIndicator,
   thinking as thinkingMotion,
   toast as toastMotion,
