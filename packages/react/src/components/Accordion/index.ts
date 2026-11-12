@@ -1,0 +1,15 @@
+export {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+  type AccordionContentProps,
+  type AccordionHeadingLevel,
+  type AccordionItemProps,
+  type AccordionMultipleProps,
+  type AccordionProps,
+  type AccordionSingleProps,
+  type AccordionSize,
+  type AccordionTriggerProps,
+  type AccordionVariant,
+} from './Accordion';

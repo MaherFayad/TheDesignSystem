@@ -1,0 +1,250 @@
+{
+  "name": "Accordion",
+  "kind": "component",
+  "family": "containers",
+  "summary": "Stacked sections that open and close. Each title is a heading holding the system Button that toggles its section. One or many open at a time.",
+  "useWhen": [
+    "A long page of settings or answers where people need one or two sections at a time, such as an FAQ or account settings",
+    "A side panel that groups many controls into named sections that can be folded away",
+    "Content that is useful but secondary, where a short title says enough to decide whether to open it"
+  ],
+  "avoidWhen": [
+    "Content that most people need: hiding it costs a click for everyone",
+    "Switching between views of the same thing, where only one shows at a time and the choice should stay visible",
+    "Steps that must be done in order",
+    "A single section that shows or hides one detail"
+  ],
+  "insteadUse": {
+    "Switching between views": "Tabs",
+    "Steps done in order": "Stepper",
+    "One detail to show or hide": "Collapsible",
+    "Content that everyone needs": "Card",
+    "Navigation between pages": "Sidebar"
+  },
+  "anatomy": [
+    "root",
+    "item",
+    "header",
+    "trigger",
+    "content"
+  ],
+  "parts": {
+    "AccordionItem": "item",
+    "AccordionTrigger": "trigger",
+    "AccordionContent": "content"
+  },
+  "slots": {
+    "trigger": {
+      "accepts": "text",
+      "min": 1,
+      "max": 1
+    },
+    "content": {
+      "accepts": "any"
+    }
+  },
+  "props": {
+    "type": {
+      "type": [
+        "single",
+        "multiple"
+      ],
+      "default": "single",
+      "description": "single: one section open at a time. multiple: any number open."
+    },
+    "collapsible": {
+      "type": "boolean",
+      "default": true,
+      "description": "With type single: the open section can be closed again, so all can be closed."
+    },
+    "value": {
+      "type": "string",
+      "description": "The open section, controlled: a string with type single (empty closes all), a list of strings with type multiple. Pair with onValueChange."
+    },
+    "defaultValue": {
+      "type": "string",
+      "description": "The section open at first: a string with type single, a list of strings with type multiple."
+    },
+    "onValueChange": {
+      "type": "function",
+      "description": "Called with the new value when a section opens or closes."
+    },
+    "size": {
+      "type": [
+        "sm",
+        "md"
+      ],
+      "default": "md",
+      "description": "Trigger height and text size: sm is size.control.md (32px) with text s, md is size.control.lg (44px) with text m."
+    },
+    "variant": {
+      "type": [
+        "plain",
+        "divided",
+        "card"
+      ],
+      "default": "divided",
+      "description": "data-variant. plain: no lines. divided: a border.default line under each section. card: each section on surface 2 with radius.panel and a gap."
+    },
+    "headingLevel": {
+      "type": "number",
+      "default": 3,
+      "description": "The heading level, 2 to 6, that holds each trigger, so the sections fit the page outline."
+    },
+    "disabled": {
+      "type": "boolean",
+      "default": false,
+      "description": "On the root or an AccordionItem: the section cannot open or close. Its trigger keeps focus with aria-disabled and dims with opacity.disabled."
+    },
+    "children": {
+      "type": "node",
+      "description": "AccordionItem elements, each with one AccordionTrigger and one AccordionContent."
+    }
+  },
+  "states": [
+    "open",
+    "closed",
+    "data-disabled",
+    "data-orientation"
+  ],
+  "a11y": {
+    "role": "Each trigger is a native button with aria-expanded and aria-controls, inside a heading (level from headingLevel). Each open content is a region named by its trigger.",
+    "focus": "Every trigger is in the tab order, disabled ones included (aria-disabled). The content's own controls follow their trigger. The trigger takes the Button's 2px focus ring.",
+    "keys": {
+      "Tab": "Moves to the next trigger, or into the open content",
+      "Enter": "Opens or closes the focused section",
+      "Space": "Opens or closes the focused section",
+      "ArrowDown": "Moves focus to the next trigger, from the last to the first",
+      "ArrowUp": "Moves focus to the previous trigger, from the first to the last",
+      "Home": "Moves focus to the first trigger",
+      "End": "Moves focus to the last trigger"
+    },
+    "announce": "The trigger is announced as a button with its title and expanded or collapsed. The heading level lets screen reader users jump between sections.",
+    "native": {
+      "accessibilityRole": "button",
+      "accessibilityState": [
+        "expanded",
+        "disabled"
+      ]
+    },
+    "notes": [
+      "The order proposed an icon part. The trigger is the system Button, and a part inside it belongs to the Button, so the chevron is the Button's end content (data-part end), not an accordion part.",
+      "The chevron is the trigger Button's end content and is hidden from assistive tech; aria-expanded carries the state, the turn of the chevron shows it.",
+      "Arrow keys move up and down in both directions of text, as the sections stack.",
+      "Closed content is not in the page, so a search in the page does not find it.",
+      "Forced colors: the dividers and card edges become CanvasText lines; the trigger uses the Button's forced colors focus.",
+      "data-orientation is stamped by Radix on the root, items, headers and triggers, and is always vertical."
+    ]
+  },
+  "content": {
+    "en": {
+      "trigger": "A noun that names the section, sentence case: Billing, Notifications. No question marks unless it is an FAQ.",
+      "content": "Plain sentences. Say what the person can do here."
+    },
+    "ar": {
+      "trigger": "Noun form, no diacritics: الفوترة، التنبيهات.",
+      "content": "White Saudi dialect, Western digits."
+    }
+  },
+  "tokens": [
+    "size.control.md",
+    "size.control.lg",
+    "space.xs",
+    "space.s",
+    "space.m",
+    "space.l",
+    "font.family.sans",
+    "font.size.s",
+    "font.size.m",
+    "font.leading.normal",
+    "radius.panel",
+    "border.width.default",
+    "color.border.default",
+    "color.bg.surface-2",
+    "color.bg.overlay-5",
+    "color.bg.overlay-10",
+    "color.text.default",
+    "color.text.bright",
+    "color.text.muted",
+    "duration.base",
+    "duration.medium",
+    "ease.default",
+    "ease.out"
+  ],
+  "motion": "accordion-height",
+  "frameworks": {
+    "react": {
+      "status": "ready",
+      "behavior": "radix:Accordion, the trigger on the system Button through asChild",
+      "example": "Accordion.demo.tsx",
+      "note": "accordion-height: the content fades in and slides down space.xs as it opens (transform and opacity, duration.medium, ease.out), the chevron turns (transform). Closing is at once. Under reduced motion both are off."
+    },
+    "angular": {
+      "status": "planned",
+      "note": "CDK accordion (cdkAccordion, cdkAccordionItem) with button[dsButton] as the trigger. Accordion.css as is."
+    },
+    "native": {
+      "status": "planned",
+      "note": "rn-primitives accordion; the trigger is the native Button."
+    }
+  },
+  "styles": {
+    "studio": "Ghost triggers on the page, a border.default line between sections in divided, surface 2 cards in card. The trigger hover is the 5% overlay.",
+    "desk": "The same, on Desk's surfaces and type. No recipe.",
+    "neutral": "Planned: no recipe expected.",
+    "liquid": "Planned: card sections stay solid content."
+  },
+  "mistakes": [
+    {
+      "wrong": "Putting a button or a link inside the trigger",
+      "right": "Keep the trigger to its title; put actions in the content"
+    },
+    {
+      "wrong": "Tabs drawn as an accordion to switch views",
+      "right": "Tabs"
+    },
+    {
+      "wrong": "Every heading at level 3 inside a section that is already level 3",
+      "right": "Set headingLevel one below the heading that holds the accordion"
+    },
+    {
+      "wrong": "Hiding the one setting most people need inside a closed section",
+      "right": "Leave it open with defaultValue, or outside the accordion"
+    }
+  ],
+  "contract": {
+    "keys": {
+      "Enter": {
+        "focus": "[data-part='trigger']",
+        "case": "one",
+        "expect": "state-changes"
+      },
+      "Space": {
+        "focus": "[data-part='trigger']",
+        "case": "one",
+        "expect": "state-changes"
+      },
+      "ArrowDown": {
+        "focus": "[data-part='trigger']",
+        "case": "many",
+        "expect": "focus-moves"
+      },
+      "ArrowUp": {
+        "focus": "[data-part='trigger']",
+        "case": "many",
+        "expect": "focus-moves"
+      },
+      "Home": {
+        "focus": "[data-part='item']:nth-child(2) [data-part='trigger']",
+        "case": "many",
+        "expect": "focus-moves"
+      },
+      "End": {
+        "focus": "[data-part='trigger']",
+        "case": "many",
+        "expect": "focus-moves"
+      }
+    }
+  },
+  "since": "0.1.0"
+}

@@ -8,6 +8,7 @@ export interface DemoRoute {
 }
 
 export const routes: DemoRoute[] = [
+  { name: 'Accordion', slug: 'accordion', load: () => import('../../../packages/react/src/components/Accordion/Accordion.demo') },
   { name: 'Button', slug: 'button', load: () => import('../../../packages/react/src/components/Button/Button.demo') },
   { name: 'Card', slug: 'card', load: () => import('../../../packages/react/src/components/Card/Card.demo') },
   { name: 'Dialog', slug: 'dialog', load: () => import('../../../packages/react/src/components/Dialog/Dialog.demo') },
