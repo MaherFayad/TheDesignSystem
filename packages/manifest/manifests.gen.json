@@ -13,14 +13,16 @@
       "Every tile is the same size",
       "Rows of records the user compares or sorts",
       "The user rearranges or resizes the tiles",
-      "A long feed that loads more as it scrolls"
+      "A long feed that loads more as it scrolls",
+      "Inside a narrow pane on a wide screen: the columns follow the viewport, not the pane"
     ],
     "insteadUse": {
       "Tiles of one size": "Grid",
       "Records to compare or sort": "Table",
       "Tiles the user drags or resizes": "ResizablePanels",
       "A feed": "Stack",
-      "One box with a fill": "Surface"
+      "One box with a fill": "Surface",
+      "A narrow pane": "Stack"
     },
     "anatomy": [
       "root",
@@ -86,13 +88,14 @@
       "keys": {},
       "announce": "The tiles are read in source order. No dense packing, so a tile never moves ahead of one that comes before it in the source.",
       "native": {
-        "accessibilityRole": "list",
+        "accessibilityRole": "none, or list when the tiles are a list (root ul, items li)",
         "accessibilityState": []
       },
       "notes": [
         "Reading order equals visual order: the grid flows by rows with no dense packing. A wide tile that does not fit leaves a hole rather than pulling a later tile forward.",
         "One column under breakpoint.phone, so there is no sideways scroll at 320px.",
-        "In forced colors mode each tile draws an outline, since the fills are gone."
+        "In forced colors mode each tile draws an outline, since the fills are gone.",
+        "Under breakpoint.phone every tile is one cell: column and row spans reset."
       ]
     },
     "content": {
@@ -152,6 +155,18 @@
       {
         "wrong": "Every tile 2x2",
         "right": "A Grid of equal tiles; Bento is for mixed sizes"
+      },
+      {
+        "wrong": "A ul root with div items",
+        "right": "as=\"li\" on every BentoItem when the root is a ul"
+      },
+      {
+        "wrong": "Spans that leave a row part empty, so holes open in the grid",
+        "right": "Spans that fill each row; in Studio a hole shows the body next to square tile corners"
+      },
+      {
+        "wrong": "A focusable tile whose focus ring sits outside it",
+        "right": "An inset ring, since Studio clips the grid to its radius"
       }
     ],
     "since": "0.1.0"

@@ -3,7 +3,10 @@
  * separation dial of Studio (PLAN.md 3.7, "1px gap between tiles"). Source:
  * the Figma-Killer-2 dashboard grid. The gap, the parent fill and the square
  * inner corners are a layout difference no token can say. The whole grid
- * keeps the card radius and clips the tiles to it.
+ * keeps the card radius and clips the tiles to it. Rows should fill: a hole
+ * left by a wide tile shows the body, next to tiles with square corners.
+ * The clip also cuts a focus ring on the grid's outer edge, so a focusable
+ * tile draws its ring inside itself.
  */
 @layer ds.recipes {
   [data-style='studio'] [data-ds='bento'] {

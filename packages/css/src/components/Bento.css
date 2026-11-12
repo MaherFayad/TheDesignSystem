@@ -68,19 +68,24 @@
     grid-row: span 2;
   }
 
+  /* Both selectors: a root without data-columns too, and later than the data-columns rules so it wins over them. */
   @media (width < 48rem) /* breakpoint.tablet */ {
+    [data-ds='bento'],
     [data-ds='bento'][data-columns] {
       --_bento-columns: 2;
     }
   }
 
   @media (width < 30rem) /* breakpoint.phone */ {
+    [data-ds='bento'],
     [data-ds='bento'][data-columns] {
       --_bento-columns: 1;
     }
 
-    [data-ds='bento'] > [data-part='item']:is([data-span='2x1'], [data-span='2x2']) {
+    /* One column: every tile is one cell, so a large tile is not a tall empty box. */
+    [data-ds='bento'] > [data-part='item']:is([data-span='2x1'], [data-span='1x2'], [data-span='2x2']) {
       grid-column: auto;
+      grid-row: auto;
     }
   }
 
@@ -88,6 +93,8 @@
   @media (forced-colors: active) {
     [data-ds='bento'] > [data-part='item'] {
       outline: var(--ds-border-width-default) solid CanvasText;
+      /* Inside the tile, so the Studio clip on the grid does not cut the outer edge. */
+      outline-offset: calc(-1 * var(--ds-border-width-default));
     }
   }
 }

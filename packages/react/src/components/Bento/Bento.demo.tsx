@@ -16,6 +16,9 @@ function Tile({ span, name, figure, children }: { span?: BentoSpan; name: string
   );
 }
 
+/** Wide tiles in the too-many case, placed so every row of 4 fills. */
+const wide = new Set([0, 5, 10, 11]);
+
 export default function BentoDemo() {
   return (
     <DemoPage>
@@ -24,11 +27,13 @@ export default function BentoDemo() {
           <Tile span="2x2" name="Visitors this week" figure="12,480">
             <p style={{ margin: 0 }}>Up 8 percent on last week.</p>
           </Tile>
-          <Tile span="2x1" name="Sign ups" figure="342" />
           <Tile span="1x2" name="Open tickets" figure="17">
             <Button size="sm">Open queue</Button>
           </Tile>
           <Tile name="Uptime" figure="99.9%" />
+          <Tile name="Errors" figure="4" />
+          <Tile span="2x1" name="Sign ups" figure="342" />
+          <Tile span="2x1" name="Latency" figure="120 ms" />
         </Bento>
         <Bento as="ul" columns={3}>
           <Tile span="2x1" name="Revenue" figure="$48,200" />
@@ -44,13 +49,13 @@ export default function BentoDemo() {
         </div>
       </DemoCase>
 
-      <DemoCase id="one" title="One tile">
-        <Bento as="ul">
+      <DemoCase id="one" title="One wide tile in 2 columns">
+        <Bento as="ul" columns={2}>
           <Tile span="2x1" name="Sign ups" figure="342" />
         </Bento>
       </DemoCase>
 
-      <DemoCase id="many" title="Many tiles in source order">
+      <DemoCase id="many" title="Many tiles in source order, every row filled">
         <Bento as="ul">
           <Tile span="2x2" name="Visitors" figure="12,480" />
           <Tile name="Sign ups" figure="342" />
@@ -59,14 +64,16 @@ export default function BentoDemo() {
           <Tile span="1x2" name="Open tickets" figure="17" />
           <Tile name="Refunds" figure="6" />
           <Tile name="Plans" figure="3" />
+          <Tile name="Errors" figure="4" />
           <Tile span="2x1" name="Churn" figure="1.2%" />
+          <Tile name="Latency" figure="120 ms" />
         </Bento>
       </DemoCase>
 
       <DemoCase id="too-many" title="Too many: the grid grows down, never sideways">
         <Bento as="ul">
           {sample.en.items.map((item, i) => (
-            <Tile key={item} span={i % 5 === 0 ? '2x1' : '1x1'} name={item} figure={String((i + 1) * 12)} />
+            <Tile key={item} span={wide.has(i) ? '2x1' : '1x1'} name={item} figure={String((i + 1) * 12)} />
           ))}
         </Bento>
       </DemoCase>
