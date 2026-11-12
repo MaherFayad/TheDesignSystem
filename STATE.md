@@ -47,7 +47,7 @@ No adb. No iOS build.
 | 1.0.c3 | Shared logic in native | ds-native | native | done | e360d28 |
 | 1.0.d | Package fixes from the consumers report | ds-docs | all | done | a85837c |
 | 1.0.e | Contract `moves` expectation, Window key hints | ds-qa | all | done | d892d01 |
-| 1.0.f | Manifest gaps and visual findings | ds-component | react | running | |
+| 1.0.f | Manifest gaps and visual findings | ds-component | react | done | e179b2b |
 | 1.0.g | Icons for wave 1 | ds-style | all | done | 24b8a20 |
 | 1.1 | Batch 1 actions (11) | ds-component | react | open | |
 | 1.2 | Batch 2 text inputs (12) | ds-component | react | open | |
