@@ -1,0 +1,197 @@
+/*
+ * Surface: a background box on one surface step. Sources: the surface steps
+ * of GoBanana studio-tokens.css (through docs/contracts/token-mapping.md)
+ * and the Figma-Killer-2 Widget tile (surface-2, no border, the card radius).
+ *
+ * Private properties on the root (recipes override these):
+ *   --_surface-bg            the fill, from the level
+ *   --_surface-fg            the text color
+ *   --_surface-border-color  transparent unless bordered
+ *   --_surface-radius        from the radius attribute
+ *   --_surface-padding       from the padding attribute
+ *   --_surface-shadow        from the elevation attribute
+ *
+ * The border is always 1px wide and transparent at rest, so a bordered and a
+ * plain surface have the same box. In forced colors mode the system draws
+ * that transparent border, so every surface keeps an edge when its fill and
+ * its shadow are gone.
+ *
+ * No motion: a surface does not change.
+ */
+@layer ds.base {
+  [data-ds='surface'] {
+    --_surface-bg: var(--ds-color-bg-surface);
+    --_surface-fg: var(--ds-color-text-default);
+    --_surface-border-color: transparent;
+    --_surface-radius: var(--ds-radius-card);
+    --_surface-padding: var(--ds-space-xl);
+    --_surface-shadow: none;
+
+    display: block;
+    box-sizing: border-box;
+    min-inline-size: 0;
+    margin: 0;
+    padding: var(--_surface-padding);
+    border: var(--ds-border-width-default) solid var(--_surface-border-color);
+    border-radius: var(--_surface-radius);
+    background-color: var(--_surface-bg);
+    box-shadow: var(--_surface-shadow);
+    color: var(--_surface-fg);
+  }
+
+  /* ------------------------------------------------------------ level */
+
+  [data-ds='surface'][data-level='body'] {
+    --_surface-bg: var(--ds-color-bg-body);
+  }
+
+  [data-ds='surface'][data-level='1'] {
+    --_surface-bg: var(--ds-color-bg-surface);
+  }
+
+  [data-ds='surface'][data-level='2'] {
+    --_surface-bg: var(--ds-color-bg-surface-2);
+  }
+
+  [data-ds='surface'][data-level='3'] {
+    --_surface-bg: var(--ds-color-bg-surface-3);
+  }
+
+  [data-ds='surface'][data-level='4'] {
+    --_surface-bg: var(--ds-color-bg-surface-4);
+  }
+
+  [data-ds='surface'][data-level='5'] {
+    --_surface-bg: var(--ds-color-bg-surface-5);
+  }
+
+  /* ------------------------------------------------------------ border and elevation */
+
+  [data-ds='surface'][data-bordered] {
+    --_surface-border-color: var(--ds-color-border-default);
+  }
+
+  [data-ds='surface'][data-elevation='card'] {
+    --_surface-shadow: var(--ds-elevation-card);
+  }
+
+  [data-ds='surface'][data-elevation='panel'] {
+    --_surface-shadow: var(--ds-elevation-panel);
+  }
+
+  /* ------------------------------------------------------------ radius */
+
+  [data-ds='surface'][data-radius='none'] {
+    --_surface-radius: 0;
+  }
+
+  [data-ds='surface'][data-radius='xs'] {
+    --_surface-radius: var(--ds-radius-xs);
+  }
+
+  [data-ds='surface'][data-radius='sm'] {
+    --_surface-radius: var(--ds-radius-sm);
+  }
+
+  [data-ds='surface'][data-radius='field'] {
+    --_surface-radius: var(--ds-radius-field);
+  }
+
+  [data-ds='surface'][data-radius='control'] {
+    --_surface-radius: var(--ds-radius-control);
+  }
+
+  [data-ds='surface'][data-radius='panel'] {
+    --_surface-radius: var(--ds-radius-panel);
+  }
+
+  [data-ds='surface'][data-radius='card'] {
+    --_surface-radius: var(--ds-radius-card);
+  }
+
+  [data-ds='surface'][data-radius='window'] {
+    --_surface-radius: var(--ds-radius-window);
+  }
+
+  [data-ds='surface'][data-radius='sheet'] {
+    --_surface-radius: var(--ds-radius-sheet);
+  }
+
+  [data-ds='surface'][data-radius='pill'] {
+    --_surface-radius: var(--ds-radius-pill);
+  }
+
+  /* ------------------------------------------------------------ padding */
+
+  [data-ds='surface'][data-padding='none'] {
+    --_surface-padding: 0;
+  }
+
+  [data-ds='surface'][data-padding='2xs'] {
+    --_surface-padding: var(--ds-space-2xs);
+  }
+
+  [data-ds='surface'][data-padding='xs'] {
+    --_surface-padding: var(--ds-space-xs);
+  }
+
+  [data-ds='surface'][data-padding='s'] {
+    --_surface-padding: var(--ds-space-s);
+  }
+
+  [data-ds='surface'][data-padding='m'] {
+    --_surface-padding: var(--ds-space-m);
+  }
+
+  [data-ds='surface'][data-padding='l'] {
+    --_surface-padding: var(--ds-space-l);
+  }
+
+  [data-ds='surface'][data-padding='xl'] {
+    --_surface-padding: var(--ds-space-xl);
+  }
+
+  [data-ds='surface'][data-padding='2xl'] {
+    --_surface-padding: var(--ds-space-2xl);
+  }
+
+  [data-ds='surface'][data-padding='3xl'] {
+    --_surface-padding: var(--ds-space-3xl);
+  }
+
+  [data-ds='surface'][data-padding='4xl'] {
+    --_surface-padding: var(--ds-space-4xl);
+  }
+
+  [data-ds='surface'][data-padding='5xl'] {
+    --_surface-padding: var(--ds-space-5xl);
+  }
+
+  [data-ds='surface'][data-padding='6xl'] {
+    --_surface-padding: var(--ds-space-6xl);
+  }
+
+  [data-ds='surface'][data-padding='7xl'] {
+    --_surface-padding: var(--ds-space-7xl);
+  }
+
+  [data-ds='surface'][data-padding='8xl'] {
+    --_surface-padding: var(--ds-space-8xl);
+  }
+
+  [data-ds='surface'][data-padding='9xl'] {
+    --_surface-padding: var(--ds-space-9xl);
+  }
+
+  [data-ds='surface'][data-padding='10xl'] {
+    --_surface-padding: var(--ds-space-10xl);
+  }
+
+  [data-ds='surface'][data-padding='11xl'] {
+    --_surface-padding: var(--ds-space-11xl);
+  }
+
+  [data-ds='surface'][data-padding='12xl'] {
+    --_surface-padding: var(--ds-space-12xl);
+  }
+}

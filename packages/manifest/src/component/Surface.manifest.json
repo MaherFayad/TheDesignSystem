@@ -1,0 +1,219 @@
+{
+  "name": "Surface",
+  "kind": "component",
+  "family": "layout",
+  "summary": "A plain background box on one surface step (body, surface 1 to 5), with an optional border, elevation, radius and padding.",
+  "useWhen": [
+    "A region needs its own background step to separate it from the page, such as a sidebar fill or a summary box",
+    "Building a larger component (a tile, a panel body) that should take its fill from the surface tokens",
+    "Nesting boxes so each one sits one surface step above its parent"
+  ],
+  "avoidWhen": [
+    "The whole box is clickable or selectable",
+    "The box has a title, media and actions in a fixed layout",
+    "Only space is needed, with no fill or edge",
+    "A floating layer above the page, such as a menu or a popover"
+  ],
+  "insteadUse": {
+    "A clickable or selectable box": "Card",
+    "A box with a title, media and actions": "Card",
+    "Space and alignment only": "Stack",
+    "A titled region of a page or panel": "Section",
+    "A floating layer": "Popover",
+    "Tiles of mixed sizes": "Bento"
+  },
+  "anatomy": [
+    "root"
+  ],
+  "slots": {
+    "root": {
+      "accepts": "any"
+    }
+  },
+  "props": {
+    "level": {
+      "type": [
+        "body",
+        "1",
+        "2",
+        "3",
+        "4",
+        "5"
+      ],
+      "default": "1",
+      "description": "The surface step: body is color.bg.body, 1 is color.bg.surface, 2 to 5 are color.bg.surface-2 to -5. React takes the numbers 1 to 5. Stamped as data-level."
+    },
+    "bordered": {
+      "type": "boolean",
+      "default": false,
+      "description": "A 1px border in color.border.default. Stamped as data-bordered."
+    },
+    "elevation": {
+      "type": [
+        "none",
+        "card",
+        "panel"
+      ],
+      "default": "none",
+      "description": "Shadow from elevation.card or elevation.panel. Stamped as data-elevation."
+    },
+    "radius": {
+      "type": [
+        "none",
+        "xs",
+        "sm",
+        "field",
+        "control",
+        "panel",
+        "card",
+        "window",
+        "sheet",
+        "pill"
+      ],
+      "default": "card",
+      "description": "A radius token name. Stamped as data-radius."
+    },
+    "padding": {
+      "type": [
+        "none",
+        "2xs",
+        "xs",
+        "s",
+        "m",
+        "l",
+        "xl",
+        "2xl",
+        "3xl",
+        "4xl",
+        "5xl",
+        "6xl",
+        "7xl",
+        "8xl",
+        "9xl",
+        "10xl",
+        "11xl",
+        "12xl"
+      ],
+      "default": "xl",
+      "description": "Inner space on every side, a space token step. Stamped as data-padding."
+    },
+    "as": {
+      "type": [
+        "div",
+        "section",
+        "article",
+        "aside",
+        "header",
+        "footer",
+        "figure",
+        "li"
+      ],
+      "default": "div",
+      "description": "The element. Pick the one that says what the box is."
+    }
+  },
+  "states": [],
+  "a11y": {
+    "role": "none: the element given by as (a div by default). A section or aside with an accessible name becomes a landmark.",
+    "focus": "Not focusable. Controls inside keep their own order.",
+    "keys": {},
+    "announce": "Nothing of its own. The content is read in document order.",
+    "native": {
+      "accessibilityRole": "none",
+      "accessibilityState": []
+    },
+    "notes": [
+      "Text inside reads color.text.default, which the contrast gate checks against every surface step.",
+      "The border is always 1px and transparent at rest, so in forced colors mode the system draws it and the box keeps an edge without its fill or shadow."
+    ]
+  },
+  "content": {
+    "en": {
+      "body": "Any content. The surface adds no copy of its own."
+    },
+    "ar": {
+      "body": "Any content. The surface mirrors with the page through logical properties."
+    }
+  },
+  "tokens": [
+    "color.bg.body",
+    "color.bg.surface",
+    "color.bg.surface-2",
+    "color.bg.surface-3",
+    "color.bg.surface-4",
+    "color.bg.surface-5",
+    "color.text.default",
+    "color.border.default",
+    "border.width.default",
+    "elevation.card",
+    "elevation.panel",
+    "radius.xs",
+    "radius.sm",
+    "radius.field",
+    "radius.control",
+    "radius.panel",
+    "radius.card",
+    "radius.window",
+    "radius.sheet",
+    "radius.pill",
+    "space.2xs",
+    "space.xs",
+    "space.s",
+    "space.m",
+    "space.l",
+    "space.xl",
+    "space.2xl",
+    "space.3xl",
+    "space.4xl",
+    "space.5xl",
+    "space.6xl",
+    "space.7xl",
+    "space.8xl",
+    "space.9xl",
+    "space.10xl",
+    "space.11xl",
+    "space.12xl"
+  ],
+  "frameworks": {
+    "react": {
+      "status": "ready",
+      "behavior": "plain markup",
+      "example": "Surface.demo.tsx"
+    },
+    "angular": {
+      "status": "planned",
+      "behavior": "[dsSurface] attribute directive on any element",
+      "note": "Stamps the same data attributes; Surface.css is used as is."
+    },
+    "native": {
+      "status": "planned",
+      "behavior": "View with the surface, border, radius and shadow from the theme object",
+      "note": "Elevation maps to the platform shadow or Android elevation."
+    }
+  },
+  "styles": {
+    "studio": "Flat: six achromatic steps from black, no shadow. Separate boxes by the step, not by elevation.",
+    "desk": "The same steps on the black desk. Elevation reads the deep Desk shadows.",
+    "neutral": "White and soft gray steps, light first. Small soft shadows for elevation.",
+    "liquid": "Content surfaces stay solid. A Surface is never glass: glass is for the control and navigation layer only."
+  },
+  "mistakes": [
+    {
+      "wrong": "A Surface with an onClick handler as a clickable tile",
+      "right": "A Card, which has the button or link semantics, focus ring and hover"
+    },
+    {
+      "wrong": "A raw background color in a style prop to get a lighter box",
+      "right": "The level prop, one step above the parent"
+    },
+    {
+      "wrong": "Elevation on every box in Studio to separate them",
+      "right": "Studio is flat: a surface step, or the 1px gap of a Bento"
+    },
+    {
+      "wrong": "Making a Surface translucent in Liquid",
+      "right": "Content stays solid; glass belongs to bars, sheets and menus"
+    }
+  ],
+  "since": "0.1.0"
+}
