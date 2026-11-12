@@ -14,15 +14,19 @@
 //           <span data-part="label">Title</span>
 //           <span data-part="end"><svg data-ds="icon" data-icon="chevron-down"/></span>
 //       <div data-part="content" role="region" data-state>                      Radix Content
+//         <div>children</div>                                                    unnamed, the part that slides
 //
 // The trigger is the system Button (no bare button), so its chevron sits in
 // the Button's own `end` part. The order proposed an `icon` part of the
 // accordion; a part inside the Button would belong to the Button by the
 // ownership rule in anatomy.md, so the chevron is the Button's end content.
 //
-// Motion (accordion-height): the content fades in and slides down a step as
-// it opens, transform and opacity only, never height. Closing is at once, so
-// Radix unmounts the content without waiting for any animation event.
+// Motion, interaction accordion-reveal (pattern accordion-height): the
+// content takes its open height at once and clips; its children sit in one
+// unnamed div that slides down from above the clip and fades in, transform
+// and opacity only, never height, so the text never scales (Accordion.css).
+// Closing is at once, so Radix unmounts the content without waiting for any
+// animation event.
 import { createContext, use, type ComponentProps, type ReactNode, type Ref } from 'react';
 import { Accordion as RadixAccordion } from 'radix-ui';
 import { Icon } from '@the-system/icons/react';
@@ -131,7 +135,11 @@ export function AccordionTrigger({ children, ref, ...rest }: AccordionTriggerPro
 
 export type AccordionContentProps = Omit<ComponentProps<typeof RadixAccordion.Content>, 'asChild'>;
 
-/** The section body. Mounted only while open. */
-export function AccordionContent(props: AccordionContentProps) {
-  return <RadixAccordion.Content {...props} data-part="content" />;
+/** The section body. Mounted only while open. Its children sit in one unnamed div, the layer that slides in. */
+export function AccordionContent({ children, ...rest }: AccordionContentProps) {
+  return (
+    <RadixAccordion.Content {...rest} data-part="content">
+      <div>{children}</div>
+    </RadixAccordion.Content>
+  );
 }

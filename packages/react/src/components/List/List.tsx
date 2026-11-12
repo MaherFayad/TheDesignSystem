@@ -1,3 +1,4 @@
+'use client';
 // List: a vertical list of rows with optional start, end, description and
 // actions. Not a selection list (that is ListBox) and not tabular data
 // (that is Table).
@@ -12,9 +13,22 @@
 // focus layer), so the row is one Tab stop. Actions sit above that hit area
 // and are their own Tab stops. No bare buttons: actions are system Buttons
 // or IconButtons the caller passes.
+//
+// Motion, interaction list-stagger (pattern list-stagger): on the first
+// paint of its rows, each row fades and rises in one delay.reveal-step after
+// the one before, capped at LIST_STAGGER_MAX_STEPS, through useMotion().play
+// so the style's preset sets it or turns it off. Only opacity and transform
+// move: every row is in the DOM and read by assistive tech at once. It never
+// plays again on a re-render, an added row or a reorder, and not when the
+// rows come from server HTML that is already on screen (hydration). Under
+// reduced motion the pattern plays a fade with no delay.
 import {
   Children,
   isValidElement,
+  useCallback,
+  useLayoutEffect,
+  useRef,
+  useSyncExternalStore,
   type AnchorHTMLAttributes,
   type HTMLAttributes,
   type ReactElement,
@@ -23,6 +37,7 @@ import {
 } from 'react';
 import { Icon, type IconName } from '@the-system/icons/react';
 import type { Size } from '@the-system/shared';
+import { useMotion } from '../../internal/motion';
 
 export type ListSize = Extract<Size, 'sm' | 'md'>;
 export type ListVariant = 'plain' | 'divided' | 'inset';
@@ -52,12 +67,50 @@ function slot(content: ListSlotContent): ReactNode {
   return typeof content === 'string' ? <Icon name={content} size="md" /> : content;
 }
 
+const noSubscribe = () => () => {};
+
+/**
+ * Plays list-stagger once, the first time the list has rows on screen, and
+ * returns the ref for the list element. Rows hydrated from server HTML
+ * skip it: they are already painted.
+ */
+function useFirstPaintStagger(hasRows: boolean, ref: Ref<HTMLElement> | undefined) {
+  const motion = useMotion();
+  // True only while React hydrates server HTML: the first render reads the server snapshot.
+  const hydrating = useSyncExternalStore(noSubscribe, () => false, () => true);
+  // Rows in server HTML are painted already; rows that arrive later on the client are a first paint.
+  const fresh = useRef(!hydrating || !hasRows);
+  const played = useRef(false);
+  const node = useRef<HTMLElement | null>(null);
+  useLayoutEffect(() => {
+    if (played.current || !hasRows) return;
+    played.current = true;
+    const el = node.current;
+    if (!fresh.current || !el) return;
+    let index = 0;
+    for (const item of Array.from(el.children)) {
+      if (item.getAttribute('data-part') !== 'item') continue;
+      motion.play(item, 'list-stagger', 'list-stagger', { index });
+      index += 1;
+    }
+  }, [hasRows, motion]);
+  return useCallback(
+    (el: HTMLElement | null) => {
+      node.current = el;
+      if (typeof ref === 'function') ref(el);
+      else if (ref) (ref as { current: HTMLElement | null }).current = el;
+    },
+    [ref],
+  );
+}
+
 /**
  * A list of rows. With no rows it renders the `empty` message in a div with
  * the same `data-ds`, so an empty list is not announced as a list of one.
  */
-export function List({ size = 'md', variant = 'plain', ordered = false, empty, children, ...rest }: ListProps) {
+export function List({ size = 'md', variant = 'plain', ordered = false, empty, children, ref, ...rest }: ListProps) {
   const rows = Children.toArray(children).filter(isValidElement);
+  const setRef = useFirstPaintStagger(rows.length > 0, ref);
   const common = { 'data-ds': 'list', 'data-size': size, 'data-variant': variant } as const;
   // list-style: none makes Safari and VoiceOver drop the list role, so it is set again.
   const listRole = { role: 'list' } as const;
@@ -68,18 +121,18 @@ export function List({ size = 'md', variant = 'plain', ordered = false, empty, c
         // A name on a plain div is not allowed: a labelled empty list is a group.
         role={rest['aria-label'] || rest['aria-labelledby'] ? 'group' : rest.role}
         {...common}
-        ref={rest.ref as Ref<HTMLDivElement>}
+        ref={setRef}
       >
         {empty !== undefined && <p data-part="empty">{empty}</p>}
       </div>
     );
   }
   return ordered ? (
-    <ol {...listRole} {...(rest as HTMLAttributes<HTMLOListElement>)} {...common} ref={rest.ref as Ref<HTMLOListElement>}>
+    <ol {...listRole} {...(rest as HTMLAttributes<HTMLOListElement>)} {...common} ref={setRef}>
       {rows}
     </ol>
   ) : (
-    <ul {...listRole} {...(rest as HTMLAttributes<HTMLUListElement>)} {...common} ref={rest.ref as Ref<HTMLUListElement>}>
+    <ul {...listRole} {...(rest as HTMLAttributes<HTMLUListElement>)} {...common} ref={setRef}>
       {rows}
     </ul>
   );

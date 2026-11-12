@@ -1,7 +1,17 @@
 'use client';
-import { Fragment, useId, useState, type ComponentProps, type CSSProperties, type ReactNode, type Ref } from 'react';
+// Motion. slider-pull (pattern press, Slider.css): the thumb lifts a little
+// while it is grabbed and settles on release, a CSS transition on the
+// thumb's transform. slider-nudge (pattern shake, one swing toward the end):
+// when a key or a drag pushes a thumb past the minimum or the maximum, the
+// thumb nudges toward that end and back once, played through
+// useMotion().play and added on top of the lift (composite add). Neither
+// waits on anything: the value changes, and the drag follows the pointer,
+// at once. A held key nudges once, not on every repeat. A vertical slider
+// does not nudge: the shake pattern moves on the inline axis only.
+import { Fragment, useId, useRef, useState, type ComponentProps, type CSSProperties, type PointerEvent, type ReactNode, type Ref } from 'react';
 import { Slider as RadixSlider } from 'radix-ui';
 import type { Size, Tone } from '@the-system/shared';
+import { useMotion } from '../../internal/motion';
 import { useTheme } from '../../theme/hooks';
 import { useField, useFieldControl } from '../Field/Field';
 import { formatSliderValue } from './format';
@@ -65,6 +75,36 @@ interface BaseInternals {
   ariaLabelledBy?: string;
 }
 
+type SliderEnd = 'start' | 'end';
+
+/** The end a key moves a thumb toward, as Radix reads the keys (horizontal only). */
+function keyEnd(key: string, dir: 'ltr' | 'rtl'): SliderEnd | null {
+  if (key === 'Home' || key === 'PageDown' || key === 'ArrowDown') return 'start';
+  if (key === 'End' || key === 'PageUp' || key === 'ArrowUp') return 'end';
+  if (key === 'ArrowLeft') return dir === 'rtl' ? 'end' : 'start';
+  if (key === 'ArrowRight') return dir === 'rtl' ? 'start' : 'end';
+  return null;
+}
+
+/**
+ * slider-nudge: plays the shake pattern, one swing toward `end`, on a thumb
+ * that cannot go further. Returns a function to call with the thumb.
+ */
+function useEndNudge() {
+  const motion = useMotion();
+  const busyUntil = useRef(0);
+  return (thumb: Element | null | undefined, end: SliderEnd) => {
+    const now = typeof performance === 'undefined' ? Date.now() : performance.now();
+    if (!thumb || now < busyUntil.current) return;
+    const nudge = motion.play(thumb, 'shake', 'slider-nudge', { swings: 1, toward: end });
+    if (!nudge) return;
+    // Added to the lift of a grabbed thumb instead of replacing it.
+    if (nudge.effect && 'composite' in nudge.effect) (nudge.effect as KeyframeEffect).composite = 'add';
+    const duration = nudge.effect?.getTiming().duration;
+    busyUntil.current = now + (typeof duration === 'number' ? duration : 0);
+  };
+}
+
 function toMark(mark: number | SliderMark): SliderMark {
   return typeof mark === 'number' ? { value: mark } : mark;
 }
@@ -106,6 +146,7 @@ export function SliderBase({
   onPointerDown,
   onLostPointerCapture,
   onKeyDown,
+  onPointerMove,
   minStepsBetweenThumbs = 0,
   ...rest
 }: SliderBaseProps & BaseInternals) {
@@ -116,6 +157,18 @@ export function SliderBase({
   const [own, setOwn] = useState<number[]>(defaultValue);
   const [dragging, setDragging] = useState(false);
   const values = valueProp ?? own;
+  const nudge = useEndNudge();
+  /** The end the pointer went past during this drag, so a drag nudges once per excursion. */
+  const pastEnd = useRef<SliderEnd | null>(null);
+  const horizontal = orientation === 'horizontal';
+
+  /** The thumb that has focus in this slider, and its index. */
+  const focusedThumb = (control: Element): [Element, number] | null => {
+    const thumbs = Array.from(control.querySelectorAll('[data-part="thumb"]'));
+    const i = thumbs.findIndex((t) => t === t.ownerDocument.activeElement);
+    const thumb = thumbs[i];
+    return thumb ? [thumb, i] : null;
+  };
 
   const format = (v: number) => formatValue?.(v) ?? formatSliderValue(v, theme.lang, { unit, options: formatOptions });
   const hasLabel = label !== undefined && label !== null && label !== false;
@@ -171,11 +224,16 @@ export function SliderBase({
         onValueChange={onChange}
         onValueCommit={(next) => {
           setDragging(false);
+          pastEnd.current = null;
           onValueCommit?.(next);
         }}
         minStepsBetweenThumbs={minStepsBetweenThumbs}
         onKeyDown={(event) => {
           onKeyDown?.(event);
+          // slider-nudge: a key that pushes a thumb past the minimum or the maximum.
+          const end = horizontal && !event.repeat && !control.disabled ? keyEnd(event.key, theme.dir) : null;
+          const found = end ? focusedThumb(event.currentTarget) : null;
+          if (end && found && values[found[1]] === (end === 'start' ? min : max)) nudge(found[0], end);
           // Radix sends Home to the start thumb and End to the end thumb, whichever has focus.
           // With two thumbs, move the focused one as far as the other allows instead.
           if (event.defaultPrevented || values.length < 2 || (event.key !== 'Home' && event.key !== 'End')) return;
@@ -196,6 +254,22 @@ export function SliderBase({
         onLostPointerCapture={(event) => {
           onLostPointerCapture?.(event);
           setDragging(false);
+          pastEnd.current = null;
+        }}
+        onPointerMove={(event: PointerEvent<HTMLSpanElement>) => {
+          onPointerMove?.(event);
+          if (!dragging || !horizontal) return;
+          // slider-nudge: the pointer went past the start or the end of the track.
+          const track = event.currentTarget.querySelector('[data-part="track"]')?.getBoundingClientRect();
+          if (!track) return;
+          const beforeLeft = event.clientX < track.left;
+          const pastRight = event.clientX > track.right;
+          const end: SliderEnd | null = beforeLeft || pastRight ? (beforeLeft === (theme.dir === 'rtl') ? 'end' : 'start') : null;
+          if (end === pastEnd.current) return;
+          pastEnd.current = end;
+          const found = end ? focusedThumb(event.currentTarget) : null;
+          // Only the outer thumb of that end: the start thumb of a range stops at the end thumb, not at the maximum.
+          if (end && found && found[1] === (end === 'start' ? 0 : values.length - 1)) nudge(found[0], end);
         }}
       >
         <RadixSlider.Track data-part="track">

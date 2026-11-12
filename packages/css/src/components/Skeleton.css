@@ -16,11 +16,21 @@
  *   --_skeleton-width         the width; the width prop sets it inline, which wins
  *   --_skeleton-height        the height of a rect; the height prop sets it inline
  *   --_skeleton-font-size     the type size a text line stands for
+ *   --_skeleton-duration      one sweep of the band (duration.shimmer)
+ *   --_skeleton-loops         how many sweeps play before the band stops; a
+ *                             name outside the list in anatomy.md: an
+ *                             animation iteration count. 0 turns the shimmer
+ *                             off. A style that slows duration.shimmer sets
+ *                             it so every sweep ends before five seconds.
+ *   --_skeleton-shimmer-from, --_skeleton-shimmer-to
+ *                             where the band starts and ends; RTL swaps them
  *
  * The shimmer is the skeleton-shimmer pattern: a band on ::before (the glow
  * layer) moves across with transform only. It travels toward the inline end,
- * so it runs right to left in RTL. It plays three times (4.2s) and stops,
- * as the pattern does, so it needs no pause control. Under reduced motion the band is not
+ * so it runs right to left in RTL. It plays three times (4.2s), linear, then
+ * holds a still frame (the band rests outside the clip), as the pattern
+ * does (SHIMMER_ITERATIONS), so it needs no pause control. This is the
+ * skeleton-swap interaction. Under reduced motion the band is not
  * drawn and the shape stays still. Forced colors draws an outline, since the
  * fill is not painted there.
  */
@@ -34,6 +44,8 @@
     --_skeleton-height: auto;
     --_skeleton-shimmer-from: -100%;
     --_skeleton-shimmer-to: 100%;
+    --_skeleton-duration: var(--ds-duration-shimmer);
+    --_skeleton-loops: 3;
 
     position: relative;
     display: block;
@@ -59,7 +71,7 @@
     background-image: linear-gradient(to right, transparent, var(--_skeleton-highlight), transparent);
     transform: translateX(var(--_skeleton-shimmer-from));
     /* Three loops of duration.shimmer (4.2s), linear, as the pattern: it stops before five seconds (WCAG 2.2.2). */
-    animation: ds-skeleton-shimmer var(--ds-duration-shimmer) linear 3;
+    animation: ds-skeleton-shimmer var(--_skeleton-duration) linear var(--_skeleton-loops);
   }
 
   @keyframes ds-skeleton-shimmer {

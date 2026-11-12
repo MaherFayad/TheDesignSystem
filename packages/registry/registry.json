@@ -400,6 +400,11 @@
           "target": "@components/ds/styles/desk/style.json"
         },
         {
+          "path": "packages/styles/neutral/motion.ts",
+          "type": "registry:lib",
+          "target": "@components/ds/styles/neutral/motion.ts"
+        },
+        {
           "path": "packages/styles/neutral/style.json",
           "type": "registry:lib",
           "target": "@components/ds/styles/neutral/style.json"
@@ -451,6 +456,11 @@
           "path": "packages/react/src/internal/keys.ts",
           "type": "registry:ui",
           "target": "@components/ds/react/internal/keys.ts"
+        },
+        {
+          "path": "packages/react/src/internal/motion.ts",
+          "type": "registry:ui",
+          "target": "@components/ds/react/internal/motion.ts"
         },
         {
           "path": "packages/react/src/internal/useControllable.ts",
@@ -2490,6 +2500,11 @@
           "target": "@components/ds/react/components/Input/Input.tsx"
         },
         {
+          "path": "packages/react/src/components/Input/useErrorShake.ts",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/Input/useErrorShake.ts"
+        },
+        {
           "path": "packages/css/src/components/Input.css",
           "type": "registry:file",
           "target": "@components/ds/css/components/Input.css"
@@ -3017,6 +3032,7 @@
         "@ds/core",
         "@ds/field",
         "@ds/icon-button",
+        "@ds/input",
         "@ds/theme"
       ],
       "files": [
@@ -3053,6 +3069,7 @@
       "registryDependencies": [
         "@ds/core",
         "@ds/field",
+        "@ds/input",
         "@ds/theme"
       ],
       "files": [
@@ -4671,6 +4688,11 @@
           "path": "packages/react/src/components/Toast/isInsideToaster.ts",
           "type": "registry:ui",
           "target": "@components/ds/react/components/Toast/isInsideToaster.ts"
+        },
+        {
+          "path": "packages/react/src/components/Toast/stackShift.ts",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/Toast/stackShift.ts"
         },
         {
           "path": "packages/react/src/components/Toast/Toast.tsx",

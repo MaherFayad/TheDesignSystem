@@ -22,10 +22,21 @@
  *   --_slider-length        the length of a vertical slider
  *   --_slider-mark-at       a mark's place, set inline on each mark
  *   --_slider-label-fg, --_slider-value-fg   the label and value colors
+ *   --_slider-lift          the thumb scale while grabbed (slider-pull); 1 turns it off
+ *   --_slider-lift-now      the working scale the grabbed state sets
+ *   --_slider-duration, --_slider-ease       the lift and settle timing
  *
  * The thumb is its target: the visible circle is the content box, painted
  * with background-clip, so the hit area stays 24px without a second layer.
- * Radix positions the thumb; nothing here animates its place.
+ * Radix positions the thumb's wrapper; nothing here animates its place.
+ *
+ * slider-pull (pattern press, read upward): while a pointer holds a thumb
+ * (the root has data-dragging and Radix has focused the thumb it moves),
+ * the thumb scales up to --_slider-lift from its center, and settles back
+ * on release, over duration.base on ease.emphasized. The scale is
+ * 2 - scale.window-enter squared (1.15) until a scale.lift token exists. The value
+ * and the drag never wait on it. The end nudge (slider-nudge) is played by
+ * Slider.tsx and added on top of this transform.
  */
 @layer ds.base {
   :is([data-ds='slider'], [data-ds='range-slider']) {
@@ -42,6 +53,10 @@
     --_slider-mark-at: 0%;
     --_slider-label-fg: var(--ds-color-text-default);
     --_slider-value-fg: var(--ds-color-text-muted);
+    --_slider-lift: calc(2 - var(--ds-scale-window-enter) * var(--ds-scale-window-enter));
+    --_slider-lift-now: 1;
+    --_slider-duration: var(--ds-duration-base);
+    --_slider-ease: var(--ds-ease-emphasized);
 
     display: grid;
     grid-template-columns: minmax(0, 1fr) auto;
@@ -125,6 +140,8 @@
     background-clip: content-box;
     cursor: grab;
     outline: none;
+    transform: scale(var(--_slider-lift-now));
+    transition: transform var(--_slider-duration) var(--_slider-ease);
   }
 
   /* The focus glow and ring, the size of the circle. */
@@ -163,6 +180,11 @@
 
   :is([data-ds='slider'], [data-ds='range-slider'])[data-dragging] [data-part='thumb'] {
     cursor: grabbing;
+  }
+
+  /* slider-pull: the grabbed thumb is the one Radix focused on pointer down. */
+  :is([data-ds='slider'], [data-ds='range-slider'])[data-dragging] [data-part='thumb']:focus {
+    --_slider-lift-now: var(--_slider-lift);
   }
 
   /*
@@ -238,7 +260,13 @@
     cursor: not-allowed;
   }
 
+  /* Reduced: the thumb does not lift; the grab cursor and focus ring carry the state. */
   @media (prefers-reduced-motion: reduce) {
+    :is([data-ds='slider'], [data-ds='range-slider']) {
+      --_slider-lift: 1;
+    }
+
+    :is([data-ds='slider'], [data-ds='range-slider']) [data-part='thumb'],
     :is([data-ds='slider'], [data-ds='range-slider']) [data-part='thumb']::before {
       transition: none;
     }
