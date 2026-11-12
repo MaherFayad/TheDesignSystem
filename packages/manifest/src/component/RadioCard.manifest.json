@@ -1,0 +1,297 @@
+{
+  "name": "RadioCard",
+  "kind": "component",
+  "family": "forms",
+  "summary": "One choice among a few options drawn as cards with a title, text, an optional icon and end content such as a price.",
+  "useWhen": [
+    "Two to six options that each need a title, a line of text and a price or a date: plans, shipping, delivery slots",
+    "A choice that is the main decision on the page, where a bigger target helps",
+    "Options side by side on a wide screen that stack on a phone"
+  ],
+  "avoidWhen": [
+    "Options that are a word or two each",
+    "Seven or more options, or a list that grows",
+    "Several cards may be picked",
+    "A card that opens a page or runs an action"
+  ],
+  "insteadUse": {
+    "Options that are a word or two each": "RadioGroup",
+    "Seven or more options, or a list that grows": "Select",
+    "Several cards may be picked": "CheckboxGroup",
+    "A card that opens a page or runs an action": "Card with a Button or a link",
+    "Two to four views of the same content, switched in place": "SegmentedControl"
+  },
+  "anatomy": [
+    "root",
+    "item",
+    "indicator",
+    "icon",
+    "title",
+    "description",
+    "end"
+  ],
+  "parts": {
+    "RadioCardItem": "item"
+  },
+  "slots": {
+    "icon": {
+      "accepts": [
+        "Icon"
+      ],
+      "max": 1
+    },
+    "end": {
+      "accepts": [
+        "text"
+      ],
+      "max": 1
+    }
+  },
+  "props": {
+    "value": {
+      "type": "string",
+      "description": "The checked value, controlled. On RadioCardItem, the value that card sets (required)."
+    },
+    "defaultValue": {
+      "type": "string",
+      "description": "The checked value at first render. No default: a group starts with none checked."
+    },
+    "onValueChange": {
+      "type": "function",
+      "description": "Called with the new value when a person picks a card."
+    },
+    "disabled": {
+      "type": "boolean",
+      "default": false,
+      "description": "Disables every card. On RadioCardItem, that card only."
+    },
+    "required": {
+      "type": "boolean",
+      "default": false,
+      "description": "Sets aria-required on the group and required on the hidden inputs."
+    },
+    "invalid": {
+      "type": "boolean",
+      "default": false,
+      "description": "aria-invalid and the danger border on unchecked cards. Point aria-describedby at the message."
+    },
+    "name": {
+      "type": "string",
+      "description": "The form field name of the hidden native inputs."
+    },
+    "orientation": {
+      "type": [
+        "vertical",
+        "horizontal"
+      ],
+      "default": "vertical",
+      "description": "vertical: one card per line. horizontal: a grid of cards that wraps, one per line on a phone."
+    },
+    "size": {
+      "type": [
+        "sm",
+        "md",
+        "lg"
+      ],
+      "default": "md",
+      "description": "Padding, title size, circle size (14, 16, 20 px) and icon size."
+    },
+    "tone": {
+      "type": [
+        "neutral",
+        "accent"
+      ],
+      "default": "neutral",
+      "description": "neutral: the checked card takes the text color. accent: the primary fill and border."
+    },
+    "loop": {
+      "type": "boolean",
+      "default": true,
+      "description": "Arrow keys wrap from the last card to the first."
+    },
+    "title": {
+      "type": "node",
+      "required": true,
+      "description": "RadioCardItem: the visible name. It is the accessible name."
+    },
+    "description": {
+      "type": "node",
+      "description": "RadioCardItem: a line or two under the title. Joins aria-describedby."
+    },
+    "icon": {
+      "type": "node",
+      "description": "RadioCardItem: a system icon name or a node before the text. Decoration, aria-hidden."
+    },
+    "end": {
+      "type": "node",
+      "description": "RadioCardItem: a price or a date at the inline end. Read after the description."
+    }
+  },
+  "states": [
+    "checked",
+    "unchecked",
+    "data-disabled",
+    "data-invalid",
+    "data-orientation"
+  ],
+  "a11y": {
+    "role": "radiogroup on the root, named by aria-labelledby or aria-label; radio on each card, named by its title",
+    "focus": "One tab stop for the group. Tab lands on the checked card, or the first enabled card when none is checked. Focus shows a 2px ring around the card.",
+    "keys": {
+      "Tab": "Moves focus into the group at the checked card, and on to the next control",
+      "Shift+Tab": "Moves focus back out of the group",
+      "ArrowDown": "Moves to the next card and selects it",
+      "ArrowUp": "Moves to the previous card and selects it",
+      "ArrowRight, ArrowLeft": "Move to the card on that side and select it, in either orientation. They follow the reading direction: in Arabic ArrowLeft moves to the next card.",
+      "Space": "Selects the focused card when it is not checked"
+    },
+    "announce": "Each card is read with its title as the name, then the description and the end content through aria-describedby, its checked state and its position. The group name comes from the heading aria-labelledby points at.",
+    "native": {
+      "accessibilityRole": "radiogroup",
+      "accessibilityState": [
+        "checked",
+        "disabled"
+      ]
+    },
+    "notes": [
+      "Behavior from Radix RadioGroup. Each card is a button with role radio, so the whole card is the target. A hidden native input per card posts the value with the form.",
+      "No source: designed from the dials table in PLAN.md 3.7, RadioGroup and the card radius of the active style.",
+      "Checked is never color alone: the border doubles in width and the indicator fills with a dot.",
+      "The accent border uses color.primary.border, which keeps 3:1 against the page (WCAG 1.4.11) where the yellow does not.",
+      "A card holds text only. No link, button or input inside a card: the card is a button.",
+      "Disabled uses native disabled: a disabled card leaves the arrow order and draws with opacity.disabled.",
+      "Read only does not apply: show the chosen card as text instead.",
+      "The group has no legend part: put a heading above it and point aria-labelledby at it, or use aria-label."
+    ]
+  },
+  "content": {
+    "en": {
+      "title": "A noun or a short phrase in sentence case: Team, Express delivery.",
+      "description": "One or two lines that tell the cards apart: what is included, when it arrives.",
+      "end": "A price or a date, short: $12 a seat, Free, Tomorrow.",
+      "heading": "A short noun or question above the group: Plan, Shipping."
+    },
+    "ar": {
+      "title": "اسم أو عبارة قصيرة بدون تشكيل: الفريق، توصيل سريع",
+      "description": "سطر أو سطرين يوضحون الفرق بين الخيارات",
+      "end": "السعر أو الموعد بالأرقام الغربية: 45 ر.س، مجاني"
+    }
+  },
+  "tokens": [
+    "size.icon.md",
+    "size.icon.lg",
+    "size.target-min",
+    "size.control.lg",
+    "space.fixed.4xs",
+    "space.fixed.2xs",
+    "space.3xs",
+    "space.xs",
+    "space.s",
+    "space.m",
+    "space.l",
+    "space.xl",
+    "radius.card",
+    "radius.sm",
+    "radius.pill",
+    "border.width.default",
+    "border.width.strong",
+    "font.family.sans",
+    "font.size.xs",
+    "font.size.s",
+    "font.size.m",
+    "font.weight.semibold",
+    "font.leading.snug",
+    "font.leading.normal",
+    "color.text.default",
+    "color.text.muted",
+    "color.text.on-primary",
+    "color.bg.body",
+    "color.bg.overlay-5",
+    "color.border.control",
+    "color.border.control-hover",
+    "color.primary.fill",
+    "color.primary.border",
+    "color.state.danger.text",
+    "focus.shadow.ring",
+    "focus.shadow.primary",
+    "opacity.disabled",
+    "duration.base",
+    "duration.fast",
+    "ease.default"
+  ],
+  "motion": "fade",
+  "frameworks": {
+    "react": {
+      "status": "ready",
+      "behavior": "radix RadioGroup",
+      "example": "RadioCard.demo.tsx"
+    },
+    "angular": {
+      "status": "planned"
+    },
+    "native": {
+      "status": "planned"
+    }
+  },
+  "styles": {
+    "studio": "A transparent card with the control border and the card radius; checked adds an inset line that doubles the border, in the text color, and a quiet fill. accent: the circle takes the translucent primary fill with the control border, and the checked card border keeps the control color, so the doubled border and the dot carry the state.",
+    "desk": "The same card in Instrument Sans; accent fills the circle with the yellow primary and draws the checked border in the primary border color."
+  },
+  "mistakes": [
+    {
+      "wrong": "A button or a link inside a card",
+      "right": "Text only in the card; put actions outside the group"
+    },
+    {
+      "wrong": "Cards for options that are one word each",
+      "right": "RadioGroup"
+    },
+    {
+      "wrong": "A checked card shown only by a color change",
+      "right": "RadioCard draws the thick border and the filled indicator; keep both in a recipe"
+    },
+    {
+      "wrong": "A group without a name",
+      "right": "A heading above it with aria-labelledby, or aria-label"
+    },
+    {
+      "wrong": "Twelve cards for seat counts",
+      "right": "A Select or a number Input"
+    }
+  ],
+  "contract": {
+    "optionalParts": [
+      "icon",
+      "description",
+      "end"
+    ],
+    "keys": {
+      "ArrowDown": {
+        "focus": "[data-part='item'][data-state='checked']",
+        "case": "many",
+        "expect": "value-changes"
+      },
+      "ArrowUp": {
+        "focus": "[data-part='item'][data-state='checked']",
+        "case": "many",
+        "expect": "value-changes"
+      },
+      "ArrowRight": {
+        "focus": "[data-part='item'][data-state='checked']",
+        "case": "many",
+        "expect": "value-changes"
+      },
+      "ArrowLeft": {
+        "focus": "[data-part='item'][data-state='checked']",
+        "case": "many",
+        "expect": "value-changes"
+      },
+      "Space": {
+        "focus": "[data-part='item']",
+        "case": "empty",
+        "expect": "state-changes"
+      }
+    }
+  },
+  "since": "0.1.0"
+}
