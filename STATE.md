@@ -1,8 +1,8 @@
 # State
 Updated: 2026-11-12 08:30 UTC
 Main model: claude-fable-5-2, medium. Subagents: claude-opus-5-5, medium.
-Current wave: 0
-Next open order: 0.19
+Current wave: 1 (wave 0 passed its gate on 2026-11-12, report in docs/reports/wave-0.md)
+Next open order: 1.0 (ds-architect writes docs/plan/wave-1.md; start with the carry over list in docs/reports/wave-0.md)
 
 ## Paths
 GoBanana: /home/user/gobanana (read only clone, commit 216625c)
@@ -34,8 +34,8 @@ No adb. No iOS build.
 | 0.16 | React Native proof | ds-native | native | done | 5f00f2f |
 | 0.17 | Desk Light | ds-style | all | done, proposed | f7e054b |
 | 0.18 | Consumers | ds-docs | react | done | ae2d0ee |
-| 0.19 | Matrix | ds-qa | all | open | |
-| 0.20 | Gate 0 report | lead | all | open | |
+| 0.19 | Matrix | ds-qa | all | done | 6a0444d |
+| 0.20 | Gate 0 report | lead | all | done | see git log |
 
 ## Coverage
 | Family | React | Angular | Native |
