@@ -11,7 +11,7 @@
 //             <div data-part="controls"><div dsWindowControls>     Desk only (optional part)
 //             <h2 data-part="title"><span data-dialog-title id>...</span></h2>
 //           <h2 data-part="title">                                Studio
-//           <button data-part="close" dsIconButton>               Studio
+//           <button data-part="close" dsCloseButton>               Studio
 //           <p data-part="description">
 //           <div data-part="body">  <div data-part="footer">      from the content template
 //
@@ -80,7 +80,8 @@ import { consumeHostAttributes } from '../../internal/host';
 import { animationsDone, hideOthers, lockScroll, tabbables, wrapTab } from '../../behavior';
 import { DsThemeScope, DsThemeService, attributesOf, syncDirectionality, themeScopeProviders } from '../../theme';
 import type { ThemeValue } from '../../theme';
-import { DsIconButton } from '../icon-button/icon-button';
+import { DsCloseButton } from '../close-button/close-button';
+import { isInsideToaster } from '../toast/is-inside-toaster';
 import { DsTitleBar } from '../title-bar/title-bar';
 import { DsWindowControls } from '../window-controls/window-controls';
 
@@ -277,7 +278,7 @@ const stack: DsDialogLayer[] = [];
  */
 @Component({
   selector: 'div[data-dialog-layer]',
-  imports: [NgTemplateOutlet, DsIconButton, DsTitleBar, DsWindowControls],
+  imports: [NgTemplateOutlet, DsCloseButton, DsTitleBar, DsWindowControls],
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: themeScopeProviders(() => new DsThemeScope(inject(DIALOG_LAYER).theme)),
   host: {
@@ -322,7 +323,7 @@ const stack: DsDialogLayer[] = [];
         [onClose]="dialog.dismissible() ? closeFn : undefined"></div>
     </ng-template>
     <ng-template #closeButton>
-      <button dsIconButton data-part="close" icon="close" [label]="closeName()" size="sm"
+      <button dsCloseButton data-part="close" [label]="closeName()" size="sm"
         [disabled]="!dialog.dismissible()" (click)="close()"></button>
     </ng-template>
   `,
@@ -373,6 +374,8 @@ export class DsDialogLayer {
   /** Escape and Tab for the top dialog. */
   onDocumentKeydown(event: KeyboardEvent): void {
     if (!this.isTop() || this.closing()) return;
+    // The toaster sits above dialogs: its keys (Tab through toasts, Escape) are its own, as in React.
+    if (isInsideToaster(event.target)) return;
     if (event.key === 'Escape') {
       if (event.defaultPrevented) return;
       event.preventDefault();
@@ -390,6 +393,8 @@ export class DsDialogLayer {
     if (target instanceof Node && panel.contains(target)) return;
     // A menu opened from inside the dialog lives in its own portal layer: focus there stays.
     if (target instanceof Element && target.closest('[data-menu-layer]')) return;
+    // The toaster sits above dialogs: focus may move into the toasts (F8), as in React.
+    if (isInsideToaster(target)) return;
     (tabbables(panel, this.checker)[0] ?? panel).focus();
   }
 

@@ -99,6 +99,8 @@ export function hideOthers(keep: Element): () => void {
     if (el === keep || el.contains(keep)) continue;
     if (['SCRIPT', 'STYLE', 'TEMPLATE', 'LINK'].includes(el.tagName)) continue;
     if (el.getAttribute('aria-hidden') === 'true' || el.hasAttribute('aria-live')) continue;
+    // The toaster sits above dialogs: toasts and their live regions stay readable, as in React.
+    if (el.hasAttribute('data-toaster-layer')) continue;
     el.setAttribute('aria-hidden', 'true');
     hidden.push(el);
   }
