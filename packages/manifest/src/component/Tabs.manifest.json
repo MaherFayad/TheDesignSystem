@@ -62,7 +62,7 @@
     },
     "defaultValue": {
       "type": "string",
-      "description": "Tabs: the active tab at first when uncontrolled. Always pass one, so a panel shows on load."
+      "description": "Tabs: the active tab at first when uncontrolled. Required when value is not set, so a panel always shows on load."
     },
     "onValueChange": {
       "type": "function",
@@ -135,7 +135,8 @@
   "states": [
     "active",
     "inactive",
-    "data-disabled"
+    "data-disabled",
+    "data-orientation"
   ],
   "a11y": {
     "role": "tablist on the list, with a name; tab on each trigger (aria-selected, aria-controls); tabpanel on each panel (aria-labelledby the tab).",
@@ -171,7 +172,8 @@
     "ar": {
       "label": "Noun form labels, white Saudi dialect, no diacritics: عام، الأعضاء، السجل.",
       "list": "A noun phrase: إعدادات اللوحة.",
-      "count": "Western digits."
+      "count": "Western digits.",
+      "panel": "An empty panel says what to do next, in white Saudi dialect: ما فيه تعليقات للحين. اختر إطار واضغط C عشان تضيف أول تعليق."
     }
   },
   "tokens": [

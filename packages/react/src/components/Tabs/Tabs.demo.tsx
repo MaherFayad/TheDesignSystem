@@ -167,7 +167,7 @@ export default function TabsDemo() {
             </TabsTrigger>
           </TabsList>
           <TabsPanel value="a">
-            <p>Your changes are saved to your account. Open the board on any other device to see the same version.</p>
+            <p>Download the colors, sizes and type of this board as tokens for the web, iOS and Android, kept in sync with every change you save.</p>
           </TabsPanel>
           <TabsPanel value="b">
             <p>Component code.</p>
@@ -200,6 +200,7 @@ export default function TabsDemo() {
       </DemoCase>
 
       <DemoCase id="disabled" title="Disabled tab: skipped by the arrow keys">
+        <p>Only the workspace owner can open Billing.</p>
         <Tabs defaultValue="general">
           <TabsList aria-label="Workspace settings">
             <TabsTrigger value="general">General</TabsTrigger>

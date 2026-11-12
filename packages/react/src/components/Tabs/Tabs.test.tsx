@@ -3,7 +3,6 @@ import { userEvent } from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';
 import { Theme } from '../../theme/Theme';
 import TabsDemo from './Tabs.demo';
-import { parseTime as parseTimeForTest } from './Tabs';
 import { Tabs, TabsList, TabsPanel, TabsTrigger } from './index';
 
 function Example(props: Partial<Parameters<typeof Tabs>[0]> & { disabledB?: boolean }) {
@@ -150,13 +149,6 @@ describe('Tabs', () => {
     screen.getAllByRole('tab')[0]?.focus();
     await userEvent.tab();
     expect(document.activeElement).toBe(screen.getByRole('tabpanel'));
-  });
-
-  it('reads CSS times', () => {
-    expect(parseTimeForTest('120ms')).toBe(120);
-    expect(parseTimeForTest(' 0.2s')).toBe(200);
-    expect(parseTimeForTest('0ms')).toBe(0);
-    expect(parseTimeForTest('')).toBe(0);
   });
 
   it('throws outside Tabs', () => {

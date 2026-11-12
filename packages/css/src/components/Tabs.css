@@ -19,8 +19,10 @@
  *   --_tabs-count-bg, -count-fg
  *
  * Each trigger copies the private colors into its own --_tabs-trigger-*
- * properties, so a state rule swaps one property and the root rule writes
- * the declarations. Colors swap at once; only the indicator moves, with a
+ * properties: the state lives on the trigger, not the root, so the swap has
+ * to happen there. The root keeps every value a recipe overrides; the
+ * trigger properties only point at them. Every selector reaches the parts
+ * with child combinators, so a Tabs nested in a panel keeps its own look. Colors swap at once; only the indicator moves, with a
  * transform (Tabs.tsx, Web Animations API).
  */
 @layer ds.base {
@@ -108,7 +110,7 @@
 
   [data-ds='tabs'][data-orientation='vertical'] > [data-part='list'] {
     flex-direction: column;
-    max-inline-size: none;
+    max-inline-size: 50%;
     border-block-end-width: 0;
     border-inline-end: var(--ds-border-width-default) solid var(--_tabs-list-border-color);
     overflow-x: hidden;
@@ -121,7 +123,7 @@
 
   /* ------------------------------------------------------------ trigger */
 
-  [data-ds='tabs'] [data-part='trigger'] {
+  [data-ds='tabs'] > [data-part='list'] > [data-part='trigger'] {
     --_tabs-trigger-fg: var(--_tabs-fg);
     --_tabs-trigger-bg: transparent;
     --_tabs-trigger-weight: var(--_tabs-weight);
@@ -136,6 +138,7 @@
     block-size: var(--_tabs-height);
     min-block-size: var(--ds-size-target-min);
     min-inline-size: var(--ds-size-target-min);
+    max-inline-size: 100%;
     margin: 0;
     padding-block: 0;
     padding-inline: var(--_tabs-padding-inline);
@@ -154,23 +157,23 @@
     -webkit-tap-highlight-color: transparent;
   }
 
-  [data-ds='tabs'][data-emphasis='ghost'] [data-part='trigger'] {
+  [data-ds='tabs'][data-emphasis='ghost'] > [data-part='list'] > [data-part='trigger'] {
     border-end-start-radius: 0;
     border-end-end-radius: 0;
   }
 
-  [data-ds='tabs'][data-orientation='vertical'] [data-part='trigger'] {
+  [data-ds='tabs'][data-orientation='vertical'] > [data-part='list'] > [data-part='trigger'] {
     justify-content: flex-start;
   }
 
-  [data-ds='tabs'][data-orientation='vertical'][data-emphasis='ghost'] [data-part='trigger'] {
+  [data-ds='tabs'][data-orientation='vertical'][data-emphasis='ghost'] > [data-part='list'] > [data-part='trigger'] {
     border-radius: var(--_tabs-radius);
     border-start-end-radius: 0;
     border-end-end-radius: 0;
   }
 
   /* A long label ends in an ellipsis inside the tab; the list scrolls before that happens. */
-  [data-ds='tabs'] [data-part='trigger'] > [data-part='label'] {
+  [data-ds='tabs'] > [data-part='list'] > [data-part='trigger'] > [data-part='label'] {
     position: relative;
     min-inline-size: 0;
     overflow-x: clip;
@@ -178,13 +181,13 @@
     text-overflow: ellipsis;
   }
 
-  [data-ds='tabs'] [data-part='trigger'] > [data-part='start'] {
+  [data-ds='tabs'] > [data-part='list'] > [data-part='trigger'] > [data-part='start'] {
     position: relative;
     display: inline-flex;
     flex: none;
   }
 
-  [data-ds='tabs'] [data-part='trigger'] > [data-part='count'] {
+  [data-ds='tabs'] > [data-part='list'] > [data-part='trigger'] > [data-part='count'] {
     position: relative;
     display: inline-flex;
     flex: none;
@@ -212,7 +215,7 @@
    * on the block end edge, just inside the list hairline (the list clips
    * its overflow, so the line cannot overlap the border). soft: the pill.
    */
-  [data-ds='tabs'] [data-part='indicator'] {
+  [data-ds='tabs'] > [data-part='list'] > [data-part='trigger'] > [data-part='indicator'] {
     position: absolute;
     inset-inline: 0;
     inset-block-end: 0;
@@ -223,14 +226,14 @@
     pointer-events: none;
   }
 
-  [data-ds='tabs'][data-orientation='vertical'][data-emphasis='ghost'] [data-part='indicator'] {
+  [data-ds='tabs'][data-orientation='vertical'][data-emphasis='ghost'] > [data-part='list'] > [data-part='trigger'] > [data-part='indicator'] {
     inset-block: 0;
     inset-inline: auto 0;
     inline-size: var(--_tabs-indicator-thickness);
     block-size: auto;
   }
 
-  [data-ds='tabs'][data-emphasis='soft'] [data-part='indicator'] {
+  [data-ds='tabs'][data-emphasis='soft'] > [data-part='list'] > [data-part='trigger'] > [data-part='indicator'] {
     inset: 0;
     block-size: auto;
     border-radius: var(--_tabs-radius);
@@ -238,25 +241,25 @@
 
   /* ------------------------------------------------------------ states: swap the private properties */
 
-  [data-ds='tabs'] [data-part='trigger']:hover:not([data-disabled]) {
+  [data-ds='tabs'] > [data-part='list'] > [data-part='trigger']:hover:not([data-disabled], [data-state='active']) {
     --_tabs-trigger-fg: var(--_tabs-fg-hover);
     --_tabs-trigger-bg: var(--_tabs-bg-hover);
   }
 
-  [data-ds='tabs'] [data-part='trigger'][data-state='active'] {
+  [data-ds='tabs'] > [data-part='list'] > [data-part='trigger'][data-state='active'] {
     --_tabs-trigger-fg: var(--_tabs-fg-active);
     --_tabs-trigger-bg: transparent;
     --_tabs-trigger-weight: var(--_tabs-weight-active);
   }
 
   /* The transparent outline is set only here, so forced colors mode draws it on focus and nowhere else. */
-  [data-ds='tabs'] [data-part='trigger']:focus-visible {
+  [data-ds='tabs'] > [data-part='list'] > [data-part='trigger']:focus-visible {
     outline: var(--ds-border-width-strong) solid transparent;
     outline-offset: calc(-1 * var(--ds-border-width-strong));
     box-shadow: var(--_tabs-ring);
   }
 
-  [data-ds='tabs'] [data-part='trigger'][data-disabled] {
+  [data-ds='tabs'] > [data-part='list'] > [data-part='trigger'][data-disabled] {
     opacity: var(--ds-opacity-disabled);
     cursor: not-allowed;
   }
@@ -285,17 +288,17 @@
    * Highlight frame. The heavier weight still marks the active tab.
    */
   @media (forced-colors: active) {
-    [data-ds='tabs'] [data-part='indicator'] {
+    [data-ds='tabs'] > [data-part='list'] > [data-part='trigger'] > [data-part='indicator'] {
       background-color: Highlight;
       forced-color-adjust: none;
     }
 
-    [data-ds='tabs'][data-emphasis='soft'] [data-part='indicator'] {
+    [data-ds='tabs'][data-emphasis='soft'] > [data-part='list'] > [data-part='trigger'] > [data-part='indicator'] {
       border: var(--ds-border-width-strong) solid Highlight;
       background-color: transparent;
     }
 
-    [data-ds='tabs'] [data-part='trigger'][data-disabled] {
+    [data-ds='tabs'] > [data-part='list'] > [data-part='trigger'][data-disabled] {
       color: GrayText;
     }
   }

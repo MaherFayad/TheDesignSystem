@@ -46,6 +46,7 @@ import {
   type Ref,
 } from 'react';
 import { Tabs as RadixTabs } from 'radix-ui';
+import { parseDuration } from '@the-system/motion';
 import type { Emphasis, Size } from '@the-system/shared';
 import { renderSlotContent, type ButtonSlotContent } from '../Button/ButtonBase';
 import { useControllable } from '../Window/useControllable';
@@ -77,24 +78,11 @@ function useTabsContext(name: string): TabsContextValue {
   return ctx;
 }
 
-/** Reads a CSS time ("120ms", "0.2s") as milliseconds. Anything else is 0. */
-export function parseTime(value: string): number {
-  const v = value.trim();
-  const ms = /^(-?[\d.]+)ms$/.exec(v);
-  if (ms) return Number(ms[1]);
-  const s = /^(-?[\d.]+)s$/.exec(v);
-  if (s) return Number(s[1]) * 1000;
-  return 0;
-}
 
 // ------------------------------------------------------------------ Tabs
 
-export interface TabsProps
+interface TabsBaseProps
   extends Omit<ComponentProps<typeof RadixTabs.Root>, 'asChild' | 'value' | 'defaultValue' | 'onValueChange' | 'dir' | 'title'> {
-  /** Controlled value: the value of the active trigger, with onValueChange. */
-  value?: string;
-  /** The value active at first when uncontrolled. Default: none until a tab is chosen, so always pass one. */
-  defaultValue?: string;
   /** Called with the value of the tab that becomes active. */
   onValueChange?: (value: string) => void;
   /** Trigger height and type size. Default md. */
@@ -107,6 +95,12 @@ export interface TabsProps
   activationMode?: TabsActivationMode;
   ref?: Ref<HTMLDivElement>;
 }
+
+/**
+ * Controlled (`value`, with onValueChange) or uncontrolled (`defaultValue`,
+ * required then, so a panel always shows on load).
+ */
+export type TabsProps = TabsBaseProps & ({ value: string; defaultValue?: string } | { value?: undefined; defaultValue: string });
 
 /**
  * The tabs root. Holds the value; TabsList and the TabsPanel elements go
@@ -205,14 +199,25 @@ export function TabsTrigger({ value, start, count, children, ref, ...rest }: Tab
     if (!node) return;
     // Keep the active tab in view inside a scrolling list. Not on the first
     // render, so a page never scrolls by itself on load.
-    if (from !== null && from !== value && typeof node.scrollIntoView === 'function') {
-      node.scrollIntoView({ block: 'nearest', inline: 'nearest' });
+    // Only the list scrolls, never the page around it.
+    const list = node.parentElement;
+    if (from !== null && from !== value && list) {
+      if (ctx.orientation === 'vertical') {
+        const top = node.offsetTop - list.offsetTop;
+        if (top < list.scrollTop) list.scrollTop = top;
+        else if (top + node.offsetHeight > list.scrollTop + list.clientHeight) list.scrollTop = top + node.offsetHeight - list.clientHeight;
+      } else {
+        const l = node.getBoundingClientRect();
+        const b = list.getBoundingClientRect();
+        if (l.left < b.left) list.scrollLeft -= b.left - l.left;
+        else if (l.right > b.right) list.scrollLeft += l.right - b.right;
+      }
     }
     const indicator = indicatorRef.current;
     const prev = from !== null && from !== value ? ctx.triggers.get(from) : undefined;
     if (!indicator || !prev || typeof indicator.animate !== 'function') return;
     const style = getComputedStyle(indicator);
-    const duration = parseTime(style.getPropertyValue('--_tabs-indicator-duration'));
+    const duration = parseDuration(style.getPropertyValue('--_tabs-indicator-duration'));
     if (duration <= 0) return;
     const a = prev.getBoundingClientRect();
     const b = node.getBoundingClientRect();
