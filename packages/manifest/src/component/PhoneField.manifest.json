@@ -193,7 +193,7 @@
       "status": "ready",
       "behavior": "div[dsPhoneField] with a native select and a native tel input, hand built on packages/shared phone.ts, ControlValueAccessor",
       "example": "phone-field.demo.ts",
-      "note": "value (E.164) and country are models: [(value)], [(country)] (defaultCountry is country, default SA). onValueChange's detail is the valueDetail output. The caret stays after the same digit as the groups add spaces. The hidden input named name posts the E.164 number."
+      "note": "value (E.164) is a model: [(value)]. country is an input with a countryChange output, so [(country)] works and a set country wins over the dial code of the value, as in React; defaultCountry (default SA) is used while country is not set. onValueChange's detail is the valueDetail output. The caret stays after the same digit as the groups add spaces. The hidden input named name posts the E.164 number."
     },
     "native": {
       "status": "planned"

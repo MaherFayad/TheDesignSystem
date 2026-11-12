@@ -12,6 +12,7 @@ import { DsPhoneField, type PhoneValueDetail } from './phone-field';
     <div data-t="empty" dsPhoneField aria-label="Mobile" country="KW"></div>
     <div dsField label="Account phone" readOnly><div data-t="readonly" dsPhoneField value="+97336001234"></div></div>
     <div data-t="arabic" dsPhoneField locale="ar" aria-label="رقم الجوال"></div>
+    <div data-t="free" dsPhoneField aria-label="Phone" value="+971501234567"></div>
     <div data-t="form" dsPhoneField aria-label="Phone" [formControl]="control"></div>
   `,
 })
@@ -116,5 +117,25 @@ describe('DsPhoneField', () => {
     host.control.disable();
     await fixture.whenStable();
     expect(native('form').disabled).toBe(true);
+  });
+
+  it('keeps the country of the number when the number is cleared, and ends a draft on a new value', async () => {
+    const { fixture, q, native, select, host } = await setup();
+    expect(select('free')?.value).toBe('AE');
+    await type(fixture, native('free'), '');
+    expect(select('free')?.value).toBe('AE');
+    expect(q('free').querySelector('bdi')?.textContent).toBe('+971');
+    await type(fixture, native('mobile'), '+9');
+    expect(native('mobile').value).toBe('+9');
+    host.phone.set('+966500000000');
+    await fixture.whenStable();
+    expect(native('mobile').value).toBe('50 000 0000');
+  });
+
+  it('lets a set country win over the dial code of the value', async () => {
+    const { fixture, host, select } = await setup();
+    host.country.set('AE');
+    await fixture.whenStable();
+    expect(select('mobile')?.value).toBe('AE');
   });
 });

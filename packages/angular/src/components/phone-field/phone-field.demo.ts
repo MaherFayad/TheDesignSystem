@@ -28,7 +28,7 @@ const shapes: PhoneFieldShape[] = ['default', 'pill'];
         <div dsPhoneField value="+97433123456" aria-label="Mobile number in Qatar"></div>
         <div dsPhoneField value="+97336001234" aria-label="Mobile number in Bahrain"></div>
         <div dsPhoneField value="+96892123456" aria-label="Mobile number in Oman"></div>
-        <div dsPhoneField country="EG" value="+201012345678" aria-label="Mobile number in Egypt"></div>
+        <div dsPhoneField defaultCountry="EG" value="+201012345678" aria-label="Mobile number in Egypt"></div>
       </div>
       <div data-demo="row" label="عربي">
         <div lang="ar" dir="rtl" style="inline-size: 18rem;">
@@ -55,10 +55,10 @@ const shapes: PhoneFieldShape[] = ['default', 'pill'];
           <div dsPhoneField value="+966551234567"></div>
         </div>
         <div dsField label="Office number" description="Landline with the area code.">
-          <div dsPhoneField country="AE" value="+97141234567"></div>
+          <div dsPhoneField defaultCountry="AE" value="+97141234567"></div>
         </div>
         <div dsField label="Emergency contact">
-          <div dsPhoneField country="KW"></div>
+          <div dsPhoneField defaultCountry="KW"></div>
         </div>
       </div>
     </section>
@@ -66,7 +66,7 @@ const shapes: PhoneFieldShape[] = ['default', 'pill'];
     <section data-demo="case" data-demo-case="too-many" heading="A long number in a narrow container">
       <div style="max-inline-size: 16rem;">
         <div dsField label="Office number in Germany">
-          <div dsPhoneField country="DE" value="+49301234567890" size="sm"></div>
+          <div dsPhoneField defaultCountry="DE" value="+49301234567890" size="sm"></div>
         </div>
       </div>
     </section>
@@ -84,7 +84,7 @@ const shapes: PhoneFieldShape[] = ['default', 'pill'];
         </div>
         <ng-template #arDescription>نرسل لك رمز الدخول على هذا الرقم في رسالة نصية. اكتب الرقم بدون الصفر في البداية، مثل <bdi dir="ltr">50 123 4567</bdi>، أو الصقه كامل مع رمز الدولة.</ng-template>
         <div dsField label="رقم المكتب">
-          <div dsPhoneField country="AE"></div>
+          <div dsPhoneField defaultCountry="AE"></div>
         </div>
       </div>
     </section>

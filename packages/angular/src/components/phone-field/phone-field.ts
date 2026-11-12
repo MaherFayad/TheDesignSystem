@@ -14,7 +14,8 @@
 //
 // React's value, defaultValue and onValueChange are the value model
 // (`[(value)]`) plus the valueDetail output; country, defaultCountry and
-// onCountryChange are the country model (`[(country)]`, default SA). It
+// onCountryChange are the country and defaultCountry inputs and the
+// countryChange output (`[(country)]`; defaultCountry SA). It
 // implements ControlValueAccessor with the E.164 value.
 import {
   ChangeDetectionStrategy,
@@ -111,6 +112,7 @@ const ATTRIBUTES = [
   'dsPhoneField',
   'value',
   'country',
+  'defaultCountry',
   'countries',
   'locale',
   'labels',
@@ -209,8 +211,10 @@ const ATTRIBUTES = [
 export class DsPhoneField implements ControlValueAccessor {
   /** The number in E.164 form, +966501234567. Two way: `[(value)]`. An empty string clears it. */
   readonly value = model<string | undefined>(undefined);
-  /** The selected country, an ISO code. Two way: `[(country)]`. Default SA. */
-  readonly country = model<string>('SA');
+  /** The selected country, an ISO code. Two way: `[(country)]`. Set, it wins over the dial code of the value. */
+  readonly country = input<string | undefined>(undefined);
+  /** The first country while country is not set. Default SA. */
+  readonly defaultCountry = input('SA');
   /** Limits the picker to these ISO codes. The Gulf still comes first. */
   readonly countries = input<string[] | undefined>(undefined);
   /** Language of the country names. Default: the lang of the nearest dsTheme. */
@@ -239,6 +243,8 @@ export class DsPhoneField implements ControlValueAccessor {
 
   /** With every value change: the E.164 number (empty while there are no digits) and its parts. */
   readonly valueDetail = output<PhoneValueDetail>();
+  /** The country changed, from the picker or from a pasted +number. With country, the pair is `[(country)]`. */
+  readonly countryChange = output<string>();
 
   protected readonly field = inject(DsFieldContext, { optional: true });
   private readonly theme = inject(DsThemeService);
@@ -256,17 +262,25 @@ export class DsPhoneField implements ControlValueAccessor {
   /** While "+9" or "+97" is typed no dial code matches yet: the raw text shows until one does. */
   private readonly draft = signal<string | null>(null);
   protected lastKey: string | null = null;
+  /** The country the field holds itself, used while the country input is not set. */
+  private readonly ownCountry = signal<string | undefined>(undefined);
+  /** The last value this field sent, so a value the parent sets itself can end a draft. */
+  private lastEmitted: string | undefined = undefined;
 
   private readonly lang = computed(() => this.locale() ?? this.theme.value().lang);
   protected readonly copy = computed(() => (this.lang().toLowerCase().startsWith('ar') ? COPY.ar : COPY.en));
   /** A value names its own country (+971...): that country wins over the country model. */
   private readonly fromValue = computed(() => {
     const v = this.value();
-    return v === undefined ? undefined : parsePhone(v, this.country());
+    return v === undefined ? undefined : parsePhone(v, this.baseCountry());
   });
+  /** As React: a set country wins, then the dial code of the value, then the country the field holds. */
+  private readonly baseCountry = computed(() => this.country() ?? this.ownCountry() ?? this.defaultCountry());
   protected readonly resolvedCountry = computed(() => {
+    const set = this.country();
+    if (set !== undefined) return set.toUpperCase();
     const parsed = this.fromValue();
-    return (parsed?.international ? parsed.country : this.country()).toUpperCase();
+    return (parsed?.international ? parsed.country : this.baseCountry()).toUpperCase();
   });
   private readonly national = computed(() => {
     const v = this.value();
@@ -307,6 +321,13 @@ export class DsPhoneField implements ControlValueAccessor {
   });
 
   constructor() {
+    // A value the parent set itself (a reset to "") ends a draft.
+    effect(() => {
+      const v = this.value();
+      untracked(() => {
+        if (v !== this.lastEmitted) this.draft.set(null);
+      });
+    });
     if (this.field) {
       const field = this.field;
       effect(() => {
@@ -331,9 +352,12 @@ export class DsPhoneField implements ControlValueAccessor {
   private emit(nextCountry: string, nextNational: string): void {
     const country = this.resolvedCountry();
     const countryChanged = nextCountry !== country;
-    if (countryChanged) this.country.set(nextCountry);
-    if (nextNational !== this.national() || countryChanged || this.value() === undefined) {
+    // The field keeps the country it shows, so clearing the number does not snap the picker back.
+    this.ownCountry.set(nextCountry);
+    if (countryChanged) this.countryChange.emit(nextCountry);
+    if (nextNational !== this.national() || countryChanged) {
       const e164 = toE164(nextNational, nextCountry);
+      this.lastEmitted = e164;
       this.value.set(e164);
       this.onChange(e164);
       this.valueDetail.emit({ country: nextCountry, national: nextNational, valid: isValidNational(nextNational, nextCountry) });
