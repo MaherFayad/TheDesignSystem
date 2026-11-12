@@ -210,6 +210,21 @@ async function settle(page: Page): Promise<void> {
   });
 }
 
+/**
+ * Clicks the trigger. When something on the page covers it (a Menubar demo
+ * that shows a menu open at load), it is opened from the keyboard instead:
+ * focus, then Enter.
+ */
+async function openTrigger(page: Page, selector: string): Promise<void> {
+  const trigger = page.locator(selector).first();
+  try {
+    await trigger.click({ timeout: 5_000 });
+  } catch {
+    await trigger.focus();
+    await page.keyboard.press('Enter');
+  }
+}
+
 /** One capture in a fresh context. Returns the PNG bytes, or throws. */
 async function capture(browser: Browser, url: string, s: Shot, trigger: string, opens: string): Promise<Buffer> {
   const context = await browser.newContext({ viewport: VIEWPORT, deviceScaleFactor: 1, reducedMotion: 'reduce' });
@@ -226,7 +241,7 @@ async function capture(browser: Browser, url: string, s: Shot, trigger: string, 
       const inVariants = `[data-demo-case="variants"] :is(${trigger}) >> visible=true`;
       const selector = (await page.locator(inVariants).count()) > 0 ? inVariants : `:is(${trigger}) >> visible=true`;
       await page.evaluate(markSeen, opens);
-      await page.locator(selector).first().click();
+      await openTrigger(page, selector);
       const deadline = Date.now() + 5_000;
       while ((await page.evaluate(freshOpen, opens)) === 0) {
         if (Date.now() > deadline) throw new Error(`the first visible trigger opens no [data-ds=${opens}]`);
@@ -440,15 +455,18 @@ async function runCapture(args: Args, framework: string, out: string): Promise<n
         const first = await capture(browser, url, s, trigger, opens);
         let stable: boolean | null = null;
         let note: string | undefined;
+        const { bytes, codec } = await recompress(first);
         if (args.verify) {
+          // Chromium's PNG encoder can change bytes for the same pixels, so
+          // stability is judged on the recompressed bytes, which follow the
+          // pixels only.
           const second = await capture(browser, url, s, trigger, opens);
-          stable = first.equals(second);
+          stable = first.equals(second) || bytes.equals((await recompress(second)).bytes);
           if (!stable) {
             const d = pngDiff(first, second);
             note = d.sizeMismatch ? `unstable: page size changes between captures (${d.sizeMismatch})` : `unstable: ${d.differ} pixels differ between two captures (${((d.differ / d.total) * 100).toFixed(3)} percent), ${d.box ?? 'no box'}`;
           }
         }
-        const { bytes, codec } = await recompress(first);
         codecs.set(codec, (codecs.get(codec) ?? 0) + 1);
         const keep = kept(s, args.keep);
         if (writeIfChanged(join(work, s.file), bytes)) written += 1;

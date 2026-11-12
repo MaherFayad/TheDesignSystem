@@ -173,7 +173,15 @@ async function run(browser: Browser, url: string, job: Job): Promise<Result> {
       const inVariants = `[data-demo-case="variants"] :is(${trigger}) >> visible=true`;
       const selector = (await page.locator(inVariants).count()) > 0 ? inVariants : `:is(${trigger}) >> visible=true`;
       await page.evaluate(markSeen, kebab);
-      await page.locator(selector).first().click();
+      // A covered trigger (a Menubar demo with a menu open at load) opens from the keyboard.
+      await page
+        .locator(selector)
+        .first()
+        .click({ timeout: 5_000 })
+        .catch(async () => {
+          await page.locator(selector).first().focus();
+          await page.keyboard.press('Enter');
+        });
       const deadline = Date.now() + 5_000;
       while ((await page.evaluate(freshOpen, kebab)) === 0) {
         if (Date.now() > deadline) throw new Error(`the first trigger opens no [data-ds=${kebab}]`);
