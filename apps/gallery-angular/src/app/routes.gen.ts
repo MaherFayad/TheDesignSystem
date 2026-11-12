@@ -16,4 +16,5 @@ export const routes: DemoRoute[] = [
   { slug: 'list-box', load: () => import('../../../../packages/angular/src/components/list-box/list-box.demo').then((m) => m.default) },
   { slug: 'multi-select', load: () => import('../../../../packages/angular/src/components/multi-select/multi-select.demo').then((m) => m.default) },
   { slug: 'select', load: () => import('../../../../packages/angular/src/components/select/select.demo').then((m) => m.default) },
+  { slug: 'tag-field', load: () => import('../../../../packages/angular/src/components/tag-field/tag-field.demo').then((m) => m.default) },
 ];

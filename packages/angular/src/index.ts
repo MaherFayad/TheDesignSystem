@@ -12,5 +12,6 @@ export * from './components/input/index';
 export * from './components/list-box/index';
 export * from './components/multi-select/index';
 export * from './components/select/index';
+export * from './components/tag-field/index';
 export * from './components/title-bar/index';
 export * from './components/window-controls/index';
