@@ -31,7 +31,7 @@ Set them on the one root theme. Nested themes may change any axis for a part of 
 
 | Axis | Values |
 | --- | --- |
-| style | `desk`, `neutral`, `studio` (`npx ds style list`) |
+| style | `desk`, `liquid`, `neutral`, `studio` (`npx ds style list`) |
 | scheme | `dark`, `light` |
 | density | `compact`, `default`, `comfortable` |
 | contrast | `default`, `more` |

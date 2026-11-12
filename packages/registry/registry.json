@@ -440,6 +440,11 @@
           "target": "@components/ds/styles/desk/style.json"
         },
         {
+          "path": "packages/styles/liquid/style.json",
+          "type": "registry:lib",
+          "target": "@components/ds/styles/liquid/style.json"
+        },
+        {
           "path": "packages/styles/neutral/motion.ts",
           "type": "registry:lib",
           "target": "@components/ds/styles/neutral/motion.ts"
@@ -694,6 +699,49 @@
       "meta": {
         "style": "desk",
         "status": "stable"
+      }
+    },
+    {
+      "name": "style-liquid",
+      "type": "registry:style",
+      "title": "Liquid style",
+      "description": "Tokens for dark and light, fonts and recipes of the Liquid style. Status: proposed, waiting for the owner.",
+      "dependencies": [
+        "@fontsource/ibm-plex-sans-arabic@^5.3.0"
+      ],
+      "registryDependencies": [
+        "@ds/core"
+      ],
+      "files": [
+        {
+          "path": "packages/registry/files/style-liquid.css",
+          "type": "registry:file",
+          "target": "@components/ds/style-liquid.css"
+        },
+        {
+          "path": "packages/tokens/dist/css/liquid.css",
+          "type": "registry:file",
+          "target": "@components/ds/tokens/liquid.css"
+        },
+        {
+          "path": "packages/styles/liquid/index.css",
+          "type": "registry:file",
+          "target": "@components/ds/styles/liquid/index.css"
+        },
+        {
+          "path": "packages/styles/liquid/fonts.css",
+          "type": "registry:file",
+          "target": "@components/ds/styles/liquid/fonts.css"
+        }
+      ],
+      "extends": "none",
+      "docs": "Import ds/style-liquid.css after ds/ds.css, and set style=\"liquid\" on Theme.",
+      "categories": [
+        "style"
+      ],
+      "meta": {
+        "style": "liquid",
+        "status": "proposed"
       }
     },
     {

@@ -69,6 +69,53 @@ const PRIMARY_FILLS = ['color.primary.fill', 'color.primary.fill-hover', 'color.
 
 const over = (tops: readonly string[], unders: readonly string[]): string[] => tops.flatMap((t) => unders.map((u) => `${t} over ${u}`));
 
+/** The brightest and the darkest picture glass may sit over (order 1.26). */
+const PICTURES = ['color.glass.backdrop-bright', 'color.glass.backdrop-dark'] as const;
+
+/** Liquid glass that carries text, over both pictures. */
+const LIQUID_GLASS = over(
+  ['color.material.glass', 'color.material.glass-strong', 'color.material.glass-flat', 'color.material.glass-tinted', 'color.material.dock', 'color.material.menubar'],
+  PICTURES,
+);
+
+/** Pairs measured only in Liquid, whose glass floats over any picture. */
+const LIQUID: readonly PairGroup[] = [
+  {
+    use: 'Liquid: text on glass over a white and a black picture',
+    fg: ['color.text.bright', 'color.text.default', 'color.text.muted', 'color.text.subtle', 'color.text.link', 'color.primary.on-surface'],
+    bg: LIQUID_GLASS,
+    min: 4.5,
+    styles: ['liquid'],
+  },
+  {
+    use: 'Liquid: text on a hovered or selected row of a glass menu over both pictures',
+    fg: ['color.text.default', 'color.text.muted'],
+    bg: [...over(['color.material.glass-hover over color.material.glass'], PICTURES), ...over(['color.primary.tint over color.material.glass'], PICTURES)],
+    min: 4.5,
+    styles: ['liquid'],
+  },
+  {
+    use: 'Liquid: text on clear glass, which always sits on a 40% dim, over both pictures',
+    fg: ['color.glass.on-clear'],
+    bg: over(['color.material.glass-clear over color.bg.scrim-40'], PICTURES),
+    min: 4.5,
+    styles: ['liquid'],
+  },
+  {
+    use: 'Liquid: focus ring and control boundary on glass over both pictures',
+    fg: ['color.focus.ring', 'color.border.control over $bg'],
+    bg: over(['color.material.glass', 'color.material.glass-strong', 'color.material.glass-tinted'], PICTURES),
+    min: 3,
+    styles: ['liquid'],
+  },
+  // The switch thumb is white in both schemes (color.primary.text). In light
+  // the off thumb carries a control edge, since white on the light off track
+  // is too faint.
+  { use: 'Liquid: the white switch thumb on the on fill', fg: ['color.primary.text'], bg: PRIMARY_FILLS, min: 3, styles: ['liquid'] },
+  { use: 'Liquid: the white switch thumb on the off track', fg: ['color.primary.text'], bg: ['color.bg.surface-4'], min: 3, styles: ['liquid'], schemes: ['dark'] },
+  { use: 'Liquid: the edge of the off switch thumb on the off track', fg: ['color.border.control'], bg: ['color.bg.surface-4'], min: 3, styles: ['liquid'], schemes: ['light'] },
+];
+
 export const CONTRAST_PAIRS: ContrastData = {
   backdrops: [...SURFACES],
 
@@ -232,6 +279,11 @@ export const CONTRAST_PAIRS: ContrastData = {
       bg: ['color.window.light-close', 'color.window.light-min', 'color.window.light-zoom'],
       min: 3,
     },
+
+    // Liquid (order 1.26): glass sits over pictures, not only over the
+    // style's own surfaces. Every glass that carries text is measured over a
+    // white and a black picture (color.glass.backdrop-bright and -dark).
+    ...LIQUID,
   ],
 
   // Desk dark: the regular, tinted and dock glass and the title bar over the

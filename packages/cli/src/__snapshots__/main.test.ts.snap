@@ -347,9 +347,10 @@ exports[`ds --json > errors carry a stable code and exit 2 1`] = `
     "apiVersion": 1,
     "data": {
       "code": "DS_E_STYLE",
-      "message": "No style "paper". Styles: desk, neutral, studio.",
+      "message": "No style "paper". Styles: desk, liquid, neutral, studio.",
       "styles": [
         "desk",
+        "liquid",
         "neutral",
         "studio",
       ],
@@ -554,6 +555,20 @@ exports[`ds --json > style list 1`] = `
           "light",
         ],
         "status": "stable",
+      },
+      {
+        "defaultDensity": "comfortable",
+        "defaultScheme": "light",
+        "iconSet": "line",
+        "id": "liquid",
+        "motionPreset": "spring",
+        "name": "Liquid",
+        "proposedSchemes": [],
+        "schemes": [
+          "light",
+          "dark",
+        ],
+        "status": "proposed",
       },
       {
         "defaultDensity": "comfortable",

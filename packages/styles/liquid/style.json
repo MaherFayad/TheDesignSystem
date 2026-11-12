@@ -1,0 +1,28 @@
+{
+  "id": "liquid",
+  "name": "Liquid",
+  "extends": "base",
+  "status": "proposed",
+  "schemes": ["light", "dark"],
+  "defaultScheme": "light",
+  "defaultDensity": "comfortable",
+  "iconSet": "line",
+  "motionPreset": "spring",
+  "usesGlass": true,
+  "optionalParts": {},
+  "fonts": { "sans": "system-ui", "arabic": "IBM Plex Sans Arabic" },
+  "dials": {
+    "base": "solid content under a floating glass layer",
+    "accent": "one tint, blue by default, picked up by glass at low strength",
+    "depth": "glass: blur, saturation, a light edge, a soft wide shadow",
+    "separation": "content scrolls under glass, scroll edge fade",
+    "radius": "capsules, 20 to 28 for panels and sheets, inner equals outer minus padding",
+    "controls": "capsule buttons, floating tab bar, glass sheets, glass lens thumbs",
+    "density": "roomy, touch first: the comfortable step of the shared scale",
+    "type": "the platform system font stack, no font file",
+    "icons": "line, round caps",
+    "chrome": "floating tab bar, toolbars, sheets with detents",
+    "motion": "springs, press scale, shapes merge",
+    "focus": "2px tint ring, 2px gap; glass is never the only signal"
+  }
+}
