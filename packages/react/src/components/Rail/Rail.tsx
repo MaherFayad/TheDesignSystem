@@ -14,14 +14,14 @@
 //   another lane: once it lands, every item of a rail with hidden labels is
 //   wrapped in a Tooltip with its label, at the marked line in RailItem.
 //   Until then, prefer visible labels.
-// - Targets: md items are size.control.lg (44px, 40px compact), sm items
-//   size.control.md (32px, 28px compact), never under 24px.
+// - Targets: md items are size.control.md (32px), sm size.control.sm
+//   (28px), never under 24px. On data-platform ios and android they grow to
+//   size.touch.ios (44pt) and size.touch.android (48dp) for touch templates.
 // - `start` and `end` hold the brand and the account or settings items, at
 //   the block start and the block end of the column.
 // - No motion: the hover veil fades on duration.fast and collapses under
 //   reduced motion; nothing moves, so there is no pattern to name.
 import {
-  cloneElement,
   createContext,
   isValidElement,
   useContext,
@@ -53,7 +53,7 @@ const ListContext = createContext(false);
 export interface RailProps extends Omit<HTMLAttributes<HTMLElement>, 'title'> {
   /** The accessible name of the navigation landmark ("Main", "Tools"). Required. */
   label: string;
-  /** Item size: sm 32px, md 44px at default density. Default md. */
+  /** Item size: sm 28px, md 32px at default density; 44 or 48 on touch platforms. Default md. */
   size?: RailSize;
   /**
    * Draws only the icons; each label stays as the accessible name. Pair
@@ -81,11 +81,15 @@ export function Rail({ label, size = 'md', hideLabels = false, start, end, child
       data-size={size}
       data-hide-labels={hideLabels ? '' : undefined}
     >
-      {start !== undefined && <div data-part="start">{start}</div>}
+      {start != null && <div data-part="start">{start}</div>}
       <ul data-part="list">
         <ListContext.Provider value={true}>{children}</ListContext.Provider>
       </ul>
-      {end !== undefined && <div data-part="end">{end}</div>}
+      {end != null && (
+        <ul data-part="end">
+          <ListContext.Provider value={true}>{end}</ListContext.Provider>
+        </ul>
+      )}
     </nav>
   );
 }
@@ -165,38 +169,43 @@ export function RailItem({
     },
   };
 
-  const content = (
-    <>
-      <span data-part="item-icon" aria-hidden="true">
-        {typeof icon === 'string' ? <Icon name={icon} size="md" /> : icon}
-      </span>
-      <span data-part="item-label">{label}</span>
-      {/* A space for the accessible name ("Inbox 3"); a flex column draws no whitespace. */}
-      {(dot || shown !== undefined) && ' '}
-      {(dot || shown !== undefined) && (
-        <span data-part="item-badge" data-dot={dot ? '' : undefined}>
-          {/* dir ltr: 99+ keeps its order in Arabic. */}
-          {shown !== undefined && (
-            <span dir="ltr" aria-hidden={badgeLabel ? true : undefined}>
-              {shown}
-            </span>
-          )}
-          {badgeLabel && <span data-visually-hidden="">{badgeLabel}</span>}
+  const badgePart = (dot || shown !== undefined) && (
+    <span data-part="item-badge" data-dot={dot ? '' : undefined}>
+      {/* dir ltr: 99+ keeps its order in Arabic. */}
+      {shown !== undefined && (
+        <span dir="ltr" aria-hidden={badgeLabel ? true : undefined}>
+          {shown}
         </span>
       )}
+      {badgeLabel && <span data-visually-hidden="">{badgeLabel}</span>}
+    </span>
+  );
+
+  // The badge sits in the icon box, on its corner. The label comes first in the DOM so the name reads "Inbox 3".
+  const content = (
+    <>
+      {/* dir auto: a Latin label in an Arabic rail truncates at its own end. */}
+      <span data-part="item-label" dir="auto">
+        {label}
+      </span>
+      {badgePart && ' '}
+      <span data-part="item-icon">
+        <span aria-hidden="true">{typeof icon === 'string' ? <Icon name={icon} size="md" /> : icon}</span>
+        {badgePart}
+      </span>
     </>
   );
 
   // Tooltip (1.6.6): when it lands, wrap the item below in a Tooltip with its label while labels are hidden.
   let item: ReactNode;
-  if (asChild) {
-    if (!isValidElement<{ href?: string }>(children)) {
+  // A disabled item is always the plain anchor: a router child's own click handler would run first and navigate.
+  if (asChild && !disabled) {
+    if (!isValidElement(children)) {
       throw new Error('RailItem with asChild needs one element as its child.');
     }
-    const child = disabled && children.props.href !== undefined ? cloneElement(children, { href: undefined }) : children;
     item = (
       <Slot.Root {...attrs}>
-        <Slot.Slottable child={child}>{() => content}</Slot.Slottable>
+        <Slot.Slottable child={children}>{() => content}</Slot.Slottable>
       </Slot.Root>
     );
   } else {

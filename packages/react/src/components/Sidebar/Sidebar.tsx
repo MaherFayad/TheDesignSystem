@@ -25,7 +25,6 @@
 // - The width never animates (only transform and opacity may), so collapse
 //   is instant. An opened group fades in (pattern "fade-rise").
 import {
-  cloneElement,
   createContext,
   isValidElement,
   useCallback,
@@ -390,18 +389,20 @@ export function SidebarItem({
 
   // Tooltip (1.6.6): when it lands, wrap the item below in a Tooltip with its label while the sidebar is collapsed.
   let item: ReactNode;
-  if (asChild) {
-    if (!isValidElement<{ href?: string }>(children)) {
+  // A disabled item is always the plain anchor: a router child's own click handler would run first and navigate.
+  if (asChild && !disabled) {
+    if (!isValidElement(children)) {
       throw new Error('SidebarItem with asChild needs one element as its child.');
     }
-    const child = disabled && children.props.href !== undefined ? cloneElement(children, { href: undefined }) : children;
     item = (
       <Slot.Root {...attrs}>
-        <Slot.Slottable child={child}>{(content: ReactNode) => render(content)}</Slot.Slottable>
+        <Slot.Slottable child={children}>{(content: ReactNode) => render(content)}</Slot.Slottable>
       </Slot.Root>
     );
   } else {
-    item = <a {...attrs}>{render(children)}</a>;
+    // A disabled asChild item shows its child's text in the plain anchor.
+    const text = asChild && isValidElement<{ children?: ReactNode }>(children) ? children.props.children : children;
+    item = <a {...attrs}>{render(text)}</a>;
   }
 
   return inList ? <li>{item}</li> : item;

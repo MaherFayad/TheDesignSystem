@@ -49,6 +49,7 @@ function AppRail({
   label = 'Main',
   settings = 'Settings',
   mark = 'N',
+  newActivity = 'New activity',
 }: {
   entries: Entry[];
   size?: RailSize;
@@ -56,6 +57,7 @@ function AppRail({
   label?: string;
   settings?: string;
   mark?: string;
+  newActivity?: string;
 }) {
   return (
     <Rail
@@ -72,7 +74,7 @@ function AppRail({
           icon={icon}
           label={text}
           badge={badge}
-          badgeLabel={badge === true ? 'New activity' : undefined}
+          badgeLabel={badge === true ? newActivity : undefined}
           active={i === 0}
         />
       ))}
@@ -98,10 +100,10 @@ export default function RailDemo() {
         <Theme lang="ar" data-demo="content">
           <DemoRow>
             <Frame>
-              <AppRail entries={ar} label="الرئيسية" settings="الإعدادات" mark="ش" />
+              <AppRail entries={ar} label="التنقل الرئيسي" settings="الإعدادات" mark="ش" newActivity="نشاط جديد" />
             </Frame>
             <Frame>
-              <AppRail entries={ar} label="الرئيسية" settings="الإعدادات" mark="ش" size="sm" hideLabels />
+              <AppRail entries={ar} label="التنقل الرئيسي" settings="الإعدادات" mark="ش" newActivity="نشاط جديد" size="sm" hideLabels />
             </Frame>
           </DemoRow>
         </Theme>
@@ -146,9 +148,10 @@ export default function RailDemo() {
 
       <DemoCase id="long-arabic" title="Long Arabic labels" lang="ar">
         <Frame>
-          <Rail label="الرئيسية">
+          <Rail label="التنقل الرئيسي">
             <RailItem href="#ar-a" icon="folder" label="المستندات المشتركة" active />
             <RailItem href="#ar-b" icon="user" label="الاشتراكات" badge={12} />
+            <RailItem href="#ar-c" icon="settings" label="Settings" />
           </Rail>
         </Frame>
       </DemoCase>

@@ -25,9 +25,10 @@ describe('Rail', () => {
     expect(el.hasAttribute('data-hide-labels')).toBe(false);
     const parts = Array.from(el.children).map((c) => c.getAttribute('data-part'));
     expect(parts).toEqual(['start', 'list', 'end']);
-    expect(screen.getAllByRole('listitem')).toHaveLength(2);
-    // The end item is a bare link, not a list item.
-    expect(el.querySelector('[data-part="end"] > a[data-part="item"]')).not.toBeNull();
+    // The end is a second list, so its items are list items too.
+    expect(screen.getAllByRole('listitem')).toHaveLength(3);
+    expect(el.querySelector('[data-part="end"] > li > a[data-part="item"]')).not.toBeNull();
+    expect(screen.getByRole('link', { name: 'Inbox 3' }).hasAttribute('aria-current')).toBe(false);
   });
 
   it('marks the active item and reads the badge in the name', () => {
@@ -87,6 +88,32 @@ describe('Rail', () => {
     const item = screen.getByRole('link', { name: 'Home' });
     expect(item.getAttribute('href')).toBe('#router');
     expect(item.getAttribute('data-part')).toBe('item');
+  });
+
+  it('a badge of 0 or false draws nothing; the label has dir auto', () => {
+    const { container } = render(
+      <Rail label="Main">
+        <RailItem href="#a" icon="home" label="Home" badge={0} />
+        <RailItem href="#b" icon="inbox" label="Inbox" badge={false} />
+      </Rail>,
+    );
+    expect(container.querySelector('[data-part="item-badge"]')).toBeNull();
+    expect(container.querySelector('[data-part="item-label"]')?.getAttribute('dir')).toBe('auto');
+  });
+
+  it('a disabled asChild item never runs the router child click', async () => {
+    const childClick = vi.fn();
+    render(
+      <Rail label="Main">
+        <RailItem asChild disabled icon="home" label="Home">
+          <a href="#router" onClick={childClick} />
+        </RailItem>
+      </Rail>,
+    );
+    const item = screen.getByRole('link', { name: 'Home' });
+    expect(item.hasAttribute('href')).toBe(false);
+    await userEvent.click(item);
+    expect(childClick).not.toHaveBeenCalled();
   });
 
   it('the demo sets no native title', () => {

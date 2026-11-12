@@ -260,6 +260,25 @@ describe('Sidebar', () => {
     expect(item.querySelector('[data-part="item-icon"]')).not.toBeNull();
   });
 
+  it('a disabled asChild item never runs the router child click', async () => {
+    const childClick = vi.fn();
+    render(
+      <Sidebar label="Main">
+        <SidebarGroup>
+          <SidebarItem asChild disabled>
+            <a href="#router" onClick={childClick}>
+              Home
+            </a>
+          </SidebarItem>
+        </SidebarGroup>
+      </Sidebar>,
+    );
+    const item = screen.getByRole('link', { name: 'Home' });
+    expect(item.hasAttribute('href')).toBe(false);
+    await userEvent.click(item);
+    expect(childClick).not.toHaveBeenCalled();
+  });
+
   it('never sets a native title', () => {
     const { container } = render(<SidebarDemo />);
     expect(container.querySelector('[title]')).toBeNull();

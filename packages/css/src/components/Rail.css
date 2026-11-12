@@ -8,10 +8,10 @@
  *     [data-part='start']                       brand or workspace, block start
  *     [data-part='list']                        the ul of items
  *       [data-part='item']                      a link, data-active, data-disabled
- *         [data-part='item-icon']
- *         [data-part='item-label']              short, under the icon
- *         [data-part='item-badge']              a count or a dot (data-dot) on the icon's corner
- *     [data-part='end']                         account or settings, block end
+ *         [data-part='item-label']              short, drawn under the icon (first in the DOM for the name)
+ *         [data-part='item-icon']               drawn first with order -1
+ *           [data-part='item-badge']            a count or a dot (data-dot) on the icon's corner
+ *     [data-part='end']                         a second ul: account or settings, block end
  *
  * Private properties on the root (recipes override these):
  *
@@ -35,9 +35,9 @@
     --_rail-bg: var(--ds-color-bg-surface);
     --_rail-fg: var(--ds-color-text-default);
     --_rail-border-color: var(--ds-color-border-hairline);
-    --_rail-item-size: var(--ds-size-control-lg);
-    /* Room for a one word label under the icon: half again the icon box. */
-    --_rail-item-width: calc(var(--_rail-item-size) * 1.5);
+    --_rail-item-size: var(--ds-size-control-md);
+    /* Room for a one word label under the icon: half again the Studio rail width, or the item, whichever is wider. */
+    --_rail-item-width: max(calc(var(--ds-shell-rail-width) * 1.5), var(--_rail-item-size));
     --_rail-item-radius: var(--ds-radius-field);
     --_rail-label-font-size: var(--ds-font-size-2xs);
     --_rail-item-bg: transparent;
@@ -69,7 +69,16 @@
   }
 
   [data-ds='rail'][data-size='sm'] {
-    --_rail-item-size: var(--ds-size-control-md);
+    --_rail-item-size: var(--ds-size-control-sm);
+  }
+
+  /* Touch templates: 44pt on iOS, 48dp on Android (WCAG 2.5.8 and the platform guides). */
+  [data-platform='ios'] [data-ds='rail'] {
+    --_rail-item-size: var(--ds-size-touch-ios);
+  }
+
+  [data-platform='android'] [data-ds='rail'] {
+    --_rail-item-size: var(--ds-size-touch-android);
   }
 
   [data-ds='rail'][data-hide-labels] {
@@ -98,8 +107,9 @@
   }
 
   [data-ds='rail'] > [data-part='end'] {
-    margin-block-start: auto;
-    padding-block-start: var(--_rail-gap);
+    margin-block: auto 0;
+    padding: var(--_rail-gap) 0 0;
+    list-style: none;
   }
 
   /* The list scrolls when it runs out of room; start and end stay in view. */
@@ -115,6 +125,7 @@
     overflow-x: hidden;
     overflow-y: auto;
     overscroll-behavior: contain;
+    scrollbar-width: thin;
     list-style: none;
   }
 
@@ -168,6 +179,8 @@
   }
 
   [data-ds='rail'] [data-part='item-icon'] {
+    position: relative;
+    order: -1;
     display: inline-flex;
     flex: none;
     align-items: center;
@@ -186,10 +199,11 @@
     white-space: nowrap;
   }
 
+  /* On the icon's top end corner, half outside it. */
   [data-ds='rail'] [data-part='item-badge'] {
     position: absolute;
-    inset-block-start: var(--ds-space-4xs);
-    inset-inline-end: var(--ds-space-4xs);
+    inset-block-start: calc(-1 * var(--ds-space-xs));
+    inset-inline-start: calc(100% - var(--ds-space-xs));
     display: inline-flex;
     align-items: center;
     justify-content: center;

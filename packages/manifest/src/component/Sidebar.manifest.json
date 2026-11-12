@@ -45,11 +45,34 @@
     "SidebarFooter": "footer"
   },
   "slots": {
-    "header": { "accepts": "any", "max": 1 },
-    "group": { "accepts": ["SidebarItem"], "min": 1 },
-    "footer": { "accepts": ["SidebarItem", "Button", "DropdownMenu"] },
-    "item-icon": { "accepts": ["Icon"], "max": 1 },
-    "item-label": { "accepts": "text", "min": 1, "max": 1 }
+    "header": {
+      "accepts": "any",
+      "max": 1
+    },
+    "group": {
+      "accepts": [
+        "SidebarItem"
+      ],
+      "min": 1
+    },
+    "footer": {
+      "accepts": [
+        "SidebarItem",
+        "Button",
+        "DropdownMenu"
+      ]
+    },
+    "item-icon": {
+      "accepts": [
+        "Icon"
+      ],
+      "max": 1
+    },
+    "item-label": {
+      "accepts": "text",
+      "min": 1,
+      "max": 1
+    }
   },
   "props": {
     "label": {
@@ -58,7 +81,10 @@
       "description": "The accessible name of the nav landmark: Main, Settings. Not drawn."
     },
     "size": {
-      "type": ["sm", "md"],
+      "type": [
+        "sm",
+        "md"
+      ],
       "default": "md",
       "description": "Row height from size.control: sm 28px, md 32px at default density. Compact makes them 24 and 28, comfortable 32 and 36."
     },
@@ -66,8 +92,15 @@
       "type": "boolean",
       "description": "Controlled collapsed state: items show only their icons, labels stay as the accessible names."
     },
-    "defaultCollapsed": { "type": "boolean", "default": false, "description": "Collapsed at first render when uncontrolled." },
-    "onCollapsedChange": { "type": "function", "description": "Called with the next collapsed state when the toggle is pressed." },
+    "defaultCollapsed": {
+      "type": "boolean",
+      "default": false,
+      "description": "Collapsed at first render when uncontrolled."
+    },
+    "onCollapsedChange": {
+      "type": "function",
+      "description": "Called with the next collapsed state when the toggle is pressed."
+    },
     "collapsible": {
       "type": "boolean",
       "default": true,
@@ -78,19 +111,44 @@
       "default": "{ collapse: 'Collapse sidebar', expand: 'Expand sidebar' }",
       "description": "The toggle's accessible names. Under an Arabic Theme the defaults are طي القائمة الجانبية and توسيع القائمة الجانبية."
     },
-    "SidebarGroup.label": { "type": "string", "description": "The visible heading and the name of the group's list." },
+    "SidebarGroup.label": {
+      "type": "string",
+      "description": "The visible heading and the name of the group's list."
+    },
     "SidebarGroup.collapsible": {
       "type": "boolean",
       "default": false,
       "description": "The heading becomes a ghost Button that opens and closes the group (Radix Collapsible). The group then stamps data-state open or closed."
     },
-    "SidebarGroup.open": { "type": "boolean", "description": "Controlled open state of a collapsible group." },
-    "SidebarGroup.defaultOpen": { "type": "boolean", "default": true, "description": "Open at first render when uncontrolled." },
-    "SidebarGroup.onOpenChange": { "type": "function", "description": "Called with the next open state." },
-    "SidebarItem.href": { "type": "string", "description": "Where the item goes. Removed while disabled." },
-    "SidebarItem.start": { "type": "icon | node", "description": "The leading icon, a system icon name or a node. Give every item one if the sidebar can collapse." },
-    "SidebarItem.count": { "type": "number", "description": "A number after the label. Over 99 shows 99+; 0 draws nothing." },
-    "SidebarItem.countLabel": { "type": "string", "description": "What the count means, read instead of the bare number: 12 unread." },
+    "SidebarGroup.open": {
+      "type": "boolean",
+      "description": "Controlled open state of a collapsible group."
+    },
+    "SidebarGroup.defaultOpen": {
+      "type": "boolean",
+      "default": true,
+      "description": "Open at first render when uncontrolled."
+    },
+    "SidebarGroup.onOpenChange": {
+      "type": "function",
+      "description": "Called with the next open state."
+    },
+    "SidebarItem.href": {
+      "type": "string",
+      "description": "Where the item goes. Removed while disabled."
+    },
+    "SidebarItem.start": {
+      "type": "icon | node",
+      "description": "The leading icon, a system icon name or a node. Give every item one if the sidebar can collapse."
+    },
+    "SidebarItem.count": {
+      "type": "number",
+      "description": "A number after the label. Over 99 shows 99+; 0 draws nothing."
+    },
+    "SidebarItem.countLabel": {
+      "type": "string",
+      "description": "What the count means, read instead of the bare number: 12 unread."
+    },
     "SidebarItem.active": {
       "type": "boolean",
       "default": false,
@@ -99,12 +157,27 @@
     "SidebarItem.disabled": {
       "type": "boolean",
       "default": false,
-      "description": "Removes the href, sets role link, aria-disabled and data-disabled, and stays in the tab order."
+      "description": "Removes the href, sets role link, aria-disabled and data-disabled, and stays in the tab order. With asChild the plain anchor renders instead of the router child, so the child's own click never runs."
     },
-    "SidebarItem.asChild": { "type": "boolean", "default": false, "description": "Renders the single child element, a router link, as the item." },
-    "children": { "type": "node", "required": true, "description": "SidebarHeader, SidebarGroups and a SidebarFooter. An item's children are its label." }
+    "SidebarItem.asChild": {
+      "type": "boolean",
+      "default": false,
+      "description": "Renders the single child element, a router link, as the item."
+    },
+    "children": {
+      "type": "node",
+      "required": true,
+      "description": "SidebarHeader, SidebarGroups and a SidebarFooter. An item's children are its label."
+    }
   },
-  "states": ["expanded", "collapsed", "open", "closed", "data-active", "data-disabled"],
+  "states": [
+    "expanded",
+    "collapsed",
+    "open",
+    "closed",
+    "data-active",
+    "data-disabled"
+  ],
   "a11y": {
     "role": "navigation (nav with aria-label); each group is a list named by its heading; items are links",
     "focus": "Every item is a tab stop, disabled ones included. The ring is an inset 2px ring from color.focus.ring inside the row.",
@@ -117,7 +190,10 @@
     "announce": "The current item says current page. The toggle is a button named for its next action (Collapse sidebar, Expand sidebar), with no aria-expanded: every link stays in place, only drawn smaller. A group trigger has aria-expanded. A count with countLabel reads as Inbox 12 unread.",
     "native": {
       "accessibilityRole": "link (each item; the container has no role)",
-      "accessibilityState": ["disabled", "expanded (group triggers)"]
+      "accessibilityState": [
+        "disabled",
+        "expanded (group triggers)"
+      ]
     },
     "notes": [
       "The current page is shown by aria-current, a bold weight, a fill and an edge bar, never by color alone (WCAG 1.4.1).",
@@ -205,17 +281,46 @@
     "neutral": "Takes the tokens of the Neutral style, no recipe."
   },
   "mistakes": [
-    { "wrong": "The current page shown only by a different text color", "right": "active, which adds aria-current, weight, a fill and an edge bar" },
-    { "wrong": "Items with no icon in a sidebar that can collapse", "right": "start on every item, so the collapsed column still shows each destination" },
-    { "wrong": "A Sidebar of icon buttons with no labels", "right": "Rail" },
-    { "wrong": "Hiding the label with display none when collapsed", "right": "Collapsed keeps the label as the accessible name" },
-    { "wrong": "Buttons that save or delete inside the item list", "right": "Items only navigate; actions go in the header or footer as Buttons" }
+    {
+      "wrong": "The current page shown only by a different text color",
+      "right": "active, which adds aria-current, weight, a fill and an edge bar"
+    },
+    {
+      "wrong": "Items with no icon in a sidebar that can collapse",
+      "right": "start on every item, so the collapsed column still shows each destination"
+    },
+    {
+      "wrong": "A Sidebar of icon buttons with no labels",
+      "right": "Rail"
+    },
+    {
+      "wrong": "Hiding the label with display none when collapsed",
+      "right": "Collapsed keeps the label as the accessible name"
+    },
+    {
+      "wrong": "Buttons that save or delete inside the item list",
+      "right": "Items only navigate; actions go in the header or footer as Buttons"
+    }
   ],
   "contract": {
-    "optionalParts": ["group-label", "group-trigger", "item-count", "item-icon", "header", "toggle", "footer"],
+    "optionalParts": [
+      "group-label",
+      "group-trigger",
+      "item-count",
+      "item-icon",
+      "header",
+      "toggle",
+      "footer"
+    ],
     "keys": {
-      "Enter": { "focus": "[data-part='item']:not([data-disabled])", "expect": "click" },
-      "Space": { "focus": "[data-part='group-trigger']", "expect": "state-changes" }
+      "Enter": {
+        "focus": "[data-part='item']:not([data-disabled])",
+        "expect": "click"
+      },
+      "Space": {
+        "focus": "[data-part='group-trigger']",
+        "expect": "state-changes"
+      }
     }
   },
   "since": "0.1.0"
