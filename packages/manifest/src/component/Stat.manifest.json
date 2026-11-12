@@ -1,0 +1,117 @@
+{
+  "name": "Stat",
+  "kind": "component",
+  "family": "data-display",
+  "summary": "One number with its label, its change since the last period and a short hint: a KPI.",
+  "useWhen": [
+    "A dashboard row of key numbers: active users, revenue, failed payments",
+    "One headline number at the top of a report or a detail page, with how it moved",
+    "A count that people compare with a target or the last period"
+  ],
+  "avoidWhen": [
+    "Many numbers people compare row by row",
+    "A trend over time that people read point by point",
+    "A number that is a setting people change",
+    "A small count on a nav item or a tab"
+  ],
+  "insteadUse": {
+    "Many numbers compared row by row": "Table (wave 2)",
+    "A trend over time": "a chart (wave 3), with Stat above it for the latest value",
+    "Term and value pairs, such as order details": "DescriptionList",
+    "A number people edit": "NumberField",
+    "A count on a nav item or a tab": "Badge",
+    "Progress toward a goal": "Progress"
+  },
+  "anatomy": ["root", "label", "value", "delta", "hint", "icon"],
+  "slots": {
+    "label": { "accepts": "text", "min": 1, "max": 1 },
+    "value": { "accepts": "text", "max": 1 },
+    "hint": { "accepts": "text", "max": 1 },
+    "icon": { "accepts": ["Icon"], "max": 1 }
+  },
+  "props": {
+    "label": { "type": "node", "required": true, "description": "What the number counts, in sentence case: Active users." },
+    "value": {
+      "type": "node",
+      "description": "A number is formatted with Intl in the Theme language with Western digits and the format options. A node (No data) is drawn as is."
+    },
+    "format": { "type": "string", "description": "Intl.NumberFormat options for a numeric value: currency, unit, compact notation." },
+    "delta": {
+      "type": "node",
+      "description": "The change since the last period. A number sets the trend from its sign and is drawn as its absolute value with deltaFormat (0.12 is 12%). A node is drawn as is and needs trend."
+    },
+    "deltaFormat": { "type": "string", "default": "{ style: 'percent', maximumFractionDigits: 1 }", "description": "Intl.NumberFormat options for a numeric delta." },
+    "trend": { "type": ["up", "down", "flat"], "description": "Default from the sign of a numeric delta. Sets data-trend on the root (up, down or flat) and the arrow icon." },
+    "tone": {
+      "type": ["success", "danger", "neutral"],
+      "description": "The color of the change. Default success when up, danger when down, neutral when flat. Set it when down is good: costs, errors, churn. Only stamped when there is a change."
+    },
+    "hint": { "type": "node", "description": "A short line under the value: Since last month." },
+    "icon": { "type": "node", "description": "A system icon name or a node at the end of the label line. Decorative, hidden from assistive tech." },
+    "size": { "type": ["sm", "md", "lg"], "default": "md", "description": "The size of the value: font.size 2xl, 4xl and 6xl." },
+    "loading": { "type": "boolean", "default": false, "description": "Draws a placeholder block for the value, sets aria-busy and data-loading, hides the change." },
+    "loadingLabel": { "type": "string", "default": "Loading", "description": "What screen readers hear while loading. جار التحميل under an Arabic Theme." },
+    "trendLabels": { "type": "string", "description": "Overrides the trend words: { up, down, flat }. Default Up, Down, No change, or ارتفاع، انخفاض، بدون تغيير." }
+  },
+  "states": ["data-loading"],
+  "a11y": {
+    "role": "None: a div with text. Read in order: label, value, change, hint.",
+    "focus": "Never focusable.",
+    "keys": {},
+    "announce": "The change is read with its trend word first: Up 12%. Value changes are not announced, so a page of refreshing KPIs stays quiet. While loading, aria-busy is set and the value says loadingLabel.",
+    "native": { "accessibilityRole": "text", "accessibilityState": ["busy"] },
+    "notes": [
+      "The trend is never color alone (WCAG 1.4.1): an arrow or a bar icon draws it and a visually hidden word says it.",
+      "data-trend on the root carries up, down or flat. It is a valued attribute, so it is listed here and under props, not under states, until the contract suite knows valued states.",
+      "Numbers use tabular figures, so a refreshing value does not shift its neighbours.",
+      "Under forced colors the loading block keeps a CanvasText border."
+    ]
+  },
+  "content": {
+    "en": {
+      "label": "A noun phrase in sentence case: Active users, Revenue this month. No colon.",
+      "hint": "Say what the change compares with: Since last month.",
+      "empty": "No data, with a hint that says when it will show."
+    },
+    "ar": {
+      "label": "Noun form, no diacritics: المستخدمين النشطين، الإيرادات.",
+      "hint": "مقارنة بالشهر الماضي",
+      "digits": "Western digits, through Intl with the latn numbering system. Currency SAR shows ر.س."
+    }
+  },
+  "tokens": [
+    "space.4xs", "space.3xs", "space.2xs", "space.xs",
+    "font.family.sans", "font.size.xs", "font.size.s", "font.size.m", "font.size.2xl", "font.size.4xl", "font.size.6xl",
+    "font.weight.medium", "font.weight.semibold",
+    "font.leading.tight", "font.leading.snug", "font.leading.arabic-snug",
+    "font.tracking.display", "font.tracking.none",
+    "color.text.bright", "color.text.muted",
+    "color.state.success.text", "color.state.danger.text",
+    "color.bg.overlay-10", "radius.xs", "border.width.default",
+    "size.icon.sm", "size.icon.md",
+    "duration.roll", "ease.reveal"
+  ],
+  "motion": "number-roll",
+  "frameworks": {
+    "react": {
+      "status": "ready",
+      "behavior": "hand built",
+      "example": "Stat.demo.tsx",
+      "note": "number-roll plays through the Web Animations API on duration.roll and ease.reveal when a numeric value changes after the first paint; opacity only under reduced motion. Numbers go through a private formatStatNumber until packages/shared/src/number.ts (order 1.2.5) lands."
+    },
+    "angular": { "status": "planned", "behavior": "[dsStat], hand built" },
+    "native": { "status": "planned", "note": "Same props; number-roll through Reanimated in wave 2." }
+  },
+  "styles": {
+    "studio": "Bright value on the black body, muted label and hint; the change in the state text colors.",
+    "desk": "Same layout in Instrument Sans with display tracking on the value.",
+    "neutral": "Same layout on the Neutral tokens; no recipe."
+  },
+  "mistakes": [
+    { "wrong": "A green number with no arrow or word", "right": "delta with its trend: the icon and the hidden word say up or down" },
+    { "wrong": "Errors went down, shown in red", "right": "tone success on a metric where down is good" },
+    { "wrong": "A preformatted string like 48.2K for a number", "right": "value as a number with format { notation: 'compact' }, so the language sets the digits" },
+    { "wrong": "A live region around a refreshing KPI", "right": "No announcement; the page announces a change people asked for" }
+  ],
+  "since": "0.1.0"
+}

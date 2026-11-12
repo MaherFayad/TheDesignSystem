@@ -1,0 +1,130 @@
+import { render } from '@testing-library/react';
+import { userEvent } from '@testing-library/user-event';
+import { describe, expect, it, vi } from 'vitest';
+import { Theme } from '../../theme/Theme';
+import StatDemo from './Stat.demo';
+import { Stat } from './index';
+import { formatStatNumber, statLocale } from './formatStatNumber';
+
+const root = (c: HTMLElement) => c.querySelector<HTMLElement>('[data-ds="stat"]')!;
+const part = (c: HTMLElement, p: string) => c.querySelector<HTMLElement>(`[data-ds="stat"] > [data-part="${p}"]`);
+
+describe('formatStatNumber', () => {
+  it('uses Western digits in Arabic', () => {
+    expect(statLocale('ar')).toBe('ar-u-nu-latn');
+    expect(statLocale('ar-SA-u-nu-arab')).toBe('ar-SA-u-nu-arab');
+    expect(formatStatNumber(48200, 'ar')).toMatch(/48,?200|48٬200/);
+    expect(formatStatNumber(48200, 'ar')).not.toMatch(/[٠-٩]/);
+  });
+
+  it('falls back to English on a bad locale', () => {
+    expect(formatStatNumber(1200, 'not a locale!')).toBe('1,200');
+  });
+});
+
+describe('Stat', () => {
+  it('renders the label and the formatted value at size md', () => {
+    const { container } = render(<Stat label="Active users" value={12480} />);
+    expect(root(container).getAttribute('data-size')).toBe('md');
+    expect(part(container, 'label')?.textContent).toBe('Active users');
+    expect(part(container, 'value')?.textContent).toBe('12,480');
+    expect(part(container, 'delta')).toBeNull();
+    expect(root(container).hasAttribute('data-tone')).toBe(false);
+    expect(root(container).hasAttribute('data-trend')).toBe(false);
+  });
+
+  it('takes format options and a node value', () => {
+    const { container, rerender } = render(<Stat label="Revenue" value={1500} format={{ style: 'currency', currency: 'USD' }} />);
+    expect(part(container, 'value')?.textContent).toBe('$1,500.00');
+    rerender(<Stat label="Time" value={14} format={{ style: 'unit', unit: 'minute' }} />);
+    expect(part(container, 'value')?.textContent).toBe('14 min');
+    rerender(<Stat label="Revenue" value="No data" />);
+    expect(part(container, 'value')?.textContent).toBe('No data');
+  });
+
+  it('derives trend and tone from the sign of the delta and says the trend in words', () => {
+    const { container, rerender } = render(<Stat label="Users" value={10} delta={0.12} />);
+    expect(root(container).getAttribute('data-trend')).toBe('up');
+    expect(root(container).getAttribute('data-tone')).toBe('success');
+    expect(part(container, 'delta')?.textContent).toBe('Up 12%');
+    expect(part(container, 'delta')?.querySelector('svg')).not.toBeNull();
+
+    rerender(<Stat label="Users" value={10} delta={-0.05} />);
+    expect(root(container).getAttribute('data-trend')).toBe('down');
+    expect(root(container).getAttribute('data-tone')).toBe('danger');
+    expect(part(container, 'delta')?.textContent).toBe('Down 5%');
+
+    rerender(<Stat label="Users" value={10} delta={0} />);
+    expect(root(container).getAttribute('data-trend')).toBe('flat');
+    expect(root(container).getAttribute('data-tone')).toBe('neutral');
+    expect(part(container, 'delta')?.textContent).toBe('No change 0%');
+  });
+
+  it('lets the tone and trend be set, for metrics where down is good', () => {
+    const { container } = render(<Stat label="Errors" value={3} delta={-0.4} tone="success" />);
+    expect(root(container).getAttribute('data-tone')).toBe('success');
+    expect(root(container).getAttribute('data-trend')).toBe('down');
+  });
+
+  it('speaks the trend in Arabic under an Arabic Theme, and takes overrides', () => {
+    const { container, rerender } = render(
+      <Theme lang="ar">
+        <Stat label="المستخدمين" value={10} delta={0.1} />
+      </Theme>,
+    );
+    expect(part(container, 'delta')?.textContent).toContain('ارتفاع');
+    rerender(<Stat label="Users" value={10} delta={0.1} trendLabels={{ up: 'Rose' }} />);
+    expect(part(container, 'delta')?.textContent).toBe('Rose 10%');
+  });
+
+  it('takes a node delta with an explicit trend', () => {
+    const { container } = render(<Stat label="Seats" value={20} delta="3 seats" trend="up" />);
+    expect(part(container, 'delta')?.textContent).toBe('Up 3 seats');
+  });
+
+  it('renders the hint, the icon hidden, and the size', () => {
+    const { container } = render(<Stat label="Boards" value={42} hint="Across 3 teams" icon="grid" size="lg" />);
+    expect(part(container, 'hint')?.textContent).toBe('Across 3 teams');
+    expect(part(container, 'icon')?.getAttribute('aria-hidden')).toBe('true');
+    expect(root(container).getAttribute('data-size')).toBe('lg');
+  });
+
+  it('shows loading with aria-busy, a label and no change', () => {
+    const { container } = render(<Stat label="Users" loading delta={0.1} />);
+    expect(root(container).hasAttribute('data-loading')).toBe(true);
+    expect(root(container).getAttribute('data-loading')).toBe('');
+    expect(root(container).getAttribute('aria-busy')).toBe('true');
+    expect(part(container, 'value')?.textContent).toBe('Loading');
+    expect(part(container, 'delta')).toBeNull();
+  });
+
+  it('rolls the value in when it changes, not on the first paint', async () => {
+    const animate = vi.fn(() => ({ finished: Promise.resolve() }) as unknown as Animation);
+    const proto = HTMLElement.prototype as unknown as { animate?: unknown };
+    const original = proto.animate;
+    proto.animate = animate;
+    try {
+      const { rerender } = render(<Stat label="Users" value={10} />);
+      expect(animate).not.toHaveBeenCalled();
+      rerender(<Stat label="Users" value={11} />);
+      expect(animate).toHaveBeenCalledTimes(1);
+    } finally {
+      proto.animate = original;
+    }
+  });
+
+  it('passes props and the ref to the root', () => {
+    let node: HTMLDivElement | null = null;
+    const { container } = render(<Stat label="A" value={1} className="x" ref={(n) => void (node = n)} />);
+    expect(root(container).className).toBe('x');
+    expect(node).toBe(root(container));
+  });
+
+  it('renders the demo cases in order and the roll button works', async () => {
+    const { container, getByRole } = render(<StatDemo />);
+    const ids = Array.from(container.querySelectorAll('[data-demo-case]')).map((s) => s.getAttribute('data-demo-case'));
+    expect(ids).toEqual(['variants', 'empty', 'one', 'many', 'too-many', 'long-text', 'long-arabic', 'loading']);
+    await userEvent.click(getByRole('button', { name: 'Add visitors' }));
+    expect(container.textContent).toContain('1,277');
+  });
+});
