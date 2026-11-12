@@ -120,7 +120,12 @@
   "frameworks": {
     "react": { "status": "ready", "behavior": "hand built", "example": "NotificationCenter.demo.tsx",
       "note": "Motion: no catalog pattern. The panel renders a static list and no stagger plays when items are inserted; only the item hover veil fades (NotificationCenter.css). list-stagger is the pattern to wire when inserted items animate." },
-    "angular": { "status": "planned", "behavior": "hand built" },
+    "angular": {
+      "status": "ready",
+      "behavior": "section[dsNotificationCenter], host bindings, cdk:a11y _IdGenerator",
+      "example": "notification-center.demo.ts",
+      "note": "The host element is the root. title, emptyTitle, emptyBody and an item's title and body take a string or a TemplateRef. onMarkAllRead is a function input: the mark-all Button renders only with a handler while an item is unread, and focus moves to the title first. Ids come from the CDK id generator, one per item id. time.ts is a copy of the React helper until it moves to packages/shared. NotificationCenter.css is used as is."
+    },
     "native": { "status": "planned", "behavior": "hand built", "note": "A SectionList with a header per group; items as pressable rows." }
   },
   "styles": {
