@@ -11,7 +11,7 @@
 // DropdownMenu surface, the keys the ARIA 1.2 combobox pattern.
 import { useMemo } from 'react';
 import { flattenListBoxItems, type ListBoxItem } from '../ListBox';
-import { useControllable } from '../Window/useControllable';
+import { useControllable } from '../../internal/useControllable';
 import { ComboboxBase, type ComboboxBaseProps } from './ComboboxBase';
 
 export type { ComboboxShape, ComboboxSize } from './ComboboxBase';

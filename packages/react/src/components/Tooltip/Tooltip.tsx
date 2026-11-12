@@ -56,7 +56,7 @@ import {
 import { Tooltip as RadixTooltip } from 'radix-ui';
 import { useTheme } from '../../theme/hooks';
 import { ArrowShape, ThemedPortal, physicalSide, useLayerPresence, type FloatingAlign, type FloatingSide } from '../Popover/FloatingLayer';
-import { useControllable } from '../Window/useControllable';
+import { useControllable } from '../../internal/useControllable';
 
 export type TooltipSide = FloatingSide;
 export type TooltipAlign = FloatingAlign;

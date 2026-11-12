@@ -41,7 +41,7 @@ import { useTheme } from '../../theme/hooks';
 import { DialogBody, DialogFooter, type DialogBodyProps, type DialogFooterProps } from '../Dialog';
 import { DialogBase, assignRef, type DialogBaseState } from '../Dialog/DialogBase';
 import { IconButton } from '../IconButton';
-import { useControllable } from '../Window/useControllable';
+import { useControllable } from '../../internal/useControllable';
 
 export type DrawerSize = Extract<OverlaySize, 'sm' | 'md' | 'lg' | 'xl'>;
 export type DrawerSide = 'start' | 'end';

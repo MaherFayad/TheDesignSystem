@@ -9,7 +9,7 @@
 // component. It drops the trigger and clear buttons: the field is a plain
 // text field that suggests, not a picker.
 import type { ListBoxItem } from '../ListBox';
-import { useControllable } from '../Window/useControllable';
+import { useControllable } from '../../internal/useControllable';
 import { ComboboxBase, type ComboboxBaseProps } from '../Combobox/ComboboxBase';
 
 export type { ComboboxShape as AutocompleteShape, ComboboxSize as AutocompleteSize } from '../Combobox/ComboboxBase';

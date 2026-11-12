@@ -27,7 +27,7 @@ import { Children, createContext, isValidElement, use, useCallback, useMemo, use
 import { AlertDialog as RadixAlertDialog } from 'radix-ui';
 import type { OverlaySize, Tone } from '@the-system/shared';
 import { Icon, type IconName } from '../Icon';
-import { useControllable } from '../Window/useControllable';
+import { useControllable } from '../../internal/useControllable';
 import { DialogBase, assignRef, type DialogBaseState } from '../Dialog/DialogBase';
 
 export type AlertDialogSize = Extract<OverlaySize, 'sm' | 'md'>;

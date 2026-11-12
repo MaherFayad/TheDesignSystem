@@ -49,7 +49,7 @@ import { Tabs as RadixTabs } from 'radix-ui';
 import { parseDuration } from '@the-system/motion';
 import type { Emphasis, Size } from '@the-system/shared';
 import { renderSlotContent, type ButtonSlotContent } from '../Button/ButtonBase';
-import { useControllable } from '../Window/useControllable';
+import { useControllable } from '../../internal/useControllable';
 
 /** sm triggers are 28px (size.control.sm), md triggers 32px (size.control.md) at default density. */
 export type TabsSize = Extract<Size, 'sm' | 'md'>;

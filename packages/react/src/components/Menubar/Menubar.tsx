@@ -59,7 +59,7 @@ import { Menubar as RadixMenubar } from 'radix-ui';
 import { Icon } from '@the-system/icons/react';
 import type { Size, Tone } from '@the-system/shared';
 import { type ButtonSlotContent } from '../Button/ButtonBase';
-import { useControllable } from '../Window/useControllable';
+import { useControllable } from '../../internal/useControllable';
 import {
   IndicatorGlyph,
   ItemContent,

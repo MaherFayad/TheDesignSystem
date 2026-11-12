@@ -40,7 +40,7 @@ import { HoverCard as RadixHoverCard } from 'radix-ui';
 import type { Size } from '@the-system/shared';
 import { useTheme } from '../../theme/hooks';
 import { ArrowShape, ThemedPortal, physicalSide, useLayerPresence, type FloatingAlign, type FloatingSide } from '../Popover/FloatingLayer';
-import { useControllable } from '../Window/useControllable';
+import { useControllable } from '../../internal/useControllable';
 
 export type HoverCardSize = Extract<Size, 'sm' | 'md'>;
 export type HoverCardSide = FloatingSide;

@@ -46,7 +46,7 @@ import { useTheme } from '../../theme/hooks';
 import { DialogBody, DialogFooter, type DialogBodyProps, type DialogFooterProps } from '../Dialog';
 import { DialogBase, assignRef, usePanelElement, type DialogBaseState } from '../Dialog/DialogBase';
 import { isArabic, splitHeader } from '../Drawer/Drawer';
-import { useControllable } from '../Window/useControllable';
+import { useControllable } from '../../internal/useControllable';
 
 export type SheetSize = Extract<OverlaySize, 'sm' | 'md' | 'lg'>;
 

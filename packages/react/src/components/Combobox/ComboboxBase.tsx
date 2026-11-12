@@ -61,7 +61,7 @@ import {
   type ListBoxItem,
   type ListBoxOption,
 } from '../ListBox';
-import { useControllable } from '../Window/useControllable';
+import { useControllable } from '../../internal/useControllable';
 
 export type ComboboxSize = Extract<Size, 'sm' | 'md' | 'lg'>;
 export type ComboboxShape = Extract<Shape, 'default' | 'pill'>;

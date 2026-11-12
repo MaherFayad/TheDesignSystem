@@ -67,7 +67,7 @@ import {
   type Size,
 } from '@the-system/shared';
 import { useTheme } from '../../theme/hooks';
-import { useControllable } from '../Window/useControllable';
+import { useControllable } from '../../internal/useControllable';
 
 /** Row sizes: sm 24px rows, md list.row.height (28px at default density). */
 export type ListBoxSize = Extract<Size, 'sm' | 'md'>;

@@ -59,7 +59,7 @@ import type { Size } from '@the-system/shared';
 import { useTheme } from '../../theme/hooks';
 import { Button } from '../Button';
 import { ArrowShape, ThemedPortal, isArabic, physicalSide, useLayerPresence, type FloatingAlign, type FloatingSide } from '../Popover/FloatingLayer';
-import { useControllable } from '../Window/useControllable';
+import { useControllable } from '../../internal/useControllable';
 
 export type TourSize = Extract<Size, 'sm' | 'md'>;
 export type TourSide = FloatingSide;

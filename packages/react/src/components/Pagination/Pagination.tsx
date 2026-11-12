@@ -33,7 +33,7 @@ import { clampPage, isEllipsis, itemRange, pageCount as countPages, pageRange, t
 import { useTheme } from '../../theme';
 import { Button } from '../Button';
 import { IconButton } from '../IconButton';
-import { useControllable } from '../Window/useControllable';
+import { useControllable } from '../../internal/useControllable';
 
 export type PaginationSize = Extract<Size, 'sm' | 'md' | 'lg'>;
 export type PaginationShape = Extract<Shape, 'default' | 'pill' | 'square'>;

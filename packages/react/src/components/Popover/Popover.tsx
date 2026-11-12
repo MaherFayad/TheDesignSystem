@@ -47,7 +47,7 @@ import { Popover as RadixPopover } from 'radix-ui';
 import type { Size } from '@the-system/shared';
 import { useTheme } from '../../theme/hooks';
 import { IconButton } from '../IconButton';
-import { useControllable } from '../Window/useControllable';
+import { useControllable } from '../../internal/useControllable';
 import {
   ArrowShape,
   ThemedPortal,

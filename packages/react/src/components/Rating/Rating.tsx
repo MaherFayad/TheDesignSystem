@@ -17,7 +17,7 @@ import { useId, type ComponentProps, type KeyboardEvent, type ReactNode } from '
 import { RadioGroup as RadixRadioGroup } from 'radix-ui';
 import { Icon } from '@the-system/icons/react';
 import type { Size, Tone } from '@the-system/shared';
-import { useControllable } from '../Window/useControllable';
+import { useControllable } from '../../internal/useControllable';
 
 export type RatingSize = Extract<Size, 'sm' | 'md' | 'lg'>;
 export type RatingTone = Extract<Tone, 'accent' | 'warning'>;
