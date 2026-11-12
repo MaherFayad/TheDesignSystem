@@ -415,6 +415,257 @@
     "since": "0.1.0"
   },
   {
+    "name": "Card",
+    "kind": "component",
+    "family": "containers",
+    "summary": "A bordered, filled or raised container for one item: optional media, a header with a title and a description, a body, and a footer with actions. The whole card can be one link.",
+    "useWhen": [
+      "One item among several that each need a title, a short summary and an action, such as a board, a project or a plan",
+      "A whole card that opens a detail page, through one CardLink in the title",
+      "A group of related settings or figures that reads as one block on a page"
+    ],
+    "avoidWhen": [
+      "A dense grid of files or boards in Studio, where tiles split by a 1px gap read better",
+      "Rows that people scan and compare, such as a list of messages or a table",
+      "A choice of one option out of several",
+      "Wrapping a whole page section only to draw a border around it"
+    ],
+    "insteadUse": {
+      "A Studio grid of files or boards": "Tile",
+      "Rows to scan and compare": "List",
+      "Tabular data": "Table",
+      "Picking one option shown as a card": "RadioCard",
+      "Sections that open and close": "Accordion",
+      "A place with no content yet": "EmptyState"
+    },
+    "anatomy": [
+      "root",
+      "media",
+      "header",
+      "title",
+      "link",
+      "description",
+      "body",
+      "footer",
+      "actions"
+    ],
+    "parts": {
+      "CardMedia": "media",
+      "CardHeader": "header",
+      "CardTitle": "title",
+      "CardLink": "link",
+      "CardDescription": "description",
+      "CardBody": "body",
+      "CardFooter": "footer",
+      "CardActions": "actions"
+    },
+    "slots": {
+      "media": {
+        "accepts": "any",
+        "max": 1
+      },
+      "title": {
+        "accepts": "text",
+        "max": 1
+      },
+      "link": {
+        "accepts": "text",
+        "max": 1
+      },
+      "description": {
+        "accepts": "text",
+        "max": 1
+      },
+      "body": {
+        "accepts": "any"
+      },
+      "actions": {
+        "accepts": [
+          "Button",
+          "IconButton",
+          "DropdownMenu"
+        ],
+        "max": 3
+      }
+    },
+    "props": {
+      "emphasis": {
+        "type": [
+          "outline",
+          "soft",
+          "solid"
+        ],
+        "default": "outline",
+        "description": "outline: a hairline border on the surface. soft: one tone step up, no border. solid: the tone step plus elevation.menu, a soft drop shadow in both Studio and Desk, which steps to elevation.panel on hover."
+      },
+      "size": {
+        "type": [
+          "sm",
+          "md",
+          "lg"
+        ],
+        "default": "md",
+        "description": "Padding and the gap between parts: space l, 2xl and 4xl. sm takes radius.panel, md and lg take radius.card."
+      },
+      "selected": {
+        "type": "boolean",
+        "default": false,
+        "description": "Draws a 2px ring inside the border (not color alone) and sets data-selected. Say it in words too: aria-current on the CardLink or a checkbox in the card."
+      },
+      "disabled": {
+        "type": "boolean",
+        "default": false,
+        "description": "Sets data-disabled, mutes the title, dims the media with opacity.disabled and removes the CardLink href (aria-disabled, role link). Text stays at 4.5:1: a card is not a control, so the contrast exception does not cover it. Actions are disabled by the caller."
+      },
+      "asChild": {
+        "type": "boolean",
+        "default": false,
+        "description": "Renders the single child element as the root, for example an li inside a ul of cards or an article."
+      },
+      "level": {
+        "type": [
+          "2",
+          "3",
+          "4",
+          "5",
+          "6"
+        ],
+        "default": "3",
+        "description": "On CardTitle: the heading level, so the card fits the outline of its page."
+      },
+      "href": {
+        "type": "string",
+        "description": "On CardLink: the link target. Its hit area covers the whole card."
+      },
+      "children": {
+        "type": "node",
+        "description": "The parts: CardMedia, CardHeader (CardTitle, CardDescription), CardBody, CardFooter (CardActions)."
+      }
+    },
+    "states": [
+      "data-interactive",
+      "data-selected",
+      "data-disabled"
+    ],
+    "a11y": {
+      "role": "None on the root (a div, or the asChild element). The title is a heading. A whole card link is one native link inside the title.",
+      "focus": "The card itself never takes focus. Tab reaches the CardLink, then each action. While the link has keyboard focus the whole card shows the 2px ring from focus.shadow.ring.",
+      "keys": {
+        "Tab": "Moves to the card link, then to each action in the footer",
+        "Enter": "On the card link: opens it"
+      },
+      "announce": "The link is named by the title text. Description and body are read in order after it. Selection is announced through aria-current on the link or a checkbox, which the caller sets.",
+      "native": {
+        "accessibilityRole": "none",
+        "accessibilityState": [
+          "disabled",
+          "selected"
+        ]
+      },
+      "notes": [
+        "A whole card link is one real link and a stretched target (the link's ::before covers the card). Never wrap the card in a link and never put a button inside the link.",
+        "Actions sit above the stretched target, so they keep their own 24px targets and do not open the link. Interactive content goes in CardActions only: a link or button in the body sits under the target and cannot be clicked.",
+        "A disabled CardLink keeps tabIndex 0 and aria-disabled, so it stays in the tab order (convention 5); a click does nothing.",
+        "Text under the stretched target cannot be selected with the pointer. Keep long text that people copy out of an interactive card.",
+        "Forced colors: the border becomes CanvasText, the selected card gets a Highlight outline inside its border and focus shows as a Highlight outline."
+      ]
+    },
+    "content": {
+      "en": {
+        "title": "The item's name, sentence case, no end period: Spring launch.",
+        "description": "One line of context: Updated 2 hours ago, 4 boards.",
+        "actions": "A verb plus a noun: Share board. An icon only action names its item: More actions for Spring launch."
+      },
+      "ar": {
+        "title": "The item's name in white Saudi dialect, no diacritics: إطلاق الربيع.",
+        "description": "Short and plain, Western digits: آخر تحديث قبل 3 أيام.",
+        "actions": "Noun form labels: مشاركة اللوحة."
+      }
+    },
+    "tokens": [
+      "space.l",
+      "space.2xl",
+      "space.4xl",
+      "space.s",
+      "space.m",
+      "space.xs",
+      "space.3xs",
+      "space.4xs",
+      "radius.card",
+      "radius.panel",
+      "radius.sm",
+      "border.width.default",
+      "border.width.strong",
+      "color.bg.surface",
+      "color.bg.surface-2",
+      "color.bg.overlay-5",
+      "color.border.default",
+      "color.text.default",
+      "color.text.bright",
+      "color.text.muted",
+      "color.focus.ring",
+      "focus.shadow.ring",
+      "elevation.card",
+      "elevation.card-hover",
+      "elevation.menu",
+      "elevation.panel",
+      "font.family.sans",
+      "font.size.s",
+      "font.size.m",
+      "font.size.l",
+      "font.size.xl",
+      "font.weight.semibold",
+      "font.leading.snug",
+      "font.leading.normal",
+      "opacity.disabled",
+      "duration.base",
+      "duration.fast",
+      "ease.default"
+    ],
+    "motion": "fade-rise",
+    "frameworks": {
+      "react": {
+        "status": "ready",
+        "behavior": "hand built, radix:Slot for asChild",
+        "example": "Card.demo.tsx",
+        "note": "Motion: an interactive card rises by space.4xs on hover (transform only) and its hover veil fades in (opacity), off under reduced motion. Named fade-rise from the 1.11 catalog list; no catalog pattern covers a hover lift yet."
+      },
+      "angular": {
+        "status": "planned",
+        "note": "dsCard on the host, parts as attribute directives (dsCardTitle, a[dsCardLink]). Card.css as is."
+      },
+      "native": {
+        "status": "planned",
+        "note": "A View with the same parts. A whole card link is a Pressable root with the title as its label; actions as separate Pressables beside it."
+      }
+    },
+    "styles": {
+      "studio": "outline is the surface with the default border, soft is the surface 2 tone step. solid adds Studio's menu shadow (12 by 28px). An interactive card rises by space.4xs on hover, takes elevation.card-hover (a soft two layer shadow) and a 5% veil; soft and solid also step to surface 3.",
+      "desk": "The same parts on the Desk surfaces; solid takes the Desk menu shadow and the panel shadow on hover.",
+      "neutral": "Planned: small soft shadows and 1px borders from Neutral's tokens, no recipe expected.",
+      "liquid": "Planned: cards stay solid content under the glass layer."
+    },
+    "mistakes": [
+      {
+        "wrong": "Wrapping the whole card in an anchor with buttons inside it",
+        "right": "One CardLink inside CardTitle; buttons in CardActions sit above its stretched target"
+      },
+      {
+        "wrong": "Showing selection only with a border color",
+        "right": "selected draws a 2px ring, and aria-current or a checkbox says it in words"
+      },
+      {
+        "wrong": "A Studio file grid of outlined cards with gaps",
+        "right": "Tile inside TileGrid, split by the 1px gap"
+      },
+      {
+        "wrong": "An action labelled More with no item name",
+        "right": "More actions for Spring launch"
+      }
+    ],
+    "since": "0.1.0"
+  },
+  {
     "name": "Dialog",
     "kind": "component",
     "family": "overlays",
