@@ -5048,6 +5048,261 @@
     "since": "0.1.0"
   },
   {
+    "name": "ConsentField",
+    "kind": "component",
+    "family": "forms",
+    "summary": "One consent: a Checkbox or Switch whose label is one purpose, a link to the details, an optional record line, and a record of the choice handed to the app. Never ticked in advance.",
+    "useWhen": [
+      "Asking for consent to one use of personal data, such as marketing email or sharing with a partner",
+      "A settings list where each use of data can be turned on or off at any time",
+      "A consent the service truly cannot work without, such as sharing health data with the clinic being booked"
+    ],
+    "avoidWhen": [
+      "Accepting terms of service or a contract, which is not consent to a use of data",
+      "A preference with no personal data in it, such as dark mode",
+      "Asking for several purposes with one control"
+    ],
+    "insteadUse": {
+      "A preference with no personal data in it": "Switch",
+      "An answer to a question in a form": "Checkbox",
+      "Several related choices with one value array": "CheckboxGroup",
+      "A notice the person only needs to read": "Callout"
+    },
+    "anatomy": [
+      "root",
+      "control",
+      "text",
+      "purpose",
+      "required",
+      "meta",
+      "details",
+      "error"
+    ],
+    "slots": {
+      "control": {
+        "accepts": [
+          "Checkbox",
+          "Switch"
+        ],
+        "min": 1,
+        "max": 1
+      },
+      "purpose": {
+        "accepts": "text",
+        "min": 1,
+        "max": 1
+      },
+      "details": {
+        "accepts": [
+          "Link"
+        ],
+        "max": 1
+      },
+      "meta": {
+        "accepts": "text"
+      },
+      "error": {
+        "accepts": [
+          "FieldError"
+        ],
+        "max": 1
+      }
+    },
+    "props": {
+      "purpose": {
+        "type": "node",
+        "description": "One sentence that names one purpose. It is the control's label. Required."
+      },
+      "checked": {
+        "type": "boolean",
+        "description": "Controlled: a choice already on record. Needs onCheckedChange, so it can always be withdrawn. There is no defaultChecked."
+      },
+      "onCheckedChange": {
+        "type": "function",
+        "description": "Called with true when given, false when withdrawn."
+      },
+      "onDecision": {
+        "type": "function",
+        "description": "Called with a record: name, granted, version and the time as ISO 8601, for the app to store."
+      },
+      "control": {
+        "type": [
+          "checkbox",
+          "switch"
+        ],
+        "default": "checkbox",
+        "description": "checkbox in a form that is sent, switch in settings that save at once."
+      },
+      "name": {
+        "type": "string",
+        "description": "The form name. Inside a Form, the Form's error for this name shows here."
+      },
+      "value": {
+        "type": "string",
+        "default": "granted",
+        "description": "The value sent while granted."
+      },
+      "detailsHref": {
+        "type": "string",
+        "description": "Where the details live: who gets the data, for how long, how to withdraw. Renders the details link."
+      },
+      "detailsLabel": {
+        "type": "node",
+        "default": "How we use your data",
+        "description": "The details link text. Arabic default under lang ar."
+      },
+      "detailsExternal": {
+        "type": "boolean",
+        "default": false,
+        "description": "Opens the details in a new tab."
+      },
+      "meta": {
+        "type": "node",
+        "description": "A record line: the version of the text, or when the choice was made."
+      },
+      "version": {
+        "type": "string",
+        "description": "The version of the purpose text, passed back in the record."
+      },
+      "required": {
+        "type": "boolean",
+        "default": false,
+        "description": "The service cannot work without it. Shows an aria-hidden mark and sets aria-required."
+      },
+      "disabled": {
+        "type": "boolean",
+        "default": false,
+        "description": "Disables the control."
+      },
+      "invalid": {
+        "type": "boolean",
+        "description": "When not passed, invalid while an error shows. false hides the error."
+      },
+      "error": {
+        "type": "node",
+        "description": "An error shown now, for a required consent left off."
+      },
+      "requiredError": {
+        "type": "node",
+        "description": "Inside a Form: the error when the Form finds this required consent left off. Default the Form's required message."
+      },
+      "size": {
+        "type": [
+          "sm",
+          "md",
+          "lg"
+        ],
+        "default": "md",
+        "description": "Control and text size."
+      }
+    },
+    "states": [
+      "granted",
+      "denied",
+      "checked",
+      "unchecked",
+      "data-required",
+      "data-invalid",
+      "data-disabled"
+    ],
+    "a11y": {
+      "role": "checkbox or switch, from the control. The root has no role.",
+      "focus": "The control is the one tab stop of the consent; the details link is the next.",
+      "keys": {
+        "Tab": "Moves to the control, then to the details link",
+        "Space": "Gives or withdraws the consent"
+      },
+      "announce": "The purpose is the control's name (a native label and aria-labelledby). The record line and the error are read through aria-describedby. Nothing is live.",
+      "native": {
+        "accessibilityRole": "checkbox",
+        "accessibilityState": [
+          "checked",
+          "disabled"
+        ]
+      },
+      "notes": [
+        "Design note, not legal advice: the component follows the consent rules of the Saudi Personal Data Protection Law (PDPL) and its Implementing Regulations from SDAIA as a design aid only. Consent is explicit (an action by the person), specific (one purpose per control), never given in advance, and as easy to withdraw as to give. The purpose copy, the details page and whether consent is the right legal basis must be checked by someone qualified in PDPL for each product.",
+        "Never ticked in advance: there is no defaultChecked prop and the uncontrolled state starts denied. A test proves it.",
+        "Withdrawing is the same control and the same one action as giving. In settings, use control switch, so the change saves at once.",
+        "Keep the record: store what onDecision returns (granted, the text version, the time) with the account. In a form that is sent, store the last record when the form is sent.",
+        "The details link sits outside the label, so a click on it never toggles the consent.",
+        "Do not mark a marketing consent required. Required is for a consent the service truly cannot work without.",
+        "checked and unchecked are on the control part, a Checkbox or Switch root that carries the consent field control part. The consent root says granted or denied."
+      ]
+    },
+    "content": {
+      "en": {
+        "purpose": "A first person sentence that names one use and who gets the data: Share my order history with the delivery partner to plan delivery times. Never a bundle joined with and.",
+        "details": "Names the page: How we use your data. Never Learn more.",
+        "meta": "The version or the date of the choice: You agreed on 3 November 2026. Text version 2.1.",
+        "error": "Why it is needed and the other way: The booking needs this consent. Tick the box, or book by phone instead."
+      },
+      "ar": {
+        "purpose": "جملة بصيغة المتكلم تبدأ بأوافق وتذكر استخدام واحد ومين يستلم البيانات: أوافق على مشاركة سجل طلباتي مع شريك التوصيل",
+        "details": "طريقة استخدام بياناتك",
+        "meta": "الإصدار 2.1، آخر تحديث 1 نوفمبر 2026",
+        "error": "يوضح ليش مطلوبة والبديل: الحجز يحتاج موافقتك على المشاركة. حدد المربع أو احجز بالاتصال"
+      }
+    },
+    "tokens": [
+      "space.4xs",
+      "space.3xs",
+      "space.2xs",
+      "size.target-min",
+      "size.control.lg",
+      "font.size.xs",
+      "font.size.s",
+      "font.size.m",
+      "font.leading.normal",
+      "font.leading.arabic-normal",
+      "color.text.default",
+      "color.text.muted",
+      "opacity.disabled"
+    ],
+    "motion": "none",
+    "frameworks": {
+      "react": {
+        "status": "ready",
+        "behavior": "hand built on Checkbox and Switch, FieldError as the error part, reads the Form error by name",
+        "example": "ConsentField.demo.tsx"
+      },
+      "angular": {
+        "status": "planned"
+      },
+      "native": {
+        "status": "planned"
+      }
+    },
+    "styles": {
+      "studio": "The control at the start, the purpose in text s on the control's center line, a muted record line and a small details link under it",
+      "desk": "The same layout, in Instrument Sans",
+      "neutral": "Takes the tokens of the Neutral style, no recipe."
+    },
+    "mistakes": [
+      {
+        "wrong": "One checkbox: I agree to the terms, the privacy policy and to receive offers by email",
+        "right": "Terms accepted by the submit button's copy, and one ConsentField per purpose: Send me offers by email."
+      },
+      {
+        "wrong": "A consent ticked in advance, so the person has to untick it",
+        "right": "A ConsentField, which always starts denied and has no defaultChecked"
+      },
+      {
+        "wrong": "Withdrawal only by email to support, or hidden three screens deep",
+        "right": "The same ConsentField with control switch in Settings, one action to withdraw"
+      },
+      {
+        "wrong": "A Learn more link inside the label, so a click on it ticks the box",
+        "right": "detailsHref, which renders the Link outside the label with a name that says where it goes"
+      },
+      {
+        "wrong": "A marketing consent marked required to finish sign up",
+        "right": "Marketing consent optional; required only when the service cannot work without it"
+      }
+    ],
+    "since": "0.1.0"
+  },
+  {
     "name": "Container",
     "kind": "component",
     "family": "layout",
@@ -8039,6 +8294,398 @@
     "since": "0.1.0"
   },
   {
+    "name": "Fieldset",
+    "kind": "component",
+    "family": "forms",
+    "summary": "A group of fields or choices under one legend: a native fieldset, so the legend names the group and native disabled disables everything inside.",
+    "useWhen": [
+      "Several fields that answer one question together, such as a delivery address or a date of birth in three parts",
+      "A long form split into named sections, each with its own legend",
+      "A group of Checkbox or Switch items that needs a group level error, such as Pick at least one",
+      "Turning off a whole section at once with native disabled"
+    ],
+    "avoidWhen": [
+      "One field alone: the legend would repeat its label",
+      "A group of checkboxes with one value array",
+      "A heading over unrelated content that holds no controls",
+      "A form split into steps the person moves through"
+    ],
+    "insteadUse": {
+      "One field with a label, a hint and an error": "Field",
+      "Checkboxes that share one value array": "CheckboxGroup",
+      "One answer picked from a few choices": "RadioGroup",
+      "A heading over content with no controls": "Section",
+      "A long form split into steps": "FormWizard"
+    },
+    "anatomy": [
+      "root",
+      "legend",
+      "description",
+      "error",
+      "body"
+    ],
+    "slots": {
+      "legend": {
+        "accepts": "any",
+        "min": 1,
+        "max": 1
+      },
+      "description": {
+        "accepts": "text"
+      },
+      "error": {
+        "accepts": [
+          "FieldError"
+        ],
+        "max": 1
+      },
+      "body": {
+        "accepts": [
+          "Field",
+          "Fieldset",
+          "Checkbox",
+          "Switch",
+          "RadioGroup",
+          "CheckboxGroup",
+          "ConsentField"
+        ],
+        "min": 1
+      }
+    },
+    "props": {
+      "legend": {
+        "type": "node",
+        "description": "The name of the group, in a native legend. Required."
+      },
+      "description": {
+        "type": "node",
+        "description": "A hint under the legend. Joins the group's aria-describedby."
+      },
+      "error": {
+        "type": "node",
+        "description": "What is wrong with the group as a whole and how to fix it. Renders a FieldError root with data-part error, above the body."
+      },
+      "size": {
+        "type": [
+          "sm",
+          "md",
+          "lg"
+        ],
+        "default": "md",
+        "description": "Legend size and the space between the fields."
+      },
+      "disabled": {
+        "type": "boolean",
+        "default": false,
+        "description": "Native disabled: every control inside is disabled, buttons included. The body takes the one disabled look."
+      },
+      "invalid": {
+        "type": "boolean",
+        "description": "When not passed, the group is invalid while it shows an error. false hides the error."
+      }
+    },
+    "states": [
+      "data-disabled",
+      "data-invalid"
+    ],
+    "a11y": {
+      "role": "group, from the native fieldset, named by the legend",
+      "focus": "The fieldset is never focusable. Each control inside is its own tab stop, in DOM order.",
+      "keys": {
+        "Tab": "Moves to the first control in the group, then on through the controls. The group adds no stop of its own."
+      },
+      "announce": "The legend is read with the first control when focus enters the group. The description and the group error are read through the group's aria-describedby. The error is not a live region and never role alert.",
+      "native": {
+        "accessibilityRole": "none",
+        "accessibilityState": [
+          "disabled"
+        ]
+      },
+      "notes": [
+        "The legend is a native legend, the first child of the fieldset, so every browser and screen reader takes it as the group name.",
+        "The group error sits above the body, so it is seen before a long list of choices. A form that checks on submit moves focus to the first control of the invalid group.",
+        "Native disabled reaches every control inside, including the Radix Checkbox and Switch buttons, without a prop on each.",
+        "Keep the legend short: some screen readers read it again before every control in the group."
+      ]
+    },
+    "content": {
+      "en": {
+        "legend": "A noun phrase or a question in sentence case that names the group: Delivery address, How should we reach you. No colon.",
+        "description": "One sentence that helps fill the group. Not a repeat of the legend.",
+        "error": "What to do with the group: Pick at least one way to reach you. Never only Required."
+      },
+      "ar": {
+        "legend": "اسم المجموعة أو سؤال واضح بدون تشكيل: عنوان التوصيل",
+        "description": "جملة وحدة توضح وش يعبي",
+        "error": "يقول وش يسوي: اختر طريقة وحدة على الأقل عشان نوصلك"
+      }
+    },
+    "tokens": [
+      "space.2xs",
+      "space.xs",
+      "space.s",
+      "space.m",
+      "space.l",
+      "space.xl",
+      "font.size.s",
+      "font.size.m",
+      "font.size.l",
+      "font.weight.semibold",
+      "font.leading.snug",
+      "font.leading.normal",
+      "color.text.default",
+      "color.text.muted",
+      "opacity.disabled"
+    ],
+    "motion": "none",
+    "frameworks": {
+      "react": {
+        "status": "ready",
+        "behavior": "hand built native fieldset and legend, FieldError as the error part",
+        "example": "Fieldset.demo.tsx"
+      },
+      "angular": {
+        "status": "planned"
+      },
+      "native": {
+        "status": "planned"
+      }
+    },
+    "styles": {
+      "studio": "A semibold legend one step above the field label, a muted description, the fields stacked with a roomy gap.",
+      "desk": "The same layout, in Instrument Sans",
+      "neutral": "Takes the tokens of the Neutral style, no recipe."
+    },
+    "mistakes": [
+      {
+        "wrong": "A div with a bold heading over a group of radios or checkboxes",
+        "right": "A Fieldset, so the legend names the group for a screen reader"
+      },
+      {
+        "wrong": "A Fieldset around one field, with a legend that repeats the label",
+        "right": "A Field alone"
+      },
+      {
+        "wrong": "disabled passed to every field in a section, one by one",
+        "right": "disabled on the Fieldset: native disabled reaches every control inside"
+      },
+      {
+        "wrong": "A long legend with the instructions in it",
+        "right": "A short legend, and the instructions in description"
+      }
+    ],
+    "since": "0.1.0"
+  },
+  {
+    "name": "FilterBar",
+    "kind": "component",
+    "family": "forms",
+    "summary": "The row above a list: a search box, quick filter chips, more filters in a menu, the active filter count, clear all, and an end slot for view toggles. One value array holds every filter that is on.",
+    "useWhen": [
+      "A list, grid or table the person narrows with a search and a few filters",
+      "Quick filters that are on or off, with rarer ones tucked in a menu",
+      "A gallery or file browser with view toggles at the end of the filter row"
+    ],
+    "avoidWhen": [
+      "Picking one view from a few, such as All, Mine, Shared",
+      "Filters that each need a range, a date or a typed value",
+      "A search that opens a list of suggestions to pick from"
+    ],
+    "insteadUse": {
+      "One view from a few": "Tabs",
+      "Filters with ranges, dates or typed values": "Form in a Sheet",
+      "A search with suggestions": "Combobox",
+      "A search box alone": "SearchField"
+    },
+    "anatomy": [
+      "root",
+      "search",
+      "filters",
+      "more",
+      "count",
+      "clear",
+      "end"
+    ],
+    "slots": {
+      "search": {
+        "accepts": [
+          "SearchField"
+        ],
+        "max": 1
+      },
+      "filters": {
+        "accepts": [
+          "Chip"
+        ]
+      },
+      "more": {
+        "accepts": [
+          "Button"
+        ],
+        "max": 1
+      },
+      "clear": {
+        "accepts": [
+          "Button"
+        ],
+        "max": 1
+      },
+      "end": {
+        "accepts": [
+          "IconButton",
+          "ToggleButton",
+          "DropdownMenu"
+        ],
+        "max": 3
+      }
+    },
+    "props": {
+      "search": {
+        "type": "SearchFieldProps",
+        "description": "Props for the search box, aria-label included. Leave it out for no search."
+      },
+      "filters": {
+        "type": "FilterBarFilter[]",
+        "description": "Quick filters as chips: value, label, textValue, disabled."
+      },
+      "more": {
+        "type": "FilterBarFilter[]",
+        "description": "Rarer filters, as checkbox items in the more menu. The menu stays open while the person picks."
+      },
+      "value": {
+        "type": "string[]",
+        "description": "Controlled: the values of every filter that is on, from the chips and the menu."
+      },
+      "defaultValue": {
+        "type": "string[]",
+        "default": "[]",
+        "description": "Uncontrolled starting value."
+      },
+      "onValueChange": {
+        "type": "function",
+        "description": "Called with the new list of values."
+      },
+      "onClear": {
+        "type": "function",
+        "description": "Called by clear all, after the value and the search box are cleared."
+      },
+      "resultCount": {
+        "type": "number",
+        "description": "The results the filters leave. Shown in the count part, and announced once when it changes after a filter or search change."
+      },
+      "end": {
+        "type": "node",
+        "description": "View toggles or a sort menu, at the end of the row."
+      },
+      "size": {
+        "type": [
+          "sm",
+          "md"
+        ],
+        "default": "md",
+        "description": "Height of the search box, the chips and the buttons."
+      },
+      "labels": {
+        "type": "Partial<FilterBarLabels>",
+        "description": "Copy for the group name, more, clear and the counts. Default from the Theme language, English or Arabic."
+      }
+    },
+    "states": [
+      "open",
+      "closed",
+      "data-active",
+      "data-overflow-start",
+      "data-overflow-end",
+      "data-selected"
+    ],
+    "a11y": {
+      "role": "none on the root. The chips sit in a role group named Filters; each chip is a toggle button with aria-pressed.",
+      "focus": "Each part is a tab stop in DOM order: search, each chip, more, clear, then the end slot. When clear all is used it hides, and focus moves to the search box, else the first chip.",
+      "keys": {
+        "Tab": "Moves to the next part, and to each chip in turn",
+        "Shift+Tab": "Moves to the part before",
+        "Space": "Turns the focused chip on or off"
+      },
+      "announce": "The result count is read once, politely, when resultCount changes after a filter or search change, 600ms after the last such change: typing does not read every count, and a slow count is not read stale. A change that leaves the count the same is not announced. Each chip says pressed or not pressed.",
+      "native": {
+        "accessibilityRole": "none"
+      },
+      "notes": [
+        "The order names ToggleGroup, MultiSelect and Select. They do not exist yet, so filters are Chips in a role group and more is a DropdownMenu with checkbox items. Arrow keys do not move between chips: each chip is a tab stop, as in the Figma-Killer-2 source. The anatomy stays when ToggleGroup lands.",
+        "The chip strip scrolls sideways inside itself and never scrolls the page at 320px (WCAG 1.4.10). The root carries data-overflow-start and data-overflow-end in logical terms, so the edge fades flip in RTL.",
+        "A selected chip shows a check, not color alone.",
+        "data-selected is on each selected Chip root inside the filters part.",
+        "open and closed are on the more part, the Button that opens the DropdownMenu. Escape in the search box clears the query; Escape in the more menu closes it and returns focus to the more button.",
+        "A search query counts as one filter on in the count part, and clear all empties it too.",
+        "The more part is the Button that opens the DropdownMenu. open, closed and data-selected in states sit on nested roots (the more Button and the selected Chips); the FilterBar root carries data-active and the overflow states."
+      ]
+    },
+    "content": {
+      "en": {
+        "filters": "One to three words in sentence case, a noun: Images, Shared with me. Never a verb.",
+        "more": "More filters, with the number on in brackets: More filters (2).",
+        "clear": "Clear filters. Never Reset.",
+        "count": "1 filter on, 2 filters on (a search query counts as one), then the results: 24 results. No results when none."
+      },
+      "ar": {
+        "filters": "اسم قصير: الصور، المشاركة معي",
+        "more": "فلاتر إضافية (2)",
+        "clear": "مسح الفلاتر",
+        "count": "فلتر واحد مفعل، فلترين مفعلين، 3 فلاتر مفعلة، ثم النتائج: نتيجتين، 24 نتيجة، ما فيه نتائج"
+      }
+    },
+    "tokens": [
+      "space.4xs",
+      "space.3xs",
+      "space.2xs",
+      "space.xs",
+      "space.xl",
+      "dialog.width.sm",
+      "field.label.width",
+      "font.size.s",
+      "font.leading.snug",
+      "color.text.muted"
+    ],
+    "motion": "none",
+    "frameworks": {
+      "react": {
+        "status": "ready",
+        "behavior": "hand built on SearchField, Chip, DropdownMenu and Button",
+        "example": "FilterBar.demo.tsx"
+      },
+      "angular": {
+        "status": "planned"
+      },
+      "native": {
+        "status": "planned"
+      }
+    },
+    "styles": {
+      "studio": "One wrapping row: the search box takes the free room, the chip strip scrolls with soft edge fades, a muted count and a ghost clear button. The strip takes a line of its own below dialog.width.sm (a borrowed token until a filter-bar token exists).",
+      "desk": "The same layout, with the Desk pill chips and buttons",
+      "neutral": "Takes the tokens of the Neutral style, no recipe."
+    },
+    "mistakes": [
+      {
+        "wrong": "Chips that only change color when on",
+        "right": "Chips with aria-pressed and a check, which FilterBar uses"
+      },
+      {
+        "wrong": "Announcing the result count on every key press in the search box",
+        "right": "One polite announcement after the last change"
+      },
+      {
+        "wrong": "A filter row that makes the page scroll sideways on a phone",
+        "right": "The chip strip scrolls inside itself, with edge fades"
+      },
+      {
+        "wrong": "Twelve chips for filters people rarely use",
+        "right": "Three or four chips, and the rest under more"
+      }
+    ],
+    "since": "0.1.0"
+  },
+  {
     "name": "FloatingActionButton",
     "kind": "component",
     "family": "actions",
@@ -8317,6 +8964,208 @@
       }
     ],
     "since": "0.2.0"
+  },
+  {
+    "name": "Form",
+    "kind": "component",
+    "family": "forms",
+    "summary": "A native form that checks on submit, lists the errors in a summary with links to the fields, moves focus to the first invalid field, announces the result once and maps server errors to fields by name.",
+    "useWhen": [
+      "Any set of fields sent together with one submit button",
+      "A form that needs custom checks next to the browser's own (type, pattern, required)",
+      "A form whose server answer can say which field is wrong",
+      "A short form inside a Dialog, with the submit Button in the footer"
+    ],
+    "avoidWhen": [
+      "A long form the person fills over several steps",
+      "One setting that saves the moment it changes",
+      "A search box or a filter row that updates a list as the person types"
+    ],
+    "insteadUse": {
+      "A long form split into steps with a review step": "FormWizard",
+      "One setting that saves at once": "Switch",
+      "A search and filter row above a list": "FilterBar",
+      "A text that is edited where it is shown": "InlineEdit"
+    },
+    "anatomy": [
+      "root",
+      "summary",
+      "body",
+      "actions"
+    ],
+    "parts": {
+      "FormField": "body",
+      "FormSubmit": "actions"
+    },
+    "slots": {
+      "summary": {
+        "accepts": [
+          "Alert"
+        ],
+        "max": 1
+      },
+      "body": {
+        "accepts": [
+          "FormField",
+          "Field",
+          "Fieldset",
+          "CheckboxGroup",
+          "RadioGroup",
+          "ConsentField",
+          "Checkbox",
+          "Switch"
+        ],
+        "min": 1
+      },
+      "actions": {
+        "accepts": [
+          "FormSubmit",
+          "Button"
+        ],
+        "max": 3
+      }
+    },
+    "props": {
+      "size": {
+        "type": [
+          "sm",
+          "md",
+          "lg"
+        ],
+        "default": "md",
+        "description": "Space between the fields and the parts. Shared with the fields through useFormContext()."
+      },
+      "orientation": {
+        "type": [
+          "vertical",
+          "horizontal"
+        ],
+        "default": "vertical",
+        "description": "The default orientation of every FormField: label above, or label at the start of the line."
+      },
+      "validators": {
+        "type": "Record<string, FormValidator | FormValidator[]>",
+        "description": "Custom checks by field name, run after the browser constraint check. Each returns a message or nothing."
+      },
+      "onSubmit": {
+        "type": "function",
+        "description": "Called with the values when every check passes. May return server errors in any shape mapServerErrors reads; a promise keeps the form in submitting."
+      },
+      "onErrors": {
+        "type": "function",
+        "description": "Called with the field errors each time a submit finds some."
+      },
+      "serverErrors": {
+        "type": "unknown",
+        "description": "Errors from outside, such as a server action rendered with the page. Shown without moving focus."
+      },
+      "actions": {
+        "type": "node",
+        "description": "The buttons, in the actions part. FormSubmit first."
+      },
+      "labels": {
+        "type": "Partial<FormLabels>",
+        "description": "Copy for the summary title and the built in errors. Default from the Theme language, English or Arabic."
+      }
+    },
+    "states": [
+      "idle",
+      "submitting",
+      "submitted",
+      "data-invalid",
+      "data-orientation"
+    ],
+    "a11y": {
+      "role": "form, the native element. Give it aria-label or aria-labelledby when the page has more than one form.",
+      "focus": "On a submit with errors, focus moves to the first invalid field in form order; when no field can take it, to the summary. Values are kept.",
+      "keys": {
+        "Tab": "Moves through the fields, then the actions. The form adds no stop of its own.",
+        "Enter": "In a single line field, submits the form through its submit button. On a summary link, moves focus to that field."
+      },
+      "announce": "Once per submit with errors, a polite status says how many fields to fix (WCAG 4.1.3). The summary itself is not a live region, so nothing is read twice. Each field reads its error through aria-describedby when focus lands on it.",
+      "native": {
+        "accessibilityRole": "none"
+      },
+      "notes": [
+        "Hand built on the native form with noValidate: the browser bubble never shows, and type, pattern, min and maxLength still feed the check through checkValidity().",
+        "An empty control with native required or aria-required (Field sets aria-required) gets the required message.",
+        "After a submit, a change that fixes a field removes its error at once. A change never adds an error: checks run on submit.",
+        "autocomplete is never changed and values are never cleared on an error, so nothing is asked twice (WCAG 3.3.7, 3.3.8).",
+        "aria-busy is true while onSubmit runs, and FormSubmit shows its loading state.",
+        "A form in a Dialog: the form sits in DialogBody with an id, and the submit Button in DialogFooter takes form set to that id and type submit. Enter in a field still submits. That footer Button is outside the Form context, so it shows no loading state: give it loading from your own state when onSubmit is slow.",
+        "The action prop is not taken: the form checks before it sends, and React does not run an action on a submit that is stopped. Call the server action from onSubmit and return its errors.",
+        "When onSubmit throws, the summary says the form could not be sent and focus moves to it. Values are kept.",
+        "Read only controls, hidden inputs and controls in a disabled Fieldset are not checked."
+      ]
+    },
+    "content": {
+      "en": {
+        "submit": "A verb plus a noun that names the result: Send request, Save address, Create account. Never Submit, OK or Continue.",
+        "summary": "Fix 2 fields to send the form. Count the fields, name the goal.",
+        "errors": "Each says what to do with the field: Add your city. Use your work email, not a personal one.",
+        "required": "Say once, above the form, that fields marked * are required."
+      },
+      "ar": {
+        "submit": "اسم الفعل مع الشيء: إرسال الطلب، حفظ العنوان، إنشاء الحساب",
+        "summary": "حقلين يحتاجون تصحيح قبل الإرسال",
+        "errors": "كل خطأ يقول وش يسوي: اكتب المدينة. استخدم بريد العمل مو البريد الشخصي",
+        "required": "سطر واحد فوق النموذج: الحقول اللي عليها * مطلوبة"
+      }
+    },
+    "tokens": [
+      "space.3xs",
+      "space.2xs",
+      "space.xs",
+      "space.s",
+      "space.m",
+      "space.l",
+      "space.xl",
+      "space.2xl",
+      "border.width.strong",
+      "focus.shadow.ring"
+    ],
+    "motion": "none",
+    "frameworks": {
+      "react": {
+        "status": "ready",
+        "behavior": "hand built native form, shared logic in packages/shared/src/form.ts, Alert as the summary",
+        "example": "Form.demo.tsx"
+      },
+      "angular": {
+        "status": "planned"
+      },
+      "native": {
+        "status": "planned"
+      }
+    },
+    "styles": {
+      "studio": "Fields stacked with a roomy gap, the danger Alert summary on top, the actions on one wrapping line at the start",
+      "desk": "The same layout, in Instrument Sans, the summary Alert in its Desk look",
+      "neutral": "Takes the tokens of the Neutral style, no recipe."
+    },
+    "mistakes": [
+      {
+        "wrong": "A submit button that stays disabled until every field is valid",
+        "right": "An enabled submit that checks, lists the errors and moves focus to the first one"
+      },
+      {
+        "wrong": "Checking every field on each key press and showing errors while the person types",
+        "right": "Check on submit; after that, remove an error as soon as the field is fixed"
+      },
+      {
+        "wrong": "A summary with role alert and a field error that is also live, so each error is read twice",
+        "right": "One polite status per submit, and errors read through aria-describedby"
+      },
+      {
+        "wrong": "Clearing the fields or the password after a server error",
+        "right": "Keep every value and show the server message on the field it names"
+      },
+      {
+        "wrong": "A multi step flow built as one long Form with hidden sections",
+        "right": "FormWizard"
+      }
+    ],
+    "since": "0.1.0"
   },
   {
     "name": "FormWizard",
