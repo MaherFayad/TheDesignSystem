@@ -1,8 +1,8 @@
-/* Fixture for ds/animate-transform-opacity-only. Lines 4, 5, 6, 7 and 14 fail. */
+/* Fixture for ds/animate-transform-opacity-only. Lines 4, 5, 6, 7, 14, 23 and 28 fail. */
 @layer ds.base {
   [data-ds='sample'] {
     transition: all var(--ds-duration-base);
-    transition-property: opacity, background-color;
+    transition-property: opacity, inline-size;
     transition: transform var(--ds-duration-base), inline-size var(--ds-duration-base);
     transition: 0.2s;
     transition: transform var(--ds-duration-base) var(--ds-ease-standard), opacity var(--ds-duration-base);
@@ -16,5 +16,15 @@
   [data-ds='sample'][data-state='open'] {
     transition-property: opacity, overlay;
     transition-behavior: allow-discrete;
+  }
+  /* The paint properties of the motion ruling pass; layout still fails. */
+  [data-ds='sample'][data-state='on'] {
+    transition: background-color var(--ds-duration-base), box-shadow var(--ds-duration-base), clip-path var(--ds-duration-base);
+    transition-property: stroke-dashoffset, filter, margin-inline-start;
+  }
+  @keyframes ds-sample-draw {
+    from { stroke-dashoffset: 1; clip-path: inset(0 100% 0 0); }
+    to { stroke-dashoffset: 0; backdrop-filter: blur(4px); color: currentColor; }
+    50% { block-size: 0; }
   }
 }

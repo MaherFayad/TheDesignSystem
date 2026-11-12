@@ -1,5 +1,9 @@
-// ds/animate-transform-opacity-only: only `transform` and `opacity` animate
-// (PLAN.md 3.4). Checks `transition-property`, the `transition` shorthand and
+// ds/animate-transform-opacity-only: only compositor and paint properties
+// animate (PLAN.md 3.4, widened by the motion ruling of 2026-11-12 in
+// DECISIONS.md): `transform`, `opacity`, `clip-path`, `stroke-dashoffset`,
+// `stroke-dasharray`, `filter`, `backdrop-filter`, `color`,
+// `background-color`, `border-color`, `outline-color` and `box-shadow`.
+// Layout properties never animate. The rule keeps its id. Checks `transition-property`, the `transition` shorthand and
 // every declaration inside `@keyframes`. `transition: all` fails, and so does a
 // transition item with no property, since that means `all`.
 //
@@ -12,9 +16,23 @@ import type { Finding, Rule, SourceFile } from '../types';
 
 export const ANIMATE_TRANSFORM_OPACITY_ONLY = 'ds/animate-transform-opacity-only';
 
-const ANIMATABLE = new Set(['transform', 'opacity']);
+const ANIMATABLE = new Set([
+  'transform',
+  'opacity',
+  'clip-path',
+  'stroke-dashoffset',
+  'stroke-dasharray',
+  'filter',
+  'backdrop-filter',
+  'color',
+  'background-color',
+  'border-color',
+  'outline-color',
+  'box-shadow',
+]);
+const ALLOWED = [...ANIMATABLE].join(', ');
 const DISCRETE = new Set(['display', 'overlay', 'content-visibility']);
-const KEYFRAME_OK = new Set(['transform', 'opacity', 'animation-timing-function', 'animation-composition']);
+const KEYFRAME_OK = new Set([...ANIMATABLE, 'animation-timing-function', 'animation-composition']);
 const NOT_A_PROPERTY =
   /^(ease|ease-in|ease-out|ease-in-out|linear|step-start|step-end|normal|allow-discrete|initial|inherit|unset|revert|revert-layer)$/i;
 
@@ -34,7 +52,7 @@ export function animateTransformOpacityOnly(file: SourceFile): Finding[] {
     const value = d.value.replace(/!\s*important/i, '').trim();
 
     if (inKeyframes(d)) {
-      if (!KEYFRAME_OK.has(d.property)) hit(`@keyframes animates ${d.property}. Only transform and opacity animate.`);
+      if (!KEYFRAME_OK.has(d.property)) hit(`@keyframes animates ${d.property}. Only ${ALLOWED} animate.`);
       continue;
     }
     if (d.property === 'transition-property') {
@@ -47,7 +65,7 @@ export function animateTransformOpacityOnly(file: SourceFile): Finding[] {
         const props = tokens.filter((t) => !isTimeOrFunction(t) && !NOT_A_PROPERTY.test(t));
         const hasVar = tokens.some((t) => /^var\(/i.test(t));
         if (props.length === 0) {
-          if (!hasVar) hit(`transition: ${item} names no property, so it means all. Name transform or opacity.`);
+          if (!hasVar) hit(`transition: ${item} names no property, so it means all. Name the property.`);
           continue;
         }
         for (const p of props) checkProperty(p.toLowerCase(), /allow-discrete/i.test(item) ? 'allow-discrete' : '', hit);
@@ -61,13 +79,13 @@ function checkProperty(property: string, behavior: string, hit: (message: string
   if (property === 'none' || property.startsWith('var(')) return;
   if (ANIMATABLE.has(property)) return;
   if (DISCRETE.has(property) && behavior === 'allow-discrete') return;
-  if (property === 'all') hit('transition: all. Name transform or opacity.');
-  else hit(`transition on ${property}. Only transform and opacity animate.`);
+  if (property === 'all') hit('transition: all. Name the property.');
+  else hit(`transition on ${property}. Only ${ALLOWED} animate. Layout never animates.`);
 }
 
 export const animateTransformOpacityOnlyRule: Rule = {
   id: ANIMATE_TRANSFORM_OPACITY_ONLY,
-  description: 'Only transform and opacity in transitions and keyframes. No transition: all.',
+  description: 'Only transform, opacity and the paint properties of the motion ruling in transitions and keyframes. No layout. No transition: all.',
   appliesTo: isSystemCss,
   check: animateTransformOpacityOnly,
 };

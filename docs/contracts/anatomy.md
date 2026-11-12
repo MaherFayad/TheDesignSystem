@@ -50,8 +50,13 @@ One file per component: `packages/css/src/components/<Name>.css`.
 
 - Base rules go in `ds.base`. Style pack recipes go in `ds.recipes` and are
   scoped with `[data-style='<id>']` on an ancestor.
-- Tokens only. Logical properties only. Only `transform` and `opacity`
-  animate. Durations and eases come from tokens.
+- Tokens only. Logical properties only. Motion animates `transform`,
+  `opacity` and the paint properties of the motion ruling: `clip-path`,
+  `stroke-dashoffset`, `stroke-dasharray`, `filter`, `backdrop-filter`,
+  `color`, `background-color`, `border-color`, `outline-color` and
+  `box-shadow`. Layout properties never animate. `filter` and
+  `backdrop-filter` need a fallback where unsupported and under
+  `prefers-reduced-transparency`. Durations and eases come from tokens.
 - Everything collapses under `prefers-reduced-motion`.
 - Translucent surfaces turn solid under `prefers-reduced-transparency` and
   `prefers-contrast: more`, and under `[data-contrast='more']`.
