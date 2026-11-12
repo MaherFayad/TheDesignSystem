@@ -1,9 +1,16 @@
-import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { act, fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 import { useState } from 'react';
 import { describe, expect, it } from 'vitest';
 import { Theme } from '../../theme/Theme';
 import { Button } from '../Button';
+import { Toaster, createToastFunction, createToastStore } from '../Toast';
+
+// jsdom has no pointer capture, which Radix Toast calls on pointer up.
+const proto = Element.prototype as unknown as Record<string, unknown>;
+proto.hasPointerCapture ??= () => false;
+proto.setPointerCapture ??= () => undefined;
+proto.releasePointerCapture ??= () => undefined;
 import AlertDialogDemo from './AlertDialog.demo';
 import {
   AlertDialog,
@@ -201,6 +208,31 @@ describe('AlertDialog', () => {
     expect(layer?.getAttribute('data-scheme')).toBe('light');
     expect(layer?.getAttribute('lang')).toBe('ar');
     expect(layer?.getAttribute('dir')).toBe('rtl');
+  });
+
+  it('keeps a toast above clickable, and Escape from inside still cancels while the toast stays', async () => {
+    const user = userEvent.setup();
+    const store = createToastStore();
+    const toast = createToastFunction(store);
+    let retried = 0;
+    render(
+      <Theme>
+        <Toaster store={store} />
+        <Basic defaultOpen />
+      </Theme>,
+    );
+    const panel = await screen.findByRole('alertdialog');
+    await waitFor(() => expect(panel.contains(document.activeElement)).toBe(true));
+    act(() => void toast.danger({ title: 'Could not delete board', action: { label: 'Retry delete', onAction: () => (retried += 1) } }));
+    await user.click(screen.getByRole('button', { name: 'Retry delete' }));
+    expect(retried).toBe(1);
+    expect(screen.getByRole('alertdialog')).toBe(panel);
+    // A second toast, then Escape from inside the alert: the alert cancels, that toast stays.
+    act(() => void toast.danger({ title: 'Board is read only' }));
+    screen.getByRole('button', { name: 'Keep board' }).focus();
+    await user.keyboard('{Escape}');
+    await waitFor(() => expect(rootEl()).toBeNull());
+    expect(store.getSnapshot().visible.filter((t) => t.state === 'open').length).toBe(1);
   });
 
   it('renders the demo with a trigger per case and no native title', () => {
