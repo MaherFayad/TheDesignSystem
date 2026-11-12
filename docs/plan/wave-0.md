@@ -114,7 +114,14 @@ react-native-svg components. Sizes 12, 16, 24. A mirror flag for RTL.
 Add pixelarticons to `THIRD_PARTY_NOTICES.md` (the lead applies the row from
 your report).
 
-Owns: `packages/icons/`, `packages/styles/{studio,desk}/icons.ts`.
+Owns: `packages/icons/`, `packages/styles/{studio,desk}/icons.ts`,
+`packages/css/src/components/Icon.css`, `packages/react/src/components/Icon/`,
+`packages/manifest/src/component/Icon.manifest.json`.
+Open for 0.15 and 0.16: the Angular and native icon sources sit in
+`packages/icons/generated-pending/` until those frameworks are installed.
+Review notes to settle there: the Angular `label` check must equal React's
+(`!== undefined`), stale set attributes on a set change, a Directive instead
+of a Component, and `accessibilityElementsHidden` on iOS.
 Done when: generated components typecheck, a unit test renders an icon in
 React and checks the mirror flag. Icons render in the gallery once 0.7 lands.
 

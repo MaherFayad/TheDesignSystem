@@ -1,0 +1,36 @@
+/* Icon: one inline svg. Size from the size.icon tokens, color from currentColor. */
+@layer ds.base {
+  [data-ds='icon'] {
+    display: inline-block;
+    flex: none;
+    inline-size: var(--ds-size-icon-md);
+    block-size: var(--ds-size-icon-md);
+    vertical-align: middle;
+  }
+
+  [data-ds='icon'][data-size='sm'] {
+    inline-size: var(--ds-size-icon-sm);
+    block-size: var(--ds-size-icon-sm);
+  }
+
+  [data-ds='icon'][data-size='lg'] {
+    inline-size: var(--ds-size-icon-lg);
+    block-size: var(--ds-size-icon-lg);
+  }
+
+  /* Pixel glyphs sit on a 2px grid: keep the edges hard at every size. */
+  [data-ds='icon'][data-set='pixel'] {
+    fill: currentColor;
+    shape-rendering: crispEdges;
+  }
+
+  [data-ds='icon'][data-set='line'] {
+    fill: none;
+    stroke: currentColor;
+  }
+
+  /* Directional glyphs flip when the text runs right to left. */
+  [data-ds='icon'][data-mirror]:dir(rtl) {
+    transform: scaleX(-1);
+  }
+}
