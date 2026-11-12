@@ -9,7 +9,9 @@
  *   --_progress-circle-width      the ring thickness
  *   --_progress-circle-font-size  the value inside the ring
  *   --_progress-circle-track      the full ring
- *   --_progress-circle-fill       the indicator ring, set by the tone
+ *   --_progress-circle-fill       the indicator ring, set by the tone. A mark
+ *                                 with no text on it: state.*.border, 3:1 on
+ *                                 the track and the page in every style.
  *   --_progress-circle-fraction   0 to 1, set inline on the indicator
  *
  * Drawing: track and indicator are round borders on spans stacked in the
@@ -17,7 +19,8 @@
  * starts at 12 o'clock and runs clockwise. A value change swaps the mask at
  * once (only transform and opacity animate). Indeterminate shows a quarter
  * arc that turns with transform: rotate (motion pattern spinner); under
- * reduced motion it stops as a still quarter arc.
+ * reduced motion it stops as a dashed full ring, a shape no value can take
+ * (a still quarter arc reads as 25 percent).
  */
 @layer ds.base {
   [data-ds='progress-circle'] {
@@ -59,15 +62,15 @@
   }
 
   [data-ds='progress-circle'][data-tone='success'] {
-    --_progress-circle-fill: var(--ds-color-state-success-solid);
+    --_progress-circle-fill: var(--ds-color-state-success-border);
   }
 
   [data-ds='progress-circle'][data-tone='warning'] {
-    --_progress-circle-fill: var(--ds-color-state-warning-solid);
+    --_progress-circle-fill: var(--ds-color-state-warning-border);
   }
 
   [data-ds='progress-circle'][data-tone='danger'] {
-    --_progress-circle-fill: var(--ds-color-state-danger-solid);
+    --_progress-circle-fill: var(--ds-color-state-danger-border);
   }
 
   /* ------------------------------------------------------------ parts */
@@ -108,10 +111,13 @@
 
   @media (prefers-reduced-motion: reduce) {
     /*
-     * Stops as a still quarter arc, like the still Spinner, in the full tone
-     * color (a faded ring fell below 3:1). aria-valuetext says Loading.
+     * Stops as a dashed full ring in the full tone color. A still quarter arc
+     * looks like a ring at 25 percent, and a faded ring fell below 3:1. No
+     * determinate value is dashed. aria-valuetext says Loading.
      */
     [data-ds='progress-circle'][data-state='indeterminate'] > [data-part='indicator'] {
+      border-style: dashed;
+      mask-image: none;
       animation: none;
     }
   }

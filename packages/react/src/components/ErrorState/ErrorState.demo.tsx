@@ -33,12 +33,11 @@ export default function ErrorStateDemo() {
       <DemoCase id="variants" title="Variants: sm in a card, md for a section, lg for a page">
         <DemoGrid min="18rem">
           <div style={panel}>
-            <Retryable lang="en" size="sm" live={false} title="Could not load activity" body="Check your connection, then retry." headingLevel={3} />
+            <Retryable lang="en" size="sm" title="Could not load activity" body="Check your connection, then retry." headingLevel={3} />
           </div>
           <div style={panel}>
             <Retryable
               lang="en"
-              live={false}
               title="Could not load members"
               body="The server took too long to answer. Your team is safe; nothing was changed."
               code="ERR_TIMEOUT 504"
@@ -50,7 +49,6 @@ export default function ErrorStateDemo() {
           <Retryable
             lang="en"
             size="lg"
-            live={false}
             title="This page did not load"
             body="Something went wrong on our side. Retry, or go back to your boards."
             actions={<Button size="md">Open boards</Button>}
@@ -64,7 +62,6 @@ export default function ErrorStateDemo() {
           <div style={panel}>
             <Retryable
               lang="ar"
-              live={false}
               title="تعذر تحميل الأعضاء"
               body="الخادم تأخر في الرد. بيانات فريقك سليمة وما تغير شيء."
               code="ERR_TIMEOUT 504"
@@ -79,7 +76,6 @@ export default function ErrorStateDemo() {
         <div style={panel}>
           <ErrorState
             lang="en"
-            live={false}
             icon="lock"
             title="You cannot open this board"
             body="Ask the owner for access, or open one of your own boards."
@@ -98,7 +94,6 @@ export default function ErrorStateDemo() {
           <Retryable
             lang="en"
             size="sm"
-            live={false}
             title="Could not load the comments on Quarterly planning board for the design team"
             body="The connection dropped while the comments were loading. Nothing you wrote is lost. Retry when you are back online, or keep working and the comments load on their own."
             code="ERR_NETWORK_CHANGED"
@@ -112,7 +107,6 @@ export default function ErrorStateDemo() {
           <Retryable
             lang="ar"
             size="sm"
-            live={false}
             title="تعذر تحميل التعليقات على لوحة التخطيط الربع سنوي لفريق التصميم"
             body="انقطع الاتصال وقت تحميل التعليقات، وكل اللي كتبته محفوظ. أعد المحاولة لما يرجع الاتصال، أو كمل شغلك والتعليقات بتنزل لحالها."
             code="ERR_NETWORK_CHANGED"
@@ -123,13 +117,13 @@ export default function ErrorStateDemo() {
 
       <DemoCase id="loading" title="Loading: a retry in flight">
         <div style={panel}>
-          <ErrorState lang="en" live={false} retrying onRetry={() => undefined} title="Could not load invoices" body="Trying again now." headingLevel={3} />
+          <ErrorState lang="en" retrying onRetry={() => undefined} title="Could not load invoices" body="Trying again now." headingLevel={3} />
         </div>
       </DemoCase>
 
       <DemoCase id="error" title="Error: no details, retry only">
         <div style={panel}>
-          <Retryable lang="en" live={false} title="Could not load files" body="Retry, and if it fails again, reload the page." headingLevel={3} />
+          <Retryable lang="en" title="Could not load files" body="Retry, and if it fails again, reload the page." headingLevel={3} />
         </div>
       </DemoCase>
     </DemoPage>

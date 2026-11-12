@@ -46,10 +46,10 @@
     "role": "None. Every skeleton is aria-hidden, whatever the caller passes.",
     "focus": "Not focusable. Holds no controls.",
     "keys": {},
-    "announce": "Nothing. The container that is loading carries aria-busy=\"true\" while the skeletons show and drops it when the content lands. For a wait worth saying, the consumer adds a status message such as Loading members.",
+    "announce": "The skeletons say nothing, so the consumer says it once per region. Keep one visually hidden role=\"status\" element mounted next to the loading container (outside it, since aria-busy can hold back what is inside). Put the words in it when loading starts: Loading members, Arabic جار تحميل الأعضاء. Empty it when the content lands. The container carries aria-busy=\"true\" while the skeletons show. Every case of Skeleton.demo.tsx shows the pattern.",
     "native": { "accessibilityRole": "none", "accessibilityState": [] },
     "notes": [
-      "The shimmer is a low contrast band and stops under reduced motion; the shape stays.",
+      "The shimmer plays three times (4.2s, linear, the skeleton-shimmer pattern) and stops, so it needs no pause control (WCAG 2.2.2). Under reduced motion it does not play; the shape stays.",
       "Forced colors draws an outline in the system text color, since the fill is not painted."
     ]
   },
@@ -69,8 +69,7 @@
     "font.size.2xl",
     "font.leading.normal",
     "border.width.default",
-    "duration.shimmer",
-    "ease.default"
+    "duration.shimmer"
   ],
   "motion": "skeleton-shimmer",
   "frameworks": {

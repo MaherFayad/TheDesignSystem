@@ -7205,8 +7205,8 @@
       },
       "live": {
         "type": "boolean",
-        "default": true,
-        "description": "role alert on the root, so an error that replaces content after load is read once. false for an error present at page load: the root is then role group named by its title, with no live role."
+        "default": false,
+        "description": "role alert on the root with aria-atomic false, so an error that replaces content after load is read once. Off by default: an error present at page load must not shout, and the root is then role group named by its title, with no live role."
       }
     },
     "states": [
@@ -7214,7 +7214,7 @@
       "retrying"
     ],
     "a11y": {
-      "role": "alert while live (default), with aria-atomic false; otherwise a group named by its title. The title is a real heading (h2 by default). The details part is a native details element.",
+      "role": "group named by its title (default); alert with aria-atomic false while live. The title is a real heading (h2 by default). The details part is a native details element.",
       "focus": "Focus does not move to it. Tab reaches the retry Button, the other actions, then the details summary.",
       "keys": {
         "Tab": "Moves to the retry Button, the other actions, then the details summary",
@@ -7222,7 +7222,7 @@
         "Enter": "Runs the focused action, or opens and closes the details",
         "Space": "Runs the focused action, or opens and closes the details"
       },
-      "announce": "With live, the role alert (aria-atomic false, so a retry does not read it all again) reads the title, body and actions once when the error replaces content after load. Retrying is said by the retry Button's hidden status (Retrying). An error present at page load is not announced; pass live false there.",
+      "announce": "With live, the role alert (aria-atomic false, so a retry does not read it all again) reads the title, body and actions once when the error replaces content after load. Retrying is said by the retry Button's hidden status (Retrying). An error present at page load is not announced, which is the default; pass live when the error replaces content after load. The default words follow the lang prop, else the Theme language.",
       "native": {
         "accessibilityRole": "alert",
         "accessibilityState": []
@@ -11586,9 +11586,9 @@
       "color.text.default",
       "color.text.muted",
       "color.primary.on-surface",
-      "color.state.success.solid",
-      "color.state.warning.solid",
-      "color.state.danger.solid",
+      "color.state.success.border",
+      "color.state.warning.border",
+      "color.state.danger.border",
       "color.state.danger.text",
       "duration.slow",
       "ease.standard"
@@ -11985,7 +11985,7 @@
       "title": {
         "type": "node",
         "default": "Notifications",
-        "description": "The panel heading. Arabic default under lang ar."
+        "description": "The panel heading. Arabic default under lang ar, from the prop or else the Theme language."
       },
       "headingLevel": {
         "type": [
@@ -11999,7 +11999,7 @@
       },
       "onMarkAllRead": {
         "type": "function",
-        "description": "Renders the mark all read Button (data-part mark-all) while any item is unread, and is called by it. The consumer clears unread on its items."
+        "description": "Renders the mark all read Button (data-part mark-all) while any item is unread, and is called by it. The consumer clears unread on its items. Before the call, focus moves to the panel title (tabIndex -1), since the Button removes itself once nothing is unread."
       },
       "markAllLabel": {
         "type": "string",
@@ -12093,7 +12093,7 @@
       "font.weight.medium",
       "font.weight.semibold",
       "font.leading.snug",
-      "focus.shadow.ring",
+      "color.focus.ring",
       "duration.fast",
       "ease.out"
     ],
@@ -13420,7 +13420,7 @@
           "danger"
         ],
         "default": "accent",
-        "description": "Indicator color. accent is color.primary.on-surface; the others are color.state.<tone>.solid."
+        "description": "Indicator color. accent is color.primary.on-surface; the others are color.state.<tone>.border, which holds 3:1 on the track in every style (WCAG 1.4.11)."
       }
     },
     "states": [
@@ -13441,13 +13441,13 @@
       },
       "notes": [
         "The label and the value sit inside the progressbar; its children are presentational, so the label names it through aria-labelledby and the value through aria-valuetext.",
-        "Indeterminate slides a 40% segment along the track. Under reduced motion it stops as a full, faded track and the value text says Loading.",
+        "Indeterminate slides a 40% segment along the track. Under reduced motion it stops as a still segment in the middle of the track, in the full tone color: a shape no value can take. The value text says Loading.",
         "The indicator scales from the inline start: it fills from the right in Arabic.",
         "Under forced colors the track has a CanvasText border and the indicator is Highlight.",
         "Tone is never the only signal: the label says what happened (Upload stopped) and the value says how far.",
         "WCAG 2.2.2: the indeterminate loop has no pause control; a busy indicator is essential motion, and it stops under reduced motion.",
         "The percent is rounded down, so an unfinished task never shows 100%.",
-        "With showValue false, the stopped indeterminate bar under reduced motion has no visible Loading text; keep showValue on, or say the state in text next to the bar."
+        "With showValue false the indeterminate bar has no visible Loading text; the still middle segment under reduced motion still reads as busy, but keep showValue on or say the state in text next to the bar."
       ]
     },
     "content": {
@@ -13481,9 +13481,9 @@
       "color.text.default",
       "color.text.muted",
       "color.primary.on-surface",
-      "color.state.success.solid",
-      "color.state.warning.solid",
-      "color.state.danger.solid",
+      "color.state.success.border",
+      "color.state.warning.border",
+      "color.state.danger.border",
       "duration.slow",
       "duration.shimmer",
       "ease.standard"
@@ -13573,11 +13573,11 @@
       },
       "showValue": {
         "type": "boolean",
-        "description": "Shows the value text inside the ring. Default true at md and lg, false at xs and sm. Never shown while indeterminate."
+        "description": "Shows the value text inside the ring. Default true at md and lg, false at xs and sm. Turning it on at xs or sm spills the text out of the ring; show the value next to the ring instead. Never shown while indeterminate."
       },
       "valueText": {
         "type": "function",
-        "description": "(value, max) => string for the value text and aria-valuetext. Keep it short to fit the ring: 7/12. Default: a whole percent with Western digits."
+        "description": "(value, max) => string for the value text and aria-valuetext. Keep it short to fit the ring: at most about five characters at md and seven at lg, for example 7/12. The text does not wrap. Default: a whole percent with Western digits."
       },
       "loadingLabel": {
         "type": "string",
@@ -13602,7 +13602,7 @@
           "danger"
         ],
         "default": "accent",
-        "description": "Indicator color. accent is color.primary.on-surface; the others are color.state.<tone>.solid."
+        "description": "Indicator color. accent is color.primary.on-surface; the others are color.state.<tone>.border, which holds 3:1 on the track and the page in every style (WCAG 1.4.11)."
       }
     },
     "states": [
@@ -13623,9 +13623,9 @@
       },
       "notes": [
         "The ring is a round border cut by a conic gradient mask; there is no SVG stroke and no stroke-dashoffset. A value change swaps the mask at once: only transform and opacity animate.",
-        "Indeterminate turns a quarter arc with transform: rotate. Under reduced motion it stops as a still quarter arc in the full tone color, like a still Spinner, and aria-valuetext says Loading.",
+        "Indeterminate turns a quarter arc with transform: rotate. Under reduced motion it stops as a dashed full ring in the full tone color, a shape no value can take (a still quarter arc reads as 25 percent), and aria-valuetext says Loading.",
         "The ring fills clockwise from 12 o'clock in both directions: a clock face does not mirror in RTL.",
-        "Ring contrast: every tone color is a solid mark color made for 3:1 against the surface (WCAG 1.4.11).",
+        "Ring contrast: every tone color is a state border color specified for 3:1 against the track and the surface (WCAG 1.4.11).",
         "Under forced colors the track is GrayText and the indicator Highlight.",
         "WCAG 2.2.2: the indeterminate loop has no pause control; a busy indicator is essential motion, and it stops under reduced motion.",
         "The percent is rounded down, so an unfinished task never shows 100%.",
@@ -13659,9 +13659,9 @@
       "color.bg.overlay-10",
       "color.text.default",
       "color.primary.on-surface",
-      "color.state.success.solid",
-      "color.state.warning.solid",
-      "color.state.danger.solid",
+      "color.state.success.border",
+      "color.state.warning.border",
+      "color.state.danger.border",
       "duration.spin"
     ],
     "motion": "spinner",
@@ -16789,13 +16789,13 @@
       "role": "None. Every skeleton is aria-hidden, whatever the caller passes.",
       "focus": "Not focusable. Holds no controls.",
       "keys": {},
-      "announce": "Nothing. The container that is loading carries aria-busy=\"true\" while the skeletons show and drops it when the content lands. For a wait worth saying, the consumer adds a status message such as Loading members.",
+      "announce": "The skeletons say nothing, so the consumer says it once per region. Keep one visually hidden role=\"status\" element mounted next to the loading container (outside it, since aria-busy can hold back what is inside). Put the words in it when loading starts: Loading members, Arabic جار تحميل الأعضاء. Empty it when the content lands. The container carries aria-busy=\"true\" while the skeletons show. Every case of Skeleton.demo.tsx shows the pattern.",
       "native": {
         "accessibilityRole": "none",
         "accessibilityState": []
       },
       "notes": [
-        "The shimmer is a low contrast band and stops under reduced motion; the shape stays.",
+        "The shimmer plays three times (4.2s, linear, the skeleton-shimmer pattern) and stops, so it needs no pause control (WCAG 2.2.2). Under reduced motion it does not play; the shape stays.",
         "Forced colors draws an outline in the system text color, since the fill is not painted."
       ]
     },
@@ -16819,8 +16819,7 @@
       "font.size.2xl",
       "font.leading.normal",
       "border.width.default",
-      "duration.shimmer",
-      "ease.default"
+      "duration.shimmer"
     ],
     "motion": "skeleton-shimmer",
     "frameworks": {

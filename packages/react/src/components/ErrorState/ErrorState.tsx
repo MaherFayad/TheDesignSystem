@@ -17,6 +17,7 @@ import { useId, type HTMLAttributes, type ReactNode, type Ref } from 'react';
 import type { Size } from '@the-system/shared';
 import type { IconName } from '@the-system/icons';
 import { Icon } from '@the-system/icons/react';
+import { useTheme } from '../../theme';
 import { Button } from '../Button';
 
 export type ErrorStateSize = Extract<Size, 'sm' | 'md' | 'lg'>;
@@ -55,7 +56,7 @@ export interface ErrorStateProps extends Omit<HTMLAttributes<HTMLDivElement>, 't
   body?: ReactNode;
   /** A system icon name, a node, or false for none. Default "alert-circle". */
   icon?: IconName | ReactNode | false;
-  /** The language of the copy when it differs from the page. Sets lang, dir and the default words. */
+  /** The language of the copy when it differs from the page. Sets lang and dir. The default words follow it, else the Theme language. */
   lang?: string;
   /** Default md: a section. sm sits in a card or a panel, lg fills a page. */
   size?: ErrorStateSize;
@@ -82,8 +83,9 @@ export interface ErrorStateProps extends Omit<HTMLAttributes<HTMLDivElement>, 't
   /**
    * Makes the root role="alert", so an error that replaces content after
    * load is read once (aria-atomic false, so the retry Button's status does
-   * not read the whole error again). Default true. Set false for an error
-   * present when the page loads; the root is then a group named by the title.
+   * not read the whole error again). Default false: an error present when the
+   * page loads must not shout, and the root is then a group named by the
+   * title. Set it when the error replaces content after load.
    */
   live?: boolean;
   ref?: Ref<HTMLDivElement>;
@@ -104,18 +106,21 @@ export function ErrorState({
   details,
   detailsLabel,
   detailsOpen = false,
-  live = true,
+  live = false,
   lang,
   ...rest
 }: ErrorStateProps) {
   const titleId = useId();
-  const words = labelsFor(lang);
+  const theme = useTheme();
+  // Words follow the prop, else the Theme. dir and lang are set only from the prop.
+  const words = labelsFor(lang ?? theme.lang);
   const Heading = `h${headingLevel}` as const;
   const hasActions = onRetry !== undefined || actions !== undefined;
   const hasDetails = (code !== undefined && code !== '') || details !== undefined;
   return (
     <div
-      role={live ? 'alert' : undefined}
+      role={live ? 'alert' : 'group'}
+      aria-atomic={live ? false : undefined}
       aria-labelledby={live ? undefined : titleId}
       {...rest}
       lang={lang}
@@ -132,7 +137,7 @@ export function ErrorState({
       <Heading id={titleId} data-part="title">
         {title}
       </Heading>
-      {body !== undefined && body !== '' && <p data-part="body">{body}</p>}
+      {body !== undefined && body !== '' && <div data-part="body">{body}</div>}
       {hasActions && (
         <div data-part="actions">
           {onRetry !== undefined && (

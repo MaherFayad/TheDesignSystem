@@ -14,7 +14,11 @@
  *   --_notification-center-item-bg       an item's fill at rest
  *   --_notification-center-item-bg-unread
  *   --_notification-center-item-bg-hover the hover veil on ::after
- *   --_notification-center-ring          the focus ring of an item
+ *   --_notification-center-ring          the focus ring of an item, a whole
+ *                                        inset shadow. focus.shadow.ring is
+ *                                        two layers in Neutral, and inset
+ *                                        reaches only the first, so the ring
+ *                                        is built here from the focus color.
  *
  * Unread is never color alone: the item gets a dot, a bold title and a
  * hidden "Unread" word before the title.
@@ -29,7 +33,7 @@
     --_notification-center-item-bg: transparent;
     --_notification-center-item-bg-unread: var(--ds-color-bg-overlay-5);
     --_notification-center-item-bg-hover: var(--ds-color-bg-overlay-5);
-    --_notification-center-ring: var(--ds-focus-shadow-ring);
+    --_notification-center-ring: inset 0 0 0 var(--ds-border-width-strong) var(--ds-color-focus-ring);
     --_notification-center-item-fg: var(--ds-color-text-default);
 
     display: flex;
@@ -147,7 +151,7 @@
   [data-ds='notification-center'] [data-part='item']:focus-visible {
     outline: var(--ds-border-width-strong) solid transparent;
     outline-offset: calc(-1 * var(--ds-border-width-strong));
-    box-shadow: inset var(--_notification-center-ring);
+    box-shadow: var(--_notification-center-ring);
   }
 
   [data-ds='notification-center'] [data-part='item'] > [data-part='item-icon'] {

@@ -124,7 +124,7 @@ export default function NotificationCenterDemo() {
   return (
     <DemoPage>
       <DemoCase id="variants" title="Variants: md and sm, unread and read, every tone, grouped by day">
-        <DemoGrid min="20rem">
+        <DemoGrid min="min(20rem, 100%)">
           <Panel>
             <Live initial={english} />
           </Panel>

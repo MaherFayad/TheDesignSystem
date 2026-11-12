@@ -38,24 +38,24 @@ export default function MeterDemo() {
   return (
     <DemoPage>
       <DemoCase id="variants" title="Variants: the tone follows the thresholds, the level is in words">
-        <DemoGrid min="20rem">
+        <DemoGrid min="min(20rem, 100%)">
           <Meter value={32} {...storage} valueText={gb} levelLabels={storageLevels} label="Storage used" />
           <Meter value={72} {...storage} valueText={gb} levelLabels={storageLevels} label="Storage used" />
           <Meter value={94} {...storage} valueText={gb} levelLabels={storageLevels} label="Storage used" />
         </DemoGrid>
-        <DemoGrid min="20rem">
+        <DemoGrid min="min(20rem, 100%)">
           <Meter value={9} {...score} valueText={outOf10} levelLabels={scoreLevels} label="Accessibility score" />
           <Meter value={5} {...score} valueText={outOf10} levelLabels={scoreLevels} label="Accessibility score" />
           <Meter value={2} {...score} valueText={outOf10} levelLabels={scoreLevels} label="Accessibility score" />
         </DemoGrid>
-        <DemoGrid min="20rem">
+        <DemoGrid min="min(20rem, 100%)">
           {sizes.map((size) => (
             <Meter key={size} size={size} value={46} label={`Size ${size}, no thresholds`} />
           ))}
         </DemoGrid>
         <h3 data-demo="title">Variants in Arabic</h3>
         <Theme lang="ar" data-demo="content">
-          <DemoGrid min="20rem">
+          <DemoGrid min="min(20rem, 100%)">
             <Meter value={32} {...storage} valueText={gbAr} levelLabels={storageLevelsAr} label="المساحة المستخدمة" />
             <Meter value={72} {...storage} valueText={gbAr} levelLabels={storageLevelsAr} label="المساحة المستخدمة" />
             <Meter value={94} {...storage} valueText={gbAr} levelLabels={storageLevelsAr} label="المساحة المستخدمة" />
@@ -80,7 +80,7 @@ export default function MeterDemo() {
       </DemoCase>
 
       <DemoCase id="many" title="Many meters, one per team">
-        <DemoGrid min="20rem">
+        <DemoGrid min="min(20rem, 100%)">
           {members.map(([name, value]) => (
             <Meter
               key={name}

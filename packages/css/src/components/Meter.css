@@ -10,7 +10,10 @@
  *   --_meter-font-size    label and value text
  *   --_meter-radius       the track corners
  *   --_meter-track        the track fill
- *   --_meter-fill         the indicator fill, set by the tone
+ *   --_meter-fill         the indicator fill, set by the tone. Its length is
+ *                         the value, a mark with no text on it, so the tones
+ *                         use state.*.border (3:1 on the track in every
+ *                         style), never state.*.solid.
  *   --_meter-fg           the label color
  *   --_meter-value-fg     the value color
  *   --_meter-fraction     0 to 1, set inline on the indicator
@@ -59,15 +62,15 @@
   }
 
   [data-ds='meter'][data-tone='success'] {
-    --_meter-fill: var(--ds-color-state-success-solid);
+    --_meter-fill: var(--ds-color-state-success-border);
   }
 
   [data-ds='meter'][data-tone='warning'] {
-    --_meter-fill: var(--ds-color-state-warning-solid);
+    --_meter-fill: var(--ds-color-state-warning-border);
   }
 
   [data-ds='meter'][data-tone='danger'] {
-    --_meter-fill: var(--ds-color-state-danger-solid);
+    --_meter-fill: var(--ds-color-state-danger-border);
     --_meter-value-fg: var(--ds-color-state-danger-text);
   }
 

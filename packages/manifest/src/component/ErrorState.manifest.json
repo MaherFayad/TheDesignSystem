@@ -43,11 +43,11 @@
     "details": { "type": "node", "description": "More detail inside the disclosure, after the code: a request id to send to support." },
     "detailsLabel": { "type": "string", "default": "Error details", "description": "The disclosure toggle." },
     "detailsOpen": { "type": "boolean", "default": false, "description": "Renders the details open at first." },
-    "live": { "type": "boolean", "default": true, "description": "role alert on the root, so an error that replaces content after load is read once. false for an error present at page load: the root is then role group named by its title, with no live role." }
+    "live": { "type": "boolean", "default": false, "description": "role alert on the root with aria-atomic false, so an error that replaces content after load is read once. Off by default: an error present at page load must not shout, and the root is then role group named by its title, with no live role." }
   },
   "states": ["error", "retrying"],
   "a11y": {
-    "role": "alert while live (default), with aria-atomic false; otherwise a group named by its title. The title is a real heading (h2 by default). The details part is a native details element.",
+    "role": "group named by its title (default); alert with aria-atomic false while live. The title is a real heading (h2 by default). The details part is a native details element.",
     "focus": "Focus does not move to it. Tab reaches the retry Button, the other actions, then the details summary.",
     "keys": {
       "Tab": "Moves to the retry Button, the other actions, then the details summary",
@@ -55,7 +55,7 @@
       "Enter": "Runs the focused action, or opens and closes the details",
       "Space": "Runs the focused action, or opens and closes the details"
     },
-    "announce": "With live, the role alert (aria-atomic false, so a retry does not read it all again) reads the title, body and actions once when the error replaces content after load. Retrying is said by the retry Button's hidden status (Retrying). An error present at page load is not announced; pass live false there.",
+    "announce": "With live, the role alert (aria-atomic false, so a retry does not read it all again) reads the title, body and actions once when the error replaces content after load. Retrying is said by the retry Button's hidden status (Retrying). An error present at page load is not announced, which is the default; pass live when the error replaces content after load. The default words follow the lang prop, else the Theme language.",
     "native": { "accessibilityRole": "alert", "accessibilityState": [] },
     "notes": [
       "The retry Button stays focusable while retrying (aria-disabled through loading), so focus is not lost.",

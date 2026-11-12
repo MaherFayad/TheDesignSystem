@@ -10,7 +10,10 @@
  *   --_progress-bar-font-size    label and value text
  *   --_progress-bar-radius       the track corners
  *   --_progress-bar-track        the track fill
- *   --_progress-bar-fill         the indicator fill, set by the tone
+ *   --_progress-bar-fill         the indicator fill, set by the tone. A mark
+ *                                with no text on it, so the tones use
+ *                                state.*.border (3:1 on the track in every
+ *                                style), never state.*.solid.
  *   --_progress-bar-fg           the label color
  *   --_progress-bar-value-fg     the value color
  *
@@ -18,8 +21,10 @@
  * component. The indicator spans the track and scales with scaleX from the
  * inline start, so only transform animates. Indeterminate slides a short
  * segment along the track (motion pattern spinner, the looping busy form);
- * under reduced motion it stops as a full, faded track and the value text
- * says Loading.
+ * under reduced motion it stops as a still segment in the middle of the
+ * track, in the full tone color. No determinate value has that shape (a
+ * value always starts at the inline start), so it never reads as done or as
+ * a part done. The value text says Loading.
  */
 @layer ds.base {
   [data-ds='progress-bar'] {
@@ -59,15 +64,15 @@
   }
 
   [data-ds='progress-bar'][data-tone='success'] {
-    --_progress-bar-fill: var(--ds-color-state-success-solid);
+    --_progress-bar-fill: var(--ds-color-state-success-border);
   }
 
   [data-ds='progress-bar'][data-tone='warning'] {
-    --_progress-bar-fill: var(--ds-color-state-warning-solid);
+    --_progress-bar-fill: var(--ds-color-state-warning-border);
   }
 
   [data-ds='progress-bar'][data-tone='danger'] {
-    --_progress-bar-fill: var(--ds-color-state-danger-solid);
+    --_progress-bar-fill: var(--ds-color-state-danger-border);
   }
 
   /* ------------------------------------------------------------ parts */
@@ -152,13 +157,19 @@
       transition: none;
     }
 
-    /* Stops: a full, faded track. The value text says Loading. */
-    [data-ds='progress-bar'][data-state='indeterminate'] [data-part='indicator'],
-    [data-ds='progress-bar'][data-state='indeterminate'] [data-part='indicator']:dir(rtl) {
-      inline-size: 100%;
-      transform: none;
+    /*
+     * Stops as a still segment in the middle of the track, full tone color.
+     * The 40 percent segment moves 75 percent of its own size, so it sits
+     * from 30 to 70 percent of the track: a shape no value can take.
+     */
+    [data-ds='progress-bar'][data-state='indeterminate'] [data-part='indicator'] {
+      transform: translateX(75%);
       animation: none;
-      opacity: var(--ds-opacity-disabled);
+    }
+
+    [data-ds='progress-bar'][data-state='indeterminate'] [data-part='indicator']:dir(rtl) {
+      transform: translateX(-75%);
+      animation: none;
     }
   }
 

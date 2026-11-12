@@ -66,6 +66,14 @@ export function ProgressBar({
   const text = value === null ? busy : valueText ? valueText(value, max) : formatPercent(value / max, lang);
   const fraction = value === null ? 0 : value / max;
   const hasLabel = label !== undefined && label !== null && label !== false && label !== '';
+  if (
+    process.env.NODE_ENV !== 'production' &&
+    !hasLabel &&
+    rest['aria-label'] === undefined &&
+    rest['aria-labelledby'] === undefined
+  ) {
+    console.warn('ProgressBar: no accessible name. Pass label, or aria-label when the bar has no visible text.');
+  }
 
   return (
     <Progress.Root

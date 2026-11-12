@@ -1,7 +1,10 @@
+import { readFileSync } from 'node:fs';
+import { join } from 'node:path';
 import { render } from '@testing-library/react';
 import { createRef } from 'react';
 import { describe, expect, it } from 'vitest';
 import SkeletonDemo from './Skeleton.demo';
+import { SHIMMER_ITERATIONS } from '@the-system/motion';
 import { Skeleton } from './index';
 
 function root(container: HTMLElement): HTMLElement {
@@ -61,5 +64,30 @@ describe('Skeleton', () => {
     const all = container.querySelectorAll('[data-ds="skeleton"]');
     expect(all.length).toBeGreaterThan(20);
     all.forEach((el) => expect(el.closest('[aria-busy="true"]')).not.toBeNull());
+  });
+});
+
+describe('Skeleton shimmer and loading announcement', () => {
+  const css = readFileSync(join(process.cwd(), 'packages/css/src/components/Skeleton.css'), 'utf8');
+
+  // WCAG 2.2.2: the skeleton-shimmer pattern loops SHIMMER_ITERATIONS times
+  // (4.2s) so it stops before five seconds. The CSS must match it.
+  it('plays the shimmer three times, linear, never infinite', () => {
+    const decl = /animation: ds-skeleton-shimmer ([^;]+);/.exec(css)?.[1] ?? '';
+    expect(decl).not.toContain('infinite');
+    expect(decl).toContain('linear');
+    expect(decl.trim().split(/\s+/).at(-1)).toBe(String(SHIMMER_ITERATIONS));
+  });
+
+  it('every busy region in the demo has a status line outside it that says what loads', () => {
+    const { container } = render(<SkeletonDemo />);
+    const busy = [...container.querySelectorAll('[aria-busy="true"]')];
+    expect(busy.length).toBeGreaterThan(0);
+    for (const region of busy) {
+      const status = region.parentElement?.querySelector(':scope > [role="status"]');
+      expect(status, region.getAttribute('aria-label') ?? '').not.toBeNull();
+      expect(region.contains(status!)).toBe(false);
+      expect(status!.textContent?.trim()).not.toBe('');
+    }
   });
 });
