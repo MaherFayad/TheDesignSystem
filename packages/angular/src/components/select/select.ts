@@ -220,8 +220,8 @@ export class DsSelect implements ControlValueAccessor {
   protected readonly loadingText = computed(() => this.loadingLabel() ?? words[this.lang()].loading);
   protected readonly emptyContent = computed<ListBoxContent>(() => this.empty() ?? words[this.lang()].empty);
 
-  protected readonly controlId = computed(() => this.id() ?? this.field?.controlId);
-  readonly isInvalid = computed(() => this.invalid() ?? this.field?.isInvalid() ?? false);
+  protected readonly controlId = computed(() => this.id() ?? this.field?.controlId());
+  readonly isInvalid = computed(() => this.invalid() ?? this.field?.invalid() ?? false);
   private readonly formDisabled = signal<boolean | undefined>(undefined);
   readonly isDisabled = computed(() => this.disabled() ?? this.formDisabled() ?? this.field?.disabled() ?? false);
   readonly isReadOnly = computed(() => this.readOnly() ?? this.field?.readOnly() ?? false);

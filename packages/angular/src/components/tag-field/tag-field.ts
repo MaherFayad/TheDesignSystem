@@ -196,8 +196,8 @@ export class DsTagField implements ControlValueAccessor {
   private readonly lang = computed<'en' | 'ar'>(() => (this.theme.value().lang.startsWith('ar') ? 'ar' : 'en'));
   private readonly t = computed(() => words[this.lang()]);
 
-  protected readonly controlId = computed(() => this.id() ?? this.field?.controlId);
-  readonly isInvalid = computed(() => this.invalid() ?? this.field?.isInvalid() ?? false);
+  protected readonly controlId = computed(() => this.id() ?? this.field?.controlId());
+  readonly isInvalid = computed(() => this.invalid() ?? this.field?.invalid() ?? false);
   private readonly formDisabled = signal<boolean | undefined>(undefined);
   readonly isDisabled = computed(() => this.disabled() ?? this.formDisabled() ?? this.field?.disabled() ?? false);
   readonly isReadOnly = computed(() => this.readOnly() ?? this.field?.readOnly() ?? false);

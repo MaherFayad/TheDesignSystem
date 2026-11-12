@@ -159,8 +159,8 @@ export class DsCheckbox implements ControlValueAccessor {
   });
   protected readonly iconSize = computed<CheckboxSize>(() => this.size() ?? this.group?.size() ?? 'md');
   protected readonly itemName = computed(() => this.name() ?? this.group?.name());
-  protected readonly controlId = computed(() => this.id() ?? this.field?.controlId ?? this.ownId);
-  readonly isInvalid = computed(() => this.invalid() ?? this.group?.invalid() ?? this.field?.isInvalid() ?? false);
+  protected readonly controlId = computed(() => this.id() ?? this.field?.controlId() ?? this.ownId);
+  readonly isInvalid = computed(() => this.invalid() ?? this.group?.invalid() ?? this.field?.invalid() ?? false);
   readonly isDisabled = computed(
     () => this.disabled() ?? this.formDisabled() ?? this.group?.disabled() ?? this.field?.disabled() ?? false,
   );

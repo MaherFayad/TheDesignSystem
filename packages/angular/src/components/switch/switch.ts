@@ -145,8 +145,8 @@ export class DsSwitch implements ControlValueAccessor {
 
   readonly current = computed(() => this.own());
   readonly state = computed(() => (this.current() ? 'checked' : 'unchecked'));
-  protected readonly controlId = computed(() => this.id() ?? this.field?.controlId ?? this.ownId);
-  readonly isInvalid = computed(() => this.invalid() ?? this.field?.isInvalid() ?? false);
+  protected readonly controlId = computed(() => this.id() ?? this.field?.controlId() ?? this.ownId);
+  readonly isInvalid = computed(() => this.invalid() ?? this.field?.invalid() ?? false);
   readonly isDisabled = computed(() => this.disabled() ?? this.formDisabled() ?? this.field?.disabled() ?? false);
   readonly isReadOnly = computed(() => this.readOnly() ?? this.field?.readOnly() ?? false);
   protected readonly isRequired = computed(() => this.required() ?? this.field?.required() ?? false);

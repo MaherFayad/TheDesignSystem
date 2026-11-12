@@ -249,10 +249,10 @@ export abstract class DsSliderBase {
     return l !== undefined && l !== null;
   });
   protected readonly valueShown = computed(() => this.showValue() ?? this.hasLabel());
-  readonly isInvalid = computed(() => this.invalid() ?? this.field?.isInvalid() ?? false);
+  readonly isInvalid = computed(() => this.invalid() ?? this.field?.invalid() ?? false);
   readonly isDisabled = computed(() => this.disabled() ?? this.formDisabled() ?? this.field?.disabled() ?? false);
   protected readonly formDisabled = signal<boolean | undefined>(undefined);
-  protected readonly controlId = computed(() => this.id() ?? this.field?.controlId);
+  protected readonly controlId = computed(() => this.id() ?? this.field?.controlId());
   protected readonly describedBy = computed(
     () => [this.field?.describedBy(), this.ariaDescribedby()].filter(Boolean).join(' ') || undefined,
   );

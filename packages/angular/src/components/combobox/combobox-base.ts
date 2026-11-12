@@ -226,8 +226,8 @@ export abstract class DsComboboxBase implements OnInit {
   protected readonly clearText = computed(() => this.clearLabelText() ?? this.t().clear);
 
   // Field wiring, as React's useFieldControl.
-  protected readonly controlId = computed(() => this.id() ?? this.field?.controlId);
-  readonly isInvalid = computed(() => this.invalid() ?? this.field?.isInvalid() ?? false);
+  protected readonly controlId = computed(() => this.id() ?? this.field?.controlId());
+  readonly isInvalid = computed(() => this.invalid() ?? this.field?.invalid() ?? false);
   private readonly formDisabled = signal<boolean | undefined>(undefined);
   readonly isDisabled = computed(() => this.disabled() ?? this.formDisabled() ?? this.field?.disabled() ?? false);
   readonly isReadOnly = computed(() => this.readOnly() ?? this.field?.readOnly() ?? false);
