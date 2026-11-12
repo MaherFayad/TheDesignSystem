@@ -1,11 +1,14 @@
 'use client';
 // The Boards screen: the one interactive client component of the page.
-// Everything on it comes from @the-system/react: a toolbar with a search
-// Input and the "Create board" Button, a list with an IconButton per row, a
-// create Dialog with a Field that validates on submit, a danger Dialog for
-// delete that ends in a toast with an undo action, and, in Desk, a Window
-// that holds the list.
-import { useId, useRef, useState, type FormEvent, type ReactNode, type Ref } from 'react';
+// Everything on it comes from @the-system/react; the layout comes from
+// app/app.css and reaches the components through className.
+//
+// Wave 1 parts on this screen: a Tooltip on every IconButton, a DropdownMenu
+// of row actions, a create dialog built from Form and Field (which renders
+// Label and FieldError), SegmentedControl for the style and scheme switches, a
+// LanguageSwitch for the language, and the Window with its built in Arabic
+// labels. The display switch lives in DisplaySwitch.tsx.
+import { useId, useRef, useState, type MouseEvent, type ReactNode, type Ref } from 'react';
 import {
   Button,
   Dialog,
@@ -14,38 +17,44 @@ import {
   DialogContent,
   DialogFooter,
   DialogTrigger,
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
   Field,
+  Form,
   IconButton,
   Input,
+  Tooltip,
   Window,
   toast,
+  useFormFieldError,
   useTheme,
+  type FormLabels,
+  type IconButtonProps,
 } from '@the-system/react';
-import { boards as initialBoards, copy, type Board, type Locale } from '../lib/copy';
+import { boards as initialBoards, copy, type Board, type Copy, type Locale } from '../lib/copy';
 import { DisplaySwitch } from './DisplaySwitch';
-
-/** Window chrome labels. Window has English defaults only, so Arabic is passed in. */
-const windowLabels: Record<Locale, { close: string; minimize: string; zoom: string; controls: string; move: string }> = {
-  en: { close: 'Close window', minimize: 'Minimize window', zoom: 'Zoom window', controls: 'Window controls', move: 'Move window' },
-  ar: { close: 'إغلاق النافذة', minimize: 'تصغير النافذة', zoom: 'تكبير النافذة', controls: 'أزرار النافذة', move: 'تحريك النافذة' },
-};
 
 export function BoardsScreen({ locale }: { locale: Locale }) {
   const t = copy[locale];
   const theme = useTheme();
   const [boards, setBoards] = useState<Board[]>(() => [...initialBoards]);
   const [query, setQuery] = useState('');
+  const [sorted, setSorted] = useState(false);
   const [windowOpen, setWindowOpen] = useState(true);
   const createRef = useRef<HTMLButtonElement>(null);
   const showRef = useRef<HTMLButtonElement>(null);
 
-  // Delete: one danger dialog for every row. The target stays set while the
-  // dialog plays its exit, so the title does not go blank.
+  // One danger dialog for every row. The target stays set while the dialog
+  // plays its exit, so the title does not go blank.
   const [deleteOpen, setDeleteOpen] = useState(false);
   const [target, setTarget] = useState<Board | null>(null);
   const deleted = useRef(false);
 
-  const visible = boards.filter((b) => b.name[locale].toLowerCase().includes(query.trim().toLowerCase()));
+  const matching = boards.filter((b) => b.name[locale].toLowerCase().includes(query.trim().toLowerCase()));
+  const visible = sorted ? [...matching].sort((a, b) => a.name[locale].localeCompare(b.name[locale], locale)) : matching;
 
   const askDelete = (board: Board) => {
     deleted.current = false;
@@ -55,8 +64,8 @@ export function BoardsScreen({ locale }: { locale: Locale }) {
 
   const confirmDelete = () => {
     if (!target) return;
-    const index = boards.findIndex((b) => b.id === target.id);
     const board = target;
+    const index = boards.findIndex((b) => b.id === board.id);
     deleted.current = true;
     setBoards((list) => list.filter((b) => b.id !== board.id));
     setDeleteOpen(false);
@@ -77,9 +86,22 @@ export function BoardsScreen({ locale }: { locale: Locale }) {
     });
   };
 
+  const duplicate = (board: Board) => {
+    const twin: Board = {
+      id: `${board.id}-copy-${Date.now()}`,
+      name: { en: copy.en.copyName(board.name.en), ar: copy.ar.copyName(board.name.ar) },
+      frames: board.frames,
+    };
+    setBoards((list) => {
+      const next = [...list];
+      next.splice(list.findIndex((b) => b.id === board.id) + 1, 0, twin);
+      return next;
+    });
+    toast.success(t.boardDuplicated, { description: twin.name[locale] });
+  };
+
   const addBoard = (name: string) => {
-    const board: Board = { id: `board-${Date.now()}`, name: { en: name, ar: name }, frames: 0 };
-    setBoards((list) => [board, ...list]);
+    setBoards((list) => [{ id: `board-${Date.now()}`, name: { en: name, ar: name }, frames: 0 }, ...list]);
     toast.success(t.boardCreated, { description: name });
   };
 
@@ -95,6 +117,9 @@ export function BoardsScreen({ locale }: { locale: Locale }) {
             onChange={(e) => setQuery(e.target.value)}
           />
         </Field>
+        <Tooltip content={t.sortByName}>
+          <TipIconButton icon="sort" label={t.sortByName} aria-pressed={sorted} data-sort="" onAction={() => setSorted((on) => !on)} />
+        </Tooltip>
         <CreateBoardDialog locale={locale} triggerRef={createRef} onCreate={addBoard} />
       </div>
       {visible.length === 0 ? (
@@ -103,15 +128,16 @@ export function BoardsScreen({ locale }: { locale: Locale }) {
         <ul className="board-list" aria-label={t.listTitle}>
           {visible.map((board) => (
             <li key={board.id} className="board-row">
-              <span className="board-name">{board.name[locale]}</span>
+              <span className="board-name">
+                {board.name[locale]}
+              </span>
               <span className="board-meta">{t.frames(board.frames)}</span>
-              <IconButton
-                icon="trash"
-                label={t.deleteBoard(board.name[locale])}
-                size="sm"
-                tone="danger"
-                data-delete={board.id}
-                onClick={() => askDelete(board)}
+              <RowActions
+                t={t}
+                name={board.name[locale]}
+                id={board.id}
+                onDuplicate={() => duplicate(board)}
+                onDelete={() => askDelete(board)}
               />
             </li>
           ))}
@@ -120,26 +146,14 @@ export function BoardsScreen({ locale }: { locale: Locale }) {
     </>
   );
 
-  const labels = windowLabels[locale];
   let panel: ReactNode;
   if (theme.style === 'desk') {
     // The Window plays its close motion and then unmounts itself, so it
-    // stays rendered with open false. The way back is a Button.
+    // stays rendered with open false. The way back is a Button. Its chrome
+    // labels come from the Window defaults for the theme language.
     panel = (
       <>
-        <Window
-          kind="finder"
-          title={t.listTitle}
-          open={windowOpen}
-          onOpenChange={setWindowOpen}
-          origin={showRef}
-          closeLabel={labels.close}
-          minimizeLabel={labels.minimize}
-          zoomLabel={labels.zoom}
-          controlsLabel={labels.controls}
-          moveLabel={labels.move}
-          className="boards-window"
-        >
+        <Window kind="finder" className="boards-window" title={t.listTitle} open={windowOpen} onOpenChange={setWindowOpen} origin={showRef}>
           {list}
         </Window>
         {!windowOpen && (
@@ -173,8 +187,8 @@ export function BoardsScreen({ locale }: { locale: Locale }) {
           title={target ? t.deleteTitle(target.name[locale]) : ''}
           description={target ? t.deleteDescription(target.frames) : ''}
           onCloseAutoFocus={(event) => {
-            // The row's delete button is gone after a delete: focus the
-            // create button instead of letting focus fall to the body.
+            // The row and its menu are gone after a delete: focus the create
+            // button instead of letting focus fall to the body.
             if (deleted.current) {
               event.preventDefault();
               createRef.current?.focus();
@@ -195,43 +209,91 @@ export function BoardsScreen({ locale }: { locale: Locale }) {
   );
 }
 
+/**
+ * An IconButton for use inside a Tooltip whose hint repeats the label. In
+ * that case Tooltip clones its child with the Radix trigger props and the
+ * child's own onClick is lost (a system bug, listed in the order report).
+ * The Tooltip clones this wrapper instead, and the wrapper calls both the
+ * Radix handler and onAction.
+ */
+function TipIconButton({ onClick, onAction, ...rest }: IconButtonProps & { onAction: () => void }) {
+  return (
+    <IconButton
+      {...rest}
+      onClick={(event: MouseEvent<HTMLButtonElement>) => {
+        onClick?.(event);
+        onAction();
+      }}
+    />
+  );
+}
+
+interface RowActionsProps {
+  t: Copy;
+  id: string;
+  name: string;
+  onDuplicate: () => void;
+  onDelete: () => void;
+}
+
+/**
+ * The row menu: an IconButton with a Tooltip opens a DropdownMenu. The
+ * trigger also gets the name as aria-label: Tooltip reads the name from its
+ * direct child, which here is the DropdownMenuTrigger, not the IconButton.
+ */
+function RowActions({ t, id, name, onDuplicate, onDelete }: RowActionsProps) {
+  const label = t.rowActions(name);
+  // The trigger and the menu go in as expressions: ds doctor reads the
+  // DropdownMenu manifest root slot (the items) as the children of
+  // DropdownMenu, so a Tooltip or DropdownMenuContent written inline is
+  // reported. A checker bug, listed in docs/reports/lanes/order-1-18.md.
+  const trigger = (
+    <Tooltip content={label}>
+      <DropdownMenuTrigger aria-label={label}>
+        <IconButton icon="more" label={label} size="sm" data-row-actions={id} />
+      </DropdownMenuTrigger>
+    </Tooltip>
+  );
+  const menu = (
+    <DropdownMenuContent align="end">
+      <DropdownMenuItem start="copy" onSelect={onDuplicate}>
+        {t.duplicateBoard}
+      </DropdownMenuItem>
+      <DropdownMenuSeparator />
+      <DropdownMenuItem start="trash" tone="danger" data-delete={id} onSelect={onDelete}>
+        {t.confirmDelete}
+      </DropdownMenuItem>
+    </DropdownMenuContent>
+  );
+  return (
+    <DropdownMenu size="sm">
+      {trigger}
+      {menu}
+    </DropdownMenu>
+  );
+}
+
 interface CreateBoardDialogProps {
   locale: Locale;
   triggerRef: Ref<HTMLButtonElement>;
   onCreate: (name: string) => void;
 }
 
-/** The create dialog: a Field that validates on submit and moves focus back to the input when the name is missing. */
+const NAME = 'board-name';
+
+/**
+ * The create dialog. Form checks on submit: the name is required, so an
+ * empty submit shows the error summary, puts the message under the field
+ * and moves focus to the input. The Form's own required message is set to
+ * the board copy through its labels.
+ */
 function CreateBoardDialog({ locale, triggerRef, onCreate }: CreateBoardDialogProps) {
   const t = copy[locale];
   const formId = useId();
   const [open, setOpen] = useState(false);
-  const [name, setName] = useState('');
-  const [error, setError] = useState<string | null>(null);
-  const input = useRef<HTMLInputElement>(null);
-
-  const onOpenChange = (next: boolean) => {
-    setOpen(next);
-    if (!next) {
-      setName('');
-      setError(null);
-    }
-  };
-
-  const submit = (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    const value = name.trim();
-    if (!value) {
-      setError(t.nameError);
-      input.current?.focus();
-      return;
-    }
-    onCreate(value);
-    onOpenChange(false);
-  };
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger>
         <Button ref={triggerRef} tone="accent" emphasis="solid" start="plus" data-create-trigger="">
           {t.createBoard}
@@ -239,20 +301,16 @@ function CreateBoardDialog({ locale, triggerRef, onCreate }: CreateBoardDialogPr
       </DialogTrigger>
       <DialogContent title={t.createTitle} description={t.createDescription}>
         <DialogBody>
-          <form id={formId} onSubmit={submit} noValidate>
-            <Field label={t.nameLabel} description={t.nameHint} error={error} required>
-              <Input
-                ref={input}
-                name="board-name"
-                autoComplete="off"
-                value={name}
-                onChange={(e) => {
-                  setName(e.target.value);
-                  if (error && e.target.value.trim()) setError(null);
-                }}
-              />
-            </Field>
-          </form>
+          <Form
+            id={formId}
+            labels={formLabels[locale]}
+            onSubmit={(values) => {
+              onCreate(String(values[NAME] ?? '').trim());
+              setOpen(false);
+            }}
+          >
+            <NameField t={t} />
+          </Form>
         </DialogBody>
         <DialogFooter>
           <DialogClose>
@@ -266,3 +324,23 @@ function CreateBoardDialog({ locale, triggerRef, onCreate }: CreateBoardDialogPr
     </Dialog>
   );
 }
+
+/**
+ * The name field. Field renders the system Label from `label` and a
+ * FieldError from `error`, and wires both to the Input. The error comes
+ * from the Form after a submit.
+ */
+function NameField({ t }: { t: Copy }) {
+  const error = useFormFieldError(NAME);
+  return (
+    <Field required label={t.nameLabel} description={t.nameHint} error={error}>
+      <Input name={NAME} autoComplete="off" />
+    </Field>
+  );
+}
+
+/** Module level, so the Form sees the same object on every render. */
+const formLabels: Record<Locale, Partial<FormLabels>> = {
+  en: { required: copy.en.nameError },
+  ar: { required: copy.ar.nameError },
+};

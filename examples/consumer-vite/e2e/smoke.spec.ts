@@ -1,8 +1,12 @@
 // Smoke test of the Vite consumer, run against the production build by
-// scripts/smoke.mjs. It proves Gate 0 for this app: the five wave 0
+// scripts/smoke.mjs. It proves gate 0 and gate 1 for this app: the system
 // components render from the packages, themed, in both languages, with no
-// console errors, no sideways scroll at 320px and a clean axe run. It also
-// checks the layering rule: an unlayered CSS Module class beats the system.
+// console errors, no sideways scroll at 320px and a clean axe run. Wave 1
+// parts: Tooltip on every IconButton, a DropdownMenu of row actions, the
+// create dialog on Form, Field, Label and FieldError, SegmentedControl and
+// LanguageSwitch for the switches, and the Window's own Arabic labels. It
+// also checks the layering rule: an unlayered CSS Module class beats the
+// system.
 import { mkdirSync } from 'node:fs';
 import { join } from 'node:path';
 import AxeBuilder from '@axe-core/playwright';
@@ -58,7 +62,7 @@ test('Studio renders the components from the packages, themed', async ({ page })
   await open(page, path('studio', 'dark', 'en'));
   await expectHtml(page, { 'data-ds': 'theme', 'data-style': 'studio', 'data-scheme': 'dark', lang: 'en', dir: 'ltr' });
   await expect(page.locator('#root > [data-ds="theme"]')).toHaveAttribute('data-style', 'studio');
-  for (const ds of ['button', 'icon-button', 'field', 'input']) {
+  for (const ds of ['button', 'icon-button', 'field', 'input', 'segmented-control', 'language-switch']) {
     await expect(page.locator(`[data-ds="${ds}"]`).first()).toBeVisible();
   }
   await expect(page.locator('[data-ds="window"]')).toHaveCount(0);
@@ -79,7 +83,9 @@ test('an unlayered CSS Module class wins over the system layers', async ({ page 
   const radius = (selector: string) =>
     page.locator(selector).first().evaluate((el) => getComputedStyle(el).borderStartStartRadius);
   const create = await radius('[data-create-trigger]');
-  const other = await radius('[data-choice="style-studio"]');
+  // The same Button with no class: the submit button of the create dialog.
+  await page.locator('[data-create-trigger]').click();
+  const other = await radius('[data-ds="dialog"] [type="submit"]');
   const small = await page.evaluate(() => {
     const probe = document.createElement('div');
     probe.style.borderRadius = 'var(--ds-radius-sm)';
@@ -101,10 +107,14 @@ test('the create dialog opens, validates, closes and returns focus', async ({ pa
   const input = dialog.locator('[data-ds="input"] input');
   await expect(input).toBeFocused();
   await dialog.getByRole('button', { name: 'Create board' }).click();
-  await expect(dialog.locator('[data-ds="field"] [data-part="error"]')).toContainText('Add a name for the board');
+  await expect(dialog.locator('[data-ds="form"]')).toBeVisible();
+  await expect(dialog.locator('[data-ds="field"] [data-ds="label"]')).toHaveText(/Board name/);
+  await expect(dialog.locator('[data-ds="field"] [data-ds="field-error"]')).toContainText('Add a name for the board');
+  await expect(dialog.locator('[data-ds="form"] [data-part="summary"]')).toBeVisible();
   await expect(input).toHaveAttribute('aria-invalid', 'true');
   await expect(input).toBeFocused();
   await input.fill('Roadmap');
+  await expect(dialog.locator('[data-ds="field-error"]')).toHaveCount(0);
   await input.press('Enter');
   await expect(dialog).toHaveCount(0);
   await expect(trigger).toBeFocused();
@@ -114,6 +124,8 @@ test('the create dialog opens, validates, closes and returns focus', async ({ pa
 
 test('delete asks in a danger dialog and the toast undoes it', async ({ page }) => {
   await open(page, path('desk', 'dark', 'en'));
+  await page.locator('[data-row-actions="spring"]').click();
+  await expect(page.locator('[data-ds="dropdown-menu"]')).toBeVisible();
   await page.locator('[data-delete="spring"]').click();
   const dialog = page.locator('[data-ds="dialog"]');
   await expect(dialog).toHaveAttribute('data-tone', 'danger');
@@ -137,13 +149,49 @@ test('the switch changes style, scheme and language', async ({ page }) => {
   await expect(page.locator('[data-ds="window"]')).toBeVisible();
   await page.locator('[data-choice="scheme-light"]').click();
   await expectHtml(page, { 'data-scheme': 'light' });
-  await page.locator('[data-choice="lang-ar"]').click();
+  await page.locator('[data-ds="language-switch"]').getByRole('link', { name: 'العربية' }).click();
   await expectHtml(page, { lang: 'ar', dir: 'rtl', 'data-style': 'desk', 'data-scheme': 'light' });
   await expect(page.locator('h1')).toHaveText('اللوحات');
   await expect(page).toHaveURL(/style=desk&scheme=light&lang=ar/);
   // A reload opens the same screen from the URL.
   await page.reload();
   await expectHtml(page, { lang: 'ar', dir: 'rtl', 'data-style': 'desk', 'data-scheme': 'light' });
+});
+
+test('every IconButton shows its label in a Tooltip on focus', async ({ page }) => {
+  await open(page, path('studio', 'dark', 'en'));
+  const buttons = page.locator('[data-ds="icon-button"]');
+  const count = await buttons.count();
+  expect(count).toBeGreaterThan(1);
+  for (let i = 0; i < count; i += 1) {
+    const button = buttons.nth(i);
+    const label = await button.getAttribute('aria-label');
+    await button.focus();
+    expect(label).toBeTruthy();
+    await expect(page.locator('[data-ds="tooltip"]').filter({ hasText: label ?? '' })).toBeVisible();
+    await page.keyboard.press('Escape');
+  }
+});
+
+test('the sort IconButton sorts by name and the row menu duplicates a board', async ({ page }) => {
+  await open(page, path('studio', 'dark', 'en'));
+  const sort = page.locator('[data-sort]');
+  await sort.click();
+  await expect(sort).toHaveAttribute('aria-pressed', 'true');
+  await expect(page.locator('[data-board-name]').first()).toHaveText('Brand refresh');
+  await page.locator('[data-row-actions="checkout"]').press('Enter');
+  const menu = page.locator('[data-ds="dropdown-menu"]');
+  await expect(menu.getByRole('menuitem').first()).toBeFocused();
+  await menu.getByRole('menuitem', { name: 'Duplicate board' }).click();
+  await expect(page.locator('[data-board-name]', { hasText: 'Checkout flow copy' })).toHaveCount(1);
+  await expect(page.locator('[data-ds="toast"]').filter({ hasText: 'Board duplicated' })).toBeVisible();
+});
+
+test('the Window takes its Arabic labels from its own defaults', async ({ page }) => {
+  await open(page, path('desk', 'dark', 'ar'));
+  const win = page.locator('[data-ds="window"]');
+  await expect(win.getByRole('button', { name: 'إغلاق النافذة' })).toBeVisible();
+  await expect(win.getByRole('button', { name: 'Close window' })).toHaveCount(0);
 });
 
 for (const style of ['studio', 'desk'] as const) {

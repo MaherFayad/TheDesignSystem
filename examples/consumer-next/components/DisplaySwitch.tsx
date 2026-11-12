@@ -1,13 +1,13 @@
 'use client';
-// The style, scheme and language switch: three small groups of system
-// Buttons. Style and scheme write a cookie and refresh the route, so the
-// server layout stamps the new theme on <html>. Language is a link to the
-// other locale segment, rendered as a Button through asChild.
-import Link from 'next/link';
+// The style, scheme and language switch. Style and scheme are two
+// SegmentedControls: a choice writes a cookie and refreshes the route, so
+// the server layout stamps the new theme on <html>. Language is a
+// LanguageSwitch: two links to the other locale segment, each name in its
+// own language with lang and hreflang.
 import { useRouter } from 'next/navigation';
 import { useTransition } from 'react';
-import { Button, useTheme } from '@the-system/react';
-import { copy, schemes, styleNames, styles, type Locale } from '../lib/copy';
+import { LanguageSwitch, SegmentedControl, SegmentedControlItem, useTheme } from '@the-system/react';
+import { copy, isScheme, isStyle, schemes, styleNames, styles, type Locale } from '../lib/copy';
 import { SCHEME_COOKIE, STYLE_COOKIE } from '../lib/theme-cookie';
 
 const ONE_YEAR = 60 * 60 * 24 * 365;
@@ -25,46 +25,38 @@ export function DisplaySwitch({ locale }: { locale: Locale }) {
 
   return (
     <div className="display-switch">
-      <div role="group" aria-label={t.styleGroup} className="switch-group">
+      <SegmentedControl
+        aria-label={t.styleGroup}
+        size="sm"
+        value={theme.style}
+        onValueChange={(value) => isStyle(value) && choose(STYLE_COOKIE, value)}
+      >
         {styles.map((id) => (
-          <Button
-            key={id}
-            size="sm"
-            emphasis={theme.style === id ? 'solid' : 'ghost'}
-            aria-pressed={theme.style === id}
-            data-choice={`style-${id}`}
-            onClick={() => choose(STYLE_COOKIE, id)}
-          >
+          <SegmentedControlItem key={id} value={id} data-choice={`style-${id}`}>
             {styleNames[id]}
-          </Button>
+          </SegmentedControlItem>
         ))}
-      </div>
-      <div role="group" aria-label={t.schemeGroup} className="switch-group">
+      </SegmentedControl>
+      <SegmentedControl
+        aria-label={t.schemeGroup}
+        size="sm"
+        value={theme.scheme}
+        onValueChange={(value) => isScheme(value) && choose(SCHEME_COOKIE, value)}
+      >
         {schemes.map((id) => (
-          <Button
-            key={id}
-            size="sm"
-            emphasis={theme.scheme === id ? 'solid' : 'ghost'}
-            aria-pressed={theme.scheme === id}
-            data-choice={`scheme-${id}`}
-            onClick={() => choose(SCHEME_COOKIE, id)}
-          >
+          <SegmentedControlItem key={id} value={id} data-choice={`scheme-${id}`}>
             {id === 'dark' ? t.dark : t.light}
-          </Button>
+          </SegmentedControlItem>
         ))}
-      </div>
-      <nav aria-label={t.languageGroup} className="switch-group">
-        <Button size="sm" emphasis={locale === 'en' ? 'solid' : 'ghost'} asChild>
-          <Link href="/en" hrefLang="en" lang="en" aria-current={locale === 'en' ? 'page' : undefined} data-choice="lang-en">
-            English
-          </Link>
-        </Button>
-        <Button size="sm" emphasis={locale === 'ar' ? 'solid' : 'ghost'} asChild>
-          <Link href="/ar" hrefLang="ar" lang="ar" aria-current={locale === 'ar' ? 'page' : undefined} data-choice="lang-ar">
-            العربية
-          </Link>
-        </Button>
-      </nav>
+      </SegmentedControl>
+      <LanguageSwitch
+        size="sm"
+        current={locale}
+        languages={[
+          { code: 'en', name: 'English', href: '/en' },
+          { code: 'ar', name: 'العربية', href: '/ar' },
+        ]}
+      />
     </div>
   );
 }

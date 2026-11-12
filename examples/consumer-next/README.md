@@ -82,3 +82,31 @@ these imports with no declaration of your own.
 - `agentRules: false` keeps `next dev` from writing an `AGENTS.md` here.
 - Built and tested with Turbopack, the Next 16 default. `next build
   --webpack` builds too.
+
+## What the screen uses (wave 1)
+
+- A `TooltipProvider` inside the root Theme, and a Tooltip on every
+  IconButton: the sort toggle in the toolbar and the row actions trigger.
+- A DropdownMenu of row actions: "Duplicate board" and, in the danger tone,
+  "Delete board", which opens the danger Dialog.
+- The create dialog: `Form` with one `Field` (it renders the system Label
+  and FieldError) around an Input. The Form checks on submit, lists the
+  error in its summary and moves focus to the field.
+- `SegmentedControl` for style and scheme, `LanguageSwitch` for the
+  language.
+- The Window chrome labels come from the Window defaults for the theme
+  language, Arabic included. No labels are passed in.
+
+Workarounds kept in the code, each with a comment, until the system fixes
+land (see `docs/reports/lanes/order-1-18.md`):
+
+- `TipIconButton`: a Tooltip whose hint repeats the IconButton label drops
+  the button's own `onClick`. The wrapper calls both handlers.
+- The DropdownMenu trigger and content are passed as expressions, and the
+  trigger repeats the name as `aria-label`, so `ds doctor` and the Tooltip
+  name check read the tree correctly.
+- The name field uses the `label`, `description` and `error` props of
+  Field, not FieldLabel and FieldError as children, which `ds doctor`
+  reports today.
+
+`npx ds doctor examples/<app>` from the repo root is clean.

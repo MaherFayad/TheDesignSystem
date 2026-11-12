@@ -2,7 +2,10 @@
 // scripts/smoke.mjs. It proves Gate 0 for this app: the five wave 0
 // components render from the packages, themed on the server, in both
 // locales, with no console errors, no hydration warnings, no sideways scroll
-// at 320px and a clean axe run.
+// at 320px and a clean axe run. Wave 1 parts: Tooltip on every IconButton,
+// a DropdownMenu of row actions, the create dialog on Form, Field, Label and
+// FieldError, SegmentedControl and LanguageSwitch for the switches, and the
+// Window's own Arabic labels.
 import { mkdirSync } from 'node:fs';
 import { join } from 'node:path';
 import AxeBuilder from '@axe-core/playwright';
@@ -69,7 +72,7 @@ test('Studio renders the components from the packages, themed on the server', as
   await expectHtml(page, { 'data-ds': 'theme', 'data-style': 'studio', 'data-scheme': 'dark', lang: 'en', dir: 'ltr' });
   const root = page.locator('body > .app-root[data-ds="theme"]');
   await expect(root).toHaveAttribute('data-style', 'studio');
-  for (const ds of ['button', 'icon-button', 'field', 'input']) {
+  for (const ds of ['button', 'icon-button', 'field', 'input', 'segmented-control', 'language-switch']) {
     await expect(page.locator(`[data-ds="${ds}"]`).first()).toBeVisible();
   }
   // Studio shows the list in a plain panel, not a Window.
@@ -97,10 +100,14 @@ test('the create dialog opens, validates, closes and returns focus', async ({ pa
   const input = dialog.locator('[data-ds="input"] input');
   await expect(input).toBeFocused();
   await dialog.getByRole('button', { name: 'Create board' }).click();
-  await expect(dialog.locator('[data-ds="field"] [data-part="error"]')).toContainText('Add a name for the board');
+  await expect(dialog.locator('[data-ds="form"]')).toBeVisible();
+  await expect(dialog.locator('[data-ds="field"] [data-ds="label"]')).toHaveText(/Board name/);
+  await expect(dialog.locator('[data-ds="field"] [data-ds="field-error"]')).toContainText('Add a name for the board');
+  await expect(dialog.locator('[data-ds="form"] [data-part="summary"]')).toBeVisible();
   await expect(input).toHaveAttribute('aria-invalid', 'true');
   await expect(input).toBeFocused();
   await input.fill('Roadmap');
+  await expect(dialog.locator('[data-ds="field-error"]')).toHaveCount(0);
   await input.press('Enter');
   await expect(dialog).toHaveCount(0);
   await expect(trigger).toBeFocused();
@@ -111,6 +118,8 @@ test('the create dialog opens, validates, closes and returns focus', async ({ pa
 test('delete asks in a danger dialog and the toast undoes it', async ({ page, context }) => {
   await setTheme(context, 'desk', 'dark');
   await open(page, '/en');
+  await page.locator('[data-row-actions="spring"]').click();
+  await expect(page.locator('[data-ds="dropdown-menu"]')).toBeVisible();
   await page.locator('[data-delete="spring"]').click();
   const dialog = page.locator('[data-ds="dialog"]');
   await expect(dialog).toHaveAttribute('data-tone', 'danger');
@@ -135,13 +144,52 @@ test('the switch changes style, scheme and language', async ({ page, context }) 
   await expect(page.locator('[data-ds="window"]')).toBeVisible();
   await page.locator('[data-choice="scheme-light"]').click();
   await expectHtml(page, { 'data-scheme': 'light' });
-  await page.locator('[data-choice="lang-ar"]').click();
+  await page.locator('[data-ds="language-switch"]').getByRole('link', { name: 'العربية' }).click();
   await expect(page).toHaveURL(/\/ar$/);
   await expectHtml(page, { lang: 'ar', dir: 'rtl', 'data-style': 'desk', 'data-scheme': 'light' });
   await expect(page.locator('h1')).toHaveText('اللوحات');
   // A reload renders the same theme on the server.
   await page.reload();
   await expectHtml(page, { lang: 'ar', dir: 'rtl', 'data-style': 'desk', 'data-scheme': 'light' });
+});
+
+test('every IconButton shows its label in a Tooltip on focus', async ({ page, context }) => {
+  await setTheme(context, 'studio', 'dark');
+  await open(page, '/en');
+  const buttons = page.locator('[data-ds="icon-button"]');
+  const count = await buttons.count();
+  expect(count).toBeGreaterThan(1);
+  for (let i = 0; i < count; i += 1) {
+    const button = buttons.nth(i);
+    const label = await button.getAttribute('aria-label');
+    expect(label).toBeTruthy();
+    await button.focus();
+    await expect(page.locator('[data-ds="tooltip"]').filter({ hasText: label ?? '' })).toBeVisible();
+    await page.keyboard.press('Escape');
+  }
+});
+
+test('the sort IconButton sorts by name and the row menu duplicates a board', async ({ page, context }) => {
+  await setTheme(context, 'studio', 'dark');
+  await open(page, '/en');
+  const sort = page.locator('[data-sort]');
+  await sort.click();
+  await expect(sort).toHaveAttribute('aria-pressed', 'true');
+  await expect(page.locator('.board-name').first()).toHaveText('Brand refresh');
+  await page.locator('[data-row-actions="checkout"]').press('Enter');
+  const menu = page.locator('[data-ds="dropdown-menu"]');
+  await expect(menu.getByRole('menuitem').first()).toBeFocused();
+  await menu.getByRole('menuitem', { name: 'Duplicate board' }).click();
+  await expect(page.locator('.board-name', { hasText: 'Checkout flow copy' })).toHaveCount(1);
+  await expect(page.locator('[data-ds="toast"]').filter({ hasText: 'Board duplicated' })).toBeVisible();
+});
+
+test('the Window takes its Arabic labels from its own defaults', async ({ page, context }) => {
+  await setTheme(context, 'desk', 'dark');
+  await open(page, '/ar');
+  const win = page.locator('[data-ds="window"]');
+  await expect(win.getByRole('button', { name: 'إغلاق النافذة' })).toBeVisible();
+  await expect(win.getByRole('button', { name: 'Close window' })).toHaveCount(0);
 });
 
 for (const style of ['studio', 'desk'] as const) {
@@ -183,8 +231,10 @@ test('screenshots', async ({ page, context }) => {
   // One with the delete dialog and the toast above it.
   await setTheme(context, 'desk', 'dark');
   await open(page, '/en');
+  await page.locator('[data-row-actions="brand"]').click();
   await page.locator('[data-delete="brand"]').click();
   await page.getByRole('button', { name: 'Delete board', exact: true }).click();
+  await page.locator('[data-row-actions="spring"]').click();
   await page.locator('[data-delete="spring"]').click();
   await expect(page.locator('[data-ds="dialog"]')).toBeVisible();
   await page.waitForTimeout(600);
