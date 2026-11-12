@@ -26,9 +26,9 @@ export interface AvatarGroupProps extends Omit<HTMLAttributes<HTMLDivElement>, '
    * "Shared with 5 people". Required.
    */
   label: string;
-  /** The Avatar elements. Their size is set by the group. */
+  /** The Avatar elements. The group sets size and data-part item on each element child, so pass only Avatars. */
   children: ReactNode;
-  /** The size of every avatar and of the count: xs 24, sm 28, md 32, lg 44 px. Default md. */
+  /** The size of every avatar and of the count, from size.control: xs 24, sm 28, md 32, lg 44 px at default density. Default md. */
   size?: AvatarSize;
   /** How many avatars show before the count. Default 4. */
   max?: number;
@@ -36,7 +36,8 @@ export interface AvatarGroupProps extends Omit<HTMLAttributes<HTMLDivElement>, '
   total?: number;
   /**
    * The words for the count, for assistive tech: the visible text is "+N".
-   * Default `${n} more`, or `Show ${n} more` when the count is a Button.
+   * Default `${n} more`. When the count is a Button its name is "+N, "
+   * followed by these words, so the name starts with the visible text.
    * Arabic: pass it, for example (n) => `${n} آخرين`.
    */
   overflowLabel?: (hidden: number) => string;
@@ -69,11 +70,7 @@ export function AvatarGroup({
   const hidden = Math.max(0, (total ?? avatars.length) - shown.length);
   // The plus stays before the digits in right to left layouts too: the count is isolated as left to right.
   const count = `+${hidden}`;
-  const countWords = overflowLabel
-    ? overflowLabel(hidden)
-    : onOverflowClick
-      ? `Show ${hidden} more`
-      : `${hidden} more`;
+  const countWords = overflowLabel ? overflowLabel(hidden) : `${hidden} more`;
 
   return (
     <div {...rest} ref={ref} data-ds="avatar-group" data-size={size} role="group" aria-label={label}>
@@ -87,7 +84,7 @@ export function AvatarGroup({
             size={size}
             shape="pill"
             emphasis="soft"
-            aria-label={countWords}
+            aria-label={`${count}, ${countWords}`}
             onClick={onOverflowClick}
           >
             <bdi dir="ltr">{count}</bdi>

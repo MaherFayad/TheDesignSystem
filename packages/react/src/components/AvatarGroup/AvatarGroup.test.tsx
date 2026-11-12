@@ -63,7 +63,7 @@ describe('AvatarGroup', () => {
     const user = userEvent.setup();
     const onOverflowClick = vi.fn();
     const { container } = group({ onOverflowClick });
-    const button = screen.getByRole('button', { name: 'Show 2 more' });
+    const button = screen.getByRole('button', { name: '+2, 2 more' });
     expect(button.getAttribute('data-ds')).toBe('button');
     expect(button.getAttribute('data-part')).toBe('overflow');
     expect(root(container).contains(button)).toBe(true);

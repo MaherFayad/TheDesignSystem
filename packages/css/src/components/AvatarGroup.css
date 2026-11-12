@@ -65,12 +65,22 @@
     white-space: nowrap;
   }
 
-  /* The count as a Button: the group size and a tight pill. */
+  /*
+   * The count as a Button: the group size, a tight pill and the same fill
+   * and text as the plain count. Rest, hover and active are all set here, so
+   * the result does not depend on the order of the files. No cutout ring:
+   * Button draws its focus ring with box-shadow.
+   */
   [data-ds='avatar-group'] > [data-ds='button'][data-part='overflow'] {
     --_button-height: var(--_avatar-group-size);
     --_button-padding-inline: var(--ds-space-2xs);
     --_button-font-size: var(--_avatar-group-font-size);
     --_button-bg: var(--_avatar-group-bg);
+    --_button-fg: var(--_avatar-group-fg);
+    --_button-bg-hover: var(--ds-color-bg-overlay-20);
+    --_button-fg-hover: var(--_avatar-group-fg);
+    --_button-bg-active: var(--ds-color-bg-overlay-30);
+    --_button-fg-active: var(--_avatar-group-fg);
   }
 
   /* ------------------------------------------------------------ sizes */

@@ -35,6 +35,14 @@ function countAr(n: number): string {
   return `${n} شخص`;
 }
 
+/** "N others" with the Arabic plural rules, Western digits. */
+function othersAr(n: number): string {
+  if (n === 1) return 'واحد ثاني';
+  if (n === 2) return 'شخصين ثانيين';
+  if (n <= 10) return `${n} آخرين`;
+  return `${n} شخص ثاني`;
+}
+
 function Group({ names, size, max, total }: { names: string[]; size?: AvatarSize; max?: number; total?: number }) {
   return (
     <AvatarGroup label={count(total ?? names.length)} size={size} max={max} total={total}>
@@ -72,7 +80,7 @@ export default function AvatarGroupDemo() {
           <ClickableGroup />
         </DemoRow>
         <DemoRow label="Arabic">
-          <AvatarGroup label={countAr(peopleAr.length)} lang="ar" dir="rtl" overflowLabel={(n) => `${n} آخرين`}>
+          <AvatarGroup label={countAr(peopleAr.length)} lang="ar" dir="rtl" overflowLabel={othersAr}>
             {peopleAr.map((name) => (
               <Avatar key={name} name={name} />
             ))}
@@ -96,7 +104,7 @@ export default function AvatarGroupDemo() {
       </DemoCase>
 
       <DemoCase id="long-arabic" title="Long Arabic text" lang="ar">
-        <AvatarGroup label={countAr(48)} total={48} overflowLabel={(n) => `${n} آخرين`}>
+        <AvatarGroup label={countAr(48)} total={48} overflowLabel={othersAr}>
           {peopleAr.map((name) => (
             <Avatar key={name} name={name} />
           ))}

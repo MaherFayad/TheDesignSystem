@@ -33,7 +33,7 @@
     "size": {
       "type": ["xs", "sm", "md", "lg"],
       "default": "md",
-      "description": "Sets every avatar and the count: 24, 28, 32 and 44 px."
+      "description": "Sets every avatar and the count, from size.control: 24, 28, 32 and 44 px at default density."
     },
     "max": { "type": "number", "default": 4, "description": "How many avatars show before the count." },
     "total": {
@@ -42,7 +42,7 @@
     },
     "overflowLabel": {
       "type": "function",
-      "description": "(hidden) => words for the count. Default \"N more\", or \"Show N more\" when the count is a Button. Pass it in Arabic."
+      "description": "(hidden) => words for the count. Default \"N more\". When the count is a Button its name is \"+N, \" and these words, so the name starts with the visible text (WCAG 2.5.3). Pass it in Arabic."
     },
     "onOverflowClick": {
       "type": "function",
@@ -69,11 +69,11 @@
   "content": {
     "en": {
       "label": "A count of people in sentence case: 5 people, Shared with 5 people.",
-      "overflowLabel": "N more for the count; Show N more when it is a button."
+      "overflowLabel": "N more. The button form reads +N, N more."
     },
     "ar": {
       "label": "The count with the Arabic plural, Western digits: 5 أشخاص، شخصين، 12 شخص.",
-      "overflowLabel": "N آخرين."
+      "overflowLabel": "With the Arabic plural: واحد ثاني، شخصين ثانيين، 3 آخرين، 11 شخص ثاني."
     }
   },
   "tokens": [
@@ -81,10 +81,10 @@
     "size.control.sm",
     "size.control.md",
     "size.control.lg",
+    "space.3xs",
     "space.2xs",
     "space.xs",
     "space.s",
-    "space.m",
     "font.size.3xs",
     "font.size.2xs",
     "font.size.xs",
@@ -97,7 +97,9 @@
     "border.width.strong",
     "color.bg.surface",
     "color.bg.surface-3",
-    "color.text.default"
+    "color.text.default",
+    "color.bg.overlay-20",
+    "color.bg.overlay-30"
   ],
   "motion": "fade-rise",
   "frameworks": {
