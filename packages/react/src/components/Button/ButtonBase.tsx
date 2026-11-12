@@ -117,7 +117,9 @@ function useLoadingMorph(root: { current: HTMLElement | null }, loading: boolean
     last.current = loading;
     const el = root.current;
     if (!el) return;
-    const label = el.querySelector(':scope > [data-part="label"]') ?? el.querySelector(':scope > [data-part="icon"]');
+    // When loading ends straight into a result (Button's data-result), the
+    // label stays out under the result glyph: only the spinner leaves.
+    const label = !loading && el.hasAttribute('data-result') ? null : (el.querySelector(':scope > [data-part="label"]') ?? el.querySelector(':scope > [data-part="icon"]'));
     const spinner = el.querySelector(':scope > [data-part="spinner"]');
     const played = buttonMorph({ root: el, label, spinner }, loading ? 'idle' : 'loading', loading ? 'loading' : 'idle', { mode: motion.mode(interaction) });
     if (loading) return;

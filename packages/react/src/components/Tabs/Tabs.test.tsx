@@ -220,10 +220,9 @@ describe('Tabs', () => {
           expect(frames[1]?.transform).toMatch(/^translate\(-100px, 0px\) scale\(1\.\d+, 1\)$/);
           expect(frames.at(-1)?.transform).toBe('none');
           for (const f of frames) expect(Object.keys(f).filter((k) => k !== 'offset')).toEqual(['transform']);
-          // The labels answer: the one it leaves dips, the one it reaches pops, added to their own transform.
+          // Round 3: the labels no longer dip and pop; the ink crosses instead (ink.test.ts).
           const answers = animate.mock.calls.filter((c) => (c as unknown as [Keyframe[], KeyframeAnimationOptions])[1].id === 'ds-motion:indicator-answer');
-          expect(answers).toHaveLength(2);
-          for (const a of answers) expect((a as unknown as [Keyframe[], KeyframeAnimationOptions])[1].composite).toBe('add');
+          expect(answers).toHaveLength(0);
         } finally {
           rects.mockRestore();
         }

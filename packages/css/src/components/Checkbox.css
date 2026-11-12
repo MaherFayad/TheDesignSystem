@@ -32,7 +32,8 @@
  *   --_checkbox-stroke-width  the mark's stroke, in the 16 unit box of its view box
  *   --_checkbox-morph-ease    the bend between the dash and the check, ease.spring-snappy
  *   --_checkbox-fill-now      working: the radius of the fill clip, 0% empty, 75% full
- *   --_checkbox-joint, -short-turn, -long-turn   working: where the two strokes meet
+ *   --_checkbox-joint, -short-turn, -long-turn   working: where the two strokes meet (as a
+ *                             share of the view box, so no raw length)
  *                             and how each one turns; the check or the dash by data-glyph
  *   --_checkbox-short-cut, -long-cut   working: the stroke-dashoffset of each stroke,
  *                             0 drawn, 1.05 retracted, a part for the dash
@@ -244,13 +245,13 @@
 
   /* The shapes: the check, and the dash, which is the same two strokes laid flat. */
   [data-ds='checkbox'] [data-part='mark'][data-glyph='check'] {
-    --_checkbox-joint: translate(6.5px, 11px);
+    --_checkbox-joint: translate(40.625%, 68.75%);
     --_checkbox-short-turn: 45deg;
     --_checkbox-long-turn: -47.3deg;
   }
 
   [data-ds='checkbox'] [data-part='mark'][data-glyph='minus'] {
-    --_checkbox-joint: translate(8px, 8px);
+    --_checkbox-joint: translate(50%, 50%);
     --_checkbox-short-turn: 0deg;
     --_checkbox-long-turn: 0deg;
   }

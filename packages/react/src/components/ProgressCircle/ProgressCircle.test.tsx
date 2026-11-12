@@ -117,7 +117,8 @@ describe('ProgressCircle ring contrast and reduced motion', () => {
   it('under reduced motion the indeterminate ring is a dashed full ring, not a quarter arc', () => {
     const reduced = /@media \(prefers-reduced-motion: reduce\) \{([\s\S]*?)\n  \}\n/.exec(css)?.[1] ?? '';
     expect(reduced).toContain("[data-state='indeterminate']");
-    expect(reduced).toContain('border-style: dashed');
-    expect(reduced).toContain('mask-image: none');
+    // Round 3: the arc is an SVG stroke; the reduced busy ring is dashed with stroke-dasharray.
+    expect(reduced).toContain('stroke-dasharray: var(--_progress-circle-dash)');
+    expect(reduced).toContain('animation: none');
   });
 });

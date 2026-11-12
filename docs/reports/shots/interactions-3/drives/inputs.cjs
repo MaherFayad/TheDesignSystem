@@ -61,11 +61,11 @@ module.exports = {
       await a.wait(600);
     },
   },
-  'password-reveal': { region: STAGE, drive: (a) => playTwice(a, 900) },
-  'search-clear': { region: STAGE, drive: (a) => playTwice(a, 900) },
-  'search-submit': { region: STAGE, drive: (a) => playTwice(a, 900) },
+  'password-reveal': { region: `${STAGE} [data-ds='password-field']`, drive: (a) => playTwice(a, 900) },
+  'search-clear': { region: `${STAGE} [data-ds='search-field']`, drive: (a) => playTwice(a, 900) },
+  'search-submit': { region: `${STAGE} [data-ds='search-field']`, drive: (a) => playTwice(a, 900) },
   'otp-fill': {
-    region: STAGE,
+    region: `${STAGE} [data-ds='otp-field']`,
     drive: async (a) => {
       await typeInto(a, `${STAGE} [data-ds='otp-field']`, ['4', '8', '2']);
       await a.wait(300);
@@ -75,15 +75,15 @@ module.exports = {
     },
   },
   'otp-caret': {
-    region: STAGE,
+    region: `${STAGE} [data-ds='otp-field']`,
     drive: async (a) => {
       await typeInto(a, `${STAGE} [data-ds='otp-field']`, ['7', '3', '9'], 420);
       await a.wait(400);
     },
   },
-  'otp-complete': { region: STAGE, drive: (a) => playTwice(a, 900) },
+  'otp-complete': { region: `${STAGE} [data-ds='otp-field']`, drive: (a) => playTwice(a, 900) },
   'field-step': {
-    region: STAGE,
+    region: `${STAGE} [data-ds='number-field']`,
     drive: async (a) => {
       const b = await box(a.page, `${STAGE} [data-ds='number-field'] input`);
       if (b) await a.page.mouse.click(b.x + b.width / 2, b.y + b.height / 2);
@@ -111,7 +111,7 @@ module.exports = {
       await a.wait(600);
     },
   },
-  'inline-edit-morph': { region: STAGE, drive: (a) => playTwice(a, 1000) },
+  'inline-edit-morph': { region: `${STAGE} [data-ds='inline-edit']`, drive: (a) => playTwice(a, 1000) },
   'form-summary-enter': { region: STAGE, drive: (a) => playTwice(a, 1000) },
   'form-submit-success': {
     region: STAGE,

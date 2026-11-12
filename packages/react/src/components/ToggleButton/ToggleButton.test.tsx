@@ -19,7 +19,8 @@ describe('ToggleButton', () => {
     expect(el.getAttribute('data-state')).toBe('off');
     expect(el.getAttribute('data-size')).toBe('md');
     expect(el.getAttribute('data-emphasis')).toBe('soft');
-    expect(Array.from(el.children).map((c) => c.getAttribute('data-part'))).toEqual(['start', 'label']);
+    expect(Array.from(el.children).map((c) => c.getAttribute('data-part'))).toEqual(['state-layer', 'start', 'label']);
+    expect(el.querySelector('[data-part="state-layer"]')?.getAttribute('aria-hidden')).toBe('true');
   });
 
   it('toggles with click, Enter and Space, uncontrolled', async () => {
@@ -140,9 +141,9 @@ describe('ToggleButton press (interaction button-press)', () => {
       fireEvent.click(el);
       fireEvent.keyUp(el, { key: 'Enter' });
       expect(el.getAttribute('aria-pressed')).toBe('true');
-      // The press and its release on the root, and the pop of the label (toggle-pop).
+      // The press and its release on the root, and the flood of the state layer (toggle-pop).
       expect(frames).toHaveLength(3);
-      expect(JSON.stringify(frames[1])).toContain('--ds-scale-pop');
+      expect(JSON.stringify(frames[1])).toContain('clipPath');
       expect(el.getAttribute('data-ds')).toBe('toggle-button');
     } finally {
       Reflect.deleteProperty(HTMLElement.prototype, 'animate');
@@ -150,7 +151,7 @@ describe('ToggleButton press (interaction button-press)', () => {
   });
 });
 
-describe('ToggleButton pop (interaction toggle-pop)', () => {
+describe('ToggleButton flood (interaction toggle-pop, order 1.23)', () => {
   function mockAnimate() {
     const calls: { el: Element; frames: Keyframe[] }[] = [];
     Object.defineProperty(HTMLElement.prototype, 'animate', {
@@ -163,7 +164,7 @@ describe('ToggleButton pop (interaction toggle-pop)', () => {
     return { calls, restore: () => Reflect.deleteProperty(HTMLElement.prototype, 'animate') };
   }
 
-  it('plays no pop in Studio, whose pop is reduced', () => {
+  it('plays no flood in Studio, whose pop is reduced', () => {
     const { calls, restore } = mockAnimate();
     try {
       render(
@@ -178,7 +179,7 @@ describe('ToggleButton pop (interaction toggle-pop)', () => {
     }
   });
 
-  it('pops the parts when turned on and lets them sink when turned off, never the root', () => {
+  it('floods the state layer from the press point when turned on and drains it when off, never moving the root or the content', () => {
     const { calls, restore } = mockAnimate();
     try {
       render(
@@ -187,21 +188,24 @@ describe('ToggleButton pop (interaction toggle-pop)', () => {
         </Theme>,
       );
       const el = screen.getByRole('button');
+      fireEvent.pointerDown(el, { clientX: 0, clientY: 0 });
       fireEvent.click(el);
       expect(el.getAttribute('data-state')).toBe('on');
-      expect(calls.map((c) => c.el.getAttribute('data-part'))).toEqual(['start', 'label']);
-      expect(JSON.stringify(calls[0]?.frames)).toContain('--ds-scale-pop');
+      expect(calls.map((c) => c.el.getAttribute('data-part'))).toEqual(['state-layer']);
+      expect(JSON.stringify(calls[0]?.frames)).toContain('circle(150%');
       calls.length = 0;
+      fireEvent.keyDown(el, { key: ' ' });
+      expect(el.style.getPropertyValue('--_toggle-button-x')).toBe('');
       fireEvent.click(el);
       expect(el.getAttribute('data-state')).toBe('off');
-      expect(JSON.stringify(calls[0]?.frames)).toContain('--ds-scale-anticipate');
-      expect(calls.some((c) => c.el === el)).toBe(false);
+      expect(JSON.stringify(calls[0]?.frames)).toContain('circle(0%');
+      expect(calls.some((c) => c.el === el || c.el.getAttribute('data-part') === 'label')).toBe(false);
     } finally {
       restore();
     }
   });
 
-  it('plays no pop under reduced motion, and the state still changes', () => {
+  it('plays no flood under reduced motion, and the state still changes', () => {
     const { calls, restore } = mockAnimate();
     vi.stubGlobal('matchMedia', (q: string) => ({ matches: q.includes('reduce'), media: q, addEventListener() {}, removeEventListener() {} }));
     try {

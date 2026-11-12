@@ -174,6 +174,12 @@ export interface FlipGroupOptions {
   interaction?: string;
   /** Draw a removed item shrinking out. Default true. */
   ghosts?: boolean;
+  /**
+   * An item that moved farther than the container is tall (it was out of
+   * view in a list that scrolls) arrives like a new item instead of flying
+   * across the list. Default false.
+   */
+  nearOnly?: boolean;
 }
 
 /**
@@ -181,7 +187,7 @@ export interface FlipGroupOptions {
  * commit that changed them (FLIP). The first commit only measures, so a
  * first paint plays nothing.
  */
-export function useFlipGroup(container: RefObject<Element | null>, { items, interaction = 'collection-flip', ghosts = true }: FlipGroupOptions): void {
+export function useFlipGroup(container: RefObject<Element | null>, { items, interaction = 'collection-flip', ghosts = true, nearOnly = false }: FlipGroupOptions): void {
   const motion = useMotion();
   const last = useRef<Map<Element, Spot> | null>(null);
   useLayoutEffect(() => {
@@ -209,7 +215,12 @@ export function useFlipGroup(container: RefObject<Element | null>, { items, inte
     if (ghosts) for (const item of gone) ghostOut(el, item, before.get(item)!, mode);
     const o = origin(el);
     const rects = new Map<Element, { x: number; y: number; width: number; height: number }>();
-    for (const [item, s] of before) if (spots.has(item)) rects.set(item, { x: s.x + o.x, y: s.y + o.y, width: s.width, height: s.height });
+    const far = nearOnly ? el.clientHeight : Infinity;
+    for (const [item, s] of before) {
+      const now = spots.get(item);
+      if (!now || Math.abs(now.y - s.y) > far) continue;
+      rects.set(item, { x: s.x + o.x, y: s.y + o.y, width: s.width, height: s.height });
+    }
     flipPlay({ rects }, { items: now, mode, spring: 'snappy', enter: 'pop' });
   });
 }
@@ -271,6 +282,7 @@ export function usePopupRows(forward?: (node: HTMLElement | null) => void) {
     items: (el) => Array.from(el.querySelectorAll("[data-part='option']")),
     interaction: 'combobox-results',
     ghosts: false,
+    nearOnly: true,
   });
   return ref;
 }

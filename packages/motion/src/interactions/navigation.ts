@@ -29,14 +29,17 @@ export const navigationInteractions = [
     pattern: 'tab-indicator',
     drive: 'waapi',
     trigger: 'Choose another tab, segment or single choice item with a click, a tap or the arrow keys.',
-    feedback:
-      'The shared pill: the underline, thumb or on fill slides from the old item to the new one and stretches along its travel, a transform with the center origin measured from both boxes. ' +
-      'The label it leaves dips and the label it reaches pops. Colors and weight change at once. ' +
-      'ToggleGroup (single) draws its on fill in an aria-hidden span inside the item so the fill can travel; a port without the span keeps the round 1 look.',
-    beats: SLIDE_BEATS,
+    feedback: 'The shared pill slides from the old item to the new one and stretches along its travel (a transform with the center origin, measured from both boxes). Round 3: the label colour crosses with clip-path, so the text under the pill takes the selected colour exactly where the pill is: each label gets an aria-hidden twin in the selected colour (part label-ink), cut to the pill box keyframe for keyframe with the slide, and the label the pill reaches holds the rest colour under it. The dip and pop of the labels of round 2 are gone. Weight changes at once.',
+    beats: [
+      'Press: the item takes its hover fill at once; the value changes on the press (Radix), so the pill never waits for release.',
+      'Action: the pill moves from the box of the item it leaves to the box of the item it reaches on ease.spring-snappy over duration.spring-snappy (Neutral 180ms, Desk 300ms with a 10% overshoot, Studio 80ms in two steps).',
+      'Stretch: at 45% of the run the pill is longer along its travel by up to scale.stretch (Neutral 1.15, Desk 1.3, Studio 1.08), less for a short hop, then settles to its own size.',
+      'Ink: over the same run, on the same easing and keyframes, the twins of every label are cut with clip-path inset() to the pill along the travel axis, so a label half under the pill is half in each colour; the twins are removed when the run ends.',
+      'Back: a second change mid travel starts from where the pill is drawn; the twins of the first change are removed first.',
+    ],
     styles: SLIDE_STYLES,
-    reduced: 'No motion: the indicator appears under the new item at once.',
-    round: 2,
+    reduced: 'No motion: the pill and the selected colour are on the new item at once; no twin is drawn.',
+    round: 3,
     status: 'proposed',
   },
   {
@@ -45,13 +48,11 @@ export const navigationInteractions = [
     pattern: 'tab-indicator',
     drive: 'waapi',
     trigger: 'Another link becomes the current page (a client side route change, or a click in the stage).',
-    feedback:
-      'The current mark (the bar under a Navbar link, the edge bar of a Sidebar or Rail item, each the item ::before) slides from the old current item along the bar or the column and stretches on the way. ' +
-      'The Sidebar label and the Rail icon of the new item pop, the old one dips. The item fill and weight change at once. Two items marked current at once do not slide between each other.',
+    feedback: 'The current mark (the bar under a Navbar link, the edge bar of a Sidebar or Rail item, each the item ::before) slides from the old current item along the bar or the column and stretches on the way. Round 3: in the Navbar the link text takes the current colour where the bar is, with the ink twins of tab-slide (no visible change when the style draws current and rest links in one colour). The Sidebar label and the Rail icon of the new item pop, the old one dips. Two items marked current at once do not slide between each other.',
     beats: SLIDE_BEATS,
     styles: SLIDE_STYLES,
     reduced: 'No motion: the bar appears on the new item at once.',
-    round: 2,
+    round: 3,
     status: 'proposed',
   },
   {
@@ -110,12 +111,11 @@ export const navigationInteractions = [
     drive: 'waapi',
     primitive: 'stagger',
     trigger: 'Collapse or expand the Sidebar with its toggle; show or hide the Rail labels (hideLabels).',
-    feedback:
-      'The width and the hidden labels change at once (only transform and opacity may move). On expand the labels, counts and group titles come in from the inline start two stagger steps after the panel, one step apart (staggerGroup). ' +
-      'On collapse the icons gather from scale.anticipate and settle. In the Rail the icons travel to their new places (flipPlay) and the labels rise in after them.',
+    feedback: 'The width changes at once (layout never animates). Round 3, expand: the panel is uncovered from its collapsed width to its new width with clip-path on the soft spring, so it reads as a panel opening, and each label, count and group title wipes in from the inline start with clip-path, delay.stagger apart after two steps, capped at six. Collapse: the icons pop from scale.anticipate. In the Rail the icons travel to their new places (flipPlay) and the labels rise in after them.',
     beats: [
       'Action: the panel takes its new width at once.',
-      'Secondary, expand: after two stagger steps the labels slide in from the inline start by distance.shift and fade in on ease.spring-soft over duration.spring-soft (Neutral 220ms, Desk 340ms, Studio 100ms), delay.stagger apart, capped at six.',
+      'Expand: the panel clip opens from inset(the width it gained) at the inline end to none on ease.spring-soft over duration.spring-soft (Neutral 220ms, Desk 340ms, Studio 100ms).',
+      'Secondary, expand: the labels wipe in from the inline start (clip-path inset from 100% at the inline end to none) on the soft spring, delay.stagger apart (24, 45, 0ms) starting two steps late, capped at six steps.',
       'Secondary, collapse: the icons pop from scale.anticipate past rest on the bouncy spring. Rail: the icons travel on the snappy spring.',
     ],
     styles: {
@@ -123,8 +123,8 @@ export const navigationInteractions = [
       desk: 'labels ripple in one by one',
       neutral: 'a short ripple',
     },
-    reduced: 'The labels fade in with no travel and no delay; the icons do not move.',
-    round: 2,
+    reduced: 'The labels fade in with no travel and no delay; the panel is not clipped and the icons do not move.',
+    round: 3,
     status: 'proposed',
   },
   {
@@ -133,13 +133,12 @@ export const navigationInteractions = [
     pattern: 'tab-indicator',
     drive: 'waapi',
     trigger: 'Move to another step (next, back, or a reachable step title).',
-    feedback:
-      'A ring (the indicator ::after, drawn only while it travels) slides from the old current indicator to the new one in the direction of the change, stretches along the way and fades as it lands. ' +
-      'The new current indicator pops. The connector fill grows or shrinks on the soft spring (CSS, Stepper.css).',
+    feedback: 'A ring (the indicator ::after, drawn only while it travels) slides from the old current indicator to the new one in the direction of the change, stretches along the way and fades as it lands. The new current indicator pops. The connector fill grows or shrinks on the soft spring (CSS). Round 3: a step that turns complete draws its check with stroke-dashoffset, the short stroke first.',
     beats: [
       'Action: the ring travels on ease.spring-snappy over duration.spring-snappy (Neutral 180ms, Desk 300ms, Studio 80ms), stretched by up to scale.stretch, from opacity 1 to 0 as it lands.',
       'Overshoot and settle: the new current indicator pops from scale.anticipate on the bouncy spring.',
       'Secondary: the connector after a step that turns complete fills on ease.spring-soft over duration.spring-soft; going back it empties the same way.',
+      'Done: the check of each step that turned complete draws from its end to its start (stroke-dasharray 24, stroke-dashoffset from -24 to 0 in its 24 unit box) on ease.out over duration.spring-soft; going back the check is simply gone.',
     ],
     styles: {
       studio: 'a stepped hop',
@@ -147,7 +146,7 @@ export const navigationInteractions = [
       neutral: 'a quick travel',
     },
     reduced: 'Nothing travels; the current step and the fill change at once.',
-    round: 2,
+    round: 3,
     status: 'proposed',
   },
   {

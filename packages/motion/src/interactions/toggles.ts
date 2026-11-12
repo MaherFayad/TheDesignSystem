@@ -10,7 +10,7 @@ export const togglesInteractions = [
   {
     id: 'toggle-pop',
     components: ['ToggleButton'],
-    pattern: 'press',
+    pattern: 'pop',
     drive: 'waapi',
     trigger: 'The person presses a ToggleButton with the pointer, Space or Enter, and turns it on or off.',
     feedback:
@@ -18,7 +18,7 @@ export const togglesInteractions = [
       'From the keyboard the flood starts at the centre. The content does not scale: the fill is the feedback.',
     beats: [
       'Rest and hover: the fill and the text color cross to the hover look over duration.quick on ease.out.',
-      'Press: the state layer grows from a dot at the pointer to a disc half the button high, at 12 percent of the content color, over duration.spring-soft on ease.spring-soft (Neutral 220ms).',
+      'Press: the state layer, the content color at 12 percent, grows from a dot at the pointer to a circle of 60 percent over duration.spring-soft on ease.spring-soft (Neutral 220ms). The button does not dip.',
       'Release on: the state changes at once. The layer floods from its disc to cover the button and fades over duration.morph on ease.out (Neutral 200ms, Desk 320ms); the on fill and the text color cross over duration.quick (100ms); the 2px inner ring shows at once.',
       'Release off: the layer starts over the whole button and drains to the press point over duration.quick on ease.exit (100ms); the fill crosses back.',
     ],

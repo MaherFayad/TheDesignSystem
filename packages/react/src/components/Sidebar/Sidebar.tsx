@@ -58,7 +58,7 @@ import {
 } from 'react';
 import { Collapsible, Slot } from 'radix-ui';
 import { Icon, type IconName } from '@the-system/icons/react';
-import { staggerGroup } from '@the-system/motion';
+import { readDuration, readEasing, staggerGroup, type PatternMode } from '@the-system/motion';
 import type { Size } from '@the-system/shared';
 import { useTheme } from '../../theme';
 import { followIndicator, popIn, useHoverFollow, useIndicatorTrack, type IndicatorTrack } from '../../internal/indicator';
@@ -129,6 +129,35 @@ function renderStart(content: SidebarSlotContent): ReactNode {
   return typeof content === 'string' ? <Icon name={content} size="md" /> : content;
 }
 
+/** Round 3: clips the expanded panel back to the width it had and opens the clip to its new width, on the soft spring. */
+function revealPanel(root: HTMLElement, from: number, to: number, mode: PatternMode): void {
+  if (mode !== 'full' || typeof root.animate !== 'function' || !(from > 0) || from >= to) return;
+  const rtl = getComputedStyle(root).direction === 'rtl';
+  const cut = `${Math.round(to - from)}px`;
+  root.animate([{ clipPath: rtl ? `inset(0 0 0 ${cut})` : `inset(0 ${cut} 0 0)` }, { clipPath: 'inset(0)' }], {
+    id: 'ds-motion:sidebar-reveal',
+    duration: readDuration(root, 'duration.spring-soft'),
+    easing: readEasing(root, 'ease.spring-soft'),
+  });
+}
+
+/** Round 3: each label wipes in from the inline start with clip-path, delay.stagger apart after two steps, at most six steps. */
+function wipeLabels(labels: NodeListOf<Element>, mode: PatternMode): void {
+  if (mode !== 'full') return;
+  labels.forEach((el, i) => {
+    if (typeof el.animate !== 'function') return;
+    const rtl = getComputedStyle(el).direction === 'rtl';
+    const step = readDuration(el, 'delay.stagger');
+    el.animate([{ clipPath: rtl ? 'inset(0 0 0 100%)' : 'inset(0 100% 0 0)' }, { clipPath: 'inset(0)' }], {
+      id: 'ds-motion:sidebar-labels',
+      duration: readDuration(el, 'duration.spring-soft'),
+      easing: readEasing(el, 'ease.spring-soft'),
+      delay: step * Math.min(6, i + 2),
+      fill: 'backwards',
+    });
+  });
+}
+
 // ------------------------------------------------------------------ Sidebar
 
 /** No `title`: hints come from Tooltip, never the native title attribute. */
@@ -195,22 +224,29 @@ export function Sidebar({
 
   // Collapse and expand: the width changes at once; the parts answer after it.
   const wasCollapsed = useRef(collapsed);
+  const lastWidth = useRef(0);
   useLayoutEffect(() => {
     const root = rootRef.current;
     const before = wasCollapsed.current;
     wasCollapsed.current = collapsed;
+    const width = root ? root.getBoundingClientRect().width : 0;
+    const from = lastWidth.current;
+    lastWidth.current = width;
     if (!root || before === collapsed) return;
     const mode = motion.mode('sidebar-collapse');
     if (collapsed) {
       for (const icon of root.querySelectorAll('[data-part="item-icon"]')) popIn(icon, mode);
       return;
     }
-    staggerGroup(root.querySelectorAll('[data-part="item-label"], [data-part="item-count"], [data-part="group-label"]'), {
-      mode,
-      from: 'inline',
-      offset: 2,
-      spring: 'soft',
-    });
+    const labels = root.querySelectorAll('[data-part="item-label"], [data-part="item-count"], [data-part="group-label"]');
+    if (mode !== 'full') {
+      staggerGroup(labels, { mode, from: 'inline', offset: 2, spring: 'soft' });
+      return;
+    }
+    // Round 3: the panel is uncovered from its collapsed width to its new width with clip-path
+    // (the layout took the width at once), and the labels wipe in from the inline start, a stagger step apart.
+    revealPanel(root, from, width, mode);
+    wipeLabels(labels, mode);
   }, [collapsed, motion]);
 
   // The header goes first and the footer last; everything else goes in the scrolling body.

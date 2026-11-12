@@ -1,9 +1,51 @@
 /*
  * ToggleButton: what differs from Button. The look, the on state and the
  * forced colors form are a toggle-button block in Button.css (rule 10 of
- * the convention). Here: the icon only form is a square, as IconButton.
+ * the convention). Here: the icon only form is a square, as IconButton, and
+ * the state layer of interaction toggle-pop.
+ *
+ * Interaction toggle-pop, round 3 (order 1.23, proposed). The state machine:
+ *   rest      the off or on fill.
+ *   hover     the fill and the text color cross to the hover look over
+ *             duration.quick on ease.out (on the root of a toggle only).
+ *   press     the state-layer part, the content color at a low opacity,
+ *             pools under the pointer: a circle that grows from a dot to
+ *             --_toggle-button-press-radius over duration.spring-soft. The
+ *             button does not dip: the pool is the press.
+ *   release   on: ToggleButton.tsx floods the layer from the pool across the
+ *             button and fades it (duration.morph, ease.out) while the on
+ *             fill and text color cross in over duration.quick; the 2px
+ *             inner ring shows at once. Off: the layer starts full and
+ *             drains to the press point over duration.quick on ease.exit.
+ * Reduced motion: no pool, no flood and no cross fade.
+ *
+ * Private properties on the root (names beyond the list, each with a line):
+ *   --_toggle-button-layer          the state layer's color, the content color
+ *   --_toggle-button-layer-opacity  how strong the pool and the flood are
+ *   --_toggle-button-press-radius   the pool's radius while pressed
+ *   --_toggle-button-x, -y          set inline by ToggleButton.tsx: the press point,
+ *                                   as a share of the box; the centre without one
+ *   --_toggle-button-color-duration the cross fade of the fill and the text color
+ *   --_toggle-button-pool-now       working: the pool's radius now, 0% or the press radius
+ * The press dip of Button (--_button-press-scale) is 1 here; a style may set it back.
  */
 @layer ds.base {
+  [data-ds='toggle-button'][data-size][data-shape] {
+    --_toggle-button-layer: currentColor;
+    --_toggle-button-layer-opacity: 0.12;
+    --_toggle-button-press-radius: 60%;
+    --_toggle-button-color-duration: var(--ds-duration-quick);
+    --_toggle-button-pool-now: 0%;
+    --_toggle-button-x: 50%;
+    --_toggle-button-y: 50%;
+    --_button-press-scale: 1;
+
+    transition:
+      transform calc(var(--_button-duration-out) * var(--_button-motion)) var(--_button-ease-out),
+      background-color calc(var(--_toggle-button-color-duration) * var(--_button-motion)) var(--ds-ease-out),
+      color calc(var(--_toggle-button-color-duration) * var(--_button-motion)) var(--ds-ease-out);
+  }
+
   /* [data-size][data-shape] are always present: they lift this rule over the Button size rules. */
   [data-ds='toggle-button'][data-size][data-shape]:not(:has(> [data-part='label'])) {
     --_button-padding-inline: 0;
@@ -11,5 +53,54 @@
     flex: none;
     inline-size: max(var(--_button-height), var(--ds-size-target-min));
     min-inline-size: var(--ds-size-target-min);
+  }
+
+  /* The state layer: under the content, the shape of the button, clipped to a circle at the press point. */
+  [data-ds='toggle-button'][data-size][data-shape] > [data-part='state-layer'] {
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background-color: var(--_toggle-button-layer);
+    opacity: 0;
+    clip-path: circle(var(--_toggle-button-pool-now) at var(--_toggle-button-x, 50%) var(--_toggle-button-y, 50%));
+    pointer-events: none;
+    transition:
+      opacity calc(var(--ds-duration-quick) * var(--_button-motion)) var(--ds-ease-out),
+      clip-path calc(var(--ds-duration-quick) * var(--_button-motion)) var(--ds-ease-out);
+  }
+
+  /* Press: the pool grows under the pointer. Not while disabled. */
+  [data-ds='toggle-button'][data-size][data-shape]:active:not([data-disabled], [aria-disabled='true']) > [data-part='state-layer'] {
+    --_toggle-button-pool-now: var(--_toggle-button-press-radius);
+
+    opacity: var(--_toggle-button-layer-opacity);
+    transition:
+      opacity calc(var(--ds-duration-instant) * var(--_button-motion)) var(--ds-ease-out),
+      clip-path calc(var(--ds-duration-spring-soft) * var(--_button-motion)) var(--ds-ease-spring-soft);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    [data-ds='toggle-button'][data-size][data-shape] {
+      transition: none;
+    }
+
+    [data-ds='toggle-button'][data-size][data-shape] > [data-part='state-layer'] {
+      display: none;
+    }
+  }
+
+  :root[data-motion='reduce'] [data-ds='toggle-button'][data-size][data-shape] {
+    transition: none;
+  }
+
+  :root[data-motion='reduce'] [data-ds='toggle-button'][data-size][data-shape] > [data-part='state-layer'] {
+    display: none;
+  }
+
+  /* Forced colors: the layer is a fill, which forced colors drops; the on look in Button.css shows the state. */
+  @media (forced-colors: active) {
+    [data-ds='toggle-button'] > [data-part='state-layer'] {
+      display: none;
+    }
   }
 }

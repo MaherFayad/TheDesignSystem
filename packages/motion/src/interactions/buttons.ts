@@ -63,7 +63,7 @@ export const buttonsInteractions = [
     trigger: 'The pointer moves over a solid button, or a finger presses it.',
     feedback:
       'A soft round highlight in the fill sits under the pointer and follows it across the face, so the fill reads as a lit surface. ButtonRoot writes the pointer place as a share of the box into two private properties on pointermove and pointerdown; no render runs per move. ' +
-      'It shows at 60% of --_button-glow while the pointer is over the button and fully while it is pressed, so a tap lights up under the finger.',
+      'It shows at 80% of --_button-glow while the pointer is over the button and fully while it is pressed, so a tap lights up under the finger.',
     beats: [
       'Hover: the ::before glow (a radial gradient of the fill text color, mixed thin, one and a half button heights across) fades in over duration.morph on ease.out at the pointer.',
       'Move: the glow centre follows --_button-glow-x and -y at once, frame by frame.',
@@ -143,12 +143,12 @@ export const buttonsInteractions = [
     drive: 'css',
     trigger: 'The caller sets result to success or error when an action ends (often right after loading), and clears it to go back.',
     feedback:
-      'The ending of the action is drawn in the button: the label rolls up and out, and a check draws itself stroke by stroke (success) or a mark draws from the top and its dot lands (error), at the size of the icons. An error also shakes the button once. ' +
+      'The ending of the action is drawn in the button: the label rolls up and out, and a check draws itself stroke by stroke (success) or a cross draws in two strokes (error), at the size of the icons. An error also shakes the button once. ' +
       'When the caller clears result, the glyph shrinks away and the label drops back in. The width holds; the status says resultLabel once.',
     beats: [
       'Out: the start, label and end parts roll up by --_button-roll (distance.shift) and fade over duration.quick on ease.exit.',
       'Land: one delay.stagger step later the result part grows from scale.morph on ease.spring-bouncy over duration.spring-bouncy and fades in over duration.fast.',
-      'Draw: two stagger steps in, each stroke draws with stroke-dashoffset from 1 to 0 (pathLength 1) over duration.morph on ease.out: the check from its short stroke to its long one; the error mark from the top, then its dot one duration.morph later.',
+      'Draw: two stagger steps in, each stroke draws with stroke-dashoffset from 1 to 0 (pathLength 1) over duration.morph on ease.out: the check from its short stroke to its long one; the error cross one stroke, then the other one duration.morph later.',
       'Error: the button shakes along the inline axis by --_button-shake (distance.nudge) over duration.celebrate: out, back past rest, half out, rest. Two swings, far under three flashes a second.',
       'Back: the glyph shrinks to scale.morph and fades over duration.quick; the parts drop in from above on the snappy spring.',
     ],

@@ -174,9 +174,17 @@ function watch(list: HTMLElement, opts: WatchOptions, mode: () => PatternMode): 
   };
 
   const observer = typeof MutationObserver === 'undefined' ? null : new MutationObserver(update);
+  // A popup that gets its width after it mounts (Radix measures the trigger) resizes the rows: the marker follows.
+  const resize = typeof ResizeObserver === 'undefined' ? null : new ResizeObserver(() => current && update());
+  resize?.observe(list);
   observer?.observe(list, { subtree: true, childList: true, attributes: true, attributeFilter: ['data-highlighted', 'data-state', 'data-disabled'] });
   const onKey = () => {
     input = 'keys';
+    // The keys take the marker back from the pointer: it goes to the lit row.
+    if (hovered !== null) {
+      hovered = null;
+      update();
+    }
   };
   const onPointer = (event: Event) => {
     input = 'pointer';
@@ -198,6 +206,7 @@ function watch(list: HTMLElement, opts: WatchOptions, mode: () => PatternMode): 
   update();
   return () => {
     observer?.disconnect();
+    resize?.disconnect();
     doc.removeEventListener('keydown', onKey, true);
     list.removeEventListener('pointermove', onPointer);
     list.removeEventListener('pointerleave', onLeave);

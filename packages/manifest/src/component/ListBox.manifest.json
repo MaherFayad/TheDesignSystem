@@ -35,7 +35,8 @@
     "group",
     "group-label",
     "separator",
-    "empty"
+    "empty",
+    "highlight"
   ],
   "parts": {
     "ListBox": "root"
@@ -295,7 +296,8 @@
       "option-description",
       "group",
       "group-label",
-      "separator"
+      "separator",
+      "highlight"
     ],
     "keys": {
       "ArrowDown": {
@@ -304,7 +306,7 @@
         "expect": "focus-moves"
       },
       "ArrowUp": {
-        "focus": "[data-part='option']:last-child",
+        "focus": "div[data-part='option']:last-of-type",
         "case": "many",
         "expect": "focus-moves"
       },
@@ -314,7 +316,7 @@
         "expect": "focus-moves"
       },
       "Home": {
-        "focus": "[data-part='option']:last-child",
+        "focus": "div[data-part='option']:last-of-type",
         "case": "many",
         "expect": "focus-moves"
       }

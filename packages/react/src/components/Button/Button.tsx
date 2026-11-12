@@ -53,7 +53,7 @@ export interface ButtonProps extends ButtonBaseProps {
   wrap?: boolean;
   /**
    * The ending of an action (interaction button-result, order 1.23): while
-   * set, the label rolls out and a check (success) or a mark (error) draws
+   * set, the label rolls out and a check (success) or a cross (error) draws
    * in its place, and an error shakes the button once. Sets data-result.
    * Clear it to go back, for example after delay.feedback (2s). The width
    * holds. Default none.
@@ -75,7 +75,7 @@ export type ButtonResult = 'success' | 'error';
 /** The strokes of each result glyph, in a 24 unit box. Each draws from its start with stroke-dashoffset (pathLength 1). */
 const resultStrokes: Record<ButtonResult, readonly string[]> = {
   success: ['M5 12.5 9.5 17 19 7'],
-  error: ['M12 5.5v8.5', 'M12 18.5v0.01'],
+  error: ['M7 7 17 17', 'M17 7 7 17'],
 };
 
 /**

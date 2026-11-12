@@ -2524,7 +2524,8 @@
       "label",
       "end",
       "spinner",
-      "status"
+      "status",
+      "result"
     ],
     "slots": {
       "label": {
@@ -2639,6 +2640,17 @@
         "type": "node",
         "required": true,
         "description": "The label text."
+      },
+      "result": {
+        "type": [
+          "success",
+          "error"
+        ],
+        "description": "The ending of an action (interaction button-result): while set, the label rolls out and a check (success) or a mark (error) draws in its place, and an error shakes the button once. Sets data-result. The caller clears it to go back, for example after delay.feedback. The width holds."
+      },
+      "resultLabel": {
+        "type": "string",
+        "description": "What a visually hidden status says while result is set, for example Saved or تم الحفظ. While it is passed, an empty polite status waits in the button, so the words are read once when they arrive."
       }
     },
     "states": [
@@ -2655,7 +2667,7 @@
         "Space": "Activates the button",
         "Tab": "Moves focus to the next control"
       },
-      "announce": "The label is the accessible name. While loading, a visually hidden status inside the button says loadingLabel (Loading by default) and aria-busy is set.",
+      "announce": "The label is the accessible name. While loading, a visually hidden status inside the button says loadingLabel (Loading by default) and aria-busy is set. With resultLabel, a second visually hidden status says it once when result is set and is emptied when result clears; the result glyph is aria-hidden.",
       "native": {
         "accessibilityRole": "button",
         "accessibilityState": [
@@ -2668,7 +2680,10 @@
         "While disabled or loading, a click or middle click does not submit a form or follow an asChild link, and onClick, onAuxClick, onPointerDown and onKeyDown do not run. A disabled asChild link loses its href and keeps role link.",
         "Icons inside the button are hidden from assistive tech. The label names the button.",
         "Under forced colors the focus outline uses Highlight and the Desk roll is off.",
-        "No native title attribute. Hints come from Tooltip (wave 1)."
+        "No native title attribute. Hints come from Tooltip (wave 1).",
+        "Motion of round 3 (order 1.23, proposed). Press: the root dips to scale.press, the parts sink by --_button-press-y (1px at xs and sm, distance.nudge at md, one more pixel at lg and on a FloatingActionButton) and an inner shade at the top edge (::after) comes in over duration.instant; release springs back on the bouncy spring. Glow: on a solid fill a soft highlight (::before) follows the pointer, set from pointermove as a share of the box; --_button-glow: 0 turns it off. Result: the label rolls up and out, the glyph draws with stroke-dashoffset, an error shakes once by distance.nudge over duration.celebrate.",
+        "Hover looks apply only under @media (hover: hover), so a tap on a phone never leaves a hover look; press works on touch through :active.",
+        "Reduced motion (the system setting and data-motion reduce): no sink, no shake, no roll, no glow, and the result glyph shows whole at once. Forced colors: the glow and the shade layers are hidden."
       ]
     },
     "content": {
@@ -2965,7 +2980,8 @@
         "The group adds no keys. Arrow keys do nothing here; a set that should move with arrows is a Toolbar, a ToggleGroup or a SegmentedControl.",
         "Every IconButton child needs its own label: the group name does not name its children.",
         "Tone stays on each child, so a danger action in a group stays danger.",
-        "Under forced colors the system draws every child's border, so the seam stays visible, and the focus outline is pulled inside the child."
+        "Under forced colors the system draws every child's border, so the seam stays visible, and the focus outline is pulled inside the child.",
+        "Motion of round 3 (order 1.23, proposed, interaction segment-press): in an attached group the pressed segment keeps its box; its parts dip to scale.anticipate and sink by Button's --_button-press-y while Button's inner shade comes in, so the segment reads as a key pushed into the row. Neighbors and the seam stay still."
       ]
     },
     "content": {
@@ -4345,7 +4361,8 @@
         "Emphasis is always ghost and tone neutral; a ButtonGroup passes only size and shape.",
         "The default name reads the lang of the nearest Theme, not a lang attribute on a plain element.",
         "Dialog, Toast and Window draw their own close parts today; they can adopt CloseButton later (orders 1.6.1 and on).",
-        "At least 24 by 24 CSS px at xs."
+        "At least 24 by 24 CSS px at xs.",
+        "Motion of round 3 (order 1.23, proposed, interaction close-turn): on hover, keyboard focus and press a round fill opens from the glyph (a circle clip on ::before) while the glyph turns a quarter turn on the snappy spring; a press pinches the glyph to scale.anticipate and it springs back on release. Hover only where the device can hover. Reduced motion: the fill shows whole at once, no turn, no pinch."
       ]
     },
     "content": {
@@ -5937,7 +5954,8 @@
       "root",
       "icon",
       "label",
-      "status"
+      "status",
+      "bubble"
     ],
     "props": {
       "value": {
@@ -5948,7 +5966,7 @@
       "label": {
         "type": "string",
         "default": "Copy",
-        "description": "The action name: visible text, or the accessible name with iconOnly. Copy, or نسخ under an Arabic Theme. Name what is copied when it helps: Copy command."
+        "description": "The action name: visible text, and always the accessible name (aria-label), so the name never changes while the label shows the result. Copy, or نسخ under an Arabic Theme. Name what is copied when it helps: Copy command."
       },
       "iconOnly": {
         "type": "boolean",
@@ -5958,12 +5976,12 @@
       "copiedLabel": {
         "type": "string",
         "default": "Copied",
-        "description": "What the status says after a copy (تم النسخ in Arabic)."
+        "description": "What the label rolls to and the status says after a copy (تم النسخ in Arabic)."
       },
       "failedLabel": {
         "type": "string",
         "default": "Could not copy",
-        "description": "What the status says after a failure (تعذر النسخ in Arabic)."
+        "description": "What the label rolls to and the status says after a failure (تعذر النسخ in Arabic)."
       },
       "target": {
         "type": "string",
@@ -6037,7 +6055,7 @@
         "Space": "Copies the value",
         "Tab": "Moves focus to the next control"
       },
-      "announce": "A visually hidden status inside the button says Copied, or Could not copy, once per copy (WCAG 4.1.3), and is emptied when the button returns to idle. No native title.",
+      "announce": "A visually hidden polite status inside the button says Copied, or Could not copy, once per copy (WCAG 4.1.3): each copy writes a new text node, so a second copy is heard again, and the status is emptied when the button returns to idle. The visible words and the bubble are aria-hidden; the accessible name stays the label. No native title.",
       "native": {
         "accessibilityRole": "button",
         "accessibilityState": [
@@ -6046,8 +6064,12 @@
       },
       "notes": [
         "The Clipboard API is called inside the click handler. Where it is missing or refused, a hidden textarea and the copy command are tried; if both fail, the state is failed and the target text is selected.",
-        "The result shows for delay.peek-hide, then the button returns to idle. Hold time, not motion: it is kept under reduced motion.",
-        "The result is not told by color alone: the icon changes from copy to check or warning, and the status says it."
+        "The result shows for delay.feedback, then the button returns to idle. Hold time, not motion: it is kept under reduced motion.",
+        "The result is not told by color alone: the icon changes from copy to check or warning, and the status says it.",
+        "Motion of round 3 (order 1.23, proposed, interaction copy-swap): the copy glyph closes into its centre (a circle clip and scale.morph) while the check wipes in along its strokes (clip-path) and pops on the bouncy spring, in the success text color; the warning pops in and the button shakes once after a failure. The label rolls from the action name to Copied (or the failure words) like a counter and rolls back after delay.feedback. The three words sit in one grid cell, so the button keeps the width of the widest and never changes size.",
+        "The icon only form shows a small aria-hidden bubble above the button with the result word; it rises in on the snappy spring and keeps rising as it fades.",
+        "A second copy restarts the hold time, draws the check again and replays the bubble. Everything is CSS on data-state: nothing waits for an animation.",
+        "Reduced motion: no roll, turn, rise, wipe or shake; the glyphs and the words cross fade in place."
       ]
     },
     "content": {
@@ -6208,7 +6230,13 @@
         "right": "The status part; a Tooltip arrives in wave 1"
       }
     ],
-    "since": "0.2.0"
+    "since": "0.2.0",
+    "contract": {
+      "optionalParts": [
+        "label",
+        "bubble"
+      ]
+    }
   },
   {
     "name": "DescriptionList",
@@ -8917,7 +8945,8 @@
       "notes": [
         "Floats at space.4xl from the inline end and the block end, plus the device safe area, on z.floating-panel.",
         "Reserve room so it never covers focused content (WCAG 2.4.11): give the scroll container scroll-padding-block-end and padding-block-end of at least the button height plus its inset, and leave the last row clear.",
-        "Never under 44 by 44 CSS px (a touch first control)."
+        "Never under 44 by 44 CSS px (a touch first control).",
+        "Motion of round 3 (order 1.23, proposed, interaction fab-morph): where the device can hover, the button rises by distance.lift and the glow follows the pointer; a press brings it down and in with the sink and the shade of Button; a plus turns an eighth of a turn into a close mark while the button holds a menu open; the extended label is unveiled from the icon side with a clip and a short slide. Reduced motion: no lift, no slide, no reveal."
       ]
     },
     "content": {
@@ -9098,7 +9127,8 @@
       "root",
       "summary",
       "body",
-      "actions"
+      "actions",
+      "success-mark"
     ],
     "slots": {
       "summary": {
@@ -9228,7 +9258,7 @@
       "border.width.strong",
       "focus.shadow.ring"
     ],
-    "motion": "none",
+    "motion": "pop",
     "frameworks": {
       "react": {
         "status": "ready",
@@ -9272,7 +9302,12 @@
         "right": "FormWizard"
       }
     ],
-    "since": "0.1.0"
+    "since": "0.1.0",
+    "contract": {
+      "optionalParts": [
+        "success-mark"
+      ]
+    }
   },
   {
     "name": "FormWizard",
@@ -9307,7 +9342,8 @@
       "back",
       "next",
       "submit",
-      "status"
+      "status",
+      "success-mark"
     ],
     "slots": {
       "body": {
@@ -9516,7 +9552,8 @@
       "optionalParts": [
         "back",
         "submit",
-        "error"
+        "error",
+        "success-mark"
       ],
       "keys": {
         "Enter": {
@@ -12040,7 +12077,8 @@
         "Space does not follow a link, only Enter, as in the browser.",
         "The external icon is hidden from assistive tech; the hidden words carry the meaning.",
         "Under forced colors the system link color applies, the underline takes the text color and the focus outline uses Highlight.",
-        "No native title attribute. Hints come from Tooltip."
+        "No native title attribute. Hints come from Tooltip.",
+        "Motion of round 3 (order 1.23, proposed, interaction link-underline): on a standalone link a stronger line draws over the rest underline with clip-path from the inline start (right to left in Arabic) on hover, keyboard focus and press, and is erased toward the inline end when the state ends; the external icon nudges toward where it leads; the text color eases to its hover color. Hover only where the device can hover; a tap shows the drawn line while held. Reduced motion: the line shows and goes at once."
       ]
     },
     "content": {
@@ -17500,7 +17538,8 @@
       "stars",
       "item",
       "icon",
-      "value"
+      "value",
+      "fill"
     ],
     "slots": {
       "value": {
@@ -17700,7 +17739,8 @@
     "contract": {
       "optionalParts": [
         "stars",
-        "value"
+        "value",
+        "fill"
       ],
       "keys": {
         "ArrowRight": {
@@ -21137,7 +21177,8 @@
         "Both halves are at least 24 by 24 CSS px at every size (WCAG 2.5.8); the trigger is a square of the control height.",
         "Under forced colors the system draws every border, so the seam stays visible, the focus outline is pulled inside each half, and the open trigger takes the system Highlight.",
         "The menu is a DropdownMenu root portaled into a themed layer under body, carrying data-part menu. The contract suite cannot own a part outside the root's subtree, so menu is listed in contract.optionalParts.",
-        "In an attached ButtonGroup a SplitButton joins the row's seam on both sides. Horizontal groups only: it is a row control and is not placed in a vertical attached group."
+        "In an attached ButtonGroup a SplitButton joins the row's seam on both sides. Horizontal groups only: it is a row control and is not placed in a vertical attached group.",
+        "Motion of round 3 (order 1.23, proposed, interactions split-chevron and segment-press): the chevron drops on hover (hover capable devices only) and further while the closed trigger is held, then flips half a turn on the snappy spring as the menu opens. The pressed half keeps its box: its parts dip, the action's parts sink and Button's inner shade comes in, so the seam never opens."
       ]
     },
     "content": {

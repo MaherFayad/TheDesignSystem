@@ -42,12 +42,12 @@ describe('Checkbox', () => {
     const onChange = vi.fn();
     const { container } = render(<Checkbox label="Snap" onCheckedChange={onChange} />);
     const control = screen.getByRole('checkbox', { name: 'Snap' });
-    // The hidden glyph waits in the clip of check-draw, a check before any.
-    expect(container.querySelector('[data-part="indicator"] > span[aria-hidden="true"] > [data-icon="check"]')).not.toBeNull();
+    // The hidden mark waits in the box, drawn as a check before any (check-draw).
+    expect(container.querySelector('[data-part="indicator"] > [data-part="mark"]')?.getAttribute('data-glyph')).toBe('check');
     await user.click(control);
     expect(control.getAttribute('aria-checked')).toBe('true');
     expect(root(container).getAttribute('data-state')).toBe('checked');
-    expect(container.querySelector('[data-icon="check"]')).not.toBeNull();
+    expect(container.querySelector('[data-part="indicator"] > [data-part="mark"]')?.getAttribute('data-glyph')).toBe('check');
     await user.keyboard('{Enter}');
     expect(control.getAttribute('aria-checked')).toBe('true');
     await user.keyboard(' ');
@@ -66,7 +66,7 @@ describe('Checkbox', () => {
     const { container } = render(<Checkbox aria-label="All" defaultChecked="indeterminate" />);
     expect(screen.getByRole('checkbox').getAttribute('aria-checked')).toBe('mixed');
     expect(root(container).getAttribute('data-state')).toBe('indeterminate');
-    expect(container.querySelector('[data-icon="minus"]')).not.toBeNull();
+    expect(container.querySelector('[data-part="indicator"] > [data-part="mark"]')?.getAttribute('data-glyph')).toBe('minus');
     fireEvent.click(screen.getByRole('checkbox'));
     expect(screen.getByRole('checkbox').getAttribute('aria-checked')).toBe('true');
     expect(checkboxState(true)).toBe('checked');
@@ -134,26 +134,30 @@ describe('Checkbox', () => {
     expect(box.id).toBe('root');
   });
 
-  it('keeps the last glyph in an unnamed aria-hidden clip, so an uncheck can fade it out (check-draw)', () => {
+  it('draws the mark as two strokes and keeps the last glyph, so an uncheck retracts it (check-draw, check-mixed)', () => {
     const { container } = render(<Checkbox aria-label="All" defaultChecked="indeterminate" />);
-    const clip = container.querySelector('[data-part="indicator"] > span');
-    expect(clip?.getAttribute('aria-hidden')).toBe('true');
-    expect(clip?.hasAttribute('data-part')).toBe(false);
-    expect(clip?.querySelector('[data-icon="minus"]')).not.toBeNull();
-    // Indeterminate to checked, then to unchecked: the check stays, hidden by CSS.
+    const fill = container.querySelector('[data-part="indicator"] > span');
+    expect(fill?.getAttribute('aria-hidden')).toBe('true');
+    expect(fill?.hasAttribute('data-part')).toBe(false);
+    const mark = container.querySelector('[data-part="indicator"] > [data-part="mark"]');
+    expect(mark?.getAttribute('aria-hidden')).toBe('true');
+    expect(mark?.querySelectorAll('path')).toHaveLength(2);
+    for (const path of mark?.querySelectorAll('path') ?? []) expect(path.getAttribute('pathLength')).toBe('1');
+    expect(mark?.getAttribute('data-glyph')).toBe('minus');
+    // Indeterminate to checked, then to unchecked: the check stays, retracted by CSS.
     fireEvent.click(screen.getByRole('checkbox'));
-    expect(clip?.querySelector('[data-icon="check"]')).not.toBeNull();
+    expect(mark?.getAttribute('data-glyph')).toBe('check');
     fireEvent.click(screen.getByRole('checkbox'));
     expect(root(container).getAttribute('data-state')).toBe('unchecked');
-    expect(clip?.querySelectorAll('[data-icon]')).toHaveLength(1);
-    expect(clip?.querySelector('[data-icon="check"]')).not.toBeNull();
+    expect(mark?.getAttribute('data-glyph')).toBe('check');
   });
 
   it('draws the mark with a CSS transition only: no animation is started from code', () => {
     const { container } = render(<Checkbox aria-label="x" defaultChecked />);
     expect(root(container).getAttribute('data-state')).toBe('checked');
-    const icon = container.querySelector<SVGElement>('[data-icon="check"]');
-    expect(icon?.getAttribute('style')).toBeNull();
+    const mark = container.querySelector<SVGElement>('[data-part="indicator"] > [data-part="mark"]');
+    expect(mark).not.toBeNull();
+    expect(mark?.getAttribute('style')).toBeNull();
   });
 
   it('renders the demo with every case', () => {

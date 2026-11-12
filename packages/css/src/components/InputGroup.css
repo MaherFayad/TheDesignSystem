@@ -146,8 +146,8 @@
   /*
    * The focus ring goes inside the child: a ring outside would sit under
    * the next part, which paints later. The same width and color as the
-   * focus tokens. A joined child draws no glow (interaction focus-glow): it
-   * would sit under the next part too.
+   * focus tokens. A joined child draws no glow and no bloom (interaction
+   * focus-glow, order 1.23): it would sit under the next part too.
    */
   [data-ds='input-group'] > [data-ds='input'] {
     --_input-ring: var(--_input-group-ring);

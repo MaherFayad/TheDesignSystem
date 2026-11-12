@@ -132,11 +132,22 @@ describe('Accordion', () => {
     const off = getInteraction('accordion-reveal')?.off?.["[data-ds='accordion']"] ?? {};
     const css = readFileSync(join(process.cwd(), 'packages/css/src/components/Accordion.css'), 'utf8');
     // The chevron's transition reads a property the off row sets to 0s.
-    const chevron = /\[data-part='trigger'\] \[data-ds='icon'\] \{[^}]*transition: transform var\((--_accordion-[\w-]+)\)/.exec(css);
+    const chevron = /\[data-part='trigger'\] \[data-ds='icon'\] \{[^}]*transition:\s+transform var\((--_accordion-[\w-]+)\)/.exec(css);
     expect(chevron?.[1]).toBeDefined();
     expect(off[chevron?.[1] as `--_${string}`]).toBe('0s');
     // So do the content slide and the child stagger.
     expect(off['--_accordion-duration']).toBe('0s');
     expect(off['--_accordion-stagger']).toBe('0s');
+  });
+
+  it('reveals the content with clip-path and never animates the height (round 3)', () => {
+    const css = readFileSync(join(process.cwd(), 'packages/css/src/components/Accordion.css'), 'utf8');
+    const reveal = /@keyframes ds-accordion-reveal \{([\s\S]*?)\n {2}\}/.exec(css)?.[1] ?? '';
+    expect(reveal).toContain('clip-path: var(--_accordion-reveal)');
+    expect(reveal).toContain('clip-path: inset(0)');
+    expect(reveal).not.toMatch(/height|block-size/);
+    // The chevron leans on hover, and not under reduced motion.
+    expect(css).toMatch(/:hover \[data-ds='icon'\] \{\s+--_accordion-icon-nudge-now: var\(--_accordion-icon-nudge\)/);
+    expect(css).toMatch(/--_accordion-icon-nudge: 0px;/);
   });
 });

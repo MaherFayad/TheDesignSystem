@@ -20,7 +20,7 @@ async function pressAt(a, p, hold = 120, after = 520) {
 
 module.exports = {
   'tab-slide': {
-    region: STAGE,
+    region: '[data-stage-region]',
     drive: async (a) => {
       const { page } = a;
       // Soft tabs: a long hop, then back one.
@@ -29,8 +29,8 @@ module.exports = {
       // Segmented control and the toggle group.
       await pressAt(a, await centre(page, "[data-ds='segmented-control'] [data-part='item']", 2));
       await pressAt(a, await centre(page, "[data-ds='toggle-group'] [data-part='item']", 0));
-      // Keyboard on the ghost tabs.
-      await page.locator("[data-ds='tabs'][data-emphasis='ghost'] [role='tab'][data-state='active']").first().focus();
+      // Keyboard on the soft tabs.
+      await page.locator("[data-ds='tabs'][data-emphasis='soft'] [role='tab'][data-state='active']").first().focus();
       await a.key('ArrowRight');
       await a.wait(500);
     },

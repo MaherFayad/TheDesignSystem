@@ -106,7 +106,8 @@ describe('skeleton-swap', () => {
     expect(container.textContent).toBe('Loaded');
     flush();
     expect(container.querySelector('[data-ds="skeleton"][inert]')).not.toBeNull();
-    expect(ids()).toContain('ds-motion:ghost-fade');
+    // Round 3: the ghost is wiped toward the inline end.
+    expect(ids()).toContain('ds-motion:skeleton-wipe');
     await act(async () => undefined);
     expect(container.querySelector('[data-ds="skeleton"]')).toBeNull();
   });
@@ -175,12 +176,24 @@ describe('progress-celebrate', () => {
     expect(ids().filter((i) => i === 'ds-motion:pop-mark')).toHaveLength(1);
   });
 
-  it('turns the ring into place and rolls its value', () => {
-    const { rerender } = render(desk(<ProgressCircle label="Upload" value={20} />));
+  it('draws the arc with stroke-dashoffset (CSS, an SVG arc part) and rolls its value', () => {
+    const { container, rerender } = render(desk(<ProgressCircle label="Upload" value={20} />));
+    const arc = container.querySelector('[data-part="indicator"] > svg[data-part="arc"]');
+    expect(arc?.getAttribute('aria-hidden')).toBe('true');
+    expect(arc?.querySelector('circle')?.getAttribute('pathLength')).toBe('100');
     rerender(desk(<ProgressCircle label="Upload" value={45} />));
-    const call = (animate.mock.calls as unknown as Call[]).find((c) => c[1].id === 'ds-motion:progress-sweep');
-    expect(call?.[0][0]?.transform).toBe('rotate(-90deg)');
+    expect((container.querySelector('[data-part="indicator"]') as HTMLElement).style.getPropertyValue('--_progress-circle-fraction')).toBe('0.45');
+    // The turn of round 2 is gone: the stroke draws.
+    expect(ids()).not.toContain('ds-motion:progress-sweep');
     expect(ids()).toContain('ds-motion:digit-roll');
+  });
+
+  it('beats once with a halo when it completes (round 3)', () => {
+    const { rerender } = render(desk(<ProgressCircle label="Upload" value={60} />));
+    rerender(desk(<ProgressCircle label="Upload" value={100} />));
+    expect(ids().filter((id) => id === 'ds-motion:progress-halo')).toHaveLength(1);
+    rerender(desk(<ProgressCircle label="Upload" value={100} />));
+    expect(ids().filter((id) => id === 'ds-motion:progress-halo')).toHaveLength(1);
   });
 });
 

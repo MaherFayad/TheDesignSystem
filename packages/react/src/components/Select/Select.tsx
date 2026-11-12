@@ -152,17 +152,27 @@ function rollValue(el: HTMLElement | null, before: string | null, mode: PatternM
   ghost.setAttribute('aria-hidden', 'true');
   ghost.setAttribute('inert', '');
   ghost.textContent = before;
+  // The value part may still be empty here (Radix fills it after this commit): the copy spans from its
+  // inline start to the icon, over the full height of the trigger, its text centred as the value's is.
   const h = host.getBoundingClientRect();
   const v = el.getBoundingClientRect();
-  const rtl = getComputedStyle(host).direction === 'rtl';
+  const icon = el.nextElementSibling as HTMLElement | null;
+  const hs = getComputedStyle(host);
+  const rtl = hs.direction === 'rtl';
   // Drawn px back to CSS px (a CSS zoom on the page).
   const k = drawnScale(host);
+  const start = (rtl ? h.right - v.right : v.left - h.left) / k - host.clientLeft;
+  const padEnd = parseFloat(rtl ? hs.paddingLeft : hs.paddingRight) || 0;
+  const gap = parseFloat(hs.columnGap) || 0;
+  const room = host.clientWidth - start - padEnd - (icon?.offsetWidth ?? 0) - gap;
   const g = ghost.style;
   g.position = 'absolute';
-  g.insetBlockStart = `${(v.top - h.top) / k - host.clientTop}px`;
-  g.insetInlineStart = `${(rtl ? h.right - v.right : v.left - h.left) / k - host.clientLeft}px`;
-  g.inlineSize = `${v.width / k}px`;
-  g.blockSize = `${v.height / k}px`;
+  g.insetBlockStart = '0';
+  g.insetInlineStart = `${start}px`;
+  g.inlineSize = `${Math.max(0, room)}px`;
+  g.blockSize = `${host.clientHeight}px`;
+  g.display = 'flex';
+  g.alignItems = 'center';
   g.overflow = 'hidden';
   g.whiteSpace = 'nowrap';
   g.textOverflow = 'ellipsis';

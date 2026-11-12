@@ -6,42 +6,50 @@
 // Button.css. Source: GoBanana `.st-btn[aria-pressed='true']`, site
 // `PricingToggle.tsx`.
 //
-// The pressed pop (interaction toggle-pop, order 1.22, proposed): when the
-// person turns it on, the content (icon, start, label, end) pops to
-// scale.pop and settles over duration.celebrate, one stagger step apart,
-// while the on fill and ring show at once; turning it off lets the content
-// sink to scale.anticipate and settle back on the soft spring. Only the
-// parts move, so a toggle in an attached ButtonGroup keeps its seams. The
-// state never waits for it.
-import { useCallback, useRef, type ReactNode } from 'react';
+// The flood (interaction toggle-pop, round 3, order 1.23, proposed): a
+// state layer, an aria-hidden part under the content, pools under the
+// pointer while the button is held (ToggleButton.css). When the person turns
+// it on, the layer floods from that point across the button and fades while
+// the on fill crosses in behind it; turning it off, the layer drains back to
+// the point, faster. From the keyboard the point is the centre. Only the
+// layer moves: the content and the root keep still, so a toggle in an
+// attached ButtonGroup keeps its seams. The state never waits for it.
+import { useCallback, useRef, type KeyboardEvent, type PointerEvent, type ReactNode } from 'react';
 import { Toggle } from 'radix-ui';
-import { cssToken, play, scaleValue, type MotionSpec } from '@the-system/motion';
+import { play, type MotionSpec } from '@the-system/motion';
 import { useMotion } from '../../internal/motion';
 import { ButtonRoot, renderSlotContent, setRef, type ButtonBaseProps, type ButtonSlotContent } from '../Button/ButtonBase';
 
-/** The parts that pop, in the order they land. */
-const POP_PARTS = ':scope > :is([data-part="icon"], [data-part="start"], [data-part="label"], [data-part="end"])';
+/** The press point, read by the state layer: set on the root by pointer down, the centre for keys. */
+const AT = 'circle(var(--_toggle-button-press-radius) at var(--_toggle-button-x, 50%) var(--_toggle-button-y, 50%))';
+const FULL = 'circle(150% at var(--_toggle-button-x, 50%) var(--_toggle-button-y, 50%))';
+const NONE = 'circle(0% at var(--_toggle-button-x, 50%) var(--_toggle-button-y, 50%))';
+const LAYER = 'var(--_toggle-button-layer-opacity)';
 
-/** The way the content lands: a pop past rest when on, a small sink when off. */
-export function toggleLandSpec(on: boolean, step: number): MotionSpec {
-  const delay = step > 0 ? { delay: 'delay.stagger' as const, delaySteps: Math.min(step, 6) } : {};
+/** The state layer's move on a change: a flood from the press point when on, a drain back to it when off. */
+export function toggleLayerSpec(on: boolean): MotionSpec {
   if (on) {
     return {
-      keyframes: [{ transform: 'none' }, { transform: `scale(${cssToken('scale.pop', scaleValue['scale.pop'])})`, offset: 0.4 }, { transform: 'none' }],
-      duration: 'duration.celebrate',
+      keyframes: [
+        { clipPath: AT, opacity: LAYER },
+        { clipPath: FULL, opacity: LAYER, offset: 0.55 },
+        { clipPath: FULL, opacity: 0 },
+      ],
+      duration: 'duration.morph',
       easing: 'ease.out',
-      fill: 'backwards',
+      fill: 'none',
       origin: '50% 50%',
-      ...delay,
     };
   }
   return {
-    keyframes: [{ transform: `scale(${cssToken('scale.anticipate', scaleValue['scale.anticipate'])})` }, { transform: 'none' }],
-    duration: 'duration.spring-soft',
-    easing: 'ease.spring-soft',
-    fill: 'backwards',
+    keyframes: [
+      { clipPath: FULL, opacity: LAYER },
+      { clipPath: NONE, opacity: LAYER },
+    ],
+    duration: 'duration.quick',
+    easing: 'ease.exit',
+    fill: 'none',
     origin: '50% 50%',
-    ...delay,
   };
 }
 
@@ -98,9 +106,23 @@ export function ToggleButton({
   );
   const changePressed = (next: boolean) => {
     onPressedChange?.(next);
-    const el = own.current;
-    if (!el || motion.mode('toggle-pop') !== 'full') return;
-    el.querySelectorAll(POP_PARTS).forEach((part, i) => play(part, toggleLandSpec(next, i), 'toggle-pop'));
+    const layer = own.current?.querySelector(':scope > [data-part="state-layer"]');
+    if (!layer || motion.mode('toggle-pop') !== 'full') return;
+    play(layer, toggleLayerSpec(next), 'toggle-pop');
+  };
+  // The press point, as a share of the box so it holds at any zoom. Keys flood from the centre.
+  const placePoint = (event: PointerEvent<HTMLButtonElement>) => {
+    const el = event.currentTarget;
+    const box = el.getBoundingClientRect();
+    if (!(box.width > 0 && box.height > 0)) return;
+    const share = (n: number) => `${Math.round(Math.min(1, Math.max(0, n)) * 1000) / 10}%`;
+    el.style.setProperty('--_toggle-button-x', share((event.clientX - box.left) / box.width));
+    el.style.setProperty('--_toggle-button-y', share((event.clientY - box.top) / box.height));
+  };
+  const centrePoint = (event: KeyboardEvent<HTMLButtonElement>) => {
+    if (event.key !== ' ' && event.key !== 'Enter') return;
+    event.currentTarget.style.removeProperty('--_toggle-button-x');
+    event.currentTarget.style.removeProperty('--_toggle-button-y');
   };
   return (
     <Toggle.Root
@@ -112,6 +134,14 @@ export function ToggleButton({
     >
       <ButtonRoot
         {...rest}
+        onPointerDown={(event) => {
+          placePoint(event);
+          rest.onPointerDown?.(event);
+        }}
+        onKeyDown={(event) => {
+          centrePoint(event);
+          rest.onKeyDown?.(event);
+        }}
         ref={setOwn}
         ds="toggle-button"
         iconOnly={iconOnly}
@@ -119,9 +149,13 @@ export function ToggleButton({
         aria-label={iconOnly ? label : rest['aria-label']}
         render={() =>
           iconOnly ? (
-            <span data-part="icon">{renderSlotContent(icon)}</span>
+            <>
+              <span data-part="state-layer" aria-hidden="true" />
+              <span data-part="icon">{renderSlotContent(icon)}</span>
+            </>
           ) : (
             <>
+              <span data-part="state-layer" aria-hidden="true" />
               {start !== undefined && <span data-part="start">{renderSlotContent(start)}</span>}
               <span data-part="label">{children}</span>
               {end !== undefined && <span data-part="end">{renderSlotContent(end)}</span>}

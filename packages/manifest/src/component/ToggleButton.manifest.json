@@ -21,6 +21,7 @@
   },
   "anatomy": [
     "root",
+    "state-layer",
     "start",
     "label",
     "end",
@@ -155,7 +156,8 @@
       "Pressed is not told by color alone: an on toggle also gets a 2px inner ring.",
       "In forced colors an on toggle is drawn in Highlight and HighlightText.",
       "Keep the label the same in both states. Do not swap Show to Hide: aria-pressed carries the state.",
-      "A ButtonGroup passes size, emphasis and shape through context; a prop on the toggle wins."
+      "A ButtonGroup passes size, emphasis and shape through context; a prop on the toggle wins.",
+      "Motion, round 3 (toggle-pop, proposed): the state-layer part, aria-hidden, pools under the pointer while pressed; turning on, it floods from the press point across the button while the on fill crosses in; turning off, it drains back, faster. From the keyboard it floods from the centre. The button does not dip and the content does not scale. Reduced motion: no layer and no cross fade."
     ]
   },
   "content": {
@@ -267,9 +269,12 @@
     "delay.stagger",
     "scale.press",
     "scale.pop",
-    "scale.anticipate"
+    "scale.anticipate",
+    "duration.morph",
+    "duration.quick",
+    "ease.exit"
   ],
-  "motion": "press",
+  "motion": "pop",
   "frameworks": {
     "react": {
       "status": "ready",

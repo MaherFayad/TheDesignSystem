@@ -184,7 +184,13 @@ function fillClip(track: Element | null | undefined): string {
  * release from a pull springs back on the bouncy spring, anything else
  * glides on the snappy spring. Reduced motion lands at once.
  */
-function useGlide(control: { current: HTMLSpanElement | null }, following: { current: boolean }, pulled: boolean, mode: (id: string) => PatternMode) {
+function useGlide(
+  control: { current: HTMLSpanElement | null },
+  following: { current: boolean },
+  fractions: number[],
+  pulled: boolean,
+  mode: (id: string) => PatternMode,
+) {
   const last = useRef<{ clip: string; places: number[]; pulled: boolean } | null>(null);
   useLayoutEffect(() => {
     const root = control.current;
@@ -197,7 +203,7 @@ function useGlide(control: { current: HTMLSpanElement | null }, following: { cur
     const flying = glides(track);
     const live = flying.some((a) => a.playState === 'running') ? fillClip(track) : '';
     for (const a of flying) a.cancel();
-    const now = { clip: fillClip(track), places: wrappers.map((w) => (w ? w.offsetLeft + w.offsetTop : 0)), pulled };
+    const now = { clip: fillClip(track), places: fractions, pulled };
     const before = last.current;
     last.current = now;
     if (following.current) {
@@ -225,7 +231,10 @@ function useGlide(control: { current: HTMLSpanElement | null }, following: { cur
       const to = now.places[i];
       if (!w || from === undefined || to === undefined || from === to || typeof w.animate !== 'function') return;
       const vertical = root.getAttribute('data-orientation') === 'vertical';
-      const delta = `${from - to}px`;
+      // The distance in the track's own px, from the change of the value: a vertical slider grows upward, RTL leftward.
+      const length = track ? (vertical ? track.offsetHeight : track.offsetWidth) : 0;
+      const sign = vertical || getComputedStyle(root).direction === 'rtl' ? -1 : 1;
+      const delta = `${Math.round((from - to) * length * sign * 10) / 10}px`;
       for (const a of glides(w)) a.cancel();
       w.animate({ transform: [vertical ? `translateY(${delta})` : `translateX(${delta})`, vertical ? 'translateY(0)' : 'translateX(0)'] }, { id, duration, easing, composite: 'add' });
     });
@@ -292,7 +301,13 @@ export function SliderBase({
   const following = useRef(false);
   const controlRef = useRef<HTMLSpanElement | null>(null);
   const horizontal = orientation === 'horizontal';
-  useGlide(controlRef, following, pull.start > 0 || pull.end > 0, motion.mode);
+  useGlide(
+    controlRef,
+    following,
+    values.map((v) => (v - min) / (max - min || 1)),
+    pull.start > 0 || pull.end > 0,
+    motion.mode,
+  );
   const release = () => {
     setDragging(false);
     following.current = false;

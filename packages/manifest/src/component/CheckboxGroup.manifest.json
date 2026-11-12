@@ -129,7 +129,8 @@
       "Items are Checkbox components with a value. They read checked, size, name, disabled, invalid and read only from the group.",
       "The error is not a live region and never role alert. A form that checks on submit moves focus to the first item of the invalid group.",
       "Arrow keys do not move between items: that is a RadioGroup. Each checkbox is its own tab stop, as native checkboxes are.",
-      "checked, unchecked and indeterminate are on the select all part, a Checkbox root that carries the group's select-all part. The group root has no data-state."
+      "checked, unchecked and indeterminate are on the select all part, a Checkbox root that carries the group's select-all part. The group root has no data-state.",
+      "Motion, round 3: select all cascades the draw of the boxes one delay.stagger apart, capped at three steps, in reading order when it checks and from the last box when it unchecks."
     ]
   },
   "content": {
@@ -161,7 +162,7 @@
     "color.text.muted",
     "color.state.danger.text"
   ],
-  "motion": "fade",
+  "motion": "chart-draw",
   "frameworks": {
     "react": {
       "status": "ready",

@@ -1,6 +1,11 @@
 // Drives of the selection family (order 1.23): menus, pickers, lists, chips
 // and filters. Each drive marks the beats the contact sheet should show (at
 // most five bands of twelve frames, 40 ms apart). See ../record.cjs for the api.
+// Popper overlays (menus, picker lists) land away from their trigger when the
+// recorder draws the page with CSS zoom above 1 (the positioning reads zoomed
+// boxes and applies them again), so their drives crop the whole frame at zoom 1.
+const WHOLE = 'body';
+
 const centre = (b) => ({ x: b.x + b.width / 2, y: b.y + b.height / 2 });
 
 /** The centre of the nth match of a selector, or null. */
@@ -73,9 +78,10 @@ async function pickerDrive(a) {
 }
 
 module.exports = {
-  'highlight-marker': { drive: menuMarker },
+  'highlight-marker': { region: WHOLE, drive: menuMarker },
 
   'menu-origin': {
+    region: WHOLE,
     drive: async (a) => {
       const { page, at } = a;
       await a.hover(at, 10);
@@ -99,6 +105,7 @@ module.exports = {
   },
 
   'menu-submenu-nudge': {
+    region: WHOLE,
     drive: async (a) => {
       const { page, at } = a;
       await a.press(at, 90);
@@ -121,6 +128,7 @@ module.exports = {
   },
 
   'menu-row-slide': {
+    region: WHOLE,
     drive: async (a) => {
       const { page, at } = a;
       await a.press(at, 90);
@@ -141,6 +149,7 @@ module.exports = {
   },
 
   'picker-value-roll': {
+    // The beat is in the trigger: kept large; the list may land off the crop.
     drive: async (a) => {
       const { page, at } = a;
       await a.press(at, 90);
@@ -162,8 +171,8 @@ module.exports = {
     },
   },
 
-  'picker-chevron-turn': { drive: pickerDrive },
-  'menu-rows': { drive: pickerDrive },
+  'picker-chevron-turn': { region: WHOLE, drive: pickerDrive },
+  'menu-rows': { region: WHOLE, drive: pickerDrive },
 
   'check-draw-pick': {
     drive: async (a) => {
@@ -190,6 +199,7 @@ module.exports = {
   },
 
   'combobox-results': {
+    region: WHOLE,
     drive: async (a) => {
       const { page, at } = a;
       await a.press(at, 90);

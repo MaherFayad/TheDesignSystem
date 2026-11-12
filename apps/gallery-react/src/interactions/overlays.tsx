@@ -137,6 +137,21 @@ function ToastStackStage() {
   );
 }
 
+/**
+ * A toast stage: the trigger and, under it, a room the size of a toast stack.
+ * The toasts show in the page's toaster as anywhere else; the recorder moves
+ * that toaster onto the room (drives/overlays.cjs) so a clip can hold the
+ * trigger and the toasts at a large zoom.
+ */
+function ToastDock({ children }: { children: ReactNode }) {
+  return (
+    <div data-toast-stage="" style={{ display: 'grid', justifyItems: 'center', gap: 'var(--ds-space-m)' }}>
+      {children}
+      <div data-toast-dock="" aria-hidden="true" style={{ inlineSize: 'min(22rem, 90vw)', blockSize: '12rem' }} />
+    </div>
+  );
+}
+
 /** Three toasts at once, so the stack shows its depth and the hover opens it. */
 function ToastExpandStage() {
   const [n, setN] = useState(1);
@@ -325,16 +340,28 @@ export const stages: Record<string, () => ReactNode> = {
     </span>
   ),
   'toast-enter': () => (
-    <Button data-interaction-trigger="" onClick={() => toast({ lang: 'en', tone: 'info', title: 'New version ready', description: 'Reload the page to get it.' })}>
+    <ToastDock>
+      <Button data-interaction-trigger="" onClick={() => toast({ lang: 'en', tone: 'info', title: 'New version ready', description: 'Reload the page to get it.' })}>
       Show a toast
     </Button>
+    </ToastDock>
   ),
-  'toast-stack': () => <ToastStackStage />,
-  'toast-expand': () => <ToastExpandStage />,
+  'toast-stack': () => (
+    <ToastDock>
+      <ToastStackStage />
+    </ToastDock>
+  ),
+  'toast-expand': () => (
+    <ToastDock>
+      <ToastExpandStage />
+    </ToastDock>
+  ),
   'toast-timer': () => (
-    <Button data-interaction-trigger="" onClick={() => toast({ lang: 'en', tone: 'success', title: 'Draft saved', description: 'Rest the pointer here to keep it.', dedupeKey: false })}>
+    <ToastDock>
+      <Button data-interaction-trigger="" onClick={() => toast({ lang: 'en', tone: 'success', title: 'Draft saved', description: 'Rest the pointer here to keep it.', dedupeKey: false })}>
       Show a timed toast
     </Button>
+    </ToastDock>
   ),
   'dialog-refuse': () => (
     <AlertDialog>
@@ -360,9 +387,11 @@ export const stages: Record<string, () => ReactNode> = {
     </AlertDialog>
   ),
   'toast-swipe': () => (
-    <Button data-interaction-trigger="" onClick={() => toast({ lang: 'en', title: 'Board duplicated', description: 'Swipe it away or wait.' })}>
+    <ToastDock>
+      <Button data-interaction-trigger="" onClick={() => toast({ lang: 'en', title: 'Board duplicated', description: 'Swipe it away or wait.' })}>
       Show a toast
     </Button>
+    </ToastDock>
   ),
   'notification-change': () => <NotificationStage />,
 };

@@ -25,6 +25,7 @@
     "control",
     "track",
     "thumb",
+    "thumb-lens",
     "label",
     "description",
     "state-text"
@@ -111,7 +112,8 @@
     "unchecked",
     "data-disabled",
     "data-invalid",
-    "data-readonly"
+    "data-readonly",
+    "data-dragging"
   ],
   "a11y": {
     "role": "switch, on the control (a Radix button). aria-checked is true or false.",
@@ -120,7 +122,8 @@
       "Tab": "Moves focus to the control, and on to the next control",
       "Shift+Tab": "Moves focus back",
       "Space": "Toggles the switch",
-      "Enter": "Toggles the switch"
+      "Enter": "Toggles the switch",
+      "Pointer drag": "Drags the thumb; on release it snaps by velocity, else to the nearer end. A tap toggles."
     },
     "announce": "Name from the label (or aria-label), the state as on or off, the description through aria-describedby. The state text is hidden, so it is not read twice.",
     "native": {
@@ -134,7 +137,9 @@
       "The anatomy adds a control part to the order's list: the 24px target that holds the track, so a 16px track still meets WCAG 2.5.8.",
       "On: the thumb moves to the inline end and the track fills. Two signals, so the state never relies on color alone. In right to left text the thumb moves to the left.",
       "Read only is not part of Radix: clicks are prevented, aria-readonly is set and the track draws dashed.",
-      "A switch applies its setting at once. If the change fails, set it back and say why in a Toast."
+      "A switch applies its setting at once. If the change fails, set it back and say why in a Toast.",
+      "Motion, round 3 (switch-stretch and switch-drag, proposed): the thumb leans on hover, grows and stretches while pressed and travels on the bouncy spring; the on fill sweeps behind it with a clip that rides the thumb, so the track under the thumb is filled on every frame. A drag moves the thumb with the pointer (data-dragging) and snaps on release; the click that ends a drag toggles nothing; Space and Enter still toggle. Reduced motion: the thumb jumps and the fill shows at once.",
+      "The thumb-lens part is an aria-hidden layer inside the thumb. A style makes a glass thumb with --_switch-thumb-backdrop, --_switch-thumb-highlight and --_switch-thumb-solid-pressed, or a growing dot with --_switch-thumb-size-rest, -on and -pressed (transform only). The glass falls back to a solid thumb without backdrop-filter, under reduced transparency and under more contrast."
     ]
   },
   "content": {
@@ -184,7 +189,11 @@
     "ease.spring-soft",
     "scale.press",
     "scale.stretch",
-    "scale.morph"
+    "scale.morph",
+    "scale.pop",
+    "distance.nudge",
+    "duration.quick",
+    "ease.in"
   ],
   "motion": "press",
   "frameworks": {
