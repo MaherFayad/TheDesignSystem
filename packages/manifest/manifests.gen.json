@@ -17642,9 +17642,10 @@
         "note": "The menu opens with menu-scale from the trigger side, aligned to the control's inline end; each half keeps Button's press, and the open trigger's chevron turns over (transform, quick duration, instant under reduced motion). The seam is drawn by SplitButton.css through Button's private corner properties. Inside a ButtonGroup, unset size, emphasis and shape come from the group."
       },
       "angular": {
-        "status": "planned",
-        "behavior": "[dsSplitButton] host with button[dsButton] and a cdk:menu trigger",
-        "note": "SplitButton.css is used as is: the host div is the root, the halves carry data-part action and trigger."
+        "status": "ready",
+        "behavior": "div[dsSplitButton] composed of dsButton, dsIconButton with dsDropdownMenuTrigger and dsDropdownMenuContent",
+        "example": "split-button.demo.ts",
+        "note": "The menu items come in an ng-template dsSplitButtonMenu, not as projected content: they render in the menu layer and their DI must reach the menu, which the host provides. label is a string. onClick is the action output (a click output would also fire for clicks on the trigger, since the native click bubbles to the host). onOpenChange is the openChange output of [(open)]. actionRef has no input: read the action through the dsSplitButton exportAs or a query. SplitButton.css is used as is."
       },
       "native": {
         "status": "planned",

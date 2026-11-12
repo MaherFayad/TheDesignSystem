@@ -2,7 +2,7 @@
 
 Made by `npm run shots`. Each shot is the `variants` case at `chrome=0`, 1280 by 800 viewport, full page, device scale factor 1, animations off, reduced motion, fonts loaded. File names: `<component>/<style>-<scheme>-<dir>[-<density>][-open].png`. Density is default unless named.
 
-240 shots, 17 components, 17.34 MB. Stable (two captures byte equal): 240; unstable: 0; not verified: 0.
+252 shots, 18 components, 18.45 MB. Stable (two captures byte equal): 252; unstable: 0; not verified: 0.
 
 The full list with sizes and hashes is in `captured.json`.
 
@@ -186,6 +186,17 @@ Densities, dark, ltr en:
 | desk | [compact](link/desk-dark-ltr-compact.png) | [default](link/desk-dark-ltr.png) | [comfortable](link/desk-dark-ltr-comfortable.png) |
 | neutral | [compact](link/neutral-dark-ltr-compact.png) | [default](link/neutral-dark-ltr.png) | [comfortable](link/neutral-dark-ltr-comfortable.png) |
 | studio | [compact](link/studio-dark-ltr-compact.png) | [default](link/studio-dark-ltr.png) | [comfortable](link/studio-dark-ltr-comfortable.png) |
+
+## SplitButton
+
+| Style | Scheme | ltr en | rtl ar |
+| --- | --- | --- | --- |
+| desk | dark | [ltr](split-button/desk-dark-ltr.png) | [rtl](split-button/desk-dark-rtl.png) |
+| desk | light | [ltr](split-button/desk-light-ltr.png) | [rtl](split-button/desk-light-rtl.png) |
+| neutral | dark | [ltr](split-button/neutral-dark-ltr.png) | [rtl](split-button/neutral-dark-rtl.png) |
+| neutral | light | [ltr](split-button/neutral-light-ltr.png) | [rtl](split-button/neutral-light-rtl.png) |
+| studio | dark | [ltr](split-button/studio-dark-ltr.png) | [rtl](split-button/studio-dark-rtl.png) |
+| studio | light | [ltr](split-button/studio-light-ltr.png) | [rtl](split-button/studio-light-rtl.png) |
 
 ## TitleBar
 

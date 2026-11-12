@@ -277,7 +277,8 @@ export abstract class MenuPanel {
   abstract readonly template: TemplateRef<unknown>;
   abstract readonly id: string;
   abstract readonly labelledBy: string;
-  abstract readonly part: string | null;
+  /** The data-part of the menu root: sub-content for a submenu, or the part a parent component names. */
+  abstract partName(): string | null;
   abstract readonly root: DsDropdownMenu;
   /** The menu element while mounted. */
   element: HTMLElement | null = null;
@@ -403,7 +404,7 @@ const MENU_LAYER = new InjectionToken<LayerData>('DS_MENU_LAYER');
   },
   template: `
     <div #wrapper data-radix-popper-content-wrapper="" [attr.dir]="attrs().dir">
-      <div #menu data-ds="dropdown-menu" [attr.data-part]="panel.part" role="menu" [id]="panel.id"
+      <div #menu data-ds="dropdown-menu" [attr.data-part]="panel.partName()" role="menu" [id]="panel.id"
         [attr.aria-labelledby]="panel.labelledBy" aria-orientation="vertical" data-orientation="vertical"
         data-radix-menu-content="" [attr.data-state]="state()" [attr.data-side]="side()" [attr.data-align]="align()"
         [attr.data-size]="data.size()" [attr.dir]="attrs().dir" tabindex="-1" (keydown)="panel.onKeyDown($event)">
@@ -503,7 +504,7 @@ abstract class MenuPanelHost extends MenuPanel {
       ref.changeDetectorRef.detectChanges();
     };
     this.undo = [autoPlace(anchor ?? wrapper, wrapper, place), ...this.listen(menu)];
-    if (this.root.modal() && !this.part) this.undo.push(hideOthers(ref.location.nativeElement as Element));
+    if (this.root.modal() && this.partName() !== 'sub-content') this.undo.push(hideOthers(ref.location.nativeElement as Element));
     this.opened(menu);
   }
 
@@ -561,6 +562,12 @@ export class DsDropdownMenuContent extends MenuPanelHost {
   readonly sideOffset = input<number>(TRIGGER_GAP);
   /** Space kept from the viewport edge in px. Default 8. */
   readonly collisionPadding = input<number>(VIEWPORT_GUTTER);
+  /**
+   * A data-part for the menu root, when the menu is a part of another
+   * component (SplitButton names it menu). React passes data-part as a prop
+   * spread onto the root; an ng-template has no attributes to spread.
+   */
+  readonly part = input<string | undefined>(undefined);
 
   readonly root = injectMenu('dsDropdownMenuContent');
   readonly template = inject<TemplateRef<unknown>>(TemplateRef);
@@ -569,7 +576,9 @@ export class DsDropdownMenuContent extends MenuPanelHost {
   get labelledBy(): string {
     return this.root.triggerId;
   }
-  readonly part = null;
+  partName(): string | null {
+    return this.part() ?? null;
+  }
 
   constructor() {
     super();
@@ -719,7 +728,9 @@ export class DsDropdownMenuSubContent extends MenuPanelHost {
   get labelledBy(): string {
     return this.sub.triggerId;
   }
-  readonly part = 'sub-content';
+  partName(): string {
+    return 'sub-content';
+  }
   private readonly parentPanel = this.sub.parent;
 
   constructor() {

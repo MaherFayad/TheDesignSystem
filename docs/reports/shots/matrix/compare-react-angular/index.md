@@ -2,7 +2,7 @@
 
 Made by `npm run shots -- --compare react angular`. pixelmatch threshold 0.1; a pair passes when at most 0.5 percent of pixels differ and the sizes match.
 
-172 pairs, 172 pass, 0 fail. Only in react: 68. Only in angular: 0.
+184 pairs, 184 pass, 0 fail. Only in react: 68. Only in angular: 0.
 
 | File | Result | Differing pixels | Where | Diff |
 | --- | --- | --- | --- | --- |
@@ -160,6 +160,18 @@ Made by `npm run shots -- --compare react angular`. pixelmatch threshold 0.1; a 
 | link/studio-dark-rtl.png | pass | 0 (0.000 percent) |  | none |
 | link/studio-light-ltr.png | pass | 0 (0.000 percent) |  | none |
 | link/studio-light-rtl.png | pass | 0 (0.000 percent) |  | none |
+| split-button/desk-dark-ltr.png | pass | 0 (0.000 percent) |  | none |
+| split-button/desk-dark-rtl.png | pass | 0 (0.000 percent) |  | none |
+| split-button/desk-light-ltr.png | pass | 0 (0.000 percent) |  | none |
+| split-button/desk-light-rtl.png | pass | 0 (0.000 percent) |  | none |
+| split-button/neutral-dark-ltr.png | pass | 0 (0.000 percent) |  | none |
+| split-button/neutral-dark-rtl.png | pass | 0 (0.000 percent) |  | none |
+| split-button/neutral-light-ltr.png | pass | 0 (0.000 percent) |  | none |
+| split-button/neutral-light-rtl.png | pass | 0 (0.000 percent) |  | none |
+| split-button/studio-dark-ltr.png | pass | 0 (0.000 percent) |  | none |
+| split-button/studio-dark-rtl.png | pass | 0 (0.000 percent) |  | none |
+| split-button/studio-light-ltr.png | pass | 0 (0.000 percent) |  | none |
+| split-button/studio-light-rtl.png | pass | 0 (0.000 percent) |  | none |
 | toggle-button/desk-dark-ltr-comfortable.png | pass | 0 (0.000 percent) |  | none |
 | toggle-button/desk-dark-ltr-compact.png | pass | 0 (0.000 percent) |  | none |
 | toggle-button/desk-dark-ltr.png | pass | 0 (0.000 percent) |  | none |
