@@ -1,3 +1,5 @@
+import { readFileSync } from 'node:fs';
+import { join } from 'node:path';
 import { render, screen, within } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 import { createRef } from 'react';
@@ -38,6 +40,40 @@ describe('collapseItems', () => {
 
   it('does not collapse a single step', () => {
     expect(collapseItems(3, 2)).toEqual([0, 1, 2]);
+  });
+
+  it('reads a maxItems below 3 as 3, and one that is not finite as none', () => {
+    for (const max of [0, 1, 2, -4, 2.5]) expect(collapseItems(6, max)).toEqual(collapseItems(6, 3));
+    expect(collapseItems(6, 3)).toEqual([0, 'overflow', 5]);
+    expect(collapseItems(6, Number.NaN)).toEqual([0, 1, 2, 3, 4, 5]);
+    expect(collapseItems(6, Number.POSITIVE_INFINITY)).toEqual([0, 1, 2, 3, 4, 5]);
+  });
+});
+
+describe('Breadcrumbs.css truncation', () => {
+  const read = (name: string) =>
+    readFileSync(join(process.cwd(), `packages/css/src/components/${name}.css`), 'utf8').replace(/\/\*[\s\S]*?\*\//g, '');
+  /** Attribute and pseudo class count of a simple selector list: enough to compare these rules. */
+  const weight = (selector: string) => (selector.replace(/:is\([^)]*\)/g, ':x').match(/\[[^\]]+\]|:[a-z-]+/g) ?? []).length;
+  const rules = (css: string, property: string) =>
+    [...css.matchAll(/([^{}]+)\{([^{}]*)\}/g)].filter(([, , body]) => body!.includes(`${property}:`)).map(([, sel]) => sel!.trim());
+
+  it('the step width beats Link standalone, which is imported later at the same layer', () => {
+    const link = rules(read('Link'), 'max-inline-size').find((sel) => sel.includes('[data-standalone]'));
+    expect(link).toBeDefined();
+    const cap = rules(read('Breadcrumbs'), 'max-inline-size').find((sel) => sel.includes("[data-part='link']") && !sel.includes(':is('));
+    expect(cap).toBeDefined();
+    expect(weight(cap!)).toBeGreaterThan(weight(link!));
+  });
+
+  it('a hovered or focused step shows whole: it wraps inside its row', () => {
+    const css = read('Breadcrumbs');
+    const open = [...css.matchAll(/([^{}]+)\{([^{}]*)\}/g)].find(([, sel]) => sel!.includes(':is(:hover, :focus-visible)'));
+    expect(open).toBeDefined();
+    expect(weight(open![1]!)).toBeGreaterThan(weight(rules(read('Link'), 'max-inline-size').find((sel) => sel.includes('[data-standalone]'))!));
+    expect(open![2]).toMatch(/white-space:\s*normal/);
+    expect(open![2]).toMatch(/overflow:\s*visible/);
+    expect(open![2]).toMatch(/max-inline-size:\s*100%/);
   });
 });
 

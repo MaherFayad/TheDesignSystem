@@ -79,20 +79,27 @@
 
   /*
    * With a hover pointer, a long link step is one line that ends in an
-   * ellipsis; hover and keyboard focus show it whole. No property of Link
+   * ellipsis; hover and keyboard focus show it whole, wrapping inside its row
+   * when it is wider than the row (WCAG 1.4.10 at 320px). No property of Link
    * covers truncation, so these declarations are set here. Without hover
    * (touch), steps wrap and nothing is cut off.
+   *
+   * The selector names [data-ds='link'] as well as the part: Link.css sets
+   * max-inline-size on [data-ds='link'][data-standalone] at the same
+   * specificity and is imported later, so a part only rule would lose.
    */
   @media (hover: hover) {
-    [data-ds='breadcrumbs'] [data-part='link'] {
+    [data-ds='breadcrumbs'] [data-part='link'][data-ds='link'] {
       max-inline-size: var(--_breadcrumbs-item-max);
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
     }
 
-    [data-ds='breadcrumbs'] [data-part='link']:is(:hover, :focus-visible) {
-      max-inline-size: none;
+    [data-ds='breadcrumbs'] [data-part='link'][data-ds='link']:is(:hover, :focus-visible) {
+      max-inline-size: 100%;
+      overflow: visible;
+      white-space: normal;
     }
   }
 
