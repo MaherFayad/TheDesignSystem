@@ -1,0 +1,129 @@
+{
+  "name": "Dock",
+  "kind": "component",
+  "family": "navigation",
+  "summary": "A row of app shortcuts at the block end of the screen: Desk's glass dock with a magnify effect, a plain row of icon tiles in other styles.",
+  "useWhen": [
+    "A desktop style shell with a set of apps the person opens and switches between",
+    "App shortcuts that show which apps are open",
+    "A launcher row of up to about a dozen destinations with strong icons"
+  ],
+  "avoidWhen": [
+    "Bottom navigation on a phone",
+    "Commands that act on the current content",
+    "Destinations whose icons do not say what they are",
+    "Main site navigation"
+  ],
+  "insteadUse": {
+    "Bottom navigation on a phone": "TabBar",
+    "Commands on the current content": "Toolbar",
+    "A narrow column of app destinations": "Rail",
+    "Main site navigation": "Navbar or Sidebar"
+  },
+  "anatomy": ["root", "item", "item-icon", "item-label", "item-status", "item-indicator", "separator"],
+  "parts": { "DockItem": "item", "DockSeparator": "separator" },
+  "slots": { "root": { "accepts": ["DockItem", "DockSeparator"], "min": 1, "max": 16 } },
+  "props": {
+    "aria-label": { "type": "string", "description": "Dock: required unless aria-labelledby is set. Names the landmark: Apps." },
+    "size": {
+      "type": ["md", "lg"],
+      "default": "md",
+      "description": "Dock: md tiles are size.control.lg (44px); lg tiles are 1.25 times that, for a desktop home screen."
+    },
+    "label": { "type": "string", "description": "DockItem: the app name. It is the link text, drawn above the tile on hover and focus; never only a native title." },
+    "icon": { "type": "string | node", "description": "DockItem: a system icon name drawn in a tile, or a node such as an app image (decorative, empty alt)." },
+    "href": { "type": "string", "description": "DockItem: the app's route. An app that opens a window still has one (a route or a hash) and handles onClick." },
+    "active": { "type": "boolean", "default": false, "description": "DockItem: the current page belongs to this app. aria-current page, data-active and a ring on the tile." },
+    "open": { "type": "boolean", "default": false, "description": "DockItem: the app has an open window. data-open, the dot under the tile, and the word open in the name." },
+    "openLabel": { "type": "string", "default": "open", "description": "DockItem: the words the open state adds to the name: Files, open. Arabic: مفتوح." },
+    "asChild": { "type": "boolean", "default": false, "description": "DockItem: renders its one child element (a router link) as the item." }
+  },
+  "states": ["data-active", "data-open"],
+  "a11y": {
+    "role": "navigation (the nav landmark) with a name; each item is a link, the current app's with aria-current page. Separators are decorative.",
+    "focus": "Every item is a tab stop, in reading order. Focus shows the ring on the tile and draws the name.",
+    "keys": {
+      "Tab": "Moves to the next app",
+      "Shift+Tab": "Moves to the previous app",
+      "Enter": "Follows the link, or runs the item's onClick"
+    },
+    "announce": "Each link reads the app name, open when the app is open, and current page for the current app.",
+    "notes": [
+      "The name is always the link text (WCAG 2.4.4, 4.1.2). It is drawn on hover and focus with opacity, so it is read at all times; no native title attribute.",
+      "Open is shown by the dot and said in the name; current is shown by a ring on the tile and aria-current, never by color alone.",
+      "Magnify (Desk) scales the tile with transform only and is off under reduced motion; the name still appears.",
+      "A fixed dock covers content unless the page keeps the same room at its block end (WCAG 2.4.11): the layout (PageShell) reserves it.",
+      "Tiles are 44px at md (WCAG 2.5.8).",
+      "Many apps wrap onto a second row rather than scroll the page sideways (WCAG 1.4.10).",
+      "Every item is a link. The order allows buttons; a system Button would own the item's parts, so an app that opens a window keeps an href and handles onClick."
+    ]
+  },
+  "content": {
+    "en": { "label": "The app name, a noun, sentence case: Files, Mail, Calendar.", "landmark": "Apps." },
+    "ar": { "label": "Noun form labels, white Saudi dialect, no diacritics: الملفات، البريد، التقويم.", "open": "مفتوح." }
+  },
+  "tokens": [
+    "color.bg.surface-2",
+    "color.bg.surface-4",
+    "color.border.subtle",
+    "color.border.default",
+    "color.border.strong",
+    "color.bg.overlay-10",
+    "color.bg.overlay-20",
+    "color.text.default",
+    "color.material.dock",
+    "color.material.glass-border",
+    "focus.shadow.ring",
+    "size.control.lg",
+    "space.4xs",
+    "space.3xs",
+    "space.2xs",
+    "space.xs",
+    "space.s",
+    "radius.card",
+    "radius.panel",
+    "radius.window",
+    "radius.sm",
+    "radius.pill",
+    "elevation.tooltip",
+    "elevation.window-soft",
+    "blur.glass",
+    "blur.window-saturation",
+    "font.family.sans",
+    "font.size.xs",
+    "font.weight.medium",
+    "font.leading.snug",
+    "border.width.default",
+    "border.width.strong",
+    "duration.base",
+    "duration.fast",
+    "ease.emphasized",
+    "ease.default"
+  ],
+  "motion": "fade-rise",
+  "frameworks": {
+    "react": {
+      "status": "ready",
+      "behavior": "hand built nav of links",
+      "example": "Dock.demo.tsx",
+      "note": "The name fades in on hover and focus (opacity); Desk magnifies the tile with a transform. Both collapse under reduced motion."
+    },
+    "angular": { "status": "planned", "behavior": "hand built" },
+    "native": { "status": "not-applicable", "note": "A desktop shell part. Phone layouts use TabBar." }
+  },
+  "styles": {
+    "studio": "A plain row: a surface-2 bar with a subtle hairline, overlay-10 tiles, no magnify.",
+    "desk": "Glass: the dock material with the glass blur, the window radius and soft window shadow, larger tile corners, and magnify: the tile under the pointer or focus grows 1.25 times and lifts, its neighbors 1.1 times. Solid under reduced transparency and more contrast; no magnify under reduced motion.",
+    "neutral": "Token driven; applies once the Neutral pack is merged.",
+    "liquid": "Planned: a glass dock."
+  },
+  "mistakes": [
+    { "wrong": "An app name only in a native title on hover", "right": "label: the link text, drawn on hover and focus" },
+    { "wrong": "Open apps shown only by a brighter icon", "right": "open: the dot, and the word open in the name" },
+    { "wrong": "A fixed dock over the last line of the page", "right": "Reserve the dock's height at the end of the page" },
+    { "wrong": "A Dock as phone navigation", "right": "TabBar" },
+    { "wrong": "Commands in the dock: Save, Share", "right": "Toolbar" }
+  ],
+  "contract": { "optionalParts": ["item-status", "item-indicator", "separator"] },
+  "since": "0.1.0"
+}

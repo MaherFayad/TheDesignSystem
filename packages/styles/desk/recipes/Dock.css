@@ -1,0 +1,52 @@
+/*
+ * Desk recipe for Dock: the glass dock with the magnify effect, what the
+ * tokens cannot say. It sets the private properties of Dock.css.
+ * Source: the Desk dials (menu bar, dock, windows; glass at 24 and 40px
+ * blur) and the color.material.dock token. GoBanana `Dock.tsx` was not
+ * reachable in this session.
+ */
+@layer ds.recipes {
+  [data-style='desk'] [data-ds='dock'] {
+    --_dock-bg: var(--ds-color-material-dock);
+    --_dock-border-color: var(--ds-color-material-glass-border);
+    --_dock-radius: var(--ds-radius-window);
+    --_dock-shadow: var(--ds-elevation-window-soft);
+    --_dock-backdrop: blur(var(--ds-blur-glass)) saturate(var(--ds-blur-window-saturation));
+    --_dock-tile-bg: var(--ds-color-bg-overlay-10);
+    --_dock-tile-radius: var(--ds-radius-card);
+    /* Magnify: the tile under the pointer or the focus grows from its base and lifts. */
+    --_dock-scale: 1.25;
+    --_dock-lift: var(--ds-space-xs);
+  }
+
+  /* The neighbors grow a little, so the row swells around the pointer. */
+  [data-style='desk'] [data-ds='dock'] > [data-part='item']:has(+ [data-part='item']:hover),
+  [data-style='desk'] [data-ds='dock'] > [data-part='item']:hover + [data-part='item'] {
+    --_dock-item-transform: translateY(calc(-0.5 * var(--_dock-lift))) scale(1.1);
+  }
+
+  /* Magnify is motion: off under reduced motion (the base also collapses the transition). */
+  @media (prefers-reduced-motion: reduce) {
+    [data-style='desk'] [data-ds='dock'] {
+      --_dock-scale: 1;
+      --_dock-lift: 0;
+    }
+
+    [data-style='desk'] [data-ds='dock'] > [data-part='item'] {
+      --_dock-item-transform: none;
+    }
+  }
+
+  /* The token build makes the glass solid in these modes; the blur goes too. */
+  @media (prefers-reduced-transparency: reduce) {
+    [data-style='desk'] [data-ds='dock'] {
+      --_dock-backdrop: none;
+    }
+  }
+
+  @media (prefers-contrast: more) {
+    [data-style='desk'] [data-ds='dock'] {
+      --_dock-backdrop: none;
+    }
+  }
+}
