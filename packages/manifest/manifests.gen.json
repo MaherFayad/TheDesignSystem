@@ -102,7 +102,8 @@
       "Navigation inside text": "Link",
       "A setting that stays on or off": "Switch",
       "One of several options": "SegmentedControl",
-      "A list of actions behind one control": "DropdownMenu"
+      "A list of actions behind one control": "DropdownMenu",
+      "A pressed or toggled state": "ToggleButton (order 1.1.5). Until it lands, use a Button with aria-pressed and swap its emphasis between solid and ghost"
     },
     "anatomy": [
       "root",
@@ -415,6 +416,202 @@
     "since": "0.1.0"
   },
   {
+    "name": "ButtonGroup",
+    "kind": "component",
+    "family": "actions",
+    "summary": "A labelled row or column of two to five related actions, spaced apart or attached into one seamed control.",
+    "useWhen": [
+      "Two to five actions on the same object that belong together: save, preview and share a page",
+      "A compact set of icon actions in a toolbar, attached: zoom in and zoom out, previous and next page",
+      "The actions of a form or a card footer, spaced, so they share one size and wrap together",
+      "The base of a split control: a main action joined to its menu trigger (SplitButton)"
+    ],
+    "avoidWhen": [
+      "Choosing one value or view from a set, where one option stays selected",
+      "Turning options on and off, alone or several at once",
+      "More than five actions, or actions that are rarely used",
+      "Actions that do not relate to each other, only placed near each other"
+    ],
+    "insteadUse": {
+      "One choice among views or modes": "SegmentedControl",
+      "Options that stay on or off": "ToggleGroup",
+      "More than five actions, or rare ones": "DropdownMenu, or one main Button plus a DropdownMenu",
+      "A main action with related variants": "SplitButton",
+      "A bar of mixed controls with arrow key navigation": "Toolbar",
+      "Navigation between pages": "Pagination or Link"
+    },
+    "anatomy": [
+      "root"
+    ],
+    "slots": {
+      "root": {
+        "accepts": [
+          "Button",
+          "IconButton",
+          "ToggleButton",
+          "SplitButton"
+        ],
+        "min": 1,
+        "max": 5
+      }
+    },
+    "props": {
+      "aria-label": {
+        "type": "string",
+        "description": "The group's name, for example Page actions. Required unless aria-labelledby is set."
+      },
+      "aria-labelledby": {
+        "type": "string",
+        "description": "The id of a visible heading that names the group. Required unless aria-label is set."
+      },
+      "size": {
+        "type": [
+          "xs",
+          "sm",
+          "md",
+          "lg"
+        ],
+        "default": "md",
+        "description": "Passed to every child that does not set its own size. Spaced xs and sm groups use the smaller gap."
+      },
+      "emphasis": {
+        "type": [
+          "solid",
+          "soft",
+          "outline",
+          "ghost"
+        ],
+        "description": "Passed to every child that does not set its own. No default: each child keeps its own default (soft for Button, ghost for IconButton). No link: links are not grouped."
+      },
+      "shape": {
+        "type": [
+          "default",
+          "pill",
+          "square"
+        ],
+        "description": "Passed to every child that does not set its own. No default. Attached, only the outer corners take the shape."
+      },
+      "orientation": {
+        "type": [
+          "horizontal",
+          "vertical"
+        ],
+        "default": "horizontal",
+        "description": "A row or a column. Sets data-orientation. A spaced row wraps; a column stretches its children to the widest."
+      },
+      "attached": {
+        "type": "boolean",
+        "default": false,
+        "description": "Joins the children: no gap, inner corners square on the logical sides (they flip in RTL), a 1px divider. Sets data-attached. An attached row never wraps; its labels end in an ellipsis when squeezed."
+      },
+      "fullWidth": {
+        "type": "boolean",
+        "default": false,
+        "description": "Fills the width of its container; Buttons in a row share it equally, IconButtons keep their square. Sets data-full-width."
+      },
+      "children": {
+        "type": "node",
+        "required": true,
+        "description": "Two to five Buttons, IconButtons, ToggleButtons or SplitButtons. Tone stays per child."
+      }
+    },
+    "states": [
+      "data-orientation",
+      "data-attached",
+      "data-full-width"
+    ],
+    "a11y": {
+      "role": "group, named by aria-label or aria-labelledby",
+      "focus": "No roving focus: every child is its own tab stop, disabled children included (they use aria-disabled). Attached children draw the focus ring inside their box, so the next child never covers it.",
+      "keys": {
+        "Tab": "Moves focus to the next child, then out of the group",
+        "Shift+Tab": "Moves focus to the previous child"
+      },
+      "announce": "Screen readers announce the group name when focus enters it, then each child by its own name.",
+      "native": {
+        "accessibilityRole": "none"
+      },
+      "notes": [
+        "The group adds no keys. Arrow keys do nothing here; a set that should move with arrows is a Toolbar, a ToggleGroup or a SegmentedControl.",
+        "Every IconButton child needs its own label: the group name does not name its children.",
+        "Tone stays on each child, so a danger action in a group stays danger.",
+        "Under forced colors the system draws every child's border, so the seam stays visible, and the focus outline is pulled inside the child."
+      ]
+    },
+    "content": {
+      "en": {
+        "name": "Name the group by what its actions act on: Page actions, Board view. Sentence case.",
+        "labels": "Each Button is a verb plus a noun in sentence case: Save draft, Preview page. Never OK, Continue, Confirm or Yes.",
+        "order": "The most used action first, in the reading direction. A destructive action last, or apart."
+      },
+      "ar": {
+        "name": "Noun form, no diacritics: إجراءات الصفحة.",
+        "labels": "Noun form labels, no diacritics: حفظ المسودة، معاينة الصفحة. Never the imperative.",
+        "order": "The same order as English: it flips with the direction, so the first action sits on the right."
+      }
+    },
+    "tokens": [
+      "space.xs",
+      "space.2xs",
+      "border.width.default",
+      "border.width.strong",
+      "color.border.default",
+      "color.focus.ring",
+      "color.focus.ring-on-primary-inner",
+      "color.focus.ring-on-primary-outer"
+    ],
+    "frameworks": {
+      "react": {
+        "status": "ready",
+        "behavior": "hand built, role group",
+        "example": "ButtonGroup.demo.tsx",
+        "note": "No motion: the group itself never moves; the children keep their own (Button press). The axes reach the children through ButtonGroupContext and, for direct children, as props they leave unset."
+      },
+      "angular": {
+        "status": "planned",
+        "behavior": "[dsButtonGroup] host bindings, an injection token for the axes",
+        "note": "The host div is the root. Grouped dsButton directives read the axes from the token and let their own inputs win. ButtonGroup.css is used as is."
+      },
+      "native": {
+        "status": "planned",
+        "behavior": "react-native:View with accessibilityRole none and an accessibilityLabel",
+        "note": "Attached corners through the style function, flipped by I18nManager."
+      }
+    },
+    "styles": {
+      "studio": "Overlay filled children. Attached, the seam is color.border.default over the overlay fill; the control radius rounds only the outer corners.",
+      "desk": "Children are pills, so an attached group reads as one pill with square inner corners. The roll label runs in each child as usual.",
+      "neutral": "Takes the tokens of the Neutral style, no recipe."
+    },
+    "mistakes": [
+      {
+        "wrong": "A ButtonGroup with one button marked as the selected view",
+        "right": "SegmentedControl, which keeps one option selected and says so"
+      },
+      {
+        "wrong": "Eight actions in one attached group",
+        "right": "At most five; the rest in a DropdownMenu behind a More actions IconButton"
+      },
+      {
+        "wrong": "A group with no aria-label or aria-labelledby",
+        "right": "A name that says what the actions act on: Page actions"
+      },
+      {
+        "wrong": "Two solid accent buttons attached side by side as two main actions",
+        "right": "One main action, or a SplitButton for a main action with variants"
+      },
+      {
+        "wrong": "An attached group of Buttons and IconButtons with no emphasis, so soft Buttons sit next to a ghost IconButton",
+        "right": "Set emphasis on the attached group, so every child shares one fill"
+      },
+      {
+        "wrong": "Arrow keys wired to move between the children",
+        "right": "Leave each child in the tab order, or use Toolbar for arrow key navigation"
+      }
+    ],
+    "since": "0.1.0"
+  },
+  {
     "name": "Dialog",
     "kind": "component",
     "family": "overlays",
@@ -534,7 +731,7 @@
       },
       "rootProps": {
         "type": "object",
-        "description": "DialogContent: props for the root layer. className and style go to the root too; ref and every other prop go to the panel, the element with role dialog."
+        "description": "DialogContent: props for the root layer. className and style go to the root too; ref and every other prop go to the panel, the element with role dialog, Radix Content props included. The useful ones: onOpenAutoFocus (preventDefault to place focus yourself), onCloseAutoFocus (preventDefault and focus another element when the trigger is gone, for example after a delete), onEscapeKeyDown (preventDefault to keep the dialog open, for example while a field holds unsaved text)."
       },
       "DialogTrigger": {
         "type": "node",
@@ -555,7 +752,7 @@
     ],
     "a11y": {
       "role": "dialog (the panel), modal: Radix hides the rest of the page from assistive tech and keeps focus inside. Named by the title (aria-labelledby), described by the description (aria-describedby).",
-      "focus": "On open, focus goes to an element marked data-autofocus; else to the first field in the body; else to the first footer action that is not tone danger; when tone is danger, to the Cancel action (the DialogClose) or else the first footer action that is not tone danger, never a destructive one; else to the close control. On close, focus returns to the trigger, or to the element that had focus before the dialog opened.",
+      "focus": "On open, focus goes to an element marked data-autofocus; else to the first field in the body; else to the first footer action that is not tone danger; when tone is danger, to the Cancel action (the DialogClose) or else the first footer action that is not tone danger, never a destructive one; else to the close control. On close, focus returns to the trigger, or to the element that had focus before the dialog opened; when that element is gone, to its nearest connected focusable ancestor, else the first tab stop of main, else the body.",
       "keys": {
         "Escape": "Closes the dialog, unless dismissible is false. Escape from inside the dialog closes the dialog even while a toast shows above it. A nested dialog or a menu on top closes first.",
         "Tab": "Moves to the next control inside the dialog and wraps from the last to the first",
@@ -573,7 +770,8 @@
         "No native title attribute.",
         "In Desk the title and the close control sit inside the title bar, so they are parts of TitleBar and WindowControls there (a part belongs to the nearest root). The dialog's own parts in Desk are titlebar, description, body and footer; title, close and controls are listed here for Studio and for style.json optionalParts.",
         "dismissible false is for short waits, while the dialog's own action runs. The app must set it back to true when the action ends, success or failure. The close control (the Studio IconButton or the Desk close light) is aria-disabled and stays focusable.",
-        "Development builds warn in the console when a dialog opens with no title, and when its footer holds more than three actions."
+        "Development builds warn in the console when a dialog opens with no title, and when its footer holds more than three actions.",
+        "A form in a dialog: the form element lives in DialogBody with an id and an onSubmit; the submit Button sits in DialogFooter with type=\"submit\" and form={id}, so Enter in a field and the button both submit. Close the dialog from onSubmit when the save succeeds, not from a DialogClose around the submit button."
       ]
     },
     "content": {
@@ -695,6 +893,10 @@
       {
         "wrong": "Waiting for animationend before removing a closed dialog",
         "right": "Dialog.css sets the animations to none under reduced motion, so Radix removes the dialog at once"
+      },
+      {
+        "wrong": "A <form> that wraps the whole DialogContent, or a submit Button inside DialogClose",
+        "right": "<form id=\"rename\" onSubmit={save}> inside DialogBody; <Button type=\"submit\" form=\"rename\" tone=\"accent\" emphasis=\"solid\"> in DialogFooter; close on success"
       }
     ],
     "contract": {
@@ -708,6 +910,413 @@
         "body",
         "footer"
       ]
+    },
+    "since": "0.1.0"
+  },
+  {
+    "name": "DropdownMenu",
+    "kind": "component",
+    "family": "overlays",
+    "summary": "A menu of actions or options that opens from a trigger button. Items, checkbox and radio items, labels, separators and submenus, with arrow keys, typeahead and Escape.",
+    "useWhen": [
+      "More actions than fit next to the object they act on",
+      "A set of related commands behind one button, such as the actions of a board",
+      "Options that are switched on and off, or one chosen from a short set, next to the commands they change"
+    ],
+    "avoidWhen": [
+      "Choosing a value for a form field",
+      "Actions that need a right click to find",
+      "Rich content, a form or a picture in the panel",
+      "One or two actions that fit on the page as buttons",
+      "Navigation between pages of a site"
+    ],
+    "insteadUse": {
+      "Choosing a value for a form field": "Select",
+      "Right click on an item": "ContextMenu",
+      "Rich content or a small form": "Popover",
+      "One or two actions": "Button",
+      "The application menu row": "Menubar",
+      "Search and run any command": "CommandPalette"
+    },
+    "anatomy": [
+      "root",
+      "label",
+      "item",
+      "checkbox-item",
+      "radio-item",
+      "indicator",
+      "start",
+      "text",
+      "shortcut",
+      "end",
+      "group",
+      "separator",
+      "sub-trigger",
+      "sub-content"
+    ],
+    "parts": {
+      "DropdownMenuContent": "root",
+      "DropdownMenuLabel": "label",
+      "DropdownMenuItem": "item",
+      "DropdownMenuCheckboxItem": "checkbox-item",
+      "DropdownMenuRadioItem": "radio-item",
+      "DropdownMenuGroup": "group",
+      "DropdownMenuRadioGroup": "group",
+      "DropdownMenuSeparator": "separator",
+      "DropdownMenuSubTrigger": "sub-trigger",
+      "DropdownMenuSubContent": "sub-content"
+    },
+    "slots": {
+      "root": {
+        "accepts": [
+          "DropdownMenuLabel",
+          "DropdownMenuItem",
+          "DropdownMenuCheckboxItem",
+          "DropdownMenuRadioGroup",
+          "DropdownMenuGroup",
+          "DropdownMenuSeparator",
+          "DropdownMenuSub"
+        ],
+        "min": 1,
+        "max": 12
+      },
+      "group": {
+        "accepts": [
+          "DropdownMenuLabel",
+          "DropdownMenuItem",
+          "DropdownMenuCheckboxItem",
+          "DropdownMenuRadioItem"
+        ]
+      },
+      "sub-content": {
+        "accepts": [
+          "DropdownMenuLabel",
+          "DropdownMenuItem",
+          "DropdownMenuCheckboxItem",
+          "DropdownMenuRadioGroup",
+          "DropdownMenuGroup",
+          "DropdownMenuSeparator",
+          "DropdownMenuSub"
+        ],
+        "min": 1,
+        "max": 12
+      },
+      "text": {
+        "accepts": "text",
+        "min": 1,
+        "max": 1
+      },
+      "label": {
+        "accepts": "text",
+        "max": 1
+      },
+      "shortcut": {
+        "accepts": "text",
+        "max": 1
+      }
+    },
+    "props": {
+      "open": {
+        "type": "boolean",
+        "description": "DropdownMenu: controlled open state, with onOpenChange."
+      },
+      "defaultOpen": {
+        "type": "boolean",
+        "default": false,
+        "description": "DropdownMenu."
+      },
+      "onOpenChange": {
+        "type": "function",
+        "description": "DropdownMenu: called with true on open and false on close (an item chosen, Escape, a click outside)."
+      },
+      "modal": {
+        "type": "boolean",
+        "default": false,
+        "description": "DropdownMenu: true hides the rest of the page from assistive tech (aria-hidden) and blocks pointer input outside while open. Default false: the menu button pattern needs neither, and axe flags focusable content under aria-hidden when no aria-modal dialog is open."
+      },
+      "size": {
+        "type": [
+          "sm",
+          "md"
+        ],
+        "default": "md",
+        "description": "DropdownMenu: row height and type size. sm rows are 24px (size.control.xs), md rows follow menu.item.height (24, 28 and 32px in the compact, default and comfortable densities). Submenus take the size of their menu."
+      },
+      "side": {
+        "type": [
+          "block-end",
+          "block-start",
+          "inline-end",
+          "inline-start"
+        ],
+        "default": "block-end",
+        "description": "DropdownMenuContent: where the menu opens, in logical words. block-end is under the trigger; inline-end is after it in reading order, so on its left in Arabic. It flips to the other side when there is no room."
+      },
+      "align": {
+        "type": [
+          "start",
+          "center",
+          "end"
+        ],
+        "default": "start",
+        "description": "DropdownMenuContent: how the menu lines up with the trigger. start is the trigger's inline start edge, its right edge in Arabic."
+      },
+      "sideOffset": {
+        "type": "number",
+        "default": 4,
+        "description": "DropdownMenuContent: the gap to the trigger in px."
+      },
+      "collisionPadding": {
+        "type": "number",
+        "default": 8,
+        "description": "DropdownMenuContent and DropdownMenuSubContent: the space kept from the viewport edge in px. The menu is never taller than the room left: it scrolls inside."
+      },
+      "loop": {
+        "type": "boolean",
+        "default": false,
+        "description": "DropdownMenuContent: ArrowDown on the last item goes to the first."
+      },
+      "DropdownMenuItem.tone": {
+        "type": [
+          "neutral",
+          "danger"
+        ],
+        "default": "neutral",
+        "description": "An item's tone. danger marks a destructive action: the danger text color, and the label names what is destroyed. The menu root has no tone."
+      },
+      "start": {
+        "type": "node",
+        "description": "Items and the sub trigger: leading content, a system icon name or a node. Decorative: the text names the item. Rows without it line their text up with rows that have it."
+      },
+      "end": {
+        "type": "node",
+        "description": "Items: trailing content, a system icon name or a node. The sub trigger always shows chevron-forward here, mirrored in RTL."
+      },
+      "shortcut": {
+        "type": "string",
+        "description": "Items: a key hint shown at the inline end as plain text, left to right in every language (for example Ctrl+D). It does not bind the key; the app does."
+      },
+      "disabled": {
+        "type": "boolean",
+        "default": false,
+        "description": "Items and DropdownMenuTrigger: aria-disabled and data-disabled. A disabled item stays in the menu, is skipped by the arrow keys and does not select. Drawn with opacity.disabled."
+      },
+      "onSelect": {
+        "type": "function",
+        "description": "Items: runs on click, Enter and Space, then the menu closes. Call event.preventDefault() to keep it open."
+      },
+      "checked": {
+        "type": [
+          "true",
+          "false",
+          "indeterminate"
+        ],
+        "description": "DropdownMenuCheckboxItem, with onCheckedChange. The check icon shows it, a minus for indeterminate."
+      },
+      "value": {
+        "type": "string",
+        "description": "DropdownMenuRadioGroup, with onValueChange: the chosen DropdownMenuRadioItem value."
+      },
+      "textValue": {
+        "type": "string",
+        "description": "Items: the text typeahead matches. Default: the label when it is plain text."
+      },
+      "DropdownMenuTrigger": {
+        "type": "node",
+        "description": "One child element, a system Button or IconButton, rendered as the trigger (always asChild). It gets aria-haspopup menu, aria-expanded and data-state, names the menu, and takes focus back on close."
+      },
+      "DropdownMenuSub": {
+        "type": "node",
+        "description": "A submenu: a DropdownMenuSubTrigger, then a DropdownMenuSubContent. open, defaultOpen and onOpenChange as on the root."
+      }
+    },
+    "states": [
+      "open",
+      "closed",
+      "checked",
+      "unchecked",
+      "indeterminate",
+      "data-highlighted",
+      "data-disabled"
+    ],
+    "a11y": {
+      "role": "menu (the root and each submenu). Not modal by default: the page stays in the accessibility tree, Tab does not leave the open menu, and a click or focus outside closes it. Items are menuitem, menuitemcheckbox (aria-checked true, false or mixed) and menuitemradio inside a group. The trigger has aria-haspopup menu and aria-expanded, and names the menu (aria-labelledby).",
+      "focus": "Opened with Enter, Space or ArrowDown on the trigger: focus on the first item. Opened with ArrowUp: focus on the last item. Opened with the pointer: focus on the menu, the first arrow key goes to an item. The highlight follows the pointer and the keys. On close, focus returns to the trigger.",
+      "keys": {
+        "ArrowDown": "On the trigger, opens the menu with focus on the first item. In the menu, moves to the next item, skipping disabled ones",
+        "ArrowUp": "On the trigger, opens the menu with focus on the last item. In the menu, moves to the previous item",
+        "Home": "Moves to the first item",
+        "End": "Moves to the last item",
+        "Enter": "On the trigger, opens the menu. On an item, selects it and closes the menu; on a sub trigger, opens the submenu",
+        "Space": "The same as Enter",
+        "ArrowRight": "On a sub trigger, opens the submenu with focus on its first item. In a submenu, nothing. In right to left layouts this is ArrowLeft",
+        "ArrowLeft": "In a submenu, closes it and returns focus to its sub trigger. In right to left layouts this is ArrowRight",
+        "Escape": "Closes the menu, or only the open submenu, and returns focus to the trigger",
+        "Typeahead": "Typing letters moves to the next item whose label starts with them"
+      },
+      "announce": "The menu is read with the trigger's name when it opens. Each item reads its label, its shortcut, its checked state and whether it is disabled or opens a submenu.",
+      "notes": [
+        "Tab does not move focus while the menu is open (Radix keeps it in the menu); Escape or choosing an item returns focus to the trigger.",
+        "Disabled items use aria-disabled: they stay in the menu so a screen reader user learns they exist, and the arrow keys skip them.",
+        "Checked state is shown by a check icon, a minus for indeterminate, never by color alone (WCAG 1.4.1).",
+        "A danger item is drawn in the danger text color; its label also names the action (Delete board), so color is never the only cue.",
+        "The menu never grows past the viewport: it takes the room Radix measures on the open side, minus collisionPadding, and scrolls inside. Rows are at least 24px tall (size.target-min).",
+        "Shortcut hints are plain text set left to right, so key names read the same inside Arabic.",
+        "The submenu chevron is chevron-forward and mirrors in right to left layouts; the submenu opens toward the inline end and Radix follows the direction set by Theme.",
+        "Contract keys: ArrowDown and ArrowUp are checked on the trigger (they open the menu and move focus). Home, End, Enter, Space, the submenu arrows and typeahead are covered by the unit tests, since the generic suite cannot press them inside an open menu.",
+        "No native title attribute."
+      ]
+    },
+    "content": {
+      "en": {
+        "trigger": "Names the menu: a noun (Board actions, Edit) or a verb plus a noun. An icon only trigger names the object too: More frame actions, never only More.",
+        "items": "Verb plus noun, sentence case: Duplicate board, Copy link. Options are nouns or short phrases: Show grid, Name. No ending punctuation, no ellipsis unless the item opens a dialog that asks for more.",
+        "label": "A short noun over the group: Board, Sort by.",
+        "danger": "Name what is destroyed: Delete board, never Delete alone or Remove.",
+        "count": "Up to 12 entries at the top level. Group or split longer menus, or use a submenu."
+      },
+      "ar": {
+        "items": "Noun form labels, white Saudi dialect, no diacritics: تكرار اللوحة، نسخ الرابط، حذف اللوحة.",
+        "label": "A short noun: اللوحة، الترتيب حسب.",
+        "shortcut": "Key names stay in Latin letters and left to right: Ctrl+D."
+      }
+    },
+    "tokens": [
+      "color.bg.surface-2",
+      "color.bg.surface-3",
+      "color.bg.overlay-10",
+      "color.text.default",
+      "color.text.muted",
+      "color.state.danger-text",
+      "color.state.danger-tint-10",
+      "color.state.danger-solid",
+      "color.state.danger-on-solid",
+      "color.primary.fill",
+      "color.primary.text",
+      "color.material.glass-strong",
+      "color.material.glass-solid",
+      "color.border.hairline",
+      "color.border.strong",
+      "color.focus.ring",
+      "color.focus.ring-on-primary-inner",
+      "radius.card",
+      "radius.panel",
+      "radius.field",
+      "menu.item.height",
+      "menu.item.radius",
+      "menu.width.min",
+      "elevation.menu",
+      "blur.window-strong",
+      "blur.window-saturation",
+      "size.target-min",
+      "size.control.xs",
+      "size.icon.md",
+      "space.4xs",
+      "space.3xs",
+      "space.2xs",
+      "space.xs",
+      "space.s",
+      "space.m",
+      "border.width.default",
+      "border.width.strong",
+      "font.family.sans",
+      "font.size.xs",
+      "font.size.s",
+      "font.size.m",
+      "font.weight.menu",
+      "font.weight.regular",
+      "font.weight.semibold",
+      "font.leading.snug",
+      "font.leading.arabic.snug",
+      "font.tracking.none",
+      "opacity.disabled",
+      "scale.press",
+      "duration.base",
+      "duration.quick",
+      "ease.emphasized",
+      "ease.exit",
+      "z.menu"
+    ],
+    "motion": "menu-scale",
+    "frameworks": {
+      "react": {
+        "status": "ready",
+        "behavior": "radix:DropdownMenu",
+        "example": "DropdownMenu.demo.tsx",
+        "note": "The content and each submenu are portaled into a Theme that copies the axes of the Theme the menu is in (the Toaster pattern), so tokens, language and direction apply inside. A submenu is its own root carrying data-part sub-content."
+      },
+      "angular": {
+        "status": "planned",
+        "behavior": "cdk:menu"
+      },
+      "native": {
+        "status": "planned",
+        "behavior": "rn-primitives:dropdown-menu"
+      }
+    },
+    "styles": {
+      "studio": "A flat surface: surface-3, the card radius (16px) with 12px rows inside, the menu shadow, no border. The lit row takes the overlay step; a danger row a danger tint. Rows use the menu weight. Separators on surface-2.",
+      "desk": "Glass, from the macOS style menu bar menu: the strong glass material with the strong blur, a hairline, the soft window shadow, the panel radius (12px) with 8px rows inside, regular weight. The lit row is the yellow primary fill with dark text, a danger row lights in the danger fill. Under reduced transparency and more contrast the glass turns solid and the blur goes.",
+      "neutral": "Planned.",
+      "liquid": "Planned: a glass menu, never on top of other glass."
+    },
+    "mistakes": [
+      {
+        "wrong": "A DropdownMenu to choose a value in a form",
+        "right": "Select, which shows the chosen value in the field"
+      },
+      {
+        "wrong": "An icon only trigger named More",
+        "right": "Name the object: More frame actions"
+      },
+      {
+        "wrong": "A checked option shown only by a colored label",
+        "right": "DropdownMenuCheckboxItem or DropdownMenuRadioItem: the check icon carries the state"
+      },
+      {
+        "wrong": "A menu of 30 actions in one flat list",
+        "right": "Up to 12 entries: group with labels and separators, or move the rest into a submenu"
+      },
+      {
+        "wrong": "A bare button or a div with onClick as the trigger",
+        "right": "A system Button or IconButton inside DropdownMenuTrigger"
+      },
+      {
+        "wrong": "Hiding an action that cannot run now",
+        "right": "disabled: the item stays in the menu with aria-disabled, and a Tooltip or the page says why"
+      },
+      {
+        "wrong": "A shortcut typed into the label: Duplicate board (Ctrl+D)",
+        "right": "The shortcut prop, which sets the hint apart and keeps it left to right"
+      }
+    ],
+    "contract": {
+      "trigger": "[data-demo-trigger]",
+      "optionalParts": [
+        "label",
+        "checkbox-item",
+        "radio-item",
+        "indicator",
+        "start",
+        "shortcut",
+        "end",
+        "group",
+        "separator",
+        "sub-trigger",
+        "sub-content"
+      ],
+      "keys": {
+        "ArrowDown": {
+          "focus": "[data-demo-trigger]",
+          "case": "variants",
+          "expect": "focus-moves"
+        },
+        "ArrowUp": {
+          "focus": "[data-demo-trigger]",
+          "case": "variants",
+          "expect": "focus-moves"
+        }
+      }
     },
     "since": "0.1.0"
   },
@@ -1608,6 +2217,218 @@
     "since": "0.1.0"
   },
   {
+    "name": "Link",
+    "kind": "component",
+    "family": "actions",
+    "summary": "Navigation to another page, place or site, inside a sentence or on its own line. Always underlined.",
+    "useWhen": [
+      "Navigation inside running text: a sentence that points to a guide, a policy or a setting",
+      "A link that stands on its own line under a card, a form or an empty state, with standalone",
+      "A link to another site, with external, so it opens a new tab and says so",
+      "A router link that must look like text, through asChild"
+    ],
+    "avoidWhen": [
+      "An action that changes data or starts a task on this page (save, send, delete)",
+      "The main call to action of a view that must read as a button",
+      "Navigation between sections of the app shell or between tabs of one view",
+      "Link text that only says Click here, Here or More"
+    ],
+    "insteadUse": {
+      "An action on this page": "Button",
+      "A link that must look like a button": "Button with asChild",
+      "A quiet action that reads like text but does not navigate": "Button with emphasis link",
+      "Only an icon": "IconButton with asChild",
+      "App navigation": "NavigationMenu or Sidebar",
+      "Views of one page": "Tabs"
+    },
+    "anatomy": [
+      "root",
+      "label",
+      "end"
+    ],
+    "slots": {
+      "label": {
+        "accepts": "text",
+        "min": 1,
+        "max": 1
+      },
+      "end": {
+        "accepts": [
+          "Icon"
+        ],
+        "max": 1
+      }
+    },
+    "props": {
+      "href": {
+        "type": "string",
+        "description": "Where the link goes. Removed while disabled."
+      },
+      "tone": {
+        "type": [
+          "neutral",
+          "accent"
+        ],
+        "default": "neutral",
+        "description": "neutral reads as color.text.link, accent as color.primary.on-surface (the yellow family in Desk)."
+      },
+      "size": {
+        "type": [
+          "xs",
+          "sm",
+          "md",
+          "lg"
+        ],
+        "description": "Font size from font.size xs, s, m and l. No default: without size the link inherits the font size of the text around it, which is what a link in a sentence wants."
+      },
+      "external": {
+        "type": "boolean",
+        "default": false,
+        "description": "Opens a new tab (target _blank, rel noopener noreferrer unless passed) and renders the end part: the external icon, mirrored in RTL, and visually hidden words after a comma."
+      },
+      "externalLabel": {
+        "type": "string",
+        "default": "opens in a new tab",
+        "description": "The hidden words of an external link. Under an Arabic Theme the default is يفتح في تبويب جديد."
+      },
+      "standalone": {
+        "type": "boolean",
+        "default": false,
+        "description": "A link on its own line: an inline flex box at least size.target-min (24px) tall. Sets data-standalone. Leave it off inside a sentence, where the inline target exception of WCAG 2.5.8 applies."
+      },
+      "disabled": {
+        "type": "boolean",
+        "default": false,
+        "description": "Removes the href, sets role link, aria-disabled and data-disabled, and keeps the link in the tab order so a Tooltip can say why. Click and middle click do nothing."
+      },
+      "asChild": {
+        "type": "boolean",
+        "default": false,
+        "description": "Renders the single child element, for example a router link, as the link. A disabled child loses its href."
+      },
+      "children": {
+        "type": "node",
+        "required": true,
+        "description": "The link text. It names the place, not the gesture."
+      }
+    },
+    "states": [
+      "data-disabled",
+      "data-standalone"
+    ],
+    "a11y": {
+      "role": "link (native a with href; role link is set while disabled, when the href is gone)",
+      "focus": "In the tab order, disabled included. A 2px ring from focus.shadow.ring on keyboard focus, drawn around every line of a link that wraps.",
+      "keys": {
+        "Enter": "Follows the link",
+        "Tab": "Moves focus to the next control"
+      },
+      "announce": "The label is the accessible name. An external link adds the hidden words after a comma: Open the docs, opens in a new tab.",
+      "native": {
+        "accessibilityRole": "link",
+        "accessibilityState": [
+          "disabled"
+        ]
+      },
+      "notes": [
+        "The underline is drawn at rest and on hover, so a link in running text is never told apart by color alone (WCAG 1.4.1). Hover makes it thicker.",
+        "Inline target exception (WCAG 2.5.8): a link inside a sentence keeps the line height of the text and may be under 24px tall. A link on its own line takes standalone and is at least 24px tall.",
+        "Space does not follow a link, only Enter, as in the browser.",
+        "The external icon is hidden from assistive tech; the hidden words carry the meaning.",
+        "Under forced colors the system link color applies, the underline takes the text color and the focus outline uses Highlight.",
+        "No native title attribute. Hints come from Tooltip."
+      ]
+    },
+    "content": {
+      "en": {
+        "label": "Name the destination in sentence case: Read the pricing guide, the sharing guide. Never Click here, Here, More or Learn more on its own.",
+        "sentence": "Put the link on the words that say where it goes, not on a whole sentence.",
+        "external": "Do not write opens in a new tab in the visible text: external adds it for screen readers and the icon shows it."
+      },
+      "ar": {
+        "label": "Noun form, no diacritics: دليل المشاركة، سياسة الخصوصية. Never اضغط هنا.",
+        "sentence": "Link only the words that name the place, and keep Latin runs in Bidi.",
+        "digits": "Western digits."
+      }
+    },
+    "tokens": [
+      "color.text.link",
+      "color.text.bright",
+      "color.border.control",
+      "color.primary.on-surface",
+      "color.primary.border",
+      "border.width.default",
+      "border.width.strong",
+      "font.size.xs",
+      "font.size.s",
+      "font.size.m",
+      "font.size.l",
+      "space.3xs",
+      "radius.xs",
+      "size.target-min",
+      "size.icon.sm",
+      "focus.shadow.ring",
+      "color.focus.ring",
+      "opacity.disabled"
+    ],
+    "frameworks": {
+      "react": {
+        "status": "ready",
+        "behavior": "native a, radix:Slot",
+        "example": "Link.demo.tsx",
+        "note": "No motion: color and underline swap at once on hover, so there is no pattern to name and nothing to reduce."
+      },
+      "angular": {
+        "status": "planned",
+        "behavior": "a[dsLink], host bindings",
+        "note": "The host anchor is the root. No asChild: a[dsLink] on a routerLink anchor is the router form."
+      },
+      "native": {
+        "status": "planned",
+        "behavior": "react-native:Text with accessibilityRole link",
+        "note": "A pressable Text inside running text; Linking.openURL for external links."
+      }
+    },
+    "styles": {
+      "studio": "Bright text (color.text.link) with a soft control colored underline that turns to the text color and thickens on hover. Accent reads the same as neutral in Studio, since its primary is the neutral fill.",
+      "desk": "Accent is the yellow family: color.primary.on-surface, yellow on dark and a dark gold on light, with a yellow underline. Neutral matches Studio.",
+      "neutral": "Takes the tokens of the Neutral style, no recipe."
+    },
+    "mistakes": [
+      {
+        "wrong": "Link text Click here or Learn more",
+        "right": "Link text that names the place: Read the pricing guide"
+      },
+      {
+        "wrong": "A link told apart from the sentence by color only",
+        "right": "Link, which keeps the underline at rest"
+      },
+      {
+        "wrong": "A Link that saves, sends or deletes",
+        "right": "A Button; a link only navigates"
+      },
+      {
+        "wrong": "target _blank with no hint",
+        "right": "external, which adds the icon and the hidden words"
+      },
+      {
+        "wrong": "A standalone link row under 24px tall",
+        "right": "standalone on links that sit on their own line"
+      }
+    ],
+    "contract": {
+      "optionalParts": [
+        "end"
+      ],
+      "keys": {
+        "Enter": {
+          "expect": "click"
+        }
+      }
+    },
+    "since": "0.1.0"
+  },
+  {
     "name": "Theme",
     "kind": "component",
     "family": "foundations",
@@ -1723,7 +2544,8 @@
       "notes": [
         "dir and lang on the element let screen readers pick the right voice and let CSS mirror the layout.",
         "The Radix direction provider follows dir, so menus, sliders and arrow keys mirror in right to left.",
-        "Arabic text gets IBM Plex Sans Arabic, zero tracking, taller lines and small text one step up through base.css. Body text keeps its size."
+        "Arabic text gets IBM Plex Sans Arabic, zero tracking, taller lines and small text one step up through base.css. Body text keeps its size.",
+        "A root Theme is needed even when <html> is stamped with themeAttributes(): attributes give the CSS its axes but no React context, so useTheme, useOptionalPart and the Dialog and Toaster portals would fall back to the root defaults (Studio dark, English). Stamp <html> for the first paint and wrap the app in <Theme> with the same axes."
       ],
       "native": {
         "accessibilityRole": "none"
@@ -1771,7 +2593,7 @@
       "react": {
         "status": "ready",
         "behavior": "radix-ui Direction.Provider",
-        "note": "Exports Theme, useTheme, useOptionalPart, themeAttributes and resolveTheme from packages/react/src/theme."
+        "note": "Exports Theme, useTheme, useOptionalPart, themeAttributes and resolveTheme from packages/react/src/theme. themeAttributes() on <html> does not replace the root <Theme>: attributes carry no React context."
       },
       "angular": {
         "status": "ready",
@@ -1799,6 +2621,10 @@
       {
         "wrong": "Reading data-style from the DOM to pick a branch",
         "right": "useTheme().style, or useOptionalPart for a part only one style shows"
+      },
+      {
+        "wrong": "<html {...themeAttributes({ style: \"desk\", lang: \"ar\" })}> with no Theme around the app",
+        "right": "Stamp <html> and also wrap the app in <Theme style=\"desk\" lang=\"ar\">: portals and useTheme read the React context, not the html attributes"
       }
     ],
     "since": "0.1.0"
@@ -1893,7 +2719,7 @@
       "moveHint": {
         "type": "string",
         "default": "Arrow keys move the window. Shift moves it further.",
-        "description": "Description of the move handle, through aria-describedby."
+        "description": "Description of the move handle, through aria-describedby. Under lang=\"ar\" the default is مفاتيح الأسهم لتحريك النافذة، ومع Shift لمسافة أبعد."
       }
     },
     "states": [
@@ -1926,6 +2752,7 @@
       }
     },
     "tokens": [
+      "title-bar.height",
       "size.control.md",
       "size.icon.sm",
       "size.target-min",
@@ -1989,7 +2816,7 @@
     "name": "Toast",
     "kind": "component",
     "family": "feedback",
-    "summary": "A short notice that something happened, shown in a corner and gone on its own. Called from anywhere with toast(); one Toaster renders them.",
+    "summary": "A short notice that something happened, shown in a corner and gone on its own. Called from anywhere with toast(); one Toaster renders them. Call shape: toast(title, options) or toast(options); toast.success, toast.warning, toast.danger and toast.info set the tone; each returns the id; toast.dismiss(id) closes one (or all, without an id), toast.update(id, patch) changes one in place, toast.configure(config) sets the max and the durations for the app.",
     "useWhen": [
       "Confirming that an action the person took has finished: Draft saved, Link copied",
       "A failure the person can fix later or retry from the toast, as tone danger with one action",
@@ -2213,7 +3040,7 @@
         "status": "ready",
         "behavior": "radix:Toast",
         "example": "Toast.demo.tsx",
-        "note": "Toaster renders the shared store from @the-system/shared; toast is re-exported from @the-system/react."
+        "note": "Toaster renders the shared store from @the-system/shared; toast is re-exported from @the-system/react. Call shape: toast(title: string, options?) or toast(options) with title inside; toast.success, toast.warning, toast.danger and toast.info take the same arguments and set tone; toast.dismiss(id?), toast.update(id, { tone, title, description }), toast.configure({ max, durations }). From packages/shared/src/toast.ts."
       },
       "angular": {
         "status": "planned",
@@ -2264,6 +3091,10 @@
       {
         "wrong": "A dialog that closes when the person clicks a toast above it",
         "right": "Call isInsideToaster(event.target) in the dialog's outside handlers and prevent the default"
+      },
+      {
+        "wrong": "toast({ type: \"success\", message: \"Draft saved\" }), or a toast component rendered by hand for a one off notice",
+        "right": "toast.success(\"Draft saved\"), or toast(\"Draft saved\", { tone: \"success\", lang: \"en\" }); keep the id to call toast.update(id, patch) or toast.dismiss(id)"
       }
     ],
     "contract": {
@@ -2306,7 +3137,8 @@
       "footer"
     ],
     "parts": {
-      "TitleBar": "titlebar"
+      "TitleBar": "titlebar",
+      "WindowLayer": "none: the positioned layer that hosts windows (data-ds window-layer, a region named Windows, النوافذ in Arabic). Not a part of a window; see a11y notes"
     },
     "slots": {
       "body": {
@@ -2357,7 +3189,7 @@
       },
       "open": {
         "type": "boolean",
-        "description": "Controlled open state, with onOpenChange. Closing plays window-close, then unmounts."
+        "description": "Controlled open state, with onOpenChange. Keep rendering the Window with open={false}: it stays mounted while window-close plays, then renders nothing. Unmounting it instead (a conditional render) skips the close motion."
       },
       "defaultOpen": {
         "type": "boolean",
@@ -2403,7 +3235,7 @@
       },
       "movable": {
         "type": "boolean",
-        "description": "Drag by the title bar and move with the arrow keys. Default true inside a WindowLayer or with a frame, false for a window placed by its parent."
+        "description": "Drag by the title bar and move with the arrow keys. Default true inside a WindowLayer or with a frame. A Window outside a WindowLayer sits in the page flow (position relative), has no frame and does not move unless it gets a frame."
       },
       "origin": {
         "type": "node",
@@ -2420,28 +3252,32 @@
       },
       "closeLabel": {
         "type": "string",
-        "default": "Close window"
+        "default": "Close window",
+        "description": "Under lang=\"ar\" the default is إغلاق النافذة. A prop always wins."
       },
       "minimizeLabel": {
         "type": "string",
-        "default": "Minimize window"
+        "default": "Minimize window",
+        "description": "Under lang=\"ar\" the default is تصغير النافذة. A prop always wins."
       },
       "zoomLabel": {
         "type": "string",
-        "default": "Zoom window"
+        "default": "Zoom window",
+        "description": "Under lang=\"ar\" the default is تكبير النافذة. A prop always wins."
       },
       "controlsLabel": {
         "type": "string",
-        "default": "Window controls"
+        "default": "Window controls",
+        "description": "Under lang=\"ar\" the default is أزرار النافذة. A prop always wins."
       },
       "moveLabel": {
         "type": "string",
         "default": "Move window",
-        "description": "Name of the move handle: the title of a window that can move, focusable, a TitleBar part."
+        "description": "Name of the move handle: the title of a window that can move, focusable, a TitleBar part. Under lang=\"ar\" the default is تحريك النافذة."
       },
       "moveHint": {
         "type": "string",
-        "description": "Description of the move handle. Default names the arrow keys, Shift, and Enter when zoom works."
+        "description": "Description of the move handle. Default names the arrow keys, Shift, and Enter when zoom works, in Arabic under lang=\"ar\"."
       }
     },
     "states": [
@@ -2479,7 +3315,12 @@
         "Tab order follows the DOM order of the windows, not their stacking. Moving focus into a window with Tab brings it to the front.",
         "A long title truncates with an ellipsis; the full text is the accessible name, and keyboard focus on the move handle wraps the title to show it in full.",
         "No native title attribute.",
-        "Contract suite: Escape is checked in the many case, where closing the front window makes the next one active (data-state changes). The arrow keys move the frame (inline position), which no contract.keys expectation reads yet, so the suite notes them; Window.test.tsx covers them."
+        "WindowLayer is the container for windows, not a part of one: a positioned region (tabindex -1, named Windows) that stacks its windows, tracks the active one through the shared window manager and takes focus when its last window leaves. useWindowLayer() returns that manager, for a dock that restores minimized windows.",
+        "A Window outside a WindowLayer sits in the page flow (position relative), takes the size its parent gives it, has no frame and does not move. Give it a frame (and a positioned parent) to place and move it.",
+        "The five chrome labels (close, minimize, zoom, the controls group, the move handle) and the move hint default to Arabic under lang=\"ar\", as Dialog and Toast do. A prop always wins.",
+        "Contract suite (many case, focus on the move handle): the arrow keys are checked with moves, Shift with the arrows with moves further, Escape with closes and Enter (zoom) with state-changes.",
+        "Arrow keys move the window in the physical direction on screen, in both directions: ArrowRight moves it right in Arabic too. A window is a spatial object on a desk, like a dragged card; a text or list control follows the reading direction, a positioned object does not (lead decision, wave 1).",
+        "Enter on the move handle zooms, and the handle is not rendered while the window is zoomed: focus moves to the window element (WCAG 2.4.3) and back to the handle when the window is restored."
       ]
     },
     "content": {
@@ -2489,7 +3330,7 @@
       },
       "ar": {
         "title": "Noun form, no diacritics: إعدادات الحساب. Latin file names inside Arabic go through Bidi.",
-        "labels": "إغلاق النافذة، تصغير النافذة، تكبير النافذة."
+        "labels": "The defaults under lang=\"ar\": إغلاق النافذة، تصغير النافذة، تكبير النافذة، أزرار النافذة، تحريك النافذة."
       }
     },
     "tokens": [
@@ -2514,7 +3355,12 @@
       "font.family.sans",
       "duration.window-open",
       "duration.window-close",
-      "duration.zoom",
+      "duration.window-zoom",
+      "duration.window-minimize",
+      "blur.window-saturation",
+      "window.width.settings",
+      "window.width.finder-max",
+      "scale.window-enter",
       "duration.base",
       "ease.window",
       "ease.exit",
@@ -2677,20 +3523,23 @@
       },
       "closeLabel": {
         "type": "string",
-        "default": "Close window"
+        "default": "Close window",
+        "description": "Under lang=\"ar\" the default is إغلاق النافذة. A prop always wins."
       },
       "minimizeLabel": {
         "type": "string",
-        "default": "Minimize window"
+        "default": "Minimize window",
+        "description": "Under lang=\"ar\" the default is تصغير النافذة. A prop always wins."
       },
       "zoomLabel": {
         "type": "string",
-        "default": "Zoom window"
+        "default": "Zoom window",
+        "description": "Under lang=\"ar\" the default is تكبير النافذة. A prop always wins."
       },
       "label": {
         "type": "string",
         "default": "Window controls",
-        "description": "The name of the group."
+        "description": "The name of the group. Under lang=\"ar\" the default is أزرار النافذة. A prop always wins."
       },
       "active": {
         "type": "boolean",
@@ -2728,7 +3577,7 @@
         "labels": "Close window, Minimize window, Zoom window. Name the window when several are open: Close notes.txt."
       },
       "ar": {
-        "labels": "إغلاق النافذة، تصغير النافذة، تكبير النافذة."
+        "labels": "The defaults under lang=\"ar\": إغلاق النافذة، تصغير النافذة، تكبير النافذة، أزرار النافذة."
       }
     },
     "tokens": [
