@@ -19,6 +19,7 @@ export const routes: DemoRoute[] = [
   { slug: 'error-state', load: () => import('../../../../packages/angular/src/components/error-state/error-state.demo').then((m) => m.default) },
   { slug: 'field', load: () => import('../../../../packages/angular/src/components/field/field.demo').then((m) => m.default) },
   { slug: 'field-error', load: () => import('../../../../packages/angular/src/components/field-error/field-error.demo').then((m) => m.default) },
+  { slug: 'fieldset', load: () => import('../../../../packages/angular/src/components/fieldset/fieldset.demo').then((m) => m.default) },
   { slug: 'floating-action-button', load: () => import('../../../../packages/angular/src/components/floating-action-button/floating-action-button.demo').then((m) => m.default) },
   { slug: 'icon-button', load: () => import('../../../../packages/angular/src/components/icon-button/icon-button.demo').then((m) => m.default) },
   { slug: 'inline-edit', load: () => import('../../../../packages/angular/src/components/inline-edit/inline-edit.demo').then((m) => m.default) },

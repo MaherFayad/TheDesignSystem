@@ -2,7 +2,7 @@
 
 Made by `npm run shots`. Each shot is the `variants` case at `chrome=0`, 1280 by 800 viewport, full page, device scale factor 1, animations off, reduced motion, fonts loaded. File names: `<component>/<style>-<scheme>-<dir>[-<density>][-open].png`. Density is default unless named.
 
-252 shots, 18 components, 18.45 MB. Stable (two captures byte equal): 252; unstable: 0; not verified: 0.
+264 shots, 19 components, 18.99 MB. Stable (two captures byte equal): 264; unstable: 0; not verified: 0.
 
 The full list with sizes and hashes is in `captured.json`.
 
@@ -107,6 +107,17 @@ Densities, dark, ltr en:
 | desk | light | [ltr](field/desk-light-ltr.png) | [rtl](field/desk-light-rtl.png) |
 | studio | dark | [ltr](field/studio-dark-ltr.png) | [rtl](field/studio-dark-rtl.png) |
 | studio | light | [ltr](field/studio-light-ltr.png) | [rtl](field/studio-light-rtl.png) |
+
+## Fieldset
+
+| Style | Scheme | ltr en | rtl ar |
+| --- | --- | --- | --- |
+| desk | dark | [ltr](fieldset/desk-dark-ltr.png) | [rtl](fieldset/desk-dark-rtl.png) |
+| desk | light | [ltr](fieldset/desk-light-ltr.png) | [rtl](fieldset/desk-light-rtl.png) |
+| neutral | dark | [ltr](fieldset/neutral-dark-ltr.png) | [rtl](fieldset/neutral-dark-rtl.png) |
+| neutral | light | [ltr](fieldset/neutral-light-ltr.png) | [rtl](fieldset/neutral-light-rtl.png) |
+| studio | dark | [ltr](fieldset/studio-dark-ltr.png) | [rtl](fieldset/studio-dark-rtl.png) |
+| studio | light | [ltr](fieldset/studio-light-ltr.png) | [rtl](fieldset/studio-light-rtl.png) |
 
 ## FloatingActionButton
 

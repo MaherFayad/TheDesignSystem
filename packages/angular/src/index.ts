@@ -13,6 +13,7 @@ export * from './components/dropdown-menu/index';
 export * from './components/error-state/index';
 export * from './components/field/index';
 export * from './components/field-error/index';
+export * from './components/fieldset/index';
 export * from './components/floating-action-button/index';
 export * from './components/icon-button/index';
 export * from './components/inline-edit/index';
