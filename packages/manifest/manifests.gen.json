@@ -2413,12 +2413,12 @@
       "languages": {
         "type": "LanguageOption[]",
         "required": true,
-        "description": "The languages the page exists in: { code, name, href }. name is written in that language (English, العربية, Français). href is the same page in that language, so the switch keeps the page. Two render a link pair, three or more a menu."
+        "description": "The languages the page exists in: { code, name, href }. name is written in that language (English, العربية, Français). href is the same page in that language, so the switch keeps the page. Two render a link pair, three or more a menu. Fewer than two render nothing."
       },
       "current": {
         "type": "string",
         "required": true,
-        "description": "The code of the language the page is in now."
+        "description": "The code of the language the page is in now. When it matches no language, nothing is marked."
       },
       "size": {
         "type": [
@@ -2426,7 +2426,7 @@
           "md"
         ],
         "default": "md",
-        "description": "Type size of the pair (font.size.xs or s, one step up for Arabic names) and the trigger Button size."
+        "description": "Type size of the pair (the item Links take Link size sm at md and xs at sm, one step up for Arabic names) and the trigger Button size."
       },
       "emphasis": {
         "type": [
@@ -2439,7 +2439,7 @@
       "label": {
         "type": "string",
         "default": "Language",
-        "description": "The accessible name of the nav landmark, also the start of the trigger name (Language: English). Under an Arabic Theme the default is اللغة."
+        "description": "The accessible name of the nav landmark, also the end of the trigger name (English, Language). Under an Arabic Theme the default is اللغة."
       },
       "onNavigate": {
         "type": "(language: LanguageOption) => void",
@@ -2459,7 +2459,7 @@
         "Enter": "Follows a link, or opens the menu",
         "ArrowDown, ArrowUp": "Inside the menu, as DropdownMenu; Enter or Space chooses a language"
       },
-      "announce": "Each name is read in its own language (lang on the link or item). The current language in the pair reads as current; in the menu it reads as checked. The trigger reads Language: English, menu button.",
+      "announce": "Each name is read in its own language (lang on the link or item). The current language in the pair reads as current page; in the menu it reads as checked. The trigger reads English, Language, menu button: the visible name first.",
       "native": {
         "accessibilityRole": "link",
         "accessibilityState": [
@@ -2468,9 +2468,9 @@
       },
       "notes": [
         "Never a flag: a flag names a country, not a language.",
-        "Each name carries lang and hreflang, and its own direction (dir rtl for Arabic, Urdu, Persian), so screen readers switch voice and the name shapes correctly inside a page of the other direction.",
-        "The current language in the pair is marked by weight, a missing underline, data-active and aria-current true, never color alone (WCAG 1.4.1).",
-        "Escape is not in the key map because the contract suite reads it as closing LanguageSwitch itself; it closes the menu, as DropdownMenu, whose own contract checks it.",
+        "Each name carries lang and its own direction (dir rtl for Arabic, Urdu, Persian and the other right to left languages, from directionOf in @the-system/shared), so screen readers switch voice and the name shapes correctly inside a page of the other direction. Pair links also carry hreflang. Menu rows are menu items with lang but no href, so the menu form needs script; the pair works without it.",
+        "The current language in the pair is marked by weight, a missing underline, data-active and aria-current page (its link is this page), never color alone (WCAG 1.4.1). When current matches no language, nothing is marked. Fewer than two languages render nothing.",
+        "Escape is not in the key map: the contract suite cannot open the menu as a LanguageSwitch root (the menu is a DropdownMenu root of its own), so it would read Escape as closing LanguageSwitch. Escape closes the menu as in DropdownMenu, whose own contract checks it, axe and target size of the open menu included.",
         "React Native: a direction change (English to Arabic) needs an app restart through I18nManager, so the native form asks before it reloads.",
         "open and closed are the data-state of the menu trigger (a Button carrying data-part trigger) and of the menu; the LanguageSwitch root has no state."
       ]

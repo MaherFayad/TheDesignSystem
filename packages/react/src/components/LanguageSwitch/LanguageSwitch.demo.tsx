@@ -66,7 +66,7 @@ export default function LanguageSwitchDemo() {
         <LanguageSwitch languages={many} current="fr" />
       </DemoCase>
 
-      <DemoCase id="too-many" title="Too many: the menu scrolls inside">
+      <DemoCase id="too-many" title="Too many: a long menu, capped to the viewport, scrolls inside when it must">
         <LanguageSwitch languages={tooMany} current="en" />
       </DemoCase>
 
@@ -74,11 +74,11 @@ export default function LanguageSwitchDemo() {
         <LanguageSwitch languages={many} current="id" />
       </DemoCase>
 
-      <DemoCase id="long-arabic" title="Long Arabic text" lang="ar">
+      <DemoCase id="long-arabic" title="Long Arabic text: an Arabic page with a long Latin name" lang="ar">
         <LanguageSwitch
           languages={[
-            { code: 'ar', name: 'العربية الفصحى المبسطة', href: '#/ar/pricing' },
-            { code: 'en', name: 'English', href: '#/en/pricing' },
+            { code: 'ar', name: 'العربية', href: '#/ar/pricing' },
+            { code: 'id', name: 'Bahasa Indonesia', href: '#/id/pricing' },
           ]}
           current="ar"
         />

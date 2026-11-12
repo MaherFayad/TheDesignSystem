@@ -40,7 +40,8 @@ describe('LanguageSwitch', () => {
     expect(ar.getAttribute('dir')).toBe('rtl');
     expect(en.getAttribute('dir')).toBe('ltr');
     expect(ar.getAttribute('href')).toBe('/ar/pricing');
-    expect(en.getAttribute('aria-current')).toBe('true');
+    expect(en.getAttribute('aria-current')).toBe('page');
+    expect(en.getAttribute('data-size')).toBe('sm');
     expect(en.hasAttribute('data-active')).toBe(true);
     expect(ar.hasAttribute('aria-current')).toBe(false);
     expect(ar.hasAttribute('data-active')).toBe(false);
@@ -64,8 +65,8 @@ describe('LanguageSwitch', () => {
     const user = userEvent.setup();
     const onNavigate = vi.fn();
     render(<LanguageSwitch languages={many} current="en" onNavigate={onNavigate} />);
-    await user.click(screen.getByRole('button', { name: 'Language: English' }));
-    const menu = screen.getByRole('menu', { name: 'Language: English' });
+    await user.click(screen.getByRole('button', { name: 'English, Language' }));
+    const menu = screen.getByRole('menu', { name: 'English, Language' });
     expect(menu.getAttribute('data-part')).toBe('menu');
     const items = screen.getAllByRole('menuitemradio');
     expect(items.map((i) => i.textContent)).toEqual(['English', 'العربية', 'Français']);
@@ -80,9 +81,17 @@ describe('LanguageSwitch', () => {
     const user = userEvent.setup();
     const onNavigate = vi.fn();
     render(<LanguageSwitch languages={many} current="en" onNavigate={onNavigate} />);
-    await user.click(screen.getByRole('button', { name: 'Language: English' }));
+    await user.click(screen.getByRole('button', { name: 'English, Language' }));
     await user.click(screen.getAllByRole('menuitemradio')[0]!);
     expect(onNavigate).not.toHaveBeenCalled();
+  });
+
+  it('marks nothing when current matches no language, and renders nothing for one language', () => {
+    const { container, rerender } = render(<LanguageSwitch languages={pair} current="fr" />);
+    expect(container.querySelector('[data-active]')).toBeNull();
+    expect(container.querySelector('[aria-current]')).toBeNull();
+    rerender(<LanguageSwitch languages={pair.slice(0, 1)} current="en" />);
+    expect(container.querySelector('[data-ds="language-switch"]')).toBeNull();
   });
 
   it('uses the Arabic label inside an Arabic Theme and takes a custom one', () => {

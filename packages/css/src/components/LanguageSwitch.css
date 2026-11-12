@@ -41,13 +41,13 @@
     --_link-fg-hover: var(--_language-switch-fg-active);
   }
 
-  /* Arabic names: one step up, as small Arabic text is everywhere. */
+  /* Arabic names: one step up, as small Arabic text is everywhere. The items carry Link sizes sm (md) and xs (sm). */
   [data-ds='language-switch'] > [data-part='item']:lang(ar) {
-    font-size: var(--ds-font-size-m);
+    --_link-font-size: var(--ds-font-size-m);
   }
 
   [data-ds='language-switch'][data-size='sm'] > [data-part='item']:lang(ar) {
-    font-size: var(--ds-font-size-s);
+    --_link-font-size: var(--ds-font-size-s);
   }
 
   /* The active language: bright and medium weight with no underline, plus aria-current. Not color alone. */
@@ -62,8 +62,9 @@
   /* ------------------------------------------------------------ forced colors */
 
   @media (forced-colors: active) {
+    /* Link draws its underline in the text color under forced colors; the active name keeps weight and aria-current. */
     [data-ds='language-switch'] > [data-part='item'][data-active] {
-      color: CanvasText;
+      --_link-fg: CanvasText;
     }
   }
 }

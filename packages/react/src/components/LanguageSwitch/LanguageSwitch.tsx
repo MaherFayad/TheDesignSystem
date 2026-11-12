@@ -24,17 +24,18 @@
 // - Each language is named in its own language with lang set, never a flag:
 //   English, العربية. The accessible name is that name, read in its voice.
 // - The current language stays in the pair, marked by weight, a missing
-//   underline, data-active and aria-current="true", so the pair reads as a
-//   choice and the reader sees where they are.
+//   underline, data-active and aria-current="page" (its link is this very
+//   page), so the pair reads as a choice and the reader sees where they are.
 // - Menu items are radio items (the current one checked), so the menu says
 //   which language is active. Choosing one calls onNavigate, or sends the
 //   browser to its href.
 // - emphasis styles the menu trigger (a Button). The pair is always links.
-// - The trigger is named "Language: English" (the nav label, then the
-//   visible name), so it says what it changes; the menu takes its name from
-//   the trigger.
+// - The trigger is named "English, Language": the visible name first (WCAG
+//   2.5.3), then what it changes. The menu takes its name from the trigger.
+// - Menu rows are menu items, not links: they carry lang but no hreflang, and
+//   choosing one needs script. The pair is plain links and works without it.
 import type { HTMLAttributes, Ref } from 'react';
-import type { Emphasis, Size } from '@the-system/shared';
+import { directionOf, type Emphasis, type Size } from '@the-system/shared';
 import { useTheme } from '../../theme';
 import { Button } from '../Button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuRadioGroup, DropdownMenuRadioItem, DropdownMenuTrigger } from '../DropdownMenu';
@@ -58,10 +59,6 @@ const words = {
   ar: { label: 'اللغة' },
 } as const;
 
-/** Text direction of a language tag, for the name shown in it. */
-function dirOf(code: string): 'rtl' | 'ltr' {
-  return /^(ar|fa|he|ur|ps|ckb|dv|yi)(-|$)/i.test(code) ? 'rtl' : 'ltr';
-}
 
 /** No `title`: hints come from Tooltip, never the native title attribute. */
 export interface LanguageSwitchProps extends Omit<HTMLAttributes<HTMLElement>, 'title' | 'children'> {
@@ -93,8 +90,11 @@ export function LanguageSwitch({
 }: LanguageSwitchProps) {
   const { lang } = useTheme();
   const t = words[lang === 'ar' ? 'ar' : 'en'];
-  const active = languages.find((l) => l.code === current) ?? languages[0];
+  // No match marks nothing: the page says which language it is in, the switch does not guess.
+  const active = languages.find((l) => l.code === current);
   const navLabel = label ?? rest['aria-label'] ?? t.label;
+  // One language (or none) has nothing to switch to.
+  if (languages.length < 2) return null;
 
   return (
     <nav
@@ -113,12 +113,13 @@ export function LanguageSwitch({
               key={l.code}
               data-part="item"
               standalone
+              size={size === 'sm' ? 'xs' : 'sm'}
               href={l.href}
               hrefLang={l.code}
               lang={l.code}
-              dir={dirOf(l.code)}
+              dir={directionOf(l.code)}
               data-active={isActive ? '' : undefined}
-              aria-current={isActive ? 'true' : undefined}
+              aria-current={isActive ? 'page' : undefined}
             >
               {l.name}
             </Link>
@@ -129,13 +130,13 @@ export function LanguageSwitch({
           <DropdownMenuTrigger>
             <Button
               data-part="trigger"
-              size={size === 'sm' ? 'sm' : 'md'}
+              size={size}
               emphasis={emphasis}
               start="language"
               end="chevron-down"
-              aria-label={`${navLabel}: ${active?.name ?? ''}`}
+              aria-label={active ? `${active.name}${lang === 'ar' ? '،' : ','} ${navLabel}` : navLabel}
             >
-              <span lang={active?.code} dir={active ? dirOf(active.code) : undefined}>
+              <span lang={active?.code} dir={active ? directionOf(active.code) : undefined}>
                 {active?.name}
               </span>
             </Button>
@@ -153,7 +154,7 @@ export function LanguageSwitch({
               {languages.map((l) => (
                 <DropdownMenuRadioItem key={l.code} value={l.code} lang={l.code} textValue={l.name}>
                   {/* The direction goes on the name only: the row keeps the menu's layout. */}
-                  <span dir={dirOf(l.code)}>{l.name}</span>
+                  <span dir={directionOf(l.code)}>{l.name}</span>
                 </DropdownMenuRadioItem>
               ))}
             </DropdownMenuRadioGroup>
