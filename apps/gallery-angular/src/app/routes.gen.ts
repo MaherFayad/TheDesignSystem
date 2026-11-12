@@ -12,8 +12,13 @@ export const routes: DemoRoute[] = [
   { slug: 'field', load: () => import('../../../../packages/angular/src/components/field/field.demo').then((m) => m.default) },
   { slug: 'field-error', load: () => import('../../../../packages/angular/src/components/field-error/field-error.demo').then((m) => m.default) },
   { slug: 'icon-button', load: () => import('../../../../packages/angular/src/components/icon-button/icon-button.demo').then((m) => m.default) },
+  { slug: 'inline-edit', load: () => import('../../../../packages/angular/src/components/inline-edit/inline-edit.demo').then((m) => m.default) },
   { slug: 'input', load: () => import('../../../../packages/angular/src/components/input/input.demo').then((m) => m.default) },
   { slug: 'input-group', load: () => import('../../../../packages/angular/src/components/input-group/input-group.demo').then((m) => m.default) },
   { slug: 'label', load: () => import('../../../../packages/angular/src/components/label/label.demo').then((m) => m.default) },
+  { slug: 'otp-field', load: () => import('../../../../packages/angular/src/components/otp-field/otp-field.demo').then((m) => m.default) },
+  { slug: 'password-field', load: () => import('../../../../packages/angular/src/components/password-field/password-field.demo').then((m) => m.default) },
+  { slug: 'phone-field', load: () => import('../../../../packages/angular/src/components/phone-field/phone-field.demo').then((m) => m.default) },
+  { slug: 'search-field', load: () => import('../../../../packages/angular/src/components/search-field/search-field.demo').then((m) => m.default) },
   { slug: 'textarea', load: () => import('../../../../packages/angular/src/components/textarea/textarea.demo').then((m) => m.default) },
 ];

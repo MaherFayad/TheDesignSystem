@@ -9351,7 +9351,10 @@
         "note": "Motion: the edit icon fades in on hover and focus, and the Input focus glow fades in. The swap between viewing and editing is instant."
       },
       "angular": {
-        "status": "planned"
+        "status": "ready",
+        "behavior": "div[dsInlineEdit] on dsButton, dsInput and dsIconButton, ControlValueAccessor",
+        "example": "inline-edit.demo.ts",
+        "note": "value is a model whose valueChange fires on save only (defaultValue is value); onEditingChange is the editingChange output; validate is a function input; error takes a string or a TemplateRef. Escape cancels in a window capture listener, so a dialog around it stays open."
       },
       "native": {
         "status": "planned"
@@ -12361,7 +12364,10 @@
         "example": "OTPField.demo.tsx"
       },
       "angular": {
-        "status": "planned"
+        "status": "ready",
+        "behavior": "div[dsOTPField] around one native input, hand built on packages/shared otp.ts, ControlValueAccessor",
+        "example": "otp-field.demo.ts",
+        "note": "Same DOM and keys as React: one input with autocomplete one-time-code over aria-hidden cells. value is a model (defaultValue is value); onComplete is the complete output. The input shows the parsed code at once, so a refused key leaves no trace. The React gallery routes it at /c/otpfield, the contract and the Angular gallery at /c/otp-field (see the lane report)."
       },
       "native": {
         "status": "planned"
@@ -12806,7 +12812,10 @@
         "note": "Motion: only the focus glow fades in, as on Input; the value swap is instant. The root is the bordered box; the nested Input is the control part."
       },
       "angular": {
-        "status": "planned"
+        "status": "ready",
+        "behavior": "div[dsPasswordField] on dsInput and dsIconButton, aria-pressed toggle, ControlValueAccessor",
+        "example": "password-field.demo.ts",
+        "note": "The root is the bordered box; the nested dsInput is the control part. visible and defaultVisible are the visible model ([(visible)]), onVisibleChange its visibleChange output; defaultValue is value. The value hides again on form submit: the input turns password before the browser reads the form."
       },
       "native": {
         "status": "planned"
@@ -13043,7 +13052,10 @@
         "example": "PhoneField.demo.tsx"
       },
       "angular": {
-        "status": "planned"
+        "status": "ready",
+        "behavior": "div[dsPhoneField] with a native select and a native tel input, hand built on packages/shared phone.ts, ControlValueAccessor",
+        "example": "phone-field.demo.ts",
+        "note": "value (E.164) and country are models: [(value)], [(country)] (defaultCountry is country, default SA). onValueChange's detail is the valueDetail output. The caret stays after the same digit as the groups add spaces. The hidden input named name posts the E.164 number."
       },
       "native": {
         "status": "planned"
@@ -15740,7 +15752,10 @@
         "note": "The root is the bordered box; the nested Input is the control part and keeps the Field wiring and the ref. The focus glow fades in as on Input; the spinner stops under reduced motion."
       },
       "angular": {
-        "status": "planned"
+        "status": "ready",
+        "behavior": "div[dsSearchField] on dsInput and dsIconButton, ControlValueAccessor",
+        "example": "search-field.demo.ts",
+        "note": "The root is the bordered box; the nested dsInput is the control part and keeps the Field wiring. value is a model (defaultValue is value); onValueChange, onSubmit and onClear are the valueChange, submit and clear outputs. end takes a TemplateRef. Escape clears in a window capture listener, as in React. Inside an InputGroup it is the control."
       },
       "native": {
         "status": "planned"
