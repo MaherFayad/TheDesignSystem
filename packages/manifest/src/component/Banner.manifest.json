@@ -1,0 +1,242 @@
+{
+  "name": "Banner",
+  "kind": "component",
+  "family": "feedback",
+  "summary": "A page wide notice at the top of the app: maintenance, a trial that ends, an outage. A named region the consumer dismisses and remembers.",
+  "useWhen": [
+    "A notice about the whole app or workspace: scheduled maintenance, an outage, a trial that ends",
+    "A condition that lasts across pages until it changes or the person dismisses it",
+    "One action that fixes the condition for everyone, such as Add payment method"
+  ],
+  "avoidWhen": [
+    "The message is about one section or one form",
+    "A passing confirmation of something the person just did",
+    "Marketing or a promotion that the person did not ask for",
+    "More than two banners at once"
+  ],
+  "insteadUse": {
+    "A message about one section or form": "Alert",
+    "A passing confirmation": "Toast",
+    "Static guidance inside content": "Callout",
+    "A decision that blocks the task": "AlertDialog"
+  },
+  "anatomy": [
+    "root",
+    "icon",
+    "body",
+    "actions",
+    "close"
+  ],
+  "slots": {
+    "body": {
+      "accepts": "any",
+      "min": 1
+    },
+    "actions": {
+      "accepts": [
+        "Button"
+      ],
+      "max": 2
+    }
+  },
+  "props": {
+    "tone": {
+      "type": [
+        "neutral",
+        "accent",
+        "success",
+        "warning",
+        "danger",
+        "info"
+      ],
+      "default": "neutral",
+      "description": "The color, the icon and the tone word the icon says."
+    },
+    "emphasis": {
+      "type": [
+        "soft",
+        "solid"
+      ],
+      "default": "soft",
+      "description": "soft is a tinted bar, solid a full tone fill for an outage or a blocking condition. Both are opaque."
+    },
+    "children": {
+      "type": "node",
+      "required": true,
+      "description": "The notice: one or two sentences, links allowed."
+    },
+    "actions": {
+      "type": "node",
+      "description": "Up to two Buttons, size sm. Use emphasis outline on a soft banner; on a solid banner any Button takes the banner ink."
+    },
+    "label": {
+      "type": "string",
+      "default": "Announcement",
+      "description": "The name of the region. Default Announcement, or Arabic under lang ar. Give each banner its own label when a page has two."
+    },
+    "icon": {
+      "type": "node",
+      "description": "A system icon name or a node in place of the tone icon. The tone word stays on the icon part."
+    },
+    "toneLabel": {
+      "type": "string",
+      "description": "The word the icon says. Default by tone and language."
+    },
+    "sticky": {
+      "type": "boolean",
+      "default": false,
+      "description": "Sticks to the top of its scroll container and sets that container's scroll-padding-block-start to its height (WCAG 2.4.11)."
+    },
+    "onDismiss": {
+      "type": "function",
+      "description": "Renders the close button and is called by it after focus moves to the main content. The consumer removes the banner and remembers the choice; the banner stores nothing."
+    },
+    "returnFocus": {
+      "type": [
+        "element",
+        "string"
+      ],
+      "default": "main, [role=\"main\"]",
+      "description": "Where focus goes on dismiss: an element or a selector. A target that is not focusable gets tabindex -1."
+    },
+    "closeLabel": {
+      "type": "string",
+      "default": "Dismiss announcement",
+      "description": "The accessible name of the close button. Arabic under lang ar: إغلاق الإعلان."
+    }
+  },
+  "states": [
+    "data-sticky"
+  ],
+  "a11y": {
+    "role": "region (a section with aria-label), so the notice is listed with the landmarks and can be reached from them.",
+    "focus": "The banner takes no focus. Tab reaches its actions, then the close button. The close button moves focus to the start of the main content (the main element, or returnFocus) before onDismiss runs, so focus is never lost on the removed banner.",
+    "keys": {
+      "Tab": "Moves to the next action, then the close button",
+      "Shift+Tab": "Moves back",
+      "Enter": "Runs the focused action, or dismisses and moves focus to the main content",
+      "Space": "Runs the focused action, or dismisses and moves focus to the main content"
+    },
+    "announce": "Never on its own: a banner is part of the page and is read with it. An outage that starts while the page is open is also told through a Toast or a live Alert. The icon is an image named with the tone word, so the tone is never told by color alone.",
+    "native": {
+      "accessibilityRole": "summary",
+      "accessibilityState": []
+    },
+    "notes": [
+      "A sticky banner reserves scroll padding for its own height on its scroll container, so a focused element is never hidden under it (WCAG 2.4.11). The previous value comes back when it unmounts.",
+      "The parts wrap at narrow widths: no sideways scroll at 320px (WCAG 1.4.10).",
+      "The close button is 24 by 24 px (WCAG 2.5.8).",
+      "One sticky banner per scroll container: two would overlap at the top and share one scroll padding. Stack a second banner without sticky under the first.",
+      "A sticky banner uses z.topbar and sticks at the top edge of its scroll container. Under an app top bar, put the banner in the content scroll container below the bar, not in the same one."
+    ]
+  },
+  "content": {
+    "en": {
+      "body": "Say what is happening, to what, and until when: Scheduled maintenance on Friday from 22:00 to 23:00 Riyadh time. Sentence case, no exclamation marks.",
+      "actions": "A verb plus a noun: Add payment method, Open status page. Never OK, Continue, Confirm or Yes.",
+      "label": "Name the kind of notice when the page has more than one: Service status, Billing."
+    },
+    "ar": {
+      "body": "White Saudi dialect or Gulf MSA, no diacritics, Western digits and 24 hour times: صيانة مجدولة يوم الجمعة من 22:00 إلى 23:00 بتوقيت الرياض.",
+      "actions": "Noun form labels: إضافة طريقة دفع، عرض صفحة الحالة."
+    }
+  },
+  "tokens": [
+    "space.3xs",
+    "space.xs",
+    "space.s",
+    "space.m",
+    "space.l",
+    "border.width.default",
+    "font.family.sans",
+    "font.size.m",
+    "font.leading.normal",
+    "z.topbar",
+    "color.bg.surface",
+    "color.bg.surface-4",
+    "color.bg.overlay-5",
+    "color.text.default",
+    "color.text.bright",
+    "color.text.muted",
+    "color.border.default",
+    "color.primary.on-surface",
+    "color.primary.tint",
+    "color.primary.border",
+    "color.primary.fill",
+    "color.primary.text",
+    "color.state.info.text",
+    "color.state.info.tint-10",
+    "color.state.info.tint-20",
+    "color.state.info.solid",
+    "color.state.info.on-solid",
+    "color.state.success.text",
+    "color.state.success.tint-10",
+    "color.state.success.tint-20",
+    "color.state.success.solid",
+    "color.state.success.on-solid",
+    "color.state.warning.text",
+    "color.state.warning.tint-10",
+    "color.state.warning.tint-20",
+    "color.state.warning.solid",
+    "color.state.warning.on-solid",
+    "color.state.danger.text",
+    "color.state.danger.tint-10",
+    "color.state.danger.tint-20",
+    "color.state.danger.solid",
+    "color.state.danger.on-solid",
+    "focus.shadow.primary",
+    "duration.medium",
+    "ease.out",
+    "size.icon.md",
+    "breakpoint.phone"
+  ],
+  "motion": "fade-rise",
+  "frameworks": {
+    "react": {
+      "status": "ready",
+      "behavior": "hand built",
+      "example": "Banner.demo.tsx"
+    },
+    "angular": {
+      "status": "planned",
+      "behavior": "hand built",
+      "note": "The same DOM on Banner.css; the scroll padding through a ResizeObserver in the directive."
+    },
+    "native": {
+      "status": "planned",
+      "behavior": "hand built",
+      "note": "Under the safe area at the top of the screen; the tone word in accessibilityLabel."
+    }
+  },
+  "styles": {
+    "studio": "A full width opaque bar with a hairline on its block end; achromatic accent.",
+    "desk": "The same bar above the desk; the accent tone takes the yellow primary.",
+    "neutral": "Planned: tokens only, no recipe.",
+    "liquid": "Planned: a solid bar under the floating glass layer, never glass itself."
+  },
+  "mistakes": [
+    {
+      "wrong": "A Banner for a form error",
+      "right": "An Alert above the form"
+    },
+    {
+      "wrong": "A Banner that stores its own dismissed flag in localStorage",
+      "right": "The consumer remembers the choice in onDismiss"
+    },
+    {
+      "wrong": "A sticky toolbar or banner that hides the focused field when tabbing",
+      "right": "sticky on the Banner, which reserves scroll padding for its height"
+    },
+    {
+      "wrong": "Three banners stacked at the top",
+      "right": "One banner, two at most, the most urgent first"
+    }
+  ],
+  "contract": {
+    "optionalParts": [
+      "actions",
+      "close"
+    ]
+  },
+  "since": "0.1.0"
+}
