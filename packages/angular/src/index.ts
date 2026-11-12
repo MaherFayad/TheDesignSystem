@@ -17,6 +17,7 @@ export * from './components/field-error/index';
 export * from './components/fieldset/index';
 export * from './components/floating-action-button/index';
 export * from './components/form/index';
+export * from './components/form-wizard/index';
 export * from './components/icon-button/index';
 export * from './components/inline-edit/index';
 export * from './components/input/index';

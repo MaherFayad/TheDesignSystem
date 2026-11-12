@@ -9382,9 +9382,10 @@
         "note": "Motion fade-rise: the current step body fades in and rises by space.xs through @starting-style; under reduced motion it only fades, and every duration is 0ms."
       },
       "angular": {
-        "status": "planned",
-        "behavior": "[dsFormWizard] on a div, a form[dsFormWizardPanel], state from packages/shared/src/stepper.ts",
-        "note": "FormWizard.css and Stepper.css are used as is."
+        "status": "ready",
+        "behavior": "[dsFormWizard] on a div with a form panel in its template and the dsStepper, state from packages/shared/src/stepper.ts",
+        "example": "form-wizard.demo.ts",
+        "note": "A step content is a TemplateRef with values and errors in its context. onSubmit is a function input, onStepChange the stepChange output, formProps a record of attributes for the panel form, formRef the formElement of exportAs dsFormWizard. FormWizard.css and Stepper.css are used as is."
       },
       "native": {
         "status": "planned",

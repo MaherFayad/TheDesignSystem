@@ -2,7 +2,7 @@
 
 Made by `npm run shots -- --compare react angular`. pixelmatch threshold 0.1; a pair passes when at most 0.5 percent of pixels differ and the sizes match.
 
-598 pairs, 598 pass, 0 fail. Only in react: 32. Only in angular: 0.
+616 pairs, 616 pass, 0 fail. Only in react: 32. Only in angular: 0.
 
 | File | Result | Differing pixels | Where | Diff |
 | --- | --- | --- | --- | --- |
@@ -244,6 +244,24 @@ Made by `npm run shots -- --compare react angular`. pixelmatch threshold 0.1; a 
 | floating-action-button/studio-dark-rtl.png | pass | 0 (0.000 percent) |  | none |
 | floating-action-button/studio-light-ltr.png | pass | 0 (0.000 percent) |  | none |
 | floating-action-button/studio-light-rtl.png | pass | 0 (0.000 percent) |  | none |
+| form-wizard/desk-dark-ltr-comfortable.png | pass | 38 (0.003 percent) | x 55 to 1221, y 216 to 946 | [diff](form-wizard/desk-dark-ltr-comfortable.png) |
+| form-wizard/desk-dark-ltr-compact.png | pass | 38 (0.003 percent) | x 49 to 1227, y 183 to 775 | [diff](form-wizard/desk-dark-ltr-compact.png) |
+| form-wizard/desk-dark-ltr.png | pass | 38 (0.003 percent) | x 52 to 1224, y 199 to 857 | [diff](form-wizard/desk-dark-ltr.png) |
+| form-wizard/desk-dark-rtl.png | pass | 32 (0.002 percent) | x 993 to 1224, y 216 to 895 | [diff](form-wizard/desk-dark-rtl.png) |
+| form-wizard/desk-light-ltr.png | pass | 38 (0.003 percent) | x 52 to 1224, y 199 to 857 | [diff](form-wizard/desk-light-ltr.png) |
+| form-wizard/desk-light-rtl.png | pass | 32 (0.002 percent) | x 993 to 1224, y 216 to 895 | [diff](form-wizard/desk-light-rtl.png) |
+| form-wizard/neutral-dark-ltr-comfortable.png | pass | 95 (0.007 percent) | x 57 to 1217, y 223 to 969 | [diff](form-wizard/neutral-dark-ltr-comfortable.png) |
+| form-wizard/neutral-dark-ltr-compact.png | pass | 95 (0.008 percent) | x 51 to 1223, y 190 to 798 | [diff](form-wizard/neutral-dark-ltr-compact.png) |
+| form-wizard/neutral-dark-ltr.png | pass | 95 (0.007 percent) | x 57 to 1217, y 223 to 969 | [diff](form-wizard/neutral-dark-ltr.png) |
+| form-wizard/neutral-dark-rtl.png | pass | 136 (0.009 percent) | x 978 to 1219, y 238 to 1008 | [diff](form-wizard/neutral-dark-rtl.png) |
+| form-wizard/neutral-light-ltr.png | pass | 93 (0.007 percent) | x 57 to 1217, y 223 to 968 | [diff](form-wizard/neutral-light-ltr.png) |
+| form-wizard/neutral-light-rtl.png | pass | 126 (0.009 percent) | x 978 to 1219, y 238 to 1007 | [diff](form-wizard/neutral-light-rtl.png) |
+| form-wizard/studio-dark-ltr-comfortable.png | pass | 72 (0.005 percent) | x 55 to 1221, y 217 to 949 | [diff](form-wizard/studio-dark-ltr-comfortable.png) |
+| form-wizard/studio-dark-ltr-compact.png | pass | 72 (0.006 percent) | x 49 to 1227, y 184 to 778 | [diff](form-wizard/studio-dark-ltr-compact.png) |
+| form-wizard/studio-dark-ltr.png | pass | 72 (0.006 percent) | x 52 to 1224, y 200 to 860 | [diff](form-wizard/studio-dark-ltr.png) |
+| form-wizard/studio-dark-rtl.png | pass | 70 (0.005 percent) | x 990 to 1224, y 216 to 898 | [diff](form-wizard/studio-dark-rtl.png) |
+| form-wizard/studio-light-ltr.png | pass | 71 (0.006 percent) | x 52 to 1224, y 200 to 860 | [diff](form-wizard/studio-light-ltr.png) |
+| form-wizard/studio-light-rtl.png | pass | 69 (0.005 percent) | x 990 to 1224, y 216 to 898 | [diff](form-wizard/studio-light-rtl.png) |
 | form/desk-dark-ltr-comfortable.png | pass | 0 (0.000 percent) |  | none |
 | form/desk-dark-ltr-compact.png | pass | 0 (0.000 percent) |  | none |
 | form/desk-dark-ltr.png | pass | 0 (0.000 percent) |  | none |

@@ -2,7 +2,7 @@
 
 Made by `npm run shots`. Each shot is the `variants` case at `chrome=0`, 1280 by 800 viewport, full page, device scale factor 1, animations off, reduced motion, fonts loaded. File names: `<component>/<style>-<scheme>-<dir>[-<density>][-open].png`. Density is default unless named.
 
-244 shots, 15 components, 19.03 MB. Stable (two captures byte equal): 244; unstable: 0; not verified: 0.
+262 shots, 16 components, 20.19 MB. Stable (two captures byte equal): 262; unstable: 0; not verified: 0.
 
 The full list with sizes and hashes is in `captured.json`.
 
@@ -166,6 +166,25 @@ Densities, dark, ltr en:
 | desk | [compact](form/desk-dark-ltr-compact.png) | [default](form/desk-dark-ltr.png) | [comfortable](form/desk-dark-ltr-comfortable.png) |
 | neutral | [compact](form/neutral-dark-ltr-compact.png) | [default](form/neutral-dark-ltr.png) | [comfortable](form/neutral-dark-ltr-comfortable.png) |
 | studio | [compact](form/studio-dark-ltr-compact.png) | [default](form/studio-dark-ltr.png) | [comfortable](form/studio-dark-ltr-comfortable.png) |
+
+## FormWizard
+
+| Style | Scheme | ltr en | rtl ar |
+| --- | --- | --- | --- |
+| desk | dark | [ltr](form-wizard/desk-dark-ltr.png) | [rtl](form-wizard/desk-dark-rtl.png) |
+| desk | light | [ltr](form-wizard/desk-light-ltr.png) | [rtl](form-wizard/desk-light-rtl.png) |
+| neutral | dark | [ltr](form-wizard/neutral-dark-ltr.png) | [rtl](form-wizard/neutral-dark-rtl.png) |
+| neutral | light | [ltr](form-wizard/neutral-light-ltr.png) | [rtl](form-wizard/neutral-light-rtl.png) |
+| studio | dark | [ltr](form-wizard/studio-dark-ltr.png) | [rtl](form-wizard/studio-dark-rtl.png) |
+| studio | light | [ltr](form-wizard/studio-light-ltr.png) | [rtl](form-wizard/studio-light-rtl.png) |
+
+Densities, dark, ltr en:
+
+| Style | compact | default | comfortable |
+| --- | --- | --- | --- |
+| desk | [compact](form-wizard/desk-dark-ltr-compact.png) | [default](form-wizard/desk-dark-ltr.png) | [comfortable](form-wizard/desk-dark-ltr-comfortable.png) |
+| neutral | [compact](form-wizard/neutral-dark-ltr-compact.png) | [default](form-wizard/neutral-dark-ltr.png) | [comfortable](form-wizard/neutral-dark-ltr-comfortable.png) |
+| studio | [compact](form-wizard/studio-dark-ltr-compact.png) | [default](form-wizard/studio-dark-ltr.png) | [comfortable](form-wizard/studio-dark-ltr-comfortable.png) |
 
 ## IconButton
 
