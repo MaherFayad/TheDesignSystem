@@ -1,0 +1,285 @@
+{
+  "name": "Slider",
+  "kind": "component",
+  "family": "selection",
+  "summary": "One number on a range, picked by dragging a thumb or with the arrow keys.",
+  "useWhen": [
+    "A value where the rough position matters more than the exact number: volume, opacity, zoom",
+    "A bounded number with a small step that people tune while watching the result",
+    "A setting with a few named stops, shown as marks"
+  ],
+  "avoidWhen": [
+    "An exact number that people know and want to type",
+    "A low and a high value, such as a price range",
+    "A choice among a few named options with no order between them"
+  ],
+  "insteadUse": {
+    "An exact number to type": "NumberField",
+    "A low and a high value": "RangeSlider",
+    "A few named options": "RadioGroup",
+    "A progress value people do not set": "ProgressBar"
+  },
+  "anatomy": [
+    "root",
+    "label",
+    "value",
+    "control",
+    "track",
+    "range",
+    "thumb",
+    "marks"
+  ],
+  "props": {
+    "size": {
+      "type": [
+        "sm",
+        "md",
+        "lg"
+      ],
+      "default": "md",
+      "description": "Track 2, 4 and 6 px thick, thumb 12, 16 and 24 px in a target of 24 px, 24 px and the lg control height."
+    },
+    "tone": {
+      "type": [
+        "accent"
+      ],
+      "default": "accent",
+      "description": "The range fill and the thumb: the primary color the style uses on a surface."
+    },
+    "value": {
+      "type": "number",
+      "description": "Controlled value. Pair with onValueChange."
+    },
+    "defaultValue": {
+      "type": "number",
+      "description": "Uncontrolled starting value. Default min."
+    },
+    "onValueChange": {
+      "type": "function",
+      "description": "Called on every change, while dragging too."
+    },
+    "onValueCommit": {
+      "type": "function",
+      "description": "Called once when a drag ends or a key changes the value. Save here."
+    },
+    "min": {
+      "type": "number",
+      "default": "0"
+    },
+    "max": {
+      "type": "number",
+      "default": "100"
+    },
+    "step": {
+      "type": "number",
+      "default": "1",
+      "description": "Arrows move one step; PageUp and PageDown move ten."
+    },
+    "orientation": {
+      "type": [
+        "horizontal",
+        "vertical"
+      ],
+      "default": "horizontal"
+    },
+    "label": {
+      "type": "node",
+      "description": "Visible name above the track. Names the thumb through aria-labelledby. Without it, pass aria-label."
+    },
+    "showValue": {
+      "type": "boolean",
+      "description": "Shows the formatted value at the end of the label row. Default true when there is a label."
+    },
+    "unit": {
+      "type": "string",
+      "description": "A unit after the number, in the value text and aria-valuetext: %, px, SAR."
+    },
+    "formatOptions": {
+      "type": "object",
+      "description": "Intl.NumberFormat options for the value text. Digits are always Western."
+    },
+    "formatValue": {
+      "type": "function",
+      "description": "Full control of the value text, aria-valuetext included."
+    },
+    "marks": {
+      "type": "array",
+      "description": "Ticks under the track: numbers, or { value, label } objects."
+    },
+    "name": {
+      "type": "string",
+      "description": "The form name."
+    },
+    "invalid": {
+      "type": "boolean",
+      "description": "A danger tint on the track and aria-invalid on the thumb. Inside a Field it follows the Field."
+    },
+    "disabled": {
+      "type": "boolean",
+      "description": "Inside a Field it follows the Field."
+    },
+    "rootProps": {
+      "type": "object",
+      "description": "Props for the root element. className and style also go to the root."
+    }
+  },
+  "states": [
+    "data-orientation",
+    "data-disabled",
+    "data-invalid",
+    "data-dragging"
+  ],
+  "a11y": {
+    "role": "slider, on the thumb (a Radix span), with aria-valuemin, aria-valuemax, aria-valuenow and aria-valuetext.",
+    "focus": "The thumb is the one tab stop. Focus shows the glow and a 2px ring around the drawn thumb.",
+    "keys": {
+      "Tab": "Moves focus to the thumb, and on to the next control",
+      "Shift+Tab": "Moves focus back",
+      "ArrowRight, ArrowUp": "Raise the value by one step. In right to left text ArrowLeft raises it.",
+      "ArrowLeft, ArrowDown": "Lower the value by one step. In right to left text ArrowRight lowers it.",
+      "PageUp, PageDown": "Raise or lower the value by ten steps",
+      "Shift+ArrowRight": "Moves by ten steps, as PageUp",
+      "Home, End": "Move to the minimum or the maximum"
+    },
+    "announce": "Name from the label (or aria-label), then aria-valuetext: the formatted value with its unit, such as 40%. The visible value is aria-hidden, so it is not read twice.",
+    "native": {
+      "accessibilityRole": "adjustable",
+      "accessibilityState": [
+        "disabled"
+      ]
+    },
+    "notes": [
+      "Every drag has the key path above (WCAG 2.5.7).",
+      "The thumb is a target of at least 24px at every size (the lg control height at lg): the drawn circle is its content box.",
+      "Values use Western digits in every language. formatSliderValue is a stand in until packages/shared/src/number.ts lands.",
+      "Marks are aria-hidden: they repeat what aria-valuetext says. A vertical slider shows no marks.","Rest props (name, min, max, step) go to the Radix slider root; the ref goes to the thumb.","Inside a Field with a label and no label of its own, the thumb is named by the Field label through aria-labelledby.",
+      "A label that is not a native label: the thumb is not a form element, so the label is tied with aria-labelledby."
+    ]
+  },
+  "content": {
+    "en": {
+      "label": "A noun in sentence case: Opacity. The unit goes in unit, not in the label.",
+      "unit": "A symbol or a short unit: %, px, SAR.",
+      "marks": "Only the values people aim for. Not every step."
+    },
+    "ar": {
+      "label": "اسم بدون تشكيل: الشفافية",
+      "unit": "الأرقام إنجليزية دايم، والوحدة بعد الرقم: 12,500 ريال"
+    }
+  },
+  "tokens": [
+    "size.target-min",
+    "size.control.lg",
+    "size.icon.sm",
+    "size.icon.md",
+    "size.icon.lg",
+    "border.width.default",
+    "border.width.strong",
+    "space.2xs",
+    "space.m",
+    "font.size.xs",
+    "font.size.s",
+    "font.size.m",
+    "font.weight.semibold",
+    "font.leading.snug",
+    "radius.pill",
+    "color.bg.overlay-20",
+    "color.bg.surface",
+    "color.primary.on-surface",
+    "color.text.default",
+    "color.text.muted",
+    "color.border.strong",
+    "color.state.danger.tint-20",
+    "elevation.input-focus",
+    "focus.shadow.ring",
+    "duration.base",
+    "ease.default",
+    "opacity.disabled"
+  ],
+  "motion": "fade",
+  "frameworks": {
+    "react": {
+      "status": "ready",
+      "behavior": "radix:Slider",
+      "example": "Slider.demo.tsx"
+    },
+    "angular": {
+      "status": "planned"
+    },
+    "native": {
+      "status": "planned"
+    }
+  },
+  "styles": {
+    "studio": "A thin overlay track, the range and thumb in the bright text color",
+    "desk": "The same track, the range and thumb in the yellow primary (a darker gold in Desk Light)"
+  },
+  "mistakes": [
+    {
+      "wrong": "A slider for an exact number such as a price",
+      "right": "A NumberField, or a Slider with a NumberField beside it"
+    },
+    {
+      "wrong": "aria-valuetext left out, so 40 is read with no unit",
+      "right": "The unit prop, which sets aria-valuetext"
+    },
+    {
+      "wrong": "Saving on every onValueChange while dragging",
+      "right": "Save in onValueCommit"
+    },
+    {
+      "wrong": "Two Sliders for a low and a high value",
+      "right": "A RangeSlider"
+    }
+  ],
+  "contract": {
+    "optionalParts": [
+      "label",
+      "value",
+      "marks"
+    ],
+    "keys": {
+      "ArrowRight": {
+        "focus": "[data-ds='slider'] [data-part='thumb']",
+        "case": "one",
+        "expect": "value-changes"
+      },
+      "ArrowLeft": {
+        "focus": "[data-ds='slider'] [data-part='thumb']",
+        "case": "one",
+        "expect": "value-changes"
+      },
+      "ArrowUp": {
+        "focus": "[data-ds='slider'] [data-part='thumb']",
+        "case": "one",
+        "expect": "value-changes"
+      },
+      "ArrowDown": {
+        "focus": "[data-ds='slider'] [data-part='thumb']",
+        "case": "one",
+        "expect": "value-changes"
+      },
+      "PageUp": {
+        "focus": "[data-ds='slider'] [data-part='thumb']",
+        "case": "one",
+        "expect": "value-changes"
+      },
+      "PageDown": {
+        "focus": "[data-ds='slider'] [data-part='thumb']",
+        "case": "one",
+        "expect": "value-changes"
+      },
+      "Home": {
+        "focus": "[data-ds='slider'] [data-part='thumb']",
+        "case": "one",
+        "expect": "value-changes"
+      },
+      "End": {
+        "focus": "[data-ds='slider'] [data-part='thumb']",
+        "case": "one",
+        "expect": "value-changes"
+      }
+    }
+  },
+  "since": "0.1.0"
+}
