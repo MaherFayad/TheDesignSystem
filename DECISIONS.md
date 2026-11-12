@@ -218,3 +218,21 @@ on the allow list in section 4 of the plan. It brings no second React copy.
 It is used only where an order names it (NumberField, ScrubInput, later the
 date family).
 
+## Motion may use paint properties (owner feedback, 2026-11-12)
+
+The plan said only `transform` and `opacity` animate. After testing the live
+site the owner asked for a check that is drawn, a glass thumb and richer
+feedback, which that rule cannot give. The lead reads this as a ruling:
+motion may also use `clip-path`, `stroke-dashoffset`, `stroke-dasharray`,
+`filter`, `backdrop-filter`, `color`, `background-color`, `border-color`,
+`outline-color` and `box-shadow`. Layout properties never animate. The lint
+rule and `docs/contracts/anatomy.md` change in order 1.23. If the owner did
+not mean this, the rule goes back and round 3 keeps its transform and opacity
+forms as the fallback.
+
+## Liquid starts in wave 1 (owner feedback, 2026-11-12)
+
+The owner asked for the glass look on controls. That is the Liquid style of
+the plan, scheduled for wave 2. Order 1.26 starts it now, as proposed. The
+hard limits stand: the id is `liquid`, no vendor font file, symbol or mark.
+

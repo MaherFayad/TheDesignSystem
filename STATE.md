@@ -214,6 +214,7 @@ again: commit the tree as wip, push, and resume the agents by id.
    for demo copy unless told otherwise.
 
 ## Owner answers
+- 2026-11-12 22:50 UTC, after testing the live site: checkbox and toggle need much better interactions (glass thumb, growing dot, drawn check); improve every interaction and its feedback (copy animates from icon to "Copied"); toasts and popups need a better look in every style; Studio and Desk are far too close; iOS, Android and web show no difference. Orders 1.23 to 1.26 in `docs/plan/wave-1.md`. The lead took this as a ruling that motion may use paint properties (see DECISIONS.md).
 - 2026-11-12 18:20 UTC: after the round 1 videos, the interactions are acceptable but need a further round of richer animations and micro interactions. Order 1.22 added.
 1. 2026-11-12: pushing. The owner approved pushing the session branch
    `claude/relaxed-hypatia-7gseap` to `origin` after each wave. No other

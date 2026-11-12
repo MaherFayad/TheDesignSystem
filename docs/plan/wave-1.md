@@ -679,6 +679,56 @@ is acceptable but needs richer animations and micro interactions.
   beats and timings, what was rejected, and the ideas that need a rule
   change. Everything stays "proposed" until the owner approves.
 
+### 1.23 to 1.26 Owner feedback after testing the live site (2026-11-12, 22:50 UTC)
+
+The owner tested `the-system-docs.vercel.app/gallery/interactions` on a phone
+and said:
+
+1. Checkbox and toggle can be much better: a glass thumb as on iOS, a thumb
+   dot that grows as on Android, a check that is drawn. These need care.
+2. Go through every interaction and improve the motion and the feedback. The
+   copy control should animate from the icon to the word "Copied".
+3. Toasts and popups (dialog, menu) need a better look and feel in every
+   style.
+4. Studio and Desk look far too close. That cannot stay.
+5. There is no difference between iOS, Android and web.
+
+**Ruling taken from this feedback** (recorded in `DECISIONS.md`): motion may
+now use paint and compositor properties besides `transform` and `opacity`:
+`clip-path`, `stroke-dashoffset`, `stroke-dasharray`, `filter`,
+`backdrop-filter`, `color`, `background-color`, `border-color`, `outline-color`
+and `box-shadow`. Layout properties still never animate (`width`, `height`,
+`inset`, `margin`, `padding`, `font-size`, `gap`, grid tracks). Every other
+motion rule stands.
+
+- **1.23 Interaction round 3: signature controls and feedback**
+  (ds-component). Owns every React component's CSS and source, and
+  `packages/motion`. Rebuilds Checkbox, Switch, Radio, CopyButton and the
+  rest with the new property set, fixes the blockers of the round 2 review,
+  and updates the lint rule and the contract line for the ruling. Adds no
+  platform or style specific look: it exposes private properties and parts
+  that 1.24 to 1.26 set.
+- **1.24 Styles apart: Studio, Desk and Neutral** (ds-style). Owns
+  `packages/styles/{studio,desk,neutral}/**`. Pushes the twelve dials of
+  section 3.7 of the plan much further apart, and redesigns the overlay
+  surfaces (Toast, Dialog, AlertDialog, Sheet, Drawer, Popover, Tooltip,
+  menus and list boxes) in each style. Proposed, with side by side
+  screenshots.
+- **1.25 Platform axis** (ds-style). Owns new files
+  `packages/css/src/platform/ios.css` and `android.css` and their wiring.
+  `data-platform` changes proportions, touch targets, the shape and travel
+  of controls, press feedback, and where overlays come from, following each
+  platform's public conventions. No vendor asset, font file, icon or name.
+- **1.26 Liquid style, brought forward from wave 2** (ds-style). Owns
+  `packages/styles/liquid/**`. The glass style of the dials table: capsule
+  controls, a glass switch thumb, glass sheets and toasts, springs. Style id
+  `liquid`. Proposed.
+
+Accept, each: `npm run check` green; the contract suite green for touched
+components; contrast gate green in every style and scheme; side by side
+evidence under `docs/reports/shots/`; a report under `docs/reports/`; the
+docs site redeployed by the lead. All looks stay "proposed".
+
 ## Schedule
 
 At most four agents at once. Never two installing orders at once (installs
