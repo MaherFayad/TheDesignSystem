@@ -74,6 +74,44 @@ describe('List', () => {
     expect(link.getAttribute('target')).toBe('_self');
   });
 
+  it('keeps a disabled link focusable and blocks its click handler', async () => {
+    let clicks = 0;
+    render(
+      <List>
+        <ListItem title="Finance" href="#finance" disabled linkProps={{ onClick: () => void (clicks += 1) }} />
+      </List>,
+    );
+    const link = screen.getByRole('link', { name: 'Finance' });
+    await userEvent.tab();
+    expect(document.activeElement).toBe(link);
+    await userEvent.click(link);
+    expect(clicks).toBe(0);
+  });
+
+  it('says which row is current when the row has no link', () => {
+    const { container } = render(
+      <List>
+        <ListItem title="Now" active />
+      </List>,
+    );
+    expect(container.querySelector('[data-part="item"]')?.getAttribute('aria-current')).toBe('true');
+  });
+
+  it('sets role list on ul and ol, and makes a labelled empty list a group', () => {
+    const { container, rerender } = render(
+      <List ordered>
+        <ListItem title="Step" />
+      </List>,
+    );
+    expect(root(container).getAttribute('role')).toBe('list');
+    rerender(<List aria-label="Inbox" empty="No mail yet" />);
+    expect(root(container).getAttribute('role')).toBe('group');
+    rerender(<List />);
+    expect(root(container).tagName).toBe('DIV');
+    expect(root(container).hasAttribute('role')).toBe(false);
+    expect(container.querySelector('[data-part="empty"]')).toBeNull();
+  });
+
   it('drops the href and marks the row when disabled', () => {
     const { container } = render(
       <List>

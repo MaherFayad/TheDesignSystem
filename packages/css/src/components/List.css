@@ -14,7 +14,7 @@
  *   --_list-bg                the inset surface
  *   --_list-item-bg, -item-bg-hover, -item-bg-active
  *   --_list-fg, --_list-description-fg, --_list-separator-color
- *   --_list-ring              the focus ring of a row link
+ *   --_list-ring-color        the focus ring of a row link, drawn on the row
  *
  * A row is a grid: start | title over description | end | actions. A
  * linked row's title anchor stretches its ::before over the row: one hit
@@ -39,7 +39,7 @@
     --_list-fg: var(--ds-color-text-default);
     --_list-description-fg: var(--ds-color-text-muted);
     --_list-separator-color: var(--ds-color-border-hairline);
-    --_list-ring: var(--ds-focus-shadow-ring);
+    --_list-ring-color: var(--ds-color-focus-ring);
 
     display: flex;
     flex-direction: column;
@@ -165,9 +165,13 @@
     outline: none;
   }
 
-  [data-ds='list'] > [data-part='item'] > a[data-part='title']:focus-visible::before {
-    outline: var(--ds-border-width-strong) solid transparent;
-    box-shadow: var(--_list-ring);
+  /*
+   * The ring is an outline inside the row, so the next row (positioned, and
+   * painted later) never covers its bottom edge. Color from the focus tokens.
+   */
+  [data-ds='list'] > [data-part='item']:has(> a[data-part='title']:focus-visible) {
+    outline: var(--ds-border-width-strong) solid var(--_list-ring-color);
+    outline-offset: calc(-1 * var(--ds-border-width-strong));
   }
 
   [data-ds='list'] > [data-part='item'][data-disabled] > a[data-part='title'] {
@@ -187,7 +191,9 @@
     line-clamp: 2;
   }
 
+  /* Positioned like actions, so a link or a Badge in end sits above the row link. */
   [data-ds='list'] > [data-part='item'] > [data-part='end'] {
+    position: relative;
     display: inline-flex;
     grid-area: end;
     align-items: center;
@@ -221,7 +227,7 @@
   }
 
   @media (forced-colors: active) {
-    [data-ds='list'] > [data-part='item'] > a[data-part='title']:focus-visible::before {
+    [data-ds='list'] > [data-part='item']:has(> a[data-part='title']:focus-visible) {
       outline-color: Highlight;
     }
 

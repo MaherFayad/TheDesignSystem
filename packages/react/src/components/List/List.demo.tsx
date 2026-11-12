@@ -69,7 +69,7 @@ export default function ListDemo() {
       </DemoCase>
 
       <DemoCase id="empty" title="Empty">
-        <List variant="inset" empty="No mail yet. Mail you get from your team shows here." aria-label="Inbox" />
+        <List variant="inset" empty="No mail yet. Mail you get from your team shows here." />
       </DemoCase>
 
       <DemoCase id="one" title="One row, no link">
@@ -119,7 +119,7 @@ export default function ListDemo() {
             title="مراجعة دليل الهوية للربع الرابع مع فرق التسويق في المناطق والوكالة"
             description="لو خلصت من تعديل الملف، احفظه وارجع للوحة عشان تشوف كل التغييرات في مكان واحد. وإذا تبي تشاركه مع فريقك، نزله بصيغة JSON وأرسله لهم."
             end="12:40"
-            actions={<IconButton size="xs" icon="more" label="خيارات مراجعة الدليل" />}
+            actions={<IconButton size="xs" icon="more" label="عرض خيارات مراجعة الدليل" />}
           />
         </List>
       </DemoCase>
