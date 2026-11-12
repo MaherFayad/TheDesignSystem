@@ -16,6 +16,10 @@
  *   --_split-view-back-gap      the space around the back Button
  *   --_split-view-ring-color, -ring-width   the outline of a pane that took focus
  *
+ * The focus of a pane is an outline drawn inside it, not a ::before layer:
+ * a pane is a panel of the group, whose ::before is free, but a ring on a
+ * layer would sit under the pane's own scrolling content.
+ *
  * Motion: none of its own. The panes switch at once; the handle follows the
  * ResizablePanels motion ("drag-drop").
  */

@@ -27,7 +27,8 @@
 // Focus: when the detail opens while stacked, focus moves to the secondary
 // pane, so a screen reader starts reading it. Back hides it and returns
 // focus to the element that had focus when the detail opened (the list
-// item), else to the primary pane.
+// item, the last element focused inside the list), else to the primary pane.
+// The first render, before the width is measured and on the server, is split.
 import { useCallback, useLayoutEffect, useRef, useState, type ComponentProps, type ReactNode } from 'react';
 import { useTheme } from '../../theme/hooks';
 import { Button } from '../Button';
@@ -40,10 +41,12 @@ export type SplitViewState = 'split' | 'primary' | 'secondary';
 
 /** breakpoint.tablet, 48rem, in rem. */
 const TABLET_REM = 48;
+/** Media queries read rem at the initial font size, 16px; the width check does the same. */
+const MEDIA_REM_PX = 16;
 
 const splitViewLabels = {
-  en: { back: 'Back to list', handle: 'Resize list' },
-  ar: { back: 'الرجوع للقائمة', handle: 'تغيير حجم القائمة' },
+  en: { back: 'Return to list', handle: 'Resize list', primary: 'List', secondary: 'Detail' },
+  ar: { back: 'الرجوع للقائمة', handle: 'تغيير حجم القائمة', primary: 'القائمة', secondary: 'التفاصيل' },
 } as const;
 
 /** The SplitView state for a layout, a width in px and a root font size. */
@@ -76,13 +79,13 @@ export interface SplitViewProps extends Omit<ComponentProps<'div'>, 'dir'> {
   primaryMax?: number;
   /** Smallest detail width in percent. Default 35. */
   secondaryMin?: number;
-  /** Names the list pane as a region. */
+  /** The name of the list pane, a region. Default "List", in Arabic under lang="ar". Name the list: Messages. */
   primaryLabel?: string;
-  /** Names the detail pane as a region. */
+  /** The name of the detail pane, a region. Default "Detail", in Arabic under lang="ar". Name the detail: Message. */
   secondaryLabel?: string;
   /** The name of the handle. Default "Resize list", in Arabic under lang="ar". */
   handleLabel?: string;
-  /** The label of the back Button. Default "Back to list", in Arabic under lang="ar". */
+  /** The label of the back Button. Default "Return to list", in Arabic under lang="ar". */
   backLabel?: string;
 }
 
@@ -114,7 +117,6 @@ export function SplitView({
   const secondaryRef = useRef<HTMLDivElement | null>(null);
   const opener = useRef<HTMLElement | null>(null);
   const [width, setWidth] = useState(0);
-  const [rootFont, setRootFont] = useState(16);
 
   const setRoot = useCallback(
     (el: HTMLDivElement | null) => {
@@ -128,11 +130,7 @@ export function SplitView({
   useLayoutEffect(() => {
     const el = root.current;
     if (!el) return undefined;
-    const read = () => {
-      setWidth(el.getBoundingClientRect().width);
-      const px = Number.parseFloat(getComputedStyle(document.documentElement).fontSize);
-      if (px > 0) setRootFont(px);
-    };
+    const read = () => setWidth(el.getBoundingClientRect().width);
     read();
     if (typeof ResizeObserver === 'undefined') return undefined;
     const observer = new ResizeObserver(read);
@@ -140,7 +138,7 @@ export function SplitView({
     return () => observer.disconnect();
   }, []);
 
-  const state = splitViewState(layout, width, rootFont, show);
+  const state = splitViewState(layout, width, MEDIA_REM_PX, show);
   const stacked = state !== 'split';
 
   // Focus follows the stacked pane: into the detail when it opens, back to
@@ -151,14 +149,21 @@ export function SplitView({
     prevShow.current = show;
     if (show === was) return;
     if (show) {
-      const active = document.activeElement;
-      opener.current = active instanceof HTMLElement && primaryRef.current?.contains(active) ? active : null;
       if (stacked) secondaryRef.current?.focus();
     } else if (stacked && secondaryRef.current?.contains(document.activeElement)) {
       const target = opener.current?.isConnected ? opener.current : primaryRef.current;
       target?.focus();
     }
   }, [show, stacked]);
+
+  // When the root narrows into stacked with focus in the pane that hides,
+  // focus moves to the pane that stays.
+  useLayoutEffect(() => {
+    if (!stacked) return;
+    const hiddenPane = state === 'secondary' ? primaryRef.current : secondaryRef.current;
+    const shown = state === 'secondary' ? secondaryRef.current : primaryRef.current;
+    if (hiddenPane?.contains(document.activeElement)) shown?.focus();
+  }, [stacked, state]);
 
   return (
     <PanelGroup
@@ -176,8 +181,12 @@ export function SplitView({
         max={primaryMax}
         tabIndex={-1}
         hidden={state === 'secondary'}
-        role={primaryLabel ? 'region' : undefined}
-        aria-label={primaryLabel}
+        role="region"
+        aria-label={primaryLabel ?? labels.primary}
+        onFocus={(event) => {
+          // The last focused element in the list is the one that opened the detail.
+          if (event.target !== event.currentTarget) opener.current = event.target;
+        }}
       >
         {primary}
       </ResizablePanel>
@@ -187,8 +196,8 @@ export function SplitView({
         min={secondaryMin}
         tabIndex={-1}
         hidden={state === 'primary'}
-        role={secondaryLabel ? 'region' : undefined}
-        aria-label={secondaryLabel}
+        role="region"
+        aria-label={secondaryLabel ?? labels.secondary}
       >
         {stacked && (
           <Button data-part="back" emphasis="ghost" size="sm" start="arrow-back" onClick={() => setShow(false)}>

@@ -91,11 +91,34 @@ describe('SplitView', () => {
     expect(p.primary.hidden).toBe(true);
     expect(document.activeElement).toBe(p.secondary);
     expect(p.back?.getAttribute('data-ds')).toBe('button');
-    expect(p.back?.textContent).toContain('Back to list');
+    expect(p.back?.textContent).toContain('Return to list');
     fireEvent.click(p.back!);
     expect(onShow).toHaveBeenLastCalledWith(false);
     expect(parts(container).root.getAttribute('data-state')).toBe('primary');
     expect(document.activeElement).toBe(opener);
+  });
+
+  it('names both panes by default and moves focus out of a pane that hides', () => {
+    function Narrowing() {
+      const [layout, setLayout] = useState<SplitViewLayout>('split');
+      return (
+        <SplitView
+          layout={layout}
+          defaultShowSecondary
+          primary={<Button onClick={() => setLayout('stacked')}>Stack the view</Button>}
+          secondary="Detail text"
+        />
+      );
+    }
+    const { container } = render(<Narrowing />);
+    const p = parts(container);
+    expect(p.primary.getAttribute('aria-label')).toBe('List');
+    expect(p.secondary.getAttribute('aria-label')).toBe('Detail');
+    const button = screen.getByRole('button', { name: 'Stack the view' });
+    button.focus();
+    fireEvent.click(button);
+    expect(parts(container).root.getAttribute('data-state')).toBe('secondary');
+    expect(document.activeElement).toBe(parts(container).secondary);
   });
 
   it('labels the handle and back in Arabic under lang ar', () => {

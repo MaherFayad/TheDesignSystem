@@ -47,7 +47,7 @@ function MailReader({ mails, layout = 'auto', lang = 'en', startOpen, blockSize 
   const chosen = open === null ? undefined : mails[open];
   const t =
     lang === 'ar'
-      ? { list: 'الرسائل', detail: 'الرسالة', none: 'ما فيه رسالة مختارة. اختر رسالة من القائمة.', empty: 'ما فيه رسائل.' }
+      ? { list: 'الرسائل', detail: 'الرسالة', none: 'ما فيه رسالة مختارة. اختار رسالة من القائمة.', empty: 'ما فيه رسائل.' }
       : { list: 'Messages', detail: 'Message', none: 'No message selected. Choose one from the list.', empty: 'No messages yet.' };
   return (
     <SplitView

@@ -2107,7 +2107,7 @@
           "stacked"
         ],
         "default": "auto",
-        "description": "auto: split when the root is at least breakpoint.tablet (48rem) wide, stacked below. The root's own width counts, not the window's."
+        "description": "auto: split when the root is at least breakpoint.tablet (48rem) wide, stacked below. The root's own width counts, not the window's. The first render, before the width is measured and on the server, is split. 48rem is read at 16px, as media queries do."
       },
       "defaultSizes": {
         "type": "number[]",
@@ -2132,11 +2132,13 @@
       },
       "primaryLabel": {
         "type": "string",
-        "description": "Names the list pane as a region."
+        "default": "List",
+        "description": "The name of the list pane, a region. Under lang=\"ar\" the default is القائمة. Name the list: Messages."
       },
       "secondaryLabel": {
         "type": "string",
-        "description": "Names the detail pane as a region."
+        "default": "Detail",
+        "description": "The name of the detail pane, a region. Under lang=\"ar\" the default is التفاصيل. Name the detail: Message."
       },
       "handleLabel": {
         "type": "string",
@@ -2145,8 +2147,8 @@
       },
       "backLabel": {
         "type": "string",
-        "default": "Back to list",
-        "description": "Under lang=\"ar\" the default is الرجوع للقائمة. Name the list: Back to messages."
+        "default": "Return to list",
+        "description": "Under lang=\"ar\" the default is الرجوع للقائمة. Name the list: Return to messages."
       }
     },
     "states": [
@@ -2157,8 +2159,8 @@
       "data-dragging"
     ],
     "a11y": {
-      "role": "none on the root. The panes are regions when primaryLabel and secondaryLabel name them. The handle is a separator (the window splitter of ResizablePanels).",
-      "focus": "While stacked, focus moves to the detail pane when it opens, and back returns it to the element that opened the detail (the list item), else to the list pane. While split, focus stays where the person put it.",
+      "role": "none on the root. The panes are regions, named by primaryLabel and secondaryLabel (List and Detail by default). The handle is a separator (the window splitter of ResizablePanels).",
+      "focus": "While stacked, focus moves to the detail pane when it opens, and back returns it to the last element focused in the list (the item that opened the detail), else to the list pane. When the view narrows into stacked with focus in the pane that hides, focus moves to the pane that stays. While split, focus stays where the person put it.",
       "keys": {
         "Tab": "Moves through the list, the handle and the detail",
         "ArrowLeft, ArrowRight": "On the handle, move it 5 percent left or right on screen. The list is on the right in Arabic.",
@@ -2174,27 +2176,37 @@
         "Both panes stay mounted while stacked; the hidden one has the hidden attribute, so the list keeps its scroll position.",
         "The width is read from the root, so a SplitView inside a narrow window or panel stacks there too. No sideways scroll at 320px.",
         "Every drag has a key path (WCAG 2.5.7), from ResizablePanels.",
-        "handle-grip is the grip of the shared handle; the order's anatomy did not list it.",
-        "Contract suite: the handle keys are checked on ResizablePanels, which owns them; here they are noted."
+        "handle-grip is the grip of the shared handle; the order's anatomy did not list it."
       ]
     },
     "content": {
       "en": {
-        "back": "Back to plus the list name: Back to messages.",
+        "back": "A verb plus the list name: Return to messages.",
         "empty": "The detail pane without a choice says what to do: Choose a message from the list."
       },
       "ar": {
         "back": "Noun form, no diacritics: الرجوع للرسائل.",
-        "empty": "ما فيه رسالة مختارة. اختر رسالة من القائمة."
+        "empty": "ما فيه رسالة مختارة. اختار رسالة من القائمة."
       }
     },
     "tokens": [
       "breakpoint.tablet",
       "color.focus.ring",
+      "focus.shadow.ring",
+      "border.width.default",
       "border.width.strong",
       "space.s",
+      "space.3xl",
+      "space.3xs",
       "color.border.control",
-      "size.target-min"
+      "color.border.control-hover",
+      "color.border.strong",
+      "radius.xs",
+      "radius.pill",
+      "size.target-min",
+      "duration.base",
+      "ease.out",
+      "z.dropdown"
     ],
     "motion": "drag-drop",
     "frameworks": {
@@ -2239,7 +2251,29 @@
         "handle",
         "handle-grip",
         "back"
-      ]
+      ],
+      "keys": {
+        "ArrowLeft": {
+          "case": "variants",
+          "focus": "[data-part='handle']",
+          "expect": "value-changes"
+        },
+        "ArrowRight": {
+          "case": "variants",
+          "focus": "[data-part='handle']",
+          "expect": "value-changes"
+        },
+        "Home": {
+          "case": "variants",
+          "focus": "[data-part='handle']",
+          "expect": "value-changes"
+        },
+        "End": {
+          "case": "variants",
+          "focus": "[data-part='handle']",
+          "expect": "value-changes"
+        }
+      }
     },
     "since": "0.1.0",
     "uses": [

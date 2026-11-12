@@ -150,10 +150,10 @@ interface SplitViewProps extends Omit<ComponentProps<'div'>, 'dir'> {
   primaryMin?: number;                // default 25
   primaryMax?: number;                // default 50
   secondaryMin?: number;              // default 35
-  primaryLabel?: string;              // names the pane as a region
-  secondaryLabel?: string;
+  primaryLabel?: string;              // pane region name; default "List" / القائمة
+  secondaryLabel?: string;            // default "Detail" / التفاصيل
   handleLabel?: string;               // default "Resize list" / تغيير حجم القائمة
-  backLabel?: string;                 // default "Back to list" / الرجوع للقائمة
+  backLabel?: string;                 // default "Return to list" / الرجوع للقائمة
 }
 export function splitViewState(layout, width, rootFontPx, showSecondary): 'split' | 'primary' | 'secondary';
 ```
@@ -165,13 +165,26 @@ Decisions:
 - Both panes stay mounted while stacked; the hidden one has `hidden`, so the
   list keeps its scroll position.
 - Stacked: focus moves into the detail when it opens; back returns focus to
-  the element that opened it, else the list pane.
+  the last element focused in the list (the item that opened the detail),
+  else the list pane. Narrowing into stacked with focus in the pane that
+  hides moves focus to the pane that stays.
+- The 48rem check uses 16px per rem, as media queries do. The first render,
+  before the width is measured and on the server, is split (manifest note).
+- `contract.keys` hints for the handle arrows, Home and End, as on
+  ResizablePanels.
 - Anatomy adds `handle-grip`: the grip of the shared handle is owned by the
   SplitView root, so the manifest lists it.
 - The back Button is a system Button (`data-ds="button"`, `data-part="back"`,
   start icon `arrow-back`, which mirrors in RTL).
 
-Review: see the end of this file.
+Review: no blockers. Fixed the notes on recording the opener (now the last
+focus in the list), focus left in a pane that hides, unnamed panes (default
+names now), the back label (a verb: Return to list), the Arabic imperative
+(اختار, dialect), the full token list, the key hints, and the rem base.
+Noted in the CSS header: a pane's focus is an outline inside it, not a
+`::before` layer, since a layer would sit under the pane's scrolling content.
+Left open: SplitView imports `useControllable` from the Window folder (see
+"Changes needed from the lead").
 
 ## PageShell (wo-1.8.12): not built
 
@@ -199,6 +212,12 @@ not exist, so PageShell waits for 1.7.11 and Drawer to merge.
 - `packages/shared/src/index.ts` gains `export * from './resize';` through
   gen.
 - Route the token questions above to ds-tokens.
+- Move `packages/react/src/components/Window/useControllable.ts` to a shared
+  place (for example `packages/react/src/internal/useControllable.ts`) and
+  update its importers: Window, Dialog and now SplitView
+  (`SplitView.tsx`, the line `import { useControllable } from '../Window/useControllable';`).
+  It is a private helper of another component today; Dialog already
+  imports it the same way.
 
 ## What I could not do
 
