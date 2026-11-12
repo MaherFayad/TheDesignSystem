@@ -26,10 +26,10 @@
 // the start edge of the main axis (above, or before the inline start), and
 // `data-overflow-end` while content is hidden after the end edge. The main
 // axis is the block axis for `vertical` and `both`, the inline axis for
-// `horizontal`. In RTL, scrollLeft runs from 0 toward negative numbers, so the
+// `horizontal`. With `both` the fades and states follow the block axis only. In RTL, scrollLeft runs from 0 toward negative numbers, so the
 // inline position is read as its absolute value.
 //
-// Focus: a viewport with no focusable child gets tabindex 0, role region and
+// Focus: a viewport that overflows and has no focusable child gets tabindex 0, role region and
 // a name, so a keyboard user can reach it and scroll with the arrow keys
 // (WCAG 2.1.1, axe scrollable-region-focusable). With a focusable child the
 // viewport stays out of the tab order and the children scroll it into view.
@@ -59,11 +59,11 @@ const scrollAreaLabels = {
 } as const;
 
 const FOCUSABLE =
-  'a[href], area[href], button:not([disabled]), input:not([disabled]):not([type="hidden"]), select:not([disabled]), textarea:not([disabled]), iframe, audio[controls], video[controls], [contenteditable]:not([contenteditable="false"]), [tabindex]:not([tabindex="-1"])';
+  'summary, a[href], area[href], button:not([disabled]), input:not([disabled]):not([type="hidden"]), select:not([disabled]), textarea:not([disabled]), iframe, audio[controls], video[controls], [contenteditable]:not([contenteditable="false"]), [tabindex]:not([tabindex="-1"])';
 
 /** True when the element holds a focusable descendant. */
 export function hasFocusableChild(el: Element): boolean {
-  return el.querySelector(FOCUSABLE) !== null;
+  return Array.from(el.querySelectorAll(FOCUSABLE)).some((child) => child.closest('[inert]') === null);
 }
 
 interface Overflow {
@@ -102,14 +102,14 @@ export interface ScrollAreaProps extends Omit<ComponentProps<'div'>, 'dir'> {
   /** Edge fades on the side that still has content. Default true. */
   fades?: boolean;
   /**
-   * The accessible name of the viewport when it takes focus (no focusable
-   * child). Default "Scrollable content", in Arabic under lang="ar". Name what
+   * The accessible name of the viewport when it takes focus (it overflows
+   * and has no focusable child). Default "Scrollable content", in Arabic under lang="ar". Name what
    * scrolls: "Release notes".
    */
   label?: string;
   /**
-   * Whether the viewport joins the tab order. auto: only when it has no
-   * focusable child (default). true and false force it.
+   * Whether the viewport joins the tab order. auto: only when its content
+   * overflows and it has no focusable child (default). true and false force it.
    */
   focusable?: boolean | 'auto';
   /** A ref to the viewport, the element that scrolls. */
@@ -139,6 +139,7 @@ export function ScrollArea({
   const viewport = useRef<HTMLDivElement | null>(null);
   const [overflow, setOverflow] = useState<Overflow>({ start: false, end: false });
   const [childFocusable, setChildFocusable] = useState(false);
+  const [scrolls, setScrolls] = useState(false);
   const axis = orientation === 'horizontal' ? 'inline' : 'block';
 
   const measure = useCallback(() => {
@@ -146,6 +147,7 @@ export function ScrollArea({
     if (!el) return;
     const next = readOverflow(el, axis);
     setOverflow((prev) => (prev.start === next.start && prev.end === next.end ? prev : next));
+    setScrolls(el.scrollHeight - el.clientHeight > 1 || el.scrollWidth - el.clientWidth > 1);
   }, [axis]);
 
   const setViewport = useCallback(
@@ -177,7 +179,7 @@ export function ScrollArea({
     };
   }, [measure]);
 
-  const takesFocus = focusable === 'auto' ? !childFocusable : focusable;
+  const takesFocus = focusable === 'auto' ? scrolls && !childFocusable : focusable;
   const name = label ?? (lang === 'ar' || lang.startsWith('ar-') ? scrollAreaLabels.ar : scrollAreaLabels.en);
   const vertical = orientation !== 'horizontal';
   const horizontal = orientation !== 'vertical';
@@ -198,7 +200,7 @@ export function ScrollArea({
         data-part="viewport"
         tabIndex={takesFocus ? 0 : undefined}
         role={takesFocus ? 'region' : undefined}
-        aria-label={takesFocus || label !== undefined ? name : undefined}
+        aria-label={takesFocus ? name : undefined}
         onScroll={(event) => {
           measure();
           onScroll?.(event);

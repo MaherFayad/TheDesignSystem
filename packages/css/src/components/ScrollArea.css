@@ -29,9 +29,10 @@
  * content passes that edge and out when the edge is reached. Only opacity
  * animates. Under reduced motion the fades switch at once.
  *
- * Focus: the viewport takes focus only when no child can. Its ring is an
- * outline drawn inside the viewport, because the root clips everything
- * outside it. A real outline color also shows in forced colors mode.
+ * Focus: the viewport takes focus only when it overflows and no child can.
+ * Its ring is the root's outline, drawn outside the root, so the fades and
+ * the scrollbar cannot cover it. The names -ring-color and -ring-width
+ * split the contract's -ring because the ring is an outline, not a shadow.
  */
 @layer ds.base {
   [data-ds='scroll-area'] {
@@ -70,9 +71,17 @@
     border-radius: inherit;
   }
 
+  /*
+   * The ring sits on the root, outside its edge, so the fades and the
+   * scrollbar never cover it. The viewport draws none of its own.
+   */
   [data-ds='scroll-area'] > [data-part='viewport']:focus-visible {
+    outline: var(--_scroll-area-ring-width) solid transparent;
+  }
+
+  [data-ds='scroll-area']:has(> [data-part='viewport']:focus-visible) {
     outline: var(--_scroll-area-ring-width) solid var(--_scroll-area-ring-color);
-    outline-offset: calc(var(--_scroll-area-ring-width) * -1);
+    outline-offset: var(--_scroll-area-ring-width);
   }
 
   /* ------------------------------------------------------------ edge fades */
@@ -80,7 +89,7 @@
   [data-ds='scroll-area'] > :is([data-part='fade-start'], [data-part='fade-end']) {
     position: absolute;
     pointer-events: none;
-    opacity: 0;
+    opacity: var(--_scroll-area-fade-opacity, 0);
     transition: opacity var(--_scroll-area-duration) var(--_scroll-area-ease);
   }
 
@@ -126,7 +135,7 @@
 
   [data-ds='scroll-area'][data-overflow-start] > [data-part='fade-start'],
   [data-ds='scroll-area'][data-overflow-end] > [data-part='fade-end'] {
-    opacity: 1;
+    --_scroll-area-fade-opacity: 1;
   }
 
   /* ------------------------------------------------------------ scrollbars */
@@ -157,7 +166,7 @@
   }
 
   [data-ds='scroll-area'] > [data-part='scrollbar'] > [data-part='thumb']:hover {
-    background: var(--_scroll-area-thumb-hover);
+    --_scroll-area-thumb: var(--_scroll-area-thumb-hover);
   }
 
   [data-ds='scroll-area'] > [data-part='corner'] {
@@ -182,7 +191,7 @@
       background: CanvasText;
     }
 
-    [data-ds='scroll-area'] > [data-part='viewport']:focus-visible {
+    [data-ds='scroll-area']:has(> [data-part='viewport']:focus-visible) {
       outline-color: Highlight;
     }
   }

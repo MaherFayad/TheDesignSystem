@@ -69,7 +69,7 @@ export default function ScrollAreaDemo() {
               ))}
             </Strip>
           </ScrollArea>
-          <ScrollArea orientation="both" label="Wide table" style={box('10rem')}>
+          <ScrollArea orientation="both" label="Wide notes" style={box('10rem')}>
             <div style={{ ...pad, inlineSize: '40rem' }}>
               {releaseNotes.map((note) => (
                 <p key={note} style={{ margin: 0, paddingBlock: 'var(--ds-space-2xs)' }}>

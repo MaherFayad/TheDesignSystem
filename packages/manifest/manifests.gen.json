@@ -1693,7 +1693,7 @@
           "false"
         ],
         "default": "auto",
-        "description": "auto: the viewport joins the tab order (tabindex 0, role region, named) only when it holds no focusable child."
+        "description": "auto: the viewport joins the tab order (tabindex 0, role region, named) only when its content overflows and it holds no focusable child."
       },
       "viewportRef": {
         "type": "ref",
@@ -1713,7 +1713,7 @@
     ],
     "a11y": {
       "role": "none on the root. The viewport is a region named by label while it takes focus.",
-      "focus": "The viewport takes focus (tabindex 0) only when it has no focusable child, so a keyboard user can reach it and scroll. With focusable children, Tab moves through them and the browser scrolls each into view.",
+      "focus": "The viewport takes focus (tabindex 0) only when its content overflows and it has no focusable child, so a keyboard user can reach it and scroll. With focusable children, Tab moves through them and the browser scrolls each into view.",
       "keys": {
         "Tab": "Moves to the viewport when it takes focus, else to the first focusable child",
         "ArrowUp, ArrowDown": "Native scrolling of the focused viewport by a line",
@@ -1730,6 +1730,9 @@
         "Scrolling stays native: wheel, touch, keys, find in page and scroll into view all work. No custom wheel handling.",
         "The vertical scrollbar sits on the inline end, so on the left in right to left layouts. Horizontal fades mirror too.",
         "The keys are the browser's own scrolling of a focused scroll container, so the contract suite notes them; ScrollArea.test.tsx covers the focus rule and the overflow states.",
+        "visible and hidden are the data-state of the Radix scrollbar and thumb parts under scrollbars scroll or hover.",
+        "With orientation both, the fades and the overflow states follow the block axis only.",
+        "The thumb tokens (scrollbar.thumb) measure under 3:1 on some surfaces; the thumb is a pointer aid, the keyboard and the native scroll carry the function. Raised with the lead as a token question.",
         "Edge fades fade into --_scroll-area-fade-color, the body color by default. A parent on another surface sets that private property to its own fill from its own CSS."
       ]
     },

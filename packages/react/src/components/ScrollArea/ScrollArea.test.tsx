@@ -35,6 +35,14 @@ function geometry(el: HTMLElement, g: Partial<Record<'scrollTop' | 'scrollLeft' 
   }
 }
 
+/** Makes the viewport overflow and lets the area measure it again. */
+function overflowing(container: HTMLElement): HTMLElement {
+  const v = viewport(container);
+  geometry(v, { scrollTop: 0, scrollHeight: 400, clientHeight: 100 });
+  fireEvent.scroll(v);
+  return v;
+}
+
 describe('ScrollArea', () => {
   it('renders the anatomy with the default axes', () => {
     const { container } = render(<ScrollArea>Text</ScrollArea>);
@@ -61,9 +69,16 @@ describe('ScrollArea', () => {
     expect(el.querySelector('[data-part="fade-start"]')).toBeNull();
   });
 
-  it('makes a viewport with no focusable child a named, focusable region', () => {
+  it('keeps a viewport that does not overflow out of the tab order', () => {
     const { container } = render(<ScrollArea label="Release notes">Text</ScrollArea>);
     const v = viewport(container);
+    expect(v.hasAttribute('tabindex')).toBe(false);
+    expect(v.hasAttribute('aria-label')).toBe(false);
+  });
+
+  it('makes an overflowing viewport with no focusable child a named, focusable region', () => {
+    const { container } = render(<ScrollArea label="Release notes">Text</ScrollArea>);
+    const v = overflowing(container);
     expect(v.getAttribute('tabindex')).toBe('0');
     expect(v.getAttribute('role')).toBe('region');
     expect(v.getAttribute('aria-label')).toBe('Release notes');
@@ -75,19 +90,21 @@ describe('ScrollArea', () => {
         <ScrollArea>نص</ScrollArea>
       </Theme>,
     );
+    overflowing(container);
     expect(viewport(container).getAttribute('aria-label')).toBe('محتوى قابل للتمرير');
     expect(root(container).getAttribute('dir')).toBe('rtl');
   });
 
-  it('keeps the viewport out of the tab order when a child can take focus', () => {
+  it('keeps the viewport out of the tab order and unnamed when a child can take focus', () => {
     const { container } = render(
-      <ScrollArea>
+      <ScrollArea label="Links">
         <a href="#one">One</a>
       </ScrollArea>,
     );
-    const v = viewport(container);
+    const v = overflowing(container);
     expect(v.hasAttribute('tabindex')).toBe(false);
     expect(v.hasAttribute('role')).toBe(false);
+    expect(v.hasAttribute('aria-label')).toBe(false);
   });
 
   it('follows focusable true and false', () => {
@@ -161,7 +178,7 @@ describe('readOverflow', () => {
 describe('hasFocusableChild', () => {
   it('skips disabled controls and tabindex -1', () => {
     const d = document.createElement('div');
-    d.innerHTML = '<button disabled>A</button><span tabindex="-1">B</span>';
+    d.innerHTML = '<button disabled>A</button><span tabindex="-1">B</span><div inert><a href="#c">C</a></div>';
     expect(hasFocusableChild(d)).toBe(false);
     d.innerHTML += '<input />';
     expect(hasFocusableChild(d)).toBe(true);
