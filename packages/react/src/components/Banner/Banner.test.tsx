@@ -74,6 +74,17 @@ describe('Banner', () => {
     expect(document.querySelector('main')?.getAttribute('tabindex')).toBe('-1');
   });
 
+  it('still calls onDismiss when the focus target is missing or the selector is invalid', async () => {
+    const onDismiss = vi.fn();
+    render(
+      <Banner onDismiss={onDismiss} returnFocus="[[bad">
+        Trial ends soon.
+      </Banner>,
+    );
+    await userEvent.click(screen.getByRole('button', { name: 'Dismiss announcement' }));
+    expect(onDismiss).toHaveBeenCalledTimes(1);
+  });
+
   it('returns focus to a given element', async () => {
     render(
       <>
@@ -103,7 +114,14 @@ describe('Banner', () => {
       </div>,
     );
     expect(box.style.scrollPaddingBlockStart).toBe('4px');
+    rerender(
+      <div data-testid="box" style={{ overflowY: 'auto', scrollPaddingBlockStart: '4px' }}>
+        <Banner sticky>Maintenance on Friday.</Banner>
+      </div>,
+    );
+    expect(box.style.scrollPaddingBlockStart).toBe('0px');
     unmount();
+    expect(box.style.scrollPaddingBlockStart).toBe('4px');
   });
 
   it('passes ref and rest props to the root', () => {

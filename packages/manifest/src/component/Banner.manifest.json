@@ -72,7 +72,7 @@
     "label": {
       "type": "string",
       "default": "Announcement",
-      "description": "The name of the region. Arabic under lang ar: إعلان."
+      "description": "The name of the region. Default Announcement, or Arabic under lang ar. Give each banner its own label when a page has two."
     },
     "icon": {
       "type": "node",
@@ -125,7 +125,9 @@
     "notes": [
       "A sticky banner reserves scroll padding for its own height on its scroll container, so a focused element is never hidden under it (WCAG 2.4.11). The previous value comes back when it unmounts.",
       "The parts wrap at narrow widths: no sideways scroll at 320px (WCAG 1.4.10).",
-      "The close button is 24 by 24 px (WCAG 2.5.8)."
+      "The close button is 24 by 24 px (WCAG 2.5.8).",
+      "One sticky banner per scroll container: two would overlap at the top and share one scroll padding. Stack a second banner without sticky under the first.",
+      "A sticky banner uses z.topbar and sticks at the top edge of its scroll container. Under an app top bar, put the banner in the content scroll container below the bar, not in the same one."
     ]
   },
   "content": {

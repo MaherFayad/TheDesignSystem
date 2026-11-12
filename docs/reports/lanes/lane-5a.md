@@ -1,5 +1,7 @@
 # Lane 5A report: Messages (Alert, Callout, Banner)
 
+Status: done. All three components built, reviewed once each, and green.
+
 Branch `claude/ds-lane-5a`. Built in the lane order: Alert, Callout, Banner.
 
 | Order | Component | Commit | Check | Contract (react) |
@@ -143,7 +145,8 @@ Decisions:
 - **Dismiss**: the banner stores nothing and never hides itself. The close
   button moves focus to the start of main content (adding `tabindex="-1"`
   when the target is not focusable), then calls `onDismiss`, where the
-  consumer unmounts it and remembers the choice.
+  consumer unmounts it and remembers the choice. A missing target or a bad
+  selector leaves focus alone and still calls `onDismiss`.
 - **Sticky (WCAG 2.4.11)**: sticks to the top of its scroll container with
   `z.topbar`, and sets that container's `scroll-padding-block-start` to its
   measured height through a ResizeObserver. The previous value is restored
@@ -187,7 +190,16 @@ beyond the name list in anatomy.md rule 1, the same pattern as Toast and
 Alert; in forced colors soft and outline look the same (the tone stays in
 the icon name).
 
-Banner: see the section below.
+Banner, fixed: the demo nested a second main inside the gallery main
+(blocker; the demo now passes `returnFocus` to a plain element); the scroll
+container lookup now matches the element a sticky box sticks to (hidden
+counts); a layout effect sets the padding before first paint; a consumer
+aria-label is kept; an invalid or missing focus target no longer stops
+onDismiss; the unmount restore is tested; narrow actions span to the last
+column; the two banners in the many case have their own labels. Left
+open, documented in the manifest notes: one sticky banner per scroll
+container (two would overlap and share one padding), and z.topbar is the
+same layer as an app top bar.
 
 ## Changes needed from the lead
 

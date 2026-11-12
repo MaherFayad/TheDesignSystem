@@ -1,6 +1,6 @@
 // Banner demo. One section per content case. The variants case shows every
 // tone in soft and solid, and an Arabic row. The one case dismisses a
-// banner: focus moves to the demo's main element. The too-many case shows a
+// banner: focus moves to the content after it (returnFocus). The too-many case shows a
 // sticky banner over a long list in its own scroll box, where the banner
 // reserves scroll padding for its height.
 import { useState } from 'react';
@@ -38,7 +38,7 @@ function Dismissible() {
   return (
     <>
       {open ? (
-        <Banner tone="warning" onDismiss={() => setOpen(false)} actions={<Button size="sm" emphasis="outline">Add payment method</Button>}>
+        <Banner tone="warning" returnFocus="#banner-demo-boards" onDismiss={() => setOpen(false)} actions={<Button size="sm" emphasis="outline">Add payment method</Button>}>
           {copy.warning}
         </Banner>
       ) : (
@@ -48,9 +48,8 @@ function Dismissible() {
           </Button>
         </DemoRow>
       )}
-      <main aria-label="Boards">
-        <p>Your boards. Focus lands here when the banner is dismissed.</p>
-      </main>
+      {/* The gallery already has a main element, so the demo names its own target with returnFocus. */}
+      <p id="banner-demo-boards">Your boards. Focus lands here when the banner is dismissed.</p>
     </>
   );
 }
@@ -85,10 +84,10 @@ export default function BannerDemo() {
 
       <DemoCase id="many" title="Many: two banners stacked, the most urgent first">
         <div>
-          <Banner tone="danger" emphasis="solid">
+          <Banner tone="danger" emphasis="solid" label="Service status">
             {copy.danger}
           </Banner>
-          <Banner tone="info" onDismiss={() => undefined}>
+          <Banner tone="info" label="Maintenance" onDismiss={() => undefined}>
             {copy.info}
           </Banner>
         </div>

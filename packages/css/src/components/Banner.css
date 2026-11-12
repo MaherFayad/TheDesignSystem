@@ -115,7 +115,7 @@
   /* Narrow banner: the actions move below the body, so the body keeps a readable line and nothing scrolls sideways. */
   @container (inline-size < 30rem) { /* breakpoint.phone */
     [data-ds='banner'] > [data-part='actions'] {
-      grid-column: 2 / 4;
+      grid-column: 2 / -1;
       grid-row: 2;
       margin-block-start: var(--ds-space-xs);
     }

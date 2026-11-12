@@ -17,7 +17,7 @@
 // focused element or an anchor target is never hidden under it (WCAG
 // 2.4.11). The previous value comes back when the banner unmounts or stops
 // being sticky.
-import { useEffect, useRef, type HTMLAttributes, type ReactElement, type ReactNode, type Ref } from 'react';
+import { useLayoutEffect, useRef, type HTMLAttributes, type ReactElement, type ReactNode, type Ref } from 'react';
 import { Icon } from '@the-system/icons/react';
 import type { IconName } from '@the-system/icons';
 import type { Emphasis, Tone } from '@the-system/shared';
@@ -75,18 +75,24 @@ export interface BannerProps extends Omit<HTMLAttributes<HTMLElement>, 'title' |
   ref?: Ref<HTMLElement>;
 }
 
-/** The nearest ancestor that scrolls on the block axis, or the document's scrolling element. */
+/** The ancestor a sticky element sticks to: the nearest one whose block overflow is not visible, or the document's scrolling element. */
 function scrollContainer(el: HTMLElement): HTMLElement {
   for (let node = el.parentElement; node; node = node.parentElement) {
     const overflow = getComputedStyle(node).overflowY;
-    if (overflow === 'auto' || overflow === 'scroll' || overflow === 'overlay') return node;
+    if (overflow !== 'visible' && overflow !== 'clip' && overflow !== '') return node;
   }
   return (el.ownerDocument.scrollingElement as HTMLElement | null) ?? el.ownerDocument.documentElement;
 }
 
 /** Moves focus to the target, making it focusable by script when it is not. */
 function focusTarget(doc: Document, target: HTMLElement | string | undefined) {
-  const el = typeof target === 'string' || target === undefined ? doc.querySelector<HTMLElement>(target ?? MAIN_SELECTOR) : target;
+  let el: HTMLElement | null = null;
+  try {
+    el = typeof target === 'string' || target === undefined ? doc.querySelector<HTMLElement>(target ?? MAIN_SELECTOR) : target;
+  } catch {
+    // An invalid selector: focus stays where it is, and onDismiss still runs.
+    el = null;
+  }
   if (!el) return;
   if (el.tabIndex < 0 && !el.hasAttribute('tabindex')) el.setAttribute('tabindex', '-1');
   el.focus();
@@ -115,7 +121,8 @@ export function Banner({
   const word = toneLabel || words.tone[tone];
   const own = useRef<HTMLElement | null>(null);
 
-  useEffect(() => {
+  // Layout effect: the padding is in place before the first paint.
+  useLayoutEffect(() => {
     const el = own.current;
     if (!sticky || !el) return;
     const container = scrollContainer(el);
@@ -143,7 +150,7 @@ export function Banner({
       {...rest}
       ref={setRef}
       lang={lang}
-      aria-label={rest['aria-labelledby'] !== undefined ? undefined : (label ?? words.region)}
+      aria-label={rest['aria-labelledby'] !== undefined ? undefined : (label ?? rest['aria-label'] ?? words.region)}
       data-ds="banner"
       data-tone={tone}
       data-emphasis={emphasis}
