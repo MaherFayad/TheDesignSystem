@@ -1,5 +1,7 @@
 import { render } from '@testing-library/react';
 import { createRef } from 'react';
+import { readFileSync } from 'node:fs';
+import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import BentoDemo from './Bento.demo';
 import { Bento, BentoItem } from './index';
@@ -57,9 +59,24 @@ describe('Bento', () => {
     expect(itemRef.current).toBe(items[0]);
   });
 
+  it('gives a ul the list role, since list-style none drops it in Safari', () => {
+    const list = root(render(<Bento as="ul" />).container);
+    expect(list.getAttribute('role')).toBe('list');
+    expect(root(render(<Bento />).container).hasAttribute('role')).toBe(false);
+    expect(root(render(<Bento as="section" />).container).hasAttribute('role')).toBe(false);
+  });
+
+  it('says in the manifest why it names no motion pattern', () => {
+    const manifest = JSON.parse(readFileSync(join(process.cwd(), 'packages/manifest/src/component/Bento.manifest.json'), 'utf8')) as {
+      motion?: string | null;
+      frameworks: { react: { note?: string } };
+    };
+    if (manifest.motion == null) expect(manifest.frameworks.react.note ?? '').toMatch(/no motion/i);
+  });
+
   it('renders every demo case', () => {
     const { container } = render(<BentoDemo />);
-    for (const id of ['variants', 'one', 'many', 'too-many', 'long-text', 'long-arabic']) {
+    for (const id of ['variants', 'empty', 'one', 'many', 'too-many', 'long-text', 'long-arabic']) {
       expect(container.querySelector(`[data-demo-case="${id}"]`)).not.toBeNull();
     }
   });

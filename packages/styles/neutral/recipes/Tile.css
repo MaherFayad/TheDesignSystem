@@ -1,0 +1,22 @@
+/*
+ * Neutral recipe for Tile: Neutral separates by a 1px border and white space
+ * (dial 4), not by a 1px gap on the parent. On Neutral's light surfaces that
+ * gap is close to invisible and the grid reads as one slab. The grid opens
+ * up to the card gap and stops clipping, and each tile becomes a rounded
+ * card on the surface with the default border. The private properties carry
+ * it; no declaration is restyled.
+ */
+@layer ds.recipes {
+  [data-style='neutral'] [data-ds='tile-grid'] {
+    --_tile-grid-gap: var(--ds-space-m);
+    --_tile-grid-radius: 0;
+  }
+
+  [data-style='neutral'] [data-ds='tile'],
+  [data-style='neutral'] [data-ds='tile-grid'] > [data-ds='tile'] {
+    --_tile-radius: var(--ds-radius-panel);
+    --_tile-bg: var(--ds-color-bg-surface);
+    --_tile-bg-hover: var(--ds-color-bg-surface-2);
+    --_tile-border-color: var(--ds-color-border-default);
+  }
+}

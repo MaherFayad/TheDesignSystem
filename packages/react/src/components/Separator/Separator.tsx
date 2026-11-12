@@ -9,7 +9,8 @@
 //
 // Color: a decorative line uses color.border.subtle. A semantic one (it
 // carries meaning, so assistive tech hears it) uses color.border.control,
-// which meets 3:1 on every surface (WCAG 1.4.11).
+// which meets 3:1 on body and surface 1 to 3 (WCAG 1.4.11);
+// on surface 4 and 5 it measures 2.4 to 2.9 in the dark schemes and Neutral light.
 import { Separator as RadixSeparator } from 'radix-ui';
 import { useId, type HTMLAttributes, type ReactNode, type Ref } from 'react';
 

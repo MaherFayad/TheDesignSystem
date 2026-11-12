@@ -1,5 +1,7 @@
 import { act, fireEvent, render } from '@testing-library/react';
 import { createRef } from 'react';
+import { readFileSync } from 'node:fs';
+import { join } from 'node:path';
 import { beforeAll, describe, expect, it, vi } from 'vitest';
 import { Theme } from '../../theme/Theme';
 import ScrollAreaDemo from './ScrollArea.demo';
@@ -182,5 +184,56 @@ describe('hasFocusableChild', () => {
     expect(hasFocusableChild(d)).toBe(false);
     d.innerHTML += '<input />';
     expect(hasFocusableChild(d)).toBe(true);
+  });
+});
+
+describe('ScrollArea thumb contrast (WCAG 1.4.11)', () => {
+  // Vitest runs from the repo root; the token build runs before the tests in npm run check.
+  const css = readFileSync(join(process.cwd(), 'packages/css/src/components/ScrollArea.css'), 'utf8');
+  const tokens = readFileSync(join(process.cwd(), 'packages/tokens/dist/css/tokens.css'), 'utf8');
+
+  const parse = (value: string): { rgb: number[]; a: number } => {
+    const v = value.trim();
+    if (v.startsWith('#')) return { rgb: [1, 3, 5].map((i) => Number.parseInt(v.slice(i, i + 2), 16)), a: 1 };
+    const m = /rgb\((\d+) (\d+) (\d+)(?: \/ ([\d.]+))?\)/.exec(v);
+    if (!m) throw new Error(`cannot parse ${v}`);
+    return { rgb: [Number(m[1]), Number(m[2]), Number(m[3])], a: m[4] ? Number(m[4]) : 1 };
+  };
+  const lum = (rgb: number[]) => {
+    const [r, g, b] = rgb.map((c) => {
+      const s = c / 255;
+      return s <= 0.03928 ? s / 12.92 : ((s + 0.055) / 1.055) ** 2.4;
+    });
+    return 0.2126 * r! + 0.7152 * g! + 0.0722 * b!;
+  };
+  const ratio = (fg: string, bg: string) => {
+    const f = parse(fg);
+    const b = parse(bg).rgb;
+    const mixed = f.rgb.map((c, i) => Math.round(f.a * c + (1 - f.a) * b[i]!));
+    const [hi, lo] = [lum(mixed), lum(b)].sort((x, y) => y - x);
+    return (hi! + 0.05) / (lo! + 0.05);
+  };
+
+  it('draws the thumb at 3:1 or more on body and surface 1 to 4 in every style and scheme', () => {
+    const thumbToken = /--_scroll-area-thumb:\s*var\(--ds-([\w-]+)\)/.exec(css)?.[1];
+    expect(thumbToken).toBeDefined();
+    const blocks = tokens.split(/\n\s*(\[data-style='\w+'\]\[data-scheme='\w+'\]) \{/);
+    let modes = 0;
+    for (let i = 1; i < blocks.length; i += 2) {
+      const body = blocks[i + 1]!.split('\n  }')[0]!;
+      const t = Object.fromEntries([...body.matchAll(/--ds-([\w-]+): ([^;]+);/g)].map((m) => [m[1], m[2]]));
+      for (const bg of ['bg-body', 'bg-surface', 'bg-surface-2', 'bg-surface-3', 'bg-surface-4']) {
+        expect(ratio(t[thumbToken!]!, t[`color-${bg}`]!), `${blocks[i]} on ${bg}`).toBeGreaterThanOrEqual(3);
+      }
+      modes += 1;
+    }
+    expect(modes).toBe(6);
+  });
+
+  it('gives no demo ScrollArea a fixed inline size that could overflow a 320px screen', () => {
+    const { container } = render(<ScrollAreaDemo />);
+    const roots = Array.from(container.querySelectorAll<HTMLElement>('[data-ds="scroll-area"]'));
+    expect(roots.length).toBeGreaterThan(0);
+    for (const el of roots) expect(el.style.inlineSize, el.outerHTML.slice(0, 80)).not.toMatch(/rem|px/);
   });
 });

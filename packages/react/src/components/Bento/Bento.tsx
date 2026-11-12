@@ -39,7 +39,11 @@ export interface BentoItemProps extends Omit<HTMLAttributes<HTMLElement>, 'title
 export function Bento({ columns = 4, as = 'div', ref, ...rest }: BentoProps) {
   // Every allowed element takes the same props; narrow to one for the checker.
   const Element = as as 'div';
-  return <Element {...rest} ref={ref as Ref<HTMLDivElement>} data-ds="bento" data-columns={String(columns)} />;
+  // list-style none drops the list role in Safari: set it again, as Stack and Grid do.
+  const role = as === 'ul' ? 'list' : undefined;
+  return (
+    <Element role={role} {...rest} ref={ref as Ref<HTMLDivElement>} data-ds="bento" data-columns={String(columns)} />
+  );
 }
 
 /** One tile. */

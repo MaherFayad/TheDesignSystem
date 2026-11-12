@@ -115,4 +115,9 @@ describe('Kbd', () => {
     const ids = Array.from(container.querySelectorAll('[data-demo-case]')).map((s) => s.getAttribute('data-demo-case'));
     expect(ids).toEqual(['variants', 'one', 'many', 'long-text', 'long-arabic']);
   });
+
+  it('renders nothing for an empty string, not an empty kbd', () => {
+    const { container } = render(<Kbd>{''}</Kbd>);
+    expect(container.querySelector('[data-ds="kbd"]')).toBeNull();
+  });
 });

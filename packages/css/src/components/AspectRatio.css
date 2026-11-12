@@ -1,24 +1,20 @@
 /*
- * AspectRatio: the root is the inner box Radix stretches over its ratio
- * wrapper. Media children fill it; the fit attribute picks crop or
- * letterbox. Overflow is clipped so a cropped image never spills. Layout
- * only: no color of its own and no motion.
+ * AspectRatio: one box with the native aspect-ratio property, read from
+ * --_aspect-ratio-ratio, which the component sets from its ratio prop. Media
+ * children fill it; the fit attribute picks crop or letterbox. Overflow is
+ * clipped so a cropped image never spills, and a clipped box also lets the
+ * ratio win over tall content. Layout only: no color of its own and no motion.
  */
 @layer ds.base {
   [data-ds='aspect-ratio'] {
+    /* The default; the component sets the prop value inline, which wins. */
+    --_aspect-ratio-ratio: 16 / 9;
     --_aspect-ratio-fit: cover;
 
+    aspect-ratio: var(--_aspect-ratio-ratio);
     overflow: hidden;
     box-sizing: border-box;
-  }
-
-  /*
-   * React only: Radix wraps the root in a ratio box (data-radix-aspect-ratio-wrapper),
-   * and that wrapper is the item a grid or flex row stretches. Keep it at its
-   * own height so the ratio holds next to a taller sibling. Angular sets the
-   * native aspect-ratio on the root and has no wrapper, so this never matches there.
-   */
-  [data-radix-aspect-ratio-wrapper]:has(> [data-ds='aspect-ratio']) {
+    /* A grid or flex row would stretch the block size and break the ratio. */
     align-self: start;
   }
 
@@ -26,12 +22,19 @@
     --_aspect-ratio-fit: contain;
   }
 
-  [data-ds='aspect-ratio'] > :is(img, video, iframe, picture, canvas, svg) {
+  [data-ds='aspect-ratio'] > :is(img, video, iframe, picture, canvas) {
     display: block;
     inline-size: 100%;
     block-size: 100%;
     object-fit: var(--_aspect-ratio-fit);
     border: 0;
+  }
+
+  /* An inline svg fits through its own preserveAspectRatio; object-fit does nothing there. */
+  [data-ds='aspect-ratio'] > svg {
+    display: block;
+    inline-size: 100%;
+    block-size: 100%;
   }
 
   [data-ds='aspect-ratio'] > picture > img {

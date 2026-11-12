@@ -123,6 +123,11 @@
       "default": "Loading",
       "description": "What screen readers hear while loading. جار التحميل under an Arabic Theme."
     },
+    "emptyLabel": {
+      "type": "string",
+      "default": "No data",
+      "description": "What the value says when there is none to show: undefined, null, NaN or an infinite number. لا توجد بيانات under an Arabic Theme. Sets data-empty."
+    },
     "trendLabels": {
       "type": "object",
       "description": "Overrides the trend words: { up, down, flat }. Default Up, Down, No change, or ارتفاع، انخفاض، بدون تغيير."
@@ -130,13 +135,14 @@
   },
   "states": [
     "data-loading",
+    "data-empty",
     "data-trend=up|down|flat"
   ],
   "a11y": {
     "role": "None: a div with text. Read in order: label, value, change, hint.",
     "focus": "Never focusable.",
     "keys": {},
-    "announce": "The change is read with its trend word first: Up 12%. Value changes are not announced, so a page of refreshing KPIs stays quiet. While loading, aria-busy is set and the value says loadingLabel.",
+    "announce": "The change is read with its trend word first: Up 12%. Value changes are not announced, so a page of refreshing KPIs stays quiet. While loading, aria-busy is set and the value says loadingLabel. With no value, or a value that is not a finite number, the value says emptyLabel (No data) instead of NaN or the infinity sign.",
     "native": {
       "accessibilityRole": "text",
       "accessibilityState": [

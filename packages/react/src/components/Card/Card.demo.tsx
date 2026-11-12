@@ -233,7 +233,7 @@ export default function CardDemo() {
 
       <DemoCase id="disabled" title="Disabled: the link loses its href, the title mutes and the media dims">
         <DemoGrid min="14rem">
-          <BoardCard title="Archived board" meta="Restore it to open it again" disabled />
+          <BoardCard title="Archived board" meta="An owner can restore it from the archive" disabled />
         </DemoGrid>
       </DemoCase>
     </DemoPage>

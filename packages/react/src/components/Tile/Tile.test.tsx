@@ -1,4 +1,6 @@
 import { render, screen } from '@testing-library/react';
+import { existsSync, readFileSync } from 'node:fs';
+import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import TileDemo from './Tile.demo';
 import { Tile, TileActions, TileGrid, TileLink, TileMedia, TileMeta, TileTitle } from './index';
@@ -100,5 +102,26 @@ describe('Tile', () => {
     const { container } = render(<TileDemo />);
     const cases = Array.from(container.querySelectorAll('[data-demo-case]')).map((c) => c.getAttribute('data-demo-case'));
     expect(cases).toEqual(['variants', 'one', 'many', 'too-many', 'long-text', 'long-arabic']);
+  });
+});
+
+describe('Tile style separation', () => {
+  // Vitest runs from the repo root.
+  const read = (path: string) => readFileSync(join(process.cwd(), path), 'utf8');
+
+  it('has a recipe in every style whose dial is not the 1px gap: Desk and Neutral set tiles apart with space and a border', () => {
+    for (const style of ['desk', 'neutral']) {
+      const path = `packages/styles/${style}/recipes/Tile.css`;
+      expect(existsSync(join(process.cwd(), path)), path).toBe(true);
+      const css = read(path);
+      expect(css, style).toMatch(new RegExp(`\\[data-style='${style}'\\] \\[data-ds='tile-grid'\\]`));
+      expect(css, style).toMatch(/--_tile-grid-gap:\s*var\(--ds-space-(?!px)/);
+      expect(css, style).toMatch(/--_tile-border-color:\s*var\(--ds-color-border-/);
+    }
+  });
+
+  it('drops the grid radius under forced colors, so the clip keeps the corner tile borders', () => {
+    const css = read('packages/css/src/components/TileGrid.css');
+    expect(css).toMatch(/@media \(forced-colors: active\)\s*\{\s*\[data-ds='tile-grid'\]\s*\{\s*--_tile-grid-radius: 0;/);
   });
 });

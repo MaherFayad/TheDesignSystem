@@ -18,7 +18,6 @@
     "insteadUse": {
       "Switching between views": "Tabs",
       "Steps done in order": "Stepper",
-      "One detail to show or hide": "Collapsible",
       "Content that everyone needs": "Card",
       "Navigation between pages": "Sidebar"
     },
@@ -109,7 +108,7 @@
       "data-orientation"
     ],
     "a11y": {
-      "role": "Each trigger is a native button with aria-expanded and aria-controls, inside a heading (level from headingLevel). Each open content is a region named by its trigger.",
+      "role": "Each trigger is a native button with aria-expanded, and aria-controls while its section is open (Radix drops it when closed, which the APG pattern allows), inside a heading (level from headingLevel). Each open content is a region named by its trigger.",
       "focus": "Every trigger is in the tab order, disabled ones included (aria-disabled). The content's own controls follow their trigger. The trigger takes the Button's 2px focus ring.",
       "keys": {
         "Tab": "Moves to the next trigger, or into the open content",
@@ -831,7 +830,7 @@
       "asChild": {
         "type": "boolean",
         "default": false,
-        "description": "Renders the single child element as the root through Radix Slot."
+        "description": "Renders the single child element as the root through Radix Slot. The ratio goes on that element."
       },
       "children": {
         "type": "node",
@@ -864,14 +863,14 @@
     "frameworks": {
       "react": {
         "status": "ready",
-        "behavior": "radix:AspectRatio",
+        "behavior": "native aspect-ratio on one div",
         "example": "AspectRatio.demo.tsx",
-        "note": "Radix renders a wrapper div (data-radix-aspect-ratio-wrapper) around the root that takes 100% width; className, style and ref go to the inner root. No motion: nothing animates. Component CSS keeps that wrapper at align-self start, so a grid or flex row cannot stretch it out of ratio."
+        "note": "One div with the native aspect-ratio property, set from the ratio prop through the private --_aspect-ratio-ratio. No Radix wrapper, so className, style and ref go to the ratio box itself and a width or margin keeps the ratio. The same DOM as Angular. No motion: nothing animates. Component CSS sets align-self start, so a grid or flex row cannot stretch it out of ratio."
       },
       "angular": {
         "status": "planned",
         "behavior": "[dsAspectRatio] directive on the native aspect-ratio property",
-        "note": "No Radix in Angular: the host sets aspect-ratio from the ratio input, so there is no wrapper div. The shared CSS styles the root and its media the same way."
+        "note": "The host sets --_aspect-ratio-ratio from the ratio input, the same single div as React. The shared CSS styles the root and its media the same way."
       },
       "native": {
         "status": "planned",
@@ -2078,7 +2077,7 @@
     "insteadUse": {
       "Tiles of one size": "Grid",
       "Records to compare or sort": "Table",
-      "Tiles the user drags or resizes": "ResizablePanels",
+      "Panes the user resizes side by side": "ResizablePanels",
       "A feed": "Stack",
       "One box with a fill": "Surface",
       "A narrow pane": "Stack"
@@ -2183,7 +2182,8 @@
       "react": {
         "status": "ready",
         "behavior": "plain markup on CSS grid",
-        "example": "Bento.demo.tsx"
+        "example": "Bento.demo.tsx",
+        "note": "No motion: a static grid has nothing to animate, so no pattern from the catalog applies. Tiles that enter get their motion from the parent that shows them. as ul sets role list, so Safari keeps the list and its count after list-style none."
       },
       "angular": {
         "status": "planned",
@@ -3215,7 +3215,7 @@
       "A dense grid of files or boards in Studio, where tiles split by a 1px gap read better",
       "Rows that people scan and compare, such as a list of messages or a table",
       "A choice of one option out of several",
-      "Wrapping a whole page section only to draw a border around it"
+      "Wrapping a whole page section only to draw a border around it: use Surface or Section"
     ],
     "insteadUse": {
       "A Studio grid of files or boards": "Tile",
@@ -3223,7 +3223,9 @@
       "Tabular data": "Table",
       "Picking one option shown as a card": "RadioCard",
       "Sections that open and close": "Accordion",
-      "A place with no content yet": "EmptyState"
+      "A place with no content yet": "EmptyState",
+      "A plain box with a fill or a border and no title": "Surface",
+      "Facts about one thing as term and value pairs": "DescriptionList"
     },
     "anatomy": [
       "root",
@@ -4708,7 +4710,8 @@
     "avoidWhen": [
       "Inside a panel, card or dialog that already has its own padding",
       "Laying out children in a row or columns",
-      "A full bleed band of color or media that must reach the screen edges"
+      "A full bleed band of color or media that must reach the screen edges",
+      "Inside another Container: the gutters add up"
     ],
     "insteadUse": {
       "Children in a row or a column": "Stack",
@@ -10763,6 +10766,10 @@
       {
         "wrong": "An empty ul with nothing in it",
         "right": "empty with what to do next"
+      },
+      {
+        "wrong": "A long sentence as the title, cut to one line with an ellipsis that a pointer user cannot read in full",
+        "right": "A short title of a few words, with the rest in description, which wraps to two lines"
       }
     ],
     "since": "0.1.0"
@@ -15114,7 +15121,8 @@
     "avoidWhen": [
       "A list and its detail that should stack on phones",
       "A fixed page frame with a header, a sidebar and main content",
-      "Content that should simply wrap to the width it gets"
+      "Content that should simply wrap to the width it gets",
+      "Phone widths: limits are percents, so at 320px panels shrink to 60 to 70px; use SplitView, which stacks"
     ],
     "insteadUse": {
       "A list and its detail, stacked on phones": "SplitView",
@@ -15446,7 +15454,9 @@
         "The keys are the browser's own scrolling of a focused scroll container, so the contract suite notes them; ScrollArea.test.tsx covers the focus rule and the overflow states.",
         "visible and hidden are the data-state of the Radix scrollbar and thumb parts under scrollbars scroll or hover.",
         "With orientation both, the fades and the overflow states follow the block axis only.",
-        "The thumb tokens (scrollbar.thumb) measure under 3:1 on some surfaces; the thumb is a pointer aid, the keyboard and the native scroll carry the function. Raised with the lead as a token question.",
+        "The scrollbar.thumb token measures under 3:1 on every surface (1.5 to 2.7), so the thumb draws in color.text.muted, which meets 3:1 on body and surface 1 to 4 in every style and scheme. It does not on surface 5 in Studio and Desk dark (2.5): keep a ScrollArea off surface 5 there until the thumb token is fixed.",
+        "The 4px and 6px thumbs are under the 24px target of WCAG 2.5.8; the equivalent exception applies, since wheel, touch and the keys on the focusable viewport scroll the same content.",
+        "A focusable viewport is a region named by label, with a built in default name. Several areas with the default give several regions of the same name, so always pass label.",
         "Edge fades fade into --_scroll-area-fade-color, the body color by default. A parent on another surface sets that private property to its own fill from its own CSS."
       ]
     },
@@ -15461,8 +15471,8 @@
     "tokens": [
       "scrollbar.size",
       "scrollbar.track",
-      "scrollbar.thumb",
-      "scrollbar.thumb-hover",
+      "color.text.muted",
+      "color.text.default",
       "space.4xs",
       "space.3xl",
       "radius.pill",
@@ -15491,9 +15501,9 @@
       }
     },
     "styles": {
-      "studio": "A 6px thumb on a clear track, from the scrollbar tokens. Fades into the body color.",
-      "desk": "The same thumb, a little lighter on the dark desk, from the Desk scrollbar tokens.",
-      "neutral": "The same parts on the Neutral scrollbar tokens once 1.10 lands.",
+      "studio": "A 6px thumb in the muted text color on a clear track. Fades into the body color.",
+      "desk": "The same thumb in the Desk muted text color.",
+      "neutral": "The same thumb in the Neutral muted text color.",
       "liquid": "Planned: content scrolls under glass bars, with the scroll edge fade."
     },
     "mistakes": [
@@ -15512,6 +15522,14 @@
       {
         "wrong": "Wrapping the whole page in a ScrollArea",
         "right": "Let the page scroll natively; use ScrollArea for panels inside it"
+      },
+      {
+        "wrong": "scrollbars scroll or hover with fades false, so nothing at rest shows that the area scrolls",
+        "right": "Keep fades on when the bars hide at rest, or use scrollbars auto or always"
+      },
+      {
+        "wrong": "Two ScrollAreas on one page with no label, both announced as Scrollable content",
+        "right": "A label on every ScrollArea that names what scrolls"
       }
     ],
     "contract": {
@@ -16057,7 +16075,7 @@
       "decorative": {
         "type": "boolean",
         "default": true,
-        "description": "true: role none, hidden from assistive tech, drawn with color.border.subtle. false: role separator, announced, drawn with color.border.control at 3:1. Sets data-decorative when true."
+        "description": "true: role none, hidden from assistive tech, drawn with color.border.subtle. false: role separator, announced, drawn with color.border.control, 3:1 on body and surface 1 to 3 (2.4 to 2.9 on surface 4 and 5 in the dark schemes and Neutral light). Sets data-decorative when true."
       },
       "label": {
         "type": "node",
@@ -18283,6 +18301,11 @@
         "default": "Loading",
         "description": "What screen readers hear while loading. جار التحميل under an Arabic Theme."
       },
+      "emptyLabel": {
+        "type": "string",
+        "default": "No data",
+        "description": "What the value says when there is none to show: undefined, null, NaN or an infinite number. لا توجد بيانات under an Arabic Theme. Sets data-empty."
+      },
       "trendLabels": {
         "type": "object",
         "description": "Overrides the trend words: { up, down, flat }. Default Up, Down, No change, or ارتفاع، انخفاض، بدون تغيير."
@@ -18290,13 +18313,14 @@
     },
     "states": [
       "data-loading",
+      "data-empty",
       "data-trend=up|down|flat"
     ],
     "a11y": {
       "role": "None: a div with text. Read in order: label, value, change, hint.",
       "focus": "Never focusable.",
       "keys": {},
-      "announce": "The change is read with its trend word first: Up 12%. Value changes are not announced, so a page of refreshing KPIs stays quiet. While loading, aria-busy is set and the value says loadingLabel.",
+      "announce": "The change is read with its trend word first: Up 12%. Value changes are not announced, so a page of refreshing KPIs stays quiet. While loading, aria-busy is set and the value says loadingLabel. With no value, or a value that is not a finite number, the value says emptyLabel (No data) instead of NaN or the infinity sign.",
       "native": {
         "accessibilityRole": "text",
         "accessibilityState": [
@@ -18994,7 +19018,8 @@
       "react": {
         "status": "ready",
         "behavior": "plain markup",
-        "example": "Surface.demo.tsx"
+        "example": "Surface.demo.tsx",
+        "note": "No motion: a static box has nothing to animate, so no pattern from the catalog applies. A Surface that appears or moves gets its motion from the parent that shows it."
       },
       "angular": {
         "status": "planned",
@@ -19008,8 +19033,8 @@
       }
     },
     "styles": {
-      "studio": "Flat: six achromatic steps from black, no shadow. Separate boxes by the step, not by elevation.",
-      "desk": "The same steps on the black desk. Elevation reads the deep Desk shadows.",
+      "studio": "Flat: six achromatic steps from black, no shadow. elevation card draws nothing here (the token is a zero shadow), so separate boxes by the step or a border, not by elevation.",
+      "desk": "The same steps on the black desk. elevation card draws nothing here (a zero shadow); elevation panel reads the deep Desk shadow.",
       "neutral": "White and soft gray steps, light first. Small soft shadows for elevation.",
       "liquid": "Content surfaces stay solid. A Surface is never glass: glass is for the control and navigation layer only."
     },
@@ -20577,7 +20602,7 @@
     "styles": {
       "studio": "Borderless tiles on surface 2, square inside the grid, split by a 1px gap that shows the parent; the grid rounds the outside with radius.panel. Hover steps to surface 3.",
       "desk": "recipes/Tile.css: the grid opens to a space.m gap, each tile is a rounded card on the surface with the hairline border; hover steps to surface 2.",
-      "neutral": "Planned: reads as a card with 1px borders and white space, through a recipe like Desk's.",
+      "neutral": "Free cards with a 1px border.default edge and a space.m gap, each on radius.panel and the surface fill (recipes/Tile.css). Hover steps to surface 2.",
       "liquid": "Planned: solid tiles under the glass layer."
     },
     "mistakes": [

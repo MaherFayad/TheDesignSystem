@@ -17,7 +17,6 @@
   "insteadUse": {
     "Switching between views": "Tabs",
     "Steps done in order": "Stepper",
-    "One detail to show or hide": "Collapsible",
     "Content that everyone needs": "Card",
     "Navigation between pages": "Sidebar"
   },
@@ -108,7 +107,7 @@
     "data-orientation"
   ],
   "a11y": {
-    "role": "Each trigger is a native button with aria-expanded and aria-controls, inside a heading (level from headingLevel). Each open content is a region named by its trigger.",
+    "role": "Each trigger is a native button with aria-expanded, and aria-controls while its section is open (Radix drops it when closed, which the APG pattern allows), inside a heading (level from headingLevel). Each open content is a region named by its trigger.",
     "focus": "Every trigger is in the tab order, disabled ones included (aria-disabled). The content's own controls follow their trigger. The trigger takes the Button's 2px focus ring.",
     "keys": {
       "Tab": "Moves to the next trigger, or into the open content",

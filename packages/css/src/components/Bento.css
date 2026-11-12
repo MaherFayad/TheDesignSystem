@@ -54,6 +54,8 @@
     min-inline-size: 0;
     margin: 0;
     padding: var(--_bento-item-padding);
+    /* Transparent at rest; forced colors paint it, so the edge needs no outline. */
+    border: var(--ds-border-width-default) solid transparent;
     border-radius: var(--_bento-item-radius);
     background-color: var(--_bento-item-bg);
     color: var(--_bento-item-fg);
@@ -89,12 +91,10 @@
     }
   }
 
-  /* Forced colors drop the fills: draw each tile's edge. */
+  /* Forced colors drop the fills: the transparent border becomes each tile's edge, inside the tile, so the Studio clip does not cut it. */
   @media (forced-colors: active) {
     [data-ds='bento'] > [data-part='item'] {
-      outline: var(--ds-border-width-default) solid CanvasText;
-      /* Inside the tile, so the Studio clip on the grid does not cut the outer edge. */
-      outline-offset: calc(-1 * var(--ds-border-width-default));
+      border-color: CanvasText;
     }
   }
 }
