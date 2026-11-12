@@ -16,11 +16,15 @@ import {
   optionalParts,
   propValues,
   readyComponents,
+  reportFile,
   splitKeys,
   stateClasses,
   stateFindings,
+  trapsFocus,
+  triggerSelector,
   variantFindings,
   type Manifest,
+  type StyleInfo,
 } from './lib';
 
 const button: Manifest = {
@@ -79,9 +83,33 @@ describe('manifest reading', () => {
     expect(keyCheckFor('ArrowDown', { ...button, contract: { keys: { ArrowDown: { expect: 'focus-moves' } } } })).toBe('hint');
   });
 
-  it('merges optional parts from the manifest and style packs', () => {
-    const styles = [{ id: 'desk', schemes: ['dark'], defaultScheme: 'dark', optionalParts: { button: ['controls'] } }];
-    expect(optionalParts(button, styles)).toEqual(['spinner', 'controls']);
+  it('reads optional parts per style under test', () => {
+    const styles: StyleInfo[] = [
+      { id: 'desk', schemes: ['dark'], defaultScheme: 'dark', optionalParts: { button: ['controls', 'titlebar'] } },
+      { id: 'studio', schemes: ['dark'], defaultScheme: 'dark', optionalParts: {} },
+    ];
+    // Studio does not show the desk only parts, so they may be missing there.
+    expect(optionalParts(button, styles, 'studio')).toEqual(['spinner', 'controls', 'titlebar']);
+    // Desk shows them, so they are required there.
+    expect(optionalParts(button, styles, 'desk')).toEqual(['spinner']);
+  });
+
+  it('reads whether focus is trapped from the a11y text', () => {
+    expect(trapsFocus({ ...button, a11y: { role: 'dialog, modal: keeps focus inside' } })).toBe(true);
+    expect(trapsFocus({ ...button, a11y: { role: 'dialog', keys: { Tab: 'Moves inside and wraps from the last to the first' } } })).toBe(true);
+    expect(trapsFocus({ ...button, a11y: { role: 'dialog. Not modal unless modal is set.' } })).toBe(false);
+    expect(trapsFocus(button)).toBe(false);
+    expect(trapsFocus({ ...button, a11y: { role: 'region', focus: 'While a modal dialog is open, focus stays in it' } })).toBe(false);
+  });
+
+  it('picks the trigger selector', () => {
+    expect(triggerSelector(button)).toBe('[data-demo-trigger]');
+    expect(triggerSelector({ ...button, contract: { trigger: '#open' } })).toBe('#open');
+  });
+
+  it('writes a partial run away from the main report', () => {
+    expect(reportFile('/r', 'react', false, 7)).toBe('/r/docs/reports/contract-react.json');
+    expect(reportFile('/r', 'react', true, 7)).toBe('/r/packages/contract-tests/.out/7/contract-react.partial.json');
   });
 
   it('keeps components ready for a framework', () => {

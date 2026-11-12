@@ -22,11 +22,19 @@ demo, runs `npx playwright test --config packages/contract-tests/playwright.conf
 stops the server it started and exits with the test status.
 
 - Human list: stdout (the list reporter), then one summary line per component.
-- JSON: `docs/reports/contract-<framework>.json` (the Playwright JSON reporter).
+- JSON, full run: `docs/reports/contract-<framework>.json` (the Playwright JSON
+  reporter).
+- JSON, run narrowed with `--component`:
+  `packages/contract-tests/.out/<pid>/contract-<framework>.partial.json`. The
+  full report is left alone.
+- Every run keeps its Playwright output in `packages/contract-tests/.out/<pid>/`
+  and picks a free port again when another run takes it first, so several runs
+  on one machine do not collide. `.out/` is scratch and is not committed.
 
 Environment the spec reads: `DS_GALLERY_URL`, `DS_FRAMEWORK` (default
 `react`), `DS_COMPONENT` (comma list), `DS_ROUTES` (set by run.ts),
-`DS_CONTRACT_JSON`, `DS_CONTRACT_WORKERS` (default 4).
+`DS_CONTRACT_JSON`, `DS_CONTRACT_OUT` (the run folder), `DS_CONTRACT_WORKERS`
+(default 4).
 
 Unit tests for the helpers: `src/lib.test.ts` and `src/page.test.ts` run in
 Vitest with `npm run check`. The Playwright suite is not part of check.
@@ -45,8 +53,8 @@ Every test title starts with the component name.
 | Manifest key | Check | Runs in |
 | --- | --- | --- |
 | `name` | `data-ds="<kebab name>"` is the root selector; the route is `/c/<kebab>` | all |
-| `anatomy` | **anatomy**: a root exists; every part except `root` is found as `[data-part]` owned by some root; no owned `data-part` outside the anatomy; no root carries `data-part="root"` | default style, dark, en ltr |
-| `contract.optionalParts`, `style.json` `optionalParts[<kebab>]` | parts that may be missing | anatomy |
+| `anatomy` | **anatomy**: a root exists; every part except `root` is found as `[data-part]` owned by some root; no owned `data-part` outside the anatomy; no root carries `data-part="root"` | every style, dark, en ltr |
+| `contract.optionalParts`, `style.json` `optionalParts[<kebab>]` | parts that may be missing; a part a style pack lists is required in that style and optional in the others | anatomy |
 | `props.size`, `props.tone`, `props.emphasis`, `props.shape` | **variant attributes**: manifest values are shared words; every root value is a shared word and is in the manifest; the `variants` case shows every manifest value at least once | default style, dark, en ltr |
 | `states` | **state attributes**: boolean states (`data-disabled`, `data-loading`, `data-invalid`, `data-readonly`, `data-selected`, `data-dragging`, plus any other `data-*` in `states` except `data-state` and `data-orientation`) have an empty value; `data-state` values are in `states`; no state class (`is-*`, `*--disabled`, `active`, `disabled`, `selected`, `loading` and similar) on roots and parts | default style, dark, en ltr |
 | `a11y.keys` | **keyboard map**, one generic check per key (below) | default style, dark, en ltr |
@@ -57,11 +65,39 @@ Every test title starts with the component name.
 
 ### Part ownership
 
-A part belongs to the nearest ancestor with `data-ds`. The walk starts at the
-part's parent element, so a part on an element that is itself a nested root
-(an IconButton that is a Dialog's `close`) belongs to the outer root. Parts of
-nested components (an Icon inside an Input) are never counted for the outer
-component.
+A part belongs to the nearest ancestor root, not counting the element itself.
+The walk starts at the part's parent element, so a part on an element that is
+itself a nested root (the close IconButton of a Window,
+`data-ds="icon-button" data-part="close"`) counts for the outer root. Parts
+inside a nested root (the `title` inside a TitleBar inside a Window) belong to
+the nested component and are never counted for the outer one.
+
+### Overlays
+
+A component is an overlay when its `states` list `open` and `closed` and the
+demo has a trigger (`contract.trigger`, else `[data-demo-trigger]`). Its root
+is not in the DOM until a trigger opens it, and a demo may also hold static
+examples (a Toast in the demo next to the toasts the Toaster shows). Before
+each trigger click the suite marks every root on the page as seen; the roots
+the click adds are the opened ones, wherever they render (a portal, or
+`[data-ds="toaster"]`).
+
+- Anatomy, variant attributes and state attributes: read from the static
+  examples, plus every root opened by each trigger in turn (the triggers in
+  the variants case, else all), each closed with Escape (or a reload) before
+  the next. Opened roots from the variants case count for variant coverage.
+- State attributes: a static example of an overlay stamps no `data-state`
+  (other than `closed`).
+- Tab and Shift+Tab: open the first trigger, then the key must move focus.
+  When the manifest says modal (the role or the Tab entry names a modal, a
+  trap, or "wraps from the last", and does not say "not modal") or the open
+  root has `aria-modal="true"`, focus must be inside after opening and stay
+  inside for every press around the loop.
+- Escape: open the first trigger; only the roots it added count. When focus
+  is not inside them, it is moved to their first tab stop first. They must
+  close or leave the DOM.
+- Axe: also runs with the first trigger's root open, in every style, scheme
+  and direction, with reduced motion.
 
 ### Keyboard checks
 
@@ -69,10 +105,10 @@ Each `a11y.keys` entry is split into keys (`"Home, End"` gives Home and End).
 
 | Key | Generic check | Runs when |
 | --- | --- | --- |
-| `Tab` | Tab from the top of the page reaches the first enabled root, or a control inside it | always |
-| `Shift+Tab` | after Tab reaches it, Shift+Tab leaves it | always |
+| `Tab` | Tab from the top of the page reaches the first enabled root, or a control inside it (overlays: see above) | always |
+| `Shift+Tab` | after Tab reaches it, Shift+Tab leaves it (overlays: see above) | always |
 | `Enter`, `Space` | on the first enabled root that is a button element or `role="button"`, a click event fires | such a root exists; otherwise a note |
-| `Escape` | open through `contract.trigger` or a `[data-demo-trigger]`, wait for a root with `data-state="open"`, press Escape, the root closes or leaves the DOM | `states` has `open` and `closed`; otherwise a note |
+| `Escape` | open through `contract.trigger` or a `[data-demo-trigger]`; the roots the trigger added close or leave the DOM | `states` has `open` and `closed`; otherwise a note |
 | any other key | only through a `contract.keys` hint | the hint exists; otherwise a note |
 
 A `contract.keys` hint wins over the generic check for its key.

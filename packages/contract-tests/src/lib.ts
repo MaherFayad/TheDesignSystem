@@ -30,7 +30,7 @@ export interface Manifest {
   anatomy?: string[];
   props?: Record<string, unknown>;
   states?: string[];
-  a11y?: { role?: string; keys?: Record<string, string> };
+  a11y?: { role?: string; focus?: string; keys?: Record<string, string> };
   frameworks: Record<string, { status: string }>;
   contract?: ContractHints;
 }
@@ -138,11 +138,44 @@ export function keyCheckFor(key: string, m: Manifest): KeyCheck {
   return 'none';
 }
 
-/** Parts that may be missing: contract.optionalParts plus parts any style marks optional for this component. */
-export function optionalParts(m: Manifest, styles: StyleInfo[]): string[] {
+/**
+ * Parts that may be missing under one style: contract.optionalParts, plus the
+ * parts some style pack shows only in its own style (style.json
+ * optionalParts[<kebab>]) when the style under test is not one of them. The
+ * style that lists a part shows it, so there the part is required unless the
+ * manifest marks it optional.
+ */
+export function optionalParts(m: Manifest, styles: StyleInfo[], styleId?: string): string[] {
   const kebab = kebabCase(m.name);
-  const fromStyles = styles.flatMap((s) => s.optionalParts[kebab] ?? []);
+  const own = styles.find((s) => s.id === styleId)?.optionalParts[kebab] ?? [];
+  const fromStyles = styles.flatMap((s) => s.optionalParts[kebab] ?? []).filter((p) => !own.includes(p));
   return [...new Set([...(m.contract?.optionalParts ?? []), ...fromStyles])];
+}
+
+/** The selector that opens the component: contract.trigger, else [data-demo-trigger]. */
+export function triggerSelector(m: Manifest): string {
+  return m.contract?.trigger ?? '[data-demo-trigger]';
+}
+
+/**
+ * True when the manifest says focus stays inside while it is open: the role
+ * or the Tab entry names a modal or a trap, and does not say "not modal".
+ * Only the component's own role and Tab entry count, so a sentence about
+ * another component (a toast above a modal dialog) does not.
+ */
+export function trapsFocus(m: Manifest): boolean {
+  const text = [m.a11y?.role ?? '', m.a11y?.keys?.Tab ?? ''].join(' ');
+  if (/\bnot modal\b|\bnon[- ]modal\b/i.test(text)) return false;
+  return /\bmodal\b|focus (is )?trapped|traps focus|keeps focus inside|stays inside|wraps from the last/i.test(text);
+}
+
+/**
+ * Where a run writes its JSON. A full run writes the main report in
+ * docs/reports. A run narrowed with --component writes a partial report under
+ * packages/contract-tests/.out/<pid>/, so it never clobbers the full one.
+ */
+export function reportFile(repo: string, framework: string, partial: boolean, pid: number): string {
+  return partial ? join(repo, 'packages/contract-tests/.out', String(pid), `contract-${framework}.partial.json`) : join(repo, 'docs/reports', `contract-${framework}.json`);
 }
 
 /** Class names that look like a state written as a class. */

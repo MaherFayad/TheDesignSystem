@@ -11,7 +11,8 @@ import type { AnatomyScan, StateHit, VariantRoot } from './lib';
  * itself a nested root belongs to the parent, so the walk starts at the
  * parent element.
  */
-export function scanAnatomy(kebab: string): AnatomyScan {
+export function scanAnatomy(arg: { kebab: string; fresh?: boolean }): AnatomyScan {
+  const kebab = arg.kebab;
   const describe = (el: Element): string => {
     const tag = el.tagName.toLowerCase();
     const ds = el.getAttribute('data-ds');
@@ -19,7 +20,7 @@ export function scanAnatomy(kebab: string): AnatomyScan {
     const demo = el.closest('[data-demo-case]')?.getAttribute('data-demo-case');
     return `${tag}${ds ? `[data-ds=${ds}]` : ''}${part ? `[data-part=${part}]` : ''}${demo ? ` in case ${demo}` : ''}`;
   };
-  const roots = Array.from(document.querySelectorAll(`[data-ds="${kebab}"]`));
+  const roots = Array.from(document.querySelectorAll(`[data-ds="${kebab}"]`)).filter((r) => !arg.fresh || !r.hasAttribute('data-contract-seen'));
   const parts: AnatomyScan['parts'] = [];
   const rootPart: string[] = [];
   roots.forEach((root, i) => {
@@ -34,24 +35,27 @@ export function scanAnatomy(kebab: string): AnatomyScan {
 }
 
 /** Variant attributes on every root, and whether the root sits in the variants case. */
-export function scanVariants(kebab: string): { roots: VariantRoot[]; hasVariantsCase: boolean } {
+export function scanVariants(arg: { kebab: string; fresh?: boolean; asVariants?: boolean }): { roots: VariantRoot[]; hasVariantsCase: boolean } {
+  const kebab = arg.kebab;
   const axes = ['size', 'tone', 'emphasis', 'shape'];
-  const roots = Array.from(document.querySelectorAll(`[data-ds="${kebab}"]`)).map((root) => {
+  const found = Array.from(document.querySelectorAll(`[data-ds="${kebab}"]`)).filter((r) => !arg.fresh || !r.hasAttribute('data-contract-seen'));
+  const roots = found.map((root) => {
     const attrs: Record<string, string> = {};
     for (const axis of axes) {
       const v = root.getAttribute(`data-${axis}`);
       if (v !== null) attrs[axis] = v;
     }
     const demo = root.closest('[data-demo-case]')?.getAttribute('data-demo-case');
-    return { attrs, inVariants: demo === 'variants', where: `${root.tagName.toLowerCase()}[data-ds=${kebab}]${demo ? ` in case ${demo}` : ''}` };
+    const where = `${root.tagName.toLowerCase()}[data-ds=${kebab}]${demo ? ` in case ${demo}` : arg.fresh ? ' opened by a trigger' : ''}`;
+    return { attrs, inVariants: arg.asVariants === true || demo === 'variants', where };
   });
   return { roots, hasVariantsCase: document.querySelector('[data-demo-case="variants"]') !== null };
 }
 
 /** State attributes, data-state and class names on every root and every part the root owns. */
-export function scanStates(arg: { kebab: string; booleans: string[] }): StateHit[] {
+export function scanStates(arg: { kebab: string; booleans: string[]; fresh?: boolean }): StateHit[] {
   const out: StateHit[] = [];
-  const roots = Array.from(document.querySelectorAll(`[data-ds="${arg.kebab}"]`));
+  const roots = Array.from(document.querySelectorAll(`[data-ds="${arg.kebab}"]`)).filter((r) => !arg.fresh || !r.hasAttribute('data-contract-seen'));
   for (const root of roots) {
     const owned = Array.from(root.querySelectorAll('[data-part]')).filter((el) => (el.parentElement ? el.parentElement.closest('[data-ds]') : null) === root);
     for (const el of [root, ...owned]) {
@@ -102,7 +106,7 @@ export function scanDisabled(kebab: string): { disabledRoots: number; failures: 
  * root that is a button (a button element or role button) counts.
  * Returns a description, or null when there is none.
  */
-export function markTarget(arg: { kebab: string; button: boolean; within?: string }): string | null {
+export function markTarget(arg: { kebab: string; button: boolean; within?: string; fresh?: boolean }): string | null {
   const FOCUSABLE = 'a[href], button, input:not([type="hidden"]), select, textarea, summary, [tabindex], [contenteditable=""], [contenteditable="true"]';
   for (const old of Array.from(document.querySelectorAll('[data-contract-target]'))) old.removeAttribute('data-contract-target');
   const scope = arg.within ? document.querySelector(arg.within) : document;
@@ -112,6 +116,7 @@ export function markTarget(arg: { kebab: string; button: boolean; within?: strin
   const visible = (el: Element) => (typeof el.checkVisibility === 'function' ? el.checkVisibility({ visibilityProperty: true }) : true);
   const tabbable = (el: Element) => el.matches(FOCUSABLE) && (el as HTMLElement).tabIndex >= 0 && !el.matches(':disabled') && visible(el);
   for (const root of Array.from(scope.querySelectorAll(`[data-ds="${arg.kebab}"]`))) {
+    if (arg.fresh && root.hasAttribute('data-contract-seen')) continue;
     if (!enabled(root) || !visible(root)) continue;
     if (arg.button && !(root.tagName === 'BUTTON' || root.getAttribute('role') === 'button')) continue;
     const stop = tabbable(root) ? root : Array.from(root.querySelectorAll(FOCUSABLE)).find(tabbable);
@@ -348,4 +353,41 @@ export function axeOwners(targets: string[]): Record<string, string> {
     if (root || demo) out[t] = `${root ? `[data-ds=${root.getAttribute('data-ds')}]` : 'page'}${demo ? ` case ${demo}` : ''}`;
   }
   return out;
+}
+
+/**
+ * Marks every root on the page as seen, so the roots a trigger adds can be
+ * told apart from static examples. Returns how many roots there were.
+ */
+export function markSeen(kebab: string): number {
+  const roots = Array.from(document.querySelectorAll(`[data-ds="${kebab}"]`));
+  for (const r of roots) r.setAttribute('data-contract-seen', '');
+  return roots.length;
+}
+
+/** Roots added since markSeen that are still open (in the DOM and not data-state="closed"). */
+export function freshOpen(kebab: string): number {
+  return Array.from(document.querySelectorAll(`[data-ds="${kebab}"]:not([data-contract-seen])`)).filter((r) => r.getAttribute('data-state') !== 'closed').length;
+}
+
+/** Static examples of an overlay that stamp data-state, which a presentational example must not do. */
+export function staticDataState(kebab: string): string[] {
+  return Array.from(document.querySelectorAll(`[data-ds="${kebab}"][data-state]`)).map((r) => {
+    const demo = r.closest('[data-demo-case]')?.getAttribute('data-demo-case');
+    return `${r.tagName.toLowerCase()}[data-ds=${kebab}][data-state=${r.getAttribute('data-state')}]${demo ? ` in case ${demo}` : ''}`;
+  });
+}
+
+/** Tab stops inside the marked target root. */
+export function targetStops(): number {
+  const FOCUSABLE = 'a[href], button, input:not([type="hidden"]), select, textarea, summary, [tabindex], [contenteditable=""], [contenteditable="true"]';
+  const t = document.querySelector('[data-contract-target]');
+  if (!t) return 0;
+  return [t, ...Array.from(t.querySelectorAll(FOCUSABLE))].filter((el) => el.matches(FOCUSABLE) && (el as HTMLElement).tabIndex >= 0 && !el.matches(':disabled')).length;
+}
+
+/** True when the marked target root, or something in it, has aria-modal="true". */
+export function targetModal(): boolean {
+  const t = document.querySelector('[data-contract-target]');
+  return !!t && (t.getAttribute('aria-modal') === 'true' || t.querySelector('[aria-modal="true"]') !== null);
 }

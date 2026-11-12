@@ -3,14 +3,18 @@
 // Without --url it starts the gallery of the framework on a free port, waits
 // for it, probes which components have a demo route, runs the Playwright
 // suite with this package's config, stops the server and exits with the test
-// status. The JSON report goes to docs/reports/contract-<framework>.json.
+// status. A full run writes docs/reports/contract-<framework>.json. A run
+// narrowed with --component writes
+// packages/contract-tests/.out/<pid>/contract-<framework>.partial.json, so it
+// never clobbers the full report. Each run keeps its Playwright output in
+// packages/contract-tests/.out/<pid>/, so parallel runs do not collide.
 import { spawn, type ChildProcess } from 'node:child_process';
-import { existsSync, mkdirSync, readFileSync } from 'node:fs';
+import { copyFileSync, existsSync, mkdirSync, readFileSync, renameSync } from 'node:fs';
 import { createServer } from 'node:net';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { chromium } from '@playwright/test';
-import { demoPath, kebabCase, loadManifests, readyComponents } from './src/lib';
+import { demoPath, kebabCase, loadManifests, readyComponents, reportFile } from './src/lib';
 
 const here = dirname(fileURLToPath(import.meta.url));
 const repo = resolve(here, '../..');
@@ -149,7 +153,11 @@ function summary(file: string): void {
 
 async function main(): Promise<number> {
   const args = parseArgs(process.argv.slice(2));
-  const report = join(repo, 'docs/reports', `contract-${args.framework}.json`);
+  const partial = args.components.length > 0;
+  const runDir = join(here, '.out', String(process.pid));
+  const report = reportFile(repo, args.framework, partial, process.pid);
+  // Playwright writes into the run folder; a full run then moves the JSON into place.
+  const runJson = join(runDir, partial ? `contract-${args.framework}.partial.json` : `contract-${args.framework}.json`);
 
   if (args.framework === 'angular' && !args.url && !existsSync(join(repo, 'apps/gallery-angular/package.json'))) {
     console.log('Angular gallery: not available yet. apps/gallery-angular has no package.json, so the contract suite is skipped for angular.');
@@ -176,18 +184,27 @@ async function main(): Promise<number> {
   try {
     let url = args.url;
     if (!url) {
-      const port = await freePort();
-      url = `http://localhost:${port}`;
-      console.log(`Starting the ${args.framework} gallery at ${url}`);
-      server = startGallery(args.framework, port);
-      let log = '';
-      server.stdout?.on('data', (d: Buffer) => (log += d.toString()));
-      server.stderr?.on('data', (d: Buffer) => (log += d.toString()));
-      try {
-        await waitFor(url, server, 90_000);
-      } catch (err) {
-        console.error(log);
-        throw err;
+      // Another run may take the free port between the pick and the bind
+      // (strictPort makes the server exit then), so pick again a few times.
+      for (let attempt = 1; ; attempt += 1) {
+        const port = await freePort();
+        url = `http://localhost:${port}`;
+        console.log(`Starting the ${args.framework} gallery at ${url}`);
+        server = startGallery(args.framework, port);
+        let log = '';
+        server.stdout?.on('data', (d: Buffer) => (log += d.toString()));
+        server.stderr?.on('data', (d: Buffer) => (log += d.toString()));
+        try {
+          await waitFor(url, server, 90_000);
+          break;
+        } catch (err) {
+          stop(server);
+          if (attempt >= 5 || server.exitCode === null) {
+            console.error(log);
+            throw err;
+          }
+          console.log(`The gallery could not take port ${port}; trying another.`);
+        }
       }
     }
 
@@ -196,6 +213,7 @@ async function main(): Promise<number> {
       if (!routes[kebabCase(m.name)]) console.log(`note: ${m.name} is ready for ${args.framework} but ${url}/c/${kebabCase(m.name)} renders no demo case. Its checks are skipped.`);
     }
 
+    mkdirSync(runDir, { recursive: true });
     mkdirSync(dirname(report), { recursive: true });
     const env = {
       ...process.env,
@@ -203,14 +221,20 @@ async function main(): Promise<number> {
       DS_FRAMEWORK: args.framework,
       DS_COMPONENT: args.components.join(','),
       DS_ROUTES: JSON.stringify(routes),
-      DS_CONTRACT_JSON: report,
+      DS_CONTRACT_JSON: runJson,
+      DS_CONTRACT_OUT: runDir,
     };
     const status = await new Promise<number>((ok) => {
       const pw = spawn('npx', ['playwright', 'test', '--config', join(here, 'playwright.config.ts')], { cwd: repo, env, stdio: 'inherit' });
       pw.on('exit', (code) => ok(code ?? 1));
     });
+    if (existsSync(runJson) && runJson !== report) {
+      // Copy then rename, so a reader never sees half a file.
+      copyFileSync(runJson, `${report}.${process.pid}.tmp`);
+      renameSync(`${report}.${process.pid}.tmp`, report);
+    }
     summary(report);
-    console.log(`\nJSON report: ${report}`);
+    console.log(`\nJSON report: ${report}${partial ? ' (partial run: the full report in docs/reports is untouched)' : ''}`);
     return status;
   } finally {
     cleanup();

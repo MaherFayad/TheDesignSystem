@@ -23,6 +23,8 @@ import {
   readyComponents,
   splitKeys,
   stateFindings,
+  trapsFocus,
+  triggerSelector,
   variantFindings,
   type Axes,
   type AxeViolation,
@@ -36,7 +38,12 @@ import {
   keySnapshot,
   listenClicks,
   markTarget,
+  freshOpen,
+  markSeen,
   openRoots,
+  staticDataState,
+  targetModal,
+  targetStops,
   probeFocused,
   probePoint,
   reflowAndTitles,
@@ -83,13 +90,78 @@ async function open(page: Page, kebab: string, axes: Axes): Promise<void> {
   });
 }
 
-/** Opens an overlay through contract.trigger or a [data-demo-trigger] element, when there is one. */
-async function openTrigger(page: Page, m: Manifest): Promise<boolean> {
-  const selector = m.contract?.trigger ?? '[data-demo-trigger]';
-  const trigger = page.locator(selector).first();
-  if ((await trigger.count()) === 0) return false;
-  await trigger.click();
-  return true;
+/** True when the component opens and closes and the demo has a trigger for it. */
+async function overlayMode(page: Page, m: Manifest): Promise<boolean> {
+  return opensAndCloses(m) && (await page.locator(triggerSelector(m)).count()) > 0;
+}
+
+/** The triggers to walk: those in the variants case, else every trigger in the demo. */
+async function triggerScope(page: Page, m: Manifest): Promise<{ selector: string; count: number; inVariants: boolean }> {
+  const inVariants = `[data-demo-case="variants"] :is(${triggerSelector(m)})`;
+  const n = await page.locator(inVariants).count();
+  if (n > 0) return { selector: inVariants, count: n, inVariants: true };
+  return { selector: triggerSelector(m), count: await page.locator(triggerSelector(m)).count(), inVariants: false };
+}
+
+/** Marks the roots on the page as seen, clicks one trigger and waits for a root it adds. */
+async function openNth(page: Page, kebab: string, selector: string, i: number): Promise<boolean> {
+  await page.evaluate(markSeen, kebab);
+  await page.locator(selector).nth(i).click();
+  return expect
+    .poll(() => page.evaluate(freshOpen, kebab), { timeout: 5_000 })
+    .toBeGreaterThan(0)
+    .then(() => true)
+    .catch(() => false);
+}
+
+/** Closes what the trigger opened with Escape; reloads the demo when Escape leaves it open. */
+async function closeFresh(page: Page, kebab: string): Promise<void> {
+  await page.keyboard.press('Escape');
+  const closed = await expect
+    .poll(() => page.evaluate(freshOpen, kebab), { timeout: 3_000 })
+    .toBe(0)
+    .then(() => true)
+    .catch(() => false);
+  if (!closed) {
+    await page.goto(page.url());
+    await page.locator('[data-demo-case]').first().waitFor({ state: 'attached' });
+  }
+}
+
+/**
+ * Opens each trigger in turn (the variants case first), runs `fn` while the
+ * roots it added are open, then closes them. Returns failures for triggers
+ * that open nothing.
+ */
+async function eachOpened(page: Page, m: Manifest, kebab: string, fn: (inVariants: boolean) => Promise<void>): Promise<string[]> {
+  const scope = await triggerScope(page, m);
+  const failures: string[] = [];
+  for (let i = 0; i < scope.count; i += 1) {
+    const label = ((await page.locator(scope.selector).nth(i).textContent()) ?? '').trim().slice(0, 40);
+    if (!(await openNth(page, kebab, scope.selector, i))) {
+      failures.push(`trigger ${i + 1} "${label}" adds no open [data-ds=${kebab}]`);
+      await page.goto(page.url());
+      await page.locator('[data-demo-case]').first().waitFor({ state: 'attached' });
+      continue;
+    }
+    await fn(scope.inVariants);
+    await closeFresh(page, kebab);
+  }
+  return failures;
+}
+
+/** Axe with the contract tags, minus contract.skipAxeRules. One line per failing node. */
+async function runAxe(page: Page, m: Manifest): Promise<string[]> {
+  const skip = m.contract?.skipAxeRules ?? [];
+  if (skip.length) note(`axe rules skipped by the manifest: ${skip.join(', ')}`);
+  // @axe-core/playwright types its Page against its own playwright-core copy.
+  let builder = new AxeBuilder({ page } as unknown as ConstructorParameters<typeof AxeBuilder>[0]).withTags(AXE_TAGS);
+  if (skip.length) builder = builder.disableRules(skip);
+  const result = await builder.analyze();
+  const violations = result.violations as unknown as AxeViolation[];
+  const targets = violations.flatMap((v) => v.nodes.map((n) => n.target.map(String).join(' ')));
+  const owners = targets.length ? await page.evaluate(axeOwners, targets) : {};
+  return formatAxe(violations, owners);
 }
 
 async function checkHint(page: Page, kebab: string, key: string, hint: KeyHint, failures: string[]): Promise<void> {
@@ -151,28 +223,63 @@ for (const m of components) {
     continue;
   }
 
-  test(`${name}: anatomy`, async ({ page }) => {
-    await open(page, kebab, baseAxes);
-    if (opensAndCloses(m) || m.contract?.trigger) {
-      if (await openTrigger(page, m)) await page.locator(`[data-ds="${kebab}"]`).first().waitFor({ state: 'attached', timeout: 5_000 }).catch(() => undefined);
-    }
-    const scan = await page.evaluate(scanAnatomy, kebab);
-    const optional = optionalParts(m, styles);
-    if (optional.length) note(`optional parts: ${optional.join(', ')}`);
-    expect(anatomyFindings(m.anatomy ?? ['root'], optional, scan), `${name} anatomy on ${page.url()}`).toEqual([]);
-  });
+  for (const style of styles) {
+    const axes: Axes = { style: style.id, scheme: style.schemes.includes('dark') ? 'dark' : style.defaultScheme, dir: 'ltr', lang: 'en' };
+    test(`${name}: anatomy, ${style.id}`, async ({ page }) => {
+      await open(page, kebab, axes);
+      const scan = await page.evaluate(scanAnatomy, { kebab });
+      const failures: string[] = [];
+      if (await overlayMode(page, m)) {
+        failures.push(
+          ...(await eachOpened(page, m, kebab, async () => {
+            const fresh = await page.evaluate(scanAnatomy, { kebab, fresh: true });
+            scan.parts.push(...fresh.parts.map((p) => ({ ...p, root: p.root + scan.roots })));
+            scan.rootPart.push(...fresh.rootPart);
+            scan.roots += fresh.roots;
+          })),
+        );
+        note('anatomy read from the static examples and from every root a trigger opened');
+      }
+      const optional = optionalParts(m, styles, style.id);
+      if (optional.length) note(`optional parts in ${style.id}: ${optional.join(', ')}`);
+      failures.push(...anatomyFindings(m.anatomy ?? ['root'], optional, scan));
+      expect(failures, `${name} anatomy on ${page.url()}`).toEqual([]);
+    });
+  }
 
   test(`${name}: variant attributes`, async ({ page }) => {
     await open(page, kebab, baseAxes);
-    const { roots, hasVariantsCase } = await page.evaluate(scanVariants, kebab);
-    expect(variantFindings(m, roots, hasVariantsCase), `${name} variants on ${page.url()}`).toEqual([]);
+    const { roots, hasVariantsCase } = await page.evaluate(scanVariants, { kebab });
+    const failures: string[] = [];
+    if (await overlayMode(page, m)) {
+      failures.push(
+        ...(await eachOpened(page, m, kebab, async (inVariants) => {
+          const fresh = await page.evaluate(scanVariants, { kebab, fresh: true, asVariants: inVariants });
+          roots.push(...fresh.roots);
+        })),
+      );
+      note('variants read from the static examples and from every root a trigger in the variants case opened');
+    }
+    failures.push(...variantFindings(m, roots, hasVariantsCase));
+    expect(failures, `${name} variants on ${page.url()}`).toEqual([]);
   });
 
   test(`${name}: state attributes`, async ({ page }) => {
     await open(page, kebab, baseAxes);
-    if (opensAndCloses(m)) await openTrigger(page, m);
-    const hits = await page.evaluate(scanStates, { kebab, booleans: booleanStates(m) });
-    expect(stateFindings(m, hits), `${name} states on ${page.url()}`).toEqual([]);
+    const booleans = booleanStates(m);
+    const hits = await page.evaluate(scanStates, { kebab, booleans });
+    const failures: string[] = [];
+    if (await overlayMode(page, m)) {
+      // A static example has no open or closed behavior, so it stamps no data-state.
+      failures.push(...(await page.evaluate(staticDataState, kebab)).map((w) => `presentational example stamps data-state: ${w}`));
+      failures.push(
+        ...(await eachOpened(page, m, kebab, async () => {
+          hits.push(...(await page.evaluate(scanStates, { kebab, booleans, fresh: true })));
+        })),
+      );
+    }
+    failures.push(...stateFindings(m, hits));
+    expect(failures, `${name} states on ${page.url()}`).toEqual([]);
   });
 
   test(`${name}: keyboard map`, async ({ page }) => {
@@ -183,11 +290,44 @@ for (const m of components) {
     test.skip(keys.length === 0 && disabled.disabledRoots === 0, 'no a11y.keys in the manifest and no disabled root in the demo');
     const failures = [...disabled.failures];
     if (disabled.disabledRoots > 0) note(`${disabled.disabledRoots} disabled roots checked for focus`);
+    const overlay = await overlayMode(page, m);
+    if (overlay) note(`overlay: keys are pressed with the first trigger's root open; focus ${trapsFocus(m) ? 'must stay inside (the manifest says modal)' : 'stays inside only when the open root has aria-modal'}`);
 
     for (const key of keys) {
       const check = keyCheckFor(key, m);
       await page.goto(page.url());
       await page.locator('[data-demo-case]').first().waitFor({ state: 'attached' });
+
+      if ((check === 'tab' || check === 'shift-tab') && overlay) {
+        const scope = await triggerScope(page, m);
+        if (!(await openNth(page, kebab, scope.selector, 0))) {
+          failures.push(`${key}: the first trigger adds no open [data-ds=${kebab}]`);
+          continue;
+        }
+        const target = await page.evaluate(markTarget, { kebab, button: false, fresh: true });
+        if (!target) {
+          failures.push(`${key}: the open root holds no tab stop`);
+          continue;
+        }
+        const modal = trapsFocus(m) || (await page.evaluate(targetModal));
+        if (modal && !(await page.evaluate(focusState)).inTarget) failures.push(`${key}: focus is not inside the open root after it opens (${(await page.evaluate(focusState)).active})`);
+        const before = await page.evaluate(keySnapshot, kebab);
+        await page.keyboard.press(key);
+        const after = await page.evaluate(keySnapshot, kebab);
+        if (after.active === before.active) failures.push(`${key}: focus does not move with the root open`);
+        if (modal) {
+          const presses = (await page.evaluate(targetStops)) + 2;
+          for (let i = 0; i < presses; i += 1) {
+            const s = await page.evaluate(focusState);
+            if (!s.inTarget) {
+              failures.push(`${key}: focus leaves the open modal root after ${i + 1} presses (on ${s.active})`);
+              break;
+            }
+            await page.keyboard.press(key);
+          }
+        }
+        continue;
+      }
 
       if (check === 'tab' || check === 'shift-tab') {
         const target = await page.evaluate(markTarget, { kebab, button: false });
@@ -230,26 +370,29 @@ for (const m of components) {
       }
 
       if (check === 'escape') {
-        if (!(await openTrigger(page, m))) {
+        if (!overlay) {
           failures.push(`Escape: no contract.trigger and no [data-demo-trigger] in the demo to open ${name}`);
           continue;
         }
-        const opened = await expect
-          .poll(() => page.evaluate(openRoots, kebab), { timeout: 5_000 })
-          .toBeGreaterThan(0)
-          .then(() => true)
-          .catch(() => false);
-        if (!opened) {
-          failures.push(`Escape: the trigger did not open a [data-ds=${kebab}][data-state=open]`);
+        const scope = await triggerScope(page, m);
+        if (!(await openNth(page, kebab, scope.selector, 0))) {
+          failures.push(`Escape: the first trigger adds no open [data-ds=${kebab}]`);
           continue;
+        }
+        // Escape acts where focus is: move it into the opened root when the open did not.
+        if (await page.evaluate(markTarget, { kebab, button: false, fresh: true })) {
+          if (!(await page.evaluate(focusState)).inTarget) {
+            note('Escape: focus was moved into the opened root before the key press');
+            await page.locator('[data-contract-stop]').first().focus();
+          }
         }
         await page.keyboard.press('Escape');
         const closed = await expect
-          .poll(() => page.evaluate(openRoots, kebab), { timeout: 5_000 })
+          .poll(() => page.evaluate(freshOpen, kebab), { timeout: 5_000 })
           .toBe(0)
           .then(() => true)
           .catch(() => false);
-        if (!closed) failures.push('Escape: the root stays data-state="open"');
+        if (!closed) failures.push('Escape: the root the trigger opened stays open');
         continue;
       }
 
@@ -300,16 +443,18 @@ for (const m of components) {
   for (const axes of axeMatrix(styles)) {
     test(`${name}: axe, ${axes.style} ${axes.scheme} ${axes.lang} ${axes.dir}`, async ({ page }) => {
       await open(page, kebab, axes);
-      const skip = m.contract?.skipAxeRules ?? [];
-      if (skip.length) note(`axe rules skipped by the manifest: ${skip.join(', ')}`);
-      // @axe-core/playwright types its Page against its own playwright-core copy.
-      let builder = new AxeBuilder({ page } as unknown as ConstructorParameters<typeof AxeBuilder>[0]).withTags(AXE_TAGS);
-      if (skip.length) builder = builder.disableRules(skip);
-      const result = await builder.analyze();
-      const violations = result.violations as unknown as AxeViolation[];
-      const targets = violations.flatMap((v) => v.nodes.map((n) => n.target.map(String).join(' ')));
-      const owners = targets.length ? await page.evaluate(axeOwners, targets) : {};
-      expect(formatAxe(violations, owners), `${name} axe on ${page.url()}`).toEqual([]);
+      expect(await runAxe(page, m), `${name} axe on ${page.url()}`).toEqual([]);
     });
+    if (opensAndCloses(m)) {
+      test(`${name}: axe open, ${axes.style} ${axes.scheme} ${axes.lang} ${axes.dir}`, async ({ page }) => {
+        await page.emulateMedia({ reducedMotion: 'reduce' });
+        await open(page, kebab, axes);
+        test.skip(!(await overlayMode(page, m)), 'no contract.trigger and no [data-demo-trigger] in the demo');
+        const scope = await triggerScope(page, m);
+        expect(await openNth(page, kebab, scope.selector, 0), `the first trigger opens a [data-ds=${kebab}]`).toBe(true);
+        await page.waitForTimeout(300);
+        expect(await runAxe(page, m), `${name} axe with the first trigger's root open on ${page.url()}`).toEqual([]);
+      });
+    }
   }
 }

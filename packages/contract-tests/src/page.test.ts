@@ -2,7 +2,7 @@
 // The in-page scans on a small DOM. Layout based functions (target size,
 // reflow) need a real browser and run only in the Playwright suite.
 import { beforeEach, describe, expect, it } from 'vitest';
-import { markTarget, scanAnatomy, scanDisabled, scanStates, scanVariants } from './page';
+import { freshOpen, markSeen, markTarget, scanAnatomy, scanDisabled, scanStates, scanVariants, staticDataState } from './page';
 
 beforeEach(() => {
   document.body.innerHTML = `
@@ -26,27 +26,27 @@ beforeEach(() => {
 
 describe('scanAnatomy: the part ownership walk', () => {
   it('gives each part to the nearest root above it', () => {
-    const field = scanAnatomy('field');
+    const field = scanAnatomy({ kebab: 'field' });
     expect(field.roots).toBe(1);
     expect(field.parts.map((p) => p.part).sort()).toEqual(['description', 'label', 'required']);
-    const input = scanAnatomy('input');
+    const input = scanAnatomy({ kebab: 'input' });
     expect(input.roots).toBe(4);
     expect(input.parts.filter((p) => p.root === 0).map((p) => p.part)).toEqual(['start', 'control']);
   });
 
   it('gives a part on a nested root to the parent root', () => {
-    expect(scanAnatomy('dialog').parts.map((p) => p.part)).toEqual(['close']);
-    expect(scanAnatomy('icon-button').parts).toEqual([]);
+    expect(scanAnatomy({ kebab: 'dialog' }).parts.map((p) => p.part)).toEqual(['close']);
+    expect(scanAnatomy({ kebab: 'icon-button' }).parts).toEqual([]);
   });
 
   it('reports where a part is', () => {
-    expect(scanAnatomy('field').parts[0]?.where).toBe('label[data-part=label] in case variants');
+    expect(scanAnatomy({ kebab: 'field' }).parts[0]?.where).toBe('label[data-part=label] in case variants');
   });
 });
 
 describe('scanVariants', () => {
   it('reads the axes and the case of every root', () => {
-    const r = scanVariants('input');
+    const r = scanVariants({ kebab: 'input' });
     expect(r.hasVariantsCase).toBe(true);
     expect(r.roots[0]).toMatchObject({ attrs: { size: 'md', shape: 'pill' }, inVariants: true });
     expect(r.roots[1]).toMatchObject({ attrs: { size: 'sm' }, inVariants: false });
@@ -77,5 +77,48 @@ describe('markTarget', () => {
     expect(document.querySelectorAll('[data-contract-target]')).toHaveLength(1);
     expect(document.querySelector('[data-contract-stop]')?.tagName).toBe('INPUT');
     expect(markTarget({ kebab: 'input', button: true })).toBeNull();
+  });
+});
+
+describe('nested components (Window, TitleBar, Dialog close)', () => {
+  it('counts a part on a nested root for the outer root, and the parts inside it for the nested one', () => {
+    document.body.innerHTML = `
+      <div data-ds="window">
+        <div data-ds="title-bar" data-part="titlebar">
+          <div data-ds="window-controls" data-part="controls">
+            <button data-ds="icon-button" data-part="close"><span data-part="icon"></span></button>
+          </div>
+          <h2 data-part="title">Board</h2>
+        </div>
+        <div data-part="body"></div>
+      </div>`;
+    expect(scanAnatomy({ kebab: 'window' }).parts.map((p) => p.part)).toEqual(['titlebar', 'body']);
+    expect(scanAnatomy({ kebab: 'title-bar' }).parts.map((p) => p.part)).toEqual(['controls', 'title']);
+    expect(scanAnatomy({ kebab: 'window-controls' }).parts.map((p) => p.part)).toEqual(['close']);
+    expect(scanAnatomy({ kebab: 'icon-button' }).parts.map((p) => p.part)).toEqual(['icon']);
+  });
+});
+
+describe('overlays: roots a trigger adds', () => {
+  it('tells opened roots from static examples', () => {
+    document.body.innerHTML = `
+      <section data-demo-case="variants"><div data-ds="toast" data-tone="info"><span data-part="title"></span></div></section>
+      <ol data-ds="toaster"></ol>`;
+    expect(markSeen('toast')).toBe(1);
+    expect(freshOpen('toast')).toBe(0);
+    document.querySelector('[data-ds="toaster"]')!.innerHTML = '<li data-ds="toast" data-tone="danger" data-state="open"><span data-part="icon"></span></li>';
+    expect(freshOpen('toast')).toBe(1);
+    expect(scanAnatomy({ kebab: 'toast', fresh: true }).parts.map((p) => p.part)).toEqual(['icon']);
+    const v = scanVariants({ kebab: 'toast', fresh: true, asVariants: true });
+    expect(v.roots).toEqual([{ attrs: { tone: 'danger' }, inVariants: true, where: 'li[data-ds=toast] opened by a trigger' }]);
+    expect(scanStates({ kebab: 'toast', booleans: [], fresh: true }).map((h) => h.dataState)).toEqual(['open', null]);
+    document.querySelector('[data-ds="toaster"] [data-ds="toast"]')!.setAttribute('data-state', 'closed');
+    expect(freshOpen('toast')).toBe(0);
+    expect(markTarget({ kebab: 'toast', button: false, fresh: true })).toBeNull();
+  });
+
+  it('flags a static example that stamps data-state', () => {
+    document.body.innerHTML = '<section data-demo-case="one"><div data-ds="toast" data-state="open"></div><div data-ds="toast"></div></section>';
+    expect(staticDataState('toast')).toEqual(['div[data-ds=toast][data-state=open] in case one']);
   });
 });
