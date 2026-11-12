@@ -9,6 +9,7 @@ export interface DemoRoute {
 
 export const routes: DemoRoute[] = [
   { name: 'Button', slug: 'button', load: () => import('../../../packages/react/src/components/Button/Button.demo') },
+  { name: 'Container', slug: 'container', load: () => import('../../../packages/react/src/components/Container/Container.demo') },
   { name: 'Dialog', slug: 'dialog', load: () => import('../../../packages/react/src/components/Dialog/Dialog.demo') },
   { name: 'Field', slug: 'field', load: () => import('../../../packages/react/src/components/Field/Field.demo') },
   { name: 'Grid', slug: 'grid', load: () => import('../../../packages/react/src/components/Grid/Grid.demo') },

@@ -1,0 +1,174 @@
+{
+  "name": "Container",
+  "kind": "component",
+  "family": "layout",
+  "summary": "Centers page content at a max width with a gutter on both inline sides.",
+  "useWhen": [
+    "The content column of a page or a landing section, centered on wide screens",
+    "Capping the line length of reading text at a narrow width",
+    "Keeping the 16px phone gutter on any page content"
+  ],
+  "avoidWhen": [
+    "Inside a panel, card or dialog that already has its own padding",
+    "Laying out children in a row or columns",
+    "A full bleed band of color or media that must reach the screen edges"
+  ],
+  "insteadUse": {
+    "Children in a row or a column": "Stack",
+    "Columns and rows": "Grid",
+    "A background box with padding": "Surface",
+    "The page frame with header and sidebar": "PageShell"
+  },
+  "anatomy": [
+    "root"
+  ],
+  "slots": {
+    "root": {
+      "accepts": "any"
+    }
+  },
+  "props": {
+    "width": {
+      "type": [
+        "sm",
+        "md",
+        "lg",
+        "xl",
+        "full"
+      ],
+      "default": "lg",
+      "description": "The max inline size, gutter included: sm 30rem (breakpoint.phone), md 48rem (breakpoint.tablet), lg 68.75rem (breakpoint.desktop), xl desktop plus half a phone (about 86rem), full no cap. Named width, not size, because size is the shared control axis. Sets data-width."
+    },
+    "gutter": {
+      "type": [
+        "none",
+        "4xs",
+        "3xs",
+        "2xs",
+        "xs",
+        "s",
+        "m",
+        "l",
+        "xl",
+        "2xl",
+        "3xl",
+        "4xl",
+        "5xl",
+        "6xl",
+        "7xl",
+        "8xl",
+        "9xl",
+        "10xl",
+        "11xl",
+        "12xl"
+      ],
+      "default": "3xl",
+      "description": "Padding on both inline sides, a space.* step. 3xl is 16px on phones in the default density. Sets data-gutter."
+    },
+    "as": {
+      "type": [
+        "div",
+        "main",
+        "section",
+        "article",
+        "header",
+        "footer"
+      ],
+      "default": "div",
+      "description": "The element to render. One main per page."
+    },
+    "children": {
+      "type": "node",
+      "description": "The page content."
+    }
+  },
+  "states": [],
+  "a11y": {
+    "role": "none of its own: a div, or the landmark of as",
+    "focus": "Never focusable.",
+    "keys": {},
+    "announce": "Nothing. A Container is layout only.",
+    "native": {
+      "accessibilityRole": "none"
+    },
+    "notes": [
+      "Content never scrolls sideways at 320px: the width is a max, the box is 100% and the gutter sits inside it (WCAG 1.4.10).",
+      "Width sm keeps reading text near 70 characters a line."
+    ]
+  },
+  "content": {
+    "en": {
+      "body": "No copy of its own."
+    },
+    "ar": {
+      "body": "No copy of its own. The gutter is the same on both sides, so nothing changes in Arabic."
+    }
+  },
+  "tokens": [
+    "breakpoint.phone",
+    "breakpoint.tablet",
+    "breakpoint.desktop",
+    "space.4xs",
+    "space.3xs",
+    "space.2xs",
+    "space.xs",
+    "space.s",
+    "space.m",
+    "space.l",
+    "space.xl",
+    "space.2xl",
+    "space.3xl",
+    "space.4xl",
+    "space.5xl",
+    "space.6xl",
+    "space.7xl",
+    "space.8xl",
+    "space.9xl",
+    "space.10xl",
+    "space.11xl",
+    "space.12xl"
+  ],
+  "frameworks": {
+    "react": {
+      "status": "ready",
+      "behavior": "hand built",
+      "example": "Container.demo.tsx",
+      "note": "No motion: a static layout has nothing to animate, so no pattern from the catalog applies."
+    },
+    "angular": {
+      "status": "planned",
+      "behavior": "[dsContainer] attribute directive",
+      "note": "The host element is the root, so as is not needed."
+    },
+    "native": {
+      "status": "planned",
+      "behavior": "react-native:View with maxWidth, alignSelf center and paddingHorizontal",
+      "note": "Respect the safe area insets on top of the gutter."
+    }
+  },
+  "styles": {
+    "studio": "Layout only.",
+    "desk": "Layout only. Pages sit inside windows, so a Container is mostly for site pages.",
+    "neutral": "Layout only.",
+    "liquid": "Layout only. Content scrolls under the glass bars; the gutter stays."
+  },
+  "mistakes": [
+    {
+      "wrong": "A Container inside a Dialog body or a Card",
+      "right": "No Container: the panel already pads its content"
+    },
+    {
+      "wrong": "max-width 1200px and padding 0 16px written by hand",
+      "right": "Container width lg, which keeps the gutter and the logical margins"
+    },
+    {
+      "wrong": "size xl to pick a page width",
+      "right": "width xl; size is the control size axis"
+    },
+    {
+      "wrong": "Two Containers rendered as main on one page",
+      "right": "One main per page; the rest as div or section"
+    }
+  ],
+  "since": "0.1.0"
+}

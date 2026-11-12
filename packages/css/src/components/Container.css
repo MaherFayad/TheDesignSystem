@@ -1,0 +1,119 @@
+/*
+ * Container: the centered max width wrapper with the page gutter. The max
+ * inline size includes the gutter (border-box), so a full width container on
+ * a 320px phone keeps 16px on each side in the default density and never
+ * scrolls sideways. Layout only: no color and no motion.
+ *
+ * Widths are the breakpoint tokens until the token build has a
+ * size.container scale (asked of the lead in the lane report).
+ */
+@layer ds.base {
+  [data-ds='container'] {
+    --_container-max: var(--ds-breakpoint-desktop);
+    --_container-padding-inline: var(--ds-space-3xl);
+
+    box-sizing: border-box;
+    inline-size: 100%;
+    max-inline-size: var(--_container-max);
+    margin-inline: auto;
+    padding-inline: var(--_container-padding-inline);
+    min-inline-size: 0;
+  }
+
+  [data-ds='container'][data-width='sm'] {
+    --_container-max: var(--ds-breakpoint-phone);
+  }
+
+  [data-ds='container'][data-width='md'] {
+    --_container-max: var(--ds-breakpoint-tablet);
+  }
+
+  /* xl: desktop plus half a phone width, about 86rem. */
+  [data-ds='container'][data-width='xl'] {
+    --_container-max: calc(var(--ds-breakpoint-desktop) + var(--ds-breakpoint-phone) / 2);
+  }
+
+  [data-ds='container'][data-width='full'] {
+    --_container-max: none;
+  }
+
+  [data-ds='container'][data-gutter='none'] {
+    --_container-padding-inline: 0;
+  }
+
+  [data-ds='container'][data-gutter='4xs'] {
+    --_container-padding-inline: var(--ds-space-4xs);
+  }
+
+  [data-ds='container'][data-gutter='3xs'] {
+    --_container-padding-inline: var(--ds-space-3xs);
+  }
+
+  [data-ds='container'][data-gutter='2xs'] {
+    --_container-padding-inline: var(--ds-space-2xs);
+  }
+
+  [data-ds='container'][data-gutter='xs'] {
+    --_container-padding-inline: var(--ds-space-xs);
+  }
+
+  [data-ds='container'][data-gutter='s'] {
+    --_container-padding-inline: var(--ds-space-s);
+  }
+
+  [data-ds='container'][data-gutter='m'] {
+    --_container-padding-inline: var(--ds-space-m);
+  }
+
+  [data-ds='container'][data-gutter='l'] {
+    --_container-padding-inline: var(--ds-space-l);
+  }
+
+  [data-ds='container'][data-gutter='xl'] {
+    --_container-padding-inline: var(--ds-space-xl);
+  }
+
+  [data-ds='container'][data-gutter='2xl'] {
+    --_container-padding-inline: var(--ds-space-2xl);
+  }
+
+  [data-ds='container'][data-gutter='3xl'] {
+    --_container-padding-inline: var(--ds-space-3xl);
+  }
+
+  [data-ds='container'][data-gutter='4xl'] {
+    --_container-padding-inline: var(--ds-space-4xl);
+  }
+
+  [data-ds='container'][data-gutter='5xl'] {
+    --_container-padding-inline: var(--ds-space-5xl);
+  }
+
+  [data-ds='container'][data-gutter='6xl'] {
+    --_container-padding-inline: var(--ds-space-6xl);
+  }
+
+  [data-ds='container'][data-gutter='7xl'] {
+    --_container-padding-inline: var(--ds-space-7xl);
+  }
+
+  [data-ds='container'][data-gutter='8xl'] {
+    --_container-padding-inline: var(--ds-space-8xl);
+  }
+
+  [data-ds='container'][data-gutter='9xl'] {
+    --_container-padding-inline: var(--ds-space-9xl);
+  }
+
+  [data-ds='container'][data-gutter='10xl'] {
+    --_container-padding-inline: var(--ds-space-10xl);
+  }
+
+  [data-ds='container'][data-gutter='11xl'] {
+    --_container-padding-inline: var(--ds-space-11xl);
+  }
+
+  [data-ds='container'][data-gutter='12xl'] {
+    --_container-padding-inline: var(--ds-space-12xl);
+  }
+}
