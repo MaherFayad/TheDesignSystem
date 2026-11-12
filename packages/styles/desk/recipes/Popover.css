@@ -1,0 +1,48 @@
+/*
+ * Desk recipe for Popover: floating surfaces on the desk are glass (the
+ * dials table of PLAN.md 3.7, depth "glass"), the same material as the Desk
+ * toasts: the strong glass fill, the glass border, the window blur and the
+ * soft window shadow. The radius stays the panel radius: a popover is
+ * smaller than a window.
+ *
+ * Glass turns solid by itself: under prefers-reduced-transparency,
+ * prefers-contrast more and data-contrast more the material tokens resolve
+ * to the solid glass color, and the rules below drop the blur.
+ *
+ * Only the private --_popover-* properties are declared here, so the markup
+ * and the base rules stay the same in every style.
+ */
+@layer ds.recipes {
+  [data-style='desk'] [data-ds='popover'] {
+    --_popover-bg: var(--ds-color-material-glass-strong);
+    --_popover-border-color: var(--ds-color-material-glass-border);
+    --_popover-shadow: var(--ds-elevation-window-soft);
+    --_popover-blur: var(--ds-blur-window);
+  }
+
+  /* The recipe layer wins over the base layer, so the blur is dropped here again where the glass turns solid. */
+  @media (prefers-reduced-transparency: reduce), (prefers-contrast: more), (forced-colors: active) {
+    [data-style='desk'] [data-ds='popover'] {
+      --_popover-blur: 0;
+    }
+  }
+
+  @media (prefers-contrast: more) {
+    [data-style='desk'] [data-ds='popover'] {
+      --_popover-border-color: var(--ds-color-border-strong);
+    }
+  }
+
+  @media (forced-colors: active) {
+    [data-style='desk'] [data-ds='popover'] {
+      --_popover-bg: Canvas;
+      --_popover-border-color: CanvasText;
+    }
+  }
+
+  [data-style='desk'][data-contrast='more'] [data-ds='popover'],
+  [data-style='desk'] [data-contrast='more'] [data-ds='popover'] {
+    --_popover-blur: 0;
+    --_popover-border-color: var(--ds-color-border-strong);
+  }
+}
