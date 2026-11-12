@@ -1,0 +1,18 @@
+/*
+ * Studio recipe for Bento: tiles 1px apart on the body fill, the
+ * separation dial of Studio (PLAN.md 3.7, "1px gap between tiles"). Source:
+ * the Figma-Killer-2 dashboard grid. The gap, the parent fill and the square
+ * inner corners are a layout difference no token can say. The whole grid
+ * keeps the card radius and clips the tiles to it.
+ */
+@layer ds.recipes {
+  [data-style='studio'] [data-ds='bento'] {
+    --_bento-gap: var(--ds-space-px);
+    --_bento-bg: var(--ds-color-bg-body);
+    --_bento-radius: var(--ds-radius-card);
+    --_bento-item-bg: var(--ds-color-bg-surface-2);
+    --_bento-item-radius: 0;
+
+    overflow: clip;
+  }
+}

@@ -1,0 +1,157 @@
+{
+  "name": "Bento",
+  "kind": "component",
+  "family": "layout",
+  "summary": "A grid of tiles of mixed sizes (1x1, 2x1, 1x2, 2x2) for overviews and landing sections. Reading order is the visual order.",
+  "useWhen": [
+    "A dashboard overview with a few figures of different weight",
+    "A landing section that shows features as tiles of mixed sizes",
+    "Tiles where one or two deserve more room than the rest"
+  ],
+  "avoidWhen": [
+    "Every tile is the same size",
+    "Rows of records the user compares or sorts",
+    "The user rearranges or resizes the tiles",
+    "A long feed that loads more as it scrolls"
+  ],
+  "insteadUse": {
+    "Tiles of one size": "Grid",
+    "Records to compare or sort": "Table",
+    "Tiles the user drags or resizes": "ResizablePanels",
+    "A feed": "Stack",
+    "One box with a fill": "Surface"
+  },
+  "anatomy": [
+    "root",
+    "item"
+  ],
+  "parts": {
+    "BentoItem": "item"
+  },
+  "slots": {
+    "root": {
+      "accepts": [
+        "BentoItem"
+      ],
+      "min": 1
+    },
+    "item": {
+      "accepts": "any"
+    }
+  },
+  "props": {
+    "columns": {
+      "type": [
+        "2",
+        "3",
+        "4"
+      ],
+      "default": "4",
+      "description": "Columns at full width. At most 2 under breakpoint.tablet, 1 under breakpoint.phone. React takes the numbers. Stamped as data-columns."
+    },
+    "as": {
+      "type": [
+        "div",
+        "ul",
+        "section"
+      ],
+      "default": "div",
+      "description": "The root element. ul with items as li when the tiles are a list."
+    },
+    "BentoItem.span": {
+      "type": [
+        "1x1",
+        "2x1",
+        "1x2",
+        "2x2"
+      ],
+      "default": "1x1",
+      "description": "Columns by rows. Stamped as data-span. Every tile spans one column under breakpoint.phone."
+    },
+    "BentoItem.as": {
+      "type": [
+        "div",
+        "li",
+        "article"
+      ],
+      "default": "div",
+      "description": "The item element. li inside a ul root."
+    }
+  },
+  "states": [],
+  "a11y": {
+    "role": "No role of its own: the native role of the element given by as. A ul root with li items is announced as a list with its count.",
+    "focus": "Not focusable. Controls inside the tiles take focus in source order, which is the visual order.",
+    "keys": {},
+    "announce": "The tiles are read in source order. No dense packing, so a tile never moves ahead of one that comes before it in the source.",
+    "native": {
+      "accessibilityRole": "list",
+      "accessibilityState": []
+    },
+    "notes": [
+      "Reading order equals visual order: the grid flows by rows with no dense packing. A wide tile that does not fit leaves a hole rather than pulling a later tile forward.",
+      "One column under breakpoint.phone, so there is no sideways scroll at 320px.",
+      "In forced colors mode each tile draws an outline, since the fills are gone."
+    ]
+  },
+  "content": {
+    "en": {
+      "item": "A short label in sentence case, then the figure or the content. Figures use Western digits."
+    },
+    "ar": {
+      "item": "Noun form labels, no diacritics, Western digits."
+    }
+  },
+  "tokens": [
+    "space.px",
+    "space.l",
+    "space.2xl",
+    "space.12xl",
+    "radius.card",
+    "color.bg.surface",
+    "color.bg.surface-2",
+    "color.text.default",
+    "border.width.default",
+    "breakpoint.tablet",
+    "breakpoint.phone",
+    "color.bg.body"
+  ],
+  "frameworks": {
+    "react": {
+      "status": "ready",
+      "behavior": "plain markup on CSS grid",
+      "example": "Bento.demo.tsx"
+    },
+    "angular": {
+      "status": "planned",
+      "behavior": "[dsBento] and [dsBentoItem] attribute directives",
+      "note": "Stamps the same data attributes; Bento.css is used as is."
+    },
+    "native": {
+      "status": "planned",
+      "behavior": "A flex wrap of Views with widths from the span",
+      "note": "One column on phones, so most native screens render a plain stack."
+    }
+  },
+  "styles": {
+    "studio": "Tiles 1px apart on the body fill, square inner corners, the whole grid on the card radius (recipes/Bento.css). A hole left by a wide tile shows the body.",
+    "desk": "Free tiles on the black desk with a gap, each on the card radius.",
+    "neutral": "Free tiles with white space between them.",
+    "liquid": "Tiles are content: they stay solid, never glass."
+  },
+  "mistakes": [
+    {
+      "wrong": "grid-auto-flow dense to fill the holes",
+      "right": "Order the tiles so they fit; dense packing breaks the reading order"
+    },
+    {
+      "wrong": "Placing a tile with grid-column-start to move it on screen",
+      "right": "Move it in the source, so screen readers and keyboard users meet it in the same place"
+    },
+    {
+      "wrong": "Every tile 2x2",
+      "right": "A Grid of equal tiles; Bento is for mixed sizes"
+    }
+  ],
+  "since": "0.1.0"
+}

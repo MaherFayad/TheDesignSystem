@@ -1,0 +1,93 @@
+/*
+ * Bento: a grid of tiles of mixed sizes. Source: the Figma-Killer-2 tile
+ * grid (Widget tiles on a darker parent).
+ *
+ * Private properties on the root (recipes override these):
+ *   --_bento-columns      columns at the current width
+ *   --_bento-gap          the space between tiles
+ *   --_bento-row          the least height of one row
+ *   --_bento-bg           the fill behind the tiles (shows in the gap)
+ *   --_bento-radius       the corner of the whole grid
+ *   --_bento-item-bg, --_bento-item-fg, --_bento-item-radius, --_bento-item-padding
+ *
+ * The base look is free tiles with a gap (Desk, Neutral). Studio sets the
+ * tiles 1px apart on a darker parent (packages/styles/studio/recipes/Bento.css).
+ *
+ * No dense packing: the reading order is the visual order. No motion.
+ */
+@layer ds.base {
+  [data-ds='bento'] {
+    --_bento-columns: 4;
+    --_bento-gap: var(--ds-space-l);
+    --_bento-row: var(--ds-space-12xl);
+    --_bento-bg: transparent;
+    --_bento-radius: 0;
+    --_bento-item-bg: var(--ds-color-bg-surface);
+    --_bento-item-fg: var(--ds-color-text-default);
+    --_bento-item-radius: var(--ds-radius-card);
+    --_bento-item-padding: var(--ds-space-2xl);
+
+    display: grid;
+    grid-template-columns: repeat(var(--_bento-columns), minmax(0, 1fr));
+    grid-auto-rows: minmax(var(--_bento-row), auto);
+    grid-auto-flow: row;
+    gap: var(--_bento-gap);
+    box-sizing: border-box;
+    min-inline-size: 0;
+    margin: 0;
+    padding: 0;
+    border-radius: var(--_bento-radius);
+    background-color: var(--_bento-bg);
+    list-style: none;
+  }
+
+  [data-ds='bento'][data-columns='2'] {
+    --_bento-columns: 2;
+  }
+
+  [data-ds='bento'][data-columns='3'] {
+    --_bento-columns: 3;
+  }
+
+  [data-ds='bento'] > [data-part='item'] {
+    box-sizing: border-box;
+    min-inline-size: 0;
+    margin: 0;
+    padding: var(--_bento-item-padding);
+    border-radius: var(--_bento-item-radius);
+    background-color: var(--_bento-item-bg);
+    color: var(--_bento-item-fg);
+    overflow-wrap: anywhere;
+  }
+
+  [data-ds='bento'] > [data-part='item']:is([data-span='2x1'], [data-span='2x2']) {
+    grid-column: span 2;
+  }
+
+  [data-ds='bento'] > [data-part='item']:is([data-span='1x2'], [data-span='2x2']) {
+    grid-row: span 2;
+  }
+
+  @media (width < 48rem) /* breakpoint.tablet */ {
+    [data-ds='bento'][data-columns] {
+      --_bento-columns: 2;
+    }
+  }
+
+  @media (width < 30rem) /* breakpoint.phone */ {
+    [data-ds='bento'][data-columns] {
+      --_bento-columns: 1;
+    }
+
+    [data-ds='bento'] > [data-part='item']:is([data-span='2x1'], [data-span='2x2']) {
+      grid-column: auto;
+    }
+  }
+
+  /* Forced colors drop the fills: draw each tile's edge. */
+  @media (forced-colors: active) {
+    [data-ds='bento'] > [data-part='item'] {
+      outline: var(--ds-border-width-default) solid CanvasText;
+    }
+  }
+}
