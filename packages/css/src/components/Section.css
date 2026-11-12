@@ -14,10 +14,14 @@
  *
  * The toggle is a system Button (data-ds="button" data-part="toggle"). This
  * file restyles it through the Button's private properties, as the anatomy
- * contract allows a parent to do. Two declarations have no private property
- * in Button.css (the start alignment of the row and of a wrapped label), so
- * they are written on the toggle directly. A request to add them as
- * properties is in docs/reports/lanes/lane-8b.md.
+ * contract allows a parent to do. Four declarations have no private
+ * property in Button.css, so they are written on the toggle directly: the
+ * start alignment of the row (justify-content) and of a wrapped label
+ * (text-align), the start offset (margin-inline-start) and the muted
+ * chevron color (color on the start part). A request to add them as
+ * properties is in the lane 8B report (docs/reports/lanes/lane-8b.md).
+ * The start offset puts the hover fill and the focus ring a little past the
+ * section's start edge: a clipping parent needs that much inline padding.
  *
  * Motion: accordion-height. The opening body fades in and slides from a
  * little above (transform and opacity only, never height). Closing is
@@ -110,7 +114,7 @@
 
   /* With a toggle, the description lines up with the title text, past the chevron. */
   [data-ds='section'][data-state] > [data-part='header'] > [data-part='description'] {
-    padding-inline-start: calc(var(--ds-size-icon-md) + var(--ds-space-2xs));
+    padding-inline-start: calc(var(--ds-size-icon-md) + var(--ds-space-2xs) + var(--ds-border-width-default));
   }
 
   /* ------------------------------------------------------------ toggle (a ghost Button) */
@@ -124,7 +128,7 @@
     --_button-fg-hover: var(--_section-fg);
     --_button-fg-active: var(--_section-fg);
 
-    /* No private property covers these two in Button.css: see the file header. */
+    /* No private property covers these in Button.css: see the file header. */
     justify-content: flex-start;
 
     /* The hover fill reaches past the chevron; the chevron itself sits on the section's start edge. */

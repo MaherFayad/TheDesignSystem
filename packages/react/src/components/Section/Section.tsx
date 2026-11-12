@@ -47,7 +47,9 @@ export interface SectionProps extends Omit<HTMLAttributes<HTMLElement>, 'title'>
   /**
    * The title becomes a toggle that shows and hides the body. Default false.
    * A collapsible section with no children draws the header alone, with no
-   * toggle: there is nothing to disclose.
+   * toggle: there is nothing to disclose. Pass no children (undefined, null
+   * or false) for that: a child component that renders nothing still counts
+   * as a body.
    */
   collapsible?: boolean;
   /** Controlled open state. Only with collapsible. */
@@ -59,7 +61,7 @@ export interface SectionProps extends Omit<HTMLAttributes<HTMLElement>, 'title'>
   /**
    * Names the section with its title (aria-labelledby), which makes it a
    * region landmark. Default false: most sections are parts of a page, not
-   * places to jump to.
+   * places to jump to. The title id is added to any aria-labelledby you pass.
    */
   landmark?: boolean;
   /** The body. */
@@ -134,7 +136,7 @@ export function Section({
     ...rest,
     'data-ds': 'section',
     'data-size': size,
-    'aria-labelledby': landmark ? titleId : rest['aria-labelledby'],
+    'aria-labelledby': landmark ? [rest['aria-labelledby'], titleId].filter(Boolean).join(' ') : rest['aria-labelledby'],
   };
 
   if (!disclosure) {

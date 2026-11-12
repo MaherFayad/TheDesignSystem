@@ -19,7 +19,7 @@
     "Views of the same content": "Tabs",
     "A box with a fill or border": "Surface",
     "A clickable tile with a title": "Card",
-    "Show and hide one short line": "Collapsible"
+    "A hint under a field": "Field description"
   },
   "anatomy": [
     "root",
@@ -86,7 +86,7 @@
     "collapsible": {
       "type": "boolean",
       "default": false,
-      "description": "The title becomes a toggle that shows and hides the body. With no children there is nothing to disclose, so the header draws alone, with no toggle."
+      "description": "The title becomes a toggle that shows and hides the body. With no children there is nothing to disclose, so the header draws alone, with no toggle. A child component that renders nothing still counts as a body: pass no children instead."
     },
     "open": {
       "type": "boolean",
@@ -104,7 +104,7 @@
     "landmark": {
       "type": "boolean",
       "default": false,
-      "description": "Names the section with its title (aria-labelledby), which makes it a region landmark."
+      "description": "Names the section with its title (aria-labelledby), which makes it a region landmark. The title id is added to any aria-labelledby passed."
     }
   },
   "states": [
@@ -129,7 +129,8 @@
     "notes": [
       "The toggle sits inside the heading (the disclosure pattern), so the heading keeps its place in the outline.",
       "Header actions are siblings of the toggle, never inside it: a control inside a control is invalid and unreachable by keyboard.",
-      "The chevron points forward when closed and down when open. chevron-forward mirrors in right to left layouts."
+      "The chevron points forward when closed and down when open. chevron-forward mirrors in right to left layouts.",
+      "Radix stamps data-state on the toggle Button too (open or closed). It is the Section's state, carried by its toggle part."
     ]
   },
   "content": {
@@ -185,7 +186,7 @@
     }
   },
   "styles": {
-    "studio": "No fill, no radius, a hairline between sections, a bold small title (the inspector section).",
+    "studio": "No fill, no radius, a hairline between sections, a bold title (small at size sm, as the inspector section).",
     "desk": "The same on the glass of a window. The toggle is a square ghost button with no roll label.",
     "neutral": "The same structure, with the Neutral hairline and type scale.",
     "liquid": "Content stays solid: a Section is never glass."
