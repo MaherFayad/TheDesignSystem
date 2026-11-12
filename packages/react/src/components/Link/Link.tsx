@@ -28,6 +28,7 @@ import {
 import { Slot } from 'radix-ui';
 import { Icon } from '@the-system/icons/react';
 import type { Size, Tone } from '@the-system/shared';
+import { NAVIGATION_KEYS } from '../../internal/keys';
 import { useTheme } from '../../theme';
 
 export type LinkTone = Extract<Tone, 'neutral' | 'accent'>;
@@ -126,8 +127,9 @@ export function Link({
       }
       onAuxClick?.(event);
     },
+    // While disabled, navigation keys still reach the handler (a roving group); every other key is swallowed.
     onKeyDown: (event: KeyboardEvent<HTMLAnchorElement>) => {
-      if (!disabled) onKeyDown?.(event);
+      if (!disabled || NAVIGATION_KEYS.has(event.key)) onKeyDown?.(event);
     },
   };
 

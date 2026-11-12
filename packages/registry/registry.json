@@ -115,6 +115,11 @@
           "target": "@components/ds/motion/patterns/fade-rise.ts"
         },
         {
+          "path": "packages/motion/src/patterns/fade.ts",
+          "type": "registry:lib",
+          "target": "@components/ds/motion/patterns/fade.ts"
+        },
+        {
           "path": "packages/motion/src/patterns/list-stagger.ts",
           "type": "registry:lib",
           "target": "@components/ds/motion/patterns/list-stagger.ts"
@@ -128,6 +133,11 @@
           "path": "packages/motion/src/patterns/number-roll.ts",
           "type": "registry:lib",
           "target": "@components/ds/motion/patterns/number-roll.ts"
+        },
+        {
+          "path": "packages/motion/src/patterns/press.ts",
+          "type": "registry:lib",
+          "target": "@components/ds/motion/patterns/press.ts"
         },
         {
           "path": "packages/motion/src/patterns/sheet.ts",
@@ -245,6 +255,11 @@
           "target": "@components/ds/shared/meter.ts"
         },
         {
+          "path": "packages/shared/src/number.ts",
+          "type": "registry:lib",
+          "target": "@components/ds/shared/number.ts"
+        },
+        {
           "path": "packages/shared/src/otp.ts",
           "type": "registry:lib",
           "target": "@components/ds/shared/otp.ts"
@@ -265,6 +280,11 @@
           "target": "@components/ds/shared/resize.ts"
         },
         {
+          "path": "packages/shared/src/scrub.ts",
+          "type": "registry:lib",
+          "target": "@components/ds/shared/scrub.ts"
+        },
+        {
           "path": "packages/shared/src/shortcut.ts",
           "type": "registry:lib",
           "target": "@components/ds/shared/shortcut.ts"
@@ -278,6 +298,11 @@
           "path": "packages/shared/src/stepper.ts",
           "type": "registry:lib",
           "target": "@components/ds/shared/stepper.ts"
+        },
+        {
+          "path": "packages/shared/src/tags.ts",
+          "type": "registry:lib",
+          "target": "@components/ds/shared/tags.ts"
         },
         {
           "path": "packages/shared/src/theme.ts",
@@ -362,6 +387,11 @@
         "@ds/style-studio"
       ],
       "files": [
+        {
+          "path": "packages/react/src/internal/keys.ts",
+          "type": "registry:ui",
+          "target": "@components/ds/react/internal/keys.ts"
+        },
         {
           "path": "packages/react/src/internal/useControllable.ts",
           "type": "registry:ui",
@@ -461,6 +491,11 @@
           "target": "@components/ds/styles/desk/recipes/Combobox.css"
         },
         {
+          "path": "packages/styles/desk/recipes/CommandPalette.css",
+          "type": "registry:file",
+          "target": "@components/ds/styles/desk/recipes/CommandPalette.css"
+        },
+        {
           "path": "packages/styles/desk/recipes/Dialog.css",
           "type": "registry:file",
           "target": "@components/ds/styles/desk/recipes/Dialog.css"
@@ -491,9 +526,24 @@
           "target": "@components/ds/styles/desk/recipes/Menubar.css"
         },
         {
+          "path": "packages/styles/desk/recipes/MultiSelect.css",
+          "type": "registry:file",
+          "target": "@components/ds/styles/desk/recipes/MultiSelect.css"
+        },
+        {
           "path": "packages/styles/desk/recipes/Popover.css",
           "type": "registry:file",
           "target": "@components/ds/styles/desk/recipes/Popover.css"
+        },
+        {
+          "path": "packages/styles/desk/recipes/Select.css",
+          "type": "registry:file",
+          "target": "@components/ds/styles/desk/recipes/Select.css"
+        },
+        {
+          "path": "packages/styles/desk/recipes/TagField.css",
+          "type": "registry:file",
+          "target": "@components/ds/styles/desk/recipes/TagField.css"
         },
         {
           "path": "packages/styles/desk/recipes/Tile.css",
@@ -573,6 +623,11 @@
           "path": "packages/styles/neutral/recipes/Input.css",
           "type": "registry:file",
           "target": "@components/ds/styles/neutral/recipes/Input.css"
+        },
+        {
+          "path": "packages/styles/neutral/recipes/Tile.css",
+          "type": "registry:file",
+          "target": "@components/ds/styles/neutral/recipes/Tile.css"
         },
         {
           "path": "packages/styles/neutral/recipes/Window.css",
@@ -1429,6 +1484,55 @@
       ],
       "meta": {
         "manifest": "Combobox",
+        "framework": "react",
+        "since": "0.1.0"
+      }
+    },
+    {
+      "name": "command-palette",
+      "type": "registry:ui",
+      "title": "CommandPalette",
+      "description": "A modal search box over the page that finds a command by name and runs it. It opens from anywhere with Mod+K (Command K on a Mac, Control K elsewhere) or from a trigger Button.",
+      "dependencies": [
+        "radix-ui@^1.8.1"
+      ],
+      "registryDependencies": [
+        "@ds/combobox",
+        "@ds/core",
+        "@ds/dialog",
+        "@ds/icon-button",
+        "@ds/kbd",
+        "@ds/list-box",
+        "@ds/search-field",
+        "@ds/theme"
+      ],
+      "files": [
+        {
+          "path": "packages/react/src/components/CommandPalette/CommandPalette.tsx",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/CommandPalette/CommandPalette.tsx"
+        },
+        {
+          "path": "packages/react/src/components/CommandPalette/index.ts",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/CommandPalette/index.ts"
+        },
+        {
+          "path": "packages/react/src/components/CommandPalette/matchShortcut.ts",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/CommandPalette/matchShortcut.ts"
+        },
+        {
+          "path": "packages/css/src/components/CommandPalette.css",
+          "type": "registry:file",
+          "target": "@components/ds/css/components/CommandPalette.css"
+        }
+      ],
+      "categories": [
+        "overlays"
+      ],
+      "meta": {
+        "manifest": "CommandPalette",
         "framework": "react",
         "since": "0.1.0"
       }
@@ -2328,6 +2432,46 @@
       }
     },
     {
+      "name": "lightbox",
+      "type": "registry:ui",
+      "title": "Lightbox",
+      "description": "A full screen viewer for images, one at a time, with previous, next, zoom, a counter and a caption. Opens from a thumbnail or a Button and returns focus to it.",
+      "dependencies": [
+        "radix-ui@^1.8.1"
+      ],
+      "registryDependencies": [
+        "@ds/dialog",
+        "@ds/icon-button",
+        "@ds/spinner",
+        "@ds/theme"
+      ],
+      "files": [
+        {
+          "path": "packages/react/src/components/Lightbox/index.ts",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/Lightbox/index.ts"
+        },
+        {
+          "path": "packages/react/src/components/Lightbox/Lightbox.tsx",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/Lightbox/Lightbox.tsx"
+        },
+        {
+          "path": "packages/css/src/components/Lightbox.css",
+          "type": "registry:file",
+          "target": "@components/ds/css/components/Lightbox.css"
+        }
+      ],
+      "categories": [
+        "overlays"
+      ],
+      "meta": {
+        "manifest": "Lightbox",
+        "framework": "react",
+        "since": "0.1.0"
+      }
+    },
+    {
       "name": "link",
       "type": "registry:ui",
       "title": "Link",
@@ -2512,6 +2656,50 @@
       }
     },
     {
+      "name": "multi-select",
+      "type": "registry:ui",
+      "title": "MultiSelect",
+      "description": "A closed trigger that opens a list with checks and keeps any number of values from it. The trigger shows the chosen values as tags, or as a count.",
+      "dependencies": [
+        "radix-ui@^1.8.1"
+      ],
+      "registryDependencies": [
+        "@ds/button",
+        "@ds/core",
+        "@ds/field",
+        "@ds/list-box",
+        "@ds/search-field",
+        "@ds/select",
+        "@ds/spinner",
+        "@ds/theme"
+      ],
+      "files": [
+        {
+          "path": "packages/react/src/components/MultiSelect/index.ts",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/MultiSelect/index.ts"
+        },
+        {
+          "path": "packages/react/src/components/MultiSelect/MultiSelect.tsx",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/MultiSelect/MultiSelect.tsx"
+        },
+        {
+          "path": "packages/css/src/components/MultiSelect.css",
+          "type": "registry:file",
+          "target": "@components/ds/css/components/MultiSelect.css"
+        }
+      ],
+      "categories": [
+        "selection"
+      ],
+      "meta": {
+        "manifest": "MultiSelect",
+        "framework": "react",
+        "since": "0.1.0"
+      }
+    },
+    {
       "name": "navbar",
       "type": "registry:ui",
       "title": "Navbar",
@@ -2594,6 +2782,46 @@
       }
     },
     {
+      "name": "number-field",
+      "type": "registry:ui",
+      "title": "NumberField",
+      "description": "A number in a bordered box with a decrement and an increment button, locale formatting with Western digits, units and bounds.",
+      "dependencies": [
+        "react-aria-components@1.22.1"
+      ],
+      "registryDependencies": [
+        "@ds/core",
+        "@ds/field",
+        "@ds/icon-button",
+        "@ds/theme"
+      ],
+      "files": [
+        {
+          "path": "packages/react/src/components/NumberField/index.ts",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/NumberField/index.ts"
+        },
+        {
+          "path": "packages/react/src/components/NumberField/NumberField.tsx",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/NumberField/NumberField.tsx"
+        },
+        {
+          "path": "packages/css/src/components/NumberField.css",
+          "type": "registry:file",
+          "target": "@components/ds/css/components/NumberField.css"
+        }
+      ],
+      "categories": [
+        "forms"
+      ],
+      "meta": {
+        "manifest": "NumberField",
+        "framework": "react",
+        "since": "0.1.0"
+      }
+    },
+    {
       "name": "otpfield",
       "type": "registry:ui",
       "title": "OTPField",
@@ -2625,6 +2853,45 @@
       ],
       "meta": {
         "manifest": "OTPField",
+        "framework": "react",
+        "since": "0.1.0"
+      }
+    },
+    {
+      "name": "page-shell",
+      "type": "registry:ui",
+      "title": "PageShell",
+      "description": "The frame of a page: a skip link first, then a header, the navigation column, one main, an aside and a footer, each in its landmark. Under breakpoint.tablet the navigation moves to a Drawer behind a menu button.",
+      "registryDependencies": [
+        "@ds/drawer",
+        "@ds/icon-button",
+        "@ds/rail",
+        "@ds/sidebar",
+        "@ds/skip-link",
+        "@ds/theme"
+      ],
+      "files": [
+        {
+          "path": "packages/react/src/components/PageShell/index.ts",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/PageShell/index.ts"
+        },
+        {
+          "path": "packages/react/src/components/PageShell/PageShell.tsx",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/PageShell/PageShell.tsx"
+        },
+        {
+          "path": "packages/css/src/components/PageShell.css",
+          "type": "registry:file",
+          "target": "@components/ds/css/components/PageShell.css"
+        }
+      ],
+      "categories": [
+        "layout"
+      ],
+      "meta": {
+        "manifest": "PageShell",
         "framework": "react",
         "since": "0.1.0"
       }
@@ -3127,6 +3394,42 @@
       }
     },
     {
+      "name": "scrub-input",
+      "type": "registry:ui",
+      "title": "ScrubInput",
+      "description": "The Studio inspector number: drag the label to scrub, type a value or an expression such as 12*2, or nudge with the arrow keys.",
+      "registryDependencies": [
+        "@ds/core",
+        "@ds/field",
+        "@ds/theme"
+      ],
+      "files": [
+        {
+          "path": "packages/react/src/components/ScrubInput/index.ts",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/ScrubInput/index.ts"
+        },
+        {
+          "path": "packages/react/src/components/ScrubInput/ScrubInput.tsx",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/ScrubInput/ScrubInput.tsx"
+        },
+        {
+          "path": "packages/css/src/components/ScrubInput.css",
+          "type": "registry:file",
+          "target": "@components/ds/css/components/ScrubInput.css"
+        }
+      ],
+      "categories": [
+        "forms"
+      ],
+      "meta": {
+        "manifest": "ScrubInput",
+        "framework": "react",
+        "since": "0.1.0"
+      }
+    },
+    {
       "name": "search-field",
       "type": "registry:ui",
       "title": "SearchField",
@@ -3199,6 +3502,93 @@
       ],
       "meta": {
         "manifest": "Section",
+        "framework": "react",
+        "since": "0.1.0"
+      }
+    },
+    {
+      "name": "segmented-control",
+      "type": "registry:ui",
+      "title": "SegmentedControl",
+      "description": "One choice among two to five views or modes, always one selected: a track of items with a thumb that slides to the selected one.",
+      "dependencies": [
+        "radix-ui@^1.8.1"
+      ],
+      "registryDependencies": [
+        "@ds/button",
+        "@ds/button-group",
+        "@ds/core",
+        "@ds/theme",
+        "@ds/toggle-group"
+      ],
+      "files": [
+        {
+          "path": "packages/react/src/components/SegmentedControl/index.ts",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/SegmentedControl/index.ts"
+        },
+        {
+          "path": "packages/react/src/components/SegmentedControl/SegmentedControl.tsx",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/SegmentedControl/SegmentedControl.tsx"
+        },
+        {
+          "path": "packages/css/src/components/SegmentedControl.css",
+          "type": "registry:file",
+          "target": "@components/ds/css/components/SegmentedControl.css"
+        }
+      ],
+      "categories": [
+        "actions"
+      ],
+      "meta": {
+        "manifest": "SegmentedControl",
+        "framework": "react",
+        "since": "0.2.0"
+      }
+    },
+    {
+      "name": "select",
+      "type": "registry:ui",
+      "title": "Select",
+      "description": "A closed trigger that opens a short list and keeps one value from it. The trigger shows the chosen label; the list opens under it and takes focus while it is open.",
+      "dependencies": [
+        "radix-ui@^1.8.1"
+      ],
+      "registryDependencies": [
+        "@ds/core",
+        "@ds/field",
+        "@ds/list-box",
+        "@ds/spinner",
+        "@ds/theme"
+      ],
+      "files": [
+        {
+          "path": "packages/react/src/components/Select/index.ts",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/Select/index.ts"
+        },
+        {
+          "path": "packages/react/src/components/Select/popupLayer.tsx",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/Select/popupLayer.tsx"
+        },
+        {
+          "path": "packages/react/src/components/Select/Select.tsx",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/Select/Select.tsx"
+        },
+        {
+          "path": "packages/css/src/components/Select.css",
+          "type": "registry:file",
+          "target": "@components/ds/css/components/Select.css"
+        }
+      ],
+      "categories": [
+        "selection"
+      ],
+      "meta": {
+        "manifest": "Select",
         "framework": "react",
         "since": "0.1.0"
       }
@@ -3879,6 +4269,48 @@
       }
     },
     {
+      "name": "tag-field",
+      "type": "registry:ui",
+      "title": "TagField",
+      "description": "A box where people type free tags: Enter or a comma adds the text as a tag, each tag has a remove button, and optional suggestions show under the box.",
+      "dependencies": [
+        "radix-ui@^1.8.1"
+      ],
+      "registryDependencies": [
+        "@ds/close-button",
+        "@ds/core",
+        "@ds/field",
+        "@ds/list-box",
+        "@ds/select",
+        "@ds/theme"
+      ],
+      "files": [
+        {
+          "path": "packages/react/src/components/TagField/index.ts",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/TagField/index.ts"
+        },
+        {
+          "path": "packages/react/src/components/TagField/TagField.tsx",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/TagField/TagField.tsx"
+        },
+        {
+          "path": "packages/css/src/components/TagField.css",
+          "type": "registry:file",
+          "target": "@components/ds/css/components/TagField.css"
+        }
+      ],
+      "categories": [
+        "selection"
+      ],
+      "meta": {
+        "manifest": "TagField",
+        "framework": "react",
+        "since": "0.1.0"
+      }
+    },
+    {
       "name": "textarea",
       "type": "registry:ui",
       "title": "Textarea",
@@ -4073,6 +4505,51 @@
       ],
       "meta": {
         "manifest": "ToggleButton",
+        "framework": "react",
+        "since": "0.2.0"
+      }
+    },
+    {
+      "name": "toggle-group",
+      "type": "registry:ui",
+      "title": "ToggleGroup",
+      "description": "A labelled set of toggle buttons with one tab stop, where one (type single) or several (type multiple) can be on: text style, filter chips, view options.",
+      "dependencies": [
+        "radix-ui@^1.8.1"
+      ],
+      "registryDependencies": [
+        "@ds/button",
+        "@ds/button-group",
+        "@ds/core",
+        "@ds/theme"
+      ],
+      "files": [
+        {
+          "path": "packages/react/src/components/ToggleGroup/index.ts",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/ToggleGroup/index.ts"
+        },
+        {
+          "path": "packages/react/src/components/ToggleGroup/inertItems.ts",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/ToggleGroup/inertItems.ts"
+        },
+        {
+          "path": "packages/react/src/components/ToggleGroup/ToggleGroup.tsx",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/ToggleGroup/ToggleGroup.tsx"
+        },
+        {
+          "path": "packages/css/src/components/ToggleGroup.css",
+          "type": "registry:file",
+          "target": "@components/ds/css/components/ToggleGroup.css"
+        }
+      ],
+      "categories": [
+        "actions"
+      ],
+      "meta": {
+        "manifest": "ToggleGroup",
         "framework": "react",
         "since": "0.2.0"
       }

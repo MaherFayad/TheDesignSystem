@@ -4,12 +4,11 @@
  * a 320px phone keeps 16px on each side in the default density and never
  * scrolls sideways. Layout only: no color and no motion.
  *
- * Widths are the breakpoint tokens until the token build has a
- * size.container scale (asked of the lead in the lane report).
+ * Widths come from the size.container scale.
  */
 @layer ds.base {
   [data-ds='container'] {
-    --_container-max: var(--ds-breakpoint-desktop);
+    --_container-max: var(--ds-size-container-lg);
     --_container-padding-inline: var(--ds-space-3xl);
 
     box-sizing: border-box;
@@ -21,16 +20,15 @@
   }
 
   [data-ds='container'][data-width='sm'] {
-    --_container-max: var(--ds-breakpoint-phone);
+    --_container-max: var(--ds-size-container-sm);
   }
 
   [data-ds='container'][data-width='md'] {
-    --_container-max: var(--ds-breakpoint-tablet);
+    --_container-max: var(--ds-size-container-md);
   }
 
-  /* xl: desktop plus half a phone width, about 84rem. */
   [data-ds='container'][data-width='xl'] {
-    --_container-max: calc(var(--ds-breakpoint-desktop) + var(--ds-breakpoint-phone) / 2);
+    --_container-max: var(--ds-size-container-xl);
   }
 
   [data-ds='container'][data-width='full'] {

@@ -116,12 +116,13 @@
     "duration.fast",
     "ease.default"
   ],
+  "motion": "press",
   "frameworks": {
     "react": {
       "status": "ready",
       "behavior": "IconButton",
       "example": "WindowControls.demo.tsx",
-      "note": "Motion: no catalog pattern. A press is an instant color swap; the light and its glyph fade on hover and focus in WindowControls.css. A press pattern is a request to the motion owner."
+      "note": "Motion: press. On the web a press is still an instant color swap until the component plays the pattern; the light and its glyph fade on hover and focus in WindowControls.css."
     },
     "angular": {
       "status": "planned",

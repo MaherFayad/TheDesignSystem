@@ -2476,7 +2476,9 @@
         "link",
         "separator",
         "overflow"
-      ]
+      ],
+      "trigger": "[data-ds='breadcrumbs'] [data-part='overflow']",
+      "opens": "dropdown-menu"
     },
     "since": "0.1.0"
   },
@@ -2760,12 +2762,13 @@
       "duration.roll",
       "ease.reveal"
     ],
+    "motion": "press",
     "frameworks": {
       "react": {
         "status": "ready",
         "behavior": "native button, radix:Slot",
         "example": "Button.demo.tsx",
-        "note": "Motion: no catalog pattern. Press feedback is an instant color swap; the spinner turn, the hover veil fade and the Desk roll label are component CSS. A press pattern (scale.press, spring.press) is a request to the motion owner."
+        "note": "Motion: press (scale.press, spring.press). On the web the press is still an instant color swap until the component plays the pattern; the spinner turn, the hover veil fade and the Desk roll label are component CSS."
       },
       "angular": {
         "status": "ready",
@@ -3655,7 +3658,7 @@
       "ease.default",
       "opacity.disabled"
     ],
-    "motion": "none",
+    "motion": "fade",
     "frameworks": {
       "react": {
         "status": "ready",
@@ -3877,7 +3880,7 @@
       "color.text.muted",
       "color.state.danger.text"
     ],
-    "motion": "none",
+    "motion": "fade",
     "frameworks": {
       "react": {
         "status": "ready",
@@ -10334,12 +10337,13 @@
       "duration.spin",
       "ease.default"
     ],
+    "motion": "press",
     "frameworks": {
       "react": {
         "status": "ready",
         "behavior": "native button, radix:Slot",
         "example": "IconButton.demo.tsx",
-        "note": "Motion: no catalog pattern. Press feedback is an instant color swap; the spinner turn and the hover veil fade are component CSS. A press pattern (scale.press, spring.press) is a request to the motion owner."
+        "note": "Motion: press (scale.press, spring.press). On the web the press is still an instant color swap until the component plays the pattern; the spinner turn and the hover veil fade are component CSS."
       },
       "angular": {
         "status": "ready",
@@ -10559,7 +10563,7 @@
       "duration.base",
       "ease.default"
     ],
-    "motion": "none",
+    "motion": "fade",
     "frameworks": {
       "react": {
         "status": "ready",
@@ -10803,12 +10807,13 @@
       "color.bg.surface",
       "radius.xs"
     ],
+    "motion": "fade",
     "frameworks": {
       "react": {
         "status": "ready",
         "behavior": "native input",
         "example": "Input.demo.tsx",
-        "note": "Motion: no catalog pattern. Only the focus glow fades (an opacity transition in Input.css); fade-rise would also rise, so it is not named."
+        "note": "Motion: fade. Only the focus glow fades (an opacity transition in Input.css)."
       },
       "angular": {
         "status": "ready",
@@ -11528,7 +11533,9 @@
         "item",
         "trigger",
         "menu"
-      ]
+      ],
+      "trigger": "[data-ds='language-switch'] [data-part='trigger']",
+      "opens": "dropdown-menu"
     },
     "since": "0.1.0"
   },
@@ -12938,7 +12945,9 @@
           "focus": "[data-menu-layer='menubar'] [role='menuitem']",
           "expect": "focus-moves"
         }
-      }
+      },
+      "trigger": "[data-ds='menubar'] [data-part='trigger']",
+      "opens": "dropdown-menu"
     },
     "since": "0.1.0"
   },
@@ -14266,13 +14275,13 @@
       "ease.default",
       "opacity.disabled"
     ],
-    "motion": "none",
+    "motion": "fade",
     "frameworks": {
       "react": {
         "status": "ready",
         "behavior": "react-aria-components NumberField, rendered with our elements through its render prop",
         "example": "NumberField.demo.tsx",
-        "note": "Motion: none. Only the focus glow fades (an opacity transition), and the value changes at once: number-roll is for a value someone reads, not one they type."
+        "note": "Motion: fade. Only the focus glow fades (an opacity transition), and the value changes at once: number-roll is for a value someone reads, not one they type."
       },
       "angular": {
         "status": "planned"
@@ -14530,7 +14539,7 @@
       "ease.default",
       "opacity.disabled"
     ],
-    "motion": "none",
+    "motion": "fade",
     "frameworks": {
       "react": {
         "status": "ready",
@@ -15005,7 +15014,7 @@
       "color.bg.overlay-10",
       "color.bg.overlay-20"
     ],
-    "motion": "none",
+    "motion": "press",
     "frameworks": {
       "react": {
         "status": "ready",
@@ -15226,7 +15235,7 @@
       "ease.default",
       "opacity.disabled"
     ],
-    "motion": "none",
+    "motion": "fade",
     "frameworks": {
       "react": {
         "status": "ready",
@@ -15467,7 +15476,7 @@
       "ease.default",
       "opacity.disabled"
     ],
-    "motion": "none",
+    "motion": "fade",
     "frameworks": {
       "react": {
         "status": "ready",
@@ -16375,7 +16384,7 @@
       "duration.fast",
       "ease.default"
     ],
-    "motion": "none",
+    "motion": "fade",
     "frameworks": {
       "react": {
         "status": "ready",
@@ -16667,7 +16676,7 @@
       "duration.fast",
       "ease.default"
     ],
-    "motion": "none",
+    "motion": "fade",
     "frameworks": {
       "react": {
         "status": "ready",
@@ -17212,7 +17221,7 @@
       "ease.default",
       "opacity.disabled"
     ],
-    "motion": "none",
+    "motion": "fade",
     "frameworks": {
       "react": {
         "status": "ready",
@@ -17480,7 +17489,7 @@
       "duration.fast",
       "ease.default"
     ],
-    "motion": "none",
+    "motion": "fade",
     "frameworks": {
       "react": {
         "status": "ready",
@@ -18182,13 +18191,13 @@
       "ease.default",
       "opacity.disabled"
     ],
-    "motion": "none",
+    "motion": "fade",
     "frameworks": {
       "react": {
         "status": "ready",
         "behavior": "hand built, pointer capture for the scrub; logic in @the-system/shared scrub.ts and number.ts",
         "example": "ScrubInput.demo.tsx",
-        "note": "Motion: none. The value follows the pointer with no animation; only the focus ring fades (an opacity transition)."
+        "note": "Motion: fade, for the focus ring. The value follows the pointer with no animation; only the focus ring fades (an opacity transition)."
       },
       "angular": {
         "status": "planned"
@@ -20528,7 +20537,7 @@
       "ease.default",
       "opacity.disabled"
     ],
-    "motion": "none",
+    "motion": "fade",
     "frameworks": {
       "react": {
         "status": "ready",
@@ -20913,7 +20922,8 @@
         "Enter": "On the action, runs the main action. On the trigger, opens the menu with focus on the first item",
         "Space": "The same as Enter",
         "ArrowDown": "On the trigger, opens the menu with focus on the first item",
-        "ArrowUp": "On the trigger, opens the menu with focus on the last item"
+        "ArrowUp": "On the trigger, opens the menu with focus on the last item",
+        "Escape": "With the menu open, closes it and returns focus to the trigger"
       },
       "announce": "The action reads its label as a button. The trigger reads its name (More publish options), menu button and collapsed or expanded. While loading, the action is busy and its hidden status says the loading label.",
       "native": {
@@ -21026,8 +21036,15 @@
           "focus": "[data-ds='split-button'] > [data-part='trigger']",
           "case": "variants",
           "expect": "focus-moves"
+        },
+        "Escape": {
+          "open": "[data-ds='split-button'] > [data-part='trigger']",
+          "case": "variants",
+          "expect": "focus-returns"
         }
-      }
+      },
+      "trigger": "[data-ds='split-button'] > [data-part='trigger']",
+      "opens": "dropdown-menu"
     },
     "since": "0.1.0"
   },
@@ -22559,7 +22576,7 @@
       "ease.default",
       "opacity.disabled"
     ],
-    "motion": "none",
+    "motion": "fade",
     "frameworks": {
       "react": {
         "status": "ready",
@@ -23786,7 +23803,7 @@
       "ease.default",
       "opacity.disabled"
     ],
-    "motion": "none",
+    "motion": "fade",
     "frameworks": {
       "react": {
         "status": "ready",
@@ -25204,7 +25221,7 @@
       "color.focus.ring-on-primary-inner",
       "color.focus.ring-on-primary-outer"
     ],
-    "motion": "none",
+    "motion": "press",
     "frameworks": {
       "react": {
         "status": "ready",
@@ -26546,12 +26563,13 @@
       "duration.fast",
       "ease.default"
     ],
+    "motion": "press",
     "frameworks": {
       "react": {
         "status": "ready",
         "behavior": "IconButton",
         "example": "WindowControls.demo.tsx",
-        "note": "Motion: no catalog pattern. A press is an instant color swap; the light and its glyph fade on hover and focus in WindowControls.css. A press pattern is a request to the motion owner."
+        "note": "Motion: press. On the web a press is still an instant color swap until the component plays the pattern; the light and its glyph fade on hover and focus in WindowControls.css."
       },
       "angular": {
         "status": "planned",

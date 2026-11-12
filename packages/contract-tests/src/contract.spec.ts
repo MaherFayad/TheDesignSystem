@@ -30,6 +30,8 @@ import {
   stateFindings,
   trapsFocus,
   triggerSelector,
+  openedKebab,
+  hasOpenChecks,
   variantFindings,
   type Axes,
   type AxeViolation,
@@ -104,7 +106,12 @@ async function open(page: Page, kebab: string, axes: Axes): Promise<void> {
 
 /** True when the component opens and closes and the demo has a trigger for it. */
 async function overlayMode(page: Page, m: Manifest): Promise<boolean> {
-  return opensAndCloses(m) && (await page.locator(triggerSelector(m)).count()) > 0;
+  return !m.contract?.opens && opensAndCloses(m) && (await page.locator(triggerSelector(m)).count()) > 0;
+}
+
+/** True when the open checks can run: the component opens a root (its own or contract.opens) and the demo has a trigger. */
+async function openMode(page: Page, m: Manifest): Promise<boolean> {
+  return hasOpenChecks(m) && (await page.locator(triggerSelector(m)).count()) > 0;
 }
 
 /** The triggers to walk: those in the variants case, else every trigger in the demo. */
@@ -178,6 +185,31 @@ async function runAxe(page: Page, m: Manifest): Promise<string[]> {
 
 async function checkHint(page: Page, m: Manifest, kebab: string, key: string, hint: KeyHint, failures: string[]): Promise<void> {
   const scope = hint.case ? `[data-demo-case="${hint.case}"]` : undefined;
+  const openSel = hint.open ? (scope ? `${scope} ${hint.open}` : hint.open) : undefined;
+  if (openSel) {
+    const opener = page.locator(openSel).first();
+    if ((await opener.count()) === 0) {
+      failures.push(`${key}: contract.keys open selector ${openSel} matches nothing`);
+      return;
+    }
+    await opener.evaluate((node) => node.setAttribute('data-contract-opener', ''));
+    await opener.click();
+    await page.waitForTimeout(150);
+  }
+  if (hint.expect === 'focus-returns') {
+    if (!openSel) {
+      failures.push(`${key}: expect focus-returns needs an open selector`);
+      return;
+    }
+    await page.keyboard.press(key);
+    const back = await expect
+      .poll(() => page.evaluate(() => document.activeElement?.hasAttribute('data-contract-opener') ?? false), { timeout: 3_000 })
+      .toBe(true)
+      .then(() => true)
+      .catch(() => false);
+    if (!back) failures.push(`${key}: expected focus back on ${openSel}, it is elsewhere`);
+    return;
+  }
   if (hint.focus) {
     const sel = scope ? `${scope} ${hint.focus}` : hint.focus;
     const el = page.locator(sel).first();
@@ -515,19 +547,20 @@ for (const m of components) {
         expect(failures, `${name} target size on ${page.url()}`).toEqual([]);
       });
     }
-    if (opensAndCloses(m)) {
+    if (hasOpenChecks(m)) {
       const axes: Axes = { style: style.id, scheme: style.schemes.includes('dark') ? 'dark' : style.defaultScheme, dir: 'ltr', lang: 'en' };
+      const target = openedKebab(m, kebab);
       test(`${name}: target size open, ${style.id}`, async ({ page }) => {
         await page.emulateMedia({ reducedMotion: 'reduce' });
         await open(page, kebab, axes);
-        test.skip(!(await overlayMode(page, m)), 'no contract.trigger and no [data-demo-trigger] in the demo');
+        test.skip(!(await openMode(page, m)), 'no contract.trigger and no [data-demo-trigger] in the demo');
         const failures: string[] = [];
         let opened = 0;
         failures.push(
-          ...(await eachOpened(page, m, kebab, async () => {
+          ...(await eachOpened(page, m, target, async () => {
             opened += 1;
             await page.evaluate(finiteAnimationsDone);
-            const small = await page.evaluate(undersizedTargets, { scope: `[data-ds="${kebab}"]:not([data-contract-seen])` });
+            const small = await page.evaluate(undersizedTargets, { scope: `[data-ds="${target}"]:not([data-contract-seen])` });
             failures.push(...(await targetFailures(page, small)).map((f) => `opened by trigger ${opened}: ${f}`));
           })),
         );
@@ -555,13 +588,14 @@ for (const m of components) {
       await open(page, kebab, axes);
       expect(await runAxe(page, m), `${name} axe on ${page.url()}`).toEqual([]);
     });
-    if (opensAndCloses(m)) {
+    if (hasOpenChecks(m)) {
+      const target = openedKebab(m, kebab);
       test(`${name}: axe open, ${axes.style} ${axes.scheme} ${axes.lang} ${axes.dir}`, async ({ page }) => {
         await page.emulateMedia({ reducedMotion: 'reduce' });
         await open(page, kebab, axes);
-        test.skip(!(await overlayMode(page, m)), 'no contract.trigger and no [data-demo-trigger] in the demo');
+        test.skip(!(await openMode(page, m)), 'no contract.trigger and no [data-demo-trigger] in the demo');
         const scope = await triggerScope(page, m);
-        expect(await openNth(page, kebab, scope.selector, 0), `the first trigger opens a [data-ds=${kebab}]`).toBe(true);
+        expect(await openNth(page, target, scope.selector, 0), `the first trigger opens a [data-ds=${target}]`).toBe(true);
         await page.waitForTimeout(300);
         expect(await runAxe(page, m), `${name} axe with the first trigger's root open on ${page.url()}`).toEqual([]);
       });

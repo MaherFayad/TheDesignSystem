@@ -14,7 +14,7 @@ import { dirname, join, relative, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import AxeBuilder from '@axe-core/playwright';
 import { chromium, type Browser, type Page } from '@playwright/test';
-import { demoPath, discoverStyles, formatAxe, kebabCase, loadManifests, opensAndCloses, triggerSelector, type AxeCheck, type AxeViolation, type Manifest } from '../packages/contract-tests/src/lib';
+import { demoPath, discoverStyles, formatAxe, hasOpenChecks, kebabCase, loadManifests, openedKebab, triggerSelector, type AxeCheck, type AxeViolation, type Manifest } from '../packages/contract-tests/src/lib';
 import { axeOwners, freshOpen, markSeen } from '../packages/contract-tests/src/page';
 import { galleryExists, launchGallery, probeRoutes, type Gallery } from '../packages/contract-tests/src/server';
 
@@ -119,8 +119,15 @@ async function run(browser: Browser, url: string, job: Job): Promise<Result> {
     }
     await settle(page);
     if (job.mode.open && job.manifest) {
-      const kebab = kebabCase(job.manifest.name);
+      const kebab = openedKebab(job.manifest, kebabCase(job.manifest.name));
       const trigger = triggerSelector(job.manifest);
+      // No trigger in the demo (Section, Accordion): the open pass would only
+      // repeat the closed one, as in contract.spec.ts. It is skipped, not failed.
+      if ((await page.locator(trigger).count()) === 0) {
+        base.pass = true;
+        base.lines = ['open pass skipped: no contract.trigger and no [data-demo-trigger] in the demo'];
+        return base;
+      }
       const inVariants = `[data-demo-case="variants"] :is(${trigger})`;
       const selector = (await page.locator(inVariants).count()) > 0 ? inVariants : trigger;
       await page.evaluate(markSeen, kebab);
@@ -263,7 +270,7 @@ async function main(): Promise<number> {
       const skip = m.contract?.skipAxeRules ?? [];
       for (const mode of modes) {
         jobs.push({ page: `/c/${kebab}`, path: demoPath(kebab, { style: mode.style, scheme: mode.scheme, dir: mode.dir, lang: mode.lang }), mode, skip, manifest: m });
-        if (opensAndCloses(m)) jobs.push({ page: `/c/${kebab}`, path: demoPath(kebab, { style: mode.style, scheme: mode.scheme, dir: mode.dir, lang: mode.lang }), mode: { ...mode, open: true }, skip, manifest: m });
+        if (hasOpenChecks(m)) jobs.push({ page: `/c/${kebab}`, path: demoPath(kebab, { style: mode.style, scheme: mode.scheme, dir: mode.dir, lang: mode.lang }), mode: { ...mode, open: true }, skip, manifest: m });
       }
     }
     console.log(`${args.framework}: ${jobs.length} axe runs on ${new Set(jobs.map((j) => j.page)).size} pages.${noRoute.length ? ` No gallery route: ${noRoute.join(', ')}.` : ''}`);

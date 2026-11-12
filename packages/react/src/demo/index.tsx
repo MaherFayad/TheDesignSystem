@@ -86,7 +86,7 @@ export function DemoRow({ label, children }: { label?: string; children: ReactNo
 /** A grid of equal cells that fills the line. `min` is the smallest cell width as a CSS length. */
 export function DemoGrid({ min, children }: { min?: string; children: ReactNode }) {
   return (
-    <div data-demo="grid" style={min ? { gridTemplateColumns: `repeat(auto-fill, minmax(${min}, 1fr))` } : undefined}>
+    <div data-demo="grid" style={min ? { gridTemplateColumns: `repeat(auto-fill, minmax(min(${min}, 100%), 1fr))` } : undefined}>
       {children}
     </div>
   );

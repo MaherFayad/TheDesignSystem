@@ -370,6 +370,7 @@ export const neutralLight: Theme = {
     },
   },
   delay: {
+    feedback: 2000,
     'peek-hide': 600,
     'reveal-step': 80,
   },
@@ -391,6 +392,7 @@ export const neutralLight: Theme = {
     instant: 70,
     medium: 180,
     moderate: 150,
+    pulse: 1400,
     quick: 100,
     reveal: 640,
     roll: 300,
@@ -668,6 +670,7 @@ export const neutralLight: Theme = {
       radius: 6,
     },
     width: {
+      max: 400,
       min: 200,
     },
   },
@@ -864,13 +867,14 @@ export const neutralLight: Theme = {
   },
   scale: {
     'dialog-enter': 0.98,
+    'menu-enter': 0.97,
     press: 0.97,
     'window-enter': 0.92,
   },
   scrollbar: {
     size: 6,
-    thumb: 'rgba(86, 96, 110, 0.58)',
-    'thumb-hover': 'rgba(75, 85, 99, 0.72)',
+    thumb: '#5a6372',
+    'thumb-hover': '#4b5464',
     track: 'rgba(0, 0, 0, 0)',
   },
   shell: {
@@ -890,17 +894,32 @@ export const neutralLight: Theme = {
     },
   },
   size: {
+    container: {
+      lg: 1100,
+      md: 768,
+      sm: 480,
+      xl: 1344,
+    },
     control: {
       lg: 44,
       md: 32,
       sm: 28,
       xs: 24,
     },
+    grid: {
+      'item-min': {
+        lg: 384,
+        md: 240,
+        sm: 160,
+      },
+    },
     icon: {
       lg: 24,
       md: 16,
       sm: 12,
+      xl: 36,
     },
+    measure: 540,
     'target-min': 24,
     touch: {
       android: 48,
@@ -992,6 +1011,7 @@ export const neutralLight: Theme = {
     dropdown: 20,
     'floating-panel': 50,
     menu: 9800,
+    raised: 1,
     sidebar: 55,
     spotlight: 9000,
     toast: 10000,

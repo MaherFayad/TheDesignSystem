@@ -5,7 +5,7 @@
   "license": "UNLICENSED",
   "type": "module",
   "engines": {
-    "node": ">=22"
+    "node": ">=22.23.4"
   },
   "workspaces": [
     "packages/*",
@@ -15,7 +15,7 @@
   "scripts": {
     "build": "tsx scripts/build.ts",
     "check": "tsx scripts/check.ts",
-    "gen": "tsx scripts/gen-index.ts",
+    "gen": "tsx scripts/gen-index.ts && tsx packages/tokens/build.ts && tsx packages/registry/build.ts && npm run gen -w @the-system/docs",
     "typecheck": "tsc --noEmit -p tsconfig.json",
     "lint": "eslint .",
     "test": "vitest run",

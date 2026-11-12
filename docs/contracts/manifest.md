@@ -28,7 +28,7 @@ of `ready`, `planned` or `not-applicable`.
 | `a11y` | `role`, `focus`, `keys` (the keyboard map), `announce`, `native` |
 | `content` | Copy rules for `en` and `ar` |
 | `tokens` | Token paths the component reads |
-| `motion` | The pattern name from `packages/motion` |
+| `motion` | A pattern id from `packages/motion` (`PATTERN_IDS` in `core.ts`), or `none`. The schema enum is written by `npm run gen`. Leave the key out only for layout components; write `none` for a component that has no motion |
 | `styles` | What a style changes, in words, per style id |
 | `mistakes` | Pairs of `wrong` and `right` |
 | `contract` | Hints for the contract suite: `trigger`, `optionalParts`, `skipAxeRules` |

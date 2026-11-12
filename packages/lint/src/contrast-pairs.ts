@@ -221,6 +221,12 @@ export const CONTRAST_PAIRS: ContrastData = {
       }),
     ),
     {
+      use: 'scrollbar thumb, at rest and on hover',
+      fg: ['scrollbar.thumb over $bg', 'scrollbar.thumb-hover over $bg'],
+      bg: SURFACES,
+      min: 3,
+    },
+    {
       use: 'window light glyph on its light',
       fg: ['color.window.light-ink over $bg'],
       bg: ['color.window.light-close', 'color.window.light-min', 'color.window.light-zoom'],

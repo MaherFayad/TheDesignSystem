@@ -10,6 +10,7 @@ import {
   demoPath,
   discoverStyles,
   formatAxe,
+  hasOpenChecks,
   isControl,
   kebabCase,
   keyCheckFor,
@@ -17,6 +18,7 @@ import {
   moveDirection,
   moveDistance,
   moveFinding,
+  openedKebab,
   optionalParts,
   parseValuedState,
   propValues,
@@ -302,5 +304,22 @@ describe('the moves expectation', () => {
     expect(shiftMovesFurther(win, 'ArrowRight')).toBe(false);
     expect(shiftMovesFurther({ ...win, a11y: { keys: { ArrowUp: 'Moves up', 'Shift+ArrowUp': 'Moves further up' } } }, 'Shift+ArrowUp')).toBe(true);
     expect(shiftMovesFurther({ ...win, a11y: { keys: { ArrowUp: 'Moves up 16px', 'Shift+ArrowUp': 'Moves up 16px' } } }, 'Shift+ArrowUp')).toBe(false);
+  });
+});
+
+describe('contract.opens', () => {
+  const split: Manifest = { name: 'SplitButton', kind: 'component', states: ['data-disabled'], frameworks: {}, contract: { opens: 'dropdown-menu' } };
+  const own: Manifest = { name: 'Dialog', kind: 'component', states: ['open', 'closed'], frameworks: {} };
+  const still: Manifest = { name: 'Badge', kind: 'component', frameworks: {} };
+
+  it('names the root the trigger opens', () => {
+    expect(openedKebab(split, 'split-button')).toBe('dropdown-menu');
+    expect(openedKebab(own, 'dialog')).toBe('dialog');
+  });
+
+  it('runs the open checks for a component that opens itself or names what it opens', () => {
+    expect(hasOpenChecks(split)).toBe(true);
+    expect(hasOpenChecks(own)).toBe(true);
+    expect(hasOpenChecks(still)).toBe(false);
   });
 });

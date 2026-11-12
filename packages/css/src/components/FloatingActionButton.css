@@ -4,7 +4,7 @@
  * Here: the floating position and the square of the icon only form.
  *
  * Private properties on the root:
- *   --_fab-inset   the distance from the inline end and the block end
+ *   --_floating-action-button-inset the distance from the inline end and the block end
  */
 @layer ds.base {
   /*
@@ -14,11 +14,11 @@
    * in both directions.
    */
   [data-ds='floating-action-button'] {
-    --_fab-inset: var(--ds-space-4xl);
+    --_floating-action-button-inset: var(--ds-space-4xl);
 
     position: fixed;
-    inset-inline-end: calc(var(--_fab-inset) + max(env(safe-area-inset-left, 0px), env(safe-area-inset-right, 0px)));
-    inset-block-end: calc(var(--_fab-inset) + env(safe-area-inset-bottom, 0px));
+    inset-inline-end: calc(var(--_floating-action-button-inset) + max(env(safe-area-inset-left, 0px), env(safe-area-inset-right, 0px)));
+    inset-block-end: calc(var(--_floating-action-button-inset) + env(safe-area-inset-bottom, 0px));
     z-index: var(--ds-z-floating-panel);
   }
 

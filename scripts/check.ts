@@ -31,7 +31,7 @@ function workspaceChecks(): Step[] {
 
 const steps: Step[] = [
   { name: 'tokens build', cmd: 'npx', args: ['tsx', 'packages/tokens/build.ts'], when: () => existsSync(join(root, 'packages/tokens/build.ts')) },
-  { name: 'gen', cmd: 'npx', args: ['tsx', 'scripts/gen-index.ts'] },
+  { name: 'gen', cmd: 'npm', args: ['run', 'gen'] },
   { name: 'typecheck', cmd: 'npx', args: ['tsc', '--noEmit', '-p', 'tsconfig.json'] },
   { name: 'eslint', cmd: 'npx', args: ['eslint', '.'] },
   { name: 'manifests', cmd: 'npx', args: ['tsx', 'packages/manifest/validate.ts'] },

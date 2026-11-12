@@ -212,3 +212,19 @@ describe('Button', () => {
     );
   });
 });
+
+describe('Button keys while disabled', () => {
+  it('passes navigation keys to onKeyDown and swallows the rest', () => {
+    const onKeyDown = vi.fn();
+    render(
+      <Button disabled onKeyDown={onKeyDown}>
+        Save draft
+      </Button>,
+    );
+    const button = screen.getByRole('button', { name: 'Save draft' });
+    for (const key of ['Enter', ' ', 'Delete', 'a']) fireEvent.keyDown(button, { key });
+    expect(onKeyDown).not.toHaveBeenCalled();
+    for (const key of ['ArrowRight', 'Home', 'End', 'Tab']) fireEvent.keyDown(button, { key });
+    expect(onKeyDown.mock.calls.map(([e]) => (e as KeyboardEvent).key)).toEqual(['ArrowRight', 'Home', 'End', 'Tab']);
+  });
+});

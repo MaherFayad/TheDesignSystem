@@ -55,7 +55,10 @@ export interface Manifest {
 
 /** The URL slug, the same rule as the gallery routes in scripts/gen-index.ts. */
 export function slugOf(name: string): string {
-  return name.replace(/([a-z0-9])([A-Z])/g, '$1-$2').toLowerCase();
+  return name
+    .replace(/([A-Z]+)([A-Z][a-z])/g, '$1-$2')
+    .replace(/([a-z0-9])([A-Z])/g, '$1-$2')
+    .toLowerCase();
 }
 
 /** The docs section of a kind: component pages live under /components/. */

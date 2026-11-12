@@ -82,7 +82,85 @@
           "unit": "px"
         },
         "$description": "Icon in empty states."
+      },
+      "xl": {
+        "$type": "dimension",
+        "$value": {
+          "value": 36,
+          "unit": "px"
+        },
+        "$description": "Large spinner and status marks. Spinner lg was 1.5 times icon.lg."
       }
+    },
+    "container": {
+      "sm": {
+        "$type": "dimension",
+        "$value": {
+          "value": 30,
+          "unit": "rem"
+        },
+        "$description": "Container width sm: a narrow column, one form or one message."
+      },
+      "md": {
+        "$type": "dimension",
+        "$value": {
+          "value": 48,
+          "unit": "rem"
+        },
+        "$description": "Container width md: a reading column with side content."
+      },
+      "lg": {
+        "$type": "dimension",
+        "$value": {
+          "value": 68.75,
+          "unit": "rem"
+        },
+        "$description": "Container width lg, the default: a page body."
+      },
+      "xl": {
+        "$type": "dimension",
+        "$value": {
+          "value": 84,
+          "unit": "rem"
+        },
+        "$description": "Container width xl: a wide page body, desktop plus half a phone."
+      }
+    },
+    "grid": {
+      "item-min": {
+        "sm": {
+          "$type": "dimension",
+          "$value": {
+            "value": 10,
+            "unit": "rem"
+          },
+          "$description": "Grid item minimum sm: small tiles, four or more to a row."
+        },
+        "md": {
+          "$type": "dimension",
+          "$value": {
+            "value": 15,
+            "unit": "rem"
+          },
+          "$description": "Grid item minimum md, the default: cards."
+        },
+        "lg": {
+          "$type": "dimension",
+          "$value": {
+            "value": 24,
+            "unit": "rem"
+          },
+          "$description": "Grid item minimum lg: wide cards, two to a row on a tablet."
+        }
+      }
+    },
+    "measure": {
+      "$type": "dimension",
+      "$value": {
+        "value": 33.75,
+        "unit": "rem"
+      },
+      "$description": "The widest line of running text in an empty or error state (540px)."
     }
   }
 }

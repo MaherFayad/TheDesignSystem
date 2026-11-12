@@ -214,6 +214,13 @@ describe('ScrollArea thumb contrast (WCAG 1.4.11)', () => {
     return (hi! + 0.05) / (lo! + 0.05);
   };
 
+  // A token may alias another (var(--ds-color-text-subtle)); follow the chain inside the same block.
+  const resolve = (t: Record<string, string>, name: string): string => {
+    let v = t[name]!;
+    for (let m = /^var\(--ds-([\w-]+)\)$/.exec(v); m; m = /^var\(--ds-([\w-]+)\)$/.exec(v)) v = t[m[1]!]!;
+    return v;
+  };
+
   it('draws the thumb at 3:1 or more on body and surface 1 to 4 in every style and scheme', () => {
     const thumbToken = /--_scroll-area-thumb:\s*var\(--ds-([\w-]+)\)/.exec(css)?.[1];
     expect(thumbToken).toBeDefined();
@@ -223,7 +230,7 @@ describe('ScrollArea thumb contrast (WCAG 1.4.11)', () => {
       const body = blocks[i + 1]!.split('\n  }')[0]!;
       const t = Object.fromEntries([...body.matchAll(/--ds-([\w-]+): ([^;]+);/g)].map((m) => [m[1], m[2]]));
       for (const bg of ['bg-body', 'bg-surface', 'bg-surface-2', 'bg-surface-3', 'bg-surface-4']) {
-        expect(ratio(t[thumbToken!]!, t[`color-${bg}`]!), `${blocks[i]} on ${bg}`).toBeGreaterThanOrEqual(3);
+        expect(ratio(resolve(t, thumbToken!), resolve(t, `color-${bg}`)), `${blocks[i]} on ${bg}`).toBeGreaterThanOrEqual(3);
       }
       modes += 1;
     }
