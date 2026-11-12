@@ -17,6 +17,7 @@ export const routes: DemoRoute[] = [
   { name: 'IconButton', slug: 'icon-button', load: () => import('../../../packages/react/src/components/IconButton/IconButton.demo') },
   { name: 'Input', slug: 'input', load: () => import('../../../packages/react/src/components/Input/Input.demo') },
   { name: 'Link', slug: 'link', load: () => import('../../../packages/react/src/components/Link/Link.demo') },
+  { name: 'Navbar', slug: 'navbar', load: () => import('../../../packages/react/src/components/Navbar/Navbar.demo') },
   { name: 'Rail', slug: 'rail', load: () => import('../../../packages/react/src/components/Rail/Rail.demo') },
   { name: 'Sidebar', slug: 'sidebar', load: () => import('../../../packages/react/src/components/Sidebar/Sidebar.demo') },
   { name: 'TitleBar', slug: 'title-bar', load: () => import('../../../packages/react/src/components/TitleBar/TitleBar.demo') },

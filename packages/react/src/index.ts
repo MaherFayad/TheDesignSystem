@@ -9,6 +9,7 @@ export * from './components/Icon/index';
 export * from './components/IconButton/index';
 export * from './components/Input/index';
 export * from './components/Link/index';
+export * from './components/Navbar/index';
 export * from './components/Rail/index';
 export * from './components/Sidebar/index';
 export * from './components/TitleBar/index';
