@@ -831,7 +831,7 @@
       "asChild": {
         "type": "boolean",
         "default": false,
-        "description": "Renders the single child element as the root through Radix Slot."
+        "description": "Renders the single child element as the root through Radix Slot. The ratio goes on that element."
       },
       "children": {
         "type": "node",
@@ -864,14 +864,14 @@
     "frameworks": {
       "react": {
         "status": "ready",
-        "behavior": "radix:AspectRatio",
+        "behavior": "native aspect-ratio on one div",
         "example": "AspectRatio.demo.tsx",
-        "note": "Radix renders a wrapper div (data-radix-aspect-ratio-wrapper) around the root that takes 100% width; className, style and ref go to the inner root. No motion: nothing animates. Component CSS keeps that wrapper at align-self start, so a grid or flex row cannot stretch it out of ratio."
+        "note": "One div with the native aspect-ratio property, set from the ratio prop through the private --_aspect-ratio-ratio. No Radix wrapper, so className, style and ref go to the ratio box itself and a width or margin keeps the ratio. The same DOM as Angular. No motion: nothing animates. Component CSS sets align-self start, so a grid or flex row cannot stretch it out of ratio."
       },
       "angular": {
         "status": "planned",
         "behavior": "[dsAspectRatio] directive on the native aspect-ratio property",
-        "note": "No Radix in Angular: the host sets aspect-ratio from the ratio input, so there is no wrapper div. The shared CSS styles the root and its media the same way."
+        "note": "The host sets --_aspect-ratio-ratio from the ratio input, the same single div as React. The shared CSS styles the root and its media the same way."
       },
       "native": {
         "status": "planned",

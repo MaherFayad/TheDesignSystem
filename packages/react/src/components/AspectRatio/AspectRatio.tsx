@@ -1,14 +1,14 @@
-// AspectRatio: keeps media at a ratio. Built on Radix AspectRatio, which wraps
-// the root in a relative box with a padding trick and stretches the root over
-// it. The root (`data-ds="aspect-ratio"`) is the inner element, the one that
-// takes className, style and ref. Media inside fills it and is cropped
-// (cover) or letterboxed (contain).
+// AspectRatio: keeps media at a ratio. One element: the root
+// (`data-ds="aspect-ratio"`) carries the native aspect-ratio property, read
+// from the private `--_aspect-ratio-ratio` set here from the prop. className,
+// style and ref land on that same element, so a width or margin set by the
+// consumer keeps the ratio. Angular renders the same single div.
 //
 // No source: designed from the dials table and the nearest components.
 // The plain alternative is the native `aspect-ratio` CSS property on the media
 // element itself, noted in the manifest.
-import { AspectRatio as RadixAspectRatio } from 'radix-ui';
-import type { HTMLAttributes, ReactNode, Ref } from 'react';
+import { Slot } from 'radix-ui';
+import type { CSSProperties, HTMLAttributes, ReactNode, Ref } from 'react';
 
 export type AspectRatioFit = 'cover' | 'contain';
 
@@ -24,11 +24,23 @@ export interface AspectRatioProps extends HTMLAttributes<HTMLDivElement> {
 }
 
 /** A box that keeps a ratio of width to height at any width. */
-export function AspectRatio({ ratio = 16 / 9, fit = 'cover', ref, children, ...rest }: AspectRatioProps) {
+export function AspectRatio({
+  ratio = 16 / 9,
+  fit = 'cover',
+  asChild = false,
+  style,
+  ref,
+  children,
+  ...rest
+}: AspectRatioProps) {
   const safe = Number.isFinite(ratio) && ratio > 0 ? ratio : 16 / 9;
-  return (
-    <RadixAspectRatio.Root {...rest} ref={ref} ratio={safe} data-ds="aspect-ratio" data-fit={fit}>
-      {children}
-    </RadixAspectRatio.Root>
-  );
+  const attrs = {
+    ...rest,
+    ref,
+    'data-ds': 'aspect-ratio',
+    'data-fit': fit,
+    style: { '--_aspect-ratio-ratio': String(safe), ...style } as CSSProperties,
+  };
+  if (asChild) return <Slot.Root {...attrs}>{children}</Slot.Root>;
+  return <div {...attrs}>{children}</div>;
 }
