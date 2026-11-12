@@ -1,5 +1,5 @@
-import { Suspense, lazy, useEffect, type ComponentType, type LazyExoticComponent } from 'react';
-import { Theme, themeAttributes, useTheme, type ThemeAxesInput } from '@the-system/react';
+import { Component, Suspense, lazy, useEffect, type ComponentType, type ErrorInfo, type LazyExoticComponent, type ReactNode } from 'react';
+import { DEFAULT_STYLE, Theme, styleIds, themeAttributes, useTheme, type ThemeAxesInput } from '@the-system/react';
 import { axisControls, axisQuery, readAxes, readCase } from './axes';
 import { Link, navigate, useUrl } from './router';
 import { routes } from './routes.gen';
@@ -19,11 +19,15 @@ function useDocumentTheme(axes: ThemeAxesInput): void {
 export function App() {
   const url = useUrl();
   const params = url.searchParams;
-  const axes = readAxes(params);
+  const asked = readAxes(params);
+  // A style id that is not in the registry has no token CSS, so nothing would
+  // paint. The gallery uses the default style instead and says so.
+  const unknownStyle = asked.style !== undefined && !styleIds.includes(asked.style) ? asked.style : undefined;
+  const axes = unknownStyle ? { ...asked, style: DEFAULT_STYLE } : asked;
   const chrome = params.get('chrome') !== '0';
   const caseId = readCase(params);
   const path = url.pathname.replace(/\/+$/, '') || '/';
-  const slug = path.startsWith('/c/') ? decodeURIComponent(path.slice(3)) : undefined;
+  const slug = path.startsWith('/c/') ? safeDecode(path.slice(3)) : undefined;
   const route = slug !== undefined ? routes.find((r) => r.slug === slug) : undefined;
   useDocumentTheme(axes);
 
@@ -34,17 +38,24 @@ export function App() {
   let page;
   if (path === '/') page = <Index query={axisQuery(params)} />;
   else if (path === '/all') page = <KitchenSink />;
-  else if (route) page = <DemoView slug={route.slug} />;
+  else if (route) page = <DemoView slug={route.slug} name={route.name} />;
   else page = <NotFound />;
 
   return (
     <Theme {...axes} id="gallery-root" data-gallery="root">
       {chrome && <Shell params={params} title={route?.name} />}
       <main data-gallery="stage" data-gallery-case={caseId}>
+        {unknownStyle && (
+          <p data-gallery="note" role="status">
+            No style called {unknownStyle}. Showing {DEFAULT_STYLE}.
+          </p>
+        )}
         {caseId && (
           <style>{`[data-gallery-case='${caseId}'] [data-demo-case]:not([data-demo-case='${caseId}']) { display: none; }`}</style>
         )}
-        <Suspense fallback={<p data-gallery="loading">Loading the demo</p>}>{page}</Suspense>
+        <DemoBoundary key={path}>
+          <Suspense fallback={<p data-gallery="loading">Loading the demo</p>}>{page}</Suspense>
+        </DemoBoundary>
       </main>
     </Theme>
   );
@@ -59,6 +70,8 @@ function Shell({ params, title }: { params: URLSearchParams; title: string | und
     if (value) next.set(key, value);
     else next.delete(key);
     const s = next.toString();
+    // replaceState, not pushState: an axis change is a view setting, so the
+    // back button leaves the demo instead of stepping through every select.
     navigate(`${window.location.pathname}${s ? `?${s}` : ''}`, { replace: true });
   };
   return (
@@ -102,20 +115,28 @@ function Index({ query }: { query: string }) {
   );
 }
 
-function DemoView({ slug }: { slug: string }) {
+/** One demo under its name as the page heading (small, so it works with chrome=0 too). */
+function DemoView({ slug, name }: { slug: string; name: string }) {
   const Demo = demos.get(slug);
-  return Demo ? <Demo /> : <NotFound />;
+  if (!Demo) return <NotFound />;
+  return (
+    <div data-gallery="demo">
+      <h1 data-gallery="demo-title">{name}</h1>
+      <Demo />
+    </div>
+  );
 }
 
 /** Every demo on one page, for screenshots. */
 function KitchenSink() {
   return (
     <div data-gallery="sink">
+      <h1>Every demo</h1>
       {routes.map((r) => {
         const Demo = demos.get(r.slug);
         return (
           <section key={r.slug} data-gallery="sink-item" data-gallery-slug={r.slug}>
-            <h1>{r.name}</h1>
+            <h2>{r.name}</h2>
             {Demo && <Demo />}
           </section>
         );
@@ -133,4 +154,41 @@ function NotFound() {
       </p>
     </div>
   );
+}
+
+/** A malformed path such as /c/%E0 is not a demo: it shows the not found page. */
+function safeDecode(part: string): string | undefined {
+  try {
+    return decodeURIComponent(part);
+  } catch {
+    return undefined;
+  }
+}
+
+/** Shows a message when a demo throws, instead of a blank page. Reset by the key on navigation. */
+class DemoBoundary extends Component<{ children: ReactNode }, { error: Error | null }> {
+  override state: { error: Error | null } = { error: null };
+
+  static getDerivedStateFromError(error: Error) {
+    return { error };
+  }
+
+  override componentDidCatch(error: Error, info: ErrorInfo) {
+    console.error(error, info.componentStack);
+  }
+
+  override render() {
+    if (this.state.error) {
+      return (
+        <div data-gallery="index" role="alert">
+          <h1>This demo failed to render</h1>
+          <p>{this.state.error.message}</p>
+          <p>
+            <Link href="/">Open the component list</Link>
+          </p>
+        </div>
+      );
+    }
+    return this.props.children;
+  }
 }

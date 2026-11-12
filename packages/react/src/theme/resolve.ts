@@ -10,33 +10,31 @@ import type { StyleData, ThemeAttributes, ThemeAxes, ThemeAxesInput, ThemeValue 
 export const DEFAULT_STYLE = 'studio';
 
 const registry = styles as unknown as Readonly<Record<string, StyleData>>;
-const fallbacks = new Map<string, StyleData>();
-
 /**
  * The style.json data for an id. A custom id that is not in the registry gets
  * plain defaults: dark first, default density, pixel icons, no optional parts.
+ * Nothing is cached for custom ids, so arbitrary ids cannot grow memory.
+ *
+ * A custom id paints nothing unless the consumer ships token CSS for it
+ * (`[data-style='<id>'][data-scheme='dark']` and so on). Check with
+ * `styleIds` before passing an id that comes from user input.
  */
 export function getStyleData(id: string): StyleData {
   const known = registry[id];
   if (known) return known;
-  let data = fallbacks.get(id);
-  if (!data) {
-    data = {
-      id,
-      name: id,
-      schemes: ['dark', 'light'],
-      defaultScheme: 'dark',
-      defaultDensity: 'default',
-      iconSet: 'pixel',
-      motionPreset: 'flat',
-      usesGlass: false,
-      optionalParts: {},
-      fonts: { sans: 'Inter Variable', arabic: 'IBM Plex Sans Arabic' },
-      dials: {},
-    };
-    fallbacks.set(id, data);
-  }
-  return data;
+  return {
+    id,
+    name: id,
+    schemes: ['dark', 'light'],
+    defaultScheme: 'dark',
+    defaultDensity: 'default',
+    iconSet: 'pixel',
+    motionPreset: 'flat',
+    usesGlass: false,
+    optionalParts: {},
+    fonts: { sans: 'Inter Variable', arabic: 'IBM Plex Sans Arabic' },
+    dials: {},
+  };
 }
 
 /** Ids of every style in the registry. */

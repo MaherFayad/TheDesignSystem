@@ -5,8 +5,11 @@
 import react from '@vitejs/plugin-react';
 import { defineConfig } from 'vite';
 
+// PORT lets parallel agents run their own dev server. Default 5173.
+const port = Number(process.env.PORT ?? 5173);
+
 export default defineConfig({
   plugins: [react()],
-  server: { port: 5173, strictPort: true },
+  server: { port, strictPort: true },
   preview: { port: 4173, strictPort: true },
 });

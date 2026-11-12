@@ -18,34 +18,115 @@
     "Reading the active axes": "useTheme()",
     "A Latin term inside Arabic copy": "Bidi"
   },
-  "anatomy": ["root"],
-  "slots": { "root": { "accepts": "any" } },
+  "anatomy": [
+    "root"
+  ],
+  "slots": {
+    "root": {
+      "accepts": "any"
+    }
+  },
   "props": {
-    "style": { "type": ["studio", "desk", "neutral", "liquid", "paper"], "default": "studio", "description": "The style pack id. Any custom id is accepted. At the root the default is studio; nested, the parent's." },
-    "scheme": { "type": ["dark", "light"], "description": "Default from the style.json at the root, the parent's when nested. A scheme the style does not list falls back to its default." },
-    "density": { "type": ["compact", "default", "comfortable"], "description": "Default from the style.json at the root, the parent's when nested." },
-    "contrast": { "type": ["default", "more"], "default": "default" },
-    "platform": { "type": ["web", "ios", "android"], "default": "web" },
-    "glass": { "type": ["clear", "regular", "tinted"], "default": "regular", "description": "Read only by styles that use glass." },
-    "dir": { "type": ["ltr", "rtl"], "description": "Follows lang when lang is passed and dir is not. Otherwise the parent's, then from lang." },
-    "lang": { "type": "string", "default": "en", "description": "A BCP 47 tag. The system ships en and ar." },
-    "as": { "type": ["div", "section", "main", "article", "aside", "header", "footer", "nav", "span"], "default": "div" },
-    "css": { "type": "string", "description": "Inline styles for the Theme element (an object in React). style is taken by the style axis." },
+    "style": {
+      "type": [
+        "studio",
+        "desk",
+        "neutral",
+        "liquid",
+        "paper"
+      ],
+      "default": "studio",
+      "description": "The style pack id. Any custom id is accepted. At the root the default is studio; nested, the parent's."
+    },
+    "scheme": {
+      "type": [
+        "dark",
+        "light"
+      ],
+      "description": "Default from the style.json at the root, the parent's when nested. A scheme the style does not list falls back to its default."
+    },
+    "density": {
+      "type": [
+        "compact",
+        "default",
+        "comfortable"
+      ],
+      "description": "Default from the style.json at the root, the parent's when nested."
+    },
+    "contrast": {
+      "type": [
+        "default",
+        "more"
+      ],
+      "default": "default"
+    },
+    "platform": {
+      "type": [
+        "web",
+        "ios",
+        "android"
+      ],
+      "default": "web"
+    },
+    "glass": {
+      "type": [
+        "clear",
+        "regular",
+        "tinted"
+      ],
+      "default": "regular",
+      "description": "Read only by styles that use glass."
+    },
+    "dir": {
+      "type": [
+        "ltr",
+        "rtl"
+      ],
+      "description": "Follows lang when lang is passed and dir is not. Otherwise the parent's, then from lang."
+    },
+    "lang": {
+      "type": "string",
+      "default": "en",
+      "description": "A BCP 47 tag. The system ships en and ar."
+    },
+    "as": {
+      "type": [
+        "div",
+        "section",
+        "main",
+        "article",
+        "aside",
+        "header",
+        "footer",
+        "nav",
+        "span"
+      ],
+      "default": "div"
+    },
+    "css": {
+      "type": "CSSProperties",
+      "description": "Inline styles for the Theme element, as a React style object. style is taken by the style axis."
+    },
     "className": "string"
   },
-  "states": ["data-style", "data-scheme", "data-density", "data-contrast", "data-platform", "data-glass"],
   "a11y": {
     "focus": "Never focusable. It adds no role.",
     "notes": [
       "dir and lang on the element let screen readers pick the right voice and let CSS mirror the layout.",
       "The Radix direction provider follows dir, so menus, sliders and arrow keys mirror in right to left.",
-      "Arabic text gets IBM Plex Sans Arabic, zero tracking, taller lines and small text one step up through base.css."
+      "Arabic text gets IBM Plex Sans Arabic, zero tracking, taller lines and small text one step up through base.css. Body text keeps its size."
     ],
-    "native": { "accessibilityRole": "none" }
+    "native": {
+      "accessibilityRole": "none"
+    }
   },
   "content": {
-    "en": { "lang": "Set lang on the root Theme. A Latin island inside Arabic is a nested Theme with lang en." },
-    "ar": { "lang": "Set lang ar on the root Theme. dir follows as rtl." }
+    "en": {
+      "lang": "Set lang on the root Theme. A Latin island inside Arabic is any element with lang en; it gets the Latin type back."
+    },
+    "ar": {
+      "lang": "Set lang ar on the root Theme. dir follows as rtl."
+    }
   },
   "tokens": [
     "color.bg.body",
@@ -53,35 +134,63 @@
     "color.bg.inverse",
     "color.focus.ring",
     "font.family.sans",
+    "font.family.display",
     "font.family.arabic",
     "font.family.display-arabic",
+    "font.size.s",
     "font.size.m",
-    "font.size.l",
     "font.weight.regular",
+    "font.leading.tight",
+    "font.leading.snug",
     "font.leading.normal",
+    "font.leading.relaxed",
+    "font.leading.display",
     "font.leading.arabic.tight",
     "font.leading.arabic.snug",
     "font.leading.arabic.normal",
     "font.leading.arabic.relaxed",
     "font.tracking.none",
+    "font.tracking.caps",
+    "font.tracking.eyebrow",
+    "font.tracking.display",
     "border.width.strong",
     "duration.instant",
     "scrollbar.thumb",
     "scrollbar.track"
   ],
   "frameworks": {
-    "react": { "status": "ready", "behavior": "radix-ui Direction.Provider", "note": "Exports Theme, useTheme, useOptionalPart, themeAttributes and resolveTheme from packages/react/src/theme." },
-    "angular": { "status": "planned", "behavior": "@angular/cdk Directionality", "note": "dsTheme directive with the same inputs." },
-    "native": { "status": "planned", "note": "ThemeProvider passes the resolved theme object through context, with the same axis names." }
+    "react": {
+      "status": "ready",
+      "behavior": "radix-ui Direction.Provider",
+      "note": "Exports Theme, useTheme, useOptionalPart, themeAttributes and resolveTheme from packages/react/src/theme."
+    },
+    "angular": {
+      "status": "planned",
+      "behavior": "@angular/cdk Directionality",
+      "note": "dsTheme directive with the same inputs."
+    },
+    "native": {
+      "status": "planned",
+      "note": "ThemeProvider passes the resolved theme object through context, with the same axis names."
+    }
   },
   "styles": {
     "studio": "Black body, Inter Variable, default density",
     "desk": "Black desk, Instrument Sans, default density, window and dialog controls and titlebar turned on"
   },
   "mistakes": [
-    { "wrong": "<div dir=\"rtl\" lang=\"ar\"> around a screen", "right": "<Theme lang=\"ar\">, which also sets dir, the Radix direction and the Arabic type" },
-    { "wrong": "<Theme style={{ padding: 8 }}>", "right": "<Theme css={{ padding: 8 }}>: style is the style axis" },
-    { "wrong": "Reading data-style from the DOM to pick a branch", "right": "useTheme().style, or useOptionalPart for a part only one style shows" }
+    {
+      "wrong": "<div dir=\"rtl\" lang=\"ar\"> around a screen",
+      "right": "<Theme lang=\"ar\">, which also sets dir, the Radix direction and the Arabic type"
+    },
+    {
+      "wrong": "<Theme style={{ padding: 8 }}>",
+      "right": "<Theme css={{ padding: 8 }}>: style is the style axis"
+    },
+    {
+      "wrong": "Reading data-style from the DOM to pick a branch",
+      "right": "useTheme().style, or useOptionalPart for a part only one style shows"
+    }
   ],
   "since": "0.1.0"
 }

@@ -9,6 +9,10 @@
  *
  * Each file holds only @font-face rules with a unicode range, so a browser
  * downloads a subset only when a page uses its characters.
+ *
+ * Studio imports the same Plex files. When both packs load, Vite inlines each
+ * imported file once (checked with a build), and identical @font-face rules
+ * would be harmless anyway: the browser fetches one url once.
  */
 @import '@fontsource/instrument-sans/400.css';
 @import '@fontsource/instrument-sans/500.css';

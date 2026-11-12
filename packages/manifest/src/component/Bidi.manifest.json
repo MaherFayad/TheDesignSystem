@@ -10,10 +10,10 @@
   "avoidWhen": [
     "English copy: it comes back unchanged, so the wrapper adds nothing",
     "Copy with markup inside: Bidi takes plain text only",
-    "A whole paragraph in another language: use a nested Theme with its lang"
+    "A whole paragraph in another language: give its element a lang attribute"
   ],
   "insteadUse": {
-    "A paragraph in English inside an Arabic screen": "Theme with lang en",
+    "A paragraph in English inside an Arabic screen": "an element with lang en, or a Theme with lang en to change direction too",
     "Splitting text without React": "splitLatinRuns from @the-system/shared"
   },
   "anatomy": ["root", "run"],

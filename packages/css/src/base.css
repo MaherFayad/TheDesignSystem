@@ -27,16 +27,33 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     scrollbar-color: var(--ds-scrollbar-thumb) var(--ds-scrollbar-track);
+
+    /*
+     * Latin copies of the type tokens the Arabic rules switch. The switch
+     * never runs on the Theme element itself, so these hold the Latin values,
+     * and a Latin island inside Arabic reads them back (see below).
+     */
+    --ds-latin-font-family-sans: var(--ds-font-family-sans);
+    --ds-latin-font-family-display: var(--ds-font-family-display);
+    --ds-latin-font-leading-tight: var(--ds-font-leading-tight);
+    --ds-latin-font-leading-snug: var(--ds-font-leading-snug);
+    --ds-latin-font-leading-normal: var(--ds-font-leading-normal);
+    --ds-latin-font-leading-relaxed: var(--ds-font-leading-relaxed);
+    --ds-latin-font-leading-display: var(--ds-font-leading-display);
+    --ds-latin-font-tracking-caps: var(--ds-font-tracking-caps);
+    --ds-latin-font-tracking-eyebrow: var(--ds-font-tracking-eyebrow);
+    --ds-latin-font-tracking-display: var(--ds-font-tracking-display);
+    --ds-latin-font-size-s: var(--ds-font-size-s);
   }
 
   /*
    * Arabic. IBM Plex Sans Arabic through the arabic family token, zero
    * tracking, the taller Arabic line heights, and small text one step up.
-   * The tokens are switched here so every component that reads them follows
-   * without an Arabic rule of its own. A Latin island inside Arabic needs a
-   * nested Theme with lang="en", which declares every token again.
+   * Body text keeps its size. The tokens are switched on every element below
+   * the Theme element, so every component that reads them follows without an
+   * Arabic rule of its own.
    */
-  :lang(ar) {
+  :lang(ar):not([data-ds='theme']) {
     --ds-font-family-sans: var(--ds-font-family-arabic);
     --ds-font-family-display: var(--ds-font-family-display-arabic);
     --ds-font-leading-tight: var(--ds-font-leading-arabic-tight);
@@ -51,13 +68,39 @@
     --ds-font-size-s: var(--ds-font-size-m);
   }
 
-  /* The body text of an Arabic Theme is one step up too. */
+  /* The Arabic Theme element itself: its tokens stay Latin, so it reads the Arabic ones directly. */
   [data-ds='theme']:lang(ar) {
-    font-size: var(--ds-font-size-l);
+    font-family: var(--ds-font-family-arabic);
+    line-height: var(--ds-font-leading-arabic-normal);
   }
 
   /* An element that switches to Arabic inside a Latin page picks up the Arabic type. */
   :where([lang]:lang(ar)) {
+    font-family: var(--ds-font-family-sans);
+    line-height: var(--ds-font-leading-normal);
+    letter-spacing: var(--ds-font-tracking-none);
+  }
+
+  /*
+   * A Latin island inside Arabic, for example <span lang="en">, gets the
+   * Latin tokens back from the copies on the nearest Theme element, and with
+   * them the Latin font, leading and tracking. A nested Theme is not needed.
+   */
+  :lang(ar) [lang]:not(:lang(ar)):not([data-ds='theme']) {
+    --ds-font-family-sans: var(--ds-latin-font-family-sans);
+    --ds-font-family-display: var(--ds-latin-font-family-display);
+    --ds-font-leading-tight: var(--ds-latin-font-leading-tight);
+    --ds-font-leading-snug: var(--ds-latin-font-leading-snug);
+    --ds-font-leading-normal: var(--ds-latin-font-leading-normal);
+    --ds-font-leading-relaxed: var(--ds-latin-font-leading-relaxed);
+    --ds-font-leading-display: var(--ds-latin-font-leading-display);
+    --ds-font-tracking-caps: var(--ds-latin-font-tracking-caps);
+    --ds-font-tracking-eyebrow: var(--ds-latin-font-tracking-eyebrow);
+    --ds-font-tracking-display: var(--ds-latin-font-tracking-display);
+    --ds-font-size-s: var(--ds-latin-font-size-s);
+  }
+
+  :where(:lang(ar) [lang]:not(:lang(ar)):not([data-ds='theme'])) {
     font-family: var(--ds-font-family-sans);
     line-height: var(--ds-font-leading-normal);
     letter-spacing: var(--ds-font-tracking-none);

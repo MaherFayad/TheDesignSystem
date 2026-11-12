@@ -3,8 +3,8 @@
 // work, the shell selects update the URL, and the fonts load.
 //
 // Run from the repo root: node apps/gallery-react/smoke.mjs
-// It uses a dev server on GALLERY_URL (default http://localhost:5173) and
-// starts one when nothing answers there. Headless Chromium from
+// It uses a dev server on GALLERY_URL (default http://localhost:<PORT>, PORT
+// default 5173) and starts one on PORT when nothing answers there. Headless Chromium from
 // @playwright/test. Screenshots go to docs/reports/shots/wave-0/gallery/.
 import { spawn } from 'node:child_process';
 import { mkdirSync } from 'node:fs';
@@ -14,7 +14,8 @@ import { chromium } from '@playwright/test';
 
 const here = dirname(fileURLToPath(import.meta.url));
 const shots = join(here, '../../docs/reports/shots/wave-0/gallery');
-const base = process.env.GALLERY_URL ?? 'http://localhost:5173';
+const port = process.env.PORT ?? '5173';
+const base = process.env.GALLERY_URL ?? `http://localhost:${port}`;
 
 async function up() {
   try {
@@ -28,7 +29,7 @@ async function up() {
 let server;
 if (!(await up())) {
   console.log(`starting vite in ${here}`);
-  server = spawn('npx', ['vite', '--port', '5173', '--strictPort'], { cwd: here, stdio: 'ignore' });
+  server = spawn('npx', ['vite', '--port', port, '--strictPort'], { cwd: here, stdio: 'ignore', env: { ...process.env, PORT: port } });
   for (let i = 0; i < 60 && !(await up()); i++) await new Promise((r) => setTimeout(r, 500));
   if (!(await up())) throw new Error(`no dev server at ${base}`);
 }
@@ -142,12 +143,67 @@ await open('?style=desk');
 const deskFonts = await page.evaluate(async () => (await document.fonts.load('16px "Instrument Sans"', 'Abc')).length);
 check('desk loads Instrument Sans', deskFonts > 0, String(deskFonts));
 
+// One h1 per page, with chrome=0 too.
+await open('?chrome=0');
+check('/c/icon has one h1 with chrome=0', (await page.locator('h1').count()) === 1);
+
+// A malformed path and an unknown style.
+// The dev server answers a malformed URL with 404 itself, so the app is moved there in place.
+await open('');
+await page.evaluate(() => {
+  window.history.pushState(null, '', '/c/%E0%A4%A');
+  window.dispatchEvent(new Event('gallery:navigate'));
+});
+await page.waitForFunction(() => document.querySelector('h1')?.textContent === 'No demo at this address').catch(() => {});
+check('a malformed path shows the not found page', (await page.locator('h1').textContent()) === 'No demo at this address');
+await open('?style=nope');
+check('an unknown style falls back with a note', (await themeOf()).root.style === 'studio' && (await page.locator('[data-gallery="note"]').count()) === 1);
+
+// Arabic type: body keeps its size, small text moves up, a lang="en" island gets the Latin type back.
+await open('?style=desk&lang=ar&chrome=0');
+const type = await page.evaluate(() => {
+  const stage = document.querySelector('[data-gallery="stage"]');
+  const probe = document.createElement('p');
+  probe.textContent = 'نص';
+  const small = document.createElement('p');
+  small.style.fontSize = 'var(--ds-font-size-s)';
+  const island = document.createElement('span');
+  island.lang = 'en';
+  island.textContent = 'Save changes';
+  stage.append(probe, small, island);
+  const cs = (el) => getComputedStyle(el);
+  const root = document.querySelector('#gallery-root');
+  const m = cs(root).getPropertyValue('--ds-font-size-m');
+  const out = {
+    rootSize: cs(root).fontSize,
+    pSize: cs(probe).fontSize,
+    smallSize: cs(small).fontSize,
+    pFont: cs(probe).fontFamily,
+    pLeading: cs(probe).lineHeight,
+    islandFont: cs(island).fontFamily,
+    islandLeading: cs(island).lineHeight,
+    m,
+  };
+  probe.remove();
+  small.remove();
+  island.remove();
+  return out;
+});
+await open('?style=desk&lang=en&chrome=0');
+const enSize = await page.evaluate(() => getComputedStyle(document.querySelector('#gallery-root')).fontSize);
+check('Arabic body text keeps the English size', type.rootSize === enSize && type.pSize === enSize, `${type.rootSize}, ${type.pSize} vs ${enSize}`);
+check('Arabic small text is one step up (s reads m)', type.smallSize === type.pSize, `${type.smallSize} vs ${type.pSize}`);
+check('Arabic text uses IBM Plex Sans Arabic', type.pFont.startsWith('"IBM Plex Sans Arabic"'), type.pFont);
+check('a lang="en" island inside Arabic gets the Latin font and leading', type.islandFont.startsWith('"Instrument Sans"') && type.islandLeading !== type.pLeading, `${type.islandFont}; ${type.islandLeading} vs ${type.pLeading}`);
+
 // The index and the kitchen sink render.
 await page.goto(`${base}/`);
 check('the index lists the demos', (await page.locator('[data-gallery="index"] a[href^="/c/"]').count()) > 0);
+check('the index has one h1', (await page.locator('h1').count()) === 1);
 await page.goto(`${base}/all`);
 await page.waitForSelector('[data-gallery="sink-item"] [data-demo-case]');
 check('/all renders every demo', (await page.locator('[data-gallery="sink-item"]').count()) > 0);
+check('/all has one h1', (await page.locator('h1').count()) === 1);
 
 // Screenshots.
 mkdirSync(shots, { recursive: true });

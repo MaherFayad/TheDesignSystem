@@ -75,7 +75,8 @@
   }
 
   [data-gallery='index'] h1,
-  [data-gallery='sink-item'] > h1 {
+  [data-gallery='sink'] > h1,
+  [data-gallery='sink-item'] > h2 {
     color: var(--ds-color-text-bright);
     font-size: var(--ds-font-size-4xl);
     font-weight: var(--ds-font-weight-semibold);
@@ -96,6 +97,29 @@
     gap: var(--ds-space-xl);
     padding-block-end: var(--ds-space-4xl);
     border-block-end: var(--ds-border-width-default) solid var(--ds-color-border-subtle);
+  }
+
+  [data-gallery='demo'] {
+    display: grid;
+    gap: var(--ds-space-xl);
+  }
+
+  /* The page heading of one demo: small, the demo is the content. */
+  [data-gallery='demo-title'] {
+    color: var(--ds-color-text-muted);
+    font-size: var(--ds-font-size-s);
+    font-weight: var(--ds-font-weight-semibold);
+    line-height: var(--ds-font-leading-snug);
+  }
+
+  [data-gallery='note'] {
+    margin-block-end: var(--ds-space-xl);
+    padding-block: var(--ds-space-xs);
+    padding-inline: var(--ds-space-s);
+    border: var(--ds-border-width-default) solid var(--ds-color-state-warning-border);
+    border-radius: var(--ds-radius-sm);
+    background-color: var(--ds-color-state-warning-tint-10);
+    color: var(--ds-color-text-default);
   }
 
   [data-gallery='loading'] {

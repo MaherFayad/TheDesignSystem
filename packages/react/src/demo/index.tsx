@@ -46,31 +46,29 @@ export interface DemoCaseProps {
   /** A short heading in sentence case. */
   title: string;
   /**
-   * Renders the case as a nested Theme in this language (and its direction),
-   * for the `long-arabic` case. The heading stays in the case's language.
+   * Renders the content in a nested Theme in this language (and its
+   * direction), for the `long-arabic` case. The heading stays outside it.
    */
   lang?: 'en' | 'ar';
   children: ReactNode;
 }
 
-/** One content case: a section with `data-demo-case="<id>"` and a heading. */
+/**
+ * One content case: a section with `data-demo-case="<id>"` and a heading.
+ * With `lang`, the content sits in a nested Theme in that language and the
+ * heading stays outside it, in the gallery's language.
+ */
 export function DemoCase({ id, title, lang, children }: DemoCaseProps) {
-  const content = (
-    <>
-      <h2 data-demo="title">{title}</h2>
-      {children}
-    </>
-  );
-  if (lang) {
-    return (
-      <Theme as="section" lang={lang} data-demo="case" data-demo-case={id}>
-        {content}
-      </Theme>
-    );
-  }
   return (
     <section data-demo="case" data-demo-case={id}>
-      {content}
+      <h2 data-demo="title">{title}</h2>
+      {lang ? (
+        <Theme lang={lang} data-demo="content">
+          {children}
+        </Theme>
+      ) : (
+        children
+      )}
     </section>
   );
 }
@@ -103,7 +101,7 @@ export const sample = {
   en: {
     label: 'Save changes',
     short: 'Draft saved',
-    long: 'Your changes are saved on this device. Open the board again on any other device to see the same version, with every comment and every reference in place.',
+    long: 'Your changes are saved to your account. Open the board on any other device to see the same version, with every comment and every reference in place.',
     word: 'Supercalifragilisticexpialidocious',
     items: ['Inbox', 'Drafts', 'Sent', 'Archive', 'Trash', 'Spam', 'Starred', 'Important', 'Scheduled', 'All mail', 'Templates', 'Snoozed'],
   },

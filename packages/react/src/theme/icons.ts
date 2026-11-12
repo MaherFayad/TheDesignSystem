@@ -11,16 +11,17 @@ const packs: Readonly<Record<string, IconStyle>> = {
   desk: deskIcons,
 };
 
-const fromStyleJson = new Map<string, IconStyle>();
+// Keyed by icon set, not by style id, so custom ids cannot grow it.
+const bySet = new Map<string, IconStyle>();
 
-/** The icon config for a style. Stable per style id, so context consumers do not re-render. */
+/** The icon config for a style. Stable per style id and icon set, so context consumers do not re-render. */
 export function iconStyleFor(style: StyleData): IconStyle {
   const pack = packs[style.id];
   if (pack) return pack;
-  let value = fromStyleJson.get(style.id);
+  let value = bySet.get(style.iconSet);
   if (!value) {
     value = { set: style.iconSet };
-    fromStyleJson.set(style.id, value);
+    bySet.set(style.iconSet, value);
   }
   return value;
 }
