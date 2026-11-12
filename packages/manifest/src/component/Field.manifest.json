@@ -171,7 +171,10 @@
       "example": "Field.demo.tsx"
     },
     "angular": {
-      "status": "planned"
+      "status": "ready",
+      "behavior": "div[dsField], provides DsFieldContext through DI",
+      "example": "field.demo.ts",
+      "note": "Controls read the ids and state through DI (fieldControl, the twin of useFieldControl). label, description and error take a string or a TemplateRef. Compound parts: label[dsFieldLabel], p[dsFieldDescription], p[dsFieldError]."
     },
     "native": {
       "status": "planned"
