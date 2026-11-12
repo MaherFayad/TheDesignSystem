@@ -164,7 +164,7 @@ export default function ToolbarDemo() {
         <Toolbar aria-label="Review">
           <ToolbarButton start="check">Resolve every open comment on this board</ToolbarButton>
           <ToolbarButton start="send">Send the review to the whole team</ToolbarButton>
-          <ToolbarButton icon="more" label="Open review settings" />
+          <ToolbarButton icon="settings" label="Open review settings" />
         </Toolbar>
       </DemoCase>
 

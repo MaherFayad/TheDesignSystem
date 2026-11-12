@@ -49,7 +49,7 @@ describe('Toolbar', () => {
     expect(el.getAttribute('data-size')).toBe('md');
     expect(el.getAttribute('data-emphasis')).toBe('ghost');
     expect(el.getAttribute('data-orientation')).toBe('horizontal');
-    expect(el.getAttribute('data-overflow')).toBe('menu');
+    expect(el.hasAttribute('data-wrap')).toBe(false);
     expect(el.hasAttribute('data-overflowing')).toBe(false);
     const parts = Array.from(el.children).map((c) => c.getAttribute('data-part'));
     expect(parts).toEqual(['group', 'separator', 'group', 'item', 'item', 'item', 'more']);
@@ -122,12 +122,44 @@ describe('Toolbar', () => {
     await userEvent.keyboard('{Enter}');
     await userEvent.click(del);
     expect(onDelete).not.toHaveBeenCalled();
+    // The arrow keys leave a disabled item too.
+    await userEvent.keyboard('{ArrowRight}');
+    expect(document.activeElement).toBe(screen.getByRole('link', { name: 'Open the guide' }));
+  });
+
+  it('a disabled toggle item does not toggle and keeps its tab stop in the arrows', async () => {
+    render(
+      <Toolbar aria-label="Frame">
+        <ToolbarToggleGroup type="multiple" aria-label="Options">
+          <ToolbarToggleItem value="lock" icon="lock" label="Lock frame" disabled />
+          <ToolbarToggleItem value="hide" icon="eye-off" label="Hide frame" />
+        </ToolbarToggleGroup>
+      </Toolbar>,
+    );
+    const lock = screen.getByRole('button', { name: 'Lock frame' });
+    await userEvent.click(lock);
+    expect(lock.getAttribute('aria-pressed')).toBe('false');
+    lock.focus();
+    await userEvent.keyboard('{ArrowRight}');
+    expect(document.activeElement).toBe(screen.getByRole('button', { name: 'Hide frame' }));
+  });
+
+  it('in a vertical toolbar the arrows on More move focus and do not open the menu', async () => {
+    render(<Example orientation="vertical" />);
+    const more = document.querySelector<HTMLElement>('[data-part="more"]');
+    more?.focus();
+    await userEvent.keyboard('{ArrowDown}');
+    expect(more?.getAttribute('data-state')).toBe('closed');
+    expect(document.activeElement).toBe(screen.getByRole('button', { name: 'Bold' }));
+    more?.focus();
+    await userEvent.keyboard('{ArrowUp}');
+    expect(document.activeElement).toBe(screen.getByRole('link', { name: 'Open the guide' }));
   });
 
   it('wrap mode renders no overflow trigger', () => {
     const { container } = render(<Example overflow="wrap" />);
     expect(container.querySelector('[data-part="more"]')).toBeNull();
-    expect(root(container).getAttribute('data-overflow')).toBe('wrap');
+    expect(root(container).getAttribute('data-wrap')).toBe('');
   });
 
   it('names the overflow trigger in the language of the page', () => {

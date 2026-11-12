@@ -61,7 +61,7 @@
   }
 
   /* wrap: the row breaks onto more lines instead of moving items into the menu. */
-  [data-ds='toolbar'][data-overflow='wrap'] {
+  [data-ds='toolbar'][data-wrap] {
     flex-wrap: wrap;
     inline-size: auto;
   }
@@ -104,14 +104,37 @@
 
   /* ------------------------------------------------------------ toggle items: the on state */
 
+  /*
+   * The fill alone is under 3:1 against the bar, so an on item also draws
+   * its border in the muted text color (WCAG 1.4.11). This rule and Button's
+   * hover rule have the same specificity and this file loads later, so the
+   * on hover and pressed fills get rules of their own.
+   */
   [data-ds='toolbar'] [data-part='item'][data-state='on'] {
     --_button-bg: var(--ds-color-bg-overlay-20);
     --_button-fg: var(--ds-color-text-bright);
     --_button-fg-hover: var(--ds-color-text-bright);
+    --_button-border-color: var(--ds-color-text-muted);
+    --_button-border-color-hover: var(--ds-color-text-muted);
   }
 
-  [data-ds='toolbar'] [data-part='item'][data-state='on']:hover:not([data-disabled]) {
+  [data-ds='toolbar'] [data-part='item'][data-state='on']:hover:not([aria-disabled='true']) {
     --_button-bg: var(--ds-color-bg-overlay-30);
+  }
+
+  [data-ds='toolbar'] [data-part='item'][data-state='on']:active:not([aria-disabled='true']) {
+    --_button-bg: var(--ds-color-bg-overlay-40);
+  }
+
+  /* ------------------------------------------------------------ disabled items */
+
+  /*
+   * Toolbar.tsx never sets an item's own disabled (it would stop the arrow
+   * keys): it sets aria-disabled, drawn here like Button's data-disabled.
+   */
+  [data-ds='toolbar'] [data-part='item'][aria-disabled='true'] {
+    opacity: var(--ds-opacity-disabled);
+    cursor: not-allowed;
   }
 
   /* ------------------------------------------------------------ overflow */

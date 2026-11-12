@@ -41,6 +41,7 @@ import {
   useRef,
   useState,
   type ComponentProps,
+  type KeyboardEvent,
   type ReactNode,
   type Ref,
 } from 'react';
@@ -263,13 +264,20 @@ export function Toolbar({
     segments.forEach((el, i) => el.toggleAttribute('data-overflowed', i >= count));
     root.removeAttribute('data-measuring');
     setOverflowing(count < segments.length);
+    // Focus never drops to the page: an item that just moved into the menu
+    // hands focus to the More tools trigger once it shows.
+    const focused = document.activeElement;
+    if (focused instanceof HTMLElement && segments.some((el, i) => i >= count && el.contains(focused))) {
+      root.setAttribute('data-overflowing', '');
+      if (more instanceof HTMLElement) more.focus();
+    }
   }, [overflow, vertical]);
 
-  // Measure after every render (children may have changed), and whenever
-  // the toolbar or its parent changes size.
+  // Measure when the content or the axes change, and whenever the toolbar
+  // or its parent changes size (the observer below).
   useLayoutEffect(() => {
     measure();
-  });
+  }, [measure, children, size, emphasis]);
 
   useLayoutEffect(() => {
     const root = rootRef.current;
@@ -286,6 +294,29 @@ export function Toolbar({
     setEntries(overflowEntries(segmentsOf(root).filter((el) => el.hasAttribute('data-overflowed'))));
   }, []);
 
+  // In a vertical toolbar ArrowUp and ArrowDown move between items, also on
+  // the More trigger, where the menu button would otherwise open on them.
+  // Cancelling the key stops both the menu and the roving focus, so focus
+  // moves here. Enter and Space still open the menu.
+  const onMoreKeyDown = useCallback(
+    (event: KeyboardEvent<HTMLButtonElement>) => {
+      if (event.key !== 'ArrowDown' && event.key !== 'ArrowUp') return;
+      const root = rootRef.current;
+      if (!root) return;
+      event.preventDefault();
+      // Hidden items (moved into the menu) are not stops.
+      const stops = Array.from(root.querySelectorAll<HTMLElement>('[data-part="item"], :scope > [data-part="more"]')).filter(
+        (el) => !el.closest('[data-overflowed]'),
+      );
+      const at = stops.indexOf(event.currentTarget);
+      if (at < 0) return;
+      const next = event.key === 'ArrowDown' ? at + 1 : at - 1;
+      const target = loop ? stops[(next + stops.length) % stops.length] : stops[next];
+      target?.focus();
+    },
+    [loop],
+  );
+
   const label = moreLabel ?? moreLabels[lang === 'ar' ? 'ar' : 'en'];
 
   return (
@@ -297,14 +328,14 @@ export function Toolbar({
       data-ds="toolbar"
       data-size={size}
       data-emphasis={emphasis}
-      data-overflow={overflow}
+      data-wrap={overflow === 'wrap' ? '' : undefined}
       data-overflowing={overflowing ? '' : undefined}
     >
       <ToolbarContext value={ctx}>
         {children}
         {overflow === 'menu' && (
           <DropdownMenu onOpenChange={onMenuOpen}>
-            <DropdownMenuTrigger>
+            <DropdownMenuTrigger onKeyDown={vertical ? onMoreKeyDown : undefined}>
               <RadixToolbar.Button asChild>
                 <IconButton data-part="more" icon="more" label={label} size={size} emphasis={emphasis} />
               </RadixToolbar.Button>
@@ -339,6 +370,23 @@ export function Toolbar({
 
 // ------------------------------------------------------------------ items
 
+/**
+ * A disabled item. Button and Link swallow every key while their own
+ * `disabled` is set, and the arrow keys of the roving focus would stop on
+ * the item. So the item is never given `disabled`: it gets aria-disabled
+ * (drawn by Toolbar.css) and its click is cancelled here. A cancelled click
+ * also stops a Radix toggle, which checks defaultPrevented.
+ */
+function inertProps<E extends { preventDefault: () => void }>(disabled: boolean | undefined, onClick: ((event: E) => void) | undefined) {
+  if (!disabled) return { onClick };
+  return {
+    'aria-disabled': true as const,
+    onClick: (event: E) => {
+      event.preventDefault();
+    },
+  };
+}
+
 type ToolbarTextButtonProps = Omit<ButtonProps, 'asChild'> & { icon?: undefined };
 type ToolbarIconButtonProps = Omit<IconButtonProps, 'asChild'>;
 
@@ -350,16 +398,17 @@ type ToolbarIconButtonProps = Omit<IconButtonProps, 'asChild'>;
  */
 export type ToolbarButtonProps = ToolbarTextButtonProps | ToolbarIconButtonProps;
 
-export function ToolbarButton(props: ToolbarButtonProps) {
+export function ToolbarButton({ disabled, onClick, ...props }: ToolbarButtonProps) {
   const ctx = useToolbarContext('ToolbarButton');
   const size = props.size ?? ctx.size;
   const emphasis = props.emphasis ?? ctx.emphasis;
+  const inert = inertProps(disabled, onClick);
   return (
     <RadixToolbar.Button asChild>
       {props.icon !== undefined ? (
-        <IconButton {...props} size={size} emphasis={emphasis as ToolbarIconButtonProps['emphasis']} data-part="item" />
+        <IconButton {...(props as ToolbarIconButtonProps)} {...inert} size={size} emphasis={emphasis as ToolbarIconButtonProps['emphasis']} data-part="item" />
       ) : (
-        <Button {...props} size={size} emphasis={emphasis} data-part="item" />
+        <Button {...(props as ToolbarTextButtonProps)} {...inert} size={size} emphasis={emphasis} data-part="item" />
       )}
     </RadixToolbar.Button>
   );
@@ -368,13 +417,15 @@ export function ToolbarButton(props: ToolbarButtonProps) {
 export type ToolbarLinkProps = Omit<LinkProps, 'asChild' | 'standalone'>;
 
 /** A link in the toolbar: a standalone system Link (a 24px target), in the roving focus. */
-export function ToolbarLink({ size, ...rest }: ToolbarLinkProps) {
+export function ToolbarLink({ size, disabled, onClick, href, ...rest }: ToolbarLinkProps) {
   const ctx = useToolbarContext('ToolbarLink');
   // Link has no xs: the toolbar's xs gives the sm link.
   const linkSize = size ?? (ctx.size === 'xs' ? 'sm' : ctx.size);
+  const inert = inertProps(disabled, onClick);
+  // A disabled link loses its href (nothing can open it) and keeps role link.
   return (
     <RadixToolbar.Link asChild>
-      <Link {...rest} size={linkSize} standalone data-part="item" />
+      <Link {...rest} {...inert} href={disabled ? undefined : href} role={disabled ? 'link' : rest.role} size={linkSize} standalone data-part="item" />
     </RadixToolbar.Link>
   );
 }
@@ -401,7 +452,7 @@ type RadixToggleGroupProps = ComponentProps<typeof RadixToolbar.ToggleGroup>;
  * (aria-pressed): bold, italic. `type="single"`: one item at most is on
  * (radio semantics): text alignment.
  */
-export type ToolbarToggleGroupProps = Omit<RadixToggleGroupProps, 'asChild' | 'title' | 'dir' | 'rovingFocus'> &
+export type ToolbarToggleGroupProps = Omit<RadixToggleGroupProps, 'asChild' | 'title' | 'dir' | 'rovingFocus' | 'disabled'> &
   ({ 'aria-label': string; 'aria-labelledby'?: string } | { 'aria-labelledby': string; 'aria-label'?: string });
 
 export function ToolbarToggleGroup(props: ToolbarToggleGroupProps) {
@@ -421,24 +472,24 @@ export type ToolbarToggleItemProps = (Omit<ToolbarTextButtonProps, 'value'> | Om
  * state as a filled item, so it never rests on color alone in forced colors
  * (a Highlight frame).
  */
-export function ToolbarToggleItem({ value, disabled, ...props }: ToolbarToggleItemProps) {
+export function ToolbarToggleItem({ value, disabled, onClick, ...props }: ToolbarToggleItemProps) {
   const ctx = useToolbarContext('ToolbarToggleItem');
   const size = props.size ?? ctx.size;
   const emphasis = props.emphasis ?? ctx.emphasis;
-  // disabled goes to the system button only: it keeps its tab stop with
-  // aria-disabled and swallows the click, so Radix never toggles it.
+  // Never Radix's disabled (it would drop the tab stop): see inertProps.
+  const inert = inertProps(disabled, onClick);
   return (
     <RadixToolbar.ToggleItem value={value} asChild>
       {props.icon !== undefined ? (
-        <IconButton {...(props as ToolbarIconButtonProps)} disabled={disabled} size={size} emphasis={emphasis as ToolbarIconButtonProps['emphasis']} data-part="item" />
+        <IconButton {...(props as ToolbarIconButtonProps)} {...inert} size={size} emphasis={emphasis as ToolbarIconButtonProps['emphasis']} data-part="item" />
       ) : (
-        <Button {...(props as ToolbarTextButtonProps)} disabled={disabled} size={size} emphasis={emphasis} data-part="item" />
+        <Button {...(props as ToolbarTextButtonProps)} {...inert} size={size} emphasis={emphasis} data-part="item" />
       )}
     </RadixToolbar.ToggleItem>
   );
 }
 
-export type ToolbarSeparatorProps = Omit<ComponentProps<typeof RadixToolbar.Separator>, 'asChild'>;
+export type ToolbarSeparatorProps = Omit<ComponentProps<typeof RadixToolbar.Separator>, 'asChild' | 'title'>;
 
 /** A line between groups of items, across the toolbar's direction. */
 export function ToolbarSeparator(props: ToolbarSeparatorProps) {

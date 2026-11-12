@@ -118,7 +118,7 @@
     "disabled": {
       "type": "boolean",
       "default": false,
-      "description": "Items: aria-disabled. The item keeps its place in the arrow key order and swallows the click."
+      "description": "ToolbarButton, ToolbarLink and ToolbarToggleItem: aria-disabled, drawn with opacity.disabled. The item keeps its place in the arrow key order and its click is cancelled. A disabled link loses its href."
     },
     "type": {
       "type": [
@@ -140,7 +140,8 @@
     "data-orientation",
     "data-overflowing",
     "data-overflowed",
-    "data-disabled"
+    "data-measuring",
+    "data-wrap"
   ],
   "a11y": {
     "role": "toolbar with a name and aria-orientation. Groups are role group with a name; toggle items are buttons with aria-pressed (multiple) or radio with aria-checked (single). The overflow trigger is a menu button.",
@@ -163,7 +164,9 @@
       "Overflow keeps the page from scrolling sideways (WCAG 1.4.10): the toolbar is never wider than its container.",
       "Every item is a system Button, IconButton or Link: 24px targets at xs, 44px at lg (WCAG 2.5.8).",
       "Contract keys: arrows, Home and End are checked by hints; Enter and Space run on the items, which are Buttons with their own contract.",
-      "open and closed are the data-state of the More tools trigger, from DropdownMenu."
+      "open and closed are the data-state of the More tools trigger, from DropdownMenu.",
+      "Items of a single ToolbarToggleGroup (radio semantics) appear in the More tools menu as checkbox items, since the menu has no radio entry built from the DOM yet.",
+      "On a disabled item the hover fill still shows: Button draws hover from its own data-disabled, which the toolbar cannot set without trapping the arrow keys."
     ]
   },
   "content": {
@@ -189,7 +192,10 @@
     "space.4xs",
     "space.3xs",
     "space.2xs",
-    "border.width.default"
+    "border.width.default",
+    "color.text.muted",
+    "color.bg.overlay-40",
+    "opacity.disabled"
   ],
   "motion": "menu-scale",
   "frameworks": {
@@ -205,7 +211,8 @@
     },
     "native": {
       "status": "planned",
-      "behavior": "rn-primitives:toolbar"
+      "behavior": "rn-primitives:toolbar",
+      "note": "A native toolbar is a row of Pressables with accessibilityRole toolbar; overflow becomes a menu sheet."
     }
   },
   "styles": {
