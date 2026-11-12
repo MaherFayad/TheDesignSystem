@@ -278,4 +278,33 @@ Autocomplete: see the addendum below.
 
 ## Addendum: Autocomplete review
 
-Pending at the time of this commit. A follow-up commit records its findings.
+Fresh eyes, 3 blockers, 8 notes. Fixed in the commit after `4014af7`.
+
+Blockers fixed:
+
+- The Autocomplete padding rule lost to the shared rule in Combobox.css,
+  because the barrel imports Autocomplete.css first. `[data-size]` now lifts
+  it. The computed padding is even on both sides; checked in the browser.
+- In free mode, text with no match announced "No results". The count is now
+  read only while the popup shows.
+- The Escape key text named a clear button that Autocomplete does not have.
+
+Notes fixed:
+
+- The closing popup no longer flashes the default empty text in free mode:
+  ComboboxBase resolves the empty content once, as `emptyContent`.
+- Manifest wording: placeholder, "An Autocomplete", and Typing now says
+  "or when empty is set". The `status` part is explained in `a11y.notes`.
+- A duplicate comment in ComboboxBase was removed.
+- Tests added: Enter lets the form submit with nothing highlighted, and does
+  not on a suggestion; Escape clears at once when nothing shows; the status
+  stays silent when nothing matches; Alt+ArrowUp chooses.
+
+Left open:
+
+- The token list matches Combobox's. The Desk popup recipe does use the
+  primary fill and ring tokens for Autocomplete too, so the list stays.
+
+After the fixes: `npm run check` green, contract green for all three
+components, lane axe with the popup open shows 0 violations, and the
+Autocomplete screenshots are retaken.

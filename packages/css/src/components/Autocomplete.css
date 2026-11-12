@@ -10,8 +10,11 @@
  *   [data-ds='autocomplete'][data-part='popup'] the suggestions, its own root
  */
 @layer ds.base {
-  /* No buttons at the end: the same padding on both sides. */
-  [data-ds='autocomplete']:not([data-part='popup']) {
+  /*
+   * No buttons at the end: the same padding on both sides. [data-size] lifts
+   * the rule over the shared one in Combobox.css, whatever the import order.
+   */
+  [data-ds='autocomplete'][data-size]:not([data-part='popup']) {
     padding-inline: var(--_combobox-padding-inline);
   }
 }

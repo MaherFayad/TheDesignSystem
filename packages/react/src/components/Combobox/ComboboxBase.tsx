@@ -247,6 +247,11 @@ export function ComboboxBase({
   const query = mode === 'free' || typed ? text : '';
   const shown = useMemo(() => filterListBoxItems(items, query), [items, query]);
   const options = useMemo(() => flattenListBoxItems(shown), [shown]);
+  const hasOptions = options.length > 0;
+  // What to say when nothing matches: select mode says the default unless empty is null; free mode says only an empty it is given.
+  const emptyContent = mode === 'select' ? (empty === null ? null : (empty ?? t.empty)) : (empty ?? null);
+  // The popup needs a list or something to say. A free text field with no suggestion shows nothing.
+  const popupOpen = open && !inert && (hasOptions || loading || emptyContent !== null);
   const isDisabled = useCallback((i: number) => options[i]?.disabled ?? false, [options]);
 
   const firstEnabled = useCallback(() => {
@@ -285,13 +290,14 @@ export function ComboboxBase({
   formatRef.current = formatCount;
   useEffect(() => {
     setStatus('');
-    if (!open) return undefined;
+    // Only what is shown is announced: a free text field with no suggestion stays silent.
+    if (!popupOpen) return undefined;
     const timer = setTimeout(() => {
       if (loading) setStatus(loadingLabel ?? t.loading);
       else setStatus(formatRef.current ? formatRef.current(count) : defaultResultCount(count, lang));
     }, ANNOUNCE_DELAY);
     return () => clearTimeout(timer);
-  }, [open, query, count, loading, loadingLabel, lang, t.loading]);
+  }, [popupOpen, query, count, loading, loadingLabel, lang, t.loading]);
 
   const openList = (highlight: 'selected' | 'first' | 'last' | 'none') => {
     if (inert) return;
@@ -423,10 +429,7 @@ export function ComboboxBase({
   const activeId = open && highlighted !== null && highlightVisible ? listBoxOptionId(listId, highlighted) : undefined;
   const listSize = size === 'sm' ? 'sm' : 'md';
   const showClear = mode === 'select' && !inert && (value !== null || text !== '');
-  const hasOptions = options.length > 0;
 
-  // The popup needs a list or something to say. A free text field with no suggestion shows nothing.
-  const popupOpen = open && !inert && (hasOptions || loading || (mode === 'select' ? empty !== null : empty !== undefined && empty !== null));
   const layer = usePopupLayer(popupOpen);
   // An expanded combobox controls something: the list, or the popup that says nothing matched.
   const popupId = `${listId}-popup`;
@@ -472,10 +475,9 @@ export function ComboboxBase({
           }}
         />
       )}
-      {!hasOptions && (loading || empty !== null) && <div data-part="empty">{loading ? (loadingLabel ?? t.loading) : (empty ?? t.empty)}</div>}
+      {!hasOptions && (loading || emptyContent !== null) && <div data-part="empty">{loading ? (loadingLabel ?? t.loading) : emptyContent}</div>}
     </Popover.Content>
   );
-  // The popup needs a list or something to say. A free text field with no suggestion shows nothing.
 
   return (
     <Popover.Root

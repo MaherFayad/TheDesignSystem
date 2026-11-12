@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react';
+import { act, render, screen } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 import { useState } from 'react';
 import { beforeAll, describe, expect, it, vi } from 'vitest';
@@ -134,6 +134,54 @@ describe('Autocomplete', () => {
     expect(root().hasAttribute('data-disabled')).toBe(true);
     await user.click(input());
     expect(popup()).toBeNull();
+  });
+
+  it('Enter with nothing highlighted lets the form submit; Enter on a suggestion does not', async () => {
+    const user = userEvent.setup();
+    const onSubmit = vi.fn((e: Event) => e.preventDefault());
+    const onCommit = vi.fn();
+    render(
+      <form onSubmit={(e) => onSubmit(e.nativeEvent)}>
+        <Tag onCommit={onCommit} />
+      </form>,
+    );
+    await user.type(input(), 'des');
+    await user.keyboard('{ArrowDown}{Enter}');
+    expect(onSubmit).not.toHaveBeenCalled();
+    expect(onCommit).not.toHaveBeenCalled();
+    expect(input().value).toBe('Design');
+    await user.keyboard('{Enter}');
+    expect(onCommit).toHaveBeenLastCalledWith('Design');
+    expect(onSubmit).toHaveBeenCalledTimes(1);
+  });
+
+  it('Escape clears at once when nothing is shown', async () => {
+    const user = userEvent.setup();
+    render(<Tag />);
+    await user.type(input(), 'zzz');
+    await user.keyboard('{Escape}');
+    expect(input().value).toBe('');
+  });
+
+  it('stays silent when nothing matches', async () => {
+    vi.useFakeTimers({ shouldAdvanceTime: true });
+    const user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime });
+    render(<Tag />);
+    await user.type(input(), 'zzz');
+    act(() => {
+      vi.advanceTimersByTime(600);
+    });
+    expect(root().querySelector('[role="status"]')?.textContent).toBe('');
+    vi.useRealTimers();
+  });
+
+  it('Alt+ArrowUp puts the highlighted suggestion in the field', async () => {
+    const user = userEvent.setup();
+    render(<Tag />);
+    await user.type(input(), 'ro');
+    await user.keyboard('{ArrowDown}{Alt>}{ArrowUp}{/Alt}');
+    expect(input().value).toBe('Roadmap');
+    expect(input().getAttribute('aria-expanded')).toBe('false');
   });
 
   it('renders the demo', () => {
