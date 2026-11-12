@@ -1,0 +1,131 @@
+/*
+ * Breadcrumbs: the path to the current page. Follows "One convention for
+ * component CSS and props" in docs/contracts/anatomy.md.
+ *
+ * Private properties on the root (recipes override these):
+ *
+ *   --_breadcrumbs-font-size                the type size of every step
+ *   --_breadcrumbs-gap                      the space around a separator
+ *   --_breadcrumbs-fg                       the color of a link step
+ *   --_breadcrumbs-fg-hover                 its hover color
+ *   --_breadcrumbs-current-fg               the current page
+ *   --_breadcrumbs-separator-fg             the chevron
+ *   --_breadcrumbs-item-max                 the widest a step draws before it truncates
+ *
+ * Link steps are system Links (data-ds="link" data-part="link"). This file
+ * restyles them through Link's private properties, and sets their box for
+ * truncation, which no property covers. Nothing animates.
+ */
+@layer ds.base {
+  [data-ds='breadcrumbs'] {
+    --_breadcrumbs-font-size: var(--ds-font-size-s);
+    --_breadcrumbs-gap: var(--ds-space-2xs);
+    --_breadcrumbs-fg: var(--ds-color-text-muted);
+    --_breadcrumbs-fg-hover: var(--ds-color-text-bright);
+    --_breadcrumbs-current-fg: var(--ds-color-text-bright);
+    --_breadcrumbs-separator-fg: var(--ds-color-text-subtle);
+    --_breadcrumbs-item-max: var(--ds-menu-width-min);
+
+    display: block;
+    min-inline-size: 0;
+    font-size: var(--_breadcrumbs-font-size);
+    line-height: var(--ds-font-leading-tight);
+  }
+
+  [data-ds='breadcrumbs'][data-size='sm'] {
+    --_breadcrumbs-font-size: var(--ds-font-size-xs);
+    --_breadcrumbs-gap: var(--ds-space-3xs);
+  }
+
+  /* Arabic: small text one step up. */
+  [data-ds='breadcrumbs']:lang(ar) {
+    --_breadcrumbs-font-size: var(--ds-font-size-m);
+
+    line-height: var(--ds-font-leading-arabic-tight);
+  }
+
+  [data-ds='breadcrumbs'][data-size='sm']:lang(ar) {
+    --_breadcrumbs-font-size: var(--ds-font-size-s);
+  }
+
+  [data-ds='breadcrumbs'] > [data-part='list'] {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    min-inline-size: 0;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  [data-ds='breadcrumbs'] [data-part='item'] {
+    display: inline-flex;
+    align-items: center;
+    min-inline-size: 0;
+    max-inline-size: 100%;
+  }
+
+  /* ------------------------------------------------------------ steps */
+
+  /* A link step: a standalone Link (a 24px target), muted, shrinking with its row. */
+  [data-ds='breadcrumbs'] [data-part='link'] {
+    --_link-fg: var(--_breadcrumbs-fg);
+    --_link-fg-hover: var(--_breadcrumbs-fg-hover);
+
+    flex: 0 1 auto;
+    min-inline-size: 0;
+    overflow-wrap: anywhere;
+  }
+
+  /*
+   * With a hover pointer, a long link step is one line that ends in an
+   * ellipsis; hover and keyboard focus show it whole. No property of Link
+   * covers truncation, so these declarations are set here. Without hover
+   * (touch), steps wrap and nothing is cut off.
+   */
+  @media (hover: hover) {
+    [data-ds='breadcrumbs'] [data-part='link'] {
+      max-inline-size: var(--_breadcrumbs-item-max);
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    [data-ds='breadcrumbs'] [data-part='link']:is(:hover, :focus-visible) {
+      max-inline-size: none;
+    }
+  }
+
+  /* The current page: bright and medium weight, no underline, never truncated. aria-current names it, not the color. */
+  [data-ds='breadcrumbs'] [data-part='current'] {
+    display: inline-block;
+    min-inline-size: 0;
+    color: var(--_breadcrumbs-current-fg);
+    font-weight: var(--ds-font-weight-medium);
+    line-height: var(--ds-size-target-min);
+    overflow-wrap: anywhere;
+  }
+
+  [data-ds='breadcrumbs'] [data-part='separator'] {
+    display: inline-flex;
+    flex: none;
+    margin-inline: var(--_breadcrumbs-gap);
+    color: var(--_breadcrumbs-separator-fg);
+  }
+
+  [data-ds='breadcrumbs'] [data-part='overflow'] {
+    flex: none;
+  }
+
+  /* ------------------------------------------------------------ forced colors */
+
+  @media (forced-colors: active) {
+    [data-ds='breadcrumbs'] [data-part='current'] {
+      color: CanvasText;
+    }
+
+    [data-ds='breadcrumbs'] [data-part='separator'] {
+      color: GrayText;
+    }
+  }
+}

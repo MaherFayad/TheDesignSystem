@@ -1,0 +1,106 @@
+/*
+ * SkipLink: the first link of a page, drawn only while it has focus. Follows
+ * "One convention for component CSS and props" in docs/contracts/anatomy.md.
+ *
+ * Private properties on the root (recipes override these):
+ *
+ *   --_skip-link-height, -padding-inline, -padding-block, -font-size, -radius
+ *   --_skip-link-bg, -fg, -border-color, -shadow
+ *   --_skip-link-offset                      the gap to the page corner
+ *   --_skip-link-ring                        the focus ring, a box shadow
+ *
+ * The root rule paints the link. At rest it is visually hidden (clipped to
+ * one pixel) but stays in the tab order and the accessibility tree. The
+ * focus rule only lifts the clip and sets the box. It is drawn at the block
+ * start and inline start corner of its containing block, above the page
+ * chrome. Nothing animates: it appears at once, so there is no motion to
+ * reduce.
+ */
+@layer ds.base {
+  [data-ds='skip-link'] {
+    --_skip-link-height: var(--ds-size-control-md);
+    --_skip-link-padding-inline: var(--ds-space-xl);
+    --_skip-link-padding-block: var(--ds-space-2xs);
+    --_skip-link-font-size: var(--ds-font-size-s);
+    --_skip-link-radius: var(--ds-radius-control);
+    --_skip-link-bg: var(--ds-color-bg-surface-3);
+    --_skip-link-fg: var(--ds-color-text-bright);
+    --_skip-link-border-color: var(--ds-color-border-control);
+    --_skip-link-shadow: var(--ds-elevation-menu);
+    --_skip-link-offset: var(--ds-space-s);
+    --_skip-link-ring: var(--ds-focus-shadow-ring);
+
+    position: absolute;
+    inset-block-start: var(--_skip-link-offset);
+    inset-inline-start: var(--_skip-link-offset);
+    z-index: var(--ds-z-spotlight);
+    box-sizing: border-box;
+    border: var(--ds-border-width-default) solid var(--_skip-link-border-color);
+    border-radius: var(--_skip-link-radius);
+    background-color: var(--_skip-link-bg);
+    box-shadow: var(--_skip-link-shadow);
+    color: var(--_skip-link-fg);
+    font-family: var(--ds-font-family-sans);
+    font-size: var(--_skip-link-font-size);
+    font-weight: var(--ds-font-weight-bold);
+    line-height: var(--ds-font-leading-tight);
+    text-decoration-line: underline;
+    text-decoration-thickness: var(--ds-border-width-default);
+    text-underline-offset: var(--ds-space-3xs);
+    overflow-wrap: anywhere;
+
+    /* Visually hidden at rest: one pixel, clipped. */
+    inline-size: var(--ds-border-width-default);
+    block-size: var(--ds-border-width-default);
+    margin: calc(-1 * var(--ds-border-width-default));
+    padding: 0;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  /* Drawn while focused, by mouse or keyboard, so it never vanishes under the pointer that clicked it. */
+  [data-ds='skip-link']:focus {
+    display: inline-flex;
+    align-items: center;
+    inline-size: auto;
+    block-size: auto;
+    min-block-size: max(var(--_skip-link-height), var(--ds-size-target-min));
+    max-inline-size: calc(100% - 2 * var(--_skip-link-offset));
+    margin: 0;
+    padding-block: var(--_skip-link-padding-block);
+    padding-inline: var(--_skip-link-padding-inline);
+    overflow: visible;
+    clip-path: none;
+    white-space: normal;
+  }
+
+  /* The transparent outline is set only here, so forced colors mode draws it on focus and nowhere else. */
+  [data-ds='skip-link']:focus-visible {
+    --_skip-link-shadow: var(--_skip-link-ring), var(--ds-elevation-menu);
+
+    outline: var(--ds-border-width-strong) solid transparent;
+    outline-offset: var(--ds-border-width-strong);
+  }
+
+  /* Arabic: small text one step up and a taller line (base.css swaps the family). */
+  [data-ds='skip-link']:lang(ar) {
+    --_skip-link-font-size: var(--ds-font-size-m);
+
+    line-height: var(--ds-font-leading-arabic-snug);
+  }
+
+  /* ------------------------------------------------------------ forced colors */
+
+  @media (forced-colors: active) {
+    [data-ds='skip-link'] {
+      border-color: LinkText;
+      background-color: Canvas;
+      color: LinkText;
+    }
+
+    [data-ds='skip-link']:focus-visible {
+      outline-color: Highlight;
+    }
+  }
+}

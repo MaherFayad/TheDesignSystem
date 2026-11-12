@@ -1,0 +1,125 @@
+/*
+ * Pagination: page controls for a list. Follows "One convention for
+ * component CSS and props" in docs/contracts/anatomy.md.
+ *
+ * Private properties on the root (recipes override these):
+ *
+ *   --_pagination-gap                    the space between controls
+ *   --_pagination-height                 the control height, for the ellipsis box
+ *   --_pagination-fg                     the summary and ellipsis color
+ *   --_pagination-bg-active, -bg-active-hover            the current page fill
+ *   --_pagination-fg-active                              the current page number color
+ *   --_pagination-border-color-active                    the border that marks the current page
+ *
+ * Every control is a system Button or IconButton (data-part first, previous,
+ * page, next, last). This file restyles them only through Button's private
+ * properties. The current page is a soft fill plus a strong border and
+ * aria-current, so it is never told apart by color alone. Nothing animates
+ * beyond the Button press.
+ */
+@layer ds.base {
+  [data-ds='pagination'] {
+    --_pagination-gap: var(--ds-space-3xs);
+    --_pagination-height: var(--ds-size-control-md);
+    --_pagination-fg: var(--ds-color-text-muted);
+    --_pagination-bg-active: var(--ds-color-bg-overlay-10);
+    --_pagination-bg-active-hover: var(--ds-color-bg-overlay-20);
+    --_pagination-fg-active: var(--ds-color-text-bright);
+    --_pagination-border-color-active: var(--ds-color-border-strong);
+
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--_pagination-gap);
+    min-inline-size: 0;
+    font-variant-numeric: tabular-nums;
+  }
+
+  [data-ds='pagination'][data-size='sm'] {
+    --_pagination-height: var(--ds-size-control-sm);
+  }
+
+  [data-ds='pagination'][data-size='lg'] {
+    --_pagination-height: var(--ds-size-control-lg);
+    --_pagination-gap: var(--ds-space-2xs);
+  }
+
+  /* "21 to 40 of 312": at the inline start, the controls follow at the inline end. */
+  [data-ds='pagination'] > [data-part='summary'] {
+    margin-inline-end: auto;
+    padding-inline-end: var(--ds-space-m);
+    color: var(--_pagination-fg);
+    font-size: var(--ds-font-size-s);
+    line-height: var(--ds-font-leading-tight);
+    white-space: nowrap;
+  }
+
+  [data-ds='pagination']:lang(ar) > [data-part='summary'] {
+    font-size: var(--ds-font-size-m);
+    line-height: var(--ds-font-leading-arabic-tight);
+  }
+
+  /* A page number: at least as wide as it is tall, with tight padding. */
+  [data-ds='pagination'] > [data-part='page'] {
+    --_button-padding-inline: var(--ds-space-2xs);
+  }
+
+  [data-ds='pagination'] > [data-part='page'][data-active] {
+    --_button-bg: var(--_pagination-bg-active);
+    --_button-bg-hover: var(--_pagination-bg-active-hover);
+    --_button-fg: var(--_pagination-fg-active);
+    --_button-fg-hover: var(--_pagination-fg-active);
+    --_button-border-color: var(--_pagination-border-color-active);
+    --_button-border-color-hover: var(--_pagination-border-color-active);
+  }
+
+  [data-ds='pagination'] > [data-part='ellipsis'] {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-inline-size: var(--_pagination-height);
+    block-size: var(--_pagination-height);
+    color: var(--_pagination-fg);
+    user-select: none;
+  }
+
+  /* The compact ellipsis shows only in the compact form. */
+  [data-ds='pagination'] > [data-part='ellipsis'][data-compact] {
+    display: none;
+  }
+
+  /*
+   * Compact form: the ends, the current page and the last page (so the row
+   * still says how many there are), the summary on its own line above and
+   * free to wrap. The ellipsis before the last page stays when pages are
+   * hidden between them.
+   */
+  @media (width < 30rem) { /* breakpoint.phone */
+    [data-ds='pagination'] > [data-part='page']:not([data-active], :nth-last-child(1 of [data-part='page'])) {
+      display: none;
+    }
+
+    [data-ds='pagination'] > [data-part='ellipsis']:not([data-compact]) {
+      display: none;
+    }
+
+    [data-ds='pagination'] > [data-part='ellipsis'][data-compact] {
+      display: inline-flex;
+    }
+
+    [data-ds='pagination'] > [data-part='summary'] {
+      flex-basis: 100%;
+      padding-inline-end: 0;
+      white-space: normal;
+    }
+  }
+
+  /* ------------------------------------------------------------ forced colors */
+
+  @media (forced-colors: active) {
+    [data-ds='pagination'] > [data-part='page'][data-active] {
+      --_button-border-color: Highlight;
+      --_button-border-color-hover: Highlight;
+    }
+  }
+}

@@ -1,0 +1,161 @@
+{
+  "name": "LanguageSwitch",
+  "kind": "component",
+  "family": "navigation",
+  "summary": "Moves the reader to the same page in another language. Two languages render as a link pair, more as a menu. Each language is named in its own language, never with a flag.",
+  "useWhen": [
+    "A site or app that exists in English and Arabic, in the header or footer",
+    "A page translated into three or more languages, where a menu keeps the header short",
+    "A settings screen entry point to the reader's language, when changing it reloads the page"
+  ],
+  "avoidWhen": [
+    "Choosing the language of content inside a form, such as the language of a document being written",
+    "Choosing a country or a currency",
+    "A page that exists in one language only"
+  ],
+  "insteadUse": {
+    "The language of a field or a document": "Select",
+    "A country or region": "Select or Combobox",
+    "A currency": "Select",
+    "Only one other language to offer as a text link": "Link with hreflang and lang"
+  },
+  "anatomy": [
+    "root",
+    "item",
+    "trigger",
+    "menu"
+  ],
+  "props": {
+    "languages": {
+      "type": "LanguageOption[]",
+      "required": true,
+      "description": "The languages the page exists in: { code, name, href }. name is written in that language (English, العربية, Français). href is the same page in that language, so the switch keeps the page. Two render a link pair, three or more a menu. Fewer than two render nothing."
+    },
+    "current": {
+      "type": "string",
+      "required": true,
+      "description": "The code of the language the page is in now. When it matches no language, nothing is marked."
+    },
+    "size": {
+      "type": [
+        "sm",
+        "md"
+      ],
+      "default": "md",
+      "description": "Type size of the pair (the item Links take Link size sm at md and xs at sm, one step up for Arabic names) and the trigger Button size."
+    },
+    "emphasis": {
+      "type": [
+        "ghost",
+        "soft"
+      ],
+      "default": "ghost",
+      "description": "How loud the menu trigger Button is. The pair is always links."
+    },
+    "label": {
+      "type": "string",
+      "default": "Language",
+      "description": "The accessible name of the nav landmark, also the end of the trigger name (English, Language). Under an Arabic Theme the default is اللغة."
+    },
+    "onNavigate": {
+      "type": "(language: LanguageOption) => void",
+      "description": "Called when a language is chosen from the menu, for client side routing. Without it the browser goes to its href. The pair links navigate on their own."
+    }
+  },
+  "states": [
+    "data-active",
+    "open",
+    "closed"
+  ],
+  "a11y": {
+    "role": "navigation landmark; the pair is two links, the menu form a menu button with menuitemradio items",
+    "focus": "Each link of the pair is a tab stop. In the menu form the trigger is one tab stop; the menu follows DropdownMenu, with focus back on the trigger when it closes.",
+    "keys": {
+      "Tab": "Moves through the pair, or to the menu trigger",
+      "Enter": "Follows a link, or opens the menu",
+      "ArrowDown, ArrowUp": "Inside the menu, as DropdownMenu; Enter or Space chooses a language"
+    },
+    "announce": "Each name is read in its own language (lang on the link or item). The current language in the pair reads as current page; in the menu it reads as checked. The trigger reads English, Language, menu button: the visible name first.",
+    "native": {
+      "accessibilityRole": "link",
+      "accessibilityState": [
+        "selected"
+      ]
+    },
+    "notes": [
+      "Never a flag: a flag names a country, not a language.",
+      "Each name carries lang and its own direction (dir rtl for Arabic, Urdu, Persian and the other right to left languages, from directionOf in @the-system/shared), so screen readers switch voice and the name shapes correctly inside a page of the other direction. Pair links also carry hreflang. Menu rows are menu items with lang but no href, so the menu form needs script; the pair works without it.",
+      "The current language in the pair is marked by weight, a missing underline, data-active and aria-current page (its link is this page), never color alone (WCAG 1.4.1). When current matches no language, nothing is marked. Fewer than two languages render nothing.",
+      "Escape is not in the key map: the contract suite cannot open the menu as a LanguageSwitch root (the menu is a DropdownMenu root of its own), so it would read Escape as closing LanguageSwitch. Escape closes the menu as in DropdownMenu, whose own contract checks it, axe and target size of the open menu included.",
+      "React Native: a direction change (English to Arabic) needs an app restart through I18nManager, so the native form asks before it reloads.",
+      "open and closed are the data-state of the menu trigger (a Button carrying data-part trigger) and of the menu; the LanguageSwitch root has no state."
+    ]
+  },
+  "content": {
+    "en": {
+      "names": "Each language in its own language and script: English, العربية, Français. Never translate the names into the page language, never use flags or two letter codes alone.",
+      "label": "Language"
+    },
+    "ar": {
+      "names": "العربية, not عربي or AR.",
+      "label": "اللغة, noun form, no diacritics."
+    }
+  },
+  "tokens": [
+    "font.size.xs",
+    "font.size.s",
+    "font.size.m",
+    "font.weight.medium",
+    "space.s",
+    "space.m",
+    "color.text.muted",
+    "color.text.bright"
+  ],
+  "frameworks": {
+    "react": {
+      "status": "ready",
+      "behavior": "nav of system Links for two languages; system Button and radix:DropdownMenu radio items for more",
+      "example": "LanguageSwitch.demo.tsx",
+      "note": "No motion of its own: the menu plays DropdownMenu's menu-scale."
+    },
+    "angular": {
+      "status": "planned",
+      "behavior": "nav[dsLanguageSwitch] with a[dsLink] items and the DropdownMenu port for more"
+    },
+    "native": {
+      "status": "planned",
+      "note": "A direction change on React Native needs an app restart (I18nManager.forceRTL then a reload), so the switch confirms before it applies."
+    }
+  },
+  "styles": {
+    "studio": "Muted text links with the active language bright, medium weight and no underline; the menu trigger a ghost Button with the language icon.",
+    "desk": "The same from the Desk tokens; the trigger takes the Desk pill.",
+    "neutral": "Takes the tokens of the Neutral style, no recipe."
+  },
+  "mistakes": [
+    {
+      "wrong": "A flag for each language",
+      "right": "The name of each language in its own language"
+    },
+    {
+      "wrong": "Language names translated into the page language (Arabic, Anglais)",
+      "right": "English, العربية, Français whatever the page language"
+    },
+    {
+      "wrong": "A switch that goes back to the home page in the other language",
+      "right": "hrefs that keep the page and swap the locale"
+    },
+    {
+      "wrong": "Names with no lang attribute, read in the wrong voice",
+      "right": "LanguageSwitch, which sets lang and hreflang on each name"
+    }
+  ],
+  "contract": {
+    "optionalParts": [
+      "item",
+      "trigger",
+      "menu"
+    ]
+  },
+  "since": "0.1.0"
+}
