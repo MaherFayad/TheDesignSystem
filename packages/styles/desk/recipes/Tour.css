@@ -1,5 +1,5 @@
 /*
- * Desk recipe for the Tour panel: floating surfaces on the desk are glass (the
+ * Desk recipe for the Tour panel (declared on the root, read by the panel): floating surfaces on the desk are glass (the
  * dials table of PLAN.md 3.7, depth "glass"), the same material as the Desk
  * toasts: the strong glass fill, the glass border, the window blur and the
  * soft window shadow. The radius stays the panel radius: a tour panel is
@@ -13,7 +13,7 @@
  * and the base rules stay the same in every style.
  */
 @layer ds.recipes {
-  [data-style='desk'] [data-ds='tour'] [data-part='panel'] {
+  [data-style='desk'] [data-ds='tour'] {
     --_tour-bg: var(--ds-color-material-glass-strong);
     --_tour-border-color: var(--ds-color-material-glass-border);
     --_tour-shadow: var(--ds-elevation-window-soft);
@@ -22,26 +22,26 @@
 
   /* The recipe layer wins over the base layer, so the blur is dropped here again where the glass turns solid. */
   @media (prefers-reduced-transparency: reduce), (prefers-contrast: more), (forced-colors: active) {
-    [data-style='desk'] [data-ds='tour'] [data-part='panel'] {
+    [data-style='desk'] [data-ds='tour'] {
       --_tour-blur: 0;
     }
   }
 
   @media (prefers-contrast: more) {
-    [data-style='desk'] [data-ds='tour'] [data-part='panel'] {
+    [data-style='desk'] [data-ds='tour'] {
       --_tour-border-color: var(--ds-color-border-strong);
     }
   }
 
   @media (forced-colors: active) {
-    [data-style='desk'] [data-ds='tour'] [data-part='panel'] {
+    [data-style='desk'] [data-ds='tour'] {
       --_tour-bg: Canvas;
       --_tour-border-color: CanvasText;
     }
   }
 
-  [data-style='desk'][data-contrast='more'] [data-ds='tour'] [data-part='panel'],
-  [data-style='desk'] [data-contrast='more'] [data-ds='tour'] [data-part='panel'] {
+  [data-style='desk'][data-contrast='more'] [data-ds='tour'],
+  [data-style='desk'] [data-contrast='more'] [data-ds='tour'] {
     --_tour-blur: 0;
     --_tour-border-color: var(--ds-color-border-strong);
   }

@@ -110,6 +110,34 @@ describe('Tour', () => {
     expect(document.activeElement).toBe(screen.getByRole('button', { name: 'Start tour' }));
   });
 
+  it('starts again at the first step after it ends', async () => {
+    const user = userEvent.setup();
+    render(<Basic />);
+    await start(user);
+    await user.click(screen.getByRole('button', { name: 'Next step' }));
+    await user.click(screen.getByRole('button', { name: 'Skip tour' }));
+    await waitFor(() => expect(rootEl()).toBeNull());
+    await start(user);
+    expect(part('progress')?.textContent).toBe('Step 1 of 3');
+  });
+
+  it('Escape keeps focus in the page field the person is using', async () => {
+    const user = userEvent.setup();
+    render(
+      <>
+        <input aria-label="Board name" />
+        <Basic />
+      </>,
+    );
+    await start(user);
+    const field = screen.getByRole('textbox', { name: 'Board name' });
+    await user.click(field);
+    expect(document.activeElement).toBe(field);
+    await user.keyboard('{Escape}');
+    await waitFor(() => expect(rootEl()).toBeNull());
+    expect(document.activeElement).toBe(field);
+  });
+
   it('a click on the page does not end the tour', async () => {
     const user = userEvent.setup();
     render(<Basic />);

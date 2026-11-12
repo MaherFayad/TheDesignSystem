@@ -69,7 +69,7 @@ export type TourAlign = FloatingAlign;
 export type TourTarget = string | RefObject<HTMLElement | null> | (() => HTMLElement | null);
 
 export interface TourStep {
-  /** The element the step points at. When it is missing, the panel shows in the middle of the viewport with no ring. */
+  /** The element the step points at. When it is missing, the panel shows just under the middle of the viewport, with no ring and no arrow. */
   target: TourTarget;
   /** The step title: what this part of the screen is. */
   title: ReactNode;
@@ -183,6 +183,13 @@ export function Tour({
   const current = steps[index];
   const shown = open && current !== undefined;
 
+  // An uncontrolled tour starts again at defaultStep each time it opens.
+  const wasOpen = useRef(open);
+  useEffect(() => {
+    if (open && !wasOpen.current && stepProp === undefined && rawStep !== defaultStep) setStep(defaultStep);
+    wasOpen.current = open;
+  }, [open, stepProp, rawStep, defaultStep, setStep]);
+
   const [mounted, presenceRef] = useLayerPresence(shown);
   const panelRef = useRef<HTMLDivElement | null>(null);
   const layerRef = useRef<HTMLDivElement | null>(null);
@@ -212,7 +219,7 @@ export function Tour({
   // Scroll the target into view on each step, without motion under reduced motion.
   useEffect(() => {
     if (!shown || !target || typeof target.scrollIntoView !== 'function') return;
-    target.scrollIntoView({ block: 'center', inline: 'nearest', behavior: prefersReducedMotion() ? 'auto' : 'smooth' });
+    target.scrollIntoView({ block: 'nearest', inline: 'nearest', behavior: prefersReducedMotion() ? 'instant' : 'smooth' });
   }, [shown, target]);
 
   // The ring follows the target box in logical viewport coordinates.
@@ -226,12 +233,18 @@ export function Tour({
     const measure = () => {
       cancelAnimationFrame(frame);
       frame = requestAnimationFrame(() => {
+        // The target left the page during the step: no ring.
+        if (!target.isConnected) {
+          setRing(null);
+          return;
+        }
         const box = target.getBoundingClientRect();
-        const width = layerRef.current?.clientWidth ?? document.documentElement.clientWidth;
+        // Against the layer box, so a scrollbar on either side never shifts the ring.
+        const layer = layerRef.current?.getBoundingClientRect();
         const rtl = theme.dir === 'rtl';
         setRing({
-          inlineStart: rtl ? width - box.right : box.left,
-          blockStart: box.top,
+          inlineStart: rtl ? (layer?.right ?? document.documentElement.clientWidth) - box.right : box.left - (layer?.left ?? 0),
+          blockStart: box.top - (layer?.top ?? 0),
           inlineSize: box.width,
           blockSize: box.height,
         });
@@ -266,9 +279,13 @@ export function Tour({
     [target],
   );
 
-  // Each new step: focus moves to the panel, so its title and body are read.
+  // Each new step: focus moves to the panel, so its title and body are read,
+  // unless the person is working in the page (focus outside the panel).
   useEffect(() => {
-    if (shown) panelRef.current?.focus();
+    const panel = panelRef.current;
+    if (!shown || !panel) return;
+    const active = panel.ownerDocument.activeElement;
+    if (!active || active === panel.ownerDocument.body || panel.contains(active)) panel.focus();
   }, [shown, index]);
 
   const titleId = useId();
@@ -286,7 +303,7 @@ export function Tour({
     } else setStep(index + 1);
   };
   const back = () => setStep(Math.max(index - 1, 0));
-  const missing = target === null;
+  const missing = target === null || ring === null;
   const ringStyle = ring
     ? ({
         '--_tour-target-inline-start': `${ring.inlineStart}px`,
@@ -319,6 +336,9 @@ export function Tour({
               event.preventDefault();
               const back = openedFrom.current;
               openedFrom.current = null;
+              // Only when focus was in the tour (now gone to body): never pull it out of the page.
+              const active = document.activeElement;
+              if (active && active !== document.body && !panelRef.current?.contains(active)) return;
               if (back?.isConnected) back.focus();
             }}
             // The page stays usable: a click or focus elsewhere never ends the tour.

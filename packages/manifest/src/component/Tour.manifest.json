@@ -35,7 +35,7 @@
     "steps": {
       "type": "object",
       "required": true,
-      "description": "The steps in order: { target, title, body?, side?, align? }. target is a CSS selector, a ref or a function that returns the element. A missing target shows the step in the middle of the viewport with no ring and no arrow."
+      "description": "The steps in order: { target, title, body?, side?, align? }. target is a CSS selector, a ref or a function that returns the element. A missing target (or one that leaves the page) shows the step just under the middle of the viewport, with no ring and no arrow."
     },
     "open": { "type": "boolean", "description": "Controlled open state, with onOpenChange. Open it from any Button: the tour has no trigger part." },
     "defaultOpen": { "type": "boolean", "default": false },
@@ -71,7 +71,9 @@
       "Never blocks the page: no backdrop and no dimmed page. The root layer and the ring take no pointer, so the target stays usable. A click on the page does not end the tour.",
       "Skip tour is on every step, the last one included. Escape ends the tour too.",
       "The ring around the target is drawn in the focus ring color and is not the only signal: the panel's arrow points at the target and the title names it.",
-      "The target scrolls into view on each step: smoothly, or at once under reduced motion.",
+      "The target scrolls into view on each step when it is not already in view: smoothly, or at once (instant) under reduced motion.",
+      "An uncontrolled tour starts again at defaultStep each time it opens.",
+      "Focus moves to the panel on each step only while focus is in the tour; a person typing in the page keeps focus there, and Escape then does not pull focus back.",
       "The panel carries data-side and data-align from Radix; data-side is physical after the logical side is mapped by direction.",
       "The root is a fixed layer that holds the ring and the panel (the order made the content the root): the ring must sit outside the Radix wrapper, which is positioned with a transform, and still belong to the tour. Dialog uses the same shape.",
       "The step state is local until packages/shared/src/stepper.ts (order 1.7.7) is merged; the props do not change when it moves."

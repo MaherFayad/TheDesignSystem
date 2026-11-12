@@ -220,7 +220,21 @@ Decisions:
 - Labels: Next step, Previous step, Skip tour, Finish tour, "Step 2 of 4";
   Arabic الخطوة التالية، الخطوة السابقة، تخطي الجولة، إنهاء الجولة، "الخطوة 2 من 4".
 
-Review: see "Tour review" below.
+Review: two blockers, fixed in a follow up commit (`lane-6b: Tour review
+fixes`). An uncontrolled tour reopened on its last step; it now starts again
+at `defaultStep`. Escape pulled focus back from a page field; focus now
+returns only when it was in the tour. Also fixed: focus moves to the panel on
+a step change only while focus is in the tour, the scroll uses `nearest` and
+`instant` under reduced motion (`auto` follows a page's smooth scroll), a
+target that leaves the page drops the ring and the arrow, the RTL ring is
+measured against the layer box (scrollbar side safe), unit `0px` defaults,
+the Desk recipe declares on the root, and the "middle of the viewport" docs
+now say "just under the middle" (the anchor point is the middle). Left open:
+the ring does not follow a target that moves with no scroll, resize or size
+change (the panel does, through floating-ui); "Next step" and "Previous
+step" kept as the button labels, a step noun the person reads as a command
+(the lead may prefer "Go to next step"); the 1.6 width multiplier (token gap
+above).
 
 ## Token gaps
 

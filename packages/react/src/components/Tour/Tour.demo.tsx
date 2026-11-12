@@ -110,7 +110,7 @@ export default function TourDemo() {
         />
       </DemoCase>
 
-      <DemoCase id="error" title="A target that is not on the page: the step shows in the middle, with no ring">
+      <DemoCase id="error" title="A target that is not on the page: the step shows near the middle, with no ring">
         <TourExample
           prefix="tour-missing"
           trigger="error"
