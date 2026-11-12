@@ -305,7 +305,27 @@ function cssBlock(selector: string, map: TokenMap, prefix: string, scope: TokenM
 
 // ---------------------------------------------------------------- native values
 
-type NativeValue = string | number | number[] | Record<string, unknown>;
+type NativeValue = string | number | number[] | Record<string, unknown> | undefined;
+
+/** Units relative to the window. Native gets a ratio under a renamed key. */
+const WINDOW_UNITS: Record<string, string> = { vh: 'height', vw: 'width' };
+
+function windowUnit(token: Token, map: TokenMap): string | undefined {
+  const t = finalToken(token, map);
+  const unit = t.type === 'number' ? unitOf(t) : undefined;
+  return unit && unit in WINDOW_UNITS ? unit : undefined;
+}
+
+/** The native key path: a window relative token gets `-window-ratio` on its last name. */
+function nativePath(token: Token, map: TokenMap): string {
+  return windowUnit(token, map) ? `${token.path}-window-ratio` : token.path;
+}
+
+/** The first real family name, or undefined for the platform default. */
+function nativeFamily(value: unknown): string | undefined {
+  const list = Array.isArray(value) ? (value as string[]) : [value as string];
+  return list.find((f) => !GENERIC_FONTS.has(f));
+}
 
 function nativeColor(c: ColorValue): string {
   const [r, g, b, a] = rgbOf(c);
@@ -345,7 +365,8 @@ function nativeValue(token: Token, map: TokenMap): NativeValue {
       const unit = unitOf(t);
       const n = value as number;
       if (unit === 'em') return Number(num(n * ROOT_FONT_PX));
-      if (unit === 'vh' || unit === 'vw' || unit === '%') return `${num(n)}%`;
+      if (unit && unit in WINDOW_UNITS) return Number(num(n / 100));
+      if (unit === '%') return `${num(n)}%`;
       return n;
     }
     case 'fontWeight':
@@ -353,11 +374,42 @@ function nativeValue(token: Token, map: TokenMap): NativeValue {
     case 'cubicBezier':
       return value as number[];
     case 'fontFamily':
-      return Array.isArray(value) ? (value[0] as string) : (value as string);
+      return nativeFamily(value);
     case 'shadow':
       return nativeShadow(value);
     default:
       return String(value);
+  }
+}
+
+const NATIVE_SHADOW_TYPE = `{
+  readonly shadowColor: string;
+  readonly shadowOffset: { readonly width: number; readonly height: number };
+  readonly shadowOpacity: number;
+  readonly shadowRadius: number;
+  readonly elevation: number;
+}`;
+
+/** The TypeScript type of a native value, from the token type (not the value). */
+function nativeType(token: Token, map: TokenMap): string {
+  const t = finalToken(token, map);
+  switch (t.type) {
+    case 'color':
+      return 'string';
+    case 'number':
+      return unitOf(t) === '%' ? 'string' : 'number';
+    case 'cubicBezier':
+      return 'readonly [number, number, number, number]';
+    case 'fontFamily':
+      return 'string | undefined';
+    case 'shadow':
+      return NATIVE_SHADOW_TYPE;
+    case 'dimension':
+    case 'duration':
+    case 'fontWeight':
+      return 'number';
+    default:
+      return 'string';
   }
 }
 
@@ -376,6 +428,7 @@ function tsKey(k: string): string {
 }
 
 function tsLiteral(value: unknown, indent: string): string {
+  if (value === undefined) return 'undefined';
   if (typeof value === 'string') return `'${value.replace(/\\/g, '\\\\').replace(/'/g, "\\'")}'`;
   if (typeof value === 'number') return String(value);
   if (Array.isArray(value)) return `[${value.map((v) => tsLiteral(v, indent)).join(', ')}]`;
@@ -385,10 +438,9 @@ function tsLiteral(value: unknown, indent: string): string {
   return `{\n${inner.join('\n')}\n${indent}}`;
 }
 
+/** Prints a tree whose leaves are type strings. */
 function tsType(value: unknown, indent: string): string {
-  if (typeof value === 'string') return 'string';
-  if (typeof value === 'number') return 'number';
-  if (Array.isArray(value)) return `readonly [${value.map(() => 'number').join(', ')}]`;
+  if (typeof value === 'string') return value.replace(/\n/g, `\n${indent}`);
   const obj = value as Record<string, unknown>;
   const keys = Object.keys(obj).sort(compareNames);
   const inner = keys.map((k) => `${indent}  readonly ${tsKey(k)}: ${tsType(obj[k], `${indent}  `)};`);
@@ -419,6 +471,10 @@ function figmaVariable(token: Token, map: TokenMap, prefix: string): FigmaVariab
   if (t.type === 'color') {
     const [r, g, b, a] = rgbOf(resolveValue(token.value, map, token.path) as ColorValue);
     v = { type: 'COLOR', value: { r: Number(num(r / 255)), g: Number(num(g / 255)), b: Number(num(b / 255)), a: Number(num(a)) } };
+  } else if (windowUnit(token, map) || t.type === 'fontFamily') {
+    const resolved = resolveValue(token.value, map, token.path);
+    const family = t.type === 'fontFamily' ? (Array.isArray(resolved) ? (resolved as string[]) : [resolved as string]) : [];
+    v = { type: 'STRING', value: t.type === 'fontFamily' ? (nativeFamily(resolved) ?? family[0] ?? '') : cssValue(t, resolved, prefix, map) };
   } else if (typeof native === 'number') {
     v = { type: 'FLOAT', value: native };
   } else if (typeof native === 'string' && t.type !== 'shadow') {
@@ -526,8 +582,9 @@ function renderCss(r: BuildResult, modes: Mode[]): string {
     blocks.push(cssBlock(`[data-style='${m.style}'][data-scheme='${m.scheme}']`, m.own, prefix, m.all, scheme));
   }
 
-  // Reduced motion: every duration and delay goes to zero.
-  const motion = sortedPaths(base).filter((p) => p.startsWith('duration.') || p.startsWith('delay.'));
+  // Reduced motion: every duration and delay goes to zero, except timing that
+  // is not motion (hover intent), marked $extensions["ds.motion"]: false.
+  const motion = sortedPaths(base).filter((p) => (p.startsWith('duration.') || p.startsWith('delay.')) && base.get(p)!.extensions?.['ds.motion'] !== false);
   if (motion.length) {
     const lines = motion.map((p) => `      ${cssVar(prefix, p)}: 0ms;`);
     blocks.push(`  @media (prefers-reduced-motion: reduce) {\n    :root,\n    [data-style] {\n${lines.join('\n')}\n    }\n  }`);
@@ -539,6 +596,7 @@ function renderCss(r: BuildResult, modes: Mode[]): string {
   if (mats.length) {
     const lines = (indent: string) => mats.map((p) => `${indent}${cssVar(prefix, p)}: ${solid};`).join('\n');
     blocks.push(`  @media (prefers-reduced-transparency: reduce) {\n    [data-style][data-scheme] {\n${lines('      ')}\n    }\n  }`);
+    blocks.push(`  @media (prefers-contrast: more) {\n    [data-style][data-scheme] {\n${lines('      ')}\n    }\n  }`);
     blocks.push(`  [data-style][data-scheme][data-contrast='more'] {\n${lines('    ')}\n  }`);
   }
 
@@ -555,9 +613,39 @@ function renderCss(r: BuildResult, modes: Mode[]): string {
 
 function nativeTheme(mode: Mode): Record<string, unknown> {
   const obj: Record<string, unknown> = {};
-  for (const path of sortedPaths(mode.all)) setPath(obj, path, nativeValue(mode.all.get(path)!, mode.all));
+  for (const path of sortedPaths(mode.all)) {
+    const t = mode.all.get(path)!;
+    setPath(obj, nativePath(t, mode.all), nativeValue(t, mode.all));
+  }
   return obj;
 }
+
+function nativeThemeType(mode: Mode): Record<string, unknown> {
+  const obj: Record<string, unknown> = {};
+  for (const path of sortedPaths(mode.all)) {
+    const t = mode.all.get(path)!;
+    setPath(obj, nativePath(t, mode.all), nativeType(t, mode.all));
+  }
+  return obj;
+}
+
+const NATIVE_TYPES_DOC = `/**
+ * One resolved theme: plain numbers and strings, no CSS.
+ *
+ * - Colours are hex, or rgba() when translucent.
+ * - Dimensions are numbers in px (dp on Android, pt on iOS). rem is converted at 16px.
+ * - Fluid values (space, font.size) use their max.
+ * - em tokens (radius.control, font.tracking.*) are converted at 16px. For letter
+ *   spacing at another size, scale by fontSize / 16.
+ * - font.leading.* are multipliers, not line heights: lineHeight = fontSize * leading.
+ * - font.family.* is the first real family name of the stack. CSS keywords such as
+ *   system-ui or ui-monospace are skipped; undefined means the platform default font.
+ * - Keys ending in -window-ratio come from vh or vw tokens: a ratio from 0 to 1 that
+ *   you multiply by the window height (vh) or width (vw), for example from
+ *   useWindowDimensions(). dialog.height.max-window-ratio is 0.8 for 80vh.
+ * - Durations are milliseconds. Eases are cubic bezier control points.
+ * - Shadows are React Native shadow props, from the outer layer with the largest blur.
+ */`;
 
 function render(r: BuildResult): Record<string, string> {
   const files: Record<string, string> = {};
@@ -575,7 +663,8 @@ function render(r: BuildResult): Record<string, string> {
   files['native/types.ts'] = [
     `// ${HEADER}`,
     '',
-    `export interface Theme ${first ? tsType(first.obj, '') : '{}'}`,
+    NATIVE_TYPES_DOC,
+    `export interface Theme ${first ? tsType(nativeThemeType(first.mode), '') : '{}'}`,
     '',
   ].join('\n');
   for (const t of themes) {
@@ -590,7 +679,7 @@ function render(r: BuildResult): Record<string, string> {
   const densityObjs = densities.map((d) => {
     const obj: Record<string, unknown> = {};
     const scope = new Map([...base, ...d.tokens]);
-    for (const p of sortedPaths(d.tokens)) setPath(obj, p, nativeValue(d.tokens.get(p)!, scope));
+    for (const p of sortedPaths(d.tokens)) setPath(obj, nativePath(d.tokens.get(p)!, scope), nativeValue(d.tokens.get(p)!, scope));
     return { id: d.id, obj };
   });
   const themeMap: Record<string, Record<string, string>> = {};

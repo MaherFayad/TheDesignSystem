@@ -827,7 +827,13 @@
         },
         "text": {
           "$type": "color",
-          "$value": "{color.state.warning.fill}"
+          "$value": {
+            "colorSpace": "srgb",
+            "components": [0.5725, 0.251, 0.0549],
+            "alpha": 1,
+            "hex": "#92400e"
+          },
+          "$description": "A11y change. The light fill (#b45309) measured 4.04:1 to 4.46:1 as text on the light body and surface-3; the GB light warning text tone reaches 5.7:1 or more."
         },
         "border": {
           "$type": "color",
@@ -874,7 +880,13 @@
         },
         "text": {
           "$type": "color",
-          "$value": "{color.state.success.fill}"
+          "$value": {
+            "colorSpace": "srgb",
+            "components": [0.0235, 0.3725, 0.2745],
+            "alpha": 1,
+            "hex": "#065f46"
+          },
+          "$description": "A11y change. The light fill (#047857) is under 4.5:1 as text on the light body; FK2 --success-text-muted reaches 6.1:1 or more."
         },
         "border": {
           "$type": "color",
@@ -1158,11 +1170,11 @@
           "$type": "color",
           "$value": {
             "colorSpace": "srgb",
-            "components": [0.6588, 0.6275, 0.1961],
+            "components": [0.5529, 0.5176, 0],
             "alpha": 1,
-            "hex": "#a8a032"
+            "hex": "#8d8400"
           },
-          "$description": "Added for the contract; not yet validated for colour vision deficiency."
+          "$description": "Added for the contract. Light: darkened in OKLCH, same hue, to reach 3:1 on the light body and surface. Not yet validated for colour vision deficiency."
         },
         "8": {
           "$type": "color",

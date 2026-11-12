@@ -53,6 +53,26 @@ describe('token build', () => {
     expect(css).toContain("[data-density='compact'] {");
     expect(css).toContain("[data-density='comfortable'] {");
     expect(css).toContain('@media (prefers-reduced-motion: reduce)');
+    expect(css).toContain('@media (prefers-contrast: more)');
+    expect(css).toContain("[data-style][data-scheme][data-contrast='more'] {");
+  });
+
+  it('zeroes motion under reduced motion but keeps timing marked ds.motion false', () => {
+    const css = result.files['css/tokens.css']!;
+    const block = css.slice(css.indexOf('@media (prefers-reduced-motion: reduce)'));
+    const reduced = block.slice(0, block.indexOf('\n  }'));
+    expect(reduced).toContain('--ds-duration-base: 0ms;');
+    expect(reduced).toContain('--ds-delay-reveal-step: 0ms;');
+    expect(reduced).not.toContain('--ds-delay-peek-hide');
+    expect(result.base.get('delay.peek-hide')!.extensions?.['ds.motion']).toBe(false);
+  });
+
+  it('gives native plain values a consumer can use', () => {
+    const t = result.files['native/studio.dark.ts']!;
+    expect(t).toContain("'max-window-ratio': 0.8,");
+    expect(t).toContain("mono: 'SFMono-Regular',");
+    expect(t).not.toMatch(/'(system-ui|ui-monospace|sans-serif)'/);
+    expect(result.files['native/types.ts']).toContain('lineHeight = fontSize * leading');
   });
 
   it('emits fluid values as clamp() and uses the max on native', () => {

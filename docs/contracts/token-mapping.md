@@ -146,8 +146,8 @@ Value conversions:
 | `--st-danger-fg` | `color.state.danger.text` | dark `#f87171`, light `#b91c1c` | GB studio-tokens.css (dark and light) | Text on a plain surface. A11y note kept as $description. |
 | `--st-danger-light` | `color.state.danger.border` | dark `#f87171`, light `#dc2626` | GB studio-tokens.css (dark and light) | Used as the danger border (3:1 on surfaces). |
 | `--st-danger-text` | `color.state.danger.on-tint` | dark `#fecaca`, light `#991b1b` | GB studio-tokens.css (dark and light) | Text placed on the 10% tint. |
-| `--st-delay-peek-hide` | `delay.peek-hide` | `600ms`; reduced motion `0ms` | GB studio-tokens.css (theme free, reduced motion) | Zeroed under prefers-reduced-motion; the build emits that block for every duration and delay. |
-| `--st-delay-reveal-step` | `delay.reveal-step` | `80ms`; reduced motion `0ms` | GB studio-tokens.css (theme free, reduced motion) | Zeroed under prefers-reduced-motion; the build emits that block for every duration and delay. |
+| `--st-delay-peek-hide` | `delay.peek-hide` | `600ms`; reduced motion `0ms` | GB studio-tokens.css (theme free, reduced motion) | Hover intent timing, not motion. The source zeroed it under reduced motion; it is now kept ($extensions ds.motion false). |
+| `--st-delay-reveal-step` | `delay.reveal-step` | `80ms`; reduced motion `0ms` | GB studio-tokens.css (theme free, reduced motion) | Zeroed under prefers-reduced-motion; the build emits that block for every duration and delay not marked $extensions ds.motion false. |
 | `--st-dense-row-h` | `inspector.row.height` | `32px` | GB studio-tokens.css (theme free) | Same value as FK2 --inspector-row-h. |
 | `--st-desk-bg` | `color.bg.body` | `#000000` | GB studio-tokens.css (theme free) | Desk only. |
 | `--st-desk-blur` | `blur.window` | `24px` | GB studio-tokens.css (theme free) | Desk only. |
@@ -193,7 +193,7 @@ Value conversions:
 | `--st-desk-menubar` | `color.material.menubar` | `#000000b8` | GB studio-tokens.css (theme free) |  |
 | `--st-desk-meta` | `color.text.subtle` | `#8f8f8f` | GB studio-tokens.css (theme free) | Desk only. Same value as Studio. |
 | `--st-desk-radius` | `radius.window` | `1rem` | GB studio-tokens.css (theme free) | Desk only. |
-| `--st-desk-roll` | `duration.roll` | `0.3s`; reduced motion `0ms` | GB studio-tokens.css (theme free, reduced motion) | Moved to base: the duration is shared, the roll itself is a Desk recipe. Zeroed under prefers-reduced-motion; the build emits that block for every duration and delay. |
+| `--st-desk-roll` | `duration.roll` | `0.3s`; reduced motion `0ms` | GB studio-tokens.css (theme free, reduced motion) | Moved to base: the duration is shared, the roll itself is a Desk recipe. Zeroed under prefers-reduced-motion; the build emits that block for every duration and delay not marked $extensions ds.motion false. |
 | `--st-desk-scrim` | `color.bg.scrim` | `#000000a6` | GB studio-tokens.css (theme free) | Desk only. The modal backdrop. |
 | `--st-desk-scrim-strong` | `palette.site.scrim-strong` | `#000000c2` | GB studio-tokens.css (theme free) | Marketing desk picture (GoBanana landing). Fixed in every style and scheme. |
 | `--st-desk-shadow` | `elevation.window` | `0 30px 80px -20px #000000d9, 0 0 0 1px #00000066` | GB studio-tokens.css (theme free) | Desk only. |
@@ -217,17 +217,17 @@ Value conversions:
 | `--st-dialog-w-md` | `dialog.width.md` | `440px` | GB studio-tokens.css (theme free) |  |
 | `--st-dialog-w-sm` | `dialog.width.sm` | `360px` | GB studio-tokens.css (theme free) |  |
 | `--st-dialog-w-xl` | `dialog.width.xl` | `640px` | GB studio-tokens.css (theme free) |  |
-| `--st-duration-base` | `duration.base` | `120ms`; reduced motion `0ms` | GB studio-tokens.css (theme free, reduced motion) | Zeroed under prefers-reduced-motion; the build emits that block for every duration and delay. |
-| `--st-duration-fast` | `duration.fast` | `80ms`; reduced motion `0ms` | GB studio-tokens.css (theme free, reduced motion) | Zeroed under prefers-reduced-motion; the build emits that block for every duration and delay. |
-| `--st-duration-instant` | `duration.instant` | `70ms`; reduced motion `0ms` | GB studio-tokens.css (theme free, reduced motion) | Zeroed under prefers-reduced-motion; the build emits that block for every duration and delay. |
-| `--st-duration-medium` | `duration.medium` | `140ms`; reduced motion `0ms` | GB studio-tokens.css (theme free, reduced motion) | Zeroed under prefers-reduced-motion; the build emits that block for every duration and delay. |
-| `--st-duration-moderate` | `duration.moderate` | `150ms`; reduced motion `0ms` | GB studio-tokens.css (theme free, reduced motion) | Zeroed under prefers-reduced-motion; the build emits that block for every duration and delay. |
-| `--st-duration-quick` | `duration.quick` | `100ms`; reduced motion `0ms` | GB studio-tokens.css (theme free, reduced motion) | Zeroed under prefers-reduced-motion; the build emits that block for every duration and delay. |
-| `--st-duration-reveal` | `duration.reveal` | `640ms`; reduced motion `0ms` | GB studio-tokens.css (theme free, reduced motion) | Zeroed under prefers-reduced-motion; the build emits that block for every duration and delay. |
-| `--st-duration-shimmer` | `duration.shimmer` | `1.4s`; reduced motion `0ms` | GB studio-tokens.css (theme free, reduced motion) | Zeroed under prefers-reduced-motion; the build emits that block for every duration and delay. |
-| `--st-duration-slow` | `duration.slow` | `180ms`; reduced motion `0ms` | GB studio-tokens.css (theme free, reduced motion) | Zeroed under prefers-reduced-motion; the build emits that block for every duration and delay. |
-| `--st-duration-spin` | `duration.spin` | `0.8s`; reduced motion `0ms` | GB studio-tokens.css (theme free, reduced motion) | Zeroed under prefers-reduced-motion; the build emits that block for every duration and delay. |
-| `--st-duration-zoom` | `duration.zoom` | `220ms`; reduced motion `0ms` | GB studio-tokens.css (theme free, reduced motion) | Zeroed under prefers-reduced-motion; the build emits that block for every duration and delay. |
+| `--st-duration-base` | `duration.base` | `120ms`; reduced motion `0ms` | GB studio-tokens.css (theme free, reduced motion) | Zeroed under prefers-reduced-motion; the build emits that block for every duration and delay not marked $extensions ds.motion false. |
+| `--st-duration-fast` | `duration.fast` | `80ms`; reduced motion `0ms` | GB studio-tokens.css (theme free, reduced motion) | Zeroed under prefers-reduced-motion; the build emits that block for every duration and delay not marked $extensions ds.motion false. |
+| `--st-duration-instant` | `duration.instant` | `70ms`; reduced motion `0ms` | GB studio-tokens.css (theme free, reduced motion) | Zeroed under prefers-reduced-motion; the build emits that block for every duration and delay not marked $extensions ds.motion false. |
+| `--st-duration-medium` | `duration.medium` | `140ms`; reduced motion `0ms` | GB studio-tokens.css (theme free, reduced motion) | Zeroed under prefers-reduced-motion; the build emits that block for every duration and delay not marked $extensions ds.motion false. |
+| `--st-duration-moderate` | `duration.moderate` | `150ms`; reduced motion `0ms` | GB studio-tokens.css (theme free, reduced motion) | Zeroed under prefers-reduced-motion; the build emits that block for every duration and delay not marked $extensions ds.motion false. |
+| `--st-duration-quick` | `duration.quick` | `100ms`; reduced motion `0ms` | GB studio-tokens.css (theme free, reduced motion) | Zeroed under prefers-reduced-motion; the build emits that block for every duration and delay not marked $extensions ds.motion false. |
+| `--st-duration-reveal` | `duration.reveal` | `640ms`; reduced motion `0ms` | GB studio-tokens.css (theme free, reduced motion) | Zeroed under prefers-reduced-motion; the build emits that block for every duration and delay not marked $extensions ds.motion false. |
+| `--st-duration-shimmer` | `duration.shimmer` | `1.4s`; reduced motion `0ms` | GB studio-tokens.css (theme free, reduced motion) | Zeroed under prefers-reduced-motion; the build emits that block for every duration and delay not marked $extensions ds.motion false. |
+| `--st-duration-slow` | `duration.slow` | `180ms`; reduced motion `0ms` | GB studio-tokens.css (theme free, reduced motion) | Zeroed under prefers-reduced-motion; the build emits that block for every duration and delay not marked $extensions ds.motion false. |
+| `--st-duration-spin` | `duration.spin` | `0.8s`; reduced motion `0ms` | GB studio-tokens.css (theme free, reduced motion) | Zeroed under prefers-reduced-motion; the build emits that block for every duration and delay not marked $extensions ds.motion false. |
+| `--st-duration-zoom` | `duration.zoom` | `220ms`; reduced motion `0ms` | GB studio-tokens.css (theme free, reduced motion) | Zeroed under prefers-reduced-motion; the build emits that block for every duration and delay not marked $extensions ds.motion false. |
 | `--st-ease` | `ease.default` | `ease` | GB studio-tokens.css (theme free) | CSS keyword converted to its cubic bezier. |
 | `--st-ease-emphasized` | `ease.emphasized` | `cubic-bezier(0.16, 1, 0.3, 1)` | GB studio-tokens.css (theme free) |  |
 | `--st-ease-exit` | `ease.exit` | `cubic-bezier(0.4, 0, 1, 1)` | GB studio-tokens.css (theme free) |  |
@@ -376,7 +376,7 @@ Value conversions:
 | `--st-space-xl` | `space.xl` | `clamp(12px, calc(11.257px + 0.19vw), 14px)` | GB studio-tokens.css (theme free) | Fluid. The build rebuilds the clamp() from min and max between the 380px and 1440px viewports, so the middle term can differ in the third decimal. |
 | `--st-space-xs` | `space.xs` | `clamp(5px, calc(4.629px + 0.095vw), 6px)` | GB studio-tokens.css (theme free) | Fluid. The build rebuilds the clamp() from min and max between the 380px and 1440px viewports, so the middle term can differ in the third decimal. |
 | `--st-spotlight-w` | `spotlight.width` | `640px` | GB studio-tokens.css (theme free) |  |
-| `--st-success` | `color.state.success.fill` | dark `#34d399`, light `#047857` | GB studio-tokens.css (dark and light) |  |
+| `--st-success` | `color.state.success.fill` | dark `#34d399`, light `#047857` | GB studio-tokens.css (dark and light) | Dark: color.state.success.text aliases the fill. Light: the text is #065f46 (FK2 --success-text-muted, A11y change). |
 | `--st-success-10` | `color.state.success.tint-10` | `rgba(52, 211, 153, 0.1)` | GB studio-tokens.css (dark and light) |  |
 | `--st-success-text` | `color.state.success.on-tint` | dark `#d1fae5`, light `#047857` | GB studio-tokens.css (dark and light) | Text placed on the 10% tint. |
 | `--st-target-min` | `size.target-min` | `24px` | GB studio-tokens.css (theme free) |  |
@@ -428,7 +428,7 @@ Value conversions:
 | `--st-viz-seq-3` | `color.chart.sequential.4` | `#256abf` | GB studio-tokens.css (theme free) | Steps renumbered from 0 to 5 to 1 to 6. |
 | `--st-viz-seq-4` | `color.chart.sequential.5` | `#6da7ec` | GB studio-tokens.css (theme free) | Steps renumbered from 0 to 5 to 1 to 6. |
 | `--st-viz-seq-5` | `color.chart.sequential.6` | `#b7d3f6` | GB studio-tokens.css (theme free) | Steps renumbered from 0 to 5 to 1 to 6. |
-| `--st-warning` | `color.state.warning.fill` | dark `#f59e0b`, light `#b45309` | GB studio-tokens.css (dark and light) |  |
+| `--st-warning` | `color.state.warning.fill` | dark `#f59e0b`, light `#b45309` | GB studio-tokens.css (dark and light) | Dark: color.state.warning.text aliases the fill. Light: the text is #92400e (A11y change), the fill stays for icons and borders. |
 | `--st-warning-10` | `color.state.warning.tint-10` | `rgba(245, 158, 11, 0.1)` | GB studio-tokens.css (dark and light) |  |
 | `--st-warning-text` | `color.state.warning.on-tint` | dark `#fde68a`, light `#92400e` | GB studio-tokens.css (dark and light) | Text placed on the 10% tint. |
 | `--st-weight-bold` | `font.weight.bold` | `700` | GB studio-tokens.css (theme free) |  |
@@ -438,9 +438,9 @@ Value conversions:
 | `--st-weight-semibold` | `font.weight.semibold` | `600` | GB studio-tokens.css (theme free) |  |
 | `--st-window-backdrop` | `window.backdrop.bg` | `#00000066` | GB studio-tokens.css (theme free) | Component token. The dim behind a window that opens over the page. |
 | `--st-window-backdrop-blur` | `blur.backdrop` | `10px` | GB studio-tokens.css (theme free) | Desk value of blur.backdrop. |
-| `--st-window-close` | `duration.window-close` | `220ms`; reduced motion `0ms` | GB studio-tokens.css (theme free, reduced motion) | Zeroed under prefers-reduced-motion; the build emits that block for every duration and delay. |
+| `--st-window-close` | `duration.window-close` | `220ms`; reduced motion `0ms` | GB studio-tokens.css (theme free, reduced motion) | Zeroed under prefers-reduced-motion; the build emits that block for every duration and delay not marked $extensions ds.motion false. |
 | `--st-window-ease` | `ease.window` | `cubic-bezier(0.2, 0.8, 0.2, 1)` | GB studio-tokens.css (theme free) |  |
-| `--st-window-open` | `duration.window-open` | `300ms`; reduced motion `0ms` | GB studio-tokens.css (theme free, reduced motion) | Zeroed under prefers-reduced-motion; the build emits that block for every duration and delay. |
+| `--st-window-open` | `duration.window-open` | `300ms`; reduced motion `0ms` | GB studio-tokens.css (theme free, reduced motion) | Zeroed under prefers-reduced-motion; the build emits that block for every duration and delay not marked $extensions ds.motion false. |
 | `--st-z-canvas` | `z.canvas` | `0` | GB studio-tokens.css (theme free) |  |
 | `--st-z-canvas-floating-toolbar` | `z.canvas-floating-toolbar` | `15` | GB studio-tokens.css (theme free) |  |
 | `--st-z-canvas-notch` | `z.canvas-notch` | `53` | GB studio-tokens.css (theme free) |  |
@@ -509,6 +509,8 @@ not part of the system yet.
 | `--inspector-section-label-color` | `inspector.section.label` | dark `#8f9da3`, light `#495e74` | FK2 globals.css |  |
 | `--inspector-row-h` | `inspector.row.height` | `32px` | FK2 globals.css | Same value as GB --st-dense-row-h. |
 | `--inspector-space-*` | `space.fixed.*` | 2px to 12px | FK2 globals.css | Same values as GB --st-fixed-*. |
+| `Button .variant-primary:hover (--overlay-30)` | `color.primary.fill-hover` | `var(--overlay-30)` | FK2 globals.css | Studio dark: 28% white, A11y change (label 4.55:1 over surface-3). Studio light keeps overlay-30. |
+| `--success-text-muted` | `color.state.success.text` | light `#065f46` | FK2 globals.css | Light only, A11y change: the success fill is under 4.5:1 as text on the light body. |
 | `--chart-default-tint` | `chart.default-tint` | `var(--accent-4)` | FK2 globals.css | Alias. |
 | `--chart-series-min` | `chart.series.min` | `#38bdf8` | FK2 globals.css |  |
 | `--chart-series-min-glow` | `chart.series.min-glow` | `rgba(56, 189, 248, 0.4)` | FK2 globals.css |  |

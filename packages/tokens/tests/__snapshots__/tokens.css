@@ -688,7 +688,7 @@
     --ds-color-chart-categorical-4: #c98500;
     --ds-color-chart-categorical-5: #d55181;
     --ds-color-chart-categorical-6: #9085e9;
-    --ds-color-chart-categorical-7: #a8a032;
+    --ds-color-chart-categorical-7: #8d8400;
     --ds-color-chart-categorical-8: #b07a5a;
     --ds-color-chart-diverging-1: #184f95;
     --ds-color-chart-diverging-2: #3987e5;
@@ -754,13 +754,13 @@
     --ds-color-state-success-border: var(--ds-color-state-success-fill);
     --ds-color-state-success-fill: #047857;
     --ds-color-state-success-on-tint: #047857;
-    --ds-color-state-success-text: var(--ds-color-state-success-fill);
+    --ds-color-state-success-text: #065f46;
     --ds-color-state-success-tint-10: rgb(52 211 153 / 0.1);
     --ds-color-state-success-tint-20: rgb(52 211 153 / 0.2);
     --ds-color-state-warning-border: var(--ds-color-state-warning-fill);
     --ds-color-state-warning-fill: #b45309;
     --ds-color-state-warning-on-tint: #92400e;
-    --ds-color-state-warning-text: var(--ds-color-state-warning-fill);
+    --ds-color-state-warning-text: #92400e;
     --ds-color-state-warning-tint-10: rgb(245 158 11 / 0.1);
     --ds-color-state-warning-tint-20: rgb(245 158 11 / 0.2);
     --ds-color-text-bright: #111827;
@@ -977,7 +977,7 @@
     --ds-color-material-titlebar: var(--ds-color-bg-surface);
     --ds-color-primary-border: var(--ds-color-border-control);
     --ds-color-primary-fill: var(--ds-color-bg-overlay-20);
-    --ds-color-primary-fill-hover: var(--ds-color-bg-overlay-30);
+    --ds-color-primary-fill-hover: rgb(255 255 255 / 0.28);
     --ds-color-primary-fill-pressed: var(--ds-color-bg-overlay-20);
     --ds-color-primary-text: var(--ds-color-text-default);
     --ds-color-state-danger-border: #f87171;
@@ -1170,7 +1170,7 @@
     --ds-color-chart-categorical-4: #c98500;
     --ds-color-chart-categorical-5: #d55181;
     --ds-color-chart-categorical-6: #9085e9;
-    --ds-color-chart-categorical-7: #a8a032;
+    --ds-color-chart-categorical-7: #8d8400;
     --ds-color-chart-categorical-8: #b07a5a;
     --ds-color-chart-diverging-1: #184f95;
     --ds-color-chart-diverging-2: #3987e5;
@@ -1236,13 +1236,13 @@
     --ds-color-state-success-border: var(--ds-color-state-success-fill);
     --ds-color-state-success-fill: #047857;
     --ds-color-state-success-on-tint: #047857;
-    --ds-color-state-success-text: var(--ds-color-state-success-fill);
+    --ds-color-state-success-text: #065f46;
     --ds-color-state-success-tint-10: rgb(52 211 153 / 0.1);
     --ds-color-state-success-tint-20: rgb(52 211 153 / 0.2);
     --ds-color-state-warning-border: var(--ds-color-state-warning-fill);
     --ds-color-state-warning-fill: #b45309;
     --ds-color-state-warning-on-tint: #92400e;
-    --ds-color-state-warning-text: var(--ds-color-state-warning-fill);
+    --ds-color-state-warning-text: #92400e;
     --ds-color-state-warning-tint-10: rgb(245 158 11 / 0.1);
     --ds-color-state-warning-tint-20: rgb(245 158 11 / 0.2);
     --ds-color-text-bright: #111827;
@@ -1312,7 +1312,6 @@
   @media (prefers-reduced-motion: reduce) {
     :root,
     [data-style] {
-      --ds-delay-peek-hide: 0ms;
       --ds-delay-reveal-step: 0ms;
       --ds-duration-base: 0ms;
       --ds-duration-fast: 0ms;
@@ -1332,6 +1331,19 @@
   }
 
   @media (prefers-reduced-transparency: reduce) {
+    [data-style][data-scheme] {
+      --ds-color-material-glass: var(--ds-color-material-glass-solid);
+      --ds-color-material-glass-strong: var(--ds-color-material-glass-solid);
+      --ds-color-material-glass-clear: var(--ds-color-material-glass-solid);
+      --ds-color-material-glass-tinted: var(--ds-color-material-glass-solid);
+      --ds-color-material-glass-flat: var(--ds-color-material-glass-solid);
+      --ds-color-material-titlebar: var(--ds-color-material-glass-solid);
+      --ds-color-material-menubar: var(--ds-color-material-glass-solid);
+      --ds-color-material-dock: var(--ds-color-material-glass-solid);
+    }
+  }
+
+  @media (prefers-contrast: more) {
     [data-style][data-scheme] {
       --ds-color-material-glass: var(--ds-color-material-glass-solid);
       --ds-color-material-glass-strong: var(--ds-color-material-glass-solid);

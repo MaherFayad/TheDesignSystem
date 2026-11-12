@@ -210,8 +210,6 @@ export const CONTRAST_PAIRS: ContrastData = {
 
   // Desk dark: the regular, tinted and dock glass and the title bar over the
   // brightest window content (surface-5). Over the black desk they pass.
-  // Light schemes: warning and success text on the light body and surface-3.
-  // Studio dark: the neutral primary hover fill over a menu surface.
   knownFailures: [
     { mode: 'desk.dark', fg: 'color.text.muted', bg: 'color.material.glass over color.bg.surface-5', reason: 'reported to lead, wave 0' },
     { mode: 'desk.dark', fg: 'color.text.subtle', bg: 'color.material.glass over color.bg.surface-5', reason: 'reported to lead, wave 0' },
@@ -221,12 +219,5 @@ export const CONTRAST_PAIRS: ContrastData = {
     { mode: 'desk.dark', fg: 'color.text.muted', bg: 'color.material.titlebar over color.material.glass over color.bg.surface-5', reason: 'reported to lead, wave 0' },
     { mode: 'desk.dark', fg: 'color.text.subtle', bg: 'color.material.titlebar over color.material.glass over color.bg.surface-5', reason: 'reported to lead, wave 0' },
     { mode: 'desk.dark', fg: 'color.text.muted', bg: 'color.material.glass-hover over color.material.glass over color.bg.surface-5', reason: 'reported to lead, wave 0' },
-    { mode: 'desk.light', fg: 'color.state.warning.text', bg: 'color.bg.body', reason: 'reported to lead, wave 0' },
-    { mode: 'desk.light', fg: 'color.state.warning.text', bg: 'color.bg.surface-3', reason: 'reported to lead, wave 0' },
-    { mode: 'desk.light', fg: 'color.state.success.text', bg: 'color.bg.body', reason: 'reported to lead, wave 0' },
-    { mode: 'studio.dark', fg: 'color.text.on-primary', bg: 'color.primary.fill-hover over color.bg.surface-3', reason: 'reported to lead, wave 0' },
-    { mode: 'studio.light', fg: 'color.state.warning.text', bg: 'color.bg.body', reason: 'reported to lead, wave 0' },
-    { mode: 'studio.light', fg: 'color.state.warning.text', bg: 'color.bg.surface-3', reason: 'reported to lead, wave 0' },
-    { mode: 'studio.light', fg: 'color.state.success.text', bg: 'color.bg.body', reason: 'reported to lead, wave 0' },
   ],
 };

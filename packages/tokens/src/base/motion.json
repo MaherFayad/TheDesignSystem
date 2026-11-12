@@ -120,7 +120,10 @@
         "value": 600,
         "unit": "ms"
       },
-      "$description": "Grace period before peek chrome rolls away."
+      "$description": "Grace period before peek chrome rolls away. Hover intent timing, not motion: kept under reduced motion.",
+      "$extensions": {
+        "ds.motion": false
+      }
     },
     "reveal-step": {
       "$type": "duration",
