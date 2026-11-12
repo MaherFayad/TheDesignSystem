@@ -190,6 +190,22 @@ describe('DsMultiSelect', () => {
     await settle();
     expect(host.model).toEqual(['abu-dhabi']);
   });
+
+  it('is not touched when the popup opens and focus moves into it; touched when focus leaves both', async () => {
+    const { host, trigger, key, popup, settle } = await setup();
+    const el = trigger('reactive');
+    el.focus();
+    await key(el, 'Enter');
+    expect(popup()).not.toBeNull();
+    el.dispatchEvent(new FocusEvent('blur', { relatedTarget: popup() }));
+    await settle();
+    expect(host.form.touched).toBe(false);
+    await key(document.activeElement ?? el, 'Escape');
+    expect(popup()).toBeNull();
+    expect(host.form.touched).toBe(false);
+    el.dispatchEvent(new FocusEvent('blur', { relatedTarget: null }));
+    expect(host.form.touched).toBe(true);
+  });
 });
 
 @Component({
