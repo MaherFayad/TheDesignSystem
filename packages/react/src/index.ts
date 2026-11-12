@@ -36,6 +36,7 @@ export * from './components/Section/index';
 export * from './components/Separator/index';
 export * from './components/Skeleton/index';
 export * from './components/Spinner/index';
+export * from './components/SplitButton/index';
 export * from './components/SplitView/index';
 export * from './components/Stack/index';
 export * from './components/Stat/index';

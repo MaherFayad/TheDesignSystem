@@ -1,0 +1,270 @@
+{
+  "name": "SplitButton",
+  "kind": "component",
+  "family": "actions",
+  "summary": "A main action fused to a chevron trigger that opens a menu of related actions. Both halves share one size, tone, emphasis and shape and read as one control.",
+  "useWhen": [
+    "One action people run most of the time, with a few variants of it: Publish page, with Schedule publish and Publish to staging in the menu",
+    "A primary action whose other forms would crowd the toolbar as separate buttons: Save changes, with Save as copy",
+    "A footer or toolbar where the default choice should take one click and the alternatives two"
+  ],
+  "avoidWhen": [
+    "The menu holds actions that are not variants of the main action, such as Delete next to Publish",
+    "There is no clear default: every action is used about as often",
+    "The control picks a value or a mode that stays selected",
+    "More than seven related actions",
+    "On touch first layouts where a 24px chevron is the only path to the variants"
+  ],
+  "insteadUse": {
+    "Several unrelated actions behind one button": "DropdownMenu with a Button or IconButton trigger",
+    "Two or three equal actions side by side": "ButtonGroup",
+    "One action with no variants": "Button",
+    "Choosing a value that stays selected": "Select or SegmentedControl",
+    "A bar of mixed controls with arrow key navigation": "Toolbar",
+    "More than seven related actions": "DropdownMenu with labels and groups, or a CommandPalette"
+  },
+  "anatomy": [
+    "root",
+    "action",
+    "trigger",
+    "menu"
+  ],
+  "slots": {
+    "menu": {
+      "accepts": [
+        "DropdownMenuItem"
+      ],
+      "min": 1,
+      "max": 7
+    }
+  },
+  "props": {
+    "label": {
+      "type": "node",
+      "required": true,
+      "description": "The visible text of the main action. English: a verb plus a noun in sentence case (Publish page). Arabic: a noun form (نشر الصفحة). It ends in an ellipsis when the control is squeezed."
+    },
+    "menuLabel": {
+      "type": "string",
+      "required": true,
+      "description": "The trigger's accessible name, set as aria-label; it also names the menu. Name the menu, never only More: More publish options."
+    },
+    "children": {
+      "type": "node",
+      "required": true,
+      "description": "The menu: one to seven DropdownMenuItems, the variants of the main action. Item props (start, shortcut, tone, disabled, onSelect) work as in DropdownMenu."
+    },
+    "onClick": {
+      "type": "function",
+      "description": "Runs the main action on click, Enter and Space on the action half. Not called while loading or disabled."
+    },
+    "start": {
+      "type": "node",
+      "description": "Leading content of the action: a system icon name or a node. It sits on the start side, so on the right in Arabic."
+    },
+    "size": {
+      "type": [
+        "xs",
+        "sm",
+        "md",
+        "lg"
+      ],
+      "default": "md",
+      "description": "Both halves, from the size.control tokens: 24, 28, 32 and 44px at default density. The menu rows are sm for xs and sm, md for md and lg. Inside a ButtonGroup an unset size comes from the group."
+    },
+    "tone": {
+      "type": [
+        "neutral",
+        "accent",
+        "success",
+        "warning",
+        "danger",
+        "info"
+      ],
+      "default": "neutral",
+      "description": "Both halves. accent with solid is the primary action of a view. The menu items keep their own tone."
+    },
+    "emphasis": {
+      "type": [
+        "solid",
+        "soft",
+        "outline",
+        "ghost"
+      ],
+      "default": "soft",
+      "description": "Both halves, as Button. No link: a link has no fill to split. The seam is color.border.default on soft and ghost, the outline border on outline, and the text color at 35 percent on solid."
+    },
+    "shape": {
+      "type": [
+        "default",
+        "pill",
+        "square"
+      ],
+      "default": "default",
+      "description": "Both halves. Only the outer corners take the shape; the inner corners at the seam are square and flip in RTL."
+    },
+    "loading": {
+      "type": "boolean",
+      "default": false,
+      "description": "The main action is in flight: the action shows the spinner, sets aria-busy and data-loading, keeps its width and blocks activation. The trigger and its menu stay usable."
+    },
+    "loadingLabel": {
+      "type": "string",
+      "default": "Loading",
+      "description": "The words the action's hidden status says while loading. Arabic: جار التحميل."
+    },
+    "disabled": {
+      "type": "boolean",
+      "default": false,
+      "description": "Blocks both halves. They stay focusable with aria-disabled and data-disabled, so a Tooltip can say why. Sets data-disabled on the root."
+    },
+    "open": {
+      "type": "boolean",
+      "description": "Controlled open state of the menu, with onOpenChange."
+    },
+    "defaultOpen": {
+      "type": "boolean",
+      "default": false,
+      "description": "The menu starts open."
+    },
+    "onOpenChange": {
+      "type": "function",
+      "description": "Called with true when the menu opens and false when it closes (an item chosen, Escape, a click outside)."
+    },
+    "actionRef": {
+      "type": "ref",
+      "description": "The action button element, for moving focus to it."
+    }
+  },
+  "states": [
+    "open",
+    "closed",
+    "data-disabled",
+    "data-loading"
+  ],
+  "a11y": {
+    "role": "No role on the root. The action is a button. The trigger is a menu button: a button with aria-haspopup menu, aria-expanded and data-state open or closed, named by menuLabel, and it names the menu (aria-labelledby). The menu is a DropdownMenu root, role menu, not modal.",
+    "focus": "Two tab stops: the action, then the trigger. Opened with Enter, Space or ArrowDown on the trigger, focus goes to the first item; with ArrowUp, to the last item. Escape or choosing an item closes the menu and returns focus to the trigger. Each half draws the focus ring inside its own box, so the other half never covers it. Disabled halves stay in the tab order.",
+    "keys": {
+      "Tab": "Moves focus to the action, then to the trigger, then out",
+      "Shift+Tab": "Moves focus back from the trigger to the action",
+      "Enter": "On the action, runs the main action. On the trigger, opens the menu with focus on the first item",
+      "Space": "The same as Enter",
+      "ArrowDown": "On the trigger, opens the menu with focus on the first item",
+      "ArrowUp": "On the trigger, opens the menu with focus on the last item"
+    },
+    "announce": "The action reads its label as a button. The trigger reads its name (More publish options), menu button and collapsed or expanded. While loading, the action is busy and its hidden status says the loading label.",
+    "native": {
+      "accessibilityRole": "none"
+    },
+    "notes": [
+      "In the open menu the DropdownMenu keys apply: ArrowDown and ArrowUp move, Home and End, typeahead, Enter and Space select and close, and Escape closes the menu and returns focus to the trigger. Unit tests cover Escape here; the generic contract suite checks it on DropdownMenu, because the root it opens is a dropdown-menu, not a split-button.",
+      "The trigger's name names the menu (More publish options), never only More: a screen reader user hears it without the action next to it (WCAG 2.4.6).",
+      "Loading blocks the action only, so a long publish does not hide the other ways to publish.",
+      "When the menu is open the trigger's chevron turns to point up and the trigger takes its pressed fill where the fill has one, with aria-expanded true, so open is not told by color alone. Under reduced motion the chevron turns at once.",
+      "Both halves are at least 24 by 24 CSS px at every size (WCAG 2.5.8); the trigger is a square of the control height.",
+      "Under forced colors the system draws every border, so the seam stays visible, the focus outline is pulled inside each half, and the open trigger takes the system Highlight.",
+      "The menu is a DropdownMenu root portaled into a themed layer under body, carrying data-part menu. The contract suite cannot own a part outside the root's subtree, so menu is listed in contract.optionalParts.",
+      "In an attached ButtonGroup a SplitButton joins the row's seam on both sides. Horizontal groups only: it is a row control and is not placed in a vertical attached group."
+    ]
+  },
+  "content": {
+    "en": {
+      "action": "A verb plus a noun in sentence case: Publish page, Save changes. Never OK, Continue, Confirm or Yes.",
+      "menuLabel": "More plus what the menu holds: More publish options, More save options. Never only More.",
+      "items": "Variants of the main action, each a verb plus a noun: Schedule publish, Publish to staging, Save as draft. The most used first."
+    },
+    "ar": {
+      "action": "Noun form, no diacritics: نشر الصفحة، حفظ التغييرات. Never the imperative.",
+      "menuLabel": "Noun form that names the menu: خيارات النشر الأخرى.",
+      "items": "Noun form labels, no diacritics, Western digits: جدولة النشر، النشر للتجربة، الحفظ كمسودة."
+    }
+  },
+  "tokens": [
+    "color.border.default",
+    "border.width.strong",
+    "color.focus.ring",
+    "color.focus.ring-on-primary-inner",
+    "color.focus.ring-on-primary-outer",
+    "duration.quick",
+    "ease.default"
+  ],
+  "motion": "menu-scale",
+  "frameworks": {
+    "react": {
+      "status": "ready",
+      "behavior": "Button plus radix:DropdownMenu (DropdownMenuTrigger around an IconButton)",
+      "example": "SplitButton.demo.tsx",
+      "note": "The menu opens with menu-scale from the trigger side, aligned to the control's inline end; each half keeps Button's press, and the open trigger's chevron turns over (transform, quick duration, instant under reduced motion). The seam is drawn by SplitButton.css through Button's private corner properties. Inside a ButtonGroup, unset size, emphasis and shape come from the group."
+    },
+    "angular": {
+      "status": "planned",
+      "behavior": "[dsSplitButton] host with button[dsButton] and a cdk:menu trigger",
+      "note": "SplitButton.css is used as is: the host div is the root, the halves carry data-part action and trigger."
+    },
+    "native": {
+      "status": "planned",
+      "behavior": "react-native:View with two Pressables and rn-primitives:dropdown-menu",
+      "note": "The square inner corners through the style function, flipped by I18nManager. The trigger keeps a 44pt or 48dp hit area."
+    }
+  },
+  "styles": {
+    "studio": "Overlay filled halves with the control radius on the outer corners; the seam is color.border.default over the fill. The primary form is the neutral primary fill. The menu is the Studio surface-3 menu.",
+    "desk": "Pill halves, so the control reads as one pill with a square seam; the action's label rolls on hover as on every Desk Button. The primary form is yellow with ink text and a faint ink seam. The menu is the Desk glass menu.",
+    "neutral": "Takes the tokens of the Neutral style, no recipe."
+  },
+  "mistakes": [
+    {
+      "wrong": "A trigger named More or Options",
+      "right": "menuLabel names the menu: More publish options"
+    },
+    {
+      "wrong": "Delete board in the menu of a Publish page SplitButton",
+      "right": "Only variants of the main action in the menu; destructive and unrelated actions in a separate DropdownMenu"
+    },
+    {
+      "wrong": "A SplitButton whose main action only opens the menu",
+      "right": "A Button or IconButton as a DropdownMenuTrigger"
+    },
+    {
+      "wrong": "Twelve items in the menu",
+      "right": "At most seven; past that, a DropdownMenu with labels and groups"
+    },
+    {
+      "wrong": "Disabling the whole control while the main action runs",
+      "right": "loading on the action; the menu stays usable"
+    },
+    {
+      "wrong": "A Button and an IconButton placed side by side with hand drawn corners",
+      "right": "SplitButton, which squares the seam on the logical sides and wires the menu button"
+    }
+  ],
+  "contract": {
+    "optionalParts": [
+      "menu"
+    ],
+    "keys": {
+      "Enter": {
+        "focus": "[data-ds='split-button'] > [data-part='action']",
+        "case": "variants",
+        "expect": "click"
+      },
+      "Space": {
+        "focus": "[data-ds='split-button'] > [data-part='action']",
+        "case": "variants",
+        "expect": "click"
+      },
+      "ArrowDown": {
+        "focus": "[data-ds='split-button'] > [data-part='trigger']",
+        "case": "variants",
+        "expect": "focus-moves"
+      },
+      "ArrowUp": {
+        "focus": "[data-ds='split-button'] > [data-part='trigger']",
+        "case": "variants",
+        "expect": "focus-moves"
+      }
+    }
+  },
+  "since": "0.1.0"
+}

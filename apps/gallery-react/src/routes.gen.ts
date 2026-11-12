@@ -44,6 +44,7 @@ export const routes: DemoRoute[] = [
   { name: 'Separator', slug: 'separator', load: () => import('../../../packages/react/src/components/Separator/Separator.demo') },
   { name: 'Skeleton', slug: 'skeleton', load: () => import('../../../packages/react/src/components/Skeleton/Skeleton.demo') },
   { name: 'Spinner', slug: 'spinner', load: () => import('../../../packages/react/src/components/Spinner/Spinner.demo') },
+  { name: 'SplitButton', slug: 'split-button', load: () => import('../../../packages/react/src/components/SplitButton/SplitButton.demo') },
   { name: 'SplitView', slug: 'split-view', load: () => import('../../../packages/react/src/components/SplitView/SplitView.demo') },
   { name: 'Stack', slug: 'stack', load: () => import('../../../packages/react/src/components/Stack/Stack.demo') },
   { name: 'Stat', slug: 'stat', load: () => import('../../../packages/react/src/components/Stat/Stat.demo') },

@@ -1,0 +1,159 @@
+/*
+ * SplitButton: a main action fused to a menu trigger. Source: Figma-Killer-2
+ * `SplitButton.module.css` (the seam: inner corners square, a 1px divider).
+ * Follows "One convention for component CSS and props" in
+ * docs/contracts/anatomy.md.
+ *
+ * Private properties (recipes override these):
+ *
+ *   --_split-button-divider   the 1px seam between the halves, declared on
+ *                             the root. A deliberate exception to rule 1:
+ *                             the action redeclares it for solid and outline
+ *                             fills, because Button's colors it reads
+ *                             (--_button-fg, --_button-border-color) exist
+ *                             only on the action, not on the root.
+ *
+ * The parts are nested system components: the action is a Button root and
+ * the trigger an IconButton root, both styled by Button.css. As their
+ * parent, this file squares the inner corners through Button's corner
+ * properties, sets Button's focus ring inside the box, opens the trigger
+ * fill while the menu is open, and draws the seam with the logical border
+ * sides (Button has no property for one border side). Every one is a
+ * logical property, so the seam flips in RTL.
+ */
+@layer ds.base {
+  [data-ds='split-button'] {
+    --_split-button-divider: var(--ds-color-border-default);
+
+    display: inline-flex;
+    flex-wrap: nowrap;
+    align-items: center;
+    box-sizing: border-box;
+    max-inline-size: 100%;
+    vertical-align: middle;
+  }
+
+  /* ------------------------------------------------------------ the seam */
+
+  /*
+   * The action draws the divider with its end border; the trigger drops its
+   * start border, so the line stays one hairline and neither target loses
+   * size. The action shrinks with its row and its label ends in an
+   * ellipsis; the trigger keeps its square.
+   */
+  [data-ds='split-button'] > [data-part='action'] {
+    --_button-radius-start-end: 0;
+    --_button-radius-end-end: 0;
+
+    border-inline-end-color: var(--_split-button-divider);
+  }
+
+  [data-ds='split-button'] > [data-part='trigger'] {
+    --_button-radius-start-start: 0;
+    --_button-radius-end-start: 0;
+
+    border-inline-start-width: 0;
+  }
+
+  /* A solid fill takes the seam in its own text color, faint, so it reads on any fill. */
+  [data-ds='split-button'][data-emphasis='solid'] > [data-part='action'] {
+    --_split-button-divider: color-mix(in srgb, var(--_button-fg) 35%, transparent);
+  }
+
+  /* An outline keeps its own border color as the seam. */
+  [data-ds='split-button'][data-emphasis='outline'] > [data-part='action'] {
+    --_split-button-divider: var(--_button-border-color);
+  }
+
+  /*
+   * The focus ring goes inside each half: a ring outside the action would sit
+   * under the trigger, which paints later. The same widths and colors as the
+   * focus tokens; the doubled ring for solid fills keeps the outer color at
+   * the edge.
+   */
+  [data-ds='split-button'] > :is([data-part='action'], [data-part='trigger']) {
+    --_button-ring: inset 0 0 0 var(--ds-border-width-strong) var(--ds-color-focus-ring);
+  }
+
+  [data-ds='split-button'][data-emphasis='solid'] > :is([data-part='action'], [data-part='trigger']) {
+    --_button-ring:
+      inset 0 0 0 var(--ds-border-width-strong) var(--ds-color-focus-ring-on-primary-outer),
+      inset 0 0 0 calc(2 * var(--ds-border-width-strong)) var(--ds-color-focus-ring-on-primary-inner);
+  }
+
+  /* ------------------------------------------------------------ open: the chevron turns over, the trigger keeps its pressed fill */
+
+  /*
+   * Some fills have no separate pressed color (neutral solid, Studio's
+   * primary), so the open state is told by the chevron turning to point up,
+   * never by the fill alone. Under reduced motion the duration token is 0ms:
+   * it turns at once.
+   */
+  [data-ds='split-button'] > [data-part='trigger'] > [data-part='icon'] {
+    transition: transform var(--ds-duration-quick) var(--ds-ease-default);
+  }
+
+  [data-ds='split-button'] > [data-part='trigger'][data-state='open'] > [data-part='icon'] {
+    transform: rotate(0.5turn);
+  }
+
+  [data-ds='split-button'] > [data-part='trigger'][data-state='open'] {
+    --_button-bg: var(--_button-bg-active);
+    --_button-bg-hover: var(--_button-bg-active);
+    --_button-fg: var(--_button-fg-active);
+    --_button-fg-hover: var(--_button-fg-active);
+  }
+
+  /* ------------------------------------------------------------ inside an attached ButtonGroup */
+
+  /*
+   * A SplitButton in an attached row squares the outer corners that meet a
+   * neighbor and keeps one seam: the neighbor before it draws the divider,
+   * so the action drops its start border; the trigger draws the group's
+   * divider toward the neighbor after it (an outline trigger its own
+   * border), as ButtonGroup.css does for its children. Horizontal groups
+   * only: a SplitButton is a row control and is not placed in a vertical
+   * attached group.
+   */
+  [data-ds='button-group'][data-attached][data-orientation='horizontal'] > [data-ds='split-button']:not(:first-child) > [data-part='action'] {
+    --_button-radius-start-start: 0;
+    --_button-radius-end-start: 0;
+
+    border-inline-start-width: 0;
+  }
+
+  [data-ds='button-group'][data-attached][data-orientation='horizontal'] > [data-ds='split-button']:not(:last-child) > [data-part='trigger'] {
+    --_button-radius-start-end: 0;
+    --_button-radius-end-end: 0;
+
+    border-inline-end-color: var(--_button-group-divider);
+  }
+
+  [data-ds='button-group'][data-attached][data-orientation='horizontal'] > [data-ds='split-button'][data-emphasis='outline']:not(:last-child) > [data-part='trigger'] {
+    border-inline-end-color: var(--_button-border-color);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    [data-ds='split-button'] > [data-part='trigger'] > [data-part='icon'] {
+      transition: none;
+    }
+  }
+
+  /*
+   * Forced colors drop the box shadow ring and draw Button's focus outline
+   * instead (Button.css). Pull it inside each half, so the trigger does not
+   * cover the action's. The seam needs nothing: the system draws every
+   * border, transparent ones included. The open trigger takes the system
+   * highlight, as an on ToggleButton does, besides the turned chevron.
+   */
+  @media (forced-colors: active) {
+    [data-ds='split-button'] > [data-part='trigger'][data-state='open'] {
+      background-color: Highlight;
+      color: HighlightText;
+    }
+
+    [data-ds='split-button'] > :is([data-part='action'], [data-part='trigger']):focus-visible {
+      outline-offset: calc(-2 * var(--ds-border-width-strong));
+    }
+  }
+}
