@@ -1,0 +1,39 @@
+/*
+ * Neutral recipe for Tooltip (order 1.24, proposed): a dark slate chip with
+ * white text, 6px corners (radius.sm) and the small tooltip shadow, the way
+ * a product UI marks a hint apart from its white cards. Why not a token:
+ * Tooltip.css draws the bubble on the raised surface of the scheme, and
+ * the inverse pair differs per scheme.
+ *
+ * - Light: the inverse ink (color.bg.inverse, the blue black #0f1729) with
+ *   the page color as text (the same pair as text selection, 17:1) and
+ *   surface-4 for the shortcut (12:1). No border: the chip is its own edge.
+ * - Dark: the inverse there is near white, so the chip takes the top slate
+ *   step (surface-5) with bright text (10:1) and the default text for the
+ *   shortcut (8:1), edged by the strong border so it lifts off a dark page.
+ */
+@layer ds.recipes {
+  [data-style='neutral'] [data-ds='tooltip'] {
+    --_tooltip-bg: var(--ds-color-bg-inverse);
+    --_tooltip-fg: var(--ds-color-bg-body);
+    --_tooltip-muted: var(--ds-color-bg-surface-4);
+    --_tooltip-border-color: var(--ds-color-bg-inverse);
+    --_tooltip-radius: var(--ds-radius-sm);
+  }
+
+  [data-style='neutral'][data-scheme='dark'] [data-ds='tooltip'] {
+    --_tooltip-bg: var(--ds-color-bg-surface-5);
+    --_tooltip-fg: var(--ds-color-text-bright);
+    --_tooltip-muted: var(--ds-color-text-default);
+    --_tooltip-border-color: var(--ds-color-border-strong);
+  }
+
+  @media (forced-colors: active) {
+    [data-style='neutral'] [data-ds='tooltip'] {
+      --_tooltip-bg: Canvas;
+      --_tooltip-fg: CanvasText;
+      --_tooltip-muted: CanvasText;
+      --_tooltip-border-color: CanvasText;
+    }
+  }
+}

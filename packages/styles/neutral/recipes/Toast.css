@@ -1,0 +1,112 @@
+/*
+ * Neutral recipe for Toast (order 1.24, proposed). A toast is a white card:
+ * the 1px default border all round, 12px corners, the soft panel shadow,
+ * no colored bar. The tone lives in the icon: the tone color on a disc of
+ * the tone tint, the way a product notification marks it. The title is
+ * semibold in the ink, the description muted, the action a small white
+ * outline button with blue text, the close a ghost square.
+ *
+ * What tokens cannot say:
+ * - the start edge: Toast.css draws it in the tone color from --_toast-edge;
+ *   here it takes the border color, so no bar shows;
+ * - the disc: the icon part gets the tint as its fill and as a spread
+ *   shadow of space.2xs, so a 16px glyph sits on a 28px disc without
+ *   growing the grid track (a shadow takes no room); it is centered on the
+ *   first line of the title;
+ * - the title weight and the nested action and close Buttons
+ *   (--_button-* properties, every rest color with its hover).
+ */
+@layer ds.recipes {
+  [data-style='neutral'] [data-ds='toast'] {
+    --_toast-bg: var(--ds-color-bg-surface);
+    --_toast-border-color: var(--ds-color-border-default);
+    --_toast-edge: var(--ds-color-border-default);
+    --_toast-radius: var(--ds-radius-card);
+    --_toast-shadow: var(--ds-elevation-panel);
+    --_toast-blur: 0;
+  }
+
+  [data-style='neutral'] [data-ds='toast'] > [data-part='icon'] {
+    block-size: var(--ds-size-icon-md);
+    margin-block-start: calc((var(--ds-font-size-s) * var(--ds-font-leading-snug) - var(--ds-size-icon-md)) / 2);
+    border-radius: var(--ds-radius-pill);
+    background-color: var(--ds-color-bg-overlay-5);
+    box-shadow: 0 0 0 var(--ds-space-2xs) var(--ds-color-bg-overlay-5);
+  }
+
+  [data-style='neutral'] [data-ds='toast'][data-tone='info'] > [data-part='icon'] {
+    background-color: var(--ds-color-state-info-tint-10);
+    box-shadow: 0 0 0 var(--ds-space-2xs) var(--ds-color-state-info-tint-10);
+  }
+
+  [data-style='neutral'] [data-ds='toast'][data-tone='success'] > [data-part='icon'] {
+    background-color: var(--ds-color-state-success-tint-10);
+    box-shadow: 0 0 0 var(--ds-space-2xs) var(--ds-color-state-success-tint-10);
+  }
+
+  [data-style='neutral'] [data-ds='toast'][data-tone='warning'] > [data-part='icon'] {
+    background-color: var(--ds-color-state-warning-tint-10);
+    box-shadow: 0 0 0 var(--ds-space-2xs) var(--ds-color-state-warning-tint-10);
+  }
+
+  [data-style='neutral'] [data-ds='toast'][data-tone='danger'] > [data-part='icon'] {
+    background-color: var(--ds-color-state-danger-tint-10);
+    box-shadow: 0 0 0 var(--ds-space-2xs) var(--ds-color-state-danger-tint-10);
+  }
+
+  [data-style='neutral'] [data-ds='toast'] > [data-part='title'] {
+    font-weight: var(--ds-font-weight-semibold);
+  }
+
+  [data-style='neutral'] [data-ds='toast'] > [data-ds='button'][data-part='action'] {
+    --_button-bg: var(--ds-color-bg-surface);
+    --_button-fg: var(--ds-color-primary-on-surface);
+    --_button-border-color: var(--ds-color-border-strong);
+    --_button-border-color-hover: var(--ds-color-border-strong);
+    --_button-bg-hover: var(--ds-color-primary-tint);
+    --_button-fg-hover: var(--ds-color-primary-on-surface);
+    --_button-bg-active: var(--ds-color-primary-tint-hover);
+    --_button-fg-active: var(--ds-color-primary-on-surface);
+    --_button-shadow: var(--ds-elevation-card);
+  }
+
+  /* The hover and press swaps of Button.css, repeated in this layer. */
+  [data-style='neutral'] [data-ds='toast'] > [data-ds='button'][data-part='action']:hover:not([data-disabled], [data-loading]) {
+    --_button-bg: var(--_button-bg-hover);
+    --_button-fg: var(--_button-fg-hover);
+    --_button-border-color: var(--_button-border-color-hover);
+  }
+
+  [data-style='neutral'] [data-ds='toast'] > [data-ds='button'][data-part='action']:active:not([data-disabled], [data-loading]) {
+    --_button-bg: var(--_button-bg-active);
+    --_button-fg: var(--_button-fg-active);
+  }
+
+  [data-style='neutral'] [data-ds='toast'] > [data-ds='close-button'][data-part='close'] {
+    --_button-radius: var(--ds-radius-sm);
+  }
+
+  @media (forced-colors: active) {
+    [data-style='neutral'] [data-ds='toast'] {
+      --_toast-border-color: CanvasText;
+      --_toast-edge: CanvasText;
+      --_toast-shadow: none;
+    }
+
+    [data-style='neutral'] [data-ds='toast'] > [data-part='icon'] {
+      box-shadow: none;
+    }
+  }
+
+  @media (prefers-contrast: more) {
+    [data-style='neutral'] [data-ds='toast'] {
+      --_toast-border-color: var(--ds-color-border-strong);
+      --_toast-edge: var(--ds-color-border-strong);
+    }
+  }
+
+  [data-style='neutral'][data-contrast='more'] [data-ds='toast'] {
+    --_toast-border-color: var(--ds-color-border-strong);
+    --_toast-edge: var(--ds-color-border-strong);
+  }
+}

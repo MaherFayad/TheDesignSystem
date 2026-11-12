@@ -1,0 +1,70 @@
+/*
+ * Neutral recipe for Button and the family on its base (order 1.24,
+ * proposed). Neutral's controls dial: a filled primary, an outline
+ * secondary on a white fill with a tiny shadow, a ghost tertiary, labels at
+ * 14px and medium weight. Why not tokens: the neutral soft and solid fills
+ * are overlay steps in Button.css, shared with every style, and a white
+ * fill with a border and a shadow is three properties no token can switch
+ * together.
+ *
+ * - Neutral soft, the default emphasis: the secondary, white with the
+ *   strong border and the card shadow. Hover takes surface-3.
+ * - Neutral solid: the inverse ink (blue black in light, near white in
+ *   dark) with the page color as text, the quiet dark button of a product.
+ * - md and lg labels at font.size.m (14px), Arabic lg one step up as in
+ *   Button.css.
+ *
+ * ToggleButton keeps the fills of Button.css: its on state swaps the fill
+ * in ds.base, which a value here would hide.
+ *
+ * Every rest color comes with its hover color, as Button.css asks, and the
+ * hover and press swaps are repeated in this layer (a recipe value wins over
+ * the swaps in ds.base).
+ */
+@layer ds.recipes {
+  [data-style='neutral'] :is([data-ds='button'], [data-ds='toggle-button'], [data-ds='copy-button']):not([data-size='xs'], [data-size='sm']) {
+    --_button-font-size: var(--ds-font-size-m);
+  }
+
+  [data-style='neutral'] :is([data-ds='button'], [data-ds='toggle-button'], [data-ds='copy-button'])[data-size='lg']:lang(ar) {
+    --_button-font-size: var(--ds-font-size-l);
+  }
+
+  [data-style='neutral'] :is([data-ds='button'], [data-ds='icon-button'], [data-ds='copy-button'])[data-tone='neutral'][data-emphasis='soft'] {
+    --_button-bg: var(--ds-color-bg-surface);
+    --_button-fg: var(--ds-color-text-default);
+    --_button-border-color: var(--ds-color-border-strong);
+    --_button-border-color-hover: var(--ds-color-border-strong);
+    --_button-bg-hover: var(--ds-color-bg-surface-3);
+    --_button-fg-hover: var(--ds-color-text-bright);
+    --_button-bg-active: var(--ds-color-bg-surface-4);
+    --_button-fg-active: var(--ds-color-text-bright);
+    --_button-shadow: var(--ds-elevation-card);
+  }
+
+  [data-style='neutral'] :is([data-ds='button'], [data-ds='icon-button'], [data-ds='copy-button'])[data-tone='neutral'][data-emphasis='solid'] {
+    --_button-bg: var(--ds-color-bg-inverse);
+    --_button-fg: var(--ds-color-bg-surface);
+    --_button-bg-hover: var(--ds-color-bg-overlay-80);
+    --_button-fg-hover: var(--ds-color-bg-surface);
+    --_button-bg-active: var(--ds-color-bg-overlay-70);
+    --_button-fg-active: var(--ds-color-bg-surface);
+  }
+
+  /* A filled button carries the tiny shadow too, so the primary sits on the page like the secondary. */
+  [data-style='neutral'] :is([data-ds='button'], [data-ds='copy-button'])[data-emphasis='solid'] {
+    --_button-shadow: var(--ds-elevation-card);
+  }
+
+  /* The hover and press swaps of Button.css, repeated here: this layer wins over them, so the rest values above would hold on hover. */
+  [data-style='neutral'] :is([data-ds='button'], [data-ds='icon-button'], [data-ds='copy-button'])[data-tone='neutral']:is([data-emphasis='soft'], [data-emphasis='solid']):hover:not([data-disabled], [data-loading]) {
+    --_button-bg: var(--_button-bg-hover);
+    --_button-fg: var(--_button-fg-hover);
+    --_button-border-color: var(--_button-border-color-hover);
+  }
+
+  [data-style='neutral'] :is([data-ds='button'], [data-ds='icon-button'], [data-ds='copy-button'])[data-tone='neutral']:is([data-emphasis='soft'], [data-emphasis='solid']):active:not([data-disabled], [data-loading]) {
+    --_button-bg: var(--_button-bg-active);
+    --_button-fg: var(--_button-fg-active);
+  }
+}
