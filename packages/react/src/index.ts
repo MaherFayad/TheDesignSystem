@@ -12,6 +12,7 @@ export * from './components/Input/index';
 export * from './components/Link/index';
 export * from './components/Pagination/index';
 export * from './components/SkipLink/index';
+export * from './components/TableOfContents/index';
 export * from './components/TitleBar/index';
 export * from './components/Toast/index';
 export * from './components/Window/index';

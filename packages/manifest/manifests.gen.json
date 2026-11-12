@@ -2643,7 +2643,7 @@
       },
       "pageCount": {
         "type": "number",
-        "description": "The number of pages. Default: worked out from itemCount and pageSize, else 1."
+        "description": "The number of pages. Default: worked out from itemCount and pageSize, else 1. A count under 1 or NaN reads as 1."
       },
       "itemCount": {
         "type": "number",
@@ -2671,7 +2671,7 @@
       },
       "getHref": {
         "type": "(page: number) => string",
-        "description": "Turns every control into a link (Button asChild with an a). Default none: buttons."
+        "description": "Turns every control into a link (Button asChild with an a). Default none: buttons. A click with a modifier key or a middle click is left to the browser and does not change the page."
       },
       "size": {
         "type": [
@@ -2703,12 +2703,13 @@
       },
       "formatSummary": {
         "type": "(start, end, total) => string",
-        "description": "Replaces the summary text. Default 21 to 40 of 312, in Arabic 21 إلى 40 من 312. An empty list says No items, in Arabic لا توجد عناصر."
+        "description": "Replaces the summary text. Default 21 to 40 of 312, in Arabic 21 إلى 40 من 312. An empty list says No items, in Arabic ما فيه عناصر."
       }
     },
     "states": [
       "data-active",
-      "data-disabled"
+      "data-disabled",
+      "data-compact"
     ],
     "a11y": {
       "role": "navigation landmark (nav with aria-label) of buttons, or links with getHref",
@@ -2729,9 +2730,10 @@
         "The current page is a soft fill plus a strong border and aria-current page, never color alone (WCAG 1.4.1).",
         "The ends use chevrons-back, chevron-back, chevron-forward and chevrons-forward, mirrored in RTL.",
         "Numbers use Western digits in both languages, grouped with a comma (12,480).",
-        "Under breakpoint.phone (30rem) the compact form keeps the ends and the current page only, and the summary takes its own line. No sideways scroll at 320px (WCAG 1.4.10).",
+        "Under breakpoint.phone (30rem) the compact form keeps the ends, the current page and the last page, with a compact-only ellipsis (data-compact) between them when pages are hidden; the summary takes its own line and wraps. No sideways scroll at 320px (WCAG 1.4.10).",
         "The page row keeps the same length as the current page moves (pageRange), so controls do not jump under the pointer.",
-        "A page label Page 5 contains the visible number, so voice control by the number works (WCAG 2.5.3)."
+        "A page label Page 5 contains the visible number, so voice control by the number works (WCAG 2.5.3).",
+        "data-active and data-disabled sit on the child controls (page, and first, previous, next, last), not on the root. disabled makes every control aria-disabled."
       ]
     },
     "content": {
@@ -2740,7 +2742,7 @@
         "labels": "Page 5, First page, Previous page, Next page, Last page."
       },
       "ar": {
-        "summary": "21 إلى 40 من 312, Western digits.",
+        "summary": "21 إلى 40 من 312, Western digits. Empty list: ما فيه عناصر.",
         "labels": "صفحة 5، الصفحة الأولى، الصفحة السابقة، الصفحة التالية، الصفحة الأخيرة. Noun form, no diacritics."
       }
     },
@@ -2945,6 +2947,194 @@
       }
     ],
     "contract": {
+      "keys": {
+        "Enter": {
+          "case": "variants",
+          "expect": "focus-moves"
+        }
+      }
+    },
+    "since": "0.1.0"
+  },
+  {
+    "name": "TableOfContents",
+    "kind": "component",
+    "family": "navigation",
+    "summary": "Links to the headings of a long page, nested by level, with the section in view marked as the reader scrolls.",
+    "useWhen": [
+      "A long document, guide or settings page with four or more sections a reader may jump between",
+      "A docs page with a side column that can hold a sticky list of its sections",
+      "A page where readers need to see which section they are in while they scroll"
+    ],
+    "avoidWhen": [
+      "A short page with one or two sections",
+      "Switching between separate views or pages, rather than sections of one page",
+      "Navigation of the whole site or app"
+    ],
+    "insteadUse": {
+      "Views of one page shown one at a time": "Tabs",
+      "Navigation of the whole app": "Sidebar or Navbar",
+      "The path to the current page": "Breadcrumbs",
+      "Jumping past the header to the main content": "SkipLink"
+    },
+    "anatomy": [
+      "root",
+      "title",
+      "list",
+      "item",
+      "link",
+      "indicator"
+    ],
+    "props": {
+      "items": {
+        "type": "TocHeading[]",
+        "required": true,
+        "description": "The headings of the page in document order: { id, label, level }. They nest by level through buildTree in @the-system/shared; a skipped level nests one step down."
+      },
+      "title": {
+        "type": "node | false",
+        "default": "On this page",
+        "description": "The visible title, a p that names the nav through aria-labelledby. Under an Arabic Theme the default is محتوى الصفحة. false hides it; then pass aria-label."
+      },
+      "size": {
+        "type": [
+          "sm",
+          "md"
+        ],
+        "default": "md",
+        "description": "Type size: sm is font.size.xs, md font.size.s, one step up in Arabic. Every link is at least 24px tall."
+      },
+      "offset": {
+        "type": "number",
+        "default": 0,
+        "description": "The height of a sticky header above the content, in px. A heading counts as reached when its top passes this line plus a fifth of the viewport, at most 64px (the reading line)."
+      },
+      "sticky": {
+        "type": "boolean",
+        "default": false,
+        "description": "Keeps the list in view as the page scrolls (position sticky), and scrolls inside when taller than dialog.height.max. Sets data-sticky."
+      },
+      "active": {
+        "type": "string | null",
+        "description": "The active heading id, controlled. Default: tracked from the scroll position."
+      },
+      "onActiveChange": {
+        "type": "(id: string | null) => void",
+        "description": "Called when the active heading changes, from scrolling or a link."
+      }
+    },
+    "states": [
+      "data-active",
+      "data-sticky"
+    ],
+    "a11y": {
+      "role": "navigation landmark named by its title, with ordered lists of links",
+      "focus": "Each link is a tab stop. Enter or a click moves focus to the heading itself (tabindex -1 only when the heading is not focusable), so the next Tab continues from that section. A 2px ring from focus.shadow.ring.",
+      "keys": {
+        "Tab": "Moves through the links",
+        "Enter": "Scrolls to the heading and moves focus to it"
+      },
+      "announce": "Navigation, On this page, list. The link of the section in view reads as current location (aria-current location). The indicator is aria-hidden.",
+      "native": {
+        "accessibilityRole": "link",
+        "accessibilityState": [
+          "selected"
+        ]
+      },
+      "notes": [
+        "The section in view is marked by medium weight, the indicator bar and aria-current location, never color alone (WCAG 1.4.1).",
+        "Items carry data-level (1, 2, 3 and deeper) for their nesting depth, which sets the indent.",
+        "Scrolling is smooth, and a jump under prefers-reduced-motion. The URL fragment is set without a second jump.",
+        "A click with a modifier key or a middle click is left to the browser.",
+        "The active section comes from activeHeading in @the-system/shared. An IntersectionObserver on the headings triggers a new measure once per frame at most; nothing runs on every scroll event.",
+        "Sticky form (WCAG 2.4.11): give the headings scroll-margin-block-start equal to any sticky page header and pass the same height as offset, so a heading never lands under the header.",
+        "Under forced colors the indicator uses Highlight and the focus outline uses Highlight."
+      ]
+    },
+    "content": {
+      "en": {
+        "title": "On this page, or a title that names the document: In this guide.",
+        "labels": "The heading text as written on the page, sentence case. Shorten only when the heading is longer than a line."
+      },
+      "ar": {
+        "title": "محتوى الصفحة, noun form, no diacritics.",
+        "labels": "The heading text as on the page. Latin terms inside go through Bidi; each link has dir auto."
+      }
+    },
+    "tokens": [
+      "font.size.xs",
+      "font.size.s",
+      "font.size.m",
+      "font.weight.medium",
+      "font.weight.semibold",
+      "font.leading.snug",
+      "font.leading.arabic-snug",
+      "color.text.muted",
+      "color.text.bright",
+      "color.text.default",
+      "color.border.subtle",
+      "space.3xs",
+      "space.xs",
+      "space.s",
+      "space.m",
+      "space.l",
+      "size.target-min",
+      "radius.xs",
+      "radius.pill",
+      "border.width.default",
+      "border.width.strong",
+      "focus.shadow.ring",
+      "dialog.height.max",
+      "duration.base",
+      "ease.out"
+    ],
+    "motion": "tab-indicator",
+    "frameworks": {
+      "react": {
+        "status": "ready",
+        "behavior": "nav with ol of anchors; IntersectionObserver in an effect; buildTree and activeHeading from @the-system/shared",
+        "example": "TableOfContents.demo.tsx",
+        "note": "The indicator moves with a transform transition (tab-indicator); under reduced motion the duration is 0ms and the scroll is a jump."
+      },
+      "angular": {
+        "status": "planned",
+        "behavior": "nav[dsTableOfContents] with the shared buildTree and activeHeading, IntersectionObserver in afterNextRender"
+      },
+      "native": {
+        "status": "planned",
+        "note": "A list of pressables that scroll a ScrollView to measured section offsets with scrollTo; onScroll feeds activeHeading."
+      }
+    },
+    "styles": {
+      "studio": "A hairline rail at the inline start, muted links that brighten on hover, a bright bar beside the section in view.",
+      "desk": "The same from the Desk tokens.",
+      "neutral": "Takes the tokens of the Neutral style, no recipe."
+    },
+    "mistakes": [
+      {
+        "wrong": "The section in view marked by color only",
+        "right": "TableOfContents, which adds weight, the bar and aria-current location"
+      },
+      {
+        "wrong": "Links that only scroll, so the next Tab starts from the list again",
+        "right": "TableOfContents, which moves focus to the heading"
+      },
+      {
+        "wrong": "A scroll listener that measures every heading on every frame",
+        "right": "The IntersectionObserver in TableOfContents and activeHeading"
+      },
+      {
+        "wrong": "Headings that land under a sticky header after a jump",
+        "right": "scroll-margin-block-start on the headings and the same height as offset"
+      }
+    ],
+    "contract": {
+      "optionalParts": [
+        "title",
+        "list",
+        "item",
+        "link"
+      ],
       "keys": {
         "Enter": {
           "case": "variants",

@@ -20,6 +20,7 @@ export const routes: DemoRoute[] = [
   { name: 'Link', slug: 'link', load: () => import('../../../packages/react/src/components/Link/Link.demo') },
   { name: 'Pagination', slug: 'pagination', load: () => import('../../../packages/react/src/components/Pagination/Pagination.demo') },
   { name: 'SkipLink', slug: 'skip-link', load: () => import('../../../packages/react/src/components/SkipLink/SkipLink.demo') },
+  { name: 'TableOfContents', slug: 'table-of-contents', load: () => import('../../../packages/react/src/components/TableOfContents/TableOfContents.demo') },
   { name: 'TitleBar', slug: 'title-bar', load: () => import('../../../packages/react/src/components/TitleBar/TitleBar.demo') },
   { name: 'Toast', slug: 'toast', load: () => import('../../../packages/react/src/components/Toast/Toast.demo') },
   { name: 'Window', slug: 'window', load: () => import('../../../packages/react/src/components/Window/Window.demo') },

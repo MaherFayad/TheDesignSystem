@@ -1,0 +1,179 @@
+/*
+ * TableOfContents: links to the sections of a long page, the one in view
+ * marked. Follows "One convention for component CSS and props" in
+ * docs/contracts/anatomy.md.
+ *
+ * Private properties on the root (recipes override these):
+ *
+ *   --_toc-font-size                     the type size of the links
+ *   --_toc-fg, -fg-hover                 a link at rest and on hover
+ *   --_toc-fg-active                     the link of the section in view
+ *   --_toc-title-fg                      the title
+ *   --_toc-indent                        the inset of each nested level
+ *   --_toc-rail                          the hairline the indicator runs along
+ *   --_toc-indicator-bg                  the indicator bar
+ *   --_toc-sticky-offset                 the gap above the sticky form
+ *   --_toc-ring                          the focus ring, a box shadow
+ *
+ * The indicator offset and length (--_toc-indicator-offset, -size) are set
+ * on the indicator element by the component after it measures the active
+ * link. Only its transform animates (pattern tab-indicator); under reduced
+ * motion the duration token is 0ms and it jumps.
+ */
+@layer ds.base {
+  [data-ds='table-of-contents'] {
+    --_toc-font-size: var(--ds-font-size-s);
+    --_toc-fg: var(--ds-color-text-muted);
+    --_toc-fg-hover: var(--ds-color-text-bright);
+    --_toc-fg-active: var(--ds-color-text-bright);
+    --_toc-title-fg: var(--ds-color-text-default);
+    --_toc-indent: var(--ds-space-l);
+    --_toc-rail: var(--ds-color-border-subtle);
+    --_toc-indicator-bg: var(--ds-color-text-bright);
+    --_toc-sticky-offset: var(--ds-space-l);
+    --_toc-ring: var(--ds-focus-shadow-ring);
+    /* Set on the indicator element by the component once it measures the active link. */
+    --_toc-indicator-offset: 0;
+    --_toc-indicator-size: 0;
+
+    position: relative;
+    display: block;
+    min-inline-size: 0;
+    font-size: var(--_toc-font-size);
+    line-height: var(--ds-font-leading-snug);
+  }
+
+  [data-ds='table-of-contents'][data-size='sm'] {
+    --_toc-font-size: var(--ds-font-size-xs);
+    --_toc-indent: var(--ds-space-m);
+  }
+
+  /* Arabic: small text one step up, a taller line. */
+  [data-ds='table-of-contents']:lang(ar) {
+    --_toc-font-size: var(--ds-font-size-m);
+
+    line-height: var(--ds-font-leading-arabic-snug);
+  }
+
+  [data-ds='table-of-contents'][data-size='sm']:lang(ar) {
+    --_toc-font-size: var(--ds-font-size-s);
+  }
+
+  /*
+   * Sticky: stays in view and scrolls inside when it is taller than the
+   * viewport. Headings the links jump to should carry scroll-margin-block-start
+   * equal to any sticky header, so they do not land under it (WCAG 2.4.11).
+   */
+  [data-ds='table-of-contents'][data-sticky] {
+    position: sticky;
+    inset-block-start: var(--_toc-sticky-offset);
+    /* No viewport height token for panels yet: dialog.height.max (80dvh) is the nearest. Token gap noted for the lead. */
+    max-block-size: var(--ds-dialog-height-max);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+  }
+
+  [data-ds='table-of-contents'] > [data-part='title'] {
+    margin: 0 0 var(--ds-space-s);
+    color: var(--_toc-title-fg);
+    font-weight: var(--ds-font-weight-semibold);
+  }
+
+  /* The top list carries the rail the indicator runs along, at the inline start. */
+  [data-ds='table-of-contents'] [data-part='list'] {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  [data-ds='table-of-contents'] > [data-part='list'] {
+    border-inline-start: var(--ds-border-width-default) solid var(--_toc-rail);
+  }
+
+  [data-ds='table-of-contents'] [data-part='item'] {
+    margin: 0;
+  }
+
+  /* A link: a 24px tall row at least, inset by its level. Long labels wrap. */
+  [data-ds='table-of-contents'] [data-part='link'] {
+    position: relative;
+    display: flex;
+    align-items: center;
+    box-sizing: border-box;
+    min-block-size: var(--ds-size-target-min);
+    padding-block: var(--ds-space-3xs);
+    padding-inline: var(--_toc-indent) var(--ds-space-xs);
+    border-radius: var(--ds-radius-xs);
+    color: var(--_toc-fg);
+    text-decoration-line: none;
+    overflow-wrap: anywhere;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  [data-ds='table-of-contents'] [data-part='item'][data-level='2'] > [data-part='link'] {
+    padding-inline-start: calc(2 * var(--_toc-indent));
+  }
+
+  [data-ds='table-of-contents'] [data-part='item'][data-level='3'] > [data-part='link'],
+  [data-ds='table-of-contents'] [data-part='item'][data-level='4'] > [data-part='link'],
+  [data-ds='table-of-contents'] [data-part='item'][data-level='5'] > [data-part='link'],
+  [data-ds='table-of-contents'] [data-part='item'][data-level='6'] > [data-part='link'] {
+    padding-inline-start: calc(3 * var(--_toc-indent));
+  }
+
+  [data-ds='table-of-contents'] [data-part='link']:hover {
+    --_toc-fg: var(--_toc-fg-hover);
+
+    text-decoration-line: underline;
+    text-decoration-thickness: var(--ds-border-width-default);
+    text-underline-offset: var(--ds-space-3xs);
+  }
+
+  /* The section in view: bright and medium weight, plus the indicator bar and aria-current. */
+  [data-ds='table-of-contents'] [data-part='item'][data-active] > [data-part='link'] {
+    --_toc-fg: var(--_toc-fg-active);
+
+    font-weight: var(--ds-font-weight-medium);
+  }
+
+  /* The transparent outline is set only here, so forced colors mode draws it on focus and nowhere else. */
+  [data-ds='table-of-contents'] [data-part='link']:focus-visible {
+    outline: var(--ds-border-width-strong) solid transparent;
+    outline-offset: calc(-1 * var(--ds-border-width-strong));
+    box-shadow: var(--_toc-ring);
+  }
+
+  /* The bar: placed at the top of the root, moved down to the active link by transform. */
+  [data-ds='table-of-contents'] > [data-part='indicator'] {
+    position: absolute;
+    inset-block-start: 0;
+    inset-inline-start: 0;
+    inline-size: var(--ds-border-width-strong);
+    block-size: var(--_toc-indicator-size);
+    border-radius: var(--ds-radius-pill);
+    background-color: var(--_toc-indicator-bg);
+    transform: translateY(var(--_toc-indicator-offset));
+    transition: transform var(--ds-duration-base) var(--ds-ease-out);
+    pointer-events: none;
+    /* Centered on the rail, so the wider bar covers it. */
+    margin-inline-start: calc((var(--ds-border-width-default) - var(--ds-border-width-strong)) / 2);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    [data-ds='table-of-contents'] > [data-part='indicator'] {
+      transition: none;
+    }
+  }
+
+  /* ------------------------------------------------------------ forced colors */
+
+  @media (forced-colors: active) {
+    [data-ds='table-of-contents'] > [data-part='indicator'] {
+      background-color: Highlight;
+    }
+
+    [data-ds='table-of-contents'] [data-part='link']:focus-visible {
+      outline-color: Highlight;
+    }
+  }
+}

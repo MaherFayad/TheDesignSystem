@@ -5,4 +5,5 @@ export * from './dialog-focus';
 export * from './pagination';
 export * from './theme';
 export * from './toast';
+export * from './toc';
 export * from './window';
