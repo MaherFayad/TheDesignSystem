@@ -19,9 +19,11 @@ import {
   ElementRef,
   afterNextRender,
   computed,
+  effect,
   inject,
   input,
   signal,
+  untracked,
   viewChildren,
   type DestroyRef,
   type Signal,
@@ -32,7 +34,7 @@ import type { Size, Tone } from '@the-system/shared';
 import { optionalBoolean } from '../../internal/optional-boolean';
 import type { OrderedStyle } from '../../internal/ordered-style';
 import { DsThemeService } from '../../theme/theme';
-import { DsField } from '../field/field';
+import { DsFieldContext, fieldControl } from '../field/field-context';
 import { formatSliderValue } from './format';
 
 export type SliderSize = Extract<Size, 'sm' | 'md' | 'lg'>;
@@ -224,7 +226,7 @@ export abstract class DsSliderBase {
     return undefined;
   }
 
-  private readonly field = inject(DsField, { optional: true });
+  private readonly field = inject(DsFieldContext, { optional: true });
   private readonly theme = inject(DsThemeService);
   private readonly directionality = inject(Directionality, { optional: true });
   private readonly control = viewChildren<ElementRef<HTMLElement>>('control');
@@ -249,13 +251,18 @@ export abstract class DsSliderBase {
     return l !== undefined && l !== null;
   });
   protected readonly valueShown = computed(() => this.showValue() ?? this.hasLabel());
-  readonly isInvalid = computed(() => this.invalid() ?? this.field?.invalid() ?? false);
-  readonly isDisabled = computed(() => this.disabled() ?? this.formDisabled() ?? this.field?.disabled() ?? false);
   protected readonly formDisabled = signal<boolean | undefined>(undefined);
-  protected readonly controlId = computed(() => this.id() ?? this.field?.controlId());
-  protected readonly describedBy = computed(
-    () => [this.field?.describedBy(), this.ariaDescribedby()].filter(Boolean).join(' ') || undefined,
-  );
+  /** The Field wiring merged with the slider's own values, as React's useFieldControl. React passes no read only or required. */
+  private readonly fieldState = fieldControl(this.field, () => ({
+    id: this.id(),
+    describedBy: this.ariaDescribedby(),
+    invalid: this.invalid(),
+    disabled: this.disabled() ?? this.formDisabled(),
+  }));
+  readonly isInvalid = computed(() => this.fieldState().invalid);
+  readonly isDisabled = computed(() => this.fieldState().disabled);
+  protected readonly controlId = computed(() => this.fieldState().id);
+  protected readonly describedBy = computed(() => this.fieldState().describedBy);
   protected readonly isGroup = computed(() => this.values().length > 1 && this.hasLabel());
   protected readonly format = computed(() => {
     const custom = this.formatValue();
@@ -337,6 +344,17 @@ export abstract class DsSliderBase {
 
   /** Wires measuring, forms and reset. Subclasses call it from their constructor. */
   protected setUp(destroyRef: DestroyRef): void {
+    // A slider with its own id tells the Field, so the Field label points at its first thumb, as React's useFieldControl.
+    const field = this.field;
+    if (field) {
+      effect(() => {
+        const id = this.id();
+        untracked(() => field.setControlId(id));
+      });
+      destroyRef.onDestroy(() => {
+        if (untracked(this.id) !== undefined) field.setControlId(undefined);
+      });
+    }
     afterNextRender(() => {
       const thumbs = this.thumbs().map((t) => t.nativeElement);
       const measure = () => this.thumbSizes.set(thumbs.map((t) => ({ width: t.offsetWidth, height: t.offsetHeight })));

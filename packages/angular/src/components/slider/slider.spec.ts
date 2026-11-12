@@ -219,3 +219,58 @@ describe('DsSlider', () => {
     expect(root('plain').querySelector('input')).toBeNull();
   });
 });
+
+@Component({
+  imports: [DsSlider, DsField],
+  template: `
+    <div dsField data-test="wired" label="Name" description="A hint." error="Fix this." required>
+      <div dsSlider></div>
+    </div>
+    <div dsField data-test="own-id" label="Name">
+      <div dsSlider id="own-control"></div>
+    </div>
+    <div dsField data-test="off" label="Name" disabled>
+      <div dsSlider></div>
+    </div>
+  `,
+})
+class FieldWiringHost {
+}
+
+describe('DsSlider in a Field', () => {
+  it('reads the Field as React useFieldControl does: id, describedby order, invalid, required, disabled', async () => {
+    const fixture = TestBed.createComponent(FieldWiringHost);
+    await fixture.whenStable();
+    fixture.detectChanges();
+    await fixture.whenStable();
+    const field = (id: string) => fixture.nativeElement.querySelector(`[data-test="${id}"]`) as HTMLElement;
+    const control = (id: string) => field(id).querySelector('[role="slider"]') as HTMLElement;
+
+    const wired = field('wired');
+    const label = wired.querySelector(':scope > label') as HTMLLabelElement;
+    const description = wired.querySelector(':scope > [data-part="description"]') as HTMLElement;
+    const error = wired.querySelector(':scope > [data-part="error"]') as HTMLElement;
+    const c = control('wired');
+    expect(c.id).not.toBe('');
+    expect(label.getAttribute('for')).toBe(c.id);
+    expect(c.getAttribute('aria-describedby')).toBe(`${description.id} ${error.id}`);
+    expect(c.getAttribute('aria-invalid')).toBe('true');
+    expect(c.getAttribute('aria-required')).toBe(null);
+    // React names the thumb by the Field label when it has no name of its own.
+    expect(c.getAttribute('aria-labelledby')).toBe(label.id);
+
+    // A control with an id of its own tells the Field, so the label points at it.
+    expect(control('own-id').id).toBe('own-control');
+    expect(field('own-id').querySelector(':scope > label')?.getAttribute('for')).toBe('own-control');
+    expect(control('own-id').hasAttribute('aria-describedby')).toBe(false);
+    expect(control('own-id').hasAttribute('aria-invalid')).toBe(false);
+  });
+
+  it('takes disabled from the Field', async () => {
+    const fixture = TestBed.createComponent(FieldWiringHost);
+    await fixture.whenStable();
+    const c = fixture.nativeElement.querySelector('[data-test="off"] [role="slider"]') as HTMLButtonElement;
+    expect(c.hasAttribute('tabindex')).toBe(false);
+    expect(c.closest('[data-ds="slider"]')?.hasAttribute('data-disabled')).toBe(true);
+  });
+});
