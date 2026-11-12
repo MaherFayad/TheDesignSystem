@@ -29,7 +29,7 @@ No adb. No iOS build.
 | 0.11 | Dialog | ds-component | react | open | |
 | 0.12 | Toast | ds-component | react | open | |
 | 0.13 | Window | ds-component, ds-style | react | open | |
-| 0.14 | Contract suite | ds-qa | react | open | |
+| 0.14 | Contract suite | ds-qa | react | done | cd05ff1 |
 | 0.15 | Angular proof | ds-angular | angular | open | |
 | 0.16 | React Native proof | ds-native | native | open | |
 | 0.17 | Desk Light | ds-style | all | open | |
