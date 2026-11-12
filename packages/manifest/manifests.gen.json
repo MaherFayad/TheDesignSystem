@@ -4813,7 +4813,7 @@
       "shortcut": {
         "type": "string",
         "default": "Mod+K",
-        "description": "Opens and closes the palette from anywhere on the page. Mod is Command on a Mac and Control elsewhere. A letter also matches by its physical key, so it works on an Arabic layout. null turns it off. Only one palette on a page should keep it."
+        "description": "Opens and closes the palette from anywhere on the page. Mod is Command on a Mac and Control elsewhere. A letter also matches by its physical key when the key typed is not a Latin letter or digit, so it works on an Arabic layout. Without Ctrl, Meta or Alt it is ignored in text fields. null turns it off. Only one palette on a page should keep it."
       },
       "label": {
         "type": "string",
@@ -4884,7 +4884,7 @@
       "role": "dialog (the panel), modal: Radix hides the rest of the page and keeps focus inside. The search input is a combobox with aria-expanded, aria-controls and aria-activedescendant; the list is a listbox of options, in groups when the commands are grouped.",
       "focus": "On open, focus goes to the search input and stays there: the highlighted command is pointed at with aria-activedescendant, rows never take focus. On close, focus returns to the element that had it when the shortcut opened the palette, or to the trigger that opened it; when that element is gone, to its nearest connected focusable ancestor, else the first tab stop of main.",
       "keys": {
-        "Mod+K": "Opens the palette from anywhere on the page, and closes it. The shortcut prop changes or turns it off.",
+        "Mod+K": "Opens the palette from anywhere on the page, and closes it, also from inside a text field. The shortcut prop changes or turns it off. A shortcut with no Ctrl, Meta or Alt (such as / or ?) types a character, so it is ignored while focus is in an input, a textarea, a select or contenteditable content (WCAG 2.1.4). A letter or digit also matches by its physical key only when the key typed is not a Latin letter or digit, as on an Arabic layout.",
         "ArrowDown": "Highlights the next command, skipping disabled ones, and wraps from the last to the first",
         "ArrowUp": "Highlights the previous command and wraps from the first to the last",
         "Enter": "Runs the highlighted command and closes the palette",
@@ -5192,8 +5192,8 @@
         "description": "An error shown now, for a required consent left off."
       },
       "requiredError": {
-        "type": "node",
-        "description": "Inside a Form: the error when the Form finds this required consent left off. Default the Form's required message."
+        "type": "string",
+        "description": "Inside a Form, with name: the error when the Form finds this required consent left off. Registered with the Form by name, so the field and the summary show the same message. Default the Form's requiredChoice message, Tick this box to go on."
       },
       "size": {
         "type": [
@@ -5236,18 +5236,19 @@
         "Keep the record: store what onDecision returns (granted, the text version, the time) with the account. In a form that is sent, store the last record when the form is sent.",
         "The details link sits outside the label, so a click on it never toggles the consent.",
         "Do not mark a marketing consent required. Required is for a consent the service truly cannot work without.",
-        "checked and unchecked are on the control part, a Checkbox or Switch root that carries the consent field control part. The consent root says granted or denied."
+        "checked and unchecked are on the control part, a Checkbox or Switch root that carries the consent field control part. The consent root says granted or denied.",
+        "Development warnings catch what the types cannot: a stray defaultChecked, a controlled checked that starts true with no meta (show the record of the choice), disabled with checked true (a given consent must stay withdrawable), and no detailsHref when the surrounding Fieldset description has no link to the notice either."
       ]
     },
     "content": {
       "en": {
-        "purpose": "A first person sentence that names one use and who gets the data: Share my order history with the delivery partner to plan delivery times. Never a bundle joined with and.",
+        "purpose": "A first person sentence that names one use and who gets the data: Share my order history with the delivery partner to plan delivery times. A list of data items for that one use is fine; two uses are two ConsentFields. Never a bundle joined with and.",
         "details": "Names the page: How we use your data. Never Learn more.",
         "meta": "The version or the date of the choice: You agreed on 3 November 2026. Text version 2.1.",
         "error": "Why it is needed and the other way: The booking needs this consent. Tick the box, or book by phone instead."
       },
       "ar": {
-        "purpose": "جملة بصيغة المتكلم تبدأ بأوافق وتذكر استخدام واحد ومين يستلم البيانات: أوافق على مشاركة سجل طلباتي مع شريك التوصيل",
+        "purpose": "جملة بصيغة المتكلم تبدأ بأوافق وتذكر استخدام واحد ومين يستلم البيانات: أوافق على مشاركة سجل طلباتي مع شريك التوصيل. تقدر تعدد البيانات لنفس الاستخدام، لكن كل استخدام له موافقة لحاله",
         "details": "طريقة استخدام بياناتك",
         "meta": "الإصدار 2.1، آخر تحديث 1 نوفمبر 2026",
         "error": "يوضح ليش مطلوبة والبديل: الحجز يحتاج موافقتك على المشاركة. حدد المربع أو احجز بالاتصال"
@@ -5307,6 +5308,14 @@
       {
         "wrong": "A marketing consent marked required to finish sign up",
         "right": "Marketing consent optional; required only when the service cannot work without it"
+      },
+      {
+        "wrong": "A list of consents with no way to the privacy notice",
+        "right": "detailsHref on each consent, or a link to the notice in the description of the Fieldset around them"
+      },
+      {
+        "wrong": "A given consent shown disabled, so it cannot be withdrawn",
+        "right": "Keep a given consent enabled; disable only a consent that is off and waits on another"
       }
     ],
     "since": "0.1.0"
@@ -8310,7 +8319,7 @@
     "useWhen": [
       "Several fields that answer one question together, such as a delivery address or a date of birth in three parts",
       "A long form split into named sections, each with its own legend",
-      "A group of Checkbox or Switch items that needs a group level error, such as Pick at least one",
+      "A group of Checkbox or Switch items that needs a group level error, such as Pick at least one. Inside a Form, set name to the name the controls share.",
       "Turning off a whole section at once with native disabled"
     ],
     "avoidWhen": [
@@ -8374,6 +8383,10 @@
         "type": "node",
         "description": "What is wrong with the group as a whole and how to fix it. Renders a FieldError root with data-part error, above the body."
       },
+      "name": {
+        "type": "string",
+        "description": "The name the controls of a checkbox or radio group share. Inside a Form, the Form's error for that name shows in the error part, in place of error. Rendered as data-name, not as the fieldset name attribute."
+      },
       "size": {
         "type": [
           "sm",
@@ -8412,9 +8425,10 @@
       },
       "notes": [
         "The legend is a native legend, the first child of the fieldset, so every browser and screen reader takes it as the group name.",
-        "The group error sits above the body, so it is seen before a long list of choices. A form that checks on submit moves focus to the first control of the invalid group.",
+        "The group error sits above the body, so it is seen before a long list of choices. Inside a Form, give the Fieldset the name its controls share: a Form validator error for that name then shows in the error part, the summary link names the group by its legend, and focus on submit moves to the first control of the group.",
         "Native disabled reaches every control inside, including the Radix Checkbox and Switch buttons, without a prop on each.",
-        "Keep the legend short: some screen readers read it again before every control in the group."
+        "Keep the legend short: some screen readers read it again before every control in the group.",
+        "The controls inside do not get aria-invalid from the group yet. The error reaches a screen reader through the group's aria-describedby, which some readers skip on entry."
       ]
     },
     "content": {
@@ -8604,8 +8618,7 @@
       "closed",
       "data-active",
       "data-overflow-start",
-      "data-overflow-end",
-      "data-selected"
+      "data-overflow-end"
     ],
     "a11y": {
       "role": "none on the root. The chips sit in a role group named Filters; each chip is a toggle button with aria-pressed.",
@@ -8623,16 +8636,16 @@
         "The order names ToggleGroup, MultiSelect and Select. They do not exist yet, so filters are Chips in a role group and more is a DropdownMenu with checkbox items. Arrow keys do not move between chips: each chip is a tab stop, as in the Figma-Killer-2 source. The anatomy stays when ToggleGroup lands.",
         "The chip strip scrolls sideways inside itself and never scrolls the page at 320px (WCAG 1.4.10). The root carries data-overflow-start and data-overflow-end in logical terms, so the edge fades flip in RTL.",
         "A selected chip shows a check, not color alone.",
-        "data-selected is on each selected Chip root inside the filters part.",
-        "open and closed are on the more part, the Button that opens the DropdownMenu. Escape in the search box clears the query; Escape in the more menu closes it and returns focus to the more button.",
+        "Each selected chip carries data-selected on its own Chip root; that state belongs to the Chip manifest, not to this one.",
+        "open and closed are data-state on the more part, the Button that opens the DropdownMenu; they stay in states because the contract suite reads data-state on every part. Escape in the search box clears the query; Escape in the more menu closes it and returns focus to the more button.",
         "A search query counts as one filter on in the count part, and clear all empties it too.",
-        "The more part is the Button that opens the DropdownMenu. open, closed and data-selected in states sit on nested roots (the more Button and the selected Chips); the FilterBar root carries data-active and the overflow states."
+        "The FilterBar root carries data-active and the overflow states; open and closed are on the more part. data-selected sits on the Chip roots and belongs to the Chip manifest."
       ]
     },
     "content": {
       "en": {
         "filters": "One to three words in sentence case, a noun: Images, Shared with me. Never a verb.",
-        "more": "More filters, with the number on in brackets: More filters (2).",
+        "more": "More filters, with the number on in brackets: More filters (2). An agreed exception to the verb plus noun rule: it is the usual name for a menu trigger, like Next page.",
         "clear": "Clear filters. Never Reset.",
         "count": "1 filter on, 2 filters on (a search query counts as one), then the results: 24 results. No results when none."
       },
@@ -9002,10 +9015,6 @@
       "body",
       "actions"
     ],
-    "parts": {
-      "FormField": "body",
-      "FormSubmit": "actions"
-    },
     "slots": {
       "summary": {
         "accepts": [
@@ -9054,7 +9063,7 @@
       },
       "validators": {
         "type": "Record<string, FormValidator | FormValidator[]>",
-        "description": "Custom checks by field name, run after the browser constraint check. Each returns a message or nothing."
+        "description": "Custom checks by field name. An empty required field keeps the required message; otherwise a validator message wins over the built in constraint copy, so a validator can name the format: Enter the 5 digit postal code."
       },
       "onSubmit": {
         "type": "function",
@@ -9074,7 +9083,7 @@
       },
       "labels": {
         "type": "Partial<FormLabels>",
-        "description": "Copy for the summary title and the built in errors. Default from the Theme language, English or Arabic."
+        "description": "Copy for the summary, the submitted announcement and the built in errors: required, requiredChoice (a box left off), requiredOption (a radio group with nothing picked), and one message per ValidityState flag (typeMismatch, patternMismatch, tooShort, tooLong, rangeUnderflow, rangeOverflow, stepMismatch, badInput). Default from the Theme language, English or Arabic. The browser validationMessage is never shown."
       }
     },
     "states": [
@@ -9091,27 +9100,28 @@
         "Tab": "Moves through the fields, then the actions. The form adds no stop of its own.",
         "Enter": "In a single line field, submits the form through its submit button. On a summary link, moves focus to that field."
       },
-      "announce": "Once per submit with errors, a polite status says how many fields to fix (WCAG 4.1.3). The summary itself is not a live region, so nothing is read twice. Each field reads its error through aria-describedby when focus lands on it.",
+      "announce": "Once per submit with errors, a polite status says how many fields to fix (WCAG 4.1.3). After a submit that passes, the same status says the form was sent (labels.submitted, empty to say nothing). The summary itself is not a live region, so nothing is read twice. Each field reads its error through aria-describedby when focus lands on it.",
       "native": {
         "accessibilityRole": "none"
       },
       "notes": [
-        "Hand built on the native form with noValidate: the browser bubble never shows, and type, pattern, min and maxLength still feed the check through checkValidity().",
-        "An empty control with native required or aria-required (Field sets aria-required) gets the required message.",
+        "Hand built on the native form with noValidate: the browser bubble never shows, and type, pattern, min and maxLength still feed the check through checkValidity(). Each failure is read from its ValidityState flag and gets copy from labels in the page language; the browser validationMessage is never used, since it is in the browser language and does not say how to fix the value.",
+        "An empty control with native required or aria-required (Field sets aria-required) gets the required message: requiredChoice for a checkbox or switch, requiredOption for a radio group, required for the rest. A ConsentField requiredError replaces it for that name, in the field and in the summary.",
         "After a submit, a change that fixes a field removes its error at once. A change never adds an error: checks run on submit.",
         "autocomplete is never changed and values are never cleared on an error, so nothing is asked twice (WCAG 3.3.7, 3.3.8).",
         "aria-busy is true while onSubmit runs, and FormSubmit shows its loading state.",
         "A form in a Dialog: the form sits in DialogBody with an id, and the submit Button in DialogFooter takes form set to that id and type submit. Enter in a field still submits. That footer Button is outside the Form context, so it shows no loading state: give it loading from your own state when onSubmit is slow.",
         "The action prop is not taken: the form checks before it sends, and React does not run an action on a submit that is stopped. Call the server action from onSubmit and return its errors.",
         "When onSubmit throws, the summary says the form could not be sent and focus moves to it. Values are kept.",
-        "Read only controls, hidden inputs and controls in a disabled Fieldset are not checked."
+        "Read only controls, hidden inputs and controls in a disabled Fieldset are not checked.",
+        "Several checkboxes or radios with one name are one group: the summary link takes the legend of the nearest Fieldset, and a Fieldset with the same name shows the error in its error part. Without that Fieldset name the error shows only in the summary."
       ]
     },
     "content": {
       "en": {
         "submit": "A verb plus a noun that names the result: Send request, Save address, Create account. Never Submit, OK or Continue.",
         "summary": "Fix 2 fields to send the form. Count the fields, name the goal.",
-        "errors": "Each says what to do with the field: Add your city. Use your work email, not a personal one.",
+        "errors": "Each says what to do with the field: Add your city. Use your work email, not a personal one. For a pattern, a validator that names the format: Enter the 5 digit postal code.",
         "required": "Say once, above the form, that fields marked * are required."
       },
       "ar": {
@@ -11580,7 +11590,7 @@
       "status"
     ],
     "parts": {
-      "LightboxTrigger": "trigger (outside the root)",
+      "LightboxTrigger": "trigger (outside the root). One child element, a system Button (always asChild), with index: the image it opens. Focus returns to the trigger that opened the viewer.",
       "IconButton": "zoom, close, previous, next",
       "Spinner": "spinner"
     },
@@ -11664,10 +11674,6 @@
       "rootProps": {
         "type": "object",
         "description": "Props for the root layer. className and style go to the root too."
-      },
-      "LightboxTrigger": {
-        "type": "node",
-        "description": "One child element, a system Button (always asChild), with index: the image it opens. Focus returns to the trigger that opened the viewer."
       }
     },
     "states": [
@@ -11696,6 +11702,8 @@
         "Every image needs alt text that says what it shows, never the file name. A caption does not replace it.",
         "A swipe on the image moves to the next or previous image in reading order. The previous and next buttons and the arrow keys are the key path (WCAG 2.5.7).",
         "A double click on the image toggles the zoom; the zoom button and + and - are its key path.",
+        "While zoomed, the arrows pan the image and do not move to another image. Press - first, then an arrow, to move on. Escape closes the viewer at any zoom.",
+        "Previous and next have a solid surface fill, so the chevrons read on any image where the buttons sit over it (on phones, and over a zoomed image).",
         "Previous and next stay focusable when there is no image that way (aria-disabled), so focus never drops.",
         "The neighbours of the image on show load ahead.",
         "Images sit on the solid page color of the scheme, never on glass, in every style.",
@@ -11717,6 +11725,10 @@
     "tokens": [
       "color.bg.body",
       "color.bg.scrim",
+      "color.bg.surface",
+      "color.bg.surface-2",
+      "color.bg.surface-3",
+      "color.border.default",
       "color.text.default",
       "color.text.muted",
       "space.s",
@@ -11756,7 +11768,7 @@
       }
     },
     "styles": {
-      "studio": "No recipe: the base CSS applies. Full screen on the page color: black in dark, the light page gray in light. The counter sits at the inline start of the toolbar, zoom and close at its end, previous and next as 44px IconButtons at the middle of each side, the caption centered under the image. The viewer fades in from 98%.",
+      "studio": "No recipe: the base CSS applies. Full screen on the page color: black in dark, the light page gray in light. The counter sits at the inline start of the toolbar, zoom and close at its end, previous and next as 44px IconButtons on a solid surface fill at the middle of each side, the caption centered under the image. The viewer fades in from 98%.",
       "desk": "No recipe: the base CSS applies on the Desk page color. No glass: images never sit on glass.",
       "neutral": "Tokens only: the Neutral page color and controls apply with no recipe.",
       "liquid": "Planned: the toolbar may float on glass; the image stays on a solid surface."
@@ -14723,10 +14735,6 @@
         "type": "boolean",
         "default": false,
         "description": "A preview of a page inside another page (a gallery, docs, a template picker): the same frame with no landmarks; main becomes a region named Main content."
-      },
-      "usePageShell": {
-        "type": "function",
-        "description": "Hook: { sidebar, wideSidebar, setSidebar, narrow, setDrawerOpen }. Pass collapsed={sidebar === 'collapsed'} and onCollapsedChange to the Sidebar so its toggle and the shell agree."
       }
     },
     "states": [
@@ -14786,7 +14794,7 @@
         "status": "ready",
         "behavior": "hand built",
         "example": "PageShell.demo.tsx",
-        "note": "Renders SkipLink, IconButton and Drawer; usePageShell() shares the column state."
+        "note": "Renders SkipLink, IconButton and Drawer. The hook usePageShell() shares the column state: { sidebar, wideSidebar, setSidebar, narrow, setDrawerOpen }. Pass collapsed={sidebar === 'collapsed'} and onCollapsedChange to the Sidebar so its toggle and the shell agree."
       },
       "angular": {
         "status": "planned",
@@ -18820,7 +18828,7 @@
       "fullWidth": {
         "type": "boolean",
         "default": false,
-        "description": "Fills the width of its container; the items share it equally. Long labels end in an ellipsis, so five options need room: keep labels short. Sets data-full-width."
+        "description": "Fills the width of its container; the items share it equally. A label that does not fit wraps onto a second line and the item grows in height, so keep labels short. Sets data-full-width."
       },
       "children": {
         "type": "node",
@@ -19012,7 +19020,6 @@
       "group",
       "label",
       "separator",
-      "empty",
       "scroll-down"
     ],
     "parts": {
@@ -19113,7 +19120,7 @@
       "empty": {
         "type": "node",
         "default": "No options to choose from yet.",
-        "description": "Shown in the list when there is no option. Arabic default: ما فيه خيارات للاختيار. Say what to do next."
+        "description": "With no option the list does not open and the trigger is described by these words (aria-describedby). Pass them: the default cannot know what to do next, so say why there is no option and the next step. Arabic default: ما فيه خيارات للاختيار."
       },
       "name": {
         "type": "string",
@@ -19152,8 +19159,8 @@
       "announce": "The trigger reads its Field label, the chosen label (or the placeholder), and that it opens a list. Moving through the list reads each option: its label, its description, selected or not, unavailable, and its position.",
       "notes": [
         "Tab does not move focus while the list is open (Radix keeps it in the list); Escape or a choice returns focus to the trigger.",
-        "The open listbox is named like the trigger: through the Field label, else aria-label or aria-labelledby on the Select. With no option, the list is described by its empty text.",
-        "Read only and loading block only the keys that open the list or choose by typeahead; Tab and browser shortcuts with a modifier pass.",
+        "The open listbox is named like the trigger: through the Field label, else aria-label or aria-labelledby on the Select. With no option the list does not open (an empty listbox is not valid): the trigger is described by the empty text, as it is by the loading words while loading.",
+        "Read only, loading and empty block only the keys that open the list or choose by typeahead; Tab and browser shortcuts with a modifier pass.",
         "The chosen item shows a check on every style, never color alone (WCAG 1.4.1). The check column is on every row so labels line up.",
         "Rows equal ListBox option rows: the same list.row.height (sm: size.control.xs), padding, gap, radius, type and highlight tokens. Rows and the scroll buttons are at least size.target-min (WCAG 2.5.8).",
         "The content is portaled into a Theme copied from the trigger's Theme and is its own root carrying data-part content, as the Combobox popup is; its z-index is z.menu so it shows over a Dialog.",
@@ -19161,7 +19168,7 @@
         "An option description is read through aria-describedby on the item.",
         "Contract: the variants case marks one trigger with data-demo-trigger. Enter, Space and ArrowDown on the trigger are checked as state changes (aria-expanded), because Radix opens on keydown and prevents the click. The closed trigger stamps no data-state (it reads as open through aria-expanded); data-state open is on the content root.",
         "contract.skipAxeRules aria-hidden-focus: while the list is open, Radix Select hides the rest of the page with aria-hidden and traps focus in the list (a focus scope, and pointer events off outside it), so the other triggers on the page cannot be reached until it closes. Axe flags those hidden triggers by shape. The closed pages passed axe with the rule on in the lane run before it was skipped (docs/reports/lanes/lane-3d.md).",
-        "States: open is data-state on the content root; closed means the content is not in the DOM (Radix Select has no exit presence). checked and unchecked are data-state on each item."
+        "States: open is data-state on the content root; when closed the content is not in the DOM (Radix Select has no exit presence), so no element stamps closed. closed stays in states because the contract suite treats a component as an overlay, and opens it, only when states lists both open and closed. checked and unchecked are data-state on each item."
       ]
     },
     "content": {
@@ -19302,8 +19309,7 @@
         "item-description",
         "group",
         "label",
-        "separator",
-        "empty"
+        "separator"
       ],
       "keys": {
         "Enter": {
@@ -23408,7 +23414,7 @@
       },
       "max": {
         "type": "number",
-        "description": "The most tags. Text past it is not added and the status says so."
+        "description": "The most tags. Text past it is not added: it stays in the control, and a visible message under the box (You can add up to 12 tags) says why."
       },
       "size": {
         "type": [
@@ -23488,7 +23494,7 @@
         "ArrowDown": "With suggestions: opens them, then moves to the next suggestion",
         "ArrowUp": "With suggestions: moves to the previous suggestion. Escape closes the suggestions"
       },
-      "announce": "Each add, removal, duplicate and the max are read once from a polite status (Added tag design, Removed tag design, design is already added; Arabic أضفنا الوسم، حذفنا الوسم، الحد الأعلى للوسوم: 10). The status empties first, so the same words are read again.",
+      "announce": "Each add, removal, duplicate and the max are read once from a polite status (Added tag design, Removed tag design, design is already added; Arabic أضفنا الوسم، حذفنا الوسم، الحد الأعلى للوسوم: 10). The status empties first, so the same words are read again. A duplicate or the max also shows as visible text under the box (WCAG 3.3.1), a FieldError that the control is described by, until the next edit, add or removal.",
       "notes": [
         "Splitting and duplicates come from @the-system/shared tags.ts: the comma, the Arabic comma and new lines split; parts are trimmed; two tags are the same when their normalize() forms match (case, accents, Arabic diacritics, tatweel and alef forms ignored).",
         "Pasting text with a separator adds every part at once; a single line pastes as typed text.",
@@ -23499,7 +23505,8 @@
         "Disabled: the control is natively disabled and the tag group carries aria-disabled, so the faded tags read as unavailable (WCAG 1.4.3 exempts inactive components).",
         "Escape closes the suggestions (in the ArrowUp entry): the contract suite checks Escape only on an overlay with a trigger, and a TagField has none.",
         "Blur keeps typed text in the control and does not add it; only Enter, a separator or a paste adds. The control's text is not submitted with the form.",
-        "Text past max stays in the control; a paste replaces the selected text."
+        "Text past max stays in the control, whether it ends with Enter, a separator or a paste; a paste replaces the selected text.",
+        "The refusal message is a FieldError rendered right after the root (outside the Field wiring, so a Field error keeps its own id and the Field stays valid). The control's aria-describedby names it only while it shows."
       ]
     },
     "content": {
@@ -23513,7 +23520,7 @@
       "ar": {
         "label": "Noun form, no diacritics: الوسوم.",
         "placeholder": "Noun form: إضافة وسم.",
-        "hint": "اضغط Enter أو اكتب فاصلة لإضافة وسم.",
+        "hint": "اضغط Enter أو اكتب فاصلة لإضافة وسم. The Latin run Enter goes through Bidi.",
         "remove": "حذف الوسم <tag>. After removal: حذفنا الوسم <tag>.",
         "error": "أضف وسما واحدا على الأقل."
       }
