@@ -10,7 +10,10 @@
 // On an element that carries a `ds*` directive attribute (for example
 // `<div dsDialogContent [title]="t">`), `title` and `[title]` are the
 // directive's input, not the native attribute, and pass. `[attr.title]`
-// always writes the native attribute and still fails.
+// always writes the native attribute and still fails. Strict form
+// (`createNoNativeTitle(titleHosts)`): only the directive attributes that
+// really declare a `title` input pass, from `titleInputHosts` in
+// angular-inputs.ts. The repo gate and `ds doctor` use the strict form.
 import ts from 'typescript';
 import { boundName, jsxTag, parseTs, propName, readTags, templatesOf, walk } from '../markup';
 import { isUiSource } from '../scopes';
@@ -27,7 +30,19 @@ const DS_DIRECTIVE = /^[[*(]?ds[A-Z][\w]*\]?\)?$/;
 
 const MESSAGE = 'native title attribute. Use the Tooltip component (WCAG 1.4.13).';
 
+/** Builds the check. With `titleHosts`, only those directive attributes take `title` as an input. */
+export function createNoNativeTitle(titleHosts?: ReadonlySet<string>): (file: SourceFile) => Finding[] {
+  return (file) => checkNativeTitle(file, titleHosts);
+}
+
+/** The permissive form: any `ds*` directive attribute takes `title` as an input. */
 export function noNativeTitle(file: SourceFile): Finding[] {
+  return checkNativeTitle(file, undefined);
+}
+
+const attrKey = (name: string) => name.replace(/^[[*(]+/, '').replace(/[\])]+$/, '');
+
+function checkNativeTitle(file: SourceFile, titleHosts: ReadonlySet<string> | undefined): Finding[] {
   const ext = extname(file.path);
   if (!['.tsx', '.ts', '.html'].includes(ext)) return [];
   const out: Finding[] = [];
@@ -83,7 +98,9 @@ export function noNativeTitle(file: SourceFile): Finding[] {
   for (const t of templatesOf(file.path, file.content, source)) {
     for (const tag of readTags(t.text)) {
       if (tag.name.includes('-') || TITLE_IS_NAME.has(tag.name)) continue;
-      const directive = tag.attrs.some((a) => DS_DIRECTIVE.test(a.name));
+      const directive = titleHosts
+        ? tag.attrs.some((a) => titleHosts.has(attrKey(a.name)))
+        : tag.attrs.some((a) => DS_DIRECTIVE.test(a.name));
       for (const a of tag.attrs) {
         if (boundName(a.name) !== 'title') continue;
         if (directive && !/^\[?attr\./i.test(a.name)) continue;
@@ -92,6 +109,10 @@ export function noNativeTitle(file: SourceFile): Finding[] {
     }
   }
   return out;
+}
+
+export function createNoNativeTitleRule(titleHosts?: ReadonlySet<string>): Rule {
+  return { ...noNativeTitleRule, check: createNoNativeTitle(titleHosts) };
 }
 
 export const noNativeTitleRule: Rule = {

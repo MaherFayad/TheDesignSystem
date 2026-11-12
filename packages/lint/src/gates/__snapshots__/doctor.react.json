@@ -1,0 +1,212 @@
+{
+  "apiVersion": 1,
+  "type": "doctor.report",
+  "data": {
+    "findings": [
+      {
+        "ruleId": "ds/copy",
+        "severity": "error",
+        "file": "copy.tsx",
+        "line": 7,
+        "column": 7,
+        "message": "\"OK\" says nothing about the action. A button is a verb plus a noun, for example \"Save board\"."
+      },
+      {
+        "ruleId": "ds/copy",
+        "severity": "warning",
+        "file": "copy.tsx",
+        "line": 8,
+        "column": 32,
+        "message": "\"Close\" is one word. A button is a verb plus a noun, for example \"Delete board\"."
+      },
+      {
+        "ruleId": "ds/direction",
+        "severity": "error",
+        "file": "direction.tsx",
+        "line": 4,
+        "column": 19,
+        "message": "marginLeft is physical and does not mirror in RTL. Use marginInlineStart.",
+        "fix": "marginInlineStart"
+      },
+      {
+        "ruleId": "ds/direction",
+        "severity": "error",
+        "file": "direction.tsx",
+        "line": 4,
+        "column": 52,
+        "message": "textAlign: 'left' is physical. Use 'start'.",
+        "fix": "'start'"
+      },
+      {
+        "ruleId": "ds/direction",
+        "severity": "error",
+        "file": "direction.tsx",
+        "line": 5,
+        "column": 22,
+        "message": "right is physical and does not mirror in RTL. Use insetInlineEnd.",
+        "fix": "insetInlineEnd"
+      },
+      {
+        "ruleId": "ds/logical-properties",
+        "severity": "error",
+        "file": "logical-properties.css",
+        "line": 2,
+        "column": 9,
+        "message": "margin-left is physical. Use margin-inline-start."
+      },
+      {
+        "ruleId": "ds/no-dash",
+        "severity": "error",
+        "file": "no-dash.tsx",
+        "line": 3,
+        "column": 21,
+        "message": "em dash (escaped) near \") { return <h1>Boards <here> recent</h1>; } \". Use a comma, colon, period or parentheses."
+      },
+      {
+        "ruleId": "ds/no-native-title",
+        "severity": "error",
+        "file": "no-native-title.tsx",
+        "line": 3,
+        "column": 16,
+        "message": "<span title>: native title attribute. Use the Tooltip component (WCAG 1.4.13)."
+      },
+      {
+        "ruleId": "ds/no-radix-import",
+        "severity": "error",
+        "file": "no-radix-import.tsx",
+        "line": 2,
+        "column": 1,
+        "message": "Import from radix-ui in app code. Use the system component from @the-system/react; it wires the behavior, the anatomy and the tokens."
+      },
+      {
+        "ruleId": "ds/no-radix-import",
+        "severity": "error",
+        "file": "no-radix-import.tsx",
+        "line": 3,
+        "column": 1,
+        "message": "Import from @radix-ui/react-popover in app code. Use the system component from @the-system/react; it wires the behavior, the anatomy and the tokens."
+      },
+      {
+        "ruleId": "ds/no-raw-color",
+        "severity": "error",
+        "file": "no-raw-color.css",
+        "line": 2,
+        "column": 9,
+        "message": "color: #ff0000 is a raw color. Use a --ds-color-* token."
+      },
+      {
+        "ruleId": "ds/no-raw-value",
+        "severity": "error",
+        "file": "no-raw-value.css",
+        "line": 2,
+        "column": 9,
+        "message": "padding: 12px is a raw length. Use a --ds-* token."
+      },
+      {
+        "ruleId": "ds/primitives",
+        "severity": "error",
+        "file": "primitives.tsx",
+        "line": 5,
+        "column": 7,
+        "message": "<button> where the system has Button. Use Button. Instead use: IconButton (only an icon); Link (navigation inside text).",
+        "fix": "Button"
+      },
+      {
+        "ruleId": "ds/primitives",
+        "severity": "error",
+        "file": "primitives.tsx",
+        "line": 6,
+        "column": 7,
+        "message": "<input> where the system has Input. Use Input. Instead use: Textarea (text longer than one line); Select (a choice from a short known list).",
+        "fix": "Input"
+      },
+      {
+        "ruleId": "ds/primitives",
+        "severity": "error",
+        "file": "primitives.tsx",
+        "line": 8,
+        "column": 7,
+        "message": "<dialog> where the system has Dialog. Use Dialog. Instead use: Drawer (long content); Toast (no decision).",
+        "fix": "Dialog"
+      },
+      {
+        "ruleId": "ds/shared-axes",
+        "severity": "error",
+        "file": "shared-axes.tsx",
+        "line": 7,
+        "column": 15,
+        "message": "Button tone=\"primary\" is not a value of the manifest. Use one of: neutral, accent, danger, success, warning, info."
+      },
+      {
+        "ruleId": "ds/shared-axes",
+        "severity": "error",
+        "file": "shared-axes.tsx",
+        "line": 8,
+        "column": 14,
+        "message": "Input shape=\"square\" is not a value of the manifest. Use one of: default, pill."
+      },
+      {
+        "ruleId": "ds/slot-limits",
+        "severity": "error",
+        "file": "slot-limits.tsx",
+        "line": 9,
+        "column": 9,
+        "message": "DialogFooter holds 4 items; the Dialog footer slot takes at most 3. Instead use: Drawer (long content); Toast (no decision)."
+      },
+      {
+        "ruleId": "ds/slot-limits",
+        "severity": "error",
+        "file": "slot-limits.tsx",
+        "line": 16,
+        "column": 11,
+        "message": "<div> in the Dialog footer slot, which takes Button. Instead use: Drawer (long content); Toast (no decision)."
+      },
+      {
+        "ruleId": "ds/slot-limits",
+        "severity": "error",
+        "file": "slot-limits.tsx",
+        "line": 19,
+        "column": 15,
+        "message": "Button start takes Icon, not <span>. Instead use: IconButton (only an icon); Link (navigation inside text)."
+      },
+      {
+        "ruleId": "ds/token-vocabulary",
+        "severity": "error",
+        "file": "token-vocabulary.css",
+        "line": 2,
+        "column": 20,
+        "message": "--ds-color-text-made-up is not in the token build and this file does not declare it. Use a token from packages/tokens or add the name to packages/tokens/src/contract.json."
+      },
+      {
+        "ruleId": "ds/touch-target",
+        "severity": "error",
+        "file": "touch/touch-target.tsx",
+        "line": 5,
+        "column": 18,
+        "message": "Button size=\"xs\" is 24px, under the 44pt (iOS) and 48dp (Android) touch target. Use sm or larger in a touch template.",
+        "fix": "size=\"md\""
+      }
+    ],
+    "summary": {
+      "files": 13,
+      "errors": 21,
+      "warnings": 1,
+      "byRule": {
+        "ds/copy": 2,
+        "ds/direction": 3,
+        "ds/logical-properties": 1,
+        "ds/no-dash": 1,
+        "ds/no-native-title": 1,
+        "ds/no-radix-import": 2,
+        "ds/no-raw-color": 1,
+        "ds/no-raw-value": 1,
+        "ds/primitives": 3,
+        "ds/shared-axes": 2,
+        "ds/slot-limits": 3,
+        "ds/token-vocabulary": 1,
+        "ds/touch-target": 1
+      },
+      "skipped": []
+    }
+  }
+}

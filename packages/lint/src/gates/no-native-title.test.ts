@@ -1,10 +1,27 @@
 import { describe, expect, it } from 'vitest';
-import { noNativeTitle, noNativeTitleRule } from '../rules/no-native-title';
-import { fixture, format, lines, runRule } from './harness';
+import { titleInputHosts } from '../angular-inputs';
+import { createNoNativeTitle, createNoNativeTitleRule, noNativeTitle } from '../rules/no-native-title';
+import { fixture, format, lines, readText, repoFiles, runRule } from './harness';
+
+const angularSources = repoFiles()
+  .filter((p) => p.startsWith('packages/angular/src/'))
+  .map((path) => ({ path, content: readText(path) ?? '' }));
+const titleHosts = titleInputHosts(angularSources);
 
 describe('gate ds/no-native-title: hints go through Tooltip', () => {
-  it('finds no native title in TSX, HTML or Angular templates', () => {
-    expect(format(runRule(noNativeTitleRule)), 'use the Tooltip component').toEqual([]);
+  it('finds the Angular directives with a title input', () => {
+    expect(titleHosts.has('dsDialogContent')).toBe(true);
+    expect(titleHosts.has('dsButton')).toBe(false);
+  });
+
+  it('finds no native title in TSX, HTML or Angular templates (strict: only real title inputs pass)', () => {
+    expect(format(runRule(createNoNativeTitleRule(titleHosts))), 'use the Tooltip component').toEqual([]);
+  });
+
+  it('strict form: [title] passes only on a directive that declares a title input', () => {
+    const check = createNoNativeTitle(new Set(['dsDialogContent']));
+    const file = { path: 'sample.html', content: '<div dsDialogContent [title]="t"></div>\n<button dsButton [title]="t">x</button>\n<div [dsDialogContent]="d" title="x"></div>' };
+    expect(lines(check(file))).toEqual([2]);
   });
 
   it('fails on the TSX fixture, and passes component props, svg <title> and iframe', () => {

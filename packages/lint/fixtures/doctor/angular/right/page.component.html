@@ -1,0 +1,13 @@
+<main class="page" [style.margin-inline-start]="gap">
+  <div dsInput><input type="search" aria-label="Search boards" /></div>
+  <div dsDialogFooter>
+    <button dsButton dsDialogClose>Keep editing</button>
+    <button dsButton tone="accent" emphasis="solid">Save board</button>
+  </div>
+  <ng-container>
+    <button dsButton size="sm">Open board</button>
+  </ng-container>
+  @if (open) {
+    <div dsTitleBar [title]="name"></div>
+  }
+</main>

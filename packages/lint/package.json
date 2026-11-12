@@ -5,6 +5,19 @@
   "license": "UNLICENSED",
   "type": "module",
   "exports": {
-    ".": "./src/index.ts"
+    ".": "./src/index.ts",
+    "./doctor": "./src/doctor.ts"
+  },
+  "dependencies": {
+    "typescript": "^6.0.3",
+    "culori": "^4.0.2"
+  },
+  "peerDependencies": {
+    "@angular/compiler": ">=20"
+  },
+  "peerDependenciesMeta": {
+    "@angular/compiler": {
+      "optional": true
+    }
   }
 }

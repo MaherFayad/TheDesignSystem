@@ -1,0 +1,177 @@
+{
+  "apiVersion": 1,
+  "type": "doctor.report",
+  "data": {
+    "findings": [
+      {
+        "ruleId": "ds/copy",
+        "severity": "error",
+        "file": "copy.html",
+        "line": 2,
+        "column": 1,
+        "message": "\"Continue\" says nothing about the action. A button is a verb plus a noun, for example \"Save board\"."
+      },
+      {
+        "ruleId": "ds/direction",
+        "severity": "error",
+        "file": "direction.html",
+        "line": 2,
+        "column": 6,
+        "message": "margin-left is physical. Use margin-inline-start."
+      },
+      {
+        "ruleId": "ds/direction",
+        "severity": "error",
+        "file": "direction.html",
+        "line": 3,
+        "column": 6,
+        "message": "left is physical. Use inset-inline-start."
+      },
+      {
+        "ruleId": "ds/logical-properties",
+        "severity": "error",
+        "file": "logical-properties.css",
+        "line": 2,
+        "column": 9,
+        "message": "margin-left is physical. Use margin-inline-start."
+      },
+      {
+        "ruleId": "ds/no-dash",
+        "severity": "error",
+        "file": "no-dash.html",
+        "line": 2,
+        "column": 12,
+        "message": "em dash (escaped) near \" entity. --> <h1>Boards <here> recent</h1> \". Use a comma, colon, period or parentheses."
+      },
+      {
+        "ruleId": "ds/no-native-title",
+        "severity": "error",
+        "file": "no-native-title.html",
+        "line": 2,
+        "column": 7,
+        "message": "<span title>: native title attribute. Use the Tooltip component (WCAG 1.4.13)."
+      },
+      {
+        "ruleId": "ds/no-native-title",
+        "severity": "error",
+        "file": "no-native-title.html",
+        "line": 3,
+        "column": 18,
+        "message": "<button [title]>: native title attribute. Use the Tooltip component (WCAG 1.4.13)."
+      },
+      {
+        "ruleId": "ds/no-raw-color",
+        "severity": "error",
+        "file": "no-raw-color.css",
+        "line": 2,
+        "column": 9,
+        "message": "color: #ff0000 is a raw color. Use a --ds-color-* token."
+      },
+      {
+        "ruleId": "ds/no-raw-value",
+        "severity": "error",
+        "file": "no-raw-value.css",
+        "line": 2,
+        "column": 9,
+        "message": "padding: 12px is a raw length. Use a --ds-* token."
+      },
+      {
+        "ruleId": "ds/primitives",
+        "severity": "error",
+        "file": "primitives.component.ts",
+        "line": 6,
+        "column": 14,
+        "message": "<button> where the system has Button. Use the dsButton directive. Instead use: IconButton (only an icon); Link (navigation inside text).",
+        "fix": "Button"
+      },
+      {
+        "ruleId": "ds/primitives",
+        "severity": "error",
+        "file": "primitives.html",
+        "line": 3,
+        "column": 3,
+        "message": "<button> where the system has Button. Use the dsButton directive. Instead use: IconButton (only an icon); Link (navigation inside text).",
+        "fix": "Button"
+      },
+      {
+        "ruleId": "ds/primitives",
+        "severity": "error",
+        "file": "primitives.html",
+        "line": 5,
+        "column": 3,
+        "message": "<input> where the system has Input. Use the dsInput directive. Instead use: Textarea (text longer than one line); Select (a choice from a short known list).",
+        "fix": "Input"
+      },
+      {
+        "ruleId": "ds/primitives",
+        "severity": "error",
+        "file": "primitives.html",
+        "line": 6,
+        "column": 3,
+        "message": "<dialog> where the system has Dialog. Use the dsDialog directive. Instead use: Drawer (long content); Toast (no decision).",
+        "fix": "Dialog"
+      },
+      {
+        "ruleId": "ds/shared-axes",
+        "severity": "error",
+        "file": "shared-axes.html",
+        "line": 2,
+        "column": 18,
+        "message": "Button tone=\"primary\" is not a value of the manifest. Use one of: neutral, accent, danger, success, warning, info."
+      },
+      {
+        "ruleId": "ds/shared-axes",
+        "severity": "error",
+        "file": "shared-axes.html",
+        "line": 3,
+        "column": 18,
+        "message": "Button size=\"xl\" is not a value of the manifest. Use one of: xs, sm, md, lg."
+      },
+      {
+        "ruleId": "ds/slot-limits",
+        "severity": "error",
+        "file": "slot-limits.html",
+        "line": 4,
+        "column": 3,
+        "message": "<a> in the Dialog footer slot, which takes Button. Instead use: Drawer (long content); Toast (no decision)."
+      },
+      {
+        "ruleId": "ds/token-vocabulary",
+        "severity": "error",
+        "file": "token-vocabulary.css",
+        "line": 2,
+        "column": 20,
+        "message": "--ds-color-text-made-up is not in the token build and this file does not declare it. Use a token from packages/tokens or add the name to packages/tokens/src/contract.json."
+      },
+      {
+        "ruleId": "ds/touch-target",
+        "severity": "error",
+        "file": "touch/touch-target.html",
+        "line": 2,
+        "column": 18,
+        "message": "Button size=\"xs\" is 24px, under the 44pt (iOS) and 48dp (Android) touch target. Use sm or larger in a touch template.",
+        "fix": "size=\"md\""
+      }
+    ],
+    "summary": {
+      "files": 13,
+      "errors": 18,
+      "warnings": 0,
+      "byRule": {
+        "ds/copy": 1,
+        "ds/direction": 2,
+        "ds/logical-properties": 1,
+        "ds/no-dash": 1,
+        "ds/no-native-title": 2,
+        "ds/no-raw-color": 1,
+        "ds/no-raw-value": 1,
+        "ds/primitives": 4,
+        "ds/shared-axes": 2,
+        "ds/slot-limits": 1,
+        "ds/token-vocabulary": 1,
+        "ds/touch-target": 1
+      },
+      "skipped": []
+    }
+  }
+}

@@ -1,0 +1,97 @@
+{
+  "apiVersion": 1,
+  "type": "doctor.report",
+  "data": {
+    "findings": [
+      {
+        "ruleId": "ds/copy",
+        "severity": "error",
+        "file": "copy.tsx",
+        "line": 5,
+        "column": 10,
+        "message": "\"Yes\" says nothing about the action. A button is a verb plus a noun, for example \"Save board\"."
+      },
+      {
+        "ruleId": "ds/direction",
+        "severity": "error",
+        "file": "direction.tsx",
+        "line": 6,
+        "column": 25,
+        "message": "marginLeft is physical and does not mirror in RTL. Use marginStart.",
+        "fix": "marginStart"
+      },
+      {
+        "ruleId": "ds/native-no-style-literals",
+        "severity": "error",
+        "file": "native-no-style-literals.styles.ts",
+        "line": 5,
+        "column": 79,
+        "message": "padding: 12 is a literal in a styles file. Read it from the theme object argument (only 0, 1 and percentages may be written)."
+      },
+      {
+        "ruleId": "ds/native-no-style-literals",
+        "severity": "error",
+        "file": "native-no-style-literals.tsx",
+        "line": 5,
+        "column": 25,
+        "message": "padding: 12 is a literal in a style. Read it from the theme in <Name>.styles.ts."
+      },
+      {
+        "ruleId": "ds/native-no-style-literals",
+        "severity": "error",
+        "file": "native-no-style-literals.tsx",
+        "line": 5,
+        "column": 38,
+        "message": "backgroundColor: '#ffffff' is a literal in a style. Read it from the theme in <Name>.styles.ts."
+      },
+      {
+        "ruleId": "ds/no-dash",
+        "severity": "error",
+        "file": "no-dash.tsx",
+        "line": 5,
+        "column": 25,
+        "message": "em dash (escaped) near \" return <Text>{'Boards <here> recent'}</Text>; \". Use a comma, colon, period or parentheses."
+      },
+      {
+        "ruleId": "ds/shared-axes",
+        "severity": "error",
+        "file": "shared-axes.tsx",
+        "line": 5,
+        "column": 18,
+        "message": "Button tone=\"primary\" is not a value of the manifest. Use one of: neutral, accent, danger, success, warning, info."
+      },
+      {
+        "ruleId": "ds/slot-limits",
+        "severity": "error",
+        "file": "slot-limits.tsx",
+        "line": 6,
+        "column": 18,
+        "message": "Button start takes Icon, not <View>. Instead use: IconButton (only an icon); Link (navigation inside text)."
+      },
+      {
+        "ruleId": "ds/touch-target",
+        "severity": "error",
+        "file": "touch-target.tsx",
+        "line": 5,
+        "column": 18,
+        "message": "Button size=\"xs\" is 24px, under the 44pt (iOS) and 48dp (Android) touch target. Use sm or larger in a touch template.",
+        "fix": "size=\"md\""
+      }
+    ],
+    "summary": {
+      "files": 8,
+      "errors": 9,
+      "warnings": 0,
+      "byRule": {
+        "ds/copy": 1,
+        "ds/direction": 1,
+        "ds/native-no-style-literals": 3,
+        "ds/no-dash": 1,
+        "ds/shared-axes": 1,
+        "ds/slot-limits": 1,
+        "ds/touch-target": 1
+      },
+      "skipped": []
+    }
+  }
+}

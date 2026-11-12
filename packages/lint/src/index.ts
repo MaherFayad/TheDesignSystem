@@ -58,3 +58,4 @@ export const rules: readonly Rule[] = [
 export * from './rules/contrast';
 export * from './rules/contract-filled';
 export * from './contrast-pairs';
+export * from './angular-inputs';
