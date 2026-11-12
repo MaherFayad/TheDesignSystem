@@ -41,12 +41,12 @@ No adb. No iOS build.
 | Id | Title | Owner | Framework | Status | Commit |
 | --- | --- | --- | --- | --- | --- |
 | 1.0.a | Lint gate changes | ds-qa | all | done | e6d3b58 |
-| 1.0.b | Token adoption in wave 0 components | ds-component | react | running, partly in e861fe6 | |
+| 1.0.b | Token adoption in wave 0 components | ds-component | react | done | d892d01 |
 | 1.0.c1 | Shared theme and dialog focus, React | ds-component | react | done | 6f0b589 |
 | 1.0.c2 | Shared logic in Angular | ds-angular | angular | done | e861fe6 (inside the wip commit) |
 | 1.0.c3 | Shared logic in native | ds-native | native | done | e360d28 |
 | 1.0.d | Package fixes from the consumers report | ds-docs | all | done | a85837c |
-| 1.0.e | Contract `moves` expectation, Window key hints | ds-qa | all | running, partly in e861fe6 | |
+| 1.0.e | Contract `moves` expectation, Window key hints | ds-qa | all | done | d892d01 |
 | 1.0.f | Manifest gaps and visual findings | ds-component | react | running | |
 | 1.0.g | Icons for wave 1 | ds-style | all | done | 24b8a20 |
 | 1.1 | Batch 1 actions (11) | ds-component | react | open | |
