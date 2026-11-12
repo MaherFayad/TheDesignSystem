@@ -1,0 +1,151 @@
+/*
+ * Stack: one dimension layout with a token gap. Flex on the block axis (a
+ * column) or the inline axis (a row). Directions and alignment words are
+ * logical, so a row starts on the right in right to left text. Layout only:
+ * no color, no motion, nothing for forced colors to replace.
+ */
+@layer ds.base {
+  [data-ds='stack'] {
+    --_stack-gap: var(--ds-space-s);
+
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    align-items: stretch;
+    justify-content: start;
+    gap: var(--_stack-gap);
+    min-inline-size: 0;
+    box-sizing: border-box;
+  }
+
+  /* A list rendered as a Stack keeps its role (set in markup) but no bullets. */
+  :is(ul, ol)[data-ds='stack'] {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  [data-ds='stack'][data-orientation='horizontal'] {
+    flex-direction: row;
+  }
+
+  [data-ds='stack'][data-wrap] {
+    flex-wrap: wrap;
+  }
+
+  [data-ds='stack'][data-align='start'] {
+    align-items: start;
+  }
+
+  [data-ds='stack'][data-align='center'] {
+    align-items: center;
+  }
+
+  [data-ds='stack'][data-align='end'] {
+    align-items: end;
+  }
+
+  [data-ds='stack'][data-align='baseline'] {
+    align-items: baseline;
+  }
+
+  [data-ds='stack'][data-justify='center'] {
+    justify-content: center;
+  }
+
+  [data-ds='stack'][data-justify='end'] {
+    justify-content: end;
+  }
+
+  [data-ds='stack'][data-justify='between'] {
+    justify-content: space-between;
+  }
+
+  [data-ds='stack'][data-justify='around'] {
+    justify-content: space-around;
+  }
+
+  [data-ds='stack'][data-justify='evenly'] {
+    justify-content: space-evenly;
+  }
+
+  [data-ds='stack'][data-gap='none'] {
+    --_stack-gap: 0;
+  }
+
+  [data-ds='stack'][data-gap='4xs'] {
+    --_stack-gap: var(--ds-space-4xs);
+  }
+
+  [data-ds='stack'][data-gap='3xs'] {
+    --_stack-gap: var(--ds-space-3xs);
+  }
+
+  [data-ds='stack'][data-gap='2xs'] {
+    --_stack-gap: var(--ds-space-2xs);
+  }
+
+  [data-ds='stack'][data-gap='xs'] {
+    --_stack-gap: var(--ds-space-xs);
+  }
+
+  [data-ds='stack'][data-gap='s'] {
+    --_stack-gap: var(--ds-space-s);
+  }
+
+  [data-ds='stack'][data-gap='m'] {
+    --_stack-gap: var(--ds-space-m);
+  }
+
+  [data-ds='stack'][data-gap='l'] {
+    --_stack-gap: var(--ds-space-l);
+  }
+
+  [data-ds='stack'][data-gap='xl'] {
+    --_stack-gap: var(--ds-space-xl);
+  }
+
+  [data-ds='stack'][data-gap='2xl'] {
+    --_stack-gap: var(--ds-space-2xl);
+  }
+
+  [data-ds='stack'][data-gap='3xl'] {
+    --_stack-gap: var(--ds-space-3xl);
+  }
+
+  [data-ds='stack'][data-gap='4xl'] {
+    --_stack-gap: var(--ds-space-4xl);
+  }
+
+  [data-ds='stack'][data-gap='5xl'] {
+    --_stack-gap: var(--ds-space-5xl);
+  }
+
+  [data-ds='stack'][data-gap='6xl'] {
+    --_stack-gap: var(--ds-space-6xl);
+  }
+
+  [data-ds='stack'][data-gap='7xl'] {
+    --_stack-gap: var(--ds-space-7xl);
+  }
+
+  [data-ds='stack'][data-gap='8xl'] {
+    --_stack-gap: var(--ds-space-8xl);
+  }
+
+  [data-ds='stack'][data-gap='9xl'] {
+    --_stack-gap: var(--ds-space-9xl);
+  }
+
+  [data-ds='stack'][data-gap='10xl'] {
+    --_stack-gap: var(--ds-space-10xl);
+  }
+
+  [data-ds='stack'][data-gap='11xl'] {
+    --_stack-gap: var(--ds-space-11xl);
+  }
+
+  [data-ds='stack'][data-gap='12xl'] {
+    --_stack-gap: var(--ds-space-12xl);
+  }
+}

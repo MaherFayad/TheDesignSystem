@@ -1,0 +1,117 @@
+{
+  "name": "AspectRatio",
+  "kind": "component",
+  "family": "layout",
+  "summary": "Keeps a box, and the image, video or embed inside it, at a fixed ratio of width to height at any width.",
+  "useWhen": [
+    "A cover image, thumbnail or video that must not jump in height while it loads",
+    "An embed (a map or a video player) that should scale with its column",
+    "A grid of thumbnails that all share one ratio"
+  ],
+  "avoidWhen": [
+    "A single img or video you can style yourself: the native aspect-ratio CSS property on the element is simpler",
+    "Text content that must grow with its copy",
+    "An icon or avatar with a fixed size"
+  ],
+  "insteadUse": {
+    "One media element you style yourself": "the native aspect-ratio CSS property",
+    "A fixed size round picture of a person": "Avatar",
+    "A placeholder while media loads": "Skeleton",
+    "An icon": "Icon"
+  },
+  "anatomy": [
+    "root"
+  ],
+  "slots": {
+    "root": {
+      "accepts": "any",
+      "max": 1
+    }
+  },
+  "props": {
+    "ratio": {
+      "type": "number",
+      "default": "16 / 9",
+      "description": "Width divided by height, for example 16 / 9, 4 / 3, 1 or 3 / 4. A value that is not a positive finite number falls back to 16 / 9."
+    },
+    "fit": {
+      "type": [
+        "cover",
+        "contain"
+      ],
+      "default": "cover",
+      "description": "How an img, video, iframe, picture or canvas child fills the box: cover crops, contain letterboxes. Sets data-fit. An inline svg fits through its own preserveAspectRatio."
+    },
+    "asChild": {
+      "type": "boolean",
+      "default": false,
+      "description": "Renders the single child element as the root through Radix Slot."
+    },
+    "children": {
+      "type": "node",
+      "description": "One media element, or any content that fills the box."
+    }
+  },
+  "states": [],
+  "a11y": {
+    "role": "none of its own: a div. The media inside carries the name (alt text on img, a title track or label on video).",
+    "focus": "Never focusable.",
+    "keys": {},
+    "announce": "Nothing.",
+    "native": {
+      "accessibilityRole": "none"
+    },
+    "notes": [
+      "The ratio box reserves its height before media loads, so the page does not shift.",
+      "Content taller than the box is clipped. Never put text a person needs inside a ratio box."
+    ]
+  },
+  "content": {
+    "en": {
+      "alt": "Alt text on the media says what it shows, in sentence case. Decorative media gets an empty alt."
+    },
+    "ar": {
+      "alt": "Alt text in Arabic for Arabic pages, no diacritics."
+    }
+  },
+  "tokens": [],
+  "frameworks": {
+    "react": {
+      "status": "ready",
+      "behavior": "radix:AspectRatio",
+      "example": "AspectRatio.demo.tsx",
+      "note": "Radix renders a wrapper div (data-radix-aspect-ratio-wrapper) around the root that takes 100% width; className, style and ref go to the inner root. No motion: nothing animates. Component CSS keeps that wrapper at align-self start, so a grid or flex row cannot stretch it out of ratio."
+    },
+    "angular": {
+      "status": "planned",
+      "behavior": "[dsAspectRatio] directive on the native aspect-ratio property",
+      "note": "No Radix in Angular: the host sets aspect-ratio from the ratio input, so there is no wrapper div. The shared CSS styles the root and its media the same way."
+    },
+    "native": {
+      "status": "planned",
+      "behavior": "react-native:View with the aspectRatio style",
+      "note": "React Native has aspectRatio on every view; fit maps to Image resizeMode cover or contain."
+    }
+  },
+  "styles": {
+    "studio": "Layout only.",
+    "desk": "Layout only.",
+    "neutral": "Layout only.",
+    "liquid": "Layout only. Media stays solid under glass bars."
+  },
+  "mistakes": [
+    {
+      "wrong": "An AspectRatio around one img that you style yourself",
+      "right": "aspect-ratio 16 / 9 on the img in your CSS, with object-fit cover"
+    },
+    {
+      "wrong": "A fixed height on a thumbnail so the grid lines up",
+      "right": "AspectRatio ratio 1 in each cell, which scales with the column"
+    },
+    {
+      "wrong": "A caption inside the ratio box",
+      "right": "The caption below the box, where it can wrap"
+    }
+  ],
+  "since": "0.1.0"
+}

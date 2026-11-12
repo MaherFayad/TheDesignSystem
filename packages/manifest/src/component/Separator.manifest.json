@@ -1,0 +1,140 @@
+{
+  "name": "Separator",
+  "kind": "component",
+  "family": "layout",
+  "summary": "A thin line between groups of content, horizontal or vertical, with an optional short centered label.",
+  "useWhen": [
+    "Between groups of items in a menu, a toolbar or a settings list",
+    "Between two ways to do one thing, with a label such as Or",
+    "Between a day of messages and the next, with the date as the label"
+  ],
+  "avoidWhen": [
+    "Between every item of a list: the gap already separates them",
+    "As the border of a panel or a card",
+    "To make room: the line adds no space of its own",
+    "A heading for the group that follows"
+  ],
+  "insteadUse": {
+    "Space between items": "Stack",
+    "A box with a border": "Surface",
+    "A titled group": "Section",
+    "A divider you can drag": "ResizablePanels"
+  },
+  "anatomy": [
+    "root",
+    "line",
+    "label"
+  ],
+  "contract": {
+    "optionalParts": [
+      "line",
+      "label"
+    ]
+  },
+  "slots": {
+    "label": {
+      "accepts": "text",
+      "max": 1
+    }
+  },
+  "props": {
+    "orientation": {
+      "type": [
+        "horizontal",
+        "vertical"
+      ],
+      "default": "horizontal",
+      "description": "horizontal runs along the line, between stacked groups. vertical stands between items in a row and stretches to its height. Sets data-orientation."
+    },
+    "decorative": {
+      "type": "boolean",
+      "default": true,
+      "description": "true: role none, hidden from assistive tech, drawn with color.border.subtle. false: role separator, announced, drawn with color.border.control at 3:1. Sets data-decorative when true."
+    },
+    "label": {
+      "type": "node",
+      "description": "Short centered text on the line, for example Or. On a semantic separator it is the accessible name (aria-labelledby). Renders the label part and two line parts, and sets data-labelled."
+    }
+  },
+  "states": [
+    "data-orientation",
+    "data-decorative",
+    "data-labelled"
+  ],
+  "a11y": {
+    "role": "separator when decorative is false, none when it is true (Radix Separator)",
+    "focus": "Never focusable.",
+    "keys": {},
+    "announce": "A semantic separator is announced as a separator, with its label as the name. A decorative one is silent; its label text, if any, is read as plain text in the flow.",
+    "native": {
+      "accessibilityRole": "none"
+    },
+    "notes": [
+      "A semantic separator is a boundary a person needs to see, so its line meets 3:1 against the surface (WCAG 1.4.11). A decorative line may be quieter.",
+      "The line is a border, so it stays visible in forced colors (CanvasText, GrayText when decorative).",
+      "The two line parts of a labelled separator are hidden from assistive tech."
+    ]
+  },
+  "content": {
+    "en": {
+      "label": "One or two words in sentence case: Or, Older messages. No colon, no full stop."
+    },
+    "ar": {
+      "label": "A short noun or particle: أو، الرسائل الأقدم. No diacritics."
+    }
+  },
+  "tokens": [
+    "color.border.subtle",
+    "color.border.control",
+    "border.width.default",
+    "space.m",
+    "size.icon.md",
+    "color.text.muted",
+    "font.family.sans",
+    "font.size.s",
+    "font.leading.snug"
+  ],
+  "frameworks": {
+    "react": {
+      "status": "ready",
+      "behavior": "radix:Separator",
+      "example": "Separator.demo.tsx",
+      "note": "No motion: a static line has nothing to animate, so no pattern from the catalog applies. No spacing prop: the gap of the parent Stack or Grid spaces the groups."
+    },
+    "angular": {
+      "status": "planned",
+      "behavior": "[dsSeparator] directive with role and aria-orientation host bindings",
+      "note": "Label through content projection with the same line and label parts."
+    },
+    "native": {
+      "status": "planned",
+      "behavior": "react-native:View with a hairline border",
+      "note": "StyleSheet.hairlineWidth; accessible false when decorative."
+    }
+  },
+  "styles": {
+    "studio": "A 1px line in the subtle border color; Studio otherwise separates tiles by the 1px gap.",
+    "desk": "A 1px hairline inside windows.",
+    "neutral": "A 1px line, the main way Neutral separates groups.",
+    "liquid": "A 1px line on solid content; glass bars use spacing instead."
+  },
+  "mistakes": [
+    {
+      "wrong": "A separator between every row of a list",
+      "right": "A gap, or a separator only between groups"
+    },
+    {
+      "wrong": "An hr with margin-left and margin-right",
+      "right": "Separator inside a Stack, which spaces it with the gap"
+    },
+    {
+      "wrong": "A decorative separator that marks the only boundary between two forms",
+      "right": "decorative false, so it is announced and drawn at 3:1"
+    },
+    {
+      "wrong": "A long sentence as the label",
+      "right": "One or two words; a sentence belongs in a heading or a paragraph"
+    }
+  ],
+  "since": "0.1.0"
+}
