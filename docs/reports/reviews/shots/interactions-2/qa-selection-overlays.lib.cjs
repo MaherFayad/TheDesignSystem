@@ -299,7 +299,7 @@ const scenarios = {
   'filter-count-roll': {
     runs: [
       { name: 'pick-images', stateSel: '[data-ds=filter-bar] [data-ds=chip]', act: (p) => clickF(p, '[data-ds=filter-bar] [data-ds=chip] >> nth=0'), inspect: () => document.querySelector('[data-part=count] [data-visually-hidden]').textContent },
-      { name: 'pick-video', stateSel: '[data-ds=filter-bar] [data-ds=chip] >> nth=1', act: (p) => clickF(p, '[data-ds=filter-bar] [data-ds=chip] >> nth=1') },
+      { name: 'pick-video', stateSel: '[data-ds=filter-bar] [data-ds=chip]:nth-child(2)', act: (p) => clickF(p, '[data-ds=filter-bar] [data-ds=chip] >> nth=1') },
     ],
   },
   'list-stagger': {
@@ -353,7 +353,7 @@ const scenarios = {
   },
   'tooltip-follow': {
     runs: [
-      { name: 'hover-next', ms: 900, stateSel: "[data-ds='icon-button'] >> nth=1", prep: async (p) => { await hover(p, T); await sleep(1300); await settle(p); }, act: (p) => hover(p, "[data-ds='icon-button'] >> nth=1"), inspect: () => [...document.querySelectorAll('[role=tooltip]')].map((t) => t.textContent) },
+      { name: 'hover-next', ms: 900, stateSel: "[aria-label='Edit layer']", prep: async (p) => { await hover(p, T); await sleep(1300); await settle(p); }, act: (p) => hover(p, "[data-ds='icon-button'] >> nth=1"), inspect: () => [...document.querySelectorAll('[role=tooltip]')].map((t) => t.textContent) },
     ],
   },
   'dialog-spring': {
@@ -400,7 +400,7 @@ const scenarios = {
     runs: [
       { name: 'start', ms: 1000, act: (p) => clickF(p, T) },
       { name: 'next', ms: 1000, act: (p) => clickF(p, "[data-ds='tour'] button:has-text('Next')") },
-      { name: 'back', ms: 1000, act: (p) => clickF(p, "[data-ds='tour'] button:has-text('Back')") },
+      { name: 'back', ms: 1000, act: (p) => clickF(p, "[data-ds='tour'] button:has-text('Previous')") },
     ],
   },
   'window-settle': {

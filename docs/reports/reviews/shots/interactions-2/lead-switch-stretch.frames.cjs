@@ -60,10 +60,11 @@ const TS = [0, 20, 40, 60, 80, 100, 140, 180, 220, 300, 440];
     execFileSync('ffmpeg', args);
     rows.push(row);
   }
+  fs.writeFileSync(path.join(OUT, 'lead-switch-stretch.frames.json'), JSON.stringify({ times: TS, note: 'rows studio dark, desk dark, neutral light; columns the times after release', runs: all }, null, 1));
   const args = ['-v', 'error', '-y'];
   rows.forEach((f) => args.push('-i', f));
-  args.push('-filter_complex', rows.map((_, i) => `[${i}:v]`).join('') + `vstack=inputs=${rows.length}`, path.join(OUT, 'lead-switch-stretch.frames.png'));
+  // Rows differ in width (the switch differs per style): pad each to the widest.
+  args.push('-filter_complex', rows.map((_, i) => `[${i}:v]pad=6000:ih:0:0:white[p${i}]`).join(';') + ';' + rows.map((_, i) => `[p${i}]`).join('') + `vstack=inputs=${rows.length}`, path.join(OUT, 'lead-switch-stretch.frames.png'));
   execFileSync('ffmpeg', args);
-  fs.writeFileSync(path.join(OUT, 'lead-switch-stretch.frames.json'), JSON.stringify({ times: TS, note: 'rows studio dark, desk dark, neutral light; columns the times after release', runs: all }, null, 1));
   await b.close();
 })();
