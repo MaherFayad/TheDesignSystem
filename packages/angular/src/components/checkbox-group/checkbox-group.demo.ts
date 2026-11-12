@@ -41,7 +41,7 @@ const regions = [
   template: `
     <div data-demo="page">
       <section data-demo="case" data-demo-case="variants" heading="Sizes, orientations and select all">
-        <div data-demo="grid" style="grid-template-columns: repeat(auto-fill, minmax(16rem, 1fr));">
+        <div data-demo="grid" style="grid-template-columns: repeat(auto-fill, minmax(min(16rem, 100%), 1fr));">
           @for (size of sizes; track size) {
             <fieldset dsCheckboxGroup [legend]="'Channels, ' + size" [size]="size" [defaultValue]="['email']">
               @for (c of channels; track c[0]) {
