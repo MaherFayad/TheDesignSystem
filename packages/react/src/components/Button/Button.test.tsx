@@ -47,17 +47,17 @@ describe('Button', () => {
 
   it('renders icons as parts around the label, by name or as an element', () => {
     const { container } = render(
-      <Button iconStart="plus" iconEnd={<svg data-testid="custom" />}>
+      <Button start="plus" end={<svg data-testid="custom" />}>
         Add file
       </Button>,
     );
     const el = root(container);
     const parts = Array.from(el.children).map((c) => c.getAttribute('data-part'));
-    expect(parts).toEqual(['icon-start', 'label', 'icon-end']);
-    const start = el.querySelector('[data-part="icon-start"] [data-ds="icon"]');
+    expect(parts).toEqual(['start', 'label', 'end']);
+    const start = el.querySelector('[data-part="start"] [data-ds="icon"]');
     expect(start?.getAttribute('data-icon')).toBe('plus');
     expect(start?.getAttribute('aria-hidden')).toBe('true');
-    expect(el.querySelector('[data-part="icon-end"] [data-testid="custom"]')).not.toBeNull();
+    expect(el.querySelector('[data-part="end"] [data-testid="custom"]')).not.toBeNull();
     expect(screen.getByRole('button', { name: 'Add file' })).toBe(el);
   });
 
@@ -112,7 +112,7 @@ describe('Button', () => {
     const user = userEvent.setup();
     const onClick = vi.fn();
     const { container } = render(
-      <Button loading onClick={onClick} iconStart="upload">
+      <Button loading onClick={onClick} start="upload">
         Upload file
       </Button>,
     );
@@ -123,8 +123,11 @@ describe('Button', () => {
     expect(el.hasAttribute('data-disabled')).toBe(false);
     const spinner = el.querySelector('[data-part="spinner"]');
     expect(spinner?.getAttribute('aria-hidden')).toBe('true');
-    // The label stays in the tree, so the width and the accessible name hold.
-    expect(screen.getByRole('button', { name: 'Upload file' })).toBe(el);
+    // The label stays in the tree, so the width holds; the hidden status says Loading once.
+    const status = el.querySelector('[data-part="status"]');
+    expect(status?.getAttribute('role')).toBe('status');
+    expect(status?.textContent).toBe('Loading');
+    expect(screen.getByRole('button', { name: /^Upload file\s*Loading$/ })).toBe(el);
     await user.click(el);
     expect(onClick).not.toHaveBeenCalled();
   });
@@ -132,7 +135,7 @@ describe('Button', () => {
   it('renders the child element as the button with asChild', () => {
     const onClick = vi.fn();
     render(
-      <Button asChild tone="accent" emphasis="solid" iconEnd="arrow-forward" onClick={onClick}>
+      <Button asChild tone="accent" emphasis="solid" end="arrow-forward" onClick={onClick}>
         <a href="#pricing">See pricing</a>
       </Button>,
     );
@@ -143,22 +146,39 @@ describe('Button', () => {
     expect(link.getAttribute('data-tone')).toBe('accent');
     expect(link.hasAttribute('type')).toBe(false);
     expect(link.querySelector('[data-part="label"]')?.textContent).toBe('See pricing');
-    expect(link.querySelector('[data-part="icon-end"]')).not.toBeNull();
+    expect(link.querySelector('[data-part="end"]')).not.toBeNull();
     fireEvent.click(link);
     expect(onClick).toHaveBeenCalledTimes(1);
   });
 
-  it('a disabled asChild link does not navigate', () => {
+  it('a disabled asChild link loses its href and blocks click and middle click', () => {
     render(
       <Button asChild disabled>
         <a href="#pricing">See pricing</a>
       </Button>,
     );
-    const link = screen.getByRole('link');
-    const event = new MouseEvent('click', { bubbles: true, cancelable: true });
-    link.dispatchEvent(event);
-    expect(event.defaultPrevented).toBe(true);
+    const link = screen.getByRole('link', { name: 'See pricing' });
+    expect(link.hasAttribute('href')).toBe(false);
     expect(link.getAttribute('aria-disabled')).toBe('true');
+    for (const type of ['click', 'auxclick']) {
+      const event = new MouseEvent(type, { bubbles: true, cancelable: true, button: type === 'auxclick' ? 1 : 0 });
+      link.dispatchEvent(event);
+      expect(event.defaultPrevented).toBe(true);
+    }
+  });
+
+  it('takes a custom loading label and the wrap prop', () => {
+    const { container } = render(
+      <Button loading loadingLabel="Saving changes" wrap>
+        Save changes
+      </Button>,
+    );
+    const el = root(container);
+    expect(el.querySelector('[data-part="status"]')?.textContent).toBe('Saving changes');
+    expect(el.getAttribute('data-wrap')).toBe('');
+    const plain = root(render(<Button>Save changes</Button>).container);
+    expect(plain.querySelector('[data-part="status"]')).toBeNull();
+    expect(plain.hasAttribute('data-wrap')).toBe(false);
   });
 
   it('takes ref as a prop, and passes className, style and other props through', () => {
@@ -182,10 +202,13 @@ describe('Button', () => {
       expect(container.querySelector(`[data-demo-case="${id}"]`)).not.toBeNull();
     }
     const arabic = container.querySelector('[data-demo-case="long-arabic"] [data-ds="theme"]');
+    expect(container.querySelector('[data-demo-case="variants"] [data-ds="theme"][lang="ar"]')).not.toBeNull();
     expect(arabic?.getAttribute('lang')).toBe('ar');
     expect(arabic?.getAttribute('dir')).toBe('rtl');
     // Six tones by five emphases in the matrix.
     const variants = container.querySelector('[data-demo-case="variants"]');
-    expect(variants?.querySelectorAll('[data-ds="button"][data-tone][data-emphasis]').length).toBeGreaterThanOrEqual(30);
+    expect(variants?.querySelectorAll('[data-ds="button"][data-tone][data-emphasis]').length).toBeGreaterThanOrEqual(
+      30,
+    );
   });
 });

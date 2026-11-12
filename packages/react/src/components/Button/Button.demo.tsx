@@ -1,4 +1,5 @@
 import { DemoCase, DemoPage, DemoRow } from '../../demo';
+import { Theme } from '../../theme';
 import { Button } from './index';
 import type { ButtonEmphasis, ButtonShape, ButtonSize, ButtonTone } from './index';
 
@@ -6,6 +7,16 @@ const tones: ButtonTone[] = ['neutral', 'accent', 'danger', 'success', 'warning'
 const emphases: ButtonEmphasis[] = ['solid', 'soft', 'outline', 'ghost', 'link'];
 const sizes: ButtonSize[] = ['xs', 'sm', 'md', 'lg'];
 const shapes: ButtonShape[] = ['default', 'pill', 'square'];
+
+/** The tone labels as noun forms in white Saudi dialect, no diacritics. */
+const toneLabelAr: Record<ButtonTone, string> = {
+  neutral: 'حفظ المسودة',
+  accent: 'نشر الصفحة',
+  danger: 'حذف المشروع',
+  success: 'اعتماد التعديل',
+  warning: 'إعادة الترتيب',
+  info: 'فتح الدليل',
+};
 
 const toneLabel: Record<ButtonTone, string> = {
   neutral: 'Save draft',
@@ -62,7 +73,7 @@ export default function ButtonDemo() {
           </DemoRow>
         ))}
         <DemoRow label="Primary action">
-          <Button tone="accent" emphasis="solid" iconEnd="arrow-forward">
+          <Button tone="accent" emphasis="solid" end="arrow-forward">
             Create board
           </Button>
           <Button>Cancel edit</Button>
@@ -74,10 +85,10 @@ export default function ButtonDemo() {
               Publish page
             </Button>
             <Button size={size}>Save draft</Button>
-            <Button size={size} emphasis="outline" iconStart="plus">
+            <Button size={size} emphasis="outline" start="plus">
               Add file
             </Button>
-            <Button size={size} emphasis="ghost" iconEnd="chevron-down">
+            <Button size={size} emphasis="ghost" end="chevron-down">
               Sort items
             </Button>
           </DemoRow>
@@ -94,22 +105,22 @@ export default function ButtonDemo() {
           </DemoRow>
         ))}
         <DemoRow label="With icons">
-          <Button iconStart="download">Download report</Button>
-          <Button iconEnd="external" emphasis="outline">
+          <Button start="download">Download report</Button>
+          <Button end="external" emphasis="outline">
             Open docs
           </Button>
-          <Button iconStart="chevron-back" emphasis="ghost">
-            Go back
+          <Button start="chevron-back" emphasis="ghost">
+            Open previous page
           </Button>
-          <Button iconEnd="chevron-forward" tone="accent" emphasis="solid">
-            Go forward
+          <Button end="chevron-forward" tone="accent" emphasis="solid">
+            Open next page
           </Button>
-          <Button iconStart="trash" tone="danger">
+          <Button start="trash" tone="danger">
             Delete file
           </Button>
         </DemoRow>
         <DemoRow label="As a link">
-          <Button asChild tone="accent" emphasis="solid" iconEnd="arrow-forward">
+          <Button asChild tone="accent" emphasis="solid" end="arrow-forward">
             <a href="#pricing">See pricing</a>
           </Button>
           <Button asChild emphasis="link">
@@ -121,6 +132,25 @@ export default function ButtonDemo() {
             Create account
           </Button>
         </DemoRow>
+        <h3 data-demo="title">Variants in Arabic</h3>
+        <Theme lang="ar" data-demo="content">
+          {tones.map((tone) => (
+            <DemoRow key={tone} label={tone}>
+              {emphases.map((emphasis) => (
+                <Button key={emphasis} tone={tone} emphasis={emphasis}>
+                  {toneLabelAr[tone]}
+                </Button>
+              ))}
+            </DemoRow>
+          ))}
+          <DemoRow label="Sizes">
+            {sizes.map((size) => (
+              <Button key={size} size={size} tone="accent" emphasis="solid" start="plus">
+                إضافة ملف
+              </Button>
+            ))}
+          </DemoRow>
+        </Theme>
       </DemoCase>
 
       <DemoCase id="one" title="One button">
@@ -154,13 +184,22 @@ export default function ButtonDemo() {
 
       <DemoCase id="long-text" title="Long text">
         <DemoRow>
-          <Button tone="accent" emphasis="solid" iconStart="upload">
+          <Button tone="accent" emphasis="solid" start="upload">
             Upload every file in this folder and replace the older versions on the board
           </Button>
         </DemoRow>
-        <div style={{ maxInlineSize: 'var(--ds-menu-width-min)' }}>
-          <Button iconEnd="arrow-forward">Download the full report with every comment and reference</Button>
-        </div>
+        <DemoRow label="Squeezed, ends in an ellipsis">
+          <div style={{ maxInlineSize: 'var(--ds-menu-width-min)' }}>
+            <Button end="arrow-forward">Download the full report with every comment and reference</Button>
+          </div>
+        </DemoRow>
+        <DemoRow label="wrap">
+          <div style={{ maxInlineSize: 'var(--ds-menu-width-min)' }}>
+            <Button wrap end="arrow-forward">
+              Download the full report with every comment and reference
+            </Button>
+          </div>
+        </DemoRow>
       </DemoCase>
 
       <DemoCase id="long-arabic" title="Long Arabic text" lang="ar">
@@ -172,10 +211,10 @@ export default function ButtonDemo() {
           ))}
         </DemoRow>
         <DemoRow>
-          <Button tone="accent" emphasis="solid" size="lg" iconEnd="arrow-forward">
+          <Button tone="accent" emphasis="solid" size="lg" end="arrow-forward">
             حفظ التغييرات ومشاركة اللوحة مع كل أعضاء الفريق
           </Button>
-          <Button size="lg" iconStart="chevron-back">
+          <Button size="lg" start="chevron-back">
             رجوع
           </Button>
         </DemoRow>
@@ -190,11 +229,16 @@ export default function ButtonDemo() {
 
       <DemoCase id="loading" title="Loading">
         <DemoRow>
+          <Theme lang="ar" as="span">
+            <Button loading loadingLabel="جار الحفظ" tone="accent" emphasis="solid">
+              حفظ التغييرات
+            </Button>
+          </Theme>
           <Button loading tone="accent" emphasis="solid">
             Save changes
           </Button>
           <Button loading>Export kit</Button>
-          <Button loading emphasis="outline" iconStart="upload">
+          <Button loading emphasis="outline" start="upload">
             Upload file
           </Button>
           <Button loading tone="danger" emphasis="solid">

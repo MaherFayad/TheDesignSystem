@@ -20,48 +20,12 @@ export const RAW_VALUE_ALLOW: readonly AllowEntry[] = [];
 
 export const BUTTON_PRIMITIVE_ALLOW: readonly AllowEntry[] = [];
 
-const MIGRATION = 'migration in progress, wave 0';
-
 /** Component files that still declare --ds-* names. Their owners move them to --_* properties. */
 export const PUBLIC_TOKEN_DECLARED_ALLOW: readonly AllowEntry[] = [
-  { key: 'packages/css/src/components/Button.css|--ds-button-height', reason: MIGRATION },
-  { key: 'packages/css/src/components/Button.css|--ds-button-padding', reason: MIGRATION },
-  { key: 'packages/css/src/components/Button.css|--ds-button-gap', reason: MIGRATION },
-  { key: 'packages/css/src/components/Button.css|--ds-button-font-size', reason: MIGRATION },
-  { key: 'packages/css/src/components/Button.css|--ds-button-radius', reason: MIGRATION },
-  { key: 'packages/css/src/components/Button.css|--ds-button-bg', reason: MIGRATION },
-  { key: 'packages/css/src/components/Button.css|--ds-button-fg', reason: MIGRATION },
-  { key: 'packages/css/src/components/Button.css|--ds-button-border', reason: MIGRATION },
-  { key: 'packages/css/src/components/Button.css|--ds-button-bg-hover', reason: MIGRATION },
-  { key: 'packages/css/src/components/Button.css|--ds-button-fg-hover', reason: MIGRATION },
-  { key: 'packages/css/src/components/Button.css|--ds-button-border-hover', reason: MIGRATION },
-  { key: 'packages/css/src/components/Button.css|--ds-button-bg-active', reason: MIGRATION },
-  { key: 'packages/css/src/components/Button.css|--ds-button-fg-active', reason: MIGRATION },
-  { key: 'packages/css/src/components/Button.css|--ds-button-veil', reason: MIGRATION },
-  { key: 'packages/css/src/components/Button.css|--ds-button-focus', reason: MIGRATION },
-  { key: 'packages/css/src/components/Button.css|--ds-button-disabled-opacity', reason: MIGRATION },
-  { key: 'packages/css/src/components/Button.css|--ds-button-tone-text', reason: MIGRATION },
-  { key: 'packages/css/src/components/Button.css|--ds-button-tone-on-tint', reason: MIGRATION },
-  { key: 'packages/css/src/components/Button.css|--ds-button-tone-border', reason: MIGRATION },
-  { key: 'packages/css/src/components/Button.css|--ds-button-tone-tint', reason: MIGRATION },
-  { key: 'packages/css/src/components/Button.css|--ds-button-tone-tint-strong', reason: MIGRATION },
-  { key: 'packages/css/src/components/Field.css|--ds-field-gap', reason: MIGRATION },
-  { key: 'packages/css/src/components/Field.css|--ds-field-label-width', reason: MIGRATION },
-  { key: 'packages/css/src/components/Input.css|--ds-input-height', reason: MIGRATION },
-  { key: 'packages/css/src/components/Input.css|--ds-input-padding-inline', reason: MIGRATION },
-  { key: 'packages/css/src/components/Input.css|--ds-input-gap', reason: MIGRATION },
-  { key: 'packages/css/src/components/Input.css|--ds-input-font-size', reason: MIGRATION },
-  { key: 'packages/css/src/components/Input.css|--ds-input-radius', reason: MIGRATION },
-  { key: 'packages/css/src/components/Input.css|--ds-input-border-color', reason: MIGRATION },
-  { key: 'packages/css/src/components/Input.css|--ds-input-fill', reason: MIGRATION },
-  { key: 'packages/css/src/components/Input.css|--ds-input-glow', reason: MIGRATION },
-  { key: 'packages/styles/desk/recipes/Button.css|--ds-button-radius', reason: MIGRATION },
-  { key: 'packages/styles/desk/recipes/Button.css|--ds-button-roll', reason: MIGRATION },
 ];
 
 /** Transparent outlines still set at rest. Their owners move them into the focus selector. */
 export const FORCED_COLORS_ALLOW: readonly AllowEntry[] = [
-  { key: "packages/css/src/components/Button.css|:is([data-ds='button'], [data-ds='icon-button'])|outline", reason: MIGRATION },
 ];
 
 /**

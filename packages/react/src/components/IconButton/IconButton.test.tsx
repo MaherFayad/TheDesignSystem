@@ -33,7 +33,8 @@ describe('IconButton', () => {
     expect(plain.getAttribute('data-emphasis')).toBe('ghost');
     expect(plain.getAttribute('data-shape')).toBe('default');
     const set = root(
-      render(<IconButton icon="plus" label="Add page" size="xs" tone="accent" emphasis="solid" shape="pill" />).container,
+      render(<IconButton icon="plus" label="Add page" size="xs" tone="accent" emphasis="solid" shape="pill" />)
+        .container,
     );
     expect(set.getAttribute('data-size')).toBe('xs');
     expect(set.getAttribute('data-tone')).toBe('accent');
@@ -68,6 +69,7 @@ describe('IconButton', () => {
     expect(loading?.getAttribute('aria-busy')).toBe('true');
     expect(loading?.getAttribute('data-loading')).toBe('');
     expect(loading?.querySelector('[data-part="spinner"]')?.getAttribute('aria-hidden')).toBe('true');
+    expect(loading?.querySelector('[data-part="status"]')?.textContent).toBe('Loading');
     await user.click(disabled!);
     await user.click(loading!);
     loading!.blur();
@@ -108,7 +110,9 @@ describe('IconButton', () => {
     for (const id of ['variants', 'one', 'many', 'too-many', 'long-text', 'long-arabic', 'loading', 'disabled']) {
       expect(container.querySelector(`[data-demo-case="${id}"]`)).not.toBeNull();
     }
-    expect(container.querySelector('[data-demo-case="long-arabic"] [data-ds="theme"]')?.getAttribute('dir')).toBe('rtl');
+    expect(container.querySelector('[data-demo-case="long-arabic"] [data-ds="theme"]')?.getAttribute('dir')).toBe(
+      'rtl',
+    );
     for (const el of Array.from(container.querySelectorAll('[data-ds="icon-button"]'))) {
       expect(el.getAttribute('aria-label')?.length).toBeGreaterThan(0);
     }

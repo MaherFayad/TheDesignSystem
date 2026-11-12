@@ -1,10 +1,11 @@
 import type { IconName } from '@the-system/icons';
 import { DemoCase, DemoPage, DemoRow } from '../../demo';
-import type { ButtonEmphasis, ButtonShape, ButtonSize, ButtonTone } from '../Button';
-import { IconButton } from './index';
+import { Theme } from '../../theme';
+import type { ButtonShape, ButtonSize, ButtonTone } from '../Button';
+import { IconButton, type IconButtonEmphasis } from './index';
 
 const tones: ButtonTone[] = ['neutral', 'accent', 'danger', 'success', 'warning', 'info'];
-const emphases: ButtonEmphasis[] = ['solid', 'soft', 'outline', 'ghost'];
+const emphases: IconButtonEmphasis[] = ['solid', 'soft', 'outline', 'ghost'];
 const sizes: ButtonSize[] = ['xs', 'sm', 'md', 'lg'];
 const shapes: ButtonShape[] = ['default', 'pill', 'square'];
 
@@ -17,6 +18,16 @@ const toneAction: Record<ButtonTone, [IconName, string]> = {
   info: ['info', 'Show details'],
 };
 
+/** The tone actions as noun forms, no diacritics. */
+const toneActionAr: Record<ButtonTone, string> = {
+  neutral: 'فتح الإعدادات',
+  accent: 'إضافة صفحة',
+  danger: 'حذف الملف',
+  success: 'اعتماد التعديل',
+  warning: 'عرض التنبيهات',
+  info: 'عرض التفاصيل',
+};
+
 /** A toolbar worth of actions: icon, English label, Arabic label (noun form, no diacritics). */
 const toolbar: [IconName, string, string][] = [
   ['plus', 'Add page', 'إضافة صفحة'],
@@ -27,15 +38,15 @@ const toolbar: [IconName, string, string][] = [
   ['search', 'Search board', 'البحث في اللوحة'],
   ['filter', 'Filter items', 'تصفية العناصر'],
   ['sort', 'Sort items', 'ترتيب العناصر'],
-  ['star', 'Star board', 'تمييز اللوحة'],
+  ['star', 'Add to favorites', 'إضافة للمفضلة'],
   ['link', 'Share link', 'مشاركة الرابط'],
   ['bell', 'Open alerts', 'فتح التنبيهات'],
   ['settings', 'Open settings', 'فتح الإعدادات'],
   ['more', 'Show more actions', 'إجراءات إضافية'],
   ['trash', 'Delete page', 'حذف الصفحة'],
   ['close', 'Close panel', 'إغلاق اللوحة'],
-  ['chevron-back', 'Go back', 'رجوع'],
-  ['chevron-forward', 'Go forward', 'التالي'],
+  ['chevron-back', 'Open previous page', 'الصفحة السابقة'],
+  ['chevron-forward', 'Open next page', 'الصفحة التالية'],
   ['help', 'Open help', 'فتح المساعدة'],
 ];
 
@@ -74,9 +85,25 @@ export default function IconButtonDemo() {
           </IconButton>
         </DemoRow>
         <DemoRow label="Mirrors in Arabic">
-          <IconButton icon="chevron-back" label="Go back" emphasis="soft" />
-          <IconButton icon="chevron-forward" label="Go forward" emphasis="soft" />
+          <IconButton icon="chevron-back" label="Open previous page" emphasis="soft" />
+          <IconButton icon="chevron-forward" label="Open next page" emphasis="soft" />
         </DemoRow>
+        <h3 data-demo="title">Variants in Arabic</h3>
+        <Theme lang="ar" data-demo="content">
+          {tones.map((tone) => (
+            <DemoRow key={tone} label={tone}>
+              {emphases.map((emphasis) => (
+                <IconButton
+                  key={emphasis}
+                  icon={toneAction[tone][0]}
+                  label={toneActionAr[tone]}
+                  tone={tone}
+                  emphasis={emphasis}
+                />
+              ))}
+            </DemoRow>
+          ))}
+        </Theme>
       </DemoCase>
 
       <DemoCase id="one" title="One icon button">
@@ -128,6 +155,7 @@ export default function IconButtonDemo() {
           <IconButton loading icon="download" label="Download file" emphasis="soft" />
           <IconButton loading icon="trash" label="Delete file" tone="danger" emphasis="soft" />
           <IconButton loading icon="send" label="Send message" size="lg" />
+          <IconButton loading loadingLabel="Sending message" icon="send" label="Send message" emphasis="outline" />
         </DemoRow>
       </DemoCase>
 

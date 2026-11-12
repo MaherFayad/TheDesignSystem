@@ -1,1 +1,1 @@
-export { IconButton, type IconButtonProps } from './IconButton';
+export { IconButton, type IconButtonEmphasis, type IconButtonProps } from './IconButton';

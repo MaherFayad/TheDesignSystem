@@ -19,38 +19,127 @@
     "A setting that stays on or off": "Switch",
     "A list of actions behind one control": "DropdownMenu"
   },
-  "anatomy": ["root", "icon", "spinner"],
+  "anatomy": [
+    "root",
+    "icon",
+    "spinner",
+    "status"
+  ],
   "slots": {
-    "icon": { "accepts": ["Icon"], "min": 1, "max": 1 }
+    "icon": {
+      "accepts": [
+        "Icon"
+      ],
+      "min": 1,
+      "max": 1
+    }
   },
   "props": {
-    "icon": { "type": "node", "required": true, "description": "A system icon name or an icon element. Hidden from assistive tech." },
-    "label": { "type": "string", "required": true, "description": "The accessible name, set as aria-label. A verb plus a noun. Never shown with the native title attribute." },
-    "size": { "type": ["xs", "sm", "md", "lg"], "default": "md", "description": "A square of size.control: 24, 28, 32 and 44 px. Never under 24 by 24." },
-    "tone": { "type": ["neutral", "accent", "danger", "success", "warning", "info"], "default": "neutral" },
-    "emphasis": { "type": ["solid", "soft", "outline", "ghost", "link"], "default": "ghost", "description": "ghost, because icon buttons sit in toolbars and headers." },
-    "shape": { "type": ["default", "pill", "square"], "default": "default", "description": "pill is a circle, square takes radius.sm, default takes radius.control (a circle in Desk)." },
-    "loading": { "type": "boolean", "default": false, "description": "The spinner replaces the icon, aria-busy is set, activation is blocked, focus stays." },
-    "disabled": { "type": "boolean", "default": false, "description": "aria-disabled and data-disabled. Stays focusable so a Tooltip can say why." },
-    "asChild": { "type": "boolean", "default": false, "description": "Renders the single child element, for example an empty link, as the button." },
-    "type": { "type": ["button", "submit", "reset"], "default": "button" }
+    "icon": {
+      "type": "node",
+      "required": true,
+      "description": "A system icon name or a node. Hidden from assistive tech. 16px at every size, lg included, as in both sources."
+    },
+    "label": {
+      "type": "string",
+      "required": true,
+      "description": "The accessible name, set as aria-label. A verb plus a noun. Never the native title attribute. The Tooltip pairing that shows it on hover arrives with Tooltip in wave 1."
+    },
+    "size": {
+      "type": [
+        "xs",
+        "sm",
+        "md",
+        "lg"
+      ],
+      "default": "md",
+      "description": "A square of size.control: 24, 28, 32 and 44 px. Never under 24 by 24."
+    },
+    "tone": {
+      "type": [
+        "neutral",
+        "accent",
+        "danger",
+        "success",
+        "warning",
+        "info"
+      ],
+      "default": "neutral"
+    },
+    "emphasis": {
+      "type": [
+        "solid",
+        "soft",
+        "outline",
+        "ghost"
+      ],
+      "default": "ghost",
+      "description": "ghost, because icon buttons sit in toolbars and headers. No link: an icon only link reads as neither."
+    },
+    "shape": {
+      "type": [
+        "default",
+        "pill",
+        "square"
+      ],
+      "default": "default",
+      "description": "pill is a circle, square takes radius.sm, default takes radius.control (a circle in Desk)."
+    },
+    "loading": {
+      "type": "boolean",
+      "default": false,
+      "description": "The spinner replaces the icon, a visually hidden status says loadingLabel, aria-busy is set, activation is blocked, focus stays."
+    },
+    "loadingLabel": {
+      "type": "string",
+      "default": "Loading",
+      "description": "What the hidden status says while loading."
+    },
+    "disabled": {
+      "type": "boolean",
+      "default": false,
+      "description": "aria-disabled and data-disabled. Stays focusable so a Tooltip can say why."
+    },
+    "asChild": {
+      "type": "boolean",
+      "default": false,
+      "description": "Renders the single child element, for example an empty link, as the button."
+    },
+    "type": {
+      "type": [
+        "button",
+        "submit",
+        "reset"
+      ],
+      "default": "button"
+    }
   },
-  "states": ["data-loading", "data-disabled", "hover", "active", "focus-visible"],
+  "states": [
+    "data-loading",
+    "data-disabled"
+  ],
   "a11y": {
     "role": "button (native button element), or the role of the asChild element",
-    "focus": "In the tab order in every state. A 2px ring on keyboard focus; the solid accent icon button gets two rings.",
+    "focus": "In the tab order in every state. A 2px ring on keyboard focus; solid fills get the doubled ring.",
     "keys": {
       "Enter": "Activates the button",
       "Space": "Activates the button",
       "Tab": "Moves focus to the next control"
     },
-    "announce": "The label prop is the accessible name. Loading sets aria-busy.",
-    "native": { "accessibilityRole": "button", "accessibilityState": ["disabled", "busy"] },
+    "announce": "The label prop is the accessible name. While loading, a visually hidden status says loadingLabel and aria-busy is set.",
+    "native": {
+      "accessibilityRole": "button",
+      "accessibilityState": [
+        "disabled",
+        "busy"
+      ]
+    },
     "notes": [
       "label is required by the type, so an icon button always has a name.",
       "At least 24 by 24 CSS px at xs (WCAG 2.5.8). Use lg (44px) in touch layouts.",
-      "Show the label on hover and focus with Tooltip. No native title attribute.",
-      "Directional icons (chevron-back, arrow-forward) mirror in right to left layouts."
+      "No native title attribute. The Tooltip pairing that shows the label on hover and focus arrives with Tooltip in wave 1.",
+      "Directional icons (chevron-back, arrow-forward) mirror in right to left layouts.",
+      "A disabled asChild link loses its href and keeps role link."
     ]
   },
   "content": {
@@ -69,41 +158,126 @@
     "size.target-min",
     "size.icon.sm",
     "size.icon.md",
+    "space.xs",
+    "space.s",
+    "space.xl",
+    "space.2xl",
+    "space.2xs",
     "radius.control",
     "radius.field",
     "radius.pill",
     "radius.sm",
+    "border.width.default",
+    "border.width.strong",
+    "font.family.sans",
+    "font.size.s",
+    "font.size.m",
+    "font.size.l",
+    "font.weight.bold",
+    "font.leading.tight",
+    "font.tracking.none",
+    "opacity.disabled",
+    "color.bg.overlay-5",
     "color.bg.overlay-10",
     "color.bg.overlay-20",
     "color.bg.overlay-30",
-    "color.text.muted",
+    "button.text.secondary",
     "color.text.default",
+    "color.text.muted",
+    "color.text.bright",
+    "color.border.control",
+    "color.border.control-hover",
     "color.primary.fill",
     "color.primary.fill-hover",
     "color.primary.fill-pressed",
     "color.primary.text",
     "color.primary.border",
+    "color.primary.tint",
+    "color.primary.tint-hover",
+    "color.primary.on-surface",
+    "color.state.danger.solid",
+    "color.state.danger.solid-hover",
+    "color.state.danger.on-solid",
+    "color.state.danger.text",
+    "color.state.danger.on-tint",
+    "color.state.danger.border",
+    "color.state.danger.tint-10",
+    "color.state.danger.tint-20",
+    "color.state.success.solid",
+    "color.state.success.solid-hover",
+    "color.state.success.on-solid",
+    "color.state.success.text",
+    "color.state.success.on-tint",
+    "color.state.success.border",
+    "color.state.success.tint-10",
+    "color.state.success.tint-20",
+    "color.state.warning.solid",
+    "color.state.warning.solid-hover",
+    "color.state.warning.on-solid",
+    "color.state.warning.text",
+    "color.state.warning.on-tint",
+    "color.state.warning.border",
+    "color.state.warning.tint-10",
+    "color.state.warning.tint-20",
+    "color.state.info.solid",
+    "color.state.info.solid-hover",
+    "color.state.info.on-solid",
+    "color.state.info.text",
+    "color.state.info.on-tint",
+    "color.state.info.border",
+    "color.state.info.tint-10",
+    "color.state.info.tint-20",
     "focus.shadow.ring",
     "focus.shadow.primary",
-    "duration.spin"
+    "color.focus.ring",
+    "color.focus.ring-on-primary-inner",
+    "color.focus.ring-on-primary-outer",
+    "duration.fast",
+    "duration.spin",
+    "ease.default"
   ],
   "motion": "press",
   "frameworks": {
-    "react": { "status": "ready", "behavior": "native button, radix:Slot", "example": "IconButton.demo.tsx" },
-    "angular": { "status": "planned", "behavior": "button[dsIconButton] and a[dsIconButton]", "note": "Uses Button.css and IconButton.css as is." },
-    "native": { "status": "planned", "behavior": "rn-primitives:slot and Pressable", "note": "44pt on iOS, 48dp on Android, accessibilityLabel from label." }
+    "react": {
+      "status": "ready",
+      "behavior": "native button, radix:Slot",
+      "example": "IconButton.demo.tsx",
+      "note": "Motion: press, named from the pattern catalog that arrives in wave 1. Today: instant color swaps, the spinner, and the Desk roll label."
+    },
+    "angular": {
+      "status": "planned",
+      "behavior": "button[dsIconButton] and a[dsIconButton]",
+      "note": "Uses Button.css and IconButton.css as is."
+    },
+    "native": {
+      "status": "planned",
+      "behavior": "rn-primitives:slot and Pressable",
+      "note": "44pt on iOS, 48dp on Android, accessibilityLabel from label."
+    }
   },
   "styles": {
     "studio": "Ghost by default, the control radius, the overlay steps on hover and press.",
-    "desk": "A circle by default (Desk controls are pills). The solid accent icon button is yellow with a doubled focus ring. No roll: there is no label.",
+    "desk": "A circle by default (Desk controls are pills). The solid accent icon button is yellow with a doubled focus ring, accent soft a yellow tint. No roll: there is no label.",
     "neutral": "Planned.",
     "liquid": "Planned: capsule glass on toolbars."
   },
   "mistakes": [
-    { "wrong": "An icon button with no label, or the label in a title attribute", "right": "label set; the hint in a Tooltip" },
-    { "wrong": "label=\"trash\"", "right": "label=\"Delete file\"" },
-    { "wrong": "A 16px icon button in a dense row", "right": "size xs, which keeps the 24px target" },
-    { "wrong": "A Button with only an icon child", "right": "IconButton" }
+    {
+      "wrong": "An icon button with no label, or the label in a title attribute",
+      "right": "label set; the hint in a Tooltip"
+    },
+    {
+      "wrong": "label=\"trash\"",
+      "right": "label=\"Delete file\""
+    },
+    {
+      "wrong": "A 16px icon button in a dense row",
+      "right": "size xs, which keeps the 24px target"
+    },
+    {
+      "wrong": "A Button with only an icon child",
+      "right": "IconButton"
+    }
   ],
   "since": "0.1.0"
 }

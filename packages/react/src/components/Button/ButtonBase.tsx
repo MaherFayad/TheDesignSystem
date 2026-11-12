@@ -4,6 +4,7 @@
 // bare <button> the system renders. Not exported from the package barrel:
 // IconButton imports it from '../Button/ButtonBase'.
 import {
+  cloneElement,
   isValidElement,
   type ButtonHTMLAttributes,
   type KeyboardEvent,
@@ -15,16 +16,17 @@ import {
 } from 'react';
 import { Slot } from 'radix-ui';
 import { Icon, type IconName } from '@the-system/icons/react';
+import type { Emphasis, Shape, Size, Tone } from '@the-system/shared';
 
-export type ButtonSize = 'xs' | 'sm' | 'md' | 'lg';
-export type ButtonTone = 'neutral' | 'accent' | 'danger' | 'success' | 'warning' | 'info';
-export type ButtonEmphasis = 'solid' | 'soft' | 'outline' | 'ghost' | 'link';
-export type ButtonShape = 'default' | 'pill' | 'square';
-/** A system icon name, or an icon element (for example `<Icon name="plus" size="sm" />`). */
-export type ButtonIcon = IconName | ReactElement;
+/** The shared axes, all of them: Button takes every value. */
+export type ButtonSize = Extract<Size, 'xs' | 'sm' | 'md' | 'lg'>;
+export type ButtonTone = Extract<Tone, 'neutral' | 'accent' | 'success' | 'warning' | 'danger' | 'info'>;
+export type ButtonEmphasis = Extract<Emphasis, 'solid' | 'soft' | 'outline' | 'ghost' | 'link'>;
+export type ButtonShape = Extract<Shape, 'default' | 'pill' | 'square'>;
+/** Leading or trailing content: a system icon name, or a node (for example `<Icon name="plus" size="sm" />`). */
+export type ButtonSlotContent = IconName | ReactElement;
 
-/** The props Button and IconButton share. */
-/** No `title`: hints come from Tooltip, never the native title attribute. */
+/** The props Button and IconButton share. No `title`: hints come from Tooltip, never the native title attribute. */
 export interface ButtonBaseProps extends Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'title'> {
   /** Height from the size.control tokens: xs 24, sm 28, md 32, lg 44 (default density). Default md. */
   size?: ButtonSize;
@@ -35,10 +37,13 @@ export interface ButtonBaseProps extends Omit<ButtonHTMLAttributes<HTMLButtonEle
   /** default takes the style's control radius, pill is fully round, square has small corners. Default default. */
   shape?: ButtonShape;
   /**
-   * An action is in flight: shows the spinner, sets `aria-busy` and
-   * `data-loading`, keeps the width and focus, and blocks activation.
+   * An action is in flight: shows the spinner, adds a visually hidden status
+   * (`loadingLabel`), sets `aria-busy` and `data-loading`, keeps the width
+   * and focus, and blocks activation.
    */
   loading?: boolean;
+  /** The words the hidden status says while loading. Default "Loading". Arabic: "جار التحميل". */
+  loadingLabel?: string;
   /**
    * Blocks activation. The button stays focusable and in the tab order,
    * with `aria-disabled` and `data-disabled`, so a Tooltip can say why.
@@ -52,14 +57,21 @@ export interface ButtonBaseProps extends Omit<ButtonHTMLAttributes<HTMLButtonEle
   ref?: Ref<HTMLButtonElement>;
 }
 
-/** Renders a ButtonIcon: a name becomes a 16px system Icon, an element is used as is. */
-export function renderButtonIcon(icon: ButtonIcon): ReactNode {
-  return typeof icon === 'string' ? <Icon name={icon} size="md" /> : icon;
+/** Renders leading or trailing content: a name becomes a 16px system Icon, a node is used as is. */
+export function renderSlotContent(content: ButtonSlotContent): ReactNode {
+  return typeof content === 'string' ? <Icon name={content} size="md" /> : content;
 }
 
-/** The spinner part, shown while loading. Hidden from assistive tech: `aria-busy` carries the state. */
-export function ButtonSpinner() {
-  return <span data-part="spinner" aria-hidden="true" />;
+/** The spinner and the hidden status, shown while loading. The spinner is hidden from assistive tech. */
+export function ButtonLoading({ label }: { label: string }) {
+  return (
+    <>
+      <span data-part="spinner" aria-hidden="true" />
+      <span data-part="status" role="status">
+        {label}
+      </span>
+    </>
+  );
 }
 
 interface ButtonRootProps extends ButtonBaseProps {
@@ -85,11 +97,13 @@ export function ButtonRoot({
   emphasis,
   shape = 'default',
   loading = false,
+  loadingLabel: _loadingLabel,
   disabled = false,
   asChild = false,
   type = 'button',
   children,
   onClick,
+  onAuxClick,
   onPointerDown,
   onKeyDown,
   ref,
@@ -109,14 +123,21 @@ export function ButtonRoot({
     'aria-disabled': inert ? true : rest['aria-disabled'],
     'aria-busy': loading ? true : rest['aria-busy'],
     // While inert, the handlers of the caller (and of a Radix trigger that
-    // wraps this button with asChild) do not run, and a click does not
-    // submit a form or follow a link.
+    // wraps this button with asChild) do not run, and a click, middle click
+    // included, does not submit a form or follow a link.
     onClick: (event: MouseEvent<HTMLButtonElement>) => {
       if (inert) {
         event.preventDefault();
         return;
       }
       onClick?.(event);
+    },
+    onAuxClick: (event: MouseEvent<HTMLButtonElement>) => {
+      if (inert) {
+        event.preventDefault();
+        return;
+      }
+      onAuxClick?.(event);
     },
     onPointerDown: (event: PointerEvent<HTMLButtonElement>) => {
       if (!inert) onPointerDown?.(event);
@@ -127,12 +148,21 @@ export function ButtonRoot({
   };
 
   if (asChild) {
-    if (!isValidElement(children)) {
+    if (!isValidElement<{ href?: string; role?: string }>(children)) {
       throw new Error(`${ds === 'button' ? 'Button' : 'IconButton'} with asChild needs one element as its child.`);
     }
+    // An inert link loses its href, so no click, middle click, context menu
+    // or drag can open it. role="link" keeps it announced as a link.
+    const child =
+      inert && children.props.href !== undefined
+        ? cloneElement(children, {
+            href: undefined,
+            role: children.props.role ?? 'link',
+          })
+        : children;
     return (
       <Slot.Root {...attrs}>
-        <Slot.Slottable child={children}>{(content: ReactNode) => render(content)}</Slot.Slottable>
+        <Slot.Slottable child={child}>{(content: ReactNode) => render(content)}</Slot.Slottable>
       </Slot.Root>
     );
   }

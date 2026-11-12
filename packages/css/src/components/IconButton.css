@@ -1,19 +1,17 @@
 /*
- * IconButton: the square box. Colors, states, sizes and shapes come from
- * Button.css, which styles [data-ds='icon-button'] with [data-ds='button'].
- * Source: GoBanana `.st-btn[data-icon-only]`.
+ * IconButton: what differs from Button. Colors, states, sizes and shapes
+ * come from Button.css, which styles [data-ds='icon-button'] with
+ * [data-ds='button'] (one CSS file per data-ds, with the base exception in
+ * docs/contracts/anatomy.md). Source: GoBanana `.st-btn[data-icon-only]`.
  */
 @layer ds.base {
-  /* As wide as it is tall, never under the 24px target. [data-size] wins over the Button padding. */
-  [data-ds='icon-button'][data-size] {
-    aspect-ratio: 1;
-    min-inline-size: var(--ds-size-target-min);
-    padding-inline: 0;
-  }
+  /* A square of the control height, never under the 24px target, and it never shrinks in a row. */
+  /* [data-size][data-shape] are always present: they lift this rule over the Button size rules. */
+  [data-ds='icon-button'][data-size][data-shape] {
+    --_button-padding-inline: 0;
 
-  /* A link emphasis icon button keeps its box: an icon has no underline. */
-  [data-ds='icon-button'][data-size][data-emphasis='link'] {
-    block-size: var(--ds-size-target-min);
-    text-decoration-line: none;
+    flex: none;
+    inline-size: max(var(--_button-height), var(--ds-size-target-min));
+    min-inline-size: var(--ds-size-target-min);
   }
 }

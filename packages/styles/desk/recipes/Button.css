@@ -1,5 +1,6 @@
 /*
- * Desk recipe for Button and IconButton: what the tokens cannot say.
+ * Desk recipe for Button and IconButton: what the tokens cannot say. It sets
+ * the private properties of Button.css where one covers the need.
  * Source: GoBanana `RollButton.tsx` and the "rolling labels" rules in
  * `app/(site)/_components/desktop/desktop.css`.
  *
@@ -9,7 +10,7 @@
 @layer ds.recipes {
   /* Desk controls are pills (the source `.roll-btn`). The other shapes still apply. */
   [data-style='desk'] :is([data-ds='button'], [data-ds='icon-button'])[data-shape='default'] {
-    --ds-button-radius: var(--ds-radius-pill);
+    --_button-radius: var(--ds-radius-pill);
   }
 
   /*
@@ -18,43 +19,43 @@
    * duration.roll on ease.reveal. The copy is a text shadow one button
    * height below the label, so the markup stays the same in every style and
    * a screen reader hears the label once. The button is the window: it
-   * clips the label and its copy above and below.
+   * clips above and below. The label clips only along the line
+   * (Button.css), so the copy shows through. A wrapping label has no roll:
+   * a copy one height down would sit on its second line.
    */
-  [data-style='desk'] [data-ds='button']:not([data-emphasis='link']) {
-    --ds-button-roll: var(--ds-size-control-md);
-
+  [data-style='desk'] [data-ds='button']:not([data-emphasis='link'], [data-wrap]) {
     overflow: clip;
   }
 
-  [data-style='desk'] [data-ds='button'][data-size='xs']:not([data-emphasis='link']) {
-    --ds-button-roll: var(--ds-size-control-xs);
+  [data-style='desk'] [data-ds='button']:not([data-emphasis='link'], [data-wrap]) > [data-part='label'] {
+    text-shadow: 0 var(--_button-height) currentColor;
+    transition:
+      transform var(--ds-duration-roll) var(--ds-ease-reveal),
+      opacity var(--ds-duration-fast) var(--ds-ease-default);
   }
 
-  [data-style='desk'] [data-ds='button'][data-size='sm']:not([data-emphasis='link']) {
-    --ds-button-roll: var(--ds-size-control-sm);
+  [data-style='desk'] [data-ds='button']:not([data-emphasis='link'], [data-wrap], [data-disabled], [data-loading]):is(:hover, :focus-visible) > [data-part='label'] {
+    transform: translateY(calc(-1 * var(--_button-height)));
   }
 
-  [data-style='desk'] [data-ds='button'][data-size='lg']:not([data-emphasis='link']) {
-    --ds-button-roll: var(--ds-size-control-lg);
-  }
-
-  /* The label clips only along the line (Button.css), so the copy below it shows through to the button window. */
-  [data-style='desk'] [data-ds='button']:not([data-emphasis='link']) > [data-part='label'] {
-    text-shadow: 0 var(--ds-button-roll) currentColor;
-    transition: transform var(--ds-duration-roll) var(--ds-ease-reveal);
-  }
-
-  [data-style='desk'] [data-ds='button']:not([data-emphasis='link'], [data-disabled], [data-loading]):is(:hover, :focus-visible) > [data-part='label'] {
-    transform: translateY(calc(-1 * var(--ds-button-roll)));
-  }
-
-  /* Off under reduced motion: duration.roll is 0ms there, and the label does not move at all. */
+  /* Off under reduced motion: duration.roll is 0ms there, and the label does not move at all. The fallbacks repeat the roll selectors so they match their specificity. */
   @media (prefers-reduced-motion: reduce) {
-    [data-style='desk'] [data-ds='button']:not([data-emphasis='link']) > [data-part='label'] {
+    [data-style='desk'] [data-ds='button']:not([data-emphasis='link'], [data-wrap]) > [data-part='label'] {
       text-shadow: none;
     }
 
-    [data-style='desk'] [data-ds='button']:not([data-emphasis='link'], [data-disabled], [data-loading]):is(:hover, :focus-visible) > [data-part='label'] {
+    [data-style='desk'] [data-ds='button']:not([data-emphasis='link'], [data-wrap], [data-disabled], [data-loading]):is(:hover, :focus-visible) > [data-part='label'] {
+      transform: none;
+    }
+  }
+
+  /* Forced colors: the system draws text in one color and the clip would leave a blank button mid roll. No roll. */
+  @media (forced-colors: active) {
+    [data-style='desk'] [data-ds='button']:not([data-emphasis='link'], [data-wrap]) > [data-part='label'] {
+      text-shadow: none;
+    }
+
+    [data-style='desk'] [data-ds='button']:not([data-emphasis='link'], [data-wrap], [data-disabled], [data-loading]):is(:hover, :focus-visible) > [data-part='label'] {
       transform: none;
     }
   }
