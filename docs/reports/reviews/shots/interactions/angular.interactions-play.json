@@ -1,0 +1,778 @@
+{
+ "button|studio-dark-ltr|react": {
+  "pressedTransform": "matrix(0.97, 0, 0, 0.97, 0, 0)",
+  "startedOnPress": [
+   {
+    "kind": "CSSTransition",
+    "name": "transform",
+    "target": "button",
+    "dur": 70
+   }
+  ],
+  "releasedTransform": "none"
+ },
+ "button|studio-dark-ltr|angular": {
+  "pressedTransform": "matrix(0.97, 0, 0, 0.97, 0, 0)",
+  "startedOnPress": [
+   {
+    "kind": "CSSTransition",
+    "name": "transform",
+    "target": "button",
+    "dur": 70
+   }
+  ],
+  "releasedTransform": "none"
+ },
+ "button|neutral-light-rtl|react": {
+  "pressedTransform": "matrix(0.97, 0, 0, 0.97, 0, 0)",
+  "startedOnPress": [
+   {
+    "kind": "CSSTransition",
+    "name": "transform",
+    "target": "button",
+    "dur": 70
+   }
+  ],
+  "releasedTransform": "none"
+ },
+ "button|neutral-light-rtl|angular": {
+  "pressedTransform": "matrix(0.97, 0, 0, 0.97, 0, 0)",
+  "startedOnPress": [
+   {
+    "kind": "CSSTransition",
+    "name": "transform",
+    "target": "button",
+    "dur": 70
+   }
+  ],
+  "releasedTransform": "none"
+ },
+ "checkbox|studio-dark-ltr|react": {
+  "startedOnCheck": [
+   {
+    "kind": "CSSTransition",
+    "name": "transform",
+    "target": "span",
+    "dur": 140
+   },
+   {
+    "kind": "CSSTransition",
+    "name": "transform",
+    "target": "icon",
+    "dur": 140
+   }
+  ],
+  "state": "unchecked",
+  "indicatorChildren": [
+   "span[aria-hidden]"
+  ],
+  "svgBox": [
+   0,
+   0,
+   12,
+   12
+  ],
+  "hitInsideIndicator": false,
+  "chain": [
+   {
+    "tag": "svg",
+    "opacity": "1",
+    "transform": "matrix(1, 0, 0, 1, 12, 0)",
+    "overflow": "hidden",
+    "color": "rgba(255, 255, 255, 0.2)"
+   },
+   {
+    "tag": "span",
+    "opacity": "0",
+    "transform": "matrix(1, 0, 0, 1, -12, 0)",
+    "overflow": "hidden",
+    "color": "rgba(255, 255, 255, 0.2)"
+   },
+   {
+    "tag": "span",
+    "opacity": "1",
+    "transform": "none",
+    "overflow": "visible",
+    "color": "rgba(0, 0, 0, 0)"
+   }
+  ],
+  "indicatorPngBytes": 230
+ },
+ "checkbox|studio-dark-ltr|angular": {
+  "error": "Error: locator.evaluate: TypeError: Cannot read properties of null (reading 'getBoundingClientRect')"
+ },
+ "checkbox|neutral-light-rtl|react": {
+  "startedOnCheck": [
+   {
+    "kind": "CSSTransition",
+    "name": "transform",
+    "target": "span",
+    "dur": 180
+   },
+   {
+    "kind": "CSSTransition",
+    "name": "transform",
+    "target": "icon",
+    "dur": 180
+   }
+  ],
+  "state": "unchecked",
+  "indicatorChildren": [
+   "span[aria-hidden]"
+  ],
+  "svgBox": [
+   0,
+   0,
+   12,
+   12
+  ],
+  "hitInsideIndicator": false,
+  "chain": [
+   {
+    "tag": "svg",
+    "opacity": "1",
+    "transform": "matrix(1, 0, 0, 1, -12, 0)",
+    "overflow": "hidden",
+    "color": "rgb(37, 99, 235)"
+   },
+   {
+    "tag": "span",
+    "opacity": "0",
+    "transform": "matrix(1, 0, 0, 1, 12, 0)",
+    "overflow": "hidden",
+    "color": "rgb(37, 99, 235)"
+   },
+   {
+    "tag": "span",
+    "opacity": "1",
+    "transform": "none",
+    "overflow": "visible",
+    "color": "rgba(0, 0, 0, 0)"
+   }
+  ],
+  "indicatorPngBytes": 290
+ },
+ "checkbox|neutral-light-rtl|angular": {
+  "error": "Error: locator.evaluate: TypeError: Cannot read properties of null (reading 'getBoundingClientRect')"
+ },
+ "switch|studio-dark-ltr|react": {
+  "pressedThumb": "matrix(1.1536, 0, 0, 1, 0.9216, 0)",
+  "startedOnToggle": [
+   {
+    "kind": "CSSTransition",
+    "name": "transform",
+    "target": "thumb",
+    "dur": 140
+   }
+  ],
+  "restThumb": "matrix(1, 0, 0, 1, 12, 0)"
+ },
+ "switch|studio-dark-ltr|angular": {
+  "pressedThumb": "matrix(1.1536, 0, 0, 1, 0.9216, 0)",
+  "startedOnToggle": [
+   {
+    "kind": "CSSTransition",
+    "name": "transform",
+    "target": "thumb",
+    "dur": 140
+   }
+  ],
+  "restThumb": "matrix(1, 0, 0, 1, 12, 0)"
+ },
+ "switch|neutral-light-rtl|react": {
+  "pressedThumb": "matrix(1.1536, 0, 0, 1, -0.9216, 0)",
+  "startedOnToggle": [
+   {
+    "kind": "CSSTransition",
+    "name": "transform",
+    "target": "thumb",
+    "dur": 180
+   }
+  ],
+  "restThumb": "matrix(1, 0, 0, 1, -12, 0)"
+ },
+ "switch|neutral-light-rtl|angular": {
+  "pressedThumb": "matrix(1.1536, 0, 0, 1, -0.9216, 0)",
+  "startedOnToggle": [
+   {
+    "kind": "CSSTransition",
+    "name": "transform",
+    "target": "thumb",
+    "dur": 180
+   }
+  ],
+  "restThumb": "matrix(1, 0, 0, 1, -12, 0)"
+ },
+ "input|studio-dark-ltr|react": {
+  "startedOnFocus": [
+   {
+    "kind": "CSSTransition",
+    "name": "opacity",
+    "target": "input::before",
+    "dur": 120
+   },
+   {
+    "kind": "CSSTransition",
+    "name": "transform",
+    "target": "input::before",
+    "dur": 120
+   }
+  ],
+  "atFocus": {
+   "ring": "rgb(244, 244, 245) 0px 0px 0px 2px",
+   "glowOpacity": "1"
+  },
+  "after400": {
+   "glowOpacity": "1",
+   "glowTransform": "none",
+   "glowShadow": "rgba(255, 255, 255, 0.06) 0px 0px 5px 0px inset, rgba(255, 255, 255, 0.09) 0px -5px 8px 0px inset, rgba(0, 0, 0, 0.24) 0px 0px 5px 0px"
+  }
+ },
+ "input|studio-dark-ltr|angular": {
+  "startedOnFocus": [
+   {
+    "kind": "CSSTransition",
+    "name": "opacity",
+    "target": "input::before",
+    "dur": 120
+   },
+   {
+    "kind": "CSSTransition",
+    "name": "transform",
+    "target": "input::before",
+    "dur": 120
+   }
+  ],
+  "atFocus": {
+   "ring": "rgb(244, 244, 245) 0px 0px 0px 2px",
+   "glowOpacity": "0"
+  },
+  "after400": {
+   "glowOpacity": "1",
+   "glowTransform": "none",
+   "glowShadow": "rgba(255, 255, 255, 0.06) 0px 0px 5px 0px inset, rgba(255, 255, 255, 0.09) 0px -5px 8px 0px inset, rgba(0, 0, 0, 0.24) 0px 0px 5px 0px"
+  }
+ },
+ "input|neutral-light-rtl|react": {
+  "startedOnFocus": [
+   {
+    "kind": "CSSTransition",
+    "name": "opacity",
+    "target": "input::before",
+    "dur": 150
+   },
+   {
+    "kind": "CSSTransition",
+    "name": "transform",
+    "target": "input::before",
+    "dur": 150
+   }
+  ],
+  "atFocus": {
+   "ring": "rgb(255, 255, 255) 0px 0px 0px 2px, rgb(37, 99, 235) 0px 0px 0px 4px",
+   "glowOpacity": "0"
+  },
+  "after400": {
+   "glowOpacity": "1",
+   "glowTransform": "none",
+   "glowShadow": "rgba(15, 23, 41, 0) 0px 0px 0px 0px"
+  }
+ },
+ "input|neutral-light-rtl|angular": {
+  "startedOnFocus": [
+   {
+    "kind": "CSSTransition",
+    "name": "opacity",
+    "target": "input::before",
+    "dur": 150
+   },
+   {
+    "kind": "CSSTransition",
+    "name": "transform",
+    "target": "input::before",
+    "dur": 150
+   }
+  ],
+  "atFocus": {
+   "ring": "rgb(255, 255, 255) 0px 0px 0px 2px, rgb(37, 99, 235) 0px 0px 0px 4px",
+   "glowOpacity": "0.177913"
+  },
+  "after400": {
+   "glowOpacity": "1",
+   "glowTransform": "none",
+   "glowShadow": "rgba(15, 23, 41, 0) 0px 0px 0px 0px"
+  }
+ },
+ "password-field|studio-dark-ltr|react": {
+  "startedOnFocus": [
+   {
+    "kind": "CSSTransition",
+    "name": "opacity",
+    "target": "password-field::before",
+    "dur": 120
+   },
+   {
+    "kind": "CSSTransition",
+    "name": "transform",
+    "target": "password-field::before",
+    "dur": 120
+   },
+   {
+    "kind": "CSSTransition",
+    "name": "opacity",
+    "target": "input::before",
+    "dur": 120
+   },
+   {
+    "kind": "CSSTransition",
+    "name": "transform",
+    "target": "input::before",
+    "dur": 120
+   }
+  ],
+  "glow": {
+   "o": "1",
+   "t": "none",
+   "ring": "rgb(244, 244, 245) 0px 0px 0px 2px"
+  }
+ },
+ "password-field|studio-dark-ltr|angular": {
+  "startedOnFocus": [
+   {
+    "kind": "CSSTransition",
+    "name": "opacity",
+    "target": "password-field::before",
+    "dur": 120
+   },
+   {
+    "kind": "CSSTransition",
+    "name": "transform",
+    "target": "password-field::before",
+    "dur": 120
+   },
+   {
+    "kind": "CSSTransition",
+    "name": "opacity",
+    "target": "input::before",
+    "dur": 120
+   },
+   {
+    "kind": "CSSTransition",
+    "name": "transform",
+    "target": "input::before",
+    "dur": 120
+   }
+  ],
+  "glow": {
+   "o": "1",
+   "t": "none",
+   "ring": "rgb(244, 244, 245) 0px 0px 0px 2px"
+  }
+ },
+ "password-field|neutral-light-rtl|react": {
+  "startedOnFocus": [
+   {
+    "kind": "CSSTransition",
+    "name": "opacity",
+    "target": "password-field::before",
+    "dur": 150
+   },
+   {
+    "kind": "CSSTransition",
+    "name": "transform",
+    "target": "password-field::before",
+    "dur": 150
+   },
+   {
+    "kind": "CSSTransition",
+    "name": "opacity",
+    "target": "input::before",
+    "dur": 150
+   },
+   {
+    "kind": "CSSTransition",
+    "name": "transform",
+    "target": "input::before",
+    "dur": 150
+   }
+  ],
+  "glow": {
+   "o": "1",
+   "t": "none",
+   "ring": "rgb(255, 255, 255) 0px 0px 0px 2px, rgb(37, 99, 235) 0px 0px 0px 4px"
+  }
+ },
+ "password-field|neutral-light-rtl|angular": {
+  "startedOnFocus": [
+   {
+    "kind": "CSSTransition",
+    "name": "opacity",
+    "target": "password-field::before",
+    "dur": 150
+   },
+   {
+    "kind": "CSSTransition",
+    "name": "transform",
+    "target": "password-field::before",
+    "dur": 150
+   },
+   {
+    "kind": "CSSTransition",
+    "name": "opacity",
+    "target": "input::before",
+    "dur": 150
+   },
+   {
+    "kind": "CSSTransition",
+    "name": "transform",
+    "target": "input::before",
+    "dur": 150
+   }
+  ],
+  "glow": {
+   "o": "1",
+   "t": "none",
+   "ring": "rgb(255, 255, 255) 0px 0px 0px 2px, rgb(37, 99, 235) 0px 0px 0px 4px"
+  }
+ },
+ "otp-field|studio-dark-ltr|react": {
+  "startedOnFocus": [
+   {
+    "kind": "CSSTransition",
+    "name": "opacity",
+    "target": "cell::before",
+    "dur": 120
+   },
+   {
+    "kind": "CSSTransition",
+    "name": "transform",
+    "target": "cell::before",
+    "dur": 120
+   }
+  ]
+ },
+ "otp-field|studio-dark-ltr|angular": {
+  "startedOnFocus": [
+   {
+    "kind": "CSSTransition",
+    "name": "opacity",
+    "target": "cell::before",
+    "dur": 120
+   },
+   {
+    "kind": "CSSTransition",
+    "name": "transform",
+    "target": "cell::before",
+    "dur": 120
+   }
+  ]
+ },
+ "otp-field|neutral-light-rtl|react": {
+  "startedOnFocus": [
+   {
+    "kind": "CSSTransition",
+    "name": "opacity",
+    "target": "cell::before",
+    "dur": 150
+   },
+   {
+    "kind": "CSSTransition",
+    "name": "transform",
+    "target": "cell::before",
+    "dur": 150
+   }
+  ]
+ },
+ "otp-field|neutral-light-rtl|angular": {
+  "startedOnFocus": [
+   {
+    "kind": "CSSTransition",
+    "name": "opacity",
+    "target": "cell::before",
+    "dur": 150
+   },
+   {
+    "kind": "CSSTransition",
+    "name": "transform",
+    "target": "cell::before",
+    "dur": 150
+   }
+  ]
+ },
+ "dropdown-menu|studio-dark-ltr|react": {
+  "startedOnOpen": [
+   {
+    "kind": "CSSAnimation",
+    "name": "ds-menu-in",
+    "target": "dropdown-menu",
+    "dur": 120
+   }
+  ],
+  "openMenu": {
+   "origin": "0px 0px",
+   "opacity": "1",
+   "transform": "none"
+  },
+  "startedOnClose": [
+   {
+    "kind": "CSSAnimation",
+    "name": "ds-menu-out",
+    "target": "dropdown-menu",
+    "dur": 100
+   }
+  ]
+ },
+ "dropdown-menu|studio-dark-ltr|angular": {
+  "startedOnOpen": [
+   {
+    "kind": "CSSAnimation",
+    "name": "ds-menu-in",
+    "target": "dropdown-menu",
+    "dur": 120
+   }
+  ],
+  "openMenu": {
+   "origin": "0px 0px",
+   "opacity": "1",
+   "transform": "none"
+  },
+  "startedOnClose": [
+   {
+    "kind": "CSSAnimation",
+    "name": "ds-menu-out",
+    "target": "dropdown-menu",
+    "dur": 100
+   }
+  ]
+ },
+ "dropdown-menu|neutral-light-rtl|react": {
+  "startedOnOpen": [
+   {
+    "kind": "CSSAnimation",
+    "name": "ds-menu-in",
+    "target": "dropdown-menu",
+    "dur": 150
+   }
+  ],
+  "openMenu": {
+   "origin": "0px 0px",
+   "opacity": "1",
+   "transform": "none"
+  },
+  "startedOnClose": [
+   {
+    "kind": "CSSAnimation",
+    "name": "ds-menu-out",
+    "target": "dropdown-menu",
+    "dur": 100
+   }
+  ]
+ },
+ "dropdown-menu|neutral-light-rtl|angular": {
+  "startedOnOpen": [
+   {
+    "kind": "CSSAnimation",
+    "name": "ds-menu-in",
+    "target": "dropdown-menu",
+    "dur": 150
+   }
+  ],
+  "openMenu": {
+   "origin": "0px 0px",
+   "opacity": "1",
+   "transform": "none"
+  },
+  "startedOnClose": [
+   {
+    "kind": "CSSAnimation",
+    "name": "ds-menu-out",
+    "target": "dropdown-menu",
+    "dur": 100
+   }
+  ]
+ },
+ "toast|studio-dark-ltr|react": {
+  "startedOnShow": [
+   {
+    "kind": "CSSAnimation",
+    "name": "ds-toast-in",
+    "target": "toast",
+    "dur": 140
+   }
+  ]
+ },
+ "toast|studio-dark-ltr|angular": {
+  "startedOnShow": [
+   {
+    "kind": "CSSAnimation",
+    "name": "ds-toast-in",
+    "target": "toast",
+    "dur": 140
+   }
+  ]
+ },
+ "toast|neutral-light-rtl|react": {
+  "startedOnShow": [
+   {
+    "kind": "CSSAnimation",
+    "name": "ds-toast-in",
+    "target": "toast",
+    "dur": 180
+   }
+  ]
+ },
+ "toast|neutral-light-rtl|angular": {
+  "startedOnShow": [
+   {
+    "kind": "CSSAnimation",
+    "name": "ds-toast-in",
+    "target": "toast",
+    "dur": 180
+   }
+  ]
+ },
+ "dialog|studio-dark-ltr|react": {
+  "startedOnOpen": [
+   {
+    "kind": "CSSAnimation",
+    "name": "ds-dialog-fade-in",
+    "target": "backdrop",
+    "dur": 120
+   },
+   {
+    "kind": "CSSAnimation",
+    "name": "ds-dialog-in",
+    "target": "panel",
+    "dur": 120
+   }
+  ],
+  "startedOnClose": [
+   {
+    "kind": "CSSAnimation",
+    "name": "ds-dialog-fade-out",
+    "target": "backdrop",
+    "dur": 120
+   },
+   {
+    "kind": "CSSAnimation",
+    "name": "ds-dialog-out",
+    "target": "panel",
+    "dur": 120
+   }
+  ]
+ },
+ "dialog|studio-dark-ltr|angular": {
+  "startedOnOpen": [
+   {
+    "kind": "CSSAnimation",
+    "name": "ds-dialog-fade-in",
+    "target": "backdrop",
+    "dur": 120
+   },
+   {
+    "kind": "CSSAnimation",
+    "name": "ds-dialog-in",
+    "target": "panel",
+    "dur": 120
+   }
+  ],
+  "startedOnClose": [
+   {
+    "kind": "CSSAnimation",
+    "name": "ds-dialog-fade-out",
+    "target": "backdrop",
+    "dur": 120
+   },
+   {
+    "kind": "CSSAnimation",
+    "name": "ds-dialog-out",
+    "target": "panel",
+    "dur": 120
+   }
+  ]
+ },
+ "dialog|neutral-light-rtl|react": {
+  "startedOnOpen": [
+   {
+    "kind": "CSSAnimation",
+    "name": "ds-dialog-fade-in",
+    "target": "backdrop",
+    "dur": 150
+   },
+   {
+    "kind": "CSSAnimation",
+    "name": "ds-dialog-in",
+    "target": "panel",
+    "dur": 150
+   }
+  ],
+  "startedOnClose": [
+   {
+    "kind": "CSSAnimation",
+    "name": "ds-dialog-fade-out",
+    "target": "backdrop",
+    "dur": 150
+   },
+   {
+    "kind": "CSSAnimation",
+    "name": "ds-dialog-out",
+    "target": "panel",
+    "dur": 150
+   }
+  ]
+ },
+ "dialog|neutral-light-rtl|angular": {
+  "startedOnOpen": [
+   {
+    "kind": "CSSAnimation",
+    "name": "ds-dialog-fade-in",
+    "target": "backdrop",
+    "dur": 150
+   },
+   {
+    "kind": "CSSAnimation",
+    "name": "ds-dialog-in",
+    "target": "panel",
+    "dur": 150
+   }
+  ],
+  "startedOnClose": [
+   {
+    "kind": "CSSAnimation",
+    "name": "ds-dialog-fade-out",
+    "target": "backdrop",
+    "dur": 150
+   },
+   {
+    "kind": "CSSAnimation",
+    "name": "ds-dialog-out",
+    "target": "panel",
+    "dur": 150
+   }
+  ]
+ },
+ "slider|studio-dark-ltr|react": {
+  "heldThumb": "matrix(1.1536, 0, 0, 1.1536, 0, 0)"
+ },
+ "slider|studio-dark-ltr|angular": {
+  "heldThumb": "matrix(1.1536, 0, 0, 1.1536, 0, 0)"
+ },
+ "slider|neutral-light-rtl|react": {
+  "heldThumb": "matrix(1.1536, 0, 0, 1.1536, 0, 0)"
+ },
+ "slider|neutral-light-rtl|angular": {
+  "heldThumb": "matrix(1.1536, 0, 0, 1.1536, 0, 0)"
+ },
+ "skeleton|studio-dark-ltr|react": {
+  "iterations": []
+ },
+ "skeleton|studio-dark-ltr|angular": {
+  "iterations": []
+ },
+ "skeleton|neutral-light-rtl|react": {
+  "iterations": []
+ },
+ "skeleton|neutral-light-rtl|angular": {
+  "iterations": []
+ }
+}

@@ -1,0 +1,404 @@
+{
+ "studio-dark": {
+  "dialog-0.25": {
+   "animations": [
+    {
+     "name": "ds-dialog-fade-in",
+     "target": "backdrop",
+     "duration": 120,
+     "at": 30
+    },
+    {
+     "name": "ds-dialog-in",
+     "target": "panel",
+     "duration": 120,
+     "at": 30
+    }
+   ],
+   "violations": []
+  },
+  "dialog-0.5": {
+   "animations": [
+    {
+     "name": "ds-dialog-fade-in",
+     "target": "backdrop",
+     "duration": 120,
+     "at": 60
+    },
+    {
+     "name": "ds-dialog-in",
+     "target": "panel",
+     "duration": 120,
+     "at": 60
+    }
+   ],
+   "violations": []
+  },
+  "menu-0.25": {
+   "animations": [
+    {
+     "name": "ds-menu-in",
+     "target": "dropdown-menu",
+     "duration": 120,
+     "at": 30
+    }
+   ],
+   "violations": [
+    {
+     "id": "button-name",
+     "impact": "critical",
+     "nodes": [
+      {
+       "target": [
+        "button[data-state=\"off\"]"
+       ],
+       "summary": "Fix any of the following:   Element does not have inner text that is visible to screen readers   aria-label attribute does not exist or is empty"
+      }
+     ]
+    }
+   ]
+  },
+  "menu-0.5": {
+   "animations": [
+    {
+     "name": "ds-menu-in",
+     "target": "dropdown-menu",
+     "duration": 120,
+     "at": 60
+    }
+   ],
+   "violations": [
+    {
+     "id": "button-name",
+     "impact": "critical",
+     "nodes": [
+      {
+       "target": [
+        "button[data-state=\"off\"]"
+       ],
+       "summary": "Fix any of the following:   Element does not have inner text that is visible to screen readers   aria-label attribute does not exist or is empty"
+      }
+     ]
+    }
+   ]
+  }
+ },
+ "desk-dark": {
+  "dialog-0.25": {
+   "animations": [
+    {
+     "name": "waapi",
+     "target": "label",
+     "duration": 300,
+     "at": 75
+    },
+    {
+     "name": "ds-dialog-fade-in",
+     "target": "backdrop",
+     "duration": 300,
+     "at": 75
+    },
+    {
+     "name": "ds-dialog-in",
+     "target": "panel",
+     "duration": 300,
+     "at": 75
+    }
+   ],
+   "violations": []
+  },
+  "dialog-0.5": {
+   "animations": [
+    {
+     "name": "waapi",
+     "target": "label",
+     "duration": 300,
+     "at": 150
+    },
+    {
+     "name": "ds-dialog-fade-in",
+     "target": "backdrop",
+     "duration": 300,
+     "at": 150
+    },
+    {
+     "name": "ds-dialog-in",
+     "target": "panel",
+     "duration": 300,
+     "at": 150
+    }
+   ],
+   "violations": []
+  },
+  "menu-0.25": {
+   "animations": [
+    {
+     "name": "ds-menu-in",
+     "target": "dropdown-menu",
+     "duration": 120,
+     "at": 30
+    }
+   ],
+   "violations": [
+    {
+     "id": "button-name",
+     "impact": "critical",
+     "nodes": [
+      {
+       "target": [
+        "button[data-state=\"off\"]"
+       ],
+       "summary": "Fix any of the following:   Element does not have inner text that is visible to screen readers   aria-label attribute does not exist or is empty"
+      }
+     ]
+    }
+   ]
+  },
+  "menu-0.5": {
+   "animations": [
+    {
+     "name": "waapi",
+     "target": "label",
+     "duration": 300,
+     "at": 150
+    },
+    {
+     "name": "ds-menu-in",
+     "target": "dropdown-menu",
+     "duration": 120,
+     "at": 60
+    }
+   ],
+   "violations": [
+    {
+     "id": "button-name",
+     "impact": "critical",
+     "nodes": [
+      {
+       "target": [
+        "button[data-state=\"off\"]"
+       ],
+       "summary": "Fix any of the following:   Element does not have inner text that is visible to screen readers   aria-label attribute does not exist or is empty"
+      }
+     ]
+    }
+   ]
+  }
+ },
+ "neutral-light": {
+  "dialog-0.25": {
+   "animations": [
+    {
+     "name": "ds-dialog-fade-in",
+     "target": "backdrop",
+     "duration": 150,
+     "at": 37.5
+    },
+    {
+     "name": "ds-dialog-in",
+     "target": "panel",
+     "duration": 150,
+     "at": 37.5
+    }
+   ],
+   "violations": []
+  },
+  "dialog-0.5": {
+   "animations": [
+    {
+     "name": "ds-dialog-fade-in",
+     "target": "backdrop",
+     "duration": 150,
+     "at": 75
+    },
+    {
+     "name": "ds-dialog-in",
+     "target": "panel",
+     "duration": 150,
+     "at": 75
+    }
+   ],
+   "violations": []
+  },
+  "menu-0.25": {
+   "animations": [
+    {
+     "name": "ds-menu-in",
+     "target": "dropdown-menu",
+     "duration": 150,
+     "at": 37.5
+    }
+   ],
+   "violations": [
+    {
+     "id": "button-name",
+     "impact": "critical",
+     "nodes": [
+      {
+       "target": [
+        "button[data-state=\"off\"]"
+       ],
+       "summary": "Fix any of the following:   Element does not have inner text that is visible to screen readers   aria-label attribute does not exist or is empty"
+      }
+     ]
+    },
+    {
+     "id": "target-size",
+     "impact": "serious",
+     "nodes": [
+      {
+       "target": [
+        "a:nth-child(3)"
+       ],
+       "summary": "Fix any of the following:   Target has insufficient size (77.8px by 21px, should be at least 24px by 24px)   Target has insufficient space to its closest neighbors. Safe clickable space has a diameter of 20.2px instead of at least 24px."
+      },
+      {
+       "target": [
+        "#radix-_r_q_"
+       ],
+       "summary": "Fix any of the following:   Target has insufficient size because it is partially obscured (smallest space is 105.7px by 9.8px, should be at least 24px by 24px)   Target has insufficient space to its closest neighbors. Safe clickable space has a diameter of 19.6px instead of at least 24px."
+      },
+      {
+       "target": [
+        "button[data-interaction-trigger=\"popover\"]"
+       ],
+       "summary": "Fix any of the following:   Target has insufficient size because it is partially obscured (smallest space is 122.5px by 9.8px, should be at least 24px by 24px)   Target has insufficient space to its closest neighbors. Safe clickable space has a diameter of 19.4px instead of at least 24px."
+      }
+     ]
+    }
+   ]
+  },
+  "menu-0.5": {
+   "animations": [
+    {
+     "name": "ds-menu-in",
+     "target": "dropdown-menu",
+     "duration": 150,
+     "at": 75
+    }
+   ],
+   "violations": [
+    {
+     "id": "button-name",
+     "impact": "critical",
+     "nodes": [
+      {
+       "target": [
+        "button[data-state=\"off\"]"
+       ],
+       "summary": "Fix any of the following:   Element does not have inner text that is visible to screen readers   aria-label attribute does not exist or is empty"
+      }
+     ]
+    },
+    {
+     "id": "target-size",
+     "impact": "serious",
+     "nodes": [
+      {
+       "target": [
+        "a:nth-child(3)"
+       ],
+       "summary": "Fix any of the following:   Target has insufficient size (77.8px by 21px, should be at least 24px by 24px)   Target has insufficient space to its closest neighbors. Safe clickable space has a diameter of 20.2px instead of at least 24px."
+      },
+      {
+       "target": [
+        "#radix-_r_q_"
+       ],
+       "summary": "Fix any of the following:   Target has insufficient size because it is partially obscured (smallest space is 105.7px by 9.8px, should be at least 24px by 24px)   Target has insufficient space to its closest neighbors. Safe clickable space has a diameter of 19.6px instead of at least 24px."
+      },
+      {
+       "target": [
+        "button[data-interaction-trigger=\"popover\"]"
+       ],
+       "summary": "Fix any of the following:   Target has insufficient size because it is partially obscured (smallest space is 122.5px by 9.8px, should be at least 24px by 24px)   Target has insufficient space to its closest neighbors. Safe clickable space has a diameter of 19.4px instead of at least 24px."
+      }
+     ]
+    }
+   ]
+  }
+ },
+ "neutral-light-rtl-ar": {
+  "dialog-0.25": {
+   "animations": [
+    {
+     "name": "ds-dialog-fade-in",
+     "target": "backdrop",
+     "duration": 150,
+     "at": 37.5
+    },
+    {
+     "name": "ds-dialog-in",
+     "target": "panel",
+     "duration": 150,
+     "at": 37.5
+    }
+   ],
+   "violations": []
+  },
+  "dialog-0.5": {
+   "animations": [
+    {
+     "name": "ds-dialog-fade-in",
+     "target": "backdrop",
+     "duration": 150,
+     "at": 75
+    },
+    {
+     "name": "ds-dialog-in",
+     "target": "panel",
+     "duration": 150,
+     "at": 75
+    }
+   ],
+   "violations": []
+  },
+  "menu-0.25": {
+   "animations": [
+    {
+     "name": "ds-menu-in",
+     "target": "dropdown-menu",
+     "duration": 150,
+     "at": 37.5
+    }
+   ],
+   "violations": [
+    {
+     "id": "button-name",
+     "impact": "critical",
+     "nodes": [
+      {
+       "target": [
+        "button[data-state=\"off\"]"
+       ],
+       "summary": "Fix any of the following:   Element does not have inner text that is visible to screen readers   aria-label attribute does not exist or is empty"
+      }
+     ]
+    }
+   ]
+  },
+  "menu-0.5": {
+   "animations": [
+    {
+     "name": "ds-menu-in",
+     "target": "dropdown-menu",
+     "duration": 150,
+     "at": 75
+    }
+   ],
+   "violations": [
+    {
+     "id": "button-name",
+     "impact": "critical",
+     "nodes": [
+      {
+       "target": [
+        "button[data-state=\"off\"]"
+       ],
+       "summary": "Fix any of the following:   Element does not have inner text that is visible to screen readers   aria-label attribute does not exist or is empty"
+      }
+     ]
+    }
+   ]
+  }
+ }
+}

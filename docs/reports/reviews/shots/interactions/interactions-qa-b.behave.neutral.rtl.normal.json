@@ -1,0 +1,282 @@
+{
+ "inputDuringAnim": {
+  "dialogCloseClickAt40": {
+   "animAtClick": [
+    "running:83"
+   ],
+   "closed": true,
+   "ae": "Open dialog"
+  },
+  "menuItemClickAt40": {
+   "animAtClick": [
+    "running:50"
+   ],
+   "closed": true,
+   "ae": "Open menu"
+  },
+  "toastCloseRaw": {
+   "clicks": 3,
+   "left": []
+  }
+ },
+ "toastSwipeOut": {
+  "info": {
+   "dir": "left",
+   "pos": "bottom-end",
+   "x": 16,
+   "right": 436,
+   "vw": 1100
+  },
+  "afterRelease": [
+   {
+    "t": 5081,
+    "sw": "end",
+    "st": "closed",
+    "tr": "matrix(1, 0, 0, 1, -140, 0)",
+    "op": "1",
+    "an": [
+     "ds-toast-swipe-out:150:running"
+    ]
+   },
+   {
+    "t": 5084,
+    "sw": "end",
+    "st": "closed",
+    "tr": "matrix(1, 0, 0, 1, -140, 0)",
+    "op": "1",
+    "an": [
+     "ds-toast-swipe-out:150:running"
+    ]
+   },
+   {
+    "t": 6286,
+    "gone": true
+   }
+  ],
+  "anims": [
+   "ds-toast-swipe-out:150"
+  ],
+  "gone": true
+ },
+ "tabRapid": {
+  "midAnims": [
+   "running:0"
+  ],
+  "end": {
+   "sel": 0,
+   "inds": 1,
+   "indX": 964,
+   "indW": 75,
+   "tabX": 964,
+   "tabW": 75,
+   "tr": "none",
+   "panel": "Name the board."
+  },
+  "keyboardArrowsDuringSlide": {
+   "sel": 1,
+   "focusIdx": 1,
+   "tr": "none",
+   "indX": 874,
+   "tabX": 874
+  }
+ },
+ "statRapid": {
+  "starts": [
+   94,
+   314,
+   589,
+   798,
+   1005
+  ],
+  "text": "1,610",
+  "tr": "none",
+  "op": "1",
+  "spans": 1
+ },
+ "focusRings": {
+  "menu": {
+   "el": "button:Open menu",
+   "frame0": {
+    "fv": true,
+    "outline": "solid 2px",
+    "shadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgb(20, 23, 28) 0px 0px 0px 2px, rgb(109, 155, 255) 0px 0px 0px 4px",
+    "anims": []
+   },
+   "frame1": {
+    "outline": "solid 2px",
+    "shadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgb(20, 23, 28) 0px 0px 0px 2px, rgb(109, 155, 255) 0px 0px 0px 4px"
+   }
+  },
+  "tooltip": {
+   "el": "icon-button:",
+   "frame0": {
+    "fv": true,
+    "outline": "solid 2px",
+    "shadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgb(20, 23, 28) 0px 0px 0px 2px, rgb(109, 155, 255) 0px 0px 0px 4px",
+    "anims": []
+   },
+   "frame1": {
+    "outline": "solid 2px",
+    "shadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgb(20, 23, 28) 0px 0px 0px 2px, rgb(109, 155, 255) 0px 0px 0px 4px"
+   }
+  },
+  "toastEnter": {
+   "el": "button:Show a toast",
+   "frame0": {
+    "fv": true,
+    "outline": "solid 2px",
+    "shadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgb(20, 23, 28) 0px 0px 0px 2px, rgb(109, 155, 255) 0px 0px 0px 4px",
+    "anims": []
+   },
+   "frame1": {
+    "outline": "solid 2px",
+    "shadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgb(20, 23, 28) 0px 0px 0px 2px, rgb(109, 155, 255) 0px 0px 0px 4px"
+   }
+  },
+  "toastStack": {
+   "el": "button:Show a toast",
+   "frame0": {
+    "fv": true,
+    "outline": "solid 2px",
+    "shadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgb(20, 23, 28) 0px 0px 0px 2px, rgb(109, 155, 255) 0px 0px 0px 4px",
+    "anims": []
+   },
+   "frame1": {
+    "outline": "solid 2px",
+    "shadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgb(20, 23, 28) 0px 0px 0px 2px, rgb(109, 155, 255) 0px 0px 0px 4px"
+   }
+  },
+  "toastSwipe": {
+   "el": "button:Show a toast",
+   "frame0": {
+    "fv": true,
+    "outline": "solid 2px",
+    "shadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgb(20, 23, 28) 0px 0px 0px 2px, rgb(109, 155, 255) 0px 0px 0px 4px",
+    "anims": []
+   },
+   "frame1": {
+    "outline": "solid 2px",
+    "shadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgb(20, 23, 28) 0px 0px 0px 2px, rgb(109, 155, 255) 0px 0px 0px 4px"
+   }
+  },
+  "dialog": {
+   "el": "button:Open dialog",
+   "frame0": {
+    "fv": true,
+    "outline": "solid 2px",
+    "shadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgb(20, 23, 28) 0px 0px 0px 2px, rgb(109, 155, 255) 0px 0px 0px 4px",
+    "anims": []
+   },
+   "frame1": {
+    "outline": "solid 2px",
+    "shadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgb(20, 23, 28) 0px 0px 0px 2px, rgb(109, 155, 255) 0px 0px 0px 4px"
+   }
+  },
+  "sheet": {
+   "el": "button:Open sheet",
+   "frame0": {
+    "fv": true,
+    "outline": "solid 2px",
+    "shadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgb(20, 23, 28) 0px 0px 0px 2px, rgb(109, 155, 255) 0px 0px 0px 4px",
+    "anims": []
+   },
+   "frame1": {
+    "outline": "solid 2px",
+    "shadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgb(20, 23, 28) 0px 0px 0px 2px, rgb(109, 155, 255) 0px 0px 0px 4px"
+   }
+  },
+  "drawer": {
+   "el": "button:Open drawer",
+   "frame0": {
+    "fv": true,
+    "outline": "solid 2px",
+    "shadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgb(20, 23, 28) 0px 0px 0px 2px, rgb(109, 155, 255) 0px 0px 0px 4px",
+    "anims": []
+   },
+   "frame1": {
+    "outline": "solid 2px",
+    "shadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgb(20, 23, 28) 0px 0px 0px 2px, rgb(109, 155, 255) 0px 0px 0px 4px"
+   }
+  },
+  "tab": {
+   "el": "tab:General",
+   "frame0": {
+    "fv": true,
+    "outline": "solid 2px",
+    "shadow": "rgb(109, 155, 255) 0px 0px 0px 2px inset",
+    "anims": []
+   },
+   "frame1": {
+    "outline": "solid 2px",
+    "shadow": "rgb(109, 155, 255) 0px 0px 0px 2px inset"
+   }
+  },
+  "accordion": {
+   "el": "button:Billing",
+   "frame0": {
+    "fv": true,
+    "outline": "solid 2px",
+    "shadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgb(20, 23, 28) 0px 0px 0px 2px, rgb(109, 155, 255) 0px 0px 0px 4px",
+    "anims": []
+   },
+   "frame1": {
+    "outline": "solid 2px",
+    "shadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgb(20, 23, 28) 0px 0px 0px 2px, rgb(109, 155, 255) 0px 0px 0px 4px"
+   }
+  },
+  "skeleton": {
+   "el": "button:Load the content",
+   "frame0": {
+    "fv": true,
+    "outline": "solid 2px",
+    "shadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgb(20, 23, 28) 0px 0px 0px 2px, rgb(109, 155, 255) 0px 0px 0px 4px",
+    "anims": []
+   },
+   "frame1": {
+    "outline": "solid 2px",
+    "shadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgb(20, 23, 28) 0px 0px 0px 2px, rgb(109, 155, 255) 0px 0px 0px 4px"
+   }
+  },
+  "list": {
+   "el": "button:Paint the list aga",
+   "frame0": {
+    "fv": true,
+    "outline": "solid 2px",
+    "shadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgb(20, 23, 28) 0px 0px 0px 2px, rgb(109, 155, 255) 0px 0px 0px 4px",
+    "anims": []
+   },
+   "frame1": {
+    "outline": "solid 2px",
+    "shadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgb(20, 23, 28) 0px 0px 0px 2px, rgb(109, 155, 255) 0px 0px 0px 4px"
+   }
+  },
+  "stat": {
+   "el": "button:Add visitors",
+   "frame0": {
+    "fv": true,
+    "outline": "solid 2px",
+    "shadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgb(20, 23, 28) 0px 0px 0px 2px, rgb(109, 155, 255) 0px 0px 0px 4px",
+    "anims": []
+   },
+   "frame1": {
+    "outline": "solid 2px",
+    "shadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgb(20, 23, 28) 0px 0px 0px 2px, rgb(109, 155, 255) 0px 0px 0px 4px"
+   }
+  }
+ },
+ "menuKeyboard": {
+  "onOpenFrame0": {
+   "ae": "menuitem:Rename board",
+   "highlighted": true,
+   "fv": true,
+   "outline": "solid 2px",
+   "shadow": "rgb(109, 155, 255) 0px 0px 0px 2px inset",
+   "bg": "rgba(255, 255, 255, 0.1)",
+   "menuAnim": [
+    "ds-menu-in:running:0"
+   ]
+  },
+  "focusBackMs": 102,
+  "nodeGoneMs": 0
+ }
+}

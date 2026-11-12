@@ -1,0 +1,176 @@
+{
+ "inputDuringAnim": {
+  "dialogCloseClickAt40": {
+   "animAtClick": [
+    "running:0"
+   ],
+   "closed": true,
+   "ae": "Open dialog"
+  },
+  "menuItemClickAt40": {
+   "animAtClick": [
+    "running:50"
+   ],
+   "closed": true,
+   "ae": "Open menu"
+  },
+  "toastCloseRaw": {
+   "clicks": 3,
+   "left": []
+  }
+ },
+ "menuEscapeDuringOpen": {
+  "midAnim": [
+   "running:33"
+  ],
+  "escapeGoneMs": 136,
+  "end": {
+   "menu": false,
+   "exp": "false",
+   "ae": "Open menu"
+  },
+  "secondClick": "ok",
+  "rapid": {
+   "menu": null,
+   "exp": "false",
+   "tr": null
+  },
+  "popover": [
+   {
+    "n": "ds-popover-in",
+    "d": 120,
+    "kf": "offset,easing,composite,opacity,transform,computedOffset|offset,easing,composite,opacity,transform,computedOffset",
+    "e": "cubic-bezier(0.16, 1, 0.3, 1)|cubic-bezier(0.16, 1, 0.3, 1)"
+   }
+  ],
+  "popoverEscapeGoneMs": 127
+ },
+ "tabRapid": {
+  "midAnims": [
+   "running:0"
+  ],
+  "end": {
+   "sel": 0,
+   "inds": 1,
+   "indX": 52,
+   "indW": 62,
+   "tabX": 52,
+   "tabW": 62,
+   "tr": "none",
+   "panel": "Name the board."
+  },
+  "keyboardArrowsDuringSlide": {
+   "sel": 2,
+   "focusIdx": 2,
+   "tr": "none",
+   "indX": 190,
+   "tabX": 190
+  }
+ },
+ "accordionRapid": {
+  "twoClicks30ms": {
+   "exp": "false",
+   "content": "closed:true"
+  },
+  "threeClicks30ms": {
+   "exp": "true",
+   "content": "open",
+   "innerTr": "none 1",
+   "scaleInText": false
+  },
+  "enterTwice40ms": "false"
+ },
+ "listRapid": [
+  "1 none 0",
+  "1 none 0",
+  "1 none 0"
+ ],
+ "statRapid": {
+  "starts": [
+   60,
+   455,
+   773
+  ],
+  "text": "1,610",
+  "tr": "none",
+  "op": "1",
+  "spans": 1
+ },
+ "toastStack": {
+  "midStack": [
+   {
+    "st": "open",
+    "anims": []
+   },
+   {
+    "st": "open",
+    "anims": []
+   },
+   {
+    "st": "open",
+    "anims": []
+   }
+  ],
+  "closeClicks": 3,
+  "endAfter1200": [
+   {
+    "st": "open",
+    "title": "Draft 4 savedS",
+    "tr": "none",
+    "op": "1",
+    "running": 0
+   }
+  ],
+  "after6s": [
+   {
+    "st": "open",
+    "title": "Draft 4 savedS",
+    "tr": "none",
+    "op": "1"
+   }
+  ]
+ },
+ "dialog": {
+  "kbOpenFrame0": {
+   "inside": true,
+   "ae": "button:Keep board",
+   "fv": true,
+   "outline": "solid 2px",
+   "shadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgb(244, 244, 245) 0px 0px 0px 2px",
+   "panelAnim": [
+    "ds-dialog-in:running:0"
+   ]
+  },
+  "escFocusBackMs": 524,
+  "escNodeGoneMs": 0,
+  "escDuringOpen": {
+   "mid": [
+    "running:50"
+   ],
+   "focusBackMs": 576,
+   "goneMs": 0,
+   "end": {
+    "dialogs": 0,
+    "ae": "Open dialog",
+    "inert": 38,
+    "bodyPE": "auto"
+   }
+  },
+  "closeAt60ms": {
+   "closeClick": "ok",
+   "focusBackMs": 457,
+   "end": {
+    "dialogs": 0,
+    "ae": "Open dialog",
+    "bodyPE": "auto"
+   }
+  },
+  "doubleTrigger": {
+   "dbl": "blocked by overlay (expected for a modal)",
+   "end": {
+    "open": "open",
+    "tr": "none 1"
+   }
+  }
+ }
+}

@@ -1,0 +1,1106 @@
+{
+ "desk.ltr.attr": {
+  "stateTrueFrameMs": 20,
+  "firstAnimFrameMs": null,
+  "stateAtTriggerTask": {
+   "t": 27.799999999813735,
+   "s": {
+    "ok": true,
+    "ops": [
+     "1",
+     "1",
+     "1"
+    ]
+   }
+  },
+  "events": [
+   {
+    "type": "pointermove",
+    "t": -4.2
+   },
+   {
+    "type": "pointerdown",
+    "t": 0
+   },
+   {
+    "type": "focusin",
+    "t": 1.4
+   },
+   {
+    "type": "click",
+    "t": 2.5
+   }
+  ],
+  "anims": [],
+  "firstState": {
+   "ok": true,
+   "ops": [
+    "1",
+    "1",
+    "1"
+   ]
+  },
+  "lastState": {
+   "ok": true,
+   "ops": [
+    "1",
+    "1",
+    "1"
+   ]
+  }
+ },
+ "desk.ltr.media": {
+  "stateTrueFrameMs": 23.1,
+  "firstAnimFrameMs": null,
+  "stateAtTriggerTask": {
+   "t": 26.399999999906868,
+   "s": {
+    "ok": true,
+    "ops": [
+     "1",
+     "1",
+     "1"
+    ]
+   }
+  },
+  "events": [
+   {
+    "type": "pointermove",
+    "t": -6
+   },
+   {
+    "type": "pointerdown",
+    "t": 0
+   },
+   {
+    "type": "focusin",
+    "t": 3.1
+   },
+   {
+    "type": "click",
+    "t": 4.3
+   }
+  ],
+  "anims": [],
+  "firstState": {
+   "ok": true,
+   "ops": [
+    "1",
+    "1",
+    "1"
+   ]
+  },
+  "lastState": {
+   "ok": true,
+   "ops": [
+    "1",
+    "1",
+    "1"
+   ]
+  }
+ },
+ "desk.ltr.normal": {
+  "stateTrueFrameMs": 38,
+  "firstAnimFrameMs": 38,
+  "stateAtTriggerTask": {
+   "t": 48.699999999953434,
+   "s": {
+    "ok": true,
+    "ops": [
+     "0",
+     "0",
+     "0"
+    ]
+   }
+  },
+  "events": [
+   {
+    "type": "pointermove",
+    "t": -4
+   },
+   {
+    "type": "pointerdown",
+    "t": 0
+   },
+   {
+    "type": "focusin",
+    "t": 1.3
+   },
+   {
+    "type": "click",
+    "t": 2
+   }
+  ],
+  "anims": [
+   {
+    "target": "span[part=label]",
+    "kind": "CSSTransition",
+    "name": "transform",
+    "props": [
+     "transform"
+    ],
+    "durationMs": 300,
+    "delayMs": 0,
+    "iterations": 1,
+    "easing": "cubic-bezier(0.22, 1, 0.36, 1)",
+    "keyframes": [
+     {
+      "offset": 0,
+      "transform": "none"
+     },
+     {
+      "offset": 1,
+      "transform": "translateY(-28px)"
+     }
+    ],
+    "wallFirstSeenMs": 38,
+    "wallLastRunningMs": 350
+   },
+   {
+    "target": "li[part=item]",
+    "kind": "Animation",
+    "name": "ds-motion:list-stagger",
+    "props": [
+     "opacity",
+     "transform"
+    ],
+    "durationMs": 180,
+    "delayMs": 0,
+    "iterations": 1,
+    "easing": "cubic-bezier(0.22, 1, 0.36, 1)",
+    "keyframes": [
+     {
+      "offset": null,
+      "transform": "translateY(var(--ds-space-s, 8px))",
+      "opacity": "0"
+     },
+     {
+      "offset": null,
+      "transform": "none",
+      "opacity": "1"
+     }
+    ],
+    "wallFirstSeenMs": 38,
+    "wallLastRunningMs": 217
+   },
+   {
+    "target": "li[part=item]",
+    "kind": "Animation",
+    "name": "ds-motion:list-stagger",
+    "props": [
+     "opacity",
+     "transform"
+    ],
+    "durationMs": 180,
+    "delayMs": 80,
+    "iterations": 1,
+    "easing": "cubic-bezier(0.22, 1, 0.36, 1)",
+    "keyframes": [
+     {
+      "offset": null,
+      "transform": "translateY(var(--ds-space-s, 8px))",
+      "opacity": "0"
+     },
+     {
+      "offset": null,
+      "transform": "none",
+      "opacity": "1"
+     }
+    ],
+    "wallFirstSeenMs": 38,
+    "wallLastRunningMs": 312
+   },
+   {
+    "target": "li[part=item]",
+    "kind": "Animation",
+    "name": "ds-motion:list-stagger",
+    "props": [
+     "opacity",
+     "transform"
+    ],
+    "durationMs": 180,
+    "delayMs": 160,
+    "iterations": 1,
+    "easing": "cubic-bezier(0.22, 1, 0.36, 1)",
+    "keyframes": [
+     {
+      "offset": null,
+      "transform": "translateY(var(--ds-space-s, 8px))",
+      "opacity": "0"
+     },
+     {
+      "offset": null,
+      "transform": "none",
+      "opacity": "1"
+     }
+    ],
+    "wallFirstSeenMs": 38,
+    "wallLastRunningMs": 384
+   }
+  ],
+  "firstState": {
+   "ok": true,
+   "ops": [
+    "0",
+    "0",
+    "0"
+   ]
+  },
+  "lastState": {
+   "ok": true,
+   "ops": [
+    "1",
+    "1",
+    "1"
+   ]
+  }
+ },
+ "desk.rtl.normal": {
+  "stateTrueFrameMs": 163,
+  "firstAnimFrameMs": 163,
+  "stateAtTriggerTask": {
+   "t": 167.60000000009313,
+   "s": {
+    "ok": true,
+    "ops": [
+     "0",
+     "0",
+     "0"
+    ]
+   }
+  },
+  "events": [
+   {
+    "type": "pointermove",
+    "t": -7.5
+   },
+   {
+    "type": "pointerdown",
+    "t": 0
+   },
+   {
+    "type": "focusin",
+    "t": 1.9
+   },
+   {
+    "type": "click",
+    "t": 3.7
+   }
+  ],
+  "anims": [
+   {
+    "target": "span[part=label]",
+    "kind": "CSSTransition",
+    "name": "transform",
+    "props": [
+     "transform"
+    ],
+    "durationMs": 300,
+    "delayMs": 0,
+    "iterations": 1,
+    "easing": "cubic-bezier(0.22, 1, 0.36, 1)",
+    "keyframes": [
+     {
+      "offset": 0,
+      "transform": "none"
+     },
+     {
+      "offset": 1,
+      "transform": "translateY(-28px)"
+     }
+    ],
+    "wallFirstSeenMs": 163,
+    "wallLastRunningMs": 483
+   },
+   {
+    "target": "li[part=item]",
+    "kind": "Animation",
+    "name": "ds-motion:list-stagger",
+    "props": [
+     "opacity",
+     "transform"
+    ],
+    "durationMs": 180,
+    "delayMs": 0,
+    "iterations": 1,
+    "easing": "cubic-bezier(0.22, 1, 0.36, 1)",
+    "keyframes": [
+     {
+      "offset": null,
+      "transform": "translateY(var(--ds-space-s, 8px))",
+      "opacity": "0"
+     },
+     {
+      "offset": null,
+      "transform": "none",
+      "opacity": "1"
+     }
+    ],
+    "wallFirstSeenMs": 163,
+    "wallLastRunningMs": 483
+   },
+   {
+    "target": "li[part=item]",
+    "kind": "Animation",
+    "name": "ds-motion:list-stagger",
+    "props": [
+     "opacity",
+     "transform"
+    ],
+    "durationMs": 180,
+    "delayMs": 80,
+    "iterations": 1,
+    "easing": "cubic-bezier(0.22, 1, 0.36, 1)",
+    "keyframes": [
+     {
+      "offset": null,
+      "transform": "translateY(var(--ds-space-s, 8px))",
+      "opacity": "0"
+     },
+     {
+      "offset": null,
+      "transform": "none",
+      "opacity": "1"
+     }
+    ],
+    "wallFirstSeenMs": 163,
+    "wallLastRunningMs": 483
+   },
+   {
+    "target": "li[part=item]",
+    "kind": "Animation",
+    "name": "ds-motion:list-stagger",
+    "props": [
+     "opacity",
+     "transform"
+    ],
+    "durationMs": 180,
+    "delayMs": 160,
+    "iterations": 1,
+    "easing": "cubic-bezier(0.22, 1, 0.36, 1)",
+    "keyframes": [
+     {
+      "offset": null,
+      "transform": "translateY(var(--ds-space-s, 8px))",
+      "opacity": "0"
+     },
+     {
+      "offset": null,
+      "transform": "none",
+      "opacity": "1"
+     }
+    ],
+    "wallFirstSeenMs": 163,
+    "wallLastRunningMs": 483
+   }
+  ],
+  "firstState": {
+   "ok": true,
+   "ops": [
+    "0",
+    "0",
+    "0"
+   ]
+  },
+  "lastState": {
+   "ok": true,
+   "ops": [
+    "1",
+    "1",
+    "1"
+   ]
+  }
+ },
+ "neutral.ltr.attr": {
+  "stateTrueFrameMs": 47.9,
+  "firstAnimFrameMs": null,
+  "stateAtTriggerTask": {
+   "t": 50,
+   "s": {
+    "ok": true,
+    "ops": [
+     "1",
+     "1",
+     "1"
+    ]
+   }
+  },
+  "events": [
+   {
+    "type": "pointermove",
+    "t": -4.4
+   },
+   {
+    "type": "pointerdown",
+    "t": 0
+   },
+   {
+    "type": "focusin",
+    "t": 2.1
+   },
+   {
+    "type": "click",
+    "t": 2.8
+   }
+  ],
+  "anims": [],
+  "firstState": {
+   "ok": true,
+   "ops": [
+    "1",
+    "1",
+    "1"
+   ]
+  },
+  "lastState": {
+   "ok": true,
+   "ops": [
+    "1",
+    "1",
+    "1"
+   ]
+  }
+ },
+ "neutral.ltr.media": {
+  "stateTrueFrameMs": 38.6,
+  "firstAnimFrameMs": null,
+  "stateAtTriggerTask": {
+   "t": 42.89999999990687,
+   "s": {
+    "ok": true,
+    "ops": [
+     "1",
+     "1",
+     "1"
+    ]
+   }
+  },
+  "events": [
+   {
+    "type": "pointermove",
+    "t": -10.2
+   },
+   {
+    "type": "pointerdown",
+    "t": 0
+   },
+   {
+    "type": "focusin",
+    "t": 3
+   },
+   {
+    "type": "click",
+    "t": 3.8
+   }
+  ],
+  "anims": [],
+  "firstState": {
+   "ok": true,
+   "ops": [
+    "1",
+    "1",
+    "1"
+   ]
+  },
+  "lastState": {
+   "ok": true,
+   "ops": [
+    "1",
+    "1",
+    "1"
+   ]
+  }
+ },
+ "neutral.ltr.normal": {
+  "stateTrueFrameMs": 61.2,
+  "firstAnimFrameMs": 61,
+  "stateAtTriggerTask": {
+   "t": 64.79999999981374,
+   "s": {
+    "ok": true,
+    "ops": [
+     "0",
+     "0",
+     "0"
+    ]
+   }
+  },
+  "events": [
+   {
+    "type": "pointermove",
+    "t": -2.2
+   },
+   {
+    "type": "pointerdown",
+    "t": 0
+   },
+   {
+    "type": "focusin",
+    "t": 1.8
+   },
+   {
+    "type": "click",
+    "t": 2.8
+   }
+  ],
+  "anims": [
+   {
+    "target": "li[part=item]",
+    "kind": "Animation",
+    "name": "ds-motion:list-stagger",
+    "props": [
+     "opacity"
+    ],
+    "durationMs": 150,
+    "delayMs": 0,
+    "iterations": 1,
+    "easing": "cubic-bezier(0, 0, 0.58, 1)",
+    "keyframes": [
+     {
+      "offset": null,
+      "opacity": "0"
+     },
+     {
+      "offset": null,
+      "opacity": "1"
+     }
+    ],
+    "wallFirstSeenMs": 61,
+    "wallLastRunningMs": 242
+   },
+   {
+    "target": "li[part=item]",
+    "kind": "Animation",
+    "name": "ds-motion:list-stagger",
+    "props": [
+     "opacity"
+    ],
+    "durationMs": 150,
+    "delayMs": 0,
+    "iterations": 1,
+    "easing": "cubic-bezier(0, 0, 0.58, 1)",
+    "keyframes": [
+     {
+      "offset": null,
+      "opacity": "0"
+     },
+     {
+      "offset": null,
+      "opacity": "1"
+     }
+    ],
+    "wallFirstSeenMs": 61,
+    "wallLastRunningMs": 242
+   },
+   {
+    "target": "li[part=item]",
+    "kind": "Animation",
+    "name": "ds-motion:list-stagger",
+    "props": [
+     "opacity"
+    ],
+    "durationMs": 150,
+    "delayMs": 0,
+    "iterations": 1,
+    "easing": "cubic-bezier(0, 0, 0.58, 1)",
+    "keyframes": [
+     {
+      "offset": null,
+      "opacity": "0"
+     },
+     {
+      "offset": null,
+      "opacity": "1"
+     }
+    ],
+    "wallFirstSeenMs": 61,
+    "wallLastRunningMs": 242
+   }
+  ],
+  "firstState": {
+   "ok": true,
+   "ops": [
+    "0",
+    "0",
+    "0"
+   ]
+  },
+  "lastState": {
+   "ok": true,
+   "ops": [
+    "1",
+    "1",
+    "1"
+   ]
+  }
+ },
+ "neutral.rtl.normal": {
+  "stateTrueFrameMs": 137.8,
+  "firstAnimFrameMs": 138,
+  "stateAtTriggerTask": {
+   "t": 141.60000000009313,
+   "s": {
+    "ok": true,
+    "ops": [
+     "0",
+     "0",
+     "0"
+    ]
+   }
+  },
+  "events": [
+   {
+    "type": "pointermove",
+    "t": -7.2
+   },
+   {
+    "type": "pointerdown",
+    "t": 0
+   },
+   {
+    "type": "focusin",
+    "t": 1.4
+   },
+   {
+    "type": "click",
+    "t": 6.4
+   }
+  ],
+  "anims": [
+   {
+    "target": "li[part=item]",
+    "kind": "Animation",
+    "name": "ds-motion:list-stagger",
+    "props": [
+     "opacity"
+    ],
+    "durationMs": 150,
+    "delayMs": 0,
+    "iterations": 1,
+    "easing": "cubic-bezier(0, 0, 0.58, 1)",
+    "keyframes": [
+     {
+      "offset": null,
+      "opacity": "0"
+     },
+     {
+      "offset": null,
+      "opacity": "1"
+     }
+    ],
+    "wallFirstSeenMs": 138,
+    "wallLastRunningMs": 287
+   },
+   {
+    "target": "li[part=item]",
+    "kind": "Animation",
+    "name": "ds-motion:list-stagger",
+    "props": [
+     "opacity"
+    ],
+    "durationMs": 150,
+    "delayMs": 0,
+    "iterations": 1,
+    "easing": "cubic-bezier(0, 0, 0.58, 1)",
+    "keyframes": [
+     {
+      "offset": null,
+      "opacity": "0"
+     },
+     {
+      "offset": null,
+      "opacity": "1"
+     }
+    ],
+    "wallFirstSeenMs": 138,
+    "wallLastRunningMs": 287
+   },
+   {
+    "target": "li[part=item]",
+    "kind": "Animation",
+    "name": "ds-motion:list-stagger",
+    "props": [
+     "opacity"
+    ],
+    "durationMs": 150,
+    "delayMs": 0,
+    "iterations": 1,
+    "easing": "cubic-bezier(0, 0, 0.58, 1)",
+    "keyframes": [
+     {
+      "offset": null,
+      "opacity": "0"
+     },
+     {
+      "offset": null,
+      "opacity": "1"
+     }
+    ],
+    "wallFirstSeenMs": 138,
+    "wallLastRunningMs": 287
+   }
+  ],
+  "firstState": {
+   "ok": true,
+   "ops": [
+    "0",
+    "0",
+    "0"
+   ]
+  },
+  "lastState": {
+   "ok": true,
+   "ops": [
+    "1",
+    "1",
+    "1"
+   ]
+  }
+ },
+ "studio.ltr.attr": {
+  "stateTrueFrameMs": 21.9,
+  "firstAnimFrameMs": null,
+  "stateAtTriggerTask": {
+   "t": 27.800000000279397,
+   "s": {
+    "ok": true,
+    "ops": [
+     "1",
+     "1",
+     "1"
+    ]
+   }
+  },
+  "events": [
+   {
+    "type": "pointermove",
+    "t": -3.1
+   },
+   {
+    "type": "pointerdown",
+    "t": 0
+   },
+   {
+    "type": "focusin",
+    "t": 1.7
+   },
+   {
+    "type": "click",
+    "t": 2.8
+   }
+  ],
+  "anims": [],
+  "firstState": {
+   "ok": true,
+   "ops": [
+    "1",
+    "1",
+    "1"
+   ]
+  },
+  "lastState": {
+   "ok": true,
+   "ops": [
+    "1",
+    "1",
+    "1"
+   ]
+  }
+ },
+ "studio.ltr.media": {
+  "stateTrueFrameMs": 29.8,
+  "firstAnimFrameMs": null,
+  "stateAtTriggerTask": {
+   "t": 42.299999999813735,
+   "s": {
+    "ok": true,
+    "ops": [
+     "1",
+     "1",
+     "1"
+    ]
+   }
+  },
+  "events": [
+   {
+    "type": "pointermove",
+    "t": -3
+   },
+   {
+    "type": "pointerdown",
+    "t": 0
+   },
+   {
+    "type": "focusin",
+    "t": 1.9
+   },
+   {
+    "type": "click",
+    "t": 2.8
+   }
+  ],
+  "anims": [],
+  "firstState": {
+   "ok": true,
+   "ops": [
+    "1",
+    "1",
+    "1"
+   ]
+  },
+  "lastState": {
+   "ok": true,
+   "ops": [
+    "1",
+    "1",
+    "1"
+   ]
+  }
+ },
+ "studio.ltr.normal": {
+  "stateTrueFrameMs": 408.7,
+  "firstAnimFrameMs": 409,
+  "stateAtTriggerTask": {
+   "t": 517.6000000000931,
+   "s": {
+    "ok": true,
+    "ops": [
+     "0",
+     "0",
+     "0"
+    ]
+   }
+  },
+  "events": [
+   {
+    "type": "pointermove",
+    "t": -2.7
+   },
+   {
+    "type": "pointerdown",
+    "t": 0
+   },
+   {
+    "type": "focusin",
+    "t": 8.7
+   },
+   {
+    "type": "click",
+    "t": 9.5
+   }
+  ],
+  "anims": [
+   {
+    "target": "li[part=item]",
+    "kind": "Animation",
+    "name": "ds-motion:list-stagger",
+    "props": [
+     "opacity"
+    ],
+    "durationMs": 120,
+    "delayMs": 0,
+    "iterations": 1,
+    "easing": "cubic-bezier(0, 0, 0.58, 1)",
+    "keyframes": [
+     {
+      "offset": null,
+      "opacity": "0"
+     },
+     {
+      "offset": null,
+      "opacity": "1"
+     }
+    ],
+    "wallFirstSeenMs": 409,
+    "wallLastRunningMs": 593
+   },
+   {
+    "target": "li[part=item]",
+    "kind": "Animation",
+    "name": "ds-motion:list-stagger",
+    "props": [
+     "opacity"
+    ],
+    "durationMs": 120,
+    "delayMs": 0,
+    "iterations": 1,
+    "easing": "cubic-bezier(0, 0, 0.58, 1)",
+    "keyframes": [
+     {
+      "offset": null,
+      "opacity": "0"
+     },
+     {
+      "offset": null,
+      "opacity": "1"
+     }
+    ],
+    "wallFirstSeenMs": 409,
+    "wallLastRunningMs": 593
+   },
+   {
+    "target": "li[part=item]",
+    "kind": "Animation",
+    "name": "ds-motion:list-stagger",
+    "props": [
+     "opacity"
+    ],
+    "durationMs": 120,
+    "delayMs": 0,
+    "iterations": 1,
+    "easing": "cubic-bezier(0, 0, 0.58, 1)",
+    "keyframes": [
+     {
+      "offset": null,
+      "opacity": "0"
+     },
+     {
+      "offset": null,
+      "opacity": "1"
+     }
+    ],
+    "wallFirstSeenMs": 409,
+    "wallLastRunningMs": 593
+   }
+  ],
+  "firstState": {
+   "ok": true,
+   "ops": [
+    "0",
+    "0",
+    "0"
+   ]
+  },
+  "lastState": {
+   "ok": true,
+   "ops": [
+    "1",
+    "1",
+    "1"
+   ]
+  }
+ },
+ "studio.rtl.normal": {
+  "stateTrueFrameMs": 23.9,
+  "firstAnimFrameMs": 24,
+  "stateAtTriggerTask": {
+   "t": 28.199999999953434,
+   "s": {
+    "ok": true,
+    "ops": [
+     "0",
+     "0",
+     "0"
+    ]
+   }
+  },
+  "events": [
+   {
+    "type": "pointermove",
+    "t": -5.5
+   },
+   {
+    "type": "pointerdown",
+    "t": 0
+   },
+   {
+    "type": "focusin",
+    "t": 1.2
+   },
+   {
+    "type": "click",
+    "t": 4.5
+   }
+  ],
+  "anims": [
+   {
+    "target": "li[part=item]",
+    "kind": "Animation",
+    "name": "ds-motion:list-stagger",
+    "props": [
+     "opacity"
+    ],
+    "durationMs": 120,
+    "delayMs": 0,
+    "iterations": 1,
+    "easing": "cubic-bezier(0, 0, 0.58, 1)",
+    "keyframes": [
+     {
+      "offset": null,
+      "opacity": "0"
+     },
+     {
+      "offset": null,
+      "opacity": "1"
+     }
+    ],
+    "wallFirstSeenMs": 24,
+    "wallLastRunningMs": 129
+   },
+   {
+    "target": "li[part=item]",
+    "kind": "Animation",
+    "name": "ds-motion:list-stagger",
+    "props": [
+     "opacity"
+    ],
+    "durationMs": 120,
+    "delayMs": 0,
+    "iterations": 1,
+    "easing": "cubic-bezier(0, 0, 0.58, 1)",
+    "keyframes": [
+     {
+      "offset": null,
+      "opacity": "0"
+     },
+     {
+      "offset": null,
+      "opacity": "1"
+     }
+    ],
+    "wallFirstSeenMs": 24,
+    "wallLastRunningMs": 129
+   },
+   {
+    "target": "li[part=item]",
+    "kind": "Animation",
+    "name": "ds-motion:list-stagger",
+    "props": [
+     "opacity"
+    ],
+    "durationMs": 120,
+    "delayMs": 0,
+    "iterations": 1,
+    "easing": "cubic-bezier(0, 0, 0.58, 1)",
+    "keyframes": [
+     {
+      "offset": null,
+      "opacity": "0"
+     },
+     {
+      "offset": null,
+      "opacity": "1"
+     }
+    ],
+    "wallFirstSeenMs": 24,
+    "wallLastRunningMs": 129
+   }
+  ],
+  "firstState": {
+   "ok": true,
+   "ops": [
+    "0",
+    "0",
+    "0"
+   ]
+  },
+  "lastState": {
+   "ok": true,
+   "ops": [
+    "1",
+    "1",
+    "1"
+   ]
+  }
+ }
+}
