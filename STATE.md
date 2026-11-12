@@ -25,7 +25,7 @@ No adb. No iOS build.
 | 0.7 | Theme and React gallery | ds-component | react | done | 3df922f |
 | 0.8 | Icons | ds-style | all | done | ade095b |
 | 0.9 | Button | ds-component | react | built, review open | 41a178b |
-| 0.10 | Field and Input | ds-component | react | built, review open | 70359cb |
+| 0.10 | Field and Input | ds-component | react | done | 70359cb, 0344ac6 |
 | 0.11 | Dialog | ds-component | react | open | |
 | 0.12 | Toast | ds-component | react | built, review open | ee104cf |
 | 0.13 | Window | ds-component, ds-style | react | open | |
