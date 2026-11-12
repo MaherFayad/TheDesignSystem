@@ -39,7 +39,7 @@ function ShareSheet({ trigger, label, ...props }: SheetProps & { trigger: string
         </SheetBody>
         <SheetFooter>
           <SheetClose>
-            <Button>Close share</Button>
+            <Button>Discard invite</Button>
           </SheetClose>
           <SheetClose>
             <Button tone="accent" emphasis="solid">
@@ -100,7 +100,7 @@ function BusySheet() {
       <SheetContent title="Send 12 invites?" description="Each person gets an email with the link.">
         <SheetFooter>
           <SheetClose>
-            <Button disabled={busy}>Close share</Button>
+            <Button disabled={busy}>Discard invite</Button>
           </SheetClose>
           <Button tone="accent" emphasis="solid" loading={busy} loadingLabel="Sending invites" onClick={send}>
             Send invites

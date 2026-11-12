@@ -1,3 +1,5 @@
+import { readFileSync } from 'node:fs';
+import { join } from 'node:path';
 import { createEvent, fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 import { describe, expect, it } from 'vitest';
@@ -26,7 +28,7 @@ function Basic(props: SheetProps) {
         <SheetBody>Body</SheetBody>
         <SheetFooter>
           <SheetClose>
-            <Button>Close share</Button>
+            <Button>Discard invite</Button>
           </SheetClose>
         </SheetFooter>
       </SheetContent>
@@ -75,6 +77,8 @@ describe('Sheet', () => {
     expect(part('handle')?.getAttribute('aria-hidden')).toBe('true');
     expect(part('handle')?.hasAttribute('tabindex')).toBe(false);
     expect(Array.from(part('header')?.children ?? []).map((c) => c.getAttribute('data-part'))).toEqual(['title', 'description', 'close']);
+    // The close part is the system CloseButton, the same control as Toast and Alert.
+    expect(part('close')?.getAttribute('data-ds')).toBe('close-button');
   });
 
   it('sets data-size for every size', async () => {
@@ -98,7 +102,7 @@ describe('Sheet', () => {
     await user.click(await screen.findByRole('button', { name: 'Close sheet' }));
     await waitFor(() => expect(rootEl()).toBeNull());
     await user.click(trigger);
-    await user.click(await screen.findByRole('button', { name: 'Close share' }));
+    await user.click(await screen.findByRole('button', { name: 'Discard invite' }));
     await waitFor(() => expect(rootEl()).toBeNull());
   });
 
@@ -177,5 +181,15 @@ describe('Sheet', () => {
       expect(section.querySelector('[data-demo-trigger]')).not.toBeNull();
     }
     expect(container.querySelector('[title]')).toBeNull();
+  });
+
+  it('moves a bottom toaster to the top edge while a Sheet is open, so toasts never cover its footer', () => {
+    const css = readFileSync(join(process.cwd(), 'packages/css/src/components/Dialog.css'), 'utf8');
+    const selector = ":root:has([data-ds='sheet'] > [data-part='panel'][data-state='open']) [data-ds='toaster'][data-position^='bottom'] {";
+    const at = css.indexOf(selector);
+    expect(at).toBeGreaterThan(-1);
+    const rule = css.slice(at, css.indexOf('}', at));
+    expect(rule).toMatch(/inset-block-start: var\(--_toaster-inset-block-start\);/);
+    expect(rule).toMatch(/inset-block-end: auto;/);
   });
 });
