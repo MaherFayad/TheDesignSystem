@@ -82,54 +82,70 @@ components, a fresh review, then commit.
 
 | Lane | Components | Branch | Session | Status |
 | --- | --- | --- | --- | --- |
-| 5A | Alert, Callout, Banner | claude/ds-lane-5a | session_01ErLBsbefnDBtEpkCj3GvTS | merged, review open |
-| 5B | Spinner, ProgressBar, ProgressCircle, Meter | claude/ds-lane-5b | session_01ErLBsbQkcpmsu3TmHi5rBc | merged, review open |
-| 5C | StatusDot, Skeleton, ErrorState, NotificationCenter | claude/ds-lane-5c | session_01ErLBscJqT26iQKYXWfvW2v | merged, review open |
-| 8A | Stack, Grid, Container, AspectRatio, Separator | claude/ds-lane-8a | session_01ErLBsatk6FvhTqt28raxGW | merged, review open |
-| 8B | Surface, Section, Bento | claude/ds-lane-8b | session_01ErLBsaksJtMzavzrmJEa6t | merged, review open |
-| 8C | ScrollArea, ResizablePanels, SplitView, PageShell | claude/ds-lane-8c | session_01ErLBsa8BSXjHaR4V3oZ3Ey | merged, review open |
-| 9A | Avatar, AvatarGroup, Badge, Chip | claude/ds-lane-9a | session_01ErLBsdSNQd8GYQXKyPnFtx | running |
-| 9B | Kbd, Stat, DescriptionList, List | claude/ds-lane-9b | session_01ErLBsbn61TreoYiaJyiVHH | merged, review open |
-| 9C | Card, Tile, Accordion, EmptyState | claude/ds-lane-9c | session_01ErLBsckjBZHg8VUHK6mfMB | merged, review open |
-| 6B | Popover, Tooltip, HoverCard, Tour | claude/ds-lane-6b | session_01ErLBscFPqJJ34KeEwkLV3n | running |
-| 3A | Checkbox, CheckboxGroup, Switch, Slider, RangeSlider | claude/ds-lane-3a | session_01ErLBsa24qpzHgQodUJrTe8 | running |
-| 3B | RadioGroup, RadioCard, Rating | claude/ds-lane-3b | session_01ErLBsdLpnMMa2v2FtGkhme | running |
-| 1.11 | Motion catalog | claude/ds-order-1-11 | session_01ErLBscxhmd1nrS2SH4V1nU | merged |
-| 6A | Dialog bring up, AlertDialog, Drawer, Sheet | claude/ds-lane-6a | session_01ErLBsdNLKJYCuviMHY2RUQ | running |
-| 6C | ContextMenu, Menubar | claude/ds-lane-6c | session_01ErLBsZK8DpHg6JpsoEi455 | running |
-| 7A | Sidebar, Rail, Navbar | claude/ds-lane-7a | session_01ErLBsa15oMtQUTSt64h7S1 | running |
-| 7B | Tabs, Toolbar, TabBar, Dock | claude/ds-lane-7b | session_01ErLBsdSbnyDtHbcF8wWvPW | running |
-| 7C | SkipLink, Breadcrumbs, Pagination, TableOfContents, LanguageSwitch | claude/ds-lane-7c | session_01ErLBsaPqGo8ipZihqhLTXM | running |
-| 2A | Label, FieldError, Field bring up, Textarea | claude/ds-lane-2a | session_01ErLBsdmfWzsKQon1KuZQ6V | running |
-| 2B | InputGroup, SearchField, PasswordField, InlineEdit | claude/ds-lane-2b | session_01ErLBsbwATiCna4DXRSoBvp | running |
-| 2D | OTPField, PhoneField | claude/ds-lane-2d | session_01ErLBsbGXGP5q1RazYgciYx | running |
-| 3C | ListBox, Combobox, Autocomplete | claude/ds-lane-3c | session_01ErLBsZo8xNsMUVW6VtiVdG | running |
-| 4B | Stepper, FormWizard | claude/ds-lane-4b | session_01ErLBsZiF2GsbhjQfEgbywx | running |
+| 5A | Alert, Callout, Banner | claude/ds-lane-5a | session_01ErLBsbefnDBtEpkCj3GvTS | merged, reviewed, fix round on claude/ds-fix-5 |
+| 5B | Spinner, ProgressBar, ProgressCircle, Meter | claude/ds-lane-5b | session_01ErLBsbQkcpmsu3TmHi5rBc | merged, reviewed, fix round on claude/ds-fix-5 |
+| 5C | StatusDot, Skeleton, ErrorState, NotificationCenter | claude/ds-lane-5c | session_01ErLBscJqT26iQKYXWfvW2v | merged, reviewed, fix round on claude/ds-fix-5 |
+| 8A | Stack, Grid, Container, AspectRatio, Separator | claude/ds-lane-8a | session_01ErLBsatk6FvhTqt28raxGW | merged, reviewed, fix round on claude/ds-fix-8-9 |
+| 8B | Surface, Section, Bento | claude/ds-lane-8b | session_01ErLBsaksJtMzavzrmJEa6t | merged, reviewed, fix round on claude/ds-fix-8-9 |
+| 8C | ScrollArea, ResizablePanels, SplitView, PageShell | claude/ds-lane-8c | session_01ErLBsa8BSXjHaR4V3oZ3Ey | merged, reviewed, fix round on claude/ds-fix-8-9 |
+| 9A | Avatar, AvatarGroup, Badge, Chip | claude/ds-lane-9a | session_01ErLBsdSNQd8GYQXKyPnFtx | merged, review open |
+| 9B | Kbd, Stat, DescriptionList, List | claude/ds-lane-9b | session_01ErLBsbn61TreoYiaJyiVHH | merged, reviewed, fix round on claude/ds-fix-8-9 |
+| 9C | Card, Tile, Accordion, EmptyState | claude/ds-lane-9c | session_01ErLBsckjBZHg8VUHK6mfMB | merged, reviewed, fix round on claude/ds-fix-8-9 |
+| 6B | Popover, Tooltip, HoverCard, Tour | claude/ds-lane-6b | session_01ErLBscFPqJJ34KeEwkLV3n | merged, review open |
+| 3A | Checkbox, CheckboxGroup, Switch, Slider, RangeSlider | claude/ds-lane-3a | session_01ErLBsa24qpzHgQodUJrTe8 | merged, review open |
+| 3B | RadioGroup, RadioCard, Rating | claude/ds-lane-3b | session_01ErLBsdLpnMMa2v2FtGkhme | merged, review open |
+| 1.11 | Motion catalog | claude/ds-order-1-11 | session_01ErLBscxhmd1nrS2SH4V1nU | merged, reviewed, fix round on claude/ds-fix-motion |
+| 6A | Dialog bring up, AlertDialog, Drawer, Sheet | claude/ds-lane-6a | session_01ErLBsdNLKJYCuviMHY2RUQ | merged, review open |
+| 6C | ContextMenu, Menubar | claude/ds-lane-6c | session_01ErLBsZK8DpHg6JpsoEi455 | merged, review open |
+| 7A | Sidebar, Rail, Navbar | claude/ds-lane-7a | session_01ErLBsa15oMtQUTSt64h7S1 | merged, review open |
+| 7B | Tabs, Toolbar, TabBar, Dock | claude/ds-lane-7b | session_01ErLBsdSbnyDtHbcF8wWvPW | merged, review open |
+| 7C | SkipLink, Breadcrumbs, Pagination, TableOfContents, LanguageSwitch | claude/ds-lane-7c | session_01ErLBsaPqGo8ipZihqhLTXM | merged, review open |
+| 2A | Label, FieldError, Field bring up, Textarea | claude/ds-lane-2a | session_01ErLBsdmfWzsKQon1KuZQ6V | merged, review open |
+| 2B | InputGroup, SearchField, PasswordField, InlineEdit | claude/ds-lane-2b | session_01ErLBsbwATiCna4DXRSoBvp | merged, review open |
+| 2D | OTPField, PhoneField | claude/ds-lane-2d | session_01ErLBsbGXGP5q1RazYgciYx | merged, review open |
+| 3C | ListBox, Combobox, Autocomplete | claude/ds-lane-3c | session_01ErLBsZo8xNsMUVW6VtiVdG | merged, review open |
+| 4B | Stepper, FormWizard | claude/ds-lane-4b | session_01ErLBsZiF2GsbhjQfEgbywx | merged, review open |
+| 1E | SplitButton | claude/ds-lane-1e | session_01ErLBsd2g8TDh8kPx6CyQfU | merged, review open |
+| 1D | ToggleGroup, SegmentedControl | claude/ds-lane-1d | session_01ErLBsaLU7fYh8oJTPLRUYN | running |
+| 3D | Select, MultiSelect, TagField | claude/ds-lane-3d | session_01ErLBscBVRhPUortaE6kB1W | running |
+| 4A, 4C | Fieldset, Form, ConsentField, FilterBar | claude/ds-lane-4a | session_01ErLBsdAxTp9pNKkafLst2H | running |
+| 6D | CommandPalette, Lightbox, PageShell | claude/ds-lane-6d | session_01ErLBscXKXkP4UetBBLqh7d | running |
 
-Not started yet (each waits on another lane): 1D ToggleGroup and
-SegmentedControl, 1E SplitButton, 2C NumberField and ScrubInput (needs an
-install), 3D Select, MultiSelect and TagField (need ListBox), 4A Fieldset,
-Form and ConsentField, 4C FilterBar, 6D CommandPalette and Lightbox.
+Not started yet: 2C NumberField and ScrubInput (React Aria 1.22.1 is now
+installed, order 1.2.0).
 
-Done locally: Link, ButtonGroup, DropdownMenu.
+Done locally: Link, ButtonGroup, DropdownMenu, lane 1A (ToggleButton,
+CloseButton, CopyButton, FloatingActionButton), the consolidation pass
+(`docs/reports/consolidation-1.md`).
 
-Review sessions (findings only, no source edits): batch 5 on
-`claude/ds-review-5` (session_01ErLBsd5dj77mtG4ZKCmhTs), batch 8 on
-`claude/ds-review-8` (session_01ErLBsZfAjNyUmivfhgabX1). Their reports land in
-`docs/reports/reviews/`. Requests from the lanes are collected in
-`docs/plan/wave-1-followups.md`.
+Review sessions (findings only, no source edits), reports in
+`docs/reports/reviews/`:
 
-Local subagents in the lead's tree: lane 1A (ToggleButton, CloseButton, CopyButton,
-FloatingActionButton), 1.10 Neutral, the base CSS rem fix.
+| Scope | Branch | Session | Status |
+| --- | --- | --- | --- |
+| Batch 5 | claude/ds-review-5 | session_01ErLBsd5dj77mtG4ZKCmhTs | merged, 13 blockers |
+| Batch 8 | claude/ds-review-8 | session_01ErLBsZfAjNyUmivfhgabX1 | merged, 5 blockers |
+| Batch 9 (9B, 9C) and motion catalog | claude/ds-review-9 | session_01ErLBsc1vxoKHFFzBBENpbB | merged, 2 and 3 blockers |
+| Batches 1 and 2 | claude/ds-review-1-2 | session_01ErLBscUzPBTFNWCJyke4iK | running |
+| Batches 3 and 4 | claude/ds-review-3-4 | session_01ErLBsd5x5XcqMzeeS8QJks | running |
+| Batch 6 | claude/ds-review-6 | session_01ErLBsZcdwTv7v9hbqpAv7g | running |
+| Batch 7 and lane 9A | claude/ds-review-7 | session_01ErLBsbTnC7FkxYnXYwpRXK | running |
+
+Fix round sessions (round 1 of 3), reports in `docs/reports/fixes/`:
+
+| Scope | Branch | Session | Status |
+| --- | --- | --- | --- |
+| Batch 5 blockers | claude/ds-fix-5 | session_01ErLBsaGC9XKK8xzKjxjGVv | running |
+| Batch 8 and 9 blockers | claude/ds-fix-8-9 | session_01ErLBsdNKL8hgeVbwciEbpg | running |
+| Motion catalog blockers, plus `fade` and `press` patterns | claude/ds-fix-motion | session_01ErLBsZwcTK6P49LLqbm1Lb | running |
+
+Requests from the lanes are collected in `docs/plan/wave-1-followups.md`.
 
 ## Coverage
-| Family | React | Angular | Native |
-| --- | --- | --- | --- |
-| Actions | 2 of 11 | 2 of 11 | 2 of 11 |
-| Text inputs | 2 of 12 | 0 of 12 | 0 of 12 |
-| Feedback | 1 of 12 | 0 of 12 | 0 of 12 |
-| Overlays | 1 of 13 | 1 of 13 | 0 of 13 |
-| Window chrome | 3 of 5 | 0 of 5 | not applicable |
+As of 2026-11-12 13:00 UTC: 97 component manifests, all React
+(`packages/manifest/src/component/`). Angular has 4 full and 4 minimal
+components, React Native 2. The per family table comes back with the matrix
+order 1.17, generated from the manifests.
 
 ## Blocked
 Nothing.

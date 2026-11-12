@@ -100,3 +100,11 @@ Newest first inside each section. Each entry has a date and the reasoning.
 ## Conflicts between the prompt and a source repo
 
 None yet.
+
+## React Aria Components 1.22.1 (order 1.2.0, 2026-11-12)
+
+Installed `react-aria-components@1.22.1`, exact, in `@the-system/react`. It is
+on the allow list in section 4 of the plan. It brings no second React copy.
+It is used only where an order names it (NumberField, ScrubInput, later the
+date family).
+

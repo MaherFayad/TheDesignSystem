@@ -395,4 +395,27 @@ so a style can set its own control sizes per density.
 
 ## Proofs
 
-See the bottom of this file, filled in after the runs.
+Run on the tree as it was before the lead merged lanes 4B, 6A to 6C and 7A
+to 7C (47 ready components in React, 3 in Angular).
+
+- `npm run check`: pass (863 tests, every package check green).
+- `npm run contract -- --framework react`: 1381 passed, 6 failed, 53
+  skipped. The 6 are "no sideways scroll at 320px" for Meter,
+  NotificationCenter and ScrollArea (en ltr and ar rtl). None of their demos
+  changed here; the Meter demo uses `DemoGrid min="20rem"`, which is the
+  whole 320px viewport before the stage padding. For the owners of lanes 5B,
+  5C and 8C.
+- `npm run contract -- --framework angular`: 102 passed, 1 skipped, 0
+  failed (Button, Dialog, IconButton).
+- `npm run shots -- --compare react angular` for Button, IconButton and
+  Dialog: 60 pairs, 48 pass. Button and IconButton: 36 pairs, 0 differing
+  pixels. Dialog: the 12 rtl pairs fail (0.6 to 3.9 percent). Cause, not
+  from this pass: commit e179b2b put the React Dialog demo cases in
+  `lang="en"` content Themes (`DemoCase lang="en"`), so in an Arabic page
+  the English rows read left to right in React; the Angular Dialog demo has
+  no such wrapper and its rows read right to left. The old React shot
+  equals today's Angular shot pixel for pixel. Fix: give the Angular demo
+  the same `lang="en"` content Themes, or drop them from the React demo.
+- The shot matrix under `docs/reports/shots/matrix/` was put back to its
+  committed state after the compare, since a filtered run refreshes only
+  three components.
