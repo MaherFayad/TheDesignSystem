@@ -187,7 +187,10 @@
       "note": "Motion: no catalog pattern. Only the focus glow fades (an opacity transition in Input.css); fade-rise would also rise, so it is not named."
     },
     "angular": {
-      "status": "planned"
+      "status": "ready",
+      "behavior": "div[dsInput] around a native input, ControlValueAccessor",
+      "example": "input.demo.ts",
+      "note": "The host box is the root. React spreads native props on the inner input; Angular cannot forward attributes, so the native props are inputs with the React names (type, placeholder, value as a model, id, name, autoComplete, inputMode, aria-label, aria-labelledby, aria-describedby and more). defaultValue is value. start and end take an icon name, a short text or a TemplateRef. Works with ngModel, formControl and formControlName."
     },
     "native": {
       "status": "planned"
