@@ -73,6 +73,8 @@ describe('Drawer', () => {
     expect(part('panel')).toBe(panel);
     expect(Array.from(panel.children).map((c) => c.getAttribute('data-part'))).toEqual(['header', 'body', 'footer']);
     expect(Array.from(part('header')?.children ?? []).map((c) => c.getAttribute('data-part'))).toEqual(['title', 'description', 'close']);
+    // The close part is the system CloseButton, the same control as Toast and Alert.
+    expect(part('close')?.getAttribute('data-ds')).toBe('close-button');
     expect(screen.getByRole('dialog', { name: 'Filters' })).toBe(panel);
     expect(document.getElementById(panel.getAttribute('aria-describedby') ?? '')?.textContent).toBe('Boards that match every filter.');
     expect(document.body.querySelector('[title]')).toBeNull();
@@ -175,7 +177,7 @@ describe('Drawer', () => {
       </Theme>,
     );
     await screen.findByRole('dialog');
-    expect(screen.getByRole('button', { name: 'إغلاق اللوحة الجانبية' })).not.toBeNull();
+    expect(screen.getByRole('button', { name: 'إغلاق الشريط الجانبي' })).not.toBeNull();
     expect(rootEl()?.parentElement?.getAttribute('dir')).toBe('rtl');
   });
 

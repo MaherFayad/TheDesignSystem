@@ -18,7 +18,7 @@
 //           <div data-part="header">
 //             <h2 data-part="title">
 //             <p data-part="description">
-//             <button data-ds="icon-button" data-part="close">
+//             <button data-ds="close-button" data-part="close">
 //           <div data-part="body">                   scrolls
 //           <div data-part="footer">
 import {
@@ -40,7 +40,7 @@ import type { OverlaySize } from '@the-system/shared';
 import { useTheme } from '../../theme/hooks';
 import { DialogBody, DialogFooter, type DialogBodyProps, type DialogFooterProps } from '../Dialog';
 import { DialogBase, assignRef, type DialogBaseState } from '../Dialog/DialogBase';
-import { IconButton } from '../IconButton';
+import { CloseButton } from '../CloseButton';
 import { useControllable } from '../../internal/useControllable';
 
 export type DrawerSize = Extract<OverlaySize, 'sm' | 'md' | 'lg' | 'xl'>;
@@ -48,7 +48,7 @@ export type DrawerSide = 'start' | 'end';
 
 const drawerLabels = {
   en: { close: 'Close drawer' },
-  ar: { close: 'إغلاق اللوحة الجانبية' },
+  ar: { close: 'إغلاق الشريط الجانبي' },
 } as const;
 
 /** True for Arabic, the language with its own built in labels. */
@@ -196,8 +196,8 @@ function flatten(children: ReactNode): ReactNode[] {
 
 /**
  * Builds the header band of a Drawer or a Sheet: the title and the
- * description lifted out of the children (or from props), then the close
- * IconButton. Returns the header and the remaining children.
+ * description lifted out of the children (or from props), then the
+ * CloseButton. Returns the header and the remaining children.
  */
 export function splitHeader(options: {
   children: ReactNode;
@@ -223,7 +223,7 @@ export function splitHeader(options: {
       {titleNode}
       {descriptionNode}
       <RadixDialog.Close asChild>
-        <IconButton data-part="close" icon="close" label={options.closeLabel} size="sm" disabled={options.closeDisabled} />
+        <CloseButton data-part="close" label={options.closeLabel} size="sm" disabled={options.closeDisabled} />
       </RadixDialog.Close>
     </div>
   );
