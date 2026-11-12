@@ -344,6 +344,8 @@ export interface PopupLayerOptions {
   align?: PopperAlign;
   sideOffset: number;
   padding: number;
+  /** A dir attribute for the Radix wrapper (Radix Select passes one, Popover does not). */
+  wrapperDir?: () => string | null;
 }
 
 /**
@@ -400,6 +402,8 @@ export class PopupLayer {
     this.mounted.set(true);
     const content = this.layer.content;
     const wrapper = this.layer.wrapper;
+    const dir = this.options.wrapperDir?.();
+    if (dir) wrapper.setAttribute('dir', dir);
     const zIndex = content ? (this.doc.defaultView?.getComputedStyle(content).zIndex ?? 'auto') : 'auto';
     // The same properties, in the same order, as the Radix wrapper style.
     wrapper.style.setProperty('position', 'fixed');
