@@ -10471,9 +10471,10 @@
         "note": "No motion: color and underline swap at once on hover, so there is no pattern to name and nothing to reduce."
       },
       "angular": {
-        "status": "planned",
-        "behavior": "a[dsLink], host bindings",
-        "note": "The host anchor is the root. No asChild: a[dsLink] on a routerLink anchor is the router form."
+        "status": "ready",
+        "behavior": "a[dsLink], host bindings, a capture listener blocks click and auxclick while disabled",
+        "example": "link.demo.ts",
+        "note": "The host anchor is the root. No asChild: a[dsLink] on a routerLink anchor is the router form. href, target, rel, role and tabIndex are inputs so disabled and external can rewrite them."
       },
       "native": {
         "status": "planned",
