@@ -49,6 +49,10 @@ export default function BentoDemo() {
         </div>
       </DemoCase>
 
+      <DemoCase id="empty" title="No tiles: the grid takes no space, so show an EmptyState in its place">
+        <Bento as="ul" aria-label="Overview" />
+      </DemoCase>
+
       <DemoCase id="one" title="One wide tile in 2 columns">
         <Bento as="ul" columns={2}>
           <Tile span="2x1" name="Sign ups" figure="342" />

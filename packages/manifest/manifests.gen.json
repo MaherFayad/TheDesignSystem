@@ -2078,7 +2078,7 @@
     "insteadUse": {
       "Tiles of one size": "Grid",
       "Records to compare or sort": "Table",
-      "Tiles the user drags or resizes": "ResizablePanels",
+      "Panes the user resizes side by side": "ResizablePanels",
       "A feed": "Stack",
       "One box with a fill": "Surface",
       "A narrow pane": "Stack"
@@ -2183,7 +2183,8 @@
       "react": {
         "status": "ready",
         "behavior": "plain markup on CSS grid",
-        "example": "Bento.demo.tsx"
+        "example": "Bento.demo.tsx",
+        "note": "No motion: a static grid has nothing to animate, so no pattern from the catalog applies. Tiles that enter get their motion from the parent that shows them. as ul sets role list, so Safari keeps the list and its count after list-style none."
       },
       "angular": {
         "status": "planned",
