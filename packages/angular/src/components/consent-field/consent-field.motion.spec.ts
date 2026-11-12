@@ -17,19 +17,21 @@ interface Call {
 let calls: Call[] = [];
 const ids = (id: string) => calls.filter((c) => String(c.opts.id) === `ds-motion:${id}`);
 
+// The stand in goes on the HTML and SVG prototypes too, so an own property
+// another spec left there cannot shadow it.
+const prototypes = [Element.prototype, HTMLElement.prototype, SVGElement.prototype];
+
 beforeEach(() => {
   calls = [];
-  Object.defineProperty(Element.prototype, 'animate', {
-    configurable: true,
-    value: vi.fn(function (this: Element, frames: Keyframe[], opts: KeyframeAnimationOptions) {
-      calls.push({ el: this, frames, opts });
-      return { id: String(opts?.id ?? ''), finished: new Promise(() => undefined), cancel: vi.fn() } as unknown as Animation;
-    }),
+  const animate = vi.fn(function (this: Element, frames: Keyframe[], opts: KeyframeAnimationOptions) {
+    calls.push({ el: this, frames, opts });
+    return { id: String(opts?.id ?? ''), finished: new Promise(() => undefined), cancel: vi.fn() } as unknown as Animation;
   });
+  for (const proto of prototypes) Object.defineProperty(proto, 'animate', { configurable: true, writable: true, value: animate });
 });
 
 afterEach(() => {
-  Reflect.deleteProperty(Element.prototype, 'animate');
+  for (const proto of prototypes) Reflect.deleteProperty(proto, 'animate');
   document.documentElement.removeAttribute('data-motion');
 });
 
