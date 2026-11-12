@@ -1,0 +1,199 @@
+/*
+ * Stat: a KPI. Label on top with an optional icon at its end, the value
+ * large, then the change and a hint on one line. No surface of its own: a
+ * Card or a Tile frames it. Follows "One convention for component CSS and
+ * props" in docs/contracts/anatomy.md.
+ *
+ * Private properties on the root (recipes override these):
+ *
+ *   --_stat-gap               between the lines
+ *   --_stat-font-size         the value
+ *   --_stat-label-font-size, --_stat-meta-font-size (change and hint)
+ *   --_stat-fg, --_stat-label-fg, --_stat-hint-fg
+ *   --_stat-delta-fg          the change, set by the tone
+ *   --_stat-placeholder-bg    the loading block color
+ *   --_stat-value-bg, -value-inline-size, -value-block-size
+ *                             the value box; loading swaps them
+ *
+ * The value rolls in when it changes through the Web Animations API in the
+ * React component (number-roll), so this file has no transition.
+ */
+@layer ds.base {
+  [data-ds='stat'] {
+    --_stat-gap: var(--ds-space-2xs);
+    --_stat-font-size: var(--ds-font-size-4xl);
+    --_stat-label-font-size: var(--ds-font-size-s);
+    --_stat-meta-font-size: var(--ds-font-size-s);
+    --_stat-fg: var(--ds-color-text-bright);
+    --_stat-label-fg: var(--ds-color-text-muted);
+    --_stat-hint-fg: var(--ds-color-text-muted);
+    --_stat-delta-fg: var(--ds-color-text-muted);
+    --_stat-placeholder-bg: var(--ds-color-bg-overlay-10);
+    --_stat-value-bg: transparent;
+    --_stat-value-inline-size: auto;
+    --_stat-value-block-size: auto;
+
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    grid-template-areas:
+      'label label icon'
+      'value value value'
+      'delta hint hint';
+    align-content: start;
+    align-items: center;
+    row-gap: var(--_stat-gap);
+    column-gap: 0;
+    min-inline-size: 0;
+    color: var(--_stat-fg);
+    font-family: var(--ds-font-family-sans);
+  }
+
+  [data-ds='stat'][data-size='sm'] {
+    --_stat-gap: var(--ds-space-3xs);
+    --_stat-font-size: var(--ds-font-size-2xl);
+    --_stat-label-font-size: var(--ds-font-size-xs);
+    --_stat-meta-font-size: var(--ds-font-size-xs);
+  }
+
+  [data-ds='stat'][data-size='lg'] {
+    --_stat-gap: var(--ds-space-xs);
+    --_stat-font-size: var(--ds-font-size-6xl);
+    --_stat-label-font-size: var(--ds-font-size-m);
+    --_stat-meta-font-size: var(--ds-font-size-m);
+  }
+
+  /* ------------------------------------------------------------ tones */
+
+  [data-ds='stat'][data-tone='success'] {
+    --_stat-delta-fg: var(--ds-color-state-success-text);
+  }
+
+  [data-ds='stat'][data-tone='danger'] {
+    --_stat-delta-fg: var(--ds-color-state-danger-text);
+  }
+
+  [data-ds='stat'][data-tone='neutral'] {
+    --_stat-delta-fg: var(--ds-color-text-muted);
+  }
+
+  /* ------------------------------------------------------------ parts */
+
+  [data-ds='stat'] > [data-part='label'] {
+    grid-area: label;
+    min-inline-size: 0;
+    color: var(--_stat-label-fg);
+    font-size: var(--_stat-label-font-size);
+    font-weight: var(--ds-font-weight-medium);
+    line-height: var(--ds-font-leading-snug);
+    overflow-wrap: anywhere;
+  }
+
+  [data-ds='stat'] > [data-part='icon'] {
+    display: inline-flex;
+    grid-area: icon;
+    align-self: start;
+    margin-inline-start: var(--ds-space-xs);
+    color: var(--_stat-label-fg);
+  }
+
+  [data-ds='stat'] > [data-part='value'] {
+    grid-area: value;
+    min-inline-size: 0;
+    max-inline-size: 100%;
+    inline-size: var(--_stat-value-inline-size);
+    block-size: var(--_stat-value-block-size);
+    border-radius: var(--ds-radius-xs);
+    background-color: var(--_stat-value-bg);
+    color: var(--_stat-fg);
+    font-size: var(--_stat-font-size);
+    font-weight: var(--ds-font-weight-semibold);
+    font-variant-numeric: tabular-nums;
+    line-height: var(--ds-font-leading-tight);
+    letter-spacing: var(--ds-font-tracking-display);
+    /* Break a number only when it cannot fit its line, never at every digit group. */
+    overflow-wrap: break-word;
+  }
+
+  [data-ds='stat'] > [data-part='delta'] {
+    display: inline-flex;
+    grid-area: delta;
+    align-items: center;
+    gap: var(--ds-space-4xs);
+    margin-inline-end: var(--ds-space-xs);
+    color: var(--_stat-delta-fg);
+    font-size: var(--_stat-meta-font-size);
+    font-weight: var(--ds-font-weight-semibold);
+    font-variant-numeric: tabular-nums;
+    line-height: var(--ds-font-leading-snug);
+    white-space: nowrap;
+  }
+
+  [data-ds='stat'] > [data-part='hint'] {
+    grid-area: hint;
+    min-inline-size: 0;
+    color: var(--_stat-hint-fg);
+    font-size: var(--_stat-meta-font-size);
+    line-height: var(--ds-font-leading-snug);
+    overflow-wrap: anywhere;
+  }
+
+  /* Without a change the hint takes the whole line. */
+  [data-ds='stat']:not(:has(> [data-part='delta'])) > [data-part='hint'] {
+    grid-column: 1 / -1;
+  }
+
+  /* Visually hidden words: the trend for screen readers, and the loading label. */
+  [data-ds='stat'] [data-trend-label],
+  [data-ds='stat'] [data-loading-label] {
+    position: absolute;
+    inline-size: var(--ds-border-width-default);
+    block-size: var(--ds-border-width-default);
+    margin: calc(-1 * var(--ds-border-width-default));
+    padding: 0;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  /* Loading: a block the size of a short number, no shimmer (Skeleton owns that motion). */
+  [data-ds='stat'][data-loading] {
+    --_stat-value-bg: var(--_stat-placeholder-bg);
+    --_stat-value-inline-size: calc(4 * var(--_stat-font-size));
+    --_stat-value-block-size: calc(var(--_stat-font-size) * var(--ds-font-leading-tight));
+  }
+
+  [data-ds='stat'][data-loading] > [data-part='value'] {
+    position: relative;
+  }
+
+  /* Arabic: no display tracking, a taller line for the label and hint. */
+  [data-ds='stat']:lang(ar) > [data-part='value'] {
+    letter-spacing: var(--ds-font-tracking-none);
+  }
+
+  [data-ds='stat']:lang(ar) > :is([data-part='label'], [data-part='hint']) {
+    line-height: var(--ds-font-leading-arabic-snug);
+  }
+
+  /* Small Arabic text goes one step up (PLAN.md section 12). */
+  [data-ds='stat']:lang(ar) {
+    --_stat-label-font-size: var(--ds-font-size-m);
+    --_stat-meta-font-size: var(--ds-font-size-m);
+  }
+
+  [data-ds='stat'][data-size='sm']:lang(ar) {
+    --_stat-label-font-size: var(--ds-font-size-s);
+    --_stat-meta-font-size: var(--ds-font-size-s);
+  }
+
+  [data-ds='stat'][data-size='lg']:lang(ar) {
+    --_stat-label-font-size: var(--ds-font-size-l);
+    --_stat-meta-font-size: var(--ds-font-size-l);
+  }
+
+  @media (forced-colors: active) {
+    [data-ds='stat'][data-loading] > [data-part='value'] {
+      border: var(--ds-border-width-default) solid CanvasText;
+    }
+  }
+}

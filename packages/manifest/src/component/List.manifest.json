@@ -1,0 +1,249 @@
+{
+  "name": "List",
+  "kind": "component",
+  "family": "data-display",
+  "summary": "A vertical list of rows, each with a title and optional start, description, end and actions. Rows can be links.",
+  "useWhen": [
+    "A short list of things people open: mail, files, boards, members",
+    "Rows that each carry one or two actions, such as delete or more",
+    "Ordered steps or a ranking, as an ol"
+  ],
+  "avoidWhen": [
+    "Picking one or more options from the rows",
+    "Many fields per row that people compare across rows",
+    "Term and value pairs about one thing",
+    "Site or app navigation with sections and nesting"
+  ],
+  "insteadUse": {
+    "Picking options from rows": "ListBox",
+    "Many fields compared across rows": "Table (wave 2)",
+    "Term and value pairs about one thing": "DescriptionList",
+    "App navigation with sections": "Sidebar or NavList (wave 1 navigation batch)",
+    "A list of actions behind one control": "DropdownMenu"
+  },
+  "anatomy": [
+    "root",
+    "item",
+    "start",
+    "title",
+    "description",
+    "end",
+    "actions",
+    "separator",
+    "empty"
+  ],
+  "parts": {
+    "ListItem": "item"
+  },
+  "slots": {
+    "item": {
+      "accepts": [
+        "ListItem"
+      ]
+    },
+    "start": {
+      "accepts": [
+        "Icon",
+        "Avatar"
+      ],
+      "max": 1
+    },
+    "title": {
+      "accepts": "text",
+      "min": 1,
+      "max": 1
+    },
+    "description": {
+      "accepts": "text",
+      "max": 1
+    },
+    "end": {
+      "accepts": "any",
+      "max": 1
+    },
+    "actions": {
+      "accepts": [
+        "Button",
+        "IconButton"
+      ],
+      "max": 3
+    },
+    "empty": {
+      "accepts": "text",
+      "max": 1
+    }
+  },
+  "props": {
+    "size": {
+      "type": [
+        "sm",
+        "md"
+      ],
+      "default": "md",
+      "description": "md rows are at least list.row.height plus a small inset (about 36px in the default density), sm rows are list.row.height (28px default, 24 compact, 32 comfortable)."
+    },
+    "variant": {
+      "type": [
+        "plain",
+        "divided",
+        "inset"
+      ],
+      "default": "plain",
+      "description": "plain: rows only. divided: a hairline between rows. inset: rows grouped on a rounded surface with hairlines. Sets data-variant on the root."
+    },
+    "ordered": {
+      "type": "boolean",
+      "default": false,
+      "description": "Renders an ol for rows whose order means something."
+    },
+    "empty": {
+      "type": "node",
+      "description": "Shown when there are no rows, in a p with part empty; the root is then a div. Say what is missing and what to do next."
+    },
+    "ListItem.title": {
+      "type": "node",
+      "required": true,
+      "description": "The row's main text, one line with an ellipsis. With href it is the link."
+    },
+    "ListItem.description": {
+      "type": "node",
+      "description": "A second line, up to two lines then an ellipsis."
+    },
+    "ListItem.start": {
+      "type": "node",
+      "description": "A system icon name (hidden from assistive tech) or a node such as an Avatar."
+    },
+    "ListItem.end": {
+      "type": "node",
+      "description": "Trailing content that is not an action: a time, a count, a Badge."
+    },
+    "ListItem.actions": {
+      "type": "node",
+      "description": "Buttons or IconButtons for the row. Their own Tab stops, drawn above the row link."
+    },
+    "ListItem.href": {
+      "type": "string",
+      "description": "Makes the row a link: the title becomes an anchor whose hit area covers the row."
+    },
+    "ListItem.linkProps": {
+      "type": "object",
+      "description": "Extra anchor props: target, rel, onClick for a client router, aria-current."
+    },
+    "ListItem.active": {
+      "type": "boolean",
+      "default": false,
+      "description": "The current row. Sets data-active, the active fill, and aria-current (true, or the value in linkProps) on the link. The description and end step up to the default text color on the active fill."
+    },
+    "ListItem.disabled": {
+      "type": "boolean",
+      "default": false,
+      "description": "Dims the start icon and the title. A link loses its href, keeps role link with aria-disabled and leaves the tab order. The description and end stay at full contrast, so the reason the row is off stays readable. Actions are the caller's to disable."
+    }
+  },
+  "states": [
+    "data-active",
+    "data-disabled",
+    "data-linked"
+  ],
+  "a11y": {
+    "role": "list (ul or ol) with listitem rows. A linked row's title is a link. An empty list is a div with a paragraph, so it is not read as a list of one.",
+    "focus": "Each linked row is one Tab stop on its title link; its actions follow. Rows without a link and the list itself are not focusable. A 2px ring from focus.shadow.ring draws around the whole row.",
+    "keys": {
+      "Tab": "Moves to the next row link or row action",
+      "Shift+Tab": "Moves to the previous row link or row action",
+      "Enter": "Follows the focused row link, or activates the focused action"
+    },
+    "announce": "The link name is the title only; the description, end and actions are read as the row's other content. Name each action with the row it acts on: Delete mail from Sara.",
+    "native": {
+      "accessibilityRole": "list"
+    },
+    "notes": [
+      "No arrow key navigation: this is a list of links and buttons, not a composite widget. For arrow keys and selection use ListBox.",
+      "The row link's hit area is its ::before stretched over the row, which is also the focus layer. Actions are positioned later in the DOM, so they sit above it without a z-index.",
+      "Give the list an aria-label when the page has no heading for it.",
+      "Under forced colors the focus ring is Highlight, the active row gets a CanvasText outline and separators are CanvasText."
+    ]
+  },
+  "content": {
+    "en": {
+      "title": "A name people scan for: the sender, the file, the board. Sentence case.",
+      "description": "One line of context: the subject, the last change.",
+      "empty": "What is missing and what happens next: No mail yet. Mail you get from your team shows here.",
+      "actions": "Accessible names say the verb and the row: Delete mail from Sara Alqahtani."
+    },
+    "ar": {
+      "title": "Noun form, no diacritics.",
+      "empty": "ما فيه رسائل للحين. الرسائل اللي توصلك من فريقك بتظهر هنا.",
+      "digits": "Western digits in end content such as times and counts."
+    }
+  },
+  "tokens": [
+    "list.row.height",
+    "space.4xs",
+    "space.3xs",
+    "space.2xs",
+    "space.xs",
+    "space.s",
+    "space.l",
+    "font.family.sans",
+    "font.size.xs",
+    "font.size.s",
+    "font.size.m",
+    "font.weight.medium",
+    "font.leading.snug",
+    "font.leading.arabic.snug",
+    "radius.sm",
+    "radius.panel",
+    "color.bg.surface-2",
+    "color.bg.overlay-5",
+    "color.bg.overlay-10",
+    "color.text.default",
+    "color.text.muted",
+    "color.border.hairline",
+    "border.width.default",
+    "border.width.strong",
+    "focus.shadow.ring",
+    "opacity.disabled"
+  ],
+  "motion": "list-stagger",
+  "frameworks": {
+    "react": {
+      "status": "ready",
+      "behavior": "hand built ul or ol",
+      "example": "List.demo.tsx",
+      "note": "Hover and active swap the row fill at once. list-stagger (rows entering) is named for the catalog; the component plays no motion yet and leaves entry to the page."
+    },
+    "angular": {
+      "status": "planned",
+      "behavior": "ul[dsList] and li[dsListItem], hand built"
+    },
+    "native": {
+      "status": "planned",
+      "note": "FlatList rows with Pressable for linked rows; 44pt rows on iOS and 48dp on Android."
+    }
+  },
+  "styles": {
+    "studio": "Flat rows, a 5 percent overlay on hover, a 10 percent overlay for the active row; inset groups on surface 2.",
+    "desk": "The same on the Desk tokens; inset groups read as a panel inside a window.",
+    "neutral": "The same on the Neutral tokens; no recipe."
+  },
+  "mistakes": [
+    {
+      "wrong": "A row with onClick on the li",
+      "right": "href on ListItem, so the row is a real link that keyboards and new tabs work with"
+    },
+    {
+      "wrong": "A List with checkboxes for picking rows",
+      "right": "ListBox"
+    },
+    {
+      "wrong": "An action labelled Delete in every row",
+      "right": "Delete mail from Sara Alqahtani, so each name is unique"
+    },
+    {
+      "wrong": "An empty ul with nothing in it",
+      "right": "empty with what to do next"
+    }
+  ],
+  "since": "0.1.0"
+}

@@ -1,0 +1,112 @@
+/*
+ * Kbd: a key or a shortcut as keycaps. Source: Figma-Killer-2
+ * `Kbd.module.css`, a sculpted, top lit keycap whose face is a vertical
+ * gradient and whose depth is a stack of shadows. Colors from the kbd.*
+ * tokens. Follows "One convention for component CSS and props" in
+ * docs/contracts/anatomy.md.
+ *
+ * Private properties on the root (recipes override these):
+ *
+ *   --_kbd-height, -padding-inline, -gap, -font-size, -radius
+ *   --_kbd-fg, -border-color, -face-top, -face-bottom
+ *   --_kbd-separator-fg the plus between keycaps
+ *   --_kbd-shadow      the depth stack: top highlight, bottom edge, drop
+ *
+ * A keycap is text, not a control: no hover, press, focus or motion. The
+ * root is `dir="ltr"` and isolated, so a shortcut reads Ctrl then K inside
+ * Arabic too.
+ */
+@layer ds.base {
+  [data-ds='kbd'] {
+    --_kbd-height: var(--ds-size-icon-lg);
+    --_kbd-padding-inline: var(--ds-space-2xs);
+    --_kbd-gap: var(--ds-space-4xs);
+    --_kbd-font-size: var(--ds-font-size-s);
+    --_kbd-radius: var(--ds-radius-xs);
+    --_kbd-fg: var(--ds-kbd-text);
+    --_kbd-border-color: var(--ds-kbd-border);
+    --_kbd-face-top: var(--ds-kbd-face-top);
+    --_kbd-face-bottom: var(--ds-kbd-face-bottom);
+    --_kbd-separator-fg: var(--ds-color-text-muted);
+    --_kbd-shadow:
+      inset 0 var(--ds-border-width-default) 0 var(--ds-kbd-highlight),
+      0 var(--ds-border-width-default) 0 var(--ds-kbd-edge),
+      0 var(--ds-border-width-default) var(--ds-border-width-strong) var(--ds-kbd-drop);
+
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: var(--_kbd-gap);
+    margin: 0;
+    padding: 0;
+    color: var(--_kbd-fg);
+    font-family: var(--ds-font-family-mono);
+    font-size: var(--_kbd-font-size);
+    font-weight: var(--ds-font-weight-medium);
+    line-height: var(--ds-font-leading-tight);
+    letter-spacing: var(--ds-font-tracking-none);
+    white-space: nowrap;
+    vertical-align: middle;
+    unicode-bidi: isolate;
+  }
+
+  [data-ds='kbd'][data-size='xs'] {
+    --_kbd-height: var(--ds-size-icon-md);
+    --_kbd-padding-inline: var(--ds-space-4xs);
+    --_kbd-font-size: var(--ds-font-size-2xs);
+  }
+
+  [data-ds='kbd'][data-size='sm'] {
+    --_kbd-height: calc(var(--ds-size-icon-md) + 2 * var(--ds-space-4xs));
+    --_kbd-padding-inline: var(--ds-space-3xs);
+    --_kbd-font-size: var(--ds-font-size-xs);
+  }
+
+  /* ------------------------------------------------------------ parts */
+
+  [data-ds='kbd'] > [data-part='key'] {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    min-inline-size: var(--_kbd-height);
+    block-size: var(--_kbd-height);
+    margin: 0;
+    padding-block: 0;
+    padding-inline: var(--_kbd-padding-inline);
+    border: var(--ds-border-width-default) solid var(--_kbd-border-color);
+    border-radius: var(--_kbd-radius);
+    background-color: var(--_kbd-face-bottom);
+    background-image: linear-gradient(var(--_kbd-face-top), var(--_kbd-face-bottom));
+    box-shadow: var(--_kbd-shadow);
+    color: inherit;
+    font: inherit;
+  }
+
+  [data-ds='kbd'] > [data-part='separator'] {
+    color: var(--_kbd-separator-fg);
+    font-family: var(--ds-font-family-sans);
+  }
+
+  /* The spoken key names: read by screen readers, not drawn. */
+  [data-ds='kbd'] > [data-part='spoken'] {
+    position: absolute;
+    inline-size: var(--ds-border-width-default);
+    block-size: var(--ds-border-width-default);
+    margin: calc(-1 * var(--ds-border-width-default));
+    padding: 0;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  /* The depth is shadow and gradient only: forced colors draws a plain bordered key. */
+  @media (forced-colors: active) {
+    [data-ds='kbd'] > [data-part='key'] {
+      --_kbd-border-color: CanvasText;
+
+      background-image: none;
+      box-shadow: none;
+    }
+  }
+}

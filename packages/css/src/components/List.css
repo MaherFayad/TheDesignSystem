@@ -1,0 +1,236 @@
+/*
+ * List: rows with start, title, description, end and actions. Sources:
+ * Figma-Killer-2 `WidgetList.module.css` (a thin rule between rows) and
+ * `PropertyList.module.css` (fixed start and trailing cells, a title that
+ * shrinks). Follows "One convention for component CSS and props" in
+ * docs/contracts/anatomy.md.
+ *
+ * Private properties on the root (recipes override these):
+ *
+ *   --_list-height            the least height of a row (list.row.height)
+ *   --_list-padding-inline, --_list-padding-block, --_list-gap
+ *   --_list-font-size, --_list-description-font-size
+ *   --_list-radius            rows of a linked or inset list
+ *   --_list-bg                the inset surface
+ *   --_list-item-bg, -item-bg-hover, -item-bg-active
+ *   --_list-fg, --_list-description-fg, --_list-separator-color
+ *   --_list-ring              the focus ring of a row link
+ *
+ * A row is a grid: start | title over description | end | actions. A
+ * linked row's title anchor stretches its ::before over the row: one hit
+ * area and the focus layer. Actions come later in the DOM and are
+ * positioned, so they paint above that layer without a z-index. Hover
+ * swaps the row fill instead of a ::after veil, so no layer covers the
+ * text or the actions. Colors swap at once: nothing animates.
+ */
+@layer ds.base {
+  [data-ds='list'] {
+    --_list-height: calc(var(--ds-list-row-height) + 2 * var(--ds-space-2xs));
+    --_list-padding-inline: var(--ds-space-s);
+    --_list-padding-block: var(--ds-space-2xs);
+    --_list-gap: var(--ds-space-s);
+    --_list-font-size: var(--ds-font-size-m);
+    --_list-description-font-size: var(--ds-font-size-s);
+    --_list-radius: var(--ds-radius-sm);
+    --_list-bg: transparent;
+    --_list-item-bg: transparent;
+    --_list-item-bg-hover: var(--ds-color-bg-overlay-5);
+    --_list-item-bg-active: var(--ds-color-bg-overlay-10);
+    --_list-fg: var(--ds-color-text-default);
+    --_list-description-fg: var(--ds-color-text-muted);
+    --_list-separator-color: var(--ds-color-border-hairline);
+    --_list-ring: var(--ds-focus-shadow-ring);
+
+    display: flex;
+    flex-direction: column;
+    min-inline-size: 0;
+    margin: 0;
+    padding: 0;
+    border-radius: var(--_list-radius);
+    background-color: var(--_list-bg);
+    color: var(--_list-fg);
+    font-family: var(--ds-font-family-sans);
+    font-size: var(--_list-font-size);
+    line-height: var(--ds-font-leading-snug);
+    list-style: none;
+  }
+
+  [data-ds='list'][data-size='sm'] {
+    --_list-height: var(--ds-list-row-height);
+    --_list-padding-inline: var(--ds-space-xs);
+    --_list-padding-block: var(--ds-space-3xs);
+    --_list-gap: var(--ds-space-xs);
+    --_list-font-size: var(--ds-font-size-s);
+    --_list-description-font-size: var(--ds-font-size-xs);
+  }
+
+  [data-ds='list'][data-variant='inset'] {
+    --_list-bg: var(--ds-color-bg-surface-2);
+    --_list-radius: var(--ds-radius-panel);
+
+    padding: var(--ds-space-3xs);
+  }
+
+  /* ------------------------------------------------------------- rows */
+
+  [data-ds='list'] > [data-part='item'] {
+    position: relative;
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto auto;
+    grid-template-areas:
+      'start title end actions'
+      'start description end actions';
+    grid-template-rows: auto auto;
+    align-items: center;
+    column-gap: var(--_list-gap);
+    box-sizing: border-box;
+    min-block-size: var(--_list-height);
+    margin: 0;
+    padding-block: var(--_list-padding-block);
+    padding-inline: var(--_list-padding-inline);
+    border-radius: var(--_list-radius);
+    background-color: var(--_list-item-bg);
+  }
+
+  /* A row without a description centers the title on the row. */
+  [data-ds='list'] > [data-part='item']:not(:has(> [data-part='description'])) {
+    grid-template-areas: 'start title end actions';
+    grid-template-rows: auto;
+  }
+
+  /* The active fill is darker: the secondary text steps up to keep 4.5:1. */
+  [data-ds='list'] > [data-part='item'][data-active] {
+    --_list-item-bg: var(--_list-item-bg-active);
+    --_list-description-fg: var(--ds-color-text-default);
+  }
+
+  /* Hover on rows that go somewhere swaps the row fill. */
+  [data-ds='list'] > [data-part='item'][data-linked]:not([data-disabled], [data-active]):hover {
+    --_list-item-bg: var(--_list-item-bg-hover);
+  }
+
+  /*
+   * Disabled dims the icon and the title (the link carries aria-disabled).
+   * The description and end stay readable: they often say why the row is
+   * off, and dimmed text would fail 4.5:1.
+   */
+  [data-ds='list'] > [data-part='item'][data-disabled] > :is([data-part='start'], [data-part='title']) {
+    opacity: var(--ds-opacity-disabled);
+  }
+
+  /* ------------------------------------------------------------ parts */
+
+  [data-ds='list'] > [data-part='item'] > [data-part='separator'] {
+    display: none;
+  }
+
+  [data-ds='list'][data-variant='divided'] > [data-part='item'] + [data-part='item'] > [data-part='separator'],
+  [data-ds='list'][data-variant='inset'] > [data-part='item'] + [data-part='item'] > [data-part='separator'] {
+    position: absolute;
+    inset-block-start: 0;
+    inset-inline: var(--_list-padding-inline);
+    display: block;
+    block-size: var(--ds-border-width-default);
+    background-color: var(--_list-separator-color);
+    pointer-events: none;
+  }
+
+  [data-ds='list'] > [data-part='item'] > [data-part='start'] {
+    display: inline-flex;
+    grid-area: start;
+    align-items: center;
+    color: var(--_list-description-fg);
+  }
+
+  [data-ds='list'] > [data-part='item'] > [data-part='title'] {
+    grid-area: title;
+    min-inline-size: 0;
+    overflow: hidden;
+    color: inherit;
+    font-weight: var(--ds-font-weight-medium);
+    text-decoration: none;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  /* The link's hit area covers the row; it is also the focus layer. */
+  [data-ds='list'] > [data-part='item'] > a[data-part='title']::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: var(--_list-radius);
+  }
+
+  [data-ds='list'] > [data-part='item'] > a[data-part='title']:focus-visible {
+    outline: none;
+  }
+
+  [data-ds='list'] > [data-part='item'] > a[data-part='title']:focus-visible::before {
+    outline: var(--ds-border-width-strong) solid transparent;
+    box-shadow: var(--_list-ring);
+  }
+
+  [data-ds='list'] > [data-part='item'][data-disabled] > a[data-part='title'] {
+    cursor: not-allowed;
+  }
+
+  [data-ds='list'] > [data-part='item'] > [data-part='description'] {
+    display: -webkit-box;
+    grid-area: description;
+    min-inline-size: 0;
+    overflow: hidden;
+    color: var(--_list-description-fg);
+    font-size: var(--_list-description-font-size);
+    overflow-wrap: anywhere;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+  }
+
+  [data-ds='list'] > [data-part='item'] > [data-part='end'] {
+    display: inline-flex;
+    grid-area: end;
+    align-items: center;
+    color: var(--_list-description-fg);
+    font-size: var(--_list-description-font-size);
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+  }
+
+  [data-ds='list'] > [data-part='item'] > [data-part='actions'] {
+    position: relative;
+    display: inline-flex;
+    grid-area: actions;
+    align-items: center;
+    gap: var(--ds-space-4xs);
+  }
+
+  /* ------------------------------------------------------------ empty */
+
+  [data-ds='list'] > [data-part='empty'] {
+    margin: 0;
+    padding-block: var(--ds-space-l);
+    padding-inline: var(--_list-padding-inline);
+    color: var(--_list-description-fg);
+    text-align: center;
+  }
+
+  /* Arabic: a taller line for wrapped descriptions. */
+  [data-ds='list']:lang(ar) {
+    line-height: var(--ds-font-leading-arabic-snug);
+  }
+
+  @media (forced-colors: active) {
+    [data-ds='list'] > [data-part='item'] > a[data-part='title']:focus-visible::before {
+      outline-color: Highlight;
+    }
+
+    [data-ds='list'] > [data-part='item'][data-active] {
+      outline: var(--ds-border-width-default) solid CanvasText;
+    }
+
+    [data-ds='list'] > [data-part='item'] > [data-part='separator'] {
+      background-color: CanvasText;
+    }
+  }
+}

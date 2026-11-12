@@ -1,0 +1,177 @@
+'use client';
+// Stat: one number with its label, its change and a short hint (a KPI).
+//
+// Source: GoBanana admin `ui.tsx` (`StatTile`). The source repo was not
+// reachable in this session, so the layout follows the order's anatomy and
+// the dials table: label on top, the value large, the change and the hint on
+// one line under it, an optional icon at the end of the label line. No
+// surface of its own: put a Stat in a Card or a Tile for a framed tile.
+//
+// The change is never color alone (WCAG 1.4.1): an arrow icon draws the
+// trend and a visually hidden word says it, so a screen reader hears
+// "Up 12%".
+import { isValidElement, useEffect, useRef, type HTMLAttributes, type ReactElement, type ReactNode, type Ref } from 'react';
+import { Icon, type IconName } from '@the-system/icons/react';
+import { prefersReducedMotion, readDuration, readEasing } from '@the-system/motion';
+import type { Size, Tone } from '@the-system/shared';
+import { useTheme } from '../../theme/hooks';
+import { breakableValue, formatStatNumber } from './formatStatNumber';
+
+export type StatSize = Extract<Size, 'sm' | 'md' | 'lg'>;
+export type StatTone = Extract<Tone, 'success' | 'danger' | 'neutral'>;
+export type StatTrend = 'up' | 'down' | 'flat';
+
+/** The trend words a screen reader hears before the change, per language. */
+export const statTrendLabels: Record<'en' | 'ar', Record<StatTrend, string>> = {
+  en: { up: 'Up', down: 'Down', flat: 'No change' },
+  ar: { up: 'ارتفاع', down: 'انخفاض', flat: 'بدون تغيير' },
+};
+
+const loadingLabels: Record<'en' | 'ar', string> = { en: 'Loading', ar: 'جار التحميل' };
+
+const trendIcons: Record<StatTrend, IconName> = { up: 'trend-up', down: 'trend-down', flat: 'minus' };
+
+export interface StatProps extends Omit<HTMLAttributes<HTMLDivElement>, 'title'> {
+  /** What the number counts, in sentence case: Active users, Revenue this month. */
+  label: ReactNode;
+  /**
+   * The number. A number is formatted with Intl in the Theme language, with
+   * Western digits and the `format` options. A node is drawn as is.
+   */
+  value?: number | ReactNode;
+  /** Intl.NumberFormat options for a numeric value: currency, unit, compact notation. */
+  format?: Intl.NumberFormatOptions;
+  /**
+   * The change since the last period. A number sets the trend from its
+   * sign and is formatted with `deltaFormat` (a percent by default: 0.12 is
+   * 12%). A node is drawn as is and needs `trend`.
+   */
+  delta?: number | ReactNode;
+  /** Intl.NumberFormat options for a numeric delta. Default a percent with up to one decimal. */
+  deltaFormat?: Intl.NumberFormatOptions;
+  /** up, down or flat. Default from the sign of a numeric delta. Sets `data-trend`. */
+  trend?: StatTrend;
+  /**
+   * The color of the change. Default success when up, danger when down,
+   * neutral when flat. Pass it when down is good (costs, errors, churn).
+   */
+  tone?: StatTone;
+  /** A short line under the value: Since last month, Target 50,000. */
+  hint?: ReactNode;
+  /** A glyph for the metric at the end of the label line: a system icon name or a node. Decorative. */
+  icon?: IconName | ReactElement;
+  /** sm, md or lg: the size of the value. Default md. */
+  size?: StatSize;
+  /** The value is on its way: draws a placeholder, sets aria-busy and data-loading, hides the change. */
+  loading?: boolean;
+  /** What screen readers hear while loading. Default Loading, or جار التحميل in Arabic. */
+  loadingLabel?: string;
+  /** Overrides the trend words. Default from `statTrendLabels` in the Theme language. */
+  trendLabels?: Partial<Record<StatTrend, string>>;
+  ref?: Ref<HTMLDivElement>;
+}
+
+/**
+ * The trend of a numeric delta as it is shown: a change that rounds to zero
+ * in the display format (0.0004 as a percent) is flat, not up 0%.
+ */
+function trendOf(delta: unknown, trend: StatTrend | undefined, shownZero: (n: number) => boolean): StatTrend | undefined {
+  if (trend) return trend;
+  if (typeof delta !== 'number' || !Number.isFinite(delta)) return undefined;
+  if (delta === 0 || shownZero(delta)) return 'flat';
+  return delta > 0 ? 'up' : 'down';
+}
+
+const toneOf: Record<StatTrend, StatTone> = { up: 'success', down: 'danger', flat: 'neutral' };
+
+const defaultDeltaFormat: Intl.NumberFormatOptions = { style: 'percent', maximumFractionDigits: 1 };
+
+/**
+ * A KPI: label, value, change, hint. The value rolls in when it changes
+ * (the number-roll pattern: a short rise and fade, opacity only under
+ * reduced motion). It does not announce changes: a page of KPIs that
+ * refresh would talk over everything.
+ */
+export function Stat({
+  label,
+  value,
+  format,
+  delta,
+  deltaFormat = defaultDeltaFormat,
+  trend: trendProp,
+  tone: toneProp,
+  hint,
+  icon,
+  size = 'md',
+  loading = false,
+  loadingLabel,
+  trendLabels,
+  ...rest
+}: StatProps) {
+  const { lang } = useTheme();
+  const langKey: 'en' | 'ar' = lang.toLowerCase().startsWith('ar') ? 'ar' : 'en';
+  const trend = trendOf(delta, trendProp, (n) => formatStatNumber(Math.abs(n), lang, deltaFormat) === formatStatNumber(0, lang, deltaFormat));
+  const tone = toneProp ?? (trend ? toneOf[trend] : 'neutral');
+  const shownValue = typeof value === 'number' ? breakableValue(formatStatNumber(value, lang, format)) : value;
+  const shownDelta = typeof delta === 'number' ? formatStatNumber(Math.abs(delta), lang, deltaFormat) : delta;
+  const words = { ...statTrendLabels[langKey], ...trendLabels };
+  const hasDelta = !loading && delta !== undefined && delta !== null && !(typeof delta === 'number' && !Number.isFinite(delta));
+
+  const valueRef = useRollOnChange(typeof value === 'number' ? shownValue : undefined, loading);
+
+  return (
+    <div
+      {...rest}
+      data-ds="stat"
+      data-size={size}
+      data-tone={hasDelta ? tone : undefined}
+      data-trend={hasDelta ? trend : undefined}
+      data-loading={loading ? '' : undefined}
+      aria-busy={loading || undefined}
+    >
+      <span data-part="label">{label}</span>
+      {icon !== undefined && (
+        <span data-part="icon" aria-hidden="true">
+          {isValidElement(icon) ? icon : <Icon name={icon as IconName} size="md" />}
+        </span>
+      )}
+      <span data-part="value" ref={valueRef}>
+        {loading ? <span data-loading-label="">{loadingLabel ?? loadingLabels[langKey]}</span> : shownValue}
+      </span>
+      {hasDelta && (
+        <span data-part="delta">
+          {trend && <Icon name={trendIcons[trend]} size="sm" />}
+          {trend && <span data-trend-label="">{words[trend]} </span>}
+          <span>{shownDelta}</span>
+        </span>
+      )}
+      {hint !== undefined && hint !== null && <span data-part="hint">{hint}</span>}
+    </div>
+  );
+}
+
+/**
+ * Plays the number-roll pattern on the value when the formatted value
+ * changes after the first paint: a rise from below with a fade, on
+ * duration.roll and ease.reveal. Opacity only under reduced motion, where
+ * the duration token is 0ms anyway. Never awaits animationend.
+ */
+function useRollOnChange(key: ReactNode, loading: boolean) {
+  const ref = useRef<HTMLSpanElement>(null);
+  const previous = useRef<ReactNode>(key);
+  useEffect(() => {
+    const el = ref.current;
+    const before = previous.current;
+    previous.current = key;
+    if (!el || loading || before === key || before === undefined || typeof el.animate !== 'function') return;
+    const reduced = prefersReducedMotion();
+    const keyframes: Keyframe[] = reduced
+      ? [{ opacity: 0 }, { opacity: 1 }]
+      : [
+          { transform: 'translateY(40%)', opacity: 0 },
+          { transform: 'none', opacity: 1 },
+        ];
+    el.animate(keyframes, { duration: readDuration(el, 'duration.roll'), easing: readEasing(el, 'ease.reveal') });
+  }, [key, loading]);
+  return ref;
+}
