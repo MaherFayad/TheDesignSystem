@@ -15874,7 +15874,19 @@
       },
       "onChange": {
         "type": "function",
-        "description": "Called with every committed value: each drag move, each nudge, a typed commit on Enter or blur."
+        "description": "Called with every value: each pixel of a drag, each nudge, a typed commit on Enter or blur."
+      },
+      "onChangeEnd": {
+        "type": "function",
+        "description": "Called once when a change is done: the end of a drag, a nudge, a typed commit. One undo entry per gesture."
+      },
+      "aria-label": {
+        "type": "string",
+        "description": "The full name of the field (Width, Position X). Required outside a Field, since a letter label is not a name."
+      },
+      "placeholder": {
+        "type": "string",
+        "description": "Shown while empty, such as Auto. Mixed shows mixedLabel instead."
       },
       "min": {
         "type": "number",
@@ -15943,14 +15955,14 @@
     ],
     "a11y": {
       "role": "textbox, from the native input. The scrub handle is aria-hidden: a pointer only shortcut for the arrow keys.",
-      "focus": "The input is the only tab stop. A press on the handle with no move focuses the input and selects its text. Focus and a drag show the 2px ring.",
+      "focus": "The input is the only tab stop. A press on the handle with no move focuses the input and selects its text, read only too. Focus and a drag show the 2px ring.",
       "keys": {
         "Tab": "Moves focus to the input, and on to the next control",
         "Shift+Tab": "Moves focus back",
         "ArrowUp": "Adds one step; with Shift ten steps, with Alt a tenth of a step",
         "ArrowDown": "Takes away one step; with Shift ten steps, with Alt a tenth of a step",
         "Enter": "Commits the typed value or expression, keeps focus and selects it",
-        "Escape": "Reverts the typed text; with nothing typed it goes on to the parent"
+        "Escape": "Reverts the typed text and keeps focus; with nothing typed it goes on to the parent"
       },
       "announce": "Name from aria-label or the Field label. The unit and the Field description and error through aria-describedby. Mixed reads as the placeholder.",
       "native": {

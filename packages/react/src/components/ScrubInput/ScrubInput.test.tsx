@@ -23,7 +23,7 @@ function handle(container: HTMLElement): HTMLElement {
 function drag(el: HTMLElement, from: number, to: number, init: { shiftKey?: boolean; altKey?: boolean } = {}) {
   fireEvent.pointerDown(el, { button: 0, pointerId: 1, clientX: from });
   fireEvent.pointerMove(el, { pointerId: 1, clientX: to, ...init });
-  fireEvent.pointerUp(el, { pointerId: 1, clientX: to });
+  fireEvent.pointerUp(el, { pointerId: 1, clientX: to, ...init });
 }
 
 describe('ScrubInput', () => {
@@ -108,6 +108,51 @@ describe('ScrubInput', () => {
     expect(input.selectionStart).toBe(0);
     expect(input.selectionEnd).toBe(3);
     expect(onChange).not.toHaveBeenCalled();
+  });
+
+  it('nudges an empty field from zero, the key path of a drag', () => {
+    const onChange = vi.fn();
+    render(<ScrubInput label="W" aria-label="Width" onChange={onChange} />);
+    fireEvent.keyDown(screen.getByRole('textbox'), { key: 'ArrowUp' });
+    expect(onChange).toHaveBeenLastCalledWith(1);
+  });
+
+  it('never drops the final value on release, and ends the change once', () => {
+    const onChange = vi.fn();
+    const onChangeEnd = vi.fn();
+    const { container } = render(<ScrubInput label="W" aria-label="Width" defaultValue={100} onChange={onChange} onChangeEnd={onChangeEnd} />);
+    const el = handle(container);
+    fireEvent.pointerDown(el, { button: 0, pointerId: 1, clientX: 0 });
+    fireEvent.pointerMove(el, { pointerId: 1, clientX: 10 });
+    fireEvent.pointerMove(el, { pointerId: 1, clientX: 20 });
+    fireEvent.pointerUp(el, { pointerId: 1, clientX: 25 });
+    expect(onChange).toHaveBeenLastCalledWith(125);
+    expect(onChangeEnd).toHaveBeenCalledTimes(1);
+    expect(onChangeEnd).toHaveBeenCalledWith(125);
+  });
+
+  it('ends the change after a nudge and a typed commit', () => {
+    const onChangeEnd = vi.fn();
+    render(<ScrubInput label="W" aria-label="Width" defaultValue={1} onChangeEnd={onChangeEnd} />);
+    const input = screen.getByRole('textbox');
+    fireEvent.keyDown(input, { key: 'ArrowUp' });
+    expect(onChangeEnd).toHaveBeenLastCalledWith(2);
+    fireEvent.change(input, { target: { value: '7' } });
+    fireEvent.keyDown(input, { key: 'Enter' });
+    expect(onChangeEnd).toHaveBeenLastCalledWith(7);
+  });
+
+  it('does not mark a drag on a mixed field, and a read only press still focuses', () => {
+    const { container, unmount } = render(<ScrubInput label="H" aria-label="Height" mixed />);
+    const el = handle(container);
+    fireEvent.pointerDown(el, { button: 0, pointerId: 1, clientX: 0 });
+    fireEvent.pointerMove(el, { pointerId: 1, clientX: 30 });
+    expect(root(container).hasAttribute('data-dragging')).toBe(false);
+    fireEvent.pointerUp(el, { pointerId: 1, clientX: 30 });
+    unmount();
+    const ro = render(<ScrubInput label="W" aria-label="Width" defaultValue={5} readOnly />);
+    drag(handle(ro.container), 0, 0);
+    expect(document.activeElement).toBe(screen.getByRole('textbox'));
   });
 
   it('does not scrub while disabled, read only or mixed', () => {

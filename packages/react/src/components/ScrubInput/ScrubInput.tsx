@@ -56,6 +56,12 @@ export interface ScrubInputProps
   defaultValue?: number | null;
   /** Called with every committed value: each drag move, each nudge, a typed commit. */
   onChange?: (value: number) => void;
+  /**
+   * Called once when a change is done: at the end of a drag, after a nudge
+   * and after a typed commit. Use it for one undo entry per gesture, while
+   * onChange follows every pixel of a drag.
+   */
+  onChangeEnd?: (value: number) => void;
   /** The lowest value. */
   min?: number;
   /** The highest value. */
@@ -91,6 +97,10 @@ interface Drag {
   /** -1 in rtl: a drag toward the inline end grows the value. */
   sign: 1 | -1;
   moved: boolean;
+  /** No scrub: a press only focuses (read only, or mixed with no baseline). */
+  pressOnly: boolean;
+  /** The last value the drag sent. */
+  last: number | null;
 }
 
 /** Pixels of travel before a press counts as a drag, so a click still focuses. */
@@ -111,6 +121,7 @@ export function ScrubInput({
   value,
   defaultValue = null,
   onChange,
+  onChangeEnd,
   min,
   max,
   step = 1,
@@ -161,12 +172,18 @@ export function ScrubInput({
     if (mixed || next !== current) setCurrent(next);
   };
 
+  /** A finished change: commit it and tell onChangeEnd. */
+  const finish = (next: number) => {
+    commit(next);
+    onChangeEnd?.(next);
+  };
+
   const commitDraft = (): boolean => {
     if (draft === null) return false;
     const next = resolveCommit(draft, { unit, min, max, precision });
     setDraft(null);
     if (next === null) return false;
-    commit(next);
+    finish(next);
     return true;
   };
 
@@ -184,10 +201,11 @@ export function ScrubInput({
     if (event.defaultPrevented || inert) return;
     if (event.key === 'ArrowUp' || event.key === 'ArrowDown') {
       event.preventDefault();
-      const from = baseline();
+      // An empty field nudges from zero, as a drag does. Mixed waits for a typed value.
+      const from = mixed && draft === null ? null : (baseline() ?? 0);
       if (from === null) return;
       setDraft(null);
-      commit(nudgeValue(from, event.key === 'ArrowUp' ? 1 : -1, event, step, { min, max, precision }));
+      finish(nudgeValue(from, event.key === 'ArrowUp' ? 1 : -1, event, step, { min, max, precision }));
       return;
     }
     if (event.key === 'Enter') {
@@ -211,10 +229,11 @@ export function ScrubInput({
   };
 
   const onHandleDown = (event: PointerEvent<HTMLSpanElement>) => {
-    if (event.button !== 0 || inert) return;
+    if (event.button !== 0 || control.disabled) return;
     event.preventDefault();
-    // An empty field scrubs from zero; mixed has no baseline.
-    const from = mixed ? Number.NaN : (baseline() ?? 0);
+    // An empty field scrubs from zero. Read only and mixed (no baseline) only take a press to focus.
+    const pressOnly = Boolean(control.readOnly) || mixed;
+    const from = pressOnly ? Number.NaN : (baseline() ?? 0);
     const handle = event.currentTarget;
     handle.setPointerCapture?.(event.pointerId);
     drag.current = {
@@ -223,22 +242,30 @@ export function ScrubInput({
       from,
       sign: getComputedStyle(handle).direction === 'rtl' ? -1 : 1,
       moved: false,
+      pressOnly,
+      last: null,
     };
   };
+
+  const dragValue = (d: Drag, event: PointerEvent<HTMLSpanElement>): number =>
+    scrubValue(d.from, Math.round((event.clientX - d.startX) * d.sign), nudgeStepFor(event, step), { min, max, precision });
 
   const onHandleMove = (event: PointerEvent<HTMLSpanElement>) => {
     const d = drag.current;
     if (!d || d.pointerId !== event.pointerId) return;
     const dx = (event.clientX - d.startX) * d.sign;
+    if (d.pressOnly) return;
     if (!d.moved) {
       if (Math.abs(dx) < DRAG_THRESHOLD) return;
       d.moved = true;
       setDragging(true);
     }
-    // Mixed has no baseline: the drag waits for a typed value.
-    if (Number.isNaN(d.from)) return;
     setDraft(null);
-    commit(scrubValue(d.from, Math.round(dx), nudgeStepFor(event, step), { min, max, precision }));
+    const next = dragValue(d, event);
+    // Compare with the last value sent, not the render's value: two moves can land before a render.
+    if (next === d.last) return;
+    d.last = next;
+    commit(next);
   };
 
   const endDrag = (event: PointerEvent<HTMLSpanElement>) => {
@@ -247,7 +274,12 @@ export function ScrubInput({
     drag.current = null;
     setDragging(false);
     if (event.currentTarget.hasPointerCapture?.(event.pointerId)) event.currentTarget.releasePointerCapture(event.pointerId);
-    if (!d.moved && event.type === 'pointerup') {
+    if (d.moved) {
+      // The release position is the final value, even when no move event came after the last pixel.
+      const next = event.type === 'pointerup' ? dragValue(d, event) : (d.last ?? d.from);
+      if (next !== d.last) commit(next);
+      onChangeEnd?.(next);
+    } else if (event.type === 'pointerup') {
       input.current?.focus();
       input.current?.select();
     }
