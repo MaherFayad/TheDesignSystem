@@ -1,0 +1,188 @@
+/*
+ * ResizablePanels: panels in a flex row or column with handles between them.
+ * No source: designed from the dials table (Studio separates by a 1px line,
+ * Desk by a hairline) and the shell sidebar widths.
+ *
+ *   [data-ds='resizable-panels'][data-orientation]   root: flex row (horizontal) or column (vertical)
+ *     > [data-part='panel']                           flex grow = its size in percent, on a 0 basis
+ *     > [data-part='handle']                          role separator: a 1px line in a 24px hit area
+ *         > [data-part='handle-grip']                 the small pill in the middle of the line
+ *
+ * The handle takes 1px of layout (border.width.default) and spreads its
+ * 24px target (size.target-min) over both panels with negative margins
+ * (WCAG 2.5.8). The root isolates its stacking, so the handle can sit
+ * above the panel after it without reaching the rest of the page.
+ *
+ * Private properties on the root (docs/contracts/anatomy.md, one convention):
+ *   --_resizable-panels-line, -line-hover, -line-active   the line color by state
+ *   --_resizable-panels-line-width                        the line thickness
+ *   --_resizable-panels-target                            the hit area
+ *   --_resizable-panels-grip, -grip-length, -grip-thickness
+ *   --_resizable-panels-grip-opacity                      the grip at rest, swapped on hover and focus
+ *   --_resizable-panels-ring, -radius                     the focus ring of the handle
+ *   --_resizable-panels-duration, -ease                   the grip fade
+ * On each panel, set inline by the component:
+ *   --_resizable-panels-size                              its size in percent
+ *
+ * Motion, pattern "drag-drop": the panels follow the pointer and the keys at
+ * once, with no tween (sizes are layout, which never animates). Only the grip
+ * fades in on hover and focus. Under reduced motion it switches at once.
+ */
+@layer ds.base {
+  [data-ds='resizable-panels'] {
+    --_resizable-panels-line: var(--ds-color-border-subtle);
+    --_resizable-panels-line-hover: var(--ds-color-border-strong);
+    --_resizable-panels-line-active: var(--ds-color-focus-ring);
+    --_resizable-panels-line-width: var(--ds-border-width-default);
+    --_resizable-panels-target: var(--ds-size-target-min);
+    --_resizable-panels-grip: var(--ds-color-border-strong);
+    --_resizable-panels-grip-length: var(--ds-space-3xl);
+    --_resizable-panels-grip-thickness: var(--ds-space-3xs);
+    --_resizable-panels-grip-opacity: 0;
+    --_resizable-panels-ring: var(--ds-focus-shadow-ring);
+    --_resizable-panels-radius: var(--ds-radius-xs);
+    --_resizable-panels-duration: var(--ds-duration-base);
+    --_resizable-panels-ease: var(--ds-ease-out);
+
+    display: flex;
+    box-sizing: border-box;
+    inline-size: 100%;
+    block-size: 100%;
+    min-inline-size: 0;
+    min-block-size: 0;
+    isolation: isolate;
+  }
+
+  [data-ds='resizable-panels'][data-orientation='vertical'] {
+    flex-direction: column;
+  }
+
+  /* The component sets the size inline on each panel; 1 is the even share before it does. */
+  [data-ds='resizable-panels'] > [data-part='panel'] {
+    --_resizable-panels-size: 1;
+
+    flex: var(--_resizable-panels-size) 1 0;
+    box-sizing: border-box;
+    min-inline-size: 0;
+    min-block-size: 0;
+    overflow: hidden;
+  }
+
+  /* A collapsed panel at size 0 draws nothing; its content is inert. */
+  [data-ds='resizable-panels'] > [data-part='panel'][data-collapsed][inert] {
+    visibility: hidden;
+  }
+
+  /* While a handle drags, the page text does not select and the cursor stays. */
+  [data-ds='resizable-panels']:has(> [data-part='handle'][data-dragging]) {
+    user-select: none;
+  }
+
+  /* ------------------------------------------------------------ handle */
+
+  [data-ds='resizable-panels'] > [data-part='handle'] {
+    --_resizable-panels-line-now: var(--_resizable-panels-line);
+
+    position: relative;
+    z-index: var(--ds-z-dropdown);
+    flex: 0 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    border-radius: var(--_resizable-panels-radius);
+    background-repeat: no-repeat;
+    background-position: center;
+    background-image: linear-gradient(var(--_resizable-panels-line-now), var(--_resizable-panels-line-now));
+    touch-action: none;
+    outline: none;
+  }
+
+  [data-ds='resizable-panels'][data-orientation='horizontal'] > [data-part='handle'] {
+    inline-size: var(--_resizable-panels-target);
+    margin-inline: calc((var(--_resizable-panels-line-width) - var(--_resizable-panels-target)) / 2);
+    background-size: var(--_resizable-panels-line-width) 100%;
+    cursor: col-resize;
+  }
+
+  [data-ds='resizable-panels'][data-orientation='vertical'] > [data-part='handle'] {
+    block-size: var(--_resizable-panels-target);
+    margin-block: calc((var(--_resizable-panels-line-width) - var(--_resizable-panels-target)) / 2);
+    background-size: 100% var(--_resizable-panels-line-width);
+    cursor: row-resize;
+  }
+
+  [data-ds='resizable-panels'] > [data-part='handle']:hover {
+    --_resizable-panels-line-now: var(--_resizable-panels-line-hover);
+    --_resizable-panels-grip-opacity: 1;
+  }
+
+  [data-ds='resizable-panels'] > [data-part='handle'][data-dragging] {
+    --_resizable-panels-line-now: var(--_resizable-panels-line-active);
+    --_resizable-panels-grip-opacity: 1;
+  }
+
+  /* The transparent outline is set only here, so forced colors mode draws it on focus and nowhere else. */
+  [data-ds='resizable-panels'] > [data-part='handle']:focus-visible {
+    --_resizable-panels-line-now: var(--_resizable-panels-line-active);
+    --_resizable-panels-grip-opacity: 1;
+
+    outline: var(--ds-border-width-strong) solid transparent;
+    outline-offset: calc(var(--ds-border-width-strong) * -1);
+  }
+
+  /* ::before is the focus layer: the ring around the 24px target. */
+  [data-ds='resizable-panels'] > [data-part='handle']::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    pointer-events: none;
+  }
+
+  [data-ds='resizable-panels'] > [data-part='handle']:focus-visible::before {
+    box-shadow: var(--_resizable-panels-ring);
+  }
+
+  [data-ds='resizable-panels'] > [data-part='handle'] > [data-part='handle-grip'] {
+    flex: 0 0 auto;
+    border-radius: var(--ds-radius-pill);
+    background: var(--_resizable-panels-grip);
+    opacity: var(--_resizable-panels-grip-opacity);
+    transition: opacity var(--_resizable-panels-duration) var(--_resizable-panels-ease);
+    pointer-events: none;
+  }
+
+  [data-ds='resizable-panels'][data-orientation='horizontal'] > [data-part='handle'] > [data-part='handle-grip'] {
+    inline-size: var(--_resizable-panels-grip-thickness);
+    block-size: var(--_resizable-panels-grip-length);
+  }
+
+  [data-ds='resizable-panels'][data-orientation='vertical'] > [data-part='handle'] > [data-part='handle-grip'] {
+    inline-size: var(--_resizable-panels-grip-length);
+    block-size: var(--_resizable-panels-grip-thickness);
+  }
+
+  /* ------------------------------------------------------------ reduced motion, forced colors */
+
+  @media (prefers-reduced-motion: reduce) {
+    [data-ds='resizable-panels'] > [data-part='handle'] > [data-part='handle-grip'] {
+      transition: none;
+    }
+  }
+
+  @media (forced-colors: active) {
+    [data-ds='resizable-panels'] > [data-part='handle'] {
+      forced-color-adjust: none;
+      --_resizable-panels-line-now: CanvasText;
+    }
+
+    [data-ds='resizable-panels'] > [data-part='handle']:focus-visible {
+      outline-color: Highlight;
+    }
+
+    [data-ds='resizable-panels'] > [data-part='handle'] > [data-part='handle-grip'] {
+      background: CanvasText;
+    }
+  }
+}
