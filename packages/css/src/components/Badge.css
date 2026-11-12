@@ -1,0 +1,195 @@
+/*
+ * Badge: a small static pill with a label or a count, or a dot. Follows
+ * "One convention for component CSS and props" in docs/contracts/anatomy.md.
+ * Source: Figma-Killer-2 TagPill (the static form). Colors follow
+ * Button.css so a badge and a button of one tone match.
+ *
+ * Private properties on the root (recipes override these):
+ *
+ *   --_badge-height, -padding-inline, -gap, -font-size, -radius
+ *   --_badge-bg, -fg, -border-color
+ *   --_badge-dot             the size of the dot form
+ *   --_badge-tone-*          the colors of one tone
+ *
+ * Not interactive: no focus layer, no hover veil, nothing animates.
+ */
+@layer ds.base {
+  [data-ds='badge'] {
+    --_badge-height: calc(var(--ds-size-control-xs) - var(--ds-space-2xs));
+    --_badge-padding-inline: var(--ds-space-xs);
+    --_badge-gap: var(--ds-space-4xs);
+    --_badge-font-size: var(--ds-font-size-xs);
+    --_badge-radius: var(--ds-radius-pill);
+    --_badge-bg: var(--ds-color-bg-overlay-10);
+    --_badge-fg: var(--ds-color-text-default);
+    --_badge-border-color: transparent;
+    --_badge-dot: var(--ds-space-s);
+
+    display: inline-flex;
+    flex: none;
+    align-items: center;
+    justify-content: center;
+    gap: var(--_badge-gap);
+    box-sizing: border-box;
+    block-size: var(--_badge-height);
+    min-inline-size: var(--_badge-height);
+    max-inline-size: 100%;
+    padding-block: 0;
+    padding-inline: var(--_badge-padding-inline);
+    border: var(--ds-border-width-default) solid var(--_badge-border-color);
+    border-radius: var(--_badge-radius);
+    background-color: var(--_badge-bg);
+    color: var(--_badge-fg);
+    font-family: var(--ds-font-family-sans);
+    font-size: var(--_badge-font-size);
+    font-weight: var(--ds-font-weight-bold);
+    font-variant-numeric: tabular-nums;
+    line-height: var(--ds-font-leading-tight);
+    letter-spacing: var(--ds-font-tracking-none);
+    white-space: nowrap;
+    vertical-align: middle;
+  }
+
+  /* ------------------------------------------------------------ parts */
+
+  [data-ds='badge'] > [data-part='icon'] {
+    display: inline-flex;
+    flex: none;
+  }
+
+  /* A long label ends in an ellipsis; a badge never wraps. */
+  [data-ds='badge'] > [data-part='label'] {
+    min-inline-size: 0;
+    overflow-x: clip;
+    overflow-y: visible;
+    text-overflow: ellipsis;
+  }
+
+  /* ------------------------------------------------------------ sizes */
+
+  [data-ds='badge'][data-size='xs'] {
+    --_badge-height: calc(var(--ds-size-control-xs) - var(--ds-space-s));
+    --_badge-padding-inline: var(--ds-space-3xs);
+    --_badge-font-size: var(--ds-font-size-2xs);
+    --_badge-dot: var(--ds-space-xs);
+  }
+
+  /* ------------------------------------------------------------ dot: only a circle, the label is visually hidden */
+
+  [data-ds='badge'][data-dot] {
+    inline-size: var(--_badge-dot);
+    block-size: var(--_badge-dot);
+    min-inline-size: 0;
+    padding: 0;
+  }
+
+  /* ------------------------------------------------------------ neutral (soft is the root default) */
+
+  [data-ds='badge'][data-tone='neutral'] {
+    --_badge-tone-solid: var(--ds-color-text-muted);
+  }
+
+  [data-ds='badge'][data-tone='neutral'][data-emphasis='solid'] {
+    --_badge-bg: var(--ds-color-text-default);
+    --_badge-fg: var(--ds-color-bg-body);
+  }
+
+  [data-ds='badge'][data-tone='neutral'][data-emphasis='outline'] {
+    --_badge-bg: transparent;
+    --_badge-fg: var(--ds-color-text-muted);
+    --_badge-border-color: var(--ds-color-border-control);
+  }
+
+  /* ------------------------------------------------------------ accent */
+
+  /* The accent dot takes the primary text color: Studio's primary fill is a dark step that a dot on the page would lose. */
+  [data-ds='badge'][data-tone='accent'] {
+    --_badge-tone-solid: var(--ds-color-primary-on-surface);
+    --_badge-bg: var(--ds-color-primary-tint);
+    --_badge-fg: var(--ds-color-primary-on-surface);
+  }
+
+  [data-ds='badge'][data-tone='accent'][data-emphasis='solid'] {
+    --_badge-bg: var(--ds-color-primary-fill);
+    --_badge-fg: var(--ds-color-primary-text);
+    --_badge-border-color: var(--ds-color-primary-border);
+  }
+
+  [data-ds='badge'][data-tone='accent'][data-emphasis='outline'] {
+    --_badge-bg: transparent;
+    --_badge-border-color: var(--ds-color-primary-border);
+  }
+
+  /* ------------------------------------------------------------ danger, success, warning, info */
+
+  [data-ds='badge'][data-tone='danger'] {
+    --_badge-tone-solid: var(--ds-color-state-danger-solid);
+    --_badge-tone-on-solid: var(--ds-color-state-danger-on-solid);
+    --_badge-tone-text: var(--ds-color-state-danger-text);
+    --_badge-tone-on-tint: var(--ds-color-state-danger-on-tint);
+    --_badge-tone-border: var(--ds-color-state-danger-border);
+    --_badge-tone-tint: var(--ds-color-state-danger-tint-10);
+  }
+
+  [data-ds='badge'][data-tone='success'] {
+    --_badge-tone-solid: var(--ds-color-state-success-solid);
+    --_badge-tone-on-solid: var(--ds-color-state-success-on-solid);
+    --_badge-tone-text: var(--ds-color-state-success-text);
+    --_badge-tone-on-tint: var(--ds-color-state-success-on-tint);
+    --_badge-tone-border: var(--ds-color-state-success-border);
+    --_badge-tone-tint: var(--ds-color-state-success-tint-10);
+  }
+
+  [data-ds='badge'][data-tone='warning'] {
+    --_badge-tone-solid: var(--ds-color-state-warning-solid);
+    --_badge-tone-on-solid: var(--ds-color-state-warning-on-solid);
+    --_badge-tone-text: var(--ds-color-state-warning-text);
+    --_badge-tone-on-tint: var(--ds-color-state-warning-on-tint);
+    --_badge-tone-border: var(--ds-color-state-warning-border);
+    --_badge-tone-tint: var(--ds-color-state-warning-tint-10);
+  }
+
+  [data-ds='badge'][data-tone='info'] {
+    --_badge-tone-solid: var(--ds-color-state-info-solid);
+    --_badge-tone-on-solid: var(--ds-color-state-info-on-solid);
+    --_badge-tone-text: var(--ds-color-state-info-text);
+    --_badge-tone-on-tint: var(--ds-color-state-info-on-tint);
+    --_badge-tone-border: var(--ds-color-state-info-border);
+    --_badge-tone-tint: var(--ds-color-state-info-tint-10);
+  }
+
+  [data-ds='badge']:is([data-tone='danger'], [data-tone='success'], [data-tone='warning'], [data-tone='info']) {
+    --_badge-bg: var(--_badge-tone-tint);
+    --_badge-fg: var(--_badge-tone-on-tint);
+  }
+
+  [data-ds='badge']:is([data-tone='danger'], [data-tone='success'], [data-tone='warning'], [data-tone='info'])[data-emphasis='solid'] {
+    --_badge-bg: var(--_badge-tone-solid);
+    --_badge-fg: var(--_badge-tone-on-solid);
+  }
+
+  [data-ds='badge']:is([data-tone='danger'], [data-tone='success'], [data-tone='warning'], [data-tone='info'])[data-emphasis='outline'] {
+    --_badge-bg: transparent;
+    --_badge-fg: var(--_badge-tone-text);
+    --_badge-border-color: var(--_badge-tone-border);
+  }
+
+  /* A soft dot would be too faint: every dot takes the solid fill of its tone. Last, so it wins over every emphasis. */
+  [data-ds='badge'][data-dot][data-tone] {
+    --_badge-bg: var(--_badge-tone-solid);
+    --_badge-border-color: transparent;
+  }
+
+  /* ------------------------------------------------------------ forced colors */
+
+  @media (forced-colors: active) {
+    [data-ds='badge'] {
+      border-color: CanvasText;
+      color: CanvasText;
+    }
+
+    [data-ds='badge'][data-dot] {
+      background-color: CanvasText;
+    }
+  }
+}

@@ -2,6 +2,7 @@
 export * from './theme/index';
 export * from './components/Avatar/index';
 export * from './components/AvatarGroup/index';
+export * from './components/Badge/index';
 export * from './components/Button/index';
 export * from './components/Dialog/index';
 export * from './components/Field/index';
