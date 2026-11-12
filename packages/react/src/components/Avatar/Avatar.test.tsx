@@ -1,7 +1,8 @@
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { render, screen } from '@testing-library/react';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
+import { Theme } from '../../theme';
 import AvatarDemo from './Avatar.demo';
 import { Avatar } from './index';
 
@@ -68,6 +69,33 @@ describe('Avatar', () => {
     expect(ar.getAttribute('aria-label')).toBe('عمر حداد، متصل');
   });
 
+  it('the status part is a StatusDot root carrying data-part status, its words in the hidden label', () => {
+    const el = root(render(<Avatar name="Omar Haddad" status="warning" />).container);
+    const status = el.querySelector('[data-part="status"]');
+    expect(status?.getAttribute('data-ds')).toBe('status-dot');
+    expect(status?.hasAttribute('data-hide-label')).toBe(true);
+    expect(status?.querySelector('[data-part="label"]')?.textContent).toBe('Away');
+  });
+
+  it('the status words follow an Arabic Theme; away is not "far"', () => {
+    const { container } = render(
+      <Theme lang="ar">
+        <Avatar name="عمر حداد" status="warning" />
+      </Theme>,
+    );
+    expect(root(container).getAttribute('aria-label')).toBe('عمر حداد، غير متواجد');
+  });
+
+  it('an empty name is decorative and warns', () => {
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => undefined);
+    const el = root(render(<Avatar name="  " />).container);
+    expect(el.getAttribute('role')).toBeNull();
+    expect(el.hasAttribute('aria-label')).toBe(false);
+    expect(el.getAttribute('aria-hidden')).toBe('true');
+    expect(warn).toHaveBeenCalled();
+    warn.mockRestore();
+  });
+
   it('passes ref and native props to the root', () => {
     let node: HTMLSpanElement | null = null;
     const { container } = render(<Avatar name="Ada" id="me" ref={(el) => void (node = el)} />);
@@ -78,7 +106,37 @@ describe('Avatar', () => {
   it('renders every demo case', () => {
     const { container } = render(<AvatarDemo />);
     const cases = [...container.querySelectorAll('[data-demo-case]')].map((el) => el.getAttribute('data-demo-case'));
-    expect(cases).toEqual(['variants', 'empty', 'one', 'many', 'long-text', 'long-arabic', 'error']);
+    expect(cases).toEqual(['variants', 'empty', 'one', 'many', 'long-text', 'long-arabic', 'loading', 'error']);
+  });
+});
+
+describe('Avatar status shapes', () => {
+  const css = readFileSync(join(process.cwd(), 'packages/css/src/components/Avatar.css'), 'utf8');
+  const rule = (selector: string) => {
+    const at = css.indexOf(`${selector} {`);
+    return at < 0 ? '' : css.slice(at, css.indexOf('\n  }', at));
+  };
+  const part = "[data-ds='avatar'] > [data-ds='status-dot'][data-part='status']";
+
+  // WCAG 1.4.1: online is the full disk; away, busy and offline each draw a shape on it.
+  it.each(['warning', 'danger', 'neutral'])('the %s status draws a shape of its own', (tone) => {
+    expect(rule(`${part}[data-tone='${tone}']`)).toMatch(/--_avatar-status-shape:\s*\S/);
+  });
+
+  it('the shapes differ from each other', () => {
+    const shapes = ['warning', 'danger', 'neutral'].map((tone) => /--_avatar-status-shape:([^;]*);/.exec(rule(`${part}[data-tone='${tone}']`))?.[1]);
+    expect(new Set(shapes).size).toBe(3);
+  });
+
+  // In forced colors the shapes stay: system colors, and no forcing that would drop the layers.
+  it('keeps the shapes in forced colors', () => {
+    const forced = css.slice(css.indexOf('@media (forced-colors: active)'));
+    const at = forced.indexOf(`${part}[data-tone] {`);
+    expect(at).toBeGreaterThan(-1);
+    const block = forced.slice(at, forced.indexOf('}', at));
+    expect(block).toMatch(/forced-color-adjust:\s*none/);
+    expect(block).toMatch(/--_avatar-status-bg:\s*CanvasText/);
+    expect(block).toMatch(/--_avatar-status-hole:\s*Canvas/);
   });
 });
 

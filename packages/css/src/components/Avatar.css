@@ -14,7 +14,9 @@
  *                           is the solid hue with color.text.on-accent, which
  *                           holds 4.5:1 in every style and scheme (pastels
  *                           with ink in dark, deep hues with white in light).
- *   --_avatar-status-size, -status-bg, -ring  the status dot and its cutout
+ *   --_avatar-status-size, -status-bg  the status dot and its fill
+ *   --_avatar-status-hole   the cut color inside a status shape
+ *   --_avatar-status-shape, -shape-size  the background layers of a shape
  *   --_avatar-ring          the border drawn by AvatarGroup between items
  *
  * The names size, hue and status-* are outside the name list of anatomy
@@ -87,32 +89,58 @@
     white-space: nowrap;
   }
 
-  /* The dot sits on the end corner, cut out of the avatar by a ring of the page surface. */
-  [data-ds='avatar'] > [data-part='status'] {
+  /*
+   * The status part is a StatusDot root (label visually hidden). The root
+   * draws the dot here, so StatusDot's own dot is sized to fit and left
+   * clear. It sits on the end corner, cut out of the avatar by a ring of
+   * the page surface. Each status has its own shape, so none rests on
+   * color alone (WCAG 1.4.1):
+   *
+   *   online   a full disk
+   *   away     a ring, its lower half filled
+   *   busy     a disk with a bar across it, a minus sign
+   *   offline  an empty ring
+   *
+   * The shapes are background layers sized in percent, so they scale with
+   * the dot at every size. [data-ds][data-part] lifts these rules over the
+   * StatusDot rules of the same weight that load after this file.
+   */
+  [data-ds='avatar'] > [data-ds='status-dot'][data-part='status'] {
+    --_status-dot-size: var(--_avatar-status-size);
+    --_status-dot-bg: transparent;
+    --_avatar-status-hole: var(--ds-color-bg-surface);
+    --_avatar-status-shape: none;
+    --_avatar-status-shape-size: auto;
+
     position: absolute;
     inset-block-end: 0;
     inset-inline-end: 0;
     box-sizing: content-box;
-    inline-size: var(--_avatar-status-size);
-    block-size: var(--_avatar-status-size);
     border: var(--ds-border-width-strong) solid var(--ds-color-bg-surface);
     border-radius: var(--ds-radius-pill);
     background-color: var(--_avatar-status-bg);
+    background-image: var(--_avatar-status-shape);
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: var(--_avatar-status-shape-size);
   }
 
-  [data-ds='avatar'] > [data-part='status'][data-tone='warning'] {
+  [data-ds='avatar'] > [data-ds='status-dot'][data-part='status'][data-tone='warning'] {
     --_avatar-status-bg: var(--ds-color-state-warning-solid);
+    --_avatar-status-shape:
+      radial-gradient(closest-side, transparent 58%, var(--_avatar-status-bg) 62%),
+      linear-gradient(var(--_avatar-status-hole) 50%, transparent 50%);
   }
 
-  [data-ds='avatar'] > [data-part='status'][data-tone='danger'] {
+  [data-ds='avatar'] > [data-ds='status-dot'][data-part='status'][data-tone='danger'] {
     --_avatar-status-bg: var(--ds-color-state-danger-solid);
+    --_avatar-status-shape: linear-gradient(var(--_avatar-status-hole), var(--_avatar-status-hole));
+    --_avatar-status-shape-size: 64% 26%;
   }
 
-  /* Offline is a hollow ring, so it differs from the others by shape and not by color alone. */
-  [data-ds='avatar'] > [data-part='status'][data-tone='neutral'] {
-    --_avatar-status-bg: var(--ds-color-bg-surface);
-
-    box-shadow: inset 0 0 0 var(--ds-border-width-strong) var(--ds-color-text-muted);
+  [data-ds='avatar'] > [data-ds='status-dot'][data-part='status'][data-tone='neutral'] {
+    --_avatar-status-bg: var(--ds-color-text-muted);
+    --_avatar-status-shape: radial-gradient(closest-side, var(--_avatar-status-hole) 58%, transparent 62%);
   }
 
   /* ------------------------------------------------------------ sizes */
@@ -155,16 +183,13 @@
       color: CanvasText;
     }
 
-    [data-ds='avatar'] > [data-part='status'] {
-      border-color: Canvas;
-      background-color: CanvasText;
-    }
+    /* The status keeps its shape in system colors: the text color on the page color. [data-tone] lifts it over the tone rules. */
+    [data-ds='avatar'] > [data-ds='status-dot'][data-part='status'][data-tone] {
+      --_avatar-status-bg: CanvasText;
+      --_avatar-status-hole: Canvas;
 
-    [data-ds='avatar'] > [data-part='status'][data-tone='neutral'] {
-      background-color: Canvas;
-      box-shadow: none;
-      outline: var(--ds-border-width-strong) solid CanvasText;
-      outline-offset: calc(-1 * var(--ds-border-width-strong));
+      forced-color-adjust: none;
+      border-color: Canvas;
     }
   }
 }

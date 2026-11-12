@@ -27,7 +27,7 @@
     "name": {
       "type": "string",
       "required": true,
-      "description": "The person or workspace name. The accessible name of the avatar, the source of the initials and of the fallback hue."
+      "description": "The person or workspace name. The accessible name of the avatar, the source of the initials and of the fallback hue. An empty name makes the avatar decorative and warns in development."
     },
     "src": { "type": "string", "description": "The image URL. Without it the fallback shows at once." },
     "size": {
@@ -51,11 +51,11 @@
     },
     "status": {
       "type": ["success", "warning", "danger", "neutral"],
-      "description": "Adds the status dot on the end corner: online, away, busy, offline. The status words join the accessible name; the dot is a visual hint, and offline is drawn hollow."
+      "description": "Adds the status dot on the end corner: online, away, busy, offline. The status words join the accessible name. The dot is a StatusDot root carrying data-part status, with one shape per status: online a full disk, away a ring with its lower half filled, busy a disk with a bar, offline an empty ring."
     },
     "statusLabel": {
       "type": "string",
-      "description": "The status in words, added to the accessible name. Default Online, Away, Busy or Offline. Pass it in Arabic."
+      "description": "The status in words, added to the accessible name. Default Online, Away, Busy or Offline; under an Arabic Theme متصل، غير متواجد، مشغول، غير متصل."
     },
     "fallbackDelay": {
       "type": "number",
@@ -75,7 +75,8 @@
       "The name is the alt: the root role img carries it, so a failed image never leaves an unnamed picture.",
       "decorative hides the avatar when the name is written next to it (WCAG 1.1.1).",
       "The fallback is the solid hue of the name with color.text.on-accent: 4.5:1 or more for all ten hues in every style and scheme, tested in Avatar.test.tsx against tokens.css (WCAG 1.4.3).",
-      "The status words join the accessible name, so the status never rests on color for assistive tech. Sighted users get color, plus a hollow ring for offline; online, away and busy differ by color only, so write the status in text where it matters (WCAG 1.4.1).",
+      "The status words join the accessible name, so the status never rests on color for assistive tech. Sighted users get a shape per status as well as its color, and the shapes stay in forced colors (WCAG 1.4.1).",
+      "An empty name has nothing to announce: the avatar is drawn as decorative and a warning shows in development.",
       "data-state is stamped only when there is an image to load.",
       "decorative hides the status words too: write the status next to the avatar, with the name."
     ]
@@ -87,7 +88,7 @@
     },
     "ar": {
       "name": "The full name, no diacritics: ماهر فياض. Initials skip diacritics and the article ال of the last name.",
-      "statusLabel": "Noun or adjective, no diacritics: متصل، بعيد، مشغول، غير متصل."
+      "statusLabel": "Noun or adjective, no diacritics: متصل، غير متواجد، مشغول، غير متصل. Not بعيد for away: it reads as far."
     }
   },
   "tokens": [
@@ -136,9 +137,9 @@
   "frameworks": {
     "react": {
       "status": "ready",
-      "behavior": "radix:Avatar",
+      "behavior": "radix:Avatar, StatusDot (status)",
       "example": "Avatar.demo.tsx",
-      "note": "Motion: fade-rise, the image fades in and rises 2px once loaded (@starting-style, opacity and transform); none under reduced motion. Initials and the hue come from @the-system/shared initials.ts. The status part is drawn by Avatar.css until StatusDot (1.5.10) exists; then it becomes a StatusDot root carrying data-part status."
+      "note": "Motion: a CSS form of fade-rise. The image fades in and rises by space.4xs once loaded (@starting-style, opacity and transform), a smaller rise than the pattern's space.xs at avatar size; under reduced motion it shows at once. Initials and the hue come from @the-system/shared initials.ts. The status part is a StatusDot root carrying data-part status, with its label visually hidden; Avatar.css draws the shape of each status on it. The loading case shows Skeleton circles while the people load: an image that stays loading needs a network stall the gallery does not have, so the loading state of the image is covered by a unit test."
     },
     "angular": { "status": "planned" },
     "native": { "status": "planned", "note": "Same initials.ts. Image through expo-image with the same fallback rule." }
@@ -151,7 +152,7 @@
   },
   "mistakes": [
     { "wrong": "An avatar with alt text next to the same name in text", "right": "decorative, so the name is read once" },
-    { "wrong": "A status dot as the only sign that someone is offline", "right": "status with statusLabel; offline is drawn hollow" },
+    { "wrong": "A status dot told apart by color only", "right": "status, which draws a shape per status and adds the words to the name" },
     { "wrong": "Initials typed by hand, or with Arabic diacritics", "right": "Pass the full name; initials.ts builds them" },
     { "wrong": "An onClick on the avatar", "right": "Wrap it in a Button or a link with its own name" }
   ],

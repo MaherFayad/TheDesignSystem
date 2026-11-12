@@ -1,17 +1,13 @@
 import { DemoCase, DemoPage, DemoRow } from '../../demo';
-import { Avatar, type AvatarShape, type AvatarSize, type AvatarStatusTone } from './index';
+import { Skeleton } from '../Skeleton';
+import { Avatar, avatarStatusLabelAr, type AvatarShape, type AvatarSize, type AvatarStatusTone } from './index';
 
 const sizes: AvatarSize[] = ['xs', 'sm', 'md', 'lg'];
 const shapes: AvatarShape[] = ['default', 'square'];
 const statuses: AvatarStatusTone[] = ['success', 'warning', 'danger', 'neutral'];
 
-/** Arabic status words, noun forms, no diacritics. */
-const statusAr: Record<AvatarStatusTone, string> = {
-  success: 'متصل',
-  warning: 'بعيد',
-  danger: 'مشغول',
-  neutral: 'غير متصل',
-};
+/** Arabic status words, no diacritics: the component's own Arabic defaults. */
+const statusAr = avatarStatusLabelAr;
 
 /**
  * A stand in portrait drawn as an inline svg, so the demo needs no network.
@@ -112,6 +108,16 @@ export default function AvatarDemo() {
             <Avatar key={name} name={name} />
           ))}
         </DemoRow>
+      </DemoCase>
+
+      <DemoCase id="loading" title="Loading: while the people load, Skeleton circles hold each avatar's place">
+        <div aria-busy="true" aria-label="People" role="group">
+          <DemoRow>
+            {sizes.map((size) => (
+              <Skeleton key={size} variant="circle" width={`var(--ds-size-control-${size})`} />
+            ))}
+          </DemoRow>
+        </div>
       </DemoCase>
 
       <DemoCase id="error" title="Error: the image fails and the initials show">
