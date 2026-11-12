@@ -110,9 +110,15 @@ components, a fresh review, then commit.
 | 3D | Select, MultiSelect, TagField | claude/ds-lane-3d | session_01ErLBscBVRhPUortaE6kB1W | running |
 | 4A, 4C | Fieldset, Form, ConsentField, FilterBar | claude/ds-lane-4a | session_01ErLBsdAxTp9pNKkafLst2H | running |
 | 6D | CommandPalette, Lightbox, PageShell | claude/ds-lane-6d | session_01ErLBscXKXkP4UetBBLqh7d | running |
+| 2C | NumberField, ScrubInput | claude/ds-lane-2c | session_01ErLBsa9N8BxuZxXv3txFFC | running |
+| 1.13, 1.14, 1.16 | Registry, CLI, agent files | claude/ds-order-1-13 | session_01ErLBscA1spNxiDuqwFeKkb | running |
+| 1.15 | Docs site | claude/ds-order-1-15 | session_01ErLBsdntSkYYP93KvNeUUF | running |
+| A1 | Angular actions | claude/ds-angular-a1 | session_01ErLBscFDv12uob1HrEYb2e | running |
+| A2 | Angular text inputs | claude/ds-angular-a2 | session_01ErLBsdMcfbuvbHoYkVYJB5 | running |
 
-Not started yet: 2C NumberField and ScrubInput (React Aria 1.22.1 is now
-installed, order 1.2.0).
+React Aria Components 1.22.1 is installed (order 1.2.0). Not started yet:
+Angular A3 to A5 (after the reviews and fix rounds of React batches 3 to 5),
+orders 1.17 to 1.21.
 
 Done locally: Link, ButtonGroup, DropdownMenu, lane 1A (ToggleButton,
 CloseButton, CopyButton, FloatingActionButton), the consolidation pass
