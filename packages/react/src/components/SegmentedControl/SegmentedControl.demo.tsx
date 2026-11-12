@@ -107,7 +107,7 @@ export default function SegmentedControlDemo() {
         </DemoRow>
       </DemoCase>
 
-      <DemoCase id="too-many" title="Five options in a narrow column: labels end in an ellipsis">
+      <DemoCase id="too-many" title="Five options in a narrow column: labels wrap">
         <div style={{ maxInlineSize: '18rem' }}>
           <SegmentedControl aria-label="Chart range" fullWidth defaultValue="7d">
             <SegmentedControlItem value="24h">24 hours</SegmentedControlItem>
