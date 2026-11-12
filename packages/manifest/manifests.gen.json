@@ -7927,8 +7927,10 @@
         "example": "FloatingActionButton.demo.tsx"
       },
       "angular": {
-        "status": "planned",
-        "behavior": "button[dsFloatingActionButton] on the shared Button.css"
+        "status": "ready",
+        "behavior": "button[dsFloatingActionButton] and a[dsFloatingActionButton] on DsButtonBase",
+        "example": "floating-action-button.demo.ts",
+        "note": "No asChild: the a form is the link. icon takes an icon name or a TemplateRef. Emphasis is always solid; size defaults to lg and does not take the size of a ButtonGroup, as in React."
       },
       "native": {
         "status": "planned",

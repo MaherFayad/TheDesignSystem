@@ -7,6 +7,7 @@ export * from './components/close-button/index';
 export * from './components/copy-button/index';
 export * from './components/dialog/index';
 export * from './components/field/index';
+export * from './components/floating-action-button/index';
 export * from './components/icon-button/index';
 export * from './components/input/index';
 export * from './components/title-bar/index';

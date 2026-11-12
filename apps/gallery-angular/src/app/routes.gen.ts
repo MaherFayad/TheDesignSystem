@@ -12,6 +12,7 @@ export const routes: DemoRoute[] = [
   { slug: 'close-button', load: () => import('../../../../packages/angular/src/components/close-button/close-button.demo').then((m) => m.default) },
   { slug: 'copy-button', load: () => import('../../../../packages/angular/src/components/copy-button/copy-button.demo').then((m) => m.default) },
   { slug: 'dialog', load: () => import('../../../../packages/angular/src/components/dialog/dialog.demo').then((m) => m.default) },
+  { slug: 'floating-action-button', load: () => import('../../../../packages/angular/src/components/floating-action-button/floating-action-button.demo').then((m) => m.default) },
   { slug: 'icon-button', load: () => import('../../../../packages/angular/src/components/icon-button/icon-button.demo').then((m) => m.default) },
   { slug: 'toggle-button', load: () => import('../../../../packages/angular/src/components/toggle-button/toggle-button.demo').then((m) => m.default) },
 ];
