@@ -1,0 +1,183 @@
+{
+  "name": "Fieldset",
+  "kind": "component",
+  "family": "forms",
+  "summary": "A group of fields or choices under one legend: a native fieldset, so the legend names the group and native disabled disables everything inside.",
+  "useWhen": [
+    "Several fields that answer one question together, such as a delivery address or a date of birth in three parts",
+    "A long form split into named sections, each with its own legend",
+    "A group of Checkbox or Switch items that needs a group level error, such as Pick at least one",
+    "Turning off a whole section at once with native disabled"
+  ],
+  "avoidWhen": [
+    "One field alone: the legend would repeat its label",
+    "A group of checkboxes with one value array",
+    "A heading over unrelated content that holds no controls",
+    "A form split into steps the person moves through"
+  ],
+  "insteadUse": {
+    "One field with a label, a hint and an error": "Field",
+    "Checkboxes that share one value array": "CheckboxGroup",
+    "One answer picked from a few choices": "RadioGroup",
+    "A heading over content with no controls": "Section",
+    "A long form split into steps": "FormWizard"
+  },
+  "anatomy": [
+    "root",
+    "legend",
+    "description",
+    "error",
+    "body"
+  ],
+  "slots": {
+    "legend": {
+      "accepts": "any",
+      "min": 1,
+      "max": 1
+    },
+    "description": {
+      "accepts": "text"
+    },
+    "error": {
+      "accepts": [
+        "FieldError"
+      ],
+      "max": 1
+    },
+    "body": {
+      "accepts": [
+        "Field",
+        "Fieldset",
+        "Checkbox",
+        "Switch",
+        "RadioGroup",
+        "CheckboxGroup",
+        "ConsentField"
+      ],
+      "min": 1
+    }
+  },
+  "props": {
+    "legend": {
+      "type": "node",
+      "description": "The name of the group, in a native legend. Required."
+    },
+    "description": {
+      "type": "node",
+      "description": "A hint under the legend. Joins the group's aria-describedby."
+    },
+    "error": {
+      "type": "node",
+      "description": "What is wrong with the group as a whole and how to fix it. Renders a FieldError root with data-part error, above the body."
+    },
+    "size": {
+      "type": [
+        "sm",
+        "md",
+        "lg"
+      ],
+      "default": "md",
+      "description": "Legend size and the space between the fields."
+    },
+    "disabled": {
+      "type": "boolean",
+      "default": false,
+      "description": "Native disabled: every control inside is disabled, buttons included. The body takes the one disabled look."
+    },
+    "invalid": {
+      "type": "boolean",
+      "description": "When not passed, the group is invalid while it shows an error. false hides the error."
+    }
+  },
+  "states": [
+    "data-disabled",
+    "data-invalid"
+  ],
+  "a11y": {
+    "role": "group, from the native fieldset, named by the legend",
+    "focus": "The fieldset is never focusable. Each control inside is its own tab stop, in DOM order.",
+    "keys": {
+      "Tab": "Moves to the first control in the group, then on through the controls. The group adds no stop of its own."
+    },
+    "announce": "The legend is read with the first control when focus enters the group. The description and the group error are read through the group's aria-describedby. The error is not a live region and never role alert.",
+    "native": {
+      "accessibilityRole": "none",
+      "accessibilityState": [
+        "disabled"
+      ]
+    },
+    "notes": [
+      "The legend is a native legend, the first child of the fieldset, so every browser and screen reader takes it as the group name.",
+      "The group error sits above the body, so it is seen before a long list of choices. A form that checks on submit moves focus to the first control of the invalid group.",
+      "Native disabled reaches every control inside, including the Radix Checkbox and Switch buttons, without a prop on each.",
+      "Keep the legend short: some screen readers read it again before every control in the group."
+    ]
+  },
+  "content": {
+    "en": {
+      "legend": "A noun phrase or a question in sentence case that names the group: Delivery address, How should we reach you. No colon.",
+      "description": "One sentence that helps fill the group. Not a repeat of the legend.",
+      "error": "What to do with the group: Pick at least one way to reach you. Never only Required."
+    },
+    "ar": {
+      "legend": "اسم المجموعة أو سؤال واضح بدون تشكيل: عنوان التوصيل",
+      "description": "جملة وحدة توضح وش يعبي",
+      "error": "يقول وش يسوي: اختر طريقة وحدة على الأقل عشان نوصلك"
+    }
+  },
+  "tokens": [
+    "space.2xs",
+    "space.xs",
+    "space.s",
+    "space.m",
+    "space.l",
+    "space.xl",
+    "font.size.s",
+    "font.size.m",
+    "font.size.l",
+    "font.weight.semibold",
+    "font.leading.snug",
+    "font.leading.normal",
+    "color.text.default",
+    "color.text.muted",
+    "opacity.disabled"
+  ],
+  "motion": "none",
+  "frameworks": {
+    "react": {
+      "status": "ready",
+      "behavior": "hand built native fieldset and legend, FieldError as the error part",
+      "example": "Fieldset.demo.tsx"
+    },
+    "angular": {
+      "status": "planned"
+    },
+    "native": {
+      "status": "planned"
+    }
+  },
+  "styles": {
+    "studio": "A semibold legend one step above the field label, a muted description, the fields stacked with a roomy gap.",
+    "desk": "The same layout, in Instrument Sans",
+    "neutral": "Takes the tokens of the Neutral style, no recipe."
+  },
+  "mistakes": [
+    {
+      "wrong": "A div with a bold heading over a group of radios or checkboxes",
+      "right": "A Fieldset, so the legend names the group for a screen reader"
+    },
+    {
+      "wrong": "A Fieldset around one field, with a legend that repeats the label",
+      "right": "A Field alone"
+    },
+    {
+      "wrong": "disabled passed to every field in a section, one by one",
+      "right": "disabled on the Fieldset: native disabled reaches every control inside"
+    },
+    {
+      "wrong": "A long legend with the instructions in it",
+      "right": "A short legend, and the instructions in description"
+    }
+  ],
+  "since": "0.1.0"
+}

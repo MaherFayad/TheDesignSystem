@@ -1,0 +1,100 @@
+/*
+ * Fieldset: a native fieldset with a legend, a description, a group error
+ * and a body of fields, in that DOM order. The error part is the system
+ * FieldError (FieldError.css); this file lays the parts out.
+ * Sources: CheckboxGroup.css and Field.css in this repo (a semibold legend,
+ * a quiet description). GoBanana `.st-section` could not be read in the
+ * lane 4A session (open item in docs/reports/lanes/lane-4a.md), so the
+ * legend follows the dials table: one step above the field label,
+ * semibold, no rule under it.
+ *
+ * Private properties on the root (docs/contracts/anatomy.md, one
+ * convention), for recipes to override:
+ *   --_fieldset-gap          space between the legend, description, error and body
+ *   --_fieldset-body-gap     space between the fields in the body
+ *   --_fieldset-font-size    legend size, from the size axis
+ *   --_fieldset-fg           legend color, --_fieldset-fg-disabled when disabled
+ *
+ * The legend floats, so it lays out like any other child of the fieldset
+ * and the gap applies to it.
+ */
+@layer ds.base {
+  [data-ds='fieldset'] {
+    --_fieldset-gap: var(--ds-space-xs);
+    --_fieldset-body-gap: var(--ds-space-l);
+    --_fieldset-font-size: var(--ds-font-size-m);
+    --_fieldset-fg: var(--ds-color-text-default);
+    --_fieldset-fg-disabled: var(--ds-color-text-muted);
+
+    display: flex;
+    flex-direction: column;
+    gap: var(--_fieldset-gap);
+    min-inline-size: 0;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    font-family: var(--ds-font-family-sans);
+  }
+
+  [data-ds='fieldset'][data-size='sm'] {
+    --_fieldset-gap: var(--ds-space-2xs);
+    --_fieldset-body-gap: var(--ds-space-m);
+    --_fieldset-font-size: var(--ds-font-size-s);
+  }
+
+  [data-ds='fieldset'][data-size='lg'] {
+    --_fieldset-gap: var(--ds-space-s);
+    --_fieldset-body-gap: var(--ds-space-xl);
+    --_fieldset-font-size: var(--ds-font-size-l);
+  }
+
+  [data-ds='fieldset'] > [data-part='legend'] {
+    float: inline-start;
+    inline-size: 100%;
+    margin: 0;
+    padding: 0;
+    color: var(--_fieldset-fg);
+    font-size: var(--_fieldset-font-size);
+    font-weight: var(--ds-font-weight-semibold);
+    line-height: var(--ds-font-leading-snug);
+    overflow-wrap: anywhere;
+  }
+
+  [data-ds='fieldset'] > [data-part='description'] {
+    margin: 0;
+    color: var(--ds-color-text-muted);
+    font-size: var(--ds-font-size-s);
+    line-height: var(--ds-font-leading-normal);
+    overflow-wrap: anywhere;
+  }
+
+  [data-ds='fieldset'] > [data-part='body'] {
+    display: flex;
+    flex-direction: column;
+    gap: var(--_fieldset-body-gap);
+    min-inline-size: 0;
+    margin-block-start: var(--_fieldset-gap);
+  }
+
+  /*
+   * Disabled: native disabled stops every control inside, but the controls
+   * do not know it, so every part takes the one disabled look, opacity.disabled.
+   * The legend also turns muted, so it reads as off in forced colors too.
+   */
+  [data-ds='fieldset'][data-disabled] {
+    --_fieldset-fg: var(--_fieldset-fg-disabled);
+  }
+
+  [data-ds='fieldset'][data-disabled] > :is([data-part='legend'], [data-part='description'], [data-part='body']) {
+    opacity: var(--ds-opacity-disabled);
+  }
+
+  /* data-invalid is a hook for recipes and tests: the FieldError part carries the look, with its icon. */
+
+  /* Forced colors: native disabled draws the controls in GrayText; the legend follows. */
+  @media (forced-colors: active) {
+    [data-ds='fieldset'][data-disabled] {
+      --_fieldset-fg: GrayText;
+    }
+  }
+}

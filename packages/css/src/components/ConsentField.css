@@ -1,0 +1,113 @@
+/*
+ * ConsentField: the control (a Checkbox or Switch root) at the start, then
+ * the text column: the purpose, the record line (meta), the details link
+ * and the error. The control, the Link and the FieldError keep their own
+ * files; this one lays them out.
+ * Sources: Checkbox.css (the box and its label line) and Field.css (a muted
+ * description, the error under it) in this repo. GoBanana `TakedownForm.tsx`
+ * could not be read in the lane 4A session.
+ *
+ * Private properties on the root (docs/contracts/anatomy.md, one
+ * convention), for recipes to override:
+ *   --_consent-field-gap         space between the control and the text
+ *   --_consent-field-text-gap    space between the lines of the text column
+ *   --_consent-field-font-size   purpose size, from the size axis
+ *   --_consent-field-fg          purpose color (GrayText when disabled in forced colors)
+ *   --_consent-field-line        the height the first line is centered in, the control target height
+ *   --_consent-field-leading     line height of the text column
+ */
+@layer ds.base {
+  [data-ds='consent-field'] {
+    --_consent-field-gap: var(--ds-space-3xs);
+    --_consent-field-text-gap: var(--ds-space-4xs);
+    --_consent-field-font-size: var(--ds-font-size-s);
+    --_consent-field-fg: var(--ds-color-text-default);
+    --_consent-field-line: var(--ds-size-target-min);
+    --_consent-field-leading: var(--ds-font-leading-normal);
+
+    display: flex;
+    align-items: start;
+    gap: var(--_consent-field-gap);
+    min-inline-size: 0;
+    font-family: var(--ds-font-family-sans);
+    /*
+     * Inside a form, Radix keeps a hidden input next to the control, moved
+     * outside it with a transform. Clip it on the inline axis, so it never
+     * scrolls the page sideways in RTL at 320px. The margin keeps the focus
+     * ring of the control. The root is the input's containing block, so
+     * the clip reaches it.
+     */
+    position: relative;
+    overflow-x: clip;
+    overflow-clip-margin: var(--ds-space-2xs);
+  }
+
+  [data-ds='consent-field'][data-size='sm'] {
+    --_consent-field-font-size: var(--ds-font-size-xs);
+  }
+
+  /* Arabic small text one step up (PLAN.md section 12): base.css raises only s, so sm takes s. */
+  [data-ds='consent-field'][data-size='sm']:lang(ar) {
+    --_consent-field-font-size: var(--ds-font-size-s);
+  }
+
+  /* Arabic takes the taller leading (PLAN.md section 12). */
+  [data-ds='consent-field']:lang(ar) {
+    --_consent-field-leading: var(--ds-font-leading-arabic-normal);
+  }
+
+  [data-ds='consent-field'][data-size='lg'] {
+    --_consent-field-gap: var(--ds-space-2xs);
+    --_consent-field-font-size: var(--ds-font-size-m);
+    --_consent-field-line: var(--ds-size-control-lg);
+  }
+
+  [data-ds='consent-field'] > [data-part='control'] {
+    flex: none;
+  }
+
+  [data-ds='consent-field'] > [data-part='text'] {
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    gap: var(--_consent-field-text-gap);
+    min-inline-size: 0;
+    /* The first line sits on the center line of the control target. */
+    padding-block-start: calc((var(--_consent-field-line) - var(--_consent-field-font-size) * var(--_consent-field-leading)) / 2);
+    font-size: var(--_consent-field-font-size);
+    line-height: var(--_consent-field-leading);
+  }
+
+  [data-ds='consent-field'] [data-part='purpose'] {
+    color: var(--_consent-field-fg);
+    overflow-wrap: anywhere;
+    cursor: pointer;
+  }
+
+  [data-ds='consent-field'] [data-part='required'] {
+    color: var(--ds-color-text-muted);
+  }
+
+  [data-ds='consent-field'] [data-part='meta'] {
+    margin: 0;
+    color: var(--ds-color-text-muted);
+    font-size: var(--ds-font-size-xs);
+    overflow-wrap: anywhere;
+  }
+
+  [data-ds='consent-field']:lang(ar) [data-part='meta'] {
+    font-size: var(--ds-font-size-s);
+  }
+
+  /* One disabled look, opacity.disabled, on the purpose. The record line stays readable: it often says why the consent is off. */
+  [data-ds='consent-field'][data-disabled] [data-part='purpose'] {
+    opacity: var(--ds-opacity-disabled);
+    cursor: not-allowed;
+  }
+
+  @media (forced-colors: active) {
+    [data-ds='consent-field'][data-disabled] {
+      --_consent-field-fg: GrayText;
+    }
+  }
+}

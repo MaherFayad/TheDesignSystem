@@ -3,6 +3,7 @@ export * from './axes';
 export * from './bidi';
 export * from './dialog-focus';
 export * from './filter';
+export * from './form';
 export * from './initials';
 export * from './listbox';
 export * from './meter';

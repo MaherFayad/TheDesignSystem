@@ -1,0 +1,77 @@
+/*
+ * Form: the error summary, the body of fields and the actions, in that DOM
+ * order. The summary is the system Alert (Alert.css) carrying the summary
+ * part; the fields are Field and Fieldset roots, styled in their own files.
+ * Sources: Figma-Killer-2 `FormField.module.css` (a stacked field rhythm)
+ * and Field.css in this repo. GoBanana `TakedownForm.tsx` could not be read
+ * in the lane 4A session.
+ *
+ * Private properties on the root (docs/contracts/anatomy.md, one
+ * convention), for recipes to override:
+ *   --_form-gap            space between the summary, the body and the actions
+ *   --_form-body-gap       space between the fields in the body
+ *   --_form-actions-gap    space between the buttons
+ */
+@layer ds.base {
+  [data-ds='form'] {
+    --_form-gap: var(--ds-space-xl);
+    --_form-body-gap: var(--ds-space-l);
+    --_form-actions-gap: var(--ds-space-xs);
+
+    display: flex;
+    flex-direction: column;
+    gap: var(--_form-gap);
+    min-inline-size: 0;
+    margin: 0;
+  }
+
+  [data-ds='form'][data-size='sm'] {
+    --_form-gap: var(--ds-space-l);
+    --_form-body-gap: var(--ds-space-m);
+    --_form-actions-gap: var(--ds-space-2xs);
+  }
+
+  [data-ds='form'][data-size='lg'] {
+    --_form-gap: var(--ds-space-2xl);
+    --_form-body-gap: var(--ds-space-xl);
+    --_form-actions-gap: var(--ds-space-s);
+  }
+
+  [data-ds='form'] > [data-part='body'] {
+    display: flex;
+    flex-direction: column;
+    gap: var(--_form-body-gap);
+    min-inline-size: 0;
+  }
+
+  /* The summary list: one link per field, in form order. */
+  [data-ds='form'] > [data-part='summary'] ul {
+    display: flex;
+    flex-direction: column;
+    gap: var(--ds-space-3xs);
+    margin: 0;
+    padding-inline-start: var(--ds-space-l);
+  }
+
+  [data-ds='form'] > [data-part='actions'] {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--_form-actions-gap);
+  }
+
+  /* While it submits the fields stay as they are: the submit Button shows the loading state. */
+
+  /* The summary takes focus only when no field can: the Alert draws no ring of its own. */
+  [data-ds='form'] > [data-part='summary']:focus-visible {
+    outline: var(--ds-border-width-strong) solid transparent;
+    outline-offset: var(--ds-border-width-strong);
+    box-shadow: var(--ds-focus-shadow-ring);
+  }
+
+  @media (forced-colors: active) {
+    [data-ds='form'] > [data-part='summary']:focus-visible {
+      outline-color: Highlight;
+    }
+  }
+}

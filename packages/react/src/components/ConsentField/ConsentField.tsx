@@ -1,0 +1,238 @@
+'use client';
+// ConsentField: one consent, its purpose, a link to the details and, when
+// given, a record line (version or date).
+//
+// Sources: GoBanana `TakedownForm.tsx` and `DeleteAccount.tsx` could not be
+// read in the lane 4A session; built on Checkbox and Switch in this repo and
+// the consent rules below.
+//
+// Decisions:
+// - Never ticked in advance: the props have no defaultChecked, and the
+//   uncontrolled state always starts denied. A controlled `checked` is for
+//   showing a choice the person already made, never a default.
+// - One purpose per control. Several purposes are several ConsentFields.
+// - The purpose is a native label bound to the control, so a click on the
+//   text toggles it, and the control's name is the purpose itself.
+// - Withdrawing is the same control and the same one action as giving.
+// - checkbox in a form that is sent; switch in settings that save at once.
+// - The error part is the system FieldError, given a Field context of its
+//   own (the same pattern as Fieldset). Inside a Form, the Form's error for
+//   `name` shows there.
+// - onDecision hands back a record: name, granted, version and the time, so
+//   the app can store who agreed to what and when.
+import { useId, useMemo, useState, type ComponentProps, type ReactNode } from 'react';
+import type { Size } from '@the-system/shared';
+import { useTheme } from '../../theme';
+import { Checkbox } from '../Checkbox/Checkbox';
+import { FieldContext, type FieldContextValue } from '../Field/context';
+import { FieldError } from '../FieldError/FieldError';
+import { useFormFieldError } from '../Form/Form';
+import { Link } from '../Link/Link';
+import { Switch } from '../Switch/Switch';
+
+export type ConsentFieldSize = Extract<Size, 'sm' | 'md' | 'lg'>;
+export type ConsentFieldState = 'granted' | 'denied';
+export type ConsentFieldControl = 'checkbox' | 'switch';
+
+/** What the app stores when the person decides. */
+export interface ConsentRecord {
+  /** The form name of the consent, when given. */
+  name: string | undefined;
+  granted: boolean;
+  /** The version of the purpose text the person saw, when given. */
+  version: string | undefined;
+  /** When the choice was made, as an ISO 8601 string. */
+  at: string;
+}
+
+interface ConsentFieldBaseProps extends Omit<ComponentProps<'div'>, 'title' | 'onChange' | 'defaultChecked' | 'children'> {
+  /**
+   * What the person agrees to, in one sentence that names one purpose:
+   * "Send me offers by email". It is the control's label. Required.
+   */
+  purpose: ReactNode;
+  /**
+   * Called with a record of each choice, for the app to store. In a form
+   * that is sent, store the record of the last choice when the form is
+   * sent, not every toggle before it.
+   */
+  onDecision?: (record: ConsentRecord) => void;
+  /** checkbox in a form that is sent, switch in settings that save at once. Default checkbox. */
+  control?: ConsentFieldControl;
+  /** The form name. The value sent while granted is `value`. */
+  name?: string;
+  /** The value sent while granted. Default "granted". */
+  value?: string;
+  /** Where the details live: who gets the data, for how long, how to withdraw. Renders the details link. */
+  detailsHref?: string;
+  /** The text of the details link. Default "How we use your data", or Arabic under lang ar. */
+  detailsLabel?: ReactNode;
+  /** Opens the details in a new tab. Default false. */
+  detailsExternal?: boolean;
+  /** A record line under the purpose: the version of the text or the date of the choice. */
+  meta?: ReactNode;
+  /** The version of the purpose text, passed back in the record. */
+  version?: string;
+  /** The service cannot work without this consent. Shows the required mark and sets aria-required. */
+  required?: boolean;
+  disabled?: boolean;
+  /** Marks the consent invalid. When it is not passed, it is invalid while it shows an error. `false` hides the error. */
+  invalid?: boolean;
+  /** An error shown now, for a required consent left denied. */
+  error?: ReactNode;
+  /**
+   * Inside a Form: what the error says when the Form finds this required
+   * consent left off. Say why it is needed and the other way. Default the
+   * Form's own required message.
+   */
+  requiredError?: ReactNode;
+  /** Control and text size. Default md. */
+  size?: ConsentFieldSize;
+}
+
+export type ConsentFieldProps = ConsentFieldBaseProps &
+  (
+    | {
+        /** Controlled: the choice already on record. There is no defaultChecked: a consent never starts given. */
+        checked: boolean;
+        /** Called with the new choice. Required with checked, so a controlled consent can always be withdrawn. */
+        onCheckedChange: (granted: boolean) => void;
+      }
+    | {
+        checked?: undefined;
+        /** Called with the new choice. */
+        onCheckedChange?: (granted: boolean) => void;
+      }
+  );
+
+const detailsByLang = { en: 'How we use your data', ar: 'طريقة استخدام بياناتك' } as const;
+
+function hasContent(node: ReactNode): boolean {
+  return node !== undefined && node !== null && node !== false && node !== '';
+}
+
+const noop = () => () => undefined;
+
+/** One consent with its purpose, a link to the details and a record of the choice. Never ticked in advance. */
+export function ConsentField({
+  purpose,
+  checked: checkedProp,
+  onCheckedChange,
+  onDecision,
+  control = 'checkbox',
+  name,
+  value = 'granted',
+  detailsHref,
+  detailsLabel,
+  detailsExternal = false,
+  meta,
+  version,
+  required = false,
+  disabled = false,
+  invalid,
+  error,
+  requiredError,
+  size = 'md',
+  'aria-describedby': describedBy,
+  ...props
+}: ConsentFieldProps) {
+  // A caller without types could still pass defaultChecked: it is dropped, never forwarded.
+  const { defaultChecked: _dropped, ...rest } = props as typeof props & { defaultChecked?: unknown };
+  const { lang } = useTheme();
+  const base = useId();
+  const controlId = `${base}control`;
+  const purposeId = `${base}purpose`;
+  const metaId = `${base}meta`;
+  const errorId = `${base}error`;
+  const [own, setOwn] = useState(false);
+  const granted = checkedProp ?? own;
+
+  const formError = useFormFieldError(name);
+  const shownError = formError !== undefined ? (requiredError ?? formError) : error;
+  const showError = hasContent(shownError) && invalid !== false;
+  const isInvalid = invalid ?? showError;
+  const showMeta = hasContent(meta);
+
+  const decide = (next: boolean) => {
+    if (checkedProp === undefined) setOwn(next);
+    onCheckedChange?.(next);
+    onDecision?.({ name, granted: next, version, at: new Date().toISOString() });
+  };
+
+  const errorContext = useMemo<FieldContextValue>(
+    () => ({
+      controlId,
+      labelId: purposeId,
+      descriptionId: metaId,
+      errorId,
+      invalid: isInvalid,
+      invalidProp: invalid,
+      disabled,
+      readOnly: false,
+      required,
+      hasDescription: showMeta,
+      hasError: showError,
+      register: noop,
+      setControlId: () => undefined,
+    }),
+    [controlId, purposeId, metaId, errorId, isInvalid, invalid, disabled, required, showMeta, showError],
+  );
+
+  const ariaDescribedBy = [showMeta ? metaId : undefined, showError ? errorId : undefined, describedBy].filter(Boolean).join(' ') || undefined;
+  const controlProps = {
+    id: controlId,
+    size,
+    name,
+    value,
+    checked: granted,
+    disabled,
+    required,
+    invalid: isInvalid,
+    'aria-labelledby': purposeId,
+    'aria-describedby': ariaDescribedBy,
+    rootProps: { 'data-part': 'control' } as Omit<ComponentProps<'div'>, 'title' | 'children'>,
+  };
+
+  return (
+    <div
+      {...rest}
+      data-ds="consent-field"
+      data-size={size}
+      data-state={granted ? 'granted' : 'denied'}
+      data-required={required ? '' : undefined}
+      data-invalid={isInvalid ? '' : undefined}
+      data-disabled={disabled ? '' : undefined}
+    >
+      {control === 'switch' ? (
+        <Switch {...controlProps} onCheckedChange={(next) => decide(next)} />
+      ) : (
+        <Checkbox {...controlProps} onCheckedChange={(next) => decide(next === true)} />
+      )}
+      <div data-part="text">
+        <label id={purposeId} htmlFor={controlId} data-part="purpose">
+          {purpose}
+          {required && (
+            <span data-part="required" aria-hidden="true">
+              {' *'}
+            </span>
+          )}
+        </label>
+        {showMeta && (
+          <p id={metaId} data-part="meta">
+            {meta}
+          </p>
+        )}
+        {detailsHref !== undefined && (
+          <Link data-part="details" href={detailsHref} external={detailsExternal} size={size === 'sm' ? 'xs' : 'sm'} standalone>
+            {detailsLabel ?? (lang === 'ar' ? detailsByLang.ar : detailsByLang.en)}
+          </Link>
+        )}
+        {showError && (
+          <FieldContext value={errorContext}>
+            <FieldError size={size === 'sm' ? 'sm' : 'md'}>{shownError}</FieldError>
+          </FieldContext>
+        )}
+      </div>
+    </div>
+  );
+}
