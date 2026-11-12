@@ -5,6 +5,7 @@ import { NgTemplateOutlet } from '@angular/common';
 import { DEMO, sample } from '../../demo/demo';
 import { DsTheme } from '../../theme/theme';
 import { DsField } from '../field/field';
+import { DemoBidi } from '../field/demo-bidi';
 import type { ListBoxOption } from '../list-box/list-box';
 import { DsTagField } from './tag-field';
 
@@ -33,7 +34,7 @@ function suggestions(lang: 'en' | 'ar'): ListBoxOption[] {
 
 @Component({
   selector: 'ds-tag-field-demo',
-  imports: [DEMO, DsTheme, DsField, DsTagField, NgTemplateOutlet],
+  imports: [DEMO, DemoBidi, DsTheme, DsField, DsTagField, NgTemplateOutlet],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div data-demo="page">
@@ -86,7 +87,9 @@ function suggestions(lang: 'en' | 'ar'): ListBoxOption[] {
 
       <section data-demo="case" data-demo-case="long-arabic" heading="Long Arabic text">
         <div dsTheme lang="ar" data-demo="content">
-          <div dsField [label]="copy.ar.tags" [description]="copy.ar.hint" style="inline-size: 18rem;">
+          <!-- The Latin run "Enter" sits inside Arabic copy, so the hint goes through Bidi, as React. -->
+          <ng-template #arHint><span data-ds="bidi" [text]="copy.ar.hint"></span></ng-template>
+          <div dsField [label]="copy.ar.tags" [description]="arHint" style="inline-size: 18rem;">
             <div dsTagField [defaultValue]="[sample.ar.long, sample.ar.word]" [placeholder]="copy.ar.placeholder"></div>
           </div>
         </div>

@@ -42,6 +42,8 @@ import {
   ElementRef,
   Injector,
   TemplateRef,
+  ViewContainerRef,
+  type ComponentRef,
   afterNextRender,
   computed,
   effect,
@@ -55,15 +57,15 @@ import {
 } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
 import { NG_VALUE_ACCESSOR, type ControlValueAccessor } from '@angular/forms';
-import { DsIcon } from '@the-system/icons/angular';
 import { addTags, hasTag, hasTagSeparator, splitTags, type Shape, type Size } from '@the-system/shared';
 import { consumeHostAttributes } from '../../internal/host';
 import { ListHighlight } from '../../internal/list-highlight';
-import { DsNativeButton } from '../../internal/native-button';
 import { optionalBoolean } from '../../internal/optional-boolean';
 import { PopupLayer } from '../../internal/popper';
 import { DsThemeService } from '../../theme';
+import { DsCloseButton } from '../close-button/close-button';
 import { DsFieldContext, fieldControl } from '../field/field-context';
+import { DsFieldError } from '../field-error/field-error';
 import {
   DsListBox,
   filterListBoxItems,
@@ -102,7 +104,7 @@ let nextId = 0;
 @Component({
   selector: 'div[dsTagField]',
   exportAs: 'dsTagField',
-  imports: [DsIcon, DsListBox, DsNativeButton],
+  imports: [DsListBox, DsCloseButton],
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [{ provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => DsTagField), multi: true }],
   host: {
@@ -114,11 +116,10 @@ let nextId = 0;
     '[attr.data-readonly]': 'isReadOnly() ? "" : null',
     '(mousedown)': 'onRootMousedown($event)',
   },
-  template: `@if (tags().length > 0) {<div data-part="tags" role="group" [attr.aria-labelledby]="labelledBy() ?? null" [attr.aria-label]="ariaLabel() ?? null" [attr.aria-disabled]="isDisabled() ? 'true' : null">@for (tag of tags(); track $index + '-' + tag; let i = $index) {<span data-part="tag"><span data-part="tag-label">{{ tag }}</span>@if (!isReadOnly()) {<button dsNativeButton type="button" data-ds="close-button" data-emphasis="ghost" data-part="tag-remove" data-shape="default" data-size="xs" data-tone="neutral" tabindex="-1"
-  [attr.aria-label]="removeText(tag)"
-  [attr.aria-disabled]="isDisabled() ? 'true' : null"
-  [attr.data-disabled]="isDisabled() ? '' : null"
-  (click)="onRemoveClick(i)" (keydown)="onRemoveKeydown($event, i)"><span data-part="icon"><svg dsIcon name="close" size="md"></svg></span></button>}</span>}</div>}<input #control
+  template: `@if (tags().length > 0) {<div data-part="tags" role="group" [attr.aria-labelledby]="labelledBy() ?? null" [attr.aria-label]="ariaLabel() ?? null" [attr.aria-disabled]="isDisabled() ? 'true' : null">@for (tag of tags(); track $index + '-' + tag; let i = $index) {<span data-part="tag"><span data-part="tag-label">{{ tag }}</span>@if (!isReadOnly()) {<button dsCloseButton data-part="tag-remove" size="xs" tabindex="-1"
+  [label]="removeText(tag)"
+  [disabled]="isDisabled()"
+  (click)="onRemoveClick(i)" (keydown)="onRemoveKeydown($event, i)"></button>}</span>}</div>}<input #control
   type="text"
   data-part="control"
   autocomplete="off"
@@ -200,7 +201,7 @@ export class DsTagField implements ControlValueAccessor {
   /** The Field wiring merged with the control's own values, as React's useFieldControl. It lands on the input. */
   private readonly fieldState = fieldControl(this.field, () => ({
     id: this.id(),
-    describedBy: this.ariaDescribedby(),
+    describedBy: [this.ariaDescribedby(), this.notice() ? this.noticeId : undefined].filter(Boolean).join(' ') || undefined,
     invalid: this.invalid(),
     disabled: this.disabled() ?? this.formDisabled(),
     readOnly: this.readOnly(),
@@ -220,6 +221,9 @@ export class DsTagField implements ControlValueAccessor {
   private readonly open = signal(false);
   readonly highlighted = signal<string | null>(null);
   readonly status = signal('');
+  /** A refusal (past max, or a duplicate), shown under the root as a FieldError while it holds. */
+  readonly notice = signal('');
+  private readonly noticeId = `ds-tag-field-notice-${++nextId}`;
 
   /** Suggestions: the ones not added yet that match the text. */
   private readonly unused = computed<ListBoxItem[]>(() => {
@@ -261,6 +265,32 @@ export class DsTagField implements ControlValueAccessor {
     // The field root is the Radix Anchor, which renders class="".
     if (!this.host.hasAttribute('class')) this.host.setAttribute('class', '');
     const destroyRef = inject(DestroyRef);
+    // The refusal message: a FieldError after the root, out of the Field wiring, so the
+    // Field's own error keeps its id and the Field stays valid, as React.
+    const after = inject(ViewContainerRef);
+    const noFieldInjector = Injector.create({ providers: [{ provide: DsFieldContext, useValue: null }], parent: this.injector });
+    let error: { ref: ComponentRef<DsFieldError>; text: Text } | null = null;
+    effect(() => {
+      const notice = this.notice();
+      const size = this.size() === 'sm' ? 'sm' : 'md';
+      untracked(() => {
+        if (!notice) {
+          error?.ref.destroy();
+          error = null;
+          return;
+        }
+        if (!error) {
+          const text = this.doc.createTextNode('');
+          const ref = after.createComponent(DsFieldError, { injector: noFieldInjector, projectableNodes: [[text]] });
+          ref.setInput('id', this.noticeId);
+          error = { ref, text };
+        }
+        error.ref.setInput('size', size);
+        error.text.data = notice;
+        error.ref.changeDetectorRef.detectChanges();
+      });
+    });
+    destroyRef.onDestroy(() => error?.ref.destroy());
     // A control with its own id tells the Field, so the Field label points at it, as React's useFieldControl.
     const field = this.field;
     if (field) {
@@ -343,8 +373,14 @@ export class DsTagField implements ControlValueAccessor {
     const max = this.max();
     const result = addTags(this.tags(), incoming, max);
     if (result.added.length) this.setTags(result.tags);
-    if (result.overflow.length && max !== undefined) this.say(this.t().full(max));
-    else if (result.duplicates.length) this.say(this.t().duplicate(result.duplicates[0] ?? ''));
+    const refused =
+      result.overflow.length && max !== undefined
+        ? this.t().full(max)
+        : result.duplicates.length
+          ? this.t().duplicate(result.duplicates[0] ?? '')
+          : '';
+    this.notice.set(refused);
+    if (refused) this.say(refused);
     else if (result.added.length) this.say(this.t().added(result.added));
     return result.overflow;
   }
@@ -355,6 +391,7 @@ export class DsTagField implements ControlValueAccessor {
     const tag = tags[index];
     if (tag === undefined) return;
     this.setTags(tags.filter((_, i) => i !== index));
+    this.notice.set('');
     const format = this.formatRemoved();
     this.say(format ? format(tag) : this.t().removed(tag));
   }
