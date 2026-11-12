@@ -1,6 +1,6 @@
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
-import { render, screen } from '@testing-library/react';
+import { fireEvent, render, screen } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 import { createRef } from 'react';
 import { describe, expect, it, vi } from 'vitest';
@@ -115,5 +115,30 @@ describe('ToggleButton', () => {
     // Without this the browser draws a Canvas backplate behind the label on the Highlight fill.
     expect(rule("[data-ds='toggle-button'][data-state='on']")).toMatch(/forced-color-adjust: none;/);
     expect(rule("[data-ds='toggle-button'][data-state='on'] *")).toMatch(/forced-color-adjust: none;/);
+  });
+});
+
+describe('ToggleButton press (interaction button-press)', () => {
+  it('plays the press on Enter and still toggles on the click', () => {
+    const frames: Keyframe[][] = [];
+    Object.defineProperty(HTMLElement.prototype, 'animate', {
+      configurable: true,
+      value: (f: Keyframe[]) => {
+        frames.push(f);
+        return { id: '', playState: 'running', finished: Promise.resolve(), cancel: () => {} } as unknown as Animation;
+      },
+    });
+    try {
+      render(<ToggleButton>Grid view</ToggleButton>);
+      const el = screen.getByRole('button');
+      fireEvent.keyDown(el, { key: 'Enter' });
+      fireEvent.click(el);
+      fireEvent.keyUp(el, { key: 'Enter' });
+      expect(el.getAttribute('aria-pressed')).toBe('true');
+      expect(frames).toHaveLength(2);
+      expect(el.getAttribute('data-ds')).toBe('toggle-button');
+    } finally {
+      Reflect.deleteProperty(HTMLElement.prototype, 'animate');
+    }
   });
 });

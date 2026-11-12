@@ -22,6 +22,11 @@
  *   --_button-ring                           the focus ring, a box shadow
  *   --_button-decoration, -decoration-hover  the link underline color
  *   --_button-tone-*                         the colors of one tone
+ *   --_button-duration, -ease                motion plumbing: the timing of
+ *                                            the press (button-press)
+ *   --_button-press-scale                    the scale of a pressed control,
+ *                                            scale.press; a style sets it to
+ *                                            1 to turn the press off
  *
  * Every rule that sets a rest color also sets its hover color: the hover
  * state assigns `--_button-bg: var(--_button-bg-hover)`, so a hover value
@@ -438,9 +443,23 @@
 
   /* ------------------------------------------------------------ copy-button (lane 1A) */
 
-  /* The icon tells the result: the success color after a copy, the danger color after a failure. Not on a solid fill. */
+  /*
+   * The icon tells the result: the success color after a copy, the danger
+   * color after a failure. Not on a solid fill.
+   *
+   * The icon swap (interaction copy-swap): while the result icon rolls in,
+   * CopyButton keeps the old icon for one swap in an unnamed aria-hidden
+   * span after it. Both sit in one grid cell, so they overlap and the width
+   * holds.
+   */
   [data-ds='copy-button'] > [data-part='icon'] {
+    display: inline-grid;
+    place-items: center;
     color: var(--_copy-icon-fg, currentColor);
+  }
+
+  [data-ds='copy-button'] > [data-part='icon'] > * {
+    grid-area: 1 / 1;
   }
 
   [data-ds='copy-button'][data-state='copied']:not([data-emphasis='solid']) {
@@ -468,6 +487,29 @@
 
   [data-ds='floating-action-button'][data-size='lg'] {
     --_button-height: max(var(--ds-size-control-lg), var(--ds-size-touch-android));
+  }
+
+  /* ------------------------------------------------------------ press (interaction button-press, order 1.21) */
+
+  /*
+   * Pointer down, or Space down (the browser keeps a button :active while
+   * Space is held), scales the control to scale.press from its center over
+   * duration.instant on ease.out. Release returns it the same way. ease.out
+   * has no overshoot, so a toggle settles in its new state with no second
+   * bounce. Enter activates on key down and draws no :active: ButtonRoot
+   * plays the press pattern for it. Never on a disabled or loading control.
+   */
+  :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button'], [data-ds='copy-button']) {
+    --_button-press-scale: var(--ds-scale-press);
+    --_button-duration: var(--ds-duration-instant);
+    --_button-ease: var(--ds-ease-out);
+
+    transform-origin: center;
+    transition: transform var(--_button-duration) var(--_button-ease);
+  }
+
+  :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button'], [data-ds='copy-button']):active:not([data-disabled], [data-loading], [aria-disabled='true']) {
+    transform: scale(var(--_button-press-scale));
   }
 
   /* ------------------------------------------------------------ states: swap the private properties */
@@ -513,8 +555,14 @@
     :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button'], [data-ds='close-button'], [data-ds='copy-button'], [data-ds='floating-action-button']) > [data-part='spinner'] {
       animation: none;
     }
+
+    /* No press scale: the pressed color carries the state. */
+    :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button'], [data-ds='copy-button']) {
+      --_button-press-scale: 1;
+    }
   }
 
+  /* Forced colors: the press scale and the icon swap draw the same in system colors, so they stay. */
   @media (forced-colors: active) {
     :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button'], [data-ds='close-button'], [data-ds='copy-button'], [data-ds='floating-action-button']):focus-visible {
       outline-color: Highlight;
