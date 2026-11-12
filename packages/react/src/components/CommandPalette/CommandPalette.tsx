@@ -70,7 +70,7 @@ import { IconButton } from '../IconButton';
 import { Kbd, useKeyboardPlatform } from '../Kbd';
 import { filterListBoxItems, listBoxOptionId, type ListBoxItem, type ListBoxOption } from '../ListBox';
 import { SearchField } from '../SearchField';
-import { matchShortcut } from './matchShortcut';
+import { hasCommandModifier, isEditableTarget, matchShortcut } from './matchShortcut';
 
 /** Widths from the dialog width tokens: md 520, lg 640 px. */
 export type CommandPaletteSize = Extract<OverlaySize, 'md' | 'lg'>;
@@ -295,6 +295,8 @@ export function CommandPalette({
     if (!shortcut) return undefined;
     const listener = (event: globalThis.KeyboardEvent) => {
       if (event.defaultPrevented || event.repeat || event.isComposing) return;
+      // A shortcut with no Ctrl, Meta or Alt (/ or ?) types a character, so it never fires while the person types in a field (WCAG 2.1.4).
+      if (!hasCommandModifier(shortcut, platform) && isEditableTarget(event.target)) return;
       if (!matchShortcut(event, shortcut, platform)) return;
       event.preventDefault();
       if (!openRef.current) openedFrom.current = document.activeElement;
@@ -384,7 +386,8 @@ export function CommandPalette({
   const [status, setStatus] = useState('');
   const formatRef = useRef(formatCount);
   formatRef.current = formatCount;
-  const count = rows.length;
+  // Distinct commands: the recent group repeats commands that also show below it.
+  const count = useMemo(() => new Set(rows.map((r) => r.command.value)).size, [rows]);
   useEffect(() => {
     setStatus('');
     if (!open) return undefined;
