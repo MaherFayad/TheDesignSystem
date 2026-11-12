@@ -14,8 +14,9 @@
 // Escape and toasts (DECISIONS.md, Components 1): while a toast shows above
 // the dialog, Radix makes the toast the top layer and gives it Escape. The
 // panel's own keydown handler closes the dialog for an Escape from inside it
-// that no layer prevented. Whether the toast also closes is the Toaster's
-// call (it should keep a toast unless focus is inside the toaster).
+// that no layer prevented. The Toaster keeps its toasts on an Escape from
+// outside the toaster, so the toast stays. In nested dialogs the inner
+// panel prevents the key, so the outer one stays open.
 //
 // The DOM, the same in every style except for the optional parts:
 //
@@ -508,7 +509,8 @@ export function DialogContent({
             closeLabel={closeName}
             minimizeLabel={words.minimize}
             zoomLabel={words.zoom}
-            onClose={ctx.dismissible ? close : undefined}
+            onClose={close}
+            closeDisabled={!ctx.dismissible}
           />
         ) : undefined
       }

@@ -444,7 +444,11 @@ describe('Dialog', () => {
         </Theme>,
       );
       await open(user);
-      expect(screen.getByRole('button', { name: 'Close dialog' }).getAttribute('aria-disabled')).toBe('true');
+      const light = screen.getByRole('button', { name: 'Close dialog' });
+      expect(light.getAttribute('aria-disabled')).toBe('true');
+      expect(light.tabIndex).toBe(0);
+      await user.click(light);
+      expect(rootEl()?.getAttribute('data-state')).toBe('open');
     });
   });
 
@@ -540,12 +544,7 @@ describe('Dialog', () => {
     expect(screen.getByRole('dialog')).toBe(dialog);
   });
 
-  // The Toaster still closes the newest toast on this Escape (its OPEN_LAYER
-  // exception). Once it keeps toasts unless focus is inside the toaster, turn
-  // this into a test that the danger toast stays open.
-  it.todo('keeps a persistent danger toast open on an Escape meant for the dialog (needs the Toaster change)');
-
-  it('closes on Escape from inside the dialog while a toast shows above it', async () => {
+  it('closes on Escape from inside the dialog while a danger toast shows above it, and the toast stays', async () => {
     const user = userEvent.setup();
     const store = createToastStore();
     const toast = createToastFunction(store);
@@ -560,6 +559,46 @@ describe('Dialog', () => {
     act(() => void toast.danger({ title: 'Could not delete project' }));
     await user.keyboard('{Escape}');
     await waitFor(() => expect(rootEl()).toBeNull());
+    // The danger toast stays: the Escape was meant for the dialog.
+    expect(store.getSnapshot().visible.map((t) => t.state)).toEqual(['open']);
+  });
+
+  it('with a toast above nested dialogs, Escape closes only the top dialog', async () => {
+    const user = userEvent.setup();
+    const store = createToastStore();
+    const toast = createToastFunction(store);
+    render(
+      <Theme>
+        <Toaster store={store} />
+        <Dialog defaultOpen>
+          <DialogContent title="Share board?">
+            <DialogFooter>
+              <Dialog size="sm">
+                <DialogTrigger>
+                  <Button>Reset link</Button>
+                </DialogTrigger>
+                <DialogContent title="Reset the link?">
+                  <DialogFooter>
+                    <DialogClose>
+                      <Button>Keep link</Button>
+                    </DialogClose>
+                  </DialogFooter>
+                </DialogContent>
+              </Dialog>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+      </Theme>,
+    );
+    await screen.findByRole('dialog', { name: 'Share board?' });
+    await user.click(screen.getByRole('button', { name: 'Reset link' }));
+    const inner = await screen.findByRole('dialog', { name: 'Reset the link?' });
+    await waitFor(() => expect(inner.contains(document.activeElement)).toBe(true));
+    act(() => void toast.danger({ title: 'Could not reset link' }));
+    await user.keyboard('{Escape}');
+    await waitFor(() => expect(document.body.querySelectorAll('[data-ds="dialog"]')).toHaveLength(1));
+    expect(screen.getByRole('dialog', { name: 'Share board?' })).not.toBeNull();
+    expect(store.getSnapshot().visible.map((t) => t.state)).toEqual(['open']);
   });
 
   it('renders the demo with a trigger per case', () => {
