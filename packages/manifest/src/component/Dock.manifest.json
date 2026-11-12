@@ -20,32 +20,88 @@
     "A narrow column of app destinations": "Rail",
     "Main site navigation": "Navbar or Sidebar"
   },
-  "anatomy": ["root", "item", "item-icon", "item-label", "item-status", "item-indicator", "separator"],
-  "parts": { "DockItem": "item", "DockSeparator": "separator" },
-  "slots": { "root": { "accepts": ["DockItem", "DockSeparator"], "min": 1, "max": 16 } },
+  "anatomy": [
+    "root",
+    "item",
+    "item-icon",
+    "item-label",
+    "item-status",
+    "item-indicator",
+    "separator"
+  ],
+  "parts": {
+    "DockItem": "item",
+    "DockSeparator": "separator"
+  },
+  "slots": {
+    "root": {
+      "accepts": [
+        "DockItem",
+        "DockSeparator"
+      ],
+      "min": 1,
+      "max": 16
+    }
+  },
   "props": {
-    "aria-label": { "type": "string", "description": "Dock: required unless aria-labelledby is set. Names the landmark: Apps." },
+    "aria-label": {
+      "type": "string",
+      "description": "Dock: required unless aria-labelledby is set. Names the landmark: Apps."
+    },
     "size": {
-      "type": ["md", "lg"],
+      "type": [
+        "md",
+        "lg"
+      ],
       "default": "md",
       "description": "Dock: md tiles are size.control.lg (44px); lg tiles are 1.25 times that, for a desktop home screen."
     },
-    "label": { "type": "string", "description": "DockItem: the app name. It is the link text, drawn above the tile on hover and focus; never only a native title." },
-    "icon": { "type": "string | node", "description": "DockItem: a system icon name drawn in a tile, or a node such as an app image (decorative, empty alt)." },
-    "href": { "type": "string", "description": "DockItem: the app's route. An app that opens a window still has one (a route or a hash) and handles onClick." },
-    "active": { "type": "boolean", "default": false, "description": "DockItem: the current page belongs to this app. aria-current page, data-active and a ring on the tile." },
-    "open": { "type": "boolean", "default": false, "description": "DockItem: the app has an open window. data-open, the dot under the tile, and the word open in the name." },
-    "openLabel": { "type": "string", "default": "open", "description": "DockItem: the words the open state adds to the name: Files, open. Arabic: مفتوح." },
-    "asChild": { "type": "boolean", "default": false, "description": "DockItem: renders its one child element (a router link) as the item." }
+    "label": {
+      "type": "string",
+      "description": "DockItem: the app name. It is the link text, drawn above the tile on hover and focus; never only a native title."
+    },
+    "icon": {
+      "type": "string | node",
+      "description": "DockItem: a system icon name drawn in a tile, or a node such as an app image (decorative, empty alt)."
+    },
+    "href": {
+      "type": "string",
+      "description": "DockItem: the app's route. An app that opens a window still has one (a route or a hash) and handles onClick."
+    },
+    "active": {
+      "type": "boolean",
+      "default": false,
+      "description": "DockItem: the current page belongs to this app. aria-current page, data-active and a ring on the tile."
+    },
+    "open": {
+      "type": "boolean",
+      "default": false,
+      "description": "DockItem: the app has an open window. data-open, the dot under the tile, and the word open in the name."
+    },
+    "openLabel": {
+      "type": "string",
+      "default": "open",
+      "description": "DockItem: the words the open state adds to the name: Files, open. Arabic: مفتوح."
+    },
+    "asChild": {
+      "type": "boolean",
+      "default": false,
+      "description": "DockItem: renders its one child element (a router link) as the item."
+    }
   },
-  "states": ["data-active", "data-open"],
+  "states": [
+    "data-active",
+    "data-open",
+    "data-label-hidden"
+  ],
   "a11y": {
     "role": "navigation (the nav landmark) with a name; each item is a link, the current app's with aria-current page. Separators are decorative.",
     "focus": "Every item is a tab stop, in reading order. Focus shows the ring on the tile and draws the name.",
     "keys": {
       "Tab": "Moves to the next app",
       "Shift+Tab": "Moves to the previous app",
-      "Enter": "Follows the link, or runs the item's onClick"
+      "Enter": "Follows the link, or runs the item's onClick",
+      "Escape": "Hides the drawn name of the focused or hovered app until focus or the pointer leaves"
     },
     "announce": "Each link reads the app name, open when the app is open, and current page for the current app.",
     "notes": [
@@ -55,12 +111,21 @@
       "A fixed dock covers content unless the page keeps the same room at its block end (WCAG 2.4.11): the layout (PageShell) reserves it.",
       "Tiles are 44px at md (WCAG 2.5.8).",
       "Many apps wrap onto a second row rather than scroll the page sideways (WCAG 1.4.10).",
-      "Every item is a link. The order allows buttons; a system Button would own the item's parts, so an app that opens a window keeps an href and handles onClick."
+      "Every item is a link. The order allows buttons; a system Button would own the item's parts, so an app that opens a window keeps an href and handles onClick.",
+      "The drawn name is dismissable (Escape), hoverable (it does not hide while the pointer is on the item) and persistent until focus or the pointer leaves (WCAG 1.4.13). It is a part of the link, not a Tooltip, because it is the link's own text.",
+      "The demo case many shows the reserved room: the page pads its block end and its scroll padding by the dock's height (size.control.lg plus the dock padding).",
+      "Contract keys: Escape sets data-label-hidden on the item, a part, which the generic suite does not watch; the unit tests cover it."
     ]
   },
   "content": {
-    "en": { "label": "The app name, a noun, sentence case: Files, Mail, Calendar.", "landmark": "Apps." },
-    "ar": { "label": "Noun form labels, white Saudi dialect, no diacritics: الملفات، البريد، التقويم.", "open": "مفتوح." }
+    "en": {
+      "label": "The app name, a noun, sentence case: Files, Mail, Calendar.",
+      "landmark": "Apps."
+    },
+    "ar": {
+      "label": "Noun form labels, white Saudi dialect, no diacritics: الملفات، البريد، التقويم.",
+      "open": "مفتوح."
+    }
   },
   "tokens": [
     "color.bg.surface-2",
@@ -98,7 +163,10 @@
     "duration.base",
     "duration.fast",
     "ease.emphasized",
-    "ease.default"
+    "ease.default",
+    "tooltip.width-max",
+    "space.3xl",
+    "font.size.s"
   ],
   "motion": "fade-rise",
   "frameworks": {
@@ -106,10 +174,16 @@
       "status": "ready",
       "behavior": "hand built nav of links",
       "example": "Dock.demo.tsx",
-      "note": "The name fades in on hover and focus (opacity); Desk magnifies the tile with a transform. Both collapse under reduced motion."
+      "note": "The name fades in on hover and focus (the opacity half of fade-rise; the rise is left out so the name sits still over a moving tile). Desk magnifies the tile with a transform. Both collapse under reduced motion."
     },
-    "angular": { "status": "planned", "behavior": "hand built" },
-    "native": { "status": "not-applicable", "note": "A desktop shell part. Phone layouts use TabBar." }
+    "angular": {
+      "status": "planned",
+      "behavior": "hand built"
+    },
+    "native": {
+      "status": "not-applicable",
+      "note": "A desktop shell part. Phone layouts use TabBar."
+    }
   },
   "styles": {
     "studio": "A plain row: a surface-2 bar with a subtle hairline, overlay-10 tiles, no magnify.",
@@ -118,12 +192,33 @@
     "liquid": "Planned: a glass dock."
   },
   "mistakes": [
-    { "wrong": "An app name only in a native title on hover", "right": "label: the link text, drawn on hover and focus" },
-    { "wrong": "Open apps shown only by a brighter icon", "right": "open: the dot, and the word open in the name" },
-    { "wrong": "A fixed dock over the last line of the page", "right": "Reserve the dock's height at the end of the page" },
-    { "wrong": "A Dock as phone navigation", "right": "TabBar" },
-    { "wrong": "Commands in the dock: Save, Share", "right": "Toolbar" }
+    {
+      "wrong": "An app name only in a native title on hover",
+      "right": "label: the link text, drawn on hover and focus"
+    },
+    {
+      "wrong": "Open apps shown only by a brighter icon",
+      "right": "open: the dot, and the word open in the name"
+    },
+    {
+      "wrong": "A fixed dock over the last line of the page",
+      "right": "Reserve the dock's height at the end of the page"
+    },
+    {
+      "wrong": "A Dock as phone navigation",
+      "right": "TabBar"
+    },
+    {
+      "wrong": "Commands in the dock: Save, Share",
+      "right": "Toolbar"
+    }
   ],
-  "contract": { "optionalParts": ["item-status", "item-indicator", "separator"] },
+  "contract": {
+    "optionalParts": [
+      "item-status",
+      "item-indicator",
+      "separator"
+    ]
+  },
   "since": "0.1.0"
 }

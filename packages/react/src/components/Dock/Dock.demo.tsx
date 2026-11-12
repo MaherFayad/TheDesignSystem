@@ -76,6 +76,34 @@ export default function DockDemo() {
         </div>
       </DemoCase>
 
+      <DemoCase id="many" title="Eight apps docked at the end of a page that keeps room for the dock">
+        <div
+          style={{
+            blockSize: 'calc(var(--ds-menu-width-min) * 1.2)',
+            overflowY: 'auto',
+            border: 'var(--ds-border-width-default) solid var(--ds-color-border-subtle)',
+            borderRadius: 'var(--ds-radius-card)',
+            padding: 'var(--ds-space-m)',
+            // The room the dock takes: tile, padding and border, so the last line scrolls clear of it.
+            paddingBlockEnd: 'calc(var(--ds-size-control-lg) + var(--ds-space-3xl))',
+            scrollPaddingBlockEnd: 'calc(var(--ds-size-control-lg) + var(--ds-space-3xl))',
+          }}
+        >
+          {Array.from({ length: 6 }, (_, i) => (
+            <p key={i}>Your changes are saved to your account. Open the board on any other device to see the same version.</p>
+          ))}
+          <div style={{ position: 'sticky', insetBlockEnd: 0, display: 'flex', justifyContent: 'center' }}>
+            <Dock aria-label="Apps">
+              {many.slice(0, 7).map((a) => (
+                <DockItem key={a.en} href={`#${a.en.toLowerCase()}`} icon={a.icon} label={a.en} open={a.open} />
+              ))}
+              <DockSeparator />
+              <DockItem href="#trash" icon="trash" label="Trash" />
+            </Dock>
+          </div>
+        </div>
+      </DemoCase>
+
       <DemoCase id="too-many" title="Too many apps: the dock wraps, the page does not scroll sideways">
         <div>
           <Dock aria-label="Apps">

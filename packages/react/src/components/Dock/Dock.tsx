@@ -22,7 +22,7 @@
 // href (its route or a hash) and handles onClick; with asChild the item
 // renders a router link. A system Button is not used: its own parts would
 // own the label and the indicator.
-import { Children, isValidElement, type AnchorHTMLAttributes, type HTMLAttributes, type ReactElement, type ReactNode, type Ref } from 'react';
+import { Children, isValidElement, useState, type AnchorHTMLAttributes, type FocusEvent, type KeyboardEvent, type PointerEvent, type HTMLAttributes, type ReactElement, type ReactNode, type Ref } from 'react';
 import { Slot } from 'radix-ui';
 import { Icon, type IconName } from '@the-system/icons/react';
 import type { Size } from '@the-system/shared';
@@ -73,8 +73,23 @@ export interface DockItemProps extends Omit<AnchorHTMLAttributes<HTMLAnchorEleme
 const openWords = { en: 'open', ar: 'مفتوح' } as const;
 
 /** One app shortcut. */
-export function DockItem({ label, icon, active = false, open = false, openLabel, asChild = false, children, ref, ...rest }: DockItemProps) {
+export function DockItem({
+  label,
+  icon,
+  active = false,
+  open = false,
+  openLabel,
+  asChild = false,
+  children,
+  ref,
+  onKeyDown,
+  onBlur,
+  onPointerLeave,
+  ...rest
+}: DockItemProps) {
   const { lang } = useTheme();
+  // Escape hides the drawn name until focus or the pointer leaves (WCAG 1.4.13).
+  const [labelHidden, setLabelHidden] = useState(false);
   const ar = lang === 'ar';
   const parts = (
     <>
@@ -92,7 +107,20 @@ export function DockItem({ label, icon, active = false, open = false, openLabel,
     'data-part': 'item',
     'data-active': active ? '' : undefined,
     'data-open': open ? '' : undefined,
+    'data-label-hidden': labelHidden ? '' : undefined,
     'aria-current': active ? ('page' as const) : rest['aria-current'],
+    onKeyDown: (event: KeyboardEvent<HTMLAnchorElement>) => {
+      onKeyDown?.(event);
+      if (event.key === 'Escape') setLabelHidden(true);
+    },
+    onBlur: (event: FocusEvent<HTMLAnchorElement>) => {
+      onBlur?.(event);
+      setLabelHidden(false);
+    },
+    onPointerLeave: (event: PointerEvent<HTMLAnchorElement>) => {
+      onPointerLeave?.(event);
+      setLabelHidden(false);
+    },
   };
   if (asChild) {
     const child = Children.only(children);

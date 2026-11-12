@@ -48,6 +48,16 @@ describe('Dock', () => {
     expect(screen.getByRole('navigation').getAttribute('data-size')).toBe('lg');
   });
 
+  it('Escape hides the drawn name until focus leaves', async () => {
+    render(<Example />);
+    const mail = screen.getByRole('link', { name: 'Mail' });
+    mail.focus();
+    await userEvent.keyboard('{Escape}');
+    expect(mail.getAttribute('data-label-hidden')).toBe('');
+    await userEvent.tab();
+    expect(mail.hasAttribute('data-label-hidden')).toBe(false);
+  });
+
   it('takes a node as the icon', () => {
     render(<Example />);
     expect(screen.getByTestId('img').closest('[data-part="item-icon"]')).not.toBeNull();
@@ -90,6 +100,6 @@ describe('Dock', () => {
   it('renders the demo with every case', () => {
     const { container } = render(<DockDemo />);
     const ids = Array.from(container.querySelectorAll('[data-demo-case]')).map((c) => c.getAttribute('data-demo-case'));
-    expect(ids).toEqual(['variants', 'one', 'too-many', 'long-text', 'long-arabic']);
+    expect(ids).toEqual(['variants', 'one', 'many', 'too-many', 'long-text', 'long-arabic']);
   });
 });

@@ -1006,7 +1006,8 @@
     },
     "states": [
       "data-active",
-      "data-open"
+      "data-open",
+      "data-label-hidden"
     ],
     "a11y": {
       "role": "navigation (the nav landmark) with a name; each item is a link, the current app's with aria-current page. Separators are decorative.",
@@ -1014,7 +1015,8 @@
       "keys": {
         "Tab": "Moves to the next app",
         "Shift+Tab": "Moves to the previous app",
-        "Enter": "Follows the link, or runs the item's onClick"
+        "Enter": "Follows the link, or runs the item's onClick",
+        "Escape": "Hides the drawn name of the focused or hovered app until focus or the pointer leaves"
       },
       "announce": "Each link reads the app name, open when the app is open, and current page for the current app.",
       "notes": [
@@ -1024,7 +1026,10 @@
         "A fixed dock covers content unless the page keeps the same room at its block end (WCAG 2.4.11): the layout (PageShell) reserves it.",
         "Tiles are 44px at md (WCAG 2.5.8).",
         "Many apps wrap onto a second row rather than scroll the page sideways (WCAG 1.4.10).",
-        "Every item is a link. The order allows buttons; a system Button would own the item's parts, so an app that opens a window keeps an href and handles onClick."
+        "Every item is a link. The order allows buttons; a system Button would own the item's parts, so an app that opens a window keeps an href and handles onClick.",
+        "The drawn name is dismissable (Escape), hoverable (it does not hide while the pointer is on the item) and persistent until focus or the pointer leaves (WCAG 1.4.13). It is a part of the link, not a Tooltip, because it is the link's own text.",
+        "The demo case many shows the reserved room: the page pads its block end and its scroll padding by the dock's height (size.control.lg plus the dock padding).",
+        "Contract keys: Escape sets data-label-hidden on the item, a part, which the generic suite does not watch; the unit tests cover it."
       ]
     },
     "content": {
@@ -1073,7 +1078,10 @@
       "duration.base",
       "duration.fast",
       "ease.emphasized",
-      "ease.default"
+      "ease.default",
+      "tooltip.width-max",
+      "space.3xl",
+      "font.size.s"
     ],
     "motion": "fade-rise",
     "frameworks": {
@@ -1081,7 +1089,7 @@
         "status": "ready",
         "behavior": "hand built nav of links",
         "example": "Dock.demo.tsx",
-        "note": "The name fades in on hover and focus (opacity); Desk magnifies the tile with a transform. Both collapse under reduced motion."
+        "note": "The name fades in on hover and focus (the opacity half of fade-rise; the rise is left out so the name sits still over a moving tile). Desk magnifies the tile with a transform. Both collapse under reduced motion."
       },
       "angular": {
         "status": "planned",
@@ -2698,7 +2706,7 @@
           "lg"
         ],
         "default": "md",
-        "description": "TabBar: md items are at least size.control.md (32px) with 16px icons; lg items are size.control.lg (44px) with 24px icons, for touch layouts."
+        "description": "TabBar: md items are at least size.control.md (32px) with 16px icons; lg items are at least 44px (size.control.lg, never under size.touch-ios) with 24px icons, for touch layouts."
       },
       "label": {
         "type": "string",
@@ -2751,13 +2759,14 @@
         "The bar pads its block end by env(safe-area-inset-bottom) and its sides by the side insets.",
         "A bar fixed to the bottom of the viewport covers content unless the page keeps the same room at its end (WCAG 2.4.11): the layout (PageShell) reserves it.",
         "lg gives 44px targets for touch layouts (WCAG 2.5.8 and the touch template rule); md items are at least 32px.",
-        "No native title attribute; a cut label keeps its full text in the link name."
+        "No native title attribute; a cut label keeps its full text in the link name.",
+        "env(safe-area-inset-*) is 0 unless the page sets viewport-fit=cover in its viewport meta tag."
       ]
     },
     "content": {
       "en": {
         "label": "One short noun, sentence case: Home, Search, Inbox. No verbs.",
-        "landmark": "Name it Main, or after the app section."
+        "landmark": "Name it after the app section, never the same name as another nav on the page."
       },
       "ar": {
         "label": "Noun form labels, white Saudi dialect, no diacritics: الرئيسية، البحث، الوارد.",
@@ -2793,7 +2802,9 @@
       "font.weight.bold",
       "font.leading.tight",
       "border.width.default",
-      "border.width.strong"
+      "border.width.strong",
+      "size.touch-ios",
+      "font.size.s"
     ],
     "motion": "fade-rise",
     "frameworks": {
@@ -2839,6 +2850,10 @@
       {
         "wrong": "A fixed bar over the last line of the page",
         "right": "Reserve the bar's height at the end of the page"
+      },
+      {
+        "wrong": "A bottom bar on a phone page without viewport-fit=cover",
+        "right": "Set viewport-fit=cover so the safe area padding applies"
       }
     ],
     "contract": {
@@ -3952,7 +3967,7 @@
       "disabled": {
         "type": "boolean",
         "default": false,
-        "description": "Items: aria-disabled. The item keeps its place in the arrow key order and swallows the click."
+        "description": "ToolbarButton, ToolbarLink and ToolbarToggleItem: aria-disabled, drawn with opacity.disabled. The item keeps its place in the arrow key order and its click is cancelled. A disabled link loses its href."
       },
       "type": {
         "type": [
@@ -3974,7 +3989,8 @@
       "data-orientation",
       "data-overflowing",
       "data-overflowed",
-      "data-disabled"
+      "data-measuring",
+      "data-wrap"
     ],
     "a11y": {
       "role": "toolbar with a name and aria-orientation. Groups are role group with a name; toggle items are buttons with aria-pressed (multiple) or radio with aria-checked (single). The overflow trigger is a menu button.",
@@ -3997,7 +4013,9 @@
         "Overflow keeps the page from scrolling sideways (WCAG 1.4.10): the toolbar is never wider than its container.",
         "Every item is a system Button, IconButton or Link: 24px targets at xs, 44px at lg (WCAG 2.5.8).",
         "Contract keys: arrows, Home and End are checked by hints; Enter and Space run on the items, which are Buttons with their own contract.",
-        "open and closed are the data-state of the More tools trigger, from DropdownMenu."
+        "open and closed are the data-state of the More tools trigger, from DropdownMenu.",
+        "Items of a single ToolbarToggleGroup (radio semantics) appear in the More tools menu as checkbox items, since the menu has no radio entry built from the DOM yet.",
+        "On a disabled item the hover fill still shows: Button draws hover from its own data-disabled, which the toolbar cannot set without trapping the arrow keys."
       ]
     },
     "content": {
@@ -4023,7 +4041,10 @@
       "space.4xs",
       "space.3xs",
       "space.2xs",
-      "border.width.default"
+      "border.width.default",
+      "color.text.muted",
+      "color.bg.overlay-40",
+      "opacity.disabled"
     ],
     "motion": "menu-scale",
     "frameworks": {
@@ -4039,7 +4060,8 @@
       },
       "native": {
         "status": "planned",
-        "behavior": "rn-primitives:toolbar"
+        "behavior": "rn-primitives:toolbar",
+        "note": "A native toolbar is a row of Pressables with accessibilityRole toolbar; overflow becomes a menu sheet."
       }
     },
     "styles": {

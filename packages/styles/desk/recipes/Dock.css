@@ -16,24 +16,17 @@
     --_dock-tile-radius: var(--ds-radius-card);
     /* Magnify: the tile under the pointer or the focus grows from its base and lifts. */
     --_dock-scale: 1.25;
+    /* The neighbors grow a little, so the row swells around the pointer (Dock.css). */
+    --_dock-neighbor-scale: 1.1;
     --_dock-lift: var(--ds-space-xs);
-  }
-
-  /* The neighbors grow a little, so the row swells around the pointer. */
-  [data-style='desk'] [data-ds='dock'] > [data-part='item']:has(+ [data-part='item']:hover),
-  [data-style='desk'] [data-ds='dock'] > [data-part='item']:hover + [data-part='item'] {
-    --_dock-item-transform: translateY(calc(-0.5 * var(--_dock-lift))) scale(1.1);
   }
 
   /* Magnify is motion: off under reduced motion (the base also collapses the transition). */
   @media (prefers-reduced-motion: reduce) {
     [data-style='desk'] [data-ds='dock'] {
       --_dock-scale: 1;
+      --_dock-neighbor-scale: 1;
       --_dock-lift: 0;
-    }
-
-    [data-style='desk'] [data-ds='dock'] > [data-part='item'] {
-      --_dock-item-transform: none;
     }
   }
 
