@@ -21,7 +21,7 @@ No adb. No iOS build.
 | 0.3 | Plan into repo | lead | all | done | see git log |
 | 0.4 | Token extraction | ds-tokens | all | done | 0240c02 |
 | 0.5 | Token build | ds-tokens | all | done | 0240c02 |
-| 0.6 | Gates | ds-qa | all | part 1 done, part 2 open | 50ae3c1 |
+| 0.6 | Gates | ds-qa | all | done | 50ae3c1, 8bf86c6 |
 | 0.7 | Theme and React gallery | ds-component | react | open | |
 | 0.8 | Icons | ds-style | all | done | ade095b |
 | 0.9 | Button | ds-component | react | open | |
