@@ -11,7 +11,8 @@
  *         > [data-part='tag-label']
  *         > [data-ds='close-button'][data-part='tag-remove']
  *     > [data-part='control']                    the native input
- *     > [data-part='status']                     removal and duplicates, visually hidden
+ *     > [data-part='status']                     every add, removal and refusal, visually hidden
+ *   [data-ds='field-error']                      after the root, while text was refused (FieldError styles it)
  *   [data-ds='theme'][data-menu-layer]           the portal Theme (DropdownMenu.css draws it as contents)
  *   [data-ds='tag-field'][data-part='popup']     its own root: Radix Popover Content, data-state open|closed
  *     > [data-ds='list-box']                     the suggestions
@@ -277,6 +278,17 @@
     min-block-size: 0;
   }
 
+  /*
+   * The suggestions use virtual focus: DOM focus stays in the control and the
+   * active option is only data-highlighted, so it never matches ListBox's
+   * :focus-visible ring. The fill step alone is about 1.3:1, so the active
+   * option also takes the ListBox ring (the focus ring color, WCAG 2.4.7 and
+   * 1.4.11). Only ListBox private properties are set here.
+   */
+  [data-ds='tag-field'][data-part='popup'] > [data-ds='list-box'] [data-part='option'][data-highlighted] {
+    --_list-box-option-ring: inset 0 0 0 var(--ds-border-width-strong) var(--_list-box-option-ring-color);
+  }
+
   [data-ds='tag-field'][data-part='popup']:lang(ar) {
     font-size: var(--ds-font-size-m);
     line-height: var(--ds-font-leading-arabic-snug);
@@ -385,6 +397,12 @@
       --_menu-meta-fg: CanvasText;
       --_menu-item-bg-highlight: Highlight;
       --_menu-item-fg-highlight: HighlightText;
+      --_menu-item-ring-color: HighlightText;
+    }
+
+    /* The popup draws the one frame: the nested ListBox border takes the popup's Canvas, so no second frame shows. */
+    [data-ds='tag-field'][data-part='popup'] > [data-ds='list-box'] {
+      --_list-box-border-color: Canvas;
     }
   }
 }

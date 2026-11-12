@@ -17,7 +17,8 @@
 //         <span data-part="tag-label">
 //         <button data-ds="close-button" data-part="tag-remove" tabindex="-1" aria-label="Remove tag design">
 //     <input data-part="control" role="combobox"? aria-expanded? aria-controls? aria-activedescendant?>
-//     <span data-part="status" role="status">                             removal and duplicates, visually hidden
+//     <span data-part="status" role="status">                             every add, removal and refusal, visually hidden
+//   <p data-ds="field-error" id>                                           after the root, only while text was refused (max or a duplicate)
 //   <body>
 //     <div data-ds="theme" data-menu-layer>
 //       <div data-ds="tag-field" data-part="popup" data-size data-state>  Radix Popover Content, its own root
@@ -30,6 +31,11 @@
 // the caret at the start, moves to the last tag; the arrows move between
 // tags and past the last one back to the control. The remove buttons are not
 // in the tab order: the control is the one tab stop.
+//
+// Text that is refused (past max, or a duplicate) is said twice: once in the
+// polite status and as a visible message under the box (a FieldError of its
+// own, outside any Field wiring) that the control is described by. The
+// message clears on the next edit, add or removal.
 import {
   useCallback,
   useEffect,
@@ -56,6 +62,8 @@ import {
 import { useTheme } from '../../theme/hooks';
 import { CloseButton } from '../CloseButton';
 import { useField, useFieldControl } from '../Field/Field';
+import { FieldContext } from '../Field/context';
+import { FieldError } from '../FieldError/FieldError';
 import { ListBox, filterListBoxItems, flattenListBoxItems, listBoxOptionId, type ListBoxItem, type ListBoxOption } from '../ListBox';
 import { usePopupLayer } from '../Select/popupLayer';
 import { useControllable } from '../../internal/useControllable';
@@ -95,7 +103,7 @@ export interface TagFieldProps
   onValueChange?: (tags: string[]) => void;
   /** Suggested tags, plain or in groups, as ListBox takes them. Choosing one adds its label. Tags already added are not suggested. */
   suggestions?: readonly ListBoxItem[];
-  /** The most tags. Text past it is not added and the status says so. */
+  /** The most tags. Text past it stays in the control, and a message under the box says why. */
   max?: number;
   /** Box height at one line, and the row size of the suggestions. Default md. */
   size?: TagFieldSize;
@@ -149,7 +157,16 @@ export function TagField({
   onPaste,
   ...rest
 }: TagFieldProps) {
-  const control = useFieldControl({ id, 'aria-describedby': describedBy, invalid, disabled, readOnly, required });
+  const [notice, setNotice] = useState('');
+  const noticeId = `ds-tag-field-notice-${useId().replace(/:/g, '')}`;
+  const control = useFieldControl({
+    id,
+    'aria-describedby': [describedBy, notice ? noticeId : undefined].filter(Boolean).join(' ') || undefined,
+    invalid,
+    disabled,
+    readOnly,
+    required,
+  });
   const field = useField();
   const inert = Boolean(control.disabled || control.readOnly);
   const lang: 'en' | 'ar' = useTheme().lang.startsWith('ar') ? 'ar' : 'en';
@@ -184,19 +201,46 @@ export function TagField({
   const popupOpen = hasSuggestions && open && !inert && options.length > 0;
   const highlightVisible = highlighted !== null && options.some((o) => o.value === highlighted);
 
+  // Frames still to run are cancelled on unmount, so none sets state after it.
+  const frames = useRef(new Set<number>());
+  useEffect(() => {
+    const pending = frames.current;
+    return () => {
+      pending.forEach((frame) => cancelAnimationFrame(frame));
+      pending.clear();
+    };
+  }, []);
+  const nextFrame = (run: () => void) => {
+    const frame = requestAnimationFrame(() => {
+      frames.current.delete(frame);
+      run();
+    });
+    frames.current.add(frame);
+  };
+
   // The status empties first, so the same words after a second removal are read again.
   const say = (words: string) => {
     setStatus('');
-    requestAnimationFrame(() => setStatus(words));
+    nextFrame(() => setStatus(words));
   };
 
-  /** Adds the parts and says what happened once. Returns the parts that were not added past max, so they stay in the control. */
+  /**
+   * Adds the parts and says what happened once. A refusal (past max, or a
+   * duplicate) also shows as the visible message. Returns the parts that were
+   * not added past max, so they stay in the control.
+   */
   const add = (incoming: string[]): string[] => {
     if (inert || incoming.length === 0) return [];
     const result = addTags(tags, incoming, max);
     if (result.added.length) setTags(result.tags);
-    if (result.overflow.length && max !== undefined) say(t.full(max));
-    else if (result.duplicates.length) say(t.duplicate(result.duplicates[0] ?? ''));
+    const refused =
+      result.overflow.length && max !== undefined
+        ? t.full(max)
+        : result.duplicates.length
+          ? t.duplicate(result.duplicates[0] ?? '')
+          : '';
+    setNotice(refused);
+    if (refused) say(refused);
     else if (result.added.length) say(t.added(result.added));
     return result.overflow;
   };
@@ -206,6 +250,7 @@ export function TagField({
     const tag = tags[index];
     if (tag === undefined) return;
     setTags(tags.filter((_, i) => i !== index));
+    setNotice('');
     say(formatRemoved ? formatRemoved(tag) : t.removed(tag));
   };
 
@@ -224,7 +269,7 @@ export function TagField({
     const left = tags.length - 1;
     focusAfter.current = left === 0 ? 'control' : index < left ? index : index - 1;
     // A controlled parent may refuse the removal: then nothing moves focus later.
-    requestAnimationFrame(() => {
+    nextFrame(() => {
       focusAfter.current = null;
     });
     remove(index);
@@ -330,14 +375,17 @@ export function TagField({
   const onInputChange = (next: string) => {
     if (inert) return;
     if (hasTagSeparator(next)) {
-      // Every part before the last separator becomes a tag; the rest stays in the control.
+      // Every part before the last separator becomes a tag. Parts past max and
+      // the text after the last separator stay in the control, as with Enter.
       const lastSep = Math.max(next.lastIndexOf(','), next.lastIndexOf('،'), next.lastIndexOf('\n'));
-      add(splitTags(next.slice(0, lastSep)));
-      setText(next.slice(lastSep + 1).trimStart());
+      const overflow = add(splitTags(next.slice(0, lastSep)));
+      const tail = next.slice(lastSep + 1).trimStart();
+      setText([...overflow, tail].filter(Boolean).join(', '));
       close();
       return;
     }
     setText(next);
+    setNotice('');
     setHighlighted(null);
     if (hasSuggestions) setOpen(next.trim() !== '');
   };
@@ -501,6 +549,12 @@ export function TagField({
           </span>
         </div>
       </Popover.Anchor>
+      {/* Out of the Field wiring: the Field's own error keeps its id and the Field stays valid. */}
+      <FieldContext value={null}>
+        <FieldError id={noticeId} size={size === 'sm' ? 'sm' : 'md'}>
+          {notice}
+        </FieldError>
+      </FieldContext>
       {layer.render(popup)}
     </Popover.Root>
   );
