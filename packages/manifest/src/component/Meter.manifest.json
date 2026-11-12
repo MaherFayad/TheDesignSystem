@@ -136,7 +136,10 @@
       "note": "Level and tone logic in packages/shared/src/meter.ts (pure, shared with Angular). Values formatted by the ProgressBar format.ts helper until packages/shared/src/number.ts lands. Motion: no catalog pattern. A value change eases the scaleX transform over duration.slow in Meter.css until the catalog has a fill pattern (a request to the motion owner)."
     },
     "angular": {
-      "status": "planned"
+      "status": "ready",
+      "behavior": "div[dsMeter], hand built, role meter, level and tone from @the-system/shared meter.ts",
+      "example": "meter.demo.ts",
+      "note": "The host element is the root. Inputs take the React prop names; React spreads a range object, Angular takes min, max, low, high and optimum as inputs. label takes a string or a TemplateRef. Meter.css is used as is."
     },
     "native": {
       "status": "planned"

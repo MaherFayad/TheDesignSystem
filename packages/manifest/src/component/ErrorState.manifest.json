@@ -115,7 +115,12 @@
   "motion": "fade-rise",
   "frameworks": {
     "react": { "status": "ready", "behavior": "hand built", "example": "ErrorState.demo.tsx" },
-    "angular": { "status": "planned", "behavior": "hand built" },
+    "angular": {
+      "status": "ready",
+      "behavior": "div[dsErrorState], host bindings, cdk:a11y _IdGenerator",
+      "example": "error-state.demo.ts",
+      "note": "The host element is the root. title, body, actions and details take a string or a TemplateRef; icon takes an icon name, a TemplateRef or false. onRetry is a function input: the retry Button renders only with a handler. The heading level picks h2 to h6. The title id comes from the CDK id generator. ErrorState.css is used as is."
+    },
     "native": { "status": "planned", "behavior": "hand built", "note": "The details disclosure becomes a pressable row that shows the code." }
   },
   "styles": {

@@ -74,7 +74,12 @@
   "motion": "skeleton-shimmer",
   "frameworks": {
     "react": { "status": "ready", "behavior": "hand built", "example": "Skeleton.demo.tsx" },
-    "angular": { "status": "planned", "behavior": "hand built" },
+    "angular": {
+      "status": "ready",
+      "behavior": "span[dsSkeleton], host bindings",
+      "example": "skeleton.demo.ts",
+      "note": "The host element is the root, always aria-hidden. width and height set --_skeleton-width and --_skeleton-height as inline styles, numbers as px. Skeleton.css is used as is."
+    },
     "native": { "status": "planned", "behavior": "hand built", "note": "A View with the same fill; the shimmer through Reanimated, still under reduce motion." }
   },
   "styles": {

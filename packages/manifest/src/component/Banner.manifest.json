@@ -198,9 +198,10 @@
       "example": "Banner.demo.tsx"
     },
     "angular": {
-      "status": "planned",
-      "behavior": "hand built",
-      "note": "The same DOM on Banner.css; the scroll padding through a ResizeObserver in the directive."
+      "status": "ready",
+      "behavior": "section[dsBanner], host bindings, ResizeObserver",
+      "example": "banner.demo.ts",
+      "note": "The host element is the root. The body is the projected content; actions and icon take a TemplateRef (an icon name for icon). onDismiss is a function input: the close part renders only with a handler, and focus moves to returnFocus before it runs. sticky reserves scroll padding on the scroll container in an afterRenderEffect. The close part has the CloseButton DOM. Banner.css is used as is."
     },
     "native": {
       "status": "planned",

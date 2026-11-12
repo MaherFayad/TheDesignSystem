@@ -153,9 +153,10 @@
       "example": "Callout.demo.tsx"
     },
     "angular": {
-      "status": "planned",
-      "behavior": "hand built",
-      "note": "The same DOM on Callout.css, ids from the CDK id generator."
+      "status": "ready",
+      "behavior": "div[dsCallout] and aside[dsCallout], host bindings, cdk:a11y _IdGenerator",
+      "example": "callout.demo.ts",
+      "note": "The host element is the root; React's as prop is the host tag (div gets role note, aside is a landmark). The body is the projected content and the part is left out while empty. title and icon take a string (an icon name for icon) or a TemplateRef. Icon and title ids come from the CDK id generator, or from the id input. Callout.css is used as is."
     },
     "native": {
       "status": "planned",
