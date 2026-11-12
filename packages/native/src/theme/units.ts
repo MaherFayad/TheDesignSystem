@@ -1,17 +1,13 @@
 // Unit conversions the theme objects leave to the consumer. See the header of
 // packages/tokens/dist/native/types.ts.
-import type { Theme } from '@the-system/tokens/native';
+import { emBase, type Theme } from '@the-system/tokens/native';
 
 /**
- * The font size the token build converts em tokens at (radius.control,
- * font.tracking.*). It is the build's constant, not a design value. The build
- * does not export it yet; docs/reports/native-proof.md asks for that.
+ * An em token from the theme object (converted at the build's `emBase`), at a
+ * font size: CSS resolves `1em` on the element's own font size.
  */
-export const EM_BASE = 16;
-
-/** An em token from the theme object, at a font size: CSS resolves `1em` on the element's own font size. */
 export function emAt(converted: number, fontSize: number): number {
-  return (converted / EM_BASE) * fontSize;
+  return (converted / emBase) * fontSize;
 }
 
 /** The line height for a font size and a leading multiplier from `theme.font.leading`. */

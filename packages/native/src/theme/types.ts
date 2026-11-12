@@ -1,54 +1,21 @@
-// Axis types for the React Native ThemeProvider. Same names and values as the
-// web Theme (packages/react/src/theme/types.ts) and the runtime axes table in
-// docs/contracts/frameworks.md.
+// Types for the React Native ThemeProvider. The axis types come from
+// packages/shared/src/theme.ts, the same ones the web Theme uses.
+import type { StyleData, ThemeAxes } from '@the-system/shared';
 import type { Theme } from '@the-system/tokens/native';
-import type { StyleId } from '@the-system/styles/registry';
 
-/** A style id from the registry, or any custom id a consumer adds. */
-export type ThemeStyle = StyleId | (string & {});
-export type Scheme = 'dark' | 'light';
-export type Density = 'compact' | 'default' | 'comfortable';
-export type Contrast = 'default' | 'more';
-export type Platform = 'web' | 'ios' | 'android';
-/** Only styles with `usesGlass` read it. */
-export type Glass = 'clear' | 'regular' | 'tinted';
-export type Dir = 'ltr' | 'rtl';
-/** A BCP 47 tag. The system ships `en` and `ar`. */
-export type Lang = 'en' | 'ar' | (string & {});
-
-/** Every axis, resolved. */
-export interface ThemeAxes {
-  style: ThemeStyle;
-  scheme: Scheme;
-  density: Density;
-  contrast: Contrast;
-  platform: Platform;
-  glass: Glass;
-  dir: Dir;
-  lang: Lang;
-}
-
-/** What a ThemeProvider takes: any axis may be left out. */
-export type ThemeAxesInput = Partial<ThemeAxes>;
-
-/** The data of one `packages/styles/<id>/style.json`. See section 3.7 of PLAN.md. */
-export interface StyleData {
-  id: string;
-  name: string;
-  extends?: string;
-  status?: 'stable' | 'proposed';
-  schemes: readonly Scheme[];
-  proposedSchemes?: readonly Scheme[];
-  defaultScheme: Scheme;
-  defaultDensity: Density;
-  iconSet: string;
-  motionPreset: string;
-  usesGlass: boolean;
-  /** Component name (kebab case) to the optional parts this style turns on. */
-  optionalParts: Readonly<Record<string, readonly string[]>>;
-  fonts: { sans: string; arabic: string };
-  dials: Readonly<Record<string, string>>;
-}
+export type {
+  Contrast,
+  Density,
+  Dir,
+  Glass,
+  Lang,
+  Platform,
+  Scheme,
+  StyleData,
+  ThemeAxes,
+  ThemeAxesInput,
+  ThemeStyle,
+} from '@the-system/shared';
 
 /**
  * Where text gets its font family. `theme` uses the family names of the theme

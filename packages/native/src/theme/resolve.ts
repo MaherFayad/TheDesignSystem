@@ -1,48 +1,14 @@
-// Pure theme resolution for React Native: no React, no native modules.
+// Theme resolution for React Native: no React, no native modules.
 //
-// The axis order is the web Theme's (packages/react/src/theme/resolve.ts):
-// the prop, then the nearest parent, then the root default. The root defaults
-// differ in two places only, because a device has settings a page does not:
-// platform comes from the device, and dir from I18nManager. Both are passed
-// in as `device` so this file stays pure and testable.
-//
-// The web resolver lives in packages/react. It is repeated here, not
-// imported, because packages/react pulls in the DOM and Radix. Moving the
-// shared part to packages/shared is noted in docs/reports/native-proof.md.
-import { directionOf } from '@the-system/shared';
-import { styles } from '@the-system/styles/registry';
-import { densities, themes, type Theme } from '@the-system/tokens/native';
-import type { Density, Dir, FontSource, Platform, Scheme, StyleData, ThemeAxes, ThemeAxesInput } from './types';
+// The axis rules live in packages/shared/src/theme.ts (`resolveTheme`), the
+// same ones the web Theme and the Angular dsTheme use. This file adds what a
+// device knows at the root (platform, I18nManager direction, more contrast,
+// the system color scheme) and picks the theme object of the token build.
+import { DEFAULT_STYLE, getStyleData, resolveTheme } from '@the-system/shared';
+import { densities, solidMaterials, themes, type Theme } from '@the-system/tokens/native';
+import type { Density, FontSource, Platform, Scheme, ThemeAxes, ThemeAxesInput } from './types';
 
-/** The style a root ThemeProvider uses when none is passed. The same as the web. */
-export const DEFAULT_STYLE = 'studio';
-
-const registry = styles as unknown as Readonly<Record<string, StyleData>>;
-
-/** Ids of every style in the registry. */
-export const styleIds: readonly string[] = Object.keys(registry);
-
-/**
- * The style.json data for an id. A custom id that is not in the registry gets
- * the same plain defaults as on the web.
- */
-export function getStyleData(id: string): StyleData {
-  const known = registry[id];
-  if (known) return known;
-  return {
-    id,
-    name: id,
-    schemes: ['dark', 'light'],
-    defaultScheme: 'dark',
-    defaultDensity: 'default',
-    iconSet: 'pixel',
-    motionPreset: 'flat',
-    usesGlass: false,
-    optionalParts: {},
-    fonts: { sans: 'Inter Variable', arabic: 'IBM Plex Sans Arabic' },
-    dials: {},
-  };
-}
+export { DEFAULT_STYLE, getStyleData, styleIds } from '@the-system/shared';
 
 /** What the device says when a prop and the parent are silent. */
 export interface DeviceDefaults {
@@ -58,15 +24,11 @@ export interface DeviceDefaults {
 export const webDevice: DeviceDefaults = { platform: 'web', isRTL: false };
 
 /**
- * Resolves every axis. Order for each axis: the prop, then the parent, then
- * the root default. Root defaults: style `studio`, scheme from the system when
- * `followSystem` is set and else from style.json, density from style.json,
- * contrast `more` when the system asks for it and else `default`, platform
- * from the device, glass `regular`, lang `en`.
- *
- * - A scheme the style does not list falls back to the style's default scheme.
- * - `dir` follows `lang` when `lang` is passed and `dir` is not. Otherwise it
- *   comes from the parent, and at the root from I18nManager, then from lang.
+ * Resolves every axis with the shared `resolveTheme`: the prop, then the
+ * parent, then the root default. At the root the device gives the platform,
+ * the direction (I18nManager, when neither dir nor lang is passed) and the
+ * contrast (`more` when the system asks for it). With `followSystem` the
+ * root takes the device color scheme when the scheme prop is silent.
  */
 export function resolveAxes(
   input: ThemeAxesInput,
@@ -74,44 +36,14 @@ export function resolveAxes(
   device: DeviceDefaults = webDevice,
   followSystem = false,
 ): ThemeAxes {
-  const style = input.style ?? parent?.style ?? DEFAULT_STYLE;
-  const styleData = getStyleData(style);
-  const system = followSystem && device.colorScheme ? device.colorScheme : undefined;
-  const wanted = input.scheme ?? system ?? parent?.scheme ?? styleData.defaultScheme;
-  const scheme = styleData.schemes.includes(wanted) ? wanted : styleData.defaultScheme;
-  const lang = input.lang ?? parent?.lang ?? 'en';
-  let dir: Dir;
-  if (input.dir !== undefined) dir = input.dir;
-  else if (input.lang !== undefined) dir = directionOf(input.lang);
-  else if (parent) dir = parent.dir;
-  else dir = device.isRTL ? 'rtl' : directionOf(lang);
-  return {
-    style,
-    scheme,
-    density: input.density ?? parent?.density ?? styleData.defaultDensity,
-    contrast: input.contrast ?? parent?.contrast ?? (device.moreContrast ? 'more' : 'default'),
-    platform: input.platform ?? parent?.platform ?? device.platform,
-    glass: input.glass ?? parent?.glass ?? 'regular',
-    dir,
-    lang,
-  };
+  const system = !parent && followSystem && device.colorScheme ? device.colorScheme : undefined;
+  const { styleData: _styleData, ...axes } = resolveTheme({ ...input, scheme: input.scheme ?? system }, parent ?? null, {
+    platform: device.platform,
+    dir: device.isRTL ? 'rtl' : undefined,
+    contrast: device.moreContrast ? 'more' : undefined,
+  });
+  return axes;
 }
-
-/**
- * The material keys that turn solid under more contrast and reduced
- * transparency. The same list as the `[data-contrast='more']` block of the
- * token CSS. The token build does not expose it as data yet.
- */
-export const solidMaterialKeys = [
-  'glass',
-  'glass-strong',
-  'glass-clear',
-  'glass-tinted',
-  'glass-flat',
-  'titlebar',
-  'menubar',
-  'dock',
-] as const;
 
 type Plain = Record<string, unknown>;
 
@@ -125,6 +57,14 @@ export function deepMerge<T>(base: T, over: unknown): T {
   const out: Plain = { ...base };
   for (const [k, v] of Object.entries(over)) out[k] = deepMerge(out[k], v);
   return out as T;
+}
+
+/** An override object that sets one dotted token path. */
+function atPath(path: string, value: unknown): Plain {
+  return path
+    .split('.')
+    .reverse()
+    .reduce<unknown>((acc, key) => ({ [key]: acc }), value) as Plain;
 }
 
 /** The style id whose theme objects the build ships for an id: the id itself, or the default style. */
@@ -142,10 +82,11 @@ const cache = new Map<string, Theme>();
 
 /**
  * The theme object for resolved axes: `themes[style][scheme]`, then the
- * density overrides, then solid materials, then the font source. Cached per
- * combination, so the same axes always give the same object and the style
- * functions can memoize on it. The cache is bounded: the key holds the style
- * id of the theme object, never a custom id.
+ * density overrides, then solid materials (the token build's
+ * `solidMaterials` paths take `color.material.glass-solid`), then the font
+ * source. Cached per combination, so the same axes always give the same
+ * object and the style functions can memoize on it. The cache is bounded:
+ * the key holds the style id of the theme object, never a custom id.
  */
 export function themeFor(axes: ThemeAxes, options: ThemeObjectOptions): Theme {
   const style = themeStyleOf(axes.style);
@@ -161,9 +102,8 @@ export function themeFor(axes: ThemeAxes, options: ThemeObjectOptions): Theme {
   let theme: Theme = base;
   if (density !== 'default') theme = deepMerge(theme, densities[density]);
   if (options.solidMaterials) {
-    const material: Plain = { ...theme.color.material };
-    for (const k of solidMaterialKeys) material[k] = theme.color.material['glass-solid'];
-    theme = deepMerge(theme, { color: { material } });
+    const solid = theme.color.material['glass-solid'];
+    for (const path of solidMaterials) theme = deepMerge(theme, atPath(path, solid));
   }
   if (options.fonts === 'system') {
     const family: Plain = {};

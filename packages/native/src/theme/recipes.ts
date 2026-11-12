@@ -5,9 +5,7 @@
 //
 // Add a line when a style pack ships a native recipe.
 import type { Theme } from '@the-system/tokens/native';
-// A relative path: the `./*/native/*` export of @the-system/styles has two
-// wildcards, which package exports do not allow, so it does not resolve.
-import deskButton from '../../../styles/desk/native/Button';
+import deskButton from '@the-system/styles/desk/native/Button';
 
 /** Style adjustments per part: each part's entries are merged over the base styles. */
 export type RecipeAdjustments<Part extends string> = Partial<Record<Part, Record<string, unknown>>>;

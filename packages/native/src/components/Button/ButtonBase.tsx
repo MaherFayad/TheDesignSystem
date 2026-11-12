@@ -36,12 +36,6 @@ import {
 /** Leading or trailing content: a system icon name, or a node. */
 export type ButtonSlotContent = IconName | ReactElement;
 
-/**
- * How far a button shrinks while pressed. No token holds a press scale yet:
- * the press pattern arrives with the motion catalog in wave 1.
- */
-export const PRESS_SCALE = 0.97;
-
 /** The props Button and IconButton share. Same names and values as React. */
 export interface ButtonBaseProps
   extends Omit<PressableProps, 'children' | 'style' | 'disabled' | 'hitSlop' | 'accessibilityRole' | 'accessibilityState'> {
@@ -149,7 +143,7 @@ export function ButtonRoot({
       onPressIn={(e: GestureResponderEvent) => {
         if (inert) return;
         setPressed(true);
-        press(PRESS_SCALE);
+        press(theme.scale.press);
         onPressIn?.(e);
       }}
       onPressOut={(e: GestureResponderEvent) => {
