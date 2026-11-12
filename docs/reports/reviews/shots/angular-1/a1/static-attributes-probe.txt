@@ -1,0 +1,42 @@
+Probe: packages/angular/src/components/zz-review-a1.spec.ts (temporary, removed). Template:
+  template: `
+    <button id="t1" dsToggleButton tone="accent" disabled emphasis="outline" size="sm" shape="pill" defaultPressed start="grid">Grid</button>
+    <button id="t2" dsToggleButton aria-label="Bold text">B</button>
+    <button id="c1" dsCloseButton size="sm" disabled label="Close panel"></button>
+    <button id="p1" dsCopyButton value="x" iconOnly label="Copy id" disabled tone="accent"></button>
+    <button id="p2" dsCopyButton value="x" aria-describedby="hint"></button>
+    <button id="f1" dsFloatingActionButton icon="plus" label="Create board" extended position="static" disabled></button>
+    <a id="l1" dsLink href="#a" tone="accent" standalone external size="sm">Docs</a>
+    <a id="l2" dsLink href="#a" tabindex="-1">Skip</a>
+    <a id="l3" dsLink href="#a" aria-disabled="true">Odd</a>
+    <div id="g1" dsButtonGroup size="sm" emphasis="outline" shape="pill" attached fullWidth orientation="vertical" aria-label="View">
+      <button id="g1b" dsButton>One</button>
+      <button id="g1t" dsToggleButton size="lg">Two</button>
+    </div>
+    <div id="s1" dsSplitButton tone="accent" emphasis="solid" label="Publish page" menuLabel="More publish options" disabled size="sm">
+      <ng-template dsSplitButtonMenu><div dsDropdownMenuItem>Later</div></ng-template>
+    </div>
+    <ng-container dsDropdownMenu size="sm">
+      <button id="m1" dsButton dsDropdownMenuTrigger>Menu</button>
+      <ng-template dsDropdownMenuContent><div dsDropdownMenuItem tone="danger" start="trash" shortcut="Del" textValue="Delete">Delete</div></ng-template>
+    </ng-container>
+  `,
+
+Host attributes after render:
+t1: aria-disabled=true aria-pressed=true data-disabled= data-ds=toggle-button data-emphasis=outline data-shape=pill data-size=sm data-state=on data-tone=accent id=t1 type=button
+t2: aria-pressed=false data-ds=toggle-button data-emphasis=soft data-shape=default data-size=md data-state=off data-tone=neutral id=t2 type=button
+c1: aria-disabled=true aria-label=Close panel data-disabled= data-ds=close-button data-emphasis=ghost data-shape=default data-size=sm data-tone=neutral id=c1 type=button
+p1: aria-disabled=true aria-label=Copy id data-disabled= data-ds=copy-button data-emphasis=ghost data-shape=default data-size=md data-state=idle data-tone=accent id=p1 type=button
+p2: aria-describedby=hint data-ds=copy-button data-emphasis=ghost data-shape=default data-size=md data-state=idle data-tone=neutral id=p2 type=button
+f1: aria-disabled=true data-disabled= data-ds=floating-action-button data-emphasis=solid data-extended= data-position=static data-shape=default data-size=lg data-tone=accent id=f1 type=button
+l1: data-ds=link data-size=sm data-standalone= data-tone=accent href=#a id=l1 rel=noopener noreferrer target=_blank
+l2: data-ds=link data-tone=neutral href=#a id=l2
+l3: data-ds=link data-tone=neutral href=#a id=l3
+g1: aria-label=View data-attached= data-ds=button-group data-emphasis=outline data-full-width= data-orientation=vertical data-shape=pill data-size=sm id=g1 role=group
+g1b: data-ds=button data-emphasis=outline data-shape=pill data-size=sm data-tone=neutral id=g1b type=button
+g1t: aria-pressed=false data-ds=toggle-button data-emphasis=outline data-shape=pill data-size=lg data-state=off data-tone=neutral id=g1t type=button
+s1: data-disabled= data-ds=split-button data-emphasis=solid data-shape=default data-size=sm data-tone=accent id=s1
+m1: aria-expanded=false aria-haspopup=menu data-ds=button data-emphasis=soft data-shape=default data-size=md data-state=closed data-tone=neutral id=m1 type=button
+s1 child: <button aria-disabled=true data-disabled= data-ds=button data-emphasis=solid data-part=action data-shape=default data-size=sm data-tone=accent type=button>
+s1 child: <button aria-disabled=true aria-expanded=false aria-haspopup=menu aria-label=More publish options data-disabled= data-ds=icon-button data-emphasis=solid data-part=trigger data-shape=default data-size=sm data-state=closed data-tone=accent id=ds-menu-trigger-3 type=button>
+menu item: data-highlighted= data-orientation=vertical data-part=item data-radix-collection-item= data-tone=danger role=menuitem tabindex=0
