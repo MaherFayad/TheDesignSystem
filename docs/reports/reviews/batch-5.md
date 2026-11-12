@@ -37,10 +37,11 @@ language. Six of the blockers are one line or a few lines each.
   **308 passed, 4 failed**. The four failures are "no sideways scroll at
   320px" for Meter and NotificationCenter, en ltr and ar rtl. Cause: the demo
   grids (see Meter and NotificationCenter below), not the components.
-- `npm run a11y`: started on the whole gallery (600 axe runs on 45 pages).
-  At the time of writing every failure it had printed was on `/c/accordion`
-  (a locator click timeout, outside this batch); none on the eleven pages of
-  this batch. Its report file is not part of this commit.
+- `npm run a11y`: 600 axe runs on 45 pages, **576 pass, 24 fail**. All 24
+  failures are outside this batch: a locator click timeout when opening
+  `/c/accordion` and `/c/section` (12 each, every style, scheme and
+  direction). The eleven pages of this batch pass in every run. The
+  regenerated `docs/reports/a11y-react.*` files are not part of this commit.
 - My own Playwright run (chromium headless, `@axe-core/playwright`), React
   gallery on port 5173, `chrome=0`:
   - axe (wcag2a, wcag2aa, wcag21aa, wcag22aa and best practice) on every
