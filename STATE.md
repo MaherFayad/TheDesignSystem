@@ -32,7 +32,7 @@ No adb. No iOS build.
 | 0.14 | Contract suite | ds-qa | react | done | cd05ff1 |
 | 0.15 | Angular proof | ds-angular | angular | open | |
 | 0.16 | React Native proof | ds-native | native | open | |
-| 0.17 | Desk Light | ds-style | all | open | |
+| 0.17 | Desk Light | ds-style | all | done, proposed | f7e054b |
 | 0.18 | Consumers | ds-docs | react | open | |
 | 0.19 | Matrix | ds-qa | all | open | |
 | 0.20 | Gate 0 report | lead | all | open | |
@@ -46,7 +46,15 @@ No adb. No iOS build.
 Nothing.
 
 ## Waiting on owner
-Nothing.
+1. Desk Light approval (HUMAN GATE). Proposal and screenshots:
+   `docs/reports/desk-light.md`. Three open choices, each with a
+   recommendation: warm or neutral desk (warm), how strong the gold border on
+   the yellow primary is (`#987400`, 3.35:1), and window light colors on a
+   light title bar (deeper tones that reach 3:1).
+2. Desk dark: muted and subtle text on glass drops to 3.04 to 4.33 when the
+   glass sits over bright content. These are the GoBanana values, kept as
+   known failures in the contrast gate. Change the values, or confirm that
+   bright content never sits behind Desk glass.
 
 ## Owner answers
 1. 2026-11-12: pushing. The owner approved pushing the session branch
