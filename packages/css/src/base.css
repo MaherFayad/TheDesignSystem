@@ -20,7 +20,6 @@
     background-color: var(--ds-color-bg-body);
     color: var(--ds-color-text-default);
     font-family: var(--ds-font-family-sans);
-    font-size: var(--ds-font-size-m);
     font-weight: var(--ds-font-weight-regular);
     line-height: var(--ds-font-leading-normal);
     letter-spacing: var(--ds-font-tracking-none);
@@ -47,6 +46,17 @@
   }
 
   /*
+   * The system text size. A Theme on <html> leaves the root font size alone,
+   * so rem stays the browser default and follows the user's font size setting
+   * (WCAG 1.4.4); the size applies from <body> down instead. A Theme on any
+   * other element sets it on itself. Arabic keeps this size: only s moves.
+   */
+  [data-ds='theme']:not(html),
+  html[data-ds='theme'] > body {
+    font-size: var(--ds-font-size-m);
+  }
+
+  /*
    * Arabic. IBM Plex Sans Arabic through the arabic family token, zero
    * tracking, the taller Arabic line heights, and small text one step up.
    * Body text keeps its size. The tokens are switched on every element below
@@ -68,7 +78,12 @@
     --ds-font-size-s: var(--ds-font-size-m);
   }
 
-  /* The Arabic Theme element itself: its tokens stay Latin, so it reads the Arabic ones directly. */
+  /*
+   * The Arabic Theme element itself: its tokens stay Latin, so it reads the
+   * Arabic ones directly. On <html> this sets no size, only the family and
+   * leading that <body> inherits; <body> is below the Theme element, so the
+   * token switch above (s step included) runs on it.
+   */
   [data-ds='theme']:lang(ar) {
     font-family: var(--ds-font-family-arabic);
     line-height: var(--ds-font-leading-arabic-normal);

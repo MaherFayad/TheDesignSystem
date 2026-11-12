@@ -196,6 +196,43 @@ check('Arabic small text is one step up (s reads m)', type.smallSize === type.pS
 check('Arabic text uses IBM Plex Sans Arabic', type.pFont.startsWith('"IBM Plex Sans Arabic"'), type.pFont);
 check('a lang="en" island inside Arabic gets the Latin font and leading', type.islandFont.startsWith('"Instrument Sans"') && type.islandLeading !== type.pLeading, `${type.islandFont}; ${type.islandLeading} vs ${type.pLeading}`);
 
+// The theme is stamped on <html> too: the root font size stays the browser
+// default, so rem is 16px, and the system size starts at <body>.
+async function rootType() {
+  return page.evaluate(() => {
+    const html = document.documentElement;
+    const body = document.body;
+    const probe = document.createElement('span');
+    probe.style.fontSize = 'var(--ds-font-size-m)';
+    body.append(probe);
+    const m = getComputedStyle(probe).fontSize;
+    probe.remove();
+    const cs = getComputedStyle(body);
+    return {
+      themed: html.getAttribute('data-ds'),
+      html: getComputedStyle(html).fontSize,
+      body: cs.fontSize,
+      m,
+      bodyFont: cs.fontFamily,
+      bodyLeading: Number.parseFloat(cs.lineHeight) / Number.parseFloat(cs.fontSize),
+      bodyS: cs.getPropertyValue('--ds-font-size-s').trim(),
+      bodyM: cs.getPropertyValue('--ds-font-size-m').trim(),
+      arabicLeading: Number.parseFloat(cs.getPropertyValue('--ds-font-leading-arabic-normal')),
+    };
+  });
+}
+for (const style of ['studio', 'desk']) {
+  await open(`?style=${style}&chrome=0`);
+  const en = await rootType();
+  check(`${style}: html is themed and keeps a 16px root font size`, en.themed === 'theme' && en.html === '16px', en.html);
+  check(`${style}: body text is font.size.m`, en.body === en.m, `${en.body} vs ${en.m}`);
+  await open(`?style=${style}&lang=ar&chrome=0`);
+  const ar = await rootType();
+  check(`${style} Arabic: html keeps 16px and body stays at font.size.m`, ar.html === '16px' && ar.body === ar.m, `${ar.html}, ${ar.body} vs ${ar.m}`);
+  check(`${style} Arabic: body uses IBM Plex Sans Arabic with the Arabic leading`, ar.bodyFont.startsWith('"IBM Plex Sans Arabic"') && Math.abs(ar.bodyLeading - ar.arabicLeading) < 0.01, `${ar.bodyFont}; ${ar.bodyLeading.toFixed(3)} vs ${ar.arabicLeading}`);
+  check(`${style} Arabic: s moves one step up from body down`, ar.bodyS !== '' && ar.bodyS === ar.bodyM, `${ar.bodyS} vs ${ar.bodyM}`);
+}
+
 // The index and the kitchen sink render.
 await page.goto(`${base}/`);
 check('the index lists the demos', (await page.locator('[data-gallery="index"] a[href^="/c/"]').count()) > 0);
