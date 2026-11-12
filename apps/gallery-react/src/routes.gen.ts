@@ -28,6 +28,7 @@ export const routes: DemoRoute[] = [
   { name: 'Chip', slug: 'chip', load: () => import('../../../packages/react/src/components/Chip/Chip.demo') },
   { name: 'CloseButton', slug: 'close-button', load: () => import('../../../packages/react/src/components/CloseButton/CloseButton.demo') },
   { name: 'Combobox', slug: 'combobox', load: () => import('../../../packages/react/src/components/Combobox/Combobox.demo') },
+  { name: 'CommandPalette', slug: 'command-palette', load: () => import('../../../packages/react/src/components/CommandPalette/CommandPalette.demo') },
   { name: 'Container', slug: 'container', load: () => import('../../../packages/react/src/components/Container/Container.demo') },
   { name: 'ContextMenu', slug: 'context-menu', load: () => import('../../../packages/react/src/components/ContextMenu/ContextMenu.demo') },
   { name: 'CopyButton', slug: 'copy-button', load: () => import('../../../packages/react/src/components/CopyButton/CopyButton.demo') },

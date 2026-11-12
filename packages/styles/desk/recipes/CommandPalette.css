@@ -1,0 +1,74 @@
+/*
+ * Desk recipe for CommandPalette: the palette is a glass window, as the Desk
+ * dialog is, and its rows are the Desk menu rows. Sources: GoBanana `.dwin`
+ * and `.mb-item` in desktop/desktop.css, through the Desk Dialog and ListBox
+ * recipes, which draw the same materials.
+ *
+ * What tokens cannot say:
+ * - glass on the panel (a backdrop filter), with the strong glass so text
+ *   reads at 4.5:1 over any page behind the scrim, and no flat bands: the
+ *   search and the hints sit on the glass under and over a hairline;
+ * - the lit row takes the yellow primary fill with dark text, and its icon
+ *   and description take the same dark text;
+ * - the window radius and the window grow on its open timing (pattern
+ *   "dialog", the values of window-grow without a trigger).
+ */
+@layer ds.recipes {
+  [data-style='desk'] [data-ds='command-palette'] {
+    --_command-palette-bg: var(--ds-color-material-glass-strong);
+    --_command-palette-border-color: var(--ds-color-border-hairline);
+    --_command-palette-radius: var(--ds-radius-window);
+    --_command-palette-shadow: var(--ds-elevation-window);
+    --_command-palette-backdrop: blur(var(--ds-blur-window)) saturate(var(--ds-blur-window-saturation));
+    --_command-palette-band-bg: transparent;
+    --_command-palette-divider-color: var(--ds-color-border-hairline);
+    --_command-palette-item-radius: var(--ds-radius-field);
+    --_command-palette-item-bg-highlight: var(--ds-color-primary-fill);
+    --_command-palette-item-fg-highlight: var(--ds-color-primary-text);
+    --_command-palette-meta-fg-highlight: var(--ds-color-primary-text);
+    --_command-palette-enter-y: 0;
+    --_command-palette-enter-scale: var(--ds-scale-window-enter);
+    --_command-palette-duration-in: var(--ds-duration-window-open);
+    --_command-palette-duration-out: var(--ds-duration-window-close);
+    --_command-palette-ease-in: var(--ds-ease-window);
+  }
+
+  @media (prefers-reduced-transparency: reduce) {
+    [data-style='desk'] [data-ds='command-palette'] {
+      --_command-palette-backdrop: none;
+    }
+  }
+
+  @media (prefers-contrast: more) {
+    [data-style='desk'] [data-ds='command-palette'] {
+      --_command-palette-backdrop: none;
+      --_command-palette-border-color: var(--ds-color-border-strong);
+      --_command-palette-divider-color: var(--ds-color-border-strong);
+    }
+  }
+
+  [data-style='desk'][data-contrast='more'] [data-ds='command-palette'] {
+    --_command-palette-backdrop: none;
+    --_command-palette-border-color: var(--ds-color-border-strong);
+    --_command-palette-divider-color: var(--ds-color-border-strong);
+  }
+
+  @media (forced-colors: active) {
+    [data-style='desk'] [data-ds='command-palette'] {
+      --_command-palette-bg: Canvas;
+      --_command-palette-backdrop: none;
+      --_command-palette-border-color: CanvasText;
+      --_command-palette-divider-color: CanvasText;
+      --_command-palette-item-bg-highlight: Highlight;
+      --_command-palette-item-fg-highlight: HighlightText;
+      --_command-palette-meta-fg-highlight: HighlightText;
+    }
+  }
+
+  /* No backdrop filter in the browser: the solid material, never glass it cannot blur. */
+  @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+    [data-style='desk'] [data-ds='command-palette'] {
+      --_command-palette-bg: var(--ds-color-material-glass-solid);
+    }
+  }
+}
