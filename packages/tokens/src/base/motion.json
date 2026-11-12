@@ -1,0 +1,223 @@
+{
+  "duration": {
+    "instant": {
+      "$type": "duration",
+      "$value": {
+        "value": 70,
+        "unit": "ms"
+      },
+      "$description": "Keycap press."
+    },
+    "fast": {
+      "$type": "duration",
+      "$value": {
+        "value": 80,
+        "unit": "ms"
+      },
+      "$description": "Tooltip fade, overlay close."
+    },
+    "quick": {
+      "$type": "duration",
+      "$value": {
+        "value": 100,
+        "unit": "ms"
+      },
+      "$description": "Menu exit, tab colour."
+    },
+    "base": {
+      "$type": "duration",
+      "$value": {
+        "value": 120,
+        "unit": "ms"
+      },
+      "$description": "Default hover and state changes, spotlight open."
+    },
+    "medium": {
+      "$type": "duration",
+      "$value": {
+        "value": 140,
+        "unit": "ms"
+      },
+      "$description": "Rail indicator, toast enter."
+    },
+    "moderate": {
+      "$type": "duration",
+      "$value": {
+        "value": 150,
+        "unit": "ms"
+      },
+      "$description": "Button colour transitions."
+    },
+    "slow": {
+      "$type": "duration",
+      "$value": {
+        "value": 180,
+        "unit": "ms"
+      },
+      "$description": "Sidebar open and close, notch roll."
+    },
+    "zoom": {
+      "$type": "duration",
+      "$value": {
+        "value": 220,
+        "unit": "ms"
+      },
+      "$description": "Discrete zoom (buttons, keys, fit)."
+    },
+    "reveal": {
+      "$type": "duration",
+      "$value": {
+        "value": 640,
+        "unit": "ms"
+      },
+      "$description": "Site scroll reveals (app/(site)/_components/Reveal.tsx): a section fades and rises in once, and each item after the first waits one stagger step more."
+    },
+    "shimmer": {
+      "$type": "duration",
+      "$value": {
+        "value": 1.4,
+        "unit": "s"
+      },
+      "$description": "Skeleton shimmer loop."
+    },
+    "spin": {
+      "$type": "duration",
+      "$value": {
+        "value": 0.8,
+        "unit": "s"
+      },
+      "$description": "Spinner loop."
+    },
+    "window-open": {
+      "$type": "duration",
+      "$value": {
+        "value": 300,
+        "unit": "ms"
+      },
+      "$description": "Window motion (open, close, zoom, minimize), macOS style: a quick settle with a soft end. The page behind a window that opens over it is dimmed and softly blurred."
+    },
+    "window-close": {
+      "$type": "duration",
+      "$value": {
+        "value": 220,
+        "unit": "ms"
+      },
+      "$description": "Window close and minimize."
+    },
+    "roll": {
+      "$type": "duration",
+      "$value": {
+        "value": 0.3,
+        "unit": "s"
+      },
+      "$description": "Desk label roll, light colour change, dock lift."
+    }
+  },
+  "delay": {
+    "peek-hide": {
+      "$type": "duration",
+      "$value": {
+        "value": 600,
+        "unit": "ms"
+      },
+      "$description": "Grace period before peek chrome rolls away."
+    },
+    "reveal-step": {
+      "$type": "duration",
+      "$value": {
+        "value": 80,
+        "unit": "ms"
+      },
+      "$description": "Stagger step between revealed items."
+    }
+  },
+  "ease": {
+    "default": {
+      "$type": "cubicBezier",
+      "$value": [0.25, 0.1, 0.25, 1],
+      "$description": "The CSS ease keyword as a curve."
+    },
+    "out": {
+      "$type": "cubicBezier",
+      "$value": [0, 0, 0.58, 1],
+      "$description": "The CSS ease-out keyword as a curve."
+    },
+    "in": {
+      "$type": "cubicBezier",
+      "$value": [0.42, 0, 1, 1],
+      "$description": "The CSS ease-in keyword as a curve."
+    },
+    "standard": {
+      "$type": "cubicBezier",
+      "$value": [0.4, 0, 0.2, 1],
+      "$description": "Zoom and pan animations."
+    },
+    "emphasized": {
+      "$type": "cubicBezier",
+      "$value": [0.16, 1, 0.3, 1],
+      "$description": "Menu enter."
+    },
+    "exit": {
+      "$type": "cubicBezier",
+      "$value": [0.4, 0, 1, 1],
+      "$description": "Menu exit."
+    },
+    "reveal": {
+      "$type": "cubicBezier",
+      "$value": [0.22, 1, 0.36, 1],
+      "$description": "Scroll reveals and the hero headline: a long ease out that settles softly."
+    },
+    "window": {
+      "$type": "cubicBezier",
+      "$value": [0.2, 0.8, 0.2, 1],
+      "$description": "Window open, close, zoom and minimize. A quick settle with a soft end."
+    }
+  },
+  "spring": {
+    "press": {
+      "stiffness": {
+        "$type": "number",
+        "$value": 520,
+        "$description": "Press scale on a control. Stiff, settles fast. No source value; set for the contract."
+      },
+      "damping": {
+        "$type": "number",
+        "$value": 32
+      },
+      "mass": {
+        "$type": "number",
+        "$value": 1
+      }
+    },
+    "sheet": {
+      "stiffness": {
+        "$type": "number",
+        "$value": 300,
+        "$description": "Sheets and drawers moving between detents. No source value; set for the contract."
+      },
+      "damping": {
+        "$type": "number",
+        "$value": 30
+      },
+      "mass": {
+        "$type": "number",
+        "$value": 1
+      }
+    },
+    "merge": {
+      "stiffness": {
+        "$type": "number",
+        "$value": 220,
+        "$description": "Shapes that merge and split, a softer settle. No source value; set for the contract."
+      },
+      "damping": {
+        "$type": "number",
+        "$value": 24
+      },
+      "mass": {
+        "$type": "number",
+        "$value": 1
+      }
+    }
+  }
+}

@@ -1,0 +1,590 @@
+{
+  "menu": {
+    "item": {
+      "height": {
+        "$type": "dimension",
+        "$value": {
+          "value": 28,
+          "unit": "px"
+        }
+      }
+    },
+    "width": {
+      "min": {
+        "$type": "dimension",
+        "$value": {
+          "value": 200,
+          "unit": "px"
+        }
+      }
+    }
+  },
+  "list": {
+    "row": {
+      "height": {
+        "$type": "dimension",
+        "$value": {
+          "value": 28,
+          "unit": "px"
+        }
+      }
+    }
+  },
+  "inspector": {
+    "row": {
+      "height": {
+        "$type": "dimension",
+        "$value": {
+          "value": 32,
+          "unit": "px"
+        },
+        "$description": "Studio inspector row."
+      }
+    },
+    "padding": {
+      "inline": {
+        "$type": "dimension",
+        "$value": {
+          "value": 12,
+          "unit": "px"
+        },
+        "$description": "Inline padding of the inspector panel."
+      }
+    },
+    "header": {
+      "height": {
+        "$type": "dimension",
+        "$value": {
+          "value": 32,
+          "unit": "px"
+        }
+      }
+    },
+    "field": {
+      "gap": {
+        "$type": "dimension",
+        "$value": {
+          "value": 6,
+          "unit": "px"
+        },
+        "$description": "Gutter between two fields on one row, and between caption groups."
+      },
+      "radius": {
+        "$type": "dimension",
+        "$value": "{radius.field}",
+        "$description": "Inspector fields are filled rectangles, not pills."
+      }
+    },
+    "group": {
+      "gap": {
+        "$type": "dimension",
+        "$value": {
+          "value": 8,
+          "unit": "px"
+        }
+      }
+    },
+    "caption": {
+      "gap": {
+        "$type": "dimension",
+        "$value": {
+          "value": 3,
+          "unit": "px"
+        },
+        "$description": "Caption to the field it names."
+      }
+    },
+    "label": {
+      "width": {
+        "$type": "dimension",
+        "$value": {
+          "value": 68,
+          "unit": "px"
+        },
+        "$description": "Text label column, for rows with no glyph."
+      }
+    },
+    "rail": {
+      "width": {
+        "$type": "dimension",
+        "$value": {
+          "value": 32,
+          "unit": "px"
+        },
+        "$description": "The vertical category rail column."
+      }
+    },
+    "accent": {
+      "dark": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [0.4941, 1, 0.9608],
+          "alpha": 1,
+          "hex": "#7efff5"
+        },
+        "$description": "Accent for a control on a dark field."
+      },
+      "light": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [0.4118, 0.0667, 0.8314],
+          "alpha": 1,
+          "hex": "#6911d4"
+        },
+        "$description": "Accent for a control on a light field."
+      }
+    }
+  },
+  "shell": {
+    "topbar": {
+      "height": {
+        "$type": "dimension",
+        "$value": {
+          "value": 36,
+          "unit": "px"
+        },
+        "$description": "Shell layout"
+      }
+    },
+    "rail": {
+      "width": {
+        "$type": "dimension",
+        "$value": {
+          "value": 42,
+          "unit": "px"
+        }
+      }
+    },
+    "sidebar": {
+      "width": {
+        "start": {
+          "$type": "dimension",
+          "$value": {
+            "value": 320,
+            "unit": "px"
+          }
+        },
+        "end": {
+          "$type": "dimension",
+          "$value": {
+            "value": 290,
+            "unit": "px"
+          }
+        },
+        "min": {
+          "$type": "dimension",
+          "$value": {
+            "value": 260,
+            "unit": "px"
+          }
+        },
+        "max": {
+          "$type": "dimension",
+          "$value": {
+            "value": 520,
+            "unit": "px"
+          }
+        }
+      }
+    }
+  },
+  "canvas": {
+    "corner": {
+      "radius": {
+        "$type": "dimension",
+        "$value": "{radius.card}",
+        "$description": "The canvas is inset into the black shell with a rounded top-start corner."
+      }
+    },
+    "handle": {
+      "size": {
+        "$type": "dimension",
+        "$value": {
+          "value": 9,
+          "unit": "px"
+        },
+        "$description": "Visible corner handle. Its hit area is --st-target-min."
+      }
+    },
+    "edge": {
+      "hit": {
+        "$type": "dimension",
+        "$value": {
+          "value": 7,
+          "unit": "px"
+        },
+        "$description": "Invisible edge strips in Studio. Banana pads them to 24px."
+      }
+    },
+    "selection": {
+      "width": {
+        "$type": "dimension",
+        "$value": {
+          "value": 2,
+          "unit": "px"
+        }
+      },
+      "offset": {
+        "$type": "dimension",
+        "$value": {
+          "value": 2,
+          "unit": "px"
+        }
+      }
+    },
+    "frame": {
+      "gap": {
+        "$type": "dimension",
+        "$value": {
+          "value": 40,
+          "unit": "px"
+        }
+      },
+      "paper": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [1, 1, 1],
+          "alpha": 1,
+          "hex": "#ffffff"
+        },
+        "$description": "The paper a frame is painted on, light page scheme."
+      },
+      "paper-dark": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [0.0706, 0.0706, 0.0706],
+          "alpha": 1,
+          "hex": "#121212"
+        },
+        "$description": "The paper a frame is painted on, dark page scheme."
+      }
+    },
+    "zoom-fit": {
+      "padding": {
+        "$type": "dimension",
+        "$value": {
+          "value": 64,
+          "unit": "px"
+        }
+      }
+    },
+    "comment": {
+      "pin": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [1, 0.6902, 0.1255],
+          "alpha": 1,
+          "hex": "#ffb020"
+        },
+        "$description": "Review comment pin."
+      },
+      "pin-text": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [0.102, 0.0706, 0],
+          "alpha": 1,
+          "hex": "#1a1200"
+        }
+      },
+      "pin-ring": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [1, 1, 1],
+          "alpha": 1,
+          "hex": "#ffffff"
+        },
+        "$description": "Ring that separates a pin from the page behind it."
+      },
+      "pin-resolved": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [0.4196, 0.4196, 0.4196],
+          "alpha": 1,
+          "hex": "#6b6b6b"
+        }
+      },
+      "pin-stale": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [1, 0.3608, 0.3608],
+          "alpha": 1,
+          "hex": "#ff5c5c"
+        }
+      }
+    },
+    "prototype": {
+      "link": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [0.2196, 0.7412, 0.9725],
+          "alpha": 1,
+          "hex": "#38bdf8"
+        },
+        "$description": "A prototype link the user drew."
+      },
+      "link-draft": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [0.4902, 0.8275, 0.9882],
+          "alpha": 1,
+          "hex": "#7dd3fc"
+        }
+      },
+      "drop-wash": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [0.2196, 0.7412, 0.9725],
+          "alpha": 0.12,
+          "hex": "#38bdf8"
+        }
+      }
+    },
+    "measure": {
+      "line": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [0.9098, 0.2196, 0.3098],
+          "alpha": 1,
+          "hex": "#e8384f"
+        },
+        "$description": "Alt hover distance lines."
+      },
+      "pill-bg": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [0.9098, 0.2196, 0.3098],
+          "alpha": 1,
+          "hex": "#e8384f"
+        }
+      },
+      "pill-text": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [1, 0.9608, 0.9647],
+          "alpha": 1,
+          "hex": "#fff5f6"
+        }
+      },
+      "padding-fill": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [0.5922, 0.4627, 0.9137],
+          "alpha": 0.3,
+          "hex": "#9776e9"
+        }
+      },
+      "padding-line": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [0.5922, 0.4627, 0.9137],
+          "alpha": 1,
+          "hex": "#9776e9"
+        }
+      },
+      "padding-text": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [0.9686, 0.9569, 1],
+          "alpha": 1,
+          "hex": "#f7f4ff"
+        }
+      }
+    },
+    "flow": {
+      "code": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [0.5569, 0.6078, 0.6902],
+          "alpha": 1,
+          "hex": "#8e9bb0"
+        },
+        "$description": "A flow connector derived from code. Achromatic on purpose."
+      },
+      "code-chip": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [0.1098, 0.1294, 0.1608],
+          "alpha": 1,
+          "hex": "#1c2129"
+        }
+      },
+      "code-chip-text": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [0.8431, 0.8706, 0.9137],
+          "alpha": 1,
+          "hex": "#d7dee9"
+        }
+      },
+      "design": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [0, 0.8196, 0.6275],
+          "alpha": 1,
+          "hex": "#00d1a0"
+        },
+        "$description": "A flow connector the user drew."
+      },
+      "design-text": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [0.0157, 0.1294, 0.102],
+          "alpha": 1,
+          "hex": "#04211a"
+        }
+      }
+    },
+    "ruler": {
+      "guide": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [0.6941, 0.3059, 1],
+          "alpha": 1,
+          "hex": "#b14eff"
+        },
+        "$description": "A saved ruler guide."
+      }
+    }
+  },
+  "spotlight": {
+    "width": {
+      "$type": "dimension",
+      "$value": {
+        "value": 640,
+        "unit": "px"
+      }
+    }
+  },
+  "dialog": {
+    "width": {
+      "sm": {
+        "$type": "dimension",
+        "$value": {
+          "value": 360,
+          "unit": "px"
+        }
+      },
+      "md": {
+        "$type": "dimension",
+        "$value": {
+          "value": 440,
+          "unit": "px"
+        }
+      },
+      "lg": {
+        "$type": "dimension",
+        "$value": {
+          "value": 520,
+          "unit": "px"
+        }
+      },
+      "xl": {
+        "$type": "dimension",
+        "$value": {
+          "value": 640,
+          "unit": "px"
+        }
+      },
+      "2xl": {
+        "$type": "dimension",
+        "$value": {
+          "value": 820,
+          "unit": "px"
+        }
+      }
+    },
+    "height": {
+      "max": {
+        "$type": "number",
+        "$value": 80,
+        "$extensions": {
+          "ds.unit": "vh"
+        },
+        "$description": "Dialog max block size, a share of the viewport height."
+      }
+    }
+  },
+  "tooltip": {
+    "width": {
+      "max": {
+        "$type": "dimension",
+        "$value": {
+          "value": 240,
+          "unit": "px"
+        }
+      }
+    }
+  },
+  "toast": {
+    "width": {
+      "max": {
+        "$type": "dimension",
+        "$value": {
+          "value": 420,
+          "unit": "px"
+        }
+      }
+    },
+    "inset": {
+      "$type": "dimension",
+      "$value": {
+        "value": 16,
+        "unit": "px"
+      },
+      "$description": "Use with inset-block-end and inset-inline-end so the stack flips in RTL."
+    }
+  },
+  "scrollbar": {
+    "size": {
+      "$type": "dimension",
+      "$value": {
+        "value": 6,
+        "unit": "px"
+      }
+    }
+  },
+  "control-row": {
+    "label": {
+      "width": {
+        "$type": "dimension",
+        "$value": {
+          "value": 100,
+          "unit": "px"
+        },
+        "$description": "Label column of a form control row."
+      }
+    },
+    "height": {
+      "$type": "dimension",
+      "$value": {
+        "value": 28,
+        "unit": "px"
+      },
+      "$description": "Height of a form control row."
+    }
+  }
+}

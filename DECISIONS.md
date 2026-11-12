@@ -51,6 +51,23 @@ Newest first inside each section. Each entry has a date and the reasoning.
    not list: `parts` (named sub components), `contract` (hints for the
    generated contract suite) and, for templates, `regions`, `uses`, `data`.
 
+## Tokens (2026-11-12)
+
+1. **DTCG 2025.10 is the format.** Differences from the shapes in PLAN.md are
+   listed in `docs/contracts/tokens.md`. The spec wins: `em` and `vh` values
+   are numbers with a `ds.unit` extension, and springs are groups of numbers.
+2. **64 names added to the contract** under `added` in `contract.json`, so
+   that no source token is dropped (overlay and scrim steps, glass variants,
+   `text.placeholder`, `state.*.on-tint`, chart ordinal colors, Arabic
+   leading, extra durations and eases). The mapping is in
+   `docs/contracts/token-mapping.md`.
+3. **Studio primary is neutral.** The yellow primary applies to Desk only, as
+   the dials table says.
+4. **First pass values with no source:** chart categorical 7 and 8,
+   sequential 7, diverging, status critical, the info state, Desk glass-clear
+   and glass-tinted, the three springs. They are reviewed with the charts
+   (wave 2) and with Liquid.
+
 ## Conflicts between the prompt and a source repo
 
 None yet.

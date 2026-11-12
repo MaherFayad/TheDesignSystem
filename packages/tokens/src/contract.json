@@ -1,0 +1,512 @@
+{
+  "$description": "Semantic names every style must fill, in every scheme. names come from section 3.6 of PLAN.md; added lists the names this contract adds. Extend only by adding here. Read by the token build, the gates and the style generator.",
+  "groups": [
+    {
+      "group": "color.bg",
+      "type": "color",
+      "names": [
+        "body",
+        "surface",
+        "surface-2",
+        "surface-3",
+        "surface-4",
+        "surface-5",
+        "overlay-5",
+        "overlay-10",
+        "overlay-20",
+        "overlay-30",
+        "scrim",
+        "inverse"
+      ],
+      "added": [
+        "overlay-solid",
+        "overlay-40",
+        "overlay-50",
+        "overlay-60",
+        "overlay-70",
+        "overlay-80",
+        "overlay-90",
+        "scrim-solid",
+        "scrim-10",
+        "scrim-20",
+        "scrim-30",
+        "scrim-40",
+        "scrim-50",
+        "scrim-60",
+        "scrim-70",
+        "scrim-80",
+        "scrim-90"
+      ]
+    },
+    {
+      "group": "color.material",
+      "type": "color",
+      "names": [
+        "glass",
+        "glass-strong",
+        "glass-clear",
+        "glass-tinted",
+        "glass-solid",
+        "glass-edge",
+        "titlebar",
+        "menubar",
+        "dock"
+      ],
+      "added": [
+        "glass-flat",
+        "glass-border",
+        "glass-hover"
+      ]
+    },
+    {
+      "group": "color.border",
+      "type": "color",
+      "names": [
+        "subtle",
+        "muted",
+        "default",
+        "strong",
+        "control",
+        "hairline"
+      ],
+      "added": [
+        "control-hover"
+      ]
+    },
+    {
+      "group": "color.text",
+      "type": "color",
+      "names": [
+        "bright",
+        "default",
+        "muted",
+        "subtle",
+        "disabled",
+        "link",
+        "on-primary",
+        "on-accent"
+      ],
+      "added": [
+        "placeholder",
+        "dim"
+      ]
+    },
+    {
+      "group": "color.primary",
+      "type": "color",
+      "names": [
+        "fill",
+        "fill-hover",
+        "fill-pressed",
+        "text",
+        "border"
+      ],
+      "added": []
+    },
+    {
+      "group": "color.accent",
+      "type": "color",
+      "names": [
+        "1",
+        "2",
+        "3",
+        "4",
+        "5",
+        "6",
+        "7",
+        "8",
+        "9",
+        "10",
+        "1-tint",
+        "2-tint",
+        "3-tint",
+        "4-tint",
+        "5-tint",
+        "6-tint",
+        "7-tint",
+        "8-tint",
+        "9-tint",
+        "10-tint"
+      ],
+      "added": []
+    },
+    {
+      "group": "color.state",
+      "type": "color",
+      "names": [
+        "danger.fill",
+        "danger.text",
+        "danger.border",
+        "danger.tint-10",
+        "danger.tint-20",
+        "warning.fill",
+        "warning.text",
+        "warning.border",
+        "warning.tint-10",
+        "warning.tint-20",
+        "success.fill",
+        "success.text",
+        "success.border",
+        "success.tint-10",
+        "success.tint-20",
+        "info.fill",
+        "info.text",
+        "info.border",
+        "info.tint-10",
+        "info.tint-20"
+      ],
+      "added": [
+        "danger.on-tint",
+        "warning.on-tint",
+        "success.on-tint",
+        "info.on-tint"
+      ]
+    },
+    {
+      "group": "color.focus",
+      "type": "color",
+      "names": [
+        "ring",
+        "halo",
+        "ring-on-primary-inner",
+        "ring-on-primary-outer"
+      ],
+      "added": []
+    },
+    {
+      "group": "color.window",
+      "type": "color",
+      "names": [
+        "light-close",
+        "light-min",
+        "light-zoom",
+        "light-ink",
+        "light-idle"
+      ],
+      "added": []
+    },
+    {
+      "group": "color.canvas",
+      "type": "color",
+      "names": [
+        "selection",
+        "hover",
+        "selector",
+        "placeholder",
+        "guide"
+      ],
+      "added": []
+    },
+    {
+      "group": "color.chart",
+      "type": "color",
+      "names": [
+        "categorical.1",
+        "categorical.2",
+        "categorical.3",
+        "categorical.4",
+        "categorical.5",
+        "categorical.6",
+        "categorical.7",
+        "categorical.8",
+        "sequential.1",
+        "sequential.2",
+        "sequential.3",
+        "sequential.4",
+        "sequential.5",
+        "sequential.6",
+        "sequential.7",
+        "diverging.1",
+        "diverging.2",
+        "diverging.3",
+        "diverging.4",
+        "diverging.5",
+        "diverging.6",
+        "diverging.7",
+        "status.good",
+        "status.warning",
+        "status.critical",
+        "axis",
+        "grid",
+        "reference"
+      ],
+      "added": [
+        "muted",
+        "ordinal.1",
+        "ordinal.2",
+        "ordinal.3",
+        "ordinal.4",
+        "ordinal.5",
+        "ordinal.6",
+        "on-dark",
+        "on-light"
+      ]
+    },
+    {
+      "group": "radius",
+      "type": "dimension",
+      "names": [
+        "xs",
+        "sm",
+        "field",
+        "panel",
+        "card",
+        "control",
+        "window",
+        "sheet",
+        "pill"
+      ],
+      "added": []
+    },
+    {
+      "group": "border.width",
+      "type": "dimension",
+      "names": [
+        "default",
+        "strong"
+      ],
+      "added": []
+    },
+    {
+      "group": "space",
+      "type": "dimension",
+      "names": [
+        "4xs",
+        "3xs",
+        "2xs",
+        "xs",
+        "s",
+        "m",
+        "l",
+        "xl",
+        "2xl",
+        "3xl",
+        "4xl",
+        "5xl",
+        "6xl",
+        "7xl",
+        "8xl",
+        "9xl",
+        "10xl",
+        "11xl",
+        "12xl",
+        "fixed.4xs",
+        "fixed.3xs",
+        "fixed.2xs",
+        "fixed.xs",
+        "fixed.s",
+        "fixed.m",
+        "fixed.l",
+        "fixed.xl"
+      ],
+      "added": [
+        "px"
+      ]
+    },
+    {
+      "group": "size",
+      "type": "dimension",
+      "names": [
+        "control.xs",
+        "control.sm",
+        "control.md",
+        "control.lg",
+        "target-min",
+        "touch.ios",
+        "touch.android",
+        "icon.sm",
+        "icon.md",
+        "icon.lg"
+      ],
+      "added": []
+    },
+    {
+      "group": "font.family",
+      "type": "fontFamily",
+      "names": [
+        "sans",
+        "arabic",
+        "mono",
+        "display",
+        "display-arabic"
+      ],
+      "added": []
+    },
+    {
+      "group": "font.size",
+      "type": "dimension",
+      "names": [
+        "3xs",
+        "2xs",
+        "xs",
+        "s",
+        "m",
+        "l",
+        "xl",
+        "2xl",
+        "3xl",
+        "4xl",
+        "5xl",
+        "6xl",
+        "7xl"
+      ],
+      "added": []
+    },
+    {
+      "group": "font.weight",
+      "type": "fontWeight",
+      "names": [
+        "regular",
+        "medium",
+        "menu",
+        "semibold",
+        "bold"
+      ],
+      "added": []
+    },
+    {
+      "group": "font.leading",
+      "type": "number",
+      "names": [
+        "tight",
+        "snug",
+        "normal",
+        "relaxed"
+      ],
+      "added": [
+        "display",
+        "arabic.tight",
+        "arabic.snug",
+        "arabic.normal",
+        "arabic.relaxed"
+      ]
+    },
+    {
+      "group": "font.tracking",
+      "type": "number",
+      "names": [
+        "caps",
+        "eyebrow"
+      ],
+      "added": [
+        "display",
+        "none"
+      ]
+    },
+    {
+      "group": "elevation",
+      "type": "shadow",
+      "names": [
+        "panel",
+        "menu",
+        "dialog",
+        "tooltip",
+        "card",
+        "card-hover",
+        "input-focus",
+        "window",
+        "window-soft",
+        "glass"
+      ],
+      "added": []
+    },
+    {
+      "group": "blur",
+      "type": "dimension",
+      "names": [
+        "panel",
+        "backdrop",
+        "window",
+        "window-strong",
+        "glass",
+        "glass-strong"
+      ],
+      "added": []
+    },
+    {
+      "group": "duration",
+      "type": "duration",
+      "names": [
+        "instant",
+        "fast",
+        "quick",
+        "base",
+        "medium",
+        "moderate",
+        "slow",
+        "zoom",
+        "window-open",
+        "window-close",
+        "reveal"
+      ],
+      "added": [
+        "shimmer",
+        "spin",
+        "roll"
+      ]
+    },
+    {
+      "group": "delay",
+      "type": "duration",
+      "names": [],
+      "added": [
+        "peek-hide",
+        "reveal-step"
+      ]
+    },
+    {
+      "group": "ease",
+      "type": "cubicBezier",
+      "names": [
+        "standard",
+        "emphasized",
+        "exit",
+        "reveal",
+        "window"
+      ],
+      "added": [
+        "default",
+        "in",
+        "out"
+      ]
+    },
+    {
+      "group": "spring",
+      "type": "number",
+      "names": [
+        "press.stiffness",
+        "press.damping",
+        "press.mass",
+        "sheet.stiffness",
+        "sheet.damping",
+        "sheet.mass",
+        "merge.stiffness",
+        "merge.damping",
+        "merge.mass"
+      ],
+      "added": []
+    },
+    {
+      "group": "z",
+      "type": "number",
+      "names": [
+        "canvas",
+        "canvas-floating-toolbar",
+        "canvas-notch",
+        "canvas-overlay",
+        "canvas-selection",
+        "dialog",
+        "dropdown",
+        "floating-panel",
+        "menu",
+        "sidebar",
+        "spotlight",
+        "toast",
+        "toolbar-popover",
+        "tooltip",
+        "topbar"
+      ],
+      "added": []
+    }
+  ]
+}

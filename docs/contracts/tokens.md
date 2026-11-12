@@ -42,6 +42,30 @@ differs from the shapes in PLAN.md, the spec wins and DECISIONS.md records it.
 - Aliases use the DTCG reference syntax `{color.bg.surface}`.
 - Keep every "A11y change" note from the source as part of `$description`.
 
+## Where we follow the spec, and where we differ
+
+Checked against DTCG 2025.10, the first stable version (28 October 2025).
+
+- Dimensions allow only `px` and `rem`. Values in `em` or `vh` are
+  `$type: "number"` with `$extensions["ds.unit"]` holding the unit.
+- The color `hex` fallback has 6 digits. Alpha is its own field.
+- The spec has no spring type. A spring is a group of three number tokens:
+  `stiffness`, `damping`, `mass`.
+- The build supports curly brace aliases and group `$type` inheritance.
+  `$ref`, `$extends` and `$root` are not supported yet.
+- The spec recommends reverse domain extension keys and the `.tokens.json`
+  file extension. We keep `ds.fluid`, `ds.unit` and `tokens.dark.json`.
+
+## Contract file
+
+`packages/tokens/src/contract.json` lists each group with `names` (from
+section 3.6 of PLAN.md) and `added` (names added so no source token is
+dropped). Every style must fill both lists. Density overrides live in
+`packages/tokens/src/density/compact.json` and `comfortable.json`.
+
+Arabic line heights are their own tokens (`font.leading.arabic.*`).
+`base.css` switches to them under `:lang(ar)`.
+
 ## Names
 
 - CSS variable prefix: `--ds-`. Path `color.bg.surface` becomes
