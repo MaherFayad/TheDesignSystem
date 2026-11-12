@@ -22,6 +22,7 @@ import { DS_INPUT_GROUP } from './input-group';
     <div dsField label="Address" [disabled]="disabled()" readOnly>
       <div id="in-field" dsInputGroup>
         <div dsInput></div>
+        <button data-t="act" dsIconButton icon="copy" label="Copy" (click)="clicks = clicks + 1"></button>
         @if (showAddon()) {
           <span dsInputGroupAddon>px</span>
         }
@@ -33,6 +34,7 @@ import { DS_INPUT_GROUP } from './input-group';
 class Host {
   readonly disabled = signal(true);
   readonly showAddon = signal(true);
+  clicks = 0;
 }
 
 async function setup() {
@@ -89,5 +91,20 @@ describe('DsInputGroup', () => {
   it('leaves a button outside a group alone', async () => {
     const { q } = await setup();
     expect(q('#outside').getAttribute('data-part')).toBe('close');
+  });
+
+  it('disables an action with the group, and enables it again', async () => {
+    const { fixture, host, q } = await setup();
+    const act = q('[data-t="act"]');
+    expect(act.getAttribute('data-part')).toBe('action');
+    expect(act.getAttribute('aria-disabled')).toBe('true');
+    expect(act.hasAttribute('data-disabled')).toBe(true);
+    act.click();
+    expect(host.clicks).toBe(0);
+    host.disabled.set(false);
+    await fixture.whenStable();
+    expect(act.hasAttribute('aria-disabled')).toBe(false);
+    act.click();
+    expect(host.clicks).toBe(1);
   });
 });

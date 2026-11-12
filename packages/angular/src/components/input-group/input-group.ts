@@ -16,10 +16,10 @@
 //   read only where it sets none, and the add on ids in aria-describedby;
 // - an add on is `span[dsInputGroupAddon]`;
 // - a dsButton or dsIconButton in the group takes data-part="action"
-//   through DsInputGroupAction (part of DS_INPUT_GROUP). It cannot fill the
-//   button's own inputs, so write size, shape, emphasis="outline" and
-//   disabled on the action as React would fill them.
-import { ChangeDetectionStrategy, Component, DestroyRef, Directive, ElementRef, computed, forwardRef, inject, input, signal } from '@angular/core';
+//   through DsInputGroupAction (part of DS_INPUT_GROUP), and is disabled
+//   with the group. It cannot fill the button's own inputs, so write size,
+//   shape and emphasis="outline" on the action as React would fill them.
+import { ChangeDetectionStrategy, Component, DestroyRef, Directive, ElementRef, afterRenderEffect, computed, forwardRef, inject, input, signal } from '@angular/core';
 import type { Shape, Size } from '@the-system/shared';
 import { consumeHostAttributes } from '../../internal/host';
 import { DsFieldContext } from '../field/field-context';
@@ -71,7 +71,8 @@ export class DsInputGroup extends DsInputGroupContext {
   private count = 0;
 
   protected readonly isInvalid = computed(() => this.invalid() ?? this.field?.invalid() ?? false);
-  protected readonly isDisabled = computed(() => this.disabled() ?? this.field?.disabled() ?? false);
+  /** Disabled by the group or by the Field around it. */
+  readonly isDisabled = computed(() => this.disabled() ?? this.field?.disabled() ?? false);
   protected readonly isReadOnly = computed(() => this.readOnly() ?? this.field?.readOnly() ?? false);
 
   constructor() {
@@ -116,7 +117,12 @@ export class DsInputGroupAddon {
   }
 }
 
-/** Stamps data-part="action" on a dsButton or dsIconButton written in a group. */
+/**
+ * Stamps data-part="action" on a dsButton or dsIconButton written in a
+ * group. While the group or its Field is disabled, the action is disabled
+ * the way Button disables itself: aria-disabled and data-disabled, still
+ * focusable, click and auxclick blocked.
+ */
 @Directive({
   selector: 'button[dsButton], a[dsButton], button[dsIconButton], a[dsIconButton]',
 })
@@ -124,7 +130,29 @@ export class DsInputGroupAction {
   constructor() {
     // Outside a group it writes nothing, so a data-part of the caller's own stays.
     const host = inject<ElementRef<HTMLElement>>(ElementRef).nativeElement;
-    if (inject(DsInputGroup, { optional: true }) && typeof host.setAttribute === 'function') host.setAttribute('data-part', 'action');
+    const group = inject(DsInputGroup, { optional: true });
+    if (!group || typeof host.setAttribute !== 'function') return;
+    host.setAttribute('data-part', 'action');
+    let stamped = false;
+    // After render, so the button's own first host binding write does not clear it.
+    afterRenderEffect(() => {
+      const off = group.isDisabled();
+      if (off && !host.hasAttribute('aria-disabled')) {
+        host.setAttribute('aria-disabled', 'true');
+        host.setAttribute('data-disabled', '');
+        stamped = true;
+      } else if (!off && stamped) {
+        host.removeAttribute('aria-disabled');
+        host.removeAttribute('data-disabled');
+        stamped = false;
+      }
+    });
+    const block = (event: Event) => {
+      if (!stamped) return;
+      event.preventDefault();
+      event.stopImmediatePropagation();
+    };
+    for (const type of ['click', 'auxclick']) host.addEventListener(type, block, { capture: true });
   }
 }
 

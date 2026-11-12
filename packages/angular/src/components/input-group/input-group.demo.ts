@@ -3,7 +3,8 @@
 //
 // React fills an action's size, shape, emphasis (outline) and disabled from
 // the group. The Angular group cannot set another directive's inputs, so
-// the demo writes them on each action (see input-group.ts).
+// the demo writes them on each action (see input-group.ts). Disabled follows
+// the group by itself; the demo writes it too, as React would render it.
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { DEMO, sample } from '../../demo/demo';
 import { DsTheme } from '../../theme/theme';
