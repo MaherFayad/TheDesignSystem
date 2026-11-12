@@ -148,7 +148,10 @@
       "note": "No motion of its own: the children keep theirs (the Input focus fade, the Button press). Parts are stamped on direct children: the control through rootProps, actions as a data-part prop."
     },
     "angular": {
-      "status": "planned"
+      "status": "ready",
+      "behavior": "div[dsInputGroup], role group, provides DsInputGroupContext through DI",
+      "example": "input-group.demo.ts",
+      "note": "React clones its children to stamp the parts. Angular reads the group through DI: the control takes data-part control and the group's size, shape and state where it sets none, and the add on ids in aria-describedby; span[dsInputGroupAddon] is an add on; DsInputGroupAction stamps data-part action on a dsButton or dsIconButton in the group. It cannot fill the button's own inputs, so size, shape, emphasis outline and disabled are written on each action."
     },
     "native": {
       "status": "planned"

@@ -186,7 +186,10 @@
       "note": "Motion: the edit icon fades in on hover and focus, and the Input focus glow fades in. The swap between viewing and editing is instant."
     },
     "angular": {
-      "status": "planned"
+      "status": "ready",
+      "behavior": "div[dsInlineEdit] on dsButton, dsInput and dsIconButton, ControlValueAccessor",
+      "example": "inline-edit.demo.ts",
+      "note": "value is a model whose valueChange fires on save only (defaultValue is value); onEditingChange is the editingChange output; validate is a function input; error takes a string or a TemplateRef. Escape cancels in a window capture listener, so a dialog around it stays open."
     },
     "native": {
       "status": "planned"

@@ -202,7 +202,10 @@
       "note": "The root is the bordered box; the nested Input is the control part and keeps the Field wiring and the ref. The focus glow fades in as on Input; the spinner stops under reduced motion."
     },
     "angular": {
-      "status": "planned"
+      "status": "ready",
+      "behavior": "div[dsSearchField] on dsInput and dsIconButton, ControlValueAccessor",
+      "example": "search-field.demo.ts",
+      "note": "The root is the bordered box; the nested dsInput is the control part and keeps the Field wiring. value is a model (defaultValue is value); onValueChange, onSubmit and onClear are the valueChange, submit and clear outputs. end takes a TemplateRef. Escape clears in a window capture listener, as in React. Inside an InputGroup it is the control."
     },
     "native": {
       "status": "planned"

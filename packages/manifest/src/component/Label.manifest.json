@@ -120,9 +120,10 @@
       "note": "No motion: nothing on a label moves or fades, so there is no pattern to name and nothing to reduce."
     },
     "angular": {
-      "status": "planned",
+      "status": "ready",
       "behavior": "label[dsLabel], host bindings",
-      "note": "The host label is the root. Inside dsField the directive reads the field ids and state."
+      "example": "label.demo.ts",
+      "note": "The host label is the root. htmlFor is the htmlFor input or the native for attribute. label[dsFieldLabel] is the FieldLabel form: the field's label id, for and data-part label. The hidden required word uses the Radix VisuallyHidden inline style, so the DOM equals React's. optional takes a string or a TemplateRef."
     },
     "native": {
       "status": "planned",
