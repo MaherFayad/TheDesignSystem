@@ -30,16 +30,21 @@
     --_dialog-header-bg: transparent;
     --_dialog-footer-bg: transparent;
     --_dialog-divider-color: var(--ds-color-border-hairline);
-    --_dialog-duration-in: var(--ds-duration-window-open);
     --_dialog-duration-out: var(--ds-duration-window-close);
-    --_dialog-ease-in: var(--ds-ease-window);
   }
 
-  /* The centered members grow like a window; Drawer and Sheet keep their slide (pattern "sheet"). */
+  /* The centered members grow like a window on its timing; Drawer and Sheet keep their slide and timing (pattern "sheet"). */
   [data-style='desk'] :is([data-ds='dialog'], [data-ds='alert-dialog']) {
     --_dialog-padding: var(--ds-space-5xl);
     --_dialog-enter-y: 0;
     --_dialog-enter-scale: var(--ds-scale-window-enter);
+    --_dialog-duration-in: var(--ds-duration-window-open);
+    --_dialog-ease-in: var(--ds-ease-window);
+  }
+
+  /* The sheet keeps its own corner token over the window radius above. */
+  [data-style='desk'] [data-ds='sheet'] {
+    --_dialog-radius: var(--ds-radius-sheet);
   }
 
   /* No line under the bar: the content right under it starts a little closer than the body padding. */

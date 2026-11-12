@@ -53,6 +53,9 @@ export function assignRef<T>(ref: Ref<T> | undefined, value: T | null): void {
   else if (ref) (ref as RefObject<T | null>).current = value;
 }
 
+/** The roots built on DialogBase. CommandPalette and Lightbox join in lane 6D. */
+export type DialogKind = 'dialog' | 'alert-dialog' | 'drawer' | 'sheet';
+
 /** What every family member keeps in its context: the open state and the trigger. */
 export interface DialogBaseState {
   open: boolean;
@@ -91,8 +94,8 @@ type PanelPrimitive = (props: any) => JSX.Element | ReactNode;
 export interface DialogBaseProps extends DialogBaseContentHandlers {
   /** The family member's state. */
   state: DialogBaseState;
-  /** The root's data-ds: dialog, alert-dialog, drawer, sheet. */
-  kind: string;
+  /** The root's data-ds. */
+  kind: DialogKind;
   /** Data attributes of the root besides data-ds and data-state (data-size, data-tone, data-side). */
   rootAttributes?: Record<string, string | boolean | undefined>;
   /** The tone the focus rule reads. AlertDialog passes danger, so focus opens on Cancel. */
@@ -252,9 +255,17 @@ export function DialogBase({
             if (panelRef.current) warnInDev(panelRef.current, devName);
             if (event.defaultPrevented || !panelRef.current) return;
             const target = dialogInitialFocus(panelRef.current, focusTone);
-            if (!target) return;
+            if (target) {
+              event.preventDefault();
+              target.focus();
+              return;
+            }
+            // Radix Dialog then focuses the first tab stop itself. Radix
+            // AlertDialog would focus its Cancel ref, which may be empty:
+            // here the first tab stop, else the panel, takes focus.
+            if (kind !== 'alert-dialog') return;
             event.preventDefault();
-            target.focus();
+            (panelRef.current.querySelector<HTMLElement>(DIALOG_ACTION_SELECTOR) ?? panelRef.current).focus();
           }}
           onCloseAutoFocus={(event: Event) => {
             onCloseAutoFocus?.(event);

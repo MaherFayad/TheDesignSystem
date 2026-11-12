@@ -23,7 +23,7 @@ const copy = {
     open: 'Leave the board',
     title: 'Leave the board Spring launch?',
     description: 'You lose access right away. An owner has to invite you again.',
-    cancel: 'Stay on board',
+    cancel: 'Keep access',
     action: 'Leave board',
   },
   danger: {
@@ -123,10 +123,10 @@ function LoadingAlert({ fail = false }: { fail?: boolean }) {
       </AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogTitle>{fail ? 'Delete the team Design?' : 'Delete the project Spring launch?'}</AlertDialogTitle>
-        <AlertDialogDescription role={failed ? 'alert' : undefined}>
-          {failed
-            ? 'Could not delete the team. Check your connection, then try again.'
-            : 'Every board in it is deleted for good. This cannot be undone.'}
+        <AlertDialogDescription>
+          {fail ? 'The team and every board in it are deleted for good.' : 'Every board in it is deleted for good. This cannot be undone.'}
+          {/* The live region is in place from the start, so the error is announced when it fills. */}
+          <span role="alert">{failed ? ' Could not delete the team. Check your connection, then try again.' : ''}</span>
         </AlertDialogDescription>
         <AlertDialogFooter>
           <AlertDialogCancel>

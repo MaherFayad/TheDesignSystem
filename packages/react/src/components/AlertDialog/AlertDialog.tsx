@@ -23,7 +23,7 @@
 //
 // Focus opens on Cancel in every tone (the focus rule read as danger), so
 // Enter never runs the action by accident.
-import { createContext, isValidElement, use, useCallback, useMemo, useRef, type ComponentProps, type CSSProperties, type ReactElement, type ReactNode } from 'react';
+import { Children, createContext, isValidElement, use, useCallback, useMemo, useRef, type ComponentProps, type CSSProperties, type ReactElement, type ReactNode } from 'react';
 import { AlertDialog as RadixAlertDialog } from 'radix-ui';
 import type { OverlaySize, Tone } from '@the-system/shared';
 import { Icon, type IconName } from '../Icon';
@@ -220,9 +220,14 @@ export function AlertDialogContent({
   onCloseAutoFocus,
   onEscapeKeyDown,
   onKeyDown,
+  onFocusOutside,
   ...rest
 }: AlertDialogContentProps) {
   const ctx = useAlertDialogContext('AlertDialogContent');
+  // A title child wins over the title prop, and a description child over the description prop: one of each.
+  const childTypes = Children.toArray(children).map((child) => (isValidElement(child) ? child.type : null));
+  const hasTitle = childTypes.includes(AlertDialogTitle);
+  const hasDescription = childTypes.includes(AlertDialogDescription);
   const iconValue = icon === undefined ? toneIcon[ctx.tone] : icon;
   const iconNode =
     iconValue === false ? null : (
@@ -248,10 +253,11 @@ export function AlertDialogContent({
       onCloseAutoFocus={onCloseAutoFocus}
       onEscapeKeyDown={onEscapeKeyDown}
       onKeyDown={onKeyDown}
+      onFocusOutside={onFocusOutside}
     >
       {iconNode}
-      {title !== undefined && title !== null ? <AlertDialogTitle>{title}</AlertDialogTitle> : null}
-      {description !== undefined && description !== null ? (
+      {!hasTitle && title !== undefined && title !== null ? <AlertDialogTitle>{title}</AlertDialogTitle> : null}
+      {!hasDescription && description !== undefined && description !== null ? (
         <AlertDialogDescription>{description}</AlertDialogDescription>
       ) : null}
       {children}
