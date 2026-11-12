@@ -169,7 +169,10 @@
       "example": "CheckboxGroup.demo.tsx"
     },
     "angular": {
-      "status": "planned"
+      "status": "ready",
+      "behavior": "fieldset[dsCheckboxGroup], hand built on DsCheckbox through DS_CHECKBOX_GROUP, ControlValueAccessor",
+      "example": "checkbox-group.demo.ts",
+      "note": "The host is the root. Inputs take the React prop names; onValueChange is the valueChange output of [(value)]. legend, description, error and selectAll take text. aria-describedby is an input, joined with the group's own ids. Items are div[dsCheckbox] with a value; they read the value, size, name, disabled, invalid and read only from the group through DI. The select all item renders as React does it, a DsCheckbox with data-part select-all first in the items. The group is the ControlValueAccessor for the string array. CheckboxGroup.css is used as is."
     },
     "native": {
       "status": "planned"
