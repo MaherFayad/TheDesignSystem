@@ -165,8 +165,15 @@ add `interactions: { 'stat-roll': 'full', 'badge-count': 'full' }` to
   (light), `feedback.studio.webm` (dark), `feedback.desk.webm` (dark), from a
   static build of the gallery (the dev server reloaded under other agents'
   edits and dropped the page mid run). Re-encoded to VP8 at 960 by 600 and
-  15 frames a second to stay under 8 MB on a loaded machine. They were
-  recorded before the Meter hold change, which looks the same. A probe listed the running animations
+  15 frames a second to stay under 8 MB. They were recorded before the
+  Meter hold change (which looks the same) and before the readable stagger
+  rule (parts now reach full opacity sooner). At the time of the commit the
+  machine ran at a load of about 35 and the encode ran at about one frame a
+  second, so the three files were still encoding from the raw recordings in
+  the scratch folder (`f/vid/feedback.<style>.raw.webm`); the encode loop
+  copies each finished file to `docs/reports/shots/interactions-2/`. The
+  command, if it has to run again:
+  `ffmpeg -i feedback.<style>.raw.webm -vf "fps=15,scale=960:-2" -c:v libvpx -b:v 220k -maxrate 280k -bufsize 560k -deadline realtime -cpu-used 16 feedback.<style>.webm`. A probe listed the running animations
   after each trigger in Desk: every row plays (for example stat-roll 3 digit
   columns and the trend nudge, toast-stack `ds-motion:flip`, meter-fill held
   then played at 640ms, alert-dismiss `flip-exit` plus two neighbour flips).
