@@ -1,0 +1,244 @@
+/*
+ * Alert: a message about the page or a section. Sources: Figma-Killer-2
+ * `ui/components/Alert/Alert.module.css` (a bordered box, a bold title, a
+ * body), the Toast parts in this repo for the icon column and the close
+ * button. GoBanana `.st-alert` could not be read in this session.
+ *
+ * Private plumbing (docs/contracts/anatomy.md, one convention): local
+ * --_alert-* properties on the root. Each defaults to a semantic token. The
+ * tone and emphasis rules only swap them, and a style recipe overrides them
+ * by declaring the same name (packages/styles/<id>/recipes/Alert.css).
+ *
+ *   --_alert-bg, -fg, -border-color   the box
+ *   --_alert-title-fg                 the title
+ *   --_alert-icon                     the icon color
+ *   --_alert-radius, -padding-block, -padding-inline, -gap, -font-size
+ *   --_alert-tone-*                   the colors of one tone, read by the emphasis rules
+ *
+ * Motion: the fade-rise pattern plays once when an alert mounts, transform
+ * and opacity only. Under reduced motion it is none.
+ *
+ * Inside a solid alert the nested Buttons and the close IconButton take the
+ * alert's ink through their own private --_button-* properties, so their
+ * text keeps its contrast on the tone fill.
+ */
+@layer ds.base {
+  [data-ds='alert'] {
+    --_alert-radius: var(--ds-radius-card);
+    --_alert-padding-block: var(--ds-space-m);
+    --_alert-padding-inline: var(--ds-space-l);
+    --_alert-gap: var(--ds-space-m);
+    --_alert-font-size: var(--ds-font-size-m);
+    --_alert-tone-text: var(--ds-color-text-muted);
+    --_alert-tone-tint: var(--ds-color-bg-overlay-5);
+    --_alert-tone-border: var(--ds-color-border-default);
+    --_alert-tone-edge: var(--ds-color-bg-overlay-10);
+    --_alert-tone-solid: var(--ds-color-bg-surface-4);
+    --_alert-tone-on-solid: var(--ds-color-text-bright);
+    --_alert-bg: var(--_alert-tone-tint);
+    --_alert-fg: var(--ds-color-text-default);
+    --_alert-title-fg: var(--ds-color-text-bright);
+    --_alert-border-color: var(--_alert-tone-edge);
+    --_alert-icon: var(--_alert-tone-text);
+
+    display: grid;
+    grid-template-columns: var(--ds-size-icon-md) minmax(0, 1fr) auto;
+    grid-template-areas:
+      'icon title close'
+      'icon body close'
+      'icon actions close';
+    grid-template-rows: auto auto auto;
+    align-items: start;
+    column-gap: var(--_alert-gap);
+    box-sizing: border-box;
+    inline-size: 100%;
+    margin: 0;
+    padding-block: var(--_alert-padding-block);
+    padding-inline: var(--_alert-padding-inline);
+    border: var(--ds-border-width-default) solid var(--_alert-border-color);
+    border-radius: var(--_alert-radius);
+    background-color: var(--_alert-bg);
+    color: var(--_alert-fg);
+    font-family: var(--ds-font-family-sans);
+    font-size: var(--_alert-font-size);
+    line-height: var(--ds-font-leading-normal);
+    overflow-wrap: anywhere;
+    animation: ds-alert-in var(--ds-duration-medium) var(--ds-ease-out);
+  }
+
+  @keyframes ds-alert-in {
+    from {
+      opacity: 0;
+      transform: translateY(var(--ds-space-3xs));
+    }
+  }
+
+  /* ------------------------------------------------------------ size */
+
+  [data-ds='alert'][data-size='sm'] {
+    --_alert-padding-block: var(--ds-space-s);
+    --_alert-padding-inline: var(--ds-space-m);
+    --_alert-gap: var(--ds-space-s);
+    --_alert-font-size: var(--ds-font-size-s);
+  }
+
+  /* ------------------------------------------------------------ parts */
+
+  [data-ds='alert'] > [data-part='icon'] {
+    grid-area: icon;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    /* One title line high, so the icon sits on the first line. */
+    block-size: calc(var(--_alert-font-size) * var(--ds-font-leading-normal));
+    color: var(--_alert-icon);
+  }
+
+  [data-ds='alert'] > [data-part='title'] {
+    grid-area: title;
+    margin: 0;
+    color: var(--_alert-title-fg);
+    font-weight: var(--ds-font-weight-semibold);
+  }
+
+  [data-ds='alert'] > [data-part='body'] {
+    grid-area: body;
+    margin-block-start: var(--ds-space-3xs);
+  }
+
+  [data-ds='alert'] > [data-part='body'] > :is(p, ul, ol) {
+    margin-block: 0;
+  }
+
+  [data-ds='alert'] > [data-part='body'] > :is(p, ul, ol) + :is(p, ul, ol) {
+    margin-block-start: var(--ds-space-xs);
+  }
+
+  [data-ds='alert'] > [data-part='body'] :is(ul, ol) {
+    padding-inline-start: var(--ds-space-xl);
+  }
+
+  [data-ds='alert'] > [data-part='actions'] {
+    grid-area: actions;
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--ds-space-xs);
+    margin-block-start: var(--ds-space-s);
+  }
+
+  /* The close button is an IconButton carrying data-part="close". */
+  [data-ds='alert'] > [data-part='close'] {
+    grid-area: close;
+    /* Pull the 24px target into the padding, so the box does not grow for it. */
+    margin-block: calc(-1 * var(--ds-space-2xs));
+  }
+
+  /* ------------------------------------------------------------ tones */
+
+  [data-ds='alert'][data-tone='accent'] {
+    --_alert-tone-text: var(--ds-color-primary-on-surface);
+    --_alert-tone-tint: var(--ds-color-primary-tint);
+    --_alert-tone-border: var(--ds-color-primary-border);
+    --_alert-tone-edge: var(--ds-color-primary-tint-hover);
+    --_alert-tone-solid: var(--ds-color-primary-fill);
+    --_alert-tone-on-solid: var(--ds-color-primary-text);
+  }
+
+  [data-ds='alert'][data-tone='info'] {
+    --_alert-tone-text: var(--ds-color-state-info-text);
+    --_alert-tone-tint: var(--ds-color-state-info-tint-10);
+    --_alert-tone-border: var(--ds-color-state-info-border);
+    --_alert-tone-edge: var(--ds-color-state-info-tint-20);
+    --_alert-tone-solid: var(--ds-color-state-info-solid);
+    --_alert-tone-on-solid: var(--ds-color-state-info-on-solid);
+  }
+
+  [data-ds='alert'][data-tone='success'] {
+    --_alert-tone-text: var(--ds-color-state-success-text);
+    --_alert-tone-tint: var(--ds-color-state-success-tint-10);
+    --_alert-tone-border: var(--ds-color-state-success-border);
+    --_alert-tone-edge: var(--ds-color-state-success-tint-20);
+    --_alert-tone-solid: var(--ds-color-state-success-solid);
+    --_alert-tone-on-solid: var(--ds-color-state-success-on-solid);
+  }
+
+  [data-ds='alert'][data-tone='warning'] {
+    --_alert-tone-text: var(--ds-color-state-warning-text);
+    --_alert-tone-tint: var(--ds-color-state-warning-tint-10);
+    --_alert-tone-border: var(--ds-color-state-warning-border);
+    --_alert-tone-edge: var(--ds-color-state-warning-tint-20);
+    --_alert-tone-solid: var(--ds-color-state-warning-solid);
+    --_alert-tone-on-solid: var(--ds-color-state-warning-on-solid);
+  }
+
+  [data-ds='alert'][data-tone='danger'] {
+    --_alert-tone-text: var(--ds-color-state-danger-text);
+    --_alert-tone-tint: var(--ds-color-state-danger-tint-10);
+    --_alert-tone-border: var(--ds-color-state-danger-border);
+    --_alert-tone-edge: var(--ds-color-state-danger-tint-20);
+    --_alert-tone-solid: var(--ds-color-state-danger-solid);
+    --_alert-tone-on-solid: var(--ds-color-state-danger-on-solid);
+  }
+
+  /* ------------------------------------------------------------ emphasis */
+
+  /* soft is the root default: the tone tint with a faint tone edge. */
+
+  [data-ds='alert'][data-emphasis='outline'] {
+    --_alert-bg: transparent;
+    --_alert-border-color: var(--_alert-tone-border);
+  }
+
+  [data-ds='alert'][data-emphasis='solid'] {
+    --_alert-bg: var(--_alert-tone-solid);
+    --_alert-fg: var(--_alert-tone-on-solid);
+    --_alert-title-fg: var(--_alert-tone-on-solid);
+    --_alert-icon: var(--_alert-tone-on-solid);
+    --_alert-border-color: transparent;
+  }
+
+  /*
+   * Nested Buttons on a solid fill: outlined in the alert's ink, a veil of
+   * the same ink on hover. Every value the Button state rules swap in is set
+   * here, so hover and press keep the contrast too.
+   */
+  [data-ds='alert'][data-emphasis='solid'] > [data-part='actions'] [data-ds='button'] {
+    --_button-bg: transparent;
+    --_button-fg: var(--_alert-tone-on-solid);
+    --_button-border-color: var(--_alert-tone-on-solid);
+    --_button-decoration: var(--_alert-tone-on-solid);
+  }
+
+  [data-ds='alert'][data-emphasis='solid'] > [data-ds='icon-button'][data-part='close'] {
+    --_button-bg: transparent;
+    --_button-fg: var(--_alert-tone-on-solid);
+  }
+
+  [data-ds='alert'][data-emphasis='solid'] > [data-part='actions'] [data-ds='button']:hover:not([data-disabled], [data-loading]),
+  [data-ds='alert'][data-emphasis='solid'] > [data-ds='icon-button'][data-part='close']:hover:not([data-disabled], [data-loading]) {
+    --_button-bg: color-mix(in srgb, var(--_alert-tone-on-solid) 12%, transparent);
+  }
+
+  [data-ds='alert'][data-emphasis='solid'] > [data-part='actions'] [data-ds='button']:active:not([data-disabled], [data-loading]),
+  [data-ds='alert'][data-emphasis='solid'] > [data-ds='icon-button'][data-part='close']:active:not([data-disabled], [data-loading]) {
+    --_button-bg: color-mix(in srgb, var(--_alert-tone-on-solid) 20%, transparent);
+  }
+
+  /* ------------------------------------------------------------ reduced motion, forced colors */
+
+  @media (prefers-reduced-motion: reduce) {
+    [data-ds='alert'] {
+      animation: none;
+    }
+  }
+
+  /* Forced colors: the fill is dropped by the browser; the border becomes the system text color so the box keeps a boundary. */
+  @media (forced-colors: active) {
+    [data-ds='alert'] {
+      --_alert-border-color: CanvasText;
+      --_alert-icon: CanvasText;
+
+      animation: none;
+    }
+  }
+}
