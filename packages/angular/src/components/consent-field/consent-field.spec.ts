@@ -58,6 +58,7 @@ class FormHost {
     @switch (which()) {
       @case ('stray') { <div dsConsentField purpose="Send me offers by email." detailsHref="/privacy" defaultChecked></div> }
       @case ('given') { <div dsConsentField purpose="Send me offers by email." detailsHref="/privacy" [checked]="true"></div> }
+      @case ('nodate') { <div dsConsentField purpose="Send me offers by email." detailsHref="/privacy" meta="You agreed in the app." [checked]="true"></div> }
       @case ('locked') { <div dsConsentField purpose="Send me offers by email." detailsHref="/privacy" meta="You agreed on 3 November 2026." [checked]="true" disabled></div> }
       @case ('nolink') { <div dsConsentField purpose="Send me offers by email."></div> }
       @case ('fieldset') {
@@ -251,6 +252,7 @@ describe('DsConsentField', () => {
     };
     expect((await show('stray')).some((m) => m.includes('defaultChecked is ignored'))).toBe(true);
     expect((await show('given')).some((m) => m.includes('checked starts true with no meta'))).toBe(true);
+    expect(await show('nodate')).toEqual([expect.stringContaining('checked starts true and meta has no date')]);
     expect(await show('locked')).toEqual([expect.stringContaining('cannot be withdrawn')]);
     expect(await show('nolink')).toEqual([expect.stringContaining('no detailsHref')]);
     expect(await show('fieldset')).toEqual([]);

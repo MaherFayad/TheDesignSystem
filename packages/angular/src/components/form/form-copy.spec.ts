@@ -36,6 +36,14 @@ class PreTickedHost {
   readonly survey = new FormControl(true);
 }
 
+@Component({
+  imports: [DsConsentField, ReactiveFormsModule],
+  template: `<div dsConsentField purpose="Send me a survey." detailsHref="#p" meta="You agreed in the app." [formControl]="survey"></div>`,
+})
+class UndatedHost {
+  readonly survey = new FormControl(true);
+}
+
 describe('Form and ConsentField copy in Angular (B6)', () => {
   afterEach(() => vi.restoreAllMocks());
 
@@ -70,6 +78,16 @@ describe('Form and ConsentField copy in Angular (B6)', () => {
     const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
     const fixture = TestBed.createComponent(PreTickedHost);
     await fixture.whenStable();
-    expect(warn.mock.calls.some(([m]) => String(m).includes('FormControl starts true'))).toBe(true);
+    const said = warn.mock.calls.map(([m]) => String(m)).filter((m) => m.startsWith('ConsentField'));
+    // One warning, named after the form control, never a second one for checked.
+    expect(said).toEqual([expect.stringContaining('FormControl starts true with no meta')]);
+  });
+
+  it('shares one check with checked: a FormControl that starts true with an undated meta is named too', async () => {
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    const fixture = TestBed.createComponent(UndatedHost);
+    await fixture.whenStable();
+    const said = warn.mock.calls.map(([m]) => String(m)).filter((m) => m.startsWith('ConsentField'));
+    expect(said).toEqual([expect.stringContaining('FormControl starts true and meta has no date')]);
   });
 });
