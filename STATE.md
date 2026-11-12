@@ -2,7 +2,7 @@
 Updated: 2026-11-12 08:30 UTC
 Main model: claude-fable-5-2, medium. Subagents: claude-opus-5-5, medium.
 Current wave: 0
-Next open order: 0.11
+Next open order: 0.15
 
 ## Paths
 GoBanana: /home/user/gobanana (read only clone, commit 216625c)
@@ -26,7 +26,7 @@ No adb. No iOS build.
 | 0.8 | Icons | ds-style | all | done | ade095b |
 | 0.9 | Button | ds-component | react | done | 41a178b, 00ad977 |
 | 0.10 | Field and Input | ds-component | react | done | 70359cb, 0344ac6 |
-| 0.11 | Dialog | ds-component | react | open | |
+| 0.11 | Dialog | ds-component | react | built, review open | 231d365 |
 | 0.12 | Toast | ds-component | react | built, review open | ee104cf |
 | 0.13 | Window | ds-component, ds-style | react | built, review open | 5c464dc |
 | 0.14 | Contract suite | ds-qa | react | done | cd05ff1 |
