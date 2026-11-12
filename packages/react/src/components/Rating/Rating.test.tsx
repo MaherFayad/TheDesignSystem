@@ -159,3 +159,98 @@ describe('Rating', () => {
     expect(screen.getByRole('img', { name: 'Not rated' })).toBeTruthy();
   });
 });
+
+describe('Rating fill (interaction rating-fill)', () => {
+  /** A stand in for Element.animate on svg, which jsdom lacks: it records the target and the options of each call. */
+  function mockAnimate() {
+    const calls: { el: Element; frames: Keyframe[]; delay: number; cancel: ReturnType<typeof vi.fn> }[] = [];
+    const animate = vi.fn(function (this: Element, frames: Keyframe[], opts: KeyframeAnimationOptions) {
+      const cancel = vi.fn();
+      calls.push({ el: this, frames, delay: Number(opts.delay ?? 0), cancel });
+      return { id: String(opts.id ?? ''), playState: 'running', finished: Promise.resolve(), cancel } as unknown as Animation;
+    });
+    Object.defineProperty(SVGElement.prototype, 'animate', { configurable: true, value: animate });
+    return { calls, restore: () => Reflect.deleteProperty(SVGElement.prototype, 'animate') };
+  }
+
+  it('pops the stars from the first to the chosen one, each a step later, on the icons (Desk plays pop in full)', () => {
+    const { calls, restore } = mockAnimate();
+    try {
+      render(
+        <Theme style="desk">
+          <Rating aria-label="R" style={{ ['--ds-delay-reveal-step' as string]: '80ms' }} />
+        </Theme>,
+      );
+      expect(calls).toHaveLength(0);
+      fireEvent.click(screen.getByRole('radio', { name: '4 of 5 stars' }));
+      expect(calls).toHaveLength(4);
+      for (const c of calls) expect(c.el.getAttribute('data-part')).toBe('icon');
+      expect(JSON.stringify(calls[0]?.frames)).toContain('scale(');
+      const delays = calls.map((c) => c.delay);
+      expect(delays[0]).toBe(0);
+      for (let i = 1; i < delays.length; i++) expect(delays[i]).toBeGreaterThan(delays[i - 1] ?? 0);
+    } finally {
+      restore();
+    }
+  });
+
+  it('cancels the run on the next pick and does not play on first paint or a controlled change', () => {
+    const { calls, restore } = mockAnimate();
+    try {
+      const { rerender } = render(<Rating aria-label="R" defaultValue={3} />);
+      expect(calls).toHaveLength(0);
+      fireEvent.click(screen.getByRole('radio', { name: '5 of 5 stars' }));
+      expect(calls).toHaveLength(5);
+      const first = calls.slice();
+      fireEvent.click(screen.getByRole('radio', { name: '2 of 5 stars' }));
+      for (const c of first) expect(c.cancel).toHaveBeenCalled();
+      expect(calls).toHaveLength(7);
+      rerender(<Rating aria-label="R" defaultValue={1} />);
+      expect(calls).toHaveLength(7);
+    } finally {
+      restore();
+    }
+  });
+
+  it('plays a fade with no scale in Studio, whose preset plays pop reduced', () => {
+    const { calls, restore } = mockAnimate();
+    try {
+      render(
+        <Theme style="studio">
+          <Rating aria-label="R" />
+        </Theme>,
+      );
+      fireEvent.click(screen.getByRole('radio', { name: '3 of 5 stars' }));
+      expect(calls).toHaveLength(3);
+      for (const c of calls) expect(JSON.stringify(c.frames)).not.toContain('scale(');
+    } finally {
+      restore();
+    }
+  });
+
+  it('plays nothing read only, and a fade with no scale under reduced motion', () => {
+    const { calls, restore } = mockAnimate();
+    vi.stubGlobal('matchMedia', (q: string) => ({ matches: q.includes('reduce'), media: q, addEventListener() {}, removeEventListener() {} }));
+    try {
+      render(<Rating aria-label="R" readOnly defaultValue={3} />);
+      expect(calls).toHaveLength(0);
+      render(
+        <Theme style="desk">
+          <Rating aria-label="S" />
+        </Theme>,
+      );
+      fireEvent.click(screen.getAllByRole('radio', { name: '2 of 5 stars' })[0] as HTMLElement);
+      expect(calls).toHaveLength(2);
+      for (const c of calls) expect(JSON.stringify(c.frames)).not.toContain('scale(');
+    } finally {
+      vi.unstubAllGlobals();
+      restore();
+    }
+  });
+
+  it('picks at once when the platform has no animate', () => {
+    const { container } = render(<Rating aria-label="R" />);
+    fireEvent.click(screen.getByRole('radio', { name: '3 of 5 stars' }));
+    expect(icons(root(container))).toEqual(['star-filled', 'star-filled', 'star-filled', 'star', 'star']);
+  });
+});

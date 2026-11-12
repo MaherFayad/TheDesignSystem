@@ -11,12 +11,20 @@
 // them stays outside it, so it is read. Half stars
 // show only in this form; the star-half icon mirrors in right to left.
 //
+// Interaction rating-fill (order 1.21, proposed): when a person picks a
+// score, the stars from the first to the chosen one pop in a short run (the
+// pop pattern with its index, capped at POP_MAX_STEPS). It plays after the
+// score is set and a new pick cancels the run, so it never holds back the
+// next pick. The hover preview stays instant (CSS, no transition).
+//
 // Source: GoBanana admin FeedbackList could not be fetched in the lane
 // session. Designed from the dials table in PLAN.md 3.7 and RadioGroup.
-import { useId, type ComponentProps, type KeyboardEvent, type ReactNode } from 'react';
+import { useId, useLayoutEffect, useRef, type ComponentProps, type KeyboardEvent, type ReactNode } from 'react';
+import { POP_MAX_STEPS } from '@the-system/motion';
 import { RadioGroup as RadixRadioGroup } from 'radix-ui';
 import { Icon } from '@the-system/icons/react';
 import type { Size, Tone } from '@the-system/shared';
+import { useMotion } from '../../internal/motion';
 import { useControllable } from '../../internal/useControllable';
 import { useTheme } from '../../theme';
 
@@ -111,9 +119,31 @@ export function Rating({
   const getItemLabel = getItemLabelProp ?? ((score: number, of: number) => ratingItemLabel(score, of, lang));
   const getValueLabel = getValueLabelProp ?? ((score: number, of: number) => ratingValueLabel(score, of, lang));
   const [current, setCurrent] = useControllable<number>(value, defaultValue, onValueChange);
+  const whole = Math.round(current);
+  const motion = useMotion();
+  const items = useRef<(HTMLButtonElement | null)[]>([]);
+  const running = useRef<Animation[]>([]);
+  // Set by a pick, read once the new score is drawn.
+  const picked = useRef(false);
+  const pick = (next: number) => {
+    if (next !== whole) picked.current = true;
+    setCurrent(next);
+  };
   const valueId = useId();
   const starsId = useId();
   const scores = Array.from({ length: max }, (_, i) => i + 1);
+  useLayoutEffect(() => {
+    if (!picked.current) return;
+    picked.current = false;
+    for (const a of running.current) a.cancel();
+    running.current = [];
+    for (let i = 0; i < whole; i++) {
+      const icon = items.current[i]?.querySelector('[data-part="icon"]');
+      const a = motion.play(icon, 'pop', 'rating-fill', { index: Math.min(i, POP_MAX_STEPS) });
+      if (a) running.current.push(a);
+    }
+  }, [whole, motion]);
+
   const hasText = showValue || (children !== undefined && children !== null && children !== false);
   const text = (
     <span id={valueId} data-part="value">
@@ -157,14 +187,13 @@ export function Rating({
     );
   }
 
-  const whole = Math.round(current);
   const onRootKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
     onKeyDown?.(event);
     // Radix prevents the default of Home and End itself, so defaultPrevented is not a signal here.
     if (disabled) return;
     if (event.key === 'Home' || event.key === 'End') {
       // Radix moves focus to the first or last star; the score follows it.
-      setCurrent(event.key === 'Home' ? 1 : max);
+      pick(event.key === 'Home' ? 1 : max);
     }
   };
 
@@ -176,7 +205,7 @@ export function Rating({
       aria-describedby={[rest['aria-describedby'], hasText ? valueId : undefined].filter(Boolean).join(' ') || undefined}
       onKeyDown={onRootKeyDown}
       value={whole > 0 ? String(whole) : ''}
-      onValueChange={(next) => setCurrent(Number(next))}
+      onValueChange={(next) => pick(Number(next))}
       disabled={disabled}
       required={required}
       name={name}
@@ -192,6 +221,9 @@ export function Rating({
         return (
           <RadixRadioGroup.Item
             key={score}
+            ref={(el) => {
+              items.current[score - 1] = el;
+            }}
             value={String(score)}
             aria-label={getItemLabel(score, max)}
             data-part="item"
