@@ -1,0 +1,322 @@
+{
+ "recipe": "@layer ds.recipes {\n  /* button-press */\n  [data-style='studio'] [data-ds='button'] {\n    --_button-press-scale: 1;\n  }\n  /* button-press */\n  [data-style='studio'] [data-ds='icon-button'] {\n    --_button-press-scale: 1;\n  }\n  /* button-press */\n  [data-style='studio'] [data-ds='toggle-button'] {\n    --_button-press-scale: 1;\n  }\n  /* button-press */\n  [data-style='studio'] [data-ds='copy-button'] {\n    --_button-press-scale: 1;\n  }\n  /* check-draw */\n  [data-style='studio'] [data-ds='checkbox'] {\n    --_checkbox-duration: 0s;\n    --_checkbox-duration-out: 0s;\n  }\n  /* switch-stretch */\n  [data-style='studio'] [data-ds='switch'] {\n    --_switch-stretch: 1;\n    --_switch-duration: var(--ds-duration-base);\n    --_switch-ease: var(--ds-ease-default);\n  }\n  /* focus-glow */\n  [data-style='studio'] [data-ds='input'] {\n    --_input-duration-in: 0s;\n    --_input-duration-out: 0s;\n    --_input-enter-scale: 1;\n  }\n  /* focus-glow */\n  [data-style='studio'] [data-ds='password-field'] {\n    --_password-field-duration-in: 0s;\n    --_password-field-duration-out: 0s;\n    --_password-field-enter-scale: 1;\n  }\n  /* focus-glow */\n  [data-style='studio'] [data-ds='otp-field'] {\n    --_otp-field-duration-in: 0s;\n    --_otp-field-duration-out: 0s;\n    --_otp-field-enter-scale: 1;\n  }\n  /* focus-glow */\n  [data-style='studio'] [data-ds='number-field'] {\n    --_number-field-duration-in: 0s;\n    --_number-field-duration-out: 0s;\n    --_number-field-enter-scale: 1;\n  }\n  /* menu-origin */\n  [data-style='studio'] [data-ds='dropdown-menu'] {\n    --_menu-enter-scale: 1;\n  }\n  /* menu-origin */\n  [data-style='studio'] [data-ds='context-menu'] {\n    --_menu-enter-scale: 1;\n  }\n  /* menu-origin */\n  [data-style='studio'] [data-ds='popover'] {\n    --_popover-enter-scale: 1;\n  }\n  /* tooltip-rise */\n  [data-style='studio'] [data-ds='tooltip'] {\n    --_tooltip-shift: 0px;\n  }\n  /* toast-enter */\n  [data-style='studio'] [data-ds='toast'] {\n    --_toast-enter-y: 0px;\n    --_toast-enter-scale: 1;\n  }\n  /* toast-swipe */\n  [data-style='studio'] [data-ds='toast'] {\n    --_toast-duration: 0s;\n    --_toast-swipe-x: 0%;\n    --_toast-swipe-y: 0%;\n  }\n  /* dialog-spring */\n  [data-style='studio'] [data-ds='dialog'] {\n    --_dialog-enter-y: 0px;\n    --_dialog-enter-scale: 1;\n  }\n  /* dialog-spring */\n  [data-style='studio'] [data-ds='alert-dialog'] {\n    --_dialog-enter-y: 0px;\n    --_dialog-enter-scale: 1;\n  }\n  /* sheet-spring */\n  [data-style='studio'] [data-ds='sheet'] {\n    --_dialog-slide: 0%;\n    --_dialog-enter-opacity: 0;\n    --_dialog-drag-duration: 0s;\n  }\n  /* sheet-spring */\n  [data-style='studio'] [data-ds='drawer'] {\n    --_dialog-slide: 0%;\n    --_dialog-enter-opacity: 0;\n  }\n  /* accordion-reveal */\n  [data-style='studio'] [data-ds='accordion'] {\n    --_accordion-duration: 0s;\n  }\n  /* skeleton-swap */\n  [data-style='studio'] [data-ds='skeleton'] {\n    --_skeleton-loops: 0;\n  }\n  /* slider-pull */\n  [data-style='studio'] [data-ds='slider'] {\n    --_slider-lift: 1;\n  }\n  /* slider-pull */\n  [data-style='studio'] [data-ds='range-slider'] {\n    --_slider-lift: 1;\n  }\n}\n",
+ "out": {
+  "button|base": {
+   "pressed": "matrix(0.97, 0, 0, 0.97, 0, 0)"
+  },
+  "button|off": {
+   "pressed": "matrix(1, 0, 0, 1, 0, 0)"
+  },
+  "checkbox|base": {
+   "anims": [
+    {
+     "name": "transform",
+     "target": "span",
+     "duration": 140,
+     "iterations": 1,
+     "transformAt0": "matrix(1, 0, 0, 1, -12, 0)",
+     "opacityAt0": "1"
+    },
+    {
+     "name": "transform",
+     "target": "icon",
+     "duration": 140,
+     "iterations": 1,
+     "transformAt0": "matrix(1, 0, 0, 1, 12, 0)",
+     "opacityAt0": "1"
+    }
+   ]
+  },
+  "checkbox|off": {
+   "anims": []
+  },
+  "switch|base": {
+   "pressedThumb": "matrix(1.1536, 0, 0, 1, 0.9216, 0)",
+   "onToggle": [
+    {
+     "name": "transform",
+     "target": "thumb",
+     "duration": 140,
+     "iterations": 1,
+     "transformAt0": "matrix(1.1536, 0, 0, 1, 0.9216, 0)",
+     "opacityAt0": "1"
+    }
+   ]
+  },
+  "switch|off": {
+   "pressedThumb": "matrix(1, 0, 0, 1, 0, 0)",
+   "onToggle": [
+    {
+     "name": "transform",
+     "target": "thumb",
+     "duration": 120,
+     "iterations": 1,
+     "transformAt0": "matrix(1, 0, 0, 1, 0, 0)",
+     "opacityAt0": "1"
+    }
+   ]
+  },
+  "input|base": {
+   "anims": [
+    {
+     "name": "opacity",
+     "target": "input::before",
+     "duration": 120,
+     "iterations": 1,
+     "transformAt0": "matrix(0.98, 0, 0, 0.98, 0, 0)",
+     "opacityAt0": "0"
+    },
+    {
+     "name": "transform",
+     "target": "input::before",
+     "duration": 120,
+     "iterations": 1,
+     "transformAt0": "matrix(0.98, 0, 0, 0.98, 0, 0)",
+     "opacityAt0": "0"
+    }
+   ]
+  },
+  "input|off": {
+   "anims": []
+  },
+  "number-field|base": {
+   "anims": [
+    {
+     "name": "opacity",
+     "target": "number-field::before",
+     "duration": 120,
+     "iterations": 1,
+     "transformAt0": "matrix(0.98, 0, 0, 0.98, 0, 0)",
+     "opacityAt0": "0"
+    },
+    {
+     "name": "transform",
+     "target": "number-field::before",
+     "duration": 120,
+     "iterations": 1,
+     "transformAt0": "matrix(0.98, 0, 0, 0.98, 0, 0)",
+     "opacityAt0": "0"
+    }
+   ]
+  },
+  "number-field|off": {
+   "anims": []
+  },
+  "dropdown-menu|base": {
+   "anims": [
+    {
+     "name": "ds-menu-in",
+     "target": "dropdown-menu",
+     "duration": 120,
+     "iterations": 1,
+     "transformAt0": "matrix(0.97, 0, 0, 0.97, 0, 0)",
+     "opacityAt0": "0"
+    }
+   ]
+  },
+  "dropdown-menu|off": {
+   "anims": [
+    {
+     "name": "ds-menu-in",
+     "target": "dropdown-menu",
+     "duration": 120,
+     "iterations": 1,
+     "transformAt0": "matrix(1, 0, 0, 1, 0, 0)",
+     "opacityAt0": "0"
+    }
+   ]
+  },
+  "popover|base": {
+   "anims": [
+    {
+     "name": "opacity",
+     "target": "input::before",
+     "duration": 120,
+     "iterations": 1,
+     "transformAt0": "matrix(0.98, 0, 0, 0.98, 0, 0)",
+     "opacityAt0": "0"
+    },
+    {
+     "name": "transform",
+     "target": "input::before",
+     "duration": 120,
+     "iterations": 1,
+     "transformAt0": "matrix(0.98, 0, 0, 0.98, 0, 0)",
+     "opacityAt0": "0"
+    },
+    {
+     "name": "ds-popover-in",
+     "target": "popover",
+     "duration": 120,
+     "iterations": 1,
+     "transformAt0": "matrix(0.97, 0, 0, 0.97, 0, 0)",
+     "opacityAt0": "0"
+    }
+   ]
+  },
+  "popover|off": {
+   "anims": [
+    {
+     "name": "ds-popover-in",
+     "target": "popover",
+     "duration": 120,
+     "iterations": 1,
+     "transformAt0": "matrix(1, 0, 0, 1, 0, 0)",
+     "opacityAt0": "0"
+    }
+   ]
+  },
+  "tooltip|base": {
+   "anims": []
+  },
+  "tooltip|off": {
+   "anims": []
+  },
+  "toast|base": {
+   "anims": []
+  },
+  "toast|off": {
+   "anims": [
+    {
+     "name": "ds-toast-in",
+     "target": "toast",
+     "duration": 140,
+     "iterations": 1,
+     "transformAt0": "matrix(1, 0, 0, 1, 0, 0)",
+     "opacityAt0": "0"
+    }
+   ]
+  },
+  "dialog|base": {
+   "anims": []
+  },
+  "dialog|off": {
+   "anims": []
+  },
+  "sheet|base": {
+   "anims": [
+    {
+     "name": "ds-dialog-fade-in",
+     "target": "backdrop",
+     "duration": 180,
+     "iterations": 1,
+     "transformAt0": "none",
+     "opacityAt0": "0"
+    },
+    {
+     "name": "ds-sheet-in-y",
+     "target": "panel",
+     "duration": 180,
+     "iterations": 1,
+     "transformAt0": "matrix(1, 0, 0, 1, 0, 224.391)",
+     "opacityAt0": "1"
+    }
+   ]
+  },
+  "sheet|off": {
+   "anims": [
+    {
+     "name": "ds-dialog-fade-in",
+     "target": "backdrop",
+     "duration": 180,
+     "iterations": 1,
+     "transformAt0": "none",
+     "opacityAt0": "0"
+    },
+    {
+     "name": "ds-sheet-in-y",
+     "target": "panel",
+     "duration": 180,
+     "iterations": 1,
+     "transformAt0": "matrix(1, 0, 0, 1, 0, 0)",
+     "opacityAt0": "0"
+    }
+   ]
+  },
+  "drawer|base": {
+   "anims": []
+  },
+  "drawer|off": {
+   "anims": [
+    {
+     "name": "ds-dialog-fade-in",
+     "target": "backdrop",
+     "duration": 180,
+     "iterations": 1,
+     "transformAt0": "none",
+     "opacityAt0": "0"
+    },
+    {
+     "name": "ds-sheet-in-x",
+     "target": "panel",
+     "duration": 180,
+     "iterations": 1,
+     "transformAt0": "matrix(1, 0, 0, 1, 0, 0)",
+     "opacityAt0": "0"
+    }
+   ]
+  },
+  "accordion|base": {
+   "anims": [
+    {
+     "name": "transform",
+     "target": "icon",
+     "duration": 120,
+     "iterations": 1,
+     "transformAt0": "matrix(-1, 0, 0, -1, 0, 0)",
+     "opacityAt0": "1"
+    },
+    {
+     "name": "transform",
+     "target": "icon",
+     "duration": 120,
+     "iterations": 1,
+     "transformAt0": "matrix(1, 0, 0, 1, 0, 0)",
+     "opacityAt0": "1"
+    },
+    {
+     "name": "ds-accordion-reveal",
+     "target": "div",
+     "duration": 180,
+     "iterations": 1,
+     "transformAt0": "matrix(1, 0, 0, 1, 0, -17.4062)",
+     "opacityAt0": "0"
+    }
+   ]
+  },
+  "accordion|off": {
+   "anims": [
+    {
+     "name": "transform",
+     "target": "icon",
+     "duration": 120,
+     "iterations": 1,
+     "transformAt0": "matrix(-1, 0, 0, -1, 0, 0)",
+     "opacityAt0": "1"
+    },
+    {
+     "name": "transform",
+     "target": "icon",
+     "duration": 120,
+     "iterations": 1,
+     "transformAt0": "matrix(1, 0, 0, 1, 0, 0)",
+     "opacityAt0": "1"
+    }
+   ]
+  },
+  "skeleton|base": {
+   "loops": [
+    "ds-skeleton-shimmer:3"
+   ]
+  },
+  "skeleton|off": {
+   "loops": []
+  },
+  "slider|base": {
+   "held": "matrix(1.1536, 0, 0, 1.1536, 0, 0)"
+  },
+  "slider|off": {
+   "held": "matrix(1, 0, 0, 1, 0, 0)"
+  }
+ }
+}
