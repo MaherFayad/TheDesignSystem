@@ -4,9 +4,10 @@
 //
 // The host element is the root: `button[dsButton]` or `a[dsButton]`, so no
 // wrapper sits between the root and its parts and Button.css applies as is.
-import { Directive, booleanAttribute, computed, input, type TemplateRef } from '@angular/core';
+import { Directive, booleanAttribute, computed, inject, input, type Signal, type TemplateRef } from '@angular/core';
 import type { IconName } from '@the-system/icons';
 import { consumeHostAttributes } from '../../internal/host';
+import { DS_BUTTON_GROUP } from '../button-group/button-group-context';
 import type { Emphasis, Shape, Size, Tone } from '@the-system/shared';
 
 export type ButtonSize = Extract<Size, 'xs' | 'sm' | 'md' | 'lg'>;
@@ -37,9 +38,10 @@ const BASE_INPUTS = ['dsButton', 'dsIconButton', 'size', 'tone', 'shape', 'loadi
 @Directive({
   host: {
     '[attr.type]': 'isButton ? type() : null',
-    '[attr.data-size]': 'size()',
+    '[attr.data-size]': 'resolvedSize()',
     '[attr.data-tone]': 'tone()',
-    '[attr.data-shape]': 'shape()',
+    '[attr.data-emphasis]': 'resolvedEmphasis()',
+    '[attr.data-shape]': 'resolvedShape()',
     '[attr.data-loading]': 'loading() ? "" : null',
     '[attr.data-disabled]': 'disabled() ? "" : null',
     '[attr.aria-disabled]': 'inert() ? "true" : null',
@@ -49,12 +51,12 @@ const BASE_INPUTS = ['dsButton', 'dsIconButton', 'size', 'tone', 'shape', 'loadi
   },
 })
 export abstract class DsButtonBase {
-  /** Height from the size.control tokens: xs 24, sm 28, md 32, lg 44. Default md. */
-  readonly size = input<ButtonSize>('md');
+  /** Height from the size.control tokens: xs 24, sm 28, md 32, lg 44. Default md, or the size of the ButtonGroup. */
+  readonly size = input<ButtonSize | undefined>(undefined);
   /** The color family. accent is the primary action color of the active style. Default neutral. */
   readonly tone = input<ButtonTone>('neutral');
-  /** default takes the style's control radius, pill is fully round, square has small corners. */
-  readonly shape = input<ButtonShape>('default');
+  /** default takes the style's control radius, pill is fully round, square has small corners. Default default, or the shape of the ButtonGroup. */
+  readonly shape = input<ButtonShape | undefined>(undefined);
   /** An action is in flight: spinner, hidden status, aria-busy, data-loading, blocks activation. */
   readonly loading = input(false, { transform: booleanAttribute });
   /** The words the hidden status says while loading. Default "Loading". */
@@ -67,6 +69,26 @@ export abstract class DsButtonBase {
   readonly href = input<string | undefined>(undefined);
   /** A role of the caller's own, kept on an inert link. */
   readonly role = input<string | undefined>(undefined);
+
+  /** How loud the control is. Each component declares it with its own type; undefined takes the group, then the default. */
+  abstract readonly emphasis: Signal<ButtonEmphasis | undefined>;
+  /** The emphasis when neither the control nor a ButtonGroup sets one. */
+  protected abstract readonly defaultEmphasis: ButtonEmphasis;
+  /** An icon only control never takes link from a group. */
+  protected isIconOnly(): boolean {
+    return false;
+  }
+
+  // A ButtonGroup passes size, emphasis and shape through DI. The control's
+  // own input always wins, as useButtonGroup() in React.
+  private readonly group = inject(DS_BUTTON_GROUP, { optional: true });
+  readonly resolvedSize = computed<ButtonSize>(() => this.size() ?? this.group?.size() ?? 'md');
+  readonly resolvedShape = computed<ButtonShape>(() => this.shape() ?? this.group?.shape() ?? 'default');
+  readonly resolvedEmphasis = computed<ButtonEmphasis>(() => {
+    const fromGroup = this.group?.emphasis();
+    const groupEmphasis = fromGroup && !(this.isIconOnly() && (fromGroup as string) === 'link') ? fromGroup : undefined;
+    return this.emphasis() ?? groupEmphasis ?? this.defaultEmphasis;
+  });
 
   protected readonly host = consumeHostAttributes(BASE_INPUTS);
   protected readonly isButton = this.host.tagName === 'BUTTON';

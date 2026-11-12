@@ -21,7 +21,6 @@ export type IconButtonEmphasis = Exclude<ButtonEmphasis, 'link'>;
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     'data-ds': 'icon-button',
-    '[attr.data-emphasis]': 'emphasis()',
     '[attr.aria-label]': 'label()',
   },
   template: `
@@ -44,8 +43,13 @@ export class DsIconButton extends DsButtonBase {
   readonly icon = input.required<ButtonSlotContent>();
   /** The accessible name, set as aria-label. English: a verb plus a noun. */
   readonly label = input.required<string>();
-  /** Default ghost: icon buttons sit in toolbars and headers. */
-  readonly emphasis = input<IconButtonEmphasis>('ghost');
+  /** Default ghost, or the emphasis of the ButtonGroup: icon buttons sit in toolbars and headers. */
+  readonly emphasis = input<IconButtonEmphasis | undefined>(undefined);
+  protected readonly defaultEmphasis: ButtonEmphasis = 'ghost';
+
+  protected override isIconOnly(): boolean {
+    return true;
+  }
 
   protected readonly isIconName = isIconName;
 

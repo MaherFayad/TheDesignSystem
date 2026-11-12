@@ -123,9 +123,10 @@
       "note": "No motion: the group itself never moves; the children keep their own (Button press). The axes reach the children through ButtonGroupContext and, for direct children, as props they leave unset."
     },
     "angular": {
-      "status": "planned",
-      "behavior": "[dsButtonGroup] host bindings, an injection token for the axes",
-      "note": "The host div is the root. Grouped dsButton directives read the axes from the token and let their own inputs win. ButtonGroup.css is used as is."
+      "status": "ready",
+      "behavior": "div[dsButtonGroup] host bindings, the DS_BUTTON_GROUP injection token for the axes",
+      "example": "button-group.demo.ts",
+      "note": "The host div is the root. Every directive on DsButtonBase reads the axes from the token and lets its own input win; DI follows the template where the child is declared, so a wrapper element between them is fine. The name is the native aria-label or aria-labelledby. ButtonGroup.css is used as is."
     },
     "native": {
       "status": "planned",

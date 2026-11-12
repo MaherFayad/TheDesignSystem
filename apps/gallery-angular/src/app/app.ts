@@ -192,6 +192,20 @@ export class App {
     window.addEventListener('popstate', sync);
     window.addEventListener(EVENT, sync);
 
+    // The Angular CLI needs <base href="/"> for its script paths, and the
+    // base makes an in-page link such as href="#sharing" open "/#sharing",
+    // away from the demo. The React gallery has no base, so the link stays
+    // on the page. Resolve such links against the current page, as a
+    // document without a base element does. Only plain clicks: a click that
+    // a component already prevented (a disabled link) is left alone.
+    document.addEventListener('click', (event) => {
+      if (event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+      const a = event.target instanceof Element ? event.target.closest('a[href^="#"]') : null;
+      if (!a || a.hasAttribute('target')) return;
+      event.preventDefault();
+      window.location.hash = a.getAttribute('href') ?? '';
+    });
+
     // Stamps the resolved axes on <html> too, so the whole viewport is themed.
     effect(() => applyDocumentTheme(this.axes()));
 
