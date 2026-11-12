@@ -1,0 +1,586 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`ds --json > add, angular: copies the component folder without specs and demos 1`] = `
+{
+  "apiVersion": 1,
+  "data": {
+    "dependencies": [
+      "@the-system/angular",
+      "@the-system/css",
+      "@the-system/tokens",
+      "@the-system/styles",
+    ],
+    "files": [
+      {
+        "path": "src/ds/angular/components/button/button-base.ts",
+        "status": "planned",
+      },
+      {
+        "path": "src/ds/angular/components/button/button.ts",
+        "status": "planned",
+      },
+      {
+        "path": "src/ds/angular/components/button/index.ts",
+        "status": "planned",
+      },
+      {
+        "path": "src/ds/angular/internal/host.ts",
+        "status": "planned",
+      },
+    ],
+    "framework": "angular",
+    "imports": [
+      "@import '@the-system/tokens/css';  /* styles.css: tokens for every style */",
+      "@import '@the-system/css';         /* reset, base, components */",
+      "@import '@the-system/styles';      /* recipes for every style */",
+      "<div dsTheme="studio" scheme="dark">...</div>  <!-- the root theme -->",
+    ],
+    "install": null,
+    "items": [
+      "Button",
+    ],
+    "name": "Button",
+    "shadcn": null,
+  },
+  "type": "add.result",
+}
+`;
+
+exports[`ds --json > add, native 1`] = `
+{
+  "apiVersion": 1,
+  "data": {
+    "dependencies": [
+      "@the-system/native",
+      "@the-system/tokens",
+    ],
+    "files": [
+      {
+        "path": "src/ds/native/components/Button/Button.styles.ts",
+        "status": "planned",
+      },
+      {
+        "path": "src/ds/native/components/Button/ButtonBase.tsx",
+        "status": "planned",
+      },
+      {
+        "path": "src/ds/native/components/IconButton/IconButton.tsx",
+        "status": "planned",
+      },
+      {
+        "path": "src/ds/native/components/IconButton/index.ts",
+        "status": "planned",
+      },
+      {
+        "path": "src/ds/native/theme/context.ts",
+        "status": "planned",
+      },
+      {
+        "path": "src/ds/native/theme/hooks.ts",
+        "status": "planned",
+      },
+      {
+        "path": "src/ds/native/theme/recipes.ts",
+        "status": "planned",
+      },
+      {
+        "path": "src/ds/native/theme/resolve.ts",
+        "status": "planned",
+      },
+      {
+        "path": "src/ds/native/theme/types.ts",
+        "status": "planned",
+      },
+      {
+        "path": "src/ds/native/theme/units.ts",
+        "status": "planned",
+      },
+    ],
+    "framework": "native",
+    "imports": [
+      "import { ThemeProvider } from '@the-system/native';",
+      "<ThemeProvider style="studio" scheme="dark">...</ThemeProvider>",
+    ],
+    "install": null,
+    "items": [
+      "IconButton",
+    ],
+    "name": "IconButton",
+    "shadcn": null,
+  },
+  "type": "add.result",
+}
+`;
+
+exports[`ds --json > add, react: writes the registry item and its dependencies, then changes nothing on a second run 1`] = `
+{
+  "apiVersion": 1,
+  "data": {
+    "dependencies": [
+      "@fontsource-variable/inter@^5.3.0",
+      "@fontsource/ibm-plex-sans-arabic@^5.3.0",
+      "radix-ui@^1.8.1",
+    ],
+    "framework": "react",
+    "imports": [
+      "import './components/ds/ds.css';  // once, at the app root",
+      "import './components/ds/style-studio.css';  // or another style",
+      "import { Theme } from './components/ds/react/theme';",
+      "import { Kbd } from './components/ds/react/components/Kbd';",
+    ],
+    "install": "npm install @fontsource-variable/inter@^5.3.0 @fontsource/ibm-plex-sans-arabic@^5.3.0",
+    "items": [
+      "kbd",
+      "core",
+      "theme",
+      "style-studio",
+    ],
+    "name": "Kbd",
+    "shadcn": "npx shadcn@4.23.0 add @ds/kbd",
+  },
+  "type": "add.result",
+}
+`;
+
+exports[`ds --json > docs 1`] = `
+{
+  "apiVersion": 1,
+  "data": {
+    "a11y": {
+      "announce": "The spoken key names, or label. Nothing when decorative.",
+      "focus": "Never focusable.",
+      "keys": {},
+      "native": {
+        "accessibilityRole": "text",
+      },
+      "notes": [
+        "The root is dir ltr and isolated (unicode-bidi isolate), so a shortcut reads Ctrl then K inside an Arabic sentence and does not move the punctuation around it.",
+        "Menu items and buttons that have a shortcut set aria-keyshortcuts (ariaKeyShortcuts from the same helpers) and render Kbd decorative.",
+        "No hover, press or motion: a keycap is text, not a control.",
+        "Under forced colors the gradient and the depth shadow drop; each key keeps a CanvasText border.",
+        "The default spoken names are English and carry lang en, so an Arabic page reads them with an English voice. Pass label for names in another language.",
+      ],
+      "role": "None: a kbd element. Each keycap is hidden; a visually hidden span (spoken) says the key names, so a screen reader hears Control Shift P, not C T R L plus.",
+    },
+    "anatomy": [
+      "root",
+      "key",
+      "separator",
+      "spoken",
+    ],
+    "avoidWhen": [
+      "Code, a file name or a command people type, which is not a key press",
+      "A label on a button people click",
+      "The only way to learn an action: a shortcut is an extra path, the action needs a visible control too",
+    ],
+    "content": {
+      "ar": {
+        "digits": "Western digits.",
+        "keys": "Keys stay in Latin letters and read left to right: Ctrl+K, never translated or mirrored.",
+        "sentence": "اضغط Ctrl+K للبحث. The key names are spoken in English by default; pass label for another wording.",
+      },
+      "en": {
+        "keys": "Key names as printed on keyboards: Ctrl, Shift, Alt, Esc, Enter, Tab, single letters in upper case.",
+        "sentence": "Put the shortcut after the verb: Press Ctrl+K to open search.",
+      },
+    },
+    "family": "data-display",
+    "frameworks": {
+      "angular": {
+        "behavior": "kbd[dsKbd], hand built on shortcut.ts",
+        "status": "planned",
+      },
+      "native": {
+        "note": "Touch first apps rarely show shortcuts; useful on iPad and Android with a hardware keyboard. Same shortcut.ts.",
+        "status": "planned",
+      },
+      "react": {
+        "behavior": "hand built kbd elements",
+        "example": "Kbd.demo.tsx",
+        "note": "Parsing, the Mod mapping and spoken names live in @the-system/shared (shortcut.ts), so Angular and native read the same keys.",
+        "status": "ready",
+      },
+    },
+    "insteadUse": {
+      "A hint that explains a control": "Tooltip, with Kbd in its shortcut part",
+      "A removable value or a filter": "Chip",
+      "A status or a count next to a label": "Badge",
+      "Code or a command people type": "Code (wave 2), or a monospace text span",
+    },
+    "kind": "component",
+    "markdown": "# Kbd
+
+A key or a keyboard shortcut drawn as keycaps, with the key names spoken to screen readers.
+
+## Use when
+
+- Telling people which key or shortcut runs an action: Ctrl+K opens search
+- The shortcut part of a menu item, a tooltip or a command palette row
+- A keyboard help sheet that lists shortcuts next to what they do
+
+## Do not use when
+
+- Code, a file name or a command people type, which is not a key press
+- A label on a button people click
+- The only way to learn an action: a shortcut is an extra path, the action needs a visible control too
+
+## Use instead
+
+- Code or a command people type: Code (wave 2), or a monospace text span
+- A status or a count next to a label: Badge
+- A removable value or a filter: Chip
+- A hint that explains a control: Tooltip, with Kbd in its shortcut part
+
+## Anatomy
+
+\`root\`, \`key\`, \`separator\`, \`spoken\`
+
+## Accessibility
+
+- Role: None: a kbd element. Each keycap is hidden; a visually hidden span (spoken) says the key names, so a screen reader hears Control Shift P, not C T R L plus.
+- Focus: Never focusable.
+- Announce: The spoken key names, or label. Nothing when decorative.
+
+## Common mistakes
+
+- Wrong: <kbd>Ctrl+Shift+P</kbd> as one cap, read as C T R L plus
+  Right: Kbd with the shortcut string: three keycaps and the spoken names
+- Wrong: Hard coding ⌘ for everyone
+  Right: Mod+K, which draws ⌘K on a Mac and Ctrl+K elsewhere
+- Wrong: A shortcut in an Arabic sentence that renders K+Ctrl
+  Right: Kbd, which keeps the keys left to right inside right to left text
+- Wrong: A menu item whose shortcut is read twice
+  Right: aria-keyshortcuts on the item and Kbd decorative
+
+## Frameworks
+
+- react: ready (example Kbd.demo.tsx)
+- angular: planned
+- native: planned
+",
+    "mistakes": [
+      {
+        "right": "Kbd with the shortcut string: three keycaps and the spoken names",
+        "wrong": "<kbd>Ctrl+Shift+P</kbd> as one cap, read as C T R L plus",
+      },
+      {
+        "right": "Mod+K, which draws ⌘K on a Mac and Ctrl+K elsewhere",
+        "wrong": "Hard coding ⌘ for everyone",
+      },
+      {
+        "right": "Kbd, which keeps the keys left to right inside right to left text",
+        "wrong": "A shortcut in an Arabic sentence that renders K+Ctrl",
+      },
+      {
+        "right": "aria-keyshortcuts on the item and Kbd decorative",
+        "wrong": "A menu item whose shortcut is read twice",
+      },
+    ],
+    "name": "Kbd",
+    "slug": "kbd",
+    "summary": "A key or a keyboard shortcut drawn as keycaps, with the key names spoken to screen readers.",
+    "useWhen": [
+      "Telling people which key or shortcut runs an action: Ctrl+K opens search",
+      "The shortcut part of a menu item, a tooltip or a command palette row",
+      "A keyboard help sheet that lists shortcuts next to what they do",
+    ],
+  },
+  "type": "docs.page",
+}
+`;
+
+exports[`ds --json > errors carry a stable code and exit 2 1`] = `
+[
+  {
+    "apiVersion": 1,
+    "data": {
+      "code": "DS_E_NOT_FOUND",
+      "message": "No component, pattern or template named "Buton". Did you mean Button?",
+      "suggestions": [
+        "Button",
+      ],
+    },
+    "type": "error",
+  },
+  {
+    "apiVersion": 1,
+    "data": {
+      "code": "DS_E_FRAMEWORK",
+      "message": "Pass --framework react|angular|native.",
+    },
+    "type": "error",
+  },
+  {
+    "apiVersion": 1,
+    "data": {
+      "code": "DS_E_FRAMEWORK",
+      "message": "Unknown framework "vue". Use react, angular, native.",
+    },
+    "type": "error",
+  },
+  {
+    "apiVersion": 1,
+    "data": {
+      "code": "DS_E_NOT_READY",
+      "message": "Tabs is planned for angular. Ready for: react.",
+      "readyIn": [
+        "react",
+      ],
+      "status": "planned",
+    },
+    "type": "error",
+  },
+  {
+    "apiVersion": 1,
+    "data": {
+      "code": "DS_E_FRAMEWORK",
+      "message": "Window does not exist for native: Phones and tablets have no free windows. A native app shows the same content as a full screen or a sheet; see Dialog and Drawer.",
+      "status": "not-applicable",
+    },
+    "type": "error",
+  },
+  {
+    "apiVersion": 1,
+    "data": {
+      "code": "DS_E_STYLE",
+      "message": "No style "paper". Styles: desk, neutral, studio.",
+      "styles": [
+        "desk",
+        "neutral",
+        "studio",
+      ],
+    },
+    "type": "error",
+  },
+  {
+    "apiVersion": 1,
+    "data": {
+      "code": "DS_E_USAGE",
+      "message": "Unknown command "nothing". Run ds --help.",
+    },
+    "type": "error",
+  },
+  {
+    "apiVersion": 1,
+    "data": {
+      "code": "DS_E_USAGE",
+      "message": "Give at least one word. Usage: ds search <words> [--framework react|angular|native]",
+    },
+    "type": "error",
+  },
+]
+`;
+
+exports[`ds --json > help and version 1`] = `
+{
+  "apiVersion": 1,
+  "data": {
+    "name": "The system",
+    "version": "0.1.0",
+  },
+  "type": "version",
+}
+`;
+
+exports[`ds --json > search 1`] = `
+{
+  "apiVersion": 1,
+  "data": {
+    "framework": null,
+    "query": "keyboard shortcut",
+    "results": [
+      {
+        "family": "data-display",
+        "frameworks": {
+          "angular": "planned",
+          "native": "planned",
+          "react": "ready",
+        },
+        "kind": "component",
+        "name": "Kbd",
+        "score": 6,
+        "summary": "A key or a keyboard shortcut drawn as keycaps, with the key names spoken to screen readers.",
+      },
+      {
+        "family": "overlays",
+        "frameworks": {
+          "angular": "planned",
+          "native": "not-applicable",
+          "react": "ready",
+        },
+        "kind": "component",
+        "name": "Tooltip",
+        "score": 6,
+        "summary": "A short hint for a control, shown on hover and on keyboard focus. The only way to show a hint in the system: never the native title attribute.",
+      },
+      {
+        "family": "overlays",
+        "frameworks": {
+          "angular": "planned",
+          "native": "planned",
+          "react": "ready",
+        },
+        "kind": "component",
+        "name": "ContextMenu",
+        "score": 5,
+        "summary": "The actions of an item, opened on right click, a long press, or Shift+F10 and the Menu key on the focused item. The DropdownMenu surface and parts: items, checkbox and radio items, labels, separators and submenus.",
+      },
+    ],
+  },
+  "type": "search.results",
+}
+`;
+
+exports[`ds --json > style check desk passes 1`] = `
+{
+  "apiVersion": 1,
+  "data": {
+    "checks": [
+      {
+        "findings": [],
+        "id": "contract",
+        "ok": true,
+      },
+      {
+        "findings": [],
+        "id": "contrast",
+        "ok": true,
+      },
+      {
+        "findings": [],
+        "id": "icons",
+        "ok": true,
+      },
+      {
+        "findings": [],
+        "id": "fonts",
+        "ok": true,
+      },
+    ],
+    "ok": true,
+    "style": "desk",
+  },
+  "type": "style.check",
+}
+`;
+
+exports[`ds --json > style check neutral passes 1`] = `
+{
+  "apiVersion": 1,
+  "data": {
+    "checks": [
+      {
+        "findings": [],
+        "id": "contract",
+        "ok": true,
+      },
+      {
+        "findings": [],
+        "id": "contrast",
+        "ok": true,
+      },
+      {
+        "findings": [],
+        "id": "icons",
+        "ok": true,
+      },
+      {
+        "findings": [],
+        "id": "fonts",
+        "ok": true,
+      },
+    ],
+    "ok": true,
+    "style": "neutral",
+  },
+  "type": "style.check",
+}
+`;
+
+exports[`ds --json > style check studio passes 1`] = `
+{
+  "apiVersion": 1,
+  "data": {
+    "checks": [
+      {
+        "findings": [],
+        "id": "contract",
+        "ok": true,
+      },
+      {
+        "findings": [],
+        "id": "contrast",
+        "ok": true,
+      },
+      {
+        "findings": [],
+        "id": "icons",
+        "ok": true,
+      },
+      {
+        "findings": [],
+        "id": "fonts",
+        "ok": true,
+      },
+    ],
+    "ok": true,
+    "style": "studio",
+  },
+  "type": "style.check",
+}
+`;
+
+exports[`ds --json > style list 1`] = `
+{
+  "apiVersion": 1,
+  "data": {
+    "styles": [
+      {
+        "defaultDensity": "default",
+        "defaultScheme": "dark",
+        "iconSet": "pixel",
+        "id": "desk",
+        "motionPreset": "window",
+        "name": "Desk",
+        "proposedSchemes": [
+          "light",
+        ],
+        "schemes": [
+          "dark",
+          "light",
+        ],
+        "status": "stable",
+      },
+      {
+        "defaultDensity": "comfortable",
+        "defaultScheme": "light",
+        "iconSet": "line",
+        "id": "neutral",
+        "motionPreset": "fade",
+        "name": "Neutral",
+        "proposedSchemes": [],
+        "schemes": [
+          "light",
+          "dark",
+        ],
+        "status": "proposed",
+      },
+      {
+        "defaultDensity": "default",
+        "defaultScheme": "dark",
+        "iconSet": "pixel",
+        "id": "studio",
+        "motionPreset": "flat",
+        "name": "Studio",
+        "proposedSchemes": [],
+        "schemes": [
+          "dark",
+          "light",
+        ],
+        "status": "stable",
+      },
+    ],
+  },
+  "type": "style.list",
+}
+`;

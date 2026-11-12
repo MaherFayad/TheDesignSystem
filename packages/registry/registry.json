@@ -1,0 +1,4285 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry.json",
+  "name": "the-system",
+  "homepage": "/",
+  "items": [
+    {
+      "name": "core",
+      "type": "registry:lib",
+      "title": "Core",
+      "description": "Shared logic, icons, motion patterns, style data, the reset and the base CSS. Every other item needs it.",
+      "files": [
+        {
+          "path": "packages/registry/files/ds.css",
+          "type": "registry:file",
+          "target": "@components/ds/ds.css"
+        },
+        {
+          "path": "packages/css/src/reset.css",
+          "type": "registry:file",
+          "target": "@components/ds/css/reset.css"
+        },
+        {
+          "path": "packages/css/src/base.css",
+          "type": "registry:file",
+          "target": "@components/ds/css/base.css"
+        },
+        {
+          "path": "packages/icons/src/generated/line.gen.ts",
+          "type": "registry:lib",
+          "target": "@components/ds/icons/generated/line.gen.ts"
+        },
+        {
+          "path": "packages/icons/src/generated/pixel.gen.ts",
+          "type": "registry:lib",
+          "target": "@components/ds/icons/generated/pixel.gen.ts"
+        },
+        {
+          "path": "packages/icons/src/generated/sets.gen.ts",
+          "type": "registry:lib",
+          "target": "@components/ds/icons/generated/sets.gen.ts"
+        },
+        {
+          "path": "packages/icons/src/index.ts",
+          "type": "registry:lib",
+          "target": "@components/ds/icons/index.ts"
+        },
+        {
+          "path": "packages/icons/src/names.ts",
+          "type": "registry:lib",
+          "target": "@components/ds/icons/names.ts"
+        },
+        {
+          "path": "packages/icons/src/react/Icon.tsx",
+          "type": "registry:lib",
+          "target": "@components/ds/icons/react/Icon.tsx"
+        },
+        {
+          "path": "packages/icons/src/react/IconSetContext.ts",
+          "type": "registry:lib",
+          "target": "@components/ds/icons/react/IconSetContext.ts"
+        },
+        {
+          "path": "packages/icons/src/react/index.ts",
+          "type": "registry:lib",
+          "target": "@components/ds/icons/react/index.ts"
+        },
+        {
+          "path": "packages/icons/src/svg.ts",
+          "type": "registry:lib",
+          "target": "@components/ds/icons/svg.ts"
+        },
+        {
+          "path": "packages/icons/src/types.ts",
+          "type": "registry:lib",
+          "target": "@components/ds/icons/types.ts"
+        },
+        {
+          "path": "packages/motion/src/catalog.ts",
+          "type": "registry:lib",
+          "target": "@components/ds/motion/catalog.ts"
+        },
+        {
+          "path": "packages/motion/src/core.ts",
+          "type": "registry:lib",
+          "target": "@components/ds/motion/core.ts"
+        },
+        {
+          "path": "packages/motion/src/index.ts",
+          "type": "registry:lib",
+          "target": "@components/ds/motion/index.ts"
+        },
+        {
+          "path": "packages/motion/src/patterns/accordion-height.ts",
+          "type": "registry:lib",
+          "target": "@components/ds/motion/patterns/accordion-height.ts"
+        },
+        {
+          "path": "packages/motion/src/patterns/chart-draw.ts",
+          "type": "registry:lib",
+          "target": "@components/ds/motion/patterns/chart-draw.ts"
+        },
+        {
+          "path": "packages/motion/src/patterns/dialog.ts",
+          "type": "registry:lib",
+          "target": "@components/ds/motion/patterns/dialog.ts"
+        },
+        {
+          "path": "packages/motion/src/patterns/drag-drop.ts",
+          "type": "registry:lib",
+          "target": "@components/ds/motion/patterns/drag-drop.ts"
+        },
+        {
+          "path": "packages/motion/src/patterns/fade-rise.ts",
+          "type": "registry:lib",
+          "target": "@components/ds/motion/patterns/fade-rise.ts"
+        },
+        {
+          "path": "packages/motion/src/patterns/list-stagger.ts",
+          "type": "registry:lib",
+          "target": "@components/ds/motion/patterns/list-stagger.ts"
+        },
+        {
+          "path": "packages/motion/src/patterns/menu-scale.ts",
+          "type": "registry:lib",
+          "target": "@components/ds/motion/patterns/menu-scale.ts"
+        },
+        {
+          "path": "packages/motion/src/patterns/number-roll.ts",
+          "type": "registry:lib",
+          "target": "@components/ds/motion/patterns/number-roll.ts"
+        },
+        {
+          "path": "packages/motion/src/patterns/sheet.ts",
+          "type": "registry:lib",
+          "target": "@components/ds/motion/patterns/sheet.ts"
+        },
+        {
+          "path": "packages/motion/src/patterns/skeleton-shimmer.ts",
+          "type": "registry:lib",
+          "target": "@components/ds/motion/patterns/skeleton-shimmer.ts"
+        },
+        {
+          "path": "packages/motion/src/patterns/spinner.ts",
+          "type": "registry:lib",
+          "target": "@components/ds/motion/patterns/spinner.ts"
+        },
+        {
+          "path": "packages/motion/src/patterns/streaming-text.ts",
+          "type": "registry:lib",
+          "target": "@components/ds/motion/patterns/streaming-text.ts"
+        },
+        {
+          "path": "packages/motion/src/patterns/tab-indicator.ts",
+          "type": "registry:lib",
+          "target": "@components/ds/motion/patterns/tab-indicator.ts"
+        },
+        {
+          "path": "packages/motion/src/patterns/thinking.ts",
+          "type": "registry:lib",
+          "target": "@components/ds/motion/patterns/thinking.ts"
+        },
+        {
+          "path": "packages/motion/src/patterns/toast.ts",
+          "type": "registry:lib",
+          "target": "@components/ds/motion/patterns/toast.ts"
+        },
+        {
+          "path": "packages/motion/src/patterns/values.ts",
+          "type": "registry:lib",
+          "target": "@components/ds/motion/patterns/values.ts"
+        },
+        {
+          "path": "packages/motion/src/patterns/window-grow.ts",
+          "type": "registry:lib",
+          "target": "@components/ds/motion/patterns/window-grow.ts"
+        },
+        {
+          "path": "packages/motion/src/patterns/window-minimize.ts",
+          "type": "registry:lib",
+          "target": "@components/ds/motion/patterns/window-minimize.ts"
+        },
+        {
+          "path": "packages/motion/src/patterns/window-shared.ts",
+          "type": "registry:lib",
+          "target": "@components/ds/motion/patterns/window-shared.ts"
+        },
+        {
+          "path": "packages/motion/src/patterns/window-zoom.ts",
+          "type": "registry:lib",
+          "target": "@components/ds/motion/patterns/window-zoom.ts"
+        },
+        {
+          "path": "packages/motion/src/preset.ts",
+          "type": "registry:lib",
+          "target": "@components/ds/motion/preset.ts"
+        },
+        {
+          "path": "packages/motion/src/tokens.ts",
+          "type": "registry:lib",
+          "target": "@components/ds/motion/tokens.ts"
+        },
+        {
+          "path": "packages/motion/src/window.ts",
+          "type": "registry:lib",
+          "target": "@components/ds/motion/window.ts"
+        },
+        {
+          "path": "packages/shared/src/axes.ts",
+          "type": "registry:lib",
+          "target": "@components/ds/shared/axes.ts"
+        },
+        {
+          "path": "packages/shared/src/bidi.ts",
+          "type": "registry:lib",
+          "target": "@components/ds/shared/bidi.ts"
+        },
+        {
+          "path": "packages/shared/src/dialog-focus.ts",
+          "type": "registry:lib",
+          "target": "@components/ds/shared/dialog-focus.ts"
+        },
+        {
+          "path": "packages/shared/src/filter.ts",
+          "type": "registry:lib",
+          "target": "@components/ds/shared/filter.ts"
+        },
+        {
+          "path": "packages/shared/src/index.ts",
+          "type": "registry:lib",
+          "target": "@components/ds/shared/index.ts"
+        },
+        {
+          "path": "packages/shared/src/initials.ts",
+          "type": "registry:lib",
+          "target": "@components/ds/shared/initials.ts"
+        },
+        {
+          "path": "packages/shared/src/listbox.ts",
+          "type": "registry:lib",
+          "target": "@components/ds/shared/listbox.ts"
+        },
+        {
+          "path": "packages/shared/src/meter.ts",
+          "type": "registry:lib",
+          "target": "@components/ds/shared/meter.ts"
+        },
+        {
+          "path": "packages/shared/src/otp.ts",
+          "type": "registry:lib",
+          "target": "@components/ds/shared/otp.ts"
+        },
+        {
+          "path": "packages/shared/src/pagination.ts",
+          "type": "registry:lib",
+          "target": "@components/ds/shared/pagination.ts"
+        },
+        {
+          "path": "packages/shared/src/phone.ts",
+          "type": "registry:lib",
+          "target": "@components/ds/shared/phone.ts"
+        },
+        {
+          "path": "packages/shared/src/resize.ts",
+          "type": "registry:lib",
+          "target": "@components/ds/shared/resize.ts"
+        },
+        {
+          "path": "packages/shared/src/shortcut.ts",
+          "type": "registry:lib",
+          "target": "@components/ds/shared/shortcut.ts"
+        },
+        {
+          "path": "packages/shared/src/space.ts",
+          "type": "registry:lib",
+          "target": "@components/ds/shared/space.ts"
+        },
+        {
+          "path": "packages/shared/src/stepper.ts",
+          "type": "registry:lib",
+          "target": "@components/ds/shared/stepper.ts"
+        },
+        {
+          "path": "packages/shared/src/theme.ts",
+          "type": "registry:lib",
+          "target": "@components/ds/shared/theme.ts"
+        },
+        {
+          "path": "packages/shared/src/toast.ts",
+          "type": "registry:lib",
+          "target": "@components/ds/shared/toast.ts"
+        },
+        {
+          "path": "packages/shared/src/toc.ts",
+          "type": "registry:lib",
+          "target": "@components/ds/shared/toc.ts"
+        },
+        {
+          "path": "packages/shared/src/window.ts",
+          "type": "registry:lib",
+          "target": "@components/ds/shared/window.ts"
+        },
+        {
+          "path": "packages/styles/desk/icons.ts",
+          "type": "registry:lib",
+          "target": "@components/ds/styles/desk/icons.ts"
+        },
+        {
+          "path": "packages/styles/desk/motion.ts",
+          "type": "registry:lib",
+          "target": "@components/ds/styles/desk/motion.ts"
+        },
+        {
+          "path": "packages/styles/desk/style.json",
+          "type": "registry:lib",
+          "target": "@components/ds/styles/desk/style.json"
+        },
+        {
+          "path": "packages/styles/neutral/style.json",
+          "type": "registry:lib",
+          "target": "@components/ds/styles/neutral/style.json"
+        },
+        {
+          "path": "packages/styles/registry.gen.ts",
+          "type": "registry:lib",
+          "target": "@components/ds/styles/registry.gen.ts"
+        },
+        {
+          "path": "packages/styles/studio/icons.ts",
+          "type": "registry:lib",
+          "target": "@components/ds/styles/studio/icons.ts"
+        },
+        {
+          "path": "packages/styles/studio/motion.ts",
+          "type": "registry:lib",
+          "target": "@components/ds/styles/studio/motion.ts"
+        },
+        {
+          "path": "packages/styles/studio/style.json",
+          "type": "registry:lib",
+          "target": "@components/ds/styles/studio/style.json"
+        }
+      ],
+      "docs": "Import ds/ds.css and one ds/style-<id>.css once at the app root. Dialog and Tooltip read process.env.NODE_ENV: in a Vite app add \"node\" to compilerOptions.types.",
+      "categories": [
+        "core"
+      ],
+      "meta": {
+        "source": "The system",
+        "version": "0.1.0"
+      }
+    },
+    {
+      "name": "theme",
+      "type": "registry:ui",
+      "title": "Theme",
+      "description": "Stamps every runtime axis on its own element, resolves what is not passed from the nearest parent Theme, and gives the subtree its direction, icon set and style data.",
+      "dependencies": [
+        "radix-ui@^1.8.1"
+      ],
+      "registryDependencies": [
+        "@ds/core",
+        "@ds/style-studio"
+      ],
+      "files": [
+        {
+          "path": "packages/react/src/internal/useControllable.ts",
+          "type": "registry:ui",
+          "target": "@components/ds/react/internal/useControllable.ts"
+        },
+        {
+          "path": "packages/react/src/theme/Bidi.tsx",
+          "type": "registry:ui",
+          "target": "@components/ds/react/theme/Bidi.tsx"
+        },
+        {
+          "path": "packages/react/src/theme/context.ts",
+          "type": "registry:ui",
+          "target": "@components/ds/react/theme/context.ts"
+        },
+        {
+          "path": "packages/react/src/theme/hooks.ts",
+          "type": "registry:ui",
+          "target": "@components/ds/react/theme/hooks.ts"
+        },
+        {
+          "path": "packages/react/src/theme/icons.ts",
+          "type": "registry:ui",
+          "target": "@components/ds/react/theme/icons.ts"
+        },
+        {
+          "path": "packages/react/src/theme/index.ts",
+          "type": "registry:ui",
+          "target": "@components/ds/react/theme/index.ts"
+        },
+        {
+          "path": "packages/react/src/theme/resolve.ts",
+          "type": "registry:ui",
+          "target": "@components/ds/react/theme/resolve.ts"
+        },
+        {
+          "path": "packages/react/src/theme/Theme.tsx",
+          "type": "registry:ui",
+          "target": "@components/ds/react/theme/Theme.tsx"
+        },
+        {
+          "path": "packages/react/src/theme/types.ts",
+          "type": "registry:ui",
+          "target": "@components/ds/react/theme/types.ts"
+        }
+      ],
+      "docs": "Wrap the app in Theme. Its style prop picks the style; add that style item too.",
+      "categories": [
+        "foundations"
+      ],
+      "meta": {
+        "manifest": "Theme",
+        "framework": "react"
+      }
+    },
+    {
+      "name": "style-desk",
+      "type": "registry:style",
+      "title": "Desk style",
+      "description": "Tokens for dark and light, fonts and recipes of the Desk style.",
+      "dependencies": [
+        "@fontsource/ibm-plex-sans-arabic@^5.3.0",
+        "@fontsource/instrument-sans@^5.3.0"
+      ],
+      "registryDependencies": [
+        "@ds/core"
+      ],
+      "files": [
+        {
+          "path": "packages/registry/files/style-desk.css",
+          "type": "registry:file",
+          "target": "@components/ds/style-desk.css"
+        },
+        {
+          "path": "packages/tokens/dist/css/desk.css",
+          "type": "registry:file",
+          "target": "@components/ds/tokens/desk.css"
+        },
+        {
+          "path": "packages/styles/desk/index.css",
+          "type": "registry:file",
+          "target": "@components/ds/styles/desk/index.css"
+        },
+        {
+          "path": "packages/styles/desk/fonts.css",
+          "type": "registry:file",
+          "target": "@components/ds/styles/desk/fonts.css"
+        },
+        {
+          "path": "packages/styles/desk/recipes/Button.css",
+          "type": "registry:file",
+          "target": "@components/ds/styles/desk/recipes/Button.css"
+        },
+        {
+          "path": "packages/styles/desk/recipes/Combobox.css",
+          "type": "registry:file",
+          "target": "@components/ds/styles/desk/recipes/Combobox.css"
+        },
+        {
+          "path": "packages/styles/desk/recipes/Dialog.css",
+          "type": "registry:file",
+          "target": "@components/ds/styles/desk/recipes/Dialog.css"
+        },
+        {
+          "path": "packages/styles/desk/recipes/Dock.css",
+          "type": "registry:file",
+          "target": "@components/ds/styles/desk/recipes/Dock.css"
+        },
+        {
+          "path": "packages/styles/desk/recipes/DropdownMenu.css",
+          "type": "registry:file",
+          "target": "@components/ds/styles/desk/recipes/DropdownMenu.css"
+        },
+        {
+          "path": "packages/styles/desk/recipes/HoverCard.css",
+          "type": "registry:file",
+          "target": "@components/ds/styles/desk/recipes/HoverCard.css"
+        },
+        {
+          "path": "packages/styles/desk/recipes/ListBox.css",
+          "type": "registry:file",
+          "target": "@components/ds/styles/desk/recipes/ListBox.css"
+        },
+        {
+          "path": "packages/styles/desk/recipes/Menubar.css",
+          "type": "registry:file",
+          "target": "@components/ds/styles/desk/recipes/Menubar.css"
+        },
+        {
+          "path": "packages/styles/desk/recipes/Popover.css",
+          "type": "registry:file",
+          "target": "@components/ds/styles/desk/recipes/Popover.css"
+        },
+        {
+          "path": "packages/styles/desk/recipes/Tile.css",
+          "type": "registry:file",
+          "target": "@components/ds/styles/desk/recipes/Tile.css"
+        },
+        {
+          "path": "packages/styles/desk/recipes/Toast.css",
+          "type": "registry:file",
+          "target": "@components/ds/styles/desk/recipes/Toast.css"
+        },
+        {
+          "path": "packages/styles/desk/recipes/Tooltip.css",
+          "type": "registry:file",
+          "target": "@components/ds/styles/desk/recipes/Tooltip.css"
+        },
+        {
+          "path": "packages/styles/desk/recipes/Tour.css",
+          "type": "registry:file",
+          "target": "@components/ds/styles/desk/recipes/Tour.css"
+        },
+        {
+          "path": "packages/styles/desk/recipes/Window.css",
+          "type": "registry:file",
+          "target": "@components/ds/styles/desk/recipes/Window.css"
+        }
+      ],
+      "extends": "none",
+      "docs": "Import ds/style-desk.css after ds/ds.css, and set style=\"desk\" on Theme.",
+      "categories": [
+        "style"
+      ],
+      "meta": {
+        "style": "desk",
+        "status": "stable"
+      }
+    },
+    {
+      "name": "style-neutral",
+      "type": "registry:style",
+      "title": "Neutral style",
+      "description": "Tokens for dark and light, fonts and recipes of the Neutral style. Status: proposed, waiting for the owner.",
+      "dependencies": [
+        "@fontsource-variable/inter@^5.3.0",
+        "@fontsource/ibm-plex-sans-arabic@^5.3.0"
+      ],
+      "registryDependencies": [
+        "@ds/core"
+      ],
+      "files": [
+        {
+          "path": "packages/registry/files/style-neutral.css",
+          "type": "registry:file",
+          "target": "@components/ds/style-neutral.css"
+        },
+        {
+          "path": "packages/tokens/dist/css/neutral.css",
+          "type": "registry:file",
+          "target": "@components/ds/tokens/neutral.css"
+        },
+        {
+          "path": "packages/styles/neutral/index.css",
+          "type": "registry:file",
+          "target": "@components/ds/styles/neutral/index.css"
+        },
+        {
+          "path": "packages/styles/neutral/fonts.css",
+          "type": "registry:file",
+          "target": "@components/ds/styles/neutral/fonts.css"
+        },
+        {
+          "path": "packages/styles/neutral/recipes/Icon.css",
+          "type": "registry:file",
+          "target": "@components/ds/styles/neutral/recipes/Icon.css"
+        },
+        {
+          "path": "packages/styles/neutral/recipes/Input.css",
+          "type": "registry:file",
+          "target": "@components/ds/styles/neutral/recipes/Input.css"
+        },
+        {
+          "path": "packages/styles/neutral/recipes/Window.css",
+          "type": "registry:file",
+          "target": "@components/ds/styles/neutral/recipes/Window.css"
+        }
+      ],
+      "extends": "none",
+      "docs": "Import ds/style-neutral.css after ds/ds.css, and set style=\"neutral\" on Theme.",
+      "categories": [
+        "style"
+      ],
+      "meta": {
+        "style": "neutral",
+        "status": "proposed"
+      }
+    },
+    {
+      "name": "style-studio",
+      "type": "registry:style",
+      "title": "Studio style",
+      "description": "Tokens for dark and light, fonts and recipes of the Studio style.",
+      "dependencies": [
+        "@fontsource-variable/inter@^5.3.0",
+        "@fontsource/ibm-plex-sans-arabic@^5.3.0"
+      ],
+      "registryDependencies": [
+        "@ds/core"
+      ],
+      "files": [
+        {
+          "path": "packages/registry/files/style-studio.css",
+          "type": "registry:file",
+          "target": "@components/ds/style-studio.css"
+        },
+        {
+          "path": "packages/tokens/dist/css/studio.css",
+          "type": "registry:file",
+          "target": "@components/ds/tokens/studio.css"
+        },
+        {
+          "path": "packages/styles/studio/index.css",
+          "type": "registry:file",
+          "target": "@components/ds/styles/studio/index.css"
+        },
+        {
+          "path": "packages/styles/studio/fonts.css",
+          "type": "registry:file",
+          "target": "@components/ds/styles/studio/fonts.css"
+        },
+        {
+          "path": "packages/styles/studio/recipes/Bento.css",
+          "type": "registry:file",
+          "target": "@components/ds/styles/studio/recipes/Bento.css"
+        },
+        {
+          "path": "packages/styles/studio/recipes/Rating.css",
+          "type": "registry:file",
+          "target": "@components/ds/styles/studio/recipes/Rating.css"
+        },
+        {
+          "path": "packages/styles/studio/recipes/Window.css",
+          "type": "registry:file",
+          "target": "@components/ds/styles/studio/recipes/Window.css"
+        }
+      ],
+      "extends": "none",
+      "docs": "Import ds/style-studio.css after ds/ds.css, and set style=\"studio\" on Theme.",
+      "categories": [
+        "style"
+      ],
+      "meta": {
+        "style": "studio",
+        "status": "stable"
+      }
+    },
+    {
+      "name": "accordion",
+      "type": "registry:ui",
+      "title": "Accordion",
+      "description": "Stacked sections that open and close. Each title is a heading holding the system Button that toggles its section. One or many open at a time.",
+      "dependencies": [
+        "radix-ui@^1.8.1"
+      ],
+      "registryDependencies": [
+        "@ds/button",
+        "@ds/core",
+        "@ds/theme"
+      ],
+      "files": [
+        {
+          "path": "packages/react/src/components/Accordion/Accordion.tsx",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/Accordion/Accordion.tsx"
+        },
+        {
+          "path": "packages/react/src/components/Accordion/index.ts",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/Accordion/index.ts"
+        },
+        {
+          "path": "packages/css/src/components/Accordion.css",
+          "type": "registry:file",
+          "target": "@components/ds/css/components/Accordion.css"
+        }
+      ],
+      "categories": [
+        "containers"
+      ],
+      "meta": {
+        "manifest": "Accordion",
+        "framework": "react",
+        "since": "0.1.0"
+      }
+    },
+    {
+      "name": "alert",
+      "type": "registry:ui",
+      "title": "Alert",
+      "description": "A message about the page or a section that stays until it is fixed or dismissed: a form error summary, a sync problem, a plan limit.",
+      "registryDependencies": [
+        "@ds/close-button",
+        "@ds/core",
+        "@ds/theme"
+      ],
+      "files": [
+        {
+          "path": "packages/react/src/components/Alert/Alert.tsx",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/Alert/Alert.tsx"
+        },
+        {
+          "path": "packages/react/src/components/Alert/index.ts",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/Alert/index.ts"
+        },
+        {
+          "path": "packages/react/src/components/Alert/messageTones.ts",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/Alert/messageTones.ts"
+        },
+        {
+          "path": "packages/css/src/components/Alert.css",
+          "type": "registry:file",
+          "target": "@components/ds/css/components/Alert.css"
+        }
+      ],
+      "categories": [
+        "feedback"
+      ],
+      "meta": {
+        "manifest": "Alert",
+        "framework": "react",
+        "since": "0.1.0"
+      }
+    },
+    {
+      "name": "alert-dialog",
+      "type": "registry:ui",
+      "title": "AlertDialog",
+      "description": "A modal question about an action that cannot be undone. The person must answer it: Cancel or the action. It never closes on a click outside.",
+      "dependencies": [
+        "radix-ui@^1.8.1"
+      ],
+      "registryDependencies": [
+        "@ds/core",
+        "@ds/dialog",
+        "@ds/icon",
+        "@ds/theme"
+      ],
+      "files": [
+        {
+          "path": "packages/react/src/components/AlertDialog/AlertDialog.tsx",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/AlertDialog/AlertDialog.tsx"
+        },
+        {
+          "path": "packages/react/src/components/AlertDialog/index.ts",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/AlertDialog/index.ts"
+        }
+      ],
+      "categories": [
+        "overlays"
+      ],
+      "meta": {
+        "manifest": "AlertDialog",
+        "framework": "react",
+        "since": "0.1.0"
+      }
+    },
+    {
+      "name": "aspect-ratio",
+      "type": "registry:ui",
+      "title": "AspectRatio",
+      "description": "Keeps a box, and the image, video or embed inside it, at a fixed ratio of width to height at any width.",
+      "dependencies": [
+        "radix-ui@^1.8.1"
+      ],
+      "registryDependencies": [
+        "@ds/theme"
+      ],
+      "files": [
+        {
+          "path": "packages/react/src/components/AspectRatio/AspectRatio.tsx",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/AspectRatio/AspectRatio.tsx"
+        },
+        {
+          "path": "packages/react/src/components/AspectRatio/index.ts",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/AspectRatio/index.ts"
+        },
+        {
+          "path": "packages/css/src/components/AspectRatio.css",
+          "type": "registry:file",
+          "target": "@components/ds/css/components/AspectRatio.css"
+        }
+      ],
+      "categories": [
+        "layout"
+      ],
+      "meta": {
+        "manifest": "AspectRatio",
+        "framework": "react",
+        "since": "0.1.0"
+      }
+    },
+    {
+      "name": "autocomplete",
+      "type": "registry:ui",
+      "title": "Autocomplete",
+      "description": "A text field that suggests as you type, where any text is a valid answer. Suggestions filter in a list under the field; choosing one fills the field, and Enter with nothing highlighted keeps what was typed.",
+      "registryDependencies": [
+        "@ds/combobox",
+        "@ds/list-box",
+        "@ds/theme"
+      ],
+      "files": [
+        {
+          "path": "packages/react/src/components/Autocomplete/Autocomplete.tsx",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/Autocomplete/Autocomplete.tsx"
+        },
+        {
+          "path": "packages/react/src/components/Autocomplete/index.ts",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/Autocomplete/index.ts"
+        },
+        {
+          "path": "packages/css/src/components/Autocomplete.css",
+          "type": "registry:file",
+          "target": "@components/ds/css/components/Autocomplete.css"
+        }
+      ],
+      "categories": [
+        "selection"
+      ],
+      "meta": {
+        "manifest": "Autocomplete",
+        "framework": "react",
+        "since": "0.1.0"
+      }
+    },
+    {
+      "name": "avatar",
+      "type": "registry:ui",
+      "title": "Avatar",
+      "description": "A person or a workspace shown as an image, initials or an icon, with an optional status dot.",
+      "dependencies": [
+        "radix-ui@^1.8.1"
+      ],
+      "registryDependencies": [
+        "@ds/core",
+        "@ds/theme"
+      ],
+      "files": [
+        {
+          "path": "packages/react/src/components/Avatar/Avatar.tsx",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/Avatar/Avatar.tsx"
+        },
+        {
+          "path": "packages/react/src/components/Avatar/index.ts",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/Avatar/index.ts"
+        },
+        {
+          "path": "packages/css/src/components/Avatar.css",
+          "type": "registry:file",
+          "target": "@components/ds/css/components/Avatar.css"
+        }
+      ],
+      "categories": [
+        "data-display"
+      ],
+      "meta": {
+        "manifest": "Avatar",
+        "framework": "react",
+        "since": "0.2.0"
+      }
+    },
+    {
+      "name": "avatar-group",
+      "type": "registry:ui",
+      "title": "AvatarGroup",
+      "description": "A few overlapping avatars and a +N count for the rest, named as one group.",
+      "registryDependencies": [
+        "@ds/avatar",
+        "@ds/button",
+        "@ds/theme"
+      ],
+      "files": [
+        {
+          "path": "packages/react/src/components/AvatarGroup/AvatarGroup.tsx",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/AvatarGroup/AvatarGroup.tsx"
+        },
+        {
+          "path": "packages/react/src/components/AvatarGroup/index.ts",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/AvatarGroup/index.ts"
+        },
+        {
+          "path": "packages/css/src/components/AvatarGroup.css",
+          "type": "registry:file",
+          "target": "@components/ds/css/components/AvatarGroup.css"
+        }
+      ],
+      "categories": [
+        "data-display"
+      ],
+      "meta": {
+        "manifest": "AvatarGroup",
+        "framework": "react",
+        "since": "0.2.0"
+      }
+    },
+    {
+      "name": "badge",
+      "type": "registry:ui",
+      "title": "Badge",
+      "description": "A small static count or status label attached to something: unread 3, Beta, Draft.",
+      "dependencies": [
+        "radix-ui@^1.8.1"
+      ],
+      "registryDependencies": [
+        "@ds/core",
+        "@ds/theme"
+      ],
+      "files": [
+        {
+          "path": "packages/react/src/components/Badge/Badge.tsx",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/Badge/Badge.tsx"
+        },
+        {
+          "path": "packages/react/src/components/Badge/index.ts",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/Badge/index.ts"
+        },
+        {
+          "path": "packages/css/src/components/Badge.css",
+          "type": "registry:file",
+          "target": "@components/ds/css/components/Badge.css"
+        }
+      ],
+      "categories": [
+        "data-display"
+      ],
+      "meta": {
+        "manifest": "Badge",
+        "framework": "react",
+        "since": "0.2.0"
+      }
+    },
+    {
+      "name": "banner",
+      "type": "registry:ui",
+      "title": "Banner",
+      "description": "A page wide notice at the top of the app: maintenance, a trial that ends, an outage. A named region the consumer dismisses and remembers.",
+      "registryDependencies": [
+        "@ds/alert",
+        "@ds/close-button",
+        "@ds/core",
+        "@ds/theme"
+      ],
+      "files": [
+        {
+          "path": "packages/react/src/components/Banner/Banner.tsx",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/Banner/Banner.tsx"
+        },
+        {
+          "path": "packages/react/src/components/Banner/index.ts",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/Banner/index.ts"
+        },
+        {
+          "path": "packages/css/src/components/Banner.css",
+          "type": "registry:file",
+          "target": "@components/ds/css/components/Banner.css"
+        }
+      ],
+      "categories": [
+        "feedback"
+      ],
+      "meta": {
+        "manifest": "Banner",
+        "framework": "react",
+        "since": "0.1.0"
+      }
+    },
+    {
+      "name": "bento",
+      "type": "registry:ui",
+      "title": "Bento",
+      "description": "A grid of tiles of mixed sizes (1x1, 2x1, 1x2, 2x2) for overviews and landing sections. Reading order is the visual order.",
+      "registryDependencies": [
+        "@ds/theme"
+      ],
+      "files": [
+        {
+          "path": "packages/react/src/components/Bento/Bento.tsx",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/Bento/Bento.tsx"
+        },
+        {
+          "path": "packages/react/src/components/Bento/index.ts",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/Bento/index.ts"
+        },
+        {
+          "path": "packages/css/src/components/Bento.css",
+          "type": "registry:file",
+          "target": "@components/ds/css/components/Bento.css"
+        }
+      ],
+      "categories": [
+        "layout"
+      ],
+      "meta": {
+        "manifest": "Bento",
+        "framework": "react",
+        "since": "0.1.0"
+      }
+    },
+    {
+      "name": "bidi",
+      "type": "registry:ui",
+      "title": "Bidi",
+      "description": "Isolates each Latin run inside Arabic copy, so sentence punctuation stays at the logical end of the line.",
+      "registryDependencies": [
+        "@ds/theme"
+      ],
+      "files": [],
+      "docs": "Bidi ships inside the theme item. Import it from ds/react/theme.",
+      "categories": [
+        "foundations"
+      ],
+      "meta": {
+        "manifest": "Bidi",
+        "framework": "react",
+        "since": "0.1.0"
+      }
+    },
+    {
+      "name": "breadcrumbs",
+      "type": "registry:ui",
+      "title": "Breadcrumbs",
+      "description": "The path from the top of a site to the current page: links to each level above, then the current page with aria-current page.",
+      "registryDependencies": [
+        "@ds/core",
+        "@ds/dropdown-menu",
+        "@ds/icon-button",
+        "@ds/link",
+        "@ds/theme"
+      ],
+      "files": [
+        {
+          "path": "packages/react/src/components/Breadcrumbs/Breadcrumbs.tsx",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/Breadcrumbs/Breadcrumbs.tsx"
+        },
+        {
+          "path": "packages/react/src/components/Breadcrumbs/index.ts",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/Breadcrumbs/index.ts"
+        },
+        {
+          "path": "packages/css/src/components/Breadcrumbs.css",
+          "type": "registry:file",
+          "target": "@components/ds/css/components/Breadcrumbs.css"
+        }
+      ],
+      "categories": [
+        "navigation"
+      ],
+      "meta": {
+        "manifest": "Breadcrumbs",
+        "framework": "react",
+        "since": "0.1.0"
+      }
+    },
+    {
+      "name": "button",
+      "type": "registry:ui",
+      "title": "Button",
+      "description": "An action the person takes on this page: save, send, open, delete. The one control that renders a native button.",
+      "dependencies": [
+        "radix-ui@^1.8.1"
+      ],
+      "registryDependencies": [
+        "@ds/button-group",
+        "@ds/core",
+        "@ds/theme"
+      ],
+      "files": [
+        {
+          "path": "packages/react/src/components/Button/Button.tsx",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/Button/Button.tsx"
+        },
+        {
+          "path": "packages/react/src/components/Button/ButtonBase.tsx",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/Button/ButtonBase.tsx"
+        },
+        {
+          "path": "packages/react/src/components/Button/index.ts",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/Button/index.ts"
+        },
+        {
+          "path": "packages/css/src/components/Button.css",
+          "type": "registry:file",
+          "target": "@components/ds/css/components/Button.css"
+        }
+      ],
+      "categories": [
+        "actions"
+      ],
+      "meta": {
+        "manifest": "Button",
+        "framework": "react",
+        "since": "0.1.0"
+      }
+    },
+    {
+      "name": "button-group",
+      "type": "registry:ui",
+      "title": "ButtonGroup",
+      "description": "A labelled row or column of two to five related actions, spaced apart or attached into one seamed control.",
+      "registryDependencies": [
+        "@ds/core",
+        "@ds/theme"
+      ],
+      "files": [
+        {
+          "path": "packages/react/src/components/ButtonGroup/ButtonGroup.tsx",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/ButtonGroup/ButtonGroup.tsx"
+        },
+        {
+          "path": "packages/react/src/components/ButtonGroup/ButtonGroupContext.ts",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/ButtonGroup/ButtonGroupContext.ts"
+        },
+        {
+          "path": "packages/react/src/components/ButtonGroup/index.ts",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/ButtonGroup/index.ts"
+        },
+        {
+          "path": "packages/css/src/components/ButtonGroup.css",
+          "type": "registry:file",
+          "target": "@components/ds/css/components/ButtonGroup.css"
+        }
+      ],
+      "categories": [
+        "actions"
+      ],
+      "meta": {
+        "manifest": "ButtonGroup",
+        "framework": "react",
+        "since": "0.1.0"
+      }
+    },
+    {
+      "name": "callout",
+      "type": "registry:ui",
+      "title": "Callout",
+      "description": "A static note inside content: a tip, a caution or a fact to keep in mind, read in reading order with the text around it.",
+      "registryDependencies": [
+        "@ds/alert",
+        "@ds/core",
+        "@ds/theme"
+      ],
+      "files": [
+        {
+          "path": "packages/react/src/components/Callout/Callout.tsx",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/Callout/Callout.tsx"
+        },
+        {
+          "path": "packages/react/src/components/Callout/index.ts",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/Callout/index.ts"
+        },
+        {
+          "path": "packages/css/src/components/Callout.css",
+          "type": "registry:file",
+          "target": "@components/ds/css/components/Callout.css"
+        }
+      ],
+      "categories": [
+        "feedback"
+      ],
+      "meta": {
+        "manifest": "Callout",
+        "framework": "react",
+        "since": "0.1.0"
+      }
+    },
+    {
+      "name": "card",
+      "type": "registry:ui",
+      "title": "Card",
+      "description": "A bordered, filled or raised container for one item: optional media, a header with a title and a description, a body, and a footer with actions. The whole card can be one link.",
+      "dependencies": [
+        "radix-ui@^1.8.1"
+      ],
+      "registryDependencies": [
+        "@ds/core",
+        "@ds/theme"
+      ],
+      "files": [
+        {
+          "path": "packages/react/src/components/Card/Card.tsx",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/Card/Card.tsx"
+        },
+        {
+          "path": "packages/react/src/components/Card/index.ts",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/Card/index.ts"
+        },
+        {
+          "path": "packages/css/src/components/Card.css",
+          "type": "registry:file",
+          "target": "@components/ds/css/components/Card.css"
+        }
+      ],
+      "categories": [
+        "containers"
+      ],
+      "meta": {
+        "manifest": "Card",
+        "framework": "react",
+        "since": "0.1.0"
+      }
+    },
+    {
+      "name": "checkbox",
+      "type": "registry:ui",
+      "title": "Checkbox",
+      "description": "One on or off choice that is saved with a form, with an indeterminate state for a parent of mixed children.",
+      "dependencies": [
+        "radix-ui@^1.8.1"
+      ],
+      "registryDependencies": [
+        "@ds/core",
+        "@ds/field",
+        "@ds/theme"
+      ],
+      "files": [
+        {
+          "path": "packages/react/src/components/Checkbox/Checkbox.tsx",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/Checkbox/Checkbox.tsx"
+        },
+        {
+          "path": "packages/react/src/components/Checkbox/group-context.ts",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/Checkbox/group-context.ts"
+        },
+        {
+          "path": "packages/react/src/components/Checkbox/index.ts",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/Checkbox/index.ts"
+        },
+        {
+          "path": "packages/css/src/components/Checkbox.css",
+          "type": "registry:file",
+          "target": "@components/ds/css/components/Checkbox.css"
+        }
+      ],
+      "categories": [
+        "selection"
+      ],
+      "meta": {
+        "manifest": "Checkbox",
+        "framework": "react",
+        "since": "0.1.0"
+      }
+    },
+    {
+      "name": "checkbox-group",
+      "type": "registry:ui",
+      "title": "CheckboxGroup",
+      "description": "Several Checkbox items under one question, in a fieldset with a legend, with one value array.",
+      "registryDependencies": [
+        "@ds/checkbox",
+        "@ds/core",
+        "@ds/theme"
+      ],
+      "files": [
+        {
+          "path": "packages/react/src/components/CheckboxGroup/CheckboxGroup.tsx",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/CheckboxGroup/CheckboxGroup.tsx"
+        },
+        {
+          "path": "packages/react/src/components/CheckboxGroup/index.ts",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/CheckboxGroup/index.ts"
+        },
+        {
+          "path": "packages/css/src/components/CheckboxGroup.css",
+          "type": "registry:file",
+          "target": "@components/ds/css/components/CheckboxGroup.css"
+        }
+      ],
+      "categories": [
+        "selection"
+      ],
+      "meta": {
+        "manifest": "CheckboxGroup",
+        "framework": "react",
+        "since": "0.1.0"
+      }
+    },
+    {
+      "name": "chip",
+      "type": "registry:ui",
+      "title": "Chip",
+      "description": "A compact pill you press (a filter, toggled with selected) or remove (a picked value).",
+      "registryDependencies": [
+        "@ds/button",
+        "@ds/core",
+        "@ds/icon-button",
+        "@ds/theme"
+      ],
+      "files": [
+        {
+          "path": "packages/react/src/components/Chip/Chip.tsx",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/Chip/Chip.tsx"
+        },
+        {
+          "path": "packages/react/src/components/Chip/index.ts",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/Chip/index.ts"
+        },
+        {
+          "path": "packages/css/src/components/Chip.css",
+          "type": "registry:file",
+          "target": "@components/ds/css/components/Chip.css"
+        }
+      ],
+      "categories": [
+        "data-display"
+      ],
+      "meta": {
+        "manifest": "Chip",
+        "framework": "react",
+        "since": "0.2.0"
+      }
+    },
+    {
+      "name": "close-button",
+      "type": "registry:ui",
+      "title": "CloseButton",
+      "description": "The one close control for dialogs, toasts, banners, chips and drawers: a ghost icon button with the close icon and a default name.",
+      "registryDependencies": [
+        "@ds/button",
+        "@ds/theme"
+      ],
+      "files": [
+        {
+          "path": "packages/react/src/components/CloseButton/CloseButton.tsx",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/CloseButton/CloseButton.tsx"
+        },
+        {
+          "path": "packages/react/src/components/CloseButton/index.ts",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/CloseButton/index.ts"
+        },
+        {
+          "path": "packages/css/src/components/CloseButton.css",
+          "type": "registry:file",
+          "target": "@components/ds/css/components/CloseButton.css"
+        }
+      ],
+      "categories": [
+        "actions"
+      ],
+      "meta": {
+        "manifest": "CloseButton",
+        "framework": "react",
+        "since": "0.2.0"
+      }
+    },
+    {
+      "name": "combobox",
+      "type": "registry:ui",
+      "title": "Combobox",
+      "description": "A text field that filters a long list as you type and keeps one value from it. The list opens under the field; focus stays in the field while the arrow keys move through the matches.",
+      "dependencies": [
+        "radix-ui@^1.8.1"
+      ],
+      "registryDependencies": [
+        "@ds/core",
+        "@ds/field",
+        "@ds/icon-button",
+        "@ds/list-box",
+        "@ds/theme"
+      ],
+      "files": [
+        {
+          "path": "packages/react/src/components/Combobox/Combobox.tsx",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/Combobox/Combobox.tsx"
+        },
+        {
+          "path": "packages/react/src/components/Combobox/ComboboxBase.tsx",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/Combobox/ComboboxBase.tsx"
+        },
+        {
+          "path": "packages/react/src/components/Combobox/index.ts",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/Combobox/index.ts"
+        },
+        {
+          "path": "packages/css/src/components/Combobox.css",
+          "type": "registry:file",
+          "target": "@components/ds/css/components/Combobox.css"
+        }
+      ],
+      "categories": [
+        "selection"
+      ],
+      "meta": {
+        "manifest": "Combobox",
+        "framework": "react",
+        "since": "0.1.0"
+      }
+    },
+    {
+      "name": "container",
+      "type": "registry:ui",
+      "title": "Container",
+      "description": "Centers page content at a max width with a gutter on both inline sides.",
+      "registryDependencies": [
+        "@ds/core",
+        "@ds/theme"
+      ],
+      "files": [
+        {
+          "path": "packages/react/src/components/Container/Container.tsx",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/Container/Container.tsx"
+        },
+        {
+          "path": "packages/react/src/components/Container/index.ts",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/Container/index.ts"
+        },
+        {
+          "path": "packages/css/src/components/Container.css",
+          "type": "registry:file",
+          "target": "@components/ds/css/components/Container.css"
+        }
+      ],
+      "categories": [
+        "layout"
+      ],
+      "meta": {
+        "manifest": "Container",
+        "framework": "react",
+        "since": "0.1.0"
+      }
+    },
+    {
+      "name": "context-menu",
+      "type": "registry:ui",
+      "title": "ContextMenu",
+      "description": "The actions of an item, opened on right click, a long press, or Shift+F10 and the Menu key on the focused item. The DropdownMenu surface and parts: items, checkbox and radio items, labels, separators and submenus.",
+      "dependencies": [
+        "radix-ui@^1.8.1"
+      ],
+      "registryDependencies": [
+        "@ds/button",
+        "@ds/core",
+        "@ds/dropdown-menu",
+        "@ds/theme"
+      ],
+      "files": [
+        {
+          "path": "packages/react/src/components/ContextMenu/ContextMenu.tsx",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/ContextMenu/ContextMenu.tsx"
+        },
+        {
+          "path": "packages/react/src/components/ContextMenu/index.ts",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/ContextMenu/index.ts"
+        }
+      ],
+      "categories": [
+        "overlays"
+      ],
+      "meta": {
+        "manifest": "ContextMenu",
+        "framework": "react",
+        "since": "0.1.0"
+      }
+    },
+    {
+      "name": "copy-button",
+      "type": "registry:ui",
+      "title": "CopyButton",
+      "description": "Copies a value to the clipboard and confirms it once: the icon turns to a check and a hidden status says Copied.",
+      "registryDependencies": [
+        "@ds/button",
+        "@ds/core",
+        "@ds/theme"
+      ],
+      "files": [
+        {
+          "path": "packages/react/src/components/CopyButton/copy.ts",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/CopyButton/copy.ts"
+        },
+        {
+          "path": "packages/react/src/components/CopyButton/CopyButton.tsx",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/CopyButton/CopyButton.tsx"
+        },
+        {
+          "path": "packages/react/src/components/CopyButton/index.ts",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/CopyButton/index.ts"
+        },
+        {
+          "path": "packages/css/src/components/CopyButton.css",
+          "type": "registry:file",
+          "target": "@components/ds/css/components/CopyButton.css"
+        }
+      ],
+      "categories": [
+        "actions"
+      ],
+      "meta": {
+        "manifest": "CopyButton",
+        "framework": "react",
+        "since": "0.2.0"
+      }
+    },
+    {
+      "name": "description-list",
+      "type": "registry:ui",
+      "title": "DescriptionList",
+      "description": "Term and value pairs on a dl: the details of an order, a summary of settings, the facts about a record.",
+      "registryDependencies": [
+        "@ds/core",
+        "@ds/theme"
+      ],
+      "files": [
+        {
+          "path": "packages/react/src/components/DescriptionList/DescriptionList.tsx",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/DescriptionList/DescriptionList.tsx"
+        },
+        {
+          "path": "packages/react/src/components/DescriptionList/index.ts",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/DescriptionList/index.ts"
+        },
+        {
+          "path": "packages/css/src/components/DescriptionList.css",
+          "type": "registry:file",
+          "target": "@components/ds/css/components/DescriptionList.css"
+        }
+      ],
+      "categories": [
+        "data-display"
+      ],
+      "meta": {
+        "manifest": "DescriptionList",
+        "framework": "react",
+        "since": "0.1.0"
+      }
+    },
+    {
+      "name": "dialog",
+      "type": "registry:ui",
+      "title": "Dialog",
+      "description": "A modal task that must be finished or dismissed. The page behind it is covered by a backdrop, hidden from assistive tech and out of reach until the dialog closes.",
+      "dependencies": [
+        "radix-ui@^1.8.1"
+      ],
+      "registryDependencies": [
+        "@ds/core",
+        "@ds/icon-button",
+        "@ds/theme",
+        "@ds/title-bar",
+        "@ds/toast",
+        "@ds/window-controls"
+      ],
+      "files": [
+        {
+          "path": "packages/react/src/components/Dialog/Dialog.tsx",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/Dialog/Dialog.tsx"
+        },
+        {
+          "path": "packages/react/src/components/Dialog/DialogBase.tsx",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/Dialog/DialogBase.tsx"
+        },
+        {
+          "path": "packages/react/src/components/Dialog/index.ts",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/Dialog/index.ts"
+        },
+        {
+          "path": "packages/css/src/components/Dialog.css",
+          "type": "registry:file",
+          "target": "@components/ds/css/components/Dialog.css"
+        }
+      ],
+      "categories": [
+        "overlays"
+      ],
+      "meta": {
+        "manifest": "Dialog",
+        "framework": "react",
+        "since": "0.1.0"
+      }
+    },
+    {
+      "name": "dock",
+      "type": "registry:ui",
+      "title": "Dock",
+      "description": "A row of app shortcuts at the block end of the screen: Desk's glass dock with a magnify effect, a plain row of icon tiles in other styles.",
+      "dependencies": [
+        "radix-ui@^1.8.1"
+      ],
+      "registryDependencies": [
+        "@ds/core",
+        "@ds/theme"
+      ],
+      "files": [
+        {
+          "path": "packages/react/src/components/Dock/Dock.tsx",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/Dock/Dock.tsx"
+        },
+        {
+          "path": "packages/react/src/components/Dock/index.ts",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/Dock/index.ts"
+        },
+        {
+          "path": "packages/css/src/components/Dock.css",
+          "type": "registry:file",
+          "target": "@components/ds/css/components/Dock.css"
+        }
+      ],
+      "categories": [
+        "navigation"
+      ],
+      "meta": {
+        "manifest": "Dock",
+        "framework": "react",
+        "since": "0.1.0"
+      }
+    },
+    {
+      "name": "drawer",
+      "type": "registry:ui",
+      "title": "Drawer",
+      "description": "A full height panel over the page at the inline end or start, for a secondary task such as filters or the details of a selected item. Modal by default; non modal keeps the page usable next to it.",
+      "dependencies": [
+        "radix-ui@^1.8.1"
+      ],
+      "registryDependencies": [
+        "@ds/core",
+        "@ds/dialog",
+        "@ds/icon-button",
+        "@ds/theme"
+      ],
+      "files": [
+        {
+          "path": "packages/react/src/components/Drawer/Drawer.tsx",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/Drawer/Drawer.tsx"
+        },
+        {
+          "path": "packages/react/src/components/Drawer/index.ts",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/Drawer/index.ts"
+        }
+      ],
+      "categories": [
+        "overlays"
+      ],
+      "meta": {
+        "manifest": "Drawer",
+        "framework": "react",
+        "since": "0.1.0"
+      }
+    },
+    {
+      "name": "dropdown-menu",
+      "type": "registry:ui",
+      "title": "DropdownMenu",
+      "description": "A menu of actions or options that opens from a trigger button. Items, checkbox and radio items, labels, separators and submenus, with arrow keys, typeahead and Escape.",
+      "dependencies": [
+        "radix-ui@^1.8.1"
+      ],
+      "registryDependencies": [
+        "@ds/button",
+        "@ds/core",
+        "@ds/theme"
+      ],
+      "files": [
+        {
+          "path": "packages/react/src/components/DropdownMenu/DropdownMenu.tsx",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/DropdownMenu/DropdownMenu.tsx"
+        },
+        {
+          "path": "packages/react/src/components/DropdownMenu/index.ts",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/DropdownMenu/index.ts"
+        },
+        {
+          "path": "packages/react/src/components/DropdownMenu/menuShared.tsx",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/DropdownMenu/menuShared.tsx"
+        },
+        {
+          "path": "packages/css/src/components/DropdownMenu.css",
+          "type": "registry:file",
+          "target": "@components/ds/css/components/DropdownMenu.css"
+        }
+      ],
+      "categories": [
+        "overlays"
+      ],
+      "meta": {
+        "manifest": "DropdownMenu",
+        "framework": "react",
+        "since": "0.1.0"
+      }
+    },
+    {
+      "name": "empty-state",
+      "type": "registry:ui",
+      "title": "EmptyState",
+      "description": "A place with no content yet that says what is missing, what to do next and how, with the action that does it.",
+      "registryDependencies": [
+        "@ds/core",
+        "@ds/theme"
+      ],
+      "files": [
+        {
+          "path": "packages/react/src/components/EmptyState/EmptyState.tsx",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/EmptyState/EmptyState.tsx"
+        },
+        {
+          "path": "packages/react/src/components/EmptyState/index.ts",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/EmptyState/index.ts"
+        },
+        {
+          "path": "packages/css/src/components/EmptyState.css",
+          "type": "registry:file",
+          "target": "@components/ds/css/components/EmptyState.css"
+        }
+      ],
+      "categories": [
+        "containers"
+      ],
+      "meta": {
+        "manifest": "EmptyState",
+        "framework": "react",
+        "since": "0.1.0"
+      }
+    },
+    {
+      "name": "error-state",
+      "type": "registry:ui",
+      "title": "ErrorState",
+      "description": "Stands in for a section or a page that failed to load: says what happened, what to do next, and offers a retry, with the error code behind a disclosure.",
+      "registryDependencies": [
+        "@ds/button",
+        "@ds/core",
+        "@ds/theme"
+      ],
+      "files": [
+        {
+          "path": "packages/react/src/components/ErrorState/ErrorState.tsx",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/ErrorState/ErrorState.tsx"
+        },
+        {
+          "path": "packages/react/src/components/ErrorState/index.ts",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/ErrorState/index.ts"
+        },
+        {
+          "path": "packages/css/src/components/ErrorState.css",
+          "type": "registry:file",
+          "target": "@components/ds/css/components/ErrorState.css"
+        }
+      ],
+      "categories": [
+        "feedback"
+      ],
+      "meta": {
+        "manifest": "ErrorState",
+        "framework": "react",
+        "since": "0.1.0"
+      }
+    },
+    {
+      "name": "field",
+      "type": "registry:ui",
+      "title": "Field",
+      "description": "Wires one label, one description and one error message to one form control, and passes the invalid, disabled, read only and required state to it.",
+      "registryDependencies": [
+        "@ds/field-error",
+        "@ds/label",
+        "@ds/theme"
+      ],
+      "files": [
+        {
+          "path": "packages/react/src/components/Field/context.ts",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/Field/context.ts"
+        },
+        {
+          "path": "packages/react/src/components/Field/Field.tsx",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/Field/Field.tsx"
+        },
+        {
+          "path": "packages/react/src/components/Field/index.ts",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/Field/index.ts"
+        },
+        {
+          "path": "packages/css/src/components/Field.css",
+          "type": "registry:file",
+          "target": "@components/ds/css/components/Field.css"
+        }
+      ],
+      "categories": [
+        "forms"
+      ],
+      "meta": {
+        "manifest": "Field",
+        "framework": "react",
+        "since": "0.1.0"
+      }
+    },
+    {
+      "name": "field-error",
+      "type": "registry:ui",
+      "title": "FieldError",
+      "description": "An error message under one control or one group: a danger icon and words that say how to fix the value, linked to the control through aria-describedby.",
+      "registryDependencies": [
+        "@ds/core",
+        "@ds/field",
+        "@ds/theme"
+      ],
+      "files": [
+        {
+          "path": "packages/react/src/components/FieldError/FieldError.tsx",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/FieldError/FieldError.tsx"
+        },
+        {
+          "path": "packages/react/src/components/FieldError/index.ts",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/FieldError/index.ts"
+        },
+        {
+          "path": "packages/css/src/components/FieldError.css",
+          "type": "registry:file",
+          "target": "@components/ds/css/components/FieldError.css"
+        }
+      ],
+      "categories": [
+        "forms"
+      ],
+      "meta": {
+        "manifest": "FieldError",
+        "framework": "react",
+        "since": "0.1.0"
+      }
+    },
+    {
+      "name": "floating-action-button",
+      "type": "registry:ui",
+      "title": "FloatingActionButton",
+      "description": "The one main action of a screen, floating above the content at the inline end and the block end. Icon only or extended with a label.",
+      "registryDependencies": [
+        "@ds/button",
+        "@ds/core",
+        "@ds/theme"
+      ],
+      "files": [
+        {
+          "path": "packages/react/src/components/FloatingActionButton/FloatingActionButton.tsx",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/FloatingActionButton/FloatingActionButton.tsx"
+        },
+        {
+          "path": "packages/react/src/components/FloatingActionButton/index.ts",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/FloatingActionButton/index.ts"
+        },
+        {
+          "path": "packages/css/src/components/FloatingActionButton.css",
+          "type": "registry:file",
+          "target": "@components/ds/css/components/FloatingActionButton.css"
+        }
+      ],
+      "categories": [
+        "actions"
+      ],
+      "meta": {
+        "manifest": "FloatingActionButton",
+        "framework": "react",
+        "since": "0.2.0"
+      }
+    },
+    {
+      "name": "form-wizard",
+      "type": "registry:ui",
+      "title": "FormWizard",
+      "description": "A long form split into steps: a Stepper, one panel per step, back and next, a review step and a submit at the end. Each step is checked before the user moves past it.",
+      "registryDependencies": [
+        "@ds/button",
+        "@ds/core",
+        "@ds/stepper",
+        "@ds/theme"
+      ],
+      "files": [
+        {
+          "path": "packages/react/src/components/FormWizard/FormWizard.tsx",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/FormWizard/FormWizard.tsx"
+        },
+        {
+          "path": "packages/react/src/components/FormWizard/index.ts",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/FormWizard/index.ts"
+        },
+        {
+          "path": "packages/css/src/components/FormWizard.css",
+          "type": "registry:file",
+          "target": "@components/ds/css/components/FormWizard.css"
+        }
+      ],
+      "categories": [
+        "forms"
+      ],
+      "meta": {
+        "manifest": "FormWizard",
+        "framework": "react",
+        "since": "0.1.0"
+      }
+    },
+    {
+      "name": "grid",
+      "type": "registry:ui",
+      "title": "Grid",
+      "description": "Lays out children in columns and rows: a fixed column count, or as many columns as fit at a minimum item size.",
+      "registryDependencies": [
+        "@ds/core",
+        "@ds/theme"
+      ],
+      "files": [
+        {
+          "path": "packages/react/src/components/Grid/Grid.tsx",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/Grid/Grid.tsx"
+        },
+        {
+          "path": "packages/react/src/components/Grid/index.ts",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/Grid/index.ts"
+        },
+        {
+          "path": "packages/css/src/components/Grid.css",
+          "type": "registry:file",
+          "target": "@components/ds/css/components/Grid.css"
+        }
+      ],
+      "categories": [
+        "layout"
+      ],
+      "meta": {
+        "manifest": "Grid",
+        "framework": "react",
+        "since": "0.1.0"
+      }
+    },
+    {
+      "name": "hover-card",
+      "type": "registry:ui",
+      "title": "HoverCard",
+      "description": "A read only preview card for a link or a person, shown on hover and on keyboard focus of the link. The link works on its own; the card only saves a click.",
+      "dependencies": [
+        "radix-ui@^1.8.1"
+      ],
+      "registryDependencies": [
+        "@ds/core",
+        "@ds/popover",
+        "@ds/theme"
+      ],
+      "files": [
+        {
+          "path": "packages/react/src/components/HoverCard/HoverCard.tsx",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/HoverCard/HoverCard.tsx"
+        },
+        {
+          "path": "packages/react/src/components/HoverCard/index.ts",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/HoverCard/index.ts"
+        },
+        {
+          "path": "packages/css/src/components/HoverCard.css",
+          "type": "registry:file",
+          "target": "@components/ds/css/components/HoverCard.css"
+        }
+      ],
+      "categories": [
+        "overlays"
+      ],
+      "meta": {
+        "manifest": "HoverCard",
+        "framework": "react",
+        "since": "0.1.0"
+      }
+    },
+    {
+      "name": "icon",
+      "type": "registry:ui",
+      "title": "Icon",
+      "description": "One system icon drawn from the icon set of the active style, sized by the size.icon tokens.",
+      "registryDependencies": [
+        "@ds/core",
+        "@ds/theme"
+      ],
+      "files": [
+        {
+          "path": "packages/react/src/components/Icon/index.ts",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/Icon/index.ts"
+        },
+        {
+          "path": "packages/css/src/components/Icon.css",
+          "type": "registry:file",
+          "target": "@components/ds/css/components/Icon.css"
+        }
+      ],
+      "categories": [
+        "media"
+      ],
+      "meta": {
+        "manifest": "Icon",
+        "framework": "react",
+        "since": "0.1.0"
+      }
+    },
+    {
+      "name": "icon-button",
+      "type": "registry:ui",
+      "title": "IconButton",
+      "description": "A square action button with only an icon. Its label is the accessible name and the text of its Tooltip.",
+      "registryDependencies": [
+        "@ds/button",
+        "@ds/theme"
+      ],
+      "files": [
+        {
+          "path": "packages/react/src/components/IconButton/IconButton.tsx",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/IconButton/IconButton.tsx"
+        },
+        {
+          "path": "packages/react/src/components/IconButton/index.ts",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/IconButton/index.ts"
+        },
+        {
+          "path": "packages/css/src/components/IconButton.css",
+          "type": "registry:file",
+          "target": "@components/ds/css/components/IconButton.css"
+        }
+      ],
+      "categories": [
+        "actions"
+      ],
+      "meta": {
+        "manifest": "IconButton",
+        "framework": "react",
+        "since": "0.1.0"
+      }
+    },
+    {
+      "name": "inline-edit",
+      "type": "registry:ui",
+      "title": "InlineEdit",
+      "description": "A value shown as text that turns into an Input to edit in place, with save and cancel, such as a board name in its header.",
+      "registryDependencies": [
+        "@ds/button",
+        "@ds/core",
+        "@ds/icon-button",
+        "@ds/input",
+        "@ds/theme"
+      ],
+      "files": [
+        {
+          "path": "packages/react/src/components/InlineEdit/index.ts",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/InlineEdit/index.ts"
+        },
+        {
+          "path": "packages/react/src/components/InlineEdit/InlineEdit.tsx",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/InlineEdit/InlineEdit.tsx"
+        },
+        {
+          "path": "packages/css/src/components/InlineEdit.css",
+          "type": "registry:file",
+          "target": "@components/ds/css/components/InlineEdit.css"
+        }
+      ],
+      "categories": [
+        "forms"
+      ],
+      "meta": {
+        "manifest": "InlineEdit",
+        "framework": "react",
+        "since": "0.1.0"
+      }
+    },
+    {
+      "name": "input",
+      "type": "registry:ui",
+      "title": "Input",
+      "description": "A single line text input: a native input in a bordered box with optional start and end adornments.",
+      "registryDependencies": [
+        "@ds/core",
+        "@ds/field",
+        "@ds/theme"
+      ],
+      "files": [
+        {
+          "path": "packages/react/src/components/Input/index.ts",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/Input/index.ts"
+        },
+        {
+          "path": "packages/react/src/components/Input/Input.tsx",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/Input/Input.tsx"
+        },
+        {
+          "path": "packages/css/src/components/Input.css",
+          "type": "registry:file",
+          "target": "@components/ds/css/components/Input.css"
+        }
+      ],
+      "categories": [
+        "forms"
+      ],
+      "meta": {
+        "manifest": "Input",
+        "framework": "react",
+        "since": "0.1.0"
+      }
+    },
+    {
+      "name": "input-group",
+      "type": "registry:ui",
+      "title": "InputGroup",
+      "description": "An Input joined in one row with add on text and action buttons: a unit, a fixed prefix or suffix, or a Button that acts on the value.",
+      "registryDependencies": [
+        "@ds/button",
+        "@ds/core",
+        "@ds/field",
+        "@ds/icon-button",
+        "@ds/theme"
+      ],
+      "files": [
+        {
+          "path": "packages/react/src/components/InputGroup/index.ts",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/InputGroup/index.ts"
+        },
+        {
+          "path": "packages/react/src/components/InputGroup/InputGroup.tsx",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/InputGroup/InputGroup.tsx"
+        },
+        {
+          "path": "packages/css/src/components/InputGroup.css",
+          "type": "registry:file",
+          "target": "@components/ds/css/components/InputGroup.css"
+        }
+      ],
+      "categories": [
+        "forms"
+      ],
+      "meta": {
+        "manifest": "InputGroup",
+        "framework": "react",
+        "since": "0.1.0"
+      }
+    },
+    {
+      "name": "kbd",
+      "type": "registry:ui",
+      "title": "Kbd",
+      "description": "A key or a keyboard shortcut drawn as keycaps, with the key names spoken to screen readers.",
+      "registryDependencies": [
+        "@ds/core",
+        "@ds/theme"
+      ],
+      "files": [
+        {
+          "path": "packages/react/src/components/Kbd/index.ts",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/Kbd/index.ts"
+        },
+        {
+          "path": "packages/react/src/components/Kbd/Kbd.tsx",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/Kbd/Kbd.tsx"
+        },
+        {
+          "path": "packages/css/src/components/Kbd.css",
+          "type": "registry:file",
+          "target": "@components/ds/css/components/Kbd.css"
+        }
+      ],
+      "categories": [
+        "data-display"
+      ],
+      "meta": {
+        "manifest": "Kbd",
+        "framework": "react",
+        "since": "0.1.0"
+      }
+    },
+    {
+      "name": "label",
+      "type": "registry:ui",
+      "title": "Label",
+      "description": "The visible name of one control: a native label that focuses or toggles the control on click, with an optional required mark or optional text.",
+      "dependencies": [
+        "radix-ui@^1.8.1"
+      ],
+      "registryDependencies": [
+        "@ds/core",
+        "@ds/field",
+        "@ds/theme"
+      ],
+      "files": [
+        {
+          "path": "packages/react/src/components/Label/index.ts",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/Label/index.ts"
+        },
+        {
+          "path": "packages/react/src/components/Label/Label.tsx",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/Label/Label.tsx"
+        },
+        {
+          "path": "packages/css/src/components/Label.css",
+          "type": "registry:file",
+          "target": "@components/ds/css/components/Label.css"
+        }
+      ],
+      "categories": [
+        "forms"
+      ],
+      "meta": {
+        "manifest": "Label",
+        "framework": "react",
+        "since": "0.1.0"
+      }
+    },
+    {
+      "name": "language-switch",
+      "type": "registry:ui",
+      "title": "LanguageSwitch",
+      "description": "Moves the reader to the same page in another language. Two languages render as a link pair, more as a menu. Each language is named in its own language, never with a flag.",
+      "registryDependencies": [
+        "@ds/button",
+        "@ds/core",
+        "@ds/dropdown-menu",
+        "@ds/link",
+        "@ds/theme"
+      ],
+      "files": [
+        {
+          "path": "packages/react/src/components/LanguageSwitch/index.ts",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/LanguageSwitch/index.ts"
+        },
+        {
+          "path": "packages/react/src/components/LanguageSwitch/LanguageSwitch.tsx",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/LanguageSwitch/LanguageSwitch.tsx"
+        },
+        {
+          "path": "packages/css/src/components/LanguageSwitch.css",
+          "type": "registry:file",
+          "target": "@components/ds/css/components/LanguageSwitch.css"
+        }
+      ],
+      "categories": [
+        "navigation"
+      ],
+      "meta": {
+        "manifest": "LanguageSwitch",
+        "framework": "react",
+        "since": "0.1.0"
+      }
+    },
+    {
+      "name": "link",
+      "type": "registry:ui",
+      "title": "Link",
+      "description": "Navigation to another page, place or site, inside a sentence or on its own line. Always underlined.",
+      "dependencies": [
+        "radix-ui@^1.8.1"
+      ],
+      "registryDependencies": [
+        "@ds/core",
+        "@ds/theme"
+      ],
+      "files": [
+        {
+          "path": "packages/react/src/components/Link/index.ts",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/Link/index.ts"
+        },
+        {
+          "path": "packages/react/src/components/Link/Link.tsx",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/Link/Link.tsx"
+        },
+        {
+          "path": "packages/css/src/components/Link.css",
+          "type": "registry:file",
+          "target": "@components/ds/css/components/Link.css"
+        }
+      ],
+      "categories": [
+        "actions"
+      ],
+      "meta": {
+        "manifest": "Link",
+        "framework": "react",
+        "since": "0.1.0"
+      }
+    },
+    {
+      "name": "list",
+      "type": "registry:ui",
+      "title": "List",
+      "description": "A vertical list of rows, each with a title and optional start, description, end and actions. Rows can be links.",
+      "registryDependencies": [
+        "@ds/core",
+        "@ds/theme"
+      ],
+      "files": [
+        {
+          "path": "packages/react/src/components/List/index.ts",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/List/index.ts"
+        },
+        {
+          "path": "packages/react/src/components/List/List.tsx",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/List/List.tsx"
+        },
+        {
+          "path": "packages/css/src/components/List.css",
+          "type": "registry:file",
+          "target": "@components/ds/css/components/List.css"
+        }
+      ],
+      "categories": [
+        "data-display"
+      ],
+      "meta": {
+        "manifest": "List",
+        "framework": "react",
+        "since": "0.1.0"
+      }
+    },
+    {
+      "name": "list-box",
+      "type": "registry:ui",
+      "title": "ListBox",
+      "description": "A visible list of options to choose one or many from, with groups, descriptions, icons, typeahead and the matched part of each label marked. The same list sits inside the popups of Combobox, Autocomplete, MultiSelect, TagField and CommandPalette.",
+      "registryDependencies": [
+        "@ds/core",
+        "@ds/theme"
+      ],
+      "files": [
+        {
+          "path": "packages/react/src/components/ListBox/index.ts",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/ListBox/index.ts"
+        },
+        {
+          "path": "packages/react/src/components/ListBox/ListBox.tsx",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/ListBox/ListBox.tsx"
+        },
+        {
+          "path": "packages/css/src/components/ListBox.css",
+          "type": "registry:file",
+          "target": "@components/ds/css/components/ListBox.css"
+        }
+      ],
+      "categories": [
+        "selection"
+      ],
+      "meta": {
+        "manifest": "ListBox",
+        "framework": "react",
+        "since": "0.1.0"
+      }
+    },
+    {
+      "name": "menubar",
+      "type": "registry:ui",
+      "title": "Menubar",
+      "description": "The application menu row (File, Edit, View), Desk's menu bar. Menu titles that open DropdownMenu style menus, arrow keys across the row in reading order, and a status slot at the end.",
+      "dependencies": [
+        "radix-ui@^1.8.1"
+      ],
+      "registryDependencies": [
+        "@ds/button",
+        "@ds/core",
+        "@ds/dropdown-menu",
+        "@ds/theme"
+      ],
+      "files": [
+        {
+          "path": "packages/react/src/components/Menubar/index.ts",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/Menubar/index.ts"
+        },
+        {
+          "path": "packages/react/src/components/Menubar/Menubar.tsx",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/Menubar/Menubar.tsx"
+        },
+        {
+          "path": "packages/css/src/components/Menubar.css",
+          "type": "registry:file",
+          "target": "@components/ds/css/components/Menubar.css"
+        }
+      ],
+      "categories": [
+        "overlays"
+      ],
+      "meta": {
+        "manifest": "Menubar",
+        "framework": "react",
+        "since": "0.1.0"
+      }
+    },
+    {
+      "name": "meter",
+      "type": "registry:ui",
+      "title": "Meter",
+      "description": "A measured value in a known range, such as storage used or a score, with its level in words.",
+      "registryDependencies": [
+        "@ds/core",
+        "@ds/progress-bar",
+        "@ds/theme"
+      ],
+      "files": [
+        {
+          "path": "packages/react/src/components/Meter/index.ts",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/Meter/index.ts"
+        },
+        {
+          "path": "packages/react/src/components/Meter/Meter.tsx",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/Meter/Meter.tsx"
+        },
+        {
+          "path": "packages/css/src/components/Meter.css",
+          "type": "registry:file",
+          "target": "@components/ds/css/components/Meter.css"
+        }
+      ],
+      "categories": [
+        "feedback"
+      ],
+      "meta": {
+        "manifest": "Meter",
+        "framework": "react",
+        "since": "0.1.0"
+      }
+    },
+    {
+      "name": "navbar",
+      "type": "registry:ui",
+      "title": "Navbar",
+      "description": "The top bar of a site or app: a brand, primary links and menus with panels, actions at the end, and a menu button with a list on phones.",
+      "dependencies": [
+        "radix-ui@^1.8.1"
+      ],
+      "registryDependencies": [
+        "@ds/button",
+        "@ds/core",
+        "@ds/icon-button",
+        "@ds/sidebar",
+        "@ds/theme"
+      ],
+      "files": [
+        {
+          "path": "packages/react/src/components/Navbar/index.ts",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/Navbar/index.ts"
+        },
+        {
+          "path": "packages/react/src/components/Navbar/Navbar.tsx",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/Navbar/Navbar.tsx"
+        },
+        {
+          "path": "packages/css/src/components/Navbar.css",
+          "type": "registry:file",
+          "target": "@components/ds/css/components/Navbar.css"
+        }
+      ],
+      "categories": [
+        "navigation"
+      ],
+      "meta": {
+        "manifest": "Navbar",
+        "framework": "react",
+        "since": "0.1.0"
+      }
+    },
+    {
+      "name": "notification-center",
+      "type": "registry:ui",
+      "title": "NotificationCenter",
+      "description": "The panel of notifications: a list grouped by day or by the consumer's groups, unread marks, mark all read, actions per item and an empty state. Placed by the consumer in a Popover or a Sheet.",
+      "registryDependencies": [
+        "@ds/button",
+        "@ds/core",
+        "@ds/theme"
+      ],
+      "files": [
+        {
+          "path": "packages/react/src/components/NotificationCenter/index.ts",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/NotificationCenter/index.ts"
+        },
+        {
+          "path": "packages/react/src/components/NotificationCenter/NotificationCenter.tsx",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/NotificationCenter/NotificationCenter.tsx"
+        },
+        {
+          "path": "packages/react/src/components/NotificationCenter/time.ts",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/NotificationCenter/time.ts"
+        },
+        {
+          "path": "packages/css/src/components/NotificationCenter.css",
+          "type": "registry:file",
+          "target": "@components/ds/css/components/NotificationCenter.css"
+        }
+      ],
+      "categories": [
+        "feedback"
+      ],
+      "meta": {
+        "manifest": "NotificationCenter",
+        "framework": "react",
+        "since": "0.1.0"
+      }
+    },
+    {
+      "name": "otpfield",
+      "type": "registry:ui",
+      "title": "OTPField",
+      "description": "A one time code shown in separate cells: one native input holds the code, the cells draw it.",
+      "registryDependencies": [
+        "@ds/core",
+        "@ds/field",
+        "@ds/theme"
+      ],
+      "files": [
+        {
+          "path": "packages/react/src/components/OTPField/index.ts",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/OTPField/index.ts"
+        },
+        {
+          "path": "packages/react/src/components/OTPField/OTPField.tsx",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/OTPField/OTPField.tsx"
+        },
+        {
+          "path": "packages/css/src/components/OTPField.css",
+          "type": "registry:file",
+          "target": "@components/ds/css/components/OTPField.css"
+        }
+      ],
+      "categories": [
+        "forms"
+      ],
+      "meta": {
+        "manifest": "OTPField",
+        "framework": "react",
+        "since": "0.1.0"
+      }
+    },
+    {
+      "name": "pagination",
+      "type": "registry:ui",
+      "title": "Pagination",
+      "description": "Page controls for a long list or table: first, previous, page numbers with ellipses, next and last, with an optional item summary such as 21 to 40 of 312.",
+      "registryDependencies": [
+        "@ds/button",
+        "@ds/core",
+        "@ds/icon-button",
+        "@ds/theme"
+      ],
+      "files": [
+        {
+          "path": "packages/react/src/components/Pagination/index.ts",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/Pagination/index.ts"
+        },
+        {
+          "path": "packages/react/src/components/Pagination/Pagination.tsx",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/Pagination/Pagination.tsx"
+        },
+        {
+          "path": "packages/css/src/components/Pagination.css",
+          "type": "registry:file",
+          "target": "@components/ds/css/components/Pagination.css"
+        }
+      ],
+      "categories": [
+        "navigation"
+      ],
+      "meta": {
+        "manifest": "Pagination",
+        "framework": "react",
+        "since": "0.1.0"
+      }
+    },
+    {
+      "name": "password-field",
+      "type": "registry:ui",
+      "title": "PasswordField",
+      "description": "A password input with a show and hide toggle, built on Input, that works with password managers.",
+      "registryDependencies": [
+        "@ds/core",
+        "@ds/field",
+        "@ds/icon-button",
+        "@ds/input",
+        "@ds/theme"
+      ],
+      "files": [
+        {
+          "path": "packages/react/src/components/PasswordField/index.ts",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/PasswordField/index.ts"
+        },
+        {
+          "path": "packages/react/src/components/PasswordField/PasswordField.tsx",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/PasswordField/PasswordField.tsx"
+        },
+        {
+          "path": "packages/css/src/components/PasswordField.css",
+          "type": "registry:file",
+          "target": "@components/ds/css/components/PasswordField.css"
+        }
+      ],
+      "categories": [
+        "forms"
+      ],
+      "meta": {
+        "manifest": "PasswordField",
+        "framework": "react",
+        "since": "0.1.0"
+      }
+    },
+    {
+      "name": "phone-field",
+      "type": "registry:ui",
+      "title": "PhoneField",
+      "description": "A phone number with a country code picker, Gulf countries first. The value out is E.164.",
+      "registryDependencies": [
+        "@ds/core",
+        "@ds/field",
+        "@ds/theme"
+      ],
+      "files": [
+        {
+          "path": "packages/react/src/components/PhoneField/index.ts",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/PhoneField/index.ts"
+        },
+        {
+          "path": "packages/react/src/components/PhoneField/PhoneField.tsx",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/PhoneField/PhoneField.tsx"
+        },
+        {
+          "path": "packages/css/src/components/PhoneField.css",
+          "type": "registry:file",
+          "target": "@components/ds/css/components/PhoneField.css"
+        }
+      ],
+      "categories": [
+        "forms"
+      ],
+      "meta": {
+        "manifest": "PhoneField",
+        "framework": "react",
+        "since": "0.1.0"
+      }
+    },
+    {
+      "name": "popover",
+      "type": "registry:ui",
+      "title": "Popover",
+      "description": "Non modal content anchored to a trigger: a small form or details next to the control that opened it. The page stays usable while it is open.",
+      "dependencies": [
+        "radix-ui@^1.8.1"
+      ],
+      "registryDependencies": [
+        "@ds/core",
+        "@ds/icon-button",
+        "@ds/theme"
+      ],
+      "files": [
+        {
+          "path": "packages/react/src/components/Popover/FloatingLayer.tsx",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/Popover/FloatingLayer.tsx"
+        },
+        {
+          "path": "packages/react/src/components/Popover/index.ts",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/Popover/index.ts"
+        },
+        {
+          "path": "packages/react/src/components/Popover/Popover.tsx",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/Popover/Popover.tsx"
+        },
+        {
+          "path": "packages/css/src/components/Popover.css",
+          "type": "registry:file",
+          "target": "@components/ds/css/components/Popover.css"
+        }
+      ],
+      "categories": [
+        "overlays"
+      ],
+      "meta": {
+        "manifest": "Popover",
+        "framework": "react",
+        "since": "0.1.0"
+      }
+    },
+    {
+      "name": "progress-bar",
+      "type": "registry:ui",
+      "title": "ProgressBar",
+      "description": "A labelled bar that shows how far a task has come, or that it runs with no known end.",
+      "dependencies": [
+        "radix-ui@^1.8.1"
+      ],
+      "registryDependencies": [
+        "@ds/core",
+        "@ds/theme"
+      ],
+      "files": [
+        {
+          "path": "packages/react/src/components/ProgressBar/format.ts",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/ProgressBar/format.ts"
+        },
+        {
+          "path": "packages/react/src/components/ProgressBar/index.ts",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/ProgressBar/index.ts"
+        },
+        {
+          "path": "packages/react/src/components/ProgressBar/ProgressBar.tsx",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/ProgressBar/ProgressBar.tsx"
+        },
+        {
+          "path": "packages/css/src/components/ProgressBar.css",
+          "type": "registry:file",
+          "target": "@components/ds/css/components/ProgressBar.css"
+        }
+      ],
+      "categories": [
+        "feedback"
+      ],
+      "meta": {
+        "manifest": "ProgressBar",
+        "framework": "react",
+        "since": "0.1.0"
+      }
+    },
+    {
+      "name": "progress-circle",
+      "type": "registry:ui",
+      "title": "ProgressCircle",
+      "description": "Compact progress in a ring, for a file chip, a card corner or a table cell.",
+      "dependencies": [
+        "radix-ui@^1.8.1"
+      ],
+      "registryDependencies": [
+        "@ds/core",
+        "@ds/progress-bar",
+        "@ds/theme"
+      ],
+      "files": [
+        {
+          "path": "packages/react/src/components/ProgressCircle/index.ts",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/ProgressCircle/index.ts"
+        },
+        {
+          "path": "packages/react/src/components/ProgressCircle/ProgressCircle.tsx",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/ProgressCircle/ProgressCircle.tsx"
+        },
+        {
+          "path": "packages/css/src/components/ProgressCircle.css",
+          "type": "registry:file",
+          "target": "@components/ds/css/components/ProgressCircle.css"
+        }
+      ],
+      "categories": [
+        "feedback"
+      ],
+      "meta": {
+        "manifest": "ProgressCircle",
+        "framework": "react",
+        "since": "0.1.0"
+      }
+    },
+    {
+      "name": "radio-card",
+      "type": "registry:ui",
+      "title": "RadioCard",
+      "description": "One choice among a few options drawn as cards with a title, text, an optional icon and end content such as a price.",
+      "dependencies": [
+        "radix-ui@^1.8.1"
+      ],
+      "registryDependencies": [
+        "@ds/core",
+        "@ds/theme"
+      ],
+      "files": [
+        {
+          "path": "packages/react/src/components/RadioCard/index.ts",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/RadioCard/index.ts"
+        },
+        {
+          "path": "packages/react/src/components/RadioCard/RadioCard.tsx",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/RadioCard/RadioCard.tsx"
+        },
+        {
+          "path": "packages/css/src/components/RadioCard.css",
+          "type": "registry:file",
+          "target": "@components/ds/css/components/RadioCard.css"
+        }
+      ],
+      "categories": [
+        "forms"
+      ],
+      "meta": {
+        "manifest": "RadioCard",
+        "framework": "react",
+        "since": "0.1.0"
+      }
+    },
+    {
+      "name": "radio-group",
+      "type": "registry:ui",
+      "title": "RadioGroup",
+      "description": "One choice among a few visible options: round controls with labels under a legend, with an optional description and error.",
+      "dependencies": [
+        "radix-ui@^1.8.1"
+      ],
+      "registryDependencies": [
+        "@ds/core",
+        "@ds/theme"
+      ],
+      "files": [
+        {
+          "path": "packages/react/src/components/RadioGroup/index.ts",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/RadioGroup/index.ts"
+        },
+        {
+          "path": "packages/react/src/components/RadioGroup/RadioGroup.tsx",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/RadioGroup/RadioGroup.tsx"
+        },
+        {
+          "path": "packages/css/src/components/RadioGroup.css",
+          "type": "registry:file",
+          "target": "@components/ds/css/components/RadioGroup.css"
+        }
+      ],
+      "categories": [
+        "forms"
+      ],
+      "meta": {
+        "manifest": "RadioGroup",
+        "framework": "react",
+        "since": "0.1.0"
+      }
+    },
+    {
+      "name": "rail",
+      "type": "registry:ui",
+      "title": "Rail",
+      "description": "A narrow column of icon destinations with short labels, a start and an end: the Studio rail.",
+      "dependencies": [
+        "radix-ui@^1.8.1"
+      ],
+      "registryDependencies": [
+        "@ds/core",
+        "@ds/theme"
+      ],
+      "files": [
+        {
+          "path": "packages/react/src/components/Rail/index.ts",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/Rail/index.ts"
+        },
+        {
+          "path": "packages/react/src/components/Rail/Rail.tsx",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/Rail/Rail.tsx"
+        },
+        {
+          "path": "packages/css/src/components/Rail.css",
+          "type": "registry:file",
+          "target": "@components/ds/css/components/Rail.css"
+        }
+      ],
+      "categories": [
+        "navigation"
+      ],
+      "meta": {
+        "manifest": "Rail",
+        "framework": "react",
+        "since": "0.1.0"
+      }
+    },
+    {
+      "name": "range-slider",
+      "type": "registry:ui",
+      "title": "RangeSlider",
+      "description": "A low and a high value on one track, such as a price range, with two thumbs that cannot cross.",
+      "registryDependencies": [
+        "@ds/slider",
+        "@ds/theme"
+      ],
+      "files": [
+        {
+          "path": "packages/react/src/components/RangeSlider/index.ts",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/RangeSlider/index.ts"
+        },
+        {
+          "path": "packages/react/src/components/RangeSlider/RangeSlider.tsx",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/RangeSlider/RangeSlider.tsx"
+        },
+        {
+          "path": "packages/css/src/components/RangeSlider.css",
+          "type": "registry:file",
+          "target": "@components/ds/css/components/RangeSlider.css"
+        }
+      ],
+      "categories": [
+        "selection"
+      ],
+      "meta": {
+        "manifest": "RangeSlider",
+        "framework": "react",
+        "since": "0.1.0"
+      }
+    },
+    {
+      "name": "rating",
+      "type": "registry:ui",
+      "title": "Rating",
+      "description": "Pick or show a score from 1 to 5 (or 10) as stars. Interactive it is a radio group of stars; read only it is an image with a label, with half stars.",
+      "dependencies": [
+        "radix-ui@^1.8.1"
+      ],
+      "registryDependencies": [
+        "@ds/core",
+        "@ds/theme"
+      ],
+      "files": [
+        {
+          "path": "packages/react/src/components/Rating/index.ts",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/Rating/index.ts"
+        },
+        {
+          "path": "packages/react/src/components/Rating/Rating.tsx",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/Rating/Rating.tsx"
+        },
+        {
+          "path": "packages/css/src/components/Rating.css",
+          "type": "registry:file",
+          "target": "@components/ds/css/components/Rating.css"
+        }
+      ],
+      "categories": [
+        "forms"
+      ],
+      "meta": {
+        "manifest": "Rating",
+        "framework": "react",
+        "since": "0.1.0"
+      }
+    },
+    {
+      "name": "resizable-panels",
+      "type": "registry:ui",
+      "title": "ResizablePanels",
+      "description": "Two or more panels side by side or stacked, with dividers a person drags or moves with the keys to share the room. Sizes are percents, reported through onLayout for the app to save.",
+      "registryDependencies": [
+        "@ds/core",
+        "@ds/theme"
+      ],
+      "files": [
+        {
+          "path": "packages/react/src/components/ResizablePanels/index.ts",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/ResizablePanels/index.ts"
+        },
+        {
+          "path": "packages/react/src/components/ResizablePanels/ResizablePanels.tsx",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/ResizablePanels/ResizablePanels.tsx"
+        },
+        {
+          "path": "packages/css/src/components/ResizablePanels.css",
+          "type": "registry:file",
+          "target": "@components/ds/css/components/ResizablePanels.css"
+        }
+      ],
+      "categories": [
+        "layout"
+      ],
+      "meta": {
+        "manifest": "ResizablePanels",
+        "framework": "react",
+        "since": "0.1.0"
+      }
+    },
+    {
+      "name": "scroll-area",
+      "type": "registry:ui",
+      "title": "ScrollArea",
+      "description": "A scroll container with thin styled scrollbars over native scrolling, and edge fades on the side that still has content.",
+      "dependencies": [
+        "radix-ui@^1.8.1"
+      ],
+      "registryDependencies": [
+        "@ds/core",
+        "@ds/theme"
+      ],
+      "files": [
+        {
+          "path": "packages/react/src/components/ScrollArea/index.ts",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/ScrollArea/index.ts"
+        },
+        {
+          "path": "packages/react/src/components/ScrollArea/ScrollArea.tsx",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/ScrollArea/ScrollArea.tsx"
+        },
+        {
+          "path": "packages/css/src/components/ScrollArea.css",
+          "type": "registry:file",
+          "target": "@components/ds/css/components/ScrollArea.css"
+        }
+      ],
+      "categories": [
+        "layout"
+      ],
+      "meta": {
+        "manifest": "ScrollArea",
+        "framework": "react",
+        "since": "0.1.0"
+      }
+    },
+    {
+      "name": "search-field",
+      "type": "registry:ui",
+      "title": "SearchField",
+      "description": "A search box: a search icon, a search input, a clear button while there is a query, an optional end slot and a loading state.",
+      "registryDependencies": [
+        "@ds/core",
+        "@ds/field",
+        "@ds/icon-button",
+        "@ds/input",
+        "@ds/theme"
+      ],
+      "files": [
+        {
+          "path": "packages/react/src/components/SearchField/index.ts",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/SearchField/index.ts"
+        },
+        {
+          "path": "packages/react/src/components/SearchField/SearchField.tsx",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/SearchField/SearchField.tsx"
+        },
+        {
+          "path": "packages/css/src/components/SearchField.css",
+          "type": "registry:file",
+          "target": "@components/ds/css/components/SearchField.css"
+        }
+      ],
+      "categories": [
+        "forms"
+      ],
+      "meta": {
+        "manifest": "SearchField",
+        "framework": "react",
+        "since": "0.1.0"
+      }
+    },
+    {
+      "name": "section",
+      "type": "registry:ui",
+      "title": "Section",
+      "description": "A titled region of a page or panel: a heading at a level you set, an optional description and actions, and a body that can collapse.",
+      "dependencies": [
+        "radix-ui@^1.8.1"
+      ],
+      "registryDependencies": [
+        "@ds/button",
+        "@ds/core",
+        "@ds/theme"
+      ],
+      "files": [
+        {
+          "path": "packages/react/src/components/Section/index.ts",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/Section/index.ts"
+        },
+        {
+          "path": "packages/react/src/components/Section/Section.tsx",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/Section/Section.tsx"
+        },
+        {
+          "path": "packages/css/src/components/Section.css",
+          "type": "registry:file",
+          "target": "@components/ds/css/components/Section.css"
+        }
+      ],
+      "categories": [
+        "layout"
+      ],
+      "meta": {
+        "manifest": "Section",
+        "framework": "react",
+        "since": "0.1.0"
+      }
+    },
+    {
+      "name": "separator",
+      "type": "registry:ui",
+      "title": "Separator",
+      "description": "A thin line between groups of content, horizontal or vertical, with an optional short centered label.",
+      "dependencies": [
+        "radix-ui@^1.8.1"
+      ],
+      "registryDependencies": [
+        "@ds/theme"
+      ],
+      "files": [
+        {
+          "path": "packages/react/src/components/Separator/index.ts",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/Separator/index.ts"
+        },
+        {
+          "path": "packages/react/src/components/Separator/Separator.tsx",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/Separator/Separator.tsx"
+        },
+        {
+          "path": "packages/css/src/components/Separator.css",
+          "type": "registry:file",
+          "target": "@components/ds/css/components/Separator.css"
+        }
+      ],
+      "categories": [
+        "layout"
+      ],
+      "meta": {
+        "manifest": "Separator",
+        "framework": "react",
+        "since": "0.1.0"
+      }
+    },
+    {
+      "name": "sheet",
+      "type": "registry:ui",
+      "title": "Sheet",
+      "description": "A modal panel that rises from the bottom of the screen, for phone layouts and quick tasks. A drag handle closes it, with the close control and Escape as the key path.",
+      "dependencies": [
+        "radix-ui@^1.8.1"
+      ],
+      "registryDependencies": [
+        "@ds/core",
+        "@ds/dialog",
+        "@ds/drawer",
+        "@ds/theme"
+      ],
+      "files": [
+        {
+          "path": "packages/react/src/components/Sheet/index.ts",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/Sheet/index.ts"
+        },
+        {
+          "path": "packages/react/src/components/Sheet/Sheet.tsx",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/Sheet/Sheet.tsx"
+        }
+      ],
+      "categories": [
+        "overlays"
+      ],
+      "meta": {
+        "manifest": "Sheet",
+        "framework": "react",
+        "since": "0.1.0"
+      }
+    },
+    {
+      "name": "sidebar",
+      "type": "registry:ui",
+      "title": "Sidebar",
+      "description": "The side navigation of an app: groups of links with icons and counts, a header, a footer and a collapsed icon form.",
+      "dependencies": [
+        "radix-ui@^1.8.1"
+      ],
+      "registryDependencies": [
+        "@ds/button",
+        "@ds/core",
+        "@ds/icon-button",
+        "@ds/theme"
+      ],
+      "files": [
+        {
+          "path": "packages/react/src/components/Sidebar/index.ts",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/Sidebar/index.ts"
+        },
+        {
+          "path": "packages/react/src/components/Sidebar/Sidebar.tsx",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/Sidebar/Sidebar.tsx"
+        },
+        {
+          "path": "packages/css/src/components/Sidebar.css",
+          "type": "registry:file",
+          "target": "@components/ds/css/components/Sidebar.css"
+        }
+      ],
+      "categories": [
+        "navigation"
+      ],
+      "meta": {
+        "manifest": "Sidebar",
+        "framework": "react",
+        "since": "0.1.0"
+      }
+    },
+    {
+      "name": "skeleton",
+      "type": "registry:ui",
+      "title": "Skeleton",
+      "description": "A placeholder shape that stands where content will appear while it loads: a text line, a circle or a rectangle.",
+      "registryDependencies": [
+        "@ds/core",
+        "@ds/theme"
+      ],
+      "files": [
+        {
+          "path": "packages/react/src/components/Skeleton/index.ts",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/Skeleton/index.ts"
+        },
+        {
+          "path": "packages/react/src/components/Skeleton/Skeleton.tsx",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/Skeleton/Skeleton.tsx"
+        },
+        {
+          "path": "packages/css/src/components/Skeleton.css",
+          "type": "registry:file",
+          "target": "@components/ds/css/components/Skeleton.css"
+        }
+      ],
+      "categories": [
+        "feedback"
+      ],
+      "meta": {
+        "manifest": "Skeleton",
+        "framework": "react",
+        "since": "0.1.0"
+      }
+    },
+    {
+      "name": "skip-link",
+      "type": "registry:ui",
+      "title": "SkipLink",
+      "description": "The first link of a page. Hidden until it takes keyboard focus, then Enter moves focus past the header and navigation to the main content.",
+      "registryDependencies": [
+        "@ds/theme"
+      ],
+      "files": [
+        {
+          "path": "packages/react/src/components/SkipLink/index.ts",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/SkipLink/index.ts"
+        },
+        {
+          "path": "packages/react/src/components/SkipLink/SkipLink.tsx",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/SkipLink/SkipLink.tsx"
+        },
+        {
+          "path": "packages/css/src/components/SkipLink.css",
+          "type": "registry:file",
+          "target": "@components/ds/css/components/SkipLink.css"
+        }
+      ],
+      "categories": [
+        "navigation"
+      ],
+      "meta": {
+        "manifest": "SkipLink",
+        "framework": "react",
+        "since": "0.1.0"
+      }
+    },
+    {
+      "name": "slider",
+      "type": "registry:ui",
+      "title": "Slider",
+      "description": "One number on a range, picked by dragging a thumb or with the arrow keys.",
+      "dependencies": [
+        "radix-ui@^1.8.1"
+      ],
+      "registryDependencies": [
+        "@ds/core",
+        "@ds/field",
+        "@ds/theme"
+      ],
+      "files": [
+        {
+          "path": "packages/react/src/components/Slider/format.ts",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/Slider/format.ts"
+        },
+        {
+          "path": "packages/react/src/components/Slider/index.ts",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/Slider/index.ts"
+        },
+        {
+          "path": "packages/react/src/components/Slider/Slider.tsx",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/Slider/Slider.tsx"
+        },
+        {
+          "path": "packages/css/src/components/Slider.css",
+          "type": "registry:file",
+          "target": "@components/ds/css/components/Slider.css"
+        }
+      ],
+      "categories": [
+        "selection"
+      ],
+      "meta": {
+        "manifest": "Slider",
+        "framework": "react",
+        "since": "0.1.0"
+      }
+    },
+    {
+      "name": "spinner",
+      "type": "registry:ui",
+      "title": "Spinner",
+      "description": "A small turning ring that says something is busy and its length is unknown.",
+      "registryDependencies": [
+        "@ds/core",
+        "@ds/theme"
+      ],
+      "files": [
+        {
+          "path": "packages/react/src/components/Spinner/index.ts",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/Spinner/index.ts"
+        },
+        {
+          "path": "packages/react/src/components/Spinner/Spinner.tsx",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/Spinner/Spinner.tsx"
+        },
+        {
+          "path": "packages/css/src/components/Spinner.css",
+          "type": "registry:file",
+          "target": "@components/ds/css/components/Spinner.css"
+        }
+      ],
+      "categories": [
+        "feedback"
+      ],
+      "meta": {
+        "manifest": "Spinner",
+        "framework": "react",
+        "since": "0.1.0"
+      }
+    },
+    {
+      "name": "split-button",
+      "type": "registry:ui",
+      "title": "SplitButton",
+      "description": "A main action fused to a chevron trigger that opens a menu of related actions. Both halves share one size, tone, emphasis and shape and read as one control.",
+      "registryDependencies": [
+        "@ds/button",
+        "@ds/button-group",
+        "@ds/core",
+        "@ds/dropdown-menu",
+        "@ds/icon-button",
+        "@ds/theme"
+      ],
+      "files": [
+        {
+          "path": "packages/react/src/components/SplitButton/index.ts",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/SplitButton/index.ts"
+        },
+        {
+          "path": "packages/react/src/components/SplitButton/SplitButton.tsx",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/SplitButton/SplitButton.tsx"
+        },
+        {
+          "path": "packages/css/src/components/SplitButton.css",
+          "type": "registry:file",
+          "target": "@components/ds/css/components/SplitButton.css"
+        }
+      ],
+      "categories": [
+        "actions"
+      ],
+      "meta": {
+        "manifest": "SplitButton",
+        "framework": "react",
+        "since": "0.1.0"
+      }
+    },
+    {
+      "name": "split-view",
+      "type": "registry:ui",
+      "title": "SplitView",
+      "description": "A list and its detail side by side with a resize handle, stacked one at a time with a back Button under breakpoint.tablet, as in a mail reader.",
+      "registryDependencies": [
+        "@ds/button",
+        "@ds/resizable-panels",
+        "@ds/theme"
+      ],
+      "files": [
+        {
+          "path": "packages/react/src/components/SplitView/index.ts",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/SplitView/index.ts"
+        },
+        {
+          "path": "packages/react/src/components/SplitView/SplitView.tsx",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/SplitView/SplitView.tsx"
+        },
+        {
+          "path": "packages/css/src/components/SplitView.css",
+          "type": "registry:file",
+          "target": "@components/ds/css/components/SplitView.css"
+        }
+      ],
+      "categories": [
+        "layout"
+      ],
+      "meta": {
+        "manifest": "SplitView",
+        "framework": "react",
+        "since": "0.1.0"
+      }
+    },
+    {
+      "name": "stack",
+      "type": "registry:ui",
+      "title": "Stack",
+      "description": "Lays out children in one direction, a column or a row, with a gap from the space token scale.",
+      "dependencies": [
+        "radix-ui@^1.8.1"
+      ],
+      "registryDependencies": [
+        "@ds/core",
+        "@ds/theme"
+      ],
+      "files": [
+        {
+          "path": "packages/react/src/components/Stack/index.ts",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/Stack/index.ts"
+        },
+        {
+          "path": "packages/react/src/components/Stack/space.ts",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/Stack/space.ts"
+        },
+        {
+          "path": "packages/react/src/components/Stack/Stack.tsx",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/Stack/Stack.tsx"
+        },
+        {
+          "path": "packages/css/src/components/Stack.css",
+          "type": "registry:file",
+          "target": "@components/ds/css/components/Stack.css"
+        }
+      ],
+      "categories": [
+        "layout"
+      ],
+      "meta": {
+        "manifest": "Stack",
+        "framework": "react",
+        "since": "0.1.0"
+      }
+    },
+    {
+      "name": "stat",
+      "type": "registry:ui",
+      "title": "Stat",
+      "description": "One number with its label, its change since the last period and a short hint: a KPI.",
+      "registryDependencies": [
+        "@ds/core",
+        "@ds/theme"
+      ],
+      "files": [
+        {
+          "path": "packages/react/src/components/Stat/formatStatNumber.ts",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/Stat/formatStatNumber.ts"
+        },
+        {
+          "path": "packages/react/src/components/Stat/index.ts",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/Stat/index.ts"
+        },
+        {
+          "path": "packages/react/src/components/Stat/Stat.tsx",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/Stat/Stat.tsx"
+        },
+        {
+          "path": "packages/css/src/components/Stat.css",
+          "type": "registry:file",
+          "target": "@components/ds/css/components/Stat.css"
+        }
+      ],
+      "categories": [
+        "data-display"
+      ],
+      "meta": {
+        "manifest": "Stat",
+        "framework": "react",
+        "since": "0.1.0"
+      }
+    },
+    {
+      "name": "status-dot",
+      "type": "registry:ui",
+      "title": "StatusDot",
+      "description": "A small colored dot with the state in words next to it: Online, Sync failed, Syncing.",
+      "registryDependencies": [
+        "@ds/core",
+        "@ds/theme"
+      ],
+      "files": [
+        {
+          "path": "packages/react/src/components/StatusDot/index.ts",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/StatusDot/index.ts"
+        },
+        {
+          "path": "packages/react/src/components/StatusDot/StatusDot.tsx",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/StatusDot/StatusDot.tsx"
+        },
+        {
+          "path": "packages/css/src/components/StatusDot.css",
+          "type": "registry:file",
+          "target": "@components/ds/css/components/StatusDot.css"
+        }
+      ],
+      "categories": [
+        "feedback"
+      ],
+      "meta": {
+        "manifest": "StatusDot",
+        "framework": "react",
+        "since": "0.1.0"
+      }
+    },
+    {
+      "name": "stepper",
+      "type": "registry:ui",
+      "title": "Stepper",
+      "description": "Shows the steps of a process in order, which are complete, which one is current and which are still to come.",
+      "registryDependencies": [
+        "@ds/button",
+        "@ds/core",
+        "@ds/theme"
+      ],
+      "files": [
+        {
+          "path": "packages/react/src/components/Stepper/index.ts",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/Stepper/index.ts"
+        },
+        {
+          "path": "packages/react/src/components/Stepper/Stepper.tsx",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/Stepper/Stepper.tsx"
+        },
+        {
+          "path": "packages/css/src/components/Stepper.css",
+          "type": "registry:file",
+          "target": "@components/ds/css/components/Stepper.css"
+        }
+      ],
+      "categories": [
+        "navigation"
+      ],
+      "meta": {
+        "manifest": "Stepper",
+        "framework": "react",
+        "since": "0.1.0"
+      }
+    },
+    {
+      "name": "surface",
+      "type": "registry:ui",
+      "title": "Surface",
+      "description": "A plain background box on one surface step (body, surface 1 to 5), with an optional border, elevation, radius and padding.",
+      "registryDependencies": [
+        "@ds/core",
+        "@ds/theme"
+      ],
+      "files": [
+        {
+          "path": "packages/react/src/components/Surface/index.ts",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/Surface/index.ts"
+        },
+        {
+          "path": "packages/react/src/components/Surface/Surface.tsx",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/Surface/Surface.tsx"
+        },
+        {
+          "path": "packages/css/src/components/Surface.css",
+          "type": "registry:file",
+          "target": "@components/ds/css/components/Surface.css"
+        }
+      ],
+      "categories": [
+        "layout"
+      ],
+      "meta": {
+        "manifest": "Surface",
+        "framework": "react",
+        "since": "0.1.0"
+      }
+    },
+    {
+      "name": "switch",
+      "type": "registry:ui",
+      "title": "Switch",
+      "description": "An on or off setting that takes effect the moment it changes.",
+      "dependencies": [
+        "radix-ui@^1.8.1"
+      ],
+      "registryDependencies": [
+        "@ds/core",
+        "@ds/field",
+        "@ds/theme"
+      ],
+      "files": [
+        {
+          "path": "packages/react/src/components/Switch/index.ts",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/Switch/index.ts"
+        },
+        {
+          "path": "packages/react/src/components/Switch/Switch.tsx",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/Switch/Switch.tsx"
+        },
+        {
+          "path": "packages/css/src/components/Switch.css",
+          "type": "registry:file",
+          "target": "@components/ds/css/components/Switch.css"
+        }
+      ],
+      "categories": [
+        "selection"
+      ],
+      "meta": {
+        "manifest": "Switch",
+        "framework": "react",
+        "since": "0.1.0"
+      }
+    },
+    {
+      "name": "tab-bar",
+      "type": "registry:ui",
+      "title": "TabBar",
+      "description": "The bottom bar of three to five top level destinations on phone layouts: an icon over a label for each, the current one marked.",
+      "dependencies": [
+        "radix-ui@^1.8.1"
+      ],
+      "registryDependencies": [
+        "@ds/core",
+        "@ds/theme"
+      ],
+      "files": [
+        {
+          "path": "packages/react/src/components/TabBar/index.ts",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/TabBar/index.ts"
+        },
+        {
+          "path": "packages/react/src/components/TabBar/TabBar.tsx",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/TabBar/TabBar.tsx"
+        },
+        {
+          "path": "packages/css/src/components/TabBar.css",
+          "type": "registry:file",
+          "target": "@components/ds/css/components/TabBar.css"
+        }
+      ],
+      "categories": [
+        "navigation"
+      ],
+      "meta": {
+        "manifest": "TabBar",
+        "framework": "react",
+        "since": "0.1.0"
+      }
+    },
+    {
+      "name": "table-of-contents",
+      "type": "registry:ui",
+      "title": "TableOfContents",
+      "description": "Links to the headings of a long page, nested by level, with the section in view marked as the reader scrolls.",
+      "registryDependencies": [
+        "@ds/core",
+        "@ds/theme"
+      ],
+      "files": [
+        {
+          "path": "packages/react/src/components/TableOfContents/index.ts",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/TableOfContents/index.ts"
+        },
+        {
+          "path": "packages/react/src/components/TableOfContents/TableOfContents.tsx",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/TableOfContents/TableOfContents.tsx"
+        },
+        {
+          "path": "packages/css/src/components/TableOfContents.css",
+          "type": "registry:file",
+          "target": "@components/ds/css/components/TableOfContents.css"
+        }
+      ],
+      "categories": [
+        "navigation"
+      ],
+      "meta": {
+        "manifest": "TableOfContents",
+        "framework": "react",
+        "since": "0.1.0"
+      }
+    },
+    {
+      "name": "tabs",
+      "type": "registry:ui",
+      "title": "Tabs",
+      "description": "Switches between panels of related content in place. A labelled list of tabs, one active at a time, with its panel below or beside it.",
+      "dependencies": [
+        "radix-ui@^1.8.1"
+      ],
+      "registryDependencies": [
+        "@ds/button",
+        "@ds/core",
+        "@ds/theme"
+      ],
+      "files": [
+        {
+          "path": "packages/react/src/components/Tabs/index.ts",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/Tabs/index.ts"
+        },
+        {
+          "path": "packages/react/src/components/Tabs/Tabs.tsx",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/Tabs/Tabs.tsx"
+        },
+        {
+          "path": "packages/css/src/components/Tabs.css",
+          "type": "registry:file",
+          "target": "@components/ds/css/components/Tabs.css"
+        }
+      ],
+      "categories": [
+        "navigation"
+      ],
+      "meta": {
+        "manifest": "Tabs",
+        "framework": "react",
+        "since": "0.1.0"
+      }
+    },
+    {
+      "name": "textarea",
+      "type": "registry:ui",
+      "title": "Textarea",
+      "description": "Multi line text in a bordered box that grows with the text, with an optional character count that never cuts the text.",
+      "dependencies": [
+        "radix-ui@^1.8.1"
+      ],
+      "registryDependencies": [
+        "@ds/core",
+        "@ds/field",
+        "@ds/theme"
+      ],
+      "files": [
+        {
+          "path": "packages/react/src/components/Textarea/index.ts",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/Textarea/index.ts"
+        },
+        {
+          "path": "packages/react/src/components/Textarea/Textarea.tsx",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/Textarea/Textarea.tsx"
+        },
+        {
+          "path": "packages/css/src/components/Textarea.css",
+          "type": "registry:file",
+          "target": "@components/ds/css/components/Textarea.css"
+        }
+      ],
+      "categories": [
+        "forms"
+      ],
+      "meta": {
+        "manifest": "Textarea",
+        "framework": "react",
+        "since": "0.1.0"
+      }
+    },
+    {
+      "name": "tile",
+      "type": "registry:ui",
+      "title": "Tile",
+      "description": "The borderless card of Studio: a thumbnail, a title, one meta line and an icon action, laid out in a TileGrid split by a 1px gap that shows the parent surface.",
+      "dependencies": [
+        "radix-ui@^1.8.1"
+      ],
+      "registryDependencies": [
+        "@ds/core",
+        "@ds/theme"
+      ],
+      "files": [
+        {
+          "path": "packages/react/src/components/Tile/index.ts",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/Tile/index.ts"
+        },
+        {
+          "path": "packages/react/src/components/Tile/Tile.tsx",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/Tile/Tile.tsx"
+        },
+        {
+          "path": "packages/css/src/components/Tile.css",
+          "type": "registry:file",
+          "target": "@components/ds/css/components/Tile.css"
+        }
+      ],
+      "categories": [
+        "containers"
+      ],
+      "meta": {
+        "manifest": "Tile",
+        "framework": "react",
+        "since": "0.1.0"
+      }
+    },
+    {
+      "name": "title-bar",
+      "type": "registry:ui",
+      "title": "TitleBar",
+      "description": "The bar at the top of a window or a panel: window controls at the start, the title, then trailing actions.",
+      "registryDependencies": [
+        "@ds/theme"
+      ],
+      "files": [
+        {
+          "path": "packages/react/src/components/TitleBar/index.ts",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/TitleBar/index.ts"
+        },
+        {
+          "path": "packages/react/src/components/TitleBar/TitleBar.tsx",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/TitleBar/TitleBar.tsx"
+        },
+        {
+          "path": "packages/css/src/components/TitleBar.css",
+          "type": "registry:file",
+          "target": "@components/ds/css/components/TitleBar.css"
+        }
+      ],
+      "categories": [
+        "overlays"
+      ],
+      "meta": {
+        "manifest": "TitleBar",
+        "framework": "react",
+        "since": "0.1.0"
+      }
+    },
+    {
+      "name": "toast",
+      "type": "registry:ui",
+      "title": "Toast",
+      "description": "A short notice that something happened, shown in a corner and gone on its own. Called from anywhere with toast(); one Toaster renders them. Call shape: toast(title, options) or toast(options); toast.success, toast.warning, toast.danger and toast.info set the tone; each returns the id; toast.dismiss(id) closes one (or all, without an id), toast.update(id, patch) changes one in place, toast.configure(config) sets the max and the durations for the app.",
+      "dependencies": [
+        "radix-ui@^1.8.1"
+      ],
+      "registryDependencies": [
+        "@ds/button",
+        "@ds/close-button",
+        "@ds/core",
+        "@ds/theme"
+      ],
+      "files": [
+        {
+          "path": "packages/react/src/components/Toast/index.ts",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/Toast/index.ts"
+        },
+        {
+          "path": "packages/react/src/components/Toast/isInsideToaster.ts",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/Toast/isInsideToaster.ts"
+        },
+        {
+          "path": "packages/react/src/components/Toast/Toast.tsx",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/Toast/Toast.tsx"
+        },
+        {
+          "path": "packages/react/src/components/Toast/Toaster.tsx",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/Toast/Toaster.tsx"
+        },
+        {
+          "path": "packages/css/src/components/Toast.css",
+          "type": "registry:file",
+          "target": "@components/ds/css/components/Toast.css"
+        }
+      ],
+      "categories": [
+        "feedback"
+      ],
+      "meta": {
+        "manifest": "Toast",
+        "framework": "react",
+        "since": "0.1.0"
+      }
+    },
+    {
+      "name": "toggle-button",
+      "type": "registry:ui",
+      "title": "ToggleButton",
+      "description": "A button that stays pressed or not: bold, mute, grid view. aria-pressed tells assistive tech the state.",
+      "dependencies": [
+        "radix-ui@^1.8.1"
+      ],
+      "registryDependencies": [
+        "@ds/button",
+        "@ds/theme"
+      ],
+      "files": [
+        {
+          "path": "packages/react/src/components/ToggleButton/index.ts",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/ToggleButton/index.ts"
+        },
+        {
+          "path": "packages/react/src/components/ToggleButton/ToggleButton.tsx",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/ToggleButton/ToggleButton.tsx"
+        },
+        {
+          "path": "packages/css/src/components/ToggleButton.css",
+          "type": "registry:file",
+          "target": "@components/ds/css/components/ToggleButton.css"
+        }
+      ],
+      "categories": [
+        "actions"
+      ],
+      "meta": {
+        "manifest": "ToggleButton",
+        "framework": "react",
+        "since": "0.2.0"
+      }
+    },
+    {
+      "name": "toolbar",
+      "type": "registry:ui",
+      "title": "Toolbar",
+      "description": "A labelled row of controls for one context, such as a text editor or a canvas. One tab stop, arrow keys between items, and a More tools menu for what does not fit.",
+      "dependencies": [
+        "radix-ui@^1.8.1"
+      ],
+      "registryDependencies": [
+        "@ds/button",
+        "@ds/core",
+        "@ds/dropdown-menu",
+        "@ds/icon-button",
+        "@ds/link",
+        "@ds/theme"
+      ],
+      "files": [
+        {
+          "path": "packages/react/src/components/Toolbar/index.ts",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/Toolbar/index.ts"
+        },
+        {
+          "path": "packages/react/src/components/Toolbar/Toolbar.tsx",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/Toolbar/Toolbar.tsx"
+        },
+        {
+          "path": "packages/css/src/components/Toolbar.css",
+          "type": "registry:file",
+          "target": "@components/ds/css/components/Toolbar.css"
+        }
+      ],
+      "categories": [
+        "navigation"
+      ],
+      "meta": {
+        "manifest": "Toolbar",
+        "framework": "react",
+        "since": "0.1.0"
+      }
+    },
+    {
+      "name": "tooltip",
+      "type": "registry:ui",
+      "title": "Tooltip",
+      "description": "A short hint for a control, shown on hover and on keyboard focus. The only way to show a hint in the system: never the native title attribute.",
+      "dependencies": [
+        "radix-ui@^1.8.1"
+      ],
+      "registryDependencies": [
+        "@ds/popover",
+        "@ds/theme"
+      ],
+      "files": [
+        {
+          "path": "packages/react/src/components/Tooltip/index.ts",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/Tooltip/index.ts"
+        },
+        {
+          "path": "packages/react/src/components/Tooltip/Tooltip.tsx",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/Tooltip/Tooltip.tsx"
+        },
+        {
+          "path": "packages/css/src/components/Tooltip.css",
+          "type": "registry:file",
+          "target": "@components/ds/css/components/Tooltip.css"
+        }
+      ],
+      "categories": [
+        "overlays"
+      ],
+      "meta": {
+        "manifest": "Tooltip",
+        "framework": "react",
+        "since": "0.1.0"
+      }
+    },
+    {
+      "name": "tour",
+      "type": "registry:ui",
+      "title": "Tour",
+      "description": "A short guided tour that points at real parts of the screen, one step at a time. Not modal: the page stays usable, a ring marks the target and skip is always there.",
+      "dependencies": [
+        "radix-ui@^1.8.1"
+      ],
+      "registryDependencies": [
+        "@ds/button",
+        "@ds/core",
+        "@ds/popover",
+        "@ds/theme"
+      ],
+      "files": [
+        {
+          "path": "packages/react/src/components/Tour/index.ts",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/Tour/index.ts"
+        },
+        {
+          "path": "packages/react/src/components/Tour/Tour.tsx",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/Tour/Tour.tsx"
+        },
+        {
+          "path": "packages/css/src/components/Tour.css",
+          "type": "registry:file",
+          "target": "@components/ds/css/components/Tour.css"
+        }
+      ],
+      "categories": [
+        "overlays"
+      ],
+      "meta": {
+        "manifest": "Tour",
+        "framework": "react",
+        "since": "0.1.0"
+      }
+    },
+    {
+      "name": "window",
+      "type": "registry:ui",
+      "title": "Window",
+      "description": "An app window over the page: a title bar, a body and an optional footer. It opens from a trigger, moves, zooms, minimizes and closes. Desk draws it as a glass window with traffic lights; Studio as a flat panel with a close button.",
+      "registryDependencies": [
+        "@ds/core",
+        "@ds/icon-button",
+        "@ds/theme",
+        "@ds/title-bar",
+        "@ds/window-controls"
+      ],
+      "files": [
+        {
+          "path": "packages/react/src/components/Window/index.ts",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/Window/index.ts"
+        },
+        {
+          "path": "packages/react/src/components/Window/styleMotion.ts",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/Window/styleMotion.ts"
+        },
+        {
+          "path": "packages/react/src/components/Window/Window.tsx",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/Window/Window.tsx"
+        },
+        {
+          "path": "packages/react/src/components/Window/WindowLayer.tsx",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/Window/WindowLayer.tsx"
+        },
+        {
+          "path": "packages/css/src/components/Window.css",
+          "type": "registry:file",
+          "target": "@components/ds/css/components/Window.css"
+        }
+      ],
+      "categories": [
+        "overlays"
+      ],
+      "meta": {
+        "manifest": "Window",
+        "framework": "react",
+        "since": "0.1.0"
+      }
+    },
+    {
+      "name": "window-controls",
+      "type": "registry:ui",
+      "title": "WindowControls",
+      "description": "The traffic lights of a window: close, minimize and zoom. 12px lights with 24 by 24 px targets, each an IconButton with its own label.",
+      "registryDependencies": [
+        "@ds/core",
+        "@ds/icon-button",
+        "@ds/theme"
+      ],
+      "files": [
+        {
+          "path": "packages/react/src/components/WindowControls/index.ts",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/WindowControls/index.ts"
+        },
+        {
+          "path": "packages/react/src/components/WindowControls/WindowControls.tsx",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/WindowControls/WindowControls.tsx"
+        },
+        {
+          "path": "packages/css/src/components/WindowControls.css",
+          "type": "registry:file",
+          "target": "@components/ds/css/components/WindowControls.css"
+        }
+      ],
+      "categories": [
+        "overlays"
+      ],
+      "meta": {
+        "manifest": "WindowControls",
+        "framework": "react",
+        "since": "0.1.0"
+      }
+    }
+  ]
+}
