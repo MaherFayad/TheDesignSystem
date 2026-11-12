@@ -63,12 +63,12 @@
     "close": {
       "type": "boolean",
       "default": true,
-      "description": "PopoverContent: shows the close IconButton. Escape and an outside click always close."
+      "description": "PopoverContent: shows the CloseButton. Escape and an outside click always close."
     },
     "closeLabel": {
       "type": "string",
       "default": "Close popover",
-      "description": "PopoverContent: accessible name of the close control. Arabic default under lang ar: إغلاق النافذة."
+      "description": "PopoverContent: accessible name of the close control. Arabic default under lang ar: إغلاق."
     },
     "title": { "type": "node", "description": "PopoverContent: the title for the common case, the same as a PopoverTitle child. It names the popover." },
     "PopoverTrigger": {
@@ -86,8 +86,8 @@
     "keys": {
       "Enter, Space": "On the trigger: opens and closes the popover",
       "Escape": "Closes the popover and returns focus to the trigger",
-      "Tab": "Moves to the next control inside the popover. Not modal, no trap: the popover renders at the end of the page, so Tab past its last control leaves the page content; Escape is the way back to the trigger",
-      "Shift+Tab": "Moves to the previous control inside the popover"
+      "Tab": "Moves to the next control inside the popover and wraps from the last to the first (the Radix focus scope loops). Not modal: Escape closes it and returns focus to the trigger, and a click outside closes it",
+      "Shift+Tab": "Moves to the previous control inside the popover and wraps from the first to the last"
     },
     "announce": "The trigger says it opens a dialog and whether it is expanded. On open the title is read as the name of the dialog, then the focused field.",
     "notes": [
@@ -112,7 +112,7 @@
     "ar": {
       "title": "Noun form, no diacritics: تسمية الطبقة، مقاس الإطار.",
       "buttons": "Noun form labels: حفظ الاسم، إلغاء. Never نعم or موافق.",
-      "close": "إغلاق النافذة"
+      "close": "إغلاق"
     }
   },
   "tokens": [
