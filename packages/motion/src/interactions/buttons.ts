@@ -227,59 +227,6 @@ export const buttonsInteractions = [
     status: 'proposed',
   },
   {
-    id: 'toggle-pop',
-    components: ['ToggleButton'],
-    pattern: 'pop',
-    drive: 'waapi',
-    trigger: 'The person turns a ToggleButton on or off with the pointer, Space or Enter.',
-    feedback:
-      'On: the content (icon, start, label, end) pops past rest and settles, one stagger step apart, while the on fill and the ring show at once. Off: the content sinks a little and settles back. Only the parts move, so a toggle in an attached ButtonGroup keeps its seams.',
-    beats: [
-      'Anticipation: the press dips the button (button-press) or, in an attached group, its parts (segment-press).',
-      'Action: aria-pressed, data-state, the fill and the ring change at once on release.',
-      'Overshoot and settle on: each part grows to scale.pop and back over duration.celebrate on ease.out (Neutral 1.05 over 220ms, Desk 1.14 over 480ms), one delay.stagger step apart (Neutral 24ms, Desk 45ms).',
-      'Off: each part sinks from scale.anticipate to rest on ease.spring-soft over duration.spring-soft.',
-    ],
-    styles: {
-      studio: 'no pop: the fill and the ring land in place',
-      desk: 'a full pop that swells the content and a staggered settle',
-      neutral: 'a small pop',
-    },
-    reduced: 'No pop. The on fill and the ring carry the state.',
-    round: 2,
-    status: 'proposed',
-  },
-  {
-    id: 'switch-stretch',
-    components: ['Switch'],
-    pattern: 'press',
-    drive: 'css',
-    trigger: 'The person presses the switch with the pointer or Space, then releases it to toggle.',
-    feedback:
-      'While pressed the thumb widens toward the side it will travel to, its trailing edge still, and the track dips a little. On the toggle the thumb travels on the bouncy spring, passing its end and settling, its stretch springing back with it; the track springs back to rest, and the on tint crosses in behind the thumb.',
-    beats: [
-      'Anticipation: the thumb stretches to scale.stretch toward its travel (Neutral 1.15, Desk 1.3, Studio 1.08) and the track dips to scale.press, both over duration.instant on ease.out, while held.',
-      'Action: on release the state changes at once and the thumb travels on ease.spring-bouncy over duration.spring-bouncy (Neutral 220ms passing its end by 6%, Desk 440ms by 25%, Studio 120ms in three steps).',
-      'Settle: the stretch and the track spring back to rest on the same spring.',
-      'Secondary: the on tint fades in and grows from scale.morph at the inline start to the full track on ease.spring-soft over duration.spring-soft; turning off fades and shrinks it back toward the start.',
-    ],
-    styles: {
-      studio: 'a short stretch and a travel in three hard steps',
-      desk: 'a long stretch, a thumb that swings past its end, a tint that sweeps in',
-      neutral: 'a short stretch and a travel with a small swing',
-    },
-    reduced: 'The thumb jumps to the other side and does not stretch; the track does not dip; the tint shows at once.',
-    off: {
-      "[data-ds='switch']": {
-        '--_switch-stretch': '1',
-        '--_switch-track-press': '1',
-        '--_switch-motion': '0',
-      },
-    },
-    round: 2,
-    status: 'proposed',
-  },
-  {
     id: 'link-underline',
     components: ['Link'],
     pattern: 'chart-draw',

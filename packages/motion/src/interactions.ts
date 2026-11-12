@@ -1,9 +1,9 @@
-// The interaction registry of orders 1.21 and 1.22: every small piece of
+// The interaction registry of orders 1.21 to 1.23: every small piece of
 // feedback the components play, by id, with its trigger, its pattern, its
 // beats, its reduced form and the private properties a style sets to turn a
 // CSS one off. One file per family under ./interactions (order 1.22): actions
-// (buttons.ts), inputs (fields.ts), selection, overlays, navigation and
-// feedback (content.ts). The gallery page `/interactions` plays each one;
+// (buttons.ts), toggles, inputs (fields.ts), selection, overlays, navigation
+// and feedback (content.ts). The gallery page `/interactions` plays each one;
 // docs/reports/interactions.md and interactions-2.md explain them. Every row
 // is a proposal to the owner.
 import type { PatternMode } from './core';
@@ -13,6 +13,7 @@ import { fieldsInteractions } from './interactions/fields';
 import { navigationInteractions } from './interactions/navigation';
 import { overlaysInteractions } from './interactions/overlays';
 import { selectionInteractions } from './interactions/selection';
+import { togglesInteractions } from './interactions/toggles';
 import type { Interaction, InteractionFamily } from './interactions/types';
 import type { StyleMotionPreset } from './preset';
 
@@ -21,6 +22,7 @@ export type { Interaction, InteractionDrive, InteractionFamily, PrimitiveId } fr
 /** The families in the order the gallery shows them, with their rows. */
 const byFamily: readonly [InteractionFamily, readonly Interaction[]][] = [
   ['actions', buttonsInteractions],
+  ['toggles', togglesInteractions],
   ['inputs', fieldsInteractions],
   ['selection', selectionInteractions],
   ['overlays', overlaysInteractions],
@@ -30,10 +32,11 @@ const byFamily: readonly [InteractionFamily, readonly Interaction[]][] = [
 
 /** The title of each family. */
 export const INTERACTION_FAMILIES: Readonly<Record<InteractionFamily, string>> = {
-  actions: 'Actions and toggles',
-  inputs: 'Text inputs and forms',
-  selection: 'Selection controls and lists',
-  overlays: 'Overlays and menus',
+  actions: 'Actions',
+  toggles: 'Switches, checks and radios',
+  inputs: 'Text inputs, sliders and forms',
+  selection: 'Menus, lists and collections',
+  overlays: 'Overlays and toasts',
   navigation: 'Navigation and shared indicators',
   feedback: 'Feedback, progress, data display and layout',
 };

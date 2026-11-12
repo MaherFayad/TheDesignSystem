@@ -20,10 +20,11 @@ import { stages as inputs } from './interactions/inputs';
 import { stages as navigation } from './interactions/navigation';
 import { stages as overlays } from './interactions/overlays';
 import { stages as selection } from './interactions/selection';
+import { stages as toggles } from './interactions/toggles';
 import './interactions.css';
 
 /** Live stages by interaction id, from every family file. */
-const stages: Record<string, () => ReactNode> = { ...actions, ...inputs, ...selection, ...overlays, ...navigation, ...feedback };
+const stages: Record<string, () => ReactNode> = { ...actions, ...toggles, ...inputs, ...selection, ...overlays, ...navigation, ...feedback };
 
 /** The recipes that turn off the CSS interactions each style plays reduced or not at all. */
 const recipes = [interactionRecipes('studio', studio), interactionRecipes('desk', desk), interactionRecipes('neutral', neutral)].join('\n');
@@ -74,13 +75,28 @@ function PointerDot() {
   return <div data-gallery="pointer-dot" ref={ref} aria-hidden="true" />;
 }
 
+/**
+ * `&zoom=<n>` sets the CSS zoom of the focus stage (default 2.5, the round 2
+ * look). The round 3 recorder passes `zoom=1` and draws the page at a device
+ * scale instead, so portaled overlays and the control share one scale.
+ */
+function focusZoom(): number | undefined {
+  try {
+    const z = Number(new URLSearchParams(window.location.search).get('zoom'));
+    return Number.isFinite(z) && z > 0 ? z : undefined;
+  } catch {
+    return undefined;
+  }
+}
+
 function FocusStage({ id }: { id: string }) {
   const stage = stages[id];
+  const zoom = focusZoom();
   return (
     <TooltipProvider>
       <div data-gallery="interactions-focus" data-focus={id}>
         <style>{recipes}</style>
-        <div data-gallery="interactions-focus-stage" data-interaction-stage="">
+        <div data-gallery="interactions-focus-stage" data-interaction-stage="" style={zoom ? { zoom } : undefined}>
           {stage ? stage() : <p>No stage for {id}.</p>}
         </div>
         <PointerDot />

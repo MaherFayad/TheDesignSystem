@@ -481,4 +481,55 @@ export const fieldsInteractions = [
     round: 2,
     status: 'proposed',
   },
+  {
+    id: 'slider-pull',
+    components: ['Slider', 'RangeSlider'],
+    pattern: 'press',
+    drive: 'css',
+    trigger: 'Hold a slider thumb, or the track, with a pointer, and let go.',
+    feedback:
+      'The grabbed thumb grows to scale.stretch from its center on the snappy spring, and on release it springs back on the bouncy spring, under its size and back. The value follows the pointer at once.',
+    beats: [
+      'Action: the thumb grows to scale.stretch (Neutral 1.15, Desk 1.3, Studio 1.08) on ease.spring-snappy over duration.spring-snappy (180, 300, 80ms).',
+      'Release and overshoot: it returns on ease.spring-bouncy over duration.spring-bouncy (220, 440, 120ms) and dips under its size before it settles.',
+    ],
+    styles: { neutral: 'a small lift', desk: 'a large lift and a bouncy release', studio: 'a small lift in steps' },
+    reduced: 'No motion: the thumb keeps its size; the grab cursor and the focus ring carry the state.',
+    off: {
+      "[data-ds='slider']": { '--_slider-lift': '1' },
+      "[data-ds='range-slider']": { '--_slider-lift': '1' },
+    },
+    round: 2,
+    status: 'proposed',
+  },
+  {
+    id: 'slider-bubble',
+    components: ['Slider', 'RangeSlider'],
+    pattern: 'number-roll',
+    drive: 'waapi',
+    primitive: 'digit-roll',
+    trigger: 'Hold a slider thumb with a pointer and move it.',
+    feedback:
+      'A value bubble rises over the held thumb and grows in; as the value changes its digits roll, up when it grows and down when it falls. On release the bubble drops away. The bubble is aria-hidden: the thumb keeps aria-valuetext and the value output keeps the real text.',
+    beats: [
+      'Action and overshoot: the bubble rises from distance.enter and grows from scale.morph on ease.spring-bouncy over duration.spring-bouncy (220, 440, 120ms), past its size and back.',
+      'Secondary: each changed digit rolls in its own column on the snappy spring (180, 300, 80ms), columns one delay.stagger apart from the last digit.',
+      'Exit: on release it shrinks and fades over duration.quick (100ms) on ease.exit.',
+    ],
+    styles: { neutral: 'a short rise and roll', desk: 'a tall bouncy rise, digits ripple', studio: 'digits flip in hard cuts' },
+    reduced: 'The bubble shows at once, without travel; the digits change in place with a fade.',
+    round: 2,
+    status: 'proposed',
+  },
+  {
+    id: 'slider-nudge',
+    components: ['Slider', 'RangeSlider'],
+    pattern: 'shake',
+    drive: 'waapi',
+    trigger: 'A key or a drag pushes a thumb past the minimum or the maximum of a horizontal slider.',
+    feedback:
+      'The thumb nudges space.3xs toward that end and back once (shake, one swing, toward) over duration.base on ease.out, added on top of the lift. A held key nudges once; a drag nudges once each time it goes past the end.',
+    reduced: 'No motion: the value stays at its end.',
+    status: 'proposed',
+  },
 ] as const satisfies readonly Interaction[];

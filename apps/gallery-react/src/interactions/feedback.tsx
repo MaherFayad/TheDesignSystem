@@ -25,43 +25,24 @@ import {
   ErrorState,
   Kbd,
   Meter,
-  NotificationCenter,
   ProgressBar,
   ProgressCircle,
   ResizableHandle,
   ResizablePanel,
   ResizablePanels,
   Skeleton,
-  SplitView,
   Spinner,
+  SplitView,
   Stat,
   StatusDot,
   Tile,
   TileLink,
   TileTitle,
-  toast,
   type AvatarStatusTone,
-  type NotificationItem,
 } from '@the-system/react';
 
 const column = { display: 'grid', gap: 'var(--ds-space-s)', inlineSize: '100%' } as const;
 const row = { display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 'var(--ds-space-s)' } as const;
-
-/** Each press shows a toast with its own title, so the stack grows instead of updating one toast. */
-function ToastStackStage() {
-  const [n, setN] = useState(1);
-  return (
-    <Button
-      data-interaction-trigger=""
-      onClick={() => {
-        toast({ lang: 'en', tone: 'success', title: `Draft ${n} saved`, description: 'Saved a moment ago.' });
-        setN((v) => v + 1);
-      }}
-    >
-      Show a toast
-    </Button>
-  );
-}
 
 function StatStage() {
   const [value, setValue] = useState(1240);
@@ -268,37 +249,6 @@ function AvatarStatusStage() {
   );
 }
 
-const now = new Date();
-const base: NotificationItem[] = [
-  { id: 'n1', title: 'Omar commented on Brand review', time: now, unread: true },
-  { id: 'n2', title: 'Lina invited you to Launch plan', time: now, unread: false, tone: 'info' },
-];
-
-function NotificationStage() {
-  const [items, setItems] = useState(base);
-  const [n, setN] = useState(3);
-  return (
-    <div style={column}>
-      <div style={row}>
-        <Button
-          size="sm"
-          data-interaction-trigger=""
-          onClick={() => {
-            setItems((v) => [{ id: `n${n}`, title: `Build ${n} passed`, time: new Date(), unread: true, tone: 'success' }, ...v]);
-            setN((x) => x + 1);
-          }}
-        >
-          Add a notification
-        </Button>
-        <Button size="sm" emphasis="soft" onClick={() => setItems((v) => v.slice(1))}>
-          Remove the newest
-        </Button>
-      </div>
-      <NotificationCenter size="sm" items={items} now={now} onMarkAllRead={() => setItems((v) => v.map((x) => ({ ...x, unread: false })))} />
-    </div>
-  );
-}
-
 function MeterStage() {
   const [n, setN] = useState(0);
   return (
@@ -437,18 +387,6 @@ export const stages: Record<string, () => ReactNode> = {
   'accordion-reveal': () => <AccordionStage />,
   'skeleton-swap': () => <SkeletonStage />,
   'stat-roll': () => <StatStage />,
-  'toast-enter': () => (
-    <Button data-interaction-trigger="" onClick={() => toast({ lang: 'en', tone: 'info', title: 'New version ready', description: 'Reload the page to get it.' })}>
-      Show a toast
-    </Button>
-  ),
-  'toast-stack': () => <ToastStackStage />,
-  'toast-swipe': () => (
-    <Button data-interaction-trigger="" onClick={() => toast({ lang: 'en', title: 'Board duplicated', description: 'Swipe it away or wait.' })}>
-      Show a toast
-    </Button>
-  ),
-  'notification-change': () => <NotificationStage />,
   'progress-spring': () => <ProgressStage />,
   'progress-celebrate': () => <ProgressStage />,
   'meter-fill': () => <MeterStage />,

@@ -14,12 +14,6 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
   Button,
-  CommandPalette,
-  CommandPaletteTrigger,
-  ContextMenu,
-  ContextMenuContent,
-  ContextMenuItem,
-  ContextMenuTrigger,
   Dialog,
   DialogBody,
   DialogClose,
@@ -33,26 +27,13 @@ import {
   DrawerContent,
   DrawerTitle,
   DrawerTrigger,
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuSub,
-  DropdownMenuSubContent,
-  DropdownMenuSubTrigger,
-  DropdownMenuTrigger,
   HoverCard,
   HoverCardContent,
   HoverCardTrigger,
   IconButton,
   Lightbox,
   LightboxTrigger,
-  Menubar,
-  MenubarContent,
-  MenubarItem,
-  MenubarMenu,
-  MenubarTrigger,
+  NotificationCenter,
   Popover,
   PopoverBody,
   PopoverContent,
@@ -68,10 +49,14 @@ import {
   Window,
   WindowControls,
   WindowLayer,
-  type CommandPaletteItem,
+  toast,
   type LightboxImage,
+  type NotificationItem,
   type TourStep,
 } from '@the-system/react';
+
+const column = { display: 'grid', gap: 'var(--ds-space-s)', inlineSize: '100%' } as const;
+const row = { display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 'var(--ds-space-s)' } as const;
 
 /** A made up landscape as an SVG data URL, so the stage works offline. */
 function landscape(hue: number): string {
@@ -85,26 +70,6 @@ const photos: LightboxImage[] = [
 ];
 
 const thumbStyle: CSSProperties = { display: 'block', inlineSize: '4rem', blockSize: '2.5rem', objectFit: 'cover', borderRadius: 'var(--ds-radius-sm)' };
-
-const commands: CommandPaletteItem[] = [
-  {
-    label: 'Boards',
-    commands: [
-      { value: 'create-board', label: 'Create board', start: 'plus', keywords: ['new'] },
-      { value: 'open-board', label: 'Open board', start: 'folder' },
-      { value: 'duplicate-board', label: 'Duplicate board', start: 'copy' },
-      { value: 'export-pdf', label: 'Export as PDF', start: 'download' },
-    ],
-  },
-  {
-    label: 'Team',
-    commands: [
-      { value: 'invite', label: 'Invite people', start: 'user-plus' },
-      { value: 'share', label: 'Share board', start: 'link' },
-      { value: 'settings', label: 'Open settings', start: 'settings' },
-    ],
-  },
-];
 
 function TourStage() {
   const [open, setOpen] = useState(false);
@@ -156,98 +121,55 @@ function WindowStage() {
 }
 
 /** Live stages by interaction id. */
+/** Each press shows a toast with its own title, so the stack grows instead of updating one toast. */
+function ToastStackStage() {
+  const [n, setN] = useState(1);
+  return (
+    <Button
+      data-interaction-trigger=""
+      onClick={() => {
+        toast({ lang: 'en', tone: 'success', title: `Draft ${n} saved`, description: 'Saved a moment ago.' });
+        setN((v) => v + 1);
+      }}
+    >
+      Show a toast
+    </Button>
+  );
+}
+
+const now = new Date();
+
+const base: NotificationItem[] = [
+  { id: 'n1', title: 'Omar commented on Brand review', time: now, unread: true },
+  { id: 'n2', title: 'Lina invited you to Launch plan', time: now, unread: false, tone: 'info' },
+];
+
+function NotificationStage() {
+  const [items, setItems] = useState(base);
+  const [n, setN] = useState(3);
+  return (
+    <div style={column}>
+      <div style={row}>
+        <Button
+          size="sm"
+          data-interaction-trigger=""
+          onClick={() => {
+            setItems((v) => [{ id: `n${n}`, title: `Build ${n} passed`, time: new Date(), unread: true, tone: 'success' }, ...v]);
+            setN((x) => x + 1);
+          }}
+        >
+          Add a notification
+        </Button>
+        <Button size="sm" emphasis="soft" onClick={() => setItems((v) => v.slice(1))}>
+          Remove the newest
+        </Button>
+      </div>
+      <NotificationCenter size="sm" items={items} now={now} onMarkAllRead={() => setItems((v) => v.map((x) => ({ ...x, unread: false })))} />
+    </div>
+  );
+}
+
 export const stages: Record<string, () => ReactNode> = {
-  'menu-origin': () => (
-    <>
-      <DropdownMenu>
-        <DropdownMenuTrigger>
-          <Button data-interaction-trigger="menu">Open menu</Button>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent>
-          <DropdownMenuLabel>Board</DropdownMenuLabel>
-          <DropdownMenuItem start="edit" shortcut="F2">
-            Rename board
-          </DropdownMenuItem>
-          <DropdownMenuItem start="copy">Duplicate board</DropdownMenuItem>
-          <DropdownMenuItem start="link">Copy link</DropdownMenuItem>
-          <DropdownMenuSeparator />
-          <DropdownMenuItem start="trash" tone="danger">
-            Delete board
-          </DropdownMenuItem>
-        </DropdownMenuContent>
-      </DropdownMenu>
-      <ContextMenu>
-        <ContextMenuTrigger>
-          <div tabIndex={0} style={{ padding: 'var(--ds-space-m)', border: 'var(--ds-border-width-default) dashed var(--ds-color-border-default)', borderRadius: 'var(--ds-radius-sm)' }}>
-            Right click here
-          </div>
-        </ContextMenuTrigger>
-        <ContextMenuContent>
-          <ContextMenuItem start="copy">Copy frame</ContextMenuItem>
-          <ContextMenuItem start="edit">Rename frame</ContextMenuItem>
-          <ContextMenuItem start="trash" tone="danger">
-            Delete frame
-          </ContextMenuItem>
-        </ContextMenuContent>
-      </ContextMenu>
-    </>
-  ),
-  'menu-row-slide': () => (
-    <>
-      <DropdownMenu>
-        <DropdownMenuTrigger>
-          <Button data-interaction-trigger="menu">Open menu</Button>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent>
-          <DropdownMenuItem start="edit">Rename board</DropdownMenuItem>
-          <DropdownMenuItem start="copy">Duplicate board</DropdownMenuItem>
-          <DropdownMenuItem start="link">Copy link</DropdownMenuItem>
-          <DropdownMenuSeparator />
-          <DropdownMenuItem start="download">Export board</DropdownMenuItem>
-        </DropdownMenuContent>
-      </DropdownMenu>
-      <Menubar aria-label="Board menu">
-        <MenubarMenu value="file">
-          <MenubarTrigger>File</MenubarTrigger>
-          <MenubarContent>
-            <MenubarItem>New board</MenubarItem>
-            <MenubarItem>Open board</MenubarItem>
-          </MenubarContent>
-        </MenubarMenu>
-        <MenubarMenu value="edit">
-          <MenubarTrigger>Edit</MenubarTrigger>
-          <MenubarContent>
-            <MenubarItem>Undo</MenubarItem>
-            <MenubarItem>Redo</MenubarItem>
-          </MenubarContent>
-        </MenubarMenu>
-        <MenubarMenu value="view">
-          <MenubarTrigger>View</MenubarTrigger>
-          <MenubarContent>
-            <MenubarItem>Zoom in</MenubarItem>
-            <MenubarItem>Zoom out</MenubarItem>
-          </MenubarContent>
-        </MenubarMenu>
-      </Menubar>
-    </>
-  ),
-  'menu-submenu-nudge': () => (
-    <DropdownMenu>
-      <DropdownMenuTrigger>
-        <Button data-interaction-trigger="">Open menu</Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent>
-        <DropdownMenuItem start="edit">Rename board</DropdownMenuItem>
-        <DropdownMenuSub>
-          <DropdownMenuSubTrigger start="send">Share board</DropdownMenuSubTrigger>
-          <DropdownMenuSubContent>
-            <DropdownMenuItem>Copy link</DropdownMenuItem>
-            <DropdownMenuItem>Invite by email</DropdownMenuItem>
-          </DropdownMenuSubContent>
-        </DropdownMenuSub>
-      </DropdownMenuContent>
-    </DropdownMenu>
-  ),
   'popover-spring': () => (
     <>
       <Popover>
@@ -365,33 +287,6 @@ export const stages: Record<string, () => ReactNode> = {
       </Drawer>
     </>
   ),
-  'command-palette-open': () => (
-    <CommandPalette items={commands} shortcut={null}>
-      <CommandPaletteTrigger>
-        <Button data-interaction-trigger="" start="search">
-          Search commands
-        </Button>
-      </CommandPaletteTrigger>
-    </CommandPalette>
-  ),
-  'command-palette-results': () => (
-    <CommandPalette items={commands} shortcut={null}>
-      <CommandPaletteTrigger>
-        <Button data-interaction-trigger="" start="search">
-          Search commands
-        </Button>
-      </CommandPaletteTrigger>
-    </CommandPalette>
-  ),
-  'command-palette-row-slide': () => (
-    <CommandPalette items={commands} shortcut={null}>
-      <CommandPaletteTrigger>
-        <Button data-interaction-trigger="" start="search">
-          Search commands
-        </Button>
-      </CommandPaletteTrigger>
-    </CommandPalette>
-  ),
   'lightbox-zoom': () => (
     <Lightbox images={photos}>
       {photos.map((photo, i) => (
@@ -411,4 +306,16 @@ export const stages: Record<string, () => ReactNode> = {
       <WindowControls onClose={() => undefined} onMinimize={() => undefined} onZoom={() => undefined} />
     </span>
   ),
+  'toast-enter': () => (
+    <Button data-interaction-trigger="" onClick={() => toast({ lang: 'en', tone: 'info', title: 'New version ready', description: 'Reload the page to get it.' })}>
+      Show a toast
+    </Button>
+  ),
+  'toast-stack': () => <ToastStackStage />,
+  'toast-swipe': () => (
+    <Button data-interaction-trigger="" onClick={() => toast({ lang: 'en', title: 'Board duplicated', description: 'Swipe it away or wait.' })}>
+      Show a toast
+    </Button>
+  ),
+  'notification-change': () => <NotificationStage />,
 };

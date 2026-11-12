@@ -6,23 +6,36 @@
 import { useState, type ReactNode } from 'react';
 import {
   Button,
-  Checkbox,
-  CheckboxGroup,
   Chip,
   Combobox,
+  CommandPalette,
+  CommandPaletteTrigger,
+  ContextMenu,
+  ContextMenuContent,
+  ContextMenuItem,
+  ContextMenuTrigger,
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuSub,
+  DropdownMenuSubContent,
+  DropdownMenuSubTrigger,
+  DropdownMenuTrigger,
   FilterBar,
   List,
   ListBox,
   ListItem,
+  Menubar,
+  MenubarContent,
+  MenubarItem,
+  MenubarMenu,
+  MenubarTrigger,
   MultiSelect,
-  RadioCard,
-  RadioCardItem,
-  RadioGroup,
-  RadioGroupItem,
-  RangeSlider,
   Select,
-  Slider,
   TagField,
+  type CommandPaletteItem,
 } from '@the-system/react';
 
 const fruit = [
@@ -130,48 +143,27 @@ function FilterStage() {
 }
 
 /** Live stages by interaction id. */
+const commands: CommandPaletteItem[] = [
+  {
+    label: 'Boards',
+    commands: [
+      { value: 'create-board', label: 'Create board', start: 'plus', keywords: ['new'] },
+      { value: 'open-board', label: 'Open board', start: 'folder' },
+      { value: 'duplicate-board', label: 'Duplicate board', start: 'copy' },
+      { value: 'export-pdf', label: 'Export as PDF', start: 'download' },
+    ],
+  },
+  {
+    label: 'Team',
+    commands: [
+      { value: 'invite', label: 'Invite people', start: 'user-plus' },
+      { value: 'share', label: 'Share board', start: 'link' },
+      { value: 'settings', label: 'Open settings', start: 'settings' },
+    ],
+  },
+];
+
 export const stages: Record<string, () => ReactNode> = {
-  'check-draw': () => (
-    <div style={stack}>
-      <Checkbox label="Snap frames to the grid" data-interaction-trigger="" />
-      <CheckboxGroup legend="Notify me about" selectAll="All notifications">
-        <Checkbox value="comments" label="Comments" />
-        <Checkbox value="mentions" label="Mentions" />
-        <Checkbox value="invites" label="Invites" />
-        <Checkbox value="reviews" label="Reviews" />
-      </CheckboxGroup>
-    </div>
-  ),
-  'radio-pop': () => (
-    <RadioGroup label="Export as" defaultValue="png">
-      <RadioGroupItem value="png" label="PNG" data-interaction-trigger="" />
-      <RadioGroupItem value="svg" label="SVG" />
-      <RadioGroupItem value="pdf" label="PDF" />
-    </RadioGroup>
-  ),
-  'radio-card-lift': () => (
-    <RadioCard aria-label="Plan" defaultValue="team" orientation="horizontal">
-      <RadioCardItem value="solo" title="Solo" description="One seat" end="$12" data-interaction-trigger="" />
-      <RadioCardItem value="team" title="Team" description="Five seats" end="$48" />
-    </RadioCard>
-  ),
-  'slider-nudge': () => (
-    <div style={{ inlineSize: '100%' }}>
-      <Slider label="Volume" unit="%" defaultValue={100} data-interaction-trigger="" />
-    </div>
-  ),
-  'slider-pull': () => (
-    <div style={stack}>
-      <Slider label="Opacity" unit="%" defaultValue={40} data-interaction-trigger="" />
-      <RangeSlider label="Price" unit="SAR" min={0} max={1000} step={50} defaultValue={[200, 800]} thumbLabels={['Minimum price', 'Maximum price']} />
-    </div>
-  ),
-  'slider-bubble': () => (
-    <div style={stack}>
-      <Slider label="Zoom" unit="%" min={10} max={400} defaultValue={120} data-interaction-trigger="" />
-      <RangeSlider label="Budget" unit="SAR" min={0} max={5000} step={10} defaultValue={[900, 3200]} thumbLabels={['Lowest budget', 'Highest budget']} />
-    </div>
-  ),
   'picker-chevron-turn': () => (
     <div style={stack}>
       <Select aria-label="Fruit" items={fruit} defaultValue="apple" data-interaction-trigger="" />
@@ -199,4 +191,122 @@ export const stages: Record<string, () => ReactNode> = {
   'chip-check-pop': () => <ChipStage />,
   'filter-count-roll': () => <FilterStage />,
   'list-stagger': () => <ListStage />,
+  'menu-origin': () => (
+    <>
+      <DropdownMenu>
+        <DropdownMenuTrigger>
+          <Button data-interaction-trigger="menu">Open menu</Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent>
+          <DropdownMenuLabel>Board</DropdownMenuLabel>
+          <DropdownMenuItem start="edit" shortcut="F2">
+            Rename board
+          </DropdownMenuItem>
+          <DropdownMenuItem start="copy">Duplicate board</DropdownMenuItem>
+          <DropdownMenuItem start="link">Copy link</DropdownMenuItem>
+          <DropdownMenuSeparator />
+          <DropdownMenuItem start="trash" tone="danger">
+            Delete board
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
+      <ContextMenu>
+        <ContextMenuTrigger>
+          <div tabIndex={0} style={{ padding: 'var(--ds-space-m)', border: 'var(--ds-border-width-default) dashed var(--ds-color-border-default)', borderRadius: 'var(--ds-radius-sm)' }}>
+            Right click here
+          </div>
+        </ContextMenuTrigger>
+        <ContextMenuContent>
+          <ContextMenuItem start="copy">Copy frame</ContextMenuItem>
+          <ContextMenuItem start="edit">Rename frame</ContextMenuItem>
+          <ContextMenuItem start="trash" tone="danger">
+            Delete frame
+          </ContextMenuItem>
+        </ContextMenuContent>
+      </ContextMenu>
+    </>
+  ),
+  'menu-row-slide': () => (
+    <>
+      <DropdownMenu>
+        <DropdownMenuTrigger>
+          <Button data-interaction-trigger="menu">Open menu</Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent>
+          <DropdownMenuItem start="edit">Rename board</DropdownMenuItem>
+          <DropdownMenuItem start="copy">Duplicate board</DropdownMenuItem>
+          <DropdownMenuItem start="link">Copy link</DropdownMenuItem>
+          <DropdownMenuSeparator />
+          <DropdownMenuItem start="download">Export board</DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
+      <Menubar aria-label="Board menu">
+        <MenubarMenu value="file">
+          <MenubarTrigger>File</MenubarTrigger>
+          <MenubarContent>
+            <MenubarItem>New board</MenubarItem>
+            <MenubarItem>Open board</MenubarItem>
+          </MenubarContent>
+        </MenubarMenu>
+        <MenubarMenu value="edit">
+          <MenubarTrigger>Edit</MenubarTrigger>
+          <MenubarContent>
+            <MenubarItem>Undo</MenubarItem>
+            <MenubarItem>Redo</MenubarItem>
+          </MenubarContent>
+        </MenubarMenu>
+        <MenubarMenu value="view">
+          <MenubarTrigger>View</MenubarTrigger>
+          <MenubarContent>
+            <MenubarItem>Zoom in</MenubarItem>
+            <MenubarItem>Zoom out</MenubarItem>
+          </MenubarContent>
+        </MenubarMenu>
+      </Menubar>
+    </>
+  ),
+  'menu-submenu-nudge': () => (
+    <DropdownMenu>
+      <DropdownMenuTrigger>
+        <Button data-interaction-trigger="">Open menu</Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent>
+        <DropdownMenuItem start="edit">Rename board</DropdownMenuItem>
+        <DropdownMenuSub>
+          <DropdownMenuSubTrigger start="send">Share board</DropdownMenuSubTrigger>
+          <DropdownMenuSubContent>
+            <DropdownMenuItem>Copy link</DropdownMenuItem>
+            <DropdownMenuItem>Invite by email</DropdownMenuItem>
+          </DropdownMenuSubContent>
+        </DropdownMenuSub>
+      </DropdownMenuContent>
+    </DropdownMenu>
+  ),
+  'command-palette-open': () => (
+    <CommandPalette items={commands} shortcut={null}>
+      <CommandPaletteTrigger>
+        <Button data-interaction-trigger="" start="search">
+          Search commands
+        </Button>
+      </CommandPaletteTrigger>
+    </CommandPalette>
+  ),
+  'command-palette-results': () => (
+    <CommandPalette items={commands} shortcut={null}>
+      <CommandPaletteTrigger>
+        <Button data-interaction-trigger="" start="search">
+          Search commands
+        </Button>
+      </CommandPaletteTrigger>
+    </CommandPalette>
+  ),
+  'command-palette-row-slide': () => (
+    <CommandPalette items={commands} shortcut={null}>
+      <CommandPaletteTrigger>
+        <Button data-interaction-trigger="" start="search">
+          Search commands
+        </Button>
+      </CommandPaletteTrigger>
+    </CommandPalette>
+  ),
 };

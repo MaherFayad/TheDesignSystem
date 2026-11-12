@@ -4,8 +4,8 @@
 // reads tokens. Each one is a proposal to the owner until it is approved.
 import type { PatternId } from '../core';
 
-/** The six families of order 1.22, one registry file each. */
-export type InteractionFamily = 'actions' | 'inputs' | 'selection' | 'overlays' | 'navigation' | 'feedback';
+/** The families of orders 1.22 and 1.23, one registry file each. */
+export type InteractionFamily = 'actions' | 'toggles' | 'inputs' | 'selection' | 'overlays' | 'navigation' | 'feedback';
 
 /** The primitives of order 1.22 (packages/motion/src/primitives). */
 export type PrimitiveId = 'flip' | 'stagger' | 'icon-morph' | 'digit-roll' | 'button-morph';
@@ -49,7 +49,7 @@ export interface Interaction {
   /** How the three styles differ, in a few words each (order 1.22). */
   styles?: Readonly<Partial<Record<'studio' | 'desk' | 'neutral', string>>>;
   /** The round that added or last reworked it. Default 1. */
-  round?: 1 | 2;
+  round?: 1 | 2 | 3;
   /** Set by the registry from the file it lives in. */
   family?: InteractionFamily;
   /** Every interaction waits for the owner. */

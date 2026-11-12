@@ -18,7 +18,6 @@ import {
   IconButton,
   Link,
   SplitButton,
-  Switch,
   Theme,
   ToggleButton,
 } from '@the-system/react';
@@ -133,27 +132,6 @@ export const stages: Record<string, () => ReactNode> = {
     </>
   ),
   'fab-morph': () => <FabStage />,
-  'toggle-pop': () => (
-    <>
-      <ToggleButton start="grid" data-interaction-trigger="">
-        Grid view
-      </ToggleButton>
-      <ToggleButton icon="bell" label="Mute alerts" />
-      <ButtonGroup aria-label="View" attached>
-        <ToggleButton>List</ToggleButton>
-        <ToggleButton>Board</ToggleButton>
-      </ButtonGroup>
-    </>
-  ),
-  'switch-stretch': () => (
-    <>
-      <Switch label="Auto save" data-interaction-trigger="" />
-      <Switch label="Snap to grid" defaultChecked size="lg" />
-      <Theme lang="ar">
-        <Switch label="حفظ تلقائي" />
-      </Theme>
-    </>
-  ),
   'link-underline': () => (
     <>
       <Link href="#pricing" standalone data-interaction-trigger="" onClick={(e) => e.preventDefault()}>
