@@ -45,6 +45,7 @@ export * from './components/InputGroup/index';
 export * from './components/Kbd/index';
 export * from './components/Label/index';
 export * from './components/LanguageSwitch/index';
+export * from './components/Lightbox/index';
 export * from './components/Link/index';
 export * from './components/List/index';
 export * from './components/ListBox/index';

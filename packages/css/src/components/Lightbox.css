@@ -1,0 +1,293 @@
+/*
+ * Lightbox: a fixed layer (the root) whose panel fills the screen on the
+ * solid page color of the scheme. Images never sit on glass, in any style.
+ * No source: designed from the dials table (PLAN.md 3.7) and Dialog.css
+ * (the root, the backdrop, the motion "dialog", the fallbacks). Follows
+ * "One convention for component CSS and props" in docs/contracts/anatomy.md.
+ *
+ *   [data-ds='lightbox']                     root: fixed, full screen
+ *     > [data-part='backdrop']               the scrim, Radix Overlay
+ *     > [data-part='panel']                  role dialog: a grid of toolbar, stage, caption
+ *         > [data-part='title']              visually hidden, names the dialog
+ *         > [data-part='toolbar']            counter at the inline start, zoom and close at the end
+ *             > [data-part='counter']
+ *             > [data-part='zoom'], [data-part='close']   IconButtons
+ *         > [data-part='stage']              holds the image; scrolls while zoomed
+ *             > [data-part='image']
+ *             > [data-part='spinner']        a Spinner root, while loading
+ *             > [data-part='error']
+ *         > [data-part='previous'], [data-part='next']    IconButtons at the middle of each side
+ *         > [data-part='caption']
+ *         > [data-part='status']             visually hidden, "Image 3 of 12"
+ *
+ * Private properties on the root. States only swap them; recipes override them:
+ *   --_lightbox-bg, -fg, -meta-fg, -scrim
+ *   --_lightbox-gutter            space around the image and the bars
+ *   --_lightbox-nav-space         room the side buttons keep free beside the image
+ *   --_lightbox-stage-overflow    hidden when fitted, auto when zoomed
+ *   --_lightbox-image-max-inline, -image-max-block
+ *   --_lightbox-image-inline-size the zoomed width; Lightbox.tsx sets the measured value inline on the image
+ *   --_lightbox-cursor            zoom-in when fitted, zoom-out when zoomed
+ *   --_lightbox-image-opacity     0 while the image loads
+ *   --_lightbox-stage-touch-action  pan-y when fitted (a sideways swipe moves), auto when zoomed
+ *   --_lightbox-enter-scale, -duration-in, -duration-out, -ease-in, -ease-out
+ */
+@layer ds.base {
+  [data-ds='lightbox'] {
+    --_lightbox-bg: var(--ds-color-bg-body);
+    --_lightbox-fg: var(--ds-color-text-default);
+    --_lightbox-meta-fg: var(--ds-color-text-muted);
+    --_lightbox-scrim: var(--ds-color-bg-scrim);
+    --_lightbox-gutter: var(--ds-space-xl);
+    --_lightbox-nav-space: calc(var(--ds-size-control-lg) + var(--_lightbox-gutter) * 2);
+    --_lightbox-stage-overflow: hidden;
+    --_lightbox-image-max-inline: 100%;
+    --_lightbox-image-max-block: 100%;
+    --_lightbox-image-inline-size: auto;
+    --_lightbox-cursor: zoom-in;
+    --_lightbox-image-opacity: 1;
+    --_lightbox-stage-touch-action: pan-y pinch-zoom;
+    --_lightbox-enter-scale: var(--ds-scale-dialog-enter);
+    --_lightbox-duration-in: var(--ds-duration-base);
+    --_lightbox-duration-out: var(--ds-duration-base);
+    --_lightbox-ease-in: var(--ds-ease-out);
+    --_lightbox-ease-out: var(--ds-ease-exit);
+
+    position: fixed;
+    z-index: var(--ds-z-dialog);
+    inset: 0;
+    display: flex;
+  }
+
+  /* Zoomed: the image at the measured zoom width, in a stage that scrolls both ways. */
+  [data-ds='lightbox'][data-zoomed] {
+    --_lightbox-stage-overflow: auto;
+    --_lightbox-image-max-inline: none;
+    --_lightbox-image-max-block: none;
+    /* Fallback until the measured width is set inline on the image. */
+    --_lightbox-image-inline-size: 200%;
+    --_lightbox-cursor: zoom-out;
+    --_lightbox-stage-touch-action: auto;
+  }
+
+  /* While the image loads or after it fails, nothing to zoom. */
+  [data-ds='lightbox']:is([data-loading], [data-error]) {
+    --_lightbox-cursor: default;
+  }
+
+  [data-ds='lightbox'][data-loading] {
+    --_lightbox-image-opacity: 0;
+  }
+
+  /* Phones: the side buttons sit over the image edge, so the image keeps the width. */
+  @media (width < 30rem) { /* breakpoint.phone */
+    [data-ds='lightbox'] {
+      --_lightbox-gutter: var(--ds-space-s);
+      --_lightbox-nav-space: 0;
+    }
+  }
+
+  /* ------------------------------------------------------------ backdrop */
+
+  [data-ds='lightbox'] > [data-part='backdrop'] {
+    position: absolute;
+    inset: 0;
+    background-color: var(--_lightbox-scrim);
+  }
+
+  [data-ds='lightbox'] > [data-part='backdrop'][data-state='open'] {
+    animation: ds-dialog-fade-in var(--_lightbox-duration-in) var(--_lightbox-ease-in);
+  }
+
+  [data-ds='lightbox'] > [data-part='backdrop'][data-state='closed'] {
+    animation: ds-dialog-fade-out var(--_lightbox-duration-out) var(--_lightbox-ease-out) forwards;
+  }
+
+  /* ------------------------------------------------------------ panel */
+
+  [data-ds='lightbox'] > [data-part='panel'] {
+    position: relative;
+    display: grid;
+    flex: 1 1 auto;
+    grid-template-rows: auto minmax(0, 1fr) auto;
+    grid-template-columns: minmax(0, 1fr);
+    box-sizing: border-box;
+    min-inline-size: 0;
+    padding-block: env(safe-area-inset-top, 0px) env(safe-area-inset-bottom, 0px);
+    padding-inline: max(env(safe-area-inset-left, 0px), env(safe-area-inset-right, 0px));
+    background-color: var(--_lightbox-bg);
+    color: var(--_lightbox-fg);
+    font-family: var(--ds-font-family-sans);
+    font-size: var(--ds-font-size-m);
+    line-height: var(--ds-font-leading-normal);
+  }
+
+  [data-ds='lightbox'] > [data-part='panel'][data-state='open'] {
+    animation: ds-lightbox-in var(--_lightbox-duration-in) var(--_lightbox-ease-in);
+  }
+
+  [data-ds='lightbox'] > [data-part='panel'][data-state='closed'] {
+    animation: ds-lightbox-out var(--_lightbox-duration-out) var(--_lightbox-ease-out) forwards;
+  }
+
+  [data-ds='lightbox'] > [data-part='panel']:focus {
+    outline: none;
+  }
+
+  /* ------------------------------------------------------------ visually hidden parts */
+
+  [data-ds='lightbox'] > [data-part='panel'] > :is([data-part='title'], [data-part='status']) {
+    position: absolute;
+    inline-size: var(--ds-border-width-default);
+    block-size: var(--ds-border-width-default);
+    margin: calc(-1 * var(--ds-border-width-default));
+    padding: 0;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  /* ------------------------------------------------------------ toolbar */
+
+  [data-ds='lightbox'] > [data-part='panel'] > [data-part='toolbar'] {
+    display: flex;
+    grid-row: 1;
+    align-items: center;
+    justify-content: flex-end;
+    gap: var(--ds-space-s);
+    padding-block: var(--ds-space-s);
+    padding-inline: var(--_lightbox-gutter);
+  }
+
+  [data-ds='lightbox'] [data-part='toolbar'] > [data-part='counter'] {
+    margin-inline-end: auto;
+    color: var(--_lightbox-meta-fg);
+    font-size: var(--ds-font-size-s);
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* ------------------------------------------------------------ stage and image */
+
+  [data-ds='lightbox'] > [data-part='panel'] > [data-part='stage'] {
+    position: relative;
+    display: flex;
+    grid-row: 2;
+    min-block-size: 0;
+    padding-inline: var(--_lightbox-nav-space);
+    overflow: var(--_lightbox-stage-overflow);
+    overscroll-behavior: contain;
+    touch-action: var(--_lightbox-stage-touch-action);
+  }
+
+  /*
+   * margin auto centers the image and still lets a zoomed image scroll from
+   * its first pixel (centering with justify-content would cut its start off).
+   */
+  [data-ds='lightbox'] [data-part='stage'] > [data-part='image'] {
+    display: block;
+    flex: none;
+    box-sizing: border-box;
+    inline-size: var(--_lightbox-image-inline-size);
+    max-inline-size: var(--_lightbox-image-max-inline);
+    block-size: auto;
+    max-block-size: var(--_lightbox-image-max-block);
+    margin: auto;
+    object-fit: contain;
+    cursor: var(--_lightbox-cursor);
+    opacity: var(--_lightbox-image-opacity);
+    user-select: none;
+  }
+
+  [data-ds='lightbox'] [data-part='stage'] > :is([data-part='spinner'], [data-part='error']) {
+    position: absolute;
+    inset-block-start: 50%;
+    inset-inline-start: 50%;
+    translate: -50% -50%;
+  }
+
+  [data-ds='lightbox'] [data-part='stage'] > [data-part='error'] {
+    margin: 0;
+    max-inline-size: calc(100% - var(--_lightbox-gutter) * 2);
+    color: var(--_lightbox-meta-fg);
+    text-align: center;
+  }
+
+  /* translate is set in physical terms; in right to left layouts the start is the right, so it flips. */
+  [data-ds='lightbox'] [data-part='stage']:dir(rtl) > :is([data-part='spinner'], [data-part='error']) {
+    translate: 50% -50%;
+  }
+
+  /* ------------------------------------------------------------ previous and next */
+
+  [data-ds='lightbox'] > [data-part='panel'] > :is([data-part='previous'], [data-part='next']) {
+    position: absolute;
+    inset-block-start: 50%;
+    translate: 0 -50%;
+  }
+
+  [data-ds='lightbox'] > [data-part='panel'] > [data-part='previous'] {
+    inset-inline-start: var(--_lightbox-gutter);
+  }
+
+  [data-ds='lightbox'] > [data-part='panel'] > [data-part='next'] {
+    inset-inline-end: var(--_lightbox-gutter);
+  }
+
+  /* ------------------------------------------------------------ caption */
+
+  [data-ds='lightbox'] > [data-part='panel'] > [data-part='caption'] {
+    grid-row: 3;
+    box-sizing: border-box;
+    inline-size: 100%;
+    max-inline-size: calc(var(--ds-dialog-width-2xl) + var(--_lightbox-gutter) * 2);
+    margin: 0;
+    margin-inline: auto;
+    padding-block: var(--ds-space-l);
+    padding-inline: var(--_lightbox-gutter);
+    color: var(--_lightbox-fg);
+    text-align: center;
+    overflow-wrap: anywhere;
+  }
+
+  /* ------------------------------------------------------------ motion: pattern "dialog" */
+
+  @keyframes ds-lightbox-in {
+    from {
+      opacity: 0;
+      transform: scale(var(--_lightbox-enter-scale));
+    }
+  }
+
+  @keyframes ds-lightbox-out {
+    to {
+      opacity: 0;
+      transform: scale(var(--_lightbox-enter-scale));
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    [data-ds='lightbox'] > :is([data-part='panel'], [data-part='backdrop'])[data-state] {
+      animation: none;
+    }
+  }
+
+  /* ------------------------------------------------------------ contrast and forced colors */
+
+  @media (prefers-contrast: more) {
+    [data-ds='lightbox'] {
+      --_lightbox-meta-fg: var(--ds-color-text-default);
+    }
+  }
+
+  [data-contrast='more'] [data-ds='lightbox'] {
+    --_lightbox-meta-fg: var(--ds-color-text-default);
+  }
+
+  @media (forced-colors: active) {
+    [data-ds='lightbox'] {
+      --_lightbox-bg: Canvas;
+      --_lightbox-fg: CanvasText;
+      --_lightbox-meta-fg: CanvasText;
+    }
+  }
+}

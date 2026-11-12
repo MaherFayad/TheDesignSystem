@@ -53,6 +53,7 @@ export const routes: DemoRoute[] = [
   { name: 'Kbd', slug: 'kbd', load: () => import('../../../packages/react/src/components/Kbd/Kbd.demo') },
   { name: 'Label', slug: 'label', load: () => import('../../../packages/react/src/components/Label/Label.demo') },
   { name: 'LanguageSwitch', slug: 'language-switch', load: () => import('../../../packages/react/src/components/LanguageSwitch/LanguageSwitch.demo') },
+  { name: 'Lightbox', slug: 'lightbox', load: () => import('../../../packages/react/src/components/Lightbox/Lightbox.demo') },
   { name: 'Link', slug: 'link', load: () => import('../../../packages/react/src/components/Link/Link.demo') },
   { name: 'List', slug: 'list', load: () => import('../../../packages/react/src/components/List/List.demo') },
   { name: 'ListBox', slug: 'list-box', load: () => import('../../../packages/react/src/components/ListBox/ListBox.demo') },
