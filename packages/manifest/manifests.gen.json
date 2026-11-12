@@ -81,6 +81,182 @@
     "since": "0.1.0"
   },
   {
+    "name": "Breadcrumbs",
+    "kind": "component",
+    "family": "navigation",
+    "summary": "The path from the top of a site to the current page: links to each level above, then the current page with aria-current page.",
+    "useWhen": [
+      "A page sits three or more levels deep in a hierarchy (a project, a board, a file) and readers need to step back up",
+      "Readers arrive from search or a shared link and need to see where the page lives",
+      "A deep path that must fit one line: maxItems moves the middle levels into a menu"
+    ],
+    "avoidWhen": [
+      "A flat site of one or two levels, where the navigation already shows the place",
+      "Steps of a task done in order, such as a checkout",
+      "The history of pages a reader visited",
+      "Switching between views of the same page"
+    ],
+    "insteadUse": {
+      "Steps of a task in order": "Stepper",
+      "Views of one page": "Tabs",
+      "Top level app navigation": "Navbar or Sidebar",
+      "One link back to the parent page": "Link with the arrow-back icon",
+      "Links to the headings of a long page": "TableOfContents"
+    },
+    "anatomy": [
+      "root",
+      "list",
+      "item",
+      "link",
+      "separator",
+      "current",
+      "overflow"
+    ],
+    "slots": {
+      "link": {
+        "accepts": [
+          "Link"
+        ]
+      },
+      "overflow": {
+        "accepts": [
+          "IconButton"
+        ],
+        "max": 1
+      }
+    },
+    "props": {
+      "items": {
+        "type": "BreadcrumbItem[]",
+        "required": true,
+        "description": "The path from the top level to the current page. Each item is { label, href?, link? }. The last item is the current page and needs no href. link is a router element rendered through Link asChild."
+      },
+      "size": {
+        "type": [
+          "sm",
+          "md"
+        ],
+        "default": "md",
+        "description": "Type size: sm is font.size.xs, md font.size.s, one step up in Arabic. Every link step is a 24px tall target at both sizes."
+      },
+      "maxItems": {
+        "type": "number",
+        "description": "The most steps to show. With more, the first step, the overflow menu and the last maxItems minus 2 steps (at least the current page) show. No default: every step shows and the list wraps."
+      },
+      "label": {
+        "type": "string",
+        "default": "Breadcrumbs",
+        "description": "The accessible name of the nav landmark. Under an Arabic Theme the default is مسار التنقل."
+      },
+      "overflowLabel": {
+        "type": "string",
+        "default": "Show hidden pages",
+        "description": "The accessible name of the overflow IconButton. Under an Arabic Theme the default is الصفحات المخفية."
+      },
+      "onNavigate": {
+        "type": "(item, index) => void",
+        "description": "Called when a step is chosen from the overflow menu, for client side routing. Without it the browser goes to the item href."
+      }
+    },
+    "states": [
+      "open",
+      "closed"
+    ],
+    "a11y": {
+      "role": "navigation landmark (nav with aria-label) around an ordered list; link steps are links, the current page is plain text with aria-current page",
+      "focus": "Each link step and the overflow button are tab stops, in order. The current page is not focusable. A 2px ring from focus.shadow.ring on keyboard focus.",
+      "keys": {
+        "Tab": "Moves through the link steps and the overflow button",
+        "Enter": "Follows a link step, or opens the overflow menu",
+        "ArrowDown, ArrowUp": "Inside the overflow menu, as DropdownMenu"
+      },
+      "announce": "Navigation, Breadcrumbs, list of N items. The current page reads as current page. Separators are aria-hidden and never read.",
+      "native": {
+        "accessibilityRole": "none on the row; each step is a link"
+      },
+      "notes": [
+        "The current page is told apart by weight, the missing underline and aria-current, not by color alone (WCAG 1.4.1).",
+        "Separators are chevron-forward icons, aria-hidden, mirrored in RTL.",
+        "A long step truncates with an ellipsis at menu.width.min. Its full text stays in the DOM as the accessible name and shows whole on hover and keyboard focus. No native title.",
+        "The overflow part is the DropdownMenu trigger, an IconButton carrying data-part overflow, with data-state open or closed for its menu; the menu items are the hidden steps in order. The breadcrumbs root itself has no state.",
+        "Each landmark needs its own name when a page has more than one nav."
+      ]
+    },
+    "content": {
+      "en": {
+        "label": "Each step is the page name as its heading says it, in sentence case. Do not add Home as text when the first step is a logo.",
+        "current": "The last step repeats the page heading, shortened if needed."
+      },
+      "ar": {
+        "label": "Page names in noun form, no diacritics: الرئيسية، المشاريع، اللوحات.",
+        "digits": "Western digits in names that hold numbers."
+      }
+    },
+    "tokens": [
+      "font.size.xs",
+      "font.size.s",
+      "font.size.m",
+      "font.weight.medium",
+      "font.leading.tight",
+      "font.leading.arabic-tight",
+      "space.2xs",
+      "space.3xs",
+      "size.target-min",
+      "size.icon.sm",
+      "menu.width.min",
+      "color.text.muted",
+      "color.text.bright",
+      "color.text.subtle"
+    ],
+    "frameworks": {
+      "react": {
+        "status": "ready",
+        "behavior": "nav and ol, system Link, IconButton and radix:DropdownMenu for the overflow",
+        "example": "Breadcrumbs.demo.tsx",
+        "note": "No motion of its own: the overflow menu plays DropdownMenu's menu-scale."
+      },
+      "angular": {
+        "status": "planned",
+        "behavior": "nav[dsBreadcrumbs] with a links input, a[dsLink] steps and the DropdownMenu port for the overflow"
+      },
+      "native": {
+        "status": "planned",
+        "note": "A row of pressable Text links with accessibilityRole link; the current page with accessibilityState selected. Rarely used on phones, where a back button is the norm."
+      }
+    },
+    "styles": {
+      "studio": "Muted link steps that brighten on hover, a subtle pixel chevron, the current page bright and medium weight.",
+      "desk": "The same from the Desk tokens.",
+      "neutral": "Takes the tokens of the Neutral style, no recipe."
+    },
+    "mistakes": [
+      {
+        "wrong": "The current page as a link to itself, told apart by color",
+        "right": "The last item without href: plain text with aria-current page"
+      },
+      {
+        "wrong": "Slash characters typed between links, read aloud by screen readers",
+        "right": "Breadcrumbs, whose separators are aria-hidden icons"
+      },
+      {
+        "wrong": "A nav without a label next to the main navigation",
+        "right": "The default label Breadcrumbs, or a label of your own"
+      },
+      {
+        "wrong": "A long path that wraps onto three lines on a phone",
+        "right": "maxItems, which moves the middle steps into a menu"
+      }
+    ],
+    "contract": {
+      "optionalParts": [
+        "link",
+        "separator",
+        "overflow"
+      ]
+    },
+    "since": "0.1.0"
+  },
+  {
     "name": "Button",
     "kind": "component",
     "family": "actions",
@@ -2477,9 +2653,9 @@
       },
       "notes": [
         "WCAG 2.4.1 Bypass blocks.",
-        "The target gets tabindex -1 only when it is not focusable already. A link, a button, a field or an element with its own tabindex keeps what it has.",
+        "The target gets tabindex -1 only when focus does not land on it as it is. A link, a button, a field or an element with its own tabindex keeps what it has; an anchor with no href or a disabled control gets tabindex -1.",
         "Focus moves to the target itself, not only the scroll position, so the next Tab continues from the main content in every browser.",
-        "The URL fragment changes through history, as a plain fragment link would. When the target is missing the browser handles the link.",
+        "The URL fragment changes after focus moves, so hashchange and :target fire as for a plain fragment link. A click with a modifier key or a middle click is left to the browser. When the target is missing the browser handles the link.",
         "Drawn on any focus, keyboard or pointer, so it never vanishes under the pointer that clicked it. At 24px or more tall when shown (WCAG 2.5.8).",
         "Under forced colors it is drawn in LinkText on Canvas with a LinkText border, and the focus outline uses Highlight.",
         "No native title attribute."
@@ -2496,6 +2672,7 @@
       }
     },
     "tokens": [
+      "font.family.sans",
       "size.control.md",
       "size.target-min",
       "space.xl",
@@ -2530,7 +2707,7 @@
       },
       "native": {
         "status": "not-applicable",
-        "note": "Native screen readers move by headings and containers, and there is no tab order to bypass. Mark the main region with accessibilityRole header or a container label instead."
+        "note": "Native screen readers move by headings and containers, and there is no tab order to bypass. Start the first content block with a heading (accessibilityRole header on its title) so screen reader users can jump to it."
       }
     },
     "styles": {
