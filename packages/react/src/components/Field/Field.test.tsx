@@ -1,6 +1,7 @@
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 import { Input } from '../Input/Input';
+import { Label } from '../Label/Label';
 import FieldDemo from './Field.demo';
 import { Field, FieldDescription, FieldError, FieldLabel, useFieldControl } from './index';
 
@@ -164,6 +165,65 @@ describe('Field', () => {
     expect(input.getAttribute('aria-invalid')).toBe('true');
     expect(input.getAttribute('aria-describedby')).toBeNull();
     expect(input.id).toBe('');
+  });
+
+  describe('bring up: Label and FieldError as parts', () => {
+    it('inside a Field the mark alone is aria-hidden and the control carries aria-required', () => {
+      const { container } = render(
+        <Field label="Email" required>
+          <Input />
+        </Field>,
+      );
+      const input = screen.getByRole('textbox', { name: 'Email' });
+      expect(input.getAttribute('aria-required')).toBe('true');
+      const mark = container.querySelector('[data-ds="label"] > [data-part="required"]');
+      expect(mark?.getAttribute('aria-hidden')).toBe('true');
+      expect(mark?.textContent).toBe('*');
+    });
+
+    it('follows the Field state, and own values win', () => {
+      const { container } = render(
+        <Field label="Name" disabled invalid>
+          <Input />
+        </Field>,
+      );
+      const el = container.querySelector('[data-ds="label"]') as HTMLElement;
+      expect(el.getAttribute('data-part')).toBe('label');
+      expect(el.hasAttribute('data-disabled')).toBe(true);
+      expect(el.hasAttribute('data-invalid')).toBe(true);
+      const own = render(
+        <Field disabled>
+          <Label disabled={false}>Other</Label>
+          <Input />
+        </Field>,
+      );
+      expect((own.container.querySelector('[data-ds="label"]') as HTMLElement).hasAttribute('data-disabled')).toBe(false);
+    });
+
+    it('the required mark inside a Field that is not required keeps the word, so it is never a lone asterisk', () => {
+      render(
+        <Field>
+          <Label htmlFor="em" required>
+            Email
+          </Label>
+          <Input id="em" />
+        </Field>,
+      );
+      expect(screen.getByRole('textbox', { name: /^Email ?required$/ })).toBeTruthy();
+    });
+
+    it('renders FieldError as the error part, with its own anatomy', () => {
+      const { container } = render(
+        <Field label="Email" error="Add the part after the @.">
+          <Input />
+        </Field>,
+      );
+      const error = container.querySelector('[data-part="error"]');
+      expect(error?.getAttribute('data-ds')).toBe('field-error');
+      expect(error?.querySelector('[data-part="icon"]')).not.toBeNull();
+      expect(error?.querySelector('[data-part="message"]')?.textContent).toBe('Add the part after the @.');
+      expect(container.querySelector('[data-part="label"]')?.getAttribute('data-ds')).toBe('label');
+    });
   });
 
   it('renders the demo with every content case', () => {

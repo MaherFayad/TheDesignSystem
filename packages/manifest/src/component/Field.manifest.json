@@ -21,7 +21,6 @@
   "anatomy": [
     "root",
     "label",
-    "required",
     "description",
     "error"
   ],
@@ -34,21 +33,41 @@
     "root": {
       "accepts": [
         "Input",
-        "Select",
         "Textarea",
-        "Combobox"
+        "NumberField",
+        "ScrubInput",
+        "SearchField",
+        "PasswordField",
+        "OTPField",
+        "PhoneField",
+        "InputGroup",
+        "Select",
+        "Combobox",
+        "Autocomplete",
+        "MultiSelect",
+        "TagField",
+        "Slider",
+        "RangeSlider",
+        "Switch",
+        "Checkbox"
       ],
       "min": 1,
       "max": 1
     },
     "label": {
-      "accepts": "text"
+      "accepts": [
+        "Label"
+      ],
+      "max": 1
     },
     "description": {
       "accepts": "text"
     },
     "error": {
-      "accepts": "text"
+      "accepts": [
+        "FieldError"
+      ],
+      "max": 1
     }
   },
   "props": {
@@ -81,7 +100,7 @@
     },
     "label": {
       "type": "node",
-      "description": "One line API: renders FieldLabel."
+      "description": "One line API: renders FieldLabel, the system Label with data-part label."
     },
     "description": {
       "type": "node",
@@ -89,7 +108,7 @@
     },
     "error": {
       "type": "node",
-      "description": "One line API: renders FieldError."
+      "description": "One line API: renders the system FieldError with data-part error."
     }
   },
   "states": [
@@ -115,7 +134,8 @@
       "The error starts with a danger icon, so it does not rely on color.",
       "Controls read the wiring with useFieldControl(): id, aria-describedby, aria-invalid, aria-required, disabled and readOnly. A value the control passes itself wins.",
       "A form that checks on submit moves focus to the first invalid control.",
-      "Validate on blur or on submit, never on every key. On submit, move focus to the first invalid control."
+      "Validate on blur or on submit, never on every key. On submit, move focus to the first invalid control.",
+      "The label part is a Label root (data-ds label) and the error part a FieldError root (data-ds field-error). The required mark and the error icon belong to those components' anatomy."
     ]
   },
   "content": {
@@ -137,23 +157,17 @@
   },
   "tokens": [
     "space.xs",
-    "space.3xs",
-    "space.2xs",
     "space.l",
     "field.label.width",
     "font.size.s",
-    "font.weight.semibold",
-    "font.weight.regular",
-    "font.leading.snug",
     "font.leading.normal",
-    "color.text.default",
     "color.text.muted",
-    "color.state.danger.text"
+    "color.text.default"
   ],
   "frameworks": {
     "react": {
       "status": "ready",
-      "behavior": "radix:Label, native label wiring",
+      "behavior": "hand built context, Label and FieldError as parts",
       "example": "Field.demo.tsx"
     },
     "angular": {
@@ -164,8 +178,9 @@
     }
   },
   "styles": {
-    "studio": "Semibold label, muted description, danger text error with an icon",
-    "desk": "The same, in Instrument Sans"
+    "studio": "Lays out the Label, the control, a muted description and the FieldError",
+    "desk": "The same, in Instrument Sans",
+    "neutral": "Takes the tokens of the Neutral style, no recipe."
   },
   "mistakes": [
     {
