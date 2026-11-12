@@ -1,0 +1,129 @@
+{
+  "name": "Spinner",
+  "kind": "component",
+  "family": "feedback",
+  "summary": "A small turning ring that says something is busy and its length is unknown.",
+  "useWhen": [
+    "A short wait of unknown length on a small area: a list row, a card, a field that checks a value",
+    "Next to visible text such as Loading files, as decorative",
+    "Inside a region that carries aria-busy, as decorative"
+  ],
+  "avoidWhen": [
+    "The task reports how far it is",
+    "The layout is known while content loads",
+    "An action button is busy",
+    "A wait longer than a few seconds with no visible text"
+  ],
+  "insteadUse": {
+    "The task reports how far it is": "ProgressBar",
+    "Compact progress with a known value": "ProgressCircle",
+    "The layout is known while content loads": "Skeleton",
+    "An action button is busy": "Button",
+    "A wait longer than a few seconds with no visible text": "ProgressBar",
+    "A live state marker such as syncing": "StatusDot"
+  },
+  "anatomy": ["root", "label"],
+  "props": {
+    "size": {
+      "type": ["xs", "sm", "md", "lg"],
+      "default": "md",
+      "description": "Ring size: xs 12 (size.icon.sm), sm 16 (size.icon.md), md 24 (size.icon.lg), lg 36 px with a thicker stroke."
+    },
+    "tone": {
+      "type": ["neutral", "accent"],
+      "default": "neutral",
+      "description": "neutral draws the arc in color.text.default, accent in color.primary.on-surface (the neutral fill in Studio, yellow in Desk dark, dark gold in Desk light)."
+    },
+    "label": {
+      "type": "string",
+      "required": false,
+      "description": "The accessible name, read by a status region: Loading files. Required unless decorative (a TypeScript union enforces it). Never rendered as visible text."
+    },
+    "decorative": {
+      "type": "boolean",
+      "default": false,
+      "description": "Sets aria-hidden and drops the status role and the label. Use it when visible text or an aria-busy parent already says the area is busy."
+    }
+  },
+  "states": [],
+  "a11y": {
+    "role": "status (with a label), or none and aria-hidden (decorative)",
+    "focus": "Never focusable.",
+    "keys": {},
+    "announce": "With a label, the root is a polite status region holding the visually hidden label. It is read when a screen reader reaches it and when the label changes; a region inserted with its text already in it is not announced by every reader. Decorative spinners say nothing. aria-hidden is ignored on the labelled form.",
+    "native": {
+      "accessibilityRole": "progressbar",
+      "accessibilityState": ["busy"]
+    },
+    "notes": [
+      "Under reduced motion the ring stops and stays as a still ring with its arc; the label is still read.",
+      "Under forced colors the ring is GrayText with a CanvasText arc, so it does not collapse into one color.",
+      "Many spinners on one view: make them decorative and say the busy state once, in a region with aria-busy or in one status line.",
+      "The turn is clockwise in both directions: a spinner is a clock and does not mirror in RTL.",
+      "WCAG 2.2.2: a busy indicator is essential motion, but a wait longer than five seconds should show visible text or move to ProgressBar."
+    ]
+  },
+  "content": {
+    "en": {
+      "label": "Name the work in progress, a present participle plus a noun: Loading files, Syncing boards. Not Please wait.",
+      "visible": "When the wait is longer than a second or two, show the same words next to a decorative spinner."
+    },
+    "ar": {
+      "label": "Noun form with جار: جار تحميل الملفات، جار مزامنة اللوحات. No diacritics.",
+      "digits": "Western digits."
+    }
+  },
+  "tokens": [
+    "size.icon.sm",
+    "size.icon.md",
+    "size.icon.lg",
+    "border.width.default",
+    "border.width.strong",
+    "radius.pill",
+    "color.bg.overlay-20",
+    "color.text.default",
+    "color.primary.on-surface",
+    "duration.spin"
+  ],
+  "motion": "spinner",
+  "frameworks": {
+    "react": {
+      "status": "ready",
+      "behavior": "hand built, role status",
+      "example": "Spinner.demo.tsx",
+      "note": "Motion: the spinner pattern from the 1.11 catalog list, today a CSS rotate keyframe on duration.spin, none under reduced motion."
+    },
+    "angular": {
+      "status": "planned"
+    },
+    "native": {
+      "status": "planned",
+      "note": "Expected on ActivityIndicator or a Reanimated rotation, still under reduce motion."
+    }
+  },
+  "styles": {
+    "studio": "A 2px ring in overlay 20 with a text colored arc; accent uses the neutral fill of Studio, the same as neutral in effect.",
+    "desk": "The same ring; accent turns the arc yellow on dark and dark gold on light, from color.primary.on-surface.",
+    "neutral": "Planned: the same ring with the brand color for accent.",
+    "liquid": "Planned: the same ring."
+  },
+  "mistakes": [
+    {
+      "wrong": "A spinner with role status next to visible text that says the same thing",
+      "right": "decorative on the spinner, the visible text carries the meaning"
+    },
+    {
+      "wrong": "Ten labelled spinners in a list, each announcing Loading",
+      "right": "Decorative spinners and one aria-busy region or one status line"
+    },
+    {
+      "wrong": "A spinner while an upload reports its percent",
+      "right": "A ProgressBar or a ProgressCircle with the value"
+    },
+    {
+      "wrong": "A Spinner placed inside a busy Button by hand",
+      "right": "Button with loading and loadingLabel"
+    }
+  ],
+  "since": "0.1.0"
+}

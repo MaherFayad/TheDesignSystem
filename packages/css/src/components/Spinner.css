@@ -1,0 +1,93 @@
+/*
+ * Spinner. Source: the spinner part of Button (Button.css), itself from
+ * GoBanana `.st-spinner`. Follows "One convention for component CSS and
+ * props" in docs/contracts/anatomy.md.
+ *
+ * Private properties on the root (recipes override these):
+ *
+ *   --_spinner-size      the outer box of the ring
+ *   --_spinner-width     the stroke of the ring
+ *   --_spinner-track     the full ring, quiet
+ *   --_spinner-arc       the one quarter that reads as the moving mark
+ *
+ * The ring is the root's own border, so the root turns with transform:
+ * rotate. The visually hidden label turns with it, which nobody sees. The
+ * turn is clockwise in both directions: a spinner is a clock, and clocks do
+ * not mirror in RTL. Motion pattern: spinner. Under reduced motion the
+ * animation is none and a still ring with its arc stays.
+ */
+@layer ds.base {
+  [data-ds='spinner'] {
+    --_spinner-size: var(--ds-size-icon-lg);
+    --_spinner-width: var(--ds-border-width-strong);
+    --_spinner-track: var(--ds-color-bg-overlay-20);
+    --_spinner-arc: var(--ds-color-text-default);
+
+    position: relative;
+    display: inline-block;
+    flex: none;
+    box-sizing: border-box;
+    inline-size: var(--_spinner-size);
+    block-size: var(--_spinner-size);
+    margin: 0;
+    border: var(--_spinner-width) solid var(--_spinner-track);
+    border-block-start-color: var(--_spinner-arc);
+    border-radius: var(--ds-radius-pill);
+    vertical-align: middle;
+    animation: ds-spinner-turn var(--ds-duration-spin) linear infinite;
+  }
+
+  [data-ds='spinner'][data-size='xs'] {
+    --_spinner-size: var(--ds-size-icon-sm);
+  }
+
+  [data-ds='spinner'][data-size='sm'] {
+    --_spinner-size: var(--ds-size-icon-md);
+  }
+
+  [data-ds='spinner'][data-size='lg'] {
+    --_spinner-size: calc(var(--ds-size-icon-lg) * 1.5);
+    --_spinner-width: calc(var(--ds-border-width-strong) * 1.5);
+  }
+
+  [data-ds='spinner'][data-tone='accent'] {
+    --_spinner-arc: var(--ds-color-primary-on-surface);
+  }
+
+  @keyframes ds-spinner-turn {
+    to {
+      transform: rotate(1turn);
+    }
+  }
+
+  /* The label: read by screen readers, not drawn. */
+  [data-ds='spinner'] > [data-part='label'] {
+    position: absolute;
+    inline-size: var(--ds-border-width-default);
+    block-size: var(--ds-border-width-default);
+    margin: calc(-1 * var(--ds-border-width-default));
+    padding: 0;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    [data-ds='spinner'] {
+      animation: none;
+    }
+  }
+
+  /*
+   * Forced colors would paint every side of the border in one color, and a
+   * full ring that turns shows no motion. Keep the two colors from the
+   * system palette instead.
+   */
+  @media (forced-colors: active) {
+    [data-ds='spinner'] {
+      forced-color-adjust: none;
+      border-color: GrayText;
+      border-block-start-color: CanvasText;
+    }
+  }
+}

@@ -1,0 +1,175 @@
+/*
+ * ProgressBar. No source: designed from the dials table in PLAN.md 3.7 and
+ * the nearest components (the pill track, the tone colors of Toast). Follows
+ * "One convention for component CSS and props" in docs/contracts/anatomy.md.
+ *
+ * Private properties on the root (recipes override these):
+ *
+ *   --_progress-bar-height       the track thickness
+ *   --_progress-bar-gap          between the label row and the track
+ *   --_progress-bar-font-size    label and value text
+ *   --_progress-bar-radius       the track corners
+ *   --_progress-bar-track        the track fill
+ *   --_progress-bar-fill         the indicator fill, set by the tone
+ *   --_progress-bar-fg           the label color
+ *   --_progress-bar-value-fg     the value color
+ *
+ * --_progress-bar-fraction (0 to 1, 0 on the root) is set inline on the indicator by the
+ * component. The indicator spans the track and scales with scaleX from the
+ * inline start, so only transform animates. Indeterminate slides a short
+ * segment along the track (motion pattern spinner, the looping busy form);
+ * under reduced motion it stops as a full, faded track and the value text
+ * says Loading.
+ */
+@layer ds.base {
+  [data-ds='progress-bar'] {
+    --_progress-bar-height: var(--ds-space-fixed-m);
+    --_progress-bar-gap: var(--ds-space-2xs);
+    --_progress-bar-font-size: var(--ds-font-size-s);
+    --_progress-bar-radius: var(--ds-radius-pill);
+    --_progress-bar-track: var(--ds-color-bg-overlay-10);
+    --_progress-bar-fill: var(--ds-color-primary-on-surface);
+    --_progress-bar-fg: var(--ds-color-text-default);
+    --_progress-bar-value-fg: var(--ds-color-text-muted);
+    --_progress-bar-fraction: 0;
+
+    display: grid;
+    /* The value column takes at most half the row and wraps past it, so a long value never squeezes the label. */
+    grid-template-columns: minmax(0, 1fr) fit-content(50%);
+    align-items: baseline;
+    column-gap: var(--ds-space-s);
+    row-gap: var(--_progress-bar-gap);
+    box-sizing: border-box;
+    inline-size: 100%;
+    min-inline-size: 0;
+    color: var(--_progress-bar-fg);
+    font-family: var(--ds-font-family-sans);
+    font-size: var(--_progress-bar-font-size);
+    line-height: var(--ds-font-leading-snug);
+  }
+
+  [data-ds='progress-bar'][data-size='sm'] {
+    --_progress-bar-height: var(--ds-space-fixed-2xs);
+    --_progress-bar-font-size: var(--ds-font-size-xs);
+  }
+
+  [data-ds='progress-bar'][data-size='lg'] {
+    --_progress-bar-height: var(--ds-space-fixed-xl);
+    --_progress-bar-font-size: var(--ds-font-size-m);
+  }
+
+  [data-ds='progress-bar'][data-tone='success'] {
+    --_progress-bar-fill: var(--ds-color-state-success-solid);
+  }
+
+  [data-ds='progress-bar'][data-tone='warning'] {
+    --_progress-bar-fill: var(--ds-color-state-warning-solid);
+  }
+
+  [data-ds='progress-bar'][data-tone='danger'] {
+    --_progress-bar-fill: var(--ds-color-state-danger-solid);
+  }
+
+  /* ------------------------------------------------------------ parts */
+
+  [data-ds='progress-bar'] > [data-part='label'] {
+    grid-column: 1;
+    min-inline-size: 0;
+    font-weight: var(--ds-font-weight-medium);
+    overflow-wrap: anywhere;
+  }
+
+  [data-ds='progress-bar'] > [data-part='value'] {
+    grid-column: 2;
+    color: var(--_progress-bar-value-fg);
+    min-inline-size: 0;
+    font-variant-numeric: tabular-nums;
+    text-align: end;
+    overflow-wrap: anywhere;
+    unicode-bidi: plaintext;
+  }
+
+  [data-ds='progress-bar'] > [data-part='track'] {
+    position: relative;
+    display: block;
+    grid-column: 1 / -1;
+    block-size: var(--_progress-bar-height);
+    overflow: hidden;
+    border-radius: var(--_progress-bar-radius);
+    background-color: var(--_progress-bar-track);
+  }
+
+  [data-ds='progress-bar'] [data-part='indicator'] {
+    display: block;
+    inline-size: 100%;
+    block-size: 100%;
+    background-color: var(--_progress-bar-fill);
+    transform: scaleX(var(--_progress-bar-fraction));
+    transform-origin: 0 50%;
+    transition: transform var(--ds-duration-slow) var(--ds-ease-standard);
+  }
+
+  [data-ds='progress-bar'] [data-part='indicator']:dir(rtl) {
+    transform-origin: 100% 50%;
+  }
+
+  /* ------------------------------------------------------------ states */
+
+  [data-ds='progress-bar'][data-state='indeterminate'] [data-part='indicator'] {
+    inline-size: 40%;
+    transform: translateX(-100%);
+    transition: none;
+    animation: ds-progress-bar-slide var(--ds-duration-shimmer) var(--ds-ease-standard) infinite;
+  }
+
+  [data-ds='progress-bar'][data-state='indeterminate'] [data-part='indicator']:dir(rtl) {
+    transform: translateX(100%);
+    animation-name: ds-progress-bar-slide-rtl;
+  }
+
+  @keyframes ds-progress-bar-slide {
+    from {
+      transform: translateX(-100%);
+    }
+
+    to {
+      transform: translateX(250%);
+    }
+  }
+
+  @keyframes ds-progress-bar-slide-rtl {
+    from {
+      transform: translateX(100%);
+    }
+
+    to {
+      transform: translateX(-250%);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    [data-ds='progress-bar'] [data-part='indicator'] {
+      transition: none;
+    }
+
+    /* Stops: a full, faded track. The value text says Loading. */
+    [data-ds='progress-bar'][data-state='indeterminate'] [data-part='indicator'],
+    [data-ds='progress-bar'][data-state='indeterminate'] [data-part='indicator']:dir(rtl) {
+      inline-size: 100%;
+      transform: none;
+      animation: none;
+      opacity: var(--ds-opacity-disabled);
+    }
+  }
+
+  @media (forced-colors: active) {
+    [data-ds='progress-bar'] > [data-part='track'] {
+      border: var(--ds-border-width-default) solid CanvasText;
+    }
+
+    [data-ds='progress-bar'] [data-part='indicator'] {
+      forced-color-adjust: none;
+      background-color: Highlight;
+    }
+  }
+}

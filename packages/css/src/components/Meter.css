@@ -1,0 +1,133 @@
+/*
+ * Meter. Source: GoBanana `.adm-meter` (not reachable in this session);
+ * drawn like ProgressBar so a measure and a task read as one family. Follows
+ * "One convention for component CSS and props" in docs/contracts/anatomy.md.
+ *
+ * Private properties on the root (recipes override these):
+ *
+ *   --_meter-height       the track thickness
+ *   --_meter-gap          between the label row and the track
+ *   --_meter-font-size    label and value text
+ *   --_meter-radius       the track corners
+ *   --_meter-track        the track fill
+ *   --_meter-fill         the indicator fill, set by the tone
+ *   --_meter-fg           the label color
+ *   --_meter-value-fg     the value color
+ *   --_meter-fraction     0 to 1, set inline on the indicator
+ *
+ * data-tone comes from the thresholds (success, warning, danger) or is
+ * accent with none. data-level (low, medium, high) is also written in the
+ * value text, so the level is never only a color. The indicator scales with
+ * scaleX from the inline start; a value change eases the transform, and
+ * under reduced motion it moves at once.
+ */
+@layer ds.base {
+  [data-ds='meter'] {
+    --_meter-height: var(--ds-space-fixed-m);
+    --_meter-gap: var(--ds-space-2xs);
+    --_meter-font-size: var(--ds-font-size-s);
+    --_meter-radius: var(--ds-radius-pill);
+    --_meter-track: var(--ds-color-bg-overlay-10);
+    --_meter-fill: var(--ds-color-primary-on-surface);
+    --_meter-fg: var(--ds-color-text-default);
+    --_meter-value-fg: var(--ds-color-text-muted);
+    --_meter-fraction: 0;
+
+    display: grid;
+    /* The value column takes at most half the row and wraps past it, so a long value never squeezes the label. */
+    grid-template-columns: minmax(0, 1fr) fit-content(50%);
+    align-items: baseline;
+    column-gap: var(--ds-space-s);
+    row-gap: var(--_meter-gap);
+    box-sizing: border-box;
+    inline-size: 100%;
+    min-inline-size: 0;
+    color: var(--_meter-fg);
+    font-family: var(--ds-font-family-sans);
+    font-size: var(--_meter-font-size);
+    line-height: var(--ds-font-leading-snug);
+  }
+
+  [data-ds='meter'][data-size='sm'] {
+    --_meter-height: var(--ds-space-fixed-2xs);
+    --_meter-font-size: var(--ds-font-size-xs);
+  }
+
+  [data-ds='meter'][data-size='lg'] {
+    --_meter-height: var(--ds-space-fixed-xl);
+    --_meter-font-size: var(--ds-font-size-m);
+  }
+
+  [data-ds='meter'][data-tone='success'] {
+    --_meter-fill: var(--ds-color-state-success-solid);
+  }
+
+  [data-ds='meter'][data-tone='warning'] {
+    --_meter-fill: var(--ds-color-state-warning-solid);
+  }
+
+  [data-ds='meter'][data-tone='danger'] {
+    --_meter-fill: var(--ds-color-state-danger-solid);
+    --_meter-value-fg: var(--ds-color-state-danger-text);
+  }
+
+  /* ------------------------------------------------------------ parts */
+
+  [data-ds='meter'] > [data-part='label'] {
+    grid-column: 1;
+    min-inline-size: 0;
+    font-weight: var(--ds-font-weight-medium);
+    overflow-wrap: anywhere;
+  }
+
+  [data-ds='meter'] > [data-part='value'] {
+    grid-column: 2;
+    color: var(--_meter-value-fg);
+    min-inline-size: 0;
+    font-variant-numeric: tabular-nums;
+    text-align: end;
+    overflow-wrap: anywhere;
+    unicode-bidi: plaintext;
+  }
+
+  [data-ds='meter'] > [data-part='track'] {
+    position: relative;
+    display: block;
+    grid-column: 1 / -1;
+    block-size: var(--_meter-height);
+    overflow: hidden;
+    border-radius: var(--_meter-radius);
+    background-color: var(--_meter-track);
+  }
+
+  [data-ds='meter'] [data-part='indicator'] {
+    display: block;
+    inline-size: 100%;
+    block-size: 100%;
+    background-color: var(--_meter-fill);
+    transform: scaleX(var(--_meter-fraction));
+    transform-origin: 0 50%;
+    transition: transform var(--ds-duration-slow) var(--ds-ease-standard);
+  }
+
+  [data-ds='meter'] [data-part='indicator']:dir(rtl) {
+    transform-origin: 100% 50%;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    [data-ds='meter'] [data-part='indicator'] {
+      transition: none;
+    }
+  }
+
+  @media (forced-colors: active) {
+    [data-ds='meter'] > [data-part='track'] {
+      border: var(--ds-border-width-default) solid CanvasText;
+    }
+
+    [data-ds='meter'] [data-part='indicator'] {
+      forced-color-adjust: none;
+      background-color: Highlight;
+    }
+  }
+}
