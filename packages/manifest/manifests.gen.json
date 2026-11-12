@@ -1152,8 +1152,10 @@
         "note": "No source: designed from the dials table and Combobox. Styled by Combobox.css with a thin Autocomplete.css (anatomy.md rule 10)."
       },
       "angular": {
-        "status": "planned",
-        "behavior": "cdk:overlay with the shared filter.ts and listbox.ts"
+        "status": "ready",
+        "behavior": "div[dsAutocomplete], on the Angular Combobox base: a CDK ComponentPortal popup placed with the Radix Popper steps (internal/popper.ts), a ListBox with virtualFocus, the highlight on the CDK ActiveDescendantKeyManager, the shared filter.ts and listbox.ts, ControlValueAccessor",
+        "example": "autocomplete.demo.ts",
+        "note": "The host is the root. Inputs take the React prop names; onValueChange (the text) and onOpenChange are the valueChange and openChange outputs of [(value)] and [(open)], onCommit is the commit output. Native input props React spreads on the input (placeholder, id, name, aria-label, aria-labelledby, aria-describedby) are inputs. empty takes text or a TemplateRef. Angular Aria Autocomplete would replace the key manager once @angular/aria is installed. Combobox.css and Autocomplete.css are used as is."
       },
       "native": {
         "status": "planned",

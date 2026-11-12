@@ -7,6 +7,7 @@ export interface DemoRoute {
 }
 
 export const routes: DemoRoute[] = [
+  { slug: 'autocomplete', load: () => import('../../../../packages/angular/src/components/autocomplete/autocomplete.demo').then((m) => m.default) },
   { slug: 'button', load: () => import('../../../../packages/angular/src/components/button/button.demo').then((m) => m.default) },
   { slug: 'checkbox', load: () => import('../../../../packages/angular/src/components/checkbox/checkbox.demo').then((m) => m.default) },
   { slug: 'combobox', load: () => import('../../../../packages/angular/src/components/combobox/combobox.demo').then((m) => m.default) },
