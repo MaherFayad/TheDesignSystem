@@ -10,6 +10,8 @@ import { DsLink } from './link';
     <a id="plain" dsLink href="#docs">Read the docs</a>
     <a id="ext" dsLink href="https://example.com" external tone="accent" size="sm" standalone>Open the site</a>
     <a id="disabled" dsLink href="#report" disabled (click)="clicks.set(clicks() + 1)">Download the report</a>
+    <a id="skip" dsLink href="#a" tabindex="-1" aria-disabled="true">Skipped link</a>
+    <div dsTheme [lang]="'ar-SA'"><a id="arsa" dsLink href="https://example.com" external>الدليل</a></div>
     <div dsTheme [lang]="'ar'"><a id="ar" dsLink href="https://example.com" external>الدليل</a></div>
   `,
 })
@@ -58,6 +60,22 @@ describe('DsLink', () => {
     el.click();
     await fixture.whenStable();
     expect(host.clicks()).toBe(0);
+  });
+
+  it('keeps a static tabindex and aria-disabled of the caller', async () => {
+    const fixture = TestBed.createComponent(Host);
+    await fixture.whenStable();
+    const el = fixture.nativeElement.querySelector('#skip') as HTMLElement;
+    expect(el.getAttribute('tabindex')).toBe('-1');
+    expect(el.getAttribute('aria-disabled')).toBe('true');
+    expect(el.getAttribute('href')).toBe('#a');
+  });
+
+  it('reads a regional Arabic lang as Arabic', async () => {
+    const fixture = TestBed.createComponent(Host);
+    await fixture.whenStable();
+    const el = fixture.nativeElement.querySelector('#arsa [data-part="end"] span') as HTMLElement;
+    expect(el.textContent).toContain('يفتح في تبويب جديد');
   });
 
   it('says the hidden words in Arabic under an Arabic dsTheme', async () => {
