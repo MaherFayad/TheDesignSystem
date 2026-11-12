@@ -31,7 +31,7 @@ No adb. No iOS build.
 | 0.13 | Window | ds-component, ds-style | react | done | 5c464dc, 7d5ffca |
 | 0.14 | Contract suite | ds-qa | react | done | cd05ff1 |
 | 0.15 | Angular proof | ds-angular | angular | open | |
-| 0.16 | React Native proof | ds-native | native | open | |
+| 0.16 | React Native proof | ds-native | native | done | 5f00f2f |
 | 0.17 | Desk Light | ds-style | all | done, proposed | f7e054b |
 | 0.18 | Consumers | ds-docs | react | open | |
 | 0.19 | Matrix | ds-qa | all | open | |
@@ -40,7 +40,7 @@ No adb. No iOS build.
 ## Coverage
 | Family | React | Angular | Native |
 | --- | --- | --- | --- |
-| Actions | 0 of 11 | 0 of 11 | 0 of 11 |
+| Actions | 2 of 11 | 0 of 11 | 2 of 11 |
 
 ## Blocked
 Nothing.
@@ -55,6 +55,10 @@ Nothing.
    glass sits over bright content. These are the GoBanana values, kept as
    known failures in the contrast gate. Change the values, or confirm that
    bright content never sits behind Desk glass.
+
+3. Liquid and Button on a real iPhone (HUMAN GATE). This container and the
+   owner's Windows machine cannot build iOS. Steps to open the Expo gallery
+   in Expo Go: `docs/reports/ios-check.md`.
 
 ## Owner answers
 1. 2026-11-12: pushing. The owner approved pushing the session branch
