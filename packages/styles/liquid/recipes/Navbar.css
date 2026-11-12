@@ -1,0 +1,127 @@
+/*
+ * Liquid recipe for Navbar: a glass top bar. Why not tokens alone: Navbar.css
+ * draws a solid surface, and Liquid needs the glass material of Popover.css
+ * (blur plus saturation, the data-glass levels) on the bar. The open panel
+ * hangs inside the bar, so it cannot be a second glass (glass never sits on
+ * glass, and the bar's filter would leave it nothing to blur): it takes the
+ * flat glass, the panel radius, and rows of the panel radius less its
+ * padding. The current link keeps its bar and weight and takes the tint.
+ */
+@layer ds.recipes {
+  [data-style='liquid'] [data-ds='navbar'] {
+    --_navbar-bg: var(--ds-color-material-glass);
+    --_navbar-border-color: var(--ds-color-material-glass-border);
+    --_navbar-link-fg-active: var(--ds-color-primary-on-surface);
+    --_navbar-panel-bg: var(--ds-color-material-glass-flat);
+    --_navbar-panel-radius: var(--ds-radius-panel);
+
+    -webkit-backdrop-filter: blur(var(--ds-blur-glass)) saturate(var(--ds-blur-window-saturation));
+    backdrop-filter: blur(var(--ds-blur-glass)) saturate(var(--ds-blur-window-saturation));
+  }
+
+  [data-style='liquid'] [data-ds='navbar'] [data-part='content-list'] [data-part='link'] {
+    --_navbar-link-radius: calc(var(--ds-radius-panel) - var(--_navbar-panel-padding));
+  }
+
+  [data-style='liquid'][data-glass='tinted'] [data-ds='navbar'] {
+    --_navbar-bg: var(--ds-color-material-glass-tinted);
+  }
+
+  /* Clear: for a bar over pictures, on the 40% dim with white text. The panel holds reading text and stays as it is. */
+  [data-style='liquid'][data-glass='clear'] [data-ds='navbar'] {
+    --_navbar-bg: var(--ds-color-material-glass-clear);
+    --_navbar-fg: var(--ds-color-glass-on-clear);
+    --_navbar-link-fg-active: var(--ds-color-glass-on-clear);
+    --_navbar-link-edge-active: var(--ds-color-glass-on-clear);
+
+    background-image: linear-gradient(var(--ds-color-bg-scrim-40), var(--ds-color-bg-scrim-40));
+  }
+
+  /* The actions in a clear bar: white text and a white outline, solid fills stay as they are. */
+  [data-style='liquid'][data-glass='clear'] [data-ds='navbar'] > :is([data-part='end'], [data-part='menu-button']) :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button']):not([data-emphasis='solid']),
+  [data-style='liquid'][data-glass='clear'] [data-ds='navbar'] > [data-part='menu-button'] {
+    --_button-fg: var(--ds-color-glass-on-clear);
+    --_button-fg-hover: var(--ds-color-glass-on-clear);
+    --_button-fg-active: var(--ds-color-glass-on-clear);
+    --_button-border-color: var(--ds-color-glass-on-clear);
+    --_button-border-color-hover: var(--ds-color-glass-on-clear);
+  }
+
+  [data-style='liquid'][data-glass='clear'] [data-ds='navbar'] > [data-part='viewport'] {
+    --_navbar-link-fg: var(--ds-color-text-default);
+    --_navbar-link-fg-active: var(--ds-color-primary-on-surface);
+    --_navbar-link-edge-active: var(--ds-color-primary-on-surface);
+
+    color: var(--ds-color-text-default);
+  }
+
+  /* ------------------------------------------------------------ fallbacks: solid glass, no filter */
+
+  @supports not ((backdrop-filter: blur(0)) or (-webkit-backdrop-filter: blur(0))) {
+    [data-style='liquid'] [data-ds='navbar'],
+    [data-style='liquid'][data-glass] [data-ds='navbar'] {
+      --_navbar-bg: var(--ds-color-material-glass-solid);
+    }
+  }
+
+  @media (prefers-reduced-transparency: reduce), (prefers-contrast: more), (forced-colors: active) {
+    [data-style='liquid'] [data-ds='navbar'] {
+      -webkit-backdrop-filter: none;
+      backdrop-filter: none;
+    }
+
+    [data-style='liquid'][data-glass='clear'] [data-ds='navbar'] {
+      --_navbar-fg: var(--ds-color-text-default);
+      --_navbar-link-fg-active: var(--ds-color-primary-on-surface);
+      --_navbar-link-edge-active: var(--ds-color-primary-on-surface);
+
+      background-image: none;
+    }
+
+    [data-style='liquid'][data-glass='clear'] [data-ds='navbar'] > :is([data-part='end'], [data-part='menu-button']) :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button']):not([data-emphasis='solid']),
+    [data-style='liquid'][data-glass='clear'] [data-ds='navbar'] > [data-part='menu-button'] {
+      --_button-fg: revert-layer;
+      --_button-fg-hover: revert-layer;
+      --_button-fg-active: revert-layer;
+      --_button-border-color: revert-layer;
+      --_button-border-color-hover: revert-layer;
+    }
+  }
+
+  @media (prefers-contrast: more) {
+    [data-style='liquid'] [data-ds='navbar'] {
+      --_navbar-border-color: var(--ds-color-border-strong);
+    }
+  }
+
+  [data-style='liquid'][data-contrast='more'] [data-ds='navbar'] {
+    --_navbar-border-color: var(--ds-color-border-strong);
+
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+
+  [data-style='liquid'][data-contrast='more'][data-glass='clear'] [data-ds='navbar'] > :is([data-part='end'], [data-part='menu-button']) :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button']):not([data-emphasis='solid']),
+  [data-style='liquid'][data-contrast='more'][data-glass='clear'] [data-ds='navbar'] > [data-part='menu-button'] {
+    --_button-fg: revert-layer;
+    --_button-fg-hover: revert-layer;
+    --_button-fg-active: revert-layer;
+    --_button-border-color: revert-layer;
+    --_button-border-color-hover: revert-layer;
+  }
+
+  [data-style='liquid'][data-contrast='more'][data-glass='clear'] [data-ds='navbar'] {
+    --_navbar-fg: var(--ds-color-text-default);
+    --_navbar-link-fg-active: var(--ds-color-primary-on-surface);
+    --_navbar-link-edge-active: var(--ds-color-primary-on-surface);
+
+    background-image: none;
+  }
+
+  @media (forced-colors: active) {
+    [data-style='liquid'] [data-ds='navbar'] {
+      --_navbar-bg: Canvas;
+      --_navbar-border-color: CanvasText;
+    }
+  }
+}

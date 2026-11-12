@@ -1,0 +1,48 @@
+/*
+ * Liquid recipe for ListBox options. The surface is drawn by the popup that
+ * holds the list (Combobox, Autocomplete, MultiSelect: their own recipes),
+ * and a list alone is content, so it stays solid. Why not tokens alone: in a
+ * glass popup the lit option is a lens, a bright rim and a small lift on the
+ * option's glide layer, and a selected option keeps the tint text on top of
+ * its check mark; neither has a token.
+ */
+@layer ds.recipes {
+  /* The selected option keeps the tint text, lit or not; the check mark stays as well. */
+  [data-style='liquid'] [data-ds='list-box'] [data-part='option'][data-selected] {
+    --_list-box-option-fg: var(--ds-color-primary-on-surface);
+  }
+
+  /* In a glass popup the lit option is a lens: it lifts a touch on the snappy spring, its fill takes a bright rim. */
+  [data-style='liquid'] [data-part='popup'] > [data-ds='list-box'] [data-part='option'] {
+    transition: transform var(--ds-duration-spring-snappy) var(--ds-ease-spring-snappy);
+  }
+
+  [data-style='liquid'] [data-part='popup'] > [data-ds='list-box'] [data-part='option'][data-highlighted] {
+    transform: scale(var(--ds-scale-lift));
+  }
+
+  [data-style='liquid'] [data-part='popup'] > [data-ds='list-box'] [data-part='option'][data-highlighted] > span[aria-hidden='true']:not([data-part]) {
+    box-shadow: var(--ds-elevation-card), inset 0 var(--ds-border-width-default) 0 0 var(--ds-color-glass-highlight);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    [data-style='liquid'] [data-part='popup'] > [data-ds='list-box'] [data-part='option'] {
+      transition: none;
+    }
+  }
+
+  :root[data-motion='reduce'] [data-style='liquid'] [data-part='popup'] > [data-ds='list-box'] [data-part='option'],
+  :root[data-motion='reduce'][data-style='liquid'] [data-part='popup'] > [data-ds='list-box'] [data-part='option'] {
+    transition: none;
+  }
+
+  @media (forced-colors: active) {
+    [data-style='liquid'] [data-ds='list-box'] [data-part='option'][data-selected] {
+      --_list-box-option-fg: CanvasText;
+    }
+
+    [data-style='liquid'] [data-ds='list-box'] [data-part='option'][data-selected][data-highlighted] {
+      --_list-box-option-fg: HighlightText;
+    }
+  }
+}

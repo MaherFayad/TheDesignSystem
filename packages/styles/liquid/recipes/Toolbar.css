@@ -1,0 +1,145 @@
+/*
+ * Liquid recipe for Toolbar: a floating glass bar. Why not tokens alone:
+ * Toolbar.css draws a solid fill, and Liquid needs the glass material of
+ * Popover.css (blur plus saturation, the light edge, the data-glass levels),
+ * a capsule for a single row and the panel radius for a toolbar that wraps.
+ *
+ * The items are Buttons inside the glass, so they keep their overlay fills
+ * (glass never sits on glass). An item that is on shows the tint, the lens
+ * fill with its bright rim, and keeps the base border, never the glass alone.
+ * No scroll edge fade: a toolbar does not say which edge it sits on.
+ */
+@layer ds.recipes {
+  [data-style='liquid'] [data-ds='toolbar'] {
+    --_toolbar-bg: var(--ds-color-material-glass);
+    --_toolbar-border-color: var(--ds-color-material-glass-border);
+    --_toolbar-radius: var(--ds-radius-control);
+    --_toolbar-padding: var(--ds-space-2xs);
+
+    box-shadow: var(--ds-elevation-glass), inset 0 var(--ds-border-width-default) 0 0 var(--ds-color-material-glass-edge),
+      inset var(--ds-border-width-default) 0 0 0 var(--ds-color-material-glass-edge);
+    -webkit-backdrop-filter: blur(var(--ds-blur-glass)) saturate(var(--ds-blur-window-saturation));
+    backdrop-filter: blur(var(--ds-blur-glass)) saturate(var(--ds-blur-window-saturation));
+  }
+
+  [data-style='liquid'] [data-ds='toolbar']:dir(rtl) {
+    box-shadow: var(--ds-elevation-glass), inset 0 var(--ds-border-width-default) 0 0 var(--ds-color-material-glass-edge),
+      inset calc(var(--ds-border-width-default) * -1) 0 0 0 var(--ds-color-material-glass-edge);
+  }
+
+  /* A toolbar that wraps onto more lines is a panel, not a capsule. */
+  [data-style='liquid'] [data-ds='toolbar'][data-wrap] {
+    --_toolbar-radius: var(--ds-radius-panel);
+  }
+
+  [data-style='liquid'] [data-ds='toolbar'] [data-part='item'][data-state='on'] {
+    --_button-bg: var(--ds-color-glass-lens);
+    --_button-fg: var(--ds-color-primary-on-surface);
+    --_button-fg-hover: var(--ds-color-primary-on-surface);
+    --_button-fg-active: var(--ds-color-primary-on-surface);
+    --_button-shadow: inset 0 0 0 var(--ds-border-width-default) var(--ds-color-glass-highlight);
+  }
+
+  [data-style='liquid'][data-glass='tinted'] [data-ds='toolbar'] {
+    --_toolbar-bg: var(--ds-color-material-glass-tinted);
+  }
+
+  /* Clear: for a toolbar over pictures, on the 40% dim with white text. An on item keeps the lens and the bright text. */
+  [data-style='liquid'][data-glass='clear'] [data-ds='toolbar'] {
+    --_toolbar-bg: var(--ds-color-material-glass-clear);
+    --_toolbar-separator-color: var(--ds-color-glass-on-clear);
+
+    background-image: linear-gradient(var(--ds-color-bg-scrim-40), var(--ds-color-bg-scrim-40));
+    color: var(--ds-color-glass-on-clear);
+  }
+
+  [data-style='liquid'][data-glass='clear'] [data-ds='toolbar'] [data-part='item']:not([data-state='on']) {
+    --_button-fg: var(--ds-color-glass-on-clear);
+    --_button-fg-hover: var(--ds-color-glass-on-clear);
+    --_button-fg-active: var(--ds-color-glass-on-clear);
+  }
+
+  [data-style='liquid'][data-glass='clear'] [data-ds='toolbar'] [data-part='item'][data-state='on'] {
+    --_button-fg: var(--ds-color-text-bright);
+    --_button-fg-hover: var(--ds-color-text-bright);
+    --_button-fg-active: var(--ds-color-text-bright);
+  }
+
+  /* ------------------------------------------------------------ fallbacks: solid glass, no filter, no edge */
+
+  @supports not ((backdrop-filter: blur(0)) or (-webkit-backdrop-filter: blur(0))) {
+    [data-style='liquid'] [data-ds='toolbar'],
+    [data-style='liquid'][data-glass] [data-ds='toolbar'] {
+      --_toolbar-bg: var(--ds-color-material-glass-solid);
+    }
+  }
+
+  @media (prefers-reduced-transparency: reduce), (prefers-contrast: more), (forced-colors: active) {
+    [data-style='liquid'] [data-ds='toolbar'],
+    [data-style='liquid'] [data-ds='toolbar']:dir(rtl) {
+      box-shadow: var(--ds-elevation-glass);
+      -webkit-backdrop-filter: none;
+      backdrop-filter: none;
+    }
+
+    [data-style='liquid'][data-glass='clear'] [data-ds='toolbar'] {
+      --_toolbar-separator-color: var(--ds-color-border-default);
+
+      background-image: none;
+      color: revert-layer;
+    }
+
+    [data-style='liquid'][data-glass='clear'] [data-ds='toolbar'] [data-part='item']:not([data-state='on']) {
+      --_button-fg: revert-layer;
+      --_button-fg-hover: revert-layer;
+      --_button-fg-active: revert-layer;
+    }
+
+    [data-style='liquid'][data-glass='clear'] [data-ds='toolbar'] [data-part='item'][data-state='on'] {
+      --_button-fg: var(--ds-color-primary-on-surface);
+      --_button-fg-hover: var(--ds-color-primary-on-surface);
+      --_button-fg-active: var(--ds-color-primary-on-surface);
+    }
+  }
+
+  @media (prefers-contrast: more) {
+    [data-style='liquid'] [data-ds='toolbar'] {
+      --_toolbar-border-color: var(--ds-color-border-strong);
+    }
+  }
+
+  [data-style='liquid'][data-contrast='more'] [data-ds='toolbar'],
+  [data-style='liquid'][data-contrast='more'] [data-ds='toolbar']:dir(rtl) {
+    --_toolbar-border-color: var(--ds-color-border-strong);
+
+    box-shadow: var(--ds-elevation-glass);
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+
+  [data-style='liquid'][data-contrast='more'][data-glass='clear'] [data-ds='toolbar'] {
+    --_toolbar-separator-color: var(--ds-color-border-default);
+
+    background-image: none;
+    color: revert-layer;
+  }
+
+  [data-style='liquid'][data-contrast='more'][data-glass='clear'] [data-ds='toolbar'] [data-part='item']:not([data-state='on']) {
+    --_button-fg: revert-layer;
+    --_button-fg-hover: revert-layer;
+    --_button-fg-active: revert-layer;
+  }
+
+  [data-style='liquid'][data-contrast='more'][data-glass='clear'] [data-ds='toolbar'] [data-part='item'][data-state='on'] {
+    --_button-fg: var(--ds-color-primary-on-surface);
+    --_button-fg-hover: var(--ds-color-primary-on-surface);
+    --_button-fg-active: var(--ds-color-primary-on-surface);
+  }
+
+  @media (forced-colors: active) {
+    [data-style='liquid'] [data-ds='toolbar'] {
+      --_toolbar-bg: Canvas;
+      --_toolbar-border-color: CanvasText;
+    }
+  }
+}

@@ -1,0 +1,81 @@
+/*
+ * Liquid recipe for the MultiSelect popup: the Popover glass material on the
+ * menu surface, grown on the snappy spring. Why not tokens alone: the popup
+ * takes its fill, edge, filter, padding and motion from private properties,
+ * and the glass is a blur plus a saturation boost with a light edge on the
+ * top and start sides.
+ *
+ * Radius: radius.panel (22px) outside, menu.item.radius (16px) on the
+ * options: the padding is the difference. The search field and the action
+ * buttons inside keep their own solid and overlay fills (glass never sits
+ * on glass). The lens of the lit option and the tint of the checked ones are
+ * in the ListBox recipe. The trigger box is on content: solid, no recipe.
+ */
+@layer ds.recipes {
+  [data-style='liquid'] [data-ds='multi-select'][data-part='popup'] {
+    --_menu-bg: var(--ds-color-material-glass);
+    --_menu-border-color: var(--ds-color-material-glass-border);
+    --_menu-radius: var(--ds-radius-panel);
+    --_menu-padding: calc(var(--ds-radius-panel) - var(--ds-menu-item-radius));
+    --_menu-shadow: var(--ds-elevation-menu), inset 0 var(--ds-border-width-default) 0 0 var(--ds-color-material-glass-edge),
+      inset var(--ds-border-width-default) 0 0 0 var(--ds-color-material-glass-edge);
+    --_menu-backdrop: blur(var(--ds-blur-glass)) saturate(var(--ds-blur-window-saturation));
+    --_menu-item-bg-highlight: var(--ds-color-material-glass-hover);
+    --_menu-separator-color: var(--ds-color-material-glass-border);
+    --_menu-duration-in: var(--ds-duration-spring-snappy);
+    --_menu-ease-in: var(--ds-ease-spring-snappy);
+  }
+
+  /* The start side edge follows the text direction. */
+  [data-style='liquid'] [data-ds='multi-select'][data-part='popup']:dir(rtl) {
+    --_menu-shadow: var(--ds-elevation-menu), inset 0 var(--ds-border-width-default) 0 0 var(--ds-color-material-glass-edge),
+      inset calc(var(--ds-border-width-default) * -1) 0 0 0 var(--ds-color-material-glass-edge);
+  }
+
+  [data-style='liquid'][data-glass='tinted'] [data-ds='multi-select'][data-part='popup'] {
+    --_menu-bg: var(--ds-color-material-glass-tinted);
+  }
+
+  /* Clear glass is for bars over pictures. A list holds reading text, so the clear level keeps the regular glass. */
+
+  /* ------------------------------------------------------------ fallbacks: solid glass, no filter, no edge */
+
+  @supports not ((backdrop-filter: blur(0)) or (-webkit-backdrop-filter: blur(0))) {
+    [data-style='liquid'] [data-ds='multi-select'][data-part='popup'] {
+      --_menu-bg: var(--ds-color-material-glass-solid);
+    }
+  }
+
+  @media (prefers-reduced-transparency: reduce), (prefers-contrast: more), (forced-colors: active) {
+    [data-style='liquid'] [data-ds='multi-select'][data-part='popup'],
+    [data-style='liquid'] [data-ds='multi-select'][data-part='popup']:dir(rtl) {
+      --_menu-shadow: var(--ds-elevation-menu);
+      --_menu-backdrop: none;
+    }
+  }
+
+  @media (prefers-contrast: more) {
+    [data-style='liquid'] [data-ds='multi-select'][data-part='popup'] {
+      --_menu-border-color: var(--ds-color-border-strong);
+      --_menu-separator-color: var(--ds-color-border-strong);
+    }
+  }
+
+  [data-style='liquid'][data-contrast='more'] [data-ds='multi-select'][data-part='popup'],
+  [data-style='liquid'][data-contrast='more'] [data-ds='multi-select'][data-part='popup']:dir(rtl) {
+    --_menu-shadow: var(--ds-elevation-menu);
+    --_menu-backdrop: none;
+    --_menu-border-color: var(--ds-color-border-strong);
+    --_menu-separator-color: var(--ds-color-border-strong);
+  }
+
+  @media (forced-colors: active) {
+    [data-style='liquid'] [data-ds='multi-select'][data-part='popup'] {
+      --_menu-bg: Canvas;
+      --_menu-border-color: CanvasText;
+      --_menu-separator-color: CanvasText;
+      --_menu-item-bg-highlight: Highlight;
+      --_menu-item-fg-highlight: HighlightText;
+    }
+  }
+}

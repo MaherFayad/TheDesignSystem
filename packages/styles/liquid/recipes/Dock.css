@@ -1,0 +1,88 @@
+/*
+ * Liquid recipe for Dock: the dock glass. Why not tokens alone: Dock.css
+ * draws a solid row, and Liquid needs color.material.dock over a blur plus
+ * a saturation boost, the 1px light edge on the top and start sides, a soft
+ * glass shadow and the data-glass levels (the material of Popover.css). The
+ * radius is the panel radius, and the tiles take it less the dock padding.
+ * The tiles keep their overlay fills: glass never sits on glass.
+ */
+@layer ds.recipes {
+  [data-style='liquid'] [data-ds='dock'] {
+    --_dock-bg: var(--ds-color-material-dock);
+    --_dock-border-color: var(--ds-color-material-glass-border);
+    --_dock-radius: var(--ds-radius-panel);
+    --_dock-tile-radius: calc(var(--ds-radius-panel) - var(--_dock-padding));
+    --_dock-shadow: var(--ds-elevation-glass), inset 0 var(--ds-border-width-default) 0 0 var(--ds-color-material-glass-edge),
+      inset var(--ds-border-width-default) 0 0 0 var(--ds-color-material-glass-edge);
+    --_dock-backdrop: blur(var(--ds-blur-glass)) saturate(var(--ds-blur-window-saturation));
+  }
+
+  [data-style='liquid'] [data-ds='dock']:dir(rtl) {
+    --_dock-shadow: var(--ds-elevation-glass), inset 0 var(--ds-border-width-default) 0 0 var(--ds-color-material-glass-edge),
+      inset calc(var(--ds-border-width-default) * -1) 0 0 0 var(--ds-color-material-glass-edge);
+  }
+
+  [data-style='liquid'][data-glass='tinted'] [data-ds='dock'] {
+    --_dock-bg: var(--ds-color-material-glass-tinted);
+  }
+
+  /* Clear: for a dock over a picture, on the 40% dim; the open dots and the current ring turn white. The names keep their own solid label. */
+  [data-style='liquid'][data-glass='clear'] [data-ds='dock'] {
+    --_dock-bg: var(--ds-color-material-glass-clear);
+    --_dock-indicator: var(--ds-color-glass-on-clear);
+    --_dock-current-color: var(--ds-color-glass-on-clear);
+
+    background-image: linear-gradient(var(--ds-color-bg-scrim-40), var(--ds-color-bg-scrim-40));
+  }
+
+  /* ------------------------------------------------------------ fallbacks: solid glass, no filter, no edge */
+
+  @supports not ((backdrop-filter: blur(0)) or (-webkit-backdrop-filter: blur(0))) {
+    [data-style='liquid'] [data-ds='dock'],
+    [data-style='liquid'][data-glass] [data-ds='dock'] {
+      --_dock-bg: var(--ds-color-material-glass-solid);
+    }
+  }
+
+  @media (prefers-reduced-transparency: reduce), (prefers-contrast: more), (forced-colors: active) {
+    [data-style='liquid'] [data-ds='dock'],
+    [data-style='liquid'] [data-ds='dock']:dir(rtl) {
+      --_dock-shadow: var(--ds-elevation-glass);
+      --_dock-backdrop: none;
+    }
+
+    [data-style='liquid'][data-glass='clear'] [data-ds='dock'] {
+      --_dock-indicator: var(--ds-color-text-default);
+      --_dock-current-color: var(--ds-color-text-default);
+
+      background-image: none;
+    }
+  }
+
+  @media (prefers-contrast: more) {
+    [data-style='liquid'] [data-ds='dock'] {
+      --_dock-border-color: var(--ds-color-border-strong);
+    }
+  }
+
+  [data-style='liquid'][data-contrast='more'] [data-ds='dock'],
+  [data-style='liquid'][data-contrast='more'] [data-ds='dock']:dir(rtl) {
+    --_dock-shadow: var(--ds-elevation-glass);
+    --_dock-border-color: var(--ds-color-border-strong);
+    --_dock-backdrop: none;
+  }
+
+  [data-style='liquid'][data-contrast='more'][data-glass='clear'] [data-ds='dock'] {
+    --_dock-indicator: var(--ds-color-text-default);
+    --_dock-current-color: var(--ds-color-text-default);
+
+    background-image: none;
+  }
+
+  @media (forced-colors: active) {
+    [data-style='liquid'] [data-ds='dock'] {
+      --_dock-bg: Canvas;
+      --_dock-border-color: CanvasText;
+    }
+  }
+}
