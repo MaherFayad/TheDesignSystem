@@ -71,6 +71,8 @@ export function useKeyboardPlatform(platform?: KeyboardPlatform): KeyboardPlatfo
  */
 export function Kbd({ children, size = 'md', platform, label, decorative = false, separator, ...rest }: KbdProps) {
   const resolved = useKeyboardPlatform(platform);
+  // An empty string would draw an empty kbd with no keycap and nothing to say.
+  if (children === '') return null;
   const keys: (ShortcutKey | { label: ReactNode; spoken: string; modifier: false })[] =
     typeof children === 'string' ? shortcutKeys(children, resolved) : [{ label: children, spoken: label ?? '', modifier: false }];
   const sep = separator ?? (resolved === 'mac' ? '' : '+');
