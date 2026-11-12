@@ -15,8 +15,8 @@ export function isArabic(lang: string | undefined): boolean {
 
 /** The default busy words, by language. */
 export const progressLabels = {
-  en: { loading: 'Loading' },
-  ar: { loading: 'جار التحميل' },
+  en: { loading: "Loading" },
+  ar: { loading: "جار التحميل" },
 } as const;
 
 /** The default busy words for a language tag. */
@@ -25,34 +25,64 @@ export function loadingLabelFor(lang: string | undefined): string {
 }
 
 /** A number formatter in the language, with Western digits (latn) always. */
-function formatter(lang: string | undefined, options: Intl.NumberFormatOptions): Intl.NumberFormat {
+function formatter(
+  lang: string | undefined,
+  options: Intl.NumberFormatOptions,
+): Intl.NumberFormat {
   try {
-    return new Intl.NumberFormat(lang || 'en', { numberingSystem: 'latn', ...options });
+    return new Intl.NumberFormat(lang || "en", {
+      numberingSystem: "latn",
+      ...options,
+    });
   } catch {
-    return new Intl.NumberFormat('en', options);
+    return new Intl.NumberFormat("en", options);
   }
 }
 
-/** A fraction from 0 to 1 as a whole percent in the language: 0.456 gives "46%". */
-export function formatPercent(fraction: number, lang: string | undefined): string {
-  return formatter(lang, { style: 'percent', maximumFractionDigits: 0 }).format(fraction);
+/**
+ * A fraction from 0 to 1 as a whole percent in the language, rounded down so
+ * an unfinished task never says 100%: 0.456 gives "45%", 0.996 gives "99%".
+ */
+export function formatPercent(
+  fraction: number,
+  lang: string | undefined,
+): string {
+  return formatter(lang, { style: "percent", maximumFractionDigits: 0 }).format(
+    Math.floor(fraction * 100 + 1e-9) / 100,
+  );
 }
 
 /** A plain number in the language with Western digits: 1234.5 gives "1,234.5". */
-export function formatNumber(value: number, lang: string | undefined, options: Intl.NumberFormatOptions = {}): string {
-  return formatter(lang, { maximumFractionDigits: 2, ...options }).format(value);
+export function formatNumber(
+  value: number,
+  lang: string | undefined,
+  options: Intl.NumberFormatOptions = {},
+): string {
+  return formatter(lang, { maximumFractionDigits: 2, ...options }).format(
+    value,
+  );
 }
 
 /** A finite max above min, else the fallback. */
-export function validMax(max: number | undefined, min: number, fallback: number): number {
-  return typeof max === 'number' && Number.isFinite(max) && max > min ? max : fallback;
+export function validMax(
+  max: number | undefined,
+  min: number,
+  fallback: number,
+): number {
+  return typeof max === "number" && Number.isFinite(max) && max > min
+    ? max
+    : fallback;
 }
 
 /**
  * The value clamped into [min, max], or null when there is no usable value
  * (undefined, null, NaN): the indeterminate form.
  */
-export function clampValue(value: number | null | undefined, min: number, max: number): number | null {
-  if (typeof value !== 'number' || Number.isNaN(value)) return null;
+export function clampValue(
+  value: number | null | undefined,
+  min: number,
+  max: number,
+): number | null {
+  if (typeof value !== "number" || Number.isNaN(value)) return null;
   return Math.min(max, Math.max(min, value));
 }

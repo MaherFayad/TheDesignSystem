@@ -1,0 +1,153 @@
+{
+  "name": "ProgressCircle",
+  "kind": "component",
+  "family": "feedback",
+  "summary": "Compact progress in a ring, for a file chip, a card corner or a table cell.",
+  "useWhen": [
+    "Progress of a task in little room: a file chip, a card corner, a table cell, a toolbar",
+    "Many small tasks side by side, one ring each, with the name in text next to it",
+    "A busy sign that becomes a known value once the task reports one"
+  ],
+  "avoidWhen": [
+    "There is room for a labelled bar",
+    "A measured value that is not a task, such as storage used",
+    "A short wait with no value and no change to a value later",
+    "The exact value must be read at xs or sm size"
+  ],
+  "insteadUse": {
+    "There is room for a labelled bar": "ProgressBar",
+    "A measured value that is not a task": "Meter",
+    "A short wait with no value and no change to a value later": "Spinner",
+    "The exact value must be read at xs or sm size": "ProgressBar"
+  },
+  "anatomy": ["root", "track", "indicator", "value"],
+  "props": {
+    "value": {
+      "type": "number",
+      "description": "Progress from 0 to max. null or undefined gives the indeterminate form. Values out of range are clamped."
+    },
+    "max": {
+      "type": "number",
+      "default": 100,
+      "description": "The value that means done. The minimum is always 0 (Radix Progress)."
+    },
+    "label": {
+      "type": "string",
+      "required": true,
+      "description": "The accessible name, set as aria-label: Uploading board-cover.png. The ring has no visible label part; put the name in text next to it."
+    },
+    "showValue": {
+      "type": "boolean",
+      "description": "Shows the value text inside the ring. Default true at md and lg, false at xs and sm. Never shown while indeterminate."
+    },
+    "valueText": {
+      "type": "function",
+      "description": "(value, max) => string for the value text and aria-valuetext. Keep it short to fit the ring: 7/12. Default: a whole percent with Western digits."
+    },
+    "loadingLabel": {
+      "type": "string",
+      "default": "Loading",
+      "description": "What aria-valuetext says while indeterminate. Arabic default under lang ar: جار التحميل."
+    },
+    "size": {
+      "type": ["xs", "sm", "md", "lg"],
+      "default": "md",
+      "description": "Diameter 16 (size.icon.md), 24 (size.icon.lg), 44 (size.control.lg) and 68 px (size.control.lg plus size.icon.lg) at the default density; md and lg follow density. Ring 2, 3, 4 and 6 px."
+    },
+    "tone": {
+      "type": ["accent", "success", "warning", "danger"],
+      "default": "accent",
+      "description": "Indicator color. accent is color.primary.on-surface; the others are color.state.<tone>.solid."
+    }
+  },
+  "states": ["loading", "complete", "indeterminate"],
+  "a11y": {
+    "role": "progressbar (Radix Progress) with aria-label, aria-valuemin 0, aria-valuemax, aria-valuenow and aria-valuetext",
+    "focus": "Never focusable.",
+    "keys": {},
+    "announce": "Not a live region: a screen reader reads the label and aria-valuetext when it reaches the ring. The value text inside the ring is aria-hidden, since aria-valuetext says the same. Say a finish once in a Toast or a status line.",
+    "native": {
+      "accessibilityRole": "progressbar",
+      "accessibilityState": ["busy"]
+    },
+    "notes": [
+      "The ring is a round border cut by a conic gradient mask; there is no SVG stroke and no stroke-dashoffset. A value change swaps the mask at once: only transform and opacity animate.",
+      "Indeterminate turns a quarter arc with transform: rotate. Under reduced motion it stops as a full, faded ring and aria-valuetext says Loading.",
+      "The ring fills clockwise from 12 o'clock in both directions: a clock face does not mirror in RTL.",
+      "Ring contrast: every tone color is a solid mark color made for 3:1 against the surface (WCAG 1.4.11).",
+      "Under forced colors the track is GrayText and the indicator Highlight.",
+      "WCAG 2.2.2: the indeterminate loop has no pause control; a busy indicator is essential motion, and it stops under reduced motion.",
+      "The percent is rounded down, so an unfinished task never shows 100%."
+    ]
+  },
+  "content": {
+    "en": {
+      "label": "Name the task and its object: Uploading board-cover.png. The same words usually sit next to the ring as visible text.",
+      "value": "A whole percent, or a short count that fits the ring: 7/12."
+    },
+    "ar": {
+      "label": "Noun form, no diacritics: رفع ملف الغلاف.",
+      "value": "Western digits."
+    }
+  },
+  "tokens": [
+    "size.icon.md",
+    "size.icon.lg",
+    "size.control.lg",
+    "space.fixed.4xs",
+    "space.fixed.3xs",
+    "space.fixed.2xs",
+    "space.fixed.s",
+    "font.family.sans",
+    "font.size.xs",
+    "font.size.s",
+    "font.weight.medium",
+    "font.leading.tight",
+    "radius.pill",
+    "opacity.disabled",
+    "color.bg.overlay-10",
+    "color.text.default",
+    "color.primary.on-surface",
+    "color.state.success.solid",
+    "color.state.warning.solid",
+    "color.state.danger.solid",
+    "duration.spin"
+  ],
+  "motion": "spinner",
+  "frameworks": {
+    "react": {
+      "status": "ready",
+      "behavior": "radix:Progress",
+      "example": "ProgressCircle.demo.tsx",
+      "note": "Shares format.ts with ProgressBar (Intl.NumberFormat, Western digits) until packages/shared/src/number.ts lands."
+    },
+    "angular": {
+      "status": "planned"
+    },
+    "native": {
+      "status": "planned",
+      "note": "The conic mask has no React Native form; expect two rotated halves with Reanimated."
+    }
+  },
+  "styles": {
+    "studio": "An overlay 10 ring; accent is the strongest text color (near white on dark, near black on light), as Studio has a neutral primary.",
+    "desk": "The same ring; accent is yellow on dark and dark gold on light.",
+    "neutral": "Planned: the brand color for accent.",
+    "liquid": "Planned: the same ring on solid content."
+  },
+  "mistakes": [
+    {
+      "wrong": "A ring with no text near it and only a percent inside",
+      "right": "The task name in text next to the ring, and label set to the same words"
+    },
+    {
+      "wrong": "A long valueText such as 7 of 12 files inside an md ring",
+      "right": "A short count (7/12), or a ProgressBar"
+    },
+    {
+      "wrong": "A ProgressCircle as a decorative busy sign",
+      "right": "A Spinner"
+    }
+  ],
+  "since": "0.1.0"
+}

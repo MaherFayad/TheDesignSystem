@@ -1,0 +1,128 @@
+/*
+ * ProgressCircle. No source: designed from the dials table in PLAN.md 3.7 and
+ * ProgressBar. Follows "One convention for component CSS and props" in
+ * docs/contracts/anatomy.md.
+ *
+ * Private properties on the root (recipes override these):
+ *
+ *   --_progress-circle-size       the ring diameter
+ *   --_progress-circle-width      the ring thickness
+ *   --_progress-circle-font-size  the value inside the ring
+ *   --_progress-circle-track      the full ring
+ *   --_progress-circle-fill       the indicator ring, set by the tone
+ *   --_progress-circle-fraction   0 to 1, set inline on the indicator
+ *
+ * Drawing: track and indicator are round borders on spans stacked in the
+ * root. The indicator is cut to the value by a conic gradient mask that
+ * starts at 12 o'clock and runs clockwise. A value change swaps the mask at
+ * once (only transform and opacity animate). Indeterminate shows a quarter
+ * arc that turns with transform: rotate (motion pattern spinner); under
+ * reduced motion it stops as a full, faded ring.
+ */
+@layer ds.base {
+  [data-ds='progress-circle'] {
+    --_progress-circle-size: var(--ds-size-control-lg);
+    --_progress-circle-width: var(--ds-space-fixed-2xs);
+    --_progress-circle-font-size: var(--ds-font-size-xs);
+    --_progress-circle-track: var(--ds-color-bg-overlay-10);
+    --_progress-circle-fill: var(--ds-color-primary-on-surface);
+    --_progress-circle-fraction: 0;
+
+    position: relative;
+    display: inline-grid;
+    flex: none;
+    place-items: center;
+    box-sizing: border-box;
+    inline-size: var(--_progress-circle-size);
+    block-size: var(--_progress-circle-size);
+    color: var(--ds-color-text-default);
+    font-family: var(--ds-font-family-sans);
+    font-size: var(--_progress-circle-font-size);
+    line-height: var(--ds-font-leading-tight);
+    vertical-align: middle;
+  }
+
+  [data-ds='progress-circle'][data-size='xs'] {
+    --_progress-circle-size: var(--ds-size-icon-md);
+    --_progress-circle-width: var(--ds-space-fixed-4xs);
+  }
+
+  [data-ds='progress-circle'][data-size='sm'] {
+    --_progress-circle-size: var(--ds-size-icon-lg);
+    --_progress-circle-width: var(--ds-space-fixed-3xs);
+  }
+
+  [data-ds='progress-circle'][data-size='lg'] {
+    --_progress-circle-size: calc(var(--ds-size-control-lg) + var(--ds-size-icon-lg));
+    --_progress-circle-width: var(--ds-space-fixed-s);
+    --_progress-circle-font-size: var(--ds-font-size-s);
+  }
+
+  [data-ds='progress-circle'][data-tone='success'] {
+    --_progress-circle-fill: var(--ds-color-state-success-solid);
+  }
+
+  [data-ds='progress-circle'][data-tone='warning'] {
+    --_progress-circle-fill: var(--ds-color-state-warning-solid);
+  }
+
+  [data-ds='progress-circle'][data-tone='danger'] {
+    --_progress-circle-fill: var(--ds-color-state-danger-solid);
+  }
+
+  /* ------------------------------------------------------------ parts */
+
+  [data-ds='progress-circle'] > :is([data-part='track'], [data-part='indicator']) {
+    position: absolute;
+    inset: 0;
+    box-sizing: border-box;
+    border: var(--_progress-circle-width) solid var(--_progress-circle-track);
+    border-radius: var(--ds-radius-pill);
+  }
+
+  [data-ds='progress-circle'] > [data-part='indicator'] {
+    border-color: var(--_progress-circle-fill);
+    mask-image: conic-gradient(currentColor calc(var(--_progress-circle-fraction) * 1turn), transparent 0);
+  }
+
+  [data-ds='progress-circle'] > [data-part='value'] {
+    position: relative;
+    font-variant-numeric: tabular-nums;
+    font-weight: var(--ds-font-weight-medium);
+    white-space: nowrap;
+    unicode-bidi: plaintext;
+  }
+
+  /* ------------------------------------------------------------ states */
+
+  [data-ds='progress-circle'][data-state='indeterminate'] > [data-part='indicator'] {
+    mask-image: conic-gradient(currentColor 0.25turn, transparent 0);
+    animation: ds-progress-circle-turn var(--ds-duration-spin) linear infinite;
+  }
+
+  @keyframes ds-progress-circle-turn {
+    to {
+      transform: rotate(1turn);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    /* Stops: a full, faded ring. aria-valuetext says Loading. */
+    [data-ds='progress-circle'][data-state='indeterminate'] > [data-part='indicator'] {
+      mask-image: none;
+      animation: none;
+      opacity: var(--ds-opacity-disabled);
+    }
+  }
+
+  @media (forced-colors: active) {
+    [data-ds='progress-circle'] > [data-part='track'] {
+      border-color: GrayText;
+    }
+
+    [data-ds='progress-circle'] > [data-part='indicator'] {
+      forced-color-adjust: none;
+      border-color: Highlight;
+    }
+  }
+}
