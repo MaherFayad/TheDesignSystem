@@ -161,7 +161,7 @@ Fix round sessions (round 1 of 3), reports in `docs/reports/fixes/`:
 | Late lanes blockers, Sidebar target size | claude/ds-fix-late | session_01ErLBsc2CaZGKDvsW79jfhp | merged, recheck open |
 | Round 2 leftovers (Sheet, Breadcrumbs, new blockers, Switch label gap) | claude/ds-fix-round-2 | session_01ErLBsaZPjzKmFAAdPBF2UR | merged |
 | Angular: review blockers, 4 missing ports, DOM sync, Field API | claude/ds-angular-sync | session_01ErLBsdvtuUeh2CMnRYDKRE | merged |
-| Angular review 2 blockers | claude/ds-angular-fix-2 | session_01ErLBsaCAJgzAtNDG4vkyUP | running |
+| Angular review 2 blockers | claude/ds-angular-fix-2 | session_01ErLBsaCAJgzAtNDG4vkyUP | merged, recheck open |
 | Review 7 blockers | claude/ds-fix-7 | session_01ErLBsZh5KyRZBXYhtBr3Fz | merged, second review open |
 
 Requests from the lanes are collected in `docs/plan/wave-1-followups.md`.

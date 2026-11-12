@@ -652,3 +652,13 @@ Copied from each lane report's "Changes needed from the lead" section. Not yet w
 2. The CLI test `ds add --framework angular` snapshots the real Angular file
    list, so it breaks on every Angular merge. Snapshot a fixture folder, or
    assert the shape and a few known files.
+
+# Round 4: from Angular fix round 2 (docs/reports/fixes/angular-2.md)
+
+Done by the lead: `@angular/forms` and `@the-system/motion` declared in
+`packages/angular/package.json`. Open, items 2 to 7 of that report: React
+Form `visibleTarget` for a radio at `tabindex="-1"`; the ConsentField
+manifest note; an Angular motion order for the round 1 and round 2
+interactions; `labelOf` reading `aria-labelledby`, once, in
+`packages/shared/src/form.ts`; contract suite cases that submit a form and
+open an empty Select; a full shots refresh for both frameworks.
