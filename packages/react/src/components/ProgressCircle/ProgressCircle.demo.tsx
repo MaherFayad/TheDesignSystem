@@ -51,8 +51,7 @@ export default function ProgressCircleDemo() {
             <ProgressCircle key={size} size={size} label="Preparing export" />
           ))}
         </DemoRow>
-        <DemoRow label="Value on small sizes">
-          <ProgressCircle size="sm" value={46} label="Uploading files" showValue />
+        <DemoRow label="Short value text">
           <ProgressCircle size="lg" value={7} max={12} label="Copying files" valueText={(v, m) => `${v}/${m}`} />
         </DemoRow>
         <h3 data-demo="title">Variants in Arabic</h3>

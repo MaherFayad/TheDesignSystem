@@ -1,9 +1,12 @@
+import { readFileSync } from 'node:fs';
+import { join } from 'node:path';
 import { createRef } from 'react';
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 import { Theme } from '../../theme';
 import ProgressCircleDemo from './ProgressCircle.demo';
 import { ProgressCircle } from './index';
+import { fillOnTrack, fillTokens, pairs } from '../ProgressBar/fillContrast.test-util';
 
 function root(container: HTMLElement): HTMLElement {
   const el = container.querySelector<HTMLElement>('[data-ds="progress-circle"]');
@@ -92,5 +95,29 @@ describe('ProgressCircle', () => {
       expect(container.querySelector(`[data-demo-case="${id}"]`)).not.toBeNull();
     }
     expect(container.querySelector('[data-demo-case="variants"] [data-ds="theme"][lang="ar"]')).not.toBeNull();
+  });
+});
+
+describe('ProgressCircle ring contrast and reduced motion', () => {
+  const css = readFileSync(join(process.cwd(), 'packages/css/src/components/ProgressCircle.css'), 'utf8');
+  const fills = fillTokens(css, 'progress-circle', '--_progress-circle-fill');
+
+  it('sets a fill for every tone', () => {
+    expect(Object.keys(fills).sort()).toEqual(['accent', 'danger', 'success', 'warning']);
+  });
+
+  it.each(pairs.map((p) => [p.name, p.body]))('every tone ring holds 3:1 on the track in %s', (_, block) => {
+    for (const [tone, token] of Object.entries(fills)) {
+      expect(fillOnTrack(block, token, 'color-bg-overlay-10'), `${tone} ${token}`).toBeGreaterThanOrEqual(3);
+    }
+  });
+
+  // A still quarter arc reads as 25 percent. The still form must take a shape
+  // no determinate value can take.
+  it('under reduced motion the indeterminate ring is a dashed full ring, not a quarter arc', () => {
+    const reduced = /@media \(prefers-reduced-motion: reduce\) \{([\s\S]*?)\n  \}\n/.exec(css)?.[1] ?? '';
+    expect(reduced).toContain("[data-state='indeterminate']");
+    expect(reduced).toContain('border-style: dashed');
+    expect(reduced).toContain('mask-image: none');
   });
 });
