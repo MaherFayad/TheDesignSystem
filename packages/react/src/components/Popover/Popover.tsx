@@ -15,14 +15,15 @@
 //       <div data-radix-popper-content-wrapper>       Radix: positions the content
 //         <div data-ds="popover" role="dialog" data-size data-state data-side data-align>   root: Radix Content
 //           <h2 data-part="title">
-//           <button data-part="close" data-ds="icon-button">
+//           <button data-part="close" data-ds="close-button">
 //           <div data-part="body">
 //           <div data-part="footer">
 //           <span><svg data-part="arrow"></span>        Radix Arrow, positioned by Radix
 //
 // The root is the Radix Content itself (the order's anatomy). It is not
-// modal: the page stays usable, Tab leaves the popover at its end, and a
-// click outside closes it.
+// modal: the page stays usable and a click outside closes it. Tab moves
+// through the popover and wraps (Radix runs its focus scope with loop on);
+// Escape is the way out, back to the trigger.
 //
 // Focus on open: an element marked data-autofocus, else the first field in
 // the body, else the first footer action, else the root itself. Never the
@@ -46,7 +47,7 @@ import {
 import { Popover as RadixPopover } from 'radix-ui';
 import type { Size } from '@the-system/shared';
 import { useTheme } from '../../theme/hooks';
-import { IconButton } from '../IconButton';
+import { CloseButton } from '../CloseButton';
 import { useControllable } from '../../internal/useControllable';
 import {
   ArrowShape,
@@ -64,7 +65,7 @@ export type PopoverAlign = FloatingAlign;
 
 const popoverLabels = {
   en: { close: 'Close popover' },
-  ar: { close: 'إغلاق النافذة' },
+  ar: { close: 'إغلاق' },
 } as const;
 
 /** Fields first, then actions: where focus goes when the popover opens. */
@@ -226,7 +227,7 @@ export interface PopoverContentProps
   sideOffset?: number;
   /** Shows the arrow that points at the trigger. Default true. */
   arrow?: boolean;
-  /** Shows the close IconButton (part close). Default true. Escape and an outside click always close. */
+  /** Shows the CloseButton (part close). Default true. Escape and an outside click always close. */
   close?: boolean;
   /** Accessible name of the close control. Default "Close popover" (Arabic under lang ar). */
   closeLabel?: string;
@@ -318,7 +319,7 @@ export function PopoverContent({
         {title !== undefined && title !== null && <PopoverTitle>{title}</PopoverTitle>}
         {close && (
           <RadixPopover.Close asChild>
-            <IconButton data-part="close" icon="close" label={closeName} size="xs" />
+            <CloseButton data-part="close" label={closeName} size="xs" />
           </RadixPopover.Close>
         )}
         {children}

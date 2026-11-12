@@ -193,4 +193,50 @@ describe('Tour', () => {
     const ids = Array.from(container.querySelectorAll('[data-demo-case]')).map((el) => el.getAttribute('data-demo-case'));
     expect(ids).toEqual(['variants', 'one', 'many', 'too-many', 'long-text', 'long-arabic', 'error']);
   });
+
+  it('Tab past the last control leaves to the step target and the tour stays open; Shift+Tab from the panel does too', async () => {
+    const user = userEvent.setup();
+    render(<Basic />);
+    await start(user);
+    await waitFor(() => expect(document.activeElement).toBe(part('panel')));
+    await user.tab();
+    expect(document.activeElement).toBe(part('skip'));
+    await user.tab();
+    expect(document.activeElement).toBe(part('next'));
+    await user.tab();
+    expect(document.activeElement).toBe(screen.getByRole('button', { name: 'New board' }));
+    expect(rootEl()?.getAttribute('data-state')).toBe('open');
+
+    part('panel')?.focus();
+    await user.tab({ shift: true });
+    expect(document.activeElement).toBe(screen.getByRole('button', { name: 'New board' }));
+    expect(rootEl()?.getAttribute('data-state')).toBe('open');
+  });
+
+  it('Tab leaves to a target that takes no focus by giving it tabindex -1', async () => {
+    const user = userEvent.setup();
+    function Section() {
+      const [open, setOpen] = useState(false);
+      return (
+        <>
+          <section id="t-chart" aria-label="Sales chart">
+            Chart
+          </section>
+          <Button onClick={() => setOpen(true)}>Start tour</Button>
+          <Tour steps={[{ target: '#t-chart', title: 'Read the chart' }]} open={open} onOpenChange={setOpen} />
+        </>
+      );
+    }
+    render(<Section />);
+    await start(user);
+    await waitFor(() => expect(document.activeElement).toBe(part('panel')));
+    await user.tab();
+    await user.tab();
+    expect(document.activeElement).toBe(part('next'));
+    await user.tab();
+    const chart = document.getElementById('t-chart');
+    expect(document.activeElement).toBe(chart);
+    expect(chart?.getAttribute('tabindex')).toBe('-1');
+    expect(rootEl()?.getAttribute('data-state')).toBe('open');
+  });
 });

@@ -36,7 +36,9 @@
 // belongs to the nearest root). As in Dialog, the root holds both.
 //
 // Focus: on open and on every step, focus moves to the panel, so the title
-// and the body are read; Tab then reaches skip, back and next. Escape ends
+// and the body are read; Tab then reaches skip, back and next, and Tab past
+// the last button moves to the step's target with the tour still open, so
+// a keyboard user can work on the page as a pointer user can. Escape ends
 // the tour. A click on the page does not end it. On close, focus returns to
 // the element that had it when the tour started.
 //
@@ -111,6 +113,27 @@ const tourLabels: Record<'en' | 'ar', TourLabels> = {
 export function clampStep(step: number, total: number): number {
   if (total <= 0) return 0;
   return Math.min(Math.max(Math.trunc(step), 0), total - 1);
+}
+
+const TABBABLE = 'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]';
+
+/** The tab stops inside an element, in order. */
+function tabStops(root: HTMLElement): HTMLElement[] {
+  return [...root.querySelectorAll<HTMLElement>(TABBABLE)].filter((el) => el.tabIndex >= 0 && !el.hidden);
+}
+
+/**
+ * Where Tab out of the panel lands: the target when it takes focus, else its
+ * first tab stop, else the target itself made focusable by script only
+ * (tabindex -1, the skip link pattern), so a section or a chart works too.
+ */
+function focusTarget(target: HTMLElement | null): HTMLElement | null {
+  if (!target?.isConnected) return null;
+  if (target.tabIndex >= 0 && target.matches(TABBABLE)) return target;
+  const inside = tabStops(target)[0];
+  if (inside) return inside;
+  if (!target.hasAttribute('tabindex')) target.setAttribute('tabindex', '-1');
+  return target;
 }
 
 function resolveTarget(target: TourTarget, doc: Document): HTMLElement | null {
@@ -343,6 +366,25 @@ export function Tour({
             }}
             // The page stays usable: a click or focus elsewhere never ends the tour.
             onInteractOutside={(event) => event.preventDefault()}
+            // Radix runs its focus scope with loop on and sets its own onKeyDown, so Tab
+            // would wrap inside the panel. In the capture phase, Tab past the last
+            // control (or Shift+Tab before the first) moves focus to the step's target
+            // instead, and the tour stays open: it never blocks the page.
+            onKeyDownCapture={(event) => {
+              if (event.key !== 'Tab' || event.altKey || event.ctrlKey || event.metaKey) return;
+              const panel = panelRef.current;
+              if (!panel) return;
+              const stops = tabStops(panel);
+              const active = document.activeElement;
+              const atEnd = event.shiftKey ? active === panel || active === stops[0] : active === stops[stops.length - 1];
+              if (!atEnd) return;
+              // The target, else the element that started the tour (a missing target).
+              const into = focusTarget(target) ?? (openedFrom.current?.isConnected ? openedFrom.current : null);
+              if (!into) return;
+              into.focus();
+              // Only cancel the Tab when focus really moved (a hidden or inert target refuses it).
+              if (document.activeElement === into) event.preventDefault();
+            }}
           >
             <h2 id={titleId} data-part="title">
               {current.title}

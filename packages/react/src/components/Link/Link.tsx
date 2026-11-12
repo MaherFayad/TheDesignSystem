@@ -93,7 +93,7 @@ export function Link({
   ...rest
 }: LinkProps) {
   const { lang } = useTheme();
-  const ar = lang === 'ar';
+  const ar = lang.toLowerCase().startsWith('ar');
   // A comma before the hidden words, so they read as a pause after the link text: "Open the docs, opens in a new tab".
   const hidden = `${ar ? '،' : ','} ${externalLabel ?? externalLabels[ar ? 'ar' : 'en']}`;
 

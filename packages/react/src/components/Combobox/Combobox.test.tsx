@@ -1,3 +1,5 @@
+import { readFileSync } from 'node:fs';
+import { join } from 'node:path';
 import { act, render, screen, waitFor } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 import { useState } from 'react';
@@ -297,5 +299,15 @@ describe('Combobox', () => {
   it('renders the demo', () => {
     render(<ComboboxDemo />);
     expect(document.querySelectorAll('[data-ds="combobox"]').length).toBeGreaterThan(8);
+  });
+
+  it('names a contract trigger the demo has, so the open popup checks run', () => {
+    const manifest = JSON.parse(
+      readFileSync(join(process.cwd(), 'packages/manifest/src/component/Combobox.manifest.json'), 'utf8'),
+    ) as { contract?: { trigger?: string } };
+    const trigger = manifest.contract?.trigger;
+    expect(trigger).toBeTruthy();
+    const { container } = render(<ComboboxDemo />);
+    expect(container.querySelectorAll(trigger!).length).toBeGreaterThan(0);
   });
 });

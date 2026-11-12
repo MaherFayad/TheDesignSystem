@@ -18,7 +18,7 @@
  *     > [data-part='panel']                role dialog, Radix Content
  *         > [data-part='titlebar']         Desk (optional part): TitleBar
  *         > [data-part='title']            Studio: the title band
- *         > [data-part='close']            Studio: the close IconButton
+ *         > [data-part='close']            Studio: the CloseButton
  *         > [data-part='description']
  *         > [data-part='body']             scrolls inside
  *         > [data-part='footer']           the actions at the inline end
@@ -581,6 +581,27 @@
 
   [data-ds='sheet'] > [data-part='panel'][data-state='open'] {
     animation: ds-sheet-in-y var(--_dialog-duration-in) var(--_dialog-ease-in);
+  }
+
+  /*
+   * A Sheet and a bottom toaster share the bottom edge: a toast would cover
+   * the Sheet footer, and keyboard focus cannot reach the toast while the
+   * Sheet is open (WCAG 2.4.11, 2.4.12; PLAN.md section 12). While a Sheet
+   * is open the toaster moves to the top edge, at the same inline place,
+   * and its toasts enter from above and stack as the top positions do.
+   * Only the toaster's position and its private properties change; the
+   * toast store does not. A size lg Sheet fills the screen, so there the
+   * top toast can still cover the title and close part: the lasting fix is
+   * in the toast layer and is asked of the lead (docs/reports/fixes).
+   */
+  :root:has([data-ds='sheet'] > [data-part='panel'][data-state='open']) [data-ds='toaster'][data-position^='bottom'] {
+    flex-direction: column-reverse;
+    inset-block-start: var(--_toaster-inset-block-start);
+    inset-block-end: auto;
+  }
+
+  :root:has([data-ds='sheet'] > [data-part='panel'][data-state='open']) [data-ds='toaster'][data-position^='bottom'] > [data-ds='toast'] {
+    --_toast-enter-y: calc(-1 * var(--ds-space-xs));
   }
 
   [data-ds='sheet'] > [data-part='panel'][data-state='closed'] {

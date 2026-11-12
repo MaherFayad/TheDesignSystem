@@ -84,10 +84,10 @@ describe('Rating', () => {
         <Rating aria-label="R" defaultValue={3} onValueChange={onValueChange} />
       </Theme>,
     );
-    const three = screen.getByRole('radio', { name: '3 of 5 stars' });
+    const three = screen.getByRole('radio', { name: '3 من 5 نجوم' });
     three.focus();
     fireEvent.keyDown(three, { key: 'ArrowLeft' });
-    await waitFor(() => expect(document.activeElement).toBe(screen.getByRole('radio', { name: '4 of 5 stars' })));
+    await waitFor(() => expect(document.activeElement).toBe(screen.getByRole('radio', { name: '4 من 5 نجوم' })));
     expect(onValueChange).toHaveBeenLastCalledWith(4);
     fireEvent.keyDown(document.activeElement as HTMLElement, { key: 'End' });
     expect(onValueChange).toHaveBeenLastCalledWith(5);
@@ -139,5 +139,23 @@ describe('Rating', () => {
     const ids = [...container.querySelectorAll('[id]')].map((el) => el.id);
     expect(new Set(ids).size).toBe(ids.length);
     expect(container.querySelector('[title]')).toBeNull();
+  });
+
+  it('names the stars in Arabic inside an Arabic Theme, with no labels passed', () => {
+    render(
+      <Theme lang="ar-SA">
+        <Rating aria-label="تقييم" defaultValue={3} />
+        <Rating readOnly value={4.5} />
+        <Rating readOnly value={0} />
+      </Theme>,
+    );
+    expect(screen.getByRole('radio', { name: '3 من 5 نجوم' })).toBeTruthy();
+    expect(screen.getByRole('img', { name: '4.5 من 5 نجوم' })).toBeTruthy();
+    expect(screen.getByRole('img', { name: 'بدون تقييم' })).toBeTruthy();
+  });
+
+  it('keeps English names outside an Arabic Theme', () => {
+    render(<Rating readOnly value={0} />);
+    expect(screen.getByRole('img', { name: 'Not rated' })).toBeTruthy();
   });
 });

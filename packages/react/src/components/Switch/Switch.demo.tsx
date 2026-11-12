@@ -48,7 +48,7 @@ export default function SwitchDemo() {
         <Theme lang="ar">
           <DemoRow label="عربي">
             <Switch label="المحاذاة للشبكة" defaultChecked />
-            <Switch label="الوضع الداكن" stateText={{ on: 'مفعل', off: 'متوقف' }} />
+            <Switch label="الوضع الداكن" stateText={{ on: 'مفعل', off: 'غير مفعل' }} />
           </DemoRow>
         </Theme>
       </DemoCase>
@@ -89,7 +89,7 @@ export default function SwitchDemo() {
 
       <DemoCase id="long-arabic" title="نص عربي طويل" lang="ar">
         <div style={{ maxInlineSize: 'var(--ds-dialog-width-sm)', display: 'grid', gap: 'var(--ds-space-m)' }}>
-          <Switch label="الحفظ التلقائي" description={sample.ar.long} defaultChecked stateText={{ on: 'مفعل', off: 'متوقف' }} />
+          <Switch label="الحفظ التلقائي" description={sample.ar.long} defaultChecked stateText={{ on: 'مفعل', off: 'غير مفعل' }} />
           <Switch label="مشاركة بيانات الاستخدام مع فريق الدعم لتحسين الخدمة" size="lg" />
           <Switch label={sample.ar.word} />
         </div>

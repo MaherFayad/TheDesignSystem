@@ -127,4 +127,29 @@ describe('HoverCard', () => {
     const ids = Array.from(container.querySelectorAll('[data-demo-case]')).map((el) => el.getAttribute('data-demo-case'));
     expect(ids).toEqual(['variants', 'empty', 'one', 'long-text', 'long-arabic', 'loading', 'error']);
   });
+
+  it('stays closed after an early Escape: the open delay never opens it again', () => {
+    vi.useFakeTimers();
+    try {
+      render(
+        <HoverCard openDelay={500}>
+          <HoverCardTrigger>
+            <a href="#sara">Sara Ahmed</a>
+          </HoverCardTrigger>
+          <HoverCardContent>Design lead.</HoverCardContent>
+        </HoverCard>,
+      );
+      act(() => screen.getByText('Sara Ahmed').focus());
+      expect(rootEl()).not.toBeNull();
+      act(() => {
+        fireEvent.keyDown(document.activeElement ?? document.body, { key: 'Escape' });
+      });
+      act(() => {
+        vi.advanceTimersByTime(600);
+      });
+      expect(rootEl()).toBeNull();
+    } finally {
+      vi.useRealTimers();
+    }
+  });
 });

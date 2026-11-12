@@ -1,3 +1,5 @@
+import { readFileSync } from 'node:fs';
+import { join } from 'node:path';
 import { createRef, useState } from 'react';
 import { act, fireEvent, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
@@ -289,5 +291,15 @@ describe('OTPField', () => {
     }
     expect(container.querySelector('button')).toBeNull();
     expect(container.querySelector('[title]')).toBeNull();
+  });
+
+  it('can shrink inside a narrow flex or grid parent (reflow at 320px)', () => {
+    const css = readFileSync(join(process.cwd(), 'packages/css/src/components/OTPField.css'), 'utf8');
+    const at = css.indexOf("[data-ds='otp-field'] {");
+    const root = css.slice(at, css.indexOf('}', at));
+    // Without it the automatic minimum is the cells' full width and lg rows overflow.
+    expect(root).toMatch(/min-inline-size: 0;/);
+    const demo = readFileSync(join(process.cwd(), 'packages/react/src/components/OTPField/OTPField.demo.tsx'), 'utf8');
+    expect(demo).not.toMatch(/<DemoGrid[^>]*min="\d/);
   });
 });

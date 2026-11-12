@@ -300,4 +300,9 @@ describe('FormWizard', () => {
     const ids = Array.from(container.querySelectorAll('[data-demo-case]')).map((c) => c.getAttribute('data-demo-case'));
     expect(ids).toEqual(['variants', 'many', 'long-text', 'long-arabic', 'error']);
   });
+
+  it('names the step list Steps when no stepsLabel is passed', () => {
+    const { container } = render(<FormWizard steps={steps} />);
+    expect(container.querySelector('[data-part="steps"]')?.getAttribute('aria-label')).toBe('Steps');
+  });
 });

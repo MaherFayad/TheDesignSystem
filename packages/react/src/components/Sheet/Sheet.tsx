@@ -17,7 +17,7 @@
 //           <div data-part="header">
 //             <h2 data-part="title">
 //             <p data-part="description">
-//             <button data-ds="icon-button" data-part="close">
+//             <button data-ds="close-button" data-part="close">
 //           <div data-part="body">
 //           <div data-part="footer">
 //

@@ -2850,7 +2850,7 @@
           "ToggleButton",
           "SplitButton"
         ],
-        "min": 1,
+        "min": 2,
         "max": 5
       }
     },
@@ -4538,7 +4538,7 @@
     ],
     "a11y": {
       "role": "combobox (ARIA 1.2) on the input, aria-autocomplete list, aria-expanded, aria-controls pointing at the listbox in the popup, aria-activedescendant pointing at the highlighted option. The popup has no role of its own; it holds a ListBox named like the field. Not modal.",
-      "focus": "Focus stays in the input the whole time. The trigger and clear buttons are not in the tab order (tabindex -1) and keep focus in the input when pressed. On blur the list closes and the field shows the chosen label again.",
+      "focus": "Focus stays in the input the whole time, so the open popup holds no tab stop. data-state open and closed is stamped on the popup part, not on the field root. The trigger and clear buttons are not in the tab order (tabindex -1) and keep focus in the input when pressed. On blur the list closes and the field shows the chosen label again.",
       "keys": {
         "Tab": "Moves into the field and out of it; the list closes",
         "ArrowDown": "Closed: opens the list on the chosen option, else the first. Open: moves to the next option, skipping disabled ones, wrapping at the end",
@@ -4685,12 +4685,18 @@
       }
     ],
     "contract": {
+      "trigger": "[data-ds='combobox'] [data-part='trigger']",
       "optionalParts": [
         "clear",
         "popup",
         "empty"
       ],
       "keys": {
+        "Tab": {
+          "focus": "[data-part='control']",
+          "case": "many",
+          "expect": "focus-moves"
+        },
         "ArrowDown": {
           "focus": "[data-part='control']",
           "case": "many",
@@ -6442,7 +6448,7 @@
         "The long title wraps, never cut: it is the question being asked.",
         "No native title attribute.",
         "In Desk the title and the close control sit inside the title bar, so they are parts of TitleBar and WindowControls there (a part belongs to the nearest root). The dialog's own parts in Desk are titlebar, description, body and footer; title, close and controls are listed here for Studio and for style.json optionalParts.",
-        "dismissible false is for short waits, while the dialog's own action runs. The app must set it back to true when the action ends, success or failure. The close control (the Studio IconButton or the Desk close light) is aria-disabled and stays focusable.",
+        "dismissible false is for short waits, while the dialog's own action runs. The app must set it back to true when the action ends, success or failure. The close control (the Studio CloseButton or the Desk close light) is aria-disabled and stays focusable.",
         "Development builds warn in the console when a dialog opens with no title, and when its footer holds more than three actions.",
         "A form in a dialog: the form element lives in DialogBody with an id and an onSubmit; the submit Button sits in DialogFooter with type=\"submit\" and form={id}, so Enter in a field and the button both submit. Close the dialog from onSubmit when the save succeeds, not from a DialogClose around the submit button."
       ]
@@ -6533,7 +6539,7 @@
       }
     },
     "styles": {
-      "studio": "A flat panel: the solid surface, the panel radius, the dialog shadow. The title sits in a band on surface-2 with a line under it and the close IconButton (part close) at its inline end; the footer is a band on surface-2 with a line over it. The backdrop is the scrim with a light blur. The panel rises 4px and scales up from 98% on duration.base.",
+      "studio": "A flat panel: the solid surface, the panel radius, the dialog shadow. The title sits in a band on surface-2 with a line under it and the CloseButton (part close) at its inline end; the footer is a band on surface-2 with a line over it. The backdrop is the scrim with a light blur. The panel rises 4px and scales up from 98% on duration.base.",
       "desk": "Renders as a window with traffic lights: glass with a 24px blur, radius 1rem, a hairline inside, the deep window shadow. The title bar (optional part titlebar) starts with the lights (optional part controls): only the close light works, minimize and zoom are idle and out of the tab order, and the close light is part close. The title sits in the bar and wraps when long. The window grows from 92% on the window open timing. In right to left layouts the lights stay at the top left and the title is centered.",
       "neutral": "Planned.",
       "liquid": "Planned: a glass sheet."
@@ -6557,7 +6563,7 @@
       },
       {
         "wrong": "Hiding the close button in Desk with CSS",
-        "right": "The style turns the titlebar and controls parts on in style.json; Dialog then renders the close light instead of the IconButton"
+        "right": "The style turns the titlebar and controls parts on in style.json; Dialog then renders the close light instead of the CloseButton"
       },
       {
         "wrong": "A dialog that closes while its action is still saving",
@@ -6923,7 +6929,7 @@
       "closeLabel": {
         "type": "string",
         "default": "Close drawer",
-        "description": "DrawerContent: the accessible name of the close control. Arabic default under lang ar: إغلاق اللوحة الجانبية."
+        "description": "DrawerContent: the accessible name of the close control. Arabic default under lang ar: إغلاق الشريط الجانبي."
       },
       "rootProps": {
         "type": "object",
@@ -6973,7 +6979,7 @@
       "ar": {
         "title": "Noun form, no diacritics: فلترة اللوحات",
         "buttons": "Noun form labels: تطبيق الفلاتر، مسح الفلاتر.",
-        "close": "إغلاق اللوحة الجانبية"
+        "close": "إغلاق الشريط الجانبي"
       }
     },
     "tokens": [
@@ -7043,7 +7049,7 @@
       }
     },
     "styles": {
-      "studio": "A full height surface panel with the inner corners rounded, the header band on surface-2 with the close IconButton, the footer band. It slides in from its side on duration.slow, ease.emphasized.",
+      "studio": "A full height surface panel with the inner corners rounded, the header band on surface-2 with the CloseButton, the footer band. It slides in from its side on duration.slow, ease.emphasized.",
       "desk": "The Desk dialog glass, hairline and window shadow, with the window radius on the inner corners. The slide keeps duration.slow and ease.emphasized.",
       "neutral": "Planned.",
       "liquid": "Planned."
@@ -15624,12 +15630,12 @@
       "close": {
         "type": "boolean",
         "default": true,
-        "description": "PopoverContent: shows the close IconButton. Escape and an outside click always close."
+        "description": "PopoverContent: shows the CloseButton. Escape and an outside click always close."
       },
       "closeLabel": {
         "type": "string",
         "default": "Close popover",
-        "description": "PopoverContent: accessible name of the close control. Arabic default under lang ar: إغلاق النافذة."
+        "description": "PopoverContent: accessible name of the close control. Arabic default under lang ar: إغلاق."
       },
       "title": {
         "type": "node",
@@ -15662,8 +15668,8 @@
       "keys": {
         "Enter, Space": "On the trigger: opens and closes the popover",
         "Escape": "Closes the popover and returns focus to the trigger",
-        "Tab": "Moves to the next control inside the popover. Not modal, no trap: the popover renders at the end of the page, so Tab past its last control leaves the page content; Escape is the way back to the trigger",
-        "Shift+Tab": "Moves to the previous control inside the popover"
+        "Tab": "Moves to the next control inside the popover and wraps from the last to the first (the Radix focus scope loops). Not modal: Escape closes it and returns focus to the trigger, and a click outside closes it",
+        "Shift+Tab": "Moves to the previous control inside the popover and wraps from the first to the last"
       },
       "announce": "The trigger says it opens a dialog and whether it is expanded. On open the title is read as the name of the dialog, then the focused field.",
       "notes": [
@@ -15688,7 +15694,7 @@
       "ar": {
         "title": "Noun form, no diacritics: تسمية الطبقة، مقاس الإطار.",
         "buttons": "Noun form labels: حفظ الاسم، إلغاء. Never نعم or موافق.",
-        "close": "إغلاق النافذة"
+        "close": "إغلاق"
       }
     },
     "tokens": [
@@ -17394,11 +17400,11 @@
       },
       "getItemLabel": {
         "type": "function",
-        "description": "The name of one star. Default \"3 of 5 stars\". Pass one for Arabic: \"3 من 5 نجوم\"."
+        "description": "The name of one star. Default \"3 of 5 stars\", or \"3 من 5 نجوم\" in an Arabic Theme."
       },
       "getValueLabel": {
         "type": "function",
-        "description": "The name of a read only rating. Default \"4.5 of 5 stars\", or \"Not rated\" for 0."
+        "description": "The name of a read only rating. Default \"4.5 of 5 stars\", or \"Not rated\" for 0. In an Arabic Theme \"4.5 من 5 نجوم\" and \"بدون تقييم\"."
       }
     },
     "states": [
@@ -19678,6 +19684,10 @@
       "liquid": "Planned: a glass sheet."
     },
     "mistakes": [
+      {
+        "wrong": "A bottom toast over the Sheet footer, where focus cannot reach it while the Sheet is open",
+        "right": "Nothing to do: while a Sheet is open a bottom toaster moves to the top edge (Dialog.css), and goes back when it closes"
+      },
       {
         "wrong": "A sheet that closes only by dragging",
         "right": "The close control and Escape close it too; the handle is a shortcut"
@@ -22517,7 +22527,7 @@
       },
       "ar": {
         "label": "اسم الإعداد بصيغة الاسم، بدون تشكيل: الحفظ التلقائي",
-        "stateText": "مفعل ومتوقف"
+        "stateText": "مفعل وغير مفعل"
       }
     },
     "tokens": [
@@ -25916,8 +25926,8 @@
       "focus": "On open and on every step, focus moves to the panel, so the title, the body and the progress are read. Tab then reaches Skip tour, Previous step and Next step. On close, focus returns to the element that had it when the tour started.",
       "keys": {
         "Escape": "Ends the tour and returns focus",
-        "Tab": "Moves to Skip tour, Previous step and Next step, then out to the page (not modal, no trap)",
-        "Shift+Tab": "Moves back through the step's buttons",
+        "Tab": "Moves to Skip tour, Previous step and Next step, then out to the step's target on the page (a target that takes no focus gets tabindex -1; with no target, the element that started the tour); the tour stays open (not modal, no trap)",
+        "Shift+Tab": "Moves back through the step's buttons; from the first button or the panel it moves to the step's target",
         "Enter, Space": "On Next step, Previous step or Skip tour: runs it"
       },
       "announce": "Each step is read when focus moves to it: the title, the body, then Step 2 of 4.",

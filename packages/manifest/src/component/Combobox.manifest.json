@@ -167,7 +167,7 @@
   ],
   "a11y": {
     "role": "combobox (ARIA 1.2) on the input, aria-autocomplete list, aria-expanded, aria-controls pointing at the listbox in the popup, aria-activedescendant pointing at the highlighted option. The popup has no role of its own; it holds a ListBox named like the field. Not modal.",
-    "focus": "Focus stays in the input the whole time. The trigger and clear buttons are not in the tab order (tabindex -1) and keep focus in the input when pressed. On blur the list closes and the field shows the chosen label again.",
+    "focus": "Focus stays in the input the whole time, so the open popup holds no tab stop. data-state open and closed is stamped on the popup part, not on the field root. The trigger and clear buttons are not in the tab order (tabindex -1) and keep focus in the input when pressed. On blur the list closes and the field shows the chosen label again.",
     "keys": {
       "Tab": "Moves into the field and out of it; the list closes",
       "ArrowDown": "Closed: opens the list on the chosen option, else the first. Open: moves to the next option, skipping disabled ones, wrapping at the end",
@@ -314,12 +314,18 @@
     }
   ],
   "contract": {
+    "trigger": "[data-ds='combobox'] [data-part='trigger']",
     "optionalParts": [
       "clear",
       "popup",
       "empty"
     ],
     "keys": {
+      "Tab": {
+        "focus": "[data-part='control']",
+        "case": "many",
+        "expect": "focus-moves"
+      },
       "ArrowDown": {
         "focus": "[data-part='control']",
         "case": "many",

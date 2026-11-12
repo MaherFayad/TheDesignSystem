@@ -186,4 +186,15 @@ describe('Link', () => {
       expect(variants?.querySelector(`[data-ds="link"][data-tone="${tone}"]`)).not.toBeNull();
     }
   });
+
+  it('says new tab in Arabic under a regional Arabic tag', () => {
+    render(
+      <Theme lang="ar-SA">
+        <Link href="https://example.com" external>
+          الدليل
+        </Link>
+      </Theme>,
+    );
+    expect(screen.getByRole('link').textContent).toContain('، ');
+  });
 });

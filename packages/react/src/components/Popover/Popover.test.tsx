@@ -1,3 +1,5 @@
+import { readFileSync } from 'node:fs';
+import { join } from 'node:path';
 import { render, screen, waitFor } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 import { useState } from 'react';
@@ -81,7 +83,7 @@ describe('Popover', () => {
     expect(root?.getAttribute('role')).toBe('dialog');
     expect(root?.hasAttribute('data-part')).toBe(false);
     for (const name of ['title', 'close', 'body', 'footer', 'arrow']) expect(part(name)).not.toBeNull();
-    expect(part('close')?.getAttribute('data-ds')).toBe('icon-button');
+    expect(part('close')?.getAttribute('data-ds')).toBe('close-button');
     expect(part('close')?.getAttribute('aria-label')).toBe('Close popover');
     // Named by its title.
     expect(root?.getAttribute('aria-labelledby')).toBe(part('title')?.id);
@@ -107,7 +109,7 @@ describe('Popover', () => {
     expect(layer?.getAttribute('data-style')).toBe('desk');
     expect(layer?.getAttribute('data-scheme')).toBe('light');
     expect(layer?.getAttribute('dir')).toBe('rtl');
-    expect(part('close')?.getAttribute('aria-label')).toBe('إغلاق النافذة');
+    expect(part('close')?.getAttribute('aria-label')).toBe('إغلاق');
   });
 
   it('moves focus to the first field in the body', async () => {
@@ -300,5 +302,24 @@ describe('Popover', () => {
     const ids = Array.from(container.querySelectorAll('[data-demo-case]')).map((el) => el.getAttribute('data-demo-case'));
     expect(ids).toEqual(['variants', 'empty', 'one', 'many', 'too-many', 'long-text', 'long-arabic', 'loading', 'error', 'disabled', 'readonly']);
     expect(container.querySelectorAll('[data-demo-trigger]').length).toBeGreaterThan(8);
+  });
+
+  it('Tab wraps inside the popover, as the manifest says', async () => {
+    const user = userEvent.setup();
+    render(<Basic />);
+    await user.click(screen.getByRole('button', { name: 'Rename layer' }));
+    const field = screen.getByRole('textbox', { name: 'Layer name' });
+    await waitFor(() => expect(document.activeElement).toBe(field));
+    const stops = new Set<Element | null>();
+    for (let i = 0; i < 6; i += 1) {
+      await user.tab();
+      stops.add(document.activeElement);
+    }
+    for (const el of stops) expect(rootEl()?.contains(el)).toBe(true);
+    expect(stops.has(field)).toBe(true);
+    const manifest = JSON.parse(readFileSync(join(process.cwd(), 'packages/manifest/src/component/Popover.manifest.json'), 'utf8')) as {
+      a11y: { keys: Record<string, string> };
+    };
+    expect(manifest.a11y.keys.Tab).toMatch(/wraps/);
   });
 });

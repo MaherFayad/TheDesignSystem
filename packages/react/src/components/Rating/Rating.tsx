@@ -18,19 +18,23 @@ import { RadioGroup as RadixRadioGroup } from 'radix-ui';
 import { Icon } from '@the-system/icons/react';
 import type { Size, Tone } from '@the-system/shared';
 import { useControllable } from '../../internal/useControllable';
+import { useTheme } from '../../theme';
 
 export type RatingSize = Extract<Size, 'sm' | 'md' | 'lg'>;
 export type RatingTone = Extract<Tone, 'accent' | 'warning'>;
 export type RatingMax = 5 | 10;
 
-/** The name of one star, "3 of 5 stars". Pass your own for another language. */
-export function ratingItemLabel(score: number, max: number): string {
-  return `${score} of ${max} stars`;
+const isArabic = (lang: string | undefined) => (lang ?? '').toLowerCase().startsWith('ar');
+
+/** The name of one star: "3 of 5 stars", or "3 من 5 نجوم" for Arabic. Western digits in both. */
+export function ratingItemLabel(score: number, max: number, lang?: string): string {
+  return isArabic(lang) ? `${score} من ${max} نجوم` : `${score} of ${max} stars`;
 }
 
-/** The name of a read only rating, "4.5 of 5 stars", or "Not rated" for 0. */
-export function ratingValueLabel(value: number, max: number): string {
-  return value > 0 ? `${value} of ${max} stars` : 'Not rated';
+/** The name of a read only rating: "4.5 of 5 stars", or "Not rated" for 0. Arabic: "4.5 من 5 نجوم", "بدون تقييم". */
+export function ratingValueLabel(value: number, max: number, lang?: string): string {
+  if (value > 0) return ratingItemLabel(value, max, lang);
+  return isArabic(lang) ? 'بدون تقييم' : 'Not rated';
 }
 
 /** How a star draws for a value: full, half or empty. Rounds to the nearest half. */
@@ -71,9 +75,9 @@ export interface RatingProps
   tone?: RatingTone;
   /** Shows the score as text after the stars, for example 4.5. Default false. */
   showValue?: boolean;
-  /** The name of one star. Default "3 of 5 stars". */
+  /** The name of one star. Default "3 of 5 stars", in Arabic "3 من 5 نجوم", following the Theme language. */
   getItemLabel?: (score: number, max: number) => string;
-  /** The name of a read only rating. Default "4.5 of 5 stars". */
+  /** The name of a read only rating. Default "4.5 of 5 stars" or "Not rated", in Arabic "4.5 من 5 نجوم" or "بدون تقييم". */
   getValueLabel?: (value: number, max: number) => string;
   /** Text after the stars, in place of the score when showValue is set: "(128 reviews)". */
   children?: ReactNode;
@@ -95,14 +99,17 @@ export function Rating({
   size = 'md',
   tone = 'warning',
   showValue = false,
-  getItemLabel = ratingItemLabel,
-  getValueLabel = ratingValueLabel,
+  getItemLabel: getItemLabelProp,
+  getValueLabel: getValueLabelProp,
   children,
   onKeyDown,
   'aria-label': ariaLabel,
   'aria-labelledby': labelledBy,
   ...rest
 }: RatingProps) {
+  const { lang } = useTheme();
+  const getItemLabel = getItemLabelProp ?? ((score: number, of: number) => ratingItemLabel(score, of, lang));
+  const getValueLabel = getValueLabelProp ?? ((score: number, of: number) => ratingValueLabel(score, of, lang));
   const [current, setCurrent] = useControllable<number>(value, defaultValue, onValueChange);
   const valueId = useId();
   const starsId = useId();

@@ -1,3 +1,5 @@
+import { readFileSync } from 'node:fs';
+import { join } from 'node:path';
 import { render, screen } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 import { createRef } from 'react';
@@ -100,5 +102,18 @@ describe('ToggleButton', () => {
       expect(container.querySelector(`[data-demo-case="${id}"]`)).not.toBeNull();
     }
     expect(container.querySelector('[data-demo-case="variants"] [data-ds="theme"][lang="ar"]')).not.toBeNull();
+  });
+
+  it('keeps the label of a pressed toggle readable in forced colors', () => {
+    const css = readFileSync(join(process.cwd(), 'packages/css/src/components/Button.css'), 'utf8');
+    const block = css.slice(css.indexOf('@media (forced-colors: active)'));
+    const rule = (selector: string) => {
+      const at = block.indexOf(`${selector} {`);
+      expect(at).toBeGreaterThan(-1);
+      return block.slice(at, block.indexOf('}', at));
+    };
+    // Without this the browser draws a Canvas backplate behind the label on the Highlight fill.
+    expect(rule("[data-ds='toggle-button'][data-state='on']")).toMatch(/forced-color-adjust: none;/);
+    expect(rule("[data-ds='toggle-button'][data-state='on'] *")).toMatch(/forced-color-adjust: none;/);
   });
 });
