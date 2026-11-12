@@ -1,0 +1,372 @@
+/*
+ * Dialog: a fixed layer (the root) that holds the backdrop and the panel.
+ * Sources: GoBanana `.st-dialog` in studio-components.css (sizes from the
+ * dialog width tokens, the viewport minus a gutter, the header and footer
+ * bands on surface-2, the panel radius and shadow, the enter motion) and
+ * Figma-Killer-2 `Dialog.module.css` (the backdrop layer, 80vh at most).
+ *
+ *   [data-ds='theme'][data-dialog-layer]   the portal Theme, draws no box
+ *   [data-ds='dialog']                     root: fixed, centers the panel
+ *     > [data-part='backdrop']             the scrim, Radix Overlay
+ *     > [data-part='panel']                role dialog, Radix Content
+ *         > [data-part='titlebar']         Desk (optional part): TitleBar
+ *         > [data-part='title']            Studio: the title band
+ *         > [data-part='close']            Studio: the close IconButton
+ *         > [data-part='description']
+ *         > [data-part='body']             scrolls inside
+ *         > [data-part='footer']           the actions at the inline end
+ *
+ * Private properties on the root (docs/contracts/anatomy.md, one convention).
+ * Sizes and tones only swap them; style recipes override them:
+ *   --_dialog-width, -height-max, -gutter
+ *   --_dialog-bg, -fg, -border-color, -radius, -shadow, -ring
+ *   --_dialog-backdrop      the panel's backdrop filter (glass in Desk)
+ *   --_dialog-title-fg      the title color (danger in the danger tone)
+ *   --_dialog-header-bg, -footer-bg, -divider-color
+ *   --_dialog-padding, -band-padding-block, -band-padding-inline
+ *   --_dialog-scrim, -scrim-filter     the backdrop color and blur
+ *   --_dialog-enter-y, -enter-scale, -duration-in, -duration-out,
+ *   --_dialog-ease-in, -ease-out       the motion (pattern "dialog")
+ *
+ * Motion, pattern "dialog": the panel rises a few px and scales up from
+ * 98% while it fades in; the backdrop fades. Closing plays the reverse,
+ * faster, on the exit ease. Only transform and opacity animate. Under
+ * reduced motion both animations are none: Radix then removes the closed
+ * dialog at once and never waits for an animationend.
+ */
+@layer ds.base {
+  /* ------------------------------------------------------------ portal layer */
+
+  [data-ds='theme'][data-dialog-layer] {
+    display: contents;
+  }
+
+  /* ------------------------------------------------------------ root */
+
+  [data-ds='dialog'] {
+    --_dialog-width: var(--ds-dialog-width-md);
+    --_dialog-height-max: var(--ds-dialog-height-max);
+    --_dialog-gutter: var(--ds-space-5xl);
+    --_dialog-bg: var(--ds-color-bg-surface);
+    --_dialog-fg: var(--ds-color-text-default);
+    --_dialog-border-color: transparent;
+    --_dialog-radius: var(--ds-radius-panel);
+    --_dialog-shadow: var(--ds-elevation-dialog);
+    --_dialog-ring: 0 0 transparent;
+    --_dialog-backdrop: none;
+    --_dialog-title-fg: var(--ds-color-text-bright);
+    --_dialog-header-bg: var(--ds-color-bg-surface-2);
+    --_dialog-footer-bg: var(--ds-color-bg-surface-2);
+    --_dialog-divider-color: var(--ds-color-border-default);
+    --_dialog-padding: var(--ds-space-2xl);
+    --_dialog-band-padding-block: var(--ds-space-l);
+    --_dialog-band-padding-inline: var(--ds-space-xl);
+    --_dialog-scrim: var(--ds-color-bg-scrim);
+    --_dialog-scrim-filter: blur(var(--ds-blur-backdrop));
+    --_dialog-enter-y: var(--ds-space-2xs);
+    --_dialog-enter-scale: 0.98;
+    --_dialog-duration-in: var(--ds-duration-base);
+    --_dialog-duration-out: var(--ds-duration-base);
+    --_dialog-ease-in: var(--ds-ease-out);
+    --_dialog-ease-out: var(--ds-ease-exit);
+
+    position: fixed;
+    z-index: var(--ds-z-dialog);
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    /* The gutter, plus the safe areas of a phone with a notch or a home bar. */
+    padding-block-start: calc(var(--_dialog-gutter) + env(safe-area-inset-top, 0px));
+    padding-block-end: calc(var(--_dialog-gutter) + env(safe-area-inset-bottom, 0px));
+    padding-inline: calc(var(--_dialog-gutter) + max(env(safe-area-inset-left, 0px), env(safe-area-inset-right, 0px)));
+  }
+
+  [data-ds='dialog'][data-size='sm'] {
+    --_dialog-width: var(--ds-dialog-width-sm);
+  }
+
+  [data-ds='dialog'][data-size='lg'] {
+    --_dialog-width: var(--ds-dialog-width-lg);
+  }
+
+  [data-ds='dialog'][data-size='xl'] {
+    --_dialog-width: var(--ds-dialog-width-xl);
+  }
+
+  [data-ds='dialog'][data-size='2xl'] {
+    --_dialog-width: var(--ds-dialog-width-2xl);
+  }
+
+  /* A danger dialog: the title, the question, in the danger text color (3:1 and more on every surface). */
+  [data-ds='dialog'][data-tone='danger'] {
+    --_dialog-title-fg: var(--ds-color-state-danger-text);
+  }
+
+  /*
+   * Phones: under 480px wide the panel fills the inline size with a small
+   * gutter. There is no breakpoint token yet, so the query names 30rem.
+   */
+  @media (width < 30rem) {
+    [data-ds='dialog'] {
+      --_dialog-gutter: var(--ds-space-s);
+      --_dialog-padding: var(--ds-space-xl);
+    }
+  }
+
+  /* ------------------------------------------------------------ backdrop */
+
+  [data-ds='dialog'] > [data-part='backdrop'] {
+    position: absolute;
+    inset: 0;
+    background-color: var(--_dialog-scrim);
+    -webkit-backdrop-filter: var(--_dialog-scrim-filter);
+    backdrop-filter: var(--_dialog-scrim-filter);
+  }
+
+  [data-ds='dialog'] > [data-part='backdrop'][data-state='open'] {
+    animation: ds-dialog-fade-in var(--_dialog-duration-in) var(--_dialog-ease-in);
+  }
+
+  [data-ds='dialog'] > [data-part='backdrop'][data-state='closed'] {
+    animation: ds-dialog-fade-out var(--_dialog-duration-out) var(--_dialog-ease-out) forwards;
+  }
+
+  /* ------------------------------------------------------------ panel */
+
+  [data-ds='dialog'] > [data-part='panel'] {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+    inline-size: min(var(--_dialog-width), 100%);
+    max-block-size: min(var(--_dialog-height-max), 100%);
+    min-inline-size: 0;
+    border: var(--ds-border-width-default) solid var(--_dialog-border-color);
+    border-radius: var(--_dialog-radius);
+    background-color: var(--_dialog-bg);
+    -webkit-backdrop-filter: var(--_dialog-backdrop);
+    backdrop-filter: var(--_dialog-backdrop);
+    box-shadow: var(--_dialog-shadow), var(--_dialog-ring);
+    color: var(--_dialog-fg);
+    font-family: var(--ds-font-family-sans);
+    font-size: var(--ds-font-size-l);
+    line-height: var(--ds-font-leading-normal);
+    overflow: clip;
+  }
+
+  [data-ds='dialog'] > [data-part='panel'][data-state='open'] {
+    animation: ds-dialog-in var(--_dialog-duration-in) var(--_dialog-ease-in);
+  }
+
+  [data-ds='dialog'] > [data-part='panel'][data-state='closed'] {
+    animation: ds-dialog-out var(--_dialog-duration-out) var(--_dialog-ease-out) forwards;
+  }
+
+  /*
+   * The panel takes focus only when it holds nothing focusable. It shows the
+   * ring on keyboard focus. The transparent outline shows in forced colors.
+   */
+  [data-ds='dialog'] > [data-part='panel']:focus-visible {
+    --_dialog-ring: var(--ds-focus-shadow-ring);
+
+    outline: var(--ds-border-width-strong) solid transparent;
+  }
+
+  [data-ds='dialog'] > [data-part='panel']:focus:not(:focus-visible) {
+    outline: none;
+  }
+
+  /* ------------------------------------------------------------ title band (Studio) */
+
+  /*
+   * The title is the question being asked: it wraps, never cut. The close
+   * control sits at the inline end of its first line, so the band keeps room
+   * for it.
+   */
+  [data-ds='dialog'] > [data-part='panel'] > [data-part='title'] {
+    flex: none;
+    margin: 0;
+    padding-block: var(--_dialog-band-padding-block);
+    padding-inline-start: var(--_dialog-band-padding-inline);
+    padding-inline-end: calc(var(--_dialog-band-padding-inline) + var(--ds-size-control-sm) + var(--ds-space-s));
+    border-block-end: var(--ds-border-width-default) solid var(--_dialog-divider-color);
+    background-color: var(--_dialog-header-bg);
+    color: var(--_dialog-title-fg);
+    font-size: var(--ds-font-size-xl);
+    font-weight: var(--ds-font-weight-semibold);
+    line-height: var(--ds-font-leading-tight);
+    overflow-wrap: anywhere;
+    text-wrap: balance;
+  }
+
+  [data-ds='dialog'] > [data-part='panel'] > [data-part='close'] {
+    position: absolute;
+    /* Centered on the first line of the title. */
+    inset-block-start: calc(var(--_dialog-band-padding-block) + (var(--ds-font-size-xl) * var(--ds-font-leading-tight) - var(--ds-size-control-sm)) / 2);
+    inset-inline-end: calc(var(--_dialog-band-padding-inline) - var(--ds-space-2xs));
+  }
+
+  /* ------------------------------------------------------------ title bar (Desk) */
+
+  [data-ds='dialog'] > [data-part='panel'] > [data-part='titlebar'] {
+    --_title-bar-fg: var(--_dialog-title-fg);
+
+    flex: none;
+    align-items: start;
+  }
+
+  /* The lights stay on the first line of a title that wraps, as a window draws them. */
+  [data-ds='dialog'] > [data-part='panel'] > [data-part='titlebar'] > [data-part='controls'] {
+    margin-block-start: calc(var(--ds-space-s) + (var(--_title-bar-font-size) * var(--ds-font-leading-tight) - var(--ds-size-target-min)) / 2);
+  }
+
+  /* The title is a question: in a dialog's title bar it wraps instead of ending in an ellipsis. */
+  [data-ds='dialog'] > [data-part='panel'] > [data-part='titlebar'] > [data-part='title'] {
+    padding-block: var(--ds-space-s);
+    overflow-wrap: anywhere;
+    white-space: normal;
+    text-wrap: balance;
+  }
+
+  /* ------------------------------------------------------------ description, body, footer */
+
+  [data-ds='dialog'] > [data-part='panel'] > [data-part='description'] {
+    flex: none;
+    margin: 0;
+    padding-block: var(--_dialog-padding) 0;
+    padding-inline: var(--_dialog-padding);
+    color: var(--ds-color-text-muted);
+  }
+
+  /* No body under it: the description keeps the padding the body would have given. */
+  [data-ds='dialog'] > [data-part='panel'] > [data-part='description']:not(:has(+ [data-part='body'])) {
+    padding-block-end: var(--_dialog-padding);
+  }
+
+  [data-ds='dialog'] > [data-part='panel'] > [data-part='description'] + [data-part='body'] {
+    padding-block-start: var(--ds-space-l);
+  }
+
+  [data-ds='dialog'] > [data-part='panel'] > [data-part='body'] {
+    flex: 1 1 auto;
+    min-block-size: 0;
+    min-inline-size: 0;
+    padding: var(--_dialog-padding);
+    overflow: auto;
+    overscroll-behavior: contain;
+    overflow-wrap: break-word;
+  }
+
+  [data-ds='dialog'] > [data-part='panel'] > [data-part='body'] > :first-child {
+    margin-block-start: 0;
+  }
+
+  [data-ds='dialog'] > [data-part='panel'] > [data-part='body'] > :last-child {
+    margin-block-end: 0;
+  }
+
+  /* Running text in the body: one step of space between blocks, whatever the page reset says. */
+  [data-ds='dialog'] > [data-part='panel'] > [data-part='body'] > :is(p, ul, ol) + :is(p, ul, ol) {
+    margin-block-start: var(--ds-space-l);
+  }
+
+  /* A body that scrolls is a tab stop, so the keyboard can scroll it. The ring sits inside the panel edge. */
+  [data-ds='dialog'] > [data-part='panel'] > [data-part='body']:focus-visible {
+    outline: var(--ds-border-width-strong) solid var(--ds-color-focus-ring);
+    outline-offset: calc(var(--ds-border-width-strong) * -1);
+  }
+
+  [data-ds='dialog'] > [data-part='panel'] > [data-part='footer'] {
+    display: flex;
+    flex: none;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: flex-end;
+    gap: var(--ds-space-s);
+    padding-block: var(--_dialog-band-padding-block);
+    padding-inline: var(--_dialog-band-padding-inline);
+    border-block-start: var(--ds-border-width-default) solid var(--_dialog-divider-color);
+    background-color: var(--_dialog-footer-bg);
+  }
+
+  /* Long labels: a footer Button shrinks with the row instead of pushing past the panel. */
+  [data-ds='dialog'] > [data-part='panel'] > [data-part='footer'] > * {
+    min-inline-size: 0;
+    max-inline-size: 100%;
+  }
+
+  /* ------------------------------------------------------------ motion: pattern "dialog" */
+
+  @keyframes ds-dialog-in {
+    from {
+      opacity: 0;
+      transform: translateY(var(--_dialog-enter-y)) scale(var(--_dialog-enter-scale));
+    }
+  }
+
+  @keyframes ds-dialog-out {
+    to {
+      opacity: 0;
+      transform: translateY(var(--_dialog-enter-y)) scale(var(--_dialog-enter-scale));
+    }
+  }
+
+  @keyframes ds-dialog-fade-in {
+    from {
+      opacity: 0;
+    }
+  }
+
+  @keyframes ds-dialog-fade-out {
+    to {
+      opacity: 0;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    [data-ds='dialog'] > :is([data-part='panel'], [data-part='backdrop'])[data-state] {
+      animation: none;
+    }
+  }
+
+  /* ------------------------------------------------------------ transparency, contrast, forced colors */
+
+  /* Nothing to see through: the scrim and the panel stop blurring (the tokens make the materials solid). */
+  @media (prefers-reduced-transparency: reduce) {
+    [data-ds='dialog'] {
+      --_dialog-backdrop: none;
+      --_dialog-scrim-filter: none;
+      --_dialog-scrim: var(--ds-color-bg-scrim-80);
+    }
+  }
+
+  @media (prefers-contrast: more) {
+    [data-ds='dialog'] {
+      --_dialog-backdrop: none;
+      --_dialog-scrim-filter: none;
+      --_dialog-scrim: var(--ds-color-bg-scrim-80);
+      --_dialog-border-color: var(--ds-color-border-strong);
+    }
+  }
+
+  [data-contrast='more'] [data-ds='dialog'] {
+    --_dialog-backdrop: none;
+    --_dialog-scrim-filter: none;
+    --_dialog-scrim: var(--ds-color-bg-scrim-80);
+    --_dialog-border-color: var(--ds-color-border-strong);
+  }
+
+  /* Forced colors drop shadows and the scrim: a border draws the panel, the outline draws focus. */
+  @media (forced-colors: active) {
+    [data-ds='dialog'] {
+      --_dialog-border-color: CanvasText;
+      --_dialog-divider-color: CanvasText;
+    }
+
+    [data-ds='dialog'] > [data-part='panel']:focus-visible {
+      outline-color: Highlight;
+    }
+  }
+}

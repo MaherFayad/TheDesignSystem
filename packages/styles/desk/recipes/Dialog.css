@@ -1,0 +1,73 @@
+/*
+ * Desk recipe for Dialog: the dialog is a window. Source: GoBanana
+ * `.dwin` in desktop/desktop.css, the same look as Window.css: glass with a
+ * 24px blur, the window radius (1rem), a hairline inside, the deep window
+ * shadow. The title bar with the traffic lights is the optional part
+ * (style.json `optionalParts.dialog`), so Dialog.tsx renders it; this file
+ * only draws it.
+ *
+ * What tokens cannot say:
+ * - glass on the panel (a backdrop filter) and no flat bands: the title bar
+ *   carries its own material, the footer sits on the glass under a hairline;
+ * - the motion grows the window from 92% on the window open timing, the
+ *   same values as window-grow without a trigger, in CSS (pattern "dialog").
+ */
+@layer ds.recipes {
+  [data-style='desk'] [data-ds='dialog'] {
+    --_dialog-bg: var(--ds-color-material-glass);
+    --_dialog-border-color: var(--ds-color-border-hairline);
+    --_dialog-radius: var(--ds-radius-window);
+    --_dialog-shadow: var(--ds-elevation-window);
+    --_dialog-backdrop: blur(var(--ds-blur-window)) saturate(1.3);
+    --_dialog-header-bg: transparent;
+    --_dialog-footer-bg: transparent;
+    --_dialog-divider-color: var(--ds-color-border-hairline);
+    --_dialog-padding: var(--ds-space-5xl);
+    --_dialog-enter-y: 0;
+    --_dialog-enter-scale: 0.92;
+    --_dialog-duration-in: var(--ds-duration-window-open);
+    --_dialog-duration-out: var(--ds-duration-window-close);
+    --_dialog-ease-in: var(--ds-ease-window);
+  }
+
+  /* No line under the bar: the content right under it starts a little closer than the body padding. */
+  [data-style='desk'] [data-ds='dialog'] > [data-part='panel'] > [data-part='titlebar'] + :is([data-part='description'], [data-part='body']) {
+    padding-block-start: var(--ds-space-xl);
+  }
+
+  /*
+   * The token build makes the glass solid in these modes; the blur has to go
+   * as well, here, since this layer wins over the base rules.
+   */
+  @media (prefers-reduced-transparency: reduce) {
+    [data-style='desk'] [data-ds='dialog'] {
+      --_dialog-backdrop: none;
+    }
+  }
+
+  @media (prefers-contrast: more) {
+    [data-style='desk'] [data-ds='dialog'] {
+      --_dialog-backdrop: none;
+      --_dialog-border-color: var(--ds-color-border-strong);
+    }
+  }
+
+  [data-style='desk'][data-contrast='more'] [data-ds='dialog'] {
+    --_dialog-backdrop: none;
+    --_dialog-border-color: var(--ds-color-border-strong);
+  }
+
+  @media (forced-colors: active) {
+    [data-style='desk'] [data-ds='dialog'] {
+      --_dialog-border-color: CanvasText;
+      --_dialog-divider-color: CanvasText;
+    }
+  }
+
+  /* No backdrop filter in the browser: the solid material, never glass it cannot blur. */
+  @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+    [data-style='desk'] [data-ds='dialog'] {
+      --_dialog-bg: var(--ds-color-material-glass-solid);
+    }
+  }
+}
