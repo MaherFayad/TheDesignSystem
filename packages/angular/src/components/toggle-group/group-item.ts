@@ -33,6 +33,7 @@ import {
 } from '@angular/core';
 import type { RovingRadioGroup, RovingRadioItem } from '../../behavior/roving-radio';
 import { rovingItem } from '../../behavior/roving-radio';
+import { ownAttribute } from '../../internal/own-attribute';
 import { consumeHostAttributes } from '../../internal/host';
 import { DsButtonBase, isIconName, type ButtonSlotContent } from '../button/button-base';
 
@@ -74,7 +75,6 @@ export const ITEM_INPUTS = ['value', 'icon', 'label', 'start', 'aria-label'];
     '[attr.data-state]': 'on() ? "on" : "off"',
     '[attr.tabindex]': 'toggles.roving.itemTabIndex(rovingRef)',
     '[attr.data-orientation]': 'toggles.orientation()',
-    '[attr.aria-label]': 'icon() !== undefined ? (label() ?? null) : (ariaLabel() ?? null)',
     '[attr.data-disabled]': 'isDisabled() ? "" : null',
     '(mousedown)': 'toggles.roving.onItemMousedown(rovingRef, $event)',
     '(focus)': 'onFocus()',
@@ -119,6 +119,8 @@ export abstract class DsGroupItemBase extends DsButtonBase {
   constructor() {
     super();
     consumeHostAttributes(ITEM_INPUTS);
+    // Bound only while set, so a caller's [attr.aria-label] stays (review angular-2 R1).
+    ownAttribute(this.host, 'aria-label', () => (this.icon() !== undefined ? this.label() : this.ariaLabel()));
     const destroyRef = inject(DestroyRef);
     destroyRef.onDestroy(this.toggles.register(this.rovingRef));
     const press = (event: MouseEvent) => {

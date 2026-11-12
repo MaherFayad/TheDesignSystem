@@ -24,7 +24,7 @@ const filters = [
   'Starred',
 ];
 
-const filtersAr = ['مفتوحة', 'مسندة لي', 'فيها تعليقات', 'تنتهي هذا الأسبوع', 'متوقفة'];
+const filtersAr = ['مفتوحة', 'مسندة لي', 'فيها تعليقات', 'موعدها هالأسبوع', 'متوقفة'];
 
 @Component({
   selector: 'div[data-demo=page]',
