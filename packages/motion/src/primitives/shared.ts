@@ -14,7 +14,7 @@
 //   and the animation plays from the old look to that rest. When it ends or
 //   is cancelled, the part sits where the CSS puts it. Nothing waits on
 //   transitionend or animationend.
-import { cssToken, play, prefersReducedMotion, type DelayToken, type DurationToken, type EaseToken, type MotionSpec, type PatternMode } from '../core';
+import { cssToken, play, prefersReducedMotion, readDuration, type DelayToken, type DurationToken, type EaseToken, type MotionSpec, type PatternMode } from '../core';
 import { distancePx, durationMs, scaleValue, type DistanceName, type ScaleName } from '../tokens';
 
 /** The three springs of order 1.22. Each is a pair of tokens: `ease.spring-<name>` and `duration.spring-<name>`. */
@@ -79,6 +79,39 @@ export function played(list: (Animation | null)[]): Animation[] {
 
 /** The most steps a stagger plays; the parts after that start with the last step. */
 export const STAGGER_MAX_STEPS = 6;
+
+/**
+ * Text that enters is at full opacity within about 200ms of the trigger, so
+ * nothing is read (or measured by axe) below its contrast for more than a
+ * moment (lead finding on round 1 `list-stagger`). Two rules carry it: the
+ * delays of a stagger add up to at most this budget, and an entering part
+ * reaches full opacity early in its own run (`READABLE_AT` of the way), while
+ * the transform carries the rest of the entrance.
+ */
+export const STAGGER_BUDGET_MS = 120;
+
+/** The share of an entrance by which opacity is 1. */
+export const READABLE_AT = 0.3;
+
+/**
+ * The most stagger steps that fit `STAGGER_BUDGET_MS` at the live
+ * `delay.stagger` on `el` (Neutral 24ms: 5 steps; Desk 45ms: 2 steps; Studio
+ * 0ms: no wait at all), never more than `max`.
+ */
+export function stepsWithin(el: Element | null | undefined, max = STAGGER_MAX_STEPS, prefix = 'ds'): number {
+  const step = el ? readDuration(el, STAGGER_DELAY, prefix) : 0;
+  if (!(step > 0)) return max;
+  return Math.max(0, Math.min(max, Math.floor(STAGGER_BUDGET_MS / step)));
+}
+
+/** Entrance keyframes from `from`: opacity is 1 by `READABLE_AT`, the transform settles over the whole run. */
+export function readableEnter(from: string): Keyframe[] {
+  return [
+    { transform: from, opacity: 0, offset: 0 },
+    { opacity: 1, offset: READABLE_AT },
+    { transform: 'none', opacity: 1, offset: 1 },
+  ];
+}
 
 /** The stagger step token. */
 export const STAGGER_DELAY: DelayToken = 'delay.stagger';

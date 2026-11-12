@@ -10,11 +10,12 @@
 //   never stagger: the person asked for it to go.
 // - The content is in the DOM and the accessibility tree from the first
 //   frame; only its look arrives in order. A delayed part waits hidden
-//   (fill backwards), at most six steps. Studio sets the step to 0ms, so its parts land
+//   (fill backwards). Every part is at full opacity within about 200ms:
+//   the delays fit a 120ms budget and opacity is 1 by 30% of each run. Studio sets the step to 0ms, so its parts land
 //   together.
 // - Reduced: a fade with no delay. Mode `none`: nothing.
 import { readDir } from '../core';
-import { distanceVar, fadeOnly, negDistanceVar, played, resolveMode, run, scaleVar, spec, springTiming, STAGGER_DELAY, STAGGER_MAX_STEPS, type PrimitiveOptions, type MotionSpring } from './shared';
+import { distanceVar, fadeOnly, negDistanceVar, played, resolveMode, run, scaleVar, spec, springTiming, readableEnter, STAGGER_DELAY, STAGGER_MAX_STEPS, stepsWithin, type PrimitiveOptions, type MotionSpring } from './shared';
 
 /** The id of every animation a staggered group starts. */
 export const STAGGER_ID = 'stagger';
@@ -69,18 +70,18 @@ export function staggerGroup(parts: Iterable<Element | null | undefined>, opts: 
       ),
     );
   }
+  // Text stays readable: the delays fit the stagger budget and each part is
+  // at full opacity early in its run (see STAGGER_BUDGET_MS).
+  const maxSteps = Math.min(opts.maxSteps ?? STAGGER_MAX_STEPS, stepsWithin(list[0], STAGGER_MAX_STEPS, prefix));
   return played(
     list.map((el, i) => {
-      const step = staggerStep(i, opts);
+      const step = staggerStep(i, { ...opts, maxSteps });
       const delay = mode === 'full' && step > 0 ? { delay: STAGGER_DELAY, delaySteps: step } : {};
       const s =
         mode === 'reduced'
           ? fadeOnly('enter')
           : spec(
-              [
-                { transform: enterFrom(opts.from, el, prefix), opacity: 0 },
-                { transform: 'none', opacity: 1 },
-              ],
+              readableEnter(enterFrom(opts.from, el, prefix)),
               springTiming(opts.spring ?? 'soft'),
               { ...delay, fill: step > 0 ? 'backwards' : 'none' },
             );

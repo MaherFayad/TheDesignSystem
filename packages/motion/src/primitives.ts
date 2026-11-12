@@ -14,5 +14,5 @@ export { digitSlots, DIGIT_ROLL_ID, renderDigits, rollDigits, rollDirection } fr
 export type { DigitRollOptions, DigitSlot } from './primitives/digit-roll';
 export { buttonMorph, BUTTON_MORPH_ID, partFor } from './primitives/button-morph';
 export type { MorphParts, MorphState } from './primitives/button-morph';
-export { resolveMode, SPRING_NAMES, springTiming, STAGGER_MAX_STEPS } from './primitives/shared';
+export { READABLE_AT, readableEnter, resolveMode, SPRING_NAMES, springTiming, STAGGER_BUDGET_MS, STAGGER_MAX_STEPS, stepsWithin } from './primitives/shared';
 export type { PrimitiveOptions, MotionSpring } from './primitives/shared';

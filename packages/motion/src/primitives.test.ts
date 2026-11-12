@@ -3,7 +3,7 @@
 // so each element gets a recording `animate` and a fixed box.
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { animatedProperties } from './core';
-import { buttonMorph, digitSlots, flipPlay, flipSnapshot, iconMorph, iconParts, iconTurn, invert, renderDigits, resolveMode, rollDigits, rollDirection, staggerGroup, staggerStep } from './primitives';
+import { buttonMorph, READABLE_AT, readableEnter, stepsWithin, digitSlots, flipPlay, flipSnapshot, iconMorph, iconParts, iconTurn, invert, renderDigits, resolveMode, rollDigits, rollDirection, staggerGroup, staggerStep } from './primitives';
 
 interface Call {
   el: Element;
@@ -126,6 +126,25 @@ describe('flip move', () => {
   it('invert keeps size unless asked', () => {
     expect(invert({ x: 0, y: 0, width: 10, height: 10 }, { x: 0, y: 0, width: 20, height: 20 }, false)).toBeNull();
     expect(invert({ x: 0, y: 0, width: 10, height: 10 }, { x: 0, y: 0, width: 20, height: 20 }, true)).toContain('scale(0.5, 0.5)');
+  });
+});
+
+describe('readable text', () => {
+  it('fits the stagger delays in the budget at the live step', () => {
+    const e = el();
+    const at = (ms: string) => {
+      e.style.setProperty('--ds-delay-stagger', ms);
+      return stepsWithin(e);
+    };
+    expect(at('24ms')).toBe(5);
+    expect(at('45ms')).toBe(2);
+    expect(at('0ms')).toBe(6);
+  });
+
+  it('enters at full opacity by 30% of the run', () => {
+    expect(readableEnter('translateY(6px)')[1]).toEqual({ opacity: 1, offset: READABLE_AT });
+    staggerGroup([el(), el()], { reduced: false });
+    expect(calls[0]!.frames[1]!.opacity).toBe(1);
   });
 });
 

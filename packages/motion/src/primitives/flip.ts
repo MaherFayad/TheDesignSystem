@@ -25,7 +25,7 @@
 //   a target.
 import type { MotionRect } from '../core';
 import { between, round, usableRect } from '../core';
-import { distanceVar, fadeOnly, played, resolveMode, run, scaleVar, spec, springTiming, STAGGER_DELAY, STAGGER_MAX_STEPS, type PrimitiveOptions, type MotionSpring } from './shared';
+import { distanceVar, fadeOnly, played, resolveMode, run, scaleVar, spec, springTiming, readableEnter, STAGGER_DELAY, STAGGER_MAX_STEPS, stepsWithin, type PrimitiveOptions, type MotionSpring } from './shared';
 
 /** The id of every animation a FLIP move starts. */
 export const FLIP_ID = 'flip';
@@ -93,10 +93,11 @@ export function flipPlay(snap: FlipSnapshot, opts: FlipOptions = {}): Animation[
   for (const el of items) cancelFlip(el);
   const out: (Animation | null)[] = [];
   let entering = 0;
+  const maxSteps = stepsWithin(items[0], STAGGER_MAX_STEPS, prefix);
   for (const el of items) {
     const first = snap.rects.get(el);
     if (!first) {
-      const step = opts.stagger === false ? 0 : Math.min(entering, STAGGER_MAX_STEPS);
+      const step = opts.stagger === false ? 0 : Math.min(entering, maxSteps);
       entering += 1;
       out.push(run(el, enterSpec(mode, opts.enter ?? 'pop', step, prefix), FLIP_ID, prefix));
       continue;
@@ -116,14 +117,10 @@ function enterSpec(mode: 'full' | 'reduced', enter: 'pop' | 'fade' | 'none', ste
   if (enter === 'none') return null;
   const delay = step > 0 ? { delay: STAGGER_DELAY, delaySteps: step } : {};
   if (mode === 'reduced' || enter === 'fade') return fadeOnly('enter', delay);
-  return spec(
-    [
-      { transform: `translateY(${distanceVar('distance.shift', prefix)}) scale(${scaleVar('scale.enter', prefix)})`, opacity: 0 },
-      { transform: 'none', opacity: 1 },
-    ],
-    springTiming('bouncy'),
-    delay,
-  );
+  return spec(readableEnter(`translateY(${distanceVar('distance.shift', prefix)}) scale(${scaleVar('scale.enter', prefix)})`), springTiming('bouncy'), {
+    ...delay,
+    fill: step > 0 ? 'backwards' : 'none',
+  });
 }
 
 /** Cancels a FLIP move on an element, so it sits at its real place. */

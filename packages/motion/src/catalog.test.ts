@@ -129,9 +129,11 @@ describe('the catalog', () => {
     }
   });
 
-  it('caps the stagger', () => {
-    expect(catalog['list-stagger'].spec({ index: 3 }).delaySteps).toBe(3);
-    expect(catalog['list-stagger'].spec({ index: 40 }).delaySteps).toBe(8);
+  it('caps the stagger so every row reads within about 200ms (order 1.22)', () => {
+    expect(catalog['list-stagger'].spec({ index: 2 }).delaySteps).toBe(2);
+    expect(catalog['list-stagger'].spec({ index: 40 }).delaySteps).toBe(3);
+    const frames = catalog['list-stagger'].keyframes();
+    expect(frames.find((f) => f.offset === 0.3)?.opacity).toBe(1);
   });
 });
 
@@ -147,6 +149,7 @@ describe('animate', () => {
       '--ds-ease-emphasized': 'cubic-bezier(0.16, 1, 0.3, 1)',
       '--ds-ease-reveal': 'cubic-bezier(0.22, 1, 0.36, 1)',
       '--ds-delay-reveal-step': '80ms',
+      '--ds-delay-stagger': '24ms',
     };
     vi.stubGlobal('getComputedStyle', () => ({ direction, getPropertyValue: (n: string) => vars[n] ?? '' }));
     return { el, animate, running };
@@ -170,7 +173,7 @@ describe('animate', () => {
   it('delays a staggered item by its steps', () => {
     const { el, animate } = fakeEl();
     catalog['list-stagger'].animate(el, { index: 2, reduced: false });
-    expect(animate).toHaveBeenCalledWith(expect.any(Array), expect.objectContaining({ delay: 160, fill: 'backwards' }));
+    expect(animate).toHaveBeenCalledWith(expect.any(Array), expect.objectContaining({ delay: 48, fill: 'backwards' }));
     vi.unstubAllGlobals();
   });
 

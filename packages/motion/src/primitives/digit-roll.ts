@@ -19,7 +19,7 @@
 // - Reduced: the new characters fade in with no travel. Mode `none`: the text
 //   changes at once.
 // - Studio's spring eases are steps, so its digits flip in hard cuts.
-import { fadeOnly, played, resolveMode, run, spec, springTiming, STAGGER_DELAY, STAGGER_MAX_STEPS, type PrimitiveOptions } from './shared';
+import { fadeOnly, played, resolveMode, run, spec, springTiming, STAGGER_DELAY, STAGGER_MAX_STEPS, stepsWithin, type PrimitiveOptions } from './shared';
 
 /** The id of every animation a digit roll starts. */
 export const DIGIT_ROLL_ID = 'digit-roll';
@@ -105,11 +105,13 @@ export function rollDigits(host: HTMLElement, from: string, to: string, opts: Di
   const offset = slots.length - cols.length;
   const out: (Animation | null)[] = [];
   let changed = 0;
+  // The digits are text: the ripple fits the stagger budget (STAGGER_BUDGET_MS).
+  const maxSteps = stepsWithin(host, STAGGER_MAX_STEPS, prefix);
   for (let i = slots.length - 1; i >= 0; i--) {
     const slot = slots[i]!;
     const col = cols[i - offset];
     if (!slot.changed || !col) continue;
-    const step = Math.min(changed, STAGGER_MAX_STEPS);
+    const step = Math.min(changed, maxSteps);
     changed += 1;
     const inner = col.firstElementChild as HTMLElement | null;
     const delay = mode === 'full' && step > 0 ? { delay: STAGGER_DELAY, delaySteps: step, fill: 'backwards' as FillMode } : {};
