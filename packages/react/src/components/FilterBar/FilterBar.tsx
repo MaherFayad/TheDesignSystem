@@ -192,18 +192,22 @@ export function FilterBar({
     pending.current = true;
   }, [changeKey]);
   const lastCount = useRef(resultCount);
-  const resultsLabel = labels.results;
+  // The latest words, kept in a ref: `labels` is a new object every render,
+  // so as a dependency it would cancel the wait on any parent render and the
+  // count would never be read (WCAG 4.1.3).
+  const resultsLabel = useRef(labels.results);
+  resultsLabel.current = labels.results;
   useEffect(() => {
     if (lastCount.current === resultCount) return undefined;
     lastCount.current = resultCount;
     if (!pending.current || resultCount === undefined) return undefined;
-    const text = resultsLabel(resultCount);
     const timer = setTimeout(() => {
       pending.current = false;
+      const text = resultsLabel.current(resultCount);
       setAnnouncement((prev) => text + (prev.endsWith('\u00a0') ? '' : '\u00a0'));
     }, 600);
     return () => clearTimeout(timer);
-  }, [resultCount, resultsLabel]);
+  }, [resultCount]);
 
   const countText = [active ? labels.active(activeCount) : undefined, resultCount !== undefined ? labels.results(resultCount) : undefined]
     .filter(Boolean)
