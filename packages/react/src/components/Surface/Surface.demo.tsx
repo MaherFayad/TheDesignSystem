@@ -14,7 +14,7 @@ export default function SurfaceDemo() {
             </Surface>
           ))}
         </DemoGrid>
-        <DemoGrid min="calc(var(--ds-space-12xl) * 1.5)">
+        <div style={{ display: 'grid', gap: 'var(--ds-space-3xl)', gridTemplateColumns: 'repeat(auto-fill, minmax(calc(var(--ds-space-12xl) * 1.5), 1fr))' }}>
           <Surface level={2} bordered>
             Bordered
           </Surface>
@@ -27,7 +27,7 @@ export default function SurfaceDemo() {
           <Surface level={2} bordered elevation="panel">
             Bordered with panel elevation
           </Surface>
-        </DemoGrid>
+        </div>
         <DemoGrid min="calc(var(--ds-space-12xl) * 1.5)">
           <Surface level={2} radius="none">
             No radius
@@ -38,8 +38,8 @@ export default function SurfaceDemo() {
           <Surface level={2} radius="panel">
             Radius panel
           </Surface>
-          <Surface level={2} radius="pill" padding="s">
-            Radius pill
+          <Surface level={2} radius="card">
+            Radius card
           </Surface>
         </DemoGrid>
         <DemoGrid min="calc(var(--ds-space-12xl) * 1.5)">
@@ -58,7 +58,7 @@ export default function SurfaceDemo() {
         </DemoGrid>
         <DemoRow label="Arabic">
           <Surface level={2} lang="ar" dir="rtl" bordered>
-            سطح بحد
+            سطح بإطار
           </Surface>
           <Surface level={3} lang="ar" dir="rtl" elevation="card">
             سطح مرفوع

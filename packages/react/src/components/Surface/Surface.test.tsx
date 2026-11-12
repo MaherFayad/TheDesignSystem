@@ -1,5 +1,7 @@
 import { render } from '@testing-library/react';
 import { createRef } from 'react';
+import { readFileSync } from 'node:fs';
+import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import SurfaceDemo from './Surface.demo';
 import { Surface } from './index';
@@ -32,7 +34,7 @@ describe('Surface', () => {
           level="body"
           bordered
           elevation="panel"
-          radius="pill"
+          radius="sheet"
           padding="none"
           as="section"
           className="x"
@@ -44,7 +46,7 @@ describe('Surface', () => {
     expect(el.getAttribute('data-level')).toBe('body');
     expect(el.getAttribute('data-bordered')).toBe('');
     expect(el.getAttribute('data-elevation')).toBe('panel');
-    expect(el.getAttribute('data-radius')).toBe('pill');
+    expect(el.getAttribute('data-radius')).toBe('sheet');
     expect(el.getAttribute('data-padding')).toBe('none');
     expect(el.className).toBe('x');
     expect(el.getAttribute('aria-label')).toBe('Summary');
@@ -53,6 +55,21 @@ describe('Surface', () => {
 
   it('takes a number level and writes it as a string', () => {
     expect(root(render(<Surface level={5} />).container).getAttribute('data-level')).toBe('5');
+  });
+
+  it('has a CSS rule for every manifest value of level, elevation, radius and padding', () => {
+    // Vitest runs from the repo root.
+    const css = readFileSync(join(process.cwd(), 'packages/css/src/components/Surface.css'), 'utf8');
+    const manifest = JSON.parse(readFileSync(join(process.cwd(), 'packages/manifest/src/component/Surface.manifest.json'), 'utf8')) as {
+      props: Record<string, { type: string[] | string }>;
+    };
+    const attrs = { level: 'data-level', elevation: 'data-elevation', radius: 'data-radius', padding: 'data-padding' } as const;
+    for (const [prop, attr] of Object.entries(attrs)) {
+      for (const value of manifest.props[prop]!.type as string[]) {
+        if (prop === 'elevation' && value === 'none') continue;
+        expect(css, `${attr}=${value}`).toContain(`[data-ds='surface'][${attr}='${value}']`);
+      }
+    }
   });
 
   it('renders every demo case', () => {

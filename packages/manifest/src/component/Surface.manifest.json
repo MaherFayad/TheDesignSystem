@@ -41,7 +41,7 @@
         "5"
       ],
       "default": "1",
-      "description": "The surface step: body is color.bg.body, 1 is color.bg.surface, 2 to 5 are color.bg.surface-2 to -5. React takes the numbers 1 to 5. Stamped as data-level."
+      "description": "The surface step: body is color.bg.body, 1 is color.bg.surface, 2 to 5 are color.bg.surface-2 to -5. React takes the numbers 1 to 5 or the same digits as strings. Stamped as data-level."
     },
     "bordered": {
       "type": "boolean",
@@ -67,11 +67,10 @@
         "panel",
         "card",
         "window",
-        "sheet",
-        "pill"
+        "sheet"
       ],
       "default": "card",
-      "description": "A radius token name. Stamped as data-radius."
+      "description": "A radius token name. Stamped as data-radius. No pill: a block box would clip its text into the round ends."
     },
     "padding": {
       "type": [
@@ -114,7 +113,7 @@
   },
   "states": [],
   "a11y": {
-    "role": "none: the element given by as (a div by default). A section or aside with an accessible name becomes a landmark.",
+    "role": "No role of its own: the native role of the element given by as (a div by default, no role). A section or aside with an accessible name becomes a landmark.",
     "focus": "Not focusable. Controls inside keep their own order.",
     "keys": {},
     "announce": "Nothing of its own. The content is read in document order.",
@@ -123,8 +122,8 @@
       "accessibilityState": []
     },
     "notes": [
-      "Text inside reads color.text.default, which the contrast gate checks against every surface step.",
-      "The border is always 1px and transparent at rest, so in forced colors mode the system draws it and the box keeps an edge without its fill or shadow."
+      "Text inside reads color.text.default, which the contrast gate checks against every surface step. Muted, dim and subtle text are checked only up to surface 3 (subtle up to surface 2): on levels 4 and 5 use default or bright text.",
+      "The border is always 1px and transparent at rest, so in forced colors mode the system draws it and the box keeps an edge without its fill or shadow. The cost: padding none still insets the content by that 1px."
     ]
   },
   "content": {
@@ -155,7 +154,6 @@
     "radius.card",
     "radius.window",
     "radius.sheet",
-    "radius.pill",
     "space.2xs",
     "space.xs",
     "space.s",
@@ -213,6 +211,14 @@
     {
       "wrong": "Making a Surface translucent in Liquid",
       "right": "Content stays solid; glass belongs to bars, sheets and menus"
+    },
+    {
+      "wrong": "Muted or subtle text on a level 4 or 5 surface",
+      "right": "Default or bright text there; the contrast gate checks the quieter text colors only on the lower steps"
+    },
+    {
+      "wrong": "Elevated boxes packed edge to edge, each shadow painting over its neighbour",
+      "right": "A gap of at least space.xl between elevated siblings"
     }
   ],
   "since": "0.1.0"

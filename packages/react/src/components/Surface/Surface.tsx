@@ -12,12 +12,12 @@
 // Angular port stamps the same attributes. No inline style.
 import type { HTMLAttributes, Ref } from 'react';
 
-/** The surface step: `body` is the page, 1 to 5 step up from it. */
-export type SurfaceLevel = 'body' | 1 | 2 | 3 | 4 | 5;
+/** The surface step: `body` is the page, 1 to 5 step up from it. Numbers or the same digits as strings. */
+export type SurfaceLevel = 'body' | 1 | 2 | 3 | 4 | 5 | '1' | '2' | '3' | '4' | '5';
 /** Shadow from the elevation tokens. */
 export type SurfaceElevation = 'none' | 'card' | 'panel';
 /** A radius token name, or none. */
-export type SurfaceRadius = 'none' | 'xs' | 'sm' | 'field' | 'control' | 'panel' | 'card' | 'window' | 'sheet' | 'pill';
+export type SurfaceRadius = 'none' | 'xs' | 'sm' | 'field' | 'control' | 'panel' | 'card' | 'window' | 'sheet';
 /** A space token step, or none. */
 export type SurfacePadding =
   | 'none'
@@ -41,7 +41,8 @@ export type SurfacePadding =
 /** The element. Pick the one that says what the box is; div says nothing. */
 export type SurfaceElement = 'div' | 'section' | 'article' | 'aside' | 'header' | 'footer' | 'figure' | 'li';
 
-export interface SurfaceProps extends HTMLAttributes<HTMLElement> {
+/** No `title`: hints come from Tooltip, never the native title attribute. */
+export interface SurfaceProps extends Omit<HTMLAttributes<HTMLElement>, 'title'> {
   /** The surface step. Default 1 (`color.bg.surface`). */
   level?: SurfaceLevel;
   /** A 1px border in `color.border.default`. Default false. */
