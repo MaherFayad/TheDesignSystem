@@ -1,7 +1,9 @@
 'use client';
 // Skeleton demo. Every group of skeletons sits in a container that carries
-// aria-busy, the way a consumer uses them; the skeletons are aria-hidden.
-import { useState, type ReactNode } from 'react';
+// aria-busy, the way a consumer uses them; the skeletons are aria-hidden. A
+// visually hidden status line next to the container (outside it, since
+// aria-busy can hold back what is inside) says once what is loading.
+import { useState, type CSSProperties, type ReactNode } from 'react';
 import { DemoCase, DemoGrid, DemoPage, DemoRow } from '../../demo';
 import { Theme } from '../../theme';
 import { Button } from '../Button';
@@ -21,10 +23,32 @@ function CardSkeleton() {
   );
 }
 
-function Busy({ label, children }: { label: string; children: ReactNode }) {
+/** Visually hidden, still read. */
+const hidden: CSSProperties = {
+  position: 'absolute',
+  inlineSize: 1,
+  blockSize: 1,
+  overflow: 'hidden',
+  clipPath: 'inset(50%)',
+  whiteSpace: 'nowrap',
+};
+
+/** The status line a consumer keeps mounted next to a loading region. */
+function LoadingStatus({ children }: { children?: ReactNode }) {
   return (
-    <div aria-busy="true" aria-label={label} role="group">
+    <span role="status" style={hidden} data-demo="loading-status">
       {children}
+    </span>
+  );
+}
+
+function Busy({ label, status, children }: { label: string; status: string; children: ReactNode }) {
+  return (
+    <div>
+      <LoadingStatus>{status}</LoadingStatus>
+      <div aria-busy="true" aria-label={label} role="group">
+        {children}
+      </div>
     </div>
   );
 }
@@ -38,6 +62,7 @@ function LoadDemo() {
           {loading ? 'Show loaded profile' : 'Show loading profile'}
         </Button>
       </DemoRow>
+      <LoadingStatus>{loading ? 'Loading profile' : ''}</LoadingStatus>
       <section aria-busy={loading} aria-label="Profile">
         {loading ? (
           <CardSkeleton />
@@ -53,7 +78,7 @@ export default function SkeletonDemo() {
   return (
     <DemoPage>
       <DemoCase id="variants" title="Variants: text in three sizes, circle and rect">
-        <Busy label="Variants">
+        <Busy label="Variants" status="Loading variants">
           <DemoGrid min="14rem">
             <div>
               <Skeleton size="sm" />
@@ -70,7 +95,7 @@ export default function SkeletonDemo() {
         </Busy>
         <h3 data-demo="title">Variants in Arabic</h3>
         <Theme lang="ar" data-demo="content">
-          <Busy label="بطاقة">
+          <Busy label="بطاقة" status="جار تحميل البطاقة">
             <div style={{ maxInlineSize: '24rem' }}>
               <CardSkeleton />
             </div>
@@ -79,7 +104,7 @@ export default function SkeletonDemo() {
       </DemoCase>
 
       <DemoCase id="one" title="One: a single title line">
-        <Busy label="Title">
+        <Busy label="Title" status="Loading title">
           <div style={{ maxInlineSize: '16rem' }}>
             <Skeleton size="lg" />
           </div>
@@ -87,7 +112,7 @@ export default function SkeletonDemo() {
       </DemoCase>
 
       <DemoCase id="many" title="Many: a list of cards">
-        <Busy label="Members">
+        <Busy label="Members" status="Loading members">
           <div style={{ display: 'grid', gap: 'var(--ds-space-l)', maxInlineSize: '28rem' }}>
             <CardSkeleton />
             <CardSkeleton />
@@ -97,7 +122,7 @@ export default function SkeletonDemo() {
       </DemoCase>
 
       <DemoCase id="too-many" title="Too many: a grid of twelve tiles">
-        <Busy label="Files">
+        <Busy label="Files" status="Loading files">
           <DemoGrid min="8rem">
             {Array.from({ length: 12 }, (_, i) => (
               <div key={i}>
@@ -110,7 +135,7 @@ export default function SkeletonDemo() {
       </DemoCase>
 
       <DemoCase id="long-text" title="Long text: a paragraph of lines, the last one short">
-        <Busy label="Article">
+        <Busy label="Article" status="Loading article">
           <div style={{ maxInlineSize: '28rem' }}>
             {Array.from({ length: 6 }, (_, i) => (
               <Skeleton key={i} />
@@ -121,7 +146,7 @@ export default function SkeletonDemo() {
       </DemoCase>
 
       <DemoCase id="long-arabic" title="Long Arabic text: the shimmer runs toward the inline end" lang="ar">
-        <Busy label="مقال">
+        <Busy label="مقال" status="جار تحميل المقال">
           <div style={{ maxInlineSize: '28rem' }}>
             <Skeleton size="lg" width="50%" />
             <Skeleton />
