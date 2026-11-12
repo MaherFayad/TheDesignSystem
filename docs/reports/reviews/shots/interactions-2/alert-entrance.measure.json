@@ -1,0 +1,3417 @@
+{
+ "id": "alert-entrance",
+ "family": "feedback",
+ "drive": "css",
+ "pattern": "fade-rise",
+ "reducedSays": "No motion: the message is there at once.",
+ "styles": {
+  "studio": {
+   "focus": {
+    "at0": {
+     "el": "button[button]",
+     "outline": "solid 2px rgba(0, 0, 0, 0)",
+     "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgb(244, 244, 245) 0px 0px 0px 2px",
+     "focusVisible": true,
+     "opacity": 1,
+     "anims": []
+    },
+    "at300": {
+     "el": "button[button]",
+     "outline": "solid 2px rgba(0, 0, 0, 0)",
+     "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgb(244, 244, 245) 0px 0px 0px 2px",
+     "focusVisible": true,
+     "opacity": 1,
+     "anims": []
+    },
+    "ringAtOnce": true
+   },
+   "transitionSweep": [],
+   "seek": {
+    "animations": 12,
+    "startOffsets": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "hit": {
+     "checked": 2,
+     "missed": [],
+     "maxShift": 14
+    },
+    "parts": [
+     {
+      "part": "div[alert]",
+      "scale": [
+       1,
+       1
+      ],
+      "travelPx": 4,
+      "opacityMin": 0,
+      "scaleOvershoot": 0,
+      "travelOvershootPx": 0,
+      "movesUntil": 40
+     },
+     {
+      "part": "span[icon]",
+      "scale": [
+       0.8,
+       1
+      ],
+      "travelPx": 0,
+      "opacityMin": 0,
+      "scaleOvershoot": 0,
+      "travelOvershootPx": 0,
+      "movesUntil": 100
+     },
+     {
+      "part": "div[title]",
+      "scale": [
+       1,
+       1
+      ],
+      "travelPx": 1,
+      "opacityMin": 0,
+      "scaleOvershoot": 0,
+      "travelOvershootPx": 0,
+      "movesUntil": 20
+     },
+     {
+      "part": "div[body]",
+      "scale": [
+       1,
+       1
+      ],
+      "travelPx": 1,
+      "opacityMin": 0,
+      "scaleOvershoot": 0,
+      "travelOvershootPx": 0,
+      "movesUntil": 20
+     },
+     {
+      "part": "div[actions]",
+      "scale": [
+       1,
+       1
+      ],
+      "travelPx": 1,
+      "opacityMin": 0,
+      "scaleOvershoot": 0,
+      "travelOvershootPx": 0,
+      "movesUntil": 20
+     },
+     {
+      "part": "section[banner]",
+      "scale": [
+       1,
+       1
+      ],
+      "travelPx": 4,
+      "opacityMin": 0,
+      "scaleOvershoot": 0,
+      "travelOvershootPx": 0,
+      "movesUntil": 40
+     },
+     {
+      "part": "div[callout]",
+      "scale": [
+       1,
+       1
+      ],
+      "travelPx": 0,
+      "opacityMin": 0,
+      "scaleOvershoot": 0,
+      "travelOvershootPx": 0,
+      "movesUntil": 20
+     }
+    ],
+    "readable": [
+     {
+      "text": "div[title]:Could not sync",
+      "readableAt": 40,
+      "appearedAt": 0
+     },
+     {
+      "text": "div[body]:Your local cop",
+      "readableAt": 40,
+      "appearedAt": 0
+     },
+     {
+      "text": "span[label]:Try again",
+      "readableAt": 40,
+      "appearedAt": 0
+     },
+     {
+      "text": "div[body]:The workspace ",
+      "readableAt": 40,
+      "appearedAt": 0
+     },
+     {
+      "text": "div[title]:تم الحفظ",
+      "readableAt": 40,
+      "appearedAt": 0
+     },
+     {
+      "text": "div[body]:التغييرات محفو",
+      "readableAt": 40,
+      "appearedAt": 0
+     }
+    ]
+   },
+   "transitionSweepAfter": [],
+   "full": {
+    "anims": [
+     {
+      "kind": "keyframes",
+      "name": "ds-alert-in",
+      "target": "div[alert]",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 100,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "linear",
+      "kfEasing": [
+       "ease.spring-soft"
+      ],
+      "fill": "none",
+      "kf": [
+       {
+        "offset": 0,
+        "opacity": "0",
+        "transform": "translateY(4px) scale(1)"
+       },
+       {
+        "offset": 0.3,
+        "opacity": "1"
+       },
+       {
+        "offset": 1,
+        "opacity": "1",
+        "transform": "none"
+       }
+      ],
+      "first": 48,
+      "last": 147,
+      "playState": "running"
+     },
+     {
+      "kind": "keyframes",
+      "name": "ds-alert-icon-in",
+      "target": "span[icon]",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 120,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "linear",
+      "kfEasing": [
+       "ease.spring-bouncy"
+      ],
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "opacity": "0",
+        "transform": "scale(0.8)"
+       },
+       {
+        "offset": 0.3,
+        "opacity": "1"
+       },
+       {
+        "offset": 1,
+        "opacity": "1",
+        "transform": "none"
+       }
+      ],
+      "first": 48,
+      "last": 164,
+      "playState": "running"
+     },
+     {
+      "kind": "keyframes",
+      "name": "ds-alert-text-in",
+      "target": "div[title]",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 100,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "linear",
+      "kfEasing": [
+       "ease.spring-soft"
+      ],
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "opacity": "0",
+        "transform": "translateY(1px)"
+       },
+       {
+        "offset": 0.3,
+        "opacity": "1"
+       },
+       {
+        "offset": 1,
+        "opacity": "1",
+        "transform": "none"
+       }
+      ],
+      "first": 48,
+      "last": 147,
+      "playState": "running"
+     },
+     {
+      "kind": "keyframes",
+      "name": "ds-alert-text-in",
+      "target": "div[body]",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 100,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "linear",
+      "kfEasing": [
+       "ease.spring-soft"
+      ],
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "opacity": "0",
+        "transform": "translateY(1px)"
+       },
+       {
+        "offset": 0.3,
+        "opacity": "1"
+       },
+       {
+        "offset": 1,
+        "opacity": "1",
+        "transform": "none"
+       }
+      ],
+      "first": 48,
+      "last": 147,
+      "playState": "running"
+     },
+     {
+      "kind": "keyframes",
+      "name": "ds-alert-text-in",
+      "target": "div[actions]",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 100,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "linear",
+      "kfEasing": [
+       "ease.spring-soft"
+      ],
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "opacity": "0",
+        "transform": "translateY(1px)"
+       },
+       {
+        "offset": 0.3,
+        "opacity": "1"
+       },
+       {
+        "offset": 1,
+        "opacity": "1",
+        "transform": "none"
+       }
+      ],
+      "first": 48,
+      "last": 147,
+      "playState": "running"
+     },
+     {
+      "kind": "keyframes",
+      "name": "ds-banner-in",
+      "target": "section[banner]",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 100,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "linear",
+      "kfEasing": [
+       "ease.spring-soft"
+      ],
+      "fill": "none",
+      "kf": [
+       {
+        "offset": 0,
+        "opacity": "0",
+        "transform": "translateY(-4px)"
+       },
+       {
+        "offset": 0.3,
+        "opacity": "1"
+       },
+       {
+        "offset": 1,
+        "opacity": "1",
+        "transform": "none"
+       }
+      ],
+      "first": 48,
+      "last": 147,
+      "playState": "running"
+     },
+     {
+      "kind": "keyframes",
+      "name": "ds-banner-icon-in",
+      "target": "span[icon]",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 120,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "linear",
+      "kfEasing": [
+       "ease.spring-bouncy"
+      ],
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "opacity": "0",
+        "transform": "scale(0.8)"
+       },
+       {
+        "offset": 0.3,
+        "opacity": "1"
+       },
+       {
+        "offset": 1,
+        "opacity": "1",
+        "transform": "none"
+       }
+      ],
+      "first": 48,
+      "last": 164,
+      "playState": "running"
+     },
+     {
+      "kind": "keyframes",
+      "name": "ds-banner-text-in",
+      "target": "div[body]",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 100,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "linear",
+      "kfEasing": [
+       "ease.spring-soft"
+      ],
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "opacity": "0",
+        "transform": "translateY(1px)"
+       },
+       {
+        "offset": 0.3,
+        "opacity": "1"
+       },
+       {
+        "offset": 1,
+        "opacity": "1",
+        "transform": "none"
+       }
+      ],
+      "first": 48,
+      "last": 147,
+      "playState": "running"
+     },
+     {
+      "kind": "keyframes",
+      "name": "ds-callout-in",
+      "target": "div[callout]",
+      "props": [
+       "opacity"
+      ],
+      "duration": 100,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "linear",
+      "kfEasing": [
+       "ease.out"
+      ],
+      "fill": "none",
+      "kf": [
+       {
+        "offset": 0,
+        "opacity": "0"
+       },
+       {
+        "offset": 0.3,
+        "opacity": "1"
+       },
+       {
+        "offset": 1,
+        "opacity": "1"
+       }
+      ],
+      "first": 48,
+      "last": 147,
+      "playState": "running"
+     },
+     {
+      "kind": "keyframes",
+      "name": "ds-callout-icon-in",
+      "target": "span[icon]",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 120,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "linear",
+      "kfEasing": [
+       "ease.spring-bouncy"
+      ],
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "opacity": "0",
+        "transform": "scale(0.8)"
+       },
+       {
+        "offset": 0.3,
+        "opacity": "1"
+       },
+       {
+        "offset": 1,
+        "opacity": "1",
+        "transform": "none"
+       }
+      ],
+      "first": 48,
+      "last": 164,
+      "playState": "running"
+     },
+     {
+      "kind": "keyframes",
+      "name": "ds-callout-text-in",
+      "target": "div[title]",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 100,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "linear",
+      "kfEasing": [
+       "ease.spring-soft"
+      ],
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "opacity": "0",
+        "transform": "translateY(1px)"
+       },
+       {
+        "offset": 0.3,
+        "opacity": "1"
+       },
+       {
+        "offset": 1,
+        "opacity": "1",
+        "transform": "none"
+       }
+      ],
+      "first": 48,
+      "last": 147,
+      "playState": "running"
+     },
+     {
+      "kind": "keyframes",
+      "name": "ds-callout-text-in",
+      "target": "div[body]",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 100,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "linear",
+      "kfEasing": [
+       "ease.spring-soft"
+      ],
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "opacity": "0",
+        "transform": "translateY(1px)"
+       },
+       {
+        "offset": 0.3,
+        "opacity": "1"
+       },
+       {
+        "offset": 1,
+        "opacity": "1",
+        "transform": "none"
+       }
+      ],
+      "first": 48,
+      "last": 147,
+      "playState": "running"
+     }
+    ],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 120,
+    "infinite": [],
+    "stateAt": null,
+    "firstMotionAt": 48,
+    "focusAfter": "button[button]",
+    "frames": 81,
+    "animCount": 12
+   },
+   "rapid": {
+    "left": [],
+    "held": [],
+    "inline": [],
+    "ghosts": 0,
+    "nodes": 25,
+    "indicators": "0 ok",
+    "custom": null,
+    "nodesBefore": 25
+   },
+   "interrupt": null,
+   "tenFast": null,
+   "off": {
+    "injected": "@layer ds.recipes {[data-style='studio'] [data-ds='alert'] {--_alert-enter-y: 0px; --_alert-enter-scale: 1; --_alert-icon-enter-scale: 1; --_alert-shift: 0px;}\n[data-style='studio'] [data-ds='banner'] {--_banner-enter-y: 0px; --_banner-icon-enter-scale: 1; --_banner-shift: 0px;}\n[data-style='studio'] [data-ds='callout'] {--_callout-icon-enter-scale: 1; --_callout-shift: 0px;}}",
+    "animations": 12,
+    "moving": [],
+    "fading": [
+     "div[alert]",
+     "span[icon]",
+     "div[title]",
+     "div[body]",
+     "div[actions]",
+     "section[banner]",
+     "div[callout]"
+    ]
+   },
+   "full.rtl": {
+    "anims": [
+     {
+      "kind": "keyframes",
+      "name": "ds-alert-in",
+      "target": "div[alert]",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 100,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "linear",
+      "kfEasing": [
+       "ease.spring-soft"
+      ],
+      "fill": "none",
+      "kf": [
+       {
+        "offset": 0,
+        "opacity": "0",
+        "transform": "translateY(4px) scale(1)"
+       },
+       {
+        "offset": 0.3,
+        "opacity": "1"
+       },
+       {
+        "offset": 1,
+        "opacity": "1",
+        "transform": "none"
+       }
+      ],
+      "first": 141,
+      "last": 285,
+      "playState": "running"
+     },
+     {
+      "kind": "keyframes",
+      "name": "ds-alert-icon-in",
+      "target": "span[icon]",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 120,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "linear",
+      "kfEasing": [
+       "ease.spring-bouncy"
+      ],
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "opacity": "0",
+        "transform": "scale(0.8)"
+       },
+       {
+        "offset": 0.3,
+        "opacity": "1"
+       },
+       {
+        "offset": 1,
+        "opacity": "1",
+        "transform": "none"
+       }
+      ],
+      "first": 141,
+      "last": 322,
+      "playState": "running"
+     },
+     {
+      "kind": "keyframes",
+      "name": "ds-alert-text-in",
+      "target": "div[title]",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 100,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "linear",
+      "kfEasing": [
+       "ease.spring-soft"
+      ],
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "opacity": "0",
+        "transform": "translateY(1px)"
+       },
+       {
+        "offset": 0.3,
+        "opacity": "1"
+       },
+       {
+        "offset": 1,
+        "opacity": "1",
+        "transform": "none"
+       }
+      ],
+      "first": 141,
+      "last": 285,
+      "playState": "running"
+     },
+     {
+      "kind": "keyframes",
+      "name": "ds-alert-text-in",
+      "target": "div[body]",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 100,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "linear",
+      "kfEasing": [
+       "ease.spring-soft"
+      ],
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "opacity": "0",
+        "transform": "translateY(1px)"
+       },
+       {
+        "offset": 0.3,
+        "opacity": "1"
+       },
+       {
+        "offset": 1,
+        "opacity": "1",
+        "transform": "none"
+       }
+      ],
+      "first": 141,
+      "last": 285,
+      "playState": "running"
+     },
+     {
+      "kind": "keyframes",
+      "name": "ds-alert-text-in",
+      "target": "div[actions]",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 100,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "linear",
+      "kfEasing": [
+       "ease.spring-soft"
+      ],
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "opacity": "0",
+        "transform": "translateY(1px)"
+       },
+       {
+        "offset": 0.3,
+        "opacity": "1"
+       },
+       {
+        "offset": 1,
+        "opacity": "1",
+        "transform": "none"
+       }
+      ],
+      "first": 141,
+      "last": 285,
+      "playState": "running"
+     },
+     {
+      "kind": "keyframes",
+      "name": "ds-banner-in",
+      "target": "section[banner]",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 100,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "linear",
+      "kfEasing": [
+       "ease.spring-soft"
+      ],
+      "fill": "none",
+      "kf": [
+       {
+        "offset": 0,
+        "opacity": "0",
+        "transform": "translateY(-4px)"
+       },
+       {
+        "offset": 0.3,
+        "opacity": "1"
+       },
+       {
+        "offset": 1,
+        "opacity": "1",
+        "transform": "none"
+       }
+      ],
+      "first": 141,
+      "last": 285,
+      "playState": "running"
+     },
+     {
+      "kind": "keyframes",
+      "name": "ds-banner-icon-in",
+      "target": "span[icon]",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 120,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "linear",
+      "kfEasing": [
+       "ease.spring-bouncy"
+      ],
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "opacity": "0",
+        "transform": "scale(0.8)"
+       },
+       {
+        "offset": 0.3,
+        "opacity": "1"
+       },
+       {
+        "offset": 1,
+        "opacity": "1",
+        "transform": "none"
+       }
+      ],
+      "first": 141,
+      "last": 322,
+      "playState": "running"
+     },
+     {
+      "kind": "keyframes",
+      "name": "ds-banner-text-in",
+      "target": "div[body]",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 100,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "linear",
+      "kfEasing": [
+       "ease.spring-soft"
+      ],
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "opacity": "0",
+        "transform": "translateY(1px)"
+       },
+       {
+        "offset": 0.3,
+        "opacity": "1"
+       },
+       {
+        "offset": 1,
+        "opacity": "1",
+        "transform": "none"
+       }
+      ],
+      "first": 141,
+      "last": 285,
+      "playState": "running"
+     },
+     {
+      "kind": "keyframes",
+      "name": "ds-callout-in",
+      "target": "div[callout]",
+      "props": [
+       "opacity"
+      ],
+      "duration": 100,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "linear",
+      "kfEasing": [
+       "ease.out"
+      ],
+      "fill": "none",
+      "kf": [
+       {
+        "offset": 0,
+        "opacity": "0"
+       },
+       {
+        "offset": 0.3,
+        "opacity": "1"
+       },
+       {
+        "offset": 1,
+        "opacity": "1"
+       }
+      ],
+      "first": 141,
+      "last": 285,
+      "playState": "running"
+     },
+     {
+      "kind": "keyframes",
+      "name": "ds-callout-icon-in",
+      "target": "span[icon]",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 120,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "linear",
+      "kfEasing": [
+       "ease.spring-bouncy"
+      ],
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "opacity": "0",
+        "transform": "scale(0.8)"
+       },
+       {
+        "offset": 0.3,
+        "opacity": "1"
+       },
+       {
+        "offset": 1,
+        "opacity": "1",
+        "transform": "none"
+       }
+      ],
+      "first": 141,
+      "last": 322,
+      "playState": "running"
+     },
+     {
+      "kind": "keyframes",
+      "name": "ds-callout-text-in",
+      "target": "div[title]",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 100,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "linear",
+      "kfEasing": [
+       "ease.spring-soft"
+      ],
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "opacity": "0",
+        "transform": "translateY(1px)"
+       },
+       {
+        "offset": 0.3,
+        "opacity": "1"
+       },
+       {
+        "offset": 1,
+        "opacity": "1",
+        "transform": "none"
+       }
+      ],
+      "first": 141,
+      "last": 285,
+      "playState": "running"
+     },
+     {
+      "kind": "keyframes",
+      "name": "ds-callout-text-in",
+      "target": "div[body]",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 100,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "linear",
+      "kfEasing": [
+       "ease.spring-soft"
+      ],
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "opacity": "0",
+        "transform": "translateY(1px)"
+       },
+       {
+        "offset": 0.3,
+        "opacity": "1"
+       },
+       {
+        "offset": 1,
+        "opacity": "1",
+        "transform": "none"
+       }
+      ],
+      "first": 141,
+      "last": 285,
+      "playState": "running"
+     }
+    ],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 120,
+    "infinite": [],
+    "stateAt": 141,
+    "firstMotionAt": 141,
+    "focusAfter": "button[button]",
+    "frames": 69,
+    "animCount": 12,
+    "rapid": {
+     "left": [],
+     "held": [],
+     "inline": [],
+     "ghosts": 0,
+     "nodes": 25,
+     "indicators": "0 ok",
+     "custom": null,
+     "nodesBefore": 25
+    }
+   },
+   "media.ltr": {
+    "anims": [],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 0,
+    "infinite": [],
+    "stateAt": 153,
+    "firstMotionAt": null,
+    "focusAfter": "button[button]",
+    "frames": 70,
+    "animCount": 0,
+    "restOffTransforms": []
+   },
+   "media.rtl": {
+    "anims": [],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 0,
+    "infinite": [],
+    "stateAt": 60,
+    "firstMotionAt": null,
+    "focusAfter": "button[button]",
+    "frames": 73,
+    "animCount": 0,
+    "restOffTransforms": []
+   },
+   "attr.ltr": {
+    "anims": [],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 0,
+    "infinite": [],
+    "stateAt": 96,
+    "firstMotionAt": null,
+    "focusAfter": "button[button]",
+    "frames": 69,
+    "animCount": 0,
+    "restOffTransforms": []
+   },
+   "attr.rtl": {
+    "anims": [],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 0,
+    "infinite": [],
+    "stateAt": 132,
+    "firstMotionAt": null,
+    "focusAfter": "button[button]",
+    "frames": 72,
+    "animCount": 0,
+    "restOffTransforms": []
+   }
+  },
+  "desk": {
+   "focus": {
+    "at0": {
+     "el": "button[button]",
+     "outline": "solid 2px rgba(0, 0, 0, 0)",
+     "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgb(244, 244, 245) 0px 0px 0px 2px",
+     "focusVisible": true,
+     "opacity": 1,
+     "anims": [
+      "transform 300"
+     ]
+    },
+    "at300": {
+     "el": "button[button]",
+     "outline": "solid 2px rgba(0, 0, 0, 0)",
+     "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgb(244, 244, 245) 0px 0px 0px 2px",
+     "focusVisible": true,
+     "opacity": 1,
+     "anims": []
+    },
+    "ringAtOnce": true
+   },
+   "transitionSweep": [],
+   "seek": {
+    "animations": 12,
+    "startOffsets": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "hit": {
+     "checked": 2,
+     "missed": [],
+     "maxShift": 32
+    },
+    "parts": [
+     {
+      "part": "div[alert]",
+      "scale": [
+       0.9,
+       1.002
+      ],
+      "travelPx": 12,
+      "opacityMin": 0,
+      "scaleOvershoot": 0.002,
+      "travelOvershootPx": 0.2,
+      "movesUntil": 160
+     },
+     {
+      "part": "span[icon]",
+      "scale": [
+       0.3,
+       1.171
+      ],
+      "travelPx": 0,
+      "opacityMin": 0,
+      "scaleOvershoot": 0.171,
+      "travelOvershootPx": 0,
+      "movesUntil": 460
+     },
+     {
+      "part": "div[title]",
+      "scale": [
+       1,
+       1
+      ],
+      "travelPx": 3,
+      "opacityMin": 0,
+      "scaleOvershoot": 0,
+      "travelOvershootPx": 0.1,
+      "movesUntil": 200
+     },
+     {
+      "part": "div[body]",
+      "scale": [
+       1,
+       1
+      ],
+      "travelPx": 3,
+      "opacityMin": 0,
+      "scaleOvershoot": 0,
+      "travelOvershootPx": 0.1,
+      "movesUntil": 200
+     },
+     {
+      "part": "div[actions]",
+      "scale": [
+       1,
+       1
+      ],
+      "travelPx": 3,
+      "opacityMin": 0,
+      "scaleOvershoot": 0,
+      "travelOvershootPx": 0.1,
+      "movesUntil": 200
+     },
+     {
+      "part": "section[banner]",
+      "scale": [
+       1,
+       1
+      ],
+      "travelPx": 12,
+      "opacityMin": 0,
+      "scaleOvershoot": 0,
+      "travelOvershootPx": 0.2,
+      "movesUntil": 160
+     },
+     {
+      "part": "div[callout]",
+      "scale": [
+       1,
+       1
+      ],
+      "travelPx": 0,
+      "opacityMin": 0,
+      "scaleOvershoot": 0,
+      "travelOvershootPx": 0,
+      "movesUntil": 80
+     }
+    ],
+    "readable": [
+     {
+      "text": "div[title]:Could not sync",
+      "readableAt": 140,
+      "appearedAt": 0
+     },
+     {
+      "text": "div[body]:Your local cop",
+      "readableAt": 140,
+      "appearedAt": 0
+     },
+     {
+      "text": "span[label]:Try again",
+      "readableAt": 140,
+      "appearedAt": 0
+     },
+     {
+      "text": "div[body]:The workspace ",
+      "readableAt": 140,
+      "appearedAt": 0
+     },
+     {
+      "text": "div[title]:تم الحفظ",
+      "readableAt": 140,
+      "appearedAt": 0
+     },
+     {
+      "text": "div[body]:التغييرات محفو",
+      "readableAt": 140,
+      "appearedAt": 0
+     }
+    ]
+   },
+   "transitionSweepAfter": [],
+   "full": {
+    "anims": [
+     {
+      "kind": "keyframes",
+      "name": "ds-alert-in",
+      "target": "div[alert]",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 340,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "linear",
+      "kfEasing": [
+       "ease.spring-soft"
+      ],
+      "fill": "none",
+      "kf": [
+       {
+        "offset": 0,
+        "opacity": "0",
+        "transform": "translateY(12px) scale(0.9)"
+       },
+       {
+        "offset": 0.3,
+        "opacity": "1"
+       },
+       {
+        "offset": 1,
+        "opacity": "1",
+        "transform": "none"
+       }
+      ],
+      "first": 88,
+      "last": 444,
+      "playState": "running"
+     },
+     {
+      "kind": "keyframes",
+      "name": "ds-alert-icon-in",
+      "target": "span[icon]",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 440,
+      "delay": 45,
+      "iterations": 1,
+      "easing": "linear",
+      "kfEasing": [
+       "ease.spring-bouncy"
+      ],
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "opacity": "0",
+        "transform": "scale(0.3)"
+       },
+       {
+        "offset": 0.3,
+        "opacity": "1"
+       },
+       {
+        "offset": 1,
+        "opacity": "1",
+        "transform": "none"
+       }
+      ],
+      "first": 88,
+      "last": 596,
+      "playState": "running"
+     },
+     {
+      "kind": "keyframes",
+      "name": "ds-alert-text-in",
+      "target": "div[title]",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 340,
+      "delay": 90,
+      "iterations": 1,
+      "easing": "linear",
+      "kfEasing": [
+       "ease.spring-soft"
+      ],
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "opacity": "0",
+        "transform": "translateY(3px)"
+       },
+       {
+        "offset": 0.3,
+        "opacity": "1"
+       },
+       {
+        "offset": 1,
+        "opacity": "1",
+        "transform": "none"
+       }
+      ],
+      "first": 88,
+      "last": 521,
+      "playState": "running"
+     },
+     {
+      "kind": "keyframes",
+      "name": "ds-alert-text-in",
+      "target": "div[body]",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 340,
+      "delay": 90,
+      "iterations": 1,
+      "easing": "linear",
+      "kfEasing": [
+       "ease.spring-soft"
+      ],
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "opacity": "0",
+        "transform": "translateY(3px)"
+       },
+       {
+        "offset": 0.3,
+        "opacity": "1"
+       },
+       {
+        "offset": 1,
+        "opacity": "1",
+        "transform": "none"
+       }
+      ],
+      "first": 88,
+      "last": 521,
+      "playState": "running"
+     },
+     {
+      "kind": "keyframes",
+      "name": "ds-alert-text-in",
+      "target": "div[actions]",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 340,
+      "delay": 90,
+      "iterations": 1,
+      "easing": "linear",
+      "kfEasing": [
+       "ease.spring-soft"
+      ],
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "opacity": "0",
+        "transform": "translateY(3px)"
+       },
+       {
+        "offset": 0.3,
+        "opacity": "1"
+       },
+       {
+        "offset": 1,
+        "opacity": "1",
+        "transform": "none"
+       }
+      ],
+      "first": 88,
+      "last": 521,
+      "playState": "running"
+     },
+     {
+      "kind": "keyframes",
+      "name": "ds-banner-in",
+      "target": "section[banner]",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 340,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "linear",
+      "kfEasing": [
+       "ease.spring-soft"
+      ],
+      "fill": "none",
+      "kf": [
+       {
+        "offset": 0,
+        "opacity": "0",
+        "transform": "translateY(-12px)"
+       },
+       {
+        "offset": 0.3,
+        "opacity": "1"
+       },
+       {
+        "offset": 1,
+        "opacity": "1",
+        "transform": "none"
+       }
+      ],
+      "first": 88,
+      "last": 444,
+      "playState": "running"
+     },
+     {
+      "kind": "keyframes",
+      "name": "ds-banner-icon-in",
+      "target": "span[icon]",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 440,
+      "delay": 45,
+      "iterations": 1,
+      "easing": "linear",
+      "kfEasing": [
+       "ease.spring-bouncy"
+      ],
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "opacity": "0",
+        "transform": "scale(0.3)"
+       },
+       {
+        "offset": 0.3,
+        "opacity": "1"
+       },
+       {
+        "offset": 1,
+        "opacity": "1",
+        "transform": "none"
+       }
+      ],
+      "first": 88,
+      "last": 596,
+      "playState": "running"
+     },
+     {
+      "kind": "keyframes",
+      "name": "ds-banner-text-in",
+      "target": "div[body]",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 340,
+      "delay": 90,
+      "iterations": 1,
+      "easing": "linear",
+      "kfEasing": [
+       "ease.spring-soft"
+      ],
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "opacity": "0",
+        "transform": "translateY(3px)"
+       },
+       {
+        "offset": 0.3,
+        "opacity": "1"
+       },
+       {
+        "offset": 1,
+        "opacity": "1",
+        "transform": "none"
+       }
+      ],
+      "first": 88,
+      "last": 521,
+      "playState": "running"
+     },
+     {
+      "kind": "keyframes",
+      "name": "ds-callout-in",
+      "target": "div[callout]",
+      "props": [
+       "opacity"
+      ],
+      "duration": 340,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "linear",
+      "kfEasing": [
+       "ease.out"
+      ],
+      "fill": "none",
+      "kf": [
+       {
+        "offset": 0,
+        "opacity": "0"
+       },
+       {
+        "offset": 0.3,
+        "opacity": "1"
+       },
+       {
+        "offset": 1,
+        "opacity": "1"
+       }
+      ],
+      "first": 88,
+      "last": 444,
+      "playState": "running"
+     },
+     {
+      "kind": "keyframes",
+      "name": "ds-callout-icon-in",
+      "target": "span[icon]",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 440,
+      "delay": 45,
+      "iterations": 1,
+      "easing": "linear",
+      "kfEasing": [
+       "ease.spring-bouncy"
+      ],
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "opacity": "0",
+        "transform": "scale(0.3)"
+       },
+       {
+        "offset": 0.3,
+        "opacity": "1"
+       },
+       {
+        "offset": 1,
+        "opacity": "1",
+        "transform": "none"
+       }
+      ],
+      "first": 88,
+      "last": 596,
+      "playState": "running"
+     },
+     {
+      "kind": "keyframes",
+      "name": "ds-callout-text-in",
+      "target": "div[title]",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 340,
+      "delay": 90,
+      "iterations": 1,
+      "easing": "linear",
+      "kfEasing": [
+       "ease.spring-soft"
+      ],
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "opacity": "0",
+        "transform": "translateY(3px)"
+       },
+       {
+        "offset": 0.3,
+        "opacity": "1"
+       },
+       {
+        "offset": 1,
+        "opacity": "1",
+        "transform": "none"
+       }
+      ],
+      "first": 88,
+      "last": 521,
+      "playState": "running"
+     },
+     {
+      "kind": "keyframes",
+      "name": "ds-callout-text-in",
+      "target": "div[body]",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 340,
+      "delay": 90,
+      "iterations": 1,
+      "easing": "linear",
+      "kfEasing": [
+       "ease.spring-soft"
+      ],
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "opacity": "0",
+        "transform": "translateY(3px)"
+       },
+       {
+        "offset": 0.3,
+        "opacity": "1"
+       },
+       {
+        "offset": 1,
+        "opacity": "1",
+        "transform": "none"
+       }
+      ],
+      "first": 88,
+      "last": 521,
+      "playState": "running"
+     }
+    ],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 485,
+    "infinite": [],
+    "stateAt": null,
+    "firstMotionAt": 88,
+    "focusAfter": "button[button]",
+    "frames": 90,
+    "animCount": 12
+   },
+   "rapid": {
+    "left": [],
+    "held": [],
+    "inline": [],
+    "ghosts": 0,
+    "nodes": 25,
+    "indicators": "0 ok",
+    "custom": null,
+    "nodesBefore": 25
+   },
+   "interrupt": null,
+   "tenFast": null,
+   "off": {
+    "injected": "@layer ds.recipes {[data-style='desk'] [data-ds='alert'] {--_alert-enter-y: 0px; --_alert-enter-scale: 1; --_alert-icon-enter-scale: 1; --_alert-shift: 0px;}\n[data-style='desk'] [data-ds='banner'] {--_banner-enter-y: 0px; --_banner-icon-enter-scale: 1; --_banner-shift: 0px;}\n[data-style='desk'] [data-ds='callout'] {--_callout-icon-enter-scale: 1; --_callout-shift: 0px;}}",
+    "animations": 12,
+    "moving": [],
+    "fading": [
+     "div[alert]",
+     "span[icon]",
+     "div[title]",
+     "div[body]",
+     "div[actions]",
+     "section[banner]",
+     "div[callout]"
+    ]
+   },
+   "full.rtl": {
+    "anims": [
+     {
+      "kind": "keyframes",
+      "name": "ds-alert-in",
+      "target": "div[alert]",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 340,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "linear",
+      "kfEasing": [
+       "ease.spring-soft"
+      ],
+      "fill": "none",
+      "kf": [
+       {
+        "offset": 0,
+        "opacity": "0",
+        "transform": "translateY(12px) scale(0.9)"
+       },
+       {
+        "offset": 0.3,
+        "opacity": "1"
+       },
+       {
+        "offset": 1,
+        "opacity": "1",
+        "transform": "none"
+       }
+      ],
+      "first": 62,
+      "last": 436,
+      "playState": "running"
+     },
+     {
+      "kind": "keyframes",
+      "name": "ds-alert-icon-in",
+      "target": "span[icon]",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 440,
+      "delay": 45,
+      "iterations": 1,
+      "easing": "linear",
+      "kfEasing": [
+       "ease.spring-bouncy"
+      ],
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "opacity": "0",
+        "transform": "scale(0.3)"
+       },
+       {
+        "offset": 0.3,
+        "opacity": "1"
+       },
+       {
+        "offset": 1,
+        "opacity": "1",
+        "transform": "none"
+       }
+      ],
+      "first": 62,
+      "last": 595,
+      "playState": "running"
+     },
+     {
+      "kind": "keyframes",
+      "name": "ds-alert-text-in",
+      "target": "div[title]",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 340,
+      "delay": 90,
+      "iterations": 1,
+      "easing": "linear",
+      "kfEasing": [
+       "ease.spring-soft"
+      ],
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "opacity": "0",
+        "transform": "translateY(3px)"
+       },
+       {
+        "offset": 0.3,
+        "opacity": "1"
+       },
+       {
+        "offset": 1,
+        "opacity": "1",
+        "transform": "none"
+       }
+      ],
+      "first": 62,
+      "last": 528,
+      "playState": "running"
+     },
+     {
+      "kind": "keyframes",
+      "name": "ds-alert-text-in",
+      "target": "div[body]",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 340,
+      "delay": 90,
+      "iterations": 1,
+      "easing": "linear",
+      "kfEasing": [
+       "ease.spring-soft"
+      ],
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "opacity": "0",
+        "transform": "translateY(3px)"
+       },
+       {
+        "offset": 0.3,
+        "opacity": "1"
+       },
+       {
+        "offset": 1,
+        "opacity": "1",
+        "transform": "none"
+       }
+      ],
+      "first": 62,
+      "last": 528,
+      "playState": "running"
+     },
+     {
+      "kind": "keyframes",
+      "name": "ds-alert-text-in",
+      "target": "div[actions]",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 340,
+      "delay": 90,
+      "iterations": 1,
+      "easing": "linear",
+      "kfEasing": [
+       "ease.spring-soft"
+      ],
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "opacity": "0",
+        "transform": "translateY(3px)"
+       },
+       {
+        "offset": 0.3,
+        "opacity": "1"
+       },
+       {
+        "offset": 1,
+        "opacity": "1",
+        "transform": "none"
+       }
+      ],
+      "first": 62,
+      "last": 528,
+      "playState": "running"
+     },
+     {
+      "kind": "keyframes",
+      "name": "ds-banner-in",
+      "target": "section[banner]",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 340,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "linear",
+      "kfEasing": [
+       "ease.spring-soft"
+      ],
+      "fill": "none",
+      "kf": [
+       {
+        "offset": 0,
+        "opacity": "0",
+        "transform": "translateY(-12px)"
+       },
+       {
+        "offset": 0.3,
+        "opacity": "1"
+       },
+       {
+        "offset": 1,
+        "opacity": "1",
+        "transform": "none"
+       }
+      ],
+      "first": 62,
+      "last": 436,
+      "playState": "running"
+     },
+     {
+      "kind": "keyframes",
+      "name": "ds-banner-icon-in",
+      "target": "span[icon]",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 440,
+      "delay": 45,
+      "iterations": 1,
+      "easing": "linear",
+      "kfEasing": [
+       "ease.spring-bouncy"
+      ],
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "opacity": "0",
+        "transform": "scale(0.3)"
+       },
+       {
+        "offset": 0.3,
+        "opacity": "1"
+       },
+       {
+        "offset": 1,
+        "opacity": "1",
+        "transform": "none"
+       }
+      ],
+      "first": 62,
+      "last": 595,
+      "playState": "running"
+     },
+     {
+      "kind": "keyframes",
+      "name": "ds-banner-text-in",
+      "target": "div[body]",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 340,
+      "delay": 90,
+      "iterations": 1,
+      "easing": "linear",
+      "kfEasing": [
+       "ease.spring-soft"
+      ],
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "opacity": "0",
+        "transform": "translateY(3px)"
+       },
+       {
+        "offset": 0.3,
+        "opacity": "1"
+       },
+       {
+        "offset": 1,
+        "opacity": "1",
+        "transform": "none"
+       }
+      ],
+      "first": 62,
+      "last": 528,
+      "playState": "running"
+     },
+     {
+      "kind": "keyframes",
+      "name": "ds-callout-in",
+      "target": "div[callout]",
+      "props": [
+       "opacity"
+      ],
+      "duration": 340,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "linear",
+      "kfEasing": [
+       "ease.out"
+      ],
+      "fill": "none",
+      "kf": [
+       {
+        "offset": 0,
+        "opacity": "0"
+       },
+       {
+        "offset": 0.3,
+        "opacity": "1"
+       },
+       {
+        "offset": 1,
+        "opacity": "1"
+       }
+      ],
+      "first": 62,
+      "last": 436,
+      "playState": "running"
+     },
+     {
+      "kind": "keyframes",
+      "name": "ds-callout-icon-in",
+      "target": "span[icon]",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 440,
+      "delay": 45,
+      "iterations": 1,
+      "easing": "linear",
+      "kfEasing": [
+       "ease.spring-bouncy"
+      ],
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "opacity": "0",
+        "transform": "scale(0.3)"
+       },
+       {
+        "offset": 0.3,
+        "opacity": "1"
+       },
+       {
+        "offset": 1,
+        "opacity": "1",
+        "transform": "none"
+       }
+      ],
+      "first": 62,
+      "last": 595,
+      "playState": "running"
+     },
+     {
+      "kind": "keyframes",
+      "name": "ds-callout-text-in",
+      "target": "div[title]",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 340,
+      "delay": 90,
+      "iterations": 1,
+      "easing": "linear",
+      "kfEasing": [
+       "ease.spring-soft"
+      ],
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "opacity": "0",
+        "transform": "translateY(3px)"
+       },
+       {
+        "offset": 0.3,
+        "opacity": "1"
+       },
+       {
+        "offset": 1,
+        "opacity": "1",
+        "transform": "none"
+       }
+      ],
+      "first": 62,
+      "last": 528,
+      "playState": "running"
+     },
+     {
+      "kind": "keyframes",
+      "name": "ds-callout-text-in",
+      "target": "div[body]",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 340,
+      "delay": 90,
+      "iterations": 1,
+      "easing": "linear",
+      "kfEasing": [
+       "ease.spring-soft"
+      ],
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "opacity": "0",
+        "transform": "translateY(3px)"
+       },
+       {
+        "offset": 0.3,
+        "opacity": "1"
+       },
+       {
+        "offset": 1,
+        "opacity": "1",
+        "transform": "none"
+       }
+      ],
+      "first": 62,
+      "last": 528,
+      "playState": "running"
+     }
+    ],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 485,
+    "infinite": [],
+    "stateAt": 62,
+    "firstMotionAt": 62,
+    "focusAfter": "button[button]",
+    "frames": 60,
+    "animCount": 12,
+    "rapid": {
+     "left": [],
+     "held": [],
+     "inline": [],
+     "ghosts": 0,
+     "nodes": 25,
+     "indicators": "0 ok",
+     "custom": null,
+     "nodesBefore": 25
+    }
+   },
+   "media.ltr": {
+    "anims": [],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 0,
+    "infinite": [],
+    "stateAt": 79,
+    "firstMotionAt": null,
+    "focusAfter": "button[button]",
+    "frames": 72,
+    "animCount": 0,
+    "restOffTransforms": []
+   },
+   "media.rtl": {
+    "anims": [],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 0,
+    "infinite": [],
+    "stateAt": 67,
+    "firstMotionAt": null,
+    "focusAfter": "button[button]",
+    "frames": 71,
+    "animCount": 0,
+    "restOffTransforms": []
+   },
+   "attr.ltr": {
+    "anims": [],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 0,
+    "infinite": [],
+    "stateAt": 86,
+    "firstMotionAt": null,
+    "focusAfter": "button[button]",
+    "frames": 70,
+    "animCount": 0,
+    "restOffTransforms": []
+   },
+   "attr.rtl": {
+    "anims": [],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 0,
+    "infinite": [],
+    "stateAt": 72,
+    "firstMotionAt": null,
+    "focusAfter": "button[button]",
+    "frames": 70,
+    "animCount": 0,
+    "restOffTransforms": []
+   }
+  },
+  "neutral": {
+   "focus": {
+    "at0": {
+     "el": "button[button]",
+     "outline": "solid 2px rgba(0, 0, 0, 0)",
+     "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgb(255, 255, 255) 0px 0px 0px 2px, rgb(37, 99, 235) 0px 0px 0px 4px",
+     "focusVisible": true,
+     "opacity": 1,
+     "anims": []
+    },
+    "at300": {
+     "el": "button[button]",
+     "outline": "solid 2px rgba(0, 0, 0, 0)",
+     "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgb(255, 255, 255) 0px 0px 0px 2px, rgb(37, 99, 235) 0px 0px 0px 4px",
+     "focusVisible": true,
+     "opacity": 1,
+     "anims": []
+    },
+    "ringAtOnce": true
+   },
+   "transitionSweep": [],
+   "seek": {
+    "animations": 12,
+    "startOffsets": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "hit": {
+     "checked": 2,
+     "missed": [],
+     "maxShift": 18
+    },
+    "parts": [
+     {
+      "part": "div[alert]",
+      "scale": [
+       0.97,
+       1
+      ],
+      "travelPx": 6,
+      "opacityMin": 0,
+      "scaleOvershoot": 0,
+      "travelOvershootPx": 0,
+      "movesUntil": 120
+     },
+     {
+      "part": "span[icon]",
+      "scale": [
+       0.5,
+       1.031
+      ],
+      "travelPx": 0,
+      "opacityMin": 0,
+      "scaleOvershoot": 0.031,
+      "travelOvershootPx": 0,
+      "movesUntil": 220
+     },
+     {
+      "part": "div[title]",
+      "scale": [
+       1,
+       1
+      ],
+      "travelPx": 2,
+      "opacityMin": 0,
+      "scaleOvershoot": 0,
+      "travelOvershootPx": 0,
+      "movesUntil": 120
+     },
+     {
+      "part": "div[body]",
+      "scale": [
+       1,
+       1
+      ],
+      "travelPx": 2,
+      "opacityMin": 0,
+      "scaleOvershoot": 0,
+      "travelOvershootPx": 0,
+      "movesUntil": 120
+     },
+     {
+      "part": "div[actions]",
+      "scale": [
+       1,
+       1
+      ],
+      "travelPx": 2,
+      "opacityMin": 0,
+      "scaleOvershoot": 0,
+      "travelOvershootPx": 0,
+      "movesUntil": 120
+     },
+     {
+      "part": "section[banner]",
+      "scale": [
+       1,
+       1
+      ],
+      "travelPx": 6,
+      "opacityMin": 0,
+      "scaleOvershoot": 0,
+      "travelOvershootPx": 0,
+      "movesUntil": 120
+     },
+     {
+      "part": "div[callout]",
+      "scale": [
+       1,
+       1
+      ],
+      "travelPx": 0,
+      "opacityMin": 0,
+      "scaleOvershoot": 0,
+      "travelOvershootPx": 0,
+      "movesUntil": 40
+     }
+    ],
+    "readable": [
+     {
+      "text": "div[title]:Could not sync",
+      "readableAt": 100,
+      "appearedAt": 0
+     },
+     {
+      "text": "div[body]:Your local cop",
+      "readableAt": 100,
+      "appearedAt": 0
+     },
+     {
+      "text": "span[label]:Try again",
+      "readableAt": 100,
+      "appearedAt": 0
+     },
+     {
+      "text": "div[body]:The workspace ",
+      "readableAt": 100,
+      "appearedAt": 0
+     },
+     {
+      "text": "div[title]:تم الحفظ",
+      "readableAt": 100,
+      "appearedAt": 0
+     },
+     {
+      "text": "div[body]:التغييرات محفو",
+      "readableAt": 100,
+      "appearedAt": 0
+     }
+    ]
+   },
+   "transitionSweepAfter": [],
+   "full": {
+    "anims": [
+     {
+      "kind": "keyframes",
+      "name": "ds-alert-in",
+      "target": "div[alert]",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 220,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "linear",
+      "kfEasing": [
+       "ease.spring-soft"
+      ],
+      "fill": "none",
+      "kf": [
+       {
+        "offset": 0,
+        "opacity": "0",
+        "transform": "translateY(6px) scale(0.97)"
+       },
+       {
+        "offset": 0.3,
+        "opacity": "1"
+       },
+       {
+        "offset": 1,
+        "opacity": "1",
+        "transform": "none"
+       }
+      ],
+      "first": 125,
+      "last": 365,
+      "playState": "running"
+     },
+     {
+      "kind": "keyframes",
+      "name": "ds-alert-icon-in",
+      "target": "span[icon]",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 220,
+      "delay": 24,
+      "iterations": 1,
+      "easing": "linear",
+      "kfEasing": [
+       "ease.spring-bouncy"
+      ],
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "opacity": "0",
+        "transform": "scale(0.5)"
+       },
+       {
+        "offset": 0.3,
+        "opacity": "1"
+       },
+       {
+        "offset": 1,
+        "opacity": "1",
+        "transform": "none"
+       }
+      ],
+      "first": 125,
+      "last": 381,
+      "playState": "running"
+     },
+     {
+      "kind": "keyframes",
+      "name": "ds-alert-text-in",
+      "target": "div[title]",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 220,
+      "delay": 48,
+      "iterations": 1,
+      "easing": "linear",
+      "kfEasing": [
+       "ease.spring-soft"
+      ],
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "opacity": "0",
+        "transform": "translateY(2px)"
+       },
+       {
+        "offset": 0.3,
+        "opacity": "1"
+       },
+       {
+        "offset": 1,
+        "opacity": "1",
+        "transform": "none"
+       }
+      ],
+      "first": 125,
+      "last": 415,
+      "playState": "running"
+     },
+     {
+      "kind": "keyframes",
+      "name": "ds-alert-text-in",
+      "target": "div[body]",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 220,
+      "delay": 48,
+      "iterations": 1,
+      "easing": "linear",
+      "kfEasing": [
+       "ease.spring-soft"
+      ],
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "opacity": "0",
+        "transform": "translateY(2px)"
+       },
+       {
+        "offset": 0.3,
+        "opacity": "1"
+       },
+       {
+        "offset": 1,
+        "opacity": "1",
+        "transform": "none"
+       }
+      ],
+      "first": 125,
+      "last": 415,
+      "playState": "running"
+     },
+     {
+      "kind": "keyframes",
+      "name": "ds-alert-text-in",
+      "target": "div[actions]",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 220,
+      "delay": 48,
+      "iterations": 1,
+      "easing": "linear",
+      "kfEasing": [
+       "ease.spring-soft"
+      ],
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "opacity": "0",
+        "transform": "translateY(2px)"
+       },
+       {
+        "offset": 0.3,
+        "opacity": "1"
+       },
+       {
+        "offset": 1,
+        "opacity": "1",
+        "transform": "none"
+       }
+      ],
+      "first": 125,
+      "last": 415,
+      "playState": "running"
+     },
+     {
+      "kind": "keyframes",
+      "name": "ds-banner-in",
+      "target": "section[banner]",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 220,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "linear",
+      "kfEasing": [
+       "ease.spring-soft"
+      ],
+      "fill": "none",
+      "kf": [
+       {
+        "offset": 0,
+        "opacity": "0",
+        "transform": "translateY(-6px)"
+       },
+       {
+        "offset": 0.3,
+        "opacity": "1"
+       },
+       {
+        "offset": 1,
+        "opacity": "1",
+        "transform": "none"
+       }
+      ],
+      "first": 125,
+      "last": 365,
+      "playState": "running"
+     },
+     {
+      "kind": "keyframes",
+      "name": "ds-banner-icon-in",
+      "target": "span[icon]",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 220,
+      "delay": 24,
+      "iterations": 1,
+      "easing": "linear",
+      "kfEasing": [
+       "ease.spring-bouncy"
+      ],
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "opacity": "0",
+        "transform": "scale(0.5)"
+       },
+       {
+        "offset": 0.3,
+        "opacity": "1"
+       },
+       {
+        "offset": 1,
+        "opacity": "1",
+        "transform": "none"
+       }
+      ],
+      "first": 125,
+      "last": 381,
+      "playState": "running"
+     },
+     {
+      "kind": "keyframes",
+      "name": "ds-banner-text-in",
+      "target": "div[body]",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 220,
+      "delay": 48,
+      "iterations": 1,
+      "easing": "linear",
+      "kfEasing": [
+       "ease.spring-soft"
+      ],
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "opacity": "0",
+        "transform": "translateY(2px)"
+       },
+       {
+        "offset": 0.3,
+        "opacity": "1"
+       },
+       {
+        "offset": 1,
+        "opacity": "1",
+        "transform": "none"
+       }
+      ],
+      "first": 125,
+      "last": 415,
+      "playState": "running"
+     },
+     {
+      "kind": "keyframes",
+      "name": "ds-callout-in",
+      "target": "div[callout]",
+      "props": [
+       "opacity"
+      ],
+      "duration": 220,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "linear",
+      "kfEasing": [
+       "ease.out"
+      ],
+      "fill": "none",
+      "kf": [
+       {
+        "offset": 0,
+        "opacity": "0"
+       },
+       {
+        "offset": 0.3,
+        "opacity": "1"
+       },
+       {
+        "offset": 1,
+        "opacity": "1"
+       }
+      ],
+      "first": 125,
+      "last": 365,
+      "playState": "running"
+     },
+     {
+      "kind": "keyframes",
+      "name": "ds-callout-icon-in",
+      "target": "span[icon]",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 220,
+      "delay": 24,
+      "iterations": 1,
+      "easing": "linear",
+      "kfEasing": [
+       "ease.spring-bouncy"
+      ],
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "opacity": "0",
+        "transform": "scale(0.5)"
+       },
+       {
+        "offset": 0.3,
+        "opacity": "1"
+       },
+       {
+        "offset": 1,
+        "opacity": "1",
+        "transform": "none"
+       }
+      ],
+      "first": 125,
+      "last": 381,
+      "playState": "running"
+     },
+     {
+      "kind": "keyframes",
+      "name": "ds-callout-text-in",
+      "target": "div[title]",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 220,
+      "delay": 48,
+      "iterations": 1,
+      "easing": "linear",
+      "kfEasing": [
+       "ease.spring-soft"
+      ],
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "opacity": "0",
+        "transform": "translateY(2px)"
+       },
+       {
+        "offset": 0.3,
+        "opacity": "1"
+       },
+       {
+        "offset": 1,
+        "opacity": "1",
+        "transform": "none"
+       }
+      ],
+      "first": 125,
+      "last": 415,
+      "playState": "running"
+     },
+     {
+      "kind": "keyframes",
+      "name": "ds-callout-text-in",
+      "target": "div[body]",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 220,
+      "delay": 48,
+      "iterations": 1,
+      "easing": "linear",
+      "kfEasing": [
+       "ease.spring-soft"
+      ],
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "opacity": "0",
+        "transform": "translateY(2px)"
+       },
+       {
+        "offset": 0.3,
+        "opacity": "1"
+       },
+       {
+        "offset": 1,
+        "opacity": "1",
+        "transform": "none"
+       }
+      ],
+      "first": 125,
+      "last": 415,
+      "playState": "running"
+     }
+    ],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 268,
+    "infinite": [],
+    "stateAt": null,
+    "firstMotionAt": 125,
+    "focusAfter": "button[button]",
+    "frames": 92,
+    "animCount": 12
+   },
+   "rapid": {
+    "left": [],
+    "held": [],
+    "inline": [],
+    "ghosts": 0,
+    "nodes": 30,
+    "indicators": "0 ok",
+    "custom": null,
+    "nodesBefore": 30
+   },
+   "interrupt": null,
+   "tenFast": null,
+   "off": {
+    "injected": "@layer ds.recipes {[data-style='neutral'] [data-ds='alert'] {--_alert-enter-y: 0px; --_alert-enter-scale: 1; --_alert-icon-enter-scale: 1; --_alert-shift: 0px;}\n[data-style='neutral'] [data-ds='banner'] {--_banner-enter-y: 0px; --_banner-icon-enter-scale: 1; --_banner-shift: 0px;}\n[data-style='neutral'] [data-ds='callout'] {--_callout-icon-enter-scale: 1; --_callout-shift: 0px;}}",
+    "animations": 12,
+    "moving": [],
+    "fading": [
+     "div[alert]",
+     "span[icon]",
+     "div[title]",
+     "div[body]",
+     "div[actions]",
+     "section[banner]",
+     "div[callout]"
+    ]
+   },
+   "full.rtl": {
+    "anims": [
+     {
+      "kind": "keyframes",
+      "name": "ds-alert-in",
+      "target": "div[alert]",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 220,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "linear",
+      "kfEasing": [
+       "ease.spring-soft"
+      ],
+      "fill": "none",
+      "kf": [
+       {
+        "offset": 0,
+        "opacity": "0",
+        "transform": "translateY(6px) scale(0.97)"
+       },
+       {
+        "offset": 0.3,
+        "opacity": "1"
+       },
+       {
+        "offset": 1,
+        "opacity": "1",
+        "transform": "none"
+       }
+      ],
+      "first": 67,
+      "last": 305,
+      "playState": "running"
+     },
+     {
+      "kind": "keyframes",
+      "name": "ds-alert-icon-in",
+      "target": "span[icon]",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 220,
+      "delay": 24,
+      "iterations": 1,
+      "easing": "linear",
+      "kfEasing": [
+       "ease.spring-bouncy"
+      ],
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "opacity": "0",
+        "transform": "scale(0.5)"
+       },
+       {
+        "offset": 0.3,
+        "opacity": "1"
+       },
+       {
+        "offset": 1,
+        "opacity": "1",
+        "transform": "none"
+       }
+      ],
+      "first": 67,
+      "last": 322,
+      "playState": "running"
+     },
+     {
+      "kind": "keyframes",
+      "name": "ds-alert-text-in",
+      "target": "div[title]",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 220,
+      "delay": 48,
+      "iterations": 1,
+      "easing": "linear",
+      "kfEasing": [
+       "ease.spring-soft"
+      ],
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "opacity": "0",
+        "transform": "translateY(2px)"
+       },
+       {
+        "offset": 0.3,
+        "opacity": "1"
+       },
+       {
+        "offset": 1,
+        "opacity": "1",
+        "transform": "none"
+       }
+      ],
+      "first": 67,
+      "last": 356,
+      "playState": "running"
+     },
+     {
+      "kind": "keyframes",
+      "name": "ds-alert-text-in",
+      "target": "div[body]",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 220,
+      "delay": 48,
+      "iterations": 1,
+      "easing": "linear",
+      "kfEasing": [
+       "ease.spring-soft"
+      ],
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "opacity": "0",
+        "transform": "translateY(2px)"
+       },
+       {
+        "offset": 0.3,
+        "opacity": "1"
+       },
+       {
+        "offset": 1,
+        "opacity": "1",
+        "transform": "none"
+       }
+      ],
+      "first": 67,
+      "last": 356,
+      "playState": "running"
+     },
+     {
+      "kind": "keyframes",
+      "name": "ds-alert-text-in",
+      "target": "div[actions]",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 220,
+      "delay": 48,
+      "iterations": 1,
+      "easing": "linear",
+      "kfEasing": [
+       "ease.spring-soft"
+      ],
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "opacity": "0",
+        "transform": "translateY(2px)"
+       },
+       {
+        "offset": 0.3,
+        "opacity": "1"
+       },
+       {
+        "offset": 1,
+        "opacity": "1",
+        "transform": "none"
+       }
+      ],
+      "first": 67,
+      "last": 356,
+      "playState": "running"
+     },
+     {
+      "kind": "keyframes",
+      "name": "ds-banner-in",
+      "target": "section[banner]",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 220,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "linear",
+      "kfEasing": [
+       "ease.spring-soft"
+      ],
+      "fill": "none",
+      "kf": [
+       {
+        "offset": 0,
+        "opacity": "0",
+        "transform": "translateY(-6px)"
+       },
+       {
+        "offset": 0.3,
+        "opacity": "1"
+       },
+       {
+        "offset": 1,
+        "opacity": "1",
+        "transform": "none"
+       }
+      ],
+      "first": 67,
+      "last": 305,
+      "playState": "running"
+     },
+     {
+      "kind": "keyframes",
+      "name": "ds-banner-icon-in",
+      "target": "span[icon]",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 220,
+      "delay": 24,
+      "iterations": 1,
+      "easing": "linear",
+      "kfEasing": [
+       "ease.spring-bouncy"
+      ],
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "opacity": "0",
+        "transform": "scale(0.5)"
+       },
+       {
+        "offset": 0.3,
+        "opacity": "1"
+       },
+       {
+        "offset": 1,
+        "opacity": "1",
+        "transform": "none"
+       }
+      ],
+      "first": 67,
+      "last": 322,
+      "playState": "running"
+     },
+     {
+      "kind": "keyframes",
+      "name": "ds-banner-text-in",
+      "target": "div[body]",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 220,
+      "delay": 48,
+      "iterations": 1,
+      "easing": "linear",
+      "kfEasing": [
+       "ease.spring-soft"
+      ],
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "opacity": "0",
+        "transform": "translateY(2px)"
+       },
+       {
+        "offset": 0.3,
+        "opacity": "1"
+       },
+       {
+        "offset": 1,
+        "opacity": "1",
+        "transform": "none"
+       }
+      ],
+      "first": 67,
+      "last": 356,
+      "playState": "running"
+     },
+     {
+      "kind": "keyframes",
+      "name": "ds-callout-in",
+      "target": "div[callout]",
+      "props": [
+       "opacity"
+      ],
+      "duration": 220,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "linear",
+      "kfEasing": [
+       "ease.out"
+      ],
+      "fill": "none",
+      "kf": [
+       {
+        "offset": 0,
+        "opacity": "0"
+       },
+       {
+        "offset": 0.3,
+        "opacity": "1"
+       },
+       {
+        "offset": 1,
+        "opacity": "1"
+       }
+      ],
+      "first": 67,
+      "last": 305,
+      "playState": "running"
+     },
+     {
+      "kind": "keyframes",
+      "name": "ds-callout-icon-in",
+      "target": "span[icon]",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 220,
+      "delay": 24,
+      "iterations": 1,
+      "easing": "linear",
+      "kfEasing": [
+       "ease.spring-bouncy"
+      ],
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "opacity": "0",
+        "transform": "scale(0.5)"
+       },
+       {
+        "offset": 0.3,
+        "opacity": "1"
+       },
+       {
+        "offset": 1,
+        "opacity": "1",
+        "transform": "none"
+       }
+      ],
+      "first": 67,
+      "last": 322,
+      "playState": "running"
+     },
+     {
+      "kind": "keyframes",
+      "name": "ds-callout-text-in",
+      "target": "div[title]",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 220,
+      "delay": 48,
+      "iterations": 1,
+      "easing": "linear",
+      "kfEasing": [
+       "ease.spring-soft"
+      ],
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "opacity": "0",
+        "transform": "translateY(2px)"
+       },
+       {
+        "offset": 0.3,
+        "opacity": "1"
+       },
+       {
+        "offset": 1,
+        "opacity": "1",
+        "transform": "none"
+       }
+      ],
+      "first": 67,
+      "last": 356,
+      "playState": "running"
+     },
+     {
+      "kind": "keyframes",
+      "name": "ds-callout-text-in",
+      "target": "div[body]",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 220,
+      "delay": 48,
+      "iterations": 1,
+      "easing": "linear",
+      "kfEasing": [
+       "ease.spring-soft"
+      ],
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "opacity": "0",
+        "transform": "translateY(2px)"
+       },
+       {
+        "offset": 0.3,
+        "opacity": "1"
+       },
+       {
+        "offset": 1,
+        "opacity": "1",
+        "transform": "none"
+       }
+      ],
+      "first": 67,
+      "last": 356,
+      "playState": "running"
+     }
+    ],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 268,
+    "infinite": [],
+    "stateAt": 67,
+    "firstMotionAt": 67,
+    "focusAfter": "button[button]",
+    "frames": 73,
+    "animCount": 12,
+    "rapid": {
+     "left": [],
+     "held": [],
+     "inline": [],
+     "ghosts": 0,
+     "nodes": 30,
+     "indicators": "0 ok",
+     "custom": null,
+     "nodesBefore": 30
+    }
+   },
+   "media.ltr": {
+    "anims": [],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 0,
+    "infinite": [],
+    "stateAt": 69,
+    "firstMotionAt": null,
+    "focusAfter": "button[button]",
+    "frames": 68,
+    "animCount": 0,
+    "restOffTransforms": []
+   },
+   "media.rtl": {
+    "anims": [],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 0,
+    "infinite": [],
+    "stateAt": 46,
+    "firstMotionAt": null,
+    "focusAfter": "button[button]",
+    "frames": 72,
+    "animCount": 0,
+    "restOffTransforms": []
+   },
+   "attr.ltr": {
+    "anims": [],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 0,
+    "infinite": [],
+    "stateAt": 132,
+    "firstMotionAt": null,
+    "focusAfter": "button[button]",
+    "frames": 72,
+    "animCount": 0,
+    "restOffTransforms": []
+   },
+   "attr.rtl": {
+    "anims": [],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 0,
+    "infinite": [],
+    "stateAt": 198,
+    "firstMotionAt": null,
+    "focusAfter": "button[button]",
+    "frames": 68,
+    "animCount": 0,
+    "restOffTransforms": []
+   }
+  }
+ },
+ "sheet": "alert-entrance.sheet.png"
+}

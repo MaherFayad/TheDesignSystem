@@ -1,0 +1,3086 @@
+{
+ "id": "form-summary-enter",
+ "family": "inputs",
+ "drive": "waapi",
+ "pattern": "list-stagger",
+ "reduced": "The rows fade in together.",
+ "tokens": {
+  "studio": {
+   "delay-feedback": "2000ms",
+   "delay-stagger": "0ms",
+   "distance-enter": "4px",
+   "distance-lift": "0px",
+   "distance-nudge": "1px",
+   "distance-shift": "2px",
+   "duration-base": "120ms",
+   "duration-celebrate": "120ms",
+   "duration-fast": "80ms",
+   "duration-instant": "70ms",
+   "duration-medium": "140ms",
+   "duration-moderate": "150ms",
+   "duration-morph": "100ms",
+   "duration-quick": "100ms",
+   "duration-roll": "0.3s",
+   "duration-slow": "180ms",
+   "duration-spin": "0.8s",
+   "duration-spring-bouncy": "120ms",
+   "duration-spring-snappy": "80ms",
+   "duration-spring-soft": "100ms",
+   "duration-zoom": "220ms",
+   "scale-anticipate": "0.97",
+   "scale-enter": "1",
+   "scale-lift": "1",
+   "scale-morph": "0.8",
+   "scale-pop": "1",
+   "scale-press": "0.97",
+   "scale-stretch": "1.08"
+  },
+  "desk": {
+   "delay-feedback": "2000ms",
+   "delay-stagger": "45ms",
+   "distance-enter": "12px",
+   "distance-lift": "4px",
+   "distance-nudge": "3px",
+   "distance-shift": "6px",
+   "duration-base": "120ms",
+   "duration-celebrate": "480ms",
+   "duration-fast": "80ms",
+   "duration-instant": "70ms",
+   "duration-medium": "140ms",
+   "duration-moderate": "150ms",
+   "duration-morph": "320ms",
+   "duration-quick": "100ms",
+   "duration-roll": "0.3s",
+   "duration-slow": "180ms",
+   "duration-spin": "0.8s",
+   "duration-spring-bouncy": "440ms",
+   "duration-spring-snappy": "300ms",
+   "duration-spring-soft": "340ms",
+   "duration-zoom": "220ms",
+   "scale-anticipate": "0.9",
+   "scale-enter": "0.9",
+   "scale-lift": "1.03",
+   "scale-morph": "0.3",
+   "scale-pop": "1.14",
+   "scale-press": "0.97",
+   "scale-stretch": "1.3"
+  },
+  "neutral": {
+   "delay-feedback": "2000ms",
+   "delay-stagger": "24ms",
+   "distance-enter": "6px",
+   "distance-lift": "2px",
+   "distance-nudge": "2px",
+   "distance-shift": "4px",
+   "duration-base": "150ms",
+   "duration-celebrate": "220ms",
+   "duration-fast": "80ms",
+   "duration-instant": "70ms",
+   "duration-medium": "180ms",
+   "duration-moderate": "150ms",
+   "duration-morph": "200ms",
+   "duration-quick": "100ms",
+   "duration-roll": "0.3s",
+   "duration-slow": "180ms",
+   "duration-spin": "0.8s",
+   "duration-spring-bouncy": "220ms",
+   "duration-spring-snappy": "180ms",
+   "duration-spring-soft": "220ms",
+   "duration-zoom": "220ms",
+   "scale-anticipate": "0.95",
+   "scale-enter": "0.97",
+   "scale-lift": "1.01",
+   "scale-morph": "0.5",
+   "scale-pop": "1.05",
+   "scale-press": "0.97",
+   "scale-stretch": "1.15"
+  }
+ },
+ "runs": [
+  {
+   "style": "studio",
+   "dir": "ltr",
+   "motion": "full",
+   "state": "idle/undefined -> idle/name",
+   "stateAt": 80,
+   "firstMotionAt": 80,
+   "events": "pointerdown@39 focusin@40 pointerup@40 click@41",
+   "longest": 120,
+   "movers": 13,
+   "badProps": [],
+   "hitFails": 122,
+   "hitSample": [
+    {
+     "t": 80,
+     "s": "idle/name",
+     "a": "input>input[control]",
+     "hit": "error>span[message]",
+     "n": 35,
+     "x": 0
+    },
+    {
+     "t": 83,
+     "s": "idle/name",
+     "a": "input>input[control]",
+     "hit": "error>span[message]",
+     "n": 35,
+     "x": 0
+    }
+   ],
+   "text": {
+    "seenAt": 80,
+    "readyAt": 198,
+    "readyAfterSeen": 118,
+    "firstOpacity": 0
+   },
+   "anims": [
+    {
+     "target": "field>label[label]",
+     "kind": "Transition",
+     "props": "transform",
+     "dur": 80,
+     "durTok": "duration-fast|duration-spring-snappy",
+     "ease": "steps(2)",
+     "kf": [
+      {
+       "offset": 0,
+       "transform": "none"
+      },
+      {
+       "offset": 1,
+       "transform": "translateY(-2.5px)"
+      }
+     ],
+     "at": 80
+    },
+    {
+     "target": "field>div[input]::before",
+     "kind": "Transition",
+     "props": "opacity",
+     "dur": 100,
+     "durTok": "duration-morph|duration-quick|duration-spring-soft",
+     "ease": "ease-spring-soft",
+     "kf": [
+      {
+       "offset": 0,
+       "opacity": "0"
+      },
+      {
+       "offset": 1,
+       "opacity": "1"
+      }
+     ],
+     "at": 80
+    },
+    {
+     "target": "field>div[input]::before",
+     "kind": "Transition",
+     "props": "transform",
+     "dur": 100,
+     "durTok": "duration-morph|duration-quick|duration-spring-soft",
+     "ease": "ease-spring-soft",
+     "kf": [
+      {
+       "offset": 0,
+       "transform": "scale(1)"
+      },
+      {
+       "offset": 1,
+       "transform": "none"
+      }
+     ],
+     "at": 80
+    },
+    {
+     "target": "form>div[summary]",
+     "kind": "Animation",
+     "props": "opacity,transform",
+     "dur": 100,
+     "durTok": "duration-morph|duration-quick|duration-spring-soft",
+     "ease": "linear",
+     "kf": [
+      {
+       "offset": 0,
+       "opacity": "0",
+       "transform": "translateY(4px) scale(1)",
+       "easing": "ease-spring-soft"
+      },
+      {
+       "offset": 0.3,
+       "opacity": "1",
+       "easing": "ease-spring-soft"
+      },
+      {
+       "offset": 1,
+       "composite": "replace",
+       "opacity": "1",
+       "transform": "none",
+       "easing": "ease-spring-soft"
+      }
+     ],
+     "at": 80
+    },
+    {
+     "target": "summary>span[icon]",
+     "kind": "Animation",
+     "props": "opacity,transform",
+     "dur": 120,
+     "durTok": "duration-base|duration-celebrate|duration-spring-bouncy",
+     "ease": "linear",
+     "kf": [
+      {
+       "offset": 0,
+       "opacity": "0",
+       "transform": "scale(0.8)",
+       "easing": "steps(3)"
+      },
+      {
+       "offset": 0.3,
+       "opacity": "1",
+       "easing": "steps(3)"
+      },
+      {
+       "offset": 1,
+       "composite": "replace",
+       "opacity": "1",
+       "transform": "none",
+       "easing": "steps(3)"
+      }
+     ],
+     "at": 80
+    },
+    {
+     "target": "summary>div[title]",
+     "kind": "Animation",
+     "props": "opacity,transform",
+     "dur": 100,
+     "durTok": "duration-morph|duration-quick|duration-spring-soft",
+     "ease": "linear",
+     "kf": [
+      {
+       "offset": 0,
+       "opacity": "0",
+       "transform": "translateY(1px)",
+       "easing": "ease-spring-soft"
+      },
+      {
+       "offset": 0.3,
+       "opacity": "1",
+       "easing": "ease-spring-soft"
+      },
+      {
+       "offset": 1,
+       "composite": "replace",
+       "opacity": "1",
+       "transform": "none",
+       "easing": "ease-spring-soft"
+      }
+     ],
+     "at": 80
+    },
+    {
+     "target": "summary>div[body]",
+     "kind": "Animation",
+     "props": "opacity,transform",
+     "dur": 100,
+     "durTok": "duration-morph|duration-quick|duration-spring-soft",
+     "ease": "linear",
+     "kf": [
+      {
+       "offset": 0,
+       "opacity": "0",
+       "transform": "translateY(1px)",
+       "easing": "ease-spring-soft"
+      },
+      {
+       "offset": 0.3,
+       "opacity": "1",
+       "easing": "ease-spring-soft"
+      },
+      {
+       "offset": 1,
+       "composite": "replace",
+       "opacity": "1",
+       "transform": "none",
+       "easing": "ease-spring-soft"
+      }
+     ],
+     "at": 80
+    },
+    {
+     "target": "li",
+     "kind": "Animation",
+     "props": "opacity",
+     "dur": 120,
+     "durTok": "duration-base|duration-celebrate|duration-spring-bouncy",
+     "ease": "ease-out",
+     "kf": [
+      {
+       "opacity": "0"
+      },
+      {
+       "opacity": "1"
+      }
+     ],
+     "at": 80,
+     "n": 2
+    },
+    {
+     "target": "field>p[error]",
+     "kind": "Animation",
+     "props": "opacity,transform",
+     "dur": 100,
+     "durTok": "duration-morph|duration-quick|duration-spring-soft",
+     "ease": "ease-spring-soft",
+     "kf": [
+      {
+       "offset": 0,
+       "opacity": "0",
+       "transform": "translateY(calc(-1 * var(--ds-distance-shift, 4px)))"
+      },
+      {
+       "offset": 0.3,
+       "opacity": "1"
+      },
+      {
+       "offset": 1,
+       "opacity": "1",
+       "transform": "none"
+      }
+     ],
+     "at": 80,
+     "n": 2
+    },
+    {
+     "target": "error>svg[icon]",
+     "kind": "Animation",
+     "props": "opacity,transform",
+     "dur": 120,
+     "durTok": "duration-base|duration-celebrate|duration-spring-bouncy",
+     "ease": "steps(3)",
+     "kf": [
+      {
+       "offset": 0,
+       "opacity": "0",
+       "transform": "scale(var(--ds-scale-morph, 0.5))"
+      },
+      {
+       "offset": 0.3,
+       "opacity": "1"
+      },
+      {
+       "offset": 1,
+       "opacity": "1",
+       "transform": "none"
+      }
+     ],
+     "at": 80,
+     "n": 2
+    }
+   ],
+   "end": {
+    "live": [],
+    "offRest": 4,
+    "offSample": [
+     "11:span[label]::after t=matrix(0, 0, 0, 1, 0, 0) o=1",
+     "14:span[label]::after t=matrix(0, 0, 0, 1, 0, 0) o=1",
+     "17:label[label] t=matrix(1, 0, 0, 1, 0, -1) o=1"
+    ],
+    "nodes": 35
+   }
+  },
+  {
+   "style": "studio",
+   "dir": "ltr",
+   "motion": "media",
+   "state": "idle/undefined -> idle/name",
+   "stateAt": 82,
+   "firstMotionAt": 82,
+   "events": "pointerdown@51 focusin@52 pointerup@53 click@53",
+   "longest": 100,
+   "movers": 3,
+   "badProps": [],
+   "hitFails": 128,
+   "hitSample": [
+    {
+     "t": 82,
+     "s": "idle/name",
+     "a": "input>input[control]",
+     "hit": "body>div[field]",
+     "n": 35,
+     "x": 1
+    },
+    {
+     "t": 83,
+     "s": "idle/name",
+     "a": "input>input[control]",
+     "hit": "body>div[field]",
+     "n": 35,
+     "x": 1
+    }
+   ],
+   "text": {
+    "seenAt": 82,
+    "readyAt": 82,
+    "readyAfterSeen": 0,
+    "firstOpacity": 1
+   },
+   "anims": [
+    {
+     "target": "field>label[label]",
+     "kind": "Transition",
+     "props": "transform",
+     "dur": 80,
+     "durTok": "duration-spring-snappy",
+     "ease": "steps(2)",
+     "kf": [
+      {
+       "offset": 0,
+       "transform": "none"
+      },
+      {
+       "offset": 1,
+       "transform": "translateY(0px)"
+      }
+     ],
+     "at": 82
+    },
+    {
+     "target": "field>div[input]::before",
+     "kind": "Transition",
+     "props": "opacity",
+     "dur": 100,
+     "durTok": "duration-morph|duration-spring-soft",
+     "ease": "ease-spring-soft",
+     "kf": [
+      {
+       "offset": 0,
+       "opacity": "0"
+      },
+      {
+       "offset": 1,
+       "opacity": "1"
+      }
+     ],
+     "at": 82
+    },
+    {
+     "target": "field>div[input]::before",
+     "kind": "Transition",
+     "props": "transform",
+     "dur": 100,
+     "durTok": "duration-morph|duration-spring-soft",
+     "ease": "ease-spring-soft",
+     "kf": [
+      {
+       "offset": 0,
+       "transform": "scale(1)"
+      },
+      {
+       "offset": 1,
+       "transform": "none"
+      }
+     ],
+     "at": 82
+    }
+   ],
+   "end": {
+    "live": [],
+    "offRest": 3,
+    "offSample": [
+     "11:span[label]::after t=matrix(0, 0, 0, 1, 0, 0) o=1",
+     "14:span[label]::after t=matrix(0, 0, 0, 1, 0, 0) o=1",
+     "26:div::before t=matrix(1, 0, 0, 1, 0, 0) o=0"
+    ],
+    "nodes": 35
+   }
+  },
+  {
+   "style": "studio",
+   "dir": "ltr",
+   "motion": "attr",
+   "state": "idle/undefined -> idle/name",
+   "stateAt": 93,
+   "firstMotionAt": null,
+   "events": "pointerdown@56 focusin@56 pointerup@57 click@57",
+   "longest": 0,
+   "movers": 0,
+   "badProps": [],
+   "hitFails": 124,
+   "hitSample": [
+    {
+     "t": 93,
+     "s": "idle/name",
+     "a": "input>input[control]",
+     "hit": "body>div[field]",
+     "n": 35,
+     "x": 1
+    },
+    {
+     "t": 94,
+     "s": "idle/name",
+     "a": "input>input[control]",
+     "hit": "body>div[field]",
+     "n": 35,
+     "x": 1
+    }
+   ],
+   "text": {
+    "seenAt": 93,
+    "readyAt": 93,
+    "readyAfterSeen": 0,
+    "firstOpacity": 1
+   },
+   "anims": [],
+   "end": {
+    "live": [],
+    "offRest": 3,
+    "offSample": [
+     "11:span[label]::after t=matrix(0, 0, 0, 1, 0, 0) o=1",
+     "14:span[label]::after t=matrix(0, 0, 0, 1, 0, 0) o=1",
+     "26:div::before t=matrix(1, 0, 0, 1, 0, 0) o=0"
+    ],
+    "nodes": 35
+   }
+  },
+  {
+   "style": "studio",
+   "dir": "rtl",
+   "motion": "full",
+   "state": "idle/undefined -> idle/name",
+   "stateAt": 106,
+   "firstMotionAt": 106,
+   "events": "pointerdown@71 focusin@72 pointerup@76 click@77",
+   "longest": 120,
+   "movers": 13,
+   "badProps": [],
+   "hitFails": 120,
+   "hitSample": [
+    {
+     "t": 106,
+     "s": "idle/name",
+     "a": "input>input[control]",
+     "hit": "body>div[field]",
+     "n": 35,
+     "x": 0
+    },
+    {
+     "t": 111,
+     "s": "idle/name",
+     "a": "input>input[control]",
+     "hit": "body>div[field]",
+     "n": 35,
+     "x": 0
+    }
+   ],
+   "text": {
+    "seenAt": 106,
+    "readyAt": 252,
+    "readyAfterSeen": 146,
+    "firstOpacity": 0
+   },
+   "anims": [
+    {
+     "target": "field>label[label]",
+     "kind": "Transition",
+     "props": "transform",
+     "dur": 80,
+     "durTok": "duration-fast|duration-spring-snappy",
+     "ease": "steps(2)",
+     "kf": [
+      {
+       "offset": 0,
+       "transform": "none"
+      },
+      {
+       "offset": 1,
+       "transform": "translateY(-2.5px)"
+      }
+     ],
+     "at": 106
+    },
+    {
+     "target": "field>div[input]::before",
+     "kind": "Transition",
+     "props": "opacity",
+     "dur": 100,
+     "durTok": "duration-morph|duration-quick|duration-spring-soft",
+     "ease": "ease-spring-soft",
+     "kf": [
+      {
+       "offset": 0,
+       "opacity": "0"
+      },
+      {
+       "offset": 1,
+       "opacity": "1"
+      }
+     ],
+     "at": 106
+    },
+    {
+     "target": "field>div[input]::before",
+     "kind": "Transition",
+     "props": "transform",
+     "dur": 100,
+     "durTok": "duration-morph|duration-quick|duration-spring-soft",
+     "ease": "ease-spring-soft",
+     "kf": [
+      {
+       "offset": 0,
+       "transform": "scale(1)"
+      },
+      {
+       "offset": 1,
+       "transform": "none"
+      }
+     ],
+     "at": 106
+    },
+    {
+     "target": "form>div[summary]",
+     "kind": "Animation",
+     "props": "opacity,transform",
+     "dur": 100,
+     "durTok": "duration-morph|duration-quick|duration-spring-soft",
+     "ease": "linear",
+     "kf": [
+      {
+       "offset": 0,
+       "opacity": "0",
+       "transform": "translateY(4px) scale(1)",
+       "easing": "ease-spring-soft"
+      },
+      {
+       "offset": 0.3,
+       "opacity": "1",
+       "easing": "ease-spring-soft"
+      },
+      {
+       "offset": 1,
+       "composite": "replace",
+       "opacity": "1",
+       "transform": "none",
+       "easing": "ease-spring-soft"
+      }
+     ],
+     "at": 106
+    },
+    {
+     "target": "summary>span[icon]",
+     "kind": "Animation",
+     "props": "opacity,transform",
+     "dur": 120,
+     "durTok": "duration-base|duration-celebrate|duration-spring-bouncy",
+     "ease": "linear",
+     "kf": [
+      {
+       "offset": 0,
+       "opacity": "0",
+       "transform": "scale(0.8)",
+       "easing": "steps(3)"
+      },
+      {
+       "offset": 0.3,
+       "opacity": "1",
+       "easing": "steps(3)"
+      },
+      {
+       "offset": 1,
+       "composite": "replace",
+       "opacity": "1",
+       "transform": "none",
+       "easing": "steps(3)"
+      }
+     ],
+     "at": 106
+    },
+    {
+     "target": "summary>div[title]",
+     "kind": "Animation",
+     "props": "opacity,transform",
+     "dur": 100,
+     "durTok": "duration-morph|duration-quick|duration-spring-soft",
+     "ease": "linear",
+     "kf": [
+      {
+       "offset": 0,
+       "opacity": "0",
+       "transform": "translateY(1px)",
+       "easing": "ease-spring-soft"
+      },
+      {
+       "offset": 0.3,
+       "opacity": "1",
+       "easing": "ease-spring-soft"
+      },
+      {
+       "offset": 1,
+       "composite": "replace",
+       "opacity": "1",
+       "transform": "none",
+       "easing": "ease-spring-soft"
+      }
+     ],
+     "at": 106
+    },
+    {
+     "target": "summary>div[body]",
+     "kind": "Animation",
+     "props": "opacity,transform",
+     "dur": 100,
+     "durTok": "duration-morph|duration-quick|duration-spring-soft",
+     "ease": "linear",
+     "kf": [
+      {
+       "offset": 0,
+       "opacity": "0",
+       "transform": "translateY(1px)",
+       "easing": "ease-spring-soft"
+      },
+      {
+       "offset": 0.3,
+       "opacity": "1",
+       "easing": "ease-spring-soft"
+      },
+      {
+       "offset": 1,
+       "composite": "replace",
+       "opacity": "1",
+       "transform": "none",
+       "easing": "ease-spring-soft"
+      }
+     ],
+     "at": 106
+    },
+    {
+     "target": "li",
+     "kind": "Animation",
+     "props": "opacity",
+     "dur": 120,
+     "durTok": "duration-base|duration-celebrate|duration-spring-bouncy",
+     "ease": "ease-out",
+     "kf": [
+      {
+       "opacity": "0"
+      },
+      {
+       "opacity": "1"
+      }
+     ],
+     "at": 106,
+     "n": 2
+    },
+    {
+     "target": "field>p[error]",
+     "kind": "Animation",
+     "props": "opacity,transform",
+     "dur": 100,
+     "durTok": "duration-morph|duration-quick|duration-spring-soft",
+     "ease": "ease-spring-soft",
+     "kf": [
+      {
+       "offset": 0,
+       "opacity": "0",
+       "transform": "translateY(calc(-1 * var(--ds-distance-shift, 4px)))"
+      },
+      {
+       "offset": 0.3,
+       "opacity": "1"
+      },
+      {
+       "offset": 1,
+       "opacity": "1",
+       "transform": "none"
+      }
+     ],
+     "at": 106,
+     "n": 2
+    },
+    {
+     "target": "error>svg[icon]",
+     "kind": "Animation",
+     "props": "opacity,transform",
+     "dur": 120,
+     "durTok": "duration-base|duration-celebrate|duration-spring-bouncy",
+     "ease": "steps(3)",
+     "kf": [
+      {
+       "offset": 0,
+       "opacity": "0",
+       "transform": "scale(var(--ds-scale-morph, 0.5))"
+      },
+      {
+       "offset": 0.3,
+       "opacity": "1"
+      },
+      {
+       "offset": 1,
+       "opacity": "1",
+       "transform": "none"
+      }
+     ],
+     "at": 106,
+     "n": 2
+    }
+   ],
+   "end": {
+    "live": [],
+    "offRest": 4,
+    "offSample": [
+     "11:span[label]::after t=matrix(0, 0, 0, 1, 0, 0) o=1",
+     "14:span[label]::after t=matrix(0, 0, 0, 1, 0, 0) o=1",
+     "17:label[label] t=matrix(1, 0, 0, 1, 0, -1) o=1"
+    ],
+    "nodes": 35
+   }
+  },
+  {
+   "style": "studio",
+   "dir": "rtl",
+   "motion": "media",
+   "state": "idle/undefined -> idle/name",
+   "stateAt": 143,
+   "firstMotionAt": 143,
+   "events": "pointerdown@90 focusin@91 pointerup@91 click@91",
+   "longest": 100,
+   "movers": 3,
+   "badProps": [],
+   "hitFails": 120,
+   "hitSample": [
+    {
+     "t": 143,
+     "s": "idle/name",
+     "a": "input>input[control]",
+     "hit": "body>div[field]",
+     "n": 35,
+     "x": 1
+    },
+    {
+     "t": 144,
+     "s": "idle/name",
+     "a": "input>input[control]",
+     "hit": "body>div[field]",
+     "n": 35,
+     "x": 1
+    }
+   ],
+   "text": {
+    "seenAt": 143,
+    "readyAt": 143,
+    "readyAfterSeen": 0,
+    "firstOpacity": 1
+   },
+   "anims": [
+    {
+     "target": "field>label[label]",
+     "kind": "Transition",
+     "props": "transform",
+     "dur": 80,
+     "durTok": "duration-spring-snappy",
+     "ease": "steps(2)",
+     "kf": [
+      {
+       "offset": 0,
+       "transform": "none"
+      },
+      {
+       "offset": 1,
+       "transform": "translateY(0px)"
+      }
+     ],
+     "at": 143
+    },
+    {
+     "target": "field>div[input]::before",
+     "kind": "Transition",
+     "props": "opacity",
+     "dur": 100,
+     "durTok": "duration-morph|duration-spring-soft",
+     "ease": "ease-spring-soft",
+     "kf": [
+      {
+       "offset": 0,
+       "opacity": "0"
+      },
+      {
+       "offset": 1,
+       "opacity": "1"
+      }
+     ],
+     "at": 143
+    },
+    {
+     "target": "field>div[input]::before",
+     "kind": "Transition",
+     "props": "transform",
+     "dur": 100,
+     "durTok": "duration-morph|duration-spring-soft",
+     "ease": "ease-spring-soft",
+     "kf": [
+      {
+       "offset": 0,
+       "transform": "scale(1)"
+      },
+      {
+       "offset": 1,
+       "transform": "none"
+      }
+     ],
+     "at": 143
+    }
+   ],
+   "end": {
+    "live": [],
+    "offRest": 3,
+    "offSample": [
+     "11:span[label]::after t=matrix(0, 0, 0, 1, 0, 0) o=1",
+     "14:span[label]::after t=matrix(0, 0, 0, 1, 0, 0) o=1",
+     "26:div::before t=matrix(1, 0, 0, 1, 0, 0) o=0"
+    ],
+    "nodes": 35
+   }
+  },
+  {
+   "style": "studio",
+   "dir": "rtl",
+   "motion": "attr",
+   "state": "idle/undefined -> idle/name",
+   "stateAt": 84,
+   "firstMotionAt": null,
+   "events": "pointerdown@56 focusin@57 pointerup@57 click@58",
+   "longest": 0,
+   "movers": 0,
+   "badProps": [],
+   "hitFails": 122,
+   "hitSample": [
+    {
+     "t": 84,
+     "s": "idle/name",
+     "a": "input>input[control]",
+     "hit": "body>div[field]",
+     "n": 35,
+     "x": 1
+    },
+    {
+     "t": 85,
+     "s": "idle/name",
+     "a": "input>input[control]",
+     "hit": "body>div[field]",
+     "n": 35,
+     "x": 1
+    }
+   ],
+   "text": {
+    "seenAt": 84,
+    "readyAt": 84,
+    "readyAfterSeen": 0,
+    "firstOpacity": 1
+   },
+   "anims": [],
+   "end": {
+    "live": [],
+    "offRest": 3,
+    "offSample": [
+     "11:span[label]::after t=matrix(0, 0, 0, 1, 0, 0) o=1",
+     "14:span[label]::after t=matrix(0, 0, 0, 1, 0, 0) o=1",
+     "26:div::before t=matrix(1, 0, 0, 1, 0, 0) o=0"
+    ],
+    "nodes": 35
+   }
+  },
+  {
+   "style": "desk",
+   "dir": "ltr",
+   "motion": "full",
+   "state": "idle/undefined -> idle/name",
+   "stateAt": 93,
+   "firstMotionAt": 93,
+   "events": "pointerdown@61 focusin@62 pointerup@62 click@63",
+   "longest": 485,
+   "movers": 15,
+   "badProps": [],
+   "hitFails": 114,
+   "hitSample": [
+    {
+     "t": 93,
+     "s": "idle/name",
+     "a": "input>input[control]",
+     "hit": "error>span[message]",
+     "n": 35,
+     "x": 0
+    },
+    {
+     "t": 95,
+     "s": "idle/name",
+     "a": "input>input[control]",
+     "hit": "error>span[message]",
+     "n": 35,
+     "x": 0
+    }
+   ],
+   "text": {
+    "seenAt": 93,
+    "readyAt": 250,
+    "readyAfterSeen": 157,
+    "firstOpacity": 0
+   },
+   "anims": [
+    {
+     "target": "field>label[label]",
+     "kind": "Transition",
+     "props": "transform",
+     "dur": 300,
+     "durTok": "duration-roll|duration-spring-snappy",
+     "ease": "ease-spring-snappy",
+     "kf": [
+      {
+       "offset": 0,
+       "transform": "none"
+      },
+      {
+       "offset": 1,
+       "transform": "translateY(-7.5px)"
+      }
+     ],
+     "at": 93
+    },
+    {
+     "target": "field>div[input]::before",
+     "kind": "Transition",
+     "props": "opacity",
+     "dur": 340,
+     "durTok": "duration-spring-soft",
+     "ease": "ease-spring-soft",
+     "kf": [
+      {
+       "offset": 0,
+       "opacity": "0"
+      },
+      {
+       "offset": 1,
+       "opacity": "1"
+      }
+     ],
+     "at": 93
+    },
+    {
+     "target": "field>div[input]::before",
+     "kind": "Transition",
+     "props": "transform",
+     "dur": 340,
+     "durTok": "duration-spring-soft",
+     "ease": "ease-spring-soft",
+     "kf": [
+      {
+       "offset": 0,
+       "transform": "scale(0.9)"
+      },
+      {
+       "offset": 1,
+       "transform": "none"
+      }
+     ],
+     "at": 93
+    },
+    {
+     "target": "form>div[summary]",
+     "kind": "Animation",
+     "props": "opacity,transform",
+     "dur": 340,
+     "durTok": "duration-spring-soft",
+     "ease": "linear",
+     "kf": [
+      {
+       "offset": 0,
+       "opacity": "0",
+       "transform": "translateY(12px) scale(0.9)",
+       "easing": "linear(..)"
+      },
+      {
+       "offset": 0.3,
+       "opacity": "1",
+       "easing": "linear(..)"
+      },
+      {
+       "offset": 1,
+       "composite": "replace",
+       "opacity": "1",
+       "transform": "none",
+       "easing": "linear(..)"
+      }
+     ],
+     "at": 93
+    },
+    {
+     "target": "summary>span[icon]",
+     "kind": "Animation",
+     "props": "opacity,transform",
+     "dur": 440,
+     "durTok": "duration-spring-bouncy",
+     "delay": 45,
+     "ease": "linear",
+     "kf": [
+      {
+       "offset": 0,
+       "opacity": "0",
+       "transform": "scale(0.3)",
+       "easing": "linear(..)"
+      },
+      {
+       "offset": 0.3,
+       "opacity": "1",
+       "easing": "linear(..)"
+      },
+      {
+       "offset": 1,
+       "composite": "replace",
+       "opacity": "1",
+       "transform": "none",
+       "easing": "linear(..)"
+      }
+     ],
+     "at": 93
+    },
+    {
+     "target": "summary>div[title]",
+     "kind": "Animation",
+     "props": "opacity,transform",
+     "dur": 340,
+     "durTok": "duration-spring-soft",
+     "delay": 90,
+     "ease": "linear",
+     "kf": [
+      {
+       "offset": 0,
+       "opacity": "0",
+       "transform": "translateY(3px)",
+       "easing": "linear(..)"
+      },
+      {
+       "offset": 0.3,
+       "opacity": "1",
+       "easing": "linear(..)"
+      },
+      {
+       "offset": 1,
+       "composite": "replace",
+       "opacity": "1",
+       "transform": "none",
+       "easing": "linear(..)"
+      }
+     ],
+     "at": 93
+    },
+    {
+     "target": "summary>div[body]",
+     "kind": "Animation",
+     "props": "opacity,transform",
+     "dur": 340,
+     "durTok": "duration-spring-soft",
+     "delay": 90,
+     "ease": "linear",
+     "kf": [
+      {
+       "offset": 0,
+       "opacity": "0",
+       "transform": "translateY(3px)",
+       "easing": "linear(..)"
+      },
+      {
+       "offset": 0.3,
+       "opacity": "1",
+       "easing": "linear(..)"
+      },
+      {
+       "offset": 1,
+       "composite": "replace",
+       "opacity": "1",
+       "transform": "none",
+       "easing": "linear(..)"
+      }
+     ],
+     "at": 93
+    },
+    {
+     "target": "li",
+     "kind": "Animation",
+     "props": "opacity,transform",
+     "dur": 340,
+     "durTok": "duration-spring-soft",
+     "ease": "ease-spring-soft",
+     "kf": [
+      {
+       "offset": 0,
+       "opacity": "0",
+       "transform": "translateX(calc(-1 * var(--ds-distance-shift, 4px)))"
+      },
+      {
+       "offset": 0.3,
+       "opacity": "1"
+      },
+      {
+       "offset": 1,
+       "opacity": "1",
+       "transform": "none"
+      }
+     ],
+     "at": 93
+    },
+    {
+     "target": "li",
+     "kind": "Animation",
+     "props": "opacity,transform",
+     "dur": 340,
+     "durTok": "duration-spring-soft",
+     "delay": 45,
+     "ease": "ease-spring-soft",
+     "kf": [
+      {
+       "offset": 0,
+       "opacity": "0",
+       "transform": "translateX(calc(-1 * var(--ds-distance-shift, 4px)))"
+      },
+      {
+       "offset": 0.3,
+       "opacity": "1"
+      },
+      {
+       "offset": 1,
+       "opacity": "1",
+       "transform": "none"
+      }
+     ],
+     "at": 93
+    },
+    {
+     "target": "field>p[error]",
+     "kind": "Animation",
+     "props": "opacity,transform",
+     "dur": 340,
+     "durTok": "duration-spring-soft",
+     "ease": "ease-spring-soft",
+     "kf": [
+      {
+       "offset": 0,
+       "opacity": "0",
+       "transform": "translateY(calc(-1 * var(--ds-distance-shift, 4px)))"
+      },
+      {
+       "offset": 0.3,
+       "opacity": "1"
+      },
+      {
+       "offset": 1,
+       "opacity": "1",
+       "transform": "none"
+      }
+     ],
+     "at": 93,
+     "n": 2
+    },
+    {
+     "target": "error>svg[icon]",
+     "kind": "Animation",
+     "props": "opacity,transform",
+     "dur": 440,
+     "durTok": "duration-spring-bouncy",
+     "delay": 45,
+     "ease": "ease-spring-bouncy",
+     "kf": [
+      {
+       "offset": 0,
+       "opacity": "0",
+       "transform": "scale(var(--ds-scale-morph, 0.5))"
+      },
+      {
+       "offset": 0.3,
+       "opacity": "1"
+      },
+      {
+       "offset": 1,
+       "opacity": "1",
+       "transform": "none"
+      }
+     ],
+     "at": 93,
+     "n": 2
+    },
+    {
+     "target": "field>div[input]",
+     "kind": "Animation",
+     "props": "transform",
+     "dur": 440,
+     "durTok": "duration-spring-bouncy",
+     "ease": "ease-out",
+     "kf": [
+      {
+       "offset": 0,
+       "transform": "none"
+      },
+      {
+       "offset": 0.14,
+       "transform": "translateX(calc(1 * var(--ds-distance-shift, 4px)))"
+      },
+      {
+       "offset": 0.74,
+       "transform": "translateX(calc(1 * -0.5 * var(--ds-distance-nudge, 2px)))"
+      },
+      {
+       "offset": 1,
+       "transform": "none"
+      }
+     ],
+     "at": 93,
+     "n": 2
+    }
+   ],
+   "end": {
+    "live": [],
+    "offRest": 4,
+    "offSample": [
+     "11:span[label]::after t=matrix(0, 0, 0, 1, 0, 0) o=1",
+     "14:span[label]::after t=matrix(0, 0, 0, 1, 0, 0) o=1",
+     "17:label[label] t=matrix(1, 0, 0, 1, 0, -3) o=1"
+    ],
+    "nodes": 35
+   }
+  },
+  {
+   "style": "desk",
+   "dir": "ltr",
+   "motion": "media",
+   "state": "idle/undefined -> idle/name",
+   "stateAt": 54,
+   "firstMotionAt": 117,
+   "events": "pointerdown@47 focusin@48 pointerup@61 click@62",
+   "longest": 340,
+   "movers": 3,
+   "badProps": [],
+   "hitFails": 118,
+   "hitSample": [
+    {
+     "t": 117,
+     "s": "idle/name",
+     "a": "input>input[control]",
+     "hit": "body>div[field]",
+     "n": 35,
+     "x": 1
+    },
+    {
+     "t": 119,
+     "s": "idle/name",
+     "a": "input>input[control]",
+     "hit": "body>div[field]",
+     "n": 35,
+     "x": 1
+    }
+   ],
+   "text": {
+    "seenAt": 117,
+    "readyAt": 117,
+    "readyAfterSeen": 0,
+    "firstOpacity": 1
+   },
+   "anims": [
+    {
+     "target": "field>label[label]",
+     "kind": "Transition",
+     "props": "transform",
+     "dur": 300,
+     "durTok": "duration-spring-snappy",
+     "ease": "ease-spring-snappy",
+     "kf": [
+      {
+       "offset": 0,
+       "transform": "none"
+      },
+      {
+       "offset": 1,
+       "transform": "translateY(0px)"
+      }
+     ],
+     "at": 117
+    },
+    {
+     "target": "field>div[input]::before",
+     "kind": "Transition",
+     "props": "opacity",
+     "dur": 340,
+     "durTok": "duration-spring-soft",
+     "ease": "ease-spring-soft",
+     "kf": [
+      {
+       "offset": 0,
+       "opacity": "0"
+      },
+      {
+       "offset": 1,
+       "opacity": "1"
+      }
+     ],
+     "at": 117
+    },
+    {
+     "target": "field>div[input]::before",
+     "kind": "Transition",
+     "props": "transform",
+     "dur": 340,
+     "durTok": "duration-spring-soft",
+     "ease": "ease-spring-soft",
+     "kf": [
+      {
+       "offset": 0,
+       "transform": "scale(1)"
+      },
+      {
+       "offset": 1,
+       "transform": "none"
+      }
+     ],
+     "at": 117
+    }
+   ],
+   "end": {
+    "live": [],
+    "offRest": 3,
+    "offSample": [
+     "11:span[label]::after t=matrix(0, 0, 0, 1, 0, 0) o=1",
+     "14:span[label]::after t=matrix(0, 0, 0, 1, 0, 0) o=1",
+     "26:div::before t=matrix(1, 0, 0, 1, 0, 0) o=0"
+    ],
+    "nodes": 35
+   }
+  },
+  {
+   "style": "desk",
+   "dir": "ltr",
+   "motion": "attr",
+   "state": "idle/undefined -> idle/name",
+   "stateAt": 82,
+   "firstMotionAt": null,
+   "events": "pointerdown@47 focusin@47 pointerup@50 click@50",
+   "longest": 0,
+   "movers": 0,
+   "badProps": [],
+   "hitFails": 122,
+   "hitSample": [
+    {
+     "t": 82,
+     "s": "idle/name",
+     "a": "input>input[control]",
+     "hit": "body>div[field]",
+     "n": 35,
+     "x": 1
+    },
+    {
+     "t": 83,
+     "s": "idle/name",
+     "a": "input>input[control]",
+     "hit": "body>div[field]",
+     "n": 35,
+     "x": 1
+    }
+   ],
+   "text": {
+    "seenAt": 82,
+    "readyAt": 82,
+    "readyAfterSeen": 0,
+    "firstOpacity": 1
+   },
+   "anims": [],
+   "end": {
+    "live": [],
+    "offRest": 3,
+    "offSample": [
+     "11:span[label]::after t=matrix(0, 0, 0, 1, 0, 0) o=1",
+     "14:span[label]::after t=matrix(0, 0, 0, 1, 0, 0) o=1",
+     "26:div::before t=matrix(1, 0, 0, 1, 0, 0) o=0"
+    ],
+    "nodes": 35
+   }
+  },
+  {
+   "style": "desk",
+   "dir": "rtl",
+   "motion": "full",
+   "state": "idle/undefined -> idle/name",
+   "stateAt": 168,
+   "firstMotionAt": 168,
+   "events": "pointerdown@118 focusin@119 pointerup@125 click@125",
+   "longest": 485,
+   "movers": 15,
+   "badProps": [],
+   "hitFails": 100,
+   "hitSample": [
+    {
+     "t": 168,
+     "s": "idle/name",
+     "a": "input>input[control]",
+     "hit": "error>span[message]",
+     "n": 35,
+     "x": 0
+    },
+    {
+     "t": 171,
+     "s": "idle/name",
+     "a": "input>input[control]",
+     "hit": "error>span[message]",
+     "n": 35,
+     "x": 0
+    }
+   ],
+   "text": {
+    "seenAt": 168,
+    "readyAt": 393,
+    "readyAfterSeen": 225,
+    "firstOpacity": 0
+   },
+   "anims": [
+    {
+     "target": "field>label[label]",
+     "kind": "Transition",
+     "props": "transform",
+     "dur": 300,
+     "durTok": "duration-roll|duration-spring-snappy",
+     "ease": "ease-spring-snappy",
+     "kf": [
+      {
+       "offset": 0,
+       "transform": "none"
+      },
+      {
+       "offset": 1,
+       "transform": "translateY(-7.5px)"
+      }
+     ],
+     "at": 168
+    },
+    {
+     "target": "field>div[input]::before",
+     "kind": "Transition",
+     "props": "opacity",
+     "dur": 340,
+     "durTok": "duration-spring-soft",
+     "ease": "ease-spring-soft",
+     "kf": [
+      {
+       "offset": 0,
+       "opacity": "0"
+      },
+      {
+       "offset": 1,
+       "opacity": "1"
+      }
+     ],
+     "at": 168
+    },
+    {
+     "target": "field>div[input]::before",
+     "kind": "Transition",
+     "props": "transform",
+     "dur": 340,
+     "durTok": "duration-spring-soft",
+     "ease": "ease-spring-soft",
+     "kf": [
+      {
+       "offset": 0,
+       "transform": "scale(0.9)"
+      },
+      {
+       "offset": 1,
+       "transform": "none"
+      }
+     ],
+     "at": 168
+    },
+    {
+     "target": "form>div[summary]",
+     "kind": "Animation",
+     "props": "opacity,transform",
+     "dur": 340,
+     "durTok": "duration-spring-soft",
+     "ease": "linear",
+     "kf": [
+      {
+       "offset": 0,
+       "opacity": "0",
+       "transform": "translateY(12px) scale(0.9)",
+       "easing": "linear(..)"
+      },
+      {
+       "offset": 0.3,
+       "opacity": "1",
+       "easing": "linear(..)"
+      },
+      {
+       "offset": 1,
+       "composite": "replace",
+       "opacity": "1",
+       "transform": "none",
+       "easing": "linear(..)"
+      }
+     ],
+     "at": 168
+    },
+    {
+     "target": "summary>span[icon]",
+     "kind": "Animation",
+     "props": "opacity,transform",
+     "dur": 440,
+     "durTok": "duration-spring-bouncy",
+     "delay": 45,
+     "ease": "linear",
+     "kf": [
+      {
+       "offset": 0,
+       "opacity": "0",
+       "transform": "scale(0.3)",
+       "easing": "linear(..)"
+      },
+      {
+       "offset": 0.3,
+       "opacity": "1",
+       "easing": "linear(..)"
+      },
+      {
+       "offset": 1,
+       "composite": "replace",
+       "opacity": "1",
+       "transform": "none",
+       "easing": "linear(..)"
+      }
+     ],
+     "at": 168
+    },
+    {
+     "target": "summary>div[title]",
+     "kind": "Animation",
+     "props": "opacity,transform",
+     "dur": 340,
+     "durTok": "duration-spring-soft",
+     "delay": 90,
+     "ease": "linear",
+     "kf": [
+      {
+       "offset": 0,
+       "opacity": "0",
+       "transform": "translateY(3px)",
+       "easing": "linear(..)"
+      },
+      {
+       "offset": 0.3,
+       "opacity": "1",
+       "easing": "linear(..)"
+      },
+      {
+       "offset": 1,
+       "composite": "replace",
+       "opacity": "1",
+       "transform": "none",
+       "easing": "linear(..)"
+      }
+     ],
+     "at": 168
+    },
+    {
+     "target": "summary>div[body]",
+     "kind": "Animation",
+     "props": "opacity,transform",
+     "dur": 340,
+     "durTok": "duration-spring-soft",
+     "delay": 90,
+     "ease": "linear",
+     "kf": [
+      {
+       "offset": 0,
+       "opacity": "0",
+       "transform": "translateY(3px)",
+       "easing": "linear(..)"
+      },
+      {
+       "offset": 0.3,
+       "opacity": "1",
+       "easing": "linear(..)"
+      },
+      {
+       "offset": 1,
+       "composite": "replace",
+       "opacity": "1",
+       "transform": "none",
+       "easing": "linear(..)"
+      }
+     ],
+     "at": 168
+    },
+    {
+     "target": "li",
+     "kind": "Animation",
+     "props": "opacity,transform",
+     "dur": 340,
+     "durTok": "duration-spring-soft",
+     "ease": "ease-spring-soft",
+     "kf": [
+      {
+       "offset": 0,
+       "opacity": "0",
+       "transform": "translateX(var(--ds-distance-shift, 4px))"
+      },
+      {
+       "offset": 0.3,
+       "opacity": "1"
+      },
+      {
+       "offset": 1,
+       "opacity": "1",
+       "transform": "none"
+      }
+     ],
+     "at": 168
+    },
+    {
+     "target": "li",
+     "kind": "Animation",
+     "props": "opacity,transform",
+     "dur": 340,
+     "durTok": "duration-spring-soft",
+     "delay": 45,
+     "ease": "ease-spring-soft",
+     "kf": [
+      {
+       "offset": 0,
+       "opacity": "0",
+       "transform": "translateX(var(--ds-distance-shift, 4px))"
+      },
+      {
+       "offset": 0.3,
+       "opacity": "1"
+      },
+      {
+       "offset": 1,
+       "opacity": "1",
+       "transform": "none"
+      }
+     ],
+     "at": 168
+    },
+    {
+     "target": "field>p[error]",
+     "kind": "Animation",
+     "props": "opacity,transform",
+     "dur": 340,
+     "durTok": "duration-spring-soft",
+     "ease": "ease-spring-soft",
+     "kf": [
+      {
+       "offset": 0,
+       "opacity": "0",
+       "transform": "translateY(calc(-1 * var(--ds-distance-shift, 4px)))"
+      },
+      {
+       "offset": 0.3,
+       "opacity": "1"
+      },
+      {
+       "offset": 1,
+       "opacity": "1",
+       "transform": "none"
+      }
+     ],
+     "at": 168,
+     "n": 2
+    },
+    {
+     "target": "error>svg[icon]",
+     "kind": "Animation",
+     "props": "opacity,transform",
+     "dur": 440,
+     "durTok": "duration-spring-bouncy",
+     "delay": 45,
+     "ease": "ease-spring-bouncy",
+     "kf": [
+      {
+       "offset": 0,
+       "opacity": "0",
+       "transform": "scale(var(--ds-scale-morph, 0.5))"
+      },
+      {
+       "offset": 0.3,
+       "opacity": "1"
+      },
+      {
+       "offset": 1,
+       "opacity": "1",
+       "transform": "none"
+      }
+     ],
+     "at": 168,
+     "n": 2
+    },
+    {
+     "target": "field>div[input]",
+     "kind": "Animation",
+     "props": "transform",
+     "dur": 440,
+     "durTok": "duration-spring-bouncy",
+     "ease": "ease-out",
+     "kf": [
+      {
+       "offset": 0,
+       "transform": "none"
+      },
+      {
+       "offset": 0.14,
+       "transform": "translateX(calc(-1 * var(--ds-distance-shift, 4px)))"
+      },
+      {
+       "offset": 0.74,
+       "transform": "translateX(calc(-1 * -0.5 * var(--ds-distance-nudge, 2px)))"
+      },
+      {
+       "offset": 1,
+       "transform": "none"
+      }
+     ],
+     "at": 168,
+     "n": 2
+    }
+   ],
+   "end": {
+    "live": [],
+    "offRest": 4,
+    "offSample": [
+     "11:span[label]::after t=matrix(0, 0, 0, 1, 0, 0) o=1",
+     "14:span[label]::after t=matrix(0, 0, 0, 1, 0, 0) o=1",
+     "17:label[label] t=matrix(1, 0, 0, 1, 0, -3) o=1"
+    ],
+    "nodes": 35
+   }
+  },
+  {
+   "style": "desk",
+   "dir": "rtl",
+   "motion": "media",
+   "state": "idle/undefined -> idle/name",
+   "stateAt": 84,
+   "firstMotionAt": 84,
+   "events": "pointerdown@45 focusin@46 pointerup@46 click@46",
+   "longest": 340,
+   "movers": 3,
+   "badProps": [],
+   "hitFails": 122,
+   "hitSample": [
+    {
+     "t": 84,
+     "s": "idle/name",
+     "a": "input>input[control]",
+     "hit": "body>div[field]",
+     "n": 35,
+     "x": 1
+    },
+    {
+     "t": 85,
+     "s": "idle/name",
+     "a": "input>input[control]",
+     "hit": "body>div[field]",
+     "n": 35,
+     "x": 1
+    }
+   ],
+   "text": {
+    "seenAt": 84,
+    "readyAt": 84,
+    "readyAfterSeen": 0,
+    "firstOpacity": 1
+   },
+   "anims": [
+    {
+     "target": "field>label[label]",
+     "kind": "Transition",
+     "props": "transform",
+     "dur": 300,
+     "durTok": "duration-spring-snappy",
+     "ease": "ease-spring-snappy",
+     "kf": [
+      {
+       "offset": 0,
+       "transform": "none"
+      },
+      {
+       "offset": 1,
+       "transform": "translateY(0px)"
+      }
+     ],
+     "at": 84
+    },
+    {
+     "target": "field>div[input]::before",
+     "kind": "Transition",
+     "props": "opacity",
+     "dur": 340,
+     "durTok": "duration-spring-soft",
+     "ease": "ease-spring-soft",
+     "kf": [
+      {
+       "offset": 0,
+       "opacity": "0"
+      },
+      {
+       "offset": 1,
+       "opacity": "1"
+      }
+     ],
+     "at": 84
+    },
+    {
+     "target": "field>div[input]::before",
+     "kind": "Transition",
+     "props": "transform",
+     "dur": 340,
+     "durTok": "duration-spring-soft",
+     "ease": "ease-spring-soft",
+     "kf": [
+      {
+       "offset": 0,
+       "transform": "scale(1)"
+      },
+      {
+       "offset": 1,
+       "transform": "none"
+      }
+     ],
+     "at": 84
+    }
+   ],
+   "end": {
+    "live": [],
+    "offRest": 3,
+    "offSample": [
+     "11:span[label]::after t=matrix(0, 0, 0, 1, 0, 0) o=1",
+     "14:span[label]::after t=matrix(0, 0, 0, 1, 0, 0) o=1",
+     "26:div::before t=matrix(1, 0, 0, 1, 0, 0) o=0"
+    ],
+    "nodes": 35
+   }
+  },
+  {
+   "style": "desk",
+   "dir": "rtl",
+   "motion": "attr",
+   "state": "idle/undefined -> idle/name",
+   "stateAt": 70,
+   "firstMotionAt": null,
+   "events": "pointerdown@46 focusin@46 pointerup@47 click@47",
+   "longest": 0,
+   "movers": 0,
+   "badProps": [],
+   "hitFails": 126,
+   "hitSample": [
+    {
+     "t": 70,
+     "s": "idle/name",
+     "a": "input>input[control]",
+     "hit": "body>div[field]",
+     "n": 35,
+     "x": 1
+    },
+    {
+     "t": 71,
+     "s": "idle/name",
+     "a": "input>input[control]",
+     "hit": "body>div[field]",
+     "n": 35,
+     "x": 1
+    }
+   ],
+   "text": {
+    "seenAt": 70,
+    "readyAt": 70,
+    "readyAfterSeen": 0,
+    "firstOpacity": 1
+   },
+   "anims": [],
+   "end": {
+    "live": [],
+    "offRest": 3,
+    "offSample": [
+     "11:span[label]::after t=matrix(0, 0, 0, 1, 0, 0) o=1",
+     "14:span[label]::after t=matrix(0, 0, 0, 1, 0, 0) o=1",
+     "26:div::before t=matrix(1, 0, 0, 1, 0, 0) o=0"
+    ],
+    "nodes": 35
+   }
+  },
+  {
+   "style": "neutral",
+   "dir": "ltr",
+   "motion": "full",
+   "state": "idle/undefined -> idle/name",
+   "stateAt": 167,
+   "firstMotionAt": 167,
+   "events": "pointerdown@121 focusin@123 pointerup@123 click@124",
+   "longest": 268,
+   "movers": 15,
+   "badProps": [],
+   "hitFails": 118,
+   "hitSample": [
+    {
+     "t": 167,
+     "s": "idle/name",
+     "a": "input>input[control]",
+     "hit": "input>input[control]",
+     "n": 41,
+     "x": 0
+    },
+    {
+     "t": 171,
+     "s": "idle/name",
+     "a": "input>input[control]",
+     "hit": "input>input[control]",
+     "n": 41,
+     "x": 0
+    }
+   ],
+   "text": {
+    "seenAt": 167,
+    "readyAt": 296,
+    "readyAfterSeen": 129,
+    "firstOpacity": 0
+   },
+   "anims": [
+    {
+     "target": "field>label[label]",
+     "kind": "Transition",
+     "props": "transform",
+     "dur": 180,
+     "durTok": "duration-medium|duration-slow|duration-spring-snappy",
+     "ease": "ease-spring-snappy",
+     "kf": [
+      {
+       "offset": 0,
+       "transform": "none"
+      },
+      {
+       "offset": 1,
+       "transform": "translateY(-5px)"
+      }
+     ],
+     "at": 167
+    },
+    {
+     "target": "field>div[input]::before",
+     "kind": "Transition",
+     "props": "opacity",
+     "dur": 220,
+     "durTok": "duration-celebrate|duration-spring-bouncy|duration-spring-soft|duration-zoom",
+     "ease": "ease-spring-soft",
+     "kf": [
+      {
+       "offset": 0,
+       "opacity": "0"
+      },
+      {
+       "offset": 1,
+       "opacity": "1"
+      }
+     ],
+     "at": 167
+    },
+    {
+     "target": "field>div[input]::before",
+     "kind": "Transition",
+     "props": "transform",
+     "dur": 220,
+     "durTok": "duration-celebrate|duration-spring-bouncy|duration-spring-soft|duration-zoom",
+     "ease": "ease-spring-soft",
+     "kf": [
+      {
+       "offset": 0,
+       "transform": "scale(0.97)"
+      },
+      {
+       "offset": 1,
+       "transform": "none"
+      }
+     ],
+     "at": 167
+    },
+    {
+     "target": "form>div[summary]",
+     "kind": "Animation",
+     "props": "opacity,transform",
+     "dur": 220,
+     "durTok": "duration-celebrate|duration-spring-bouncy|duration-spring-soft|duration-zoom",
+     "ease": "linear",
+     "kf": [
+      {
+       "offset": 0,
+       "opacity": "0",
+       "transform": "translateY(6px) scale(0.97)",
+       "easing": "linear(..)"
+      },
+      {
+       "offset": 0.3,
+       "opacity": "1",
+       "easing": "linear(..)"
+      },
+      {
+       "offset": 1,
+       "composite": "replace",
+       "opacity": "1",
+       "transform": "none",
+       "easing": "linear(..)"
+      }
+     ],
+     "at": 167
+    },
+    {
+     "target": "summary>span[icon]",
+     "kind": "Animation",
+     "props": "opacity,transform",
+     "dur": 220,
+     "durTok": "duration-celebrate|duration-spring-bouncy|duration-spring-soft|duration-zoom",
+     "delay": 24,
+     "ease": "linear",
+     "kf": [
+      {
+       "offset": 0,
+       "opacity": "0",
+       "transform": "scale(0.5)",
+       "easing": "linear(..)"
+      },
+      {
+       "offset": 0.3,
+       "opacity": "1",
+       "easing": "linear(..)"
+      },
+      {
+       "offset": 1,
+       "composite": "replace",
+       "opacity": "1",
+       "transform": "none",
+       "easing": "linear(..)"
+      }
+     ],
+     "at": 167
+    },
+    {
+     "target": "summary>div[title]",
+     "kind": "Animation",
+     "props": "opacity,transform",
+     "dur": 220,
+     "durTok": "duration-celebrate|duration-spring-bouncy|duration-spring-soft|duration-zoom",
+     "delay": 48,
+     "ease": "linear",
+     "kf": [
+      {
+       "offset": 0,
+       "opacity": "0",
+       "transform": "translateY(2px)",
+       "easing": "linear(..)"
+      },
+      {
+       "offset": 0.3,
+       "opacity": "1",
+       "easing": "linear(..)"
+      },
+      {
+       "offset": 1,
+       "composite": "replace",
+       "opacity": "1",
+       "transform": "none",
+       "easing": "linear(..)"
+      }
+     ],
+     "at": 167
+    },
+    {
+     "target": "summary>div[body]",
+     "kind": "Animation",
+     "props": "opacity,transform",
+     "dur": 220,
+     "durTok": "duration-celebrate|duration-spring-bouncy|duration-spring-soft|duration-zoom",
+     "delay": 48,
+     "ease": "linear",
+     "kf": [
+      {
+       "offset": 0,
+       "opacity": "0",
+       "transform": "translateY(2px)",
+       "easing": "linear(..)"
+      },
+      {
+       "offset": 0.3,
+       "opacity": "1",
+       "easing": "linear(..)"
+      },
+      {
+       "offset": 1,
+       "composite": "replace",
+       "opacity": "1",
+       "transform": "none",
+       "easing": "linear(..)"
+      }
+     ],
+     "at": 167
+    },
+    {
+     "target": "li",
+     "kind": "Animation",
+     "props": "opacity",
+     "dur": 150,
+     "durTok": "duration-base|duration-moderate",
+     "ease": "ease-out",
+     "kf": [
+      {
+       "opacity": "0"
+      },
+      {
+       "opacity": "1"
+      }
+     ],
+     "at": 167,
+     "n": 2
+    },
+    {
+     "target": "field>p[error]",
+     "kind": "Animation",
+     "props": "opacity,transform",
+     "dur": 220,
+     "durTok": "duration-celebrate|duration-spring-bouncy|duration-spring-soft|duration-zoom",
+     "ease": "ease-spring-soft",
+     "kf": [
+      {
+       "offset": 0,
+       "opacity": "0",
+       "transform": "translateY(calc(-1 * var(--ds-distance-shift, 4px)))"
+      },
+      {
+       "offset": 0.3,
+       "opacity": "1"
+      },
+      {
+       "offset": 1,
+       "opacity": "1",
+       "transform": "none"
+      }
+     ],
+     "at": 167,
+     "n": 2
+    },
+    {
+     "target": "error>svg[icon]",
+     "kind": "Animation",
+     "props": "opacity,transform",
+     "dur": 220,
+     "durTok": "duration-celebrate|duration-spring-bouncy|duration-spring-soft|duration-zoom",
+     "delay": 24,
+     "ease": "ease-spring-bouncy",
+     "kf": [
+      {
+       "offset": 0,
+       "opacity": "0",
+       "transform": "scale(var(--ds-scale-morph, 0.5))"
+      },
+      {
+       "offset": 0.3,
+       "opacity": "1"
+      },
+      {
+       "offset": 1,
+       "opacity": "1",
+       "transform": "none"
+      }
+     ],
+     "at": 167,
+     "n": 2
+    },
+    {
+     "target": "field>div[input]",
+     "kind": "Animation",
+     "props": "transform",
+     "dur": 220,
+     "durTok": "duration-celebrate|duration-spring-bouncy|duration-spring-soft|duration-zoom",
+     "ease": "ease-out",
+     "kf": [
+      {
+       "offset": 0,
+       "transform": "none"
+      },
+      {
+       "offset": 0.14,
+       "transform": "translateX(calc(1 * var(--ds-distance-shift, 4px)))"
+      },
+      {
+       "offset": 0.74,
+       "transform": "translateX(calc(1 * -0.5 * var(--ds-distance-nudge, 2px)))"
+      },
+      {
+       "offset": 1,
+       "transform": "none"
+      }
+     ],
+     "at": 167,
+     "n": 2
+    }
+   ],
+   "end": {
+    "live": [],
+    "offRest": 4,
+    "offSample": [
+     "13:span[label]::after t=matrix(0, 0, 0, 1, 0, 0) o=1",
+     "16:span[label]::after t=matrix(0, 0, 0, 1, 0, 0) o=1",
+     "19:label[label] t=matrix(1, 0, 0, 1, 0, -2) o=1"
+    ],
+    "nodes": 41
+   }
+  },
+  {
+   "style": "neutral",
+   "dir": "ltr",
+   "motion": "media",
+   "state": "idle/undefined -> idle/name",
+   "stateAt": 133,
+   "firstMotionAt": 133,
+   "events": "pointerdown@102 focusin@103 pointerup@103 click@103",
+   "longest": 220,
+   "movers": 3,
+   "badProps": [],
+   "hitFails": 110,
+   "hitSample": [
+    {
+     "t": 133,
+     "s": "idle/name",
+     "a": "input>input[control]",
+     "hit": "input>input[control]",
+     "n": 41,
+     "x": 1
+    },
+    {
+     "t": 133,
+     "s": "idle/name",
+     "a": "input>input[control]",
+     "hit": "input>input[control]",
+     "n": 41,
+     "x": 1
+    }
+   ],
+   "text": {
+    "seenAt": 133,
+    "readyAt": 133,
+    "readyAfterSeen": 0,
+    "firstOpacity": 1
+   },
+   "anims": [
+    {
+     "target": "field>label[label]",
+     "kind": "Transition",
+     "props": "transform",
+     "dur": 180,
+     "durTok": "duration-spring-snappy",
+     "ease": "ease-spring-snappy",
+     "kf": [
+      {
+       "offset": 0,
+       "transform": "none"
+      },
+      {
+       "offset": 1,
+       "transform": "translateY(0px)"
+      }
+     ],
+     "at": 133
+    },
+    {
+     "target": "field>div[input]::before",
+     "kind": "Transition",
+     "props": "opacity",
+     "dur": 220,
+     "durTok": "duration-celebrate|duration-spring-bouncy|duration-spring-soft",
+     "ease": "ease-spring-soft",
+     "kf": [
+      {
+       "offset": 0,
+       "opacity": "0"
+      },
+      {
+       "offset": 1,
+       "opacity": "1"
+      }
+     ],
+     "at": 133
+    },
+    {
+     "target": "field>div[input]::before",
+     "kind": "Transition",
+     "props": "transform",
+     "dur": 220,
+     "durTok": "duration-celebrate|duration-spring-bouncy|duration-spring-soft",
+     "ease": "ease-spring-soft",
+     "kf": [
+      {
+       "offset": 0,
+       "transform": "scale(1)"
+      },
+      {
+       "offset": 1,
+       "transform": "none"
+      }
+     ],
+     "at": 133
+    }
+   ],
+   "end": {
+    "live": [],
+    "offRest": 3,
+    "offSample": [
+     "13:span[label]::after t=matrix(0, 0, 0, 1, 0, 0) o=1",
+     "16:span[label]::after t=matrix(0, 0, 0, 1, 0, 0) o=1",
+     "30:div::before t=matrix(1, 0, 0, 1, 0, 0) o=0"
+    ],
+    "nodes": 41
+   }
+  },
+  {
+   "style": "neutral",
+   "dir": "ltr",
+   "motion": "attr",
+   "state": "idle/undefined -> idle/name",
+   "stateAt": 141,
+   "firstMotionAt": null,
+   "events": "pointerdown@111 focusin@112 pointerup@113 click@113",
+   "longest": 0,
+   "movers": 0,
+   "badProps": [],
+   "hitFails": 114,
+   "hitSample": [
+    {
+     "t": 141,
+     "s": "idle/name",
+     "a": "input>input[control]",
+     "hit": "input>input[control]",
+     "n": 41,
+     "x": 1
+    },
+    {
+     "t": 142,
+     "s": "idle/name",
+     "a": "input>input[control]",
+     "hit": "input>input[control]",
+     "n": 41,
+     "x": 1
+    }
+   ],
+   "text": {
+    "seenAt": 141,
+    "readyAt": 141,
+    "readyAfterSeen": 0,
+    "firstOpacity": 1
+   },
+   "anims": [],
+   "end": {
+    "live": [],
+    "offRest": 3,
+    "offSample": [
+     "13:span[label]::after t=matrix(0, 0, 0, 1, 0, 0) o=1",
+     "16:span[label]::after t=matrix(0, 0, 0, 1, 0, 0) o=1",
+     "30:div::before t=matrix(1, 0, 0, 1, 0, 0) o=0"
+    ],
+    "nodes": 41
+   }
+  },
+  {
+   "style": "neutral",
+   "dir": "rtl",
+   "motion": "full",
+   "state": "idle/undefined -> idle/name",
+   "stateAt": 121,
+   "firstMotionAt": 121,
+   "events": "pointerdown@74 focusin@76 pointerup@77 click@78",
+   "longest": 268,
+   "movers": 15,
+   "badProps": [],
+   "hitFails": 120,
+   "hitSample": [
+    {
+     "t": 121,
+     "s": "idle/name",
+     "a": "input>input[control]",
+     "hit": "input>input[control]",
+     "n": 41,
+     "x": 0
+    },
+    {
+     "t": 126,
+     "s": "idle/name",
+     "a": "input>input[control]",
+     "hit": "input>input[control]",
+     "n": 41,
+     "x": 0
+    }
+   ],
+   "text": {
+    "seenAt": 121,
+    "readyAt": 254,
+    "readyAfterSeen": 133,
+    "firstOpacity": 0
+   },
+   "anims": [
+    {
+     "target": "field>label[label]",
+     "kind": "Transition",
+     "props": "transform",
+     "dur": 180,
+     "durTok": "duration-medium|duration-slow|duration-spring-snappy",
+     "ease": "ease-spring-snappy",
+     "kf": [
+      {
+       "offset": 0,
+       "transform": "none"
+      },
+      {
+       "offset": 1,
+       "transform": "translateY(-5px)"
+      }
+     ],
+     "at": 121
+    },
+    {
+     "target": "field>div[input]::before",
+     "kind": "Transition",
+     "props": "opacity",
+     "dur": 220,
+     "durTok": "duration-celebrate|duration-spring-bouncy|duration-spring-soft|duration-zoom",
+     "ease": "ease-spring-soft",
+     "kf": [
+      {
+       "offset": 0,
+       "opacity": "0"
+      },
+      {
+       "offset": 1,
+       "opacity": "1"
+      }
+     ],
+     "at": 121
+    },
+    {
+     "target": "field>div[input]::before",
+     "kind": "Transition",
+     "props": "transform",
+     "dur": 220,
+     "durTok": "duration-celebrate|duration-spring-bouncy|duration-spring-soft|duration-zoom",
+     "ease": "ease-spring-soft",
+     "kf": [
+      {
+       "offset": 0,
+       "transform": "scale(0.97)"
+      },
+      {
+       "offset": 1,
+       "transform": "none"
+      }
+     ],
+     "at": 121
+    },
+    {
+     "target": "form>div[summary]",
+     "kind": "Animation",
+     "props": "opacity,transform",
+     "dur": 220,
+     "durTok": "duration-celebrate|duration-spring-bouncy|duration-spring-soft|duration-zoom",
+     "ease": "linear",
+     "kf": [
+      {
+       "offset": 0,
+       "opacity": "0",
+       "transform": "translateY(6px) scale(0.97)",
+       "easing": "linear(..)"
+      },
+      {
+       "offset": 0.3,
+       "opacity": "1",
+       "easing": "linear(..)"
+      },
+      {
+       "offset": 1,
+       "composite": "replace",
+       "opacity": "1",
+       "transform": "none",
+       "easing": "linear(..)"
+      }
+     ],
+     "at": 121
+    },
+    {
+     "target": "summary>span[icon]",
+     "kind": "Animation",
+     "props": "opacity,transform",
+     "dur": 220,
+     "durTok": "duration-celebrate|duration-spring-bouncy|duration-spring-soft|duration-zoom",
+     "delay": 24,
+     "ease": "linear",
+     "kf": [
+      {
+       "offset": 0,
+       "opacity": "0",
+       "transform": "scale(0.5)",
+       "easing": "linear(..)"
+      },
+      {
+       "offset": 0.3,
+       "opacity": "1",
+       "easing": "linear(..)"
+      },
+      {
+       "offset": 1,
+       "composite": "replace",
+       "opacity": "1",
+       "transform": "none",
+       "easing": "linear(..)"
+      }
+     ],
+     "at": 121
+    },
+    {
+     "target": "summary>div[title]",
+     "kind": "Animation",
+     "props": "opacity,transform",
+     "dur": 220,
+     "durTok": "duration-celebrate|duration-spring-bouncy|duration-spring-soft|duration-zoom",
+     "delay": 48,
+     "ease": "linear",
+     "kf": [
+      {
+       "offset": 0,
+       "opacity": "0",
+       "transform": "translateY(2px)",
+       "easing": "linear(..)"
+      },
+      {
+       "offset": 0.3,
+       "opacity": "1",
+       "easing": "linear(..)"
+      },
+      {
+       "offset": 1,
+       "composite": "replace",
+       "opacity": "1",
+       "transform": "none",
+       "easing": "linear(..)"
+      }
+     ],
+     "at": 121
+    },
+    {
+     "target": "summary>div[body]",
+     "kind": "Animation",
+     "props": "opacity,transform",
+     "dur": 220,
+     "durTok": "duration-celebrate|duration-spring-bouncy|duration-spring-soft|duration-zoom",
+     "delay": 48,
+     "ease": "linear",
+     "kf": [
+      {
+       "offset": 0,
+       "opacity": "0",
+       "transform": "translateY(2px)",
+       "easing": "linear(..)"
+      },
+      {
+       "offset": 0.3,
+       "opacity": "1",
+       "easing": "linear(..)"
+      },
+      {
+       "offset": 1,
+       "composite": "replace",
+       "opacity": "1",
+       "transform": "none",
+       "easing": "linear(..)"
+      }
+     ],
+     "at": 121
+    },
+    {
+     "target": "li",
+     "kind": "Animation",
+     "props": "opacity",
+     "dur": 150,
+     "durTok": "duration-base|duration-moderate",
+     "ease": "ease-out",
+     "kf": [
+      {
+       "opacity": "0"
+      },
+      {
+       "opacity": "1"
+      }
+     ],
+     "at": 121,
+     "n": 2
+    },
+    {
+     "target": "field>p[error]",
+     "kind": "Animation",
+     "props": "opacity,transform",
+     "dur": 220,
+     "durTok": "duration-celebrate|duration-spring-bouncy|duration-spring-soft|duration-zoom",
+     "ease": "ease-spring-soft",
+     "kf": [
+      {
+       "offset": 0,
+       "opacity": "0",
+       "transform": "translateY(calc(-1 * var(--ds-distance-shift, 4px)))"
+      },
+      {
+       "offset": 0.3,
+       "opacity": "1"
+      },
+      {
+       "offset": 1,
+       "opacity": "1",
+       "transform": "none"
+      }
+     ],
+     "at": 121,
+     "n": 2
+    },
+    {
+     "target": "error>svg[icon]",
+     "kind": "Animation",
+     "props": "opacity,transform",
+     "dur": 220,
+     "durTok": "duration-celebrate|duration-spring-bouncy|duration-spring-soft|duration-zoom",
+     "delay": 24,
+     "ease": "ease-spring-bouncy",
+     "kf": [
+      {
+       "offset": 0,
+       "opacity": "0",
+       "transform": "scale(var(--ds-scale-morph, 0.5))"
+      },
+      {
+       "offset": 0.3,
+       "opacity": "1"
+      },
+      {
+       "offset": 1,
+       "opacity": "1",
+       "transform": "none"
+      }
+     ],
+     "at": 121,
+     "n": 2
+    },
+    {
+     "target": "field>div[input]",
+     "kind": "Animation",
+     "props": "transform",
+     "dur": 220,
+     "durTok": "duration-celebrate|duration-spring-bouncy|duration-spring-soft|duration-zoom",
+     "ease": "ease-out",
+     "kf": [
+      {
+       "offset": 0,
+       "transform": "none"
+      },
+      {
+       "offset": 0.14,
+       "transform": "translateX(calc(-1 * var(--ds-distance-shift, 4px)))"
+      },
+      {
+       "offset": 0.74,
+       "transform": "translateX(calc(-1 * -0.5 * var(--ds-distance-nudge, 2px)))"
+      },
+      {
+       "offset": 1,
+       "transform": "none"
+      }
+     ],
+     "at": 121,
+     "n": 2
+    }
+   ],
+   "end": {
+    "live": [],
+    "offRest": 4,
+    "offSample": [
+     "13:span[label]::after t=matrix(0, 0, 0, 1, 0, 0) o=1",
+     "16:span[label]::after t=matrix(0, 0, 0, 1, 0, 0) o=1",
+     "19:label[label] t=matrix(1, 0, 0, 1, 0, -2) o=1"
+    ],
+    "nodes": 41
+   }
+  },
+  {
+   "style": "neutral",
+   "dir": "rtl",
+   "motion": "media",
+   "state": "idle/undefined -> idle/name",
+   "stateAt": 85,
+   "firstMotionAt": 85,
+   "events": "pointerdown@53 focusin@54 pointerup@56 click@57",
+   "longest": 220,
+   "movers": 3,
+   "badProps": [],
+   "hitFails": 126,
+   "hitSample": [
+    {
+     "t": 85,
+     "s": "idle/name",
+     "a": "input>input[control]",
+     "hit": "input>input[control]",
+     "n": 41,
+     "x": 1
+    },
+    {
+     "t": 87,
+     "s": "idle/name",
+     "a": "input>input[control]",
+     "hit": "input>input[control]",
+     "n": 41,
+     "x": 1
+    }
+   ],
+   "text": {
+    "seenAt": 85,
+    "readyAt": 85,
+    "readyAfterSeen": 0,
+    "firstOpacity": 1
+   },
+   "anims": [
+    {
+     "target": "field>label[label]",
+     "kind": "Transition",
+     "props": "transform",
+     "dur": 180,
+     "durTok": "duration-spring-snappy",
+     "ease": "ease-spring-snappy",
+     "kf": [
+      {
+       "offset": 0,
+       "transform": "none"
+      },
+      {
+       "offset": 1,
+       "transform": "translateY(0px)"
+      }
+     ],
+     "at": 85
+    },
+    {
+     "target": "field>div[input]::before",
+     "kind": "Transition",
+     "props": "opacity",
+     "dur": 220,
+     "durTok": "duration-celebrate|duration-spring-bouncy|duration-spring-soft",
+     "ease": "ease-spring-soft",
+     "kf": [
+      {
+       "offset": 0,
+       "opacity": "0"
+      },
+      {
+       "offset": 1,
+       "opacity": "1"
+      }
+     ],
+     "at": 85
+    },
+    {
+     "target": "field>div[input]::before",
+     "kind": "Transition",
+     "props": "transform",
+     "dur": 220,
+     "durTok": "duration-celebrate|duration-spring-bouncy|duration-spring-soft",
+     "ease": "ease-spring-soft",
+     "kf": [
+      {
+       "offset": 0,
+       "transform": "scale(1)"
+      },
+      {
+       "offset": 1,
+       "transform": "none"
+      }
+     ],
+     "at": 85
+    }
+   ],
+   "end": {
+    "live": [],
+    "offRest": 3,
+    "offSample": [
+     "13:span[label]::after t=matrix(0, 0, 0, 1, 0, 0) o=1",
+     "16:span[label]::after t=matrix(0, 0, 0, 1, 0, 0) o=1",
+     "30:div::before t=matrix(1, 0, 0, 1, 0, 0) o=0"
+    ],
+    "nodes": 41
+   }
+  },
+  {
+   "style": "neutral",
+   "dir": "rtl",
+   "motion": "attr",
+   "state": "idle/undefined -> idle/name",
+   "stateAt": 77,
+   "firstMotionAt": null,
+   "events": "pointerdown@40 focusin@41 pointerup@41 click@42",
+   "longest": 0,
+   "movers": 0,
+   "badProps": [],
+   "hitFails": 124,
+   "hitSample": [
+    {
+     "t": 77,
+     "s": "idle/name",
+     "a": "input>input[control]",
+     "hit": "input>input[control]",
+     "n": 41,
+     "x": 1
+    },
+    {
+     "t": 78,
+     "s": "idle/name",
+     "a": "input>input[control]",
+     "hit": "input>input[control]",
+     "n": 41,
+     "x": 1
+    }
+   ],
+   "text": {
+    "seenAt": 77,
+    "readyAt": 77,
+    "readyAfterSeen": 0,
+    "firstOpacity": 1
+   },
+   "anims": [],
+   "end": {
+    "live": [],
+    "offRest": 3,
+    "offSample": [
+     "13:span[label]::after t=matrix(0, 0, 0, 1, 0, 0) o=1",
+     "16:span[label]::after t=matrix(0, 0, 0, 1, 0, 0) o=1",
+     "30:div::before t=matrix(1, 0, 0, 1, 0, 0) o=0"
+    ],
+    "nodes": 41
+   }
+  }
+ ],
+ "sweep": {
+  "studio": [],
+  "desk": [],
+  "neutral": []
+ },
+ "held": [],
+ "ring": {
+  "studio": {
+   "focusVisible": true,
+   "atOnce": true,
+   "diffFrame0": [],
+   "diffFirstFrame": [],
+   "first": {
+    "t": 2,
+    "outline": "solid 2px",
+    "shadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgb(0, 0, 0) 0px 0px 0px 2px, rgb(244, 244, 245) 0px 0px",
+    "hostShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgb(0, 0, 0) 0px 0px 0px 2px, rgb(244, 244, 245) 0px 0px"
+   },
+   "last": {
+    "t": 274,
+    "outline": "solid 2px",
+    "shadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgb(0, 0, 0) 0px 0px 0px 2px, rgb(244, 244, 245) 0px 0px",
+    "hostShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgb(0, 0, 0) 0px 0px 0px 2px, rgb(244, 244, 245) 0px 0px"
+   },
+   "frames": 18
+  },
+  "desk": {
+   "focusVisible": true,
+   "atOnce": true,
+   "diffFrame0": [],
+   "diffFirstFrame": [],
+   "first": {
+    "t": 2,
+    "outline": "solid 2px",
+    "shadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgb(0, 0, 0) 0px 0px 0px 2px, rgb(244, 244, 245) 0px 0px",
+    "hostShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgb(0, 0, 0) 0px 0px 0px 2px, rgb(244, 244, 245) 0px 0px"
+   },
+   "last": {
+    "t": 272,
+    "outline": "solid 2px",
+    "shadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgb(0, 0, 0) 0px 0px 0px 2px, rgb(244, 244, 245) 0px 0px",
+    "hostShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgb(0, 0, 0) 0px 0px 0px 2px, rgb(244, 244, 245) 0px 0px"
+   },
+   "frames": 18
+  },
+  "neutral": {
+   "focusVisible": true,
+   "atOnce": true,
+   "diffFrame0": [],
+   "diffFirstFrame": [],
+   "first": {
+    "t": 2,
+    "outline": "solid 2px",
+    "shadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgb(255, 255, 255) 0px 0px 0px 2px, rgb(37, 99, 235) 0px",
+    "hostShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgb(255, 255, 255) 0px 0px 0px 2px, rgb(37, 99, 235) 0px"
+   },
+   "last": {
+    "t": 274,
+    "outline": "solid 2px",
+    "shadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgb(255, 255, 255) 0px 0px 0px 2px, rgb(37, 99, 235) 0px",
+    "hostShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgb(255, 255, 255) 0px 0px 0px 2px, rgb(37, 99, 235) 0px"
+   },
+   "frames": 18
+  }
+ },
+ "rapid": {
+  "studio": {
+   "same": true,
+   "fast": {
+    "state": "idle/name",
+    "nodes": 35,
+    "off": [
+     "11:span[label]::after t=matrix(0, 0, 0, 1, 0, 0) o=1",
+     "14:span[label]::after t=matrix(0, 0, 0, 1, 0, 0) o=1",
+     "17:label[label] t=matrix(1, 0, 0, 1, 0, -1) o=1",
+     "26:div::before t=matrix(1, 0, 0, 1, 0, 0) o=0"
+    ],
+    "live": [],
+    "active": "control"
+   }
+  },
+  "desk": {
+   "same": true,
+   "fast": {
+    "state": "idle/name",
+    "nodes": 35,
+    "off": [
+     "11:span[label]::after t=matrix(0, 0, 0, 1, 0, 0) o=1",
+     "14:span[label]::after t=matrix(0, 0, 0, 1, 0, 0) o=1",
+     "17:label[label] t=matrix(1, 0, 0, 1, 0, -3) o=1",
+     "26:div::before t=matrix(0.9, 0, 0, 0.9, 0, 0) o=0"
+    ],
+    "live": [],
+    "active": "control"
+   }
+  },
+  "neutral": {
+   "same": true,
+   "fast": {
+    "state": "idle/name",
+    "nodes": 41,
+    "off": [
+     "13:span[label]::after t=matrix(0, 0, 0, 1, 0, 0) o=1",
+     "16:span[label]::after t=matrix(0, 0, 0, 1, 0, 0) o=1",
+     "19:label[label] t=matrix(1, 0, 0, 1, 0, -2) o=1",
+     "30:div::before t=matrix(0.97, 0, 0, 0.97, 0, 0) o=0"
+    ],
+    "live": [],
+    "active": "control"
+   }
+  }
+ },
+ "interrupt": {},
+ "off": {},
+ "extra": {}
+}

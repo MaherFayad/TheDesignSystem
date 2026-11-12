@@ -1,0 +1,1050 @@
+{
+ "id": "link-underline",
+ "family": "actions",
+ "drive": "css",
+ "pattern": "chart-draw",
+ "reduced": "The line shows and goes at once; the icon stays still.",
+ "tokens": {
+  "studio": {
+   "delay-feedback": "2000ms",
+   "delay-stagger": "0ms",
+   "distance-enter": "4px",
+   "distance-lift": "0px",
+   "distance-nudge": "1px",
+   "distance-shift": "2px",
+   "duration-base": "120ms",
+   "duration-celebrate": "120ms",
+   "duration-fast": "80ms",
+   "duration-instant": "70ms",
+   "duration-medium": "140ms",
+   "duration-moderate": "150ms",
+   "duration-morph": "100ms",
+   "duration-quick": "100ms",
+   "duration-roll": "0.3s",
+   "duration-slow": "180ms",
+   "duration-spin": "0.8s",
+   "duration-spring-bouncy": "120ms",
+   "duration-spring-snappy": "80ms",
+   "duration-spring-soft": "100ms",
+   "duration-zoom": "220ms",
+   "scale-anticipate": "0.97",
+   "scale-enter": "1",
+   "scale-lift": "1",
+   "scale-morph": "0.8",
+   "scale-pop": "1",
+   "scale-press": "0.97",
+   "scale-stretch": "1.08"
+  },
+  "desk": {
+   "delay-feedback": "2000ms",
+   "delay-stagger": "45ms",
+   "distance-enter": "12px",
+   "distance-lift": "4px",
+   "distance-nudge": "3px",
+   "distance-shift": "6px",
+   "duration-base": "120ms",
+   "duration-celebrate": "480ms",
+   "duration-fast": "80ms",
+   "duration-instant": "70ms",
+   "duration-medium": "140ms",
+   "duration-moderate": "150ms",
+   "duration-morph": "320ms",
+   "duration-quick": "100ms",
+   "duration-roll": "0.3s",
+   "duration-slow": "180ms",
+   "duration-spin": "0.8s",
+   "duration-spring-bouncy": "440ms",
+   "duration-spring-snappy": "300ms",
+   "duration-spring-soft": "340ms",
+   "duration-zoom": "220ms",
+   "scale-anticipate": "0.9",
+   "scale-enter": "0.9",
+   "scale-lift": "1.03",
+   "scale-morph": "0.3",
+   "scale-pop": "1.14",
+   "scale-press": "0.97",
+   "scale-stretch": "1.3"
+  },
+  "neutral": {
+   "delay-feedback": "2000ms",
+   "delay-stagger": "24ms",
+   "distance-enter": "6px",
+   "distance-lift": "2px",
+   "distance-nudge": "2px",
+   "distance-shift": "4px",
+   "duration-base": "150ms",
+   "duration-celebrate": "220ms",
+   "duration-fast": "80ms",
+   "duration-instant": "70ms",
+   "duration-medium": "180ms",
+   "duration-moderate": "150ms",
+   "duration-morph": "200ms",
+   "duration-quick": "100ms",
+   "duration-roll": "0.3s",
+   "duration-slow": "180ms",
+   "duration-spin": "0.8s",
+   "duration-spring-bouncy": "220ms",
+   "duration-spring-snappy": "180ms",
+   "duration-spring-soft": "220ms",
+   "duration-zoom": "220ms",
+   "scale-anticipate": "0.95",
+   "scale-enter": "0.97",
+   "scale-lift": "1.01",
+   "scale-morph": "0.5",
+   "scale-pop": "1.05",
+   "scale-press": "0.97",
+   "scale-stretch": "1.15"
+  }
+ },
+ "runs": [
+  {
+   "style": "studio",
+   "dir": "ltr",
+   "motion": "full",
+   "state": "false -> true",
+   "stateAt": 37,
+   "firstMotionAt": 37,
+   "events": "",
+   "longest": 100,
+   "movers": 1,
+   "badProps": [],
+   "anims": [
+    {
+     "target": "link>span[label]::after",
+     "kind": "Transition",
+     "props": "transform",
+     "dur": 100,
+     "durTok": "duration-morph|duration-quick|duration-spring-soft",
+     "ease": "ease-out",
+     "kf": [
+      {
+       "offset": 0,
+       "transform": "scaleX(0)"
+      },
+      {
+       "offset": 1,
+       "transform": "scaleX(1)"
+      }
+     ],
+     "at": 37
+    }
+   ],
+   "end": {
+    "live": [],
+    "offRest": 2,
+    "offSample": [
+     "3:span[label]::after t=matrix(0, 0, 0, 1, 0, 0) o=1",
+     "11:span[label]::after t=matrix(0, 0, 0, 1, 0, 0) o=1"
+    ],
+    "nodes": 12
+   }
+  },
+  {
+   "style": "studio",
+   "dir": "ltr",
+   "motion": "media",
+   "state": "false -> true",
+   "stateAt": 56,
+   "firstMotionAt": 56,
+   "events": "",
+   "longest": 100,
+   "movers": 1,
+   "badProps": [],
+   "anims": [
+    {
+     "target": "link>span[label]::after",
+     "kind": "Transition",
+     "props": "transform",
+     "dur": 100,
+     "durTok": "duration-morph|duration-spring-soft",
+     "ease": "ease-out",
+     "kf": [
+      {
+       "offset": 0,
+       "transform": "scaleX(0)"
+      },
+      {
+       "offset": 1,
+       "transform": "scaleX(1)"
+      }
+     ],
+     "at": 56
+    }
+   ],
+   "end": {
+    "live": [],
+    "offRest": 2,
+    "offSample": [
+     "3:span[label]::after t=matrix(0, 0, 0, 1, 0, 0) o=1",
+     "11:span[label]::after t=matrix(0, 0, 0, 1, 0, 0) o=1"
+    ],
+    "nodes": 12
+   }
+  },
+  {
+   "style": "studio",
+   "dir": "ltr",
+   "motion": "attr",
+   "state": "false -> true",
+   "stateAt": 39,
+   "firstMotionAt": null,
+   "events": "",
+   "longest": 0,
+   "movers": 0,
+   "badProps": [],
+   "anims": [],
+   "end": {
+    "live": [],
+    "offRest": 2,
+    "offSample": [
+     "3:span[label]::after t=matrix(0, 0, 0, 1, 0, 0) o=1",
+     "11:span[label]::after t=matrix(0, 0, 0, 1, 0, 0) o=1"
+    ],
+    "nodes": 12
+   }
+  },
+  {
+   "style": "studio",
+   "dir": "rtl",
+   "motion": "full",
+   "state": "false -> true",
+   "stateAt": 39,
+   "firstMotionAt": 39,
+   "events": "",
+   "longest": 100,
+   "movers": 1,
+   "badProps": [],
+   "anims": [
+    {
+     "target": "link>span[label]::after",
+     "kind": "Transition",
+     "props": "transform",
+     "dur": 100,
+     "durTok": "duration-morph|duration-quick|duration-spring-soft",
+     "ease": "ease-out",
+     "kf": [
+      {
+       "offset": 0,
+       "transform": "scaleX(0)"
+      },
+      {
+       "offset": 1,
+       "transform": "scaleX(1)"
+      }
+     ],
+     "at": 39
+    }
+   ],
+   "end": {
+    "live": [],
+    "offRest": 3,
+    "offSample": [
+     "3:span[label]::after t=matrix(0, 0, 0, 1, 0, 0) o=1",
+     "5:svg t=matrix(-1, 0, 0, 1, 0, 0) o=1",
+     "11:span[label]::after t=matrix(0, 0, 0, 1, 0, 0) o=1"
+    ],
+    "nodes": 12
+   }
+  },
+  {
+   "style": "studio",
+   "dir": "rtl",
+   "motion": "media",
+   "state": "false -> true",
+   "stateAt": 56,
+   "firstMotionAt": 56,
+   "events": "",
+   "longest": 100,
+   "movers": 1,
+   "badProps": [],
+   "anims": [
+    {
+     "target": "link>span[label]::after",
+     "kind": "Transition",
+     "props": "transform",
+     "dur": 100,
+     "durTok": "duration-morph|duration-spring-soft",
+     "ease": "ease-out",
+     "kf": [
+      {
+       "offset": 0,
+       "transform": "scaleX(0)"
+      },
+      {
+       "offset": 1,
+       "transform": "scaleX(1)"
+      }
+     ],
+     "at": 56
+    }
+   ],
+   "end": {
+    "live": [],
+    "offRest": 3,
+    "offSample": [
+     "3:span[label]::after t=matrix(0, 0, 0, 1, 0, 0) o=1",
+     "5:svg t=matrix(-1, 0, 0, 1, 0, 0) o=1",
+     "11:span[label]::after t=matrix(0, 0, 0, 1, 0, 0) o=1"
+    ],
+    "nodes": 12
+   }
+  },
+  {
+   "style": "studio",
+   "dir": "rtl",
+   "motion": "attr",
+   "state": "false -> true",
+   "stateAt": 64,
+   "firstMotionAt": null,
+   "events": "",
+   "longest": 0,
+   "movers": 0,
+   "badProps": [],
+   "anims": [],
+   "end": {
+    "live": [],
+    "offRest": 3,
+    "offSample": [
+     "3:span[label]::after t=matrix(0, 0, 0, 1, 0, 0) o=1",
+     "5:svg t=matrix(-1, 0, 0, 1, 0, 0) o=1",
+     "11:span[label]::after t=matrix(0, 0, 0, 1, 0, 0) o=1"
+    ],
+    "nodes": 12
+   }
+  },
+  {
+   "style": "desk",
+   "dir": "ltr",
+   "motion": "full",
+   "state": "false -> true",
+   "stateAt": 59,
+   "firstMotionAt": 59,
+   "events": "",
+   "longest": 320,
+   "movers": 1,
+   "badProps": [],
+   "anims": [
+    {
+     "target": "link>span[label]::after",
+     "kind": "Transition",
+     "props": "transform",
+     "dur": 320,
+     "durTok": "duration-morph",
+     "ease": "ease-out",
+     "kf": [
+      {
+       "offset": 0,
+       "transform": "scaleX(0)"
+      },
+      {
+       "offset": 1,
+       "transform": "scaleX(1)"
+      }
+     ],
+     "at": 59
+    }
+   ],
+   "end": {
+    "live": [],
+    "offRest": 2,
+    "offSample": [
+     "3:span[label]::after t=matrix(0, 0, 0, 1, 0, 0) o=1",
+     "11:span[label]::after t=matrix(0, 0, 0, 1, 0, 0) o=1"
+    ],
+    "nodes": 12
+   }
+  },
+  {
+   "style": "desk",
+   "dir": "ltr",
+   "motion": "media",
+   "state": "false -> true",
+   "stateAt": 64,
+   "firstMotionAt": 64,
+   "events": "",
+   "longest": 320,
+   "movers": 1,
+   "badProps": [],
+   "anims": [
+    {
+     "target": "link>span[label]::after",
+     "kind": "Transition",
+     "props": "transform",
+     "dur": 320,
+     "durTok": "duration-morph",
+     "ease": "ease-out",
+     "kf": [
+      {
+       "offset": 0,
+       "transform": "scaleX(0)"
+      },
+      {
+       "offset": 1,
+       "transform": "scaleX(1)"
+      }
+     ],
+     "at": 64
+    }
+   ],
+   "end": {
+    "live": [],
+    "offRest": 2,
+    "offSample": [
+     "3:span[label]::after t=matrix(0, 0, 0, 1, 0, 0) o=1",
+     "11:span[label]::after t=matrix(0, 0, 0, 1, 0, 0) o=1"
+    ],
+    "nodes": 12
+   }
+  },
+  {
+   "style": "desk",
+   "dir": "ltr",
+   "motion": "attr",
+   "state": "false -> true",
+   "stateAt": 51,
+   "firstMotionAt": null,
+   "events": "",
+   "longest": 0,
+   "movers": 0,
+   "badProps": [],
+   "anims": [],
+   "end": {
+    "live": [],
+    "offRest": 2,
+    "offSample": [
+     "3:span[label]::after t=matrix(0, 0, 0, 1, 0, 0) o=1",
+     "11:span[label]::after t=matrix(0, 0, 0, 1, 0, 0) o=1"
+    ],
+    "nodes": 12
+   }
+  },
+  {
+   "style": "desk",
+   "dir": "rtl",
+   "motion": "full",
+   "state": "false -> true",
+   "stateAt": 38,
+   "firstMotionAt": 38,
+   "events": "",
+   "longest": 320,
+   "movers": 1,
+   "badProps": [],
+   "anims": [
+    {
+     "target": "link>span[label]::after",
+     "kind": "Transition",
+     "props": "transform",
+     "dur": 320,
+     "durTok": "duration-morph",
+     "ease": "ease-out",
+     "kf": [
+      {
+       "offset": 0,
+       "transform": "scaleX(0)"
+      },
+      {
+       "offset": 1,
+       "transform": "scaleX(1)"
+      }
+     ],
+     "at": 38
+    }
+   ],
+   "end": {
+    "live": [],
+    "offRest": 3,
+    "offSample": [
+     "3:span[label]::after t=matrix(0, 0, 0, 1, 0, 0) o=1",
+     "5:svg t=matrix(-1, 0, 0, 1, 0, 0) o=1",
+     "11:span[label]::after t=matrix(0, 0, 0, 1, 0, 0) o=1"
+    ],
+    "nodes": 12
+   }
+  },
+  {
+   "style": "desk",
+   "dir": "rtl",
+   "motion": "media",
+   "state": "false -> true",
+   "stateAt": 61,
+   "firstMotionAt": 61,
+   "events": "",
+   "longest": 320,
+   "movers": 1,
+   "badProps": [],
+   "anims": [
+    {
+     "target": "link>span[label]::after",
+     "kind": "Transition",
+     "props": "transform",
+     "dur": 320,
+     "durTok": "duration-morph",
+     "ease": "ease-out",
+     "kf": [
+      {
+       "offset": 0,
+       "transform": "scaleX(0)"
+      },
+      {
+       "offset": 1,
+       "transform": "scaleX(1)"
+      }
+     ],
+     "at": 61
+    }
+   ],
+   "end": {
+    "live": [],
+    "offRest": 3,
+    "offSample": [
+     "3:span[label]::after t=matrix(0, 0, 0, 1, 0, 0) o=1",
+     "5:svg t=matrix(-1, 0, 0, 1, 0, 0) o=1",
+     "11:span[label]::after t=matrix(0, 0, 0, 1, 0, 0) o=1"
+    ],
+    "nodes": 12
+   }
+  },
+  {
+   "style": "desk",
+   "dir": "rtl",
+   "motion": "attr",
+   "state": "false -> true",
+   "stateAt": 73,
+   "firstMotionAt": null,
+   "events": "",
+   "longest": 0,
+   "movers": 0,
+   "badProps": [],
+   "anims": [],
+   "end": {
+    "live": [],
+    "offRest": 3,
+    "offSample": [
+     "3:span[label]::after t=matrix(0, 0, 0, 1, 0, 0) o=1",
+     "5:svg t=matrix(-1, 0, 0, 1, 0, 0) o=1",
+     "11:span[label]::after t=matrix(0, 0, 0, 1, 0, 0) o=1"
+    ],
+    "nodes": 12
+   }
+  },
+  {
+   "style": "neutral",
+   "dir": "ltr",
+   "motion": "full",
+   "state": "false -> true",
+   "stateAt": 64,
+   "firstMotionAt": 64,
+   "events": "",
+   "longest": 200,
+   "movers": 1,
+   "badProps": [],
+   "anims": [
+    {
+     "target": "link>span[label]::after",
+     "kind": "Transition",
+     "props": "transform",
+     "dur": 200,
+     "durTok": "duration-morph",
+     "ease": "ease-out",
+     "kf": [
+      {
+       "offset": 0,
+       "transform": "scaleX(0)"
+      },
+      {
+       "offset": 1,
+       "transform": "scaleX(1)"
+      }
+     ],
+     "at": 64
+    }
+   ],
+   "end": {
+    "live": [],
+    "offRest": 2,
+    "offSample": [
+     "3:span[label]::after t=matrix(0, 0, 0, 1, 0, 0) o=1",
+     "12:span[label]::after t=matrix(0, 0, 0, 1, 0, 0) o=1"
+    ],
+    "nodes": 13
+   }
+  },
+  {
+   "style": "neutral",
+   "dir": "ltr",
+   "motion": "media",
+   "state": "false -> true",
+   "stateAt": 176,
+   "firstMotionAt": 176,
+   "events": "",
+   "longest": 200,
+   "movers": 1,
+   "badProps": [],
+   "anims": [
+    {
+     "target": "link>span[label]::after",
+     "kind": "Transition",
+     "props": "transform",
+     "dur": 200,
+     "durTok": "duration-morph",
+     "ease": "ease-out",
+     "kf": [
+      {
+       "offset": 0,
+       "transform": "scaleX(0)"
+      },
+      {
+       "offset": 1,
+       "transform": "scaleX(1)"
+      }
+     ],
+     "at": 176
+    }
+   ],
+   "end": {
+    "live": [],
+    "offRest": 2,
+    "offSample": [
+     "3:span[label]::after t=matrix(0, 0, 0, 1, 0, 0) o=1",
+     "12:span[label]::after t=matrix(0, 0, 0, 1, 0, 0) o=1"
+    ],
+    "nodes": 13
+   }
+  },
+  {
+   "style": "neutral",
+   "dir": "ltr",
+   "motion": "attr",
+   "state": "false -> true",
+   "stateAt": 81,
+   "firstMotionAt": null,
+   "events": "",
+   "longest": 0,
+   "movers": 0,
+   "badProps": [],
+   "anims": [],
+   "end": {
+    "live": [],
+    "offRest": 2,
+    "offSample": [
+     "3:span[label]::after t=matrix(0, 0, 0, 1, 0, 0) o=1",
+     "12:span[label]::after t=matrix(0, 0, 0, 1, 0, 0) o=1"
+    ],
+    "nodes": 13
+   }
+  },
+  {
+   "style": "neutral",
+   "dir": "rtl",
+   "motion": "full",
+   "state": "false -> true",
+   "stateAt": 46,
+   "firstMotionAt": 46,
+   "events": "",
+   "longest": 200,
+   "movers": 1,
+   "badProps": [],
+   "anims": [
+    {
+     "target": "link>span[label]::after",
+     "kind": "Transition",
+     "props": "transform",
+     "dur": 200,
+     "durTok": "duration-morph",
+     "ease": "ease-out",
+     "kf": [
+      {
+       "offset": 0,
+       "transform": "scaleX(0)"
+      },
+      {
+       "offset": 1,
+       "transform": "scaleX(1)"
+      }
+     ],
+     "at": 46
+    }
+   ],
+   "end": {
+    "live": [],
+    "offRest": 3,
+    "offSample": [
+     "3:span[label]::after t=matrix(0, 0, 0, 1, 0, 0) o=1",
+     "5:svg t=matrix(-1, 0, 0, 1, 0, 0) o=1",
+     "12:span[label]::after t=matrix(0, 0, 0, 1, 0, 0) o=1"
+    ],
+    "nodes": 13
+   }
+  },
+  {
+   "style": "neutral",
+   "dir": "rtl",
+   "motion": "media",
+   "state": "false -> true",
+   "stateAt": 34,
+   "firstMotionAt": 34,
+   "events": "",
+   "longest": 200,
+   "movers": 1,
+   "badProps": [],
+   "anims": [
+    {
+     "target": "link>span[label]::after",
+     "kind": "Transition",
+     "props": "transform",
+     "dur": 200,
+     "durTok": "duration-morph",
+     "ease": "ease-out",
+     "kf": [
+      {
+       "offset": 0,
+       "transform": "scaleX(0)"
+      },
+      {
+       "offset": 1,
+       "transform": "scaleX(1)"
+      }
+     ],
+     "at": 34
+    }
+   ],
+   "end": {
+    "live": [],
+    "offRest": 3,
+    "offSample": [
+     "3:span[label]::after t=matrix(0, 0, 0, 1, 0, 0) o=1",
+     "5:svg t=matrix(-1, 0, 0, 1, 0, 0) o=1",
+     "12:span[label]::after t=matrix(0, 0, 0, 1, 0, 0) o=1"
+    ],
+    "nodes": 13
+   }
+  },
+  {
+   "style": "neutral",
+   "dir": "rtl",
+   "motion": "attr",
+   "state": "false -> true",
+   "stateAt": 53,
+   "firstMotionAt": null,
+   "events": "",
+   "longest": 0,
+   "movers": 0,
+   "badProps": [],
+   "anims": [],
+   "end": {
+    "live": [],
+    "offRest": 3,
+    "offSample": [
+     "3:span[label]::after t=matrix(0, 0, 0, 1, 0, 0) o=1",
+     "5:svg t=matrix(-1, 0, 0, 1, 0, 0) o=1",
+     "12:span[label]::after t=matrix(0, 0, 0, 1, 0, 0) o=1"
+    ],
+    "nodes": 13
+   }
+  }
+ ],
+ "sweep": {
+  "studio": [],
+  "desk": [],
+  "neutral": []
+ },
+ "held": [],
+ "ring": {
+  "studio": {
+   "focusVisible": true,
+   "atOnce": true,
+   "diffFrame0": [],
+   "diffFirstFrame": [],
+   "first": {
+    "t": 1,
+    "outline": "solid 2px",
+    "shadow": "rgb(244, 244, 245) 0px 0px 0px 2px",
+    "hostShadow": "rgb(244, 244, 245) 0px 0px 0px 2px"
+   },
+   "last": {
+    "t": 282,
+    "outline": "solid 2px",
+    "shadow": "rgb(244, 244, 245) 0px 0px 0px 2px",
+    "hostShadow": "rgb(244, 244, 245) 0px 0px 0px 2px"
+   },
+   "frames": 18
+  },
+  "desk": {
+   "focusVisible": true,
+   "atOnce": true,
+   "diffFrame0": [],
+   "diffFirstFrame": [],
+   "first": {
+    "t": 1,
+    "outline": "solid 2px",
+    "shadow": "rgb(244, 244, 245) 0px 0px 0px 2px",
+    "hostShadow": "rgb(244, 244, 245) 0px 0px 0px 2px"
+   },
+   "last": {
+    "t": 273,
+    "outline": "solid 2px",
+    "shadow": "rgb(244, 244, 245) 0px 0px 0px 2px",
+    "hostShadow": "rgb(244, 244, 245) 0px 0px 0px 2px"
+   },
+   "frames": 16
+  },
+  "neutral": {
+   "focusVisible": true,
+   "atOnce": true,
+   "diffFrame0": [],
+   "diffFirstFrame": [],
+   "first": {
+    "t": 1,
+    "outline": "solid 2px",
+    "shadow": "rgb(255, 255, 255) 0px 0px 0px 2px, rgb(37, 99, 235) 0px 0px 0px 4px",
+    "hostShadow": "rgb(255, 255, 255) 0px 0px 0px 2px, rgb(37, 99, 235) 0px 0px 0px 4px"
+   },
+   "last": {
+    "t": 271,
+    "outline": "solid 2px",
+    "shadow": "rgb(255, 255, 255) 0px 0px 0px 2px, rgb(37, 99, 235) 0px 0px 0px 4px",
+    "hostShadow": "rgb(255, 255, 255) 0px 0px 0px 2px, rgb(37, 99, 235) 0px 0px 0px 4px"
+   },
+   "frames": 17
+  }
+ },
+ "rapid": {
+  "studio": {
+   "same": true,
+   "fast": {
+    "state": "false",
+    "nodes": 12,
+    "off": [
+     "1:span[label]::after t=matrix(0, 0, 0, 1, 0, 0) o=1",
+     "3:span[label]::after t=matrix(0, 0, 0, 1, 0, 0) o=1",
+     "11:span[label]::after t=matrix(0, 0, 0, 1, 0, 0) o=1"
+    ],
+    "live": [],
+    "active": "BODY"
+   }
+  },
+  "desk": {
+   "same": true,
+   "fast": {
+    "state": "false",
+    "nodes": 12,
+    "off": [
+     "1:span[label]::after t=matrix(0, 0, 0, 1, 0, 0) o=1",
+     "3:span[label]::after t=matrix(0, 0, 0, 1, 0, 0) o=1",
+     "11:span[label]::after t=matrix(0, 0, 0, 1, 0, 0) o=1"
+    ],
+    "live": [],
+    "active": "BODY"
+   }
+  },
+  "neutral": {
+   "same": true,
+   "fast": {
+    "state": "false",
+    "nodes": 13,
+    "off": [
+     "1:span[label]::after t=matrix(0, 0, 0, 1, 0, 0) o=1",
+     "3:span[label]::after t=matrix(0, 0, 0, 1, 0, 0) o=1",
+     "12:span[label]::after t=matrix(0, 0, 0, 1, 0, 0) o=1"
+    ],
+    "live": [],
+    "active": "BODY"
+   }
+  }
+ },
+ "interrupt": {
+  "studio": {
+   "same": true,
+   "fast": {
+    "state": "false",
+    "nodes": 12,
+    "off": [
+     "1:span[label]::after t=matrix(0, 0, 0, 1, 0, 0) o=1",
+     "3:span[label]::after t=matrix(0, 0, 0, 1, 0, 0) o=1",
+     "11:span[label]::after t=matrix(0, 0, 0, 1, 0, 0) o=1"
+    ],
+    "live": [],
+    "active": "BODY"
+   }
+  },
+  "desk": {
+   "same": true,
+   "fast": {
+    "state": "false",
+    "nodes": 12,
+    "off": [
+     "1:span[label]::after t=matrix(0, 0, 0, 1, 0, 0) o=1",
+     "3:span[label]::after t=matrix(0, 0, 0, 1, 0, 0) o=1",
+     "11:span[label]::after t=matrix(0, 0, 0, 1, 0, 0) o=1"
+    ],
+    "live": [],
+    "active": "BODY"
+   }
+  },
+  "neutral": {
+   "same": true,
+   "fast": {
+    "state": "false",
+    "nodes": 13,
+    "off": [
+     "1:span[label]::after t=matrix(0, 0, 0, 1, 0, 0) o=1",
+     "3:span[label]::after t=matrix(0, 0, 0, 1, 0, 0) o=1",
+     "12:span[label]::after t=matrix(0, 0, 0, 1, 0, 0) o=1"
+    ],
+    "live": [],
+    "active": "BODY"
+   }
+  }
+ },
+ "off": {
+  "studio": {
+   "injected": "@layer ds.recipes { [data-ds='link'] { --_link-motion: 0; --_link-shift: 0px; } }",
+   "movers": 0,
+   "moving": []
+  },
+  "desk": {
+   "injected": "@layer ds.recipes { [data-ds='link'] { --_link-motion: 0; --_link-shift: 0px; } }",
+   "movers": 0,
+   "moving": []
+  },
+  "neutral": {
+   "injected": "@layer ds.recipes { [data-ds='link'] { --_link-motion: 0; --_link-shift: 0px; } }",
+   "movers": 0,
+   "moving": []
+  }
+ },
+ "extra": {
+  "studio": {
+   "badProps": [],
+   "longest": 100,
+   "anims": [
+    {
+     "target": "link>span[label]::after",
+     "kind": "Transition",
+     "props": "transform",
+     "dur": 100,
+     "durTok": "duration-morph|duration-quick|duration-spring-soft",
+     "ease": "ease-out",
+     "kf": [
+      {
+       "offset": 0,
+       "transform": "scaleX(0)"
+      },
+      {
+       "offset": 1,
+       "transform": "scaleX(1)"
+      }
+     ],
+     "at": 65
+    },
+    {
+     "target": "link>span[end]",
+     "kind": "Transition",
+     "props": "transform",
+     "dur": 80,
+     "durTok": "duration-fast|duration-spring-snappy",
+     "ease": "steps(2)",
+     "kf": [
+      {
+       "offset": 0,
+       "transform": "translate(0px)"
+      },
+      {
+       "offset": 1,
+       "transform": "translate(2.5px, -2.5px)"
+      }
+     ],
+     "at": 65
+    }
+   ]
+  },
+  "desk": {
+   "badProps": [],
+   "longest": 320,
+   "anims": [
+    {
+     "target": "link>span[label]::after",
+     "kind": "Transition",
+     "props": "transform",
+     "dur": 320,
+     "durTok": "duration-morph",
+     "ease": "ease-out",
+     "kf": [
+      {
+       "offset": 0,
+       "transform": "scaleX(0)"
+      },
+      {
+       "offset": 1,
+       "transform": "scaleX(1)"
+      }
+     ],
+     "at": 67
+    },
+    {
+     "target": "link>span[end]",
+     "kind": "Transition",
+     "props": "transform",
+     "dur": 300,
+     "durTok": "duration-roll|duration-spring-snappy",
+     "ease": "ease-spring-snappy",
+     "kf": [
+      {
+       "offset": 0,
+       "transform": "translate(0px)"
+      },
+      {
+       "offset": 1,
+       "transform": "translate(7.5px, -7.5px)"
+      }
+     ],
+     "at": 67
+    }
+   ]
+  },
+  "neutral": {
+   "badProps": [],
+   "longest": 200,
+   "anims": [
+    {
+     "target": "link>span[label]::after",
+     "kind": "Transition",
+     "props": "transform",
+     "dur": 200,
+     "durTok": "duration-morph",
+     "ease": "ease-out",
+     "kf": [
+      {
+       "offset": 0,
+       "transform": "scaleX(0)"
+      },
+      {
+       "offset": 1,
+       "transform": "scaleX(1)"
+      }
+     ],
+     "at": 41
+    },
+    {
+     "target": "link>span[end]",
+     "kind": "Transition",
+     "props": "transform",
+     "dur": 180,
+     "durTok": "duration-medium|duration-slow|duration-spring-snappy",
+     "ease": "ease-spring-snappy",
+     "kf": [
+      {
+       "offset": 0,
+       "transform": "translate(0px)"
+      },
+      {
+       "offset": 1,
+       "transform": "translate(5px, -5px)"
+      }
+     ],
+     "at": 41
+    }
+   ]
+  }
+ }
+}

@@ -353,7 +353,7 @@ const scenarios = {
   },
   'tooltip-follow': {
     runs: [
-      { name: 'hover-next', ms: 900, stateSel: "[aria-label='Edit layer']", prep: async (p) => { await hover(p, T); await sleep(1300); await settle(p); }, act: (p) => hover(p, "[data-ds='icon-button'] >> nth=1"), inspect: () => [...document.querySelectorAll('[role=tooltip]')].map((t) => t.textContent) },
+      { name: 'hover-next', ms: 900, stateSel: "[aria-label='Edit layer']", prep: async (p) => { await hover(p, T); await sleep(1300); await settle(p); }, act: async (p) => { const c = await center(p, "[data-ds='icon-button'] >> nth=1"); await p.mouse.move(c.x, c.y, { steps: 4 }); }, inspect: () => [...document.querySelectorAll('[role=tooltip]')].map((t) => t.textContent) },
     ],
   },
   'dialog-spring': {

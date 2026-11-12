@@ -1,0 +1,4046 @@
+{
+ "id": "state-illustration",
+ "family": "feedback",
+ "drive": "css",
+ "pattern": "fade-rise",
+ "reducedSays": "No motion: every part is there at once.",
+ "styles": {
+  "studio": {
+   "focus": {
+    "at0": {
+     "el": "button[button]",
+     "outline": "solid 2px rgba(0, 0, 0, 0)",
+     "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgb(244, 244, 245) 0px 0px 0px 2px",
+     "focusVisible": true,
+     "opacity": 1,
+     "anims": []
+    },
+    "at300": {
+     "el": "button[button]",
+     "outline": "solid 2px rgba(0, 0, 0, 0)",
+     "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgb(244, 244, 245) 0px 0px 0px 2px",
+     "focusVisible": true,
+     "opacity": 1,
+     "anims": []
+    },
+    "ringAtOnce": true
+   },
+   "transitionSweep": [],
+   "seek": {
+    "animations": 8,
+    "startOffsets": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "hit": {
+     "checked": 3,
+     "missed": [],
+     "maxShift": 2.5
+    },
+    "parts": [
+     {
+      "part": "span[icon]",
+      "scale": [
+       1,
+       1
+      ],
+      "travelPx": 0,
+      "opacityMin": 0,
+      "scaleOvershoot": 0,
+      "travelOvershootPx": 0,
+      "movesUntil": 20
+     },
+     {
+      "part": "h3[title]",
+      "scale": [
+       1,
+       1
+      ],
+      "travelPx": 1,
+      "opacityMin": 0,
+      "scaleOvershoot": 0,
+      "travelOvershootPx": 0,
+      "movesUntil": 20
+     },
+     {
+      "part": "div[body]",
+      "scale": [
+       1,
+       1
+      ],
+      "travelPx": 1,
+      "opacityMin": 0,
+      "scaleOvershoot": 0,
+      "travelOvershootPx": 0,
+      "movesUntil": 20
+     },
+     {
+      "part": "div[actions]",
+      "scale": [
+       1,
+       1
+      ],
+      "travelPx": 1,
+      "opacityMin": 0,
+      "scaleOvershoot": 0,
+      "travelOvershootPx": 0,
+      "movesUntil": 20
+     },
+     {
+      "part": "div[error-state]",
+      "scale": [
+       1,
+       1
+      ],
+      "travelPx": 0,
+      "opacityMin": 0,
+      "scaleOvershoot": 0,
+      "travelOvershootPx": 0,
+      "movesUntil": 20
+     },
+     {
+      "part": "h2[title]",
+      "scale": [
+       1,
+       1
+      ],
+      "travelPx": 1,
+      "opacityMin": 0,
+      "scaleOvershoot": 0,
+      "travelOvershootPx": 0,
+      "movesUntil": 20
+     }
+    ],
+    "readable": [
+     {
+      "text": "h3[title]:No results",
+      "readableAt": 20,
+      "appearedAt": 0
+     },
+     {
+      "text": "div[body]:Try another wo",
+      "readableAt": 20,
+      "appearedAt": 0
+     },
+     {
+      "text": "span[label]:Clear the filt",
+      "readableAt": 20,
+      "appearedAt": 0
+     },
+     {
+      "text": "h2[title]:Could not load",
+      "readableAt": 40,
+      "appearedAt": 0
+     },
+     {
+      "text": "span[label]:Retry loading",
+      "readableAt": 40,
+      "appearedAt": 0
+     }
+    ]
+   },
+   "transitionSweepAfter": [],
+   "full": {
+    "anims": [
+     {
+      "kind": "keyframes",
+      "name": "ds-empty-state-art",
+      "target": "span[icon]",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 120,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "linear",
+      "kfEasing": [
+       "ease.spring-bouncy"
+      ],
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "opacity": "0",
+        "transform": "translateY(0px) scale(1)"
+       },
+       {
+        "offset": 0.3,
+        "opacity": "1"
+       },
+       {
+        "offset": 1,
+        "opacity": "1",
+        "transform": "none"
+       }
+      ],
+      "first": 63,
+      "last": 173,
+      "playState": "running"
+     },
+     {
+      "kind": "keyframes",
+      "name": "ds-empty-state-text",
+      "target": "h3[title]",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 100,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "linear",
+      "kfEasing": [
+       "ease.spring-soft"
+      ],
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "opacity": "0",
+        "transform": "translateY(1px)"
+       },
+       {
+        "offset": 0.3,
+        "opacity": "1"
+       },
+       {
+        "offset": 1,
+        "opacity": "1",
+        "transform": "none"
+       }
+      ],
+      "first": 63,
+      "last": 160,
+      "playState": "running"
+     },
+     {
+      "kind": "keyframes",
+      "name": "ds-empty-state-text",
+      "target": "div[body]",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 100,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "linear",
+      "kfEasing": [
+       "ease.spring-soft"
+      ],
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "opacity": "0",
+        "transform": "translateY(1px)"
+       },
+       {
+        "offset": 0.3,
+        "opacity": "1"
+       },
+       {
+        "offset": 1,
+        "opacity": "1",
+        "transform": "none"
+       }
+      ],
+      "first": 63,
+      "last": 160,
+      "playState": "running"
+     },
+     {
+      "kind": "keyframes",
+      "name": "ds-empty-state-text",
+      "target": "div[actions]",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 100,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "linear",
+      "kfEasing": [
+       "ease.spring-soft"
+      ],
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "opacity": "0",
+        "transform": "translateY(1px)"
+       },
+       {
+        "offset": 0.3,
+        "opacity": "1"
+       },
+       {
+        "offset": 1,
+        "opacity": "1",
+        "transform": "none"
+       }
+      ],
+      "first": 63,
+      "last": 160,
+      "playState": "running"
+     },
+     {
+      "kind": "keyframes",
+      "name": "ds-error-state-in",
+      "target": "div[error-state]",
+      "props": [
+       "opacity"
+      ],
+      "duration": 100,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "linear",
+      "kfEasing": [
+       "ease.out"
+      ],
+      "fill": "none",
+      "kf": [
+       {
+        "offset": 0,
+        "opacity": "0"
+       },
+       {
+        "offset": 0.3,
+        "opacity": "1"
+       },
+       {
+        "offset": 1,
+        "opacity": "1"
+       }
+      ],
+      "first": 63,
+      "last": 160,
+      "playState": "running"
+     },
+     {
+      "kind": "keyframes",
+      "name": "ds-error-state-art",
+      "target": "span[icon]",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 120,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "linear",
+      "kfEasing": [
+       "ease.spring-bouncy"
+      ],
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "opacity": "0",
+        "transform": "translateY(0px) scale(1)"
+       },
+       {
+        "offset": 0.3,
+        "opacity": "1"
+       },
+       {
+        "offset": 1,
+        "opacity": "1",
+        "transform": "none"
+       }
+      ],
+      "first": 63,
+      "last": 173,
+      "playState": "running"
+     },
+     {
+      "kind": "keyframes",
+      "name": "ds-error-state-text",
+      "target": "h2[title]",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 100,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "linear",
+      "kfEasing": [
+       "ease.spring-soft"
+      ],
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "opacity": "0",
+        "transform": "translateY(1px)"
+       },
+       {
+        "offset": 0.3,
+        "opacity": "1"
+       },
+       {
+        "offset": 1,
+        "opacity": "1",
+        "transform": "none"
+       }
+      ],
+      "first": 63,
+      "last": 160,
+      "playState": "running"
+     },
+     {
+      "kind": "keyframes",
+      "name": "ds-error-state-text",
+      "target": "div[actions]",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 100,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "linear",
+      "kfEasing": [
+       "ease.spring-soft"
+      ],
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "opacity": "0",
+        "transform": "translateY(1px)"
+       },
+       {
+        "offset": 0.3,
+        "opacity": "1"
+       },
+       {
+        "offset": 1,
+        "opacity": "1",
+        "transform": "none"
+       }
+      ],
+      "first": 63,
+      "last": 160,
+      "playState": "running"
+     }
+    ],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 120,
+    "infinite": [],
+    "stateAt": null,
+    "firstMotionAt": 63,
+    "focusAfter": "button[button]",
+    "frames": 92,
+    "animCount": 8
+   },
+   "rapid": {
+    "left": [],
+    "held": [],
+    "inline": [],
+    "ghosts": 0,
+    "nodes": 24,
+    "indicators": "0 ok",
+    "custom": null,
+    "nodesBefore": 24
+   },
+   "interrupt": null,
+   "tenFast": null,
+   "off": {
+    "injected": "@layer ds.recipes {[data-style='studio'] [data-ds='empty-state'] {--_empty-state-lift: 0px; --_empty-state-enter-scale: 1; --_empty-state-shift: 0px;}\n[data-style='studio'] [data-ds='error-state'] {--_error-state-lift: 0px; --_error-state-enter-scale: 1; --_error-state-shift: 0px;}}",
+    "animations": 8,
+    "moving": [],
+    "fading": [
+     "span[icon]",
+     "h3[title]",
+     "div[body]",
+     "div[actions]",
+     "div[error-state]",
+     "h2[title]"
+    ]
+   },
+   "full.rtl": {
+    "anims": [
+     {
+      "kind": "keyframes",
+      "name": "ds-empty-state-art",
+      "target": "span[icon]",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 120,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "linear",
+      "kfEasing": [
+       "ease.spring-bouncy"
+      ],
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "opacity": "0",
+        "transform": "translateY(0px) scale(1)"
+       },
+       {
+        "offset": 0.3,
+        "opacity": "1"
+       },
+       {
+        "offset": 1,
+        "opacity": "1",
+        "transform": "none"
+       }
+      ],
+      "first": 59,
+      "last": 222,
+      "playState": "running"
+     },
+     {
+      "kind": "keyframes",
+      "name": "ds-empty-state-text",
+      "target": "h3[title]",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 100,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "linear",
+      "kfEasing": [
+       "ease.spring-soft"
+      ],
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "opacity": "0",
+        "transform": "translateY(1px)"
+       },
+       {
+        "offset": 0.3,
+        "opacity": "1"
+       },
+       {
+        "offset": 1,
+        "opacity": "1",
+        "transform": "none"
+       }
+      ],
+      "first": 59,
+      "last": 188,
+      "playState": "running"
+     },
+     {
+      "kind": "keyframes",
+      "name": "ds-empty-state-text",
+      "target": "div[body]",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 100,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "linear",
+      "kfEasing": [
+       "ease.spring-soft"
+      ],
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "opacity": "0",
+        "transform": "translateY(1px)"
+       },
+       {
+        "offset": 0.3,
+        "opacity": "1"
+       },
+       {
+        "offset": 1,
+        "opacity": "1",
+        "transform": "none"
+       }
+      ],
+      "first": 59,
+      "last": 188,
+      "playState": "running"
+     },
+     {
+      "kind": "keyframes",
+      "name": "ds-empty-state-text",
+      "target": "div[actions]",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 100,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "linear",
+      "kfEasing": [
+       "ease.spring-soft"
+      ],
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "opacity": "0",
+        "transform": "translateY(1px)"
+       },
+       {
+        "offset": 0.3,
+        "opacity": "1"
+       },
+       {
+        "offset": 1,
+        "opacity": "1",
+        "transform": "none"
+       }
+      ],
+      "first": 59,
+      "last": 188,
+      "playState": "running"
+     },
+     {
+      "kind": "keyframes",
+      "name": "ds-error-state-in",
+      "target": "div[error-state]",
+      "props": [
+       "opacity"
+      ],
+      "duration": 100,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "linear",
+      "kfEasing": [
+       "ease.out"
+      ],
+      "fill": "none",
+      "kf": [
+       {
+        "offset": 0,
+        "opacity": "0"
+       },
+       {
+        "offset": 0.3,
+        "opacity": "1"
+       },
+       {
+        "offset": 1,
+        "opacity": "1"
+       }
+      ],
+      "first": 59,
+      "last": 188,
+      "playState": "running"
+     },
+     {
+      "kind": "keyframes",
+      "name": "ds-error-state-art",
+      "target": "span[icon]",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 120,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "linear",
+      "kfEasing": [
+       "ease.spring-bouncy"
+      ],
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "opacity": "0",
+        "transform": "translateY(0px) scale(1)"
+       },
+       {
+        "offset": 0.3,
+        "opacity": "1"
+       },
+       {
+        "offset": 1,
+        "opacity": "1",
+        "transform": "none"
+       }
+      ],
+      "first": 59,
+      "last": 222,
+      "playState": "running"
+     },
+     {
+      "kind": "keyframes",
+      "name": "ds-error-state-text",
+      "target": "h2[title]",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 100,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "linear",
+      "kfEasing": [
+       "ease.spring-soft"
+      ],
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "opacity": "0",
+        "transform": "translateY(1px)"
+       },
+       {
+        "offset": 0.3,
+        "opacity": "1"
+       },
+       {
+        "offset": 1,
+        "opacity": "1",
+        "transform": "none"
+       }
+      ],
+      "first": 59,
+      "last": 188,
+      "playState": "running"
+     },
+     {
+      "kind": "keyframes",
+      "name": "ds-error-state-text",
+      "target": "div[actions]",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 100,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "linear",
+      "kfEasing": [
+       "ease.spring-soft"
+      ],
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "opacity": "0",
+        "transform": "translateY(1px)"
+       },
+       {
+        "offset": 0.3,
+        "opacity": "1"
+       },
+       {
+        "offset": 1,
+        "opacity": "1",
+        "transform": "none"
+       }
+      ],
+      "first": 59,
+      "last": 188,
+      "playState": "running"
+     }
+    ],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 120,
+    "infinite": [],
+    "stateAt": null,
+    "firstMotionAt": 59,
+    "focusAfter": "button[button]",
+    "frames": 69,
+    "animCount": 8,
+    "rapid": {
+     "left": [],
+     "held": [],
+     "inline": [],
+     "ghosts": 0,
+     "nodes": 24,
+     "indicators": "0 ok",
+     "custom": null,
+     "nodesBefore": 24
+    }
+   },
+   "media.ltr": {
+    "anims": [
+     {
+      "kind": "keyframes",
+      "name": "ds-empty-state-art",
+      "target": "span[icon]",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 120,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "linear",
+      "kfEasing": [
+       "ease.spring-bouncy"
+      ],
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "opacity": "0",
+        "transform": "translateY(0px) scale(1)"
+       },
+       {
+        "offset": 0.3,
+        "opacity": "1"
+       },
+       {
+        "offset": 1,
+        "opacity": "1",
+        "transform": "none"
+       }
+      ],
+      "first": 96,
+      "last": 213,
+      "playState": "running"
+     },
+     {
+      "kind": "keyframes",
+      "name": "ds-empty-state-text",
+      "target": "h3[title]",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 100,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "linear",
+      "kfEasing": [
+       "ease.spring-soft"
+      ],
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "opacity": "0",
+        "transform": "translateY(1px)"
+       },
+       {
+        "offset": 0.3,
+        "opacity": "1"
+       },
+       {
+        "offset": 1,
+        "opacity": "1",
+        "transform": "none"
+       }
+      ],
+      "first": 96,
+      "last": 180,
+      "playState": "running"
+     },
+     {
+      "kind": "keyframes",
+      "name": "ds-empty-state-text",
+      "target": "div[body]",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 100,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "linear",
+      "kfEasing": [
+       "ease.spring-soft"
+      ],
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "opacity": "0",
+        "transform": "translateY(1px)"
+       },
+       {
+        "offset": 0.3,
+        "opacity": "1"
+       },
+       {
+        "offset": 1,
+        "opacity": "1",
+        "transform": "none"
+       }
+      ],
+      "first": 96,
+      "last": 180,
+      "playState": "running"
+     },
+     {
+      "kind": "keyframes",
+      "name": "ds-empty-state-text",
+      "target": "div[actions]",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 100,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "linear",
+      "kfEasing": [
+       "ease.spring-soft"
+      ],
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "opacity": "0",
+        "transform": "translateY(1px)"
+       },
+       {
+        "offset": 0.3,
+        "opacity": "1"
+       },
+       {
+        "offset": 1,
+        "opacity": "1",
+        "transform": "none"
+       }
+      ],
+      "first": 96,
+      "last": 180,
+      "playState": "running"
+     },
+     {
+      "kind": "keyframes",
+      "name": "ds-error-state-art",
+      "target": "span[icon]",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 120,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "linear",
+      "kfEasing": [
+       "ease.spring-bouncy"
+      ],
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "opacity": "0",
+        "transform": "translateY(0px) scale(1)"
+       },
+       {
+        "offset": 0.3,
+        "opacity": "1"
+       },
+       {
+        "offset": 1,
+        "opacity": "1",
+        "transform": "none"
+       }
+      ],
+      "first": 96,
+      "last": 213,
+      "playState": "running"
+     },
+     {
+      "kind": "keyframes",
+      "name": "ds-error-state-text",
+      "target": "h2[title]",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 100,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "linear",
+      "kfEasing": [
+       "ease.spring-soft"
+      ],
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "opacity": "0",
+        "transform": "translateY(1px)"
+       },
+       {
+        "offset": 0.3,
+        "opacity": "1"
+       },
+       {
+        "offset": 1,
+        "opacity": "1",
+        "transform": "none"
+       }
+      ],
+      "first": 96,
+      "last": 180,
+      "playState": "running"
+     },
+     {
+      "kind": "keyframes",
+      "name": "ds-error-state-text",
+      "target": "div[actions]",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 100,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "linear",
+      "kfEasing": [
+       "ease.spring-soft"
+      ],
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "opacity": "0",
+        "transform": "translateY(1px)"
+       },
+       {
+        "offset": 0.3,
+        "opacity": "1"
+       },
+       {
+        "offset": 1,
+        "opacity": "1",
+        "transform": "none"
+       }
+      ],
+      "first": 96,
+      "last": 180,
+      "playState": "running"
+     }
+    ],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 120,
+    "infinite": [],
+    "stateAt": null,
+    "firstMotionAt": 96,
+    "focusAfter": "button[button]",
+    "frames": 72,
+    "animCount": 7,
+    "restOffTransforms": []
+   },
+   "media.rtl": {
+    "anims": [
+     {
+      "kind": "keyframes",
+      "name": "ds-empty-state-art",
+      "target": "span[icon]",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 120,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "linear",
+      "kfEasing": [
+       "ease.spring-bouncy"
+      ],
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "opacity": "0",
+        "transform": "translateY(0px) scale(1)"
+       },
+       {
+        "offset": 0.3,
+        "opacity": "1"
+       },
+       {
+        "offset": 1,
+        "opacity": "1",
+        "transform": "none"
+       }
+      ],
+      "first": 49,
+      "last": 165,
+      "playState": "running"
+     },
+     {
+      "kind": "keyframes",
+      "name": "ds-empty-state-text",
+      "target": "h3[title]",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 100,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "linear",
+      "kfEasing": [
+       "ease.spring-soft"
+      ],
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "opacity": "0",
+        "transform": "translateY(1px)"
+       },
+       {
+        "offset": 0.3,
+        "opacity": "1"
+       },
+       {
+        "offset": 1,
+        "opacity": "1",
+        "transform": "none"
+       }
+      ],
+      "first": 49,
+      "last": 143,
+      "playState": "running"
+     },
+     {
+      "kind": "keyframes",
+      "name": "ds-empty-state-text",
+      "target": "div[body]",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 100,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "linear",
+      "kfEasing": [
+       "ease.spring-soft"
+      ],
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "opacity": "0",
+        "transform": "translateY(1px)"
+       },
+       {
+        "offset": 0.3,
+        "opacity": "1"
+       },
+       {
+        "offset": 1,
+        "opacity": "1",
+        "transform": "none"
+       }
+      ],
+      "first": 49,
+      "last": 143,
+      "playState": "running"
+     },
+     {
+      "kind": "keyframes",
+      "name": "ds-empty-state-text",
+      "target": "div[actions]",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 100,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "linear",
+      "kfEasing": [
+       "ease.spring-soft"
+      ],
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "opacity": "0",
+        "transform": "translateY(1px)"
+       },
+       {
+        "offset": 0.3,
+        "opacity": "1"
+       },
+       {
+        "offset": 1,
+        "opacity": "1",
+        "transform": "none"
+       }
+      ],
+      "first": 49,
+      "last": 143,
+      "playState": "running"
+     },
+     {
+      "kind": "keyframes",
+      "name": "ds-error-state-art",
+      "target": "span[icon]",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 120,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "linear",
+      "kfEasing": [
+       "ease.spring-bouncy"
+      ],
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "opacity": "0",
+        "transform": "translateY(0px) scale(1)"
+       },
+       {
+        "offset": 0.3,
+        "opacity": "1"
+       },
+       {
+        "offset": 1,
+        "opacity": "1",
+        "transform": "none"
+       }
+      ],
+      "first": 49,
+      "last": 165,
+      "playState": "running"
+     },
+     {
+      "kind": "keyframes",
+      "name": "ds-error-state-text",
+      "target": "h2[title]",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 100,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "linear",
+      "kfEasing": [
+       "ease.spring-soft"
+      ],
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "opacity": "0",
+        "transform": "translateY(1px)"
+       },
+       {
+        "offset": 0.3,
+        "opacity": "1"
+       },
+       {
+        "offset": 1,
+        "opacity": "1",
+        "transform": "none"
+       }
+      ],
+      "first": 49,
+      "last": 143,
+      "playState": "running"
+     },
+     {
+      "kind": "keyframes",
+      "name": "ds-error-state-text",
+      "target": "div[actions]",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 100,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "linear",
+      "kfEasing": [
+       "ease.spring-soft"
+      ],
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "opacity": "0",
+        "transform": "translateY(1px)"
+       },
+       {
+        "offset": 0.3,
+        "opacity": "1"
+       },
+       {
+        "offset": 1,
+        "opacity": "1",
+        "transform": "none"
+       }
+      ],
+      "first": 49,
+      "last": 143,
+      "playState": "running"
+     }
+    ],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 120,
+    "infinite": [],
+    "stateAt": null,
+    "firstMotionAt": 49,
+    "focusAfter": "button[button]",
+    "frames": 72,
+    "animCount": 7,
+    "restOffTransforms": []
+   },
+   "attr.ltr": {
+    "anims": [],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 0,
+    "infinite": [],
+    "stateAt": null,
+    "firstMotionAt": null,
+    "focusAfter": "button[button]",
+    "frames": 73,
+    "animCount": 0,
+    "restOffTransforms": []
+   },
+   "attr.rtl": {
+    "anims": [],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 0,
+    "infinite": [],
+    "stateAt": null,
+    "firstMotionAt": null,
+    "focusAfter": "button[button]",
+    "frames": 73,
+    "animCount": 0,
+    "restOffTransforms": []
+   }
+  },
+  "desk": {
+   "focus": {
+    "at0": {
+     "el": "button[button]",
+     "outline": "solid 2px rgba(0, 0, 0, 0)",
+     "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgb(244, 244, 245) 0px 0px 0px 2px",
+     "focusVisible": true,
+     "opacity": 1,
+     "anims": [
+      "transform 300"
+     ]
+    },
+    "at300": {
+     "el": "button[button]",
+     "outline": "solid 2px rgba(0, 0, 0, 0)",
+     "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgb(244, 244, 245) 0px 0px 0px 2px",
+     "focusVisible": true,
+     "opacity": 1,
+     "anims": [
+      "transform 300"
+     ]
+    },
+    "ringAtOnce": true
+   },
+   "transitionSweep": [],
+   "seek": {
+    "animations": 9,
+    "startOffsets": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "hit": {
+     "checked": 3,
+     "missed": [],
+     "maxShift": 7.5
+    },
+    "parts": [
+     {
+      "part": "span[label]",
+      "scale": [
+       1,
+       1
+      ],
+      "travelPx": 28,
+      "opacityMin": 1,
+      "scaleOvershoot": 0,
+      "travelOvershootPx": 0,
+      "movesUntil": 180
+     },
+     {
+      "part": "span[icon]",
+      "scale": [
+       0.9,
+       1.024
+      ],
+      "travelPx": 4,
+      "opacityMin": 0,
+      "scaleOvershoot": 0.024,
+      "travelOvershootPx": 0.9,
+      "movesUntil": 280
+     },
+     {
+      "part": "h3[title]",
+      "scale": [
+       1,
+       1
+      ],
+      "travelPx": 3,
+      "opacityMin": 0,
+      "scaleOvershoot": 0,
+      "travelOvershootPx": 0.1,
+      "movesUntil": 160
+     },
+     {
+      "part": "div[body]",
+      "scale": [
+       1,
+       1
+      ],
+      "travelPx": 3,
+      "opacityMin": 0,
+      "scaleOvershoot": 0,
+      "travelOvershootPx": 0.1,
+      "movesUntil": 200
+     },
+     {
+      "part": "div[actions]",
+      "scale": [
+       1,
+       1
+      ],
+      "travelPx": 3,
+      "opacityMin": 0,
+      "scaleOvershoot": 0,
+      "travelOvershootPx": 0.1,
+      "movesUntil": 240
+     },
+     {
+      "part": "div[error-state]",
+      "scale": [
+       1,
+       1
+      ],
+      "travelPx": 0,
+      "opacityMin": 0,
+      "scaleOvershoot": 0,
+      "travelOvershootPx": 0,
+      "movesUntil": 80
+     },
+     {
+      "part": "h2[title]",
+      "scale": [
+       1,
+       1
+      ],
+      "travelPx": 3,
+      "opacityMin": 0,
+      "scaleOvershoot": 0,
+      "travelOvershootPx": 0.1,
+      "movesUntil": 160
+     }
+    ],
+    "readable": [
+     {
+      "text": "h3[title]:No results",
+      "readableAt": 100,
+      "appearedAt": 0
+     },
+     {
+      "text": "div[body]:Try another wo",
+      "readableAt": 140,
+      "appearedAt": 0
+     },
+     {
+      "text": "span[label]:Clear the filt",
+      "readableAt": 180,
+      "appearedAt": 0
+     },
+     {
+      "text": "h2[title]:Could not load",
+      "readableAt": 100,
+      "appearedAt": 0
+     },
+     {
+      "text": "span[label]:Retry loading",
+      "readableAt": 180,
+      "appearedAt": 0
+     }
+    ]
+   },
+   "transitionSweepAfter": [],
+   "full": {
+    "anims": [
+     {
+      "kind": "keyframes",
+      "name": "ds-empty-state-art",
+      "target": "span[icon]",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 440,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "linear",
+      "kfEasing": [
+       "ease.spring-bouncy"
+      ],
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "opacity": "0",
+        "transform": "translateY(-4px) scale(0.9)"
+       },
+       {
+        "offset": 0.3,
+        "opacity": "1"
+       },
+       {
+        "offset": 1,
+        "opacity": "1",
+        "transform": "none"
+       }
+      ],
+      "first": 68,
+      "last": 502,
+      "playState": "running"
+     },
+     {
+      "kind": "keyframes",
+      "name": "ds-empty-state-text",
+      "target": "h3[title]",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 340,
+      "delay": 45,
+      "iterations": 1,
+      "easing": "linear",
+      "kfEasing": [
+       "ease.spring-soft"
+      ],
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "opacity": "0",
+        "transform": "translateY(3px)"
+       },
+       {
+        "offset": 0.3,
+        "opacity": "1"
+       },
+       {
+        "offset": 1,
+        "opacity": "1",
+        "transform": "none"
+       }
+      ],
+      "first": 68,
+      "last": 451,
+      "playState": "running"
+     },
+     {
+      "kind": "keyframes",
+      "name": "ds-empty-state-text",
+      "target": "div[body]",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 340,
+      "delay": 90,
+      "iterations": 1,
+      "easing": "linear",
+      "kfEasing": [
+       "ease.spring-soft"
+      ],
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "opacity": "0",
+        "transform": "translateY(3px)"
+       },
+       {
+        "offset": 0.3,
+        "opacity": "1"
+       },
+       {
+        "offset": 1,
+        "opacity": "1",
+        "transform": "none"
+       }
+      ],
+      "first": 68,
+      "last": 485,
+      "playState": "running"
+     },
+     {
+      "kind": "keyframes",
+      "name": "ds-empty-state-text",
+      "target": "div[actions]",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 340,
+      "delay": 120,
+      "iterations": 1,
+      "easing": "linear",
+      "kfEasing": [
+       "ease.spring-soft"
+      ],
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "opacity": "0",
+        "transform": "translateY(3px)"
+       },
+       {
+        "offset": 0.3,
+        "opacity": "1"
+       },
+       {
+        "offset": 1,
+        "opacity": "1",
+        "transform": "none"
+       }
+      ],
+      "first": 68,
+      "last": 520,
+      "playState": "running"
+     },
+     {
+      "kind": "keyframes",
+      "name": "ds-error-state-in",
+      "target": "div[error-state]",
+      "props": [
+       "opacity"
+      ],
+      "duration": 340,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "linear",
+      "kfEasing": [
+       "ease.out"
+      ],
+      "fill": "none",
+      "kf": [
+       {
+        "offset": 0,
+        "opacity": "0"
+       },
+       {
+        "offset": 0.3,
+        "opacity": "1"
+       },
+       {
+        "offset": 1,
+        "opacity": "1"
+       }
+      ],
+      "first": 68,
+      "last": 403,
+      "playState": "running"
+     },
+     {
+      "kind": "keyframes",
+      "name": "ds-error-state-art",
+      "target": "span[icon]",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 440,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "linear",
+      "kfEasing": [
+       "ease.spring-bouncy"
+      ],
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "opacity": "0",
+        "transform": "translateY(-4px) scale(0.9)"
+       },
+       {
+        "offset": 0.3,
+        "opacity": "1"
+       },
+       {
+        "offset": 1,
+        "opacity": "1",
+        "transform": "none"
+       }
+      ],
+      "first": 68,
+      "last": 502,
+      "playState": "running"
+     },
+     {
+      "kind": "keyframes",
+      "name": "ds-error-state-text",
+      "target": "h2[title]",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 340,
+      "delay": 45,
+      "iterations": 1,
+      "easing": "linear",
+      "kfEasing": [
+       "ease.spring-soft"
+      ],
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "opacity": "0",
+        "transform": "translateY(3px)"
+       },
+       {
+        "offset": 0.3,
+        "opacity": "1"
+       },
+       {
+        "offset": 1,
+        "opacity": "1",
+        "transform": "none"
+       }
+      ],
+      "first": 68,
+      "last": 451,
+      "playState": "running"
+     },
+     {
+      "kind": "keyframes",
+      "name": "ds-error-state-text",
+      "target": "div[actions]",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 340,
+      "delay": 120,
+      "iterations": 1,
+      "easing": "linear",
+      "kfEasing": [
+       "ease.spring-soft"
+      ],
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "opacity": "0",
+        "transform": "translateY(3px)"
+       },
+       {
+        "offset": 0.3,
+        "opacity": "1"
+       },
+       {
+        "offset": 1,
+        "opacity": "1",
+        "transform": "none"
+       }
+      ],
+      "first": 68,
+      "last": 520,
+      "playState": "running"
+     }
+    ],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 460,
+    "infinite": [],
+    "stateAt": null,
+    "firstMotionAt": 68,
+    "focusAfter": "button[button]",
+    "frames": 88,
+    "animCount": 8
+   },
+   "rapid": {
+    "left": [],
+    "held": [],
+    "inline": [],
+    "ghosts": 0,
+    "nodes": 24,
+    "indicators": "0 ok",
+    "custom": null,
+    "nodesBefore": 24
+   },
+   "interrupt": null,
+   "tenFast": null,
+   "off": {
+    "injected": "@layer ds.recipes {[data-style='desk'] [data-ds='empty-state'] {--_empty-state-lift: 0px; --_empty-state-enter-scale: 1; --_empty-state-shift: 0px;}\n[data-style='desk'] [data-ds='error-state'] {--_error-state-lift: 0px; --_error-state-enter-scale: 1; --_error-state-shift: 0px;}}",
+    "animations": 8,
+    "moving": [],
+    "fading": [
+     "span[icon]",
+     "h3[title]",
+     "div[body]",
+     "div[actions]",
+     "div[error-state]",
+     "h2[title]"
+    ]
+   },
+   "full.rtl": {
+    "anims": [
+     {
+      "kind": "transition",
+      "name": "transform",
+      "target": "span[label]",
+      "props": [
+       "transform"
+      ],
+      "duration": 300,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.reveal",
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "transform": "scale(1)"
+       },
+       {
+        "offset": 1,
+        "transform": "translateY(-70px)"
+       }
+      ],
+      "first": 53,
+      "last": 352,
+      "playState": "running"
+     },
+     {
+      "kind": "keyframes",
+      "name": "ds-empty-state-art",
+      "target": "span[icon]",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 440,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "linear",
+      "kfEasing": [
+       "ease.spring-bouncy"
+      ],
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "opacity": "0",
+        "transform": "translateY(-4px) scale(0.9)"
+       },
+       {
+        "offset": 0.3,
+        "opacity": "1"
+       },
+       {
+        "offset": 1,
+        "opacity": "1",
+        "transform": "none"
+       }
+      ],
+      "first": 53,
+      "last": 486,
+      "playState": "running"
+     },
+     {
+      "kind": "keyframes",
+      "name": "ds-empty-state-text",
+      "target": "h3[title]",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 340,
+      "delay": 45,
+      "iterations": 1,
+      "easing": "linear",
+      "kfEasing": [
+       "ease.spring-soft"
+      ],
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "opacity": "0",
+        "transform": "translateY(3px)"
+       },
+       {
+        "offset": 0.3,
+        "opacity": "1"
+       },
+       {
+        "offset": 1,
+        "opacity": "1",
+        "transform": "none"
+       }
+      ],
+      "first": 53,
+      "last": 443,
+      "playState": "running"
+     },
+     {
+      "kind": "keyframes",
+      "name": "ds-empty-state-text",
+      "target": "div[body]",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 340,
+      "delay": 90,
+      "iterations": 1,
+      "easing": "linear",
+      "kfEasing": [
+       "ease.spring-soft"
+      ],
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "opacity": "0",
+        "transform": "translateY(3px)"
+       },
+       {
+        "offset": 0.3,
+        "opacity": "1"
+       },
+       {
+        "offset": 1,
+        "opacity": "1",
+        "transform": "none"
+       }
+      ],
+      "first": 53,
+      "last": 469,
+      "playState": "running"
+     },
+     {
+      "kind": "keyframes",
+      "name": "ds-empty-state-text",
+      "target": "div[actions]",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 340,
+      "delay": 120,
+      "iterations": 1,
+      "easing": "linear",
+      "kfEasing": [
+       "ease.spring-soft"
+      ],
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "opacity": "0",
+        "transform": "translateY(3px)"
+       },
+       {
+        "offset": 0.3,
+        "opacity": "1"
+       },
+       {
+        "offset": 1,
+        "opacity": "1",
+        "transform": "none"
+       }
+      ],
+      "first": 53,
+      "last": 504,
+      "playState": "running"
+     },
+     {
+      "kind": "keyframes",
+      "name": "ds-error-state-in",
+      "target": "div[error-state]",
+      "props": [
+       "opacity"
+      ],
+      "duration": 340,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "linear",
+      "kfEasing": [
+       "ease.out"
+      ],
+      "fill": "none",
+      "kf": [
+       {
+        "offset": 0,
+        "opacity": "0"
+       },
+       {
+        "offset": 0.3,
+        "opacity": "1"
+       },
+       {
+        "offset": 1,
+        "opacity": "1"
+       }
+      ],
+      "first": 53,
+      "last": 391,
+      "playState": "running"
+     },
+     {
+      "kind": "keyframes",
+      "name": "ds-error-state-art",
+      "target": "span[icon]",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 440,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "linear",
+      "kfEasing": [
+       "ease.spring-bouncy"
+      ],
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "opacity": "0",
+        "transform": "translateY(-4px) scale(0.9)"
+       },
+       {
+        "offset": 0.3,
+        "opacity": "1"
+       },
+       {
+        "offset": 1,
+        "opacity": "1",
+        "transform": "none"
+       }
+      ],
+      "first": 53,
+      "last": 486,
+      "playState": "running"
+     },
+     {
+      "kind": "keyframes",
+      "name": "ds-error-state-text",
+      "target": "h2[title]",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 340,
+      "delay": 45,
+      "iterations": 1,
+      "easing": "linear",
+      "kfEasing": [
+       "ease.spring-soft"
+      ],
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "opacity": "0",
+        "transform": "translateY(3px)"
+       },
+       {
+        "offset": 0.3,
+        "opacity": "1"
+       },
+       {
+        "offset": 1,
+        "opacity": "1",
+        "transform": "none"
+       }
+      ],
+      "first": 53,
+      "last": 443,
+      "playState": "running"
+     },
+     {
+      "kind": "keyframes",
+      "name": "ds-error-state-text",
+      "target": "div[actions]",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 340,
+      "delay": 120,
+      "iterations": 1,
+      "easing": "linear",
+      "kfEasing": [
+       "ease.spring-soft"
+      ],
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "opacity": "0",
+        "transform": "translateY(3px)"
+       },
+       {
+        "offset": 0.3,
+        "opacity": "1"
+       },
+       {
+        "offset": 1,
+        "opacity": "1",
+        "transform": "none"
+       }
+      ],
+      "first": 53,
+      "last": 504,
+      "playState": "running"
+     }
+    ],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 460,
+    "infinite": [],
+    "stateAt": null,
+    "firstMotionAt": 53,
+    "focusAfter": "button[button]",
+    "frames": 71,
+    "animCount": 9,
+    "rapid": {
+     "left": [],
+     "held": [],
+     "inline": [],
+     "ghosts": 0,
+     "nodes": 24,
+     "indicators": "0 ok",
+     "custom": null,
+     "nodesBefore": 24
+    }
+   },
+   "media.ltr": {
+    "anims": [
+     {
+      "kind": "keyframes",
+      "name": "ds-empty-state-art",
+      "target": "span[icon]",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 440,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "linear",
+      "kfEasing": [
+       "ease.spring-bouncy"
+      ],
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "opacity": "0",
+        "transform": "translateY(-4px) scale(0.9)"
+       },
+       {
+        "offset": 0.3,
+        "opacity": "1"
+       },
+       {
+        "offset": 1,
+        "opacity": "1",
+        "transform": "none"
+       }
+      ],
+      "first": 51,
+      "last": 515,
+      "playState": "running"
+     },
+     {
+      "kind": "keyframes",
+      "name": "ds-empty-state-text",
+      "target": "h3[title]",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 340,
+      "delay": 45,
+      "iterations": 1,
+      "easing": "linear",
+      "kfEasing": [
+       "ease.spring-soft"
+      ],
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "opacity": "0",
+        "transform": "translateY(3px)"
+       },
+       {
+        "offset": 0.3,
+        "opacity": "1"
+       },
+       {
+        "offset": 1,
+        "opacity": "1",
+        "transform": "none"
+       }
+      ],
+      "first": 51,
+      "last": 465,
+      "playState": "running"
+     },
+     {
+      "kind": "keyframes",
+      "name": "ds-empty-state-text",
+      "target": "div[body]",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 340,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "linear",
+      "kfEasing": [
+       "ease.spring-soft"
+      ],
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "opacity": "0",
+        "transform": "translateY(3px)"
+       },
+       {
+        "offset": 0.3,
+        "opacity": "1"
+       },
+       {
+        "offset": 1,
+        "opacity": "1",
+        "transform": "none"
+       }
+      ],
+      "first": 51,
+      "last": 425,
+      "playState": "running"
+     },
+     {
+      "kind": "keyframes",
+      "name": "ds-empty-state-text",
+      "target": "div[actions]",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 340,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "linear",
+      "kfEasing": [
+       "ease.spring-soft"
+      ],
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "opacity": "0",
+        "transform": "translateY(3px)"
+       },
+       {
+        "offset": 0.3,
+        "opacity": "1"
+       },
+       {
+        "offset": 1,
+        "opacity": "1",
+        "transform": "none"
+       }
+      ],
+      "first": 51,
+      "last": 425,
+      "playState": "running"
+     },
+     {
+      "kind": "keyframes",
+      "name": "ds-error-state-art",
+      "target": "span[icon]",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 440,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "linear",
+      "kfEasing": [
+       "ease.spring-bouncy"
+      ],
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "opacity": "0",
+        "transform": "translateY(-4px) scale(0.9)"
+       },
+       {
+        "offset": 0.3,
+        "opacity": "1"
+       },
+       {
+        "offset": 1,
+        "opacity": "1",
+        "transform": "none"
+       }
+      ],
+      "first": 51,
+      "last": 515,
+      "playState": "running"
+     },
+     {
+      "kind": "keyframes",
+      "name": "ds-error-state-text",
+      "target": "h2[title]",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 340,
+      "delay": 45,
+      "iterations": 1,
+      "easing": "linear",
+      "kfEasing": [
+       "ease.spring-soft"
+      ],
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "opacity": "0",
+        "transform": "translateY(3px)"
+       },
+       {
+        "offset": 0.3,
+        "opacity": "1"
+       },
+       {
+        "offset": 1,
+        "opacity": "1",
+        "transform": "none"
+       }
+      ],
+      "first": 51,
+      "last": 465,
+      "playState": "running"
+     },
+     {
+      "kind": "keyframes",
+      "name": "ds-error-state-text",
+      "target": "div[actions]",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 340,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "linear",
+      "kfEasing": [
+       "ease.spring-soft"
+      ],
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "opacity": "0",
+        "transform": "translateY(3px)"
+       },
+       {
+        "offset": 0.3,
+        "opacity": "1"
+       },
+       {
+        "offset": 1,
+        "opacity": "1",
+        "transform": "none"
+       }
+      ],
+      "first": 51,
+      "last": 425,
+      "playState": "running"
+     }
+    ],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 440,
+    "infinite": [],
+    "stateAt": null,
+    "firstMotionAt": 51,
+    "focusAfter": "button[button]",
+    "frames": 71,
+    "animCount": 7,
+    "restOffTransforms": []
+   },
+   "media.rtl": {
+    "anims": [
+     {
+      "kind": "keyframes",
+      "name": "ds-empty-state-art",
+      "target": "span[icon]",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 440,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "linear",
+      "kfEasing": [
+       "ease.spring-bouncy"
+      ],
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "opacity": "0",
+        "transform": "translateY(-4px) scale(0.9)"
+       },
+       {
+        "offset": 0.3,
+        "opacity": "1"
+       },
+       {
+        "offset": 1,
+        "opacity": "1",
+        "transform": "none"
+       }
+      ],
+      "first": 82,
+      "last": 518,
+      "playState": "running"
+     },
+     {
+      "kind": "keyframes",
+      "name": "ds-empty-state-text",
+      "target": "h3[title]",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 340,
+      "delay": 45,
+      "iterations": 1,
+      "easing": "linear",
+      "kfEasing": [
+       "ease.spring-soft"
+      ],
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "opacity": "0",
+        "transform": "translateY(3px)"
+       },
+       {
+        "offset": 0.3,
+        "opacity": "1"
+       },
+       {
+        "offset": 1,
+        "opacity": "1",
+        "transform": "none"
+       }
+      ],
+      "first": 82,
+      "last": 469,
+      "playState": "running"
+     },
+     {
+      "kind": "keyframes",
+      "name": "ds-empty-state-text",
+      "target": "div[body]",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 340,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "linear",
+      "kfEasing": [
+       "ease.spring-soft"
+      ],
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "opacity": "0",
+        "transform": "translateY(3px)"
+       },
+       {
+        "offset": 0.3,
+        "opacity": "1"
+       },
+       {
+        "offset": 1,
+        "opacity": "1",
+        "transform": "none"
+       }
+      ],
+      "first": 82,
+      "last": 418,
+      "playState": "running"
+     },
+     {
+      "kind": "keyframes",
+      "name": "ds-empty-state-text",
+      "target": "div[actions]",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 340,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "linear",
+      "kfEasing": [
+       "ease.spring-soft"
+      ],
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "opacity": "0",
+        "transform": "translateY(3px)"
+       },
+       {
+        "offset": 0.3,
+        "opacity": "1"
+       },
+       {
+        "offset": 1,
+        "opacity": "1",
+        "transform": "none"
+       }
+      ],
+      "first": 82,
+      "last": 418,
+      "playState": "running"
+     },
+     {
+      "kind": "keyframes",
+      "name": "ds-error-state-art",
+      "target": "span[icon]",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 440,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "linear",
+      "kfEasing": [
+       "ease.spring-bouncy"
+      ],
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "opacity": "0",
+        "transform": "translateY(-4px) scale(0.9)"
+       },
+       {
+        "offset": 0.3,
+        "opacity": "1"
+       },
+       {
+        "offset": 1,
+        "opacity": "1",
+        "transform": "none"
+       }
+      ],
+      "first": 82,
+      "last": 518,
+      "playState": "running"
+     },
+     {
+      "kind": "keyframes",
+      "name": "ds-error-state-text",
+      "target": "h2[title]",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 340,
+      "delay": 45,
+      "iterations": 1,
+      "easing": "linear",
+      "kfEasing": [
+       "ease.spring-soft"
+      ],
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "opacity": "0",
+        "transform": "translateY(3px)"
+       },
+       {
+        "offset": 0.3,
+        "opacity": "1"
+       },
+       {
+        "offset": 1,
+        "opacity": "1",
+        "transform": "none"
+       }
+      ],
+      "first": 82,
+      "last": 469,
+      "playState": "running"
+     },
+     {
+      "kind": "keyframes",
+      "name": "ds-error-state-text",
+      "target": "div[actions]",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 340,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "linear",
+      "kfEasing": [
+       "ease.spring-soft"
+      ],
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "opacity": "0",
+        "transform": "translateY(3px)"
+       },
+       {
+        "offset": 0.3,
+        "opacity": "1"
+       },
+       {
+        "offset": 1,
+        "opacity": "1",
+        "transform": "none"
+       }
+      ],
+      "first": 82,
+      "last": 418,
+      "playState": "running"
+     }
+    ],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 440,
+    "infinite": [],
+    "stateAt": null,
+    "firstMotionAt": 82,
+    "focusAfter": "button[button]",
+    "frames": 68,
+    "animCount": 7,
+    "restOffTransforms": []
+   },
+   "attr.ltr": {
+    "anims": [],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 0,
+    "infinite": [],
+    "stateAt": null,
+    "firstMotionAt": null,
+    "focusAfter": "button[button]",
+    "frames": 75,
+    "animCount": 0,
+    "restOffTransforms": []
+   },
+   "attr.rtl": {
+    "anims": [],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 0,
+    "infinite": [],
+    "stateAt": null,
+    "firstMotionAt": null,
+    "focusAfter": "button[button]",
+    "frames": 71,
+    "animCount": 0,
+    "restOffTransforms": []
+   }
+  },
+  "neutral": {
+   "focus": {
+    "at0": {
+     "el": "button[button]",
+     "outline": "solid 2px rgba(0, 0, 0, 0)",
+     "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgb(255, 255, 255) 0px 0px 0px 2px, rgb(37, 99, 235) 0px 0px 0px 4px",
+     "focusVisible": true,
+     "opacity": 1,
+     "anims": []
+    },
+    "at300": {
+     "el": "button[button]",
+     "outline": "solid 2px rgba(0, 0, 0, 0)",
+     "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgb(255, 255, 255) 0px 0px 0px 2px, rgb(37, 99, 235) 0px 0px 0px 4px",
+     "focusVisible": true,
+     "opacity": 1,
+     "anims": []
+    },
+    "ringAtOnce": true
+   },
+   "transitionSweep": [],
+   "seek": {
+    "animations": 8,
+    "startOffsets": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "hit": {
+     "checked": 3,
+     "missed": [],
+     "maxShift": 5
+    },
+    "parts": [
+     {
+      "part": "span[icon]",
+      "scale": [
+       0.97,
+       1.002
+      ],
+      "travelPx": 2,
+      "opacityMin": 0,
+      "scaleOvershoot": 0.002,
+      "travelOvershootPx": 0.1,
+      "movesUntil": 60
+     },
+     {
+      "part": "h3[title]",
+      "scale": [
+       1,
+       1
+      ],
+      "travelPx": 2,
+      "opacityMin": 0,
+      "scaleOvershoot": 0,
+      "travelOvershootPx": 0,
+      "movesUntil": 100
+     },
+     {
+      "part": "div[body]",
+      "scale": [
+       1,
+       1
+      ],
+      "travelPx": 2,
+      "opacityMin": 0,
+      "scaleOvershoot": 0,
+      "travelOvershootPx": 0,
+      "movesUntil": 120
+     },
+     {
+      "part": "div[actions]",
+      "scale": [
+       1,
+       1
+      ],
+      "travelPx": 2,
+      "opacityMin": 0,
+      "scaleOvershoot": 0,
+      "travelOvershootPx": 0,
+      "movesUntil": 140
+     },
+     {
+      "part": "div[error-state]",
+      "scale": [
+       1,
+       1
+      ],
+      "travelPx": 0,
+      "opacityMin": 0,
+      "scaleOvershoot": 0,
+      "travelOvershootPx": 0,
+      "movesUntil": 40
+     },
+     {
+      "part": "h2[title]",
+      "scale": [
+       1,
+       1
+      ],
+      "travelPx": 2,
+      "opacityMin": 0,
+      "scaleOvershoot": 0,
+      "travelOvershootPx": 0,
+      "movesUntil": 100
+     }
+    ],
+    "readable": [
+     {
+      "text": "h3[title]:No results",
+      "readableAt": 60,
+      "appearedAt": 0
+     },
+     {
+      "text": "div[body]:Try another wo",
+      "readableAt": 100,
+      "appearedAt": 0
+     },
+     {
+      "text": "span[label]:Clear the filt",
+      "readableAt": 120,
+      "appearedAt": 0
+     },
+     {
+      "text": "h2[title]:Could not load",
+      "readableAt": 60,
+      "appearedAt": 0
+     },
+     {
+      "text": "span[label]:Retry loading",
+      "readableAt": 120,
+      "appearedAt": 0
+     }
+    ]
+   },
+   "transitionSweepAfter": [],
+   "full": {
+    "anims": [
+     {
+      "kind": "keyframes",
+      "name": "ds-empty-state-art",
+      "target": "span[icon]",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 220,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "linear",
+      "kfEasing": [
+       "ease.spring-bouncy"
+      ],
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "opacity": "0",
+        "transform": "translateY(-2px) scale(0.97)"
+       },
+       {
+        "offset": 0.3,
+        "opacity": "1"
+       },
+       {
+        "offset": 1,
+        "opacity": "1",
+        "transform": "none"
+       }
+      ],
+      "first": 77,
+      "last": 294,
+      "playState": "running"
+     },
+     {
+      "kind": "keyframes",
+      "name": "ds-empty-state-text",
+      "target": "h3[title]",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 220,
+      "delay": 24,
+      "iterations": 1,
+      "easing": "linear",
+      "kfEasing": [
+       "ease.spring-soft"
+      ],
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "opacity": "0",
+        "transform": "translateY(2px)"
+       },
+       {
+        "offset": 0.3,
+        "opacity": "1"
+       },
+       {
+        "offset": 1,
+        "opacity": "1",
+        "transform": "none"
+       }
+      ],
+      "first": 77,
+      "last": 310,
+      "playState": "running"
+     },
+     {
+      "kind": "keyframes",
+      "name": "ds-empty-state-text",
+      "target": "div[body]",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 220,
+      "delay": 48,
+      "iterations": 1,
+      "easing": "linear",
+      "kfEasing": [
+       "ease.spring-soft"
+      ],
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "opacity": "0",
+        "transform": "translateY(2px)"
+       },
+       {
+        "offset": 0.3,
+        "opacity": "1"
+       },
+       {
+        "offset": 1,
+        "opacity": "1",
+        "transform": "none"
+       }
+      ],
+      "first": 77,
+      "last": 352,
+      "playState": "running"
+     },
+     {
+      "kind": "keyframes",
+      "name": "ds-empty-state-text",
+      "target": "div[actions]",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 220,
+      "delay": 72,
+      "iterations": 1,
+      "easing": "linear",
+      "kfEasing": [
+       "ease.spring-soft"
+      ],
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "opacity": "0",
+        "transform": "translateY(2px)"
+       },
+       {
+        "offset": 0.3,
+        "opacity": "1"
+       },
+       {
+        "offset": 1,
+        "opacity": "1",
+        "transform": "none"
+       }
+      ],
+      "first": 77,
+      "last": 360,
+      "playState": "running"
+     },
+     {
+      "kind": "keyframes",
+      "name": "ds-error-state-in",
+      "target": "div[error-state]",
+      "props": [
+       "opacity"
+      ],
+      "duration": 220,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "linear",
+      "kfEasing": [
+       "ease.out"
+      ],
+      "fill": "none",
+      "kf": [
+       {
+        "offset": 0,
+        "opacity": "0"
+       },
+       {
+        "offset": 0.3,
+        "opacity": "1"
+       },
+       {
+        "offset": 1,
+        "opacity": "1"
+       }
+      ],
+      "first": 77,
+      "last": 294,
+      "playState": "running"
+     },
+     {
+      "kind": "keyframes",
+      "name": "ds-error-state-art",
+      "target": "span[icon]",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 220,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "linear",
+      "kfEasing": [
+       "ease.spring-bouncy"
+      ],
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "opacity": "0",
+        "transform": "translateY(-2px) scale(0.97)"
+       },
+       {
+        "offset": 0.3,
+        "opacity": "1"
+       },
+       {
+        "offset": 1,
+        "opacity": "1",
+        "transform": "none"
+       }
+      ],
+      "first": 77,
+      "last": 294,
+      "playState": "running"
+     },
+     {
+      "kind": "keyframes",
+      "name": "ds-error-state-text",
+      "target": "h2[title]",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 220,
+      "delay": 24,
+      "iterations": 1,
+      "easing": "linear",
+      "kfEasing": [
+       "ease.spring-soft"
+      ],
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "opacity": "0",
+        "transform": "translateY(2px)"
+       },
+       {
+        "offset": 0.3,
+        "opacity": "1"
+       },
+       {
+        "offset": 1,
+        "opacity": "1",
+        "transform": "none"
+       }
+      ],
+      "first": 77,
+      "last": 310,
+      "playState": "running"
+     },
+     {
+      "kind": "keyframes",
+      "name": "ds-error-state-text",
+      "target": "div[actions]",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 220,
+      "delay": 72,
+      "iterations": 1,
+      "easing": "linear",
+      "kfEasing": [
+       "ease.spring-soft"
+      ],
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "opacity": "0",
+        "transform": "translateY(2px)"
+       },
+       {
+        "offset": 0.3,
+        "opacity": "1"
+       },
+       {
+        "offset": 1,
+        "opacity": "1",
+        "transform": "none"
+       }
+      ],
+      "first": 77,
+      "last": 360,
+      "playState": "running"
+     }
+    ],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 292,
+    "infinite": [],
+    "stateAt": null,
+    "firstMotionAt": 77,
+    "focusAfter": "button[button]",
+    "frames": 92,
+    "animCount": 8
+   },
+   "rapid": {
+    "left": [],
+    "held": [],
+    "inline": [],
+    "ghosts": 0,
+    "nodes": 30,
+    "indicators": "0 ok",
+    "custom": null,
+    "nodesBefore": 30
+   },
+   "interrupt": null,
+   "tenFast": null,
+   "off": {
+    "injected": "@layer ds.recipes {[data-style='neutral'] [data-ds='empty-state'] {--_empty-state-lift: 0px; --_empty-state-enter-scale: 1; --_empty-state-shift: 0px;}\n[data-style='neutral'] [data-ds='error-state'] {--_error-state-lift: 0px; --_error-state-enter-scale: 1; --_error-state-shift: 0px;}}",
+    "animations": 8,
+    "moving": [],
+    "fading": [
+     "span[icon]",
+     "h3[title]",
+     "div[body]",
+     "div[actions]",
+     "div[error-state]",
+     "h2[title]"
+    ]
+   },
+   "full.rtl": {
+    "anims": [
+     {
+      "kind": "keyframes",
+      "name": "ds-empty-state-art",
+      "target": "span[icon]",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 220,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "linear",
+      "kfEasing": [
+       "ease.spring-bouncy"
+      ],
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "opacity": "0",
+        "transform": "translateY(-2px) scale(0.97)"
+       },
+       {
+        "offset": 0.3,
+        "opacity": "1"
+       },
+       {
+        "offset": 1,
+        "opacity": "1",
+        "transform": "none"
+       }
+      ],
+      "first": 101,
+      "last": 323,
+      "playState": "running"
+     },
+     {
+      "kind": "keyframes",
+      "name": "ds-empty-state-text",
+      "target": "h3[title]",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 220,
+      "delay": 24,
+      "iterations": 1,
+      "easing": "linear",
+      "kfEasing": [
+       "ease.spring-soft"
+      ],
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "opacity": "0",
+        "transform": "translateY(2px)"
+       },
+       {
+        "offset": 0.3,
+        "opacity": "1"
+       },
+       {
+        "offset": 1,
+        "opacity": "1",
+        "transform": "none"
+       }
+      ],
+      "first": 101,
+      "last": 357,
+      "playState": "running"
+     },
+     {
+      "kind": "keyframes",
+      "name": "ds-empty-state-text",
+      "target": "div[body]",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 220,
+      "delay": 48,
+      "iterations": 1,
+      "easing": "linear",
+      "kfEasing": [
+       "ease.spring-soft"
+      ],
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "opacity": "0",
+        "transform": "translateY(2px)"
+       },
+       {
+        "offset": 0.3,
+        "opacity": "1"
+       },
+       {
+        "offset": 1,
+        "opacity": "1",
+        "transform": "none"
+       }
+      ],
+      "first": 101,
+      "last": 387,
+      "playState": "running"
+     },
+     {
+      "kind": "keyframes",
+      "name": "ds-empty-state-text",
+      "target": "div[actions]",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 220,
+      "delay": 72,
+      "iterations": 1,
+      "easing": "linear",
+      "kfEasing": [
+       "ease.spring-soft"
+      ],
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "opacity": "0",
+        "transform": "translateY(2px)"
+       },
+       {
+        "offset": 0.3,
+        "opacity": "1"
+       },
+       {
+        "offset": 1,
+        "opacity": "1",
+        "transform": "none"
+       }
+      ],
+      "first": 101,
+      "last": 390,
+      "playState": "running"
+     },
+     {
+      "kind": "keyframes",
+      "name": "ds-error-state-in",
+      "target": "div[error-state]",
+      "props": [
+       "opacity"
+      ],
+      "duration": 220,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "linear",
+      "kfEasing": [
+       "ease.out"
+      ],
+      "fill": "none",
+      "kf": [
+       {
+        "offset": 0,
+        "opacity": "0"
+       },
+       {
+        "offset": 0.3,
+        "opacity": "1"
+       },
+       {
+        "offset": 1,
+        "opacity": "1"
+       }
+      ],
+      "first": 101,
+      "last": 323,
+      "playState": "running"
+     },
+     {
+      "kind": "keyframes",
+      "name": "ds-error-state-art",
+      "target": "span[icon]",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 220,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "linear",
+      "kfEasing": [
+       "ease.spring-bouncy"
+      ],
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "opacity": "0",
+        "transform": "translateY(-2px) scale(0.97)"
+       },
+       {
+        "offset": 0.3,
+        "opacity": "1"
+       },
+       {
+        "offset": 1,
+        "opacity": "1",
+        "transform": "none"
+       }
+      ],
+      "first": 101,
+      "last": 323,
+      "playState": "running"
+     },
+     {
+      "kind": "keyframes",
+      "name": "ds-error-state-text",
+      "target": "h2[title]",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 220,
+      "delay": 24,
+      "iterations": 1,
+      "easing": "linear",
+      "kfEasing": [
+       "ease.spring-soft"
+      ],
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "opacity": "0",
+        "transform": "translateY(2px)"
+       },
+       {
+        "offset": 0.3,
+        "opacity": "1"
+       },
+       {
+        "offset": 1,
+        "opacity": "1",
+        "transform": "none"
+       }
+      ],
+      "first": 101,
+      "last": 357,
+      "playState": "running"
+     },
+     {
+      "kind": "keyframes",
+      "name": "ds-error-state-text",
+      "target": "div[actions]",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 220,
+      "delay": 72,
+      "iterations": 1,
+      "easing": "linear",
+      "kfEasing": [
+       "ease.spring-soft"
+      ],
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "opacity": "0",
+        "transform": "translateY(2px)"
+       },
+       {
+        "offset": 0.3,
+        "opacity": "1"
+       },
+       {
+        "offset": 1,
+        "opacity": "1",
+        "transform": "none"
+       }
+      ],
+      "first": 101,
+      "last": 390,
+      "playState": "running"
+     }
+    ],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 292,
+    "infinite": [],
+    "stateAt": null,
+    "firstMotionAt": 101,
+    "focusAfter": "button[button]",
+    "frames": 71,
+    "animCount": 8,
+    "rapid": {
+     "left": [],
+     "held": [],
+     "inline": [],
+     "ghosts": 0,
+     "nodes": 30,
+     "indicators": "0 ok",
+     "custom": null,
+     "nodesBefore": 30
+    }
+   },
+   "media.ltr": {
+    "anims": [
+     {
+      "kind": "keyframes",
+      "name": "ds-empty-state-art",
+      "target": "span[icon]",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 220,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "linear",
+      "kfEasing": [
+       "ease.spring-bouncy"
+      ],
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "opacity": "0",
+        "transform": "translateY(-2px) scale(0.97)"
+       },
+       {
+        "offset": 0.3,
+        "opacity": "1"
+       },
+       {
+        "offset": 1,
+        "opacity": "1",
+        "transform": "none"
+       }
+      ],
+      "first": 60,
+      "last": 277,
+      "playState": "running"
+     },
+     {
+      "kind": "keyframes",
+      "name": "ds-empty-state-text",
+      "target": "h3[title]",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 220,
+      "delay": 24,
+      "iterations": 1,
+      "easing": "linear",
+      "kfEasing": [
+       "ease.spring-soft"
+      ],
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "opacity": "0",
+        "transform": "translateY(2px)"
+       },
+       {
+        "offset": 0.3,
+        "opacity": "1"
+       },
+       {
+        "offset": 1,
+        "opacity": "1",
+        "transform": "none"
+       }
+      ],
+      "first": 60,
+      "last": 292,
+      "playState": "running"
+     },
+     {
+      "kind": "keyframes",
+      "name": "ds-empty-state-text",
+      "target": "div[body]",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 220,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "linear",
+      "kfEasing": [
+       "ease.spring-soft"
+      ],
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "opacity": "0",
+        "transform": "translateY(2px)"
+       },
+       {
+        "offset": 0.3,
+        "opacity": "1"
+       },
+       {
+        "offset": 1,
+        "opacity": "1",
+        "transform": "none"
+       }
+      ],
+      "first": 60,
+      "last": 277,
+      "playState": "running"
+     },
+     {
+      "kind": "keyframes",
+      "name": "ds-empty-state-text",
+      "target": "div[actions]",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 220,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "linear",
+      "kfEasing": [
+       "ease.spring-soft"
+      ],
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "opacity": "0",
+        "transform": "translateY(2px)"
+       },
+       {
+        "offset": 0.3,
+        "opacity": "1"
+       },
+       {
+        "offset": 1,
+        "opacity": "1",
+        "transform": "none"
+       }
+      ],
+      "first": 60,
+      "last": 277,
+      "playState": "running"
+     },
+     {
+      "kind": "keyframes",
+      "name": "ds-error-state-art",
+      "target": "span[icon]",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 220,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "linear",
+      "kfEasing": [
+       "ease.spring-bouncy"
+      ],
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "opacity": "0",
+        "transform": "translateY(-2px) scale(0.97)"
+       },
+       {
+        "offset": 0.3,
+        "opacity": "1"
+       },
+       {
+        "offset": 1,
+        "opacity": "1",
+        "transform": "none"
+       }
+      ],
+      "first": 60,
+      "last": 277,
+      "playState": "running"
+     },
+     {
+      "kind": "keyframes",
+      "name": "ds-error-state-text",
+      "target": "h2[title]",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 220,
+      "delay": 24,
+      "iterations": 1,
+      "easing": "linear",
+      "kfEasing": [
+       "ease.spring-soft"
+      ],
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "opacity": "0",
+        "transform": "translateY(2px)"
+       },
+       {
+        "offset": 0.3,
+        "opacity": "1"
+       },
+       {
+        "offset": 1,
+        "opacity": "1",
+        "transform": "none"
+       }
+      ],
+      "first": 60,
+      "last": 292,
+      "playState": "running"
+     },
+     {
+      "kind": "keyframes",
+      "name": "ds-error-state-text",
+      "target": "div[actions]",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 220,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "linear",
+      "kfEasing": [
+       "ease.spring-soft"
+      ],
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "opacity": "0",
+        "transform": "translateY(2px)"
+       },
+       {
+        "offset": 0.3,
+        "opacity": "1"
+       },
+       {
+        "offset": 1,
+        "opacity": "1",
+        "transform": "none"
+       }
+      ],
+      "first": 60,
+      "last": 277,
+      "playState": "running"
+     }
+    ],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 244,
+    "infinite": [],
+    "stateAt": null,
+    "firstMotionAt": 60,
+    "focusAfter": "button[button]",
+    "frames": 74,
+    "animCount": 7,
+    "restOffTransforms": []
+   },
+   "media.rtl": {
+    "anims": [
+     {
+      "kind": "keyframes",
+      "name": "ds-empty-state-art",
+      "target": "span[icon]",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 220,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "linear",
+      "kfEasing": [
+       "ease.spring-bouncy"
+      ],
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "opacity": "0",
+        "transform": "translateY(-2px) scale(0.97)"
+       },
+       {
+        "offset": 0.3,
+        "opacity": "1"
+       },
+       {
+        "offset": 1,
+        "opacity": "1",
+        "transform": "none"
+       }
+      ],
+      "first": 50,
+      "last": 265,
+      "playState": "running"
+     },
+     {
+      "kind": "keyframes",
+      "name": "ds-empty-state-text",
+      "target": "h3[title]",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 220,
+      "delay": 24,
+      "iterations": 1,
+      "easing": "linear",
+      "kfEasing": [
+       "ease.spring-soft"
+      ],
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "opacity": "0",
+        "transform": "translateY(2px)"
+       },
+       {
+        "offset": 0.3,
+        "opacity": "1"
+       },
+       {
+        "offset": 1,
+        "opacity": "1",
+        "transform": "none"
+       }
+      ],
+      "first": 50,
+      "last": 286,
+      "playState": "running"
+     },
+     {
+      "kind": "keyframes",
+      "name": "ds-empty-state-text",
+      "target": "div[body]",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 220,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "linear",
+      "kfEasing": [
+       "ease.spring-soft"
+      ],
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "opacity": "0",
+        "transform": "translateY(2px)"
+       },
+       {
+        "offset": 0.3,
+        "opacity": "1"
+       },
+       {
+        "offset": 1,
+        "opacity": "1",
+        "transform": "none"
+       }
+      ],
+      "first": 50,
+      "last": 265,
+      "playState": "running"
+     },
+     {
+      "kind": "keyframes",
+      "name": "ds-empty-state-text",
+      "target": "div[actions]",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 220,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "linear",
+      "kfEasing": [
+       "ease.spring-soft"
+      ],
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "opacity": "0",
+        "transform": "translateY(2px)"
+       },
+       {
+        "offset": 0.3,
+        "opacity": "1"
+       },
+       {
+        "offset": 1,
+        "opacity": "1",
+        "transform": "none"
+       }
+      ],
+      "first": 50,
+      "last": 265,
+      "playState": "running"
+     },
+     {
+      "kind": "keyframes",
+      "name": "ds-error-state-art",
+      "target": "span[icon]",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 220,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "linear",
+      "kfEasing": [
+       "ease.spring-bouncy"
+      ],
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "opacity": "0",
+        "transform": "translateY(-2px) scale(0.97)"
+       },
+       {
+        "offset": 0.3,
+        "opacity": "1"
+       },
+       {
+        "offset": 1,
+        "opacity": "1",
+        "transform": "none"
+       }
+      ],
+      "first": 50,
+      "last": 265,
+      "playState": "running"
+     },
+     {
+      "kind": "keyframes",
+      "name": "ds-error-state-text",
+      "target": "h2[title]",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 220,
+      "delay": 24,
+      "iterations": 1,
+      "easing": "linear",
+      "kfEasing": [
+       "ease.spring-soft"
+      ],
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "opacity": "0",
+        "transform": "translateY(2px)"
+       },
+       {
+        "offset": 0.3,
+        "opacity": "1"
+       },
+       {
+        "offset": 1,
+        "opacity": "1",
+        "transform": "none"
+       }
+      ],
+      "first": 50,
+      "last": 286,
+      "playState": "running"
+     },
+     {
+      "kind": "keyframes",
+      "name": "ds-error-state-text",
+      "target": "div[actions]",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 220,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "linear",
+      "kfEasing": [
+       "ease.spring-soft"
+      ],
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "opacity": "0",
+        "transform": "translateY(2px)"
+       },
+       {
+        "offset": 0.3,
+        "opacity": "1"
+       },
+       {
+        "offset": 1,
+        "opacity": "1",
+        "transform": "none"
+       }
+      ],
+      "first": 50,
+      "last": 265,
+      "playState": "running"
+     }
+    ],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 244,
+    "infinite": [],
+    "stateAt": null,
+    "firstMotionAt": 50,
+    "focusAfter": "button[button]",
+    "frames": 73,
+    "animCount": 7,
+    "restOffTransforms": []
+   },
+   "attr.ltr": {
+    "anims": [],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 0,
+    "infinite": [],
+    "stateAt": null,
+    "firstMotionAt": null,
+    "focusAfter": "button[button]",
+    "frames": 71,
+    "animCount": 0,
+    "restOffTransforms": []
+   },
+   "attr.rtl": {
+    "anims": [],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 0,
+    "infinite": [],
+    "stateAt": null,
+    "firstMotionAt": null,
+    "focusAfter": "button[button]",
+    "frames": 72,
+    "animCount": 0,
+    "restOffTransforms": []
+   }
+  }
+ },
+ "sheet": "state-illustration.sheet.png"
+}

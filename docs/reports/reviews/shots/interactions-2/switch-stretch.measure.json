@@ -1,0 +1,1584 @@
+{
+ "id": "switch-stretch",
+ "family": "actions",
+ "drive": "css",
+ "pattern": "press",
+ "reduced": "The thumb jumps to the other side and does not stretch; the track does not dip; the tint shows at once.",
+ "tokens": {
+  "studio": {
+   "delay-feedback": "2000ms",
+   "delay-stagger": "0ms",
+   "distance-enter": "4px",
+   "distance-lift": "0px",
+   "distance-nudge": "1px",
+   "distance-shift": "2px",
+   "duration-base": "120ms",
+   "duration-celebrate": "120ms",
+   "duration-fast": "80ms",
+   "duration-instant": "70ms",
+   "duration-medium": "140ms",
+   "duration-moderate": "150ms",
+   "duration-morph": "100ms",
+   "duration-quick": "100ms",
+   "duration-roll": "0.3s",
+   "duration-slow": "180ms",
+   "duration-spin": "0.8s",
+   "duration-spring-bouncy": "120ms",
+   "duration-spring-snappy": "80ms",
+   "duration-spring-soft": "100ms",
+   "duration-zoom": "220ms",
+   "scale-anticipate": "0.97",
+   "scale-enter": "1",
+   "scale-lift": "1",
+   "scale-morph": "0.8",
+   "scale-pop": "1",
+   "scale-press": "0.97",
+   "scale-stretch": "1.08"
+  },
+  "desk": {
+   "delay-feedback": "2000ms",
+   "delay-stagger": "45ms",
+   "distance-enter": "12px",
+   "distance-lift": "4px",
+   "distance-nudge": "3px",
+   "distance-shift": "6px",
+   "duration-base": "120ms",
+   "duration-celebrate": "480ms",
+   "duration-fast": "80ms",
+   "duration-instant": "70ms",
+   "duration-medium": "140ms",
+   "duration-moderate": "150ms",
+   "duration-morph": "320ms",
+   "duration-quick": "100ms",
+   "duration-roll": "0.3s",
+   "duration-slow": "180ms",
+   "duration-spin": "0.8s",
+   "duration-spring-bouncy": "440ms",
+   "duration-spring-snappy": "300ms",
+   "duration-spring-soft": "340ms",
+   "duration-zoom": "220ms",
+   "scale-anticipate": "0.9",
+   "scale-enter": "0.9",
+   "scale-lift": "1.03",
+   "scale-morph": "0.3",
+   "scale-pop": "1.14",
+   "scale-press": "0.97",
+   "scale-stretch": "1.3"
+  },
+  "neutral": {
+   "delay-feedback": "2000ms",
+   "delay-stagger": "24ms",
+   "distance-enter": "6px",
+   "distance-lift": "2px",
+   "distance-nudge": "2px",
+   "distance-shift": "4px",
+   "duration-base": "150ms",
+   "duration-celebrate": "220ms",
+   "duration-fast": "80ms",
+   "duration-instant": "70ms",
+   "duration-medium": "180ms",
+   "duration-moderate": "150ms",
+   "duration-morph": "200ms",
+   "duration-quick": "100ms",
+   "duration-roll": "0.3s",
+   "duration-slow": "180ms",
+   "duration-spin": "0.8s",
+   "duration-spring-bouncy": "220ms",
+   "duration-spring-snappy": "180ms",
+   "duration-spring-soft": "220ms",
+   "duration-zoom": "220ms",
+   "scale-anticipate": "0.95",
+   "scale-enter": "0.97",
+   "scale-lift": "1.01",
+   "scale-morph": "0.5",
+   "scale-pop": "1.05",
+   "scale-press": "0.97",
+   "scale-stretch": "1.15"
+  }
+ },
+ "runs": [
+  {
+   "style": "studio",
+   "dir": "ltr",
+   "motion": "full",
+   "state": "false -> true",
+   "stateAt": 258,
+   "firstMotionAt": 47,
+   "events": "pointerdown@36 focusin@39 pointerup@225 click@226",
+   "longest": 120,
+   "movers": 6,
+   "badProps": [],
+   "anims": [
+    {
+     "target": "control>span[track]",
+     "kind": "Transition",
+     "props": "transform",
+     "dur": 70,
+     "durTok": "duration-instant",
+     "ease": "ease-out",
+     "kf": [
+      {
+       "offset": 0,
+       "transform": "scale(1)"
+      },
+      {
+       "offset": 1,
+       "transform": "scale(0.97)"
+      }
+     ],
+     "at": 47
+    },
+    {
+     "target": "track>span[thumb]",
+     "kind": "Transition",
+     "props": "transform",
+     "dur": 70,
+     "durTok": "duration-instant",
+     "ease": "ease-out",
+     "kf": [
+      {
+       "offset": 0,
+       "transform": "translateX(0px) scaleX(1)"
+      },
+      {
+       "offset": 1,
+       "transform": "translateX(2px) scaleX(1.08)"
+      }
+     ],
+     "at": 47
+    },
+    {
+     "target": "control>span[track]",
+     "kind": "Transition",
+     "props": "transform",
+     "dur": 120,
+     "durTok": "duration-base|duration-celebrate|duration-spring-bouncy",
+     "ease": "steps(3)",
+     "kf": [
+      {
+       "offset": 0,
+       "transform": "scale(0.97)"
+      },
+      {
+       "offset": 1,
+       "transform": "scale(1)"
+      }
+     ],
+     "at": 258
+    },
+    {
+     "target": "track>span",
+     "kind": "Transition",
+     "props": "opacity",
+     "dur": 100,
+     "durTok": "duration-morph|duration-quick|duration-spring-soft",
+     "ease": "ease-out",
+     "kf": [
+      {
+       "offset": 0,
+       "opacity": "0"
+      },
+      {
+       "offset": 1,
+       "opacity": "1"
+      }
+     ],
+     "at": 258
+    },
+    {
+     "target": "track>span",
+     "kind": "Transition",
+     "props": "transform",
+     "dur": 100,
+     "durTok": "duration-morph|duration-quick|duration-spring-soft",
+     "ease": "ease-spring-soft",
+     "kf": [
+      {
+       "offset": 0,
+       "transform": "scaleX(0.8)"
+      },
+      {
+       "offset": 1,
+       "transform": "scaleX(1)"
+      }
+     ],
+     "at": 258
+    },
+    {
+     "target": "track>span[thumb]",
+     "kind": "Transition",
+     "props": "transform",
+     "dur": 120,
+     "durTok": "duration-base|duration-celebrate|duration-spring-bouncy",
+     "ease": "steps(3)",
+     "kf": [
+      {
+       "offset": 0,
+       "transform": "translateX(2px) scaleX(1.08)"
+      },
+      {
+       "offset": 1,
+       "transform": "translateX(45px) scaleX(1)"
+      }
+     ],
+     "at": 258
+    }
+   ],
+   "end": {
+    "live": [],
+    "offRest": 6,
+    "offSample": [
+     "1:button[control]::before t=none o=0",
+     "4:span[thumb] t=matrix(1, 0, 0, 1, 18, 0) o=1",
+     "7:button[control]::before t=none o=0"
+    ],
+    "nodes": 19
+   }
+  },
+  {
+   "style": "studio",
+   "dir": "ltr",
+   "motion": "media",
+   "state": "false -> true",
+   "stateAt": 223,
+   "firstMotionAt": null,
+   "events": "pointerdown@38 focusin@40 pointerup@206 click@207",
+   "longest": 0,
+   "movers": 0,
+   "badProps": [],
+   "anims": [],
+   "end": {
+    "live": [],
+    "offRest": 6,
+    "offSample": [
+     "1:button[control]::before t=none o=0",
+     "4:span[thumb] t=matrix(1, 0, 0, 1, 18, 0) o=1",
+     "7:button[control]::before t=none o=0"
+    ],
+    "nodes": 19
+   }
+  },
+  {
+   "style": "studio",
+   "dir": "ltr",
+   "motion": "attr",
+   "state": "false -> true",
+   "stateAt": 259,
+   "firstMotionAt": null,
+   "events": "pointerdown@68 focusin@70 pointerup@252 click@252",
+   "longest": 0,
+   "movers": 0,
+   "badProps": [],
+   "anims": [],
+   "end": {
+    "live": [],
+    "offRest": 6,
+    "offSample": [
+     "1:button[control]::before t=none o=0",
+     "4:span[thumb] t=matrix(1, 0, 0, 1, 18, 0) o=1",
+     "7:button[control]::before t=none o=0"
+    ],
+    "nodes": 19
+   }
+  },
+  {
+   "style": "studio",
+   "dir": "rtl",
+   "motion": "full",
+   "state": "false -> true",
+   "stateAt": 205,
+   "firstMotionAt": 44,
+   "events": "pointerdown@32 focusin@34 pointerup@198 click@199",
+   "longest": 120,
+   "movers": 6,
+   "badProps": [],
+   "anims": [
+    {
+     "target": "control>span[track]",
+     "kind": "Transition",
+     "props": "transform",
+     "dur": 70,
+     "durTok": "duration-instant",
+     "ease": "ease-out",
+     "kf": [
+      {
+       "offset": 0,
+       "transform": "scale(1)"
+      },
+      {
+       "offset": 1,
+       "transform": "scale(0.97)"
+      }
+     ],
+     "at": 44
+    },
+    {
+     "target": "track>span[thumb]",
+     "kind": "Transition",
+     "props": "transform",
+     "dur": 70,
+     "durTok": "duration-instant",
+     "ease": "ease-out",
+     "kf": [
+      {
+       "offset": 0,
+       "transform": "translateX(0px) scaleX(1)"
+      },
+      {
+       "offset": 1,
+       "transform": "translateX(-2px) scaleX(1.08)"
+      }
+     ],
+     "at": 44
+    },
+    {
+     "target": "control>span[track]",
+     "kind": "Transition",
+     "props": "transform",
+     "dur": 120,
+     "durTok": "duration-base|duration-celebrate|duration-spring-bouncy",
+     "ease": "steps(3)",
+     "kf": [
+      {
+       "offset": 0,
+       "transform": "scale(0.97)"
+      },
+      {
+       "offset": 1,
+       "transform": "scale(1)"
+      }
+     ],
+     "at": 205
+    },
+    {
+     "target": "track>span",
+     "kind": "Transition",
+     "props": "opacity",
+     "dur": 100,
+     "durTok": "duration-morph|duration-quick|duration-spring-soft",
+     "ease": "ease-out",
+     "kf": [
+      {
+       "offset": 0,
+       "opacity": "0"
+      },
+      {
+       "offset": 1,
+       "opacity": "1"
+      }
+     ],
+     "at": 205
+    },
+    {
+     "target": "track>span",
+     "kind": "Transition",
+     "props": "transform",
+     "dur": 100,
+     "durTok": "duration-morph|duration-quick|duration-spring-soft",
+     "ease": "ease-spring-soft",
+     "kf": [
+      {
+       "offset": 0,
+       "transform": "scaleX(0.8)"
+      },
+      {
+       "offset": 1,
+       "transform": "scaleX(1)"
+      }
+     ],
+     "at": 205
+    },
+    {
+     "target": "track>span[thumb]",
+     "kind": "Transition",
+     "props": "transform",
+     "dur": 120,
+     "durTok": "duration-base|duration-celebrate|duration-spring-bouncy",
+     "ease": "steps(3)",
+     "kf": [
+      {
+       "offset": 0,
+       "transform": "translateX(-2px) scaleX(1.08)"
+      },
+      {
+       "offset": 1,
+       "transform": "translateX(-45px) scaleX(1)"
+      }
+     ],
+     "at": 205
+    }
+   ],
+   "end": {
+    "live": [],
+    "offRest": 6,
+    "offSample": [
+     "1:button[control]::before t=none o=0",
+     "4:span[thumb] t=matrix(1, 0, 0, 1, -18, 0) o=1",
+     "7:button[control]::before t=none o=0"
+    ],
+    "nodes": 19
+   }
+  },
+  {
+   "style": "studio",
+   "dir": "rtl",
+   "motion": "media",
+   "state": "false -> true",
+   "stateAt": 303,
+   "firstMotionAt": null,
+   "events": "pointerdown@112 focusin@133 pointerup@297 click@297",
+   "longest": 0,
+   "movers": 0,
+   "badProps": [],
+   "anims": [],
+   "end": {
+    "live": [],
+    "offRest": 6,
+    "offSample": [
+     "1:button[control]::before t=none o=0",
+     "4:span[thumb] t=matrix(1, 0, 0, 1, -18, 0) o=1",
+     "7:button[control]::before t=none o=0"
+    ],
+    "nodes": 19
+   }
+  },
+  {
+   "style": "studio",
+   "dir": "rtl",
+   "motion": "attr",
+   "state": "false -> true",
+   "stateAt": 211,
+   "firstMotionAt": null,
+   "events": "pointerdown@33 focusin@37 pointerup@203 click@203",
+   "longest": 0,
+   "movers": 0,
+   "badProps": [],
+   "anims": [],
+   "end": {
+    "live": [],
+    "offRest": 6,
+    "offSample": [
+     "1:button[control]::before t=none o=0",
+     "4:span[thumb] t=matrix(1, 0, 0, 1, -18, 0) o=1",
+     "7:button[control]::before t=none o=0"
+    ],
+    "nodes": 19
+   }
+  },
+  {
+   "style": "desk",
+   "dir": "ltr",
+   "motion": "full",
+   "state": "false -> true",
+   "stateAt": 208,
+   "firstMotionAt": 36,
+   "events": "pointerdown@23 focusin@25 pointerup@201 click@201",
+   "longest": 440,
+   "movers": 6,
+   "badProps": [],
+   "anims": [
+    {
+     "target": "control>span[track]",
+     "kind": "Transition",
+     "props": "transform",
+     "dur": 70,
+     "durTok": "duration-instant",
+     "ease": "ease-out",
+     "kf": [
+      {
+       "offset": 0,
+       "transform": "scale(1)"
+      },
+      {
+       "offset": 1,
+       "transform": "scale(0.97)"
+      }
+     ],
+     "at": 36
+    },
+    {
+     "target": "track>span[thumb]",
+     "kind": "Transition",
+     "props": "transform",
+     "dur": 70,
+     "durTok": "duration-instant",
+     "ease": "ease-out",
+     "kf": [
+      {
+       "offset": 0,
+       "transform": "translateX(0px) scaleX(1)"
+      },
+      {
+       "offset": 1,
+       "transform": "translateX(7.5px) scaleX(1.3)"
+      }
+     ],
+     "at": 36
+    },
+    {
+     "target": "control>span[track]",
+     "kind": "Transition",
+     "props": "transform",
+     "dur": 440,
+     "durTok": "duration-spring-bouncy",
+     "ease": "ease-spring-bouncy",
+     "kf": [
+      {
+       "offset": 0,
+       "transform": "scale(0.97)"
+      },
+      {
+       "offset": 1,
+       "transform": "scale(1)"
+      }
+     ],
+     "at": 208
+    },
+    {
+     "target": "track>span",
+     "kind": "Transition",
+     "props": "opacity",
+     "dur": 340,
+     "durTok": "duration-spring-soft",
+     "ease": "ease-out",
+     "kf": [
+      {
+       "offset": 0,
+       "opacity": "0"
+      },
+      {
+       "offset": 1,
+       "opacity": "1"
+      }
+     ],
+     "at": 208
+    },
+    {
+     "target": "track>span",
+     "kind": "Transition",
+     "props": "transform",
+     "dur": 340,
+     "durTok": "duration-spring-soft",
+     "ease": "ease-spring-soft",
+     "kf": [
+      {
+       "offset": 0,
+       "transform": "scaleX(0.3)"
+      },
+      {
+       "offset": 1,
+       "transform": "scaleX(1)"
+      }
+     ],
+     "at": 208
+    },
+    {
+     "target": "track>span[thumb]",
+     "kind": "Transition",
+     "props": "transform",
+     "dur": 440,
+     "durTok": "duration-spring-bouncy",
+     "ease": "ease-spring-bouncy",
+     "kf": [
+      {
+       "offset": 0,
+       "transform": "translateX(7.5px) scaleX(1.3)"
+      },
+      {
+       "offset": 1,
+       "transform": "translateX(45px) scaleX(1)"
+      }
+     ],
+     "at": 208
+    }
+   ],
+   "end": {
+    "live": [],
+    "offRest": 6,
+    "offSample": [
+     "1:button[control]::before t=none o=0",
+     "4:span[thumb] t=matrix(1, 0, 0, 1, 18, 0) o=1",
+     "7:button[control]::before t=none o=0"
+    ],
+    "nodes": 19
+   }
+  },
+  {
+   "style": "desk",
+   "dir": "ltr",
+   "motion": "media",
+   "state": "false -> true",
+   "stateAt": 307,
+   "firstMotionAt": null,
+   "events": "pointerdown@56 focusin@58 pointerup@285 click@286",
+   "longest": 0,
+   "movers": 0,
+   "badProps": [],
+   "anims": [],
+   "end": {
+    "live": [],
+    "offRest": 6,
+    "offSample": [
+     "1:button[control]::before t=none o=0",
+     "4:span[thumb] t=matrix(1, 0, 0, 1, 18, 0) o=1",
+     "7:button[control]::before t=none o=0"
+    ],
+    "nodes": 19
+   }
+  },
+  {
+   "style": "desk",
+   "dir": "ltr",
+   "motion": "attr",
+   "state": "false -> true",
+   "stateAt": 196,
+   "firstMotionAt": null,
+   "events": "pointerdown@17 focusin@20 pointerup@188 click@189",
+   "longest": 0,
+   "movers": 0,
+   "badProps": [],
+   "anims": [],
+   "end": {
+    "live": [],
+    "offRest": 6,
+    "offSample": [
+     "1:button[control]::before t=none o=0",
+     "4:span[thumb] t=matrix(1, 0, 0, 1, 18, 0) o=1",
+     "7:button[control]::before t=none o=0"
+    ],
+    "nodes": 19
+   }
+  },
+  {
+   "style": "desk",
+   "dir": "rtl",
+   "motion": "full",
+   "state": "false -> true",
+   "stateAt": 290,
+   "firstMotionAt": 119,
+   "events": "pointerdown@116 focusin@118 pointerup@283 click@283",
+   "longest": 440,
+   "movers": 6,
+   "badProps": [],
+   "anims": [
+    {
+     "target": "control>span[track]",
+     "kind": "Transition",
+     "props": "transform",
+     "dur": 70,
+     "durTok": "duration-instant",
+     "ease": "ease-out",
+     "kf": [
+      {
+       "offset": 0,
+       "transform": "scale(1)"
+      },
+      {
+       "offset": 1,
+       "transform": "scale(0.97)"
+      }
+     ],
+     "at": 119
+    },
+    {
+     "target": "track>span[thumb]",
+     "kind": "Transition",
+     "props": "transform",
+     "dur": 70,
+     "durTok": "duration-instant",
+     "ease": "ease-out",
+     "kf": [
+      {
+       "offset": 0,
+       "transform": "translateX(0px) scaleX(1)"
+      },
+      {
+       "offset": 1,
+       "transform": "translateX(-7.5px) scaleX(1.3)"
+      }
+     ],
+     "at": 119
+    },
+    {
+     "target": "control>span[track]",
+     "kind": "Transition",
+     "props": "transform",
+     "dur": 440,
+     "durTok": "duration-spring-bouncy",
+     "ease": "ease-spring-bouncy",
+     "kf": [
+      {
+       "offset": 0,
+       "transform": "scale(0.97)"
+      },
+      {
+       "offset": 1,
+       "transform": "scale(1)"
+      }
+     ],
+     "at": 290
+    },
+    {
+     "target": "track>span",
+     "kind": "Transition",
+     "props": "opacity",
+     "dur": 340,
+     "durTok": "duration-spring-soft",
+     "ease": "ease-out",
+     "kf": [
+      {
+       "offset": 0,
+       "opacity": "0"
+      },
+      {
+       "offset": 1,
+       "opacity": "1"
+      }
+     ],
+     "at": 290
+    },
+    {
+     "target": "track>span",
+     "kind": "Transition",
+     "props": "transform",
+     "dur": 340,
+     "durTok": "duration-spring-soft",
+     "ease": "ease-spring-soft",
+     "kf": [
+      {
+       "offset": 0,
+       "transform": "scaleX(0.3)"
+      },
+      {
+       "offset": 1,
+       "transform": "scaleX(1)"
+      }
+     ],
+     "at": 290
+    },
+    {
+     "target": "track>span[thumb]",
+     "kind": "Transition",
+     "props": "transform",
+     "dur": 440,
+     "durTok": "duration-spring-bouncy",
+     "ease": "ease-spring-bouncy",
+     "kf": [
+      {
+       "offset": 0,
+       "transform": "translateX(-7.5px) scaleX(1.3)"
+      },
+      {
+       "offset": 1,
+       "transform": "translateX(-45px) scaleX(1)"
+      }
+     ],
+     "at": 290
+    }
+   ],
+   "end": {
+    "live": [],
+    "offRest": 6,
+    "offSample": [
+     "1:button[control]::before t=none o=0",
+     "4:span[thumb] t=matrix(1, 0, 0, 1, -18, 0) o=1",
+     "7:button[control]::before t=none o=0"
+    ],
+    "nodes": 19
+   }
+  },
+  {
+   "style": "desk",
+   "dir": "rtl",
+   "motion": "media",
+   "state": "false -> true",
+   "stateAt": 208,
+   "firstMotionAt": null,
+   "events": "pointerdown@29 focusin@31 pointerup@192 click@193",
+   "longest": 0,
+   "movers": 0,
+   "badProps": [],
+   "anims": [],
+   "end": {
+    "live": [],
+    "offRest": 6,
+    "offSample": [
+     "1:button[control]::before t=none o=0",
+     "4:span[thumb] t=matrix(1, 0, 0, 1, -18, 0) o=1",
+     "7:button[control]::before t=none o=0"
+    ],
+    "nodes": 19
+   }
+  },
+  {
+   "style": "desk",
+   "dir": "rtl",
+   "motion": "attr",
+   "state": "false -> true",
+   "stateAt": 220,
+   "firstMotionAt": null,
+   "events": "pointerdown@24 focusin@25 pointerup@210 click@210",
+   "longest": 0,
+   "movers": 0,
+   "badProps": [],
+   "anims": [],
+   "end": {
+    "live": [],
+    "offRest": 6,
+    "offSample": [
+     "1:button[control]::before t=none o=0",
+     "4:span[thumb] t=matrix(1, 0, 0, 1, -18, 0) o=1",
+     "7:button[control]::before t=none o=0"
+    ],
+    "nodes": 19
+   }
+  },
+  {
+   "style": "neutral",
+   "dir": "ltr",
+   "motion": "full",
+   "state": "false -> true",
+   "stateAt": 196,
+   "firstMotionAt": 28,
+   "events": "pointerdown@16 focusin@18 pointerup@181 click@181",
+   "longest": 220,
+   "movers": 6,
+   "badProps": [],
+   "anims": [
+    {
+     "target": "control>span[track]",
+     "kind": "Transition",
+     "props": "transform",
+     "dur": 70,
+     "durTok": "duration-instant",
+     "ease": "ease-out",
+     "kf": [
+      {
+       "offset": 0,
+       "transform": "scale(1)"
+      },
+      {
+       "offset": 1,
+       "transform": "scale(0.97)"
+      }
+     ],
+     "at": 28
+    },
+    {
+     "target": "track>span[thumb]",
+     "kind": "Transition",
+     "props": "transform",
+     "dur": 70,
+     "durTok": "duration-instant",
+     "ease": "ease-out",
+     "kf": [
+      {
+       "offset": 0,
+       "transform": "translateX(0px) scaleX(1)"
+      },
+      {
+       "offset": 1,
+       "transform": "translateX(3.75px) scaleX(1.15)"
+      }
+     ],
+     "at": 28
+    },
+    {
+     "target": "control>span[track]",
+     "kind": "Transition",
+     "props": "transform",
+     "dur": 220,
+     "durTok": "duration-celebrate|duration-spring-bouncy|duration-spring-soft|duration-zoom",
+     "ease": "ease-spring-bouncy",
+     "kf": [
+      {
+       "offset": 0,
+       "transform": "scale(0.97)"
+      },
+      {
+       "offset": 1,
+       "transform": "scale(1)"
+      }
+     ],
+     "at": 196
+    },
+    {
+     "target": "track>span",
+     "kind": "Transition",
+     "props": "opacity",
+     "dur": 220,
+     "durTok": "duration-celebrate|duration-spring-bouncy|duration-spring-soft|duration-zoom",
+     "ease": "ease-out",
+     "kf": [
+      {
+       "offset": 0,
+       "opacity": "0"
+      },
+      {
+       "offset": 1,
+       "opacity": "1"
+      }
+     ],
+     "at": 196
+    },
+    {
+     "target": "track>span",
+     "kind": "Transition",
+     "props": "transform",
+     "dur": 220,
+     "durTok": "duration-celebrate|duration-spring-bouncy|duration-spring-soft|duration-zoom",
+     "ease": "ease-spring-soft",
+     "kf": [
+      {
+       "offset": 0,
+       "transform": "scaleX(0.5)"
+      },
+      {
+       "offset": 1,
+       "transform": "scaleX(1)"
+      }
+     ],
+     "at": 196
+    },
+    {
+     "target": "track>span[thumb]",
+     "kind": "Transition",
+     "props": "transform",
+     "dur": 220,
+     "durTok": "duration-celebrate|duration-spring-bouncy|duration-spring-soft|duration-zoom",
+     "ease": "ease-spring-bouncy",
+     "kf": [
+      {
+       "offset": 0,
+       "transform": "translateX(3.75px) scaleX(1.15)"
+      },
+      {
+       "offset": 1,
+       "transform": "translateX(45px) scaleX(1)"
+      }
+     ],
+     "at": 196
+    }
+   ],
+   "end": {
+    "live": [],
+    "offRest": 6,
+    "offSample": [
+     "1:button[control]::before t=none o=0",
+     "4:span[thumb] t=matrix(1, 0, 0, 1, 18, 0) o=1",
+     "7:button[control]::before t=none o=0"
+    ],
+    "nodes": 19
+   }
+  },
+  {
+   "style": "neutral",
+   "dir": "ltr",
+   "motion": "media",
+   "state": "false -> true",
+   "stateAt": 215,
+   "firstMotionAt": null,
+   "events": "pointerdown@34 focusin@35 pointerup@201 click@202",
+   "longest": 0,
+   "movers": 0,
+   "badProps": [],
+   "anims": [],
+   "end": {
+    "live": [],
+    "offRest": 6,
+    "offSample": [
+     "1:button[control]::before t=none o=0",
+     "4:span[thumb] t=matrix(1, 0, 0, 1, 18, 0) o=1",
+     "7:button[control]::before t=none o=0"
+    ],
+    "nodes": 19
+   }
+  },
+  {
+   "style": "neutral",
+   "dir": "ltr",
+   "motion": "attr",
+   "state": "false -> true",
+   "stateAt": 210,
+   "firstMotionAt": null,
+   "events": "pointerdown@41 focusin@43 pointerup@204 click@204",
+   "longest": 0,
+   "movers": 0,
+   "badProps": [],
+   "anims": [],
+   "end": {
+    "live": [],
+    "offRest": 6,
+    "offSample": [
+     "1:button[control]::before t=none o=0",
+     "4:span[thumb] t=matrix(1, 0, 0, 1, 18, 0) o=1",
+     "7:button[control]::before t=none o=0"
+    ],
+    "nodes": 19
+   }
+  },
+  {
+   "style": "neutral",
+   "dir": "rtl",
+   "motion": "full",
+   "state": "false -> true",
+   "stateAt": 210,
+   "firstMotionAt": 53,
+   "events": "pointerdown@36 focusin@37 pointerup@200 click@201",
+   "longest": 220,
+   "movers": 6,
+   "badProps": [],
+   "anims": [
+    {
+     "target": "control>span[track]",
+     "kind": "Transition",
+     "props": "transform",
+     "dur": 70,
+     "durTok": "duration-instant",
+     "ease": "ease-out",
+     "kf": [
+      {
+       "offset": 0,
+       "transform": "scale(1)"
+      },
+      {
+       "offset": 1,
+       "transform": "scale(0.97)"
+      }
+     ],
+     "at": 53
+    },
+    {
+     "target": "track>span[thumb]",
+     "kind": "Transition",
+     "props": "transform",
+     "dur": 70,
+     "durTok": "duration-instant",
+     "ease": "ease-out",
+     "kf": [
+      {
+       "offset": 0,
+       "transform": "translateX(0px) scaleX(1)"
+      },
+      {
+       "offset": 1,
+       "transform": "translateX(-3.75px) scaleX(1.15)"
+      }
+     ],
+     "at": 53
+    },
+    {
+     "target": "control>span[track]",
+     "kind": "Transition",
+     "props": "transform",
+     "dur": 220,
+     "durTok": "duration-celebrate|duration-spring-bouncy|duration-spring-soft|duration-zoom",
+     "ease": "ease-spring-bouncy",
+     "kf": [
+      {
+       "offset": 0,
+       "transform": "scale(0.97)"
+      },
+      {
+       "offset": 1,
+       "transform": "scale(1)"
+      }
+     ],
+     "at": 210
+    },
+    {
+     "target": "track>span",
+     "kind": "Transition",
+     "props": "opacity",
+     "dur": 220,
+     "durTok": "duration-celebrate|duration-spring-bouncy|duration-spring-soft|duration-zoom",
+     "ease": "ease-out",
+     "kf": [
+      {
+       "offset": 0,
+       "opacity": "0"
+      },
+      {
+       "offset": 1,
+       "opacity": "1"
+      }
+     ],
+     "at": 210
+    },
+    {
+     "target": "track>span",
+     "kind": "Transition",
+     "props": "transform",
+     "dur": 220,
+     "durTok": "duration-celebrate|duration-spring-bouncy|duration-spring-soft|duration-zoom",
+     "ease": "ease-spring-soft",
+     "kf": [
+      {
+       "offset": 0,
+       "transform": "scaleX(0.5)"
+      },
+      {
+       "offset": 1,
+       "transform": "scaleX(1)"
+      }
+     ],
+     "at": 210
+    },
+    {
+     "target": "track>span[thumb]",
+     "kind": "Transition",
+     "props": "transform",
+     "dur": 220,
+     "durTok": "duration-celebrate|duration-spring-bouncy|duration-spring-soft|duration-zoom",
+     "ease": "ease-spring-bouncy",
+     "kf": [
+      {
+       "offset": 0,
+       "transform": "translateX(-3.75px) scaleX(1.15)"
+      },
+      {
+       "offset": 1,
+       "transform": "translateX(-45px) scaleX(1)"
+      }
+     ],
+     "at": 210
+    }
+   ],
+   "end": {
+    "live": [],
+    "offRest": 6,
+    "offSample": [
+     "1:button[control]::before t=none o=0",
+     "4:span[thumb] t=matrix(1, 0, 0, 1, -18, 0) o=1",
+     "7:button[control]::before t=none o=0"
+    ],
+    "nodes": 19
+   }
+  },
+  {
+   "style": "neutral",
+   "dir": "rtl",
+   "motion": "media",
+   "state": "false -> true",
+   "stateAt": 204,
+   "firstMotionAt": null,
+   "events": "pointerdown@27 focusin@28 pointerup@191 click@191",
+   "longest": 0,
+   "movers": 0,
+   "badProps": [],
+   "anims": [],
+   "end": {
+    "live": [],
+    "offRest": 6,
+    "offSample": [
+     "1:button[control]::before t=none o=0",
+     "4:span[thumb] t=matrix(1, 0, 0, 1, -18, 0) o=1",
+     "7:button[control]::before t=none o=0"
+    ],
+    "nodes": 19
+   }
+  },
+  {
+   "style": "neutral",
+   "dir": "rtl",
+   "motion": "attr",
+   "state": "false -> true",
+   "stateAt": 197,
+   "firstMotionAt": null,
+   "events": "pointerdown@20 focusin@26 pointerup@192 click@192",
+   "longest": 0,
+   "movers": 0,
+   "badProps": [],
+   "anims": [],
+   "end": {
+    "live": [],
+    "offRest": 6,
+    "offSample": [
+     "1:button[control]::before t=none o=0",
+     "4:span[thumb] t=matrix(1, 0, 0, 1, -18, 0) o=1",
+     "7:button[control]::before t=none o=0"
+    ],
+    "nodes": 19
+   }
+  }
+ ],
+ "sweep": {
+  "studio": [],
+  "desk": [],
+  "neutral": []
+ },
+ "held": [
+  {
+   "style": "studio",
+   "dir": "ltr",
+   "motion": "full",
+   "held": "matrix(1.08, 0, 0, 1, 17.2, 0)",
+   "track": "matrix(0.97, 0, 0, 0.97, 0, 0)",
+   "root": "none",
+   "neighbor": null,
+   "neighborTf": null
+  },
+  {
+   "style": "studio",
+   "dir": "ltr",
+   "motion": "media",
+   "held": "matrix(1, 0, 0, 1, 18, 0)",
+   "track": "matrix(1, 0, 0, 1, 0, 0)",
+   "root": "none",
+   "neighbor": null,
+   "neighborTf": null
+  },
+  {
+   "style": "studio",
+   "dir": "ltr",
+   "motion": "attr",
+   "held": "matrix(1, 0, 0, 1, 18, 0)",
+   "track": "matrix(1, 0, 0, 1, 0, 0)",
+   "root": "none",
+   "neighbor": null,
+   "neighborTf": null
+  },
+  {
+   "style": "studio",
+   "dir": "rtl",
+   "motion": "full",
+   "held": "matrix(1.08, 0, 0, 1, -17.2, 0)",
+   "track": "matrix(0.97, 0, 0, 0.97, 0, 0)",
+   "root": "none",
+   "neighbor": null,
+   "neighborTf": null
+  },
+  {
+   "style": "studio",
+   "dir": "rtl",
+   "motion": "media",
+   "held": "matrix(1, 0, 0, 1, -18, 0)",
+   "track": "matrix(1, 0, 0, 1, 0, 0)",
+   "root": "none",
+   "neighbor": null,
+   "neighborTf": null
+  },
+  {
+   "style": "studio",
+   "dir": "rtl",
+   "motion": "attr",
+   "held": "matrix(1, 0, 0, 1, -18, 0)",
+   "track": "matrix(1, 0, 0, 1, 0, 0)",
+   "root": "none",
+   "neighbor": null,
+   "neighborTf": null
+  },
+  {
+   "style": "desk",
+   "dir": "ltr",
+   "motion": "full",
+   "held": "matrix(1.3, 0, 0, 1, 15, 0)",
+   "track": "matrix(0.97, 0, 0, 0.97, 0, 0)",
+   "root": "none",
+   "neighbor": null,
+   "neighborTf": null
+  },
+  {
+   "style": "desk",
+   "dir": "ltr",
+   "motion": "media",
+   "held": "matrix(1, 0, 0, 1, 18, 0)",
+   "track": "matrix(1, 0, 0, 1, 0, 0)",
+   "root": "none",
+   "neighbor": null,
+   "neighborTf": null
+  },
+  {
+   "style": "desk",
+   "dir": "ltr",
+   "motion": "attr",
+   "held": "matrix(1, 0, 0, 1, 18, 0)",
+   "track": "matrix(1, 0, 0, 1, 0, 0)",
+   "root": "none",
+   "neighbor": null,
+   "neighborTf": null
+  },
+  {
+   "style": "desk",
+   "dir": "rtl",
+   "motion": "full",
+   "held": "matrix(1.3, 0, 0, 1, -15, 0)",
+   "track": "matrix(0.97, 0, 0, 0.97, 0, 0)",
+   "root": "none",
+   "neighbor": null,
+   "neighborTf": null
+  },
+  {
+   "style": "desk",
+   "dir": "rtl",
+   "motion": "media",
+   "held": "matrix(1, 0, 0, 1, -18, 0)",
+   "track": "matrix(1, 0, 0, 1, 0, 0)",
+   "root": "none",
+   "neighbor": null,
+   "neighborTf": null
+  },
+  {
+   "style": "desk",
+   "dir": "rtl",
+   "motion": "attr",
+   "held": "matrix(1, 0, 0, 1, -18, 0)",
+   "track": "matrix(1, 0, 0, 1, 0, 0)",
+   "root": "none",
+   "neighbor": null,
+   "neighborTf": null
+  },
+  {
+   "style": "neutral",
+   "dir": "ltr",
+   "motion": "full",
+   "held": "matrix(1.15, 0, 0, 1, 16.5, 0)",
+   "track": "matrix(0.97, 0, 0, 0.97, 0, 0)",
+   "root": "none",
+   "neighbor": null,
+   "neighborTf": null
+  },
+  {
+   "style": "neutral",
+   "dir": "ltr",
+   "motion": "media",
+   "held": "matrix(1, 0, 0, 1, 18, 0)",
+   "track": "matrix(1, 0, 0, 1, 0, 0)",
+   "root": "none",
+   "neighbor": null,
+   "neighborTf": null
+  },
+  {
+   "style": "neutral",
+   "dir": "ltr",
+   "motion": "attr",
+   "held": "matrix(1, 0, 0, 1, 18, 0)",
+   "track": "matrix(1, 0, 0, 1, 0, 0)",
+   "root": "none",
+   "neighbor": null,
+   "neighborTf": null
+  },
+  {
+   "style": "neutral",
+   "dir": "rtl",
+   "motion": "full",
+   "held": "matrix(1.15, 0, 0, 1, -16.5, 0)",
+   "track": "matrix(0.97, 0, 0, 0.97, 0, 0)",
+   "root": "none",
+   "neighbor": null,
+   "neighborTf": null
+  },
+  {
+   "style": "neutral",
+   "dir": "rtl",
+   "motion": "media",
+   "held": "matrix(1, 0, 0, 1, -18, 0)",
+   "track": "matrix(1, 0, 0, 1, 0, 0)",
+   "root": "none",
+   "neighbor": null,
+   "neighborTf": null
+  },
+  {
+   "style": "neutral",
+   "dir": "rtl",
+   "motion": "attr",
+   "held": "matrix(1, 0, 0, 1, -18, 0)",
+   "track": "matrix(1, 0, 0, 1, 0, 0)",
+   "root": "none",
+   "neighbor": null,
+   "neighborTf": null
+  }
+ ],
+ "ring": {
+  "studio": {
+   "focusVisible": true,
+   "atOnce": true,
+   "diffFrame0": [],
+   "diffFirstFrame": [],
+   "first": {
+    "t": 2,
+    "outline": "solid 2px",
+    "shadow": "none",
+    "p0::before": "o=1 s=1",
+    "hostShadow": "none"
+   },
+   "last": {
+    "t": 277,
+    "outline": "solid 2px",
+    "shadow": "none",
+    "p0::before": "o=1 s=1",
+    "hostShadow": "none"
+   },
+   "frames": 15
+  },
+  "desk": {
+   "focusVisible": true,
+   "atOnce": true,
+   "diffFrame0": [],
+   "diffFirstFrame": [],
+   "first": {
+    "t": 2,
+    "outline": "solid 2px",
+    "shadow": "none",
+    "p0::before": "o=1 s=1",
+    "hostShadow": "none"
+   },
+   "last": {
+    "t": 300,
+    "outline": "solid 2px",
+    "shadow": "none",
+    "p0::before": "o=1 s=1",
+    "hostShadow": "none"
+   },
+   "frames": 15
+  },
+  "neutral": {
+   "focusVisible": true,
+   "atOnce": true,
+   "diffFrame0": [],
+   "diffFirstFrame": [],
+   "first": {
+    "t": 1,
+    "outline": "solid 2px",
+    "shadow": "none",
+    "p0::before": "o=1 s=1",
+    "hostShadow": "none"
+   },
+   "last": {
+    "t": 261,
+    "outline": "solid 2px",
+    "shadow": "none",
+    "p0::before": "o=1 s=1",
+    "hostShadow": "none"
+   },
+   "frames": 18
+  }
+ },
+ "rapid": {
+  "studio": {
+   "same": true,
+   "fast": {
+    "state": "false",
+    "nodes": 19,
+    "off": [
+     "1:button[control]::before t=none o=0",
+     "3:span t=matrix(0.8, 0, 0, 1, 0, 0) o=0",
+     "7:button[control]::before t=none o=0",
+     "10:span[thumb] t=matrix(1, 0, 0, 1, 24, 0) o=1",
+     "14:button[control]::before t=none o=0",
+     "16:span t=matrix(0.8, 0, 0, 1, 0, 0) o=0"
+    ],
+    "live": [],
+    "active": "control"
+   }
+  },
+  "desk": {
+   "same": true,
+   "fast": {
+    "state": "false",
+    "nodes": 19,
+    "off": [
+     "1:button[control]::before t=none o=0",
+     "3:span t=matrix(0.3, 0, 0, 1, 0, 0) o=0",
+     "7:button[control]::before t=none o=0",
+     "10:span[thumb] t=matrix(1, 0, 0, 1, 24, 0) o=1",
+     "14:button[control]::before t=none o=0",
+     "16:span t=matrix(0.3, 0, 0, 1, 0, 0) o=0"
+    ],
+    "live": [],
+    "active": "control"
+   }
+  },
+  "neutral": {
+   "same": true,
+   "fast": {
+    "state": "false",
+    "nodes": 19,
+    "off": [
+     "1:button[control]::before t=none o=0",
+     "3:span t=matrix(0.5, 0, 0, 1, 0, 0) o=0",
+     "7:button[control]::before t=none o=0",
+     "10:span[thumb] t=matrix(1, 0, 0, 1, 27, 0) o=1",
+     "14:button[control]::before t=none o=0",
+     "16:span t=matrix(0.5, 0, 0, 1, 0, 0) o=0"
+    ],
+    "live": [],
+    "active": "control"
+   }
+  }
+ },
+ "interrupt": {
+  "studio": {
+   "same": true,
+   "fast": {
+    "state": "false",
+    "nodes": 19,
+    "off": [
+     "1:button[control]::before t=none o=0",
+     "3:span t=matrix(0.8, 0, 0, 1, 0, 0) o=0",
+     "7:button[control]::before t=none o=0",
+     "10:span[thumb] t=matrix(1, 0, 0, 1, 24, 0) o=1",
+     "14:button[control]::before t=none o=0",
+     "16:span t=matrix(0.8, 0, 0, 1, 0, 0) o=0"
+    ],
+    "live": [],
+    "active": "control"
+   }
+  },
+  "desk": {
+   "same": true,
+   "fast": {
+    "state": "false",
+    "nodes": 19,
+    "off": [
+     "1:button[control]::before t=none o=0",
+     "3:span t=matrix(0.3, 0, 0, 1, 0, 0) o=0",
+     "7:button[control]::before t=none o=0",
+     "10:span[thumb] t=matrix(1, 0, 0, 1, 24, 0) o=1",
+     "14:button[control]::before t=none o=0",
+     "16:span t=matrix(0.3, 0, 0, 1, 0, 0) o=0"
+    ],
+    "live": [],
+    "active": "control"
+   }
+  },
+  "neutral": {
+   "same": true,
+   "fast": {
+    "state": "false",
+    "nodes": 19,
+    "off": [
+     "1:button[control]::before t=none o=0",
+     "3:span t=matrix(0.5, 0, 0, 1, 0, 0) o=0",
+     "7:button[control]::before t=none o=0",
+     "10:span[thumb] t=matrix(1, 0, 0, 1, 27, 0) o=1",
+     "14:button[control]::before t=none o=0",
+     "16:span t=matrix(0.5, 0, 0, 1, 0, 0) o=0"
+    ],
+    "live": [],
+    "active": "control"
+   }
+  }
+ },
+ "off": {
+  "studio": {
+   "injected": "@layer ds.recipes { [data-ds='switch'] { --_switch-stretch: 1; --_switch-track-press: 1; --_switch-motion: 0; } }",
+   "movers": 0,
+   "moving": [],
+   "held": "matrix(1, 0, 0, 1, 18, 0)"
+  },
+  "desk": {
+   "injected": "@layer ds.recipes { [data-ds='switch'] { --_switch-stretch: 1; --_switch-track-press: 1; --_switch-motion: 0; } }",
+   "movers": 0,
+   "moving": [],
+   "held": "matrix(1, 0, 0, 1, 18, 0)"
+  },
+  "neutral": {
+   "injected": "@layer ds.recipes { [data-ds='switch'] { --_switch-stretch: 1; --_switch-track-press: 1; --_switch-motion: 0; } }",
+   "movers": 0,
+   "moving": [],
+   "held": "matrix(1, 0, 0, 1, 18, 0)"
+  }
+ },
+ "extra": {}
+}
