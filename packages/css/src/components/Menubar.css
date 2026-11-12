@@ -5,10 +5,11 @@
  * PLAN.md 3.7 and the menu surface; the GoBanana menu bar sources were not
  * reachable when it was built.
  *
- *   [data-ds='menubar']                 root: role menubar, the row
- *     [data-part='trigger']             role menuitem, opens one menu
- *       > [data-part='text']            the title; data-text reserves the open weight
- *     [data-part='end']                 a status slot at the inline end (a clock)
+ *   [data-ds='menubar']                 root: the row, draws the surface
+ *     [data-part='bar']                 role menubar, holds the titles
+ *       [data-part='trigger']           role menuitem, opens one menu
+ *         > [data-part='text']          the title; data-text reserves the open weight
+ *     [data-part='end']                 a status slot at the inline end (a clock), outside role menubar
  *
  * Private properties on the root (the Desk recipe overrides these):
  *
@@ -16,7 +17,11 @@
  *   --_menubar-bg, -fg, -border-color, -backdrop
  *   --_menubar-trigger-height, -trigger-padding-inline, -trigger-radius
  *   --_menubar-trigger-weight, -trigger-weight-open
- *   --_menubar-trigger-bg, -trigger-bg-hover, -trigger-bg-open, -trigger-fg-open
+ *   --_menubar-trigger-bg, -trigger-bg-hover, -trigger-bg-open
+ *   --_menubar-trigger-fg, -trigger-fg-open
+ *
+ * The -open suffix names the value of the current menu, the state this
+ * component adds to the hover, active, focus and disabled suffixes.
  *   --_menubar-trigger-ring, -trigger-ring-color
  *   --_menubar-meta-fg
  *
@@ -45,6 +50,7 @@
     --_menubar-trigger-bg: transparent;
     --_menubar-trigger-bg-hover: var(--ds-color-bg-overlay-10);
     --_menubar-trigger-bg-open: var(--ds-color-bg-overlay-20);
+    --_menubar-trigger-fg: inherit;
     --_menubar-trigger-fg-open: var(--ds-color-text-default);
     --_menubar-trigger-ring: 0 0 transparent;
     --_menubar-trigger-ring-color: var(--ds-color-focus-ring);
@@ -69,6 +75,17 @@
     line-height: var(--ds-font-leading-snug);
   }
 
+  /* The titles: the role menubar part. It wraps onto a second line before the row scrolls. */
+  [data-ds='menubar'] > [data-part='bar'] {
+    display: flex;
+    flex: 1 1 auto;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--_menubar-gap);
+    min-inline-size: 0;
+    outline: none;
+  }
+
   [data-ds='menubar'][data-size='sm'] {
     --_menubar-height: var(--ds-size-control-sm);
     --_menubar-trigger-height: var(--ds-size-control-xs);
@@ -89,7 +106,7 @@
 
   /* ------------------------------------------------------------ trigger */
 
-  [data-ds='menubar'] > [data-part='trigger'] {
+  [data-ds='menubar'] [data-part='trigger'] {
     position: relative;
     display: inline-flex;
     flex: none;
@@ -106,10 +123,10 @@
     border-radius: var(--_menubar-trigger-radius);
     background-color: var(--_menubar-trigger-bg);
     box-shadow: var(--_menubar-trigger-ring);
-    color: inherit;
+    color: var(--_menubar-trigger-fg);
     font: inherit;
     font-weight: var(--_menubar-trigger-weight);
-    white-space: nowrap;
+    overflow-wrap: anywhere;
     cursor: default;
     user-select: none;
     outline: none;
@@ -117,33 +134,32 @@
   }
 
   @media (hover: hover) {
-    [data-ds='menubar'] > [data-part='trigger']:hover {
+    [data-ds='menubar'] [data-part='trigger']:hover {
       --_menubar-trigger-bg: var(--_menubar-trigger-bg-hover);
     }
   }
 
   /* Radix lights the trigger that has focus while the row is in use. */
-  [data-ds='menubar'] > [data-part='trigger'][data-highlighted] {
+  [data-ds='menubar'] [data-part='trigger'][data-highlighted] {
     --_menubar-trigger-bg: var(--_menubar-trigger-bg-hover);
   }
 
   /* The current menu: the open fill and the open weight. */
-  [data-ds='menubar'] > [data-part='trigger'][data-state='open'] {
+  [data-ds='menubar'] [data-part='trigger'][data-state='open'] {
     --_menubar-trigger-bg: var(--_menubar-trigger-bg-open);
     --_menubar-trigger-weight: var(--_menubar-trigger-weight-open);
-
-    color: var(--_menubar-trigger-fg-open);
+    --_menubar-trigger-fg: var(--_menubar-trigger-fg-open);
   }
 
   /* The keyboard ring sits inside the trigger. The transparent outline shows in forced colors. */
-  [data-ds='menubar'] > [data-part='trigger']:focus-visible {
+  [data-ds='menubar'] [data-part='trigger']:focus-visible {
     --_menubar-trigger-ring: inset 0 0 0 var(--ds-border-width-strong) var(--_menubar-trigger-ring-color);
 
     outline: var(--ds-border-width-strong) solid transparent;
     outline-offset: calc(var(--ds-border-width-strong) * -1);
   }
 
-  [data-ds='menubar'] > [data-part='trigger'][data-disabled] {
+  [data-ds='menubar'] [data-part='trigger'][data-disabled] {
     opacity: var(--ds-opacity-disabled);
     cursor: not-allowed;
   }
@@ -151,7 +167,10 @@
   /*
    * The title and, under it, a copy at the open weight that takes no
    * height: the trigger is as wide as its open title at rest too. The copy
-   * has empty alternative text, so it is never read.
+   * has empty alternative text, so it is never read. It sits on the text
+   * part, not the root: the trigger keeps no ::before or ::after (its ring
+   * is a box shadow, its hover a fill), so the pseudo element rule of
+   * anatomy.md is not in play.
    */
   [data-ds='menubar'] [data-part='trigger'] > [data-part='text'] {
     display: inline-flex;
@@ -172,16 +191,19 @@
 
   /* ------------------------------------------------------------ end slot */
 
+  /* Shrinks and wraps before the row scrolls sideways. */
   [data-ds='menubar'] > [data-part='end'] {
     display: inline-flex;
-    flex: none;
+    flex: 0 1 auto;
     align-items: center;
     gap: var(--ds-space-s);
+    min-inline-size: 0;
     margin-inline-start: auto;
     padding-inline: var(--_menubar-trigger-padding-inline);
     color: var(--_menubar-meta-fg);
     font-variant-numeric: tabular-nums;
-    white-space: nowrap;
+    text-align: end;
+    overflow-wrap: anywhere;
   }
 
   /* ------------------------------------------------------------ transparency, contrast, forced colors */
@@ -216,15 +238,15 @@
       --_menubar-meta-fg: CanvasText;
     }
 
-    [data-ds='menubar'] > [data-part='trigger']:is([data-state='open'], [data-highlighted]) {
+    [data-ds='menubar'] [data-part='trigger']:is([data-state='open'], [data-highlighted]) {
       --_menubar-trigger-bg: Highlight;
+      --_menubar-trigger-fg: HighlightText;
       --_menubar-trigger-fg-open: HighlightText;
 
-      color: HighlightText;
       forced-color-adjust: none;
     }
 
-    [data-ds='menubar'] > [data-part='trigger']:focus-visible {
+    [data-ds='menubar'] [data-part='trigger']:focus-visible {
       outline-color: CanvasText;
     }
   }

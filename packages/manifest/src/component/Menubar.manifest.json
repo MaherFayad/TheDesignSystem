@@ -23,6 +23,7 @@
   },
   "anatomy": [
     "root",
+    "bar",
     "trigger",
     "text",
     "content",
@@ -40,7 +41,7 @@
         "MenubarEnd"
       ],
       "min": 1,
-      "max": 10
+      "max": 11
     },
     "content": {
       "accepts": [
@@ -63,6 +64,13 @@
     "end": {
       "accepts": "text",
       "max": 1
+    },
+    "bar": {
+      "accepts": [
+        "MenubarMenu"
+      ],
+      "min": 1,
+      "max": 10
     }
   },
   "props": {
@@ -94,7 +102,7 @@
     },
     "aria-label": {
       "type": "string",
-      "description": "Menubar: names the row, for example Application menu."
+      "description": "Menubar: names the menu bar (it goes on the bar part, role menubar), for example Application menu."
     },
     "MenubarMenu.value": {
       "type": "string",
@@ -156,7 +164,7 @@
     "disabled": {
       "type": "boolean",
       "default": false,
-      "description": "Items and MenubarTrigger: aria-disabled and data-disabled. Skipped by the arrow keys, drawn with opacity.disabled."
+      "description": "Items: aria-disabled and data-disabled; they stay focusable in the menu, skipped by the arrow keys. MenubarTrigger: the native disabled of the Radix trigger, with data-disabled: dimmed and skipped by the arrow keys (an exception to anatomy rule 5, see a11y notes)."
     },
     "onSelect": {
       "type": "function",
@@ -181,6 +189,10 @@
     "MenubarSub": {
       "type": "node",
       "description": "A submenu: a MenubarSubTrigger, then a MenubarSubContent; open, defaultOpen and onOpenChange."
+    },
+    "className": {
+      "type": "string",
+      "description": "Menubar: goes to the root, as style does. Every other prop goes to the bar."
     }
   },
   "states": [
@@ -190,7 +202,7 @@
     "data-disabled"
   ],
   "a11y": {
-    "role": "menubar on the root, named with aria-label. Each trigger is a menuitem with aria-haspopup menu and aria-expanded, and names its menu. The menus are role menu, not modal: the page stays in the accessibility tree. The end slot has role none.",
+    "role": "The root is a plain element. Its bar part is role menubar, named with aria-label. Each trigger is a menuitem with aria-haspopup menu and aria-expanded, and names its menu. The menus are role menu, not modal: the page stays in the accessibility tree. The end slot sits next to the bar, outside role menubar, so its text is read in the page.",
     "focus": "The row is one tab stop: Tab reaches the current title, the arrow keys move between titles. A menu opened with the keyboard puts focus on its first item; on close, focus returns to its title.",
     "keys": {
       "Tab": "Moves into the row, onto one title, and out again; the row is one tab stop",
@@ -203,18 +215,20 @@
       "Home": "Moves to the first title, or the first item in a menu",
       "End": "Moves to the last title, or the last item in a menu",
       "Escape": "Closes the open menu and returns focus to its title",
-      "Typeahead": "Typing letters moves to the title or item whose label starts with them"
+      "Typeahead": "In a menu, typing letters moves to the item whose label starts with them. The titles have no typeahead"
     },
     "announce": "The row is read as a menu bar with its name. Each title reads its label, that it has a popup and whether it is expanded. Items read as in DropdownMenu.",
     "notes": [
       "The current menu is shown by two cues, never color alone (WCAG 1.4.1): its title takes the open fill and the open weight. The title reserves the width of its open weight, so the row never shifts.",
       "Arrow keys follow the reading direction: Radix reads the direction from Theme.",
-      "The end slot holds status text (a clock, a save state). Controls go in their own row or toolbar, outside role menubar.",
-      "At narrow widths the row wraps onto a second line instead of scrolling sideways (WCAG 1.4.10).",
+      "The end slot holds status text (a clock, a save state), outside role menubar. Controls go in their own row or toolbar.",
+      "A disabled title uses the native disabled that Radix Menubar sets, so it leaves the arrow key order; the WAI-ARIA menubar pattern allows either. Items inside the menus keep aria-disabled and stay focusable.",
+      "At narrow widths the titles wrap onto a second line, and long titles and status text wrap, instead of scrolling sideways (WCAG 1.4.10).",
       "Titles are at least 24px tall (size.target-min).",
       "Each menu is a dropdown-menu root carrying the part name content, drawn by DropdownMenu.css; its items are DropdownMenu parts.",
       "Contract keys: ArrowRight, ArrowLeft and ArrowDown are checked on a title of the variants case; Escape on an item of the menu that the open case shows at load. The other keys are covered by the unit tests.",
-      "No native title attribute."
+      "No native title attribute.",
+      "The item parts inside a menu (item, checkbox-item, radio-item, label, group, separator, sub-trigger, sub-content) belong to the nested dropdown-menu root and are listed in the DropdownMenu manifest (anatomy.md: a manifest lists only its own parts)."
     ]
   },
   "content": {

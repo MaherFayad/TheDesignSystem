@@ -77,16 +77,21 @@ describe('Menubar', () => {
   it('renders the row: root, triggers with a text part, and the end slot', () => {
     render(<Bar />);
     const bar = screen.getByRole('menubar', { name: 'Application menu' });
-    expect(bar.getAttribute('data-ds')).toBe('menubar');
-    expect(bar.getAttribute('data-size')).toBe('md');
-    expect(Array.from(bar.children).map((c) => c.getAttribute('data-part'))).toEqual(['trigger', 'trigger', 'trigger', 'end']);
+    expect(bar.getAttribute('data-part')).toBe('bar');
+    const root = bar.parentElement!;
+    expect(root.getAttribute('data-ds')).toBe('menubar');
+    expect(root.getAttribute('data-size')).toBe('md');
+    expect(root.hasAttribute('role')).toBe(false);
+    expect(Array.from(root.children).map((c) => c.getAttribute('data-part'))).toEqual(['bar', 'end']);
+    expect(Array.from(bar.children).map((c) => c.getAttribute('data-part'))).toEqual(['trigger', 'trigger', 'trigger']);
     const file = trigger('File');
     expect(file.getAttribute('aria-haspopup')).toBe('menu');
     expect(file.getAttribute('aria-expanded')).toBe('false');
     expect(file.getAttribute('data-state')).toBe('closed');
     const text = file.querySelector('[data-part="text"]');
     expect(text?.getAttribute('data-text')).toBe('File');
-    expect(bar.querySelector('[data-part="end"]')?.getAttribute('role')).toBe('none');
+    expect(bar.querySelector('[data-part="end"]')).toBeNull();
+    expect(root.querySelector('[data-part="end"]')?.textContent).toBe('9:41');
     expect(trigger('View').hasAttribute('data-disabled')).toBe(true);
     expect(menus()).toHaveLength(0);
     expect(document.body.querySelector('[title]')).toBeNull();
@@ -95,7 +100,7 @@ describe('Menubar', () => {
   it('size sm stamps the row and every menu', async () => {
     const user = userEvent.setup();
     render(<Bar size="sm" />);
-    expect(screen.getByRole('menubar').getAttribute('data-size')).toBe('sm');
+    expect(screen.getByRole('menubar').closest('[data-ds="menubar"]')?.getAttribute('data-size')).toBe('sm');
     await user.click(trigger('File'));
     await waitFor(() => expect(menus()[0]?.getAttribute('data-size')).toBe('sm'));
   });

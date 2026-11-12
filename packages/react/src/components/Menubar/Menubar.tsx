@@ -17,12 +17,14 @@
 //
 // The DOM:
 //
-//   <div data-ds="menubar" role="menubar" data-size>
+//   <div data-ds="menubar" data-size>                       the row; draws the surface
+//     <div data-part="bar" role="menubar" aria-label>       the Radix root: the titles
 //     <button data-part="trigger" role="menuitem" aria-haspopup="menu"
 //             aria-expanded data-state="open|closed" data-highlighted? data-disabled?>
 //       <span data-part="text" data-text="File">File</span>   the label; data-text reserves the open weight
 //     ...
-//     <div data-part="end">                                  a slot at the inline end: a clock, a status
+//     </div>
+//     <div data-part="end">                                  a slot at the inline end, outside role menubar
 //   <body>
 //     <div data-ds="theme" data-menu-layer="menubar">         the portal Theme, display: contents
 //       <div data-radix-popper-content-wrapper>
@@ -42,11 +44,14 @@
 // Motion: the menus play "menu-scale" from DropdownMenu.css. The row itself
 // does not move.
 import {
+  Children,
   createContext,
+  isValidElement,
   use,
   useCallback,
   useId,
   useMemo,
+  useRef,
   type ComponentProps,
   type ReactNode,
 } from 'react';
@@ -118,18 +123,42 @@ export interface MenubarProps
   size?: MenubarSize;
   /** ArrowLeft on the first menu goes to the last, and back. Default true. */
   loop?: boolean;
-  /** MenubarMenu elements, then an optional MenubarEnd. Name the row with aria-label ("Application menu"). */
+  /** MenubarMenu elements, then an optional MenubarEnd. Name the row with aria-label ("Application menu"): it goes on the bar. */
   children?: ReactNode;
 }
 
-/** The row: the root `data-ds="menubar"`, role menubar. Props spread onto it. */
-export function Menubar({ value: valueProp, defaultValue = '', onValueChange, size = 'md', loop = true, children, ...rest }: MenubarProps) {
+/**
+ * The row: the root `data-ds="menubar"`, a plain element that holds the
+ * role menubar part (`bar`) and, next to it, the MenubarEnd slot, so the
+ * status text is never owned by the menubar role. Props, aria-label
+ * included, spread onto the bar; className and style go to the root.
+ */
+export function Menubar({
+  value: valueProp,
+  defaultValue = '',
+  onValueChange,
+  size = 'md',
+  loop = true,
+  className,
+  style,
+  children,
+  ...rest
+}: MenubarProps) {
   const [value, setValue] = useControllable(valueProp, defaultValue, onValueChange);
   const ctx = useMemo<BarContextValue>(() => ({ value, size }), [value, size]);
+  const menus: ReactNode[] = [];
+  const end: ReactNode[] = [];
+  Children.forEach(children, (child) => {
+    if (isValidElement(child) && child.type === MenubarEnd) end.push(child);
+    else menus.push(child);
+  });
   return (
-    <RadixMenubar.Root {...rest} value={value} onValueChange={setValue} loop={loop} data-ds="menubar" data-size={size}>
-      <BarContext value={ctx}>{children}</BarContext>
-    </RadixMenubar.Root>
+    <div data-ds="menubar" data-size={size} className={className} style={style}>
+      <RadixMenubar.Root {...rest} value={value} onValueChange={setValue} loop={loop} data-part="bar">
+        <BarContext value={ctx}>{menus}</BarContext>
+      </RadixMenubar.Root>
+      {end}
+    </div>
   );
 }
 
@@ -164,8 +193,8 @@ export interface MenubarTriggerProps extends Omit<ComponentProps<typeof RadixMen
 
 /**
  * The menu title in the row (role menuitem with aria-haspopup menu). Click,
- * Enter, Space or ArrowDown opens its menu. `disabled` keeps it in the row,
- * skipped by the arrow keys.
+ * Enter, Space or ArrowDown opens its menu. `disabled` is the native
+ * disabled of the Radix trigger: drawn dimmed, skipped by the arrow keys.
  */
 export function MenubarTrigger({ children, ...rest }: MenubarTriggerProps) {
   return (
@@ -202,6 +231,7 @@ export function MenubarContent({
   align = 'start',
   sideOffset = TRIGGER_GAP,
   collisionPadding = VIEWPORT_GUTTER,
+  onEscapeKeyDown,
   ref,
   children,
   ...rest
@@ -210,10 +240,12 @@ export function MenubarContent({
   const menu = useMenu('MenubarContent');
   const layer = useMenuLayer(menu.open, LAYER);
   const { onContent } = layer;
+  const node = useRef<HTMLDivElement | null>(null);
   const setRef = useCallback(
-    (node: HTMLDivElement | null) => {
-      assignRef(ref, node);
-      onContent(node);
+    (el: HTMLDivElement | null) => {
+      node.current = el;
+      assignRef(ref, el);
+      onContent(el);
     },
     [ref, onContent],
   );
@@ -221,6 +253,13 @@ export function MenubarContent({
     <RadixMenubar.Content
       {...rest}
       ref={setRef}
+      onEscapeKeyDown={(event) => {
+        onEscapeKeyDown?.(event);
+        if (event.defaultPrevented) return;
+        // Focus goes back to the title at once, not after the exit motion (Radix returns it on unmount).
+        const id = node.current?.getAttribute('aria-labelledby');
+        if (id) document.getElementById(id)?.focus();
+      }}
       side={physicalSide(side, layer.dir)}
       align={align}
       sideOffset={sideOffset}
@@ -241,9 +280,13 @@ export interface MenubarEndProps extends ComponentProps<'div'> {
   children?: ReactNode;
 }
 
-/** A slot at the inline end of the row (role none). Plain status text such as a clock; never a menu or a control. */
+/**
+ * A slot at the inline end of the row, outside the menubar role, so its text
+ * is read in the page. Plain status text such as a clock; never a menu or a
+ * control. Put it last among the Menubar children.
+ */
 export function MenubarEnd(props: MenubarEndProps) {
-  return <div role="none" {...props} data-part="end" />;
+  return <div {...props} data-part="end" />;
 }
 
 // ------------------------------------------------------------------ items

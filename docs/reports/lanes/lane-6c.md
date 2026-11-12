@@ -5,7 +5,7 @@ Branch `claude/ds-lane-6c`, from `claude/relaxed-hypatia-7gseap`.
 | Order | Component | Status | Commits |
 | --- | --- | --- | --- |
 | 1.6.9 | ContextMenu | done | `wo-1.6.9: ContextMenu`, `wo-1.6.9: ContextMenu review fixes` |
-| 1.6.10 | Menubar | done | `wo-1.6.10: Menubar`, then review fixes (see below) |
+| 1.6.10 | Menubar | done | `wo-1.6.10: Menubar`, `wo-1.6.10: Menubar review fixes` |
 
 Proof, at the last commit: `npm run check` green;
 `npm run contract -- --framework react --component ContextMenu,Menubar,DropdownMenu`
@@ -118,7 +118,7 @@ Review (one round, fresh ds-qa subagent):
   (headless Linux). If it shows, the menu re-anchors at the same item or
   the browser menu shows; the fix is to swallow the next native
   `contextmenu` after a key open. Needs a Windows check.
-- Open, note: the menubar block landed with 1.6.9, ahead of its order.
+- Left, note: the menubar block landed with 1.6.9, ahead of its order.
 - Answered, note: `packages/css/src/index.css`, `packages/styles/desk/index.css`
   and `manifests.gen.json` changed more than this lane's files (ButtonGroup,
   Link, DropdownMenu imports). That is `npm run gen` catching up with the
@@ -134,7 +134,8 @@ Radix Menubar. Files: `packages/react/src/components/Menubar/`,
 `docs/reports/shots/wave-1/menubar/`.
 
 ```tsx
-<Menubar aria-label="Application menu" size?="sm" | "md" value? defaultValue?="" onValueChange? loop?={true}>
+<Menubar aria-label="Application menu" size?="sm" | "md" value? defaultValue?="" onValueChange? loop?={true} className? style?>
+  // className and style go to the root; every other prop (aria-label included) to the bar
   <MenubarMenu value?>                       // renders no element
     <MenubarTrigger disabled?>File</MenubarTrigger>
     <MenubarContent side?="block-end" align?="start" sideOffset?={4} collisionPadding?={8}>
@@ -148,17 +149,20 @@ Radix Menubar. Files: `packages/react/src/components/Menubar/`,
 </Menubar>
 ```
 
-DOM: `div[data-ds=menubar][role=menubar][data-size]` >
-`button[data-part=trigger][role=menuitem]` > `span[data-part=text][data-text]`,
-and `div[data-part=end][role=none]`. Each menu:
+DOM: `div[data-ds=menubar][data-size]` (the row, no role) >
+`div[data-part=bar][role=menubar]` > `button[data-part=trigger][role=menuitem]`
+> `span[data-part=text][data-text]`; and, next to the bar,
+`div[data-part=end]`. Each menu:
 `div[data-ds=dropdown-menu][data-part=content]` in a
 `[data-ds=theme][data-menu-layer=menubar]` layer; submenus
 `data-part="sub-content"`.
 
 Decisions:
 
-- **Anatomy differs from the order:** root, `trigger`, `text`, `content`,
-  `end`. No `menu` part: Radix `Menubar.Menu` renders no element, and a
+- **Anatomy differs from the order:** root, `bar`, `trigger`, `text`,
+  `content`, `end`. The `bar` part holds role menubar, so the `end` slot
+  sits outside that role (role menubar may own only menu items and
+  groups; text inside it is never reached in menu mode). No `menu` part: Radix `Menubar.Menu` renders no element, and a
   wrapper would add DOM for nothing. A `text` part was added (below). Item
   parts belong to the nested dropdown-menu root, per anatomy.md.
 - **The trigger is not a system Button.** Radix renders the `<button>` (no
@@ -173,8 +177,15 @@ Decisions:
   `content: attr(data-text) / ''` so it is never read), so the row never
   shifts. A title passed as a node gets no reservation.
 - **Row wraps** at narrow widths instead of scrolling (WCAG 1.4.10).
-- **`MenubarEnd` has `role="none"`** inside role menubar; it holds status
-  text only. axe is clean in every style, scheme and direction.
+- **`MenubarEnd` sits outside role menubar**, as a sibling of the bar;
+  Menubar pulls it out of its children. Status text only.
+- **Disabled title** keeps the native `disabled` Radix Menubar sets (out of
+  the arrow key order): an exception to anatomy rule 5, written in the
+  manifest. Making it aria-disabled would need Radix to treat it as enabled
+  for roving focus and still never open it, which its content keydown path
+  does not allow.
+- **Escape focuses the title at once**, instead of after the exit motion
+  (Radix returns focus on unmount). Found through a flaky contract run.
 - **Sizes:** md row `size.control.md`, trigger `size.control.sm`; sm row
   `size.control.sm`, trigger `size.control.xs`. Menus take the same size.
 - **Desk recipe:** the blur behind `color.material.menubar`, regular and
@@ -203,6 +214,22 @@ Coverage instead:
 
 A suite option for "the trigger opens a root of another kind" (here a
 dropdown-menu) would let Menubar run the open checks; see below.
+
+Review (one round, fresh ds-qa subagent):
+
+- Fixed, blocker: `MenubarEnd` inside role menubar. Now a sibling of the
+  `bar` part.
+- Fixed, blocker: the manifest said disabled titles get aria-disabled. It
+  now says native disabled and records the exception.
+- Fixed, notes: typeahead works in menus, not on titles (manifest); the
+  open state swaps `--_menubar-trigger-fg` instead of writing `color`; the
+  `::after` copy on the text part is explained in a comment; the `-open`
+  suffix is written down in the header; the end slot and titles shrink and
+  wrap; "Paste here" is now "Paste selection"; the Arabic recent boards are
+  in Arabic.
+- Left, note: the item parts are not in the Menubar anatomy. They belong to
+  the nested dropdown-menu root (anatomy.md, own parts only); the manifest
+  notes say so.
 
 ## Changes needed from the lead
 

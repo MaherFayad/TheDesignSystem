@@ -38,7 +38,7 @@ const copy = {
     redo: 'Redo change',
     cut: 'Cut selection',
     copySel: 'Copy selection',
-    paste: 'Paste here',
+    paste: 'Paste selection',
     remove: 'Delete selection',
     grid: 'Show grid',
     rulers: 'Show rulers',
@@ -48,6 +48,7 @@ const copy = {
     docs: 'Read the guide',
     keys: 'Show shortcuts',
     clock: 'Thu 12 Nov 9:41',
+    recentBoards: ['Spring launch', 'Brand refresh', 'Checkout flow'],
   },
   ar: {
     bar: 'قائمة التطبيق',
@@ -65,7 +66,7 @@ const copy = {
     redo: 'إعادة',
     cut: 'قص التحديد',
     copySel: 'نسخ التحديد',
-    paste: 'لصق',
+    paste: 'لصق التحديد',
     remove: 'حذف التحديد',
     grid: 'إظهار الشبكة',
     rulers: 'إظهار المساطر',
@@ -75,6 +76,7 @@ const copy = {
     docs: 'قراءة الدليل',
     keys: 'عرض الاختصارات',
     clock: 'الخميس 12 نوفمبر 9:41',
+    recentBoards: ['إطلاق الربيع', 'تحديث الهوية', 'مسار الدفع'],
   },
 } as const;
 
@@ -100,9 +102,9 @@ function AppMenubar({ size, lang = 'en', defaultValue }: { size?: MenubarSize; l
           <MenubarSub>
             <MenubarSubTrigger start="history">{t.recent}</MenubarSubTrigger>
             <MenubarSubContent>
-              <MenubarItem>Spring launch</MenubarItem>
-              <MenubarItem>Brand refresh</MenubarItem>
-              <MenubarItem>Checkout flow</MenubarItem>
+              {t.recentBoards.map((name) => (
+                <MenubarItem key={name}>{name}</MenubarItem>
+              ))}
             </MenubarSubContent>
           </MenubarSub>
           <MenubarSeparator />
