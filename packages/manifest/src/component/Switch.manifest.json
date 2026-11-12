@@ -185,7 +185,10 @@
       "example": "Switch.demo.tsx"
     },
     "angular": {
-      "status": "planned"
+      "status": "ready",
+      "behavior": "div[dsSwitch], hand built on a native button with the Radix Switch DOM, ControlValueAccessor",
+      "example": "switch.demo.ts",
+      "note": "The host is the root. Inputs take the React prop names; onCheckedChange is the checkedChange output of [(checked)]. stateText takes { on, off } text. aria-label, aria-labelledby and aria-describedby are inputs, as React spreads them on the control. Behavior by hand with the Radix DOM: Space and Enter toggle, read only keeps the value and focus, a hidden native checkbox inside a form. Works with reactive and template forms. Switch.css is used as is."
     },
     "native": {
       "status": "planned"
