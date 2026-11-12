@@ -3,9 +3,13 @@
  * desktop/desktop.css, the same rows the Desk DropdownMenu recipe draws.
  *
  * What tokens cannot say:
- * - the lit row takes the yellow primary fill with dark text, while Studio
- *   lights it with the overlay step;
- * - the keyboard ring on the yellow row is the on-primary ring color;
+ * - the lit row is a soft highlight (overlay-10: white at 10% in dark, ink
+ *   at 10% in light) with the text bright and the achromatic ring, not a
+ *   yellow fill (order 1.24, proposed); the popups of Combobox,
+ *   Autocomplete, MultiSelect and TagField take the same rows;
+ * - the selected row is marked by the yellow check (primary on surface:
+ *   yellow in dark, a deep gold in light) and the medium weight, never by
+ *   the fill alone (WCAG 1.4.1);
  * - Desk rows use the regular weight and the panel radius family: a 12px
  *   box with 8px rows inside.
  */
@@ -14,10 +18,18 @@
     --_list-box-radius: var(--ds-radius-panel);
     --_list-box-option-radius: var(--ds-radius-field);
     --_list-box-option-font-weight: var(--ds-font-weight-regular);
-    --_list-box-option-bg-highlight: var(--ds-color-primary-fill);
-    --_list-box-option-fg-highlight: var(--ds-color-primary-text);
-    --_list-box-option-ring-color: var(--ds-color-focus-ring-on-primary-inner);
-    --_list-box-separator-color: var(--ds-color-border-hairline);
+    --_list-box-option-bg-highlight: var(--ds-color-bg-overlay-10);
+    --_list-box-option-fg-highlight: var(--ds-color-text-bright);
+    --_list-box-option-ring-color: var(--ds-color-focus-ring);
+    --_list-box-separator-color: var(--ds-color-material-glass-border);
+  }
+
+  [data-style='desk'] [data-ds='list-box'] [data-part='option']:is([data-selected], [aria-selected='true']) {
+    --_list-box-option-font-weight: var(--ds-font-weight-medium);
+  }
+
+  [data-style='desk'] [data-ds='list-box'] [data-part='option'] > [data-part='indicator'] {
+    color: var(--ds-color-primary-on-surface);
   }
 
   @media (forced-colors: active) {

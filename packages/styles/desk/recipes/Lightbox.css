@@ -1,0 +1,75 @@
+/*
+ * Desk recipe for Lightbox. Order 1.24 (proposed): the photo is laid on a
+ * dimmed, blurred desk, and the controls are glass pills.
+ *
+ * What tokens cannot say:
+ * - the panel is the desk color at 88% over a backdrop that blurs the page
+ *   (blur.window-strong), so the desk shows through, dim and soft, instead
+ *   of a flat black sheet;
+ * - the toolbar and the side buttons are pills with the light edge on the
+ *   solid glass color: the icon keeps its own opaque fill over any photo
+ *   (WCAG 1.4.11), as the base rule asks.
+ *
+ * Under reduced transparency and more contrast the panel is the solid desk
+ * color and the blur goes; in forced colors it is Canvas.
+ */
+@layer ds.recipes {
+  [data-style='desk'] [data-ds='lightbox'] {
+    --_lightbox-bg: color-mix(in srgb, var(--ds-color-bg-body) 88%, transparent);
+    --_lightbox-scrim: transparent;
+    --_lightbox-nav-bg: var(--ds-color-material-glass-solid);
+    --_lightbox-nav-bg-hover: var(--ds-color-bg-surface-2);
+    --_lightbox-nav-bg-active: var(--ds-color-bg-surface-3);
+    --_lightbox-nav-border-color: var(--ds-color-material-glass-border);
+  }
+
+  [data-style='desk'] [data-ds='lightbox'] > [data-part='backdrop'] {
+    -webkit-backdrop-filter: blur(var(--ds-blur-window-strong)) saturate(var(--ds-blur-window-saturation));
+    backdrop-filter: blur(var(--ds-blur-window-strong)) saturate(var(--ds-blur-window-saturation));
+  }
+
+  [data-style='desk'] [data-ds='lightbox'] > [data-part='panel'] > :is([data-part='toolbar'] > [data-ds='icon-button'], [data-ds='icon-button']:is([data-part='previous'], [data-part='next'])) {
+    --_button-radius: var(--ds-radius-pill);
+    --_button-shadow: inset 0 var(--ds-border-width-default) 0 var(--ds-color-material-glass-edge), var(--ds-elevation-tooltip);
+  }
+
+  [data-style='desk'] [data-ds='lightbox'] > [data-part='panel'] > [data-part='toolbar'] > [data-ds='icon-button'] {
+    --_button-bg: var(--ds-color-material-glass-solid);
+    --_button-bg-hover: var(--ds-color-bg-surface-2);
+    --_button-bg-active: var(--ds-color-bg-surface-3);
+    --_button-border-color: var(--ds-color-material-glass-border);
+    --_button-border-color-hover: var(--ds-color-material-glass-border);
+  }
+
+  @media (prefers-reduced-transparency: reduce), (prefers-contrast: more) {
+    [data-style='desk'] [data-ds='lightbox'] {
+      --_lightbox-bg: var(--ds-color-bg-body);
+    }
+
+    [data-style='desk'] [data-ds='lightbox'] > [data-part='backdrop'] {
+      -webkit-backdrop-filter: none;
+      backdrop-filter: none;
+    }
+  }
+
+  @media (forced-colors: active) {
+    [data-style='desk'] [data-ds='lightbox'] {
+      --_lightbox-bg: Canvas;
+    }
+
+    [data-style='desk'] [data-ds='lightbox'] > [data-part='backdrop'] {
+      -webkit-backdrop-filter: none;
+      backdrop-filter: none;
+    }
+  }
+
+  [data-style='desk'][data-contrast='more'] [data-ds='lightbox'] {
+    --_lightbox-bg: var(--ds-color-bg-body);
+  }
+
+  @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+    [data-style='desk'] [data-ds='lightbox'] {
+      --_lightbox-bg: var(--ds-color-bg-body);
+    }
+  }
+}

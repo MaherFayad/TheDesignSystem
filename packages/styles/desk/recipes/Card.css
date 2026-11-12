@@ -1,0 +1,25 @@
+/*
+ * Desk recipe for Card. Order 1.24 (proposed): a card is an object lying on
+ * the desk, content on a solid surface (glass is for overlays and chrome):
+ * the surface, the glass hairline inside its edge, the light edge and a
+ * short shadow under it (elevation.card), and the card radius (16px).
+ */
+@layer ds.recipes {
+  [data-style='desk'] [data-ds='card']:not([data-emphasis='soft'], [data-emphasis='solid']) {
+    --_card-border-color: var(--ds-color-material-glass-border);
+  }
+
+  [data-style='desk'] [data-ds='card'] {
+    --_card-radius: var(--ds-radius-card);
+  }
+
+  @media (prefers-contrast: more) {
+    [data-style='desk'] [data-ds='card']:not([data-emphasis='soft'], [data-emphasis='solid']) {
+      --_card-border-color: var(--ds-color-border-strong);
+    }
+  }
+
+  [data-style='desk'][data-contrast='more'] [data-ds='card']:not([data-emphasis='soft'], [data-emphasis='solid']) {
+    --_card-border-color: var(--ds-color-border-strong);
+  }
+}

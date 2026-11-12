@@ -1,0 +1,39 @@
+/*
+ * Desk recipe for the field family: Input, PasswordField, the Select
+ * trigger, Combobox, Autocomplete, MultiSelect and SearchField. Order 1.24 (proposed).
+ *
+ * Desk fields are filled pills, not Studio's bordered transparent pills:
+ * the control fill (white at 8% in dark, ink at 6% in light) inside the
+ * control border, the pill radius from radius.control, and the label text
+ * one step larger (the Desk type scale). The border keeps its 3:1 control
+ * color (WCAG 1.4.11). A read only field keeps its own quiet fill and dashed
+ * border; the search band of CommandPalette and the MultiSelect popup keep
+ * their own look (they are parts, not fields on the desk). Forced colors
+ * replace the fill with the system field color by themselves.
+ */
+@layer ds.recipes {
+  /* A nested input (the control part of SearchField or PasswordField) stays clear: its field draws the fill. */
+  [data-style='desk'] [data-ds='input']:not([data-part], [data-readonly]) {
+    --_input-bg: var(--ds-control-fill-default);
+  }
+
+  [data-style='desk'] [data-ds='password-field']:not([data-part], [data-readonly]) {
+    --_password-field-bg: var(--ds-control-fill-default);
+  }
+
+  [data-style='desk'] [data-ds='select']:not([data-part], [data-readonly]) {
+    --_select-bg: var(--ds-control-fill-default);
+  }
+
+  [data-style='desk'] :is([data-ds='combobox'], [data-ds='autocomplete']):not([data-part], [data-readonly]) {
+    --_combobox-bg: var(--ds-control-fill-default);
+  }
+
+  [data-style='desk'] [data-ds='multi-select']:not([data-part], [data-readonly]) {
+    --_multi-select-bg: var(--ds-control-fill-default);
+  }
+
+  [data-style='desk'] [data-ds='search-field']:not([data-part], [data-readonly]) {
+    --_search-field-bg: var(--ds-control-fill-default);
+  }
+}

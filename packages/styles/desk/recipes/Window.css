@@ -22,4 +22,31 @@
   [data-style='desk'][data-scheme='light'] [data-ds='window-layer']::before {
     filter: invert(1);
   }
+
+  /*
+   * Order 1.24 (proposed): the page is the desk too. The Theme element that
+   * paints the desk color lays the same grain over it, as a background
+   * image, so every object (a card, a window, a menu) lies on grain. The
+   * tile carries its own strength (alpha 0.1, the grain opacity of 0.14
+   * times the tile's 0.7), since a background image takes no opacity. Light
+   * Desk takes the dark tile. Under reduced transparency and more contrast
+   * the desk is plain.
+   */
+  [data-style='desk'][data-ds='theme'][data-scheme='dark'] {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 .1 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  [data-style='desk'][data-ds='theme'][data-scheme='light'] {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .1 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  @media (prefers-reduced-transparency: reduce), (prefers-contrast: more), (forced-colors: active) {
+    [data-style='desk'][data-ds='theme'][data-scheme] {
+      background-image: none;
+    }
+  }
+
+  [data-style='desk'][data-ds='theme'][data-scheme][data-contrast='more'] {
+    background-image: none;
+  }
 }
