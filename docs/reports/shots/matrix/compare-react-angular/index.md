@@ -2,7 +2,7 @@
 
 Made by `npm run shots -- --compare react angular`. pixelmatch threshold 0.1; a pair passes when at most 0.5 percent of pixels differ and the sizes match.
 
-148 pairs, 148 pass, 0 fail. Only in react: 68. Only in angular: 0.
+172 pairs, 172 pass, 0 fail. Only in react: 68. Only in angular: 0.
 
 | File | Result | Differing pixels | Where | Diff |
 | --- | --- | --- | --- | --- |
@@ -88,6 +88,30 @@ Made by `npm run shots -- --compare react angular`. pixelmatch threshold 0.1; a 
 | dialog/studio-light-ltr.png | pass | 0 (0.000 percent) |  | none |
 | dialog/studio-light-rtl-open.png | pass | 0 (0.000 percent) |  | none |
 | dialog/studio-light-rtl.png | pass | 0 (0.000 percent) |  | none |
+| dropdown-menu/desk-dark-ltr-open.png | pass | 0 (0.000 percent) |  | none |
+| dropdown-menu/desk-dark-ltr.png | pass | 0 (0.000 percent) |  | none |
+| dropdown-menu/desk-dark-rtl-open.png | pass | 0 (0.000 percent) |  | none |
+| dropdown-menu/desk-dark-rtl.png | pass | 0 (0.000 percent) |  | none |
+| dropdown-menu/desk-light-ltr-open.png | pass | 0 (0.000 percent) |  | none |
+| dropdown-menu/desk-light-ltr.png | pass | 0 (0.000 percent) |  | none |
+| dropdown-menu/desk-light-rtl-open.png | pass | 0 (0.000 percent) |  | none |
+| dropdown-menu/desk-light-rtl.png | pass | 0 (0.000 percent) |  | none |
+| dropdown-menu/neutral-dark-ltr-open.png | pass | 0 (0.000 percent) |  | none |
+| dropdown-menu/neutral-dark-ltr.png | pass | 0 (0.000 percent) |  | none |
+| dropdown-menu/neutral-dark-rtl-open.png | pass | 0 (0.000 percent) |  | none |
+| dropdown-menu/neutral-dark-rtl.png | pass | 0 (0.000 percent) |  | none |
+| dropdown-menu/neutral-light-ltr-open.png | pass | 0 (0.000 percent) |  | none |
+| dropdown-menu/neutral-light-ltr.png | pass | 0 (0.000 percent) |  | none |
+| dropdown-menu/neutral-light-rtl-open.png | pass | 0 (0.000 percent) |  | none |
+| dropdown-menu/neutral-light-rtl.png | pass | 0 (0.000 percent) |  | none |
+| dropdown-menu/studio-dark-ltr-open.png | pass | 0 (0.000 percent) |  | none |
+| dropdown-menu/studio-dark-ltr.png | pass | 0 (0.000 percent) |  | none |
+| dropdown-menu/studio-dark-rtl-open.png | pass | 0 (0.000 percent) |  | none |
+| dropdown-menu/studio-dark-rtl.png | pass | 0 (0.000 percent) |  | none |
+| dropdown-menu/studio-light-ltr-open.png | pass | 0 (0.000 percent) |  | none |
+| dropdown-menu/studio-light-ltr.png | pass | 0 (0.000 percent) |  | none |
+| dropdown-menu/studio-light-rtl-open.png | pass | 0 (0.000 percent) |  | none |
+| dropdown-menu/studio-light-rtl.png | pass | 0 (0.000 percent) |  | none |
 | floating-action-button/desk-dark-ltr-comfortable.png | pass | 0 (0.000 percent) |  | none |
 | floating-action-button/desk-dark-ltr-compact.png | pass | 0 (0.000 percent) |  | none |
 | floating-action-button/desk-dark-ltr.png | pass | 0 (0.000 percent) |  | none |

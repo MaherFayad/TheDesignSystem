@@ -6804,8 +6804,10 @@
         "note": "The content and each submenu are portaled into a Theme that copies the axes of the Theme the menu is in (the Toaster pattern), so tokens, language and direction apply inside. A submenu is its own root carrying data-part sub-content."
       },
       "angular": {
-        "status": "planned",
-        "behavior": "cdk:menu"
+        "status": "ready",
+        "behavior": "hand built on the CDK (Portal, Directionality) with Radix DropdownMenu's keys and focus rules; positioning in behavior/popper.ts",
+        "example": "dropdown-menu.demo.ts",
+        "note": "Root on an ng-container (dsDropdownMenu), dsDropdownMenuTrigger on the system button, the content and each submenu are ng-templates rendered through a CDK ComponentPortal whose host is the themed layer (data-menu-layer), as in React. onOpenChange, onCheckedChange and onValueChange are the openChange, checkedChange and valueChange outputs of [(open)], [(checked)] and [(value)]; onSelect is the select output and preventDefault keeps the menu open. The DOM keeps Radix's attribute and variable names (data-radix-popper-content-wrapper, --radix-dropdown-menu-content-*), which DropdownMenu.css reads. Not done: Radix's focus guard spans in body and the pointer grace area toward a submenu."
       },
       "native": {
         "status": "planned",

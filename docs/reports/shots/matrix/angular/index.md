@@ -2,7 +2,7 @@
 
 Made by `npm run shots`. Each shot is the `variants` case at `chrome=0`, 1280 by 800 viewport, full page, device scale factor 1, animations off, reduced motion, fonts loaded. File names: `<component>/<style>-<scheme>-<dir>[-<density>][-open].png`. Density is default unless named.
 
-148 shots, 9 components, 13.40 MB. Stable (two captures byte equal): 148; unstable: 0; not verified: 0.
+172 shots, 10 components, 14.00 MB. Stable (two captures byte equal): 172; unstable: 0; not verified: 0.
 
 The full list with sizes and hashes is in `captured.json`.
 
@@ -87,6 +87,17 @@ Densities, dark, ltr en:
 | desk | light | [ltr](dialog/desk-light-ltr.png) | [rtl](dialog/desk-light-rtl.png) | [ltr open](dialog/desk-light-ltr-open.png) | [rtl open](dialog/desk-light-rtl-open.png) |
 | studio | dark | [ltr](dialog/studio-dark-ltr.png) | [rtl](dialog/studio-dark-rtl.png) | [ltr open](dialog/studio-dark-ltr-open.png) | [rtl open](dialog/studio-dark-rtl-open.png) |
 | studio | light | [ltr](dialog/studio-light-ltr.png) | [rtl](dialog/studio-light-rtl.png) | [ltr open](dialog/studio-light-ltr-open.png) | [rtl open](dialog/studio-light-rtl-open.png) |
+
+## DropdownMenu
+
+| Style | Scheme | ltr en | rtl ar | ltr open | rtl open |
+| --- | --- | --- | --- | --- | --- |
+| desk | dark | [ltr](dropdown-menu/desk-dark-ltr.png) | [rtl](dropdown-menu/desk-dark-rtl.png) | [ltr open](dropdown-menu/desk-dark-ltr-open.png) | [rtl open](dropdown-menu/desk-dark-rtl-open.png) |
+| desk | light | [ltr](dropdown-menu/desk-light-ltr.png) | [rtl](dropdown-menu/desk-light-rtl.png) | [ltr open](dropdown-menu/desk-light-ltr-open.png) | [rtl open](dropdown-menu/desk-light-rtl-open.png) |
+| neutral | dark | [ltr](dropdown-menu/neutral-dark-ltr.png) | [rtl](dropdown-menu/neutral-dark-rtl.png) | [ltr open](dropdown-menu/neutral-dark-ltr-open.png) | [rtl open](dropdown-menu/neutral-dark-rtl-open.png) |
+| neutral | light | [ltr](dropdown-menu/neutral-light-ltr.png) | [rtl](dropdown-menu/neutral-light-rtl.png) | [ltr open](dropdown-menu/neutral-light-ltr-open.png) | [rtl open](dropdown-menu/neutral-light-rtl-open.png) |
+| studio | dark | [ltr](dropdown-menu/studio-dark-ltr.png) | [rtl](dropdown-menu/studio-dark-rtl.png) | [ltr open](dropdown-menu/studio-dark-ltr-open.png) | [rtl open](dropdown-menu/studio-dark-rtl-open.png) |
+| studio | light | [ltr](dropdown-menu/studio-light-ltr.png) | [rtl](dropdown-menu/studio-light-rtl.png) | [ltr open](dropdown-menu/studio-light-ltr-open.png) | [rtl open](dropdown-menu/studio-light-rtl-open.png) |
 
 ## FloatingActionButton
 
