@@ -2965,9 +2965,10 @@
         "note": "No motion: the group itself never moves; the children keep their own (Button press). The axes reach the children through ButtonGroupContext and, for direct children, as props they leave unset."
       },
       "angular": {
-        "status": "planned",
-        "behavior": "[dsButtonGroup] host bindings, an injection token for the axes",
-        "note": "The host div is the root. Grouped dsButton directives read the axes from the token and let their own inputs win. ButtonGroup.css is used as is."
+        "status": "ready",
+        "behavior": "div[dsButtonGroup] host bindings, the DS_BUTTON_GROUP injection token for the axes",
+        "example": "button-group.demo.ts",
+        "note": "The host div is the root. Every directive on DsButtonBase reads the axes from the token and lets its own input win; DI follows the template where the child is declared, so a wrapper element between them is fine. The name is the native aria-label or aria-labelledby. ButtonGroup.css is used as is."
       },
       "native": {
         "status": "planned",
@@ -4337,8 +4338,10 @@
         "example": "CloseButton.demo.tsx"
       },
       "angular": {
-        "status": "planned",
-        "behavior": "button[dsCloseButton] on the shared Button.css"
+        "status": "ready",
+        "behavior": "button[dsCloseButton] and a[dsCloseButton] on DsButtonBase",
+        "example": "close-button.demo.ts",
+        "note": "No asChild: a[dsCloseButton] is the link form. The default name follows the lang of the nearest dsTheme. tone and loading are inherited inputs of the base; leave them unset."
       },
       "native": {
         "status": "planned",
@@ -5832,8 +5835,10 @@
         "example": "CopyButton.demo.tsx"
       },
       "angular": {
-        "status": "planned",
-        "behavior": "button[dsCopyButton] on the shared Button.css"
+        "status": "ready",
+        "behavior": "button[dsCopyButton] on DsButtonBase, the clipboard inside the click handler",
+        "example": "copy-button.demo.ts",
+        "note": "onCopied and onCopyFailed are the copied and copyFailed outputs. A (click) of the caller that calls preventDefault cancels the copy, as onClick does in React. The copy logic is a copy of the React copy.ts until it moves to packages/shared."
       },
       "native": {
         "status": "planned",
@@ -7147,8 +7152,10 @@
         "note": "The content and each submenu are portaled into a Theme that copies the axes of the Theme the menu is in (the Toaster pattern), so tokens, language and direction apply inside. A submenu is its own root carrying data-part sub-content."
       },
       "angular": {
-        "status": "planned",
-        "behavior": "cdk:menu"
+        "status": "ready",
+        "behavior": "hand built on the CDK (Portal, Directionality) with Radix DropdownMenu's keys and focus rules; positioning in behavior/popper.ts",
+        "example": "dropdown-menu.demo.ts",
+        "note": "Root on an ng-container (dsDropdownMenu), dsDropdownMenuTrigger on the system button, the content and each submenu are ng-templates rendered through a CDK ComponentPortal whose host is the themed layer (data-menu-layer), as in React. onOpenChange, onCheckedChange and onValueChange are the openChange, checkedChange and valueChange outputs of [(open)], [(checked)] and [(value)]; onSelect is the select output and preventDefault keeps the menu open. The DOM keeps Radix's attribute and variable names (data-radix-popper-content-wrapper, --radix-dropdown-menu-content-*), which DropdownMenu.css reads. Not done: Radix's focus guard spans in body and the pointer grace area toward a submenu."
       },
       "native": {
         "status": "planned",
@@ -8270,8 +8277,10 @@
         "example": "FloatingActionButton.demo.tsx"
       },
       "angular": {
-        "status": "planned",
-        "behavior": "button[dsFloatingActionButton] on the shared Button.css"
+        "status": "ready",
+        "behavior": "button[dsFloatingActionButton] and a[dsFloatingActionButton] on DsButtonBase",
+        "example": "floating-action-button.demo.ts",
+        "note": "No asChild: the a form is the link. icon takes an icon name or a TemplateRef. Emphasis is always solid; size defaults to lg and does not take the size of a ButtonGroup, as in React."
       },
       "native": {
         "status": "planned",
@@ -11074,9 +11083,10 @@
         "note": "No motion: color and underline swap at once on hover, so there is no pattern to name and nothing to reduce."
       },
       "angular": {
-        "status": "planned",
-        "behavior": "a[dsLink], host bindings",
-        "note": "The host anchor is the root. No asChild: a[dsLink] on a routerLink anchor is the router form."
+        "status": "ready",
+        "behavior": "a[dsLink], host bindings, a capture listener blocks click and auxclick while disabled",
+        "example": "link.demo.ts",
+        "note": "The host anchor is the root. No asChild: a[dsLink] on a routerLink anchor is the router form. href, target, rel, role and tabIndex are inputs so disabled and external can rewrite them."
       },
       "native": {
         "status": "planned",
@@ -20044,9 +20054,10 @@
         "note": "The menu opens with menu-scale from the trigger side, aligned to the control's inline end; each half keeps Button's press, and the open trigger's chevron turns over (transform, quick duration, instant under reduced motion). The seam is drawn by SplitButton.css through Button's private corner properties. Inside a ButtonGroup, unset size, emphasis and shape come from the group."
       },
       "angular": {
-        "status": "planned",
-        "behavior": "[dsSplitButton] host with button[dsButton] and a cdk:menu trigger",
-        "note": "SplitButton.css is used as is: the host div is the root, the halves carry data-part action and trigger."
+        "status": "ready",
+        "behavior": "div[dsSplitButton] composed of dsButton, dsIconButton with dsDropdownMenuTrigger and dsDropdownMenuContent",
+        "example": "split-button.demo.ts",
+        "note": "The menu items come in an ng-template dsSplitButtonMenu, not as projected content: they render in the menu layer and their DI must reach the menu, which the host provides. label is a string. onClick is the action output (a click output would also fire for clicks on the trigger, since the native click bubbles to the host). onOpenChange is the openChange output of [(open)]. actionRef has no input: read the action through the dsSplitButton exportAs or a query. SplitButton.css is used as is."
       },
       "native": {
         "status": "planned",
@@ -24065,8 +24076,10 @@
         "example": "ToggleButton.demo.tsx"
       },
       "angular": {
-        "status": "planned",
-        "behavior": "button[dsToggleButton] on the shared Button.css"
+        "status": "ready",
+        "behavior": "button[dsToggleButton] on DsButtonBase, host bindings",
+        "example": "toggle-button.demo.ts",
+        "note": "aria-pressed and data-state on the host, as Radix Toggle sets them. onPressedChange is the pressedChange output of [(pressed)]; defaultPressed seeds the local state when pressed is not bound. start, end and icon take an icon name or a TemplateRef. Button.css is used as is."
       },
       "native": {
         "status": "planned",

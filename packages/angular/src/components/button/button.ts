@@ -20,7 +20,6 @@ import { DsButtonBase, isIconName, type ButtonEmphasis, type ButtonSlotContent }
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     'data-ds': 'button',
-    '[attr.data-emphasis]': 'emphasis()',
     '[attr.data-full-width]': 'fullWidth() ? "" : null',
     '[attr.data-wrap]': 'wrap() ? "" : null',
   },
@@ -51,8 +50,9 @@ import { DsButtonBase, isIconName, type ButtonEmphasis, type ButtonSlotContent }
   `,
 })
 export class DsButton extends DsButtonBase {
-  /** How loud the button is. Default soft. tone accent with emphasis solid is the primary action. */
-  readonly emphasis = input<ButtonEmphasis>('soft');
+  /** How loud the button is. Default soft, or the emphasis of the ButtonGroup. tone accent with emphasis solid is the primary action. */
+  readonly emphasis = input<ButtonEmphasis | undefined>(undefined);
+  protected readonly defaultEmphasis: ButtonEmphasis = 'soft';
   /** Leading content before the label: an icon name or a template. */
   readonly start = input<ButtonSlotContent | undefined>(undefined);
   /** Trailing content after the label: an icon name or a template. */
