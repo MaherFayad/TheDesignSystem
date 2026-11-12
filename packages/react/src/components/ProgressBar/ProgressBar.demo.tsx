@@ -9,14 +9,14 @@ const tones: ProgressBarTone[] = ['accent', 'success', 'warning', 'danger'];
 const toneLabel: Record<ProgressBarTone, string> = {
   accent: 'Uploading files',
   success: 'Backup finished',
-  warning: 'Storage almost full',
+  warning: 'Upload slowing down',
   danger: 'Upload stopped',
 };
 
 const toneLabelAr: Record<ProgressBarTone, string> = {
   accent: 'رفع الملفات',
   success: 'اكتمال النسخة الاحتياطية',
-  warning: 'المساحة قربت تخلص',
+  warning: 'بطء الرفع',
   danger: 'توقف الرفع',
 };
 

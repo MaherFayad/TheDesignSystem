@@ -1,10 +1,13 @@
+import { readFileSync } from 'node:fs';
+import { join } from 'node:path';
 import { createRef } from 'react';
 import { render, screen } from '@testing-library/react';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import { Theme } from '../../theme';
 import ProgressBarDemo from './ProgressBar.demo';
 import { clampValue, formatNumber, formatPercent, loadingLabelFor, validMax } from './format';
 import { ProgressBar } from './index';
+import { fillOnTrack, fillTokens, pairs } from './fillContrast.test-util';
 
 function root(container: HTMLElement): HTMLElement {
   const el = container.querySelector<HTMLElement>('[data-ds="progress-bar"]');
@@ -137,5 +140,43 @@ describe('progress format helpers', () => {
     expect(validMax(5, 0, 100)).toBe(5);
     expect(loadingLabelFor('ar-SA')).toBe('جار التحميل');
     expect(loadingLabelFor('en')).toBe('Loading');
+  });
+});
+
+describe('ProgressBar fill contrast and reduced motion', () => {
+  const css = readFileSync(join(process.cwd(), 'packages/css/src/components/ProgressBar.css'), 'utf8');
+  const fills = fillTokens(css, 'progress-bar', '--_progress-bar-fill');
+
+  it('sets a fill for every tone', () => {
+    expect(Object.keys(fills).sort()).toEqual(['accent', 'danger', 'success', 'warning']);
+  });
+
+  // WCAG 1.4.11: the fill is the graphic that shows the value. It needs 3:1
+  // against the track in every style and scheme, Neutral dark included.
+  it.each(pairs.map((p) => [p.name, p.body]))('every tone fill holds 3:1 on the track in %s', (_, block) => {
+    for (const [tone, token] of Object.entries(fills)) {
+      expect(fillOnTrack(block, token, 'color-bg-overlay-10'), `${tone} ${token}`).toBeGreaterThanOrEqual(3);
+    }
+  });
+
+  it('under reduced motion the indeterminate form is a still, full color segment away from the inline start', () => {
+    const reduced = /@media \(prefers-reduced-motion: reduce\) \{([\s\S]*?)\n  \}\n/.exec(css)?.[1] ?? '';
+    expect(reduced).toContain("[data-state='indeterminate']");
+    expect(reduced).not.toContain('opacity');
+    expect(reduced).not.toContain('inline-size: 100%');
+    expect(reduced).toMatch(/translateX\(75%\)/);
+    expect(reduced).toMatch(/translateX\(-75%\)/);
+  });
+});
+
+describe('ProgressBar name warning', () => {
+  it('warns in development when the bar has no name', () => {
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    render(<ProgressBar value={10} />);
+    expect(warn).toHaveBeenCalledWith(expect.stringContaining('no accessible name'));
+    warn.mockClear();
+    render(<ProgressBar value={10} aria-label="Import progress" />);
+    expect(warn).not.toHaveBeenCalled();
+    warn.mockRestore();
   });
 });
