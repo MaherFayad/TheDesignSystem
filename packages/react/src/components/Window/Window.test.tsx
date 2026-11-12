@@ -262,6 +262,134 @@ describe('Window', () => {
     expect(document.activeElement).toBe(input);
   });
 
+  it('closing a window with no origin hands focus to the next window, then to the layer', async () => {
+    const user = userEvent.setup();
+    const { container } = render(
+      <Theme style="studio">
+        <WindowLayer label="Open windows">
+          <Window id="a" title="First">
+            A
+          </Window>
+          <Window id="b" title="Second">
+            B
+          </Window>
+        </WindowLayer>
+      </Theme>,
+    );
+    const layer = container.querySelector<HTMLElement>('[data-ds="window-layer"]')!;
+    expect(screen.getByRole('region', { name: 'Open windows' })).toBe(layer);
+    expect(layer.tabIndex).toBe(-1);
+    const b = container.querySelector<HTMLElement>('#b')!;
+    act(() => b.focus());
+    await user.keyboard('{Escape}');
+    await waitFor(() => expect(container.querySelector('#b')).toBeNull());
+    expect(document.activeElement).toBe(container.querySelector('#a'));
+    await user.keyboard('{Escape}');
+    await waitFor(() => expect(container.querySelector('#a')).toBeNull());
+    expect(document.activeElement).toBe(layer);
+  });
+
+  it('minimizing the only window with no origin moves focus to the dock when there is one', async () => {
+    const user = userEvent.setup();
+    function Docked() {
+      const dock = useRef<HTMLButtonElement>(null);
+      const [min, setMin] = useState(false);
+      return (
+        <Theme style="desk">
+          <Button ref={dock}>Open dock</Button>
+          <WindowLayer>
+            <Window title="Notes" dock={dock} minimized={min} onMinimizedChange={setMin}>
+              Body
+            </Window>
+          </WindowLayer>
+        </Theme>
+      );
+    }
+    render(<Docked />);
+    await user.click(screen.getByRole('button', { name: 'Minimize window' }));
+    await waitFor(() => expect(document.activeElement).toBe(screen.getByRole('button', { name: 'Open dock' })));
+  });
+
+  it('the move handle names the keys, moves with the arrows, and Enter zooms', () => {
+    const onFrameChange = vi.fn();
+    const onZoomedChange = vi.fn();
+    const { container } = render(
+      <Theme style="desk">
+        <WindowLayer>
+          <Window
+            title="Notes"
+            defaultFrame={{ x: 100, y: 100, width: 400, height: 300 }}
+            onFrameChange={onFrameChange}
+            onZoomedChange={onZoomedChange}
+          >
+            Body
+          </Window>
+        </WindowLayer>
+      </Theme>,
+    );
+    const layer = container.querySelector<HTMLElement>('[data-ds="window-layer"]')!;
+    giveLayout(layer, root(container));
+    const handle = screen.getByRole('group', { name: 'Move window' });
+    expect(handle.getAttribute('data-part')).toBe('move');
+    expect(handle.tabIndex).toBe(0);
+    expect(handle.closest('[data-ds]')?.getAttribute('data-ds')).toBe('title-bar');
+    const hint = document.getElementById(handle.getAttribute('aria-describedby') ?? '');
+    expect(hint?.textContent).toBe('Arrow keys move the window. Shift moves it further. Enter zooms it.');
+    fireEvent.keyDown(handle, { key: 'ArrowLeft', shiftKey: true });
+    expect(onFrameChange).toHaveBeenLastCalledWith({ x: 36, y: 100, width: 400, height: 300 });
+    // Arrow keys on a light or an action never move the window.
+    onFrameChange.mockClear();
+    fireEvent.keyDown(screen.getByRole('button', { name: 'Close window' }), { key: 'ArrowRight' });
+    expect(onFrameChange).not.toHaveBeenCalled();
+    fireEvent.keyDown(handle, { key: 'Enter' });
+    expect(onZoomedChange).toHaveBeenCalledWith(true);
+  });
+
+  it('in Studio, zoom and minimize are IconButtons next to close when the window can do them', async () => {
+    const user = userEvent.setup();
+    const onMinimizedChange = vi.fn();
+    const { container } = render(
+      <Theme style="studio">
+        <WindowLayer>
+          <Window title="Layers" onMinimizedChange={onMinimizedChange}>
+            Body
+          </Window>
+        </WindowLayer>
+      </Theme>,
+    );
+    const actions = container.querySelector('[data-part="actions"]')!;
+    expect(Array.from(actions.children).map((c) => c.getAttribute('data-part'))).toEqual(['minimize', 'zoom', 'close']);
+    const zoom = screen.getByRole('button', { name: 'Zoom window' });
+    expect(zoom.getAttribute('aria-pressed')).toBe('false');
+    await user.click(zoom);
+    expect(root(container).hasAttribute('data-zoomed')).toBe(true);
+    expect(zoom.getAttribute('aria-pressed')).toBe('true');
+    await user.click(screen.getByRole('button', { name: 'Minimize window' }));
+    expect(onMinimizedChange).toHaveBeenCalledWith(true);
+  });
+
+  it('keyboard focus brings a window to the front, as a pointer does', async () => {
+    const user = userEvent.setup();
+    const { container } = render(
+      <Theme style="studio">
+        <WindowLayer>
+          <Window id="a" title="First">
+            <input aria-label="First field" />
+          </Window>
+          <Window id="b" title="Second">
+            B
+          </Window>
+        </WindowLayer>
+      </Theme>,
+    );
+    const a = container.querySelector<HTMLElement>('#a')!;
+    expect(a.getAttribute('data-state')).toBe('inactive');
+    const field = screen.getByRole('textbox', { name: 'First field' });
+    for (let i = 0; i < 6 && document.activeElement !== field; i++) await user.tab();
+    expect(document.activeElement).toBe(field);
+    expect(a.getAttribute('data-state')).toBe('active');
+  });
+
   it('renders every demo case', () => {
     const { container } = render(<WindowDemo />);
     for (const id of ['variants', 'one', 'many', 'long-text', 'long-arabic', 'disabled']) {

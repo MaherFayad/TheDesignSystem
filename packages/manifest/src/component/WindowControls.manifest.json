@@ -15,39 +15,84 @@
     "A close control in a panel": "IconButton",
     "Other window actions": "IconButton in the TitleBar actions"
   },
-  "anatomy": ["root", "close", "minimize", "zoom"],
+  "anatomy": [
+    "root",
+    "close",
+    "minimize",
+    "zoom"
+  ],
   "props": {
-    "onClose": { "type": "function", "description": "Without it the close light is disabled." },
-    "onMinimize": { "type": "function", "description": "Without it the minimize light is disabled." },
-    "onZoom": { "type": "function", "description": "Without it the zoom light is disabled." },
-    "zoomed": { "type": "boolean", "description": "aria-pressed on the zoom light." },
-    "closeLabel": { "type": "string", "default": "Close window" },
-    "minimizeLabel": { "type": "string", "default": "Minimize window" },
-    "zoomLabel": { "type": "string", "default": "Zoom window" },
-    "label": { "type": "string", "default": "Window controls", "description": "The name of the group." },
-    "active": { "type": "boolean", "default": true, "description": "data-state active: lit. inactive: idle dots until hover or keyboard focus." }
+    "onClose": {
+      "type": "function",
+      "description": "Without it the close light is disabled."
+    },
+    "onMinimize": {
+      "type": "function",
+      "description": "Without it the minimize light is disabled."
+    },
+    "onZoom": {
+      "type": "function",
+      "description": "Without it the zoom light is disabled."
+    },
+    "zoomed": {
+      "type": "boolean",
+      "description": "aria-pressed on the zoom light."
+    },
+    "closeLabel": {
+      "type": "string",
+      "default": "Close window"
+    },
+    "minimizeLabel": {
+      "type": "string",
+      "default": "Minimize window"
+    },
+    "zoomLabel": {
+      "type": "string",
+      "default": "Zoom window"
+    },
+    "label": {
+      "type": "string",
+      "default": "Window controls",
+      "description": "The name of the group."
+    },
+    "active": {
+      "type": "boolean",
+      "default": true,
+      "description": "data-state active or inactive, for hosts and recipes. As in the source, it does not change how the lights look."
+    }
   },
-  "states": ["active", "inactive", "data-disabled"],
+  "states": [
+    "active",
+    "inactive",
+    "data-disabled"
+  ],
   "a11y": {
     "role": "group, named by label. Each light is a native button (IconButton).",
-    "focus": "Each light with a handler is in the tab order with the 2px ring around its 24px target. A light with no handler is aria-disabled and out of the tab order (tabIndex -1): three tab stops that do nothing slow a keyboard down, and a screen reader still finds them, dimmed.",
+    "focus": "Each light with a handler is in the tab order with the 2px ring around its 24px target. A light with no handler is aria-disabled and out of the tab order (tabIndex -1): an accepted exception to the rule that disabled actions stay focusable, because a dead light is inert decoration of the window chrome. A screen reader still finds it, dimmed.",
     "keys": {
       "Enter": "Presses the focused light",
       "Space": "Presses the focused light",
       "Tab": "Moves to the next light with a handler"
     },
     "announce": "Each light is named by its label. The zoom light reports pressed while the window is zoomed.",
-    "native": { "accessibilityRole": "none", "accessibilityState": [] },
+    "native": {
+      "accessibilityRole": "none",
+      "accessibilityState": []
+    },
     "notes": [
-      "Never color alone: the glyphs (x, minus, arrows) show on hover and on keyboard focus of the group, and in forced colors always.",
+      "Never color alone: the glyphs (x, minus, arrows) show with the colors on hover and on keyboard focus of the group, and always in forced colors.",
       "The lights do not mirror in right to left layouts. They keep the order close, minimize, zoom from the left, as macOS draws them and as the source does.",
       "Targets are 24 by 24 px and touch, so light centers are 24px apart (WCAG 2.5.8).",
       "No native title attribute."
     ]
   },
   "content": {
-    "en": { "labels": "Close window, Minimize window, Zoom window. Name the window when several are open: Close notes.txt." },
-    "ar": { "labels": "إغلاق النافذة، تصغير النافذة، تكبير النافذة." }
+    "en": {
+      "labels": "Close window, Minimize window, Zoom window. Name the window when several are open: Close notes.txt."
+    },
+    "ar": {
+      "labels": "إغلاق النافذة، تصغير النافذة، تكبير النافذة."
+    }
   },
   "tokens": [
     "color.window.light-close",
@@ -65,18 +110,38 @@
   ],
   "motion": "press",
   "frameworks": {
-    "react": { "status": "ready", "behavior": "IconButton", "example": "WindowControls.demo.tsx" },
-    "angular": { "status": "planned", "behavior": "[dsWindowControls] with button[dsIconButton]", "note": "WindowControls.css is used as is." },
-    "native": { "status": "not-applicable", "note": "Native apps have no window lights." }
+    "react": {
+      "status": "ready",
+      "behavior": "IconButton",
+      "example": "WindowControls.demo.tsx"
+    },
+    "angular": {
+      "status": "planned",
+      "behavior": "[dsWindowControls] with button[dsIconButton]",
+      "note": "WindowControls.css is used as is."
+    },
+    "native": {
+      "status": "not-applicable",
+      "note": "Native apps have no window lights."
+    }
   },
   "styles": {
     "studio": "Not drawn inside a Window (the controls part is off). Standalone it draws the same lights.",
-    "desk": "The traffic lights at the start of every window title bar."
+    "desk": "The traffic lights at the start of every window title bar. As in the source: idle dots at rest, the three colors on hover or focus within the group; this system adds the glyphs in the same state."
   },
   "mistakes": [
-    { "wrong": "Lights as bare buttons or spans with click handlers", "right": "WindowControls: each light is an IconButton with a label" },
-    { "wrong": "A light that does nothing but stays in the tab order", "right": "Leave out the handler: the light is disabled and skipped" },
-    { "wrong": "Telling the lights apart by color only", "right": "The glyphs show on hover and focus" }
+    {
+      "wrong": "Lights as bare buttons or spans with click handlers",
+      "right": "WindowControls: each light is an IconButton with a label"
+    },
+    {
+      "wrong": "A light that does nothing but stays in the tab order",
+      "right": "Leave out the handler: the light is disabled and skipped"
+    },
+    {
+      "wrong": "Telling the lights apart by color only",
+      "right": "The glyphs show on hover and focus"
+    }
   ],
   "since": "0.1.0"
 }

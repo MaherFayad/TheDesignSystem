@@ -26,6 +26,18 @@
     box-sizing: border-box;
   }
 
+  /* The layer takes focus by script when its last window leaves: an inset ring on keyboard focus. */
+  [data-ds='window-layer']:focus-visible {
+    outline: var(--ds-border-width-strong) solid transparent;
+    box-shadow: inset var(--ds-focus-shadow-ring);
+  }
+
+  @media (forced-colors: active) {
+    [data-ds='window-layer']:focus-visible {
+      outline-color: Highlight;
+    }
+  }
+
   [data-ds='window'] {
     --_window-bg: var(--ds-color-material-glass);
     --_window-fg: var(--ds-color-text-default);
@@ -33,9 +45,10 @@
     --_window-radius: var(--ds-radius-window);
     --_window-shadow: var(--ds-elevation-window);
     --_window-ring: 0 0 transparent;
+    /* Token gap: no backdrop saturation token (suggested blur.window-saturation); 1.3 is the source value. */
     --_window-backdrop: blur(var(--ds-blur-window)) saturate(1.3);
     --_window-edge: var(--ds-space-8xl);
-    /* No size token for a settings window yet (the source is 56rem): 20 large controls, 880px. */
+    /* Token gap: no window.width.settings (the source is 56rem); 20 large controls, 880px, is the nearest. */
     --_window-settings-size: calc(var(--ds-size-control-lg) * 20);
     --_window-padding: var(--ds-space-5xl);
     --_window-cursor: auto;
@@ -133,7 +146,7 @@
     inset: var(--_window-edge);
   }
 
-  /* The finder: as wide as the layer allows, under the top edge. */
+  /* The finder: as wide as the layer allows, under the top edge. Token gap: no window.width.finder-max (the source caps it at 104rem). */
   [data-ds='window'][data-layered][data-kind='finder'] {
     inset-block: var(--_window-edge);
     inset-inline: var(--_window-edge);

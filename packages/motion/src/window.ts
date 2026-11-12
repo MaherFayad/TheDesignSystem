@@ -35,6 +35,12 @@ export interface WindowMotionSpec {
   easing: EaseToken;
   /** `forwards` for a window that leaves (close, minimize): it stays at the last frame until removed. */
   fill: FillMode;
+  /**
+   * The transform origin the keyframes assume. It is set on the element
+   * before the animation plays, so the keyframes hold only transform and
+   * opacity.
+   */
+  origin: string;
 }
 
 export type WindowPattern = 'grow' | 'close' | 'zoom' | 'minimize';
@@ -51,6 +57,14 @@ export interface WindowMotionInput {
 
 /** A rect smaller than this on either side is not used. Same as the shared manager. */
 const MIN_SIDE = 4;
+/**
+ * Transform origins: rect to rect patterns scale from the top left corner,
+ * the 92% forms from the center, minimize from the bottom center.
+ */
+const TOP_START = '0 0';
+const CENTER = '50% 50%';
+const BOTTOM_CENTER = '50% 100%';
+
 /** The scale a window grows from, or shrinks to, when there is no trigger. */
 export const WINDOW_REST_SCALE = 0.92;
 
@@ -78,20 +92,21 @@ const fadeOut: Keyframe[] = [{ opacity: 1 }, { opacity: 0 }];
  * Reduced: a fade in.
  */
 export function windowGrow({ from, to, reduced = false }: WindowMotionInput = {}): WindowMotionSpec {
-  const base = { name: 'window-grow', duration: 'duration.window-open', easing: 'ease.window', fill: 'none' } as const;
+  const base = { name: 'window-grow', duration: 'duration.window-open', easing: 'ease.window', fill: 'none', origin: TOP_START } as const;
   if (reduced) return { ...base, duration: 'duration.base', keyframes: fadeIn };
   if (usable(from) && usable(to)) {
     return {
       ...base,
       keyframes: [
-        { transformOrigin: '0 0', transform: between(from, to), opacity: 0.35 },
-        { transformOrigin: '0 0', opacity: 1, offset: 0.35 },
-        { transformOrigin: '0 0', transform: 'none', opacity: 1 },
+        { transform: between(from, to), opacity: 0.35 },
+        { opacity: 1, offset: 0.35 },
+        { transform: 'none', opacity: 1 },
       ],
     };
   }
   return {
     ...base,
+    origin: CENTER,
     keyframes: [
       { transform: `scale(${WINDOW_REST_SCALE})`, opacity: 0 },
       { transform: 'none', opacity: 1 },
@@ -104,20 +119,21 @@ export function windowGrow({ from, to, reduced = false }: WindowMotionInput = {}
  * fades. Without a trigger it scales down to 92%. Reduced: a fade out.
  */
 export function windowClose({ from, to, reduced = false }: WindowMotionInput = {}): WindowMotionSpec {
-  const base = { name: 'window-close', duration: 'duration.window-close', fill: 'forwards' } as const;
+  const base = { name: 'window-close', duration: 'duration.window-close', fill: 'forwards', origin: TOP_START } as const;
   if (reduced) return { ...base, duration: 'duration.base', easing: 'ease.exit', keyframes: fadeOut };
   if (usable(from) && usable(to)) {
     return {
       ...base,
       easing: 'ease.window',
       keyframes: [
-        { transformOrigin: '0 0', transform: 'none', opacity: 1 },
-        { transformOrigin: '0 0', transform: between(to, from), opacity: 0 },
+        { transform: 'none', opacity: 1 },
+        { transform: between(to, from), opacity: 0 },
       ],
     };
   }
   return {
     ...base,
+    origin: CENTER,
     easing: 'ease.exit',
     keyframes: [
       { transform: 'none', opacity: 1 },
@@ -131,13 +147,13 @@ export function windowClose({ from, to, reduced = false }: WindowMotionInput = {
  * and is drawn over its old frame `from` first. Reduced: no motion.
  */
 export function windowZoom({ from, to, reduced = false }: WindowMotionInput = {}): WindowMotionSpec {
-  const base = { name: 'window-zoom', duration: 'duration.zoom', easing: 'ease.window', fill: 'none' } as const;
+  const base = { name: 'window-zoom', duration: 'duration.zoom', easing: 'ease.window', fill: 'none', origin: TOP_START } as const;
   if (reduced || !usable(from) || !usable(to)) return { ...base, keyframes: [] };
   return {
     ...base,
     keyframes: [
-      { transformOrigin: '0 0', transform: between(from, to) },
-      { transformOrigin: '0 0', transform: 'none' },
+      { transform: between(from, to) },
+      { transform: 'none' },
     ],
   };
 }
@@ -148,14 +164,15 @@ export function windowZoom({ from, to, reduced = false }: WindowMotionInput = {}
  * target it scales down and fades in place. Reduced: a fade out.
  */
 export function windowMinimize({ from, to, reduced = false }: WindowMotionInput = {}): WindowMotionSpec {
-  const base = { name: 'window-minimize', duration: 'duration.window-open', easing: 'ease.window', fill: 'forwards' } as const;
+  // Token gap: no duration.window-minimize (the source is 320ms); duration.window-open (300ms) is the nearest.
+  const base = { name: 'window-minimize', duration: 'duration.window-open', easing: 'ease.window', fill: 'forwards', origin: BOTTOM_CENTER } as const;
   if (reduced) return { ...base, duration: 'duration.base', keyframes: fadeOut };
   if (!usable(from) || !usable(to)) {
     return {
       ...base,
       keyframes: [
-        { transformOrigin: '50% 100%', transform: 'none', opacity: 1 },
-        { transformOrigin: '50% 100%', transform: 'scale(0.2)', opacity: 0 },
+        { transform: 'none', opacity: 1 },
+        { transform: 'scale(0.2)', opacity: 0 },
       ],
     };
   }
@@ -165,14 +182,13 @@ export function windowMinimize({ from, to, reduced = false }: WindowMotionInput 
   return {
     ...base,
     keyframes: [
-      { transformOrigin: '50% 100%', transform: 'none', opacity: 1 },
+      { transform: 'none', opacity: 1 },
       {
-        transformOrigin: '50% 100%',
         transform: `translate(${round(dx * 0.25)}px, ${round(dy * 0.15)}px) scale(0.55, 0.7)`,
         opacity: 0.9,
         offset: 0.4,
       },
-      { transformOrigin: '50% 100%', transform: `translate(${round(dx)}px, ${round(dy)}px) scale(${round(s, 4)})`, opacity: 0 },
+      { transform: `translate(${round(dx)}px, ${round(dy)}px) scale(${round(s, 4)})`, opacity: 0 },
     ],
   };
 }
@@ -275,6 +291,7 @@ export function animateWindow(el: HTMLElement, pattern: WindowPattern, opts: Ani
   const spec = windowMotionFor(mode, pattern, { ...input, reduced: input.reduced ?? prefersReducedMotion() });
   if (!spec || spec.keyframes.length === 0 || typeof el.animate !== 'function') return null;
   settle(el);
+  el.style.transformOrigin = spec.origin;
   return el.animate(spec.keyframes, {
     duration: readDuration(el, spec.duration, prefix),
     easing: readEasing(el, spec.easing, prefix),

@@ -32,12 +32,18 @@ export function useWindowLayer(): WindowManager | null {
 export interface WindowLayerProps extends HTMLAttributes<HTMLDivElement> {
   /** A manager made with createWindowManager, to drive the layer from outside. Default: one of its own. */
   manager?: WindowManager;
+  /**
+   * The name of the layer, a region. Default "Windows". The layer takes
+   * focus (tabIndex -1) when the last window in it closes or minimizes and
+   * nothing else can.
+   */
+  label?: string;
   children?: ReactNode;
   ref?: Ref<HTMLDivElement>;
 }
 
 /** A positioned layer for windows. Windows inside it are placed by kind, stacked and moved inside its box. */
-export function WindowLayer({ manager: given, children, ref, ...rest }: WindowLayerProps) {
+export function WindowLayer({ manager: given, label = 'Windows', children, ref, ...rest }: WindowLayerProps) {
   const [own] = useState(() => createWindowManager());
   const manager = given ?? own;
   const layer = useRef<HTMLDivElement | null>(null);
@@ -51,7 +57,7 @@ export function WindowLayer({ manager: given, children, ref, ...rest }: WindowLa
     [ref],
   );
   return (
-    <div {...rest} ref={setRef} data-ds="window-layer">
+    <div role="region" aria-label={label} tabIndex={-1} {...rest} ref={setRef} data-ds="window-layer">
       <WindowLayerContext value={value}>{children}</WindowLayerContext>
     </div>
   );

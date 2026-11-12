@@ -131,8 +131,8 @@ export default function WindowDemo() {
         <ManyDemo />
       </DemoCase>
 
-      <DemoCase id="long-text" title="Long title: it truncates, the full title names the window">
-        <WindowLayer style={layerStyle}>
+      <DemoCase id="long-text" title="Long title: it truncates; keyboard focus on the title (the move handle) shows it in full">
+        <WindowLayer style={{ ...layerStyle, maxInlineSize: 'calc(var(--ds-space-12xl) * 5)' }}>
           <Window title="Quarterly planning notes for the design system team, with every comment and reference.board">
             <Paragraph>{sample.en.long}</Paragraph>
             <Paragraph>{sample.en.word}</Paragraph>

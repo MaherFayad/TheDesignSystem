@@ -43,6 +43,18 @@ describe('TitleBar', () => {
     expect(el.className).toBe('x');
   });
 
+  it('with moveLabel puts the title in a focusable move handle described by its keys', () => {
+    const { container } = render(<TitleBar title="brief.md" moveLabel="Move window" moveHint="Arrow keys move it." />);
+    const el = root(container);
+    const move = el.querySelector<HTMLElement>(':scope > [data-part="move"]');
+    expect(move?.getAttribute('role')).toBe('group');
+    expect(move?.getAttribute('aria-label')).toBe('Move window');
+    expect(move?.tabIndex).toBe(0);
+    expect(move?.querySelector('[data-part="title"]')?.textContent).toBe('brief.md');
+    expect(document.getElementById(move?.getAttribute('aria-describedby') ?? '')?.textContent).toBe('Arrow keys move it.');
+    expect(root(render(<TitleBar title="x" />).container).querySelector('[data-part="move"]')).toBeNull();
+  });
+
   it('renders every demo case', () => {
     const { container } = render(<TitleBarDemo />);
     for (const id of ['variants', 'one', 'many', 'long-text', 'long-arabic', 'disabled']) {

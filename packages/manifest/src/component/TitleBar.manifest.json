@@ -16,37 +16,109 @@
     "A row of tools": "Toolbar",
     "A whole window": "Window"
   },
-  "anatomy": ["root", "controls", "title", "actions"],
+  "anatomy": [
+    "root",
+    "controls",
+    "move",
+    "title",
+    "actions",
+    "minimize",
+    "zoom",
+    "close"
+  ],
   "slots": {
-    "controls": { "accepts": ["WindowControls"], "max": 1 },
-    "title": { "accepts": "text", "min": 1, "max": 1 },
-    "actions": { "accepts": ["IconButton", "Button"], "max": 3 }
+    "controls": {
+      "accepts": [
+        "WindowControls"
+      ],
+      "max": 1
+    },
+    "title": {
+      "accepts": "text",
+      "min": 1,
+      "max": 1
+    },
+    "actions": {
+      "accepts": [
+        "IconButton",
+        "Button"
+      ],
+      "max": 5
+    }
   },
   "props": {
-    "title": { "type": "node", "description": "The title. One line with an ellipsis." },
-    "as": { "type": ["h1", "h2", "h3", "h4", "h5", "h6", "div"], "default": "h2", "description": "The element of the title." },
-    "titleId": { "type": "string", "description": "id of the title, for aria-labelledby on the window or dialog." },
-    "controls": { "type": "node", "description": "The start slot: WindowControls." },
-    "actions": { "type": "node", "description": "The end slot: IconButtons and small Buttons." },
-    "active": { "type": "boolean", "default": true, "description": "Sets data-state active or inactive." }
+    "title": {
+      "type": "node",
+      "description": "The title. One line with an ellipsis."
+    },
+    "as": {
+      "type": [
+        "h1",
+        "h2",
+        "h3",
+        "h4",
+        "h5",
+        "h6",
+        "div"
+      ],
+      "default": "h2",
+      "description": "The element of the title."
+    },
+    "titleId": {
+      "type": "string",
+      "description": "id of the title, for aria-labelledby on the window or dialog."
+    },
+    "controls": {
+      "type": "node",
+      "description": "The start slot: WindowControls."
+    },
+    "actions": {
+      "type": "node",
+      "description": "The end slot: IconButtons and small Buttons."
+    },
+    "active": {
+      "type": "boolean",
+      "default": true,
+      "description": "Sets data-state active or inactive."
+    },
+    "moveLabel": {
+      "type": "string",
+      "description": "Puts the title in a focusable move handle (part move, role group) named by this label: \"Move window\". The host (Window) listens for the keys there."
+    },
+    "moveHint": {
+      "type": "string",
+      "default": "Arrow keys move the window. Shift moves it further.",
+      "description": "Description of the move handle, through aria-describedby."
+    }
   },
-  "states": ["active", "inactive"],
+  "states": [
+    "active",
+    "inactive"
+  ],
   "a11y": {
     "role": "none: a plain container. The title is a heading (h2 by default).",
-    "focus": "Not focusable. Focus goes to the controls and actions inside.",
+    "focus": "The bar itself is not focusable. With moveLabel the move handle is a tab stop with the 2px ring; while it has keyboard focus the title wraps to show in full. Then the controls and actions take focus in order.",
     "keys": {
-      "Tab": "Moves through the controls, then the actions"
+      "Tab": "Moves through the controls, the move handle and the actions"
     },
     "announce": "The heading is read in document order. A window or dialog points aria-labelledby at titleId.",
-    "native": { "accessibilityRole": "header", "accessibilityState": [] },
+    "native": {
+      "accessibilityRole": "header",
+      "accessibilityState": []
+    },
     "notes": [
-      "The title truncates with an ellipsis; the full text stays in the DOM.",
+      "The title truncates with an ellipsis; the full text stays in the DOM, and keyboard focus on the move handle shows it wrapped.",
+      "Parts minimize, zoom and close are IconButtons a host renders in the actions slot when it has no lights (Window in Studio). They belong to the TitleBar, their nearest root.",
       "In right to left layouts a bar with controls keeps them at the top left and centers the title, as macOS draws it. A bar without controls mirrors."
     ]
   },
   "content": {
-    "en": { "title": "A file or app name in sentence case." },
-    "ar": { "title": "Noun form, no diacritics. Latin file names go through Bidi." }
+    "en": {
+      "title": "A file or app name in sentence case."
+    },
+    "ar": {
+      "title": "Noun form, no diacritics. Latin file names go through Bidi."
+    }
   },
   "tokens": [
     "size.control.md",
@@ -54,7 +126,6 @@
     "size.target-min",
     "space.2xs",
     "space.l",
-    "color.material.titlebar",
     "color.text.bright",
     "color.text.muted",
     "color.border.hairline",
@@ -62,23 +133,50 @@
     "font.size.m",
     "font.weight.semibold",
     "font.leading.tight",
-    "font.tracking.none"
+    "font.tracking.none",
+    "radius.field",
+    "focus.shadow.ring",
+    "border.width.strong"
   ],
   "frameworks": {
-    "react": { "status": "ready", "behavior": "plain markup", "example": "TitleBar.demo.tsx" },
-    "angular": { "status": "planned", "behavior": "[dsTitleBar]", "note": "TitleBar.css is used as is." },
-    "native": { "status": "not-applicable", "note": "Native screens use the platform navigation bar." }
+    "react": {
+      "status": "ready",
+      "behavior": "plain markup",
+      "example": "TitleBar.demo.tsx"
+    },
+    "angular": {
+      "status": "planned",
+      "behavior": "[dsTitleBar]",
+      "note": "TitleBar.css is used as is."
+    },
+    "native": {
+      "status": "not-applicable",
+      "note": "Native screens use the platform navigation bar."
+    }
   },
   "styles": {
     "studio": "A plain header on the panel surface with a hairline under it (recipes/Window.css when inside a Window).",
-    "desk": "The titlebar material, a 3% white over the glass, no divider. The lights sit at the start."
+    "desk": "Transparent, as the source .dwin-bar: the window glass shows through, no divider. The lights sit at the start."
   },
   "mistakes": [
-    { "wrong": "A title in a native title attribute to show the full text", "right": "The full text stays in the title; a Tooltip shows it" },
-    { "wrong": "Mirroring the lights in Arabic", "right": "The lights keep their place and order; only a bar without lights mirrors" }
+    {
+      "wrong": "A title in a native title attribute to show the full text",
+      "right": "The full text stays in the title; a Tooltip shows it"
+    },
+    {
+      "wrong": "Mirroring the lights in Arabic",
+      "right": "The lights keep their place and order; only a bar without lights mirrors"
+    }
   ],
   "contract": {
-    "optionalParts": ["controls", "actions"]
+    "optionalParts": [
+      "controls",
+      "move",
+      "actions",
+      "minimize",
+      "zoom",
+      "close"
+    ]
   },
   "since": "0.1.0"
 }

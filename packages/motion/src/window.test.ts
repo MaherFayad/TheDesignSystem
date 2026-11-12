@@ -15,10 +15,10 @@ import {
 const trigger = { x: 20, y: 30, width: 100, height: 40 };
 const win = { x: 220, y: 130, width: 400, height: 200 };
 
-/** Every property a keyframe sets, apart from offset and the transform origin. */
+/** Every property a keyframe sets, apart from offset. */
 function animated(frames: Keyframe[]): string[] {
   const props = new Set<string>();
-  for (const f of frames) for (const k of Object.keys(f)) if (k !== 'offset' && k !== 'transformOrigin' && k !== 'easing') props.add(k);
+  for (const f of frames) for (const k of Object.keys(f)) if (k !== 'offset' && k !== 'easing') props.add(k);
   return [...props].sort();
 }
 
@@ -37,6 +37,8 @@ describe('window patterns', () => {
   it('grow without a trigger scales up from 92%', () => {
     const spec = windowGrow({ to: win });
     expect(spec.keyframes[0]).toEqual({ transform: 'scale(0.92)', opacity: 0 });
+    expect(spec.origin).toBe('50% 50%');
+    expect(windowGrow({ from: trigger, to: win }).origin).toBe('0 0');
     expect(windowGrow({ from: { x: 0, y: 0, width: 1, height: 1 }, to: win }).keyframes[0]?.transform).toBe('scale(0.92)');
   });
 
@@ -59,12 +61,12 @@ describe('window patterns', () => {
     const dock = { x: 476, y: 744, width: 48, height: 48 };
     const spec = windowMinimize({ from: win, to: dock });
     expect(spec.keyframes).toHaveLength(3);
-    expect(spec.keyframes[0]?.transformOrigin).toBe('50% 100%');
+    expect(spec.origin).toBe('50% 100%');
     expect(spec.keyframes.at(-1)?.opacity).toBe(0);
     expect(String(spec.keyframes.at(-1)?.transform)).toMatch(/^translate\(80px, 438px\) scale\(0\.12\)$/);
   });
 
-  it('animates only transform and opacity in every pattern', () => {
+  it('keyframes hold only transform and opacity in every pattern, the origin is set apart', () => {
     for (const spec of [windowGrow({ from: trigger, to: win }), windowClose({ from: win, to: trigger }), windowZoom({ from: trigger, to: win }), windowMinimize({ from: win, to: trigger })]) {
       for (const p of animated(spec.keyframes)) expect(['opacity', 'transform']).toContain(p);
     }
@@ -98,12 +100,13 @@ describe('web helper', () => {
 
   it('plays the pattern with the token timing read from the element', () => {
     const animate = vi.fn(() => ({ finished: Promise.resolve() }) as unknown as Animation);
-    const el = { animate, getAnimations: () => [] } as unknown as HTMLElement;
+    const el = { animate, getAnimations: () => [], style: {} as CSSStyleDeclaration } as unknown as HTMLElement;
     const style = { getPropertyValue: (name: string) => ({ '--ds-duration-window-open': '300ms', '--ds-ease-window': 'cubic-bezier(0.2, 0.8, 0.2, 1)' })[name] ?? '' };
     vi.stubGlobal('getComputedStyle', () => style);
     const a = animateWindow(el, 'grow', { from: trigger, to: win, reduced: false });
     expect(a).not.toBeNull();
     expect(animate).toHaveBeenCalledWith(expect.any(Array), { duration: 300, easing: 'cubic-bezier(0.2, 0.8, 0.2, 1)', fill: 'none' });
+    expect(el.style.transformOrigin).toBe('0 0');
     expect(animateWindow(el, 'zoom', { from: trigger, to: win, mode: 'fade' })).toBeNull();
     expect(animateWindow({} as HTMLElement, 'grow', { reduced: false })).toBeNull();
     vi.unstubAllGlobals();

@@ -112,6 +112,10 @@ export interface WindowProps extends Omit<HTMLAttributes<HTMLDivElement>, 'title
   zoomLabel?: string;
   /** Accessible name of the lights group. Default "Window controls". */
   controlsLabel?: string;
+  /** Accessible name of the move handle (the title, focusable while the window can move). Default "Move window". */
+  moveLabel?: string;
+  /** Description of the move handle: its keys. Default names the arrow keys, Shift and, when zoom works, Enter. */
+  moveHint?: string;
   ref?: Ref<HTMLDivElement>;
 }
 
@@ -149,11 +153,21 @@ function measureFrame(el: HTMLElement, container: HTMLElement, dir: 'ltr' | 'rtl
   return { x, y: r.top - c.top - container.clientTop, width: r.width, height: r.height };
 }
 
-/** Moves focus to `el` only when focus is inside `from` or lost on the page. */
-function focusBack(el: HTMLElement | null, from: HTMLElement | null): void {
-  if (!el?.isConnected) return;
+/**
+ * After a window closes or minimizes, focus goes to the first of these that
+ * is on the page: the origin, the next active window of the layer, the
+ * element that had focus before the window opened, the dock, the layer. It
+ * moves only when focus is inside the leaving window or lost on the page,
+ * never away from an element the person moved to since.
+ */
+function focusAfterLeaving(candidates: (HTMLElement | null | undefined)[], from: HTMLElement | null): void {
   const now = document.activeElement;
-  if (!now || now === document.body || (from?.contains(now) ?? false)) el.focus({ preventScroll: true });
+  if (now && now !== document.body && !(from?.contains(now) ?? false)) return;
+  for (const el of candidates) {
+    if (!el?.isConnected || el === from || (from?.contains(el) ?? false) || el.closest('[hidden]')) continue;
+    el.focus({ preventScroll: true });
+    if (document.activeElement === el) return;
+  }
 }
 
 /**
@@ -189,6 +203,8 @@ export function Window({
   minimizeLabel = 'Minimize window',
   zoomLabel = 'Zoom window',
   controlsLabel = 'Window controls',
+  moveLabel = 'Move window',
+  moveHint,
   id,
   style,
   ref,
@@ -247,6 +263,13 @@ export function Window({
     return layerCtx?.layer.current ?? (rootRef.current?.offsetParent as HTMLElement | null) ?? null;
   }, [layerCtx]);
 
+  /** Where focus goes when this window closes or minimizes. */
+  const leaveFocus = () => {
+    const next = manager.getState().active;
+    const nextEl = next && next !== windowId ? document.getElementById(next) : null;
+    focusAfterLeaving([elementOf(origin), nextEl, returnTo.current, elementOf(dock), layerCtx?.layer.current], rootRef.current);
+  };
+
   const movable = movableProp ?? (layerCtx !== null || frameProp != null || defaultFrame !== null);
   const canMove = movable && !zoomed;
   const active = layerCtx ? managerState.active === windowId : true;
@@ -285,7 +308,7 @@ export function Window({
     const anim = animateWindow(el, 'close', { mode, from: el.getBoundingClientRect(), to: rectOf(origin) });
     void settled(anim).then(() => {
       if (isOpenRef.current) return;
-      focusBack(elementOf(origin) ?? returnTo.current, rootRef.current);
+      leaveFocus();
       setPresent(false);
     });
     // Runs on open changes only; the frame, origin and mode are read as they are then.
@@ -321,7 +344,7 @@ export function Window({
       const anim = animateWindow(el, 'minimize', { mode, from: el.getBoundingClientRect(), to: target });
       void settled(anim).then(() => {
         if (!minimizedRef.current) return;
-        focusBack(elementOf(origin) ?? returnTo.current, rootRef.current);
+        leaveFocus();
         setFolded(true);
       });
       return;
@@ -397,9 +420,15 @@ export function Window({
       }
       return;
     }
-    if (!canMove || event.altKey || event.ctrlKey || event.metaKey) return;
-    const target = event.target as Node;
-    if (target !== el && !titleBarRef.current?.contains(target)) return;
+    if (event.altKey || event.ctrlKey || event.metaKey) return;
+    const target = event.target as Element;
+    const onHandle = target.getAttribute('data-part') === 'move' && titleBarRef.current?.contains(target) === true;
+    if (onHandle && event.key === 'Enter' && zoomable) {
+      event.preventDefault();
+      toggleZoom();
+      return;
+    }
+    if (!canMove || (target !== el && !onHandle)) return;
     const delta = arrowDelta(event.key, event.shiftKey, dir);
     if (!delta) return;
     event.preventDefault();
@@ -462,7 +491,19 @@ export function Window({
         }
       : {};
 
-  const close = controlsOn ? undefined : <IconButton data-part="close" icon="close" label={closeLabel} size="sm" onClick={requestClose} />;
+  // Without the lights (Studio) the same actions are IconButtons at the end
+  // of the title bar, each only when the window can do it. They are parts of
+  // the TitleBar (its nearest root): minimize, zoom, close.
+  const buttons = controlsOn ? null : (
+    <>
+      {minimizable && <IconButton data-part="minimize" icon="minimize" label={minimizeLabel} size="sm" onClick={() => setMinimized(true)} />}
+      {zoomable && <IconButton data-part="zoom" icon="zoom" label={zoomLabel} size="sm" aria-pressed={zoomed} onClick={toggleZoom} />}
+      <IconButton data-part="close" icon="close" label={closeLabel} size="sm" onClick={requestClose} />
+    </>
+  );
+  const hint =
+    moveHint ??
+    (zoomable ? 'Arrow keys move the window. Shift moves it further. Enter zooms it.' : 'Arrow keys move the window. Shift moves it further.');
 
   return (
     <div
@@ -514,13 +555,15 @@ export function Window({
           ) : undefined
         }
         actions={
-          actions !== undefined || close ? (
+          actions !== undefined || buttons ? (
             <>
               {actions}
-              {close}
+              {buttons}
             </>
           ) : undefined
         }
+        moveLabel={canMove ? moveLabel : undefined}
+        moveHint={hint}
         onPointerDown={onBarPointerDown}
         onPointerMove={onBarPointerMove}
         onPointerUp={endDrag}

@@ -1,11 +1,19 @@
 /*
  * WindowControls: the traffic lights. Source: `.dwin-lights` and
- * `.dwin-light` in GoBanana desktop/desktop.css.
+ * `.dwin-light` in GoBanana desktop/desktop.css, lines 485 to 532.
+ *
+ * What the source does, and this file matches: every light is a plain idle
+ * dot at rest (`--st-desk-light-idle`), in an active window too. On hover
+ * or focus within the group (`.dwin-lights:is(:hover, :focus-within)`) all
+ * three take their colors at once: close, min and zoom. The source has no
+ * glyphs; this file adds the light ink glyph in the same state, so the
+ * lights never differ by color alone. data-state (active or inactive) is
+ * stamped for hosts and recipes and changes nothing here, as in the source.
  *
  * Each light is an IconButton (Button.css draws the box and the focus ring).
  * The 24 by 24 button is the target; its icon part is the 12px light; the
- * glyph inside it is the light ink. Targets touch, so the light centers are
- * 24px apart.
+ * glyph inside it is the ink. Targets touch, so light centers are 24px
+ * apart. The lights set Button's private properties, never its declarations.
  *
  * Private properties (docs/contracts/anatomy.md):
  *   --_window-controls-idle   the dot at rest
@@ -15,11 +23,7 @@
  *   --_window-controls-glyph  0 or 1: the glyph
  *
  * Only opacity animates: the lit color is a layer over the idle dot that
- * fades in, and the glyph fades in on hover and keyboard focus of the group.
- *
- * The light buttons are drawn transparent here with declarations, not with
- * Button's properties: Button.css still uses the old public names and will
- * move to private ones, so this file does not depend on them.
+ * fades in (the source fades background-color, which may not animate here).
  */
 @layer ds.base {
   [data-ds='window-controls'] {
@@ -36,22 +40,24 @@
     direction: ltr;
   }
 
-  /* Lit while the window is active, and in any window on hover or keyboard focus of the group. */
-  [data-ds='window-controls']:is([data-state='active'], :hover, :focus-within) {
-    --_window-controls-lit: 1;
-  }
-
-  /* The glyphs tell the lights apart without color. */
+  /* The source: colors on hover or focus of the group. The glyphs come with them. */
   [data-ds='window-controls']:is(:hover, :focus-within) {
+    --_window-controls-lit: 1;
     --_window-controls-glyph: 1;
   }
 
-  /* Specific enough to win over the tone, emphasis and state rules in Button.css. */
+  /* A transparent target: specific enough to win over the tone and emphasis rules in Button.css. */
   [data-ds='window-controls'] > [data-ds='icon-button'][data-part][data-emphasis] {
-    border-color: transparent;
-    background-color: transparent;
-    color: var(--_window-controls-ink);
-    opacity: 1;
+    --_button-height: var(--ds-size-target-min);
+    --_button-radius: var(--ds-radius-pill);
+    --_button-bg: transparent;
+    --_button-bg-hover: transparent;
+    --_button-bg-active: transparent;
+    --_button-fg: var(--_window-controls-ink);
+    --_button-fg-hover: var(--_window-controls-ink);
+    --_button-fg-active: var(--_window-controls-ink);
+    --_button-border-color: transparent;
+    --_button-border-color-hover: transparent;
   }
 
   [data-ds='window-controls'] > [data-part='close'] {
@@ -66,11 +72,17 @@
     --_window-controls-light: var(--ds-color-window-light-zoom);
   }
 
-  /* A light with no handler stays an idle dot with no glyph. */
+  /*
+   * A light with no handler stays an idle dot with no glyph. It is drawn at
+   * full strength, not with opacity.disabled: an idle dot is already the
+   * quiet form, and Button has no private property for its disabled
+   * opacity, so this is the one declaration on the nested button.
+   */
   [data-ds='window-controls'] > [data-ds='icon-button'][data-disabled] {
     --_window-controls-lit: 0;
     --_window-controls-glyph: 0;
 
+    opacity: 1;
     cursor: default;
   }
 
@@ -121,10 +133,6 @@
 
     [data-ds='window-controls'] > [data-ds='icon-button'][data-disabled] > [data-part='icon'] {
       border-color: GrayText;
-    }
-
-    [data-ds='window-controls'] > [data-ds='icon-button'][data-disabled] > [data-part='icon'] > [data-ds='icon'] {
-      color: GrayText;
     }
   }
 }

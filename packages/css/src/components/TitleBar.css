@@ -1,21 +1,29 @@
 /*
  * TitleBar: controls, title, actions. Source: GoBanana `.dwin-bar` and
  * `.dwin-title` in desktop/desktop.css: the lights, then the title as a file
- * name, no divider, a 36px row.
+ * name, no divider, a 36px row, `background: transparent` (the bar shows the
+ * window glass under it). `color.material.titlebar` (the source
+ * `--st-desk-titlebar`) is the bar of other source surfaces (dashboard, admin,
+ * canvas panels), not of `.dwin-bar`, so the bar is transparent here too.
  *
  * Private properties on the root (docs/contracts/anatomy.md):
  *   --_title-bar-height, -padding-inline, -gap, -bg, -fg, -font-size,
  *   --_title-bar-border-color (the line under the bar, transparent by default)
+ *   --_title-bar-wrap         nowrap, or normal while the move handle has keyboard focus
+ *   --_title-bar-ring         the focus ring of the move handle
  */
 @layer ds.base {
   [data-ds='title-bar'] {
+    /* Token gap: no title bar height token; one md control plus a 2xs step is the source 36px. */
     --_title-bar-height: calc(var(--ds-size-control-md) + var(--ds-space-2xs));
     --_title-bar-padding-inline: var(--ds-space-l);
     --_title-bar-gap: var(--ds-space-l);
-    --_title-bar-bg: var(--ds-color-material-titlebar);
+    --_title-bar-bg: transparent;
     --_title-bar-fg: var(--ds-color-text-bright);
     --_title-bar-font-size: var(--ds-font-size-m);
     --_title-bar-border-color: transparent;
+    --_title-bar-wrap: nowrap;
+    --_title-bar-ring: 0 0 transparent;
 
     display: flex;
     align-items: center;
@@ -38,8 +46,33 @@
     margin-inline-start: calc((var(--ds-size-icon-sm) - var(--ds-size-target-min)) / 2);
   }
 
+  /* The move handle: the title's box, a drag surface that takes keyboard focus. */
+  [data-ds='title-bar'] > [data-part='move'] {
+    display: flex;
+    flex: 1 1 auto;
+    align-items: center;
+    min-inline-size: 0;
+    min-block-size: var(--ds-size-target-min);
+    padding-inline: var(--ds-space-2xs);
+    margin-inline: calc(-1 * var(--ds-space-2xs));
+    border-radius: var(--ds-radius-field);
+    box-shadow: var(--_title-bar-ring);
+  }
+
+  /*
+   * Keyboard focus on the handle: the ring, and the full title, wrapped, so
+   * a truncated title can be read without a Tooltip.
+   */
+  [data-ds='title-bar'] > [data-part='move']:focus-visible {
+    --_title-bar-ring: var(--ds-focus-shadow-ring);
+    --_title-bar-wrap: normal;
+
+    outline: var(--ds-border-width-strong) solid transparent;
+  }
+
   /* The title: one line, an ellipsis when it is long. The full text stays in the DOM (the window's accessible name). */
-  [data-ds='title-bar'] > [data-part='title'] {
+  [data-ds='title-bar'] > [data-part='title'],
+  [data-ds='title-bar'] > [data-part='move'] > [data-part='title'] {
     flex: 1 1 auto;
     min-inline-size: 0;
     margin: 0;
@@ -51,7 +84,7 @@
     line-height: var(--ds-font-leading-tight);
     letter-spacing: var(--ds-font-tracking-none);
     text-overflow: ellipsis;
-    white-space: nowrap;
+    white-space: var(--_title-bar-wrap);
   }
 
   [data-ds='title-bar'] > [data-part='actions'] {
@@ -79,8 +112,9 @@
     justify-self: start;
   }
 
-  [data-ds='title-bar']:has(> [data-part='controls']):dir(rtl) > [data-part='title'] {
+  [data-ds='title-bar']:has(> [data-part='controls']):dir(rtl) > :is([data-part='title'], [data-part='move']) {
     grid-column: 2;
+    justify-content: center;
     direction: rtl;
     text-align: center;
   }
@@ -89,5 +123,11 @@
     grid-column: 3;
     justify-self: end;
     direction: rtl;
+  }
+
+  @media (forced-colors: active) {
+    [data-ds='title-bar'] > [data-part='move']:focus-visible {
+      outline-color: Highlight;
+    }
   }
 }
