@@ -17,6 +17,7 @@ import {
 import { NgComponentOutlet } from '@angular/common';
 import { DsTheme, DsThemeService, applyDocumentTheme, styleIds } from '@the-system/angular';
 import { GALLERY_STYLE, axisControls, axisQuery, nameOf, readAxes, readCase } from './axes';
+import { FocusStage, InteractionsList } from './interactions/page';
 import { routes } from './routes.gen';
 
 const EVENT = 'gallery:navigate';
@@ -35,6 +36,7 @@ function navigate(to: string, replace = false): void {
     <nav data-gallery="nav" aria-label="Gallery">
       <a [href]="'/' + query()" (click)="go($event, '/' + query())">Components</a>
       <a [href]="'/all' + query()" (click)="go($event, '/all' + query())">Every demo</a>
+      <a [href]="'/interactions' + query()" (click)="go($event, '/interactions' + query())">Interactions</a>
       @if (current(); as c) {
         <span data-gallery="current">{{ c }}</span>
       }
@@ -79,7 +81,7 @@ export class Shell {
 
 @Component({
   selector: 'div#app',
-  imports: [DsTheme, Shell, NgComponentOutlet],
+  imports: [DsTheme, Shell, NgComponentOutlet, InteractionsList, FocusStage],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div dsTheme id="gallery-root" data-gallery="root"
@@ -102,6 +104,13 @@ export class Shell {
                 }
               </ul>
             </div>
+          }
+          @case ('interactions') {
+            @if (focus(); as f) {
+              <div data-gallery="interactions-focus" [id]="f"></div>
+            } @else {
+              <div data-gallery="interactions"></div>
+            }
           }
           @case ('all') {
             <div data-gallery="sink">
@@ -160,6 +169,8 @@ export class App {
   );
   protected readonly chrome = computed(() => this.params().get('chrome') !== '0');
   protected readonly caseId = computed(() => readCase(this.params()));
+  /** `/interactions?focus=<id>`: one stage only, for recordings. */
+  protected readonly focus = computed(() => this.params().get('focus'));
   protected readonly query = computed(() => axisQuery(this.params()));
   private readonly path = computed(() => this.url().pathname.replace(/\/+$/, '') || '/');
   protected readonly list = routes.map((r) => ({ ...r, name: nameOf(r.slug) }));
@@ -178,6 +189,7 @@ export class App {
     const path = this.path();
     if (path === '/') return 'index';
     if (path === '/all') return 'all';
+    if (path === '/interactions') return 'interactions';
     if (this.route()) return 'demo';
     return 'missing';
   });
@@ -212,7 +224,13 @@ export class App {
     effect(() => {
       const r = this.route();
       const path = this.path();
-      document.title = r ? `${r.name}, gallery` : path === '/all' ? 'Every demo, gallery' : 'Gallery';
+      document.title = r
+        ? `${r.name}, gallery`
+        : path === '/all'
+          ? 'Every demo, gallery'
+          : path === '/interactions'
+            ? 'Interactions, gallery'
+            : 'Gallery';
     });
 
     // Loads the demos the page needs.

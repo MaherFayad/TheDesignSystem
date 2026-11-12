@@ -1,0 +1,10 @@
+// Stages of the Angular /interactions page for the inputs family, form parts (orders
+// 1.21 and 1.22), the twin of apps/gallery-react/src/interactions/inputs.tsx (Field,
+// FieldError, Fieldset, Form, FormWizard, ConsentField, Rating).
+// One standalone component per interaction id. Each stage marks the control
+// that plays it with data-interaction-trigger, so the page's replay control
+// can press it again. Same copy as React.
+import type { Type } from '@angular/core';
+
+/** Live stages by interaction id. */
+export const stages: Record<string, Type<unknown>> = {};
