@@ -71,12 +71,15 @@ export interface StatProps extends Omit<HTMLAttributes<HTMLDivElement>, 'title'>
   ref?: Ref<HTMLDivElement>;
 }
 
-function trendOf(delta: unknown, trend: StatTrend | undefined): StatTrend | undefined {
+/**
+ * The trend of a numeric delta as it is shown: a change that rounds to zero
+ * in the display format (0.0004 as a percent) is flat, not up 0%.
+ */
+function trendOf(delta: unknown, trend: StatTrend | undefined, shownZero: (n: number) => boolean): StatTrend | undefined {
   if (trend) return trend;
-  if (typeof delta !== 'number' || Number.isNaN(delta)) return undefined;
-  if (delta > 0) return 'up';
-  if (delta < 0) return 'down';
-  return 'flat';
+  if (typeof delta !== 'number' || !Number.isFinite(delta)) return undefined;
+  if (delta === 0 || shownZero(delta)) return 'flat';
+  return delta > 0 ? 'up' : 'down';
 }
 
 const toneOf: Record<StatTrend, StatTone> = { up: 'success', down: 'danger', flat: 'neutral' };
@@ -107,12 +110,12 @@ export function Stat({
 }: StatProps) {
   const { lang } = useTheme();
   const langKey: 'en' | 'ar' = lang.toLowerCase().startsWith('ar') ? 'ar' : 'en';
-  const trend = trendOf(delta, trendProp);
+  const trend = trendOf(delta, trendProp, (n) => formatStatNumber(Math.abs(n), lang, deltaFormat) === formatStatNumber(0, lang, deltaFormat));
   const tone = toneProp ?? (trend ? toneOf[trend] : 'neutral');
   const shownValue = typeof value === 'number' ? breakableValue(formatStatNumber(value, lang, format)) : value;
   const shownDelta = typeof delta === 'number' ? formatStatNumber(Math.abs(delta), lang, deltaFormat) : delta;
   const words = { ...statTrendLabels[langKey], ...trendLabels };
-  const hasDelta = !loading && delta !== undefined && delta !== null;
+  const hasDelta = !loading && delta !== undefined && delta !== null && !(typeof delta === 'number' && !Number.isFinite(delta));
 
   const valueRef = useRollOnChange(typeof value === 'number' ? shownValue : undefined, loading);
 

@@ -27,5 +27,7 @@ export function formatStatNumber(value: number, lang: string, options?: Intl.Num
  * digits. For the large value, let it wrap at that space instead.
  */
 export function breakableValue(text: string): string {
-  return text.replace(/[\u00a0\u202f]/g, ' ');
+  // Only a space next to a non digit (the currency or the unit): a locale
+  // that groups digits with a narrow no-break space (fr) keeps its groups.
+  return text.replace(/(?<=[^\d\s])[\u00a0\u202f]|[\u00a0\u202f](?=[^\d\s])/g, ' ');
 }

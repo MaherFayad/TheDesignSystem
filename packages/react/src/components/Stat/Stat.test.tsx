@@ -38,6 +38,13 @@ describe('Stat', () => {
     expect(part(container, 'value')?.textContent).toBe('$1,500.00');
     rerender(<Stat label="Time" value={14} format={{ style: 'unit', unit: 'minute' }} />);
     expect(part(container, 'value')?.textContent).toBe('14 min');
+    rerender(
+      <Theme lang="fr">
+        <Stat label="Prix" value={1234} format={{ style: 'currency', currency: 'EUR' }} />
+      </Theme>,
+    );
+    // The digit group space stays no break; the space before the currency breaks.
+    expect(part(container, 'value')?.textContent).toMatch(/^1\u202f234,00 €$/);
     rerender(<Stat label="Revenue" value="No data" />);
     expect(part(container, 'value')?.textContent).toBe('No data');
   });
@@ -58,6 +65,14 @@ describe('Stat', () => {
     expect(root(container).getAttribute('data-trend')).toBe('flat');
     expect(root(container).getAttribute('data-tone')).toBe('neutral');
     expect(part(container, 'delta')?.textContent).toBe('No change 0%');
+  });
+
+  it('reads a change that rounds to zero as flat, and drops a delta that is not a number', () => {
+    const { container, rerender } = render(<Stat label="Users" value={10} delta={0.0004} />);
+    expect(root(container).getAttribute('data-trend')).toBe('flat');
+    expect(part(container, 'delta')?.textContent).toBe('No change 0%');
+    rerender(<Stat label="Users" value={10} delta={Number.NaN} />);
+    expect(part(container, 'delta')).toBeNull();
   });
 
   it('lets the tone and trend be set, for metrics where down is good', () => {

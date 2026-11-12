@@ -11,7 +11,9 @@
  *   --_stat-label-font-size, --_stat-meta-font-size (change and hint)
  *   --_stat-fg, --_stat-label-fg, --_stat-hint-fg
  *   --_stat-delta-fg          the change, set by the tone
- *   --_stat-placeholder-bg    the loading block
+ *   --_stat-placeholder-bg    the loading block color
+ *   --_stat-value-bg, -value-inline-size, -value-block-size
+ *                             the value box; loading swaps them
  *
  * The value rolls in when it changes through the Web Animations API in the
  * React component (number-roll), so this file has no transition.
@@ -27,6 +29,9 @@
     --_stat-hint-fg: var(--ds-color-text-muted);
     --_stat-delta-fg: var(--ds-color-text-muted);
     --_stat-placeholder-bg: var(--ds-color-bg-overlay-10);
+    --_stat-value-bg: transparent;
+    --_stat-value-inline-size: auto;
+    --_stat-value-block-size: auto;
 
     display: grid;
     grid-template-columns: auto minmax(0, 1fr) auto;
@@ -34,6 +39,7 @@
       'label label icon'
       'value value value'
       'delta hint hint';
+    align-content: start;
     align-items: center;
     row-gap: var(--_stat-gap);
     column-gap: 0;
@@ -93,6 +99,11 @@
   [data-ds='stat'] > [data-part='value'] {
     grid-area: value;
     min-inline-size: 0;
+    max-inline-size: 100%;
+    inline-size: var(--_stat-value-inline-size);
+    block-size: var(--_stat-value-block-size);
+    border-radius: var(--ds-radius-xs);
+    background-color: var(--_stat-value-bg);
     color: var(--_stat-fg);
     font-size: var(--_stat-font-size);
     font-weight: var(--ds-font-weight-semibold);
@@ -145,13 +156,14 @@
   }
 
   /* Loading: a block the size of a short number, no shimmer (Skeleton owns that motion). */
+  [data-ds='stat'][data-loading] {
+    --_stat-value-bg: var(--_stat-placeholder-bg);
+    --_stat-value-inline-size: calc(4 * var(--_stat-font-size));
+    --_stat-value-block-size: calc(var(--_stat-font-size) * var(--ds-font-leading-tight));
+  }
+
   [data-ds='stat'][data-loading] > [data-part='value'] {
     position: relative;
-    inline-size: calc(4 * var(--_stat-font-size));
-    max-inline-size: 100%;
-    block-size: calc(var(--_stat-font-size) * var(--ds-font-leading-tight));
-    border-radius: var(--ds-radius-xs);
-    background-color: var(--_stat-placeholder-bg);
   }
 
   /* Arabic: no display tracking, a taller line for the label and hint. */
@@ -161,6 +173,22 @@
 
   [data-ds='stat']:lang(ar) > :is([data-part='label'], [data-part='hint']) {
     line-height: var(--ds-font-leading-arabic-snug);
+  }
+
+  /* Small Arabic text goes one step up (PLAN.md section 12). */
+  [data-ds='stat']:lang(ar) {
+    --_stat-label-font-size: var(--ds-font-size-m);
+    --_stat-meta-font-size: var(--ds-font-size-m);
+  }
+
+  [data-ds='stat'][data-size='sm']:lang(ar) {
+    --_stat-label-font-size: var(--ds-font-size-s);
+    --_stat-meta-font-size: var(--ds-font-size-s);
+  }
+
+  [data-ds='stat'][data-size='lg']:lang(ar) {
+    --_stat-label-font-size: var(--ds-font-size-l);
+    --_stat-meta-font-size: var(--ds-font-size-l);
   }
 
   @media (forced-colors: active) {

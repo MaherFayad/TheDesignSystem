@@ -99,7 +99,13 @@ export default function StatDemo() {
             delta={0.2468}
             hint="Converted at the rate of the first day of the month, before tax and refunds"
           />
-          <Stat label="Storage" value={18_400_000_000} format={{ notation: 'compact', maximumFractionDigits: 1 }} delta={1.5} hint="Bytes, compact" />
+          <Stat
+            label="Storage used"
+            value={18.4}
+            format={{ style: 'unit', unit: 'gigabyte', maximumFractionDigits: 1 }}
+            delta={1.5}
+            hint="Of 50 GB on this plan"
+          />
         </DemoGrid>
       </DemoCase>
 
@@ -112,7 +118,7 @@ export default function StatDemo() {
             delta={-0.0275}
             hint="محسوبة بسعر الصرف في أول يوم من الشهر، قبل الضريبة والمبالغ المستردة"
           />
-          <Stat label="متوسط وقت الرد" value={14} format={{ style: 'unit', unit: 'minute' }} delta={0} hint="نفس الأسبوع الماضي" icon="clock" />
+          <Stat label="متوسط وقت الرد" value={14} format={{ style: 'unit', unit: 'minute', unitDisplay: 'long' }} delta={0} hint="نفس الأسبوع الماضي" icon="clock" />
         </DemoGrid>
       </DemoCase>
 
