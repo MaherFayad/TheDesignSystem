@@ -416,5 +416,10 @@
       --_menu-item-bg-highlight: Highlight;
       --_menu-item-fg-highlight: HighlightText;
     }
+
+    /* The popup draws the one frame: the nested ListBox border takes the popup's Canvas, so no second frame shows. */
+    [data-ds='multi-select'][data-part='popup'] > [data-ds='list-box'] {
+      --_list-box-border-color: Canvas;
+    }
   }
 }
