@@ -14,25 +14,27 @@ const locales: Record<NotificationLanguage, string> = {
   ar: 'ar-u-nu-latn',
 };
 
-const steps: [Intl.RelativeTimeFormatUnit, number][] = [
-  ['second', 60],
-  ['minute', 60],
-  ['hour', 24],
-  ['day', 7],
-  ['week', 4.345],
-  ['month', 12],
-  ['year', Infinity],
-];
-
-/** "5 minutes ago", "yesterday", "قبل 5 دقائق". Times in the future read as "in 5 minutes". */
+/**
+ * "5 minutes ago", "yesterday", "قبل 5 دقائق". Under a day it counts
+ * seconds, minutes or hours; from a day on it counts calendar days, the same
+ * days dayGroup uses, so the time and its group heading never disagree.
+ * Times in the future read as "in 5 minutes".
+ */
 export function formatRelativeTime(time: Date, now: Date, lang: NotificationLanguage): string {
   const rtf = new Intl.RelativeTimeFormat(locales[lang], { numeric: 'auto' });
-  let value = (time.getTime() - now.getTime()) / 1000;
-  for (const [unit, size] of steps) {
-    if (Math.abs(value) < size) return rtf.format(Math.round(value), unit);
-    value /= size;
+  const seconds = Math.round((time.getTime() - now.getTime()) / 1000);
+  const days = calendarDays(time, now);
+  if (days === 0 || Math.abs(seconds) < 3_600) {
+    const abs = Math.abs(seconds);
+    if (abs < 60) return rtf.format(seconds, 'second');
+    if (abs < 3_600) return rtf.format(Math.round(seconds / 60), 'minute');
+    return rtf.format(Math.round(seconds / 3_600), 'hour');
   }
-  return rtf.format(Math.round(value), 'year');
+  const abs = Math.abs(days);
+  if (abs < 7) return rtf.format(days, 'day');
+  if (abs < 30) return rtf.format(Math.round(days / 7), 'week');
+  if (abs < 365) return rtf.format(Math.round(days / 30.44), 'month');
+  return rtf.format(Math.round(days / 365.25), 'year');
 }
 
 export type DayGroup = 'today' | 'yesterday' | 'earlier';
@@ -42,8 +44,13 @@ function startOfDay(d: Date): number {
 }
 
 /** The day group of a time, by the local calendar day. A time in the future counts as today. */
+/** Calendar days from now to time: negative in the past. */
+function calendarDays(time: Date, now: Date): number {
+  return Math.round((startOfDay(time) - startOfDay(now)) / 86_400_000);
+}
+
 export function dayGroup(time: Date, now: Date): DayGroup {
-  const days = Math.round((startOfDay(now) - startOfDay(time)) / 86_400_000);
+  const days = -calendarDays(time, now);
   if (days <= 0) return 'today';
   if (days === 1) return 'yesterday';
   return 'earlier';

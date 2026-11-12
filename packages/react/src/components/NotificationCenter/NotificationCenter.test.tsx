@@ -130,6 +130,26 @@ describe('NotificationCenter', () => {
     expect(el.querySelector('[data-part="item-time"]')?.textContent).toMatch(/5/);
   });
 
+  it('names every group by its heading, spaces in the label included', () => {
+    render(
+      <NotificationCenter
+        now={now}
+        items={[
+          { id: 'a', title: 'A', time: now, group: 'This week' },
+          { id: 'b', title: 'B', time: now, group: 'Last month' },
+        ]}
+      />,
+    );
+    expect(screen.getByRole('group', { name: 'This week' })).toBeTruthy();
+    expect(screen.getByRole('group', { name: 'Last month' })).toBeTruthy();
+  });
+
+  it('puts each item before its actions in the tab order', () => {
+    const { container } = render(<NotificationCenter items={items} now={now} />);
+    const stops = [...root(container).querySelectorAll<HTMLElement>('[data-part="item"], button')].map((e) => e.getAttribute('data-part') ?? e.textContent);
+    expect(stops.slice(0, 3)).toEqual(['item', 'Open comment', 'item']);
+  });
+
   it('demo renders its cases in order', () => {
     const { container } = render(<NotificationCenterDemo />);
     const ids = [...container.querySelectorAll('[data-demo-case]')].map((c) => c.getAttribute('data-demo-case'));

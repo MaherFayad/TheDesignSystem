@@ -206,7 +206,20 @@ Decisions:
 - The hover veil on `::after` washes over the whole item, actions included:
   lifting the actions above it would need a raw `z-index`.
 
-Review: see the section below.
+- Relative time counts seconds, minutes and hours under a day, and calendar
+  days from a day on, so the time ("yesterday", "2 days ago") always agrees
+  with its group heading.
+- Pass `now` when rendering on the server; the default is the render time.
+
+Review: one blocker fixed (group ids were built from the label text, so a
+label with a space broke `aria-labelledby`; ids now use the group index,
+with a test). Notes fixed: relative time against the day group, rounding
+at unit edges ("60 seconds ago"), unread swapping a private `--_*-item-fg`
+instead of writing `color`, private names moved to the listed words
+(`padding-inline`, `gap`, `item-padding-block`, `unread-bg`), a comment on
+the hidden word pattern, the `now` note for SSR, a tab order test. Left
+open: the hover veil shows on rows that are not clickable (kept, it is a
+light wash), and `list-stagger` named but not played (lead change 2).
 
 ## Token gaps
 

@@ -8,8 +8,21 @@ describe('notification times', () => {
     expect(formatRelativeTime(new Date(now.getTime() - 30_000), now, 'en')).toBe('30 seconds ago');
     expect(formatRelativeTime(new Date(now.getTime() - 5 * 60_000), now, 'en')).toBe('5 minutes ago');
     expect(formatRelativeTime(new Date(now.getTime() - 3 * 3_600_000), now, 'en')).toBe('3 hours ago');
-    expect(formatRelativeTime(new Date(now.getTime() - 26 * 3_600_000), now, 'en')).toBe('yesterday');
     expect(formatRelativeTime(new Date(now.getTime() + 10 * 60_000), now, 'en')).toBe('in 10 minutes');
+    expect(formatRelativeTime(new Date(now.getTime() - 59_600), now, 'en')).toBe('1 minute ago');
+    expect(formatRelativeTime(new Date(2026, 10, 10, 9), now, 'en')).toBe('2 days ago');
+  });
+
+  it('agrees with the day group from a day on', () => {
+    const t = new Date(now.getTime() - 50 * 3_600_000);
+    expect(dayGroup(t, now)).toBe('earlier');
+    expect(formatRelativeTime(t, now, 'en')).toBe('2 days ago');
+    const late = new Date(now.getTime() - 26 * 3_600_000);
+    expect(dayGroup(late, now)).toBe('yesterday');
+    expect(formatRelativeTime(late, now, 'en')).toBe('yesterday');
+    const y = new Date(2026, 10, 11, 23, 0);
+    expect(dayGroup(y, now)).toBe('yesterday');
+    expect(formatRelativeTime(y, now, 'en')).toBe('yesterday');
   });
 
   it('formats Arabic with Western digits', () => {

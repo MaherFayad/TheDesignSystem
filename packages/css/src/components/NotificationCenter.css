@@ -5,11 +5,12 @@
  *
  * Private plumbing (docs/contracts/anatomy.md, one convention), on the root:
  *
- *   --_notification-center-padding       the inline padding of every row
- *   --_notification-center-item-gap      between an item's columns
- *   --_notification-center-item-padding  the block padding of an item
- *   --_notification-center-font-size     item title and body
- *   --_notification-center-unread        the unread dot, primary border (3:1)
+ *   --_notification-center-padding-inline     the inline padding of every row
+ *   --_notification-center-gap                between an item's columns
+ *   --_notification-center-item-padding-block the block padding of an item
+ *   --_notification-center-font-size          item title and body
+ *   --_notification-center-unread-bg          the unread dot, primary border (3:1)
+ *   --_notification-center-item-fg            the item title color, brighter when unread
  *   --_notification-center-item-bg       an item's fill at rest
  *   --_notification-center-item-bg-unread
  *   --_notification-center-item-bg-hover the hover veil on ::after
@@ -20,15 +21,16 @@
  */
 @layer ds.base {
   [data-ds='notification-center'] {
-    --_notification-center-padding: var(--ds-space-l);
-    --_notification-center-item-gap: var(--ds-space-m);
-    --_notification-center-item-padding: var(--ds-space-m);
+    --_notification-center-padding-inline: var(--ds-space-l);
+    --_notification-center-gap: var(--ds-space-m);
+    --_notification-center-item-padding-block: var(--ds-space-m);
     --_notification-center-font-size: var(--ds-font-size-m);
-    --_notification-center-unread: var(--ds-color-primary-border);
+    --_notification-center-unread-bg: var(--ds-color-primary-border);
     --_notification-center-item-bg: transparent;
     --_notification-center-item-bg-unread: var(--ds-color-bg-overlay-5);
     --_notification-center-item-bg-hover: var(--ds-color-bg-overlay-5);
     --_notification-center-ring: var(--ds-focus-shadow-ring);
+    --_notification-center-item-fg: var(--ds-color-text-default);
 
     display: flex;
     flex-direction: column;
@@ -42,9 +44,9 @@
   }
 
   [data-ds='notification-center'][data-size='sm'] {
-    --_notification-center-padding: var(--ds-space-m);
-    --_notification-center-item-gap: var(--ds-space-s);
-    --_notification-center-item-padding: var(--ds-space-s);
+    --_notification-center-padding-inline: var(--ds-space-m);
+    --_notification-center-gap: var(--ds-space-s);
+    --_notification-center-item-padding-block: var(--ds-space-s);
     --_notification-center-font-size: var(--ds-font-size-s);
   }
 
@@ -56,7 +58,7 @@
     align-items: center;
     gap: var(--ds-space-xs);
     padding-block: var(--ds-space-s);
-    padding-inline: var(--_notification-center-padding);
+    padding-inline: var(--_notification-center-padding-inline);
     border-block-end: var(--ds-border-width-default) solid var(--ds-color-bg-overlay-10);
   }
 
@@ -94,7 +96,7 @@
   [data-ds='notification-center'] > [data-part='group'] > [data-part='group-label'] {
     margin: 0;
     padding-block: var(--ds-space-xs);
-    padding-inline: var(--_notification-center-padding);
+    padding-inline: var(--_notification-center-padding-inline);
     color: var(--ds-color-text-muted);
     font-size: var(--ds-font-size-s);
     font-weight: var(--ds-font-weight-medium);
@@ -116,9 +118,9 @@
       'icon title time'
       'icon body body'
       'icon actions actions';
-    column-gap: var(--_notification-center-item-gap);
-    padding-block: var(--_notification-center-item-padding);
-    padding-inline: var(--_notification-center-padding);
+    column-gap: var(--_notification-center-gap);
+    padding-block: var(--_notification-center-item-padding-block);
+    padding-inline: var(--_notification-center-padding-inline);
     background-color: var(--_notification-center-item-bg);
     overflow-wrap: anywhere;
   }
@@ -179,25 +181,30 @@
   [data-ds='notification-center'] [data-part='item'] > [data-part='item-title'] {
     grid-area: title;
     margin: 0;
-    color: var(--ds-color-text-default);
+    color: var(--_notification-center-item-fg);
+  }
+
+  /* Unread swaps the title color and makes it bold: the weight is the second, non color cue. */
+  [data-ds='notification-center'] [data-part='item'][data-unread] {
+    --_notification-center-item-fg: var(--ds-color-text-bright);
   }
 
   [data-ds='notification-center'] [data-part='item'][data-unread] > [data-part='item-title'] {
-    color: var(--ds-color-text-bright);
     font-weight: var(--ds-font-weight-semibold);
   }
 
   /* The unread dot sits in the inline start padding, beside the icon. Its word is read, not drawn. */
   [data-ds='notification-center'] [data-part='item'] [data-part='unread'] {
     position: absolute;
-    inset-block-start: calc(var(--_notification-center-item-padding) + (var(--_notification-center-font-size) * var(--ds-font-leading-snug) - var(--ds-space-fixed-s)) / 2);
-    inset-inline-start: calc((var(--_notification-center-padding) - var(--ds-space-fixed-s)) / 2);
+    inset-block-start: calc(var(--_notification-center-item-padding-block) + (var(--_notification-center-font-size) * var(--ds-font-leading-snug) - var(--ds-space-fixed-s)) / 2);
+    inset-inline-start: calc((var(--_notification-center-padding-inline) - var(--ds-space-fixed-s)) / 2);
     inline-size: var(--ds-space-fixed-s);
     block-size: var(--ds-space-fixed-s);
     border-radius: var(--ds-radius-pill);
-    background-color: var(--_notification-center-unread);
+    background-color: var(--_notification-center-unread-bg);
   }
 
+  /* Visually hidden, the same pattern as the Button status: a 1px box (border.width.default) clipped away. */
   [data-ds='notification-center'] [data-part='unread'] > [data-unread-word] {
     position: absolute;
     inline-size: var(--ds-border-width-default);
@@ -239,7 +246,7 @@
     align-items: center;
     gap: var(--ds-space-xs);
     padding-block: var(--ds-space-6xl);
-    padding-inline: var(--_notification-center-padding);
+    padding-inline: var(--_notification-center-padding-inline);
     color: var(--ds-color-text-muted);
     text-align: center;
   }
@@ -259,7 +266,7 @@
 
   @media (forced-colors: active) {
     [data-ds='notification-center'] {
-      --_notification-center-unread: CanvasText;
+      --_notification-center-unread-bg: CanvasText;
     }
 
     [data-ds='notification-center'] [data-part='unread'] {

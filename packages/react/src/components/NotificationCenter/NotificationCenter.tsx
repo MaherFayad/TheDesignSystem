@@ -106,7 +106,7 @@ export interface NotificationCenterProps extends Omit<HTMLAttributes<HTMLElement
   emptyTitle?: ReactNode;
   /** The empty state body: what shows up here. */
   emptyBody?: ReactNode;
-  /** The clock for relative times and day groups. Default the time of render. */
+  /** The clock for relative times and day groups. Default the time of render; pass it when rendering on the server, so server and client agree. */
   now?: Date;
   ref?: Ref<HTMLElement>;
 }
@@ -220,8 +220,8 @@ export function NotificationCenter({
           <p data-empty-body="">{emptyBody ?? words.emptyBody}</p>
         </div>
       ) : (
-        groups.map((g) => {
-          const labelId = `${titleId}-${g.key}`;
+        groups.map((g, index) => {
+          const labelId = `${titleId}-g${index}`;
           return (
             <div data-part="group" key={g.key} role="group" aria-labelledby={labelId}>
               <GroupHeading data-part="group-label" id={labelId}>
