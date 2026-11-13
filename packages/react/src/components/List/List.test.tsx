@@ -171,7 +171,7 @@ describe('List', () => {
       });
     }
 
-    /** Desk plays list-stagger in full; Studio and Neutral play its reduced form. */
+    /** Order 1.23: list-stagger plays the stagger primitive (fade-rise), so every style rises; Studio lands its rows together. */
     const desk = (ui: ReactNode) => <Theme style="desk">{ui}</Theme>;
     const rows = (n: number) => Array.from({ length: n }, (_, i) => <ListItem key={i} title={`Row ${i + 1}`} />);
 
@@ -180,7 +180,7 @@ describe('List', () => {
         const { rerender } = render(desk(<List aria-label="Rows">{rows(12)}</List>));
         expect(animate).toHaveBeenCalledTimes(12);
         const timings = animate.mock.calls.map((c) => (c as unknown as [Keyframe[], KeyframeAnimationOptions])[1]);
-        for (const t of timings) expect(t.id).toBe('ds-motion:list-stagger');
+        for (const t of timings) expect(t.id).toBe('ds-motion:stagger');
         const [frames] = animate.mock.calls[0] as unknown as [Keyframe[]];
         expect(frames[0]?.opacity).toBe(0);
         expect(String(frames[0]?.transform)).toContain('translateY(');
@@ -189,7 +189,7 @@ describe('List', () => {
         rerender(desk(<List aria-label="Rows">{rows(13)}</List>));
         rerender(desk(<List aria-label="Rows">{rows(13).reverse()}</List>));
         const ids = animate.mock.calls.map((c) => (c as unknown as [Keyframe[], KeyframeAnimationOptions])[1].id);
-        expect(ids.filter((id) => id === 'ds-motion:list-stagger')).toHaveLength(12);
+        expect(ids.filter((id) => id === 'ds-motion:stagger')).toHaveLength(12);
         // collection-flip: the added row pops in once; nothing else plays.
         expect(ids.filter((id) => id === 'ds-motion:flip')).toHaveLength(1);
       }));
@@ -219,7 +219,7 @@ describe('List', () => {
         }
       }));
 
-    it('plays the reduced fade in a style whose preset asks for it (Studio)', () =>
+    it('rises in Studio too (order 1.23: no longer the same plain fade as Neutral)', () =>
       withAnimate((animate) => {
         render(
           <Theme style="studio">
@@ -227,7 +227,7 @@ describe('List', () => {
           </Theme>,
         );
         expect(animate).toHaveBeenCalledTimes(2);
-        for (const call of animate.mock.calls) expect((call as unknown as [Keyframe[]])[0].every((f) => !('transform' in f))).toBe(true);
+        for (const call of animate.mock.calls) expect((call as unknown as [Keyframe[]])[0].some((f) => 'transform' in f)).toBe(true);
       }));
 
     it('skips rows that come from server HTML', () =>

@@ -14,6 +14,7 @@
 //         <div data-part="backdrop">                  Radix Overlay
 //         <div data-part="panel" role="dialog">       Radix Content
 //           <div data-part="handle" aria-hidden>
+//             <span data-part="handle-bar">            order 1.23: the drawn bar, so it can take a radius
 //           <div data-part="header">
 //             <h2 data-part="title">
 //             <p data-part="description">
@@ -244,7 +245,9 @@ function SheetHandle({ onDragging, dismissible, onDismiss }: { onDragging: (on: 
       onPointerUp={(event) => end(event, false)}
       onPointerCancel={(event) => end(event, true)}
       onLostPointerCapture={(event) => end(event, true)}
-    />
+    >
+      <span data-part="handle-bar" />
+    </div>
   );
 }
 

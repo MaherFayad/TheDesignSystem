@@ -37,9 +37,14 @@
  * backdrop-filter is unsupported, under reduced transparency and under more
  * contrast. While the thumb slides, the text under it takes the selected
  * colour where the thumb is (Tabs/ink.ts, part label-ink).
+ *
+ * Round 3 (order 1.23): --_segmented-control-ink, 1 or 0, whether the text under the
+ * sliding mark changes colour with it (Tabs/ink.ts); a style sets 0 to keep
+ * the colours changing at once. A name outside the list in anatomy.md.
  */
 @layer ds.base {
   [data-ds='segmented-control'] {
+    --_segmented-control-ink: 1;
     --_segmented-control-height: var(--ds-size-control-md);
     --_segmented-control-inset: var(--ds-space-4xs);
     --_segmented-control-gap: var(--ds-space-4xs);

@@ -158,7 +158,8 @@
       "In Desk the title and the close control sit inside the title bar, so they are parts of TitleBar and WindowControls there (a part belongs to the nearest root). The dialog's own parts in Desk are titlebar, description, body and footer; title, close and controls are listed here for Studio and for style.json optionalParts.",
       "dismissible false is for short waits, while the dialog's own action runs. The app must set it back to true when the action ends, success or failure. The close control (the Studio CloseButton or the Desk close light) is aria-disabled and stays focusable.",
       "Development builds warn in the console when a dialog opens with no title, and when its footer holds more than three actions.",
-      "A form in a dialog: the form element lives in DialogBody with an id and an onSubmit; the submit Button sits in DialogFooter with type=\"submit\" and form={id}, so Enter in a field and the button both submit. Close the dialog from onSubmit when the save succeeds, not from a DialogClose around the submit button."
+      "A form in a dialog: the form element lives in DialogBody with an id and an onSubmit; the submit Button sits in DialogFooter with type=\"submit\" and form={id}, so Enter in a field and the button both submit. Close the dialog from onSubmit when the save succeeds, not from a DialogClose around the submit button.",
+      "Order 1.23 motion: the backdrop blurs the page in (backdrop-filter, a solid scrim where it is missing, under reduced transparency and more contrast); the parts read within 200ms. With dismissible false a backdrop press or Escape is refused: the panel nudges once along the inline axis (interaction dialog-refuse), never under reduced motion."
     ]
   },
   "content": {

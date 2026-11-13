@@ -22,6 +22,10 @@
  *                         anatomy.md: an animation iteration count. A style
  *                         that slows duration.pulse lowers it so the pulse
  *                         still ends before five seconds; 0 turns it off.
+ *
+ * Round 3 (order 1.23): --_status-dot-duration and --_status-dot-ease, the
+ * length and curve of one pulse loop (a style keeps loops x duration under
+ * five seconds), so styles differ in kind and not only in loop count.
  */
 @layer ds.base {
   [data-ds='status-dot'] {
@@ -30,6 +34,8 @@
     --_status-dot-gap: var(--ds-space-xs);
     --_status-dot-font-size: var(--ds-font-size-m);
     --_status-dot-loops: 3;
+    --_status-dot-duration: var(--ds-duration-pulse);
+    --_status-dot-ease: var(--ds-ease-out);
 
     display: inline-flex;
     align-items: flex-start;
@@ -114,11 +120,11 @@
     border-radius: inherit;
     background-color: var(--_status-dot-bg);
     opacity: 0;
-    animation: ds-status-dot-pulse var(--ds-duration-pulse) var(--ds-ease-out) var(--_status-dot-loops);
+    animation: ds-status-dot-pulse var(--_status-dot-duration) var(--_status-dot-ease) var(--_status-dot-loops);
   }
 
   [data-ds='status-dot'][data-pulse] > [data-part='dot'] {
-    animation: ds-status-dot-beat var(--ds-duration-pulse) var(--ds-ease-standard) var(--_status-dot-loops);
+    animation: ds-status-dot-beat var(--_status-dot-duration) var(--ds-ease-standard) var(--_status-dot-loops);
   }
 
   @keyframes ds-status-dot-beat {

@@ -239,6 +239,7 @@ export function TabsTrigger({ value, start, count, children, ref, ...rest }: Tab
     const inked = (el: Element | undefined) => (el ? [...el.querySelectorAll(INKED)] : []);
     const left = from === null ? undefined : ctx.triggers.get(from);
     playInk({
+      switch: '--_tabs-ink',
       slide,
       to: ctx.track.rect ? fromLocal(ctx.track.rect, list) : indicator.getBoundingClientRect(),
       anchor: list,

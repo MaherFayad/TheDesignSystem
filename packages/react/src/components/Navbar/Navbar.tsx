@@ -145,6 +145,7 @@ export function Navbar({
     // Round 3: the link text takes the current color where the bar is (Tabs/ink.ts).
     if (slide && track.rect) {
       playInk({
+        switch: '--_navbar-ink',
         slide,
         to: fromLocal(track.rect, root),
         anchor: root,

@@ -102,6 +102,8 @@ export interface InkOptions {
   /** A part of the item the pill reaches: its color is the ink. */
   inkFrom: Element | null | undefined;
   axis: 'x' | 'y';
+  /** A private property on the anchor's root that a style sets to 0 to turn the ink off (`--_tabs-ink`). */
+  switch?: `--_${string}`;
 }
 
 /** Plays the ink with a slide. Returns the twin animations. */
@@ -109,6 +111,7 @@ export function playInk(opts: InkOptions): Animation[] {
   clearInk(opts.anchor);
   const { slide } = opts;
   if (!slide) return [];
+  if (opts.switch && typeof getComputedStyle === 'function' && getComputedStyle(opts.anchor).getPropertyValue(opts.switch).trim() === '0') return [];
   // Read after the last ink is cleared, so no hold of it is read as a color.
   const restColor = colorOf(opts.restFrom);
   const inkColor = colorOf(opts.inkFrom);

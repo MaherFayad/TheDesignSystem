@@ -100,7 +100,8 @@
       "No native title attribute.",
       "The root also carries data-side and data-align from Radix. data-side is physical (top, right, bottom, left) after the logical side prop is mapped by direction: side start is data-side right in Arabic.",
       "Focus returns to the trigger on close. A popover with only a PopoverAnchor returns focus to the element that had it when it opened.",
-      "Inside a scrolling panel pass hideWhenDetached so the popover hides while its trigger is scrolled out of view (default false)."
+      "Inside a scrolling panel pass hideWhenDetached so the popover hides while its trigger is scrolled out of view (default false).",
+      "Order 1.23 motion: the surface unfolds out of its trigger side, more along the axis away from the trigger (--_popover-enter-stretch) than across it. A part that holds focus runs its arrival in no time, so focus leaving it never replays the arrival."
     ]
   },
   "content": {

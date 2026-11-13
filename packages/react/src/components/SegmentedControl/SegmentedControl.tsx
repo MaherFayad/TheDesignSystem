@@ -180,6 +180,7 @@ export function SegmentedControl({
         const anim = slideTo({ el: thumb }, from, to, { mode, axis: 'x' });
         // Round 3: the text under the thumb takes the selected color where the thumb is (Tabs/ink.ts).
         playInk({
+          switch: '--_segmented-control-ink',
           slide: anim,
           to,
           anchor: root,

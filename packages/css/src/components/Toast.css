@@ -90,6 +90,10 @@
  *   --_toast-shadow-room     how far past its box a clipped toast keeps its shadow
  *   --_toast-strip           working value: how much of a toast behind is clipped away
  *   --_toast-swipe-duration-now   working value: 0s while the toast follows the finger
+ *   --_toast-swipe-duration-out, -swipe-ease-out   the swipe exit, apart from the plain exit,
+ *                            so a style can fling (a long ease out) or cut (steps)
+ *   --_toast-icon-delay      when the icon beat starts after the card; with
+ *                            --_toast-icon-enter-scale: 1 the beat is gone
  *
  * A style tunes the stack with --_toast-peek and --_toast-depth, turns the
  * travel off with --_toast-enter-y: 0px and --_toast-enter-scale: 1, and the
@@ -240,6 +244,9 @@
     --_toast-shadow-room: var(--ds-space-3xl);
     /* Working value: how long the spring back of a swipe takes now; 0s while the toast follows the finger. */
     --_toast-swipe-duration-now: var(--_toast-duration);
+    --_toast-swipe-duration-out: var(--_toast-duration-out);
+    --_toast-swipe-ease-out: var(--_toast-ease-out);
+    --_toast-icon-delay: var(--ds-delay-stagger);
 
     position: relative;
     display: grid;
@@ -294,7 +301,7 @@
 
   /* The icon beat: the icon pops one stagger step after the card. */
   [data-ds='toaster'] > [data-ds='toast'][data-state='open'] > [data-part='icon'] {
-    animation: ds-toast-icon-in var(--ds-duration-spring-bouncy) var(--ds-ease-spring-bouncy) var(--ds-delay-stagger) backwards;
+    animation: ds-toast-icon-in var(--ds-duration-spring-bouncy) var(--ds-ease-spring-bouncy) var(--_toast-icon-delay) backwards;
   }
 
   @keyframes ds-toast-icon-in {
@@ -402,7 +409,7 @@
   }
 
   [data-ds='toaster'] > [data-ds='toast'][data-state='closed'][data-swipe='end'] {
-    animation: ds-toast-swipe-out var(--_toast-duration-out) var(--_toast-ease-out) forwards;
+    animation: ds-toast-swipe-out var(--_toast-swipe-duration-out) var(--_toast-swipe-ease-out) forwards;
   }
 
   @keyframes ds-toast-swipe-out {

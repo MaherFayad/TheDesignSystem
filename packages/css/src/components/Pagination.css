@@ -29,9 +29,17 @@
  * aria-label) and roll digit by digit when the window of pages shifts. The
  * end arrows wind up and go. Without the span (a port that has not added
  * it) the page draws its own fill, the round 1 look.
+ *
+ * Round 3 (order 1.23): --_pagination-press-x and --_pagination-press-y, where the last
+ * press landed on an item, in px from its inline start and block start
+ * (written on the item on pointerdown, TabBar/pressOrigin.ts), 50% until
+ * then. Read by a platform ripple; this file draws nothing with them. Names
+ * outside the list in anatomy.md: a position.
  */
 @layer ds.base {
   [data-ds='pagination'] {
+    --_pagination-press-x: 50%;
+    --_pagination-press-y: 50%;
     --_pagination-gap: var(--ds-space-3xs);
     --_pagination-height: var(--ds-size-control-md);
     --_pagination-fg: var(--ds-color-text-muted);

@@ -32,6 +32,13 @@
  * with no script it shows the value.
  *
  *   --_meter-duration, -ease   a value change (motion names)
+ *
+ * Round 3 (order 1.23, review N28): the first view fill reads
+ * --_meter-reveal-duration and --_meter-reveal-ease (names outside the list
+ * in anatomy.md: the reveal's timing), so a style can make it a short snap
+ * or a long settle; and a second beat lands the value text with the fill,
+ * at --_meter-value-at of the reveal (0 to 1; a name outside the list: a
+ * point of the run). Under reduced motion neither plays.
  */
 @layer ds.base {
   [data-ds='meter'] {
@@ -39,6 +46,9 @@
     --_meter-gap: var(--ds-space-2xs);
     --_meter-duration: var(--ds-duration-spring-soft);
     --_meter-ease: var(--ds-ease-spring-soft);
+    --_meter-reveal-duration: var(--ds-duration-reveal);
+    --_meter-reveal-ease: var(--ds-ease-spring-soft);
+    --_meter-value-at: 0.6;
     --_meter-font-size: var(--ds-font-size-s);
     --_meter-radius: var(--ds-radius-pill);
     --_meter-track: var(--ds-color-bg-overlay-10);

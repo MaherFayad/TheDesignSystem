@@ -39,6 +39,7 @@
  *   --_dialog-enter-opacity            Drawer and Sheet: the opacity a slide starts from and
  *                                      leaves to, 1; 0 when a style turns the slide into a fade
  *   --_dialog-handle-color, -drag-y, -drag-duration   Sheet: the handle and the drag
+ *   --_dialog-handle-radius            Sheet: the corners of the bar (order 1.23, the handle-bar part)
  *
  *   --_dialog-shift                    how far each part of the panel rises as it arrives
  *   --_dialog-backdrop-blur            how much the backdrop blurs the page behind it; the
@@ -47,6 +48,9 @@
  *                                      of the stagger); the rise carries on after it
  *   --_dialog-stagger-max              the latest a part starts, so the last one reads in time
  *   --_dialog-part-delay               working value: when this part starts
+ *   --_dialog-stagger                  the step between two parts (0s: they come together)
+ *   --_dialog-part-duration, -part-ease   the rise of each part: a style picks its curve,
+ *                                      a spring that overshoots or a plain ease out
  *   --_dialog-refuse-shift             how far the panel swings when a close is refused
  *
  * Order 1.23, proposed. The state machine: closed, opening, open, refused,
@@ -121,6 +125,9 @@
     --_dialog-backdrop-blur: var(--ds-blur-backdrop);
     --_dialog-scrim-filter: blur(var(--_dialog-backdrop-blur));
     --_dialog-part-fade: var(--ds-duration-fast);
+    --_dialog-stagger: var(--ds-delay-stagger);
+    --_dialog-part-duration: var(--ds-duration-spring-soft);
+    --_dialog-part-ease: var(--ds-ease-spring-soft);
     --_dialog-refuse-shift: var(--ds-space-s);
     --_dialog-stagger-max: var(--ds-duration-base);
     --_dialog-enter-y: var(--ds-distance-enter);
@@ -246,23 +253,23 @@
    */
   :is([data-ds='dialog'], [data-ds='alert-dialog'], [data-ds='drawer'], [data-ds='sheet']) > [data-part='panel'][data-state='open'] > :is([data-part='header'], [data-part='title'], [data-part='description'], [data-part='body'], [data-part='footer']) {
     /* Two runs: the part is readable after --_dialog-part-fade, the rise settles on the soft spring. */
-    --_dialog-part-delay: var(--ds-delay-stagger);
+    --_dialog-part-delay: var(--_dialog-stagger);
 
     animation:
       ds-dialog-part-fade var(--_dialog-part-fade) var(--ds-ease-out) var(--_dialog-part-delay) backwards,
-      ds-dialog-part-in var(--ds-duration-spring-soft) var(--ds-ease-spring-soft) var(--_dialog-part-delay) backwards;
+      ds-dialog-part-in var(--_dialog-part-duration) var(--_dialog-part-ease) var(--_dialog-part-delay) backwards;
   }
 
   :is([data-ds='dialog'], [data-ds='alert-dialog'], [data-ds='drawer'], [data-ds='sheet']) > [data-part='panel'][data-state='open'] > [data-part='description'] {
-    --_dialog-part-delay: min(calc(var(--ds-delay-stagger) * 2), var(--_dialog-stagger-max));
+    --_dialog-part-delay: min(calc(var(--_dialog-stagger) * 2), var(--_dialog-stagger-max));
   }
 
   :is([data-ds='dialog'], [data-ds='alert-dialog'], [data-ds='drawer'], [data-ds='sheet']) > [data-part='panel'][data-state='open'] > [data-part='body'] {
-    --_dialog-part-delay: min(calc(var(--ds-delay-stagger) * 3), var(--_dialog-stagger-max));
+    --_dialog-part-delay: min(calc(var(--_dialog-stagger) * 3), var(--_dialog-stagger-max));
   }
 
   :is([data-ds='dialog'], [data-ds='alert-dialog'], [data-ds='drawer'], [data-ds='sheet']) > [data-part='panel'][data-state='open'] > [data-part='footer'] {
-    --_dialog-part-delay: min(calc(var(--ds-delay-stagger) * 4), var(--_dialog-stagger-max));
+    --_dialog-part-delay: min(calc(var(--_dialog-stagger) * 4), var(--_dialog-stagger-max));
   }
 
   /*
@@ -279,7 +286,7 @@
   /* The AlertDialog icon lands: it pops from scale.morph on the bouncy spring, with the title. */
   :is([data-ds='dialog'], [data-ds='alert-dialog'], [data-ds='drawer'], [data-ds='sheet']) > [data-part='panel'][data-state='open'] > [data-part='icon'] {
     animation: ds-dialog-icon-in var(--ds-duration-spring-bouncy) var(--ds-ease-spring-bouncy) backwards;
-    animation-delay: var(--ds-delay-stagger);
+    animation-delay: var(--_dialog-stagger);
   }
 
   /*
@@ -628,6 +635,7 @@
     --_dialog-height-max: 75%;
     --_dialog-header-bg: transparent;
     --_dialog-handle-color: var(--ds-color-border-strong);
+    --_dialog-handle-radius: var(--ds-radius-pill);
     --_dialog-drag-y: 0px;
     --_dialog-drag-duration: var(--ds-duration-base);
     --_dialog-slide: 100%;
@@ -732,6 +740,23 @@
     background-clip: content-box;
     cursor: grab;
     touch-action: none;
+  }
+
+  /*
+   * Order 1.23: where the handle holds a handle-bar part, the bar draws
+   * itself and can take --_dialog-handle-radius; the handle keeps only the
+   * target strip.
+   */
+  [data-ds='sheet'] > [data-part='panel'] > [data-part='handle']:has(> [data-part='handle-bar']) {
+    background-color: transparent;
+  }
+
+  [data-ds='sheet'] > [data-part='panel'] > [data-part='handle'] > [data-part='handle-bar'] {
+    display: block;
+    inline-size: 100%;
+    block-size: 100%;
+    border-radius: var(--_dialog-handle-radius);
+    background-color: var(--_dialog-handle-color);
   }
 
   [data-ds='sheet'][data-dragging] > [data-part='panel'] > [data-part='handle'] {
@@ -918,7 +943,8 @@
     }
 
     /* The bar keeps its own color: forced colors would paint every background as Canvas. */
-    [data-ds='sheet'] > [data-part='panel'] > [data-part='handle'] {
+    [data-ds='sheet'] > [data-part='panel'] > [data-part='handle'],
+    [data-ds='sheet'] > [data-part='panel'] > [data-part='handle'] > [data-part='handle-bar'] {
       forced-color-adjust: none;
     }
 

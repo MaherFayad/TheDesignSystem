@@ -144,6 +144,7 @@ export function ToggleGroup({
     track.label = label;
     // Round 3: the text under the pill takes the on color where the pill is (Tabs/ink.ts).
     playInk({
+      switch: '--_toggle-group-ink',
       slide,
       to: track.rect ? fromLocal(track.rect, root) : pill.getBoundingClientRect(),
       anchor: root,

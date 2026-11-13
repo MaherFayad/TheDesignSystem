@@ -25,6 +25,7 @@
     "backdrop",
     "panel",
     "handle",
+    "handle-bar",
     "header",
     "title",
     "description",
@@ -136,7 +137,8 @@
       "The panel keeps clear of the home bar with env(safe-area-inset-bottom).",
       "Detents are wave 2.",
       "No native title attribute.",
-      "When the whole panel scrolls (a short viewport, 400% zoom) the handle scrolls away; the close control stays."
+      "When the whole panel scrolls (a short viewport, 400% zoom) the handle scrolls away; the close control stays.",
+      "Order 1.23: the handle holds a handle-bar part that draws the bar and takes --_dialog-handle-radius. Dragged above its place, or down on a sheet with dismissible false, the panel follows a third of the pointer (a rubber band) and springs back. Detents are not built yet."
     ]
   },
   "content": {
@@ -249,7 +251,8 @@
     "optionalParts": [
       "description",
       "body",
-      "footer"
+      "footer",
+      "handle-bar"
     ]
   },
   "since": "0.1.0"
