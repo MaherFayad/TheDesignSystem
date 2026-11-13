@@ -1,0 +1,24 @@
+---
+// A highlighted code block: Shiki with a light and a dark theme, switched by
+// the docs scheme in CSS (defaultColor false). Both themes keep comments at
+// 4.5:1 or more on their own background (WCAG 1.4.3).
+import { Code } from 'astro:components';
+
+interface Props {
+  code: string;
+  lang: string;
+  /** Adds a copy control over the block. */
+  copy?: { label: string; done: string };
+}
+const { code, lang, copy } = Astro.props;
+---
+
+<div class="code-block">
+  <Code code={code} lang={lang as never} themes={{ light: 'github-light-default', dark: 'github-dark-default' }} defaultColor={false} />
+  {copy && (
+    <button type="button" class="copy-btn" data-copy data-done={copy.done}>
+      <svg aria-hidden="true" viewBox="0 0 24 24" width="16" height="16"><rect x="8" y="8" width="12" height="12" rx="2" /><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2" /></svg>
+      <span>{copy.label}</span>
+    </button>
+  )}
+</div>

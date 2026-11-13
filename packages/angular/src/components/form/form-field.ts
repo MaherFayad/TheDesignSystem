@@ -15,7 +15,7 @@ import { NgTemplateOutlet } from '@angular/common';
 import { ChangeDetectionStrategy, Component, booleanAttribute, computed, forwardRef, inject, input, signal } from '@angular/core';
 import { consumeHostAttributes } from '../../internal/host';
 import { DsFieldDescription, type FieldOrientation, type FieldText } from '../field/field';
-import { DsFieldContext, type FieldPart } from '../field/field-context';
+import { DsFieldContext, settleAfterFirstRender, type FieldPart } from '../field/field-context';
 import { DsFieldError } from '../field-error/field-error';
 import { DsLabel } from '../label/label';
 import { DsFormContext } from './form-context';
@@ -101,6 +101,7 @@ export class DsFormField extends DsFieldContext {
 
   constructor() {
     super();
+    settleAfterFirstRender(this);
     consumeHostAttributes([
       'dsFormField', 'name', 'invalid', 'disabled', 'readOnly', 'required', 'orientation', 'label', 'description', 'error',
     ]);

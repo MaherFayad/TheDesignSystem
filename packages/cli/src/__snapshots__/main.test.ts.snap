@@ -31,6 +31,22 @@ exports[`ds --json > add, angular: copies the component folder without specs and
         "path": "src/ds/angular/internal/host.ts",
         "status": "planned",
       },
+      {
+        "path": "src/ds/angular/internal/motion.ts",
+        "status": "planned",
+      },
+      {
+        "path": "src/ds/angular/theme/resolve.ts",
+        "status": "planned",
+      },
+      {
+        "path": "src/ds/angular/theme/theme.ts",
+        "status": "planned",
+      },
+      {
+        "path": "src/ds/angular/theme/types.ts",
+        "status": "planned",
+      },
     ],
     "framework": "angular",
     "imports": [
@@ -347,9 +363,10 @@ exports[`ds --json > errors carry a stable code and exit 2 1`] = `
     "apiVersion": 1,
     "data": {
       "code": "DS_E_STYLE",
-      "message": "No style "paper". Styles: desk, neutral, studio.",
+      "message": "No style "paper". Styles: desk, liquid, neutral, studio.",
       "styles": [
         "desk",
+        "liquid",
         "neutral",
         "studio",
       ],
@@ -554,6 +571,20 @@ exports[`ds --json > style list 1`] = `
           "light",
         ],
         "status": "stable",
+      },
+      {
+        "defaultDensity": "comfortable",
+        "defaultScheme": "light",
+        "iconSet": "line",
+        "id": "liquid",
+        "motionPreset": "spring",
+        "name": "Liquid",
+        "proposedSchemes": [],
+        "schemes": [
+          "light",
+          "dark",
+        ],
+        "status": "proposed",
       },
       {
         "defaultDensity": "comfortable",

@@ -1,0 +1,383 @@
+---
+// One component page, generated from its manifest and its demo files. Order:
+// title, summary, status row, gallery link; a hero preview with switches;
+// one section per demo case (heading, sentence, live preview, code tabs);
+// then use when, avoid when, use instead, anatomy, props, states,
+// accessibility, content rules, tokens, motion and common mistakes.
+import { interactions } from '@the-system/motion';
+import { componentCases, hasGalleryRoute } from '../../scripts/cases.ts';
+import { galleryHref, galleryUrl } from '../../scripts/gallery.ts';
+import { familyLabel, frameworkIds, slugOf, type FrameworkId, type Manifest, type Prop } from '../../scripts/manifests.ts';
+import { caseText, pageText, type Lang } from '../lib/i18n.ts';
+import { inlineHtml } from '../lib/text.ts';
+import { componentPath, href, manifests, styles } from '../lib/site.ts';
+import { criteriaFor, criterionUrl } from '../lib/wcag.ts';
+import CodeBlock from './CodeBlock.astro';
+import Layout, { type TocItem } from './Layout.astro';
+import Preview from './Preview.astro';
+
+interface Props {
+  m: Manifest;
+  lang: Lang;
+}
+const { m, lang } = Astro.props;
+const t = pageText[lang];
+const slug = slugOf(m.name);
+const path = componentPath(m);
+const cases = componentCases(m);
+const live = hasGalleryRoute(m);
+const base = galleryHref(`/c/${slug}`);
+const bundled = galleryUrl.startsWith('/');
+const fwName: Record<FrameworkId, string> = { react: 'React', angular: 'Angular', native: 'React Native' };
+const codeLang: Record<FrameworkId, string> = { react: 'tsx', angular: 'html', native: 'tsx' };
+const ar = lang === 'ar';
+/** English manifest prose: on Arabic pages it sits in a left to right isolate. */
+const en = (text: string) => inlineHtml(text);
+const enAttrs = ar ? { dir: 'ltr', lang: 'en' } : {};
+
+const hero = cases.find((c) => c.id === 'one') ?? cases[0];
+const caseLabel = (id: string, title: string): { heading: string; sentence: string } => {
+  const known = caseText[id];
+  if (known) return { heading: known[lang][0], sentence: known[lang][1] };
+  return { heading: title, sentence: '' };
+};
+
+const props = Object.entries(m.props ?? {}).map(([name, raw]) => {
+  const p: Prop = typeof raw === 'string' ? { description: raw } : raw;
+  const type = Array.isArray(p.type) ? p.type.map((v) => `'${v}'`).join(' | ') : (p.type ?? '');
+  const def = p.default === undefined ? '' : typeof p.default === 'string' ? p.default : JSON.stringify(p.default);
+  return { name, type, def, description: p.description ?? '', required: p.required === true };
+});
+const partToComponent = new Map(Object.entries(m.parts ?? {}).map(([comp, part]) => [part, comp]));
+const anatomy = (m.anatomy ?? []).map((part) => ({ part, component: part === 'root' ? m.name : partToComponent.get(part), slot: m.slots?.[part] }));
+const keys = Object.entries(m.a11y?.keys ?? {});
+const criteria = criteriaFor(m);
+const related = interactions.filter((i) => i.components.includes(m.name));
+const known = new Set(manifests.map((x) => x.name));
+const insteadRows = Object.entries(m.insteadUse);
+const contentLangs = Object.entries(m.content ?? {});
+const styleNotes = Object.entries(m.styles ?? {});
+const styleName = new Map(styles.map((s) => [s.id, s.name]));
+const acceptsText = (a: string | string[] | undefined) => (Array.isArray(a) ? a.join(', ') : (a ?? ''));
+
+const toc: TocItem[] = [];
+if (live && hero) toc.push({ depth: 2, slug: 'preview', text: t.hero });
+if (cases.length > 0) {
+  toc.push({ depth: 2, slug: 'examples', text: t.examples });
+  for (const c of cases) toc.push({ depth: 3, slug: `case-${c.id}`, text: caseLabel(c.id, c.title).heading });
+}
+toc.push({ depth: 2, slug: 'usage', text: `${t.useWhen}${ar ? '، ' : ', '}${t.avoidWhen}` });
+toc.push({ depth: 2, slug: 'use-instead', text: t.insteadUse });
+if (anatomy.length > 0) toc.push({ depth: 2, slug: 'anatomy', text: t.anatomy });
+if (props.length > 0) toc.push({ depth: 2, slug: 'props', text: t.props });
+if (m.states?.length) toc.push({ depth: 2, slug: 'states', text: t.states });
+if (m.a11y) toc.push({ depth: 2, slug: 'accessibility', text: t.a11y });
+if (contentLangs.length > 0) toc.push({ depth: 2, slug: 'content', text: t.content });
+if (m.tokens?.length) toc.push({ depth: 2, slug: 'tokens', text: t.tokens });
+if (m.motion !== undefined) toc.push({ depth: 2, slug: 'motion', text: t.motion });
+if (m.mistakes?.length) toc.push({ depth: 2, slug: 'mistakes', text: t.mistakes });
+
+const axes = [
+  { key: 'style', values: styles.map((s) => s.id), value: 'neutral' },
+  { key: 'scheme', values: ['light', 'dark'], value: 'light' },
+  { key: 'platform', values: ['web', 'ios', 'android'], value: 'web' },
+  { key: 'density', values: ['compact', 'default', 'comfortable'], value: 'default' },
+  { key: 'dir', values: ['ltr', 'rtl'], value: ar ? 'rtl' : 'ltr' },
+  { key: 'lang', values: ['en', 'ar'], value: lang },
+] as const;
+const axisLabel = (v: string) => t.axisValues[v] ?? styleName.get(v) ?? v;
+const twin = `${href(lang, `/components/${slug}`).replace(/\/$/, '')}.md`;
+---
+
+<Layout lang={lang} path={path} title={m.name} description={m.summary} toc={toc} twin={twin}>
+  <article>
+    <header class="page-head">
+      <p class="eyebrow"><a href={href(lang, '/components/')}>{familyLabel(m.family)[lang]}</a></p>
+      <div class="title-row">
+        <h1 lang={ar ? 'en' : undefined}>{m.name}</h1>
+        {live && <a class="btn" href={base} data-open-gallery>{t.openGallery}</a>}
+      </div>
+      <p class="lead" {...enAttrs} set:html={en(m.summary)} />
+      {ar && <p class="note">{t.englishNote}</p>}
+      <ul class="status-row" aria-label={t.statusLabel}>
+        {frameworkIds.map((fw, i) => (
+          <>
+            {i > 0 && <li class="sep" aria-hidden="true" />}
+            <li>
+              <span class="fw" lang="en">{fwName[fw]}</span>
+              <span class:list={['badge', `badge-${m.frameworks[fw]?.status === 'ready' ? 'ready' : 'planned'}`]}>{t.status[m.frameworks[fw]?.status ?? 'planned']}</span>
+            </li>
+          </>
+        ))}
+      </ul>
+    </header>
+
+    {live && hero && (
+      <section class="doc-section hero-preview" aria-labelledby="preview">
+        <h2 id="preview" class="visually-hidden">{t.hero}</h2>
+        <Preview base={base} caseId={hero.id} label={t.previewOf(m.name, caseLabel(hero.id, hero.title).heading)} heightKey={`${slug}/${hero.id}`} lang={lang} loadingLabel={t.loading}>
+          <fieldset class="axes" data-axes>
+            <legend>{t.previewSettings}</legend>
+            {axes.map((a) => (
+              <label class="axis">
+                <span>{t.axes[a.key]}</span>
+                <select data-axis={a.key}>
+                  {a.values.map((v) => <option value={v} selected={v === a.value}>{axisLabel(v)}</option>)}
+                </select>
+              </label>
+            ))}
+          </fieldset>
+          <p class="preview-note">
+            {bundled ? t.previewNote : <>{t.previewLocal} <span dir="ltr">{galleryUrl}</span>.</>}
+          </p>
+        </Preview>
+      </section>
+    )}
+
+    {cases.length > 0 && (
+      <section class="doc-section" aria-labelledby="examples">
+        <h2 id="examples">{t.examples}</h2>
+        {cases.map((c) => {
+          const label = caseLabel(c.id, c.title);
+          const tabsId = `tabs-${c.id}`;
+          return (
+            <section class="case" aria-labelledby={`case-${c.id}`}>
+              <h3 id={`case-${c.id}`}>{label.heading}</h3>
+              {label.sentence && <p>{label.sentence}</p>}
+              {live ? (
+                <Preview base={base} caseId={c.id} label={t.previewOf(m.name, label.heading)} heightKey={`${slug}/${c.id}`} lang={lang} loadingLabel={t.loading} fallbackHeight={c.id === 'variants' ? 520 : 200}>
+                  <div class="code-head">
+                    <div role="tablist" class="tablist" aria-label={`${t.codeFor} ${label.heading}`} data-tabs>
+                      {frameworkIds.map((fw, i) => (
+                        <button type="button" role="tab" class="tab" id={`${tabsId}-${fw}`} aria-controls={`${tabsId}-${fw}-panel`} aria-selected={i === 0 ? 'true' : 'false'} tabindex={i === 0 ? 0 : -1} lang="en">
+                          {fwName[fw]}
+                        </button>
+                      ))}
+                    </div>
+                    <button type="button" class="copy-btn" data-copy-panel data-done={t.copied}>
+                      <svg aria-hidden="true" viewBox="0 0 24 24" width="16" height="16"><rect x="8" y="8" width="12" height="12" rx="2" /><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2" /></svg>
+                      <span>{t.copy}</span>
+                    </button>
+                  </div>
+                  {frameworkIds.map((fw, i) => {
+                    const code = c.code[fw];
+                    const status = m.frameworks[fw]?.status ?? 'planned';
+                    return (
+                      <div role="tabpanel" class="tabpanel" id={`${tabsId}-${fw}-panel`} aria-labelledby={`${tabsId}-${fw}`} hidden={i !== 0}>
+                        {code ? (
+                          <CodeBlock code={code} lang={codeLang[fw]} />
+                        ) : (
+                          <p class="empty">{status === 'ready' ? t.noCase : status === 'not-applicable' ? t.notApplicable : t.planned}</p>
+                        )}
+                      </div>
+                    );
+                  })}
+                </Preview>
+              ) : (
+                c.code.react && <CodeBlock code={c.code.react} lang="tsx" />
+              )}
+            </section>
+          );
+        })}
+      </section>
+    )}
+
+    <section class="doc-section" aria-labelledby="usage">
+      <h2 id="usage" class="visually-hidden">{t.useWhen}{ar ? '، ' : ', '}{t.avoidWhen}</h2>
+      <div class="two-col">
+        <div class="rule-card">
+          <h2>{t.useWhen}</h2>
+          <ul {...enAttrs}>{m.useWhen.map((x) => <li set:html={en(x)} />)}</ul>
+        </div>
+        <div class="rule-card avoid">
+          <h2>{t.avoidWhen}</h2>
+          <ul {...enAttrs}>{m.avoidWhen.map((x) => <li set:html={en(x)} />)}</ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="doc-section" aria-labelledby="use-instead">
+      <h2 id="use-instead">{t.insteadUse}</h2>
+      <div class="table-wrap" tabindex="0" role="region" aria-labelledby="use-instead">
+        <table>
+          <thead><tr><th scope="col">{t.situation}</th><th scope="col">{t.use}</th></tr></thead>
+          <tbody>
+            {insteadRows.map(([k, v]) => (
+              <tr>
+                <td {...enAttrs} set:html={en(k)} />
+                <td lang={ar ? 'en' : undefined}>
+                  {known.has(v.trim()) ? (
+                    <a href={href(lang, componentPath(manifests.find((x) => x.name === v.trim())!))}>{v.trim()}</a>
+                  ) : (
+                    <span set:html={en(v)} />
+                  )}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    {anatomy.length > 0 && (
+      <section class="doc-section" aria-labelledby="anatomy">
+        <h2 id="anatomy">{t.anatomy}</h2>
+        <p>{t.anatomyLead}</p>
+        <div class="table-wrap" tabindex="0" role="region" aria-labelledby="anatomy">
+          <table>
+            <thead><tr><th scope="col">{t.part}</th><th scope="col">{t.component}</th><th scope="col">{t.accepts}</th></tr></thead>
+            <tbody>
+              {anatomy.map((a) => (
+                <tr>
+                  <td><code>{a.part}</code></td>
+                  <td>{a.component ? <code>{a.component}</code> : ''}</td>
+                  <td lang={ar ? 'en' : undefined}>{a.slot ? acceptsText(a.slot.accepts) : ''}{a.slot?.max !== undefined ? `, max ${a.slot.max}` : ''}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </section>
+    )}
+
+    {props.length > 0 && (
+      <section class="doc-section" aria-labelledby="props">
+        <h2 id="props">{t.props}</h2>
+        <div class="table-wrap" tabindex="0" role="region" aria-labelledby="props">
+          <table>
+            <thead><tr><th scope="col">{t.prop}</th><th scope="col">{t.type}</th><th scope="col">{t.default}</th><th scope="col">{t.description}</th></tr></thead>
+            <tbody>
+              {props.map((p) => (
+                <tr>
+                  <td><code>{p.name}</code>{p.required && <span class="badge">{t.required}</span>}</td>
+                  <td>{p.type && <code>{p.type}</code>}</td>
+                  <td>{p.def && <code>{p.def}</code>}</td>
+                  <td {...enAttrs} set:html={en(p.description)} />
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </section>
+    )}
+
+    {m.states && m.states.length > 0 && (
+      <section class="doc-section" aria-labelledby="states">
+        <h2 id="states">{t.states}</h2>
+        <p>{t.statesLead}</p>
+        <ul class="chips">{m.states.map((s) => <li><code>{s}</code></li>)}</ul>
+      </section>
+    )}
+
+    {m.a11y && (
+      <section class="doc-section" aria-labelledby="accessibility">
+        <h2 id="accessibility">{t.a11y}</h2>
+        <dl class="facts">
+          {m.a11y.role && <><dt>{t.role}</dt><dd {...enAttrs} set:html={en(m.a11y.role)} /></>}
+          {m.a11y.focus && <><dt>{t.focus}</dt><dd {...enAttrs} set:html={en(m.a11y.focus)} /></>}
+          {m.a11y.announce && <><dt>{t.announce}</dt><dd {...enAttrs} set:html={en(m.a11y.announce)} /></>}
+        </dl>
+        {keys.length > 0 && (
+          <>
+            <h3 id="keyboard">{t.keys}</h3>
+            <div class="table-wrap" tabindex="0" role="region" aria-labelledby="keyboard">
+              <table>
+                <thead><tr><th scope="col">{t.key}</th><th scope="col">{t.action}</th></tr></thead>
+                <tbody>
+                  {keys.map(([k, v]) => (
+                    <tr><td dir="ltr"><kbd>{k}</kbd></td><td {...enAttrs} set:html={en(v)} /></tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </>
+        )}
+        {m.a11y.notes && m.a11y.notes.length > 0 && (
+          <>
+            <h3 id="a11y-notes">{t.notes}</h3>
+            <ul {...enAttrs}>{m.a11y.notes.map((n) => <li set:html={en(n)} />)}</ul>
+          </>
+        )}
+        <h3 id="wcag">{t.wcag}</h3>
+        <p>{t.wcagLead}</p>
+        <ul class="chips" lang="en" dir="ltr">
+          {criteria.map((c) => <li><a class="badge" href={criterionUrl(c)}>{c.id} {c.name}</a></li>)}
+        </ul>
+      </section>
+    )}
+
+    {contentLangs.length > 0 && (
+      <section class="doc-section" aria-labelledby="content">
+        <h2 id="content">{t.content}</h2>
+        <div class="two-col">
+          {contentLangs.map(([l, rules]) => (
+            <div class="rule-card" lang={l} dir={l === 'ar' ? 'rtl' : 'ltr'}>
+              <h3 lang={lang} dir={ar ? 'rtl' : 'ltr'}>{l === 'en' ? t.contentEn : l === 'ar' ? t.contentAr : l}</h3>
+              <dl class="facts">
+                {Object.entries(rules).map(([k, v]) => (
+                  <><dt><code>{k}</code></dt><dd set:html={inlineHtml(v)} /></>
+                ))}
+              </dl>
+            </div>
+          ))}
+        </div>
+      </section>
+    )}
+
+    {m.tokens && m.tokens.length > 0 && (
+      <section class="doc-section" aria-labelledby="tokens">
+        <h2 id="tokens">{t.tokens}</h2>
+        <p>{t.tokensLead(m.tokens.length)}</p>
+        <ul class="chips">{m.tokens.map((tok) => <li><code>{tok}</code></li>)}</ul>
+        {styleNotes.length > 0 && (
+          <>
+            <h3 id="per-style">{t.styles}</h3>
+            <dl class="facts">
+              {styleNotes.map(([id, note]) => (
+                <><dt>{styleName.has(id) ? <a href={href(lang, `/styles/${id}/`)} lang="en">{styleName.get(id)}</a> : <code>{id}</code>}</dt><dd {...enAttrs} set:html={en(note)} /></>
+              ))}
+            </dl>
+          </>
+        )}
+      </section>
+    )}
+
+    {m.motion !== undefined && (
+      <section class="doc-section" aria-labelledby="motion">
+        <h2 id="motion">{t.motion}</h2>
+        {m.motion === 'none' ? (
+          <p>{t.motionNone}</p>
+        ) : (
+          <dl class="facts"><dt>{t.motionPattern}</dt><dd><code>{m.motion}</code></dd></dl>
+        )}
+        {related.length > 0 && (
+          <>
+            <h3 id="interactions">{t.motionInteractions}</h3>
+            <ul class="chips" lang="en" dir="ltr">
+              {related.map((i) => <li><a class="badge" href={galleryHref(`/interactions?focus=${encodeURIComponent(i.id)}`)}>{i.id}</a></li>)}
+            </ul>
+          </>
+        )}
+        <p><a href={href(lang, '/interactions/')}>{t.motionOpen}</a></p>
+      </section>
+    )}
+
+    {m.mistakes && m.mistakes.length > 0 && (
+      <section class="doc-section" aria-labelledby="mistakes">
+        <h2 id="mistakes">{t.mistakes}</h2>
+        <div class="table-wrap" tabindex="0" role="region" aria-labelledby="mistakes">
+          <table>
+            <thead><tr><th scope="col">{t.wrong}</th><th scope="col">{t.right}</th></tr></thead>
+            <tbody>
+              {m.mistakes.map((x) => (
+                <tr><td {...enAttrs} set:html={en(x.wrong)} /><td {...enAttrs} set:html={en(x.right)} /></tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </section>
+    )}
+
+    <p class="meta-line">{t.since} <code>{m.since}</code></p>
+  </article>
+</Layout>

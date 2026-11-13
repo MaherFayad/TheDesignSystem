@@ -1,0 +1,1030 @@
+{
+ "id": "segment-press",
+ "family": "actions",
+ "drive": "css",
+ "pattern": "press",
+ "reduced": "No dip. The pressed color carries the state.",
+ "tokens": {
+  "studio": {
+   "delay-feedback": "2000ms",
+   "delay-stagger": "0ms",
+   "distance-enter": "4px",
+   "distance-lift": "0px",
+   "distance-nudge": "1px",
+   "distance-shift": "2px",
+   "duration-base": "120ms",
+   "duration-celebrate": "120ms",
+   "duration-fast": "80ms",
+   "duration-instant": "70ms",
+   "duration-medium": "140ms",
+   "duration-moderate": "150ms",
+   "duration-morph": "100ms",
+   "duration-quick": "100ms",
+   "duration-roll": "0.3s",
+   "duration-slow": "180ms",
+   "duration-spin": "0.8s",
+   "duration-spring-bouncy": "120ms",
+   "duration-spring-snappy": "80ms",
+   "duration-spring-soft": "100ms",
+   "duration-zoom": "220ms",
+   "scale-anticipate": "0.97",
+   "scale-enter": "1",
+   "scale-lift": "1",
+   "scale-morph": "0.8",
+   "scale-pop": "1",
+   "scale-press": "0.97",
+   "scale-stretch": "1.08"
+  },
+  "desk": {
+   "delay-feedback": "2000ms",
+   "delay-stagger": "45ms",
+   "distance-enter": "12px",
+   "distance-lift": "4px",
+   "distance-nudge": "3px",
+   "distance-shift": "6px",
+   "duration-base": "120ms",
+   "duration-celebrate": "480ms",
+   "duration-fast": "80ms",
+   "duration-instant": "70ms",
+   "duration-medium": "140ms",
+   "duration-moderate": "150ms",
+   "duration-morph": "320ms",
+   "duration-quick": "100ms",
+   "duration-roll": "0.3s",
+   "duration-slow": "180ms",
+   "duration-spin": "0.8s",
+   "duration-spring-bouncy": "440ms",
+   "duration-spring-snappy": "300ms",
+   "duration-spring-soft": "340ms",
+   "duration-zoom": "220ms",
+   "scale-anticipate": "0.9",
+   "scale-enter": "0.9",
+   "scale-lift": "1.03",
+   "scale-morph": "0.3",
+   "scale-pop": "1.14",
+   "scale-press": "0.97",
+   "scale-stretch": "1.3"
+  },
+  "neutral": {
+   "delay-feedback": "2000ms",
+   "delay-stagger": "24ms",
+   "distance-enter": "6px",
+   "distance-lift": "2px",
+   "distance-nudge": "2px",
+   "distance-shift": "4px",
+   "duration-base": "150ms",
+   "duration-celebrate": "220ms",
+   "duration-fast": "80ms",
+   "duration-instant": "70ms",
+   "duration-medium": "180ms",
+   "duration-moderate": "150ms",
+   "duration-morph": "200ms",
+   "duration-quick": "100ms",
+   "duration-roll": "0.3s",
+   "duration-slow": "180ms",
+   "duration-spin": "0.8s",
+   "duration-spring-bouncy": "220ms",
+   "duration-spring-snappy": "180ms",
+   "duration-spring-soft": "220ms",
+   "duration-zoom": "220ms",
+   "scale-anticipate": "0.95",
+   "scale-enter": "0.97",
+   "scale-lift": "1.01",
+   "scale-morph": "0.5",
+   "scale-pop": "1.05",
+   "scale-press": "0.97",
+   "scale-stretch": "1.15"
+  }
+ },
+ "runs": [
+  {
+   "style": "studio",
+   "dir": "ltr",
+   "motion": "full",
+   "state": "false -> true",
+   "stateAt": 142,
+   "firstMotionAt": 142,
+   "events": "pointerdown@126 focusin@139 pointerup@322 click@322",
+   "longest": 80,
+   "movers": 2,
+   "badProps": [],
+   "anims": [
+    {
+     "target": "button>span[label]",
+     "kind": "Transition",
+     "props": "transform",
+     "dur": 80,
+     "durTok": "duration-fast|duration-spring-snappy",
+     "ease": "steps(2)",
+     "kf": [
+      {
+       "offset": 0,
+       "transform": "scale(1)"
+      },
+      {
+       "offset": 1,
+       "transform": "scale(0.97)"
+      }
+     ],
+     "at": 142
+    },
+    {
+     "target": "button>span[label]",
+     "kind": "Transition",
+     "props": "transform",
+     "dur": 80,
+     "durTok": "duration-fast|duration-spring-snappy",
+     "ease": "steps(2)",
+     "kf": [
+      {
+       "offset": 0,
+       "transform": "scale(0.97)"
+      },
+      {
+       "offset": 1,
+       "transform": "scale(1)"
+      }
+     ],
+     "at": 333
+    }
+   ],
+   "end": {
+    "live": [],
+    "offRest": 0,
+    "offSample": [],
+    "nodes": 14
+   }
+  },
+  {
+   "style": "studio",
+   "dir": "ltr",
+   "motion": "media",
+   "state": "false -> true",
+   "stateAt": 60,
+   "firstMotionAt": null,
+   "events": "pointerdown@49 focusin@51 pointerup@220 click@221",
+   "longest": 0,
+   "movers": 0,
+   "badProps": [],
+   "anims": [],
+   "end": {
+    "live": [],
+    "offRest": 0,
+    "offSample": [],
+    "nodes": 14
+   }
+  },
+  {
+   "style": "studio",
+   "dir": "ltr",
+   "motion": "attr",
+   "state": "false -> true",
+   "stateAt": 107,
+   "firstMotionAt": null,
+   "events": "pointerdown@98 focusin@99 pointerup@349 click@350",
+   "longest": 0,
+   "movers": 0,
+   "badProps": [],
+   "anims": [],
+   "end": {
+    "live": [],
+    "offRest": 0,
+    "offSample": [],
+    "nodes": 14
+   }
+  },
+  {
+   "style": "studio",
+   "dir": "rtl",
+   "motion": "full",
+   "state": "false -> true",
+   "stateAt": 91,
+   "firstMotionAt": 91,
+   "events": "pointerdown@79 focusin@81 pointerup@243 click@243",
+   "longest": 80,
+   "movers": 2,
+   "badProps": [],
+   "anims": [
+    {
+     "target": "button>span[label]",
+     "kind": "Transition",
+     "props": "transform",
+     "dur": 80,
+     "durTok": "duration-fast|duration-spring-snappy",
+     "ease": "steps(2)",
+     "kf": [
+      {
+       "offset": 0,
+       "transform": "scale(1)"
+      },
+      {
+       "offset": 1,
+       "transform": "scale(0.97)"
+      }
+     ],
+     "at": 91
+    },
+    {
+     "target": "button>span[label]",
+     "kind": "Transition",
+     "props": "transform",
+     "dur": 80,
+     "durTok": "duration-fast|duration-spring-snappy",
+     "ease": "steps(2)",
+     "kf": [
+      {
+       "offset": 0,
+       "transform": "scale(0.97)"
+      },
+      {
+       "offset": 1,
+       "transform": "scale(1)"
+      }
+     ],
+     "at": 258
+    }
+   ],
+   "end": {
+    "live": [],
+    "offRest": 0,
+    "offSample": [],
+    "nodes": 14
+   }
+  },
+  {
+   "style": "studio",
+   "dir": "rtl",
+   "motion": "media",
+   "state": "false -> true",
+   "stateAt": 45,
+   "firstMotionAt": null,
+   "events": "pointerdown@32 focusin@34 pointerup@198 click@199",
+   "longest": 0,
+   "movers": 0,
+   "badProps": [],
+   "anims": [],
+   "end": {
+    "live": [],
+    "offRest": 0,
+    "offSample": [],
+    "nodes": 14
+   }
+  },
+  {
+   "style": "studio",
+   "dir": "rtl",
+   "motion": "attr",
+   "state": "false -> true",
+   "stateAt": 58,
+   "firstMotionAt": null,
+   "events": "pointerdown@23 focusin@57 pointerup@221 click@221",
+   "longest": 0,
+   "movers": 0,
+   "badProps": [],
+   "anims": [],
+   "end": {
+    "live": [],
+    "offRest": 0,
+    "offSample": [],
+    "nodes": 14
+   }
+  },
+  {
+   "style": "desk",
+   "dir": "ltr",
+   "motion": "full",
+   "state": "false -> true",
+   "stateAt": 255,
+   "firstMotionAt": 160,
+   "events": "pointerdown@246 focusin@248 pointerup@422 click@422",
+   "longest": 300,
+   "movers": 1,
+   "badProps": [],
+   "anims": [
+    {
+     "target": "button>span[label]",
+     "kind": "Transition",
+     "props": "transform",
+     "dur": 300,
+     "durTok": "duration-roll|duration-spring-snappy",
+     "ease": "ease-reveal",
+     "kf": [
+      {
+       "offset": 0,
+       "transform": "scale(1)"
+      },
+      {
+       "offset": 1,
+       "transform": "translateY(-80px)"
+      }
+     ],
+     "at": 160
+    }
+   ],
+   "end": {
+    "live": [],
+    "offRest": 1,
+    "offSample": [
+     "2:span[label] t=matrix(1, 0, 0, 1, 0, -32) o=1"
+    ],
+    "nodes": 14
+   }
+  },
+  {
+   "style": "desk",
+   "dir": "ltr",
+   "motion": "media",
+   "state": "false -> true",
+   "stateAt": 50,
+   "firstMotionAt": null,
+   "events": "pointerdown@39 focusin@40 pointerup@255 click@256",
+   "longest": 0,
+   "movers": 0,
+   "badProps": [],
+   "anims": [],
+   "end": {
+    "live": [],
+    "offRest": 0,
+    "offSample": [],
+    "nodes": 14
+   }
+  },
+  {
+   "style": "desk",
+   "dir": "ltr",
+   "motion": "attr",
+   "state": "false -> true",
+   "stateAt": 36,
+   "firstMotionAt": null,
+   "events": "pointerdown@29 focusin@31 pointerup@194 click@195",
+   "longest": 0,
+   "movers": 0,
+   "badProps": [],
+   "anims": [],
+   "end": {
+    "live": [],
+    "offRest": 0,
+    "offSample": [],
+    "nodes": 14
+   }
+  },
+  {
+   "style": "desk",
+   "dir": "rtl",
+   "motion": "full",
+   "state": "false -> true",
+   "stateAt": 41,
+   "firstMotionAt": 23,
+   "events": "pointerdown@29 focusin@40 pointerup@203 click@203",
+   "longest": 300,
+   "movers": 1,
+   "badProps": [],
+   "anims": [
+    {
+     "target": "button>span[label]",
+     "kind": "Transition",
+     "props": "transform",
+     "dur": 300,
+     "durTok": "duration-roll|duration-spring-snappy",
+     "ease": "ease-reveal",
+     "kf": [
+      {
+       "offset": 0,
+       "transform": "scale(1)"
+      },
+      {
+       "offset": 1,
+       "transform": "translateY(-80px)"
+      }
+     ],
+     "at": 23
+    }
+   ],
+   "end": {
+    "live": [],
+    "offRest": 1,
+    "offSample": [
+     "2:span[label] t=matrix(1, 0, 0, 1, 0, -32) o=1"
+    ],
+    "nodes": 14
+   }
+  },
+  {
+   "style": "desk",
+   "dir": "rtl",
+   "motion": "media",
+   "state": "false -> true",
+   "stateAt": 71,
+   "firstMotionAt": null,
+   "events": "pointerdown@58 focusin@59 pointerup@236 click@237",
+   "longest": 0,
+   "movers": 0,
+   "badProps": [],
+   "anims": [],
+   "end": {
+    "live": [],
+    "offRest": 0,
+    "offSample": [],
+    "nodes": 14
+   }
+  },
+  {
+   "style": "desk",
+   "dir": "rtl",
+   "motion": "attr",
+   "state": "false -> true",
+   "stateAt": 48,
+   "firstMotionAt": null,
+   "events": "pointerdown@16 focusin@17 pointerup@186 click@186",
+   "longest": 0,
+   "movers": 0,
+   "badProps": [],
+   "anims": [],
+   "end": {
+    "live": [],
+    "offRest": 0,
+    "offSample": [],
+    "nodes": 14
+   }
+  },
+  {
+   "style": "neutral",
+   "dir": "ltr",
+   "motion": "full",
+   "state": "false -> true",
+   "stateAt": 28,
+   "firstMotionAt": 28,
+   "events": "pointerdown@16 focusin@18 pointerup@187 click@187",
+   "longest": 180,
+   "movers": 2,
+   "badProps": [],
+   "anims": [
+    {
+     "target": "button>span[label]",
+     "kind": "Transition",
+     "props": "transform",
+     "dur": 180,
+     "durTok": "duration-medium|duration-slow|duration-spring-snappy",
+     "ease": "ease-spring-snappy",
+     "kf": [
+      {
+       "offset": 0,
+       "transform": "scale(1)"
+      },
+      {
+       "offset": 1,
+       "transform": "scale(0.95)"
+      }
+     ],
+     "at": 28
+    },
+    {
+     "target": "button>span[label]",
+     "kind": "Transition",
+     "props": "transform",
+     "dur": 180,
+     "durTok": "duration-medium|duration-slow|duration-spring-snappy",
+     "ease": "ease-spring-snappy",
+     "kf": [
+      {
+       "offset": 0,
+       "transform": "scale(0.949416)"
+      },
+      {
+       "offset": 1,
+       "transform": "scale(1)"
+      }
+     ],
+     "at": 193
+    }
+   ],
+   "end": {
+    "live": [],
+    "offRest": 0,
+    "offSample": [],
+    "nodes": 14
+   }
+  },
+  {
+   "style": "neutral",
+   "dir": "ltr",
+   "motion": "media",
+   "state": "false -> true",
+   "stateAt": 30,
+   "firstMotionAt": null,
+   "events": "pointerdown@20 focusin@24 pointerup@194 click@194",
+   "longest": 0,
+   "movers": 0,
+   "badProps": [],
+   "anims": [],
+   "end": {
+    "live": [],
+    "offRest": 0,
+    "offSample": [],
+    "nodes": 14
+   }
+  },
+  {
+   "style": "neutral",
+   "dir": "ltr",
+   "motion": "attr",
+   "state": "false -> true",
+   "stateAt": 51,
+   "firstMotionAt": null,
+   "events": "pointerdown@40 focusin@42 pointerup@215 click@215",
+   "longest": 0,
+   "movers": 0,
+   "badProps": [],
+   "anims": [],
+   "end": {
+    "live": [],
+    "offRest": 0,
+    "offSample": [],
+    "nodes": 14
+   }
+  },
+  {
+   "style": "neutral",
+   "dir": "rtl",
+   "motion": "full",
+   "state": "false -> true",
+   "stateAt": 78,
+   "firstMotionAt": 78,
+   "events": "pointerdown@65 focusin@67 pointerup@229 click@229",
+   "longest": 180,
+   "movers": 2,
+   "badProps": [],
+   "anims": [
+    {
+     "target": "button>span[label]",
+     "kind": "Transition",
+     "props": "transform",
+     "dur": 180,
+     "durTok": "duration-medium|duration-slow|duration-spring-snappy",
+     "ease": "ease-spring-snappy",
+     "kf": [
+      {
+       "offset": 0,
+       "transform": "scale(1)"
+      },
+      {
+       "offset": 1,
+       "transform": "scale(0.95)"
+      }
+     ],
+     "at": 78
+    },
+    {
+     "target": "button>span[label]",
+     "kind": "Transition",
+     "props": "transform",
+     "dur": 180,
+     "durTok": "duration-medium|duration-slow|duration-spring-snappy",
+     "ease": "ease-spring-snappy",
+     "kf": [
+      {
+       "offset": 0,
+       "transform": "scale(0.949416)"
+      },
+      {
+       "offset": 1,
+       "transform": "scale(1)"
+      }
+     ],
+     "at": 252
+    }
+   ],
+   "end": {
+    "live": [],
+    "offRest": 0,
+    "offSample": [],
+    "nodes": 14
+   }
+  },
+  {
+   "style": "neutral",
+   "dir": "rtl",
+   "motion": "media",
+   "state": "false -> true",
+   "stateAt": 36,
+   "firstMotionAt": null,
+   "events": "pointerdown@28 focusin@30 pointerup@192 click@193",
+   "longest": 0,
+   "movers": 0,
+   "badProps": [],
+   "anims": [],
+   "end": {
+    "live": [],
+    "offRest": 0,
+    "offSample": [],
+    "nodes": 14
+   }
+  },
+  {
+   "style": "neutral",
+   "dir": "rtl",
+   "motion": "attr",
+   "state": "false -> true",
+   "stateAt": 129,
+   "firstMotionAt": null,
+   "events": "pointerdown@105 focusin@128 pointerup@293 click@293",
+   "longest": 0,
+   "movers": 0,
+   "badProps": [],
+   "anims": [],
+   "end": {
+    "live": [],
+    "offRest": 0,
+    "offSample": [],
+    "nodes": 14
+   }
+  }
+ ],
+ "sweep": {
+  "studio": [],
+  "desk": [],
+  "neutral": []
+ },
+ "held": [
+  {
+   "style": "studio",
+   "dir": "ltr",
+   "motion": "full",
+   "held": "matrix(0.97, 0, 0, 0.97, 0, 0)",
+   "track": null,
+   "root": "matrix(1, 0, 0, 1, 0, 0)",
+   "neighbor": [
+    232.5,
+    163.2
+   ],
+   "neighborTf": "matrix(1, 0, 0, 1, 0, 0)"
+  },
+  {
+   "style": "studio",
+   "dir": "ltr",
+   "motion": "media",
+   "held": "matrix(1, 0, 0, 1, 0, 0)",
+   "track": null,
+   "root": "matrix(1, 0, 0, 1, 0, 0)",
+   "neighbor": [
+    232.5,
+    163.2
+   ],
+   "neighborTf": "matrix(1, 0, 0, 1, 0, 0)"
+  },
+  {
+   "style": "studio",
+   "dir": "ltr",
+   "motion": "attr",
+   "held": "matrix(1, 0, 0, 1, 0, 0)",
+   "track": null,
+   "root": "matrix(1, 0, 0, 1, 0, 0)",
+   "neighbor": [
+    232.5,
+    163.2
+   ],
+   "neighborTf": "matrix(1, 0, 0, 1, 0, 0)"
+  },
+  {
+   "style": "studio",
+   "dir": "rtl",
+   "motion": "full",
+   "held": "matrix(0.97, 0, 0, 0.97, 0, 0)",
+   "track": null,
+   "root": "matrix(1, 0, 0, 1, 0, 0)",
+   "neighbor": [
+    567.3,
+    171.5
+   ],
+   "neighborTf": "matrix(1, 0, 0, 1, 0, 0)"
+  },
+  {
+   "style": "studio",
+   "dir": "rtl",
+   "motion": "media",
+   "held": "matrix(1, 0, 0, 1, 0, 0)",
+   "track": null,
+   "root": "matrix(1, 0, 0, 1, 0, 0)",
+   "neighbor": [
+    567.3,
+    171.5
+   ],
+   "neighborTf": "matrix(1, 0, 0, 1, 0, 0)"
+  },
+  {
+   "style": "studio",
+   "dir": "rtl",
+   "motion": "attr",
+   "held": "matrix(1, 0, 0, 1, 0, 0)",
+   "track": null,
+   "root": "matrix(1, 0, 0, 1, 0, 0)",
+   "neighbor": [
+    567.3,
+    171.5
+   ],
+   "neighborTf": "matrix(1, 0, 0, 1, 0, 0)"
+  },
+  {
+   "style": "desk",
+   "dir": "ltr",
+   "motion": "full",
+   "held": "matrix(1, 0, 0, 1, 0, -32)",
+   "track": null,
+   "root": "matrix(1, 0, 0, 1, 0, 0)",
+   "neighbor": [
+    236.1,
+    162.5
+   ],
+   "neighborTf": "matrix(1, 0, 0, 1, 0, 0)"
+  },
+  {
+   "style": "desk",
+   "dir": "ltr",
+   "motion": "media",
+   "held": "none",
+   "track": null,
+   "root": "matrix(1, 0, 0, 1, 0, 0)",
+   "neighbor": [
+    236.1,
+    162.5
+   ],
+   "neighborTf": "matrix(1, 0, 0, 1, 0, 0)"
+  },
+  {
+   "style": "desk",
+   "dir": "ltr",
+   "motion": "attr",
+   "held": "none",
+   "track": null,
+   "root": "matrix(1, 0, 0, 1, 0, 0)",
+   "neighbor": [
+    236.1,
+    162.5
+   ],
+   "neighborTf": "matrix(1, 0, 0, 1, 0, 0)"
+  },
+  {
+   "style": "desk",
+   "dir": "rtl",
+   "motion": "full",
+   "held": "matrix(1, 0, 0, 1, 0, -32)",
+   "track": null,
+   "root": "matrix(1, 0, 0, 1, 0, 0)",
+   "neighbor": [
+    564.9,
+    170.8
+   ],
+   "neighborTf": "matrix(1, 0, 0, 1, 0, 0)"
+  },
+  {
+   "style": "desk",
+   "dir": "rtl",
+   "motion": "media",
+   "held": "none",
+   "track": null,
+   "root": "matrix(1, 0, 0, 1, 0, 0)",
+   "neighbor": [
+    564.9,
+    170.8
+   ],
+   "neighborTf": "matrix(1, 0, 0, 1, 0, 0)"
+  },
+  {
+   "style": "desk",
+   "dir": "rtl",
+   "motion": "attr",
+   "held": "none",
+   "track": null,
+   "root": "matrix(1, 0, 0, 1, 0, 0)",
+   "neighbor": [
+    564.9,
+    170.8
+   ],
+   "neighborTf": "matrix(1, 0, 0, 1, 0, 0)"
+  },
+  {
+   "style": "neutral",
+   "dir": "ltr",
+   "motion": "full",
+   "held": "matrix(0.95, 0, 0, 0.95, 0, 0)",
+   "track": null,
+   "root": "matrix(1, 0, 0, 1, 0, 0)",
+   "neighbor": [
+    397.4,
+    183.8
+   ],
+   "neighborTf": "matrix(1, 0, 0, 1, 0, 0)"
+  },
+  {
+   "style": "neutral",
+   "dir": "ltr",
+   "motion": "media",
+   "held": "matrix(1, 0, 0, 1, 0, 0)",
+   "track": null,
+   "root": "matrix(1, 0, 0, 1, 0, 0)",
+   "neighbor": [
+    397.4,
+    183.8
+   ],
+   "neighborTf": "matrix(1, 0, 0, 1, 0, 0)"
+  },
+  {
+   "style": "neutral",
+   "dir": "ltr",
+   "motion": "attr",
+   "held": "matrix(1, 0, 0, 1, 0, 0)",
+   "track": null,
+   "root": "matrix(1, 0, 0, 1, 0, 0)",
+   "neighbor": [
+    397.4,
+    183.8
+   ],
+   "neighborTf": "matrix(1, 0, 0, 1, 0, 0)"
+  },
+  {
+   "style": "neutral",
+   "dir": "rtl",
+   "motion": "full",
+   "held": "matrix(0.95, 0, 0, 0.95, 0, 0)",
+   "track": null,
+   "root": "matrix(1, 0, 0, 1, 0, 0)",
+   "neighbor": [
+    374.1,
+    192
+   ],
+   "neighborTf": "matrix(1, 0, 0, 1, 0, 0)"
+  },
+  {
+   "style": "neutral",
+   "dir": "rtl",
+   "motion": "media",
+   "held": "matrix(1, 0, 0, 1, 0, 0)",
+   "track": null,
+   "root": "matrix(1, 0, 0, 1, 0, 0)",
+   "neighbor": [
+    374.1,
+    192
+   ],
+   "neighborTf": "matrix(1, 0, 0, 1, 0, 0)"
+  },
+  {
+   "style": "neutral",
+   "dir": "rtl",
+   "motion": "attr",
+   "held": "matrix(1, 0, 0, 1, 0, 0)",
+   "track": null,
+   "root": "matrix(1, 0, 0, 1, 0, 0)",
+   "neighbor": [
+    374.1,
+    192
+   ],
+   "neighborTf": "matrix(1, 0, 0, 1, 0, 0)"
+  }
+ ],
+ "ring": {
+  "studio": {
+   "focusVisible": true,
+   "atOnce": true,
+   "diffFrame0": [],
+   "diffFirstFrame": [],
+   "first": {
+    "t": 2,
+    "outline": "solid 2px",
+    "shadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgb(244, 244, 245) 0px 0px 0px 2px inset",
+    "hostShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgb(244, 244, 245) 0px 0px 0px 2px inset"
+   },
+   "last": {
+    "t": 268,
+    "outline": "solid 2px",
+    "shadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgb(244, 244, 245) 0px 0px 0px 2px inset",
+    "hostShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgb(244, 244, 245) 0px 0px 0px 2px inset"
+   },
+   "frames": 18
+  },
+  "desk": {
+   "focusVisible": true,
+   "atOnce": true,
+   "diffFrame0": [],
+   "diffFirstFrame": [],
+   "first": {
+    "t": 2,
+    "outline": "solid 2px",
+    "shadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgb(244, 244, 245) 0px 0px 0px 2px inset",
+    "hostShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgb(244, 244, 245) 0px 0px 0px 2px inset"
+   },
+   "last": {
+    "t": 273,
+    "outline": "solid 2px",
+    "shadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgb(244, 244, 245) 0px 0px 0px 2px inset",
+    "hostShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgb(244, 244, 245) 0px 0px 0px 2px inset"
+   },
+   "frames": 17
+  },
+  "neutral": {
+   "focusVisible": true,
+   "atOnce": true,
+   "diffFrame0": [],
+   "diffFirstFrame": [],
+   "first": {
+    "t": 2,
+    "outline": "solid 2px",
+    "shadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgb(37, 99, 235) 0px 0px 0px 2px inset",
+    "hostShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgb(37, 99, 235) 0px 0px 0px 2px inset"
+   },
+   "last": {
+    "t": 267,
+    "outline": "solid 2px",
+    "shadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgb(37, 99, 235) 0px 0px 0px 2px inset",
+    "hostShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgb(37, 99, 235) 0px 0px 0px 2px inset"
+   },
+   "frames": 17
+  }
+ },
+ "rapid": {
+  "studio": {
+   "same": true,
+   "fast": {
+    "state": "true",
+    "nodes": 14,
+    "off": [],
+    "live": [],
+    "active": "BUTTON"
+   }
+  },
+  "desk": {
+   "same": true,
+   "fast": {
+    "state": "true",
+    "nodes": 14,
+    "off": [],
+    "live": [],
+    "active": "BUTTON"
+   }
+  },
+  "neutral": {
+   "same": true,
+   "fast": {
+    "state": "true",
+    "nodes": 14,
+    "off": [],
+    "live": [],
+    "active": "BUTTON"
+   }
+  }
+ },
+ "interrupt": {
+  "studio": {
+   "same": true,
+   "fast": {
+    "state": "true",
+    "nodes": 14,
+    "off": [],
+    "live": [],
+    "active": "BUTTON"
+   }
+  },
+  "desk": {
+   "same": true,
+   "fast": {
+    "state": "true",
+    "nodes": 14,
+    "off": [],
+    "live": [],
+    "active": "BUTTON"
+   }
+  },
+  "neutral": {
+   "same": true,
+   "fast": {
+    "state": "true",
+    "nodes": 14,
+    "off": [],
+    "live": [],
+    "active": "BUTTON"
+   }
+  }
+ },
+ "off": {
+  "studio": {
+   "injected": "@layer ds.recipes { [data-ds='button-group'][data-attached] > * { --_button-part-press: 1; } [data-ds='split-button'] > * { --_button-part-press: 1; } }",
+   "movers": 0,
+   "moving": [],
+   "held": "matrix(1, 0, 0, 1, 0, 0)"
+  },
+  "desk": {
+   "injected": "@layer ds.recipes { [data-ds='button-group'][data-attached] > * { --_button-part-press: 1; } [data-ds='split-button'] > * { --_button-part-press: 1; } }",
+   "movers": 1,
+   "moving": [
+    "button>span[label] transform 300"
+   ],
+   "held": "matrix(1, 0, 0, 1, 0, -31.9739)"
+  },
+  "neutral": {
+   "injected": "@layer ds.recipes { [data-ds='button-group'][data-attached] > * { --_button-part-press: 1; } [data-ds='split-button'] > * { --_button-part-press: 1; } }",
+   "movers": 0,
+   "moving": [],
+   "held": "matrix(1, 0, 0, 1, 0, 0)"
+  }
+ },
+ "extra": {}
+}

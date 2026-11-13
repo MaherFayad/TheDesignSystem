@@ -1,0 +1,120 @@
+---
+// The home page: what the system is, three ways in, the same screen in every
+// style, and the coverage per framework read from the manifests.
+import { galleryHref } from '../../scripts/gallery.ts';
+import type { Lang } from '../lib/i18n.ts';
+import { config, coverage, href, styles } from '../lib/site.ts';
+import Layout from './Layout.astro';
+import Preview from './Preview.astro';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const c = coverage();
+/** The small screen the strip shows in every style. */
+const strip = { slug: 'form', caseId: 'one' };
+
+const text = {
+  en: {
+    title: config.name,
+    lead: 'A design system with one component contract, several style packs and three frameworks. Each component has one manifest, one CSS file shared by React and Angular, and a style function for React Native.',
+    start: 'Read the install guide',
+    browse: 'Browse components',
+    waysTitle: 'Start here',
+    ways: [
+      { step: '1', title: 'Install', body: 'Add the packages, import the CSS in order and wrap the app in one Theme.', path: '/getting-started/' },
+      { step: '2', title: 'Pick a style', body: 'Compare the style packs. A style changes tokens, recipes, icons and motion, never markup.', path: '/styles/' },
+      { step: '3', title: 'Build a screen', body: 'Open a component page, copy the example for your framework and compose the screen.', path: '/components/' },
+    ],
+    stripTitle: 'One screen in every style',
+    stripLead: 'The same form, live from the gallery. Only the style changes.',
+    stripLabel: (name: string) => `Form in the ${name} style`,
+    open: 'Open style',
+    countTitle: 'Components per framework',
+    countLead: 'Counted from the manifests on every build.',
+    total: 'Components',
+    of: (n: number) => `of ${n}`,
+    coverage: 'See coverage per component',
+    loading: 'Loading the preview',
+  },
+  ar: {
+    title: 'النظام',
+    lead: 'نظام تصميم يقوم على عقد واحد للمكونات، وعدة أنماط بصرية، وثلاثة أطر عمل. لكل مكون ملف تعريف واحد، وملف CSS واحد يشترك فيه React وAngular، ودالة أنماط في React Native.',
+    start: 'قراءة دليل التثبيت',
+    browse: 'تصفح المكونات',
+    waysTitle: 'من أين تبدأ',
+    ways: [
+      { step: '1', title: 'التثبيت', body: 'إضافة الحزم، واستيراد ملفات CSS بالترتيب، وتغليف التطبيق بعنصر Theme واحد.', path: '/getting-started/' },
+      { step: '2', title: 'اختيار النمط', body: 'مقارنة الأنماط البصرية. يغير النمط الرموز والوصفات والأيقونات والحركة، ولا يغير البنية.', path: '/styles/' },
+      { step: '3', title: 'بناء الشاشة', body: 'فتح صفحة المكون، ونسخ المثال الخاص بإطار العمل، وتركيب الشاشة.', path: '/components/' },
+    ],
+    stripTitle: 'شاشة واحدة بكل الأنماط',
+    stripLead: 'النموذج نفسه من المعرض مباشرة، ويتغير النمط فقط.',
+    stripLabel: (name: string) => `نموذج بنمط ${name}`,
+    open: 'فتح النمط',
+    countTitle: 'المكونات حسب إطار العمل',
+    countLead: 'يحسب العدد من ملفات التعريف في كل بناء.',
+    total: 'المكونات',
+    of: (n: number) => `من ${n}`,
+    coverage: 'عرض التغطية لكل مكون',
+    loading: 'جار تحميل المعاينة',
+  },
+}[lang];
+const ar = lang === 'ar';
+---
+
+<Layout lang={lang} path="/" title={text.title} description={text.lead} home twin={ar ? '/ar/index.md' : '/index.md'}>
+  <article>
+    <section class="hero" aria-labelledby="home-title">
+      <h1 id="home-title">{text.title}</h1>
+      <p class="lead">{text.lead}</p>
+      <div class="hero-actions">
+        <a class="btn btn-primary" href={href(lang, '/getting-started/')}>{text.start}</a>
+        <a class="btn" href={href(lang, '/components/')}>{text.browse}</a>
+      </div>
+    </section>
+
+    <section aria-labelledby="ways">
+      <h2 id="ways" class="visually-hidden">{text.waysTitle}</h2>
+      <ol class="cards">
+        {text.ways.map((w) => (
+          <li class="card">
+            <span class="card-step" aria-hidden="true">{w.step}</span>
+            <h3><a class="card-link" href={href(lang, w.path)}>{w.title}</a></h3>
+            <p>{w.body}</p>
+          </li>
+        ))}
+      </ol>
+    </section>
+
+    <section class="home-section" aria-labelledby="strip">
+      <h2 id="strip">{text.stripTitle}</h2>
+      <p>{text.stripLead}</p>
+      <ul class="strip">
+        {styles.map((s) => (
+          <li>
+            <Preview base={galleryHref(`/c/${strip.slug}`)} caseId={strip.caseId} label={text.stripLabel(s.name)} heightKey={`home/${strip.slug}/${strip.caseId}`} fixed={{ style: s.id }} lang={lang} loadingLabel={text.loading} fallbackHeight={360}>
+              <div class="strip-head">
+                <span lang="en">{s.name}</span>
+                <a href={href(lang, `/styles/${s.id}/`)} aria-label={`${text.open} ${s.name}`}>{text.open}</a>
+              </div>
+            </Preview>
+          </li>
+        ))}
+      </ul>
+    </section>
+
+    <section class="home-section" aria-labelledby="count">
+      <h2 id="count">{text.countTitle}</h2>
+      <p>{text.countLead}</p>
+      <dl class="stats">
+        <div class="stat"><dt>{text.total}</dt><dd>{c.total}</dd></div>
+        <div class="stat"><dt lang="en">React</dt><dd>{c.react} <small>{text.of(c.total)}</small></dd></div>
+        <div class="stat"><dt lang="en">Angular</dt><dd>{c.angular} <small>{text.of(c.total)}</small></dd></div>
+        <div class="stat"><dt lang="en">React Native</dt><dd>{c.native} <small>{text.of(c.total)}</small></dd></div>
+      </dl>
+      <p><a href={href(lang, '/frameworks/coverage/')}>{text.coverage}</a></p>
+    </section>
+  </article>
+</Layout>

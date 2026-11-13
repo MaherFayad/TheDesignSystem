@@ -1,5 +1,20 @@
 {
   "color": {
+    "glass": {
+      "highlight": { "$type": "color", "$value": "{color.material.glass-edge}", "$description": "Specular highlight on glass controls (order 1.26). This style draws no highlight of its own: the glass edge." },
+      "lens": { "$type": "color", "$value": "{color.material.glass-strong}", "$description": "The lens of a glass thumb (order 1.26). This style has no lens: its strong material." },
+      "on-clear": { "$type": "color", "$value": "{color.text.default}", "$description": "Text on clear glass (order 1.26). Clear glass is a plain material here, so default text." },
+      "backdrop-bright": {
+        "$type": "color",
+        "$value": { "colorSpace": "srgb", "components": [1, 1, 1], "alpha": 1, "hex": "#ffffff" },
+        "$description": "The brightest picture glass may sit over, for the contrast gate (order 1.26)."
+      },
+      "backdrop-dark": {
+        "$type": "color",
+        "$value": { "colorSpace": "srgb", "components": [0, 0, 0], "alpha": 1, "hex": "#000000" },
+        "$description": "The darkest picture glass may sit over, for the contrast gate (order 1.26)."
+      }
+    },
     "bg": {
       "body": {
         "$type": "color",

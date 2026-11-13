@@ -18,10 +18,15 @@ const site = (process.env.DOCS_SITE_URL ?? '').replace(/\/+$/, '');
 
 /** The hand written guides, in reading order. A guide missing on disk is skipped. */
 const guides: { path: string; title: string; about: string }[] = [
-  { path: 'index.md', title: 'Overview', about: 'What the system is and how the docs are built.' },
+  { path: 'index.md', title: 'Home', about: 'What the system is, in two sentences, and the component count per framework.' },
+  { path: 'getting-started.md', title: 'Installation', about: 'Install for React, Angular and React Native, the CSS import order, the root Theme and the first Button.' },
+  { path: 'overview.md', title: 'Overview of the docs', about: 'What is in the box and how to read a component page.' },
   { path: 'foundations/tokens.md', title: 'Tokens', about: 'DTCG tokens, names, the CSS variable prefix and the build outputs.' },
   { path: 'foundations/axes.md', title: 'Runtime axes', about: 'Style, scheme, density, contrast, platform, glass, direction and language.' },
   { path: 'styles.md', title: 'Styles', about: 'The style packs and what a style may change.' },
+  { path: 'platforms.md', title: 'Platforms', about: 'Web, iOS and Android, the platform axis and the package per framework.' },
+  { path: 'interactions.md', title: 'Interactions', about: 'The feedback each component plays, its trigger, pattern and reduced form.' },
+  { path: 'frameworks/coverage.md', title: 'Coverage', about: 'The status of every component in React, Angular and React Native.' },
   { path: 'frameworks/setup.md', title: 'Framework setup', about: 'Install, the CSS import order, the TypeScript note and the root Theme for React, Angular and React Native.' },
   { path: 'content/english.md', title: 'English content', about: 'Sentence case, button labels, empty states.' },
   { path: 'content/arabic.md', title: 'Arabic content', about: 'The two registers, Gulf modern standard Arabic and white Saudi dialect, and the Arabic rules.' },

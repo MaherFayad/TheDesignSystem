@@ -1,6 +1,6 @@
 import { Component, signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import { DsTheme } from '../../theme/theme';
 import { DsStepper, type StepperStep } from './stepper';
 
@@ -43,6 +43,47 @@ async function setup() {
 }
 
 describe('DsStepper', () => {
+  it('stepper-travel: the ring (indicator ::after) travels from the old current step and fades, the new one pops; nothing when reduced', async () => {
+    const animate = vi.fn(() => ({ playState: 'running', cancel: vi.fn() }) as unknown as Animation);
+    const proto = HTMLElement.prototype as unknown as { animate?: unknown; getAnimations?: unknown };
+    // Own descriptors, so cleanup removes the stubs instead of leaving own properties that hide later stubs on Element.prototype.
+    const own = (['animate', 'getAnimations', 'getBoundingClientRect'] as const).map((k) => [k, Object.getOwnPropertyDescriptor(HTMLElement.prototype, k)] as const);
+    proto.animate = animate;
+    proto.getAnimations = () => [];
+    // A fake layout: each step is a 40px row; its indicator a 24px square at its start.
+    HTMLElement.prototype.getBoundingClientRect = function (this: HTMLElement) {
+      const step = this.closest<HTMLElement>('li[data-part="step"]');
+      if (!step) return DOMRect.fromRect({ x: 0, y: 0, width: 300, height: 160 });
+      const i = Array.from(step.parentElement?.children ?? []).indexOf(step);
+      return DOMRect.fromRect({ x: 0, y: i * 40, width: 24, height: 24 });
+    };
+    try {
+      const { fixture, host } = await setup();
+      expect(animate).not.toHaveBeenCalled();
+      host.current.set(3);
+      await fixture.whenStable();
+      const calls = animate.mock.calls as unknown as [Keyframe[], KeyframeAnimationOptions & { pseudoElement?: string }][];
+      expect(calls.length).toBe(2);
+      const [frames, options] = calls[0]!;
+      expect(options).toMatchObject({ id: 'ds-motion:indicator-slide', pseudoElement: '::after' });
+      expect(frames[0]).toMatchObject({ transform: 'translate(0px, -40px) scale(1, 1)', opacity: 1 });
+      expect(frames[2]).toMatchObject({ transform: 'none', opacity: 0 });
+      // The new current indicator pops, added to its own transform.
+      expect(calls[1]![0]).toEqual([{ transform: 'scale(0.95)' }, { transform: 'none' }]);
+      expect(calls[1]![1]).toMatchObject({ id: 'ds-motion:indicator-answer', composite: 'add' });
+      document.documentElement.setAttribute('data-motion', 'reduce');
+      host.current.set(1);
+      await fixture.whenStable();
+      expect(animate).toHaveBeenCalledTimes(2);
+    } finally {
+      document.documentElement.removeAttribute('data-motion');
+      for (const [k, d] of own) {
+        if (d) Object.defineProperty(HTMLElement.prototype, k, d);
+        else delete (HTMLElement.prototype as unknown as Record<string, unknown>)[k];
+      }
+    }
+  });
+
   it('renders an ordered list with complete, current and upcoming steps, and plain titles without a handler', async () => {
     const { q, qa } = await setup();
     const list = q('#static');

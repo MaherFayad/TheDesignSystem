@@ -1,0 +1,79 @@
+/*
+ * Liquid recipe for Dialog and the family on DialogBase (AlertDialog, Drawer
+ * and Sheet share it through :is() lists, as Dialog.css does): a strong glass
+ * panel with large corners. Why not tokens alone: the panel takes its fill,
+ * edge, filter and bands from private properties, the glass is a blur plus
+ * a saturation boost with a light edge on the top and start sides, and the
+ * flat title and footer bands of the base would sit on the glass as a second
+ * surface.
+ *
+ * A modal panel holds reading text, so it takes the strong glass at every
+ * glass level. Radius: radius.window (24px) for Dialog and AlertDialog,
+ * radius.sheet (28px) for Drawer and Sheet (Dialog.css already rounds only
+ * the top corners of a Sheet and the open side of a Drawer, and draws the
+ * Sheet handle). The scrim is color.bg.scrim with blur.backdrop, and the
+ * motion is the soft spring in and ease.exit out, faster: both come from
+ * Dialog.css and the Liquid tokens, so nothing is set for them here.
+ */
+@layer ds.recipes {
+  [data-style='liquid'] :is([data-ds='dialog'], [data-ds='alert-dialog'], [data-ds='drawer'], [data-ds='sheet']) {
+    --_dialog-bg: var(--ds-color-material-glass-strong);
+    --_dialog-border-color: var(--ds-color-material-glass-border);
+    --_dialog-radius: var(--ds-radius-window);
+    --_dialog-shadow: var(--ds-elevation-dialog), inset 0 var(--ds-border-width-default) 0 0 var(--ds-color-material-glass-edge),
+      inset var(--ds-border-width-default) 0 0 0 var(--ds-color-material-glass-edge);
+    --_dialog-backdrop: blur(var(--ds-blur-glass-strong)) saturate(var(--ds-blur-window-saturation));
+    --_dialog-header-bg: transparent;
+    --_dialog-footer-bg: transparent;
+    --_dialog-divider-color: var(--ds-color-material-glass-border);
+  }
+
+  /* The start side edge follows the text direction. */
+  [data-style='liquid'] :is([data-ds='dialog'], [data-ds='alert-dialog'], [data-ds='drawer'], [data-ds='sheet']):dir(rtl) {
+    --_dialog-shadow: var(--ds-elevation-dialog), inset 0 var(--ds-border-width-default) 0 0 var(--ds-color-material-glass-edge),
+      inset calc(var(--ds-border-width-default) * -1) 0 0 0 var(--ds-color-material-glass-edge);
+  }
+
+  [data-style='liquid'] :is([data-ds='drawer'], [data-ds='sheet']) {
+    --_dialog-radius: var(--ds-radius-sheet);
+  }
+
+  /* ------------------------------------------------------------ fallbacks: solid glass, no filter, no edge */
+
+  @supports not ((backdrop-filter: blur(0)) or (-webkit-backdrop-filter: blur(0))) {
+    [data-style='liquid'] :is([data-ds='dialog'], [data-ds='alert-dialog'], [data-ds='drawer'], [data-ds='sheet']) {
+      --_dialog-bg: var(--ds-color-material-glass-solid);
+    }
+  }
+
+  @media (prefers-reduced-transparency: reduce), (prefers-contrast: more), (forced-colors: active) {
+    [data-style='liquid'] :is([data-ds='dialog'], [data-ds='alert-dialog'], [data-ds='drawer'], [data-ds='sheet']),
+    [data-style='liquid'] :is([data-ds='dialog'], [data-ds='alert-dialog'], [data-ds='drawer'], [data-ds='sheet']):dir(rtl) {
+      --_dialog-shadow: var(--ds-elevation-dialog);
+      --_dialog-backdrop: none;
+    }
+  }
+
+  @media (prefers-contrast: more) {
+    [data-style='liquid'] :is([data-ds='dialog'], [data-ds='alert-dialog'], [data-ds='drawer'], [data-ds='sheet']) {
+      --_dialog-border-color: var(--ds-color-border-strong);
+      --_dialog-divider-color: var(--ds-color-border-strong);
+    }
+  }
+
+  [data-style='liquid'][data-contrast='more'] :is([data-ds='dialog'], [data-ds='alert-dialog'], [data-ds='drawer'], [data-ds='sheet']),
+  [data-style='liquid'][data-contrast='more'] :is([data-ds='dialog'], [data-ds='alert-dialog'], [data-ds='drawer'], [data-ds='sheet']):dir(rtl) {
+    --_dialog-shadow: var(--ds-elevation-dialog);
+    --_dialog-backdrop: none;
+    --_dialog-border-color: var(--ds-color-border-strong);
+    --_dialog-divider-color: var(--ds-color-border-strong);
+  }
+
+  @media (forced-colors: active) {
+    [data-style='liquid'] :is([data-ds='dialog'], [data-ds='alert-dialog'], [data-ds='drawer'], [data-ds='sheet']) {
+      --_dialog-bg: Canvas;
+      --_dialog-border-color: CanvasText;
+      --_dialog-divider-color: CanvasText;
+    }
+  }
+}

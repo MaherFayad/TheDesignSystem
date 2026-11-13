@@ -234,7 +234,8 @@ describe('ScrollArea thumb contrast (WCAG 1.4.11)', () => {
       }
       modes += 1;
     }
-    expect(modes).toBe(6);
+    // Every style and scheme the token build writes; a new style pack adds modes.
+    expect(modes).toBeGreaterThanOrEqual(6);
   });
 
   it('gives no demo ScrollArea a fixed inline size that could overflow a 320px screen', () => {

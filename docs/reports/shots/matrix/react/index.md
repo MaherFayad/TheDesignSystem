@@ -108,12 +108,12 @@ Densities, dark, ltr en:
 
 | Style | Scheme | ltr en | rtl ar |
 | --- | --- | --- | --- |
-| desk | dark | `c7c47f2a` | [rtl](banner/desk-dark-rtl.png) |
-| desk | light | `c033ded3` | `01d3c075` |
-| neutral | dark | `dd97e559` | `80cdfc1b` |
+| desk | dark | `4578b3ce` | [rtl](banner/desk-dark-rtl.png) |
+| desk | light | `fe80680c` | `fa42acbf` |
+| neutral | dark | `c1819e8f` | `3517b650` |
 | neutral | light | [ltr](banner/neutral-light-ltr.png) | [rtl](banner/neutral-light-rtl.png) |
 | studio | dark | [ltr](banner/studio-dark-ltr.png) | [rtl](banner/studio-dark-rtl.png) |
-| studio | light | `679a378b` | `55e5e3ad` |
+| studio | light | `3fcf0b23` | `2f5635d2` |
 
 ## Bento
 
@@ -130,12 +130,12 @@ Densities, dark, ltr en:
 
 | Style | Scheme | ltr en | rtl ar |
 | --- | --- | --- | --- |
-| desk | dark | `25bb02af` | [rtl](breadcrumbs/desk-dark-rtl.png) |
-| desk | light | `2c5b1dd3` | `dad83d2f` |
-| neutral | dark | `93c30a24` | `a272ba33` |
+| desk | dark | `a79bdd1f` | [rtl](breadcrumbs/desk-dark-rtl.png) |
+| desk | light | `5131392e` | `8f8d1160` |
+| neutral | dark | `6b593060` | `278f75e7` |
 | neutral | light | [ltr](breadcrumbs/neutral-light-ltr.png) | [rtl](breadcrumbs/neutral-light-rtl.png) |
 | studio | dark | [ltr](breadcrumbs/studio-dark-ltr.png) | [rtl](breadcrumbs/studio-dark-rtl.png) |
-| studio | light | `1dc1aa43` | `0a20a74f` |
+| studio | light | `b36c7332` | `e31f3a26` |
 
 ## Button
 
@@ -285,41 +285,41 @@ Densities, dark, ltr en:
 
 | Style | Scheme | ltr en | rtl ar | ltr open | rtl open |
 | --- | --- | --- | --- | --- | --- |
-| desk | dark | `c8ba47cf` | [rtl](combobox/desk-dark-rtl.png) | `96c79daf` | [rtl open](combobox/desk-dark-rtl-open.png) |
-| desk | light | `a200b5ff` | `df9fbf9c` | `73c532d5` | `b5e2e4ea` |
-| neutral | dark | `9e10b4f2` | `565ead7d` | `d55c3643` | `2328ab06` |
+| desk | dark | `c8ba47cf` | [rtl](combobox/desk-dark-rtl.png) | `b07dc232` | [rtl open](combobox/desk-dark-rtl-open.png) |
+| desk | light | `a200b5ff` | `df9fbf9c` | `6a4dbbf5` | `e5562577` |
+| neutral | dark | `9e10b4f2` | `565ead7d` | `7f115855` | `0af258a1` |
 | neutral | light | [ltr](combobox/neutral-light-ltr.png) | [rtl](combobox/neutral-light-rtl.png) | [ltr open](combobox/neutral-light-ltr-open.png) | [rtl open](combobox/neutral-light-rtl-open.png) |
 | studio | dark | [ltr](combobox/studio-dark-ltr.png) | [rtl](combobox/studio-dark-rtl.png) | [ltr open](combobox/studio-dark-ltr-open.png) | [rtl open](combobox/studio-dark-rtl-open.png) |
-| studio | light | `06d45d28` | `36c7b425` | `7a1bd7f8` | `2f94cc4e` |
+| studio | light | `06d45d28` | `36c7b425` | `c481607b` | `a4a18dec` |
 
 ## CommandPalette
 
 | Style | Scheme | ltr en | rtl ar | ltr open | rtl open |
 | --- | --- | --- | --- | --- | --- |
-| desk | dark | `e89cb3d4` | [rtl](command-palette/desk-dark-rtl.png) | `add8897c` | [rtl open](command-palette/desk-dark-rtl-open.png) |
-| desk | light | `8a6d3341` | `ea6cd301` | `dd65d5a2` | `4276c3bc` |
-| neutral | dark | `9ec0ef19` | `874f6590` | `736d9e8e` | `c8c299ec` |
+| desk | dark | `e89cb3d4` | [rtl](command-palette/desk-dark-rtl.png) | `f12e1da7` | [rtl open](command-palette/desk-dark-rtl-open.png) |
+| desk | light | `8a6d3341` | `ea6cd301` | `92ca25df` | `fa76bc1a` |
+| neutral | dark | `9ec0ef19` | `874f6590` | `66b941fe` | `46e58c67` |
 | neutral | light | [ltr](command-palette/neutral-light-ltr.png) | [rtl](command-palette/neutral-light-rtl.png) | [ltr open](command-palette/neutral-light-ltr-open.png) | [rtl open](command-palette/neutral-light-rtl-open.png) |
 | studio | dark | [ltr](command-palette/studio-dark-ltr.png) | [rtl](command-palette/studio-dark-rtl.png) | [ltr open](command-palette/studio-dark-ltr-open.png) | [rtl open](command-palette/studio-dark-rtl-open.png) |
-| studio | light | `4812c9d3` | `3f2bd948` | `46278b32` | `9ed30758` |
+| studio | light | `4812c9d3` | `3f2bd948` | `b2b4641f` | `109044be` |
 
 ## ConsentField
 
 | Style | Scheme | ltr en | rtl ar |
 | --- | --- | --- | --- |
-| desk | dark | `2c343781` | [rtl](consent-field/desk-dark-rtl.png) |
-| desk | light | `80f39993` | `ec5a4c47` |
-| neutral | dark | `815e0a9a` | `083f486c` |
+| desk | dark | `a4be5b3d` | [rtl](consent-field/desk-dark-rtl.png) |
+| desk | light | `47e90e93` | `8b9dcb49` |
+| neutral | dark | `29c24652` | `ccc93192` |
 | neutral | light | [ltr](consent-field/neutral-light-ltr.png) | [rtl](consent-field/neutral-light-rtl.png) |
 | studio | dark | [ltr](consent-field/studio-dark-ltr.png) | [rtl](consent-field/studio-dark-rtl.png) |
-| studio | light | `cad5e54c` | `f43d043f` |
+| studio | light | `cc37c272` | `09ddd60a` |
 
 Densities, dark, ltr en:
 
 | Style | compact | default | comfortable |
 | --- | --- | --- | --- |
-| desk | `2479d3e2` | `2c343781` | `2ffdde96` |
-| neutral | `80bbeec0` | `815e0a9a` | `815e0a9a` |
+| desk | `3f82c96e` | `a4be5b3d` | `ec80a13d` |
+| neutral | `5a71d56f` | `29c24652` | `29c24652` |
 | studio | [compact](consent-field/studio-dark-ltr-compact.png) | [default](consent-field/studio-dark-ltr.png) | [comfortable](consent-field/studio-dark-ltr-comfortable.png) |
 
 ## Container
@@ -493,12 +493,12 @@ Densities, dark, ltr en:
 
 | Style | Scheme | ltr en | rtl ar |
 | --- | --- | --- | --- |
-| desk | dark | `70b229bc` | [rtl](filter-bar/desk-dark-rtl.png) |
-| desk | light | `0dcbb6c3` | `cfb8e599` |
-| neutral | dark | `e91f58d6` | `da589d1e` |
+| desk | dark | `6c912a3c` | [rtl](filter-bar/desk-dark-rtl.png) |
+| desk | light | `5045da77` | `2ce1afe3` |
+| neutral | dark | `aa7b9e0a` | `dd0c4517` |
 | neutral | light | [ltr](filter-bar/neutral-light-ltr.png) | [rtl](filter-bar/neutral-light-rtl.png) |
 | studio | dark | [ltr](filter-bar/studio-dark-ltr.png) | [rtl](filter-bar/studio-dark-rtl.png) |
-| studio | light | `278cdffc` | `b36e2afe` |
+| studio | light | `496c7113` | `5a3e7091` |
 
 ## FloatingActionButton
 
@@ -583,12 +583,12 @@ Densities, dark, ltr en:
 
 | Style | Scheme | ltr en | rtl ar |
 | --- | --- | --- | --- |
-| desk | dark | `e20807ae` | [rtl](icon/desk-dark-rtl.png) |
-| desk | light | `45cde048` | `5a9572f3` |
-| neutral | dark | `fd235cf6` | `563483b9` |
+| desk | dark | `033b6e47` | [rtl](icon/desk-dark-rtl.png) |
+| desk | light | `d9fd364a` | `9e8641cf` |
+| neutral | dark | `f049330a` | `e9f635ac` |
 | neutral | light | [ltr](icon/neutral-light-ltr.png) | [rtl](icon/neutral-light-rtl.png) |
 | studio | dark | [ltr](icon/studio-dark-ltr.png) | [rtl](icon/studio-dark-rtl.png) |
-| studio | light | `9f410837` | `2c693214` |
+| studio | light | `8645705e` | `fef04dca` |
 
 ## IconButton
 
@@ -651,19 +651,19 @@ Densities, dark, ltr en:
 
 | Style | Scheme | ltr en | rtl ar |
 | --- | --- | --- | --- |
-| desk | dark | `b6b0fa31` | [rtl](input-group/desk-dark-rtl.png) |
-| desk | light | `8a4ee0f7` | `5315944f` |
-| neutral | dark | `7dea6ef3` | `ff168ecf` |
+| desk | dark | `861a01ee` | [rtl](input-group/desk-dark-rtl.png) |
+| desk | light | `89598140` | `3c2597ca` |
+| neutral | dark | `11a4ed23` | `6f32803e` |
 | neutral | light | [ltr](input-group/neutral-light-ltr.png) | [rtl](input-group/neutral-light-rtl.png) |
 | studio | dark | [ltr](input-group/studio-dark-ltr.png) | [rtl](input-group/studio-dark-rtl.png) |
-| studio | light | `df57baef` | `e235912c` |
+| studio | light | `9c4a530a` | `906d25df` |
 
 Densities, dark, ltr en:
 
 | Style | compact | default | comfortable |
 | --- | --- | --- | --- |
-| desk | `b4fec331` | `b6b0fa31` | `0148cfd1` |
-| neutral | `77a4648e` | `7dea6ef3` | `7dea6ef3` |
+| desk | `b57fdc39` | `861a01ee` | `9ac530c7` |
+| neutral | `95d53c52` | `11a4ed23` | `11a4ed23` |
 | studio | [compact](input-group/studio-dark-ltr-compact.png) | [default](input-group/studio-dark-ltr.png) | [comfortable](input-group/studio-dark-ltr-comfortable.png) |
 
 ## Kbd
@@ -692,12 +692,12 @@ Densities, dark, ltr en:
 
 | Style | Scheme | ltr en | rtl ar | ltr open | rtl open |
 | --- | --- | --- | --- | --- | --- |
-| desk | dark | `15afda7d` | [rtl](language-switch/desk-dark-rtl.png) | `b23daa12` | [rtl open](language-switch/desk-dark-rtl-open.png) |
-| desk | light | `c4de9606` | `86c5fa40` | `120d43ce` | `3017aeb0` |
-| neutral | dark | `523a7526` | `62f7b988` | `ba3b628c` | `70563a26` |
+| desk | dark | `2277c761` | [rtl](language-switch/desk-dark-rtl.png) | `a519aa18` | [rtl open](language-switch/desk-dark-rtl-open.png) |
+| desk | light | `8e613175` | `86ec9b10` | `ef6eb2fe` | `a5f83fb7` |
+| neutral | dark | `39014cf9` | `5177e9cc` | `263f632e` | `143ec48e` |
 | neutral | light | [ltr](language-switch/neutral-light-ltr.png) | [rtl](language-switch/neutral-light-rtl.png) | [ltr open](language-switch/neutral-light-ltr-open.png) | [rtl open](language-switch/neutral-light-rtl-open.png) |
 | studio | dark | [ltr](language-switch/studio-dark-ltr.png) | [rtl](language-switch/studio-dark-rtl.png) | [ltr open](language-switch/studio-dark-ltr-open.png) | [rtl open](language-switch/studio-dark-rtl-open.png) |
-| studio | light | `2cabf879` | `56c19d50` | `832124f1` | `a09d05d2` |
+| studio | light | `422ac886` | `0c5230dc` | `641212ba` | `a3d2ca33` |
 
 ## Lightbox
 
@@ -714,19 +714,19 @@ Densities, dark, ltr en:
 
 | Style | Scheme | ltr en | rtl ar |
 | --- | --- | --- | --- |
-| desk | dark | `f40bb58c` | [rtl](link/desk-dark-rtl.png) |
-| desk | light | `c43f2cce` | `95da541a` |
-| neutral | dark | `94f004a6` | `25ef5d18` |
+| desk | dark | `a38e986c` | [rtl](link/desk-dark-rtl.png) |
+| desk | light | `40959f66` | `7cb0c550` |
+| neutral | dark | `e505a38d` | `c151d0ab` |
 | neutral | light | [ltr](link/neutral-light-ltr.png) | [rtl](link/neutral-light-rtl.png) |
 | studio | dark | [ltr](link/studio-dark-ltr.png) | [rtl](link/studio-dark-rtl.png) |
-| studio | light | `c6c08a15` | `7096e261` |
+| studio | light | `fb28dbc9` | `8f452281` |
 
 Densities, dark, ltr en:
 
 | Style | compact | default | comfortable |
 | --- | --- | --- | --- |
-| desk | `efccabc2` | `f40bb58c` | `8c6c3004` |
-| neutral | `0befb3c9` | `94f004a6` | `94f004a6` |
+| desk | `4fb2ce6b` | `a38e986c` | `6d1dbdd2` |
+| neutral | `8672955c` | `e505a38d` | `e505a38d` |
 | studio | [compact](link/studio-dark-ltr-compact.png) | [default](link/studio-dark-ltr.png) | [comfortable](link/studio-dark-ltr-comfortable.png) |
 
 ## List
@@ -785,31 +785,31 @@ Densities, dark, ltr en:
 
 | Style | Scheme | ltr en | rtl ar | ltr open | rtl open |
 | --- | --- | --- | --- | --- | --- |
-| desk | dark | `ed764420` | [rtl](multi-select/desk-dark-rtl.png) | `c34e8077` | [rtl open](multi-select/desk-dark-rtl-open.png) |
-| desk | light | `d22ae237` | `cb659c75` | `4178638d` | `4bb89ce8` |
-| neutral | dark | `32bc9441` | `824da57a` | `c72fe856` | `693594d2` |
+| desk | dark | `ed764420` | [rtl](multi-select/desk-dark-rtl.png) | `6d7da06f` | [rtl open](multi-select/desk-dark-rtl-open.png) |
+| desk | light | `d22ae237` | `cb659c75` | `9771f735` | `bd079907` |
+| neutral | dark | `32bc9441` | `824da57a` | `63b9ab48` | `c613a0ff` |
 | neutral | light | [ltr](multi-select/neutral-light-ltr.png) | [rtl](multi-select/neutral-light-rtl.png) | [ltr open](multi-select/neutral-light-ltr-open.png) | [rtl open](multi-select/neutral-light-rtl-open.png) |
 | studio | dark | [ltr](multi-select/studio-dark-ltr.png) | [rtl](multi-select/studio-dark-rtl.png) | [ltr open](multi-select/studio-dark-ltr-open.png) | [rtl open](multi-select/studio-dark-rtl-open.png) |
-| studio | light | `54b19c45` | `7923b3a6` | `945bd23f` | `f214ad19` |
+| studio | light | `54b19c45` | `7923b3a6` | `3772704f` | `e92c553f` |
 
 ## Navbar
 
 | Style | Scheme | ltr en | rtl ar |
 | --- | --- | --- | --- |
-| desk | dark | `92219edc` | [rtl](navbar/desk-dark-rtl.png) |
-| desk | light | `67fe0fc8` | `34d81cf1` |
-| neutral | dark | `5a1617a0` | `0d967b67` |
+| desk | dark | `a7fdcd0c` | [rtl](navbar/desk-dark-rtl.png) |
+| desk | light | `6687957f` | `7813f5a5` |
+| neutral | dark | `d23dc05a` | `c3fedddb` |
 | neutral | light | [ltr](navbar/neutral-light-ltr.png) | [rtl](navbar/neutral-light-rtl.png) |
 | studio | dark | [ltr](navbar/studio-dark-ltr.png) | [rtl](navbar/studio-dark-rtl.png) |
-| studio | light | `47275628` | `c6eb23e0` |
+| studio | light | `48510d75` | `5eae1c4e` |
 
 ## NotificationCenter
 
 | Style | Scheme | ltr en | rtl ar |
 | --- | --- | --- | --- |
-| desk | dark | `e41bfad6` | [rtl](notification-center/desk-dark-rtl.png) |
-| desk | light | `d46386ae` | `07a4859e` |
-| neutral | dark | `bfceecde` | `8015cd30` |
+| desk | dark | `914ccb92` | [rtl](notification-center/desk-dark-rtl.png) |
+| desk | light | `119eccf1` | `359a63bc` |
+| neutral | dark | `04550b44` | `8015cd30` |
 | neutral | light | [ltr](notification-center/neutral-light-ltr.png) | [rtl](notification-center/neutral-light-rtl.png) |
 | studio | dark | [ltr](notification-center/studio-dark-ltr.png) | [rtl](notification-center/studio-dark-rtl.png) |
 | studio | light | `11a51e00` | `30e212dd` |
@@ -818,8 +818,8 @@ Densities, dark, ltr en:
 
 | Style | compact | default | comfortable |
 | --- | --- | --- | --- |
-| desk | `a3e3544d` | `e41bfad6` | `41b4c67f` |
-| neutral | `c40cb741` | `bfceecde` | `bfceecde` |
+| desk | `a3e3544d` | `914ccb92` | `41b4c67f` |
+| neutral | `aa8d29bc` | `04550b44` | `04550b44` |
 | studio | [compact](notification-center/studio-dark-ltr-compact.png) | [default](notification-center/studio-dark-ltr.png) | [comfortable](notification-center/studio-dark-ltr-comfortable.png) |
 
 ## NumberField
@@ -875,8 +875,8 @@ Densities, dark, ltr en:
 
 | Style | Scheme | ltr en | rtl ar |
 | --- | --- | --- | --- |
-| desk | dark | `ad3b6432` | [rtl](pagination/desk-dark-rtl.png) |
-| desk | light | `a4fb2227` | `1bc350e0` |
+| desk | dark | `871c6e1f` | [rtl](pagination/desk-dark-rtl.png) |
+| desk | light | `3079969a` | `f206c361` |
 | neutral | dark | `2edf480d` | `98f80ce7` |
 | neutral | light | [ltr](pagination/neutral-light-ltr.png) | [rtl](pagination/neutral-light-rtl.png) |
 | studio | dark | [ltr](pagination/studio-dark-ltr.png) | [rtl](pagination/studio-dark-rtl.png) |
@@ -886,7 +886,7 @@ Densities, dark, ltr en:
 
 | Style | compact | default | comfortable |
 | --- | --- | --- | --- |
-| desk | `a70120cb` | `ad3b6432` | `9d3907c6` |
+| desk | `64041932` | `871c6e1f` | `b29be820` |
 | neutral | `3e480c8b` | `2edf480d` | `2edf480d` |
 | studio | [compact](pagination/studio-dark-ltr-compact.png) | [default](pagination/studio-dark-ltr.png) | [comfortable](pagination/studio-dark-ltr-comfortable.png) |
 
@@ -965,19 +965,19 @@ Densities, dark, ltr en:
 
 | Style | Scheme | ltr en | rtl ar |
 | --- | --- | --- | --- |
-| desk | dark | `4e963cbd` | [rtl](radio-card/desk-dark-rtl.png) |
-| desk | light | `bd8eb358` | `060dadac` |
-| neutral | dark | `1a6e668f` | `75ca9299` |
+| desk | dark | `c3347af0` | [rtl](radio-card/desk-dark-rtl.png) |
+| desk | light | `c8886a6c` | `21773026` |
+| neutral | dark | `bb660cb9` | `e76aafb9` |
 | neutral | light | [ltr](radio-card/neutral-light-ltr.png) | [rtl](radio-card/neutral-light-rtl.png) |
 | studio | dark | [ltr](radio-card/studio-dark-ltr.png) | [rtl](radio-card/studio-dark-rtl.png) |
-| studio | light | `93f00686` | `e978a081` |
+| studio | light | `dd69233e` | `58dadec9` |
 
 Densities, dark, ltr en:
 
 | Style | compact | default | comfortable |
 | --- | --- | --- | --- |
-| desk | `f40ae49d` | `4e963cbd` | `d2ebf7a8` |
-| neutral | `299f8712` | `1a6e668f` | `1a6e668f` |
+| desk | `237e33a3` | `c3347af0` | `68355a26` |
+| neutral | `dc02e792` | `bb660cb9` | `bb660cb9` |
 | studio | [compact](radio-card/studio-dark-ltr-compact.png) | [default](radio-card/studio-dark-ltr.png) | [comfortable](radio-card/studio-dark-ltr-comfortable.png) |
 
 ## RadioGroup
@@ -1053,18 +1053,18 @@ Densities, dark, ltr en:
 | Style | Scheme | ltr en | rtl ar |
 | --- | --- | --- | --- |
 | desk | dark | `8e38fb71` | [rtl](resizable-panels/desk-dark-rtl.png) |
-| desk | light | `71401dc8` | `cf3a2b46` |
+| desk | light | `1925ca74` | `4b9fd880` |
 | neutral | dark | `761f84f5` | `bcb9e491` |
 | neutral | light | [ltr](resizable-panels/neutral-light-ltr.png) | [rtl](resizable-panels/neutral-light-rtl.png) |
 | studio | dark | [ltr](resizable-panels/studio-dark-ltr.png) | [rtl](resizable-panels/studio-dark-rtl.png) |
-| studio | light | `beb8bfad` | `6100dc79` |
+| studio | light | `7f7074dd` | `f2b72cbf` |
 
 ## ScrollArea
 
 | Style | Scheme | ltr en | rtl ar |
 | --- | --- | --- | --- |
-| desk | dark | `8ccc1356` | [rtl](scroll-area/desk-dark-rtl.png) |
-| desk | light | `b3a49d95` | `d60989e3` |
+| desk | dark | `f02c9d1a` | [rtl](scroll-area/desk-dark-rtl.png) |
+| desk | light | `904d2354` | `d53bc355` |
 | neutral | dark | `7d2da5a5` | `75cd806f` |
 | neutral | light | [ltr](scroll-area/neutral-light-ltr.png) | [rtl](scroll-area/neutral-light-rtl.png) |
 | studio | dark | [ltr](scroll-area/studio-dark-ltr.png) | [rtl](scroll-area/studio-dark-rtl.png) |
@@ -1074,8 +1074,8 @@ Densities, dark, ltr en:
 
 | Style | compact | default | comfortable |
 | --- | --- | --- | --- |
-| desk | `2b805716` | `8ccc1356` | `307ae00d` |
-| neutral | `b8f43c79` | `7d2da5a5` | `b5c2c89e` |
+| desk | `2b805716` | `f02c9d1a` | `307ae00d` |
+| neutral | `b8f43c79` | `7d2da5a5` | `7d2da5a5` |
 | studio | [compact](scroll-area/studio-dark-ltr-compact.png) | [default](scroll-area/studio-dark-ltr.png) | [comfortable](scroll-area/studio-dark-ltr-comfortable.png) |
 
 ## ScrubInput
@@ -1150,12 +1150,12 @@ Densities, dark, ltr en:
 
 | Style | Scheme | ltr en | rtl ar | ltr open | rtl open |
 | --- | --- | --- | --- | --- | --- |
-| desk | dark | `68cf3ce6` | [rtl](select/desk-dark-rtl.png) | `45ed0c36` | [rtl open](select/desk-dark-rtl-open.png) |
-| desk | light | `a3f135a0` | `59f7d952` | `c117dd99` | `7946bf2d` |
-| neutral | dark | `d582f464` | `4076418d` | `5f847303` | `94d902db` |
+| desk | dark | `68cf3ce6` | [rtl](select/desk-dark-rtl.png) | `f643b8b1` | [rtl open](select/desk-dark-rtl-open.png) |
+| desk | light | `a3f135a0` | `59f7d952` | `11dda8af` | `e561d70b` |
+| neutral | dark | `d582f464` | `4076418d` | `cabde1a7` | `9d79025d` |
 | neutral | light | [ltr](select/neutral-light-ltr.png) | [rtl](select/neutral-light-rtl.png) | [ltr open](select/neutral-light-ltr-open.png) | [rtl open](select/neutral-light-rtl-open.png) |
 | studio | dark | [ltr](select/studio-dark-ltr.png) | [rtl](select/studio-dark-rtl.png) | [ltr open](select/studio-dark-ltr-open.png) | [rtl open](select/studio-dark-rtl-open.png) |
-| studio | light | `4089e06d` | `ddc77efc` | `32e8b0d3` | `850507db` |
+| studio | light | `4089e06d` | `ddc77efc` | `82d7ede0` | `52e46b43` |
 
 ## Separator
 
@@ -1205,12 +1205,12 @@ Densities, dark, ltr en:
 
 | Style | Scheme | ltr en | rtl ar |
 | --- | --- | --- | --- |
-| desk | dark | `9d85bfad` | [rtl](skip-link/desk-dark-rtl.png) |
-| desk | light | `f57e923d` | `dd0f01b4` |
-| neutral | dark | `6cbcc185` | `49bd91ed` |
+| desk | dark | `b3e6f099` | [rtl](skip-link/desk-dark-rtl.png) |
+| desk | light | `232a40cd` | `c11e888d` |
+| neutral | dark | `8ff2384b` | `67aa16de` |
 | neutral | light | [ltr](skip-link/neutral-light-ltr.png) | [rtl](skip-link/neutral-light-rtl.png) |
 | studio | dark | [ltr](skip-link/studio-dark-ltr.png) | [rtl](skip-link/studio-dark-rtl.png) |
-| studio | light | `b7be063a` | `b23e4880` |
+| studio | light | `cb65954a` | `e56d4713` |
 
 ## Slider
 
@@ -1248,21 +1248,21 @@ Densities, dark, ltr en:
 | --- | --- | --- | --- | --- | --- |
 | desk | dark | `590504b4` | [rtl](split-button/desk-dark-rtl.png) | `f19de25f` | [rtl open](split-button/desk-dark-rtl-open.png) |
 | desk | light | `063f510a` | `d396906e` | `41f0585b` | `9fd380fb` |
-| neutral | dark | `57999a28` | `5ead0d00` | `df3f657a` | `d18c126b` |
+| neutral | dark | `57999a28` | `5ead0d00` | `24b49618` | `d18c126b` |
 | neutral | light | [ltr](split-button/neutral-light-ltr.png) | [rtl](split-button/neutral-light-rtl.png) | [ltr open](split-button/neutral-light-ltr-open.png) | [rtl open](split-button/neutral-light-rtl-open.png) |
 | studio | dark | [ltr](split-button/studio-dark-ltr.png) | [rtl](split-button/studio-dark-rtl.png) | [ltr open](split-button/studio-dark-ltr-open.png) | [rtl open](split-button/studio-dark-rtl-open.png) |
-| studio | light | `371dedc5` | `d5a80fb5` | `15f5c9cf` | `7eb6e0d4` |
+| studio | light | `4bccd081` | `bdb32f7f` | `bdc3b9a6` | `c6d5e76d` |
 
 ## SplitView
 
 | Style | Scheme | ltr en | rtl ar |
 | --- | --- | --- | --- |
 | desk | dark | `ec2e06ac` | [rtl](split-view/desk-dark-rtl.png) |
-| desk | light | `33e0260c` | `cede5adb` |
+| desk | light | `ccb4c3f1` | `10b9a33a` |
 | neutral | dark | `e02babb6` | `73007acd` |
 | neutral | light | [ltr](split-view/neutral-light-ltr.png) | [rtl](split-view/neutral-light-rtl.png) |
 | studio | dark | [ltr](split-view/studio-dark-ltr.png) | [rtl](split-view/studio-dark-rtl.png) |
-| studio | light | `5cffe7ef` | `f8fe19a8` |
+| studio | light | `da3f2944` | `1f5e1a40` |
 
 ## Stack
 
@@ -1323,19 +1323,19 @@ Densities, dark, ltr en:
 
 | Style | Scheme | ltr en | rtl ar |
 | --- | --- | --- | --- |
-| desk | dark | `f0f132b2` | [rtl](switch/desk-dark-rtl.png) |
-| desk | light | `b9ca1275` | `bf8b09bf` |
-| neutral | dark | `74b09534` | `16cf26c1` |
+| desk | dark | `fb156915` | [rtl](switch/desk-dark-rtl.png) |
+| desk | light | `678a533e` | `cf8cee9e` |
+| neutral | dark | `1d112db9` | `85bd61ee` |
 | neutral | light | [ltr](switch/neutral-light-ltr.png) | [rtl](switch/neutral-light-rtl.png) |
 | studio | dark | [ltr](switch/studio-dark-ltr.png) | [rtl](switch/studio-dark-rtl.png) |
-| studio | light | `26eb75d6` | `a4d2e7fc` |
+| studio | light | `03fef0f6` | `45213f31` |
 
 Densities, dark, ltr en:
 
 | Style | compact | default | comfortable |
 | --- | --- | --- | --- |
-| desk | `d8b194c2` | `f0f132b2` | `03c916e5` |
-| neutral | `4740226d` | `74b09534` | `74b09534` |
+| desk | `79dfcd08` | `fb156915` | `24d7ecee` |
+| neutral | `91b740aa` | `1d112db9` | `1d112db9` |
 | studio | [compact](switch/studio-dark-ltr-compact.png) | [default](switch/studio-dark-ltr.png) | [comfortable](switch/studio-dark-ltr-comfortable.png) |
 
 ## TabBar
@@ -1372,19 +1372,19 @@ Densities, dark, ltr en:
 
 | Style | Scheme | ltr en | rtl ar |
 | --- | --- | --- | --- |
-| desk | dark | `44a6ff2f` | [rtl](tabs/desk-dark-rtl.png) |
+| desk | dark | `7e9c2764` | [rtl](tabs/desk-dark-rtl.png) |
 | desk | light | `c9f52afd` | `f402eda3` |
-| neutral | dark | `bd576790` | `b9733670` |
+| neutral | dark | `e10fdb21` | `b9733670` |
 | neutral | light | [ltr](tabs/neutral-light-ltr.png) | [rtl](tabs/neutral-light-rtl.png) |
 | studio | dark | [ltr](tabs/studio-dark-ltr.png) | [rtl](tabs/studio-dark-rtl.png) |
-| studio | light | `40ee3d23` | `90cbeafe` |
+| studio | light | `40ee3d23` | `3c6b9f3e` |
 
 Densities, dark, ltr en:
 
 | Style | compact | default | comfortable |
 | --- | --- | --- | --- |
-| desk | `3e4f6357` | `44a6ff2f` | `001eb4ff` |
-| neutral | `ad2958f3` | `bd576790` | `e10fdb21` |
+| desk | `3e4f6357` | `7e9c2764` | `ac3abd51` |
+| neutral | `ad2958f3` | `e10fdb21` | `7f0156a7` |
 | studio | [compact](tabs/studio-dark-ltr-compact.png) | [default](tabs/studio-dark-ltr.png) | [comfortable](tabs/studio-dark-ltr-comfortable.png) |
 
 ## TagField
@@ -1481,31 +1481,31 @@ Densities, dark, ltr en:
 
 | Style | Scheme | ltr en | rtl ar |
 | --- | --- | --- | --- |
-| desk | dark | `0ba61687` | [rtl](toggle-group/desk-dark-rtl.png) |
-| desk | light | `2a5ac06a` | `ce68c892` |
-| neutral | dark | `0927e9b3` | `9c7aa673` |
+| desk | dark | `7e340514` | [rtl](toggle-group/desk-dark-rtl.png) |
+| desk | light | `db7c4b3f` | `7db3ab1b` |
+| neutral | dark | `8aaf825f` | `703033c5` |
 | neutral | light | [ltr](toggle-group/neutral-light-ltr.png) | [rtl](toggle-group/neutral-light-rtl.png) |
 | studio | dark | [ltr](toggle-group/studio-dark-ltr.png) | [rtl](toggle-group/studio-dark-rtl.png) |
-| studio | light | `94af23a3` | `688def7c` |
+| studio | light | `5cadd96f` | `370cffe2` |
 
 Densities, dark, ltr en:
 
 | Style | compact | default | comfortable |
 | --- | --- | --- | --- |
-| desk | `32a1c1ab` | `0ba61687` | `8bfd65ef` |
-| neutral | `5c814f16` | `0927e9b3` | `0927e9b3` |
+| desk | `d36a06f4` | `7e340514` | `731e21fa` |
+| neutral | `c3b8ac48` | `8aaf825f` | `8aaf825f` |
 | studio | [compact](toggle-group/studio-dark-ltr-compact.png) | [default](toggle-group/studio-dark-ltr.png) | [comfortable](toggle-group/studio-dark-ltr-comfortable.png) |
 
 ## Toolbar
 
 | Style | Scheme | ltr en | rtl ar |
 | --- | --- | --- | --- |
-| desk | dark | `6bf58910` | [rtl](toolbar/desk-dark-rtl.png) |
-| desk | light | `9eec7f87` | `8f2fe09f` |
-| neutral | dark | `f51a1e44` | `7910e538` |
+| desk | dark | `eba91f8b` | [rtl](toolbar/desk-dark-rtl.png) |
+| desk | light | `b44f6c82` | `ca5608f5` |
+| neutral | dark | `88f5293f` | `cebc3c40` |
 | neutral | light | [ltr](toolbar/neutral-light-ltr.png) | [rtl](toolbar/neutral-light-rtl.png) |
 | studio | dark | [ltr](toolbar/studio-dark-ltr.png) | [rtl](toolbar/studio-dark-rtl.png) |
-| studio | light | `86da4ef3` | `ce54293c` |
+| studio | light | `cdb4368a` | `ee6d09fb` |
 
 ## Tooltip
 
@@ -1522,9 +1522,9 @@ Densities, dark, ltr en:
 
 | Style | Scheme | ltr en | rtl ar | ltr open | rtl open |
 | --- | --- | --- | --- | --- | --- |
-| desk | dark | `e56c2f19` | [rtl](tour/desk-dark-rtl.png) | `76d30c19` | [rtl open](tour/desk-dark-rtl-open.png) |
-| desk | light | `5f1adae9` | `de2e4c41` | `baef3d49` | `0f131e99` |
-| neutral | dark | `a22f6c46` | `d3cf5354` | `6d6f4241` | `df3ca9e3` |
+| desk | dark | `e56c2f19` | [rtl](tour/desk-dark-rtl.png) | `c2cd9196` | [rtl open](tour/desk-dark-rtl-open.png) |
+| desk | light | `5f1adae9` | `de2e4c41` | `aa1fcbfd` | `b7942583` |
+| neutral | dark | `a22f6c46` | `d3cf5354` | `45c09a81` | `02ed49ee` |
 | neutral | light | [ltr](tour/neutral-light-ltr.png) | [rtl](tour/neutral-light-rtl.png) | [ltr open](tour/neutral-light-ltr-open.png) | [rtl open](tour/neutral-light-rtl-open.png) |
 | studio | dark | [ltr](tour/studio-dark-ltr.png) | [rtl](tour/studio-dark-rtl.png) | [ltr open](tour/studio-dark-ltr-open.png) | [rtl open](tour/studio-dark-rtl-open.png) |
 | studio | light | `d1a8a0e3` | `c8ec78a4` | `459124db` | `42d7aec5` |
@@ -1535,7 +1535,7 @@ Densities, dark, ltr en:
 | --- | --- | --- | --- |
 | desk | dark | `505bee2c` | [rtl](window/desk-dark-rtl.png) |
 | desk | light | `88363b88` | `103f5104` |
-| neutral | dark | `9fd5f619` | `a595d80c` |
+| neutral | dark | `9fd5f619` | `57c768c1` |
 | neutral | light | [ltr](window/neutral-light-ltr.png) | [rtl](window/neutral-light-rtl.png) |
 | studio | dark | [ltr](window/studio-dark-ltr.png) | [rtl](window/studio-dark-rtl.png) |
 | studio | light | `85e60ba4` | `f694c549` |

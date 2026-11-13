@@ -46,6 +46,7 @@ import {
   Injector,
   TemplateRef,
   afterNextRender,
+  afterRenderEffect,
   computed,
   effect,
   forwardRef,
@@ -64,6 +65,8 @@ import type { Shape, Size } from '@the-system/shared';
 import { consumeHostAttributes } from '../../internal/host';
 import { optionalBoolean } from '../../internal/optional-boolean';
 import { PopupLayer } from '../../internal/popper';
+import { injectMotion } from '../../internal/motion';
+import { POPUP_LIST_ROWS, injectFlipGroup, openStaggered } from '../../internal/motion-selection';
 import { DsThemeService } from '../../theme';
 import { DsButton } from '../button/button';
 import { DsFieldContext, fieldControl } from '../field/field-context';
@@ -122,6 +125,9 @@ const words = {
   },
 } as const;
 
+/** The tags of the trigger summary. */
+const tagsOf = (value: Element) => Array.from(value.querySelectorAll(":scope > [data-part='tag']"));
+
 let nextId = 0;
 
 @Component({
@@ -156,7 +162,7 @@ let nextId = 0;
   [attr.aria-busy]="loading() ? 'true' : null"
   (keydown)="onTriggerKeydown($event)"
   (click)="onTriggerClick($event)"
-  (blur)="onTriggerBlur($event)"><span data-part="value">@if (chosen().length === 0) {{{ placeholderText() }}} @else if (summary() === 'count') {{{ countText() }}} @else {@for (o of shownTags(); track o.value) {<span data-part="tag" aria-hidden="true">{{ o.label }}</span>}@if (more() > 0) {<span data-part="tag" data-more="" aria-hidden="true"><ng-container>+</ng-container>{{ more() }}</span>}<span data-part="summary-text">{{ listText() }}</span>}</span><span data-part="icon" aria-hidden="true">@if (loading()) {<span dsSpinner size="sm" decorative></span>} @else {<svg dsIcon name="chevrons-up-down" size="md"></svg>}</span></div>@if (name() !== undefined) {@for (o of chosen(); track o.value) {<input type="hidden" [attr.name]="name()" [value]="o.value" [attr.value]="o.value" [disabled]="isDisabled()" />}}
+  (blur)="onTriggerBlur($event)"><span #valueEl data-part="value">@if (chosen().length === 0) {{{ placeholderText() }}} @else if (summary() === 'count') {{{ countText() }}} @else {@for (o of shownTags(); track o.value) {<span data-part="tag" aria-hidden="true">{{ o.label }}</span>}@if (more() > 0) {<span data-part="tag" data-more="" aria-hidden="true"><ng-container>+</ng-container>{{ more() }}</span>}<span data-part="summary-text">{{ listText() }}</span>}</span><span data-part="icon" aria-hidden="true">@if (loading()) {<span dsSpinner size="sm" decorative></span>} @else {<svg dsIcon name="chevrons-up-down" size="md"></svg>}</span></div>@if (name() !== undefined) {@for (o of chosen(); track o.value) {<input type="hidden" [attr.name]="name()" [value]="o.value" [attr.value]="o.value" [disabled]="isDisabled()" />}}
 <ng-template #popup><div data-ds="multi-select" data-part="popup" [attr.id]="popupId" [attr.data-size]="size()" [attr.data-state]="layer.closing() ? 'closed' : 'open'"
   [attr.data-side]="layer.side()" [attr.data-align]="layer.align()"
   style="--radix-popover-content-transform-origin: var(--radix-popper-transform-origin); --radix-popover-content-available-width: var(--radix-popper-available-width); --radix-popover-content-available-height: var(--radix-popper-available-height); --radix-popover-trigger-width: var(--radix-popper-anchor-width); --radix-popover-trigger-height: var(--radix-popper-anchor-height);"
@@ -293,6 +299,8 @@ export class DsMultiSelect implements ControlValueAccessor {
     this.loading() ? (this.loadingLabel() ?? this.t().loading) : (this.empty() ?? (this.hasOptions() ? this.t().empty : this.t().none)),
   );
 
+  protected readonly motion = injectMotion();
+  private readonly valueEl = viewChild<ElementRef<HTMLSpanElement>>('valueEl');
   protected readonly layer = new PopupLayer({
     template: () => this.popupTemplate(),
     anchor: () => this.host,
@@ -308,6 +316,14 @@ export class DsMultiSelect implements ControlValueAccessor {
   protected onTouched: () => void = () => {};
 
   constructor() {
+    // collection-flip: the tags in the trigger move, pop in and shrink out as the selection changes.
+    const flip = injectFlipGroup({ items: tagsOf });
+    afterRenderEffect(() => {
+      this.chosen();
+      this.summary();
+      const el = this.valueEl()?.nativeElement;
+      untracked(() => flip.update(el));
+    });
     for (const [name] of this.triggerAttrs) this.host.removeAttribute(name);
     // The field root is the Radix Anchor, which renders class="".
     if (!this.host.hasAttribute('class')) this.host.setAttribute('class', '');
@@ -415,7 +431,8 @@ export class DsMultiSelect implements ControlValueAccessor {
   // ---------------------------------------------------------------- the popup
 
   private mount(): void {
-    this.layer.open();
+    // menu-rows: the options arrive one stagger step after the popup surface, each time it opens.
+    openStaggered(this.layer, POPUP_LIST_ROWS, () => this.motion.mode('menu-rows'));
     const content = this.layer.content;
     if (!content) return;
     const onPointerDown = (event: PointerEvent) => {

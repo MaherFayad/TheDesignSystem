@@ -1,0 +1,788 @@
+{
+ "id": "toast-enter",
+ "family": "feedback",
+ "drive": "css",
+ "pattern": "toast",
+ "reducedSays": "No motion: the toast is there and gone at once.",
+ "styles": {
+  "studio": {
+   "focus": {
+    "at0": {
+     "el": "button[button]",
+     "outline": "solid 2px rgba(0, 0, 0, 0)",
+     "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgb(244, 244, 245) 0px 0px 0px 2px",
+     "focusVisible": true,
+     "opacity": 1,
+     "anims": []
+    },
+    "at300": {
+     "el": "button[button]",
+     "outline": "solid 2px rgba(0, 0, 0, 0)",
+     "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgb(244, 244, 245) 0px 0px 0px 2px",
+     "focusVisible": true,
+     "opacity": 1,
+     "anims": []
+    },
+    "ringAtOnce": true
+   },
+   "transitionSweep": [],
+   "seek": {
+    "animations": 2,
+    "startOffsets": [
+     0,
+     0
+    ],
+    "hit": {
+     "checked": 3,
+     "missed": [],
+     "maxShift": 5.5
+    },
+    "parts": [
+     {
+      "part": "li[toast]",
+      "scale": [
+       1,
+       1
+      ],
+      "travelPx": 5.5,
+      "opacityMin": 0,
+      "scaleOvershoot": 0,
+      "travelOvershootPx": 0,
+      "movesUntil": 100
+     },
+     {
+      "part": "span[icon]",
+      "scale": [
+       0.8,
+       1
+      ],
+      "travelPx": 0,
+      "opacityMin": 0,
+      "scaleOvershoot": 0,
+      "travelOvershootPx": 0,
+      "movesUntil": 100
+     }
+    ],
+    "readable": [
+     {
+      "text": "div[title]:New version re",
+      "readableAt": 40,
+      "appearedAt": 0
+     },
+     {
+      "text": "div[description]:Reload the pag",
+      "readableAt": 40,
+      "appearedAt": 0
+     }
+    ]
+   },
+   "transitionSweepAfter": [],
+   "full": {
+    "anims": [],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 0,
+    "infinite": [],
+    "stateAt": null,
+    "firstMotionAt": null,
+    "focusAfter": "button[button]",
+    "frames": 88,
+    "animCount": 0
+   },
+   "rapid": {
+    "left": [],
+    "held": [],
+    "inline": [],
+    "ghosts": 0,
+    "nodes": 13,
+    "indicators": "0 ok",
+    "custom": null,
+    "nodesBefore": 13
+   },
+   "interrupt": null,
+   "tenFast": null,
+   "off": {
+    "injected": "@layer ds.recipes {[data-style='studio'] [data-ds='toast'] {--_toast-enter-y: 0px; --_toast-enter-scale: 1; --_toast-icon-enter-scale: 1;}}",
+    "animations": 0,
+    "moving": [],
+    "fading": []
+   },
+   "full.rtl": {
+    "anims": [
+     {
+      "kind": "keyframes",
+      "name": "ds-toast-in",
+      "target": "li[toast]",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 120,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "linear",
+      "kfEasing": [
+       "ease.spring-bouncy"
+      ],
+      "fill": "none",
+      "kf": [
+       {
+        "offset": 0,
+        "opacity": "0",
+        "transform": "translateY(5.5444px) scale(1)"
+       },
+       {
+        "offset": 0.3,
+        "opacity": "1"
+       },
+       {
+        "offset": 1,
+        "opacity": "1",
+        "transform": "none"
+       }
+      ],
+      "first": 146,
+      "last": 264,
+      "playState": "running"
+     },
+     {
+      "kind": "keyframes",
+      "name": "ds-toast-icon-in",
+      "target": "span[icon]",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 120,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "linear",
+      "kfEasing": [
+       "ease.spring-bouncy"
+      ],
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "opacity": "0",
+        "transform": "scale(0.8)"
+       },
+       {
+        "offset": 0.3,
+        "opacity": "1"
+       },
+       {
+        "offset": 1,
+        "opacity": "1",
+        "transform": "none"
+       }
+      ],
+      "first": 146,
+      "last": 264,
+      "playState": "running"
+     }
+    ],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 120,
+    "infinite": [],
+    "stateAt": 146,
+    "firstMotionAt": 146,
+    "focusAfter": "button[button]",
+    "frames": 67,
+    "animCount": 2,
+    "rapid": {
+     "left": [],
+     "held": [],
+     "inline": [],
+     "ghosts": 0,
+     "nodes": 13,
+     "indicators": "0 ok",
+     "custom": null,
+     "nodesBefore": 12
+    }
+   },
+   "media.ltr": {
+    "anims": [],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 0,
+    "infinite": [],
+    "stateAt": 74,
+    "firstMotionAt": null,
+    "focusAfter": "button[button]",
+    "frames": 75,
+    "animCount": 0,
+    "restOffTransforms": []
+   },
+   "media.rtl": {
+    "anims": [],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 0,
+    "infinite": [],
+    "stateAt": 115,
+    "firstMotionAt": null,
+    "focusAfter": "button[button]",
+    "frames": 74,
+    "animCount": 0,
+    "restOffTransforms": []
+   },
+   "attr.ltr": {
+    "anims": [],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 0,
+    "infinite": [],
+    "stateAt": 57,
+    "firstMotionAt": null,
+    "focusAfter": "button[button]",
+    "frames": 71,
+    "animCount": 0,
+    "restOffTransforms": []
+   },
+   "attr.rtl": {
+    "anims": [],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 0,
+    "infinite": [],
+    "stateAt": 83,
+    "firstMotionAt": null,
+    "focusAfter": "button[button]",
+    "frames": 72,
+    "animCount": 0,
+    "restOffTransforms": []
+   }
+  },
+  "desk": {
+   "focus": {
+    "at0": {
+     "el": "button[button]",
+     "outline": "solid 2px rgba(0, 0, 0, 0)",
+     "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgb(244, 244, 245) 0px 0px 0px 2px",
+     "focusVisible": true,
+     "opacity": 1,
+     "anims": [
+      "transform 268"
+     ]
+    },
+    "at300": {
+     "el": "button[button]",
+     "outline": "solid 2px rgba(0, 0, 0, 0)",
+     "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgb(244, 244, 245) 0px 0px 0px 2px",
+     "focusVisible": true,
+     "opacity": 1,
+     "anims": []
+    },
+    "ringAtOnce": true
+   },
+   "transitionSweep": [],
+   "seek": {
+    "animations": 2,
+    "startOffsets": [
+     0,
+     0
+    ],
+    "hit": {
+     "checked": 3,
+     "missed": [],
+     "maxShift": 19.9
+    },
+    "parts": [
+     {
+      "part": "li[toast]",
+      "scale": [
+       0.9,
+       1.024
+      ],
+      "travelPx": 5.5,
+      "opacityMin": 0,
+      "scaleOvershoot": 0.024,
+      "travelOvershootPx": 1.3,
+      "movesUntil": 280
+     },
+     {
+      "part": "span[icon]",
+      "scale": [
+       0.3,
+       1.171
+      ],
+      "travelPx": 0,
+      "opacityMin": 0,
+      "scaleOvershoot": 0.171,
+      "travelOvershootPx": 0,
+      "movesUntil": 460
+     }
+    ],
+    "readable": [
+     {
+      "text": "div[title]:New version re",
+      "readableAt": 40,
+      "appearedAt": 0
+     },
+     {
+      "text": "div[description]:Reload the pag",
+      "readableAt": 40,
+      "appearedAt": 0
+     }
+    ]
+   },
+   "transitionSweepAfter": [],
+   "full": {
+    "anims": [],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 0,
+    "infinite": [],
+    "stateAt": null,
+    "firstMotionAt": null,
+    "focusAfter": "button[button]",
+    "frames": 93,
+    "animCount": 0
+   },
+   "rapid": {
+    "left": [],
+    "held": [],
+    "inline": [],
+    "ghosts": 0,
+    "nodes": 13,
+    "indicators": "0 ok",
+    "custom": null,
+    "nodesBefore": 13
+   },
+   "interrupt": null,
+   "tenFast": null,
+   "off": {
+    "injected": "@layer ds.recipes {[data-style='desk'] [data-ds='toast'] {--_toast-enter-y: 0px; --_toast-enter-scale: 1; --_toast-icon-enter-scale: 1;}}",
+    "animations": 0,
+    "moving": [],
+    "fading": []
+   },
+   "full.rtl": {
+    "anims": [
+     {
+      "kind": "transition",
+      "name": "transform",
+      "target": "span[label]",
+      "props": [
+       "transform"
+      ],
+      "duration": 300,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.reveal",
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "transform": "scale(1)"
+       },
+       {
+        "offset": 1,
+        "transform": "translateY(-80px)"
+       }
+      ],
+      "first": 137,
+      "last": 438,
+      "playState": "running"
+     },
+     {
+      "kind": "keyframes",
+      "name": "ds-toast-in",
+      "target": "li[toast]",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 440,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "linear",
+      "kfEasing": [
+       "ease.spring-bouncy"
+      ],
+      "fill": "none",
+      "kf": [
+       {
+        "offset": 0,
+        "opacity": "0",
+        "transform": "translateY(5.5444px) scale(0.9)"
+       },
+       {
+        "offset": 0.3,
+        "opacity": "1"
+       },
+       {
+        "offset": 1,
+        "opacity": "1",
+        "transform": "none"
+       }
+      ],
+      "first": 137,
+      "last": 572,
+      "playState": "running"
+     },
+     {
+      "kind": "keyframes",
+      "name": "ds-toast-icon-in",
+      "target": "span[icon]",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 440,
+      "delay": 45,
+      "iterations": 1,
+      "easing": "linear",
+      "kfEasing": [
+       "ease.spring-bouncy"
+      ],
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "opacity": "0",
+        "transform": "scale(0.3)"
+       },
+       {
+        "offset": 0.3,
+        "opacity": "1"
+       },
+       {
+        "offset": 1,
+        "opacity": "1",
+        "transform": "none"
+       }
+      ],
+      "first": 137,
+      "last": 624,
+      "playState": "running"
+     }
+    ],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 485,
+    "infinite": [],
+    "stateAt": 137,
+    "firstMotionAt": 137,
+    "focusAfter": "button[button]",
+    "frames": 68,
+    "animCount": 3,
+    "rapid": {
+     "left": [],
+     "held": [],
+     "inline": [],
+     "ghosts": 0,
+     "nodes": 13,
+     "indicators": "0 ok",
+     "custom": null,
+     "nodesBefore": 12
+    }
+   },
+   "media.ltr": {
+    "anims": [],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 0,
+    "infinite": [],
+    "stateAt": 84,
+    "firstMotionAt": null,
+    "focusAfter": "button[button]",
+    "frames": 66,
+    "animCount": 0,
+    "restOffTransforms": []
+   },
+   "media.rtl": {
+    "anims": [],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 0,
+    "infinite": [],
+    "stateAt": 78,
+    "firstMotionAt": null,
+    "focusAfter": "button[button]",
+    "frames": 73,
+    "animCount": 0,
+    "restOffTransforms": []
+   },
+   "attr.ltr": {
+    "anims": [],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 0,
+    "infinite": [],
+    "stateAt": 129,
+    "firstMotionAt": null,
+    "focusAfter": "button[button]",
+    "frames": 71,
+    "animCount": 0,
+    "restOffTransforms": []
+   },
+   "attr.rtl": {
+    "anims": [],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 0,
+    "infinite": [],
+    "stateAt": 75,
+    "firstMotionAt": null,
+    "focusAfter": "button[button]",
+    "frames": 75,
+    "animCount": 0,
+    "restOffTransforms": []
+   }
+  },
+  "neutral": {
+   "focus": {
+    "at0": {
+     "el": "button[button]",
+     "outline": "solid 2px rgba(0, 0, 0, 0)",
+     "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgb(255, 255, 255) 0px 0px 0px 2px, rgb(37, 99, 235) 0px 0px 0px 4px",
+     "focusVisible": true,
+     "opacity": 1,
+     "anims": []
+    },
+    "at300": {
+     "el": "button[button]",
+     "outline": "solid 2px rgba(0, 0, 0, 0)",
+     "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgb(255, 255, 255) 0px 0px 0px 2px, rgb(37, 99, 235) 0px 0px 0px 4px",
+     "focusVisible": true,
+     "opacity": 1,
+     "anims": []
+    },
+    "ringAtOnce": true
+   },
+   "transitionSweep": [],
+   "seek": {
+    "animations": 2,
+    "startOffsets": [
+     0,
+     0
+    ],
+    "hit": {
+     "checked": 3,
+     "missed": [],
+     "maxShift": 9.2
+    },
+    "parts": [
+     {
+      "part": "li[toast]",
+      "scale": [
+       0.97,
+       1.002
+      ],
+      "travelPx": 7.1,
+      "opacityMin": 0,
+      "scaleOvershoot": 0.002,
+      "travelOvershootPx": 0.4,
+      "movesUntil": 140
+     },
+     {
+      "part": "span[icon]",
+      "scale": [
+       0.5,
+       1.031
+      ],
+      "travelPx": 0,
+      "opacityMin": 0,
+      "scaleOvershoot": 0.031,
+      "travelOvershootPx": 0,
+      "movesUntil": 220
+     }
+    ],
+    "readable": [
+     {
+      "text": "div[title]:New version re",
+      "readableAt": 40,
+      "appearedAt": 0
+     },
+     {
+      "text": "div[description]:Reload the pag",
+      "readableAt": 40,
+      "appearedAt": 0
+     }
+    ]
+   },
+   "transitionSweepAfter": [],
+   "full": {
+    "anims": [],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 0,
+    "infinite": [],
+    "stateAt": null,
+    "firstMotionAt": null,
+    "focusAfter": "button[button]",
+    "frames": 91,
+    "animCount": 0
+   },
+   "rapid": {
+    "left": [],
+    "held": [],
+    "inline": [],
+    "ghosts": 0,
+    "nodes": 16,
+    "indicators": "0 ok",
+    "custom": null,
+    "nodesBefore": 16
+   },
+   "interrupt": null,
+   "tenFast": null,
+   "off": {
+    "injected": "@layer ds.recipes {[data-style='neutral'] [data-ds='toast'] {--_toast-enter-y: 0px; --_toast-enter-scale: 1; --_toast-icon-enter-scale: 1;}}",
+    "animations": 0,
+    "moving": [],
+    "fading": []
+   },
+   "full.rtl": {
+    "anims": [
+     {
+      "kind": "keyframes",
+      "name": "ds-toast-in",
+      "target": "li[toast]",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 220,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "linear",
+      "kfEasing": [
+       "ease.spring-bouncy"
+      ],
+      "fill": "none",
+      "kf": [
+       {
+        "offset": 0,
+        "opacity": "0",
+        "transform": "translateY(7.0974px) scale(0.97)"
+       },
+       {
+        "offset": 0.3,
+        "opacity": "1"
+       },
+       {
+        "offset": 1,
+        "opacity": "1",
+        "transform": "none"
+       }
+      ],
+      "first": 59,
+      "last": 275,
+      "playState": "running"
+     },
+     {
+      "kind": "keyframes",
+      "name": "ds-toast-icon-in",
+      "target": "span[icon]",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 220,
+      "delay": 24,
+      "iterations": 1,
+      "easing": "linear",
+      "kfEasing": [
+       "ease.spring-bouncy"
+      ],
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "opacity": "0",
+        "transform": "scale(0.5)"
+       },
+       {
+        "offset": 0.3,
+        "opacity": "1"
+       },
+       {
+        "offset": 1,
+        "opacity": "1",
+        "transform": "none"
+       }
+      ],
+      "first": 59,
+      "last": 292,
+      "playState": "running"
+     }
+    ],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 244,
+    "infinite": [],
+    "stateAt": 59,
+    "firstMotionAt": 59,
+    "focusAfter": "button[button]",
+    "frames": 75,
+    "animCount": 2,
+    "rapid": {
+     "left": [],
+     "held": [],
+     "inline": [],
+     "ghosts": 0,
+     "nodes": 16,
+     "indicators": "0 ok",
+     "custom": null,
+     "nodesBefore": 15
+    }
+   },
+   "media.ltr": {
+    "anims": [],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 0,
+    "infinite": [],
+    "stateAt": 103,
+    "firstMotionAt": null,
+    "focusAfter": "button[button]",
+    "frames": 74,
+    "animCount": 0,
+    "restOffTransforms": []
+   },
+   "media.rtl": {
+    "anims": [],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 0,
+    "infinite": [],
+    "stateAt": 70,
+    "firstMotionAt": null,
+    "focusAfter": "button[button]",
+    "frames": 72,
+    "animCount": 0,
+    "restOffTransforms": []
+   },
+   "attr.ltr": {
+    "anims": [],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 0,
+    "infinite": [],
+    "stateAt": 70,
+    "firstMotionAt": null,
+    "focusAfter": "button[button]",
+    "frames": 74,
+    "animCount": 0,
+    "restOffTransforms": []
+   },
+   "attr.rtl": {
+    "anims": [],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 0,
+    "infinite": [],
+    "stateAt": 72,
+    "firstMotionAt": null,
+    "focusAfter": "button[button]",
+    "frames": 72,
+    "animCount": 0,
+    "restOffTransforms": []
+   }
+  }
+ },
+ "sheet": "toast-enter.sheet.png"
+}

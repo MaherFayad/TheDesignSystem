@@ -1,0 +1,86 @@
+/*
+ * Liquid recipe for Tour: the step is a glass panel, the same material as
+ * the Popover recipe. Why not tokens alone: Tour.css takes only a blur
+ * length, and Liquid glass is a blur plus a saturation boost, a 1px light
+ * edge on the top and start sides and the glass levels. The filter sits on
+ * the panel part, the private properties on the root. The radius is
+ * radius.panel (22px) already; the ring around the target stays the focus
+ * ring color, so the target is never marked by glass alone, and takes
+ * radius.panel as well, so it hugs a capsule control.
+ */
+@layer ds.recipes {
+  [data-style='liquid'] [data-ds='tour'] {
+    --_tour-bg: var(--ds-color-material-glass);
+    --_tour-border-color: var(--ds-color-material-glass-border);
+    --_tour-shadow: var(--ds-elevation-menu), inset 0 var(--ds-border-width-default) 0 0 var(--ds-color-material-glass-edge),
+      inset var(--ds-border-width-default) 0 0 0 var(--ds-color-material-glass-edge);
+    /* Capsule around a control target (the corner is scaled down to half its height), a round corner around a larger one. */
+    --_tour-highlight-radius: var(--ds-radius-panel);
+  }
+
+  [data-style='liquid'] [data-ds='tour'] [data-part='panel'] {
+    -webkit-backdrop-filter: blur(var(--ds-blur-glass)) saturate(var(--ds-blur-window-saturation));
+    backdrop-filter: blur(var(--ds-blur-glass)) saturate(var(--ds-blur-window-saturation));
+  }
+
+  /* The start side edge follows the text direction. */
+  [data-style='liquid'] [data-ds='tour']:dir(rtl) {
+    --_tour-shadow: var(--ds-elevation-menu), inset 0 var(--ds-border-width-default) 0 0 var(--ds-color-material-glass-edge),
+      inset calc(var(--ds-border-width-default) * -1) 0 0 0 var(--ds-color-material-glass-edge);
+  }
+
+  /* The arrow is drawn in the panel fill; on glass it would show the fill twice, so it takes the solid twin. */
+  [data-style='liquid'] [data-ds='tour'] [data-part='arrow'] {
+    fill: var(--ds-color-material-glass-solid);
+  }
+
+  [data-style='liquid'][data-glass='tinted'] [data-ds='tour'] {
+    --_tour-bg: var(--ds-color-material-glass-tinted);
+  }
+
+  /* Clear glass is for bars over pictures. This panel holds reading text, so the clear level keeps the regular glass. */
+
+  /* ------------------------------------------------------------ fallbacks: solid glass, no filter, no edge */
+
+  @supports not ((backdrop-filter: blur(0)) or (-webkit-backdrop-filter: blur(0))) {
+    [data-style='liquid'] [data-ds='tour'] {
+      --_tour-bg: var(--ds-color-material-glass-solid);
+    }
+  }
+
+  @media (prefers-reduced-transparency: reduce), (prefers-contrast: more), (forced-colors: active) {
+    [data-style='liquid'] [data-ds='tour'],
+    [data-style='liquid'] [data-ds='tour']:dir(rtl) {
+      --_tour-shadow: var(--ds-elevation-menu);
+    }
+
+    [data-style='liquid'] [data-ds='tour'] [data-part='panel'] {
+      -webkit-backdrop-filter: none;
+      backdrop-filter: none;
+    }
+  }
+
+  @media (prefers-contrast: more) {
+    [data-style='liquid'] [data-ds='tour'] {
+      --_tour-border-color: var(--ds-color-border-strong);
+    }
+  }
+
+  [data-style='liquid'][data-contrast='more'] [data-ds='tour'],
+  [data-style='liquid'][data-contrast='more'] [data-ds='tour']:dir(rtl) {
+    --_tour-shadow: var(--ds-elevation-menu);
+    --_tour-border-color: var(--ds-color-border-strong);
+  }
+
+  [data-style='liquid'][data-contrast='more'] [data-ds='tour'] [data-part='panel'] {
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+
+  @media (forced-colors: active) {
+    [data-style='liquid'] [data-ds='tour'] {
+      --_tour-bg: Canvas;
+      --_tour-border-color: CanvasText;
+    }
+  }
+}

@@ -1,0 +1,1531 @@
+{
+ "id": "nav-hover-follow",
+ "family": "navigation",
+ "drive": "waapi",
+ "pattern": "tab-indicator",
+ "reducedSays": "The pill fades in place; nothing slides and the separator stays still.",
+ "styles": {
+  "studio": {
+   "focus": {
+    "at0": {
+     "el": "a[link]",
+     "outline": "solid 2px rgba(0, 0, 0, 0)",
+     "boxShadow": "rgb(244, 244, 245) 0px 0px 0px 2px",
+     "focusVisible": true,
+     "opacity": 1,
+     "anims": [
+      "transform 100"
+     ]
+    },
+    "at300": {
+     "el": "a[link]",
+     "outline": "solid 2px rgba(0, 0, 0, 0)",
+     "boxShadow": "rgb(244, 244, 245) 0px 0px 0px 2px",
+     "focusVisible": true,
+     "opacity": 1,
+     "anims": []
+    },
+    "ringAtOnce": true
+   },
+   "transitionSweep": [],
+   "seek": {
+    "animations": 6,
+    "startOffsets": [
+     0,
+     0,
+     17,
+     17,
+     17,
+     17
+    ],
+    "hit": {
+     "checked": 7,
+     "missed": [],
+     "maxShift": 0
+    },
+    "parts": [
+     {
+      "part": "a[link]::before",
+      "scale": [
+       0.767,
+       1
+      ],
+      "travelPx": 139.6,
+      "opacityMin": 0,
+      "scaleOvershoot": 0.233,
+      "travelOvershootPx": 0,
+      "movesUntil": 600
+     },
+     {
+      "part": "span[separator]",
+      "scale": [
+       1,
+       1
+      ],
+      "travelPx": 1,
+      "opacityMin": 1,
+      "scaleOvershoot": 0,
+      "travelOvershootPx": 0,
+      "movesUntil": 600
+     },
+     {
+      "part": "span[label]::after",
+      "scale": [
+       0,
+       1
+      ],
+      "travelPx": 0,
+      "opacityMin": 1,
+      "scaleOvershoot": 0,
+      "travelOvershootPx": 0,
+      "movesUntil": 100
+     }
+    ],
+    "readable": []
+   },
+   "transitionSweepAfter": [],
+   "full": {
+    "anims": [
+     {
+      "kind": "transition",
+      "name": "opacity",
+      "target": "a[link]::before",
+      "props": [
+       "opacity"
+      ],
+      "duration": 80,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.default",
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "opacity": "0"
+       },
+       {
+        "offset": 1,
+        "opacity": "1"
+       }
+      ],
+      "first": 16,
+      "last": 79,
+      "playState": "running"
+     },
+     {
+      "kind": "transition",
+      "name": "transform",
+      "target": "span[label]::after",
+      "props": [
+       "transform"
+      ],
+      "duration": 100,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.out",
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "transform": "scaleX(0)"
+       },
+       {
+        "offset": 1,
+        "transform": "scaleX(1)"
+       }
+      ],
+      "first": 16,
+      "last": 113,
+      "playState": "running"
+     },
+     {
+      "kind": "transition",
+      "name": "transform",
+      "target": "span[separator]",
+      "props": [
+       "transform"
+      ],
+      "duration": 80,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.spring-snappy",
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "transform": "translateX(0px)"
+       },
+       {
+        "offset": 1,
+        "transform": "translateX(2.5px)"
+       }
+      ],
+      "first": 16,
+      "last": 79,
+      "playState": "running"
+     }
+    ],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 100,
+    "infinite": [],
+    "stateAt": null,
+    "firstMotionAt": 16,
+    "focusAfter": "a[link]",
+    "frames": 91,
+    "animCount": 3
+   },
+   "rapid": {
+    "left": [],
+    "held": [],
+    "inline": [],
+    "ghosts": 0,
+    "nodes": 56,
+    "indicators": "0 ok",
+    "custom": null,
+    "nodesBefore": 56
+   },
+   "interrupt": null,
+   "tenFast": null,
+   "off": null,
+   "full.rtl": {
+    "anims": [
+     {
+      "kind": "transition",
+      "name": "opacity",
+      "target": "a[link]::before",
+      "props": [
+       "opacity"
+      ],
+      "duration": 80,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.default",
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "opacity": "1"
+       },
+       {
+        "offset": 1,
+        "opacity": "0"
+       }
+      ],
+      "first": 56,
+      "last": 120,
+      "playState": "running"
+     },
+     {
+      "kind": "transition",
+      "name": "transform",
+      "target": "span[label]::after",
+      "props": [
+       "transform"
+      ],
+      "duration": 100,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.exit",
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "transform": "scaleX(1)"
+       },
+       {
+        "offset": 1,
+        "transform": "scaleX(0)"
+       }
+      ],
+      "first": 56,
+      "last": 160,
+      "playState": "running"
+     },
+     {
+      "kind": "transition",
+      "name": "transform",
+      "target": "span[separator]",
+      "props": [
+       "transform"
+      ],
+      "duration": 80,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.spring-snappy",
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "transform": "translateX(-2.5px)"
+       },
+       {
+        "offset": 1,
+        "transform": "translateX(0px)"
+       }
+      ],
+      "first": 56,
+      "last": 120,
+      "playState": "running"
+     },
+     {
+      "kind": "transition",
+      "name": "opacity",
+      "target": "a[link]::before",
+      "props": [
+       "opacity"
+      ],
+      "duration": 80,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.default",
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "opacity": "0"
+       },
+       {
+        "offset": 1,
+        "opacity": "1"
+       }
+      ],
+      "first": 90,
+      "last": 160,
+      "playState": "running"
+     },
+     {
+      "kind": "transition",
+      "name": "transform",
+      "target": "span[label]::after",
+      "props": [
+       "transform"
+      ],
+      "duration": 100,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.out",
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "transform": "scaleX(0)"
+       },
+       {
+        "offset": 1,
+        "transform": "scaleX(1)"
+       }
+      ],
+      "first": 90,
+      "last": 171,
+      "playState": "running"
+     },
+     {
+      "kind": "transition",
+      "name": "transform",
+      "target": "span[separator]",
+      "props": [
+       "transform"
+      ],
+      "duration": 80,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.spring-snappy",
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "transform": "translateX(0px)"
+       },
+       {
+        "offset": 1,
+        "transform": "translateX(-2.5px)"
+       }
+      ],
+      "first": 90,
+      "last": 160,
+      "playState": "running"
+     },
+     {
+      "kind": "waapi",
+      "name": "motion:indicator-slide",
+      "target": "a[link]::before",
+      "props": [
+       "transform"
+      ],
+      "duration": 80,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.spring-snappy",
+      "fill": "auto",
+      "kf": [
+       {
+        "offset": 0,
+        "transform": "translate(166.63px, 0px) scale(0.764, 1)"
+       },
+       {
+        "offset": 0.45,
+        "transform": "translate(83.32px, 0px) scale(0.953, 1)"
+       },
+       {
+        "offset": 1,
+        "transform": "none"
+       }
+      ],
+      "first": 90,
+      "last": 160,
+      "playState": "running"
+     }
+    ],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 100,
+    "infinite": [],
+    "stateAt": null,
+    "firstMotionAt": 56,
+    "focusAfter": "body",
+    "frames": 74,
+    "animCount": 7,
+    "rapid": {
+     "left": [],
+     "held": [],
+     "inline": [],
+     "ghosts": 0,
+     "nodes": 56,
+     "indicators": "0 ok",
+     "custom": null,
+     "nodesBefore": 56
+    }
+   },
+   "media.ltr": {
+    "anims": [
+     {
+      "kind": "transition",
+      "name": "transform",
+      "target": "span[label]::after",
+      "props": [
+       "transform"
+      ],
+      "duration": 100,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.out",
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "transform": "scaleX(0)"
+       },
+       {
+        "offset": 1,
+        "transform": "scaleX(1)"
+       }
+      ],
+      "first": 54,
+      "last": 153,
+      "playState": "running"
+     }
+    ],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 100,
+    "infinite": [],
+    "stateAt": null,
+    "firstMotionAt": 54,
+    "focusAfter": "body",
+    "frames": 70,
+    "animCount": 1,
+    "restOffTransforms": [
+     "span[label]::after s0,1 t0,0"
+    ]
+   },
+   "media.rtl": {
+    "anims": [
+     {
+      "kind": "transition",
+      "name": "transform",
+      "target": "span[label]::after",
+      "props": [
+       "transform"
+      ],
+      "duration": 100,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.out",
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "transform": "scaleX(0)"
+       },
+       {
+        "offset": 1,
+        "transform": "scaleX(1)"
+       }
+      ],
+      "first": 42,
+      "last": 152,
+      "playState": "running"
+     }
+    ],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 100,
+    "infinite": [],
+    "stateAt": null,
+    "firstMotionAt": 42,
+    "focusAfter": "body",
+    "frames": 74,
+    "animCount": 1,
+    "restOffTransforms": [
+     "span[label]::after s0,1 t0,0"
+    ]
+   },
+   "attr.ltr": {
+    "anims": [],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 0,
+    "infinite": [],
+    "stateAt": null,
+    "firstMotionAt": null,
+    "focusAfter": "body",
+    "frames": 74,
+    "animCount": 0,
+    "restOffTransforms": [
+     "span[label]::after s0,1 t0,0"
+    ]
+   },
+   "attr.rtl": {
+    "anims": [],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 0,
+    "infinite": [],
+    "stateAt": null,
+    "firstMotionAt": null,
+    "focusAfter": "body",
+    "frames": 70,
+    "animCount": 0,
+    "restOffTransforms": [
+     "span[label]::after s0,1 t0,0"
+    ]
+   }
+  },
+  "desk": {
+   "focus": {
+    "at0": {
+     "el": "a[link]",
+     "outline": "solid 2px rgba(0, 0, 0, 0)",
+     "boxShadow": "rgb(244, 244, 245) 0px 0px 0px 2px",
+     "focusVisible": true,
+     "opacity": 1,
+     "anims": [
+      "transform 320"
+     ]
+    },
+    "at300": {
+     "el": "a[link]",
+     "outline": "solid 2px rgba(0, 0, 0, 0)",
+     "boxShadow": "rgb(244, 244, 245) 0px 0px 0px 2px",
+     "focusVisible": true,
+     "opacity": 1,
+     "anims": [
+      "transform 320"
+     ]
+    },
+    "ringAtOnce": true
+   },
+   "transitionSweep": [],
+   "seek": {
+    "animations": 6,
+    "startOffsets": [
+     0,
+     0,
+     17,
+     17,
+     17,
+     17
+    ],
+    "hit": {
+     "checked": 7,
+     "missed": [],
+     "maxShift": 0
+    },
+    "parts": [
+     {
+      "part": "a[link]::before",
+      "scale": [
+       0.776,
+       1.143
+      ],
+      "travelPx": 139.4,
+      "opacityMin": 0,
+      "scaleOvershoot": 0.224,
+      "travelOvershootPx": 0,
+      "movesUntil": 600
+     },
+     {
+      "part": "span[separator]",
+      "scale": [
+       1,
+       1
+      ],
+      "travelPx": 3.3,
+      "opacityMin": 1,
+      "scaleOvershoot": 0,
+      "travelOvershootPx": 0,
+      "movesUntil": 600
+     },
+     {
+      "part": "span[label]::after",
+      "scale": [
+       0,
+       1
+      ],
+      "travelPx": 0,
+      "opacityMin": 1,
+      "scaleOvershoot": 0,
+      "travelOvershootPx": 0,
+      "movesUntil": 320
+     }
+    ],
+    "readable": []
+   },
+   "transitionSweepAfter": [],
+   "full": {
+    "anims": [
+     {
+      "kind": "transition",
+      "name": "opacity",
+      "target": "a[link]::before",
+      "props": [
+       "opacity"
+      ],
+      "duration": 80,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.default",
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "opacity": "0"
+       },
+       {
+        "offset": 1,
+        "opacity": "1"
+       }
+      ],
+      "first": 35,
+      "last": 96,
+      "playState": "running"
+     },
+     {
+      "kind": "transition",
+      "name": "transform",
+      "target": "span[label]::after",
+      "props": [
+       "transform"
+      ],
+      "duration": 320,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.out",
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "transform": "scaleX(0)"
+       },
+       {
+        "offset": 1,
+        "transform": "scaleX(1)"
+       }
+      ],
+      "first": 35,
+      "last": 346,
+      "playState": "running"
+     },
+     {
+      "kind": "transition",
+      "name": "transform",
+      "target": "span[separator]",
+      "props": [
+       "transform"
+      ],
+      "duration": 300,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.spring-snappy",
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "transform": "translateX(0px)"
+       },
+       {
+        "offset": 1,
+        "transform": "translateX(7.5px)"
+       }
+      ],
+      "first": 35,
+      "last": 329,
+      "playState": "running"
+     }
+    ],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 320,
+    "infinite": [],
+    "stateAt": null,
+    "firstMotionAt": 35,
+    "focusAfter": "a[link]",
+    "frames": 89,
+    "animCount": 3
+   },
+   "rapid": {
+    "left": [],
+    "held": [],
+    "inline": [],
+    "ghosts": 0,
+    "nodes": 56,
+    "indicators": "0 ok",
+    "custom": null,
+    "nodesBefore": 56
+   },
+   "interrupt": null,
+   "tenFast": null,
+   "off": null,
+   "full.rtl": {
+    "anims": [
+     {
+      "kind": "transition",
+      "name": "opacity",
+      "target": "a[link]::before",
+      "props": [
+       "opacity"
+      ],
+      "duration": 80,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.default",
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "opacity": "1"
+       },
+       {
+        "offset": 1,
+        "opacity": "0"
+       }
+      ],
+      "first": 68,
+      "last": 135,
+      "playState": "running"
+     },
+     {
+      "kind": "transition",
+      "name": "transform",
+      "target": "span[label]::after",
+      "props": [
+       "transform"
+      ],
+      "duration": 100,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.exit",
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "transform": "scaleX(1)"
+       },
+       {
+        "offset": 1,
+        "transform": "scaleX(0)"
+       }
+      ],
+      "first": 68,
+      "last": 154,
+      "playState": "running"
+     },
+     {
+      "kind": "transition",
+      "name": "transform",
+      "target": "span[separator]",
+      "props": [
+       "transform"
+      ],
+      "duration": 300,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.spring-snappy",
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "transform": "translateX(-7.5px)"
+       },
+       {
+        "offset": 1,
+        "transform": "translateX(0px)"
+       }
+      ],
+      "first": 68,
+      "last": 353,
+      "playState": "running"
+     },
+     {
+      "kind": "transition",
+      "name": "opacity",
+      "target": "a[link]::before",
+      "props": [
+       "opacity"
+      ],
+      "duration": 80,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.default",
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "opacity": "0"
+       },
+       {
+        "offset": 1,
+        "opacity": "1"
+       }
+      ],
+      "first": 90,
+      "last": 154,
+      "playState": "running"
+     },
+     {
+      "kind": "transition",
+      "name": "transform",
+      "target": "span[label]::after",
+      "props": [
+       "transform"
+      ],
+      "duration": 320,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.out",
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "transform": "scaleX(0)"
+       },
+       {
+        "offset": 1,
+        "transform": "scaleX(1)"
+       }
+      ],
+      "first": 90,
+      "last": 369,
+      "playState": "running"
+     },
+     {
+      "kind": "transition",
+      "name": "transform",
+      "target": "span[separator]",
+      "props": [
+       "transform"
+      ],
+      "duration": 300,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.spring-snappy",
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "transform": "translateX(0px)"
+       },
+       {
+        "offset": 1,
+        "transform": "translateX(-7.5px)"
+       }
+      ],
+      "first": 90,
+      "last": 369,
+      "playState": "running"
+     },
+     {
+      "kind": "waapi",
+      "name": "motion:indicator-slide",
+      "target": "a[link]::before",
+      "props": [
+       "transform"
+      ],
+      "duration": 300,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.spring-snappy",
+      "fill": "auto",
+      "kf": [
+       {
+        "offset": 0,
+        "transform": "translate(165.51px, 0px) scale(0.773, 1)"
+       },
+       {
+        "offset": 0.45,
+        "transform": "translate(82.75px, 0px) scale(1.153, 1)"
+       },
+       {
+        "offset": 1,
+        "transform": "none"
+       }
+      ],
+      "first": 90,
+      "last": 369,
+      "playState": "running"
+     }
+    ],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 320,
+    "infinite": [],
+    "stateAt": null,
+    "firstMotionAt": 68,
+    "focusAfter": "body",
+    "frames": 68,
+    "animCount": 7,
+    "rapid": {
+     "left": [],
+     "held": [],
+     "inline": [],
+     "ghosts": 0,
+     "nodes": 56,
+     "indicators": "0 ok",
+     "custom": null,
+     "nodesBefore": 56
+    }
+   },
+   "media.ltr": {
+    "anims": [
+     {
+      "kind": "transition",
+      "name": "transform",
+      "target": "span[label]::after",
+      "props": [
+       "transform"
+      ],
+      "duration": 320,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.out",
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "transform": "scaleX(0)"
+       },
+       {
+        "offset": 1,
+        "transform": "scaleX(1)"
+       }
+      ],
+      "first": 68,
+      "last": 407,
+      "playState": "running"
+     }
+    ],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 320,
+    "infinite": [],
+    "stateAt": null,
+    "firstMotionAt": 68,
+    "focusAfter": "body",
+    "frames": 67,
+    "animCount": 1,
+    "restOffTransforms": [
+     "span[label]::after s0,1 t0,0"
+    ]
+   },
+   "media.rtl": {
+    "anims": [
+     {
+      "kind": "transition",
+      "name": "transform",
+      "target": "span[label]::after",
+      "props": [
+       "transform"
+      ],
+      "duration": 320,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.out",
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "transform": "scaleX(0)"
+       },
+       {
+        "offset": 1,
+        "transform": "scaleX(1)"
+       }
+      ],
+      "first": 38,
+      "last": 350,
+      "playState": "running"
+     }
+    ],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 320,
+    "infinite": [],
+    "stateAt": null,
+    "firstMotionAt": 38,
+    "focusAfter": "body",
+    "frames": 74,
+    "animCount": 1,
+    "restOffTransforms": [
+     "span[label]::after s0,1 t0,0"
+    ]
+   },
+   "attr.ltr": {
+    "anims": [],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 0,
+    "infinite": [],
+    "stateAt": null,
+    "firstMotionAt": null,
+    "focusAfter": "body",
+    "frames": 73,
+    "animCount": 0,
+    "restOffTransforms": [
+     "span[label]::after s0,1 t0,0"
+    ]
+   },
+   "attr.rtl": {
+    "anims": [],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 0,
+    "infinite": [],
+    "stateAt": null,
+    "firstMotionAt": null,
+    "focusAfter": "body",
+    "frames": 74,
+    "animCount": 0,
+    "restOffTransforms": [
+     "span[label]::after s0,1 t0,0"
+    ]
+   }
+  },
+  "neutral": {
+   "focus": {
+    "at0": {
+     "el": "a[link]",
+     "outline": "solid 2px rgba(0, 0, 0, 0)",
+     "boxShadow": "rgb(255, 255, 255) 0px 0px 0px 2px, rgb(37, 99, 235) 0px 0px 0px 4px",
+     "focusVisible": true,
+     "opacity": 1,
+     "anims": [
+      "transform 200"
+     ]
+    },
+    "at300": {
+     "el": "a[link]",
+     "outline": "solid 2px rgba(0, 0, 0, 0)",
+     "boxShadow": "rgb(255, 255, 255) 0px 0px 0px 2px, rgb(37, 99, 235) 0px 0px 0px 4px",
+     "focusVisible": true,
+     "opacity": 1,
+     "anims": []
+    },
+    "ringAtOnce": true
+   },
+   "transitionSweep": [],
+   "seek": {
+    "animations": 4,
+    "startOffsets": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "hit": {
+     "checked": 7,
+     "missed": [],
+     "maxShift": 0
+    },
+    "parts": [
+     {
+      "part": "a[link]::before",
+      "scale": [
+       0.771,
+       1.016
+      ],
+      "travelPx": 155.5,
+      "opacityMin": 0,
+      "scaleOvershoot": 0.016,
+      "travelOvershootPx": 2,
+      "movesUntil": 160
+     },
+     {
+      "part": "span[label]::after",
+      "scale": [
+       0,
+       1
+      ],
+      "travelPx": 0,
+      "opacityMin": 1,
+      "scaleOvershoot": 0,
+      "travelOvershootPx": 0,
+      "movesUntil": 180
+     },
+     {
+      "part": "span[separator]",
+      "scale": [
+       1,
+       1
+      ],
+      "travelPx": 2,
+      "opacityMin": 1,
+      "scaleOvershoot": 0,
+      "travelOvershootPx": 0,
+      "movesUntil": 60
+     }
+    ],
+    "readable": []
+   },
+   "transitionSweepAfter": [],
+   "full": {
+    "anims": [
+     {
+      "kind": "transition",
+      "name": "opacity",
+      "target": "a[link]::before",
+      "props": [
+       "opacity"
+      ],
+      "duration": 80,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.default",
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "opacity": "0"
+       },
+       {
+        "offset": 1,
+        "opacity": "1"
+       }
+      ],
+      "first": 68,
+      "last": 123,
+      "playState": "running"
+     },
+     {
+      "kind": "transition",
+      "name": "transform",
+      "target": "span[label]::after",
+      "props": [
+       "transform"
+      ],
+      "duration": 200,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.out",
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "transform": "scaleX(0)"
+       },
+       {
+        "offset": 1,
+        "transform": "scaleX(1)"
+       }
+      ],
+      "first": 68,
+      "last": 240,
+      "playState": "running"
+     },
+     {
+      "kind": "transition",
+      "name": "transform",
+      "target": "span[separator]",
+      "props": [
+       "transform"
+      ],
+      "duration": 180,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.spring-snappy",
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "transform": "translateX(0px)"
+       },
+       {
+        "offset": 1,
+        "transform": "translateX(5px)"
+       }
+      ],
+      "first": 68,
+      "last": 223,
+      "playState": "running"
+     }
+    ],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 200,
+    "infinite": [],
+    "stateAt": null,
+    "firstMotionAt": 68,
+    "focusAfter": "a[link]",
+    "frames": 88,
+    "animCount": 3
+   },
+   "rapid": {
+    "left": [],
+    "held": [],
+    "inline": [],
+    "ghosts": 0,
+    "nodes": 60,
+    "indicators": "0 ok",
+    "custom": null,
+    "nodesBefore": 60
+   },
+   "interrupt": null,
+   "tenFast": null,
+   "off": null,
+   "full.rtl": {
+    "anims": [
+     {
+      "kind": "transition",
+      "name": "opacity",
+      "target": "a[link]::before",
+      "props": [
+       "opacity"
+      ],
+      "duration": 80,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.default",
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "opacity": "1"
+       },
+       {
+        "offset": 1,
+        "opacity": "0"
+       }
+      ],
+      "first": 69,
+      "last": 135,
+      "playState": "running"
+     },
+     {
+      "kind": "transition",
+      "name": "transform",
+      "target": "span[label]::after",
+      "props": [
+       "transform"
+      ],
+      "duration": 100,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.exit",
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "transform": "scaleX(1)"
+       },
+       {
+        "offset": 1,
+        "transform": "scaleX(0)"
+       }
+      ],
+      "first": 69,
+      "last": 151,
+      "playState": "running"
+     },
+     {
+      "kind": "transition",
+      "name": "transform",
+      "target": "span[separator]",
+      "props": [
+       "transform"
+      ],
+      "duration": 180,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.spring-snappy",
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "transform": "translateX(-5px)"
+       },
+       {
+        "offset": 1,
+        "transform": "translateX(0px)"
+       }
+      ],
+      "first": 69,
+      "last": 234,
+      "playState": "running"
+     },
+     {
+      "kind": "transition",
+      "name": "opacity",
+      "target": "a[link]::before",
+      "props": [
+       "opacity"
+      ],
+      "duration": 80,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.default",
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "opacity": "0"
+       },
+       {
+        "offset": 1,
+        "opacity": "1"
+       }
+      ],
+      "first": 97,
+      "last": 168,
+      "playState": "running"
+     },
+     {
+      "kind": "transition",
+      "name": "transform",
+      "target": "span[label]::after",
+      "props": [
+       "transform"
+      ],
+      "duration": 200,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.out",
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "transform": "scaleX(0)"
+       },
+       {
+        "offset": 1,
+        "transform": "scaleX(1)"
+       }
+      ],
+      "first": 97,
+      "last": 301,
+      "playState": "running"
+     },
+     {
+      "kind": "transition",
+      "name": "transform",
+      "target": "span[separator]",
+      "props": [
+       "transform"
+      ],
+      "duration": 180,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.spring-snappy",
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "transform": "translateX(0px)"
+       },
+       {
+        "offset": 1,
+        "transform": "translateX(-5px)"
+       }
+      ],
+      "first": 97,
+      "last": 269,
+      "playState": "running"
+     },
+     {
+      "kind": "waapi",
+      "name": "motion:indicator-slide",
+      "target": "a[link]::before",
+      "props": [
+       "transform"
+      ],
+      "duration": 180,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.spring-snappy",
+      "fill": "auto",
+      "kf": [
+       {
+        "offset": 0,
+        "transform": "translate(184.86px, 0px) scale(0.769, 1)"
+       },
+       {
+        "offset": 0.45,
+        "transform": "translate(92.43px, 0px) scale(1.017, 1)"
+       },
+       {
+        "offset": 1,
+        "transform": "none"
+       }
+      ],
+      "first": 97,
+      "last": 269,
+      "playState": "running"
+     }
+    ],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 200,
+    "infinite": [],
+    "stateAt": null,
+    "firstMotionAt": 69,
+    "focusAfter": "body",
+    "frames": 69,
+    "animCount": 7,
+    "rapid": {
+     "left": [],
+     "held": [],
+     "inline": [],
+     "ghosts": 0,
+     "nodes": 60,
+     "indicators": "0 ok",
+     "custom": null,
+     "nodesBefore": 60
+    }
+   },
+   "media.ltr": {
+    "anims": [
+     {
+      "kind": "transition",
+      "name": "transform",
+      "target": "span[label]::after",
+      "props": [
+       "transform"
+      ],
+      "duration": 200,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.out",
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "transform": "scaleX(0)"
+       },
+       {
+        "offset": 1,
+        "transform": "scaleX(1)"
+       }
+      ],
+      "first": 38,
+      "last": 220,
+      "playState": "running"
+     }
+    ],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 200,
+    "infinite": [],
+    "stateAt": null,
+    "firstMotionAt": 38,
+    "focusAfter": "body",
+    "frames": 70,
+    "animCount": 1,
+    "restOffTransforms": [
+     "span[label]::after s0,1 t0,0"
+    ]
+   },
+   "media.rtl": {
+    "anims": [
+     {
+      "kind": "transition",
+      "name": "transform",
+      "target": "span[label]::after",
+      "props": [
+       "transform"
+      ],
+      "duration": 200,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.out",
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "transform": "scaleX(0)"
+       },
+       {
+        "offset": 1,
+        "transform": "scaleX(1)"
+       }
+      ],
+      "first": 54,
+      "last": 258,
+      "playState": "running"
+     }
+    ],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 200,
+    "infinite": [],
+    "stateAt": null,
+    "firstMotionAt": 54,
+    "focusAfter": "body",
+    "frames": 74,
+    "animCount": 1,
+    "restOffTransforms": [
+     "span[label]::after s0,1 t0,0"
+    ]
+   },
+   "attr.ltr": {
+    "anims": [],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 0,
+    "infinite": [],
+    "stateAt": null,
+    "firstMotionAt": null,
+    "focusAfter": "body",
+    "frames": 71,
+    "animCount": 0,
+    "restOffTransforms": [
+     "span[label]::after s0,1 t0,0"
+    ]
+   },
+   "attr.rtl": {
+    "anims": [],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 0,
+    "infinite": [],
+    "stateAt": null,
+    "firstMotionAt": null,
+    "focusAfter": "body",
+    "frames": 65,
+    "animCount": 0,
+    "restOffTransforms": [
+     "span[label]::after s0,1 t0,0"
+    ]
+   }
+  }
+ },
+ "sheet": "nav-hover-follow.sheet.png"
+}

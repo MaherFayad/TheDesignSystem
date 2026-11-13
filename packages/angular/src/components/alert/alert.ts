@@ -15,12 +15,19 @@
 //
 // Live role: none by default. `live` is for an alert mounted after load:
 // role alert for danger, role status (with aria-atomic) for the rest.
+//
+// Motion (order 1.22). alert-entrance is CSS (Alert.css). alert-dismiss:
+// the close button calls onClose at once, and a ghost of the alert shrinks
+// away while the content under it slides up into the gap, as React plays it
+// (internal/motion-feedback.ts, dismissWithExit).
 import { ChangeDetectionStrategy, Component, HostAttributeToken, booleanAttribute, computed, inject, input, type TemplateRef } from '@angular/core';
 import { NgTemplateOutlet } from '@angular/common';
 import { DsIcon } from '@the-system/icons/angular';
 import type { IconName } from '@the-system/icons';
 import type { Emphasis, Size, Tone } from '@the-system/shared';
 import { consumeHostAttributes } from '../../internal/host';
+import { injectMotion } from '../../internal/motion';
+import { dismissWithExit } from '../../internal/motion-feedback';
 import { DsThemeService } from '../../theme/theme';
 import { DsCloseButton } from '../close-button/close-button';
 import { DsFilledPart, messageIcons, wordsFor } from './message';
@@ -71,7 +78,7 @@ export type MessageContent = string | TemplateRef<unknown>;
       <div data-part="actions">@if (isText(a)) {{{ a }}} @else {<ng-container [ngTemplateOutlet]="a" />}</div>
     }
     @if (onClose(); as close) {
-      <button dsCloseButton data-part="close" size="xs" [label]="closeName()" (click)="close()"></button>
+      <button dsCloseButton data-part="close" size="xs" [label]="closeName()" (click)="dismiss(close)"></button>
     }
   `,
 })
@@ -109,7 +116,15 @@ export class DsAlert {
   protected readonly closeName = computed(() => this.closeLabel() ?? this.words().close);
   protected readonly isText = (v: unknown): v is string => typeof v === 'string';
 
+  private readonly motion = injectMotion();
+  private readonly host: HTMLElement;
+
   constructor() {
-    consumeHostAttributes(['dsAlert', 'tone', 'emphasis', 'size', 'title', 'actions', 'icon', 'toneLabel', 'live', 'onClose', 'closeLabel']);
+    this.host = consumeHostAttributes(['dsAlert', 'tone', 'emphasis', 'size', 'title', 'actions', 'icon', 'toneLabel', 'live', 'onClose', 'closeLabel']);
+  }
+
+  /** alert-dismiss: the alert goes at once; a ghost of it shrinks away while the content below slides up. */
+  protected dismiss(close: () => void): void {
+    dismissWithExit(this.host, this.motion.mode('alert-dismiss'), close);
   }
 }

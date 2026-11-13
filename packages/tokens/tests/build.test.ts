@@ -70,6 +70,15 @@ describe('token build', () => {
     expect(reduced).toContain('--ds-duration-base: 0ms;');
     expect(reduced).toContain('--ds-delay-reveal-step: 0ms;');
     expect(reduced).not.toContain('--ds-delay-peek-hide');
+    // A style's own durations sit in its mode block, so the zeroes must match that specificity.
+    expect(block).toContain('[data-style][data-scheme] {');
+    for (const m of result.modes) {
+      for (const p of m.own.keys()) {
+        if ((p.startsWith('duration.') || p.startsWith('delay.')) && result.base.get(p)?.extensions?.['ds.motion'] !== false && m.own.get(p)!.extensions?.['ds.motion'] !== false) {
+          expect(reduced, `${m.id} ${p}`).toContain(`${cssVar(result.prefix, p)}: 0ms;`);
+        }
+      }
+    }
     expect(result.base.get('delay.peek-hide')!.extensions?.['ds.motion']).toBe(false);
   });
 

@@ -64,7 +64,7 @@ describe('DsNumberField', () => {
     expect(el.getAttribute('data-shape')).toBe('default');
     expect(el.hasAttribute('dsnumberfield')).toBe(false);
     expect(el.hasAttribute('aria-label')).toBe(false);
-    expect(Array.from(el.children).map((c) => c.getAttribute('data-part'))).toEqual(['decrement', 'control', 'increment']);
+    expect(Array.from(el.children).map((c) => c.getAttribute('data-part'))).toEqual(['decrement', 'control', null, 'increment']);
     const input = native('seats');
     expect(input.value).toBe('10');
     expect(input.getAttribute('value')).toBe('10');

@@ -1,0 +1,594 @@
+{
+ "id": "handle-grip",
+ "family": "feedback",
+ "drive": "css",
+ "pattern": "drag-drop",
+ "reducedSays": "No motion: the grip shows at its length at once and does not stretch.",
+ "styles": {
+  "studio": {
+   "focus": {
+    "at0": {
+     "el": "div[handle]",
+     "outline": "solid 2px rgba(0, 0, 0, 0)",
+     "boxShadow": "none",
+     "focusVisible": true,
+     "opacity": 1,
+     "anims": [
+      "opacity 120",
+      "transform 120"
+     ]
+    },
+    "at300": {
+     "el": "div[handle]",
+     "outline": "solid 2px rgba(0, 0, 0, 0)",
+     "boxShadow": "none",
+     "focusVisible": true,
+     "opacity": 1,
+     "anims": []
+    },
+    "ringAtOnce": true
+   },
+   "transitionSweep": [],
+   "seek": {
+    "animations": 0,
+    "startOffsets": [],
+    "hit": {
+     "checked": 1,
+     "missed": [],
+     "maxShift": 0
+    },
+    "parts": [],
+    "readable": []
+   },
+   "transitionSweepAfter": [],
+   "full": {
+    "anims": [],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 0,
+    "infinite": [],
+    "stateAt": null,
+    "firstMotionAt": null,
+    "focusAfter": "div[handle]",
+    "frames": 90,
+    "animCount": 0
+   },
+   "rapid": {
+    "left": [],
+    "held": [],
+    "inline": [],
+    "ghosts": 0,
+    "nodes": 7,
+    "indicators": "0 ok",
+    "custom": null,
+    "nodesBefore": 7
+   },
+   "interrupt": null,
+   "tenFast": null,
+   "off": {
+    "injected": "@layer ds.recipes {[data-style='studio'] [data-ds='resizable-panels'] {--_resizable-panels-grip-duration: 0s;}}",
+    "animations": 0,
+    "moving": [],
+    "fading": []
+   },
+   "full.rtl": {
+    "anims": [
+     {
+      "kind": "transition",
+      "name": "opacity",
+      "target": "span[handle-grip]",
+      "props": [
+       "opacity"
+      ],
+      "duration": 120,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.out",
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "opacity": "0"
+       },
+       {
+        "offset": 1,
+        "opacity": "1"
+       }
+      ],
+      "first": 46,
+      "last": 162,
+      "playState": "running"
+     },
+     {
+      "kind": "transition",
+      "name": "transform",
+      "target": "span[handle-grip]",
+      "props": [
+       "transform"
+      ],
+      "duration": 120,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.spring-bouncy",
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "transform": "scale(1, 0.8)"
+       },
+       {
+        "offset": 1,
+        "transform": "scale(1)"
+       }
+      ],
+      "first": 46,
+      "last": 162,
+      "playState": "running"
+     }
+    ],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 120,
+    "infinite": [],
+    "stateAt": null,
+    "firstMotionAt": 46,
+    "focusAfter": "body",
+    "frames": 74,
+    "animCount": 2,
+    "rapid": {
+     "left": [],
+     "held": [],
+     "inline": [],
+     "ghosts": 0,
+     "nodes": 7,
+     "indicators": "0 ok",
+     "custom": null,
+     "nodesBefore": 7
+    }
+   },
+   "media.ltr": {
+    "anims": [],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 0,
+    "infinite": [],
+    "stateAt": null,
+    "firstMotionAt": null,
+    "focusAfter": "body",
+    "frames": 75,
+    "animCount": 0,
+    "restOffTransforms": []
+   },
+   "media.rtl": {
+    "anims": [],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 0,
+    "infinite": [],
+    "stateAt": null,
+    "firstMotionAt": null,
+    "focusAfter": "body",
+    "frames": 75,
+    "animCount": 0,
+    "restOffTransforms": []
+   },
+   "attr.ltr": {
+    "anims": [],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 0,
+    "infinite": [],
+    "stateAt": null,
+    "firstMotionAt": null,
+    "focusAfter": "body",
+    "frames": 73,
+    "animCount": 0,
+    "restOffTransforms": []
+   },
+   "attr.rtl": {
+    "anims": [],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 0,
+    "infinite": [],
+    "stateAt": null,
+    "firstMotionAt": null,
+    "focusAfter": "body",
+    "frames": 69,
+    "animCount": 0,
+    "restOffTransforms": []
+   }
+  },
+  "desk": {
+   "focus": {
+    "at0": {
+     "el": "div[handle]",
+     "outline": "solid 2px rgba(0, 0, 0, 0)",
+     "boxShadow": "none",
+     "focusVisible": true,
+     "opacity": 1,
+     "anims": [
+      "opacity 120",
+      "transform 440"
+     ]
+    },
+    "at300": {
+     "el": "div[handle]",
+     "outline": "solid 2px rgba(0, 0, 0, 0)",
+     "boxShadow": "none",
+     "focusVisible": true,
+     "opacity": 1,
+     "anims": [
+      "transform 440"
+     ]
+    },
+    "ringAtOnce": true
+   },
+   "transitionSweep": [],
+   "seek": {
+    "animations": 0,
+    "startOffsets": [],
+    "hit": {
+     "checked": 1,
+     "missed": [],
+     "maxShift": 0
+    },
+    "parts": [],
+    "readable": []
+   },
+   "transitionSweepAfter": [],
+   "full": {
+    "anims": [],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 0,
+    "infinite": [],
+    "stateAt": null,
+    "firstMotionAt": null,
+    "focusAfter": "div[handle]",
+    "frames": 92,
+    "animCount": 0
+   },
+   "rapid": {
+    "left": [],
+    "held": [],
+    "inline": [],
+    "ghosts": 0,
+    "nodes": 7,
+    "indicators": "0 ok",
+    "custom": null,
+    "nodesBefore": 7
+   },
+   "interrupt": null,
+   "tenFast": null,
+   "off": {
+    "injected": "@layer ds.recipes {[data-style='desk'] [data-ds='resizable-panels'] {--_resizable-panels-grip-duration: 0s;}}",
+    "animations": 0,
+    "moving": [],
+    "fading": []
+   },
+   "full.rtl": {
+    "anims": [
+     {
+      "kind": "transition",
+      "name": "opacity",
+      "target": "span[handle-grip]",
+      "props": [
+       "opacity"
+      ],
+      "duration": 120,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.out",
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "opacity": "0"
+       },
+       {
+        "offset": 1,
+        "opacity": "1"
+       }
+      ],
+      "first": 42,
+      "last": 159,
+      "playState": "running"
+     },
+     {
+      "kind": "transition",
+      "name": "transform",
+      "target": "span[handle-grip]",
+      "props": [
+       "transform"
+      ],
+      "duration": 440,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.spring-bouncy",
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "transform": "scale(1, 0.3)"
+       },
+       {
+        "offset": 1,
+        "transform": "scale(1)"
+       }
+      ],
+      "first": 42,
+      "last": 474,
+      "playState": "running"
+     }
+    ],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 440,
+    "infinite": [],
+    "stateAt": null,
+    "firstMotionAt": 42,
+    "focusAfter": "body",
+    "frames": 73,
+    "animCount": 2,
+    "rapid": {
+     "left": [],
+     "held": [],
+     "inline": [],
+     "ghosts": 0,
+     "nodes": 7,
+     "indicators": "0 ok",
+     "custom": null,
+     "nodesBefore": 7
+    }
+   },
+   "media.ltr": {
+    "anims": [],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 0,
+    "infinite": [],
+    "stateAt": null,
+    "firstMotionAt": null,
+    "focusAfter": "body",
+    "frames": 75,
+    "animCount": 0,
+    "restOffTransforms": []
+   },
+   "media.rtl": {
+    "anims": [],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 0,
+    "infinite": [],
+    "stateAt": null,
+    "firstMotionAt": null,
+    "focusAfter": "body",
+    "frames": 71,
+    "animCount": 0,
+    "restOffTransforms": []
+   },
+   "attr.ltr": {
+    "anims": [],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 0,
+    "infinite": [],
+    "stateAt": null,
+    "firstMotionAt": null,
+    "focusAfter": "body",
+    "frames": 73,
+    "animCount": 0,
+    "restOffTransforms": []
+   },
+   "attr.rtl": {
+    "anims": [],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 0,
+    "infinite": [],
+    "stateAt": null,
+    "firstMotionAt": null,
+    "focusAfter": "body",
+    "frames": 74,
+    "animCount": 0,
+    "restOffTransforms": []
+   }
+  },
+  "neutral": {
+   "focus": {
+    "at0": {
+     "el": "div[handle]",
+     "outline": "solid 2px rgba(0, 0, 0, 0)",
+     "boxShadow": "none",
+     "focusVisible": true,
+     "opacity": 1,
+     "anims": [
+      "opacity 150",
+      "transform 220"
+     ]
+    },
+    "at300": {
+     "el": "div[handle]",
+     "outline": "solid 2px rgba(0, 0, 0, 0)",
+     "boxShadow": "none",
+     "focusVisible": true,
+     "opacity": 1,
+     "anims": []
+    },
+    "ringAtOnce": true
+   },
+   "transitionSweep": [],
+   "seek": {
+    "animations": 0,
+    "startOffsets": [],
+    "hit": {
+     "checked": 1,
+     "missed": [],
+     "maxShift": 0
+    },
+    "parts": [],
+    "readable": []
+   },
+   "transitionSweepAfter": [],
+   "full": {
+    "anims": [],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 0,
+    "infinite": [],
+    "stateAt": null,
+    "firstMotionAt": null,
+    "focusAfter": "div[handle]",
+    "frames": 91,
+    "animCount": 0
+   },
+   "rapid": {
+    "left": [],
+    "held": [],
+    "inline": [],
+    "ghosts": 0,
+    "nodes": 7,
+    "indicators": "0 ok",
+    "custom": null,
+    "nodesBefore": 7
+   },
+   "interrupt": null,
+   "tenFast": null,
+   "off": {
+    "injected": "@layer ds.recipes {[data-style='neutral'] [data-ds='resizable-panels'] {--_resizable-panels-grip-duration: 0s;}}",
+    "animations": 0,
+    "moving": [],
+    "fading": []
+   },
+   "full.rtl": {
+    "anims": [
+     {
+      "kind": "transition",
+      "name": "opacity",
+      "target": "span[handle-grip]",
+      "props": [
+       "opacity"
+      ],
+      "duration": 150,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.out",
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "opacity": "0"
+       },
+       {
+        "offset": 1,
+        "opacity": "1"
+       }
+      ],
+      "first": 30,
+      "last": 179,
+      "playState": "running"
+     },
+     {
+      "kind": "transition",
+      "name": "transform",
+      "target": "span[handle-grip]",
+      "props": [
+       "transform"
+      ],
+      "duration": 220,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.spring-bouncy",
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "transform": "scale(1, 0.5)"
+       },
+       {
+        "offset": 1,
+        "transform": "scale(1)"
+       }
+      ],
+      "first": 30,
+      "last": 246,
+      "playState": "running"
+     }
+    ],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 220,
+    "infinite": [],
+    "stateAt": null,
+    "firstMotionAt": 30,
+    "focusAfter": "body",
+    "frames": 75,
+    "animCount": 2,
+    "rapid": {
+     "left": [],
+     "held": [],
+     "inline": [],
+     "ghosts": 0,
+     "nodes": 7,
+     "indicators": "0 ok",
+     "custom": null,
+     "nodesBefore": 7
+    }
+   },
+   "media.ltr": {
+    "anims": [],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 0,
+    "infinite": [],
+    "stateAt": null,
+    "firstMotionAt": null,
+    "focusAfter": "body",
+    "frames": 71,
+    "animCount": 0,
+    "restOffTransforms": []
+   },
+   "media.rtl": {
+    "anims": [],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 0,
+    "infinite": [],
+    "stateAt": null,
+    "firstMotionAt": null,
+    "focusAfter": "body",
+    "frames": 75,
+    "animCount": 0,
+    "restOffTransforms": []
+   },
+   "attr.ltr": {
+    "anims": [],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 0,
+    "infinite": [],
+    "stateAt": null,
+    "firstMotionAt": null,
+    "focusAfter": "body",
+    "frames": 75,
+    "animCount": 0,
+    "restOffTransforms": []
+   },
+   "attr.rtl": {
+    "anims": [],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 0,
+    "infinite": [],
+    "stateAt": null,
+    "firstMotionAt": null,
+    "focusAfter": "body",
+    "frames": 75,
+    "animCount": 0,
+    "restOffTransforms": []
+   }
+  }
+ },
+ "sheet": "handle-grip.sheet.png"
+}

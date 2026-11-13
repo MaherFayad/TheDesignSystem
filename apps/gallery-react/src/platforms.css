@@ -1,0 +1,73 @@
+/* The /platforms page and the phone screen it frames (order 1.25). Gallery chrome, not a component: tokens still. */
+@layer ds.overrides {
+  [data-gallery='platforms'] {
+    display: grid;
+    gap: var(--ds-space-6xl);
+    padding: var(--ds-space-3xl);
+  }
+
+  [data-gallery='platforms-note'] {
+    max-inline-size: var(--ds-size-measure);
+    margin: 0;
+    color: var(--ds-color-text-muted);
+  }
+
+  [data-gallery='platforms-screen'] > h2 {
+    margin-block: 0 var(--ds-space-xl);
+    font-size: var(--ds-font-size-xl);
+  }
+
+  /* The three phones scroll sideways inside their row on a narrow screen; the page itself never does (WCAG 1.4.10). */
+  [data-gallery='platforms-row'] {
+    display: flex;
+    gap: var(--ds-space-6xl);
+    overflow-x: auto;
+    padding-block-end: var(--ds-space-xl);
+  }
+
+  [data-gallery='platforms-phone'] {
+    flex: none;
+    margin: 0;
+    text-align: center;
+  }
+
+  [data-gallery='platforms-phone'] > iframe {
+    display: block;
+    border: var(--ds-border-width-default) solid var(--ds-color-border-default);
+    border-radius: var(--ds-radius-card);
+    background-color: var(--ds-color-bg-body);
+  }
+
+  [data-gallery='platforms-phone'] > figcaption {
+    margin-block-start: var(--ds-space-s);
+    color: var(--ds-color-text-muted);
+    font-size: var(--ds-font-size-l);
+  }
+
+  /* One phone screen: the bar at the top, the content, the tab bar at the bottom. */
+  [data-gallery='phone'] {
+    display: flex;
+    flex-direction: column;
+    min-block-size: 100dvh;
+  }
+
+  [data-gallery='phone-body'] {
+    display: grid;
+    flex: 1;
+    align-content: start;
+    gap: var(--ds-space-3xl);
+    padding: var(--ds-space-3xl);
+  }
+
+  [data-gallery='phone-row'] {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--ds-space-s);
+    align-items: center;
+  }
+
+  [data-gallery='phone-tabs'] {
+    position: sticky;
+    inset-block-end: 0;
+  }
+}

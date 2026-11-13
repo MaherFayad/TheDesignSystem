@@ -14,11 +14,19 @@
 // onValueChange, onSubmit and onClear are the valueChange (of the value
 // model), submit and clear outputs. defaultValue is value. end takes a
 // TemplateRef. Native props of the inner input are inputs, as on dsInput.
+//
+// Motion (order 1.22), as in React: search-clear, the clear glyph turns in
+// from a quarter turn and lands past full size when the box gets a value,
+// and a decorative copy of the button (inert, aria-hidden) turns out over
+// the place it had when the value is cleared; search-submit, Enter dips the
+// search glyph and springs it back with a small turn. Neither waits: the
+// value, the clear and submit happen first.
 import { NgTemplateOutlet } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
   DestroyRef,
+  afterRenderEffect,
   booleanAttribute,
   computed,
   forwardRef,
@@ -27,13 +35,17 @@ import {
   model,
   output,
   signal,
+  untracked,
   viewChild,
   type TemplateRef,
 } from '@angular/core';
 import { NG_VALUE_ACCESSOR, type ControlValueAccessor } from '@angular/forms';
 import { DsIcon } from '@the-system/icons/angular';
+import { iconMorph } from '@the-system/motion';
 import type { Shape, Size } from '@the-system/shared';
 import { consumeHostAttributes } from '../../internal/host';
+import { injectMotion } from '../../internal/motion';
+import { dropAfter, leavingCopy, playBeat, snapshot, token, type Snapshot } from '../../internal/motion-fields';
 import { DsFieldContext } from '../field/field-context';
 import { DsIconButton } from '../icon-button/icon-button';
 import { DsInputGroupContext } from '../input-group/input-group-context';
@@ -181,6 +193,9 @@ export class DsSearchField implements ControlValueAccessor {
   private readonly field = inject(DsFieldContext, { optional: true });
   protected readonly group = inject(DsInputGroupContext, { optional: true, skipSelf: true });
   private readonly host = consumeHostAttributes(ATTRIBUTES);
+  private readonly motion = injectMotion();
+  /** The clear button as it was drawn, read before a change that empties the box. */
+  private leaving: Snapshot | null = null;
   private readonly inputRef = viewChild.required(DsInput);
   private readonly formDisabled = signal(false);
   private onChange: (value: string) => void = () => undefined;
@@ -202,6 +217,15 @@ export class DsSearchField implements ControlValueAccessor {
   protected readonly clearSize = computed(() => (this.resolvedSize() === 'lg' ? 'sm' : 'xs'));
 
   constructor() {
+    // search-clear: the clear glyph turns in when it appears and a copy of it turns out when it goes.
+    let wasEmpty: boolean | undefined;
+    afterRenderEffect(() => {
+      const empty = this.empty();
+      const before = wasEmpty;
+      wasEmpty = empty;
+      if (before === undefined || before === empty) return;
+      untracked(() => this.playClear(empty));
+    });
     // The first Escape clears. Overlays listen for Escape on the document; a
     // window capture listener comes first, clears and marks the key handled.
     // An Escape on the empty box passes, so the layer closes.
@@ -227,7 +251,38 @@ export class DsSearchField implements ControlValueAccessor {
     this.nativeInput.focus(options);
   }
 
+  private playClear(empty: boolean): void {
+    const root = this.host;
+    const mode = this.motion.mode('search-clear');
+    if (!empty) {
+      iconMorph({ to: root.querySelector(':scope > [data-part="clear"] > [data-part="icon"]'), turn: 90, mode });
+      return;
+    }
+    const snap = this.leaving;
+    this.leaving = null;
+    if (!snap || mode === 'none') return;
+    const copy = leavingCopy(snap, root);
+    const out = playBeat(
+      copy.el,
+      {
+        keyframes: [
+          { transform: 'none', opacity: 1 },
+          { transform: `rotate(90deg) scale(${token.morph})`, opacity: 0 },
+        ],
+        duration: 'duration.morph',
+        easing: 'ease.exit',
+        fill: 'forwards',
+        origin: '50% 50%',
+      },
+      'search-clear-out',
+      mode,
+      { keyframes: [{ opacity: 1 }, { opacity: 0 }], duration: 'duration.quick', easing: 'ease.exit', fill: 'forwards' },
+    );
+    dropAfter(out, copy);
+  }
+
   protected change(next: string): void {
+    if (next === '' && this.query() !== '') this.leaving = snapshot(this.host.querySelector<HTMLElement>(':scope > [data-part="clear"]'), this.host);
     this.value.set(next);
     this.onChange(next);
   }
@@ -243,7 +298,25 @@ export class DsSearchField implements ControlValueAccessor {
     if (event.defaultPrevented) return;
     // A key that ends an IME composition (keyCode 229 in Safari) is not a command.
     if (event.isComposing || event.keyCode === 229) return;
-    if (event.key === 'Enter') this.submit.emit(this.query());
+    if (event.key !== 'Enter') return;
+    this.submit.emit(this.query());
+    // search-submit: the search glyph dips and springs back with a small turn.
+    playBeat(
+      this.host.querySelector(':scope > [data-part="icon"]'),
+      {
+        keyframes: [
+          { transform: 'none', easing: 'ease.out' },
+          { transform: `scale(${token.anticipate}) rotate(-12deg)`, offset: 0.25, easing: 'ease.spring-bouncy' },
+          { transform: 'none' },
+        ],
+        duration: 'duration.spring-bouncy',
+        easing: 'linear',
+        origin: '50% 50%',
+      },
+      'search-submit',
+      this.motion.mode('search-submit'),
+      null,
+    );
   }
 
   writeValue(value: unknown): void {

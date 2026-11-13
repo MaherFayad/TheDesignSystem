@@ -67,7 +67,12 @@ No adb. No iOS build.
 | 1.15 | Docs site | ds-docs | all | open | |
 | 1.16 | Agent files | ds-docs | all | open | |
 | 1.22 | Interaction round 2, richer motion (proposed); also takes the 6 blockers of the interaction review | claude/ds-order-1-22 | session_01ErLBsaXB3wXF8YHpuV9bS5 | merged (proposed); its own recording run was not finished, the lead records the clips |
-| A-motion | Angular motion for rounds 1 and 2, Form merge cleanup, recheck of Angular review 2 | claude/ds-angular-motion | session_01ErLBsda6FTx4PoGDqs1QU7 | running |
+| 1.23 | Interaction round 3: signature controls and feedback | claude/ds-order-1-23 | session_01ErLBsavRXxHMTS9VyScMJ5 | running |
+| 1.24 | Studio, Desk and Neutral apart; overlay surfaces | claude/ds-order-1-24 | session_01ErLBsbJByxDbkQHyYCU8Jp | running |
+| 1.25 | Platform axis: iOS and Android on the web components | claude/ds-order-1-25 | session_01ErLBsbZmbSwXftzpogNPCu | merged, proposed |
+| 1.26 | Liquid style, proposed | claude/ds-order-1-26 | session_01ErLBscJMviQH5S59ze1TNo | merged, proposed |
+| 1.27 | Docs site redesign, FlyonUI docs as the clarity reference | claude/ds-order-1-27 | session_01ErLBsZt9axdwsiH8dRRUi4 | merged and deployed |
+| A-motion | Angular motion for rounds 1 and 2, Form merge cleanup, recheck of Angular review 2 | claude/ds-angular-motion | session_01ErLBsda6FTx4PoGDqs1QU7 | merged |
 | 1.17 | Full matrix | ds-qa | all | open | |
 | 1.18 | Consumer apps on wave 1 components | ds-docs | react | open | |
 | 1.19 | Adoption guides | ds-docs | all | open | |
@@ -123,7 +128,11 @@ components, a fresh review, then commit.
 | 1.0.i | Consolidation 2: follow ups round 2, tokens, contract text | claude/ds-consolidation-2 | session_01ErLBsasj4xo1JcwWMq49Dd | merged |
 | 1.21 | Interaction round (proposed) | claude/ds-order-1-21 | session_01ErLBsbZ3wQ2RMr25bxi1QU | merged, proposed, review open |
 | 1.22 | Interaction round 2, richer motion (proposed); also takes the 6 blockers of the interaction review | claude/ds-order-1-22 | session_01ErLBsaXB3wXF8YHpuV9bS5 | merged (proposed); its own recording run was not finished, the lead records the clips |
-| A-motion | Angular motion for rounds 1 and 2, Form merge cleanup, recheck of Angular review 2 | claude/ds-angular-motion | session_01ErLBsda6FTx4PoGDqs1QU7 | running |
+| 1.23 | Interaction round 3: signature controls and feedback | claude/ds-order-1-23 | session_01ErLBsavRXxHMTS9VyScMJ5 | running |
+| 1.24 | Studio, Desk and Neutral apart; overlay surfaces | claude/ds-order-1-24 | session_01ErLBsbJByxDbkQHyYCU8Jp | running |
+| 1.25 | Platform axis: iOS and Android on the web components | claude/ds-order-1-25 | session_01ErLBsbZmbSwXftzpogNPCu | merged, proposed |
+| 1.26 | Liquid style, proposed | claude/ds-order-1-26 | session_01ErLBscJMviQH5S59ze1TNo | merged, proposed |
+| A-motion | Angular motion for rounds 1 and 2, Form merge cleanup, recheck of Angular review 2 | claude/ds-angular-motion | session_01ErLBsda6FTx4PoGDqs1QU7 | merged |
 | 1.17 | Full matrix, contract suites, a11y sweep, size report | claude/ds-order-1-17 | session_01ErLBsa6pbDJmysTT7fLpsV | merged |
 | 1.18, 1.19 | Consumers on wave 1, adoption guides | claude/ds-order-1-18 | session_01ErLBsZSfR7PvXto2uEYenL | merged |
 
@@ -149,7 +158,7 @@ Review sessions (findings only, no source edits), reports in
 | Late React lanes (1D, 2C, 3D, 4A, 6D) | claude/ds-review-late | session_01ErLBsaHFu2h1gcvSgRHo9b | merged, 18 blockers |
 | Round 2: every first review blocker rechecked | claude/ds-review-round-2 | session_01ErLBsadmficC3cuMWybkRE | merged: 52 of 55 fixed, 1 not, 2 regressed, 3 new blockers |
 | Interaction round and late fix recheck | claude/ds-review-interactions | session_01ErLBsZpFBNp9CcbADZHPc5 | merged: 3 interaction blockers, 3 late blockers, all handed to order 1.22 |
-| Interaction round 2: rules, richness, regressions | claude/ds-review-interactions-2 | session_01ErLBsde1tvdsrWdFmLUiCC | running |
+| Interaction round 2: rules, richness, regressions | claude/ds-review-interactions-2 | session_01ErLBsde1tvdsrWdFmLUiCC | merged; blockers go to order 1.23 |
 | Angular A3, A4, late ports, recheck of angular-1 | claude/ds-review-angular-2 | session_01ErLBsbZDc249xJd2nXyVxA | merged: 20 blockers in 12 components |
 | Angular A1, A2, A5 | claude/ds-review-angular-1 | session_01ErLBsdPS43RLcuWFDVcWKs | merged, blockers in 6 components, 4 not ported |
 
@@ -214,6 +223,7 @@ again: commit the tree as wip, push, and resume the agents by id.
    for demo copy unless told otherwise.
 
 ## Owner answers
+- 2026-11-12 22:52 UTC: make the docs site clean and clear, with the FlyonUI docs as a good first example (structure and feel only). Order 1.27.
 - 2026-11-12 22:50 UTC, after testing the live site: checkbox and toggle need much better interactions (glass thumb, growing dot, drawn check); improve every interaction and its feedback (copy animates from icon to "Copied"); toasts and popups need a better look in every style; Studio and Desk are far too close; iOS, Android and web show no difference. Orders 1.23 to 1.26 in `docs/plan/wave-1.md`. The lead took this as a ruling that motion may use paint properties (see DECISIONS.md).
 - 2026-11-12 18:20 UTC: after the round 1 videos, the interactions are acceptable but need a further round of richer animations and micro interactions. Order 1.22 added.
 1. 2026-11-12: pushing. The owner approved pushing the session branch

@@ -9,15 +9,26 @@
 // step is plain text. aria-current="step" sits on the current step's li.
 // The state logic is packages/shared/src/stepper.ts.
 //
+// Motion, interaction "stepper-travel" (order 1.22, proposed): when the
+// current step changes, a ring (the indicator's ::after, drawn only while
+// it travels) slides from the old current indicator to the new one, in
+// the direction of the change, stretched along the way on the snappy
+// spring (internal/indicator.ts), and fades as it lands; the new current
+// indicator pops from scale.anticipate past rest, and the connector fill
+// grows or shrinks on the soft spring (CSS). No DOM is added. It plays
+// from afterRenderEffect, after the steps show the new state.
+//
 // Names that differ from React: `onStepSelect` is a function input, not an
 // output, because the stepper must know whether it is passed (steps become
 // actions only then, as in React). `title` and `description` of a step take
 // a string or a TemplateRef.
 import { NgTemplateOutlet } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, effect, inject, input, signal, untracked, type TemplateRef } from '@angular/core';
+import { ChangeDetectionStrategy, Component, afterRenderEffect, computed, effect, inject, input, signal, untracked, type TemplateRef } from '@angular/core';
 import { DsIcon } from '@the-system/icons/angular';
 import { canGoTo, createStepperState, stepStatus, type Size, type StepperMode, type StepStatus } from '@the-system/shared';
 import { consumeHostAttributes } from '../../internal/host';
+import { createTrack, followIndicator, popIn } from '../../internal/indicator';
+import { injectMotion } from '../../internal/motion';
 import { DsThemeService } from '../../theme/theme';
 import { DsButton } from '../button/button';
 
@@ -189,10 +200,29 @@ export class DsStepper {
   protected readonly isText = (v: unknown): v is string => typeof v === 'string';
   protected readonly hasContent = (v: unknown): boolean => v !== undefined && v !== null && v !== '';
 
+  private readonly motion = injectMotion();
+  /** Where the ring was last drawn, so the next change travels from there. */
+  private readonly track = createTrack();
+
   constructor() {
-    consumeHostAttributes([
+    const root = consumeHostAttributes([
       'dsStepper', 'steps', 'current', 'defaultCurrent', 'completed', 'mode', 'onStepSelect', 'orientation', 'size', 'labels', 'aria-label', 'aria-labelledby',
     ]);
+    // Interaction "stepper-travel", after every render of the steps (React runs it after every commit).
+    afterRenderEffect(() => {
+      const current = this.base().current;
+      this.view();
+      untracked(() => {
+        const indicator = root.querySelector(':scope > [data-part="step"][data-state="current"] > [data-part="indicator"]');
+        if (!indicator) {
+          this.track.key = null;
+          return;
+        }
+        const mode = this.motion.mode('stepper-travel');
+        const moved = followIndicator(this.track, String(current), { el: indicator, pseudo: '::after' }, { mode, anchor: root, ghost: true });
+        if (moved) popIn(indicator, mode);
+      });
+    });
     // Track the furthest step reached, as the React state that only grows.
     effect(() => {
       const current = this.base().current;

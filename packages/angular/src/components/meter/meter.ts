@@ -10,10 +10,21 @@
 //     <span data-part="track"><span data-part="indicator" style="--_meter-fraction: f">
 //
 //   <div dsMeter [value]="72" [max]="100" [low]="60" [high]="85" [optimum]="0" label="Storage used"></div>
+//
+// Motion (order 1.22, meter-fill), as React plays it: the fill plays from
+// the inline start to the value once, the first time the meter is seen: at
+// once when it is on screen at mount, else when an IntersectionObserver sees
+// it enter the viewport. Until then an inline scaleX(0) holds the fill empty
+// (set after the first render, before the paint). A value change before
+// that shows the value at once. Reduced and none: the value at once.
 import {
   ChangeDetectionStrategy,
   Component,
+  DestroyRef,
+  ElementRef,
   afterNextRender,
+  afterRenderEffect,
+  viewChild,
   booleanAttribute,
   computed,
   inject,
@@ -22,7 +33,9 @@ import {
 } from '@angular/core';
 import { NgTemplateOutlet } from '@angular/common';
 import { meterLevel, meterLevelLabelsFor, meterTone, type MeterLevel, type MeterTone, type Size } from '@the-system/shared';
+import { readDuration } from '@the-system/motion';
 import { consumeHostAttributes } from '../../internal/host';
+import { injectMotion } from '../../internal/motion';
 import { DsThemeService } from '../../theme';
 import { formatPercent, validMax } from '../progress-bar/format';
 import type { ProgressLabelContent } from '../progress-bar/progress-bar';
@@ -59,7 +72,7 @@ let nextId = 0;
       <span data-part="label" [id]="labelId">@if (labelTemplate(); as tpl) {<ng-container [ngTemplateOutlet]="tpl" />} @else {<ng-container>{{ labelText() }}</ng-container>}</span>
     }
     <span data-part="value">{{ text() }}</span>
-    <span data-part="track"><span [style.--_meter-fraction]="fraction()" data-part="indicator"></span></span>
+    <span data-part="track"><span [style.--_meter-fraction]="fraction()" data-part="indicator" #indicator></span></span>
   `,
 })
 export class DsMeter {
@@ -93,6 +106,8 @@ export class DsMeter {
   readonly ariaLabelledby = input<string | undefined>(undefined, { alias: 'aria-labelledby' });
 
   private readonly theme = inject(DsThemeService);
+  private readonly motion = injectMotion();
+  private readonly indicator = viewChild.required<ElementRef<HTMLElement>>('indicator');
   protected readonly labelId = `ds-meter-label-${++nextId}`;
 
   readonly max = computed(() => validMax(this.maxInput(), this.min(), this.min() + 100));
@@ -145,6 +160,7 @@ export class DsMeter {
       'dsMeter', 'value', 'min', 'max', 'low', 'high', 'optimum', 'label', 'valueText', 'levelLabels', 'showLevel', 'tone', 'size',
       'aria-label', 'aria-labelledby',
     ]);
+    this.fillOnView();
     if (isDevMode()) {
       afterNextRender(() => {
         if (!this.hasLabel() && this.ariaLabel() === undefined && this.ariaLabelledby() === undefined) {
@@ -152,5 +168,69 @@ export class DsMeter {
         }
       });
     }
+  }
+
+  /**
+   * meter-fill: fills the indicator once on first view. The hold is an
+   * inline scaleX(0) with no transition, a style and not a paused animation,
+   * so nothing waits on an animation that never ends. On view the inline
+   * transform goes and the indicator's transition, set inline to
+   * ease.spring-soft over duration.reveal for that one change, plays the
+   * fill. The inline transition is dropped after that duration, so later
+   * changes use the CSS.
+   */
+  private fillOnView(): void {
+    let seen = false;
+    let release: () => void = () => undefined;
+    let observer: IntersectionObserver | undefined;
+    let timer: ReturnType<typeof setTimeout> | undefined;
+    let el: HTMLElement | undefined;
+    afterNextRender({
+      write: () => {
+        el = this.indicator().nativeElement;
+        const node = el;
+        if (seen || this.motion.mode('meter-fill') !== 'full' || typeof IntersectionObserver === 'undefined') {
+          seen = true;
+          return;
+        }
+        node.style.transition = 'none';
+        node.style.transform = 'scaleX(0)';
+        const show = (animate: boolean) => {
+          seen = true;
+          observer?.disconnect();
+          // Flush the held frame, so the change below starts a transition from it.
+          void getComputedStyle(node).transform;
+          node.style.transition = animate ? 'transform var(--ds-duration-reveal) var(--ds-ease-spring-soft)' : '';
+          node.style.removeProperty('transform');
+          if (animate) timer = setTimeout(() => node.style.removeProperty('transition'), readDuration(node, 'duration.reveal') + 50);
+        };
+        release = () => show(false);
+        observer = new IntersectionObserver((entries) => {
+          if (entries.some((e) => e.isIntersecting)) show(true);
+        });
+        const r = node.getBoundingClientRect();
+        if (r.bottom > 0 && r.top < window.innerHeight) show(true);
+        else observer.observe(node);
+      },
+    });
+    // A new value before the first view: show it, the fill is no longer news.
+    let first: number | undefined;
+    afterRenderEffect(() => {
+      const fraction = this.fraction();
+      if (first === undefined) {
+        first = fraction;
+        return;
+      }
+      if (fraction === first || seen) return;
+      release();
+    });
+    inject(DestroyRef).onDestroy(() => {
+      observer?.disconnect();
+      if (timer) clearTimeout(timer);
+      if (!seen && el) {
+        el.style.removeProperty('transform');
+        el.style.removeProperty('transition');
+      }
+    });
   }
 }

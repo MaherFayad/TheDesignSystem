@@ -1,10 +1,11 @@
 import { Component, signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
-import { afterEach, describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import { DsTheme } from '../../theme/theme';
 import { DsButton } from '../button/button';
 import { DS_DIALOG } from '../dialog/dialog';
 import { DS_DROPDOWN_MENU, type DropdownMenuChecked } from './dropdown-menu';
+import { slideHighlight } from './row-slide';
 
 @Component({
   imports: [DsButton, DsTheme, ...DS_DROPDOWN_MENU, ...DS_DIALOG],
@@ -84,6 +85,73 @@ async function setup() {
 describe('DsDropdownMenu', () => {
   afterEach(() => {
     for (const el of Array.from(document.body.children)) el.remove();
+  });
+
+  /** A menu row 200 by 28 px at a top, with the snappy spring tokens React's test sets. */
+  const row = (top: number) => {
+    const el = document.createElement('div');
+    el.setAttribute('role', 'menuitem');
+    el.style.setProperty('--ds-duration-spring-snappy', '180ms');
+    el.style.setProperty('--ds-ease-spring-snappy', 'linear(0, 1)');
+    el.getBoundingClientRect = () => DOMRect.fromRect({ x: 8, y: top, width: 200, height: 28 });
+    document.body.append(el);
+    return el;
+  };
+
+  it('menu-row-slide: the new row fill starts over the old row and travels on its ::after, as React', () => {
+    const from = row(10);
+    const to = row(66);
+    const animate = vi.fn(() => ({}) as Animation);
+    (to as unknown as { animate: typeof animate }).animate = animate;
+    slideHighlight(from, to, 'full');
+    expect(animate).toHaveBeenCalledTimes(1);
+    const [frames, options] = animate.mock.calls[0] as unknown as [Keyframe[], KeyframeAnimationOptions & { pseudoElement: string }];
+    expect(frames[0]?.transform).toBe('translate(0px, -56px) scale(1, 1)');
+    expect(frames[1]?.transform).toBe('none');
+    expect(options).toMatchObject({ id: 'ds-motion:menu-row-slide', duration: 180, easing: 'linear(0, 1)', pseudoElement: '::after' });
+  });
+
+  it('menu-row-slide: nothing plays when reduced, turned off, or with no row before', () => {
+    const from = row(10);
+    const to = row(66);
+    const animate = vi.fn(() => ({}) as Animation);
+    (to as unknown as { animate: typeof animate }).animate = animate;
+    expect(slideHighlight(from, to, 'reduced')).toBeNull();
+    expect(slideHighlight(from, to, 'none')).toBeNull();
+    expect(slideHighlight(null, to, 'full')).toBeNull();
+    expect(slideHighlight(to, to, 'full')).toBeNull();
+    expect(animate).not.toHaveBeenCalled();
+  });
+
+  it('menu-row-slide: the layer slides the fill when focus moves to the next row, and not under reduced motion', async () => {
+    const { byId, press } = await setup();
+    byId('trigger').focus();
+    await press('Enter');
+    const rename = byId('rename');
+    const duplicate = byId('duplicate');
+    const share = byId('share');
+    for (const [el, top] of [[rename, 30], [duplicate, 58], [share, 114]] as const) {
+      el.style.setProperty('--ds-duration-spring-snappy', '180ms');
+      el.style.setProperty('--ds-ease-spring-snappy', 'linear(0, 1)');
+      el.getBoundingClientRect = () => DOMRect.fromRect({ x: 4, y: top, width: 200, height: 28 });
+    }
+    const animate = vi.fn(() => ({}) as Animation);
+    (duplicate as unknown as { animate: typeof animate }).animate = animate;
+    (share as unknown as { animate: typeof animate }).animate = animate;
+    await press('ArrowDown');
+    expect(document.activeElement).toBe(duplicate);
+    expect(animate).toHaveBeenCalledTimes(1);
+    const [frames, options] = animate.mock.calls[0] as unknown as [Keyframe[], KeyframeAnimationOptions & { pseudoElement: string }];
+    expect(frames[0]?.transform).toBe('translate(0px, -28px) scale(1, 1)');
+    expect(options.pseudoElement).toBe('::after');
+    document.documentElement.setAttribute('data-motion', 'reduce');
+    try {
+      await press('ArrowDown');
+      expect(document.activeElement).toBe(share);
+      expect(animate).toHaveBeenCalledTimes(1);
+    } finally {
+      document.documentElement.removeAttribute('data-motion');
+    }
   });
 
   it('renders the closed trigger as React does and nothing in body', async () => {

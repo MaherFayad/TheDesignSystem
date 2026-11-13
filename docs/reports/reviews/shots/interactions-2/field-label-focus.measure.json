@@ -1,0 +1,1352 @@
+{
+ "id": "field-label-focus",
+ "family": "inputs",
+ "drive": "css",
+ "pattern": "fade-rise",
+ "reduced": "The label does not move.",
+ "tokens": {
+  "studio": {
+   "delay-feedback": "2000ms",
+   "delay-stagger": "0ms",
+   "distance-enter": "4px",
+   "distance-lift": "0px",
+   "distance-nudge": "1px",
+   "distance-shift": "2px",
+   "duration-base": "120ms",
+   "duration-celebrate": "120ms",
+   "duration-fast": "80ms",
+   "duration-instant": "70ms",
+   "duration-medium": "140ms",
+   "duration-moderate": "150ms",
+   "duration-morph": "100ms",
+   "duration-quick": "100ms",
+   "duration-roll": "0.3s",
+   "duration-slow": "180ms",
+   "duration-spin": "0.8s",
+   "duration-spring-bouncy": "120ms",
+   "duration-spring-snappy": "80ms",
+   "duration-spring-soft": "100ms",
+   "duration-zoom": "220ms",
+   "scale-anticipate": "0.97",
+   "scale-enter": "1",
+   "scale-lift": "1",
+   "scale-morph": "0.8",
+   "scale-pop": "1",
+   "scale-press": "0.97",
+   "scale-stretch": "1.08"
+  },
+  "desk": {
+   "delay-feedback": "2000ms",
+   "delay-stagger": "45ms",
+   "distance-enter": "12px",
+   "distance-lift": "4px",
+   "distance-nudge": "3px",
+   "distance-shift": "6px",
+   "duration-base": "120ms",
+   "duration-celebrate": "480ms",
+   "duration-fast": "80ms",
+   "duration-instant": "70ms",
+   "duration-medium": "140ms",
+   "duration-moderate": "150ms",
+   "duration-morph": "320ms",
+   "duration-quick": "100ms",
+   "duration-roll": "0.3s",
+   "duration-slow": "180ms",
+   "duration-spin": "0.8s",
+   "duration-spring-bouncy": "440ms",
+   "duration-spring-snappy": "300ms",
+   "duration-spring-soft": "340ms",
+   "duration-zoom": "220ms",
+   "scale-anticipate": "0.9",
+   "scale-enter": "0.9",
+   "scale-lift": "1.03",
+   "scale-morph": "0.3",
+   "scale-pop": "1.14",
+   "scale-press": "0.97",
+   "scale-stretch": "1.3"
+  },
+  "neutral": {
+   "delay-feedback": "2000ms",
+   "delay-stagger": "24ms",
+   "distance-enter": "6px",
+   "distance-lift": "2px",
+   "distance-nudge": "2px",
+   "distance-shift": "4px",
+   "duration-base": "150ms",
+   "duration-celebrate": "220ms",
+   "duration-fast": "80ms",
+   "duration-instant": "70ms",
+   "duration-medium": "180ms",
+   "duration-moderate": "150ms",
+   "duration-morph": "200ms",
+   "duration-quick": "100ms",
+   "duration-roll": "0.3s",
+   "duration-slow": "180ms",
+   "duration-spin": "0.8s",
+   "duration-spring-bouncy": "220ms",
+   "duration-spring-snappy": "180ms",
+   "duration-spring-soft": "220ms",
+   "duration-zoom": "220ms",
+   "scale-anticipate": "0.95",
+   "scale-enter": "0.97",
+   "scale-lift": "1.01",
+   "scale-morph": "0.5",
+   "scale-pop": "1.05",
+   "scale-press": "0.97",
+   "scale-stretch": "1.15"
+  }
+ },
+ "runs": [
+  {
+   "style": "studio",
+   "dir": "ltr",
+   "motion": "full",
+   "state": "false -> true",
+   "stateAt": 54,
+   "firstMotionAt": 54,
+   "events": "pointerdown@44 focusin@46 pointerup@47 click@47",
+   "longest": 100,
+   "movers": 3,
+   "badProps": [],
+   "anims": [
+    {
+     "target": "field>label[label]",
+     "kind": "Transition",
+     "props": "transform",
+     "dur": 80,
+     "durTok": "duration-fast|duration-spring-snappy",
+     "ease": "steps(2)",
+     "kf": [
+      {
+       "offset": 0,
+       "transform": "none"
+      },
+      {
+       "offset": 1,
+       "transform": "translateY(-2.5px)"
+      }
+     ],
+     "at": 54
+    },
+    {
+     "target": "field>div[input]::before",
+     "kind": "Transition",
+     "props": "opacity",
+     "dur": 100,
+     "durTok": "duration-morph|duration-quick|duration-spring-soft",
+     "ease": "ease-spring-soft",
+     "kf": [
+      {
+       "offset": 0,
+       "opacity": "0"
+      },
+      {
+       "offset": 1,
+       "opacity": "1"
+      }
+     ],
+     "at": 54
+    },
+    {
+     "target": "field>div[input]::before",
+     "kind": "Transition",
+     "props": "transform",
+     "dur": 100,
+     "durTok": "duration-morph|duration-quick|duration-spring-soft",
+     "ease": "ease-spring-soft",
+     "kf": [
+      {
+       "offset": 0,
+       "transform": "scale(1)"
+      },
+      {
+       "offset": 1,
+       "transform": "none"
+      }
+     ],
+     "at": 54
+    }
+   ],
+   "end": {
+    "live": [],
+    "offRest": 1,
+    "offSample": [
+     "1:label[label] t=matrix(1, 0, 0, 1, 0, -1) o=1"
+    ],
+    "nodes": 5
+   }
+  },
+  {
+   "style": "studio",
+   "dir": "ltr",
+   "motion": "media",
+   "state": "false -> true",
+   "stateAt": 48,
+   "firstMotionAt": 48,
+   "events": "pointerdown@43 focusin@45 pointerup@46 click@47",
+   "longest": 100,
+   "movers": 3,
+   "badProps": [],
+   "anims": [
+    {
+     "target": "field>label[label]",
+     "kind": "Transition",
+     "props": "transform",
+     "dur": 80,
+     "durTok": "duration-spring-snappy",
+     "ease": "steps(2)",
+     "kf": [
+      {
+       "offset": 0,
+       "transform": "none"
+      },
+      {
+       "offset": 1,
+       "transform": "translateY(0px)"
+      }
+     ],
+     "at": 48
+    },
+    {
+     "target": "field>div[input]::before",
+     "kind": "Transition",
+     "props": "opacity",
+     "dur": 100,
+     "durTok": "duration-morph|duration-spring-soft",
+     "ease": "ease-spring-soft",
+     "kf": [
+      {
+       "offset": 0,
+       "opacity": "0"
+      },
+      {
+       "offset": 1,
+       "opacity": "1"
+      }
+     ],
+     "at": 48
+    },
+    {
+     "target": "field>div[input]::before",
+     "kind": "Transition",
+     "props": "transform",
+     "dur": 100,
+     "durTok": "duration-morph|duration-spring-soft",
+     "ease": "ease-spring-soft",
+     "kf": [
+      {
+       "offset": 0,
+       "transform": "scale(1)"
+      },
+      {
+       "offset": 1,
+       "transform": "none"
+      }
+     ],
+     "at": 48
+    }
+   ],
+   "end": {
+    "live": [],
+    "offRest": 0,
+    "offSample": [],
+    "nodes": 5
+   }
+  },
+  {
+   "style": "studio",
+   "dir": "ltr",
+   "motion": "attr",
+   "state": "false -> true",
+   "stateAt": 89,
+   "firstMotionAt": null,
+   "events": "pointerdown@75 focusin@77 pointerup@78 click@78",
+   "longest": 0,
+   "movers": 0,
+   "badProps": [],
+   "anims": [],
+   "end": {
+    "live": [],
+    "offRest": 0,
+    "offSample": [],
+    "nodes": 5
+   }
+  },
+  {
+   "style": "studio",
+   "dir": "rtl",
+   "motion": "full",
+   "state": "false -> true",
+   "stateAt": 54,
+   "firstMotionAt": 54,
+   "events": "pointerdown@50 focusin@52 pointerup@53 click@53",
+   "longest": 100,
+   "movers": 3,
+   "badProps": [],
+   "anims": [
+    {
+     "target": "field>label[label]",
+     "kind": "Transition",
+     "props": "transform",
+     "dur": 80,
+     "durTok": "duration-fast|duration-spring-snappy",
+     "ease": "steps(2)",
+     "kf": [
+      {
+       "offset": 0,
+       "transform": "none"
+      },
+      {
+       "offset": 1,
+       "transform": "translateY(-2.5px)"
+      }
+     ],
+     "at": 54
+    },
+    {
+     "target": "field>div[input]::before",
+     "kind": "Transition",
+     "props": "opacity",
+     "dur": 100,
+     "durTok": "duration-morph|duration-quick|duration-spring-soft",
+     "ease": "ease-spring-soft",
+     "kf": [
+      {
+       "offset": 0,
+       "opacity": "0"
+      },
+      {
+       "offset": 1,
+       "opacity": "1"
+      }
+     ],
+     "at": 54
+    },
+    {
+     "target": "field>div[input]::before",
+     "kind": "Transition",
+     "props": "transform",
+     "dur": 100,
+     "durTok": "duration-morph|duration-quick|duration-spring-soft",
+     "ease": "ease-spring-soft",
+     "kf": [
+      {
+       "offset": 0,
+       "transform": "scale(1)"
+      },
+      {
+       "offset": 1,
+       "transform": "none"
+      }
+     ],
+     "at": 54
+    }
+   ],
+   "end": {
+    "live": [],
+    "offRest": 1,
+    "offSample": [
+     "1:label[label] t=matrix(1, 0, 0, 1, 0, -1) o=1"
+    ],
+    "nodes": 5
+   }
+  },
+  {
+   "style": "studio",
+   "dir": "rtl",
+   "motion": "media",
+   "state": "false -> true",
+   "stateAt": 49,
+   "firstMotionAt": 49,
+   "events": "pointerdown@36 focusin@39 pointerup@39 click@40",
+   "longest": 100,
+   "movers": 3,
+   "badProps": [],
+   "anims": [
+    {
+     "target": "field>label[label]",
+     "kind": "Transition",
+     "props": "transform",
+     "dur": 80,
+     "durTok": "duration-spring-snappy",
+     "ease": "steps(2)",
+     "kf": [
+      {
+       "offset": 0,
+       "transform": "none"
+      },
+      {
+       "offset": 1,
+       "transform": "translateY(0px)"
+      }
+     ],
+     "at": 49
+    },
+    {
+     "target": "field>div[input]::before",
+     "kind": "Transition",
+     "props": "opacity",
+     "dur": 100,
+     "durTok": "duration-morph|duration-spring-soft",
+     "ease": "ease-spring-soft",
+     "kf": [
+      {
+       "offset": 0,
+       "opacity": "0"
+      },
+      {
+       "offset": 1,
+       "opacity": "1"
+      }
+     ],
+     "at": 49
+    },
+    {
+     "target": "field>div[input]::before",
+     "kind": "Transition",
+     "props": "transform",
+     "dur": 100,
+     "durTok": "duration-morph|duration-spring-soft",
+     "ease": "ease-spring-soft",
+     "kf": [
+      {
+       "offset": 0,
+       "transform": "scale(1)"
+      },
+      {
+       "offset": 1,
+       "transform": "none"
+      }
+     ],
+     "at": 49
+    }
+   ],
+   "end": {
+    "live": [],
+    "offRest": 0,
+    "offSample": [],
+    "nodes": 5
+   }
+  },
+  {
+   "style": "studio",
+   "dir": "rtl",
+   "motion": "attr",
+   "state": "false -> true",
+   "stateAt": 52,
+   "firstMotionAt": null,
+   "events": "pointerdown@44 focusin@46 pointerup@47 click@47",
+   "longest": 0,
+   "movers": 0,
+   "badProps": [],
+   "anims": [],
+   "end": {
+    "live": [],
+    "offRest": 0,
+    "offSample": [],
+    "nodes": 5
+   }
+  },
+  {
+   "style": "desk",
+   "dir": "ltr",
+   "motion": "full",
+   "state": "false -> true",
+   "stateAt": 76,
+   "firstMotionAt": 76,
+   "events": "pointerdown@72 focusin@74 pointerup@75 click@76",
+   "longest": 340,
+   "movers": 3,
+   "badProps": [],
+   "anims": [
+    {
+     "target": "field>label[label]",
+     "kind": "Transition",
+     "props": "transform",
+     "dur": 300,
+     "durTok": "duration-roll|duration-spring-snappy",
+     "ease": "ease-spring-snappy",
+     "kf": [
+      {
+       "offset": 0,
+       "transform": "none"
+      },
+      {
+       "offset": 1,
+       "transform": "translateY(-7.5px)"
+      }
+     ],
+     "at": 76
+    },
+    {
+     "target": "field>div[input]::before",
+     "kind": "Transition",
+     "props": "opacity",
+     "dur": 340,
+     "durTok": "duration-spring-soft",
+     "ease": "ease-spring-soft",
+     "kf": [
+      {
+       "offset": 0,
+       "opacity": "0"
+      },
+      {
+       "offset": 1,
+       "opacity": "1"
+      }
+     ],
+     "at": 76
+    },
+    {
+     "target": "field>div[input]::before",
+     "kind": "Transition",
+     "props": "transform",
+     "dur": 340,
+     "durTok": "duration-spring-soft",
+     "ease": "ease-spring-soft",
+     "kf": [
+      {
+       "offset": 0,
+       "transform": "scale(0.9)"
+      },
+      {
+       "offset": 1,
+       "transform": "none"
+      }
+     ],
+     "at": 76
+    }
+   ],
+   "end": {
+    "live": [],
+    "offRest": 1,
+    "offSample": [
+     "1:label[label] t=matrix(1, 0, 0, 1, 0, -3) o=1"
+    ],
+    "nodes": 5
+   }
+  },
+  {
+   "style": "desk",
+   "dir": "ltr",
+   "motion": "media",
+   "state": "false -> true",
+   "stateAt": 87,
+   "firstMotionAt": 87,
+   "events": "pointerdown@69 focusin@76 pointerup@77 click@78",
+   "longest": 340,
+   "movers": 3,
+   "badProps": [],
+   "anims": [
+    {
+     "target": "field>label[label]",
+     "kind": "Transition",
+     "props": "transform",
+     "dur": 300,
+     "durTok": "duration-spring-snappy",
+     "ease": "ease-spring-snappy",
+     "kf": [
+      {
+       "offset": 0,
+       "transform": "none"
+      },
+      {
+       "offset": 1,
+       "transform": "translateY(0px)"
+      }
+     ],
+     "at": 87
+    },
+    {
+     "target": "field>div[input]::before",
+     "kind": "Transition",
+     "props": "opacity",
+     "dur": 340,
+     "durTok": "duration-spring-soft",
+     "ease": "ease-spring-soft",
+     "kf": [
+      {
+       "offset": 0,
+       "opacity": "0"
+      },
+      {
+       "offset": 1,
+       "opacity": "1"
+      }
+     ],
+     "at": 87
+    },
+    {
+     "target": "field>div[input]::before",
+     "kind": "Transition",
+     "props": "transform",
+     "dur": 340,
+     "durTok": "duration-spring-soft",
+     "ease": "ease-spring-soft",
+     "kf": [
+      {
+       "offset": 0,
+       "transform": "scale(1)"
+      },
+      {
+       "offset": 1,
+       "transform": "none"
+      }
+     ],
+     "at": 87
+    }
+   ],
+   "end": {
+    "live": [],
+    "offRest": 0,
+    "offSample": [],
+    "nodes": 5
+   }
+  },
+  {
+   "style": "desk",
+   "dir": "ltr",
+   "motion": "attr",
+   "state": "false -> true",
+   "stateAt": 111,
+   "firstMotionAt": null,
+   "events": "pointerdown@102 focusin@104 pointerup@105 click@105",
+   "longest": 0,
+   "movers": 0,
+   "badProps": [],
+   "anims": [],
+   "end": {
+    "live": [],
+    "offRest": 0,
+    "offSample": [],
+    "nodes": 5
+   }
+  },
+  {
+   "style": "desk",
+   "dir": "rtl",
+   "motion": "full",
+   "state": "false -> true",
+   "stateAt": 98,
+   "firstMotionAt": 98,
+   "events": "pointerdown@39 focusin@43 pointerup@44 click@45",
+   "longest": 340,
+   "movers": 3,
+   "badProps": [],
+   "anims": [
+    {
+     "target": "field>label[label]",
+     "kind": "Transition",
+     "props": "transform",
+     "dur": 300,
+     "durTok": "duration-roll|duration-spring-snappy",
+     "ease": "ease-spring-snappy",
+     "kf": [
+      {
+       "offset": 0,
+       "transform": "none"
+      },
+      {
+       "offset": 1,
+       "transform": "translateY(-7.5px)"
+      }
+     ],
+     "at": 98
+    },
+    {
+     "target": "field>div[input]::before",
+     "kind": "Transition",
+     "props": "opacity",
+     "dur": 340,
+     "durTok": "duration-spring-soft",
+     "ease": "ease-spring-soft",
+     "kf": [
+      {
+       "offset": 0,
+       "opacity": "0"
+      },
+      {
+       "offset": 1,
+       "opacity": "1"
+      }
+     ],
+     "at": 98
+    },
+    {
+     "target": "field>div[input]::before",
+     "kind": "Transition",
+     "props": "transform",
+     "dur": 340,
+     "durTok": "duration-spring-soft",
+     "ease": "ease-spring-soft",
+     "kf": [
+      {
+       "offset": 0,
+       "transform": "scale(0.9)"
+      },
+      {
+       "offset": 1,
+       "transform": "none"
+      }
+     ],
+     "at": 98
+    }
+   ],
+   "end": {
+    "live": [],
+    "offRest": 1,
+    "offSample": [
+     "1:label[label] t=matrix(1, 0, 0, 1, 0, -3) o=1"
+    ],
+    "nodes": 5
+   }
+  },
+  {
+   "style": "desk",
+   "dir": "rtl",
+   "motion": "media",
+   "state": "false -> true",
+   "stateAt": 71,
+   "firstMotionAt": 71,
+   "events": "pointerdown@52 focusin@54 pointerup@54 click@55",
+   "longest": 340,
+   "movers": 3,
+   "badProps": [],
+   "anims": [
+    {
+     "target": "field>label[label]",
+     "kind": "Transition",
+     "props": "transform",
+     "dur": 300,
+     "durTok": "duration-spring-snappy",
+     "ease": "ease-spring-snappy",
+     "kf": [
+      {
+       "offset": 0,
+       "transform": "none"
+      },
+      {
+       "offset": 1,
+       "transform": "translateY(0px)"
+      }
+     ],
+     "at": 71
+    },
+    {
+     "target": "field>div[input]::before",
+     "kind": "Transition",
+     "props": "opacity",
+     "dur": 340,
+     "durTok": "duration-spring-soft",
+     "ease": "ease-spring-soft",
+     "kf": [
+      {
+       "offset": 0,
+       "opacity": "0"
+      },
+      {
+       "offset": 1,
+       "opacity": "1"
+      }
+     ],
+     "at": 71
+    },
+    {
+     "target": "field>div[input]::before",
+     "kind": "Transition",
+     "props": "transform",
+     "dur": 340,
+     "durTok": "duration-spring-soft",
+     "ease": "ease-spring-soft",
+     "kf": [
+      {
+       "offset": 0,
+       "transform": "scale(1)"
+      },
+      {
+       "offset": 1,
+       "transform": "none"
+      }
+     ],
+     "at": 71
+    }
+   ],
+   "end": {
+    "live": [],
+    "offRest": 0,
+    "offSample": [],
+    "nodes": 5
+   }
+  },
+  {
+   "style": "desk",
+   "dir": "rtl",
+   "motion": "attr",
+   "state": "false -> true",
+   "stateAt": 70,
+   "firstMotionAt": null,
+   "events": "pointerdown@58 focusin@68 pointerup@69 click@69",
+   "longest": 0,
+   "movers": 0,
+   "badProps": [],
+   "anims": [],
+   "end": {
+    "live": [],
+    "offRest": 0,
+    "offSample": [],
+    "nodes": 5
+   }
+  },
+  {
+   "style": "neutral",
+   "dir": "ltr",
+   "motion": "full",
+   "state": "false -> true",
+   "stateAt": 88,
+   "firstMotionAt": 88,
+   "events": "pointerdown@84 focusin@86 pointerup@87 click@87",
+   "longest": 220,
+   "movers": 3,
+   "badProps": [],
+   "anims": [
+    {
+     "target": "field>label[label]",
+     "kind": "Transition",
+     "props": "transform",
+     "dur": 180,
+     "durTok": "duration-medium|duration-slow|duration-spring-snappy",
+     "ease": "ease-spring-snappy",
+     "kf": [
+      {
+       "offset": 0,
+       "transform": "none"
+      },
+      {
+       "offset": 1,
+       "transform": "translateY(-5px)"
+      }
+     ],
+     "at": 88
+    },
+    {
+     "target": "field>div[input]::before",
+     "kind": "Transition",
+     "props": "opacity",
+     "dur": 220,
+     "durTok": "duration-celebrate|duration-spring-bouncy|duration-spring-soft|duration-zoom",
+     "ease": "ease-spring-soft",
+     "kf": [
+      {
+       "offset": 0,
+       "opacity": "0"
+      },
+      {
+       "offset": 1,
+       "opacity": "1"
+      }
+     ],
+     "at": 88
+    },
+    {
+     "target": "field>div[input]::before",
+     "kind": "Transition",
+     "props": "transform",
+     "dur": 220,
+     "durTok": "duration-celebrate|duration-spring-bouncy|duration-spring-soft|duration-zoom",
+     "ease": "ease-spring-soft",
+     "kf": [
+      {
+       "offset": 0,
+       "transform": "scale(0.97)"
+      },
+      {
+       "offset": 1,
+       "transform": "none"
+      }
+     ],
+     "at": 88
+    }
+   ],
+   "end": {
+    "live": [],
+    "offRest": 1,
+    "offSample": [
+     "1:label[label] t=matrix(1, 0, 0, 1, 0, -2) o=1"
+    ],
+    "nodes": 5
+   }
+  },
+  {
+   "style": "neutral",
+   "dir": "ltr",
+   "motion": "media",
+   "state": "false -> true",
+   "stateAt": 62,
+   "firstMotionAt": 62,
+   "events": "pointerdown@57 focusin@60 pointerup@61 click@61",
+   "longest": 220,
+   "movers": 3,
+   "badProps": [],
+   "anims": [
+    {
+     "target": "field>label[label]",
+     "kind": "Transition",
+     "props": "transform",
+     "dur": 180,
+     "durTok": "duration-spring-snappy",
+     "ease": "ease-spring-snappy",
+     "kf": [
+      {
+       "offset": 0,
+       "transform": "none"
+      },
+      {
+       "offset": 1,
+       "transform": "translateY(0px)"
+      }
+     ],
+     "at": 62
+    },
+    {
+     "target": "field>div[input]::before",
+     "kind": "Transition",
+     "props": "opacity",
+     "dur": 220,
+     "durTok": "duration-celebrate|duration-spring-bouncy|duration-spring-soft",
+     "ease": "ease-spring-soft",
+     "kf": [
+      {
+       "offset": 0,
+       "opacity": "0"
+      },
+      {
+       "offset": 1,
+       "opacity": "1"
+      }
+     ],
+     "at": 62
+    },
+    {
+     "target": "field>div[input]::before",
+     "kind": "Transition",
+     "props": "transform",
+     "dur": 220,
+     "durTok": "duration-celebrate|duration-spring-bouncy|duration-spring-soft",
+     "ease": "ease-spring-soft",
+     "kf": [
+      {
+       "offset": 0,
+       "transform": "scale(1)"
+      },
+      {
+       "offset": 1,
+       "transform": "none"
+      }
+     ],
+     "at": 62
+    }
+   ],
+   "end": {
+    "live": [],
+    "offRest": 0,
+    "offSample": [],
+    "nodes": 5
+   }
+  },
+  {
+   "style": "neutral",
+   "dir": "ltr",
+   "motion": "attr",
+   "state": "false -> true",
+   "stateAt": 161,
+   "firstMotionAt": null,
+   "events": "pointerdown@157 focusin@159 pointerup@160 click@161",
+   "longest": 0,
+   "movers": 0,
+   "badProps": [],
+   "anims": [],
+   "end": {
+    "live": [],
+    "offRest": 0,
+    "offSample": [],
+    "nodes": 5
+   }
+  },
+  {
+   "style": "neutral",
+   "dir": "rtl",
+   "motion": "full",
+   "state": "false -> true",
+   "stateAt": 53,
+   "firstMotionAt": 53,
+   "events": "pointerdown@46 focusin@49 pointerup@50 click@50",
+   "longest": 220,
+   "movers": 3,
+   "badProps": [],
+   "anims": [
+    {
+     "target": "field>label[label]",
+     "kind": "Transition",
+     "props": "transform",
+     "dur": 180,
+     "durTok": "duration-medium|duration-slow|duration-spring-snappy",
+     "ease": "ease-spring-snappy",
+     "kf": [
+      {
+       "offset": 0,
+       "transform": "none"
+      },
+      {
+       "offset": 1,
+       "transform": "translateY(-5px)"
+      }
+     ],
+     "at": 53
+    },
+    {
+     "target": "field>div[input]::before",
+     "kind": "Transition",
+     "props": "opacity",
+     "dur": 220,
+     "durTok": "duration-celebrate|duration-spring-bouncy|duration-spring-soft|duration-zoom",
+     "ease": "ease-spring-soft",
+     "kf": [
+      {
+       "offset": 0,
+       "opacity": "0"
+      },
+      {
+       "offset": 1,
+       "opacity": "1"
+      }
+     ],
+     "at": 53
+    },
+    {
+     "target": "field>div[input]::before",
+     "kind": "Transition",
+     "props": "transform",
+     "dur": 220,
+     "durTok": "duration-celebrate|duration-spring-bouncy|duration-spring-soft|duration-zoom",
+     "ease": "ease-spring-soft",
+     "kf": [
+      {
+       "offset": 0,
+       "transform": "scale(0.97)"
+      },
+      {
+       "offset": 1,
+       "transform": "none"
+      }
+     ],
+     "at": 53
+    }
+   ],
+   "end": {
+    "live": [],
+    "offRest": 1,
+    "offSample": [
+     "1:label[label] t=matrix(1, 0, 0, 1, 0, -2) o=1"
+    ],
+    "nodes": 5
+   }
+  },
+  {
+   "style": "neutral",
+   "dir": "rtl",
+   "motion": "media",
+   "state": "false -> true",
+   "stateAt": 48,
+   "firstMotionAt": 48,
+   "events": "pointerdown@38 focusin@40 pointerup@42 click@43",
+   "longest": 220,
+   "movers": 3,
+   "badProps": [],
+   "anims": [
+    {
+     "target": "field>label[label]",
+     "kind": "Transition",
+     "props": "transform",
+     "dur": 180,
+     "durTok": "duration-spring-snappy",
+     "ease": "ease-spring-snappy",
+     "kf": [
+      {
+       "offset": 0,
+       "transform": "none"
+      },
+      {
+       "offset": 1,
+       "transform": "translateY(0px)"
+      }
+     ],
+     "at": 48
+    },
+    {
+     "target": "field>div[input]::before",
+     "kind": "Transition",
+     "props": "opacity",
+     "dur": 220,
+     "durTok": "duration-celebrate|duration-spring-bouncy|duration-spring-soft",
+     "ease": "ease-spring-soft",
+     "kf": [
+      {
+       "offset": 0,
+       "opacity": "0"
+      },
+      {
+       "offset": 1,
+       "opacity": "1"
+      }
+     ],
+     "at": 48
+    },
+    {
+     "target": "field>div[input]::before",
+     "kind": "Transition",
+     "props": "transform",
+     "dur": 220,
+     "durTok": "duration-celebrate|duration-spring-bouncy|duration-spring-soft",
+     "ease": "ease-spring-soft",
+     "kf": [
+      {
+       "offset": 0,
+       "transform": "scale(1)"
+      },
+      {
+       "offset": 1,
+       "transform": "none"
+      }
+     ],
+     "at": 48
+    }
+   ],
+   "end": {
+    "live": [],
+    "offRest": 0,
+    "offSample": [],
+    "nodes": 5
+   }
+  },
+  {
+   "style": "neutral",
+   "dir": "rtl",
+   "motion": "attr",
+   "state": "false -> true",
+   "stateAt": 46,
+   "firstMotionAt": null,
+   "events": "pointerdown@34 focusin@36 pointerup@36 click@37",
+   "longest": 0,
+   "movers": 0,
+   "badProps": [],
+   "anims": [],
+   "end": {
+    "live": [],
+    "offRest": 0,
+    "offSample": [],
+    "nodes": 5
+   }
+  }
+ ],
+ "sweep": {
+  "studio": [],
+  "desk": [],
+  "neutral": []
+ },
+ "held": [],
+ "ring": {
+  "studio": {
+   "focusVisible": true,
+   "atOnce": false,
+   "diffFrame0": [
+    "p1::before",
+    "p2::before"
+   ],
+   "diffFirstFrame": [
+    "p1::before",
+    "p2::before"
+   ],
+   "first": {
+    "t": 4,
+    "outline": "none 2.8px",
+    "shadow": "none",
+    "p1::before": "o=0 s=1",
+    "p2::before": "o=0 s=1",
+    "hostShadow": "rgb(244, 244, 245) 0px 0px 0px 2px"
+   },
+   "last": {
+    "t": 270,
+    "outline": "none 2.8px",
+    "shadow": "none",
+    "p1::before": "o=1 s=1",
+    "p2::before": "o=1 s=1",
+    "hostShadow": "rgb(244, 244, 245) 0px 0px 0px 2px"
+   },
+   "frames": 17
+  },
+  "desk": {
+   "focusVisible": true,
+   "atOnce": false,
+   "diffFrame0": [
+    "p1::before",
+    "p2::before"
+   ],
+   "diffFirstFrame": [
+    "p1::before",
+    "p2::before"
+   ],
+   "first": {
+    "t": 2,
+    "outline": "none 2.8px",
+    "shadow": "none",
+    "p1::before": "o=0 s=1",
+    "p2::before": "o=0 s=1",
+    "hostShadow": "rgb(244, 244, 245) 0px 0px 0px 2px"
+   },
+   "last": {
+    "t": 277,
+    "outline": "none 2.8px",
+    "shadow": "none",
+    "p1::before": "o=1 s=1",
+    "p2::before": "o=1 s=1",
+    "hostShadow": "rgb(244, 244, 245) 0px 0px 0px 2px"
+   },
+   "frames": 18
+  },
+  "neutral": {
+   "focusVisible": true,
+   "atOnce": false,
+   "diffFrame0": [
+    "p1::before",
+    "p2::before"
+   ],
+   "diffFirstFrame": [
+    "p1::before",
+    "p2::before"
+   ],
+   "first": {
+    "t": 3,
+    "outline": "none 2.8px",
+    "shadow": "none",
+    "p1::before": "o=0 s=1",
+    "p2::before": "o=0 s=1",
+    "hostShadow": "rgb(255, 255, 255) 0px 0px 0px 2px, rgb(37, 99, 235) 0px 0px 0px 4px"
+   },
+   "last": {
+    "t": 260,
+    "outline": "none 2.8px",
+    "shadow": "none",
+    "p1::before": "o=0.991538 s=1",
+    "p2::before": "o=0.991538 s=1",
+    "hostShadow": "rgb(255, 255, 255) 0px 0px 0px 2px, rgb(37, 99, 235) 0px 0px 0px 4px"
+   },
+   "frames": 13
+  }
+ },
+ "rapid": {
+  "studio": {
+   "same": true,
+   "fast": {
+    "state": "true",
+    "nodes": 5,
+    "off": [
+     "1:label[label] t=matrix(1, 0, 0, 1, 0, -1) o=1"
+    ],
+    "live": [],
+    "active": "control"
+   }
+  },
+  "desk": {
+   "same": true,
+   "fast": {
+    "state": "true",
+    "nodes": 5,
+    "off": [
+     "1:label[label] t=matrix(1, 0, 0, 1, 0, -3) o=1"
+    ],
+    "live": [],
+    "active": "control"
+   }
+  },
+  "neutral": {
+   "same": true,
+   "fast": {
+    "state": "true",
+    "nodes": 5,
+    "off": [
+     "1:label[label] t=matrix(1, 0, 0, 1, 0, -2) o=1"
+    ],
+    "live": [],
+    "active": "control"
+   }
+  }
+ },
+ "interrupt": {
+  "studio": {
+   "same": true,
+   "fast": {
+    "state": "false",
+    "nodes": 5,
+    "off": [
+     "2:div::before t=matrix(1, 0, 0, 1, 0, 0) o=0"
+    ],
+    "live": [],
+    "active": "BODY"
+   }
+  },
+  "desk": {
+   "same": true,
+   "fast": {
+    "state": "false",
+    "nodes": 5,
+    "off": [
+     "2:div::before t=matrix(0.9, 0, 0, 0.9, 0, 0) o=0"
+    ],
+    "live": [],
+    "active": "BODY"
+   }
+  },
+  "neutral": {
+   "same": true,
+   "fast": {
+    "state": "false",
+    "nodes": 5,
+    "off": [
+     "2:div::before t=matrix(0.97, 0, 0, 0.97, 0, 0) o=0"
+    ],
+    "live": [],
+    "active": "BODY"
+   }
+  }
+ },
+ "off": {
+  "studio": {
+   "injected": "@layer ds.recipes { [data-ds='field'] { --_field-lift: 0px; } }",
+   "movers": 3,
+   "moving": [
+    "field>label[label] transform 80",
+    "field>div[input]::before opacity 100",
+    "field>div[input]::before transform 100"
+   ]
+  },
+  "desk": {
+   "injected": "@layer ds.recipes { [data-ds='field'] { --_field-lift: 0px; } }",
+   "movers": 3,
+   "moving": [
+    "field>label[label] transform 300",
+    "field>div[input]::before opacity 340",
+    "field>div[input]::before transform 340"
+   ]
+  },
+  "neutral": {
+   "injected": "@layer ds.recipes { [data-ds='field'] { --_field-lift: 0px; } }",
+   "movers": 3,
+   "moving": [
+    "field>label[label] transform 180",
+    "field>div[input]::before opacity 220",
+    "field>div[input]::before transform 220"
+   ]
+  }
+ },
+ "extra": {}
+}

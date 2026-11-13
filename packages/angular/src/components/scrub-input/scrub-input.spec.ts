@@ -63,7 +63,7 @@ describe('DsScrubInput', () => {
     expect(el.getAttribute('data-size')).toBe('md');
     expect(el.hasAttribute('dsscrubinput')).toBe(false);
     expect(el.hasAttribute('aria-label')).toBe(false);
-    expect(Array.from(el.children).map((c) => c.getAttribute('data-part'))).toEqual(['label', 'control', 'unit']);
+    expect(Array.from(el.children).map((c) => c.getAttribute('data-part'))).toEqual(['label', 'control', null, 'unit']);
     expect(part('width', 'label')!.getAttribute('aria-hidden')).toBe('true');
     const input = native('width');
     expect(input.value).toBe('320');

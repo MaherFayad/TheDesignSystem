@@ -1,0 +1,1175 @@
+{
+ "id": "copy-swap",
+ "family": "actions",
+ "drive": "waapi",
+ "pattern": "swap",
+ "reduced": "The old icon fades out while the new one fades in, over duration.base. The button does not move.",
+ "tokens": {
+  "studio": {
+   "delay-feedback": "2000ms",
+   "delay-stagger": "0ms",
+   "distance-enter": "4px",
+   "distance-lift": "0px",
+   "distance-nudge": "1px",
+   "distance-shift": "2px",
+   "duration-base": "120ms",
+   "duration-celebrate": "120ms",
+   "duration-fast": "80ms",
+   "duration-instant": "70ms",
+   "duration-medium": "140ms",
+   "duration-moderate": "150ms",
+   "duration-morph": "100ms",
+   "duration-quick": "100ms",
+   "duration-roll": "0.3s",
+   "duration-slow": "180ms",
+   "duration-spin": "0.8s",
+   "duration-spring-bouncy": "120ms",
+   "duration-spring-snappy": "80ms",
+   "duration-spring-soft": "100ms",
+   "duration-zoom": "220ms",
+   "scale-anticipate": "0.97",
+   "scale-enter": "1",
+   "scale-lift": "1",
+   "scale-morph": "0.8",
+   "scale-pop": "1",
+   "scale-press": "0.97",
+   "scale-stretch": "1.08"
+  },
+  "desk": {
+   "delay-feedback": "2000ms",
+   "delay-stagger": "45ms",
+   "distance-enter": "12px",
+   "distance-lift": "4px",
+   "distance-nudge": "3px",
+   "distance-shift": "6px",
+   "duration-base": "120ms",
+   "duration-celebrate": "480ms",
+   "duration-fast": "80ms",
+   "duration-instant": "70ms",
+   "duration-medium": "140ms",
+   "duration-moderate": "150ms",
+   "duration-morph": "320ms",
+   "duration-quick": "100ms",
+   "duration-roll": "0.3s",
+   "duration-slow": "180ms",
+   "duration-spin": "0.8s",
+   "duration-spring-bouncy": "440ms",
+   "duration-spring-snappy": "300ms",
+   "duration-spring-soft": "340ms",
+   "duration-zoom": "220ms",
+   "scale-anticipate": "0.9",
+   "scale-enter": "0.9",
+   "scale-lift": "1.03",
+   "scale-morph": "0.3",
+   "scale-pop": "1.14",
+   "scale-press": "0.97",
+   "scale-stretch": "1.3"
+  },
+  "neutral": {
+   "delay-feedback": "2000ms",
+   "delay-stagger": "24ms",
+   "distance-enter": "6px",
+   "distance-lift": "2px",
+   "distance-nudge": "2px",
+   "distance-shift": "4px",
+   "duration-base": "150ms",
+   "duration-celebrate": "220ms",
+   "duration-fast": "80ms",
+   "duration-instant": "70ms",
+   "duration-medium": "180ms",
+   "duration-moderate": "150ms",
+   "duration-morph": "200ms",
+   "duration-quick": "100ms",
+   "duration-roll": "0.3s",
+   "duration-slow": "180ms",
+   "duration-spin": "0.8s",
+   "duration-spring-bouncy": "220ms",
+   "duration-spring-snappy": "180ms",
+   "duration-spring-soft": "220ms",
+   "duration-zoom": "220ms",
+   "scale-anticipate": "0.95",
+   "scale-enter": "0.97",
+   "scale-lift": "1.01",
+   "scale-morph": "0.5",
+   "scale-pop": "1.05",
+   "scale-press": "0.97",
+   "scale-stretch": "1.15"
+  }
+ },
+ "runs": [
+  {
+   "style": "studio",
+   "dir": "ltr",
+   "motion": "full",
+   "state": "idle -> idle",
+   "stateAt": 57,
+   "firstMotionAt": 57,
+   "events": "pointerdown@37 focusin@39 pointerup@39 click@40",
+   "longest": 120,
+   "movers": 5,
+   "badProps": [],
+   "anims": [
+    {
+     "target": "icon>span",
+     "kind": "Animation",
+     "props": "opacity,transform",
+     "dur": 100,
+     "durTok": "duration-morph|duration-quick|duration-spring-soft",
+     "ease": "ease-exit",
+     "kf": [
+      {
+       "opacity": "1",
+       "transform": "none"
+      },
+      {
+       "opacity": "0",
+       "transform": "translateY(calc(-1 * var(--ds-distance-shift, 4px)))"
+      }
+     ],
+     "at": 57
+    },
+    {
+     "target": "icon>svg[icon]",
+     "kind": "Animation",
+     "props": "opacity,transform",
+     "dur": 120,
+     "durTok": "duration-base|duration-celebrate|duration-spring-bouncy",
+     "ease": "steps(3)",
+     "kf": [
+      {
+       "offset": 0,
+       "opacity": "0",
+       "transform": "rotate(-45deg) scale(var(--ds-scale-morph, 0.5))"
+      },
+      {
+       "offset": 0.4,
+       "opacity": "1"
+      },
+      {
+       "offset": 1,
+       "opacity": "1",
+       "transform": "none"
+      }
+     ],
+     "at": 57
+    },
+    {
+     "target": "button[copy-button]",
+     "kind": "Animation",
+     "props": "transform",
+     "dur": 120,
+     "durTok": "duration-base|duration-celebrate|duration-spring-bouncy",
+     "ease": "ease-out",
+     "kf": [
+      {
+       "transform": "none"
+      },
+      {
+       "offset": 0.35,
+       "transform": "scale(var(--ds-scale-pop, 1.05))"
+      },
+      {
+       "transform": "none"
+      }
+     ],
+     "at": 57
+    },
+    {
+     "target": "icon>span",
+     "kind": "Animation",
+     "props": "opacity,transform",
+     "dur": 100,
+     "durTok": "duration-morph|duration-quick|duration-spring-soft",
+     "ease": "ease-exit",
+     "kf": [
+      {
+       "opacity": "1",
+       "transform": "none"
+      },
+      {
+       "opacity": "0",
+       "transform": "translateY(var(--ds-distance-shift, 4px))"
+      }
+     ],
+     "at": 2057
+    },
+    {
+     "target": "icon>svg[icon]",
+     "kind": "Animation",
+     "props": "opacity,transform",
+     "dur": 100,
+     "durTok": "duration-morph|duration-quick|duration-spring-soft",
+     "ease": "ease-spring-soft",
+     "kf": [
+      {
+       "opacity": "0",
+       "transform": "translateY(calc(-1 * var(--ds-distance-shift, 4px)))"
+      },
+      {
+       "opacity": "1",
+       "transform": "none"
+      }
+     ],
+     "at": 2057
+    }
+   ],
+   "end": {
+    "live": [],
+    "offRest": 0,
+    "offSample": [],
+    "nodes": 18
+   }
+  },
+  {
+   "style": "studio",
+   "dir": "ltr",
+   "motion": "media",
+   "state": "idle -> idle",
+   "stateAt": 75,
+   "firstMotionAt": null,
+   "events": "pointerdown@31 focusin@32 pointerup@33 click@33",
+   "longest": 0,
+   "movers": 0,
+   "badProps": [],
+   "anims": [],
+   "end": {
+    "live": [],
+    "offRest": 0,
+    "offSample": [],
+    "nodes": 18
+   }
+  },
+  {
+   "style": "studio",
+   "dir": "ltr",
+   "motion": "attr",
+   "state": "idle -> idle",
+   "stateAt": 59,
+   "firstMotionAt": null,
+   "events": "pointerdown@44 focusin@46 pointerup@46 click@46",
+   "longest": 0,
+   "movers": 0,
+   "badProps": [],
+   "anims": [],
+   "end": {
+    "live": [],
+    "offRest": 0,
+    "offSample": [],
+    "nodes": 18
+   }
+  },
+  {
+   "style": "studio",
+   "dir": "rtl",
+   "motion": "full",
+   "state": "idle -> idle",
+   "stateAt": 145,
+   "firstMotionAt": 145,
+   "events": "pointerdown@121 focusin@122 pointerup@123 click@123",
+   "longest": 120,
+   "movers": 5,
+   "badProps": [],
+   "anims": [
+    {
+     "target": "icon>span",
+     "kind": "Animation",
+     "props": "opacity,transform",
+     "dur": 100,
+     "durTok": "duration-morph|duration-quick|duration-spring-soft",
+     "ease": "ease-exit",
+     "kf": [
+      {
+       "opacity": "1",
+       "transform": "none"
+      },
+      {
+       "opacity": "0",
+       "transform": "translateY(calc(-1 * var(--ds-distance-shift, 4px)))"
+      }
+     ],
+     "at": 145
+    },
+    {
+     "target": "icon>svg[icon]",
+     "kind": "Animation",
+     "props": "opacity,transform",
+     "dur": 120,
+     "durTok": "duration-base|duration-celebrate|duration-spring-bouncy",
+     "ease": "steps(3)",
+     "kf": [
+      {
+       "offset": 0,
+       "opacity": "0",
+       "transform": "rotate(-45deg) scale(var(--ds-scale-morph, 0.5))"
+      },
+      {
+       "offset": 0.4,
+       "opacity": "1"
+      },
+      {
+       "offset": 1,
+       "opacity": "1",
+       "transform": "none"
+      }
+     ],
+     "at": 145
+    },
+    {
+     "target": "button[copy-button]",
+     "kind": "Animation",
+     "props": "transform",
+     "dur": 120,
+     "durTok": "duration-base|duration-celebrate|duration-spring-bouncy",
+     "ease": "ease-out",
+     "kf": [
+      {
+       "transform": "none"
+      },
+      {
+       "offset": 0.35,
+       "transform": "scale(var(--ds-scale-pop, 1.05))"
+      },
+      {
+       "transform": "none"
+      }
+     ],
+     "at": 145
+    },
+    {
+     "target": "icon>span",
+     "kind": "Animation",
+     "props": "opacity,transform",
+     "dur": 100,
+     "durTok": "duration-morph|duration-quick|duration-spring-soft",
+     "ease": "ease-exit",
+     "kf": [
+      {
+       "opacity": "1",
+       "transform": "none"
+      },
+      {
+       "opacity": "0",
+       "transform": "translateY(var(--ds-distance-shift, 4px))"
+      }
+     ],
+     "at": 2146
+    },
+    {
+     "target": "icon>svg[icon]",
+     "kind": "Animation",
+     "props": "opacity,transform",
+     "dur": 100,
+     "durTok": "duration-morph|duration-quick|duration-spring-soft",
+     "ease": "ease-spring-soft",
+     "kf": [
+      {
+       "opacity": "0",
+       "transform": "translateY(calc(-1 * var(--ds-distance-shift, 4px)))"
+      },
+      {
+       "opacity": "1",
+       "transform": "none"
+      }
+     ],
+     "at": 2146
+    }
+   ],
+   "end": {
+    "live": [],
+    "offRest": 0,
+    "offSample": [],
+    "nodes": 18
+   }
+  },
+  {
+   "style": "studio",
+   "dir": "rtl",
+   "motion": "media",
+   "state": "idle -> idle",
+   "stateAt": 102,
+   "firstMotionAt": null,
+   "events": "pointerdown@69 focusin@71 pointerup@72 click@72",
+   "longest": 0,
+   "movers": 0,
+   "badProps": [],
+   "anims": [],
+   "end": {
+    "live": [],
+    "offRest": 0,
+    "offSample": [],
+    "nodes": 18
+   }
+  },
+  {
+   "style": "studio",
+   "dir": "rtl",
+   "motion": "attr",
+   "state": "idle -> idle",
+   "stateAt": 58,
+   "firstMotionAt": null,
+   "events": "pointerdown@36 focusin@41 pointerup@41 click@41",
+   "longest": 0,
+   "movers": 0,
+   "badProps": [],
+   "anims": [],
+   "end": {
+    "live": [],
+    "offRest": 0,
+    "offSample": [],
+    "nodes": 18
+   }
+  },
+  {
+   "style": "desk",
+   "dir": "ltr",
+   "motion": "full",
+   "state": "idle -> idle",
+   "stateAt": 141,
+   "firstMotionAt": 141,
+   "events": "pointerdown@114 focusin@116 pointerup@116 click@116",
+   "longest": 485,
+   "movers": 5,
+   "badProps": [],
+   "anims": [
+    {
+     "target": "icon>span",
+     "kind": "Animation",
+     "props": "opacity,transform",
+     "dur": 100,
+     "durTok": "duration-quick",
+     "ease": "ease-exit",
+     "kf": [
+      {
+       "opacity": "1",
+       "transform": "none"
+      },
+      {
+       "opacity": "0",
+       "transform": "translateY(calc(-1 * var(--ds-distance-shift, 4px)))"
+      }
+     ],
+     "at": 141
+    },
+    {
+     "target": "icon>svg[icon]",
+     "kind": "Animation",
+     "props": "opacity,transform",
+     "dur": 440,
+     "durTok": "duration-spring-bouncy",
+     "delay": 45,
+     "ease": "ease-spring-bouncy",
+     "kf": [
+      {
+       "offset": 0,
+       "opacity": "0",
+       "transform": "rotate(-45deg) scale(var(--ds-scale-morph, 0.5))"
+      },
+      {
+       "offset": 0.4,
+       "opacity": "1"
+      },
+      {
+       "offset": 1,
+       "opacity": "1",
+       "transform": "none"
+      }
+     ],
+     "at": 141
+    },
+    {
+     "target": "button[copy-button]",
+     "kind": "Animation",
+     "props": "transform",
+     "dur": 480,
+     "durTok": "duration-celebrate",
+     "ease": "ease-out",
+     "kf": [
+      {
+       "transform": "none"
+      },
+      {
+       "offset": 0.35,
+       "transform": "scale(var(--ds-scale-pop, 1.05))"
+      },
+      {
+       "transform": "none"
+      }
+     ],
+     "at": 141
+    },
+    {
+     "target": "icon>span",
+     "kind": "Animation",
+     "props": "opacity,transform",
+     "dur": 100,
+     "durTok": "duration-quick",
+     "ease": "ease-exit",
+     "kf": [
+      {
+       "opacity": "1",
+       "transform": "none"
+      },
+      {
+       "opacity": "0",
+       "transform": "translateY(var(--ds-distance-shift, 4px))"
+      }
+     ],
+     "at": 2134
+    },
+    {
+     "target": "icon>svg[icon]",
+     "kind": "Animation",
+     "props": "opacity,transform",
+     "dur": 340,
+     "durTok": "duration-spring-soft",
+     "delay": 45,
+     "ease": "ease-spring-soft",
+     "kf": [
+      {
+       "opacity": "0",
+       "transform": "translateY(calc(-1 * var(--ds-distance-shift, 4px)))"
+      },
+      {
+       "opacity": "1",
+       "transform": "none"
+      }
+     ],
+     "at": 2134
+    }
+   ],
+   "end": {
+    "live": [],
+    "offRest": 0,
+    "offSample": [],
+    "nodes": 18
+   }
+  },
+  {
+   "style": "desk",
+   "dir": "ltr",
+   "motion": "media",
+   "state": "idle -> idle",
+   "stateAt": 65,
+   "firstMotionAt": null,
+   "events": "pointerdown@41 focusin@43 pointerup@43 click@43",
+   "longest": 0,
+   "movers": 0,
+   "badProps": [],
+   "anims": [],
+   "end": {
+    "live": [],
+    "offRest": 0,
+    "offSample": [],
+    "nodes": 18
+   }
+  },
+  {
+   "style": "desk",
+   "dir": "ltr",
+   "motion": "attr",
+   "state": "idle -> idle",
+   "stateAt": 94,
+   "firstMotionAt": null,
+   "events": "pointerdown@48 focusin@50 pointerup@50 click@50",
+   "longest": 0,
+   "movers": 0,
+   "badProps": [],
+   "anims": [],
+   "end": {
+    "live": [],
+    "offRest": 0,
+    "offSample": [],
+    "nodes": 18
+   }
+  },
+  {
+   "style": "desk",
+   "dir": "rtl",
+   "motion": "full",
+   "state": "idle -> idle",
+   "stateAt": 86,
+   "firstMotionAt": 86,
+   "events": "pointerdown@67 focusin@70 pointerup@73 click@73",
+   "longest": 485,
+   "movers": 5,
+   "badProps": [],
+   "anims": [
+    {
+     "target": "icon>span",
+     "kind": "Animation",
+     "props": "opacity,transform",
+     "dur": 100,
+     "durTok": "duration-quick",
+     "ease": "ease-exit",
+     "kf": [
+      {
+       "opacity": "1",
+       "transform": "none"
+      },
+      {
+       "opacity": "0",
+       "transform": "translateY(calc(-1 * var(--ds-distance-shift, 4px)))"
+      }
+     ],
+     "at": 86
+    },
+    {
+     "target": "icon>svg[icon]",
+     "kind": "Animation",
+     "props": "opacity,transform",
+     "dur": 440,
+     "durTok": "duration-spring-bouncy",
+     "delay": 45,
+     "ease": "ease-spring-bouncy",
+     "kf": [
+      {
+       "offset": 0,
+       "opacity": "0",
+       "transform": "rotate(-45deg) scale(var(--ds-scale-morph, 0.5))"
+      },
+      {
+       "offset": 0.4,
+       "opacity": "1"
+      },
+      {
+       "offset": 1,
+       "opacity": "1",
+       "transform": "none"
+      }
+     ],
+     "at": 86
+    },
+    {
+     "target": "button[copy-button]",
+     "kind": "Animation",
+     "props": "transform",
+     "dur": 480,
+     "durTok": "duration-celebrate",
+     "ease": "ease-out",
+     "kf": [
+      {
+       "transform": "none"
+      },
+      {
+       "offset": 0.35,
+       "transform": "scale(var(--ds-scale-pop, 1.05))"
+      },
+      {
+       "transform": "none"
+      }
+     ],
+     "at": 86
+    },
+    {
+     "target": "icon>span",
+     "kind": "Animation",
+     "props": "opacity,transform",
+     "dur": 100,
+     "durTok": "duration-quick",
+     "ease": "ease-exit",
+     "kf": [
+      {
+       "opacity": "1",
+       "transform": "none"
+      },
+      {
+       "opacity": "0",
+       "transform": "translateY(var(--ds-distance-shift, 4px))"
+      }
+     ],
+     "at": 2083
+    },
+    {
+     "target": "icon>svg[icon]",
+     "kind": "Animation",
+     "props": "opacity,transform",
+     "dur": 340,
+     "durTok": "duration-spring-soft",
+     "delay": 45,
+     "ease": "ease-spring-soft",
+     "kf": [
+      {
+       "opacity": "0",
+       "transform": "translateY(calc(-1 * var(--ds-distance-shift, 4px)))"
+      },
+      {
+       "opacity": "1",
+       "transform": "none"
+      }
+     ],
+     "at": 2083
+    }
+   ],
+   "end": {
+    "live": [],
+    "offRest": 0,
+    "offSample": [],
+    "nodes": 18
+   }
+  },
+  {
+   "style": "desk",
+   "dir": "rtl",
+   "motion": "media",
+   "state": "idle -> idle",
+   "stateAt": 69,
+   "firstMotionAt": null,
+   "events": "pointerdown@47 focusin@48 pointerup@49 click@49",
+   "longest": 0,
+   "movers": 0,
+   "badProps": [],
+   "anims": [],
+   "end": {
+    "live": [],
+    "offRest": 0,
+    "offSample": [],
+    "nodes": 18
+   }
+  },
+  {
+   "style": "desk",
+   "dir": "rtl",
+   "motion": "attr",
+   "state": "idle -> idle",
+   "stateAt": 75,
+   "firstMotionAt": null,
+   "events": "pointerdown@40 focusin@47 pointerup@53 click@53",
+   "longest": 0,
+   "movers": 0,
+   "badProps": [],
+   "anims": [],
+   "end": {
+    "live": [],
+    "offRest": 0,
+    "offSample": [],
+    "nodes": 18
+   }
+  },
+  {
+   "style": "neutral",
+   "dir": "ltr",
+   "motion": "full",
+   "state": "idle -> idle",
+   "stateAt": 89,
+   "firstMotionAt": 89,
+   "events": "pointerdown@66 focusin@67 pointerup@76 click@76",
+   "longest": 244,
+   "movers": 5,
+   "badProps": [],
+   "anims": [
+    {
+     "target": "icon>span",
+     "kind": "Animation",
+     "props": "opacity,transform",
+     "dur": 100,
+     "durTok": "duration-quick",
+     "ease": "ease-exit",
+     "kf": [
+      {
+       "opacity": "1",
+       "transform": "none"
+      },
+      {
+       "opacity": "0",
+       "transform": "translateY(calc(-1 * var(--ds-distance-shift, 4px)))"
+      }
+     ],
+     "at": 89
+    },
+    {
+     "target": "icon>svg[icon]",
+     "kind": "Animation",
+     "props": "opacity,transform",
+     "dur": 220,
+     "durTok": "duration-celebrate|duration-spring-bouncy|duration-spring-soft|duration-zoom",
+     "delay": 24,
+     "ease": "ease-spring-bouncy",
+     "kf": [
+      {
+       "offset": 0,
+       "opacity": "0",
+       "transform": "rotate(-45deg) scale(var(--ds-scale-morph, 0.5))"
+      },
+      {
+       "offset": 0.4,
+       "opacity": "1"
+      },
+      {
+       "offset": 1,
+       "opacity": "1",
+       "transform": "none"
+      }
+     ],
+     "at": 89
+    },
+    {
+     "target": "button[copy-button]",
+     "kind": "Animation",
+     "props": "transform",
+     "dur": 220,
+     "durTok": "duration-celebrate|duration-spring-bouncy|duration-spring-soft|duration-zoom",
+     "ease": "ease-out",
+     "kf": [
+      {
+       "transform": "none"
+      },
+      {
+       "offset": 0.35,
+       "transform": "scale(var(--ds-scale-pop, 1.05))"
+      },
+      {
+       "transform": "none"
+      }
+     ],
+     "at": 89
+    },
+    {
+     "target": "icon>span",
+     "kind": "Animation",
+     "props": "opacity,transform",
+     "dur": 100,
+     "durTok": "duration-quick",
+     "ease": "ease-exit",
+     "kf": [
+      {
+       "opacity": "1",
+       "transform": "none"
+      },
+      {
+       "opacity": "0",
+       "transform": "translateY(var(--ds-distance-shift, 4px))"
+      }
+     ],
+     "at": 2094
+    },
+    {
+     "target": "icon>svg[icon]",
+     "kind": "Animation",
+     "props": "opacity,transform",
+     "dur": 220,
+     "durTok": "duration-celebrate|duration-spring-bouncy|duration-spring-soft|duration-zoom",
+     "delay": 24,
+     "ease": "ease-spring-soft",
+     "kf": [
+      {
+       "opacity": "0",
+       "transform": "translateY(calc(-1 * var(--ds-distance-shift, 4px)))"
+      },
+      {
+       "opacity": "1",
+       "transform": "none"
+      }
+     ],
+     "at": 2094
+    }
+   ],
+   "end": {
+    "live": [],
+    "offRest": 0,
+    "offSample": [],
+    "nodes": 21
+   }
+  },
+  {
+   "style": "neutral",
+   "dir": "ltr",
+   "motion": "media",
+   "state": "idle -> idle",
+   "stateAt": 102,
+   "firstMotionAt": null,
+   "events": "pointerdown@72 focusin@73 pointerup@74 click@74",
+   "longest": 0,
+   "movers": 0,
+   "badProps": [],
+   "anims": [],
+   "end": {
+    "live": [],
+    "offRest": 0,
+    "offSample": [],
+    "nodes": 21
+   }
+  },
+  {
+   "style": "neutral",
+   "dir": "ltr",
+   "motion": "attr",
+   "state": "idle -> idle",
+   "stateAt": 82,
+   "firstMotionAt": null,
+   "events": "pointerdown@61 focusin@62 pointerup@63 click@63",
+   "longest": 0,
+   "movers": 0,
+   "badProps": [],
+   "anims": [],
+   "end": {
+    "live": [],
+    "offRest": 0,
+    "offSample": [],
+    "nodes": 21
+   }
+  },
+  {
+   "style": "neutral",
+   "dir": "rtl",
+   "motion": "full",
+   "state": "idle -> idle",
+   "stateAt": 155,
+   "firstMotionAt": 155,
+   "events": "pointerdown@98 focusin@100 pointerup@100 click@101",
+   "longest": 244,
+   "movers": 5,
+   "badProps": [],
+   "anims": [
+    {
+     "target": "icon>span",
+     "kind": "Animation",
+     "props": "opacity,transform",
+     "dur": 100,
+     "durTok": "duration-quick",
+     "ease": "ease-exit",
+     "kf": [
+      {
+       "opacity": "1",
+       "transform": "none"
+      },
+      {
+       "opacity": "0",
+       "transform": "translateY(calc(-1 * var(--ds-distance-shift, 4px)))"
+      }
+     ],
+     "at": 155
+    },
+    {
+     "target": "icon>svg[icon]",
+     "kind": "Animation",
+     "props": "opacity,transform",
+     "dur": 220,
+     "durTok": "duration-celebrate|duration-spring-bouncy|duration-spring-soft|duration-zoom",
+     "delay": 24,
+     "ease": "ease-spring-bouncy",
+     "kf": [
+      {
+       "offset": 0,
+       "opacity": "0",
+       "transform": "rotate(-45deg) scale(var(--ds-scale-morph, 0.5))"
+      },
+      {
+       "offset": 0.4,
+       "opacity": "1"
+      },
+      {
+       "offset": 1,
+       "opacity": "1",
+       "transform": "none"
+      }
+     ],
+     "at": 155
+    },
+    {
+     "target": "button[copy-button]",
+     "kind": "Animation",
+     "props": "transform",
+     "dur": 220,
+     "durTok": "duration-celebrate|duration-spring-bouncy|duration-spring-soft|duration-zoom",
+     "ease": "ease-out",
+     "kf": [
+      {
+       "transform": "none"
+      },
+      {
+       "offset": 0.35,
+       "transform": "scale(var(--ds-scale-pop, 1.05))"
+      },
+      {
+       "transform": "none"
+      }
+     ],
+     "at": 155
+    },
+    {
+     "target": "icon>span",
+     "kind": "Animation",
+     "props": "opacity,transform",
+     "dur": 100,
+     "durTok": "duration-quick",
+     "ease": "ease-exit",
+     "kf": [
+      {
+       "opacity": "1",
+       "transform": "none"
+      },
+      {
+       "opacity": "0",
+       "transform": "translateY(var(--ds-distance-shift, 4px))"
+      }
+     ],
+     "at": 2158
+    },
+    {
+     "target": "icon>svg[icon]",
+     "kind": "Animation",
+     "props": "opacity,transform",
+     "dur": 220,
+     "durTok": "duration-celebrate|duration-spring-bouncy|duration-spring-soft|duration-zoom",
+     "delay": 24,
+     "ease": "ease-spring-soft",
+     "kf": [
+      {
+       "opacity": "0",
+       "transform": "translateY(calc(-1 * var(--ds-distance-shift, 4px)))"
+      },
+      {
+       "opacity": "1",
+       "transform": "none"
+      }
+     ],
+     "at": 2158
+    }
+   ],
+   "end": {
+    "live": [],
+    "offRest": 0,
+    "offSample": [],
+    "nodes": 21
+   }
+  },
+  {
+   "style": "neutral",
+   "dir": "rtl",
+   "motion": "media",
+   "state": "idle -> idle",
+   "stateAt": 85,
+   "firstMotionAt": null,
+   "events": "pointerdown@59 focusin@61 pointerup@61 click@61",
+   "longest": 0,
+   "movers": 0,
+   "badProps": [],
+   "anims": [],
+   "end": {
+    "live": [],
+    "offRest": 0,
+    "offSample": [],
+    "nodes": 21
+   }
+  },
+  {
+   "style": "neutral",
+   "dir": "rtl",
+   "motion": "attr",
+   "state": "idle -> idle",
+   "stateAt": 87,
+   "firstMotionAt": null,
+   "events": "pointerdown@61 focusin@62 pointerup@63 click@63",
+   "longest": 0,
+   "movers": 0,
+   "badProps": [],
+   "anims": [],
+   "end": {
+    "live": [],
+    "offRest": 0,
+    "offSample": [],
+    "nodes": 21
+   }
+  }
+ ],
+ "sweep": {
+  "studio": [],
+  "desk": [],
+  "neutral": []
+ },
+ "held": [],
+ "ring": {
+  "studio": {
+   "focusVisible": true,
+   "atOnce": true,
+   "diffFrame0": [],
+   "diffFirstFrame": [],
+   "first": {
+    "t": 3,
+    "outline": "solid 2px",
+    "shadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgb(244, 244, 245) 0px 0px 0px 2px",
+    "hostShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgb(244, 244, 245) 0px 0px 0px 2px"
+   },
+   "last": {
+    "t": 266,
+    "outline": "solid 2px",
+    "shadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgb(244, 244, 245) 0px 0px 0px 2px",
+    "hostShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgb(244, 244, 245) 0px 0px 0px 2px"
+   },
+   "frames": 18
+  },
+  "desk": {
+   "focusVisible": true,
+   "atOnce": true,
+   "diffFrame0": [],
+   "diffFirstFrame": [],
+   "first": {
+    "t": 2,
+    "outline": "solid 2px",
+    "shadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgb(244, 244, 245) 0px 0px 0px 2px",
+    "hostShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgb(244, 244, 245) 0px 0px 0px 2px"
+   },
+   "last": {
+    "t": 272,
+    "outline": "solid 2px",
+    "shadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgb(244, 244, 245) 0px 0px 0px 2px",
+    "hostShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgb(244, 244, 245) 0px 0px 0px 2px"
+   },
+   "frames": 18
+  },
+  "neutral": {
+   "focusVisible": true,
+   "atOnce": true,
+   "diffFrame0": [],
+   "diffFirstFrame": [],
+   "first": {
+    "t": 2,
+    "outline": "solid 2px",
+    "shadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgb(255, 255, 255) 0px 0px 0px 2px, rgb(37, 99, 235) 0px",
+    "hostShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgb(255, 255, 255) 0px 0px 0px 2px, rgb(37, 99, 235) 0px"
+   },
+   "last": {
+    "t": 271,
+    "outline": "solid 2px",
+    "shadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgb(255, 255, 255) 0px 0px 0px 2px, rgb(37, 99, 235) 0px",
+    "hostShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgb(255, 255, 255) 0px 0px 0px 2px, rgb(37, 99, 235) 0px"
+   },
+   "frames": 18
+  }
+ },
+ "rapid": {
+  "studio": {
+   "same": true,
+   "fast": {
+    "state": "idle",
+    "nodes": 18,
+    "off": [],
+    "live": [],
+    "active": "BUTTON"
+   }
+  },
+  "desk": {
+   "same": true,
+   "fast": {
+    "state": "idle",
+    "nodes": 18,
+    "off": [],
+    "live": [],
+    "active": "BUTTON"
+   }
+  },
+  "neutral": {
+   "same": true,
+   "fast": {
+    "state": "idle",
+    "nodes": 21,
+    "off": [],
+    "live": [],
+    "active": "BUTTON"
+   }
+  }
+ },
+ "interrupt": {},
+ "off": {},
+ "extra": {}
+}

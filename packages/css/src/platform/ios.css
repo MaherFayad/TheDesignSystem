@@ -1,0 +1,722 @@
+/*
+ * Platform ios (order 1.25, proposed). Read when the Theme element, or any
+ * ancestor, carries data-platform="ios". Every rule sits under
+ * [data-platform='ios'], so the web platform is untouched.
+ *
+ * A platform changes proportion, touch target, the shape and travel of
+ * controls, press feedback, where overlays come from and how they leave,
+ * the place of toasts, navigation placement and the type scale. It never
+ * changes brand: colors, font family, surface material and character stay
+ * with the style. So this file reads only semantic tokens, and a style's
+ * recipes (ds.recipes, the layer after this one) still paint over it.
+ *
+ * Conventions followed, from the public iOS interface guidelines: a 44pt
+ * least target, button sizes 28, 32, 44 and 52, a 51 by 31 capsule switch
+ * whose thumb widens while held, a segmented control with a lifted sliding
+ * segment, inset grouped lists with 44pt rows and a disclosure chevron, a
+ * compact centred alert about 270pt wide with equal width actions split by
+ * hairlines, sheets that rise from the bottom with a grabber, menus that
+ * grow from their source, banners that drop from the top, a bottom tab bar
+ * with labels under the icons, dimming as press feedback and spring motion.
+ * The body text is 17pt; the closest token is font.size.2xl (16px on a
+ * phone), which also keeps a focused field from zooming in iOS browsers.
+ *
+ * Mechanics. Private --_<component>-* properties are set where a component
+ * offers them; where a shape needs more, the documented parts are styled.
+ * This layer comes after ds.base, so a value here beats a state rule of the
+ * component that sets the same private property: only properties the
+ * component's states do not swap are set on a root, and state values are
+ * restated here when a platform needs its own. No new private property is
+ * declared. A button that is a part of another component (a segment, a
+ * close control, a stepper title) or sits in an attached ButtonGroup keeps
+ * the size its parent gives it: the sizing rules skip [data-part] and those
+ * children, and only the hit area and the press feedback reach them.
+ * Keyframes are this file's own (ds-ios-*). Logical properties
+ * only; nothing here is left or right. Under reduced motion every animation
+ * this file adds is none, and under forced colors the drawn extras (the
+ * grabber, the chevron) take system colors.
+ *
+ * Known limit: a Theme with another data-platform nested inside an ios one
+ * still matches these descendant selectors.
+ */
+@layer ds.platform {
+  /* ------------------------------------------------------------ buttons: Button, IconButton, ToggleButton, CloseButton, CopyButton, FloatingActionButton */
+
+  /* Sizes: mini 28, small 32, regular 44, large 52. */
+  [data-platform='ios'] :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button'], [data-ds='close-button'], [data-ds='copy-button']):not([data-part], [data-ds='button-group'][data-attached] > *) {
+    --_button-height: var(--ds-size-touch-ios);
+    --_button-padding-inline: var(--ds-space-3xl);
+    --_button-font-size: var(--ds-font-size-2xl);
+    --_button-radius: var(--ds-radius-panel);
+    --_button-press-scale: 1;
+    --_button-part-press: 1;
+
+    font-weight: var(--ds-font-weight-semibold);
+    /* Press feedback is a dim, not a dip: in at once, out on release. */
+    transition:
+      opacity var(--ds-duration-slow) var(--ds-ease-out),
+      transform calc(var(--_button-duration-out) * var(--_button-motion)) var(--_button-ease-out);
+  }
+
+  [data-platform='ios'] :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button'], [data-ds='close-button'], [data-ds='copy-button']):not([data-part], [data-ds='button-group'][data-attached] > *)[data-size='xs'] {
+    --_button-height: var(--ds-size-control-sm);
+    --_button-padding-inline: var(--ds-space-m);
+    --_button-font-size: var(--ds-font-size-l);
+    --_button-radius: var(--ds-radius-sm);
+  }
+
+  [data-platform='ios'] :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button'], [data-ds='close-button'], [data-ds='copy-button']):not([data-part], [data-ds='button-group'][data-attached] > *)[data-size='sm'] {
+    --_button-height: var(--ds-size-control-md);
+    --_button-padding-inline: var(--ds-space-xl);
+    --_button-font-size: var(--ds-font-size-xl);
+    --_button-radius: var(--ds-radius-field);
+  }
+
+  [data-platform='ios'] :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button'], [data-ds='close-button'], [data-ds='copy-button']):not([data-part], [data-ds='button-group'][data-attached] > *)[data-size='lg'] {
+    --_button-height: calc(var(--ds-size-touch-ios) + var(--ds-space-fixed-m));
+    --_button-padding-inline: var(--ds-space-5xl);
+    --_button-font-size: var(--ds-font-size-2xl);
+    --_button-radius: var(--ds-radius-card);
+  }
+
+  [data-platform='ios'] [data-ds='icon-button']:not([data-part], [data-ds='button-group'][data-attached] > *) {
+    --_button-radius: var(--ds-radius-pill);
+  }
+
+  /*
+   * The hit area of a control drawn smaller than 44pt: a transparent layer
+   * that reaches 44 by 44 around it (the target size check counts it).
+   */
+  [data-platform='ios'] :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button'], [data-ds='close-button'], [data-ds='copy-button'], [data-ds='chip'])::before {
+    content: '';
+    position: absolute;
+    /* Each axis grows only when the control is shorter than the target; percentages read the control's own box. */
+    inset-block: min(0px, calc((100% - var(--ds-size-touch-ios)) / 2));
+    inset-inline: min(0px, calc((100% - var(--ds-size-touch-ios)) / 2));
+  }
+
+  [data-platform='ios'] :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button'], [data-ds='close-button'], [data-ds='copy-button'], [data-ds='floating-action-button']):active:not([data-disabled], [data-loading], [aria-disabled='true']) {
+    opacity: 0.55;
+    transition-duration: 0s, calc(var(--_button-duration-in) * var(--_button-motion));
+  }
+
+  /* There is no floating action button on iOS: it reads as a round 56pt control with the style's lift. */
+  [data-platform='ios'] [data-ds='floating-action-button'][data-size] {
+    --_button-height: calc(var(--ds-size-touch-ios) + var(--ds-space-xl));
+    --_button-radius: var(--ds-radius-pill);
+    --_button-press-scale: 1;
+    --_button-part-press: 1;
+  }
+
+  /* ------------------------------------------------------------ switch: 51 by 31, the thumb widens while held */
+
+  [data-platform='ios'] [data-ds='switch'] {
+    --_switch-target: var(--ds-size-touch-ios);
+    --_switch-height: calc(var(--ds-size-touch-ios) * 0.7);
+    --_switch-width: calc(var(--_switch-height) * 1.65);
+    --_switch-inset: var(--ds-border-width-strong);
+    --_switch-bg: var(--ds-color-bg-overlay-20);
+    --_switch-stretch: 1.3;
+    --_switch-track-press: 1;
+    --_switch-font-size: var(--ds-font-size-2xl);
+    --_switch-gap: var(--ds-space-xl);
+  }
+
+  [data-platform='ios'] [data-ds='switch'][data-state='checked'] {
+    --_switch-bg: var(--_switch-fill);
+  }
+
+  [data-platform='ios'] [data-ds='switch'] > [data-part='control'] > [data-part='track'] > [data-part='thumb'] {
+    box-shadow: var(--ds-elevation-card-hover);
+  }
+
+  /* ------------------------------------------------------------ checkbox and radio */
+
+  [data-platform='ios'] [data-ds='checkbox'] {
+    --_checkbox-target: var(--ds-size-touch-ios);
+    --_checkbox-box: calc(var(--ds-size-icon-lg) - var(--ds-space-fixed-4xs));
+    --_checkbox-font-size: var(--ds-font-size-2xl);
+    --_checkbox-gap: var(--ds-space-s);
+    --_checkbox-radius: var(--ds-radius-sm);
+  }
+
+  /* In a list a checkbox reads as a round checkmark, the way a selectable row is drawn. */
+  [data-platform='ios'] :is([data-ds='list'], [data-ds='checkbox-group']) [data-ds='checkbox'] {
+    --_checkbox-radius: var(--ds-radius-pill);
+  }
+
+  [data-platform='ios'] [data-ds='radio-group'] {
+    --_radio-group-control-size: calc(var(--ds-size-icon-lg) - var(--ds-space-fixed-4xs));
+    --_radio-group-font-size: var(--ds-font-size-2xl);
+    --_radio-group-gap: 0;
+  }
+
+  [data-platform='ios'] [data-ds='radio-group'] [data-part='item'] {
+    min-block-size: var(--ds-size-touch-ios);
+    align-items: center;
+  }
+
+  /* ------------------------------------------------------------ slider: a thin track and a large round thumb */
+
+  [data-platform='ios'] :is([data-ds='slider'], [data-ds='range-slider']) {
+    --_slider-target: var(--ds-size-touch-ios);
+    --_slider-thumb: var(--ds-size-control-sm);
+    --_slider-thickness: var(--ds-space-fixed-2xs);
+    --_slider-lift: 1;
+    --_slider-font-size: var(--ds-font-size-2xl);
+  }
+
+  /* A large disc with an edge and a shadow; its color stays the style's. */
+  [data-platform='ios'] :is([data-ds='slider'], [data-ds='range-slider']) [data-part='thumb']::after {
+    content: '';
+    position: absolute;
+    inset: calc((var(--_slider-target) - var(--_slider-thumb)) / 2);
+    border: var(--ds-border-width-default) solid var(--ds-color-border-default);
+    border-radius: var(--ds-radius-pill);
+    box-shadow: var(--ds-elevation-card-hover);
+    pointer-events: none;
+  }
+
+  /* ------------------------------------------------------------ segmented control: a lifted segment that slides */
+
+  [data-platform='ios'] [data-ds='segmented-control'] {
+    --_segmented-control-height: var(--ds-size-control-md);
+    --_segmented-control-inset: var(--ds-border-width-strong);
+    --_segmented-control-radius: var(--ds-radius-field);
+    --_segmented-control-bg: var(--ds-color-bg-overlay-10);
+    --_segmented-control-border-color: transparent;
+    --_segmented-control-thumb-bg: var(--ds-color-bg-surface-3);
+    --_segmented-control-thumb-shadow: var(--ds-elevation-card-hover);
+  }
+
+  [data-platform='ios'] [data-ds='segmented-control'] > [data-ds='toggle-button'][data-part='item'] {
+    --_button-font-size: var(--ds-font-size-l);
+
+    font-weight: var(--ds-font-weight-medium);
+  }
+
+  [data-platform='ios'] [data-ds='segmented-control'] > [data-ds='toggle-button'][data-part='item'][data-state='on'] {
+    font-weight: var(--ds-font-weight-semibold);
+  }
+
+  /* ------------------------------------------------------------ tabs: 44pt triggers on a hairline */
+
+  [data-platform='ios'] [data-ds='tabs'] {
+    --_tabs-height: var(--ds-size-touch-ios);
+    --_tabs-font-size: var(--ds-font-size-xl);
+    --_tabs-padding-inline: var(--ds-space-xl);
+  }
+
+  [data-platform='ios'] [data-ds='tabs'][data-emphasis='ghost'] {
+    --_tabs-fg-active: var(--ds-color-primary-on-surface);
+    --_tabs-indicator-bg: var(--ds-color-primary-on-surface);
+  }
+
+  /* ------------------------------------------------------------ chip and toggle shapes */
+
+  [data-platform='ios'] [data-ds='chip'] {
+    --_chip-height: var(--ds-size-control-md);
+    --_chip-padding-inline: var(--ds-space-xl);
+    --_chip-font-size: var(--ds-font-size-l);
+  }
+
+  /* ------------------------------------------------------------ fields: Input, Textarea, Select trigger */
+
+  [data-platform='ios'] [data-ds='input'] {
+    --_input-height: var(--ds-size-touch-ios);
+    --_input-font-size: var(--ds-font-size-2xl);
+    --_input-padding-inline: var(--ds-space-3xl);
+    --_input-radius: var(--ds-radius-panel);
+    --_input-bg: var(--ds-color-bg-overlay-5);
+  }
+
+  [data-platform='ios'] [data-ds='textarea'] {
+    --_textarea-font-size: var(--ds-font-size-2xl);
+    --_textarea-padding-inline: var(--ds-space-3xl);
+    --_textarea-radius: var(--ds-radius-panel);
+    --_textarea-bg: var(--ds-color-bg-overlay-5);
+  }
+
+  [data-platform='ios'] [data-ds='select']:not([data-part]) {
+    --_select-height: var(--ds-size-touch-ios);
+    --_select-font-size: var(--ds-font-size-2xl);
+    --_select-padding-inline: var(--ds-space-3xl);
+    --_select-radius: var(--ds-radius-panel);
+    --_select-bg: var(--ds-color-bg-overlay-5);
+  }
+
+  [data-platform='ios'] [data-ds='field'] {
+    --_field-gap: var(--ds-space-s);
+  }
+
+  /* ------------------------------------------------------------ list: inset grouped rows, 44pt, a chevron on rows that go somewhere */
+
+  [data-platform='ios'] [data-ds='list'] {
+    --_list-height: var(--ds-size-touch-ios);
+    --_list-padding-inline: var(--ds-space-3xl);
+    --_list-padding-block: var(--ds-space-s);
+    --_list-gap: var(--ds-space-xl);
+    --_list-font-size: var(--ds-font-size-2xl);
+    --_list-description-font-size: var(--ds-font-size-l);
+  }
+
+  [data-platform='ios'] [data-ds='list']:is([data-variant='inset'], [data-variant='divided']) {
+    --_list-bg: var(--ds-color-bg-surface-2);
+    --_list-radius: var(--ds-radius-panel);
+
+    padding: 0;
+    overflow: clip;
+  }
+
+  /* The rows of a group are square; the group's corners clip them. */
+  [data-platform='ios'] [data-ds='list']:is([data-variant='inset'], [data-variant='divided']) > [data-part='item'] {
+    border-radius: 0;
+  }
+
+  /* Separators start at the text, not at the edge. */
+  [data-platform='ios'] [data-ds='list'] > [data-part='item'] + [data-part='item'] > [data-part='separator'] {
+    inset-inline-end: 0;
+  }
+
+  /* Highlight on press is a quiet fill, never a ripple. */
+  [data-platform='ios'] [data-ds='list'] > [data-part='item'][data-linked]:active:not([data-disabled]) {
+    --_list-item-bg: var(--_list-item-bg-active);
+  }
+
+  [data-platform='ios'] [data-ds='list'] > [data-part='item'][data-linked] {
+    padding-inline-end: calc(var(--_list-padding-inline) + var(--ds-space-fixed-m) + var(--ds-space-xl));
+  }
+
+  /* The disclosure chevron: two borders of a square, turned toward the reading end. Drawn, no glyph. */
+  [data-platform='ios'] [data-ds='list'] > [data-part='item'][data-linked]::after {
+    content: '';
+    position: absolute;
+    inset-block-start: 50%;
+    inset-inline-end: calc(var(--_list-padding-inline) + var(--ds-border-width-strong));
+    box-sizing: border-box;
+    inline-size: var(--ds-space-fixed-m);
+    block-size: var(--ds-space-fixed-m);
+    border-block-start: var(--ds-border-width-strong) solid var(--ds-color-text-subtle);
+    border-inline-end: var(--ds-border-width-strong) solid var(--ds-color-text-subtle);
+    transform: translateY(-50%) rotate(45deg);
+    pointer-events: none;
+  }
+
+  [data-platform='ios'] [data-ds='list'] > [data-part='item'][data-linked]:dir(rtl)::after {
+    transform: translateY(-50%) rotate(-45deg);
+  }
+
+  /* ------------------------------------------------------------ navigation: Navbar, TabBar, Sidebar, Pagination, Stepper */
+
+  /* The bar is 44pt with a centred semibold title. The large title that collapses needs a part: see the report. */
+  [data-platform='ios'] [data-ds='navbar'] {
+    --_navbar-height: calc(var(--ds-size-touch-ios) + var(--ds-space-xs));
+    --_navbar-control-height: var(--ds-size-touch-ios);
+    --_navbar-padding-inline: var(--ds-space-3xl);
+    --_navbar-font-size: var(--ds-font-size-2xl);
+  }
+
+  /* The title link is a full height target. */
+  [data-platform='ios'] [data-ds='navbar'] > [data-part='brand'],
+  [data-platform='ios'] [data-ds='navbar'] > [data-part='brand'] > a {
+    display: inline-flex;
+    align-items: center;
+    min-block-size: var(--ds-size-touch-ios);
+  }
+
+  [data-platform='ios'] [data-ds='navbar'] > [data-part='brand'] {
+    font-size: var(--ds-font-size-2xl);
+    font-weight: var(--ds-font-weight-semibold);
+  }
+
+  /* On a phone the title sits in the middle of the bar, whatever stands at its ends. */
+  @media (width < 30rem) { /* breakpoint.phone */
+    [data-platform='ios'] [data-ds='navbar']:not([data-sticky]) {
+      position: relative;
+    }
+
+    [data-platform='ios'] [data-ds='navbar'] > [data-part='brand'] {
+      position: absolute;
+      inset-inline: 0;
+      inline-size: fit-content;
+      max-inline-size: 60%;
+      margin-inline: auto;
+    }
+  }
+
+  /* Tab bar: 49pt items, the icon over a 10pt label, the current item in the tint, no pill. */
+  [data-platform='ios'] [data-ds='tab-bar'] {
+    --_tab-bar-item-height: calc(var(--ds-size-touch-ios) + var(--ds-space-fixed-xs));
+    --_tab-bar-icon-size: var(--ds-size-icon-lg);
+    --_tab-bar-pill-bg: transparent;
+    --_tab-bar-fg-active: var(--ds-color-primary-on-surface);
+    --_tab-bar-weight: var(--ds-font-weight-medium);
+    --_tab-bar-weight-active: var(--ds-font-weight-semibold);
+  }
+
+  [data-platform='ios'] [data-ds='tab-bar'] > [data-part='item'] {
+    justify-content: flex-start;
+    gap: var(--ds-space-fixed-4xs);
+    padding-block-start: var(--ds-space-fixed-2xs);
+    font-size: var(--ds-font-size-xs);
+  }
+
+  [data-platform='ios'] [data-ds='tab-bar'] > [data-part='item'] > [data-part='item-icon'] {
+    padding: 0;
+  }
+
+  [data-platform='ios'] [data-ds='sidebar'] {
+    --_sidebar-item-height: var(--ds-size-touch-ios);
+    --_sidebar-item-radius: var(--ds-radius-panel);
+    --_sidebar-item-font-size: var(--ds-font-size-2xl);
+    --_sidebar-item-font-weight: var(--ds-font-weight-regular);
+    --_sidebar-item-font-weight-active: var(--ds-font-weight-semibold);
+    --_sidebar-item-padding-inline: var(--ds-space-xl);
+    --_sidebar-item-edge-active: transparent;
+  }
+
+  [data-platform='ios'] [data-ds='pagination'] {
+    --_pagination-height: var(--ds-size-touch-ios);
+  }
+
+  [data-platform='ios'] [data-ds='pagination'] > [data-part='page'] {
+    min-inline-size: var(--ds-size-touch-ios);
+    min-block-size: var(--ds-size-touch-ios);
+  }
+
+  [data-platform='ios'] [data-ds='stepper'] {
+    --_stepper-font-size: var(--ds-font-size-xl);
+    --_stepper-description-size: var(--ds-font-size-l);
+  }
+
+  /* ------------------------------------------------------------ menus: DropdownMenu, ContextMenu, the Select list. Compact, 250pt, grows from the source */
+
+  [data-platform='ios'] :is([data-ds='dropdown-menu'], [data-ds='context-menu'], [data-ds='select'][data-part='content']) {
+    --_menu-width-min: calc(var(--ds-menu-width-min) * 1.25);
+    --_menu-radius: var(--ds-radius-card);
+    --_menu-padding: 0;
+    --_menu-item-height: var(--ds-size-touch-ios);
+    --_menu-item-padding-inline: var(--ds-space-3xl);
+    --_menu-item-radius: 0;
+    --_menu-item-font-size: var(--ds-font-size-2xl);
+    --_menu-item-font-weight: var(--ds-font-weight-regular);
+    --_menu-enter-scale: var(--ds-scale-morph);
+    --_menu-shift: 0px;
+    --_menu-item-shift: 0px;
+    --_menu-duration-in: var(--ds-duration-spring-bouncy);
+    --_menu-ease-in: var(--ds-ease-spring-bouncy);
+  }
+
+  [data-platform='ios'] [data-ds='select'][data-part='content'] {
+    --_select-item-height: var(--ds-size-touch-ios);
+  }
+
+  /* Rows are split by hairlines, the way a menu groups its actions. */
+  [data-platform='ios'] :is([data-ds='dropdown-menu'], [data-ds='context-menu']) > :is([data-part='item'], [data-part='checkbox-item'], [data-part='radio-item'], [data-part='sub-trigger']) + :is([data-part='item'], [data-part='checkbox-item'], [data-part='radio-item'], [data-part='sub-trigger']) {
+    box-shadow: inset 0 var(--ds-border-width-default) 0 0 var(--_menu-separator-color);
+  }
+
+  [data-platform='ios'] :is([data-ds='dropdown-menu'], [data-ds='context-menu']) > [data-part='separator'] {
+    block-size: var(--ds-space-fixed-m);
+    margin: 0;
+  }
+
+  /* ------------------------------------------------------------ popover and tooltip */
+
+  [data-platform='ios'] [data-ds='popover'] {
+    --_popover-radius: var(--ds-radius-card);
+    --_popover-padding: var(--ds-space-3xl);
+    --_popover-enter-scale: var(--ds-scale-morph);
+    --_popover-shift: 0px;
+    --_popover-duration-in: var(--ds-duration-spring-bouncy);
+    --_popover-ease-in: var(--ds-ease-spring-bouncy);
+
+    font-size: var(--ds-font-size-xl);
+  }
+
+  /* Touch has no hover: a hint shows on long press there (left to the component). Drawn as a compact callout. */
+  [data-platform='ios'] [data-ds='tooltip'] {
+    --_tooltip-radius: var(--ds-radius-panel);
+    --_tooltip-padding-block: var(--ds-space-s);
+    --_tooltip-padding-inline: var(--ds-space-xl);
+    --_tooltip-enter-scale: var(--ds-scale-morph);
+    --_tooltip-duration-in: var(--ds-duration-spring-bouncy);
+    --_tooltip-ease-in: var(--ds-ease-spring-bouncy);
+
+    font-size: var(--ds-font-size-l);
+  }
+
+  /* ------------------------------------------------------------ dialog and alert dialog: a compact centred alert */
+
+  [data-platform='ios'] :is([data-ds='dialog'], [data-ds='alert-dialog']) {
+    --_dialog-width: calc(var(--ds-dialog-width-sm) * 0.75);
+    --_dialog-gutter: var(--ds-space-5xl);
+    --_dialog-radius: var(--ds-radius-card);
+    --_dialog-padding: var(--ds-space-3xl);
+    --_dialog-header-bg: transparent;
+    --_dialog-footer-bg: transparent;
+    --_dialog-enter-y: 0px;
+    --_dialog-shift: 0px;
+  }
+
+  [data-platform='ios'] :is([data-ds='dialog'], [data-ds='alert-dialog'])[data-size] {
+    --_dialog-width: calc(var(--ds-dialog-width-sm) * 0.75);
+  }
+
+  [data-platform='ios'] :is([data-ds='dialog'], [data-ds='alert-dialog']) > [data-part='panel'] {
+    text-align: center;
+  }
+
+  /* The alert scales down into place on a spring, from a little larger. */
+  [data-platform='ios'] :is([data-ds='dialog'], [data-ds='alert-dialog']) > [data-part='panel'][data-state='open'] {
+    animation: ds-ios-alert-in var(--ds-duration-spring-bouncy) var(--ds-ease-spring-bouncy);
+  }
+
+  [data-platform='ios'] [data-ds='dialog'] > [data-part='panel'] > [data-part='title'] {
+    padding-block: var(--_dialog-padding) var(--ds-space-3xs);
+    padding-inline: calc(var(--_dialog-padding) + var(--ds-size-control-sm));
+    border-block-end: 0;
+    font-size: var(--ds-font-size-2xl);
+  }
+
+  [data-platform='ios'] [data-ds='alert-dialog'] > [data-part='panel'] > [data-part='icon'] {
+    align-self: center;
+    margin-inline: 0;
+  }
+
+  [data-platform='ios'] [data-ds='alert-dialog'] > [data-part='panel'] > [data-part='title'] {
+    font-size: var(--ds-font-size-2xl);
+  }
+
+  [data-platform='ios'] :is([data-ds='dialog'], [data-ds='alert-dialog']) > [data-part='panel'] > [data-part='description'] {
+    font-size: var(--ds-font-size-l);
+  }
+
+  /*
+   * The actions: equal width, side by side for two, stacked for three or
+   * more, split by hairlines (the gaps show the divider color behind them).
+   */
+  [data-platform='ios'] :is([data-ds='dialog'], [data-ds='alert-dialog']) > [data-part='panel'] > [data-part='footer'] {
+    display: grid;
+    grid-auto-columns: minmax(0, 1fr);
+    grid-auto-flow: column;
+    gap: var(--ds-border-width-default);
+    padding: 0;
+    padding-block-start: var(--ds-border-width-default);
+    border-block-start: 0;
+    background-color: var(--_dialog-divider-color);
+  }
+
+  [data-platform='ios'] :is([data-ds='dialog'], [data-ds='alert-dialog']) > [data-part='panel'] > [data-part='footer']:has(> :nth-child(3)) {
+    grid-auto-flow: row;
+  }
+
+  [data-platform='ios'] :is([data-ds='dialog'], [data-ds='alert-dialog']) > [data-part='panel'] > [data-part='footer'] > :is([data-ds='button'], [data-ds='copy-button']) {
+    --_button-height: var(--ds-size-touch-ios);
+    --_button-radius: 0;
+    --_button-bg: var(--_dialog-bg);
+    --_button-bg-hover: var(--ds-color-bg-overlay-5);
+    --_button-bg-active: var(--ds-color-bg-overlay-10);
+    --_button-border-color: transparent;
+    --_button-border-color-hover: transparent;
+    --_button-fg: var(--ds-color-primary-on-surface);
+    --_button-fg-hover: var(--ds-color-primary-on-surface);
+    --_button-fg-active: var(--ds-color-primary-on-surface);
+    /* Inset, so the next action and the hairline never paint over the ring. */
+    --_button-ring: inset 0 0 0 var(--ds-border-width-strong) var(--ds-color-focus-ring);
+
+    inline-size: 100%;
+    block-size: auto;
+    min-block-size: var(--ds-size-touch-ios);
+    padding-block: var(--ds-space-s);
+    padding-inline: var(--ds-space-xs);
+    font-weight: var(--ds-font-weight-regular);
+  }
+
+  /* A long action label wraps instead of ending in an ellipsis: the row grows. */
+  [data-platform='ios'] :is([data-ds='dialog'], [data-ds='alert-dialog']) > [data-part='panel'] > [data-part='footer'] > [data-ds='button'] > [data-part='label'] {
+    overflow-x: visible;
+    white-space: normal;
+    overflow-wrap: anywhere;
+    text-overflow: clip;
+  }
+
+  /* The default action is the bold one; a destructive one keeps the danger text color. */
+  [data-platform='ios'] :is([data-ds='dialog'], [data-ds='alert-dialog']) > [data-part='panel'] > [data-part='footer'] > [data-ds='button'][data-emphasis='solid'] {
+    font-weight: var(--ds-font-weight-semibold);
+  }
+
+  [data-platform='ios'] :is([data-ds='dialog'], [data-ds='alert-dialog']) > [data-part='panel'] > [data-part='footer'] > [data-ds='button'][data-tone='danger'] {
+    --_button-fg: var(--ds-color-state-danger-text);
+    --_button-fg-hover: var(--ds-color-state-danger-text);
+    --_button-fg-active: var(--ds-color-state-danger-text);
+  }
+
+  /* ------------------------------------------------------------ sheet and drawer: rise from the bottom with a grabber */
+
+  [data-platform='ios'] :is([data-ds='sheet'], [data-ds='drawer']) {
+    --_dialog-radius: var(--ds-radius-card);
+    --_dialog-duration-in: var(--ds-duration-window-open);
+    --_dialog-ease-in: var(--ds-ease-spring-soft);
+    --_dialog-handle-color: transparent;
+  }
+
+  /* The Drawer leaves its side and rises like a sheet. */
+  [data-platform='ios'] [data-ds='drawer'] {
+    align-items: flex-end;
+    justify-content: center;
+    padding-block-start: calc(var(--ds-space-5xl) + env(safe-area-inset-top, 0px));
+  }
+
+  [data-platform='ios'] [data-ds='drawer'] > [data-part='panel'],
+  [data-platform='ios'] [data-ds='drawer'][data-side='start'] > [data-part='panel'],
+  [data-platform='ios'] [data-ds='drawer'][data-size] > [data-part='panel'] {
+    inline-size: min(var(--ds-dialog-width-xl), 100%);
+    block-size: auto;
+    max-block-size: 100%;
+    padding-block-start: var(--ds-space-xl);
+    padding-block-end: env(safe-area-inset-bottom, 0px);
+    border-radius: 0;
+    border-start-start-radius: var(--_dialog-radius);
+    border-start-end-radius: var(--_dialog-radius);
+  }
+
+  [data-platform='ios'] [data-ds='drawer'] > [data-part='panel'][data-state='open'] {
+    animation: ds-ios-rise var(--_dialog-duration-in) var(--_dialog-ease-in);
+  }
+
+  [data-platform='ios'] [data-ds='drawer'] > [data-part='panel'][data-state='closed'] {
+    animation: ds-ios-sink var(--_dialog-duration-out) var(--_dialog-ease-out) forwards;
+  }
+
+  /* The grabber: 36 by 5, round, at the top centre. The Sheet draws it on its handle part (the drag target); the Drawer, which has no handle, on its panel. */
+  [data-platform='ios'] [data-ds='sheet'] > [data-part='panel'] > [data-part='handle'] {
+    position: relative;
+    padding-block: var(--ds-space-xs) var(--ds-space-3xs);
+  }
+
+  [data-platform='ios'] [data-ds='sheet'] > [data-part='panel'] > [data-part='handle']::before,
+  [data-platform='ios'] [data-ds='drawer'] > [data-part='panel']::before {
+    content: '';
+    position: absolute;
+    inset-block-start: var(--ds-space-fixed-xs);
+    inset-inline-start: 50%;
+    inline-size: calc(var(--ds-size-touch-ios) - var(--ds-space-fixed-m));
+    block-size: var(--ds-space-fixed-xs);
+    border-radius: var(--ds-radius-pill);
+    background-color: var(--ds-color-border-strong);
+    transform: translateX(-50%);
+    pointer-events: none;
+  }
+
+  [data-platform='ios'] [data-ds='sheet'] > [data-part='panel'] > [data-part='handle']:dir(rtl)::before,
+  [data-platform='ios'] [data-ds='drawer'] > [data-part='panel']:dir(rtl)::before {
+    transform: translateX(50%);
+  }
+
+  [data-platform='ios'] [data-ds='sheet'] > [data-part='panel'] > [data-part='handle']::before {
+    inset-block-start: var(--ds-space-xs);
+  }
+
+  /* ------------------------------------------------------------ toast: a banner that drops from the top, under the safe area */
+
+  [data-platform='ios'] [data-ds='toaster'],
+  :root:has([data-ds='sheet'] > [data-part='panel'][data-state='open']) [data-platform='ios'] [data-ds='toaster'][data-position^='bottom'] {
+    flex-direction: column-reverse;
+    inset-block: var(--_toaster-inset-block-start) auto;
+    inset-inline: 0;
+    margin-inline: auto;
+  }
+
+  [data-platform='ios'] [data-ds='toast'] {
+    --_toast-radius: calc(var(--ds-radius-card) + var(--ds-radius-sm));
+    --_toast-edge: var(--_toast-border-color);
+    --_toast-shadow: var(--ds-elevation-menu);
+    --_toast-enter-y: calc(-1 * var(--ds-space-10xl));
+    --_toast-enter-scale: 1;
+    --_toast-duration-in: var(--ds-duration-window-open);
+    --_toast-ease-in: var(--ds-ease-spring-bouncy);
+
+    border-inline-start-width: var(--ds-border-width-default);
+    padding-block: var(--ds-space-xl);
+    padding-inline: var(--ds-space-3xl) var(--ds-space-xl);
+    font-size: var(--ds-font-size-l);
+  }
+
+  [data-platform='ios'] [data-ds='toast'] > [data-part='title'] {
+    font-weight: var(--ds-font-weight-semibold);
+  }
+
+  /* ------------------------------------------------------------ keyframes */
+
+  @keyframes ds-ios-alert-in {
+    from {
+      opacity: 0;
+      transform: scale(1.15);
+    }
+
+    30% {
+      opacity: 1;
+    }
+  }
+
+  @keyframes ds-ios-rise {
+    from {
+      transform: translateY(100%);
+    }
+  }
+
+  @keyframes ds-ios-sink {
+    to {
+      transform: translateY(100%);
+    }
+  }
+
+  /* ------------------------------------------------------------ reduced motion: the travel and the dim fade go; state changes show at once */
+
+  @media (prefers-reduced-motion: reduce) {
+    [data-platform='ios'] [data-ds='switch'] {
+      --_switch-stretch: 1;
+    }
+
+    [data-platform='ios'] :is([data-ds='dialog'], [data-ds='alert-dialog'], [data-ds='drawer']) > [data-part='panel']:is([data-state='open'], [data-state='closed']) {
+      animation: none;
+    }
+
+    [data-platform='ios'] :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button'], [data-ds='close-button'], [data-ds='copy-button']):not([data-part], [data-ds='button-group'][data-attached] > *) {
+      transition: none;
+    }
+  }
+
+  :root[data-motion='reduce'] [data-platform='ios'] [data-ds='switch'],
+  :root[data-motion='reduce'][data-platform='ios'] [data-ds='switch'] {
+    --_switch-stretch: 1;
+  }
+
+  :root[data-motion='reduce'] [data-platform='ios'] :is([data-ds='dialog'], [data-ds='alert-dialog'], [data-ds='drawer']) > [data-part='panel']:is([data-state='open'], [data-state='closed']),
+  :root[data-motion='reduce'][data-platform='ios'] :is([data-ds='dialog'], [data-ds='alert-dialog'], [data-ds='drawer']) > [data-part='panel']:is([data-state='open'], [data-state='closed']) {
+    animation: none;
+  }
+
+  :root[data-motion='reduce'] [data-platform='ios'] :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button'], [data-ds='close-button'], [data-ds='copy-button']),
+  :root[data-motion='reduce'][data-platform='ios'] :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button'], [data-ds='close-button'], [data-ds='copy-button']):not([data-part], [data-ds='button-group'][data-attached] > *) {
+    transition: none;
+  }
+
+  /* ------------------------------------------------------------ forced colors: drawn extras take system colors */
+
+  @media (forced-colors: active) {
+    [data-platform='ios'] [data-ds='list'] > [data-part='item'][data-linked]::after {
+      border-color: CanvasText;
+    }
+
+    [data-platform='ios'] [data-ds='sheet'] > [data-part='panel'] > [data-part='handle']::before,
+    [data-platform='ios'] [data-ds='drawer'] > [data-part='panel']::before {
+      background-color: CanvasText;
+    }
+
+    [data-platform='ios'] :is([data-ds='dialog'], [data-ds='alert-dialog']) > [data-part='panel'] > [data-part='footer'] {
+      background-color: CanvasText;
+    }
+  }
+}

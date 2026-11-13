@@ -22,9 +22,13 @@
 //
 // The indicator is measured from the selected item after each render that
 // changes the value, and placed with logical private properties, so RTL
-// needs nothing more. It moves with `transform` only, through the motion
-// catalog: no motion under reduced motion, where it jumps. A ResizeObserver
-// on the root and the items places it again (a jump) when sizes change.
+// needs nothing more. It moves with `transform` only: interaction
+// "tab-slide" (order 1.22, proposed), the shared pill of
+// internal/indicator.ts, slides it from where it is drawn (a second change
+// mid travel starts there) on the snappy spring, stretched along its
+// travel, and the label it leaves dips while the one it reaches pops. No
+// motion under reduced motion, where it jumps. A ResizeObserver on the root
+// and the items places it again (a jump) when sizes change.
 //
 // Names that differ from React: `onValueChange` is the `valueChange` output
 // of `[(value)]`. `start` and `icon` take an icon name or a TemplateRef.
@@ -50,10 +54,12 @@ import { NgTemplateOutlet } from '@angular/common';
 import { Directionality } from '@angular/cdk/bidi';
 import { NG_VALUE_ACCESSOR, type ControlValueAccessor } from '@angular/forms';
 import { DsIcon } from '@the-system/icons/angular';
-import { catalog, settle } from '@the-system/motion';
+import { settle } from '@the-system/motion';
 import type { Shape, Size } from '@the-system/shared';
 import { RovingRadioGroup, type RovingRadioItem } from '../../behavior/roving-radio';
 import { consumeHostAttributes } from '../../internal/host';
+import { answerLabels, slideTo } from '../../internal/indicator';
+import { injectMotion } from '../../internal/motion';
 import { DS_BUTTON_GROUP, type ButtonGroupAxes } from '../button-group/button-group-context';
 import type { ButtonEmphasis } from '../button/button-base';
 import { DS_TOGGLE_ITEM_GROUP, DsGroupItemBase, type ToggleItemGroup } from '../toggle-group/group-item';
@@ -180,6 +186,9 @@ export class DsSegmentedControl implements ControlValueAccessor {
   private placed: string | null = null;
   /** The last frame written, so a resize with the same frame leaves a running slide alone. */
   private frame = '';
+  /** The label under the thumb, which dips when the thumb leaves it. */
+  private lastLabel: Element | null = null;
+  private readonly motion = injectMotion();
 
   constructor() {
     // On every value change: slide when it changed after the first placing.
@@ -228,7 +237,13 @@ export class DsSegmentedControl implements ControlValueAccessor {
     thumb.style.setProperty('--_segmented-control-indicator-inline-size', `${f.inline}px`);
     thumb.style.setProperty('--_segmented-control-indicator-block-size', `${f.block}px`);
     thumb.hidden = false;
-    if (from) catalog['tab-indicator'].animate(thumb, { from, to: thumb.getBoundingClientRect() });
+    const label = item.querySelector(':scope > [data-part="label"], :scope > [data-part="icon"]');
+    if (from) {
+      const mode = this.motion.mode('tab-slide');
+      slideTo({ el: thumb }, from, thumb.getBoundingClientRect(), { mode, axis: 'x' });
+      answerLabels(this.lastLabel, label, mode);
+    }
+    this.lastLabel = label;
   }
 
   /** A press or a focus on an item that is not inert. A press on the selected item would empty the value: ignored. */

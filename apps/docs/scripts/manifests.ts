@@ -2,9 +2,26 @@
 // generator and the Astro config (sidebar). A new manifest file needs no
 // change here: the folder is listed on every run.
 import { existsSync, readFileSync, readdirSync } from 'node:fs';
-import { join } from 'node:path';
+import { dirname, join } from 'node:path';
 
-export const repoRoot = join(import.meta.dirname, '..', '..', '..');
+/**
+ * The repo root: three levels up from this file, or, when this module runs
+ * bundled inside the Astro build output, the first folder above the working
+ * directory that holds ds.config.json.
+ */
+function findRoot(): string {
+  const here = join(import.meta.dirname ?? '.', '..', '..', '..');
+  if (existsSync(join(here, 'ds.config.json'))) return here;
+  let dir = process.cwd();
+  while (!existsSync(join(dir, 'ds.config.json'))) {
+    const up = dirname(dir);
+    if (up === dir) return here;
+    dir = up;
+  }
+  return dir;
+}
+
+export const repoRoot = findRoot();
 const manifestRoot = join(repoRoot, 'packages', 'manifest', 'src');
 
 export type FrameworkId = 'react' | 'angular' | 'native';

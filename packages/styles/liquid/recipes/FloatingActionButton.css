@@ -1,0 +1,89 @@
+/*
+ * Liquid recipe for FloatingActionButton: a glass capsule that floats over
+ * content. Why not tokens alone: the base draws a solid tone fill, and the
+ * glass is a blur plus a saturation boost, a 1px light edge on the top and
+ * start sides and the data-glass levels (the material of Popover.css). The
+ * tone moves to the icon and label (the tint, or the tone text), so the
+ * glass is never the only signal. Press scale and the snappy release come
+ * from the Button recipe.
+ */
+@layer ds.recipes {
+  [data-style='liquid'] [data-ds='floating-action-button'] {
+    --_button-bg: var(--ds-color-material-glass);
+    --_button-bg-hover: var(--ds-color-material-glass);
+    --_button-bg-active: var(--ds-color-material-glass);
+    --_button-fg: var(--ds-color-text-default);
+    --_button-fg-hover: var(--ds-color-text-default);
+    --_button-fg-active: var(--ds-color-text-default);
+    --_button-border-color: var(--ds-color-material-glass-border);
+    --_button-border-color-hover: var(--ds-color-material-glass-border);
+    --_button-shadow: var(--ds-elevation-glass), inset 0 var(--ds-border-width-default) 0 0 var(--ds-color-material-glass-edge),
+      inset var(--ds-border-width-default) 0 0 0 var(--ds-color-material-glass-edge);
+
+    -webkit-backdrop-filter: blur(var(--ds-blur-glass)) saturate(var(--ds-blur-window-saturation));
+    backdrop-filter: blur(var(--ds-blur-glass)) saturate(var(--ds-blur-window-saturation));
+  }
+
+  [data-style='liquid'] [data-ds='floating-action-button']:dir(rtl) {
+    --_button-shadow: var(--ds-elevation-glass), inset 0 var(--ds-border-width-default) 0 0 var(--ds-color-material-glass-edge),
+      inset calc(var(--ds-border-width-default) * -1) 0 0 0 var(--ds-color-material-glass-edge);
+  }
+
+  /* The tone is carried by the content. */
+  [data-style='liquid'] [data-ds='floating-action-button'][data-tone='accent'] {
+    --_button-fg: var(--ds-color-primary-on-surface);
+    --_button-fg-hover: var(--ds-color-primary-on-surface);
+    --_button-fg-active: var(--ds-color-primary-on-surface);
+  }
+
+  [data-style='liquid'] [data-ds='floating-action-button']:is([data-tone='danger'], [data-tone='success'], [data-tone='warning'], [data-tone='info']) {
+    --_button-fg: var(--_button-tone-text);
+    --_button-fg-hover: var(--_button-tone-text);
+    --_button-fg-active: var(--_button-tone-text);
+  }
+
+  [data-style='liquid'][data-glass='tinted'] [data-ds='floating-action-button'] {
+    --_button-bg: var(--ds-color-material-glass-tinted);
+    --_button-bg-hover: var(--ds-color-material-glass-tinted);
+    --_button-bg-active: var(--ds-color-material-glass-tinted);
+  }
+
+  /* Clear glass is for bars over pictures. A floating button over content keeps the regular glass. */
+
+  /* ------------------------------------------------------------ fallbacks: solid glass, no filter, no edge */
+
+  @supports not ((backdrop-filter: blur(0)) or (-webkit-backdrop-filter: blur(0))) {
+    [data-style='liquid'] [data-ds='floating-action-button'] {
+      --_button-bg: var(--ds-color-material-glass-solid);
+      --_button-bg-hover: var(--ds-color-material-glass-solid);
+      --_button-bg-active: var(--ds-color-material-glass-solid);
+    }
+  }
+
+  @media (prefers-reduced-transparency: reduce), (prefers-contrast: more), (forced-colors: active) {
+    [data-style='liquid'] [data-ds='floating-action-button'],
+    [data-style='liquid'] [data-ds='floating-action-button']:dir(rtl) {
+      --_button-shadow: var(--ds-elevation-glass);
+
+      -webkit-backdrop-filter: none;
+      backdrop-filter: none;
+    }
+  }
+
+  @media (prefers-contrast: more) {
+    [data-style='liquid'] [data-ds='floating-action-button'] {
+      --_button-border-color: var(--ds-color-border-strong);
+      --_button-border-color-hover: var(--ds-color-border-strong);
+    }
+  }
+
+  [data-style='liquid'][data-contrast='more'] [data-ds='floating-action-button'],
+  [data-style='liquid'][data-contrast='more'] [data-ds='floating-action-button']:dir(rtl) {
+    --_button-shadow: var(--ds-elevation-glass);
+    --_button-border-color: var(--ds-color-border-strong);
+    --_button-border-color-hover: var(--ds-color-border-strong);
+
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+}

@@ -1,0 +1,16 @@
+---
+import Layout from '../components/Layout.astro';
+import { ui } from '../lib/i18n.ts';
+const t = ui.en;
+---
+
+<Layout lang="en" path="/404/" title={t.notFound} home>
+  <article>
+    <header class="page-head">
+      <h1>{t.notFound}</h1>
+      <p class="lead">{t.notFoundBody}</p>
+    </header>
+    <p><a class="btn btn-primary" href="/">{t.goHome}</a></p>
+    <p lang="ar" dir="rtl">{ui.ar.notFound}. <a href="/ar/">{ui.ar.goHome}</a></p>
+  </article>
+</Layout>

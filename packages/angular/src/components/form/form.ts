@@ -67,7 +67,10 @@ import {
   type FormValidators,
   type FormValues,
 } from '@the-system/shared';
+import { staggerGroup } from '@the-system/motion';
 import { consumeHostAttributes } from '../../internal/host';
+import { injectMotion } from '../../internal/motion';
+import { playBeat, runStep, token } from '../../internal/motion-fields';
 import { VISUALLY_HIDDEN } from '../../internal/visually-hidden';
 import { DsThemeService } from '../../theme/theme';
 import { DsAlert } from '../alert/alert';
@@ -462,6 +465,7 @@ export class DsForm extends DsFormContext {
   /** Set on destroy, so work after an await does not touch a destroyed view. */
   private destroyed = false;
   private seenServer: string | null = null;
+  private readonly motion = injectMotion();
 
   protected readonly listed = computed(() => orderErrors(this.order(), this.errors()));
   protected readonly invalid = computed(() => this.listed().length > 0 || this.formErrors().length > 0);
@@ -572,6 +576,7 @@ export class DsForm extends DsFormContext {
     this.announce(count > 0 ? this.words().summary(count) : this.words().notSent);
     const first = firstInvalid(names, fieldErrors);
     const target = first === undefined ? undefined : found.find((f) => f.name === first)?.target;
+    this.playSummaryEnter();
     if (target) target.focus();
     // The summary is not on the page yet: it takes focus after the render.
     else afterNextRender(() => this.host.querySelector<HTMLElement>(':scope > [data-part="summary"]')?.focus(), { injector: this.injector });
@@ -595,7 +600,7 @@ export class DsForm extends DsFormContext {
     this.announcement.set('');
     const submit = this.onSubmit();
     if (!submit) {
-      this.stateSignal.set('submitted');
+      this.markSubmitted();
       if (this.words().submitted) this.announce(this.words().submitted);
       return;
     }
@@ -618,8 +623,62 @@ export class DsForm extends DsFormContext {
       this.errorsFound.emit({ ...server.fields });
       return;
     }
-    this.stateSignal.set('submitted');
+    this.markSubmitted();
     if (this.words().submitted) this.announce(this.words().submitted);
+  }
+
+  /**
+   * form-summary-enter: after a submit that finds errors, the summary rows
+   * arrive in reading order once drawn, each from distance.shift at the
+   * inline start, one stagger step apart. Focus never waits.
+   */
+  private playSummaryEnter(): void {
+    afterNextRender(
+      () => {
+        const rows = this.host.querySelectorAll(':scope > [data-part="summary"] li');
+        staggerGroup(rows, { from: 'inline', mode: this.motion.mode('form-summary-enter') });
+      },
+      { injector: this.injector },
+    );
+  }
+
+  /**
+   * The form turns submitted. form-submit-success: when it was not already,
+   * the actions take one celebrate beat once drawn: each button rises to
+   * scale.pop and springs back, as one short run from the first. The form
+   * is already sent; nothing waits.
+   */
+  private markSubmitted(): void {
+    const before = this.state();
+    this.stateSignal.set('submitted');
+    if (before === 'submitted') return;
+    afterNextRender(
+      () => {
+        const buttons = [...this.host.querySelectorAll(':scope > [data-part="actions"] > *')];
+        const mode = this.motion.mode('form-submit-success');
+        buttons.forEach((el, i) =>
+          playBeat(
+            el,
+            {
+              keyframes: [
+                { transform: 'none', easing: 'ease.out' },
+                { transform: `scale(${token.pop})`, offset: 0.35, easing: 'ease.spring-bouncy' },
+                { transform: 'none' },
+              ],
+              duration: 'duration.celebrate',
+              easing: 'linear',
+              delay: 'delay.stagger',
+              steps: runStep(i, buttons.length),
+              origin: '50% 50%',
+            },
+            'form-submit-success',
+            mode,
+            null,
+          ),
+        );
+      },
+      { injector: this.injector },
+    );
   }
 
   /** The field name of an event target: its name, or the path of its formControlName host. */

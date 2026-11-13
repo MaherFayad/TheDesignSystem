@@ -1,0 +1,79 @@
+/*
+ * Liquid recipe for Menubar: the menu bar glass. Why not tokens alone:
+ * Menubar.css reads color.material.menubar as a flat fill with no filter,
+ * and Liquid glass is that material over a blur plus a saturation boost,
+ * with the data-glass levels. The open title keeps its fill and weight; the
+ * fill takes the menu row radius, and the menus are the DropdownMenu recipe.
+ */
+@layer ds.recipes {
+  [data-style='liquid'] [data-ds='menubar'] {
+    --_menubar-border-color: var(--ds-color-material-glass-border);
+    --_menubar-backdrop: blur(var(--ds-blur-glass)) saturate(var(--ds-blur-window-saturation));
+  }
+
+  [data-style='liquid'][data-glass='tinted'] [data-ds='menubar'] {
+    --_menubar-bg: var(--ds-color-material-glass-tinted);
+  }
+
+  /* Clear: for a bar over a picture, on the 40% dim with white text. */
+  [data-style='liquid'][data-glass='clear'] [data-ds='menubar'] {
+    --_menubar-bg: var(--ds-color-material-glass-clear);
+    --_menubar-fg: var(--ds-color-glass-on-clear);
+    --_menubar-trigger-fg-open: var(--ds-color-glass-on-clear);
+    --_menubar-meta-fg: var(--ds-color-glass-on-clear);
+
+    background-image: linear-gradient(var(--ds-color-bg-scrim-40), var(--ds-color-bg-scrim-40));
+  }
+
+  /* ------------------------------------------------------------ fallbacks: solid glass, no filter */
+
+  @supports not ((backdrop-filter: blur(0)) or (-webkit-backdrop-filter: blur(0))) {
+    [data-style='liquid'] [data-ds='menubar'],
+    [data-style='liquid'][data-glass] [data-ds='menubar'] {
+      --_menubar-bg: var(--ds-color-material-glass-solid);
+    }
+  }
+
+  /* The base drops the filter in these modes; this layer wins over the base, so it drops it again. */
+  @media (prefers-reduced-transparency: reduce), (prefers-contrast: more), (forced-colors: active) {
+    [data-style='liquid'] [data-ds='menubar'] {
+      --_menubar-backdrop: none;
+    }
+
+    [data-style='liquid'][data-glass='clear'] [data-ds='menubar'] {
+      --_menubar-fg: var(--ds-color-text-default);
+      --_menubar-trigger-fg-open: var(--ds-color-text-default);
+      --_menubar-meta-fg: var(--ds-color-text-muted);
+
+      background-image: none;
+    }
+  }
+
+  @media (prefers-contrast: more) {
+    [data-style='liquid'] [data-ds='menubar'] {
+      --_menubar-border-color: var(--ds-color-border-strong);
+      --_menubar-meta-fg: var(--ds-color-text-default);
+    }
+  }
+
+  [data-style='liquid'][data-contrast='more'] [data-ds='menubar'] {
+    --_menubar-backdrop: none;
+    --_menubar-border-color: var(--ds-color-border-strong);
+    --_menubar-meta-fg: var(--ds-color-text-default);
+  }
+
+  [data-style='liquid'][data-contrast='more'][data-glass='clear'] [data-ds='menubar'] {
+    --_menubar-fg: var(--ds-color-text-default);
+    --_menubar-trigger-fg-open: var(--ds-color-text-default);
+    --_menubar-meta-fg: var(--ds-color-text-default);
+
+    background-image: none;
+  }
+
+  @media (forced-colors: active) {
+    [data-style='liquid'] [data-ds='menubar'] {
+      --_menubar-bg: Canvas;
+      --_menubar-border-color: CanvasText;
+    }
+  }
+}

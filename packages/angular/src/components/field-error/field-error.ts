@@ -13,13 +13,25 @@
 // `@if`: `@if (error()) { <p dsFieldError>{{ error() }}</p> }`. The one line
 // `error` input of dsField does that already, and also follows
 // `[invalid]="false"`.
-import { ChangeDetectionStrategy, Component, DestroyRef, computed, inject, input } from '@angular/core';
+//
+// Motion (interaction field-error-enter, order 1.22, proposed): an error
+// created after its field's first render slides down from distance.shift
+// above and fades in on the soft spring; one stagger step later its icon
+// lands from scale.morph past full size on the bouncy spring. Alone, with no
+// field, it does not move: the caller's `@if` creates it, so there is no
+// first render to tell apart from a later one.
+import { ChangeDetectionStrategy, Component, DestroyRef, ElementRef, afterNextRender, computed, inject, input } from '@angular/core';
 import type { Size } from '@the-system/shared';
 import { DsIcon } from '@the-system/icons/angular';
 import { consumeHostAttributes } from '../../internal/host';
+import { injectMotion } from '../../internal/motion';
+import { landPop, playBeat, slideIn } from '../../internal/motion-fields';
 import { DsFieldContext } from '../field/field-context';
 
 export type FieldErrorSize = Extract<Size, 'sm' | 'md'>;
+
+/** The interaction id of the error entrance in the registry. */
+export const FIELD_ERROR_ENTER = 'field-error-enter';
 
 @Component({
   selector: 'p[dsFieldError]',
@@ -47,5 +59,14 @@ export class DsFieldError {
     consumeHostAttributes(['dsFieldError', 'size', 'id']);
     const unregister = this.field?.register('error');
     if (unregister) inject(DestroyRef).onDestroy(unregister);
+    if (this.field?.settled) {
+      const motion = injectMotion();
+      const root = inject<ElementRef<HTMLElement>>(ElementRef).nativeElement;
+      afterNextRender(() => {
+        const mode = motion.mode(FIELD_ERROR_ENTER);
+        playBeat(root, slideIn(), FIELD_ERROR_ENTER, mode);
+        playBeat(root.querySelector(':scope > [data-part="icon"]'), landPop(undefined, { delay: 'delay.stagger' }), `${FIELD_ERROR_ENTER}-icon`, mode, null);
+      });
+    }
   }
 }

@@ -1,0 +1,2497 @@
+{
+ "id": "sidebar-collapse",
+ "family": "navigation",
+ "drive": "waapi",
+ "pattern": "fade-rise",
+ "primitive": "stagger",
+ "reducedSays": "The labels fade in with no travel and no delay; the icons do not move.",
+ "styles": {
+  "studio": {
+   "focus": {
+    "at0": {
+     "el": "button[toggle]",
+     "outline": "solid 2px rgba(0, 0, 0, 0)",
+     "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgb(244, 244, 245) 0px 0px 0px 2px",
+     "focusVisible": true,
+     "opacity": 1,
+     "anims": []
+    },
+    "at300": {
+     "el": "button[toggle]",
+     "outline": "solid 2px rgba(0, 0, 0, 0)",
+     "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgb(244, 244, 245) 0px 0px 0px 2px",
+     "focusVisible": true,
+     "opacity": 1,
+     "anims": []
+    },
+    "ringAtOnce": true
+   },
+   "transitionSweep": [],
+   "seek": {
+    "animations": 8,
+    "startOffsets": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "hit": {
+     "checked": 10,
+     "missed": [],
+     "maxShift": 0
+    },
+    "parts": [
+     {
+      "part": "span[item-icon]",
+      "scale": [
+       0.97,
+       1
+      ],
+      "travelPx": 38.8,
+      "opacityMin": 1,
+      "scaleOvershoot": 0,
+      "travelOvershootPx": 0,
+      "movesUntil": 100
+     }
+    ],
+    "readable": []
+   },
+   "transitionSweepAfter": [],
+   "full": {
+    "anims": [
+     {
+      "kind": "waapi",
+      "name": "motion:stagger",
+      "target": "div[group-label]",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 100,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.spring-soft",
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "opacity": "0",
+        "transform": "translateX(calc(-1 * var(--ds-distance-shift, 4px)))"
+       },
+       {
+        "offset": 0.3,
+        "opacity": "1"
+       },
+       {
+        "offset": 1,
+        "opacity": "1",
+        "transform": "none"
+       }
+      ],
+      "first": 72,
+      "last": 161,
+      "playState": "running"
+     },
+     {
+      "kind": "waapi",
+      "name": "motion:stagger",
+      "target": "span[item-label]",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 100,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.spring-soft",
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "opacity": "0",
+        "transform": "translateX(calc(-1 * var(--ds-distance-shift, 4px)))"
+       },
+       {
+        "offset": 0.3,
+        "opacity": "1"
+       },
+       {
+        "offset": 1,
+        "opacity": "1",
+        "transform": "none"
+       }
+      ],
+      "first": 72,
+      "last": 161,
+      "playState": "running"
+     },
+     {
+      "kind": "waapi",
+      "name": "motion:stagger",
+      "target": "span[item-label]",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 100,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.spring-soft",
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "opacity": "0",
+        "transform": "translateX(calc(-1 * var(--ds-distance-shift, 4px)))"
+       },
+       {
+        "offset": 0.3,
+        "opacity": "1"
+       },
+       {
+        "offset": 1,
+        "opacity": "1",
+        "transform": "none"
+       }
+      ],
+      "first": 72,
+      "last": 161,
+      "playState": "running"
+     },
+     {
+      "kind": "waapi",
+      "name": "motion:stagger",
+      "target": "span[item-label]",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 100,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.spring-soft",
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "opacity": "0",
+        "transform": "translateX(calc(-1 * var(--ds-distance-shift, 4px)))"
+       },
+       {
+        "offset": 0.3,
+        "opacity": "1"
+       },
+       {
+        "offset": 1,
+        "opacity": "1",
+        "transform": "none"
+       }
+      ],
+      "first": 72,
+      "last": 161,
+      "playState": "running"
+     },
+     {
+      "kind": "waapi",
+      "name": "motion:stagger",
+      "target": "span[item-count]",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 100,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.spring-soft",
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "opacity": "0",
+        "transform": "translateX(calc(-1 * var(--ds-distance-shift, 4px)))"
+       },
+       {
+        "offset": 0.3,
+        "opacity": "1"
+       },
+       {
+        "offset": 1,
+        "opacity": "1",
+        "transform": "none"
+       }
+      ],
+      "first": 72,
+      "last": 161,
+      "playState": "running"
+     },
+     {
+      "kind": "waapi",
+      "name": "motion:stagger",
+      "target": "span[item-label]",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 100,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.spring-soft",
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "opacity": "0",
+        "transform": "translateX(calc(-1 * var(--ds-distance-shift, 4px)))"
+       },
+       {
+        "offset": 0.3,
+        "opacity": "1"
+       },
+       {
+        "offset": 1,
+        "opacity": "1",
+        "transform": "none"
+       }
+      ],
+      "first": 72,
+      "last": 161,
+      "playState": "running"
+     },
+     {
+      "kind": "waapi",
+      "name": "motion:flip",
+      "target": "span[item-icon]",
+      "props": [
+       "transform"
+      ],
+      "duration": 80,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.spring-snappy",
+      "fill": "none",
+      "kf": [
+       {
+        "transform": "translate(-38.75px, 10.92px)"
+       },
+       {
+        "transform": "none"
+       }
+      ],
+      "first": 72,
+      "last": 141,
+      "playState": "running"
+     },
+     {
+      "kind": "waapi",
+      "name": "motion:flip",
+      "target": "span[item-icon]",
+      "props": [
+       "transform"
+      ],
+      "duration": 80,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.spring-snappy",
+      "fill": "none",
+      "kf": [
+       {
+        "transform": "translate(-38.75px, -2.22px)"
+       },
+       {
+        "transform": "none"
+       }
+      ],
+      "first": 72,
+      "last": 141,
+      "playState": "running"
+     },
+     {
+      "kind": "waapi",
+      "name": "motion:flip",
+      "target": "span[item-icon]",
+      "props": [
+       "transform"
+      ],
+      "duration": 80,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.spring-snappy",
+      "fill": "none",
+      "kf": [
+       {
+        "transform": "translate(-38.75px, -15.36px)"
+       },
+       {
+        "transform": "none"
+       }
+      ],
+      "first": 72,
+      "last": 141,
+      "playState": "running"
+     },
+     {
+      "kind": "waapi",
+      "name": "motion:flip",
+      "target": "span[item-icon]",
+      "props": [
+       "transform"
+      ],
+      "duration": 80,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.spring-snappy",
+      "fill": "none",
+      "kf": [
+       {
+        "transform": "translate(-38.75px, -28.5px)"
+       },
+       {
+        "transform": "none"
+       }
+      ],
+      "first": 72,
+      "last": 141,
+      "playState": "running"
+     },
+     {
+      "kind": "waapi",
+      "name": "motion:stagger",
+      "target": "span[item-label]",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 100,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.spring-soft",
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "opacity": "0",
+        "transform": "translateY(var(--ds-distance-enter, 6px))"
+       },
+       {
+        "offset": 0.3,
+        "opacity": "1"
+       },
+       {
+        "offset": 1,
+        "opacity": "1",
+        "transform": "none"
+       }
+      ],
+      "first": 72,
+      "last": 161,
+      "playState": "running"
+     },
+     {
+      "kind": "waapi",
+      "name": "motion:stagger",
+      "target": "span[item-label]",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 100,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.spring-soft",
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "opacity": "0",
+        "transform": "translateY(var(--ds-distance-enter, 6px))"
+       },
+       {
+        "offset": 0.3,
+        "opacity": "1"
+       },
+       {
+        "offset": 1,
+        "opacity": "1",
+        "transform": "none"
+       }
+      ],
+      "first": 72,
+      "last": 161,
+      "playState": "running"
+     },
+     {
+      "kind": "waapi",
+      "name": "motion:stagger",
+      "target": "span[item-label]",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 100,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.spring-soft",
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "opacity": "0",
+        "transform": "translateY(var(--ds-distance-enter, 6px))"
+       },
+       {
+        "offset": 0.3,
+        "opacity": "1"
+       },
+       {
+        "offset": 1,
+        "opacity": "1",
+        "transform": "none"
+       }
+      ],
+      "first": 72,
+      "last": 161,
+      "playState": "running"
+     },
+     {
+      "kind": "waapi",
+      "name": "motion:stagger",
+      "target": "span[item-label]",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 100,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.spring-soft",
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "opacity": "0",
+        "transform": "translateY(var(--ds-distance-enter, 6px))"
+       },
+       {
+        "offset": 0.3,
+        "opacity": "1"
+       },
+       {
+        "offset": 1,
+        "opacity": "1",
+        "transform": "none"
+       }
+      ],
+      "first": 72,
+      "last": 161,
+      "playState": "running"
+     }
+    ],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 100,
+    "infinite": [],
+    "stateAt": 72,
+    "firstMotionAt": 72,
+    "focusAfter": "button[button]",
+    "frames": 90,
+    "animCount": 14
+   },
+   "rapid": {
+    "left": [],
+    "held": [],
+    "inline": [
+     "div[group-label] transform-origin: 50% 50%;",
+     "span[item-label] transform-origin: 50% 50%;",
+     "span[item-label] transform-origin: 50% 50%;",
+     "span[item-label] transform-origin: 50% 50%;",
+     "span[item-count] transform-origin: 50% 50%;",
+     "span[item-label] transform-origin: 50% 50%;",
+     "span[item-label] transform-origin: 50% 50%;",
+     "span[item-icon] transform-origin: 50% 50%;",
+     "span[item-label] transform-origin: 50% 50%;",
+     "span[item-icon] transform-origin: 50% 50%;"
+    ],
+    "ghosts": 0,
+    "nodes": 79,
+    "indicators": "0 ok",
+    "custom": null,
+    "nodesBefore": 79
+   },
+   "interrupt": {
+    "left": [],
+    "held": [],
+    "inline": [
+     "div[group-label] transform-origin: 50% 50%;",
+     "span[item-label] transform-origin: 50% 50%;",
+     "span[item-label] transform-origin: 50% 50%;",
+     "span[item-label] transform-origin: 50% 50%;",
+     "span[item-count] transform-origin: 50% 50%;",
+     "span[item-label] transform-origin: 50% 50%;",
+     "span[item-label] transform-origin: 50% 50%;",
+     "span[item-icon] transform-origin: 50% 50%;",
+     "span[item-label] transform-origin: 50% 50%;",
+     "span[item-icon] transform-origin: 50% 50%;"
+    ],
+    "ghosts": 0,
+    "nodes": 79,
+    "indicators": "0 ok",
+    "custom": null
+   },
+   "tenFast": null,
+   "off": null,
+   "full.rtl": {
+    "anims": [
+     {
+      "kind": "waapi",
+      "name": "motion:indicator-answer",
+      "target": "span[item-icon]",
+      "props": [
+       "transform"
+      ],
+      "duration": 120,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.spring-bouncy",
+      "composite": "add",
+      "fill": "auto",
+      "kf": [
+       {
+        "transform": "scale(0.97)"
+       },
+       {
+        "transform": "none"
+       }
+      ],
+      "first": 94,
+      "last": 208,
+      "playState": "running"
+     },
+     {
+      "kind": "waapi",
+      "name": "motion:indicator-answer",
+      "target": "span[item-icon]",
+      "props": [
+       "transform"
+      ],
+      "duration": 120,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.spring-bouncy",
+      "composite": "add",
+      "fill": "auto",
+      "kf": [
+       {
+        "transform": "scale(0.97)"
+       },
+       {
+        "transform": "none"
+       }
+      ],
+      "first": 94,
+      "last": 208,
+      "playState": "running"
+     },
+     {
+      "kind": "waapi",
+      "name": "motion:indicator-answer",
+      "target": "span[item-icon]",
+      "props": [
+       "transform"
+      ],
+      "duration": 120,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.spring-bouncy",
+      "composite": "add",
+      "fill": "auto",
+      "kf": [
+       {
+        "transform": "scale(0.97)"
+       },
+       {
+        "transform": "none"
+       }
+      ],
+      "first": 94,
+      "last": 208,
+      "playState": "running"
+     },
+     {
+      "kind": "waapi",
+      "name": "motion:indicator-answer",
+      "target": "span[item-icon]",
+      "props": [
+       "transform"
+      ],
+      "duration": 120,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.spring-bouncy",
+      "composite": "add",
+      "fill": "auto",
+      "kf": [
+       {
+        "transform": "scale(0.97)"
+       },
+       {
+        "transform": "none"
+       }
+      ],
+      "first": 94,
+      "last": 208,
+      "playState": "running"
+     },
+     {
+      "kind": "waapi",
+      "name": "motion:flip",
+      "target": "span[item-icon]",
+      "props": [
+       "transform"
+      ],
+      "duration": 80,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.spring-snappy",
+      "fill": "none",
+      "kf": [
+       {
+        "transform": "translate(38.75px, -9.69px)"
+       },
+       {
+        "transform": "none"
+       }
+      ],
+      "first": 94,
+      "last": 157,
+      "playState": "running"
+     },
+     {
+      "kind": "waapi",
+      "name": "motion:flip",
+      "target": "span[item-icon]",
+      "props": [
+       "transform"
+      ],
+      "duration": 80,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.spring-snappy",
+      "fill": "none",
+      "kf": [
+       {
+        "transform": "translate(38.75px, 12.88px)"
+       },
+       {
+        "transform": "none"
+       }
+      ],
+      "first": 94,
+      "last": 157,
+      "playState": "running"
+     },
+     {
+      "kind": "waapi",
+      "name": "motion:flip",
+      "target": "span[item-icon]",
+      "props": [
+       "transform"
+      ],
+      "duration": 80,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.spring-snappy",
+      "fill": "none",
+      "kf": [
+       {
+        "transform": "translate(38.75px, 35.44px)"
+       },
+       {
+        "transform": "none"
+       }
+      ],
+      "first": 94,
+      "last": 157,
+      "playState": "running"
+     },
+     {
+      "kind": "waapi",
+      "name": "motion:flip",
+      "target": "span[item-icon]",
+      "props": [
+       "transform"
+      ],
+      "duration": 80,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.spring-snappy",
+      "fill": "none",
+      "kf": [
+       {
+        "transform": "translate(38.75px, 58px)"
+       },
+       {
+        "transform": "none"
+       }
+      ],
+      "first": 94,
+      "last": 157,
+      "playState": "running"
+     }
+    ],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 120,
+    "infinite": [],
+    "stateAt": 94,
+    "firstMotionAt": 94,
+    "focusAfter": "button[button]",
+    "frames": 71,
+    "animCount": 8,
+    "rapid": {
+     "left": [],
+     "held": [],
+     "inline": [
+      "div[group-label] transform-origin: 50% 50%;",
+      "span[item-label] transform-origin: 50% 50%;",
+      "span[item-label] transform-origin: 50% 50%;",
+      "span[item-label] transform-origin: 50% 50%;",
+      "span[item-count] transform-origin: 50% 50%;",
+      "span[item-label] transform-origin: 50% 50%;",
+      "span[item-label] transform-origin: 50% 50%;",
+      "span[item-icon] transform-origin: 50% 50%;",
+      "span[item-label] transform-origin: 50% 50%;",
+      "span[item-icon] transform-origin: 50% 50%;"
+     ],
+     "ghosts": 0,
+     "nodes": 79,
+     "indicators": "0 ok",
+     "custom": null,
+     "nodesBefore": 79
+    }
+   },
+   "media.ltr": {
+    "anims": [],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 0,
+    "infinite": [],
+    "stateAt": 155,
+    "firstMotionAt": null,
+    "focusAfter": "button[button]",
+    "frames": 69,
+    "animCount": 0,
+    "restOffTransforms": []
+   },
+   "media.rtl": {
+    "anims": [],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 0,
+    "infinite": [],
+    "stateAt": 92,
+    "firstMotionAt": null,
+    "focusAfter": "button[button]",
+    "frames": 71,
+    "animCount": 0,
+    "restOffTransforms": []
+   },
+   "attr.ltr": {
+    "anims": [],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 0,
+    "infinite": [],
+    "stateAt": 116,
+    "firstMotionAt": null,
+    "focusAfter": "button[button]",
+    "frames": 67,
+    "animCount": 0,
+    "restOffTransforms": []
+   },
+   "attr.rtl": {
+    "anims": [],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 0,
+    "infinite": [],
+    "stateAt": 111,
+    "firstMotionAt": null,
+    "focusAfter": "button[button]",
+    "frames": 71,
+    "animCount": 0,
+    "restOffTransforms": []
+   }
+  },
+  "desk": {
+   "focus": {
+    "at0": {
+     "el": "button[toggle]",
+     "outline": "solid 2px rgba(0, 0, 0, 0)",
+     "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgb(244, 244, 245) 0px 0px 0px 2px",
+     "focusVisible": true,
+     "opacity": 1,
+     "anims": []
+    },
+    "at300": {
+     "el": "button[toggle]",
+     "outline": "solid 2px rgba(0, 0, 0, 0)",
+     "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgb(244, 244, 245) 0px 0px 0px 2px",
+     "focusVisible": true,
+     "opacity": 1,
+     "anims": []
+    },
+    "ringAtOnce": true
+   },
+   "transitionSweep": [],
+   "seek": {
+    "animations": 8,
+    "startOffsets": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "hit": {
+     "checked": 10,
+     "missed": [],
+     "maxShift": 0
+    },
+    "parts": [
+     {
+      "part": "span[item-icon]",
+      "scale": [
+       0.9,
+       1.024
+      ],
+      "travelPx": 38.8,
+      "opacityMin": 1,
+      "scaleOvershoot": 0.024,
+      "travelOvershootPx": 0,
+      "movesUntil": 280
+     }
+    ],
+    "readable": []
+   },
+   "transitionSweepAfter": [],
+   "full": {
+    "anims": [
+     {
+      "kind": "waapi",
+      "name": "motion:stagger",
+      "target": "div[group-label]",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 340,
+      "delay": 90,
+      "iterations": 1,
+      "easing": "ease.spring-soft",
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "opacity": "0",
+        "transform": "translateX(calc(-1 * var(--ds-distance-shift, 4px)))"
+       },
+       {
+        "offset": 0.3,
+        "opacity": "1"
+       },
+       {
+        "offset": 1,
+        "opacity": "1",
+        "transform": "none"
+       }
+      ],
+      "first": 127,
+      "last": 536,
+      "playState": "running"
+     },
+     {
+      "kind": "waapi",
+      "name": "motion:stagger",
+      "target": "span[item-label]",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 340,
+      "delay": 90,
+      "iterations": 1,
+      "easing": "ease.spring-soft",
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "opacity": "0",
+        "transform": "translateX(calc(-1 * var(--ds-distance-shift, 4px)))"
+       },
+       {
+        "offset": 0.3,
+        "opacity": "1"
+       },
+       {
+        "offset": 1,
+        "opacity": "1",
+        "transform": "none"
+       }
+      ],
+      "first": 127,
+      "last": 536,
+      "playState": "running"
+     },
+     {
+      "kind": "waapi",
+      "name": "motion:stagger",
+      "target": "span[item-label]",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 340,
+      "delay": 90,
+      "iterations": 1,
+      "easing": "ease.spring-soft",
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "opacity": "0",
+        "transform": "translateX(calc(-1 * var(--ds-distance-shift, 4px)))"
+       },
+       {
+        "offset": 0.3,
+        "opacity": "1"
+       },
+       {
+        "offset": 1,
+        "opacity": "1",
+        "transform": "none"
+       }
+      ],
+      "first": 127,
+      "last": 536,
+      "playState": "running"
+     },
+     {
+      "kind": "waapi",
+      "name": "motion:stagger",
+      "target": "span[item-label]",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 340,
+      "delay": 90,
+      "iterations": 1,
+      "easing": "ease.spring-soft",
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "opacity": "0",
+        "transform": "translateX(calc(-1 * var(--ds-distance-shift, 4px)))"
+       },
+       {
+        "offset": 0.3,
+        "opacity": "1"
+       },
+       {
+        "offset": 1,
+        "opacity": "1",
+        "transform": "none"
+       }
+      ],
+      "first": 127,
+      "last": 536,
+      "playState": "running"
+     },
+     {
+      "kind": "waapi",
+      "name": "motion:stagger",
+      "target": "span[item-count]",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 340,
+      "delay": 90,
+      "iterations": 1,
+      "easing": "ease.spring-soft",
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "opacity": "0",
+        "transform": "translateX(calc(-1 * var(--ds-distance-shift, 4px)))"
+       },
+       {
+        "offset": 0.3,
+        "opacity": "1"
+       },
+       {
+        "offset": 1,
+        "opacity": "1",
+        "transform": "none"
+       }
+      ],
+      "first": 127,
+      "last": 536,
+      "playState": "running"
+     },
+     {
+      "kind": "waapi",
+      "name": "motion:stagger",
+      "target": "span[item-label]",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 340,
+      "delay": 90,
+      "iterations": 1,
+      "easing": "ease.spring-soft",
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "opacity": "0",
+        "transform": "translateX(calc(-1 * var(--ds-distance-shift, 4px)))"
+       },
+       {
+        "offset": 0.3,
+        "opacity": "1"
+       },
+       {
+        "offset": 1,
+        "opacity": "1",
+        "transform": "none"
+       }
+      ],
+      "first": 127,
+      "last": 536,
+      "playState": "running"
+     },
+     {
+      "kind": "waapi",
+      "name": "motion:flip",
+      "target": "span[item-icon]",
+      "props": [
+       "transform"
+      ],
+      "duration": 300,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.spring-snappy",
+      "fill": "none",
+      "kf": [
+       {
+        "transform": "translate(-38.75px, 10.64px)"
+       },
+       {
+        "transform": "none"
+       }
+      ],
+      "first": 127,
+      "last": 452,
+      "playState": "running"
+     },
+     {
+      "kind": "waapi",
+      "name": "motion:flip",
+      "target": "span[item-icon]",
+      "props": [
+       "transform"
+      ],
+      "duration": 300,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.spring-snappy",
+      "fill": "none",
+      "kf": [
+       {
+        "transform": "translate(-38.75px, -3.06px)"
+       },
+       {
+        "transform": "none"
+       }
+      ],
+      "first": 127,
+      "last": 452,
+      "playState": "running"
+     },
+     {
+      "kind": "waapi",
+      "name": "motion:flip",
+      "target": "span[item-icon]",
+      "props": [
+       "transform"
+      ],
+      "duration": 300,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.spring-snappy",
+      "fill": "none",
+      "kf": [
+       {
+        "transform": "translate(-38.75px, -16.77px)"
+       },
+       {
+        "transform": "none"
+       }
+      ],
+      "first": 127,
+      "last": 452,
+      "playState": "running"
+     },
+     {
+      "kind": "waapi",
+      "name": "motion:flip",
+      "target": "span[item-icon]",
+      "props": [
+       "transform"
+      ],
+      "duration": 300,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.spring-snappy",
+      "fill": "none",
+      "kf": [
+       {
+        "transform": "translate(-38.75px, -30.47px)"
+       },
+       {
+        "transform": "none"
+       }
+      ],
+      "first": 127,
+      "last": 452,
+      "playState": "running"
+     },
+     {
+      "kind": "waapi",
+      "name": "motion:stagger",
+      "target": "span[item-label]",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 340,
+      "delay": 45,
+      "iterations": 1,
+      "easing": "ease.spring-soft",
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "opacity": "0",
+        "transform": "translateY(var(--ds-distance-enter, 6px))"
+       },
+       {
+        "offset": 0.3,
+        "opacity": "1"
+       },
+       {
+        "offset": 1,
+        "opacity": "1",
+        "transform": "none"
+       }
+      ],
+      "first": 127,
+      "last": 520,
+      "playState": "running"
+     },
+     {
+      "kind": "waapi",
+      "name": "motion:stagger",
+      "target": "span[item-label]",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 340,
+      "delay": 90,
+      "iterations": 1,
+      "easing": "ease.spring-soft",
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "opacity": "0",
+        "transform": "translateY(var(--ds-distance-enter, 6px))"
+       },
+       {
+        "offset": 0.3,
+        "opacity": "1"
+       },
+       {
+        "offset": 1,
+        "opacity": "1",
+        "transform": "none"
+       }
+      ],
+      "first": 127,
+      "last": 536,
+      "playState": "running"
+     },
+     {
+      "kind": "waapi",
+      "name": "motion:stagger",
+      "target": "span[item-label]",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 340,
+      "delay": 90,
+      "iterations": 1,
+      "easing": "ease.spring-soft",
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "opacity": "0",
+        "transform": "translateY(var(--ds-distance-enter, 6px))"
+       },
+       {
+        "offset": 0.3,
+        "opacity": "1"
+       },
+       {
+        "offset": 1,
+        "opacity": "1",
+        "transform": "none"
+       }
+      ],
+      "first": 127,
+      "last": 536,
+      "playState": "running"
+     },
+     {
+      "kind": "waapi",
+      "name": "motion:stagger",
+      "target": "span[item-label]",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 340,
+      "delay": 90,
+      "iterations": 1,
+      "easing": "ease.spring-soft",
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "opacity": "0",
+        "transform": "translateY(var(--ds-distance-enter, 6px))"
+       },
+       {
+        "offset": 0.3,
+        "opacity": "1"
+       },
+       {
+        "offset": 1,
+        "opacity": "1",
+        "transform": "none"
+       }
+      ],
+      "first": 127,
+      "last": 536,
+      "playState": "running"
+     }
+    ],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 430,
+    "infinite": [],
+    "stateAt": 127,
+    "firstMotionAt": 127,
+    "focusAfter": "button[button]",
+    "frames": 86,
+    "animCount": 14
+   },
+   "rapid": {
+    "left": [],
+    "held": [],
+    "inline": [
+     "div[group-label] transform-origin: 50% 50%;",
+     "span[item-label] transform-origin: 50% 50%;",
+     "span[item-label] transform-origin: 50% 50%;",
+     "span[item-label] transform-origin: 50% 50%;",
+     "span[item-count] transform-origin: 50% 50%;",
+     "span[item-label] transform-origin: 50% 50%;",
+     "span[item-label] transform-origin: 50% 50%;",
+     "span[item-icon] transform-origin: 50% 50%;",
+     "span[item-label] transform-origin: 50% 50%;",
+     "span[item-icon] transform-origin: 50% 50%;"
+    ],
+    "ghosts": 0,
+    "nodes": 79,
+    "indicators": "0 ok",
+    "custom": null,
+    "nodesBefore": 79
+   },
+   "interrupt": {
+    "left": [],
+    "held": [],
+    "inline": [
+     "div[group-label] transform-origin: 50% 50%;",
+     "span[item-label] transform-origin: 50% 50%;",
+     "span[item-label] transform-origin: 50% 50%;",
+     "span[item-label] transform-origin: 50% 50%;",
+     "span[item-count] transform-origin: 50% 50%;",
+     "span[item-label] transform-origin: 50% 50%;",
+     "span[item-label] transform-origin: 50% 50%;",
+     "span[item-icon] transform-origin: 50% 50%;",
+     "span[item-label] transform-origin: 50% 50%;",
+     "span[item-icon] transform-origin: 50% 50%;"
+    ],
+    "ghosts": 0,
+    "nodes": 79,
+    "indicators": "0 ok",
+    "custom": null
+   },
+   "tenFast": null,
+   "off": null,
+   "full.rtl": {
+    "anims": [
+     {
+      "kind": "waapi",
+      "name": "motion:indicator-answer",
+      "target": "span[item-icon]",
+      "props": [
+       "transform"
+      ],
+      "duration": 440,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.spring-bouncy",
+      "composite": "add",
+      "fill": "auto",
+      "kf": [
+       {
+        "transform": "scale(0.9)"
+       },
+       {
+        "transform": "none"
+       }
+      ],
+      "first": 79,
+      "last": 533,
+      "playState": "running"
+     },
+     {
+      "kind": "waapi",
+      "name": "motion:indicator-answer",
+      "target": "span[item-icon]",
+      "props": [
+       "transform"
+      ],
+      "duration": 440,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.spring-bouncy",
+      "composite": "add",
+      "fill": "auto",
+      "kf": [
+       {
+        "transform": "scale(0.9)"
+       },
+       {
+        "transform": "none"
+       }
+      ],
+      "first": 79,
+      "last": 533,
+      "playState": "running"
+     },
+     {
+      "kind": "waapi",
+      "name": "motion:indicator-answer",
+      "target": "span[item-icon]",
+      "props": [
+       "transform"
+      ],
+      "duration": 440,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.spring-bouncy",
+      "composite": "add",
+      "fill": "auto",
+      "kf": [
+       {
+        "transform": "scale(0.9)"
+       },
+       {
+        "transform": "none"
+       }
+      ],
+      "first": 79,
+      "last": 533,
+      "playState": "running"
+     },
+     {
+      "kind": "waapi",
+      "name": "motion:indicator-answer",
+      "target": "span[item-icon]",
+      "props": [
+       "transform"
+      ],
+      "duration": 440,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.spring-bouncy",
+      "composite": "add",
+      "fill": "auto",
+      "kf": [
+       {
+        "transform": "scale(0.9)"
+       },
+       {
+        "transform": "none"
+       }
+      ],
+      "first": 79,
+      "last": 533,
+      "playState": "running"
+     },
+     {
+      "kind": "waapi",
+      "name": "motion:flip",
+      "target": "span[item-icon]",
+      "props": [
+       "transform"
+      ],
+      "duration": 300,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.spring-snappy",
+      "fill": "none",
+      "kf": [
+       {
+        "transform": "translate(38.75px, -9.69px)"
+       },
+       {
+        "transform": "none"
+       }
+      ],
+      "first": 79,
+      "last": 463,
+      "playState": "running"
+     },
+     {
+      "kind": "waapi",
+      "name": "motion:flip",
+      "target": "span[item-icon]",
+      "props": [
+       "transform"
+      ],
+      "duration": 300,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.spring-snappy",
+      "fill": "none",
+      "kf": [
+       {
+        "transform": "translate(38.75px, 12.88px)"
+       },
+       {
+        "transform": "none"
+       }
+      ],
+      "first": 79,
+      "last": 463,
+      "playState": "running"
+     },
+     {
+      "kind": "waapi",
+      "name": "motion:flip",
+      "target": "span[item-icon]",
+      "props": [
+       "transform"
+      ],
+      "duration": 300,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.spring-snappy",
+      "fill": "none",
+      "kf": [
+       {
+        "transform": "translate(38.75px, 35.44px)"
+       },
+       {
+        "transform": "none"
+       }
+      ],
+      "first": 79,
+      "last": 463,
+      "playState": "running"
+     },
+     {
+      "kind": "waapi",
+      "name": "motion:flip",
+      "target": "span[item-icon]",
+      "props": [
+       "transform"
+      ],
+      "duration": 300,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.spring-snappy",
+      "fill": "none",
+      "kf": [
+       {
+        "transform": "translate(38.75px, 58px)"
+       },
+       {
+        "transform": "none"
+       }
+      ],
+      "first": 79,
+      "last": 463,
+      "playState": "running"
+     }
+    ],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 440,
+    "infinite": [],
+    "stateAt": 79,
+    "firstMotionAt": 79,
+    "focusAfter": "button[button]",
+    "frames": 63,
+    "animCount": 8,
+    "rapid": {
+     "left": [],
+     "held": [],
+     "inline": [
+      "div[group-label] transform-origin: 50% 50%;",
+      "span[item-label] transform-origin: 50% 50%;",
+      "span[item-label] transform-origin: 50% 50%;",
+      "span[item-label] transform-origin: 50% 50%;",
+      "span[item-count] transform-origin: 50% 50%;",
+      "span[item-label] transform-origin: 50% 50%;",
+      "span[item-label] transform-origin: 50% 50%;",
+      "span[item-icon] transform-origin: 50% 50%;",
+      "span[item-label] transform-origin: 50% 50%;",
+      "span[item-icon] transform-origin: 50% 50%;"
+     ],
+     "ghosts": 0,
+     "nodes": 79,
+     "indicators": "0 ok",
+     "custom": null,
+     "nodesBefore": 79
+    }
+   },
+   "media.ltr": {
+    "anims": [],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 0,
+    "infinite": [],
+    "stateAt": 132,
+    "firstMotionAt": null,
+    "focusAfter": "button[button]",
+    "frames": 74,
+    "animCount": 0,
+    "restOffTransforms": []
+   },
+   "media.rtl": {
+    "anims": [],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 0,
+    "infinite": [],
+    "stateAt": 111,
+    "firstMotionAt": null,
+    "focusAfter": "button[button]",
+    "frames": 70,
+    "animCount": 0,
+    "restOffTransforms": []
+   },
+   "attr.ltr": {
+    "anims": [],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 0,
+    "infinite": [],
+    "stateAt": 149,
+    "firstMotionAt": null,
+    "focusAfter": "button[button]",
+    "frames": 67,
+    "animCount": 0,
+    "restOffTransforms": []
+   },
+   "attr.rtl": {
+    "anims": [],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 0,
+    "infinite": [],
+    "stateAt": 101,
+    "firstMotionAt": null,
+    "focusAfter": "button[button]",
+    "frames": 71,
+    "animCount": 0,
+    "restOffTransforms": []
+   }
+  },
+  "neutral": {
+   "focus": {
+    "at0": {
+     "el": "button[toggle]",
+     "outline": "solid 2px rgba(0, 0, 0, 0)",
+     "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgb(255, 255, 255) 0px 0px 0px 2px, rgb(37, 99, 235) 0px 0px 0px 4px",
+     "focusVisible": true,
+     "opacity": 1,
+     "anims": []
+    },
+    "at300": {
+     "el": "button[toggle]",
+     "outline": "solid 2px rgba(0, 0, 0, 0)",
+     "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgb(255, 255, 255) 0px 0px 0px 2px, rgb(37, 99, 235) 0px 0px 0px 4px",
+     "focusVisible": true,
+     "opacity": 1,
+     "anims": []
+    },
+    "ringAtOnce": true
+   },
+   "transitionSweep": [],
+   "seek": {
+    "animations": 8,
+    "startOffsets": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "hit": {
+     "checked": 10,
+     "missed": [],
+     "maxShift": 0
+    },
+    "parts": [
+     {
+      "part": "span[item-icon]",
+      "scale": [
+       0.95,
+       1.003
+      ],
+      "travelPx": 33.8,
+      "opacityMin": 1,
+      "scaleOvershoot": 0.003,
+      "travelOvershootPx": 0,
+      "movesUntil": 140
+     }
+    ],
+    "readable": []
+   },
+   "transitionSweepAfter": [],
+   "full": {
+    "anims": [
+     {
+      "kind": "waapi",
+      "name": "motion:stagger",
+      "target": "div[group-label]",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 220,
+      "delay": 48,
+      "iterations": 1,
+      "easing": "ease.spring-soft",
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "opacity": "0",
+        "transform": "translateX(calc(-1 * var(--ds-distance-shift, 4px)))"
+       },
+       {
+        "offset": 0.3,
+        "opacity": "1"
+       },
+       {
+        "offset": 1,
+        "opacity": "1",
+        "transform": "none"
+       }
+      ],
+      "first": 73,
+      "last": 349,
+      "playState": "running"
+     },
+     {
+      "kind": "waapi",
+      "name": "motion:stagger",
+      "target": "span[item-label]",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 220,
+      "delay": 72,
+      "iterations": 1,
+      "easing": "ease.spring-soft",
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "opacity": "0",
+        "transform": "translateX(calc(-1 * var(--ds-distance-shift, 4px)))"
+       },
+       {
+        "offset": 0.3,
+        "opacity": "1"
+       },
+       {
+        "offset": 1,
+        "opacity": "1",
+        "transform": "none"
+       }
+      ],
+      "first": 73,
+      "last": 364,
+      "playState": "running"
+     },
+     {
+      "kind": "waapi",
+      "name": "motion:stagger",
+      "target": "span[item-label]",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 220,
+      "delay": 96,
+      "iterations": 1,
+      "easing": "ease.spring-soft",
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "opacity": "0",
+        "transform": "translateX(calc(-1 * var(--ds-distance-shift, 4px)))"
+       },
+       {
+        "offset": 0.3,
+        "opacity": "1"
+       },
+       {
+        "offset": 1,
+        "opacity": "1",
+        "transform": "none"
+       }
+      ],
+      "first": 73,
+      "last": 364,
+      "playState": "running"
+     },
+     {
+      "kind": "waapi",
+      "name": "motion:stagger",
+      "target": "span[item-label]",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 220,
+      "delay": 120,
+      "iterations": 1,
+      "easing": "ease.spring-soft",
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "opacity": "0",
+        "transform": "translateX(calc(-1 * var(--ds-distance-shift, 4px)))"
+       },
+       {
+        "offset": 0.3,
+        "opacity": "1"
+       },
+       {
+        "offset": 1,
+        "opacity": "1",
+        "transform": "none"
+       }
+      ],
+      "first": 73,
+      "last": 364,
+      "playState": "running"
+     },
+     {
+      "kind": "waapi",
+      "name": "motion:stagger",
+      "target": "span[item-count]",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 220,
+      "delay": 120,
+      "iterations": 1,
+      "easing": "ease.spring-soft",
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "opacity": "0",
+        "transform": "translateX(calc(-1 * var(--ds-distance-shift, 4px)))"
+       },
+       {
+        "offset": 0.3,
+        "opacity": "1"
+       },
+       {
+        "offset": 1,
+        "opacity": "1",
+        "transform": "none"
+       }
+      ],
+      "first": 73,
+      "last": 364,
+      "playState": "running"
+     },
+     {
+      "kind": "waapi",
+      "name": "motion:stagger",
+      "target": "span[item-label]",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 220,
+      "delay": 120,
+      "iterations": 1,
+      "easing": "ease.spring-soft",
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "opacity": "0",
+        "transform": "translateX(calc(-1 * var(--ds-distance-shift, 4px)))"
+       },
+       {
+        "offset": 0.3,
+        "opacity": "1"
+       },
+       {
+        "offset": 1,
+        "opacity": "1",
+        "transform": "none"
+       }
+      ],
+      "first": 73,
+      "last": 364,
+      "playState": "running"
+     },
+     {
+      "kind": "waapi",
+      "name": "motion:flip",
+      "target": "span[item-icon]",
+      "props": [
+       "transform"
+      ],
+      "duration": 180,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.spring-snappy",
+      "fill": "none",
+      "kf": [
+       {
+        "transform": "translate(-33.75px, 11.41px)"
+       },
+       {
+        "transform": "none"
+       }
+      ],
+      "first": 73,
+      "last": 247,
+      "playState": "running"
+     },
+     {
+      "kind": "waapi",
+      "name": "motion:flip",
+      "target": "span[item-icon]",
+      "props": [
+       "transform"
+      ],
+      "duration": 180,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.spring-snappy",
+      "fill": "none",
+      "kf": [
+       {
+        "transform": "translate(-33.75px, -3.25px)"
+       },
+       {
+        "transform": "none"
+       }
+      ],
+      "first": 73,
+      "last": 247,
+      "playState": "running"
+     },
+     {
+      "kind": "waapi",
+      "name": "motion:flip",
+      "target": "span[item-icon]",
+      "props": [
+       "transform"
+      ],
+      "duration": 180,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.spring-snappy",
+      "fill": "none",
+      "kf": [
+       {
+        "transform": "translate(-33.75px, -17.91px)"
+       },
+       {
+        "transform": "none"
+       }
+      ],
+      "first": 73,
+      "last": 247,
+      "playState": "running"
+     },
+     {
+      "kind": "waapi",
+      "name": "motion:flip",
+      "target": "span[item-icon]",
+      "props": [
+       "transform"
+      ],
+      "duration": 180,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.spring-snappy",
+      "fill": "none",
+      "kf": [
+       {
+        "transform": "translate(-33.75px, -32.56px)"
+       },
+       {
+        "transform": "none"
+       }
+      ],
+      "first": 73,
+      "last": 247,
+      "playState": "running"
+     },
+     {
+      "kind": "waapi",
+      "name": "motion:stagger",
+      "target": "span[item-label]",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 220,
+      "delay": 24,
+      "iterations": 1,
+      "easing": "ease.spring-soft",
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "opacity": "0",
+        "transform": "translateY(var(--ds-distance-enter, 6px))"
+       },
+       {
+        "offset": 0.3,
+        "opacity": "1"
+       },
+       {
+        "offset": 1,
+        "opacity": "1",
+        "transform": "none"
+       }
+      ],
+      "first": 73,
+      "last": 314,
+      "playState": "running"
+     },
+     {
+      "kind": "waapi",
+      "name": "motion:stagger",
+      "target": "span[item-label]",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 220,
+      "delay": 48,
+      "iterations": 1,
+      "easing": "ease.spring-soft",
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "opacity": "0",
+        "transform": "translateY(var(--ds-distance-enter, 6px))"
+       },
+       {
+        "offset": 0.3,
+        "opacity": "1"
+       },
+       {
+        "offset": 1,
+        "opacity": "1",
+        "transform": "none"
+       }
+      ],
+      "first": 73,
+      "last": 349,
+      "playState": "running"
+     },
+     {
+      "kind": "waapi",
+      "name": "motion:stagger",
+      "target": "span[item-label]",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 220,
+      "delay": 72,
+      "iterations": 1,
+      "easing": "ease.spring-soft",
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "opacity": "0",
+        "transform": "translateY(var(--ds-distance-enter, 6px))"
+       },
+       {
+        "offset": 0.3,
+        "opacity": "1"
+       },
+       {
+        "offset": 1,
+        "opacity": "1",
+        "transform": "none"
+       }
+      ],
+      "first": 73,
+      "last": 364,
+      "playState": "running"
+     },
+     {
+      "kind": "waapi",
+      "name": "motion:stagger",
+      "target": "span[item-label]",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 220,
+      "delay": 96,
+      "iterations": 1,
+      "easing": "ease.spring-soft",
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "opacity": "0",
+        "transform": "translateY(var(--ds-distance-enter, 6px))"
+       },
+       {
+        "offset": 0.3,
+        "opacity": "1"
+       },
+       {
+        "offset": 1,
+        "opacity": "1",
+        "transform": "none"
+       }
+      ],
+      "first": 73,
+      "last": 364,
+      "playState": "running"
+     }
+    ],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 340,
+    "infinite": [],
+    "stateAt": 73,
+    "firstMotionAt": 73,
+    "focusAfter": "button[button]",
+    "frames": 88,
+    "animCount": 14
+   },
+   "rapid": {
+    "left": [],
+    "held": [],
+    "inline": [
+     "div[group-label] transform-origin: 50% 50%;",
+     "span[item-label] transform-origin: 50% 50%;",
+     "span[item-label] transform-origin: 50% 50%;",
+     "span[item-label] transform-origin: 50% 50%;",
+     "span[item-count] transform-origin: 50% 50%;",
+     "span[item-label] transform-origin: 50% 50%;",
+     "span[item-label] transform-origin: 50% 50%;",
+     "span[item-icon] transform-origin: 50% 50%;",
+     "span[item-label] transform-origin: 50% 50%;",
+     "span[item-icon] transform-origin: 50% 50%;"
+    ],
+    "ghosts": 0,
+    "nodes": 88,
+    "indicators": "0 ok",
+    "custom": null,
+    "nodesBefore": 88
+   },
+   "interrupt": {
+    "left": [],
+    "held": [],
+    "inline": [
+     "div[group-label] transform-origin: 50% 50%;",
+     "span[item-label] transform-origin: 50% 50%;",
+     "span[item-label] transform-origin: 50% 50%;",
+     "span[item-label] transform-origin: 50% 50%;",
+     "span[item-count] transform-origin: 50% 50%;",
+     "span[item-label] transform-origin: 50% 50%;",
+     "span[item-label] transform-origin: 50% 50%;",
+     "span[item-icon] transform-origin: 50% 50%;",
+     "span[item-label] transform-origin: 50% 50%;",
+     "span[item-icon] transform-origin: 50% 50%;"
+    ],
+    "ghosts": 0,
+    "nodes": 88,
+    "indicators": "0 ok",
+    "custom": null
+   },
+   "tenFast": null,
+   "off": null,
+   "full.rtl": {
+    "anims": [
+     {
+      "kind": "transition",
+      "name": "transform",
+      "target": "span[end]",
+      "props": [
+       "transform"
+      ],
+      "duration": 180,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.spring-snappy",
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "transform": "translateX(0px) scale(1)"
+       },
+       {
+        "offset": 1,
+        "transform": "translateX(-5px) scale(1)"
+       }
+      ],
+      "first": 123,
+      "last": 291,
+      "playState": "running"
+     },
+     {
+      "kind": "waapi",
+      "name": "motion:indicator-answer",
+      "target": "span[item-icon]",
+      "props": [
+       "transform"
+      ],
+      "duration": 220,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.spring-bouncy",
+      "composite": "add",
+      "fill": "auto",
+      "kf": [
+       {
+        "transform": "scale(0.95)"
+       },
+       {
+        "transform": "none"
+       }
+      ],
+      "first": 123,
+      "last": 341,
+      "playState": "running"
+     },
+     {
+      "kind": "waapi",
+      "name": "motion:indicator-answer",
+      "target": "span[item-icon]",
+      "props": [
+       "transform"
+      ],
+      "duration": 220,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.spring-bouncy",
+      "composite": "add",
+      "fill": "auto",
+      "kf": [
+       {
+        "transform": "scale(0.95)"
+       },
+       {
+        "transform": "none"
+       }
+      ],
+      "first": 123,
+      "last": 341,
+      "playState": "running"
+     },
+     {
+      "kind": "waapi",
+      "name": "motion:indicator-answer",
+      "target": "span[item-icon]",
+      "props": [
+       "transform"
+      ],
+      "duration": 220,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.spring-bouncy",
+      "composite": "add",
+      "fill": "auto",
+      "kf": [
+       {
+        "transform": "scale(0.95)"
+       },
+       {
+        "transform": "none"
+       }
+      ],
+      "first": 123,
+      "last": 341,
+      "playState": "running"
+     },
+     {
+      "kind": "waapi",
+      "name": "motion:indicator-answer",
+      "target": "span[item-icon]",
+      "props": [
+       "transform"
+      ],
+      "duration": 220,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.spring-bouncy",
+      "composite": "add",
+      "fill": "auto",
+      "kf": [
+       {
+        "transform": "scale(0.95)"
+       },
+       {
+        "transform": "none"
+       }
+      ],
+      "first": 123,
+      "last": 341,
+      "playState": "running"
+     },
+     {
+      "kind": "waapi",
+      "name": "motion:flip",
+      "target": "span[item-icon]",
+      "props": [
+       "transform"
+      ],
+      "duration": 180,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.spring-snappy",
+      "fill": "none",
+      "kf": [
+       {
+        "transform": "translate(33.75px, -10.02px)"
+       },
+       {
+        "transform": "none"
+       }
+      ],
+      "first": 123,
+      "last": 291,
+      "playState": "running"
+     },
+     {
+      "kind": "waapi",
+      "name": "motion:flip",
+      "target": "span[item-icon]",
+      "props": [
+       "transform"
+      ],
+      "duration": 180,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.spring-snappy",
+      "fill": "none",
+      "kf": [
+       {
+        "transform": "translate(33.75px, 14.39px)"
+       },
+       {
+        "transform": "none"
+       }
+      ],
+      "first": 123,
+      "last": 291,
+      "playState": "running"
+     },
+     {
+      "kind": "waapi",
+      "name": "motion:flip",
+      "target": "span[item-icon]",
+      "props": [
+       "transform"
+      ],
+      "duration": 180,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.spring-snappy",
+      "fill": "none",
+      "kf": [
+       {
+        "transform": "translate(33.75px, 38.8px)"
+       },
+       {
+        "transform": "none"
+       }
+      ],
+      "first": 123,
+      "last": 291,
+      "playState": "running"
+     },
+     {
+      "kind": "waapi",
+      "name": "motion:flip",
+      "target": "span[item-icon]",
+      "props": [
+       "transform"
+      ],
+      "duration": 180,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.spring-snappy",
+      "fill": "none",
+      "kf": [
+       {
+        "transform": "translate(33.75px, 63.2px)"
+       },
+       {
+        "transform": "none"
+       }
+      ],
+      "first": 123,
+      "last": 291,
+      "playState": "running"
+     }
+    ],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 220,
+    "infinite": [],
+    "stateAt": 123,
+    "firstMotionAt": 123,
+    "focusAfter": "button[button]",
+    "frames": 63,
+    "animCount": 9,
+    "rapid": {
+     "left": [],
+     "held": [],
+     "inline": [
+      "div[group-label] transform-origin: 50% 50%;",
+      "span[item-label] transform-origin: 50% 50%;",
+      "span[item-label] transform-origin: 50% 50%;",
+      "span[item-label] transform-origin: 50% 50%;",
+      "span[item-count] transform-origin: 50% 50%;",
+      "span[item-label] transform-origin: 50% 50%;",
+      "span[item-label] transform-origin: 50% 50%;",
+      "span[item-icon] transform-origin: 50% 50%;",
+      "span[item-label] transform-origin: 50% 50%;",
+      "span[item-icon] transform-origin: 50% 50%;"
+     ],
+     "ghosts": 0,
+     "nodes": 88,
+     "indicators": "0 ok",
+     "custom": null,
+     "nodesBefore": 88
+    }
+   },
+   "media.ltr": {
+    "anims": [],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 0,
+    "infinite": [],
+    "stateAt": 88,
+    "firstMotionAt": null,
+    "focusAfter": "button[button]",
+    "frames": 71,
+    "animCount": 0,
+    "restOffTransforms": []
+   },
+   "media.rtl": {
+    "anims": [],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 0,
+    "infinite": [],
+    "stateAt": 185,
+    "firstMotionAt": null,
+    "focusAfter": "button[button]",
+    "frames": 72,
+    "animCount": 0,
+    "restOffTransforms": []
+   },
+   "attr.ltr": {
+    "anims": [],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 0,
+    "infinite": [],
+    "stateAt": 113,
+    "firstMotionAt": null,
+    "focusAfter": "button[button]",
+    "frames": 72,
+    "animCount": 0,
+    "restOffTransforms": []
+   },
+   "attr.rtl": {
+    "anims": [],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 0,
+    "infinite": [],
+    "stateAt": 95,
+    "firstMotionAt": null,
+    "focusAfter": "button[button]",
+    "frames": 70,
+    "animCount": 0,
+    "restOffTransforms": []
+   }
+  }
+ },
+ "sheet": "sidebar-collapse.sheet.png"
+}

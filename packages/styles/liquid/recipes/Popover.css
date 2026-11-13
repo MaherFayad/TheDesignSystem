@@ -1,0 +1,91 @@
+/*
+ * Liquid recipe for Popover: a glass panel. Chrome is glass, content is
+ * solid (PLAN.md 3.7, Liquid). Why not tokens alone: Popover.css takes only a
+ * blur length, and Liquid glass is a blur plus a saturation boost, a 1px
+ * light edge on the top and start sides and the three data-glass levels.
+ *
+ * The material, in every Liquid glass recipe:
+ *   fill        color.material.glass (regular), -tinted (data-glass tinted),
+ *               -clear on a 40% dim with white text (data-glass clear)
+ *   filter      blur(blur.glass) saturate(blur.window-saturation)
+ *   edge        an inset 1px line of color.material.glass-edge on the top
+ *               and the inline start side (mirrored in right to left text),
+ *               and a 1px outer border of color.material.glass-border
+ *   shadow      a soft wide elevation token
+ *   fallbacks   solid color.material.glass-solid, no filter, no edge, where
+ *               backdrop-filter is not supported, under reduced transparency,
+ *               under more contrast (media and data-contrast) and in forced
+ *               colors (Popover.css draws the forced colors look).
+ * The radius is radius.panel (22px), and the padding keeps inner corners at
+ * the outer radius less the padding.
+ */
+@layer ds.recipes {
+  [data-style='liquid'] [data-ds='popover'] {
+    --_popover-bg: var(--ds-color-material-glass);
+    --_popover-border-color: var(--ds-color-material-glass-border);
+    --_popover-radius: var(--ds-radius-panel);
+    --_popover-shadow: var(--ds-elevation-menu), inset 0 var(--ds-border-width-default) 0 0 var(--ds-color-material-glass-edge),
+      inset var(--ds-border-width-default) 0 0 0 var(--ds-color-material-glass-edge);
+    --_popover-enter-scale: var(--ds-scale-menu-enter);
+
+    -webkit-backdrop-filter: blur(var(--ds-blur-glass)) saturate(var(--ds-blur-window-saturation));
+    backdrop-filter: blur(var(--ds-blur-glass)) saturate(var(--ds-blur-window-saturation));
+  }
+
+  /* The start side edge follows the text direction. */
+  [data-style='liquid'] [data-ds='popover']:dir(rtl) {
+    --_popover-shadow: var(--ds-elevation-menu), inset 0 var(--ds-border-width-default) 0 0 var(--ds-color-material-glass-edge),
+      inset calc(var(--ds-border-width-default) * -1) 0 0 0 var(--ds-color-material-glass-edge);
+  }
+
+  /* The arrow is drawn in the panel fill; on glass it would show the fill twice, so it takes the solid twin. */
+  [data-style='liquid'] [data-ds='popover'] [data-part='arrow'] {
+    fill: var(--ds-color-material-glass-solid);
+  }
+
+  [data-style='liquid'][data-glass='tinted'] [data-ds='popover'] {
+    --_popover-bg: var(--ds-color-material-glass-tinted);
+  }
+
+  /* Clear glass is for bars over pictures. A popover holds reading text, so the clear level keeps the regular glass. */
+
+  /* ------------------------------------------------------------ fallbacks: solid glass, no filter, no edge */
+
+  @supports not ((backdrop-filter: blur(0)) or (-webkit-backdrop-filter: blur(0))) {
+    [data-style='liquid'] [data-ds='popover'] {
+      --_popover-bg: var(--ds-color-material-glass-solid);
+    }
+  }
+
+  @media (prefers-reduced-transparency: reduce), (prefers-contrast: more), (forced-colors: active) {
+    [data-style='liquid'] [data-ds='popover'],
+    [data-style='liquid'] [data-ds='popover']:dir(rtl) {
+      --_popover-shadow: var(--ds-elevation-menu);
+
+      -webkit-backdrop-filter: none;
+      backdrop-filter: none;
+    }
+  }
+
+  @media (prefers-contrast: more) {
+    [data-style='liquid'] [data-ds='popover'] {
+      --_popover-border-color: var(--ds-color-border-strong);
+    }
+  }
+
+  [data-style='liquid'][data-contrast='more'] [data-ds='popover'],
+  [data-style='liquid'][data-contrast='more'] [data-ds='popover']:dir(rtl) {
+    --_popover-shadow: var(--ds-elevation-menu);
+    --_popover-border-color: var(--ds-color-border-strong);
+
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+
+  @media (forced-colors: active) {
+    [data-style='liquid'] [data-ds='popover'] {
+      --_popover-bg: Canvas;
+      --_popover-border-color: CanvasText;
+    }
+  }
+}

@@ -1,0 +1,41 @@
+---
+// One framed live preview: an iframe of the bundled React gallery, lazy
+// loaded, with a skeleton while it loads. public/docs.js sets the src from
+// data-src and the page's preview settings, and sizes the frame to its
+// content. The reserved height comes from the measured heights file, so the
+// page does not shift when the frame arrives.
+import heights from '../data/preview-heights.json';
+
+interface Props {
+  /** The gallery URL of the component, for example /gallery/c/button. */
+  base: string;
+  /** A case id for ?case=, or none for the whole demo. */
+  caseId?: string;
+  label: string;
+  /** The heights key, for example button/one. */
+  heightKey: string;
+  /** Axes fixed for this frame, over the page settings (for example a style on the home strip). */
+  fixed?: Record<string, string>;
+  lang: 'en' | 'ar';
+  loadingLabel: string;
+  fallbackHeight?: number;
+}
+const { base, caseId, label, heightKey, fixed, lang, loadingLabel, fallbackHeight = 220 } = Astro.props;
+const h = (heights as Record<string, number>)[heightKey] ?? fallbackHeight;
+---
+
+<div class="preview" data-preview data-state="loading">
+  <div class="preview-stage">
+    <div class="preview-skeleton" aria-hidden="true"><span></span><span></span><span></span></div>
+    <iframe
+      class="preview-frame"
+      style={`--h: ${h}px`}
+      data-src={base}
+      data-case={caseId}
+      data-fixed={fixed ? JSON.stringify(fixed) : undefined}
+      data-lang={lang}
+      aria-label={label}
+      loading="lazy"></iframe>
+  </div>
+  <slot />
+</div>

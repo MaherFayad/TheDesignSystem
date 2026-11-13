@@ -227,7 +227,7 @@ export type RadioCardIcon = IconName | (string & {}) | TemplateRef<unknown>;
     '(keydown)': 'group.roving.onItemKeydown(item, $event)',
     '(click)': 'group.roving.onItemClick(item)',
   },
-  template: `<span data-part="indicator" [attr.data-state]="state()" [attr.data-disabled]="isDisabled() ? '' : null"></span>@if (icon(); as i) {<span data-part="icon" aria-hidden="true">@if (isTemplate(i)) {<ng-container [ngTemplateOutlet]="i" />} @else if (isIcon(i)) {<svg dsIcon [name]="i" [size]="iconSize()"></svg>} @else {{{ i }}}</span>}<span [id]="titleId" data-part="title">{{ title() }}</span>@if (description() !== undefined) {<span [id]="descriptionId" data-part="description">{{ description() }}</span>}@if (end(); as e) {<span [id]="endId" data-part="end">@if (isTemplate(e)) {<ng-container [ngTemplateOutlet]="e" />} @else {{{ e }}}</span>}`,
+  template: `<span data-part="indicator" [attr.data-state]="state()" [attr.data-disabled]="isDisabled() ? '' : null"><span aria-hidden="true"></span></span>@if (icon(); as i) {<span data-part="icon" aria-hidden="true">@if (isTemplate(i)) {<ng-container [ngTemplateOutlet]="i" />} @else if (isIcon(i)) {<svg dsIcon [name]="i" [size]="iconSize()"></svg>} @else {{{ i }}}</span>}<span [id]="titleId" data-part="title">{{ title() }}</span>@if (description() !== undefined) {<span [id]="descriptionId" data-part="description">{{ description() }}</span>}@if (end(); as e) {<span [id]="endId" data-part="end">@if (isTemplate(e)) {<ng-container [ngTemplateOutlet]="e" />} @else {{{ e }}}</span>}`,
 })
 export class DsRadioCardItem {
   /** The value this card sets. */

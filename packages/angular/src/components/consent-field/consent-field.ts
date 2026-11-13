@@ -56,8 +56,10 @@ import {
 import { NG_VALUE_ACCESSOR, type ControlValueAccessor } from '@angular/forms';
 import type { Size } from '@the-system/shared';
 import { consumeHostAttributes } from '../../internal/host';
+import { injectMotion } from '../../internal/motion';
+import { landPop, playBeat, token } from '../../internal/motion-fields';
 import { DsThemeService } from '../../theme/theme';
-import { DsFieldContext } from '../field/field-context';
+import { DsFieldContext, settleAfterFirstRender } from '../field/field-context';
 import { DsFieldError } from '../field-error/field-error';
 import { DsErrorContext, hasContent } from '../fieldset/error-context';
 import { DsFormContext } from '../form/form-context';
@@ -237,7 +239,11 @@ export class DsConsentField implements ControlValueAccessor, OnInit {
   /** Read before the constructor drops the attribute. */
   private readonly strayDefault = typeof this.hostEl.hasAttribute === 'function' && this.hostEl.hasAttribute('defaultChecked');
 
+  private readonly motion = injectMotion();
+
   constructor() {
+    // An error that shows after the first render slides in (order 1.22).
+    settleAfterFirstRender(this.errorContext);
     // Give the form the message for this name left off, so the field and the summary say the same.
     effect((onCleanup) => {
       const name = this.name();
@@ -263,9 +269,8 @@ export class DsConsentField implements ControlValueAccessor, OnInit {
     if (this.strayDefault) {
       console.warn('ConsentField: defaultChecked is ignored. A consent never starts given; pass checked only for a choice already on record.');
     }
-    if (this.granted() && !this.showMeta()) {
-      console.warn('ConsentField: checked starts true with no meta. Show the record of the choice in meta, such as the date and the text version, or start denied.');
-    }
+    // A value a form wrote first is checked in writeValue, under its own name.
+    if (this.firstWrite) this.warnStartedGranted(this.granted(), 'checked');
     afterNextRender(
       () => {
         // A disabled consent cannot be given yet: the link is asked for once it can.
@@ -287,25 +292,62 @@ export class DsConsentField implements ControlValueAccessor, OnInit {
   }
 
   protected decide(next: boolean): void {
+    if (next) this.playConsentCheck();
     this.checked.set(next);
     this.onChange(next);
     this.onTouched();
     this.decision.emit({ name: this.name(), granted: next, version: this.version(), at: new Date().toISOString() });
   }
 
+  /**
+   * consent-check: when the person gives the consent, the mark lands past
+   * full size on the bouncy spring, on top of the control's own draw
+   * (composite add), once the control shows it checked.
+   */
+  private playConsentCheck(): void {
+    afterNextRender(
+      () => {
+        if (!this.granted()) return;
+        const mark = this.hostEl.querySelector(':scope > [data-part="control"] [data-part="indicator"] [data-ds="icon"]');
+        playBeat(
+          mark,
+          { ...landPop(), keyframes: [{ transform: `scale(${token.morph})` }, { transform: 'scale(1)' }], composite: 'add' },
+          'consent-check',
+          this.motion.mode('consent-check'),
+          null,
+        );
+      },
+      { injector: this.injector },
+    );
+  }
+
   private firstWrite = true;
 
   writeValue(value: unknown): void {
     // PDPL: a consent is never pre ticked. A FormControl that starts true must come from a stored decision with a record line.
-    if (this.firstWrite && isDevMode() && value === true) {
-      const meta = this.meta();
-      const text = typeof meta === 'string' ? meta : '';
-      if (meta === undefined || meta === null || meta === '' || (typeof meta === 'string' && !/\d/.test(text))) {
-        console.warn('ConsentField: FormControl starts true with no dated meta. A given consent comes from a stored decision: show when it was given in meta, or start denied.');
-      }
-    }
+    if (this.firstWrite && isDevMode()) this.warnStartedGranted(value === true, 'FormControl');
     this.firstWrite = false;
     this.checked.set(value === true);
+  }
+
+  /**
+   * PDPL: a consent is never pre ticked. One check for both ways a consent
+   * can start given, the `checked` input and the first value of a form
+   * control: it needs a record of the choice in meta, with a date when the
+   * meta is text. React's two warnings, with the source named.
+   */
+  private warnStartedGranted(started: boolean, source: 'checked' | 'FormControl'): void {
+    if (!started) return;
+    const meta = this.meta();
+    if (!hasContent(meta)) {
+      console.warn(
+        `ConsentField: ${source} starts true with no meta. Show the record of the choice in meta, such as the date and the text version, or start denied.`,
+      );
+    } else if (typeof meta === 'string' && !/\d/.test(meta)) {
+      console.warn(
+        `ConsentField: ${source} starts true and meta has no date. A given consent comes from a stored decision: show when it was given, or start denied.`,
+      );
+    }
   }
 
   registerOnChange(fn: (granted: boolean) => void): void {

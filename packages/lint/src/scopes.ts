@@ -3,9 +3,13 @@
 import { DASH_EXCLUDED_FILES } from './allowlist';
 import { extname } from './util';
 
-/** Component CSS and style pack recipes: tokens only. */
+/** Component CSS, platform CSS (order 1.25) and style pack recipes: tokens only, and where private properties may be set. */
 export function isComponentCss(path: string): boolean {
-  return /^packages\/css\/src\/components\/[^/]+\.css$/.test(path) || /^packages\/styles\/[^/]+\/recipes\/[^/]+\.css$/.test(path);
+  return (
+    /^packages\/css\/src\/components\/[^/]+\.css$/.test(path) ||
+    /^packages\/css\/src\/platform\/[^/]+\.css$/.test(path) ||
+    /^packages\/styles\/[^/]+\/recipes\/[^/]+\.css$/.test(path)
+  );
 }
 
 /** Component CSS only (`packages/css/src/components`), without recipes: where private properties are declared. */

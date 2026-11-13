@@ -46,6 +46,9 @@ export type FloatingActionButtonPosition = 'fixed' | 'absolute' | 'static';
       <span data-part="spinner" aria-hidden="true"></span>
       <span data-part="status" role="status">{{ loadingLabel() }}</span>
     }
+    @if (spinnerLeaving()) {
+      <span data-part="spinner" aria-hidden="true"></span>
+    }
   `,
 })
 export class DsFloatingActionButton extends DsButtonBase {

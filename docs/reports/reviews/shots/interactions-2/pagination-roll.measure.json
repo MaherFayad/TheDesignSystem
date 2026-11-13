@@ -1,0 +1,2096 @@
+{
+ "id": "pagination-roll",
+ "family": "navigation",
+ "drive": "waapi",
+ "pattern": "number-roll",
+ "primitive": "digit-roll",
+ "reducedSays": "The new numbers fade in; nothing travels.",
+ "styles": {
+  "studio": {
+   "focus": {
+    "at0": {
+     "el": "button[first]",
+     "outline": "solid 2px rgba(0, 0, 0, 0)",
+     "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgb(244, 244, 245) 0px 0px 0px 2px",
+     "focusVisible": true,
+     "opacity": 1,
+     "anims": []
+    },
+    "at300": {
+     "el": "button[first]",
+     "outline": "solid 2px rgba(0, 0, 0, 0)",
+     "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgb(244, 244, 245) 0px 0px 0px 2px",
+     "focusVisible": true,
+     "opacity": 1,
+     "anims": []
+    },
+    "ringAtOnce": true
+   },
+   "transitionSweep": [],
+   "seek": {
+    "animations": 25,
+    "startOffsets": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "hit": {
+     "checked": 19,
+     "missed": [],
+     "maxShift": 0
+    },
+    "parts": [
+     {
+      "part": "span[end]",
+      "scale": [
+       1,
+       1
+      ],
+      "travelPx": 1,
+      "opacityMin": 1,
+      "scaleOvershoot": 0,
+      "travelOvershootPx": 0,
+      "movesUntil": 60
+     },
+     {
+      "part": "span",
+      "scale": [
+       1,
+       1
+      ],
+      "travelPx": 27.7,
+      "opacityMin": 0,
+      "scaleOvershoot": 0,
+      "travelOvershootPx": 0,
+      "movesUntil": 600
+     },
+     {
+      "part": "span[label]",
+      "scale": [
+       0.97,
+       1
+      ],
+      "travelPx": 0,
+      "opacityMin": 1,
+      "scaleOvershoot": 0,
+      "travelOvershootPx": 0,
+      "movesUntil": 100
+     }
+    ],
+    "readable": []
+   },
+   "transitionSweepAfter": [],
+   "full": {
+    "anims": [
+     {
+      "kind": "waapi",
+      "name": "motion:digit-roll",
+      "target": "span",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 80,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.spring-snappy",
+      "fill": "none",
+      "kf": [
+       {
+        "opacity": "0",
+        "transform": "translateY(100%)"
+       },
+       {
+        "opacity": "1",
+        "transform": "none"
+       }
+      ],
+      "first": 158,
+      "last": 248,
+      "playState": "running"
+     },
+     {
+      "kind": "waapi",
+      "name": "motion:digit-roll-out",
+      "target": "span",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 80,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.spring-snappy",
+      "fill": "both",
+      "kf": [
+       {
+        "opacity": "1",
+        "transform": "none"
+       },
+       {
+        "opacity": "0",
+        "transform": "translateY(-100%)"
+       }
+      ],
+      "first": 158,
+      "last": 248,
+      "playState": "running"
+     },
+     {
+      "kind": "waapi",
+      "name": "motion:digit-roll",
+      "target": "span",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 80,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.spring-snappy",
+      "fill": "none",
+      "kf": [
+       {
+        "opacity": "0",
+        "transform": "translateY(100%)"
+       },
+       {
+        "opacity": "1",
+        "transform": "none"
+       }
+      ],
+      "first": 158,
+      "last": 248,
+      "playState": "running"
+     },
+     {
+      "kind": "waapi",
+      "name": "motion:digit-roll-out",
+      "target": "span",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 80,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.spring-snappy",
+      "fill": "both",
+      "kf": [
+       {
+        "opacity": "1",
+        "transform": "none"
+       },
+       {
+        "opacity": "0",
+        "transform": "translateY(-100%)"
+       }
+      ],
+      "first": 158,
+      "last": 248,
+      "playState": "running"
+     },
+     {
+      "kind": "waapi",
+      "name": "motion:digit-roll",
+      "target": "span",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 80,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.spring-snappy",
+      "fill": "none",
+      "kf": [
+       {
+        "opacity": "0",
+        "transform": "translateY(100%)"
+       },
+       {
+        "opacity": "1",
+        "transform": "none"
+       }
+      ],
+      "first": 158,
+      "last": 248,
+      "playState": "running"
+     },
+     {
+      "kind": "waapi",
+      "name": "motion:digit-roll-out",
+      "target": "span",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 80,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.spring-snappy",
+      "fill": "both",
+      "kf": [
+       {
+        "opacity": "1",
+        "transform": "none"
+       },
+       {
+        "opacity": "0",
+        "transform": "translateY(-100%)"
+       }
+      ],
+      "first": 158,
+      "last": 248,
+      "playState": "running"
+     },
+     {
+      "kind": "waapi",
+      "name": "motion:indicator-answer",
+      "target": "span[label]",
+      "props": [
+       "transform"
+      ],
+      "duration": 120,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.spring-bouncy",
+      "composite": "add",
+      "fill": "auto",
+      "kf": [
+       {
+        "transform": "scale(0.97)"
+       },
+       {
+        "transform": "none"
+       }
+      ],
+      "first": 158,
+      "last": 297,
+      "playState": "running"
+     },
+     {
+      "kind": "waapi",
+      "name": "motion:digit-roll",
+      "target": "span",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 80,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.spring-snappy",
+      "fill": "none",
+      "kf": [
+       {
+        "opacity": "0",
+        "transform": "translateY(100%)"
+       },
+       {
+        "opacity": "1",
+        "transform": "none"
+       }
+      ],
+      "first": 158,
+      "last": 248,
+      "playState": "running"
+     },
+     {
+      "kind": "waapi",
+      "name": "motion:digit-roll-out",
+      "target": "span",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 80,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.spring-snappy",
+      "fill": "both",
+      "kf": [
+       {
+        "opacity": "1",
+        "transform": "none"
+       },
+       {
+        "opacity": "0",
+        "transform": "translateY(-100%)"
+       }
+      ],
+      "first": 158,
+      "last": 248,
+      "playState": "running"
+     },
+     {
+      "kind": "waapi",
+      "name": "motion:digit-roll",
+      "target": "span",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 80,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.spring-snappy",
+      "fill": "backwards",
+      "kf": [
+       {
+        "opacity": "0",
+        "transform": "translateY(100%)"
+       },
+       {
+        "opacity": "1",
+        "transform": "none"
+       }
+      ],
+      "first": 158,
+      "last": 248,
+      "playState": "running"
+     }
+    ],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 120,
+    "infinite": [],
+    "stateAt": 158,
+    "firstMotionAt": 158,
+    "focusAfter": "button[button]",
+    "frames": 81,
+    "animCount": 19
+   },
+   "rapid": {
+    "left": [],
+    "held": [],
+    "inline": [
+     "span display: inline-block; transform-origin: 50% 50%;",
+     "span display: inline-block; transform-origin: 50% 50%;",
+     "span display: inline-block; transform-origin: 50% 50%;"
+    ],
+    "ghosts": 0,
+    "nodes": 114,
+    "indicators": "0 ok",
+    "custom": [
+     {
+      "label": "Page 20",
+      "shown": "20",
+      "slots": "1=1 19=19 20=20 21=21 25=25"
+     },
+     {
+      "label": "Page 20",
+      "shown": "20",
+      "slots": "1=1 18=185 19=196 20=20 21=21 22=22 120=120"
+     }
+    ],
+    "nodesBefore": 110
+   },
+   "interrupt": {
+    "left": [],
+    "held": [],
+    "inline": [
+     "span display: inline-block; transform-origin: 50% 50%;",
+     "span display: inline-block; transform-origin: 50% 50%;",
+     "span display: inline-block; transform-origin: 50% 50%;"
+    ],
+    "ghosts": 0,
+    "nodes": 116,
+    "indicators": "0 ok",
+    "custom": [
+     {
+      "label": "Page 22",
+      "shown": "22",
+      "slots": "1=1 21=21 22=22 23=23 24=24 25=25"
+     },
+     {
+      "label": "Page 22",
+      "shown": "2926",
+      "slots": "1=1 20=20 21=2815 22=2926 23=230 24=241 120=120"
+     }
+    ]
+   },
+   "tenFast": {
+    "before": [
+     {
+      "label": "Page 22",
+      "shown": "22",
+      "slots": "1=1 21=21 22=22 23=23 24=24 25=25"
+     },
+     {
+      "label": "Page 22",
+      "shown": "2926",
+      "slots": "1=1 20=20 21=2815 22=2926 23=230 24=241 120=120"
+     }
+    ],
+    "after": [
+     {
+      "label": "Page 25",
+      "shown": "25",
+      "slots": "1=1 21=21 22=22 23=23 24=24 25=25"
+     },
+     {
+      "label": "Page 25",
+      "shown": "242541",
+      "slots": "1=1 23=293229026 24=2432130 25=242541 26=265 27=27 120=120"
+     }
+    ],
+    "rest": {
+     "left": [],
+     "held": [],
+     "inline": [
+      "span display: inline-block; transform-origin: 50% 50%;",
+      "span display: inline-block; transform-origin: 50% 50%;",
+      "span display: inline-block; transform-origin: 50% 50%;",
+      "span display: inline-block; transform-origin: 50% 50%;",
+      "span display: inline-block; transform-origin: 50% 50%;",
+      "span display: inline-block; transform-origin: 50% 50%;",
+      "span display: inline-block; transform-origin: 50% 50%;",
+      "span display: inline-block; transform-origin: 50% 50%;",
+      "span display: inline-block; transform-origin: 50% 50%;",
+      "span display: inline-block; transform-origin: 50% 50%;"
+     ]
+    },
+    "motionStarts": [
+     99,
+     303,
+     624
+    ],
+    "windowMs": 300
+   },
+   "off": null,
+   "full.rtl": {
+    "anims": [
+     {
+      "kind": "transition",
+      "name": "transform",
+      "target": "span[end]",
+      "props": [
+       "transform"
+      ],
+      "duration": 80,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.spring-snappy",
+      "fill": "backwards",
+      "first": 380,
+      "last": 497,
+      "playState": "running"
+     },
+     {
+      "kind": "waapi",
+      "name": "motion:digit-roll",
+      "target": "span",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 80,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.spring-snappy",
+      "fill": "none",
+      "first": 380,
+      "last": 497,
+      "playState": "running"
+     },
+     {
+      "kind": "waapi",
+      "name": "motion:digit-roll-out",
+      "target": "span",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 80,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.spring-snappy",
+      "fill": "both",
+      "first": 380,
+      "last": 497,
+      "playState": "running"
+     },
+     {
+      "kind": "waapi",
+      "name": "motion:digit-roll",
+      "target": "span",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 80,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.spring-snappy",
+      "fill": "backwards",
+      "first": 380,
+      "last": 497,
+      "playState": "running"
+     },
+     {
+      "kind": "waapi",
+      "name": "motion:digit-roll",
+      "target": "span",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 80,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.spring-snappy",
+      "fill": "none",
+      "first": 380,
+      "last": 497,
+      "playState": "running"
+     },
+     {
+      "kind": "waapi",
+      "name": "motion:digit-roll-out",
+      "target": "span",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 80,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.spring-snappy",
+      "fill": "both",
+      "first": 380,
+      "last": 497,
+      "playState": "running"
+     },
+     {
+      "kind": "waapi",
+      "name": "motion:digit-roll",
+      "target": "span",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 80,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.spring-snappy",
+      "fill": "backwards",
+      "first": 380,
+      "last": 497,
+      "playState": "running"
+     },
+     {
+      "kind": "waapi",
+      "name": "motion:digit-roll",
+      "target": "span",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 80,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.spring-snappy",
+      "fill": "none",
+      "first": 380,
+      "last": 497,
+      "playState": "running"
+     }
+    ],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 120,
+    "infinite": [],
+    "stateAt": 380,
+    "firstMotionAt": 380,
+    "focusAfter": "button[button]",
+    "frames": 57,
+    "animCount": 25,
+    "rapid": {
+     "left": [],
+     "held": [],
+     "inline": [
+      "span display: inline-block; transform-origin: 50% 50%;",
+      "span display: inline-block; transform-origin: 50% 50%;",
+      "span display: inline-block; transform-origin: 50% 50%;",
+      "span display: inline-block; transform-origin: 50% 50%;",
+      "span display: inline-block; transform-origin: 50% 50%;",
+      "span display: inline-block; transform-origin: 50% 50%;",
+      "span display: inline-block; transform-origin: 50% 50%;",
+      "span display: inline-block; transform-origin: 50% 50%;",
+      "span display: inline-block; transform-origin: 50% 50%;",
+      "span display: inline-block; transform-origin: 50% 50%;"
+     ],
+     "ghosts": 0,
+     "nodes": 114,
+     "indicators": "0 ok",
+     "custom": [
+      {
+       "label": "صفحة 17",
+       "shown": "17",
+       "slots": "صفحة 1=1 صفحة 16=16 صفحة 17=17 صفحة 18=18 صفحة 25=25"
+      },
+      {
+       "label": "صفحة 17",
+       "shown": "17",
+       "slots": "صفحة 1=1 صفحة 15=152 صفحة 16=163 صفحة 17=17 صفحة 18=18 صفحة 19=19 صفحة 120=120"
+      }
+     ],
+     "nodesBefore": 108
+    }
+   },
+   "media.ltr": {
+    "anims": [],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 0,
+    "infinite": [],
+    "stateAt": 117,
+    "firstMotionAt": null,
+    "focusAfter": "button[button]",
+    "frames": 70,
+    "animCount": 0,
+    "restOffTransforms": []
+   },
+   "media.rtl": {
+    "anims": [],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 0,
+    "infinite": [],
+    "stateAt": 136,
+    "firstMotionAt": null,
+    "focusAfter": "button[button]",
+    "frames": 73,
+    "animCount": 0,
+    "restOffTransforms": []
+   },
+   "attr.ltr": {
+    "anims": [],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 0,
+    "infinite": [],
+    "stateAt": 113,
+    "firstMotionAt": null,
+    "focusAfter": "button[button]",
+    "frames": 72,
+    "animCount": 0,
+    "restOffTransforms": []
+   },
+   "attr.rtl": {
+    "anims": [],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 0,
+    "infinite": [],
+    "stateAt": 117,
+    "firstMotionAt": null,
+    "focusAfter": "button[button]",
+    "frames": 67,
+    "animCount": 0,
+    "restOffTransforms": []
+   }
+  },
+  "desk": {
+   "focus": {
+    "at0": {
+     "el": "button[first]",
+     "outline": "solid 2px rgba(0, 0, 0, 0)",
+     "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgb(244, 244, 245) 0px 0px 0px 2px",
+     "focusVisible": true,
+     "opacity": 1,
+     "anims": []
+    },
+    "at300": {
+     "el": "button[first]",
+     "outline": "solid 2px rgba(0, 0, 0, 0)",
+     "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgb(244, 244, 245) 0px 0px 0px 2px",
+     "focusVisible": true,
+     "opacity": 1,
+     "anims": []
+    },
+    "ringAtOnce": true
+   },
+   "transitionSweep": [],
+   "seek": {
+    "animations": 26,
+    "startOffsets": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "hit": {
+     "checked": 19,
+     "missed": [],
+     "maxShift": 0
+    },
+    "parts": [
+     {
+      "part": "span[label]",
+      "scale": [
+       0.9,
+       1.024
+      ],
+      "travelPx": 28,
+      "opacityMin": 1,
+      "scaleOvershoot": 0.1,
+      "travelOvershootPx": 0,
+      "movesUntil": 600
+     },
+     {
+      "part": "span[end]",
+      "scale": [
+       1,
+       1
+      ],
+      "travelPx": 3,
+      "opacityMin": 1,
+      "scaleOvershoot": 0,
+      "travelOvershootPx": 0.3,
+      "movesUntil": 60
+     },
+     {
+      "part": "span",
+      "scale": [
+       1,
+       1
+      ],
+      "travelPx": 15.3,
+      "opacityMin": 0,
+      "scaleOvershoot": 0,
+      "travelOvershootPx": 15.3,
+      "movesUntil": 600
+     }
+    ],
+    "readable": []
+   },
+   "transitionSweepAfter": [],
+   "full": {
+    "anims": [
+     {
+      "kind": "waapi",
+      "name": "motion:digit-roll",
+      "target": "span",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 300,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.spring-snappy",
+      "fill": "none",
+      "kf": [
+       {
+        "opacity": "0",
+        "transform": "translateY(100%)"
+       },
+       {
+        "opacity": "1",
+        "transform": "none"
+       }
+      ],
+      "first": 146,
+      "last": 430,
+      "playState": "running"
+     },
+     {
+      "kind": "waapi",
+      "name": "motion:digit-roll-out",
+      "target": "span",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 300,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.spring-snappy",
+      "fill": "both",
+      "kf": [
+       {
+        "opacity": "1",
+        "transform": "none"
+       },
+       {
+        "opacity": "0",
+        "transform": "translateY(-100%)"
+       }
+      ],
+      "first": 146,
+      "last": 430,
+      "playState": "running"
+     },
+     {
+      "kind": "waapi",
+      "name": "motion:digit-roll",
+      "target": "span",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 300,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.spring-snappy",
+      "fill": "none",
+      "kf": [
+       {
+        "opacity": "0",
+        "transform": "translateY(100%)"
+       },
+       {
+        "opacity": "1",
+        "transform": "none"
+       }
+      ],
+      "first": 146,
+      "last": 430,
+      "playState": "running"
+     },
+     {
+      "kind": "waapi",
+      "name": "motion:digit-roll-out",
+      "target": "span",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 300,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.spring-snappy",
+      "fill": "both",
+      "kf": [
+       {
+        "opacity": "1",
+        "transform": "none"
+       },
+       {
+        "opacity": "0",
+        "transform": "translateY(-100%)"
+       }
+      ],
+      "first": 146,
+      "last": 430,
+      "playState": "running"
+     },
+     {
+      "kind": "waapi",
+      "name": "motion:digit-roll",
+      "target": "span",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 300,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.spring-snappy",
+      "fill": "none",
+      "kf": [
+       {
+        "opacity": "0",
+        "transform": "translateY(100%)"
+       },
+       {
+        "opacity": "1",
+        "transform": "none"
+       }
+      ],
+      "first": 146,
+      "last": 430,
+      "playState": "running"
+     },
+     {
+      "kind": "waapi",
+      "name": "motion:digit-roll-out",
+      "target": "span",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 300,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.spring-snappy",
+      "fill": "both",
+      "kf": [
+       {
+        "opacity": "1",
+        "transform": "none"
+       },
+       {
+        "opacity": "0",
+        "transform": "translateY(-100%)"
+       }
+      ],
+      "first": 146,
+      "last": 430,
+      "playState": "running"
+     },
+     {
+      "kind": "waapi",
+      "name": "motion:indicator-answer",
+      "target": "span[label]",
+      "props": [
+       "transform"
+      ],
+      "duration": 440,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.spring-bouncy",
+      "composite": "add",
+      "fill": "auto",
+      "kf": [
+       {
+        "transform": "scale(0.9)"
+       },
+       {
+        "transform": "none"
+       }
+      ],
+      "first": 146,
+      "last": 579,
+      "playState": "running"
+     },
+     {
+      "kind": "waapi",
+      "name": "motion:digit-roll",
+      "target": "span",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 300,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.spring-snappy",
+      "fill": "none",
+      "kf": [
+       {
+        "opacity": "0",
+        "transform": "translateY(100%)"
+       },
+       {
+        "opacity": "1",
+        "transform": "none"
+       }
+      ],
+      "first": 146,
+      "last": 430,
+      "playState": "running"
+     },
+     {
+      "kind": "waapi",
+      "name": "motion:digit-roll-out",
+      "target": "span",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 300,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.spring-snappy",
+      "fill": "both",
+      "kf": [
+       {
+        "opacity": "1",
+        "transform": "none"
+       },
+       {
+        "opacity": "0",
+        "transform": "translateY(-100%)"
+       }
+      ],
+      "first": 146,
+      "last": 430,
+      "playState": "running"
+     },
+     {
+      "kind": "waapi",
+      "name": "motion:digit-roll",
+      "target": "span",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 300,
+      "delay": 45,
+      "iterations": 1,
+      "easing": "ease.spring-snappy",
+      "fill": "backwards",
+      "kf": [
+       {
+        "opacity": "0",
+        "transform": "translateY(100%)"
+       },
+       {
+        "opacity": "1",
+        "transform": "none"
+       }
+      ],
+      "first": 146,
+      "last": 482,
+      "playState": "running"
+     }
+    ],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 440,
+    "infinite": [],
+    "stateAt": 146,
+    "firstMotionAt": 146,
+    "focusAfter": "button[button]",
+    "frames": 81,
+    "animCount": 19
+   },
+   "rapid": {
+    "left": [],
+    "held": [],
+    "inline": [
+     "span display: inline-block; transform-origin: 50% 50%;",
+     "span display: inline-block; transform-origin: 50% 50%;",
+     "span display: inline-block; transform-origin: 50% 50%;"
+    ],
+    "ghosts": 0,
+    "nodes": 114,
+    "indicators": "0 ok",
+    "custom": [
+     {
+      "label": "Page 20",
+      "shown": "20",
+      "slots": "1=1 19=19 20=20 21=21 25=25"
+     },
+     {
+      "label": "Page 20",
+      "shown": "20",
+      "slots": "1=1 18=185 19=196 20=20 21=21 22=22 120=120"
+     }
+    ],
+    "nodesBefore": 110
+   },
+   "interrupt": {
+    "left": [],
+    "held": [],
+    "inline": [
+     "span display: inline-block; transform-origin: 50% 50%;",
+     "span display: inline-block; transform-origin: 50% 50%;",
+     "span display: inline-block; transform-origin: 50% 50%;"
+    ],
+    "ghosts": 0,
+    "nodes": 116,
+    "indicators": "0 ok",
+    "custom": [
+     {
+      "label": "Page 22",
+      "shown": "22",
+      "slots": "1=1 21=21 22=22 23=23 24=24 25=25"
+     },
+     {
+      "label": "Page 22",
+      "shown": "2926",
+      "slots": "1=1 20=20 21=2815 22=2926 23=230 24=241 120=120"
+     }
+    ]
+   },
+   "tenFast": {
+    "before": [
+     {
+      "label": "Page 22",
+      "shown": "22",
+      "slots": "1=1 21=21 22=22 23=23 24=24 25=25"
+     },
+     {
+      "label": "Page 22",
+      "shown": "2926",
+      "slots": "1=1 20=20 21=2815 22=2926 23=230 24=241 120=120"
+     }
+    ],
+    "after": [
+     {
+      "label": "Page 25",
+      "shown": "25",
+      "slots": "1=1 21=21 22=22 23=23 24=24 25=25"
+     },
+     {
+      "label": "Page 25",
+      "shown": "242541",
+      "slots": "1=1 23=293229026 24=2432130 25=242541 26=265 27=27 120=120"
+     }
+    ],
+    "rest": {
+     "left": [],
+     "held": [],
+     "inline": [
+      "span display: inline-block; transform-origin: 50% 50%;",
+      "span display: inline-block; transform-origin: 50% 50%;",
+      "span display: inline-block; transform-origin: 50% 50%;",
+      "span display: inline-block; transform-origin: 50% 50%;",
+      "span display: inline-block; transform-origin: 50% 50%;",
+      "span display: inline-block; transform-origin: 50% 50%;",
+      "span display: inline-block; transform-origin: 50% 50%;",
+      "span display: inline-block; transform-origin: 50% 50%;",
+      "span display: inline-block; transform-origin: 50% 50%;",
+      "span display: inline-block; transform-origin: 50% 50%;"
+     ]
+    },
+    "motionStarts": [
+     82,
+     274,
+     412
+    ],
+    "windowMs": 300
+   },
+   "off": null,
+   "full.rtl": {
+    "anims": [
+     {
+      "kind": "transition",
+      "name": "transform",
+      "target": "span[label]",
+      "props": [
+       "transform"
+      ],
+      "duration": 300,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.reveal",
+      "fill": "backwards",
+      "first": 172,
+      "last": 460,
+      "playState": "running"
+     },
+     {
+      "kind": "transition",
+      "name": "transform",
+      "target": "span[end]",
+      "props": [
+       "transform"
+      ],
+      "duration": 300,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.spring-snappy",
+      "fill": "backwards",
+      "first": 172,
+      "last": 460,
+      "playState": "running"
+     },
+     {
+      "kind": "waapi",
+      "name": "motion:digit-roll",
+      "target": "span",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 300,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.spring-snappy",
+      "fill": "none",
+      "first": 172,
+      "last": 460,
+      "playState": "running"
+     },
+     {
+      "kind": "waapi",
+      "name": "motion:digit-roll-out",
+      "target": "span",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 300,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.spring-snappy",
+      "fill": "both",
+      "first": 172,
+      "last": 460,
+      "playState": "running"
+     },
+     {
+      "kind": "waapi",
+      "name": "motion:digit-roll",
+      "target": "span",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 300,
+      "delay": 45,
+      "iterations": 1,
+      "easing": "ease.spring-snappy",
+      "fill": "backwards",
+      "first": 172,
+      "last": 511,
+      "playState": "running"
+     },
+     {
+      "kind": "waapi",
+      "name": "motion:digit-roll",
+      "target": "span",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 300,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.spring-snappy",
+      "fill": "none",
+      "first": 172,
+      "last": 460,
+      "playState": "running"
+     },
+     {
+      "kind": "waapi",
+      "name": "motion:digit-roll-out",
+      "target": "span",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 300,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.spring-snappy",
+      "fill": "both",
+      "first": 172,
+      "last": 460,
+      "playState": "running"
+     },
+     {
+      "kind": "waapi",
+      "name": "motion:digit-roll",
+      "target": "span",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 300,
+      "delay": 45,
+      "iterations": 1,
+      "easing": "ease.spring-snappy",
+      "fill": "backwards",
+      "first": 172,
+      "last": 511,
+      "playState": "running"
+     }
+    ],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 440,
+    "infinite": [],
+    "stateAt": 172,
+    "firstMotionAt": 172,
+    "focusAfter": "button[button]",
+    "frames": 66,
+    "animCount": 26,
+    "rapid": {
+     "left": [],
+     "held": [],
+     "inline": [
+      "span display: inline-block; transform-origin: 50% 50%;",
+      "span display: inline-block; transform-origin: 50% 50%;",
+      "span display: inline-block; transform-origin: 50% 50%;",
+      "span display: inline-block; transform-origin: 50% 50%;",
+      "span display: inline-block; transform-origin: 50% 50%;",
+      "span display: inline-block; transform-origin: 50% 50%;",
+      "span display: inline-block; transform-origin: 50% 50%;",
+      "span display: inline-block; transform-origin: 50% 50%;",
+      "span display: inline-block; transform-origin: 50% 50%;",
+      "span display: inline-block; transform-origin: 50% 50%;"
+     ],
+     "ghosts": 0,
+     "nodes": 114,
+     "indicators": "0 ok",
+     "custom": [
+      {
+       "label": "صفحة 17",
+       "shown": "17",
+       "slots": "صفحة 1=1 صفحة 16=16 صفحة 17=17 صفحة 18=18 صفحة 25=25"
+      },
+      {
+       "label": "صفحة 17",
+       "shown": "17",
+       "slots": "صفحة 1=1 صفحة 15=152 صفحة 16=163 صفحة 17=17 صفحة 18=18 صفحة 19=19 صفحة 120=120"
+      }
+     ],
+     "nodesBefore": 108
+    }
+   },
+   "media.ltr": {
+    "anims": [],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 0,
+    "infinite": [],
+    "stateAt": 166,
+    "firstMotionAt": null,
+    "focusAfter": "button[button]",
+    "frames": 71,
+    "animCount": 0,
+    "restOffTransforms": []
+   },
+   "media.rtl": {
+    "anims": [],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 0,
+    "infinite": [],
+    "stateAt": 152,
+    "firstMotionAt": null,
+    "focusAfter": "button[button]",
+    "frames": 70,
+    "animCount": 0,
+    "restOffTransforms": []
+   },
+   "attr.ltr": {
+    "anims": [],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 0,
+    "infinite": [],
+    "stateAt": 116,
+    "firstMotionAt": null,
+    "focusAfter": "button[button]",
+    "frames": 64,
+    "animCount": 0,
+    "restOffTransforms": []
+   },
+   "attr.rtl": {
+    "anims": [],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 0,
+    "infinite": [],
+    "stateAt": 129,
+    "firstMotionAt": null,
+    "focusAfter": "button[button]",
+    "frames": 67,
+    "animCount": 0,
+    "restOffTransforms": []
+   }
+  },
+  "neutral": {
+   "focus": {
+    "at0": {
+     "el": "button[first]",
+     "outline": "solid 2px rgba(0, 0, 0, 0)",
+     "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgb(255, 255, 255) 0px 0px 0px 2px, rgb(37, 99, 235) 0px 0px 0px 4px",
+     "focusVisible": true,
+     "opacity": 1,
+     "anims": []
+    },
+    "at300": {
+     "el": "button[first]",
+     "outline": "solid 2px rgba(0, 0, 0, 0)",
+     "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgb(255, 255, 255) 0px 0px 0px 2px, rgb(37, 99, 235) 0px 0px 0px 4px",
+     "focusVisible": true,
+     "opacity": 1,
+     "anims": []
+    },
+    "ringAtOnce": true
+   },
+   "transitionSweep": [],
+   "seek": {
+    "animations": 25,
+    "startOffsets": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "hit": {
+     "checked": 19,
+     "missed": [],
+     "maxShift": 0
+    },
+    "parts": [
+     {
+      "part": "span[end]",
+      "scale": [
+       1,
+       1
+      ],
+      "travelPx": 2,
+      "opacityMin": 1,
+      "scaleOvershoot": 0,
+      "travelOvershootPx": 0,
+      "movesUntil": 60
+     },
+     {
+      "part": "span",
+      "scale": [
+       1,
+       1
+      ],
+      "travelPx": 31.2,
+      "opacityMin": 0,
+      "scaleOvershoot": 0,
+      "travelOvershootPx": 0.2,
+      "movesUntil": 600
+     },
+     {
+      "part": "span[label]",
+      "scale": [
+       0.95,
+       1.003
+      ],
+      "travelPx": 0,
+      "opacityMin": 1,
+      "scaleOvershoot": 0.003,
+      "travelOvershootPx": 0,
+      "movesUntil": 80
+     }
+    ],
+    "readable": []
+   },
+   "transitionSweepAfter": [],
+   "full": {
+    "anims": [
+     {
+      "kind": "waapi",
+      "name": "motion:digit-roll",
+      "target": "span",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 180,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.spring-snappy",
+      "fill": "none",
+      "kf": [
+       {
+        "opacity": "0",
+        "transform": "translateY(100%)"
+       },
+       {
+        "opacity": "1",
+        "transform": "none"
+       }
+      ],
+      "first": 372,
+      "last": 572,
+      "playState": "running"
+     },
+     {
+      "kind": "waapi",
+      "name": "motion:digit-roll-out",
+      "target": "span",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 180,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.spring-snappy",
+      "fill": "both",
+      "kf": [
+       {
+        "opacity": "1",
+        "transform": "none"
+       },
+       {
+        "opacity": "0",
+        "transform": "translateY(-100%)"
+       }
+      ],
+      "first": 372,
+      "last": 572,
+      "playState": "running"
+     },
+     {
+      "kind": "waapi",
+      "name": "motion:digit-roll",
+      "target": "span",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 180,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.spring-snappy",
+      "fill": "none",
+      "kf": [
+       {
+        "opacity": "0",
+        "transform": "translateY(100%)"
+       },
+       {
+        "opacity": "1",
+        "transform": "none"
+       }
+      ],
+      "first": 372,
+      "last": 572,
+      "playState": "running"
+     },
+     {
+      "kind": "waapi",
+      "name": "motion:digit-roll-out",
+      "target": "span",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 180,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.spring-snappy",
+      "fill": "both",
+      "kf": [
+       {
+        "opacity": "1",
+        "transform": "none"
+       },
+       {
+        "opacity": "0",
+        "transform": "translateY(-100%)"
+       }
+      ],
+      "first": 372,
+      "last": 572,
+      "playState": "running"
+     },
+     {
+      "kind": "waapi",
+      "name": "motion:digit-roll",
+      "target": "span",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 180,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.spring-snappy",
+      "fill": "none",
+      "kf": [
+       {
+        "opacity": "0",
+        "transform": "translateY(100%)"
+       },
+       {
+        "opacity": "1",
+        "transform": "none"
+       }
+      ],
+      "first": 372,
+      "last": 572,
+      "playState": "running"
+     },
+     {
+      "kind": "waapi",
+      "name": "motion:digit-roll-out",
+      "target": "span",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 180,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.spring-snappy",
+      "fill": "both",
+      "kf": [
+       {
+        "opacity": "1",
+        "transform": "none"
+       },
+       {
+        "opacity": "0",
+        "transform": "translateY(-100%)"
+       }
+      ],
+      "first": 372,
+      "last": 572,
+      "playState": "running"
+     },
+     {
+      "kind": "waapi",
+      "name": "motion:indicator-answer",
+      "target": "span[label]",
+      "props": [
+       "transform"
+      ],
+      "duration": 220,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.spring-bouncy",
+      "composite": "add",
+      "fill": "auto",
+      "kf": [
+       {
+        "transform": "scale(0.95)"
+       },
+       {
+        "transform": "none"
+       }
+      ],
+      "first": 372,
+      "last": 622,
+      "playState": "running"
+     },
+     {
+      "kind": "waapi",
+      "name": "motion:digit-roll",
+      "target": "span",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 180,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.spring-snappy",
+      "fill": "none",
+      "kf": [
+       {
+        "opacity": "0",
+        "transform": "translateY(100%)"
+       },
+       {
+        "opacity": "1",
+        "transform": "none"
+       }
+      ],
+      "first": 372,
+      "last": 572,
+      "playState": "running"
+     },
+     {
+      "kind": "waapi",
+      "name": "motion:digit-roll-out",
+      "target": "span",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 180,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.spring-snappy",
+      "fill": "both",
+      "kf": [
+       {
+        "opacity": "1",
+        "transform": "none"
+       },
+       {
+        "opacity": "0",
+        "transform": "translateY(-100%)"
+       }
+      ],
+      "first": 372,
+      "last": 572,
+      "playState": "running"
+     },
+     {
+      "kind": "waapi",
+      "name": "motion:digit-roll",
+      "target": "span",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 180,
+      "delay": 24,
+      "iterations": 1,
+      "easing": "ease.spring-snappy",
+      "fill": "backwards",
+      "kf": [
+       {
+        "opacity": "0",
+        "transform": "translateY(100%)"
+       },
+       {
+        "opacity": "1",
+        "transform": "none"
+       }
+      ],
+      "first": 372,
+      "last": 609,
+      "playState": "running"
+     }
+    ],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 220,
+    "infinite": [],
+    "stateAt": 372,
+    "firstMotionAt": 372,
+    "focusAfter": "button[button]",
+    "frames": 79,
+    "animCount": 19
+   },
+   "rapid": {
+    "left": [],
+    "held": [],
+    "inline": [
+     "span display: inline-block; transform-origin: 50% 50%;",
+     "span display: inline-block; transform-origin: 50% 50%;",
+     "span display: inline-block; transform-origin: 50% 50%;"
+    ],
+    "ghosts": 0,
+    "nodes": 116,
+    "indicators": "0 ok",
+    "custom": [
+     {
+      "label": "Page 20",
+      "shown": "20",
+      "slots": "1=1 19=19 20=20 21=21 25=25"
+     },
+     {
+      "label": "Page 20",
+      "shown": "20",
+      "slots": "1=1 18=185 19=196 20=20 21=21 22=22 120=120"
+     }
+    ],
+    "nodesBefore": 112
+   },
+   "interrupt": {
+    "left": [],
+    "held": [],
+    "inline": [
+     "span display: inline-block; transform-origin: 50% 50%;",
+     "span display: inline-block; transform-origin: 50% 50%;",
+     "span display: inline-block; transform-origin: 50% 50%;"
+    ],
+    "ghosts": 0,
+    "nodes": 118,
+    "indicators": "0 ok",
+    "custom": [
+     {
+      "label": "Page 22",
+      "shown": "22",
+      "slots": "1=1 21=21 22=22 23=23 24=24 25=25"
+     },
+     {
+      "label": "Page 22",
+      "shown": "2926",
+      "slots": "1=1 20=20 21=2815 22=2926 23=230 24=241 120=120"
+     }
+    ]
+   },
+   "tenFast": {
+    "before": [
+     {
+      "label": "Page 22",
+      "shown": "22",
+      "slots": "1=1 21=21 22=22 23=23 24=24 25=25"
+     },
+     {
+      "label": "Page 22",
+      "shown": "2926",
+      "slots": "1=1 20=20 21=2815 22=2926 23=230 24=241 120=120"
+     }
+    ],
+    "after": [
+     {
+      "label": "Page 25",
+      "shown": "25",
+      "slots": "1=1 21=21 22=22 23=23 24=24 25=25"
+     },
+     {
+      "label": "Page 25",
+      "shown": "242541",
+      "slots": "1=1 23=293229026 24=2432130 25=242541 26=265 27=27 120=120"
+     }
+    ],
+    "rest": {
+     "left": [],
+     "held": [],
+     "inline": [
+      "span display: inline-block; transform-origin: 50% 50%;",
+      "span display: inline-block; transform-origin: 50% 50%;",
+      "span display: inline-block; transform-origin: 50% 50%;",
+      "span display: inline-block; transform-origin: 50% 50%;",
+      "span display: inline-block; transform-origin: 50% 50%;",
+      "span display: inline-block; transform-origin: 50% 50%;",
+      "span display: inline-block; transform-origin: 50% 50%;",
+      "span display: inline-block; transform-origin: 50% 50%;",
+      "span display: inline-block; transform-origin: 50% 50%;",
+      "span display: inline-block; transform-origin: 50% 50%;"
+     ]
+    },
+    "motionStarts": [
+     223,
+     473,
+     649
+    ],
+    "windowMs": 300
+   },
+   "off": null,
+   "full.rtl": {
+    "anims": [
+     {
+      "kind": "transition",
+      "name": "transform",
+      "target": "span[end]",
+      "props": [
+       "transform"
+      ],
+      "duration": 180,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.spring-snappy",
+      "fill": "backwards",
+      "first": 171,
+      "last": 343,
+      "playState": "running"
+     },
+     {
+      "kind": "waapi",
+      "name": "motion:digit-roll",
+      "target": "span",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 180,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.spring-snappy",
+      "fill": "none",
+      "first": 171,
+      "last": 343,
+      "playState": "running"
+     },
+     {
+      "kind": "waapi",
+      "name": "motion:digit-roll-out",
+      "target": "span",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 180,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.spring-snappy",
+      "fill": "both",
+      "first": 171,
+      "last": 343,
+      "playState": "running"
+     },
+     {
+      "kind": "waapi",
+      "name": "motion:digit-roll",
+      "target": "span",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 180,
+      "delay": 24,
+      "iterations": 1,
+      "easing": "ease.spring-snappy",
+      "fill": "backwards",
+      "first": 171,
+      "last": 381,
+      "playState": "running"
+     },
+     {
+      "kind": "waapi",
+      "name": "motion:digit-roll",
+      "target": "span",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 180,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.spring-snappy",
+      "fill": "none",
+      "first": 171,
+      "last": 343,
+      "playState": "running"
+     },
+     {
+      "kind": "waapi",
+      "name": "motion:digit-roll-out",
+      "target": "span",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 180,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.spring-snappy",
+      "fill": "both",
+      "first": 171,
+      "last": 343,
+      "playState": "running"
+     },
+     {
+      "kind": "waapi",
+      "name": "motion:digit-roll",
+      "target": "span",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 180,
+      "delay": 24,
+      "iterations": 1,
+      "easing": "ease.spring-snappy",
+      "fill": "backwards",
+      "first": 171,
+      "last": 381,
+      "playState": "running"
+     },
+     {
+      "kind": "waapi",
+      "name": "motion:digit-roll",
+      "target": "span",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 180,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.spring-snappy",
+      "fill": "none",
+      "first": 171,
+      "last": 343,
+      "playState": "running"
+     }
+    ],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 220,
+    "infinite": [],
+    "stateAt": 171,
+    "firstMotionAt": 171,
+    "focusAfter": "button[button]",
+    "frames": 69,
+    "animCount": 25,
+    "rapid": {
+     "left": [],
+     "held": [],
+     "inline": [
+      "span display: inline-block; transform-origin: 50% 50%;",
+      "span display: inline-block; transform-origin: 50% 50%;",
+      "span display: inline-block; transform-origin: 50% 50%;",
+      "span display: inline-block; transform-origin: 50% 50%;",
+      "span display: inline-block; transform-origin: 50% 50%;",
+      "span display: inline-block; transform-origin: 50% 50%;",
+      "span display: inline-block; transform-origin: 50% 50%;",
+      "span display: inline-block; transform-origin: 50% 50%;",
+      "span display: inline-block; transform-origin: 50% 50%;",
+      "span display: inline-block; transform-origin: 50% 50%;"
+     ],
+     "ghosts": 0,
+     "nodes": 116,
+     "indicators": "0 ok",
+     "custom": [
+      {
+       "label": "صفحة 17",
+       "shown": "17",
+       "slots": "صفحة 1=1 صفحة 16=16 صفحة 17=17 صفحة 18=18 صفحة 25=25"
+      },
+      {
+       "label": "صفحة 17",
+       "shown": "17",
+       "slots": "صفحة 1=1 صفحة 15=152 صفحة 16=163 صفحة 17=17 صفحة 18=18 صفحة 19=19 صفحة 120=120"
+      }
+     ],
+     "nodesBefore": 110
+    }
+   },
+   "media.ltr": {
+    "anims": [],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 0,
+    "infinite": [],
+    "stateAt": 169,
+    "firstMotionAt": null,
+    "focusAfter": "button[button]",
+    "frames": 67,
+    "animCount": 0,
+    "restOffTransforms": []
+   },
+   "media.rtl": {
+    "anims": [],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 0,
+    "infinite": [],
+    "stateAt": 244,
+    "firstMotionAt": null,
+    "focusAfter": "button[button]",
+    "frames": 67,
+    "animCount": 0,
+    "restOffTransforms": []
+   },
+   "attr.ltr": {
+    "anims": [],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 0,
+    "infinite": [],
+    "stateAt": 88,
+    "firstMotionAt": null,
+    "focusAfter": "button[button]",
+    "frames": 73,
+    "animCount": 0,
+    "restOffTransforms": []
+   },
+   "attr.rtl": {
+    "anims": [],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 0,
+    "infinite": [],
+    "stateAt": 122,
+    "firstMotionAt": null,
+    "focusAfter": "button[button]",
+    "frames": 68,
+    "animCount": 0,
+    "restOffTransforms": []
+   }
+  }
+ },
+ "sheet": "pagination-roll.sheet.png",
+ "trimmed": "kf dropped from the RTL and reduced runs to stay under 60 KB"
+}

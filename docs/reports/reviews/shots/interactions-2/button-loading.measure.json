@@ -1,0 +1,1587 @@
+{
+ "id": "button-loading",
+ "family": "actions",
+ "drive": "waapi",
+ "pattern": "swap",
+ "reduced": "The label and the spinner cross fade over duration.base. The button does not move.",
+ "tokens": {
+  "studio": {
+   "delay-feedback": "2000ms",
+   "delay-stagger": "0ms",
+   "distance-enter": "4px",
+   "distance-lift": "0px",
+   "distance-nudge": "1px",
+   "distance-shift": "2px",
+   "duration-base": "120ms",
+   "duration-celebrate": "120ms",
+   "duration-fast": "80ms",
+   "duration-instant": "70ms",
+   "duration-medium": "140ms",
+   "duration-moderate": "150ms",
+   "duration-morph": "100ms",
+   "duration-quick": "100ms",
+   "duration-roll": "0.3s",
+   "duration-slow": "180ms",
+   "duration-spin": "0.8s",
+   "duration-spring-bouncy": "120ms",
+   "duration-spring-snappy": "80ms",
+   "duration-spring-soft": "100ms",
+   "duration-zoom": "220ms",
+   "scale-anticipate": "0.97",
+   "scale-enter": "1",
+   "scale-lift": "1",
+   "scale-morph": "0.8",
+   "scale-pop": "1",
+   "scale-press": "0.97",
+   "scale-stretch": "1.08"
+  },
+  "desk": {
+   "delay-feedback": "2000ms",
+   "delay-stagger": "45ms",
+   "distance-enter": "12px",
+   "distance-lift": "4px",
+   "distance-nudge": "3px",
+   "distance-shift": "6px",
+   "duration-base": "120ms",
+   "duration-celebrate": "480ms",
+   "duration-fast": "80ms",
+   "duration-instant": "70ms",
+   "duration-medium": "140ms",
+   "duration-moderate": "150ms",
+   "duration-morph": "320ms",
+   "duration-quick": "100ms",
+   "duration-roll": "0.3s",
+   "duration-slow": "180ms",
+   "duration-spin": "0.8s",
+   "duration-spring-bouncy": "440ms",
+   "duration-spring-snappy": "300ms",
+   "duration-spring-soft": "340ms",
+   "duration-zoom": "220ms",
+   "scale-anticipate": "0.9",
+   "scale-enter": "0.9",
+   "scale-lift": "1.03",
+   "scale-morph": "0.3",
+   "scale-pop": "1.14",
+   "scale-press": "0.97",
+   "scale-stretch": "1.3"
+  },
+  "neutral": {
+   "delay-feedback": "2000ms",
+   "delay-stagger": "24ms",
+   "distance-enter": "6px",
+   "distance-lift": "2px",
+   "distance-nudge": "2px",
+   "distance-shift": "4px",
+   "duration-base": "150ms",
+   "duration-celebrate": "220ms",
+   "duration-fast": "80ms",
+   "duration-instant": "70ms",
+   "duration-medium": "180ms",
+   "duration-moderate": "150ms",
+   "duration-morph": "200ms",
+   "duration-quick": "100ms",
+   "duration-roll": "0.3s",
+   "duration-slow": "180ms",
+   "duration-spin": "0.8s",
+   "duration-spring-bouncy": "220ms",
+   "duration-spring-snappy": "180ms",
+   "duration-spring-soft": "220ms",
+   "duration-zoom": "220ms",
+   "scale-anticipate": "0.95",
+   "scale-enter": "0.97",
+   "scale-lift": "1.01",
+   "scale-morph": "0.5",
+   "scale-pop": "1.05",
+   "scale-press": "0.97",
+   "scale-stretch": "1.15"
+  }
+ },
+ "runs": [
+  {
+   "style": "studio",
+   "dir": "ltr",
+   "motion": "full",
+   "state": "null/false/w267 -> null/false/w267",
+   "stateAt": 105,
+   "firstMotionAt": 105,
+   "events": "pointerdown@88 focusin@89 pointerup@90 click@90",
+   "longest": 120,
+   "movers": 7,
+   "badProps": [],
+   "infinite": [
+    "button>span[spinner] ds-button-spin",
+    "button>span[spinner] ds-button-spin"
+   ],
+   "anims": [
+    {
+     "target": "button>span[label]",
+     "kind": "Transition",
+     "props": "opacity",
+     "dur": 80,
+     "durTok": "duration-fast|duration-spring-snappy",
+     "ease": "ease-default",
+     "kf": [
+      {
+       "offset": 0,
+       "opacity": "1"
+      },
+      {
+       "offset": 1,
+       "opacity": "0"
+      }
+     ],
+     "at": 105
+    },
+    {
+     "target": "button>span[spinner]",
+     "kind": "Animation",
+     "props": "transform",
+     "dur": 800,
+     "durTok": "duration-spin",
+     "ease": "linear",
+     "it": "inf",
+     "kf": [
+      {
+       "offset": 0,
+       "composite": "replace",
+       "transform": "none"
+      },
+      {
+       "offset": 1,
+       "transform": "rotate(360deg)"
+      }
+     ],
+     "at": 105,
+     "n": 2
+    },
+    {
+     "target": "button>span[label]",
+     "kind": "Animation",
+     "props": "opacity,transform",
+     "dur": 100,
+     "durTok": "duration-morph|duration-quick|duration-spring-soft",
+     "ease": "ease-exit",
+     "kf": [
+      {
+       "opacity": "1",
+       "transform": "none"
+      },
+      {
+       "opacity": "0",
+       "transform": "translateY(calc(-1 * var(--ds-distance-shift, 4px)))"
+      }
+     ],
+     "at": 105
+    },
+    {
+     "target": "button>span[spinner]",
+     "kind": "Animation",
+     "props": "opacity,transform",
+     "dur": 120,
+     "durTok": "duration-base|duration-celebrate|duration-spring-bouncy",
+     "ease": "steps(3)",
+     "kf": [
+      {
+       "opacity": "0",
+       "transform": "scale(var(--ds-scale-morph, 0.5))"
+      },
+      {
+       "opacity": "1",
+       "transform": "none"
+      }
+     ],
+     "at": 105
+    },
+    {
+     "target": "button[button]",
+     "kind": "Animation",
+     "props": "transform",
+     "dur": 80,
+     "durTok": "duration-fast|duration-spring-snappy",
+     "ease": "steps(2)",
+     "kf": [
+      {
+       "transform": "none"
+      },
+      {
+       "offset": 0.3,
+       "transform": "scale(var(--ds-scale-anticipate, 0.95))"
+      },
+      {
+       "transform": "none"
+      }
+     ],
+     "at": 105
+    },
+    {
+     "target": "button>span[spinner]",
+     "kind": "Animation",
+     "props": "opacity,transform",
+     "dur": 100,
+     "durTok": "duration-morph|duration-quick|duration-spring-soft",
+     "ease": "ease-exit",
+     "kf": [
+      {
+       "opacity": "1",
+       "transform": "none"
+      },
+      {
+       "opacity": "0",
+       "transform": "scale(var(--ds-scale-morph, 0.5))"
+      }
+     ],
+     "at": 1589
+    },
+    {
+     "target": "button>span[label]",
+     "kind": "Animation",
+     "props": "opacity,transform",
+     "dur": 100,
+     "durTok": "duration-morph|duration-quick|duration-spring-soft",
+     "ease": "ease-spring-soft",
+     "kf": [
+      {
+       "opacity": "0",
+       "transform": "translateY(calc(-1 * var(--ds-distance-shift, 4px)))"
+      },
+      {
+       "opacity": "1",
+       "transform": "none"
+      }
+     ],
+     "at": 1589
+    },
+    {
+     "target": "button>span[label]",
+     "kind": "Transition",
+     "props": "opacity",
+     "dur": 80,
+     "durTok": "duration-fast|duration-spring-snappy",
+     "ease": "ease-default",
+     "kf": [
+      {
+       "offset": 0,
+       "opacity": "0"
+      },
+      {
+       "offset": 1,
+       "opacity": "1"
+      }
+     ],
+     "at": 1741
+    }
+   ],
+   "end": {
+    "live": [],
+    "offRest": 0,
+    "offSample": [],
+    "nodes": 6
+   }
+  },
+  {
+   "style": "studio",
+   "dir": "ltr",
+   "motion": "media",
+   "state": "null/false/w267 -> null/false/w267",
+   "stateAt": 93,
+   "firstMotionAt": null,
+   "events": "pointerdown@84 focusin@86 pointerup@86 click@86",
+   "longest": 0,
+   "movers": 0,
+   "badProps": [],
+   "anims": [],
+   "end": {
+    "live": [],
+    "offRest": 0,
+    "offSample": [],
+    "nodes": 6
+   }
+  },
+  {
+   "style": "studio",
+   "dir": "ltr",
+   "motion": "attr",
+   "state": "null/false/w267 -> null/false/w267",
+   "stateAt": 74,
+   "firstMotionAt": null,
+   "events": "pointerdown@65 focusin@67 pointerup@67 click@68",
+   "longest": 0,
+   "movers": 0,
+   "badProps": [],
+   "anims": [],
+   "end": {
+    "live": [],
+    "offRest": 0,
+    "offSample": [],
+    "nodes": 6
+   }
+  },
+  {
+   "style": "studio",
+   "dir": "rtl",
+   "motion": "full",
+   "state": "null/false/w284 -> null/false/w284",
+   "stateAt": 61,
+   "firstMotionAt": 61,
+   "events": "pointerdown@46 focusin@47 pointerup@48 click@48",
+   "longest": 120,
+   "movers": 7,
+   "badProps": [],
+   "infinite": [
+    "button>span[spinner] ds-button-spin",
+    "button>span[spinner] ds-button-spin"
+   ],
+   "anims": [
+    {
+     "target": "button>span[label]",
+     "kind": "Transition",
+     "props": "opacity",
+     "dur": 80,
+     "durTok": "duration-fast|duration-spring-snappy",
+     "ease": "ease-default",
+     "kf": [
+      {
+       "offset": 0,
+       "opacity": "1"
+      },
+      {
+       "offset": 1,
+       "opacity": "0"
+      }
+     ],
+     "at": 61
+    },
+    {
+     "target": "button>span[spinner]",
+     "kind": "Animation",
+     "props": "transform",
+     "dur": 800,
+     "durTok": "duration-spin",
+     "ease": "linear",
+     "it": "inf",
+     "kf": [
+      {
+       "offset": 0,
+       "composite": "replace",
+       "transform": "none"
+      },
+      {
+       "offset": 1,
+       "transform": "rotate(360deg)"
+      }
+     ],
+     "at": 61,
+     "n": 2
+    },
+    {
+     "target": "button>span[label]",
+     "kind": "Animation",
+     "props": "opacity,transform",
+     "dur": 100,
+     "durTok": "duration-morph|duration-quick|duration-spring-soft",
+     "ease": "ease-exit",
+     "kf": [
+      {
+       "opacity": "1",
+       "transform": "none"
+      },
+      {
+       "opacity": "0",
+       "transform": "translateY(calc(-1 * var(--ds-distance-shift, 4px)))"
+      }
+     ],
+     "at": 61
+    },
+    {
+     "target": "button>span[spinner]",
+     "kind": "Animation",
+     "props": "opacity,transform",
+     "dur": 120,
+     "durTok": "duration-base|duration-celebrate|duration-spring-bouncy",
+     "ease": "steps(3)",
+     "kf": [
+      {
+       "opacity": "0",
+       "transform": "scale(var(--ds-scale-morph, 0.5))"
+      },
+      {
+       "opacity": "1",
+       "transform": "none"
+      }
+     ],
+     "at": 61
+    },
+    {
+     "target": "button[button]",
+     "kind": "Animation",
+     "props": "transform",
+     "dur": 80,
+     "durTok": "duration-fast|duration-spring-snappy",
+     "ease": "steps(2)",
+     "kf": [
+      {
+       "transform": "none"
+      },
+      {
+       "offset": 0.3,
+       "transform": "scale(var(--ds-scale-anticipate, 0.95))"
+      },
+      {
+       "transform": "none"
+      }
+     ],
+     "at": 61
+    },
+    {
+     "target": "button>span[spinner]",
+     "kind": "Animation",
+     "props": "opacity,transform",
+     "dur": 100,
+     "durTok": "duration-morph|duration-quick|duration-spring-soft",
+     "ease": "ease-exit",
+     "kf": [
+      {
+       "opacity": "1",
+       "transform": "none"
+      },
+      {
+       "opacity": "0",
+       "transform": "scale(var(--ds-scale-morph, 0.5))"
+      }
+     ],
+     "at": 1525
+    },
+    {
+     "target": "button>span[label]",
+     "kind": "Animation",
+     "props": "opacity,transform",
+     "dur": 100,
+     "durTok": "duration-morph|duration-quick|duration-spring-soft",
+     "ease": "ease-spring-soft",
+     "kf": [
+      {
+       "opacity": "0",
+       "transform": "translateY(calc(-1 * var(--ds-distance-shift, 4px)))"
+      },
+      {
+       "opacity": "1",
+       "transform": "none"
+      }
+     ],
+     "at": 1525
+    },
+    {
+     "target": "button>span[label]",
+     "kind": "Transition",
+     "props": "opacity",
+     "dur": 80,
+     "durTok": "duration-fast|duration-spring-snappy",
+     "ease": "ease-default",
+     "kf": [
+      {
+       "offset": 0,
+       "opacity": "0"
+      },
+      {
+       "offset": 1,
+       "opacity": "1"
+      }
+     ],
+     "at": 1638
+    }
+   ],
+   "end": {
+    "live": [],
+    "offRest": 0,
+    "offSample": [],
+    "nodes": 6
+   }
+  },
+  {
+   "style": "studio",
+   "dir": "rtl",
+   "motion": "media",
+   "state": "null/false/w284 -> null/false/w284",
+   "stateAt": 93,
+   "firstMotionAt": 1495,
+   "events": "pointerdown@76 focusin@77 pointerup@77 click@77",
+   "longest": 80,
+   "movers": 1,
+   "badProps": [],
+   "anims": [
+    {
+     "target": "button>span[spinner]",
+     "kind": "Transition",
+     "props": "transform",
+     "dur": 80,
+     "durTok": "duration-spring-snappy",
+     "ease": "steps(2)",
+     "kf": [
+      {
+       "offset": 0,
+       "transform": "scale(1)"
+      },
+      {
+       "offset": 1,
+       "transform": "none"
+      }
+     ],
+     "at": 1495
+    }
+   ],
+   "end": {
+    "live": [],
+    "offRest": 0,
+    "offSample": [],
+    "nodes": 6
+   }
+  },
+  {
+   "style": "studio",
+   "dir": "rtl",
+   "motion": "attr",
+   "state": "null/false/w284 -> null/false/w284",
+   "stateAt": 95,
+   "firstMotionAt": null,
+   "events": "pointerdown@86 focusin@88 pointerup@88 click@89",
+   "longest": 0,
+   "movers": 0,
+   "badProps": [],
+   "anims": [],
+   "end": {
+    "live": [],
+    "offRest": 0,
+    "offSample": [],
+    "nodes": 6
+   }
+  },
+  {
+   "style": "desk",
+   "dir": "ltr",
+   "motion": "full",
+   "state": "null/false/w258 -> null/false/w258",
+   "stateAt": 91,
+   "firstMotionAt": 91,
+   "events": "pointerdown@79 focusin@81 pointerup@81 click@81",
+   "longest": 485,
+   "movers": 7,
+   "badProps": [],
+   "infinite": [
+    "button>span[spinner] ds-button-spin",
+    "button>span[spinner] ds-button-spin"
+   ],
+   "anims": [
+    {
+     "target": "button>span[label]",
+     "kind": "Transition",
+     "props": "opacity",
+     "dur": 80,
+     "durTok": "duration-fast",
+     "ease": "ease-default",
+     "kf": [
+      {
+       "offset": 0,
+       "opacity": "1"
+      },
+      {
+       "offset": 1,
+       "opacity": "0"
+      }
+     ],
+     "at": 91
+    },
+    {
+     "target": "button>span[spinner]",
+     "kind": "Animation",
+     "props": "transform",
+     "dur": 800,
+     "durTok": "duration-spin",
+     "ease": "linear",
+     "it": "inf",
+     "kf": [
+      {
+       "offset": 0,
+       "composite": "replace",
+       "transform": "none"
+      },
+      {
+       "offset": 1,
+       "transform": "rotate(360deg)"
+      }
+     ],
+     "at": 91,
+     "n": 2
+    },
+    {
+     "target": "button>span[label]",
+     "kind": "Animation",
+     "props": "opacity,transform",
+     "dur": 100,
+     "durTok": "duration-quick",
+     "ease": "ease-exit",
+     "kf": [
+      {
+       "opacity": "1",
+       "transform": "none"
+      },
+      {
+       "opacity": "0",
+       "transform": "translateY(calc(-1 * var(--ds-distance-shift, 4px)))"
+      }
+     ],
+     "at": 91
+    },
+    {
+     "target": "button>span[spinner]",
+     "kind": "Animation",
+     "props": "opacity,transform",
+     "dur": 440,
+     "durTok": "duration-spring-bouncy",
+     "delay": 45,
+     "ease": "ease-spring-bouncy",
+     "kf": [
+      {
+       "opacity": "0",
+       "transform": "scale(var(--ds-scale-morph, 0.5))"
+      },
+      {
+       "opacity": "1",
+       "transform": "none"
+      }
+     ],
+     "at": 91
+    },
+    {
+     "target": "button[button]",
+     "kind": "Animation",
+     "props": "transform",
+     "dur": 300,
+     "durTok": "duration-roll|duration-spring-snappy",
+     "ease": "ease-spring-snappy",
+     "kf": [
+      {
+       "transform": "none"
+      },
+      {
+       "offset": 0.3,
+       "transform": "scale(var(--ds-scale-anticipate, 0.95))"
+      },
+      {
+       "transform": "none"
+      }
+     ],
+     "at": 91
+    },
+    {
+     "target": "button>span[spinner]",
+     "kind": "Animation",
+     "props": "opacity,transform",
+     "dur": 100,
+     "durTok": "duration-quick",
+     "ease": "ease-exit",
+     "kf": [
+      {
+       "opacity": "1",
+       "transform": "none"
+      },
+      {
+       "opacity": "0",
+       "transform": "scale(var(--ds-scale-morph, 0.5))"
+      }
+     ],
+     "at": 1489
+    },
+    {
+     "target": "button>span[label]",
+     "kind": "Animation",
+     "props": "opacity,transform",
+     "dur": 340,
+     "durTok": "duration-spring-soft",
+     "delay": 45,
+     "ease": "ease-spring-soft",
+     "kf": [
+      {
+       "opacity": "0",
+       "transform": "translateY(calc(-1 * var(--ds-distance-shift, 4px)))"
+      },
+      {
+       "opacity": "1",
+       "transform": "none"
+      }
+     ],
+     "at": 1489
+    },
+    {
+     "target": "button>span[label]",
+     "kind": "Transition",
+     "props": "opacity",
+     "dur": 80,
+     "durTok": "duration-fast",
+     "ease": "ease-default",
+     "kf": [
+      {
+       "offset": 0,
+       "opacity": "0"
+      },
+      {
+       "offset": 1,
+       "opacity": "1"
+      }
+     ],
+     "at": 1600
+    }
+   ],
+   "end": {
+    "live": [],
+    "offRest": 1,
+    "offSample": [
+     "1:span[label] t=matrix(1, 0, 0, 1, 0, -32) o=1"
+    ],
+    "nodes": 6
+   }
+  },
+  {
+   "style": "desk",
+   "dir": "ltr",
+   "motion": "media",
+   "state": "null/false/w258 -> null/false/w258",
+   "stateAt": 123,
+   "firstMotionAt": 1577,
+   "events": "pointerdown@107 focusin@109 pointerup@109 click@109",
+   "longest": 300,
+   "movers": 1,
+   "badProps": [],
+   "anims": [
+    {
+     "target": "button>span[spinner]",
+     "kind": "Transition",
+     "props": "transform",
+     "dur": 300,
+     "durTok": "duration-spring-snappy",
+     "ease": "ease-spring-snappy",
+     "kf": [
+      {
+       "offset": 0,
+       "transform": "scale(1)"
+      },
+      {
+       "offset": 1,
+       "transform": "none"
+      }
+     ],
+     "at": 1577
+    }
+   ],
+   "end": {
+    "live": [],
+    "offRest": 0,
+    "offSample": [],
+    "nodes": 6
+   }
+  },
+  {
+   "style": "desk",
+   "dir": "ltr",
+   "motion": "attr",
+   "state": "null/false/w258 -> null/false/w258",
+   "stateAt": 69,
+   "firstMotionAt": null,
+   "events": "pointerdown@58 focusin@59 pointerup@60 click@60",
+   "longest": 0,
+   "movers": 0,
+   "badProps": [],
+   "anims": [],
+   "end": {
+    "live": [],
+    "offRest": 0,
+    "offSample": [],
+    "nodes": 6
+   }
+  },
+  {
+   "style": "desk",
+   "dir": "rtl",
+   "motion": "full",
+   "state": "null/false/w276 -> null/false/w276",
+   "stateAt": 138,
+   "firstMotionAt": 138,
+   "events": "pointerdown@90 focusin@92 pointerup@96 click@96",
+   "longest": 485,
+   "movers": 7,
+   "badProps": [],
+   "infinite": [
+    "button>span[spinner] ds-button-spin",
+    "button>span[spinner] ds-button-spin"
+   ],
+   "anims": [
+    {
+     "target": "button>span[label]",
+     "kind": "Transition",
+     "props": "opacity",
+     "dur": 80,
+     "durTok": "duration-fast",
+     "ease": "ease-default",
+     "kf": [
+      {
+       "offset": 0,
+       "opacity": "1"
+      },
+      {
+       "offset": 1,
+       "opacity": "0"
+      }
+     ],
+     "at": 138
+    },
+    {
+     "target": "button>span[spinner]",
+     "kind": "Animation",
+     "props": "transform",
+     "dur": 800,
+     "durTok": "duration-spin",
+     "ease": "linear",
+     "it": "inf",
+     "kf": [
+      {
+       "offset": 0,
+       "composite": "replace",
+       "transform": "none"
+      },
+      {
+       "offset": 1,
+       "transform": "rotate(360deg)"
+      }
+     ],
+     "at": 138,
+     "n": 2
+    },
+    {
+     "target": "button>span[label]",
+     "kind": "Animation",
+     "props": "opacity,transform",
+     "dur": 100,
+     "durTok": "duration-quick",
+     "ease": "ease-exit",
+     "kf": [
+      {
+       "opacity": "1",
+       "transform": "none"
+      },
+      {
+       "opacity": "0",
+       "transform": "translateY(calc(-1 * var(--ds-distance-shift, 4px)))"
+      }
+     ],
+     "at": 138
+    },
+    {
+     "target": "button>span[spinner]",
+     "kind": "Animation",
+     "props": "opacity,transform",
+     "dur": 440,
+     "durTok": "duration-spring-bouncy",
+     "delay": 45,
+     "ease": "ease-spring-bouncy",
+     "kf": [
+      {
+       "opacity": "0",
+       "transform": "scale(var(--ds-scale-morph, 0.5))"
+      },
+      {
+       "opacity": "1",
+       "transform": "none"
+      }
+     ],
+     "at": 138
+    },
+    {
+     "target": "button[button]",
+     "kind": "Animation",
+     "props": "transform",
+     "dur": 300,
+     "durTok": "duration-roll|duration-spring-snappy",
+     "ease": "ease-spring-snappy",
+     "kf": [
+      {
+       "transform": "none"
+      },
+      {
+       "offset": 0.3,
+       "transform": "scale(var(--ds-scale-anticipate, 0.95))"
+      },
+      {
+       "transform": "none"
+      }
+     ],
+     "at": 138
+    },
+    {
+     "target": "button>span[spinner]",
+     "kind": "Animation",
+     "props": "opacity,transform",
+     "dur": 100,
+     "durTok": "duration-quick",
+     "ease": "ease-exit",
+     "kf": [
+      {
+       "opacity": "1",
+       "transform": "none"
+      },
+      {
+       "opacity": "0",
+       "transform": "scale(var(--ds-scale-morph, 0.5))"
+      }
+     ],
+     "at": 1502
+    },
+    {
+     "target": "button>span[label]",
+     "kind": "Animation",
+     "props": "opacity,transform",
+     "dur": 340,
+     "durTok": "duration-spring-soft",
+     "delay": 45,
+     "ease": "ease-spring-soft",
+     "kf": [
+      {
+       "opacity": "0",
+       "transform": "translateY(calc(-1 * var(--ds-distance-shift, 4px)))"
+      },
+      {
+       "opacity": "1",
+       "transform": "none"
+      }
+     ],
+     "at": 1502
+    },
+    {
+     "target": "button>span[label]",
+     "kind": "Transition",
+     "props": "opacity",
+     "dur": 80,
+     "durTok": "duration-fast",
+     "ease": "ease-default",
+     "kf": [
+      {
+       "offset": 0,
+       "opacity": "0"
+      },
+      {
+       "offset": 1,
+       "opacity": "1"
+      }
+     ],
+     "at": 1652
+    }
+   ],
+   "end": {
+    "live": [],
+    "offRest": 1,
+    "offSample": [
+     "1:span[label] t=matrix(1, 0, 0, 1, 0, -32) o=1"
+    ],
+    "nodes": 6
+   }
+  },
+  {
+   "style": "desk",
+   "dir": "rtl",
+   "motion": "media",
+   "state": "null/false/w276 -> null/false/w276",
+   "stateAt": 59,
+   "firstMotionAt": 1469,
+   "events": "pointerdown@49 focusin@51 pointerup@52 click@52",
+   "longest": 300,
+   "movers": 1,
+   "badProps": [],
+   "anims": [
+    {
+     "target": "button>span[label]",
+     "kind": "Transition",
+     "props": "transform",
+     "dur": 300,
+     "durTok": "duration-spring-snappy",
+     "ease": "ease-spring-snappy",
+     "kf": [
+      {
+       "offset": 0,
+       "transform": "scale(1)"
+      },
+      {
+       "offset": 1,
+       "transform": "none"
+      }
+     ],
+     "at": 1469
+    }
+   ],
+   "end": {
+    "live": [],
+    "offRest": 0,
+    "offSample": [],
+    "nodes": 6
+   }
+  },
+  {
+   "style": "desk",
+   "dir": "rtl",
+   "motion": "attr",
+   "state": "null/false/w276 -> null/false/w276",
+   "stateAt": 67,
+   "firstMotionAt": null,
+   "events": "pointerdown@51 focusin@52 pointerup@53 click@53",
+   "longest": 0,
+   "movers": 0,
+   "badProps": [],
+   "anims": [],
+   "end": {
+    "live": [],
+    "offRest": 0,
+    "offSample": [],
+    "nodes": 6
+   }
+  },
+  {
+   "style": "neutral",
+   "dir": "ltr",
+   "motion": "full",
+   "state": "null/false/w299 -> null/false/w299",
+   "stateAt": 60,
+   "firstMotionAt": 60,
+   "events": "pointerdown@45 focusin@48 pointerup@49 click@49",
+   "longest": 244,
+   "movers": 7,
+   "badProps": [],
+   "infinite": [
+    "button>span[spinner] ds-button-spin",
+    "button>span[spinner] ds-button-spin"
+   ],
+   "anims": [
+    {
+     "target": "button>span[label]",
+     "kind": "Transition",
+     "props": "opacity",
+     "dur": 80,
+     "durTok": "duration-fast",
+     "ease": "ease-default",
+     "kf": [
+      {
+       "offset": 0,
+       "opacity": "1"
+      },
+      {
+       "offset": 1,
+       "opacity": "0"
+      }
+     ],
+     "at": 60
+    },
+    {
+     "target": "button>span[spinner]",
+     "kind": "Animation",
+     "props": "transform",
+     "dur": 800,
+     "durTok": "duration-spin",
+     "ease": "linear",
+     "it": "inf",
+     "kf": [
+      {
+       "offset": 0,
+       "composite": "replace",
+       "transform": "none"
+      },
+      {
+       "offset": 1,
+       "transform": "rotate(360deg)"
+      }
+     ],
+     "at": 60,
+     "n": 2
+    },
+    {
+     "target": "button>span[label]",
+     "kind": "Animation",
+     "props": "opacity,transform",
+     "dur": 100,
+     "durTok": "duration-quick",
+     "ease": "ease-exit",
+     "kf": [
+      {
+       "opacity": "1",
+       "transform": "none"
+      },
+      {
+       "opacity": "0",
+       "transform": "translateY(calc(-1 * var(--ds-distance-shift, 4px)))"
+      }
+     ],
+     "at": 60
+    },
+    {
+     "target": "button>span[spinner]",
+     "kind": "Animation",
+     "props": "opacity,transform",
+     "dur": 220,
+     "durTok": "duration-celebrate|duration-spring-bouncy|duration-spring-soft|duration-zoom",
+     "delay": 24,
+     "ease": "ease-spring-bouncy",
+     "kf": [
+      {
+       "opacity": "0",
+       "transform": "scale(var(--ds-scale-morph, 0.5))"
+      },
+      {
+       "opacity": "1",
+       "transform": "none"
+      }
+     ],
+     "at": 60
+    },
+    {
+     "target": "button[button]",
+     "kind": "Animation",
+     "props": "transform",
+     "dur": 180,
+     "durTok": "duration-medium|duration-slow|duration-spring-snappy",
+     "ease": "ease-spring-snappy",
+     "kf": [
+      {
+       "transform": "none"
+      },
+      {
+       "offset": 0.3,
+       "transform": "scale(var(--ds-scale-anticipate, 0.95))"
+      },
+      {
+       "transform": "none"
+      }
+     ],
+     "at": 60
+    },
+    {
+     "target": "button>span[spinner]",
+     "kind": "Animation",
+     "props": "opacity,transform",
+     "dur": 100,
+     "durTok": "duration-quick",
+     "ease": "ease-exit",
+     "kf": [
+      {
+       "opacity": "1",
+       "transform": "none"
+      },
+      {
+       "opacity": "0",
+       "transform": "scale(var(--ds-scale-morph, 0.5))"
+      }
+     ],
+     "at": 1469
+    },
+    {
+     "target": "button>span[label]",
+     "kind": "Animation",
+     "props": "opacity,transform",
+     "dur": 220,
+     "durTok": "duration-celebrate|duration-spring-bouncy|duration-spring-soft|duration-zoom",
+     "delay": 24,
+     "ease": "ease-spring-soft",
+     "kf": [
+      {
+       "opacity": "0",
+       "transform": "translateY(calc(-1 * var(--ds-distance-shift, 4px)))"
+      },
+      {
+       "opacity": "1",
+       "transform": "none"
+      }
+     ],
+     "at": 1469
+    },
+    {
+     "target": "button>span[label]",
+     "kind": "Transition",
+     "props": "opacity",
+     "dur": 80,
+     "durTok": "duration-fast",
+     "ease": "ease-default",
+     "kf": [
+      {
+       "offset": 0,
+       "opacity": "0"
+      },
+      {
+       "offset": 1,
+       "opacity": "1"
+      }
+     ],
+     "at": 1602
+    }
+   ],
+   "end": {
+    "live": [],
+    "offRest": 0,
+    "offSample": [],
+    "nodes": 9
+   }
+  },
+  {
+   "style": "neutral",
+   "dir": "ltr",
+   "motion": "media",
+   "state": "null/false/w299 -> null/false/w299",
+   "stateAt": 60,
+   "firstMotionAt": null,
+   "events": "pointerdown@51 focusin@53 pointerup@53 click@54",
+   "longest": 0,
+   "movers": 0,
+   "badProps": [],
+   "anims": [],
+   "end": {
+    "live": [],
+    "offRest": 0,
+    "offSample": [],
+    "nodes": 9
+   }
+  },
+  {
+   "style": "neutral",
+   "dir": "ltr",
+   "motion": "attr",
+   "state": "null/false/w299 -> null/false/w299",
+   "stateAt": 109,
+   "firstMotionAt": null,
+   "events": "pointerdown@100 focusin@102 pointerup@102 click@103",
+   "longest": 0,
+   "movers": 0,
+   "badProps": [],
+   "anims": [],
+   "end": {
+    "live": [],
+    "offRest": 0,
+    "offSample": [],
+    "nodes": 9
+   }
+  },
+  {
+   "style": "neutral",
+   "dir": "rtl",
+   "motion": "full",
+   "state": "null/false/w316 -> null/false/w316",
+   "stateAt": 82,
+   "firstMotionAt": 82,
+   "events": "pointerdown@63 focusin@65 pointerup@65 click@66",
+   "longest": 244,
+   "movers": 7,
+   "badProps": [],
+   "infinite": [
+    "button>span[spinner] ds-button-spin",
+    "button>span[spinner] ds-button-spin"
+   ],
+   "anims": [
+    {
+     "target": "button>span[label]",
+     "kind": "Transition",
+     "props": "opacity",
+     "dur": 80,
+     "durTok": "duration-fast",
+     "ease": "ease-default",
+     "kf": [
+      {
+       "offset": 0,
+       "opacity": "1"
+      },
+      {
+       "offset": 1,
+       "opacity": "0"
+      }
+     ],
+     "at": 82
+    },
+    {
+     "target": "button>span[spinner]",
+     "kind": "Animation",
+     "props": "transform",
+     "dur": 800,
+     "durTok": "duration-spin",
+     "ease": "linear",
+     "it": "inf",
+     "kf": [
+      {
+       "offset": 0,
+       "composite": "replace",
+       "transform": "none"
+      },
+      {
+       "offset": 1,
+       "transform": "rotate(360deg)"
+      }
+     ],
+     "at": 82,
+     "n": 2
+    },
+    {
+     "target": "button>span[label]",
+     "kind": "Animation",
+     "props": "opacity,transform",
+     "dur": 100,
+     "durTok": "duration-quick",
+     "ease": "ease-exit",
+     "kf": [
+      {
+       "opacity": "1",
+       "transform": "none"
+      },
+      {
+       "opacity": "0",
+       "transform": "translateY(calc(-1 * var(--ds-distance-shift, 4px)))"
+      }
+     ],
+     "at": 82
+    },
+    {
+     "target": "button>span[spinner]",
+     "kind": "Animation",
+     "props": "opacity,transform",
+     "dur": 220,
+     "durTok": "duration-celebrate|duration-spring-bouncy|duration-spring-soft|duration-zoom",
+     "delay": 24,
+     "ease": "ease-spring-bouncy",
+     "kf": [
+      {
+       "opacity": "0",
+       "transform": "scale(var(--ds-scale-morph, 0.5))"
+      },
+      {
+       "opacity": "1",
+       "transform": "none"
+      }
+     ],
+     "at": 82
+    },
+    {
+     "target": "button[button]",
+     "kind": "Animation",
+     "props": "transform",
+     "dur": 180,
+     "durTok": "duration-medium|duration-slow|duration-spring-snappy",
+     "ease": "ease-spring-snappy",
+     "kf": [
+      {
+       "transform": "none"
+      },
+      {
+       "offset": 0.3,
+       "transform": "scale(var(--ds-scale-anticipate, 0.95))"
+      },
+      {
+       "transform": "none"
+      }
+     ],
+     "at": 82
+    },
+    {
+     "target": "button>span[spinner]",
+     "kind": "Animation",
+     "props": "opacity,transform",
+     "dur": 100,
+     "durTok": "duration-quick",
+     "ease": "ease-exit",
+     "kf": [
+      {
+       "opacity": "1",
+       "transform": "none"
+      },
+      {
+       "opacity": "0",
+       "transform": "scale(var(--ds-scale-morph, 0.5))"
+      }
+     ],
+     "at": 1476
+    },
+    {
+     "target": "button>span[label]",
+     "kind": "Animation",
+     "props": "opacity,transform",
+     "dur": 220,
+     "durTok": "duration-celebrate|duration-spring-bouncy|duration-spring-soft|duration-zoom",
+     "delay": 24,
+     "ease": "ease-spring-soft",
+     "kf": [
+      {
+       "opacity": "0",
+       "transform": "translateY(calc(-1 * var(--ds-distance-shift, 4px)))"
+      },
+      {
+       "opacity": "1",
+       "transform": "none"
+      }
+     ],
+     "at": 1476
+    },
+    {
+     "target": "button>span[label]",
+     "kind": "Transition",
+     "props": "opacity",
+     "dur": 80,
+     "durTok": "duration-fast",
+     "ease": "ease-default",
+     "kf": [
+      {
+       "offset": 0,
+       "opacity": "0"
+      },
+      {
+       "offset": 1,
+       "opacity": "1"
+      }
+     ],
+     "at": 1644
+    }
+   ],
+   "end": {
+    "live": [],
+    "offRest": 0,
+    "offSample": [],
+    "nodes": 9
+   }
+  },
+  {
+   "style": "neutral",
+   "dir": "rtl",
+   "motion": "media",
+   "state": "null/false/w316 -> null/false/w316",
+   "stateAt": 45,
+   "firstMotionAt": null,
+   "events": "pointerdown@36 focusin@37 pointerup@38 click@38",
+   "longest": 0,
+   "movers": 0,
+   "badProps": [],
+   "anims": [],
+   "end": {
+    "live": [],
+    "offRest": 0,
+    "offSample": [],
+    "nodes": 9
+   }
+  },
+  {
+   "style": "neutral",
+   "dir": "rtl",
+   "motion": "attr",
+   "state": "null/false/w316 -> null/false/w316",
+   "stateAt": 223,
+   "firstMotionAt": null,
+   "events": "pointerdown@215 focusin@216 pointerup@217 click@217",
+   "longest": 0,
+   "movers": 0,
+   "badProps": [],
+   "anims": [],
+   "end": {
+    "live": [],
+    "offRest": 0,
+    "offSample": [],
+    "nodes": 9
+   }
+  }
+ ],
+ "sweep": {
+  "studio": [],
+  "desk": [],
+  "neutral": []
+ },
+ "held": [],
+ "ring": {
+  "studio": {
+   "focusVisible": true,
+   "atOnce": true,
+   "diffFrame0": [],
+   "diffFirstFrame": [],
+   "first": {
+    "t": 2,
+    "outline": "solid 2px",
+    "shadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgb(0, 0, 0) 0px 0px 0px 2px, rgb(244, 244, 245) 0px 0px",
+    "hostShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgb(0, 0, 0) 0px 0px 0px 2px, rgb(244, 244, 245) 0px 0px"
+   },
+   "last": {
+    "t": 267,
+    "outline": "solid 2px",
+    "shadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgb(0, 0, 0) 0px 0px 0px 2px, rgb(244, 244, 245) 0px 0px",
+    "hostShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgb(0, 0, 0) 0px 0px 0px 2px, rgb(244, 244, 245) 0px 0px"
+   },
+   "frames": 17
+  },
+  "desk": {
+   "focusVisible": true,
+   "atOnce": true,
+   "diffFrame0": [],
+   "diffFirstFrame": [],
+   "first": {
+    "t": 2,
+    "outline": "solid 2px",
+    "shadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgb(0, 0, 0) 0px 0px 0px 2px, rgb(244, 244, 245) 0px 0px",
+    "hostShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgb(0, 0, 0) 0px 0px 0px 2px, rgb(244, 244, 245) 0px 0px"
+   },
+   "last": {
+    "t": 270,
+    "outline": "solid 2px",
+    "shadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgb(0, 0, 0) 0px 0px 0px 2px, rgb(244, 244, 245) 0px 0px",
+    "hostShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgb(0, 0, 0) 0px 0px 0px 2px, rgb(244, 244, 245) 0px 0px"
+   },
+   "frames": 17
+  },
+  "neutral": {
+   "focusVisible": true,
+   "atOnce": true,
+   "diffFrame0": [],
+   "diffFirstFrame": [],
+   "first": {
+    "t": 2,
+    "outline": "solid 2px",
+    "shadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgb(255, 255, 255) 0px 0px 0px 2px, rgb(37, 99, 235) 0px",
+    "hostShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgb(255, 255, 255) 0px 0px 0px 2px, rgb(37, 99, 235) 0px"
+   },
+   "last": {
+    "t": 265,
+    "outline": "solid 2px",
+    "shadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgb(255, 255, 255) 0px 0px 0px 2px, rgb(37, 99, 235) 0px",
+    "hostShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgb(255, 255, 255) 0px 0px 0px 2px, rgb(37, 99, 235) 0px"
+   },
+   "frames": 18
+  }
+ },
+ "rapid": {
+  "studio": {
+   "same": true,
+   "fast": {
+    "state": "null/false/w267",
+    "nodes": 6,
+    "off": [],
+    "live": [],
+    "active": "BUTTON"
+   }
+  },
+  "desk": {
+   "same": true,
+   "fast": {
+    "state": "null/false/w258",
+    "nodes": 6,
+    "off": [],
+    "live": [],
+    "active": "BUTTON"
+   }
+  },
+  "neutral": {
+   "same": true,
+   "fast": {
+    "state": "null/false/w299",
+    "nodes": 9,
+    "off": [],
+    "live": [],
+    "active": "BUTTON"
+   }
+  }
+ },
+ "interrupt": {},
+ "off": {},
+ "extra": {}
+}
