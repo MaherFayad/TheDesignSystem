@@ -3,7 +3,7 @@
 // packages/motion/src/interactions/content.ts. Each stage marks the control
 // that plays it with data-interaction-trigger, so the page's replay control
 // can press it again. Owned by the family agent of order 1.22.
-import { useState, type ReactNode } from 'react';
+import { useEffect, useRef, useState, type ReactNode } from 'react';
 import {
   Accordion,
   AccordionContent,
@@ -425,7 +425,16 @@ function AccordionStage() {
 }
 
 function ErrorDetailsStage() {
-  return <ErrorState size="sm" title="Could not load the board" code="ERR 504" onRetry={() => undefined} />;
+  // The interaction is the details disclosure, not Retry: its summary is the stage's trigger.
+  const box = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    box.current?.querySelector('summary')?.setAttribute('data-interaction-trigger', '');
+  }, []);
+  return (
+    <div ref={box}>
+      <ErrorState size="sm" title="Could not load the board" code="ERR 504" onRetry={() => undefined} />
+    </div>
+  );
 }
 
 /** Live stages by interaction id. */

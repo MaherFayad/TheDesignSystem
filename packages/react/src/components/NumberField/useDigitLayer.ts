@@ -17,7 +17,7 @@
 // rolls in its own column, from below when the value grew and from above
 // when it fell, one stagger step apart from the last digit.
 import { useCallback, useEffect, useRef, type RefObject } from 'react';
-import { readDir, rollDigits, type PatternMode } from '@the-system/motion';
+import { rollDigits, type PatternMode } from '@the-system/motion';
 
 export interface DigitLayer {
   /** The ref for the layer span. Render `<span aria-hidden="true" ref={layer} />` as a child of the root. */
@@ -28,16 +28,25 @@ export interface DigitLayer {
   clear: () => void;
 }
 
-/** The layer over an input: its box, as logical offsets from the root's padding box. */
+/**
+ * The layer over an input: its box, as logical offsets from the root's
+ * padding box. Read from layout offsets, not from the drawn box: under a
+ * zoom or a transform on an ancestor (a page zoom, a dialog that scales in)
+ * the drawn box is scaled and the layer would land off the input.
+ */
 function place(layer: HTMLElement, input: HTMLElement, root: HTMLElement): void {
-  const i = input.getBoundingClientRect();
-  const r = root.getBoundingClientRect();
-  const rtl = readDir(root) === 'rtl';
   const s = layer.style;
-  s.insetInlineStart = `${(rtl ? r.right - i.right : i.left - r.left) - root.clientLeft}px`;
-  s.insetBlockStart = `${i.top - r.top - root.clientTop}px`;
-  s.inlineSize = `${i.width}px`;
-  s.blockSize = `${i.height}px`;
+  // The input's offsets are from the root's padding box when the root is its
+  // offset parent (the component CSS positions the root); otherwise subtract the root's own.
+  const own = input.offsetParent === root;
+  const left = input.offsetLeft - (own ? 0 : root.offsetLeft + root.clientLeft);
+  const top = input.offsetTop - (own ? 0 : root.offsetTop + root.clientTop);
+  // Physical sides: the layer is direction ltr (digits read left to right),
+  // so a logical inset would resolve against its own direction, not the root's.
+  s.left = `${left}px`;
+  s.top = `${top}px`;
+  s.inlineSize = `${input.offsetWidth}px`;
+  s.blockSize = `${input.offsetHeight}px`;
   // rollDigits keeps a display it finds; the layer centers its columns on the input's line.
   s.display = 'flex';
 }

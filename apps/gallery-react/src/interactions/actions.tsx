@@ -64,7 +64,29 @@ function FabStage() {
   );
 }
 
-/** Live stages by interaction id. */
+/** The interaction is the chevron: the menu button of the first SplitButton is the stage's trigger. */
+function SplitChevronStage() {
+  const box = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    box.current?.querySelector('button[aria-haspopup]')?.setAttribute('data-interaction-trigger', '');
+  }, []);
+  return (
+    <div ref={box} style={{ display: 'contents' }}>
+      <SplitButton label="Publish page" menuLabel="More publish options" tone="accent" emphasis="solid">
+        <DropdownMenuItem start="clock">Schedule publish</DropdownMenuItem>
+        <DropdownMenuItem start="upload">Publish to staging</DropdownMenuItem>
+        <DropdownMenuItem start="file">Save as draft</DropdownMenuItem>
+      </SplitButton>
+      <Theme lang="ar">
+        <SplitButton label="نشر الصفحة" menuLabel="خيارات النشر الأخرى">
+          <DropdownMenuItem start="clock">جدولة النشر</DropdownMenuItem>
+          <DropdownMenuItem start="file">الحفظ كمسودة</DropdownMenuItem>
+        </SplitButton>
+      </Theme>
+    </div>
+  );
+}
+
 export const stages: Record<string, () => ReactNode> = {
   'button-press': () => (
     <>
@@ -117,21 +139,7 @@ export const stages: Record<string, () => ReactNode> = {
       <CloseButton label="Close panel" size="lg" />
     </>
   ),
-  'split-chevron': () => (
-    <>
-      <SplitButton label="Publish page" menuLabel="More publish options" tone="accent" emphasis="solid">
-        <DropdownMenuItem start="clock">Schedule publish</DropdownMenuItem>
-        <DropdownMenuItem start="upload">Publish to staging</DropdownMenuItem>
-        <DropdownMenuItem start="file">Save as draft</DropdownMenuItem>
-      </SplitButton>
-      <Theme lang="ar">
-        <SplitButton label="نشر الصفحة" menuLabel="خيارات النشر الأخرى">
-          <DropdownMenuItem start="clock">جدولة النشر</DropdownMenuItem>
-          <DropdownMenuItem start="file">الحفظ كمسودة</DropdownMenuItem>
-        </SplitButton>
-      </Theme>
-    </>
-  ),
+  'split-chevron': () => <SplitChevronStage />,
   'fab-morph': () => <FabStage />,
   'toggle-pop': () => (
     <>
