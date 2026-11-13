@@ -61,7 +61,7 @@ Not set, by decision:
 | N24 Desk toaster | `gap: 0` and the negative margins were already gone (the review's lines 115 to 123 are the close control's `margin-block: 0`). Measured 5 to 6px between expanded cards; the Desk `--_toaster-gap: space.xs` override is removed so the list takes the base `space.s` (7px here) and each glass card stands apart | `shots/toast-expand.desk.*.png` |
 | N39 Liquid SegmentedControl lens | no change: the review says it passes (the lens sits on a solid track) | |
 | N42 registry text | 107 beats in `packages/motion/src/interactions/*.ts` now quote the tokens: Neutral snappy 158 (was 180), bouncy and soft 200 (was 220), morph 180 (was 200), celebrate 200; Desk bouncy 380 (was 440); Studio snappy 70 (was 80); Studio distances 0px (was 1, 2, 4px); Neutral distance.enter 4px (was 6px); slider pull from `distance.enter * 3` (Neutral 12px, Desk 36px, Studio 0px); Neutral popover unfold 0.98 by 0.93; the check draw fractions of Neutral morph (45, 72, 108ms) | `npx vitest run packages/motion` green |
-| N43 android dot | see "What is left" | |
+| N43 android dot | none needed: `android.css` already sets `--_switch-thumb-size-rest: calc(16 / 28)` | read |
 | Desk md Input on ios and android | `desk/recipes/Density.css` is scoped to `[data-platform='web']` (every rule: buttons, inputs, selects, comboboxes, rows), so the platform touch heights win | Desk md Input: web 35.5px, ios 44px, android 56px |
 | Studio field label | `studio/recipes/Field.css` lifts by 2px | computed `translateY(-2px)` on focus; 0 under the media query and `data-motion='reduce'` |
 
@@ -83,10 +83,32 @@ Not set, by decision:
 ## Contrast
 
 - `packages/lint/src/gates/contrast.test.ts`: pass, no new known failure.
-- `switch-contrast.cjs` on 5187, web, Studio and Liquid, light and dark: 22
-  of 24 runs pass; the two failures are Liquid light drags at progress 1
-  (the held clear lens at the end of the track), 2.13:1 with or without this
-  lane's changes, which is the toggles lane's open B3/B4 frame.
+- `switch-contrast.cjs` on 5187, Studio and Liquid, light and dark, web, ios
+  and android (`styles-platforms.switch-contrast.json`): 69 of 72 runs pass.
+  The three under 3:1 were already failing without this lane's changes and
+  belong to the toggles lane's B3/B4 work:
+  - Liquid light web, drag from off and from on, at progress 1 (the held
+    clear lens at the end of the track): 2.13, the same with or without
+    this lane's changes.
+  - Liquid light android, toggle off by click: 2.81 with N6, 2.0 with the
+    old 1px ring (measured by putting it back), so N6 raises it.
+
+## Contract
+
+`npm run contract -- --framework react --url http://127.0.0.1:5187
+--component AlertDialog,Sheet,Popover,Dialog,CommandPalette,Toast,Button,Input,Switch,RadioGroup,RadioCard,Field`:
+545 passed, 0 failed before my 25 minute timeout stopped it in Toast;
+Toast alone: 57 passed, 0 failed.
+
+## npm run check
+
+Exit 1, no red step in this lane's files: eslint
+(`packages/angular/src/components/select/select.motion.spec.ts:87`, unused
+`items`), vitest (only the `no-tailwind` and `no-native-title` gates, both
+5s timeouts under load), `gallery-angular` build (`TS2339: Property
+'shownState' does not exist on type 'DsSwitch'`, toggles lane). Tokens
+build, gen (adds `recipes/Field.css` to `studio/index.css`), typecheck,
+manifests and the other workspaces pass.
 
 ## Decisions
 
@@ -103,9 +125,10 @@ Not set, by decision:
 
 ## What is left
 
-- Liquid capsule thumb, ios `--_switch-thumb-width`, android
-  `--_switch-thumb-size-rest` (N43): waiting for the toggles lane, which is
-  still editing the Switch rules in `Switch.css` and the platform files.
+- Liquid capsule thumb and the ios `--_switch-thumb-width`: held until the
+  toggles lane's held lens frame passes (the capsule lowers it). The ios
+  switch already stretches 1.3 while held. No toggles report has landed yet,
+  and the lead has not messaged that the lane is done.
 - `Window.tsx` must pass the preset (see "Changes needed from the lead").
 - The short `styles:` summaries of the registry rows still quote some old
   numbers (for example `fields.ts` "a 4px slide in 220ms", "a 9px pull",
