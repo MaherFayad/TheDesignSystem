@@ -75,7 +75,7 @@ No adb. No iOS build.
 | 1.28 | Hook wiring: styles and platforms set the round 3 hooks; styles pushed further apart | claude/ds-order-1-28 | session_01ErLBsZAvcFqWeBUty3dBLn | merged and deployed, proposed |
 | A-sync3 | Angular level with round 3 | claude/ds-angular-sync-3 | session_01ErLBsdRDi2p6xndw4JgxHT | merged, not reviewed |
 | 1.29 | Fix round after the round 3 review: 14 blockers, missing hooks, shared motion helpers, Angular parity | claude/ds-order-1-29 | session_01ErLBsafVMhGAxNKtGV2vm2 | running |
-| 1.30 | Docs site takes the chosen style; styled switch menus | claude/ds-order-1-30 | session_01ErLBsd6gEHaL8mwVmuAyxH | running |
+| 1.30 | Docs site takes the chosen style; styled switch menus | claude/ds-order-1-30 | session_01ErLBsd6gEHaL8mwVmuAyxH | merged and deployed |
 | A-motion | Angular motion for rounds 1 and 2, Form merge cleanup, recheck of Angular review 2 | claude/ds-angular-motion | session_01ErLBsda6FTx4PoGDqs1QU7 | merged |
 | 1.17 | Full matrix | ds-qa | all | open | |
 | 1.18 | Consumer apps on wave 1 components | ds-docs | react | open | |
