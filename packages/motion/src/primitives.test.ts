@@ -3,7 +3,7 @@
 // so each element gets a recording `animate` and a fixed box.
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { animatedProperties } from './core';
-import { buttonMorph, READABLE_AT, readableEnter, stepsWithin, digitSlots, flipPlay, flipSnapshot, iconMorph, iconParts, iconTurn, invert, renderDigits, resolveMode, rollDigits, rollDirection, staggerGroup, staggerStep } from './primitives';
+import { buttonMorph, READABLE_AT, readableEnter, stepsWithin, digitSegments, digitSlots, flipPlay, flipSnapshot, iconMorph, iconParts, iconTurn, invert, renderDigits, resolveMode, rollDigits, rollDirection, staggerGroup, staggerStep } from './primitives';
 
 interface Call {
   el: Element;
@@ -221,7 +221,7 @@ describe('digit roll', () => {
   it('renders still columns, one per character, with tabular figures', () => {
     const host = el();
     renderDigits(host, '1,240');
-    expect(host.children).toHaveLength(5);
+    expect(host.querySelectorAll('[data-digit]')).toHaveLength(5);
     expect(host.textContent).toBe('1,240');
     expect(host.style.fontVariantNumeric).toBe('tabular-nums');
   });
@@ -243,13 +243,38 @@ describe('digit roll', () => {
     });
     rollDigits(host, '1,240', '1,277', { reduced: false });
     vi.restoreAllMocks();
-    expect([...host.children].map((c) => c.firstElementChild?.textContent).join('')).toBe('1,277');
+    expect([...host.querySelectorAll('[data-digit]')].map((c) => c.firstElementChild?.textContent).join('')).toBe('1,277');
     expect(host.querySelectorAll('[data-digit-out]')).toHaveLength(2);
     const ins = calls.filter((c) => c.opts.id === 'ds-motion:digit-roll');
     expect(ins).toHaveLength(2);
     expect(ins[0]!.el.textContent).toBe('7');
     expect(ins[0]!.frames[0]!.transform).toBe('translateY(100%)');
     onlyTransformAndOpacity();
+  });
+
+  it('keeps each number left to right and isolated, and never splits words (review B4)', () => {
+    expect(digitSegments('فلتر واحد مفعل، 12 نتيجة')).toEqual([
+      { kind: 'text', value: 'فلتر واحد مفعل، ' },
+      { kind: 'number', value: '12' },
+      { kind: 'text', value: ' نتيجة' },
+    ]);
+    const host = el();
+    renderDigits(host, '200 ريال');
+    const run = host.querySelector<HTMLElement>('[data-digit-run]');
+    expect(run?.style.direction).toBe('ltr');
+    expect(run?.style.unicodeBidi).toBe('isolate');
+    expect(run?.querySelectorAll('[data-digit]')).toHaveLength(3);
+    // The word is one node, so its letters join.
+    expect([...host.children].some((c) => c.textContent === ' ريال' && c.children.length === 0)).toBe(true);
+    expect(host.textContent).toBe('200 ريال');
+  });
+
+  it('rolls the digits of a number inside a sentence and leaves the words still', () => {
+    const host = el();
+    renderDigits(host, '12 نتيجة');
+    rollDigits(host, '12 نتيجة', '13 نتيجة', { reduced: false });
+    expect(host.textContent).toBe('13 نتيجة');
+    expect(host.querySelectorAll('[data-digit-run] [data-digit]')).toHaveLength(2);
   });
 
   it('mode none only writes the text', () => {
