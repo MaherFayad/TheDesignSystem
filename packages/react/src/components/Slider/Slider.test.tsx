@@ -152,26 +152,6 @@ describe('Slider', () => {
   });
 
   describe('slider-pull and slider-nudge', () => {
-    function withAnimate(run: (animate: ReturnType<typeof vi.fn>) => void) {
-      const animate = vi.fn(
-        () =>
-          ({
-            finished: Promise.resolve(),
-            cancel() {},
-            effect: { composite: 'replace', getTiming: () => ({ duration: 0 }) },
-          }) as unknown as Animation,
-      );
-      const proto = HTMLElement.prototype as unknown as { animate?: unknown };
-      const original = proto.animate;
-      proto.animate = animate;
-      try {
-        run(animate);
-      } finally {
-        proto.animate = original;
-      }
-    }
-    const call = (animate: ReturnType<typeof vi.fn>, i = 0) => animate.mock.calls[i] as unknown as [Keyframe[], KeyframeAnimationOptions];
-
     it('slider-nudge: a key past the maximum pulls the thumb and the fill toward the end, then lets go, and the value stays', () => {
       vi.useFakeTimers();
       try {
