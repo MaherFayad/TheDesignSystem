@@ -36,6 +36,13 @@
  * this file adds is none, and under forced colors the drawn extras (the
  * grabber, the chevron) take system colors.
  *
+ * Order 1.28 (proposed) wires the order 1.23 hooks: the glass lens thumb
+ * of the Switch, the round drawn check, the press as a dim alone, the toast
+ * stack from the top edge, the alert's own enter, the Sheet's handle-bar,
+ * the backdrop blur, menus that grow out of their trigger with a check for
+ * the selection, and the segment filter. Durations are set only through
+ * duration tokens, so a component's reduced form is never undone here.
+ *
  * Known limit: a Theme with another data-platform nested inside an ios one
  * still matches these descendant selectors.
  */
@@ -52,10 +59,23 @@
     --_button-part-press: 1;
 
     font-weight: var(--ds-font-weight-semibold);
-    /* Press feedback is a dim, not a dip: in at once, out on release. */
+    /* Press feedback is a dim, not a dip: in at once, out on release. Token durations only, so the reduced form below holds. */
     transition:
       opacity var(--ds-duration-slow) var(--ds-ease-out),
-      transform calc(var(--_button-duration-out) * var(--_button-motion)) var(--_button-ease-out);
+      transform var(--ds-duration-spring-bouncy) var(--ds-ease-spring-bouncy);
+  }
+
+  /*
+   * Every member of the family, parts and attached ones included: the press
+   * is the dim alone. No sink of the content, no inner shade and no glow
+   * (the glow layer is ::before, which this file widens into the 44pt hit
+   * area). A style that wants its glow back sets --_button-glow in its
+   * recipe, which comes after this layer.
+   */
+  [data-platform='ios'] :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button'], [data-ds='close-button'], [data-ds='copy-button'], [data-ds='floating-action-button']) {
+    --_button-press-y: 0px;
+    --_button-press-shade: transparent;
+    --_button-glow: 0;
   }
 
   [data-platform='ios'] :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button'], [data-ds='close-button'], [data-ds='copy-button']):not([data-part], [data-ds='button-group'][data-attached] > *)[data-size='xs'] {
@@ -97,7 +117,7 @@
 
   [data-platform='ios'] :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button'], [data-ds='close-button'], [data-ds='copy-button'], [data-ds='floating-action-button']):active:not([data-disabled], [data-loading], [aria-disabled='true']) {
     opacity: 0.55;
-    transition-duration: 0s, calc(var(--_button-duration-in) * var(--_button-motion));
+    transition-duration: var(--ds-duration-instant);
   }
 
   /* There is no floating action button on iOS: it reads as a round 56pt control with the style's lift. */
@@ -108,8 +128,16 @@
     --_button-part-press: 1;
   }
 
-  /* ------------------------------------------------------------ switch: 51 by 31, the thumb widens while held */
-
+  /*
+   * switch: 51 by 31. A solid thumb with a soft shadow at rest. Held, it
+   * widens (the only press change: no growth, no track dip) and turns into
+   * a clear lens: its color thins out so the track shows through, the
+   * backdrop under it brightens and saturates, and a highlight and a rim
+   * light its edge. On release it travels on the bouncy spring, the stretch
+   * springing back as it goes. The colors stay the style's: the lens reads
+   * color.glass.* and the blur reads blur.glass, so a style with no glass
+   * (blur 0) gets a clear thumb with a lit rim.
+   */
   [data-platform='ios'] [data-ds='switch'] {
     --_switch-target: var(--ds-size-touch-ios);
     --_switch-height: calc(var(--ds-size-touch-ios) * 0.7);
@@ -118,37 +146,83 @@
     --_switch-bg: var(--ds-color-bg-overlay-20);
     --_switch-stretch: 1.3;
     --_switch-track-press: 1;
+    --_switch-thumb-size-pressed: 1;
+    --_switch-lean: 0px;
     --_switch-font-size: var(--ds-font-size-2xl);
     --_switch-gap: var(--ds-space-xl);
+    --_switch-thumb-shadow: var(--ds-elevation-card-hover);
+    --_switch-thumb-solid-pressed: 0.2;
+    --_switch-thumb-backdrop: blur(var(--ds-blur-glass)) brightness(1.12) saturate(1.6);
+    --_switch-thumb-highlight: radial-gradient(circle at 50% 0%, var(--ds-color-glass-highlight), transparent 70%);
+    --_switch-thumb-highlight-opacity: 0;
+    --_switch-thumb-highlight-opacity-pressed: 1;
   }
 
   [data-platform='ios'] [data-ds='switch'][data-state='checked'] {
     --_switch-bg: var(--_switch-fill);
   }
 
-  [data-platform='ios'] [data-ds='switch'] > [data-part='control'] > [data-part='track'] > [data-part='thumb'] {
-    box-shadow: var(--ds-elevation-card-hover);
+  /* Held: a rim of light around the lens, over the same soft shadow. */
+  [data-platform='ios'] [data-ds='switch']:not([data-disabled], [data-readonly]) > [data-part='control']:active {
+    --_switch-thumb-shadow: inset 0 0 0 var(--ds-border-width-default) var(--ds-color-glass-highlight), var(--ds-elevation-card-hover);
   }
 
-  /* ------------------------------------------------------------ checkbox and radio */
+  /*
+   * The lens needs backdrop-filter. Where it is missing, under reduced
+   * transparency and under more contrast the held thumb stays solid with
+   * no filter and no highlight; it still widens.
+   */
+  @supports not ((backdrop-filter: none) or (-webkit-backdrop-filter: none)) {
+    [data-platform='ios'] [data-ds='switch'] {
+      --_switch-thumb-solid-pressed: 1;
+      --_switch-thumb-backdrop: none;
+      --_switch-thumb-highlight-opacity-pressed: 0;
+    }
+  }
 
+  @media (prefers-reduced-transparency: reduce), (prefers-contrast: more) {
+    [data-platform='ios'] [data-ds='switch'] {
+      --_switch-thumb-solid-pressed: 1;
+      --_switch-thumb-backdrop: none;
+      --_switch-thumb-highlight-opacity-pressed: 0;
+    }
+  }
+
+  [data-contrast='more'] [data-platform='ios'] [data-ds='switch'],
+  [data-contrast='more'][data-platform='ios'] [data-ds='switch'],
+  [data-platform='ios'] [data-contrast='more'] [data-ds='switch'] {
+    --_switch-thumb-solid-pressed: 1;
+    --_switch-thumb-backdrop: none;
+    --_switch-thumb-highlight-opacity-pressed: 0;
+  }
+
+  /*
+   * checkbox and radio. The platform has no square box: a selection is a
+   * round checkmark, so every checkbox is a circle (in a list, a group or
+   * alone). The fill grows from the centre, the check draws with a heavier
+   * stroke, and the circle lands on the bouncy spring after the dip. The
+   * mixed state keeps the dash.
+   */
   [data-platform='ios'] [data-ds='checkbox'] {
     --_checkbox-target: var(--ds-size-touch-ios);
     --_checkbox-box: calc(var(--ds-size-icon-lg) - var(--ds-space-fixed-4xs));
     --_checkbox-font-size: var(--ds-font-size-2xl);
     --_checkbox-gap: var(--ds-space-s);
-    --_checkbox-radius: var(--ds-radius-sm);
-  }
-
-  /* In a list a checkbox reads as a round checkmark, the way a selectable row is drawn. */
-  [data-platform='ios'] :is([data-ds='list'], [data-ds='checkbox-group']) [data-ds='checkbox'] {
     --_checkbox-radius: var(--ds-radius-pill);
+    --_checkbox-stroke-width: 2.5;
+    --_checkbox-fill-ease: var(--ds-ease-spring-snappy);
+    --_checkbox-land-ease: var(--ds-ease-spring-bouncy);
+    --_checkbox-morph-ease: var(--ds-ease-spring-bouncy);
   }
 
+  /* A radio is the same circle; the dot lands where it is, on the spring, with no lean from the last one. */
   [data-platform='ios'] [data-ds='radio-group'] {
     --_radio-group-control-size: calc(var(--ds-size-icon-lg) - var(--ds-space-fixed-4xs));
     --_radio-group-font-size: var(--ds-font-size-2xl);
     --_radio-group-gap: 0;
+    --_radio-group-dot-travel: 0px;
+    --_radio-group-dot-ease: var(--ds-ease-spring-bouncy);
+    --_radio-group-land-ease: var(--ds-ease-spring-bouncy);
   }
 
   [data-platform='ios'] [data-ds='radio-group'] [data-part='item'] {
@@ -186,7 +260,28 @@
     --_segmented-control-bg: var(--ds-color-bg-overlay-10);
     --_segmented-control-border-color: transparent;
     --_segmented-control-thumb-bg: var(--ds-color-bg-surface-3);
-    --_segmented-control-thumb-shadow: var(--ds-elevation-card-hover);
+    /* Lifted: a shadow, and a hairline so the selected segment is not told by the fill alone. */
+    --_segmented-control-thumb-shadow: inset 0 0 0 var(--ds-border-width-default) var(--ds-color-border-default), var(--ds-elevation-card-hover);
+    /* Where the style's thumb is translucent, the segment is a lens on the track; blur.glass is 0 in a style with no glass. */
+    --_segmented-control-indicator-filter: blur(var(--ds-blur-glass)) brightness(1.08) saturate(1.4);
+  }
+
+  @supports not ((backdrop-filter: none) or (-webkit-backdrop-filter: none)) {
+    [data-platform='ios'] [data-ds='segmented-control'] {
+      --_segmented-control-indicator-filter: none;
+    }
+  }
+
+  @media (prefers-reduced-transparency: reduce), (prefers-contrast: more) {
+    [data-platform='ios'] [data-ds='segmented-control'] {
+      --_segmented-control-indicator-filter: none;
+    }
+  }
+
+  [data-contrast='more'] [data-platform='ios'] [data-ds='segmented-control'],
+  [data-contrast='more'][data-platform='ios'] [data-ds='segmented-control'],
+  [data-platform='ios'] [data-contrast='more'] [data-ds='segmented-control'] {
+    --_segmented-control-indicator-filter: none;
   }
 
   [data-platform='ios'] [data-ds='segmented-control'] > [data-ds='toggle-button'][data-part='item'] {
@@ -210,6 +305,24 @@
   [data-platform='ios'] [data-ds='tabs'][data-emphasis='ghost'] {
     --_tabs-fg-active: var(--ds-color-primary-on-surface);
     --_tabs-indicator-bg: var(--ds-color-primary-on-surface);
+  }
+
+  /* soft tabs read as the segmented control: a quiet track and a lifted segment that slides. */
+  [data-platform='ios'] [data-ds='tabs'][data-emphasis='soft'] {
+    --_tabs-list-bg: var(--ds-color-bg-overlay-10);
+    --_tabs-list-padding: var(--ds-border-width-strong);
+    --_tabs-radius: var(--ds-radius-sm);
+    --_tabs-indicator-bg: var(--ds-color-bg-surface-3);
+    --_tabs-bg-hover: transparent;
+    --_tabs-weight-active: var(--ds-font-weight-semibold);
+  }
+
+  [data-platform='ios'] [data-ds='tabs'][data-emphasis='soft'] > [data-part='list'] {
+    border-radius: var(--ds-radius-field);
+  }
+
+  [data-platform='ios'] [data-ds='tabs'][data-emphasis='soft'] > [data-part='list'] > [data-part='trigger'] > [data-part='indicator'] {
+    box-shadow: var(--ds-elevation-card-hover);
   }
 
   /* ------------------------------------------------------------ chip and toggle shapes */
@@ -405,10 +518,21 @@
     --_menu-item-shift: 0px;
     --_menu-duration-in: var(--ds-duration-spring-bouncy);
     --_menu-ease-in: var(--ds-ease-spring-bouncy);
+    /* No wipe from the trigger side: the whole surface grows out of its trigger point (the Radix origin). */
+    --_menu-clip-from: var(--_menu-clip-to);
+    /* The touched row is a quiet gray; the selection is the check, never a fill. */
+    --_menu-item-bg-highlight: var(--ds-color-bg-overlay-5);
   }
 
   [data-platform='ios'] [data-ds='select'][data-part='content'] {
     --_select-item-height: var(--ds-size-touch-ios);
+    --_select-highlight-bg: var(--ds-color-bg-overlay-5);
+  }
+
+  /* The selected row: the check in the tint, the label at its usual weight. */
+  [data-platform='ios'] [data-ds='select'] [data-part='item'] > [data-part='indicator'],
+  [data-platform='ios'] :is([data-ds='dropdown-menu'], [data-ds='context-menu']) :is([data-part='checkbox-item'], [data-part='radio-item']) > [data-part='indicator'] {
+    color: var(--ds-color-primary-on-surface);
   }
 
   /* Rows are split by hairlines, the way a menu groups its actions. */
@@ -427,6 +551,8 @@
     --_popover-radius: var(--ds-radius-card);
     --_popover-padding: var(--ds-space-3xl);
     --_popover-enter-scale: var(--ds-scale-morph);
+    /* Grows evenly out of the trigger, not squashed away from it. */
+    --_popover-enter-stretch: var(--_popover-enter-scale);
     --_popover-shift: 0px;
     --_popover-duration-in: var(--ds-duration-spring-bouncy);
     --_popover-ease-in: var(--ds-ease-spring-bouncy);
@@ -440,6 +566,7 @@
     --_tooltip-padding-block: var(--ds-space-s);
     --_tooltip-padding-inline: var(--ds-space-xl);
     --_tooltip-enter-scale: var(--ds-scale-morph);
+    --_tooltip-enter-stretch: var(--_tooltip-enter-scale);
     --_tooltip-duration-in: var(--ds-duration-spring-bouncy);
     --_tooltip-ease-in: var(--ds-ease-spring-bouncy);
 
@@ -455,8 +582,23 @@
     --_dialog-padding: var(--ds-space-3xl);
     --_dialog-header-bg: transparent;
     --_dialog-footer-bg: transparent;
+    /* The alert scales down into place on the bouncy spring, from a little larger (the component's own enter, no travel). */
     --_dialog-enter-y: 0px;
+    --_dialog-enter-scale: 1.15;
+    --_dialog-duration-in: var(--ds-duration-spring-bouncy);
+    --_dialog-ease-in: var(--ds-ease-spring-bouncy);
     --_dialog-shift: 0px;
+  }
+
+  /*
+   * The page behind an alert, a sheet or a drawer dims and stays sharp:
+   * the platform does not frost what it covers, which is also its plainest
+   * difference from the web's blurred backdrop. A style whose character is
+   * a frosted backdrop sets --_dialog-backdrop-blur in its recipe, after
+   * this layer. With no blur there is nothing to fall back from.
+   */
+  [data-platform='ios'] :is([data-ds='dialog'], [data-ds='alert-dialog'], [data-ds='sheet'], [data-ds='drawer']) {
+    --_dialog-backdrop-blur: 0px;
   }
 
   [data-platform='ios'] :is([data-ds='dialog'], [data-ds='alert-dialog'])[data-size] {
@@ -465,11 +607,6 @@
 
   [data-platform='ios'] :is([data-ds='dialog'], [data-ds='alert-dialog']) > [data-part='panel'] {
     text-align: center;
-  }
-
-  /* The alert scales down into place on a spring, from a little larger. */
-  [data-platform='ios'] :is([data-ds='dialog'], [data-ds='alert-dialog']) > [data-part='panel'][data-state='open'] {
-    animation: ds-ios-alert-in var(--ds-duration-spring-bouncy) var(--ds-ease-spring-bouncy);
   }
 
   [data-platform='ios'] [data-ds='dialog'] > [data-part='panel'] > [data-part='title'] {
@@ -554,11 +691,28 @@
 
   /* ------------------------------------------------------------ sheet and drawer: rise from the bottom with a grabber */
 
+  /*
+   * Rises on the bouncy spring: it passes its rest place a little and
+   * settles, the nearest thing to a rubber band the Sheet offers (detents
+   * and the drag overshoot are not hooks yet). A drag let go settles on the
+   * same curve.
+   */
   [data-platform='ios'] :is([data-ds='sheet'], [data-ds='drawer']) {
     --_dialog-radius: var(--ds-radius-card);
     --_dialog-duration-in: var(--ds-duration-window-open);
-    --_dialog-ease-in: var(--ds-ease-spring-soft);
-    --_dialog-handle-color: transparent;
+    --_dialog-ease-in: var(--ds-ease-spring-bouncy);
+  }
+
+  /* The grabber: 36 by 5 and round, on the Sheet's handle-bar part; the handle keeps a 24px strip for the pointer. */
+  [data-platform='ios'] [data-ds='sheet'] {
+    --_dialog-handle-color: var(--ds-color-border-strong);
+    --_dialog-handle-radius: var(--ds-radius-pill);
+  }
+
+  [data-platform='ios'] [data-ds='sheet'] > [data-part='panel'] > [data-part='handle'] {
+    inline-size: calc(var(--ds-size-touch-ios) - var(--ds-space-fixed-m));
+    block-size: var(--ds-space-fixed-xs);
+    padding-block: calc((var(--ds-size-target-min) - var(--ds-space-fixed-xs)) / 2);
   }
 
   /* The Drawer leaves its side and rises like a sheet. */
@@ -589,13 +743,7 @@
     animation: ds-ios-sink var(--_dialog-duration-out) var(--_dialog-ease-out) forwards;
   }
 
-  /* The grabber: 36 by 5, round, at the top centre. The Sheet draws it on its handle part (the drag target); the Drawer, which has no handle, on its panel. */
-  [data-platform='ios'] [data-ds='sheet'] > [data-part='panel'] > [data-part='handle'] {
-    position: relative;
-    padding-block: var(--ds-space-xs) var(--ds-space-3xs);
-  }
-
-  [data-platform='ios'] [data-ds='sheet'] > [data-part='panel'] > [data-part='handle']::before,
+  /* The Drawer has no handle part: its grabber is drawn on the panel, 36 by 5 and round, at the top centre. */
   [data-platform='ios'] [data-ds='drawer'] > [data-part='panel']::before {
     content: '';
     position: absolute;
@@ -609,19 +757,22 @@
     pointer-events: none;
   }
 
-  [data-platform='ios'] [data-ds='sheet'] > [data-part='panel'] > [data-part='handle']:dir(rtl)::before,
   [data-platform='ios'] [data-ds='drawer'] > [data-part='panel']:dir(rtl)::before {
     transform: translateX(50%);
   }
 
-  [data-platform='ios'] [data-ds='sheet'] > [data-part='panel'] > [data-part='handle']::before {
-    inset-block-start: var(--ds-space-xs);
-  }
-
   /* ------------------------------------------------------------ toast: a banner that drops from the top, under the safe area */
 
-  [data-platform='ios'] [data-ds='toaster'],
-  :root:has([data-ds='sheet'] > [data-part='panel'][data-state='open']) [data-platform='ios'] [data-ds='toaster'][data-position^='bottom'] {
+  /*
+   * Every position maps to the top centre. The stack grows down from the
+   * top edge (--_toaster-dir, --_toaster-align), so the toasts behind the
+   * front one peek out under it, not off the screen, and each one enters
+   * from above its own height (the component's enter reads the direction).
+   */
+  [data-platform='ios'] [data-ds='toaster'] {
+    --_toaster-dir: 1;
+    --_toaster-align: start;
+
     flex-direction: column-reverse;
     inset-block: var(--_toaster-inset-block-start) auto;
     inset-inline: 0;
@@ -632,10 +783,14 @@
     --_toast-radius: calc(var(--ds-radius-card) + var(--ds-radius-sm));
     --_toast-edge: var(--_toast-border-color);
     --_toast-shadow: var(--ds-elevation-menu);
-    --_toast-enter-y: calc(-1 * var(--ds-space-10xl));
     --_toast-enter-scale: 1;
     --_toast-duration-in: var(--ds-duration-window-open);
     --_toast-ease-in: var(--ds-ease-spring-bouncy);
+    /* The stack: a deeper peek and step back, and the toasts behind settle on the bouncy spring when one joins or leaves. */
+    --_toast-peek: var(--ds-space-m);
+    --_toast-stack-duration: var(--ds-duration-spring-bouncy);
+    --_toast-stack-ease: var(--ds-ease-spring-bouncy);
+    --_toast-progress-thickness: 0px;
 
     border-inline-start-width: var(--ds-border-width-default);
     padding-block: var(--ds-space-xl);
@@ -648,17 +803,6 @@
   }
 
   /* ------------------------------------------------------------ keyframes */
-
-  @keyframes ds-ios-alert-in {
-    from {
-      opacity: 0;
-      transform: scale(1.15);
-    }
-
-    30% {
-      opacity: 1;
-    }
-  }
 
   @keyframes ds-ios-rise {
     from {
@@ -679,7 +823,7 @@
       --_switch-stretch: 1;
     }
 
-    [data-platform='ios'] :is([data-ds='dialog'], [data-ds='alert-dialog'], [data-ds='drawer']) > [data-part='panel']:is([data-state='open'], [data-state='closed']) {
+    [data-platform='ios'] [data-ds='drawer'] > [data-part='panel']:is([data-state='open'], [data-state='closed']) {
       animation: none;
     }
 
@@ -693,8 +837,8 @@
     --_switch-stretch: 1;
   }
 
-  :root[data-motion='reduce'] [data-platform='ios'] :is([data-ds='dialog'], [data-ds='alert-dialog'], [data-ds='drawer']) > [data-part='panel']:is([data-state='open'], [data-state='closed']),
-  :root[data-motion='reduce'][data-platform='ios'] :is([data-ds='dialog'], [data-ds='alert-dialog'], [data-ds='drawer']) > [data-part='panel']:is([data-state='open'], [data-state='closed']) {
+  :root[data-motion='reduce'] [data-platform='ios'] [data-ds='drawer'] > [data-part='panel']:is([data-state='open'], [data-state='closed']),
+  :root[data-motion='reduce'][data-platform='ios'] [data-ds='drawer'] > [data-part='panel']:is([data-state='open'], [data-state='closed']) {
     animation: none;
   }
 
@@ -710,9 +854,12 @@
       border-color: CanvasText;
     }
 
-    [data-platform='ios'] [data-ds='sheet'] > [data-part='panel'] > [data-part='handle']::before,
     [data-platform='ios'] [data-ds='drawer'] > [data-part='panel']::before {
       background-color: CanvasText;
+    }
+
+    [data-platform='ios'] [data-ds='sheet'] {
+      --_dialog-handle-color: CanvasText;
     }
 
     [data-platform='ios'] :is([data-ds='dialog'], [data-ds='alert-dialog']) > [data-part='panel'] > [data-part='footer'] {
