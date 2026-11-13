@@ -17,4 +17,9 @@ export default defineConfig({
   plugins: [react()],
   server: { port, strictPort: true },
   preview: { port: 4173, strictPort: true },
+  // The system's CSS uses `:dir(rtl)`. With an older CSS target the minifier
+  // rewrites it into a `:lang(ar, he, ...)` list, which is wrong for a
+  // `dir="ltr"` island on an Arabic page. These are the first versions that
+  // support `:dir()`, so the selector is kept as written.
+  build: { cssTarget: ['chrome120', 'edge120', 'firefox115', 'safari16.4'] },
 });
