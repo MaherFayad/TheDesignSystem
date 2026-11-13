@@ -61,7 +61,10 @@ const headScript = `(() => {
   const ids = ${JSON.stringify(styleIds)};
   const get = (k) => { try { return localStorage.getItem(k); } catch { return null; } };
   const lang = get('ds-docs-lang');
-  if ((lang === 'en' || lang === 'ar') && lang !== r.lang) {
+  // The saved language applies on the home page only, when the visit starts
+  // there from outside the site: a link to a page in one language is never
+  // overridden.
+  if ((lang === 'en' || lang === 'ar') && lang !== r.lang && ${JSON.stringify(path === '/')}) {
     let inside = false;
     try { inside = document.referrer !== '' && new URL(document.referrer).origin === location.origin; } catch {}
     const alt = document.querySelector('link[rel="alternate"][hreflang="' + lang + '"]');
