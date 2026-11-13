@@ -228,6 +228,7 @@ again: commit the tree as wip, push, and resume the agents by id.
    for demo copy unless told otherwise.
 
 ## Owner answers
+- 2026-11-13 16:55 UTC: "make this the last thing then pause work". The order 1.17 rerun is the last order. After it is merged and reported, nothing new starts until the owner says so.
 - 2026-11-13 09:05 UTC: the style switch in the docs top bar must restyle the whole docs site, not only the previews. Order 1.30.
 - 2026-11-12 22:52 UTC: make the docs site clean and clear, with the FlyonUI docs as a good first example (structure and feel only). Order 1.27.
 - 2026-11-12 22:50 UTC, after testing the live site: checkbox and toggle need much better interactions (glass thumb, growing dot, drawn check); improve every interaction and its feedback (copy animates from icon to "Copied"); toasts and popups need a better look in every style; Studio and Desk are far too close; iOS, Android and web show no difference. Orders 1.23 to 1.26 in `docs/plan/wave-1.md`. The lead took this as a ruling that motion may use paint properties (see DECISIONS.md).
