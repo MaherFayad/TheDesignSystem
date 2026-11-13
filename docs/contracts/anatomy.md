@@ -161,6 +161,10 @@ follows it.
     | Banner | `data-sticky` |
     | FloatingActionButton | `data-position`, `data-extended` |
     | Toast | `data-position`, `data-swipe` |
+    | Toaster | `data-stacked`, `data-expanded`, `data-paused` |
+    | Input | `data-variant` |
+    | Field | `data-floating`, `data-filled` |
+    | Switch | `data-dragging` |
     | Accordion, List, Skeleton | `data-variant` |
     | Card, Tile | `data-interactive` |
     | List | `data-linked` |

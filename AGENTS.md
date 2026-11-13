@@ -47,7 +47,9 @@ These rules apply to the lead and to every subagent.
 - Tokens only in component CSS. No raw color, spacing, radius, font size,
   shadow, duration or z-index.
 - Logical properties only. No `left`, `right`, `margin-left` and so on.
-- Only `transform` and `opacity` animate. No animation library on the web.
+- Motion animates only `transform`, `opacity`, `clip-path`, stroke drawing (`stroke-dashoffset`, `stroke-dasharray`), `filter`, `backdrop-filter`, colours and `box-shadow`.
+  Layout properties never animate. No
+  animation library on the web.
 - No `!important`. No Tailwind. No CSS-in-JS.
 - No bare `<button>` outside the Button implementation.
 - No native `title` attribute for hints. Use Tooltip.

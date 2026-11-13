@@ -114,8 +114,10 @@ package blocks that one component: note it and move to the next.
 
 - **CSS.** `@layer ds.base`. Attribute selectors on `data-ds` and data
   attributes only. Tokens only: no raw color, spacing, radius, font size,
-  shadow, duration or z-index. Logical properties only. Only `transform` and
-  `opacity` animate. Private `--_<component>-*` properties; never declare a
+  shadow, duration or z-index. Logical properties only. Motion animates only
+  `transform`, `opacity`, `clip-path`, stroke drawing, `filter`,
+  `backdrop-filter`, colours and `box-shadow`; layout properties never
+  animate. Private `--_<component>-*` properties; never declare a
   `--ds-*` name. States swap properties. `::before` is the focus or glow
   layer and `::after` the hover veil. The transparent outline sits only
   inside a focus selector. A forced colors fallback. Reduced motion
