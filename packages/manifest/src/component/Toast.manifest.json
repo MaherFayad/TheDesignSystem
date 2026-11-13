@@ -237,7 +237,7 @@
       "status": "ready",
       "behavior": "hand built on the shared toast store and the Radix Toast DOM; CDK ComponentPortal for the themed layer",
       "example": "toast.demo.ts",
-      "note": "ng-container dsToaster mounts the toaster; div[dsToast] is the static notice. toast() and the store come from @the-system/shared and are re-exported. Reuses the store and its timers, reports pause and resume like the React Toaster, owns two visually hidden live regions (no CDK LiveAnnouncer, which would add an element React does not render). onClose on dsToast is a function input. The close part is a private CloseButton twin until the Angular CloseButton lands. Toast.css is used as is."
+      "note": "ng-container dsToaster mounts the toaster; div[dsToast] is the static notice. toast() and the store come from @the-system/shared and are re-exported. Reuses the store and its timers, reports pause and resume like the React Toaster, owns two visually hidden live regions (no CDK LiveAnnouncer, which would add an element React does not render). onClose on dsToast is a function input. The close part is a private CloseButton twin until the Angular CloseButton lands. Toast.css is used as is. Order 1.23 as React: the stack (data-stacked and the place values from internal/toast-stack.ts, a copy of React's stack.ts), data-expanded on hover or focus inside, data-paused from the same boolean that pauses the store, the progress part of a timed toast, the swipe of internal/toast-swipe.ts (a copy of React's swipe.ts), and position auto."
     },
     "native": {
       "status": "planned",
