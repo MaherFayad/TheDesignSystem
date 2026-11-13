@@ -235,7 +235,6 @@ describe('Slider', () => {
     it('slider-rubber-band: a drag past the end pulls the thumb and the fill with resistance, and lets go on release', () => {
       const rect = vi.spyOn(Element.prototype, 'getBoundingClientRect').mockReturnValue(new DOMRect(0, 0, 100, 24));
       const capture = vi.spyOn(Element.prototype, 'hasPointerCapture').mockReturnValue(true);
-      const width = vi.spyOn(HTMLElement.prototype, 'offsetWidth', 'get').mockReturnValue(24);
       try {
         const { container } = render(
           <Theme style="desk">
@@ -266,7 +265,6 @@ describe('Slider', () => {
       } finally {
         rect.mockRestore();
         capture.mockRestore();
-        width.mockRestore();
       }
     });
 

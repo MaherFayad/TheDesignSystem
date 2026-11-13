@@ -447,8 +447,9 @@ export function SliderBase({
           const found = end ? focusedThumb(event.currentTarget) : null;
           // Only the outer thumb of that end: the start thumb of a range stops at the end thumb, not at the maximum.
           const outer = Boolean(end && found && found[1] === (end === 'start' ? 0 : values.length - 1));
-          // The resistance scale is the thumb's own target, so a larger slider pulls further.
-          const scale = found?.[0] instanceof HTMLElement ? found[0].offsetWidth : 0;
+          // The resistance scale is the thumb's own target, so a larger slider pulls further. Measured in the
+          // same space as the pointer (a zoomed ancestor scales both), so the pull does not change with zoom.
+          const scale = found?.[0] ? found[0].getBoundingClientRect().width : 0;
           const amount = outer ? rubberBand(Math.max(beforeLeft, pastRight), scale) : 0;
           const next = { start: end === 'start' ? amount : 0, end: end === 'end' ? amount : 0 };
           setPull((p) => (p.start === next.start && p.end === next.end ? p : next));
