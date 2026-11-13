@@ -303,20 +303,14 @@
 
   /*
    * The off dot keeps a 1dp edge in the platform's off handle color
-   * (border-control-hover) inside its own edge, 1dp whatever the dot's
-   * scale, so a light handle a style sets keeps 3:1 against a light track
-   * (order 1.29, B3). On the platform's gray handle it does not show. The
-   * edge color moves on the thumb color's timing (Switch.css), so turning
-   * off it shows with the off color at the middle of the travel, never on
-   * the fill.
+   * (border-control-hover) inside its own edge, 1dp whatever the dot's scale
+   * (Switch.css --_switch-thumb-edge), so a light handle a style sets keeps
+   * 3:1 against a light track (order 1.29, B3). On the platform's gray handle
+   * it does not show; the thumb's own ring inside it keeps the edge on the fill.
    */
-  [data-platform='android'] [data-ds='switch'] > [data-part='control'] > [data-part='track'] > [data-part='thumb'] {
-    outline: calc(var(--ds-border-width-default) / var(--_switch-thumb-size-now)) solid transparent;
-    outline-offset: calc(-1 * var(--ds-border-width-default) / var(--_switch-thumb-size-now));
-  }
-
-  [data-platform='android'] [data-ds='switch'][data-state='unchecked'] > [data-part='control'] > [data-part='track'] > [data-part='thumb'] {
-    outline-color: var(--ds-color-border-control-hover);
+  [data-platform='android'] [data-ds='switch'][data-state='unchecked'] {
+    --_switch-thumb-edge: var(--ds-color-border-control-hover);
+    --_switch-thumb-edge-width: var(--ds-border-width-default);
   }
 
   /*

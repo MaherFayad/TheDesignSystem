@@ -101,6 +101,11 @@
  *   --_switch-bg-ease             working: the timing of the track's own color with the tint
  *                                 layer: step-end turning on, step-start turning off, pressed
  *                                 or not (N1)
+ *   --_switch-thumb-edge, -edge-width   an edge inside the thumb's edge in a set color,
+ *                                 transparent and 0px by default; the width holds whatever
+ *                                 the thumb's scale (a platform's off dot sets 1dp in its
+ *                                 handle color, B3). Over the thumb ring, under the style's
+ *                                 own shadows
  *   --_switch-fill-reach          how far the on fill's clip reaches past the thumb's far
  *                                 edge, measured from the fill layer's own edge: the inset. A
  *                                 platform with a thicker track border sets more, so the
@@ -224,6 +229,8 @@
     --_switch-color-ease: steps(2, jump-none);
     --_switch-bg-ease: step-start;
     --_switch-fill-reach: var(--_switch-inset);
+    --_switch-thumb-edge: transparent;
+    --_switch-thumb-edge-width: 0px;
 
     display: inline-grid;
     grid-template-columns: auto minmax(0, auto);
@@ -364,8 +371,7 @@
    * (the first translateX, on the state's timing). It grows to its size now from its
    * center, stretches toward its travel from its trailing edge (transform, on
    * the press's timing while pressed), and leans on hover. Its color is
-   * `color`, on --_switch-color-ease (as is an outline color a platform
-   * draws round the off thumb); the paint thins to a lens by
+   * `color`, on --_switch-color-ease; the paint thins to a lens by
    * --_switch-thumb-solid-now and keeps a ring of the solid color inside its
    * edge, under the style's own shadows.
    */
@@ -380,6 +386,7 @@
     background-color: color-mix(in srgb, currentColor calc(var(--_switch-thumb-solid-now) * 100%), transparent);
     box-shadow:
       var(--_switch-thumb-shadow),
+      inset 0 0 0 calc(var(--_switch-thumb-edge-width) / var(--_switch-thumb-size-now)) var(--_switch-thumb-edge),
       inset 0 0 0 var(--_switch-thumb-ring-width) currentColor;
     backdrop-filter: var(--_switch-thumb-backdrop);
     transform:
@@ -395,7 +402,6 @@
     transition:
       transform calc(var(--_switch-duration) * var(--_switch-motion)) var(--_switch-ease),
       color calc(var(--_switch-duration) * var(--_switch-motion)) var(--_switch-color-ease),
-      outline-color calc(var(--_switch-duration) * var(--_switch-motion)) var(--_switch-color-ease),
       background-color calc(var(--_switch-duration-color) * var(--_switch-motion)) var(--ds-ease-out),
       box-shadow calc(var(--_switch-duration-color) * var(--_switch-motion)) var(--ds-ease-out);
   }
@@ -477,7 +483,6 @@
     transition:
       transform calc(var(--_switch-duration-in) * var(--_switch-motion)) var(--_switch-ease-in),
       color calc(var(--_switch-duration) * var(--_switch-motion)) var(--_switch-color-ease),
-      outline-color calc(var(--_switch-duration) * var(--_switch-motion)) var(--_switch-color-ease),
       background-color calc(var(--_switch-duration-in) * var(--_switch-motion)) var(--_switch-ease-in),
       box-shadow calc(var(--_switch-duration-in) * var(--_switch-motion)) var(--_switch-ease-in);
   }

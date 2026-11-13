@@ -215,7 +215,7 @@ describe('Switch thumb contrast on every frame (order 1.29, B3, B4, N1)', () => 
   });
 
   it('B3, B4: a clear lens keeps a ring of the solid thumb color inside its edge, under the style shadows', () => {
-    expect(rule(thumb)).toMatch(/box-shadow:\s*var\(--_switch-thumb-shadow\),\s*inset 0 0 0 var\(--_switch-thumb-ring-width\) currentColor;/);
+    expect(rule(thumb)).toMatch(/box-shadow:\s*var\(--_switch-thumb-shadow\),[^;]*inset 0 0 0 var\(--_switch-thumb-ring-width\) currentColor;/);
     expect(rule(thumb)).toMatch(/background-color: color-mix\(in srgb, currentColor calc\(var\(--_switch-thumb-solid-now\) \* 100%\), transparent\);/);
   });
 
@@ -247,8 +247,13 @@ describe('Switch thumb contrast on every frame (order 1.29, B3, B4, N1)', () => 
     );
   });
 
-  it('times an outline a platform draws round the off thumb with the thumb color', () => {
-    expect(rule(thumb)).toMatch(/outline-color calc\(var\(--_switch-duration\) \* var\(--_switch-motion\)\) var\(--_switch-color-ease\)/);
+  it('B3: draws an edge hook inside the thumb, held at its width whatever the scale, transparent by default', () => {
+    expect(code).toMatch(/--_switch-thumb-edge: transparent;/);
+    expect(code).toMatch(/--_switch-thumb-edge-width: 0px;/);
+    expect(rule(thumb)).toMatch(
+      /inset 0 0 0 calc\(var\(--_switch-thumb-edge-width\) \/ var\(--_switch-thumb-size-now\)\) var\(--_switch-thumb-edge\),\s*inset 0 0 0 var\(--_switch-thumb-ring-width\) currentColor;/,
+    );
+    expect(code).not.toMatch(/outline-color calc/);
   });
 
   it('declares the shape hooks with defaults that keep the look', () => {
