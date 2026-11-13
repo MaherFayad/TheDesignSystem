@@ -73,26 +73,28 @@ afterEach(() => {
 class CheckHost {}
 
 describe('recheck angular-2: checks', () => {
-  it('Checkbox B1: the indicator keeps a hidden span with the last glyph while unchecked, as React forceMount', async () => {
+  it('Checkbox B1: the indicator keeps its mark with the last glyph while unchecked, as React forceMount', async () => {
+    // Round 3 (order 1.23): the glyph is the drawn svg mark part, after an
+    // empty fill span, instead of an icon inside a clip span.
     const fixture = mount(CheckHost);
     await settle(fixture);
     const box = fixture.nativeElement.querySelector('[data-t="box"]') as HTMLElement;
     const control = box.querySelector('[data-part="control"]') as HTMLButtonElement;
-    const clip = () => box.querySelector('[data-part="indicator"] > span[aria-hidden="true"]') as HTMLElement | null;
-    // Unchecked from the start: the clip span and a check glyph are there.
-    expect(clip()).not.toBeNull();
-    expect(clip()?.querySelector('[data-icon="check"]')).not.toBeNull();
+    const mark = () => box.querySelector('[data-part="indicator"] > svg[data-part="mark"]') as SVGElement | null;
+    // Unchecked from the start: the mark is there with the check glyph.
+    expect(mark()).not.toBeNull();
+    expect(mark()?.getAttribute('data-glyph')).toBe('check');
     control.click();
     await settle(fixture);
     expect(box.getAttribute('data-state')).toBe('checked');
-    const checkedClip = clip();
-    expect(checkedClip?.querySelector('[data-icon="check"]')).not.toBeNull();
+    const checkedMark = mark();
+    expect(checkedMark?.getAttribute('data-glyph')).toBe('check');
     control.click();
     await settle(fixture);
     expect(box.getAttribute('data-state')).toBe('unchecked');
-    // Still the same span, still the last glyph, so an uncheck can fade it.
-    expect(clip()).toBe(checkedClip);
-    expect(clip()?.querySelector('[data-icon="check"]')).not.toBeNull();
+    // Still the same mark, still the last glyph, so an uncheck can undraw it.
+    expect(mark()).toBe(checkedMark);
+    expect(mark()?.getAttribute('data-glyph')).toBe('check');
   });
 
   it('CheckboxGroup B1: select all posts only the items, never channels=on', async () => {

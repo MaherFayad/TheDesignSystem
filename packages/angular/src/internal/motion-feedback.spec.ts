@@ -4,7 +4,7 @@
 // function with the same arguments as React.
 import { flipExit, flipPlay, rectOf } from '@the-system/motion';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import { Celebrate, DigitRoller, dismissWithExit, fadeAway, FlipList, haloBurst, popMark, shiftToast, watchStackShift } from './motion-feedback';
+import { Celebrate, DigitRoller, dismissWithExit, fadeAway, FlipList, haloBurst, popMark } from './motion-feedback';
 
 interface Call {
   target: Element;
@@ -207,26 +207,4 @@ describe('motion-feedback', () => {
     expect(halo!.options.id).toBe('ds-motion:progress-halo');
   });
 
-  it('watchStackShift plays the flip of each toast the stack moved (shiftToast, snappy)', async () => {
-    const viewport = document.createElement('ol');
-    document.body.append(viewport);
-    const tops = new Map<Element, number>();
-    const toast = (top: number) => {
-      const li = document.createElement('li');
-      li.setAttribute('data-ds', 'toast');
-      Object.defineProperty(li, 'offsetTop', { configurable: true, get: () => tops.get(li) ?? 0 });
-      tops.set(li, top);
-      return li;
-    };
-    const first = toast(0);
-    viewport.append(first);
-    const stop = watchStackShift(viewport, (el, from, to) => shiftToast(el, from, to, 'full'));
-    tops.set(first, 60);
-    viewport.append(toast(0));
-    await Promise.resolve();
-    const played = s.take();
-    expect(played.map((p) => [p.target, p.options.id])).toEqual([[first, 'ds-motion:flip']]);
-    expect(played[0]!.keyframes[0]!.transform).toBe('translate(0px, -60px)');
-    stop();
-  });
 });

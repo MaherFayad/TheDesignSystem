@@ -1,0 +1,304 @@
+<section data-demo="case" data-demo-case="variants">
+  <h2 data-demo="title">
+    "Sizes, shapes and adornments"
+  <div data-demo="grid" style="grid-template-columns: repeat(auto-fill, minmax(min(12rem, 100%), 1fr));">
+    <div data-ds="input" data-shape="default" data-size="xs">
+      <input aria-label="Board name, xs, default" data-part="control" placeholder="xs, default" type="text">
+    <div data-ds="input" data-shape="default" data-size="sm">
+      <input aria-label="Board name, sm, default" data-part="control" placeholder="sm, default" type="text">
+    <div data-ds="input" data-shape="default" data-size="md">
+      <input aria-label="Board name, md, default" data-part="control" placeholder="md, default" type="text">
+    <div data-ds="input" data-shape="default" data-size="lg">
+      <input aria-label="Board name, lg, default" data-part="control" placeholder="lg, default" type="text">
+  <div data-demo="grid" style="grid-template-columns: repeat(auto-fill, minmax(min(12rem, 100%), 1fr));">
+    <div data-ds="input" data-shape="pill" data-size="xs">
+      <input aria-label="Board name, xs, pill" data-part="control" placeholder="xs, pill" type="text">
+    <div data-ds="input" data-shape="pill" data-size="sm">
+      <input aria-label="Board name, sm, pill" data-part="control" placeholder="sm, pill" type="text">
+    <div data-ds="input" data-shape="pill" data-size="md">
+      <input aria-label="Board name, md, pill" data-part="control" placeholder="md, pill" type="text">
+    <div data-ds="input" data-shape="pill" data-size="lg">
+      <input aria-label="Board name, lg, pill" data-part="control" placeholder="lg, pill" type="text">
+  <div data-demo="grid" style="grid-template-columns: repeat(auto-fill, minmax(min(14rem, 100%), 1fr));">
+    <div data-ds="input" data-shape="default" data-size="md">
+      <span aria-hidden="true" data-part="start">
+        <svg aria-hidden="true" data-ds="icon" data-icon="search" data-set="line" data-size="md" fill="none" focusable="false" height="16" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="16" xmlns="http://www.w3.org/2000/svg">
+          <path d="m21 21-4.34-4.34">
+          <circle cx="11" cy="11" r="8">
+      <input aria-label="Search boards" data-part="control" placeholder="Search boards" type="search">
+    <div data-ds="input" data-shape="default" data-size="md">
+      <span aria-hidden="true" data-part="start">
+        "$"
+      <input aria-label="Price" data-part="control" type="number" value="29">
+      <span aria-hidden="true" data-part="end">
+        "USD"
+    <div data-ds="input" data-shape="default" data-size="sm">
+      <input aria-label="Width" data-part="control" type="number" value="320">
+      <span aria-hidden="true" data-part="end">
+        "px"
+    <div data-ds="input" data-shape="default" data-size="md">
+      <span aria-hidden="true" data-part="start">
+        <svg aria-hidden="true" data-ds="icon" data-icon="link" data-set="line" data-size="md" fill="none" focusable="false" height="16" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="16" xmlns="http://www.w3.org/2000/svg">
+          <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71">
+          <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71">
+      <input aria-label="Board link" data-part="control" type="url" value="example.com/board">
+      <span aria-hidden="true" data-part="end">
+        <svg aria-hidden="true" data-ds="icon" data-icon="external" data-mirror="" data-set="line" data-size="md" fill="none" focusable="false" height="16" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="16" xmlns="http://www.w3.org/2000/svg">
+          <path d="M15 3h6v6">
+          <path d="M10 14 21 3">
+          <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6">
+<section data-demo="case" data-demo-case="empty">
+  <h2 data-demo="title">
+    "Empty, placeholder only"
+  <div data-ds="field" data-orientation="vertical">
+    <label data-ds="label" data-part="label" data-size="md" for="ID1" id="ID0">
+      "Board name"
+    <div data-ds="input" data-shape="default" data-size="md">
+      <input data-part="control" id="ID1" placeholder="For example, spring launch" type="text">
+<section data-demo="case" data-demo-case="one">
+  <h2 data-demo="title">
+    "One field"
+  <div data-ds="field" data-orientation="vertical">
+    <label data-ds="label" data-part="label" data-size="md" for="ID3" id="ID2">
+      "Board name"
+    <div data-ds="input" data-shape="default" data-size="md">
+      <input aria-describedby="ID4" data-part="control" id="ID3" type="text" value="Spring launch">
+    <p data-part="description" id="ID4">
+      "Shown on the board card and in shared links."
+<section data-demo="case" data-demo-case="many">
+  <h2 data-demo="title">
+    "A short form"
+  <p data-demo="label">
+    "Fields marked * are required."
+  <div data-demo="grid" style="grid-template-columns: repeat(auto-fill, minmax(min(16rem, 100%), 1fr));">
+    <div data-ds="field" data-orientation="vertical">
+      <label data-ds="label" data-part="label" data-size="md" for="ID6" id="ID5">
+        "Full name"
+        <span aria-hidden="true" data-part="required">
+          "*"
+      <div data-ds="input" data-shape="default" data-size="md">
+        <input aria-required="true" autocomplete="name" data-part="control" id="ID6" type="text" value="Sara Ahmed">
+    <div data-ds="field" data-orientation="vertical">
+      <label data-ds="label" data-part="label" data-size="md" for="ID8" id="ID7">
+        "Email"
+        <span aria-hidden="true" data-part="required">
+          "*"
+      <div data-ds="input" data-shape="default" data-size="md">
+        <input aria-describedby="ID9" aria-required="true" autocomplete="email" data-part="control" id="ID8" placeholder="name@example.com" type="email">
+      <p data-part="description" id="ID9">
+        "Sign in links go here."
+    <div data-ds="field" data-orientation="vertical">
+      <label data-ds="label" data-part="label" data-size="md" for="ID11" id="ID10">
+        "Phone"
+      <div data-ds="input" data-shape="default" data-size="md">
+        <input autocomplete="tel" data-part="control" id="ID11" placeholder="+966 5x xxx xxxx" type="tel">
+    <div data-ds="field" data-orientation="vertical">
+      <label data-ds="label" data-part="label" data-size="md" for="ID13" id="ID12">
+        "Password"
+        <span aria-hidden="true" data-part="required">
+          "*"
+      <div data-ds="input" data-shape="default" data-size="md">
+        <span aria-hidden="true" data-part="start">
+          <svg aria-hidden="true" data-ds="icon" data-icon="lock" data-set="line" data-size="md" fill="none" focusable="false" height="16" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="16" xmlns="http://www.w3.org/2000/svg">
+            <rect height="11" rx="2" ry="2" width="18" x="3" y="11">
+            <path d="M7 11V7a5 5 0 0 1 10 0v4">
+        <input aria-describedby="ID14" aria-required="true" autocomplete="new-password" data-part="control" id="ID13" type="password">
+      <p data-part="description" id="ID14">
+        "At least 12 characters."
+<section data-demo="case" data-demo-case="too-many">
+  <h2 data-demo="title">
+    "A long form in a narrow container"
+  <div style="max-inline-size: var(--ds-dialog-width-sm); display: grid; gap: var(--ds-space-m);">
+    <div data-ds="field" data-orientation="horizontal">
+      <label data-ds="label" data-part="label" data-size="md" for="ID16" id="ID15">
+        "First name"
+      <div data-ds="input" data-shape="default" data-size="sm">
+        <input data-part="control" id="ID16" type="text" value="Sara">
+    <div data-ds="field" data-orientation="horizontal">
+      <label data-ds="label" data-part="label" data-size="md" for="ID18" id="ID17">
+        "Last name"
+      <div data-ds="input" data-shape="default" data-size="sm">
+        <input data-part="control" id="ID18" type="text" value="Ahmed">
+    <div data-ds="field" data-orientation="horizontal">
+      <label data-ds="label" data-part="label" data-size="md" for="ID20" id="ID19">
+        "Job title"
+      <div data-ds="input" data-shape="default" data-size="sm">
+        <input data-part="control" id="ID20" type="text" value="Product designer">
+    <div data-ds="field" data-orientation="horizontal">
+      <label data-ds="label" data-part="label" data-size="md" for="ID22" id="ID21">
+        "Company"
+      <div data-ds="input" data-shape="default" data-size="sm">
+        <input data-part="control" id="ID22" type="text" value="Northwind">
+    <div data-ds="field" data-orientation="horizontal">
+      <label data-ds="label" data-part="label" data-size="md" for="ID24" id="ID23">
+        "Street address"
+      <div data-ds="input" data-shape="default" data-size="sm">
+        <input data-part="control" id="ID24" type="text" value="12 King Fahd Road">
+    <div data-ds="field" data-orientation="horizontal">
+      <label data-ds="label" data-part="label" data-size="md" for="ID26" id="ID25">
+        "City"
+      <div data-ds="input" data-shape="default" data-size="sm">
+        <input data-part="control" id="ID26" type="text" value="Riyadh">
+    <div data-ds="field" data-orientation="horizontal">
+      <label data-ds="label" data-part="label" data-size="md" for="ID28" id="ID27">
+        "Postal code"
+      <div data-ds="input" data-shape="default" data-size="sm">
+        <input data-part="control" id="ID28" type="text" value="12211">
+    <div data-ds="field" data-orientation="horizontal">
+      <label data-ds="label" data-part="label" data-size="md" for="ID30" id="ID29">
+        "Country"
+      <div data-ds="input" data-shape="default" data-size="sm">
+        <input data-part="control" id="ID30" type="text" value="Saudi Arabia">
+    <div data-ds="field" data-orientation="horizontal">
+      <label data-ds="label" data-part="label" data-size="md" for="ID32" id="ID31">
+        "Time zone"
+      <div data-ds="input" data-shape="default" data-size="sm">
+        <input data-part="control" id="ID32" type="text" value="Arabia Standard Time">
+    <div data-ds="field" data-orientation="horizontal">
+      <label data-ds="label" data-part="label" data-size="md" for="ID34" id="ID33">
+        "Website"
+      <div data-ds="input" data-shape="default" data-size="sm">
+        <input data-part="control" id="ID34" type="text" value="northwind.example.com">
+    <div data-ds="field" data-orientation="horizontal">
+      <label data-ds="label" data-part="label" data-size="md" for="ID36" id="ID35">
+        "Team name"
+      <div data-ds="input" data-shape="default" data-size="sm">
+        <input data-part="control" id="ID36" type="text" value="Design">
+    <div data-ds="field" data-orientation="horizontal">
+      <label data-ds="label" data-part="label" data-size="md" for="ID38" id="ID37">
+        "Billing contact"
+      <div data-ds="input" data-shape="default" data-size="sm">
+        <input data-part="control" id="ID38" type="text" value="Omar Khalid">
+<section data-demo="case" data-demo-case="long-text">
+  <h2 data-demo="title">
+    "Long value and long label"
+  <div data-ds="field" data-orientation="vertical">
+    <label data-ds="label" data-part="label" data-size="md" for="ID40" id="ID39">
+      "The address people open to see this board, including every filter and the sort order"
+    <div data-ds="input" data-shape="default" data-size="md">
+      <input aria-describedby="ID41" data-part="control" id="ID40" type="url" value="https://boards.example.com/team/design/reviews/2026/november/landing-page-hero-directions-final-round?view=grid&sort=recent">
+    <p data-part="description" id="ID41">
+      "Your changes are saved to your account. Open the board on any other device to see the same version, with every comment and every reference in place."
+  <div data-ds="field" data-orientation="vertical">
+    <label data-ds="label" data-part="label" data-size="md" for="ID43" id="ID42">
+      "Supercalifragilisticexpialidocious"
+    <div data-ds="input" data-shape="default" data-size="md">
+      <input data-part="control" id="ID43" type="text" value="Supercalifragilisticexpialidocious Supercalifragilisticexpialidocious Supercalifragilisticexpialidocious">
+<section data-demo="case" data-demo-case="long-arabic">
+  <h2 data-demo="title">
+    "نص عربي طويل"
+  <div data-contrast="default" data-demo="content" data-density="comfortable" data-ds="theme" data-glass="regular" data-platform="web" data-scheme="light" data-style="neutral" dir="rtl" lang="ar">
+    <p data-demo="label">
+      "الحقول اللي عليها * مطلوبة."
+    <div data-ds="field" data-orientation="vertical">
+      <label data-ds="label" data-part="label" data-size="md" for="ID45" id="ID44">
+        "اسم اللوحة"
+      <div data-ds="input" data-shape="default" data-size="md">
+        <input aria-describedby="ID46" data-part="control" id="ID45" type="text" value="إطلاق الربيع، الاتجاهات النهائية للواجهة الرئيسية وصفحة الأسعار">
+      <p data-part="description" id="ID46">
+        "لو خلصت من تعديل الملف، احفظه وارجع للوحة عشان تشوف كل التغييرات في مكان واحد. وإذا تبي تشاركه مع فريقك، نزله بصيغة JSON وأرسله لهم، وبيقدرون يفتحونه من أي جهاز."
+    <div data-ds="field" data-orientation="vertical">
+      <label data-ds="label" data-part="label" data-size="md" for="ID48" id="ID47">
+        "البريد الإلكتروني"
+        <span aria-hidden="true" data-part="required">
+          "*"
+      <div data-ds="input" data-shape="default" data-size="md">
+        <input aria-describedby="ID49" aria-required="true" data-part="control" id="ID48" placeholder="name@example.com" type="email">
+      <p data-part="description" id="ID49">
+        "يوصلك عليه رابط الدخول، وما يشوفه أحد غيرك."
+    <div data-ds="field" data-invalid="" data-orientation="vertical">
+      <label data-ds="label" data-invalid="" data-part="label" data-size="md" for="ID51" id="ID50">
+        "رابط اللوحة"
+      <div data-ds="input" data-invalid="" data-shape="default" data-size="md">
+        <input aria-describedby="ID52" aria-invalid="true" data-part="control" id="ID51" type="url" value="boards.example.com">
+      <p data-ds="field-error" data-part="error" data-size="md" id="ID52">
+        <svg aria-hidden="true" data-ds="icon" data-icon="danger" data-part="icon" data-set="line" data-size="md" fill="none" focusable="false" height="16" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="16" xmlns="http://www.w3.org/2000/svg">
+          <path d="M12 16h.01">
+          <path d="M12 8v4">
+          <path d="M15.312 2a2 2 0 0 1 1.414.586l4.688 4.688A2 2 0 0 1 22 8.688v6.624a2 2 0 0 1-.586 1.414l-4.688 4.688a2 2 0 0 1-1.414.586H8.688a2 2 0 0 1-1.414-.586l-4.688-4.688A2 2 0 0 1 2 15.312V8.688a2 2 0 0 1 .586-1.414l4.688-4.688A2 2 0 0 1 8.688 2z">
+        <span data-part="message">
+          <span data-ds="bidi">
+            "الرابط ناقص. ابدأه بـ"
+            <bdi data-part="run" dir="ltr">
+              "https"
+            ":// وبعده اسم الموقع."
+    <div data-ds="field" data-orientation="horizontal">
+      <label data-ds="label" data-part="label" data-size="md" for="ID54" id="ID53">
+        "رقم الجوال"
+      <div data-ds="input" data-shape="default" data-size="md">
+        <input data-part="control" id="ID54" placeholder="05x xxx xxxx" type="tel">
+<section data-demo="case" data-demo-case="loading">
+  <h2 data-demo="title">
+    "Value being checked"
+  <div data-ds="field" data-orientation="vertical">
+    <label data-ds="label" data-part="label" data-size="md" for="ID56" id="ID55">
+      "Workspace address"
+    <div data-ds="input" data-shape="default" data-size="md">
+      <span aria-hidden="true" data-part="start">
+        <svg aria-hidden="true" data-ds="icon" data-icon="globe" data-set="line" data-size="md" fill="none" focusable="false" height="16" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="16" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="12" cy="12" r="10">
+          <path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20">
+          <path d="M2 12h20">
+      <input aria-describedby="ID57" data-part="control" id="ID56" type="text" value="spring-launch">
+      <span aria-hidden="true" data-part="end">
+        <svg aria-hidden="true" data-ds="icon" data-icon="loader" data-set="line" data-size="md" fill="none" focusable="false" height="16" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="16" xmlns="http://www.w3.org/2000/svg">
+          <path d="M21 12a9 9 0 1 1-6.219-8.56">
+    <p data-part="description" id="ID57">
+      "Checking if this address is free."
+<section data-demo="case" data-demo-case="error">
+  <h2 data-demo="title">
+    "Invalid with a message"
+  <div data-ds="field" data-invalid="" data-orientation="vertical">
+    <label data-ds="label" data-invalid="" data-part="label" data-size="md" for="ID59" id="ID58">
+      "Email"
+      <span aria-hidden="true" data-part="required">
+        "*"
+    <div data-ds="input" data-invalid="" data-shape="default" data-size="md">
+      <input aria-describedby="ID60" aria-invalid="true" aria-required="true" data-part="control" id="ID59" type="email" value="sara@">
+    <p data-ds="field-error" data-part="error" data-size="md" id="ID60">
+      <svg aria-hidden="true" data-ds="icon" data-icon="danger" data-part="icon" data-set="line" data-size="md" fill="none" focusable="false" height="16" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="16" xmlns="http://www.w3.org/2000/svg">
+        <path d="M12 16h.01">
+        <path d="M12 8v4">
+        <path d="M15.312 2a2 2 0 0 1 1.414.586l4.688 4.688A2 2 0 0 1 22 8.688v6.624a2 2 0 0 1-.586 1.414l-4.688 4.688a2 2 0 0 1-1.414.586H8.688a2 2 0 0 1-1.414-.586l-4.688-4.688A2 2 0 0 1 2 15.312V8.688a2 2 0 0 1 .586-1.414l4.688-4.688A2 2 0 0 1 8.688 2z">
+      <span data-part="message">
+        "Add the part after the @, for example name@example.com."
+<section data-demo="case" data-demo-case="disabled">
+  <h2 data-demo="title">
+    "Disabled"
+  <div data-demo="grid" style="grid-template-columns: repeat(auto-fill, minmax(min(16rem, 100%), 1fr));">
+    <div data-disabled="" data-ds="field" data-orientation="vertical">
+      <label data-disabled="" data-ds="label" data-part="label" data-size="md" for="ID62" id="ID61">
+        "Workspace"
+      <div data-disabled="" data-ds="input" data-shape="default" data-size="md">
+        <input aria-describedby="ID63" data-part="control" disabled="" id="ID62" type="text" value="Design team">
+      <p data-part="description" id="ID63">
+        "Only owners can rename the workspace."
+    <div data-disabled="" data-ds="field" data-orientation="vertical">
+      <label data-disabled="" data-ds="label" data-part="label" data-size="md" for="ID65" id="ID64">
+        "Search"
+      <div data-disabled="" data-ds="input" data-shape="default" data-size="md">
+        <span aria-hidden="true" data-part="start">
+          <svg aria-hidden="true" data-ds="icon" data-icon="search" data-set="line" data-size="md" fill="none" focusable="false" height="16" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="16" xmlns="http://www.w3.org/2000/svg">
+            <path d="m21 21-4.34-4.34">
+            <circle cx="11" cy="11" r="8">
+        <input data-part="control" disabled="" id="ID65" placeholder="Search boards" type="text">
+<section data-demo="case" data-demo-case="readonly">
+  <h2 data-demo="title">
+    "Read only"
+  <div data-demo="grid" style="grid-template-columns: repeat(auto-fill, minmax(min(16rem, 100%), 1fr));">
+    <div data-ds="field" data-orientation="vertical" data-readonly="">
+      <label data-ds="label" data-part="label" data-size="md" for="ID67" id="ID66">
+        "Board link"
+      <div data-ds="input" data-readonly="" data-shape="default" data-size="md">
+        <span aria-hidden="true" data-part="start">
+          <svg aria-hidden="true" data-ds="icon" data-icon="link" data-set="line" data-size="md" fill="none" focusable="false" height="16" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="16" xmlns="http://www.w3.org/2000/svg">
+            <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71">
+            <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71">
+        <input aria-describedby="ID68" data-part="control" id="ID67" readonly="" type="url" value="https://boards.example.com/b/42">
+      <p data-part="description" id="ID68">
+        "Copy it to share the board."
+    <div data-ds="field" data-orientation="vertical" data-readonly="">
+      <label data-ds="label" data-part="label" data-size="md" for="ID70" id="ID69">
+        "Plan"
+      <div data-ds="input" data-readonly="" data-shape="default" data-size="md">
+        <input data-part="control" id="ID70" readonly="" type="text" value="Team, yearly">

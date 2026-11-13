@@ -52,25 +52,6 @@ const dockClose = '<div data-toast-dock="" aria-hidden="true" style="inline-size
 class MenuOrigin {}
 
 @Component({
-  selector: 'gallery-stage-menu-row-slide',
-  imports: [DS_DROPDOWN_MENU, DsButton],
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  template: `
-    <ng-container dsDropdownMenu>
-      <button dsButton dsDropdownMenuTrigger data-interaction-trigger="menu">Open menu</button>
-      <ng-template dsDropdownMenuContent>
-        <div dsDropdownMenuItem start="edit">Rename board</div>
-        <div dsDropdownMenuItem start="copy">Duplicate board</div>
-        <div dsDropdownMenuItem start="link">Copy link</div>
-        <div dsDropdownMenuSeparator></div>
-        <div dsDropdownMenuItem start="download">Export board</div>
-      </ng-template>
-    </ng-container>
-  `,
-})
-class MenuRowSlide {}
-
-@Component({
   selector: 'gallery-stage-menu-submenu-nudge',
   imports: [DS_DROPDOWN_MENU, DsButton],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -254,7 +235,6 @@ class NotificationChange {
 /** Live stages by interaction id. */
 export const stages: Record<string, Type<unknown>> = {
   'menu-origin': MenuOrigin,
-  'menu-row-slide': MenuRowSlide,
   'menu-submenu-nudge': MenuSubmenuNudge,
   'dialog-spring': DialogSpring,
   'window-lights': WindowLights,

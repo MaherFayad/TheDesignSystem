@@ -8,6 +8,7 @@ import { TestBed, type ComponentFixture } from '@angular/core/testing';
 import { createToastStore, type ToastClock, type ToastStore } from '@the-system/shared';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { DsTheme } from '../../theme/theme';
+import { DsButton } from '../button/button';
 import { stackLayout } from '../../internal/toast-stack';
 import { RUBBER_MAX, rubberBand, swipeCloses, swipeVelocity } from '../../internal/toast-swipe';
 import { DsToaster, resolveToasterPosition, type ToasterPositionProp } from './toaster';
@@ -19,12 +20,12 @@ function stillClock(): ToastClock {
 }
 
 @Component({
-  imports: [DsToaster, DsTheme],
+  imports: [DsToaster, DsTheme, DsButton],
   template: `
     <div dsTheme="neutral" [platform]="platform()" [dir]="dir()">
       <ng-container dsToaster [store]="store" [position]="position()" />
     </div>
-    <button id="away" type="button">Away</button>
+    <button dsButton id="away">Move focus away</button>
   `,
 })
 class Host {
