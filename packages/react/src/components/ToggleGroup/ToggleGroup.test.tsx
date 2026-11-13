@@ -190,7 +190,8 @@ describe('ToggleGroup', () => {
       </ToggleGroup>,
     );
     const item = screen.getByRole('radio', { name: 'Grid view' });
-    expect(Array.from(item.children).map((c) => c.getAttribute('data-part'))).toEqual([null, 'icon']);
+    // The hit part is last (order 1.29, review B10, from ButtonBase).
+    expect(Array.from(item.children).map((c) => c.getAttribute('data-part'))).toEqual([null, 'icon', 'hit']);
     expect(item.firstElementChild?.getAttribute('aria-hidden')).toBe('true');
   });
 
@@ -220,6 +221,8 @@ describe('ToggleGroup', () => {
       expect(screen.getByRole('radio', { name: 'Center' }).getAttribute('data-state')).toBe('on');
       const slide = animate.mock.calls.find((c) => c[1]?.id === 'ds-motion:indicator-slide');
       expect(slide?.[0]?.[0]?.transform).toBe('translate(-80px, 0px) scale(1, 1)');
+      // The labels take the ink, not the dip and pop of followIndicator (order 1.29, angular-sync-3 section 6 item 2).
+      expect(animate.mock.calls.some((c) => c[1]?.id === 'ds-motion:indicator-answer')).toBe(false);
     } finally {
       proto.animate = saved.animate;
       HTMLElement.prototype.getBoundingClientRect = saved.rect;

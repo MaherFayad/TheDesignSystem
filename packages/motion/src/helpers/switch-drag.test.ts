@@ -7,6 +7,7 @@ import {
   DRAG_PROGRESS,
   beginSwitchDrag,
   clearDragProgress,
+  dragOnSide,
   followPointer,
   pastSlop,
   releaseChecked,
@@ -81,6 +82,21 @@ describe('switch-drag run', () => {
     expect(releaseChecked(run, 20)).toBe(false);
     expect(releaseSpeed(run, 200)).toBe(0);
     expect(releaseChecked(run, 200)).toBe(true);
+    button.parentElement!.remove();
+  });
+
+  it('B4 (order 1.29): the side flips at the middle, read from the written progress', () => {
+    const button = control();
+    const run = beginSwitchDrag(button, false, 1, 100, 0)!;
+    expect(dragOnSide(run)).toBe(false);
+    followPointer(run, 111.9, 10);
+    expect(dragOnSide(run)).toBe(false);
+    // 0.499996 is written as 0.5000, which Switch.css draws as on: the side agrees.
+    followPointer(run, 100 + 24 * 0.499996, 20);
+    expect(button.parentElement!.style.getPropertyValue(DRAG_PROGRESS)).toBe('0.5000');
+    expect(dragOnSide(run)).toBe(true);
+    followPointer(run, 160, 30);
+    expect(dragOnSide(run)).toBe(true);
     button.parentElement!.remove();
   });
 

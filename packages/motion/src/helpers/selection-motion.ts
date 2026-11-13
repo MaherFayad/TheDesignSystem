@@ -29,7 +29,8 @@
 // transitionend or animationend.
 import { ANIMATION_ID_PREFIX, readDuration, readEasing, settled, type PatternMode } from '../core';
 import { flipExit, flipPlay, rectOf } from '../primitives/flip';
-import { staggerGroup } from '../primitives/stagger';
+import { STAGGER_ID, staggerGroup, staggerStep } from '../primitives/stagger';
+import { STAGGER_DELAY, STAGGER_MAX_STEPS, distanceVar, played, run, spec, springTiming, stepsWithin } from '../primitives/shared';
 import { drawnScale } from './selection-marker';
 
 // ---------------------------------------------------------------- row glide
@@ -233,11 +234,30 @@ export class FlipGroup {
 /** The first rows a popup staggers; the rest arrive with the last step. */
 export const STAGGER_ROWS = 12;
 
-/** Rows of a popup that just opened arrive one stagger step apart, after the surface. */
+/**
+ * Rows of a popup that just opened (order 1.29, review N25 and ten weakest
+ * #9): every row fades in with the surface, on its spring with no delay, so
+ * no empty card shows and the last row is readable when the surface is; only
+ * the rise is staggered, one step apart after the surface. Reduced: a fade
+ * with no delay.
+ */
 export function staggerRows(container: Element | null, rows: string, mode: PatternMode): Animation[] {
   if (!container || mode === 'none') return [];
   const list = Array.from(container.querySelectorAll(rows)).slice(0, STAGGER_ROWS);
-  return staggerGroup(list, { phase: 'enter', offset: 1, spring: 'soft', mode });
+  if (mode === 'reduced' || list.length === 0) return staggerGroup(list, { phase: 'enter', mode });
+  const maxSteps = Math.min(STAGGER_MAX_STEPS, stepsWithin(list[0], STAGGER_MAX_STEPS));
+  return played(
+    list.flatMap((el, i) => {
+      const step = staggerStep(i, { offset: 1, maxSteps });
+      const fade = spec([{ opacity: 0 }, { opacity: 1, offset: 0.4 }, { opacity: 1 }], { duration: 'duration.spring-snappy', easing: 'ease.out' });
+      const rise = spec([{ transform: `translateY(${distanceVar('distance.enter')})` }, { transform: 'none' }], springTiming('soft'), {
+        delay: STAGGER_DELAY,
+        delaySteps: step,
+        fill: 'backwards',
+      });
+      return [run(el, fade, STAGGER_ID), run(el, rise, STAGGER_ID)];
+    }),
+  );
 }
 
 /** The option rows of the ListBox inside a picker popup. */

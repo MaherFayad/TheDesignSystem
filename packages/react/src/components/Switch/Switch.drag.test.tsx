@@ -116,6 +116,37 @@ describe('switch-drag on the control', () => {
     expect(onChange).toHaveBeenCalledTimes(2);
   });
 
+  it('B4 (order 1.29): while dragging, the root shows the side the thumb is on; the control keeps aria-checked', () => {
+    const { container } = render(<Switch label="Wi-Fi" defaultChecked />);
+    const control = screen.getByRole('switch');
+    const root = container.querySelector<HTMLElement>('[data-ds="switch"]');
+    fireEvent.pointerDown(control, { pointerId: 1, clientX: 30, button: 0, isPrimary: true });
+    fireEvent.pointerMove(control, { pointerId: 1, clientX: 24 });
+    expect(root?.getAttribute('data-state')).toBe('checked');
+    // Past the middle back toward off: 14px of a 24px travel.
+    fireEvent.pointerMove(control, { pointerId: 1, clientX: 16 });
+    expect(root?.getAttribute('data-state')).toBe('unchecked');
+    expect(control.getAttribute('aria-checked')).toBe('true');
+    fireEvent.pointerMove(control, { pointerId: 1, clientX: 16 });
+    fireEvent.pointerUp(control, { pointerId: 1, clientX: 16 });
+    fireEvent.click(control);
+    expect(root?.getAttribute('data-state')).toBe('unchecked');
+    expect(control.getAttribute('aria-checked')).toBe('false');
+  });
+
+  it('N10 (order 1.29): a lost pointer capture ends the drag where it is, and leaves no data-dragging', () => {
+    const { container } = render(<Switch label="Wi-Fi" />);
+    const control = screen.getByRole('switch');
+    const root = container.querySelector<HTMLElement>('[data-ds="switch"]');
+    fireEvent.pointerDown(control, { pointerId: 1, clientX: 10, button: 0, isPrimary: true });
+    fireEvent.pointerMove(control, { pointerId: 1, clientX: 30 });
+    expect(root?.hasAttribute('data-dragging')).toBe(true);
+    fireEvent.lostPointerCapture(control, { pointerId: 1 });
+    expect(root?.hasAttribute('data-dragging')).toBe(false);
+    expect(root?.style.getPropertyValue('--_switch-drag-progress')).toBe('');
+    expect(control.getAttribute('aria-checked')).toBe('false');
+  });
+
   it('does not drag while disabled or read only', () => {
     const { container } = render(<Switch label="Wi-Fi" readOnly />);
     const control = screen.getByRole('switch');
@@ -141,5 +172,53 @@ describe('Switch thumb icon (platform hook, order 1.23)', () => {
   it('zeroes its motion under the reduced form, by the media query and the page setting', () => {
     expect(css).toMatch(/:root\[data-motion='reduce'\] \[data-ds='switch'\] \{[^}]*--_switch-motion: 0;/);
     expect(css).toMatch(/@media \(prefers-reduced-motion: reduce\) \{\s*\[data-ds='switch'\] \{[^}]*--_switch-motion: 0;/);
+  });
+});
+
+describe('Switch thumb contrast on every frame (order 1.29, B3, B4, N1)', () => {
+  const code = css.replace(/\/\*[\s\S]*?\*\//g, '');
+  const rule = (selector: string) => {
+    const at = code.indexOf(`${selector} {`);
+    return at === -1 ? '' : code.slice(at, code.indexOf('\n  }', at));
+  };
+  const thumb = "[data-ds='switch'] > [data-part='control'] > [data-part='track'] > [data-part='thumb']";
+  const fill = "[data-ds='switch'] > [data-part='control'] > [data-part='track'] > span:not([data-part])";
+
+  it('B3: the thumb takes its on color at once and holds it to the middle of the travel turning off, with the fill', () => {
+    expect(rule("[data-ds='switch']")).toMatch(/--_switch-color-ease: steps\(2, jump-none\);/);
+    expect(rule("[data-ds='switch'][data-state='checked']")).toMatch(/--_switch-color-ease: step-start;/);
+    expect(rule(thumb)).toMatch(/color: var\(--_switch-thumb-bg\);/);
+    expect(rule(thumb)).toMatch(/color calc\(var\(--_switch-duration\) \* var\(--_switch-motion\)\) var\(--_switch-color-ease\)/);
+    expect(rule(fill)).toMatch(/opacity calc\(var\(--_switch-duration\) \* var\(--_switch-motion\)\) var\(--_switch-color-ease\)/);
+    // The fill never fades on its own curve under the thumb.
+    expect(code).not.toMatch(/opacity calc\(var\(--_switch-duration\) \* var\(--_switch-motion\)\) var\(--ds-ease-in\)/);
+  });
+
+  it('B3, B4: a clear lens keeps a ring of the solid thumb color inside its edge, under the style shadows', () => {
+    expect(rule(thumb)).toMatch(/box-shadow:\s*var\(--_switch-thumb-shadow\),\s*inset 0 0 0 var\(--_switch-thumb-ring-width\) currentColor;/);
+    expect(rule(thumb)).toMatch(/background-color: color-mix\(in srgb, currentColor calc\(var\(--_switch-thumb-solid-now\) \* 100%\), transparent\);/);
+  });
+
+  it('B4: a drag steps the fill and the thumb color at progress 0.5', () => {
+    const drag = rule("[data-ds='switch'][data-dragging]");
+    expect(drag).toMatch(/--_switch-fill-now: clamp\(0, \(var\(--_switch-drag-progress\) - 0\.5\) \* 1000000 \+ 1, 1\);/);
+    expect(drag).not.toMatch(/calc\(clamp\(0, var\(--_switch-drag-progress\), 1\) \* 100%\)/);
+  });
+
+  it('N1: the travel is the translate, on the state timing even while pressed; the press times the transform', () => {
+    const pressed = rule(`[data-ds='switch']:not([data-disabled], [data-readonly]) > [data-part='control']:active > [data-part='track'] > [data-part='thumb']`);
+    expect(pressed).toMatch(/translate calc\(var\(--_switch-duration\) \* var\(--_switch-motion\)\) var\(--_switch-ease\)/);
+    expect(pressed).toMatch(/transform calc\(var\(--_switch-duration-in\) \* var\(--_switch-motion\)\) var\(--_switch-ease-in\)/);
+    expect(rule(thumb)).toMatch(/translate: calc\(\(var\(--_switch-travel\)/);
+    expect(code).not.toMatch(/background-color calc\(var\(--_switch-duration\) \* var\(--_switch-motion\)\) step-end;/);
+  });
+
+  it('declares the shape hooks with defaults that keep the look', () => {
+    expect(code).toMatch(/--_switch-radius: var\(--ds-radius-pill\);/);
+    expect(code).toMatch(/--_switch-thumb-radius: var\(--ds-radius-pill\);/);
+    expect(code).toMatch(/--_switch-thumb-width: var\(--_switch-thumb-size\);/);
+    expect(code).toMatch(/--_switch-thumb-ring-width: var\(--ds-border-width-strong\);/);
+    expect(rule(thumb)).toMatch(/inline-size: var\(--_switch-thumb-width\);/);
+    expect(code).toMatch(/--_switch-travel-max: calc\(var\(--_switch-width\) - var\(--_switch-thumb-width\)/);
   });
 });

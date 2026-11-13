@@ -19,7 +19,8 @@ describe('ToggleButton', () => {
     expect(el.getAttribute('data-state')).toBe('off');
     expect(el.getAttribute('data-size')).toBe('md');
     expect(el.getAttribute('data-emphasis')).toBe('soft');
-    expect(Array.from(el.children).map((c) => c.getAttribute('data-part'))).toEqual(['state-layer', 'start', 'label']);
+    // The hit part is last (order 1.29, review B10: ButtonBase draws it for every button but chip).
+    expect(Array.from(el.children).map((c) => c.getAttribute('data-part'))).toEqual(['state-layer', 'start', 'label', 'hit']);
     expect(el.querySelector('[data-part="state-layer"]')?.getAttribute('aria-hidden')).toBe('true');
   });
 

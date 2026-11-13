@@ -16,8 +16,8 @@ export const selectionInteractions = [
     pattern: 'swap',
     drive: 'css',
     trigger: 'The list of a picker opens or closes.',
-    feedback: 'The chevron of the trigger turns half a turn while the list is open and back when it closes, on the snappy spring.',
-    beats: ['Action and overshoot: the icon turns to 180deg on ease.spring-snappy over duration.spring-snappy (Neutral 180ms, Desk 300ms, Studio 80ms in steps), a little past and back.'],
+    feedback: 'The chevron of the trigger flips on its block axis while the list is open and back when it closes, on the snappy spring, so it never shows a sideways shape (order 1.29; a half turn where cos() is missing).',
+    beats: ['Action and overshoot: the icon scales on the block axis to the cosine of the open angle (-1 at 180deg) on ease.spring-snappy over duration.spring-snappy (Neutral 180ms, Desk 300ms, Studio 80ms in steps).'],
     styles: { neutral: 'a quick turn', desk: 'a longer turn with a small overshoot', studio: 'a cut in steps' },
     reduced: 'The icon turns at once.',
     off: {
@@ -37,10 +37,10 @@ export const selectionInteractions = [
     primitive: 'stagger',
     trigger: 'The list of a picker opens.',
     feedback:
-      'After the surface starts to open from the field, the rows rise by distance.enter and fade in one delay.stagger apart, starting one step after the surface, with every delay inside the 120ms stagger budget (stepsWithin), and each row at full opacity early in its run (readableEnter), so every row reads at full contrast within about 200ms. Every row is in the DOM and can be picked from the first frame, and the highlight marker is on the lit row at once. Results that change while it stays open play combobox-results instead.',
+      'Every row fades in with the surface, on the snappy spring with no delay (full opacity at 40 percent), so no empty card shows; only the rise by distance.enter is staggered, one delay.stagger apart starting one step after the surface, with every delay inside the 120ms stagger budget (stepsWithin) (order 1.29). Every row is in the DOM and can be picked from the first frame, and the highlight marker is on the lit row at once. Results that change while it stays open play combobox-results instead.',
     beats: [
       'Action: the popup surface opens from the field (menu-origin).',
-      'Secondary: row n rises from distance.enter (6, 12, 4px) and fades in on ease.spring-soft over duration.spring-soft (220, 340, 100ms), after n plus 1 delay.stagger (24, 45, 0ms), the steps capped so the last delay stays within 120ms; it is at full opacity by READABLE_AT of its run.',
+      'Secondary: every row fades in over duration.spring-snappy with no delay; row n rises from distance.enter (6, 12, 4px) on ease.spring-soft over duration.spring-soft (220, 340, 100ms), after n plus 1 delay.stagger (24, 45, 0ms), the steps capped so the last delay stays within 120ms.',
     ],
     styles: { neutral: 'a short cascade', desk: 'a slow cascade', studio: 'all rows at once, a short rise' },
     reduced: 'The rows fade in together with no delay.',
@@ -163,7 +163,7 @@ export const selectionInteractions = [
     trigger: 'Open a menu or a picker list from its trigger (a press, a right click, a title of the menu bar, a field, or the keys), then close it.',
     feedback:
       'The surface comes out of its trigger side, read from the Radix side and origin: it travels distance.shift from the trigger, grows from scale.menu-enter out of the trigger corner, fades in, and a clip-path opens it from the trigger edge (the top edge for a list below its trigger, the inline start edge for a submenu), on the snappy spring. ' +
-      'Then the inside of each menu row (icon, text, shortcut, chevron), the labels and the separators rise distance.shift one delay.stagger step apart, capped at six steps; picker rows play menu-rows. ' +
+      'Then the inside of each menu row (icon, text, shortcut, chevron), the labels and the separators rise distance.shift one delay.stagger step apart, capped at six steps; they fade with the surface and never on their own, so the last row is readable when the surface is (order 1.29); picker rows play menu-rows. ' +
       'The row itself, the highlight marker and the focus ring are there from the first frame. Closing is faster and all at once: the real content leaves the DOM at once (a press on the trigger reopens at once, review B6) and an inert aria-hidden copy plays the exit: the clip closes back toward the trigger while it shrinks and fades. ' +
       'In right to left layouts the menu grows from the corner at its trigger (the Radix origin is mirrored in DropdownMenu.css). Radix Select has no exit presence: its list leaves at once.',
     beats: [

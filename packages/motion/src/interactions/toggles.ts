@@ -39,13 +39,13 @@ export const togglesInteractions = [
     trigger: 'The person hovers the switch, presses it with the pointer or Space, then releases it to toggle; or presses Enter.',
     feedback:
       'Hover leans the thumb toward the side it would travel to. While pressed the thumb grows and widens toward its travel and the track dips. On release the thumb travels on the bouncy spring, passes its end and settles; the on fill sweeps behind it with a clip whose edge rides the thumb, so the track under the thumb is filled on every frame. ' +
-      'Turning off, the fill retracts behind the thumb and fades as it arrives, and the thumb color crosses back while it is still over the fill.',
+      'The thumb takes its on color at once. Turning off, the fill retracts behind the thumb and stays opaque; at the middle of the travel the fill and the thumb on color step off together, so the thumb keeps 3:1 against what is behind it on every frame (order 1.29). On touch the travel keeps its spring while the press look lingers.',
     beats: [
       'Hover: the thumb leans distance.nudge toward its travel on the bouncy spring (Neutral 1px, Desk 3px); the border takes its hover color over duration.quick.',
       'Press: the thumb grows to --_switch-thumb-size-pressed (scale.pop: Neutral 1.05, Desk 1.14) and stretches to scale.stretch toward its travel, its trailing edge still; the track dips to scale.press. All over duration.instant (70ms) on ease.out.',
       'Release: the state changes at once. The thumb travels on ease.spring-bouncy over duration.spring-bouncy (Neutral 220ms passing its end by 6 percent, Desk 440ms by 25 percent, Studio 120ms in three steps), its growth and stretch springing back with it.',
-      'Selected: the fill clip, on the same spring and the same properties as the thumb, sweeps from the inline start behind the thumb; the thumb color crosses to the on color over duration.quick (100ms).',
-      'Back: the clip retracts behind the thumb on the same spring while the fill fades on ease.in over duration.spring-bouncy; the thumb color crosses back over duration.quick.',
+      'Selected: the fill clip, on the same spring and the same properties as the thumb, sweeps from the inline start behind the thumb; the fill and the thumb on color show at once.',
+      'Back: the clip retracts behind the thumb on the same spring with the fill opaque; the fill and the thumb on color step off at the middle of duration.spring-bouncy.',
     ],
     styles: {
       studio: 'no growth, a short stretch and a travel in three hard steps; the fill steps with the thumb',
@@ -70,7 +70,7 @@ export const togglesInteractions = [
     drive: 'css',
     trigger: 'The person drags the thumb sideways with a finger or the mouse, then lets go.',
     feedback:
-      'Past a 3px slop the thumb follows the pointer with no lag, and a little past either end with a rubber band. The fill sweeps and fades with the progress and the thumb color mixes from the off color to the on color. ' +
+      'Past a 3px slop the thumb follows the pointer with no lag, and a little past either end with a rubber band. The fill stays opaque under the thumb and only its clip follows; the fill and the thumb on color step at the middle of the travel, and the switch shows that side (order 1.29). ' +
       'On release it snaps by velocity, else to the nearer end, and springs there with the bouncy spring. A tap still toggles; the click that ends a drag toggles nothing; Space and Enter still toggle.',
     beats: [
       'Press: as in switch-stretch, the thumb grows; the stretch drops once the drag starts.',
@@ -127,7 +127,7 @@ export const togglesInteractions = [
     trigger: 'A box turns mixed, or turns from mixed to checked and back: a CheckboxGroup select all when some of its items change.',
     feedback:
       'The dash and the check are the same two strokes. Mixed to checked, the joint drops and the two arms turn on a snappy spring, so the dash bends into the check while the long arm extends to its length. Checked to mixed, the check folds flat into the dash. ' +
-      'Mixed to unchecked, the dash collapses to its centre and the fill closes.',
+      'Mixed to unchecked, the dash collapses to its centre and the fill closes. From unchecked the strokes take the new glyph angles at once and only draw, so no part of the other glyph shows (order 1.29).',
     beats: [
       'Action: the joint and both arms move with transform (a translate and a rotation per arm) over duration.morph on ease.spring-snappy (Neutral 200ms with a small swing past the angle).',
       'Length: each arm changes its drawn length with stroke-dashoffset over the same duration; the long arm grows after 40 percent, so the bend reads before the reach.',
@@ -156,7 +156,7 @@ export const togglesInteractions = [
       'Hover: the circle border takes its hover color and the veil shows around an empty circle, over duration.quick and duration.fast.',
       'Press: the circle dips to scale.anticipate over duration.instant on ease.out (70ms).',
       'Release, the new option: the fill (an inset box-shadow in the checked color) closes from the border to the dot over duration.spring-snappy on ease.out (Neutral 180ms); the dot grows from --_radio-group-dot-from on ease.spring-bouncy over duration.spring-bouncy (Neutral 220ms, about 6 percent past its size) while it slides in from the side of the old option by a third of the circle.',
-      'Release, the old option: the fill opens back to the border and the dot shrinks to scale.morph, fades and slides toward the new option, all over duration.quick on ease.exit (100ms).',
+      'Release, the old option: the fill goes at once, so only one option looks chosen (order 1.29); the dot shrinks to scale.morph, fades and slides toward the new option over duration.quick on ease.exit (100ms).',
       'Settle: the circle springs back from the dip on the bouncy spring.',
     ],
     styles: { neutral: 'a quick close and a small pop in 220ms', desk: 'a deep dip, a longer close and a clear pop', studio: 'a flat cut in steps' },
@@ -179,7 +179,7 @@ export const togglesInteractions = [
       'Press: the card dips to scale.press (0.97) over duration.instant on ease.out.',
       'Release: the border, the inner line (an inset box-shadow) and the fill cross to the checked look over duration.morph on ease.out (Neutral 200ms); the card rises by distance.lift (Neutral 2px, Desk 4px, Studio 0) on ease.spring-bouncy over duration.spring-bouncy.',
       'Badge: the circle fills inward over duration.spring-snappy on ease.out, then the check strokes in with stroke-dashoffset over duration.morph on ease.out, starting a quarter of duration.morph in.',
-      'Back: the card it leaves crosses back over duration.quick on ease.exit, settles on ease.spring-soft, and its check retracts over duration.quick on ease.in while its circle opens.',
+      'Back: the card it leaves crosses back over duration.quick on ease.exit and settles on ease.spring-soft; its badge empties at once, the fill and the check, so only one card shows a badge (order 1.29).',
     ],
     styles: { neutral: 'a 2px lift and a quick badge', desk: 'a 4px lift with a bounce and a slower badge', studio: 'no lift; the badge lands in steps' },
     reduced: 'No lift, no dip and no draw; the border, the fill and the check change at once.',

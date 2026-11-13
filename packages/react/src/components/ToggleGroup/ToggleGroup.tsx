@@ -118,6 +118,10 @@ export function ToggleGroup({
   const [singleValue, setSingleValue] = useControllable<string>(singleProps?.value, singleProps?.defaultValue ?? '', singleProps?.onValueChange);
   const rootRef = useRef<HTMLDivElement | null>(null);
   const track = useIndicatorTrack();
+  // The label under the pill, for the ink. Kept outside the track (order 1.29,
+  // angular-sync-3 section 6 item 2): followIndicator makes the track's label
+  // dip and pop, and ToggleGroup's labels take the ink instead.
+  const inkLabel = useRef<Element | null>(null);
   const motion = useMotion();
   const { ref, ...radixRest } = rest as typeof rest & { ref?: Ref<HTMLDivElement> };
   const setRef = useCallback(
@@ -138,10 +142,10 @@ export function ToggleGroup({
       track.key = null;
       return;
     }
-    const lastLabel = track.label;
+    const lastLabel = inkLabel.current;
     const label = item.querySelector(':scope > [data-part="label"], :scope > [data-part="icon"]');
     const slide = followIndicator(track, singleValue, { el: pill }, { mode: motion.mode('tab-slide'), anchor: root });
-    track.label = label;
+    inkLabel.current = label;
     // Round 3: the text under the pill takes the on color where the pill is (helpers/nav-ink.ts in @the-system/motion).
     playInk({
       switch: '--_toggle-group-ink',

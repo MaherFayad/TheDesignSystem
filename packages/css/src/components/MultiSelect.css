@@ -36,7 +36,10 @@
  * Order 1.22 (proposed):
  * - picker-chevron-turn: the trigger icon turns half a turn while open, on
  *   the snappy spring. --_multi-select-turn is the open angle (0deg turns it
- *   off), a name beyond the convention's list.
+ *   off), a name beyond the convention's list. Order 1.29: it flips on the
+ *   block axis (scaleY of the cosine of the angle) instead of turning, so
+ *   the chevrons never pass through a sideways shape (review N27); where
+ *   cos() is missing it still turns.
  * - menu-rows, row-glide and collection-flip are played by MultiSelect.tsx
  *   and ListBox: the options arrive one stagger step after the surface, the
  *   lit row's fill travels, and the tags in the trigger move, pop in and
@@ -189,9 +192,15 @@
     transition: transform var(--ds-duration-spring-snappy) var(--ds-ease-spring-snappy);
   }
 
-  /* picker-chevron-turn. */
+  /* picker-chevron-turn: a flip on the block axis (order 1.29, N27); a half turn where cos() is missing. */
   [data-ds='multi-select'] > [data-part='trigger'][aria-expanded='true'] > [data-part='icon'] {
     transform: rotate(var(--_multi-select-turn));
+  }
+
+  @supports (transform: scaleY(cos(180deg))) {
+    [data-ds='multi-select'] > [data-part='trigger'][aria-expanded='true'] > [data-part='icon'] {
+      transform: scaleY(cos(var(--_multi-select-turn)));
+    }
   }
 
   [data-ds='multi-select']:not([data-part]):hover:not([data-disabled], [data-readonly], [data-invalid], :focus-within) {

@@ -109,6 +109,13 @@ export function Checkbox({
   const [lastGlyph, setLastGlyph] = useState<CheckboxGlyph>(shown ?? 'check');
   if (shown && shown !== lastGlyph) setLastGlyph(shown);
   const glyph = shown ?? lastGlyph;
+  // B5 (order 1.29): the state before the last change. A mark drawn from an
+  // empty box carries data-enter, so it takes its glyph's angles at once and
+  // only draws: from unchecked to mixed no part of the last check shows.
+  const [seen, setSeen] = useState<{ state: CheckboxState; from: CheckboxState }>({ state, from: state });
+  if (seen.state !== state) setSeen({ state, from: seen.state });
+  const from = seen.state === state ? seen.from : seen.state;
+  const enter = state !== 'unchecked' && from === 'unchecked';
   const isReadOnly = Boolean(control.readOnly);
 
   const onChange = (next: CheckboxCheckedState) => {
@@ -164,7 +171,7 @@ export function Checkbox({
            * long arm. Checkbox.css turns and draws them (stroke-dashoffset), so
            * the same two strokes are the check and the dash and morph between them.
            */}
-          <svg data-part="mark" data-glyph={glyph} viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+          <svg data-part="mark" data-glyph={glyph} data-enter={enter ? '' : undefined} viewBox="0 0 16 16" aria-hidden="true" focusable="false">
             <path d="M-4.25 0H0" pathLength={1} />
             <path d="M0 0H8.85" pathLength={1} />
           </svg>

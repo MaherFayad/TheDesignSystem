@@ -163,7 +163,8 @@
       "Disabled uses native disabled: a disabled card leaves the arrow order and draws with opacity.disabled.",
       "Read only does not apply: show the chosen card as text instead.",
       "The group has no legend part: put a heading above it and point aria-labelledby at it, or use aria-label.",
-      "Motion, round 3 (radio-card-lift, proposed): the border, the inner line and the fill cross to the checked look; the indicator fills inward and the badge part, an aria-hidden svg check, is drawn with stroke-dashoffset; the card it leaves crosses back faster and its check retracts. Reduced motion: no lift, no dip, no draw."
+      "Motion, round 3 (radio-card-lift, proposed): the border, the inner line and the fill cross to the checked look; the indicator fills inward and the badge part, an aria-hidden svg check, is drawn with stroke-dashoffset; the card it leaves crosses back faster and its check retracts. Reduced motion: no lift, no dip, no draw.",
+      "Order 1.29: the card a change leaves empties its badge at once, so two cards never show a filled badge. Under forced colors the chosen badge is Highlight with its check in HighlightText. Hook for styles: --_radio-card-indicator-radius, radius.pill by default."
     ]
   },
   "content": {

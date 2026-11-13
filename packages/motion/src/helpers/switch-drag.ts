@@ -101,13 +101,29 @@ export function pastSlop(run: SwitchDragRun, clientX: number): boolean {
   return Math.abs((clientX - run.x0) * run.dir) >= DRAG_SLOP;
 }
 
+/** The progress as written on the root: the rubber band, to four places. */
+function writtenProgress(raw: number): string {
+  return switchRubberBand(raw).toFixed(4);
+}
+
 /** Moves the run to the pointer and writes the thumb's progress on the root, with the rubber band. */
 export function followPointer(run: SwitchDragRun, clientX: number, timeStamp: number): void {
   const dx = (clientX - run.x0) * run.dir;
   run.raw = run.from + dx / run.travel;
   run.prev = run.last;
   run.last = { p: run.raw, t: timeStamp };
-  run.root.style.setProperty(DRAG_PROGRESS, switchRubberBand(run.raw).toFixed(4));
+  run.root.style.setProperty(DRAG_PROGRESS, writtenProgress(run.raw));
+}
+
+/**
+ * The side the thumb is on now (order 1.29, B4): true at or past the middle.
+ * Switch.css steps the fill and the thumb's on color at the same point, read
+ * from the same written value, and the framework shows this side as the
+ * root's data-state while the drag runs, so a style's state swaps step there
+ * too.
+ */
+export function dragOnSide(run: SwitchDragRun): boolean {
+  return Number(writtenProgress(run.raw)) >= 0.5;
 }
 
 /** Ends the drag on the root: the progress property goes (the framework drops its flag with it). */

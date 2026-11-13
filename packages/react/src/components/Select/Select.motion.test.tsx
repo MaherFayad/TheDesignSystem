@@ -45,7 +45,8 @@ describe('picker motion (order 1.22)', () => {
     expect(ids()).not.toContain('ds-motion:stagger');
     await user.click(screen.getByRole('combobox'));
     const options = await screen.findAllByRole('option');
-    expect(ids().filter((id) => id === 'ds-motion:stagger')).toHaveLength(options.length);
+    // Order 1.29: each row gets a fade and a staggered rise (menu-rows split), so two stagger animations per row.
+    expect(ids().filter((id) => id === 'ds-motion:stagger')).toHaveLength(options.length * 2);
     // Order 1.23: no glide layer per row; one aria-hidden marker in the viewport.
     for (const o of options) expect(o.querySelector(':scope > span:not([data-part])')).toBeNull();
     const markers = document.querySelectorAll("[data-part='viewport'] > [data-part='highlight']");
@@ -70,7 +71,7 @@ describe('picker motion (order 1.22)', () => {
     expect(ids()).toContain('ds-motion:stagger');
   });
 
-  it('the chevron turns while open, and stands still under the page reduced setting', () => {
+  it('the chevron flips while open, and stands still under the page reduced setting', () => {
     for (const [name, prop] of [
       ['Select', '--_select-turn'],
       ['Combobox', '--_combobox-turn'],
@@ -78,6 +79,8 @@ describe('picker motion (order 1.22)', () => {
     ] as const) {
       const css = readFileSync(join(process.cwd(), `packages/css/src/components/${name}.css`), 'utf8');
       expect(css, name).toMatch(new RegExp(`rotate\\(var\\(${prop}\\)\\)`));
+      // Order 1.29 (review N27): a flip on the block axis where cos() is there, not a turn.
+      expect(css, name).toMatch(new RegExp(`scaleY\\(cos\\(var\\(${prop}\\)\\)\\)`));
       expect(css, name).toMatch(/:root\[data-motion='reduce'\]/);
     }
   });

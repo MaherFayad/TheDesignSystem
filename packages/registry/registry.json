@@ -95,6 +95,11 @@
           "target": "@components/ds/motion/helpers/digit-roller.ts"
         },
         {
+          "path": "packages/motion/src/helpers/drawer-swipe.ts",
+          "type": "registry:lib",
+          "target": "@components/ds/motion/helpers/drawer-swipe.ts"
+        },
+        {
           "path": "packages/motion/src/helpers/exit-ghost.ts",
           "type": "registry:lib",
           "target": "@components/ds/motion/helpers/exit-ghost.ts"
@@ -138,6 +143,11 @@
           "path": "packages/motion/src/helpers/selection-motion.ts",
           "type": "registry:lib",
           "target": "@components/ds/motion/helpers/selection-motion.ts"
+        },
+        {
+          "path": "packages/motion/src/helpers/sheet-detents.ts",
+          "type": "registry:lib",
+          "target": "@components/ds/motion/helpers/sheet-detents.ts"
         },
         {
           "path": "packages/motion/src/helpers/slider-fill.ts",
@@ -1329,7 +1339,9 @@
         "@ds/core",
         "@ds/dialog",
         "@ds/icon",
-        "@ds/theme"
+        "@ds/theme",
+        "@ds/title-bar",
+        "@ds/window-controls"
       ],
       "files": [
         {
@@ -3759,7 +3771,9 @@
       "registryDependencies": [
         "@ds/close-button",
         "@ds/core",
-        "@ds/theme"
+        "@ds/theme",
+        "@ds/title-bar",
+        "@ds/window-controls"
       ],
       "files": [
         {
@@ -4386,7 +4400,9 @@
         "@ds/core",
         "@ds/dialog",
         "@ds/drawer",
-        "@ds/theme"
+        "@ds/theme",
+        "@ds/title-bar",
+        "@ds/window-controls"
       ],
       "files": [
         {

@@ -55,6 +55,14 @@
  *                               0 drawn, 1.05 retracted
  * --_radio-card-dot-from is kept for recipes; the badge does not read it.
  *
+ * Order 1.29 (fix round 1 of the round 3 review) adds:
+ *   --_radio-card-indicator-radius  the corners of the indicator circle (and its badge
+ *                                   fill), radius.pill
+ * and the card it leaves empties its badge at once (the fill and the check,
+ * step-start), so two cards never show a filled badge while the new one fills
+ * in (N2). Under forced colors the chosen badge is Highlight with its check in
+ * HighlightText (N8).
+ *
  * Working properties on the parts, set by the state rules only:
  * --_radio-card-border-now, -bg-now and -inset on the item, and
  * --_radio-card-circle-border and -circle-bg on the indicator.
@@ -66,6 +74,7 @@
     --_radio-card-gap: var(--ds-space-s);
     --_radio-card-font-size: var(--ds-font-size-s);
     --_radio-card-radius: var(--ds-radius-card);
+    --_radio-card-indicator-radius: var(--ds-radius-pill);
     --_radio-card-bg: transparent;
     --_radio-card-bg-checked: var(--ds-color-bg-overlay-5);
     --_radio-card-border-color: var(--ds-color-border-control);
@@ -236,7 +245,7 @@
     block-size: var(--_radio-card-control-size);
     margin-block-start: calc((var(--_radio-card-font-size) * var(--ds-font-leading-snug) - var(--_radio-card-control-size)) / 2);
     border: var(--ds-border-width-strong) solid var(--_radio-card-circle-border);
-    border-radius: var(--ds-radius-pill);
+    border-radius: var(--_radio-card-indicator-radius);
     background: radial-gradient(circle closest-side, var(--_radio-card-dot) 0 40%, var(--_radio-card-circle-bg) 44%);
   }
 
@@ -254,7 +263,7 @@
     box-shadow: inset 0 0 0 var(--_radio-card-fill-now) var(--_radio-card-fill);
     transition:
       border-color calc(var(--ds-duration-quick) * var(--_radio-card-motion)) var(--ds-ease-exit),
-      box-shadow calc(var(--ds-duration-quick) * var(--_radio-card-motion)) var(--ds-ease-exit) calc(var(--ds-duration-quick) * 0.4 * var(--_radio-card-motion));
+      box-shadow calc(var(--ds-duration-quick) * var(--_radio-card-motion)) step-start;
   }
 
   [data-ds='radio-card'] > [data-part='item'] > [data-part='indicator'] > [data-part='badge'] {
@@ -270,7 +279,7 @@
     stroke-linejoin: round;
     stroke-dasharray: 1 2;
     stroke-dashoffset: var(--_radio-card-check-cut);
-    transition: stroke-dashoffset calc(var(--ds-duration-quick) * 0.6 * var(--_radio-card-motion)) var(--ds-ease-in);
+    transition: stroke-dashoffset calc(var(--ds-duration-quick) * var(--_radio-card-motion)) step-start;
   }
 
   [data-ds='radio-card'] > [data-part='item'][data-state='checked'] > [data-part='indicator']:has(> [data-part='badge']) {
@@ -415,9 +424,17 @@
       display: none;
     }
 
-    /* The fill is a shadow, which forced colors drops: the check alone shows the choice, in Highlight. */
+    /*
+     * The badge keeps its fill (the indicator does not adjust): the chosen one
+     * is Highlight with its check in HighlightText, the system pair for a
+     * choice (N8, order 1.29).
+     */
+    [data-ds='radio-card'] > [data-part='item'] > [data-part='indicator']:has(> [data-part='badge']) {
+      --_radio-card-fill: Highlight;
+    }
+
     [data-ds='radio-card'] > [data-part='item'] > [data-part='indicator'] > [data-part='badge'] {
-      stroke: Highlight;
+      stroke: HighlightText;
     }
 
     /* The inset line is a shadow, which forced colors drops: the border itself thickens instead. */

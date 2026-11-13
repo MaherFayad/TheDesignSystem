@@ -143,16 +143,36 @@ describe('collection-flip', () => {
 });
 
 describe('menu-rows', () => {
-  for (const mode of ['full', 'reduced'] as PatternMode[]) {
-    it(`staggers the rows with React's staggerGroup arguments (${mode})`, () => {
-      const list = rows(3);
-      staggerRows(list, "[data-part='option']", mode);
-      const got = take();
-      staggerGroup(Array.from(list.children), { phase: 'enter', offset: 1, spring: 'soft', mode });
-      expect(got).toEqual(take());
-      expect(got).toHaveLength(3);
-    });
-  }
+  it('fades every row in with the surface, with no delay, and staggers only the rise (order 1.29, ten weakest #9)', () => {
+    const list = rows(3);
+    for (const row of Array.from(list.children)) (row as HTMLElement).style.setProperty('--ds-delay-stagger', '24ms');
+    staggerRows(list, "[data-part='option']", 'full');
+    const got = take();
+    expect(got).toHaveLength(6);
+    const fades = got.filter((c) => c.frames.some((f) => 'opacity' in f));
+    const rises = got.filter((c) => c.frames.some((f) => 'transform' in f));
+    expect(fades).toHaveLength(3);
+    expect(rises).toHaveLength(3);
+    // No row waits to be read: the fades start with the surface, and carry no transform.
+    for (const f of fades) {
+      expect(Number(f.opts.delay ?? 0)).toBe(0);
+      expect(f.frames.some((k) => 'transform' in k)).toBe(false);
+    }
+    // The rise of each row waits one more step, and carries no opacity.
+    const delays = rises.map((r) => Number(r.opts.delay ?? 0));
+    expect(delays[0]).toBeGreaterThan(0);
+    expect(delays[1]).toBeGreaterThan(delays[0]!);
+    for (const r of rises) expect(r.frames.some((k) => 'opacity' in k)).toBe(false);
+  });
+
+  it(`the reduced form is the stagger group's fade, with no delay`, () => {
+    const list = rows(3);
+    staggerRows(list, "[data-part='option']", 'reduced');
+    const got = take();
+    staggerGroup(Array.from(list.children), { phase: 'enter', mode: 'reduced' });
+    expect(got).toEqual(take());
+    expect(got).toHaveLength(3);
+  });
 });
 
 describe('row-glide on hover', () => {

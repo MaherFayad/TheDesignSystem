@@ -26,6 +26,7 @@ import {
   SWALLOW_CLICK_MS,
   beginSwitchDrag,
   clearDragProgress,
+  dragOnSide,
   followPointer,
   pastSlop,
   releaseChecked,
@@ -43,6 +44,12 @@ type Handlers = {
 export interface SwitchDrag {
   /** True while the thumb follows the pointer. */
   dragging: boolean;
+  /**
+   * While dragging, true when the thumb is at or past the middle (order 1.29,
+   * B4): Switch shows this side as the root's data-state, so the fill, the
+   * thumb color and a style's state swaps step there.
+   */
+  onSide: boolean;
   /** The pointer handlers for the control, wrapping the caller's own. */
   handlers: (own: Handlers) => Required<Handlers>;
   /** True once for the click that ends a drag: prevent it. */
@@ -59,6 +66,7 @@ export function useSwitchDrag({
   onToggle: (next: boolean) => void;
 }): SwitchDrag {
   const [dragging, setDragging] = useState(false);
+  const [onSide, setOnSide] = useState(false);
   const run = useRef<SwitchDragRun | null>(null);
   const swallowUntil = useRef(0);
 
@@ -93,6 +101,8 @@ export function useSwitchDrag({
         setDragging(true);
       }
       followPointer(r, e.clientX, e.timeStamp);
+      // A render only when the thumb crosses the middle.
+      setOnSide(dragOnSide(r));
     },
     onPointerUp: (e: PointerEvent<HTMLButtonElement>) => {
       own.onPointerUp?.(e);
@@ -116,5 +126,5 @@ export function useSwitchDrag({
     return hit;
   };
 
-  return { dragging, handlers, consumeClick };
+  return { dragging, onSide, handlers, consumeClick };
 }

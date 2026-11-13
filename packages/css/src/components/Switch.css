@@ -80,6 +80,38 @@
  *   --_switch-drag-progress       set inline by Switch.tsx while dragging: 0 off, 1 on,
  *                                 a little past either end with the rubber band
  *
+ * Order 1.29 (fix round 1 of the round 3 review) adds these. Names beyond the list
+ * each have a line:
+ *   --_switch-radius              the corners of the control, the ring, the track and the
+ *                                 on fill, radius.pill
+ *   --_switch-thumb-radius        the thumb's corners, radius.pill
+ *   --_switch-thumb-width         the thumb's inline size apart from its block size
+ *                                 (--_switch-thumb-size), for a capsule lens; by default
+ *                                 the thumb size. The travel, the stretch and the fill cut
+ *                                 read it
+ *   --_switch-thumb-ring-width    a ring inside the thumb's edge in the thumb color, under
+ *                                 the style's own shadows, border-width.strong. Unseen on a
+ *                                 solid thumb; it keeps a clear lens (a pressed glass or
+ *                                 desk thumb) at 3:1 against the track (WCAG 1.4.11, B3, B4)
+ *   --_switch-color-ease          working: the timing of the on color on a toggle, read by
+ *                                 the thumb color and the on fill's opacity: at once
+ *                                 (step-start) turning on; held to the middle of the travel
+ *                                 and stepped there (steps(2, jump-none)) turning off, so the
+ *                                 thumb is never its off color over the fill (B3)
+ *   --_switch-bg-ease             working: the timing of the track's own color with the tint
+ *                                 layer: step-end turning on, step-start turning off, pressed
+ *                                 or not (N1)
+ * The thumb color is the thumb's `color`; its paint, its ring and the fallbacks
+ * read currentColor, so the color moves on the state's timing and the lens on
+ * the press's. The travel is the thumb's `translate`, on the state's timing even
+ * while the control is pressed: on touch `:active` stays on after a tap, and the
+ * press timing no longer carries the travel (N1). The press times `transform`
+ * only (the growth and the stretch).
+ * While dragging the thumb color and the on fill step at progress 0.5, and the
+ * fill stays opaque under the thumb with only its clip following (B4). The
+ * root's data-state shows the side the thumb is on while a drag runs
+ * (Switch.tsx), so a style's checked swaps follow the step too.
+ *
  * The parts: the thumb holds the thumb-lens part, an aria-hidden layer a
  * style paints as a highlight or a glass lens, and, with the thumbIcon
  * prop, the thumb-icon part (an aria-hidden svg: a check drawn while on and
@@ -103,14 +135,14 @@
  *   selected  the on fill sweeps behind the thumb: a clip on the fill layer
  *             whose edge rides the thumb's far edge on the same transition,
  *             so the track under the thumb is filled on every frame and the
- *             light thumb never sits on a light track. The thumb color
- *             crosses over duration.quick.
+ *             light thumb never sits on a light track. The thumb takes its
+ *             on color at once (order 1.29).
  *   back      turning off, the fill retracts behind the thumb on the same
- *             spring and fades on ease.in over the travel; the thumb color
- *             crosses back while it is still over the fill.
+ *             spring and stays opaque; at the middle of the travel the fill
+ *             and the thumb's on color step off together (order 1.29).
  *   drag      past a 3px slop the thumb follows the pointer (no transition),
- *             a little past either end with a rubber band; the fill sweeps
- *             and fades with it and the thumb color mixes with the progress.
+ *             a little past either end with a rubber band; the fill's clip
+ *             follows it, and the fill and the thumb color step at the middle.
  *             On release it snaps by velocity, else by the nearer end, and
  *             springs there; the click that ends a drag toggles nothing.
  * Reduced motion: the thumb jumps and does not stretch, grow or lean; the
@@ -172,13 +204,19 @@
     --_switch-duration-color: var(--ds-duration-quick);
     --_switch-drag-progress: 0;
     --_switch-thumb-size: calc(var(--_switch-height) - var(--_switch-inset) * 2);
-    --_switch-travel-max: calc(var(--_switch-width) - var(--_switch-thumb-size) - var(--_switch-inset) * 2);
+    --_switch-travel-max: calc(var(--_switch-width) - var(--_switch-thumb-width) - var(--_switch-inset) * 2);
     --_switch-sweep: 1;
     --_switch-thumb-opacity-pressed: 1;
     --_switch-thumb-highlight-opacity-pressed: var(--_switch-thumb-opacity-pressed);
     --_switch-thumb-icon-opacity: 0;
     --_switch-thumb-icon-off-opacity: 0;
     --_switch-thumb-icon-color: var(--_switch-fill);
+    --_switch-radius: var(--ds-radius-pill);
+    --_switch-thumb-radius: var(--ds-radius-pill);
+    --_switch-thumb-width: var(--_switch-thumb-size);
+    --_switch-thumb-ring-width: var(--ds-border-width-strong);
+    --_switch-color-ease: steps(2, jump-none);
+    --_switch-bg-ease: step-start;
 
     display: inline-grid;
     grid-template-columns: auto minmax(0, auto);
@@ -222,7 +260,7 @@
     margin: 0;
     padding: 0;
     border: 0;
-    border-radius: var(--ds-radius-pill);
+    border-radius: var(--_switch-radius);
     background: transparent;
     color: inherit;
     cursor: pointer;
@@ -236,7 +274,7 @@
     position: absolute;
     inset-block: calc((var(--_switch-target) - var(--_switch-height)) / 2);
     inset-inline: 0;
-    border-radius: var(--ds-radius-pill);
+    border-radius: var(--_switch-radius);
     box-shadow: var(--_switch-ring);
     opacity: 0;
     pointer-events: none;
@@ -251,7 +289,7 @@
     block-size: var(--_switch-height);
     padding-inline: calc(var(--_switch-inset) - var(--ds-border-width-default));
     border: var(--ds-border-width-default) var(--_switch-border-style) var(--_switch-border-color);
-    border-radius: var(--ds-radius-pill);
+    border-radius: var(--_switch-radius);
     background-color: var(--_switch-bg);
     pointer-events: none;
     transform: scale(var(--_switch-track-scale));
@@ -271,77 +309,85 @@
     transition:
       transform calc(var(--_switch-duration-out) * var(--_switch-motion)) var(--_switch-ease-out),
       border-color calc(var(--_switch-duration-color) * var(--_switch-motion)) var(--ds-ease-out),
-      background-color calc(var(--_switch-duration) * var(--_switch-motion)) step-start;
-  }
-
-  [data-ds='switch'][data-state='checked'] > [data-part='control'] > [data-part='track']:has(> span:not([data-part])) {
-    transition:
-      transform calc(var(--_switch-duration-out) * var(--_switch-motion)) var(--_switch-ease-out),
-      border-color calc(var(--_switch-duration-color) * var(--_switch-motion)) var(--ds-ease-out),
-      background-color calc(var(--_switch-duration) * var(--_switch-motion)) step-end;
+      background-color calc(var(--_switch-duration) * var(--_switch-motion)) var(--_switch-bg-ease);
   }
 
   /*
-   * The on fill. Its clip ends just past the thumb's far edge: the insets,
-   * the travel now and the thumb at its size now (grown and stretched). The
-   * clip and the thumb read the same properties on the same transition, so
-   * the fill sweeps with the thumb, overshoot and steps included, and the
-   * track under the thumb is filled on every frame. Past the track the cut
-   * is 0. The cut sits on the inline end: the right in left to right text,
-   * the left in right to left text.
+   * The on fill. Its clip ends one inset past the thumb's far edge: the inset,
+   * the travel and the lean now, half the thumb's width and half its drawn
+   * width (grown), and the whole stretch whichever way it points (the press
+   * turns it on its own timing, so the fill leaves room for it either way).
+   * The clip and the thumb's translate read the same properties on the same
+   * transition, so the fill sweeps with the thumb, overshoot and steps
+   * included, and the track under the thumb is filled on every frame, a
+   * scaled dot and a leaning or stretched thumb included (order 1.29). Past
+   * the track the cut is 0. The cut sits on the inline end: the right in left
+   * to right text, the left in right to left text. The fill is opaque or not
+   * there: it shows at once turning on and steps off at the middle of the
+   * travel turning off, with the thumb's on color (--_switch-color-ease).
    */
   [data-ds='switch'] > [data-part='control'] > [data-part='track'] > span:not([data-part]) {
     --_switch-cut: max(
       0px,
-      var(--_switch-width) - var(--_switch-inset) * 2 - var(--_switch-travel) - var(--_switch-thumb-size) *
-        var(--_switch-thumb-size-now) * var(--_switch-stretch-now)
+      var(--_switch-width) - var(--_switch-inset) * 2 - var(--_switch-travel) - var(--_switch-lean-now) * var(--_switch-toward) -
+        var(--_switch-thumb-width) * (1 + var(--_switch-thumb-size-now)) / 2 -
+        (var(--_switch-stretch-now) - 1) * var(--_switch-thumb-width) * var(--_switch-thumb-size-now)
     );
 
     position: absolute;
     inset: calc(-1 * var(--ds-border-width-default));
-    border-radius: var(--ds-radius-pill);
+    border-radius: var(--_switch-radius);
     background-color: var(--_switch-fill);
     opacity: var(--_switch-fill-now);
     clip-path: inset(
       0 calc(var(--_switch-cut) * var(--_switch-sweep) * (1 + var(--_switch-dir)) / 2) 0
         calc(var(--_switch-cut) * var(--_switch-sweep) * (1 - var(--_switch-dir)) / 2) round
-        var(--ds-radius-pill)
+        var(--_switch-radius)
     );
     transform: scaleX(var(--_switch-fill-scale));
     transform-origin: var(--_switch-fill-origin);
     transition:
-      opacity calc(var(--_switch-duration) * var(--_switch-motion)) var(--ds-ease-in),
+      opacity calc(var(--_switch-duration) * var(--_switch-motion)) var(--_switch-color-ease),
       clip-path calc(var(--_switch-duration) * var(--_switch-motion)) var(--_switch-ease),
       transform calc(var(--_switch-duration) * var(--_switch-motion)) var(--_switch-ease);
   }
 
   /*
-   * The thumb travels the track width less its own size and the two insets.
-   * It grows to its size now from its center, stretches toward its travel
-   * from its trailing edge, and leans on hover.
+   * The thumb travels the track width less its own width and the two insets
+   * (translate, on the state's timing). It grows to its size now from its
+   * center, stretches toward its travel from its trailing edge (transform, on
+   * the press's timing while pressed), and leans on hover. Its color is
+   * `color`, on --_switch-color-ease; the paint thins to a lens by
+   * --_switch-thumb-solid-now and keeps a ring of the solid color inside its
+   * edge, under the style's own shadows.
    */
   [data-ds='switch'] > [data-part='control'] > [data-part='track'] > [data-part='thumb'] {
     position: relative;
     display: block;
     flex: none;
-    inline-size: var(--_switch-thumb-size);
+    inline-size: var(--_switch-thumb-width);
     block-size: var(--_switch-thumb-size);
-    border-radius: var(--ds-radius-pill);
-    background-color: color-mix(in srgb, var(--_switch-thumb-bg) calc(var(--_switch-thumb-solid-now) * 100%), transparent);
-    box-shadow: var(--_switch-thumb-shadow);
+    border-radius: var(--_switch-thumb-radius);
+    color: var(--_switch-thumb-bg);
+    background-color: color-mix(in srgb, currentColor calc(var(--_switch-thumb-solid-now) * 100%), transparent);
+    box-shadow:
+      var(--_switch-thumb-shadow),
+      inset 0 0 0 var(--_switch-thumb-ring-width) currentColor;
     backdrop-filter: var(--_switch-thumb-backdrop);
+    translate: calc((var(--_switch-travel) + var(--_switch-lean-now) * var(--_switch-toward)) * var(--_switch-dir)) 0;
     transform:
       translateX(
         calc(
-          (var(--_switch-travel) + var(--_switch-lean-now) * var(--_switch-toward)) * var(--_switch-dir) +
-            (var(--_switch-stretch-now) - 1) * var(--_switch-thumb-size) * var(--_switch-thumb-size-now) / 2 *
+          (var(--_switch-stretch-now) - 1) * var(--_switch-thumb-width) * var(--_switch-thumb-size-now) / 2 *
             var(--_switch-toward) * var(--_switch-dir)
         )
       )
       scale(var(--_switch-thumb-size-now))
       scaleX(var(--_switch-stretch-now));
     transition:
+      translate calc(var(--_switch-duration) * var(--_switch-motion)) var(--_switch-ease),
       transform calc(var(--_switch-duration) * var(--_switch-motion)) var(--_switch-ease),
+      color calc(var(--_switch-duration) * var(--_switch-motion)) var(--_switch-color-ease),
       background-color calc(var(--_switch-duration-color) * var(--_switch-motion)) var(--ds-ease-out),
       box-shadow calc(var(--_switch-duration-color) * var(--_switch-motion)) var(--ds-ease-out);
   }
@@ -412,9 +458,12 @@
     --_switch-thumb-solid-now: var(--_switch-thumb-solid-pressed);
   }
 
+  /* The press times the growth, the stretch and the lens; the travel and the color keep the state's timing (N1). */
   [data-ds='switch']:not([data-disabled], [data-readonly]) > [data-part='control']:active > [data-part='track'] > [data-part='thumb'] {
     transition:
+      translate calc(var(--_switch-duration) * var(--_switch-motion)) var(--_switch-ease),
       transform calc(var(--_switch-duration-in) * var(--_switch-motion)) var(--_switch-ease-in),
+      color calc(var(--_switch-duration) * var(--_switch-motion)) var(--_switch-color-ease),
       background-color calc(var(--_switch-duration-in) * var(--_switch-motion)) var(--_switch-ease-in),
       box-shadow calc(var(--_switch-duration-in) * var(--_switch-motion)) var(--_switch-ease-in);
   }
@@ -436,7 +485,7 @@
     transition:
       transform calc(var(--_switch-duration-in) * var(--_switch-motion)) var(--_switch-ease-in),
       border-color calc(var(--_switch-duration-color) * var(--_switch-motion)) var(--ds-ease-out),
-      background-color calc(var(--_switch-duration) * var(--_switch-motion)) step-end;
+      background-color calc(var(--_switch-duration) * var(--_switch-motion)) var(--_switch-bg-ease);
   }
 
   [data-ds='switch'] > :is([data-part='label'], [data-part='state-text']) {
@@ -487,28 +536,26 @@
     --_switch-fill-now: 1;
     --_switch-fill-scale: 1;
     --_switch-thumb-size-now: var(--_switch-thumb-size-on);
-  }
-
-  /* On, the fill is there at once under the thumb and sweeps with it; only turning off fades it. */
-  [data-ds='switch'][data-state='checked'] > [data-part='control'] > [data-part='track'] > span:not([data-part]) {
-    transition:
-      opacity calc(var(--_switch-duration) * var(--_switch-motion)) step-start,
-      clip-path calc(var(--_switch-duration) * var(--_switch-motion)) var(--_switch-ease),
-      transform calc(var(--_switch-duration) * var(--_switch-motion)) var(--_switch-ease);
+    --_switch-color-ease: step-start;
+    --_switch-bg-ease: step-end;
   }
 
   /*
-   * Dragging: Switch.tsx sets --_switch-drag-progress. The thumb, the fill
-   * and the thumb color follow it with no transition. The state rule above
-   * is overridden while the drag runs; on release the flag goes with the new
-   * state, so the transitions carry the thumb from the pointer to its end.
+   * Dragging: Switch.tsx sets --_switch-drag-progress. The thumb and the
+   * fill's clip follow it with no transition. The fill and the thumb's on
+   * color step at progress 0.5 together (B4, order 1.29): the fill is opaque
+   * or not there, never a thin tint under a thumb of either color. The root's
+   * data-state shows the side the thumb is on while the drag runs, so the
+   * state swaps of a style follow the same step; this rule holds the step
+   * where a port does not. On release the flag goes with the new state, so
+   * the transitions carry the thumb from the pointer to its end.
    */
   [data-ds='switch'][data-dragging] {
     --_switch-travel: calc(var(--_switch-travel-max) * var(--_switch-drag-progress));
-    --_switch-fill-now: clamp(0, var(--_switch-drag-progress), 1);
+    --_switch-fill-now: clamp(0, (var(--_switch-drag-progress) - 0.5) * 1000000 + 1, 1);
     --_switch-thumb-bg: color-mix(
       in srgb,
-      var(--_switch-on-fill) calc(clamp(0, var(--_switch-drag-progress), 1) * 100%),
+      var(--_switch-on-fill) calc(clamp(0, (var(--_switch-drag-progress) - 0.5) * 1000000 + 1, 1) * 100%),
       var(--_switch-thumb-off)
     );
     --_switch-stretch-now: 1;
@@ -567,14 +614,20 @@
     cursor: not-allowed;
   }
 
-  /* Without color-mix the thumb color is drawn solid. */
+  /* Without color-mix the thumb color is drawn solid, and a drag takes the side's color from data-state. */
   @supports not (color: color-mix(in srgb, currentColor 50%, transparent)) {
     [data-ds='switch'] [data-part='thumb'] {
-      background-color: var(--_switch-thumb-bg);
+      background-color: currentColor;
     }
 
     [data-ds='switch'][data-dragging] {
       --_switch-thumb-bg: var(--_switch-thumb-off);
+      --_switch-fill-now: 0;
+    }
+
+    [data-ds='switch'][data-dragging][data-state='checked'] {
+      --_switch-thumb-bg: var(--_switch-on-fill);
+      --_switch-fill-now: 1;
     }
   }
 
@@ -585,26 +638,26 @@
    */
   @supports not ((backdrop-filter: none) or (-webkit-backdrop-filter: none)) {
     [data-ds='switch'] [data-part='thumb'] {
-      background-color: var(--_switch-thumb-bg);
+      background-color: currentColor;
     }
   }
 
   @media (prefers-reduced-transparency: reduce) {
     [data-ds='switch'] [data-part='thumb'] {
-      background-color: var(--_switch-thumb-bg);
+      background-color: currentColor;
       backdrop-filter: none;
     }
   }
 
   @media (prefers-contrast: more) {
     [data-ds='switch'] [data-part='thumb'] {
-      background-color: var(--_switch-thumb-bg);
+      background-color: currentColor;
       backdrop-filter: none;
     }
   }
 
   [data-contrast='more'] [data-ds='switch'] [data-part='thumb'] {
-    background-color: var(--_switch-thumb-bg);
+    background-color: currentColor;
     backdrop-filter: none;
   }
 
@@ -666,15 +719,18 @@
 
     [data-ds='switch'] > [data-part='control'] > [data-part='track'] > [data-part='thumb'] {
       forced-color-adjust: none;
+      color: CanvasText;
       background-color: CanvasText;
       backdrop-filter: none;
     }
 
     [data-ds='switch'][data-state='checked'] > [data-part='control'] > [data-part='track'] > [data-part='thumb'] {
+      color: Highlight;
       background-color: Highlight;
     }
 
     [data-ds='switch'][data-disabled] > [data-part='control'] > [data-part='track'] > [data-part='thumb'] {
+      color: GrayText;
       background-color: GrayText;
     }
 
