@@ -225,8 +225,13 @@ export function TabsTrigger({ value, start, count, children, ref, ...rest }: Tab
       // Keep the active tab in view inside a scrolling list, on load too (a
       // default tab past the visible part). Only the list's own scroll offset
       // is set, never scrollIntoView, so the page around it never scrolls.
-      if (from !== value) {
-        if (ctx.orientation === 'vertical') {
+      // Order 1.29 (B14): only a list that overflows can hide its active tab.
+      // The overflow reads share the style pass of the ink reads below; a
+      // list that fits costs no box read here and writes no scroll offset.
+      const vertical = ctx.orientation === 'vertical';
+      const overflows = vertical ? list.scrollHeight > list.clientHeight : list.scrollWidth > list.clientWidth;
+      if (from !== value && overflows) {
+        if (vertical) {
           const top = node.offsetTop - list.offsetTop;
           if (top < list.scrollTop) list.scrollTop = top;
           else if (top + node.offsetHeight > list.scrollTop + list.clientHeight) list.scrollTop = top + node.offsetHeight - list.clientHeight;
@@ -294,7 +299,25 @@ export interface TabsPanelProps extends Omit<ComponentProps<typeof RadixTabs.Con
  * so a panel with no focusable content is still reached. Inactive panels
  * unmount unless `forceMount` is set (then they are hidden).
  */
-export function TabsPanel(props: TabsPanelProps) {
-  useTabsContext('TabsPanel');
-  return <RadixTabs.Content {...props} data-part="panel" />;
+export function TabsPanel({ forceMount, children, ...props }: TabsPanelProps) {
+  const ctx = useTabsContext('TabsPanel');
+  if (forceMount) {
+    return (
+      <RadixTabs.Content {...props} forceMount data-part="panel">
+        {children}
+      </RadixTabs.Content>
+    );
+  }
+  // Order 1.29 (review B14): Radix keeps every panel element and hides the
+  // inactive ones through Presence, which reads the panel's animationName on
+  // each switch (a forced restyle of the whole page right after the commit)
+  // and swaps hidden and the content in a second commit. With forceMount
+  // Presence never changes, and the panel sets the same hidden and content
+  // itself in the first commit: the same DOM, one restyle per switch.
+  const active = ctx.value === props.value;
+  return (
+    <RadixTabs.Content {...props} forceMount hidden={props.hidden ?? !active} data-part="panel">
+      {active ? children : null}
+    </RadixTabs.Content>
+  );
 }

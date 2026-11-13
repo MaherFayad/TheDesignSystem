@@ -166,17 +166,45 @@ describe('Tabs', () => {
       if (this.getAttribute('role') === 'tab' && this.getAttribute('data-state') === 'active') return rect(680, 60) as DOMRect;
       return rect(0, 0) as DOMRect;
     });
+    // Order 1.29 (B14): only a list that overflows is scrolled, so this one holds 740px of tabs in 300.
+    const size = (name: 'scrollWidth' | 'clientWidth', px: number) =>
+      vi.spyOn(HTMLElement.prototype, name, 'get').mockImplementation(function (this: HTMLElement) {
+        return this.getAttribute('role') === 'tablist' ? px : 0;
+      });
+    const sizes = [size('scrollWidth', 740), size('clientWidth', 300)];
     const scrollIntoView = vi.fn();
     const original = Element.prototype.scrollIntoView;
     Element.prototype.scrollIntoView = scrollIntoView;
-    render(<Example defaultValue="c" />);
-    // Order 1.29: the list reads and scrolls in the frame job (inFrame), a microtask after the commit.
+    try {
+      render(<Example defaultValue="c" />);
+      // Order 1.29: the list reads and scrolls in the frame job (inFrame), a microtask after the commit.
+      await Promise.resolve();
+      const list = screen.getByRole('tablist');
+      expect(list.scrollLeft).toBe(440);
+      expect(scrollIntoView).not.toHaveBeenCalled();
+    } finally {
+      Element.prototype.scrollIntoView = original;
+      spy.mockRestore();
+      for (const s of sizes) s.mockRestore();
+    }
+  });
+
+  it('order 1.29 B14: a list that fits reads no box and sets no scroll offset for the keep in view check', async () => {
+    render(<Example />);
     await Promise.resolve();
     const list = screen.getByRole('tablist');
-    expect(list.scrollLeft).toBe(440);
-    expect(scrollIntoView).not.toHaveBeenCalled();
-    Element.prototype.scrollIntoView = original;
-    spy.mockRestore();
+    const spy = vi.spyOn(list, 'getBoundingClientRect');
+    const scroll = vi.spyOn(list, 'scrollLeft', 'set');
+    try {
+      await userEvent.click(screen.getByRole('tab', { name: 'Comments 12' }));
+      // The ink measures the list twice as its anchor (planFollow, planInk); the keep in view check adds none (3 before).
+      const reads = spy.mock.calls.length;
+      expect(scroll).not.toHaveBeenCalled();
+      expect(reads).toBe(2);
+    } finally {
+      spy.mockRestore();
+      scroll.mockRestore();
+    }
   });
 
   it('gives the soft pill a muted text border, so the active tab has a 3:1 edge', () => {
@@ -245,6 +273,62 @@ describe('Tabs', () => {
           rects.mockRestore();
         }
       }));
+  });
+
+  it('order 1.29 B14: a switch forces no Presence style read and swaps the panels in one commit', async () => {
+    // Radix Presence keeps the CSSStyleDeclaration of each panel and reads its
+    // animationName when the panel's presence changes: a forced restyle of the
+    // whole stage right after the commit, then a second commit that dirties it again.
+    const real = window.getComputedStyle.bind(window);
+    let reads = 0;
+    const spy = vi.spyOn(window, 'getComputedStyle').mockImplementation((el: Element, pseudo?: string | null) => {
+      const styles = real(el, pseudo);
+      if (!(el as HTMLElement).matches?.('[data-part="panel"]')) return styles;
+      return new Proxy(styles, {
+        get(target, key) {
+          if (key === 'animationName') reads++;
+          const v = Reflect.get(target, key, target);
+          return typeof v === 'function' ? v.bind(target) : v;
+        },
+      });
+    });
+    try {
+      const { container } = render(<Example />);
+      const panels = () => Array.from(container.querySelectorAll<HTMLElement>('[data-part="panel"]'));
+      expect(panels().map((p) => p.hidden)).toEqual([false, true, true]);
+      reads = 0;
+      await userEvent.click(screen.getByRole('tab', { name: 'Comments 12' }));
+      expect(screen.getByRole('tabpanel').textContent).toBe('Comments panel');
+      expect(reads).toBe(0);
+      // The same DOM as before: every panel stays, the inactive ones hidden and empty.
+      expect(panels().map((p) => [p.hidden, p.getAttribute('data-state'), p.textContent])).toEqual([
+        [true, 'inactive', ''],
+        [true, 'inactive', ''],
+        [false, 'active', 'Comments panel'],
+      ]);
+    } finally {
+      spy.mockRestore();
+    }
+  });
+
+  it('forceMount keeps every panel rendered, as Radix does', () => {
+    const { container } = render(
+      <Tabs defaultValue="a">
+        <TabsList aria-label="Kept">
+          <TabsTrigger value="a">One</TabsTrigger>
+          <TabsTrigger value="b">Two</TabsTrigger>
+        </TabsList>
+        <TabsPanel value="a">First</TabsPanel>
+        <TabsPanel value="b" forceMount>
+          Second
+        </TabsPanel>
+      </Tabs>,
+    );
+    const panels = Array.from(container.querySelectorAll<HTMLElement>('[data-part="panel"]'));
+    expect(panels.map((p) => [p.hidden, p.textContent, p.getAttribute('data-state')])).toEqual([
+      [false, 'First', 'active'],
+      [false, 'Second', 'inactive'],
+    ]);
   });
 
   it('renders the demo with every case', () => {
