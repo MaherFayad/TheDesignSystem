@@ -70,8 +70,8 @@ const ar = lang === 'ar';
       <h1 id="home-title">{text.title}</h1>
       <p class="lead">{text.lead}</p>
       <div class="hero-actions">
-        <a class="btn btn-primary" href={href(lang, '/getting-started/')}>{text.start}</a>
-        <a class="btn" href={href(lang, '/components/')}>{text.browse}</a>
+        <a href={href(lang, '/getting-started/')} data-ds="button" data-tone="accent" data-emphasis="solid" data-size="lg" data-shape="default"><span data-part="label">{text.start}</span></a>
+        <a href={href(lang, '/components/')} data-ds="button" data-tone="neutral" data-emphasis="outline" data-size="lg" data-shape="default"><span data-part="label">{text.browse}</span></a>
       </div>
     </section>
 
@@ -79,10 +79,12 @@ const ar = lang === 'ar';
       <h2 id="ways" class="visually-hidden">{text.waysTitle}</h2>
       <ol class="cards">
         {text.ways.map((w) => (
-          <li class="card">
-            <span class="card-step" aria-hidden="true">{w.step}</span>
-            <h3><a class="card-link" href={href(lang, w.path)}>{w.title}</a></h3>
-            <p>{w.body}</p>
+          <li class="card" data-ds="card" data-emphasis="outline" data-size="md" data-interactive>
+            <div data-part="header">
+              <span class="card-step" aria-hidden="true">{w.step}</span>
+              <h3 data-part="title"><a data-part="link" href={href(lang, w.path)}>{w.title}</a></h3>
+              <p data-part="description">{w.body}</p>
+            </div>
           </li>
         ))}
       </ol>

@@ -30,16 +30,18 @@ const toc: TocItem[] = groups.map((g) => ({ depth: 2, slug: `family-${g.id}`, te
     </header>
     {groups.map((g) => (
       <section class="doc-section" aria-labelledby={`family-${g.id}`}>
-        <h2 id={`family-${g.id}`}>{g.label[lang]} <span class="badge">{g.items.length}</span></h2>
+        <h2 id={`family-${g.id}`}>{g.label[lang]} <span data-ds="badge" data-tone="neutral" data-emphasis="outline" data-size="sm"><span data-part="label">{g.items.length}</span></span></h2>
         <ul class="cards">
           {g.items.map((m) => (
-            <li class="card" id={`c-${slugOf(m.name)}`}>
-              <h3 lang="en"><a class="card-link" href={href(lang, componentPath(m))}>{m.name}</a></h3>
-              <p lang={ar ? 'en' : undefined} dir={ar ? 'ltr' : undefined} set:html={inlineHtml(m.summary)} />
-              <p>
-                <span class:list={['badge', m.frameworks.react?.status === 'ready' ? 'badge-ready' : 'badge-planned']} lang="en">React</span>
-                <span class:list={['badge', m.frameworks.angular?.status === 'ready' ? 'badge-ready' : 'badge-planned']} lang="en">Angular</span>
-                <span class:list={['badge', m.frameworks.native?.status === 'ready' ? 'badge-ready' : 'badge-planned']} lang="en">Native</span>
+            <li class="card" id={`c-${slugOf(m.name)}`} data-ds="card" data-emphasis="outline" data-size="md" data-interactive>
+              <div data-part="header">
+                <h3 data-part="title" lang="en"><a data-part="link" href={href(lang, componentPath(m))}>{m.name}</a></h3>
+                <p data-part="description" lang={ar ? 'en' : undefined} dir={ar ? 'ltr' : undefined} set:html={inlineHtml(m.summary)} />
+              </div>
+              <p class="card-badges">
+                <span data-ds="badge" data-tone={m.frameworks.react?.status === 'ready' ? 'success' : 'neutral'} data-emphasis="soft" data-size="sm" lang="en"><span data-part="label">React</span></span>
+                <span data-ds="badge" data-tone={m.frameworks.angular?.status === 'ready' ? 'success' : 'neutral'} data-emphasis="soft" data-size="sm" lang="en"><span data-part="label">Angular</span></span>
+                <span data-ds="badge" data-tone={m.frameworks.native?.status === 'ready' ? 'success' : 'neutral'} data-emphasis="soft" data-size="sm" lang="en"><span data-part="label">Native</span></span>
               </p>
             </li>
           ))}

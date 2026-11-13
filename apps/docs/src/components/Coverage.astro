@@ -44,7 +44,7 @@ const toc: TocItem[] = groups.map((g) => ({ depth: 2, slug: `cov-${g.id}`, text:
                   <th scope="row" lang="en"><a href={href(lang, componentPath(m))}>{m.name}</a></th>
                   {frameworkIds.map((fw) => {
                     const s = m.frameworks[fw]?.status ?? 'planned';
-                    return <td><span class:list={['badge', s === 'ready' ? 'badge-ready' : 'badge-planned']}>{t.status[s]}</span></td>;
+                    return <td><span data-ds="badge" data-tone={s === 'ready' ? 'success' : 'neutral'} data-emphasis="soft" data-size="sm"><span data-part="label">{t.status[s]}</span></span></td>;
                   })}
                 </tr>
               ))}

@@ -1,0 +1,30 @@
+/*
+ * The system's own CSS, reused by the docs chrome. One layer of ours,
+ * docs-base, is declared before the system's ds layer (ds.reset, ds.base and
+ * so on are sublayers of ds), so the docs element defaults (links, code,
+ * focus) never beat a component rule.
+ *
+ * - Tokens: every style and scheme in one file, picked by data-style and
+ *   data-scheme on <html>.
+ * - base.css: the Theme element (<html data-ds="theme">), Arabic, focus,
+ *   reduced motion.
+ * - Components drawn on static markup through data-ds: Button, IconButton,
+ *   Link, Badge, Kbd, Card, Tabs (as links and as code tabs) and the
+ *   DropdownMenu surface for the switches.
+ * - Every style pack (fonts and recipes) through the generated index, so a
+ *   new pack needs no change here. Font faces use font-display: swap and a
+ *   unicode range, so a file downloads only when the chosen style draws text
+ *   with it.
+ */
+@layer docs-base, ds.reset, ds.tokens, ds.base, ds.platform, ds.recipes, ds.overrides;
+@import '@the-system/tokens/css/tokens.css';
+@import '@the-system/css/base.css';
+@import '@the-system/css/components/Button.css';
+@import '@the-system/css/components/IconButton.css';
+@import '@the-system/css/components/Link.css';
+@import '@the-system/css/components/Badge.css';
+@import '@the-system/css/components/Kbd.css';
+@import '@the-system/css/components/Card.css';
+@import '@the-system/css/components/Tabs.css';
+@import '@the-system/css/components/DropdownMenu.css';
+@import '@the-system/styles';

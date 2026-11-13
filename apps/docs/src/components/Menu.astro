@@ -1,0 +1,112 @@
+---
+// A menu button in the look of the system's DropdownMenu, on static markup:
+// Button (data-ds="button") opens a DropdownMenu surface (data-ds="dropdown-menu")
+// of radio items. public/docs.js adds the behavior: roving focus, arrow
+// keys, Home, End, type ahead, Escape, click outside, focus back on the
+// button. With no script the menu stays closed; language items are plain
+// links.
+//
+// The button shows the current value. Every value is in the button, stacked
+// in one grid cell and hidden but one, so the button never changes width
+// when the value changes (no layout shift). The site switches show their
+// value from attributes on <html> (set before the first paint); the preview
+// settings mark it with data-current.
+import { iconMarkup } from '../lib/chrome.ts';
+import type { IconName } from '@the-system/icons';
+
+export interface MenuItem {
+  value: string;
+  label: string;
+  /** The language of the label, when it differs from the page. */
+  lang?: string;
+  /** A small badge after the label, for example "Proposed". */
+  badge?: string;
+  /** A link: the item navigates instead of setting a value. */
+  href?: string;
+  hreflang?: string;
+}
+
+interface Props {
+  id: string;
+  /** What the menu sets: style, scheme, lang, or a preview axis (preview-style, platform and so on). */
+  setting: string;
+  /** The name of the setting, read before the value: "Site style". */
+  label: string;
+  items: MenuItem[];
+  /** The value checked in the built page. */
+  value: string;
+  icon?: IconName;
+  /** A second icon shown in the dark scheme instead of icon. */
+  iconDark?: IconName;
+  /** Where the menu opens from: the inline end of the button (top bar) or its start. */
+  align?: 'start' | 'end';
+  /** Hide the value text below 720px, keep the icon. */
+  compact?: boolean;
+  /** Show the setting name before the value. */
+  showLabel?: boolean;
+}
+
+const { id, setting, label, items, value, icon, iconDark, align = 'end', compact = false, showLabel = false } = Astro.props;
+const check = iconMarkup('check', 16);
+const chevron = iconMarkup('chevron-down', 16);
+---
+
+<div class="menu" data-menu-root data-setting={setting} data-align={align} data-compact={compact ? '' : undefined}>
+  <button
+    type="button"
+    id={`${id}-button`}
+    data-menu-button
+    data-ds="button"
+    data-tone="neutral"
+    data-emphasis="outline"
+    data-size="sm"
+    data-shape="default"
+    aria-haspopup="menu"
+    aria-expanded="false"
+    aria-controls={`${id}-menu`}>
+    {icon && !iconDark && <span data-part="start" set:html={iconMarkup(icon, 16)} />}
+    {icon && iconDark && (
+      <span data-part="start">
+        <span class="when-light" set:html={iconMarkup(icon, 16)} />
+        <span class="when-dark" set:html={iconMarkup(iconDark, 16)} />
+      </span>
+    )}
+    <span data-part="label">
+      <span class:list={[{ 'visually-hidden': !showLabel, 'menu-label': showLabel }]}>{label}{showLabel ? '' : ' '}</span>
+      <span class="mv">
+        {items.map((i) => (
+          <span data-v={i.value} data-current={i.value === value ? '' : undefined} lang={i.lang}>{i.label}</span>
+        ))}
+      </span>
+    </span>
+    <span data-part="end" set:html={chevron} />
+  </button>
+  <div
+    id={`${id}-menu`}
+    role="menu"
+    aria-label={label}
+    data-ds="dropdown-menu"
+    data-size="md"
+    data-side="bottom"
+    data-align={align}
+    data-state="open"
+    hidden>
+    <div data-part="label" aria-hidden="true">{label}</div>
+    {items.map((i) =>
+      i.href ? (
+        <a role="menuitemradio" data-part="radio-item" tabindex="-1" aria-checked={i.value === value ? 'true' : 'false'} data-value={i.value} href={i.href} hreflang={i.hreflang} lang={i.lang}>
+          <span data-part="indicator" set:html={check} />
+          <span data-part="text">{i.label}</span>
+        </a>
+      ) : (
+        <div role="menuitemradio" data-part="radio-item" tabindex="-1" aria-checked={i.value === value ? 'true' : 'false'} data-value={i.value} lang={i.lang}>
+          <span data-part="indicator" set:html={check} />
+          <span data-part="text">{i.label}</span>
+          {i.badge && (
+            <span data-ds="badge" data-tone="warning" data-emphasis="soft" data-size="sm"><span data-part="label">{i.badge}</span></span>
+          )}
+        </div>
+      ),
+    )}
+  </div>
+</div>

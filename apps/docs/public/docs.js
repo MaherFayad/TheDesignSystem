@@ -23,6 +23,11 @@
         localStorage.setItem(key, value);
       } catch {}
     },
+    remove(key) {
+      try {
+        localStorage.removeItem(key);
+      } catch {}
+    },
   };
   const ready = (fn) => (document.readyState === 'loading' ? document.addEventListener('DOMContentLoaded', fn) : fn());
   const pageLang = root.lang === 'ar' ? 'ar' : 'en';
@@ -41,21 +46,36 @@
   };
 
   // ------------------------------------------------------------ settings
-  const settings = {
-    style: store.get('ds-docs-style') || 'neutral',
-    scheme: root.dataset.scheme === 'dark' ? 'dark' : 'light',
-    platform: 'web',
-    density: 'default',
-    dir: pageLang === 'ar' ? 'rtl' : 'ltr',
-    lang: pageLang,
+  // The site settings live on <html>: the head script applied the saved
+  // style, scheme and platform before the first paint. The preview settings
+  // of a component page may override the style and the scheme for the
+  // previews of that page only; they are not saved.
+  const site = {
+    style: root.dataset.style || 'neutral',
+    schemeChoice: root.dataset.schemeChoice || 'system',
+    platform: root.dataset.platformChoice || 'web',
   };
+  const preview = { style: null, scheme: null, density: 'default', dir: pageLang === 'ar' ? 'rtl' : 'ltr', lang: pageLang };
   const frames = [];
+  const galleryBase = root.dataset.gallery || '';
+  const systemDark = matchMedia('(prefers-color-scheme: dark)');
+
+  const siteScheme = () => (site.schemeChoice === 'system' ? (systemDark.matches ? 'dark' : 'light') : site.schemeChoice);
+  // What every preview frame and gallery link gets.
+  const previewSettings = () => ({
+    style: preview.style || site.style,
+    scheme: preview.scheme || siteScheme(),
+    platform: site.platform,
+    density: preview.density,
+    dir: preview.dir,
+    lang: preview.lang,
+  });
 
   function frameUrl(frame) {
     const base = frame.dataset.src;
     const q = new URLSearchParams({ chrome: '0' });
     if (frame.dataset.case) q.set('case', frame.dataset.case);
-    for (const [k, v] of Object.entries(settings)) q.set(k, v);
+    for (const [k, v] of Object.entries(previewSettings())) q.set(k, v);
     if (frame.dataset.fixed) {
       try {
         for (const [k, v] of Object.entries(JSON.parse(frame.dataset.fixed))) q.set(k, v);
@@ -64,7 +84,27 @@
     return `${base}?${q.toString()}`;
   }
 
+  const isGalleryLink = (a) => {
+    if (a.hasAttribute('data-open-gallery')) return true;
+    if (!galleryBase) return false;
+    const raw = a.getAttribute('href') || '';
+    return raw === galleryBase || raw.startsWith(`${galleryBase}/`) || raw.startsWith(`${galleryBase}?`);
+  };
+
+  // Mark the checked item of a menu and the value its button shows.
+  function showValue(setting, value) {
+    document.querySelectorAll(`[data-menu-root][data-setting="${setting}"]`).forEach((menu) => {
+      menu.querySelectorAll('[role="menuitemradio"]').forEach((item) => item.setAttribute('aria-checked', String(item.dataset.value === value)));
+      menu.querySelectorAll('.mv > [data-v]').forEach((v) => v.toggleAttribute('data-current', v.dataset.v === value));
+    });
+  }
+
   function applySettings() {
+    root.dataset.style = site.style;
+    root.dataset.scheme = siteScheme();
+    root.dataset.schemeChoice = site.schemeChoice;
+    root.dataset.platformChoice = site.platform;
+    const p = previewSettings();
     for (const frame of frames) {
       const next = frameUrl(frame);
       if (frame.getAttribute('src') !== next) {
@@ -72,19 +112,43 @@
         frame.setAttribute('src', next);
       }
     }
-    // Keep every control showing the current value.
-    document.querySelectorAll('[data-style-select]').forEach((s) => (s.value = settings.style));
-    document.querySelectorAll('[data-axis]').forEach((s) => {
-      const v = settings[s.dataset.axis];
-      if (v !== undefined) s.value = v;
-    });
-    document.querySelectorAll('[data-open-gallery]').forEach((a) => {
+    showValue('style', site.style);
+    showValue('scheme', site.schemeChoice);
+    showValue('lang', pageLang);
+    for (const [k, v] of Object.entries(p)) showValue(`axis-${k}`, v);
+    // Gallery links open the same view the previews show.
+    document.querySelectorAll('a[href]').forEach((a) => {
+      if (!isGalleryLink(a)) return;
       const url = new URL(a.href, location.href);
-      const q = new URLSearchParams();
-      for (const [k, v] of Object.entries(settings)) q.set(k, v);
+      const q = a.hasAttribute('data-open-gallery') ? new URLSearchParams() : url.searchParams;
+      const keys = a.hasAttribute('data-open-gallery') ? Object.keys(p) : ['style', 'scheme', 'platform'];
+      for (const k of keys) q.set(k, p[k]);
       url.search = q.toString();
       a.href = url.toString();
     });
+  }
+
+  function setSetting(setting, value) {
+    if (setting === 'style') {
+      site.style = value;
+      preview.style = null;
+      store.set('ds-docs-style', value);
+    } else if (setting === 'scheme') {
+      site.schemeChoice = value;
+      preview.scheme = null;
+      if (value === 'system') store.remove('ds-docs-scheme');
+      else store.set('ds-docs-scheme', value);
+    } else if (setting === 'axis-platform') {
+      site.platform = value;
+      store.set('ds-docs-platform', value);
+    } else if (setting === 'axis-style') {
+      preview.style = value === site.style ? null : value;
+    } else if (setting === 'axis-scheme') {
+      preview.scheme = value === siteScheme() ? null : value;
+    } else if (setting.startsWith('axis-')) {
+      preview[setting.slice(5)] = value;
+    }
+    applySettings();
   }
 
   // ------------------------------------------------------------ frames
@@ -141,37 +205,124 @@ html,body,#root,[data-gallery='root']{min-block-size:0;block-size:auto}
 
   // ------------------------------------------------------------ scheme
   function setupScheme() {
-    const btn = document.querySelector('[data-scheme-toggle]');
-    const label = () => {
-      if (!btn) return;
-      btn.setAttribute('aria-label', root.dataset.scheme === 'dark' ? btn.dataset.labelLight : btn.dataset.labelDark);
-    };
-    label();
-    btn?.addEventListener('click', () => {
-      const next = root.dataset.scheme === 'dark' ? 'light' : 'dark';
-      root.dataset.scheme = next;
-      store.set('ds-docs-scheme', next);
-      settings.scheme = next;
-      label();
+    // Follow the system setting until the person picks a scheme.
+    systemDark.addEventListener('change', () => {
+      if (site.schemeChoice === 'system') applySettings();
+    });
+    // Another tab changed a setting: follow it.
+    window.addEventListener('storage', (e) => {
+      if (e.key === 'ds-docs-style' && e.newValue) site.style = e.newValue;
+      else if (e.key === 'ds-docs-scheme') site.schemeChoice = e.newValue || 'system';
+      else return;
       applySettings();
     });
   }
 
-  function setupControls() {
-    document.querySelectorAll('[data-style-select]').forEach((select) =>
-      select.addEventListener('change', () => {
-        settings.style = select.value;
-        store.set('ds-docs-style', select.value);
-        applySettings();
-      }),
-    );
-    document.querySelectorAll('select[data-axis]').forEach((select) =>
-      select.addEventListener('change', () => {
-        settings[select.dataset.axis] = select.value;
-        if (select.dataset.axis === 'style') store.set('ds-docs-style', select.value);
-        applySettings();
-      }),
-    );
+  // ------------------------------------------------------------ menus
+  // A menu button and its menu (src/components/Menu.astro), as in the WAI
+  // ARIA menu button pattern: Enter, Space or Down open on the checked item,
+  // Up opens on the last; in the menu Up, Down, Home, End and type ahead
+  // move, Enter and Space pick, Escape closes, Tab closes and moves on; a
+  // click outside closes. Focus goes back to the button.
+  let openMenu = null;
+  function setupMenus() {
+    document.querySelectorAll('[data-menu-root]').forEach((box) => {
+      const btn = box.querySelector('[data-menu-button]');
+      const menu = box.querySelector('[role="menu"]');
+      if (!btn || !menu) return;
+      const items = () => [...menu.querySelectorAll('[role^="menuitem"]')];
+      let typed = '';
+      let typedAt = 0;
+
+      const focusItem = (item) => {
+        if (!item) return;
+        items().forEach((i) => {
+          i.tabIndex = i === item ? 0 : -1;
+          i.toggleAttribute('data-highlighted', i === item);
+        });
+        item.focus();
+      };
+      const close = (returnFocus) => {
+        if (menu.hidden) return;
+        menu.hidden = true;
+        btn.setAttribute('aria-expanded', 'false');
+        box.removeAttribute('data-open');
+        items().forEach((i) => i.removeAttribute('data-highlighted'));
+        if (openMenu === close) openMenu = null;
+        if (returnFocus) btn.focus();
+      };
+      const open = (where) => {
+        if (openMenu && openMenu !== close) openMenu(false);
+        menu.hidden = false;
+        btn.setAttribute('aria-expanded', 'true');
+        box.setAttribute('data-open', '');
+        openMenu = close;
+        const list = items();
+        const checked = list.find((i) => i.getAttribute('aria-checked') === 'true');
+        focusItem(where === 'last' ? list[list.length - 1] : where === 'first' ? list[0] : checked || list[0]);
+      };
+      const pick = (item) => {
+        if (item.tagName === 'A') {
+          if (box.dataset.setting === 'lang') store.set('ds-docs-lang', item.dataset.value);
+          close(false);
+          location.href = item.href;
+          return;
+        }
+        close(true);
+        setSetting(box.dataset.setting, item.dataset.value);
+        announce(`${menu.getAttribute('aria-label')}: ${item.querySelector('[data-part="text"]')?.textContent ?? ''}`);
+      };
+
+      btn.addEventListener('click', () => (menu.hidden ? open() : close(true)));
+      btn.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+          e.preventDefault();
+          open(e.key === 'ArrowUp' ? 'last' : undefined);
+        }
+      });
+      menu.addEventListener('keydown', (e) => {
+        const list = items();
+        const i = list.indexOf(document.activeElement);
+        if (e.key === 'ArrowDown') focusItem(list[(i + 1) % list.length]);
+        else if (e.key === 'ArrowUp') focusItem(list[(i - 1 + list.length) % list.length]);
+        else if (e.key === 'Home' || e.key === 'PageUp') focusItem(list[0]);
+        else if (e.key === 'End' || e.key === 'PageDown') focusItem(list[list.length - 1]);
+        else if (e.key === 'Escape') close(true);
+        else if (e.key === 'Enter' || e.key === ' ') {
+          if (i >= 0) pick(list[i]);
+        } else if (e.key === 'Tab') {
+          close(true);
+          return;
+        } else if (e.key.length === 1 && !e.ctrlKey && !e.metaKey && !e.altKey) {
+          const now = Date.now();
+          typed = now - typedAt > 600 ? e.key.toLowerCase() : typed + e.key.toLowerCase();
+          typedAt = now;
+          const text = (item) => (item.querySelector('[data-part="text"]')?.textContent || '').trim().toLowerCase();
+          const order = [...list.slice(i + (typed.length === 1 ? 1 : 0)), ...list.slice(0, i + (typed.length === 1 ? 1 : 0))];
+          const hit = order.find((item) => text(item).startsWith(typed));
+          if (hit) focusItem(hit);
+        } else return;
+        e.preventDefault();
+      });
+      menu.addEventListener('click', (e) => {
+        const item = e.target.closest('[role^="menuitem"]');
+        if (!item) return;
+        e.preventDefault();
+        pick(item);
+      });
+      menu.addEventListener('pointermove', (e) => {
+        const item = e.target.closest('[role^="menuitem"]');
+        if (item && item !== document.activeElement) focusItem(item);
+      });
+      box.addEventListener('focusout', (e) => {
+        if (!menu.hidden && e.relatedTarget && !box.contains(e.relatedTarget)) close(false);
+      });
+    });
+    document.addEventListener('pointerdown', (e) => {
+      if (!openMenu) return;
+      const box = e.target.closest?.('[data-menu-root][data-open]');
+      if (!box) openMenu(false);
+    });
   }
 
   // ------------------------------------------------------------ tabs
@@ -179,9 +330,12 @@ html,body,#root,[data-gallery='root']{min-block-size:0;block-size:auto}
     const tabs = [...list.querySelectorAll('[role="tab"]')];
     const panelOf = (tab) => document.getElementById(tab.getAttribute('aria-controls'));
     const select = (i, focus) => {
+      const indicator = list.querySelector('[data-part="indicator"]');
       tabs.forEach((tab, j) => {
         const on = i === j;
         tab.setAttribute('aria-selected', String(on));
+        tab.dataset.state = on ? 'active' : 'inactive';
+        if (on && indicator) tab.prepend(indicator);
         tab.tabIndex = on ? 0 : -1;
         const panel = panelOf(tab);
         if (panel) panel.hidden = !on;
@@ -221,7 +375,7 @@ html,body,#root,[data-gallery='root']{min-block-size:0;block-size:auto}
       document.execCommand('copy');
       area.remove();
     }
-    const span = btn.querySelector('span');
+    const span = btn.querySelector('[data-part="label"]');
     const done = btn.dataset.done || 'Copied';
     announce(done);
     if (span) {
@@ -251,13 +405,12 @@ html,body,#root,[data-gallery='root']{min-block-size:0;block-size:auto}
       wrap.className = 'code-block';
       pre.replaceWith(wrap);
       wrap.append(pre);
-      const btn = document.createElement('button');
-      btn.type = 'button';
-      btn.className = 'copy-btn';
+      // A Button of the system, with the copy icon of every style (src/components/Layout.astro).
+      const btn = document.getElementById('copy-button')?.content.firstElementChild?.cloneNode(true);
+      if (!btn) return;
       btn.dataset.copy = '';
       btn.dataset.done = done;
-      btn.innerHTML = '<svg aria-hidden="true" viewBox="0 0 24 24" width="16" height="16"><rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"/></svg><span></span>';
-      btn.querySelector('span').textContent = label;
+      btn.querySelector('[data-part="label"]').textContent = label;
       wrap.append(btn);
     });
     // Tables of the hand written pages scroll in their own focusable box.
@@ -487,9 +640,11 @@ html,body,#root,[data-gallery='root']{min-block-size:0;block-size:auto}
   }
 
   ready(() => {
+    // Remember the language of the page the person reads.
+    store.set('ds-docs-lang', pageLang);
     setupScheme();
     setupFrames();
-    setupControls();
+    setupMenus();
     applySettings();
     document.querySelectorAll('[data-tabs]').forEach(setupTabs);
     setupCopy();
