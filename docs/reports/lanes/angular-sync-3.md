@@ -15,7 +15,8 @@ change in `internal/motion-feedback.ts`, the new stage files), `a-sync3:
 sliders`, three `a-sync3: checkpoint ...` commits (the families saved while
 they ran; toggles, overlays, feedback and navigation, actions and selection
 landed whole inside them, each finished and tested before the next family
-commit), `a-sync3: fields`, `a-sync3: lead cleanup ...`, and this report.
+commit), `a-sync3: fields`, `a-sync3: lead cleanup ...`, the matrix shots,
+and this report.
 
 The round 3 change read: `git diff 0747686^1 0747686` (the merge of
 `claude/ds-order-1-23`), and its report `docs/reports/interactions-3.md`
@@ -289,7 +290,19 @@ lines from before this order: React's panel and backdrop carry Radix's
 `pointer-events: auto`, and the Angular panel has `aria-modal="true"`
 (angular-motion lead change 5).
 
-**Screenshots**: see section 4a.
+**Screenshots**: fresh captures of both galleries after every port:
+`npm run shots -- --framework angular --url http://localhost:5302 --ready --no-verify`
+(1312 shots), the same for React on 5301, then
+`npm run shots -- --compare react angular`: 1312 pairs, 1312 pass, 0 fail,
+and every pair has 0 differing pixels (0.000 percent), so there is no
+difference to explain. Only in React: 1064 (components Angular does not
+have). Only in Angular: 0. Table:
+`docs/reports/shots/matrix/compare-react-angular/index.md`; the kept subsets
+of both matrix folders are refreshed. The matrix runs with animations off and
+reduced motion, so it proves the new parts (thumb lens, mark and fill spans,
+badge, state layer, result part, stacked copy glyphs and words, highlight
+marker, ink twins, arc, success mark, toast progress) draw nothing at rest
+that React does not; the motion is proven by section 3.
 
 ## 5. Not ported, and why
 
