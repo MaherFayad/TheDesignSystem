@@ -33,7 +33,7 @@ by the move), "after" on this branch.
 | B11 Angular Slider fill and ProgressCircle arc | already fixed on the tree by the round 3 Angular sync (the review was cut before it merged); a spec added | `slider.motion.spec.ts` (4 of 10 fail without the fill properties), `progress-circle.spec.ts` (fails without the arc) | `angular-b11-b12.pixel.json`: 24 of 24 runs 0 differing pixels against React |
 | B12 Angular contract red | already fixed on the tree; all six parts render; manifests stay ready because each contract run passes | Angular contract, 8 components | `angular-b11-b12.contract.after.json`: 295 passed, 0 failed |
 | B13 recordings | done: 436 contact sheets, all 109 ids in Studio, Desk, Neutral and Liquid, light, cropped to the control, 27.5MB, no video added | `record.cjs` with `SHEETS_ONLY=1`; the band timing now syncs on a black cover found in the video | `docs/reports/shots/interactions-3/sheets/`, `recordings.md` |
-| B14 `tab-slide` long task | improved, see "Proof at the end": `planInk` and `planSlide` read every box once and return a writer, `inFrame` batches every list's reads before writes, the twins are built once per part, labels the pill never passes get none | `nav-ink.test.ts`, `indicator` tests (N30 zoom, 6 of 7 fail before); `perf.cjs` | `playInk` self time 411ms to 17ms (CPU profile); see the final perf table |
+| B14 `tab-slide` long task | not fixed to the target; improved from 821 and 1030ms to 268 (Liquid) and 237ms (Neutral) at 4x on a production build: `planInk` and `planSlide` read every box once and return a writer, `inFrame` batches every list's reads before writes, the twins are built once per part, labels the pill never passes get none; TabsPanel no longer forces Radix Presence reads; the keep-in-view read runs only when the list overflows | `nav-ink.test.ts`, `indicator` tests (N30 zoom, 6 of 7 fail before); `perf.cjs` | `playInk` self time 411ms to 17ms (CPU profile); `final.perf.md`, `final.perf.tab-slide.after.json`, `final-fixes.md` |
 
 ## The ten weakest
 
@@ -172,4 +172,28 @@ boxes; the shared one would change the values it writes).
 
 ## Proof at the end
 
-See `docs/reports/fixes/interactions-3/final.md`.
+Run on the final tree (a49feaa for the suites, then the last fixes in
+`final-fixes.md`). Details: `docs/reports/fixes/interactions-3/final.md`.
+
+| Proof | Result |
+| --- | --- |
+| `npm run check` | all 13 steps pass (vitest 2576 root tests, 744 Angular tests), again after the last fixes |
+| Angular contract, full | 2278 passed, 0 failed, 69 skipped (`docs/reports/contract-angular.json`) |
+| React contract, full | 4411 passed, 1 failed, 163 skipped (`docs/reports/contract-react.json`); the failure was a real Popover race (a closing popover returned focus and closed the next one), fixed after the run: Popover 57 of 57 three times, race probe 0 of 216 missed at 6x CPU (6 before) |
+| `npm run shots -- --compare react angular` | 1312 of 1312 pairs pass; 56 pairs differ by 1 to 1231 pixels (at most 0.12 percent), all from the production CSS build and equal from the dev server; 1064 React shots have no Angular page (51 components planned for Angular) (`final.shots-compare.md`) |
+| Performance, 18 interactions, 4x CPU, 390 by 844 touch | every long task row is lower than in the review (`final.perf.md`); the review used the development build, so the button press baseline also fell (73 to 61ms Liquid, 114 to 53ms Neutral) |
+| `tab-slide` | largest task 268ms Liquid and 237ms Neutral (821 and 1030 in the review); not under 50ms. The rest is three whole stage restyles; ToggleGroup's direct `followIndicator` call in its layout effect forces one (moving it to `inFrame` measured 227 and 188ms). The button press alone is 53 to 66ms at 4x on this machine |
+| Switch frame contrast, toggle and drag, 4 styles x 2 schemes x 3 platforms | 144 runs, 0 under 3:1, lowest 3.23 (`final.switch-contrast.json`, also on the production build) |
+
+Found by the proofs, for the lead:
+
+- Vite's CSS minifier rewrites `:dir(rtl)` into a `:lang(ar, he, ...)`
+  fallback (109 rewrites from 46 rules): a url field in a `dir="ltr"`
+  InputGroup on an Arabic page is right aligned in production
+  (`Input.css:277`). The build target must keep `:dir()`.
+- ToggleGroup (React and Angular): move the layout effect onto `inFrame`
+  with `planFollow` and `planInk`, as Tabs does.
+- The TabsPanel doc comment says inactive panels are hidden with
+  `forceMount`; correct it and the manifest.
+- The shots capture rewrote `docs/reports/shots/matrix/` from the production
+  build; committed as is.
