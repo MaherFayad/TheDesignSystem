@@ -12,7 +12,7 @@ Every entry imported whole, before tree shaking, gzip sums. The other @the-syste
 
 | App | Entries | Gzip KB |
 | --- | --- | ---: |
-| React | `@the-system/react`, `@the-system/icons/react`, `@the-system/css`, `@the-system/tokens/css`, `@the-system/styles`, `@the-system/shared`, `@the-system/motion`, `@the-system/icons` | 333.0 |
+| React | `@the-system/react`, `@the-system/icons/react`, `@the-system/css`, `@the-system/tokens/css`, `@the-system/styles`, `@the-system/shared`, `@the-system/motion`, `@the-system/icons` | 333.1 |
 | Angular | `@the-system/angular`, `@the-system/icons/angular`, `@the-system/css`, `@the-system/tokens/css`, `@the-system/styles`, `@the-system/shared`, `@the-system/motion`, `@the-system/icons` | 314.8 |
 
 ## Change since the first run (2026-11-12, e7e8160)
@@ -21,7 +21,7 @@ Against the first run (2026-11-12, e7e8160). Gzip KB; a plus sign is growth.
 
 | What | Before | Now | Change |
 | --- | ---: | ---: | ---: |
-| React app | 217.3 | 333.0 | +115.7 |
+| React app | 217.3 | 333.1 | +115.8 |
 | Angular app | 204.2 | 314.8 | +110.6 |
 | Component CSS files, summed | 104.4 | 128.7 | +24.3 |
 | Style recipe files, summed | 7.3 | 37.0 | +29.7 |
@@ -32,7 +32,7 @@ The largest moves (0.05 KB gzip or more), at most 25:
 | --- | ---: | ---: | ---: |
 | `@the-system/motion` | 11.8 | 64.5 | +52.7 |
 | `@the-system/css` | 57.8 | 83.4 | +25.6 |
-| `@the-system/react` | 99.5 | 121.9 | +22.5 |
+| `@the-system/react` | 99.5 | 122.0 | +22.6 |
 | `@the-system/angular` | 94.9 | 112.3 | +17.4 |
 | `@the-system/styles` | 3.5 | 16.0 | +12.4 |
 | `@the-system/tokens` | 11.6 | 15.0 | +3.4 |
@@ -64,7 +64,7 @@ Gone since then: none.
 
 | Entry | Kind | Source KB | Minified KB | Gzip KB |
 | --- | --- | ---: | ---: | ---: |
-| `@the-system/react` | js | 1255.2 | 432.4 | 121.9 |
+| `@the-system/react` | js | 1256.8 | 432.8 | 122.0 |
 | `@the-system/angular` | js | 994.8 | 469.3 | 112.3 |
 | `@the-system/css` | css | 1242.3 | 678.0 | 83.4 |
 | `@the-system/motion` | js | 439.1 | 256.4 | 64.5 |
@@ -95,7 +95,7 @@ Gone since then: none.
 | `@the-system/icons/react` | js | 43.8 | 40.5 | 9.6 |
 | `@the-system/motion` | js | 439.1 | 256.4 | 64.5 |
 | `@the-system/native` | js | 44.7 | 16.5 | 5.5 |
-| `@the-system/react` | js | 1255.2 | 432.4 | 121.9 |
+| `@the-system/react` | js | 1256.8 | 432.8 | 122.0 |
 | `@the-system/shared` | js | 135.5 | 48.4 | 16.8 |
 | `@the-system/styles` | css | 276.0 | 173.3 | 16.0 |
 | `@the-system/styles/desk` | css | 90.3 | 54.4 | 6.2 |

@@ -601,6 +601,8 @@ async function runCompare(args: Args, a: string, b: string): Promise<number> {
     ...(onlyB.length ? [`Only in ${b}: ${onlyB.join(', ')}`, ''] : []),
   ];
   writeFileSync(join(out, 'index.md'), lines.join('\n'));
+  // Diff images are a guide for the eye, so they go in as palette PNGs too.
+  for (const f of pngsIn(out)) writeFileSync(join(out, f), await committedCopy(readFileSync(join(out, f))));
   console.log(`Compare ${a} with ${b}: ${both.length} pairs, ${fails} over the limit. Only in ${a}: ${onlyA.length}, only in ${b}: ${onlyB.length}. Table: ${relative(repo, join(out, 'index.md'))}`);
   return fails > 0 ? 1 : 0;
 }

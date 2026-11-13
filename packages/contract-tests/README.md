@@ -13,7 +13,25 @@ npm run contract -- --framework react                 # starts the React gallery
 npm run contract -- --framework react --component Button,Input
 npm run contract -- --framework react --url http://localhost:5203
 npm run contract -- --framework angular               # skips with a note until apps/gallery-angular exists
+npm run contract -- --framework react --style liquid --styles liquid   # the whole suite in one style
+npm run contract -- --framework react --platform ios --component Button,Switch --tag ios-controls
+npm run contract -- --framework react --platform android --grep "target size" --target-min 48 --tag android-min48
 ```
+
+Options that narrow or move a run (each sets an environment variable the spec reads):
+
+| Option | Variable | Effect |
+| --- | --- | --- |
+| `--style <id>` | `DS_STYLE` | the style of the checks that run once (variants, states, keys, reflow) |
+| `--styles <a,b>` | `DS_STYLES` | narrows the per style loops (anatomy, target size, axe) |
+| `--platform <web, ios or android>` | `DS_PLATFORM` | added to every URL |
+| `--target-min <px>` | `DS_TARGET_MIN` | the minimum target size, default 24 (WCAG 2.5.8); 44 and 48 are the platform guides, not WCAG |
+| `--grep <regex>` | (playwright `--grep`) | runs only the tests whose title matches |
+| `--tag <name>` | | the report name, `docs/reports/contract-<framework>-<name>.json` |
+
+A run with any of `--style`, `--styles`, `--platform`, `--target-min` or
+`--tag` writes `docs/reports/contract-<framework>-<suffix>.json` and leaves
+the base report alone; with `--tag`, a `--component` run writes there too.
 
 `run.ts` starts the gallery (React: `vite` in `apps/gallery-react` with `PORT`
 set; Angular: `npm run dev -- --port <port>` in `apps/gallery-angular`), waits
@@ -128,9 +146,12 @@ the only interactive element of a root that is 24px or more, the suite clicks
 inside the root outside the element, and counts the root as the hit area only
 when that click focuses the element (an input inside its box).
 
-Scheme and direction do not change sizes, so they are not repeated. The
-`platform=ios` (44pt) and `platform=android` (48dp) passes are not run for
-the web; they belong to wave 2 with the touch templates.
+Scheme and direction do not change sizes, so they are not repeated. With
+`--platform ios` or `android` the same 24px check runs on the platform's
+layout; `--target-min 44` or `48` measures against the platform guides as a
+note, not as WCAG. The button family's `hit` part (an empty last child that a
+platform grows to 44 or 48px) widens the measured target when a press in each
+band it adds reaches the control (hit tested with `elementFromPoint`).
 
 ### Axe
 

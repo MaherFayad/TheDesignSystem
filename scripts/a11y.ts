@@ -341,6 +341,8 @@ async function main(): Promise<number> {
     const wanted = args.components.map((c) => c.toLowerCase());
     const manifests = loadManifests(repo)
       .filter((m) => m.kind === 'component')
+      // Only components ready for the framework: the route probe waits 20s on each page that is missing.
+      .filter((m) => m.frameworks?.[args.framework]?.status === 'ready')
       .filter((m) => wanted.length === 0 || wanted.includes(m.name.toLowerCase()) || wanted.includes(kebabCase(m.name)))
       .sort((a, b) => a.name.localeCompare(b.name));
     const routes = await probeRoutes(browser, url, manifests.map((m) => kebabCase(m.name)));
