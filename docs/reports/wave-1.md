@@ -1,49 +1,57 @@
 # Wave 1 report
 
-Date: 2026-11-12, 20:40 UTC. Status: Gate 1 is not passed yet. One condition
-fails by four tests, and three pieces of work are still open (see "Open
-before the gate closes").
+Date: 2026-11-13, 19:45 UTC. Status: **Gate 1 is not passed. Work is paused
+by the owner.** Six of seven conditions pass. The React condition passes in
+the default style and fails in Liquid by four tests, with the same fault in
+Desk.
 
 ## Gate 1
 
-Evidence comes from order 1.17 (`docs/reports/matrix-wave-1.md`), run on the
-lead's branch at `6fabe3c`, and from `npm run check` on the lead's branch
-after each merge.
+Evidence: the second run of order 1.17, `docs/reports/matrix-wave-1.md` and
+`docs/reports/lanes/order-1-17b.md`, on the lead's branch after the fix
+round 1.29 and the `:dir()` build fix.
 
 | Condition | Result | Evidence |
 | --- | --- | --- |
-| Both web example apps use only system components | Pass | `ds doctor` on `examples/consumer-next` and `consumer-vite`: 0 findings. Order 1.18 report: `docs/reports/lanes/order-1-18.md` |
-| `ds doctor` is clean on both | Pass | consumer-next 11 files, consumer-vite 12 files, 0 errors, 0 warnings |
-| The 55 Angular components pass the contract suite | Pass at `6fabe3c` | 59 ready. 1833 tests: 1779 pass, 0 fail, 54 skipped. Compare with React: 984 pairs, 0 over the limit, 73 pairs differ below it in 5 components |
-| 105 React components | Fail by 4 tests | 111 manifests ready and valid. 3568 tests: 3421 pass, 4 fail, 143 skipped. The 4 are List axe in Desk: the suite runs axe while the first paint stagger still holds rows at low opacity |
-| Neutral style | Pass, proposed | `ds style check neutral`: contract 698, contrast 602, icons 94, fonts 2 |
-| Docs site, registry, CLI, checker | Pass on each order's own proof | `docs/reports/lanes/order-1-13.md`, `order-1-15.md`. The docs build and link check run inside `npm run check` |
-| `npm run check` | Pass | 13 steps, 2169 tests, on the lead's branch after the last merge |
+| Both web example apps use only system components | Pass | `ds doctor` on both: 0 findings |
+| `ds doctor` is clean on both | Pass | 0 errors, 0 warnings |
+| The 55 Angular components pass the contract suite | Pass | 59 ready. 2278 pass, 0 fail. Compare with React: 1312 pairs, 0 over the limit |
+| 105 React components | Pass in the default style, fail in Liquid by 4 tests | 111 manifests. 4412 pass, 0 fail. iOS and Android controls 0 fail. Slider and RangeSlider overflow at 320px in Liquid (8px) and in Desk (10px, measured by hand) |
+| Neutral style | Pass, proposed | `ds style check neutral` and `liquid` both pass |
+| Docs site, registry, CLI, checker | Pass on each order's own proof | The docs build and link check run inside `npm run check` |
+| `npm run check` | Pass | 13 steps, 2580 tests, alone on the machine. Two gate tests and one Angular spec time out when a contract suite shares the 4 cores |
 
 Other measurements from the same run:
 
-- Target size (WCAG 2.5.8): React 1038 of 1038, Angular 543 of 543, in every
-  style and density, overlays open.
-- axe sweep (WCAG 2.2 AA): 1656 runs on 111 pages, English and Arabic,
-  overlays closed and open, 0 violations.
-- Screenshot matrix: React 1782 shots, 17 differ by one channel value across
-  two runs (ScrollArea, Tabs). Angular 984 shots, all byte equal.
-- Size, gzip: `@the-system/react` 99.5 KB, `@the-system/angular` 94.9 KB,
-  `@the-system/css` 57.8 KB. Full tables: `docs/reports/size-wave-1.md`.
+- axe sweep (WCAG 2.2 AA): React 2240 runs, 2 fail, one finding: the Desk
+  danger AlertDialog title on `/platforms`, 4.42:1 (WCAG 1.4.3). Angular 1136
+  runs, 0 fail.
+- Target size (WCAG 2.5.8): 0 fail at 24px in every style and density.
+- Reduced motion: 0 interactions still move.
+- Switch contrast on every frame: 0 of 144 runs under 3:1, lowest 3.23.
+- `tab-slide` long task at 4x CPU: median 184ms in Neutral, 211ms in Liquid.
+  Down from 821 to 1030ms, still over the 50ms target.
+- Production CSS keeps all 109 `:dir(rtl)`; 1141 Arabic RTL tests pass on
+  the fixed build.
+- Screenshot matrix: 6 visible shots not byte stable across two captures
+  (ScrollArea, Menubar).
 
-## Open before the gate closes
+## Open when work paused
 
-1. **List axe in Desk.** Either the suite waits for the stagger, or the
-   stagger never lowers text below its contrast. The second is the safer
-   fix: a person can also read a row mid stagger. Handed to order 1.22.
-2. **Interaction round 2 (order 1.22).** Running. It rewrites motion in
-   every React component, so the React contract suite, the matrix and the
-   Angular compare must run again after it merges.
-3. **Angular fix round 2.** Merged after the matrix ran. Its 20 blockers are
-   reported fixed and have not been rechecked by a fresh reviewer.
-4. **Stale images.** The matrix order deleted Angular shots that a later
-   merge had changed; the merge kept the older files for ten components. A
-   full `npm run shots` for both frameworks replaces them.
+1. **Slider and RangeSlider overflow at 320px in Liquid and Desk.** The fill
+   `::before` reaches 36px past the track (`Slider.css:205`). This is the
+   one thing between the tree and gate 1.
+2. **Desk danger AlertDialog title contrast**, 4.42:1 against 4.5:1.
+3. **`tab-slide`** is still a long task on a slow phone. ToggleGroup calls
+   `followIndicator` directly; move it onto `inFrame`.
+4. **The suite runs reflow only in the default style**, which is why the
+   Desk overflow was found by hand. Run reflow in every style.
+5. **Not reviewed:** the fix round 1.29, the Angular sync for round 3, the
+   hook wiring 1.28, the docs restyle 1.30.
+6. **Angular** has no Sheet or Drawer, so detents and swipe to dismiss are
+   React only.
+7. Order 1.31 (fix round 2 of 3 for round 3) is not started. Wave 2 is not
+   started.
 
 ## What was built
 

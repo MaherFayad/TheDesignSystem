@@ -4,6 +4,24 @@ Main model: claude-fable-5-2, medium. Subagents: claude-opus-5-5, medium.
 Current wave: 1 (wave 0 passed its gate on 2026-11-12, report in docs/reports/wave-0.md)
 Next open order: 1.0 (ds-architect writes docs/plan/wave-1.md; start with the carry over list in docs/reports/wave-0.md)
 
+
+## Paused by the owner (2026-11-13, 19:45 UTC)
+
+The owner said "make this the last thing then pause work". The gate rerun
+(order 1.17, second run) is merged. No session is running and no check-in is
+scheduled. Start nothing until the owner says so.
+
+- Gate 1: not passed. Six of seven conditions pass; see
+  `docs/reports/wave-1.md`.
+- First thing to do on resume: order 1.31, the Slider and RangeSlider
+  overflow at 320px in Liquid and Desk (`Slider.css:205`), the Desk danger
+  AlertDialog title contrast, `tab-slide`, and reflow in every style in the
+  contract suite. Then rerun the gate.
+- Not reviewed yet: orders 1.28, 1.29, 1.30 and the Angular sync for round 3.
+- Everything visual is proposed: Neutral, Desk Light, the restyled Studio,
+  Desk and Neutral, Liquid, the iOS and Android looks, all interactions.
+- Live site: https://the-system-docs.vercel.app (public).
+
 ## Paths
 GoBanana: /home/user/gobanana (read only clone, commit 216625c)
 Figma-Killer-2: /home/user/maherfayad-stack/figma-killer-2 (read only clone, commit 51b1994)
