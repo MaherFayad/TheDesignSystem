@@ -12,7 +12,8 @@ describe('gate ds/no-dash: no em dash or en dash in any text file', () => {
 
   it('finds no dash in the repo', () => {
     expect(format(runRule(noDashRule)), 'use a comma, colon, period or parentheses').toEqual([]);
-  });
+    // It reads every text file in the repo. Under a loaded machine that passes the default five seconds.
+  }, 60_000);
 
   it('fails on the fixture', () => {
     expect(lines(noDash(fixture('no-dash/bad.md')))).toEqual([5, 6, 7, 7, 8, 9]);
