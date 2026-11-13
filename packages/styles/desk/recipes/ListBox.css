@@ -3,8 +3,7 @@
  * desktop/desktop.css, the same rows the Desk DropdownMenu recipe draws.
  *
  * What tokens cannot say:
- * - the lit row is a soft highlight (overlay-10: white at 10% in dark, ink
- *   at 10% in light) with the text bright and the achromatic ring, not a
+ * - the lit row is yellow glass (the primary tint, order 1.28) with the text bright and the achromatic ring, not a
  *   yellow fill (order 1.24, proposed); the popups of Combobox,
  *   Autocomplete, MultiSelect and TagField take the same rows;
  * - the selected row is marked by the yellow check (primary on surface:
@@ -18,7 +17,7 @@
     --_list-box-radius: var(--ds-radius-panel);
     --_list-box-option-radius: var(--ds-radius-field);
     --_list-box-option-font-weight: var(--ds-font-weight-regular);
-    --_list-box-option-bg-highlight: var(--ds-color-bg-overlay-10);
+    --_list-box-option-bg-highlight: var(--ds-color-primary-tint);
     --_list-box-option-fg-highlight: var(--ds-color-text-bright);
     --_list-box-option-ring-color: var(--ds-color-focus-ring);
     --_list-box-separator-color: var(--ds-color-material-glass-border);
@@ -48,5 +47,21 @@
 
   [data-style='desk'][data-contrast='more'] [data-ds='list-box'] {
     --_list-box-separator-color: var(--ds-color-border-strong);
+  }
+  /*
+   * Order 1.28 (proposed): the lit row is a yellow glass marker (the primary
+   * tint) with a yellow bar on its inline start (the primary edge: yellow in
+   * dark, gold in light), and the marker slides from row to row on the
+   * bouncy spring, so it overshoots the row and settles. The bar is an inset
+   * shadow on the highlight part, mirrored in right to left text.
+   */
+  [data-style='desk'] [data-ds='list-box'] {
+    --_list-box-option-shadow: inset calc(var(--ds-border-width-strong) * 1.5) 0 0 var(--ds-color-primary-border);
+    --_list-box-highlight-duration: var(--ds-duration-spring-bouncy);
+    --_list-box-highlight-ease: var(--ds-ease-spring-bouncy);
+  }
+
+  [data-style='desk'] [data-ds='list-box']:dir(rtl) {
+    --_list-box-option-shadow: inset calc(var(--ds-border-width-strong) * -1.5) 0 0 var(--ds-color-primary-border);
   }
 }

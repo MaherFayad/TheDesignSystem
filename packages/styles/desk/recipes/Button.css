@@ -51,6 +51,70 @@
     --_button-shadow: inset 0 var(--ds-border-width-default) 0 var(--ds-color-material-glass-edge);
   }
 
+  /*
+   * Order 1.28 (proposed), the hooks of order 1.23. A Desk button is a lit
+   * object you push into the desk: a light falls on the glass and the yellow
+   * pills from above (the glow layer, standing at rest near the top edge and
+   * following the pointer), a press sinks the content an eighth of the
+   * button's height under a deeper shade, and the release springs back past
+   * rest on the bouncy spring. Studio has none of the light, Neutral no
+   * overshoot.
+   */
+  [data-style='desk'] :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button'], [data-ds='close-button'], [data-ds='copy-button'], [data-ds='floating-action-button']) {
+    --_button-press-y: calc(var(--_button-height) / 8);
+    --_button-press-shade: var(--ds-color-bg-scrim-40);
+    --_button-release-ease: var(--ds-ease-spring-bouncy);
+    --_button-release-duration: var(--ds-duration-spring-bouncy);
+    --_button-glow-y: 0%;
+  }
+
+  [data-style='desk'] :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button'], [data-ds='copy-button'], [data-ds='floating-action-button']):is([data-emphasis='soft'], [data-emphasis='solid']) {
+    --_button-glow: 1;
+    --_button-glow-rest: 0.35;
+    --_button-glow-color: var(--ds-color-material-glass-edge);
+  }
+
+  /* On the yellow the light is white, never the dark ink of its label. */
+  [data-style='desk'] :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button'], [data-ds='copy-button'], [data-ds='floating-action-button'])[data-tone='accent'][data-emphasis='solid'] {
+    --_button-glow-rest: 0.5;
+    --_button-glow-color: color-mix(in srgb, var(--ds-color-glass-backdrop-bright) 60%, transparent);
+  }
+
+  /*
+   * CopyButton (order 1.28, proposed): the copy glyph rolls half a turn as
+   * it closes, the arriving word runs a nudge past its place and settles,
+   * and the bubble of the icon only form is a small yellow pill that rises
+   * a full step.
+   */
+  [data-style='desk'] [data-ds='copy-button'] {
+    --_copy-button-turn: calc(-180deg * var(--_button-dir));
+    --_copy-button-overshoot: var(--ds-distance-nudge);
+    --_copy-button-bubble-bg: var(--ds-color-primary-fill);
+    --_copy-button-bubble-fg: var(--ds-color-primary-text);
+    --_copy-button-bubble-border-color: var(--ds-color-primary-border);
+    --_copy-button-bubble-shadow: var(--ds-elevation-window-soft);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    [data-style='desk'] [data-ds='copy-button'] {
+      --_copy-button-turn: 0deg;
+      --_copy-button-overshoot: 0px;
+    }
+  }
+
+  :root[data-motion='reduce'] [data-style='desk'] [data-ds='copy-button'] {
+    --_copy-button-turn: 0deg;
+    --_copy-button-overshoot: 0px;
+  }
+
+  @media (forced-colors: active) {
+    [data-style='desk'] [data-ds='copy-button'] {
+      --_copy-button-bubble-bg: Canvas;
+      --_copy-button-bubble-fg: CanvasText;
+      --_copy-button-bubble-border-color: CanvasText;
+    }
+  }
+
   /* The outline button keeps the glass hairline instead of the control border, so it reads as glass too. */
   [data-style='desk'] :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button'], [data-ds='copy-button'])[data-tone='neutral'][data-emphasis='outline'] {
     --_button-shadow: inset 0 var(--ds-border-width-default) 0 var(--ds-color-material-glass-edge);
@@ -68,6 +132,35 @@
     --_button-shadow: inset 0 0 0 var(--ds-border-width-default) var(--ds-color-border-control);
 
     background-image: none;
+  }
+
+  /* More contrast: no light over a label. This layer wins over Button.css, so the glow goes again here. */
+  @media (prefers-contrast: more), (forced-colors: active) {
+    [data-style='desk'] :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button'], [data-ds='copy-button'], [data-ds='floating-action-button'])[data-emphasis] {
+      --_button-glow: 0;
+      --_button-glow-rest: 0;
+    }
+  }
+
+  [data-style='desk'][data-contrast='more'] :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button'], [data-ds='copy-button'], [data-ds='floating-action-button'])[data-emphasis],
+  [data-style='desk'] [data-contrast='more'] :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button'], [data-ds='copy-button'], [data-ds='floating-action-button'])[data-emphasis] {
+    --_button-glow: 0;
+    --_button-glow-rest: 0;
+  }
+
+  /* Reduced motion: no sink and no light that follows the pointer, as Button.css says; repeated here since this layer wins. */
+  @media (prefers-reduced-motion: reduce) {
+    [data-style='desk'] :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button'], [data-ds='close-button'], [data-ds='copy-button'], [data-ds='floating-action-button'])[data-emphasis] {
+      --_button-press-y: 0px;
+      --_button-glow: 0;
+      --_button-glow-rest: 0;
+    }
+  }
+
+  :root[data-motion='reduce'] [data-style='desk'] :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button'], [data-ds='close-button'], [data-ds='copy-button'], [data-ds='floating-action-button'])[data-emphasis] {
+    --_button-press-y: 0px;
+    --_button-glow: 0;
+    --_button-glow-rest: 0;
   }
 
   /*
@@ -92,7 +185,8 @@
   }
 
   [data-style='desk'] [data-ds='button']:not([data-emphasis='link'], [data-wrap], [data-disabled], [data-loading]):is(:hover, :focus-visible) > [data-part='label'] {
-    transform: translateY(calc(-1 * var(--_button-height)));
+    /* The rolled label keeps the press sink (--_button-part-y), so it still goes in under a press. */
+    transform: translateY(calc(var(--_button-part-y) - var(--_button-height)));
   }
 
   /* Off under reduced motion, the system setting and the page's own (data-motion="reduce" on the root, WCAG 2.3.3): duration.roll is 0ms there, and the label does not move at all. The fallbacks repeat the roll selectors so they match their specificity. */

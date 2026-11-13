@@ -11,8 +11,8 @@
  *   and the deep window shadow; the scrim dims the desk and blurs it;
  * - the search band is a large field on the glass with a hairline under
  *   it, and the hints sit over a hairline: no flat bands;
- * - the lit row is the soft highlight of the Desk menus (overlay-10, the
- *   text bright), not a yellow fill;
+ * - the lit row is the yellow glass of the Desk menus (the primary tint,
+ *   order 1.28, the text bright), not a full yellow fill;
  * - the window radius and the window grow on the soft spring (pattern
  *   "dialog", the values of window-grow without a trigger).
  */
@@ -29,7 +29,7 @@
     --_command-palette-scrim: var(--ds-color-bg-scrim);
     --_command-palette-scrim-filter: blur(var(--ds-blur-backdrop)) saturate(var(--ds-blur-window-saturation));
     --_command-palette-item-radius: var(--ds-radius-field);
-    --_command-palette-item-bg-highlight: var(--ds-color-bg-overlay-10);
+    --_command-palette-item-bg-highlight: var(--ds-color-primary-tint);
     --_command-palette-item-fg-highlight: var(--ds-color-text-bright);
     --_command-palette-meta-fg-highlight: var(--ds-color-text-default);
     --_command-palette-enter-y: 0;
@@ -86,5 +86,21 @@
     [data-style='desk'] [data-ds='command-palette'] {
       --_command-palette-bg: var(--ds-color-material-glass-solid);
     }
+  }
+  /*
+   * Order 1.28 (proposed): the lit row is a yellow glass marker (the primary
+   * tint) with a yellow bar on its inline start (the primary edge: yellow in
+   * dark, gold in light), and the marker slides from row to row on the
+   * bouncy spring, so it overshoots the row and settles. The bar is an inset
+   * shadow on the highlight part, mirrored in right to left text.
+   */
+  [data-style='desk'] [data-ds='command-palette'] {
+    --_command-palette-item-shadow: inset calc(var(--ds-border-width-strong) * 1.5) 0 0 var(--ds-color-primary-border);
+    --_command-palette-highlight-duration: var(--ds-duration-spring-bouncy);
+    --_command-palette-highlight-ease: var(--ds-ease-spring-bouncy);
+  }
+
+  [data-style='desk'] [data-ds='command-palette']:dir(rtl) {
+    --_command-palette-item-shadow: inset calc(var(--ds-border-width-strong) * -1.5) 0 0 var(--ds-color-primary-border);
   }
 }

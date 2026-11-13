@@ -9,8 +9,8 @@
  *   with the light edge and the soft window shadow (elevation.menu is
  *   elevation.window-soft), while Studio draws a flat surface;
  * - the panel radius family: a 12px panel, 6px of padding, 8px rows;
- * - the lit row is a soft highlight (overlay-10: white at 10% in dark, ink
- *   at 10% in light) with the row text bright, not a full yellow fill; a
+ * - the lit row is yellow glass (the primary tint, order 1.28) with the
+ *   row text bright, not a full yellow fill; a
  *   danger row lights in the danger tint;
  * - a checked row is marked by the yellow check (primary on surface: the
  *   yellow in dark, a deep gold in light) and the medium weight, never by
@@ -32,7 +32,7 @@
     --_menu-padding: var(--ds-space-2xs);
     --_menu-item-radius: var(--ds-radius-field);
     --_menu-item-font-weight: var(--ds-font-weight-regular);
-    --_menu-item-bg-highlight: var(--ds-color-bg-overlay-10);
+    --_menu-item-bg-highlight: var(--ds-color-primary-tint);
     --_menu-item-fg-highlight: var(--ds-color-text-bright);
     --_menu-item-ring-color: var(--ds-color-focus-ring);
     --_menu-item-bg-danger-highlight: var(--ds-color-state-danger-tint-20);
@@ -88,5 +88,21 @@
     [data-style='desk'] :is([data-ds='dropdown-menu'], [data-ds='context-menu']) {
       --_menu-bg: var(--ds-color-material-glass-solid);
     }
+  }
+  /*
+   * Order 1.28 (proposed): the lit row is a yellow glass marker (the primary
+   * tint) with a yellow bar on its inline start (the primary edge: yellow in
+   * dark, gold in light), and the marker slides from row to row on the
+   * bouncy spring, so it overshoots the row and settles. The bar is an inset
+   * shadow on the highlight part, mirrored in right to left text.
+   */
+  [data-style='desk'] :is([data-ds='dropdown-menu'], [data-ds='context-menu']) {
+    --_menu-item-shadow: inset calc(var(--ds-border-width-strong) * 1.5) 0 0 var(--ds-color-primary-border);
+    --_menu-highlight-duration: var(--ds-duration-spring-bouncy);
+    --_menu-highlight-ease: var(--ds-ease-spring-bouncy);
+  }
+
+  [data-style='desk'] :is([data-ds='dropdown-menu'], [data-ds='context-menu']):dir(rtl) {
+    --_menu-item-shadow: inset calc(var(--ds-border-width-strong) * -1.5) 0 0 var(--ds-color-primary-border);
   }
 }

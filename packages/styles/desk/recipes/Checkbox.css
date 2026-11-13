@@ -1,11 +1,29 @@
 /*
- * Desk recipe for Checkbox and Switch. Order 1.24 (proposed): the yellow
- * primary marks every control that is on. A checked neutral checkbox takes
- * the primary fill (yellow with the dark ink check; the gold edge in light),
- * where Studio draws white; the box is a little rounder (the small radius)
- * and the switch thumb, on or off, carries the light edge of glass.
+ * Desk recipe for Checkbox, Switch, RadioGroup and RadioCard. Order 1.24
+ * (proposed): the yellow primary marks every control that is on. A checked
+ * neutral checkbox takes the primary fill (yellow with the dark ink check;
+ * the gold edge in light), where Studio draws white; the box is a little
+ * rounder (the small radius).
+ *
+ * Order 1.28 (proposed), the hooks of order 1.23:
+ * - Switch: the thumb is a glass ball on the yellow track. A light spot
+ *   (the thumb-lens part) sits off centre with a light rim around it and a
+ *   soft drop under it; the spot turns half a turn as the ball travels, so
+ *   the thumb reads as rolling, not sliding. Pressed, the ball turns into
+ *   a clear lens (solid-pressed) that blurs the track under it. It leans
+ *   distance.shift toward its travel on hover and the track dips to
+ *   scale.anticipate, so the bouncy travel has a wind up.
+ * - Checkbox: a medium stroke, and the mark rolls in: it turns a quarter
+ *   from the reading start while its arms draw, and lands on the bouncy
+ *   spring; the fill and the arm turn overshoot with it.
+ * - RadioGroup and RadioCard: the yellow fill, the dot lands on the bouncy
+ *   spring after a longer lean.
+ * Reduced motion: the base files zero these beats, but this layer wins over
+ * theirs, so every distance set here is zeroed again below.
  */
 @layer ds.recipes {
+  /* ------------------------------------------------------------ checkbox */
+
   [data-style='desk'] [data-ds='checkbox']:is([data-tone='neutral'], :not([data-tone])) {
     --_checkbox-fill: var(--ds-color-primary-fill);
     --_checkbox-fill-border: var(--ds-color-primary-border);
@@ -14,19 +32,140 @@
 
   [data-style='desk'] [data-ds='checkbox'] {
     --_checkbox-radius: var(--ds-radius-sm);
+    --_checkbox-stroke-width: 2.5;
+    --_checkbox-fill-ease: var(--ds-ease-spring-bouncy);
+    --_checkbox-morph-ease: var(--ds-ease-spring-bouncy);
+    --_checkbox-land-ease: var(--ds-ease-spring-bouncy);
   }
 
   [data-style='desk'] [data-ds='checkbox'][data-size='sm'] {
     --_checkbox-radius: var(--ds-radius-xs);
   }
 
+  /* The roll: the mark lies a quarter turn back from the reading start while empty and turns upright as it draws. */
+  [data-style='desk'] [data-ds='checkbox'] > [data-part='control'] > [data-part='indicator'] > [data-part='mark'] {
+    transform: rotate(calc(-90deg * var(--_checkbox-dir))) scale(var(--ds-scale-anticipate));
+    transition: transform calc(var(--ds-duration-quick) * var(--_checkbox-motion)) var(--ds-ease-exit);
+  }
+
+  [data-style='desk'] [data-ds='checkbox']:is([data-state='checked'], [data-state='indeterminate']) > [data-part='control'] > [data-part='indicator'] > [data-part='mark'] {
+    transform: none;
+    transition: transform calc(var(--ds-duration-spring-bouncy) * var(--_checkbox-motion)) var(--ds-ease-spring-bouncy)
+      calc(var(--_checkbox-stagger) * var(--_checkbox-step) * var(--_checkbox-motion));
+  }
+
+  /* ------------------------------------------------------------ switch */
+
   [data-style='desk'] [data-ds='switch'] {
     --_switch-bg: var(--ds-control-fill-default);
+    --_switch-lean: var(--ds-distance-shift);
+    --_switch-track-press: var(--ds-scale-anticipate);
+    --_switch-thumb-highlight: radial-gradient(
+      circle at 32% 26%,
+      var(--ds-color-glass-backdrop-bright),
+      color-mix(in srgb, var(--ds-color-glass-backdrop-bright) 30%, transparent) 22%,
+      transparent 52%
+    );
+    --_switch-thumb-highlight-opacity: 0.55;
+    --_switch-thumb-highlight-opacity-pressed: 0.9;
+    --_switch-thumb-shadow:
+      inset 0 0 0 var(--ds-border-width-default) var(--ds-color-material-glass-edge),
+      var(--ds-elevation-tooltip);
+    --_switch-thumb-backdrop: blur(var(--ds-blur-backdrop)) saturate(var(--ds-blur-window-saturation));
+    --_switch-thumb-solid-pressed: 0.45;
+  }
+
+  /* The spot rolls: half a turn on the travel, along the reading direction. */
+  [data-style='desk'] [data-ds='switch'] [data-part='thumb'] > [data-part='thumb-lens'] {
+    transform: rotate(0deg);
+    transition:
+      opacity calc(var(--_switch-duration-in) * var(--_switch-motion)) var(--_switch-ease-in),
+      transform calc(var(--_switch-duration) * var(--_switch-motion)) var(--_switch-ease);
+  }
+
+  [data-style='desk'] [data-ds='switch'][data-state='checked'] [data-part='thumb'] > [data-part='thumb-lens'] {
+    transform: rotate(calc(180deg * var(--_switch-dir)));
+  }
+
+  /* ------------------------------------------------------------ radio */
+
+  [data-style='desk'] [data-ds='radio-group'] {
+    --_radio-group-bg-checked: var(--ds-color-primary-fill);
+    --_radio-group-border-color-checked: var(--ds-color-primary-border);
+    --_radio-group-dot: var(--ds-color-text-on-primary);
+    --_radio-group-dot-travel: calc(var(--_radio-group-control-size) * 0.6);
+    --_radio-group-fill-ease: var(--ds-ease-spring-bouncy);
+  }
+
+  [data-style='desk'] [data-ds='radio-card'] {
+    --_radio-card-fill: var(--ds-color-primary-fill);
+    --_radio-card-dot: var(--ds-color-text-on-primary);
+    --_radio-card-border-color-checked: var(--ds-color-primary-border);
+    --_radio-card-bg-checked: var(--ds-color-primary-tint);
+    --_radio-card-stroke-width: 2.5;
+    --_radio-card-draw-ease: var(--ds-ease-spring-bouncy);
+  }
+
+  /* ------------------------------------------------------------ reduced motion */
+
+  @media (prefers-reduced-motion: reduce) {
+    [data-style='desk'] [data-ds='switch'] {
+      --_switch-lean: 0px;
+      --_switch-track-press: 1;
+    }
+
+    [data-style='desk'] [data-ds='radio-group'] {
+      --_radio-group-dot-travel: 0px;
+    }
+  }
+
+  :root[data-motion='reduce'] [data-style='desk'] [data-ds='switch'] {
+    --_switch-lean: 0px;
+    --_switch-track-press: 1;
+  }
+
+  :root[data-motion='reduce'] [data-style='desk'] [data-ds='radio-group'] {
+    --_radio-group-dot-travel: 0px;
+  }
+
+  /* ------------------------------------------------------------ glass fallbacks */
+
+  /* More contrast: a plain solid ball, no spot. Switch.css drops the filter and the clear lens itself. */
+  @media (prefers-contrast: more) {
+    [data-style='desk'] [data-ds='switch'] {
+      --_switch-thumb-highlight: none;
+      --_switch-thumb-backdrop: none;
+      --_switch-thumb-solid-pressed: 1;
+    }
+  }
+
+  [data-style='desk'][data-contrast='more'] [data-ds='switch'],
+  [data-style='desk'] [data-contrast='more'] [data-ds='switch'] {
+    --_switch-thumb-highlight: none;
+    --_switch-thumb-backdrop: none;
+    --_switch-thumb-solid-pressed: 1;
+  }
+
+  @media (prefers-reduced-transparency: reduce) {
+    [data-style='desk'] [data-ds='switch'] {
+      --_switch-thumb-backdrop: none;
+      --_switch-thumb-solid-pressed: 1;
+    }
+  }
+
+  @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+    [data-style='desk'] [data-ds='switch'] {
+      --_switch-thumb-backdrop: none;
+      --_switch-thumb-solid-pressed: 1;
+    }
   }
 
   @media (forced-colors: active) {
     [data-style='desk'] [data-ds='switch'] {
       --_switch-bg: Canvas;
+      --_switch-thumb-highlight: none;
+      --_switch-thumb-backdrop: none;
+      --_switch-thumb-solid-pressed: 1;
     }
   }
 }
