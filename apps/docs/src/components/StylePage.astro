@@ -97,7 +97,7 @@ const short = (v: string | undefined) => (v ?? '').replace(/^"([^"]+)".*$/, '$1'
       <p class="eyebrow"><a href={href(lang, '/styles/')}>{text.eyebrow}</a></p>
       <div class="title-row">
         <h1 lang="en">{s.name}</h1>
-        <span class:list={['badge', approved ? 'badge-approved' : 'badge-proposed']}>{text.status}: {text.statusWord(s.status)}</span>
+        <span data-ds="badge" data-tone={approved ? 'success' : 'warning'} data-emphasis="soft" data-size="md"><span data-part="label">{text.status}: {text.statusWord(s.status)}</span></span>
       </div>
       <p class="lead">{text.lead(s.name)}</p>
     </header>

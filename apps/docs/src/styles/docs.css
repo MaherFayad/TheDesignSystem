@@ -1,15 +1,14 @@
 /*
- * The docs chrome. It is drawn with the system's own tokens: the Neutral
- * style, light and dark, from the built token CSS. Logical properties only,
- * so the Arabic pages mirror with no extra rule. Only transform and opacity
- * animate, and nothing moves under prefers-reduced-motion.
+ * The docs chrome. It takes the style chosen in the top bar: <html> carries
+ * data-style and data-scheme (src/components/Layout.astro), and every surface
+ * here reads only semantic tokens (color, radius, type, space, shadow,
+ * material), so a style pack changes the whole site. Controls are the
+ * system's own components on static markup (src/styles/system.css). Rules
+ * generated from the packs (icon sets, glass) sit in the page head
+ * (src/lib/chrome.ts). Logical properties only, so the Arabic pages mirror
+ * with no extra rule. Only transform, opacity and colors animate, and nothing
+ * moves under prefers-reduced-motion.
  */
-@import '@the-system/tokens/css/tokens.css';
-@import '@fontsource-variable/inter/wght.css';
-@import '@fontsource/ibm-plex-sans-arabic/arabic-400.css';
-@import '@fontsource/ibm-plex-sans-arabic/arabic-600.css';
-@import '@fontsource/instrument-sans/400.css';
-@import '@fontsource/instrument-sans/600.css';
 
 :root {
   --doc-topbar: 64px;
@@ -17,7 +16,19 @@
   --doc-rail: 232px;
   --doc-measure: 52rem;
   --doc-gutter: var(--ds-space-8xl);
+  /* The page: the surface, or the desk of a glass style (src/lib/chrome.ts). */
+  --doc-page: var(--ds-color-bg-surface);
+  /* Solid content on the page: cards, tables, code, previews. */
   --doc-bg: var(--ds-color-bg-surface);
+  /* Bars and the sidebar: the style's material. Solid in a style with no glass. */
+  --doc-bar: var(--ds-color-material-menubar);
+  --doc-bar-line: var(--ds-color-material-glass-border);
+  --doc-bar-blur: blur(var(--ds-blur-glass)) saturate(var(--ds-blur-window-saturation));
+  --doc-side: var(--ds-color-material-glass);
+  /* How far a floating sidebar sits off the edges, with its radius and shadow: none unless the style uses glass. */
+  --doc-float: 0px;
+  --doc-float-radius: 0px;
+  --doc-float-shadow: none;
   --doc-bg-soft: var(--ds-color-bg-surface-2);
   --doc-bg-muted: var(--ds-color-bg-surface-3);
   --doc-line: var(--ds-color-border-default);
@@ -26,27 +37,70 @@
   --doc-link: var(--ds-color-text-link);
   --doc-accent: var(--ds-color-primary-fill);
   --doc-accent-tint: var(--ds-color-primary-tint);
+  /* Text on the primary tint: the current page in the sidebar and the rail. */
+  --doc-current: var(--ds-color-primary-on-surface);
   --doc-ring: var(--ds-color-focus-ring);
   --doc-radius: var(--ds-radius-card);
   --doc-radius-sm: var(--ds-radius-control);
   --doc-font: var(--ds-font-family-sans);
+  --doc-display: var(--ds-font-family-display);
   --doc-mono: var(--ds-font-family-mono);
   --doc-leading: var(--ds-font-leading-relaxed);
+  --doc-line-width: var(--ds-border-width-default);
   color-scheme: light;
   scroll-padding-block-start: calc(var(--doc-topbar) + var(--ds-space-4xl));
+  /* The Theme element paints the body color; the page color goes over it. Desk's grain stays: it is a background image. */
+  background-color: var(--doc-page);
+}
+/* Under reduced transparency or more contrast, glass becomes a solid surface (style pack contract). */
+@media (prefers-reduced-transparency: reduce), (prefers-contrast: more) {
+  :root {
+    --doc-bar: var(--ds-color-material-glass-solid);
+    --doc-side: var(--ds-color-material-glass-solid);
+    --doc-bar-blur: none;
+  }
 }
 :root[data-scheme='dark'] {
   color-scheme: dark;
 }
 :root[lang='ar'] {
   --doc-font: var(--ds-font-family-arabic);
+  --doc-display: var(--ds-font-family-display-arabic);
   --doc-leading: var(--ds-font-leading-arabic-relaxed);
 }
 
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
+/*
+ * Element defaults sit in their own layer under the components, so a link,
+ * a kbd or a focus ring of the system keeps its own look.
+ */
+@layer docs-base {
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+  a {
+    color: var(--doc-link);
+    text-underline-offset: 0.2em;
+    text-decoration-thickness: var(--doc-line-width);
+  }
+  a:hover {
+    text-decoration-thickness: var(--ds-border-width-strong);
+  }
+  :focus-visible {
+    outline: var(--ds-border-width-strong) solid var(--doc-ring);
+    outline-offset: var(--ds-border-width-strong);
+    border-radius: var(--ds-radius-xs);
+  }
+  code,
+  kbd,
+  pre {
+    font-family: var(--doc-mono);
+    font-size: 0.875em;
+  }
+  svg {
+    flex: none;
+  }
 }
 
 body {
@@ -56,7 +110,7 @@ body {
   font-size: var(--ds-font-size-xl);
   line-height: var(--doc-leading);
   color: var(--doc-text);
-  background: var(--doc-bg);
+  background: transparent;
   -webkit-text-size-adjust: 100%;
   text-rendering: optimizeLegibility;
 }
@@ -72,43 +126,16 @@ body {
   font-family: var(--ds-font-family-sans);
 }
 
-a {
-  color: var(--doc-link);
-  text-underline-offset: 0.2em;
-  text-decoration-thickness: 1px;
-}
-a:hover {
-  text-decoration-thickness: 2px;
-}
-:focus-visible {
-  outline: 2px solid var(--doc-ring);
-  outline-offset: 2px;
-  border-radius: var(--ds-radius-xs);
-}
-code,
-kbd,
-pre {
-  font-family: var(--doc-mono);
-  font-size: 0.875em;
-}
 :not(pre) > code {
   padding: 0.1em 0.35em;
+  font-family: var(--doc-mono);
+  font-size: 0.875em;
   border-radius: var(--ds-radius-xs);
   background: var(--doc-bg-muted);
   color: var(--doc-text);
   overflow-wrap: anywhere;
   direction: ltr;
   unicode-bidi: isolate;
-}
-kbd {
-  display: inline-block;
-  padding: 0 0.4em;
-  border: 1px solid var(--doc-line);
-  border-block-end-width: 2px;
-  border-radius: var(--ds-radius-xs);
-  font-size: var(--ds-font-size-s);
-  color: var(--doc-muted);
-  background: var(--doc-bg);
 }
 .visually-hidden {
   position: absolute;
@@ -137,6 +164,12 @@ kbd {
 }
 
 /* ------------------------------------------------------------- top bar */
+/*
+ * The top bar is the style's menu bar: material.menubar, with the glass blur
+ * of the style (none in Neutral and Studio). The blur sits on ::before, so
+ * the bar does not become a backdrop root and a menu that opens from it
+ * still blurs the page under it.
+ */
 .topbar {
   position: sticky;
   inset-block-start: 0;
@@ -146,8 +179,16 @@ kbd {
   gap: var(--ds-space-4xl);
   block-size: var(--doc-topbar);
   padding-inline: var(--ds-space-8xl);
-  background: var(--doc-bg);
-  border-block-end: 1px solid var(--doc-line);
+  border-block-end: var(--doc-line-width) solid var(--doc-bar-line);
+}
+.topbar::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: var(--doc-bar);
+  -webkit-backdrop-filter: var(--doc-bar-blur);
+  backdrop-filter: var(--doc-bar-blur);
 }
 .topbar-start {
   display: flex;
@@ -159,116 +200,94 @@ kbd {
   display: inline-flex;
   align-items: center;
   gap: var(--ds-space-m);
-  color: var(--doc-text);
+  color: var(--ds-color-text-bright);
+  font-family: var(--doc-display);
   font-weight: var(--ds-font-weight-bold);
   font-size: var(--ds-font-size-2xl);
+  letter-spacing: var(--ds-font-tracking-display);
   text-decoration: none;
   white-space: nowrap;
 }
 .brand-mark {
   fill: var(--doc-accent);
 }
-.version {
-  font-size: var(--ds-font-size-m);
-  font-weight: var(--ds-font-weight-medium);
-  color: var(--doc-muted);
-  padding: 0 var(--ds-space-xs);
-  border: 1px solid var(--doc-line);
-  border-radius: var(--ds-radius-pill);
+/* Studio and Desk light keep the mark visible: the primary fill can be the text color or pale. */
+.brand-mark rect {
+  stroke: var(--ds-color-primary-border);
+  stroke-width: var(--doc-line-width);
 }
-.icon-btn,
-.search-btn,
-.lang-link,
-.style-pick {
+.version {
+  font-family: var(--doc-font);
+  letter-spacing: var(--ds-font-tracking-none);
+}
+/* Icons from the style's icon set (src/lib/chrome.ts) take the text color. */
+.ic {
+  inline-size: 1em;
+  block-size: 1em;
+}
+:root[dir='rtl'] .ic[data-mirror] {
+  transform: scaleX(-1);
+}
+[data-part] > .ic,
+[data-part] > span > .ic,
+.search-icon > .ic,
+.search-btn .ic {
+  inline-size: var(--ds-size-icon-md);
+  block-size: var(--ds-size-icon-md);
+}
+.menu-btn [data-part='icon'] .ic {
+  inline-size: var(--ds-size-icon-lg);
+  block-size: var(--ds-size-icon-lg);
+}
+.search-btn {
   display: inline-flex;
+  flex: 0 1 18rem;
   align-items: center;
-  justify-content: center;
   gap: var(--ds-space-s);
-  min-block-size: 36px;
-  min-inline-size: 36px;
-  padding-inline: var(--ds-space-s);
-  border: 1px solid var(--doc-line);
-  border-radius: var(--doc-radius-sm);
-  background: var(--doc-bg);
+  min-block-size: var(--ds-size-control-lg);
+  padding-inline: var(--ds-space-l) var(--ds-space-s);
+  border: var(--doc-line-width) solid var(--ds-color-border-control);
+  border-radius: var(--ds-radius-control);
+  background: var(--ds-color-bg-overlay-5);
   color: var(--doc-text);
   font: inherit;
   font-size: var(--ds-font-size-l);
-  text-decoration: none;
   cursor: pointer;
+  transition: background-color var(--ds-duration-fast) var(--ds-ease-out), border-color var(--ds-duration-fast) var(--ds-ease-out);
 }
-.icon-btn:hover,
-.search-btn:hover,
-.lang-link:hover,
-.style-pick:hover {
-  background: var(--doc-bg-soft);
+.search-btn:hover {
+  background: var(--ds-color-bg-overlay-10);
   border-color: var(--ds-color-border-control-hover);
+  color: var(--doc-text);
 }
-svg {
-  flex: none;
+.search-btn:focus-visible {
+  outline: var(--ds-border-width-strong) solid var(--doc-ring);
+  outline-offset: var(--ds-border-width-strong);
 }
-.icon-btn svg,
-.search-btn svg,
-.style-pick svg {
-  fill: none;
-  stroke: currentColor;
-  stroke-width: 1.75;
-  stroke-linecap: round;
-  stroke-linejoin: round;
+.search-btn > span {
+  display: inline-flex;
 }
-.search-btn {
-  flex: 0 1 18rem;
-  justify-content: flex-start;
-  padding-inline: var(--ds-space-l);
-  color: var(--doc-muted);
-}
-.search-btn kbd {
+.search-btn [data-ds='kbd'] {
   margin-inline-start: auto;
 }
 .topnav {
-  display: flex;
-  gap: var(--ds-space-xs);
   margin-inline-start: auto;
 }
-.topnav a {
-  padding: var(--ds-space-xs) var(--ds-space-m);
-  border-radius: var(--doc-radius-sm);
-  color: var(--doc-text);
-  font-weight: var(--ds-font-weight-medium);
-  font-size: var(--ds-font-size-l);
+/*
+ * Tabs as links: the system's soft Tabs, the current section active. Text in
+ * the bar is the default color, never muted: content of any color scrolls
+ * under the glass, and muted text over Desk's yellow would fall under 4.5:1.
+ */
+.topnav [data-ds='tabs'] {
+  --_tabs-fg: var(--ds-color-text-default);
+}
+.topnav [data-ds='tabs'] > [data-part='list'] > [data-part='trigger'] {
   text-decoration: none;
-}
-.topnav a:hover {
-  background: var(--doc-bg-soft);
-}
-.topnav a[aria-current='page'] {
-  color: var(--doc-link);
-  background: var(--doc-accent-tint);
 }
 .tools {
   display: flex;
   align-items: center;
   gap: var(--ds-space-s);
-}
-.style-pick {
-  position: relative;
-  padding-inline: var(--ds-space-s) 0;
-}
-.style-pick select {
-  appearance: none;
-  min-block-size: 34px;
-  padding-inline: 0 var(--ds-space-l);
-  border: 0;
-  background: transparent;
-  color: inherit;
-  font: inherit;
-  cursor: pointer;
-}
-.style-pick:focus-within {
-  outline: 2px solid var(--doc-ring);
-  outline-offset: 2px;
-}
-.style-pick select:focus-visible {
-  outline: none;
 }
 .menu-btn {
   display: none;
@@ -277,9 +296,73 @@ svg {
 :root[data-scheme='dark'] .when-light {
   display: none;
 }
-.icon-btn svg path,
-.icon-btn svg circle {
-  stroke: currentColor;
+
+/* ------------------------------------------------------------- menus */
+/*
+ * The switches (src/components/Menu.astro): a Button opening the system's
+ * DropdownMenu surface, drawn by DropdownMenu.css and each style's recipe.
+ * Here only the place of the menu and the value of the button.
+ */
+.menu {
+  position: relative;
+  display: inline-flex;
+  --radix-dropdown-menu-content-available-width: calc(100vw - 2 * var(--ds-space-xl));
+  --radix-dropdown-menu-content-available-height: min(28rem, calc(100dvh - var(--doc-topbar) - var(--ds-space-6xl)));
+}
+.menu > [role='menu'] {
+  position: absolute;
+  inset-block-start: calc(100% + var(--ds-space-xs));
+  inset-inline-end: 0;
+  min-inline-size: max(100%, 13rem);
+}
+.menu[data-align='start'] > [role='menu'] {
+  inset-inline-start: 0;
+  inset-inline-end: auto;
+}
+.menu > [role='menu'][hidden] {
+  display: none;
+}
+.menu > [role='menu'] > [data-part='label'] {
+  padding: var(--ds-space-xs) var(--ds-space-m);
+  color: var(--ds-color-text-muted);
+  font-size: var(--ds-font-size-xs);
+  font-weight: var(--ds-font-weight-semibold);
+}
+.menu [role='menuitemradio'] {
+  text-decoration: none;
+}
+.menu [role='menuitemradio'] > [data-part='text'] {
+  flex: 1 0 auto;
+  white-space: nowrap;
+}
+.menu [role='menuitemradio'][aria-checked='false'] > [data-part='indicator'] {
+  visibility: hidden;
+}
+.menu [role='menuitemradio'] [data-ds='badge'] {
+  margin-inline-start: auto;
+}
+/* Every value sits in one grid cell: the button keeps its width when the value changes. */
+.mv {
+  display: inline-grid;
+}
+.mv > [data-v] {
+  grid-area: 1 / 1;
+  visibility: hidden;
+}
+.menu:not([data-setting='style'], [data-setting='scheme']) .mv > [data-current] {
+  visibility: visible;
+}
+.menu-label::after {
+  content: ':';
+  margin-inline-end: var(--ds-space-2xs);
+}
+[data-menu-button] > [data-part='label'] {
+  display: inline-flex;
+  align-items: center;
+}
+/* The Arabic value would take the taller Arabic leading and lift the row. */
+.mv > [data-v] {
+  line-height: var(--ds-font-leading-tight);
 }
 
 /* ------------------------------------------------------------- frame */
@@ -291,48 +374,69 @@ svg {
 .frame-home {
   grid-template-columns: var(--doc-sidebar) minmax(0, 1fr);
 }
+/*
+ * The sidebar is navigation, so it takes the style's material: flush with a
+ * hairline in a solid style, a floating glass panel in a glass style.
+ */
 .sidebar {
   position: sticky;
-  inset-block-start: var(--doc-topbar);
-  max-block-size: calc(100dvh - var(--doc-topbar));
+  inset-block-start: calc(var(--doc-topbar) + var(--doc-float));
+  max-block-size: calc(100dvh - var(--doc-topbar) - 2 * var(--doc-float));
+  margin-block: var(--doc-float);
+  margin-inline: var(--doc-float) 0;
   overflow-y: auto;
   overscroll-behavior: contain;
-  padding: var(--ds-space-6xl) var(--ds-space-4xl) var(--ds-space-10xl) var(--ds-space-8xl);
-  border-inline-end: 1px solid var(--doc-line);
+  padding-block: var(--ds-space-6xl) var(--ds-space-10xl);
+  padding-inline: calc(var(--ds-space-8xl) - var(--doc-float)) var(--ds-space-4xl);
+  border-inline-end: var(--doc-line-width) solid var(--doc-bar-line);
+  border-radius: var(--doc-float-radius);
+  background: var(--doc-side);
+  -webkit-backdrop-filter: var(--doc-bar-blur);
+  backdrop-filter: var(--doc-bar-blur);
+  box-shadow: var(--doc-float-shadow);
   scrollbar-width: thin;
+  scrollbar-color: var(--ds-scrollbar-thumb) transparent;
   font-size: var(--ds-font-size-l);
 }
+
 .nav-group + .nav-group {
   margin-block-start: var(--ds-space-5xl);
 }
 .nav-title {
   margin: 0 0 var(--ds-space-xs);
-  font-size: var(--ds-font-size-l);
+  font-size: var(--ds-font-size-s);
   font-weight: var(--ds-font-weight-semibold);
-  color: var(--doc-text);
+  letter-spacing: var(--ds-font-tracking-eyebrow);
+  text-transform: uppercase;
+  color: var(--doc-muted);
+}
+:root[lang='ar'] .nav-title {
+  text-transform: none;
 }
 .sidebar ul {
   margin: 0;
   padding: 0;
   list-style: none;
 }
-.sidebar a {
+/* Sidebar items: the shape of a menu item of the style (menu.item.radius), the current page on the primary tint. */
+.sidebar li > a {
   display: block;
   padding: var(--ds-space-3xs) var(--ds-space-m);
   margin-inline-start: calc(-1 * var(--ds-space-m));
-  border-radius: var(--doc-radius-sm);
+  border-radius: var(--ds-menu-item-radius);
   color: var(--doc-muted);
   text-decoration: none;
   line-height: var(--ds-font-leading-normal);
+  transition: background-color var(--ds-duration-fast) var(--ds-ease-out), color var(--ds-duration-fast) var(--ds-ease-out);
 }
-.sidebar a:hover {
+.sidebar li > a:hover {
   color: var(--doc-text);
-  background: var(--doc-bg-soft);
+  background: var(--ds-color-bg-overlay-10);
 }
-.sidebar a[aria-current='page'] {
-  color: var(--doc-link);
+.sidebar li > a[aria-current='page'] {
+  color: var(--doc-current);
   background: var(--doc-accent-tint);
-  font-weight: var(--ds-font-weight-medium);
+  font-weight: var(--ds-font-weight-semibold);
 }
 .nav-family {
   margin-block-start: var(--ds-space-2xs);
@@ -342,6 +446,7 @@ svg {
   align-items: center;
   gap: var(--ds-space-xs);
   padding: var(--ds-space-3xs) 0;
+  border-radius: var(--ds-menu-item-radius);
   color: var(--doc-text);
   cursor: pointer;
   list-style: none;
@@ -375,8 +480,8 @@ svg {
 .nav-family ul {
   padding-inline-start: var(--ds-space-xl);
   margin-block: var(--ds-space-2xs) var(--ds-space-s);
-  border-inline-start: 1px solid var(--doc-line);
-  margin-inline-start: 3px;
+  border-inline-start: var(--doc-line-width) solid var(--doc-line);
+  margin-inline-start: var(--ds-space-3xs);
 }
 
 main {
@@ -399,7 +504,8 @@ main > * {
   inset-block-start: var(--doc-topbar);
   max-block-size: calc(100dvh - var(--doc-topbar));
   overflow-y: auto;
-  padding: var(--ds-space-6xl) var(--ds-space-6xl) var(--ds-space-8xl) 0;
+  padding-block: var(--ds-space-6xl) var(--ds-space-8xl);
+  padding-inline: 0 var(--ds-space-6xl);
   font-size: var(--ds-font-size-l);
   scrollbar-width: thin;
 }
@@ -412,7 +518,7 @@ main > * {
   margin: 0;
   padding: 0;
   list-style: none;
-  border-inline-start: 1px solid var(--doc-line);
+  border-inline-start: var(--doc-line-width) solid var(--doc-line);
 }
 .rail a {
   display: block;
@@ -431,8 +537,8 @@ main > * {
   color: var(--doc-text);
 }
 .rail a[aria-current='true'] {
-  color: var(--doc-link);
-  border-inline-start-color: var(--doc-accent);
+  color: var(--doc-current);
+  border-inline-start-color: var(--doc-current);
 }
 
 /* ------------------------------------------------------------- page type */
@@ -441,7 +547,7 @@ main > * {
 }
 .eyebrow {
   margin: 0 0 var(--ds-space-s);
-  color: var(--doc-link);
+  color: var(--doc-current);
   font-weight: var(--ds-font-weight-semibold);
   font-size: var(--ds-font-size-l);
 }
@@ -450,6 +556,7 @@ h2,
 h3,
 h4 {
   color: var(--ds-color-text-bright);
+  font-family: var(--doc-display);
   line-height: var(--ds-font-leading-tight);
   text-wrap: balance;
 }
@@ -460,7 +567,7 @@ h1 {
   margin: 0;
   font-size: var(--ds-font-size-6xl);
   font-weight: var(--ds-font-weight-bold);
-  letter-spacing: -0.015em;
+  letter-spacing: var(--ds-font-tracking-display);
 }
 :root[lang='ar'] h1 {
   letter-spacing: 0;
@@ -509,7 +616,7 @@ h1 {
   padding: var(--ds-space-l) var(--ds-space-4xl);
   border-inline-start: 3px solid var(--doc-accent);
   background: var(--doc-bg-soft);
-  border-radius: var(--doc-radius-sm);
+  border-radius: var(--doc-radius);
   color: var(--doc-muted);
 }
 .prose blockquote p:last-child {
@@ -530,8 +637,9 @@ h1 {
 .table-wrap {
   margin-block: 0 var(--ds-space-4xl);
   overflow-x: auto;
-  border: 1px solid var(--doc-line);
+  border: var(--doc-line-width) solid var(--doc-line);
   border-radius: var(--doc-radius);
+  background: var(--doc-bg);
 }
 table {
   inline-size: 100%;
@@ -543,7 +651,7 @@ td {
   padding: var(--ds-space-m) var(--ds-space-xl);
   text-align: start;
   vertical-align: top;
-  border-block-end: 1px solid var(--doc-line);
+  border-block-end: var(--doc-line-width) solid var(--doc-line);
 }
 tr:last-child > td {
   border-block-end: 0;
@@ -562,25 +670,25 @@ td:last-child code {
 }
 
 /* Code blocks: Shiki with a light and a dark theme, switched by the scheme. */
+/* The panel is the style's raised surface; Shiki only colors the tokens. */
 pre.astro-code {
   margin: 0 0 var(--ds-space-4xl);
   padding: var(--ds-space-xl) var(--ds-space-4xl);
   overflow-x: auto;
   border-radius: var(--doc-radius);
-  border: 1px solid var(--doc-line);
+  border: var(--doc-line-width) solid var(--doc-line);
   font-size: var(--ds-font-size-l);
   line-height: var(--ds-font-leading-relaxed);
   direction: ltr;
   text-align: left;
   tab-size: 2;
-  background-color: var(--shiki-light-bg);
+  background-color: var(--doc-bg-soft);
   color: var(--shiki-light);
 }
 pre.astro-code span {
   color: var(--shiki-light);
 }
 :root[data-scheme='dark'] pre.astro-code {
-  background-color: var(--shiki-dark-bg);
   color: var(--shiki-dark);
 }
 :root[data-scheme='dark'] pre.astro-code span {
@@ -598,28 +706,6 @@ pre.astro-code span {
   inset-inline-end: auto;
   inset-inline-start: var(--ds-space-s);
 }
-.copy-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--ds-space-xs);
-  min-block-size: 32px;
-  padding-inline: var(--ds-space-m);
-  border: 1px solid var(--doc-line);
-  border-radius: var(--doc-radius-sm);
-  background: var(--doc-bg);
-  color: var(--doc-text);
-  font: inherit;
-  font-size: var(--ds-font-size-m);
-  cursor: pointer;
-}
-.copy-btn:hover {
-  background: var(--doc-bg-soft);
-}
-.copy-btn svg {
-  fill: none;
-  stroke: currentColor;
-  stroke-width: 1.75;
-}
 
 /* ------------------------------------------------------------- previous and next */
 .pager {
@@ -628,20 +714,22 @@ pre.astro-code span {
   gap: var(--ds-space-4xl);
   margin-block-start: var(--ds-space-11xl);
   padding-block-start: var(--ds-space-6xl);
-  border-block-start: 1px solid var(--doc-line);
+  border-block-start: var(--doc-line-width) solid var(--doc-line);
 }
 .pager-link {
   display: flex;
   flex-direction: column;
   gap: var(--ds-space-3xs);
   padding: var(--ds-space-xl) var(--ds-space-4xl);
-  border: 1px solid var(--doc-line);
+  border: var(--doc-line-width) solid var(--doc-line);
   border-radius: var(--doc-radius);
+  background: var(--doc-bg);
   text-decoration: none;
   color: var(--doc-text);
+  transition: border-color var(--ds-duration-fast) var(--ds-ease-out);
 }
 .pager-link:hover {
-  border-color: var(--doc-accent);
+  border-color: var(--ds-color-border-control-hover);
 }
 .pager-next {
   grid-column: 2;
@@ -663,8 +751,8 @@ pre.astro-code span {
   justify-content: space-between;
   gap: var(--ds-space-l) var(--ds-space-6xl);
   padding: var(--ds-space-6xl) var(--ds-space-8xl);
-  border-block-start: 1px solid var(--doc-line);
-  background: var(--doc-bg-soft);
+  border-block-start: var(--doc-line-width) solid var(--doc-bar-line);
+  background: var(--doc-bar);
   color: var(--doc-muted);
   font-size: var(--ds-font-size-l);
 }
@@ -684,14 +772,15 @@ pre.astro-code span {
 }
 
 /* ------------------------------------------------------------- search */
+/* Search: a dialog of the style, its window radius and shadow, on a solid surface. */
 .search {
   inline-size: min(40rem, calc(100vw - 2 * var(--ds-space-xl)));
   max-block-size: min(36rem, calc(100dvh - 8rem));
   margin-block-start: 10vh;
   padding: 0;
-  border: 1px solid var(--doc-line);
-  border-radius: var(--doc-radius);
-  background: var(--doc-bg);
+  border: var(--doc-line-width) solid var(--ds-color-material-glass-border);
+  border-radius: var(--ds-radius-window);
+  background: var(--ds-color-bg-surface);
   color: var(--doc-text);
   box-shadow: var(--ds-elevation-dialog);
 }
@@ -707,12 +796,11 @@ pre.astro-code span {
   align-items: center;
   gap: var(--ds-space-m);
   padding: var(--ds-space-m) var(--ds-space-m) var(--ds-space-m) var(--ds-space-4xl);
-  border-block-end: 1px solid var(--doc-line);
+  border-block-end: var(--doc-line-width) solid var(--doc-line);
 }
-.search-bar > svg {
-  fill: none;
-  stroke: var(--doc-muted);
-  stroke-width: 1.75;
+.search-icon {
+  display: inline-flex;
+  color: var(--doc-muted);
 }
 .search-bar input {
   flex: 1;
@@ -745,13 +833,14 @@ pre.astro-code span {
   display: grid;
   gap: var(--ds-space-3xs);
   padding: var(--ds-space-m) var(--ds-space-l);
-  border-radius: var(--doc-radius-sm);
+  border-radius: var(--ds-menu-item-radius);
   color: var(--doc-text);
   text-decoration: none;
 }
 .search-list [role='option'][aria-selected='true'],
 .search-list [role='option']:hover {
-  background: var(--doc-accent-tint);
+  background: var(--ds-color-bg-overlay-10);
+  box-shadow: inset 0 0 0 var(--doc-line-width) var(--ds-color-border-control);
 }
 .search-list .r-title {
   font-weight: var(--ds-font-weight-semibold);
@@ -780,76 +869,29 @@ pre.astro-code span {
 .search-hint {
   margin: 0;
   padding: var(--ds-space-s) var(--ds-space-4xl);
-  border-block-start: 1px solid var(--doc-line);
+  border-block-start: var(--doc-line-width) solid var(--doc-line);
   font-size: var(--ds-font-size-s);
   color: var(--doc-muted);
   background: var(--doc-bg-soft);
 }
 
 /* ------------------------------------------------------------- shared pieces */
+/* A linked chip (WCAG criteria, interactions): a link, so not the static Badge; the pill shape of the style. */
 .badge {
   display: inline-flex;
   align-items: center;
-  gap: var(--ds-space-2xs);
   padding: 0 var(--ds-space-s);
   border-radius: var(--ds-radius-pill);
   font-size: var(--ds-font-size-m);
   font-weight: var(--ds-font-weight-medium);
   line-height: 1.8;
   white-space: nowrap;
-  border: 1px solid var(--doc-line);
-  color: var(--doc-muted);
-  background: var(--doc-bg);
-}
-.badge::before {
-  content: '';
-  inline-size: 0.5em;
-  block-size: 0.5em;
-  border-radius: 50%;
-  background: currentColor;
-}
-.badge-ready {
-  color: var(--ds-color-state-success-on-tint);
-  background: var(--ds-color-state-success-tint-10);
-  border-color: transparent;
-}
-.badge-planned {
-  color: var(--doc-muted);
-}
-.badge-proposed {
-  color: var(--ds-color-state-warning-on-tint);
-  background: var(--ds-color-state-warning-tint-10);
-  border-color: transparent;
-}
-.badge-approved {
-  color: var(--ds-color-state-success-on-tint);
-  background: var(--ds-color-state-success-tint-10);
-  border-color: transparent;
-}
-.btn {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--ds-space-s);
-  min-block-size: 40px;
-  padding-inline: var(--ds-space-4xl);
-  border-radius: var(--doc-radius-sm);
-  border: 1px solid var(--doc-line);
+  border: var(--doc-line-width) solid var(--doc-line);
   color: var(--doc-text);
   background: var(--doc-bg);
-  font-weight: var(--ds-font-weight-semibold);
-  font-size: var(--ds-font-size-l);
-  text-decoration: none;
 }
-.btn:hover {
-  background: var(--doc-bg-soft);
-}
-.btn-primary {
-  border-color: var(--ds-color-primary-border);
-  background: var(--doc-accent);
-  color: var(--ds-color-primary-text);
-}
-.btn-primary:hover {
-  background: var(--ds-color-primary-fill-hover);
+.badge:hover {
+  border-color: var(--ds-color-border-control-hover);
 }
 .cards {
   display: grid;
@@ -859,46 +901,34 @@ pre.astro-code span {
   padding: 0;
   list-style: none;
 }
-.card {
-  position: relative;
+.cards > [data-ds='card'] {
+  margin: 0;
+}
+.cards [data-part='header'] {
   display: flex;
   flex-direction: column;
   gap: var(--ds-space-s);
-  padding: var(--ds-space-6xl);
-  border: 1px solid var(--doc-line);
-  border-radius: var(--doc-radius);
-  background: var(--doc-bg);
 }
-.card:has(a.card-link:hover) {
-  border-color: var(--doc-accent);
-}
-.card h3 {
-  margin: 0;
+.cards [data-part='title'] {
   font-size: var(--ds-font-size-2xl);
 }
-.card p {
-  margin: 0;
-  color: var(--doc-muted);
+.cards [data-part='description'] {
   font-size: var(--ds-font-size-l);
 }
-.card-link {
-  color: inherit;
-  text-decoration: none;
-}
-.card-link::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
+.card-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ds-space-xs);
+  margin: 0;
 }
 .card-step {
   display: inline-grid;
   place-items: center;
-  inline-size: 32px;
-  block-size: 32px;
-  border-radius: var(--doc-radius-sm);
+  inline-size: var(--ds-size-control-md);
+  block-size: var(--ds-size-control-md);
+  border-radius: var(--ds-radius-control);
   background: var(--doc-accent-tint);
-  color: var(--doc-link);
+  color: var(--doc-current);
   font-weight: var(--ds-font-weight-bold);
 }
 .en-isolate {
@@ -908,9 +938,9 @@ pre.astro-code span {
 .note {
   margin: 0 0 var(--ds-space-4xl);
   padding: var(--ds-space-l) var(--ds-space-4xl);
-  border-radius: var(--doc-radius-sm);
+  border-radius: var(--doc-radius);
   background: var(--doc-bg-soft);
-  border: 1px solid var(--doc-line);
+  border: var(--doc-line-width) solid var(--doc-line);
   color: var(--doc-muted);
   font-size: var(--ds-font-size-l);
 }
@@ -950,7 +980,7 @@ pre.astro-code span {
 /* Preview: a framed live iframe of the bundled gallery. */
 .preview {
   margin: 0 0 var(--ds-space-4xl);
-  border: 1px solid var(--doc-line);
+  border: var(--doc-line-width) solid var(--doc-line);
   border-radius: var(--doc-radius);
   background: var(--doc-bg);
   overflow: hidden;
@@ -1010,39 +1040,7 @@ pre.astro-code span {
   justify-content: space-between;
   gap: var(--ds-space-s);
   padding: var(--ds-space-s) var(--ds-space-s) var(--ds-space-s) var(--ds-space-4xl);
-  border-block-end: 1px solid var(--doc-line);
-}
-.tablist {
-  display: flex;
-  gap: var(--ds-space-3xs);
-  padding: var(--ds-space-3xs);
-  border-radius: var(--doc-radius-sm);
-  background: var(--doc-bg-muted);
-}
-.tab {
-  min-block-size: 32px;
-  padding-inline: var(--ds-space-l);
-  border: 0;
-  border-radius: var(--ds-radius-sm);
-  background: transparent;
-  color: var(--doc-muted);
-  font: inherit;
-  font-size: var(--ds-font-size-l);
-  font-weight: var(--ds-font-weight-medium);
-  cursor: pointer;
-}
-.tab:hover {
-  color: var(--doc-text);
-}
-.tab[aria-selected='true'] {
-  background: var(--doc-bg);
-  color: var(--doc-text);
-  box-shadow: var(--ds-elevation-card);
-}
-.tab .tab-note {
-  font-size: var(--ds-font-size-s);
-  color: var(--doc-muted);
-  margin-inline-start: var(--ds-space-2xs);
+  border-block-end: var(--doc-line-width) solid var(--doc-line);
 }
 .tabpanel[hidden] {
   display: none;
@@ -1067,7 +1065,7 @@ pre.astro-code span {
   justify-content: space-between;
   gap: var(--ds-space-s);
   padding: var(--ds-space-s);
-  border-block-start: 1px solid var(--doc-line);
+  border-block-start: var(--doc-line-width) solid var(--doc-line);
   background: var(--doc-bg);
 }
 .axes {
@@ -1076,15 +1074,12 @@ pre.astro-code span {
   gap: var(--ds-space-s) var(--ds-space-l);
   margin: 0;
   padding: var(--ds-space-l) var(--ds-space-4xl);
-  border: 0;
-  border-block-end: 1px solid var(--doc-line);
+  border-block-end: var(--doc-line-width) solid var(--doc-line);
   background: var(--doc-bg);
 }
-.axes legend {
-  float: inline-start;
+.axes-title {
   inline-size: 100%;
-  margin-block-end: var(--ds-space-xs);
-  padding: 0;
+  margin: 0 0 var(--ds-space-xs);
   font-weight: var(--ds-font-weight-semibold);
   font-size: var(--ds-font-size-l);
 }
@@ -1094,23 +1089,12 @@ pre.astro-code span {
   font-size: var(--ds-font-size-m);
   color: var(--doc-muted);
 }
-.axis select {
-  min-block-size: 32px;
-  min-inline-size: 7.5rem;
-  padding-inline: var(--ds-space-s);
-  border: 1px solid var(--ds-color-border-control);
-  border-radius: var(--doc-radius-sm);
-  background: var(--doc-bg);
-  color: var(--doc-text);
-  font: inherit;
-  font-size: var(--ds-font-size-l);
-}
 .preview-note {
   margin: 0;
   padding: var(--ds-space-s) var(--ds-space-4xl);
   font-size: var(--ds-font-size-m);
   color: var(--doc-muted);
-  border-block-start: 1px solid var(--doc-line);
+  border-block-start: var(--doc-line-width) solid var(--doc-line);
 }
 .case {
   margin-block-start: var(--ds-space-10xl);
@@ -1137,19 +1121,7 @@ pre.astro-code span {
 }
 .nav-style {
   display: none;
-  gap: var(--ds-space-2xs);
   margin-block-end: var(--ds-space-5xl);
-  font-weight: var(--ds-font-weight-semibold);
-}
-.nav-style select {
-  min-block-size: 40px;
-  padding-inline: var(--ds-space-s);
-  border: 1px solid var(--ds-color-border-control);
-  border-radius: var(--doc-radius-sm);
-  background: var(--doc-bg);
-  color: var(--doc-text);
-  font: inherit;
-  font-weight: var(--ds-font-weight-regular);
 }
 .doc-section > h2 {
   margin-block-start: 0;
@@ -1161,7 +1133,7 @@ pre.astro-code span {
 }
 .rule-card {
   padding: var(--ds-space-4xl) var(--ds-space-6xl);
-  border: 1px solid var(--doc-line);
+  border: var(--doc-line-width) solid var(--doc-line);
   border-radius: var(--doc-radius);
   border-block-start: 3px solid var(--ds-color-state-success-border);
 }
@@ -1241,7 +1213,7 @@ pre.astro-code span {
   justify-content: space-between;
   gap: var(--ds-space-s);
   padding: var(--ds-space-m) var(--ds-space-4xl);
-  border-block-start: 1px solid var(--doc-line);
+  border-block-start: var(--doc-line-width) solid var(--doc-line);
   font-weight: var(--ds-font-weight-semibold);
 }
 .stats {
@@ -1252,7 +1224,7 @@ pre.astro-code span {
 }
 .stat {
   padding: var(--ds-space-6xl);
-  border: 1px solid var(--doc-line);
+  border: var(--doc-line-width) solid var(--doc-line);
   border-radius: var(--doc-radius);
 }
 .stat dt {
@@ -1293,14 +1265,14 @@ pre.astro-code span {
   list-style: none;
 }
 .swatch {
-  border: 1px solid var(--doc-line);
+  border: var(--doc-line-width) solid var(--doc-line);
   border-radius: var(--doc-radius-sm);
   overflow: hidden;
   font-size: var(--ds-font-size-m);
 }
 .swatch-chip {
   block-size: 56px;
-  border-block-end: 1px solid var(--doc-line);
+  border-block-end: var(--doc-line-width) solid var(--doc-line);
 }
 .swatch-text {
   display: grid;
@@ -1324,7 +1296,7 @@ pre.astro-code span {
 .scheme-panel {
   padding: var(--ds-space-4xl);
   border-radius: var(--doc-radius);
-  border: 1px solid var(--doc-line);
+  border: var(--doc-line-width) solid var(--doc-line);
 }
 .scheme-panel h3 {
   margin-block-start: 0;
@@ -1355,7 +1327,7 @@ pre.astro-code span {
   align-items: baseline;
   gap: var(--ds-space-4xl);
   padding-block: var(--ds-space-s);
-  border-block-end: 1px solid var(--doc-line);
+  border-block-end: var(--doc-line-width) solid var(--doc-line);
 }
 .type-sample code {
   min-inline-size: 11rem;
@@ -1403,7 +1375,9 @@ pre.astro-code span {
     z-index: 15;
     inline-size: min(20rem, 88vw);
     max-block-size: none;
-    background: var(--doc-bg);
+    margin: 0;
+    border-radius: 0;
+    background: var(--doc-side);
     box-shadow: var(--ds-elevation-panel);
     transform: translateX(-105%);
     visibility: hidden;
@@ -1425,11 +1399,22 @@ pre.astro-code span {
 @media (max-width: 719px) {
   .search-btn {
     flex: none;
-    padding-inline: var(--ds-space-s);
+    justify-content: center;
+    inline-size: var(--ds-size-control-lg);
+    padding-inline: 0;
   }
-  .search-btn kbd,
+  .search-btn [data-ds='kbd'],
   .version {
     display: none;
+  }
+  /* The scheme and language switches keep their icon; the value stays in the name. */
+  .menu[data-compact] [data-menu-button] > [data-part='label'] {
+    position: absolute;
+    inline-size: 1px;
+    block-size: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
   }
   .search-btn-text {
     position: absolute;
@@ -1438,9 +1423,6 @@ pre.astro-code span {
     overflow: hidden;
     clip-path: inset(50%);
     white-space: nowrap;
-  }
-  .style-pick svg {
-    display: none;
   }
   .tools {
     gap: var(--ds-space-xs);
@@ -1472,15 +1454,27 @@ pre.astro-code span {
   }
   /* The copy control sits over the block: the code starts under it. */
   .prose .code-block pre.astro-code {
-    padding-block-start: calc(var(--ds-space-xl) + 36px);
+    padding-block-start: calc(var(--ds-space-xl) + var(--ds-size-control-md));
   }
 }
 @media (max-width: 479px) {
-  .tools .style-pick {
-    display: none;
+  /* Every switch keeps its icon in the bar; the value stays in its name. */
+  .tools .menu [data-menu-button] > [data-part='label'],
+  .tools .menu [data-menu-button] > [data-part='end'] {
+    position: absolute;
+    inline-size: 1px;
+    block-size: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+  .tools [data-menu-button] {
+    --_button-padding-inline: 0;
+    justify-content: center;
+    min-inline-size: var(--ds-size-control-md);
   }
   .nav-style {
-    display: grid;
+    display: block;
   }
   .status-row .sep {
     display: none;
@@ -1490,9 +1484,16 @@ pre.astro-code span {
   .brand span:not(.version) {
     font-size: var(--ds-font-size-l);
   }
-  .lang-link,
-  .style-pick {
-    padding-inline: var(--ds-space-2xs);
+}
+@media (max-width: 359px) {
+  /* The mark stays; the name stays in the link's name. */
+  .brand span:not(.version) {
+    position: absolute;
+    inline-size: 1px;
+    block-size: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
   }
 }
 
@@ -1500,17 +1501,20 @@ pre.astro-code span {
   *,
   *::before,
   *::after {
-    animation-duration: 0.01ms;
+    animation-duration: var(--ds-duration-instant);
     animation-iteration-count: 1;
-    transition-duration: 0.01ms;
+    transition-duration: var(--ds-duration-instant);
     scroll-behavior: auto;
   }
 }
 @media (forced-colors: active) {
-  .tab[aria-selected='true'],
   .sidebar a[aria-current='page'],
   .rail a[aria-current='true'] {
-    outline: 2px solid Highlight;
+    outline: var(--ds-border-width-strong) solid Highlight;
+  }
+  .topbar::before,
+  .sidebar {
+    backdrop-filter: none;
   }
 }
 

@@ -29,10 +29,12 @@ const statusWord = (w: string) => (ar ? ({ proposed: 'مقترح', stable: 'مع
     <h2 id="packs">{ar ? 'حزم الأنماط' : 'The style packs'}</h2>
     <ul class="cards">
       {styles.map((s) => (
-        <li class="card">
-          <h3 lang="en"><a class="card-link" href={href(lang, `/styles/${s.id}/`)}>{s.name}</a></h3>
-          <p lang={ar ? 'en' : undefined} dir={ar ? 'ltr' : undefined}>{s.dials.base ?? ''}</p>
-          <p><span class:list={['badge', s.status === 'proposed' ? 'badge-proposed' : 'badge-approved']}>{statusWord(s.status)}</span></p>
+        <li class="card" data-ds="card" data-emphasis="outline" data-size="md" data-interactive>
+          <div data-part="header">
+            <h3 data-part="title" lang="en"><a data-part="link" href={href(lang, `/styles/${s.id}/`)}>{s.name}</a></h3>
+            <p data-part="description" lang={ar ? 'en' : undefined} dir={ar ? 'ltr' : undefined}>{s.dials.base ?? ''}</p>
+          </div>
+          <p class="card-badges"><span data-ds="badge" data-tone={s.status === 'proposed' ? 'warning' : 'success'} data-emphasis="soft" data-size="sm"><span data-part="label">{statusWord(s.status)}</span></span></p>
         </li>
       ))}
     </ul>
@@ -102,6 +104,6 @@ const statusWord = (w: string) => (ar ? ({ proposed: 'مقترح', stable: 'مع
         </Preview>
       ))}
     </div>
-    <p><a class="btn btn-primary" href={galleryHref('/interactions')}>{ar ? 'فتح كل التفاعلات' : 'Open every interaction'}</a></p>
+    <p><a href={galleryHref('/interactions')} data-ds="button" data-tone="accent" data-emphasis="solid" data-size="md" data-shape="default"><span data-part="label">{ar ? 'فتح كل التفاعلات' : 'Open every interaction'}</span></a></p>
   </>
 )}

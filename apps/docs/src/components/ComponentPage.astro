@@ -8,7 +8,9 @@ import { interactions } from '@the-system/motion';
 import { componentCases, hasGalleryRoute } from '../../scripts/cases.ts';
 import { galleryHref, galleryUrl } from '../../scripts/gallery.ts';
 import { familyLabel, frameworkIds, slugOf, type FrameworkId, type Manifest, type Prop } from '../../scripts/manifests.ts';
-import { caseText, pageText, type Lang } from '../lib/i18n.ts';
+import { caseText, pageText, ui, type Lang } from '../lib/i18n.ts';
+import Menu from './Menu.astro';
+import { iconMarkup } from '../lib/chrome.ts';
 import { inlineHtml } from '../lib/text.ts';
 import { componentPath, href, manifests, styles } from '../lib/site.ts';
 import { criteriaFor, criterionUrl } from '../lib/wcag.ts';
@@ -95,7 +97,7 @@ const twin = `${href(lang, `/components/${slug}`).replace(/\/$/, '')}.md`;
       <p class="eyebrow"><a href={href(lang, '/components/')}>{familyLabel(m.family)[lang]}</a></p>
       <div class="title-row">
         <h1 lang={ar ? 'en' : undefined}>{m.name}</h1>
-        {live && <a class="btn" href={base} data-open-gallery>{t.openGallery}</a>}
+        {live && <a href={base} data-open-gallery data-ds="button" data-tone="neutral" data-emphasis="outline" data-size="md" data-shape="default"><span data-part="label">{t.openGallery}</span><span data-part="end" set:html={iconMarkup('external', 16)} /></a>}
       </div>
       <p class="lead" {...enAttrs} set:html={en(m.summary)} />
       {ar && <p class="note">{t.englishNote}</p>}
@@ -105,7 +107,7 @@ const twin = `${href(lang, `/components/${slug}`).replace(/\/$/, '')}.md`;
             {i > 0 && <li class="sep" aria-hidden="true" />}
             <li>
               <span class="fw" lang="en">{fwName[fw]}</span>
-              <span class:list={['badge', `badge-${m.frameworks[fw]?.status === 'ready' ? 'ready' : 'planned'}`]}>{t.status[m.frameworks[fw]?.status ?? 'planned']}</span>
+              <span data-ds="badge" data-tone={m.frameworks[fw]?.status === 'ready' ? 'success' : 'neutral'} data-emphasis="soft" data-size="sm"><span data-part="label">{t.status[m.frameworks[fw]?.status ?? 'planned']}</span></span>
             </li>
           </>
         ))}
@@ -116,17 +118,22 @@ const twin = `${href(lang, `/components/${slug}`).replace(/\/$/, '')}.md`;
       <section class="doc-section hero-preview" aria-labelledby="preview">
         <h2 id="preview" class="visually-hidden">{t.hero}</h2>
         <Preview base={base} caseId={hero.id} label={t.previewOf(m.name, caseLabel(hero.id, hero.title).heading)} heightKey={`${slug}/${hero.id}`} lang={lang} loadingLabel={t.loading}>
-          <fieldset class="axes" data-axes>
-            <legend>{t.previewSettings}</legend>
+          <div class="axes" role="group" aria-labelledby="axes-title" data-axes>
+            <p class="axes-title" id="axes-title">{t.previewSettings}</p>
             {axes.map((a) => (
-              <label class="axis">
-                <span>{t.axes[a.key]}</span>
-                <select data-axis={a.key}>
-                  {a.values.map((v) => <option value={v} selected={v === a.value}>{axisLabel(v)}</option>)}
-                </select>
-              </label>
+              <div class="axis">
+                <span class="axis-name" aria-hidden="true">{a.key === 'style' ? ui[lang].previewStyle : t.axes[a.key]}</span>
+                <Menu
+                  id={`axis-${a.key}`}
+                  setting={`axis-${a.key}`}
+                  label={a.key === 'style' ? ui[lang].previewStyle : t.axes[a.key]}
+                  items={a.values.map((v) => ({ value: v, label: axisLabel(v), lang: a.key === 'style' && ar ? 'en' : undefined }))}
+                  value={a.value}
+                  align="start"
+                />
+              </div>
             ))}
-          </fieldset>
+          </div>
           <p class="preview-note">
             {bundled ? t.previewNote : <>{t.previewLocal} <span dir="ltr">{galleryUrl}</span>.</>}
           </p>
@@ -147,16 +154,19 @@ const twin = `${href(lang, `/components/${slug}`).replace(/\/$/, '')}.md`;
               {live ? (
                 <Preview base={base} caseId={c.id} label={t.previewOf(m.name, label.heading)} heightKey={`${slug}/${c.id}`} lang={lang} loadingLabel={t.loading} fallbackHeight={c.id === 'variants' ? 520 : 200}>
                   <div class="code-head">
-                    <div role="tablist" class="tablist" aria-label={`${t.codeFor} ${label.heading}`} data-tabs>
-                      {frameworkIds.map((fw, i) => (
-                        <button type="button" role="tab" class="tab" id={`${tabsId}-${fw}`} aria-controls={`${tabsId}-${fw}-panel`} aria-selected={i === 0 ? 'true' : 'false'} tabindex={i === 0 ? 0 : -1} lang="en">
-                          {fwName[fw]}
-                        </button>
-                      ))}
+                    <div data-ds="tabs" data-emphasis="soft" data-size="sm" data-orientation="horizontal">
+                      <div role="tablist" data-part="list" aria-label={`${t.codeFor} ${label.heading}`} data-tabs>
+                        {frameworkIds.map((fw, i) => (
+                          <button type="button" role="tab" data-part="trigger" data-state={i === 0 ? 'active' : 'inactive'} id={`${tabsId}-${fw}`} aria-controls={`${tabsId}-${fw}-panel`} aria-selected={i === 0 ? 'true' : 'false'} tabindex={i === 0 ? 0 : -1} lang="en">
+                            {i === 0 && <span data-part="indicator" aria-hidden="true" />}
+                            <span data-part="label">{fwName[fw]}</span>
+                          </button>
+                        ))}
+                      </div>
                     </div>
-                    <button type="button" class="copy-btn" data-copy-panel data-done={t.copied}>
-                      <svg aria-hidden="true" viewBox="0 0 24 24" width="16" height="16"><rect x="8" y="8" width="12" height="12" rx="2" /><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2" /></svg>
-                      <span>{t.copy}</span>
+                    <button type="button" class="copy-btn" data-ds="button" data-tone="neutral" data-emphasis="ghost" data-size="sm" data-shape="default" data-copy-panel data-done={t.copied}>
+                      <span data-part="start" set:html={iconMarkup('copy', 16)} />
+                      <span data-part="label">{t.copy}</span>
                     </button>
                   </div>
                   {frameworkIds.map((fw, i) => {
@@ -249,7 +259,7 @@ const twin = `${href(lang, `/components/${slug}`).replace(/\/$/, '')}.md`;
             <tbody>
               {props.map((p) => (
                 <tr>
-                  <td><code>{p.name}</code>{p.required && <span class="badge">{t.required}</span>}</td>
+                  <td><code>{p.name}</code>{p.required && <span data-ds="badge" data-tone="neutral" data-emphasis="outline" data-size="sm"><span data-part="label">{t.required}</span></span>}</td>
                   <td>{p.type && <code>{p.type}</code>}</td>
                   <td>{p.def && <code>{p.def}</code>}</td>
                   <td {...enAttrs} set:html={en(p.description)} />
