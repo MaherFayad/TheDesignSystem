@@ -12,13 +12,15 @@
 @layer ds.recipes {
   [data-style='desk'] [data-ds='multi-select'][data-part='popup'] {
     --_menu-bg: var(--ds-color-material-glass-strong);
-    --_menu-border-color: var(--ds-color-border-hairline);
+    --_menu-border-color: var(--ds-color-material-glass-border);
     --_menu-radius: var(--ds-radius-panel);
+    --_menu-shadow: var(--ds-elevation-menu);
+    --_menu-padding: var(--ds-space-2xs);
     --_menu-backdrop: blur(var(--ds-blur-window-strong)) saturate(var(--ds-blur-window-saturation));
-    --_menu-item-bg-highlight: var(--ds-color-primary-fill);
-    --_menu-item-fg-highlight: var(--ds-color-primary-text);
-    --_menu-item-ring-color: var(--ds-color-focus-ring-on-primary-inner);
-    --_menu-separator-color: var(--ds-color-border-hairline);
+    --_menu-item-bg-highlight: var(--ds-color-bg-overlay-10);
+    --_menu-item-fg-highlight: var(--ds-color-text-bright);
+    --_menu-item-ring-color: var(--ds-color-focus-ring);
+    --_menu-separator-color: var(--ds-color-material-glass-border);
   }
 
   @media (prefers-reduced-transparency: reduce) {

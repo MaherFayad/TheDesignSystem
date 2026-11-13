@@ -1,0 +1,24 @@
+/*
+ * Studio recipe for Lightbox (order 1.24, proposed): a flat stage on the
+ * body tone (black in dark, the gray body in light, so the caption and the
+ * counter keep the scheme's text colors) and a flat toolbar. The side buttons are the bordered transparent pills of
+ * Studio controls, no fill, no shadow. It appears by an opacity step, the
+ * bars arrive with it.
+ */
+@layer ds.recipes {
+  [data-style='studio'] [data-ds='lightbox'] {
+    --_lightbox-shift: 0px;
+    --_lightbox-duration-in: var(--ds-duration-quick);
+  }
+
+  @media (forced-colors: none) {
+    [data-style='studio'] [data-ds='lightbox'] {
+      --_lightbox-bg: var(--ds-color-bg-body);
+      --_lightbox-scrim: var(--ds-color-bg-scrim-solid);
+      --_lightbox-nav-bg: transparent;
+      --_lightbox-nav-bg-hover: var(--ds-color-bg-overlay-10);
+      --_lightbox-nav-bg-active: var(--ds-color-bg-overlay-20);
+      --_lightbox-nav-border-color: var(--ds-color-border-control);
+    }
+  }
+}

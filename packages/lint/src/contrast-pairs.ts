@@ -289,13 +289,9 @@ export const CONTRAST_PAIRS: ContrastData = {
   // Desk dark: the regular, tinted and dock glass and the title bar over the
   // brightest window content (surface-5). Over the black desk they pass.
   knownFailures: [
-    { mode: 'desk.dark', fg: 'color.text.muted', bg: 'color.material.glass over color.bg.surface-5', reason: 'reported to lead, wave 0' },
     { mode: 'desk.dark', fg: 'color.text.subtle', bg: 'color.material.glass over color.bg.surface-5', reason: 'reported to lead, wave 0' },
-    { mode: 'desk.dark', fg: 'color.text.muted', bg: 'color.material.glass-tinted over color.bg.surface-5', reason: 'reported to lead, wave 0' },
     { mode: 'desk.dark', fg: 'color.text.subtle', bg: 'color.material.glass-tinted over color.bg.surface-5', reason: 'reported to lead, wave 0' },
     { mode: 'desk.dark', fg: 'color.text.subtle', bg: 'color.material.dock over color.bg.surface-5', reason: 'reported to lead, wave 0' },
-    { mode: 'desk.dark', fg: 'color.text.muted', bg: 'color.material.titlebar over color.material.glass over color.bg.surface-5', reason: 'reported to lead, wave 0' },
     { mode: 'desk.dark', fg: 'color.text.subtle', bg: 'color.material.titlebar over color.material.glass over color.bg.surface-5', reason: 'reported to lead, wave 0' },
-    { mode: 'desk.dark', fg: 'color.text.muted', bg: 'color.material.glass-hover over color.material.glass over color.bg.surface-5', reason: 'reported to lead, wave 0' },
   ],
 };

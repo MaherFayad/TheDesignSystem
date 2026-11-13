@@ -7,22 +7,35 @@
  * What tokens cannot say:
  * - the list is glass (the strong material and a backdrop filter), while
  *   Studio draws the flat surface-3;
- * - the lit row takes the yellow primary fill with dark text and the
- *   on-primary keyboard ring;
+ * - the lit row is the soft highlight of the Desk menus (overlay-10, the
+ *   text bright) with the achromatic keyboard ring, not a yellow fill
+ *   (order 1.24, proposed); the selected row has the yellow check and the
+ *   medium weight;
  * - the panel radius family: a 12px list with 8px rows inside, regular weight.
  */
 @layer ds.recipes {
   [data-style='desk'] [data-ds='select'][data-part='content'] {
     --_menu-bg: var(--ds-color-material-glass-strong);
-    --_menu-border-color: var(--ds-color-border-hairline);
+    --_menu-border-color: var(--ds-color-material-glass-border);
     --_menu-radius: var(--ds-radius-panel);
+    --_menu-shadow: var(--ds-elevation-menu);
+    --_menu-padding: var(--ds-space-2xs);
     --_menu-backdrop: blur(var(--ds-blur-window-strong)) saturate(var(--ds-blur-window-saturation));
-    --_menu-item-bg-highlight: var(--ds-color-primary-fill);
-    --_menu-item-fg-highlight: var(--ds-color-primary-text);
-    --_menu-item-ring-color: var(--ds-color-focus-ring-on-primary-inner);
-    --_menu-separator-color: var(--ds-color-border-hairline);
+    --_menu-item-bg-highlight: var(--ds-color-bg-overlay-10);
+    --_menu-item-fg-highlight: var(--ds-color-text-bright);
+    --_menu-item-ring-color: var(--ds-color-focus-ring);
+    --_menu-separator-color: var(--ds-color-material-glass-border);
     --_select-item-radius: var(--ds-radius-field);
     --_select-item-font-weight: var(--ds-font-weight-regular);
+  }
+
+  /* The selected row: the yellow check and the medium weight, never the fill alone (WCAG 1.4.1). */
+  [data-style='desk'] [data-ds='select'] [data-part='item'][data-state='checked'] {
+    --_select-item-font-weight: var(--ds-font-weight-medium);
+  }
+
+  [data-style='desk'] [data-ds='select'] [data-part='item'] > [data-part='indicator'] {
+    color: var(--ds-color-primary-on-surface);
   }
 
   @media (prefers-reduced-transparency: reduce) {

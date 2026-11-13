@@ -119,6 +119,13 @@ interface Spot {
   height: number;
 }
 
+/** Drawn pixels per CSS pixel of `el`: above 1 under a zoom or a scale on an ancestor. */
+function drawnScale(el: Element): number {
+  const w = el instanceof HTMLElement ? el.offsetWidth : 0;
+  const k = w > 0 ? el.getBoundingClientRect().width / w : 1;
+  return Number.isFinite(k) && k > 0 ? k : 1;
+}
+
 function origin(container: Element): { x: number; y: number } {
   const r = container.getBoundingClientRect();
   return { x: r.x - container.scrollLeft, y: r.y - container.scrollTop };
@@ -148,8 +155,10 @@ function ghostOut(container: Element, el: Element, spot: Spot, mode: PatternMode
   s.position = 'absolute';
   s.margin = '0';
   s.boxSizing = 'border-box';
-  s.inlineSize = `${spot.width}px`;
-  s.blockSize = `${spot.height}px`;
+  // Spots are drawn pixels; styles are CSS pixels (they differ under a zoom or a scale).
+  const k = drawnScale(container);
+  s.inlineSize = `${spot.width / k}px`;
+  s.blockSize = `${spot.height / k}px`;
   s.pointerEvents = 'none';
   // Placed by measure: at the origin of its containing block first, then moved by the gap to the old box.
   s.insetBlockStart = '0';
@@ -157,8 +166,8 @@ function ghostOut(container: Element, el: Element, spot: Spot, mode: PatternMode
   container.append(clone);
   const at = clone.getBoundingClientRect();
   const o = origin(container);
-  const dx = o.x + spot.x - at.x;
-  const dy = o.y + spot.y - at.y;
+  const dx = (o.x + spot.x - at.x) / k;
+  const dy = (o.y + spot.y - at.y) / k;
   const rtl = getComputedStyle(clone).direction === 'rtl';
   s.insetBlockStart = `${dy}px`;
   s.insetInlineStart = `${rtl ? -dx : dx}px`;

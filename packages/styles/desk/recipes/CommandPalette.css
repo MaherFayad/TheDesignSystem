@@ -1,41 +1,57 @@
 /*
- * Desk recipe for CommandPalette: the palette is a glass window, as the Desk
- * dialog is, and its rows are the Desk menu rows. Sources: GoBanana `.dwin`
- * and `.mb-item` in desktop/desktop.css, through the Desk Dialog and ListBox
- * recipes, which draw the same materials.
+ * Desk recipe for CommandPalette: the palette is a big glass window centered
+ * high on the desk, as the Desk dialog is, and its rows are the Desk menu
+ * rows. Sources: GoBanana `.dwin` and `.mb-item` in desktop/desktop.css,
+ * through the Desk Dialog and ListBox recipes, which draw the same
+ * materials.
  *
- * What tokens cannot say:
- * - glass on the panel (a backdrop filter), with the strong glass so text
- *   reads at 4.5:1 over any page behind the scrim, and no flat bands: the
- *   search and the hints sit on the glass under and over a hairline;
- * - the lit row takes the yellow primary fill with dark text, and its icon
- *   and description take the same dark text;
- * - the window radius and the window grow on its open timing (pattern
+ * Order 1.24 (proposed), what tokens cannot say:
+ * - glass on the panel (the strong glass and a 40px blur with saturation),
+ *   so text reads at 4.5:1 over any page behind the scrim, the light edge
+ *   and the deep window shadow; the scrim dims the desk and blurs it;
+ * - the search band is a large field on the glass with a hairline under
+ *   it, and the hints sit over a hairline: no flat bands;
+ * - the lit row is the soft highlight of the Desk menus (overlay-10, the
+ *   text bright), not a yellow fill;
+ * - the window radius and the window grow on the soft spring (pattern
  *   "dialog", the values of window-grow without a trigger).
  */
 @layer ds.recipes {
   [data-style='desk'] [data-ds='command-palette'] {
     --_command-palette-bg: var(--ds-color-material-glass-strong);
-    --_command-palette-border-color: var(--ds-color-border-hairline);
+    --_command-palette-border-color: var(--ds-color-material-glass-border);
     --_command-palette-radius: var(--ds-radius-window);
     --_command-palette-shadow: var(--ds-elevation-window);
-    --_command-palette-backdrop: blur(var(--ds-blur-window)) saturate(var(--ds-blur-window-saturation));
+    --_command-palette-backdrop: blur(var(--ds-blur-window-strong)) saturate(var(--ds-blur-window-saturation));
     --_command-palette-band-bg: transparent;
-    --_command-palette-divider-color: var(--ds-color-border-hairline);
+    --_command-palette-divider-color: var(--ds-color-material-glass-border);
+    --_command-palette-padding: var(--ds-space-2xs);
+    --_command-palette-scrim: var(--ds-color-bg-scrim);
+    --_command-palette-scrim-filter: blur(var(--ds-blur-backdrop)) saturate(var(--ds-blur-window-saturation));
     --_command-palette-item-radius: var(--ds-radius-field);
-    --_command-palette-item-bg-highlight: var(--ds-color-primary-fill);
-    --_command-palette-item-fg-highlight: var(--ds-color-primary-text);
-    --_command-palette-meta-fg-highlight: var(--ds-color-primary-text);
+    --_command-palette-item-bg-highlight: var(--ds-color-bg-overlay-10);
+    --_command-palette-item-fg-highlight: var(--ds-color-text-bright);
+    --_command-palette-meta-fg-highlight: var(--ds-color-text-default);
     --_command-palette-enter-y: 0;
     --_command-palette-enter-scale: var(--ds-scale-window-enter);
-    --_command-palette-duration-in: var(--ds-duration-window-open);
+    --_command-palette-duration-in: var(--ds-duration-spring-soft);
     --_command-palette-duration-out: var(--ds-duration-quick); /* Order 1.22: exits faster than entrances (review N4). */
-    --_command-palette-ease-in: var(--ds-ease-window);
+    --_command-palette-ease-in: var(--ds-ease-spring-soft);
+  }
+
+  /* The search band: a large field, the body text one step up, on the glass. */
+  [data-style='desk'] [data-ds='command-palette'] > [data-part='panel'] > [data-ds='search-field'][data-part='search'] {
+    --_search-field-height: var(--ds-size-control-lg);
+    --_search-field-font-size: var(--ds-font-size-xl);
+    --_search-field-padding-inline: var(--ds-space-xl);
+
+    letter-spacing: var(--ds-font-tracking-display);
   }
 
   @media (prefers-reduced-transparency: reduce) {
     [data-style='desk'] [data-ds='command-palette'] {
       --_command-palette-backdrop: none;
+      --_command-palette-scrim-filter: none;
     }
   }
 

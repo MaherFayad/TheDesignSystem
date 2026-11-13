@@ -177,7 +177,134 @@ dark LTR, dark Arabic RTL. Viewport captures at 1280 by 800 (tiles at half
 size) and 390 by 844. A page with a demo trigger is captured with its first
 trigger open, so the overlays show their glass.
 
-PAGES_TABLE
+The signature pieces at 390:
+
+![switch, 390](shots/liquid/pages/switch-390.jpg)
+![checkbox, 390](shots/liquid/pages/checkbox-390.jpg)
+![segmented-control, 390](shots/liquid/pages/segmented-control-390.jpg)
+![slider, 390](shots/liquid/pages/slider-390.jpg)
+![button, 390](shots/liquid/pages/button-390.jpg)
+![tab-bar, 390](shots/liquid/pages/tab-bar-390.jpg)
+![toolbar, 390](shots/liquid/pages/toolbar-390.jpg)
+![dialog, 390](shots/liquid/pages/dialog-390.jpg)
+![sheet, 390](shots/liquid/pages/sheet-390.jpg)
+![toast, 390](shots/liquid/pages/toast-390.jpg)
+![dropdown-menu, 390](shots/liquid/pages/dropdown-menu-390.jpg)
+![tooltip, 390](shots/liquid/pages/tooltip-390.jpg)
+
+Every page (109 components, 218 sheets):
+
+| Component | 1280 wide | 390 wide |
+| --- | --- | --- |
+| Accordion | [sheet](shots/liquid/pages/accordion-1280.jpg) | [sheet](shots/liquid/pages/accordion-390.jpg) |
+| Alert | [sheet](shots/liquid/pages/alert-1280.jpg) | [sheet](shots/liquid/pages/alert-390.jpg) |
+| AlertDialog | [sheet](shots/liquid/pages/alert-dialog-1280.jpg) | [sheet](shots/liquid/pages/alert-dialog-390.jpg) |
+| AspectRatio | [sheet](shots/liquid/pages/aspect-ratio-1280.jpg) | [sheet](shots/liquid/pages/aspect-ratio-390.jpg) |
+| Autocomplete | [sheet](shots/liquid/pages/autocomplete-1280.jpg) | [sheet](shots/liquid/pages/autocomplete-390.jpg) |
+| Avatar | [sheet](shots/liquid/pages/avatar-1280.jpg) | [sheet](shots/liquid/pages/avatar-390.jpg) |
+| AvatarGroup | [sheet](shots/liquid/pages/avatar-group-1280.jpg) | [sheet](shots/liquid/pages/avatar-group-390.jpg) |
+| Badge | [sheet](shots/liquid/pages/badge-1280.jpg) | [sheet](shots/liquid/pages/badge-390.jpg) |
+| Banner | [sheet](shots/liquid/pages/banner-1280.jpg) | [sheet](shots/liquid/pages/banner-390.jpg) |
+| Bento | [sheet](shots/liquid/pages/bento-1280.jpg) | [sheet](shots/liquid/pages/bento-390.jpg) |
+| Breadcrumbs | [sheet](shots/liquid/pages/breadcrumbs-1280.jpg) | [sheet](shots/liquid/pages/breadcrumbs-390.jpg) |
+| Button | [sheet](shots/liquid/pages/button-1280.jpg) | [sheet](shots/liquid/pages/button-390.jpg) |
+| ButtonGroup | [sheet](shots/liquid/pages/button-group-1280.jpg) | [sheet](shots/liquid/pages/button-group-390.jpg) |
+| Callout | [sheet](shots/liquid/pages/callout-1280.jpg) | [sheet](shots/liquid/pages/callout-390.jpg) |
+| Card | [sheet](shots/liquid/pages/card-1280.jpg) | [sheet](shots/liquid/pages/card-390.jpg) |
+| Checkbox | [sheet](shots/liquid/pages/checkbox-1280.jpg) | [sheet](shots/liquid/pages/checkbox-390.jpg) |
+| CheckboxGroup | [sheet](shots/liquid/pages/checkbox-group-1280.jpg) | [sheet](shots/liquid/pages/checkbox-group-390.jpg) |
+| Chip | [sheet](shots/liquid/pages/chip-1280.jpg) | [sheet](shots/liquid/pages/chip-390.jpg) |
+| CloseButton | [sheet](shots/liquid/pages/close-button-1280.jpg) | [sheet](shots/liquid/pages/close-button-390.jpg) |
+| Combobox | [sheet](shots/liquid/pages/combobox-1280.jpg) | [sheet](shots/liquid/pages/combobox-390.jpg) |
+| CommandPalette | [sheet](shots/liquid/pages/command-palette-1280.jpg) | [sheet](shots/liquid/pages/command-palette-390.jpg) |
+| ConsentField | [sheet](shots/liquid/pages/consent-field-1280.jpg) | [sheet](shots/liquid/pages/consent-field-390.jpg) |
+| Container | [sheet](shots/liquid/pages/container-1280.jpg) | [sheet](shots/liquid/pages/container-390.jpg) |
+| ContextMenu | [sheet](shots/liquid/pages/context-menu-1280.jpg) | [sheet](shots/liquid/pages/context-menu-390.jpg) |
+| CopyButton | [sheet](shots/liquid/pages/copy-button-1280.jpg) | [sheet](shots/liquid/pages/copy-button-390.jpg) |
+| DescriptionList | [sheet](shots/liquid/pages/description-list-1280.jpg) | [sheet](shots/liquid/pages/description-list-390.jpg) |
+| Dialog | [sheet](shots/liquid/pages/dialog-1280.jpg) | [sheet](shots/liquid/pages/dialog-390.jpg) |
+| Dock | [sheet](shots/liquid/pages/dock-1280.jpg) | [sheet](shots/liquid/pages/dock-390.jpg) |
+| Drawer | [sheet](shots/liquid/pages/drawer-1280.jpg) | [sheet](shots/liquid/pages/drawer-390.jpg) |
+| DropdownMenu | [sheet](shots/liquid/pages/dropdown-menu-1280.jpg) | [sheet](shots/liquid/pages/dropdown-menu-390.jpg) |
+| EmptyState | [sheet](shots/liquid/pages/empty-state-1280.jpg) | [sheet](shots/liquid/pages/empty-state-390.jpg) |
+| ErrorState | [sheet](shots/liquid/pages/error-state-1280.jpg) | [sheet](shots/liquid/pages/error-state-390.jpg) |
+| Field | [sheet](shots/liquid/pages/field-1280.jpg) | [sheet](shots/liquid/pages/field-390.jpg) |
+| FieldError | [sheet](shots/liquid/pages/field-error-1280.jpg) | [sheet](shots/liquid/pages/field-error-390.jpg) |
+| Fieldset | [sheet](shots/liquid/pages/fieldset-1280.jpg) | [sheet](shots/liquid/pages/fieldset-390.jpg) |
+| FilterBar | [sheet](shots/liquid/pages/filter-bar-1280.jpg) | [sheet](shots/liquid/pages/filter-bar-390.jpg) |
+| FloatingActionButton | [sheet](shots/liquid/pages/floating-action-button-1280.jpg) | [sheet](shots/liquid/pages/floating-action-button-390.jpg) |
+| Form | [sheet](shots/liquid/pages/form-1280.jpg) | [sheet](shots/liquid/pages/form-390.jpg) |
+| FormWizard | [sheet](shots/liquid/pages/form-wizard-1280.jpg) | [sheet](shots/liquid/pages/form-wizard-390.jpg) |
+| Grid | [sheet](shots/liquid/pages/grid-1280.jpg) | [sheet](shots/liquid/pages/grid-390.jpg) |
+| HoverCard | [sheet](shots/liquid/pages/hover-card-1280.jpg) | [sheet](shots/liquid/pages/hover-card-390.jpg) |
+| Icon | [sheet](shots/liquid/pages/icon-1280.jpg) | [sheet](shots/liquid/pages/icon-390.jpg) |
+| IconButton | [sheet](shots/liquid/pages/icon-button-1280.jpg) | [sheet](shots/liquid/pages/icon-button-390.jpg) |
+| InlineEdit | [sheet](shots/liquid/pages/inline-edit-1280.jpg) | [sheet](shots/liquid/pages/inline-edit-390.jpg) |
+| Input | [sheet](shots/liquid/pages/input-1280.jpg) | [sheet](shots/liquid/pages/input-390.jpg) |
+| InputGroup | [sheet](shots/liquid/pages/input-group-1280.jpg) | [sheet](shots/liquid/pages/input-group-390.jpg) |
+| Kbd | [sheet](shots/liquid/pages/kbd-1280.jpg) | [sheet](shots/liquid/pages/kbd-390.jpg) |
+| Label | [sheet](shots/liquid/pages/label-1280.jpg) | [sheet](shots/liquid/pages/label-390.jpg) |
+| LanguageSwitch | [sheet](shots/liquid/pages/language-switch-1280.jpg) | [sheet](shots/liquid/pages/language-switch-390.jpg) |
+| Lightbox | [sheet](shots/liquid/pages/lightbox-1280.jpg) | [sheet](shots/liquid/pages/lightbox-390.jpg) |
+| Link | [sheet](shots/liquid/pages/link-1280.jpg) | [sheet](shots/liquid/pages/link-390.jpg) |
+| List | [sheet](shots/liquid/pages/list-1280.jpg) | [sheet](shots/liquid/pages/list-390.jpg) |
+| ListBox | [sheet](shots/liquid/pages/list-box-1280.jpg) | [sheet](shots/liquid/pages/list-box-390.jpg) |
+| Menubar | [sheet](shots/liquid/pages/menubar-1280.jpg) | [sheet](shots/liquid/pages/menubar-390.jpg) |
+| Meter | [sheet](shots/liquid/pages/meter-1280.jpg) | [sheet](shots/liquid/pages/meter-390.jpg) |
+| MultiSelect | [sheet](shots/liquid/pages/multi-select-1280.jpg) | [sheet](shots/liquid/pages/multi-select-390.jpg) |
+| Navbar | [sheet](shots/liquid/pages/navbar-1280.jpg) | [sheet](shots/liquid/pages/navbar-390.jpg) |
+| NotificationCenter | [sheet](shots/liquid/pages/notification-center-1280.jpg) | [sheet](shots/liquid/pages/notification-center-390.jpg) |
+| NumberField | [sheet](shots/liquid/pages/number-field-1280.jpg) | [sheet](shots/liquid/pages/number-field-390.jpg) |
+| OTPField | [sheet](shots/liquid/pages/otp-field-1280.jpg) | [sheet](shots/liquid/pages/otp-field-390.jpg) |
+| PageShell | [sheet](shots/liquid/pages/page-shell-1280.jpg) | [sheet](shots/liquid/pages/page-shell-390.jpg) |
+| Pagination | [sheet](shots/liquid/pages/pagination-1280.jpg) | [sheet](shots/liquid/pages/pagination-390.jpg) |
+| PasswordField | [sheet](shots/liquid/pages/password-field-1280.jpg) | [sheet](shots/liquid/pages/password-field-390.jpg) |
+| PhoneField | [sheet](shots/liquid/pages/phone-field-1280.jpg) | [sheet](shots/liquid/pages/phone-field-390.jpg) |
+| Popover | [sheet](shots/liquid/pages/popover-1280.jpg) | [sheet](shots/liquid/pages/popover-390.jpg) |
+| ProgressBar | [sheet](shots/liquid/pages/progress-bar-1280.jpg) | [sheet](shots/liquid/pages/progress-bar-390.jpg) |
+| ProgressCircle | [sheet](shots/liquid/pages/progress-circle-1280.jpg) | [sheet](shots/liquid/pages/progress-circle-390.jpg) |
+| RadioCard | [sheet](shots/liquid/pages/radio-card-1280.jpg) | [sheet](shots/liquid/pages/radio-card-390.jpg) |
+| RadioGroup | [sheet](shots/liquid/pages/radio-group-1280.jpg) | [sheet](shots/liquid/pages/radio-group-390.jpg) |
+| Rail | [sheet](shots/liquid/pages/rail-1280.jpg) | [sheet](shots/liquid/pages/rail-390.jpg) |
+| RangeSlider | [sheet](shots/liquid/pages/range-slider-1280.jpg) | [sheet](shots/liquid/pages/range-slider-390.jpg) |
+| Rating | [sheet](shots/liquid/pages/rating-1280.jpg) | [sheet](shots/liquid/pages/rating-390.jpg) |
+| ResizablePanels | [sheet](shots/liquid/pages/resizable-panels-1280.jpg) | [sheet](shots/liquid/pages/resizable-panels-390.jpg) |
+| ScrollArea | [sheet](shots/liquid/pages/scroll-area-1280.jpg) | [sheet](shots/liquid/pages/scroll-area-390.jpg) |
+| ScrubInput | [sheet](shots/liquid/pages/scrub-input-1280.jpg) | [sheet](shots/liquid/pages/scrub-input-390.jpg) |
+| SearchField | [sheet](shots/liquid/pages/search-field-1280.jpg) | [sheet](shots/liquid/pages/search-field-390.jpg) |
+| Section | [sheet](shots/liquid/pages/section-1280.jpg) | [sheet](shots/liquid/pages/section-390.jpg) |
+| SegmentedControl | [sheet](shots/liquid/pages/segmented-control-1280.jpg) | [sheet](shots/liquid/pages/segmented-control-390.jpg) |
+| Select | [sheet](shots/liquid/pages/select-1280.jpg) | [sheet](shots/liquid/pages/select-390.jpg) |
+| Separator | [sheet](shots/liquid/pages/separator-1280.jpg) | [sheet](shots/liquid/pages/separator-390.jpg) |
+| Sheet | [sheet](shots/liquid/pages/sheet-1280.jpg) | [sheet](shots/liquid/pages/sheet-390.jpg) |
+| Sidebar | [sheet](shots/liquid/pages/sidebar-1280.jpg) | [sheet](shots/liquid/pages/sidebar-390.jpg) |
+| Skeleton | [sheet](shots/liquid/pages/skeleton-1280.jpg) | [sheet](shots/liquid/pages/skeleton-390.jpg) |
+| SkipLink | [sheet](shots/liquid/pages/skip-link-1280.jpg) | [sheet](shots/liquid/pages/skip-link-390.jpg) |
+| Slider | [sheet](shots/liquid/pages/slider-1280.jpg) | [sheet](shots/liquid/pages/slider-390.jpg) |
+| Spinner | [sheet](shots/liquid/pages/spinner-1280.jpg) | [sheet](shots/liquid/pages/spinner-390.jpg) |
+| SplitButton | [sheet](shots/liquid/pages/split-button-1280.jpg) | [sheet](shots/liquid/pages/split-button-390.jpg) |
+| SplitView | [sheet](shots/liquid/pages/split-view-1280.jpg) | [sheet](shots/liquid/pages/split-view-390.jpg) |
+| Stack | [sheet](shots/liquid/pages/stack-1280.jpg) | [sheet](shots/liquid/pages/stack-390.jpg) |
+| Stat | [sheet](shots/liquid/pages/stat-1280.jpg) | [sheet](shots/liquid/pages/stat-390.jpg) |
+| StatusDot | [sheet](shots/liquid/pages/status-dot-1280.jpg) | [sheet](shots/liquid/pages/status-dot-390.jpg) |
+| Stepper | [sheet](shots/liquid/pages/stepper-1280.jpg) | [sheet](shots/liquid/pages/stepper-390.jpg) |
+| Surface | [sheet](shots/liquid/pages/surface-1280.jpg) | [sheet](shots/liquid/pages/surface-390.jpg) |
+| Switch | [sheet](shots/liquid/pages/switch-1280.jpg) | [sheet](shots/liquid/pages/switch-390.jpg) |
+| TabBar | [sheet](shots/liquid/pages/tab-bar-1280.jpg) | [sheet](shots/liquid/pages/tab-bar-390.jpg) |
+| TableOfContents | [sheet](shots/liquid/pages/table-of-contents-1280.jpg) | [sheet](shots/liquid/pages/table-of-contents-390.jpg) |
+| Tabs | [sheet](shots/liquid/pages/tabs-1280.jpg) | [sheet](shots/liquid/pages/tabs-390.jpg) |
+| TagField | [sheet](shots/liquid/pages/tag-field-1280.jpg) | [sheet](shots/liquid/pages/tag-field-390.jpg) |
+| Textarea | [sheet](shots/liquid/pages/textarea-1280.jpg) | [sheet](shots/liquid/pages/textarea-390.jpg) |
+| Tile | [sheet](shots/liquid/pages/tile-1280.jpg) | [sheet](shots/liquid/pages/tile-390.jpg) |
+| TitleBar | [sheet](shots/liquid/pages/title-bar-1280.jpg) | [sheet](shots/liquid/pages/title-bar-390.jpg) |
+| Toast | [sheet](shots/liquid/pages/toast-1280.jpg) | [sheet](shots/liquid/pages/toast-390.jpg) |
+| ToggleButton | [sheet](shots/liquid/pages/toggle-button-1280.jpg) | [sheet](shots/liquid/pages/toggle-button-390.jpg) |
+| ToggleGroup | [sheet](shots/liquid/pages/toggle-group-1280.jpg) | [sheet](shots/liquid/pages/toggle-group-390.jpg) |
+| Toolbar | [sheet](shots/liquid/pages/toolbar-1280.jpg) | [sheet](shots/liquid/pages/toolbar-390.jpg) |
+| Tooltip | [sheet](shots/liquid/pages/tooltip-1280.jpg) | [sheet](shots/liquid/pages/tooltip-390.jpg) |
+| Tour | [sheet](shots/liquid/pages/tour-1280.jpg) | [sheet](shots/liquid/pages/tour-390.jpg) |
+| Window | [sheet](shots/liquid/pages/window-1280.jpg) | [sheet](shots/liquid/pages/window-390.jpg) |
+| WindowControls | [sheet](shots/liquid/pages/window-controls-1280.jpg) | [sheet](shots/liquid/pages/window-controls-390.jpg) |
 
 Gallery labels (the demo headings) are not components: over the photo they
 read poorly in every style, which is the gallery's look, not Liquid's.

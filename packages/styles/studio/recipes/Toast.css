@@ -1,0 +1,86 @@
+/*
+ * Studio recipe for Toast and the toaster (order 1.24, proposed). A dense
+ * one line strip: the icon, the title, the description, the action and the
+ * close control on one row, about one control high. Square corners, a 1px
+ * hairline, no shadow and no blur, and the tone carried by the 2px bar at
+ * the inline start (the base edge) and the icon. The description ends in
+ * an ellipsis at rest and wraps in full while the toast is hovered or holds
+ * focus (the Toaster pauses then, so it can be read). Stacked toasts sit as
+ * a tight list, 1px apart. A toast appears by an opacity step in place:
+ * no travel, no scale (the tokens), no icon pop.
+ *
+ * The row is a layout no private property says, so this file sets the
+ * toast's grid and the toaster's gap directly.
+ */
+@layer ds.recipes {
+  [data-style='studio'] [data-ds='toaster'] {
+    gap: var(--ds-space-px);
+  }
+
+  [data-style='studio'] [data-ds='toast'] {
+    --_toast-radius: 0;
+    --_toast-shadow: none;
+    --_toast-blur: 0;
+    --_toast-enter-y: 0px;
+    --_toast-enter-scale: 1;
+    --_toast-icon-enter-scale: 1;
+    --_toast-swipe-x: 0%;
+    --_toast-swipe-y: 0%;
+
+    grid-template-columns: var(--ds-size-icon-md) minmax(0, max-content) minmax(0, 1fr) auto auto;
+    grid-template-areas: 'icon title description action close';
+    grid-template-rows: auto;
+    align-items: center;
+    column-gap: var(--ds-space-s);
+    min-block-size: var(--ds-size-control-md);
+    padding-block: var(--ds-space-3xs);
+    padding-inline: var(--ds-space-s) var(--ds-space-3xs);
+    line-height: var(--ds-font-leading-tight);
+  }
+
+  @media (forced-colors: none) {
+    [data-style='studio'] [data-ds='toast'] {
+      --_toast-bg: var(--ds-color-bg-surface-2);
+      --_toast-border-color: var(--ds-color-border-strong);
+    }
+  }
+
+  [data-style='studio'] [data-ds='toast'] > [data-part='title'] {
+    overflow-wrap: anywhere;
+  }
+
+  [data-style='studio'] [data-ds='toast'] > [data-part='title'] > [data-part='count'] {
+    border-radius: var(--ds-radius-xs);
+  }
+
+  [data-style='studio'] [data-ds='toast'] > [data-part='title'] + [data-part='description'] {
+    margin-block-start: 0;
+  }
+
+  [data-style='studio'] [data-ds='toast'] > [data-part='description'] {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  [data-style='studio'] [data-ds='toast']:is(:hover, :focus-within) > [data-part='description'] {
+    overflow: visible;
+    white-space: normal;
+    overflow-wrap: anywhere;
+  }
+
+  /* The action: an xs pill in the row, not a second line. */
+  [data-style='studio'] [data-ds='toast'] > [data-part='action'] {
+    --_button-height: var(--ds-size-control-xs);
+    --_button-padding-inline: var(--ds-space-s);
+
+    margin-block-start: 0;
+  }
+
+  /* The close control: a small square ghost. */
+  [data-style='studio'] [data-ds='toast'] > [data-part='close'] {
+    --_button-radius: var(--ds-radius-xs);
+
+    margin-block: 0;
+  }
+}

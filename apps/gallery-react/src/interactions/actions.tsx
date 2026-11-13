@@ -125,7 +125,29 @@ function Row({ children, pad = 8 }: { children: ReactNode; pad?: number }) {
   );
 }
 
-/** Live stages by interaction id. */
+/** The interaction is the chevron: the menu button of the first SplitButton is the stage's trigger. */
+function SplitChevronStage() {
+  const box = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    box.current?.querySelector('button[aria-haspopup]')?.setAttribute('data-interaction-trigger', '');
+  }, []);
+  return (
+    <div ref={box} data-stage-region="" style={{ display: 'flex', gap: 12, alignItems: 'flex-start', padding: 8, paddingBlockEnd: 140 }}>
+      <SplitButton label="Publish page" menuLabel="More publish options" tone="accent" emphasis="solid">
+        <DropdownMenuItem start="clock">Schedule publish</DropdownMenuItem>
+        <DropdownMenuItem start="upload">Publish to staging</DropdownMenuItem>
+        <DropdownMenuItem start="file">Save as draft</DropdownMenuItem>
+      </SplitButton>
+      <Theme lang="ar" dir="rtl">
+        <SplitButton label="نشر الصفحة" menuLabel="خيارات النشر الأخرى">
+          <DropdownMenuItem start="clock">جدولة النشر</DropdownMenuItem>
+          <DropdownMenuItem start="file">الحفظ كمسودة</DropdownMenuItem>
+        </SplitButton>
+      </Theme>
+    </div>
+  );
+}
+
 export const stages: Record<string, () => ReactNode> = {
   'button-press': () => (
     <Row>
@@ -211,21 +233,7 @@ export const stages: Record<string, () => ReactNode> = {
       <CloseButton label="Close panel" size="sm" />
     </Row>
   ),
-  'split-chevron': () => (
-    <div data-stage-region="" style={{ display: 'flex', gap: 12, alignItems: 'flex-start', padding: 8, paddingBlockEnd: 140 }}>
-      <SplitButton label="Publish page" menuLabel="More publish options" tone="accent" emphasis="solid">
-        <DropdownMenuItem start="clock">Schedule publish</DropdownMenuItem>
-        <DropdownMenuItem start="upload">Publish to staging</DropdownMenuItem>
-        <DropdownMenuItem start="file">Save as draft</DropdownMenuItem>
-      </SplitButton>
-      <Theme lang="ar" dir="rtl">
-        <SplitButton label="نشر الصفحة" menuLabel="خيارات النشر الأخرى">
-          <DropdownMenuItem start="clock">جدولة النشر</DropdownMenuItem>
-          <DropdownMenuItem start="file">الحفظ كمسودة</DropdownMenuItem>
-        </SplitButton>
-      </Theme>
-    </div>
-  ),
+  'split-chevron': () => <SplitChevronStage />,
   'fab-morph': () => <FabStage />,
   'link-underline': () => (
     <Row>

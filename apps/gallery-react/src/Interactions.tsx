@@ -76,9 +76,10 @@ function PointerDot() {
 }
 
 /**
- * `&zoom=<n>` sets the CSS zoom of the focus stage (default 2.5, the round 2
- * look). The round 3 recorder passes `zoom=1` and draws the page at a device
- * scale instead, so portaled overlays and the control share one scale.
+ * `&zoom=<n>` sets the CSS zoom of the focus stage. The round 3 recorder
+ * passes `zoom=1` and zooms the whole page instead, so portaled overlays and
+ * the control share one scale. Without the parameter the stage takes the
+ * largest zoom, at most 2.5, at which it fits the viewport with a margin.
  */
 function focusZoom(): number | undefined {
   try {
@@ -89,14 +90,34 @@ function focusZoom(): number | undefined {
   }
 }
 
+const FOCUS_ZOOM = 2.5;
+
 function FocusStage({ id }: { id: string }) {
   const stage = stages[id];
-  const zoom = focusZoom();
+  const ref = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const fixed = focusZoom();
+    if (fixed) {
+      el.style.zoom = String(fixed);
+      return;
+    }
+    const fit = () => {
+      el.style.zoom = '1';
+      const r = el.getBoundingClientRect();
+      const z = Math.min(FOCUS_ZOOM, (0.9 * window.innerWidth) / Math.max(1, r.width), (0.85 * window.innerHeight) / Math.max(1, r.height));
+      el.style.zoom = String(Math.max(1, Math.round(z * 100) / 100));
+    };
+    fit();
+    window.addEventListener('resize', fit);
+    return () => window.removeEventListener('resize', fit);
+  }, []);
   return (
     <TooltipProvider>
       <div data-gallery="interactions-focus" data-focus={id}>
         <style>{recipes}</style>
-        <div data-gallery="interactions-focus-stage" data-interaction-stage="" style={zoom ? { zoom } : undefined}>
+        <div data-gallery="interactions-focus-stage" data-interaction-stage="" ref={ref}>
           {stage ? stage() : <p>No stage for {id}.</p>}
         </div>
         <PointerDot />

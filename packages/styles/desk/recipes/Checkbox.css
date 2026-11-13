@@ -1,0 +1,32 @@
+/*
+ * Desk recipe for Checkbox and Switch. Order 1.24 (proposed): the yellow
+ * primary marks every control that is on. A checked neutral checkbox takes
+ * the primary fill (yellow with the dark ink check; the gold edge in light),
+ * where Studio draws white; the box is a little rounder (the small radius)
+ * and the switch thumb, on or off, carries the light edge of glass.
+ */
+@layer ds.recipes {
+  [data-style='desk'] [data-ds='checkbox']:is([data-tone='neutral'], :not([data-tone])) {
+    --_checkbox-fill: var(--ds-color-primary-fill);
+    --_checkbox-fill-border: var(--ds-color-primary-border);
+    --_checkbox-on-fill: var(--ds-color-text-on-primary);
+  }
+
+  [data-style='desk'] [data-ds='checkbox'] {
+    --_checkbox-radius: var(--ds-radius-sm);
+  }
+
+  [data-style='desk'] [data-ds='checkbox'][data-size='sm'] {
+    --_checkbox-radius: var(--ds-radius-xs);
+  }
+
+  [data-style='desk'] [data-ds='switch'] {
+    --_switch-bg: var(--ds-control-fill-default);
+  }
+
+  @media (forced-colors: active) {
+    [data-style='desk'] [data-ds='switch'] {
+      --_switch-bg: Canvas;
+    }
+  }
+}

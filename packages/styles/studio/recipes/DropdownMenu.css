@@ -1,0 +1,78 @@
+/*
+ * Studio recipe for the menu family (order 1.24, proposed): DropdownMenu,
+ * ContextMenu and Menubar menus, and the list popups of Select, Combobox,
+ * Autocomplete, MultiSelect and TagField, which all read the shared
+ * --_menu-* properties; and ListBox, whose rows they hold. One look for
+ * all: a tight tile list. A flat tile with a 1px hairline and a near square
+ * corner, no shadow, no blur, square rows edge to edge at the compact row
+ * height. The lit row is inverted (the bright fill, body colored text), a
+ * danger row lit in the red fill. A selected or checked row is marked by
+ * its check and by medium weight against the regular rows, never by fill
+ * alone. The surface appears by an opacity step in place, no travel, no
+ * scale; the rows arrive with it.
+ *
+ * Colors swap only where forced colors are off, so the base system colors
+ * (Canvas, Highlight) still win there.
+ */
+@layer ds.recipes {
+  [data-style='studio'] :is([data-ds='dropdown-menu'], [data-ds='context-menu'], [data-ds='select'][data-part='content'], :is([data-ds='combobox'], [data-ds='autocomplete'], [data-ds='multi-select'], [data-ds='tag-field'])[data-part='popup']) {
+    --_menu-radius: var(--ds-radius-xs);
+    --_menu-shadow: none;
+    --_menu-backdrop: none;
+    --_menu-padding: 0;
+    --_menu-item-font-weight: var(--ds-font-weight-regular);
+    --_menu-enter-scale: 1;
+    --_menu-shift: 0px;
+    --_menu-item-shift: 0px;
+    --_menu-nudge: 0px;
+    --_menu-duration-in: var(--ds-duration-instant);
+    --_menu-duration-out: var(--ds-duration-instant);
+    --_select-item-font-weight: var(--ds-font-weight-regular);
+
+    font-variant-numeric: tabular-nums;
+  }
+
+  [data-style='studio'] [data-ds='list-box'] {
+    --_list-box-radius: var(--ds-radius-xs);
+    --_list-box-option-font-weight: var(--ds-font-weight-regular);
+  }
+
+  @media (forced-colors: none) {
+    [data-style='studio'] :is([data-ds='dropdown-menu'], [data-ds='context-menu'], [data-ds='select'][data-part='content'], :is([data-ds='combobox'], [data-ds='autocomplete'], [data-ds='multi-select'], [data-ds='tag-field'])[data-part='popup']) {
+      --_menu-bg: var(--ds-color-bg-surface-2);
+      --_menu-border-color: var(--ds-color-border-strong);
+      --_menu-separator-color: var(--ds-color-border-default);
+      --_menu-item-bg-highlight: var(--ds-color-text-bright);
+      --_menu-item-fg-highlight: var(--ds-color-bg-body);
+      --_menu-item-bg-danger-highlight: var(--ds-color-state-danger-solid);
+      --_menu-item-fg-danger-highlight: var(--ds-color-state-danger-on-solid);
+      /* The inverted fill is the focus mark; the inset ring takes the fill color so it does not frame it. */
+      --_menu-item-ring-color: var(--ds-color-text-bright);
+    }
+
+    [data-style='studio'] [data-ds='list-box'] {
+      --_list-box-option-bg-highlight: var(--ds-color-text-bright);
+      --_list-box-option-fg-highlight: var(--ds-color-bg-body);
+      --_list-box-option-ring-color: var(--ds-color-text-bright);
+    }
+  }
+
+  /* Checked and selected rows: medium weight next to the check. */
+  [data-style='studio'] :is([data-ds='dropdown-menu'], [data-ds='context-menu']) :is([data-part='checkbox-item'], [data-part='radio-item'])[data-state='checked'] {
+    --_menu-item-font-weight: var(--ds-font-weight-medium);
+  }
+
+  [data-style='studio'] [data-ds='select'] [data-part='item'][data-state='checked'] {
+    --_select-item-font-weight: var(--ds-font-weight-medium);
+  }
+
+  [data-style='studio'] [data-ds='list-box'] [data-part='option'][aria-selected='true'] {
+    --_list-box-option-font-weight: var(--ds-font-weight-medium);
+  }
+
+  /* Separators run edge to edge, as the rows do. */
+  [data-style='studio'] :is([data-ds='dropdown-menu'], [data-ds='context-menu']) [data-part='separator'],
+  [data-style='studio'] [data-ds='list-box'] [data-part='separator'] {
+    margin-inline: 0;
+  }
+}

@@ -1,0 +1,109 @@
+/*
+ * Neutral recipe for the menu surface (order 1.24, proposed): DropdownMenu,
+ * ContextMenu and the Menubar menus (all dropdown-menu or context-menu
+ * roots), and the list family popups that set the same --_menu-* names:
+ * the Select content and the Combobox, Autocomplete, MultiSelect and
+ * TagField popups. One file, because they are one surface.
+ *
+ * The look: a white panel (surface), a 1px default border, the soft menu
+ * shadow, 8px corners (radius.control), 4px inside (space.4xs); rows of
+ * menu.item.height (32px) at 14px and regular weight with 6px corners
+ * (menu.item.radius); the lit row on surface-3, a soft gray. A selected or
+ * checked row is marked by more than a fill: its check is blue and its
+ * label medium weight.
+ *
+ * Why not tokens: the menu fill and the lit row are surface steps Studio
+ * reads differently (DropdownMenu.css defaults them to surface-3 and
+ * overlay-10), the border is transparent in the base, and the selected row
+ * weight and check color have no token.
+ */
+@layer ds.recipes {
+  [data-style='neutral'] :is([data-ds='dropdown-menu'], [data-ds='context-menu']),
+  [data-style='neutral'] [data-ds='select'][data-part='content'],
+  [data-style='neutral'] :is([data-ds='combobox'], [data-ds='autocomplete'], [data-ds='multi-select'], [data-ds='tag-field'])[data-part='popup'] {
+    --_menu-bg: var(--ds-color-bg-surface);
+    --_menu-border-color: var(--ds-color-border-default);
+    --_menu-radius: var(--ds-radius-control);
+    --_menu-padding: var(--ds-space-4xs);
+    --_menu-item-bg-highlight: var(--ds-color-bg-surface-3);
+    --_menu-item-fg-highlight: var(--ds-color-text-bright);
+    --_menu-meta-fg: var(--ds-color-text-subtle);
+    --_menu-separator-color: var(--ds-color-border-muted);
+  }
+
+  /* Rows at 14px, except the small size. */
+  [data-style='neutral'] :is([data-ds='dropdown-menu'], [data-ds='context-menu']):not([data-size='sm']) {
+    --_menu-item-font-size: var(--ds-font-size-m);
+  }
+
+  [data-style='neutral'] [data-ds='select'][data-part='content']:not([data-size='sm']) {
+    --_select-item-font-size: var(--ds-font-size-m);
+  }
+
+  [data-style='neutral'] [data-ds='list-box']:not([data-size='sm']) {
+    --_list-box-option-font-size: var(--ds-font-size-m);
+  }
+
+  /* A standalone list box lights its row the same soft gray. */
+  [data-style='neutral'] [data-ds='list-box'] {
+    --_list-box-option-bg-hover: var(--ds-color-bg-overlay-5);
+    --_list-box-option-bg-highlight: var(--ds-color-bg-surface-3);
+    --_list-box-option-fg-highlight: var(--ds-color-text-bright);
+  }
+
+  /* ------------------------------------------------------------ selected and checked rows: a blue check and medium weight */
+
+  [data-style='neutral'] :is([data-ds='dropdown-menu'], [data-ds='context-menu']) :is([data-part='checkbox-item'], [data-part='radio-item'])[data-state='checked'] {
+    --_menu-item-font-weight: var(--ds-font-weight-medium);
+  }
+
+  [data-style='neutral'] [data-ds='select'] [data-part='item'][data-state='checked'] {
+    --_select-item-font-weight: var(--ds-font-weight-medium);
+  }
+
+  [data-style='neutral'] [data-ds='list-box'] [data-part='option'][data-selected] {
+    --_list-box-option-font-weight: var(--ds-font-weight-medium);
+  }
+
+  [data-style='neutral'] :is([data-ds='dropdown-menu'], [data-ds='context-menu']) :is([data-part='checkbox-item'], [data-part='radio-item'])[data-state='checked'] > [data-part='indicator'],
+  [data-style='neutral'] [data-ds='select'] [data-part='item'][data-state='checked'] > [data-part='indicator'],
+  [data-style='neutral'] [data-ds='list-box'] [data-part='option'][data-selected] > [data-part='indicator'] {
+    color: var(--ds-color-primary-on-surface);
+  }
+
+  /* ------------------------------------------------------------ contrast and forced colors */
+
+  @media (prefers-contrast: more) {
+    [data-style='neutral'] :is([data-ds='dropdown-menu'], [data-ds='context-menu']),
+    [data-style='neutral'] [data-ds='select'][data-part='content'],
+    [data-style='neutral'] :is([data-ds='combobox'], [data-ds='autocomplete'], [data-ds='multi-select'], [data-ds='tag-field'])[data-part='popup'] {
+      --_menu-border-color: var(--ds-color-border-strong);
+      --_menu-separator-color: var(--ds-color-border-strong);
+    }
+  }
+
+  [data-style='neutral'][data-contrast='more'] :is([data-ds='dropdown-menu'], [data-ds='context-menu']),
+  [data-style='neutral'][data-contrast='more'] [data-ds='select'][data-part='content'],
+  [data-style='neutral'][data-contrast='more'] :is([data-ds='combobox'], [data-ds='autocomplete'], [data-ds='multi-select'], [data-ds='tag-field'])[data-part='popup'] {
+    --_menu-border-color: var(--ds-color-border-strong);
+    --_menu-separator-color: var(--ds-color-border-strong);
+  }
+
+  @media (forced-colors: active) {
+    [data-style='neutral'] :is([data-ds='dropdown-menu'], [data-ds='context-menu']),
+    [data-style='neutral'] [data-ds='select'][data-part='content'],
+    [data-style='neutral'] :is([data-ds='combobox'], [data-ds='autocomplete'], [data-ds='multi-select'], [data-ds='tag-field'])[data-part='popup'] {
+      --_menu-bg: Canvas;
+      --_menu-border-color: CanvasText;
+      --_menu-separator-color: CanvasText;
+      --_menu-meta-fg: CanvasText;
+      --_menu-item-bg-highlight: Highlight;
+      --_menu-item-fg-highlight: HighlightText;
+    }
+
+    [data-style='neutral'] [data-ds='list-box'] {
+      --_list-box-option-bg-highlight: Highlight;
+      --_list-box-option-fg-highlight: HighlightText;
+    }
+  }
+}

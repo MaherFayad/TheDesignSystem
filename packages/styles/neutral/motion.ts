@@ -10,10 +10,10 @@
 // duration.roll; marks land on ease.out; the list stagger, which would run
 // past 200ms, is a plain fade.
 //
-// Order 1.22 (proposed): Neutral's springs settle in 150 to 220ms with a small
-// overshoot on the bouncy spring (about 6%), a 24ms stagger step, a pop to
-// 1.05 and short travel. The rows above keep the catalog patterns on ease
-// out.
+// Order 1.24 (proposed): Neutral never overshoots. All three springs take
+// the critically damped curve and settle in 160 to 200ms; a pop goes to
+// 1.02, surfaces grow from 0.98 and rise 4px, with a 24ms stagger step. The
+// rows above keep the catalog patterns on ease out.
 import type { StyleMotionPreset } from '@the-system/motion';
 
 const motion: StyleMotionPreset = {
