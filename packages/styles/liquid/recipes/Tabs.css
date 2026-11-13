@@ -1,0 +1,68 @@
+/*
+ * Liquid recipe for Tabs, the soft emphasis: a solid capsule list, and the
+ * indicator of the active tab is a glass lens (PLAN.md 3.7, Liquid). Why
+ * not tokens alone: Tabs.css draws the soft pill as an overlay with a 1px
+ * muted edge in a radius.field list, and the lens is a translucent fill, a
+ * bright rim, a soft shadow and a backdrop filter on the indicator part. The
+ * slide and the stretch come from the tokens through the shared pill. The
+ * ghost emphasis needs nothing: its line is not glass.
+ *
+ * Glass is never the only signal: the active tab keeps the bright text and
+ * the heavier weight of Tabs.css.
+ * Fallbacks: where backdrop-filter is unsupported, under reduced
+ * transparency, more contrast and forced colors the lens drops its filter
+ * and rim; under more contrast it takes back the 1px edge of Tabs.css.
+ */
+@layer ds.recipes {
+  [data-style='liquid'] [data-ds='tabs'][data-emphasis='soft'] {
+    --_tabs-list-bg: var(--ds-color-bg-surface-3);
+    --_tabs-indicator-bg: var(--ds-color-glass-lens);
+    --_tabs-indicator-border-width: 0;
+  }
+
+  /* A row is a capsule, and the tabs nest in it. A column keeps the field corners of Tabs.css. */
+  [data-style='liquid'] [data-ds='tabs'][data-emphasis='soft']:not([data-orientation='vertical']) {
+    --_tabs-radius: var(--ds-radius-pill);
+  }
+
+  [data-style='liquid'] [data-ds='tabs'][data-emphasis='soft']:not([data-orientation='vertical']) > [data-part='list'] {
+    border-radius: var(--ds-radius-pill);
+  }
+
+  [data-style='liquid'] [data-ds='tabs'][data-emphasis='soft'] > [data-part='list'] > [data-part='trigger'] > [data-part='indicator'] {
+    box-shadow: inset 0 0 0 var(--ds-border-width-default) var(--ds-color-glass-highlight), var(--ds-elevation-tooltip);
+
+    -webkit-backdrop-filter: brightness(1.12) saturate(1.6);
+    backdrop-filter: brightness(1.12) saturate(1.6);
+  }
+
+  /* ------------------------------------------------------------ fallbacks: no filter, no rim */
+
+  @media (prefers-reduced-transparency: reduce), (prefers-contrast: more), (forced-colors: active) {
+    [data-style='liquid'] [data-ds='tabs'][data-emphasis='soft'] > [data-part='list'] > [data-part='trigger'] > [data-part='indicator'] {
+      box-shadow: var(--ds-elevation-tooltip);
+
+      -webkit-backdrop-filter: none;
+      backdrop-filter: none;
+    }
+  }
+
+  @media (prefers-contrast: more) {
+    [data-style='liquid'] [data-ds='tabs'][data-emphasis='soft'] {
+      --_tabs-indicator-border-width: var(--ds-border-width-default);
+    }
+  }
+
+  [data-style='liquid'][data-contrast='more'] [data-ds='tabs'][data-emphasis='soft'] {
+    --_tabs-indicator-border-width: var(--ds-border-width-default);
+  }
+
+  [data-style='liquid'][data-contrast='more'] [data-ds='tabs'][data-emphasis='soft'] > [data-part='list'] > [data-part='trigger'] > [data-part='indicator'] {
+    box-shadow: var(--ds-elevation-tooltip);
+
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+
+  /* Forced colors: Tabs.css draws the pill as a Highlight frame, and the system drops the shadow. */
+}

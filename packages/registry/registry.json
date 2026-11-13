@@ -440,6 +440,11 @@
           "target": "@components/ds/styles/desk/style.json"
         },
         {
+          "path": "packages/styles/liquid/style.json",
+          "type": "registry:lib",
+          "target": "@components/ds/styles/liquid/style.json"
+        },
+        {
           "path": "packages/styles/neutral/motion.ts",
           "type": "registry:lib",
           "target": "@components/ds/styles/neutral/motion.ts"
@@ -694,6 +699,179 @@
       "meta": {
         "style": "desk",
         "status": "stable"
+      }
+    },
+    {
+      "name": "style-liquid",
+      "type": "registry:style",
+      "title": "Liquid style",
+      "description": "Tokens for dark and light, fonts and recipes of the Liquid style. Status: proposed, waiting for the owner.",
+      "dependencies": [
+        "@fontsource/ibm-plex-sans-arabic@^5.3.0"
+      ],
+      "registryDependencies": [
+        "@ds/core"
+      ],
+      "files": [
+        {
+          "path": "packages/registry/files/style-liquid.css",
+          "type": "registry:file",
+          "target": "@components/ds/style-liquid.css"
+        },
+        {
+          "path": "packages/tokens/dist/css/liquid.css",
+          "type": "registry:file",
+          "target": "@components/ds/tokens/liquid.css"
+        },
+        {
+          "path": "packages/styles/liquid/index.css",
+          "type": "registry:file",
+          "target": "@components/ds/styles/liquid/index.css"
+        },
+        {
+          "path": "packages/styles/liquid/fonts.css",
+          "type": "registry:file",
+          "target": "@components/ds/styles/liquid/fonts.css"
+        },
+        {
+          "path": "packages/styles/liquid/recipes/Button.css",
+          "type": "registry:file",
+          "target": "@components/ds/styles/liquid/recipes/Button.css"
+        },
+        {
+          "path": "packages/styles/liquid/recipes/Checkbox.css",
+          "type": "registry:file",
+          "target": "@components/ds/styles/liquid/recipes/Checkbox.css"
+        },
+        {
+          "path": "packages/styles/liquid/recipes/Combobox.css",
+          "type": "registry:file",
+          "target": "@components/ds/styles/liquid/recipes/Combobox.css"
+        },
+        {
+          "path": "packages/styles/liquid/recipes/CommandPalette.css",
+          "type": "registry:file",
+          "target": "@components/ds/styles/liquid/recipes/CommandPalette.css"
+        },
+        {
+          "path": "packages/styles/liquid/recipes/Dialog.css",
+          "type": "registry:file",
+          "target": "@components/ds/styles/liquid/recipes/Dialog.css"
+        },
+        {
+          "path": "packages/styles/liquid/recipes/Dock.css",
+          "type": "registry:file",
+          "target": "@components/ds/styles/liquid/recipes/Dock.css"
+        },
+        {
+          "path": "packages/styles/liquid/recipes/DropdownMenu.css",
+          "type": "registry:file",
+          "target": "@components/ds/styles/liquid/recipes/DropdownMenu.css"
+        },
+        {
+          "path": "packages/styles/liquid/recipes/FloatingActionButton.css",
+          "type": "registry:file",
+          "target": "@components/ds/styles/liquid/recipes/FloatingActionButton.css"
+        },
+        {
+          "path": "packages/styles/liquid/recipes/HoverCard.css",
+          "type": "registry:file",
+          "target": "@components/ds/styles/liquid/recipes/HoverCard.css"
+        },
+        {
+          "path": "packages/styles/liquid/recipes/Input.css",
+          "type": "registry:file",
+          "target": "@components/ds/styles/liquid/recipes/Input.css"
+        },
+        {
+          "path": "packages/styles/liquid/recipes/ListBox.css",
+          "type": "registry:file",
+          "target": "@components/ds/styles/liquid/recipes/ListBox.css"
+        },
+        {
+          "path": "packages/styles/liquid/recipes/Menubar.css",
+          "type": "registry:file",
+          "target": "@components/ds/styles/liquid/recipes/Menubar.css"
+        },
+        {
+          "path": "packages/styles/liquid/recipes/MultiSelect.css",
+          "type": "registry:file",
+          "target": "@components/ds/styles/liquid/recipes/MultiSelect.css"
+        },
+        {
+          "path": "packages/styles/liquid/recipes/Navbar.css",
+          "type": "registry:file",
+          "target": "@components/ds/styles/liquid/recipes/Navbar.css"
+        },
+        {
+          "path": "packages/styles/liquid/recipes/Popover.css",
+          "type": "registry:file",
+          "target": "@components/ds/styles/liquid/recipes/Popover.css"
+        },
+        {
+          "path": "packages/styles/liquid/recipes/RadioGroup.css",
+          "type": "registry:file",
+          "target": "@components/ds/styles/liquid/recipes/RadioGroup.css"
+        },
+        {
+          "path": "packages/styles/liquid/recipes/SegmentedControl.css",
+          "type": "registry:file",
+          "target": "@components/ds/styles/liquid/recipes/SegmentedControl.css"
+        },
+        {
+          "path": "packages/styles/liquid/recipes/Select.css",
+          "type": "registry:file",
+          "target": "@components/ds/styles/liquid/recipes/Select.css"
+        },
+        {
+          "path": "packages/styles/liquid/recipes/Slider.css",
+          "type": "registry:file",
+          "target": "@components/ds/styles/liquid/recipes/Slider.css"
+        },
+        {
+          "path": "packages/styles/liquid/recipes/Switch.css",
+          "type": "registry:file",
+          "target": "@components/ds/styles/liquid/recipes/Switch.css"
+        },
+        {
+          "path": "packages/styles/liquid/recipes/TabBar.css",
+          "type": "registry:file",
+          "target": "@components/ds/styles/liquid/recipes/TabBar.css"
+        },
+        {
+          "path": "packages/styles/liquid/recipes/Tabs.css",
+          "type": "registry:file",
+          "target": "@components/ds/styles/liquid/recipes/Tabs.css"
+        },
+        {
+          "path": "packages/styles/liquid/recipes/Toast.css",
+          "type": "registry:file",
+          "target": "@components/ds/styles/liquid/recipes/Toast.css"
+        },
+        {
+          "path": "packages/styles/liquid/recipes/Toolbar.css",
+          "type": "registry:file",
+          "target": "@components/ds/styles/liquid/recipes/Toolbar.css"
+        },
+        {
+          "path": "packages/styles/liquid/recipes/Tooltip.css",
+          "type": "registry:file",
+          "target": "@components/ds/styles/liquid/recipes/Tooltip.css"
+        },
+        {
+          "path": "packages/styles/liquid/recipes/Tour.css",
+          "type": "registry:file",
+          "target": "@components/ds/styles/liquid/recipes/Tour.css"
+        }
+      ],
+      "extends": "none",
+      "docs": "Import ds/style-liquid.css after ds/ds.css, and set style=\"liquid\" on Theme.",
+      "categories": [
+        "style"
+      ],
+      "meta": {
+        "style": "liquid",
+        "status": "proposed"
       }
     },
     {

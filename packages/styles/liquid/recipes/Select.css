@@ -1,0 +1,118 @@
+/*
+ * Liquid recipe for the Select list: the Popover glass material on the menu
+ * surface, a lifted lens for the lit row, and the snappy spring for the
+ * entry. Why not tokens alone: the list takes its fill, edge, filter,
+ * padding and motion from private properties, the glass is a blur plus a
+ * saturation boost with a light edge on the top and start sides, and the
+ * lens (a rim and a small lift on the row's glide layer) has no token.
+ *
+ * Radius: radius.panel (22px) outside, menu.item.radius (16px) on the rows:
+ * the padding is the difference. The chosen row keeps the tint text and its
+ * check mark, so glass is never the only signal. The trigger is a field on
+ * content: solid, no recipe.
+ */
+@layer ds.recipes {
+  [data-style='liquid'] [data-ds='select'][data-part='content'] {
+    --_menu-bg: var(--ds-color-material-glass);
+    --_menu-border-color: var(--ds-color-material-glass-border);
+    --_menu-radius: var(--ds-radius-panel);
+    --_menu-padding: calc(var(--ds-radius-panel) - var(--ds-menu-item-radius));
+    --_menu-shadow: var(--ds-elevation-menu), inset 0 var(--ds-border-width-default) 0 0 var(--ds-color-material-glass-edge),
+      inset var(--ds-border-width-default) 0 0 0 var(--ds-color-material-glass-edge);
+    --_menu-backdrop: blur(var(--ds-blur-glass)) saturate(var(--ds-blur-window-saturation));
+    --_menu-item-bg-highlight: var(--ds-color-material-glass-hover);
+    --_menu-separator-color: var(--ds-color-material-glass-border);
+    --_menu-duration-in: var(--ds-duration-spring-snappy);
+    --_menu-ease-in: var(--ds-ease-spring-snappy);
+  }
+
+  /* The start side edge follows the text direction. */
+  [data-style='liquid'] [data-ds='select'][data-part='content']:dir(rtl) {
+    --_menu-shadow: var(--ds-elevation-menu), inset 0 var(--ds-border-width-default) 0 0 var(--ds-color-material-glass-edge),
+      inset calc(var(--ds-border-width-default) * -1) 0 0 0 var(--ds-color-material-glass-edge);
+  }
+
+  [data-style='liquid'][data-glass='tinted'] [data-ds='select'][data-part='content'] {
+    --_menu-bg: var(--ds-color-material-glass-tinted);
+  }
+
+  /* Clear glass is for bars over pictures. A list holds reading text, so the clear level keeps the regular glass. */
+
+  /* The lit row is a lens: it lifts a touch on the snappy spring, its fill takes a bright rim on the top edge. */
+  [data-style='liquid'] [data-ds='select'] [data-part='item'] {
+    transition: transform var(--ds-duration-spring-snappy) var(--ds-ease-spring-snappy);
+  }
+
+  [data-style='liquid'] [data-ds='select'] [data-part='item'][data-highlighted] {
+    transform: scale(var(--ds-scale-lift));
+  }
+
+  [data-style='liquid'] [data-ds='select'] [data-part='item'][data-highlighted] > span[aria-hidden='true']:not([data-part]) {
+    box-shadow: var(--ds-elevation-card), inset 0 var(--ds-border-width-default) 0 0 var(--ds-color-glass-highlight);
+  }
+
+  /* The chosen row keeps the tint text, lit or not; the check mark stays as well. */
+  [data-style='liquid'] [data-ds='select'] [data-part='item'][data-state='checked'] {
+    --_select-item-fg: var(--ds-color-primary-on-surface);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    [data-style='liquid'] [data-ds='select'] [data-part='item'] {
+      transition: none;
+    }
+  }
+
+  :root[data-motion='reduce'] [data-style='liquid'] [data-ds='select'] [data-part='item'],
+  :root[data-motion='reduce'][data-style='liquid'] [data-ds='select'] [data-part='item'] {
+    transition: none;
+  }
+
+  /* ------------------------------------------------------------ fallbacks: solid glass, no filter, no edge */
+
+  @supports not ((backdrop-filter: blur(0)) or (-webkit-backdrop-filter: blur(0))) {
+    [data-style='liquid'] [data-ds='select'][data-part='content'] {
+      --_menu-bg: var(--ds-color-material-glass-solid);
+    }
+  }
+
+  @media (prefers-reduced-transparency: reduce), (prefers-contrast: more), (forced-colors: active) {
+    [data-style='liquid'] [data-ds='select'][data-part='content'],
+    [data-style='liquid'] [data-ds='select'][data-part='content']:dir(rtl) {
+      --_menu-shadow: var(--ds-elevation-menu);
+      --_menu-backdrop: none;
+    }
+  }
+
+  @media (prefers-contrast: more) {
+    [data-style='liquid'] [data-ds='select'][data-part='content'] {
+      --_menu-border-color: var(--ds-color-border-strong);
+      --_menu-separator-color: var(--ds-color-border-strong);
+    }
+  }
+
+  [data-style='liquid'][data-contrast='more'] [data-ds='select'][data-part='content'],
+  [data-style='liquid'][data-contrast='more'] [data-ds='select'][data-part='content']:dir(rtl) {
+    --_menu-shadow: var(--ds-elevation-menu);
+    --_menu-backdrop: none;
+    --_menu-border-color: var(--ds-color-border-strong);
+    --_menu-separator-color: var(--ds-color-border-strong);
+  }
+
+  @media (forced-colors: active) {
+    [data-style='liquid'] [data-ds='select'][data-part='content'] {
+      --_menu-bg: Canvas;
+      --_menu-border-color: CanvasText;
+      --_menu-separator-color: CanvasText;
+      --_menu-item-bg-highlight: Highlight;
+      --_menu-item-fg-highlight: HighlightText;
+    }
+
+    [data-style='liquid'] [data-ds='select'] [data-part='item'][data-state='checked'] {
+      --_select-item-fg: CanvasText;
+    }
+
+    [data-style='liquid'] [data-ds='select'] [data-part='item'][data-state='checked'][data-highlighted] {
+      --_select-item-fg: HighlightText;
+    }
+  }
+}

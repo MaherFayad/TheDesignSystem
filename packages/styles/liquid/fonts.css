@@ -1,0 +1,14 @@
+/*
+ * Liquid fonts. Latin text uses the platform system font stack
+ * (font.family.sans: system-ui first), so no Latin font file is loaded:
+ * every platform draws its own interface font. No vendor font is bundled or
+ * referenced by file.
+ *
+ * Arabic uses IBM Plex Sans Arabic (SIL OFL 1.1) in every style, self hosted
+ * through fontsource: the Arabic subset only, weights 400, 500, 600 and 700.
+ * When another style loads the same files, the browser fetches each url once.
+ */
+@import '@fontsource/ibm-plex-sans-arabic/arabic-400.css';
+@import '@fontsource/ibm-plex-sans-arabic/arabic-500.css';
+@import '@fontsource/ibm-plex-sans-arabic/arabic-600.css';
+@import '@fontsource/ibm-plex-sans-arabic/arabic-700.css';

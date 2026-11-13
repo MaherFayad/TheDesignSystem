@@ -1,0 +1,85 @@
+/*
+ * Liquid recipe for Tooltip: a small glass chip. Why not tokens alone:
+ * Tooltip.css takes only a blur length, and Liquid glass is a blur plus a
+ * saturation boost, a 1px light edge on the top and start sides and the
+ * glass levels.
+ *
+ * Radius: radius.panel (22px), not radius.control. A one line tooltip is
+ * less than 44px high, so the browser scales the corner down to half the
+ * height and the chip is a capsule; a tooltip that wraps keeps a 22px corner
+ * instead of a capsule that would cut into its lines. A chip has no arrow:
+ * the arrow is hidden, and the tooltip keeps its distance from the trigger.
+ */
+@layer ds.recipes {
+  [data-style='liquid'] [data-ds='tooltip'] {
+    --_tooltip-bg: var(--ds-color-material-glass);
+    --_tooltip-border-color: var(--ds-color-material-glass-border);
+    --_tooltip-shadow: var(--ds-elevation-tooltip), inset 0 var(--ds-border-width-default) 0 0 var(--ds-color-material-glass-edge),
+      inset var(--ds-border-width-default) 0 0 0 var(--ds-color-material-glass-edge);
+    --_tooltip-radius: var(--ds-radius-panel);
+    --_tooltip-padding-inline: var(--ds-space-l);
+
+    -webkit-backdrop-filter: blur(var(--ds-blur-glass)) saturate(var(--ds-blur-window-saturation));
+    backdrop-filter: blur(var(--ds-blur-glass)) saturate(var(--ds-blur-window-saturation));
+  }
+
+  /* The start side edge follows the text direction. */
+  [data-style='liquid'] [data-ds='tooltip']:dir(rtl) {
+    --_tooltip-shadow: var(--ds-elevation-tooltip), inset 0 var(--ds-border-width-default) 0 0 var(--ds-color-material-glass-edge),
+      inset calc(var(--ds-border-width-default) * -1) 0 0 0 var(--ds-color-material-glass-edge);
+  }
+
+  [data-style='liquid'] [data-ds='tooltip'] [data-part='arrow'] {
+    display: none;
+  }
+
+  [data-style='liquid'][data-glass='tinted'] [data-ds='tooltip'] {
+    --_tooltip-bg: var(--ds-color-material-glass-tinted);
+  }
+
+  /* Clear glass is for bars over pictures. This panel holds reading text, so the clear level keeps the regular glass. */
+
+  /* ------------------------------------------------------------ fallbacks: solid glass, no filter, no edge */
+
+  @supports not ((backdrop-filter: blur(0)) or (-webkit-backdrop-filter: blur(0))) {
+    [data-style='liquid'] [data-ds='tooltip'] {
+      --_tooltip-bg: var(--ds-color-material-glass-solid);
+    }
+  }
+
+  @media (prefers-reduced-transparency: reduce), (prefers-contrast: more), (forced-colors: active) {
+    [data-style='liquid'] [data-ds='tooltip'],
+    [data-style='liquid'] [data-ds='tooltip']:dir(rtl) {
+      --_tooltip-shadow: var(--ds-elevation-tooltip);
+    }
+
+    [data-style='liquid'] [data-ds='tooltip'] {
+      -webkit-backdrop-filter: none;
+      backdrop-filter: none;
+    }
+  }
+
+  @media (prefers-contrast: more) {
+    [data-style='liquid'] [data-ds='tooltip'] {
+      --_tooltip-border-color: var(--ds-color-border-strong);
+    }
+  }
+
+  [data-style='liquid'][data-contrast='more'] [data-ds='tooltip'],
+  [data-style='liquid'][data-contrast='more'] [data-ds='tooltip']:dir(rtl) {
+    --_tooltip-shadow: var(--ds-elevation-tooltip);
+    --_tooltip-border-color: var(--ds-color-border-strong);
+  }
+
+  [data-style='liquid'][data-contrast='more'] [data-ds='tooltip'] {
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+
+  @media (forced-colors: active) {
+    [data-style='liquid'] [data-ds='tooltip'] {
+      --_tooltip-bg: Canvas;
+      --_tooltip-border-color: CanvasText;
+    }
+  }
+}

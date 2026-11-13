@@ -1,0 +1,38 @@
+/*
+ * Liquid recipe for Checkbox: a round control. Checked fills with the tint
+ * and draws a white mark; unchecked is a solid circle inside the control
+ * border; the circle sinks to scale.press while pressed (PLAN.md 3.7,
+ * Liquid). Why not tokens alone: Checkbox.css takes the box radius from
+ * radius.xs, its neutral tone from the text color and its press from
+ * scale.anticipate, and none of those is a Liquid token to change. The
+ * mark is Checkbox.css's own draw. No glass: a checkbox sits in content.
+ */
+@layer ds.recipes {
+  [data-style='liquid'] [data-ds='checkbox'] {
+    --_checkbox-radius: var(--ds-radius-pill);
+    --_checkbox-press-scale: var(--ds-scale-press);
+  }
+
+  /* The neutral and accent tones both take the tint. Danger and read only keep their own fills. */
+  [data-style='liquid'] [data-ds='checkbox']:not([data-tone='danger'], [data-readonly]) {
+    --_checkbox-fill: var(--ds-color-primary-fill);
+    --_checkbox-fill-border: var(--ds-color-primary-border);
+    --_checkbox-on-fill: var(--ds-color-primary-text);
+  }
+
+  [data-style='liquid'] [data-ds='checkbox'][data-state='unchecked']:not([data-readonly]) {
+    --_checkbox-bg: var(--ds-color-bg-surface);
+  }
+
+  /* Reduced motion, from the media query or the page setting: no dip. */
+  @media (prefers-reduced-motion: reduce) {
+    [data-style='liquid'] [data-ds='checkbox'] {
+      --_checkbox-press-scale: 1;
+    }
+  }
+
+  :root[data-motion='reduce'] [data-style='liquid'] [data-ds='checkbox'],
+  :root[data-motion='reduce'][data-style='liquid'] [data-ds='checkbox'] {
+    --_checkbox-press-scale: 1;
+  }
+}

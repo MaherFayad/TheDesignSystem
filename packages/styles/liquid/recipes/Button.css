@@ -1,0 +1,58 @@
+/*
+ * Liquid recipe for Button and every control on its base (IconButton,
+ * ToggleButton, CloseButton, CopyButton, FloatingActionButton). The capsule,
+ * the tint fill and the overlay fills already come from tokens. Why not
+ * tokens alone: the release has to spring back on the snappy spring (the
+ * base uses the bouncy one), and the specular highlight is a drawn layer.
+ *
+ * The highlight: a soft color.glass.highlight sheen at the top start of a
+ * filled capsule that brightens under the pointer. CSS cannot read the
+ * pointer, so it stays at the top start corner; a highlight that follows the
+ * pointer needs a position property written by Button.tsx (see the report).
+ * It is the ::before glow layer of anatomy.md, which Button.css leaves free
+ * (its ring is a box shadow on the root). It sits under the parts, which are
+ * positioned and come later. It is not drawn on outline, ghost and link
+ * buttons, and it goes under reduced transparency, more contrast and forced
+ * colors.
+ */
+@layer ds.recipes {
+  [data-style='liquid'] :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button'], [data-ds='close-button'], [data-ds='copy-button'], [data-ds='floating-action-button']) {
+    --_button-duration-out: var(--ds-duration-spring-snappy);
+    --_button-ease-out: var(--ds-ease-spring-snappy);
+  }
+
+  /* ------------------------------------------------------------ the specular highlight */
+
+  [data-style='liquid'] :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button'], [data-ds='copy-button'], [data-ds='floating-action-button']):not([data-emphasis='outline'], [data-emphasis='ghost'], [data-emphasis='link'])::before {
+    content: '';
+    position: absolute;
+    inset: calc(var(--ds-border-width-default) * -1);
+    border-radius: inherit;
+    background-image: radial-gradient(70% 90% at 22% 0%, var(--ds-color-glass-highlight), transparent 70%);
+    opacity: 0.35;
+    pointer-events: none;
+    transition: opacity var(--ds-duration-spring-snappy) var(--ds-ease-spring-snappy);
+  }
+
+  [data-style='liquid'] :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button'], [data-ds='copy-button'], [data-ds='floating-action-button']):not([data-emphasis='outline'], [data-emphasis='ghost'], [data-emphasis='link']):dir(rtl)::before {
+    background-image: radial-gradient(70% 90% at 78% 0%, var(--ds-color-glass-highlight), transparent 70%);
+  }
+
+  [data-style='liquid'] :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button'], [data-ds='copy-button'], [data-ds='floating-action-button']):not([data-emphasis='outline'], [data-emphasis='ghost'], [data-emphasis='link'], [data-disabled], [data-loading]):hover::before {
+    opacity: 0.8;
+  }
+
+  :root[data-motion='reduce'] [data-style='liquid'] :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button'], [data-ds='copy-button'], [data-ds='floating-action-button'])::before {
+    transition: none;
+  }
+
+  @media (prefers-reduced-transparency: reduce), (prefers-contrast: more), (forced-colors: active) {
+    [data-style='liquid'] :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button'], [data-ds='copy-button'], [data-ds='floating-action-button'])::before {
+      display: none;
+    }
+  }
+
+  [data-style='liquid'][data-contrast='more'] :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button'], [data-ds='copy-button'], [data-ds='floating-action-button'])::before {
+    display: none;
+  }
+}

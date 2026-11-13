@@ -1,0 +1,16 @@
+/*
+ * Liquid recipe for Input: fields are solid content. Why not tokens alone:
+ * Input.css reads radius.control (a capsule in Liquid) and a transparent
+ * fill, with no component token for either. Liquid fields are a white box
+ * (color.bg.surface) with radius.field, so long values keep their corners.
+ * The pill shape and the read only fill of the base still apply.
+ */
+@layer ds.recipes {
+  [data-style='liquid'] [data-ds='input']:not([data-shape='pill']) {
+    --_input-radius: var(--ds-radius-field);
+  }
+
+  [data-style='liquid'] [data-ds='input']:not([data-readonly]) {
+    --_input-bg: var(--ds-color-bg-surface);
+  }
+}

@@ -1,0 +1,118 @@
+/*
+ * Liquid recipe for DropdownMenu and ContextMenu (one surface, one :is()
+ * list): the Popover glass material on the menu surface, with a lifted lens
+ * for the lit row. Why not tokens alone: the menu takes its fill, edge,
+ * filter and padding from private properties, the glass is a blur plus a
+ * saturation boost with a light edge on the top and start sides, and the lit
+ * row is a lens (a fill, a bright rim, a small lift) drawn on the row's
+ * ::after, which tokens cannot shape.
+ *
+ * Radius: radius.panel (22px) outside, menu.item.radius (16px) on the rows,
+ * so the padding is the difference: inner equals outer minus padding.
+ * A checked row keeps the tint text and its check mark, so glass is never
+ * the only signal. The menu grows from scale.menu-enter on the snappy spring
+ * already (DropdownMenu.css).
+ */
+@layer ds.recipes {
+  [data-style='liquid'] :is([data-ds='dropdown-menu'], [data-ds='context-menu']) {
+    --_menu-bg: var(--ds-color-material-glass);
+    --_menu-border-color: var(--ds-color-material-glass-border);
+    --_menu-radius: var(--ds-radius-panel);
+    --_menu-padding: calc(var(--ds-radius-panel) - var(--ds-menu-item-radius));
+    --_menu-shadow: var(--ds-elevation-menu), inset 0 var(--ds-border-width-default) 0 0 var(--ds-color-material-glass-edge),
+      inset var(--ds-border-width-default) 0 0 0 var(--ds-color-material-glass-edge);
+    --_menu-backdrop: blur(var(--ds-blur-glass)) saturate(var(--ds-blur-window-saturation));
+    --_menu-item-bg-highlight: var(--ds-color-material-glass-hover);
+    --_menu-separator-color: var(--ds-color-material-glass-border);
+  }
+
+  /* The start side edge follows the text direction. */
+  [data-style='liquid'] :is([data-ds='dropdown-menu'], [data-ds='context-menu']):dir(rtl) {
+    --_menu-shadow: var(--ds-elevation-menu), inset 0 var(--ds-border-width-default) 0 0 var(--ds-color-material-glass-edge),
+      inset calc(var(--ds-border-width-default) * -1) 0 0 0 var(--ds-color-material-glass-edge);
+  }
+
+  [data-style='liquid'][data-glass='tinted'] :is([data-ds='dropdown-menu'], [data-ds='context-menu']) {
+    --_menu-bg: var(--ds-color-material-glass-tinted);
+  }
+
+  /* Clear glass is for bars over pictures. A menu holds reading text, so the clear level keeps the regular glass. */
+
+  /* The lit row is a lens: it lifts a touch on the snappy spring, with a bright rim on its top edge. */
+  [data-style='liquid'] :is([data-ds='dropdown-menu'], [data-ds='context-menu']) :is([data-part='item'], [data-part='checkbox-item'], [data-part='radio-item'], [data-part='sub-trigger']) {
+    transition: transform var(--ds-duration-spring-snappy) var(--ds-ease-spring-snappy);
+  }
+
+  [data-style='liquid'] :is([data-ds='dropdown-menu'], [data-ds='context-menu']) :is([data-part='item'], [data-part='checkbox-item'], [data-part='radio-item'], [data-part='sub-trigger']):is([data-highlighted], [data-state='open']) {
+    transform: scale(var(--ds-scale-lift));
+  }
+
+  [data-style='liquid'] :is([data-ds='dropdown-menu'], [data-ds='context-menu']) :is([data-part='item'], [data-part='checkbox-item'], [data-part='radio-item'], [data-part='sub-trigger']):is([data-highlighted], [data-state='open'])::after {
+    box-shadow: var(--ds-elevation-card), inset 0 var(--ds-border-width-default) 0 0 var(--ds-color-glass-highlight);
+  }
+
+  /* A checked row keeps the tint text, lit or not; the check mark stays as well. */
+  [data-style='liquid'] :is([data-ds='dropdown-menu'], [data-ds='context-menu']) :is([data-part='checkbox-item'], [data-part='radio-item'])[data-state='checked'] {
+    --_menu-item-fg: var(--ds-color-primary-on-surface);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    [data-style='liquid'] :is([data-ds='dropdown-menu'], [data-ds='context-menu']) :is([data-part='item'], [data-part='checkbox-item'], [data-part='radio-item'], [data-part='sub-trigger']) {
+      transition: none;
+    }
+  }
+
+  :root[data-motion='reduce'] [data-style='liquid'] :is([data-ds='dropdown-menu'], [data-ds='context-menu']) :is([data-part='item'], [data-part='checkbox-item'], [data-part='radio-item'], [data-part='sub-trigger']),
+  :root[data-motion='reduce'][data-style='liquid'] :is([data-ds='dropdown-menu'], [data-ds='context-menu']) :is([data-part='item'], [data-part='checkbox-item'], [data-part='radio-item'], [data-part='sub-trigger']) {
+    transition: none;
+  }
+
+  /* ------------------------------------------------------------ fallbacks: solid glass, no filter, no edge */
+
+  @supports not ((backdrop-filter: blur(0)) or (-webkit-backdrop-filter: blur(0))) {
+    [data-style='liquid'] :is([data-ds='dropdown-menu'], [data-ds='context-menu']) {
+      --_menu-bg: var(--ds-color-material-glass-solid);
+    }
+  }
+
+  @media (prefers-reduced-transparency: reduce), (prefers-contrast: more), (forced-colors: active) {
+    [data-style='liquid'] :is([data-ds='dropdown-menu'], [data-ds='context-menu']),
+    [data-style='liquid'] :is([data-ds='dropdown-menu'], [data-ds='context-menu']):dir(rtl) {
+      --_menu-shadow: var(--ds-elevation-menu);
+      --_menu-backdrop: none;
+    }
+  }
+
+  @media (prefers-contrast: more) {
+    [data-style='liquid'] :is([data-ds='dropdown-menu'], [data-ds='context-menu']) {
+      --_menu-border-color: var(--ds-color-border-strong);
+      --_menu-separator-color: var(--ds-color-border-strong);
+    }
+  }
+
+  [data-style='liquid'][data-contrast='more'] :is([data-ds='dropdown-menu'], [data-ds='context-menu']),
+  [data-style='liquid'][data-contrast='more'] :is([data-ds='dropdown-menu'], [data-ds='context-menu']):dir(rtl) {
+    --_menu-shadow: var(--ds-elevation-menu);
+    --_menu-backdrop: none;
+    --_menu-border-color: var(--ds-color-border-strong);
+    --_menu-separator-color: var(--ds-color-border-strong);
+  }
+
+  @media (forced-colors: active) {
+    [data-style='liquid'] :is([data-ds='dropdown-menu'], [data-ds='context-menu']) {
+      --_menu-bg: Canvas;
+      --_menu-border-color: CanvasText;
+      --_menu-separator-color: CanvasText;
+      --_menu-item-bg-highlight: Highlight;
+      --_menu-item-fg-highlight: HighlightText;
+    }
+
+    [data-style='liquid'] :is([data-ds='dropdown-menu'], [data-ds='context-menu']) :is([data-part='checkbox-item'], [data-part='radio-item'])[data-state='checked'] {
+      --_menu-item-fg: CanvasText;
+    }
+
+    [data-style='liquid'] :is([data-ds='dropdown-menu'], [data-ds='context-menu']) :is([data-part='checkbox-item'], [data-part='radio-item'])[data-state='checked'][data-highlighted] {
+      --_menu-item-fg: HighlightText;
+    }
+  }
+}
