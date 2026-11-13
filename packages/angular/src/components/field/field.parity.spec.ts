@@ -104,15 +104,15 @@ describe('Field parity, order 1.29', () => {
     expect(watched()).not.toContain(input);
   });
 
-  it('a field glides what follows it, a field right under a form does not, and a form watches its rows (N12)', async () => {
+  it('a field glides what follows it, a field inside a form does not, and a form watches its rows (N12)', async () => {
     const { q } = await setup();
     expect(glides(q('floating'))).toBe(true);
     expect(glides(q('plain'))).toBe(true);
-    // The guard reads the parent, as React: a field directly in a [data-ds="form"] does not glide on its own.
+    // A field anywhere inside a [data-ds="form"] leaves the glide to the form, as React.
     expect(glides(q('direct'))).toBe(false);
-    // In DsForm a field sits in the body part, so (as in React) it keeps its own glide.
+    // In DsForm a field sits in the body part; the form glides it, so it has no glide of its own.
     expect(q('inner').parentElement?.getAttribute('data-part')).toBe('body');
-    expect(glides(q('inner'))).toBe(true);
+    expect(glides(q('inner'))).toBe(false);
     // FollowGlide.watchChildren observes the form and each of its rows (the status, the body).
     const form = q('form');
     expect(observers.some((o) => !o.disconnected && o.targets[0] === form && o.targets.includes(form.querySelector(':scope > [data-part="body"]')!))).toBe(true);
