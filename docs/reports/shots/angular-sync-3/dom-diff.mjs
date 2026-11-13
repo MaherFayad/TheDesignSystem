@@ -29,7 +29,7 @@ async function dump(base, slug) {
       const walk = (el, depth) => {
         const attrs = [...el.attributes]
           .filter((a) => !drop.has(a.name) && !a.name.startsWith('_ng'))
-          .map((a) => [a.name, idAttrs.has(a.name) ? a.value.split(/\s+/).map(norm).join(' ') : a.value])
+          .map((a) => [a.name, idAttrs.has(a.name) ? a.value.split(/\s+/).map(norm).join(' ') : a.name === 'href' && a.value.startsWith('#') ? `#${norm(a.value.slice(1))}` : a.value])
           .sort((x, y) => x[0].localeCompare(y[0]))
           .map(([k, v]) => `${k}="${v}"`);
         lines.push(`${'  '.repeat(depth)}<${el.tagName.toLowerCase()} ${attrs.join(' ')}>`);
@@ -52,6 +52,7 @@ async function dump(base, slug) {
 function diff(a, b) {
   const A = a.split('\n'), B = b.split('\n');
   const n = A.length, m = B.length;
+  if (a === b) return [];
   if (n * m > 4e7) return [`too large to diff (${n} x ${m})`];
   const dp = Array.from({ length: n + 1 }, () => new Int32Array(m + 1));
   for (let i = n - 1; i >= 0; i--) for (let j = m - 1; j >= 0; j--) dp[i][j] = A[i] === B[j] ? dp[i + 1][j + 1] + 1 : Math.max(dp[i + 1][j], dp[i][j + 1]);
