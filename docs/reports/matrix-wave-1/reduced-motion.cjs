@@ -14,13 +14,14 @@
 //
 //   node docs/reports/matrix-wave-1/reduced-motion.cjs --base http://localhost:5192 \
 //     --styles studio,desk,neutral,liquid --out reduced-motion.json [--ids a,b] [--jobs 3]
+//     [--motion full]   (the control run: motion on, so the probe must find movers)
 //
 // Exits 1 when any mover is found.
 const { chromium } = require('playwright');
 const fs = require('node:fs');
 
 const args = process.argv.slice(2);
-const opt = { base: 'http://localhost:5192', styles: 'studio,desk,neutral,liquid', out: 'reduced-motion.json', ids: '', jobs: '3', scheme: 'light' };
+const opt = { base: 'http://localhost:5192', styles: 'studio,desk,neutral,liquid', out: 'reduced-motion.json', ids: '', jobs: '3', scheme: 'light', motion: 'reduce' };
 for (let i = 0; i < args.length; i += 2) opt[args[i].replace(/^--/, '')] = args[i + 1];
 
 const MOVING = /^(transform|translate|scale|rotate|clip-path|offset|offset-.*|inset|inset-.*|top|left|right|bottom|width|height|min-.*|max-.*|margin.*|padding.*|stroke-dashoffset|stroke-dasharray|background-position.*|--.*|d|x|y|r|cx|cy|grid-template-.*|font-size|letter-spacing|line-height|border-.*-width|border-width|gap|row-gap|column-gap)$/;
@@ -81,7 +82,7 @@ function sampler() {
 }
 
 async function one(browser, style, id) {
-  const ctx = await browser.newContext({ viewport: { width: 1280, height: 800 }, reducedMotion: 'reduce' });
+  const ctx = await browser.newContext({ viewport: { width: 1280, height: 800 }, reducedMotion: opt.motion === 'full' ? 'no-preference' : 'reduce' });
   const page = await ctx.newPage();
   await page.addInitScript(sampler);
   try {
@@ -134,7 +135,7 @@ async function one(browser, style, id) {
   );
   rows.sort((a, b) => (a.id + a.style).localeCompare(b.id + b.style));
   const movers = rows.filter((r) => r.movers && r.movers.length);
-  fs.writeFileSync(opt.out, `${JSON.stringify({ base: opt.base, scheme: opt.scheme, reducedMotion: 'reduce', interactions: ids.length, styles: opt.styles.split(','), runs: rows.length, withMovers: movers.length, errors: rows.filter((r) => r.error).length, rows }, null, 2)}\n`);
+  fs.writeFileSync(opt.out, `${JSON.stringify({ base: opt.base, scheme: opt.scheme, reducedMotion: opt.motion === 'full' ? 'no-preference' : 'reduce', interactions: ids.length, styles: opt.styles.split(','), runs: rows.length, withMovers: movers.length, errors: rows.filter((r) => r.error).length, rows }, null, 2)}\n`);
   console.log(`${rows.length} runs, ${ids.length} interactions, ${movers.length} with a mover, ${rows.filter((r) => r.error).length} errors`);
   await browser.close();
   process.exit(movers.length ? 1 : 0);

@@ -1,0 +1,6640 @@
+{
+  "base": "http://localhost:5193",
+  "scheme": "light",
+  "reducedMotion": "no-preference",
+  "interactions": 109,
+  "styles": [
+    "neutral"
+  ],
+  "runs": 109,
+  "withMovers": 99,
+  "errors": 0,
+  "rows": [
+    {
+      "id": "accordion-reveal",
+      "style": "neutral",
+      "action": "press",
+      "movers": [
+        {
+          "id": "transition|span[data-part=end]|transform",
+          "who": "span[data-part=end]",
+          "kind": "transition",
+          "props": [
+            "transform"
+          ],
+          "durationMs": 158,
+          "frames": 11
+        },
+        {
+          "id": "transition|svg[data-ds=icon]|transform",
+          "who": "svg[data-ds=icon]",
+          "kind": "transition",
+          "props": [
+            "transform"
+          ],
+          "durationMs": 158,
+          "frames": 11
+        },
+        {
+          "id": "animation ds-accordion-reveal|div|clipPath,transform",
+          "who": "div",
+          "kind": "animation ds-accordion-reveal",
+          "props": [
+            "clipPath",
+            "transform"
+          ],
+          "durationMs": 220,
+          "frames": 15
+        },
+        {
+          "id": "animation ds-accordion-child|p|opacity,transform",
+          "who": "p",
+          "kind": "animation ds-accordion-child",
+          "props": [
+            "opacity",
+            "transform"
+          ],
+          "durationMs": 220,
+          "frames": 35
+        },
+        {
+          "id": "animation ds-accordion-child|ul|opacity,transform",
+          "who": "ul",
+          "kind": "animation ds-accordion-child",
+          "props": [
+            "opacity",
+            "transform"
+          ],
+          "durationMs": 220,
+          "frames": 18
+        }
+      ],
+      "fades": [
+        {
+          "id": "transition|svg[data-ds=icon]|color",
+          "who": "svg[data-ds=icon]",
+          "kind": "transition",
+          "props": [
+            "color"
+          ],
+          "durationMs": 80,
+          "frames": 6
+        }
+      ],
+      "styleWrites": []
+    },
+    {
+      "id": "alert-dismiss",
+      "style": "neutral",
+      "action": "press",
+      "movers": [
+        {
+          "id": "animation ds-alert-in|div[data-ds=alert]|clipPath,opacity,transform",
+          "who": "div[data-ds=alert]",
+          "kind": "animation ds-alert-in",
+          "props": [
+            "clipPath",
+            "opacity",
+            "transform"
+          ],
+          "durationMs": 200,
+          "frames": 28
+        },
+        {
+          "id": "animation ds-alert-icon-in|span[data-part=icon]|opacity,boxShadow,transform",
+          "who": "span[data-part=icon]",
+          "kind": "animation ds-alert-icon-in",
+          "props": [
+            "opacity",
+            "boxShadow",
+            "transform"
+          ],
+          "durationMs": 200,
+          "frames": 30
+        },
+        {
+          "id": "animation ds-alert-text-in|div[data-part=title]|opacity,transform",
+          "who": "div[data-part=title]",
+          "kind": "animation ds-alert-text-in",
+          "props": [
+            "opacity",
+            "transform"
+          ],
+          "durationMs": 200,
+          "frames": 34
+        },
+        {
+          "id": "animation ds-alert-text-in|div[data-part=body]|opacity,transform",
+          "who": "div[data-part=body]",
+          "kind": "animation ds-alert-text-in",
+          "props": [
+            "opacity",
+            "transform"
+          ],
+          "durationMs": 200,
+          "frames": 17
+        },
+        {
+          "id": "script|div[data-ds=alert]|opacity,transform",
+          "who": "div[data-ds=alert]",
+          "kind": "script",
+          "props": [
+            "opacity",
+            "transform"
+          ],
+          "durationMs": 100,
+          "frames": 6
+        },
+        {
+          "id": "script|div[data-ds=alert]|transform",
+          "who": "div[data-ds=alert]",
+          "kind": "script",
+          "props": [
+            "transform"
+          ],
+          "durationMs": 158,
+          "frames": 9
+        },
+        {
+          "id": "script|p|transform",
+          "who": "p",
+          "kind": "script",
+          "props": [
+            "transform"
+          ],
+          "durationMs": 158,
+          "frames": 9
+        }
+      ],
+      "fades": [],
+      "styleWrites": []
+    },
+    {
+      "id": "alert-entrance",
+      "style": "neutral",
+      "action": "press",
+      "movers": [
+        {
+          "id": "animation ds-alert-in|div[data-ds=alert]|clipPath,opacity,transform",
+          "who": "div[data-ds=alert]",
+          "kind": "animation ds-alert-in",
+          "props": [
+            "clipPath",
+            "opacity",
+            "transform"
+          ],
+          "durationMs": 200,
+          "frames": 26
+        },
+        {
+          "id": "animation ds-alert-icon-in|span[data-part=icon]|opacity,boxShadow,transform",
+          "who": "span[data-part=icon]",
+          "kind": "animation ds-alert-icon-in",
+          "props": [
+            "opacity",
+            "boxShadow",
+            "transform"
+          ],
+          "durationMs": 200,
+          "frames": 28
+        },
+        {
+          "id": "animation ds-alert-text-in|div[data-part=title]|opacity,transform",
+          "who": "div[data-part=title]",
+          "kind": "animation ds-alert-text-in",
+          "props": [
+            "opacity",
+            "transform"
+          ],
+          "durationMs": 200,
+          "frames": 31
+        },
+        {
+          "id": "animation ds-alert-text-in|div[data-part=body]|opacity,transform",
+          "who": "div[data-part=body]",
+          "kind": "animation ds-alert-text-in",
+          "props": [
+            "opacity",
+            "transform"
+          ],
+          "durationMs": 200,
+          "frames": 31
+        },
+        {
+          "id": "animation ds-alert-text-in|div[data-part=actions]|opacity,transform",
+          "who": "div[data-part=actions]",
+          "kind": "animation ds-alert-text-in",
+          "props": [
+            "opacity",
+            "transform"
+          ],
+          "durationMs": 200,
+          "frames": 31
+        },
+        {
+          "id": "animation ds-banner-in|section[data-ds=banner]|clipPath,opacity,transform",
+          "who": "section[data-ds=banner]",
+          "kind": "animation ds-banner-in",
+          "props": [
+            "clipPath",
+            "opacity",
+            "transform"
+          ],
+          "durationMs": 200,
+          "frames": 26
+        },
+        {
+          "id": "animation ds-banner-icon-in|span[data-part=icon]|opacity,boxShadow,transform",
+          "who": "span[data-part=icon]",
+          "kind": "animation ds-banner-icon-in",
+          "props": [
+            "opacity",
+            "boxShadow",
+            "transform"
+          ],
+          "durationMs": 200,
+          "frames": 28
+        },
+        {
+          "id": "animation ds-banner-text-in|div[data-part=body]|opacity,transform",
+          "who": "div[data-part=body]",
+          "kind": "animation ds-banner-text-in",
+          "props": [
+            "opacity",
+            "transform"
+          ],
+          "durationMs": 200,
+          "frames": 31
+        },
+        {
+          "id": "animation ds-callout-icon-in|span[data-part=icon]|opacity,boxShadow,transform",
+          "who": "span[data-part=icon]",
+          "kind": "animation ds-callout-icon-in",
+          "props": [
+            "opacity",
+            "boxShadow",
+            "transform"
+          ],
+          "durationMs": 200,
+          "frames": 28
+        },
+        {
+          "id": "animation ds-callout-text-in|div[data-part=title]|opacity,transform",
+          "who": "div[data-part=title]",
+          "kind": "animation ds-callout-text-in",
+          "props": [
+            "opacity",
+            "transform"
+          ],
+          "durationMs": 200,
+          "frames": 31
+        },
+        {
+          "id": "animation ds-callout-text-in|div[data-part=body]|opacity,transform",
+          "who": "div[data-part=body]",
+          "kind": "animation ds-callout-text-in",
+          "props": [
+            "opacity",
+            "transform"
+          ],
+          "durationMs": 200,
+          "frames": 31
+        }
+      ],
+      "fades": [
+        {
+          "id": "animation ds-callout-in|div[data-ds=callout]|opacity",
+          "who": "div[data-ds=callout]",
+          "kind": "animation ds-callout-in",
+          "props": [
+            "opacity"
+          ],
+          "durationMs": 200,
+          "frames": 27
+        }
+      ],
+      "styleWrites": []
+    },
+    {
+      "id": "avatar-group-change",
+      "style": "neutral",
+      "action": "press",
+      "movers": [
+        {
+          "id": "script|span[data-ds=avatar][data-part=item]|transform",
+          "who": "span[data-ds=avatar][data-part=item]",
+          "kind": "script",
+          "props": [
+            "transform"
+          ],
+          "durationMs": 158,
+          "frames": 20
+        },
+        {
+          "id": "script|span[data-ds=avatar][data-part=item]|opacity,transform",
+          "who": "span[data-ds=avatar][data-part=item]",
+          "kind": "script",
+          "props": [
+            "opacity",
+            "transform"
+          ],
+          "durationMs": 200,
+          "frames": 12
+        }
+      ],
+      "fades": [],
+      "styleWrites": []
+    },
+    {
+      "id": "avatar-status",
+      "style": "neutral",
+      "action": "press",
+      "movers": [
+        {
+          "id": "animation ds-status-dot-beat|span[data-part=dot]|transform",
+          "who": "span[data-part=dot]",
+          "kind": "animation ds-status-dot-beat",
+          "props": [
+            "transform"
+          ],
+          "durationMs": 4200,
+          "frames": 138
+        },
+        {
+          "id": "animation ds-status-dot-pulse|span[data-part=dot]::before|opacity,transform",
+          "who": "span[data-part=dot]::before",
+          "kind": "animation ds-status-dot-pulse",
+          "props": [
+            "opacity",
+            "transform"
+          ],
+          "durationMs": 4200,
+          "frames": 138
+        },
+        {
+          "id": "script|span[data-ds=status-dot][data-part=status]|transform",
+          "who": "span[data-ds=status-dot][data-part=status]",
+          "kind": "script",
+          "props": [
+            "transform"
+          ],
+          "durationMs": 200,
+          "frames": 13
+        },
+        {
+          "id": "script|span[data-part=dot]|boxShadow,opacity,backgroundColor,transform",
+          "who": "span[data-part=dot]",
+          "kind": "script",
+          "props": [
+            "boxShadow",
+            "opacity",
+            "backgroundColor",
+            "transform"
+          ],
+          "durationMs": 4200,
+          "frames": 92
+        }
+      ],
+      "fades": [],
+      "styleWrites": []
+    },
+    {
+      "id": "badge-count",
+      "style": "neutral",
+      "action": "press",
+      "movers": [
+        {
+          "id": "script|span|opacity,transform",
+          "who": "span",
+          "kind": "script",
+          "props": [
+            "opacity",
+            "transform"
+          ],
+          "durationMs": 158,
+          "frames": 20
+        },
+        {
+          "id": "script|span[data-ds=badge]|transform",
+          "who": "span[data-ds=badge]",
+          "kind": "script",
+          "props": [
+            "transform"
+          ],
+          "durationMs": 200,
+          "frames": 26
+        }
+      ],
+      "fades": [],
+      "styleWrites": []
+    },
+    {
+      "id": "button-glow",
+      "style": "neutral",
+      "action": "press",
+      "movers": [],
+      "fades": [],
+      "styleWrites": []
+    },
+    {
+      "id": "button-loading",
+      "style": "neutral",
+      "action": "press",
+      "movers": [
+        {
+          "id": "animation ds-button-spin|span[data-part=spinner]|transform",
+          "who": "span[data-part=spinner]",
+          "kind": "animation ds-button-spin",
+          "props": [
+            "transform"
+          ],
+          "durationMs": null,
+          "frames": 91
+        },
+        {
+          "id": "script|span[data-part=label]|opacity,transform",
+          "who": "span[data-part=label]",
+          "kind": "script",
+          "props": [
+            "opacity",
+            "transform"
+          ],
+          "durationMs": 200,
+          "frames": 14
+        },
+        {
+          "id": "script|span[data-part=spinner]|opacity,transform",
+          "who": "span[data-part=spinner]",
+          "kind": "script",
+          "props": [
+            "opacity",
+            "transform"
+          ],
+          "durationMs": 200,
+          "frames": 20
+        },
+        {
+          "id": "script|button[data-ds=button]|transform",
+          "who": "button[data-ds=button]",
+          "kind": "script",
+          "props": [
+            "transform"
+          ],
+          "durationMs": 158,
+          "frames": 10
+        }
+      ],
+      "fades": [
+        {
+          "id": "transition|span[data-part=label]|opacity",
+          "who": "span[data-part=label]",
+          "kind": "transition",
+          "props": [
+            "opacity"
+          ],
+          "durationMs": 80,
+          "frames": 10
+        }
+      ],
+      "styleWrites": []
+    },
+    {
+      "id": "button-nudge",
+      "style": "neutral",
+      "action": "press",
+      "movers": [
+        {
+          "id": "transition|span[data-part=end]|transform",
+          "who": "span[data-part=end]",
+          "kind": "transition",
+          "props": [
+            "transform"
+          ],
+          "durationMs": 158,
+          "frames": 10
+        }
+      ],
+      "fades": [],
+      "styleWrites": []
+    },
+    {
+      "id": "button-press",
+      "style": "neutral",
+      "action": "press",
+      "movers": [],
+      "fades": [],
+      "styleWrites": []
+    },
+    {
+      "id": "button-result",
+      "style": "neutral",
+      "action": "press",
+      "movers": [
+        {
+          "id": "animation ds-button-spin|span[data-part=spinner]|transform",
+          "who": "span[data-part=spinner]",
+          "kind": "animation ds-button-spin",
+          "props": [
+            "transform"
+          ],
+          "durationMs": null,
+          "frames": 61
+        },
+        {
+          "id": "script|span[data-part=label]|opacity,transform",
+          "who": "span[data-part=label]",
+          "kind": "script",
+          "props": [
+            "opacity",
+            "transform"
+          ],
+          "durationMs": 100,
+          "frames": 6
+        },
+        {
+          "id": "script|span[data-part=spinner]|opacity,transform",
+          "who": "span[data-part=spinner]",
+          "kind": "script",
+          "props": [
+            "opacity",
+            "transform"
+          ],
+          "durationMs": 200,
+          "frames": 20
+        },
+        {
+          "id": "script|button[data-ds=button]|transform",
+          "who": "button[data-ds=button]",
+          "kind": "script",
+          "props": [
+            "transform"
+          ],
+          "durationMs": 158,
+          "frames": 10
+        },
+        {
+          "id": "transition|span[data-part=label]|transform",
+          "who": "span[data-part=label]",
+          "kind": "transition",
+          "props": [
+            "transform"
+          ],
+          "durationMs": 100,
+          "frames": 6
+        }
+      ],
+      "fades": [
+        {
+          "id": "transition|span[data-part=label]|opacity",
+          "who": "span[data-part=label]",
+          "kind": "transition",
+          "props": [
+            "opacity"
+          ],
+          "durationMs": 80,
+          "frames": 5
+        },
+        {
+          "id": "animation ds-button-draw|path|strokeDashoffset",
+          "who": "path",
+          "kind": "animation ds-button-draw",
+          "props": [
+            "strokeDashoffset"
+          ],
+          "durationMs": 180,
+          "frames": 13
+        }
+      ],
+      "styleWrites": []
+    },
+    {
+      "id": "card-lift",
+      "style": "neutral",
+      "action": "press",
+      "movers": [
+        {
+          "id": "transition|div[data-ds=card]|transform",
+          "who": "div[data-ds=card]",
+          "kind": "transition",
+          "props": [
+            "transform"
+          ],
+          "durationMs": 200,
+          "frames": 12
+        }
+      ],
+      "fades": [
+        {
+          "id": "transition|div[data-ds=card]|box-shadow",
+          "who": "div[data-ds=card]",
+          "kind": "transition",
+          "props": [
+            "box-shadow"
+          ],
+          "durationMs": 200,
+          "frames": 12
+        },
+        {
+          "id": "transition|div[data-ds=card]::after|opacity",
+          "who": "div[data-ds=card]::after",
+          "kind": "transition",
+          "props": [
+            "opacity"
+          ],
+          "durationMs": 80,
+          "frames": 5
+        },
+        {
+          "id": "transition|span|opacity",
+          "who": "span",
+          "kind": "transition",
+          "props": [
+            "opacity"
+          ],
+          "durationMs": 150,
+          "frames": 9
+        }
+      ],
+      "styleWrites": []
+    },
+    {
+      "id": "check-draw-pick",
+      "style": "neutral",
+      "action": "press",
+      "movers": [
+        {
+          "id": "script|svg[data-ds=icon]|transform",
+          "who": "svg[data-ds=icon]",
+          "kind": "script",
+          "props": [
+            "transform"
+          ],
+          "durationMs": 200,
+          "frames": 12
+        }
+      ],
+      "fades": [
+        {
+          "id": "transition|span[data-part=highlight]|opacity",
+          "who": "span[data-part=highlight]",
+          "kind": "transition",
+          "props": [
+            "opacity"
+          ],
+          "durationMs": 80,
+          "frames": 5
+        },
+        {
+          "id": "script|path|strokeDasharray,strokeDashoffset",
+          "who": "path",
+          "kind": "script",
+          "props": [
+            "strokeDasharray",
+            "strokeDashoffset"
+          ],
+          "durationMs": 158,
+          "frames": 10
+        }
+      ],
+      "styleWrites": [
+        "span[data-part=highlight] transform: translate(5px, 69px)"
+      ]
+    },
+    {
+      "id": "check-draw",
+      "style": "neutral",
+      "action": "press",
+      "movers": [
+        {
+          "id": "transition|span|clip-path",
+          "who": "span",
+          "kind": "transition",
+          "props": [
+            "clip-path"
+          ],
+          "durationMs": 90,
+          "frames": 6
+        },
+        {
+          "id": "transition|path|stroke-dashoffset",
+          "who": "path",
+          "kind": "transition",
+          "props": [
+            "stroke-dashoffset"
+          ],
+          "durationMs": 108,
+          "frames": 22
+        }
+      ],
+      "fades": [
+        {
+          "id": "transition|span[data-part=indicator]|border-bottom-color",
+          "who": "span[data-part=indicator]",
+          "kind": "transition",
+          "props": [
+            "border-bottom-color"
+          ],
+          "durationMs": 90,
+          "frames": 6
+        },
+        {
+          "id": "transition|span[data-part=indicator]|border-left-color",
+          "who": "span[data-part=indicator]",
+          "kind": "transition",
+          "props": [
+            "border-left-color"
+          ],
+          "durationMs": 90,
+          "frames": 6
+        },
+        {
+          "id": "transition|span[data-part=indicator]|border-right-color",
+          "who": "span[data-part=indicator]",
+          "kind": "transition",
+          "props": [
+            "border-right-color"
+          ],
+          "durationMs": 90,
+          "frames": 6
+        },
+        {
+          "id": "transition|span[data-part=indicator]|border-top-color",
+          "who": "span[data-part=indicator]",
+          "kind": "transition",
+          "props": [
+            "border-top-color"
+          ],
+          "durationMs": 90,
+          "frames": 6
+        },
+        {
+          "id": "transition|span|opacity",
+          "who": "span",
+          "kind": "transition",
+          "props": [
+            "opacity"
+          ],
+          "durationMs": 90,
+          "frames": 6
+        }
+      ],
+      "styleWrites": []
+    },
+    {
+      "id": "check-mixed",
+      "style": "neutral",
+      "action": "press",
+      "movers": [
+        {
+          "id": "transition|span|clip-path",
+          "who": "span",
+          "kind": "transition",
+          "props": [
+            "clip-path"
+          ],
+          "durationMs": 90,
+          "frames": 12
+        },
+        {
+          "id": "transition|path|stroke-dashoffset",
+          "who": "path",
+          "kind": "transition",
+          "props": [
+            "stroke-dashoffset"
+          ],
+          "durationMs": 108,
+          "frames": 36
+        }
+      ],
+      "fades": [
+        {
+          "id": "transition|span[data-part=indicator]|border-bottom-color",
+          "who": "span[data-part=indicator]",
+          "kind": "transition",
+          "props": [
+            "border-bottom-color"
+          ],
+          "durationMs": 90,
+          "frames": 12
+        },
+        {
+          "id": "transition|span[data-part=indicator]|border-left-color",
+          "who": "span[data-part=indicator]",
+          "kind": "transition",
+          "props": [
+            "border-left-color"
+          ],
+          "durationMs": 90,
+          "frames": 12
+        },
+        {
+          "id": "transition|span[data-part=indicator]|border-right-color",
+          "who": "span[data-part=indicator]",
+          "kind": "transition",
+          "props": [
+            "border-right-color"
+          ],
+          "durationMs": 90,
+          "frames": 12
+        },
+        {
+          "id": "transition|span[data-part=indicator]|border-top-color",
+          "who": "span[data-part=indicator]",
+          "kind": "transition",
+          "props": [
+            "border-top-color"
+          ],
+          "durationMs": 90,
+          "frames": 12
+        },
+        {
+          "id": "transition|span|opacity",
+          "who": "span",
+          "kind": "transition",
+          "props": [
+            "opacity"
+          ],
+          "durationMs": 90,
+          "frames": 12
+        }
+      ],
+      "styleWrites": []
+    },
+    {
+      "id": "chip-check-pop",
+      "style": "neutral",
+      "action": "press",
+      "movers": [
+        {
+          "id": "script|svg[data-ds=icon]|transform",
+          "who": "svg[data-ds=icon]",
+          "kind": "script",
+          "props": [
+            "transform"
+          ],
+          "durationMs": 200,
+          "frames": 12
+        },
+        {
+          "id": "script|span[data-part=label]|transform",
+          "who": "span[data-part=label]",
+          "kind": "script",
+          "props": [
+            "transform"
+          ],
+          "durationMs": 158,
+          "frames": 10
+        }
+      ],
+      "fades": [
+        {
+          "id": "script|path|strokeDasharray,strokeDashoffset",
+          "who": "path",
+          "kind": "script",
+          "props": [
+            "strokeDasharray",
+            "strokeDashoffset"
+          ],
+          "durationMs": 158,
+          "frames": 10
+        }
+      ],
+      "styleWrites": []
+    },
+    {
+      "id": "close-turn",
+      "style": "neutral",
+      "action": "press",
+      "movers": [
+        {
+          "id": "transition|button[data-ds=close-button]::before|clip-path",
+          "who": "button[data-ds=close-button]::before",
+          "kind": "transition",
+          "props": [
+            "clip-path"
+          ],
+          "durationMs": 158,
+          "frames": 10
+        },
+        {
+          "id": "transition|span[data-part=icon]|transform",
+          "who": "span[data-part=icon]",
+          "kind": "transition",
+          "props": [
+            "transform"
+          ],
+          "durationMs": 158,
+          "frames": 10
+        }
+      ],
+      "fades": [],
+      "styleWrites": []
+    },
+    {
+      "id": "collection-flip",
+      "style": "neutral",
+      "action": "press",
+      "movers": [
+        {
+          "id": "script|li[data-part=item]|opacity,transform",
+          "who": "li[data-part=item]",
+          "kind": "script",
+          "props": [
+            "opacity",
+            "transform"
+          ],
+          "durationMs": 200,
+          "frames": 61
+        },
+        {
+          "id": "script|span[data-part=tag]|transform",
+          "who": "span[data-part=tag]",
+          "kind": "script",
+          "props": [
+            "transform"
+          ],
+          "durationMs": 158,
+          "frames": 36
+        },
+        {
+          "id": "script|input[data-part=control]|transform",
+          "who": "input[data-part=control]",
+          "kind": "script",
+          "props": [
+            "transform"
+          ],
+          "durationMs": 158,
+          "frames": 12
+        },
+        {
+          "id": "script|li[data-part=item]|transform",
+          "who": "li[data-part=item]",
+          "kind": "script",
+          "props": [
+            "transform"
+          ],
+          "durationMs": 158,
+          "frames": 33
+        }
+      ],
+      "fades": [],
+      "styleWrites": []
+    },
+    {
+      "id": "combobox-results",
+      "style": "neutral",
+      "action": "press",
+      "movers": [
+        {
+          "id": "transition|svg[data-ds=icon]|transform",
+          "who": "svg[data-ds=icon]",
+          "kind": "transition",
+          "props": [
+            "transform"
+          ],
+          "durationMs": 158,
+          "frames": 12
+        },
+        {
+          "id": "animation ds-list-popup-in|div[data-ds=combobox][data-part=popup]|clipPath,opacity,transform",
+          "who": "div[data-ds=combobox][data-part=popup]",
+          "kind": "animation ds-list-popup-in",
+          "props": [
+            "clipPath",
+            "opacity",
+            "transform"
+          ],
+          "durationMs": 158,
+          "frames": 12
+        },
+        {
+          "id": "script|div[data-part=option]|transform",
+          "who": "div[data-part=option]",
+          "kind": "script",
+          "props": [
+            "transform"
+          ],
+          "durationMs": 200,
+          "frames": 248
+        }
+      ],
+      "fades": [
+        {
+          "id": "transition|div[data-ds=combobox]::before|opacity",
+          "who": "div[data-ds=combobox]::before",
+          "kind": "transition",
+          "props": [
+            "opacity"
+          ],
+          "durationMs": 150,
+          "frames": 11
+        },
+        {
+          "id": "transition|span[data-part=highlight]|opacity",
+          "who": "span[data-part=highlight]",
+          "kind": "transition",
+          "props": [
+            "opacity"
+          ],
+          "durationMs": 80,
+          "frames": 7
+        }
+      ],
+      "styleWrites": [
+        "span[data-part=highlight] transform: translate(0px, 0px)",
+        "div transform: translate(341px, 109px)",
+        "div transform: translate(341px, 472px)"
+      ]
+    },
+    {
+      "id": "command-palette-open",
+      "style": "neutral",
+      "action": "press",
+      "movers": [
+        {
+          "id": "transition|div[data-ds=search-field][data-part=search]::before|transform",
+          "who": "div[data-ds=search-field][data-part=search]::before",
+          "kind": "transition",
+          "props": [
+            "transform"
+          ],
+          "durationMs": 200,
+          "frames": 6
+        },
+        {
+          "id": "transition|div[data-ds=input][data-part=control]::before|transform",
+          "who": "div[data-ds=input][data-part=control]::before",
+          "kind": "transition",
+          "props": [
+            "transform"
+          ],
+          "durationMs": 200,
+          "frames": 6
+        },
+        {
+          "id": "animation ds-command-palette-in|div[data-part=panel]|opacity,transform",
+          "who": "div[data-part=panel]",
+          "kind": "animation ds-command-palette-in",
+          "props": [
+            "opacity",
+            "transform"
+          ],
+          "durationMs": 158,
+          "frames": 6
+        },
+        {
+          "id": "animation ds-command-palette-part-in|div[data-part=footer]|opacity,transform",
+          "who": "div[data-part=footer]",
+          "kind": "animation ds-command-palette-part-in",
+          "props": [
+            "opacity",
+            "transform"
+          ],
+          "durationMs": 200,
+          "frames": 6
+        },
+        {
+          "id": "script|div[data-part=item]|opacity,transform",
+          "who": "div[data-part=item]",
+          "kind": "script",
+          "props": [
+            "opacity",
+            "transform"
+          ],
+          "durationMs": 200,
+          "frames": 45
+        }
+      ],
+      "fades": [
+        {
+          "id": "transition|div[data-ds=search-field][data-part=search]|border-bottom-color",
+          "who": "div[data-ds=search-field][data-part=search]",
+          "kind": "transition",
+          "props": [
+            "border-bottom-color"
+          ],
+          "durationMs": 150,
+          "frames": 5
+        },
+        {
+          "id": "transition|div[data-ds=search-field][data-part=search]::before|opacity",
+          "who": "div[data-ds=search-field][data-part=search]::before",
+          "kind": "transition",
+          "props": [
+            "opacity"
+          ],
+          "durationMs": 200,
+          "frames": 6
+        },
+        {
+          "id": "transition|div[data-ds=input][data-part=control]::before|opacity",
+          "who": "div[data-ds=input][data-part=control]::before",
+          "kind": "transition",
+          "props": [
+            "opacity"
+          ],
+          "durationMs": 200,
+          "frames": 6
+        },
+        {
+          "id": "transition|span[data-part=highlight]|opacity",
+          "who": "span[data-part=highlight]",
+          "kind": "transition",
+          "props": [
+            "opacity"
+          ],
+          "durationMs": 80,
+          "frames": 5
+        },
+        {
+          "id": "animation ds-command-palette-backdrop-in|div[data-part=backdrop]|opacity",
+          "who": "div[data-part=backdrop]",
+          "kind": "animation ds-command-palette-backdrop-in",
+          "props": [
+            "opacity"
+          ],
+          "durationMs": 158,
+          "frames": 6
+        }
+      ],
+      "styleWrites": [
+        "span[data-part=highlight] transform: translate(6px, 32px)"
+      ]
+    },
+    {
+      "id": "command-palette-results",
+      "style": "neutral",
+      "action": "press",
+      "movers": [
+        {
+          "id": "transition|div[data-ds=search-field][data-part=search]::before|transform",
+          "who": "div[data-ds=search-field][data-part=search]::before",
+          "kind": "transition",
+          "props": [
+            "transform"
+          ],
+          "durationMs": 200,
+          "frames": 4
+        },
+        {
+          "id": "transition|div[data-ds=input][data-part=control]::before|transform",
+          "who": "div[data-ds=input][data-part=control]::before",
+          "kind": "transition",
+          "props": [
+            "transform"
+          ],
+          "durationMs": 200,
+          "frames": 4
+        },
+        {
+          "id": "animation ds-command-palette-in|div[data-part=panel]|opacity,transform",
+          "who": "div[data-part=panel]",
+          "kind": "animation ds-command-palette-in",
+          "props": [
+            "opacity",
+            "transform"
+          ],
+          "durationMs": 158,
+          "frames": 3
+        },
+        {
+          "id": "animation ds-command-palette-part-in|div[data-part=footer]|opacity,transform",
+          "who": "div[data-part=footer]",
+          "kind": "animation ds-command-palette-part-in",
+          "props": [
+            "opacity",
+            "transform"
+          ],
+          "durationMs": 200,
+          "frames": 4
+        },
+        {
+          "id": "script|div[data-part=item]|opacity,transform",
+          "who": "div[data-part=item]",
+          "kind": "script",
+          "props": [
+            "opacity",
+            "transform"
+          ],
+          "durationMs": 200,
+          "frames": 31
+        }
+      ],
+      "fades": [
+        {
+          "id": "transition|div[data-ds=search-field][data-part=search]|border-bottom-color",
+          "who": "div[data-ds=search-field][data-part=search]",
+          "kind": "transition",
+          "props": [
+            "border-bottom-color"
+          ],
+          "durationMs": 150,
+          "frames": 3
+        },
+        {
+          "id": "transition|div[data-ds=search-field][data-part=search]::before|opacity",
+          "who": "div[data-ds=search-field][data-part=search]::before",
+          "kind": "transition",
+          "props": [
+            "opacity"
+          ],
+          "durationMs": 200,
+          "frames": 4
+        },
+        {
+          "id": "transition|div[data-ds=input][data-part=control]::before|opacity",
+          "who": "div[data-ds=input][data-part=control]::before",
+          "kind": "transition",
+          "props": [
+            "opacity"
+          ],
+          "durationMs": 200,
+          "frames": 4
+        },
+        {
+          "id": "transition|span[data-part=highlight]|opacity",
+          "who": "span[data-part=highlight]",
+          "kind": "transition",
+          "props": [
+            "opacity"
+          ],
+          "durationMs": 80,
+          "frames": 2
+        },
+        {
+          "id": "animation ds-command-palette-backdrop-in|div[data-part=backdrop]|opacity",
+          "who": "div[data-part=backdrop]",
+          "kind": "animation ds-command-palette-backdrop-in",
+          "props": [
+            "opacity"
+          ],
+          "durationMs": 158,
+          "frames": 3
+        }
+      ],
+      "styleWrites": [
+        "span[data-part=highlight] transform: translate(6px, 32px)"
+      ]
+    },
+    {
+      "id": "command-palette-row-slide",
+      "style": "neutral",
+      "action": "press",
+      "movers": [
+        {
+          "id": "transition|div[data-ds=search-field][data-part=search]::before|transform",
+          "who": "div[data-ds=search-field][data-part=search]::before",
+          "kind": "transition",
+          "props": [
+            "transform"
+          ],
+          "durationMs": 200,
+          "frames": 5
+        },
+        {
+          "id": "transition|div[data-ds=input][data-part=control]::before|transform",
+          "who": "div[data-ds=input][data-part=control]::before",
+          "kind": "transition",
+          "props": [
+            "transform"
+          ],
+          "durationMs": 200,
+          "frames": 5
+        },
+        {
+          "id": "animation ds-command-palette-in|div[data-part=panel]|opacity,transform",
+          "who": "div[data-part=panel]",
+          "kind": "animation ds-command-palette-in",
+          "props": [
+            "opacity",
+            "transform"
+          ],
+          "durationMs": 158,
+          "frames": 5
+        },
+        {
+          "id": "animation ds-command-palette-part-in|div[data-part=footer]|opacity,transform",
+          "who": "div[data-part=footer]",
+          "kind": "animation ds-command-palette-part-in",
+          "props": [
+            "opacity",
+            "transform"
+          ],
+          "durationMs": 200,
+          "frames": 5
+        },
+        {
+          "id": "script|div[data-part=item]|opacity,transform",
+          "who": "div[data-part=item]",
+          "kind": "script",
+          "props": [
+            "opacity",
+            "transform"
+          ],
+          "durationMs": 200,
+          "frames": 30
+        }
+      ],
+      "fades": [
+        {
+          "id": "transition|div[data-ds=search-field][data-part=search]|border-bottom-color",
+          "who": "div[data-ds=search-field][data-part=search]",
+          "kind": "transition",
+          "props": [
+            "border-bottom-color"
+          ],
+          "durationMs": 150,
+          "frames": 5
+        },
+        {
+          "id": "transition|div[data-ds=search-field][data-part=search]::before|opacity",
+          "who": "div[data-ds=search-field][data-part=search]::before",
+          "kind": "transition",
+          "props": [
+            "opacity"
+          ],
+          "durationMs": 200,
+          "frames": 5
+        },
+        {
+          "id": "transition|div[data-ds=input][data-part=control]::before|opacity",
+          "who": "div[data-ds=input][data-part=control]::before",
+          "kind": "transition",
+          "props": [
+            "opacity"
+          ],
+          "durationMs": 200,
+          "frames": 5
+        },
+        {
+          "id": "transition|span[data-part=highlight]|opacity",
+          "who": "span[data-part=highlight]",
+          "kind": "transition",
+          "props": [
+            "opacity"
+          ],
+          "durationMs": 80,
+          "frames": 4
+        },
+        {
+          "id": "animation ds-command-palette-backdrop-in|div[data-part=backdrop]|opacity",
+          "who": "div[data-part=backdrop]",
+          "kind": "animation ds-command-palette-backdrop-in",
+          "props": [
+            "opacity"
+          ],
+          "durationMs": 158,
+          "frames": 5
+        }
+      ],
+      "styleWrites": [
+        "span[data-part=highlight] transform: translate(6px, 32px)"
+      ]
+    },
+    {
+      "id": "consent-check",
+      "style": "neutral",
+      "action": "press",
+      "movers": [
+        {
+          "id": "transition|span|clip-path",
+          "who": "span",
+          "kind": "transition",
+          "props": [
+            "clip-path"
+          ],
+          "durationMs": 90,
+          "frames": 6
+        },
+        {
+          "id": "transition|path|stroke-dashoffset",
+          "who": "path",
+          "kind": "transition",
+          "props": [
+            "stroke-dashoffset"
+          ],
+          "durationMs": 108,
+          "frames": 22
+        },
+        {
+          "id": "script|svg[data-part=mark]|transform",
+          "who": "svg[data-part=mark]",
+          "kind": "script",
+          "props": [
+            "transform"
+          ],
+          "durationMs": 200,
+          "frames": 12
+        }
+      ],
+      "fades": [
+        {
+          "id": "transition|span[data-part=indicator]|border-bottom-color",
+          "who": "span[data-part=indicator]",
+          "kind": "transition",
+          "props": [
+            "border-bottom-color"
+          ],
+          "durationMs": 90,
+          "frames": 6
+        },
+        {
+          "id": "transition|span[data-part=indicator]|border-left-color",
+          "who": "span[data-part=indicator]",
+          "kind": "transition",
+          "props": [
+            "border-left-color"
+          ],
+          "durationMs": 90,
+          "frames": 6
+        },
+        {
+          "id": "transition|span[data-part=indicator]|border-right-color",
+          "who": "span[data-part=indicator]",
+          "kind": "transition",
+          "props": [
+            "border-right-color"
+          ],
+          "durationMs": 90,
+          "frames": 6
+        },
+        {
+          "id": "transition|span[data-part=indicator]|border-top-color",
+          "who": "span[data-part=indicator]",
+          "kind": "transition",
+          "props": [
+            "border-top-color"
+          ],
+          "durationMs": 90,
+          "frames": 6
+        },
+        {
+          "id": "transition|span|opacity",
+          "who": "span",
+          "kind": "transition",
+          "props": [
+            "opacity"
+          ],
+          "durationMs": 90,
+          "frames": 6
+        }
+      ],
+      "styleWrites": []
+    },
+    {
+      "id": "copy-bubble",
+      "style": "neutral",
+      "action": "press",
+      "movers": [
+        {
+          "id": "transition|span|transform",
+          "who": "span",
+          "kind": "transition",
+          "props": [
+            "transform"
+          ],
+          "durationMs": 100,
+          "frames": 7
+        },
+        {
+          "id": "animation ds-copy-button-pop|svg[data-ds=icon]|transform",
+          "who": "svg[data-ds=icon]",
+          "kind": "animation ds-copy-button-pop",
+          "props": [
+            "transform"
+          ],
+          "durationMs": 200,
+          "frames": 14
+        },
+        {
+          "id": "animation ds-copy-button-bubble|span[data-part=bubble]|opacity,transform",
+          "who": "span[data-part=bubble]",
+          "kind": "animation ds-copy-button-bubble",
+          "props": [
+            "opacity",
+            "transform"
+          ],
+          "durationMs": 158,
+          "frames": 11
+        }
+      ],
+      "fades": [
+        {
+          "id": "transition|span[data-part=icon]|color",
+          "who": "span[data-part=icon]",
+          "kind": "transition",
+          "props": [
+            "color"
+          ],
+          "durationMs": 180,
+          "frames": 12
+        },
+        {
+          "id": "transition|span|opacity",
+          "who": "span",
+          "kind": "transition",
+          "props": [
+            "opacity"
+          ],
+          "durationMs": 100,
+          "frames": 7
+        },
+        {
+          "id": "animation ds-copy-button-wipe|span|clipPath,opacity",
+          "who": "span",
+          "kind": "animation ds-copy-button-wipe",
+          "props": [
+            "clipPath",
+            "opacity"
+          ],
+          "durationMs": 180,
+          "frames": 13
+        }
+      ],
+      "styleWrites": []
+    },
+    {
+      "id": "copy-swap",
+      "style": "neutral",
+      "action": "press",
+      "movers": [
+        {
+          "id": "transition|span|transform",
+          "who": "span",
+          "kind": "transition",
+          "props": [
+            "transform"
+          ],
+          "durationMs": 100,
+          "frames": 14
+        },
+        {
+          "id": "animation ds-copy-button-pop|svg[data-ds=icon]|transform",
+          "who": "svg[data-ds=icon]",
+          "kind": "animation ds-copy-button-pop",
+          "props": [
+            "transform"
+          ],
+          "durationMs": 200,
+          "frames": 14
+        },
+        {
+          "id": "animation ds-copy-button-roll|span|opacity,transform",
+          "who": "span",
+          "kind": "animation ds-copy-button-roll",
+          "props": [
+            "opacity",
+            "transform"
+          ],
+          "durationMs": 158,
+          "frames": 11
+        }
+      ],
+      "fades": [
+        {
+          "id": "transition|span[data-part=icon]|color",
+          "who": "span[data-part=icon]",
+          "kind": "transition",
+          "props": [
+            "color"
+          ],
+          "durationMs": 180,
+          "frames": 12
+        },
+        {
+          "id": "transition|span|opacity",
+          "who": "span",
+          "kind": "transition",
+          "props": [
+            "opacity"
+          ],
+          "durationMs": 100,
+          "frames": 12
+        },
+        {
+          "id": "animation ds-copy-button-wipe|span|clipPath,opacity",
+          "who": "span",
+          "kind": "animation ds-copy-button-wipe",
+          "props": [
+            "clipPath",
+            "opacity"
+          ],
+          "durationMs": 180,
+          "frames": 13
+        }
+      ],
+      "styleWrites": []
+    },
+    {
+      "id": "dialog-refuse",
+      "style": "neutral",
+      "action": "press",
+      "movers": [
+        {
+          "id": "animation ds-dialog-in|div[data-part=panel]|opacity,transform",
+          "who": "div[data-part=panel]",
+          "kind": "animation ds-dialog-in",
+          "props": [
+            "opacity",
+            "transform"
+          ],
+          "durationMs": 200,
+          "frames": 8
+        },
+        {
+          "id": "animation ds-dialog-icon-in|span[data-part=icon]|opacity,transform",
+          "who": "span[data-part=icon]",
+          "kind": "animation ds-dialog-icon-in",
+          "props": [
+            "opacity",
+            "transform"
+          ],
+          "durationMs": 200,
+          "frames": 9
+        },
+        {
+          "id": "animation ds-dialog-part-in|h2[data-part=title]|transform",
+          "who": "h2[data-part=title]",
+          "kind": "animation ds-dialog-part-in",
+          "props": [
+            "transform"
+          ],
+          "durationMs": 200,
+          "frames": 9
+        },
+        {
+          "id": "animation ds-dialog-part-in|p[data-part=description]|transform",
+          "who": "p[data-part=description]",
+          "kind": "animation ds-dialog-part-in",
+          "props": [
+            "transform"
+          ],
+          "durationMs": 200,
+          "frames": 9
+        }
+      ],
+      "fades": [
+        {
+          "id": "animation ds-dialog-backdrop-in|div[data-part=backdrop]|opacity,backdropFilter",
+          "who": "div[data-part=backdrop]",
+          "kind": "animation ds-dialog-backdrop-in",
+          "props": [
+            "opacity",
+            "backdropFilter"
+          ],
+          "durationMs": 200,
+          "frames": 8
+        },
+        {
+          "id": "animation ds-dialog-part-fade|h2[data-part=title]|opacity",
+          "who": "h2[data-part=title]",
+          "kind": "animation ds-dialog-part-fade",
+          "props": [
+            "opacity"
+          ],
+          "durationMs": 80,
+          "frames": 6
+        },
+        {
+          "id": "animation ds-dialog-part-fade|p[data-part=description]|opacity",
+          "who": "p[data-part=description]",
+          "kind": "animation ds-dialog-part-fade",
+          "props": [
+            "opacity"
+          ],
+          "durationMs": 80,
+          "frames": 6
+        }
+      ],
+      "styleWrites": []
+    },
+    {
+      "id": "dialog-spring",
+      "style": "neutral",
+      "action": "press",
+      "movers": [
+        {
+          "id": "animation ds-dialog-in|div[data-part=panel]|opacity,transform",
+          "who": "div[data-part=panel]",
+          "kind": "animation ds-dialog-in",
+          "props": [
+            "opacity",
+            "transform"
+          ],
+          "durationMs": 200,
+          "frames": 11
+        },
+        {
+          "id": "animation ds-dialog-part-in|h2[data-part=title]|transform",
+          "who": "h2[data-part=title]",
+          "kind": "animation ds-dialog-part-in",
+          "props": [
+            "transform"
+          ],
+          "durationMs": 200,
+          "frames": 12
+        },
+        {
+          "id": "animation ds-dialog-part-in|p[data-part=description]|transform",
+          "who": "p[data-part=description]",
+          "kind": "animation ds-dialog-part-in",
+          "props": [
+            "transform"
+          ],
+          "durationMs": 200,
+          "frames": 12
+        },
+        {
+          "id": "animation ds-dialog-part-in|div[data-part=body]|transform",
+          "who": "div[data-part=body]",
+          "kind": "animation ds-dialog-part-in",
+          "props": [
+            "transform"
+          ],
+          "durationMs": 200,
+          "frames": 13
+        }
+      ],
+      "fades": [
+        {
+          "id": "animation ds-dialog-backdrop-in|div[data-part=backdrop]|opacity,backdropFilter",
+          "who": "div[data-part=backdrop]",
+          "kind": "animation ds-dialog-backdrop-in",
+          "props": [
+            "opacity",
+            "backdropFilter"
+          ],
+          "durationMs": 200,
+          "frames": 11
+        },
+        {
+          "id": "animation ds-dialog-part-fade|h2[data-part=title]|opacity",
+          "who": "h2[data-part=title]",
+          "kind": "animation ds-dialog-part-fade",
+          "props": [
+            "opacity"
+          ],
+          "durationMs": 80,
+          "frames": 8
+        },
+        {
+          "id": "animation ds-dialog-part-fade|p[data-part=description]|opacity",
+          "who": "p[data-part=description]",
+          "kind": "animation ds-dialog-part-fade",
+          "props": [
+            "opacity"
+          ],
+          "durationMs": 80,
+          "frames": 8
+        },
+        {
+          "id": "animation ds-dialog-part-fade|div[data-part=body]|opacity",
+          "who": "div[data-part=body]",
+          "kind": "animation ds-dialog-part-fade",
+          "props": [
+            "opacity"
+          ],
+          "durationMs": 80,
+          "frames": 9
+        }
+      ],
+      "styleWrites": []
+    },
+    {
+      "id": "dock-lift",
+      "style": "neutral",
+      "action": "press",
+      "movers": [
+        {
+          "id": "animation ds-dock-pop|span[data-part=item-icon]|transform",
+          "who": "span[data-part=item-icon]",
+          "kind": "animation ds-dock-pop",
+          "props": [
+            "transform"
+          ],
+          "durationMs": 200,
+          "frames": 25
+        },
+        {
+          "id": "transition|span[data-part=end]|transform",
+          "who": "span[data-part=end]",
+          "kind": "transition",
+          "props": [
+            "transform"
+          ],
+          "durationMs": 158,
+          "frames": 10
+        }
+      ],
+      "fades": [],
+      "styleWrites": []
+    },
+    {
+      "id": "error-shake",
+      "style": "neutral",
+      "action": "press",
+      "movers": [
+        {
+          "id": "script|div[data-ds=input]|transform",
+          "who": "div[data-ds=input]",
+          "kind": "script",
+          "props": [
+            "transform"
+          ],
+          "durationMs": 200,
+          "frames": 12
+        }
+      ],
+      "fades": [
+        {
+          "id": "transition|div[data-ds=input]|border-bottom-color",
+          "who": "div[data-ds=input]",
+          "kind": "transition",
+          "props": [
+            "border-bottom-color"
+          ],
+          "durationMs": 150,
+          "frames": 9
+        },
+        {
+          "id": "transition|div[data-ds=input]|border-left-color",
+          "who": "div[data-ds=input]",
+          "kind": "transition",
+          "props": [
+            "border-left-color"
+          ],
+          "durationMs": 150,
+          "frames": 9
+        },
+        {
+          "id": "transition|div[data-ds=input]|border-right-color",
+          "who": "div[data-ds=input]",
+          "kind": "transition",
+          "props": [
+            "border-right-color"
+          ],
+          "durationMs": 150,
+          "frames": 9
+        },
+        {
+          "id": "transition|div[data-ds=input]|border-top-color",
+          "who": "div[data-ds=input]",
+          "kind": "transition",
+          "props": [
+            "border-top-color"
+          ],
+          "durationMs": 150,
+          "frames": 9
+        },
+        {
+          "id": "transition|div[data-ds=input]::before|box-shadow",
+          "who": "div[data-ds=input]::before",
+          "kind": "transition",
+          "props": [
+            "box-shadow"
+          ],
+          "durationMs": 100,
+          "frames": 6
+        }
+      ],
+      "styleWrites": []
+    },
+    {
+      "id": "error-state-details",
+      "style": "neutral",
+      "action": "press",
+      "movers": [
+        {
+          "id": "animation ds-error-state-art|span[data-part=icon]|opacity,transform",
+          "who": "span[data-part=icon]",
+          "kind": "animation ds-error-state-art",
+          "props": [
+            "opacity",
+            "transform"
+          ],
+          "durationMs": 200,
+          "frames": 14
+        },
+        {
+          "id": "animation ds-error-state-text|h2[data-part=title]|opacity,transform",
+          "who": "h2[data-part=title]",
+          "kind": "animation ds-error-state-text",
+          "props": [
+            "opacity",
+            "transform"
+          ],
+          "durationMs": 200,
+          "frames": 15
+        },
+        {
+          "id": "animation ds-error-state-text|div[data-part=actions]|opacity,transform",
+          "who": "div[data-part=actions]",
+          "kind": "animation ds-error-state-text",
+          "props": [
+            "opacity",
+            "transform"
+          ],
+          "durationMs": 200,
+          "frames": 18
+        },
+        {
+          "id": "animation ds-error-state-text|details[data-part=details]|opacity,transform",
+          "who": "details[data-part=details]",
+          "kind": "animation ds-error-state-text",
+          "props": [
+            "opacity",
+            "transform"
+          ],
+          "durationMs": 200,
+          "frames": 19
+        },
+        {
+          "id": "transition|svg[data-ds=icon]|transform",
+          "who": "svg[data-ds=icon]",
+          "kind": "transition",
+          "props": [
+            "transform"
+          ],
+          "durationMs": 158,
+          "frames": 10
+        }
+      ],
+      "fades": [
+        {
+          "id": "animation ds-error-state-in|div[data-ds=error-state]|opacity",
+          "who": "div[data-ds=error-state]",
+          "kind": "animation ds-error-state-in",
+          "props": [
+            "opacity"
+          ],
+          "durationMs": 200,
+          "frames": 14
+        }
+      ],
+      "styleWrites": []
+    },
+    {
+      "id": "fab-morph",
+      "style": "neutral",
+      "action": "press",
+      "movers": [
+        {
+          "id": "transition|button[data-ds=floating-action-button]|transform",
+          "who": "button[data-ds=floating-action-button]",
+          "kind": "transition",
+          "props": [
+            "transform"
+          ],
+          "durationMs": 200,
+          "frames": 14
+        },
+        {
+          "id": "transition|span[data-part=icon]|transform",
+          "who": "span[data-part=icon]",
+          "kind": "transition",
+          "props": [
+            "transform"
+          ],
+          "durationMs": 158,
+          "frames": 11
+        },
+        {
+          "id": "animation ds-menu-in|div[data-ds=dropdown-menu]|clipPath,opacity,transform",
+          "who": "div[data-ds=dropdown-menu]",
+          "kind": "animation ds-menu-in",
+          "props": [
+            "clipPath",
+            "opacity",
+            "transform"
+          ],
+          "durationMs": 158,
+          "frames": 11
+        },
+        {
+          "id": "animation ds-menu-row-in|span[data-part=start]|opacity,transform",
+          "who": "span[data-part=start]",
+          "kind": "animation ds-menu-row-in",
+          "props": [
+            "opacity",
+            "transform"
+          ],
+          "durationMs": 200,
+          "frames": 31
+        },
+        {
+          "id": "animation ds-menu-row-in|span[data-part=text]|opacity,transform",
+          "who": "span[data-part=text]",
+          "kind": "animation ds-menu-row-in",
+          "props": [
+            "opacity",
+            "transform"
+          ],
+          "durationMs": 200,
+          "frames": 31
+        }
+      ],
+      "fades": [],
+      "styleWrites": [
+        "div transform: translate(369px, 487px)",
+        "div transform: translate(369px, 486px)",
+        "div transform: translate(369px, 485px)",
+        "div transform: translate(369px, 484px)",
+        "div transform: translate(369px, 483px)",
+        "div transform: translate(369px, 482px)"
+      ]
+    },
+    {
+      "id": "field-error-enter",
+      "style": "neutral",
+      "action": "press",
+      "movers": [
+        {
+          "id": "script|p[data-ds=field-error][data-part=error]|clipPath,opacity,transform",
+          "who": "p[data-ds=field-error][data-part=error]",
+          "kind": "script",
+          "props": [
+            "clipPath",
+            "opacity",
+            "transform"
+          ],
+          "durationMs": 200,
+          "frames": 13
+        },
+        {
+          "id": "script|svg[data-ds=icon][data-part=icon]|opacity,transform",
+          "who": "svg[data-ds=icon][data-part=icon]",
+          "kind": "script",
+          "props": [
+            "opacity",
+            "transform"
+          ],
+          "durationMs": 200,
+          "frames": 14
+        },
+        {
+          "id": "script|div[data-ds=input]|transform",
+          "who": "div[data-ds=input]",
+          "kind": "script",
+          "props": [
+            "transform"
+          ],
+          "durationMs": 200,
+          "frames": 13
+        },
+        {
+          "id": "script|button[data-ds=button]|transform",
+          "who": "button[data-ds=button]",
+          "kind": "script",
+          "props": [
+            "transform"
+          ],
+          "durationMs": 200,
+          "frames": 12
+        }
+      ],
+      "fades": [
+        {
+          "id": "transition|label[data-ds=label][data-part=label]|color",
+          "who": "label[data-ds=label][data-part=label]",
+          "kind": "transition",
+          "props": [
+            "color"
+          ],
+          "durationMs": 158,
+          "frames": 10
+        },
+        {
+          "id": "transition|div[data-ds=input]|border-bottom-color",
+          "who": "div[data-ds=input]",
+          "kind": "transition",
+          "props": [
+            "border-bottom-color"
+          ],
+          "durationMs": 150,
+          "frames": 10
+        },
+        {
+          "id": "transition|div[data-ds=input]|border-left-color",
+          "who": "div[data-ds=input]",
+          "kind": "transition",
+          "props": [
+            "border-left-color"
+          ],
+          "durationMs": 150,
+          "frames": 10
+        },
+        {
+          "id": "transition|div[data-ds=input]|border-right-color",
+          "who": "div[data-ds=input]",
+          "kind": "transition",
+          "props": [
+            "border-right-color"
+          ],
+          "durationMs": 150,
+          "frames": 10
+        },
+        {
+          "id": "transition|div[data-ds=input]|border-top-color",
+          "who": "div[data-ds=input]",
+          "kind": "transition",
+          "props": [
+            "border-top-color"
+          ],
+          "durationMs": 150,
+          "frames": 10
+        },
+        {
+          "id": "transition|div[data-ds=input]::before|box-shadow",
+          "who": "div[data-ds=input]::before",
+          "kind": "transition",
+          "props": [
+            "box-shadow"
+          ],
+          "durationMs": 100,
+          "frames": 7
+        }
+      ],
+      "styleWrites": []
+    },
+    {
+      "id": "field-label-focus",
+      "style": "neutral",
+      "action": "press",
+      "movers": [
+        {
+          "id": "transition|label[data-ds=label][data-part=label]|transform",
+          "who": "label[data-ds=label][data-part=label]",
+          "kind": "transition",
+          "props": [
+            "transform"
+          ],
+          "durationMs": 158,
+          "frames": 43
+        },
+        {
+          "id": "transition|div[data-ds=input]::before|transform",
+          "who": "div[data-ds=input]::before",
+          "kind": "transition",
+          "props": [
+            "transform"
+          ],
+          "durationMs": 200,
+          "frames": 13
+        }
+      ],
+      "fades": [
+        {
+          "id": "transition|label[data-ds=label][data-part=label]|color",
+          "who": "label[data-ds=label][data-part=label]",
+          "kind": "transition",
+          "props": [
+            "color"
+          ],
+          "durationMs": 158,
+          "frames": 10
+        },
+        {
+          "id": "transition|div[data-ds=input]|border-bottom-color",
+          "who": "div[data-ds=input]",
+          "kind": "transition",
+          "props": [
+            "border-bottom-color"
+          ],
+          "durationMs": 150,
+          "frames": 10
+        },
+        {
+          "id": "transition|div[data-ds=input]|border-left-color",
+          "who": "div[data-ds=input]",
+          "kind": "transition",
+          "props": [
+            "border-left-color"
+          ],
+          "durationMs": 150,
+          "frames": 10
+        },
+        {
+          "id": "transition|div[data-ds=input]|border-right-color",
+          "who": "div[data-ds=input]",
+          "kind": "transition",
+          "props": [
+            "border-right-color"
+          ],
+          "durationMs": 150,
+          "frames": 10
+        },
+        {
+          "id": "transition|div[data-ds=input]|border-top-color",
+          "who": "div[data-ds=input]",
+          "kind": "transition",
+          "props": [
+            "border-top-color"
+          ],
+          "durationMs": 150,
+          "frames": 10
+        },
+        {
+          "id": "transition|div[data-ds=input]::before|box-shadow",
+          "who": "div[data-ds=input]::before",
+          "kind": "transition",
+          "props": [
+            "box-shadow"
+          ],
+          "durationMs": 200,
+          "frames": 13
+        },
+        {
+          "id": "transition|div[data-ds=input]::before|opacity",
+          "who": "div[data-ds=input]::before",
+          "kind": "transition",
+          "props": [
+            "opacity"
+          ],
+          "durationMs": 200,
+          "frames": 13
+        }
+      ],
+      "styleWrites": []
+    },
+    {
+      "id": "field-message-enter",
+      "style": "neutral",
+      "action": "press",
+      "movers": [
+        {
+          "id": "script|p[data-part=description]|opacity,transform",
+          "who": "p[data-part=description]",
+          "kind": "script",
+          "props": [
+            "opacity",
+            "transform"
+          ],
+          "durationMs": 200,
+          "frames": 13
+        },
+        {
+          "id": "script|button[data-ds=button]|transform",
+          "who": "button[data-ds=button]",
+          "kind": "script",
+          "props": [
+            "transform"
+          ],
+          "durationMs": 200,
+          "frames": 12
+        }
+      ],
+      "fades": [],
+      "styleWrites": []
+    },
+    {
+      "id": "field-step",
+      "style": "neutral",
+      "action": "press",
+      "movers": [
+        {
+          "id": "transition|div[data-ds=number-field]::before|transform",
+          "who": "div[data-ds=number-field]::before",
+          "kind": "transition",
+          "props": [
+            "transform"
+          ],
+          "durationMs": 200,
+          "frames": 14
+        },
+        {
+          "id": "script|span|opacity,transform",
+          "who": "span",
+          "kind": "script",
+          "props": [
+            "opacity",
+            "transform"
+          ],
+          "durationMs": 158,
+          "frames": 22
+        }
+      ],
+      "fades": [
+        {
+          "id": "transition|div[data-ds=number-field]|border-bottom-color",
+          "who": "div[data-ds=number-field]",
+          "kind": "transition",
+          "props": [
+            "border-bottom-color"
+          ],
+          "durationMs": 150,
+          "frames": 11
+        },
+        {
+          "id": "transition|div[data-ds=number-field]|border-left-color",
+          "who": "div[data-ds=number-field]",
+          "kind": "transition",
+          "props": [
+            "border-left-color"
+          ],
+          "durationMs": 150,
+          "frames": 11
+        },
+        {
+          "id": "transition|div[data-ds=number-field]|border-right-color",
+          "who": "div[data-ds=number-field]",
+          "kind": "transition",
+          "props": [
+            "border-right-color"
+          ],
+          "durationMs": 150,
+          "frames": 11
+        },
+        {
+          "id": "transition|div[data-ds=number-field]|border-top-color",
+          "who": "div[data-ds=number-field]",
+          "kind": "transition",
+          "props": [
+            "border-top-color"
+          ],
+          "durationMs": 150,
+          "frames": 11
+        },
+        {
+          "id": "transition|div[data-ds=number-field]::before|box-shadow",
+          "who": "div[data-ds=number-field]::before",
+          "kind": "transition",
+          "props": [
+            "box-shadow"
+          ],
+          "durationMs": 200,
+          "frames": 14
+        },
+        {
+          "id": "transition|div[data-ds=number-field]::before|opacity",
+          "who": "div[data-ds=number-field]::before",
+          "kind": "transition",
+          "props": [
+            "opacity"
+          ],
+          "durationMs": 200,
+          "frames": 14
+        }
+      ],
+      "styleWrites": []
+    },
+    {
+      "id": "filter-count-roll",
+      "style": "neutral",
+      "action": "press",
+      "movers": [
+        {
+          "id": "script|svg[data-ds=icon]|transform",
+          "who": "svg[data-ds=icon]",
+          "kind": "script",
+          "props": [
+            "transform"
+          ],
+          "durationMs": 200,
+          "frames": 14
+        },
+        {
+          "id": "script|span[data-part=label]|transform",
+          "who": "span[data-part=label]",
+          "kind": "script",
+          "props": [
+            "transform"
+          ],
+          "durationMs": 158,
+          "frames": 11
+        },
+        {
+          "id": "script|span[data-part=count]|transform",
+          "who": "span[data-part=count]",
+          "kind": "script",
+          "props": [
+            "transform"
+          ],
+          "durationMs": 158,
+          "frames": 11
+        },
+        {
+          "id": "script|button[data-ds=button][data-part=clear]|opacity,transform",
+          "who": "button[data-ds=button][data-part=clear]",
+          "kind": "script",
+          "props": [
+            "opacity",
+            "transform"
+          ],
+          "durationMs": 200,
+          "frames": 14
+        },
+        {
+          "id": "script|button[data-ds=button][data-part=clear]|transform",
+          "who": "button[data-ds=button][data-part=clear]",
+          "kind": "script",
+          "props": [
+            "transform"
+          ],
+          "durationMs": 158,
+          "frames": 10
+        }
+      ],
+      "fades": [
+        {
+          "id": "script|path|strokeDasharray,strokeDashoffset",
+          "who": "path",
+          "kind": "script",
+          "props": [
+            "strokeDasharray",
+            "strokeDashoffset"
+          ],
+          "durationMs": 158,
+          "frames": 11
+        }
+      ],
+      "styleWrites": []
+    },
+    {
+      "id": "focus-glow",
+      "style": "neutral",
+      "action": "press",
+      "movers": [
+        {
+          "id": "transition|div[data-ds=input]::before|transform",
+          "who": "div[data-ds=input]::before",
+          "kind": "transition",
+          "props": [
+            "transform"
+          ],
+          "durationMs": 200,
+          "frames": 12
+        }
+      ],
+      "fades": [
+        {
+          "id": "transition|div[data-ds=input]|border-bottom-color",
+          "who": "div[data-ds=input]",
+          "kind": "transition",
+          "props": [
+            "border-bottom-color"
+          ],
+          "durationMs": 150,
+          "frames": 9
+        },
+        {
+          "id": "transition|div[data-ds=input]|border-left-color",
+          "who": "div[data-ds=input]",
+          "kind": "transition",
+          "props": [
+            "border-left-color"
+          ],
+          "durationMs": 150,
+          "frames": 9
+        },
+        {
+          "id": "transition|div[data-ds=input]|border-right-color",
+          "who": "div[data-ds=input]",
+          "kind": "transition",
+          "props": [
+            "border-right-color"
+          ],
+          "durationMs": 150,
+          "frames": 9
+        },
+        {
+          "id": "transition|div[data-ds=input]|border-top-color",
+          "who": "div[data-ds=input]",
+          "kind": "transition",
+          "props": [
+            "border-top-color"
+          ],
+          "durationMs": 150,
+          "frames": 9
+        },
+        {
+          "id": "transition|div[data-ds=input]::before|box-shadow",
+          "who": "div[data-ds=input]::before",
+          "kind": "transition",
+          "props": [
+            "box-shadow"
+          ],
+          "durationMs": 200,
+          "frames": 12
+        },
+        {
+          "id": "transition|div[data-ds=input]::before|opacity",
+          "who": "div[data-ds=input]::before",
+          "kind": "transition",
+          "props": [
+            "opacity"
+          ],
+          "durationMs": 200,
+          "frames": 12
+        }
+      ],
+      "styleWrites": []
+    },
+    {
+      "id": "form-submit-success",
+      "style": "neutral",
+      "action": "press",
+      "movers": [
+        {
+          "id": "script|span|transform",
+          "who": "span",
+          "kind": "script",
+          "props": [
+            "transform"
+          ],
+          "durationMs": 200,
+          "frames": 11
+        },
+        {
+          "id": "script|div[data-part=body]|transform",
+          "who": "div[data-part=body]",
+          "kind": "script",
+          "props": [
+            "transform"
+          ],
+          "durationMs": 200,
+          "frames": 11
+        },
+        {
+          "id": "script|div[data-part=actions]|transform",
+          "who": "div[data-part=actions]",
+          "kind": "script",
+          "props": [
+            "transform"
+          ],
+          "durationMs": 200,
+          "frames": 11
+        },
+        {
+          "id": "animation ds-form-mark-land|svg[data-part=success-mark]|opacity,transform",
+          "who": "svg[data-part=success-mark]",
+          "kind": "animation ds-form-mark-land",
+          "props": [
+            "opacity",
+            "transform"
+          ],
+          "durationMs": 200,
+          "frames": 12
+        },
+        {
+          "id": "script|button[data-ds=button]|transform",
+          "who": "button[data-ds=button]",
+          "kind": "script",
+          "props": [
+            "transform"
+          ],
+          "durationMs": 200,
+          "frames": 12
+        }
+      ],
+      "fades": [
+        {
+          "id": "animation ds-form-mark-draw|circle|strokeDashoffset",
+          "who": "circle",
+          "kind": "animation ds-form-mark-draw",
+          "props": [
+            "strokeDashoffset"
+          ],
+          "durationMs": 180,
+          "frames": 11
+        },
+        {
+          "id": "animation ds-form-mark-draw|path|strokeDashoffset",
+          "who": "path",
+          "kind": "animation ds-form-mark-draw",
+          "props": [
+            "strokeDashoffset"
+          ],
+          "durationMs": 180,
+          "frames": 17
+        }
+      ],
+      "styleWrites": []
+    },
+    {
+      "id": "form-summary-enter",
+      "style": "neutral",
+      "action": "press",
+      "movers": [
+        {
+          "id": "script|span|transform",
+          "who": "span",
+          "kind": "script",
+          "props": [
+            "transform"
+          ],
+          "durationMs": 200,
+          "frames": 24
+        },
+        {
+          "id": "script|div[data-part=body]|transform",
+          "who": "div[data-part=body]",
+          "kind": "script",
+          "props": [
+            "transform"
+          ],
+          "durationMs": 200,
+          "frames": 24
+        },
+        {
+          "id": "script|div[data-part=actions]|transform",
+          "who": "div[data-part=actions]",
+          "kind": "script",
+          "props": [
+            "transform"
+          ],
+          "durationMs": 200,
+          "frames": 24
+        },
+        {
+          "id": "transition|label[data-ds=label][data-part=label]|transform",
+          "who": "label[data-ds=label][data-part=label]",
+          "kind": "transition",
+          "props": [
+            "transform"
+          ],
+          "durationMs": 158,
+          "frames": 12
+        },
+        {
+          "id": "transition|div[data-ds=input]::before|transform",
+          "who": "div[data-ds=input]::before",
+          "kind": "transition",
+          "props": [
+            "transform"
+          ],
+          "durationMs": 200,
+          "frames": 14
+        },
+        {
+          "id": "animation ds-alert-in|div[data-ds=alert][data-part=summary]|clipPath,opacity,transform",
+          "who": "div[data-ds=alert][data-part=summary]",
+          "kind": "animation ds-alert-in",
+          "props": [
+            "clipPath",
+            "opacity",
+            "transform"
+          ],
+          "durationMs": 200,
+          "frames": 14
+        },
+        {
+          "id": "animation ds-alert-icon-in|span[data-part=icon]|opacity,boxShadow,transform",
+          "who": "span[data-part=icon]",
+          "kind": "animation ds-alert-icon-in",
+          "props": [
+            "opacity",
+            "boxShadow",
+            "transform"
+          ],
+          "durationMs": 200,
+          "frames": 16
+        },
+        {
+          "id": "animation ds-alert-text-in|div[data-part=title]|opacity,transform",
+          "who": "div[data-part=title]",
+          "kind": "animation ds-alert-text-in",
+          "props": [
+            "opacity",
+            "transform"
+          ],
+          "durationMs": 200,
+          "frames": 17
+        },
+        {
+          "id": "animation ds-alert-text-in|div[data-part=body]|opacity,transform",
+          "who": "div[data-part=body]",
+          "kind": "animation ds-alert-text-in",
+          "props": [
+            "opacity",
+            "transform"
+          ],
+          "durationMs": 200,
+          "frames": 17
+        },
+        {
+          "id": "script|p[data-ds=field-error][data-part=error]|clipPath,opacity,transform",
+          "who": "p[data-ds=field-error][data-part=error]",
+          "kind": "script",
+          "props": [
+            "clipPath",
+            "opacity",
+            "transform"
+          ],
+          "durationMs": 200,
+          "frames": 28
+        },
+        {
+          "id": "script|svg[data-ds=icon][data-part=icon]|opacity,transform",
+          "who": "svg[data-ds=icon][data-part=icon]",
+          "kind": "script",
+          "props": [
+            "opacity",
+            "transform"
+          ],
+          "durationMs": 200,
+          "frames": 32
+        },
+        {
+          "id": "script|div[data-ds=input]|transform",
+          "who": "div[data-ds=input]",
+          "kind": "script",
+          "props": [
+            "transform"
+          ],
+          "durationMs": 200,
+          "frames": 28
+        }
+      ],
+      "fades": [
+        {
+          "id": "transition|label[data-ds=label][data-part=label]|color",
+          "who": "label[data-ds=label][data-part=label]",
+          "kind": "transition",
+          "props": [
+            "color"
+          ],
+          "durationMs": 158,
+          "frames": 24
+        },
+        {
+          "id": "transition|div[data-ds=input]|border-bottom-color",
+          "who": "div[data-ds=input]",
+          "kind": "transition",
+          "props": [
+            "border-bottom-color"
+          ],
+          "durationMs": 150,
+          "frames": 22
+        },
+        {
+          "id": "transition|div[data-ds=input]|border-left-color",
+          "who": "div[data-ds=input]",
+          "kind": "transition",
+          "props": [
+            "border-left-color"
+          ],
+          "durationMs": 150,
+          "frames": 22
+        },
+        {
+          "id": "transition|div[data-ds=input]|border-right-color",
+          "who": "div[data-ds=input]",
+          "kind": "transition",
+          "props": [
+            "border-right-color"
+          ],
+          "durationMs": 150,
+          "frames": 22
+        },
+        {
+          "id": "transition|div[data-ds=input]|border-top-color",
+          "who": "div[data-ds=input]",
+          "kind": "transition",
+          "props": [
+            "border-top-color"
+          ],
+          "durationMs": 150,
+          "frames": 22
+        },
+        {
+          "id": "transition|div[data-ds=input]::before|opacity",
+          "who": "div[data-ds=input]::before",
+          "kind": "transition",
+          "props": [
+            "opacity"
+          ],
+          "durationMs": 200,
+          "frames": 14
+        },
+        {
+          "id": "transition|div[data-ds=input]::before|box-shadow",
+          "who": "div[data-ds=input]::before",
+          "kind": "transition",
+          "props": [
+            "box-shadow"
+          ],
+          "durationMs": 200,
+          "frames": 22
+        },
+        {
+          "id": "script|li|opacity",
+          "who": "li",
+          "kind": "script",
+          "props": [
+            "opacity"
+          ],
+          "durationMs": 150,
+          "frames": 22
+        }
+      ],
+      "styleWrites": []
+    },
+    {
+      "id": "handle-grip",
+      "style": "neutral",
+      "action": "press",
+      "movers": [
+        {
+          "id": "transition|span[data-part=handle-grip]|transform",
+          "who": "span[data-part=handle-grip]",
+          "kind": "transition",
+          "props": [
+            "transform"
+          ],
+          "durationMs": 200,
+          "frames": 13
+        }
+      ],
+      "fades": [
+        {
+          "id": "transition|span[data-part=handle-grip]|opacity",
+          "who": "span[data-part=handle-grip]",
+          "kind": "transition",
+          "props": [
+            "opacity"
+          ],
+          "durationMs": 150,
+          "frames": 9
+        }
+      ],
+      "styleWrites": []
+    },
+    {
+      "id": "highlight-marker",
+      "style": "neutral",
+      "action": "press",
+      "movers": [
+        {
+          "id": "animation ds-menu-in|div[data-ds=dropdown-menu]|clipPath,opacity,transform",
+          "who": "div[data-ds=dropdown-menu]",
+          "kind": "animation ds-menu-in",
+          "props": [
+            "clipPath",
+            "opacity",
+            "transform"
+          ],
+          "durationMs": 158,
+          "frames": 11
+        },
+        {
+          "id": "animation ds-menu-row-in|span[data-part=start]|opacity,transform",
+          "who": "span[data-part=start]",
+          "kind": "animation ds-menu-row-in",
+          "props": [
+            "opacity",
+            "transform"
+          ],
+          "durationMs": 200,
+          "frames": 79
+        },
+        {
+          "id": "animation ds-menu-row-in|span[data-part=text]|opacity,transform",
+          "who": "span[data-part=text]",
+          "kind": "animation ds-menu-row-in",
+          "props": [
+            "opacity",
+            "transform"
+          ],
+          "durationMs": 200,
+          "frames": 79
+        },
+        {
+          "id": "animation ds-menu-row-in|span[data-part=shortcut]|opacity,transform",
+          "who": "span[data-part=shortcut]",
+          "kind": "animation ds-menu-row-in",
+          "props": [
+            "opacity",
+            "transform"
+          ],
+          "durationMs": 200,
+          "frames": 14
+        },
+        {
+          "id": "animation ds-menu-row-in|div[data-part=separator]|opacity,transform",
+          "who": "div[data-part=separator]",
+          "kind": "animation ds-menu-row-in",
+          "props": [
+            "opacity",
+            "transform"
+          ],
+          "durationMs": 200,
+          "frames": 17
+        }
+      ],
+      "fades": [],
+      "styleWrites": [
+        "div transform: translate(502px, 472px)"
+      ]
+    },
+    {
+      "id": "inline-edit-morph",
+      "style": "neutral",
+      "action": "press",
+      "movers": [
+        {
+          "id": "transition|div[data-ds=input][data-part=control]::before|transform",
+          "who": "div[data-ds=input][data-part=control]::before",
+          "kind": "transition",
+          "props": [
+            "transform"
+          ],
+          "durationMs": 200,
+          "frames": 14
+        },
+        {
+          "id": "script|span|opacity,transform",
+          "who": "span",
+          "kind": "script",
+          "props": [
+            "opacity",
+            "transform"
+          ],
+          "durationMs": 180,
+          "frames": 12
+        },
+        {
+          "id": "script|svg[data-ds=icon]|opacity,transform",
+          "who": "svg[data-ds=icon]",
+          "kind": "script",
+          "props": [
+            "opacity",
+            "transform"
+          ],
+          "durationMs": 200,
+          "frames": 14
+        },
+        {
+          "id": "script|span[data-part=icon]|opacity,transform",
+          "who": "span[data-part=icon]",
+          "kind": "script",
+          "props": [
+            "opacity",
+            "transform"
+          ],
+          "durationMs": 200,
+          "frames": 15
+        }
+      ],
+      "fades": [
+        {
+          "id": "transition|div[data-ds=input][data-part=control]|border-bottom-color",
+          "who": "div[data-ds=input][data-part=control]",
+          "kind": "transition",
+          "props": [
+            "border-bottom-color"
+          ],
+          "durationMs": 150,
+          "frames": 10
+        },
+        {
+          "id": "transition|div[data-ds=input][data-part=control]|border-left-color",
+          "who": "div[data-ds=input][data-part=control]",
+          "kind": "transition",
+          "props": [
+            "border-left-color"
+          ],
+          "durationMs": 150,
+          "frames": 10
+        },
+        {
+          "id": "transition|div[data-ds=input][data-part=control]|border-right-color",
+          "who": "div[data-ds=input][data-part=control]",
+          "kind": "transition",
+          "props": [
+            "border-right-color"
+          ],
+          "durationMs": 150,
+          "frames": 10
+        },
+        {
+          "id": "transition|div[data-ds=input][data-part=control]|border-top-color",
+          "who": "div[data-ds=input][data-part=control]",
+          "kind": "transition",
+          "props": [
+            "border-top-color"
+          ],
+          "durationMs": 150,
+          "frames": 10
+        },
+        {
+          "id": "transition|div[data-ds=input][data-part=control]::before|opacity",
+          "who": "div[data-ds=input][data-part=control]::before",
+          "kind": "transition",
+          "props": [
+            "opacity"
+          ],
+          "durationMs": 200,
+          "frames": 14
+        }
+      ],
+      "styleWrites": []
+    },
+    {
+      "id": "kbd-press",
+      "style": "neutral",
+      "action": "press",
+      "movers": [
+        {
+          "id": "script|kbd[data-part=key]|transform",
+          "who": "kbd[data-part=key]",
+          "kind": "script",
+          "props": [
+            "transform"
+          ],
+          "durationMs": 200,
+          "frames": 44
+        }
+      ],
+      "fades": [],
+      "styleWrites": []
+    },
+    {
+      "id": "language-roll",
+      "style": "neutral",
+      "action": "press",
+      "movers": [
+        {
+          "id": "transition|span[data-part=end]|transform",
+          "who": "span[data-part=end]",
+          "kind": "transition",
+          "props": [
+            "transform"
+          ],
+          "durationMs": 158,
+          "frames": 11
+        },
+        {
+          "id": "script|span|opacity,transform",
+          "who": "span",
+          "kind": "script",
+          "props": [
+            "opacity",
+            "transform"
+          ],
+          "durationMs": 158,
+          "frames": 22
+        },
+        {
+          "id": "script|a[data-ds=link][data-part=item]|transform",
+          "who": "a[data-ds=link][data-part=item]",
+          "kind": "script",
+          "props": [
+            "transform"
+          ],
+          "durationMs": 200,
+          "frames": 28
+        }
+      ],
+      "fades": [
+        {
+          "id": "transition|a[data-ds=link][data-part=item]|color",
+          "who": "a[data-ds=link][data-part=item]",
+          "kind": "transition",
+          "props": [
+            "color"
+          ],
+          "durationMs": 180,
+          "frames": 24
+        }
+      ],
+      "styleWrites": []
+    },
+    {
+      "id": "lightbox-zoom",
+      "style": "neutral",
+      "action": "press",
+      "movers": [
+        {
+          "id": "animation ds-lightbox-in|div[data-part=panel]|opacity,transform",
+          "who": "div[data-part=panel]",
+          "kind": "animation ds-lightbox-in",
+          "props": [
+            "opacity",
+            "transform"
+          ],
+          "durationMs": 200,
+          "frames": 13
+        },
+        {
+          "id": "animation ds-lightbox-part-in|div[data-part=toolbar]|opacity,transform",
+          "who": "div[data-part=toolbar]",
+          "kind": "animation ds-lightbox-part-in",
+          "props": [
+            "opacity",
+            "transform"
+          ],
+          "durationMs": 200,
+          "frames": 15
+        },
+        {
+          "id": "animation ds-lightbox-part-in|button[data-ds=icon-button][data-part=previous]|opacity,transform",
+          "who": "button[data-ds=icon-button][data-part=previous]",
+          "kind": "animation ds-lightbox-part-in",
+          "props": [
+            "opacity",
+            "transform"
+          ],
+          "durationMs": 200,
+          "frames": 16
+        },
+        {
+          "id": "animation ds-lightbox-part-in|p[data-part=caption]|opacity,transform",
+          "who": "p[data-part=caption]",
+          "kind": "animation ds-lightbox-part-in",
+          "props": [
+            "opacity",
+            "transform"
+          ],
+          "durationMs": 200,
+          "frames": 18
+        },
+        {
+          "id": "script|img[data-part=image]|transform",
+          "who": "img[data-part=image]",
+          "kind": "script",
+          "props": [
+            "transform"
+          ],
+          "durationMs": 200,
+          "frames": 13
+        }
+      ],
+      "fades": [
+        {
+          "id": "animation ds-dialog-fade-in|div[data-part=backdrop]|opacity",
+          "who": "div[data-part=backdrop]",
+          "kind": "animation ds-dialog-fade-in",
+          "props": [
+            "opacity"
+          ],
+          "durationMs": 200,
+          "frames": 13
+        }
+      ],
+      "styleWrites": []
+    },
+    {
+      "id": "link-underline",
+      "style": "neutral",
+      "action": "press",
+      "movers": [],
+      "fades": [
+        {
+          "id": "transition|a[data-ds=link]|color",
+          "who": "a[data-ds=link]",
+          "kind": "transition",
+          "props": [
+            "color"
+          ],
+          "durationMs": 180,
+          "frames": 11
+        },
+        {
+          "id": "animation ds-link-draw|span[data-part=label]::after|clipPath",
+          "who": "span[data-part=label]::after",
+          "kind": "animation ds-link-draw",
+          "props": [
+            "clipPath"
+          ],
+          "durationMs": 180,
+          "frames": 11
+        }
+      ],
+      "styleWrites": []
+    },
+    {
+      "id": "list-stagger",
+      "style": "neutral",
+      "action": "press",
+      "movers": [
+        {
+          "id": "script|li[data-part=item]|opacity,transform",
+          "who": "li[data-part=item]",
+          "kind": "script",
+          "props": [
+            "opacity",
+            "transform"
+          ],
+          "durationMs": 200,
+          "frames": 90
+        }
+      ],
+      "fades": [],
+      "styleWrites": []
+    },
+    {
+      "id": "menu-origin",
+      "style": "neutral",
+      "action": "press",
+      "movers": [
+        {
+          "id": "animation ds-menu-in|div[data-ds=dropdown-menu]|clipPath,opacity,transform",
+          "who": "div[data-ds=dropdown-menu]",
+          "kind": "animation ds-menu-in",
+          "props": [
+            "clipPath",
+            "opacity",
+            "transform"
+          ],
+          "durationMs": 158,
+          "frames": 11
+        },
+        {
+          "id": "animation ds-menu-row-in|div[data-part=label]|opacity,transform",
+          "who": "div[data-part=label]",
+          "kind": "animation ds-menu-row-in",
+          "props": [
+            "opacity",
+            "transform"
+          ],
+          "durationMs": 200,
+          "frames": 15
+        },
+        {
+          "id": "animation ds-menu-row-in|span[data-part=start]|opacity,transform",
+          "who": "span[data-part=start]",
+          "kind": "animation ds-menu-row-in",
+          "props": [
+            "opacity",
+            "transform"
+          ],
+          "durationMs": 200,
+          "frames": 75
+        },
+        {
+          "id": "animation ds-menu-row-in|span[data-part=text]|opacity,transform",
+          "who": "span[data-part=text]",
+          "kind": "animation ds-menu-row-in",
+          "props": [
+            "opacity",
+            "transform"
+          ],
+          "durationMs": 200,
+          "frames": 75
+        },
+        {
+          "id": "animation ds-menu-row-in|span[data-part=shortcut]|opacity,transform",
+          "who": "span[data-part=shortcut]",
+          "kind": "animation ds-menu-row-in",
+          "props": [
+            "opacity",
+            "transform"
+          ],
+          "durationMs": 200,
+          "frames": 16
+        },
+        {
+          "id": "animation ds-menu-row-in|div[data-part=separator]|opacity,transform",
+          "who": "div[data-part=separator]",
+          "kind": "animation ds-menu-row-in",
+          "props": [
+            "opacity",
+            "transform"
+          ],
+          "durationMs": 200,
+          "frames": 21
+        }
+      ],
+      "fades": [],
+      "styleWrites": [
+        "div transform: translate(332px, 472px)"
+      ]
+    },
+    {
+      "id": "menu-row-slide",
+      "style": "neutral",
+      "action": "press",
+      "movers": [
+        {
+          "id": "animation ds-menu-in|div[data-ds=dropdown-menu][data-part=content]|clipPath,opacity,transform",
+          "who": "div[data-ds=dropdown-menu][data-part=content]",
+          "kind": "animation ds-menu-in",
+          "props": [
+            "clipPath",
+            "opacity",
+            "transform"
+          ],
+          "durationMs": 158,
+          "frames": 11
+        },
+        {
+          "id": "animation ds-menu-row-in|span[data-part=text]|opacity,transform",
+          "who": "span[data-part=text]",
+          "kind": "animation ds-menu-row-in",
+          "props": [
+            "opacity",
+            "transform"
+          ],
+          "durationMs": 200,
+          "frames": 31
+        }
+      ],
+      "fades": [],
+      "styleWrites": [
+        "div transform: translate(462px, 466px)"
+      ]
+    },
+    {
+      "id": "menu-rows",
+      "style": "neutral",
+      "action": "press",
+      "movers": [
+        {
+          "id": "transition|span[data-part=icon]|transform",
+          "who": "span[data-part=icon]",
+          "kind": "transition",
+          "props": [
+            "transform"
+          ],
+          "durationMs": 158,
+          "frames": 12
+        },
+        {
+          "id": "animation ds-select-content-in|div[data-ds=select][data-part=content]|clipPath,opacity,transform",
+          "who": "div[data-ds=select][data-part=content]",
+          "kind": "animation ds-select-content-in",
+          "props": [
+            "clipPath",
+            "opacity",
+            "transform"
+          ],
+          "durationMs": 158,
+          "frames": 12
+        },
+        {
+          "id": "script|div[data-part=item]|transform",
+          "who": "div[data-part=item]",
+          "kind": "script",
+          "props": [
+            "transform"
+          ],
+          "durationMs": 200,
+          "frames": 116
+        }
+      ],
+      "fades": [
+        {
+          "id": "transition|button[data-ds=select]::before|opacity",
+          "who": "button[data-ds=select]::before",
+          "kind": "transition",
+          "props": [
+            "opacity"
+          ],
+          "durationMs": 150,
+          "frames": 11
+        },
+        {
+          "id": "transition|span[data-part=highlight]|opacity",
+          "who": "span[data-part=highlight]",
+          "kind": "transition",
+          "props": [
+            "opacity"
+          ],
+          "durationMs": 80,
+          "frames": 7
+        }
+      ],
+      "styleWrites": [
+        "div transform: translate(502px, 413px)",
+        "span[data-part=highlight] transform: translate(0px, 0px)"
+      ]
+    },
+    {
+      "id": "menu-submenu-nudge",
+      "style": "neutral",
+      "action": "press",
+      "movers": [
+        {
+          "id": "animation ds-menu-in|div[data-ds=dropdown-menu]|clipPath,opacity,transform",
+          "who": "div[data-ds=dropdown-menu]",
+          "kind": "animation ds-menu-in",
+          "props": [
+            "clipPath",
+            "opacity",
+            "transform"
+          ],
+          "durationMs": 158,
+          "frames": 11
+        },
+        {
+          "id": "animation ds-menu-row-in|span[data-part=start]|opacity,transform",
+          "who": "span[data-part=start]",
+          "kind": "animation ds-menu-row-in",
+          "props": [
+            "opacity",
+            "transform"
+          ],
+          "durationMs": 200,
+          "frames": 31
+        },
+        {
+          "id": "animation ds-menu-row-in|span[data-part=text]|opacity,transform",
+          "who": "span[data-part=text]",
+          "kind": "animation ds-menu-row-in",
+          "props": [
+            "opacity",
+            "transform"
+          ],
+          "durationMs": 200,
+          "frames": 31
+        },
+        {
+          "id": "animation ds-menu-row-in|span[data-part=end]|opacity,transform",
+          "who": "span[data-part=end]",
+          "kind": "animation ds-menu-row-in",
+          "props": [
+            "opacity",
+            "transform"
+          ],
+          "durationMs": 200,
+          "frames": 16
+        }
+      ],
+      "fades": [],
+      "styleWrites": [
+        "div transform: translate(502px, 472px)"
+      ]
+    },
+    {
+      "id": "meter-fill",
+      "style": "neutral",
+      "action": "press",
+      "movers": [
+        {
+          "id": "transition|span[data-part=indicator]|transform",
+          "who": "span[data-part=indicator]",
+          "kind": "transition",
+          "props": [
+            "transform"
+          ],
+          "durationMs": 640,
+          "frames": 158
+        },
+        {
+          "id": "script|span[data-part=value]|color,transform",
+          "who": "span[data-part=value]",
+          "kind": "script",
+          "props": [
+            "color",
+            "transform"
+          ],
+          "durationMs": 200,
+          "frames": 146
+        }
+      ],
+      "fades": [],
+      "styleWrites": []
+    },
+    {
+      "id": "nav-current-slide",
+      "style": "neutral",
+      "action": "press",
+      "movers": [
+        {
+          "id": "transition|span[data-part=end]|transform",
+          "who": "span[data-part=end]",
+          "kind": "transition",
+          "props": [
+            "transform"
+          ],
+          "durationMs": 158,
+          "frames": 11
+        },
+        {
+          "id": "script|a[data-part=item]::before|transform",
+          "who": "a[data-part=item]::before",
+          "kind": "script",
+          "props": [
+            "transform"
+          ],
+          "durationMs": 158,
+          "frames": 22
+        },
+        {
+          "id": "script|span[data-part=item-label]|transform",
+          "who": "span[data-part=item-label]",
+          "kind": "script",
+          "props": [
+            "transform"
+          ],
+          "durationMs": 200,
+          "frames": 28
+        },
+        {
+          "id": "script|span[data-part=item-icon]|transform",
+          "who": "span[data-part=item-icon]",
+          "kind": "script",
+          "props": [
+            "transform"
+          ],
+          "durationMs": 200,
+          "frames": 28
+        },
+        {
+          "id": "script|a[data-part=link]::before|transform",
+          "who": "a[data-part=link]::before",
+          "kind": "script",
+          "props": [
+            "transform"
+          ],
+          "durationMs": 158,
+          "frames": 11
+        }
+      ],
+      "fades": [
+        {
+          "id": "script|a[data-part=label-ink]|clipPath",
+          "who": "a[data-part=label-ink]",
+          "kind": "script",
+          "props": [
+            "clipPath"
+          ],
+          "durationMs": 158,
+          "frames": 33
+        },
+        {
+          "id": "script|a[data-part=link]|color",
+          "who": "a[data-part=link]",
+          "kind": "script",
+          "props": [
+            "color"
+          ],
+          "durationMs": 158,
+          "frames": 11
+        }
+      ],
+      "styleWrites": []
+    },
+    {
+      "id": "nav-hover-follow",
+      "style": "neutral",
+      "action": "press",
+      "movers": [],
+      "fades": [
+        {
+          "id": "transition|a[data-part=item]::after|opacity",
+          "who": "a[data-part=item]::after",
+          "kind": "transition",
+          "props": [
+            "opacity"
+          ],
+          "durationMs": 80,
+          "frames": 5
+        }
+      ],
+      "styleWrites": []
+    },
+    {
+      "id": "notification-change",
+      "style": "neutral",
+      "action": "press",
+      "movers": [
+        {
+          "id": "script|h3[data-part=group-label]|transform",
+          "who": "h3[data-part=group-label]",
+          "kind": "script",
+          "props": [
+            "transform"
+          ],
+          "durationMs": 158,
+          "frames": 12
+        },
+        {
+          "id": "script|li|opacity,transform",
+          "who": "li",
+          "kind": "script",
+          "props": [
+            "opacity",
+            "transform"
+          ],
+          "durationMs": 200,
+          "frames": 15
+        },
+        {
+          "id": "script|li|transform",
+          "who": "li",
+          "kind": "script",
+          "props": [
+            "transform"
+          ],
+          "durationMs": 158,
+          "frames": 24
+        },
+        {
+          "id": "script|span|opacity,transform",
+          "who": "span",
+          "kind": "script",
+          "props": [
+            "opacity",
+            "transform"
+          ],
+          "durationMs": 158,
+          "frames": 24
+        },
+        {
+          "id": "script|span[data-part=count]|transform",
+          "who": "span[data-part=count]",
+          "kind": "script",
+          "props": [
+            "transform"
+          ],
+          "durationMs": 200,
+          "frames": 15
+        }
+      ],
+      "fades": [],
+      "styleWrites": []
+    },
+    {
+      "id": "otp-caret",
+      "style": "neutral",
+      "action": "press",
+      "movers": [
+        {
+          "id": "transition|span[data-part=cell]::before|transform",
+          "who": "span[data-part=cell]::before",
+          "kind": "transition",
+          "props": [
+            "transform"
+          ],
+          "durationMs": 200,
+          "frames": 13
+        },
+        {
+          "id": "transition|span[data-part=cell]::after|transform",
+          "who": "span[data-part=cell]::after",
+          "kind": "transition",
+          "props": [
+            "transform"
+          ],
+          "durationMs": 158,
+          "frames": 10
+        },
+        {
+          "id": "script|span|opacity,transform",
+          "who": "span",
+          "kind": "script",
+          "props": [
+            "opacity",
+            "transform"
+          ],
+          "durationMs": 200,
+          "frames": 13
+        }
+      ],
+      "fades": [
+        {
+          "id": "transition|span[data-part=cell]|border-bottom-color",
+          "who": "span[data-part=cell]",
+          "kind": "transition",
+          "props": [
+            "border-bottom-color"
+          ],
+          "durationMs": 150,
+          "frames": 10
+        },
+        {
+          "id": "transition|span[data-part=cell]|border-left-color",
+          "who": "span[data-part=cell]",
+          "kind": "transition",
+          "props": [
+            "border-left-color"
+          ],
+          "durationMs": 150,
+          "frames": 10
+        },
+        {
+          "id": "transition|span[data-part=cell]|border-right-color",
+          "who": "span[data-part=cell]",
+          "kind": "transition",
+          "props": [
+            "border-right-color"
+          ],
+          "durationMs": 150,
+          "frames": 10
+        },
+        {
+          "id": "transition|span[data-part=cell]|border-top-color",
+          "who": "span[data-part=cell]",
+          "kind": "transition",
+          "props": [
+            "border-top-color"
+          ],
+          "durationMs": 150,
+          "frames": 10
+        },
+        {
+          "id": "transition|span[data-part=cell]::before|box-shadow",
+          "who": "span[data-part=cell]::before",
+          "kind": "transition",
+          "props": [
+            "box-shadow"
+          ],
+          "durationMs": 200,
+          "frames": 13
+        },
+        {
+          "id": "transition|span[data-part=cell]::before|opacity",
+          "who": "span[data-part=cell]::before",
+          "kind": "transition",
+          "props": [
+            "opacity"
+          ],
+          "durationMs": 200,
+          "frames": 13
+        },
+        {
+          "id": "transition|span[data-part=cell]::after|opacity",
+          "who": "span[data-part=cell]::after",
+          "kind": "transition",
+          "props": [
+            "opacity"
+          ],
+          "durationMs": 158,
+          "frames": 10
+        }
+      ],
+      "styleWrites": []
+    },
+    {
+      "id": "otp-complete",
+      "style": "neutral",
+      "action": "press",
+      "movers": [
+        {
+          "id": "transition|span[data-part=cell]::before|transform",
+          "who": "span[data-part=cell]::before",
+          "kind": "transition",
+          "props": [
+            "transform"
+          ],
+          "durationMs": 200,
+          "frames": 12
+        },
+        {
+          "id": "transition|span[data-part=cell]::after|transform",
+          "who": "span[data-part=cell]::after",
+          "kind": "transition",
+          "props": [
+            "transform"
+          ],
+          "durationMs": 158,
+          "frames": 1
+        },
+        {
+          "id": "script|span|opacity,transform",
+          "who": "span",
+          "kind": "script",
+          "props": [
+            "opacity",
+            "transform"
+          ],
+          "durationMs": 200,
+          "frames": 11
+        }
+      ],
+      "fades": [
+        {
+          "id": "transition|span[data-part=cell]|border-bottom-color",
+          "who": "span[data-part=cell]",
+          "kind": "transition",
+          "props": [
+            "border-bottom-color"
+          ],
+          "durationMs": 150,
+          "frames": 9
+        },
+        {
+          "id": "transition|span[data-part=cell]|border-left-color",
+          "who": "span[data-part=cell]",
+          "kind": "transition",
+          "props": [
+            "border-left-color"
+          ],
+          "durationMs": 150,
+          "frames": 9
+        },
+        {
+          "id": "transition|span[data-part=cell]|border-right-color",
+          "who": "span[data-part=cell]",
+          "kind": "transition",
+          "props": [
+            "border-right-color"
+          ],
+          "durationMs": 150,
+          "frames": 9
+        },
+        {
+          "id": "transition|span[data-part=cell]|border-top-color",
+          "who": "span[data-part=cell]",
+          "kind": "transition",
+          "props": [
+            "border-top-color"
+          ],
+          "durationMs": 150,
+          "frames": 9
+        },
+        {
+          "id": "transition|span[data-part=cell]::before|box-shadow",
+          "who": "span[data-part=cell]::before",
+          "kind": "transition",
+          "props": [
+            "box-shadow"
+          ],
+          "durationMs": 200,
+          "frames": 12
+        },
+        {
+          "id": "transition|span[data-part=cell]::before|opacity",
+          "who": "span[data-part=cell]::before",
+          "kind": "transition",
+          "props": [
+            "opacity"
+          ],
+          "durationMs": 200,
+          "frames": 12
+        },
+        {
+          "id": "transition|span[data-part=cell]::after|opacity",
+          "who": "span[data-part=cell]::after",
+          "kind": "transition",
+          "props": [
+            "opacity"
+          ],
+          "durationMs": 158,
+          "frames": 1
+        }
+      ],
+      "styleWrites": []
+    },
+    {
+      "id": "otp-fill",
+      "style": "neutral",
+      "action": "press",
+      "movers": [
+        {
+          "id": "transition|span[data-part=cell]::before|transform",
+          "who": "span[data-part=cell]::before",
+          "kind": "transition",
+          "props": [
+            "transform"
+          ],
+          "durationMs": 200,
+          "frames": 12
+        },
+        {
+          "id": "transition|span[data-part=cell]::after|transform",
+          "who": "span[data-part=cell]::after",
+          "kind": "transition",
+          "props": [
+            "transform"
+          ],
+          "durationMs": 158,
+          "frames": 1
+        },
+        {
+          "id": "script|span|opacity,transform",
+          "who": "span",
+          "kind": "script",
+          "props": [
+            "opacity",
+            "transform"
+          ],
+          "durationMs": 158,
+          "frames": 63
+        }
+      ],
+      "fades": [
+        {
+          "id": "transition|span[data-part=cell]|border-bottom-color",
+          "who": "span[data-part=cell]",
+          "kind": "transition",
+          "props": [
+            "border-bottom-color"
+          ],
+          "durationMs": 150,
+          "frames": 10
+        },
+        {
+          "id": "transition|span[data-part=cell]|border-left-color",
+          "who": "span[data-part=cell]",
+          "kind": "transition",
+          "props": [
+            "border-left-color"
+          ],
+          "durationMs": 150,
+          "frames": 10
+        },
+        {
+          "id": "transition|span[data-part=cell]|border-right-color",
+          "who": "span[data-part=cell]",
+          "kind": "transition",
+          "props": [
+            "border-right-color"
+          ],
+          "durationMs": 150,
+          "frames": 10
+        },
+        {
+          "id": "transition|span[data-part=cell]|border-top-color",
+          "who": "span[data-part=cell]",
+          "kind": "transition",
+          "props": [
+            "border-top-color"
+          ],
+          "durationMs": 150,
+          "frames": 10
+        },
+        {
+          "id": "transition|span[data-part=cell]::before|box-shadow",
+          "who": "span[data-part=cell]::before",
+          "kind": "transition",
+          "props": [
+            "box-shadow"
+          ],
+          "durationMs": 200,
+          "frames": 12
+        },
+        {
+          "id": "transition|span[data-part=cell]::before|opacity",
+          "who": "span[data-part=cell]::before",
+          "kind": "transition",
+          "props": [
+            "opacity"
+          ],
+          "durationMs": 200,
+          "frames": 12
+        },
+        {
+          "id": "transition|span[data-part=cell]::after|opacity",
+          "who": "span[data-part=cell]::after",
+          "kind": "transition",
+          "props": [
+            "opacity"
+          ],
+          "durationMs": 158,
+          "frames": 1
+        }
+      ],
+      "styleWrites": []
+    },
+    {
+      "id": "pagination-roll",
+      "style": "neutral",
+      "action": "press",
+      "movers": [
+        {
+          "id": "transition|span[data-part=end]|transform",
+          "who": "span[data-part=end]",
+          "kind": "transition",
+          "props": [
+            "transform"
+          ],
+          "durationMs": 158,
+          "frames": 11
+        },
+        {
+          "id": "script|span|opacity,transform",
+          "who": "span",
+          "kind": "script",
+          "props": [
+            "opacity",
+            "transform"
+          ],
+          "durationMs": 158,
+          "frames": 248
+        },
+        {
+          "id": "script|span|transform",
+          "who": "span",
+          "kind": "script",
+          "props": [
+            "transform"
+          ],
+          "durationMs": 158,
+          "frames": 11
+        },
+        {
+          "id": "script|span[data-part=label]|transform",
+          "who": "span[data-part=label]",
+          "kind": "script",
+          "props": [
+            "transform"
+          ],
+          "durationMs": 200,
+          "frames": 14
+        }
+      ],
+      "fades": [
+        {
+          "id": "script|span|opacity",
+          "who": "span",
+          "kind": "script",
+          "props": [
+            "opacity"
+          ],
+          "durationMs": 150,
+          "frames": 10
+        }
+      ],
+      "styleWrites": []
+    },
+    {
+      "id": "password-reveal",
+      "style": "neutral",
+      "action": "press",
+      "movers": [],
+      "fades": [
+        {
+          "id": "script|span|clipPath",
+          "who": "span",
+          "kind": "script",
+          "props": [
+            "clipPath"
+          ],
+          "durationMs": 180,
+          "frames": 11
+        },
+        {
+          "id": "script|svg[data-ds=icon]|clipPath",
+          "who": "svg[data-ds=icon]",
+          "kind": "script",
+          "props": [
+            "clipPath"
+          ],
+          "durationMs": 180,
+          "frames": 11
+        },
+        {
+          "id": "script|input[data-part=control]|opacity",
+          "who": "input[data-part=control]",
+          "kind": "script",
+          "props": [
+            "opacity"
+          ],
+          "durationMs": 150,
+          "frames": 10
+        }
+      ],
+      "styleWrites": []
+    },
+    {
+      "id": "picker-chevron-turn",
+      "style": "neutral",
+      "action": "press",
+      "movers": [
+        {
+          "id": "transition|span[data-part=icon]|transform",
+          "who": "span[data-part=icon]",
+          "kind": "transition",
+          "props": [
+            "transform"
+          ],
+          "durationMs": 158,
+          "frames": 11
+        },
+        {
+          "id": "animation ds-select-content-in|div[data-ds=select][data-part=content]|clipPath,opacity,transform",
+          "who": "div[data-ds=select][data-part=content]",
+          "kind": "animation ds-select-content-in",
+          "props": [
+            "clipPath",
+            "opacity",
+            "transform"
+          ],
+          "durationMs": 158,
+          "frames": 11
+        },
+        {
+          "id": "script|div[data-part=item]|transform",
+          "who": "div[data-part=item]",
+          "kind": "script",
+          "props": [
+            "transform"
+          ],
+          "durationMs": 200,
+          "frames": 110
+        }
+      ],
+      "fades": [
+        {
+          "id": "transition|button[data-ds=select]::before|opacity",
+          "who": "button[data-ds=select]::before",
+          "kind": "transition",
+          "props": [
+            "opacity"
+          ],
+          "durationMs": 150,
+          "frames": 11
+        },
+        {
+          "id": "transition|span[data-part=highlight]|opacity",
+          "who": "span[data-part=highlight]",
+          "kind": "transition",
+          "props": [
+            "opacity"
+          ],
+          "durationMs": 80,
+          "frames": 6
+        }
+      ],
+      "styleWrites": [
+        "div transform: translate(341px, 413px)",
+        "span[data-part=highlight] transform: translate(0px, 0px)"
+      ]
+    },
+    {
+      "id": "picker-value-roll",
+      "style": "neutral",
+      "action": "press",
+      "movers": [
+        {
+          "id": "transition|span[data-part=icon]|transform",
+          "who": "span[data-part=icon]",
+          "kind": "transition",
+          "props": [
+            "transform"
+          ],
+          "durationMs": 158,
+          "frames": 12
+        },
+        {
+          "id": "animation ds-select-content-in|div[data-ds=select][data-part=content]|clipPath,opacity,transform",
+          "who": "div[data-ds=select][data-part=content]",
+          "kind": "animation ds-select-content-in",
+          "props": [
+            "clipPath",
+            "opacity",
+            "transform"
+          ],
+          "durationMs": 158,
+          "frames": 12
+        },
+        {
+          "id": "script|div[data-part=item]|transform",
+          "who": "div[data-part=item]",
+          "kind": "script",
+          "props": [
+            "transform"
+          ],
+          "durationMs": 200,
+          "frames": 116
+        }
+      ],
+      "fades": [
+        {
+          "id": "transition|button[data-ds=select]::before|opacity",
+          "who": "button[data-ds=select]::before",
+          "kind": "transition",
+          "props": [
+            "opacity"
+          ],
+          "durationMs": 150,
+          "frames": 12
+        },
+        {
+          "id": "transition|span[data-part=highlight]|opacity",
+          "who": "span[data-part=highlight]",
+          "kind": "transition",
+          "props": [
+            "opacity"
+          ],
+          "durationMs": 80,
+          "frames": 7
+        }
+      ],
+      "styleWrites": [
+        "div transform: translate(527px, 472px)",
+        "span[data-part=highlight] transform: translate(0px, 32px)"
+      ]
+    },
+    {
+      "id": "popover-spring",
+      "style": "neutral",
+      "action": "press",
+      "movers": [
+        {
+          "id": "animation ds-popover-in|div[data-ds=popover]|opacity,transform",
+          "who": "div[data-ds=popover]",
+          "kind": "animation ds-popover-in",
+          "props": [
+            "opacity",
+            "transform"
+          ],
+          "durationMs": 200,
+          "frames": 14
+        },
+        {
+          "id": "animation ds-popover-part-in|h2[data-part=title]|opacity,transform",
+          "who": "h2[data-part=title]",
+          "kind": "animation ds-popover-part-in",
+          "props": [
+            "opacity",
+            "transform"
+          ],
+          "durationMs": 200,
+          "frames": 15
+        },
+        {
+          "id": "animation ds-popover-part-in|div[data-part=body]|opacity,transform",
+          "who": "div[data-part=body]",
+          "kind": "animation ds-popover-part-in",
+          "props": [
+            "opacity",
+            "transform"
+          ],
+          "durationMs": 200,
+          "frames": 16
+        }
+      ],
+      "fades": [],
+      "styleWrites": [
+        "div transform: translate(348px, 484px)"
+      ]
+    },
+    {
+      "id": "progress-celebrate",
+      "style": "neutral",
+      "action": "press",
+      "movers": [
+        {
+          "id": "transition|span[data-part=indicator]|clip-path",
+          "who": "span[data-part=indicator]",
+          "kind": "transition",
+          "props": [
+            "clip-path"
+          ],
+          "durationMs": 200,
+          "frames": 13
+        },
+        {
+          "id": "transition|circle|stroke-dashoffset",
+          "who": "circle",
+          "kind": "transition",
+          "props": [
+            "stroke-dashoffset"
+          ],
+          "durationMs": 200,
+          "frames": 13
+        },
+        {
+          "id": "script|span|opacity,transform",
+          "who": "span",
+          "kind": "script",
+          "props": [
+            "opacity",
+            "transform"
+          ],
+          "durationMs": 158,
+          "frames": 20
+        }
+      ],
+      "fades": [],
+      "styleWrites": []
+    },
+    {
+      "id": "progress-spring",
+      "style": "neutral",
+      "action": "press",
+      "movers": [
+        {
+          "id": "transition|span[data-part=indicator]|clip-path",
+          "who": "span[data-part=indicator]",
+          "kind": "transition",
+          "props": [
+            "clip-path"
+          ],
+          "durationMs": 200,
+          "frames": 12
+        },
+        {
+          "id": "transition|circle|stroke-dashoffset",
+          "who": "circle",
+          "kind": "transition",
+          "props": [
+            "stroke-dashoffset"
+          ],
+          "durationMs": 200,
+          "frames": 12
+        },
+        {
+          "id": "script|span|opacity,transform",
+          "who": "span",
+          "kind": "script",
+          "props": [
+            "opacity",
+            "transform"
+          ],
+          "durationMs": 158,
+          "frames": 20
+        }
+      ],
+      "fades": [],
+      "styleWrites": []
+    },
+    {
+      "id": "radio-card-lift",
+      "style": "neutral",
+      "action": "press",
+      "movers": [
+        {
+          "id": "transition|svg[data-part=badge]|stroke-dashoffset",
+          "who": "svg[data-part=badge]",
+          "kind": "transition",
+          "props": [
+            "stroke-dashoffset"
+          ],
+          "durationMs": 180,
+          "frames": 20
+        }
+      ],
+      "fades": [
+        {
+          "id": "transition|button[data-part=item]|background-color",
+          "who": "button[data-part=item]",
+          "kind": "transition",
+          "props": [
+            "background-color"
+          ],
+          "durationMs": 180,
+          "frames": 17
+        },
+        {
+          "id": "transition|button[data-part=item]|border-bottom-color",
+          "who": "button[data-part=item]",
+          "kind": "transition",
+          "props": [
+            "border-bottom-color"
+          ],
+          "durationMs": 180,
+          "frames": 17
+        },
+        {
+          "id": "transition|button[data-part=item]|border-left-color",
+          "who": "button[data-part=item]",
+          "kind": "transition",
+          "props": [
+            "border-left-color"
+          ],
+          "durationMs": 180,
+          "frames": 17
+        },
+        {
+          "id": "transition|button[data-part=item]|border-right-color",
+          "who": "button[data-part=item]",
+          "kind": "transition",
+          "props": [
+            "border-right-color"
+          ],
+          "durationMs": 180,
+          "frames": 17
+        },
+        {
+          "id": "transition|button[data-part=item]|border-top-color",
+          "who": "button[data-part=item]",
+          "kind": "transition",
+          "props": [
+            "border-top-color"
+          ],
+          "durationMs": 180,
+          "frames": 17
+        },
+        {
+          "id": "transition|button[data-part=item]|box-shadow",
+          "who": "button[data-part=item]",
+          "kind": "transition",
+          "props": [
+            "box-shadow"
+          ],
+          "durationMs": 180,
+          "frames": 17
+        },
+        {
+          "id": "transition|button[data-part=item]::after|opacity",
+          "who": "button[data-part=item]::after",
+          "kind": "transition",
+          "props": [
+            "opacity"
+          ],
+          "durationMs": 80,
+          "frames": 5
+        },
+        {
+          "id": "transition|span[data-part=indicator]|border-bottom-color",
+          "who": "span[data-part=indicator]",
+          "kind": "transition",
+          "props": [
+            "border-bottom-color"
+          ],
+          "durationMs": 100,
+          "frames": 12
+        },
+        {
+          "id": "transition|span[data-part=indicator]|border-left-color",
+          "who": "span[data-part=indicator]",
+          "kind": "transition",
+          "props": [
+            "border-left-color"
+          ],
+          "durationMs": 100,
+          "frames": 12
+        },
+        {
+          "id": "transition|span[data-part=indicator]|border-right-color",
+          "who": "span[data-part=indicator]",
+          "kind": "transition",
+          "props": [
+            "border-right-color"
+          ],
+          "durationMs": 100,
+          "frames": 12
+        },
+        {
+          "id": "transition|span[data-part=indicator]|border-top-color",
+          "who": "span[data-part=indicator]",
+          "kind": "transition",
+          "props": [
+            "border-top-color"
+          ],
+          "durationMs": 100,
+          "frames": 12
+        },
+        {
+          "id": "transition|span[data-part=indicator]|box-shadow",
+          "who": "span[data-part=indicator]",
+          "kind": "transition",
+          "props": [
+            "box-shadow"
+          ],
+          "durationMs": 158,
+          "frames": 16
+        }
+      ],
+      "styleWrites": []
+    },
+    {
+      "id": "radio-pop",
+      "style": "neutral",
+      "action": "press",
+      "movers": [],
+      "fades": [
+        {
+          "id": "transition|button[data-part=control]|border-bottom-color",
+          "who": "button[data-part=control]",
+          "kind": "transition",
+          "props": [
+            "border-bottom-color"
+          ],
+          "durationMs": 100,
+          "frames": 6
+        },
+        {
+          "id": "transition|button[data-part=control]|border-left-color",
+          "who": "button[data-part=control]",
+          "kind": "transition",
+          "props": [
+            "border-left-color"
+          ],
+          "durationMs": 100,
+          "frames": 6
+        },
+        {
+          "id": "transition|button[data-part=control]|border-right-color",
+          "who": "button[data-part=control]",
+          "kind": "transition",
+          "props": [
+            "border-right-color"
+          ],
+          "durationMs": 100,
+          "frames": 6
+        },
+        {
+          "id": "transition|button[data-part=control]|border-top-color",
+          "who": "button[data-part=control]",
+          "kind": "transition",
+          "props": [
+            "border-top-color"
+          ],
+          "durationMs": 100,
+          "frames": 6
+        }
+      ],
+      "styleWrites": []
+    },
+    {
+      "id": "rating-fill",
+      "style": "neutral",
+      "action": "press",
+      "movers": [
+        {
+          "id": "script|svg[data-ds=icon][data-part=icon]|transform",
+          "who": "svg[data-ds=icon][data-part=icon]",
+          "kind": "script",
+          "props": [
+            "transform"
+          ],
+          "durationMs": 200,
+          "frames": 25
+        },
+        {
+          "id": "script|svg[data-ds=icon][data-part=icon]|opacity,transform",
+          "who": "svg[data-ds=icon][data-part=icon]",
+          "kind": "script",
+          "props": [
+            "opacity",
+            "transform"
+          ],
+          "durationMs": 200,
+          "frames": 38
+        }
+      ],
+      "fades": [],
+      "styleWrites": []
+    },
+    {
+      "id": "rating-preview",
+      "style": "neutral",
+      "action": "press",
+      "movers": [
+        {
+          "id": "transition|svg[data-ds=icon][data-part=fill]|clip-path",
+          "who": "svg[data-ds=icon][data-part=fill]",
+          "kind": "transition",
+          "props": [
+            "clip-path"
+          ],
+          "durationMs": 150,
+          "frames": 35
+        },
+        {
+          "id": "animation ds-rating-preview|svg[data-ds=icon][data-part=icon]|transform",
+          "who": "svg[data-ds=icon][data-part=icon]",
+          "kind": "animation ds-rating-preview",
+          "props": [
+            "transform"
+          ],
+          "durationMs": 200,
+          "frames": 16
+        },
+        {
+          "id": "script|svg[data-ds=icon][data-part=icon]|transform",
+          "who": "svg[data-ds=icon][data-part=icon]",
+          "kind": "script",
+          "props": [
+            "transform"
+          ],
+          "durationMs": 200,
+          "frames": 13
+        },
+        {
+          "id": "script|svg[data-ds=icon][data-part=icon]|opacity,transform",
+          "who": "svg[data-ds=icon][data-part=icon]",
+          "kind": "script",
+          "props": [
+            "opacity",
+            "transform"
+          ],
+          "durationMs": 200,
+          "frames": 28
+        }
+      ],
+      "fades": [
+        {
+          "id": "transition|button[data-part=item]::after|opacity",
+          "who": "button[data-part=item]::after",
+          "kind": "transition",
+          "props": [
+            "opacity"
+          ],
+          "durationMs": 80,
+          "frames": 6
+        }
+      ],
+      "styleWrites": []
+    },
+    {
+      "id": "row-glide",
+      "style": "neutral",
+      "action": "press",
+      "movers": [
+        {
+          "id": "script|li[data-part=item]|opacity,transform",
+          "who": "li[data-part=item]",
+          "kind": "script",
+          "props": [
+            "opacity",
+            "transform"
+          ],
+          "durationMs": 200,
+          "frames": 63
+        },
+        {
+          "id": "script|li[data-part=item]|transform",
+          "who": "li[data-part=item]",
+          "kind": "script",
+          "props": [
+            "transform"
+          ],
+          "durationMs": 158,
+          "frames": 30
+        }
+      ],
+      "fades": [],
+      "styleWrites": []
+    },
+    {
+      "id": "scrub-roll",
+      "style": "neutral",
+      "action": "press",
+      "movers": [
+        {
+          "id": "transition|div[data-ds=scrub-input]::before|transform",
+          "who": "div[data-ds=scrub-input]::before",
+          "kind": "transition",
+          "props": [
+            "transform"
+          ],
+          "durationMs": 200,
+          "frames": 13
+        },
+        {
+          "id": "script|span|opacity,transform",
+          "who": "span",
+          "kind": "script",
+          "props": [
+            "opacity",
+            "transform"
+          ],
+          "durationMs": 158,
+          "frames": 20
+        }
+      ],
+      "fades": [
+        {
+          "id": "transition|div[data-ds=scrub-input]::before|box-shadow",
+          "who": "div[data-ds=scrub-input]::before",
+          "kind": "transition",
+          "props": [
+            "box-shadow"
+          ],
+          "durationMs": 200,
+          "frames": 13
+        },
+        {
+          "id": "transition|div[data-ds=scrub-input]::before|opacity",
+          "who": "div[data-ds=scrub-input]::before",
+          "kind": "transition",
+          "props": [
+            "opacity"
+          ],
+          "durationMs": 200,
+          "frames": 13
+        }
+      ],
+      "styleWrites": []
+    },
+    {
+      "id": "search-clear",
+      "style": "neutral",
+      "action": "press",
+      "movers": [
+        {
+          "id": "transition|div[data-ds=search-field]::before|transform",
+          "who": "div[data-ds=search-field]::before",
+          "kind": "transition",
+          "props": [
+            "transform"
+          ],
+          "durationMs": 200,
+          "frames": 12
+        },
+        {
+          "id": "transition|div[data-ds=input][data-part=control]::before|transform",
+          "who": "div[data-ds=input][data-part=control]::before",
+          "kind": "transition",
+          "props": [
+            "transform"
+          ],
+          "durationMs": 200,
+          "frames": 12
+        },
+        {
+          "id": "script|button[data-ds=icon-button]|opacity,transform",
+          "who": "button[data-ds=icon-button]",
+          "kind": "script",
+          "props": [
+            "opacity",
+            "transform"
+          ],
+          "durationMs": 180,
+          "frames": 11
+        }
+      ],
+      "fades": [
+        {
+          "id": "transition|div[data-ds=search-field]|border-bottom-color",
+          "who": "div[data-ds=search-field]",
+          "kind": "transition",
+          "props": [
+            "border-bottom-color"
+          ],
+          "durationMs": 150,
+          "frames": 9
+        },
+        {
+          "id": "transition|div[data-ds=search-field]|border-left-color",
+          "who": "div[data-ds=search-field]",
+          "kind": "transition",
+          "props": [
+            "border-left-color"
+          ],
+          "durationMs": 150,
+          "frames": 9
+        },
+        {
+          "id": "transition|div[data-ds=search-field]|border-right-color",
+          "who": "div[data-ds=search-field]",
+          "kind": "transition",
+          "props": [
+            "border-right-color"
+          ],
+          "durationMs": 150,
+          "frames": 9
+        },
+        {
+          "id": "transition|div[data-ds=search-field]|border-top-color",
+          "who": "div[data-ds=search-field]",
+          "kind": "transition",
+          "props": [
+            "border-top-color"
+          ],
+          "durationMs": 150,
+          "frames": 9
+        },
+        {
+          "id": "transition|div[data-ds=search-field]::before|box-shadow",
+          "who": "div[data-ds=search-field]::before",
+          "kind": "transition",
+          "props": [
+            "box-shadow"
+          ],
+          "durationMs": 200,
+          "frames": 12
+        },
+        {
+          "id": "transition|div[data-ds=search-field]::before|opacity",
+          "who": "div[data-ds=search-field]::before",
+          "kind": "transition",
+          "props": [
+            "opacity"
+          ],
+          "durationMs": 200,
+          "frames": 12
+        },
+        {
+          "id": "transition|div[data-ds=input][data-part=control]::before|opacity",
+          "who": "div[data-ds=input][data-part=control]::before",
+          "kind": "transition",
+          "props": [
+            "opacity"
+          ],
+          "durationMs": 200,
+          "frames": 12
+        }
+      ],
+      "styleWrites": []
+    },
+    {
+      "id": "search-submit",
+      "style": "neutral",
+      "action": "press",
+      "movers": [
+        {
+          "id": "transition|div[data-ds=search-field]::before|transform",
+          "who": "div[data-ds=search-field]::before",
+          "kind": "transition",
+          "props": [
+            "transform"
+          ],
+          "durationMs": 200,
+          "frames": 12
+        },
+        {
+          "id": "transition|div[data-ds=input][data-part=control]::before|transform",
+          "who": "div[data-ds=input][data-part=control]::before",
+          "kind": "transition",
+          "props": [
+            "transform"
+          ],
+          "durationMs": 200,
+          "frames": 12
+        },
+        {
+          "id": "script|span[data-part=icon]|transform",
+          "who": "span[data-part=icon]",
+          "kind": "script",
+          "props": [
+            "transform"
+          ],
+          "durationMs": 200,
+          "frames": 12
+        }
+      ],
+      "fades": [
+        {
+          "id": "transition|div[data-ds=search-field]|border-bottom-color",
+          "who": "div[data-ds=search-field]",
+          "kind": "transition",
+          "props": [
+            "border-bottom-color"
+          ],
+          "durationMs": 150,
+          "frames": 10
+        },
+        {
+          "id": "transition|div[data-ds=search-field]|border-left-color",
+          "who": "div[data-ds=search-field]",
+          "kind": "transition",
+          "props": [
+            "border-left-color"
+          ],
+          "durationMs": 150,
+          "frames": 10
+        },
+        {
+          "id": "transition|div[data-ds=search-field]|border-right-color",
+          "who": "div[data-ds=search-field]",
+          "kind": "transition",
+          "props": [
+            "border-right-color"
+          ],
+          "durationMs": 150,
+          "frames": 10
+        },
+        {
+          "id": "transition|div[data-ds=search-field]|border-top-color",
+          "who": "div[data-ds=search-field]",
+          "kind": "transition",
+          "props": [
+            "border-top-color"
+          ],
+          "durationMs": 150,
+          "frames": 10
+        },
+        {
+          "id": "transition|div[data-ds=search-field]::before|box-shadow",
+          "who": "div[data-ds=search-field]::before",
+          "kind": "transition",
+          "props": [
+            "box-shadow"
+          ],
+          "durationMs": 200,
+          "frames": 12
+        },
+        {
+          "id": "transition|div[data-ds=search-field]::before|opacity",
+          "who": "div[data-ds=search-field]::before",
+          "kind": "transition",
+          "props": [
+            "opacity"
+          ],
+          "durationMs": 200,
+          "frames": 12
+        },
+        {
+          "id": "transition|div[data-ds=input][data-part=control]::before|opacity",
+          "who": "div[data-ds=input][data-part=control]::before",
+          "kind": "transition",
+          "props": [
+            "opacity"
+          ],
+          "durationMs": 200,
+          "frames": 12
+        }
+      ],
+      "styleWrites": []
+    },
+    {
+      "id": "segment-press",
+      "style": "neutral",
+      "action": "press",
+      "movers": [],
+      "fades": [],
+      "styleWrites": []
+    },
+    {
+      "id": "sheet-spring",
+      "style": "neutral",
+      "action": "press",
+      "movers": [
+        {
+          "id": "animation ds-sheet-in-y|div[data-part=panel]|opacity,transform",
+          "who": "div[data-part=panel]",
+          "kind": "animation ds-sheet-in-y",
+          "props": [
+            "opacity",
+            "transform"
+          ],
+          "durationMs": 200,
+          "frames": 9
+        },
+        {
+          "id": "animation ds-dialog-part-in|div[data-part=body]|transform",
+          "who": "div[data-part=body]",
+          "kind": "animation ds-dialog-part-in",
+          "props": [
+            "transform"
+          ],
+          "durationMs": 200,
+          "frames": 11
+        }
+      ],
+      "fades": [
+        {
+          "id": "animation ds-dialog-backdrop-in|div[data-part=backdrop]|opacity,backdropFilter",
+          "who": "div[data-part=backdrop]",
+          "kind": "animation ds-dialog-backdrop-in",
+          "props": [
+            "opacity",
+            "backdropFilter"
+          ],
+          "durationMs": 200,
+          "frames": 9
+        },
+        {
+          "id": "animation ds-dialog-part-fade|div[data-part=body]|opacity",
+          "who": "div[data-part=body]",
+          "kind": "animation ds-dialog-part-fade",
+          "props": [
+            "opacity"
+          ],
+          "durationMs": 80,
+          "frames": 8
+        }
+      ],
+      "styleWrites": []
+    },
+    {
+      "id": "sidebar-collapse",
+      "style": "neutral",
+      "action": "press",
+      "movers": [
+        {
+          "id": "script|span[data-part=item-icon]|transform",
+          "who": "span[data-part=item-icon]",
+          "kind": "script",
+          "props": [
+            "transform"
+          ],
+          "durationMs": 200,
+          "frames": 104
+        }
+      ],
+      "fades": [],
+      "styleWrites": []
+    },
+    {
+      "id": "skeleton-swap",
+      "style": "neutral",
+      "action": "press",
+      "movers": [
+        {
+          "id": "animation ds-skeleton-shimmer|span[data-ds=skeleton]::before|transform",
+          "who": "span[data-ds=skeleton]::before",
+          "kind": "animation ds-skeleton-shimmer",
+          "props": [
+            "transform"
+          ],
+          "durationMs": 4200,
+          "frames": 258
+        }
+      ],
+      "fades": [
+        {
+          "id": "script|span[data-ds=skeleton]|clipPath",
+          "who": "span[data-ds=skeleton]",
+          "kind": "script",
+          "props": [
+            "clipPath"
+          ],
+          "durationMs": 180,
+          "frames": 33
+        }
+      ],
+      "styleWrites": []
+    },
+    {
+      "id": "skip-link-slide",
+      "style": "neutral",
+      "action": "press",
+      "movers": [
+        {
+          "id": "animation ds-skip-link-in|a[data-ds=skip-link]|transform",
+          "who": "a[data-ds=skip-link]",
+          "kind": "animation ds-skip-link-in",
+          "props": [
+            "transform"
+          ],
+          "durationMs": 200,
+          "frames": 12
+        }
+      ],
+      "fades": [],
+      "styleWrites": []
+    },
+    {
+      "id": "slider-bubble",
+      "style": "neutral",
+      "action": "press",
+      "movers": [
+        {
+          "id": "transition|span|transform",
+          "who": "span",
+          "kind": "transition",
+          "props": [
+            "transform"
+          ],
+          "durationMs": 100,
+          "frames": 8
+        },
+        {
+          "id": "script|span|transform",
+          "who": "span",
+          "kind": "script",
+          "props": [
+            "transform"
+          ],
+          "durationMs": 158,
+          "frames": 11
+        },
+        {
+          "id": "script|span|opacity,transform",
+          "who": "span",
+          "kind": "script",
+          "props": [
+            "opacity",
+            "transform"
+          ],
+          "durationMs": 158,
+          "frames": 74
+        }
+      ],
+      "fades": [
+        {
+          "id": "transition|span|opacity",
+          "who": "span",
+          "kind": "transition",
+          "props": [
+            "opacity"
+          ],
+          "durationMs": 100,
+          "frames": 8
+        },
+        {
+          "id": "script|span[data-part=track]::before|clipPath",
+          "who": "span[data-part=track]::before",
+          "kind": "script",
+          "props": [
+            "clipPath"
+          ],
+          "durationMs": 158,
+          "frames": 11
+        },
+        {
+          "id": "transition|span[data-part=thumb]::after|box-shadow",
+          "who": "span[data-part=thumb]::after",
+          "kind": "transition",
+          "props": [
+            "box-shadow"
+          ],
+          "durationMs": 158,
+          "frames": 10
+        }
+      ],
+      "styleWrites": []
+    },
+    {
+      "id": "slider-fill",
+      "style": "neutral",
+      "action": "press",
+      "movers": [
+        {
+          "id": "transition|span|transform",
+          "who": "span",
+          "kind": "transition",
+          "props": [
+            "transform"
+          ],
+          "durationMs": 100,
+          "frames": 8
+        },
+        {
+          "id": "script|span|transform",
+          "who": "span",
+          "kind": "script",
+          "props": [
+            "transform"
+          ],
+          "durationMs": 158,
+          "frames": 11
+        },
+        {
+          "id": "script|span|opacity,transform",
+          "who": "span",
+          "kind": "script",
+          "props": [
+            "opacity",
+            "transform"
+          ],
+          "durationMs": 158,
+          "frames": 22
+        }
+      ],
+      "fades": [
+        {
+          "id": "transition|span|opacity",
+          "who": "span",
+          "kind": "transition",
+          "props": [
+            "opacity"
+          ],
+          "durationMs": 100,
+          "frames": 8
+        },
+        {
+          "id": "script|span[data-part=track]::before|clipPath",
+          "who": "span[data-part=track]::before",
+          "kind": "script",
+          "props": [
+            "clipPath"
+          ],
+          "durationMs": 158,
+          "frames": 11
+        },
+        {
+          "id": "transition|span[data-part=thumb]::after|box-shadow",
+          "who": "span[data-part=thumb]::after",
+          "kind": "transition",
+          "props": [
+            "box-shadow"
+          ],
+          "durationMs": 158,
+          "frames": 10
+        }
+      ],
+      "styleWrites": []
+    },
+    {
+      "id": "slider-nudge",
+      "style": "neutral",
+      "action": "press",
+      "movers": [
+        {
+          "id": "transition|span|transform",
+          "who": "span",
+          "kind": "transition",
+          "props": [
+            "transform"
+          ],
+          "durationMs": 100,
+          "frames": 7
+        },
+        {
+          "id": "script|span|transform",
+          "who": "span",
+          "kind": "script",
+          "props": [
+            "transform"
+          ],
+          "durationMs": 158,
+          "frames": 11
+        },
+        {
+          "id": "script|span|opacity,transform",
+          "who": "span",
+          "kind": "script",
+          "props": [
+            "opacity",
+            "transform"
+          ],
+          "durationMs": 158,
+          "frames": 22
+        }
+      ],
+      "fades": [
+        {
+          "id": "transition|span|opacity",
+          "who": "span",
+          "kind": "transition",
+          "props": [
+            "opacity"
+          ],
+          "durationMs": 100,
+          "frames": 7
+        },
+        {
+          "id": "script|span[data-part=track]::before|clipPath",
+          "who": "span[data-part=track]::before",
+          "kind": "script",
+          "props": [
+            "clipPath"
+          ],
+          "durationMs": 158,
+          "frames": 11
+        },
+        {
+          "id": "transition|span[data-part=thumb]::after|box-shadow",
+          "who": "span[data-part=thumb]::after",
+          "kind": "transition",
+          "props": [
+            "box-shadow"
+          ],
+          "durationMs": 158,
+          "frames": 10
+        }
+      ],
+      "styleWrites": []
+    },
+    {
+      "id": "slider-pull",
+      "style": "neutral",
+      "action": "press",
+      "movers": [
+        {
+          "id": "transition|span|transform",
+          "who": "span",
+          "kind": "transition",
+          "props": [
+            "transform"
+          ],
+          "durationMs": 100,
+          "frames": 7
+        },
+        {
+          "id": "script|span|transform",
+          "who": "span",
+          "kind": "script",
+          "props": [
+            "transform"
+          ],
+          "durationMs": 158,
+          "frames": 10
+        },
+        {
+          "id": "script|span|opacity,transform",
+          "who": "span",
+          "kind": "script",
+          "props": [
+            "opacity",
+            "transform"
+          ],
+          "durationMs": 158,
+          "frames": 20
+        }
+      ],
+      "fades": [
+        {
+          "id": "transition|span|opacity",
+          "who": "span",
+          "kind": "transition",
+          "props": [
+            "opacity"
+          ],
+          "durationMs": 100,
+          "frames": 7
+        },
+        {
+          "id": "script|span[data-part=track]::before|clipPath",
+          "who": "span[data-part=track]::before",
+          "kind": "script",
+          "props": [
+            "clipPath"
+          ],
+          "durationMs": 158,
+          "frames": 10
+        },
+        {
+          "id": "transition|span[data-part=thumb]::after|box-shadow",
+          "who": "span[data-part=thumb]::after",
+          "kind": "transition",
+          "props": [
+            "box-shadow"
+          ],
+          "durationMs": 158,
+          "frames": 10
+        }
+      ],
+      "styleWrites": []
+    },
+    {
+      "id": "slider-rubber-band",
+      "style": "neutral",
+      "action": "press",
+      "movers": [
+        {
+          "id": "transition|span|transform",
+          "who": "span",
+          "kind": "transition",
+          "props": [
+            "transform"
+          ],
+          "durationMs": 100,
+          "frames": 6
+        },
+        {
+          "id": "script|span|transform",
+          "who": "span",
+          "kind": "script",
+          "props": [
+            "transform"
+          ],
+          "durationMs": 158,
+          "frames": 10
+        },
+        {
+          "id": "script|span|opacity,transform",
+          "who": "span",
+          "kind": "script",
+          "props": [
+            "opacity",
+            "transform"
+          ],
+          "durationMs": 158,
+          "frames": 20
+        }
+      ],
+      "fades": [
+        {
+          "id": "transition|span|opacity",
+          "who": "span",
+          "kind": "transition",
+          "props": [
+            "opacity"
+          ],
+          "durationMs": 100,
+          "frames": 6
+        },
+        {
+          "id": "script|span[data-part=track]::before|clipPath",
+          "who": "span[data-part=track]::before",
+          "kind": "script",
+          "props": [
+            "clipPath"
+          ],
+          "durationMs": 158,
+          "frames": 10
+        },
+        {
+          "id": "transition|span[data-part=thumb]::after|box-shadow",
+          "who": "span[data-part=thumb]::after",
+          "kind": "transition",
+          "props": [
+            "box-shadow"
+          ],
+          "durationMs": 158,
+          "frames": 10
+        }
+      ],
+      "styleWrites": []
+    },
+    {
+      "id": "spinner-loop",
+      "style": "neutral",
+      "action": "press",
+      "movers": [
+        {
+          "id": "animation ds-spinner-turn|span[data-ds=spinner]|transform",
+          "who": "span[data-ds=spinner]",
+          "kind": "animation ds-spinner-turn",
+          "props": [
+            "transform"
+          ],
+          "durationMs": null,
+          "frames": 139
+        }
+      ],
+      "fades": [
+        {
+          "id": "animation ds-spinner-in|span[data-ds=spinner]|opacity",
+          "who": "span[data-ds=spinner]",
+          "kind": "animation ds-spinner-in",
+          "props": [
+            "opacity"
+          ],
+          "durationMs": 200,
+          "frames": 25
+        }
+      ],
+      "styleWrites": []
+    },
+    {
+      "id": "split-chevron",
+      "style": "neutral",
+      "action": "press",
+      "movers": [
+        {
+          "id": "transition|span[data-part=icon]|transform",
+          "who": "span[data-part=icon]",
+          "kind": "transition",
+          "props": [
+            "transform"
+          ],
+          "durationMs": 158,
+          "frames": 12
+        },
+        {
+          "id": "animation ds-menu-in|div[data-ds=dropdown-menu][data-part=menu]|clipPath,opacity,transform",
+          "who": "div[data-ds=dropdown-menu][data-part=menu]",
+          "kind": "animation ds-menu-in",
+          "props": [
+            "clipPath",
+            "opacity",
+            "transform"
+          ],
+          "durationMs": 158,
+          "frames": 12
+        },
+        {
+          "id": "animation ds-menu-row-in|span[data-part=start]|opacity,transform",
+          "who": "span[data-part=start]",
+          "kind": "animation ds-menu-row-in",
+          "props": [
+            "opacity",
+            "transform"
+          ],
+          "durationMs": 200,
+          "frames": 52
+        },
+        {
+          "id": "animation ds-menu-row-in|span[data-part=text]|opacity,transform",
+          "who": "span[data-part=text]",
+          "kind": "animation ds-menu-row-in",
+          "props": [
+            "opacity",
+            "transform"
+          ],
+          "durationMs": 200,
+          "frames": 52
+        }
+      ],
+      "fades": [],
+      "styleWrites": [
+        "div transform: translate(453px, 307px)"
+      ]
+    },
+    {
+      "id": "split-view-pane",
+      "style": "neutral",
+      "action": "press",
+      "movers": [
+        {
+          "id": "animation ds-split-view-from-start|div[data-part=primary]|clipPath,transform",
+          "who": "div[data-part=primary]",
+          "kind": "animation ds-split-view-from-start",
+          "props": [
+            "clipPath",
+            "transform"
+          ],
+          "durationMs": 200,
+          "frames": 12
+        },
+        {
+          "id": "animation ds-split-view-from-end|div[data-part=secondary]|clipPath,transform",
+          "who": "div[data-part=secondary]",
+          "kind": "animation ds-split-view-from-end",
+          "props": [
+            "clipPath",
+            "transform"
+          ],
+          "durationMs": 200,
+          "frames": 12
+        }
+      ],
+      "fades": [],
+      "styleWrites": []
+    },
+    {
+      "id": "stat-roll",
+      "style": "neutral",
+      "action": "press",
+      "movers": [
+        {
+          "id": "script|span|opacity,transform",
+          "who": "span",
+          "kind": "script",
+          "props": [
+            "opacity",
+            "transform"
+          ],
+          "durationMs": 158,
+          "frames": 80
+        },
+        {
+          "id": "script|svg[data-ds=icon]|transform",
+          "who": "svg[data-ds=icon]",
+          "kind": "script",
+          "props": [
+            "transform"
+          ],
+          "durationMs": 200,
+          "frames": 16
+        }
+      ],
+      "fades": [],
+      "styleWrites": []
+    },
+    {
+      "id": "state-illustration",
+      "style": "neutral",
+      "action": "press",
+      "movers": [
+        {
+          "id": "animation ds-empty-state-art|span[data-part=icon]|opacity,transform",
+          "who": "span[data-part=icon]",
+          "kind": "animation ds-empty-state-art",
+          "props": [
+            "opacity",
+            "transform"
+          ],
+          "durationMs": 200,
+          "frames": 27
+        },
+        {
+          "id": "animation ds-empty-state-text|h3[data-part=title]|opacity,transform",
+          "who": "h3[data-part=title]",
+          "kind": "animation ds-empty-state-text",
+          "props": [
+            "opacity",
+            "transform"
+          ],
+          "durationMs": 200,
+          "frames": 30
+        },
+        {
+          "id": "animation ds-empty-state-text|div[data-part=body]|opacity,transform",
+          "who": "div[data-part=body]",
+          "kind": "animation ds-empty-state-text",
+          "props": [
+            "opacity",
+            "transform"
+          ],
+          "durationMs": 200,
+          "frames": 32
+        },
+        {
+          "id": "animation ds-empty-state-text|div[data-part=actions]|opacity,transform",
+          "who": "div[data-part=actions]",
+          "kind": "animation ds-empty-state-text",
+          "props": [
+            "opacity",
+            "transform"
+          ],
+          "durationMs": 200,
+          "frames": 36
+        },
+        {
+          "id": "animation ds-error-state-art|span[data-part=icon]|opacity,transform",
+          "who": "span[data-part=icon]",
+          "kind": "animation ds-error-state-art",
+          "props": [
+            "opacity",
+            "transform"
+          ],
+          "durationMs": 200,
+          "frames": 27
+        },
+        {
+          "id": "animation ds-error-state-text|h2[data-part=title]|opacity,transform",
+          "who": "h2[data-part=title]",
+          "kind": "animation ds-error-state-text",
+          "props": [
+            "opacity",
+            "transform"
+          ],
+          "durationMs": 200,
+          "frames": 30
+        },
+        {
+          "id": "animation ds-error-state-text|div[data-part=actions]|opacity,transform",
+          "who": "div[data-part=actions]",
+          "kind": "animation ds-error-state-text",
+          "props": [
+            "opacity",
+            "transform"
+          ],
+          "durationMs": 200,
+          "frames": 36
+        }
+      ],
+      "fades": [
+        {
+          "id": "animation ds-error-state-in|div[data-ds=error-state]|opacity",
+          "who": "div[data-ds=error-state]",
+          "kind": "animation ds-error-state-in",
+          "props": [
+            "opacity"
+          ],
+          "durationMs": 200,
+          "frames": 27
+        }
+      ],
+      "styleWrites": []
+    },
+    {
+      "id": "status-pulse",
+      "style": "neutral",
+      "action": "press",
+      "movers": [
+        {
+          "id": "animation ds-status-dot-beat|span[data-part=dot]|transform",
+          "who": "span[data-part=dot]",
+          "kind": "animation ds-status-dot-beat",
+          "props": [
+            "transform"
+          ],
+          "durationMs": 4200,
+          "frames": 137
+        },
+        {
+          "id": "animation ds-status-dot-pulse|span[data-part=dot]::before|opacity,transform",
+          "who": "span[data-part=dot]::before",
+          "kind": "animation ds-status-dot-pulse",
+          "props": [
+            "opacity",
+            "transform"
+          ],
+          "durationMs": 4200,
+          "frames": 137
+        },
+        {
+          "id": "script|span[data-ds=status-dot][data-part=status]|transform",
+          "who": "span[data-ds=status-dot][data-part=status]",
+          "kind": "script",
+          "props": [
+            "transform"
+          ],
+          "durationMs": 200,
+          "frames": 12
+        },
+        {
+          "id": "script|span[data-part=dot]|boxShadow,opacity,backgroundColor,transform",
+          "who": "span[data-part=dot]",
+          "kind": "script",
+          "props": [
+            "boxShadow",
+            "opacity",
+            "backgroundColor",
+            "transform"
+          ],
+          "durationMs": 4200,
+          "frames": 91
+        }
+      ],
+      "fades": [],
+      "styleWrites": []
+    },
+    {
+      "id": "stepper-travel",
+      "style": "neutral",
+      "action": "press",
+      "movers": [
+        {
+          "id": "transition|span[data-part=end]|transform",
+          "who": "span[data-part=end]",
+          "kind": "transition",
+          "props": [
+            "transform"
+          ],
+          "durationMs": 158,
+          "frames": 10
+        },
+        {
+          "id": "transition|span[data-part=connector]::before|transform",
+          "who": "span[data-part=connector]::before",
+          "kind": "transition",
+          "props": [
+            "transform"
+          ],
+          "durationMs": 200,
+          "frames": 13
+        },
+        {
+          "id": "script|span[data-part=indicator]::after|opacity,transform",
+          "who": "span[data-part=indicator]::after",
+          "kind": "script",
+          "props": [
+            "opacity",
+            "transform"
+          ],
+          "durationMs": 158,
+          "frames": 10
+        },
+        {
+          "id": "script|span[data-part=indicator]|transform",
+          "who": "span[data-part=indicator]",
+          "kind": "script",
+          "props": [
+            "transform"
+          ],
+          "durationMs": 200,
+          "frames": 13
+        }
+      ],
+      "fades": [
+        {
+          "id": "script|path|strokeDasharray,strokeDashoffset",
+          "who": "path",
+          "kind": "script",
+          "props": [
+            "strokeDasharray",
+            "strokeDashoffset"
+          ],
+          "durationMs": 200,
+          "frames": 13
+        }
+      ],
+      "styleWrites": []
+    },
+    {
+      "id": "switch-drag",
+      "style": "neutral",
+      "action": "press",
+      "movers": [
+        {
+          "id": "transition|span|clip-path",
+          "who": "span",
+          "kind": "transition",
+          "props": [
+            "clip-path"
+          ],
+          "durationMs": 158,
+          "frames": 1
+        },
+        {
+          "id": "transition|span[data-part=thumb]|transform",
+          "who": "span[data-part=thumb]",
+          "kind": "transition",
+          "props": [
+            "transform"
+          ],
+          "durationMs": 70,
+          "frames": 1
+        }
+      ],
+      "fades": [
+        {
+          "id": "transition|span[data-part=track]|background-color",
+          "who": "span[data-part=track]",
+          "kind": "transition",
+          "props": [
+            "background-color"
+          ],
+          "durationMs": 158,
+          "frames": 16
+        },
+        {
+          "id": "transition|span[data-part=track]|border-bottom-color",
+          "who": "span[data-part=track]",
+          "kind": "transition",
+          "props": [
+            "border-bottom-color"
+          ],
+          "durationMs": 100,
+          "frames": 12
+        },
+        {
+          "id": "transition|span[data-part=track]|border-left-color",
+          "who": "span[data-part=track]",
+          "kind": "transition",
+          "props": [
+            "border-left-color"
+          ],
+          "durationMs": 100,
+          "frames": 12
+        },
+        {
+          "id": "transition|span[data-part=track]|border-right-color",
+          "who": "span[data-part=track]",
+          "kind": "transition",
+          "props": [
+            "border-right-color"
+          ],
+          "durationMs": 100,
+          "frames": 12
+        },
+        {
+          "id": "transition|span[data-part=track]|border-top-color",
+          "who": "span[data-part=track]",
+          "kind": "transition",
+          "props": [
+            "border-top-color"
+          ],
+          "durationMs": 100,
+          "frames": 12
+        },
+        {
+          "id": "transition|span[data-part=thumb]|color",
+          "who": "span[data-part=thumb]",
+          "kind": "transition",
+          "props": [
+            "color"
+          ],
+          "durationMs": 158,
+          "frames": 10
+        }
+      ],
+      "styleWrites": []
+    },
+    {
+      "id": "switch-stretch",
+      "style": "neutral",
+      "action": "press",
+      "movers": [
+        {
+          "id": "transition|span|clip-path",
+          "who": "span",
+          "kind": "transition",
+          "props": [
+            "clip-path"
+          ],
+          "durationMs": 158,
+          "frames": 10
+        },
+        {
+          "id": "transition|span[data-part=thumb]|transform",
+          "who": "span[data-part=thumb]",
+          "kind": "transition",
+          "props": [
+            "transform"
+          ],
+          "durationMs": 158,
+          "frames": 10
+        }
+      ],
+      "fades": [
+        {
+          "id": "transition|span[data-part=track]|background-color",
+          "who": "span[data-part=track]",
+          "kind": "transition",
+          "props": [
+            "background-color"
+          ],
+          "durationMs": 158,
+          "frames": 10
+        },
+        {
+          "id": "transition|span[data-part=track]|border-bottom-color",
+          "who": "span[data-part=track]",
+          "kind": "transition",
+          "props": [
+            "border-bottom-color"
+          ],
+          "durationMs": 100,
+          "frames": 6
+        },
+        {
+          "id": "transition|span[data-part=track]|border-left-color",
+          "who": "span[data-part=track]",
+          "kind": "transition",
+          "props": [
+            "border-left-color"
+          ],
+          "durationMs": 100,
+          "frames": 6
+        },
+        {
+          "id": "transition|span[data-part=track]|border-right-color",
+          "who": "span[data-part=track]",
+          "kind": "transition",
+          "props": [
+            "border-right-color"
+          ],
+          "durationMs": 100,
+          "frames": 6
+        },
+        {
+          "id": "transition|span[data-part=track]|border-top-color",
+          "who": "span[data-part=track]",
+          "kind": "transition",
+          "props": [
+            "border-top-color"
+          ],
+          "durationMs": 100,
+          "frames": 6
+        },
+        {
+          "id": "transition|span|opacity",
+          "who": "span",
+          "kind": "transition",
+          "props": [
+            "opacity"
+          ],
+          "durationMs": 158,
+          "frames": 10
+        }
+      ],
+      "styleWrites": []
+    },
+    {
+      "id": "tab-bar-pop",
+      "style": "neutral",
+      "action": "press",
+      "movers": [
+        {
+          "id": "animation ds-tab-bar-pop|span[data-part=item-icon]|transform",
+          "who": "span[data-part=item-icon]",
+          "kind": "animation ds-tab-bar-pop",
+          "props": [
+            "transform"
+          ],
+          "durationMs": 200,
+          "frames": 27
+        },
+        {
+          "id": "animation ds-tab-bar-rise|span[data-part=item-label]|transform",
+          "who": "span[data-part=item-label]",
+          "kind": "animation ds-tab-bar-rise",
+          "props": [
+            "transform"
+          ],
+          "durationMs": 200,
+          "frames": 29
+        },
+        {
+          "id": "transition|span[data-part=end]|transform",
+          "who": "span[data-part=end]",
+          "kind": "transition",
+          "props": [
+            "transform"
+          ],
+          "durationMs": 158,
+          "frames": 10
+        }
+      ],
+      "fades": [],
+      "styleWrites": []
+    },
+    {
+      "id": "tab-slide",
+      "style": "neutral",
+      "action": "press",
+      "movers": [
+        {
+          "id": "transition|span[data-part=end]|transform",
+          "who": "span[data-part=end]",
+          "kind": "transition",
+          "props": [
+            "transform"
+          ],
+          "durationMs": 158,
+          "frames": 12
+        },
+        {
+          "id": "script|span|transform",
+          "who": "span",
+          "kind": "script",
+          "props": [
+            "transform"
+          ],
+          "durationMs": 158,
+          "frames": 12
+        },
+        {
+          "id": "script|span[data-part=indicator]|transform",
+          "who": "span[data-part=indicator]",
+          "kind": "script",
+          "props": [
+            "transform"
+          ],
+          "durationMs": 158,
+          "frames": 36
+        }
+      ],
+      "fades": [
+        {
+          "id": "transition|button[data-ds=toggle-button][data-part=item]|color",
+          "who": "button[data-ds=toggle-button][data-part=item]",
+          "kind": "transition",
+          "props": [
+            "color"
+          ],
+          "durationMs": 100,
+          "frames": 32
+        },
+        {
+          "id": "transition|button[data-ds=toggle-button][data-part=item]|background-color",
+          "who": "button[data-ds=toggle-button][data-part=item]",
+          "kind": "transition",
+          "props": [
+            "background-color"
+          ],
+          "durationMs": 100,
+          "frames": 16
+        },
+        {
+          "id": "script|span[data-part=label-ink]|clipPath",
+          "who": "span[data-part=label-ink]",
+          "kind": "script",
+          "props": [
+            "clipPath"
+          ],
+          "durationMs": 158,
+          "frames": 96
+        },
+        {
+          "id": "script|span[data-part=label]|color",
+          "who": "span[data-part=label]",
+          "kind": "script",
+          "props": [
+            "color"
+          ],
+          "durationMs": 158,
+          "frames": 48
+        }
+      ],
+      "styleWrites": []
+    },
+    {
+      "id": "toast-enter",
+      "style": "neutral",
+      "action": "press",
+      "movers": [
+        {
+          "id": "animation ds-toast-in|li[data-ds=toast]|opacity,transform",
+          "who": "li[data-ds=toast]",
+          "kind": "animation ds-toast-in",
+          "props": [
+            "opacity",
+            "transform"
+          ],
+          "durationMs": 200,
+          "frames": 14
+        },
+        {
+          "id": "animation ds-toast-icon-in|span[data-part=icon]|opacity,transform",
+          "who": "span[data-part=icon]",
+          "kind": "animation ds-toast-icon-in",
+          "props": [
+            "opacity",
+            "transform"
+          ],
+          "durationMs": 200,
+          "frames": 15
+        },
+        {
+          "id": "animation ds-toast-progress|span[data-part=progress]|transform",
+          "who": "span[data-part=progress]",
+          "kind": "animation ds-toast-progress",
+          "props": [
+            "transform"
+          ],
+          "durationMs": 4000,
+          "frames": 93
+        }
+      ],
+      "fades": [],
+      "styleWrites": []
+    },
+    {
+      "id": "toast-expand",
+      "style": "neutral",
+      "action": "press",
+      "movers": [
+        {
+          "id": "transition|li[data-ds=toast]|clip-path",
+          "who": "li[data-ds=toast]",
+          "kind": "transition",
+          "props": [
+            "clip-path"
+          ],
+          "durationMs": 158,
+          "frames": 24
+        },
+        {
+          "id": "animation ds-toast-in|li[data-ds=toast]|opacity,transform",
+          "who": "li[data-ds=toast]",
+          "kind": "animation ds-toast-in",
+          "props": [
+            "opacity",
+            "transform"
+          ],
+          "durationMs": 200,
+          "frames": 45
+        },
+        {
+          "id": "animation ds-toast-icon-in|span[data-part=icon]|opacity,transform",
+          "who": "span[data-part=icon]",
+          "kind": "animation ds-toast-icon-in",
+          "props": [
+            "opacity",
+            "transform"
+          ],
+          "durationMs": 200,
+          "frames": 48
+        },
+        {
+          "id": "animation ds-toast-progress|span[data-part=progress]|transform",
+          "who": "span[data-part=progress]",
+          "kind": "animation ds-toast-progress",
+          "props": [
+            "transform"
+          ],
+          "durationMs": 6000,
+          "frames": 279
+        }
+      ],
+      "fades": [],
+      "styleWrites": []
+    },
+    {
+      "id": "toast-stack",
+      "style": "neutral",
+      "action": "press",
+      "movers": [
+        {
+          "id": "animation ds-toast-in|li[data-ds=toast]|opacity,transform",
+          "who": "li[data-ds=toast]",
+          "kind": "animation ds-toast-in",
+          "props": [
+            "opacity",
+            "transform"
+          ],
+          "durationMs": 200,
+          "frames": 14
+        },
+        {
+          "id": "animation ds-toast-icon-in|span[data-part=icon]|opacity,transform",
+          "who": "span[data-part=icon]",
+          "kind": "animation ds-toast-icon-in",
+          "props": [
+            "opacity",
+            "transform"
+          ],
+          "durationMs": 200,
+          "frames": 15
+        },
+        {
+          "id": "animation ds-toast-progress|span[data-part=progress]|transform",
+          "who": "span[data-part=progress]",
+          "kind": "animation ds-toast-progress",
+          "props": [
+            "transform"
+          ],
+          "durationMs": 4000,
+          "frames": 92
+        }
+      ],
+      "fades": [],
+      "styleWrites": []
+    },
+    {
+      "id": "toast-swipe",
+      "style": "neutral",
+      "action": "press",
+      "movers": [
+        {
+          "id": "animation ds-toast-in|li[data-ds=toast]|opacity,transform",
+          "who": "li[data-ds=toast]",
+          "kind": "animation ds-toast-in",
+          "props": [
+            "opacity",
+            "transform"
+          ],
+          "durationMs": 200,
+          "frames": 14
+        },
+        {
+          "id": "animation ds-toast-icon-in|span[data-part=icon]|opacity,transform",
+          "who": "span[data-part=icon]",
+          "kind": "animation ds-toast-icon-in",
+          "props": [
+            "opacity",
+            "transform"
+          ],
+          "durationMs": 200,
+          "frames": 15
+        },
+        {
+          "id": "animation ds-toast-progress|span[data-part=progress]|transform",
+          "who": "span[data-part=progress]",
+          "kind": "animation ds-toast-progress",
+          "props": [
+            "transform"
+          ],
+          "durationMs": 4000,
+          "frames": 92
+        }
+      ],
+      "fades": [],
+      "styleWrites": []
+    },
+    {
+      "id": "toast-timer",
+      "style": "neutral",
+      "action": "press",
+      "movers": [
+        {
+          "id": "animation ds-toast-in|li[data-ds=toast]|opacity,transform",
+          "who": "li[data-ds=toast]",
+          "kind": "animation ds-toast-in",
+          "props": [
+            "opacity",
+            "transform"
+          ],
+          "durationMs": 200,
+          "frames": 14
+        },
+        {
+          "id": "animation ds-toast-icon-in|span[data-part=icon]|opacity,transform",
+          "who": "span[data-part=icon]",
+          "kind": "animation ds-toast-icon-in",
+          "props": [
+            "opacity",
+            "transform"
+          ],
+          "durationMs": 200,
+          "frames": 15
+        },
+        {
+          "id": "animation ds-toast-progress|span[data-part=progress]|transform",
+          "who": "span[data-part=progress]",
+          "kind": "animation ds-toast-progress",
+          "props": [
+            "transform"
+          ],
+          "durationMs": 4000,
+          "frames": 92
+        }
+      ],
+      "fades": [],
+      "styleWrites": []
+    },
+    {
+      "id": "toc-travel",
+      "style": "neutral",
+      "action": "press",
+      "movers": [
+        {
+          "id": "transition|span[data-part=end]|transform",
+          "who": "span[data-part=end]",
+          "kind": "transition",
+          "props": [
+            "transform"
+          ],
+          "durationMs": 158,
+          "frames": 12
+        },
+        {
+          "id": "script|span[data-part=indicator]|transform",
+          "who": "span[data-part=indicator]",
+          "kind": "script",
+          "props": [
+            "transform"
+          ],
+          "durationMs": 158,
+          "frames": 14
+        }
+      ],
+      "fades": [],
+      "styleWrites": []
+    },
+    {
+      "id": "toggle-pop",
+      "style": "neutral",
+      "action": "press",
+      "movers": [],
+      "fades": [
+        {
+          "id": "transition|button[data-ds=toggle-button]|color",
+          "who": "button[data-ds=toggle-button]",
+          "kind": "transition",
+          "props": [
+            "color"
+          ],
+          "durationMs": 100,
+          "frames": 6
+        },
+        {
+          "id": "transition|button[data-ds=toggle-button]|background-color",
+          "who": "button[data-ds=toggle-button]",
+          "kind": "transition",
+          "props": [
+            "background-color"
+          ],
+          "durationMs": 100,
+          "frames": 6
+        }
+      ],
+      "styleWrites": []
+    },
+    {
+      "id": "toolbar-press",
+      "style": "neutral",
+      "action": "press",
+      "movers": [
+        {
+          "id": "animation ds-toolbar-pop|span[data-part=icon]|transform",
+          "who": "span[data-part=icon]",
+          "kind": "animation ds-toolbar-pop",
+          "props": [
+            "transform"
+          ],
+          "durationMs": 200,
+          "frames": 24
+        },
+        {
+          "id": "transition|span[data-part=icon]|transform",
+          "who": "span[data-part=icon]",
+          "kind": "transition",
+          "props": [
+            "transform"
+          ],
+          "durationMs": 70,
+          "frames": 5
+        }
+      ],
+      "fades": [],
+      "styleWrites": []
+    },
+    {
+      "id": "tooltip-follow",
+      "style": "neutral",
+      "action": "press",
+      "movers": [],
+      "fades": [],
+      "styleWrites": []
+    },
+    {
+      "id": "tooltip-rise",
+      "style": "neutral",
+      "action": "press",
+      "movers": [],
+      "fades": [],
+      "styleWrites": []
+    },
+    {
+      "id": "tour-spotlight",
+      "style": "neutral",
+      "action": "press",
+      "movers": [
+        {
+          "id": "animation ds-tour-in|div[data-part=panel]|opacity,transform",
+          "who": "div[data-part=panel]",
+          "kind": "animation ds-tour-in",
+          "props": [
+            "opacity",
+            "transform"
+          ],
+          "durationMs": 200,
+          "frames": 13
+        },
+        {
+          "id": "animation ds-tour-part-in|h2[data-part=title]|opacity,transform",
+          "who": "h2[data-part=title]",
+          "kind": "animation ds-tour-part-in",
+          "props": [
+            "opacity",
+            "transform"
+          ],
+          "durationMs": 200,
+          "frames": 15
+        },
+        {
+          "id": "animation ds-tour-part-in|div[data-part=body]|opacity,transform",
+          "who": "div[data-part=body]",
+          "kind": "animation ds-tour-part-in",
+          "props": [
+            "opacity",
+            "transform"
+          ],
+          "durationMs": 200,
+          "frames": 16
+        },
+        {
+          "id": "animation ds-tour-part-in|div[data-part=footer]|opacity,transform",
+          "who": "div[data-part=footer]",
+          "kind": "animation ds-tour-part-in",
+          "props": [
+            "opacity",
+            "transform"
+          ],
+          "durationMs": 200,
+          "frames": 18
+        },
+        {
+          "id": "animation ds-tour-ring-in|div[data-part=highlight]|opacity,transform",
+          "who": "div[data-part=highlight]",
+          "kind": "animation ds-tour-ring-in",
+          "props": [
+            "opacity",
+            "transform"
+          ],
+          "durationMs": 158,
+          "frames": 11
+        }
+      ],
+      "fades": [],
+      "styleWrites": [
+        "div transform: translate(307px, 406px)",
+        "div transform: translate(307px, 418px)",
+        "div transform: translate(307px, 426px)"
+      ]
+    },
+    {
+      "id": "window-lights",
+      "style": "neutral",
+      "action": "press",
+      "movers": [
+        {
+          "id": "transition|svg[data-ds=icon]|transform",
+          "who": "svg[data-ds=icon]",
+          "kind": "transition",
+          "props": [
+            "transform"
+          ],
+          "durationMs": 200,
+          "frames": 47
+        }
+      ],
+      "fades": [
+        {
+          "id": "transition|span[data-part=icon]::before|opacity",
+          "who": "span[data-part=icon]::before",
+          "kind": "transition",
+          "props": [
+            "opacity"
+          ],
+          "durationMs": 80,
+          "frames": 21
+        },
+        {
+          "id": "transition|svg[data-ds=icon]|opacity",
+          "who": "svg[data-ds=icon]",
+          "kind": "transition",
+          "props": [
+            "opacity"
+          ],
+          "durationMs": 80,
+          "frames": 26
+        }
+      ],
+      "styleWrites": []
+    },
+    {
+      "id": "window-settle",
+      "style": "neutral",
+      "action": "press",
+      "movers": [
+        {
+          "id": "script|div[data-ds=window]|opacity,transform",
+          "who": "div[data-ds=window]",
+          "kind": "script",
+          "props": [
+            "opacity",
+            "transform"
+          ],
+          "durationMs": 180,
+          "frames": 10
+        },
+        {
+          "id": "script|div[data-ds=window]|transform",
+          "who": "div[data-ds=window]",
+          "kind": "script",
+          "props": [
+            "transform"
+          ],
+          "durationMs": 200,
+          "frames": 17
+        }
+      ],
+      "fades": [],
+      "styleWrites": []
+    },
+    {
+      "id": "wizard-done",
+      "style": "neutral",
+      "action": "press",
+      "movers": [
+        {
+          "id": "animation ds-form-wizard-mark-land|svg[data-part=success-mark]|opacity,transform",
+          "who": "svg[data-part=success-mark]",
+          "kind": "animation ds-form-wizard-mark-land",
+          "props": [
+            "opacity",
+            "transform"
+          ],
+          "durationMs": 200,
+          "frames": 12
+        }
+      ],
+      "fades": [
+        {
+          "id": "animation ds-form-wizard-mark-draw|circle|strokeDashoffset",
+          "who": "circle",
+          "kind": "animation ds-form-wizard-mark-draw",
+          "props": [
+            "strokeDashoffset"
+          ],
+          "durationMs": 180,
+          "frames": 11
+        },
+        {
+          "id": "animation ds-form-wizard-mark-draw|path|strokeDashoffset",
+          "who": "path",
+          "kind": "animation ds-form-wizard-mark-draw",
+          "props": [
+            "strokeDashoffset"
+          ],
+          "durationMs": 180,
+          "frames": 17
+        }
+      ],
+      "styleWrites": []
+    },
+    {
+      "id": "wizard-step",
+      "style": "neutral",
+      "action": "press",
+      "movers": [
+        {
+          "id": "transition|span[data-part=connector]::before|transform",
+          "who": "span[data-part=connector]::before",
+          "kind": "transition",
+          "props": [
+            "transform"
+          ],
+          "durationMs": 200,
+          "frames": 15
+        },
+        {
+          "id": "script|span[data-part=indicator]::after|opacity,transform",
+          "who": "span[data-part=indicator]::after",
+          "kind": "script",
+          "props": [
+            "opacity",
+            "transform"
+          ],
+          "durationMs": 158,
+          "frames": 12
+        },
+        {
+          "id": "script|span[data-part=indicator]|transform",
+          "who": "span[data-part=indicator]",
+          "kind": "script",
+          "props": [
+            "transform"
+          ],
+          "durationMs": 200,
+          "frames": 15
+        },
+        {
+          "id": "script|div|opacity,transform",
+          "who": "div",
+          "kind": "script",
+          "props": [
+            "opacity",
+            "transform"
+          ],
+          "durationMs": 100,
+          "frames": 8
+        },
+        {
+          "id": "script|div[data-part=body]|opacity,transform",
+          "who": "div[data-part=body]",
+          "kind": "script",
+          "props": [
+            "opacity",
+            "transform"
+          ],
+          "durationMs": 200,
+          "frames": 15
+        },
+        {
+          "id": "script|svg[data-ds=icon]|opacity,transform",
+          "who": "svg[data-ds=icon]",
+          "kind": "script",
+          "props": [
+            "opacity",
+            "transform"
+          ],
+          "durationMs": 200,
+          "frames": 15
+        }
+      ],
+      "fades": [
+        {
+          "id": "script|path|strokeDasharray,strokeDashoffset",
+          "who": "path",
+          "kind": "script",
+          "props": [
+            "strokeDasharray",
+            "strokeDashoffset"
+          ],
+          "durationMs": 200,
+          "frames": 15
+        }
+      ],
+      "styleWrites": []
+    }
+  ]
+}
