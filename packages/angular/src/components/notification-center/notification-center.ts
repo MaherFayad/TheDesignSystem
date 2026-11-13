@@ -12,7 +12,7 @@
 // the mark-all Button renders only with a handler while any item is unread.
 //
 // Motion (order 1.22, notification-change), as React plays it
-// (internal/motion-feedback.ts): new entries pop in, removed ones shrink
+// (helpers in @the-system/motion): new entries pop in, removed ones shrink
 // away as a ghost, the rest slide to their place (FLIP), and the number in
 // the unread count rolls digit by digit while the count pops. The entries
 // are measured in an effect, which runs before this view's template is
@@ -40,7 +40,7 @@ import type { IconName } from '@the-system/icons';
 import type { Size, Tone } from '@the-system/shared';
 import { consumeHostAttributes } from '../../internal/host';
 import { injectMotion } from '../../internal/motion';
-import { DigitRoller, FlipList, popMark } from '../../internal/motion-feedback';
+import { DigitRoller, FlipList, popMark } from '@the-system/motion';
 import { DsThemeService } from '../../theme/theme';
 import { DsButton } from '../button/button';
 import { dayGroup, formatRelativeTime, notificationLanguage, toDate, type DayGroup } from './time';

@@ -46,7 +46,8 @@ import { isIconName, type IconName } from '@the-system/icons';
 import { DsIcon } from '@the-system/icons/angular';
 import type { Shape, Size } from '@the-system/shared';
 import { consumeHostAttributes } from '../../internal/host';
-import { errorShake, type ShakeBox } from '../../internal/motion-fields';
+import type { ShakeBox } from '@the-system/motion';
+import { errorShake } from '../../internal/motion-fields';
 import { DsFieldContext, fieldControl } from '../field/field-context';
 import { DsInputGroupContext } from '../input-group/input-group-context';
 

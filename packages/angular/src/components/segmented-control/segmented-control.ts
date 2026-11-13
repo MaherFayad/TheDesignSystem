@@ -28,7 +28,7 @@
 // mid travel starts there) on the snappy spring, stretched along its
 // travel. Round 3 (order 1.23): the labels no longer dip and pop; the text
 // under the thumb takes the selected color where the thumb is, with the
-// aria-hidden `label-ink` twins of internal/nav-ink.ts. No motion under
+// aria-hidden `label-ink` twins of nav-ink.ts in @the-system/motion. No motion under
 // reduced motion, where it jumps. A ResizeObserver on the root
 // and the items places it again (a jump) when sizes change.
 //
@@ -56,12 +56,11 @@ import { NgTemplateOutlet } from '@angular/common';
 import { Directionality } from '@angular/cdk/bidi';
 import { NG_VALUE_ACCESSOR, type ControlValueAccessor } from '@angular/forms';
 import { DsIcon } from '@the-system/icons/angular';
-import { settle } from '@the-system/motion';
+import { settle, slideTo } from '@the-system/motion';
 import type { Shape, Size } from '@the-system/shared';
 import { RovingRadioGroup, type RovingRadioItem } from '../../behavior/roving-radio';
 import { consumeHostAttributes } from '../../internal/host';
-import { slideTo } from '../../internal/indicator';
-import { playInk } from '../../internal/nav-ink';
+import { playInk } from '@the-system/motion';
 import { injectMotion } from '../../internal/motion';
 import { DS_BUTTON_GROUP, type ButtonGroupAxes } from '../button-group/button-group-context';
 import type { ButtonEmphasis } from '../button/button-base';

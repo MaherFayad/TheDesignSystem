@@ -67,10 +67,9 @@ import {
   type FormValidators,
   type FormValues,
 } from '@the-system/shared';
-import { staggerGroup } from '@the-system/motion';
+import { playBeat, runStep, staggerGroup, token } from '@the-system/motion';
 import { consumeHostAttributes } from '../../internal/host';
 import { injectMotion } from '../../internal/motion';
-import { playBeat, runStep, token } from '../../internal/motion-fields';
 import { VISUALLY_HIDDEN } from '../../internal/visually-hidden';
 import { DsThemeService } from '../../theme/theme';
 import { DsAlert } from '../alert/alert';

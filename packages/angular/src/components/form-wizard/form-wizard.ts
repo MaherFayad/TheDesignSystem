@@ -67,7 +67,7 @@ import {
 } from '@the-system/shared';
 import { consumeHostAttributes } from '../../internal/host';
 import { injectMotion } from '../../internal/motion';
-import { dipPop, dropAfter, inlineSign, landPop, leavingCopy, playBeat, runStep, slideIn, snapshot, token, type Snapshot } from '../../internal/motion-fields';
+import { dipPop, dropAfter, inlineSign, landPop, leavingCopy, playBeat, runStep, slideIn, snapshot, token, type Snapshot } from '@the-system/motion';
 import { DsThemeService } from '../../theme/theme';
 import { DsButton } from '../button/button';
 import { DsStepper, type StepperOrientation, type StepperStep } from '../stepper/stepper';

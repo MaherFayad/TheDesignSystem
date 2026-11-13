@@ -7,9 +7,8 @@
 import { Component, signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { renderDigits, rollDigits } from '@the-system/motion';
+import { drawCheck, renderDigits, rollDigits } from '@the-system/motion';
 import { injectMotion } from '../../internal/motion';
-import { drawCheck } from '../../internal/selection-marker';
 import { DsFilterBar } from './filter-bar';
 
 interface Call {

@@ -15,36 +15,13 @@
 // where the placeholder was. Reduced motion swaps at once, with no ghost
 // (review B1: the mode is checked here, not left to tokens).
 import { ChangeDetectionStrategy, Component, computed, input, type AnimationCallbackEvent } from '@angular/core';
-import { play, type PatternMode } from '@the-system/motion';
+import { ghostOf, placeOf, wipeAway } from '@the-system/motion';
 import type { Size } from '@the-system/shared';
 import { consumeHostAttributes } from '../../internal/host';
 import { injectMotion } from '../../internal/motion';
-import { ghostOf, placeOf } from '../../internal/motion-feedback';
 
 export type SkeletonVariant = 'text' | 'circle' | 'rect';
 export type SkeletonSize = Extract<Size, 'sm' | 'md' | 'lg'>;
-
-/** Round 3, as React's wipeAway: the ghost of a skeleton is wiped off toward the inline end; any other mode drops it. */
-export function wipeAway(ghost: HTMLElement | null, mode: PatternMode): void {
-  if (!ghost) return;
-  if (mode !== 'full') {
-    ghost.remove();
-    return;
-  }
-  const rtl = typeof getComputedStyle === 'function' && getComputedStyle(ghost).direction === 'rtl';
-  const gone = rtl ? 'inset(0 100% 0 0)' : 'inset(0 0 0 100%)';
-  const a = play(
-    ghost,
-    { keyframes: [{ clipPath: 'inset(0)' }, { clipPath: gone }], duration: 'duration.morph', easing: 'ease.reveal', fill: 'forwards', origin: '50% 50%' },
-    'skeleton-wipe',
-  );
-  if (!a) {
-    ghost.remove();
-    return;
-  }
-  const drop = () => ghost.remove();
-  a.finished.then(drop, drop);
-}
 
 function toLength(value: string | number | undefined): string | null {
   if (value === undefined) return null;

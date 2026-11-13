@@ -90,7 +90,8 @@ import { autoPlace, computePopper, writePopper, type PopperAlign, type PopperSid
 import { DsThemeScope, DsThemeService, attributesOf, syncDirectionality, themeScopeProviders } from '../../theme';
 import type { ThemeValue } from '../../theme';
 import { isIconName, type ButtonSlotContent } from '../button/button-base';
-import { CHECK_DRAW_ID, drawCheck, exitGhost, injectHighlightMarker } from '../../internal/selection-marker';
+import { CHECK_DRAW_ID, drawCheck, exitGhost } from '@the-system/motion';
+import { injectHighlightMarker } from '../../internal/selection-marker';
 import { ROW_SLIDE_ID, rowSlide } from './row-slide';
 
 /** The rows of a menu the highlight marker lights (the items of this menu, not of a nested group's own root). */

@@ -31,7 +31,7 @@
 // item it leaves to the item it reaches on the snappy spring, stretched
 // along its travel. Round 3 (order 1.23): the labels no longer dip and pop;
 // the text under the pill takes the on color where the pill is, with the
-// aria-hidden `label-ink` twins of internal/nav-ink.ts. React's ToggleGroup
+// aria-hidden `label-ink` twins of nav-ink.ts in @the-system/motion. React's ToggleGroup
 // still dips the label it leaves (its track keeps the label, so
 // followIndicator answers it); that is a leftover of round 2 and is not
 // copied here. A multiple group has no pill. It plays from
@@ -63,8 +63,7 @@ import { DsIcon } from '@the-system/icons/angular';
 import type { Emphasis, Shape, Size } from '@the-system/shared';
 import { RovingRadioGroup, type RovingRadioItem } from '../../behavior/roving-radio';
 import { consumeHostAttributes } from '../../internal/host';
-import { createTrack, followIndicator, fromLocal } from '../../internal/indicator';
-import { playInk } from '../../internal/nav-ink';
+import { createTrack, followIndicator, fromLocal, playInk } from '@the-system/motion';
 import { injectMotion } from '../../internal/motion';
 import { DS_BUTTON_GROUP, type ButtonGroupAxes } from '../button-group/button-group-context';
 import type { ButtonEmphasis, ButtonSlotContent } from '../button/button-base';

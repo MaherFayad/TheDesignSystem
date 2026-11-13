@@ -1,5 +1,6 @@
-// The Angular indicator port plays the same keyframes, ids and timing as
-// packages/react/src/internal/indicator.ts, and nothing when reduced.
+// The shared indicator (helpers/indicator.ts in @the-system/motion, order
+// 1.29) as Angular calls it: the same keyframes, ids and timing as React,
+// and nothing when reduced.
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import {
   ANSWER_ID,
@@ -12,7 +13,7 @@ import {
   popIn,
   slideFrames,
   slideTo,
-} from './indicator';
+} from '@the-system/motion';
 
 type AnimateMock = ReturnType<typeof vi.fn<(frames: Keyframe[], options: KeyframeAnimationOptions) => Animation>>;
 

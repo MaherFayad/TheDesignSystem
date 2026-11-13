@@ -41,11 +41,10 @@ import {
 } from '@angular/core';
 import { NG_VALUE_ACCESSOR, type ControlValueAccessor } from '@angular/forms';
 import { DsIcon } from '@the-system/icons/angular';
-import { iconMorph } from '@the-system/motion';
+import { dropAfter, iconMorph, leavingCopy, playBeat, snapshot, token, type Snapshot } from '@the-system/motion';
 import type { Shape, Size } from '@the-system/shared';
 import { consumeHostAttributes } from '../../internal/host';
 import { injectMotion } from '../../internal/motion';
-import { dropAfter, leavingCopy, playBeat, snapshot, token, type Snapshot } from '../../internal/motion-fields';
 import { DsFieldContext } from '../field/field-context';
 import { DsIconButton } from '../icon-button/icon-button';
 import { DsInputGroupContext } from '../input-group/input-group-context';

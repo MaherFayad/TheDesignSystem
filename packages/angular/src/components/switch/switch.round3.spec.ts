@@ -4,7 +4,7 @@ import { Component, signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import { rubberBand, snapChecked } from '../../internal/toggles-switch-drag';
+import { snapChecked, switchRubberBand } from '@the-system/motion';
 import { DsSwitch } from './switch';
 
 @Component({
@@ -72,10 +72,10 @@ describe('Switch round 3 anatomy', () => {
 
 describe('switch-drag math', () => {
   it('damps the thumb past either end', () => {
-    expect(rubberBand(0.4)).toBe(0.4);
-    expect(rubberBand(1.2)).toBeCloseTo(1.06);
-    expect(rubberBand(3)).toBeCloseTo(1.12);
-    expect(rubberBand(-0.2)).toBeCloseTo(-0.06);
+    expect(switchRubberBand(0.4)).toBe(0.4);
+    expect(switchRubberBand(1.2)).toBeCloseTo(1.06);
+    expect(switchRubberBand(3)).toBeCloseTo(1.12);
+    expect(switchRubberBand(-0.2)).toBeCloseTo(-0.06);
   });
 
   it('snaps by velocity first, else by the nearer end', () => {

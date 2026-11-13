@@ -10,9 +10,10 @@
 import { Component, signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
+import { wipeAway } from '@the-system/motion';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { DsTheme } from '../../theme/theme';
-import { DsSkeleton, wipeAway } from './skeleton';
+import { DsSkeleton } from './skeleton';
 
 interface Call {
   target: Element;

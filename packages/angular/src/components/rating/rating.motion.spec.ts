@@ -4,7 +4,7 @@
 import { Component } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { token } from '../../internal/motion-fields';
+import { token } from '@the-system/motion';
 import { DsTheme } from '../../theme/theme';
 import { DsRating } from './rating';
 

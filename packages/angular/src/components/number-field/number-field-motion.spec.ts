@@ -5,9 +5,8 @@
 // the value turns invalid (error-shake).
 import { Component, signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
-import { rollDigits, type DigitRollOptions } from '@the-system/motion';
+import { rollDigits, shakeBeat, type DigitRollOptions } from '@the-system/motion';
 import { afterEach, describe, expect, it } from 'vitest';
-import { shakeBeat } from '../../internal/motion-fields';
 import { DsTheme } from '../../theme/theme';
 import { DsNumberField } from './number-field';
 

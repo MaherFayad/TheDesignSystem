@@ -6,7 +6,7 @@
 import { Component, signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { afterEach, describe, expect, it } from 'vitest';
-import { diagonalWipe, shakeBeat } from '../../internal/motion-fields';
+import { diagonalWipe, shakeBeat } from '@the-system/motion';
 import { DsTheme } from '../../theme/theme';
 import { DsPasswordField } from './password-field';
 

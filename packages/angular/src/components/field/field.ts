@@ -36,7 +36,7 @@ import {
 } from '@angular/core';
 import { consumeHostAttributes } from '../../internal/host';
 import { injectMotion } from '../../internal/motion';
-import { playBeat, slideIn } from '../../internal/motion-fields';
+import { playBeat, slideIn } from '@the-system/motion';
 import { DsFieldError } from '../field-error/field-error';
 import { DsLabel } from '../label/label';
 import { DsFieldContext, settleAfterFirstRender, type FieldPart } from './field-context';

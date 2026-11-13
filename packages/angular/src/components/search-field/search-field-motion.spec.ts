@@ -4,9 +4,8 @@
 // the search glyph (search-submit).
 import { Component, signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
-import { iconInFrames } from '@the-system/motion';
+import { iconInFrames, token } from '@the-system/motion';
 import { afterEach, describe, expect, it } from 'vitest';
-import { token } from '../../internal/motion-fields';
 import { DsTheme } from '../../theme/theme';
 import { DsSearchField } from './search-field';
 

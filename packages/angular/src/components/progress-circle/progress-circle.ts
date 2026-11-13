@@ -12,7 +12,7 @@
 //
 //   <div dsProgressCircle [value]="46" label="Uploading files"></div>
 //
-// Motion, as React plays it (internal/motion-feedback.ts). progress-spring
+// Motion, as React plays it (helpers in @the-system/motion). progress-spring
 // (round 3, order 1.23): the arc is an SVG circle in the indicator (part
 // arc) whose stroke-dashoffset the CSS transitions on the soft spring, so a
 // value change draws the arc forward or back from where it was; the round 2
@@ -33,7 +33,7 @@ import {
 import type { Size, Tone } from '@the-system/shared';
 import { consumeHostAttributes } from '../../internal/host';
 import { injectMotion } from '../../internal/motion';
-import { Celebrate, DigitRoller } from '../../internal/motion-feedback';
+import { Celebrate, DigitRoller } from '@the-system/motion';
 import { DsThemeService } from '../../theme';
 import { clampValue, formatPercent, loadingLabelFor, progressState, validMax } from '../progress-bar/format';
 

@@ -37,11 +37,11 @@ import {
 } from '@angular/core';
 import { NG_VALUE_ACCESSOR, type ControlValueAccessor } from '@angular/forms';
 import { DsIcon } from '@the-system/icons/angular';
-import { settled } from '@the-system/motion';
+import { diagonalWipe, fadeOutBeat, playBeat, settled, type ShakeBox } from '@the-system/motion';
 import type { Shape, Size } from '@the-system/shared';
 import { consumeHostAttributes } from '../../internal/host';
 import { injectMotion } from '../../internal/motion';
-import { diagonalWipe, errorShake, fadeOutBeat, playBeat, type ShakeBox } from '../../internal/motion-fields';
+import { errorShake } from '../../internal/motion-fields';
 import { DsFieldContext } from '../field/field-context';
 import { DsIconButton } from '../icon-button/icon-button';
 import { DsInputGroupContext } from '../input-group/input-group-context';

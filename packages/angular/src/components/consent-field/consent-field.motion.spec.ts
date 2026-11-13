@@ -4,7 +4,7 @@
 import { Component, signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { emerge, token } from '../../internal/motion-fields';
+import { emerge, token } from '@the-system/motion';
 import { DsTheme } from '../../theme/theme';
 import { DsConsentField } from './consent-field';
 

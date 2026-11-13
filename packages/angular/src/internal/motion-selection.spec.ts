@@ -1,10 +1,10 @@
-// The selection family motion helpers (order 1.22) call @the-system/motion
-// with React's arguments (packages/react/src/components/ListBox/selectionMotion.ts).
-// jsdom has no Web Animations API, so Element.animate records each call; a
-// replay of the primitive with React's arguments must record the same calls.
+// The Angular wiring of the selection family motion (order 1.22). The
+// framework free parts (row glide, flip group, staggerRows) are tested once
+// in packages/motion/src/helpers/selection-motion.test.ts (order 1.29); this
+// keeps openStaggered, the popup layer part. jsdom has no Web Animations API,
+// so Element.animate records each call.
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { flipPlay, rectOf, staggerGroup, type PatternMode } from '@the-system/motion';
-import { FlipGroup, glide, openStaggered, staggerRows, watchGlide } from './motion-selection';
+import { openStaggered } from './motion-selection';
 
 interface Call {
   el: Element;
@@ -67,88 +67,7 @@ function rows(n: number): HTMLElement {
   return list;
 }
 
-describe('row-glide', () => {
-  for (const mode of ['full', 'reduced'] as PatternMode[]) {
-    it(`glides the new row's layer from the old one with React's flipPlay arguments (${mode})`, () => {
-      const list = rows(3);
-      const [a, , c] = Array.from(list.children);
-      glide(a, c, mode);
-      const got = take();
-      const from = a!.firstElementChild!;
-      const to = c!.firstElementChild!;
-      flipPlay({ rects: new Map([[to, rectOf(from)]]) }, { items: [to], spring: 'snappy', stretch: 'y', scale: true, mode, enter: 'none' });
-      expect(got).toEqual(take());
-      if (mode === 'full') expect(got.map((g) => g.el)).toEqual([to]);
-    });
-  }
-
-  it('plays when the lit attribute moves between rows, and nothing under mode none', async () => {
-    const list = rows(3);
-    const [a, b] = Array.from(list.children) as HTMLElement[];
-    a!.setAttribute('data-highlighted', '');
-    let mode: PatternMode = 'full';
-    const stop = watchGlide(list, "[data-part='option']", 'data-highlighted', () => mode);
-    a!.removeAttribute('data-highlighted');
-    b!.setAttribute('data-highlighted', '');
-    await Promise.resolve();
-    expect(take().map((c) => c.el)).toEqual([b!.firstElementChild]);
-    mode = 'none';
-    b!.removeAttribute('data-highlighted');
-    a!.setAttribute('data-highlighted', '');
-    await Promise.resolve();
-    expect(take()).toEqual([]);
-    stop();
-  });
-});
-
-describe('collection-flip', () => {
-  it('measures on the first update and plays React flipPlay on the next', () => {
-    const list = rows(2);
-    const group = new FlipGroup({ items: (el) => Array.from(el.children) }, () => 'full');
-    group.update(list);
-    expect(take()).toEqual([]);
-    const added = document.createElement('div');
-    added.setAttribute('data-y', '56');
-    list.append(added);
-    group.update(list);
-    const got = take();
-    expect(got.map((c) => c.el)).toEqual([added]);
-    expect(String(got[0]!.opts.id)).toBe('ds-motion:flip');
-  });
-
-  it('draws a removed item once more as an inert clone that shrinks out', () => {
-    const list = rows(2);
-    const group = new FlipGroup({ items: (el) => Array.from(el.children).filter((c) => c.getAttribute('data-part') === 'option') }, () => 'full');
-    group.update(list);
-    list.firstElementChild!.remove();
-    group.update(list);
-    const clone = list.querySelector('[inert]');
-    expect(clone?.getAttribute('aria-hidden')).toBe('true');
-    expect(take().some((c) => c.el === clone)).toBe(true);
-  });
-
-  it('plays nothing under mode none', () => {
-    const list = rows(1);
-    const group = new FlipGroup({ items: (el) => Array.from(el.children) }, () => 'none');
-    group.update(list);
-    list.append(document.createElement('div'));
-    group.update(list);
-    expect(take()).toEqual([]);
-  });
-});
-
 describe('menu-rows', () => {
-  for (const mode of ['full', 'reduced'] as PatternMode[]) {
-    it(`staggers the rows with React's staggerGroup arguments (${mode})`, () => {
-      const list = rows(3);
-      staggerRows(list, "[data-part='option']", mode);
-      const got = take();
-      staggerGroup(Array.from(list.children), { phase: 'enter', offset: 1, spring: 'soft', mode });
-      expect(got).toEqual(take());
-      expect(got).toHaveLength(3);
-    });
-  }
-
   it('staggers on a fresh mount only, not on a reopen during the exit', () => {
     const list = rows(2);
     let mounted = false;

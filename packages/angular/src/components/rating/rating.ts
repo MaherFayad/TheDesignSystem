@@ -65,7 +65,7 @@ import { RovingRadioGroup, bubbleInputStyle, rovingItem, type RovingRadioItem } 
 import { BubbleEvent } from '../../internal/bubble-event';
 import { consumeHostAttributes } from '../../internal/host';
 import { injectMotion } from '../../internal/motion';
-import { dipPop, landPop, playBeat, runStep } from '../../internal/motion-fields';
+import { dipPop, landPop, playBeat, runStep } from '@the-system/motion';
 import { DsNativeButton } from '../../internal/native-button';
 import { DsThemeService } from '../../theme/theme';
 import type { Lang } from '../../theme/types';

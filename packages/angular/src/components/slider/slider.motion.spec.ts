@@ -9,7 +9,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { renderDigits, rollDigits } from '@the-system/motion';
 import { injectMotion } from '../../internal/motion';
 import { DsRangeSlider } from '../range-slider/range-slider';
-import { KEY_BUMP, rubberBand } from '../../internal/slider-fill';
+import { KEY_BUMP, sliderRubberBand } from '@the-system/motion';
 import { DsSlider } from './slider';
 
 interface Call {
@@ -214,7 +214,7 @@ describe('slider motion, orders 1.22 and 1.23', () => {
     pointer(thumb, 'pointermove', 124);
     await settle();
     const near = pull('end');
-    expect(near).toBe(rubberBand(24, 100));
+    expect(near).toBe(sliderRubberBand(24, 100));
     pointer(thumb, 'pointermove', 400);
     await settle();
     const far = pull('end');
@@ -233,10 +233,10 @@ describe('slider motion, orders 1.22 and 1.23', () => {
   });
 
   it('slider-rubber-band: the pull rises with the distance and stays under 1', () => {
-    expect(rubberBand(0, 24)).toBe(0);
-    expect(rubberBand(24, 24)).toBe(0.5);
-    expect(rubberBand(72, 24)).toBe(0.75);
-    expect(rubberBand(10, 0)).toBe(0);
+    expect(sliderRubberBand(0, 24)).toBe(0);
+    expect(sliderRubberBand(24, 24)).toBe(0.5);
+    expect(sliderRubberBand(72, 24)).toBe(0.75);
+    expect(sliderRubberBand(10, 0)).toBe(0);
   });
 
   it('slider-fill: a key glides the fill clip and the thumb wrapper on the snappy spring; a drag follows at once; reduced lands at once', async () => {

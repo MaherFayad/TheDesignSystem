@@ -40,7 +40,7 @@
 // Motion (order 1.23), as React's Toaster.tsx. The toasts share one grid
 // cell and stack with depth (data-stacked on the list): the newest in front,
 // the older ones behind it, peeking past it, smaller, clipped to the strip
-// that shows. internal/toast-stack.ts (React's stack.ts) measures the toasts
+// that shows. toast-stack.ts in @the-system/motion measures the toasts
 // and writes their place; Toast.css draws it with translate, scale and
 // clip-path and transitions them. While the pointer is over the toasts or
 // focus is inside them the list carries data-expanded and the stack opens
@@ -49,7 +49,7 @@
 // toast (its `progress` part, a CSS animation over the toast's duration)
 // pauses on it, so the line and the store's timer move together (WCAG
 // 2.2.1); a repeat or an update (a new version) starts both again. The swipe
-// is React's (internal/toast-swipe.ts): the toast follows the finger toward
+// is React's (toast-swipe.ts in @the-system/motion): the toast follows the finger toward
 // its edge, gives a little against the other way, and closes past a distance
 // or on a fast flick; let go short, it springs back. Layout never animates
 // and the store never waits.
@@ -76,18 +76,18 @@ import { DOCUMENT } from '@angular/common';
 import { ComponentPortal, DomPortalOutlet } from '@angular/cdk/portal';
 import { toastStore, toastUrgency, type ToastAction, type ToastItem, type ToastSnapshot, type ToastStore } from '@the-system/shared';
 import { consumeHostAttributes } from '../../internal/host';
-import { watchStack } from '../../internal/toast-stack';
 import {
   START_BUFFER,
-  rubberBand,
   swipeAxis,
   swipeCloses,
   swipeOffset,
+  swipeRubberBand,
   swipeSign,
   swipeVelocity,
+  watchStack,
   type SwipeDirection,
   type SwipeSample,
-} from '../../internal/toast-swipe';
+} from '@the-system/motion';
 import { animationsDone } from '../../behavior';
 import { DsThemeScope, DsThemeService, attributesOf, themeScopeProviders } from '../../theme';
 import type { ThemeValue } from '../../theme';
@@ -357,7 +357,7 @@ export class DsToasterItem {
     g.along = main * swipeSign(direction);
     g.samples.push({ t: event.timeStamp, along: g.along });
     if (g.samples.length > 12) g.samples.shift();
-    const { x, y } = swipeOffset(direction, rubberBand(g.along));
+    const { x, y } = swipeOffset(direction, swipeRubberBand(g.along));
     el.setAttribute('data-swipe', 'move');
     el.style.setProperty('--radix-toast-swipe-move-x', `${x}px`);
     el.style.setProperty('--radix-toast-swipe-move-y', `${y}px`);
@@ -519,7 +519,7 @@ export class DsToasterLayer {
       untracked(() => this.announce(snapshot, label));
     });
 
-    // The stack: each toast's place, written before the next paint (internal/toast-stack.ts).
+    // The stack: each toast's place, written before the next paint (toast-stack.ts in @the-system/motion).
     let stopStack: (() => void) | null = null;
     afterNextRender(() => {
       const viewport = this.viewport()?.nativeElement;

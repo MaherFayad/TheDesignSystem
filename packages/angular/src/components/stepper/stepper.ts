@@ -19,7 +19,7 @@
 // from afterRenderEffect, after the steps show the new state. Round 3
 // (order 1.23): a step that turns complete draws its check with
 // stroke-dashoffset, short stroke first, over duration.spring-soft on
-// ease.out (full mode only), as React's drawCheck.
+// ease.out (full mode only), as React's drawCheck (drawStepCheck in @the-system/motion).
 //
 // Names that differ from React: `onStepSelect` is a function input, not an
 // output, because the stepper must know whether it is passed (steps become
@@ -30,31 +30,10 @@ import { ChangeDetectionStrategy, Component, afterRenderEffect, computed, effect
 import { DsIcon } from '@the-system/icons/angular';
 import { canGoTo, createStepperState, stepStatus, type Size, type StepperMode, type StepStatus } from '@the-system/shared';
 import { consumeHostAttributes } from '../../internal/host';
-import { readDuration, readEasing, type PatternMode } from '@the-system/motion';
-import { createTrack, followIndicator, popIn } from '../../internal/indicator';
+import { createTrack, drawStepCheck, followIndicator, popIn } from '@the-system/motion';
 import { injectMotion } from '../../internal/motion';
 import { DsThemeService } from '../../theme/theme';
 import { DsButton } from '../button/button';
-
-/** The length of the system check path (M20 6 9 17l-5-5) in its 24 unit box, rounded up. */
-const CHECK_LENGTH = 24;
-
-/**
- * Round 3: draws a check path from its end (the short stroke) to its start
- * with stroke-dashoffset, on the soft spring. Full mode only; the check is
- * whole at once otherwise, and whole again when the animation ends.
- */
-export function drawCheck(path: Element | null | undefined, mode: PatternMode): Animation | null {
-  if (!path || mode !== 'full' || typeof path.animate !== 'function') return null;
-  const dash = `${CHECK_LENGTH} ${CHECK_LENGTH}`;
-  return path.animate(
-    [
-      { strokeDasharray: dash, strokeDashoffset: -CHECK_LENGTH },
-      { strokeDasharray: dash, strokeDashoffset: 0 },
-    ],
-    { duration: readDuration(path, 'duration.spring-soft'), easing: readEasing(path, 'ease.out'), id: 'ds-motion:stepper-check' },
-  );
-}
 
 export type StepperSize = Extract<Size, 'sm' | 'md'>;
 export type StepperOrientation = 'horizontal' | 'vertical';
@@ -251,7 +230,7 @@ export class DsStepper {
           const steps = root.querySelectorAll(':scope > [data-part="step"]');
           for (let i = before; i < current; i++) {
             const path = steps[i]?.querySelector(':scope > [data-part="indicator"] [data-icon="check"] path');
-            drawCheck(path, mode);
+            drawStepCheck(path, mode);
           }
         }
       });

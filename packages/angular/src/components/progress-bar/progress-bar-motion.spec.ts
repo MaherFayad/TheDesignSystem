@@ -5,7 +5,7 @@ import { Component, signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { DsTheme } from '../../theme/theme';
-import { haloBurst, popMark } from '../../internal/motion-feedback';
+import { haloBurst, popMark } from '@the-system/motion';
 import { DsProgressBar } from './progress-bar';
 
 interface Call {

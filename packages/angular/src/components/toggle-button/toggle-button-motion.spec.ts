@@ -7,7 +7,7 @@ import { TestBed } from '@angular/core/testing';
 import { play } from '@the-system/motion';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { DsTheme } from '../../theme/theme';
-import { toggleLayerSpec } from '../../internal/toggles-motion';
+import { toggleLayerSpec } from '@the-system/motion';
 import { DsToggleButton } from './toggle-button';
 
 /** Records every el.animate call. */
