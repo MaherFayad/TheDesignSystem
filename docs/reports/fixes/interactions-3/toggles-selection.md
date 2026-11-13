@@ -24,6 +24,8 @@ The fixes:
   `aria-checked`.
 - A 2px ring inside the thumb's edge in the thumb's own color
   (`--_switch-thumb-ring-width`) keeps a clear lens readable while held.
+- Android: `--_switch-travel-max` subtracts a capsule thumb's extra width
+  (`--_switch-thumb-width` less `--_switch-thumb-size`, 0 by default).
 - Android: the fill fell about 1px short of the dot, because the track
   border there is 2dp. A new hook, `--_switch-fill-reach`, fixes it.
 - Android: the off dot keeps a 1dp inner edge in the platform's handle
@@ -58,20 +60,25 @@ before CSS the pointer events change nothing, because no flag existed then.
 | Run | Runs under 3:1 | Lowest | Lowest on a toggle | Lowest on a drag |
 | --- | --- | --- | --- | --- |
 | `switch-contrast.before.json` (`e417cbb` CSS) | 72 of 144 | 1.00 (Studio light Android, off, held, 60ms) | 1.00 | 1.51 |
-| `switch-contrast.after.json` | 14 of 144 | 2.13 (Liquid light web, drag held at 1) | 2.68 | 2.13 |
+| `switch-contrast.after.json` | 12 of 144 | 2.68 (Neutral dark iOS, held lens) | 2.68 | 2.68 |
+| `switch-contrast.capsule.json` (`--_switch-thumb-width` 1.5 times the thumb size on Liquid and iOS) | 11 of 144 | 2.56 (Neutral dark iOS, held) | | |
 
-**The probe does not pass yet.** All 14 remaining runs come from a style's
-static colors or edges, in recipe files this lane does not own. None of them
-comes from the crossing the review measured: no frame drops under 2.1. Each
+Liquid now passes on every scheme and platform, with a capsule thumb too.
+The styles lane's three Liquid runs (web drag 2.13, Android off 2.81) are
+closed in Switch.css and android.css. Its 1.28:1 capsule drag is closed by
+the drag clamp and by Android's travel, which now subtracts a capsule's extra
+width.
+
+**The probe still exits 1.** All 12 remaining runs are Desk and Neutral dark.
+They come from those styles' static colors and edges, in recipe files this
+lane does not own. None comes from the crossing the review measured. Each
 needs a value from the styles lane:
 
 | Runs | Cause | Value for the styles lane |
 | --- | --- | --- |
 | Neutral dark iOS, 4 runs at 2.68 (held, drag on side) | Neutral's on thumb (`--_switch-on-fill: primary-text`) is dark navy on the blue fill. Under the iOS clear lens only the 2px navy ring is left, about 2.7:1 against the fill | Neutral dark: an on thumb of `--ds-color-text-on-primary`, or a fill that keeps 3:1 against `primary-text` |
-| Neutral dark Android drags, 2 runs at 2.92 | The white pressed dot sits on Neutral's off track, which is `--ds-color-border-control`, under Android's 12% state layer | Neutral: an off track one step darker than `border-control` in dark, or an off thumb that is not white on Android |
-| Liquid light web drags at progress 1, 2 runs at 2.13 | The held lens grows by `scale.pop` past the track's end, so its white ring meets the light page | Liquid: `--_switch-thumb-size-pressed: 1` while dragging, or keep the 1px control edge (`0 0 0 1px border-control`) on the held lens on both sides |
-| Liquid light Android off, 2.81 at the end of the travel | The white off dot with a 1px ring, mid travel | Liquid light: `--_switch-thumb-off` set for `[data-platform='web']` only, so Android's outline-colored handle applies |
-| Desk, 5 runs at 2.92 to 2.98 (off end, held) | Desk's white glass-edge rim sits above the thumb's edge and its tooltip shadow darkens the light track. The rest value is about 3.0 to 3.5 | Desk recipe (`styles/desk/recipes/Checkbox.css`): drop `var(--ds-elevation-tooltip)` from `--_switch-thumb-shadow` while held, or move the glass-edge rim 1px in |
+| Neutral dark Android drags, 2 runs at 2.84 | The white pressed dot sits on Neutral's off track, which is `--ds-color-border-control`, under Android's 12% state layer | Neutral dark: an off track one step darker than `border-control` |
+| Desk, 6 runs at 2.72 to 2.98 (off end, held, Android drag) | Desk's white glass-edge rim sits above the thumb's edge and its tooltip shadow darkens the light track. The rest value is about 3.0 to 3.5 | Desk recipe (`styles/desk/recipes/Checkbox.css`): drop `var(--ds-elevation-tooltip)` from `--_switch-thumb-shadow` while held, or move the glass-edge rim 1px in |
 
 Tests that fail before and pass after:
 
@@ -242,6 +249,8 @@ The first agent's files are listed in `8aeb19b`.
 
 ## Changes needed from the lead
 
-- Styles lane: the values in the B3 and B4 table, plus N3 and N5. The probe
-  passes only once those land.
+- Styles lane: the Desk and Neutral values in the B3 and B4 table, plus N3
+  and N5. The probe passes only once those land. Liquid needs nothing more.
+  `--_switch-thumb-width` can now be set for Liquid and iOS: the capsule run
+  keeps every Liquid run at 3:1 or more.
 - Angular parity lane: `data-released` through `markReleased`.

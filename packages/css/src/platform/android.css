@@ -286,7 +286,8 @@
      */
     --_switch-inset: var(--ds-border-width-default);
     --_switch-thumb-size: calc(var(--_switch-height) - var(--ds-border-width-strong) * 2);
-    --_switch-travel-max: calc(var(--_switch-width) - var(--_switch-height));
+    /* A capsule thumb (--_switch-thumb-width wider than the dot box) travels less by its extra width, so it stays in the track (order 1.29). */
+    --_switch-travel-max: calc(var(--_switch-width) - var(--_switch-height) - (var(--_switch-thumb-width) - var(--_switch-thumb-size)));
     /* The fill layer sits 1px inside the 2dp outline, so its clip reaches 1dp past the dot's far edge only with both (order 1.29, B3). */
     --_switch-fill-reach: calc(var(--ds-border-width-strong) + var(--ds-border-width-default));
     /* With the thumbIcon part: a check in the on dot. */
