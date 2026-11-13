@@ -277,6 +277,28 @@ export default function SheetDemo() {
         </DemoRow>
       </DemoCase>
 
+      <DemoCase id="detents" title="Detents: half and all of the room; drag between them, or focus the handle and use the arrows, Enter or a press" lang="en">
+        <DemoRow>
+          <ShareSheet trigger="detents" label="Share at half height" detents={[0.5, 1]} />
+          <ShareSheet trigger="detents-px" label="Share at 320px" detents={[320, 0.9]} defaultDetent={1} />
+        </DemoRow>
+      </DemoCase>
+
+      <DemoCase id="detents-arabic" title="Detents in Arabic" lang="ar">
+        <DemoRow>
+          <Theme lang="ar" dir="rtl">
+            <Sheet detents={[0.5, 1]}>
+              <SheetTrigger>
+                <Button data-demo-trigger="detents-arabic">مشاركة اللوحة</Button>
+              </SheetTrigger>
+              <SheetContent title="مشاركة إطلاق الربيع" description="يمكن لمن لديه الرابط عرض اللوحة.">
+                <SheetBody>اسحب المقبض أو استخدم مفاتيح الأسهم لتغيير الارتفاع.</SheetBody>
+              </SheetContent>
+            </Sheet>
+          </Theme>
+        </DemoRow>
+      </DemoCase>
+
       <DemoCase id="disabled" title="Not dismissible while sending: the close control is disabled, a drag and Escape wait" lang="en">
         <DemoRow>
           <BusySheet />

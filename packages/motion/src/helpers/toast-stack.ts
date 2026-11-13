@@ -16,11 +16,14 @@
 // a toast that leaves, an expand and a collapse are all the same transition.
 // Layout never animates.
 //
-// A MutationObserver sees a toast added or removed and every data-state
-// change (an open toast that starts its exit leaves the order at once, so the
-// others move while it plays out). A ResizeObserver sees a toast that grows
-// or shrinks in place (a repeat count, an update). Both callbacks run before
-// the next paint, so a toast is never drawn in the wrong place.
+// A MutationObserver sees a toast added or removed (the viewport's own child
+// list) and each toast's data-state change (an open toast that starts its
+// exit leaves the order at once, so the others move while it plays out);
+// nothing inside a toast. A ResizeObserver sees a toast that grows or
+// shrinks in place (a repeat count, an update). Both callbacks run before
+// the next paint, so a toast is never drawn in the wrong place. Each pass
+// reads every height first and writes after, and skips a value that has not
+// changed (order 1.29, review 3 N44).
 
 /** A toast as the stack sees it: its element, its height and whether it is still open. */
 export interface StackEntry {
@@ -66,50 +69,66 @@ function px(n: number): string {
   return `${Math.round(n * 100) / 100}px`;
 }
 
-/** Measures the viewport's toasts and writes the stack values on them. */
+/** Sets a custom property only when its value changes, so an unchanged stack costs no style work. */
+function put(el: HTMLElement, name: string, value: string): void {
+  if (el.style.getPropertyValue(name) !== value) el.style.setProperty(name, value);
+}
+
+/**
+ * Measures the viewport's toasts and writes the stack values on them. Every
+ * height is read first and every value written after (order 1.29, review 3
+ * N44), so one pass forces at most one layout; a value that has not changed
+ * is not written again.
+ */
 export function writeStack(viewport: HTMLElement): StackLayout {
   const els = Array.from(viewport.querySelectorAll<HTMLElement>(TOASTS));
   const gap = typeof getComputedStyle === 'function' ? Number.parseFloat(getComputedStyle(viewport).rowGap) || 0 : 0;
-  const layout = stackLayout(
-    els.map((el) => ({ el, height: el.offsetHeight, open: el.getAttribute('data-state') !== 'closed' })),
-    gap,
-  );
-  for (const el of els) {
-    const place = layout.places.get(el);
+  // Reads.
+  const entries = els.map((el) => ({ el, height: el.offsetHeight, open: el.getAttribute('data-state') !== 'closed' }));
+  const layout = stackLayout(entries, gap);
+  // Writes.
+  for (const entry of entries) {
+    const place = layout.places.get(entry.el);
     // A closing toast keeps its last values, so it plays its exit where it was.
     if (!place) continue;
-    el.style.setProperty('--_toast-index', String(place.index));
-    el.style.setProperty('--_toast-offset', px(place.offset));
-    el.style.setProperty('--_toast-height', px(el.offsetHeight));
+    put(entry.el, '--_toast-index', String(place.index));
+    put(entry.el, '--_toast-offset', px(place.offset));
+    put(entry.el, '--_toast-height', px(entry.height));
     // The front height as this toast last saw it, so a toast playing its exit stays where it was.
-    el.style.setProperty('--_toast-front-height', px(layout.front));
+    put(entry.el, '--_toast-front-height', px(layout.front));
   }
-  viewport.style.setProperty('--_toaster-front-height', px(layout.front));
-  viewport.style.setProperty('--_toaster-height', px(layout.total));
+  put(viewport, '--_toaster-front-height', px(layout.front));
+  put(viewport, '--_toaster-height', px(layout.total));
   return layout;
 }
 
 /**
  * Keeps the stack values of a toaster viewport up to date until the returned
- * function is called.
+ * function is called. The observers watch only what moves the stack (order
+ * 1.29, review 3 N44): the viewport's own child list (a toast added or
+ * removed), each toast's data-state, and each toast's size. Changes inside a
+ * toast (a button's state, a count) never measure the stack.
  */
 export function watchStack(viewport: HTMLElement): () => void {
   const resizes = typeof ResizeObserver === 'undefined' ? null : new ResizeObserver(() => writeStack(viewport));
+  const mutations = typeof MutationObserver === 'undefined' ? null : new MutationObserver(() => sync());
   const observed = new Set<Element>();
-  const sync = () => {
+  function sync() {
     const now = new Set<Element>(viewport.querySelectorAll(TOASTS));
-    for (const el of now) if (!observed.has(el)) resizes?.observe(el);
+    for (const el of now) {
+      if (observed.has(el)) continue;
+      resizes?.observe(el);
+      mutations?.observe(el, { attributes: true, attributeFilter: ['data-state'] });
+    }
     for (const el of observed) if (!now.has(el)) resizes?.unobserve(el);
     observed.clear();
     for (const el of now) observed.add(el);
     writeStack(viewport);
-  };
+  }
+  mutations?.observe(viewport, { childList: true });
   sync();
-  if (typeof MutationObserver === 'undefined') return () => resizes?.disconnect();
-  const mutations = new MutationObserver(sync);
-  mutations.observe(viewport, { childList: true, subtree: true, attributes: true, attributeFilter: ['data-state'] });
   return () => {
-    mutations.disconnect();
+    mutations?.disconnect();
     resizes?.disconnect();
   };
 }

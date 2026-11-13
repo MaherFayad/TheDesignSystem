@@ -16,7 +16,8 @@
  *   [data-ds='dialog']                     root: fixed, centers the panel
  *     > [data-part='backdrop']             the scrim, Radix Overlay
  *     > [data-part='panel']                role dialog, Radix Content
- *         > [data-part='titlebar']         Desk (optional part): TitleBar
+ *         > [data-part='titlebar']         Desk (optional part): TitleBar; order 1.29 also
+ *                                          AlertDialog and Sheet, when a style turns it on
  *         > [data-part='title']            Studio: the title band
  *         > [data-part='close']            Studio: the CloseButton
  *         > [data-part='description']
@@ -40,6 +41,12 @@
  *                                      leaves to, 1; 0 when a style turns the slide into a fade
  *   --_dialog-handle-color, -drag-y, -drag-duration   Sheet: the handle and the drag
  *   --_dialog-handle-radius            Sheet: the corners of the bar (order 1.23, the handle-bar part)
+ *   --_dialog-detent-height, -detent-max   Sheet, order 1.29, working values: the height of the
+ *                                      current detent and of the largest (Sheet.tsx, with data-detent)
+ *   --_dialog-drag-x                   Drawer, order 1.29, working value: the swipe offset across
+ *                                      (--_dialog-drag-y along the block axis on ios)
+ *   --_dialog-drawer-handle-color      Drawer, order 1.29: the bar of the handle strip,
+ *                                      transparent by default
  *
  *   --_dialog-shift                    how far each part of the panel rises as it arrives
  *   --_dialog-backdrop-blur            how much the backdrop blurs the page behind it; the
@@ -52,6 +59,12 @@
  *   --_dialog-part-duration, -part-ease   the rise of each part: a style picks its curve,
  *                                      a spring that overshoots or a plain ease out
  *   --_dialog-refuse-shift             how far the panel swings when a close is refused
+ *   --_dialog-scrim-saturate           order 1.29: how much the scrim saturates the page behind
+ *                                      it, a number, 1 for none (the default). Composed into
+ *                                      --_dialog-scrim-filter after the blur, so a style sets the
+ *                                      number and never the filter; reset to 1 (and the filter to
+ *                                      none) under more contrast, forced colors, reduced
+ *                                      transparency and where the browser has no backdrop filter
  *
  * Order 1.23, proposed. The state machine: closed, opening, open, refused,
  * closing. Opening: the backdrop fades in and its blur grows from nothing to
@@ -123,7 +136,9 @@
     --_dialog-band-padding-inline: var(--ds-space-xl);
     --_dialog-scrim: var(--ds-color-bg-scrim);
     --_dialog-backdrop-blur: var(--ds-blur-backdrop);
-    --_dialog-scrim-filter: blur(var(--_dialog-backdrop-blur));
+    /* Order 1.29: how much the scrim saturates the page behind it. 1 is none; reset to 1 wherever the blur goes. */
+    --_dialog-scrim-saturate: 1;
+    --_dialog-scrim-filter: blur(var(--_dialog-backdrop-blur)) saturate(var(--_dialog-scrim-saturate));
     --_dialog-part-fade: var(--ds-duration-fast);
     --_dialog-stagger: var(--ds-delay-stagger);
     --_dialog-part-duration: var(--ds-duration-spring-soft);
@@ -343,7 +358,8 @@
    * declares both; renaming either breaks this file.
    */
 
-  [data-ds='dialog'] > [data-part='panel'] > [data-part='titlebar'] {
+  /* Order 1.29: AlertDialog and Sheet take the same optional title bar, when a style turns it on. */
+  :is([data-ds='dialog'], [data-ds='alert-dialog'], [data-ds='sheet']) > [data-part='panel'] > [data-part='titlebar'] {
     --_title-bar-fg: var(--_dialog-title-fg);
 
     flex: none;
@@ -351,12 +367,12 @@
   }
 
   /* The lights stay on the first line of a title that wraps, as a window draws them. */
-  [data-ds='dialog'] > [data-part='panel'] > [data-part='titlebar'] > [data-part='controls'] {
+  :is([data-ds='dialog'], [data-ds='alert-dialog'], [data-ds='sheet']) > [data-part='panel'] > [data-part='titlebar'] > [data-part='controls'] {
     margin-block-start: calc(var(--ds-space-s) + (var(--_title-bar-font-size) * var(--ds-font-leading-tight) - var(--ds-size-target-min)) / 2);
   }
 
   /* The title is a question: in a dialog's title bar it wraps instead of ending in an ellipsis. */
-  [data-ds='dialog'] > [data-part='panel'] > [data-part='titlebar'] > [data-part='title'] {
+  :is([data-ds='dialog'], [data-ds='alert-dialog'], [data-ds='sheet']) > [data-part='panel'] > [data-part='titlebar'] > [data-part='title'] {
     padding-block: var(--ds-space-s);
     overflow-wrap: anywhere;
     white-space: normal;
@@ -517,6 +533,12 @@
     --_dialog-gutter: 0;
     --_dialog-slide: 100%;
     --_dialog-enter-opacity: 1;
+    /* Order 1.29, the swipe to dismiss: Drawer.tsx sets the offsets inline on the panel while the handle is dragged. */
+    --_dialog-drag-x: 0px;
+    --_dialog-drag-y: 0px;
+    --_dialog-drag-duration: var(--ds-duration-base);
+    /* The bar on the handle strip. transparent by default, so a Drawer looks as it did; a style or a platform draws it. */
+    --_dialog-drawer-handle-color: transparent;
 
     align-items: stretch;
     justify-content: flex-end;
@@ -558,6 +580,53 @@
 
   [data-ds='drawer'] > [data-part='panel'][data-state='open'] {
     animation: ds-sheet-in-x var(--_dialog-duration-in) var(--_dialog-ease-in);
+  }
+
+  /* Order 1.29: the swipe to dismiss moves the panel by transform alone; let go short it springs back. */
+  [data-ds='drawer'] > [data-part='panel'] {
+    transform: translate(var(--_dialog-drag-x), var(--_dialog-drag-y));
+    transition: transform var(--_dialog-drag-duration) var(--_dialog-ease-in);
+  }
+
+  [data-ds='drawer'][data-dragging] {
+    --_dialog-drag-duration: 0s;
+  }
+
+  /*
+   * The handle: a strip on the panel edge that faces the page (inline start
+   * for an end drawer, inline end for a start drawer), as wide as the band
+   * padding, so it lies in the empty gutter and never covers the content.
+   * It takes the swipe; the close control and Escape are the other paths
+   * (WCAG 2.5.7), and the close control is the equivalent target (2.5.8).
+   * Its bar draws nothing unless --_dialog-drawer-handle-color is set.
+   */
+  [data-ds='drawer'] > [data-part='panel'] > [data-part='handle'] {
+    position: absolute;
+    z-index: 1;
+    inset-block: 0;
+    inset-inline-start: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    inline-size: var(--_dialog-band-padding-inline);
+    cursor: grab;
+    touch-action: none;
+  }
+
+  [data-ds='drawer'][data-side='start'] > [data-part='panel'] > [data-part='handle'] {
+    inset-inline: auto 0;
+  }
+
+  [data-ds='drawer'][data-dragging] > [data-part='panel'] > [data-part='handle'] {
+    cursor: grabbing;
+  }
+
+  [data-ds='drawer'] > [data-part='panel'] > [data-part='handle'] > [data-part='handle-bar'] {
+    display: block;
+    inline-size: var(--ds-space-2xs);
+    block-size: var(--ds-size-control-lg);
+    border-radius: var(--_dialog-handle-radius, var(--ds-radius-pill));
+    background-color: var(--_dialog-drawer-handle-color);
   }
 
   [data-ds='drawer'] > [data-part='panel'][data-state='closed'] {
@@ -640,6 +709,11 @@
     --_dialog-drag-duration: var(--ds-duration-base);
     --_dialog-slide: 100%;
     --_dialog-enter-opacity: 1;
+    /* Order 1.29: the Sheet honours the enter scale; 1, so by default it only slides. A style scales it from the bottom edge. */
+    --_dialog-enter-scale: 1;
+    /* Order 1.29, working values of the detents: Sheet.tsx sets both inline on the root with data-detent. */
+    --_dialog-detent-height: 0px;
+    --_dialog-detent-max: 0px;
     /* Where toasts on the top edge end; Sheet.tsx sets it inline while they show. */
     --_sheet-toast-end: 0px;
 
@@ -675,11 +749,28 @@
     border-end-start-radius: 0;
     border-end-end-radius: 0;
     transform: translateY(var(--_dialog-drag-y));
+    transform-origin: 50% 100%;
     transition: transform var(--_dialog-drag-duration) var(--_dialog-ease-in);
   }
 
   [data-ds='sheet'][data-size='lg'] > [data-part='panel'] {
     block-size: 100%;
+  }
+
+  /*
+   * Order 1.29, detents (data-detent, the index of the current one). The
+   * panel is as tall as the largest detent (--_dialog-detent-max) and a
+   * smaller one moves it down by transform, never by its height, so a change
+   * of detent and a drag are one transform on one transition. The enter
+   * rises from below its whole height to that place; the exit leaves from
+   * wherever it is. Past the largest detent the drag offset is a rubber
+   * band (Sheet.tsx).
+   */
+  [data-ds='sheet'][data-detent] > [data-part='panel'],
+  [data-ds='sheet'][data-detent][data-size] > [data-part='panel'] {
+    block-size: var(--_dialog-detent-max);
+    max-block-size: none;
+    transform: translateY(calc(var(--_dialog-detent-max) - var(--_dialog-detent-height) + var(--_dialog-drag-y)));
   }
 
   /* A footer band reaches the bottom edge: it takes the safe area inside itself, so its color runs under the home bar. */
@@ -763,6 +854,26 @@
     cursor: grabbing;
   }
 
+  /*
+   * Order 1.29: with detents the handle is a native button (the key and the
+   * button path through the detents, WCAG 2.5.7). It keeps the look of the
+   * handle and takes the focus ring of the system.
+   */
+  [data-ds='sheet'] > [data-part='panel'] > button[data-part='handle'] {
+    appearance: none;
+    margin: 0;
+    border: 0;
+    border-radius: var(--ds-radius-pill);
+    color: inherit;
+    font: inherit;
+  }
+
+  [data-ds='sheet'] > [data-part='panel'] > button[data-part='handle']:focus-visible {
+    outline: var(--ds-border-width-strong) solid transparent;
+    outline-offset: var(--ds-border-width-strong);
+    box-shadow: var(--ds-focus-shadow-ring);
+  }
+
   /* Under the handle the header needs no line on top of it. */
   [data-ds='sheet'] > [data-part='panel'] > [data-part='handle'] + [data-part='header'] {
     padding-block-start: 0;
@@ -830,7 +941,7 @@
   @keyframes ds-dialog-backdrop-in {
     from {
       opacity: 0;
-      backdrop-filter: blur(0);
+      backdrop-filter: blur(0) saturate(1);
     }
 
     33% {
@@ -841,7 +952,7 @@
   @keyframes ds-dialog-backdrop-out {
     to {
       opacity: 0;
-      backdrop-filter: blur(0);
+      backdrop-filter: blur(0) saturate(1);
     }
   }
 
@@ -860,17 +971,18 @@
     }
   }
 
+  /* Order 1.29: the Sheet also takes --_dialog-enter-scale (1 on the Sheet by default, so it only slides). */
   @keyframes ds-sheet-in-y {
     from {
       opacity: var(--_dialog-enter-opacity);
-      transform: translateY(var(--_dialog-slide));
+      transform: translateY(var(--_dialog-slide)) scale(var(--_dialog-enter-scale));
     }
   }
 
   @keyframes ds-sheet-out-y {
     to {
       opacity: var(--_dialog-enter-opacity);
-      transform: translateY(var(--_dialog-slide));
+      transform: translateY(var(--_dialog-slide)) scale(var(--_dialog-enter-scale));
     }
   }
 
@@ -881,7 +993,7 @@
       animation: none;
     }
 
-    [data-ds='sheet'] {
+    :is([data-ds='sheet'], [data-ds='drawer']) {
       --_dialog-drag-duration: 0s;
     }
   }
@@ -891,7 +1003,7 @@
     animation: none;
   }
 
-  :root[data-motion='reduce'] [data-ds='sheet'] {
+  :root[data-motion='reduce'] :is([data-ds='sheet'], [data-ds='drawer']) {
     --_dialog-drag-duration: 0s;
   }
 
@@ -902,6 +1014,7 @@
     :is([data-ds='dialog'], [data-ds='alert-dialog'], [data-ds='drawer'], [data-ds='sheet']) {
       --_dialog-backdrop-blur: 0px;
       --_dialog-scrim-filter: none;
+      --_dialog-scrim-saturate: 1;
       --_dialog-scrim: var(--ds-color-bg-scrim-80);
     }
   }
@@ -912,6 +1025,7 @@
       --_dialog-backdrop-blur: 0px;
       --_dialog-backdrop: none;
       --_dialog-scrim-filter: none;
+      --_dialog-scrim-saturate: 1;
       --_dialog-scrim: var(--ds-color-bg-scrim-80);
     }
   }
@@ -921,6 +1035,7 @@
       --_dialog-backdrop-blur: 0px;
       --_dialog-backdrop: none;
       --_dialog-scrim-filter: none;
+      --_dialog-scrim-saturate: 1;
       --_dialog-scrim: var(--ds-color-bg-scrim-80);
       --_dialog-border-color: var(--ds-color-border-strong);
     }
@@ -930,6 +1045,7 @@
     --_dialog-backdrop-blur: 0px;
     --_dialog-backdrop: none;
     --_dialog-scrim-filter: none;
+    --_dialog-scrim-saturate: 1;
     --_dialog-scrim: var(--ds-color-bg-scrim-80);
     --_dialog-border-color: var(--ds-color-border-strong);
   }
@@ -941,6 +1057,7 @@
       --_dialog-bg: Canvas;
       --_dialog-backdrop: none;
       --_dialog-scrim-filter: none;
+      --_dialog-scrim-saturate: 1;
       --_dialog-border-color: CanvasText;
       --_dialog-divider-color: CanvasText;
     }

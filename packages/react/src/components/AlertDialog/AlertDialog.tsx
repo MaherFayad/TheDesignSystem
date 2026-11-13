@@ -23,10 +23,24 @@
 //
 // Focus opens on Cancel in every tone (the focus rule read as danger), so
 // Enter never runs the action by accident.
+//
+// Optional parts (order 1.29, Dialog's pattern): a style that lists
+// `titlebar` under `optionalParts["alert-dialog"]` in its style.json gets a
+// TitleBar at the top of the panel, with the title inside it (lifted from a
+// direct AlertDialogTitle child or the title prop, still the accessible
+// name). With `controls` as well the bar holds WindowControls: the close
+// light cancels (as Escape and Cancel do), the other two are inert.
+//
+//           <div data-part="titlebar" data-ds="title-bar">        optional part
+//             <div data-part="controls"><WindowControls/></div>   optional part
+//             <h2 data-part="title"><span data-dialog-title>...</span></h2>
 import { Children, createContext, isValidElement, use, useCallback, useMemo, useRef, type ComponentProps, type CSSProperties, type ReactElement, type ReactNode } from 'react';
 import { AlertDialog as RadixAlertDialog } from 'radix-ui';
 import type { OverlaySize, Tone } from '@the-system/shared';
 import { Icon, type IconName } from '../Icon';
+import { useOptionalPart, useTheme } from '../../theme/hooks';
+import { TitleBar } from '../TitleBar';
+import { WindowControls } from '../WindowControls';
 import { useControllable } from '../../internal/useControllable';
 import { DialogBase, assignRef, type DialogBaseState } from '../Dialog/DialogBase';
 
@@ -118,9 +132,31 @@ export function AlertDialogTrigger({ children, ref, ...rest }: AlertDialogTrigge
 
 export type AlertDialogTitleProps = ComponentProps<'h2'>;
 
+/** Where a title renders: in place, or inside the optional title bar's heading. */
+const AlertTitleSlot = createContext<'panel' | 'titlebar'>('panel');
+
+const alertLabels = {
+  en: { controls: 'Alert controls', close: 'Cancel', minimize: 'Minimize alert', zoom: 'Zoom alert' },
+  ar: { controls: 'أزرار التنبيه', close: 'إلغاء', minimize: 'تصغير التنبيه', zoom: 'تكبير التنبيه' },
+} as const;
+
 /** The question, naming the action and its object: Delete the board Spring launch? It names the alert dialog. */
-export function AlertDialogTitle(props: AlertDialogTitleProps) {
-  return <RadixAlertDialog.Title {...props} data-part="title" />;
+export function AlertDialogTitle({ children, ...props }: AlertDialogTitleProps) {
+  if (use(AlertTitleSlot) === 'titlebar') {
+    // Inside the title bar heading (TitleBar renders the h2 and its part).
+    return (
+      <RadixAlertDialog.Title asChild>
+        <span {...(props as ComponentProps<'span'>)} data-dialog-title="">
+          {children}
+        </span>
+      </RadixAlertDialog.Title>
+    );
+  }
+  return (
+    <RadixAlertDialog.Title {...props} data-part="title">
+      {children}
+    </RadixAlertDialog.Title>
+  );
 }
 
 export type AlertDialogDescriptionProps = ComponentProps<'p'>;
@@ -224,9 +260,44 @@ export function AlertDialogContent({
   ...rest
 }: AlertDialogContentProps) {
   const ctx = useAlertDialogContext('AlertDialogContent');
+  const theme = useTheme();
+  const titlebarOn = useOptionalPart('alert-dialog', 'titlebar');
+  const controlsOn = useOptionalPart('alert-dialog', 'controls');
   // A title child wins over the title prop, and a description child over the description prop: one of each.
   const childTypes = Children.toArray(children).map((child) => (isValidElement(child) ? child.type : null));
   const hasTitle = childTypes.includes(AlertDialogTitle);
+  // With the title bar on, the first direct title child (or the title prop) moves into the bar.
+  let barTitle: ReactNode = null;
+  let restChildren: ReactNode = children;
+  if (titlebarOn) {
+    const kept: ReactNode[] = [];
+    for (const child of Children.toArray(children)) {
+      if (!barTitle && isValidElement(child) && child.type === AlertDialogTitle) barTitle = child;
+      else kept.push(child);
+    }
+    if (!barTitle && title !== undefined && title !== null) barTitle = <AlertDialogTitle>{title}</AlertDialogTitle>;
+    restChildren = kept;
+  }
+  const words = theme.lang === 'ar' || theme.lang.startsWith('ar-') ? alertLabels.ar : alertLabels.en;
+  const titlebar = titlebarOn ? (
+    <TitleBar
+      data-part="titlebar"
+      as={barTitle ? 'h2' : 'div'}
+      title={<AlertTitleSlot value="titlebar">{barTitle}</AlertTitleSlot>}
+      controls={
+        controlsOn ? (
+          <WindowControls
+            label={words.controls}
+            closeLabel={words.close}
+            minimizeLabel={words.minimize}
+            zoomLabel={words.zoom}
+            onClose={() => ctx.setOpen(false)}
+            closeDisabled={!ctx.dismissible}
+          />
+        ) : undefined
+      }
+    />
+  ) : null;
   const hasDescription = childTypes.includes(AlertDialogDescription);
   const iconValue = icon === undefined ? toneIcon[ctx.tone] : icon;
   const iconNode =
@@ -255,12 +326,13 @@ export function AlertDialogContent({
       onKeyDown={onKeyDown}
       onFocusOutside={onFocusOutside}
     >
+      {titlebar}
       {iconNode}
-      {!hasTitle && title !== undefined && title !== null ? <AlertDialogTitle>{title}</AlertDialogTitle> : null}
+      {!titlebarOn && !hasTitle && title !== undefined && title !== null ? <AlertDialogTitle>{title}</AlertDialogTitle> : null}
       {!hasDescription && description !== undefined && description !== null ? (
         <AlertDialogDescription>{description}</AlertDialogDescription>
       ) : null}
-      {children}
+      {restChildren}
     </DialogBase>
   );
 }

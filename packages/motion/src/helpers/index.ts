@@ -6,6 +6,7 @@
 // glideRow, rectBetween and drawStepCheck.
 export * from './celebrate';
 export * from './digit-roller';
+export * from './drawer-swipe';
 export * from './exit-ghost';
 export * from './field-motion';
 export * from './flip-list';
@@ -14,6 +15,7 @@ export * from './meter-value';
 export * from './nav-ink';
 export * from './selection-marker';
 export * from './selection-motion';
+export * from './sheet-detents';
 export * from './slider-fill';
 export * from './step-check';
 export * from './switch-drag';

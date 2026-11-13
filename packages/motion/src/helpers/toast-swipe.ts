@@ -74,3 +74,25 @@ export function swipeOffset(direction: SwipeDirection, drawn: number): { x: numb
   const d = drawn * swipeSign(direction);
   return swipeAxis(direction) === 'x' ? { x: d, y: 0 } : { x: 0, y: d };
 }
+
+/** Where a toaster sits. end is the inline end: right in English, left in Arabic. */
+export type ToasterPlacement = 'bottom-end' | 'bottom-center' | 'top-end' | 'top-center';
+
+/**
+ * Where a toaster really sits (order 1.29, review 3 B7): `auto` is the top
+ * centre on ios and the bottom end elsewhere, and on ios every position is
+ * the top centre, because ios.css moves every toaster there. The toaster
+ * writes the result in data-position, so the stack direction and the swipe
+ * follow the place the toaster is drawn at.
+ */
+export function toasterPlacement(position: ToasterPlacement | 'auto', platform: string | undefined): ToasterPlacement {
+  if (platform === 'ios') return 'top-center';
+  return position === 'auto' ? 'bottom-end' : position;
+}
+
+/** The swipe that closes a toast: toward the edge its toaster sits on. */
+export function toasterSwipe(placement: ToasterPlacement, dir: 'ltr' | 'rtl'): SwipeDirection {
+  if (placement === 'bottom-center') return 'down';
+  if (placement === 'top-center') return 'up';
+  return dir === 'rtl' ? 'left' : 'right';
+}

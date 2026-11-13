@@ -116,7 +116,8 @@ export const overlaysInteractions = [
     feedback:
       'The backdrop fades in and the page behind it goes out of focus: its backdrop-filter blur grows from nothing to --_dialog-backdrop-blur (blur.backdrop) over the panel\'s rise. The panel rises distance.enter and grows from scale.dialog-enter on the soft spring, at full opacity within the first third of the rise, so the control that takes focus is readable almost at once. ' +
       'The parts then arrive one delay.stagger step apart: the title (and the AlertDialog icon, which pops from scale.morph on the bouncy spring), the description, the body, the footer. Each is readable duration.fast after its start and the last starts by duration.base, so the whole panel reads within 200ms; the rise settles after. A part that holds focus is there at once. ' +
-      'Closing is faster (duration.quick on ease.exit), all at once: the blur goes with the backdrop, and nothing waits for it. State machine: closed, opening, open, closing (refused is the row dialog-refuse).',
+      'Closing is faster (duration.quick on ease.exit), all at once: the blur goes with the backdrop, and nothing waits for it. State machine: closed, opening, open, closing (refused is the row dialog-refuse). ' +
+      'Order 1.29: a style may saturate the page behind the scrim with --_dialog-scrim-saturate (1, none, by default); the saturation goes with the blur under more contrast, forced colors and reduced transparency.',
     beats: [
       'Action: the panel rises distance.enter (Neutral 6px, Desk 12px, Studio 4px) and grows from scale.dialog-enter (0.98) on ease.spring-soft over duration.spring-soft (Neutral 220ms, Desk 340ms with a 2% overshoot, Studio 100ms in steps); its opacity is full at a third of that.',
       'Secondary: the backdrop blur grows from 0 to blur.backdrop (Neutral 8px) and the scrim reaches full opacity at a third, over the same run.',
@@ -144,7 +145,7 @@ export const overlaysInteractions = [
     drive: 'waapi',
     trigger: 'Press the backdrop of an alert dialog, or of a dialog set to dismissible false; or press Escape on a dialog set to dismissible false.',
     feedback:
-      'The dialog does not close, and says so: the panel nudges along the inline axis, out by --_dialog-refuse-shift (space.m), back past its place, a smaller swing and rest, inside duration.roll on ease.out (the shape of the catalog pattern shake, played on the panel with the Web Animations API under the style mode of useMotion). No color or light changes, so it is no flash. A second refusal cancels the first nudge and plays again, so a burst of presses never stacks or leaves the panel off its place. State machine: open, refused, open.',
+      'The dialog does not close, and says so: the panel nudges along the inline axis, out by --_dialog-refuse-shift (space.m), back past its place, a smaller swing and rest, inside duration.roll on ease.out (the shape of the catalog pattern shake, played on the panel with the Web Animations API under the style mode of useMotion). No color or light changes, so it is no flash. A second refusal cancels the first nudge and plays again, so a burst of presses never stacks or leaves the panel off its place. Focus stays where it was (order 1.29, review 3 B8; WCAG 2.4.3): the refused press does not move it to the body. State machine: open, refused, open.',
     beats: [
       'Action: the panel swings --_dialog-refuse-shift (space.m) toward the inline end, then back past its place by 0.7 of that, on ease.out.',
       'Settle: a 0.35 swing and rest, all inside duration.roll (300ms).',
@@ -163,15 +164,16 @@ export const overlaysInteractions = [
     components: ['Sheet', 'Drawer'],
     pattern: 'sheet',
     drive: 'css',
-    trigger: 'Open a sheet or a drawer, close it, or drag a sheet by its handle and let go.',
+    trigger: 'Open a sheet or a drawer, close it, drag a sheet or a drawer by its handle and let go, or move a sheet between its detents.',
     feedback:
       'The panel slides in its own size from its edge (a drawer from its side, mirrored in right to left layouts; a sheet from the block end) on the soft spring, with no fade, so the focused control is readable at once, while the backdrop blurs the page in as a dialog does. ' +
-      'Its header, body and footer then rise one delay.stagger step apart. A sheet let go short of closing settles back on the same spring. Closing slides out faster, over duration.quick on ease.exit.',
+      'Its header, body and footer then rise one delay.stagger step apart. A sheet let go short of closing settles back on the same spring. Closing slides out faster, over duration.quick on ease.exit. ' +
+      'Order 1.29: a sheet with detents rests at one of them (data-detent) and moves between them by transform only: a drag follows the pointer between the detents, gives a rubber band past the largest, and on release settles on the detent nearest to where it would coast (position and speed, the release counted, so a pause before it leaves no speed); the handle is then a button, and the arrows, Home, End, Enter, Space and a press step through the detents (WCAG 2.5.7). A drawer swipes away by its handle toward its edge, with a rubber band the other way. The sheet also takes --_dialog-enter-scale (1 by default).',
     beats: [
       'Action: the panel slides from its edge on ease.spring-soft over duration.spring-soft (Neutral 220ms, Desk 340ms passing its place by 2%, Studio 100ms in steps).',
       'Secondary: the backdrop blur grows from 0 to blur.backdrop over the slide.',
       'Stagger: header (or title) at one step, description at two, body at three, footer at four, each readable after duration.fast and rising distance.shift on the soft spring; all of it reads within 200ms.',
-      'Settle: a released sheet springs back to rest on the soft spring.',
+      'Settle: a released sheet springs back to rest, or to the detent it settles at, on --_dialog-drag-duration (duration.base) on the panel\'s ease; a drawer let go short does the same.',
       'Exit: the panel slides out over duration.quick (100ms) on ease.exit, all at once.',
     ],
     styles: {
@@ -179,10 +181,10 @@ export const overlaysInteractions = [
       desk: 'a long slide that settles past its edge and back',
       neutral: 'a short soft slide',
     },
-    reduced: 'The panel fades in and out where it rests, with no slide or stagger, and a released sheet is back in place at once.',
+    reduced: 'The panel fades in and out where it rests, with no slide or stagger, and a released sheet or drawer is back in place, or at its detent, at once. The drag still follows the pointer.',
     off: {
-      "[data-ds='sheet']": { '--_dialog-slide': '0%', '--_dialog-enter-opacity': '0', '--_dialog-drag-duration': '0s', '--_dialog-shift': '0px', '--_dialog-backdrop-blur': '0px' },
-      "[data-ds='drawer']": { '--_dialog-slide': '0%', '--_dialog-enter-opacity': '0', '--_dialog-shift': '0px', '--_dialog-backdrop-blur': '0px' },
+      "[data-ds='sheet']": { '--_dialog-slide': '0%', '--_dialog-enter-opacity': '0', '--_dialog-drag-duration': '0s', '--_dialog-shift': '0px', '--_dialog-backdrop-blur': '0px', '--_dialog-enter-scale': '1' },
+      "[data-ds='drawer']": { '--_dialog-slide': '0%', '--_dialog-enter-opacity': '0', '--_dialog-drag-duration': '0s', '--_dialog-shift': '0px', '--_dialog-backdrop-blur': '0px' },
     },
     round: 3,
     status: 'proposed',
@@ -314,7 +316,7 @@ export const overlaysInteractions = [
     trigger: 'Show a second and a third toast while the first is still there.',
     feedback:
       'The toasts stack with depth instead of making a column: the newest is in front, and each older one sits behind it, its edge peeking --_toast-peek (space.s) past the one in front, a step smaller (--_toast-depth, 1 minus scale.anticipate) and clipped to the strip that shows, so nothing shows through a glass toast. A toast that joins pushes the others back a step; a toast that leaves brings them forward. From the fourth back a toast is hidden. ' +
-      'Toaster.tsx measures the toasts and writes their place (stack.ts); Toast.css draws it with translate, scale and clip-path and transitions them on the snappy spring. Layout never animates and the store never waits. State machine: in front, stacked, hidden.',
+      'Toaster.tsx measures the toasts and writes their place (stack.ts); Toast.css draws it with translate, scale and clip-path and transitions them on the snappy spring. Layout never animates and the store never waits. On platform ios the toaster is at the top centre (data-position top-center, order 1.29, review 3 B7): the newest toast is at the top edge and the older ones peek below it, never into the status bar. State machine: in front, stacked, hidden.',
     beats: [
       'Action: the toasts behind move one --_toast-peek step away from the edge, shrink one --_toast-depth step and clip to their strip, on ease.spring-snappy over duration.spring-snappy (Neutral 180ms, Desk 300ms passing their place, Studio 80ms in two steps).',
       'Secondary: the new toast enters in front (row toast-enter).',
@@ -356,7 +358,7 @@ export const overlaysInteractions = [
     drive: 'css',
     trigger: 'Drag a toast toward the edge it sits on and let go, or flick it; or drag it the other way.',
     feedback:
-      'While dragged toward its edge the toast follows the finger one to one. Dragged the other way it gives a little and no more (a rubber band that never passes 24px), so it is clear that way does nothing. Let go past 50px, or flung toward the edge faster than 0.3px a millisecond over its last 100ms, it travels on out in the swipe direction while it fades; let go short, it springs back. The Toaster runs the swipe itself (swipe.ts): Radix clamps to one way and reads distance only. The close button is the button path (WCAG 2.5.7). State machine: rest, swiping, back to rest or leaving.',
+      'While dragged toward its edge the toast follows the finger one to one. Dragged the other way it gives a little and no more (a rubber band that never passes 24px), so it is clear that way does nothing. Let go past 50px, or flung toward the edge faster than 0.3px a millisecond over its last 100ms, it travels on out in the swipe direction while it fades; let go short, it springs back. The Toaster runs the swipe itself (swipe.ts): Radix clamps to one way and reads distance only. The close button is the button path (WCAG 2.5.7). On platform ios every toaster sits at the top centre (order 1.29, review 3 B7), so the swipe goes up. State machine: rest, swiping, back to rest or leaving.',
     beats: [
       'Action: the toast follows the finger (data-swipe move, no transition); the wrong way, the rubber band.',
       'Settle: let go short, it springs back on ease.spring-snappy over duration.spring-snappy (Neutral 180ms, Desk 300ms swinging past, Studio 80ms).',

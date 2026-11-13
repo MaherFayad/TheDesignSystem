@@ -24,6 +24,8 @@
     "root",
     "backdrop",
     "panel",
+    "handle",
+    "handle-bar",
     "header",
     "title",
     "description",
@@ -131,7 +133,8 @@
   },
   "states": [
     "open",
-    "closed"
+    "closed",
+    "data-dragging"
   ],
   "a11y": {
     "role": "dialog (the panel). Modal by default: Radix hides the rest of the page from assistive tech and keeps focus inside. With modal false it is not modal: the page stays reachable. Named by the title, described by the description.",
@@ -148,7 +151,8 @@
       "Toasts sit above an open drawer and stay readable and clickable, as with Dialog.",
       "Non modal: Tab leaves the drawer for the page, as for any region. Escape from inside the drawer closes it; an Escape in a page field stays with that field. When the drawer closes while the person works on the page, focus stays where it is.",
       "No native title attribute.",
-      "Order 1.23 motion: the backdrop blurs the page in as a dialog does. Swipe to dismiss is not built: the close control and Escape close it."
+      "Order 1.23 motion: the backdrop blurs the page in as a dialog does. Order 1.29 adds the swipe to dismiss (below).",
+      "Order 1.29, swipe to dismiss: the handle part, a strip on the panel edge that faces the page (at the top on platform ios), takes a drag toward the edge the drawer sits on. The panel follows the pointer by transform, gives a rubber band against the edge (and toward it when dismissible is false), and closes on release past a quarter of its width or on a flick; otherwise it springs back. The handle is hidden from assistive tech: the close control (the button path) and Escape (the key path) are the same action (WCAG 2.5.7). The math is shared with Angular (packages/motion helpers/drawer-swipe.ts)."
     ]
   },
   "content": {
@@ -260,7 +264,8 @@
       "backdrop",
       "description",
       "body",
-      "footer"
+      "footer",
+      "handle-bar"
     ]
   },
   "since": "0.1.0"

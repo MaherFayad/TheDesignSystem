@@ -63,6 +63,10 @@
 // toast (its `progress` part, a CSS animation that runs for the toast's
 // duration) pauses on it, so the line and the store's timer move together
 // (WCAG 2.2.1), and a repeat or an update (a new version) starts both again.
+// The two start together (order 1.29, review 3 N29): the Toaster notes the
+// moment the store shows a toast (the store starts its timer in that same
+// call) and the line mounts that far along, a negative animation-delay, so
+// a slow commit never leaves the line behind the timer.
 // The swipe is the Toaster's own (helpers/toast-swipe.ts in
 // @the-system/motion): Radix's clamps to one way and
 // reads distance only. The toast follows the finger toward its edge, gives
@@ -78,7 +82,7 @@
 // closes itself from its own keydown fallback, but a raw Radix Dialog from
 // a consumer does not see that Escape while a toast shows above it (the
 // manifest says so).
-import { useEffect, useRef, useState, useSyncExternalStore, type CSSProperties, type PointerEvent as ReactPointerEvent } from 'react';
+import { memo, useEffect, useLayoutEffect, useRef, useState, useSyncExternalStore, type CSSProperties, type PointerEvent as ReactPointerEvent } from 'react';
 import { createPortal } from 'react-dom';
 import { Toast as RadixToast, VisuallyHidden } from 'radix-ui';
 import { toastStore, toastUrgency, type ToastItem, type ToastStore } from '@the-system/shared';
@@ -93,27 +97,34 @@ import {
   swipeRubberBand,
   swipeSign,
   swipeVelocity,
+  toasterPlacement,
+  toasterSwipe,
   watchStack,
   type SwipeDirection,
   type SwipeSample,
+  type ToasterPlacement,
 } from '@the-system/motion';
 import { ToastParts, toastDirFor, toastLabelsFor } from './Toast';
 
 /** Where the toasts sit. end is the inline end: right in English, left in Arabic. */
-export type ToasterPosition = 'bottom-end' | 'bottom-center' | 'top-end' | 'top-center';
+export type ToasterPosition = ToasterPlacement;
 
 /**
  * The positions a Toaster takes: one of `ToasterPosition`, or `auto`, which
  * follows the platform axis of the Theme: top-center on ios (a banner from
  * the top), bottom-end elsewhere (android.css then places the snackbar at
  * the start). The root carries the resolved value in data-position.
+ *
+ * On platform ios every position resolves to top-center (review 3, B7):
+ * ios.css moves every toaster to the top centre, so data-position, the
+ * stack direction and the swipe (up, toward the top edge) follow where the
+ * toaster really is.
  */
 export type ToasterPositionProp = ToasterPosition | 'auto';
 
-/** The position `auto` resolves to on a platform. */
+/** The position a Toaster takes on a platform: `auto` resolves, and ios moves every position to the top centre. */
 export function resolveToasterPosition(position: ToasterPositionProp, platform: string | undefined): ToasterPosition {
-  if (position !== 'auto') return position;
-  return platform === 'ios' ? 'top-center' : 'bottom-end';
+  return toasterPlacement(position, platform);
 }
 
 export interface ToasterProps {
@@ -154,12 +165,8 @@ export function toastAnnouncement(item: Pick<ToastItem, 'title' | 'description' 
     .join(' ');
 }
 
-/** The swipe that closes a toast: toward the edge it sits on. */
-function swipeFor(position: ToasterPosition, dir: 'ltr' | 'rtl'): SwipeDirection {
-  if (position === 'bottom-center') return 'down';
-  if (position === 'top-center') return 'up';
-  return dir === 'rtl' ? 'left' : 'right';
-}
+/** The swipe that closes a toast: toward the edge it sits on (helpers/toast-swipe.ts). */
+const swipeFor = toasterSwipe;
 
 /** Mount once near the root, inside the root Theme. Renders the toasts of `toast()`. */
 export function Toaster({ position: positionProp = 'bottom-end', label, hotkey = ['F8'], toastLabel, closeLabel, store = toastStore }: ToasterProps) {
@@ -181,6 +188,26 @@ export function Toaster({ position: positionProp = 'bottom-end', label, hotkey =
   const clear = useRef<ReturnType<typeof setTimeout> | null>(null);
   /** Set while an Escape that must not close a toast is being handled. */
   const keepOnEscape = useRef(false);
+  /** When the store showed each toast version (Date.now), so its line starts with its timer (N29). */
+  const shownAt = useRef(new Map<string, number>());
+
+  // The store calls its listeners in the same call that starts a toast's timer: note the time then.
+  useEffect(() => {
+    const note = () => {
+      const snap = store.getSnapshot();
+      const live = new Set<string>();
+      for (const t of snap.visible) {
+        if (t.state !== 'open' || !Number.isFinite(t.duration)) continue;
+        const key = `${t.id}:${t.version}`;
+        live.add(key);
+        // A paused store does not run the timer yet: the line starts from its beginning.
+        if (!shownAt.current.has(key) && !store.isPaused()) shownAt.current.set(key, Date.now());
+      }
+      for (const key of [...shownAt.current.keys()]) if (!live.has(key)) shownAt.current.delete(key);
+    };
+    note();
+    return store.subscribe(note);
+  }, [store]);
 
   // The portal needs the document, so it renders after the first commit (safe on the server).
   // Radix announces each toast through a portal of its own; it goes to a detached element.
@@ -348,6 +375,7 @@ export function Toaster({ position: positionProp = 'bottom-end', label, hotkey =
             closeLabel={closeLabel ?? words.close}
             keepOnEscape={keepOnEscape}
             direction={swipeFor(position, theme.dir)}
+            shownAt={shownAt}
           />
         ))}
         <RadixToast.Viewport
@@ -376,18 +404,25 @@ interface Gesture {
   along: number;
 }
 
-function ToasterItem({
+/**
+ * One toast. Memoized (order 1.29, review 3 N44): hovering or focusing the
+ * stack flips the Toaster's own state (expanded, paused), and that must not
+ * render every toast again; a toast renders when its item changes.
+ */
+const ToasterItem = memo(function ToasterItem({
   item,
   store,
   closeLabel,
   keepOnEscape,
   direction,
+  shownAt,
 }: {
   item: ToastItem;
   store: ToastStore;
   closeLabel: string;
   keepOnEscape: { current: boolean };
   direction: SwipeDirection;
+  shownAt: { current: Map<string, number> };
 }) {
   const gesture = useRef<Gesture | null>(null);
 
@@ -489,14 +524,26 @@ function ToasterItem({
         />
         {Number.isFinite(item.duration) && (
           // Keyed by version: a repeat or an update restarts the store's timer, and the line with it.
-          <span
-            key={item.version}
-            data-part="progress"
-            aria-hidden="true"
-            style={{ '--_toast-life': `${item.duration}ms` } as CSSProperties}
-          />
+          <ProgressLine key={item.version} duration={item.duration} at={shownAt.current.get(`${item.id}:${item.version}`)} />
         )}
       </li>
     </RadixToast.Root>
   );
+});
+
+/**
+ * The time left of a timed toast (part `progress`). It mounts as far along
+ * as the store's timer already is: the time since the store showed this
+ * version, as a negative animation-delay, set before the first paint (N29).
+ */
+function ProgressLine({ duration, at }: { duration: number; at: number | undefined }) {
+  const ref = useRef<HTMLSpanElement>(null);
+  useLayoutEffect(() => {
+    const el = ref.current;
+    if (!el || at === undefined) return;
+    const behind = Math.min(duration, Math.max(0, Date.now() - at));
+    if (behind > 0) el.style.animationDelay = `${-behind}ms`;
+    // The line is keyed by version, so at and duration never change while it is mounted.
+  }, [at, duration]);
+  return <span ref={ref} data-part="progress" aria-hidden="true" style={{ '--_toast-life': `${duration}ms` } as CSSProperties} />;
 }

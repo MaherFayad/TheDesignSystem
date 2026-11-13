@@ -74,7 +74,8 @@
     --_tooltip-enter-sx: var(--_tooltip-enter-scale);
     --_tooltip-enter-sy: var(--_tooltip-enter-stretch);
     --_tooltip-duration-in: var(--ds-duration-spring-snappy);
-    --_tooltip-duration-out: var(--ds-duration-quick);
+    /* Order 1.29 (review 3, N22): never slower than the entrance, in any style. */
+    --_tooltip-duration-out: min(var(--ds-duration-quick), var(--_tooltip-duration-in));
     --_tooltip-ease-in: var(--ds-ease-spring-snappy);
     --_tooltip-ease-out: var(--ds-ease-exit);
 

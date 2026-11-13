@@ -26,6 +26,8 @@
     "panel",
     "handle",
     "handle-bar",
+    "titlebar",
+    "controls",
     "header",
     "title",
     "description",
@@ -38,7 +40,9 @@
     "SheetTitle": "title",
     "SheetDescription": "description",
     "SheetBody": "body",
-    "SheetFooter": "footer"
+    "SheetFooter": "footer",
+    "TitleBar": "titlebar",
+    "WindowControls": "controls"
   },
   "slots": {
     "title": {
@@ -87,6 +91,24 @@
       "default": true,
       "description": "false: Escape, a backdrop click and a drag do nothing, and the close control is aria-disabled."
     },
+    "detents": {
+      "type": "readonly number[]",
+      "default": "none",
+      "description": "Order 1.29. The heights the sheet rests at, smallest first: a fraction of the viewport height (0 < n <= 1) or px (n > 1). The largest sets the panel's height, clamped to the room under the top gap; a smaller one moves the panel down by transform. The root carries data-detent and the handle becomes a button in the tab order."
+    },
+    "detent": {
+      "type": "number",
+      "description": "Controlled detent: an index into detents, with onDetentChange."
+    },
+    "defaultDetent": {
+      "type": "number",
+      "default": 0,
+      "description": "The detent it opens at, an index into detents. Default the smallest."
+    },
+    "onDetentChange": {
+      "type": "(index: number) => void",
+      "description": "Called with the index of the detent the sheet settles at, after a drag, a key or a press on the handle."
+    },
     "title": {
       "type": "node",
       "description": "SheetContent: the title for the common case, the same as a SheetTitle child."
@@ -120,7 +142,8 @@
   "states": [
     "open",
     "closed",
-    "data-dragging"
+    "data-dragging",
+    "data-detent"
   ],
   "a11y": {
     "role": "dialog (the panel), modal: Radix hides the rest of the page from assistive tech and keeps focus inside. Named by the title, described by the description.",
@@ -128,17 +151,25 @@
     "keys": {
       "Escape": "Closes the sheet, unless dismissible is false. The key path for the drag down.",
       "Tab": "Moves to the next control inside the sheet and wraps from the last to the first",
-      "Shift+Tab": "Moves to the previous control inside the sheet and wraps from the first to the last"
+      "Shift+Tab": "Moves to the previous control inside the sheet and wraps from the first to the last",
+      "ArrowUp": "With detents, on the handle: the next larger detent; stays at the largest.",
+      "ArrowDown": "With detents, on the handle: the next smaller detent; stays at the smallest.",
+      "Home": "With detents, on the handle: the smallest detent.",
+      "End": "With detents, on the handle: the largest detent.",
+      "Enter": "With detents, on the handle: the next larger detent, round to the smallest after the largest.",
+      "Space": "With detents, on the handle: the same as Enter."
     },
-    "announce": "The title and the description are read when the sheet opens. The handle is hidden from assistive tech: the close control is the same action.",
+    "announce": "The title and the description are read when the sheet opens. With no detents the handle is hidden from assistive tech: the close control is the same action. With detents the handle is a button named for the detent it is at (Sheet size, 1 of 2).",
     "notes": [
-      "The drag to dismiss has a button path, the close control, and a key path, Escape (WCAG 2.5.7). The handle is a pointer target only, out of the tab order.",
+      "The drag to dismiss has a button path, the close control, and a key path, Escape (WCAG 2.5.7). With no detents the handle is a pointer target only, out of the tab order.",
       "A release past a quarter of the panel's height, or a quick flick down, closes it; a shorter drag snaps back. The panel never rises above its open place.",
       "The panel keeps clear of the home bar with env(safe-area-inset-bottom).",
-      "Detents are wave 2.",
       "No native title attribute.",
       "When the whole panel scrolls (a short viewport, 400% zoom) the handle scrolls away; the close control stays.",
-      "Order 1.23: the handle holds a handle-bar part that draws the bar and takes --_dialog-handle-radius. Dragged above its place, or down on a sheet with dismissible false, the panel follows a third of the pointer (a rubber band) and springs back. Detents are not built yet."
+      "Order 1.23: the handle holds a handle-bar part that draws the bar and takes --_dialog-handle-radius. Dragged above its place, or down on a sheet with dismissible false, the panel follows a third of the pointer (a rubber band) and springs back.",
+      "Order 1.29, detents: the handle is a native button (part handle) with the keys above and a press that takes the next detent, the button path for the drag (WCAG 2.5.7). A drag follows the pointer between the detents, gives a rubber band past the largest, and on release settles on the detent nearest to where it would coast, by position and speed; a flick or a drag well below the smallest closes it when dismissible. The math is shared with Angular (packages/motion helpers/sheet-detents.ts). Motion is transform only.",
+      "Order 1.29, review 3 N28: the drag speed is read over the last 100ms with the release as the last sample, so a drag that pauses before the release never counts as a flick.",
+      "Order 1.29, optional parts titlebar and controls (the Dialog pattern): rendered only when the active style lists them under optionalParts[\"sheet\"] in its style.json. The title bar holds the title (a direct SheetTitle child or the title prop, still the accessible name); the description follows the bar as a part of the panel; with controls it starts with WindowControls, whose close light closes the sheet (as the close control does), and minimize and zoom are idle and out of the tab order. No style turns them on yet."
     ]
   },
   "content": {
@@ -252,7 +283,12 @@
       "description",
       "body",
       "footer",
-      "handle-bar"
+      "handle-bar",
+      "titlebar",
+      "controls",
+      "header",
+      "title",
+      "close"
     ]
   },
   "since": "0.1.0"

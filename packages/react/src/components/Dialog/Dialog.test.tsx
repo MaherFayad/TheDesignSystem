@@ -191,6 +191,18 @@ describe('Dialog', () => {
     await waitFor(() => expect(rootEl()).toBeNull());
   });
 
+  it('with dismissible false, a refused backdrop press keeps focus where it was (review 3, B8)', async () => {
+    const user = userEvent.setup({ pointerEventsCheck: 0 });
+    render(<Basic dismissible={false} />);
+    await open(user);
+    const keep = screen.getByRole('button', { name: 'Keep project' });
+    keep.focus();
+    expect(document.activeElement).toBe(keep);
+    await user.pointer([{ keys: '[MouseLeft]', target: part('backdrop') as HTMLElement }]);
+    expect(rootEl()?.getAttribute('data-state')).toBe('open');
+    expect(document.activeElement).toBe(keep);
+  });
+
   it('with dismissible false, a refused Escape or backdrop press nudges the panel; a dismissible dialog just closes', async () => {
     const user = userEvent.setup();
     const animate = vi.fn(() => ({ cancel() {}, playState: 'running' }) as unknown as Animation);
@@ -755,15 +767,17 @@ describe('motion (order 1.22): Dialog.css', async () => {
   });
 
   it('order 1.23: the backdrop blur grows in and goes, with a solid fallback', () => {
-    expect(css).toMatch(/@keyframes ds-dialog-backdrop-in \{\s*from \{[^}]*backdrop-filter: blur\(0\);/);
-    expect(css).toMatch(/@keyframes ds-dialog-backdrop-out \{\s*to \{[^}]*backdrop-filter: blur\(0\);/);
-    expect(css).toContain('--_dialog-scrim-filter: blur(var(--_dialog-backdrop-blur));');
+    expect(css).toMatch(/@keyframes ds-dialog-backdrop-in \{\s*from \{[^}]*backdrop-filter: blur\(0\) saturate\(1\);/);
+    expect(css).toMatch(/@keyframes ds-dialog-backdrop-out \{\s*to \{[^}]*backdrop-filter: blur\(0\) saturate\(1\);/);
+    // Order 1.29: the saturate hook joins the blur, and goes with it in every fallback (review 3, B9).
+    expect(css).toContain('--_dialog-scrim-filter: blur(var(--_dialog-backdrop-blur)) saturate(var(--_dialog-scrim-saturate));');
+    expect(css.match(/--_dialog-scrim-filter: none;\s*--_dialog-scrim-saturate: 1;/g)?.length).toBe(5);
     expect(css).toContain('@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px)))');
     expect(css.match(/--_dialog-backdrop-blur: 0px;/g)?.length).toBeGreaterThanOrEqual(5);
   });
 
   it('review B2: every reduced motion rule also applies under data-motion="reduce"', () => {
     expect(css).toContain(":root[data-motion='reduce'] :is([data-ds='dialog'], [data-ds='alert-dialog'], [data-ds='drawer'], [data-ds='sheet']) > :is([data-part='panel'], [data-part='backdrop'])[data-state],");
-    expect(css).toContain(":root[data-motion='reduce'] [data-ds='sheet'] {");
+    expect(css).toContain(":root[data-motion='reduce'] :is([data-ds='sheet'], [data-ds='drawer']) {");
   });
 });

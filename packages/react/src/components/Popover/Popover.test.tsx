@@ -2,9 +2,11 @@ import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { render, screen, waitFor } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
-import { useState } from 'react';
+import { useState, type ReactNode } from 'react';
 import { describe, expect, it, vi } from 'vitest';
 import { Theme } from '../../theme/Theme';
+import { ThemeContext } from '../../theme/context';
+import { resolveTheme } from '../../theme/resolve';
 import { Button } from '../Button';
 import { Field } from '../Field';
 import { Input } from '../Input';
@@ -336,13 +338,65 @@ describe('motion (order 1.22): Popover.css and HoverCard.css', () => {
     ] as const) {
       expect(css).toContain(`--_${name}-ease-in: var(--ds-ease-spring-bouncy);`);
       expect(css).toContain(`--_${name}-enter-scale: var(--ds-scale-enter);`);
+      // Order 1.29 (review 3, N22): the exit is never slower than the entrance (Studio enters in 70ms).
+      expect(css).toMatch(new RegExp(`--_${name}-duration-out: min\\(var\\(--ds-duration-(quick|fast)\\), var\\(--_${name}-duration-in\\)\\);`));
     }
   });
   it('staggers the parts; a part with focus is there at once', () => {
     expect(popover).toContain("> :is([data-part='title'], [data-part='body'], [data-part='footer']):focus-within {\n    animation-duration: 0s;");
   });
+  it('review 3 N23: the hover card stops blurring under reduced transparency, as the popover does', () => {
+    for (const css of [popover, hoverCard]) expect(css).toMatch(/@media \(prefers-reduced-transparency: reduce\) \{\s*\[data-ds='(popover|hover-card)'\] \{\s*--_(popover|hover-card)-blur: 0;/);
+  });
   it('review B2: the reduced forms apply under data-motion="reduce" too', () => {
     expect(popover).toContain(":root[data-motion='reduce'] [data-ds='popover'][data-state],");
     expect(hoverCard).toContain(":root[data-motion='reduce'] [data-ds='hover-card'][data-state],");
+  });
+});
+
+/** A Desk theme whose style.json would turn on these optional parts (order 1.29: no style does yet). */
+function WithParts({ parts, children }: { parts: string[]; children: ReactNode }) {
+  const base = resolveTheme({ style: 'desk' });
+  const value = { ...base, styleData: { ...base.styleData, optionalParts: { ...base.styleData.optionalParts, popover: parts } } };
+  return <ThemeContext value={value}>{children}</ThemeContext>;
+}
+
+describe('Popover optional parts (order 1.29)', () => {
+  it('renders no title bar unless the style turns it on', () => {
+    render(
+      <Theme style="desk">
+        <Basic defaultOpen />
+      </Theme>,
+    );
+    expect(part('titlebar')).toBeNull();
+    expect(part('title')?.textContent).toBe('Rename layer');
+  });
+
+  it('puts the title and the close control in the title bar; the title still names the popover', async () => {
+    render(
+      <WithParts parts={['titlebar']}>
+        <Basic defaultOpen />
+      </WithParts>,
+    );
+    const root = await screen.findByRole('dialog', { name: 'Rename layer' });
+    const bar = part('titlebar');
+    expect(root.firstElementChild).toBe(bar);
+    expect(bar?.querySelector('[data-part="title"]')?.textContent).toBe('Rename layer');
+    expect(bar?.querySelector('[data-part="close"]')?.getAttribute('aria-label')).toBe('Close popover');
+    // The title renders once in the popover: inside the bar, not again in place.
+    expect(Array.from(root.querySelectorAll('[data-part="title"]'))).toHaveLength(1);
+  });
+
+  it('with controls, the close light closes it', async () => {
+    const user = userEvent.setup();
+    render(
+      <WithParts parts={['titlebar', 'controls']}>
+        <Basic defaultOpen />
+      </WithParts>,
+    );
+    await screen.findByRole('dialog');
+    expect(part('titlebar')?.querySelector('[data-ds="window-controls"]')?.getAttribute('aria-label')).toBe('Popover controls');
+    await user.click(screen.getByRole('button', { name: 'Close popover' }));
+    await waitFor(() => expect(rootEl()).toBeNull());
   });
 });

@@ -1,8 +1,10 @@
 import { act, fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
-import { useState } from 'react';
+import { useState, type ReactNode } from 'react';
 import { describe, expect, it, vi } from 'vitest';
 import { Theme } from '../../theme/Theme';
+import { ThemeContext } from '../../theme/context';
+import { resolveTheme } from '../../theme/resolve';
 import { Button } from '../Button';
 import { Toaster, createToastFunction, createToastStore } from '../Toast';
 
@@ -185,6 +187,19 @@ describe('AlertDialog', () => {
     }
   });
 
+  it('keeps focus where it was on a refused backdrop press (review 3, B8; WCAG 2.4.3)', async () => {
+    const user = userEvent.setup({ pointerEventsCheck: 0 });
+    render(<Basic />);
+    await open(user);
+    const cancel = screen.getByRole('button', { name: 'Keep board' });
+    await waitFor(() => expect(document.activeElement).toBe(cancel));
+    for (const pointerName of ['mouse', 'touch'] as const) {
+      await user.pointer([{ keys: pointerName === 'mouse' ? '[MouseLeft]' : '[TouchA]', target: part('backdrop') as HTMLElement }]);
+      expect(rootEl()).not.toBeNull();
+      expect(document.activeElement).toBe(cancel);
+    }
+  });
+
   it('traps Tab inside the panel', async () => {
     const user = userEvent.setup();
     render(<Basic />);
@@ -275,5 +290,44 @@ describe('AlertDialog', () => {
       expect(section.querySelector('[data-demo-trigger]')).not.toBeNull();
     }
     expect(container.querySelector('[title]')).toBeNull();
+  });
+});
+
+/** A Desk theme whose style.json would turn on these optional parts (order 1.29: no style does yet). */
+function WithParts({ ds, parts, children }: { ds: string; parts: string[]; children: ReactNode }) {
+  const base = resolveTheme({ style: 'desk' });
+  const value = { ...base, styleData: { ...base.styleData, optionalParts: { ...base.styleData.optionalParts, [ds]: parts } } };
+  return <ThemeContext value={value}>{children}</ThemeContext>;
+}
+
+describe('AlertDialog optional parts (order 1.29)', () => {
+  it('renders no title bar when the style does not turn it on', async () => {
+    const user = userEvent.setup();
+    render(
+      <Theme style="desk">
+        <Basic />
+      </Theme>,
+    );
+    await open(user);
+    expect(part('titlebar')).toBeNull();
+  });
+
+  it('puts the title in a title bar, still the name; the close light cancels', async () => {
+    const user = userEvent.setup();
+    render(
+      <WithParts ds="alert-dialog" parts={['titlebar', 'controls']}>
+        <Basic />
+      </WithParts>,
+    );
+    const panel = await open(user);
+    const bar = part('titlebar');
+    expect(bar?.getAttribute('data-ds')).toBe('title-bar');
+    expect(panel.firstElementChild).toBe(bar);
+    expect(screen.getAllByText('Delete the board Spring launch?')).toHaveLength(1);
+    expect(bar?.querySelector('[data-part="title"]')?.textContent).toBe('Delete the board Spring launch?');
+    expect(screen.getByRole('alertdialog', { name: 'Delete the board Spring launch?' })).toBe(panel);
+    expect(bar?.querySelector('[data-ds="window-controls"]')?.getAttribute('aria-label')).toBe('Alert controls');
+    await user.click(screen.getByRole('button', { name: 'Cancel' }));
+    await waitFor(() => expect(rootEl()).toBeNull());
   });
 });

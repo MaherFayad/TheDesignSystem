@@ -251,7 +251,8 @@ describe('motion (order 1.22)', () => {
     const css = readFileSync(join(process.cwd(), 'packages/css/src/components/Tooltip.css'), 'utf8');
     it('rises on the snappy spring and closes faster', () => {
       expect(css).toContain('--_tooltip-duration-in: var(--ds-duration-spring-snappy);');
-      expect(css).toContain('--_tooltip-duration-out: var(--ds-duration-quick);');
+      // Order 1.29 (review 3, N22): the exit is never slower than the entrance (Studio enters in 70ms).
+      expect(css).toContain('--_tooltip-duration-out: min(var(--ds-duration-quick), var(--_tooltip-duration-in));');
     });
     it('review B2: the reduced form applies under data-motion="reduce" too', () => {
       expect(css).toContain(":root[data-motion='reduce'] [data-ds='tooltip'][data-state],");

@@ -561,3 +561,66 @@ describe('the swipe (interaction toast-swipe)', () => {
     expect(store.getSnapshot().visible[0]?.state).toBe('closed');
   });
 });
+
+describe('the platform placement (review 3, B7)', () => {
+  it('on ios any position resolves to the top centre, and the swipe goes up', async () => {
+    for (const position of [undefined, 'bottom-end', 'bottom-center', 'top-end', 'auto'] as const) {
+      const { store, toast, fire } = setup();
+      const view = render(
+        <Theme platform="ios">
+          <Toaster store={store} position={position} />
+        </Theme>,
+      );
+      const viewport = await waitFor(() => {
+        const el = document.body.querySelector<HTMLElement>('[data-ds="toaster"]');
+        if (!el) throw new Error('no viewport');
+        return el;
+      });
+      expect(viewport.getAttribute('data-position')).toBe('top-center');
+      fire(() => toast('Board duplicated'));
+      expect(toasts()[0]?.getAttribute('data-swipe-direction')).toBe('up');
+      view.unmount();
+    }
+  });
+
+  it('keeps the position it is given off ios', async () => {
+    const { store } = setup();
+    render(
+      <Theme platform="android">
+        <Toaster store={store} position="top-end" />
+      </Theme>,
+    );
+    const viewport = await waitFor(() => {
+      const el = document.body.querySelector<HTMLElement>('[data-ds="toaster"]');
+      if (!el) throw new Error('no viewport');
+      return el;
+    });
+    expect(viewport.getAttribute('data-position')).toBe('top-end');
+  });
+});
+
+describe('the line and the timer start together (review 3, N29)', () => {
+  it('starts the line as far along as the time between the store starting the timer and the mount', async () => {
+    const { store, toast, fire } = setup();
+    render(
+      <Theme>
+        <Toaster store={store} />
+      </Theme>,
+    );
+    await waitFor(() => expect(document.body.querySelector('[data-ds="toaster"]')).not.toBeNull());
+    let wall = 10_000;
+    const now = vi.spyOn(Date, 'now').mockImplementation(() => wall);
+    // A slow main thread: 150ms pass between the store change and the mount.
+    const unsubscribe = store.subscribe(() => {
+      wall += 150;
+    });
+    try {
+      fire(() => toast.warning('Storage almost full'));
+      const line = toasts()[0]?.querySelector<HTMLElement>('[data-part="progress"]');
+      expect(line?.style.animationDelay).toBe('-150ms');
+    } finally {
+      unsubscribe();
+      now.mockRestore();
+    }
+  });
+});

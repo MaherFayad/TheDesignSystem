@@ -10,11 +10,25 @@
 // widths are the dialog width tokens; under breakpoint.phone it fills the
 // width. Side start is the right in Arabic (Dialog.css mirrors the slide).
 //
+// Swipe to dismiss (order 1.29). The handle part, a strip on the panel's
+// edge that faces the page (at the top on platform ios, where the Drawer
+// rises like a sheet), takes a drag toward the edge the Drawer sits on: the
+// panel follows the pointer through --_dialog-drag-x and --_dialog-drag-y
+// (transform only), the root carries data-dragging, and a release past a
+// quarter of the panel or a flick closes it; otherwise it springs back.
+// Against the edge, and toward it when dismissible is false, it gives a
+// rubber band. The math is helpers/drawer-swipe.ts in @the-system/motion,
+// the Sheet's rules. The close control and Escape are the other paths
+// (WCAG 2.5.7), so the handle is hidden from assistive tech. With no style
+// hook set the strip draws nothing (--_dialog-drawer-handle-color).
+//
 //   <body>
 //     <div data-ds="theme" data-dialog-layer>
 //       <div data-ds="drawer" data-size data-side data-state>
 //         <div data-part="backdrop">                 Radix Overlay, modal only
 //         <div data-part="panel" role="dialog">      Radix Content
+//           <div data-part="handle" aria-hidden>     order 1.29: the swipe to dismiss, a pointer path
+//             <span data-part="handle-bar">
 //           <div data-part="header">
 //             <h2 data-part="title">
 //             <p data-part="description">
@@ -30,8 +44,10 @@ import {
   useCallback,
   useMemo,
   useRef,
+  useState,
   type ComponentProps,
   type CSSProperties,
+  type PointerEvent as ReactPointerEvent,
   type ReactElement,
   type ReactNode,
 } from 'react';
@@ -39,7 +55,18 @@ import { Dialog as RadixDialog } from 'radix-ui';
 import type { OverlaySize } from '@the-system/shared';
 import { useTheme } from '../../theme/hooks';
 import { DialogBody, DialogFooter, type DialogBodyProps, type DialogFooterProps } from '../Dialog';
-import { DialogBase, assignRef, type DialogBaseState } from '../Dialog/DialogBase';
+import { DialogBase, assignRef, usePanelElement, type DialogBaseState } from '../Dialog/DialogBase';
+import {
+  drawerSwipeCloses,
+  drawerSwipeDirection,
+  drawerSwipeOffset,
+  dragVelocity,
+  swipeAxis,
+  swipeOffset,
+  swipeSign,
+  type DragSample,
+  type SwipeDirection,
+} from '@the-system/motion';
 import { CloseButton } from '../CloseButton';
 import { useControllable } from '../../internal/useControllable';
 
@@ -197,7 +224,8 @@ function flatten(children: ReactNode): ReactNode[] {
 /**
  * Builds the header band of a Drawer or a Sheet: the title and the
  * description lifted out of the children (or from props), then the
- * CloseButton. Returns the header and the remaining children.
+ * CloseButton. Returns the header and the remaining children, and the
+ * title, the description and the close control apart.
  */
 export function splitHeader(options: {
   children: ReactNode;
@@ -207,7 +235,7 @@ export function splitHeader(options: {
   Description: (props: { children?: ReactNode }) => ReactNode;
   closeLabel: string;
   closeDisabled: boolean;
-}): { header: ReactNode; others: ReactNode[] } {
+}): { header: ReactNode; others: ReactNode[]; titleNode: ReactNode; descriptionNode: ReactNode; closeButton: ReactNode } {
   const { Title, Description } = options;
   let titleNode: ReactNode = options.title !== undefined && options.title !== null ? <Title>{options.title}</Title> : null;
   let descriptionNode: ReactNode =
@@ -218,16 +246,20 @@ export function splitHeader(options: {
     else if (!descriptionNode && isValidElement(child) && child.type === Description) descriptionNode = child;
     else others.push(child);
   }
+  const closeButton = (
+    <RadixDialog.Close asChild>
+      <CloseButton data-part="close" label={options.closeLabel} size="sm" disabled={options.closeDisabled} />
+    </RadixDialog.Close>
+  );
   const header = (
     <div data-part="header">
       {titleNode}
       {descriptionNode}
-      <RadixDialog.Close asChild>
-        <CloseButton data-part="close" label={options.closeLabel} size="sm" disabled={options.closeDisabled} />
-      </RadixDialog.Close>
+      {closeButton}
     </div>
   );
-  return { header, others };
+  // The parts apart as well, for a Sheet whose style turns on the title bar (order 1.29).
+  return { header, others, titleNode, descriptionNode, closeButton };
 }
 
 // ------------------------------------------------------------------ DrawerContent
@@ -275,6 +307,7 @@ export function DrawerContent({
   const ctx = useDrawerContext('DrawerContent');
   const theme = useTheme();
   const words = isArabic(theme.lang) ? drawerLabels.ar : drawerLabels.en;
+  const [dragging, setDragging] = useState(false);
   const { header, others } = splitHeader({
     children,
     title,
@@ -290,7 +323,7 @@ export function DrawerContent({
       state={ctx}
       kind="drawer"
       devName="Drawer"
-      rootAttributes={{ 'data-size': ctx.size, 'data-side': ctx.side }}
+      rootAttributes={{ 'data-size': ctx.size, 'data-side': ctx.side, 'data-dragging': dragging }}
       Backdrop={RadixDialog.Overlay}
       Panel={RadixDialog.Content}
       panelProps={panelProps}
@@ -323,8 +356,96 @@ export function DrawerContent({
         if (!ctx.modal) event.preventDefault();
       }}
     >
+      <DrawerHandle
+        direction={drawerSwipeDirection(ctx.side, theme.dir, theme.platform)}
+        dismissible={ctx.dismissible}
+        onDragging={setDragging}
+        onDismiss={() => ctx.setOpen(false)}
+      />
       {header}
       {others}
     </DialogBase>
+  );
+}
+
+// ------------------------------------------------------------------ handle
+
+interface Swipe {
+  id: number;
+  x: number;
+  y: number;
+  along: number;
+  samples: DragSample[];
+}
+
+/** The swipe to dismiss: a pointer path only (the close control and Escape are the other paths). */
+function DrawerHandle({
+  direction,
+  dismissible,
+  onDragging,
+  onDismiss,
+}: {
+  direction: SwipeDirection;
+  dismissible: boolean;
+  onDragging: (on: boolean) => void;
+  onDismiss: () => void;
+}) {
+  const panelRef = usePanelElement();
+  const swipe = useRef<Swipe | null>(null);
+  const write = (drawn: number) => {
+    const { x, y } = swipeOffset(direction, drawn);
+    panelRef?.current?.style.setProperty('--_dialog-drag-x', `${x}px`);
+    panelRef?.current?.style.setProperty('--_dialog-drag-y', `${y}px`);
+  };
+  const reset = () => {
+    panelRef?.current?.style.removeProperty('--_dialog-drag-x');
+    panelRef?.current?.style.removeProperty('--_dialog-drag-y');
+  };
+  const end = (event: ReactPointerEvent<HTMLDivElement>, cancelled: boolean) => {
+    const g = swipe.current;
+    if (!g || g.id !== event.pointerId) return;
+    swipe.current = null;
+    onDragging(false);
+    const panel = panelRef?.current;
+    if (!panel || cancelled) return reset();
+    // The release is the last sample: a pause before it leaves no speed.
+    g.samples.push({ t: event.timeStamp, y: g.along });
+    const rect = panel.getBoundingClientRect();
+    const size = swipeAxis(direction) === 'x' ? rect.width : rect.height;
+    if (dismissible && drawerSwipeCloses(g.along, dragVelocity(g.samples), size)) {
+      // The offset stays, so the exit plays from where the panel is; a controlled parent that keeps it open gets it back.
+      onDismiss();
+      queueMicrotask(() => {
+        if (panel.isConnected && panel.getAttribute('data-state') === 'open') reset();
+      });
+      return;
+    }
+    reset();
+  };
+  return (
+    <div
+      data-part="handle"
+      aria-hidden="true"
+      onPointerDown={(event) => {
+        if (event.button !== 0 || !panelRef?.current) return;
+        event.currentTarget.setPointerCapture?.(event.pointerId);
+        swipe.current = { id: event.pointerId, x: event.clientX, y: event.clientY, along: 0, samples: [{ t: event.timeStamp, y: 0 }] };
+        onDragging(true);
+      }}
+      onPointerMove={(event) => {
+        const g = swipe.current;
+        if (!g || g.id !== event.pointerId) return;
+        const main = swipeAxis(direction) === 'x' ? event.clientX - g.x : event.clientY - g.y;
+        g.along = main * swipeSign(direction);
+        g.samples.push({ t: event.timeStamp, y: g.along });
+        if (g.samples.length > 16) g.samples.shift();
+        write(drawerSwipeOffset(g.along, dismissible));
+      }}
+      onPointerUp={(event) => end(event, false)}
+      onPointerCancel={(event) => end(event, true)}
+      onLostPointerCapture={(event) => end(event, true)}
+    >
+      <span data-part="handle-bar" />
+    </div>
   );
 }

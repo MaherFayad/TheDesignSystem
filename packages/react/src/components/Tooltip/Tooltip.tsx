@@ -103,12 +103,14 @@ const PLACE_FRAMES = 8;
  */
 function followLast(node: HTMLElement, mode: PatternMode, skipDelay: number): void {
   const prev = lastClosed;
-  if (mode !== 'full' || !prev || prev.el === node || node.getAttribute('data-state') !== 'instant-open') return;
+  if (!prev || prev.el === node || node.getAttribute('data-state') !== 'instant-open') return;
   // instant-open already says the provider is inside its skip delay; the portal mounts a frame or two after that.
   if (performance.now() - prev.at > 2 * skipDelay || typeof node.animate !== 'function') return;
-  if (prev.el.isConnected) {
+  // The last one hides at once in every mode (order 1.29, review 3 N26): its exit never plays beside the next one.
+  if (prev.el.isConnected && typeof prev.el.animate === 'function') {
     prev.el.animate([{ opacity: 0 }, { opacity: 0 }], { duration: Math.max(readDuration(prev.el, 'duration.quick'), 1), fill: 'forwards' });
   }
+  if (mode !== 'full') return;
   let frames = 0;
   const placed = () => !(node.parentElement?.style.transform ?? '').includes('-200%');
   const step = () => {

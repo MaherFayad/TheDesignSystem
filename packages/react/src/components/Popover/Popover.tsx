@@ -14,6 +14,8 @@
 //     <div data-ds="theme" data-popover-layer>        the portal Theme, display: contents
 //       <div data-radix-popper-content-wrapper>       Radix: positions the content
 //         <div data-ds="popover" role="dialog" data-size data-state data-side data-align>   root: Radix Content
+//           <div data-part="titlebar" data-ds="title-bar">   order 1.29, optional part: holds the title and the close
+//             <div data-part="controls"><WindowControls/></div>   optional part
 //           <h2 data-part="title">
 //           <button data-part="close" data-ds="close-button">
 //           <div data-part="body">
@@ -29,10 +31,18 @@
 // the body, else the first footer action, else the root itself. Never the
 // close control first: it is the last way out, Escape is the first.
 //
+// Optional parts (order 1.29, Dialog's pattern): a style that lists
+// `titlebar` under `optionalParts.popover` in its style.json gets a TitleBar
+// first in the popover, with the title (a direct PopoverTitle child or the
+// title prop) inside it and the close control at its end; with `controls`
+// the bar holds WindowControls instead, whose close light closes it.
+//
 // Motion, pattern "menu-scale" (Popover.css): the root scales up from 97%
 // toward the trigger side from the Radix transform origin while it fades.
 import {
+  Children,
   createContext,
+  isValidElement,
   use,
   useCallback,
   useMemo,
@@ -46,8 +56,10 @@ import {
 } from 'react';
 import { Popover as RadixPopover } from 'radix-ui';
 import type { Size } from '@the-system/shared';
-import { useTheme } from '../../theme/hooks';
+import { useOptionalPart, useTheme } from '../../theme/hooks';
 import { CloseButton } from '../CloseButton';
+import { TitleBar } from '../TitleBar';
+import { WindowControls } from '../WindowControls';
 import { useControllable } from '../../internal/useControllable';
 import {
   ArrowShape,
@@ -64,8 +76,8 @@ export type PopoverSide = FloatingSide;
 export type PopoverAlign = FloatingAlign;
 
 const popoverLabels = {
-  en: { close: 'Close popover' },
-  ar: { close: 'إغلاق' },
+  en: { close: 'Close popover', controls: 'Popover controls', minimize: 'Minimize popover', zoom: 'Zoom popover' },
+  ar: { close: 'إغلاق', controls: 'أزرار النافذة المنبثقة', minimize: 'تصغير النافذة المنبثقة', zoom: 'تكبير النافذة المنبثقة' },
 } as const;
 
 /** Fields first, then actions: where focus goes when the popover opens. */
@@ -191,9 +203,25 @@ export function PopoverClose({ children, ...rest }: PopoverCloseProps) {
 
 export type PopoverTitleProps = ComponentProps<'h2'>;
 
+/** Where a title renders: in place, or inside the optional title bar's heading. */
+const PopoverTitleSlot = createContext<'panel' | 'titlebar'>('panel');
+
 /** The title. It names the popover (aria-labelledby). */
-export function PopoverTitle(props: PopoverTitleProps) {
-  return <RadixPopover.Title {...props} data-part="title" />;
+export function PopoverTitle({ children, ...props }: PopoverTitleProps) {
+  if (use(PopoverTitleSlot) === 'titlebar') {
+    return (
+      <RadixPopover.Title asChild>
+        <span {...(props as ComponentProps<'span'>)} data-popover-title="">
+          {children}
+        </span>
+      </RadixPopover.Title>
+    );
+  }
+  return (
+    <RadixPopover.Title {...props} data-part="title">
+      {children}
+    </RadixPopover.Title>
+  );
 }
 
 export type PopoverBodyProps = ComponentProps<'div'>;
@@ -259,6 +287,8 @@ export function PopoverContent({
 }: PopoverContentProps) {
   const ctx = usePopoverContext('PopoverContent');
   const theme = useTheme();
+  const titlebarOn = useOptionalPart('popover', 'titlebar');
+  const controlsOn = useOptionalPart('popover', 'controls');
   const [mounted, presenceRef] = useLayerPresence(ctx.open);
   const rootRef = useRef<HTMLDivElement | null>(null);
   // The consumer ref sits in a ref, so setRef keeps one identity: a new
@@ -282,7 +312,48 @@ export function PopoverContent({
 
   if (!mounted) return null;
 
-  const closeName = closeLabel ?? (isArabic(theme.lang) ? popoverLabels.ar.close : popoverLabels.en.close);
+  const words = isArabic(theme.lang) ? popoverLabels.ar : popoverLabels.en;
+  const closeName = closeLabel ?? words.close;
+  const closeNode = close ? (
+    <RadixPopover.Close asChild>
+      <CloseButton data-part="close" label={closeName} size="xs" />
+    </RadixPopover.Close>
+  ) : null;
+  // With the style's title bar: the first direct PopoverTitle child, or the title prop, moves into the bar.
+  let barTitle: ReactNode = title !== undefined && title !== null ? <PopoverTitle>{title}</PopoverTitle> : null;
+  let body: ReactNode = children;
+  if (titlebarOn) {
+    const kept: ReactNode[] = [];
+    for (const child of Children.toArray(children)) {
+      if (!barTitle && isValidElement(child) && child.type === PopoverTitle) barTitle = child;
+      else kept.push(child);
+    }
+    body = kept;
+  }
+  const head = titlebarOn ? (
+    <TitleBar
+      data-part="titlebar"
+      as={barTitle ? 'h2' : 'div'}
+      title={<PopoverTitleSlot value="titlebar">{barTitle}</PopoverTitleSlot>}
+      controls={
+        controlsOn && close ? (
+          <WindowControls
+            label={words.controls}
+            closeLabel={closeName}
+            minimizeLabel={words.minimize}
+            zoomLabel={words.zoom}
+            onClose={() => ctx.setOpen(false)}
+          />
+        ) : undefined
+      }
+      actions={controlsOn ? undefined : closeNode}
+    />
+  ) : (
+    <>
+      {barTitle}
+      {closeNode}
+    </>
+  );
 
   return (
     <ThemedPortal layer="popover">
@@ -316,13 +387,8 @@ export function PopoverContent({
           (popoverInitialFocus(rootRef.current) ?? rootRef.current).focus();
         }}
       >
-        {title !== undefined && title !== null && <PopoverTitle>{title}</PopoverTitle>}
-        {close && (
-          <RadixPopover.Close asChild>
-            <CloseButton data-part="close" label={closeName} size="xs" />
-          </RadixPopover.Close>
-        )}
-        {children}
+        {head}
+        {body}
         {arrow && (
           <RadixPopover.Arrow asChild>
             <ArrowShape />

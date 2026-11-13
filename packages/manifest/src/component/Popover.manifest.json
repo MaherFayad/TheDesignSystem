@@ -23,12 +23,14 @@
     "Long content or a long form": "Drawer",
     "Guided steps over the page": "Tour"
   },
-  "anatomy": ["root", "arrow", "title", "close", "body", "footer"],
+  "anatomy": ["root", "titlebar", "controls", "arrow", "title", "close", "body", "footer"],
   "parts": {
     "PopoverContent": "root",
     "PopoverTitle": "title",
     "PopoverBody": "body",
-    "PopoverFooter": "footer"
+    "PopoverFooter": "footer",
+    "TitleBar": "titlebar",
+    "WindowControls": "controls"
   },
   "slots": {
     "title": { "accepts": "text", "max": 1 },
@@ -91,6 +93,7 @@
     },
     "announce": "The trigger says it opens a dialog and whether it is expanded. On open the title is read as the name of the dialog, then the focused field.",
     "notes": [
+      "Order 1.29, optional parts titlebar and controls (the Dialog pattern): rendered only when the active style lists them under optionalParts[\"popover\"] in its style.json. The title bar holds the title (a direct PopoverTitle child or the title prop, still the accessible name) and, without controls, the close control at its end; with controls it starts with WindowControls, whose close light closes the popover, and minimize and zoom are idle and out of the tab order. No style turns them on yet.",
       "Not modal: a click outside closes the popover and the page keeps working. Use Dialog for a decision that blocks the page.",
       "The popover never runs past the viewport: it flips to the other side, shifts along the trigger, and its body scrolls inside the height left.",
       "A popover opened from inside a Dialog sits above it (z.menu over z.dialog) and below the toasts.",
@@ -180,7 +183,7 @@
   ],
   "contract": {
     "trigger": "[data-demo-trigger]",
-    "optionalParts": ["arrow", "title", "close", "footer"]
+    "optionalParts": ["arrow", "title", "close", "footer", "titlebar", "controls"]
   },
   "since": "0.1.0"
 }

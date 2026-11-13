@@ -24,6 +24,8 @@
     "root",
     "backdrop",
     "panel",
+    "titlebar",
+    "controls",
     "icon",
     "title",
     "description",
@@ -37,7 +39,9 @@
     "AlertDialogDescription": "description",
     "AlertDialogFooter": "footer",
     "AlertDialogCancel": "cancel",
-    "AlertDialogAction": "action"
+    "AlertDialogAction": "action",
+    "TitleBar": "titlebar",
+    "WindowControls": "controls"
   },
   "slots": {
     "title": {
@@ -141,7 +145,9 @@
       "Toasts sit above it and stay readable and clickable, as with Dialog.",
       "The icon is decoration and hidden from assistive tech; the title carries the meaning.",
       "No native title attribute.",
-      "Order 1.23 motion: a backdrop press never closes an alert dialog; the panel nudges once along the inline axis to say so (interaction dialog-refuse), and stays still under reduced motion. The backdrop blurs the page in and the parts read within 200ms."
+      "Order 1.23 motion: a backdrop press never closes an alert dialog; the panel nudges once along the inline axis to say so (interaction dialog-refuse), and stays still under reduced motion. The backdrop blurs the page in and the parts read within 200ms.",
+      "Order 1.29, optional parts titlebar and controls (the Dialog pattern): rendered only when the active style lists them under optionalParts[\"alert-dialog\"] in its style.json. The title bar holds the title (a direct AlertDialogTitle child or the title prop, still the accessible name); with controls it starts with WindowControls, whose close light cancels (as Escape and Cancel do), and minimize and zoom are idle and out of the tab order. No style turns them on yet.",
+      "Order 1.29, review 3 B8: a refused backdrop press keeps focus where it was (WCAG 2.4.3): its pointerdown and mousedown defaults are prevented, so focus never falls to the body."
     ],
     "native": {
       "accessibilityRole": "alert",
@@ -268,7 +274,10 @@
     "trigger": "[data-demo-trigger]",
     "optionalParts": [
       "icon",
-      "description"
+      "description",
+      "titlebar",
+      "controls",
+      "title"
     ]
   },
   "since": "0.1.0"

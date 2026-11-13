@@ -99,6 +99,13 @@
  *   --_toast-icon-delay      when the icon beat starts after the card; with
  *                            --_toast-icon-enter-scale: 1 the beat is gone
  *
+ * Order 1.29 hooks (the defaults are the look before them):
+ *   --_toast-columns         grid-template-columns of the card (icon, text, close)
+ *   --_toast-areas           grid-template-areas of the card, three rows: icon, title,
+ *                            description, action, close
+ *   --_toast-edge-width      the width of the inline start edge in the tone color
+ *                            (border.width-strong; 0px for no edge)
+ *
  * A style tunes the stack with --_toast-peek and --_toast-depth, turns the
  * travel off with --_toast-enter-y: 0px and --_toast-enter-scale: 1, and the
  * spring back with --_toast-duration: 0s. The close button is the button
@@ -254,14 +261,18 @@
     --_toast-swipe-duration-out: var(--_toast-duration-out);
     --_toast-swipe-ease-out: var(--_toast-ease-out);
     --_toast-icon-delay: var(--ds-delay-stagger);
-
-    position: relative;
-    display: grid;
-    grid-template-columns: var(--ds-size-icon-md) minmax(0, 1fr) auto;
-    grid-template-areas:
+    /* Order 1.29: the layout of the card and the width of its edge, as hooks for a style or a platform. */
+    --_toast-columns: var(--ds-size-icon-md) minmax(0, 1fr) auto;
+    --_toast-areas:
       'icon title close'
       'icon description close'
       'icon action close';
+    --_toast-edge-width: var(--ds-border-width-strong);
+
+    position: relative;
+    display: grid;
+    grid-template-columns: var(--_toast-columns);
+    grid-template-areas: var(--_toast-areas);
     grid-template-rows: auto auto auto;
     align-items: start;
     column-gap: var(--ds-space-m);
@@ -272,7 +283,7 @@
     padding-block: var(--ds-space-m);
     padding-inline: var(--ds-space-l) var(--ds-space-m);
     border: var(--ds-border-width-default) solid var(--_toast-border-color);
-    border-inline-start: var(--ds-border-width-strong) solid var(--_toast-edge);
+    border-inline-start: var(--_toast-edge-width) solid var(--_toast-edge);
     border-radius: var(--_toast-radius);
     background-color: var(--_toast-bg);
     box-shadow: var(--_toast-shadow);
