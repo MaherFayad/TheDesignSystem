@@ -238,6 +238,19 @@ describe('Switch thumb contrast on every frame (order 1.29, B3, B4, N1)', () => 
     expect(code).not.toMatch(/background-color calc\(var\(--_switch-duration\) \* var\(--_switch-motion\)\) step-end;/);
   });
 
+  it('B4: a drag draws the thumb at its own size and stops it at the ends, so it never leaves the track', () => {
+    expect(rule("[data-ds='switch'][data-dragging]")).toMatch(
+      /--_switch-travel: calc\(var\(--_switch-travel-max\) \* clamp\(0, var\(--_switch-drag-progress\), 1\)\);/,
+    );
+    expect(code).toMatch(
+      /\[data-ds='switch'\]\[data-dragging\] > \[data-part='control'\],[^{]*\{[^}]*--_switch-thumb-size-now: min\(var\(--_switch-thumb-size-pressed\), 1\);/,
+    );
+  });
+
+  it('times an outline a platform draws round the off thumb with the thumb color', () => {
+    expect(rule(thumb)).toMatch(/outline-color calc\(var\(--_switch-duration\) \* var\(--_switch-motion\)\) var\(--_switch-color-ease\)/);
+  });
+
   it('declares the shape hooks with defaults that keep the look', () => {
     expect(code).toMatch(/--_switch-radius: var\(--ds-radius-pill\);/);
     expect(code).toMatch(/--_switch-thumb-radius: var\(--ds-radius-pill\);/);

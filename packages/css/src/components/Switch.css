@@ -364,7 +364,8 @@
    * (the first translateX, on the state's timing). It grows to its size now from its
    * center, stretches toward its travel from its trailing edge (transform, on
    * the press's timing while pressed), and leans on hover. Its color is
-   * `color`, on --_switch-color-ease; the paint thins to a lens by
+   * `color`, on --_switch-color-ease (as is an outline color a platform
+   * draws round the off thumb); the paint thins to a lens by
    * --_switch-thumb-solid-now and keeps a ring of the solid color inside its
    * edge, under the style's own shadows.
    */
@@ -394,6 +395,7 @@
     transition:
       transform calc(var(--_switch-duration) * var(--_switch-motion)) var(--_switch-ease),
       color calc(var(--_switch-duration) * var(--_switch-motion)) var(--_switch-color-ease),
+      outline-color calc(var(--_switch-duration) * var(--_switch-motion)) var(--_switch-color-ease),
       background-color calc(var(--_switch-duration-color) * var(--_switch-motion)) var(--ds-ease-out),
       box-shadow calc(var(--_switch-duration-color) * var(--_switch-motion)) var(--ds-ease-out);
   }
@@ -475,6 +477,7 @@
     transition:
       transform calc(var(--_switch-duration-in) * var(--_switch-motion)) var(--_switch-ease-in),
       color calc(var(--_switch-duration) * var(--_switch-motion)) var(--_switch-color-ease),
+      outline-color calc(var(--_switch-duration) * var(--_switch-motion)) var(--_switch-color-ease),
       background-color calc(var(--_switch-duration-in) * var(--_switch-motion)) var(--_switch-ease-in),
       box-shadow calc(var(--_switch-duration-in) * var(--_switch-motion)) var(--_switch-ease-in);
   }
@@ -553,7 +556,9 @@
 
   /*
    * Dragging: Switch.tsx sets --_switch-drag-progress. The thumb and the
-   * fill's clip follow it with no transition. The fill and the thumb's on
+   * fill's clip follow it with no transition, and stop at the ends: the
+   * rubber band past either end stays in the progress the snap reads, and is
+   * not drawn, so the thumb never passes the track's end (order 1.29, B4). The fill and the thumb's on
    * color step at progress 0.5 together (B4, order 1.29): the fill is opaque
    * or not there, never a thin tint under a thumb of either color. The root's
    * data-state shows the side the thumb is on while the drag runs, so the
@@ -562,7 +567,7 @@
    * the transitions carry the thumb from the pointer to its end.
    */
   [data-ds='switch'][data-dragging] {
-    --_switch-travel: calc(var(--_switch-travel-max) * var(--_switch-drag-progress));
+    --_switch-travel: calc(var(--_switch-travel-max) * clamp(0, var(--_switch-drag-progress), 1));
     --_switch-fill-now: clamp(0, (var(--_switch-drag-progress) - 0.5) * 1000000 + 1, 1);
     --_switch-thumb-bg: color-mix(
       in srgb,
@@ -573,11 +578,17 @@
     --_switch-lean-now: 0px;
   }
 
-  /* The pressed rule sets the stretch on the control; while dragging the thumb only follows. */
+  /*
+   * The pressed rule sets the stretch and the growth on the control; while
+   * dragging the thumb only follows, at its own size (at most 1), so a grown
+   * or capsule thumb never leaves the track and its edge never meets the page
+   * (order 1.29, B4).
+   */
   [data-ds='switch'][data-dragging] > [data-part='control'],
   [data-ds='switch'][data-dragging]:not([data-disabled], [data-readonly]) > [data-part='control']:is(:active, :hover) {
     --_switch-stretch-now: 1;
     --_switch-lean-now: 0px;
+    --_switch-thumb-size-now: min(var(--_switch-thumb-size-pressed), 1);
 
     cursor: grabbing;
   }

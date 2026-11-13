@@ -89,7 +89,7 @@ describe('select motion, order 1.22', () => {
       host.open.set(true);
       await settle();
       const got = ids(take(), 'stagger');
-      expect(got).toHaveLength(motion.mode('menu-rows') === 'full' ? 6 : 3);
+      expect(got).toHaveLength(items().length * (motion.mode('menu-rows') === 'full' ? 2 : 1));
       // Order 1.29 (ten weakest #9): every row fades with the surface and only the rise staggers (staggerRows).
       staggerRows(document.querySelector('[data-menu-layer]'), "[data-part='viewport'] [data-part='item']", motion.mode('menu-rows'));
       expect(got).toEqual(take());

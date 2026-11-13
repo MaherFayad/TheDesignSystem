@@ -7,6 +7,7 @@
 //     [--platforms web,ios,android] [--step 10] [--kinds toggle,drag]
 //     [--shots <folder>]   (saves each frame's crop, for a look by eye)
 //     [--jobs 4]           (style, scheme and platform sets measured at once)
+//     [--css "<rules>"]    (extra CSS on every stage, to try a hook first)
 //
 // For every style, scheme and platform it opens the gallery stage
 // `/interactions?focus=switch-stretch` (toggles) and `switch-drag` (drags),
@@ -56,6 +57,9 @@ const STEP = Number(arg('step', '10'));
 const JOBS = Number(arg('jobs', '4'));
 const KINDS = arg('kinds', 'toggle,drag').split(',');
 const SHOTS = arg('shots', '');
+// Extra CSS put on every stage, to try a hook a style has not set yet, e.g.
+// --css "[data-style='liquid'] [data-ds='switch'] { --_switch-thumb-width: calc(var(--_switch-thumb-size) * 1.5); }"
+const EXTRA_CSS = arg('css', '');
 const GATE = 3;
 const DSF = 2;
 const DIRECTIONS = 48;
@@ -161,6 +165,7 @@ async function openStage(browser, { id, style, scheme, platform }) {
   await page.waitForSelector('[data-interaction-stage] [data-interaction-trigger]', { timeout: 60000 });
   // The gallery's pointer marker would sit over the thumb in every held and dragged frame.
   await page.addStyleTag({ content: "[data-gallery='pointer-dot'] { display: none; }" });
+  if (EXTRA_CSS) await page.addStyleTag({ content: EXTRA_CSS });
   await page.mouse.move(2, 2);
   await page.waitForTimeout(300);
   await finishAll(page);

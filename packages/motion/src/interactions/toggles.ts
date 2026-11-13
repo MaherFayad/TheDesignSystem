@@ -70,11 +70,11 @@ export const togglesInteractions = [
     drive: 'css',
     trigger: 'The person drags the thumb sideways with a finger or the mouse, then lets go.',
     feedback:
-      'Past a 3px slop the thumb follows the pointer with no lag, and a little past either end with a rubber band. The fill stays opaque under the thumb and only its clip follows; the fill and the thumb on color step at the middle of the travel, and the switch shows that side (order 1.29). ' +
+      'Past a 3px slop the thumb follows the pointer with no lag and stops at either end, so it never leaves the track (order 1.29); past an end the pointer still counts, damped, toward the snap. The fill stays opaque under the thumb and only its clip follows; the fill and the thumb on color step at the middle of the travel, and the switch shows that side (order 1.29). ' +
       'On release it snaps by velocity, else to the nearer end, and springs there with the bouncy spring. A tap still toggles; the click that ends a drag toggles nothing; Space and Enter still toggle.',
     beats: [
-      'Press: as in switch-stretch, the thumb grows; the stretch drops once the drag starts.',
-      'Drag: the thumb sits under the pointer (no transition); past either end it moves 30 percent of the overshoot, at most 12 percent of the travel.',
+      'Press: as in switch-stretch, the thumb grows; once the drag starts the stretch drops and the thumb returns to its own size (order 1.29).',
+      'Drag: the thumb sits under the pointer (no transition) and stops at either end; past an end the progress the snap reads moves 30 percent of the overshoot, at most 12 percent of the travel.',
       'Release: a flick faster than 0.006 travels a ms goes its way, else the nearer end wins; the state changes at once and the thumb springs from the pointer to its end on ease.spring-bouncy over duration.spring-bouncy.',
       'Settle: the fill and the thumb color finish on the same transition as switch-stretch.',
     ],

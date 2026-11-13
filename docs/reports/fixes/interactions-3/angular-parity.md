@@ -42,9 +42,17 @@ drag).
 
 ## Contract
 
-`npm run contract -- --framework angular --url <static build>` for the
-touched components: see "Proof" below. Every touched manifest already had
-angular `ready`; none was changed.
+`npx tsx packages/contract-tests/run.ts --framework angular --url <static
+build on 5188> --component ...`, every touched component, 0 failed:
+
+| Component | Passed | Skipped |
+| --- | --- | --- |
+| Button, IconButton, CloseButton, CopyButton, FloatingActionButton, ToggleButton, ToggleGroup, SegmentedControl, Field, Input, Form, FormWizard, PasswordField, Checkbox, Switch | 37 each | 0 |
+| Dialog, Toast, Select, Combobox, MultiSelect | 57 each | 0 |
+| Autocomplete, FilterBar, TagField | 37 each | 20 each |
+| Meter, ProgressCircle, Skeleton | 36 each | 1 each |
+
+Every touched manifest already had angular `ready`; none was changed.
 
 ## DOM diff
 
@@ -60,6 +68,20 @@ except:
   so Angular does not imitate it (see "Changes needed").
 - `title-bar`, `window-controls`: no Angular `/c/` demo (known, angular-sync-3
   item 9).
+
+## Proof
+
+- `npm run check -w @the-system/angular`: ngc clean, 110 files, 743 tests
+  passed.
+- `npm run check`: every step passes except two, and neither is in this
+  lane's files once one lane fix is made. eslint flagged one unused variable
+  in `select.motion.spec.ts` (mine, fixed after the run; eslint on
+  `packages/angular/src` is now clean). vitest has 2 failures outside this
+  lane: `packages/lint/src/gates/forced-colors-fallback.test.ts`
+  (`packages/css/src/platform/android.css:314`, a transparent switch thumb
+  outline outside a focus selector, CSS lane) and
+  `packages/lint/src/gates/no-native-title.test.ts` (5s timeout under load).
+- Contract and DOM diff: above.
 
 ## Not ported
 
