@@ -88,12 +88,12 @@ export const navigationInteractions = [
     feedback:
       'The page changes at once. The pressed arrow winds up: its icon draws back by distance.nudge and goes forward by distance.shift, then home. ' +
       'Each page slot whose number changed rolls digit by digit (rollDigits, up for a later page, down for an earlier one) in an aria-hidden host; the page keeps its aria-label. ' +
-      'The current fill (an aria-hidden span inside the page part) slides to the new current slot when it moves, and the number it reaches pops.',
+      'The current fill (an aria-hidden span inside the page part) slides to the new current slot when it moves, and the number it reaches pops. When the list wraps and the new slot sits on another line, the fill fades in at its new place instead of flying across the lines (review N35).',
     beats: [
       'Anticipation: the arrow icon draws back by distance.nudge (Neutral 2px, Desk 3px, Studio 1px) in the first quarter, against its direction.',
       'Action: the page changes on the click; the icon goes forward by distance.shift and home on ease.out over duration.spring-bouncy (Neutral 220ms, Desk 440ms, Studio 120ms).',
       'Secondary: the numbers that changed roll one column at a time from the last digit, delay.stagger apart (Neutral 24ms, Desk 45ms, Studio 0ms), on ease.spring-snappy over duration.spring-snappy.',
-      'Overshoot and settle: the current fill slides with the shared pill when its slot moves (the first and the last pages), and the number it reaches pops on the bouncy spring.',
+      'Overshoot and settle: the current fill slides with the shared pill when its slot moves on the same line (the first and the last pages), or fades in over duration.base when the new slot is on another wrapped line, and the number it reaches pops on the bouncy spring.',
     ],
     styles: {
       studio: 'digits fade in place (its number-roll preset is reduced), the arrow ticks 1px',
@@ -115,7 +115,7 @@ export const navigationInteractions = [
     beats: [
       'Action: the panel takes its new width at once.',
       'Expand: the panel clip opens from inset(the width it gained) at the inline end to none on ease.spring-soft over duration.spring-soft (Neutral 220ms, Desk 340ms, Studio 100ms).',
-      'Secondary, expand: the labels wipe in from the inline start (clip-path inset from 100% at the inline end to none) on the soft spring, delay.stagger apart (24, 45, 0ms) starting two steps late, capped at six steps.',
+      'Secondary, expand: the labels wipe in from the inline start (clip-path inset from 100% at the inline end to none) on the soft spring, delay.stagger apart starting two steps late, capped at six steps, with the stagger and the wipe both compressed so the last label is whole within 400ms whatever the style spring (review N34).',
       'Secondary, collapse: the icons pop from scale.anticipate past rest on the bouncy spring. Rail: the icons travel on the snappy spring.',
     ],
     styles: {

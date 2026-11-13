@@ -112,6 +112,16 @@ export function rectBetween(a: MotionRect, b: MotionRect, t: number): MotionRect
   return { x: lerp(a.x, b.x, t), y: lerp(a.y, b.y, t), width: lerp(a.width, b.width, t), height: lerp(a.height, b.height, t) };
 }
 
+/**
+ * Box px per CSS px of an element: its CSS zoom (Element.currentCSSZoom),
+ * 1 where the browser has none. Boxes are measured after zoom, a translate
+ * is written before it (order 1.29, review N30).
+ */
+export function zoomOf(el: Element | null | undefined): number {
+  const z = (el as { currentCSSZoom?: number } | null | undefined)?.currentCSSZoom;
+  return typeof z === 'number' && Number.isFinite(z) && z > 0 ? z : 1;
+}
+
 const usable = (r: MotionRect | null | undefined): r is MotionRect => Boolean(r && (r.width >= 1 || r.height >= 1));
 
 // ---------------------------------------------------------------- the slide
@@ -140,17 +150,19 @@ export function cancelSlide(layer: Layer): void {
 
 /**
  * The keyframes that draw a layer resting at `to` over `from`, stretched
- * along its travel halfway, then at rest. Center origin.
+ * along its travel halfway, then at rest. Center origin. The boxes are in
+ * viewport px; `zoom` is the layer's box px per CSS px (zoomOf), so the
+ * translate lands on `from` under CSS zoom too.
  */
-export function slideFrames(from: MotionRect, to: MotionRect, stretchMax: number, axis: 'x' | 'y' | 'auto' = 'auto', ghost = false): Keyframe[] {
+export function slideFrames(from: MotionRect, to: MotionRect, stretchMax: number, axis: 'x' | 'y' | 'auto' = 'auto', ghost = false, zoom = 1): Keyframe[] {
   const fcx = from.x + from.width / 2;
   const fcy = from.y + from.height / 2;
   const tcx = to.x + to.width / 2;
   const tcy = to.y + to.height / 2;
-  const dx = fcx - tcx;
-  const dy = fcy - tcy;
+  const dx = (fcx - tcx) / zoom;
+  const dy = (fcy - tcy) / zoom;
   const along = axis === 'auto' ? (Math.abs(dx) >= Math.abs(dy) ? 'x' : 'y') : axis;
-  const travel = along === 'x' ? Math.abs(dx) : Math.abs(dy);
+  const travel = along === 'x' ? Math.abs(fcx - tcx) : Math.abs(fcy - tcy);
   const size = Math.max(1, along === 'x' ? to.width : to.height);
   const s = 1 + (stretchMax - 1) * Math.min(1, travel / size);
   const w = Math.max(1, to.width);
@@ -168,16 +180,37 @@ export function slideFrames(from: MotionRect, to: MotionRect, stretchMax: number
   return [first, mid, last];
 }
 
+/** A slide worked out from reads only: its keyframes and timing. */
+export interface SlidePlan {
+  frames: Keyframe[];
+  duration: number;
+  easing: string;
+}
+
+/**
+ * The slide of a layer that rests at `to` from `from` (both in viewport px),
+ * from reads only (the spring and scale tokens), or null when nothing moves.
+ */
+export function planSlide(layer: Layer, from: MotionRect | null, to: MotionRect, opts: SlideOptions): SlidePlan | null {
+  if (!from || opts.mode !== 'full' || !canAnimate(layer.el) || !usable(from) || !usable(to)) return null;
+  if (Math.abs(from.x - to.x) < 0.5 && Math.abs(from.y - to.y) < 0.5 && Math.abs(from.width - to.width) < 0.5 && Math.abs(from.height - to.height) < 0.5) return null;
+  const t = timing(layer.el, opts.spring ?? 'snappy');
+  const frames = slideFrames(from, to, scaleOf(layer.el, 'stretch'), opts.axis, opts.ghost, zoomOf(layer.el));
+  return { frames, duration: t.duration, easing: t.easing };
+}
+
+/** Starts a planned slide: the only write. */
+export function startSlide(layer: Layer, plan: SlidePlan | null): Animation | null {
+  if (!plan || !canAnimate(layer.el)) return null;
+  return layer.el.animate(plan.frames, { id: SLIDE_ID, duration: plan.duration, easing: plan.easing, pseudoElement: layer.pseudo });
+}
+
 /**
  * Slides a layer that rests at `to` from `from` (both in viewport px). Call
  * `cancelSlide` and measure `to` first. Returns the animation, or null.
  */
 export function slideTo(layer: Layer, from: MotionRect, to: MotionRect, opts: SlideOptions): Animation | null {
-  if (opts.mode !== 'full' || !canAnimate(layer.el) || !usable(from) || !usable(to)) return null;
-  if (Math.abs(from.x - to.x) < 0.5 && Math.abs(from.y - to.y) < 0.5 && Math.abs(from.width - to.width) < 0.5 && Math.abs(from.height - to.height) < 0.5) return null;
-  const t = timing(layer.el, opts.spring ?? 'snappy');
-  const frames = slideFrames(from, to, scaleOf(layer.el, 'stretch'), opts.axis, opts.ghost);
-  return layer.el.animate(frames, { id: SLIDE_ID, duration: t.duration, easing: t.easing, pseudoElement: layer.pseudo });
+  return startSlide(layer, planSlide(layer, from, to, opts));
 }
 
 /** Slides a layer from `from` to where it rests now. */
@@ -225,29 +258,118 @@ export interface FollowOptions extends SlideOptions {
   slide?: boolean;
 }
 
+/** A follow worked out from reads only. */
+export interface FollowPlan {
+  /** The slide, or null when the pill jumps (first paint, same key, reduced motion). */
+  slide: SlidePlan | null;
+  /** The rest box of the pill, in viewport px. */
+  to: MotionRect;
+  /** Starts the slide and the answers and remembers the box. Call once, after every read of the frame. */
+  write(): Animation | null;
+}
+
+/** The slides this file started on a layer. */
+function slidesOn(layer: Layer): Animation[] {
+  const el = layer.el;
+  if (typeof el.getAnimations !== 'function') return [];
+  return el.getAnimations({ subtree: Boolean(layer.pseudo) } as GetAnimationsOptions).filter((a) => {
+    if (String(a.id) !== SLIDE_ID) return false;
+    const target = (a.effect as KeyframeEffect | null)?.pseudoElement ?? null;
+    return (layer.pseudo ?? null) === target && ((a.effect as KeyframeEffect | null)?.target ?? el) === el;
+  });
+}
+
+/**
+ * The reads of followIndicator, with its writes held in `write` (order
+ * 1.29, review B14): a list can read in its commit and write after every
+ * other list has read (see inFrame), so one press costs one style pass.
+ */
+export function planFollow(track: IndicatorTrack, key: string, layer: Layer, opts: FollowOptions): FollowPlan {
+  const running = slidesOn(layer);
+  // A slide on an element moves its box, so it ends before the box is read
+  // (a write, but rare: the pill is usually a new element). A pseudo
+  // element's box is read from its computed offsets, which a transform leaves alone.
+  if (running.length && !layer.pseudo) for (const a of running) a.cancel();
+  const to = layerRect(layer);
+  const changed = track.key !== null && track.key !== key && opts.slide !== false;
+  const last = changed ? liveLocal(track) : null;
+  const from = last ? fromLocal(last, opts.anchor) : null;
+  const local = toLocal(to, opts.anchor);
+  const slide = planSlide(layer, from, to, opts);
+  return {
+    slide,
+    to,
+    write() {
+      for (const a of running) a.cancel();
+      const anim = startSlide(layer, slide);
+      if (from) answerLabels(track.label, opts.label ?? null, opts.mode);
+      track.key = key;
+      track.el = layer.el;
+      track.rect = local;
+      track.anim = anim;
+      track.from = anim ? last : null;
+      track.to = anim ? local : null;
+      track.label = opts.label ?? null;
+      return anim;
+    },
+  };
+}
+
 /**
  * Call after the commit that made `key` current, with the pill layer of that
  * item. Slides from the box of the last key when the key changed, makes the
  * labels answer, and remembers the new box.
  */
 export function followIndicator(track: IndicatorTrack, key: string, layer: Layer, opts: FollowOptions): Animation | null {
-  cancelSlide(layer);
-  const to = layerRect(layer);
-  const changed = track.key !== null && track.key !== key && opts.slide !== false;
-  let anim: Animation | null = null;
-  const last = changed ? liveLocal(track) : null;
-  if (changed && last) {
-    anim = slideTo(layer, fromLocal(last, opts.anchor), to, opts);
-    answerLabels(track.label, opts.label ?? null, opts.mode);
+  return planFollow(track, key, layer, opts).write();
+}
+
+// ---------------------------------------------------------------- one style pass per commit
+
+/** A job of inFrame: reads, and returns its writes (or nothing). */
+export type FrameJob = () => (() => void) | void;
+
+let frameJobs: FrameJob[] | null = null;
+
+function flushFrame(): void {
+  const jobs = frameJobs ?? [];
+  frameJobs = null;
+  const writes: (() => void)[] = [];
+  const fail = (e: unknown) => queueMicrotask(() => {
+    throw e;
+  });
+  for (const job of jobs) {
+    try {
+      const w = job();
+      if (w) writes.push(w);
+    } catch (e) {
+      fail(e);
+    }
   }
-  track.key = key;
-  track.el = layer.el;
-  track.rect = toLocal(to, opts.anchor);
-  track.anim = anim;
-  track.from = anim ? last : null;
-  track.to = anim ? track.rect : null;
-  track.label = opts.label ?? null;
-  return anim;
+  for (const w of writes) {
+    try {
+      w();
+    } catch (e) {
+      fail(e);
+    }
+  }
+}
+
+/**
+ * Runs `job` in one microtask with every other job queued in the same task:
+ * first every job's reads, then every write a job returns (order 1.29,
+ * review B14). Queue it from a layout effect (React) or an after render hook
+ * (Angular): the microtask runs after the commit, before the frame is
+ * painted, so the first frame already draws the slide; and the reads of the
+ * whole commit (other lists, Radix's own) share one style pass instead of
+ * one per write.
+ */
+export function inFrame(job: FrameJob): void {
+  if (!frameJobs) {
+    frameJobs = [];
+    queueMicrotask(flushFrame);
+  }
+  frameJobs.push(job);
 }
 
 // ---------------------------------------------------------------- small answers

@@ -178,7 +178,7 @@ describe('SegmentedControl', () => {
     expect(el.getAttribute('data-full-width')).toBe('');
     const grid = screen.getByRole('radio', { name: 'Grid view' });
     expect(grid.getAttribute('data-size')).toBe('lg');
-    expect(Array.from(grid.children).map((c) => c.getAttribute('data-part'))).toEqual(['icon']);
+    expect(Array.from(grid.children).map((c) => c.getAttribute('data-part'))).toEqual(['icon', 'hit']);
   });
 
   it('places the indicator under the selected item and slides it with the shared pill on a change', async () => {

@@ -58,7 +58,7 @@ import {
 import { Tabs as RadixTabs } from 'radix-ui';
 import type { Emphasis, Size } from '@the-system/shared';
 import { renderSlotContent, type ButtonSlotContent } from '../Button/ButtonBase';
-import { followIndicator, fromLocal, playInk, type IndicatorTrack } from '@the-system/motion';
+import { inFrame, planFollow, planInk, type IndicatorTrack } from '@the-system/motion';
 import { useIndicatorTrack } from '../../internal/indicator';
 import { useMotion } from '../../internal/motion';
 import { useControllable } from '../../internal/useControllable';
@@ -214,40 +214,50 @@ export function TabsTrigger({ value, start, count, children, ref, ...rest }: Tab
     if (!active) return;
     const from = ctx.previous.current;
     ctx.previous.current = value;
-    const node = ownRef.current;
-    if (!node) return;
-    // Keep the active tab in view inside a scrolling list, on load too (a
-    // default tab past the visible part). Only the list's own scroll offset
-    // is set, never scrollIntoView, so the page around it never scrolls.
-    const list = node.parentElement;
-    if (from !== value && list) {
-      if (ctx.orientation === 'vertical') {
-        const top = node.offsetTop - list.offsetTop;
-        if (top < list.scrollTop) list.scrollTop = top;
-        else if (top + node.offsetHeight > list.scrollTop + list.clientHeight) list.scrollTop = top + node.offsetHeight - list.clientHeight;
-      } else {
-        const l = node.getBoundingClientRect();
-        const b = list.getBoundingClientRect();
-        if (l.left < b.left) list.scrollLeft -= b.left - l.left;
-        else if (l.right > b.right) list.scrollLeft += l.right - b.right;
+    const mode = motion.mode('tab-slide');
+    // Order 1.29 (review B14): the reads of this list share one style pass
+    // with every other list of the commit, and the writes come after them
+    // (inFrame, still before the first paint).
+    inFrame(() => {
+      const node = ownRef.current;
+      const list = node?.parentElement;
+      if (!node?.isConnected || !list) return;
+      // Keep the active tab in view inside a scrolling list, on load too (a
+      // default tab past the visible part). Only the list's own scroll offset
+      // is set, never scrollIntoView, so the page around it never scrolls.
+      if (from !== value) {
+        if (ctx.orientation === 'vertical') {
+          const top = node.offsetTop - list.offsetTop;
+          if (top < list.scrollTop) list.scrollTop = top;
+          else if (top + node.offsetHeight > list.scrollTop + list.clientHeight) list.scrollTop = top + node.offsetHeight - list.clientHeight;
+        } else {
+          const l = node.getBoundingClientRect();
+          const b = list.getBoundingClientRect();
+          if (l.left < b.left) list.scrollLeft -= b.left - l.left;
+          else if (l.right > b.right) list.scrollLeft += l.right - b.right;
+        }
       }
-    }
-    const indicator = indicatorRef.current;
-    if (!indicator || !list) return;
-    const slide = followIndicator(ctx.track, value, { el: indicator }, { mode: motion.mode('tab-slide'), anchor: list });
-    // Round 3: the text under the pill takes the active color where the pill is (helpers/nav-ink.ts in @the-system/motion).
-    const inked = (el: Element | undefined) => (el ? [...el.querySelectorAll(INKED)] : []);
-    const left = from === null ? undefined : ctx.triggers.get(from);
-    playInk({
-      switch: '--_tabs-ink',
-      slide,
-      to: ctx.track.rect ? fromLocal(ctx.track.rect, list) : indicator.getBoundingClientRect(),
-      anchor: list,
-      parts: [...ctx.triggers.values()].flatMap(inked),
-      reaching: inked(node),
-      restFrom: left?.querySelector(':scope > [data-part="label"]'),
-      inkFrom: node.querySelector(':scope > [data-part="label"]'),
-      axis: ctx.orientation === 'vertical' ? 'y' : 'x',
+      const indicator = indicatorRef.current;
+      if (!indicator) return;
+      const plan = planFollow(ctx.track, value, { el: indicator }, { mode, anchor: list });
+      // Round 3: the text under the pill takes the active color where the pill is (helpers/nav-ink.ts in @the-system/motion).
+      const inked = (el: Element | undefined) => (el ? [...el.querySelectorAll(INKED)] : []);
+      const left = from === null ? undefined : ctx.triggers.get(from);
+      const ink = planInk({
+        switch: '--_tabs-ink',
+        slide: plan.slide,
+        to: plan.to,
+        anchor: list,
+        parts: [...ctx.triggers.values()].flatMap(inked),
+        reaching: inked(node),
+        restFrom: left?.querySelector(':scope > [data-part="label"]'),
+        inkFrom: node.querySelector(':scope > [data-part="label"]'),
+        axis: ctx.orientation === 'vertical' ? 'y' : 'x',
+        indicator,
+      });
+      return () => {
+        ink(plan.write());
+      };
     });
   }, [active, value, ctx.previous, ctx.track, ctx.orientation, ctx.triggers, motion]);
 

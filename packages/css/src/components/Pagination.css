@@ -165,9 +165,16 @@
       display: none;
     }
 
-    [data-ds='pagination'] > [data-part='page'][data-active] {
-      --_button-border-color: Highlight;
-      --_button-border-color-hover: Highlight;
+    /*
+     * The current page's own border, in Highlight. Order 1.29 (review N40):
+     * the :has() selector matches the rule above that hides this border
+     * while the pill draws, which outranked a plain [data-active] here; and
+     * the color is set on the border itself, because a style's recipe (a
+     * later layer) may set the Button border property of a soft button.
+     */
+    [data-ds='pagination'] > [data-part='page'][data-active],
+    [data-ds='pagination'] > [data-part='page'][data-active]:has(> span[aria-hidden='true']:not([data-part])) {
+      border-color: Highlight;
     }
   }
 }

@@ -1,5 +1,5 @@
 import { render } from '@testing-library/react';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import BadgeDemo from './Badge.demo';
 import { Badge, formatBadgeCount } from './index';
 
@@ -113,4 +113,29 @@ describe('Badge', () => {
     const cases = [...container.querySelectorAll('[data-demo-case]')].map((el) => el.getAttribute('data-demo-case'));
     expect(cases).toEqual(['variants', 'empty', 'one', 'many', 'too-many', 'long-text', 'long-arabic']);
   });
+
+  // Order 1.29 (review N32): a dot whose count ticks fast pops at most three times a second.
+  it('pops a dot at most three times a second, however fast its count changes', () => {
+    const proto = HTMLElement.prototype as unknown as { animate?: unknown };
+    const original = proto.animate;
+    const animate = vi.fn(() => ({ finished: Promise.resolve(), cancel() {}, effect: null }) as unknown as Animation);
+    proto.animate = animate;
+    const now = vi.spyOn(performance, 'now');
+    try {
+      let t = 1000;
+      now.mockImplementation(() => t);
+      const { rerender } = render(<Badge dot count={1} tone="danger">Unread</Badge>);
+      // Ten changes in 594ms, as the review measured.
+      for (let n = 2; n <= 11; n++) {
+        t += 66;
+        rerender(<Badge dot count={n} tone="danger">Unread</Badge>);
+      }
+      expect(animate.mock.calls.length).toBeGreaterThan(0);
+      expect(animate.mock.calls.length).toBeLessThanOrEqual(2);
+    } finally {
+      proto.animate = original;
+      now.mockRestore();
+    }
+  });
 });
+

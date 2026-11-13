@@ -143,14 +143,15 @@ export const buttonsInteractions = [
     drive: 'css',
     trigger: 'The caller sets result to success or error when an action ends (often right after loading), and clears it to go back.',
     feedback:
-      'The ending of the action is drawn in the button: the label rolls up and out, and a check draws itself stroke by stroke (success) or a cross draws in two strokes (error), at the size of the icons. An error also shakes the button once. ' +
-      'When the caller clears result, the glyph shrinks away and the label drops back in. The width holds; the status says resultLabel once.',
+      'The ending of the action is drawn in the button: the label rolls up and out, a check draws itself stroke by stroke (success) or a cross draws in two strokes (error), at the size of the icons, with the result word beside it, and the button takes the success or danger tone in its own emphasis. An error also shakes the button once. ' +
+      'When the caller clears result, the glyph shrinks away and the label drops back in. The width holds (a long word ends in an ellipsis); the status says resultLabel once.',
     beats: [
       'Out: the start, label and end parts roll up by --_button-roll (distance.shift) and fade over duration.quick on ease.exit.',
       'Land: one delay.stagger step later the result part grows from scale.morph on ease.spring-bouncy over duration.spring-bouncy and fades in over duration.fast.',
-      'Draw: one stagger step in, each stroke draws with stroke-dashoffset from 1 to 0 (pathLength 1) over duration.morph on ease.out: the check from its short stroke to its long one; the error cross one stroke, then the other one duration.morph later.',
+      'Draw: one stagger step in, each stroke draws with stroke-dashoffset from 1 to 0 (pathLength 1) on ease.out: the check over duration.morph, from its short stroke to its long one; the error cross in the same time, each stroke over half of duration.morph, the second right after the first.',
+      'Tone: the colors swap to the success or danger tone at once, with the word; they swap back when the result clears.',
       'Error: the button shakes along the inline axis by --_button-shake (distance.nudge) over duration.celebrate: out, back past rest, half out, rest. Two swings, far under three flashes a second.',
-      'Back: the glyph shrinks to scale.morph and fades over duration.quick; the parts drop in from above on the snappy spring.',
+      'Back: the glyph shrinks to scale.morph over duration.quick and fades over duration.fast on ease.out, so it is nearly gone when the parts drop in from above on the snappy spring.',
     ],
     styles: {
       studio: 'a quick draw, no swing',

@@ -206,14 +206,15 @@
   /*
    * The three words in one cell: the widest sets the width. Each word clips
    * and ends in an ellipsis on its own when the button is squeezed. The
-   * label part clips to the button's height band (inset() percentages are
-   * of the label's own height), and not along the line.
+   * label part clips to the inside of the button's border on both axes
+   * (inset() percentages are of the label's own height): a rolling word
+   * never crosses the border (order 1.29, review N4).
    */
   [data-ds='copy-button'] > [data-part='label'] {
     display: inline-grid;
     grid-template-columns: minmax(0, max-content);
     justify-items: center;
-    clip-path: inset(calc((100% - var(--_button-height)) / 2) calc(-1 * var(--_button-padding-inline)));
+    clip-path: inset(calc((100% - var(--_button-height)) / 2 + var(--ds-border-width-default)) calc(var(--ds-border-width-default) - var(--_button-padding-inline)));
   }
 
   [data-ds='copy-button'] > [data-part='label'] > [data-copy-label] {
@@ -225,8 +226,9 @@
     white-space: nowrap;
     opacity: 0;
     transform: translateY(calc(-1 * var(--_copy-button-roll)));
+    /* The leaving word is gone by the time the arriving one is whole: it fades fast on ease.out while it rolls (review N4). */
     transition:
-      opacity calc(var(--ds-duration-quick) * var(--_copy-button-motion)) var(--_copy-button-ease-out),
+      opacity calc(var(--ds-duration-fast) * var(--_copy-button-motion)) var(--ds-ease-out),
       transform calc(var(--ds-duration-quick) * var(--_copy-button-motion)) var(--_copy-button-ease-out);
   }
 

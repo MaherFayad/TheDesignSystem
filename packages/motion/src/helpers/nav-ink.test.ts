@@ -2,7 +2,8 @@
 // The ink of the shared pill (order 1.23): the twins, their clip and their removal.
 // Moved with the code from packages/react/src/components/Tabs/ink.test.tsx (order 1.29).
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { clearInk, insetFor, INK_PART, playInk, slideBoxes } from './nav-ink';
+import { clearInk, insetFor, INK_PART, playInk, slideBoxes, type InkOptions } from './nav-ink';
+import { slideFrames } from './indicator';
 
 function fakeAnimation(frames: Keyframe[], duration = 180): Animation {
   return {
@@ -85,3 +86,133 @@ describe('ink', () => {
     expect(playInk({ slide: null, to: box(0, 10), anchor: list, parts: [], reaching: [], restFrom: null, inkFrom: null, axis: 'x' })).toEqual([]);
   });
 });
+
+// Order 1.29: review B2 (forced colors), B14 (one press, one layout pass) and N30 (zoom).
+describe('ink, order 1.29', () => {
+  const rect = (x: number, width: number) => () => ({ x, y: 0, width, height: 20, top: 0, left: x, right: x + width, bottom: 20, toJSON() {} }) as DOMRect;
+
+  /** A list of `n` labels side by side, 60px wide each, with animate stubbed. */
+  function list(n: number, width = 60) {
+    const anchor = document.createElement('div');
+    const parts: HTMLElement[] = [];
+    for (let i = 0; i < n; i++) {
+      const item = document.createElement('div');
+      const label = document.createElement('span');
+      label.textContent = `Label ${i}`;
+      label.style.color = i === 1 ? 'rgb(2, 2, 2)' : 'rgb(1, 1, 1)';
+      label.getBoundingClientRect = rect(i * width, width);
+      item.append(label);
+      anchor.append(item);
+      parts.push(label);
+    }
+    document.body.append(anchor);
+    HTMLElement.prototype.animate = vi.fn(() => ({ startTime: 0, finished: new Promise(() => undefined), cancel: vi.fn() }) as unknown as Animation) as unknown as HTMLElement['animate'];
+    return { anchor, parts };
+  }
+
+  /** The pill slides from label 0 to label 1. */
+  const opts = (anchor: Element, parts: HTMLElement[], extra: Partial<InkOptions> = {}): InkOptions => ({
+    slide: fakeAnimation([{ transform: 'translate(-60px, 0px) scale(1, 1)' }, { transform: 'none' }]),
+    to: box(60, 60),
+    anchor,
+    parts,
+    reaching: [parts[1]!],
+    restFrom: parts[0],
+    inkFrom: parts[1],
+    axis: 'x',
+    ...extra,
+  });
+
+  const twinsIn = (el: Element) => el.querySelectorAll(`[data-part='${INK_PART}']`);
+
+  it('B2: draws no ink under forced colors', () => {
+    const { anchor, parts } = list(2);
+    vi.stubGlobal('matchMedia', (q: string) => ({ matches: q.includes('forced-colors: active'), media: q }) as MediaQueryList);
+    try {
+      expect(playInk(opts(anchor, parts))).toEqual([]);
+      expect(twinsIn(anchor)).toHaveLength(0);
+    } finally {
+      vi.unstubAllGlobals();
+    }
+  });
+
+  it('B2: draws no ink when the pill is not drawn', () => {
+    const { anchor, parts } = list(2);
+    const pill = document.createElement('span');
+    pill.style.visibility = 'hidden';
+    anchor.append(pill);
+    expect(playInk(opts(anchor, parts, { indicator: pill }))).toEqual([]);
+    expect(twinsIn(anchor)).toHaveLength(0);
+  });
+
+  it('B14: a style that turns the ink off costs one read, of the switch, and nothing else', () => {
+    const { anchor, parts } = list(3);
+    anchor.style.setProperty('--_tabs-ink', '0');
+    const gcs = vi.spyOn(window, 'getComputedStyle');
+    const boxes = parts.map((p) => vi.spyOn(p, 'getBoundingClientRect'));
+    expect(playInk(opts(anchor, parts, { switch: '--_tabs-ink' }))).toEqual([]);
+    expect(gcs).toHaveBeenCalledTimes(1);
+    expect(gcs.mock.calls[0]?.[0]).toBe(anchor);
+    for (const b of boxes) expect(b).not.toHaveBeenCalled();
+  });
+
+  it('B14: reads every box and color before the first write', () => {
+    const { anchor, parts } = list(3);
+    const log: string[] = [];
+    const gcs = window.getComputedStyle.bind(window);
+    vi.spyOn(window, 'getComputedStyle').mockImplementation((el, p) => {
+      log.push('read');
+      return gcs(el, p);
+    });
+    for (const part of parts) {
+      const own = part.getBoundingClientRect;
+      part.getBoundingClientRect = () => {
+        log.push('read');
+        return own();
+      };
+    }
+    const append = Element.prototype.append;
+    vi.spyOn(Element.prototype, 'append').mockImplementation(function (this: Element, ...nodes) {
+      log.push('write');
+      append.apply(this, nodes);
+    });
+    playInk(opts(anchor, parts));
+    expect(twinsIn(anchor).length).toBeGreaterThan(0);
+    const firstWrite = log.indexOf('write');
+    expect(firstWrite).toBeGreaterThan(0);
+    expect(log.slice(firstWrite)).not.toContain('read');
+  });
+
+  it('B14: builds the twins once per label and reuses them on the next slide', () => {
+    const { anchor, parts } = list(2);
+    playInk(opts(anchor, parts));
+    const first = [...twinsIn(anchor)];
+    expect(first.length).toBe(2);
+    playInk(opts(anchor, parts));
+    const second = [...twinsIn(anchor)];
+    expect(second).toHaveLength(2);
+    expect(second.every((t) => first.includes(t))).toBe(true);
+    // A label whose text changed gets a new twin.
+    parts[0]!.textContent = 'Renamed';
+    playInk(opts(anchor, parts));
+    expect([...twinsIn(anchor)].filter((t) => first.includes(t))).toHaveLength(1);
+  });
+
+  it('B14: a label the pill never passes gets no twin', () => {
+    const { anchor, parts } = list(6);
+    playInk(opts(anchor, parts));
+    // The pill travels over labels 0 and 1 only.
+    expect(twinsIn(anchor)).toHaveLength(2);
+  });
+
+  it('N30: a slide written under zoom lands on its first box, and the ink reads it back in box px', () => {
+    const from = { x: 0, y: 0, width: 80, height: 20 };
+    const to = { x: 200, y: 0, width: 80, height: 20 };
+    const frames = slideFrames(from, to, 1.2, 'x', false, 2);
+    // 200 box px at zoom 2 is a translate of 100 CSS px.
+    expect(frames[0]?.transform).toBe('translate(-100px, 0px) scale(1, 1)');
+    const slide = fakeAnimation(frames.map((f) => ({ transform: f.transform, offset: f.offset })) as Keyframe[]);
+    expect(slideBoxes(slide, to, 2)[0]?.box.x).toBe(0);
+  });
+});
+

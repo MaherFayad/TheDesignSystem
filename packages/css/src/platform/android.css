@@ -47,8 +47,8 @@
  * --_pagination-press-*; until a press it is the centre. The press shade,
  * the sink and the pointer glow of order 1.23 are off: the ripple is the
  * only press feedback. Checkbox and radio get a 40dp state layer that the
- * same circle grows into on a touch. The hit area of a control drawn under
- * 48dp is a transparent ::before (the glow's layer, emptied). Durations
+ * same circle grows into on a touch. The hit area of a button drawn under
+ * 48dp is its hit part (a chip's, its ::before). Durations
  * are tokens only, so the component's reduced zeroing and the reduced
  * tokens still hold. Under reduced motion the ripple shows whole at once.
  * Under forced colors the ripple and the state layers are hidden.
@@ -111,7 +111,7 @@
 
   /*
    * Press feedback is the ripple alone: no inner shade, no sink, no pointer
-   * glow (the glow's ::before layer is the 48dp hit area here), and the
+   * glow (the 48dp hit area is the hit part, not the glow layer), and the
    * ToggleButton's own pool and flood give way to the same ripple.
    */
   [data-platform='android'] :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button'], [data-ds='close-button'], [data-ds='copy-button'], [data-ds='floating-action-button']) {
@@ -126,14 +126,26 @@
     --_toggle-button-flood: 0;
   }
 
-  /* The 48dp hit area of a control drawn smaller: a transparent layer around it (the target size check counts it). */
-  [data-platform='android'] :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button'], [data-ds='close-button'], [data-ds='copy-button'], [data-ds='chip'])::before {
-    content: '';
+  /*
+   * The 48dp hit area of a control drawn smaller: a transparent layer around
+   * it (the target size check counts it) that takes the press. For the
+   * button family it is the hit part (order 1.29, review B10): ::before is
+   * the glow there, which has no pointer and keeps the control's box. Chip,
+   * with no glow, keeps its ::before.
+   */
+  [data-platform='android'] :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button'], [data-ds='close-button'], [data-ds='copy-button'], [data-ds='floating-action-button']) > [data-part='hit'],
+  [data-platform='android'] [data-ds='chip']::before {
     position: absolute;
-    background-image: none;
+    display: block;
     /* Each axis grows only when the control is shorter than the target; percentages read the control's own box. */
     inset-block: min(0px, calc((100% - var(--ds-size-touch-android)) / 2));
     inset-inline: min(0px, calc((100% - var(--ds-size-touch-android)) / 2));
+    pointer-events: auto;
+  }
+
+  [data-platform='android'] [data-ds='chip']::before {
+    content: '';
+    background-image: none;
   }
 
   /* ------------------------------------------------------------ the ripple: press feedback on every control that presses */
@@ -541,8 +553,13 @@
     border-start-end-radius: var(--ds-radius-xs);
   }
 
+  /*
+   * Focus thickens the active indicator to 2dp without moving the text
+   * (review N19): the border stays 1dp and the second dp is an inset shadow
+   * under the ring, so the content box keeps its size.
+   */
   [data-platform='android'] [data-ds='input']:not([data-variant='outlined']):focus-within {
-    border-block-end-width: var(--ds-border-width-strong);
+    --_input-ring: var(--ds-focus-shadow-ring), inset 0 calc(var(--ds-border-width-default) - var(--ds-border-width-strong)) 0 0 var(--_input-border-color);
   }
 
   [data-platform='android'] [data-ds='input'][data-variant='outlined'] {
@@ -551,7 +568,7 @@
   }
 
   [data-platform='android'] [data-ds='input'][data-variant='outlined']:focus-within {
-    border-width: var(--ds-border-width-strong);
+    --_input-ring: var(--ds-focus-shadow-ring), inset 0 0 0 calc(var(--ds-border-width-strong) - var(--ds-border-width-default)) var(--_input-border-color);
   }
 
   /* A floating label rests in the 56dp box at its 16dp side, and rises on focus or with a value. */
@@ -574,7 +591,7 @@
   }
 
   [data-platform='android'] [data-ds='textarea']:focus-within {
-    border-block-end-width: var(--ds-border-width-strong);
+    --_textarea-ring: var(--ds-focus-shadow-ring), inset 0 calc(var(--ds-border-width-default) - var(--ds-border-width-strong)) 0 0 var(--_textarea-border-color);
   }
 
   [data-platform='android'] [data-ds='select']:not([data-part]) {

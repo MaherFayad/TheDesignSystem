@@ -122,6 +122,8 @@ export function Button({
                   <path key={d} d={d} pathLength={1} />
                 ))}
               </svg>
+              {/* Order 1.29 (review N7): the ending in words beside the glyph. Hidden here: the status says it once. */}
+              {resultLabel !== undefined && <span data-result-label="">{resultLabel}</span>}
             </span>
           )}
           {loading && <ButtonLoading label={loadingLabel} />}

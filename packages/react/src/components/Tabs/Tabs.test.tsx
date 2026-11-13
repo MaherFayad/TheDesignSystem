@@ -159,7 +159,7 @@ describe('Tabs', () => {
     vi.restoreAllMocks();
   });
 
-  it('scrolls a default tab past the visible part into view inside the list on load', () => {
+  it('scrolls a default tab past the visible part into view inside the list on load', async () => {
     const rect = (left: number, width: number) => ({ left, right: left + width, width, top: 0, bottom: 32, height: 32, x: left, y: 0, toJSON: () => ({}) });
     const spy = vi.spyOn(HTMLElement.prototype, 'getBoundingClientRect').mockImplementation(function (this: HTMLElement) {
       if (this.getAttribute('role') === 'tablist') return rect(0, 300) as DOMRect;
@@ -170,6 +170,8 @@ describe('Tabs', () => {
     const original = Element.prototype.scrollIntoView;
     Element.prototype.scrollIntoView = scrollIntoView;
     render(<Example defaultValue="c" />);
+    // Order 1.29: the list reads and scrolls in the frame job (inFrame), a microtask after the commit.
+    await Promise.resolve();
     const list = screen.getByRole('tablist');
     expect(list.scrollLeft).toBe(440);
     expect(scrollIntoView).not.toHaveBeenCalled();

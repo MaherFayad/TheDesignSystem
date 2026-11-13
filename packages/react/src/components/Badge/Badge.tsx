@@ -51,6 +51,9 @@ export interface BadgeProps extends Omit<HTMLAttributes<HTMLSpanElement>, 'title
   ref?: Ref<HTMLSpanElement>;
 }
 
+/** The shortest time between two pops: three a second at most. */
+const POP_GAP_MS = 1000 / 3;
+
 /** The visible count text: the number, or "max+" over max. */
 export function formatBadgeCount(count: number, max = 99): string {
   const whole = Math.max(0, Math.floor(count));
@@ -82,9 +85,14 @@ export function Badge({
   const mode = motion.mode('badge-count');
   const own = useRef<HTMLSpanElement>(null);
   // The badge pops with the roll. A badge placed with a transform of its own pops its label instead, so its place holds.
+  // Order 1.29 (review N32): at most three pops a second, however fast the count changes (the rule of three flashes).
+  const lastPop = useRef(-Infinity);
   const popBadge = useCallback(() => {
     const root = own.current;
     if (!root) return;
+    const now = typeof performance !== 'undefined' ? performance.now() : Date.now();
+    if (now - lastPop.current < POP_GAP_MS) return;
+    lastPop.current = now;
     const placed = typeof getComputedStyle === 'function' && getComputedStyle(root).transform !== 'none';
     popMark(placed ? root.querySelector(':scope > [data-part="label"]') : root, mode);
   }, [mode]);
