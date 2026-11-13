@@ -99,7 +99,8 @@ export function shrinkAway(ghost: HTMLElement | null, mode: PatternMode): void {
 /** The ghost fades out over duration.morph (a cross fade with what took its place). */
 export function fadeAway(ghost: HTMLElement | null, mode: PatternMode): void {
   if (!ghost) return;
-  if (mode === 'none') {
+  // Round 3 (review B1), as React: reduced motion drops the ghost at once.
+  if (mode !== 'full') {
     ghost.remove();
     return;
   }
@@ -127,7 +128,8 @@ export function neighboursOf(el: Element): Element[] {
  * registered first, or its timer fires first).
  */
 export function dismissWithExit(el: Element | null, mode: PatternMode, close: () => void): void {
-  if (!el || mode === 'none' || !canAnimate(el) || typeof requestAnimationFrame !== 'function') {
+  // Round 3 (review B1), as React: reduced motion is checked here, not left to tokens: no ghost, no slide.
+  if (!el || mode !== 'full' || !canAnimate(el) || typeof requestAnimationFrame !== 'function') {
     close();
     return;
   }

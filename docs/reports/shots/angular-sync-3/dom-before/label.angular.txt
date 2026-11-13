@@ -1,0 +1,139 @@
+<section data-demo="case" data-demo-case="variants">
+  <h2 data-demo="title">
+    "Sizes, required, optional"
+  <div data-contrast="default" data-demo="content" data-density="comfortable" data-ds="theme" data-glass="regular" data-platform="web" data-scheme="light" data-style="neutral" dir="ltr" lang="en">
+    <div data-demo="grid" style="grid-template-columns: repeat(auto-fill, minmax(min(14rem, 100%), 1fr));">
+      <div style="display: grid; gap: var(--ds-space-xs); align-content: start;">
+        <label data-ds="label" data-size="md" for="ID0">
+          "Board name"
+        <div data-ds="input" data-shape="default" data-size="md">
+          <input data-part="control" id="ID0" type="text">
+      <div style="display: grid; gap: var(--ds-space-xs); align-content: start;">
+        <label data-ds="label" data-size="sm" for="ID1">
+          "Board name"
+        <div data-ds="input" data-shape="default" data-size="sm">
+          <input data-part="control" id="ID1" type="text">
+      <div style="display: grid; gap: var(--ds-space-xs); align-content: start;">
+        <label data-ds="label" data-size="md" for="ID2">
+          "Email"
+          <span data-part="required">
+            <span aria-hidden="true">
+              "*"
+            <span style="position: absolute; border: 0px; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; overflow-wrap: normal;">
+              "required"
+        <div data-ds="input" data-shape="default" data-size="md">
+          <input data-part="control" id="ID2" type="email">
+      <div style="display: grid; gap: var(--ds-space-xs); align-content: start;">
+        <label data-ds="label" data-size="md" for="ID3">
+          "Company"
+          <span data-part="optional">
+            "Optional"
+        <div data-ds="input" data-shape="default" data-size="md">
+          <input data-part="control" id="ID3" type="text">
+    <div data-contrast="default" data-demo="content" data-density="comfortable" data-ds="theme" data-glass="regular" data-platform="web" data-scheme="light" data-style="neutral" dir="rtl" lang="ar">
+      <div data-demo="grid" style="grid-template-columns: repeat(auto-fill, minmax(min(14rem, 100%), 1fr));">
+        <div style="display: grid; gap: var(--ds-space-xs); align-content: start;">
+          <label data-ds="label" data-size="md" for="ID4">
+            "البريد الإلكتروني"
+            <span data-part="required">
+              <span aria-hidden="true">
+                "*"
+              <span style="position: absolute; border: 0px; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; overflow-wrap: normal;">
+                "مطلوب"
+          <div data-ds="input" data-shape="default" data-size="md">
+            <input data-part="control" id="ID4" type="email">
+        <div style="display: grid; gap: var(--ds-space-xs); align-content: start;">
+          <label data-ds="label" data-size="sm" for="ID5">
+            "اسم الشركة"
+            <span data-part="optional">
+              "اختياري"
+          <div data-ds="input" data-shape="default" data-size="sm">
+            <input data-part="control" id="ID5" type="text">
+<section data-demo="case" data-demo-case="one">
+  <h2 data-demo="title">
+    "One label"
+  <div data-contrast="default" data-demo="content" data-density="comfortable" data-ds="theme" data-glass="regular" data-platform="web" data-scheme="light" data-style="neutral" dir="ltr" lang="en">
+    <div style="display: grid; gap: var(--ds-space-xs); align-content: start;">
+      <label data-ds="label" data-size="md" for="ID6">
+        "Workspace name"
+      <div data-ds="input" data-shape="default" data-size="md">
+        <input data-part="control" id="ID6" type="text" value="Design team">
+<section data-demo="case" data-demo-case="many">
+  <h2 data-demo="title">
+    "Labels in a row"
+  <div data-contrast="default" data-demo="content" data-density="comfortable" data-ds="theme" data-glass="regular" data-platform="web" data-scheme="light" data-style="neutral" dir="ltr" lang="en">
+    <div data-demo="row">
+      <div style="display: grid; gap: var(--ds-space-xs); align-content: start; inline-size: 8rem;">
+        <label data-ds="label" data-size="sm" for="ID7">
+          "Width"
+        <div data-ds="input" data-shape="default" data-size="sm">
+          <input data-part="control" id="ID7" type="text" value="120">
+          <span aria-hidden="true" data-part="end">
+            "px"
+      <div style="display: grid; gap: var(--ds-space-xs); align-content: start; inline-size: 8rem;">
+        <label data-ds="label" data-size="sm" for="ID8">
+          "Height"
+        <div data-ds="input" data-shape="default" data-size="sm">
+          <input data-part="control" id="ID8" type="text" value="120">
+          <span aria-hidden="true" data-part="end">
+            "px"
+      <div style="display: grid; gap: var(--ds-space-xs); align-content: start; inline-size: 8rem;">
+        <label data-ds="label" data-size="sm" for="ID9">
+          "Rotation"
+        <div data-ds="input" data-shape="default" data-size="sm">
+          <input data-part="control" id="ID9" type="text" value="120">
+          <span aria-hidden="true" data-part="end">
+            "px"
+<section data-demo="case" data-demo-case="long-text">
+  <h2 data-demo="title">
+    "Long label"
+  <div data-contrast="default" data-demo="content" data-density="comfortable" data-ds="theme" data-glass="regular" data-platform="web" data-scheme="light" data-style="neutral" dir="ltr" lang="en">
+    <div style="display: grid; gap: var(--ds-space-xs); align-content: start; max-inline-size: 20rem;">
+      <label data-ds="label" data-size="md" for="ID10">
+        "The name people see on the board card, in shared links and in every email we send about this board"
+        <span data-part="required">
+          <span aria-hidden="true">
+            "*"
+          <span style="position: absolute; border: 0px; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; overflow-wrap: normal;">
+            "required"
+      <div data-ds="input" data-shape="default" data-size="md">
+        <input data-part="control" id="ID10" type="text">
+    <div style="display: grid; gap: var(--ds-space-xs); align-content: start; max-inline-size: 20rem;">
+      <label data-ds="label" data-size="md" for="ID11">
+        "Supercalifragilisticexpialidocious"
+      <div data-ds="input" data-shape="default" data-size="md">
+        <input data-part="control" id="ID11" type="text">
+<section data-demo="case" data-demo-case="long-arabic">
+  <h2 data-demo="title">
+    "نص عربي طويل"
+  <div data-contrast="default" data-demo="content" data-density="comfortable" data-ds="theme" data-glass="regular" data-platform="web" data-scheme="light" data-style="neutral" dir="rtl" lang="ar">
+    <div style="display: grid; gap: var(--ds-space-xs); align-content: start; max-inline-size: 20rem;">
+      <label data-ds="label" data-size="md" for="ID12">
+        "الاسم اللي يشوفه الفريق على بطاقة اللوحة وفي الروابط المشتركة وفي كل رسالة نرسلها عن اللوحة"
+        <span data-part="optional">
+          "اختياري"
+      <div data-ds="input" data-shape="default" data-size="md">
+        <input data-part="control" id="ID12" type="text">
+<section data-demo="case" data-demo-case="error">
+  <h2 data-demo="title">
+    "Label of an invalid control"
+  <div data-contrast="default" data-demo="content" data-density="comfortable" data-ds="theme" data-glass="regular" data-platform="web" data-scheme="light" data-style="neutral" dir="ltr" lang="en">
+    <div style="display: grid; gap: var(--ds-space-xs); align-content: start;">
+      <label data-ds="label" data-invalid="" data-size="md" for="ID13">
+        "Email"
+        <span data-part="required">
+          <span aria-hidden="true">
+            "*"
+          <span style="position: absolute; border: 0px; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; overflow-wrap: normal;">
+            "required"
+      <div data-ds="input" data-invalid="" data-shape="default" data-size="md">
+        <input aria-invalid="true" data-part="control" id="ID13" type="email" value="sara@">
+<section data-demo="case" data-demo-case="disabled">
+  <h2 data-demo="title">
+    "Disabled"
+  <div data-contrast="default" data-demo="content" data-density="comfortable" data-ds="theme" data-glass="regular" data-platform="web" data-scheme="light" data-style="neutral" dir="ltr" lang="en">
+    <div style="display: grid; gap: var(--ds-space-xs); align-content: start;">
+      <label data-disabled="" data-ds="label" data-size="md" for="ID14">
+        "Workspace"
+      <div data-disabled="" data-ds="input" data-shape="default" data-size="md">
+        <input data-part="control" disabled="" id="ID14" type="text" value="Design team">

@@ -1,0 +1,152 @@
+- <section data-demo="case" data-demo-case="variants">
+-   <h2 data-demo="title">
+-     "Variants: idle dots at rest in an active and an inactive window, as in the source; the colors and the glyphs show on hover and keyboard focus of the group. The lights show here in every style because the demo passes them; Window turns them on only in styles that list the controls optional part."
+-   <div data-demo="row">
+-     <span data-demo="label">
+-       "Active"
+-     <div aria-label="Window controls" data-ds="window-controls" data-state="active" role="group">
+-       <button aria-label="Close window" data-ds="icon-button" data-emphasis="ghost" data-part="close" data-shape="pill" data-size="xs" data-tone="neutral" type="button">
+-         <span data-part="icon">
+-           <svg aria-hidden="true" data-ds="icon" data-icon="close" data-set="line" data-size="sm" fill="none" focusable="false" height="12" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="12" xmlns="http://www.w3.org/2000/svg">
+-             <path d="M18 6 6 18">
+-             <path d="m6 6 12 12">
+-       <button aria-label="Minimize window" data-ds="icon-button" data-emphasis="ghost" data-part="minimize" data-shape="pill" data-size="xs" data-tone="neutral" type="button">
+-         <span data-part="icon">
+-           <svg aria-hidden="true" data-ds="icon" data-icon="minimize" data-set="line" data-size="sm" fill="none" focusable="false" height="12" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="12" xmlns="http://www.w3.org/2000/svg">
+-             <path d="M5 12h14">
+-       <button aria-label="Zoom window" aria-pressed="false" data-ds="icon-button" data-emphasis="ghost" data-part="zoom" data-shape="pill" data-size="xs" data-tone="neutral" type="button">
+-         <span data-part="icon">
+-           <svg aria-hidden="true" data-ds="icon" data-icon="zoom" data-set="line" data-size="sm" fill="none" focusable="false" height="12" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="12" xmlns="http://www.w3.org/2000/svg">
+-             <path d="M15 3h6v6">
+-             <path d="m21 3-7 7">
+-             <path d="m3 21 7-7">
+-             <path d="M9 21H3v-6">
+-     <span role="status">
+-       "Nothing pressed yet"
+-   <div data-demo="row">
+-     <span data-demo="label">
+-       "Inactive"
+-     <div aria-label="Window controls" data-ds="window-controls" data-state="inactive" role="group">
+-       <button aria-label="Close window" data-ds="icon-button" data-emphasis="ghost" data-part="close" data-shape="pill" data-size="xs" data-tone="neutral" type="button">
+-         <span data-part="icon">
+-           <svg aria-hidden="true" data-ds="icon" data-icon="close" data-set="line" data-size="sm" fill="none" focusable="false" height="12" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="12" xmlns="http://www.w3.org/2000/svg">
+-             <path d="M18 6 6 18">
+-             <path d="m6 6 12 12">
+-       <button aria-label="Minimize window" data-ds="icon-button" data-emphasis="ghost" data-part="minimize" data-shape="pill" data-size="xs" data-tone="neutral" type="button">
+-         <span data-part="icon">
+-           <svg aria-hidden="true" data-ds="icon" data-icon="minimize" data-set="line" data-size="sm" fill="none" focusable="false" height="12" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="12" xmlns="http://www.w3.org/2000/svg">
+-             <path d="M5 12h14">
+-       <button aria-label="Zoom window" aria-pressed="false" data-ds="icon-button" data-emphasis="ghost" data-part="zoom" data-shape="pill" data-size="xs" data-tone="neutral" type="button">
+-         <span data-part="icon">
+-           <svg aria-hidden="true" data-ds="icon" data-icon="zoom" data-set="line" data-size="sm" fill="none" focusable="false" height="12" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="12" xmlns="http://www.w3.org/2000/svg">
+-             <path d="M15 3h6v6">
+-             <path d="m21 3-7 7">
+-             <path d="m3 21 7-7">
+-             <path d="M9 21H3v-6">
+-     <span role="status">
+-       "Nothing pressed yet"
+- <section data-demo="case" data-demo-case="one">
+-   <h2 data-demo="title">
+-     "Close only"
+-   <div data-demo="row">
+-     <div aria-label="Window controls" data-ds="window-controls" data-state="active" role="group">
+-       <button aria-label="Close window" data-ds="icon-button" data-emphasis="ghost" data-part="close" data-shape="pill" data-size="xs" data-tone="neutral" type="button">
+-         <span data-part="icon">
+-           <svg aria-hidden="true" data-ds="icon" data-icon="close" data-set="line" data-size="sm" fill="none" focusable="false" height="12" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="12" xmlns="http://www.w3.org/2000/svg">
+-             <path d="M18 6 6 18">
+-             <path d="m6 6 12 12">
+-       <button aria-disabled="true" aria-label="Minimize window" data-disabled="" data-ds="icon-button" data-emphasis="ghost" data-part="minimize" data-shape="pill" data-size="xs" data-tone="neutral" tabindex="-1" type="button">
+-         <span data-part="icon">
+-           <svg aria-hidden="true" data-ds="icon" data-icon="minimize" data-set="line" data-size="sm" fill="none" focusable="false" height="12" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="12" xmlns="http://www.w3.org/2000/svg">
+-             <path d="M5 12h14">
+-       <button aria-disabled="true" aria-label="Zoom window" data-disabled="" data-ds="icon-button" data-emphasis="ghost" data-part="zoom" data-shape="pill" data-size="xs" data-tone="neutral" tabindex="-1" type="button">
+-         <span data-part="icon">
+-           <svg aria-hidden="true" data-ds="icon" data-icon="zoom" data-set="line" data-size="sm" fill="none" focusable="false" height="12" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="12" xmlns="http://www.w3.org/2000/svg">
+-             <path d="M15 3h6v6">
+-             <path d="m21 3-7 7">
+-             <path d="m3 21 7-7">
+-             <path d="M9 21H3v-6">
+- <section data-demo="case" data-demo-case="long-arabic">
+-   <h2 data-demo="title">
+-     "Arabic: the labels default to Arabic, the lights keep their order"
+-   <div data-contrast="default" data-demo="content" data-density="comfortable" data-ds="theme" data-glass="regular" data-platform="web" data-scheme="light" data-style="neutral" dir="rtl" lang="ar">
+-     <div data-demo="row">
+-       <div aria-label="أزرار النافذة" data-ds="window-controls" data-state="active" role="group">
+-         <button aria-label="إغلاق النافذة" data-ds="icon-button" data-emphasis="ghost" data-part="close" data-shape="pill" data-size="xs" data-tone="neutral" type="button">
+-           <span data-part="icon">
+-             <svg aria-hidden="true" data-ds="icon" data-icon="close" data-set="line" data-size="sm" fill="none" focusable="false" height="12" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="12" xmlns="http://www.w3.org/2000/svg">
+-               <path d="M18 6 6 18">
+-               <path d="m6 6 12 12">
+-         <button aria-label="تصغير النافذة" data-ds="icon-button" data-emphasis="ghost" data-part="minimize" data-shape="pill" data-size="xs" data-tone="neutral" type="button">
+-           <span data-part="icon">
+-             <svg aria-hidden="true" data-ds="icon" data-icon="minimize" data-set="line" data-size="sm" fill="none" focusable="false" height="12" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="12" xmlns="http://www.w3.org/2000/svg">
+-               <path d="M5 12h14">
+-         <button aria-label="تكبير النافذة" data-ds="icon-button" data-emphasis="ghost" data-part="zoom" data-shape="pill" data-size="xs" data-tone="neutral" type="button">
+-           <span data-part="icon">
+-             <svg aria-hidden="true" data-ds="icon" data-icon="zoom" data-set="line" data-size="sm" fill="none" focusable="false" height="12" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="12" xmlns="http://www.w3.org/2000/svg">
+-               <path d="M15 3h6v6">
+-               <path d="m21 3-7 7">
+-               <path d="m3 21 7-7">
+-               <path d="M9 21H3v-6">
+- <section data-demo="case" data-demo-case="disabled">
+-   <h2 data-demo="title">
+-     "Disabled: lights with no handler are idle and out of the tab order; a disabled close keeps its tab stop"
+-   <div data-demo="row">
+-     <div aria-label="Window controls" data-ds="window-controls" data-state="active" role="group">
+-       <button aria-disabled="true" aria-label="Close window" data-disabled="" data-ds="icon-button" data-emphasis="ghost" data-part="close" data-shape="pill" data-size="xs" data-tone="neutral" tabindex="-1" type="button">
+-         <span data-part="icon">
+-           <svg aria-hidden="true" data-ds="icon" data-icon="close" data-set="line" data-size="sm" fill="none" focusable="false" height="12" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="12" xmlns="http://www.w3.org/2000/svg">
+-             <path d="M18 6 6 18">
+-             <path d="m6 6 12 12">
+-       <button aria-disabled="true" aria-label="Minimize window" data-disabled="" data-ds="icon-button" data-emphasis="ghost" data-part="minimize" data-shape="pill" data-size="xs" data-tone="neutral" tabindex="-1" type="button">
+-         <span data-part="icon">
+-           <svg aria-hidden="true" data-ds="icon" data-icon="minimize" data-set="line" data-size="sm" fill="none" focusable="false" height="12" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="12" xmlns="http://www.w3.org/2000/svg">
+-             <path d="M5 12h14">
+-       <button aria-disabled="true" aria-label="Zoom window" data-disabled="" data-ds="icon-button" data-emphasis="ghost" data-part="zoom" data-shape="pill" data-size="xs" data-tone="neutral" tabindex="-1" type="button">
+-         <span data-part="icon">
+-           <svg aria-hidden="true" data-ds="icon" data-icon="zoom" data-set="line" data-size="sm" fill="none" focusable="false" height="12" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="12" xmlns="http://www.w3.org/2000/svg">
+-             <path d="M15 3h6v6">
+-             <path d="m21 3-7 7">
+-             <path d="m3 21 7-7">
+-             <path d="M9 21H3v-6">
+-     <div aria-label="Window controls" data-ds="window-controls" data-state="active" role="group">
+-       <button aria-label="Close window" data-ds="icon-button" data-emphasis="ghost" data-part="close" data-shape="pill" data-size="xs" data-tone="neutral" type="button">
+-         <span data-part="icon">
+-           <svg aria-hidden="true" data-ds="icon" data-icon="close" data-set="line" data-size="sm" fill="none" focusable="false" height="12" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="12" xmlns="http://www.w3.org/2000/svg">
+-             <path d="M18 6 6 18">
+-             <path d="m6 6 12 12">
+-       <button aria-disabled="true" aria-label="Minimize window" data-disabled="" data-ds="icon-button" data-emphasis="ghost" data-part="minimize" data-shape="pill" data-size="xs" data-tone="neutral" tabindex="-1" type="button">
+-         <span data-part="icon">
+-           <svg aria-hidden="true" data-ds="icon" data-icon="minimize" data-set="line" data-size="sm" fill="none" focusable="false" height="12" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="12" xmlns="http://www.w3.org/2000/svg">
+-             <path d="M5 12h14">
+-       <button aria-disabled="true" aria-label="Zoom window" data-disabled="" data-ds="icon-button" data-emphasis="ghost" data-part="zoom" data-shape="pill" data-size="xs" data-tone="neutral" tabindex="-1" type="button">
+-         <span data-part="icon">
+-           <svg aria-hidden="true" data-ds="icon" data-icon="zoom" data-set="line" data-size="sm" fill="none" focusable="false" height="12" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="12" xmlns="http://www.w3.org/2000/svg">
+-             <path d="M15 3h6v6">
+-             <path d="m21 3-7 7">
+-             <path d="m3 21 7-7">
+-             <path d="M9 21H3v-6">
+-   <div data-demo="row">
+-     <span data-demo="label">
+-       "Close disabled, still focusable"
+-     <div aria-label="Window controls" data-ds="window-controls" data-state="active" role="group">
+-       <button aria-disabled="true" aria-label="Close window" data-disabled="" data-ds="icon-button" data-emphasis="ghost" data-part="close" data-shape="pill" data-size="xs" data-tone="neutral" type="button">
+-         <span data-part="icon">
+-           <svg aria-hidden="true" data-ds="icon" data-icon="close" data-set="line" data-size="sm" fill="none" focusable="false" height="12" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="12" xmlns="http://www.w3.org/2000/svg">
+-             <path d="M18 6 6 18">
+-             <path d="m6 6 12 12">
+-       <button aria-disabled="true" aria-label="Minimize window" data-disabled="" data-ds="icon-button" data-emphasis="ghost" data-part="minimize" data-shape="pill" data-size="xs" data-tone="neutral" tabindex="-1" type="button">
+-         <span data-part="icon">
+-           <svg aria-hidden="true" data-ds="icon" data-icon="minimize" data-set="line" data-size="sm" fill="none" focusable="false" height="12" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="12" xmlns="http://www.w3.org/2000/svg">
+-             <path d="M5 12h14">
+-       <button aria-label="Zoom window" data-ds="icon-button" data-emphasis="ghost" data-part="zoom" data-shape="pill" data-size="xs" data-tone="neutral" type="button">
+-         <span data-part="icon">
+-           <svg aria-hidden="true" data-ds="icon" data-icon="zoom" data-set="line" data-size="sm" fill="none" focusable="false" height="12" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="12" xmlns="http://www.w3.org/2000/svg">
+-             <path d="M15 3h6v6">
+-             <path d="m21 3-7 7">
+-             <path d="m3 21 7-7">
+-             <path d="M9 21H3v-6">
++ ERROR page.waitForSelector: Timeout 15000ms exceeded.
++ Call log:
++ [2m  - waiting for locator('[data-demo-case]')[22m
++ 
