@@ -1,0 +1,1738 @@
+{
+ "id": "skeleton-swap",
+ "family": "feedback",
+ "drive": "css",
+ "pattern": "skeleton-shimmer",
+ "reducedSays": "No motion: the band is not drawn and the content replaces the placeholder at once.",
+ "styles": {
+  "studio": {
+   "focus": {
+    "at0": {
+     "el": "button[button]",
+     "outline": "solid 2px rgba(0, 0, 0, 0)",
+     "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgb(244, 244, 245) 0px 0px 0px 2px",
+     "focusVisible": true,
+     "opacity": 1,
+     "anims": []
+    },
+    "at300": {
+     "el": "button[button]",
+     "outline": "solid 2px rgba(0, 0, 0, 0)",
+     "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgb(244, 244, 245) 0px 0px 0px 2px",
+     "focusVisible": true,
+     "opacity": 1,
+     "anims": []
+    },
+    "ringAtOnce": true
+   },
+   "transitionSweep": [],
+   "seek": {
+    "animations": 6,
+    "startOffsets": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "hit": {
+     "checked": 1,
+     "missed": [],
+     "maxShift": 0
+    },
+    "parts": [
+     {
+      "part": "span[skeleton]::before",
+      "scale": [
+       1,
+       1
+      ],
+      "travelPx": 192,
+      "opacityMin": 1,
+      "scaleOvershoot": 0,
+      "travelOvershootPx": 0,
+      "movesUntil": 580
+     }
+    ],
+    "readable": []
+   },
+   "transitionSweepAfter": [],
+   "full": {
+    "anims": [
+     {
+      "kind": "keyframes",
+      "name": "ds-skeleton-shimmer",
+      "target": "span[skeleton]::before",
+      "props": [
+       "transform"
+      ],
+      "duration": 1400,
+      "delay": 0,
+      "iterations": 3,
+      "easing": "linear",
+      "fill": "none",
+      "kf": [
+       {
+        "offset": 0,
+        "transform": "translateX(-100%)"
+       },
+       {
+        "offset": 1,
+        "transform": "translateX(100%)"
+       }
+      ],
+      "first": 48,
+      "last": 4249,
+      "playState": "running"
+     },
+     {
+      "kind": "keyframes",
+      "name": "ds-skeleton-shimmer",
+      "target": "span[skeleton]::before",
+      "props": [
+       "transform"
+      ],
+      "duration": 1400,
+      "delay": 0,
+      "iterations": 3,
+      "easing": "linear",
+      "fill": "none",
+      "kf": [
+       {
+        "offset": 0,
+        "transform": "translateX(-100%)"
+       },
+       {
+        "offset": 1,
+        "transform": "translateX(100%)"
+       }
+      ],
+      "first": 48,
+      "last": 4249,
+      "playState": "running"
+     },
+     {
+      "kind": "keyframes",
+      "name": "ds-skeleton-shimmer",
+      "target": "span[skeleton]::before",
+      "props": [
+       "transform"
+      ],
+      "duration": 1400,
+      "delay": 0,
+      "iterations": 3,
+      "easing": "linear",
+      "fill": "none",
+      "kf": [
+       {
+        "offset": 0,
+        "transform": "translateX(-100%)"
+       },
+       {
+        "offset": 1,
+        "transform": "translateX(100%)"
+       }
+      ],
+      "first": 48,
+      "last": 4249,
+      "playState": "running"
+     }
+    ],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 4200,
+    "infinite": [],
+    "stateAt": 48,
+    "firstMotionAt": 48,
+    "focusAfter": "button[button]",
+    "frames": 332,
+    "animCount": 3
+   },
+   "rapid": {
+    "left": [],
+    "held": [],
+    "inline": [],
+    "ghosts": 0,
+    "nodes": 6,
+    "indicators": "0 ok",
+    "custom": null,
+    "nodesBefore": 6
+   },
+   "interrupt": {
+    "left": [],
+    "held": [],
+    "inline": [],
+    "ghosts": 0,
+    "nodes": 6,
+    "indicators": "0 ok",
+    "custom": null
+   },
+   "tenFast": null,
+   "flash": {
+    "stepMs": 50,
+    "maxChangedPixels": 0,
+    "stageArea": 241381,
+    "changePeaksPerSecond": 0,
+    "curve": "0:0.053:0 100:0.0425:0 200:0.0425:0 300:0.0425:0 400:0.0425:0 500:0.0425:0 600:0.0425:0 700:0.0425:0 800:0.0425:0 900:0.0425:0 1000:0.0425:0 1100:0.0425:0 1200:0.0425:0 1300:0.0425:0 1400:0.0425:0 1500:0.0425:0 1600:0.0425:0 1700:0.0425:0 1800:0.0425:0 1900:0.0425:0 2000:0.0425:0 2100:0.0425:0 2200:0.0425:0 2300:0.0425:0 2400:0.0425:0 2500:0.0425:0 2600:0.0425:0 2700:0.0425:0 2800:0.0425:0 2900:0.0425:0 3000:0.0425:0 3100:0.0425:0 3200:0.0425:0 3300:0.0425:0 3400:0.0425:0 3500:0.0425:0 3600:0.0425:0 3700:0.0425:0 3800:0.0425:0 3900:0.0425:0 4000:0.0425:0 4100:0.0425:0 4200:0.0425:0 4300:0.0425:0 4400:0.0425:0 4500:0.0425:0 4600:0.0425:0"
+   },
+   "pause": {
+    "loopsBefore": [
+     "span[skeleton]::before ds-skeleton-shimmer x3",
+     "span[skeleton]::before ds-skeleton-shimmer x3",
+     "span[skeleton]::before ds-skeleton-shimmer x3"
+    ],
+    "paused": 0,
+    "runningAfterPause": [
+     "span[skeleton]::before ds-skeleton-shimmer x3",
+     "span[skeleton]::before ds-skeleton-shimmer x3",
+     "span[skeleton]::before ds-skeleton-shimmer x3"
+    ],
+    "timesAdvancedWhilePaused": 3,
+    "resumedRunning": 3
+   },
+   "off": {
+    "injected": "@layer ds.recipes {[data-style='studio'] [data-ds='skeleton'] {--_skeleton-loops: 0;}}",
+    "animations": 3,
+    "moving": [],
+    "fading": [
+     "span[skeleton]"
+    ]
+   },
+   "full.rtl": {
+    "anims": [
+     {
+      "kind": "keyframes",
+      "name": "ds-skeleton-shimmer",
+      "target": "span[skeleton]::before",
+      "props": [
+       "transform"
+      ],
+      "duration": 1400,
+      "delay": 0,
+      "iterations": 3,
+      "easing": "linear",
+      "fill": "none",
+      "kf": [
+       {
+        "offset": 0,
+        "transform": "translateX(100%)"
+       },
+       {
+        "offset": 1,
+        "transform": "translateX(-100%)"
+       }
+      ],
+      "first": 78,
+      "last": 144,
+      "playState": "running"
+     },
+     {
+      "kind": "keyframes",
+      "name": "ds-skeleton-shimmer",
+      "target": "span[skeleton]::before",
+      "props": [
+       "transform"
+      ],
+      "duration": 1400,
+      "delay": 0,
+      "iterations": 3,
+      "easing": "linear",
+      "fill": "none",
+      "kf": [
+       {
+        "offset": 0,
+        "transform": "translateX(100%)"
+       },
+       {
+        "offset": 1,
+        "transform": "translateX(-100%)"
+       }
+      ],
+      "first": 78,
+      "last": 144,
+      "playState": "running"
+     },
+     {
+      "kind": "keyframes",
+      "name": "ds-skeleton-shimmer",
+      "target": "span[skeleton]::before",
+      "props": [
+       "transform"
+      ],
+      "duration": 1400,
+      "delay": 0,
+      "iterations": 3,
+      "easing": "linear",
+      "fill": "none",
+      "kf": [
+       {
+        "offset": 0,
+        "transform": "translateX(100%)"
+       },
+       {
+        "offset": 1,
+        "transform": "translateX(-100%)"
+       }
+      ],
+      "first": 78,
+      "last": 144,
+      "playState": "running"
+     },
+     {
+      "kind": "waapi",
+      "name": "motion:ghost-fade",
+      "target": "span[skeleton]",
+      "props": [
+       "opacity"
+      ],
+      "duration": 100,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.exit",
+      "fill": "forwards",
+      "kf": [
+       {
+        "opacity": "1"
+       },
+       {
+        "opacity": "0"
+       }
+      ],
+      "first": 78,
+      "last": 144,
+      "playState": "running"
+     },
+     {
+      "kind": "waapi",
+      "name": "motion:ghost-fade",
+      "target": "span[skeleton]",
+      "props": [
+       "opacity"
+      ],
+      "duration": 100,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.exit",
+      "fill": "forwards",
+      "kf": [
+       {
+        "opacity": "1"
+       },
+       {
+        "opacity": "0"
+       }
+      ],
+      "first": 78,
+      "last": 144,
+      "playState": "running"
+     },
+     {
+      "kind": "waapi",
+      "name": "motion:ghost-fade",
+      "target": "span[skeleton]",
+      "props": [
+       "opacity"
+      ],
+      "duration": 100,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.exit",
+      "fill": "forwards",
+      "kf": [
+       {
+        "opacity": "1"
+       },
+       {
+        "opacity": "0"
+       }
+      ],
+      "first": 78,
+      "last": 144,
+      "playState": "running"
+     }
+    ],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 4200,
+    "infinite": [],
+    "stateAt": 64,
+    "firstMotionAt": 78,
+    "focusAfter": "button[button]",
+    "frames": 181,
+    "animCount": 6,
+    "rapid": {
+     "left": [],
+     "held": [],
+     "inline": [],
+     "ghosts": 0,
+     "nodes": 5,
+     "indicators": "0 ok",
+     "custom": null,
+     "nodesBefore": 5
+    }
+   },
+   "media.ltr": {
+    "anims": [
+     {
+      "kind": "waapi",
+      "name": "motion:ghost-fade",
+      "target": "span[skeleton]",
+      "props": [
+       "opacity"
+      ],
+      "duration": 100,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.exit",
+      "fill": "forwards",
+      "kf": [
+       {
+        "opacity": "1"
+       },
+       {
+        "opacity": "0"
+       }
+      ],
+      "first": 93,
+      "last": 177,
+      "playState": "running"
+     },
+     {
+      "kind": "waapi",
+      "name": "motion:ghost-fade",
+      "target": "span[skeleton]",
+      "props": [
+       "opacity"
+      ],
+      "duration": 100,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.exit",
+      "fill": "forwards",
+      "kf": [
+       {
+        "opacity": "1"
+       },
+       {
+        "opacity": "0"
+       }
+      ],
+      "first": 93,
+      "last": 177,
+      "playState": "running"
+     },
+     {
+      "kind": "waapi",
+      "name": "motion:ghost-fade",
+      "target": "span[skeleton]",
+      "props": [
+       "opacity"
+      ],
+      "duration": 100,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.exit",
+      "fill": "forwards",
+      "kf": [
+       {
+        "opacity": "1"
+       },
+       {
+        "opacity": "0"
+       }
+      ],
+      "first": 93,
+      "last": 177,
+      "playState": "running"
+     }
+    ],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 100,
+    "infinite": [],
+    "stateAt": 77,
+    "firstMotionAt": 93,
+    "focusAfter": "button[button]",
+    "frames": 179,
+    "animCount": 3,
+    "restOffTransforms": []
+   },
+   "media.rtl": {
+    "anims": [
+     {
+      "kind": "waapi",
+      "name": "motion:ghost-fade",
+      "target": "span[skeleton]",
+      "props": [
+       "opacity"
+      ],
+      "duration": 100,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.exit",
+      "fill": "forwards",
+      "kf": [
+       {
+        "opacity": "1"
+       },
+       {
+        "opacity": "0"
+       }
+      ],
+      "first": 139,
+      "last": 237,
+      "playState": "running"
+     },
+     {
+      "kind": "waapi",
+      "name": "motion:ghost-fade",
+      "target": "span[skeleton]",
+      "props": [
+       "opacity"
+      ],
+      "duration": 100,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.exit",
+      "fill": "forwards",
+      "kf": [
+       {
+        "opacity": "1"
+       },
+       {
+        "opacity": "0"
+       }
+      ],
+      "first": 139,
+      "last": 237,
+      "playState": "running"
+     },
+     {
+      "kind": "waapi",
+      "name": "motion:ghost-fade",
+      "target": "span[skeleton]",
+      "props": [
+       "opacity"
+      ],
+      "duration": 100,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.exit",
+      "fill": "forwards",
+      "kf": [
+       {
+        "opacity": "1"
+       },
+       {
+        "opacity": "0"
+       }
+      ],
+      "first": 139,
+      "last": 237,
+      "playState": "running"
+     }
+    ],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 100,
+    "infinite": [],
+    "stateAt": 111,
+    "firstMotionAt": 139,
+    "focusAfter": "button[button]",
+    "frames": 174,
+    "animCount": 3,
+    "restOffTransforms": []
+   },
+   "attr.ltr": {
+    "anims": [],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 0,
+    "infinite": [],
+    "stateAt": 75,
+    "firstMotionAt": null,
+    "focusAfter": "button[button]",
+    "frames": 172,
+    "animCount": 0,
+    "restOffTransforms": []
+   },
+   "attr.rtl": {
+    "anims": [],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 0,
+    "infinite": [],
+    "stateAt": 59,
+    "firstMotionAt": null,
+    "focusAfter": "button[button]",
+    "frames": 177,
+    "animCount": 0,
+    "restOffTransforms": []
+   }
+  },
+  "desk": {
+   "focus": {
+    "at0": {
+     "el": "button[button]",
+     "outline": "solid 2px rgba(0, 0, 0, 0)",
+     "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgb(244, 244, 245) 0px 0px 0px 2px",
+     "focusVisible": true,
+     "opacity": 1,
+     "anims": [
+      "transform 300"
+     ]
+    },
+    "at300": {
+     "el": "button[button]",
+     "outline": "solid 2px rgba(0, 0, 0, 0)",
+     "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgb(244, 244, 245) 0px 0px 0px 2px",
+     "focusVisible": true,
+     "opacity": 1,
+     "anims": [
+      "transform 300"
+     ]
+    },
+    "ringAtOnce": true
+   },
+   "transitionSweep": [],
+   "seek": {
+    "animations": 6,
+    "startOffsets": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "hit": {
+     "checked": 1,
+     "missed": [],
+     "maxShift": 0
+    },
+    "parts": [
+     {
+      "part": "span[skeleton]::before",
+      "scale": [
+       1,
+       1
+      ],
+      "travelPx": 192,
+      "opacityMin": 1,
+      "scaleOvershoot": 0,
+      "travelOvershootPx": 0,
+      "movesUntil": 580
+     }
+    ],
+    "readable": []
+   },
+   "transitionSweepAfter": [],
+   "full": {
+    "anims": [
+     {
+      "kind": "keyframes",
+      "name": "ds-skeleton-shimmer",
+      "target": "span[skeleton]::before",
+      "props": [
+       "transform"
+      ],
+      "duration": 1400,
+      "delay": 0,
+      "iterations": 3,
+      "easing": "linear",
+      "fill": "none",
+      "kf": [
+       {
+        "offset": 0,
+        "transform": "translateX(-100%)"
+       },
+       {
+        "offset": 1,
+        "transform": "translateX(100%)"
+       }
+      ],
+      "first": 52,
+      "last": 4260,
+      "playState": "running"
+     },
+     {
+      "kind": "keyframes",
+      "name": "ds-skeleton-shimmer",
+      "target": "span[skeleton]::before",
+      "props": [
+       "transform"
+      ],
+      "duration": 1400,
+      "delay": 0,
+      "iterations": 3,
+      "easing": "linear",
+      "fill": "none",
+      "kf": [
+       {
+        "offset": 0,
+        "transform": "translateX(-100%)"
+       },
+       {
+        "offset": 1,
+        "transform": "translateX(100%)"
+       }
+      ],
+      "first": 52,
+      "last": 4260,
+      "playState": "running"
+     },
+     {
+      "kind": "keyframes",
+      "name": "ds-skeleton-shimmer",
+      "target": "span[skeleton]::before",
+      "props": [
+       "transform"
+      ],
+      "duration": 1400,
+      "delay": 0,
+      "iterations": 3,
+      "easing": "linear",
+      "fill": "none",
+      "kf": [
+       {
+        "offset": 0,
+        "transform": "translateX(-100%)"
+       },
+       {
+        "offset": 1,
+        "transform": "translateX(100%)"
+       }
+      ],
+      "first": 52,
+      "last": 4260,
+      "playState": "running"
+     }
+    ],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 4200,
+    "infinite": [],
+    "stateAt": 52,
+    "firstMotionAt": 52,
+    "focusAfter": "button[button]",
+    "frames": 331,
+    "animCount": 3
+   },
+   "rapid": {
+    "left": [],
+    "held": [],
+    "inline": [],
+    "ghosts": 0,
+    "nodes": 6,
+    "indicators": "0 ok",
+    "custom": null,
+    "nodesBefore": 6
+   },
+   "interrupt": {
+    "left": [],
+    "held": [],
+    "inline": [],
+    "ghosts": 0,
+    "nodes": 6,
+    "indicators": "0 ok",
+    "custom": null
+   },
+   "tenFast": null,
+   "flash": {
+    "stepMs": 50,
+    "maxChangedPixels": 0,
+    "stageArea": 211200,
+    "changePeaksPerSecond": 0,
+    "curve": "0:0.0578:0 100:0.0552:0 200:0.0505:0 300:0.0466:0 400:0.0461:0 500:0.0461:0 600:0.0461:0 700:0.0461:0 800:0.0461:0 900:0.0461:0 1000:0.0461:0 1100:0.0461:0 1200:0.0461:0 1300:0.0461:0 1400:0.0461:0 1500:0.0461:0 1600:0.0461:0 1700:0.0461:0 1800:0.0461:0 1900:0.0461:0 2000:0.0461:0 2100:0.0461:0 2200:0.0461:0 2300:0.0461:0 2400:0.0461:0 2500:0.0461:0 2600:0.0461:0 2700:0.0461:0 2800:0.0461:0 2900:0.0461:0 3000:0.0461:0 3100:0.0461:0 3200:0.0461:0 3300:0.0461:0 3400:0.0461:0 3500:0.0461:0 3600:0.0461:0 3700:0.0461:0 3800:0.0461:0 3900:0.0461:0 4000:0.0461:0 4100:0.0461:0 4200:0.0461:0 4300:0.0461:0 4400:0.0461:0 4500:0.0461:0 4600:0.0461:0"
+   },
+   "pause": {
+    "loopsBefore": [
+     "span[skeleton]::before ds-skeleton-shimmer x3",
+     "span[skeleton]::before ds-skeleton-shimmer x3",
+     "span[skeleton]::before ds-skeleton-shimmer x3"
+    ],
+    "paused": 0,
+    "runningAfterPause": [
+     "span[skeleton]::before ds-skeleton-shimmer x3",
+     "span[skeleton]::before ds-skeleton-shimmer x3",
+     "span[skeleton]::before ds-skeleton-shimmer x3"
+    ],
+    "timesAdvancedWhilePaused": 3,
+    "resumedRunning": 3
+   },
+   "off": {
+    "injected": "@layer ds.recipes {[data-style='desk'] [data-ds='skeleton'] {--_skeleton-loops: 0;}}",
+    "animations": 3,
+    "moving": [],
+    "fading": [
+     "span[skeleton]"
+    ]
+   },
+   "full.rtl": {
+    "anims": [
+     {
+      "kind": "transition",
+      "name": "transform",
+      "target": "span[label]",
+      "props": [
+       "transform"
+      ],
+      "duration": 300,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.reveal",
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "transform": "scale(1)"
+       },
+       {
+        "offset": 1,
+        "transform": "translateY(-70px)"
+       }
+      ],
+      "first": 48,
+      "last": 346,
+      "playState": "running"
+     },
+     {
+      "kind": "keyframes",
+      "name": "ds-skeleton-shimmer",
+      "target": "span[skeleton]::before",
+      "props": [
+       "transform"
+      ],
+      "duration": 1400,
+      "delay": 0,
+      "iterations": 3,
+      "easing": "linear",
+      "fill": "none",
+      "kf": [
+       {
+        "offset": 0,
+        "transform": "translateX(100%)"
+       },
+       {
+        "offset": 1,
+        "transform": "translateX(-100%)"
+       }
+      ],
+      "first": 64,
+      "last": 363,
+      "playState": "running"
+     },
+     {
+      "kind": "keyframes",
+      "name": "ds-skeleton-shimmer",
+      "target": "span[skeleton]::before",
+      "props": [
+       "transform"
+      ],
+      "duration": 1400,
+      "delay": 0,
+      "iterations": 3,
+      "easing": "linear",
+      "fill": "none",
+      "kf": [
+       {
+        "offset": 0,
+        "transform": "translateX(100%)"
+       },
+       {
+        "offset": 1,
+        "transform": "translateX(-100%)"
+       }
+      ],
+      "first": 64,
+      "last": 363,
+      "playState": "running"
+     },
+     {
+      "kind": "keyframes",
+      "name": "ds-skeleton-shimmer",
+      "target": "span[skeleton]::before",
+      "props": [
+       "transform"
+      ],
+      "duration": 1400,
+      "delay": 0,
+      "iterations": 3,
+      "easing": "linear",
+      "fill": "none",
+      "kf": [
+       {
+        "offset": 0,
+        "transform": "translateX(100%)"
+       },
+       {
+        "offset": 1,
+        "transform": "translateX(-100%)"
+       }
+      ],
+      "first": 64,
+      "last": 363,
+      "playState": "running"
+     },
+     {
+      "kind": "waapi",
+      "name": "motion:ghost-fade",
+      "target": "span[skeleton]",
+      "props": [
+       "opacity"
+      ],
+      "duration": 320,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.exit",
+      "fill": "forwards",
+      "kf": [
+       {
+        "opacity": "1"
+       },
+       {
+        "opacity": "0"
+       }
+      ],
+      "first": 64,
+      "last": 363,
+      "playState": "running"
+     },
+     {
+      "kind": "waapi",
+      "name": "motion:ghost-fade",
+      "target": "span[skeleton]",
+      "props": [
+       "opacity"
+      ],
+      "duration": 320,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.exit",
+      "fill": "forwards",
+      "kf": [
+       {
+        "opacity": "1"
+       },
+       {
+        "opacity": "0"
+       }
+      ],
+      "first": 64,
+      "last": 363,
+      "playState": "running"
+     },
+     {
+      "kind": "waapi",
+      "name": "motion:ghost-fade",
+      "target": "span[skeleton]",
+      "props": [
+       "opacity"
+      ],
+      "duration": 320,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.exit",
+      "fill": "forwards",
+      "kf": [
+       {
+        "opacity": "1"
+       },
+       {
+        "opacity": "0"
+       }
+      ],
+      "first": 64,
+      "last": 363,
+      "playState": "running"
+     }
+    ],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 4200,
+    "infinite": [],
+    "stateAt": 48,
+    "firstMotionAt": 48,
+    "focusAfter": "button[button]",
+    "frames": 174,
+    "animCount": 7,
+    "rapid": {
+     "left": [],
+     "held": [],
+     "inline": [],
+     "ghosts": 0,
+     "nodes": 5,
+     "indicators": "0 ok",
+     "custom": null,
+     "nodesBefore": 5
+    }
+   },
+   "media.ltr": {
+    "anims": [
+     {
+      "kind": "waapi",
+      "name": "motion:ghost-fade",
+      "target": "span[skeleton]",
+      "props": [
+       "opacity"
+      ],
+      "duration": 320,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.exit",
+      "fill": "forwards",
+      "kf": [
+       {
+        "opacity": "1"
+       },
+       {
+        "opacity": "0"
+       }
+      ],
+      "first": 81,
+      "last": 381,
+      "playState": "running"
+     },
+     {
+      "kind": "waapi",
+      "name": "motion:ghost-fade",
+      "target": "span[skeleton]",
+      "props": [
+       "opacity"
+      ],
+      "duration": 320,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.exit",
+      "fill": "forwards",
+      "kf": [
+       {
+        "opacity": "1"
+       },
+       {
+        "opacity": "0"
+       }
+      ],
+      "first": 81,
+      "last": 381,
+      "playState": "running"
+     },
+     {
+      "kind": "waapi",
+      "name": "motion:ghost-fade",
+      "target": "span[skeleton]",
+      "props": [
+       "opacity"
+      ],
+      "duration": 320,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.exit",
+      "fill": "forwards",
+      "kf": [
+       {
+        "opacity": "1"
+       },
+       {
+        "opacity": "0"
+       }
+      ],
+      "first": 81,
+      "last": 381,
+      "playState": "running"
+     }
+    ],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 320,
+    "infinite": [],
+    "stateAt": 65,
+    "firstMotionAt": 81,
+    "focusAfter": "button[button]",
+    "frames": 177,
+    "animCount": 3,
+    "restOffTransforms": []
+   },
+   "media.rtl": {
+    "anims": [
+     {
+      "kind": "waapi",
+      "name": "motion:ghost-fade",
+      "target": "span[skeleton]",
+      "props": [
+       "opacity"
+      ],
+      "duration": 320,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.exit",
+      "fill": "forwards",
+      "kf": [
+       {
+        "opacity": "1"
+       },
+       {
+        "opacity": "0"
+       }
+      ],
+      "first": 59,
+      "last": 374,
+      "playState": "running"
+     },
+     {
+      "kind": "waapi",
+      "name": "motion:ghost-fade",
+      "target": "span[skeleton]",
+      "props": [
+       "opacity"
+      ],
+      "duration": 320,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.exit",
+      "fill": "forwards",
+      "kf": [
+       {
+        "opacity": "1"
+       },
+       {
+        "opacity": "0"
+       }
+      ],
+      "first": 59,
+      "last": 374,
+      "playState": "running"
+     },
+     {
+      "kind": "waapi",
+      "name": "motion:ghost-fade",
+      "target": "span[skeleton]",
+      "props": [
+       "opacity"
+      ],
+      "duration": 320,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.exit",
+      "fill": "forwards",
+      "kf": [
+       {
+        "opacity": "1"
+       },
+       {
+        "opacity": "0"
+       }
+      ],
+      "first": 59,
+      "last": 374,
+      "playState": "running"
+     }
+    ],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 320,
+    "infinite": [],
+    "stateAt": 40,
+    "firstMotionAt": 59,
+    "focusAfter": "button[button]",
+    "frames": 172,
+    "animCount": 3,
+    "restOffTransforms": []
+   },
+   "attr.ltr": {
+    "anims": [],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 0,
+    "infinite": [],
+    "stateAt": 50,
+    "firstMotionAt": null,
+    "focusAfter": "button[button]",
+    "frames": 180,
+    "animCount": 0,
+    "restOffTransforms": []
+   },
+   "attr.rtl": {
+    "anims": [],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 0,
+    "infinite": [],
+    "stateAt": 53,
+    "firstMotionAt": null,
+    "focusAfter": "button[button]",
+    "frames": 174,
+    "animCount": 0,
+    "restOffTransforms": []
+   }
+  },
+  "neutral": {
+   "focus": {
+    "at0": {
+     "el": "button[button]",
+     "outline": "solid 2px rgba(0, 0, 0, 0)",
+     "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgb(255, 255, 255) 0px 0px 0px 2px, rgb(37, 99, 235) 0px 0px 0px 4px",
+     "focusVisible": true,
+     "opacity": 1,
+     "anims": []
+    },
+    "at300": {
+     "el": "button[button]",
+     "outline": "solid 2px rgba(0, 0, 0, 0)",
+     "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgb(255, 255, 255) 0px 0px 0px 2px, rgb(37, 99, 235) 0px 0px 0px 4px",
+     "focusVisible": true,
+     "opacity": 1,
+     "anims": []
+    },
+    "ringAtOnce": true
+   },
+   "transitionSweep": [],
+   "seek": {
+    "animations": 6,
+    "startOffsets": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "hit": {
+     "checked": 1,
+     "missed": [],
+     "maxShift": 0
+    },
+    "parts": [
+     {
+      "part": "span[skeleton]::before",
+      "scale": [
+       1,
+       1
+      ],
+      "travelPx": 192,
+      "opacityMin": 1,
+      "scaleOvershoot": 0,
+      "travelOvershootPx": 0,
+      "movesUntil": 580
+     }
+    ],
+    "readable": []
+   },
+   "transitionSweepAfter": [],
+   "full": {
+    "anims": [
+     {
+      "kind": "keyframes",
+      "name": "ds-skeleton-shimmer",
+      "target": "span[skeleton]::before",
+      "props": [
+       "transform"
+      ],
+      "duration": 1400,
+      "delay": 0,
+      "iterations": 3,
+      "easing": "linear",
+      "fill": "none",
+      "kf": [
+       {
+        "offset": 0,
+        "transform": "translateX(-100%)"
+       },
+       {
+        "offset": 1,
+        "transform": "translateX(100%)"
+       }
+      ],
+      "first": 51,
+      "last": 4249,
+      "playState": "running"
+     },
+     {
+      "kind": "keyframes",
+      "name": "ds-skeleton-shimmer",
+      "target": "span[skeleton]::before",
+      "props": [
+       "transform"
+      ],
+      "duration": 1400,
+      "delay": 0,
+      "iterations": 3,
+      "easing": "linear",
+      "fill": "none",
+      "kf": [
+       {
+        "offset": 0,
+        "transform": "translateX(-100%)"
+       },
+       {
+        "offset": 1,
+        "transform": "translateX(100%)"
+       }
+      ],
+      "first": 51,
+      "last": 4249,
+      "playState": "running"
+     },
+     {
+      "kind": "keyframes",
+      "name": "ds-skeleton-shimmer",
+      "target": "span[skeleton]::before",
+      "props": [
+       "transform"
+      ],
+      "duration": 1400,
+      "delay": 0,
+      "iterations": 3,
+      "easing": "linear",
+      "fill": "none",
+      "kf": [
+       {
+        "offset": 0,
+        "transform": "translateX(-100%)"
+       },
+       {
+        "offset": 1,
+        "transform": "translateX(100%)"
+       }
+      ],
+      "first": 51,
+      "last": 4249,
+      "playState": "running"
+     }
+    ],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 4200,
+    "infinite": [],
+    "stateAt": 51,
+    "firstMotionAt": 51,
+    "focusAfter": "button[button]",
+    "frames": 321,
+    "animCount": 3
+   },
+   "rapid": {
+    "left": [],
+    "held": [],
+    "inline": [],
+    "ghosts": 0,
+    "nodes": 6,
+    "indicators": "0 ok",
+    "custom": null,
+    "nodesBefore": 6
+   },
+   "interrupt": {
+    "left": [],
+    "held": [],
+    "inline": [],
+    "ghosts": 0,
+    "nodes": 6,
+    "indicators": "0 ok",
+    "custom": null
+   },
+   "tenFast": null,
+   "flash": {
+    "stepMs": 50,
+    "maxChangedPixels": 42067,
+    "stageArea": 277819,
+    "changePeaksPerSecond": 0.22,
+    "curve": "0:0.7498:0 100:0.7723:0 200:0.8351:42067 300:0.8351:0 400:0.8351:0 500:0.8351:0 600:0.8351:0 700:0.8351:0 800:0.8351:0 900:0.8351:0 1000:0.8351:0 1100:0.8351:0 1200:0.8351:0 1300:0.8351:0 1400:0.8351:0 1500:0.8351:0 1600:0.8351:0 1700:0.8351:0 1800:0.8351:0 1900:0.8351:0 2000:0.8351:0 2100:0.8351:0 2200:0.8351:0 2300:0.8351:0 2400:0.8351:0 2500:0.8351:0 2600:0.8351:0 2700:0.8351:0 2800:0.8351:0 2900:0.8351:0 3000:0.8351:0 3100:0.8351:0 3200:0.8351:0 3300:0.8351:0 3400:0.8351:0 3500:0.8351:0 3600:0.8351:0 3700:0.8351:0 3800:0.8351:0 3900:0.8351:0 4000:0.8351:0 4100:0.8351:0 4200:0.8351:0 4300:0.8351:0 4400:0.8351:0 4500:0.8351:0 4600:0.8351:0"
+   },
+   "pause": {
+    "loopsBefore": [
+     "span[skeleton]::before ds-skeleton-shimmer x3",
+     "span[skeleton]::before ds-skeleton-shimmer x3",
+     "span[skeleton]::before ds-skeleton-shimmer x3"
+    ],
+    "paused": 0,
+    "runningAfterPause": [
+     "span[skeleton]::before ds-skeleton-shimmer x3",
+     "span[skeleton]::before ds-skeleton-shimmer x3",
+     "span[skeleton]::before ds-skeleton-shimmer x3"
+    ],
+    "timesAdvancedWhilePaused": 3,
+    "resumedRunning": 3
+   },
+   "off": {
+    "injected": "@layer ds.recipes {[data-style='neutral'] [data-ds='skeleton'] {--_skeleton-loops: 0;}}",
+    "animations": 3,
+    "moving": [],
+    "fading": [
+     "span[skeleton]"
+    ]
+   },
+   "full.rtl": {
+    "anims": [
+     {
+      "kind": "keyframes",
+      "name": "ds-skeleton-shimmer",
+      "target": "span[skeleton]::before",
+      "props": [
+       "transform"
+      ],
+      "duration": 1400,
+      "delay": 0,
+      "iterations": 3,
+      "easing": "linear",
+      "fill": "none",
+      "kf": [
+       {
+        "offset": 0,
+        "transform": "translateX(100%)"
+       },
+       {
+        "offset": 1,
+        "transform": "translateX(-100%)"
+       }
+      ],
+      "first": 70,
+      "last": 259,
+      "playState": "running"
+     },
+     {
+      "kind": "keyframes",
+      "name": "ds-skeleton-shimmer",
+      "target": "span[skeleton]::before",
+      "props": [
+       "transform"
+      ],
+      "duration": 1400,
+      "delay": 0,
+      "iterations": 3,
+      "easing": "linear",
+      "fill": "none",
+      "kf": [
+       {
+        "offset": 0,
+        "transform": "translateX(100%)"
+       },
+       {
+        "offset": 1,
+        "transform": "translateX(-100%)"
+       }
+      ],
+      "first": 70,
+      "last": 259,
+      "playState": "running"
+     },
+     {
+      "kind": "keyframes",
+      "name": "ds-skeleton-shimmer",
+      "target": "span[skeleton]::before",
+      "props": [
+       "transform"
+      ],
+      "duration": 1400,
+      "delay": 0,
+      "iterations": 3,
+      "easing": "linear",
+      "fill": "none",
+      "kf": [
+       {
+        "offset": 0,
+        "transform": "translateX(100%)"
+       },
+       {
+        "offset": 1,
+        "transform": "translateX(-100%)"
+       }
+      ],
+      "first": 70,
+      "last": 259,
+      "playState": "running"
+     },
+     {
+      "kind": "waapi",
+      "name": "motion:ghost-fade",
+      "target": "span[skeleton]",
+      "props": [
+       "opacity"
+      ],
+      "duration": 200,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.exit",
+      "fill": "forwards",
+      "kf": [
+       {
+        "opacity": "1"
+       },
+       {
+        "opacity": "0"
+       }
+      ],
+      "first": 70,
+      "last": 259,
+      "playState": "running"
+     },
+     {
+      "kind": "waapi",
+      "name": "motion:ghost-fade",
+      "target": "span[skeleton]",
+      "props": [
+       "opacity"
+      ],
+      "duration": 200,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.exit",
+      "fill": "forwards",
+      "kf": [
+       {
+        "opacity": "1"
+       },
+       {
+        "opacity": "0"
+       }
+      ],
+      "first": 70,
+      "last": 259,
+      "playState": "running"
+     },
+     {
+      "kind": "waapi",
+      "name": "motion:ghost-fade",
+      "target": "span[skeleton]",
+      "props": [
+       "opacity"
+      ],
+      "duration": 200,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.exit",
+      "fill": "forwards",
+      "kf": [
+       {
+        "opacity": "1"
+       },
+       {
+        "opacity": "0"
+       }
+      ],
+      "first": 70,
+      "last": 259,
+      "playState": "running"
+     }
+    ],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 4200,
+    "infinite": [],
+    "stateAt": 44,
+    "firstMotionAt": 70,
+    "focusAfter": "button[button]",
+    "frames": 172,
+    "animCount": 6,
+    "rapid": {
+     "left": [],
+     "held": [],
+     "inline": [],
+     "ghosts": 0,
+     "nodes": 5,
+     "indicators": "0 ok",
+     "custom": null,
+     "nodesBefore": 5
+    }
+   },
+   "media.ltr": {
+    "anims": [
+     {
+      "kind": "waapi",
+      "name": "motion:ghost-fade",
+      "target": "span[skeleton]",
+      "props": [
+       "opacity"
+      ],
+      "duration": 200,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.exit",
+      "fill": "forwards",
+      "kf": [
+       {
+        "opacity": "1"
+       },
+       {
+        "opacity": "0"
+       }
+      ],
+      "first": 69,
+      "last": 262,
+      "playState": "running"
+     },
+     {
+      "kind": "waapi",
+      "name": "motion:ghost-fade",
+      "target": "span[skeleton]",
+      "props": [
+       "opacity"
+      ],
+      "duration": 200,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.exit",
+      "fill": "forwards",
+      "kf": [
+       {
+        "opacity": "1"
+       },
+       {
+        "opacity": "0"
+       }
+      ],
+      "first": 69,
+      "last": 262,
+      "playState": "running"
+     },
+     {
+      "kind": "waapi",
+      "name": "motion:ghost-fade",
+      "target": "span[skeleton]",
+      "props": [
+       "opacity"
+      ],
+      "duration": 200,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.exit",
+      "fill": "forwards",
+      "kf": [
+       {
+        "opacity": "1"
+       },
+       {
+        "opacity": "0"
+       }
+      ],
+      "first": 69,
+      "last": 262,
+      "playState": "running"
+     }
+    ],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 200,
+    "infinite": [],
+    "stateAt": 62,
+    "firstMotionAt": 69,
+    "focusAfter": "button[button]",
+    "frames": 179,
+    "animCount": 3,
+    "restOffTransforms": []
+   },
+   "media.rtl": {
+    "anims": [
+     {
+      "kind": "waapi",
+      "name": "motion:ghost-fade",
+      "target": "span[skeleton]",
+      "props": [
+       "opacity"
+      ],
+      "duration": 200,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.exit",
+      "fill": "forwards",
+      "kf": [
+       {
+        "opacity": "1"
+       },
+       {
+        "opacity": "0"
+       }
+      ],
+      "first": 79,
+      "last": 257,
+      "playState": "running"
+     },
+     {
+      "kind": "waapi",
+      "name": "motion:ghost-fade",
+      "target": "span[skeleton]",
+      "props": [
+       "opacity"
+      ],
+      "duration": 200,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.exit",
+      "fill": "forwards",
+      "kf": [
+       {
+        "opacity": "1"
+       },
+       {
+        "opacity": "0"
+       }
+      ],
+      "first": 79,
+      "last": 257,
+      "playState": "running"
+     },
+     {
+      "kind": "waapi",
+      "name": "motion:ghost-fade",
+      "target": "span[skeleton]",
+      "props": [
+       "opacity"
+      ],
+      "duration": 200,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.exit",
+      "fill": "forwards",
+      "kf": [
+       {
+        "opacity": "1"
+       },
+       {
+        "opacity": "0"
+       }
+      ],
+      "first": 79,
+      "last": 257,
+      "playState": "running"
+     }
+    ],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 200,
+    "infinite": [],
+    "stateAt": 60,
+    "firstMotionAt": 79,
+    "focusAfter": "button[button]",
+    "frames": 182,
+    "animCount": 3,
+    "restOffTransforms": []
+   },
+   "attr.ltr": {
+    "anims": [],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 0,
+    "infinite": [],
+    "stateAt": 60,
+    "firstMotionAt": null,
+    "focusAfter": "button[button]",
+    "frames": 176,
+    "animCount": 0,
+    "restOffTransforms": []
+   },
+   "attr.rtl": {
+    "anims": [],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 0,
+    "infinite": [],
+    "stateAt": 48,
+    "firstMotionAt": null,
+    "focusAfter": "button[button]",
+    "frames": 180,
+    "animCount": 0,
+    "restOffTransforms": []
+   }
+  }
+ },
+ "sheet": "skeleton-swap.sheet.png"
+}

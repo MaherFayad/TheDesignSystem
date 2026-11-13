@@ -1,0 +1,2735 @@
+{
+ "id": "otp-fill",
+ "family": "inputs",
+ "drive": "waapi",
+ "pattern": "pop",
+ "reduced": "The characters fade in.",
+ "tokens": {
+  "studio": {
+   "delay-feedback": "2000ms",
+   "delay-stagger": "0ms",
+   "distance-enter": "4px",
+   "distance-lift": "0px",
+   "distance-nudge": "1px",
+   "distance-shift": "2px",
+   "duration-base": "120ms",
+   "duration-celebrate": "120ms",
+   "duration-fast": "80ms",
+   "duration-instant": "70ms",
+   "duration-medium": "140ms",
+   "duration-moderate": "150ms",
+   "duration-morph": "100ms",
+   "duration-quick": "100ms",
+   "duration-roll": "0.3s",
+   "duration-slow": "180ms",
+   "duration-spin": "0.8s",
+   "duration-spring-bouncy": "120ms",
+   "duration-spring-snappy": "80ms",
+   "duration-spring-soft": "100ms",
+   "duration-zoom": "220ms",
+   "scale-anticipate": "0.97",
+   "scale-enter": "1",
+   "scale-lift": "1",
+   "scale-morph": "0.8",
+   "scale-pop": "1",
+   "scale-press": "0.97",
+   "scale-stretch": "1.08"
+  },
+  "desk": {
+   "delay-feedback": "2000ms",
+   "delay-stagger": "45ms",
+   "distance-enter": "12px",
+   "distance-lift": "4px",
+   "distance-nudge": "3px",
+   "distance-shift": "6px",
+   "duration-base": "120ms",
+   "duration-celebrate": "480ms",
+   "duration-fast": "80ms",
+   "duration-instant": "70ms",
+   "duration-medium": "140ms",
+   "duration-moderate": "150ms",
+   "duration-morph": "320ms",
+   "duration-quick": "100ms",
+   "duration-roll": "0.3s",
+   "duration-slow": "180ms",
+   "duration-spin": "0.8s",
+   "duration-spring-bouncy": "440ms",
+   "duration-spring-snappy": "300ms",
+   "duration-spring-soft": "340ms",
+   "duration-zoom": "220ms",
+   "scale-anticipate": "0.9",
+   "scale-enter": "0.9",
+   "scale-lift": "1.03",
+   "scale-morph": "0.3",
+   "scale-pop": "1.14",
+   "scale-press": "0.97",
+   "scale-stretch": "1.3"
+  },
+  "neutral": {
+   "delay-feedback": "2000ms",
+   "delay-stagger": "24ms",
+   "distance-enter": "6px",
+   "distance-lift": "2px",
+   "distance-nudge": "2px",
+   "distance-shift": "4px",
+   "duration-base": "150ms",
+   "duration-celebrate": "220ms",
+   "duration-fast": "80ms",
+   "duration-instant": "70ms",
+   "duration-medium": "180ms",
+   "duration-moderate": "150ms",
+   "duration-morph": "200ms",
+   "duration-quick": "100ms",
+   "duration-roll": "0.3s",
+   "duration-slow": "180ms",
+   "duration-spin": "0.8s",
+   "duration-spring-bouncy": "220ms",
+   "duration-spring-snappy": "180ms",
+   "duration-spring-soft": "220ms",
+   "duration-zoom": "220ms",
+   "scale-anticipate": "0.95",
+   "scale-enter": "0.97",
+   "scale-lift": "1.01",
+   "scale-morph": "0.5",
+   "scale-pop": "1.05",
+   "scale-press": "0.97",
+   "scale-stretch": "1.15"
+  }
+ },
+ "runs": [
+  {
+   "style": "studio",
+   "dir": "ltr",
+   "motion": "full",
+   "state": " -> 482913",
+   "stateAt": 108,
+   "firstMotionAt": 83,
+   "events": "pointerdown@74 focusin@75 pointerup@76 click@76",
+   "longest": 120,
+   "movers": 12,
+   "badProps": [],
+   "anims": [
+    {
+     "target": "otp-field>span[cell]::before",
+     "kind": "Transition",
+     "props": "opacity",
+     "dur": 100,
+     "durTok": "duration-morph|duration-quick|duration-spring-soft",
+     "ease": "ease-spring-soft",
+     "kf": [
+      {
+       "offset": 0,
+       "opacity": "0"
+      },
+      {
+       "offset": 1,
+       "opacity": "1"
+      }
+     ],
+     "at": 83,
+     "n": 2
+    },
+    {
+     "target": "otp-field>span[cell]::before",
+     "kind": "Transition",
+     "props": "transform",
+     "dur": 100,
+     "durTok": "duration-morph|duration-quick|duration-spring-soft",
+     "ease": "ease-spring-soft",
+     "kf": [
+      {
+       "offset": 0,
+       "transform": "scale(1)"
+      },
+      {
+       "offset": 1,
+       "transform": "none"
+      }
+     ],
+     "at": 83,
+     "n": 2
+    },
+    {
+     "target": "otp-field>span[cell]::after",
+     "kind": "Transition",
+     "props": "opacity",
+     "dur": 80,
+     "durTok": "duration-fast|duration-spring-snappy",
+     "ease": "steps(2)",
+     "kf": [
+      {
+       "offset": 0,
+       "opacity": "0"
+      },
+      {
+       "offset": 1,
+       "opacity": "1"
+      }
+     ],
+     "at": 83
+    },
+    {
+     "target": "otp-field>span[cell]::after",
+     "kind": "Transition",
+     "props": "transform",
+     "dur": 80,
+     "durTok": "duration-fast|duration-spring-snappy",
+     "ease": "steps(2)",
+     "kf": [
+      {
+       "offset": 0,
+       "transform": "translateX(-5px)"
+      },
+      {
+       "offset": 1,
+       "transform": "none"
+      }
+     ],
+     "at": 83
+    },
+    {
+     "target": "cell>span",
+     "kind": "Animation",
+     "props": "opacity",
+     "dur": 120,
+     "durTok": "duration-base|duration-celebrate|duration-spring-bouncy",
+     "ease": "ease-out",
+     "kf": [
+      {
+       "opacity": "0"
+      },
+      {
+       "opacity": "1"
+      }
+     ],
+     "at": 108,
+     "n": 6
+    }
+   ],
+   "end": {
+    "live": [],
+    "offRest": 5,
+    "offSample": [
+     "2:span[cell]::before t=matrix(1, 0, 0, 1, 0, 0) o=0",
+     "4:span[cell]::before t=matrix(1, 0, 0, 1, 0, 0) o=0",
+     "6:span[cell]::before t=matrix(1, 0, 0, 1, 0, 0) o=0"
+    ],
+    "nodes": 17
+   }
+  },
+  {
+   "style": "studio",
+   "dir": "ltr",
+   "motion": "media",
+   "state": " -> 482913",
+   "stateAt": 111,
+   "firstMotionAt": 80,
+   "events": "pointerdown@71 focusin@72 pointerup@72 click@72",
+   "longest": 100,
+   "movers": 6,
+   "badProps": [],
+   "anims": [
+    {
+     "target": "otp-field>span[cell]::before",
+     "kind": "Transition",
+     "props": "opacity",
+     "dur": 100,
+     "durTok": "duration-morph|duration-spring-soft",
+     "ease": "ease-spring-soft",
+     "kf": [
+      {
+       "offset": 0,
+       "opacity": "0"
+      },
+      {
+       "offset": 1,
+       "opacity": "1"
+      }
+     ],
+     "at": 80,
+     "n": 2
+    },
+    {
+     "target": "otp-field>span[cell]::before",
+     "kind": "Transition",
+     "props": "transform",
+     "dur": 100,
+     "durTok": "duration-morph|duration-spring-soft",
+     "ease": "ease-spring-soft",
+     "kf": [
+      {
+       "offset": 0,
+       "transform": "scale(1)"
+      },
+      {
+       "offset": 1,
+       "transform": "none"
+      }
+     ],
+     "at": 80,
+     "n": 2
+    },
+    {
+     "target": "otp-field>span[cell]::after",
+     "kind": "Transition",
+     "props": "opacity",
+     "dur": 80,
+     "durTok": "duration-spring-snappy",
+     "ease": "steps(2)",
+     "kf": [
+      {
+       "offset": 0,
+       "opacity": "0"
+      },
+      {
+       "offset": 1,
+       "opacity": "1"
+      }
+     ],
+     "at": 80
+    },
+    {
+     "target": "otp-field>span[cell]::after",
+     "kind": "Transition",
+     "props": "transform",
+     "dur": 80,
+     "durTok": "duration-spring-snappy",
+     "ease": "steps(2)",
+     "kf": [
+      {
+       "offset": 0,
+       "transform": "translateX(0px)"
+      },
+      {
+       "offset": 1,
+       "transform": "none"
+      }
+     ],
+     "at": 80
+    }
+   ],
+   "end": {
+    "live": [],
+    "offRest": 5,
+    "offSample": [
+     "2:span[cell]::before t=matrix(1, 0, 0, 1, 0, 0) o=0",
+     "4:span[cell]::before t=matrix(1, 0, 0, 1, 0, 0) o=0",
+     "6:span[cell]::before t=matrix(1, 0, 0, 1, 0, 0) o=0"
+    ],
+    "nodes": 17
+   }
+  },
+  {
+   "style": "studio",
+   "dir": "ltr",
+   "motion": "attr",
+   "state": " -> 482913",
+   "stateAt": 97,
+   "firstMotionAt": null,
+   "events": "pointerdown@73 focusin@75 pointerup@76 click@76",
+   "longest": 0,
+   "movers": 0,
+   "badProps": [],
+   "anims": [],
+   "end": {
+    "live": [],
+    "offRest": 5,
+    "offSample": [
+     "2:span[cell]::before t=matrix(1, 0, 0, 1, 0, 0) o=0",
+     "4:span[cell]::before t=matrix(1, 0, 0, 1, 0, 0) o=0",
+     "6:span[cell]::before t=matrix(1, 0, 0, 1, 0, 0) o=0"
+    ],
+    "nodes": 17
+   }
+  },
+  {
+   "style": "studio",
+   "dir": "rtl",
+   "motion": "full",
+   "state": " -> 482913",
+   "stateAt": 196,
+   "firstMotionAt": 175,
+   "events": "pointerdown@167 focusin@169 pointerup@169 click@169",
+   "longest": 120,
+   "movers": 12,
+   "badProps": [],
+   "anims": [
+    {
+     "target": "otp-field>span[cell]::before",
+     "kind": "Transition",
+     "props": "opacity",
+     "dur": 100,
+     "durTok": "duration-morph|duration-quick|duration-spring-soft",
+     "ease": "ease-spring-soft",
+     "kf": [
+      {
+       "offset": 0,
+       "opacity": "0"
+      },
+      {
+       "offset": 1,
+       "opacity": "1"
+      }
+     ],
+     "at": 175,
+     "n": 2
+    },
+    {
+     "target": "otp-field>span[cell]::before",
+     "kind": "Transition",
+     "props": "transform",
+     "dur": 100,
+     "durTok": "duration-morph|duration-quick|duration-spring-soft",
+     "ease": "ease-spring-soft",
+     "kf": [
+      {
+       "offset": 0,
+       "transform": "scale(1)"
+      },
+      {
+       "offset": 1,
+       "transform": "none"
+      }
+     ],
+     "at": 175,
+     "n": 2
+    },
+    {
+     "target": "otp-field>span[cell]::after",
+     "kind": "Transition",
+     "props": "opacity",
+     "dur": 80,
+     "durTok": "duration-fast|duration-spring-snappy",
+     "ease": "steps(2)",
+     "kf": [
+      {
+       "offset": 0,
+       "opacity": "0"
+      },
+      {
+       "offset": 1,
+       "opacity": "1"
+      }
+     ],
+     "at": 175
+    },
+    {
+     "target": "otp-field>span[cell]::after",
+     "kind": "Transition",
+     "props": "transform",
+     "dur": 80,
+     "durTok": "duration-fast|duration-spring-snappy",
+     "ease": "steps(2)",
+     "kf": [
+      {
+       "offset": 0,
+       "transform": "translateX(-5px)"
+      },
+      {
+       "offset": 1,
+       "transform": "none"
+      }
+     ],
+     "at": 175
+    },
+    {
+     "target": "cell>span",
+     "kind": "Animation",
+     "props": "opacity",
+     "dur": 120,
+     "durTok": "duration-base|duration-celebrate|duration-spring-bouncy",
+     "ease": "ease-out",
+     "kf": [
+      {
+       "opacity": "0"
+      },
+      {
+       "opacity": "1"
+      }
+     ],
+     "at": 196,
+     "n": 6
+    }
+   ],
+   "end": {
+    "live": [],
+    "offRest": 5,
+    "offSample": [
+     "2:span[cell]::before t=matrix(1, 0, 0, 1, 0, 0) o=0",
+     "4:span[cell]::before t=matrix(1, 0, 0, 1, 0, 0) o=0",
+     "6:span[cell]::before t=matrix(1, 0, 0, 1, 0, 0) o=0"
+    ],
+    "nodes": 17
+   }
+  },
+  {
+   "style": "studio",
+   "dir": "rtl",
+   "motion": "media",
+   "state": " -> 482913",
+   "stateAt": 72,
+   "firstMotionAt": 55,
+   "events": "pointerdown@48 focusin@49 pointerup@50 click@50",
+   "longest": 100,
+   "movers": 6,
+   "badProps": [],
+   "anims": [
+    {
+     "target": "otp-field>span[cell]::before",
+     "kind": "Transition",
+     "props": "opacity",
+     "dur": 100,
+     "durTok": "duration-morph|duration-spring-soft",
+     "ease": "ease-spring-soft",
+     "kf": [
+      {
+       "offset": 0,
+       "opacity": "0"
+      },
+      {
+       "offset": 1,
+       "opacity": "1"
+      }
+     ],
+     "at": 55,
+     "n": 2
+    },
+    {
+     "target": "otp-field>span[cell]::before",
+     "kind": "Transition",
+     "props": "transform",
+     "dur": 100,
+     "durTok": "duration-morph|duration-spring-soft",
+     "ease": "ease-spring-soft",
+     "kf": [
+      {
+       "offset": 0,
+       "transform": "scale(1)"
+      },
+      {
+       "offset": 1,
+       "transform": "none"
+      }
+     ],
+     "at": 55,
+     "n": 2
+    },
+    {
+     "target": "otp-field>span[cell]::after",
+     "kind": "Transition",
+     "props": "opacity",
+     "dur": 80,
+     "durTok": "duration-spring-snappy",
+     "ease": "steps(2)",
+     "kf": [
+      {
+       "offset": 0,
+       "opacity": "0"
+      },
+      {
+       "offset": 1,
+       "opacity": "1"
+      }
+     ],
+     "at": 55
+    },
+    {
+     "target": "otp-field>span[cell]::after",
+     "kind": "Transition",
+     "props": "transform",
+     "dur": 80,
+     "durTok": "duration-spring-snappy",
+     "ease": "steps(2)",
+     "kf": [
+      {
+       "offset": 0,
+       "transform": "translateX(0px)"
+      },
+      {
+       "offset": 1,
+       "transform": "none"
+      }
+     ],
+     "at": 55
+    }
+   ],
+   "end": {
+    "live": [],
+    "offRest": 5,
+    "offSample": [
+     "2:span[cell]::before t=matrix(1, 0, 0, 1, 0, 0) o=0",
+     "4:span[cell]::before t=matrix(1, 0, 0, 1, 0, 0) o=0",
+     "6:span[cell]::before t=matrix(1, 0, 0, 1, 0, 0) o=0"
+    ],
+    "nodes": 17
+   }
+  },
+  {
+   "style": "studio",
+   "dir": "rtl",
+   "motion": "attr",
+   "state": " -> 482913",
+   "stateAt": 147,
+   "firstMotionAt": null,
+   "events": "pointerdown@127 focusin@128 pointerup@129 click@129",
+   "longest": 0,
+   "movers": 0,
+   "badProps": [],
+   "anims": [],
+   "end": {
+    "live": [],
+    "offRest": 5,
+    "offSample": [
+     "2:span[cell]::before t=matrix(1, 0, 0, 1, 0, 0) o=0",
+     "4:span[cell]::before t=matrix(1, 0, 0, 1, 0, 0) o=0",
+     "6:span[cell]::before t=matrix(1, 0, 0, 1, 0, 0) o=0"
+    ],
+    "nodes": 17
+   }
+  },
+  {
+   "style": "desk",
+   "dir": "ltr",
+   "motion": "full",
+   "state": " -> 482913",
+   "stateAt": 158,
+   "firstMotionAt": 110,
+   "events": "pointerdown@103 focusin@104 pointerup@105 click@105",
+   "longest": 570,
+   "movers": 19,
+   "badProps": [],
+   "anims": [
+    {
+     "target": "otp-field>span[cell]::before",
+     "kind": "Transition",
+     "props": "opacity",
+     "dur": 340,
+     "durTok": "duration-spring-soft",
+     "ease": "ease-spring-soft",
+     "kf": [
+      {
+       "offset": 0,
+       "opacity": "0"
+      },
+      {
+       "offset": 1,
+       "opacity": "1"
+      }
+     ],
+     "at": 110,
+     "n": 2
+    },
+    {
+     "target": "otp-field>span[cell]::before",
+     "kind": "Transition",
+     "props": "transform",
+     "dur": 340,
+     "durTok": "duration-spring-soft",
+     "ease": "ease-spring-soft",
+     "kf": [
+      {
+       "offset": 0,
+       "transform": "scale(0.9)"
+      },
+      {
+       "offset": 1,
+       "transform": "none"
+      }
+     ],
+     "at": 110,
+     "n": 2
+    },
+    {
+     "target": "otp-field>span[cell]::after",
+     "kind": "Transition",
+     "props": "opacity",
+     "dur": 300,
+     "durTok": "duration-roll|duration-spring-snappy",
+     "ease": "ease-spring-snappy",
+     "kf": [
+      {
+       "offset": 0,
+       "opacity": "0"
+      },
+      {
+       "offset": 1,
+       "opacity": "1"
+      }
+     ],
+     "at": 110
+    },
+    {
+     "target": "otp-field>span[cell]::after",
+     "kind": "Transition",
+     "props": "transform",
+     "dur": 300,
+     "durTok": "duration-roll|duration-spring-snappy",
+     "ease": "ease-spring-snappy",
+     "kf": [
+      {
+       "offset": 0,
+       "transform": "translateX(-15px)"
+      },
+      {
+       "offset": 1,
+       "transform": "none"
+      }
+     ],
+     "at": 110
+    },
+    {
+     "target": "button>span[label]",
+     "kind": "Transition",
+     "props": "transform",
+     "dur": 300,
+     "durTok": "duration-roll|duration-spring-snappy",
+     "ease": "ease-reveal",
+     "kf": [
+      {
+       "offset": 0,
+       "transform": "scale(1)"
+      },
+      {
+       "offset": 1,
+       "transform": "translateY(-70px)"
+      }
+     ],
+     "at": 110
+    },
+    {
+     "target": "cell>span",
+     "kind": "Animation",
+     "props": "opacity,transform",
+     "dur": 300,
+     "durTok": "duration-roll|duration-spring-snappy",
+     "ease": "ease-spring-snappy",
+     "kf": [
+      {
+       "offset": 0,
+       "opacity": "0",
+       "transform": "scale(var(--ds-scale-morph, 0.5))"
+      },
+      {
+       "offset": 0.3,
+       "opacity": "1"
+      },
+      {
+       "offset": 1,
+       "opacity": "1",
+       "transform": "none"
+      }
+     ],
+     "at": 158
+    },
+    {
+     "target": "cell>span",
+     "kind": "Animation",
+     "props": "opacity,transform",
+     "dur": 300,
+     "durTok": "duration-roll|duration-spring-snappy",
+     "delay": 18,
+     "ease": "ease-spring-snappy",
+     "kf": [
+      {
+       "offset": 0,
+       "opacity": "0",
+       "transform": "scale(var(--ds-scale-morph, 0.5))"
+      },
+      {
+       "offset": 0.3,
+       "opacity": "1"
+      },
+      {
+       "offset": 1,
+       "opacity": "1",
+       "transform": "none"
+      }
+     ],
+     "at": 158
+    },
+    {
+     "target": "cell>span",
+     "kind": "Animation",
+     "props": "opacity,transform",
+     "dur": 300,
+     "durTok": "duration-roll|duration-spring-snappy",
+     "delay": 36,
+     "ease": "ease-spring-snappy",
+     "kf": [
+      {
+       "offset": 0,
+       "opacity": "0",
+       "transform": "scale(var(--ds-scale-morph, 0.5))"
+      },
+      {
+       "offset": 0.3,
+       "opacity": "1"
+      },
+      {
+       "offset": 1,
+       "opacity": "1",
+       "transform": "none"
+      }
+     ],
+     "at": 158
+    },
+    {
+     "target": "cell>span",
+     "kind": "Animation",
+     "props": "opacity,transform",
+     "dur": 300,
+     "durTok": "duration-roll|duration-spring-snappy",
+     "delay": 54,
+     "ease": "ease-spring-snappy",
+     "kf": [
+      {
+       "offset": 0,
+       "opacity": "0",
+       "transform": "scale(var(--ds-scale-morph, 0.5))"
+      },
+      {
+       "offset": 0.3,
+       "opacity": "1"
+      },
+      {
+       "offset": 1,
+       "opacity": "1",
+       "transform": "none"
+      }
+     ],
+     "at": 158
+    },
+    {
+     "target": "cell>span",
+     "kind": "Animation",
+     "props": "opacity,transform",
+     "dur": 300,
+     "durTok": "duration-roll|duration-spring-snappy",
+     "delay": 72,
+     "ease": "ease-spring-snappy",
+     "kf": [
+      {
+       "offset": 0,
+       "opacity": "0",
+       "transform": "scale(var(--ds-scale-morph, 0.5))"
+      },
+      {
+       "offset": 0.3,
+       "opacity": "1"
+      },
+      {
+       "offset": 1,
+       "opacity": "1",
+       "transform": "none"
+      }
+     ],
+     "at": 158
+    },
+    {
+     "target": "cell>span",
+     "kind": "Animation",
+     "props": "opacity,transform",
+     "dur": 300,
+     "durTok": "duration-roll|duration-spring-snappy",
+     "delay": 90,
+     "ease": "ease-spring-snappy",
+     "kf": [
+      {
+       "offset": 0,
+       "opacity": "0",
+       "transform": "scale(var(--ds-scale-morph, 0.5))"
+      },
+      {
+       "offset": 0.3,
+       "opacity": "1"
+      },
+      {
+       "offset": 1,
+       "opacity": "1",
+       "transform": "none"
+      }
+     ],
+     "at": 158
+    },
+    {
+     "target": "otp-field>span[cell]",
+     "kind": "Animation",
+     "props": "transform",
+     "dur": 480,
+     "durTok": "duration-celebrate",
+     "ease": "linear",
+     "kf": [
+      {
+       "transform": "none",
+       "easing": "ease-out"
+      },
+      {
+       "offset": 0.35,
+       "transform": "translateY(calc(-1 * var(--ds-distance-lift, 2px)))",
+       "easing": "linear(..)"
+      },
+      {
+       "transform": "none"
+      }
+     ],
+     "at": 158
+    },
+    {
+     "target": "otp-field>span[cell]",
+     "kind": "Animation",
+     "props": "transform",
+     "dur": 480,
+     "durTok": "duration-celebrate",
+     "delay": 18,
+     "ease": "linear",
+     "kf": [
+      {
+       "transform": "none",
+       "easing": "ease-out"
+      },
+      {
+       "offset": 0.35,
+       "transform": "translateY(calc(-1 * var(--ds-distance-lift, 2px)))",
+       "easing": "linear(..)"
+      },
+      {
+       "transform": "none"
+      }
+     ],
+     "at": 158
+    },
+    {
+     "target": "otp-field>span[cell]",
+     "kind": "Animation",
+     "props": "transform",
+     "dur": 480,
+     "durTok": "duration-celebrate",
+     "delay": 36,
+     "ease": "linear",
+     "kf": [
+      {
+       "transform": "none",
+       "easing": "ease-out"
+      },
+      {
+       "offset": 0.35,
+       "transform": "translateY(calc(-1 * var(--ds-distance-lift, 2px)))",
+       "easing": "linear(..)"
+      },
+      {
+       "transform": "none"
+      }
+     ],
+     "at": 158
+    }
+   ],
+   "end": {
+    "live": [],
+    "offRest": 6,
+    "offSample": [
+     "2:span[cell]::before t=matrix(0.9, 0, 0, 0.9, 0, 0) o=0",
+     "4:span[cell]::before t=matrix(0.9, 0, 0, 0.9, 0, 0) o=0",
+     "6:span[cell]::before t=matrix(0.9, 0, 0, 0.9, 0, 0) o=0"
+    ],
+    "nodes": 17
+   }
+  },
+  {
+   "style": "desk",
+   "dir": "ltr",
+   "motion": "media",
+   "state": " -> 482913",
+   "stateAt": 139,
+   "firstMotionAt": 68,
+   "events": "pointerdown@61 focusin@62 pointerup@63 click@63",
+   "longest": 340,
+   "movers": 6,
+   "badProps": [],
+   "anims": [
+    {
+     "target": "otp-field>span[cell]::before",
+     "kind": "Transition",
+     "props": "opacity",
+     "dur": 340,
+     "durTok": "duration-spring-soft",
+     "ease": "ease-spring-soft",
+     "kf": [
+      {
+       "offset": 0,
+       "opacity": "0"
+      },
+      {
+       "offset": 1,
+       "opacity": "1"
+      }
+     ],
+     "at": 68,
+     "n": 2
+    },
+    {
+     "target": "otp-field>span[cell]::before",
+     "kind": "Transition",
+     "props": "transform",
+     "dur": 340,
+     "durTok": "duration-spring-soft",
+     "ease": "ease-spring-soft",
+     "kf": [
+      {
+       "offset": 0,
+       "transform": "scale(1)"
+      },
+      {
+       "offset": 1,
+       "transform": "none"
+      }
+     ],
+     "at": 68,
+     "n": 2
+    },
+    {
+     "target": "otp-field>span[cell]::after",
+     "kind": "Transition",
+     "props": "opacity",
+     "dur": 300,
+     "durTok": "duration-spring-snappy",
+     "ease": "ease-spring-snappy",
+     "kf": [
+      {
+       "offset": 0,
+       "opacity": "0"
+      },
+      {
+       "offset": 1,
+       "opacity": "1"
+      }
+     ],
+     "at": 68
+    },
+    {
+     "target": "otp-field>span[cell]::after",
+     "kind": "Transition",
+     "props": "transform",
+     "dur": 300,
+     "durTok": "duration-spring-snappy",
+     "ease": "ease-spring-snappy",
+     "kf": [
+      {
+       "offset": 0,
+       "transform": "translateX(0px)"
+      },
+      {
+       "offset": 1,
+       "transform": "none"
+      }
+     ],
+     "at": 68
+    }
+   ],
+   "end": {
+    "live": [],
+    "offRest": 5,
+    "offSample": [
+     "2:span[cell]::before t=matrix(1, 0, 0, 1, 0, 0) o=0",
+     "4:span[cell]::before t=matrix(1, 0, 0, 1, 0, 0) o=0",
+     "6:span[cell]::before t=matrix(1, 0, 0, 1, 0, 0) o=0"
+    ],
+    "nodes": 17
+   }
+  },
+  {
+   "style": "desk",
+   "dir": "ltr",
+   "motion": "attr",
+   "state": " -> 482913",
+   "stateAt": 78,
+   "firstMotionAt": null,
+   "events": "pointerdown@36 focusin@37 pointerup@38 click@38",
+   "longest": 0,
+   "movers": 0,
+   "badProps": [],
+   "anims": [],
+   "end": {
+    "live": [],
+    "offRest": 5,
+    "offSample": [
+     "2:span[cell]::before t=matrix(1, 0, 0, 1, 0, 0) o=0",
+     "4:span[cell]::before t=matrix(1, 0, 0, 1, 0, 0) o=0",
+     "6:span[cell]::before t=matrix(1, 0, 0, 1, 0, 0) o=0"
+    ],
+    "nodes": 17
+   }
+  },
+  {
+   "style": "desk",
+   "dir": "rtl",
+   "motion": "full",
+   "state": " -> 482913",
+   "stateAt": 102,
+   "firstMotionAt": 91,
+   "events": "pointerdown@73 focusin@75 pointerup@85 click@86",
+   "longest": 570,
+   "movers": 19,
+   "badProps": [],
+   "anims": [
+    {
+     "target": "otp-field>span[cell]::before",
+     "kind": "Transition",
+     "props": "opacity",
+     "dur": 340,
+     "durTok": "duration-spring-soft",
+     "ease": "ease-spring-soft",
+     "kf": [
+      {
+       "offset": 0,
+       "opacity": "0"
+      },
+      {
+       "offset": 1,
+       "opacity": "1"
+      }
+     ],
+     "at": 91,
+     "n": 2
+    },
+    {
+     "target": "otp-field>span[cell]::before",
+     "kind": "Transition",
+     "props": "transform",
+     "dur": 340,
+     "durTok": "duration-spring-soft",
+     "ease": "ease-spring-soft",
+     "kf": [
+      {
+       "offset": 0,
+       "transform": "scale(0.9)"
+      },
+      {
+       "offset": 1,
+       "transform": "none"
+      }
+     ],
+     "at": 91,
+     "n": 2
+    },
+    {
+     "target": "otp-field>span[cell]::after",
+     "kind": "Transition",
+     "props": "opacity",
+     "dur": 300,
+     "durTok": "duration-roll|duration-spring-snappy",
+     "ease": "ease-spring-snappy",
+     "kf": [
+      {
+       "offset": 0,
+       "opacity": "0"
+      },
+      {
+       "offset": 1,
+       "opacity": "1"
+      }
+     ],
+     "at": 91
+    },
+    {
+     "target": "otp-field>span[cell]::after",
+     "kind": "Transition",
+     "props": "transform",
+     "dur": 300,
+     "durTok": "duration-roll|duration-spring-snappy",
+     "ease": "ease-spring-snappy",
+     "kf": [
+      {
+       "offset": 0,
+       "transform": "translateX(-15px)"
+      },
+      {
+       "offset": 1,
+       "transform": "none"
+      }
+     ],
+     "at": 91
+    },
+    {
+     "target": "button>span[label]",
+     "kind": "Transition",
+     "props": "transform",
+     "dur": 300,
+     "durTok": "duration-roll|duration-spring-snappy",
+     "ease": "ease-reveal",
+     "kf": [
+      {
+       "offset": 0,
+       "transform": "scale(1)"
+      },
+      {
+       "offset": 1,
+       "transform": "translateY(-70px)"
+      }
+     ],
+     "at": 91
+    },
+    {
+     "target": "cell>span",
+     "kind": "Animation",
+     "props": "opacity,transform",
+     "dur": 300,
+     "durTok": "duration-roll|duration-spring-snappy",
+     "ease": "ease-spring-snappy",
+     "kf": [
+      {
+       "offset": 0,
+       "opacity": "0",
+       "transform": "scale(var(--ds-scale-morph, 0.5))"
+      },
+      {
+       "offset": 0.3,
+       "opacity": "1"
+      },
+      {
+       "offset": 1,
+       "opacity": "1",
+       "transform": "none"
+      }
+     ],
+     "at": 102
+    },
+    {
+     "target": "cell>span",
+     "kind": "Animation",
+     "props": "opacity,transform",
+     "dur": 300,
+     "durTok": "duration-roll|duration-spring-snappy",
+     "delay": 18,
+     "ease": "ease-spring-snappy",
+     "kf": [
+      {
+       "offset": 0,
+       "opacity": "0",
+       "transform": "scale(var(--ds-scale-morph, 0.5))"
+      },
+      {
+       "offset": 0.3,
+       "opacity": "1"
+      },
+      {
+       "offset": 1,
+       "opacity": "1",
+       "transform": "none"
+      }
+     ],
+     "at": 102
+    },
+    {
+     "target": "cell>span",
+     "kind": "Animation",
+     "props": "opacity,transform",
+     "dur": 300,
+     "durTok": "duration-roll|duration-spring-snappy",
+     "delay": 36,
+     "ease": "ease-spring-snappy",
+     "kf": [
+      {
+       "offset": 0,
+       "opacity": "0",
+       "transform": "scale(var(--ds-scale-morph, 0.5))"
+      },
+      {
+       "offset": 0.3,
+       "opacity": "1"
+      },
+      {
+       "offset": 1,
+       "opacity": "1",
+       "transform": "none"
+      }
+     ],
+     "at": 102
+    },
+    {
+     "target": "cell>span",
+     "kind": "Animation",
+     "props": "opacity,transform",
+     "dur": 300,
+     "durTok": "duration-roll|duration-spring-snappy",
+     "delay": 54,
+     "ease": "ease-spring-snappy",
+     "kf": [
+      {
+       "offset": 0,
+       "opacity": "0",
+       "transform": "scale(var(--ds-scale-morph, 0.5))"
+      },
+      {
+       "offset": 0.3,
+       "opacity": "1"
+      },
+      {
+       "offset": 1,
+       "opacity": "1",
+       "transform": "none"
+      }
+     ],
+     "at": 102
+    },
+    {
+     "target": "cell>span",
+     "kind": "Animation",
+     "props": "opacity,transform",
+     "dur": 300,
+     "durTok": "duration-roll|duration-spring-snappy",
+     "delay": 72,
+     "ease": "ease-spring-snappy",
+     "kf": [
+      {
+       "offset": 0,
+       "opacity": "0",
+       "transform": "scale(var(--ds-scale-morph, 0.5))"
+      },
+      {
+       "offset": 0.3,
+       "opacity": "1"
+      },
+      {
+       "offset": 1,
+       "opacity": "1",
+       "transform": "none"
+      }
+     ],
+     "at": 102
+    },
+    {
+     "target": "cell>span",
+     "kind": "Animation",
+     "props": "opacity,transform",
+     "dur": 300,
+     "durTok": "duration-roll|duration-spring-snappy",
+     "delay": 90,
+     "ease": "ease-spring-snappy",
+     "kf": [
+      {
+       "offset": 0,
+       "opacity": "0",
+       "transform": "scale(var(--ds-scale-morph, 0.5))"
+      },
+      {
+       "offset": 0.3,
+       "opacity": "1"
+      },
+      {
+       "offset": 1,
+       "opacity": "1",
+       "transform": "none"
+      }
+     ],
+     "at": 102
+    },
+    {
+     "target": "otp-field>span[cell]",
+     "kind": "Animation",
+     "props": "transform",
+     "dur": 480,
+     "durTok": "duration-celebrate",
+     "ease": "linear",
+     "kf": [
+      {
+       "transform": "none",
+       "easing": "ease-out"
+      },
+      {
+       "offset": 0.35,
+       "transform": "translateY(calc(-1 * var(--ds-distance-lift, 2px)))",
+       "easing": "linear(..)"
+      },
+      {
+       "transform": "none"
+      }
+     ],
+     "at": 102
+    },
+    {
+     "target": "otp-field>span[cell]",
+     "kind": "Animation",
+     "props": "transform",
+     "dur": 480,
+     "durTok": "duration-celebrate",
+     "delay": 18,
+     "ease": "linear",
+     "kf": [
+      {
+       "transform": "none",
+       "easing": "ease-out"
+      },
+      {
+       "offset": 0.35,
+       "transform": "translateY(calc(-1 * var(--ds-distance-lift, 2px)))",
+       "easing": "linear(..)"
+      },
+      {
+       "transform": "none"
+      }
+     ],
+     "at": 102
+    },
+    {
+     "target": "otp-field>span[cell]",
+     "kind": "Animation",
+     "props": "transform",
+     "dur": 480,
+     "durTok": "duration-celebrate",
+     "delay": 36,
+     "ease": "linear",
+     "kf": [
+      {
+       "transform": "none",
+       "easing": "ease-out"
+      },
+      {
+       "offset": 0.35,
+       "transform": "translateY(calc(-1 * var(--ds-distance-lift, 2px)))",
+       "easing": "linear(..)"
+      },
+      {
+       "transform": "none"
+      }
+     ],
+     "at": 102
+    }
+   ],
+   "end": {
+    "live": [],
+    "offRest": 6,
+    "offSample": [
+     "2:span[cell]::before t=matrix(0.9, 0, 0, 0.9, 0, 0) o=0",
+     "4:span[cell]::before t=matrix(0.9, 0, 0, 0.9, 0, 0) o=0",
+     "6:span[cell]::before t=matrix(0.9, 0, 0, 0.9, 0, 0) o=0"
+    ],
+    "nodes": 17
+   }
+  },
+  {
+   "style": "desk",
+   "dir": "rtl",
+   "motion": "media",
+   "state": " -> 482913",
+   "stateAt": 77,
+   "firstMotionAt": 57,
+   "events": "pointerdown@48 focusin@49 pointerup@50 click@50",
+   "longest": 340,
+   "movers": 6,
+   "badProps": [],
+   "anims": [
+    {
+     "target": "otp-field>span[cell]::before",
+     "kind": "Transition",
+     "props": "opacity",
+     "dur": 340,
+     "durTok": "duration-spring-soft",
+     "ease": "ease-spring-soft",
+     "kf": [
+      {
+       "offset": 0,
+       "opacity": "0"
+      },
+      {
+       "offset": 1,
+       "opacity": "1"
+      }
+     ],
+     "at": 57,
+     "n": 2
+    },
+    {
+     "target": "otp-field>span[cell]::before",
+     "kind": "Transition",
+     "props": "transform",
+     "dur": 340,
+     "durTok": "duration-spring-soft",
+     "ease": "ease-spring-soft",
+     "kf": [
+      {
+       "offset": 0,
+       "transform": "scale(1)"
+      },
+      {
+       "offset": 1,
+       "transform": "none"
+      }
+     ],
+     "at": 57,
+     "n": 2
+    },
+    {
+     "target": "otp-field>span[cell]::after",
+     "kind": "Transition",
+     "props": "opacity",
+     "dur": 300,
+     "durTok": "duration-spring-snappy",
+     "ease": "ease-spring-snappy",
+     "kf": [
+      {
+       "offset": 0,
+       "opacity": "0"
+      },
+      {
+       "offset": 1,
+       "opacity": "1"
+      }
+     ],
+     "at": 57
+    },
+    {
+     "target": "otp-field>span[cell]::after",
+     "kind": "Transition",
+     "props": "transform",
+     "dur": 300,
+     "durTok": "duration-spring-snappy",
+     "ease": "ease-spring-snappy",
+     "kf": [
+      {
+       "offset": 0,
+       "transform": "translateX(0px)"
+      },
+      {
+       "offset": 1,
+       "transform": "none"
+      }
+     ],
+     "at": 57
+    }
+   ],
+   "end": {
+    "live": [],
+    "offRest": 5,
+    "offSample": [
+     "2:span[cell]::before t=matrix(1, 0, 0, 1, 0, 0) o=0",
+     "4:span[cell]::before t=matrix(1, 0, 0, 1, 0, 0) o=0",
+     "6:span[cell]::before t=matrix(1, 0, 0, 1, 0, 0) o=0"
+    ],
+    "nodes": 17
+   }
+  },
+  {
+   "style": "desk",
+   "dir": "rtl",
+   "motion": "attr",
+   "state": " -> 482913",
+   "stateAt": 79,
+   "firstMotionAt": null,
+   "events": "pointerdown@51 focusin@53 pointerup@53 click@53",
+   "longest": 0,
+   "movers": 0,
+   "badProps": [],
+   "anims": [],
+   "end": {
+    "live": [],
+    "offRest": 5,
+    "offSample": [
+     "2:span[cell]::before t=matrix(1, 0, 0, 1, 0, 0) o=0",
+     "4:span[cell]::before t=matrix(1, 0, 0, 1, 0, 0) o=0",
+     "6:span[cell]::before t=matrix(1, 0, 0, 1, 0, 0) o=0"
+    ],
+    "nodes": 17
+   }
+  },
+  {
+   "style": "neutral",
+   "dir": "ltr",
+   "motion": "full",
+   "state": " -> 482913",
+   "stateAt": 185,
+   "firstMotionAt": 67,
+   "events": "pointerdown@56 focusin@57 pointerup@58 click@58",
+   "longest": 228,
+   "movers": 12,
+   "badProps": [],
+   "anims": [
+    {
+     "target": "otp-field>span[cell]::before",
+     "kind": "Transition",
+     "props": "opacity",
+     "dur": 220,
+     "durTok": "duration-celebrate|duration-spring-bouncy|duration-spring-soft|duration-zoom",
+     "ease": "ease-spring-soft",
+     "kf": [
+      {
+       "offset": 0,
+       "opacity": "0"
+      },
+      {
+       "offset": 1,
+       "opacity": "1"
+      }
+     ],
+     "at": 67,
+     "n": 2
+    },
+    {
+     "target": "otp-field>span[cell]::before",
+     "kind": "Transition",
+     "props": "transform",
+     "dur": 220,
+     "durTok": "duration-celebrate|duration-spring-bouncy|duration-spring-soft|duration-zoom",
+     "ease": "ease-spring-soft",
+     "kf": [
+      {
+       "offset": 0,
+       "transform": "scale(0.97)"
+      },
+      {
+       "offset": 1,
+       "transform": "none"
+      }
+     ],
+     "at": 67,
+     "n": 2
+    },
+    {
+     "target": "otp-field>span[cell]::after",
+     "kind": "Transition",
+     "props": "opacity",
+     "dur": 180,
+     "durTok": "duration-medium|duration-slow|duration-spring-snappy",
+     "ease": "ease-spring-snappy",
+     "kf": [
+      {
+       "offset": 0,
+       "opacity": "0"
+      },
+      {
+       "offset": 1,
+       "opacity": "1"
+      }
+     ],
+     "at": 67
+    },
+    {
+     "target": "otp-field>span[cell]::after",
+     "kind": "Transition",
+     "props": "transform",
+     "dur": 180,
+     "durTok": "duration-medium|duration-slow|duration-spring-snappy",
+     "ease": "ease-spring-snappy",
+     "kf": [
+      {
+       "offset": 0,
+       "transform": "translateX(-10px)"
+      },
+      {
+       "offset": 1,
+       "transform": "none"
+      }
+     ],
+     "at": 67
+    },
+    {
+     "target": "cell>span",
+     "kind": "Animation",
+     "props": "opacity,transform",
+     "dur": 180,
+     "durTok": "duration-medium|duration-slow|duration-spring-snappy",
+     "ease": "ease-spring-snappy",
+     "kf": [
+      {
+       "offset": 0,
+       "opacity": "0",
+       "transform": "scale(var(--ds-scale-morph, 0.5))"
+      },
+      {
+       "offset": 0.3,
+       "opacity": "1"
+      },
+      {
+       "offset": 1,
+       "opacity": "1",
+       "transform": "none"
+      }
+     ],
+     "at": 185
+    },
+    {
+     "target": "cell>span",
+     "kind": "Animation",
+     "props": "opacity,transform",
+     "dur": 180,
+     "durTok": "duration-medium|duration-slow|duration-spring-snappy",
+     "delay": 9.600000000000001,
+     "ease": "ease-spring-snappy",
+     "kf": [
+      {
+       "offset": 0,
+       "opacity": "0",
+       "transform": "scale(var(--ds-scale-morph, 0.5))"
+      },
+      {
+       "offset": 0.3,
+       "opacity": "1"
+      },
+      {
+       "offset": 1,
+       "opacity": "1",
+       "transform": "none"
+      }
+     ],
+     "at": 185
+    },
+    {
+     "target": "cell>span",
+     "kind": "Animation",
+     "props": "opacity,transform",
+     "dur": 180,
+     "durTok": "duration-medium|duration-slow|duration-spring-snappy",
+     "delay": 19.200000000000003,
+     "ease": "ease-spring-snappy",
+     "kf": [
+      {
+       "offset": 0,
+       "opacity": "0",
+       "transform": "scale(var(--ds-scale-morph, 0.5))"
+      },
+      {
+       "offset": 0.3,
+       "opacity": "1"
+      },
+      {
+       "offset": 1,
+       "opacity": "1",
+       "transform": "none"
+      }
+     ],
+     "at": 185
+    },
+    {
+     "target": "cell>span",
+     "kind": "Animation",
+     "props": "opacity,transform",
+     "dur": 180,
+     "durTok": "duration-medium|duration-slow|duration-spring-snappy",
+     "delay": 28.799999999999997,
+     "ease": "ease-spring-snappy",
+     "kf": [
+      {
+       "offset": 0,
+       "opacity": "0",
+       "transform": "scale(var(--ds-scale-morph, 0.5))"
+      },
+      {
+       "offset": 0.3,
+       "opacity": "1"
+      },
+      {
+       "offset": 1,
+       "opacity": "1",
+       "transform": "none"
+      }
+     ],
+     "at": 185
+    },
+    {
+     "target": "cell>span",
+     "kind": "Animation",
+     "props": "opacity,transform",
+     "dur": 180,
+     "durTok": "duration-medium|duration-slow|duration-spring-snappy",
+     "delay": 38.400000000000006,
+     "ease": "ease-spring-snappy",
+     "kf": [
+      {
+       "offset": 0,
+       "opacity": "0",
+       "transform": "scale(var(--ds-scale-morph, 0.5))"
+      },
+      {
+       "offset": 0.3,
+       "opacity": "1"
+      },
+      {
+       "offset": 1,
+       "opacity": "1",
+       "transform": "none"
+      }
+     ],
+     "at": 185
+    },
+    {
+     "target": "cell>span",
+     "kind": "Animation",
+     "props": "opacity,transform",
+     "dur": 180,
+     "durTok": "duration-medium|duration-slow|duration-spring-snappy",
+     "delay": 48,
+     "ease": "ease-spring-snappy",
+     "kf": [
+      {
+       "offset": 0,
+       "opacity": "0",
+       "transform": "scale(var(--ds-scale-morph, 0.5))"
+      },
+      {
+       "offset": 0.3,
+       "opacity": "1"
+      },
+      {
+       "offset": 1,
+       "opacity": "1",
+       "transform": "none"
+      }
+     ],
+     "at": 185
+    }
+   ],
+   "end": {
+    "live": [],
+    "offRest": 5,
+    "offSample": [
+     "2:span[cell]::before t=matrix(0.97, 0, 0, 0.97, 0, 0) o=0",
+     "4:span[cell]::before t=matrix(0.97, 0, 0, 0.97, 0, 0) o=0",
+     "6:span[cell]::before t=matrix(0.97, 0, 0, 0.97, 0, 0) o=0"
+    ],
+    "nodes": 17
+   }
+  },
+  {
+   "style": "neutral",
+   "dir": "ltr",
+   "motion": "media",
+   "state": " -> 482913",
+   "stateAt": 77,
+   "firstMotionAt": 60,
+   "events": "pointerdown@52 focusin@53 pointerup@54 click@54",
+   "longest": 220,
+   "movers": 6,
+   "badProps": [],
+   "anims": [
+    {
+     "target": "otp-field>span[cell]::before",
+     "kind": "Transition",
+     "props": "opacity",
+     "dur": 220,
+     "durTok": "duration-celebrate|duration-spring-bouncy|duration-spring-soft",
+     "ease": "ease-spring-soft",
+     "kf": [
+      {
+       "offset": 0,
+       "opacity": "0"
+      },
+      {
+       "offset": 1,
+       "opacity": "1"
+      }
+     ],
+     "at": 60,
+     "n": 2
+    },
+    {
+     "target": "otp-field>span[cell]::before",
+     "kind": "Transition",
+     "props": "transform",
+     "dur": 220,
+     "durTok": "duration-celebrate|duration-spring-bouncy|duration-spring-soft",
+     "ease": "ease-spring-soft",
+     "kf": [
+      {
+       "offset": 0,
+       "transform": "scale(1)"
+      },
+      {
+       "offset": 1,
+       "transform": "none"
+      }
+     ],
+     "at": 60,
+     "n": 2
+    },
+    {
+     "target": "otp-field>span[cell]::after",
+     "kind": "Transition",
+     "props": "opacity",
+     "dur": 180,
+     "durTok": "duration-spring-snappy",
+     "ease": "ease-spring-snappy",
+     "kf": [
+      {
+       "offset": 0,
+       "opacity": "0"
+      },
+      {
+       "offset": 1,
+       "opacity": "1"
+      }
+     ],
+     "at": 60
+    },
+    {
+     "target": "otp-field>span[cell]::after",
+     "kind": "Transition",
+     "props": "transform",
+     "dur": 180,
+     "durTok": "duration-spring-snappy",
+     "ease": "ease-spring-snappy",
+     "kf": [
+      {
+       "offset": 0,
+       "transform": "translateX(0px)"
+      },
+      {
+       "offset": 1,
+       "transform": "none"
+      }
+     ],
+     "at": 60
+    }
+   ],
+   "end": {
+    "live": [],
+    "offRest": 5,
+    "offSample": [
+     "2:span[cell]::before t=matrix(1, 0, 0, 1, 0, 0) o=0",
+     "4:span[cell]::before t=matrix(1, 0, 0, 1, 0, 0) o=0",
+     "6:span[cell]::before t=matrix(1, 0, 0, 1, 0, 0) o=0"
+    ],
+    "nodes": 17
+   }
+  },
+  {
+   "style": "neutral",
+   "dir": "ltr",
+   "motion": "attr",
+   "state": " -> 482913",
+   "stateAt": 72,
+   "firstMotionAt": null,
+   "events": "pointerdown@33 focusin@34 pointerup@35 click@35",
+   "longest": 0,
+   "movers": 0,
+   "badProps": [],
+   "anims": [],
+   "end": {
+    "live": [],
+    "offRest": 5,
+    "offSample": [
+     "2:span[cell]::before t=matrix(1, 0, 0, 1, 0, 0) o=0",
+     "4:span[cell]::before t=matrix(1, 0, 0, 1, 0, 0) o=0",
+     "6:span[cell]::before t=matrix(1, 0, 0, 1, 0, 0) o=0"
+    ],
+    "nodes": 17
+   }
+  },
+  {
+   "style": "neutral",
+   "dir": "rtl",
+   "motion": "full",
+   "state": " -> 482913",
+   "stateAt": 114,
+   "firstMotionAt": 96,
+   "events": "pointerdown@86 focusin@90 pointerup@90 click@91",
+   "longest": 228,
+   "movers": 12,
+   "badProps": [],
+   "anims": [
+    {
+     "target": "otp-field>span[cell]::before",
+     "kind": "Transition",
+     "props": "opacity",
+     "dur": 220,
+     "durTok": "duration-celebrate|duration-spring-bouncy|duration-spring-soft|duration-zoom",
+     "ease": "ease-spring-soft",
+     "kf": [
+      {
+       "offset": 0,
+       "opacity": "0"
+      },
+      {
+       "offset": 1,
+       "opacity": "1"
+      }
+     ],
+     "at": 96,
+     "n": 2
+    },
+    {
+     "target": "otp-field>span[cell]::before",
+     "kind": "Transition",
+     "props": "transform",
+     "dur": 220,
+     "durTok": "duration-celebrate|duration-spring-bouncy|duration-spring-soft|duration-zoom",
+     "ease": "ease-spring-soft",
+     "kf": [
+      {
+       "offset": 0,
+       "transform": "scale(0.97)"
+      },
+      {
+       "offset": 1,
+       "transform": "none"
+      }
+     ],
+     "at": 96,
+     "n": 2
+    },
+    {
+     "target": "otp-field>span[cell]::after",
+     "kind": "Transition",
+     "props": "opacity",
+     "dur": 180,
+     "durTok": "duration-medium|duration-slow|duration-spring-snappy",
+     "ease": "ease-spring-snappy",
+     "kf": [
+      {
+       "offset": 0,
+       "opacity": "0"
+      },
+      {
+       "offset": 1,
+       "opacity": "1"
+      }
+     ],
+     "at": 96
+    },
+    {
+     "target": "otp-field>span[cell]::after",
+     "kind": "Transition",
+     "props": "transform",
+     "dur": 180,
+     "durTok": "duration-medium|duration-slow|duration-spring-snappy",
+     "ease": "ease-spring-snappy",
+     "kf": [
+      {
+       "offset": 0,
+       "transform": "translateX(-10px)"
+      },
+      {
+       "offset": 1,
+       "transform": "none"
+      }
+     ],
+     "at": 96
+    },
+    {
+     "target": "cell>span",
+     "kind": "Animation",
+     "props": "opacity,transform",
+     "dur": 180,
+     "durTok": "duration-medium|duration-slow|duration-spring-snappy",
+     "ease": "ease-spring-snappy",
+     "kf": [
+      {
+       "offset": 0,
+       "opacity": "0",
+       "transform": "scale(var(--ds-scale-morph, 0.5))"
+      },
+      {
+       "offset": 0.3,
+       "opacity": "1"
+      },
+      {
+       "offset": 1,
+       "opacity": "1",
+       "transform": "none"
+      }
+     ],
+     "at": 114
+    },
+    {
+     "target": "cell>span",
+     "kind": "Animation",
+     "props": "opacity,transform",
+     "dur": 180,
+     "durTok": "duration-medium|duration-slow|duration-spring-snappy",
+     "delay": 9.600000000000001,
+     "ease": "ease-spring-snappy",
+     "kf": [
+      {
+       "offset": 0,
+       "opacity": "0",
+       "transform": "scale(var(--ds-scale-morph, 0.5))"
+      },
+      {
+       "offset": 0.3,
+       "opacity": "1"
+      },
+      {
+       "offset": 1,
+       "opacity": "1",
+       "transform": "none"
+      }
+     ],
+     "at": 114
+    },
+    {
+     "target": "cell>span",
+     "kind": "Animation",
+     "props": "opacity,transform",
+     "dur": 180,
+     "durTok": "duration-medium|duration-slow|duration-spring-snappy",
+     "delay": 19.200000000000003,
+     "ease": "ease-spring-snappy",
+     "kf": [
+      {
+       "offset": 0,
+       "opacity": "0",
+       "transform": "scale(var(--ds-scale-morph, 0.5))"
+      },
+      {
+       "offset": 0.3,
+       "opacity": "1"
+      },
+      {
+       "offset": 1,
+       "opacity": "1",
+       "transform": "none"
+      }
+     ],
+     "at": 114
+    },
+    {
+     "target": "cell>span",
+     "kind": "Animation",
+     "props": "opacity,transform",
+     "dur": 180,
+     "durTok": "duration-medium|duration-slow|duration-spring-snappy",
+     "delay": 28.799999999999997,
+     "ease": "ease-spring-snappy",
+     "kf": [
+      {
+       "offset": 0,
+       "opacity": "0",
+       "transform": "scale(var(--ds-scale-morph, 0.5))"
+      },
+      {
+       "offset": 0.3,
+       "opacity": "1"
+      },
+      {
+       "offset": 1,
+       "opacity": "1",
+       "transform": "none"
+      }
+     ],
+     "at": 114
+    },
+    {
+     "target": "cell>span",
+     "kind": "Animation",
+     "props": "opacity,transform",
+     "dur": 180,
+     "durTok": "duration-medium|duration-slow|duration-spring-snappy",
+     "delay": 38.400000000000006,
+     "ease": "ease-spring-snappy",
+     "kf": [
+      {
+       "offset": 0,
+       "opacity": "0",
+       "transform": "scale(var(--ds-scale-morph, 0.5))"
+      },
+      {
+       "offset": 0.3,
+       "opacity": "1"
+      },
+      {
+       "offset": 1,
+       "opacity": "1",
+       "transform": "none"
+      }
+     ],
+     "at": 114
+    },
+    {
+     "target": "cell>span",
+     "kind": "Animation",
+     "props": "opacity,transform",
+     "dur": 180,
+     "durTok": "duration-medium|duration-slow|duration-spring-snappy",
+     "delay": 48,
+     "ease": "ease-spring-snappy",
+     "kf": [
+      {
+       "offset": 0,
+       "opacity": "0",
+       "transform": "scale(var(--ds-scale-morph, 0.5))"
+      },
+      {
+       "offset": 0.3,
+       "opacity": "1"
+      },
+      {
+       "offset": 1,
+       "opacity": "1",
+       "transform": "none"
+      }
+     ],
+     "at": 114
+    }
+   ],
+   "end": {
+    "live": [],
+    "offRest": 5,
+    "offSample": [
+     "2:span[cell]::before t=matrix(0.97, 0, 0, 0.97, 0, 0) o=0",
+     "4:span[cell]::before t=matrix(0.97, 0, 0, 0.97, 0, 0) o=0",
+     "6:span[cell]::before t=matrix(0.97, 0, 0, 0.97, 0, 0) o=0"
+    ],
+    "nodes": 17
+   }
+  },
+  {
+   "style": "neutral",
+   "dir": "rtl",
+   "motion": "media",
+   "state": " -> 482913",
+   "stateAt": 70,
+   "firstMotionAt": 59,
+   "events": "pointerdown@49 focusin@51 pointerup@52 click@52",
+   "longest": 220,
+   "movers": 6,
+   "badProps": [],
+   "anims": [
+    {
+     "target": "otp-field>span[cell]::before",
+     "kind": "Transition",
+     "props": "opacity",
+     "dur": 220,
+     "durTok": "duration-celebrate|duration-spring-bouncy|duration-spring-soft",
+     "ease": "ease-spring-soft",
+     "kf": [
+      {
+       "offset": 0,
+       "opacity": "0"
+      },
+      {
+       "offset": 1,
+       "opacity": "1"
+      }
+     ],
+     "at": 59,
+     "n": 2
+    },
+    {
+     "target": "otp-field>span[cell]::before",
+     "kind": "Transition",
+     "props": "transform",
+     "dur": 220,
+     "durTok": "duration-celebrate|duration-spring-bouncy|duration-spring-soft",
+     "ease": "ease-spring-soft",
+     "kf": [
+      {
+       "offset": 0,
+       "transform": "scale(1)"
+      },
+      {
+       "offset": 1,
+       "transform": "none"
+      }
+     ],
+     "at": 59,
+     "n": 2
+    },
+    {
+     "target": "otp-field>span[cell]::after",
+     "kind": "Transition",
+     "props": "opacity",
+     "dur": 180,
+     "durTok": "duration-spring-snappy",
+     "ease": "ease-spring-snappy",
+     "kf": [
+      {
+       "offset": 0,
+       "opacity": "0"
+      },
+      {
+       "offset": 1,
+       "opacity": "1"
+      }
+     ],
+     "at": 59
+    },
+    {
+     "target": "otp-field>span[cell]::after",
+     "kind": "Transition",
+     "props": "transform",
+     "dur": 180,
+     "durTok": "duration-spring-snappy",
+     "ease": "ease-spring-snappy",
+     "kf": [
+      {
+       "offset": 0,
+       "transform": "translateX(0px)"
+      },
+      {
+       "offset": 1,
+       "transform": "none"
+      }
+     ],
+     "at": 59
+    }
+   ],
+   "end": {
+    "live": [],
+    "offRest": 5,
+    "offSample": [
+     "2:span[cell]::before t=matrix(1, 0, 0, 1, 0, 0) o=0",
+     "4:span[cell]::before t=matrix(1, 0, 0, 1, 0, 0) o=0",
+     "6:span[cell]::before t=matrix(1, 0, 0, 1, 0, 0) o=0"
+    ],
+    "nodes": 17
+   }
+  },
+  {
+   "style": "neutral",
+   "dir": "rtl",
+   "motion": "attr",
+   "state": " -> 482913",
+   "stateAt": 91,
+   "firstMotionAt": null,
+   "events": "pointerdown@67 focusin@68 pointerup@69 click@70",
+   "longest": 0,
+   "movers": 0,
+   "badProps": [],
+   "anims": [],
+   "end": {
+    "live": [],
+    "offRest": 5,
+    "offSample": [
+     "2:span[cell]::before t=matrix(1, 0, 0, 1, 0, 0) o=0",
+     "4:span[cell]::before t=matrix(1, 0, 0, 1, 0, 0) o=0",
+     "6:span[cell]::before t=matrix(1, 0, 0, 1, 0, 0) o=0"
+    ],
+    "nodes": 17
+   }
+  }
+ ],
+ "sweep": {
+  "studio": [],
+  "desk": [],
+  "neutral": []
+ },
+ "held": [],
+ "ring": {
+  "studio": {
+   "focusVisible": true,
+   "atOnce": true,
+   "diffFrame0": [],
+   "diffFirstFrame": [],
+   "first": {
+    "t": 1,
+    "outline": "none 2.8px",
+    "shadow": "none",
+    "hostShadow": "none"
+   },
+   "last": {
+    "t": 276,
+    "outline": "none 2.8px",
+    "shadow": "none",
+    "hostShadow": "none"
+   },
+   "frames": 16
+  },
+  "desk": {
+   "focusVisible": true,
+   "atOnce": true,
+   "diffFrame0": [],
+   "diffFirstFrame": [],
+   "first": {
+    "t": 2,
+    "outline": "none 2.8px",
+    "shadow": "none",
+    "hostShadow": "none"
+   },
+   "last": {
+    "t": 264,
+    "outline": "none 2.8px",
+    "shadow": "none",
+    "hostShadow": "none"
+   },
+   "frames": 17
+  },
+  "neutral": {
+   "focusVisible": true,
+   "atOnce": true,
+   "diffFrame0": [],
+   "diffFirstFrame": [],
+   "first": {
+    "t": 2,
+    "outline": "none 2.8px",
+    "shadow": "none",
+    "hostShadow": "none"
+   },
+   "last": {
+    "t": 274,
+    "outline": "none 2.8px",
+    "shadow": "none",
+    "hostShadow": "none"
+   },
+   "frames": 15
+  }
+ },
+ "rapid": {
+  "studio": {
+   "same": true,
+   "fast": {
+    "state": "482913",
+    "nodes": 17,
+    "off": [
+     "2:span[cell]::before t=matrix(1, 0, 0, 1, 0, 0) o=0",
+     "4:span[cell]::before t=matrix(1, 0, 0, 1, 0, 0) o=0",
+     "6:span[cell]::before t=matrix(1, 0, 0, 1, 0, 0) o=0",
+     "9:span[cell]::before t=matrix(1, 0, 0, 1, 0, 0) o=0",
+     "11:span[cell]::before t=matrix(1, 0, 0, 1, 0, 0) o=0"
+    ],
+    "live": [],
+    "active": "control"
+   }
+  },
+  "desk": {
+   "same": true,
+   "fast": {
+    "state": "482913",
+    "nodes": 17,
+    "off": [
+     "2:span[cell]::before t=matrix(0.9, 0, 0, 0.9, 0, 0) o=0",
+     "4:span[cell]::before t=matrix(0.9, 0, 0, 0.9, 0, 0) o=0",
+     "6:span[cell]::before t=matrix(0.9, 0, 0, 0.9, 0, 0) o=0",
+     "9:span[cell]::before t=matrix(0.9, 0, 0, 0.9, 0, 0) o=0",
+     "11:span[cell]::before t=matrix(0.9, 0, 0, 0.9, 0, 0) o=0"
+    ],
+    "live": [],
+    "active": "control"
+   }
+  },
+  "neutral": {
+   "same": true,
+   "fast": {
+    "state": "482913",
+    "nodes": 17,
+    "off": [
+     "2:span[cell]::before t=matrix(0.97, 0, 0, 0.97, 0, 0) o=0",
+     "4:span[cell]::before t=matrix(0.97, 0, 0, 0.97, 0, 0) o=0",
+     "6:span[cell]::before t=matrix(0.97, 0, 0, 0.97, 0, 0) o=0",
+     "9:span[cell]::before t=matrix(0.97, 0, 0, 0.97, 0, 0) o=0",
+     "11:span[cell]::before t=matrix(0.97, 0, 0, 0.97, 0, 0) o=0"
+    ],
+    "live": [],
+    "active": "control"
+   }
+  }
+ },
+ "interrupt": {},
+ "off": {},
+ "extra": {
+  "studio": {
+   "badProps": [],
+   "longest": 120,
+   "anims": [
+    {
+     "target": "otp-field>span[cell]::before",
+     "kind": "Transition",
+     "props": "opacity",
+     "dur": 100,
+     "durTok": "duration-morph|duration-quick|duration-spring-soft",
+     "ease": "ease-spring-soft",
+     "kf": [
+      {
+       "offset": 0,
+       "opacity": "0"
+      },
+      {
+       "offset": 1,
+       "opacity": "1"
+      }
+     ],
+     "at": 17,
+     "n": 2
+    },
+    {
+     "target": "otp-field>span[cell]::before",
+     "kind": "Transition",
+     "props": "transform",
+     "dur": 100,
+     "durTok": "duration-morph|duration-quick|duration-spring-soft",
+     "ease": "ease-spring-soft",
+     "kf": [
+      {
+       "offset": 0,
+       "transform": "scale(1)"
+      },
+      {
+       "offset": 1,
+       "transform": "none"
+      }
+     ],
+     "at": 17,
+     "n": 2
+    },
+    {
+     "target": "otp-field>span[cell]::after",
+     "kind": "Transition",
+     "props": "opacity",
+     "dur": 80,
+     "durTok": "duration-fast|duration-spring-snappy",
+     "ease": "steps(2)",
+     "kf": [
+      {
+       "offset": 0,
+       "opacity": "0"
+      },
+      {
+       "offset": 1,
+       "opacity": "1"
+      }
+     ],
+     "at": 17,
+     "n": 2
+    },
+    {
+     "target": "otp-field>span[cell]::after",
+     "kind": "Transition",
+     "props": "transform",
+     "dur": 80,
+     "durTok": "duration-fast|duration-spring-snappy",
+     "ease": "steps(2)",
+     "kf": [
+      {
+       "offset": 0,
+       "transform": "translateX(-5px)"
+      },
+      {
+       "offset": 1,
+       "transform": "none"
+      }
+     ],
+     "at": 17,
+     "n": 2
+    },
+    {
+     "target": "cell>span",
+     "kind": "Animation",
+     "props": "opacity",
+     "dur": 120,
+     "durTok": "duration-base|duration-celebrate|duration-spring-bouncy",
+     "ease": "ease-out",
+     "kf": [
+      {
+       "opacity": "0"
+      },
+      {
+       "opacity": "1"
+      }
+     ],
+     "at": 46
+    }
+   ]
+  },
+  "desk": {
+   "badProps": [],
+   "longest": 440,
+   "anims": [
+    {
+     "target": "otp-field>span[cell]::before",
+     "kind": "Transition",
+     "props": "opacity",
+     "dur": 340,
+     "durTok": "duration-spring-soft",
+     "ease": "ease-spring-soft",
+     "kf": [
+      {
+       "offset": 0,
+       "opacity": "0"
+      },
+      {
+       "offset": 1,
+       "opacity": "1"
+      }
+     ],
+     "at": 50
+    },
+    {
+     "target": "otp-field>span[cell]::before",
+     "kind": "Transition",
+     "props": "transform",
+     "dur": 340,
+     "durTok": "duration-spring-soft",
+     "ease": "ease-spring-soft",
+     "kf": [
+      {
+       "offset": 0,
+       "transform": "scale(0.9)"
+      },
+      {
+       "offset": 1,
+       "transform": "none"
+      }
+     ],
+     "at": 50
+    },
+    {
+     "target": "otp-field>span[cell]::after",
+     "kind": "Transition",
+     "props": "opacity",
+     "dur": 300,
+     "durTok": "duration-roll|duration-spring-snappy",
+     "ease": "ease-spring-snappy",
+     "kf": [
+      {
+       "offset": 0,
+       "opacity": "0"
+      },
+      {
+       "offset": 1,
+       "opacity": "1"
+      }
+     ],
+     "at": 50
+    },
+    {
+     "target": "otp-field>span[cell]::after",
+     "kind": "Transition",
+     "props": "transform",
+     "dur": 300,
+     "durTok": "duration-roll|duration-spring-snappy",
+     "ease": "ease-spring-snappy",
+     "kf": [
+      {
+       "offset": 0,
+       "transform": "translateX(-15px)"
+      },
+      {
+       "offset": 1,
+       "transform": "none"
+      }
+     ],
+     "at": 50
+    },
+    {
+     "target": "cell>span",
+     "kind": "Animation",
+     "props": "opacity,transform",
+     "dur": 440,
+     "durTok": "duration-spring-bouncy",
+     "ease": "ease-spring-bouncy",
+     "kf": [
+      {
+       "offset": 0,
+       "opacity": "0",
+       "transform": "scale(var(--ds-scale-morph, 0.5))"
+      },
+      {
+       "offset": 0.3,
+       "opacity": "1"
+      },
+      {
+       "offset": 1,
+       "opacity": "1",
+       "transform": "none"
+      }
+     ],
+     "at": 50
+    }
+   ]
+  },
+  "neutral": {
+   "badProps": [],
+   "longest": 220,
+   "anims": [
+    {
+     "target": "otp-field>span[cell]::before",
+     "kind": "Transition",
+     "props": "opacity",
+     "dur": 220,
+     "durTok": "duration-celebrate|duration-spring-bouncy|duration-spring-soft|duration-zoom",
+     "ease": "ease-spring-soft",
+     "kf": [
+      {
+       "offset": 0,
+       "opacity": "0"
+      },
+      {
+       "offset": 1,
+       "opacity": "1"
+      }
+     ],
+     "at": 29
+    },
+    {
+     "target": "otp-field>span[cell]::before",
+     "kind": "Transition",
+     "props": "transform",
+     "dur": 220,
+     "durTok": "duration-celebrate|duration-spring-bouncy|duration-spring-soft|duration-zoom",
+     "ease": "ease-spring-soft",
+     "kf": [
+      {
+       "offset": 0,
+       "transform": "scale(0.97)"
+      },
+      {
+       "offset": 1,
+       "transform": "none"
+      }
+     ],
+     "at": 29
+    },
+    {
+     "target": "otp-field>span[cell]::after",
+     "kind": "Transition",
+     "props": "opacity",
+     "dur": 180,
+     "durTok": "duration-medium|duration-slow|duration-spring-snappy",
+     "ease": "ease-spring-snappy",
+     "kf": [
+      {
+       "offset": 0,
+       "opacity": "0"
+      },
+      {
+       "offset": 1,
+       "opacity": "1"
+      }
+     ],
+     "at": 29
+    },
+    {
+     "target": "otp-field>span[cell]::after",
+     "kind": "Transition",
+     "props": "transform",
+     "dur": 180,
+     "durTok": "duration-medium|duration-slow|duration-spring-snappy",
+     "ease": "ease-spring-snappy",
+     "kf": [
+      {
+       "offset": 0,
+       "transform": "translateX(-10px)"
+      },
+      {
+       "offset": 1,
+       "transform": "none"
+      }
+     ],
+     "at": 29
+    },
+    {
+     "target": "cell>span",
+     "kind": "Animation",
+     "props": "opacity,transform",
+     "dur": 220,
+     "durTok": "duration-celebrate|duration-spring-bouncy|duration-spring-soft|duration-zoom",
+     "ease": "ease-spring-bouncy",
+     "kf": [
+      {
+       "offset": 0,
+       "opacity": "0",
+       "transform": "scale(var(--ds-scale-morph, 0.5))"
+      },
+      {
+       "offset": 0.3,
+       "opacity": "1"
+      },
+      {
+       "offset": 1,
+       "opacity": "1",
+       "transform": "none"
+      }
+     ],
+     "at": 29
+    }
+   ]
+  }
+ }
+}

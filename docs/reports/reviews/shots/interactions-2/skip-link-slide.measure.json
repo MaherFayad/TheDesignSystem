@@ -1,0 +1,540 @@
+{
+ "id": "skip-link-slide",
+ "family": "navigation",
+ "drive": "css",
+ "pattern": "fade-rise",
+ "reducedSays": "It appears in place.",
+ "styles": {
+  "studio": {
+   "focus": null,
+   "transitionSweep": [],
+   "seek": {
+    "animations": 1,
+    "startOffsets": [
+     0
+    ],
+    "hit": {
+     "checked": 2,
+     "missed": [
+      "button[button]->a[skip-link]"
+     ],
+     "maxShift": 10
+    },
+    "parts": [
+     {
+      "part": "a[skip-link]",
+      "scale": [
+       1,
+       1
+      ],
+      "travelPx": 4,
+      "opacityMin": 1,
+      "scaleOvershoot": 0,
+      "travelOvershootPx": 0,
+      "movesUntil": 100
+     }
+    ],
+    "readable": []
+   },
+   "transitionSweepAfter": [],
+   "full": {
+    "anims": [],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 0,
+    "infinite": [],
+    "stateAt": null,
+    "firstMotionAt": null,
+    "focusAfter": "button[button]",
+    "frames": 93,
+    "animCount": 0
+   },
+   "rapid": {
+    "left": [],
+    "held": [],
+    "inline": [],
+    "ghosts": 0,
+    "nodes": 4,
+    "indicators": "0 ok",
+    "custom": null,
+    "nodesBefore": 4
+   },
+   "interrupt": null,
+   "tenFast": null,
+   "off": {
+    "injected": "@layer ds.recipes {[data-style='studio'] [data-ds='skip-link'] {--_skip-link-enter-y: 0px;}}",
+    "animations": 0,
+    "moving": [],
+    "fading": []
+   },
+   "full.rtl": {
+    "anims": [
+     {
+      "kind": "keyframes",
+      "name": "ds-skip-link-in",
+      "target": "a[skip-link]",
+      "props": [
+       "transform"
+      ],
+      "duration": 120,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "linear",
+      "kfEasing": [
+       "ease.spring-bouncy"
+      ],
+      "fill": "none",
+      "kf": [
+       {
+        "offset": 0,
+        "transform": "translateY(-4px)"
+       },
+       {
+        "offset": 1,
+        "transform": "none"
+       }
+      ],
+      "first": 20,
+      "last": 132,
+      "playState": "running"
+     }
+    ],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 120,
+    "infinite": [],
+    "stateAt": null,
+    "firstMotionAt": 20,
+    "focusAfter": "a[skip-link]",
+    "frames": 74,
+    "animCount": 1,
+    "rapid": {
+     "left": [],
+     "held": [],
+     "inline": [],
+     "ghosts": 0,
+     "nodes": 4,
+     "indicators": "0 ok",
+     "custom": null,
+     "nodesBefore": 4
+    }
+   },
+   "media.ltr": {
+    "anims": [],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 0,
+    "infinite": [],
+    "stateAt": null,
+    "firstMotionAt": null,
+    "focusAfter": "a[skip-link]",
+    "frames": 74,
+    "animCount": 0,
+    "restOffTransforms": []
+   },
+   "media.rtl": {
+    "anims": [],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 0,
+    "infinite": [],
+    "stateAt": null,
+    "firstMotionAt": null,
+    "focusAfter": "a[skip-link]",
+    "frames": 73,
+    "animCount": 0,
+    "restOffTransforms": []
+   },
+   "attr.ltr": {
+    "anims": [],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 0,
+    "infinite": [],
+    "stateAt": null,
+    "firstMotionAt": null,
+    "focusAfter": "a[skip-link]",
+    "frames": 73,
+    "animCount": 0,
+    "restOffTransforms": []
+   },
+   "attr.rtl": {
+    "anims": [],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 0,
+    "infinite": [],
+    "stateAt": null,
+    "firstMotionAt": null,
+    "focusAfter": "a[skip-link]",
+    "frames": 74,
+    "animCount": 0,
+    "restOffTransforms": []
+   }
+  },
+  "desk": {
+   "focus": null,
+   "transitionSweep": [],
+   "seek": {
+    "animations": 1,
+    "startOffsets": [
+     0
+    ],
+    "hit": {
+     "checked": 2,
+     "missed": [
+      "button[button]->a[skip-link]"
+     ],
+     "maxShift": 30
+    },
+    "parts": [
+     {
+      "part": "a[skip-link]",
+      "scale": [
+       1,
+       1
+      ],
+      "travelPx": 12,
+      "opacityMin": 1,
+      "scaleOvershoot": 0,
+      "travelOvershootPx": 2.8,
+      "movesUntil": 280
+     }
+    ],
+    "readable": []
+   },
+   "transitionSweepAfter": [],
+   "full": {
+    "anims": [
+     {
+      "kind": "transition",
+      "name": "transform",
+      "target": "span[label]",
+      "props": [
+       "transform"
+      ],
+      "duration": 300,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.reveal",
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "transform": "scale(1)"
+       },
+       {
+        "offset": 1,
+        "transform": "translateY(-70px)"
+       }
+      ],
+      "first": 5,
+      "last": 296,
+      "playState": "running"
+     }
+    ],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 300,
+    "infinite": [],
+    "stateAt": null,
+    "firstMotionAt": 5,
+    "focusAfter": "button[button]",
+    "frames": 83,
+    "animCount": 1
+   },
+   "rapid": {
+    "left": [],
+    "held": [],
+    "inline": [],
+    "ghosts": 0,
+    "nodes": 4,
+    "indicators": "0 ok",
+    "custom": null,
+    "nodesBefore": 4
+   },
+   "interrupt": null,
+   "tenFast": null,
+   "off": {
+    "injected": "@layer ds.recipes {[data-style='desk'] [data-ds='skip-link'] {--_skip-link-enter-y: 0px;}}",
+    "animations": 1,
+    "moving": [
+     "span[label] travel 28px scale 1..1 opacityMin 1"
+    ],
+    "fading": []
+   },
+   "full.rtl": {
+    "anims": [
+     {
+      "kind": "keyframes",
+      "name": "ds-skip-link-in",
+      "target": "a[skip-link]",
+      "props": [
+       "transform"
+      ],
+      "duration": 440,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "linear",
+      "kfEasing": [
+       "ease.spring-bouncy"
+      ],
+      "fill": "none",
+      "kf": [
+       {
+        "offset": 0,
+        "transform": "translateY(-12px)"
+       },
+       {
+        "offset": 1,
+        "transform": "none"
+       }
+      ],
+      "first": 18,
+      "last": 447,
+      "playState": "running"
+     }
+    ],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 440,
+    "infinite": [],
+    "stateAt": null,
+    "firstMotionAt": 18,
+    "focusAfter": "a[skip-link]",
+    "frames": 74,
+    "animCount": 1,
+    "rapid": {
+     "left": [],
+     "held": [],
+     "inline": [],
+     "ghosts": 0,
+     "nodes": 4,
+     "indicators": "0 ok",
+     "custom": null,
+     "nodesBefore": 4
+    }
+   },
+   "media.ltr": {
+    "anims": [],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 0,
+    "infinite": [],
+    "stateAt": null,
+    "firstMotionAt": null,
+    "focusAfter": "a[skip-link]",
+    "frames": 71,
+    "animCount": 0,
+    "restOffTransforms": []
+   },
+   "media.rtl": {
+    "anims": [],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 0,
+    "infinite": [],
+    "stateAt": null,
+    "firstMotionAt": null,
+    "focusAfter": "a[skip-link]",
+    "frames": 75,
+    "animCount": 0,
+    "restOffTransforms": []
+   },
+   "attr.ltr": {
+    "anims": [],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 0,
+    "infinite": [],
+    "stateAt": null,
+    "firstMotionAt": null,
+    "focusAfter": "a[skip-link]",
+    "frames": 72,
+    "animCount": 0,
+    "restOffTransforms": []
+   },
+   "attr.rtl": {
+    "anims": [],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 0,
+    "infinite": [],
+    "stateAt": null,
+    "firstMotionAt": null,
+    "focusAfter": "a[skip-link]",
+    "frames": 69,
+    "animCount": 0,
+    "restOffTransforms": []
+   }
+  },
+  "neutral": {
+   "focus": null,
+   "transitionSweep": [],
+   "seek": {
+    "animations": 1,
+    "startOffsets": [
+     0
+    ],
+    "hit": {
+     "checked": 2,
+     "missed": [
+      "button[button]->a[skip-link]"
+     ],
+     "maxShift": 15
+    },
+    "parts": [
+     {
+      "part": "a[skip-link]",
+      "scale": [
+       1,
+       1
+      ],
+      "travelPx": 6,
+      "opacityMin": 1,
+      "scaleOvershoot": 0,
+      "travelOvershootPx": 0.4,
+      "movesUntil": 80
+     }
+    ],
+    "readable": []
+   },
+   "transitionSweepAfter": [],
+   "full": {
+    "anims": [],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 0,
+    "infinite": [],
+    "stateAt": null,
+    "firstMotionAt": null,
+    "focusAfter": "button[button]",
+    "frames": 86,
+    "animCount": 0
+   },
+   "rapid": {
+    "left": [],
+    "held": [],
+    "inline": [],
+    "ghosts": 0,
+    "nodes": 4,
+    "indicators": "0 ok",
+    "custom": null,
+    "nodesBefore": 4
+   },
+   "interrupt": null,
+   "tenFast": null,
+   "off": {
+    "injected": "@layer ds.recipes {[data-style='neutral'] [data-ds='skip-link'] {--_skip-link-enter-y: 0px;}}",
+    "animations": 0,
+    "moving": [],
+    "fading": []
+   },
+   "full.rtl": {
+    "anims": [
+     {
+      "kind": "keyframes",
+      "name": "ds-skip-link-in",
+      "target": "a[skip-link]",
+      "props": [
+       "transform"
+      ],
+      "duration": 220,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "linear",
+      "kfEasing": [
+       "ease.spring-bouncy"
+      ],
+      "fill": "none",
+      "kf": [
+       {
+        "offset": 0,
+        "transform": "translateY(-6px)"
+       },
+       {
+        "offset": 1,
+        "transform": "none"
+       }
+      ],
+      "first": 17,
+      "last": 265,
+      "playState": "running"
+     }
+    ],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 220,
+    "infinite": [],
+    "stateAt": null,
+    "firstMotionAt": 17,
+    "focusAfter": "a[skip-link]",
+    "frames": 70,
+    "animCount": 1,
+    "rapid": {
+     "left": [],
+     "held": [],
+     "inline": [],
+     "ghosts": 0,
+     "nodes": 4,
+     "indicators": "0 ok",
+     "custom": null,
+     "nodesBefore": 4
+    }
+   },
+   "media.ltr": {
+    "anims": [],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 0,
+    "infinite": [],
+    "stateAt": null,
+    "firstMotionAt": null,
+    "focusAfter": "a[skip-link]",
+    "frames": 72,
+    "animCount": 0,
+    "restOffTransforms": []
+   },
+   "media.rtl": {
+    "anims": [],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 0,
+    "infinite": [],
+    "stateAt": null,
+    "firstMotionAt": null,
+    "focusAfter": "a[skip-link]",
+    "frames": 73,
+    "animCount": 0,
+    "restOffTransforms": []
+   },
+   "attr.ltr": {
+    "anims": [],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 0,
+    "infinite": [],
+    "stateAt": null,
+    "firstMotionAt": null,
+    "focusAfter": "a[skip-link]",
+    "frames": 74,
+    "animCount": 0,
+    "restOffTransforms": []
+   },
+   "attr.rtl": {
+    "anims": [],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 0,
+    "infinite": [],
+    "stateAt": null,
+    "firstMotionAt": null,
+    "focusAfter": "a[skip-link]",
+    "frames": 72,
+    "animCount": 0,
+    "restOffTransforms": []
+   }
+  }
+ },
+ "sheet": "skip-link-slide.sheet.png"
+}

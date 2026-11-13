@@ -1,0 +1,1229 @@
+{
+ "id": "kbd-press",
+ "family": "feedback",
+ "drive": "waapi",
+ "pattern": "press",
+ "reducedSays": "No motion: the keycap stays still.",
+ "styles": {
+  "studio": {
+   "focus": {
+    "at0": {
+     "el": "button[button]",
+     "outline": "solid 2px rgba(0, 0, 0, 0)",
+     "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgb(244, 244, 245) 0px 0px 0px 2px",
+     "focusVisible": true,
+     "opacity": 1,
+     "anims": []
+    },
+    "at300": {
+     "el": "button[button]",
+     "outline": "solid 2px rgba(0, 0, 0, 0)",
+     "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgb(244, 244, 245) 0px 0px 0px 2px",
+     "focusVisible": true,
+     "opacity": 1,
+     "anims": []
+    },
+    "ringAtOnce": true
+   },
+   "transitionSweep": [],
+   "seek": {
+    "animations": 2,
+    "startOffsets": [
+     0,
+     0
+    ],
+    "hit": {
+     "checked": 1,
+     "missed": [],
+     "maxShift": 0
+    },
+    "parts": [
+     {
+      "part": "kbd[key]",
+      "scale": [
+       0.97,
+       1
+      ],
+      "travelPx": 1,
+      "opacityMin": 1,
+      "scaleOvershoot": 0,
+      "travelOvershootPx": 0,
+      "movesUntil": 60
+     }
+    ],
+    "readable": []
+   },
+   "transitionSweepAfter": [],
+   "full": {
+    "anims": [
+     {
+      "kind": "waapi",
+      "name": "motion:kbd-press",
+      "target": "kbd[key]",
+      "props": [
+       "transform"
+      ],
+      "duration": 80,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.spring-snappy",
+      "fill": "forwards",
+      "kf": [
+       {
+        "transform": "none"
+       },
+       {
+        "transform": "translateY(var(--ds-distance-nudge)) scale(var(--ds-scale-anticipate))"
+       }
+      ],
+      "first": 0,
+      "last": 38,
+      "playState": "finished"
+     },
+     {
+      "kind": "waapi",
+      "name": "motion:kbd-press",
+      "target": "kbd[key]",
+      "props": [
+       "transform"
+      ],
+      "duration": 80,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.spring-snappy",
+      "fill": "forwards",
+      "kf": [
+       {
+        "transform": "none"
+       },
+       {
+        "transform": "translateY(var(--ds-distance-nudge)) scale(var(--ds-scale-anticipate))"
+       }
+      ],
+      "first": 0,
+      "last": 38,
+      "playState": "finished"
+     },
+     {
+      "kind": "waapi",
+      "name": "motion:kbd-press",
+      "target": "kbd[key]",
+      "props": [
+       "transform"
+      ],
+      "duration": 80,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.spring-snappy",
+      "fill": "forwards",
+      "kf": [
+       {
+        "transform": "none"
+       },
+       {
+        "transform": "translateY(var(--ds-distance-nudge)) scale(var(--ds-scale-anticipate))"
+       }
+      ],
+      "first": 55,
+      "last": 338,
+      "playState": "finished"
+     },
+     {
+      "kind": "waapi",
+      "name": "motion:kbd-press",
+      "target": "kbd[key]",
+      "props": [
+       "transform"
+      ],
+      "duration": 80,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.spring-snappy",
+      "fill": "forwards",
+      "kf": [
+       {
+        "transform": "none"
+       },
+       {
+        "transform": "translateY(var(--ds-distance-nudge)) scale(var(--ds-scale-anticipate))"
+       }
+      ],
+      "first": 55,
+      "last": 338,
+      "playState": "finished"
+     },
+     {
+      "kind": "waapi",
+      "name": "motion:kbd-press",
+      "target": "kbd[key]",
+      "props": [
+       "transform"
+      ],
+      "duration": 120,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.spring-bouncy",
+      "fill": "none",
+      "kf": [
+       {
+        "transform": "translateY(var(--ds-distance-nudge)) scale(var(--ds-scale-anticipate))"
+       },
+       {
+        "transform": "none"
+       }
+      ],
+      "first": 355,
+      "last": 471,
+      "playState": "running"
+     },
+     {
+      "kind": "waapi",
+      "name": "motion:kbd-press",
+      "target": "kbd[key]",
+      "props": [
+       "transform"
+      ],
+      "duration": 120,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.spring-bouncy",
+      "fill": "none",
+      "kf": [
+       {
+        "transform": "translateY(var(--ds-distance-nudge)) scale(var(--ds-scale-anticipate))"
+       },
+       {
+        "transform": "none"
+       }
+      ],
+      "first": 355,
+      "last": 471,
+      "playState": "running"
+     }
+    ],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 120,
+    "infinite": [],
+    "stateAt": null,
+    "firstMotionAt": 0,
+    "focusAfter": "button[button]",
+    "frames": 90,
+    "animCount": 6
+   },
+   "rapid": {
+    "left": [],
+    "held": [],
+    "inline": [
+     "kbd[key] transform-origin: 50% 100%;",
+     "kbd[key] transform-origin: 50% 100%;"
+    ],
+    "ghosts": 0,
+    "nodes": 14,
+    "indicators": "0 ok",
+    "custom": null,
+    "nodesBefore": 14
+   },
+   "interrupt": null,
+   "tenFast": null,
+   "off": null,
+   "full.rtl": {
+    "anims": [
+     {
+      "kind": "waapi",
+      "name": "motion:kbd-press",
+      "target": "kbd[key]",
+      "props": [
+       "transform"
+      ],
+      "duration": 80,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.spring-snappy",
+      "fill": "forwards",
+      "kf": [
+       {
+        "transform": "none"
+       },
+       {
+        "transform": "translateY(var(--ds-distance-nudge)) scale(var(--ds-scale-anticipate))"
+       }
+      ],
+      "first": 72,
+      "last": 369,
+      "playState": "finished"
+     },
+     {
+      "kind": "waapi",
+      "name": "motion:kbd-press",
+      "target": "kbd[key]",
+      "props": [
+       "transform"
+      ],
+      "duration": 80,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.spring-snappy",
+      "fill": "forwards",
+      "kf": [
+       {
+        "transform": "none"
+       },
+       {
+        "transform": "translateY(var(--ds-distance-nudge)) scale(var(--ds-scale-anticipate))"
+       }
+      ],
+      "first": 72,
+      "last": 369,
+      "playState": "finished"
+     },
+     {
+      "kind": "waapi",
+      "name": "motion:kbd-press",
+      "target": "kbd[key]",
+      "props": [
+       "transform"
+      ],
+      "duration": 120,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.spring-bouncy",
+      "fill": "none",
+      "kf": [
+       {
+        "transform": "translateY(var(--ds-distance-nudge)) scale(var(--ds-scale-anticipate))"
+       },
+       {
+        "transform": "none"
+       }
+      ],
+      "first": 385,
+      "last": 501,
+      "playState": "running"
+     },
+     {
+      "kind": "waapi",
+      "name": "motion:kbd-press",
+      "target": "kbd[key]",
+      "props": [
+       "transform"
+      ],
+      "duration": 120,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.spring-bouncy",
+      "fill": "none",
+      "kf": [
+       {
+        "transform": "translateY(var(--ds-distance-nudge)) scale(var(--ds-scale-anticipate))"
+       },
+       {
+        "transform": "none"
+       }
+      ],
+      "first": 385,
+      "last": 501,
+      "playState": "running"
+     }
+    ],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 120,
+    "infinite": [],
+    "stateAt": null,
+    "firstMotionAt": 72,
+    "focusAfter": "button[button]",
+    "frames": 74,
+    "animCount": 4,
+    "rapid": {
+     "left": [],
+     "held": [],
+     "inline": [
+      "kbd[key] transform-origin: 50% 100%;",
+      "kbd[key] transform-origin: 50% 100%;"
+     ],
+     "ghosts": 0,
+     "nodes": 14,
+     "indicators": "0 ok",
+     "custom": null,
+     "nodesBefore": 14
+    }
+   },
+   "media.ltr": {
+    "anims": [],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 0,
+    "infinite": [],
+    "stateAt": null,
+    "firstMotionAt": null,
+    "focusAfter": "button[button]",
+    "frames": 70,
+    "animCount": 0,
+    "restOffTransforms": []
+   },
+   "media.rtl": {
+    "anims": [],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 0,
+    "infinite": [],
+    "stateAt": null,
+    "firstMotionAt": null,
+    "focusAfter": "button[button]",
+    "frames": 74,
+    "animCount": 0,
+    "restOffTransforms": []
+   },
+   "attr.ltr": {
+    "anims": [],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 0,
+    "infinite": [],
+    "stateAt": null,
+    "firstMotionAt": null,
+    "focusAfter": "button[button]",
+    "frames": 75,
+    "animCount": 0,
+    "restOffTransforms": []
+   },
+   "attr.rtl": {
+    "anims": [],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 0,
+    "infinite": [],
+    "stateAt": null,
+    "firstMotionAt": null,
+    "focusAfter": "button[button]",
+    "frames": 74,
+    "animCount": 0,
+    "restOffTransforms": []
+   }
+  },
+  "desk": {
+   "focus": {
+    "at0": {
+     "el": "button[button]",
+     "outline": "solid 2px rgba(0, 0, 0, 0)",
+     "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgb(244, 244, 245) 0px 0px 0px 2px",
+     "focusVisible": true,
+     "opacity": 1,
+     "anims": [
+      "transform 281"
+     ]
+    },
+    "at300": {
+     "el": "button[button]",
+     "outline": "solid 2px rgba(0, 0, 0, 0)",
+     "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgb(244, 244, 245) 0px 0px 0px 2px",
+     "focusVisible": true,
+     "opacity": 1,
+     "anims": []
+    },
+    "ringAtOnce": true
+   },
+   "transitionSweep": [],
+   "seek": {
+    "animations": 2,
+    "startOffsets": [
+     0,
+     0
+    ],
+    "hit": {
+     "checked": 1,
+     "missed": [],
+     "maxShift": 0
+    },
+    "parts": [
+     {
+      "part": "kbd[key]",
+      "scale": [
+       0.89,
+       1
+      ],
+      "travelPx": 3,
+      "opacityMin": 1,
+      "scaleOvershoot": 0.01,
+      "travelOvershootPx": 0.3,
+      "movesUntil": 180
+     }
+    ],
+    "readable": []
+   },
+   "transitionSweepAfter": [],
+   "full": {
+    "anims": [
+     {
+      "kind": "waapi",
+      "name": "motion:kbd-press",
+      "target": "kbd[key]",
+      "props": [
+       "transform"
+      ],
+      "duration": 300,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.spring-snappy",
+      "fill": "forwards",
+      "kf": [
+       {
+        "transform": "none"
+       },
+       {
+        "transform": "translateY(var(--ds-distance-nudge)) scale(var(--ds-scale-anticipate))"
+       }
+      ],
+      "first": 0,
+      "last": 31,
+      "playState": "finished"
+     },
+     {
+      "kind": "waapi",
+      "name": "motion:kbd-press",
+      "target": "kbd[key]",
+      "props": [
+       "transform"
+      ],
+      "duration": 300,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.spring-snappy",
+      "fill": "forwards",
+      "kf": [
+       {
+        "transform": "none"
+       },
+       {
+        "transform": "translateY(var(--ds-distance-nudge)) scale(var(--ds-scale-anticipate))"
+       }
+      ],
+      "first": 0,
+      "last": 31,
+      "playState": "finished"
+     },
+     {
+      "kind": "waapi",
+      "name": "motion:kbd-press",
+      "target": "kbd[key]",
+      "props": [
+       "transform"
+      ],
+      "duration": 300,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.spring-snappy",
+      "fill": "forwards",
+      "kf": [
+       {
+        "transform": "none"
+       },
+       {
+        "transform": "translateY(var(--ds-distance-nudge)) scale(var(--ds-scale-anticipate))"
+       }
+      ],
+      "first": 44,
+      "last": 327,
+      "playState": "running"
+     },
+     {
+      "kind": "waapi",
+      "name": "motion:kbd-press",
+      "target": "kbd[key]",
+      "props": [
+       "transform"
+      ],
+      "duration": 300,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.spring-snappy",
+      "fill": "forwards",
+      "kf": [
+       {
+        "transform": "none"
+       },
+       {
+        "transform": "translateY(var(--ds-distance-nudge)) scale(var(--ds-scale-anticipate))"
+       }
+      ],
+      "first": 44,
+      "last": 327,
+      "playState": "running"
+     },
+     {
+      "kind": "waapi",
+      "name": "motion:kbd-press",
+      "target": "kbd[key]",
+      "props": [
+       "transform"
+      ],
+      "duration": 440,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.spring-bouncy",
+      "fill": "none",
+      "kf": [
+       {
+        "transform": "matrix(0.900823, 0, 0, 0.900823, 0, 2.97531)"
+       },
+       {
+        "transform": "none"
+       }
+      ],
+      "first": 354,
+      "last": 778,
+      "playState": "running"
+     },
+     {
+      "kind": "waapi",
+      "name": "motion:kbd-press",
+      "target": "kbd[key]",
+      "props": [
+       "transform"
+      ],
+      "duration": 440,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.spring-bouncy",
+      "fill": "none",
+      "kf": [
+       {
+        "transform": "matrix(0.900823, 0, 0, 0.900823, 0, 2.97531)"
+       },
+       {
+        "transform": "none"
+       }
+      ],
+      "first": 354,
+      "last": 778,
+      "playState": "running"
+     }
+    ],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 440,
+    "infinite": [],
+    "stateAt": null,
+    "firstMotionAt": 0,
+    "focusAfter": "button[button]",
+    "frames": 93,
+    "animCount": 6
+   },
+   "rapid": {
+    "left": [],
+    "held": [],
+    "inline": [
+     "kbd[key] transform-origin: 50% 100%;",
+     "kbd[key] transform-origin: 50% 100%;"
+    ],
+    "ghosts": 0,
+    "nodes": 14,
+    "indicators": "0 ok",
+    "custom": null,
+    "nodesBefore": 14
+   },
+   "interrupt": null,
+   "tenFast": null,
+   "off": null,
+   "full.rtl": {
+    "anims": [
+     {
+      "kind": "transition",
+      "name": "transform",
+      "target": "span[label]",
+      "props": [
+       "transform"
+      ],
+      "duration": 300,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.reveal",
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "transform": "scale(1)"
+       },
+       {
+        "offset": 1,
+        "transform": "translateY(-70px)"
+       }
+      ],
+      "first": 80,
+      "last": 364,
+      "playState": "running"
+     },
+     {
+      "kind": "waapi",
+      "name": "motion:kbd-press",
+      "target": "kbd[key]",
+      "props": [
+       "transform"
+      ],
+      "duration": 300,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.spring-snappy",
+      "fill": "forwards",
+      "kf": [
+       {
+        "transform": "none"
+       },
+       {
+        "transform": "translateY(var(--ds-distance-nudge)) scale(var(--ds-scale-anticipate))"
+       }
+      ],
+      "first": 80,
+      "last": 364,
+      "playState": "running"
+     },
+     {
+      "kind": "waapi",
+      "name": "motion:kbd-press",
+      "target": "kbd[key]",
+      "props": [
+       "transform"
+      ],
+      "duration": 300,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.spring-snappy",
+      "fill": "forwards",
+      "kf": [
+       {
+        "transform": "none"
+       },
+       {
+        "transform": "translateY(var(--ds-distance-nudge)) scale(var(--ds-scale-anticipate))"
+       }
+      ],
+      "first": 80,
+      "last": 364,
+      "playState": "running"
+     },
+     {
+      "kind": "waapi",
+      "name": "motion:kbd-press",
+      "target": "kbd[key]",
+      "props": [
+       "transform"
+      ],
+      "duration": 440,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.spring-bouncy",
+      "fill": "none",
+      "kf": [
+       {
+        "transform": "matrix(0.900822, 0, 0, 0.900822, 0, 2.97533)"
+       },
+       {
+        "transform": "none"
+       }
+      ],
+      "first": 381,
+      "last": 815,
+      "playState": "running"
+     },
+     {
+      "kind": "waapi",
+      "name": "motion:kbd-press",
+      "target": "kbd[key]",
+      "props": [
+       "transform"
+      ],
+      "duration": 440,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.spring-bouncy",
+      "fill": "none",
+      "kf": [
+       {
+        "transform": "matrix(0.900822, 0, 0, 0.900822, 0, 2.97533)"
+       },
+       {
+        "transform": "none"
+       }
+      ],
+      "first": 381,
+      "last": 815,
+      "playState": "running"
+     }
+    ],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 440,
+    "infinite": [],
+    "stateAt": null,
+    "firstMotionAt": 80,
+    "focusAfter": "button[button]",
+    "frames": 74,
+    "animCount": 5,
+    "rapid": {
+     "left": [],
+     "held": [],
+     "inline": [
+      "kbd[key] transform-origin: 50% 100%;",
+      "kbd[key] transform-origin: 50% 100%;"
+     ],
+     "ghosts": 0,
+     "nodes": 14,
+     "indicators": "0 ok",
+     "custom": null,
+     "nodesBefore": 14
+    }
+   },
+   "media.ltr": {
+    "anims": [],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 0,
+    "infinite": [],
+    "stateAt": null,
+    "firstMotionAt": null,
+    "focusAfter": "button[button]",
+    "frames": 75,
+    "animCount": 0,
+    "restOffTransforms": []
+   },
+   "media.rtl": {
+    "anims": [],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 0,
+    "infinite": [],
+    "stateAt": null,
+    "firstMotionAt": null,
+    "focusAfter": "button[button]",
+    "frames": 75,
+    "animCount": 0,
+    "restOffTransforms": []
+   },
+   "attr.ltr": {
+    "anims": [],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 0,
+    "infinite": [],
+    "stateAt": null,
+    "firstMotionAt": null,
+    "focusAfter": "button[button]",
+    "frames": 75,
+    "animCount": 0,
+    "restOffTransforms": []
+   },
+   "attr.rtl": {
+    "anims": [],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 0,
+    "infinite": [],
+    "stateAt": null,
+    "firstMotionAt": null,
+    "focusAfter": "button[button]",
+    "frames": 73,
+    "animCount": 0,
+    "restOffTransforms": []
+   }
+  },
+  "neutral": {
+   "focus": {
+    "at0": {
+     "el": "button[button]",
+     "outline": "solid 2px rgba(0, 0, 0, 0)",
+     "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgb(255, 255, 255) 0px 0px 0px 2px, rgb(37, 99, 235) 0px 0px 0px 4px",
+     "focusVisible": true,
+     "opacity": 1,
+     "anims": []
+    },
+    "at300": {
+     "el": "button[button]",
+     "outline": "solid 2px rgba(0, 0, 0, 0)",
+     "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgb(255, 255, 255) 0px 0px 0px 2px, rgb(37, 99, 235) 0px 0px 0px 4px",
+     "focusVisible": true,
+     "opacity": 1,
+     "anims": []
+    },
+    "ringAtOnce": true
+   },
+   "transitionSweep": [],
+   "seek": {
+    "animations": 2,
+    "startOffsets": [
+     0,
+     0
+    ],
+    "hit": {
+     "checked": 1,
+     "missed": [],
+     "maxShift": 0
+    },
+    "parts": [
+     {
+      "part": "kbd[key]",
+      "scale": [
+       0.949,
+       1
+      ],
+      "travelPx": 2,
+      "opacityMin": 1,
+      "scaleOvershoot": 0.001,
+      "travelOvershootPx": 0,
+      "movesUntil": 80
+     }
+    ],
+    "readable": []
+   },
+   "transitionSweepAfter": [],
+   "full": {
+    "anims": [
+     {
+      "kind": "waapi",
+      "name": "motion:kbd-press",
+      "target": "kbd[key]",
+      "props": [
+       "transform"
+      ],
+      "duration": 180,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.spring-snappy",
+      "fill": "forwards",
+      "kf": [
+       {
+        "transform": "none"
+       },
+       {
+        "transform": "translateY(var(--ds-distance-nudge)) scale(var(--ds-scale-anticipate))"
+       }
+      ],
+      "first": 0,
+      "last": 26,
+      "playState": "finished"
+     },
+     {
+      "kind": "waapi",
+      "name": "motion:kbd-press",
+      "target": "kbd[key]",
+      "props": [
+       "transform"
+      ],
+      "duration": 180,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.spring-snappy",
+      "fill": "forwards",
+      "kf": [
+       {
+        "transform": "none"
+       },
+       {
+        "transform": "translateY(var(--ds-distance-nudge)) scale(var(--ds-scale-anticipate))"
+       }
+      ],
+      "first": 0,
+      "last": 26,
+      "playState": "finished"
+     },
+     {
+      "kind": "waapi",
+      "name": "motion:kbd-press",
+      "target": "kbd[key]",
+      "props": [
+       "transform"
+      ],
+      "duration": 180,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.spring-snappy",
+      "fill": "forwards",
+      "kf": [
+       {
+        "transform": "none"
+       },
+       {
+        "transform": "translateY(var(--ds-distance-nudge)) scale(var(--ds-scale-anticipate))"
+       }
+      ],
+      "first": 43,
+      "last": 326,
+      "playState": "finished"
+     },
+     {
+      "kind": "waapi",
+      "name": "motion:kbd-press",
+      "target": "kbd[key]",
+      "props": [
+       "transform"
+      ],
+      "duration": 180,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.spring-snappy",
+      "fill": "forwards",
+      "kf": [
+       {
+        "transform": "none"
+       },
+       {
+        "transform": "translateY(var(--ds-distance-nudge)) scale(var(--ds-scale-anticipate))"
+       }
+      ],
+      "first": 43,
+      "last": 326,
+      "playState": "finished"
+     },
+     {
+      "kind": "waapi",
+      "name": "motion:kbd-press",
+      "target": "kbd[key]",
+      "props": [
+       "transform"
+      ],
+      "duration": 220,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.spring-bouncy",
+      "fill": "none",
+      "kf": [
+       {
+        "transform": "translateY(var(--ds-distance-nudge)) scale(var(--ds-scale-anticipate))"
+       },
+       {
+        "transform": "none"
+       }
+      ],
+      "first": 343,
+      "last": 559,
+      "playState": "running"
+     },
+     {
+      "kind": "waapi",
+      "name": "motion:kbd-press",
+      "target": "kbd[key]",
+      "props": [
+       "transform"
+      ],
+      "duration": 220,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.spring-bouncy",
+      "fill": "none",
+      "kf": [
+       {
+        "transform": "translateY(var(--ds-distance-nudge)) scale(var(--ds-scale-anticipate))"
+       },
+       {
+        "transform": "none"
+       }
+      ],
+      "first": 343,
+      "last": 559,
+      "playState": "running"
+     }
+    ],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 220,
+    "infinite": [],
+    "stateAt": null,
+    "firstMotionAt": 0,
+    "focusAfter": "button[button]",
+    "frames": 93,
+    "animCount": 6
+   },
+   "rapid": {
+    "left": [],
+    "held": [],
+    "inline": [
+     "kbd[key] transform-origin: 50% 100%;",
+     "kbd[key] transform-origin: 50% 100%;"
+    ],
+    "ghosts": 0,
+    "nodes": 14,
+    "indicators": "0 ok",
+    "custom": null,
+    "nodesBefore": 14
+   },
+   "interrupt": null,
+   "tenFast": null,
+   "off": null,
+   "full.rtl": {
+    "anims": [
+     {
+      "kind": "waapi",
+      "name": "motion:kbd-press",
+      "target": "kbd[key]",
+      "props": [
+       "transform"
+      ],
+      "duration": 180,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.spring-snappy",
+      "fill": "forwards",
+      "kf": [
+       {
+        "transform": "none"
+       },
+       {
+        "transform": "translateY(var(--ds-distance-nudge)) scale(var(--ds-scale-anticipate))"
+       }
+      ],
+      "first": 47,
+      "last": 346,
+      "playState": "finished"
+     },
+     {
+      "kind": "waapi",
+      "name": "motion:kbd-press",
+      "target": "kbd[key]",
+      "props": [
+       "transform"
+      ],
+      "duration": 180,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.spring-snappy",
+      "fill": "forwards",
+      "kf": [
+       {
+        "transform": "none"
+       },
+       {
+        "transform": "translateY(var(--ds-distance-nudge)) scale(var(--ds-scale-anticipate))"
+       }
+      ],
+      "first": 47,
+      "last": 346,
+      "playState": "finished"
+     },
+     {
+      "kind": "waapi",
+      "name": "motion:kbd-press",
+      "target": "kbd[key]",
+      "props": [
+       "transform"
+      ],
+      "duration": 220,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.spring-bouncy",
+      "fill": "none",
+      "kf": [
+       {
+        "transform": "translateY(var(--ds-distance-nudge)) scale(var(--ds-scale-anticipate))"
+       },
+       {
+        "transform": "none"
+       }
+      ],
+      "first": 362,
+      "last": 579,
+      "playState": "running"
+     },
+     {
+      "kind": "waapi",
+      "name": "motion:kbd-press",
+      "target": "kbd[key]",
+      "props": [
+       "transform"
+      ],
+      "duration": 220,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.spring-bouncy",
+      "fill": "none",
+      "kf": [
+       {
+        "transform": "translateY(var(--ds-distance-nudge)) scale(var(--ds-scale-anticipate))"
+       },
+       {
+        "transform": "none"
+       }
+      ],
+      "first": 362,
+      "last": 579,
+      "playState": "running"
+     }
+    ],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 220,
+    "infinite": [],
+    "stateAt": null,
+    "firstMotionAt": 47,
+    "focusAfter": "button[button]",
+    "frames": 75,
+    "animCount": 4,
+    "rapid": {
+     "left": [],
+     "held": [],
+     "inline": [
+      "kbd[key] transform-origin: 50% 100%;",
+      "kbd[key] transform-origin: 50% 100%;"
+     ],
+     "ghosts": 0,
+     "nodes": 14,
+     "indicators": "0 ok",
+     "custom": null,
+     "nodesBefore": 14
+    }
+   },
+   "media.ltr": {
+    "anims": [],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 0,
+    "infinite": [],
+    "stateAt": null,
+    "firstMotionAt": null,
+    "focusAfter": "button[button]",
+    "frames": 75,
+    "animCount": 0,
+    "restOffTransforms": []
+   },
+   "media.rtl": {
+    "anims": [],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 0,
+    "infinite": [],
+    "stateAt": null,
+    "firstMotionAt": null,
+    "focusAfter": "button[button]",
+    "frames": 74,
+    "animCount": 0,
+    "restOffTransforms": []
+   },
+   "attr.ltr": {
+    "anims": [],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 0,
+    "infinite": [],
+    "stateAt": null,
+    "firstMotionAt": null,
+    "focusAfter": "button[button]",
+    "frames": 74,
+    "animCount": 0,
+    "restOffTransforms": []
+   },
+   "attr.rtl": {
+    "anims": [],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 0,
+    "infinite": [],
+    "stateAt": null,
+    "firstMotionAt": null,
+    "focusAfter": "button[button]",
+    "frames": 75,
+    "animCount": 0,
+    "restOffTransforms": []
+   }
+  }
+ },
+ "sheet": "kbd-press.sheet.png"
+}

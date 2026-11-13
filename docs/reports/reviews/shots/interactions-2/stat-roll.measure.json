@@ -1,0 +1,1853 @@
+{
+ "id": "stat-roll",
+ "family": "feedback",
+ "drive": "waapi",
+ "pattern": "number-roll",
+ "primitive": "digit-roll",
+ "reducedSays": "The changed digits fade in, with no travel and no nudge.",
+ "styles": {
+  "studio": {
+   "focus": {
+    "at0": {
+     "el": "button[button]",
+     "outline": "solid 2px rgba(0, 0, 0, 0)",
+     "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgb(244, 244, 245) 0px 0px 0px 2px",
+     "focusVisible": true,
+     "opacity": 1,
+     "anims": []
+    },
+    "at300": {
+     "el": "button[button]",
+     "outline": "solid 2px rgba(0, 0, 0, 0)",
+     "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgb(244, 244, 245) 0px 0px 0px 2px",
+     "focusVisible": true,
+     "opacity": 1,
+     "anims": []
+    },
+    "ringAtOnce": true
+   },
+   "transitionSweep": [],
+   "seek": {
+    "animations": 7,
+    "startOffsets": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "hit": {
+     "checked": 2,
+     "missed": [],
+     "maxShift": 0
+    },
+    "parts": [
+     {
+      "part": "span",
+      "scale": [
+       1,
+       1
+      ],
+      "travelPx": 53.3,
+      "opacityMin": 0,
+      "scaleOvershoot": 0,
+      "travelOvershootPx": 0,
+      "movesUntil": 600
+     },
+     {
+      "part": "svg[icon]",
+      "scale": [
+       1,
+       1
+      ],
+      "travelPx": 0.8,
+      "opacityMin": 1,
+      "scaleOvershoot": 0,
+      "travelOvershootPx": 0,
+      "movesUntil": 60
+     }
+    ],
+    "readable": []
+   },
+   "transitionSweepAfter": [],
+   "full": {
+    "anims": [
+     {
+      "kind": "waapi",
+      "name": "motion:digit-roll",
+      "target": "span",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 80,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.spring-snappy",
+      "fill": "none",
+      "kf": [
+       {
+        "opacity": "0",
+        "transform": "translateY(100%)"
+       },
+       {
+        "opacity": "1",
+        "transform": "none"
+       }
+      ],
+      "first": 54,
+      "last": 118,
+      "playState": "running"
+     },
+     {
+      "kind": "waapi",
+      "name": "motion:digit-roll-out",
+      "target": "span",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 80,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.spring-snappy",
+      "fill": "both",
+      "kf": [
+       {
+        "opacity": "1",
+        "transform": "none"
+       },
+       {
+        "opacity": "0",
+        "transform": "translateY(-100%)"
+       }
+      ],
+      "first": 54,
+      "last": 118,
+      "playState": "running"
+     },
+     {
+      "kind": "waapi",
+      "name": "motion:digit-roll",
+      "target": "span",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 80,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.spring-snappy",
+      "fill": "backwards",
+      "kf": [
+       {
+        "opacity": "0",
+        "transform": "translateY(100%)"
+       },
+       {
+        "opacity": "1",
+        "transform": "none"
+       }
+      ],
+      "first": 54,
+      "last": 118,
+      "playState": "running"
+     },
+     {
+      "kind": "waapi",
+      "name": "motion:digit-roll-out",
+      "target": "span",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 80,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.spring-snappy",
+      "fill": "both",
+      "kf": [
+       {
+        "opacity": "1",
+        "transform": "none"
+       },
+       {
+        "opacity": "0",
+        "transform": "translateY(-100%)"
+       }
+      ],
+      "first": 54,
+      "last": 118,
+      "playState": "running"
+     },
+     {
+      "kind": "waapi",
+      "name": "motion:digit-roll",
+      "target": "span",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 80,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.spring-snappy",
+      "fill": "backwards",
+      "kf": [
+       {
+        "opacity": "0",
+        "transform": "translateY(100%)"
+       },
+       {
+        "opacity": "1",
+        "transform": "none"
+       }
+      ],
+      "first": 54,
+      "last": 118,
+      "playState": "running"
+     },
+     {
+      "kind": "waapi",
+      "name": "motion:digit-roll-out",
+      "target": "span",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 80,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.spring-snappy",
+      "fill": "both",
+      "kf": [
+       {
+        "opacity": "1",
+        "transform": "none"
+       },
+       {
+        "opacity": "0",
+        "transform": "translateY(-100%)"
+       }
+      ],
+      "first": 54,
+      "last": 118,
+      "playState": "running"
+     },
+     {
+      "kind": "waapi",
+      "name": "motion:stat-trend",
+      "target": "svg[icon]",
+      "props": [
+       "transform"
+      ],
+      "duration": 120,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.out",
+      "fill": "none",
+      "kf": [
+       {
+        "transform": "none"
+       },
+       {
+        "offset": 0.35,
+        "transform": "translateY(calc(-1 * var(--ds-distance-nudge)))"
+       },
+       {
+        "transform": "none"
+       }
+      ],
+      "first": 54,
+      "last": 168,
+      "playState": "running"
+     }
+    ],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 120,
+    "infinite": [],
+    "stateAt": 54,
+    "firstMotionAt": 54,
+    "focusAfter": "button[button]",
+    "frames": 91,
+    "animCount": 7
+   },
+   "rapid": {
+    "left": [],
+    "held": [],
+    "inline": [
+     "svg[icon] transform-origin: 50% 50%; transform-box: fill-box;"
+    ],
+    "ghosts": 0,
+    "nodes": 26,
+    "indicators": "0 ok",
+    "custom": {
+     "label": "1,588",
+     "shown": "1,588",
+     "roller": 1067
+    },
+    "nodesBefore": 26
+   },
+   "interrupt": {
+    "left": [],
+    "held": [],
+    "inline": [
+     "svg[icon] transform-origin: 50% 50%; transform-box: fill-box;"
+    ],
+    "ghosts": 0,
+    "nodes": 26,
+    "indicators": "0 ok",
+    "custom": {
+     "label": "1,654",
+     "shown": "1,654",
+     "roller": 1067
+    }
+   },
+   "tenFast": {
+    "before": {
+     "label": "1,654",
+     "shown": "1,654",
+     "roller": 1067
+    },
+    "after": {
+     "label": "2,524",
+     "shown": "2,524",
+     "roller": 1067
+    },
+    "rest": {
+     "left": [],
+     "held": [],
+     "inline": [
+      "svg[icon] transform-origin: 50% 50%; transform-box: fill-box;"
+     ]
+    },
+    "motionStarts": [
+     11
+    ],
+    "windowMs": 300
+   },
+   "off": null,
+   "full.rtl": {
+    "anims": [
+     {
+      "kind": "transition",
+      "name": "transform",
+      "target": "button[button]",
+      "props": [
+       "transform"
+      ],
+      "duration": 70,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.out",
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "transform": "scale(1)"
+       },
+       {
+        "offset": 1,
+        "transform": "scale(0.97)"
+       }
+      ],
+      "first": 67,
+      "last": 67,
+      "playState": "running"
+     },
+     {
+      "kind": "waapi",
+      "name": "motion:digit-roll",
+      "target": "span",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 80,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.spring-snappy",
+      "fill": "none",
+      "kf": [
+       {
+        "opacity": "0",
+        "transform": "translateY(100%)"
+       },
+       {
+        "opacity": "1",
+        "transform": "none"
+       }
+      ],
+      "first": 80,
+      "last": 153,
+      "playState": "running"
+     },
+     {
+      "kind": "waapi",
+      "name": "motion:digit-roll-out",
+      "target": "span",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 80,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.spring-snappy",
+      "fill": "both",
+      "kf": [
+       {
+        "opacity": "1",
+        "transform": "none"
+       },
+       {
+        "opacity": "0",
+        "transform": "translateY(-100%)"
+       }
+      ],
+      "first": 80,
+      "last": 153,
+      "playState": "running"
+     },
+     {
+      "kind": "waapi",
+      "name": "motion:digit-roll",
+      "target": "span",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 80,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.spring-snappy",
+      "fill": "backwards",
+      "kf": [
+       {
+        "opacity": "0",
+        "transform": "translateY(100%)"
+       },
+       {
+        "opacity": "1",
+        "transform": "none"
+       }
+      ],
+      "first": 80,
+      "last": 153,
+      "playState": "running"
+     },
+     {
+      "kind": "waapi",
+      "name": "motion:digit-roll-out",
+      "target": "span",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 80,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.spring-snappy",
+      "fill": "both",
+      "kf": [
+       {
+        "opacity": "1",
+        "transform": "none"
+       },
+       {
+        "opacity": "0",
+        "transform": "translateY(-100%)"
+       }
+      ],
+      "first": 80,
+      "last": 153,
+      "playState": "running"
+     },
+     {
+      "kind": "waapi",
+      "name": "motion:digit-roll",
+      "target": "span",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 80,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.spring-snappy",
+      "fill": "backwards",
+      "kf": [
+       {
+        "opacity": "0",
+        "transform": "translateY(100%)"
+       },
+       {
+        "opacity": "1",
+        "transform": "none"
+       }
+      ],
+      "first": 80,
+      "last": 153,
+      "playState": "running"
+     },
+     {
+      "kind": "waapi",
+      "name": "motion:digit-roll-out",
+      "target": "span",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 80,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.spring-snappy",
+      "fill": "both",
+      "kf": [
+       {
+        "opacity": "1",
+        "transform": "none"
+       },
+       {
+        "opacity": "0",
+        "transform": "translateY(-100%)"
+       }
+      ],
+      "first": 80,
+      "last": 153,
+      "playState": "running"
+     },
+     {
+      "kind": "waapi",
+      "name": "motion:stat-trend",
+      "target": "svg[icon]",
+      "props": [
+       "transform"
+      ],
+      "duration": 120,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.out",
+      "fill": "none",
+      "kf": [
+       {
+        "transform": "none"
+       },
+       {
+        "offset": 0.35,
+        "transform": "translateY(calc(-1 * var(--ds-distance-nudge)))"
+       },
+       {
+        "transform": "none"
+       }
+      ],
+      "first": 80,
+      "last": 204,
+      "playState": "running"
+     }
+    ],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 120,
+    "infinite": [],
+    "stateAt": 80,
+    "firstMotionAt": 67,
+    "focusAfter": "button[button]",
+    "frames": 73,
+    "animCount": 8,
+    "rapid": {
+     "left": [],
+     "held": [],
+     "inline": [
+      "svg[icon] transform-origin: 50% 50%; transform-box: fill-box;"
+     ],
+     "ghosts": 0,
+     "nodes": 26,
+     "indicators": "0 ok",
+     "custom": {
+      "label": "1,501",
+      "shown": "1,501",
+      "roller": 1067
+     },
+     "nodesBefore": 26
+    }
+   },
+   "media.ltr": {
+    "anims": [],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 0,
+    "infinite": [],
+    "stateAt": 67,
+    "firstMotionAt": null,
+    "focusAfter": "button[button]",
+    "frames": 69,
+    "animCount": 0,
+    "restOffTransforms": []
+   },
+   "media.rtl": {
+    "anims": [],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 0,
+    "infinite": [],
+    "stateAt": 41,
+    "firstMotionAt": null,
+    "focusAfter": "button[button]",
+    "frames": 75,
+    "animCount": 0,
+    "restOffTransforms": []
+   },
+   "attr.ltr": {
+    "anims": [],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 0,
+    "infinite": [],
+    "stateAt": 46,
+    "firstMotionAt": null,
+    "focusAfter": "button[button]",
+    "frames": 71,
+    "animCount": 0,
+    "restOffTransforms": []
+   },
+   "attr.rtl": {
+    "anims": [],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 0,
+    "infinite": [],
+    "stateAt": 57,
+    "firstMotionAt": null,
+    "focusAfter": "button[button]",
+    "frames": 68,
+    "animCount": 0,
+    "restOffTransforms": []
+   }
+  },
+  "desk": {
+   "focus": {
+    "at0": {
+     "el": "button[button]",
+     "outline": "solid 2px rgba(0, 0, 0, 0)",
+     "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgb(244, 244, 245) 0px 0px 0px 2px",
+     "focusVisible": true,
+     "opacity": 1,
+     "anims": [
+      "transform 210"
+     ]
+    },
+    "at300": {
+     "el": "button[button]",
+     "outline": "solid 2px rgba(0, 0, 0, 0)",
+     "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgb(244, 244, 245) 0px 0px 0px 2px",
+     "focusVisible": true,
+     "opacity": 1,
+     "anims": []
+    },
+    "ringAtOnce": true
+   },
+   "transitionSweep": [],
+   "seek": {
+    "animations": 7,
+    "startOffsets": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "hit": {
+     "checked": 2,
+     "missed": [],
+     "maxShift": 0
+    },
+    "parts": [
+     {
+      "part": "span",
+      "scale": [
+       1,
+       1
+      ],
+      "travelPx": 53.3,
+      "opacityMin": 0,
+      "scaleOvershoot": 0,
+      "travelOvershootPx": 2.8,
+      "movesUntil": 600
+     },
+     {
+      "part": "svg[icon]",
+      "scale": [
+       1,
+       1
+      ],
+      "travelPx": 2.8,
+      "opacityMin": 1,
+      "scaleOvershoot": 0,
+      "travelOvershootPx": 0,
+      "movesUntil": 360
+     }
+    ],
+    "readable": []
+   },
+   "transitionSweepAfter": [],
+   "full": {
+    "anims": [
+     {
+      "kind": "waapi",
+      "name": "motion:digit-roll",
+      "target": "span",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 300,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.spring-snappy",
+      "fill": "none",
+      "kf": [
+       {
+        "opacity": "0",
+        "transform": "translateY(100%)"
+       },
+       {
+        "opacity": "1",
+        "transform": "none"
+       }
+      ],
+      "first": 74,
+      "last": 371,
+      "playState": "running"
+     },
+     {
+      "kind": "waapi",
+      "name": "motion:digit-roll-out",
+      "target": "span",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 300,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.spring-snappy",
+      "fill": "both",
+      "kf": [
+       {
+        "opacity": "1",
+        "transform": "none"
+       },
+       {
+        "opacity": "0",
+        "transform": "translateY(-100%)"
+       }
+      ],
+      "first": 74,
+      "last": 371,
+      "playState": "running"
+     },
+     {
+      "kind": "waapi",
+      "name": "motion:digit-roll",
+      "target": "span",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 300,
+      "delay": 45,
+      "iterations": 1,
+      "easing": "ease.spring-snappy",
+      "fill": "backwards",
+      "kf": [
+       {
+        "opacity": "0",
+        "transform": "translateY(100%)"
+       },
+       {
+        "opacity": "1",
+        "transform": "none"
+       }
+      ],
+      "first": 74,
+      "last": 408,
+      "playState": "running"
+     },
+     {
+      "kind": "waapi",
+      "name": "motion:digit-roll-out",
+      "target": "span",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 300,
+      "delay": 45,
+      "iterations": 1,
+      "easing": "ease.spring-snappy",
+      "fill": "both",
+      "kf": [
+       {
+        "opacity": "1",
+        "transform": "none"
+       },
+       {
+        "opacity": "0",
+        "transform": "translateY(-100%)"
+       }
+      ],
+      "first": 74,
+      "last": 408,
+      "playState": "running"
+     },
+     {
+      "kind": "waapi",
+      "name": "motion:digit-roll",
+      "target": "span",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 300,
+      "delay": 90,
+      "iterations": 1,
+      "easing": "ease.spring-snappy",
+      "fill": "backwards",
+      "kf": [
+       {
+        "opacity": "0",
+        "transform": "translateY(100%)"
+       },
+       {
+        "opacity": "1",
+        "transform": "none"
+       }
+      ],
+      "first": 74,
+      "last": 458,
+      "playState": "running"
+     },
+     {
+      "kind": "waapi",
+      "name": "motion:digit-roll-out",
+      "target": "span",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 300,
+      "delay": 90,
+      "iterations": 1,
+      "easing": "ease.spring-snappy",
+      "fill": "both",
+      "kf": [
+       {
+        "opacity": "1",
+        "transform": "none"
+       },
+       {
+        "opacity": "0",
+        "transform": "translateY(-100%)"
+       }
+      ],
+      "first": 74,
+      "last": 458,
+      "playState": "running"
+     },
+     {
+      "kind": "waapi",
+      "name": "motion:stat-trend",
+      "target": "svg[icon]",
+      "props": [
+       "transform"
+      ],
+      "duration": 440,
+      "delay": 45,
+      "iterations": 1,
+      "easing": "ease.out",
+      "fill": "none",
+      "kf": [
+       {
+        "transform": "none"
+       },
+       {
+        "offset": 0.35,
+        "transform": "translateY(calc(-1 * var(--ds-distance-nudge)))"
+       },
+       {
+        "transform": "none"
+       }
+      ],
+      "first": 74,
+      "last": 560,
+      "playState": "running"
+     }
+    ],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 485,
+    "infinite": [],
+    "stateAt": 74,
+    "firstMotionAt": 74,
+    "focusAfter": "button[button]",
+    "frames": 93,
+    "animCount": 7
+   },
+   "rapid": {
+    "left": [],
+    "held": [],
+    "inline": [
+     "svg[icon] transform-origin: 50% 50%; transform-box: fill-box;"
+    ],
+    "ghosts": 0,
+    "nodes": 26,
+    "indicators": "0 ok",
+    "custom": {
+     "label": "1,588",
+     "shown": "1,588",
+     "roller": 1067
+    },
+    "nodesBefore": 26
+   },
+   "interrupt": {
+    "left": [],
+    "held": [],
+    "inline": [
+     "svg[icon] transform-origin: 50% 50%; transform-box: fill-box;"
+    ],
+    "ghosts": 0,
+    "nodes": 26,
+    "indicators": "0 ok",
+    "custom": {
+     "label": "1,654",
+     "shown": "1,654",
+     "roller": 1067
+    }
+   },
+   "tenFast": {
+    "before": {
+     "label": "1,654",
+     "shown": "1,654",
+     "roller": 1067
+    },
+    "after": {
+     "label": "2,524",
+     "shown": "2,524",
+     "roller": 1067
+    },
+    "rest": {
+     "left": [],
+     "held": [],
+     "inline": [
+      "svg[icon] transform-origin: 50% 50%; transform-box: fill-box;"
+     ]
+    },
+    "motionStarts": [
+     10
+    ],
+    "windowMs": 300
+   },
+   "off": null,
+   "full.rtl": {
+    "anims": [
+     {
+      "kind": "transition",
+      "name": "transform",
+      "target": "span[label]",
+      "props": [
+       "transform"
+      ],
+      "duration": 300,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.reveal",
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "transform": "scale(1)"
+       },
+       {
+        "offset": 1,
+        "transform": "translateY(-70px)"
+       }
+      ],
+      "first": 95,
+      "last": 371,
+      "playState": "running"
+     },
+     {
+      "kind": "waapi",
+      "name": "motion:digit-roll",
+      "target": "span",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 300,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.spring-snappy",
+      "fill": "none",
+      "kf": [
+       {
+        "opacity": "0",
+        "transform": "translateY(100%)"
+       },
+       {
+        "opacity": "1",
+        "transform": "none"
+       }
+      ],
+      "first": 95,
+      "last": 371,
+      "playState": "running"
+     },
+     {
+      "kind": "waapi",
+      "name": "motion:digit-roll-out",
+      "target": "span",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 300,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.spring-snappy",
+      "fill": "both",
+      "kf": [
+       {
+        "opacity": "1",
+        "transform": "none"
+       },
+       {
+        "opacity": "0",
+        "transform": "translateY(-100%)"
+       }
+      ],
+      "first": 95,
+      "last": 371,
+      "playState": "running"
+     },
+     {
+      "kind": "waapi",
+      "name": "motion:digit-roll",
+      "target": "span",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 300,
+      "delay": 45,
+      "iterations": 1,
+      "easing": "ease.spring-snappy",
+      "fill": "backwards",
+      "kf": [
+       {
+        "opacity": "0",
+        "transform": "translateY(100%)"
+       },
+       {
+        "opacity": "1",
+        "transform": "none"
+       }
+      ],
+      "first": 95,
+      "last": 423,
+      "playState": "running"
+     },
+     {
+      "kind": "waapi",
+      "name": "motion:digit-roll-out",
+      "target": "span",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 300,
+      "delay": 45,
+      "iterations": 1,
+      "easing": "ease.spring-snappy",
+      "fill": "both",
+      "kf": [
+       {
+        "opacity": "1",
+        "transform": "none"
+       },
+       {
+        "opacity": "0",
+        "transform": "translateY(-100%)"
+       }
+      ],
+      "first": 95,
+      "last": 423,
+      "playState": "running"
+     },
+     {
+      "kind": "waapi",
+      "name": "motion:digit-roll",
+      "target": "span",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 300,
+      "delay": 90,
+      "iterations": 1,
+      "easing": "ease.spring-snappy",
+      "fill": "backwards",
+      "kf": [
+       {
+        "opacity": "0",
+        "transform": "translateY(100%)"
+       },
+       {
+        "opacity": "1",
+        "transform": "none"
+       }
+      ],
+      "first": 95,
+      "last": 471,
+      "playState": "running"
+     },
+     {
+      "kind": "waapi",
+      "name": "motion:digit-roll-out",
+      "target": "span",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 300,
+      "delay": 90,
+      "iterations": 1,
+      "easing": "ease.spring-snappy",
+      "fill": "both",
+      "kf": [
+       {
+        "opacity": "1",
+        "transform": "none"
+       },
+       {
+        "opacity": "0",
+        "transform": "translateY(-100%)"
+       }
+      ],
+      "first": 95,
+      "last": 471,
+      "playState": "running"
+     },
+     {
+      "kind": "waapi",
+      "name": "motion:stat-trend",
+      "target": "svg[icon]",
+      "props": [
+       "transform"
+      ],
+      "duration": 440,
+      "delay": 45,
+      "iterations": 1,
+      "easing": "ease.out",
+      "fill": "none",
+      "kf": [
+       {
+        "transform": "none"
+       },
+       {
+        "offset": 0.35,
+        "transform": "translateY(calc(-1 * var(--ds-distance-nudge)))"
+       },
+       {
+        "transform": "none"
+       }
+      ],
+      "first": 95,
+      "last": 571,
+      "playState": "running"
+     }
+    ],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 485,
+    "infinite": [],
+    "stateAt": 95,
+    "firstMotionAt": 95,
+    "focusAfter": "button[button]",
+    "frames": 75,
+    "animCount": 8,
+    "rapid": {
+     "left": [],
+     "held": [],
+     "inline": [
+      "svg[icon] transform-origin: 50% 50%; transform-box: fill-box;"
+     ],
+     "ghosts": 0,
+     "nodes": 26,
+     "indicators": "0 ok",
+     "custom": {
+      "label": "1,501",
+      "shown": "1,501",
+      "roller": 1067
+     },
+     "nodesBefore": 26
+    }
+   },
+   "media.ltr": {
+    "anims": [],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 0,
+    "infinite": [],
+    "stateAt": 61,
+    "firstMotionAt": null,
+    "focusAfter": "button[button]",
+    "frames": 71,
+    "animCount": 0,
+    "restOffTransforms": []
+   },
+   "media.rtl": {
+    "anims": [],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 0,
+    "infinite": [],
+    "stateAt": 104,
+    "firstMotionAt": null,
+    "focusAfter": "button[button]",
+    "frames": 74,
+    "animCount": 0,
+    "restOffTransforms": []
+   },
+   "attr.ltr": {
+    "anims": [],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 0,
+    "infinite": [],
+    "stateAt": 85,
+    "firstMotionAt": null,
+    "focusAfter": "button[button]",
+    "frames": 75,
+    "animCount": 0,
+    "restOffTransforms": []
+   },
+   "attr.rtl": {
+    "anims": [],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 0,
+    "infinite": [],
+    "stateAt": 123,
+    "firstMotionAt": null,
+    "focusAfter": "button[button]",
+    "frames": 71,
+    "animCount": 0,
+    "restOffTransforms": []
+   }
+  },
+  "neutral": {
+   "focus": {
+    "at0": {
+     "el": "button[button]",
+     "outline": "solid 2px rgba(0, 0, 0, 0)",
+     "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgb(255, 255, 255) 0px 0px 0px 2px, rgb(37, 99, 235) 0px 0px 0px 4px",
+     "focusVisible": true,
+     "opacity": 1,
+     "anims": []
+    },
+    "at300": {
+     "el": "button[button]",
+     "outline": "solid 2px rgba(0, 0, 0, 0)",
+     "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgb(255, 255, 255) 0px 0px 0px 2px, rgb(37, 99, 235) 0px 0px 0px 4px",
+     "focusVisible": true,
+     "opacity": 1,
+     "anims": []
+    },
+    "ringAtOnce": true
+   },
+   "transitionSweep": [],
+   "seek": {
+    "animations": 7,
+    "startOffsets": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "hit": {
+     "checked": 2,
+     "missed": [],
+     "maxShift": 0
+    },
+    "parts": [
+     {
+      "part": "span",
+      "scale": [
+       1,
+       1
+      ],
+      "travelPx": 53.3,
+      "opacityMin": 0,
+      "scaleOvershoot": 0,
+      "travelOvershootPx": 0.4,
+      "movesUntil": 600
+     },
+     {
+      "part": "svg[icon]",
+      "scale": [
+       1,
+       1
+      ],
+      "travelPx": 1.9,
+      "opacityMin": 1,
+      "scaleOvershoot": 0,
+      "travelOvershootPx": 0,
+      "movesUntil": 160
+     }
+    ],
+    "readable": []
+   },
+   "transitionSweepAfter": [],
+   "full": {
+    "anims": [
+     {
+      "kind": "waapi",
+      "name": "motion:digit-roll",
+      "target": "span",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 180,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.spring-snappy",
+      "fill": "none",
+      "kf": [
+       {
+        "opacity": "0",
+        "transform": "translateY(100%)"
+       },
+       {
+        "opacity": "1",
+        "transform": "none"
+       }
+      ],
+      "first": 61,
+      "last": 225,
+      "playState": "running"
+     },
+     {
+      "kind": "waapi",
+      "name": "motion:digit-roll-out",
+      "target": "span",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 180,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.spring-snappy",
+      "fill": "both",
+      "kf": [
+       {
+        "opacity": "1",
+        "transform": "none"
+       },
+       {
+        "opacity": "0",
+        "transform": "translateY(-100%)"
+       }
+      ],
+      "first": 61,
+      "last": 225,
+      "playState": "running"
+     },
+     {
+      "kind": "waapi",
+      "name": "motion:digit-roll",
+      "target": "span",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 180,
+      "delay": 24,
+      "iterations": 1,
+      "easing": "ease.spring-snappy",
+      "fill": "backwards",
+      "kf": [
+       {
+        "opacity": "0",
+        "transform": "translateY(100%)"
+       },
+       {
+        "opacity": "1",
+        "transform": "none"
+       }
+      ],
+      "first": 61,
+      "last": 257,
+      "playState": "running"
+     },
+     {
+      "kind": "waapi",
+      "name": "motion:digit-roll-out",
+      "target": "span",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 180,
+      "delay": 24,
+      "iterations": 1,
+      "easing": "ease.spring-snappy",
+      "fill": "both",
+      "kf": [
+       {
+        "opacity": "1",
+        "transform": "none"
+       },
+       {
+        "opacity": "0",
+        "transform": "translateY(-100%)"
+       }
+      ],
+      "first": 61,
+      "last": 257,
+      "playState": "running"
+     },
+     {
+      "kind": "waapi",
+      "name": "motion:digit-roll",
+      "target": "span",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 180,
+      "delay": 48,
+      "iterations": 1,
+      "easing": "ease.spring-snappy",
+      "fill": "backwards",
+      "kf": [
+       {
+        "opacity": "0",
+        "transform": "translateY(100%)"
+       },
+       {
+        "opacity": "1",
+        "transform": "none"
+       }
+      ],
+      "first": 61,
+      "last": 273,
+      "playState": "running"
+     },
+     {
+      "kind": "waapi",
+      "name": "motion:digit-roll-out",
+      "target": "span",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 180,
+      "delay": 48,
+      "iterations": 1,
+      "easing": "ease.spring-snappy",
+      "fill": "both",
+      "kf": [
+       {
+        "opacity": "1",
+        "transform": "none"
+       },
+       {
+        "opacity": "0",
+        "transform": "translateY(-100%)"
+       }
+      ],
+      "first": 61,
+      "last": 273,
+      "playState": "running"
+     },
+     {
+      "kind": "waapi",
+      "name": "motion:stat-trend",
+      "target": "svg[icon]",
+      "props": [
+       "transform"
+      ],
+      "duration": 220,
+      "delay": 24,
+      "iterations": 1,
+      "easing": "ease.out",
+      "fill": "none",
+      "kf": [
+       {
+        "transform": "none"
+       },
+       {
+        "offset": 0.35,
+        "transform": "translateY(calc(-1 * var(--ds-distance-nudge)))"
+       },
+       {
+        "transform": "none"
+       }
+      ],
+      "first": 61,
+      "last": 289,
+      "playState": "running"
+     }
+    ],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 244,
+    "infinite": [],
+    "stateAt": 61,
+    "firstMotionAt": 61,
+    "focusAfter": "button[button]",
+    "frames": 89,
+    "animCount": 7
+   },
+   "rapid": {
+    "left": [],
+    "held": [],
+    "inline": [
+     "svg[icon] transform-origin: 50% 50%; transform-box: fill-box;"
+    ],
+    "ghosts": 0,
+    "nodes": 27,
+    "indicators": "0 ok",
+    "custom": {
+     "label": "1,588",
+     "shown": "1,588",
+     "roller": 1067
+    },
+    "nodesBefore": 27
+   },
+   "interrupt": {
+    "left": [],
+    "held": [],
+    "inline": [
+     "svg[icon] transform-origin: 50% 50%; transform-box: fill-box;"
+    ],
+    "ghosts": 0,
+    "nodes": 27,
+    "indicators": "0 ok",
+    "custom": {
+     "label": "1,654",
+     "shown": "1,654",
+     "roller": 1067
+    }
+   },
+   "tenFast": {
+    "before": {
+     "label": "1,654",
+     "shown": "1,654",
+     "roller": 1067
+    },
+    "after": {
+     "label": "2,524",
+     "shown": "2,524",
+     "roller": 1067
+    },
+    "rest": {
+     "left": [],
+     "held": [],
+     "inline": [
+      "svg[icon] transform-origin: 50% 50%; transform-box: fill-box;"
+     ]
+    },
+    "motionStarts": [
+     20
+    ],
+    "windowMs": 300
+   },
+   "off": null,
+   "full.rtl": {
+    "anims": [
+     {
+      "kind": "waapi",
+      "name": "motion:digit-roll",
+      "target": "span",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 180,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.spring-snappy",
+      "fill": "none",
+      "kf": [
+       {
+        "opacity": "0",
+        "transform": "translateY(100%)"
+       },
+       {
+        "opacity": "1",
+        "transform": "none"
+       }
+      ],
+      "first": 71,
+      "last": 234,
+      "playState": "running"
+     },
+     {
+      "kind": "waapi",
+      "name": "motion:digit-roll-out",
+      "target": "span",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 180,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.spring-snappy",
+      "fill": "both",
+      "kf": [
+       {
+        "opacity": "1",
+        "transform": "none"
+       },
+       {
+        "opacity": "0",
+        "transform": "translateY(-100%)"
+       }
+      ],
+      "first": 71,
+      "last": 234,
+      "playState": "running"
+     },
+     {
+      "kind": "waapi",
+      "name": "motion:digit-roll",
+      "target": "span",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 180,
+      "delay": 24,
+      "iterations": 1,
+      "easing": "ease.spring-snappy",
+      "fill": "backwards",
+      "kf": [
+       {
+        "opacity": "0",
+        "transform": "translateY(100%)"
+       },
+       {
+        "opacity": "1",
+        "transform": "none"
+       }
+      ],
+      "first": 71,
+      "last": 268,
+      "playState": "running"
+     },
+     {
+      "kind": "waapi",
+      "name": "motion:digit-roll-out",
+      "target": "span",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 180,
+      "delay": 24,
+      "iterations": 1,
+      "easing": "ease.spring-snappy",
+      "fill": "both",
+      "kf": [
+       {
+        "opacity": "1",
+        "transform": "none"
+       },
+       {
+        "opacity": "0",
+        "transform": "translateY(-100%)"
+       }
+      ],
+      "first": 71,
+      "last": 268,
+      "playState": "running"
+     },
+     {
+      "kind": "waapi",
+      "name": "motion:digit-roll",
+      "target": "span",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 180,
+      "delay": 48,
+      "iterations": 1,
+      "easing": "ease.spring-snappy",
+      "fill": "backwards",
+      "kf": [
+       {
+        "opacity": "0",
+        "transform": "translateY(100%)"
+       },
+       {
+        "opacity": "1",
+        "transform": "none"
+       }
+      ],
+      "first": 71,
+      "last": 285,
+      "playState": "running"
+     },
+     {
+      "kind": "waapi",
+      "name": "motion:digit-roll-out",
+      "target": "span",
+      "props": [
+       "opacity",
+       "transform"
+      ],
+      "duration": 180,
+      "delay": 48,
+      "iterations": 1,
+      "easing": "ease.spring-snappy",
+      "fill": "both",
+      "kf": [
+       {
+        "opacity": "1",
+        "transform": "none"
+       },
+       {
+        "opacity": "0",
+        "transform": "translateY(-100%)"
+       }
+      ],
+      "first": 71,
+      "last": 285,
+      "playState": "running"
+     },
+     {
+      "kind": "waapi",
+      "name": "motion:stat-trend",
+      "target": "svg[icon]",
+      "props": [
+       "transform"
+      ],
+      "duration": 220,
+      "delay": 24,
+      "iterations": 1,
+      "easing": "ease.out",
+      "fill": "none",
+      "kf": [
+       {
+        "transform": "none"
+       },
+       {
+        "offset": 0.35,
+        "transform": "translateY(calc(-1 * var(--ds-distance-nudge)))"
+       },
+       {
+        "transform": "none"
+       }
+      ],
+      "first": 71,
+      "last": 301,
+      "playState": "running"
+     }
+    ],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 244,
+    "infinite": [],
+    "stateAt": 71,
+    "firstMotionAt": 71,
+    "focusAfter": "button[button]",
+    "frames": 74,
+    "animCount": 7,
+    "rapid": {
+     "left": [],
+     "held": [],
+     "inline": [
+      "svg[icon] transform-origin: 50% 50%; transform-box: fill-box;"
+     ],
+     "ghosts": 0,
+     "nodes": 27,
+     "indicators": "0 ok",
+     "custom": {
+      "label": "1,501",
+      "shown": "1,501",
+      "roller": 1067
+     },
+     "nodesBefore": 27
+    }
+   },
+   "media.ltr": {
+    "anims": [],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 0,
+    "infinite": [],
+    "stateAt": 68,
+    "firstMotionAt": null,
+    "focusAfter": "button[button]",
+    "frames": 73,
+    "animCount": 0,
+    "restOffTransforms": []
+   },
+   "media.rtl": {
+    "anims": [],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 0,
+    "infinite": [],
+    "stateAt": 108,
+    "firstMotionAt": null,
+    "focusAfter": "button[button]",
+    "frames": 73,
+    "animCount": 0,
+    "restOffTransforms": []
+   },
+   "attr.ltr": {
+    "anims": [],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 0,
+    "infinite": [],
+    "stateAt": 66,
+    "firstMotionAt": null,
+    "focusAfter": "button[button]",
+    "frames": 75,
+    "animCount": 0,
+    "restOffTransforms": []
+   },
+   "attr.rtl": {
+    "anims": [],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 0,
+    "infinite": [],
+    "stateAt": 56,
+    "firstMotionAt": null,
+    "focusAfter": "button[button]",
+    "frames": 73,
+    "animCount": 0,
+    "restOffTransforms": []
+   }
+  }
+ },
+ "sheet": "stat-roll.sheet.png"
+}
