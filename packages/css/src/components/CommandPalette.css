@@ -158,11 +158,11 @@
   }
 
   [data-ds='command-palette'] > [data-part='backdrop'][data-state='open'] {
-    animation: ds-dialog-fade-in var(--_command-palette-duration-in) var(--_command-palette-ease-in);
+    animation: ds-command-palette-backdrop-in var(--_command-palette-duration-in) var(--_command-palette-ease-in);
   }
 
   [data-ds='command-palette'] > [data-part='backdrop'][data-state='closed'] {
-    animation: ds-dialog-fade-out var(--_command-palette-duration-out) var(--_command-palette-ease-out) forwards;
+    animation: ds-command-palette-backdrop-out var(--_command-palette-duration-out) var(--_command-palette-ease-out) forwards;
   }
 
   /* ------------------------------------------------------------ panel */
@@ -438,7 +438,23 @@
 
   /* ------------------------------------------------------------ motion: interaction "command-palette-open", pattern "dialog" */
 
-  /* The backdrop fades with ds-dialog-fade-in and -out from Dialog.css; the panel has its own keyframes on its own properties. */
+  /*
+   * The backdrop fades with keyframes of its own (order 1.23: Dialog.css no
+   * longer defines ds-dialog-fade-in and -out, and a missing keyframe left the
+   * closed backdrop mounted over the page, since Radix waited for its end).
+   */
+  @keyframes ds-command-palette-backdrop-in {
+    from {
+      opacity: 0;
+    }
+  }
+
+  @keyframes ds-command-palette-backdrop-out {
+    to {
+      opacity: 0;
+    }
+  }
+
   @keyframes ds-command-palette-in {
     from {
       opacity: 0;

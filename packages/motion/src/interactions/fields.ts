@@ -537,10 +537,10 @@ export const fieldsInteractions = [
     feedback:
       'The key plays the rubber band of a drag: the thumb and the fill pull half of --_slider-pull-max past that end on the snappy spring, hold for one snappy spring, and spring back on the bouncy spring, past the end and back. The value never changes. A held key pulls once; a rapid second key restarts it.',
     beats: [
-      'Pull: --_slider-pull-end (or -start) goes to 0.5, the thumb transform travels up to half of --_slider-pull-max (Neutral 6px, Desk 12px, Studio 4px) and the fill clip follows on ease.spring-snappy over duration.spring-snappy (180, 300, 80ms).',
+      'Pull: --_slider-pull-end (or -start) goes to 0.5, the thumb transform travels up to half of --_slider-pull-max (Neutral 9px, Desk 18px, Studio 6px) and the fill clip follows on ease.spring-snappy over duration.spring-snappy (180, 300, 80ms).',
       'Release: after one duration.spring-snappy the pull goes back to 0 on ease.spring-bouncy over duration.spring-bouncy (220, 440, 120ms).',
     ],
-    styles: { neutral: 'a 6px pull and a small bounce', desk: 'a 12px pull with a big bounce', studio: 'a 4px stop' },
+    styles: { neutral: 'a 9px pull and a small bounce', desk: 'an 18px pull with a big bounce', studio: 'a 6px stop' },
     reduced: 'No motion: --_slider-pull-max is 0px, the value stays at its end and the focus ring carries the state.',
     off: {
       "[data-ds='slider']": { '--_slider-pull-max': '0px' },
@@ -574,12 +574,12 @@ export const fieldsInteractions = [
     drive: 'css',
     trigger: 'A drag on a horizontal slider goes past the minimum or the maximum, and lets go.',
     feedback:
-      'The outer thumb of that end follows the pointer past the end of the track with resistance, and the fill stretches out with it, up to --_slider-pull-max (twice distance.enter). The further the pointer goes, the less it gives: the pull is 1 minus 1 over (1 plus distance over the thumb size). On release the thumb and the fill spring back to the end on the bouncy spring, past it and back.',
+      'The outer thumb of that end follows the pointer past the end of the track with resistance, and the fill stretches out with it, up to --_slider-pull-max (three times distance.enter). The further the pointer goes, the less it gives: the pull is 1 minus 1 over (1 plus distance over the thumb size). On release the thumb and the fill spring back to the end on the bouncy spring, past it and back.',
     beats: [
-      'Pull: the thumb translates by the pull times --_slider-pull-max (Neutral 12px at most, Desk 24px, Studio 8px); the fill clip reaches the same place.',
+      'Pull: the thumb translates by the pull times --_slider-pull-max (Neutral 18px at most, Desk 36px, Studio 12px); the fill clip reaches the same place.',
       'Release: the thumb transform returns on ease.spring-bouncy over duration.spring-bouncy (220, 440, 120ms); the fill clip on the same spring (slider-fill).',
     ],
-    styles: { neutral: 'a 12px pull', desk: 'a long elastic pull', studio: 'a short stop' },
+    styles: { neutral: 'an 18px pull', desk: 'a long elastic pull', studio: 'a short stop' },
     reduced: 'No pull: the thumb stops at the end (--_slider-pull-max is 0px).',
     off: {
       "[data-ds='slider']": { '--_slider-pull-max': '0px' },
