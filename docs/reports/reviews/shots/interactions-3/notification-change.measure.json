@@ -1,0 +1,850 @@
+{
+ "id": "notification-change",
+ "runs": {
+  "studio.ltr.full": {
+   "anims": [
+    {
+     "n": "ds-motion:flip",
+     "tg": "h3[group-label]#_r_0_-g0",
+     "p": "transform",
+     "d": 70,
+     "dl": 0,
+     "it": 1,
+     "e": "steps(2)",
+     "first": 122,
+     "kf": [
+      [
+       "translate(0px, 35.27px)"
+      ],
+      [
+       "none"
+      ]
+     ]
+    },
+    {
+     "n": "ds-motion:flip",
+     "tg": "li",
+     "p": "opacity,transform",
+     "d": 120,
+     "dl": 0,
+     "it": 1,
+     "e": "steps(3)",
+     "first": 122,
+     "kf": [
+      [
+       0,
+       "translateY(var(--ds-distance-shift, 4px)) scale(var(--ds-scale-enter, 0.97))",
+       "0"
+      ],
+      [
+       0.3,
+       "1"
+      ],
+      [
+       1,
+       "none",
+       "1"
+      ]
+     ]
+    },
+    {
+     "n": "ds-motion:flip",
+     "tg": "li",
+     "p": "transform",
+     "d": 70,
+     "dl": 0,
+     "it": 1,
+     "e": "steps(2)",
+     "first": 122,
+     "kf": [
+      [
+       "translate(0px, -35.28px)"
+      ],
+      [
+       "none"
+      ]
+     ]
+    },
+    {
+     "n": "ds-motion:flip",
+     "tg": "li",
+     "p": "transform",
+     "d": 70,
+     "dl": 0,
+     "it": 1,
+     "e": "steps(2)",
+     "first": 122,
+     "kf": [
+      [
+       "translate(0px, -35.28px)"
+      ],
+      [
+       "none"
+      ]
+     ]
+    },
+    {
+     "n": "ds-motion:digit-roll",
+     "tg": "span",
+     "p": "opacity,transform",
+     "d": 70,
+     "dl": 0,
+     "it": 1,
+     "e": "steps(2)",
+     "first": 122,
+     "kf": [
+      [
+       "translateY(100%)",
+       "0"
+      ],
+      [
+       "none",
+       "1"
+      ]
+     ]
+    },
+    {
+     "n": "ds-motion:digit-roll-out",
+     "tg": "span",
+     "p": "opacity,transform",
+     "d": 70,
+     "dl": 0,
+     "it": 1,
+     "e": "steps(2)",
+     "first": 122,
+     "kf": [
+      [
+       "none",
+       "1"
+      ],
+      [
+       "translateY(-100%)",
+       "0"
+      ]
+     ]
+    },
+    {
+     "n": "ds-motion:pop-mark",
+     "tg": "span[count]",
+     "p": "transform",
+     "d": 120,
+     "dl": 0,
+     "it": 1,
+     "e": "cubic-bezier(0, 0, 0.58,",
+     "first": 122,
+     "kf": [
+      [
+       "none"
+      ],
+      [
+       0.2,
+       "scale(var(--ds-scale-anticipate))"
+      ],
+      [
+       0.55,
+       "scale(var(--ds-scale-pop))"
+      ],
+      [
+       "none"
+      ]
+     ]
+    }
+   ],
+   "bad": [],
+   "stateAt": null,
+   "firstMotionAt": 122,
+   "longest": 120,
+   "infinite": [],
+   "focus": "button[button]",
+   "layoutTransitions": []
+  },
+  "desk.ltr.full": {
+   "anims": [
+    {
+     "n": "ds-motion:flip",
+     "tg": "h3[group-label]#_r_0_-g0",
+     "p": "transform",
+     "d": 300,
+     "dl": 0,
+     "it": 1,
+     "e": "linear(0 0%, 0.087 5%, 0",
+     "first": 114,
+     "kf": [
+      [
+       "translate(0px, 36.48px)"
+      ],
+      [
+       "none"
+      ]
+     ]
+    },
+    {
+     "n": "ds-motion:flip",
+     "tg": "li",
+     "p": "opacity,transform",
+     "d": 380,
+     "dl": 0,
+     "it": 1,
+     "e": "linear(0 0%, 0.142 5%, 0",
+     "first": 114,
+     "kf": [
+      [
+       0,
+       "translateY(var(--ds-distance-shift, 4px)) scale(var(--ds-scale-enter, 0.97))",
+       "0"
+      ],
+      [
+       0.3,
+       "1"
+      ],
+      [
+       1,
+       "none",
+       "1"
+      ]
+     ]
+    },
+    {
+     "n": "ds-motion:flip",
+     "tg": "li",
+     "p": "transform",
+     "d": 300,
+     "dl": 0,
+     "it": 1,
+     "e": "linear(0 0%, 0.087 5%, 0",
+     "first": 114,
+     "kf": [
+      [
+       "translate(0px, -36.5px)"
+      ],
+      [
+       "none"
+      ]
+     ]
+    },
+    {
+     "n": "ds-motion:flip",
+     "tg": "li",
+     "p": "transform",
+     "d": 300,
+     "dl": 0,
+     "it": 1,
+     "e": "linear(0 0%, 0.087 5%, 0",
+     "first": 114,
+     "kf": [
+      [
+       "translate(0px, -36.5px)"
+      ],
+      [
+       "none"
+      ]
+     ]
+    },
+    {
+     "n": "ds-motion:digit-roll",
+     "tg": "span",
+     "p": "opacity,transform",
+     "d": 300,
+     "dl": 0,
+     "it": 1,
+     "e": "linear(0 0%, 0.087 5%, 0",
+     "first": 114,
+     "kf": [
+      [
+       "translateY(100%)",
+       "0"
+      ],
+      [
+       "none",
+       "1"
+      ]
+     ]
+    },
+    {
+     "n": "ds-motion:digit-roll-out",
+     "tg": "span",
+     "p": "opacity,transform",
+     "d": 300,
+     "dl": 0,
+     "it": 1,
+     "e": "linear(0 0%, 0.087 5%, 0",
+     "first": 114,
+     "kf": [
+      [
+       "none",
+       "1"
+      ],
+      [
+       "translateY(-100%)",
+       "0"
+      ]
+     ]
+    },
+    {
+     "n": "ds-motion:pop-mark",
+     "tg": "span[count]",
+     "p": "transform",
+     "d": 480,
+     "dl": 0,
+     "it": 1,
+     "e": "cubic-bezier(0, 0, 0.58,",
+     "first": 114,
+     "kf": [
+      [
+       "none"
+      ],
+      [
+       0.2,
+       "scale(var(--ds-scale-anticipate))"
+      ],
+      [
+       0.55,
+       "scale(var(--ds-scale-pop))"
+      ],
+      [
+       "none"
+      ]
+     ]
+    }
+   ],
+   "bad": [],
+   "stateAt": null,
+   "firstMotionAt": 114,
+   "longest": 480,
+   "infinite": [],
+   "focus": "button[button]",
+   "layoutTransitions": []
+  },
+  "neutral.ltr.full": {
+   "anims": [
+    {
+     "n": "ds-motion:flip",
+     "tg": "h3[group-label]#_r_0_-g0",
+     "p": "transform",
+     "d": 158,
+     "dl": 0,
+     "it": 1,
+     "e": "linear(0 0%, 0.055 5%, 0",
+     "first": 103,
+     "kf": [
+      [
+       "translate(0px, 31.63px)"
+      ],
+      [
+       "none"
+      ]
+     ]
+    },
+    {
+     "n": "ds-motion:flip",
+     "tg": "li",
+     "p": "opacity,transform",
+     "d": 200,
+     "dl": 0,
+     "it": 1,
+     "e": "linear(0 0%, 0.054 5%, 0",
+     "first": 103,
+     "kf": [
+      [
+       0,
+       "translateY(var(--ds-distance-shift, 4px)) scale(var(--ds-scale-enter, 0.97))",
+       "0"
+      ],
+      [
+       0.3,
+       "1"
+      ],
+      [
+       1,
+       "none",
+       "1"
+      ]
+     ]
+    },
+    {
+     "n": "ds-motion:flip",
+     "tg": "li",
+     "p": "transform",
+     "d": 158,
+     "dl": 0,
+     "it": 1,
+     "e": "linear(0 0%, 0.055 5%, 0",
+     "first": 103,
+     "kf": [
+      [
+       "translate(0px, -31.62px)"
+      ],
+      [
+       "none"
+      ]
+     ]
+    },
+    {
+     "n": "ds-motion:flip",
+     "tg": "li",
+     "p": "transform",
+     "d": 158,
+     "dl": 0,
+     "it": 1,
+     "e": "linear(0 0%, 0.055 5%, 0",
+     "first": 103,
+     "kf": [
+      [
+       "translate(0px, -31.62px)"
+      ],
+      [
+       "none"
+      ]
+     ]
+    },
+    {
+     "n": "ds-motion:digit-roll",
+     "tg": "span",
+     "p": "opacity,transform",
+     "d": 158,
+     "dl": 0,
+     "it": 1,
+     "e": "linear(0 0%, 0.055 5%, 0",
+     "first": 103,
+     "kf": [
+      [
+       "translateY(100%)",
+       "0"
+      ],
+      [
+       "none",
+       "1"
+      ]
+     ]
+    },
+    {
+     "n": "ds-motion:digit-roll-out",
+     "tg": "span",
+     "p": "opacity,transform",
+     "d": 158,
+     "dl": 0,
+     "it": 1,
+     "e": "linear(0 0%, 0.055 5%, 0",
+     "first": 103,
+     "kf": [
+      [
+       "none",
+       "1"
+      ],
+      [
+       "translateY(-100%)",
+       "0"
+      ]
+     ]
+    },
+    {
+     "n": "ds-motion:pop-mark",
+     "tg": "span[count]",
+     "p": "transform",
+     "d": 200,
+     "dl": 0,
+     "it": 1,
+     "e": "cubic-bezier(0, 0, 0.58,",
+     "first": 103,
+     "kf": [
+      [
+       "none"
+      ],
+      [
+       0.2,
+       "scale(var(--ds-scale-anticipate))"
+      ],
+      [
+       0.55,
+       "scale(var(--ds-scale-pop))"
+      ],
+      [
+       "none"
+      ]
+     ]
+    }
+   ],
+   "bad": [],
+   "stateAt": null,
+   "firstMotionAt": 103,
+   "longest": 200,
+   "infinite": [],
+   "focus": "button[button]",
+   "layoutTransitions": []
+  },
+  "liquid.ltr.full": {
+   "anims": [
+    {
+     "n": "ds-motion:flip",
+     "tg": "h3[group-label]#_r_0_-g0",
+     "p": "transform",
+     "d": 296,
+     "dl": 0,
+     "it": 1,
+     "e": "linear(0 0%, 0.054 5%, 0",
+     "first": 98,
+     "kf": [
+      [
+       "translate(0px, 32.08px)"
+      ],
+      [
+       "none"
+      ]
+     ]
+    },
+    {
+     "n": "ds-motion:flip",
+     "tg": "li",
+     "p": "opacity,transform",
+     "d": 496,
+     "dl": 0,
+     "it": 1,
+     "e": "linear(0 0%, 0.086 5%, 0",
+     "first": 98,
+     "kf": [
+      [
+       0,
+       "translateY(var(--ds-distance-shift, 4px)) scale(var(--ds-scale-enter, 0.97))",
+       "0"
+      ],
+      [
+       0.3,
+       "1"
+      ],
+      [
+       1,
+       "none",
+       "1"
+      ]
+     ]
+    },
+    {
+     "n": "ds-motion:flip",
+     "tg": "li",
+     "p": "transform",
+     "d": 296,
+     "dl": 0,
+     "it": 1,
+     "e": "linear(0 0%, 0.054 5%, 0",
+     "first": 98,
+     "kf": [
+      [
+       "translate(0px, -32.08px)"
+      ],
+      [
+       "none"
+      ]
+     ]
+    },
+    {
+     "n": "ds-motion:flip",
+     "tg": "li",
+     "p": "transform",
+     "d": 296,
+     "dl": 0,
+     "it": 1,
+     "e": "linear(0 0%, 0.054 5%, 0",
+     "first": 98,
+     "kf": [
+      [
+       "translate(0px, -32.08px)"
+      ],
+      [
+       "none"
+      ]
+     ]
+    },
+    {
+     "n": "ds-motion:digit-roll",
+     "tg": "span",
+     "p": "opacity,transform",
+     "d": 296,
+     "dl": 0,
+     "it": 1,
+     "e": "linear(0 0%, 0.054 5%, 0",
+     "first": 98,
+     "kf": [
+      [
+       "translateY(100%)",
+       "0"
+      ],
+      [
+       "none",
+       "1"
+      ]
+     ]
+    },
+    {
+     "n": "ds-motion:digit-roll-out",
+     "tg": "span",
+     "p": "opacity,transform",
+     "d": 296,
+     "dl": 0,
+     "it": 1,
+     "e": "linear(0 0%, 0.054 5%, 0",
+     "first": 98,
+     "kf": [
+      [
+       "none",
+       "1"
+      ],
+      [
+       "translateY(-100%)",
+       "0"
+      ]
+     ]
+    },
+    {
+     "n": "ds-motion:pop-mark",
+     "tg": "span[count]",
+     "p": "transform",
+     "d": 480,
+     "dl": 0,
+     "it": 1,
+     "e": "cubic-bezier(0, 0, 0.58,",
+     "first": 98,
+     "kf": [
+      [
+       "none"
+      ],
+      [
+       0.2,
+       "scale(var(--ds-scale-anticipate))"
+      ],
+      [
+       0.55,
+       "scale(var(--ds-scale-pop))"
+      ],
+      [
+       "none"
+      ]
+     ]
+    }
+   ],
+   "bad": [],
+   "stateAt": null,
+   "firstMotionAt": 98,
+   "longest": 496,
+   "infinite": [],
+   "focus": "button[button]",
+   "layoutTransitions": []
+  },
+  "neutral.rtl.full": {
+   "anims": [
+    {
+     "n": "ds-motion:flip",
+     "tg": "h3[group-label]#_r_0_-g0",
+     "p": "transform",
+     "d": 158,
+     "dl": 0,
+     "it": 1,
+     "e": "linear(0 0%, 0.055 5%, 0",
+     "first": 83,
+     "kf": [
+      [
+       "translate(0px, 37.03px)"
+      ],
+      [
+       "none"
+      ]
+     ]
+    },
+    {
+     "n": "ds-motion:flip",
+     "tg": "li",
+     "p": "opacity,transform",
+     "d": 200,
+     "dl": 0,
+     "it": 1,
+     "e": "linear(0 0%, 0.054 5%, 0",
+     "first": 83,
+     "kf": [
+      [
+       0,
+       "translateY(var(--ds-distance-shift, 4px)) scale(var(--ds-scale-enter, 0.97))",
+       "0"
+      ],
+      [
+       0.3,
+       "1"
+      ],
+      [
+       1,
+       "none",
+       "1"
+      ]
+     ]
+    },
+    {
+     "n": "ds-motion:flip",
+     "tg": "li",
+     "p": "transform",
+     "d": 158,
+     "dl": 0,
+     "it": 1,
+     "e": "linear(0 0%, 0.055 5%, 0",
+     "first": 83,
+     "kf": [
+      [
+       "translate(0px, -37.03px)"
+      ],
+      [
+       "none"
+      ]
+     ]
+    },
+    {
+     "n": "ds-motion:flip",
+     "tg": "li",
+     "p": "transform",
+     "d": 158,
+     "dl": 0,
+     "it": 1,
+     "e": "linear(0 0%, 0.055 5%, 0",
+     "first": 83,
+     "kf": [
+      [
+       "translate(0px, -37.03px)"
+      ],
+      [
+       "none"
+      ]
+     ]
+    },
+    {
+     "n": "ds-motion:digit-roll",
+     "tg": "span",
+     "p": "opacity,transform",
+     "d": 158,
+     "dl": 0,
+     "it": 1,
+     "e": "linear(0 0%, 0.055 5%, 0",
+     "first": 83,
+     "kf": [
+      [
+       "translateY(100%)",
+       "0"
+      ],
+      [
+       "none",
+       "1"
+      ]
+     ]
+    },
+    {
+     "n": "ds-motion:digit-roll-out",
+     "tg": "span",
+     "p": "opacity,transform",
+     "d": 158,
+     "dl": 0,
+     "it": 1,
+     "e": "linear(0 0%, 0.055 5%, 0",
+     "first": 83,
+     "kf": [
+      [
+       "none",
+       "1"
+      ],
+      [
+       "translateY(-100%)",
+       "0"
+      ]
+     ]
+    },
+    {
+     "n": "ds-motion:pop-mark",
+     "tg": "span[count]",
+     "p": "transform",
+     "d": 200,
+     "dl": 0,
+     "it": 1,
+     "e": "cubic-bezier(0, 0, 0.58,",
+     "first": 83,
+     "kf": [
+      [
+       "none"
+      ],
+      [
+       0.2,
+       "scale(var(--ds-scale-anticipate))"
+      ],
+      [
+       0.55,
+       "scale(var(--ds-scale-pop))"
+      ],
+      [
+       "none"
+      ]
+     ]
+    }
+   ],
+   "bad": [],
+   "stateAt": null,
+   "firstMotionAt": 83,
+   "longest": 200,
+   "infinite": [],
+   "focus": "button[button]",
+   "layoutTransitions": []
+  },
+  "desk.ltr.media": {
+   "anims": [],
+   "bad": [],
+   "stateAt": null,
+   "firstMotionAt": null,
+   "longest": 0,
+   "infinite": [],
+   "focus": "button[button]",
+   "layoutTransitions": []
+  },
+  "neutral.ltr.media": {
+   "anims": [],
+   "bad": [],
+   "stateAt": null,
+   "firstMotionAt": null,
+   "longest": 0,
+   "infinite": [],
+   "focus": "button[button]",
+   "layoutTransitions": []
+  },
+  "liquid.ltr.media": {
+   "anims": [],
+   "bad": [],
+   "stateAt": null,
+   "firstMotionAt": null,
+   "longest": 0,
+   "infinite": [],
+   "focus": "button[button]",
+   "layoutTransitions": []
+  },
+  "desk.ltr.attr": {
+   "anims": [],
+   "bad": [],
+   "stateAt": null,
+   "firstMotionAt": null,
+   "longest": 0,
+   "infinite": [],
+   "focus": "button[button]",
+   "layoutTransitions": []
+  },
+  "neutral.ltr.attr": {
+   "anims": [],
+   "bad": [],
+   "stateAt": null,
+   "firstMotionAt": null,
+   "longest": 0,
+   "infinite": [],
+   "focus": "button[button]",
+   "layoutTransitions": []
+  },
+  "liquid.ltr.attr": {
+   "anims": [],
+   "bad": [],
+   "stateAt": null,
+   "firstMotionAt": null,
+   "longest": 0,
+   "infinite": [],
+   "focus": "button[button]",
+   "layoutTransitions": []
+  }
+ }
+}
