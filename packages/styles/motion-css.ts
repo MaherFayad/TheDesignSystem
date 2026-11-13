@@ -1,9 +1,10 @@
-// Writes packages/styles/<id>/motion.css from <id>/motion.ts: the recipes
+// Writes packages/styles/<id>/recipes/Motion.css from <id>/motion.ts: the recipes
 // that turn off the CSS interactions a style plays in its reduced form or not
-// at all (interactionRecipes in @the-system/motion). Each style loads it
-// through recipes/Motion.css, so the generated index.css picks it up without
-// a change to scripts/gen-index.ts. Run: npx tsx packages/styles/motion-css.ts
-// The test next to this file fails when a motion.css is out of date.
+// at all (interactionRecipes in @the-system/motion). It lives in recipes/
+// because the vocabulary gate allows private properties only in component CSS
+// and recipes, and the generated index.css imports every recipe, so no change
+// to scripts/gen-index.ts is needed. Run: npx tsx packages/styles/motion-css.ts
+// The test next to this file fails when a file is out of date.
 import { existsSync, readdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -25,7 +26,7 @@ export async function motionCss(id: string): Promise<string> {
 }
 
 export function motionCssPath(id: string): string {
-  return join(here, id, 'motion.css');
+  return join(here, id, 'recipes', 'Motion.css');
 }
 
 if (process.argv[1] && fileURLToPath(import.meta.url) === process.argv[1]) {
@@ -33,6 +34,6 @@ if (process.argv[1] && fileURLToPath(import.meta.url) === process.argv[1]) {
     const css = await motionCss(id);
     const path = motionCssPath(id);
     if (!existsSync(path) || readFileSync(path, 'utf8') !== css) writeFileSync(path, css);
-    console.log(`motion.css: ${id}`);
+    console.log(`recipes/Motion.css: ${id}`);
   }
 }
