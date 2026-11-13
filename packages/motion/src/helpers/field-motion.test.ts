@@ -12,10 +12,14 @@ import {
   fadeOutBeat,
   landPop,
   parentBox,
+  measureFloatBox,
   placeDigitLayer,
+  placeFloatingLabel,
   playBeat,
   runStep,
   shakeBeat,
+  shakeSwings,
+  styleTurnsOff,
   token,
 } from './field-motion';
 
@@ -184,5 +188,102 @@ describe('field-motion', () => {
     } finally {
       rec.restore();
     }
+  });
+});
+
+describe('floating label box (review B6)', () => {
+  // jsdom has no layout: give the box and the control the sizes a browser would.
+  function floatingField(dir: 'ltr' | 'rtl', zoom = 1) {
+    const field = document.createElement('div');
+    field.dir = dir;
+    const box = document.createElement('div');
+    const input = document.createElement('input');
+    input.style.paddingLeft = '0px';
+    input.style.paddingRight = '0px';
+    box.append(input);
+    const label = document.createElement('label');
+    field.append(box, label);
+    document.body.append(field);
+    Object.defineProperty(box, 'offsetHeight', { value: 44 });
+    Object.defineProperty(box, 'offsetWidth', { value: 200 });
+    box.getBoundingClientRect = () => new DOMRect(10 * zoom, 0, 200 * zoom, 44 * zoom);
+    // The text starts 17px in from the box's start edge on either side.
+    input.getBoundingClientRect = () => new DOMRect((10 + 17) * zoom, 0, 166 * zoom, 44 * zoom);
+    return field;
+  }
+  afterEach(() => document.body.replaceChildren());
+
+  it('reads the box height and the text inset from the control', () => {
+    expect(measureFloatBox(floatingField('ltr'))).toEqual({ box: 44, inset: 17 });
+    expect(measureFloatBox(floatingField('rtl'))).toEqual({ box: 44, inset: 17 });
+  });
+
+  it('reads layout px under a zoom on an ancestor', () => {
+    expect(measureFloatBox(floatingField('ltr', 2.5))).toEqual({ box: 44, inset: 17 });
+  });
+
+  it('writes the box and the inset on the field, and clears them without a control', () => {
+    const field = floatingField('ltr');
+    placeFloatingLabel(field);
+    expect(field.style.getPropertyValue('--_field-float-box')).toBe('44px');
+    expect(field.style.getPropertyValue('--_field-float-inset')).toBe('17px');
+    field.querySelector('input')?.remove();
+    placeFloatingLabel(field);
+    expect(field.style.getPropertyValue('--_field-float-box')).toBe('');
+  });
+});
+
+describe('error shake reversal rate (review N17)', () => {
+  const reversals = (n: 1 | 2 | 3 | 4) => shakeBeat(1, n).keyframes.length - 2;
+  it('turns at most 12 times a second at every style duration', () => {
+    // Neutral 200ms, Desk 380ms, Liquid 496ms (review Part 1).
+    for (const ms of [200, 380, 496]) expect(reversals(shakeSwings(ms)) / (ms / 1000)).toBeLessThanOrEqual(12);
+  });
+  it('keeps four swings where there is time, and two in Neutral', () => {
+    expect(shakeSwings(380)).toBe(4);
+    expect(shakeSwings(200)).toBe(2);
+    expect(shakeSwings(0)).toBe(4);
+  });
+  it('starts toward the inline end and ends at rest with any swing count', () => {
+    for (const n of [1, 2, 3, 4] as const) {
+      const frames = shakeBeat(-1, n).keyframes;
+      expect(String(frames[1]?.transform)).toBe(`translateX(calc(-1 * ${token.shift}))`);
+      expect(frames[frames.length - 1]?.transform).toBe('none');
+    }
+  });
+});
+
+describe('off rows reach motion played from code (review N31)', () => {
+  afterEach(() => document.body.replaceChildren());
+  it('reads none, 0 and 0s as off, anything else as on', () => {
+    const el = document.createElement('div');
+    document.body.append(el);
+    expect(styleTurnsOff(el, '--_skeleton-swap')).toBe(false);
+    for (const v of ['none', '0', '0s', '0ms']) {
+      el.style.setProperty('--_skeleton-swap', v);
+      expect(styleTurnsOff(el, '--_skeleton-swap')).toBe(true);
+    }
+    el.style.setProperty('--_skeleton-swap', 'wipe');
+    expect(styleTurnsOff(el, '--_skeleton-swap')).toBe(false);
+  });
+
+  it('rolls no digits when the root says --_<component>-roll: none (scrub-roll off row)', () => {
+    const root = document.createElement('div');
+    root.dataset.ds = 'scrub-input';
+    root.style.setProperty('--_scrub-input-roll', 'none');
+    const layer = document.createElement('span');
+    const input = document.createElement('input');
+    root.append(input, layer);
+    document.body.append(root);
+    let calls = 0;
+    input.animate = (() => {
+      calls += 1;
+      return null;
+    }) as unknown as typeof input.animate;
+    digitLayerControl(() => layer).roll(input, '12', '13', { mode: 'full' });
+    // The layer is never placed over the input (placeDigitLayer shows it with display flex).
+    expect(layer.style.display).toBe('');
+    expect(layer.childElementCount).toBe(0);
+    expect(calls).toBe(0);
   });
 });

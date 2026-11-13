@@ -27,7 +27,7 @@ function stage() {
   const raf = window.requestAnimationFrame;
   const animate = function (this: Element, keyframes: Keyframe[], options: KeyframeAnimationOptions) {
     calls.push({ target: this, keyframes, options });
-    return { id: options.id, playState: 'running', finished: Promise.resolve(), cancel() {}, effect: { getTiming: () => options } };
+    return { id: options.id, playState: 'running', finished: Promise.resolve(), cancel() {}, effect: { getTiming: () => options, updateTiming: (t: OptionalEffectTiming) => Object.assign(options, t) } };
   };
   const rect = function (this: Element) {
     const siblings = this.parentElement ? [...this.parentElement.children] : [];
@@ -195,6 +195,19 @@ describe('motion-feedback', () => {
     expect(halo!.keyframes.map((k) => k.boxShadow)).toEqual(['0 0 0 0 var(--_progress-bar-fill, var(--_progress-circle-fill))', '0 0 0 var(--ds-distance-shift) transparent']);
     expect(popMark(el, 'reduced')).toBeNull();
     expect(haloBurst(el, 'reduced')).toBeNull();
+  });
+
+  it('Celebrate waits for the fill to land before it pops (review N38)', () => {
+    const el = document.createElement('span');
+    el.style.setProperty('--_progress-bar-duration', '340ms');
+    document.body.append(el);
+    const done = new Celebrate();
+    done.update(el, false, 'full');
+    done.update(el, true, 'full');
+    const [pop, halo] = s.take();
+    expect(pop!.options.delay).toBe(340);
+    expect(halo!.options.delay).toBe(340);
+    el.remove();
   });
 
   it('Celebrate sends the halo from the part a selector names (ProgressCircle: its indicator)', () => {

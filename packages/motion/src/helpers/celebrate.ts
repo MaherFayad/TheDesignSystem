@@ -3,7 +3,7 @@
 // React's useCelebrate (packages/react/src/components/ProgressBar/
 // ProgressBar.tsx) and Angular's components keep a Celebrate and call
 // `update` after each render.
-import { play, type PatternMode } from '../core';
+import { parseDuration, play, type PatternMode } from '../core';
 import { popMark } from './digit-roller';
 
 /**
@@ -21,9 +21,27 @@ export class Celebrate {
     if (!done || before) return null;
     const pop = popMark(el, mode, axis);
     const ring = halo ? el?.querySelector(halo) : el;
-    haloBurst(ring, mode);
+    const burst = haloBurst(ring, mode);
+    // Review N38: the beat follows the fill, so it plays once the bar or the arc has landed on full.
+    const wait = landingTime(el);
+    for (const a of [pop, burst]) if (a && wait > 0) a.effect?.updateTiming?.({ delay: wait });
     return pop;
   }
+}
+
+/**
+ * How long the fill takes to land, in ms: the bar's or the ring's own
+ * duration (--_progress-bar-duration, --_progress-circle-duration), read on
+ * the element. 0 under reduced motion, where those are 0s.
+ */
+export function landingTime(el: Element | null | undefined): number {
+  if (!el || typeof getComputedStyle !== 'function') return 0;
+  const cs = getComputedStyle(el);
+  for (const prop of ['--_progress-bar-duration', '--_progress-circle-duration']) {
+    const v = cs.getPropertyValue(prop).trim();
+    if (v) return parseDuration(v);
+  }
+  return 0;
 }
 
 /**

@@ -118,7 +118,7 @@ export const contentInteractions = [
     ],
     styles: { studio: 'a 100ms cut to the content', desk: 'a slow wipe', neutral: 'a short wipe' },
     reduced: 'No band; the ghost fades out over duration.morph (the round 2 cross fade).',
-    off: { "[data-ds='skeleton']": { '--_skeleton-loops': '0' } },
+    off: { "[data-ds='skeleton']": { '--_skeleton-loops': '0', '--_skeleton-swap': 'none' } },
     round: 3,
     status: 'proposed',
   },
@@ -166,7 +166,7 @@ export const contentInteractions = [
     pattern: 'pop',
     drive: 'waapi',
     trigger: 'The value reaches max after being below it (once per completion, never on a first paint at max).',
-    feedback: 'Once per completion: the bar track dips and pops on the block axis, the ring dips and pops, and round 3 adds a halo, a box-shadow ring in the fill colour that grows from the track or the ring by distance.shift and fades.',
+    feedback: 'Once per completion: the bar track dips and pops on the block axis, the ring dips and pops, and round 3 adds a halo, a box-shadow ring in the fill colour that grows from the track or the ring by distance.shift and fades. The beat waits for the fill to land (its own --_progress-bar-duration or --_progress-circle-duration), and a ring that reaches full draws on ease.out, so the arc never runs past 12 o\'clock.',
     beats: [
       'Anticipation: a dip to scale.anticipate (0.95, 0.9, 0.97) in the first fifth.',
       'Overshoot: a pop to scale.pop (1.05, 1.14, 1) at about half, then rest, over duration.celebrate (220, 480, 120ms) on ease.out.',
@@ -185,8 +185,8 @@ export const contentInteractions = [
     trigger: 'A Meter is first seen: at mount when it is on screen, else when it scrolls into view.',
     feedback: 'Round 3 (review N28): two beats. The fill grows from the inline start to the value once, when the meter is first seen, on --_meter-reveal-duration and --_meter-reveal-ease (duration.reveal and the soft spring by default, so a style can make it a snap or a long settle). Near the end (--_meter-value-at, 60%) the value text lands: it settles from distance.nudge and its colour comes up from the muted text on the bouncy spring.',
     beats: [
-      'Hold: until it is seen, an inline scaleX(0) holds the fill empty (set before the first paint); no animation waits paused.',
-      'Action: the fill transitions from 0 to the value on --_meter-reveal-ease over --_meter-reveal-duration (default 640ms on ease.spring-soft), once per mount.',
+      'Hold: until it is seen, the indicator\'s data-held draws the fill empty (set before the first paint); print shows the value; no animation waits paused.',
+      'Action: the fill transitions from 0 to the value on --_meter-reveal-ease over --_meter-reveal-duration (default 640ms on ease.spring-soft), once per mount; data-revealing keeps that timing until the next value change, so a longer style reveal is never cut.',
       'Land: at --_meter-value-at of the reveal the value text settles from distance.nudge and from text.muted to its colour on ease.spring-bouncy over duration.spring-bouncy.',
     ],
     styles: { studio: 'a stepped fill', desk: 'a fill that overshoots and settles', neutral: 'a smooth fill' },
@@ -224,6 +224,7 @@ export const contentInteractions = [
     ],
     styles: { studio: 'a ring only (pop is 1 in Studio)', desk: 'a strong beat', neutral: 'a light beat' },
     reduced: 'No motion: a still dot with its label.',
+    // The off row also stops the Avatar status ping and pop: its status part is a StatusDot, and the code reads --_status-dot-loops (review N31).
     off: { "[data-ds='status-dot']": { '--_status-dot-loops': '0' } },
     round: 3,
     status: 'proposed',
@@ -290,7 +291,7 @@ export const contentInteractions = [
     pattern: 'spinner',
     drive: 'css',
     trigger: 'A Spinner mounts while something loads.',
-    feedback: 'The spinner fades in, then turns in an endless linear loop that pauseLoops() can pause (WCAG 2.2.2).',
+    feedback: 'The spinner fades in, then turns in an endless linear loop. It stops in two ways: reduced motion (the media query or data-motion="reduce" on the root) leaves a still ring with its arc, and pauseLoops() pauses it for a page that offers its own pause control (WCAG 2.2.2). Without either it keeps turning: a loading mark is essential while the wait lasts, and its label says what is busy. The Button loading spinner and the indeterminate ProgressBar and ProgressCircle follow the same two rules.',
     beats: [
       'Action: the ring fades in over duration.spring-soft on ease.out, so a short wait does not blink.',
       'Loop: the ring turns once per duration.spin, linear, until the spinner unmounts or pauseLoops() pauses it.',

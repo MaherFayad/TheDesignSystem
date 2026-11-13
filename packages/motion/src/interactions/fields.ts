@@ -56,13 +56,13 @@ export const fieldsInteractions = [
       'The field box swings along the inline axis, toward the inline end first, with swings that shrink and a settle, over duration.spring-bouncy. Once per change to invalid: not on first paint of a field that starts invalid, not on each key while it stays invalid.',
     beats: [
       'Action: the box swings distance.shift toward the inline end (Neutral 4px, Desk 6px), then back about two thirds of it.',
-      'Settle: two smaller swings, distance.nudge and half of it, then rest, all inside duration.spring-bouncy (Neutral 220ms, Desk 440ms) on ease.out. RTL swings the other way first.',
+      'Settle: two smaller swings, distance.nudge and half of it, then rest, all inside duration.spring-bouncy (Neutral 220ms, Desk 440ms) on ease.out. RTL swings the other way first. The shake turns at most 12 times a second: a short duration drops the small swings (Neutral keeps the first swing and one back at half, then rest), so it never reads as a buzz.',
       'Secondary: the border eases to the danger color over duration.base, and the Field error comes out from under the control on the same frame (field-error-enter).',
     ],
     styles: {
       studio: 'none: the error color and message carry it',
       desk: 'a wide swing with a long settle',
-      neutral: 'a short swing that settles in 220ms',
+      neutral: 'one swing and a half swing back, settled in 220ms',
     },
     reduced: 'No motion. The error color and the Field message carry the state.',
     round: 3,
@@ -97,7 +97,7 @@ export const fieldsInteractions = [
     pattern: 'fade-rise',
     drive: 'waapi',
     trigger: 'A FieldDescription renders after the Field first painted (a hint that appears).',
-    feedback: 'The description slides down from distance.shift above and fades in on the soft spring. A description there at first paint does not move.',
+    feedback: 'The description slides down from distance.shift above and fades in on the soft spring. A description there at first paint does not move. What follows the field (or, in a Form, every row under the change) keeps its place on the first frame and glides to its new one on the soft spring (transform only, review N12); under reduced motion it steps.',
     beats: [
       'Action: from distance.shift above (Neutral 4px, Desk 6px, Studio 2px), opacity 0 to 1, on ease.spring-soft over duration.spring-soft (220ms, 340ms, 100ms). Text never overshoots.',
     ],
@@ -117,7 +117,7 @@ export const fieldsInteractions = [
     drive: 'waapi',
     trigger: 'An error message renders after its Field first painted, for example after a submit or a check.',
     feedback:
-      'The message comes out from under the control: it slides down a full line from behind its own top edge, which a clip-path holds still, so it is never seen floating over the field, and fades in on the soft spring. One stagger step later its icon lands from scale.morph past full size on the bouncy spring. The control shakes and its border turns the danger color on the same frame. The message is read at once; the content below moves down at once, since height may not animate.',
+      'The message comes out from under the control: it slides down a full line from behind its own top edge, which a clip-path holds still, so it is never seen floating over the field, and fades in on the soft spring. One stagger step later its icon lands from scale.morph past full size on the bouncy spring. The control shakes and its border turns the danger color on the same frame. The message is read at once; the content below moves down at once, since height may not animate. What follows the field (or, in a Form, every row under the change) keeps its place on the first frame and glides to its new one on the soft spring (transform only, review N12); under reduced motion it steps.',
     beats: [
       'Action: translateY(-100%) to rest with clip-path inset(100% 0 0 0) to inset(0), opacity full by 30%, on ease.spring-soft over duration.spring-soft (Neutral 220ms, Desk 340ms, Studio 100ms).',
       'Overshoot: after delay.stagger (24ms, 45ms, 0ms) the danger icon grows from scale.morph (0.5, 0.3, 0.8) on ease.spring-bouncy over duration.spring-bouncy (220ms, 440ms landing about 25% past, 120ms in three steps).',
@@ -139,18 +139,18 @@ export const fieldsInteractions = [
     drive: 'waapi',
     trigger: 'A press on the show or hide toggle.',
     feedback:
-      'The input type changes at once. The eye and the eye off glyph of the style icon set trade places along a diagonal line, so showing the password draws the slash across the eye from the top left, and hiding wipes it off from the bottom right. The two glyphs sit in one cell; the button keeps its size. The field text fades back in.',
+      'The input type changes at once. The eye and the eye off glyph of the style icon set trade places along a diagonal line, so showing the password draws the slash across the eye from the top left, and hiding wipes it off from the bottom right. The two glyphs sit in one cell; the button keeps its size. The field text eases back from 0.6, so no frame is blank.',
     beats: [
       'Action: on the press the type changes. A 45 degree line crosses the glyph cell over duration.morph (Neutral 200ms, Desk 320ms, Studio 100ms) on ease.standard: the arriving glyph is clipped to what the line has passed (clip-path polygon), the leaving one to what it has not.',
       'Direction: show runs from the top left corner, hide from the bottom right, so the slash is drawn on and wiped off along its own stroke.',
-      'Secondary: the field text fades back in over duration.base.',
+      'Secondary: the field text eases from opacity 0.6 to 1 over duration.base on ease.out; it is never blank.',
     ],
     styles: {
       studio: 'a fast wipe in 100ms',
       desk: 'a slow drawn slash',
       neutral: 'a 200ms wipe',
     },
-    reduced: 'The glyphs cross fade, with no wipe.',
+    reduced: 'The glyphs cross fade, with no wipe; the text eases back from 0.6.',
     round: 3,
     status: 'proposed',
   },
@@ -225,9 +225,9 @@ export const fieldsInteractions = [
     drive: 'css',
     trigger: 'Focus enters the field, or the active cell moves on to an empty cell.',
     feedback:
-      'The active empty cell draws a caret bar (its ::after; the input caret is transparent). It arrives from distance.shift toward the inline start and fades in on the snappy spring, so it reads as the caret moving on. It does not blink.',
+      'The active empty cell draws a caret bar (its ::after; the input caret is transparent). It arrives from distance.shift on the side of the previous cell and fades in on the snappy spring, so it reads as the caret moving on. The cells run left to right in every language (the root is dir ltr, a code reads left to right), so the caret arrives from the left in Arabic too: it follows its own travel and is not mirrored. It does not blink.',
     beats: [
-      'Action: the bar slides distance.shift (4px, 6px, 2px) from the left and fades in on ease.spring-snappy over duration.spring-snappy (180ms, 300ms with overshoot, 80ms in steps).',
+      'Action: the bar slides distance.shift (4px, 6px, 2px) from the left, the previous cell in every language, and fades in on ease.spring-snappy over duration.spring-snappy (180ms, 300ms with overshoot, 80ms in steps).',
     ],
     styles: {
       studio: 'a short step',
@@ -307,7 +307,7 @@ export const fieldsInteractions = [
       neutral: 'a quick roll, a small swell',
     },
     reduced: 'The digits fade in; the handle does not grow.',
-    off: { "[data-ds='scrub-input']": { '--_scrub-input-lift': '1' } },
+    off: { "[data-ds='scrub-input']": { '--_scrub-input-lift': '1', '--_scrub-input-roll': 'none' } },
     round: 2,
     status: 'proposed',
   },
@@ -342,7 +342,7 @@ export const fieldsInteractions = [
     drive: 'waapi',
     trigger: 'A submit finds errors and the summary shows them.',
     feedback:
-      'The summary rows arrive in reading order, each from distance.shift at the inline start, one stagger step apart. Focus moves to the first invalid field at once; the fields shake.',
+      'The summary rows arrive in reading order, each from distance.shift at the inline start, one stagger step apart. Focus moves to the first invalid field at once; the fields shake. What follows the field (or, in a Form, every row under the change) keeps its place on the first frame and glides to its new one on the soft spring (transform only, review N12); under reduced motion it steps.',
     beats: [
       'Action: each row slides from distance.shift at the inline start and fades in on ease.spring-soft over duration.spring-soft, one delay.stagger apart, at most six steps.',
     ],
@@ -384,7 +384,7 @@ export const fieldsInteractions = [
     drive: 'waapi',
     trigger: 'The current step changes: next, back, or a step picked in the Stepper.',
     feedback:
-      'Going on, the step that leaves slides toward the inline start and fades out (a decorative copy, inert and aria-hidden, over the place it had; the real body is hidden at once and keeps its values), faster than the new step, which arrives from the inline end on the soft spring. Back reverses both; RTL flips both. A mark that turned complete lands its check past full size; the new current mark answers through the Stepper motion. The title, which takes focus, does not move.',
+      'Going on, the step that leaves slides toward the inline start and fades out (a decorative copy, inert and aria-hidden, over the place it had; the real body is hidden at once and keeps its values), faster than the new step, which arrives from the inline end on the soft spring. Back reverses both; RTL flips both. A mark that turned complete lands its check past full size; the new current mark answers through the Stepper motion. The title, which takes focus, does not move. This slide is the one entrance of the new step (no CSS rise runs with it). Next shows its loading only for a check still pending one frame after the press, so a check that answers at once plays no spinner.',
     beats: [
       'Exit: the old step travels distance.enter (Neutral 6px, Desk 12px, Studio 4px) toward the start and fades over duration.quick (100ms) on ease.exit.',
       'Action: the new step comes from distance.enter at the end and fades in on ease.spring-soft over duration.spring-soft (220ms, 340ms, 100ms).',
@@ -517,7 +517,7 @@ export const fieldsInteractions = [
     primitive: 'digit-roll',
     trigger: 'Hold a slider thumb with a pointer and move it.',
     feedback:
-      'A value bubble rises over the held thumb and grows in; as the value changes its digits roll, up when it grows and down when it falls. On release the bubble drops away. The bubble is aria-hidden: the thumb keeps aria-valuetext and the value output keeps the real text.',
+      'A value bubble rises over the held thumb and grows in; as the value changes its digits roll, up when it grows and down when it falls. On release the bubble drops away. The bubble is aria-hidden: the thumb keeps aria-valuetext and the value output keeps the real text. It is the readout of a slider without a value output: a slider that shows its output keeps the bubble hidden, so the bubble never covers it. On a coarse pointer it rises one touch target clear of the thumb, above the finger.',
     beats: [
       'Action and overshoot: the bubble rises from distance.enter and grows from scale.morph on ease.spring-bouncy over duration.spring-bouncy (220, 440, 120ms), past its size and back.',
       'Secondary: each changed digit rolls in its own column on the snappy spring (180, 300, 80ms), columns one delay.stagger apart from the last digit.',

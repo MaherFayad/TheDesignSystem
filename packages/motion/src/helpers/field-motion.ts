@@ -328,23 +328,43 @@ export const parentBox: ShakeBox = (input) => input.parentElement;
 /** The interaction id in the registry and in the style presets. */
 export const ERROR_SHAKE = 'error-shake';
 
+/** The most direction changes a second a shake may make, so a short shake does not read as a buzz (review N17). */
+export const SHAKE_MAX_REVERSALS = 12;
+
+/** The swings a shake of `ms` makes: one direction change per swing, at most four, at least one. */
+export function shakeSwings(ms: number): 1 | 2 | 3 | 4 {
+  // No duration (the token is unset, or 0ms under reduced motion) lands at once: the shape does not matter.
+  if (!(ms > 0)) return 4;
+  const n = Math.floor((ms * SHAKE_MAX_REVERSALS) / 1000);
+  return Math.max(1, Math.min(4, n)) as 1 | 2 | 3 | 4;
+}
+
+/** The swing shares and where each lands, per swing count. */
+const SWINGS: Record<1 | 2 | 3 | 4, Array<[string, number]>> = {
+  1: [['1', 0.3]],
+  2: [['1', 0.22], ['-0.5', 0.58]],
+  3: [['1', 0.18], ['-0.65', 0.45], ['0.4', 0.72]],
+  4: [['1', 0.14], ['-0.65', 0.34], ['nudge', 0.54], ['-0.5 * nudge', 0.74]],
+};
+
 /**
  * The swings of the shake with a settle, toward the inline end first (`sign`
  * is -1 in RTL): shift, about two thirds of it, then nudge, then half a
  * nudge, and the box eases back to rest, over duration.spring-bouncy on
- * ease.out. No luminance change, once per error: never a flash.
+ * ease.out. A short duration takes fewer swings (`swings`, from
+ * `shakeSwings`), so the shake never turns more than 12 times a second.
+ * No luminance change, once per error: never a flash.
  */
-export function shakeBeat(sign: 1 | -1): Beat {
+export function shakeBeat(sign: 1 | -1, swings: 1 | 2 | 3 | 4 = 4): Beat {
   const x = (share: string) => ({
     transform: `translateX(calc(${sign} * ${share}))`,
   });
+  const amount = (share: string) =>
+    share === 'nudge' ? token.nudge : share === '-0.5 * nudge' ? `-0.5 * ${token.nudge}` : share === '1' ? token.shift : `${share} * ${token.shift}`;
   return {
     keyframes: [
       { transform: 'none', offset: 0 },
-      { ...x(token.shift), offset: 0.14 },
-      { ...x(`-0.65 * ${token.shift}`), offset: 0.34 },
-      { ...x(token.nudge), offset: 0.54 },
-      { ...x(`-0.5 * ${token.nudge}`), offset: 0.74 },
+      ...SWINGS[swings].map(([share, offset]) => ({ ...x(amount(share)), offset })),
       { transform: 'none', offset: 1 },
     ],
     duration: 'duration.spring-bouncy',
@@ -364,7 +384,8 @@ export class ErrorShaker {
   shake(input: HTMLInputElement | null | undefined, box: ShakeBox, mode: PatternMode): void {
     const target = input ? box(input) : null;
     if (!target || this.running?.playState === 'running') return;
-    this.running = playBeat(target, shakeBeat(inlineSign(target)), ERROR_SHAKE, mode, null);
+    const swings = shakeSwings(readDuration(target, 'duration.spring-bouncy'));
+    this.running = playBeat(target, shakeBeat(inlineSign(target), swings), ERROR_SHAKE, mode, null);
   }
 }
 
@@ -434,6 +455,11 @@ export function digitLayerControl(layer: () => HTMLElement | null | undefined): 
     const el = layer();
     const root = el?.parentElement;
     if (!el || !root || !target || mode === 'none' || typeof target.animate !== 'function') return;
+    // The off row of the interaction (--_<component>-roll: none on the root) writes the text with no roll (review N31).
+    if (root instanceof HTMLElement && root.dataset.ds && styleTurnsOff(root, `--_${root.dataset.ds}-roll`)) {
+      clear();
+      return;
+    }
     if (from === to || from.trim() === '' || to.trim() === '') {
       clear();
       return;
@@ -453,4 +479,194 @@ export function digitLayerControl(layer: () => HTMLElement | null | undefined): 
     void Promise.all(anims.map((a) => a.finished)).then(done, done);
   };
   return { roll, clear };
+}
+
+/**
+ * The box of a floating label (review B6, order 1.29): the height of the
+ * box the field lays out for its control (the field's child that holds the
+ * native control) and the inset from the box's inline start edge to where
+ * the control's text starts, both in CSS px. Read from the control, so a
+ * size, a platform or a recipe that changes the box keeps the resting label
+ * centred and in line with the text. Null when the field has no control.
+ */
+export function measureFloatBox(field: HTMLElement): { box: number; inset: number } | null {
+  const control = field.querySelector<HTMLElement>('input:not([type="hidden"], [aria-hidden="true"]), textarea, select');
+  if (!control) return null;
+  let box: HTMLElement = control;
+  while (box.parentElement && box.parentElement !== field && field.contains(box.parentElement)) box = box.parentElement;
+  if (box.offsetHeight === 0) return null;
+  const b = box.getBoundingClientRect();
+  const c = control.getBoundingClientRect();
+  // The drawn boxes are scaled under a zoom or a transform on an ancestor; the layout size is not.
+  const scale = b.width / (box.offsetWidth || b.width || 1) || 1;
+  const cs = getComputedStyle(control);
+  const rtl = readDir(field) === 'rtl';
+  const pad = parseFloat(rtl ? cs.paddingRight : cs.paddingLeft) || 0;
+  const edge = rtl ? b.right - c.right : c.left - b.left;
+  return { box: box.offsetHeight, inset: Math.max(0, edge / scale + pad) };
+}
+
+/**
+ * Writes the measured box on a floating field as `--_field-float-box` and
+ * `--_field-float-inset` (inline, so they win over the CSS defaults per
+ * size and platform). Clears both when the field has no control.
+ */
+export function placeFloatingLabel(field: HTMLElement | null | undefined): void {
+  if (!field) return;
+  const m = measureFloatBox(field);
+  const s = field.style;
+  if (!m) {
+    s.removeProperty('--_field-float-box');
+    s.removeProperty('--_field-float-inset');
+    return;
+  }
+  const box = `${Math.round(m.box * 100) / 100}px`;
+  const inset = `${Math.round(m.inset * 100) / 100}px`;
+  if (s.getPropertyValue('--_field-float-box') !== box) s.setProperty('--_field-float-box', box);
+  if (s.getPropertyValue('--_field-float-inset') !== inset) s.setProperty('--_field-float-inset', inset);
+}
+
+// ---------------------------------------------------------------- the glide of what follows a field (review N12)
+
+/** The interaction id the glide of the following content plays under (it is part of the message entrance). */
+export const FOLLOW_GLIDE = 'field-message-enter';
+
+/**
+ * When a field grows or shrinks (a description or an error enters or
+ * leaves), the content after it moves at once in layout. FollowGlide keeps
+ * that move from showing as a jump (review N12): a ResizeObserver, which
+ * runs after layout and before paint, reads the host's new height; each
+ * following sibling that moved by that same amount gets a transform back to
+ * its old place, added on top of its own (`composite: add`), and glides to
+ * its new place over duration.spring-soft on ease.spring-soft. Only the
+ * transform moves; layout is final from the first frame and nothing waits.
+ * The glide hides a layout jump, so it plays even where a style turns the
+ * message entrance down; under reduced motion (the media query or the page
+ * setting) it does not play, and the content steps.
+ */
+/** The person asked for reduced motion: the media query, or the page setting on the root. */
+function reducedMotion(el: Element): boolean {
+  if (el.ownerDocument.documentElement.dataset.motion === 'reduce') return true;
+  return typeof matchMedia === 'function' && matchMedia('(prefers-reduced-motion: reduce)').matches;
+}
+
+export class FollowGlide {
+  private ro: ResizeObserver | null = null;
+  private height = -1;
+  private tops = new Map<Element, number>();
+
+  /** Starts watching `host`. Returns the stop. */
+  watch(host: HTMLElement): () => void {
+    if (typeof ResizeObserver === 'undefined') return () => undefined;
+    this.ro?.disconnect();
+    this.height = host.offsetHeight;
+    this.tops = this.read(host);
+    this.ro = new ResizeObserver(() => this.changed(host));
+    this.ro.observe(host);
+    return () => {
+      this.ro?.disconnect();
+      this.ro = null;
+    };
+  }
+
+  /**
+   * The container form, for a Form: every direct child of `container` that
+   * moves (a summary or a message entered above it, several fields grew at
+   * once) glides from its old place to its new one. A child that is new
+   * does not glide: it plays its own entrance. Returns the stop.
+   */
+  watchChildren(container: HTMLElement): () => void {
+    if (typeof ResizeObserver === 'undefined') return () => undefined;
+    this.ro?.disconnect();
+    const kids = () => [...container.children].filter((el): el is HTMLElement => el instanceof HTMLElement);
+    const read = () => new Map<Element, number>(kids().map((el) => [el, el.offsetTop]));
+    this.tops = read();
+    const ro = new ResizeObserver(() => {
+      for (const el of kids()) ro.observe(el);
+      const before = this.tops;
+      this.tops = read();
+      if (reducedMotion(container)) return;
+      for (const [el, top] of this.tops) {
+        const old = before.get(el);
+        if (old !== undefined && Math.abs(top - old) >= 0.5) this.glide(el as HTMLElement, top - old);
+      }
+    });
+    this.ro = ro;
+    ro.observe(container);
+    for (const el of kids()) ro.observe(el);
+    return () => {
+      ro.disconnect();
+      if (this.ro === ro) this.ro = null;
+    };
+  }
+
+  /** Moves `el` back by `moved` px, on top of its own transform, and lets it glide to its new place. */
+  private glide(el: HTMLElement, moved: number): void {
+    // A glide still running keeps its place: start from where it is drawn now.
+    let from = -moved;
+    const id = `${ANIMATION_ID_PREFIX}${FOLLOW_GLIDE}-follow`;
+    for (const a of el.getAnimations?.() ?? []) {
+      if (a.id !== id) continue;
+      const timing = a.effect?.getComputedTiming();
+      const kf = (a.effect as KeyframeEffect | null)?.getKeyframes?.()[0]?.transform;
+      const start = Number(/translateY\((-?[\d.]+)px\)/.exec(String(kf ?? ''))?.[1] ?? 0);
+      // The glide eases from start to 0: what is left is about start times the part not yet run.
+      const left = 1 - Number(timing?.progress ?? 1);
+      from += start * left;
+      a.cancel();
+    }
+    playBeat(
+      el,
+      {
+        keyframes: [{ transform: `translateY(${from}px)` }, { transform: 'translateY(0px)' }],
+        duration: 'duration.spring-soft',
+        easing: 'ease.spring-soft',
+        composite: 'add',
+      },
+      `${FOLLOW_GLIDE}-follow`,
+      'full',
+      null,
+    );
+  }
+
+  private followers(host: HTMLElement): HTMLElement[] {
+    const out: HTMLElement[] = [];
+    for (let el = host.nextElementSibling; el; el = el.nextElementSibling) if (el instanceof HTMLElement) out.push(el);
+    return out;
+  }
+
+  private read(host: HTMLElement): Map<Element, number> {
+    return new Map(this.followers(host).map((el) => [el, el.offsetTop]));
+  }
+
+  private changed(host: HTMLElement): void {
+    const next = host.offsetHeight;
+    const grew = next - this.height;
+    const before = this.tops;
+    this.height = next;
+    this.tops = this.read(host);
+    if (Math.abs(grew) < 0.5 || reducedMotion(host)) return;
+    for (const [el, top] of this.tops) {
+      const old = before.get(el);
+      if (old === undefined || !(el instanceof HTMLElement)) continue;
+      const moved = top - old;
+      // Only what moved the way the field grew: a sibling in another column keeps still.
+      if (Math.abs(moved) < 0.5 || Math.sign(moved) !== Math.sign(grew)) continue;
+      this.glide(el, moved);
+    }
+  }
+}
+
+// ---------------------------------------------------------------- off rows for motion played from code (review N31)
+
+/**
+ * True when a style's off row turned a coded motion off: the private
+ * property `prop` on `el` reads `none`, `0`, `0s` or `0ms`. The interaction
+ * registry's `off` rows set CSS properties; a beat played from code reads the
+ * same property before it plays, so an off row stops it too.
+ */
+export function styleTurnsOff(el: Element | null | undefined, prop: `--_${string}`): boolean {
+  if (!el || typeof getComputedStyle !== 'function') return false;
+  const v = getComputedStyle(el).getPropertyValue(prop).trim();
+  return v === 'none' || v === '0' || v === '0s' || v === '0ms';
 }

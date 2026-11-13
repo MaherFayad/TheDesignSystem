@@ -11,7 +11,7 @@
 // (ROLL_WINDOW_MS). This hook only times it for React. The pop of a mark
 // that changed is `popMark` in the same helper.
 import { useLayoutEffect, useRef } from 'react';
-import { DigitRoller, type PatternMode } from '@the-system/motion';
+import { DigitRoller, styleTurnsOff, type PatternMode } from '@the-system/motion';
 
 /**
  * Returns the ref for the host. `text` is what the host shows; undefined
@@ -19,18 +19,23 @@ import { DigitRoller, type PatternMode } from '@the-system/motion';
  * roll that plays, for a secondary element that reacts (a trend mark, a pop).
  * `value` is the number behind the text, when there is one: it sets the
  * direction (a compact or formatted text may not read as a number).
+ * `off` names a private property that an interaction's off row sets (for
+ * example `--_progress-circle-duration: 0s`): while it reads off on the host,
+ * the text changes with no roll (review N31).
  */
 export function useDigitRoll<T extends HTMLElement>(
   text: string | undefined,
   mode: PatternMode,
   onRoll?: (direction: 'up' | 'down', host: T) => void,
   value?: number,
+  off?: `--_${string}`,
 ) {
   const ref = useRef<T>(null);
   const roller = useRef<DigitRoller | null>(null);
   roller.current ??= new DigitRoller();
   useLayoutEffect(() => {
-    roller.current?.update(ref.current, text, mode, value, onRoll);
-  }, [text, value, mode, onRoll]);
+    const now = off && styleTurnsOff(ref.current, off) ? 'none' : mode;
+    roller.current?.update(ref.current, text, now, value, onRoll);
+  }, [text, value, mode, onRoll, off]);
   return ref;
 }

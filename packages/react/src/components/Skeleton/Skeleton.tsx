@@ -29,7 +29,7 @@
 // ease.reveal, so the content shows in reading order where the placeholder
 // was. Reduced motion swaps at once, with no ghost (review B1).
 import { useLayoutEffect, useRef, type CSSProperties, type HTMLAttributes, type Ref } from 'react';
-import { ghostOf, placeOf, wipeAway } from '@the-system/motion';
+import { ghostOf, placeOf, styleTurnsOff, wipeAway } from '@the-system/motion';
 import type { Size } from '@the-system/shared';
 import { useMotion } from '../../internal/motion';
 
@@ -66,7 +66,8 @@ export function Skeleton({ variant = 'text', size = 'md', width, height, style, 
     const el = own.current;
     return () => {
       // Round 3 (review B1): only the full mode draws a ghost; reduced motion swaps at once.
-      if (!el || !el.isConnected || modeRef.current !== 'full' || typeof requestAnimationFrame !== 'function') return;
+      // The skeleton-swap off row (--_skeleton-swap: none) swaps at once too (review N31).
+      if (!el || !el.isConnected || modeRef.current !== 'full' || styleTurnsOff(el, '--_skeleton-swap') || typeof requestAnimationFrame !== 'function') return;
       const place = placeOf(el);
       requestAnimationFrame(() => {
         if (!el.isConnected) wipeAway(ghostOf(place), modeRef.current);

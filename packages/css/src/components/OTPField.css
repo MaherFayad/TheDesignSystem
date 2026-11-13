@@ -200,7 +200,12 @@
       box-shadow var(--_otp-field-duration-out) var(--_otp-field-ease-out);
   }
 
-  /* The caret of the active empty cell. The cells run left to right in every language, so it arrives from the left. */
+  /*
+   * The caret of the active empty cell. The cells run left to right in every
+   * language (the root is dir ltr), so it arrives from the left, the side of
+   * the previous cell, in Arabic too: a mirrored caret would fly against its
+   * own travel (review N14, decided in order 1.29).
+   */
   [data-ds='otp-field']:focus-within > [data-part='cell'][data-active]:not([data-filled])::after {
     content: '';
     position: absolute;

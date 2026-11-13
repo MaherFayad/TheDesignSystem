@@ -148,6 +148,20 @@ export default function InputDemo() {
           </Field>
         </DemoGrid>
       </DemoCase>
+      {/* variant: a platform may draw a field filled or outlined (Android draws filled when no variant is passed). */}
+      <DemoCase id="variant" title="Outlined and filled">
+        <DemoGrid min="14rem">
+          <Field label="Board name">
+            <Input variant="outlined" defaultValue="Spring launch" />
+          </Field>
+          <Field label="Team name">
+            <Input variant="filled" defaultValue="Design" />
+          </Field>
+          <Field label="اسم اللوحة" lang="ar" dir="rtl">
+            <Input variant="filled" defaultValue="إطلاق الربيع" />
+          </Field>
+        </DemoGrid>
+      </DemoCase>
     </DemoPage>
   );
 }

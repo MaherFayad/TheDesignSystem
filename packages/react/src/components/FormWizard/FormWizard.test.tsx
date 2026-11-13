@@ -177,6 +177,35 @@ describe('FormWizard', () => {
     expect(status(container)?.textContent).toBe('Order placed');
   });
 
+  // Review N13 (ten weakest #8): a check that answers at once plays no loading on Next.
+  it('shows no loading on Next for a check that answers within a frame', async () => {
+    const { container } = render(<FormWizard steps={filled} />);
+    const seen: string[] = [];
+    const watch = new MutationObserver((records) => {
+      for (const r of records) {
+        const el = r.target as HTMLElement;
+        if (r.attributeName === 'data-loading' && el.hasAttribute('data-loading')) seen.push('loading');
+        if (r.attributeName === 'aria-busy' && el.getAttribute('aria-busy') === 'true') seen.push('busy');
+      }
+    });
+    watch.observe(root(container), { attributes: true, subtree: true, attributeFilter: ['data-loading', 'aria-busy'] });
+    await userEvent.click(screen.getByRole('button', { name: 'Save account' }));
+    await waitFor(() => expect(title(container)?.textContent).toBe('Address'));
+    watch.disconnect();
+    expect(seen).toEqual([]);
+  });
+
+  it('shows the loading on Next once a check is still pending after a frame', async () => {
+    let answer: () => void = () => undefined;
+    const slow = filled.map((s) => (s.id === 'account' ? { ...s, validate: () => new Promise<void>((r) => (answer = r)) } : s));
+    const { container } = render(<FormWizard steps={slow} />);
+    await userEvent.click(screen.getByRole('button', { name: 'Save account' }));
+    await waitFor(() => expect(screen.getByRole('button', { name: /Save account/ }).getAttribute('data-loading')).toBe(''));
+    expect(root(container).querySelector('[data-part="panel"]')?.getAttribute('aria-busy')).toBe('true');
+    answer();
+    await waitFor(() => expect(title(container)?.textContent).toBe('Address'));
+  });
+
   it('is submitting while the promise runs, and returns to editing when it fails', async () => {
     let fail: (e: Error) => void = () => undefined;
     const onSubmit = () => new Promise<void>((_, reject) => (fail = reject));
@@ -233,7 +262,8 @@ describe('FormWizard', () => {
     await userEvent.click(next);
     expect(validate).toHaveBeenCalledTimes(1);
     const back = screen.getByRole('button', { name: 'Edit account' });
-    expect(back.getAttribute('aria-disabled')).toBe('true');
+    // The busy look comes one frame after the check starts (review N13); the check is single all along.
+    await waitFor(() => expect(back.getAttribute('aria-disabled')).toBe('true'));
     resolve(undefined);
     await waitFor(() => expect(title(container)?.textContent).toBe('Review'));
   });

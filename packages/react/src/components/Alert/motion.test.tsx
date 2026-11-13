@@ -213,12 +213,14 @@ describe('meter-fill', () => {
     const { container } = render(desk(<Meter label="Storage" value={40} />));
     const fill = container.querySelector('[data-part="indicator"]') as HTMLElement;
     // jsdom draws nothing, so the meter counts as off screen: held, and no animation waits.
-    expect(fill.style.transform).toBe('scaleX(0)');
+    // Order 1.29 (review N33): the hold is data-held, which the CSS draws empty, never an inline transform.
+    expect(fill.hasAttribute('data-held')).toBe(true);
+    expect(fill.style.transform).toBe('');
     expect(animate).not.toHaveBeenCalled();
     act(() => seen([{ isIntersecting: true } as IntersectionObserverEntry], {} as IntersectionObserver));
-    expect(fill.style.transform).toBe('');
-    // Round 3: the reveal reads the meter's private timing, which defaults to duration.reveal.
-    expect(fill.style.transition).toContain('--_meter-reveal-duration');
+    expect(fill.hasAttribute('data-held')).toBe(false);
+    // The reveal reads the meter's private timing (--_meter-reveal-duration) through data-revealing in Meter.css.
+    expect(fill.hasAttribute('data-revealing')).toBe(true);
   });
 });
 

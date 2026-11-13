@@ -325,6 +325,23 @@
       transform var(--ds-duration-quick) var(--ds-ease-exit);
   }
 
+  /*
+   * Review N15 (order 1.29): the bubble never covers the value output. A
+   * slider that shows its output reads the live value there, away from the
+   * finger, so it keeps its bubble hidden; the bubble is the readout of a
+   * slider without one. On a coarse pointer the bubble rises one touch
+   * target clear of the thumb, so the finger does not cover it.
+   */
+  :is([data-ds='slider'], [data-ds='range-slider']):has(> [data-part='value']) [data-part='thumb'] > span[aria-hidden='true'] {
+    visibility: hidden;
+  }
+
+  @media (pointer: coarse) {
+    :is([data-ds='slider'], [data-ds='range-slider']) [data-part='thumb'] > span[aria-hidden='true'] {
+      inset-block-end: calc(100% + max(var(--_slider-target), var(--ds-size-touch-ios)));
+    }
+  }
+
   :is([data-ds='slider'], [data-ds='range-slider'])[data-dragging] [data-part='thumb']:focus > span[aria-hidden='true'] {
     opacity: 1;
     transform: translateX(calc(-50% * var(--_slider-dir)));
