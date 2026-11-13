@@ -73,7 +73,7 @@ No adb. No iOS build.
 | 1.26 | Liquid style, proposed | claude/ds-order-1-26 | session_01ErLBscJMviQH5S59ze1TNo | merged, proposed |
 | 1.27 | Docs site redesign, FlyonUI docs as the clarity reference | claude/ds-order-1-27 | session_01ErLBsZt9axdwsiH8dRRUi4 | merged and deployed |
 | 1.28 | Hook wiring: styles and platforms set the round 3 hooks; styles pushed further apart | claude/ds-order-1-28 | session_01ErLBsZAvcFqWeBUty3dBLn | merged and deployed, proposed |
-| A-sync3 | Angular level with round 3 | claude/ds-angular-sync-3 | (see sessions list) | running |
+| A-sync3 | Angular level with round 3 | claude/ds-angular-sync-3 | session_01ErLBsdRDi2p6xndw4JgxHT | merged, not reviewed |
 | A-motion | Angular motion for rounds 1 and 2, Form merge cleanup, recheck of Angular review 2 | claude/ds-angular-motion | session_01ErLBsda6FTx4PoGDqs1QU7 | merged |
 | 1.17 | Full matrix | ds-qa | all | open | |
 | 1.18 | Consumer apps on wave 1 components | ds-docs | react | open | |
