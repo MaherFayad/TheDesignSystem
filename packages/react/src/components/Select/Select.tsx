@@ -40,7 +40,7 @@
 // With no option the list does not open (an empty listbox is not valid): the
 // trigger is described by the empty words instead, as it is while loading.
 import { useId, useLayoutEffect, useMemo, useRef, type ComponentProps, type ReactElement, type ReactNode, type Ref } from 'react';
-import { ANIMATION_ID_PREFIX, readDuration, readEasing, type PatternMode } from '@the-system/motion';
+import { rollValue } from '@the-system/motion';
 import { createPortal } from 'react-dom';
 import { Select as RadixSelect } from 'radix-ui';
 import { Icon, type IconName } from '@the-system/icons/react';
@@ -53,7 +53,7 @@ import { useControllable } from '../../internal/useControllable';
 import { useThemedLayer } from './popupLayer';
 import { useMotion } from '../../internal/motion';
 import { useStaggerOnOpen } from '../ListBox/selectionMotion';
-import { HighlightMarker, drawnScale, useHighlightMarker } from '../ListBox/highlightMarker';
+import { HighlightMarker, useHighlightMarker } from '../ListBox/highlightMarker';
 
 export type SelectSize = Extract<Size, 'sm' | 'md' | 'lg'>;
 export type SelectShape = Extract<Shape, 'default' | 'pill'>;
@@ -115,79 +115,6 @@ export interface SelectProps
   name?: string;
   /** Goes to the trigger, the root. */
   ref?: Ref<HTMLButtonElement>;
-}
-
-const ROLL_ID = `${ANIMATION_ID_PREFIX}picker-value-roll`;
-
-/**
- * Interaction "picker-value-roll": the value part rolls to the new label like
- * a drum. The new label comes up from one line below and the old one, drawn
- * once more by an inert aria-hidden copy laid over the value part, leaves one
- * line up. A clip-path that moves against the travel keeps both inside the
- * value box (the value part itself is what moves, so its own overflow cannot
- * clip it). The new label is the real text from the first frame. Reduced: a
- * fade of the new label. Never waits on animationend.
- */
-function rollValue(el: HTMLElement | null, before: string | null, mode: PatternMode): void {
-  if (!el || mode === 'none' || typeof el.animate !== 'function') return;
-  const reduced = mode === 'reduced';
-  const duration = readDuration(el, reduced ? 'duration.base' : 'duration.spring-snappy');
-  for (const a of el.getAnimations?.() ?? []) if (String(a.id) === ROLL_ID) a.cancel();
-  if (reduced) {
-    el.animate([{ opacity: 0 }, { opacity: 1 }], { id: ROLL_ID, duration, easing: readEasing(el, 'ease.out') });
-    return;
-  }
-  const easing = readEasing(el, 'ease.spring-snappy');
-  el.animate(
-    [
-      { transform: 'translateY(100%)', clipPath: 'inset(0 0 100% 0)' },
-      { transform: 'none', clipPath: 'inset(0 0 0 0)' },
-    ],
-    { id: ROLL_ID, duration, easing },
-  );
-  const host = el.parentElement;
-  if (!before || !host) return;
-  // The old label, once more, over the value part: it rolls up and out, faster than the new one comes in.
-  const ghost = document.createElement('span');
-  ghost.setAttribute('aria-hidden', 'true');
-  ghost.setAttribute('inert', '');
-  ghost.textContent = before;
-  // The value part may still be empty here (Radix fills it after this commit): the copy spans from its
-  // inline start to the icon, over the full height of the trigger, its text centred as the value's is.
-  const h = host.getBoundingClientRect();
-  const v = el.getBoundingClientRect();
-  const icon = el.nextElementSibling as HTMLElement | null;
-  const hs = getComputedStyle(host);
-  const rtl = hs.direction === 'rtl';
-  // Drawn px back to CSS px (a CSS zoom on the page).
-  const k = drawnScale(host);
-  const start = (rtl ? h.right - v.right : v.left - h.left) / k - host.clientLeft;
-  const padEnd = parseFloat(rtl ? hs.paddingLeft : hs.paddingRight) || 0;
-  const gap = parseFloat(hs.columnGap) || 0;
-  const room = host.clientWidth - start - padEnd - (icon?.offsetWidth ?? 0) - gap;
-  const g = ghost.style;
-  g.position = 'absolute';
-  g.insetBlockStart = '0';
-  g.insetInlineStart = `${start}px`;
-  g.inlineSize = `${Math.max(0, room)}px`;
-  g.blockSize = `${host.clientHeight}px`;
-  g.display = 'flex';
-  g.alignItems = 'center';
-  g.overflow = 'hidden';
-  g.whiteSpace = 'nowrap';
-  g.textOverflow = 'ellipsis';
-  g.pointerEvents = 'none';
-  g.color = getComputedStyle(el).color;
-  host.append(ghost);
-  const out = ghost.animate(
-    [
-      { transform: 'none', clipPath: 'inset(0 0 0 0)', opacity: 1 },
-      { transform: 'translateY(-100%)', clipPath: 'inset(100% 0 0 0)', opacity: 0 },
-    ],
-    { id: ROLL_ID, duration: readDuration(el, 'duration.quick') || duration, easing: readEasing(el, 'ease.exit'), fill: 'forwards' },
-  );
-  const drop = () => ghost.remove();
-  out.finished.then(drop, drop);
 }
 
 function renderStart(start: IconName | ReactElement) {

@@ -27,7 +27,7 @@
 //   Drawer gives the focus trap, Escape and the return to the button.
 // - The chevron of a trigger is Button's own `end` part; the Navbar turns
 //   it over, it does not own it.
-// - Motion of order 1.22 (proposed), from react/src/internal/indicator.ts:
+// - Motion of order 1.22 (proposed), from motion/src/helpers/indicator.ts:
 //   "nav-current-slide": when another link of the bar becomes current, its
 //   bar (the link's ::before) slides from the old one on the snappy spring,
 //   stretched on the way. "nav-hover-follow": the hover veil (::after)
@@ -43,8 +43,8 @@ import { Button } from '../Button';
 import { IconButton } from '../IconButton';
 import { Drawer, DrawerBody, DrawerContent, DrawerFooter, DrawerTrigger } from '../Drawer';
 import { Sidebar, SidebarGroup, SidebarItem } from '../Sidebar';
-import { followIndicator, fromLocal, useHoverFollow, useIndicatorTrack } from '../../internal/indicator';
-import { playInk } from '../Tabs/ink';
+import { followIndicator, fromLocal, playInk } from '@the-system/motion';
+import { useHoverFollow, useIndicatorTrack } from '../../internal/indicator';
 import { useMotion } from '../../internal/motion';
 
 /** The links of the bar itself, not those in a panel. */
@@ -142,7 +142,7 @@ export function Navbar({
     const link = current[0]!;
     const left = track.el;
     const slide = followIndicator(track, link.getAttribute('href') ?? '', { el: link, pseudo: '::before' }, { mode: motion.mode('nav-current-slide'), anchor: root, axis: 'x' });
-    // Round 3: the link text takes the current color where the bar is (Tabs/ink.ts).
+    // Round 3: the link text takes the current color where the bar is (helpers/nav-ink.ts in @the-system/motion).
     if (slide && track.rect) {
       playInk({
         switch: '--_navbar-ink',

@@ -4,7 +4,6 @@ import { join } from 'node:path';
 import { fireEvent, render, screen } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { getInteraction } from '@the-system/motion';
-import { rubberBand, snapChecked } from './drag';
 import { Switch } from './index';
 
 const css = readFileSync(join(process.cwd(), 'packages/css/src/components/Switch.css'), 'utf8');
@@ -48,22 +47,6 @@ describe('Switch round 3 anatomy and hooks', () => {
 
   it('registers switch-drag', () => {
     expect(getInteraction('switch-drag')?.components).toContain('Switch');
-  });
-});
-
-describe('switch-drag math', () => {
-  it('damps the thumb past either end', () => {
-    expect(rubberBand(0.4)).toBe(0.4);
-    expect(rubberBand(1.2)).toBeCloseTo(1.06);
-    expect(rubberBand(3)).toBeCloseTo(1.12);
-    expect(rubberBand(-0.2)).toBeCloseTo(-0.06);
-  });
-
-  it('snaps by velocity first, else by the nearer end', () => {
-    expect(snapChecked(0.3, 0.02)).toBe(true);
-    expect(snapChecked(0.8, -0.02)).toBe(false);
-    expect(snapChecked(0.6, 0)).toBe(true);
-    expect(snapChecked(0.4, 0.001)).toBe(false);
   });
 });
 

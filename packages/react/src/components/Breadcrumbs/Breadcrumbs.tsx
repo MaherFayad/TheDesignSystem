@@ -37,7 +37,7 @@
 // - Motion, interaction "nav-hover-follow" (order 1.22, proposed): each link
 //   step draws a hover pill on its ::before (Breadcrumbs.css). When the
 //   pointer moves from one step to the next, the shared pill
-//   (react/src/internal/indicator.ts) slides the new step's pill from the
+//   (motion/src/helpers/indicator.ts) slides the new step's pill from the
 //   old one, stretched along the way, so the pill follows the pointer; the
 //   separator nudges toward the next step in CSS. No DOM is added.
 import { useCallback, useRef, type HTMLAttributes, type ReactElement, type Ref } from 'react';

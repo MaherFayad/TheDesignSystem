@@ -19,7 +19,7 @@
 // value change before that cancels it. Reduced and none: the value at once.
 import { useId, useLayoutEffect, useRef, type CSSProperties, type HTMLAttributes, type ReactNode, type Ref } from 'react';
 import { meterLevel, meterLevelLabelsFor, meterTone, type MeterLevel, type MeterTone, type Size } from '@the-system/shared';
-import { readDuration, readEasing } from '@the-system/motion';
+import { landValue, readDuration } from '@the-system/motion';
 import { useTheme } from '../../theme';
 import { useMotion } from '../../internal/motion';
 import { formatPercent, validMax } from '../ProgressBar/format';
@@ -132,27 +132,9 @@ export function Meter({
  * the indicator's transition, set inline to ease.spring-soft over
  * duration.reveal for that one change, plays the fill. The inline
  * transition is dropped after that duration, so later changes use the CSS.
+ * The value text lands with the fill (`landValue`, helpers/meter-value.ts in
+ * @the-system/motion, round 3 review N28).
  */
-/**
- * Round 3 (review N28): the second beat of meter-fill. As the fill nears
- * its value (at --_meter-value-at of the reveal), the value text settles
- * from distance.nudge below and its colour comes up from the muted text, so
- * the number lands with the fill instead of sitting there from the start.
- * Opaque at once: only its place and colour move. Full mode only.
- */
-function landValue(value: Element | null | undefined, fill: HTMLElement): void {
-  if (!value || typeof value.animate !== 'function') return;
-  const total = readDuration(fill, 'duration.reveal');
-  const at = Number.parseFloat(getComputedStyle(fill).getPropertyValue('--_meter-value-at')) || 0.6;
-  value.animate([{ transform: 'translateY(var(--ds-distance-nudge))', color: 'var(--ds-color-text-muted)' }, { transform: 'none' }], {
-    id: 'ds-motion:meter-value',
-    duration: readDuration(fill, 'duration.spring-bouncy'),
-    easing: readEasing(fill, 'ease.spring-bouncy'),
-    delay: total * at,
-    fill: 'backwards',
-  });
-}
-
 function useFillOnView(fraction: number) {
   const ref = useRef<HTMLSpanElement>(null);
   const motion = useMotion();

@@ -20,7 +20,8 @@ import {
 import { useMotion } from '../../internal/motion';
 import { Button } from '../Button';
 import type { AvatarProps, AvatarSize } from '../Avatar';
-import { popMark, useDigitRoll } from '../Stat/useDigitRoll';
+import { popMark } from '@the-system/motion';
+import { useDigitRoll } from '../Stat/useDigitRoll';
 import { useFlipList } from './useFlipList';
 
 /** The items that move: the avatars and the overflow, never a ghost on its way out. */

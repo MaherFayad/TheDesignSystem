@@ -30,10 +30,9 @@ import { Avatar as RadixAvatar } from 'radix-ui';
 import { Icon, type IconName } from '@the-system/icons/react';
 import { hasArabic, initials, toneIndex, type Shape, type Size, type Tone } from '@the-system/shared';
 import { useTheme } from '../../theme/hooks';
-import { play } from '@the-system/motion';
+import { play, popMark } from '@the-system/motion';
 import { useMotion } from '../../internal/motion';
 import { StatusDot } from '../StatusDot';
-import { popMark } from '../Stat/useDigitRoll';
 
 export type AvatarSize = Extract<Size, 'xs' | 'sm' | 'md' | 'lg'>;
 export type AvatarShape = Extract<Shape, 'default' | 'square'>;

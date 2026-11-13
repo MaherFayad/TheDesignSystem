@@ -28,7 +28,7 @@
 // written here.
 //
 // Motion, interaction "tab-slide" (order 1.22, proposed), the shared pill of
-// react/src/internal/indicator.ts: the indicator lives in the active
+// motion/src/helpers/indicator.ts: the indicator lives in the active
 // trigger. When the value changes, the new indicator slides from the box the
 // old one was drawn in (live, so a second change mid travel starts where
 // the pill is), stretching along its travel on the snappy spring, a
@@ -40,7 +40,7 @@
 // Nothing waits for an animation event.
 //
 // Round 3 (order 1.23, proposed): the labels no longer dip and pop. The text
-// under the pill takes the active color exactly where the pill is (./ink.ts):
+// under the pill takes the active color exactly where the pill is (helpers/nav-ink.ts in @the-system/motion):
 // aria-hidden twins (part label-ink) in the active color are cut to the
 // pill with clip-path, keyframe for keyframe with the slide, and removed
 // when it ends.
@@ -58,8 +58,8 @@ import {
 import { Tabs as RadixTabs } from 'radix-ui';
 import type { Emphasis, Size } from '@the-system/shared';
 import { renderSlotContent, type ButtonSlotContent } from '../Button/ButtonBase';
-import { followIndicator, fromLocal, useIndicatorTrack, type IndicatorTrack } from '../../internal/indicator';
-import { playInk } from './ink';
+import { followIndicator, fromLocal, playInk, type IndicatorTrack } from '@the-system/motion';
+import { useIndicatorTrack } from '../../internal/indicator';
 import { useMotion } from '../../internal/motion';
 import { useControllable } from '../../internal/useControllable';
 
@@ -235,7 +235,7 @@ export function TabsTrigger({ value, start, count, children, ref, ...rest }: Tab
     const indicator = indicatorRef.current;
     if (!indicator || !list) return;
     const slide = followIndicator(ctx.track, value, { el: indicator }, { mode: motion.mode('tab-slide'), anchor: list });
-    // Round 3: the text under the pill takes the active color where the pill is (./ink.ts).
+    // Round 3: the text under the pill takes the active color where the pill is (helpers/nav-ink.ts in @the-system/motion).
     const inked = (el: Element | undefined) => (el ? [...el.querySelectorAll(INKED)] : []);
     const left = from === null ? undefined : ctx.triggers.get(from);
     playInk({

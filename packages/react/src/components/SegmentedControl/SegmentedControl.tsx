@@ -17,7 +17,7 @@
 // private properties. The indicator is measured from the selected item and
 // placed with logical private properties, so RTL needs nothing more. It
 // moves with `transform` only: interaction "tab-slide" (order 1.22,
-// proposed), the shared pill of react/src/internal/indicator.ts, slides it
+// proposed), the shared pill of motion/src/helpers/indicator.ts, slides it
 // from where it is drawn (a second change mid travel starts there) on the
 // snappy spring, stretched along its travel, and the label it leaves dips
 // while the one it reaches pops. No motion under reduced motion, where it
@@ -36,9 +36,7 @@ import {
   type Ref,
 } from 'react';
 import { ToggleGroup as RadixToggleGroup } from 'radix-ui';
-import { settle } from '@the-system/motion';
-import { slideTo } from '../../internal/indicator';
-import { playInk } from '../Tabs/ink';
+import { playInk, settle, slideTo } from '@the-system/motion';
 import { useMotion } from '../../internal/motion';
 import type { Shape, Size } from '@the-system/shared';
 import { ButtonGroupContext, type ButtonGroupContextValue } from '../ButtonGroup/ButtonGroupContext';
@@ -178,7 +176,7 @@ export function SegmentedControl({
         const mode = modeRef.current('tab-slide');
         const to = thumb.getBoundingClientRect();
         const anim = slideTo({ el: thumb }, from, to, { mode, axis: 'x' });
-        // Round 3: the text under the thumb takes the selected color where the thumb is (Tabs/ink.ts).
+        // Round 3: the text under the thumb takes the selected color where the thumb is (helpers/nav-ink.ts in @the-system/motion).
         playInk({
           switch: '--_segmented-control-ink',
           slide: anim,

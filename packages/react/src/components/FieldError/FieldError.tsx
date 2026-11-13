@@ -4,7 +4,7 @@ import { Icon } from '@the-system/icons/react';
 import type { Size } from '@the-system/shared';
 import { useMotion } from '../../internal/motion';
 import { useField } from '../Field/context';
-import { emerge, landPop, playBeat } from '../Input/fieldMotion';
+import { emerge, landPop, playBeat } from '@the-system/motion';
 
 /** The interaction id of the error entrance in the registry. */
 export const FIELD_ERROR_ENTER = 'field-error-enter';

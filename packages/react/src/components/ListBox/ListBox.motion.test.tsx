@@ -5,7 +5,6 @@ import { render, waitFor } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 import { Theme } from '../../theme/Theme';
 import { ListBox } from './index';
-import { exitGhost, setPressPoint } from './highlightMarker';
 
 const read = (name: string) => readFileSync(join(process.cwd(), `packages/css/src/components/${name}.css`), 'utf8');
 const items = [
@@ -87,44 +86,13 @@ describe('ListBox motion and focus (order 1.22)', () => {
     }
   });
 
-  it('review B6: a closed menu leaves at once and an inert copy plays its exit; the CSS exit only runs on the copy', () => {
+  it('review B6: the CSS exit of a closed menu only runs on the inert copy', () => {
     for (const name of ['DropdownMenu', 'Combobox', 'MultiSelect', 'TagField']) {
       const css = read(name);
       expect(css, name).toMatch(/\[data-state='closed'\]\[inert\] \{\s*animation:/);
       expect(css, name).not.toMatch(/\[data-state='closed'\] \{\s*animation:/);
     }
-    const layer = document.createElement('div');
-    layer.setAttribute('data-ds', 'theme');
-    const wrapper = document.createElement('div');
-    const node = document.createElement('div');
-    node.id = 'menu-1';
-    node.setAttribute('role', 'menu');
-    node.setAttribute('data-state', 'closed');
-    wrapper.append(node);
-    layer.append(wrapper);
-    document.body.append(layer);
-    const proto = HTMLElement.prototype as unknown as { animate?: unknown; getAnimations?: unknown };
-    const a = proto.animate;
-    const g = proto.getAnimations;
-    proto.animate = () => ({}) as Animation;
-    proto.getAnimations = () => [{ finished: new Promise(() => {}) } as unknown as Animation];
-    const rect = vi.spyOn(node, 'getBoundingClientRect').mockReturnValue(new DOMRect(0, 0, 120, 80));
-    try {
-      exitGhost(node);
-      const copies = document.querySelectorAll("[role='menu'][inert]");
-      expect(copies).toHaveLength(1);
-      expect(copies[0]?.getAttribute('aria-hidden')).toBe('true');
-      expect(copies[0]?.id).toBe('');
-      // An open menu (a page that unmounts) makes no copy.
-      node.setAttribute('data-state', 'open');
-      exitGhost(node);
-      expect(document.querySelectorAll("[role='menu'][inert]")).toHaveLength(1);
-    } finally {
-      rect.mockRestore();
-      proto.animate = a;
-      proto.getAnimations = g;
-      for (const el of document.querySelectorAll("[data-ds='theme']")) el.remove();
-    }
+    // The copy itself is tested with the helper (packages/motion/src/helpers/selection-marker.test.ts).
   });
 
   it('review B2 and B3: the menu lean and the private durations are zeroed under both reduced motion forms', () => {
@@ -133,19 +101,5 @@ describe('ListBox motion and focus (order 1.22)', () => {
     expect(media).toMatch(/--_menu-nudge: 0px;[^}]*--_menu-nudge-duration-in: 0s;/);
     expect(css).toMatch(/:root\[data-motion='reduce'\] :is\(\[data-ds='dropdown-menu'\], \[data-ds='context-menu'\]\) \{\s*--_menu-nudge: 0px;/);
     expect(css).toMatch(/transition: transform var\(--_menu-nudge-duration-in\)/);
-  });
-
-  it('platform hook: a press writes where it landed', () => {
-    const el = document.createElement('span');
-    document.body.append(el);
-    const rect = vi.spyOn(el, 'getBoundingClientRect').mockReturnValue(new DOMRect(10, 20, 100, 40));
-    try {
-      setPressPoint(el, 'chip', 30, 30);
-      expect(el.style.getPropertyValue('--_chip-press-x')).toBe('20px');
-      expect(el.style.getPropertyValue('--_chip-press-y')).toBe('10px');
-    } finally {
-      rect.mockRestore();
-      el.remove();
-    }
   });
 });

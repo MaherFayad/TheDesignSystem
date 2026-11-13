@@ -1,7 +1,7 @@
 'use client';
 import { useCallback, useEffect, useId, useLayoutEffect, useMemo, useRef, useState, type ComponentProps, type ReactNode } from 'react';
 import { useMotion } from '../../internal/motion';
-import { playBeat, slideIn } from '../Input/fieldMotion';
+import { playBeat, slideIn } from '@the-system/motion';
 import { FieldError } from '../FieldError/FieldError';
 import { Label, type LabelProps } from '../Label/Label';
 import { FieldContext, useField, type FieldContextValue } from './context';

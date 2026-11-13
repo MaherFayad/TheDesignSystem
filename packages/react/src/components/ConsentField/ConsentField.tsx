@@ -27,7 +27,7 @@
 //   line, a given consent locked by disabled, and no way to the details.
 import { useEffect, useId, useLayoutEffect, useMemo, useRef, useState, type ComponentProps, type ReactNode } from 'react';
 import { useMotion } from '../../internal/motion';
-import { landPop, playBeat, token } from '../Input/fieldMotion';
+import { landPop, playBeat, token } from '@the-system/motion';
 import type { Size } from '@the-system/shared';
 import { useTheme } from '../../theme';
 import { Checkbox } from '../Checkbox/Checkbox';

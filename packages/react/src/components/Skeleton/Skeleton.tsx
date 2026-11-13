@@ -18,7 +18,8 @@
 // once (nothing waits), and just before the next paint a ghost of it is put
 // back where it was drawn and fades out over duration.morph on top of the
 // content that took its place: a cross fade from the placeholder to the
-// content, inside the existing contract (./Alert/ghost.ts). The fuller
+// content, inside the existing contract (helpers/exit-ghost.ts in
+// @the-system/motion). The fuller
 // form, a `loading` prop with the content as children that fades in under
 // the leaving shape, is proposed to the owner in the round 2 report.
 //
@@ -28,10 +29,9 @@
 // ease.reveal, so the content shows in reading order where the placeholder
 // was. Reduced motion swaps at once, with no ghost (review B1).
 import { useLayoutEffect, useRef, type CSSProperties, type HTMLAttributes, type Ref } from 'react';
-import { play, type PatternMode } from '@the-system/motion';
+import { ghostOf, placeOf, wipeAway } from '@the-system/motion';
 import type { Size } from '@the-system/shared';
 import { useMotion } from '../../internal/motion';
-import { ghostOf, placeOf } from '../Alert/ghost';
 
 export type SkeletonVariant = 'text' | 'circle' | 'rect';
 export type SkeletonSize = Extract<Size, 'sm' | 'md' | 'lg'>;
@@ -46,28 +46,6 @@ export interface SkeletonProps extends Omit<HTMLAttributes<HTMLSpanElement>, 'ti
   /** Block size for rect: a CSS length or a number of px. A circle takes its width. Ignored for text. */
   height?: string | number;
   ref?: Ref<HTMLSpanElement>;
-}
-
-/** Round 3: the ghost of a skeleton is wiped off toward the inline end; reduced fades it. */
-function wipeAway(ghost: HTMLElement | null, mode: PatternMode): void {
-  if (!ghost) return;
-  if (mode !== 'full') {
-    ghost.remove();
-    return;
-  }
-  const rtl = typeof getComputedStyle === 'function' && getComputedStyle(ghost).direction === 'rtl';
-  const gone = rtl ? 'inset(0 100% 0 0)' : 'inset(0 0 0 100%)';
-  const a = play(
-    ghost,
-    { keyframes: [{ clipPath: 'inset(0)' }, { clipPath: gone }], duration: 'duration.morph', easing: 'ease.reveal', fill: 'forwards', origin: '50% 50%' },
-    'skeleton-wipe',
-  );
-  if (!a) {
-    ghost.remove();
-    return;
-  }
-  const drop = () => ghost.remove();
-  a.finished.then(drop, drop);
 }
 
 function toLength(value: string | number | undefined): string | undefined {

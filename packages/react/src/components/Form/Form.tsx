@@ -54,14 +54,13 @@ import {
   type FormValues,
   type Size,
 } from '@the-system/shared';
-import { staggerGroup } from '@the-system/motion';
+import { playBeat, runStep, staggerGroup, token } from '@the-system/motion';
 import { useMotion } from '../../internal/motion';
 import { useTheme } from '../../theme';
 import { Alert } from '../Alert/Alert';
 import { Button, type ButtonProps } from '../Button';
 import { Field, type FieldOrientation, type FieldProps } from '../Field/Field';
 import { Link } from '../Link/Link';
-import { playBeat, runStep, token } from '../Input/fieldMotion';
 
 export type FormSize = Extract<Size, 'sm' | 'md' | 'lg'>;
 export type FormState = 'idle' | 'submitting' | 'submitted';

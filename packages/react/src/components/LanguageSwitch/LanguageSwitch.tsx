@@ -33,7 +33,7 @@
 // - The trigger is named "English, Language": the visible name first (WCAG
 //   2.5.3), then what it changes. The menu takes its name from the trigger.
 // - Motion, interaction "language-roll" (order 1.22, proposed), from
-//   react/src/internal/indicator.ts: when the current language changes in
+//   motion/src/helpers/indicator.ts: when the current language changes in
 //   place (a client side switch), the trigger's name rolls: the old name
 //   rolls up and out in an aria-hidden copy while the new one rolls in from
 //   below on the snappy spring. In the pair, the name it leaves dips and the
@@ -47,7 +47,7 @@ import { useTheme } from '../../theme';
 import { Button } from '../Button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuRadioGroup, DropdownMenuRadioItem, DropdownMenuTrigger } from '../DropdownMenu';
 import { Link } from '../Link';
-import { answerLabels, rollText } from '../../internal/indicator';
+import { answerLabels, rollText } from '@the-system/motion';
 import { useMotion } from '../../internal/motion';
 
 export type LanguageSwitchSize = Extract<Size, 'sm' | 'md'>;

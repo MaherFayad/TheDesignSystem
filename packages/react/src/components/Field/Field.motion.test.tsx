@@ -14,7 +14,7 @@ import { Form, FormField, FormSubmit } from '../Form/Form';
 import { FormWizard } from '../FormWizard/FormWizard';
 import { InlineEdit } from '../InlineEdit/InlineEdit';
 import { Input } from '../Input/Input';
-import { shakeBeat } from '../Input/useErrorShake';
+import { shakeBeat } from '@the-system/motion';
 import { ScrubInput } from '../ScrubInput/ScrubInput';
 import { SearchField } from '../SearchField/SearchField';
 import { Field, FieldDescription } from './Field';

@@ -51,7 +51,8 @@
 //
 // Motion (order 1.23). The toasts share one grid cell and stack with depth:
 // the newest in front, the older ones behind it, peeking a few px further
-// from the edge, smaller, clipped to the strip that shows. stack.ts measures
+// from the edge, smaller, clipped to the strip that shows. The toast stack
+// helper of @the-system/motion (helpers/toast-stack.ts) measures
 // the toasts and writes their place; Toast.css draws it with translate,
 // scale and clip-path and transitions them. While the pointer is over the
 // toasts or focus is inside them, the viewport carries data-expanded and
@@ -62,7 +63,8 @@
 // toast (its `progress` part, a CSS animation that runs for the toast's
 // duration) pauses on it, so the line and the store's timer move together
 // (WCAG 2.2.1), and a repeat or an update (a new version) starts both again.
-// The swipe is the Toaster's own (swipe.ts): Radix's clamps to one way and
+// The swipe is the Toaster's own (helpers/toast-swipe.ts in
+// @the-system/motion): Radix's clamps to one way and
 // reads distance only. The toast follows the finger toward its edge, gives
 // a little against the other way, and closes past a distance or on a fast
 // flick; let go short, it springs back. Layout never animates and the store
@@ -83,8 +85,18 @@ import { toastStore, toastUrgency, type ToastItem, type ToastStore } from '@the-
 import { Theme } from '../../theme/Theme';
 import { useTheme } from '../../theme/hooks';
 import { isInsideToaster } from './isInsideToaster';
-import { watchStack } from './stack';
-import { START_BUFFER, rubberBand, swipeAxis, swipeCloses, swipeOffset, swipeSign, swipeVelocity, type SwipeDirection, type SwipeSample } from './swipe';
+import {
+  START_BUFFER,
+  swipeAxis,
+  swipeCloses,
+  swipeOffset,
+  swipeRubberBand,
+  swipeSign,
+  swipeVelocity,
+  watchStack,
+  type SwipeDirection,
+  type SwipeSample,
+} from '@the-system/motion';
 import { ToastParts, toastDirFor, toastLabelsFor } from './Toast';
 
 /** Where the toasts sit. end is the inline end: right in English, left in Arabic. */
@@ -235,7 +247,8 @@ export function Toaster({ position: positionProp = 'bottom-end', label, hotkey =
     return () => window.removeEventListener('keydown', onKeyDown, true);
   }, []);
 
-  // The stack: each toast's place, written before the next paint (stack.ts).
+  // The stack: each toast's place, written before the next paint (helpers/toast-stack.ts
+  // in @the-system/motion).
   useEffect(() => {
     const viewport = layer?.querySelector<HTMLElement>('[data-ds="toaster"]');
     if (!viewport) return;
@@ -421,7 +434,7 @@ function ToasterItem({
     g.along = main * swipeSign(direction);
     g.samples.push({ t: event.timeStamp, along: g.along });
     if (g.samples.length > 12) g.samples.shift();
-    const { x, y } = swipeOffset(direction, rubberBand(g.along));
+    const { x, y } = swipeOffset(direction, swipeRubberBand(g.along));
     el.setAttribute('data-swipe', 'move');
     el.style.setProperty('--radix-toast-swipe-move-x', `${x}px`);
     el.style.setProperty('--radix-toast-swipe-move-y', `${y}px`);

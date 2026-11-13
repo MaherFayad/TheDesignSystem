@@ -18,12 +18,12 @@ import {
 } from 'react';
 import { createPortal } from 'react-dom';
 import { Icon } from '@the-system/icons/react';
-import { ANIMATION_ID_PREFIX, readDuration, readEasing, type PatternMode } from '@the-system/motion';
+import { ANIMATION_ID_PREFIX, CHECK_DRAW_ID, drawCheck, exitGhost, readDuration, readEasing, type PatternMode } from '@the-system/motion';
 import { useMotion } from '../../internal/motion';
 import { Theme } from '../../theme/Theme';
 import { useTheme } from '../../theme/hooks';
 import { renderSlotContent, type ButtonSlotContent } from '../Button/ButtonBase';
-import { HighlightMarker, drawCheck, exitGhost, useHighlightMarker, CHECK_DRAW_ID } from '../ListBox/highlightMarker';
+import { HighlightMarker, useHighlightMarker } from '../ListBox/highlightMarker';
 
 /** Space kept between a menu and the viewport edge, in CSS px. Radix measures in px, so this is a number. */
 export const VIEWPORT_GUTTER = 8;

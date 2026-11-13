@@ -23,14 +23,13 @@
 // (error-shake).
 import { flushSync } from 'react-dom';
 import { useCallback, useEffect, useId, useLayoutEffect, useRef, useState, type ComponentProps, type MouseEvent, type Ref } from 'react';
-import { settled } from '@the-system/motion';
+import { diagonalWipe, fadeOutBeat, playBeat, settled, type ShakeBox } from '@the-system/motion';
 import { Icon } from '@the-system/icons/react';
 import type { Shape, Size } from '@the-system/shared';
 import { useField } from '../Field/Field';
 import { IconButton } from '../IconButton/IconButton';
 import { Input, type InputProps } from '../Input/Input';
-import { diagonalWipe, fadeOutBeat, playBeat } from '../Input/fieldMotion';
-import { useErrorShake, type ShakeBox } from '../Input/useErrorShake';
+import { useErrorShake } from '../Input/useErrorShake';
 import { useMotion } from '../../internal/motion';
 
 export type PasswordFieldSize = Size;

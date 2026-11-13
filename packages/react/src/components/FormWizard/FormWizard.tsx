@@ -48,7 +48,7 @@ import {
 } from '@the-system/shared';
 import { Icon } from '@the-system/icons/react';
 import { useMotion } from '../../internal/motion';
-import { dipPop, dropAfter, slideIn, inlineSign, landPop, leavingCopy, playBeat, runStep, snapshot, token, type Snapshot } from '../Input/fieldMotion';
+import { dipPop, dropAfter, inlineSign, landPop, leavingCopy, playBeat, runStep, slideIn, snapshot, token, type Snapshot } from '@the-system/motion';
 import { useTheme } from '../../theme';
 import { Button } from '../Button';
 import { Stepper, type StepperOrientation } from '../Stepper';

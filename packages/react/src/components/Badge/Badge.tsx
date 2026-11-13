@@ -19,7 +19,8 @@ import { VisuallyHidden } from 'radix-ui';
 import { Icon, type IconName } from '@the-system/icons/react';
 import type { Emphasis, Size, Tone } from '@the-system/shared';
 import { useMotion } from '../../internal/motion';
-import { popMark, useDigitRoll } from '../Stat/useDigitRoll';
+import { popMark } from '@the-system/motion';
+import { useDigitRoll } from '../Stat/useDigitRoll';
 
 export type BadgeSize = Extract<Size, 'xs' | 'sm'>;
 export type BadgeTone = Extract<Tone, 'neutral' | 'accent' | 'success' | 'warning' | 'danger' | 'info'>;

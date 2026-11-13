@@ -22,7 +22,7 @@
 //   current step changes, a ring (the indicator's ::after, drawn only while
 //   it travels) slides from the old current indicator to the new one, in
 //   the direction of the change, stretched along the way on the snappy
-//   spring (react/src/internal/indicator.ts), and fades as it lands; the
+//   spring (motion/src/helpers/indicator.ts), and fades as it lands; the
 //   new current indicator pops from scale.anticipate past rest, and the
 //   connector fill grows or shrinks on the soft spring (CSS). No DOM is
 //   added.
@@ -38,28 +38,9 @@ import {
 } from '@the-system/shared';
 import { useTheme } from '../../theme';
 import { Button } from '../Button';
-import { readDuration, readEasing, type PatternMode } from '@the-system/motion';
-import { followIndicator, popIn, useIndicatorTrack } from '../../internal/indicator';
+import { drawStepCheck, followIndicator, popIn } from '@the-system/motion';
+import { useIndicatorTrack } from '../../internal/indicator';
 
-/** The length of the system check path (M20 6 9 17l-5-5) in its 24 unit box, rounded up. */
-const CHECK_LENGTH = 24;
-
-/**
- * Round 3: draws a check path from its end (the short stroke) to its start
- * with stroke-dashoffset, on the soft spring. Full mode only; the check is
- * whole at once otherwise, and whole again when the animation ends.
- */
-function drawCheck(path: Element | null | undefined, mode: PatternMode): Animation | null {
-  if (!path || mode !== 'full' || typeof path.animate !== 'function') return null;
-  const dash = `${CHECK_LENGTH} ${CHECK_LENGTH}`;
-  return path.animate(
-    [
-      { strokeDasharray: dash, strokeDashoffset: -CHECK_LENGTH },
-      { strokeDasharray: dash, strokeDashoffset: 0 },
-    ],
-    { duration: readDuration(path, 'duration.spring-soft'), easing: readEasing(path, 'ease.out'), id: 'ds-motion:stepper-check' },
-  );
-}
 import { useMotion } from '../../internal/motion';
 
 export type StepperSize = Extract<Size, 'sm' | 'md'>;
@@ -188,7 +169,7 @@ export function Stepper({
       const steps = root.querySelectorAll(':scope > [data-part="step"]');
       for (let i = before; i < base.current; i++) {
         const path = steps[i]?.querySelector(':scope > [data-part="indicator"] [data-icon="check"] path');
-        drawCheck(path, mode);
+        drawStepCheck(path, mode);
       }
     }
   });

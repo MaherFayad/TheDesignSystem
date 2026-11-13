@@ -36,7 +36,7 @@ import type { Size, Tone } from '@the-system/shared';
 import { useMotion } from '../../internal/motion';
 import { useControllable } from '../../internal/useControllable';
 import { useTheme } from '../../theme';
-import { dipPop, landPop, playBeat, runStep } from '../Input/fieldMotion';
+import { dipPop, landPop, playBeat, runStep } from '@the-system/motion';
 
 export type RatingSize = Extract<Size, 'sm' | 'md' | 'lg'>;
 export type RatingTone = Extract<Tone, 'accent' | 'warning'>;

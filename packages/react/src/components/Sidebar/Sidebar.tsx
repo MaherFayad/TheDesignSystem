@@ -28,7 +28,7 @@
 //   is never hidden (WCAG 2.4.11) and no footer link covers part of an item.
 // - The width never animates (only transform and opacity may), so collapse
 //   is instant. An opened group fades in (pattern "fade-rise").
-// - Motion of order 1.22 (proposed), from react/src/internal/indicator.ts:
+// - Motion of order 1.22 (proposed), from motion/src/helpers/indicator.ts:
 //   "nav-current-slide": when another item becomes current, its edge bar
 //   (the item's ::before) slides from the old one along the column on the
 //   snappy spring, stretched on the way, and the labels dip and pop.
@@ -58,10 +58,10 @@ import {
 } from 'react';
 import { Collapsible, Slot } from 'radix-ui';
 import { Icon, type IconName } from '@the-system/icons/react';
-import { readDuration, readEasing, staggerGroup, type PatternMode } from '@the-system/motion';
+import { followIndicator, popIn, readDuration, readEasing, staggerGroup, type IndicatorTrack, type PatternMode } from '@the-system/motion';
 import type { Size } from '@the-system/shared';
 import { useTheme } from '../../theme';
-import { followIndicator, popIn, useHoverFollow, useIndicatorTrack, type IndicatorTrack } from '../../internal/indicator';
+import { useHoverFollow, useIndicatorTrack } from '../../internal/indicator';
 import { useMotion } from '../../internal/motion';
 import { Button } from '../Button';
 import { IconButton } from '../IconButton';

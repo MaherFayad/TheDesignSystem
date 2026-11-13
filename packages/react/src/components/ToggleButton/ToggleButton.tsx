@@ -13,45 +13,14 @@
 // the on fill crosses in behind it; turning it off, the layer drains back to
 // the point, faster. From the keyboard the point is the centre. Only the
 // layer moves: the content and the root keep still, so a toggle in an
-// attached ButtonGroup keeps its seams. The state never waits for it.
+// attached ButtonGroup keeps its seams. The state never waits for it. The
+// layer's spec and the press point are the toggle layer helper of
+// @the-system/motion (helpers/toggle-layer.ts).
 import { useCallback, useRef, type KeyboardEvent, type PointerEvent, type ReactNode } from 'react';
 import { Toggle } from 'radix-ui';
-import { play, type MotionSpec } from '@the-system/motion';
+import { play, pressShare, toggleLayerSpec } from '@the-system/motion';
 import { useMotion } from '../../internal/motion';
 import { ButtonRoot, renderSlotContent, setRef, type ButtonBaseProps, type ButtonSlotContent } from '../Button/ButtonBase';
-
-/** The press point, read by the state layer: set on the root by pointer down, the centre for keys. */
-const AT = 'circle(var(--_toggle-button-press-radius) at var(--_toggle-button-x, 50%) var(--_toggle-button-y, 50%))';
-const FULL = 'circle(150% at var(--_toggle-button-x, 50%) var(--_toggle-button-y, 50%))';
-const NONE = 'circle(0% at var(--_toggle-button-x, 50%) var(--_toggle-button-y, 50%))';
-const LAYER = 'var(--_toggle-button-layer-opacity)';
-
-/** The state layer's move on a change: a flood from the press point when on, a drain back to it when off. */
-export function toggleLayerSpec(on: boolean): MotionSpec {
-  if (on) {
-    return {
-      keyframes: [
-        { clipPath: AT, opacity: LAYER },
-        { clipPath: FULL, opacity: LAYER, offset: 0.55 },
-        { clipPath: FULL, opacity: 0 },
-      ],
-      duration: 'duration.morph',
-      easing: 'ease.out',
-      fill: 'none',
-      origin: '50% 50%',
-    };
-  }
-  return {
-    keyframes: [
-      { clipPath: FULL, opacity: LAYER },
-      { clipPath: NONE, opacity: LAYER },
-    ],
-    duration: 'duration.quick',
-    easing: 'ease.exit',
-    fill: 'none',
-    origin: '50% 50%',
-  };
-}
 
 export interface ToggleButtonProps extends Omit<ButtonBaseProps, 'loading' | 'loadingLabel' | 'asChild' | 'type'> {
   /** Pressed, controlled. Pair with `onPressedChange`. */
@@ -117,9 +86,8 @@ export function ToggleButton({
     const el = event.currentTarget;
     const box = el.getBoundingClientRect();
     if (!(box.width > 0 && box.height > 0)) return;
-    const share = (n: number) => `${Math.round(Math.min(1, Math.max(0, n)) * 1000) / 10}%`;
-    el.style.setProperty('--_toggle-button-x', share((event.clientX - box.left) / box.width));
-    el.style.setProperty('--_toggle-button-y', share((event.clientY - box.top) / box.height));
+    el.style.setProperty('--_toggle-button-x', pressShare((event.clientX - box.left) / box.width));
+    el.style.setProperty('--_toggle-button-y', pressShare((event.clientY - box.top) / box.height));
   };
   const centrePoint = (event: KeyboardEvent<HTMLButtonElement>) => {
     if (event.key !== ' ' && event.key !== 'Enter') return;

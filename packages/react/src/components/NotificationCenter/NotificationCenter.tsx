@@ -32,7 +32,8 @@ import { useTheme } from "../../theme";
 import { useMotion } from "../../internal/motion";
 import { Button } from "../Button";
 import { useFlipList } from "../AvatarGroup/useFlipList";
-import { popMark, useDigitRoll } from "../Stat/useDigitRoll";
+import { popMark } from "@the-system/motion";
+import { useDigitRoll } from "../Stat/useDigitRoll";
 
 /** What moves when the list changes: the group labels and the entries, never a ghost on its way out. */
 const movers = (root: HTMLElement) => [

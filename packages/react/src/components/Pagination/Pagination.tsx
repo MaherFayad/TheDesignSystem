@@ -37,14 +37,14 @@
 //   page and the last page (CSS), with a compact-only ellipsis (data-compact)
 //   between them when pages are hidden, and the summary wraps above.
 import { useCallback, useLayoutEffect, useMemo, useRef, type HTMLAttributes, type MouseEvent, type PointerEvent, type ReactElement, type Ref } from 'react';
-import { rollDigits } from '@the-system/motion';
+import { followIndicator, inlineSign, rollDigits, windUp } from '@the-system/motion';
 import { pressOrigin } from '../TabBar/pressOrigin';
 import type { IconName } from '@the-system/icons/react';
 import { clampPage, isEllipsis, itemRange, pageCount as countPages, pageRange, type Shape, type Size } from '@the-system/shared';
 import { useTheme } from '../../theme';
 import { ButtonRoot } from '../Button/ButtonBase';
 import { IconButton } from '../IconButton';
-import { followIndicator, inlineSign, useIndicatorTrack, windUp } from '../../internal/indicator';
+import { useIndicatorTrack } from '../../internal/indicator';
 import { useMotion } from '../../internal/motion';
 import { useControllable } from '../../internal/useControllable';
 
