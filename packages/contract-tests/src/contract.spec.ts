@@ -326,13 +326,13 @@ async function targetFailures(page: Page, small: TargetProbe[]): Promise<string[
       const p = await page.evaluate(probePoint, t.id);
       if (p) {
         await page.mouse.click(p.x, p.y);
-        if ((await page.evaluate(probeFocused, t.id)) && p.rootW >= 24 && p.rootH >= 24) {
+        if ((await page.evaluate(probeFocused, t.id)) && p.rootW >= targetMin && p.rootH >= targetMin) {
           note(`${t.what} is ${t.w} by ${t.h} px; its root is ${p.rootW} by ${p.rootH} px and a click there focuses it`);
           continue;
         }
       }
     }
-    failures.push(`${t.what} (owner ${t.owner}) is ${t.w} by ${t.h} px, under 24 by 24`);
+    failures.push(`${t.what} (owner ${t.owner}) is ${t.w} by ${t.h} px, under ${targetMin} by ${targetMin}`);
   }
   return failures;
 }
