@@ -24,6 +24,15 @@
  *
  * The steppers are IconButton roots styled by Button.css. As their parent,
  * this file only places them. They are 24px targets or larger (WCAG 2.5.8).
+ *
+ * Order 1.23 (focus-glow, round 3, proposed). The glow layer also blooms:
+ *   --_number-field-bloom          the color of the bloom, a soft halo outside the ring
+ *   --_number-field-bloom-invalid  the bloom while invalid (the danger tint)
+ *   --_number-field-bloom-spread   how far the bloom reaches; 0px turns it off
+ *   --_number-field-bloom-now      the working spread the focus rule sets
+ *   --_number-field-duration, --_number-field-ease   the border color change (focus, hover, invalid)
+ * On focus the bloom's box shadow spreads from 0 on the in timing; on blur it
+ * draws back on the out timing. The ring is not on this layer and shows at once.
  */
 @layer ds.base {
   [data-ds='number-field'] {
@@ -45,6 +54,12 @@
     --_number-field-ease-in: var(--ds-ease-spring-soft);
     --_number-field-ease-out: var(--ds-ease-exit);
     --_number-field-enter-scale: var(--ds-scale-enter);
+    --_number-field-bloom: var(--ds-color-primary-tint-hover);
+    --_number-field-bloom-invalid: var(--ds-color-state-danger-tint-10);
+    --_number-field-bloom-spread: var(--ds-space-s);
+    --_number-field-bloom-now: 0px;
+    --_number-field-duration: var(--ds-duration-base);
+    --_number-field-ease: var(--ds-ease-out);
     --_number-field-stepper-size: var(--ds-size-control-xs);
     --_number-field-stepper-inset: calc((var(--_number-field-height) - var(--_number-field-stepper-size)) / 2 - var(--ds-border-width-default));
 
@@ -60,6 +75,7 @@
     padding-block: 0;
     padding-inline: var(--_number-field-padding-inline);
     border: var(--ds-border-width-default) solid var(--_number-field-border-color);
+    transition: border-color var(--_number-field-duration) var(--_number-field-ease);
     border-radius: var(--_number-field-radius);
     background-color: var(--_number-field-bg);
     color: var(--_number-field-fg);
@@ -76,13 +92,16 @@
     position: absolute;
     inset: calc(var(--ds-border-width-default) * -1);
     border-radius: inherit;
-    box-shadow: var(--_number-field-shadow-focus);
+    box-shadow:
+      var(--_number-field-shadow-focus),
+      0 0 0 var(--_number-field-bloom-now) var(--_number-field-bloom);
     opacity: 0;
     transform: scale(var(--_number-field-enter-scale));
     pointer-events: none;
     transition:
       opacity var(--_number-field-duration-out) var(--_number-field-ease-out),
-      transform var(--_number-field-duration-out) var(--_number-field-ease-out);
+      transform var(--_number-field-duration-out) var(--_number-field-ease-out),
+      box-shadow var(--_number-field-duration-out) var(--_number-field-ease-out);
   }
 
   [data-ds='number-field'] > * {
@@ -237,6 +256,8 @@
   }
 
   [data-ds='number-field']:focus-within::before {
+    --_number-field-bloom-now: var(--_number-field-bloom-spread);
+
     opacity: 1;
     transform: none;
     transition-duration: var(--_number-field-duration-in);
@@ -274,6 +295,11 @@
     opacity: 1;
   }
 
+  /* Invalid: the bloom takes the danger tint, so focus on a field in error still reads as an error. */
+  [data-ds='number-field'][data-invalid] {
+    --_number-field-bloom: var(--_number-field-bloom-invalid);
+  }
+
   /* Reduced motion: the duration tokens are 0ms, and the glow does not grow. */
   @media (prefers-reduced-motion: reduce) {
     [data-ds='number-field'] {
@@ -296,5 +322,23 @@
 
       color: GrayText;
     }
+  }
+
+  /*
+   * Reduced motion (order 1.23, review B1): the component's own timings go to
+   * 0s here, so nothing moves even where a motion token keeps its value.
+   */
+  @media (prefers-reduced-motion: reduce) {
+    [data-ds='number-field'] {
+      --_number-field-duration: 0s;
+      --_number-field-duration-in: 0s;
+      --_number-field-duration-out: 0s;
+    }
+  }
+
+  :root[data-motion='reduce'] [data-ds='number-field'] {
+    --_number-field-duration: 0s;
+    --_number-field-duration-in: 0s;
+    --_number-field-duration-out: 0s;
   }
 }

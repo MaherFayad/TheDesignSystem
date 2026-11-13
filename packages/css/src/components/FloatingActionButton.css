@@ -13,6 +13,12 @@
  *   --_floating-action-button-enter-x  where the label of the extended form
  *                                   comes from when it appears: distance.shift
  *                                   back toward the icon
+ *
+ * Added in order 1.23 (proposed):
+ *   --_floating-action-button-lift  how far the button rises while the pointer
+ *                                   rests on it, distance.lift; 0px turns it off
+ *   --_floating-action-button-reveal the clip the extended label grows from:
+ *                                   hidden but for its edge at the icon
  */
 @layer ds.base {
   /*
@@ -78,5 +84,70 @@
       opacity: 0;
       transform: translateX(var(--_floating-action-button-enter-x));
     }
+  }
+
+  /*
+   * Round 3 (order 1.23, proposed).
+   *
+   * Hover lift: where the device can hover, the button rises by
+   * --_floating-action-button-lift on the bouncy spring (Button's release
+   * timing) and its glow follows the pointer (button-glow); a press brings
+   * it back down and in (button-press: the scale, the sink of the icon and
+   * the shade), and release springs it back to the lifted place. A rise of a
+   * few pixels never takes the target from under the pointer.
+   *
+   * The extended label is unveiled from behind the icon: besides the slide
+   * above, its clip opens from the icon side to the inline end over
+   * duration.morph, so the words appear in reading order.
+   */
+  [data-ds='floating-action-button'] {
+    --_floating-action-button-lift: var(--ds-distance-lift);
+    --_floating-action-button-reveal: inset(0 100% 0 0);
+  }
+
+  [data-ds='floating-action-button']:dir(rtl) {
+    --_floating-action-button-reveal: inset(0 0 0 100%);
+  }
+
+  @media (hover: hover) {
+    [data-ds='floating-action-button']:hover:not([data-disabled], [data-loading]) {
+      transform: translateY(calc(-1 * var(--_floating-action-button-lift)));
+    }
+  }
+
+  [data-ds='floating-action-button'][data-extended] > [data-part='label'] {
+    clip-path: inset(0);
+    transition:
+      opacity calc(var(--ds-duration-fast) * var(--_button-motion)) var(--ds-ease-default),
+      transform calc(var(--_button-duration) * var(--_button-motion)) var(--_button-ease),
+      clip-path calc(var(--ds-duration-morph) * var(--_button-motion)) var(--ds-ease-out);
+
+    @starting-style {
+      clip-path: var(--_floating-action-button-reveal);
+    }
+  }
+
+  /*
+   * Reduced (review B1, order 1.23): this file's own rule, so it holds even
+   * where the duration tokens are not zeroed. No lift, no slide, no reveal,
+   * every duration 0s: the plus shows as a close mark at once while open.
+   */
+  @media (prefers-reduced-motion: reduce) {
+    [data-ds='floating-action-button'] {
+      --_floating-action-button-lift: 0px;
+      --_floating-action-button-reveal: inset(0);
+      --_floating-action-button-enter-x: 0px;
+    }
+
+    [data-ds='floating-action-button'][data-size] {
+      --_button-motion: 0;
+    }
+  }
+
+  :root[data-motion='reduce'] [data-ds='floating-action-button'] {
+    --_floating-action-button-lift: 0px;
+    --_floating-action-button-reveal: inset(0);
+    --_floating-action-button-enter-x: 0px;
+    --_button-motion: 0;
   }
 }

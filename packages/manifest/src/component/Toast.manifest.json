@@ -30,7 +30,8 @@
     "count",
     "description",
     "action",
-    "close"
+    "close",
+    "progress"
   ],
   "parts": {
     "Toaster": "viewport, data-ds=\"toaster\" with data-position",
@@ -114,10 +115,11 @@
         "bottom-end",
         "bottom-center",
         "top-end",
-        "top-center"
+        "top-center",
+        "auto"
       ],
       "default": "bottom-end",
-      "description": "Toaster prop. end is the inline end: right in English, left in Arabic."
+      "description": "Toaster prop. end is the inline end: right in English, left in Arabic. auto follows the platform axis: top-center on ios, bottom-end elsewhere (android.css places the snackbar at the start). The toaster carries the resolved value in data-position."
     },
     "label": {
       "type": "string",
@@ -137,7 +139,10 @@
   "states": [
     "open",
     "closed",
-    "data-swipe=start|move|cancel|end"
+    "data-swipe=start|move|cancel|end",
+    "data-stacked",
+    "data-expanded",
+    "data-paused"
   ],
   "a11y": {
     "role": "The Toaster is a region (named Notifications) holding a list; each toast is a list item. Announcements go through two visually hidden regions owned by the Toaster: role status (polite) and role alert (assertive, for danger).",
@@ -282,14 +287,19 @@
     {
       "wrong": "toast({ type: \"success\", message: \"Draft saved\" }), or a toast component rendered by hand for a one off notice",
       "right": "toast.success(\"Draft saved\"), or toast(\"Draft saved\", { tone: \"success\", lang: \"en\" }); keep the id to call toast.update(id, patch) or toast.dismiss(id)"
+    },
+    {
+      "wrong": "Rebuilding the swipe with the Radix swipe props, or a timer bar with its own setTimeout",
+      "right": "The Toaster runs the swipe (rubber band against the edge, distance or flick to close) and the progress line is a CSS animation that pauses with the store (data-paused on the toaster), so the line and the timer never drift apart"
     }
   ],
   "contract": {
     "trigger": "[data-demo-trigger]",
     "optionalParts": [
-      "count",
       "action",
+      "count",
       "description",
+      "progress",
       "title"
     ]
   },

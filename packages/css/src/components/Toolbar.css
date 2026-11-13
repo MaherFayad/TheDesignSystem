@@ -151,12 +151,17 @@
     animation-composition: add;
   }
 
+  /* Round 3: the icon rule carries [data-state='on'], so it matches the motion rule and wins by order (review B2). */
   @media (prefers-reduced-motion: reduce) {
     [data-ds='toolbar'] [data-part='item'] {
       --_button-part-press: 1;
     }
 
-    [data-ds='toolbar'] [data-part='item'] > [data-part='icon'] {
+    [data-ds='toolbar'] {
+      --_toolbar-duration: 0s;
+    }
+
+    [data-ds='toolbar'] [data-part='item'][data-state='on'] > [data-part='icon'] {
       animation: none;
     }
   }
@@ -166,7 +171,11 @@
     --_button-part-press: 1;
   }
 
-  :root[data-motion='reduce'] [data-ds='toolbar'] [data-part='item'] > [data-part='icon'] {
+  :root[data-motion='reduce'] [data-ds='toolbar'] {
+    --_toolbar-duration: 0s;
+  }
+
+  :root[data-motion='reduce'] [data-ds='toolbar'] [data-part='item'][data-state='on'] > [data-part='icon'] {
     animation: none;
   }
 

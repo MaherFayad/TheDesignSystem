@@ -117,7 +117,9 @@ function useLoadingMorph(root: { current: HTMLElement | null }, loading: boolean
     last.current = loading;
     const el = root.current;
     if (!el) return;
-    const label = el.querySelector(':scope > [data-part="label"]') ?? el.querySelector(':scope > [data-part="icon"]');
+    // When loading ends straight into a result (Button's data-result), the
+    // label stays out under the result glyph: only the spinner leaves.
+    const label = !loading && el.hasAttribute('data-result') ? null : (el.querySelector(':scope > [data-part="label"]') ?? el.querySelector(':scope > [data-part="icon"]'));
     const spinner = el.querySelector(':scope > [data-part="spinner"]');
     const played = buttonMorph({ root: el, label, spinner }, loading ? 'idle' : 'loading', loading ? 'loading' : 'idle', { mode: motion.mode(interaction) });
     if (loading) return;
@@ -170,6 +172,7 @@ export function ButtonRoot({
   onClick,
   onAuxClick,
   onPointerDown,
+  onPointerMove,
   onKeyDown,
   onKeyUp,
   onBlur,
@@ -216,6 +219,37 @@ export function ButtonRoot({
   const sh = shape ?? group?.shape ?? 'default';
   const groupEmphasis = group?.emphasis && !(iconOnly && (group.emphasis as string) === 'link') ? group.emphasis : undefined;
   const em = emphasis ?? groupEmphasis ?? defaultEmphasis;
+  // The glow that follows the pointer (interaction button-glow, order 1.23;
+  // drawn on solid fills, and on others where a style turns it on): the
+  // pointer's place as a share of the box, so
+  // it holds at any zoom. A custom property on the element, not React state:
+  // no render per move. A touch sets it on pointer down, so the press lights
+  // up under the finger. Button.css decides whether the glow shows.
+  const placeGlow = (event: PointerEvent<HTMLButtonElement>) => {
+    if (em === 'link') return;
+    const el = event.currentTarget;
+    const box = el.getBoundingClientRect();
+    if (!(box.width > 0 && box.height > 0)) return;
+    const share = (n: number) => `${Math.round(Math.min(1, Math.max(0, n)) * 1000) / 10}%`;
+    el.style.setProperty('--_button-glow-x', share((event.clientX - box.left) / box.width));
+    el.style.setProperty('--_button-glow-y', share((event.clientY - box.top) / box.height));
+  };
+  // The ripple origin (a platform hook, order 1.23): where a press starts, in
+  // px from the root's inline start and block start, for a style or a
+  // platform that draws a press from the touch point (Android). Every
+  // emphasis. Button.css declares both at 50% and draws nothing with them.
+  // Distances are in the root's own CSS px, so they hold under CSS zoom.
+  const placeRipple = (event: PointerEvent<HTMLButtonElement>) => {
+    const el = event.currentTarget;
+    const box = el.getBoundingClientRect();
+    if (!(box.width > 0 && box.height > 0)) return;
+    const fromLeft = (event.clientX - box.left) / box.width;
+    const rtl = getComputedStyle(el).direction === 'rtl';
+    const x = (rtl ? 1 - fromLeft : fromLeft) * el.offsetWidth;
+    const y = ((event.clientY - box.top) / box.height) * el.offsetHeight;
+    el.style.setProperty('--_button-ripple-x', `${Math.round(Math.min(el.offsetWidth, Math.max(0, x)))}px`);
+    el.style.setProperty('--_button-ripple-y', `${Math.round(Math.min(el.offsetHeight, Math.max(0, y)))}px`);
+  };
   const attrs = {
     ...rest,
     ref: setOwn,
@@ -246,7 +280,15 @@ export function ButtonRoot({
       onAuxClick?.(event);
     },
     onPointerDown: (event: PointerEvent<HTMLButtonElement>) => {
-      if (!inert) onPointerDown?.(event);
+      if (!inert) {
+        placeGlow(event);
+        placeRipple(event);
+        onPointerDown?.(event);
+      }
+    },
+    onPointerMove: (event: PointerEvent<HTMLButtonElement>) => {
+      if (!inert) placeGlow(event);
+      onPointerMove?.(event);
     },
     // While inert, navigation keys (arrows, Home, End, Page keys, Tab) still
     // reach the handler, so a roving group can move past a disabled item.

@@ -23,6 +23,11 @@
  *   --_callout-title-fg, -icon
  *   --_callout-radius, -padding-block, -padding-inline, -gap, -font-size
  *   --_callout-tone-*                          the colors of one tone
+ * Round 3 (order 1.23, proposed): The icon
+ * beat adds a halo: as the icon lands, a ring in the icon color (box-shadow)
+ * grows from it by distance.shift and fades, once.
+ *
+ *   --_callout-icon-halo    the halo color (default the icon color, transparent turns it off)
  */
 @layer ds.base {
   [data-ds='callout'] {
@@ -40,6 +45,7 @@
     --_callout-border-color: transparent;
     --_callout-edge: var(--_callout-tone-border);
     --_callout-icon: var(--_callout-tone-text);
+    --_callout-icon-halo: var(--_callout-icon);
     --_callout-icon-enter-scale: var(--ds-scale-morph);
     --_callout-shift: var(--ds-distance-nudge);
 
@@ -79,11 +85,13 @@
   }
 
   [data-ds='callout'] > [data-part='icon'] {
+    border-radius: var(--ds-radius-pill);
     animation: ds-callout-icon-in var(--ds-duration-spring-bouncy) var(--ds-ease-spring-bouncy) var(--ds-delay-stagger) backwards;
   }
 
   @keyframes ds-callout-icon-in {
     from {
+      box-shadow: 0 0 0 0 var(--_callout-icon-halo);
       opacity: 0;
       transform: scale(var(--_callout-icon-enter-scale));
     }
@@ -91,6 +99,10 @@
     /* Readable early: full opacity by 30% of the run (READABLE_AT); the transform settles over all of it. */
     30% {
       opacity: 1;
+    }
+
+    to {
+      box-shadow: 0 0 0 var(--ds-distance-shift) transparent;
     }
   }
 

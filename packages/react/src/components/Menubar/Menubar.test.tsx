@@ -122,7 +122,7 @@ describe('Menubar', () => {
     expect(layer?.getAttribute('data-menu-layer')).toBe('menubar');
     expect(layer?.parentElement).toBe(document.body);
     expect(trigger('File').getAttribute('data-state')).toBe('open');
-    expect(Array.from(menu.children).map((c) => c.getAttribute('data-part'))).toEqual(['item', 'sub-trigger', 'separator', 'item']);
+    expect(Array.from(menu.children).map((c) => c.getAttribute('data-part'))).toEqual(['item', 'sub-trigger', 'separator', 'item', 'highlight']);
   });
 
   it('ArrowRight and ArrowLeft move between titles in reading order, skipping the disabled one', async () => {

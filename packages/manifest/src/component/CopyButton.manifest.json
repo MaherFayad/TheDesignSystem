@@ -22,7 +22,8 @@
     "root",
     "icon",
     "label",
-    "status"
+    "status",
+    "bubble"
   ],
   "props": {
     "value": {
@@ -33,7 +34,7 @@
     "label": {
       "type": "string",
       "default": "Copy",
-      "description": "The action name: visible text, or the accessible name with iconOnly. Copy, or نسخ under an Arabic Theme. Name what is copied when it helps: Copy command."
+      "description": "The action name: visible text, and always the accessible name (aria-label), so the name never changes while the label shows the result. Copy, or نسخ under an Arabic Theme. Name what is copied when it helps: Copy command."
     },
     "iconOnly": {
       "type": "boolean",
@@ -43,12 +44,12 @@
     "copiedLabel": {
       "type": "string",
       "default": "Copied",
-      "description": "What the status says after a copy (تم النسخ in Arabic)."
+      "description": "What the label rolls to and the status says after a copy (تم النسخ in Arabic)."
     },
     "failedLabel": {
       "type": "string",
       "default": "Could not copy",
-      "description": "What the status says after a failure (تعذر النسخ in Arabic)."
+      "description": "What the label rolls to and the status says after a failure (تعذر النسخ in Arabic)."
     },
     "target": {
       "type": "string",
@@ -122,7 +123,7 @@
       "Space": "Copies the value",
       "Tab": "Moves focus to the next control"
     },
-    "announce": "A visually hidden status inside the button says Copied, or Could not copy, once per copy (WCAG 4.1.3), and is emptied when the button returns to idle. No native title.",
+    "announce": "A visually hidden polite status inside the button says Copied, or Could not copy, once per copy (WCAG 4.1.3): each copy writes a new text node, so a second copy is heard again, and the status is emptied when the button returns to idle. The visible words and the bubble are aria-hidden; the accessible name stays the label. No native title.",
     "native": {
       "accessibilityRole": "button",
       "accessibilityState": [
@@ -131,8 +132,12 @@
     },
     "notes": [
       "The Clipboard API is called inside the click handler. Where it is missing or refused, a hidden textarea and the copy command are tried; if both fail, the state is failed and the target text is selected.",
-      "The result shows for delay.peek-hide, then the button returns to idle. Hold time, not motion: it is kept under reduced motion.",
-      "The result is not told by color alone: the icon changes from copy to check or warning, and the status says it."
+      "The result shows for delay.feedback, then the button returns to idle. Hold time, not motion: it is kept under reduced motion.",
+      "The result is not told by color alone: the icon changes from copy to check or warning, and the status says it.",
+      "Motion of round 3 (order 1.23, proposed, interaction copy-swap): the copy glyph closes into its centre (a circle clip and scale.morph) while the check wipes in along its strokes (clip-path) and pops on the bouncy spring, in the success text color; the warning pops in and the button shakes once after a failure. The label rolls from the action name to Copied (or the failure words) like a counter and rolls back after delay.feedback. The three words sit in one grid cell, so the button keeps the width of the widest and never changes size.",
+      "The icon only form shows a small aria-hidden bubble above the button with the result word; it rises in on the snappy spring and keeps rising as it fades.",
+      "A second copy restarts the hold time, draws the check again and replays the bubble. Everything is CSS on data-state: nothing waits for an animation.",
+      "Reduced motion (the system setting and data-motion reduce): CopyButton.css sets its own durations to 0s and turns every travel off, so each state shows at once; the status still says the result."
     ]
   },
   "content": {
@@ -293,5 +298,11 @@
       "right": "The status part; a Tooltip arrives in wave 1"
     }
   ],
-  "since": "0.2.0"
+  "since": "0.2.0",
+  "contract": {
+    "optionalParts": [
+      "label",
+      "bubble"
+    ]
+  }
 }

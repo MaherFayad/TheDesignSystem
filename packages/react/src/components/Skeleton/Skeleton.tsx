@@ -21,10 +21,17 @@
 // content, inside the existing contract (./Alert/ghost.ts). The fuller
 // form, a `loading` prop with the content as children that fades in under
 // the leaving shape, is proposed to the owner in the round 2 report.
+//
+// Round 3 (order 1.23, proposed): shimmer to content. The ghost no longer
+// only fades: it is wiped away with clip-path from the inline start toward
+// the inline end, the way the shimmer band runs, over duration.morph on
+// ease.reveal, so the content shows in reading order where the placeholder
+// was. Reduced motion swaps at once, with no ghost (review B1).
 import { useLayoutEffect, useRef, type CSSProperties, type HTMLAttributes, type Ref } from 'react';
+import { play, type PatternMode } from '@the-system/motion';
 import type { Size } from '@the-system/shared';
 import { useMotion } from '../../internal/motion';
-import { fadeAway, ghostOf, placeOf } from '../Alert/ghost';
+import { ghostOf, placeOf } from '../Alert/ghost';
 
 export type SkeletonVariant = 'text' | 'circle' | 'rect';
 export type SkeletonSize = Extract<Size, 'sm' | 'md' | 'lg'>;
@@ -39,6 +46,28 @@ export interface SkeletonProps extends Omit<HTMLAttributes<HTMLSpanElement>, 'ti
   /** Block size for rect: a CSS length or a number of px. A circle takes its width. Ignored for text. */
   height?: string | number;
   ref?: Ref<HTMLSpanElement>;
+}
+
+/** Round 3: the ghost of a skeleton is wiped off toward the inline end; reduced fades it. */
+function wipeAway(ghost: HTMLElement | null, mode: PatternMode): void {
+  if (!ghost) return;
+  if (mode !== 'full') {
+    ghost.remove();
+    return;
+  }
+  const rtl = typeof getComputedStyle === 'function' && getComputedStyle(ghost).direction === 'rtl';
+  const gone = rtl ? 'inset(0 100% 0 0)' : 'inset(0 0 0 100%)';
+  const a = play(
+    ghost,
+    { keyframes: [{ clipPath: 'inset(0)' }, { clipPath: gone }], duration: 'duration.morph', easing: 'ease.reveal', fill: 'forwards', origin: '50% 50%' },
+    'skeleton-wipe',
+  );
+  if (!a) {
+    ghost.remove();
+    return;
+  }
+  const drop = () => ghost.remove();
+  a.finished.then(drop, drop);
 }
 
 function toLength(value: string | number | undefined): string | undefined {
@@ -58,10 +87,11 @@ export function Skeleton({ variant = 'text', size = 'md', width, height, style, 
   useLayoutEffect(() => {
     const el = own.current;
     return () => {
-      if (!el || !el.isConnected || modeRef.current === 'none' || typeof requestAnimationFrame !== 'function') return;
+      // Round 3 (review B1): only the full mode draws a ghost; reduced motion swaps at once.
+      if (!el || !el.isConnected || modeRef.current !== 'full' || typeof requestAnimationFrame !== 'function') return;
       const place = placeOf(el);
       requestAnimationFrame(() => {
-        if (!el.isConnected) fadeAway(ghostOf(place), modeRef.current);
+        if (!el.isConnected) wipeAway(ghostOf(place), modeRef.current);
       });
     };
   }, []);

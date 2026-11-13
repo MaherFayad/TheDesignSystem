@@ -4,7 +4,7 @@ import { Icon } from '@the-system/icons/react';
 import type { Size } from '@the-system/shared';
 import { useMotion } from '../../internal/motion';
 import { useField } from '../Field/context';
-import { landPop, playBeat, slideIn } from '../Input/fieldMotion';
+import { emerge, landPop, playBeat } from '../Input/fieldMotion';
 
 /** The interaction id of the error entrance in the registry. */
 export const FIELD_ERROR_ENTER = 'field-error-enter';
@@ -33,9 +33,10 @@ export interface FieldErrorProps extends Omit<ComponentProps<'p'>, 'title'> {
  * control, through aria-describedby, when focus lands there. A form that
  * checks on submit moves focus to the first invalid control.
  *
- * Motion (interaction field-error-enter, order 1.22, proposed): an error
- * that shows after the first paint slides down from distance.shift above,
- * out from under the control, and fades in on the soft spring; one stagger
+ * Motion (interaction field-error-enter, order 1.23, proposed): an error
+ * that shows after the first paint slides down a full line from behind its
+ * own top edge (a clip-path holds the edge still), so it comes out from
+ * under the control, and fades in on the soft spring; one stagger
  * step later its icon lands from scale.morph past full size on the bouncy
  * spring. The control shakes at the same time (error-shake). The message is
  * in the DOM and read at once; the content under the field moves down at
@@ -57,7 +58,7 @@ export function FieldError({ size = 'md', children, ref, ...rest }: FieldErrorPr
     const root = el.current;
     if (!shown || !ready || !root) return;
     const mode = motion.mode(FIELD_ERROR_ENTER);
-    playBeat(root, slideIn(), FIELD_ERROR_ENTER, mode);
+    playBeat(root, emerge(), FIELD_ERROR_ENTER, mode);
     playBeat(root.querySelector(':scope > [data-part="icon"]'), landPop(undefined, { delay: 'delay.stagger' }), `${FIELD_ERROR_ENTER}-icon`, mode, null);
   }, [shown, settled, motion]);
   if (!shown) return null;

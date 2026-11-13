@@ -62,7 +62,7 @@ import {
   type ListBoxOption,
 } from '../ListBox';
 import { useControllable } from '../../internal/useControllable';
-import { useStaggerOnOpen } from '../ListBox/selectionMotion';
+import { usePopupRows } from '../ListBox/selectionMotion';
 
 export type ComboboxSize = Extract<Size, 'sm' | 'md' | 'lg'>;
 export type ComboboxShape = Extract<Shape, 'default' | 'pill'>;
@@ -433,7 +433,7 @@ export function ComboboxBase({
 
   const layer = usePopupLayer(popupOpen);
   // menu-rows: the options arrive one stagger step after the popup surface, each time it opens.
-  const popupRef = useStaggerOnOpen("[data-ds='list-box'] [data-part='option']", layer.onContent);
+  const popupRef = usePopupRows(layer.onContent);
   // An expanded combobox controls something: the list, or the popup that says nothing matched.
   const popupId = `${listId}-popup`;
   const controls = popupOpen ? (hasOptions ? listId : popupId) : undefined;

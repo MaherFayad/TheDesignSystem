@@ -25,7 +25,7 @@
 // inline loading form (a visible busy label is the caller's copy), FK2
 // align, menuItem, navItem and numeric (they belong to Menu and Nav), and
 // aria-pressed styling (a toggle is its own component).
-import type { ReactNode } from 'react';
+import { useState, type ReactNode } from 'react';
 import {
   ButtonLoading,
   ButtonRoot,
@@ -51,7 +51,32 @@ export interface ButtonProps extends ButtonBaseProps {
    * the button is squeezed, and the button shrinks with its row.
    */
   wrap?: boolean;
+  /**
+   * The ending of an action (interaction button-result, order 1.23): while
+   * set, the label rolls out and a check (success) or a cross (error) draws
+   * in its place, and an error shakes the button once. Sets data-result.
+   * Clear it to go back, for example after delay.feedback (2s). The width
+   * holds. Default none.
+   */
+  result?: ButtonResult;
+  /**
+   * What a visually hidden status says while `result` is set, so the ending
+   * is heard once: "Saved", "Could not save". Arabic: "تم الحفظ", "تعذر الحفظ".
+   * While it is passed, an empty polite status sits in the button, so the
+   * words are read when they arrive. Without it nothing is announced; the
+   * caller may announce elsewhere.
+   */
+  resultLabel?: string;
 }
+
+/** The two endings an action can show. */
+export type ButtonResult = 'success' | 'error';
+
+/** The strokes of each result glyph, in a 24 unit box. Each draws from its start with stroke-dashoffset (pathLength 1). */
+const resultStrokes: Record<ButtonResult, readonly string[]> = {
+  success: ['M5 12.5 9.5 17 19 7'],
+  error: ['M7 7 17 17', 'M17 7 7 17'],
+};
 
 /**
  * An action button. The primary action is `tone="accent" emphasis="solid"`:
@@ -66,8 +91,16 @@ export function Button({
   wrap = false,
   loading = false,
   loadingLabel = 'Loading',
+  result,
+  resultLabel,
   ...rest
 }: ButtonProps) {
+  // The last result shown. Its glyph stays (aria-hidden, at opacity 0) after
+  // the result clears, so the way back can play; nothing renders before the
+  // first result.
+  const [shown, setShown] = useState<ButtonResult | undefined>(result);
+  if (result !== undefined && result !== shown) setShown(result);
+  const glyph = result ?? shown;
   return (
     <ButtonRoot
       {...rest}
@@ -76,12 +109,27 @@ export function Button({
       loading={loading}
       data-full-width={fullWidth ? '' : undefined}
       data-wrap={wrap ? '' : undefined}
+      data-result={result}
       render={(content) => (
         <>
           {start !== undefined && <span data-part="start">{renderSlotContent(start)}</span>}
           <span data-part="label">{content}</span>
           {end !== undefined && <span data-part="end">{renderSlotContent(end)}</span>}
+          {glyph !== undefined && (
+            <span data-part="result" aria-hidden="true">
+              <svg key={glyph} viewBox="0 0 24 24" focusable="false">
+                {resultStrokes[glyph].map((d) => (
+                  <path key={d} d={d} pathLength={1} />
+                ))}
+              </svg>
+            </span>
+          )}
           {loading && <ButtonLoading label={loadingLabel} />}
+          {resultLabel !== undefined && (
+            <span data-part="status" role="status">
+              {result !== undefined && !loading ? resultLabel : ''}
+            </span>
+          )}
         </>
       )}
     />

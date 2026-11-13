@@ -29,46 +29,80 @@
  *   --_split-view-shift   the slide's distance, signed for the reading direction
  * A style turns it off with --_split-view-shift: 0px. Under reduced motion
  * (media query or data-motion="reduce") the pane does not slide.
+ *
+ * Round 3 (order 1.23, proposed): the pane that shows is also uncovered with
+ * clip-path from the side it comes from (the detail from the inline end, the
+ * list from the inline start), so it reads as a page laid over the other,
+ * while it settles its distance.enter. The reduced selectors carry
+ * [data-state] so they win over the motion rules (review B2), and the root
+ * zeroes the timing.
+ *   --_split-view-duration, -ease          the pane's timing
+ *   --_split-view-reveal-end, -reveal-start   the clip each pane starts from; names
+ *                                          outside the list in anatomy.md: clip-paths
  */
 @layer ds.base {
   [data-ds='split-view'] {
     --_split-view-back-gap: var(--ds-space-s);
     --_split-view-ring-color: var(--ds-color-focus-ring);
     --_split-view-ring-width: var(--ds-border-width-strong);
+    --_split-view-duration: var(--ds-duration-spring-soft);
+    --_split-view-ease: var(--ds-ease-spring-soft);
+    --_split-view-reveal-end: inset(0 0 0 100%);
+    --_split-view-reveal-start: inset(0 100% 0 0);
     --_split-view-shift: var(--ds-distance-enter);
   }
 
   [data-ds='split-view']:dir(rtl) {
     --_split-view-shift: calc(-1 * var(--ds-distance-enter));
+    --_split-view-reveal-end: inset(0 100% 0 0);
+    --_split-view-reveal-start: inset(0 0 0 100%);
   }
 
   [data-ds='split-view'][data-state='secondary'] > [data-part='secondary'] {
-    animation: ds-split-view-from-end var(--ds-duration-spring-soft) var(--ds-ease-spring-soft);
+    animation: ds-split-view-from-end var(--_split-view-duration) var(--_split-view-ease);
   }
 
   [data-ds='split-view'][data-state='primary'] > [data-part='primary'] {
-    animation: ds-split-view-from-start var(--ds-duration-spring-soft) var(--ds-ease-spring-soft);
+    animation: ds-split-view-from-start var(--_split-view-duration) var(--_split-view-ease);
   }
 
   @keyframes ds-split-view-from-end {
     from {
+      clip-path: var(--_split-view-reveal-end);
       transform: translateX(var(--_split-view-shift));
+    }
+
+    to {
+      clip-path: inset(0);
     }
   }
 
   @keyframes ds-split-view-from-start {
     from {
+      clip-path: var(--_split-view-reveal-start);
       transform: translateX(calc(-1 * var(--_split-view-shift)));
+    }
+
+    to {
+      clip-path: inset(0);
     }
   }
 
   @media (prefers-reduced-motion: reduce) {
-    [data-ds='split-view'] > :is([data-part='primary'], [data-part='secondary']) {
+    [data-ds='split-view'] {
+      --_split-view-duration: 0s;
+    }
+
+    [data-ds='split-view'][data-state] > :is([data-part='primary'], [data-part='secondary']) {
       animation: none;
     }
   }
 
-  :root[data-motion='reduce'] [data-ds='split-view'] > :is([data-part='primary'], [data-part='secondary']) {
+  :root[data-motion='reduce'] [data-ds='split-view'] {
+    --_split-view-duration: 0s;
+  }
+
+  :root[data-motion='reduce'] [data-ds='split-view'][data-state] > :is([data-part='primary'], [data-part='secondary']) {
     animation: none;
   }
 
@@ -95,7 +129,7 @@
   }
 
   @media (forced-colors: active) {
-    [data-ds='split-view'] > :is([data-part='primary'], [data-part='secondary']) {
+    [data-ds='split-view'][data-state] > :is([data-part='primary'], [data-part='secondary']) {
       animation: none;
     }
 

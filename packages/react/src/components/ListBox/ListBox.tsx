@@ -37,6 +37,8 @@
 //       ...options
 //     <div data-part="separator" aria-hidden>    between groups, drawn only
 //     <div data-part="empty">                    shown when there is no option
+//     <span data-part="highlight" aria-hidden>   the one marker that draws the lit row's fill and
+//                                                slides from row to row (order 1.23, highlightMarker.tsx)
 //
 // Filtering is not done here: the owner keeps the query, runs filterItems()
 // from @the-system/shared on the items, passes what matches, and passes the
@@ -46,6 +48,7 @@ import {
   useCallback,
   useEffect,
   useId,
+  useLayoutEffect,
   useMemo,
   useRef,
   type ComponentProps,
@@ -68,7 +71,8 @@ import {
 } from '@the-system/shared';
 import { useTheme } from '../../theme/hooks';
 import { useControllable } from '../../internal/useControllable';
-import { useRowGlide } from './selectionMotion';
+import { HighlightMarker, drawCheck, useHighlightMarker, CHECK_DRAW_ID } from './highlightMarker';
+import { useMotion } from '../../internal/motion';
 
 /** Row sizes: sm 24px rows, md list.row.height (28px at default density). */
 export type ListBoxSize = Extract<Size, 'sm' | 'md'>;
@@ -273,8 +277,27 @@ export function ListBox(props: ListBoxProps) {
   }, [highlightIndex, options, selected]);
 
   const rootRef = useRef<HTMLDivElement | null>(null);
-  // row-glide: the fill of the highlighted row travels from the row lit before.
-  const glideRef = useRowGlide({ rows: "[data-part='option']", lit: { attribute: 'data-highlighted' } });
+  // highlight-marker: one marker draws the lit row's fill and slides from row to row.
+  // Alone, the list lights a row on focus only, so the marker also follows the pointer.
+  const markerRef = useHighlightMarker({
+    rows: "[data-part='option']",
+    hover: !virtualFocus,
+    colors: virtualFocus ? undefined : MARKER_COLORS,
+  });
+  // check-draw-pick: the check of an option chosen now draws itself. Not on first paint.
+  const motion = useMotion();
+  const selectedBefore = useRef<readonly string[] | null>(null);
+  useLayoutEffect(() => {
+    const before = selectedBefore.current;
+    selectedBefore.current = selected;
+    if (!before || !rootRef.current) return;
+    const mode = motion.mode(CHECK_DRAW_ID);
+    for (const v of selected) {
+      if (before.includes(v)) continue;
+      const row = rootRef.current.querySelector(`#${CSS.escape(listBoxOptionId(id, v))} > [data-part='indicator']`);
+      drawCheck(row, mode);
+    }
+  }, [selected, id, motion]);
   const fromKeyboard = useRef(false);
   const fromPointer = useRef(false);
   const typeahead = useMemo(() => createTypeahead(), []);
@@ -388,8 +411,6 @@ export function ListBox(props: ListBoxProps) {
         onMouseDown={virtualFocus ? (event) => event.preventDefault() : undefined}
         onClick={() => choose(option)}
       >
-        {/* The row's fill, which glides from the last lit row (row-glide). Decorative, no part name. */}
-        <span aria-hidden="true" />
         <span data-part="indicator" aria-hidden="true">
           {isSelected && <Icon name="check" size="md" />}
         </span>
@@ -412,16 +433,16 @@ export function ListBox(props: ListBoxProps) {
 
   const isEmpty = options.length === 0;
 
-  // Stable, so the glide keeps watching across renders (a new ref callback would drop its pending records).
+  // Stable, so the marker keeps watching across renders.
   const forwardRef = rest.ref;
   const setRootRef = useCallback(
     (node: HTMLDivElement | null) => {
       rootRef.current = node;
-      glideRef(node);
+      markerRef(node);
       if (typeof forwardRef === 'function') forwardRef(node);
       else if (forwardRef) forwardRef.current = node;
     },
-    [forwardRef, glideRef],
+    [forwardRef, markerRef],
   );
 
   return (
@@ -466,9 +487,13 @@ export function ListBox(props: ListBoxProps) {
           </Fragment>
         );
       })}
+      {!isEmpty && <HighlightMarker />}
     </div>
   );
 }
+
+/** The marker's colors when the list holds focus itself: the lit fill, and the hover veil. */
+const MARKER_COLORS = { lit: 'var(--_list-box-highlight-bg)', hover: 'var(--_list-box-option-bg-hover)' };
 
 /**
  * The items that match `query`, groups kept, best matches first inside each

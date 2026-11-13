@@ -25,6 +25,10 @@
  *                                  (enter-x is the inline twin of the motion name enter-y)
  *   --_popover-shift               how far the popover travels in from its trigger side
  *   --_popover-item-shift          how far the title, body and footer rise as they arrive
+ *   --_popover-enter-stretch   order 1.23: the scale along the axis away from the trigger
+ *                                  (the cross axis keeps -enter-scale), so the surface unfolds
+ *                                  out of its trigger instead of growing evenly
+ *   --_popover-enter-sx, -enter-sy   working values: the two scales per side (data-side)
  *
  * Motion, interaction "popover-spring" (pattern "menu-scale"), order 1.22,
  * proposed: a small surface that lands. The popover comes out of its
@@ -66,6 +70,9 @@
     --_popover-arrow-width: var(--ds-space-2xl);
     --_popover-arrow-height: calc(var(--ds-space-2xl) / 2);
     --_popover-enter-scale: var(--ds-scale-enter);
+    --_popover-enter-stretch: calc(var(--_popover-enter-scale) * var(--ds-scale-anticipate));
+    --_popover-enter-sx: var(--_popover-enter-scale);
+    --_popover-enter-sy: var(--_popover-enter-stretch);
     --_popover-shift: var(--ds-distance-shift);
     --_popover-enter-x: 0px;
     --_popover-enter-y: 0px;
@@ -121,10 +128,14 @@
   }
 
   [data-ds='popover'][data-side='right'] {
+    --_popover-enter-sx: var(--_popover-enter-stretch);
+    --_popover-enter-sy: var(--_popover-enter-scale);
     --_popover-enter-x: calc(var(--_popover-shift) * -1);
   }
 
   [data-ds='popover'][data-side='left'] {
+    --_popover-enter-sx: var(--_popover-enter-stretch);
+    --_popover-enter-sy: var(--_popover-enter-scale);
     --_popover-enter-x: var(--_popover-shift);
   }
 
@@ -133,17 +144,28 @@
   }
 
   /* The parts arrive one stagger step apart after the surface. A part with focus in it is there at once. */
-  [data-ds='popover'][data-state='open'] > :is([data-part='title'], [data-part='body'], [data-part='footer']):not(:focus-within) {
+  [data-ds='popover'][data-state='open'] > :is([data-part='title'], [data-part='body'], [data-part='footer']) {
     animation: ds-popover-part-in var(--ds-duration-spring-soft) var(--ds-ease-spring-soft) backwards;
     animation-delay: var(--ds-delay-stagger);
   }
 
-  [data-ds='popover'][data-state='open'] > [data-part='body']:not(:focus-within) {
+  [data-ds='popover'][data-state='open'] > [data-part='body'] {
     animation-delay: min(calc(var(--ds-delay-stagger) * 2), var(--ds-duration-base));
   }
 
-  [data-ds='popover'][data-state='open'] > [data-part='footer']:not(:focus-within) {
+  [data-ds='popover'][data-state='open'] > [data-part='footer'] {
     animation-delay: min(calc(var(--ds-delay-stagger) * 3), var(--ds-duration-base));
+  }
+
+  /*
+   * A part that holds focus is there at once: its runs take no time. The
+   * animation keeps its name whether or not the part holds focus, so focus
+   * leaving it later (a refused press, a click elsewhere) never plays the
+   * arrival again.
+   */
+  [data-ds='popover'][data-state='open'] > :is([data-part='title'], [data-part='body'], [data-part='footer']):focus-within {
+    animation-duration: 0s;
+    animation-delay: 0s;
   }
 
   [data-ds='popover'][data-state='closed'] {
@@ -247,14 +269,14 @@
   @keyframes ds-popover-in {
     from {
       opacity: 0;
-      transform: translate(var(--_popover-enter-x), var(--_popover-enter-y)) scale(var(--_popover-enter-scale));
+      transform: translate(var(--_popover-enter-x), var(--_popover-enter-y)) scale(var(--_popover-enter-sx), var(--_popover-enter-sy));
     }
   }
 
   @keyframes ds-popover-out {
     to {
       opacity: 0;
-      transform: translate(var(--_popover-enter-x), var(--_popover-enter-y)) scale(var(--_popover-enter-scale));
+      transform: translate(var(--_popover-enter-x), var(--_popover-enter-y)) scale(var(--_popover-enter-sx), var(--_popover-enter-sy));
     }
   }
 

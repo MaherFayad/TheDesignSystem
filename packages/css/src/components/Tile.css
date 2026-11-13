@@ -30,6 +30,16 @@
  * 0px, --_tile-lift-scale 1 and --_tile-glow transparent. Under reduced
  * motion (media query or data-motion="reduce") nothing moves and the
  * highlight is not drawn.
+ *
+ * Round 3 (order 1.23, proposed): the highlight that follows the pointer
+ * lights the edge of the tile, not its face: the span is cut to a ring
+ * --_tile-glow-edge wide with a mask, and the glow is primary.border, so the
+ * text under it keeps its contrast. The shadow now grows with the lift (a
+ * box-shadow transition on the same spring), and a press settles the tile
+ * back to half its lift. A style turns the highlight off with --_tile-glow
+ * transparent, as before.
+ *
+ *   --_tile-glow-edge   the width of the lit ring (a drawing extra)
  */
 @layer ds.base {
   [data-ds='tile'] {
@@ -46,7 +56,8 @@
     --_tile-lift-scale: var(--ds-scale-lift);
     --_tile-duration: var(--ds-duration-spring-soft);
     --_tile-ease: var(--ds-ease-spring-soft);
-    --_tile-glow: var(--ds-color-bg-overlay-10);
+    --_tile-glow: var(--ds-color-primary-border);
+    --_tile-glow-edge: var(--ds-border-width-strong);
     --_tile-glow-size: calc(4 * var(--ds-size-control-lg));
     --_tile-glow-x: 0px;
     --_tile-glow-y: 0px;
@@ -73,13 +84,21 @@
     font-family: var(--ds-font-family-sans);
     font-size: var(--ds-font-size-s);
     line-height: var(--ds-font-leading-normal);
-    transition: transform var(--_tile-duration) var(--_tile-ease);
+    transition:
+      transform var(--_tile-duration) var(--_tile-ease),
+      box-shadow var(--_tile-duration) var(--_tile-ease);
   }
 
   /* card-lift: the pointer highlight, a decorative span Tile.tsx adds as the last child. */
   [data-ds='tile'] > span[aria-hidden='true']:empty:last-child {
     position: absolute;
-    inset: 0;
+    inset: calc(-1 * var(--ds-border-width-default));
+    box-sizing: border-box;
+    padding: var(--_tile-glow-edge);
+    /* Round 3: the highlight lights the edge only, a ring cut with a mask, so it never sits over the text. */
+    mask:
+      linear-gradient(currentColor 0 0) content-box exclude,
+      linear-gradient(currentColor 0 0);
     overflow: hidden;
     border-radius: inherit;
     opacity: 0;
@@ -207,12 +226,18 @@
     transform: translateY(var(--_tile-lift)) scale(var(--_tile-lift-scale));
   }
 
+  /* Press: the tile settles back to half its lift and keeps its size. */
+  [data-ds='tile']:is([data-interactive], :has(> [data-part='title'] > [data-part='link'])):hover:active {
+    transform: translateY(calc(var(--_tile-lift) / 2));
+  }
+
   @media (prefers-reduced-motion: reduce) {
     [data-ds='tile'] {
       transition: none;
     }
 
-    [data-ds='tile']:is([data-interactive], :has(> [data-part='title'] > [data-part='link'])):hover {
+    [data-ds='tile']:is([data-interactive], :has(> [data-part='title'] > [data-part='link'])):hover,
+    [data-ds='tile']:is([data-interactive], :has(> [data-part='title'] > [data-part='link'])):hover:active {
       transform: none;
     }
 
@@ -225,7 +250,8 @@
     transition: none;
   }
 
-  :root[data-motion='reduce'] [data-ds='tile']:is([data-interactive], :has(> [data-part='title'] > [data-part='link'])):hover {
+  :root[data-motion='reduce'] [data-ds='tile']:is([data-interactive], :has(> [data-part='title'] > [data-part='link'])):hover,
+  :root[data-motion='reduce'] [data-ds='tile']:is([data-interactive], :has(> [data-part='title'] > [data-part='link'])):hover:active {
     transform: none;
   }
 

@@ -14,18 +14,25 @@
  *                                 the track and the page in every style.
  *   --_progress-circle-fraction   0 to 1, set inline on the indicator
  *
- * Drawing: track and indicator are round borders on spans stacked in the
- * root. The indicator is cut to the value by a conic gradient mask that
- * starts at 12 o'clock and runs clockwise. A value change swaps the mask at
- * once (only transform and opacity animate). Indeterminate shows a quarter
- * arc that turns with transform: rotate (motion pattern spinner); under
- * reduced motion it stops as a dashed full ring, a shape no value can take
- * (a still quarter arc reads as 25 percent).
+ * Drawing (round 3, order 1.23, proposed): the track is a round border on
+ * a span. The indicator holds an SVG circle (part "arc", aria-hidden) whose
+ * radius and stroke width come from the two properties above; its stroke is
+ * cut to the value with stroke-dasharray 100 and stroke-dashoffset
+ * 100 - 100 * fraction on a pathLength of 100, turned so it starts at 12
+ * o'clock and runs clockwise. A value change transitions stroke-dashoffset
+ * on the soft spring, so the arc draws forward or back from where it was.
+ * Indeterminate draws a quarter arc and turns it with transform: rotate
+ * (motion pattern spinner); under reduced motion it stops as a dashed full
+ * ring, a shape no value can take (a still quarter arc reads as 25 percent).
  *
- * Order 1.22 (proposed), from ProgressCircle.tsx with the Web Animations
- * API: a value change turns the new arc into place on the soft spring (the
- * nearest transform form of a sweep), the value rolls digit by digit, and
- * reaching max pops the ring once. Under reduced motion none of it plays.
+ *   --_progress-circle-duration, -ease   the arc's draw (motion names);
+ *                                        a style turns it off with 0s
+ *   --_progress-circle-dash              the dash of the reduced busy ring;
+ *                                        a name outside the list in
+ *                                        anatomy.md: stroke-dasharray
+ *
+ * Reaching max beats once from ProgressCircle.tsx: the ring dips and pops
+ * and a halo (box-shadow) grows from it by distance.shift and fades.
  */
 @layer ds.base {
   [data-ds='progress-circle'] {
@@ -35,6 +42,9 @@
     --_progress-circle-track: var(--ds-color-bg-overlay-10);
     --_progress-circle-fill: var(--ds-color-primary-on-surface);
     --_progress-circle-fraction: 0;
+    --_progress-circle-duration: var(--ds-duration-spring-soft);
+    --_progress-circle-ease: var(--ds-ease-spring-soft);
+    --_progress-circle-dash: var(--ds-space-fixed-2xs) var(--ds-space-fixed-2xs);
 
     position: relative;
     display: inline-grid;
@@ -89,8 +99,29 @@
   }
 
   [data-ds='progress-circle'] > [data-part='indicator'] {
-    border-color: var(--_progress-circle-fill);
-    mask-image: conic-gradient(currentColor calc(var(--_progress-circle-fraction) * 1turn), transparent 0);
+    border-color: transparent;
+  }
+
+  /* The arc: an SVG circle on the middle line of the track, turned to start at 12 o'clock. */
+  [data-ds='progress-circle'] > [data-part='indicator'] > [data-part='arc'] {
+    position: absolute;
+    inset: calc(-1 * var(--_progress-circle-width));
+    inline-size: calc(100% + 2 * var(--_progress-circle-width));
+    block-size: calc(100% + 2 * var(--_progress-circle-width));
+    overflow: visible;
+    transform: rotate(-90deg);
+  }
+
+  [data-ds='progress-circle'] > [data-part='indicator'] > [data-part='arc'] > circle {
+    cx: 50%;
+    cy: 50%;
+    r: calc(50% - var(--_progress-circle-width) / 2);
+    fill: none;
+    stroke: var(--_progress-circle-fill);
+    stroke-width: var(--_progress-circle-width);
+    stroke-dasharray: 100;
+    stroke-dashoffset: calc(100 - 100 * var(--_progress-circle-fraction));
+    transition: stroke-dashoffset var(--_progress-circle-duration) var(--_progress-circle-ease);
   }
 
   [data-ds='progress-circle'] > [data-part='value'] {
@@ -104,8 +135,12 @@
   /* ------------------------------------------------------------ states */
 
   [data-ds='progress-circle'][data-state='indeterminate'] > [data-part='indicator'] {
-    mask-image: conic-gradient(currentColor 0.25turn, transparent 0);
     animation: ds-progress-circle-turn var(--ds-duration-spin) linear infinite;
+  }
+
+  [data-ds='progress-circle'][data-state='indeterminate'] > [data-part='indicator'] > [data-part='arc'] > circle {
+    stroke-dashoffset: 75;
+    transition: none;
   }
 
   @keyframes ds-progress-circle-turn {
@@ -121,16 +156,30 @@
      * determinate value is dashed. aria-valuetext says Loading.
      */
     [data-ds='progress-circle'][data-state='indeterminate'] > [data-part='indicator'] {
-      border-style: dashed;
-      mask-image: none;
       animation: none;
+    }
+
+    [data-ds='progress-circle'][data-state='indeterminate'] > [data-part='indicator'] > [data-part='arc'] > circle {
+      stroke-dasharray: var(--_progress-circle-dash);
+      stroke-dashoffset: 0;
+    }
+
+    [data-ds='progress-circle'] > [data-part='indicator'] > [data-part='arc'] > circle {
+      transition: none;
     }
   }
 
   :root[data-motion='reduce'] [data-ds='progress-circle'][data-state='indeterminate'] > [data-part='indicator'] {
-    border-style: dashed;
-    mask-image: none;
     animation: none;
+  }
+
+  :root[data-motion='reduce'] [data-ds='progress-circle'][data-state='indeterminate'] > [data-part='indicator'] > [data-part='arc'] > circle {
+    stroke-dasharray: var(--_progress-circle-dash);
+    stroke-dashoffset: 0;
+  }
+
+  :root[data-motion='reduce'] [data-ds='progress-circle'] > [data-part='indicator'] > [data-part='arc'] > circle {
+    transition: none;
   }
 
   @media (forced-colors: active) {
@@ -138,9 +187,9 @@
       border-color: GrayText;
     }
 
-    [data-ds='progress-circle'] > [data-part='indicator'] {
+    [data-ds='progress-circle'] > [data-part='indicator'] > [data-part='arc'] > circle {
       forced-color-adjust: none;
-      border-color: Highlight;
+      stroke: Highlight;
     }
   }
 }

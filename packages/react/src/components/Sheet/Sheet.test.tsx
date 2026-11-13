@@ -46,7 +46,8 @@ function pointer(el: HTMLElement, type: 'pointerDown' | 'pointerMove' | 'pointer
 }
 
 /** Drags the handle by dy px over the given ms. jsdom gives the panel no height, so a fake one is set. */
-function drag(dy: number, ms = 300, height = 400) {
+/** Up, or down on a sheet that will not close, the panel follows a third of the pointer (the rubber band). */
+function drag(dy: number, ms = 300, height = 400, dismissible = true) {
   const panel = part('panel') as HTMLElement;
   panel.getBoundingClientRect = () => ({ height, width: 400, top: 0, left: 0, right: 400, bottom: height, x: 0, y: 0, toJSON: () => ({}) });
   const handle = part('handle') as HTMLElement;
@@ -54,7 +55,7 @@ function drag(dy: number, ms = 300, height = 400) {
   expect(rootEl()?.hasAttribute('data-dragging')).toBe(true);
   expect(rootEl()?.getAttribute('data-dragging')).toBe('');
   pointer(handle, 'pointerMove', 100 + dy, 1 + ms / 2);
-  expect(panel.style.getPropertyValue('--_dialog-drag-y')).toBe(`${Math.max(0, dy)}px`);
+  expect(panel.style.getPropertyValue('--_dialog-drag-y')).toBe(`${dy < 0 || !dismissible ? dy * (1 / 3) : dy}px`);
   pointer(handle, 'pointerUp', 100 + dy, 1 + ms);
 }
 
@@ -120,7 +121,7 @@ describe('Sheet', () => {
     await waitFor(() => expect(rootEl()).toBeNull());
   });
 
-  it('snaps back on a short slow drag, and never rises above its place', async () => {
+  it('snaps back on a short slow drag, and above its place gives only a third (rubber band)', async () => {
     render(<Basic defaultOpen />);
     await screen.findByRole('dialog');
     drag(40, 1000);
@@ -156,7 +157,7 @@ describe('Sheet', () => {
   it('with dismissible false, a drag, Escape and the backdrop do nothing', async () => {
     render(<Basic defaultOpen dismissible={false} />);
     await screen.findByRole('dialog');
-    drag(300, 1000);
+    drag(300, 1000, 400, false);
     fireEvent.keyDown(document.activeElement ?? document.body, { key: 'Escape' });
     fireEvent.pointerDown(part('backdrop') as HTMLElement);
     expect(rootEl()).not.toBeNull();

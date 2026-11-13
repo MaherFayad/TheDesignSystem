@@ -125,6 +125,11 @@
           "target": "@components/ds/motion/interactions/selection.ts"
         },
         {
+          "path": "packages/motion/src/interactions/toggles.ts",
+          "type": "registry:lib",
+          "target": "@components/ds/motion/interactions/toggles.ts"
+        },
+        {
           "path": "packages/motion/src/interactions/types.ts",
           "type": "registry:lib",
           "target": "@components/ds/motion/interactions/types.ts"
@@ -1798,6 +1803,7 @@
         "@ds/button",
         "@ds/close-button",
         "@ds/core",
+        "@ds/list-box",
         "@ds/theme"
       ],
       "files": [
@@ -1919,7 +1925,6 @@
         "@ds/combobox",
         "@ds/core",
         "@ds/dialog",
-        "@ds/dropdown-menu",
         "@ds/icon-button",
         "@ds/kbd",
         "@ds/list-box",
@@ -2276,6 +2281,7 @@
       "registryDependencies": [
         "@ds/button",
         "@ds/core",
+        "@ds/list-box",
         "@ds/theme"
       ],
       "files": [
@@ -3156,6 +3162,11 @@
       ],
       "files": [
         {
+          "path": "packages/react/src/components/ListBox/highlightMarker.tsx",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/ListBox/highlightMarker.tsx"
+        },
+        {
           "path": "packages/react/src/components/ListBox/index.ts",
           "type": "registry:ui",
           "target": "@components/ds/react/components/ListBox/index.ts"
@@ -3319,6 +3330,7 @@
         "@ds/drawer",
         "@ds/icon-button",
         "@ds/sidebar",
+        "@ds/tabs",
         "@ds/theme"
       ],
       "files": [
@@ -3521,6 +3533,7 @@
         "@ds/button",
         "@ds/core",
         "@ds/icon-button",
+        "@ds/tab-bar",
         "@ds/theme"
       ],
       "files": [
@@ -4139,6 +4152,7 @@
         "@ds/button",
         "@ds/button-group",
         "@ds/core",
+        "@ds/tabs",
         "@ds/theme",
         "@ds/toggle-group"
       ],
@@ -4760,6 +4774,11 @@
       ],
       "files": [
         {
+          "path": "packages/react/src/components/Switch/drag.ts",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/Switch/drag.ts"
+        },
+        {
           "path": "packages/react/src/components/Switch/index.ts",
           "type": "registry:ui",
           "target": "@components/ds/react/components/Switch/index.ts"
@@ -4801,6 +4820,11 @@
           "path": "packages/react/src/components/TabBar/index.ts",
           "type": "registry:ui",
           "target": "@components/ds/react/components/TabBar/index.ts"
+        },
+        {
+          "path": "packages/react/src/components/TabBar/pressOrigin.ts",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/TabBar/pressOrigin.ts"
         },
         {
           "path": "packages/react/src/components/TabBar/TabBar.tsx",
@@ -4875,6 +4899,11 @@
           "path": "packages/react/src/components/Tabs/index.ts",
           "type": "registry:ui",
           "target": "@components/ds/react/components/Tabs/index.ts"
+        },
+        {
+          "path": "packages/react/src/components/Tabs/ink.ts",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/Tabs/ink.ts"
         },
         {
           "path": "packages/react/src/components/Tabs/Tabs.tsx",
@@ -5077,9 +5106,14 @@
           "target": "@components/ds/react/components/Toast/isInsideToaster.ts"
         },
         {
-          "path": "packages/react/src/components/Toast/stackShift.ts",
+          "path": "packages/react/src/components/Toast/stack.ts",
           "type": "registry:ui",
-          "target": "@components/ds/react/components/Toast/stackShift.ts"
+          "target": "@components/ds/react/components/Toast/stack.ts"
+        },
+        {
+          "path": "packages/react/src/components/Toast/swipe.ts",
+          "type": "registry:ui",
+          "target": "@components/ds/react/components/Toast/swipe.ts"
         },
         {
           "path": "packages/react/src/components/Toast/Toast.tsx",
@@ -5157,6 +5191,7 @@
         "@ds/button",
         "@ds/button-group",
         "@ds/core",
+        "@ds/tabs",
         "@ds/theme"
       ],
       "files": [

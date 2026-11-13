@@ -44,6 +44,22 @@
  *   ease.exit, faster than the new one lands.
  *   --_radio-group-press-scale  the circle while pressed; 1 turns the dip off
  *   --_radio-group-dot-from     the dot scale before it lands; 1 turns the pop off
+ *
+ * Round 3 (order 1.23, proposed): the checked fill is an inset box-shadow
+ * in --_radio-group-bg-checked that closes from the border to the dot, and
+ * the dots travel: an empty circle rests its hidden dot a little toward the
+ * checked option (the items before it lean forward, the items after it lean
+ * back, by the sibling selectors), so the new dot arrives from the old
+ * option and the old dot leaves toward the new one. Names beyond the list:
+ *   --_radio-group-fill-now     working: the spread of the inset fill, 0 or half the circle
+ *   --_radio-group-dot-travel   how far a hidden dot leans, a third of the circle;
+ *                               0px turns the travel off
+ *   --_radio-group-side         working, on an item: 1 before the checked item, -1 after, 0 none
+ *   --_radio-group-axis-x, -axis-y   working: which way the items run (with the reading direction)
+ *   --_radio-group-dot-ease     the curve the dot lands on, ease.spring-bouncy: its overshoot
+ *   --_radio-group-fill-ease    the curve the fill closes on, ease.out
+ *   --_radio-group-land-ease    the curve the circle comes back from the dip on
+ *   --_radio-group-motion       1 plays the transitions, 0 turns them all off (a style's off row)
  */
 @layer ds.base {
   [data-ds='radio-group'] {
@@ -64,6 +80,13 @@
     --_radio-group-veil: var(--ds-color-bg-overlay-10);
     --_radio-group-press-scale: var(--ds-scale-anticipate);
     --_radio-group-dot-from: var(--ds-scale-morph);
+    --_radio-group-dot-travel: calc(var(--_radio-group-control-size) * 0.35);
+    --_radio-group-axis-x: 0;
+    --_radio-group-axis-y: 1;
+    --_radio-group-motion: 1;
+    --_radio-group-dot-ease: var(--ds-ease-spring-bouncy);
+    --_radio-group-fill-ease: var(--ds-ease-out);
+    --_radio-group-land-ease: var(--ds-ease-spring-bouncy);
 
     display: flex;
     flex-direction: column;
@@ -151,6 +174,15 @@
     column-gap: var(--ds-space-xl);
   }
 
+  [data-ds='radio-group'][data-orientation='horizontal'] {
+    --_radio-group-axis-x: 1;
+    --_radio-group-axis-y: 0;
+  }
+
+  [data-ds='radio-group'][data-orientation='horizontal']:dir(rtl) {
+    --_radio-group-axis-x: -1;
+  }
+
   /* ------------------------------------------------------------ item */
 
   /* A row: the control in the first column, the label and description in the second. */
@@ -176,6 +208,7 @@
   [data-ds='radio-group'] [data-part='item'] > [data-part='control'] {
     --_radio-group-border-now: var(--_radio-group-border-color);
     --_radio-group-bg-now: var(--_radio-group-bg);
+    --_radio-group-fill-now: 0px;
 
     position: relative;
     grid-column: 1;
@@ -192,16 +225,32 @@
     border: var(--ds-border-width-strong) solid var(--_radio-group-border-now);
     border-radius: var(--ds-radius-pill);
     background-color: var(--_radio-group-bg-now);
+    box-shadow: inset 0 0 0 var(--_radio-group-fill-now) var(--_radio-group-bg-checked);
     color: inherit;
     cursor: pointer;
     -webkit-tap-highlight-color: transparent;
-    transition: transform var(--ds-duration-spring-bouncy) var(--ds-ease-spring-bouncy);
+    transition:
+      transform calc(var(--ds-duration-spring-bouncy) * var(--_radio-group-motion)) var(--_radio-group-land-ease),
+      border-color calc(var(--ds-duration-quick) * var(--_radio-group-motion)) var(--ds-ease-exit),
+      box-shadow calc(var(--ds-duration-quick) * var(--_radio-group-motion)) var(--ds-ease-exit);
+  }
+
+  /* The travel: a hidden dot leans toward the checked option. */
+  [data-ds='radio-group'] [data-part='item']:has(~ [data-part='item'][data-state='checked']) {
+    --_radio-group-side: 1;
+  }
+
+  [data-ds='radio-group'] [data-part='item'][data-state='checked'] ~ [data-part='item'] {
+    --_radio-group-side: -1;
   }
 
   /* radio-pop, the dip: the circle answers the press before the release. */
   [data-ds='radio-group'] [data-part='item']:not([data-disabled]):has(> :is([data-part='control'], [data-part='label']):active) > [data-part='control'] {
     transform: scale(var(--_radio-group-press-scale));
-    transition: transform var(--ds-duration-instant) var(--ds-ease-out);
+    transition:
+      transform calc(var(--ds-duration-instant) * var(--_radio-group-motion)) var(--ds-ease-out),
+      border-color calc(var(--ds-duration-quick) * var(--_radio-group-motion)) var(--ds-ease-out),
+      box-shadow calc(var(--ds-duration-spring-snappy) * var(--_radio-group-motion)) var(--ds-ease-out);
   }
 
   /* With a description the circle sits on the label's first line. */
@@ -229,7 +278,7 @@
     border-radius: var(--ds-radius-pill);
     background-color: var(--_radio-group-veil);
     opacity: 0;
-    transition: opacity var(--ds-duration-fast) var(--ds-ease-default);
+    transition: opacity calc(var(--ds-duration-fast) * var(--_radio-group-motion)) var(--ds-ease-default);
   }
 
   /* The dot: always in the DOM, so it can fade and scale in. Never color alone: the dot is a shape. */
@@ -240,10 +289,14 @@
     border-radius: var(--ds-radius-pill);
     background-color: var(--_radio-group-dot);
     opacity: 0;
-    transform: scale(var(--_radio-group-dot-from));
+    transform: translate(
+        calc(var(--_radio-group-dot-travel) * var(--_radio-group-side, 0) * var(--_radio-group-axis-x)),
+        calc(var(--_radio-group-dot-travel) * var(--_radio-group-side, 0) * var(--_radio-group-axis-y))
+      )
+      scale(var(--_radio-group-dot-from));
     transition:
-      opacity var(--ds-duration-quick) var(--ds-ease-exit),
-      transform var(--ds-duration-quick) var(--ds-ease-exit);
+      opacity calc(var(--ds-duration-quick) * var(--_radio-group-motion)) var(--ds-ease-exit),
+      transform calc(var(--ds-duration-quick) * var(--_radio-group-motion)) var(--ds-ease-exit);
   }
 
   [data-ds='radio-group'] [data-part='item'] > [data-part='label'] {
@@ -281,17 +334,23 @@
     opacity: 1;
   }
 
+  /* Checked: the fill closes from the border to the dot, and the dot springs in from the old option's side. */
   [data-ds='radio-group'] [data-part='item'][data-state='checked'] > [data-part='control'] {
     --_radio-group-border-now: var(--_radio-group-border-color-checked);
-    --_radio-group-bg-now: var(--_radio-group-bg-checked);
+    --_radio-group-fill-now: calc(var(--_radio-group-control-size) / 2);
+
+    transition:
+      transform calc(var(--ds-duration-spring-bouncy) * var(--_radio-group-motion)) var(--_radio-group-land-ease),
+      border-color calc(var(--ds-duration-quick) * var(--_radio-group-motion)) var(--ds-ease-out),
+      box-shadow calc(var(--ds-duration-spring-snappy) * var(--_radio-group-motion)) var(--_radio-group-fill-ease);
   }
 
   [data-ds='radio-group'] [data-part='item'][data-state='checked'] [data-part='indicator'] {
     opacity: 1;
     transform: none;
     transition:
-      opacity var(--ds-duration-quick) var(--ds-ease-out),
-      transform var(--ds-duration-spring-bouncy) var(--ds-ease-spring-bouncy);
+      opacity calc(var(--ds-duration-quick) * var(--_radio-group-motion)) var(--ds-ease-out),
+      transform calc(var(--ds-duration-spring-bouncy) * var(--_radio-group-motion)) var(--_radio-group-dot-ease);
   }
 
   /* Invalid: the danger border on every unchecked circle; the error text says what to do. */
@@ -323,6 +382,8 @@
     [data-ds='radio-group'] {
       --_radio-group-press-scale: 1;
       --_radio-group-dot-from: 1;
+      --_radio-group-dot-travel: 0px;
+      --_radio-group-motion: 0;
     }
 
     [data-ds='radio-group'] [data-part='control'],
@@ -335,6 +396,8 @@
   :root[data-motion='reduce'] [data-ds='radio-group'] {
     --_radio-group-press-scale: 1;
     --_radio-group-dot-from: 1;
+    --_radio-group-dot-travel: 0px;
+    --_radio-group-motion: 0;
   }
 
   :root[data-motion='reduce'] [data-ds='radio-group'] [data-part='control'],

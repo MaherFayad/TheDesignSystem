@@ -1,4 +1,4 @@
-// Digit roll (order 1.22): a number changes digit by digit. Each changed
+// Digit roll (orders 1.22 and 1.23): a number changes digit by digit. Each changed
 // character rolls in its own column, from below when the value grew and from
 // above when it fell, the old character rolling out the other way. Columns
 // start one stagger step apart from the last digit toward the first, so a
@@ -18,6 +18,9 @@
 //   value and rolls from the value as drawn: nothing stacks.
 // - Reduced: the new characters fade in with no travel. Mode `none`: the text
 //   changes at once.
+// - Right to left (order 1.23, review B4): each number run is its own left to
+//   right isolated box and only digits roll; other text stays one node, so a
+//   page "16" never reads "61" and Arabic words keep their joined letters.
 // - Studio's spring eases are steps, so its digits flip in hard cuts.
 import { fadeOnly, played, resolveMode, run, spec, springTiming, STAGGER_DELAY, STAGGER_MAX_STEPS, stepsWithin, type PrimitiveOptions } from './shared';
 
@@ -77,12 +80,64 @@ function prepareHost(host: HTMLElement): void {
   host.style.whiteSpace = 'nowrap';
 }
 
+/** A run of the value: a number (rolls digit by digit) or other text (never split). */
+export interface DigitSegment {
+  kind: 'number' | 'text';
+  value: string;
+}
+
+/** Western and Arabic Indic digits, with the separators that sit inside a number. */
+const NUMBER_RUN = /[0-9\u0660-\u0669](?:[0-9\u0660-\u0669,.\u066B\u066C]*[0-9\u0660-\u0669])?/g;
+
+/**
+ * Splits a value into number runs and text runs (order 1.23, review B4).
+ * Only the digits of a number roll; a word such as "ريال" or "نتيجة" stays
+ * one text node, so Arabic letters keep joining.
+ */
+export function digitSegments(text: string): DigitSegment[] {
+  const out: DigitSegment[] = [];
+  let last = 0;
+  for (const m of text.matchAll(NUMBER_RUN)) {
+    const i = m.index ?? 0;
+    if (i > last) out.push({ kind: 'text', value: text.slice(last, i) });
+    out.push({ kind: 'number', value: m[0] });
+    last = i + m[0].length;
+  }
+  if (last < text.length) out.push({ kind: 'text', value: text.slice(last) });
+  return out;
+}
+
+const RUN = 'data-digit-run';
+
+/**
+ * A number run: its own left to right, isolated box, as `bdi dir="ltr"`
+ * does, so its columns read 1, 6 and never 6, 1 on a right to left line
+ * (review B4). The run as a whole still sits where the bidi algorithm puts
+ * a number in the line.
+ */
+function numberRun(doc: Document, value: string): HTMLElement {
+  const run = doc.createElement('span');
+  run.setAttribute(RUN, '');
+  run.style.direction = 'ltr';
+  run.style.unicodeBidi = 'isolate';
+  run.style.display = 'inline-block';
+  run.append(...[...value].map((ch) => column(doc, ch)));
+  return run;
+}
+
+function textRun(doc: Document, value: string): HTMLElement {
+  const t = doc.createElement('span');
+  t.style.whiteSpace = 'pre';
+  t.textContent = value;
+  return t;
+}
+
 /** Writes a value into the host as still columns. */
 export function renderDigits(host: HTMLElement, text: string): void {
   prepareHost(host);
   if (typeof host.getAnimations === 'function') for (const a of host.getAnimations({ subtree: true } as GetAnimationsOptions)) a.cancel();
   const doc = host.ownerDocument;
-  host.replaceChildren(...[...text].map((ch) => column(doc, ch)));
+  host.replaceChildren(...digitSegments(text).map((seg) => (seg.kind === 'number' ? numberRun(doc, seg.value) : textRun(doc, seg.value))));
 }
 
 export interface DigitRollOptions extends PrimitiveOptions {
@@ -90,27 +145,41 @@ export interface DigitRollOptions extends PrimitiveOptions {
   direction?: 'up' | 'down';
 }
 
-/** Rolls the host from one value to the next. Returns the animations it started. */
+/**
+ * Rolls the host from one value to the next. Returns the animations it
+ * started. The number runs of the two values pair by position; when they do
+ * not pair (a run came or went), the new value shows at once.
+ */
 export function rollDigits(host: HTMLElement, from: string, to: string, opts: DigitRollOptions = {}): Animation[] {
   const mode = resolveMode(opts);
   renderDigits(host, to);
   if (mode === 'none' || from === to) return [];
   const prefix = opts.prefix ?? 'ds';
-  const slots = digitSlots(from, to);
+  const fromRuns = digitSegments(from).filter((s) => s.kind === 'number');
+  const toRuns = digitSegments(to).filter((s) => s.kind === 'number');
+  if (fromRuns.length !== toRuns.length || toRuns.length === 0) return [];
+  const runs = [...host.querySelectorAll<HTMLElement>(`[${RUN}]`)];
   const dir = opts.direction ?? rollDirection(from, to);
   const sign = dir === 'up' ? 1 : -1;
-  const cols = [...host.children] as HTMLElement[];
-  // Columns that only exist in the new value sit at the start of `slots` when
-  // the value got longer; columns that left are dropped (the width changes).
-  const offset = slots.length - cols.length;
+  // Every changed column of every run, the last digit first, so a carry ripples.
+  const pairs: { slot: DigitSlot; col: HTMLElement }[] = [];
+  toRuns.forEach((r, k) => {
+    const slots = digitSlots(fromRuns[k]!.value, r.value);
+    const cols = [...(runs[k]?.children ?? [])] as HTMLElement[];
+    // Columns that only exist in the new value sit at the start of `slots` when
+    // the value got longer; columns that left are dropped (the width changes).
+    const offset = slots.length - cols.length;
+    slots.forEach((slot, i) => {
+      const col = cols[i - offset];
+      if (slot.changed && col) pairs.push({ slot, col });
+    });
+  });
+  pairs.reverse();
   const out: (Animation | null)[] = [];
   let changed = 0;
   // The digits are text: the ripple fits the stagger budget (STAGGER_BUDGET_MS).
   const maxSteps = stepsWithin(host, STAGGER_MAX_STEPS, prefix);
-  for (let i = slots.length - 1; i >= 0; i--) {
-    const slot = slots[i]!;
-    const col = cols[i - offset];
-    if (!slot.changed || !col) continue;
+  for (const { slot, col } of pairs) {
     const step = Math.min(changed, maxSteps);
     changed += 1;
     const inner = col.firstElementChild as HTMLElement | null;

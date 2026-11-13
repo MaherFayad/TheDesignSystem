@@ -158,7 +158,8 @@
       "The 16px circle sits in a 24px press area (WCAG 2.5.8): the hover veil is that area, and the label is bound to the control, so the text extends it.",
       "The checked state is a filled circle with a dot, never color alone. Invalid adds the danger border to the unchecked circles and an error with an icon.",
       "The error is not a live region. On submit, move focus to the checked option or the first option.",
-      "data-invalid is on the root and on each item; the unchecked circles take the danger border."
+      "data-invalid is on the root and on each item; the unchecked circles take the danger border.",
+      "Motion, round 3 (radio-pop, proposed): the checked fill, an inset box-shadow, closes from the border to the dot, which springs in from the side of the old option while the old dot shrinks and leaves toward the new one, one move along the group. Reduced motion: the fill and the dot change at once."
     ]
   },
   "content": {
@@ -212,9 +213,13 @@
     "opacity.disabled",
     "duration.base",
     "duration.fast",
-    "ease.default"
+    "ease.default",
+    "duration.quick",
+    "duration.spring-snappy",
+    "ease.exit",
+    "ease.out"
   ],
-  "motion": "fade",
+  "motion": "pop",
   "frameworks": {
     "react": {
       "status": "ready",

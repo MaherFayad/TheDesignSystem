@@ -23,6 +23,7 @@ import { useMotion } from '../../internal/motion';
 import { Theme } from '../../theme/Theme';
 import { useTheme } from '../../theme/hooks';
 import { renderSlotContent, type ButtonSlotContent } from '../Button/ButtonBase';
+import { HighlightMarker, drawCheck, exitGhost, useHighlightMarker, CHECK_DRAW_ID } from '../ListBox/highlightMarker';
 
 /** Space kept between a menu and the viewport edge, in CSS px. Radix measures in px, so this is a number. */
 export const VIEWPORT_GUTTER = 8;
@@ -56,6 +57,12 @@ export function physicalSide(side: MenuSide, dir: 'ltr' | 'rtl'): 'top' | 'botto
   const start = dir === 'rtl' ? 'right' : 'left';
   return side === 'inline-end' ? end : start;
 }
+
+/** The rows of a menu the highlight marker lights (the items of this menu, not of a nested group's own root). */
+const ROW_ITEMS = "[data-part='item'], [data-part='checkbox-item'], [data-part='radio-item'], [data-part='sub-trigger']";
+
+/** The marker of a menu: render it as the last child of every menu content. */
+export { HighlightMarker as MenuHighlight };
 
 /** The id of the row highlight slide (interaction "menu-row-slide"). */
 export const ROW_SLIDE_ID = 'menu-row-slide';
@@ -94,6 +101,8 @@ function drawnAfter(el: Element): { x: number; y: number; sx: number; sy: number
  */
 export function slideHighlight(from: Element | null | undefined, to: Element, mode: PatternMode): Animation | null {
   if (mode !== 'full' || !from || from === to || !from.isConnected || typeof to.animate !== 'function') return null;
+  // A menu with a highlight marker (order 1.23) slides the marker instead.
+  if (to.parentElement?.closest('[role="menu"]')?.querySelector(":scope > [data-part='highlight']")) return null;
   const a = from.getBoundingClientRect();
   const b = to.getBoundingClientRect();
   if (b.width < 1 || b.height < 1) return null;
@@ -169,9 +178,19 @@ export function useMenuLayer(open: boolean, kind = '') {
   if (open && !mounted) setMounted(true);
   const openRef = useRef(open);
   openRef.current = open;
-  const onContent = useCallback((node: HTMLElement | null) => {
-    if (!node && !openRef.current) setMounted(false);
-  }, []);
+  // Interaction "highlight-marker" (order 1.23): one marker per menu draws the lit row's fill and slides between rows.
+  const markerRef = useHighlightMarker({ rows: ROW_ITEMS, fallback: "[data-part='sub-trigger'][data-state='open']" });
+  // Review B6: the content leaves at once on close and a copy plays the exit (exitGhost).
+  const lastNode = useRef<HTMLElement | null>(null);
+  const onContent = useCallback(
+    (node: HTMLElement | null) => {
+      markerRef(node);
+      if (!node) exitGhost(lastNode.current);
+      lastNode.current = node;
+      if (!node && !openRef.current) setMounted(false);
+    },
+    [markerRef],
+  );
 
   // Interaction "menu-row-slide", for every menu in the layer (the root menu and its submenus).
   const slide = useRowSlide();
@@ -234,7 +253,23 @@ export function ItemContent({ start, end, shortcut, indicator, children }: ItemC
   );
 }
 
-/** The glyph inside the indicator of a checkbox item: a check, or a minus for indeterminate. */
+/**
+ * The glyph inside the indicator of a checkbox item: a check, or a minus for
+ * indeterminate. Interaction "check-draw-pick": a check that appears while
+ * the menu is open (an item that keeps the menu open) draws itself; one that
+ * is there when the menu opens does not.
+ */
 export function IndicatorGlyph({ checked }: { checked?: boolean | 'indeterminate' }) {
-  return <Icon name={checked === 'indeterminate' ? 'minus' : 'check'} size="md" />;
+  const motion = useMotion();
+  const ref = useRef<SVGSVGElement>(null);
+  const mounted = useRef(false);
+  useEffect(() => {
+    const svg = ref.current;
+    // The glyph mounts when the item is checked; a menu that just opened is not a pick.
+    const menu = svg?.closest('[role="menu"]');
+    const fresh = menu && typeof menu.getAnimations === 'function' ? menu.getAnimations().some((a) => a.playState === 'running') : false;
+    if (!mounted.current && svg && checked !== 'indeterminate' && !fresh) drawCheck(svg, motion.mode(CHECK_DRAW_ID));
+    mounted.current = true;
+  }, [checked, motion]);
+  return <Icon ref={ref} name={checked === 'indeterminate' ? 'minus' : 'check'} size="md" />;
 }

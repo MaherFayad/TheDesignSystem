@@ -197,7 +197,7 @@ describe('Rating fill (interaction rating-fill)', () => {
     }
   });
 
-  it('moves only the stars whose state changed, and not on first paint or a controlled change (note N1)', () => {
+  it('pops the chosen star and every star before it as one run, and not on first paint or a controlled change (order 1.23)', () => {
     const { calls, restore } = mockAnimate();
     try {
       const desk = (ui: ReactElement) => <Theme style="desk">{ui}</Theme>;
@@ -205,15 +205,17 @@ describe('Rating fill (interaction rating-fill)', () => {
       const icons = Array.from(container.querySelectorAll('[data-part="item"] > [data-part="icon"]'));
       expect(calls).toHaveLength(0);
       fireEvent.click(screen.getByRole('radio', { name: '5 of 5 stars' }));
-      // Stars 4 and 5 fill; 1 to 3 keep their state and never blink.
-      expect(calls.map((c) => icons.indexOf(c.el))).toEqual([3, 4]);
+      // The run goes from the first star to the chosen one: 1 to 3 bounce (no fade, so they never blink), 4 and 5 land.
+      expect(calls.map((c) => icons.indexOf(c.el))).toEqual([0, 1, 2, 3, 4]);
+      for (const c of calls.slice(0, 3)) expect(JSON.stringify(c.frames)).not.toContain('opacity');
+      expect(JSON.stringify(calls[4]?.frames)).toContain('opacity');
       calls.length = 0;
       fireEvent.click(screen.getByRole('radio', { name: '2 of 5 stars' }));
-      // Stars 3 to 5 empty: each dips and springs back, with no fade.
-      expect(calls).toHaveLength(3);
+      // Stars 1 and 2 bounce; 3 to 5 empty: each dips and springs back, with no fade.
+      expect(calls).toHaveLength(5);
       for (const c of calls) expect(JSON.stringify(c.frames)).not.toContain('opacity');
       rerender(desk(<Rating aria-label="R" defaultValue={1} />));
-      expect(calls).toHaveLength(3);
+      expect(calls).toHaveLength(5);
     } finally {
       restore();
     }
@@ -259,5 +261,17 @@ describe('Rating fill (interaction rating-fill)', () => {
     const { container } = render(<Rating aria-label="R" />);
     fireEvent.click(screen.getByRole('radio', { name: '3 of 5 stars' }));
     expect(icons(root(container))).toEqual(['star-filled', 'star-filled', 'star-filled', 'star', 'star']);
+  });
+
+  it('rating-preview: each interactive star holds an aria-hidden fill glyph and its index for the sweep (order 1.23)', () => {
+    const { container } = render(<Rating aria-label="R" defaultValue={2} />);
+    const items = Array.from(container.querySelectorAll<HTMLElement>('[data-part="item"]'));
+    items.forEach((item, i) => {
+      const fill = item.querySelector('[data-part="fill"]');
+      expect(fill?.getAttribute('aria-hidden')).toBe('true');
+      expect(item.style.getPropertyValue('--_rating-index')).toBe(String(i));
+    });
+    // The star keeps one accessible name: the fill adds no text.
+    expect(screen.getByRole('radio', { name: '1 of 5 stars' })).toBeTruthy();
   });
 });

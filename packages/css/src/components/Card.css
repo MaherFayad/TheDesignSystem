@@ -35,6 +35,16 @@
  *
  * The root is not clipped, so the focus ring outside it shows. The media
  * part takes the top corners itself.
+ *
+ * Round 3 (order 1.23, proposed): the highlight that follows the pointer
+ * lights the edge of the card, not its face: the span is cut to a ring
+ * --_card-glow-edge wide with a mask, and the glow is primary.border, so the
+ * text under it keeps its contrast. The shadow now grows with the lift (a
+ * box-shadow transition on the same spring), and a press settles the card
+ * back to half its lift. A style turns the highlight off with --_card-glow
+ * transparent, as before.
+ *
+ *   --_card-glow-edge   the width of the lit ring (a drawing extra)
  */
 @layer ds.base {
   [data-ds='card'] {
@@ -53,7 +63,8 @@
     --_card-lift-scale: var(--ds-scale-lift);
     --_card-duration: var(--ds-duration-spring-soft);
     --_card-ease: var(--ds-ease-spring-soft);
-    --_card-glow: var(--ds-color-bg-overlay-10);
+    --_card-glow: var(--ds-color-primary-border);
+    --_card-glow-edge: var(--ds-border-width-strong);
     --_card-glow-size: calc(4 * var(--ds-size-control-lg));
     --_card-glow-x: 0px;
     --_card-glow-y: 0px;
@@ -76,13 +87,21 @@
     font-family: var(--ds-font-family-sans);
     font-size: var(--ds-font-size-m);
     line-height: var(--ds-font-leading-normal);
-    transition: transform var(--_card-duration) var(--_card-ease);
+    transition:
+      transform var(--_card-duration) var(--_card-ease),
+      box-shadow var(--_card-duration) var(--_card-ease);
   }
 
   /* card-lift: the pointer highlight, a decorative span Card.tsx adds as the last child. */
   [data-ds='card'] > span[aria-hidden='true']:empty:last-child {
     position: absolute;
-    inset: 0;
+    inset: calc(-1 * var(--ds-border-width-default));
+    box-sizing: border-box;
+    padding: var(--_card-glow-edge);
+    /* Round 3: the highlight lights the edge only, a ring cut with a mask, so it never sits over the text. */
+    mask:
+      linear-gradient(currentColor 0 0) content-box exclude,
+      linear-gradient(currentColor 0 0);
     overflow: hidden;
     border-radius: inherit;
     opacity: 0;
@@ -285,6 +304,11 @@
     opacity: 1;
   }
 
+  /* Press: the card settles back to half its lift and keeps its size, so it reads as pushed. */
+  [data-ds='card'][data-interactive]:not([data-disabled]):hover:active {
+    transform: translateY(calc(var(--_card-lift) / 2));
+  }
+
   [data-ds='card'][data-selected] {
     --_card-select: inset 0 0 0 var(--ds-border-width-strong) var(--ds-color-focus-ring);
     --_card-border-color: var(--ds-color-focus-ring);
@@ -327,7 +351,8 @@
       transition: none;
     }
 
-    [data-ds='card'][data-interactive]:not([data-disabled]):hover {
+    [data-ds='card'][data-interactive]:not([data-disabled]):hover,
+    [data-ds='card'][data-interactive]:not([data-disabled]):hover:active {
       transform: none;
     }
 
@@ -341,7 +366,8 @@
     transition: none;
   }
 
-  :root[data-motion='reduce'] [data-ds='card'][data-interactive]:not([data-disabled]):hover {
+  :root[data-motion='reduce'] [data-ds='card'][data-interactive]:not([data-disabled]):hover,
+  :root[data-motion='reduce'] [data-ds='card'][data-interactive]:not([data-disabled]):hover:active {
     transform: none;
   }
 

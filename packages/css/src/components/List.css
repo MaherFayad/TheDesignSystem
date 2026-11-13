@@ -34,6 +34,9 @@
  */
 @layer ds.base {
   [data-ds='list'] {
+    /* Platform hook (order 1.23): where a press landed, from the inline and block start; the component writes it on pointerdown on the pressed row. */
+    --_list-press-x: 50%;
+    --_list-press-y: 50%;
     --_list-height: calc(var(--ds-list-row-height) + 2 * var(--ds-space-2xs));
     --_list-padding-inline: var(--ds-space-s);
     --_list-padding-block: var(--ds-space-2xs);

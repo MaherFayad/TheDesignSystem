@@ -36,6 +36,13 @@
  * Inside a solid alert the nested Buttons and the close CloseButton take the
  * alert's ink through their own private --_button-* properties, so their
  * text keeps its contrast on the tone fill.
+ * Round 3 (order 1.23, proposed): the surface is uncovered with clip-path, a wipe from the inline start (--_alert-reveal, mirrored in RTL), while it rises; it no longer grows (--_alert-enter-scale defaults to 1). The icon
+ * beat adds a halo: as the icon lands, a ring in the icon color (box-shadow)
+ * grows from it by distance.shift and fades, once.
+ *
+ *   --_alert-reveal       the clip the surface starts from; a name outside the
+ *                       list in anatomy.md: a clip-path
+ *   --_alert-icon-halo    the halo color (default the icon color, transparent turns it off)
  */
 @layer ds.base {
   [data-ds='alert'] {
@@ -55,8 +62,10 @@
     --_alert-title-fg: var(--ds-color-text-bright);
     --_alert-border-color: var(--_alert-tone-edge);
     --_alert-icon: var(--_alert-tone-text);
+    --_alert-icon-halo: var(--_alert-icon);
+    --_alert-reveal: inset(0 100% 0 0 round var(--_alert-radius));
     --_alert-enter-y: var(--ds-distance-enter);
-    --_alert-enter-scale: var(--ds-scale-enter);
+    --_alert-enter-scale: 1;
     --_alert-duration-in: var(--ds-duration-spring-soft);
     --_alert-ease-in: var(--ds-ease-spring-soft);
     --_alert-icon-enter-scale: var(--ds-scale-morph);
@@ -87,8 +96,13 @@
     animation: ds-alert-in var(--_alert-duration-in) var(--_alert-ease-in);
   }
 
+  [data-ds='alert']:dir(rtl) {
+    --_alert-reveal: inset(0 0 0 100% round var(--_alert-radius));
+  }
+
   @keyframes ds-alert-in {
     from {
+      clip-path: var(--_alert-reveal);
       opacity: 0;
       transform: translateY(var(--_alert-enter-y)) scale(var(--_alert-enter-scale));
     }
@@ -97,15 +111,21 @@
     30% {
       opacity: 1;
     }
+
+    to {
+      clip-path: inset(0 round var(--_alert-radius));
+    }
   }
 
   /* Beat 2: the icon pops one stagger step after the surface. */
   [data-ds='alert'] > [data-part='icon'] {
+    border-radius: var(--ds-radius-pill);
     animation: ds-alert-icon-in var(--ds-duration-spring-bouncy) var(--ds-ease-spring-bouncy) var(--ds-delay-stagger) backwards;
   }
 
   @keyframes ds-alert-icon-in {
     from {
+      box-shadow: 0 0 0 0 var(--_alert-icon-halo);
       opacity: 0;
       transform: scale(var(--_alert-icon-enter-scale));
     }
@@ -113,6 +133,10 @@
     /* Readable early: full opacity by 30% of the run (READABLE_AT); the transform settles over all of it. */
     30% {
       opacity: 1;
+    }
+
+    to {
+      box-shadow: 0 0 0 var(--ds-distance-shift) transparent;
     }
   }
 

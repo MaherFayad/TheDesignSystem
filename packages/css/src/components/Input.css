@@ -20,8 +20,16 @@
  *
  * The focus ring is the root's own box shadow and shows at once (WCAG
  * 2.4.7). The glow sits on ::before: it fades in and grows from just under
- * full size, since only transform and opacity may animate. Border colors
- * change at once.
+ * full size. Border colors ease over --_input-duration (order 1.23).
+ *
+ * Order 1.23 (focus-glow, round 3, proposed). The glow layer also blooms:
+ *   --_input-bloom          the color of the bloom, a soft halo outside the ring
+ *   --_input-bloom-invalid  the bloom while invalid (the danger tint)
+ *   --_input-bloom-spread   how far the bloom reaches; 0px turns it off
+ *   --_input-bloom-now      the working spread the focus rule sets
+ *   --_input-duration, --_input-ease   the border color change (focus, hover, invalid)
+ * On focus the bloom's box shadow spreads from 0 on the in timing; on blur it
+ * draws back on the out timing. The ring is not on this layer and shows at once.
  */
 @layer ds.base {
   [data-ds='input'] {
@@ -45,6 +53,12 @@
     --_input-ease-in: var(--ds-ease-spring-soft);
     --_input-ease-out: var(--ds-ease-exit);
     --_input-enter-scale: var(--ds-scale-enter);
+    --_input-bloom: var(--ds-color-primary-tint-hover);
+    --_input-bloom-invalid: var(--ds-color-state-danger-tint-10);
+    --_input-bloom-spread: var(--ds-space-s);
+    --_input-bloom-now: 0px;
+    --_input-duration: var(--ds-duration-base);
+    --_input-ease: var(--ds-ease-out);
 
     position: relative;
     box-sizing: border-box;
@@ -58,6 +72,7 @@
     padding-block: 0;
     padding-inline: var(--_input-padding-inline);
     border: var(--ds-border-width-default) solid var(--_input-border-color);
+    transition: border-color var(--_input-duration) var(--_input-ease);
     border-radius: var(--_input-radius);
     background-color: var(--_input-bg);
     color: var(--_input-fg);
@@ -74,18 +89,22 @@
     position: absolute;
     inset: calc(var(--ds-border-width-default) * -1);
     border-radius: inherit;
-    box-shadow: var(--_input-shadow-focus);
+    box-shadow:
+      var(--_input-shadow-focus),
+      0 0 0 var(--_input-bloom-now) var(--_input-bloom);
     opacity: 0;
     transform: scale(var(--_input-enter-scale));
     pointer-events: none;
     transition:
       opacity var(--_input-duration-out) var(--_input-ease-out),
-      transform var(--_input-duration-out) var(--_input-ease-out);
+      transform var(--_input-duration-out) var(--_input-ease-out),
+      box-shadow var(--_input-duration-out) var(--_input-ease-out);
   }
 
   /* An Input that is the control part of another component draws no glow: the outer box draws it. */
   [data-ds='input'][data-part='control'] {
     --_input-shadow-focus: none;
+    --_input-bloom-spread: 0px;
   }
 
   /* Content paints above the glow. */
@@ -121,6 +140,14 @@
 
   [data-ds='input'][data-shape='pill'] {
     --_input-radius: var(--ds-radius-pill);
+  }
+
+  /*
+   * variant (order 1.23): outlined is the base look. filled tints the box and
+   * keeps the border for the state colors (a platform may change both).
+   */
+  [data-ds='input'][data-variant='filled'] {
+    --_input-bg: var(--ds-color-bg-overlay-5);
   }
 
   /* The native input: no box of its own. Long values scroll inside, never cut with an ellipsis. */
@@ -201,6 +228,8 @@
   }
 
   [data-ds='input']:focus-within::before {
+    --_input-bloom-now: var(--_input-bloom-spread);
+
     opacity: 1;
     transform: none;
     transition-duration: var(--_input-duration-in);
@@ -254,6 +283,11 @@
     unicode-bidi: plaintext;
   }
 
+  /* Invalid: the bloom takes the danger tint, so focus on a field in error still reads as an error. */
+  [data-ds='input'][data-invalid] {
+    --_input-bloom: var(--_input-bloom-invalid);
+  }
+
   /* Reduced motion: the duration tokens are 0ms, and the glow does not grow. */
   @media (prefers-reduced-motion: reduce) {
     [data-ds='input'] {
@@ -280,5 +314,23 @@
 
       color: GrayText;
     }
+  }
+
+  /*
+   * Reduced motion (order 1.23, review B1): the component's own timings go to
+   * 0s here, so nothing moves even where a motion token keeps its value.
+   */
+  @media (prefers-reduced-motion: reduce) {
+    [data-ds='input'] {
+      --_input-duration: 0s;
+      --_input-duration-in: 0s;
+      --_input-duration-out: 0s;
+    }
+  }
+
+  :root[data-motion='reduce'] [data-ds='input'] {
+    --_input-duration: 0s;
+    --_input-duration-in: 0s;
+    --_input-duration-out: 0s;
   }
 }

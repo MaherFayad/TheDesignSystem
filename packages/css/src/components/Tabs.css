@@ -30,9 +30,21 @@
  * tokens and the style's motion preset, not from this file. The indicator
  * keeps the default transform origin (the center) the slide is worked out
  * for, and the label is a flex item so it can scale.
+ *
+ * Round 3 (order 1.23, proposed): the labels no longer dip and pop; while
+ * the pill travels, Tabs/ink.ts lays aria-hidden twins of the labels
+ * (data-part="label-ink") in the active color over them, cut with clip-path
+ * to the pill, so the text changes color exactly where the pill is. The
+ * twins are styled inline from the computed look of each label, so this
+ * file has no rule for them.
+ *
+ * Round 3 (order 1.23): --_tabs-ink, 1 or 0, whether the text under the
+ * sliding mark changes colour with it (Tabs/ink.ts); a style sets 0 to keep
+ * the colours changing at once. A name outside the list in anatomy.md.
  */
 @layer ds.base {
   [data-ds='tabs'] {
+    --_tabs-ink: 1;
     --_tabs-height: var(--ds-size-control-md);
     --_tabs-padding-inline: var(--ds-space-m);
     --_tabs-gap: var(--ds-space-2xs);

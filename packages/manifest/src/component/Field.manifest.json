@@ -109,13 +109,20 @@
     "error": {
       "type": "node",
       "description": "One line API: renders the system FieldError with data-part error."
+    },
+    "floating": {
+      "type": "boolean",
+      "default": false,
+      "description": "A floating label: the label rests inside the control's box while it is empty and has no focus, and rises above it on focus or with a value. The label renders after the control. Use with the label prop and one single line control."
     }
   },
   "states": [
     "data-invalid",
     "data-disabled",
     "data-readonly",
-    "data-orientation"
+    "data-orientation",
+    "data-floating",
+    "data-filled"
   ],
   "a11y": {
     "role": "none on the root. The label is a native label bound to the control with for and id.",

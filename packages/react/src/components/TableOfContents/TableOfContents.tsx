@@ -55,7 +55,32 @@ import {
 } from 'react';
 import { activeHeading, buildTree, type TocHeading, type TocNode, type Size } from '@the-system/shared';
 import { useTheme } from '../../theme';
-import { stretchAlong } from '../../internal/indicator';
+import { readDuration, readEasing, type PatternMode } from '@the-system/motion';
+import { scaleOf } from '../../internal/indicator';
+
+/**
+ * Round 3 (review N18): the bar travels with the Web Animations API, from
+ * where it was drawn to its new place, on the snappy spring, and at 45% of
+ * the run it is longer by scale.stretch over the mean of both sizes. Top
+ * origin, translate and scaleY only. The CSS no longer transitions it, so
+ * the travel and the stretch are one animation and the bar never jumps.
+ */
+function travelBar(bar: HTMLElement, fromTop: number, fromSize: number, toTop: number, toSize: number, mode: PatternMode): Animation | null {
+  if (mode !== 'full' || typeof bar.animate !== 'function' || toSize <= 0) return null;
+  for (const a of bar.getAnimations?.() ?? []) if (String(a.id) === 'ds-motion:toc-travel') a.cancel();
+  const s = scaleOf(bar, 'stretch');
+  const mid = (fromTop + toTop) / 2;
+  const midSize = ((fromSize + toSize) / 2) * s;
+  const r = (n: number) => Math.round(n * 1000) / 1000;
+  return bar.animate(
+    [
+      { transform: `translateY(${r(fromTop)}px) scaleY(${r(fromSize / toSize)})` },
+      { transform: `translateY(${r(mid - (midSize - (fromSize + toSize) / 2) / 2)}px) scaleY(${r(midSize / toSize)})`, offset: 0.45 },
+      { transform: `translateY(${r(toTop)}px)` },
+    ],
+    { id: 'ds-motion:toc-travel', duration: readDuration(bar, 'duration.spring-snappy'), easing: readEasing(bar, 'ease.spring-snappy') },
+  );
+}
 import { useMotion } from '../../internal/motion';
 
 export type TableOfContentsSize = Extract<Size, 'sm' | 'md'>;
@@ -245,13 +270,18 @@ export function TableOfContents({
     }
     const rootBox = root.getBoundingClientRect();
     const box = link.getBoundingClientRect();
-    const before = Number.parseFloat(bar.style.getPropertyValue('--_toc-indicator-offset'));
     const shown = Number.parseFloat(bar.style.getPropertyValue('--_toc-indicator-size')) > 0;
-    const offset = box.top - rootBox.top + root.scrollTop;
-    // toc-travel: the bar stretches along its travel while the CSS spring moves it, trailing edge first.
-    if (shown && Number.isFinite(before) && Math.abs(offset - before) >= 1) stretchAlong(bar, 'y', offset > before, motion.mode('toc-travel'));
+    // Round 3 (review N18): where the bar is drawn now, a running travel included, so a second change starts there.
+    const drawn = bar.getBoundingClientRect();
+    // CSS px per box px: boxes are measured after any CSS zoom, offsets and styles before it.
+    const k = rootBox.height > 0 && root.offsetHeight > 0 ? root.offsetHeight / rootBox.height : 1;
+    const fromTop = (drawn.top - rootBox.top) * k + root.scrollTop;
+    const fromSize = drawn.height * k;
+    const offset = (box.top - rootBox.top) * k + root.scrollTop;
     bar.style.setProperty('--_toc-indicator-offset', `${offset}px`);
-    bar.style.setProperty('--_toc-indicator-size', `${box.height}px`);
+    bar.style.setProperty('--_toc-indicator-size', `${box.height * k}px`);
+    // toc-travel: the bar travels from where it is to the active link and stretches on the way.
+    if (shown && fromSize > 0 && Math.abs(offset - fromTop) >= 1) travelBar(bar, fromTop, fromSize, offset, box.height * k, motion.mode('toc-travel'));
     if (sticky && root.scrollHeight > root.clientHeight) {
       if (box.top < rootBox.top) root.scrollTop -= rootBox.top - box.top;
       else if (box.bottom > rootBox.bottom) root.scrollTop += box.bottom - rootBox.bottom;

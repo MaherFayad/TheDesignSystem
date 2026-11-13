@@ -117,7 +117,8 @@
       "The root carries data-side and data-align from Radix; data-side is physical after the logical side prop is mapped by direction.",
       "Pointer down on the trigger hides the tooltip, so a click never leaves it covering what the click opened. On a disabled Button the press is swallowed, so the tooltip stays and keeps saying why.",
       "The gallery shows some tooltips open with the open prop, so the contract suite and screenshots can read them; a tooltip is never open on load in a product.",
-      "disabled true keeps the trigger mounted (focus stays) and closes the tooltip."
+      "disabled true keeps the trigger mounted (focus stays) and closes the tooltip.",
+      "Order 1.23: on touch, a finger that rests 500ms on the trigger opens the hint while it stays; moving or lifting earlier cancels. The tooltip unfolds out of its trigger side (--_tooltip-enter-stretch)."
     ]
   },
   "content": {

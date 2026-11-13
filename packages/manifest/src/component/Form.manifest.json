@@ -24,7 +24,8 @@
     "root",
     "summary",
     "body",
-    "actions"
+    "actions",
+    "success-mark"
   ],
   "slots": {
     "summary": {
@@ -154,7 +155,7 @@
     "border.width.strong",
     "focus.shadow.ring"
   ],
-  "motion": "none",
+  "motion": "pop",
   "frameworks": {
     "react": {
       "status": "ready",
@@ -198,5 +199,10 @@
       "right": "FormWizard"
     }
   ],
-  "since": "0.1.0"
+  "since": "0.1.0",
+  "contract": {
+    "optionalParts": [
+      "success-mark"
+    ]
+  }
 }

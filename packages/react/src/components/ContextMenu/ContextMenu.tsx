@@ -52,6 +52,7 @@ import { useControllable } from '../../internal/useControllable';
 import {
   IndicatorGlyph,
   ItemContent,
+  MenuHighlight,
   TRIGGER_GAP,
   VIEWPORT_GUTTER,
   assignRef,
@@ -236,6 +237,7 @@ export function ContextMenuContent({ collisionPadding = VIEWPORT_GUTTER, ref, ch
       data-size={ctx.size}
     >
       {children}
+      <MenuHighlight />
     </RadixMenu.Content>,
   );
 }
@@ -431,6 +433,7 @@ export function ContextMenuSubContent({
       data-size={ctx.size}
     >
       {children}
+      <MenuHighlight />
     </RadixMenu.SubContent>,
   );
 }

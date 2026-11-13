@@ -24,6 +24,15 @@
  * --_phone-field-ease-in (the soft spring), and leaves faster on
  * --_phone-field-duration-out and --_phone-field-ease-out. Only transform and opacity
  * move.
+ *
+ * Order 1.23 (focus-glow, round 3, proposed). The glow layer also blooms:
+ *   --_phone-field-bloom          the color of the bloom, a soft halo outside the ring
+ *   --_phone-field-bloom-invalid  the bloom while invalid (the danger tint)
+ *   --_phone-field-bloom-spread   how far the bloom reaches; 0px turns it off
+ *   --_phone-field-bloom-now      the working spread the focus rule sets
+ *   --_phone-field-duration, --_phone-field-ease   the border color change (focus, hover, invalid)
+ * On focus the bloom's box shadow spreads from 0 on the in timing; on blur it
+ * draws back on the out timing. The ring is not on this layer and shows at once.
  */
 @layer ds.base {
   [data-ds='phone-field'] {
@@ -45,6 +54,12 @@
     --_phone-field-ease-in: var(--ds-ease-spring-soft);
     --_phone-field-ease-out: var(--ds-ease-exit);
     --_phone-field-enter-scale: var(--ds-scale-enter);
+    --_phone-field-bloom: var(--ds-color-primary-tint-hover);
+    --_phone-field-bloom-invalid: var(--ds-color-state-danger-tint-10);
+    --_phone-field-bloom-spread: var(--ds-space-s);
+    --_phone-field-bloom-now: 0px;
+    --_phone-field-duration: var(--ds-duration-base);
+    --_phone-field-ease: var(--ds-ease-out);
     --_phone-field-code-bg: transparent;
     --_phone-field-code-bg-hover: var(--ds-color-bg-overlay-5);
     --_phone-field-code-bg-focus: var(--ds-color-bg-overlay-10);
@@ -61,6 +76,7 @@
     min-block-size: var(--ds-size-target-min);
     padding: 0;
     border: var(--ds-border-width-default) solid var(--_phone-field-border-color);
+    transition: border-color var(--_phone-field-duration) var(--_phone-field-ease);
     border-radius: var(--_phone-field-radius);
     background-color: var(--_phone-field-bg);
     color: var(--_phone-field-fg);
@@ -76,13 +92,16 @@
     position: absolute;
     inset: calc(var(--ds-border-width-default) * -1);
     border-radius: inherit;
-    box-shadow: var(--_phone-field-shadow-focus);
+    box-shadow:
+      var(--_phone-field-shadow-focus),
+      0 0 0 var(--_phone-field-bloom-now) var(--_phone-field-bloom);
     opacity: 0;
     transform: scale(var(--_phone-field-enter-scale));
     pointer-events: none;
     transition:
       opacity var(--_phone-field-duration-out) var(--_phone-field-ease-out),
-      transform var(--_phone-field-duration-out) var(--_phone-field-ease-out);
+      transform var(--_phone-field-duration-out) var(--_phone-field-ease-out),
+      box-shadow var(--_phone-field-duration-out) var(--_phone-field-ease-out);
   }
 
   [data-ds='phone-field'][data-size='xs'] {
@@ -232,6 +251,8 @@
   }
 
   [data-ds='phone-field']:focus-within::before {
+    --_phone-field-bloom-now: var(--_phone-field-bloom-spread);
+
     opacity: 1;
     transform: none;
     transition-duration: var(--_phone-field-duration-in);
@@ -294,6 +315,11 @@
     }
   }
 
+  /* Invalid: the bloom takes the danger tint, so focus on a field in error still reads as an error. */
+  [data-ds='phone-field'][data-invalid] {
+    --_phone-field-bloom: var(--_phone-field-bloom-invalid);
+  }
+
   /* Reduced motion: the duration tokens are 0ms, and the glow does not grow. */
   @media (prefers-reduced-motion: reduce) {
     [data-ds='phone-field'] {
@@ -303,5 +329,23 @@
 
   :root[data-motion='reduce'] [data-ds='phone-field'] {
     --_phone-field-enter-scale: 1;
+  }
+
+  /*
+   * Reduced motion (order 1.23, review B1): the component's own timings go to
+   * 0s here, so nothing moves even where a motion token keeps its value.
+   */
+  @media (prefers-reduced-motion: reduce) {
+    [data-ds='phone-field'] {
+      --_phone-field-duration: 0s;
+      --_phone-field-duration-in: 0s;
+      --_phone-field-duration-out: 0s;
+    }
+  }
+
+  :root[data-motion='reduce'] [data-ds='phone-field'] {
+    --_phone-field-duration: 0s;
+    --_phone-field-duration-in: 0s;
+    --_phone-field-duration-out: 0s;
   }
 }

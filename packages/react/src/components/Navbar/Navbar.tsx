@@ -43,7 +43,8 @@ import { Button } from '../Button';
 import { IconButton } from '../IconButton';
 import { Drawer, DrawerBody, DrawerContent, DrawerFooter, DrawerTrigger } from '../Drawer';
 import { Sidebar, SidebarGroup, SidebarItem } from '../Sidebar';
-import { followIndicator, useHoverFollow, useIndicatorTrack } from '../../internal/indicator';
+import { followIndicator, fromLocal, useHoverFollow, useIndicatorTrack } from '../../internal/indicator';
+import { playInk } from '../Tabs/ink';
 import { useMotion } from '../../internal/motion';
 
 /** The links of the bar itself, not those in a panel. */
@@ -139,7 +140,22 @@ export function Navbar({
       return;
     }
     const link = current[0]!;
-    followIndicator(track, link.getAttribute('href') ?? '', { el: link, pseudo: '::before' }, { mode: motion.mode('nav-current-slide'), anchor: root, axis: 'x' });
+    const left = track.el;
+    const slide = followIndicator(track, link.getAttribute('href') ?? '', { el: link, pseudo: '::before' }, { mode: motion.mode('nav-current-slide'), anchor: root, axis: 'x' });
+    // Round 3: the link text takes the current color where the bar is (Tabs/ink.ts).
+    if (slide && track.rect) {
+      playInk({
+        switch: '--_navbar-ink',
+        slide,
+        to: fromLocal(track.rect, root),
+        anchor: root,
+        parts: Array.from(root.querySelectorAll(BAR_LINK)),
+        reaching: [link],
+        restFrom: left !== link ? left : null,
+        inkFrom: link,
+        axis: 'x',
+      });
+    }
   });
   // Radix builds element ids from item values, so values are indexes, never labels with spaces.
   const openIndex = defaultOpenMenu === undefined ? -1 : items.findIndex((item) => item.label === defaultOpenMenu);

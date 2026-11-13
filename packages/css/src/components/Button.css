@@ -58,13 +58,86 @@
  *                                            the open SplitButton chevron,
  *                                            the CloseButton on hover
  *
+ * Added in order 1.23 (round 3, proposed):
+ *
+ *   --_button-press-y                        how far the content sinks while
+ *                                            the control is held: a shallow
+ *                                            press for xs and sm, deeper for
+ *                                            lg (button-press); 0px turns it off
+ *   --_button-part-y                         the content's sink now: 0, or
+ *                                            -press-y while pressed
+ *   --_button-press-shade                    the color of the inner shade a
+ *                                            press draws at the top edge; its
+ *                                            offset and blur follow -press-y
+ *   --_button-press-layer                    the shade's opacity now: 0, or 1
+ *                                            while pressed
+ *   --_button-glow                           the strength of the highlight
+ *                                            that follows the pointer
+ *                                            (button-glow): 1 on solid, 0 on
+ *                                            the other fills (a style may set 1
+ *                                            on soft); a style sets 0 to turn
+ *                                            it off. Never on link
+ *   --_button-glow-rest                      the highlight's opacity at rest: 0;
+ *                                            a style with a standing sheen (Liquid)
+ *                                            sets it, and hover and press still
+ *                                            raise it
+ *   --_button-glow-now                       the highlight's opacity now
+ *   --_button-glow-x, -glow-y                where the highlight sits, set from
+ *                                            pointermove by ButtonRoot, as a
+ *                                            share of the box (50% at rest)
+ *   --_button-glow-color, -glow-size         its color (the text color of the
+ *                                            fill, mixed thin) and its radius
+ *   --_button-roll                           how far the label rolls out when
+ *                                            a result shows (button-result)
+ *   --_button-shake                          how far a failure shakes the
+ *                                            control, distance.nudge; 0px
+ *                                            turns the shake off
+ *   --_button-stroke-width                   the stroke of the drawn result
+ *                                            glyphs (the check, the cross)
+ *   --_button-draw                           1 draws the result glyph with
+ *                                            stroke-dashoffset, 0 shows it at
+ *                                            once (reduced motion, a style)
+ *   --_button-ripple-x, -ripple-y            where the last press started, in px
+ *                                            from the inline start and the block
+ *                                            start (50% until a press), set by
+ *                                            ButtonRoot on pointerdown. Nothing
+ *                                            here draws with it: a platform or a
+ *                                            style draws a ripple from it
+ *   --_button-press-ease                     the curve the parts sink on
+ *   --_button-release-ease, -release-duration the curve and time the parts rise
+ *                                            back on: the snappy spring, so they
+ *                                            pass rest by its overshoot. A style
+ *                                            sets a plain curve for no overshoot
+ *                                            or the bouncy spring for more
+ *   --_button-result-ease                    the curve the result glyph lands on
+ *                                            (its overshoot: the bouncy spring)
+ *   --_button-draw-ease                      the curve the result strokes draw on
+ *
+ * Whether a beat exists is a property too: --_button-press-shade transparent
+ * drops the shade, --_button-press-y 0px the sink, --_button-glow 0 the glow,
+ * --_button-shake 0px the shake, --_button-roll 0px the roll, --_button-draw 0
+ * the drawing.
+ *
+ * Two layers (convention 3): ::before is the glow (every fill but link,
+ * strength 0 off solid);
+ * ::after is the press shade. ::before paints before the parts, so the
+ * glow sits under the content and over the fill; ::after paints after
+ * them, but it is only an inner shadow along the edge with a clear middle.
+ * Both follow the corners, are hidden in forced colors and never take the
+ * pointer.
+ *
  * Every rule that sets a rest color also sets its hover color: the hover
  * state assigns `--_button-bg: var(--_button-bg-hover)`, so a hover value
  * that pointed back at the rest value would be a cycle.
  *
  * The axis rules set the private properties. The state rules at the end of
  * the file swap them. Only the root rule writes the real declarations.
- * Colors swap at once: only transform and opacity animate.
+ * Fill colors swap at once; the root's box shadow never transitions, so the
+ * focus ring shows at once.
+ *
+ * Hover rules sit inside `@media (hover: hover)`, so a tap on a phone never
+ * leaves a control stuck in its hover look. Press (:active) works for touch,
+ * pointer and Space alike.
  *
  * The focus ring is a box shadow on the root, not a ::before layer: Desk
  * clips the root for its roll label, and a clip cuts a child layer but not
@@ -105,8 +178,31 @@
     --_button-dir: 1;
     --_button-turn: 0deg;
     --_button-motion: 1;
+    --_button-press-y: var(--ds-distance-nudge);
+    --_button-part-y: 0px;
+    --_button-press-shade: var(--ds-color-bg-scrim-20);
+    --_button-press-layer: 0;
+    --_button-glow: 0;
+    --_button-glow-rest: 0;
+    --_button-glow-now: var(--_button-glow-rest);
+    --_button-glow-x: 50%;
+    --_button-glow-y: 50%;
+    --_button-glow-color: color-mix(in srgb, var(--_button-fg) 38%, transparent);
+    --_button-glow-size: calc(var(--_button-height) * 1.5);
+    --_button-roll: var(--ds-distance-shift);
+    --_button-shake: var(--ds-distance-nudge);
+    --_button-stroke-width: var(--ds-border-width-strong);
+    --_button-draw: 1;
+    --_button-ripple-x: 50%;
+    --_button-ripple-y: 50%;
+    --_button-press-ease: var(--_button-ease-in);
+    --_button-release-ease: var(--_button-ease);
+    --_button-release-duration: var(--_button-duration);
+    --_button-result-ease: var(--ds-ease-spring-bouncy);
+    --_button-draw-ease: var(--ds-ease-out);
 
     position: relative;
+    isolation: isolate;
     display: inline-flex;
     flex: 0 1 auto;
     align-items: center;
@@ -148,7 +244,7 @@
     position: relative;
     transition:
       opacity calc(var(--ds-duration-fast) * var(--_button-motion)) var(--ds-ease-default),
-      transform calc(var(--_button-duration) * var(--_button-motion)) var(--_button-ease);
+      transform calc(var(--_button-release-duration) * var(--_button-motion)) var(--_button-release-ease);
   }
 
   /*
@@ -156,18 +252,59 @@
    * scale (the dip of a pressed segment); the icon takes the turn; the end
    * part takes the nudge along the reading direction. One transform each,
    * so the three never fight. The spinner and the status are not in the
-   * list: the spinner spins on its own keyframes.
+   * list: the spinner spins on its own keyframes. Order 1.23 adds the sink
+   * of a press (--_button-part-y) in front of each.
    */
   :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button'], [data-ds='close-button'], [data-ds='copy-button'], [data-ds='floating-action-button']) > :is([data-part='start'], [data-part='label']) {
-    transform: scale(var(--_button-part-scale));
+    transform: translateY(var(--_button-part-y)) scale(var(--_button-part-scale));
   }
 
   :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button'], [data-ds='close-button'], [data-ds='copy-button'], [data-ds='floating-action-button']) > [data-part='icon'] {
-    transform: rotate(var(--_button-turn)) scale(var(--_button-part-scale));
+    transform: translateY(var(--_button-part-y)) rotate(var(--_button-turn)) scale(var(--_button-part-scale));
   }
 
   :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button'], [data-ds='close-button'], [data-ds='copy-button'], [data-ds='floating-action-button']) > [data-part='end'] {
-    transform: translateX(calc(var(--_button-nudge) * var(--_button-dir))) scale(var(--_button-part-scale));
+    transform: translate(calc(var(--_button-nudge) * var(--_button-dir)), var(--_button-part-y)) scale(var(--_button-part-scale));
+  }
+
+  /*
+   * The two layers (order 1.23). ::before is the glow that follows the
+   * pointer on a solid fill (button-glow): a soft round highlight at
+   * --_button-glow-x and -y, which ButtonRoot sets from pointermove and
+   * pointerdown. ::after is the press shade (button-press): an inner shadow
+   * at the top edge whose depth follows --_button-press-y, so a large
+   * control presses deeper than a small one. Both are decoration: no
+   * pointer, no text, under the content.
+   */
+  :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button'], [data-ds='close-button'], [data-ds='copy-button'], [data-ds='floating-action-button'])::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    box-shadow: inset 0 var(--_button-press-y) calc(var(--_button-press-y) * 2) var(--_button-press-shade);
+    opacity: var(--_button-press-layer);
+    pointer-events: none;
+    transition: opacity calc(var(--_button-duration-out) * var(--_button-motion)) var(--ds-ease-out);
+  }
+
+  :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button'], [data-ds='copy-button'], [data-ds='floating-action-button']):not([data-emphasis='link'])::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background-image: radial-gradient(circle var(--_button-glow-size) at var(--_button-glow-x) var(--_button-glow-y), var(--_button-glow-color), transparent);
+    opacity: var(--_button-glow-now);
+    pointer-events: none;
+    transition: opacity calc(var(--ds-duration-morph) * var(--_button-motion)) var(--ds-ease-out);
+  }
+
+  :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button'], [data-ds='copy-button'], [data-ds='floating-action-button'])[data-emphasis='solid'] {
+    --_button-glow: 1;
+  }
+
+  /* A link has no box to press into. */
+  :is([data-ds='button'], [data-ds='copy-button'])[data-emphasis='link'] {
+    --_button-press-shade: transparent;
   }
 
   /*
@@ -241,11 +378,13 @@
     --_button-height: var(--ds-size-control-xs);
     --_button-padding-inline: var(--ds-space-xs);
     --_button-radius: var(--ds-radius-field);
+    --_button-press-y: var(--ds-border-width-default);
   }
 
   :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button'], [data-ds='close-button'], [data-ds='copy-button'], [data-ds='floating-action-button'])[data-size='sm'] {
     --_button-height: var(--ds-size-control-sm);
     --_button-padding-inline: var(--ds-space-s);
+    --_button-press-y: var(--ds-border-width-default);
   }
 
   :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button'], [data-ds='close-button'], [data-ds='copy-button'], [data-ds='floating-action-button'])[data-size='lg'] {
@@ -253,6 +392,7 @@
     --_button-padding-inline: var(--ds-space-2xl);
     --_button-gap: var(--ds-space-xs);
     --_button-font-size: var(--ds-font-size-m);
+    --_button-press-y: calc(var(--ds-distance-nudge) + var(--ds-border-width-default));
   }
 
   /* Arabic is one step up. base.css already moves font.size.s to m; lg moves from m to l here. */
@@ -507,10 +647,9 @@
    * The icon tells the result: the success color after a copy, the danger
    * color after a failure. Not on a solid fill.
    *
-   * The result morph (interaction copy-swap): while the result icon comes
-   * in, CopyButton keeps the old icon for one morph in an unnamed
-   * aria-hidden span after it. Both sit in one grid cell, so they overlap
-   * and the width holds.
+   * The glyphs of every state sit in one grid cell, so they overlap and the
+   * width holds. The confirmation itself (interaction copy-swap, order 1.23)
+   * is CopyButton.css.
    */
   [data-ds='copy-button'] > [data-part='icon'] {
     display: inline-grid;
@@ -520,11 +659,6 @@
 
   [data-ds='copy-button'] > [data-part='icon'] > * {
     grid-area: 1 / 1;
-  }
-
-  /* The leaving icon rests out of sight: the morph plays its way out and it never shows again before it goes. */
-  [data-ds='copy-button'] > [data-part='icon'] > span:not([data-ds]) {
-    opacity: 0;
   }
 
   [data-ds='copy-button'][data-state='copied']:not([data-emphasis='solid']) {
@@ -548,6 +682,7 @@
     --_button-gap: var(--ds-space-s);
     --_button-font-size: var(--ds-font-size-m);
     --_button-shadow: var(--ds-elevation-card-hover);
+    --_button-press-y: calc(var(--ds-distance-nudge) + var(--ds-border-width-default));
   }
 
   [data-ds='floating-action-button'][data-size='lg'] {
@@ -583,10 +718,28 @@
 
   :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button'], [data-ds='close-button'], [data-ds='copy-button'], [data-ds='floating-action-button']):active:not([data-disabled], [data-loading], [aria-disabled='true']) {
     --_button-part-scale: var(--_button-part-press);
+    --_button-part-y: var(--_button-press-y);
+    --_button-press-layer: 1;
+    --_button-glow-now: var(--_button-glow);
 
     transform: scale(var(--_button-press-scale));
     transition-duration: calc(var(--_button-duration-in) * var(--_button-motion));
     transition-timing-function: var(--_button-ease-in);
+  }
+
+  /*
+   * Order 1.23: the press goes in fast and comes out on the spring. While
+   * held, the parts sink by --_button-press-y and the shade comes in over
+   * duration.instant; on release they spring back (the parts on the snappy
+   * spring, the root on the bouncy one) and the shade fades out.
+   */
+  :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button'], [data-ds='close-button'], [data-ds='copy-button'], [data-ds='floating-action-button']):active:not([data-disabled], [data-loading], [aria-disabled='true']) > [data-part] {
+    transition-duration: calc(var(--ds-duration-fast) * var(--_button-motion)), calc(var(--_button-duration-in) * var(--_button-motion));
+    transition-timing-function: var(--ds-ease-default), var(--_button-press-ease);
+  }
+
+  :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button'], [data-ds='close-button'], [data-ds='copy-button'], [data-ds='floating-action-button']):active:not([data-disabled], [data-loading], [aria-disabled='true'])::after {
+    transition-duration: calc(var(--_button-duration-in) * var(--_button-motion));
   }
 
   :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button'], [data-ds='close-button'], [data-ds='copy-button'], [data-ds='floating-action-button']):dir(rtl) {
@@ -600,8 +753,19 @@
    * and springs back when the pointer leaves. Only the decorative part
    * moves: the target stays still under the pointer.
    */
-  [data-ds='button']:is(:hover, :focus-visible):not([data-disabled], [data-loading]) {
+  [data-ds='button']:focus-visible:not([data-disabled], [data-loading]) {
     --_button-nudge: var(--_button-shift);
+  }
+
+  @media (hover: hover) {
+    [data-ds='button']:hover:not([data-disabled], [data-loading]) {
+      --_button-nudge: var(--_button-shift);
+    }
+
+    /* The glow shows while the pointer is over a solid fill, and grows stronger under a press (above). */
+    :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button'], [data-ds='copy-button'], [data-ds='floating-action-button']):not([data-emphasis='link']):hover:not([data-disabled], [data-loading]) {
+      --_button-glow-now: calc(var(--_button-glow) * 0.8);
+    }
   }
 
   /*
@@ -614,13 +778,131 @@
     opacity: 0;
   }
 
+  /*
+   * The result (interaction button-result, order 1.23, proposed). Button's
+   * `result` prop stamps data-result="success" or "error" while the caller
+   * shows the ending of an action, and clears it to go back.
+   *
+   *   Out:     the start, label and end parts roll up by --_button-roll and
+   *            fade over duration.quick on ease.exit. They stay in the flow,
+   *            so the width holds.
+   *   Draw:    the result part grows from scale.morph on the bouncy spring
+   *            one stagger step later, and its glyph draws with
+   *            stroke-dashoffset over duration.morph on ease.out: the check
+   *            from its short stroke to its long one; the cross of an error
+   *            in two strokes, the second after the first.
+   *   Error:   the control shakes once along the inline axis by
+   *            --_button-shake over duration.celebrate (two swings, far under
+   *            three flashes a second).
+   *   Back:    the glyph shrinks away over duration.quick and the parts drop
+   *            back in from above on the part spring (--_button-duration).
+   *
+   * The result part stays (aria-hidden, at opacity 0) once it has shown, so
+   * the way back plays too. Nothing waits for the motion.
+   */
+  [data-ds='button'] > [data-part='result'] {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    opacity: 0;
+    transform: scale(var(--ds-scale-morph));
+    transition:
+      opacity calc(var(--ds-duration-quick) * var(--_button-motion)) var(--ds-ease-exit),
+      transform calc(var(--ds-duration-quick) * var(--_button-motion)) var(--ds-ease-exit);
+    pointer-events: none;
+  }
+
+  [data-ds='button'] > [data-part='result'] > svg {
+    inline-size: var(--ds-size-icon-md);
+    block-size: var(--ds-size-icon-md);
+    fill: none;
+    stroke: currentColor;
+    stroke-width: var(--_button-stroke-width);
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    overflow: visible;
+  }
+
+  [data-ds='button'][data-size='lg'] > [data-part='result'] > svg {
+    inline-size: var(--ds-size-icon-lg);
+    block-size: var(--ds-size-icon-lg);
+  }
+
+  [data-ds='button'][data-result] > [data-part='result'] {
+    opacity: 1;
+    transform: none;
+    transition:
+      opacity calc(var(--ds-duration-fast) * var(--_button-motion)) var(--ds-ease-out) calc(var(--ds-delay-stagger) * var(--_button-motion)),
+      transform calc(var(--ds-duration-spring-bouncy) * var(--_button-motion)) var(--_button-result-ease) calc(var(--ds-delay-stagger) * var(--_button-motion));
+  }
+
+  [data-ds='button'][data-result] > :is([data-part='start'], [data-part='label'], [data-part='end']) {
+    opacity: 0;
+    transform: translateY(calc(-1 * var(--_button-roll)));
+    transition:
+      opacity calc(var(--ds-duration-quick) * var(--_button-motion)) var(--ds-ease-exit),
+      transform calc(var(--ds-duration-quick) * var(--_button-motion)) var(--ds-ease-exit);
+  }
+
+  /* Each stroke has pathLength 1: a dash of 1 and an offset of 1 hide it, an offset of 0 shows it whole. */
+  [data-ds='button'] > [data-part='result'] > svg > * {
+    stroke-dasharray: 1;
+    stroke-dashoffset: 0;
+  }
+
+  [data-ds='button'][data-result] > [data-part='result'] > svg > * {
+    animation: ds-button-draw calc(var(--ds-duration-morph) * var(--_button-motion) * var(--_button-draw)) var(--_button-draw-ease) calc(var(--ds-delay-stagger) * var(--_button-motion) * var(--_button-draw)) backwards;
+  }
+
+  /* The second stroke of the error cross follows the first. */
+  [data-ds='button'][data-result] > [data-part='result'] > svg > :nth-child(2) {
+    animation-delay: calc((var(--ds-duration-morph) + var(--ds-delay-stagger)) * var(--_button-motion) * var(--_button-draw));
+  }
+
+  @keyframes ds-button-draw {
+    from {
+      stroke-dashoffset: 1;
+    }
+
+    to {
+      stroke-dashoffset: 0;
+    }
+  }
+
+  [data-ds='button'][data-result='error'] {
+    animation: ds-button-shake calc(var(--ds-duration-celebrate) * var(--_button-motion)) var(--ds-ease-out) calc(var(--ds-delay-stagger) * var(--_button-motion));
+  }
+
+  @keyframes ds-button-shake {
+    0%,
+    100% {
+      transform: scale(1);
+    }
+
+    25% {
+      transform: translateX(var(--_button-shake));
+    }
+
+    55% {
+      transform: translateX(calc(-1 * var(--_button-shake)));
+    }
+
+    80% {
+      transform: translateX(calc(var(--_button-shake) / 2));
+    }
+  }
+
   /* ------------------------------------------------------------ states: swap the private properties */
 
-  :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button'], [data-ds='close-button'], [data-ds='copy-button'], [data-ds='floating-action-button']):hover:not([data-disabled], [data-loading]) {
-    --_button-bg: var(--_button-bg-hover);
-    --_button-fg: var(--_button-fg-hover);
-    --_button-border-color: var(--_button-border-color-hover);
-    --_button-decoration: var(--_button-decoration-hover);
+  /* Only where the device can hover: a tap on a phone leaves no hover look behind (order 1.23). */
+  @media (hover: hover) {
+    :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button'], [data-ds='close-button'], [data-ds='copy-button'], [data-ds='floating-action-button']):hover:not([data-disabled], [data-loading]) {
+      --_button-bg: var(--_button-bg-hover);
+      --_button-fg: var(--_button-fg-hover);
+      --_button-border-color: var(--_button-border-color-hover);
+      --_button-decoration: var(--_button-decoration-hover);
+    }
   }
 
   :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button'], [data-ds='close-button'], [data-ds='copy-button'], [data-ds='floating-action-button']):active:not([data-disabled], [data-loading]) {
@@ -658,11 +940,21 @@
       animation: none;
     }
 
-    /* No press scale, no dip, no nudge, no turn: the pressed color carries the state. The duration tokens are 0ms here too. */
-    :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button'], [data-ds='close-button'], [data-ds='copy-button'], [data-ds='floating-action-button']) {
+    /*
+     * No press scale, no dip, no nudge, no turn: the pressed color carries the state. The duration tokens are 0ms here too.
+     * Order 1.23: no sink, no shake, no roll, no glow that follows the pointer; the result glyph shows whole at once. The press shade stays: it is still, not motion.
+     * [data-emphasis] (always stamped) lifts this over the size and fill rules that set these.
+     */
+    :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button'], [data-ds='close-button'], [data-ds='copy-button'], [data-ds='floating-action-button'])[data-emphasis] {
       --_button-press-scale: 1;
       --_button-part-press: 1;
       --_button-shift: 0px;
+      --_button-press-y: 0px;
+      --_button-shake: 0px;
+      --_button-roll: 0px;
+      --_button-glow: 0;
+      --_button-draw: 0;
+      --_button-motion: 0;
     }
   }
 
@@ -676,6 +968,23 @@
     --_button-press-scale: 1;
     --_button-part-press: 1;
     --_button-shift: 0px;
+    --_button-press-y: 0px;
+    --_button-shake: 0px;
+    --_button-roll: 0px;
+    --_button-glow: 0;
+    --_button-draw: 0;
+    --_button-motion: 0;
+  }
+
+  /* More contrast: no highlight over the text of a solid fill. */
+  @media (prefers-contrast: more) {
+    :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button'], [data-ds='copy-button'], [data-ds='floating-action-button'])[data-emphasis] {
+      --_button-glow: 0;
+    }
+  }
+
+  [data-contrast='more'] :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button'], [data-ds='copy-button'], [data-ds='floating-action-button']) {
+    --_button-glow: 0;
   }
 
   /* Forced colors: the press scale and the icon swap draw the same in system colors, so they stay. */
@@ -686,6 +995,12 @@
 
     :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button'], [data-ds='close-button'], [data-ds='copy-button'], [data-ds='floating-action-button'])[data-disabled] {
       color: GrayText;
+    }
+
+    /* The glow and the press shade are author colors: off. The sink and the scale still show the press; the result glyph draws in the text color. */
+    :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button'], [data-ds='close-button'], [data-ds='copy-button'], [data-ds='floating-action-button'])::before,
+    :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button'], [data-ds='close-button'], [data-ds='copy-button'], [data-ds='floating-action-button'])::after {
+      display: none;
     }
 
     /*

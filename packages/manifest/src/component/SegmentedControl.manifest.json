@@ -24,7 +24,8 @@
   "anatomy": [
     "root",
     "item",
-    "indicator"
+    "indicator",
+    "label-ink"
   ],
   "parts": {
     "SegmentedControlItem": "item"
@@ -243,7 +244,10 @@
         "case": "many",
         "expect": "focus-moves"
       }
-    }
+    },
+    "optionalParts": [
+      "label-ink"
+    ]
   },
   "since": "0.2.0"
 }

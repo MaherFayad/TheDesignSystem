@@ -21,6 +21,8 @@
 // safe area inset, so the home indicator of a phone never covers a label.
 // Where the bar sits (fixed at the bottom, in a PageShell) is the layout's
 // choice; a fixed bar needs the page to keep the same room at its end.
+import type { PointerEvent } from 'react';
+import { pressOrigin } from './pressOrigin';
 import { Children, createContext, isValidElement, use, type AnchorHTMLAttributes, type HTMLAttributes, type ReactElement, type ReactNode, type Ref } from 'react';
 import { Slot } from 'radix-ui';
 import { Icon, type IconName } from '@the-system/icons/react';
@@ -103,6 +105,11 @@ export function TabBarItem({ label, icon, active = false, badge, badgeLabel, asC
   const attrs = {
     ...rest,
     ref,
+    // Round 3: the press point, for a platform ripple (./pressOrigin.ts).
+    onPointerDown: (event: PointerEvent<HTMLAnchorElement>) => {
+      pressOrigin(event, 'tab-bar');
+      rest.onPointerDown?.(event);
+    },
     'data-part': 'item',
     'data-active': active ? '' : undefined,
     'aria-current': active ? ('page' as const) : rest['aria-current'],

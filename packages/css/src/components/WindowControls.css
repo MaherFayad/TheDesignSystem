@@ -169,18 +169,37 @@
     transition-delay: calc(var(--ds-delay-stagger) * 2);
   }
 
-  /* Reduced motion: the system setting and the page's own setting (data-motion="reduce" on the root element). */
+  /*
+   * Reduced motion: the system setting and the page's own setting
+   * (data-motion="reduce" on the root element). Order 1.23 (review B2, B3):
+   * the scales the motion reads are 1, so nothing grows or dips whatever
+   * rule wins, and the transitions are none on every selector that sets one.
+   */
   @media (prefers-reduced-motion: reduce) {
-    [data-ds='window-controls'] > [data-ds='icon-button'] > [data-part='icon'],
-    [data-ds='window-controls'] > [data-ds='icon-button'] > [data-part='icon']::before,
-    [data-ds='window-controls'] > [data-ds='icon-button'] > [data-part='icon'] > [data-ds='icon'] {
+    :root [data-ds='window-controls'] {
+      --_window-controls-press-scale: 1;
+      --_window-controls-enter-scale: 1;
+    }
+
+    :root [data-ds='window-controls'] > [data-ds='icon-button'] > [data-part='icon'],
+    :root [data-ds='window-controls'] > [data-ds='icon-button'] > [data-part='icon']::before,
+    :root [data-ds='window-controls'] > [data-ds='icon-button'] > [data-part='icon'] > [data-ds='icon'],
+    :root [data-ds='window-controls']:is(:hover, :focus-within) > [data-ds='icon-button'] > [data-part='icon'] > [data-ds='icon'],
+    :root [data-ds='window-controls']:is(:hover, :focus-within) > :is([data-part='minimize'], [data-part='zoom']) > [data-part='icon'] > [data-ds='icon'] {
       transition: none;
     }
   }
 
+  :root[data-motion='reduce'] [data-ds='window-controls'] {
+    --_window-controls-press-scale: 1;
+    --_window-controls-enter-scale: 1;
+  }
+
   :root[data-motion='reduce'] [data-ds='window-controls'] > [data-ds='icon-button'] > [data-part='icon'],
   :root[data-motion='reduce'] [data-ds='window-controls'] > [data-ds='icon-button'] > [data-part='icon']::before,
-  :root[data-motion='reduce'] [data-ds='window-controls'] > [data-ds='icon-button'] > [data-part='icon'] > [data-ds='icon'] {
+  :root[data-motion='reduce'] [data-ds='window-controls'] > [data-ds='icon-button'] > [data-part='icon'] > [data-ds='icon'],
+  :root[data-motion='reduce'] [data-ds='window-controls']:is(:hover, :focus-within) > [data-ds='icon-button'] > [data-part='icon'] > [data-ds='icon'],
+  :root[data-motion='reduce'] [data-ds='window-controls']:is(:hover, :focus-within) > :is([data-part='minimize'], [data-part='zoom']) > [data-part='icon'] > [data-ds='icon'] {
     transition: none;
   }
 

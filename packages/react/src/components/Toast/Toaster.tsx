@@ -49,13 +49,24 @@
 //   reach the toasts. That is why a toast with an action never times out:
 //   its action is still there when the dialog closes.
 //
-// Motion (order 1.21, interaction "toast-stack"): a toast enters and leaves
-// with the CSS of Toast.css. When one joins or leaves, the toasts that stay
-// move to their new place with a transform played from where they were
-// (stackShift.ts; order 1.22 plays it with the flip primitive, flipPlay, on
-// the snappy spring, with the style's mode from useMotion, so the preset
-// and reduced motion apply). Layout never animates, the store never waits,
-// and the pause on hover and focus is untouched.
+// Motion (order 1.23). The toasts share one grid cell and stack with depth:
+// the newest in front, the older ones behind it, peeking a few px further
+// from the edge, smaller, clipped to the strip that shows. stack.ts measures
+// the toasts and writes their place; Toast.css draws it with translate,
+// scale and clip-path and transitions them. While the pointer is over the
+// toasts or focus is inside them, the viewport carries data-expanded and
+// the stack opens into a list; it closes again when both leave. The same
+// moments pause the store, so a person reading a toast never races its
+// timer. The viewport carries data-paused whenever the store is paused
+// (hover, focus, window blurred, tab hidden): the progress line of a timed
+// toast (its `progress` part, a CSS animation that runs for the toast's
+// duration) pauses on it, so the line and the store's timer move together
+// (WCAG 2.2.1), and a repeat or an update (a new version) starts both again.
+// The swipe is the Toaster's own (swipe.ts): Radix's clamps to one way and
+// reads distance only. The toast follows the finger toward its edge, gives
+// a little against the other way, and closes past a distance or on a fast
+// flick; let go short, it springs back. Layout never animates and the store
+// never waits.
 //
 // Escape closes a toast only when focus is inside the toaster, so Escape in
 // a Window, a Dialog or a form never also closes a toast, a persistent
@@ -65,24 +76,37 @@
 // closes itself from its own keydown fallback, but a raw Radix Dialog from
 // a consumer does not see that Escape while a toast shows above it (the
 // manifest says so).
-import { useEffect, useRef, useState, useSyncExternalStore } from 'react';
+import { useEffect, useRef, useState, useSyncExternalStore, type CSSProperties, type PointerEvent as ReactPointerEvent } from 'react';
 import { createPortal } from 'react-dom';
 import { Toast as RadixToast, VisuallyHidden } from 'radix-ui';
 import { toastStore, toastUrgency, type ToastItem, type ToastStore } from '@the-system/shared';
-import { flipPlay, rectOf } from '@the-system/motion';
 import { Theme } from '../../theme/Theme';
 import { useTheme } from '../../theme/hooks';
-import { useMotion } from '../../internal/motion';
 import { isInsideToaster } from './isInsideToaster';
-import { watchStackShift } from './stackShift';
+import { watchStack } from './stack';
+import { START_BUFFER, rubberBand, swipeAxis, swipeCloses, swipeOffset, swipeSign, swipeVelocity, type SwipeDirection, type SwipeSample } from './swipe';
 import { ToastParts, toastDirFor, toastLabelsFor } from './Toast';
 
 /** Where the toasts sit. end is the inline end: right in English, left in Arabic. */
 export type ToasterPosition = 'bottom-end' | 'bottom-center' | 'top-end' | 'top-center';
 
+/**
+ * The positions a Toaster takes: one of `ToasterPosition`, or `auto`, which
+ * follows the platform axis of the Theme: top-center on ios (a banner from
+ * the top), bottom-end elsewhere (android.css then places the snackbar at
+ * the start). The root carries the resolved value in data-position.
+ */
+export type ToasterPositionProp = ToasterPosition | 'auto';
+
+/** The position `auto` resolves to on a platform. */
+export function resolveToasterPosition(position: ToasterPositionProp, platform: string | undefined): ToasterPosition {
+  if (position !== 'auto') return position;
+  return platform === 'ios' ? 'top-center' : 'bottom-end';
+}
+
 export interface ToasterProps {
-  /** Default bottom-end. */
-  position?: ToasterPosition;
+  /** Default bottom-end. `auto` follows the platform axis (see `ToasterPositionProp`). */
+  position?: ToasterPositionProp;
   /**
    * The name of the notifications region. Default "Notifications" (Arabic
    * under lang ar). `{hotkey}` in it is replaced by the hotkey, for example
@@ -119,15 +143,16 @@ export function toastAnnouncement(item: Pick<ToastItem, 'title' | 'description' 
 }
 
 /** The swipe that closes a toast: toward the edge it sits on. */
-function swipeFor(position: ToasterPosition, dir: 'ltr' | 'rtl'): 'up' | 'down' | 'left' | 'right' {
+function swipeFor(position: ToasterPosition, dir: 'ltr' | 'rtl'): SwipeDirection {
   if (position === 'bottom-center') return 'down';
   if (position === 'top-center') return 'up';
   return dir === 'rtl' ? 'left' : 'right';
 }
 
 /** Mount once near the root, inside the root Theme. Renders the toasts of `toast()`. */
-export function Toaster({ position = 'bottom-end', label, hotkey = ['F8'], toastLabel, closeLabel, store = toastStore }: ToasterProps) {
+export function Toaster({ position: positionProp = 'bottom-end', label, hotkey = ['F8'], toastLabel, closeLabel, store = toastStore }: ToasterProps) {
   const theme = useTheme();
+  const position = resolveToasterPosition(positionProp, theme.platform);
   const words = toastLabelsFor(theme.lang);
   const snapshot = useSyncExternalStore(store.subscribe, store.getSnapshot, store.getServerSnapshot);
   const [body, setBody] = useState<HTMLElement | null>(null);
@@ -174,9 +199,10 @@ export function Toaster({ position = 'bottom-end', label, hotkey = ['F8'], toast
     const onOver = (event: PointerEvent) => {
       if ((event.target as Element | null)?.closest?.('[data-ds="toast"]')) setHovered(true);
     };
+    // The expanded list takes the pointer in its gaps too (Toast.css), so moving between two toasts keeps it open.
     const onOut = (event: PointerEvent) => {
       const next = event.relatedTarget as Element | null;
-      if (!next?.closest?.('[data-ds="toaster"] > [data-ds="toast"]')) setHovered(false);
+      if (!next?.closest?.('[data-ds="toaster"]')) setHovered(false);
     };
     const onFocusIn = () => setFocused(true);
     const onFocusOut = (event: FocusEvent) => {
@@ -209,21 +235,12 @@ export function Toaster({ position = 'bottom-end', label, hotkey = ['F8'], toast
     return () => window.removeEventListener('keydown', onKeyDown, true);
   }, []);
 
-  // The toasts that stay move to make room, with a transform (stackShift.ts).
-  const motion = useMotion();
+  // The stack: each toast's place, written before the next paint (stack.ts).
   useEffect(() => {
     const viewport = layer?.querySelector<HTMLElement>('[data-ds="toaster"]');
     if (!viewport) return;
-    return watchStackShift(viewport, (el, from, to) => {
-      // Order 1.22: the flip primitive on the snappy spring, so a toast that makes room lands past its place in Desk and settles.
-      const now = rectOf(el);
-      const snap = { rects: new Map([[el as Element, { ...now, y: now.y + from.y - to.y }]]) };
-      const [animation] = flipPlay(snap, { items: [el], spring: 'snappy', enter: 'none', mode: motion.mode('toast-stack') });
-      // The shift does not scale, so its origin does not matter; the toast's own exit scales from its center.
-      el.style.removeProperty('transform-origin');
-      return animation ?? null;
-    });
-  }, [layer, motion]);
+    return watchStack(viewport);
+  }, [layer]);
 
   // An emptied stack gives no pointerout, so the hover flag resets with it.
   const anyOpen = snapshot.visible.some((t) => t.state === 'open');
@@ -232,6 +249,7 @@ export function Toaster({ position = 'bottom-end', label, hotkey = ['F8'], toast
   }, [anyOpen]);
 
   const paused = hovered || focused || away || hidden;
+  const expanded = (hovered || focused) && anyOpen;
   useEffect(() => {
     if (paused) store.pause();
     else store.resume();
@@ -316,13 +334,33 @@ export function Toaster({ position = 'bottom-end', label, hotkey = ['F8'], toast
             store={store}
             closeLabel={closeLabel ?? words.close}
             keepOnEscape={keepOnEscape}
+            direction={swipeFor(position, theme.dir)}
           />
         ))}
-        <RadixToast.Viewport data-ds="toaster" data-position={position} label={label ?? words.region} hotkey={hotkey} />
+        <RadixToast.Viewport
+          data-ds="toaster"
+          data-position={position}
+          data-stacked=""
+          data-expanded={expanded ? '' : undefined}
+          data-paused={paused ? '' : undefined}
+          label={label ?? words.region}
+          hotkey={hotkey}
+        />
       </RadixToast.Provider>
     </Theme>,
     body,
   );
+}
+
+/** A swipe in progress: where it started and what it has drawn so far. */
+interface Gesture {
+  x: number;
+  y: number;
+  pointerId: number;
+  buffer: number;
+  started: boolean;
+  samples: SwipeSample[];
+  along: number;
 }
 
 function ToasterItem({
@@ -330,12 +368,88 @@ function ToasterItem({
   store,
   closeLabel,
   keepOnEscape,
+  direction,
 }: {
   item: ToastItem;
   store: ToastStore;
   closeLabel: string;
   keepOnEscape: { current: boolean };
+  direction: SwipeDirection;
 }) {
+  const gesture = useRef<Gesture | null>(null);
+
+  const clearMove = (el: HTMLElement) => {
+    el.style.removeProperty('--radix-toast-swipe-move-x');
+    el.style.removeProperty('--radix-toast-swipe-move-y');
+  };
+
+  const onPointerDown = (event: ReactPointerEvent<HTMLElement>) => {
+    if (event.button !== 0 || item.state !== 'open') return;
+    gesture.current = {
+      x: event.clientX,
+      y: event.clientY,
+      pointerId: event.pointerId,
+      buffer: event.pointerType === 'touch' ? START_BUFFER.touch : START_BUFFER.other,
+      started: false,
+      samples: [],
+      along: 0,
+    };
+  };
+
+  // Every pointermove is prevented, so Radix's own swipe never starts: this one replaces it.
+  const onPointerMove = (event: ReactPointerEvent<HTMLElement>) => {
+    event.preventDefault();
+    const g = gesture.current;
+    if (!g || g.pointerId !== event.pointerId) return;
+    const el = event.currentTarget;
+    const dx = event.clientX - g.x;
+    const dy = event.clientY - g.y;
+    const axis = swipeAxis(direction);
+    const main = axis === 'x' ? dx : dy;
+    const cross = axis === 'x' ? dy : dx;
+    if (!g.started) {
+      if (Math.abs(main) <= g.buffer && Math.abs(cross) <= g.buffer) return;
+      // A gesture that starts across the axis is not a swipe.
+      if (Math.abs(cross) > Math.abs(main)) {
+        gesture.current = null;
+        return;
+      }
+      g.started = true;
+      el.setAttribute('data-swipe', 'start');
+      el.setPointerCapture?.(event.pointerId);
+    }
+    g.along = main * swipeSign(direction);
+    g.samples.push({ t: event.timeStamp, along: g.along });
+    if (g.samples.length > 12) g.samples.shift();
+    const { x, y } = swipeOffset(direction, rubberBand(g.along));
+    el.setAttribute('data-swipe', 'move');
+    el.style.setProperty('--radix-toast-swipe-move-x', `${x}px`);
+    el.style.setProperty('--radix-toast-swipe-move-y', `${y}px`);
+  };
+
+  const end = (event: ReactPointerEvent<HTMLElement>, cancelled: boolean) => {
+    const g = gesture.current;
+    if (!g || g.pointerId !== event.pointerId) return;
+    gesture.current = null;
+    const el = event.currentTarget;
+    if (el.hasPointerCapture?.(event.pointerId)) el.releasePointerCapture(event.pointerId);
+    if (!g.started) return;
+    // A swipe is not a click on the button it started on.
+    el.addEventListener('click', (click) => click.preventDefault(), { once: true, capture: true });
+    clearMove(el);
+    // The release is the last sample: a finger that stopped before it lifted has no speed left.
+    g.samples.push({ t: event.timeStamp, along: g.along });
+    if (!cancelled && swipeCloses(g.along, swipeVelocity(g.samples))) {
+      const { x, y } = swipeOffset(direction, g.along);
+      el.setAttribute('data-swipe', 'end');
+      el.style.setProperty('--radix-toast-swipe-end-x', `${x}px`);
+      el.style.setProperty('--radix-toast-swipe-end-y', `${y}px`);
+      store.dismiss(item.id);
+      return;
+    }
+    el.setAttribute('data-swipe', 'cancel');
+  };
+
   return (
     <RadixToast.Root
       asChild
@@ -346,6 +460,10 @@ function ToasterItem({
         // Radix closes the newest toast on Escape from anywhere; only an Escape from inside the toaster counts.
         if (!open && !keepOnEscape.current) store.dismiss(item.id);
       }}
+      onPointerDown={onPointerDown}
+      onPointerMove={onPointerMove}
+      onPointerUp={(event) => end(event, false)}
+      onPointerCancel={(event) => end(event, true)}
     >
       <li data-ds="toast" data-tone={item.tone} lang={item.lang} dir={toastDirFor(item.lang)}>
         <ToastParts
@@ -356,6 +474,15 @@ function ToasterItem({
           action={item.action}
           closeLabel={item.lang !== undefined ? toastLabelsFor(item.lang).close : closeLabel}
         />
+        {Number.isFinite(item.duration) && (
+          // Keyed by version: a repeat or an update restarts the store's timer, and the line with it.
+          <span
+            key={item.version}
+            data-part="progress"
+            aria-hidden="true"
+            style={{ '--_toast-life': `${item.duration}ms` } as CSSProperties}
+          />
+        )}
       </li>
     </RadixToast.Root>
   );

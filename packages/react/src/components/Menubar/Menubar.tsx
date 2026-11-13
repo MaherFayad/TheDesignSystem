@@ -70,6 +70,7 @@ import {
   ROW_SLIDE_ID,
   IndicatorGlyph,
   ItemContent,
+  MenuHighlight,
   TRIGGER_GAP,
   VIEWPORT_GUTTER,
   assignRef,
@@ -289,6 +290,7 @@ export function MenubarContent({
       data-size={bar.size}
     >
       {children}
+      <MenuHighlight />
     </RadixMenubar.Content>,
   );
 }
@@ -498,6 +500,7 @@ export function MenubarSubContent({
       data-size={bar.size}
     >
       {children}
+      <MenuHighlight />
     </RadixMenubar.SubContent>,
   );
 }

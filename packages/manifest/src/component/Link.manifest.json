@@ -23,7 +23,11 @@
     "App navigation": "NavigationMenu or Sidebar",
     "Views of one page": "Tabs"
   },
-  "anatomy": ["root", "label", "end"],
+  "anatomy": [
+    "root",
+    "label",
+    "end"
+  ],
   "slots": {
     "label": {
       "accepts": "text",
@@ -31,7 +35,9 @@
       "max": 1
     },
     "end": {
-      "accepts": ["Icon"],
+      "accepts": [
+        "Icon"
+      ],
       "max": 1
     }
   },
@@ -41,12 +47,20 @@
       "description": "Where the link goes. Removed while disabled."
     },
     "tone": {
-      "type": ["neutral", "accent"],
+      "type": [
+        "neutral",
+        "accent"
+      ],
       "default": "neutral",
       "description": "neutral reads as color.text.link, accent as color.primary.on-surface (the yellow family in Desk)."
     },
     "size": {
-      "type": ["xs", "sm", "md", "lg"],
+      "type": [
+        "xs",
+        "sm",
+        "md",
+        "lg"
+      ],
       "description": "Font size from font.size xs, s, m and l. No default: without size the link inherits the font size of the text around it, which is what a link in a sentence wants."
     },
     "external": {
@@ -80,7 +94,10 @@
       "description": "The link text. It names the place, not the gesture."
     }
   },
-  "states": ["data-disabled", "data-standalone"],
+  "states": [
+    "data-disabled",
+    "data-standalone"
+  ],
   "a11y": {
     "role": "link (native a with href; role link is set while disabled, when the href is gone)",
     "focus": "In the tab order, disabled included. A 2px ring from focus.shadow.ring on keyboard focus, drawn around every line of a link that wraps.",
@@ -91,7 +108,9 @@
     "announce": "The label is the accessible name. An external link adds the hidden words after a comma: Open the docs, opens in a new tab.",
     "native": {
       "accessibilityRole": "link",
-      "accessibilityState": ["disabled"]
+      "accessibilityState": [
+        "disabled"
+      ]
     },
     "notes": [
       "The underline is drawn at rest and on hover, so a link in running text is never told apart by color alone (WCAG 1.4.1). Hover makes it thicker.",
@@ -99,7 +118,8 @@
       "Space does not follow a link, only Enter, as in the browser.",
       "The external icon is hidden from assistive tech; the hidden words carry the meaning.",
       "Under forced colors the system link color applies, the underline takes the text color and the focus outline uses Highlight.",
-      "No native title attribute. Hints come from Tooltip."
+      "No native title attribute. Hints come from Tooltip.",
+      "Motion of round 3 (order 1.23, proposed, interaction link-underline): on a standalone link a stronger line draws over the rest underline with clip-path from the inline start (right to left in Arabic) on hover, keyboard focus and press, and is erased toward the inline end when the state ends; the external icon nudges toward where it leads; the text color eases to its hover color. Hover only where the device can hover; a tap shows the drawn line while held. A press makes the drawn line heavier from its foot and it springs back on release. Reduced motion: Link.css sets its own durations to 0s, so the line shows and goes at once."
     ]
   },
   "content": {
@@ -188,7 +208,9 @@
     }
   ],
   "contract": {
-    "optionalParts": ["end"],
+    "optionalParts": [
+      "end"
+    ],
     "keys": {
       "Enter": {
         "expect": "click"

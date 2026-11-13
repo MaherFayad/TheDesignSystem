@@ -29,7 +29,8 @@
     "label",
     "end",
     "spinner",
-    "status"
+    "status",
+    "result"
   ],
   "slots": {
     "label": {
@@ -144,6 +145,17 @@
       "type": "node",
       "required": true,
       "description": "The label text."
+    },
+    "result": {
+      "type": [
+        "success",
+        "error"
+      ],
+      "description": "The ending of an action (interaction button-result): while set, the label rolls out and a check (success) or a cross (error) draws in its place, and an error shakes the button once. Sets data-result. The caller clears it to go back, for example after delay.feedback. The width holds."
+    },
+    "resultLabel": {
+      "type": "string",
+      "description": "What a visually hidden status says while result is set, for example Saved or تم الحفظ. While it is passed, an empty polite status waits in the button, so the words are read once when they arrive."
     }
   },
   "states": [
@@ -160,7 +172,7 @@
       "Space": "Activates the button",
       "Tab": "Moves focus to the next control"
     },
-    "announce": "The label is the accessible name. While loading, a visually hidden status inside the button says loadingLabel (Loading by default) and aria-busy is set.",
+    "announce": "The label is the accessible name. While loading, a visually hidden status inside the button says loadingLabel (Loading by default) and aria-busy is set. With resultLabel, a second visually hidden status says it once when result is set and is emptied when result clears; the result glyph is aria-hidden.",
     "native": {
       "accessibilityRole": "button",
       "accessibilityState": [
@@ -173,7 +185,11 @@
       "While disabled or loading, a click or middle click does not submit a form or follow an asChild link, and onClick, onAuxClick, onPointerDown and onKeyDown do not run. A disabled asChild link loses its href and keeps role link.",
       "Icons inside the button are hidden from assistive tech. The label names the button.",
       "Under forced colors the focus outline uses Highlight and the Desk roll is off.",
-      "No native title attribute. Hints come from Tooltip (wave 1)."
+      "No native title attribute. Hints come from Tooltip (wave 1).",
+      "Motion of round 3 (order 1.23, proposed). Press: the root dips to scale.press, the parts sink by --_button-press-y (1px at xs and sm, distance.nudge at md, one more pixel at lg and on a FloatingActionButton) and an inner shade at the top edge (::after) comes in over duration.instant; release springs back on the bouncy spring. Glow: on a solid fill a soft highlight (::before) follows the pointer, set from pointermove as a share of the box; --_button-glow: 0 turns it off. Result: the label rolls up and out, the glyph draws with stroke-dashoffset, an error shakes once by distance.nudge over duration.celebrate.",
+      "Hover looks apply only under @media (hover: hover), so a tap on a phone never leaves a hover look; press works on touch through :active.",
+      "Reduced motion (the system setting and data-motion reduce): no sink, no shake, no roll, no glow, and the result glyph shows whole at once. Forced colors: the glow and the shade layers are hidden.",
+      "Hooks for styles and platforms: on pointerdown ButtonRoot writes --_button-ripple-x and --_button-ripple-y (px from the inline start and the block start, 50% until a press) for a ripple a platform draws; --_button-press-ease, --_button-release-ease, --_button-release-duration, --_button-result-ease and --_button-draw-ease set the curve of each beat; --_button-press-shade transparent, --_button-press-y 0px, --_button-glow 0, --_button-shake 0px, --_button-roll 0px and --_button-draw 0 each drop one beat."
     ]
   },
   "content": {

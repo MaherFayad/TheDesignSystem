@@ -27,6 +27,28 @@
  *   --_checkbox-step          the place of this box in a run of draws (CheckboxGroup's
  *                             select all sets it inline); the draw waits that many delay.stagger
  *
+ * Round 3 (order 1.23, proposed) adds:
+ *   --_checkbox-motion        1 plays every transition, 0 turns them all off (the reduced
+ *                             form and a style's off row), delays included
+ *   --_checkbox-stagger       the wait per cascade step, delay.stagger; 0s for no cascade
+ *   --_checkbox-fill-ease     the curve of the fill from the centre, ease.out
+ *   --_checkbox-land-ease     the curve of the box back from the dip, ease.spring-bouncy:
+ *                             its overshoot is the land's overshoot
+ *   --_checkbox-ease (in the list above) is now the curve of the draw, ease.out
+ *   --_checkbox-mark          the stroke color of the mark, the on fill color
+ *   --_checkbox-stroke-width  the mark's stroke, in the 16 unit box of its view box
+ *   --_checkbox-morph-ease    the bend between the dash and the check, ease.spring-snappy
+ *   --_checkbox-fill-now      working: the radius of the fill clip, 0% empty, 75% full
+ *   --_checkbox-joint, -short-turn, -long-turn   working: where the two strokes meet (as a
+ *                             share of the view box, so no raw length)
+ *                             and how each one turns; the check or the dash by data-glyph
+ *   --_checkbox-short-cut, -long-cut   working: the stroke-dashoffset of each stroke,
+ *                             0 drawn, 1.05 retracted, a part for the dash
+ * The parts: the indicator holds the unnamed fill span and the mark part, an
+ * aria-hidden svg with two strokes. `data-glyph` on the mark is `check` or
+ * `minus`: the last mark shown, so an uncheck retracts the one that was there.
+ * --_checkbox-mark-scale is kept for recipes; the round 3 draw does not read it.
+ *
  * `-border-color-invalid` is a state suffix beyond the convention's list:
  * invalid needs its own color, as in Input.css.
  *
@@ -70,13 +92,23 @@
     --_checkbox-on-fill: var(--ds-color-bg-body);
     --_checkbox-ring: var(--ds-elevation-input-focus), var(--ds-focus-shadow-ring);
     --_checkbox-border-style: solid;
-    --_checkbox-duration: var(--ds-duration-spring-bouncy);
-    --_checkbox-ease: var(--ds-ease-spring-bouncy);
-    --_checkbox-duration-out: var(--ds-duration-fast);
+    --_checkbox-duration: var(--ds-duration-morph);
+    --_checkbox-ease: var(--ds-ease-out);
+    --_checkbox-duration-out: var(--ds-duration-quick);
     --_checkbox-dir: 1;
     --_checkbox-press-scale: var(--ds-scale-anticipate);
     --_checkbox-mark-scale: var(--ds-scale-morph);
     --_checkbox-step: 0;
+    --_checkbox-motion: 1;
+    --_checkbox-stagger: var(--ds-delay-stagger);
+    --_checkbox-fill-ease: var(--ds-ease-out);
+    --_checkbox-land-ease: var(--ds-ease-spring-bouncy);
+    --_checkbox-mark: var(--_checkbox-on-fill);
+    --_checkbox-stroke-width: 2;
+    --_checkbox-morph-ease: var(--ds-ease-spring-snappy);
+    --_checkbox-fill-now: 0%;
+    --_checkbox-short-cut: 1.05;
+    --_checkbox-long-cut: 1.05;
 
     display: inline-grid;
     grid-template-columns: var(--_checkbox-target) minmax(0, auto);
@@ -150,7 +182,7 @@
     pointer-events: none;
   }
 
-  /* The box. The glyph is drawn over it at the box size, so it keeps its pixel grid. */
+  /* The box. The fill and the mark are drawn over it at the box size. */
   [data-ds='checkbox'] > [data-part='control'] > [data-part='indicator'] {
     position: relative;
     display: inline-flex;
@@ -165,49 +197,145 @@
     color: var(--_checkbox-fg);
     overflow: visible;
     pointer-events: none;
-    transition: transform var(--ds-duration-spring-bouncy) var(--ds-ease-spring-bouncy);
+    transition:
+      transform calc(var(--ds-duration-spring-bouncy) * var(--_checkbox-motion)) var(--_checkbox-land-ease),
+      border-color calc(var(--_checkbox-duration) * 0.5) var(--ds-ease-out);
   }
 
   /* The dip: the box answers the press before the release. The target does not move. */
   [data-ds='checkbox']:not([data-disabled], [data-readonly]):is(:has(> [data-part='control']:active), :has(> [data-part='label']:active)) > [data-part='control'] > [data-part='indicator'] {
     transform: scale(var(--_checkbox-press-scale));
-    transition: transform var(--ds-duration-instant) var(--ds-ease-out);
+    transition:
+      transform calc(var(--ds-duration-instant) * var(--_checkbox-motion)) var(--ds-ease-out),
+      border-color calc(var(--_checkbox-duration) * 0.5) var(--ds-ease-out);
   }
 
   /*
-   * The clip of the draw: the border box of the indicator. Checked, it sits
-   * in place and the mark shows. Unchecked, it waits one box size before the
-   * inline start, with the mark one box size the other way, hidden.
+   * The fill: the border box of the indicator in the fill color, clipped to
+   * a circle at the centre. Checked, the circle grows past the corners;
+   * unchecked, it closes back to the centre.
    */
   [data-ds='checkbox'] > [data-part='control'] > [data-part='indicator'] > span {
     position: absolute;
     inset: calc(var(--ds-border-width-default) * -1);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    overflow: hidden;
+    border-radius: inherit;
+    background-color: var(--_checkbox-fill);
+    clip-path: circle(var(--_checkbox-fill-now) at 50% 50%);
+    transition: clip-path calc(var(--_checkbox-duration) * 0.5) var(--_checkbox-fill-ease) calc(var(--_checkbox-stagger) * var(--_checkbox-step) * var(--_checkbox-motion));
+  }
+
+  /* The mark: two strokes in a 16 unit box, turned about their joint. */
+  [data-ds='checkbox'] > [data-part='control'] > [data-part='indicator'] > [data-part='mark'] {
+    position: absolute;
+    inset: calc(var(--ds-border-width-default) * -1);
+    inline-size: calc(100% + var(--ds-border-width-default) * 2);
+    block-size: calc(100% + var(--ds-border-width-default) * 2);
+    overflow: visible;
+    fill: none;
+    stroke: var(--_checkbox-mark);
+    stroke-width: var(--_checkbox-stroke-width);
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  [data-ds='checkbox'] [data-part='mark'] > path {
+    stroke-dasharray: 1 2;
+    transform-box: view-box;
+    transform-origin: 0 0;
+  }
+
+  [data-ds='checkbox'] [data-part='mark'] > path:first-child {
+    stroke-dashoffset: var(--_checkbox-short-cut);
+    transform: var(--_checkbox-joint) rotate(var(--_checkbox-short-turn));
+  }
+
+  [data-ds='checkbox'] [data-part='mark'] > path:last-child {
+    stroke-dashoffset: var(--_checkbox-long-cut);
+    transform: var(--_checkbox-joint) rotate(var(--_checkbox-long-turn));
+  }
+
+  /* The shapes: the check, and the dash, which is the same two strokes laid flat. */
+  [data-ds='checkbox'] [data-part='mark'][data-glyph='check'] {
+    --_checkbox-joint: translate(40.625%, 68.75%);
+    --_checkbox-short-turn: 45deg;
+    --_checkbox-long-turn: -47.3deg;
+  }
+
+  [data-ds='checkbox'] [data-part='mark'][data-glyph='minus'] {
+    --_checkbox-joint: translate(50%, 50%);
+    --_checkbox-short-turn: 0deg;
+    --_checkbox-long-turn: 0deg;
+  }
+
+  /*
+   * Checked: the fill grows, then the short arm draws to the joint and the
+   * long arm from it. From the dash, the arms turn into the check on the
+   * snappy spring while the long arm reaches its length.
+   */
+  [data-ds='checkbox'][data-state='checked'] {
+    --_checkbox-fill-now: 75%;
+    --_checkbox-short-cut: 0;
+    --_checkbox-long-cut: 0;
+  }
+
+  [data-ds='checkbox'][data-state='checked'] [data-part='mark'] > path:first-child {
     transition:
-      transform var(--_checkbox-duration) var(--_checkbox-ease) calc(var(--ds-delay-stagger) * var(--_checkbox-step)),
-      opacity var(--_checkbox-duration) step-start calc(var(--ds-delay-stagger) * var(--_checkbox-step));
+      stroke-dashoffset calc(var(--_checkbox-duration) * 0.4) var(--_checkbox-ease)
+        calc(var(--_checkbox-duration) * 0.25 + var(--_checkbox-stagger) * var(--_checkbox-step) * var(--_checkbox-motion)),
+      transform var(--_checkbox-duration) var(--_checkbox-morph-ease) calc(var(--_checkbox-stagger) * var(--_checkbox-step) * var(--_checkbox-motion));
   }
 
-  [data-ds='checkbox'] > [data-part='control'] > [data-part='indicator'] > span > [data-ds='icon'] {
-    transition: transform var(--_checkbox-duration) var(--_checkbox-ease) calc(var(--ds-delay-stagger) * var(--_checkbox-step));
+  [data-ds='checkbox'][data-state='checked'] [data-part='mark'] > path:last-child {
+    transition:
+      stroke-dashoffset calc(var(--_checkbox-duration) * 0.6) var(--_checkbox-ease)
+        calc(var(--_checkbox-duration) * 0.65 + var(--_checkbox-stagger) * var(--_checkbox-step) * var(--_checkbox-motion)),
+      transform var(--_checkbox-duration) var(--_checkbox-morph-ease) calc(var(--_checkbox-stagger) * var(--_checkbox-step) * var(--_checkbox-motion));
   }
 
-  /* Unchecked: the mark fades out in the fill color, then the clip and the mark jump back to the start. */
+  /* Mixed: the dash, drawn from its centre out; from the check, the arms fold flat. */
+  [data-ds='checkbox'][data-state='indeterminate'] {
+    --_checkbox-fill-now: 75%;
+    --_checkbox-short-cut: -0.059;
+    --_checkbox-long-cut: 0.548;
+  }
+
+  [data-ds='checkbox'][data-state='indeterminate'] [data-part='mark'] > path {
+    transition:
+      stroke-dashoffset calc(var(--_checkbox-duration) * 0.6) var(--_checkbox-ease) calc(var(--_checkbox-stagger) * var(--_checkbox-step) * var(--_checkbox-motion)),
+      transform var(--_checkbox-duration) var(--_checkbox-morph-ease) calc(var(--_checkbox-stagger) * var(--_checkbox-step) * var(--_checkbox-motion));
+  }
+
+  /*
+   * Unchecked, faster: the long arm retracts to the joint, then the short
+   * arm back to its start (a dash collapses to its centre), and the fill
+   * closes to the centre.
+   */
+  [data-ds='checkbox'][data-state='unchecked'] {
+    --_checkbox-fill-now: 0%;
+    --_checkbox-short-cut: 1.05;
+    --_checkbox-long-cut: 1.05;
+  }
+
+  [data-ds='checkbox'][data-state='unchecked'] [data-part='mark'][data-glyph='minus'] {
+    --_checkbox-short-cut: -1.05;
+  }
+
   [data-ds='checkbox'][data-state='unchecked'] > [data-part='control'] > [data-part='indicator'] > span {
-    color: var(--_checkbox-fill);
-    opacity: 0;
-    transform: translateX(calc(var(--_checkbox-box) * var(--_checkbox-dir) * -1));
-    transition:
-      opacity var(--_checkbox-duration-out) var(--ds-ease-out),
-      transform var(--_checkbox-duration-out) step-end;
+    transition: clip-path var(--_checkbox-duration-out) var(--ds-ease-exit)
+      calc(var(--_checkbox-duration-out) * 0.3 + var(--_checkbox-stagger) * var(--_checkbox-step) * var(--_checkbox-motion));
   }
 
-  [data-ds='checkbox'][data-state='unchecked'] > [data-part='control'] > [data-part='indicator'] > span > [data-ds='icon'] {
-    transform: translateX(calc(var(--_checkbox-box) * var(--_checkbox-dir))) scale(var(--_checkbox-mark-scale));
-    transition: transform var(--_checkbox-duration-out) step-end;
+  [data-ds='checkbox'][data-state='unchecked'] [data-part='mark'] > path:first-child {
+    transition:
+      stroke-dashoffset calc(var(--_checkbox-duration-out) * 0.6) var(--ds-ease-in)
+        calc(var(--_checkbox-duration-out) * 0.4 + var(--_checkbox-stagger) * var(--_checkbox-step) * var(--_checkbox-motion)),
+      transform var(--_checkbox-duration-out) var(--ds-ease-out) calc(var(--_checkbox-stagger) * var(--_checkbox-step) * var(--_checkbox-motion));
+  }
+
+  [data-ds='checkbox'][data-state='unchecked'] [data-part='mark'] > path:last-child {
+    transition:
+      stroke-dashoffset calc(var(--_checkbox-duration-out) * 0.5) var(--ds-ease-in) calc(var(--_checkbox-stagger) * var(--_checkbox-step) * var(--_checkbox-motion)),
+      transform var(--_checkbox-duration-out) var(--ds-ease-out) calc(var(--_checkbox-stagger) * var(--_checkbox-step) * var(--_checkbox-motion));
   }
 
   /* The label lines its first line up with the center of the target. */
@@ -232,9 +360,13 @@
 
   /* Checked and indeterminate: the tone fills the box, the glyph takes the contrasting color. */
   [data-ds='checkbox']:is([data-state='checked'], [data-state='indeterminate']) {
-    --_checkbox-bg: var(--_checkbox-fill);
     --_checkbox-fg: var(--_checkbox-on-fill);
     --_checkbox-border-color: var(--_checkbox-fill-border);
+  }
+
+  /* A port that draws no fill layer fills the box at once. */
+  [data-ds='checkbox']:is([data-state='checked'], [data-state='indeterminate']) > [data-part='control'] > [data-part='indicator']:not(:has(> span)) {
+    background-color: var(--_checkbox-fill);
   }
 
   /* Hover: a stronger border on an empty box, only while the value can change. */
@@ -290,11 +422,14 @@
     [data-ds='checkbox'] {
       --_checkbox-press-scale: 1;
       --_checkbox-mark-scale: 1;
+      --_checkbox-duration: 0s;
+      --_checkbox-duration-out: 0s;
+      --_checkbox-motion: 0;
     }
 
     [data-ds='checkbox'] > [data-part='control'] > [data-part='indicator'],
     [data-ds='checkbox'][data-state] > [data-part='control'] > [data-part='indicator'] > span,
-    [data-ds='checkbox'][data-state] > [data-part='control'] > [data-part='indicator'] > span > [data-ds='icon'] {
+    [data-ds='checkbox'][data-state] [data-part='mark'][data-glyph] > path:is(:first-child, :last-child) {
       transition: none;
     }
   }
@@ -302,11 +437,14 @@
   :root[data-motion='reduce'] [data-ds='checkbox'] {
     --_checkbox-press-scale: 1;
     --_checkbox-mark-scale: 1;
+    --_checkbox-duration: 0s;
+    --_checkbox-duration-out: 0s;
+    --_checkbox-motion: 0;
   }
 
   :root[data-motion='reduce'] [data-ds='checkbox'] > [data-part='control'] > [data-part='indicator'],
   :root[data-motion='reduce'] [data-ds='checkbox'][data-state] > [data-part='control'] > [data-part='indicator'] > span,
-  :root[data-motion='reduce'] [data-ds='checkbox'][data-state] > [data-part='control'] > [data-part='indicator'] > span > [data-ds='icon'] {
+  :root[data-motion='reduce'] [data-ds='checkbox'][data-state] [data-part='mark'][data-glyph] > path:is(:first-child, :last-child) {
     transition: none;
   }
 
@@ -328,8 +466,18 @@
       color: CanvasText;
     }
 
-    [data-ds='checkbox'][data-state='unchecked'] > [data-part='control'] > [data-part='indicator'] > span {
-      color: inherit;
+    /* The fill is a background, which forced colors drops: the mark alone shows the state, in CanvasText. */
+    [data-ds='checkbox'] > [data-part='control'] > [data-part='indicator'] > span {
+      display: none;
+    }
+
+    [data-ds='checkbox'] > [data-part='control'] > [data-part='indicator'] > [data-part='mark'] {
+      forced-color-adjust: none;
+      stroke: CanvasText;
+    }
+
+    [data-ds='checkbox'][data-disabled] > [data-part='control'] > [data-part='indicator'] > [data-part='mark'] {
+      stroke: GrayText;
     }
 
     [data-ds='checkbox'][data-disabled] {

@@ -211,7 +211,8 @@ export function ConsentField({
   useLayoutEffect(() => {
     if (!granting.current || !granted) return;
     granting.current = false;
-    const mark = rootEl.current?.querySelector(':scope > [data-part="control"] [data-part="indicator"] [data-ds="icon"]');
+    // The Checkbox mark: its drawn strokes since order 1.23 (the mark part), or an icon glyph.
+    const mark = rootEl.current?.querySelector(':scope > [data-part="control"] [data-part="indicator"] :is([data-part="mark"], [data-ds="icon"])');
     playBeat(
       mark,
       {

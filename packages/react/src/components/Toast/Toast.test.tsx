@@ -7,7 +7,8 @@ import { Button } from '../Button';
 import { Dialog as SystemDialog, DialogContent } from '../Dialog';
 import ToastDemo from './Toast.demo';
 import { Toast, Toaster, isInsideToaster, createToastFunction, createToastStore, type ToastStoreOptions } from './index';
-import { liveOffsetY, watchStackShift } from './stackShift';
+import { stackLayout, watchStack } from './stack';
+import { RUBBER_MAX, SWIPE_DISTANCE, rubberBand, swipeCloses, swipeOffset, swipeVelocity } from './swipe';
 
 // jsdom has no pointer capture, which Radix Toast calls on pointer up.
 const proto = Element.prototype as unknown as Record<string, unknown>;
@@ -93,7 +94,7 @@ describe('Toaster', () => {
     expect(el.getAttribute('data-state')).toBe('open');
     expect(el.hasAttribute('data-part')).toBe(false);
     const parts = Array.from(el.querySelectorAll(':scope > [data-part]')).map((p) => p.getAttribute('data-part'));
-    expect(parts).toEqual(['icon', 'title', 'description', 'close']);
+    expect(parts).toEqual(['icon', 'title', 'description', 'close', 'progress']);
     expect(el.querySelector('[data-part="icon"] [data-ds="icon"]')?.getAttribute('data-icon')).toBe('success');
     const close = within(el).getByRole('button', { name: 'Close notification' });
     expect(close.getAttribute('data-ds')).toBe('close-button');
@@ -469,114 +470,173 @@ describe('Toast', () => {
   });
 });
 
-/** Lays out the toasts of a viewport by hand: jsdom has no layout. Bottom stack: the newest, last, sits lowest. */
-function fakeStackLayout(height = 40, gap = 8) {
+/** Gives every toast a height by hand: jsdom has no layout. */
+function fakeHeights(height = 40) {
   const li = HTMLLIElement.prototype;
-  const saved = (['offsetTop', 'offsetWidth', 'offsetHeight'] as const).map((k) => [k, Object.getOwnPropertyDescriptor(HTMLElement.prototype, k)] as const);
-  Object.defineProperty(li, 'offsetTop', {
-    configurable: true,
-    get(this: HTMLElement) {
-      const items = Array.from(this.parentElement?.children ?? []).filter((c) => c.getAttribute('data-ds') === 'toast');
-      return (items.indexOf(this) - items.length) * (height + gap);
-    },
-  });
-  Object.defineProperty(li, 'offsetWidth', { configurable: true, get: () => 320 });
   Object.defineProperty(li, 'offsetHeight', { configurable: true, get: () => height });
   return () => {
-    for (const [k] of saved) delete (li as unknown as Record<string, unknown>)[k];
+    delete (li as unknown as Record<string, unknown>).offsetHeight;
   };
 }
 
-describe('the toast stack shift (interaction toast-stack)', () => {
-  it('moves the toasts that stay from where they were, and skips the new one', async () => {
-    const restore = fakeStackLayout();
+describe('the toast stack (interaction toast-stack)', () => {
+  it('orders the open toasts from the newest and sums the expanded offsets', () => {
+    const els = [0, 1, 2, 3].map(() => document.createElement('li'));
+    const layout = stackLayout(
+      [
+        { el: els[0] as HTMLElement, height: 40, open: true },
+        { el: els[1] as HTMLElement, height: 60, open: true },
+        { el: els[2] as HTMLElement, height: 50, open: false },
+        { el: els[3] as HTMLElement, height: 30, open: true },
+      ],
+      8,
+    );
+    expect(layout.places.get(els[3] as HTMLElement)).toEqual({ index: 0, offset: 0 });
+    expect(layout.places.get(els[1] as HTMLElement)).toEqual({ index: 1, offset: 38 });
+    expect(layout.places.get(els[0] as HTMLElement)).toEqual({ index: 2, offset: 106 });
+    // A closing toast keeps no place.
+    expect(layout.places.has(els[2] as HTMLElement)).toBe(false);
+    expect(layout.front).toBe(30);
+    expect(layout.total).toBe(146);
+    expect(stackLayout([], 8)).toMatchObject({ front: 0, total: 0 });
+  });
+
+  it('writes each toast its place, and a closing toast keeps its last one', async () => {
+    const restore = fakeHeights(40);
     const viewport = document.createElement('ol');
-    for (let i = 0; i < 2; i += 1) {
+    document.body.append(viewport);
+    const add = () => {
       const li = document.createElement('li');
       li.setAttribute('data-ds', 'toast');
+      li.setAttribute('data-state', 'open');
       viewport.append(li);
-    }
-    document.body.append(viewport);
-    const play = vi.fn(() => null);
-    const stop = watchStackShift(viewport, play);
-    const fresh = document.createElement('li');
-    fresh.setAttribute('data-ds', 'toast');
-    viewport.append(fresh);
+      return li;
+    };
+    const first = add();
+    const stop = watchStack(viewport);
+    expect(first.style.getPropertyValue('--_toast-index')).toBe('0');
+    const second = add();
     await Promise.resolve();
-    expect(play).toHaveBeenCalledTimes(2);
-    for (const call of play.mock.calls as unknown as [HTMLElement, { y: number; width: number; height: number }, { y: number }][]) {
-      expect(call[0]).not.toBe(fresh);
-      // Each one was 48px lower (one toast and the gap) and plays up into place.
-      expect(call[1]).toMatchObject({ x: 0, y: 48, width: 320, height: 40 });
-      expect(call[2]).toMatchObject({ x: 0, y: 0 });
-    }
+    expect(second.style.getPropertyValue('--_toast-index')).toBe('0');
+    expect(first.style.getPropertyValue('--_toast-index')).toBe('1');
+    expect(first.style.getPropertyValue('--_toast-height')).toBe('40px');
+    expect(viewport.style.getPropertyValue('--_toaster-front-height')).toBe('40px');
+    second.setAttribute('data-state', 'closed');
+    await Promise.resolve();
+    expect(first.style.getPropertyValue('--_toast-index')).toBe('0');
+    expect(second.style.getPropertyValue('--_toast-index')).toBe('0');
     stop();
-    viewport.append(document.createElement('li'));
-    await Promise.resolve();
-    expect(play).toHaveBeenCalledTimes(2);
     viewport.remove();
     restore();
   });
 
-  it('reads the block offset of a running transform', () => {
-    const el = document.createElement('div');
-    el.style.transform = 'matrix(1, 0, 0, 1, 0, -12)';
-    document.body.append(el);
-    expect(liveOffsetY(el)).toBe(-12);
-    el.style.transform = 'none';
-    expect(liveOffsetY(el)).toBe(0);
-    el.remove();
+  it('marks the toaster stacked, and expanded and paused while the pointer is over a toast', async () => {
+    const { store, toast, fire } = setup();
+    render(
+      <Theme>
+        <Toaster store={store} />
+      </Theme>,
+    );
+    const viewport = await waitFor(() => {
+      const el = document.body.querySelector<HTMLElement>('[data-ds="toaster"]');
+      if (!el) throw new Error('no viewport');
+      return el;
+    });
+    expect(viewport.hasAttribute('data-stacked')).toBe(true);
+    fire(() => toast({ title: 'File 1 uploaded', dedupeKey: false }));
+    fire(() => toast({ title: 'File 2 uploaded', dedupeKey: false }));
+    expect(viewport.hasAttribute('data-expanded')).toBe(false);
+    const el = toasts()[1] as HTMLElement;
+    fireEvent.pointerOver(el, { relatedTarget: document.body });
+    expect(viewport.hasAttribute('data-expanded')).toBe(true);
+    expect(viewport.hasAttribute('data-paused')).toBe(true);
+    // Moving into a gap of the expanded list keeps it open.
+    fireEvent.pointerOut(el, { relatedTarget: viewport });
+    expect(viewport.hasAttribute('data-expanded')).toBe(true);
+    fireEvent.pointerOut(el, { relatedTarget: document.body });
+    expect(viewport.hasAttribute('data-expanded')).toBe(false);
+    expect(viewport.hasAttribute('data-paused')).toBe(false);
+    // The window losing focus pauses the store and the line, and does not expand the stack.
+    act(() => window.dispatchEvent(new Event('blur')));
+    expect(viewport.hasAttribute('data-paused')).toBe(true);
+    expect(store.isPaused()).toBe(true);
+    expect(viewport.hasAttribute('data-expanded')).toBe(false);
+    act(() => window.dispatchEvent(new Event('focus')));
+  });
+});
+
+describe('the progress line (interaction toast-timer)', () => {
+  it('runs for the toast duration, restarts on a repeat, and is absent on toasts that stay', async () => {
+    const { store, toast, fire } = setup();
+    render(
+      <Theme>
+        <Toaster store={store} />
+      </Theme>,
+    );
+    await waitFor(() => expect(document.body.querySelector('[data-ds="toaster"]')).not.toBeNull());
+    fire(() => toast.warning('Storage almost full'));
+    const line = toasts()[0]?.querySelector<HTMLElement>('[data-part="progress"]');
+    expect(line?.getAttribute('aria-hidden')).toBe('true');
+    expect(line?.style.getPropertyValue('--_toast-life')).toBe('6000ms');
+    fire(() => toast.warning('Storage almost full'));
+    const again = toasts()[0]?.querySelector<HTMLElement>('[data-part="progress"]');
+    // A new element: the animation starts again with the store's timer.
+    expect(again).not.toBe(line);
+    fire(() => toast.danger('Could not save'));
+    expect(toasts()[1]?.querySelector('[data-part="progress"]')).toBeNull();
+    fire(() => toast({ title: 'Draft deleted', action: { label: 'Undo delete', onAction: () => undefined } }));
+    expect(toasts()[2]?.querySelector('[data-part="progress"]')).toBeNull();
+  });
+});
+
+describe('the swipe (interaction toast-swipe)', () => {
+  it('gives less and less against the edge and never passes the most', () => {
+    expect(rubberBand(30)).toBe(30);
+    expect(rubberBand(-24)).toBeCloseTo(-12);
+    expect(rubberBand(-10_000)).toBeGreaterThan(-RUBBER_MAX);
+    expect(Math.abs(rubberBand(-100))).toBeLessThan(Math.abs(rubberBand(-200)));
   });
 
-  it('plays the shift with the flip primitive in the Toaster, and nothing under reduced motion', async () => {
-    const restore = fakeStackLayout();
-    const animate = vi.fn(() => ({ playState: 'running', cancel() {}, id: '' }) as unknown as Animation);
-    const proto = HTMLElement.prototype as unknown as { animate?: unknown };
-    const hadAnimate = 'animate' in proto;
-    proto.animate = animate;
-    const matchMedia = window.matchMedia;
-    try {
-      const { store, toast, fire } = setup();
-      const view = render(
-        <Theme>
-          <Toaster store={store} />
-        </Theme>,
-      );
-      await waitFor(() => expect(document.body.querySelector('[data-ds="toaster"]')).not.toBeNull());
-      fire(() => toast({ title: 'File 1 uploaded', dedupeKey: false }));
-      await act(async () => undefined);
-      animate.mockClear();
-      fire(() => toast({ title: 'File 2 uploaded', dedupeKey: false }));
-      await act(async () => undefined);
-      expect(animate).toHaveBeenCalledTimes(1);
-      const [keyframes, timing] = animate.mock.calls[0] as unknown as [Keyframe[], KeyframeAnimationOptions];
-      expect(timing.id).toBe('ds-motion:flip');
-      expect(keyframes[0]?.transform).toBe('translate(0px, 48px)');
-      expect(keyframes[1]?.transform).toBe('none');
-      expect(toasts()[0]?.style.transformOrigin).toBe('');
-      view.unmount();
+  it('closes past the distance or on a fast flick, and reads the speed of the last moments', () => {
+    expect(swipeCloses(SWIPE_DISTANCE, 0)).toBe(true);
+    expect(swipeCloses(20, 0)).toBe(false);
+    expect(swipeCloses(20, 1)).toBe(true);
+    expect(swipeCloses(-20, 5)).toBe(false);
+    expect(swipeVelocity([{ t: 0, along: 0 }, { t: 50, along: 25 }])).toBe(0.5);
+    // A finger that stopped before it lifted has no speed left.
+    expect(swipeVelocity([{ t: 0, along: 0 }, { t: 50, along: 25 }, { t: 300, along: 25 }])).toBe(0);
+    expect(swipeOffset('left', 10)).toEqual({ x: -10, y: 0 });
+    expect(swipeOffset('down', 10)).toEqual({ x: 0, y: 10 });
+  });
 
-      // Reduced motion: the stack still changes at once, nothing plays.
-      window.matchMedia = ((q: string) => ({ matches: q.includes('reduce'), media: q, addEventListener() {}, removeEventListener() {} })) as unknown as typeof window.matchMedia;
-      const second = setup();
-      render(
-        <Theme>
-          <Toaster store={second.store} />
-        </Theme>,
-      );
-      await waitFor(() => expect(document.body.querySelector('[data-ds="toaster"]')).not.toBeNull());
-      second.fire(() => second.toast({ title: 'File 1 uploaded', dedupeKey: false }));
-      await act(async () => undefined);
-      animate.mockClear();
-      second.fire(() => second.toast({ title: 'File 2 uploaded', dedupeKey: false }));
-      await act(async () => undefined);
-      expect(animate).not.toHaveBeenCalled();
-      expect(openToasts()).toHaveLength(2);
-    } finally {
-      window.matchMedia = matchMedia;
-      if (hadAnimate) proto.animate = undefined;
-      else delete proto.animate;
-      restore();
-    }
+  it('follows the finger, springs back when let go short, and closes on a swipe past the distance', async () => {
+    const { store, toast, fire } = setup();
+    render(
+      <Theme>
+        <Toaster store={store} />
+      </Theme>,
+    );
+    await waitFor(() => expect(document.body.querySelector('[data-ds="toaster"]')).not.toBeNull());
+    fire(() => toast('Board duplicated'));
+    const el = toasts()[0] as HTMLElement;
+    expect(el.getAttribute('data-swipe-direction')).toBe('right');
+    fireEvent.pointerDown(el, { button: 0, pointerId: 1, clientX: 100, clientY: 10 });
+    fireEvent.pointerMove(el, { pointerId: 1, clientX: 60, clientY: 10 });
+    expect(el.getAttribute('data-swipe')).toBe('move');
+    // The wrong way: a rubber band, short of the finger.
+    const x = Number.parseFloat(el.style.getPropertyValue('--radix-toast-swipe-move-x'));
+    expect(x).toBeLessThan(0);
+    expect(x).toBeGreaterThan(-RUBBER_MAX);
+    fireEvent.pointerUp(el, { pointerId: 1, clientX: 60, clientY: 10 });
+    expect(el.getAttribute('data-swipe')).toBe('cancel');
+    expect(openToasts()).toHaveLength(1);
+    fireEvent.pointerDown(el, { button: 0, pointerId: 2, clientX: 100, clientY: 10 });
+    fireEvent.pointerMove(el, { pointerId: 2, clientX: 130, clientY: 10 });
+    fireEvent.pointerMove(el, { pointerId: 2, clientX: 180, clientY: 10 });
+    expect(el.style.getPropertyValue('--radix-toast-swipe-move-x')).toBe('80px');
+    fireEvent.pointerUp(el, { pointerId: 2, clientX: 180, clientY: 10 });
+    expect(el.getAttribute('data-swipe')).toBe('end');
+    expect(el.style.getPropertyValue('--radix-toast-swipe-end-x')).toBe('80px');
+    expect(store.getSnapshot().visible[0]?.state).toBe('closed');
   });
 });

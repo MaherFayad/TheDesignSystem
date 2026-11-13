@@ -29,6 +29,7 @@
 //             <div data-part="group" role="group">
 //               <div data-part="label">            the group title
 //             <div data-part="separator">           between groups
+//             <span data-part="highlight" aria-hidden>  the marker of the lit row (order 1.23)
 //           <div data-part="scroll-down">
 //
 // The content is its own root carrying the parent's part name (anatomy.md,
@@ -39,7 +40,7 @@
 // With no option the list does not open (an empty listbox is not valid): the
 // trigger is described by the empty words instead, as it is while loading.
 import { useId, useLayoutEffect, useMemo, useRef, type ComponentProps, type ReactElement, type ReactNode, type Ref } from 'react';
-import { staggerGroup } from '@the-system/motion';
+import { ANIMATION_ID_PREFIX, readDuration, readEasing, type PatternMode } from '@the-system/motion';
 import { createPortal } from 'react-dom';
 import { Select as RadixSelect } from 'radix-ui';
 import { Icon, type IconName } from '@the-system/icons/react';
@@ -51,7 +52,8 @@ import { Spinner } from '../Spinner';
 import { useControllable } from '../../internal/useControllable';
 import { useThemedLayer } from './popupLayer';
 import { useMotion } from '../../internal/motion';
-import { useRowGlide, useStaggerOnOpen } from '../ListBox/selectionMotion';
+import { useStaggerOnOpen } from '../ListBox/selectionMotion';
+import { HighlightMarker, drawnScale, useHighlightMarker } from '../ListBox/highlightMarker';
 
 export type SelectSize = Extract<Size, 'sm' | 'md' | 'lg'>;
 export type SelectShape = Extract<Shape, 'default' | 'pill'>;
@@ -113,6 +115,79 @@ export interface SelectProps
   name?: string;
   /** Goes to the trigger, the root. */
   ref?: Ref<HTMLButtonElement>;
+}
+
+const ROLL_ID = `${ANIMATION_ID_PREFIX}picker-value-roll`;
+
+/**
+ * Interaction "picker-value-roll": the value part rolls to the new label like
+ * a drum. The new label comes up from one line below and the old one, drawn
+ * once more by an inert aria-hidden copy laid over the value part, leaves one
+ * line up. A clip-path that moves against the travel keeps both inside the
+ * value box (the value part itself is what moves, so its own overflow cannot
+ * clip it). The new label is the real text from the first frame. Reduced: a
+ * fade of the new label. Never waits on animationend.
+ */
+function rollValue(el: HTMLElement | null, before: string | null, mode: PatternMode): void {
+  if (!el || mode === 'none' || typeof el.animate !== 'function') return;
+  const reduced = mode === 'reduced';
+  const duration = readDuration(el, reduced ? 'duration.base' : 'duration.spring-snappy');
+  for (const a of el.getAnimations?.() ?? []) if (String(a.id) === ROLL_ID) a.cancel();
+  if (reduced) {
+    el.animate([{ opacity: 0 }, { opacity: 1 }], { id: ROLL_ID, duration, easing: readEasing(el, 'ease.out') });
+    return;
+  }
+  const easing = readEasing(el, 'ease.spring-snappy');
+  el.animate(
+    [
+      { transform: 'translateY(100%)', clipPath: 'inset(0 0 100% 0)' },
+      { transform: 'none', clipPath: 'inset(0 0 0 0)' },
+    ],
+    { id: ROLL_ID, duration, easing },
+  );
+  const host = el.parentElement;
+  if (!before || !host) return;
+  // The old label, once more, over the value part: it rolls up and out, faster than the new one comes in.
+  const ghost = document.createElement('span');
+  ghost.setAttribute('aria-hidden', 'true');
+  ghost.setAttribute('inert', '');
+  ghost.textContent = before;
+  // The value part may still be empty here (Radix fills it after this commit): the copy spans from its
+  // inline start to the icon, over the full height of the trigger, its text centred as the value's is.
+  const h = host.getBoundingClientRect();
+  const v = el.getBoundingClientRect();
+  const icon = el.nextElementSibling as HTMLElement | null;
+  const hs = getComputedStyle(host);
+  const rtl = hs.direction === 'rtl';
+  // Drawn px back to CSS px (a CSS zoom on the page).
+  const k = drawnScale(host);
+  const start = (rtl ? h.right - v.right : v.left - h.left) / k - host.clientLeft;
+  const padEnd = parseFloat(rtl ? hs.paddingLeft : hs.paddingRight) || 0;
+  const gap = parseFloat(hs.columnGap) || 0;
+  const room = host.clientWidth - start - padEnd - (icon?.offsetWidth ?? 0) - gap;
+  const g = ghost.style;
+  g.position = 'absolute';
+  g.insetBlockStart = '0';
+  g.insetInlineStart = `${start}px`;
+  g.inlineSize = `${Math.max(0, room)}px`;
+  g.blockSize = `${host.clientHeight}px`;
+  g.display = 'flex';
+  g.alignItems = 'center';
+  g.overflow = 'hidden';
+  g.whiteSpace = 'nowrap';
+  g.textOverflow = 'ellipsis';
+  g.pointerEvents = 'none';
+  g.color = getComputedStyle(el).color;
+  host.append(ghost);
+  const out = ghost.animate(
+    [
+      { transform: 'none', clipPath: 'inset(0 0 0 0)', opacity: 1 },
+      { transform: 'translateY(-100%)', clipPath: 'inset(100% 0 0 0)', opacity: 0 },
+    ],
+    { id: ROLL_ID, duration: readDuration(el, 'duration.quick') || duration, easing: readEasing(el, 'ease.exit'), fill: 'forwards' },
+  );
+  const drop = () => ghost.remove();
+  out.finished.then(drop, drop);
 }
 
 function renderStart(start: IconName | ReactElement) {
@@ -177,17 +252,21 @@ export function Select({
   const shown = open && !inert;
   const listSize = size === 'sm' ? 'sm' : 'md';
 
-  // menu-rows: the rows arrive one stagger step after the surface. row-glide: the lit row's fill travels.
-  const glideRef = useRowGlide({ rows: "[data-part='item']", lit: { attribute: 'data-highlighted' } });
-  const contentRef = useStaggerOnOpen("[data-part='viewport'] [data-part='item']", glideRef);
-  // picker-value-roll: a new value rolls up into the trigger. Not on first paint.
+  // menu-rows: the rows arrive one stagger step after the surface.
+  const contentRef = useStaggerOnOpen("[data-part='viewport'] [data-part='item']");
+  // highlight-marker: one marker in the viewport draws the lit row's fill and slides between rows.
+  const markerRef = useHighlightMarker({ rows: "[data-part='item']" });
+  // picker-value-roll: the old label rolls up and out while the new one rolls in from below. Not on first paint.
   const motion = useMotion();
   const valueRef = useRef<HTMLSpanElement>(null);
   const lastValue = useRef(value);
   useLayoutEffect(() => {
-    if (lastValue.current === value) return;
+    const was = lastValue.current;
+    if (was === value) return;
     lastValue.current = value;
-    staggerGroup([valueRef.current], { from: 'block', spring: 'snappy', mode: motion.mode('picker-value-roll') });
+    const before = was === null ? (placeholder ?? t.placeholder) : (options.find((o) => o.value === was)?.label ?? null);
+    rollValue(valueRef.current, before, motion.mode('picker-value-roll'));
+    // Runs on a new value only; the labels are read as they are then.
   }, [value, motion]);
 
   const renderItem = (option: ListBoxOption) => {
@@ -201,8 +280,6 @@ export function Select({
         data-part="item"
         aria-describedby={descId}
       >
-        {/* The row's fill, which glides from the last lit row (row-glide). Decorative, no part name. */}
-        <span aria-hidden="true" />
         <span data-part="indicator" aria-hidden="true">
           {value === option.value && <Icon name="check" size="md" />}
         </span>
@@ -241,7 +318,7 @@ export function Select({
       <RadixSelect.ScrollUpButton data-part="scroll-up">
         <Icon name="chevron-up" size="md" />
       </RadixSelect.ScrollUpButton>
-      <RadixSelect.Viewport data-part="viewport">
+      <RadixSelect.Viewport ref={markerRef} data-part="viewport">
         {items.map((item) => {
           if (!isListBoxSection(item)) {
             drawn += 1;
@@ -260,6 +337,7 @@ export function Select({
             </RadixSelect.Group>,
           ];
         })}
+        <HighlightMarker />
       </RadixSelect.Viewport>
       <RadixSelect.ScrollDownButton data-part="scroll-down">
         <Icon name="chevron-down" size="md" />

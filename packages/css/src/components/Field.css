@@ -19,6 +19,24 @@
  * The label moves on the transform only; its color and the ring of the
  * control change at once. A description or an error that renders after the
  * first paint slides in from code (FieldDescription, FieldError).
+ *
+ * Order 1.23 (proposed):
+ * - field-label-focus is raised: the label rises distance.shift and its
+ *   color eases to --_field-fg-focus (the primary text color) while the
+ *   field holds focus, and to --_field-fg-invalid while it is invalid.
+ *   --_field-fg-now is the working color the state rules set.
+ * - A floating label (data-floating, the `floating` prop): the label comes
+ *   after the control in the DOM and is drawn first (order). While the
+ *   control is empty and has no focus it rests inside the box, moved down
+ *   by --_field-float-drop and in by --_field-float-inset, and the control's
+ *   placeholder hides; on focus, or with a value (data-filled), it rises to
+ *   its place above the box on the snappy spring. Plumbing:
+ *     --_field-float-box     the height of the control's box (size.control.md)
+ *     --_field-float-inset   the inline padding of the control's box
+ *     --_field-float-drop    how far down the resting label sits
+ *     --_field-float-scale   the size of the label while it rests (1 keeps it)
+ *     --_field-float-now     the working transform the state rules set
+ *     --_field-float-dir     1, or -1 in right to left text
  */
 @layer ds.base {
   [data-ds='field'] {
@@ -26,9 +44,18 @@
     --_field-label-width: var(--ds-field-label-width);
     --_field-fg: var(--ds-color-text-default);
     --_field-fg-disabled: var(--ds-color-text-muted);
-    --_field-lift: var(--ds-distance-nudge);
+    --_field-lift: var(--ds-distance-shift);
     --_field-duration: var(--ds-duration-spring-snappy);
     --_field-ease: var(--ds-ease-spring-snappy);
+    --_field-fg-focus: var(--ds-color-primary-on-surface);
+    --_field-fg-invalid: var(--ds-color-state-danger-text);
+    --_field-fg-now: var(--_field-fg);
+    --_field-float-box: var(--ds-size-control-md);
+    --_field-float-inset: var(--ds-space-m);
+    --_field-float-drop: calc(50% + var(--_field-gap) + var(--_field-float-box) / 2);
+    --_field-float-scale: 1;
+    --_field-float-now: none;
+    --_field-float-dir: 1;
 
     display: flex;
     flex-direction: column;
@@ -60,10 +87,49 @@
    * data-disabled, so a Label with disabled false stays at full color.
    */
   [data-ds='field'] > [data-part='label'] {
-    --_label-fg: var(--_field-fg);
+    --_label-fg: var(--_field-fg-now);
     --_label-fg-disabled: var(--_field-fg-disabled);
 
-    transition: transform var(--_field-duration) var(--_field-ease);
+    transition:
+      transform var(--_field-duration) var(--_field-ease),
+      color var(--_field-duration) var(--ds-ease-out);
+  }
+
+  [data-ds='field']:focus-within:not([data-disabled], [data-readonly]) {
+    --_field-fg-now: var(--_field-fg-focus);
+  }
+
+  [data-ds='field'][data-invalid]:not([data-disabled]) {
+    --_field-fg-now: var(--_field-fg-invalid);
+  }
+
+  /* ------------------------------------------------------------ floating label */
+
+  /* The label comes after the control in the DOM, so it paints over the box; order draws it first. */
+  [data-ds='field'][data-floating] > [data-part='label'] {
+    order: -1;
+    align-self: start;
+    pointer-events: none;
+    transform-origin: 0 50%;
+    transform: var(--_field-float-now);
+  }
+
+  [data-ds='field'][data-floating] > [data-part='label']:dir(rtl) {
+    transform-origin: 100% 50%;
+  }
+
+  /* At rest: empty and without focus, the label lies in the box like a placeholder. */
+  [data-ds='field'][data-floating]:not([data-filled], :focus-within) {
+    --_field-float-now: translate(calc(var(--_field-float-inset) * var(--_field-float-dir)), var(--_field-float-drop)) scale(var(--_field-float-scale));
+    --_field-fg-now: var(--ds-color-text-muted);
+  }
+
+  [data-ds='field'][data-floating]:dir(rtl) {
+    --_field-float-dir: -1;
+  }
+
+  [data-ds='field'][data-floating]:not([data-filled], :focus-within) [data-part='control']::placeholder {
+    color: transparent;
   }
 
   /*
@@ -71,7 +137,7 @@
    * (Desk overshoots and settles, Studio steps), and drops back on blur. A
    * disabled or read only field does not move.
    */
-  [data-ds='field']:focus-within:not([data-disabled], [data-readonly]) > [data-part='label'] {
+  [data-ds='field']:not([data-floating]):focus-within:not([data-disabled], [data-readonly]) > [data-part='label'] {
     transform: translateY(calc(-1 * var(--_field-lift)));
   }
 
@@ -94,5 +160,19 @@
 
   :root[data-motion='reduce'] [data-ds='field'] {
     --_field-lift: 0px;
+  }
+
+  /*
+   * Reduced motion (order 1.23, review B1): the component's own timings go to
+   * 0s here, so nothing moves even where a motion token keeps its value.
+   */
+  @media (prefers-reduced-motion: reduce) {
+    [data-ds='field'] {
+      --_field-duration: 0s;
+    }
+  }
+
+  :root[data-motion='reduce'] [data-ds='field'] {
+    --_field-duration: 0s;
   }
 }

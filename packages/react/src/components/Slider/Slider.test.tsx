@@ -1,12 +1,14 @@
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { createRef } from 'react';
-import { fireEvent, render, screen } from '@testing-library/react';
+import { act, fireEvent, render, screen } from '@testing-library/react';
 import { beforeAll, describe, expect, it, vi } from 'vitest';
 import { Theme } from '../../theme/Theme';
 import { Field } from '../Field/Field';
 import SliderDemo from './Slider.demo';
 import { formatSliderValue, Slider } from './index';
+import { KEY_BUMP, rubberBand } from './Slider';
+import { RangeSlider } from '../RangeSlider';
 
 // jsdom has no ResizeObserver; Radix Slider measures the thumb with it.
 beforeAll(() => {
@@ -150,89 +152,52 @@ describe('Slider', () => {
   });
 
   describe('slider-pull and slider-nudge', () => {
-    function withAnimate(run: (animate: ReturnType<typeof vi.fn>) => void) {
-      const animate = vi.fn(
-        () =>
-          ({
-            finished: Promise.resolve(),
-            cancel() {},
-            effect: { composite: 'replace', getTiming: () => ({ duration: 0 }) },
-          }) as unknown as Animation,
-      );
-      const proto = HTMLElement.prototype as unknown as { animate?: unknown };
-      const original = proto.animate;
-      proto.animate = animate;
+    it('slider-nudge: a key past the maximum pulls the thumb and the fill toward the end, then lets go, and the value stays', () => {
+      vi.useFakeTimers();
       try {
-        run(animate);
-      } finally {
-        proto.animate = original;
-      }
-    }
-    const call = (animate: ReturnType<typeof vi.fn>, i = 0) => animate.mock.calls[i] as unknown as [Keyframe[], KeyframeAnimationOptions];
-
-    it('nudges the thumb toward the end once when a key pushes past the maximum', () =>
-      withAnimate((animate) => {
-        render(
+        const { container } = render(
           <Theme style="desk">
             <Slider aria-label="Volume" defaultValue={100} />
           </Theme>,
         );
+        const el = root(container);
         const thumb = screen.getByRole('slider');
         thumb.focus();
         fireEvent.keyDown(thumb, { key: 'ArrowRight' });
-        expect(animate).toHaveBeenCalledTimes(1);
-        const [frames, timing] = call(animate);
-        expect(timing.id).toBe('ds-motion:shake');
-        expect(frames).toHaveLength(3);
-        expect(String(frames[1]?.transform)).toMatch(/^translateX\(calc\(1 \* /);
-        // Added on top of the lift instead of replacing it.
-        expect((animate.mock.results[0]?.value as Animation).effect).toMatchObject({ composite: 'add' });
-        // A held key nudges once.
+        expect(Number(el.style.getPropertyValue('--_slider-pull-end'))).toBe(KEY_BUMP);
+        expect(thumb.getAttribute('aria-valuenow')).toBe('100');
+        act(() => {
+          vi.runAllTimers();
+        });
+        expect(Number(el.style.getPropertyValue('--_slider-pull-end'))).toBe(0);
+        // A held key does not pull again.
         fireEvent.keyDown(thumb, { key: 'ArrowRight', repeat: true });
-        expect(animate).toHaveBeenCalledTimes(1);
-        // A key that moves the value does not nudge, and the value changes at once.
+        expect(Number(el.style.getPropertyValue('--_slider-pull-end'))).toBe(0);
+        // A key that moves the value does not pull.
         fireEvent.keyDown(thumb, { key: 'ArrowLeft' });
         expect(thumb.getAttribute('aria-valuenow')).toBe('99');
-        expect(animate).toHaveBeenCalledTimes(1);
-      }));
+        expect(Number(el.style.getPropertyValue('--_slider-pull-end'))).toBe(0);
+      } finally {
+        vi.useRealTimers();
+      }
+    });
 
-    it('nudges toward the start at the minimum, with the keys of the reading direction', () =>
-      withAnimate((animate) => {
-        render(
-          <Theme style="desk" dir="rtl" lang="ar">
-            <Slider aria-label="الصوت" defaultValue={0} />
-          </Theme>,
-        );
-        const thumb = screen.getByRole('slider');
-        thumb.focus();
-        // In right to left text ArrowLeft moves toward the end, so it moves the value.
-        fireEvent.keyDown(thumb, { key: 'ArrowRight' });
-        expect(animate).toHaveBeenCalledTimes(1);
-        fireEvent.keyDown(thumb, { key: 'ArrowLeft' });
-        expect(thumb.getAttribute('aria-valuenow')).toBe('1');
-        expect(animate).toHaveBeenCalledTimes(1);
-      }));
-
-    it('plays no nudge under reduced motion and never on a vertical slider', () =>
-      withAnimate((animate) => {
-        const original = window.matchMedia;
-        window.matchMedia = ((q: string) => ({ matches: q.includes('reduce'), media: q, addEventListener() {}, removeEventListener() {} })) as unknown as typeof window.matchMedia;
-        try {
-          render(
-            <Theme style="desk">
-              <Slider aria-label="Volume" defaultValue={100} />
-              <Slider aria-label="Level" orientation="vertical" defaultValue={100} />
-            </Theme>,
-          );
-          for (const thumb of screen.getAllByRole('slider')) {
-            thumb.focus();
-            fireEvent.keyDown(thumb, { key: 'ArrowUp' });
-          }
-          expect(animate).not.toHaveBeenCalled();
-        } finally {
-          window.matchMedia = original;
-        }
-      }));
+    it('slider-nudge: in right to left text the start is on the right, and a vertical slider does not pull', () => {
+      const { container } = render(
+        <Theme style="desk" dir="rtl" lang="ar">
+          <Slider aria-label="الصوت" defaultValue={0} />
+          <Slider aria-label="المستوى" orientation="vertical" defaultValue={100} />
+        </Theme>,
+      );
+      const [h, v] = screen.getAllByRole('slider');
+      h!.focus();
+      fireEvent.keyDown(h!, { key: 'ArrowRight' });
+      const roots = container.querySelectorAll<HTMLElement>('[data-ds="slider"]');
+      expect(Number(roots[0]!.style.getPropertyValue('--_slider-pull-start'))).toBe(KEY_BUMP);
+      v!.focus();
+      fireEvent.keyDown(v!, { key: 'ArrowUp' });
+      expect(Number(roots[1]!.style.getPropertyValue('--_slider-pull-end'))).toBe(0);
+    });
 
     it('lifts the grabbed thumb in CSS on the catalog timing, and turns it off under reduced motion', () => {
       const css = readFileSync(join(process.cwd(), 'packages/css/src/components/Slider.css'), 'utf8');
@@ -247,35 +212,68 @@ describe('Slider', () => {
       expect(reduced).toMatch(/--_slider-lift: 1;/);
     });
 
-    it('nudges once when a drag goes past the end of the track, and again only after it comes back', () =>
-      withAnimate((animate) => {
-        const rect = vi.spyOn(Element.prototype, 'getBoundingClientRect').mockReturnValue(new DOMRect(0, 0, 100, 24));
-        const capture = vi.spyOn(Element.prototype, 'hasPointerCapture').mockReturnValue(true);
-        try {
-          render(
-            <Theme style="desk">
-              <Slider aria-label="Volume" defaultValue={40} />
-            </Theme>,
-          );
-          const control = document.querySelector<HTMLElement>('[data-part="control"]')!;
-          // The value bubble rolls its digits during the drag (slider-bubble); count the nudges only.
-          const nudges = () => animate.mock.calls.filter((c) => (c as unknown as [Keyframe[], KeyframeAnimationOptions])[1].id === 'ds-motion:shake') as unknown as [Keyframe[], KeyframeAnimationOptions][];
-          fireEvent.pointerDown(control, { pointerId: 1, button: 0, clientX: 40 });
-          fireEvent.pointerMove(control, { pointerId: 1, clientX: 90 });
-          expect(nudges()).toHaveLength(0);
-          fireEvent.pointerMove(control, { pointerId: 1, clientX: 130 });
-          fireEvent.pointerMove(control, { pointerId: 1, clientX: 140 });
-          expect(nudges()).toHaveLength(1);
-          expect(String(nudges()[0]![0][1]?.transform)).toMatch(/^translateX\(calc\(1 \* /);
-          fireEvent.pointerMove(control, { pointerId: 1, clientX: 50 });
-          fireEvent.pointerMove(control, { pointerId: 1, clientX: -20 });
-          expect(nudges()).toHaveLength(2);
-          expect(String(nudges()[1]![0][1]?.transform)).toMatch(/^translateX\(calc\(-1 \* /);
-        } finally {
-          rect.mockRestore();
-          capture.mockRestore();
-        }
-      }));
+    it('slider-rubber-band: a drag past the end pulls the thumb and the fill with resistance, and lets go on release', () => {
+      const rect = vi.spyOn(Element.prototype, 'getBoundingClientRect').mockReturnValue(new DOMRect(0, 0, 100, 24));
+      const capture = vi.spyOn(Element.prototype, 'hasPointerCapture').mockReturnValue(true);
+      try {
+        const { container } = render(
+          <Theme style="desk">
+            <Slider aria-label="Volume" defaultValue={40} />
+          </Theme>,
+        );
+        const el = root(container);
+        const pull = (end: 'start' | 'end') => Number(el.style.getPropertyValue(`--_slider-pull-${end}`));
+        const control = container.querySelector<HTMLElement>('[data-part="control"]')!;
+        fireEvent.pointerDown(control, { pointerId: 1, button: 0, clientX: 40 });
+        fireEvent.pointerMove(control, { pointerId: 1, clientX: 90 });
+        expect(pull('end')).toBe(0);
+        fireEvent.pointerMove(control, { pointerId: 1, clientX: 124 });
+        const near = pull('end');
+        expect(near).toBeGreaterThan(0);
+        fireEvent.pointerMove(control, { pointerId: 1, clientX: 400 });
+        const far = pull('end');
+        // It resists: further out pulls more, but never the whole way.
+        expect(far).toBeGreaterThan(near);
+        expect(far).toBeLessThan(1);
+        expect(pull('start')).toBe(0);
+        fireEvent.pointerMove(control, { pointerId: 1, clientX: -30 });
+        expect(pull('end')).toBe(0);
+        expect(pull('start')).toBeGreaterThan(0);
+        fireEvent.lostPointerCapture(control, { pointerId: 1 });
+        expect(pull('start')).toBe(0);
+        expect(pull('end')).toBe(0);
+      } finally {
+        rect.mockRestore();
+        capture.mockRestore();
+      }
+    });
+
+    it('slider-rubber-band: the pull rises with the distance and stays under 1', () => {
+      expect(rubberBand(0, 24)).toBe(0);
+      expect(rubberBand(24, 24)).toBe(0.5);
+      expect(rubberBand(72, 24)).toBe(0.75);
+      expect(rubberBand(10, 0)).toBe(0);
+    });
+
+    it('slider-fill: the root carries where the fill starts and ends', () => {
+      const one = render(<Slider aria-label="Volume" min={0} max={200} defaultValue={50} />);
+      expect(root(one.container).style.getPropertyValue('--_slider-from')).toBe('0');
+      expect(root(one.container).style.getPropertyValue('--_slider-to')).toBe('0.25');
+      one.unmount();
+      const two = render(<RangeSlider thumbLabels={['Lowest', 'Highest']} defaultValue={[20, 80]} />);
+      const range = two.container.querySelector<HTMLElement>('[data-ds="range-slider"]')!;
+      expect(range.style.getPropertyValue('--_slider-from')).toBe('0.2');
+      expect(range.style.getPropertyValue('--_slider-to')).toBe('0.8');
+    });
+
+    it('slider-fill: the fill is a clip-path on the track, and the range has no paint', () => {
+      const css = readFileSync(join(process.cwd(), 'packages/css/src/components/Slider.css'), 'utf8').replace(/\/\*[\s\S]*?\*\//g, '');
+      const at = css.indexOf("> [data-part='track']::before {");
+      expect(css.slice(at, css.indexOf('}', at))).toMatch(/clip-path: inset\(0 var\(--_slider-clip-right\) 0 var\(--_slider-clip-left\)/);
+      const range = css.indexOf("> [data-part='track'] > [data-part='range'] {");
+      expect(css.slice(range, css.indexOf('}', range))).not.toMatch(/background/);
+      expect(css).not.toMatch(/transition[^;]*\b(width|inset|left|right)\b/);
+    });
 
     it('marks the root while a pointer holds the thumb', () => {
       const { container } = render(<Slider aria-label="Volume" defaultValue={40} />);

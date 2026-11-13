@@ -53,6 +53,12 @@
  *   --_menu-item-step             the stagger step of a row, 0 to 6, set by its place in the menu
  *   --_menu-item-shift            how far the inside of a row rises as it arrives
  *   --_menu-nudge                 how far the submenu chevron moves toward its submenu
+ *   --_menu-clip-room             room kept outside the box while the clip reveals it, so the
+ *                                 shadow is not cut (order 1.23)
+ *   --_menu-clip-from, -clip-to   the clip-path the surface opens from (set per side) and to
+ *   --_menu-highlight-bg          the fill of the highlight marker (the lit row color)
+ *   --_menu-highlight-duration, -highlight-ease   the marker's slide
+ *   --_menu-nudge-duration-in, -nudge-duration-out  the chevron lean and its way back
  *
  * Motion, order 1.22 (proposed). Interaction "menu-origin" (pattern
  * "menu-scale"): the menu comes out of its trigger side (data-side): it
@@ -78,6 +84,22 @@
  * --_menu-item-shift: 0px and --_menu-nudge: 0px, which leaves fades. Under
  * reduced motion the animations are none, so Radix removes the closed menu
  * at once and never waits for an animationend.
+ *
+ * Order 1.23 (proposed). menu-origin: besides the travel, the scale and the
+ * fade, the surface is revealed by a clip-path that opens from its trigger
+ * side (from the top edge for a menu below its trigger, from the inline
+ * start edge for a submenu), and closes back toward it, faster. The clip
+ * keeps --_menu-clip-room around the box so the shadow shows while it runs.
+ * Interaction "highlight-marker": every menu holds one aria-hidden marker,
+ * [data-part='highlight'], its last child. It draws the lit row's fill and
+ * menuShared.tsx (through highlightMarker.tsx) places it with transform at
+ * the lit row's offset, so the fill slides from row to row: on the snappy
+ * spring for the pointer, over duration.fast for the keys, at once the first
+ * time it shows. While it is there the row's own fill (its ::after) is
+ * transparent; without it the ::after draws the fill as before. In forced
+ * colors the marker hides and the row keeps the system Highlight.
+ * Interaction "check-draw-pick": a check that appears in an open menu draws
+ * itself (menuShared.tsx).
  */
 @layer ds.base {
   /* ------------------------------------------------------------ portal layer */
@@ -124,11 +146,22 @@
     --_menu-enter-y: 0px;
     --_menu-item-shift: var(--ds-distance-shift);
     --_menu-item-step: 0;
-    --_menu-nudge: var(--ds-distance-nudge);
+    /* Order 1.23: distance.shift, not distance.nudge (review: a 1 to 3px lean nobody sees). */
+    --_menu-nudge: var(--ds-distance-shift);
+    --_menu-nudge-duration-in: var(--ds-duration-spring-bouncy);
+    --_menu-nudge-duration-out: var(--ds-duration-quick);
     --_menu-duration-in: var(--ds-duration-spring-snappy);
     --_menu-duration-out: var(--ds-duration-quick);
     --_menu-ease-in: var(--ds-ease-spring-snappy);
     --_menu-ease-out: var(--ds-ease-exit);
+    --_menu-clip-room: var(--ds-space-6xl);
+    --_menu-clip-to: inset(calc(var(--_menu-clip-room) * -1));
+    --_menu-clip-from: var(--_menu-clip-to);
+    --_menu-highlight-bg: var(--_menu-item-bg-highlight);
+    /* The rim of the lit row, drawn by the highlight marker (a style sets it, for example a glass lens). */
+    --_menu-item-shadow: 0 0 transparent;
+    --_menu-highlight-duration: var(--ds-duration-spring-snappy);
+    --_menu-highlight-ease: var(--ds-ease-spring-snappy);
 
     /* Positioned so the z-index applies: Radix copies it onto its positioning wrapper. */
     position: relative;
@@ -270,6 +303,39 @@
     pointer-events: none;
   }
 
+  /*
+   * highlight-marker: one marker per menu draws the lit row's fill under the
+   * rows and slides between them. The menu is a stacking context (its
+   * z-index), so the marker sits under the rows and over the surface.
+   */
+  :is([data-ds='dropdown-menu'], [data-ds='context-menu']) > [data-part='highlight'] {
+    position: absolute;
+    z-index: calc(0 - var(--ds-z-raised));
+    inset-block-start: 0;
+    inset-inline-start: 0;
+    box-sizing: border-box;
+    border-radius: var(--_menu-item-radius);
+    background-color: var(--_menu-highlight-bg);
+    box-shadow: var(--_menu-item-shadow);
+    opacity: 0;
+    pointer-events: none;
+    transition:
+      transform var(--_menu-highlight-duration) var(--_menu-highlight-ease),
+      background-color var(--ds-duration-fast) var(--ds-ease-out),
+      opacity var(--ds-duration-fast) var(--ds-ease-out);
+  }
+
+  /* A destructive row lights in its own color: the marker takes it while that row is lit. */
+  :is([data-ds='dropdown-menu'], [data-ds='context-menu']):has(> [data-part='item'][data-tone='danger'][data-highlighted], > [data-part='group'] > [data-part='item'][data-tone='danger'][data-highlighted]) {
+    --_menu-highlight-bg: var(--_menu-item-bg-danger-highlight);
+  }
+
+  @media (forced-colors: none) {
+    :is([data-ds='dropdown-menu'], [data-ds='context-menu']):has(> [data-part='highlight']) :is([data-part='item'], [data-part='checkbox-item'], [data-part='radio-item'], [data-part='sub-trigger']):is([data-highlighted], [data-state='open']) {
+      --_menu-item-bg: transparent;
+    }
+  }
+
   /* The keyboard ring, over the fill. */
   :is([data-ds='dropdown-menu'], [data-ds='context-menu']) :is([data-part='item'], [data-part='checkbox-item'], [data-part='radio-item'], [data-part='sub-trigger'])::before {
     content: '';
@@ -390,25 +456,35 @@
   /* The travel comes from the trigger side: a menu below its trigger comes down out of it. */
   :is([data-ds='dropdown-menu'], [data-ds='context-menu'])[data-side='bottom'] {
     --_menu-enter-y: calc(var(--_menu-shift) * -1);
+    --_menu-clip-from: inset(calc(var(--_menu-clip-room) * -1) calc(var(--_menu-clip-room) * -1) 100% calc(var(--_menu-clip-room) * -1));
   }
 
   :is([data-ds='dropdown-menu'], [data-ds='context-menu'])[data-side='top'] {
     --_menu-enter-y: var(--_menu-shift);
+    --_menu-clip-from: inset(100% calc(var(--_menu-clip-room) * -1) calc(var(--_menu-clip-room) * -1) calc(var(--_menu-clip-room) * -1));
   }
 
   :is([data-ds='dropdown-menu'], [data-ds='context-menu'])[data-side='right'] {
     --_menu-enter-x: calc(var(--_menu-shift) * -1);
+    --_menu-clip-from: inset(calc(var(--_menu-clip-room) * -1) 100% calc(var(--_menu-clip-room) * -1) calc(var(--_menu-clip-room) * -1));
   }
 
   :is([data-ds='dropdown-menu'], [data-ds='context-menu'])[data-side='left'] {
     --_menu-enter-x: var(--_menu-shift);
+    --_menu-clip-from: inset(calc(var(--_menu-clip-room) * -1) calc(var(--_menu-clip-room) * -1) calc(var(--_menu-clip-room) * -1) 100%);
   }
 
   :is([data-ds='dropdown-menu'], [data-ds='context-menu'])[data-state='open'] {
     animation: ds-menu-in var(--_menu-duration-in) var(--_menu-ease-in);
   }
 
-  :is([data-ds='dropdown-menu'], [data-ds='context-menu'])[data-state='closed'] {
+  /*
+   * Review B6 (order 1.23): the real content leaves at once on close (no
+   * exit animation, so Radix unmounts it in the same frame and a press on
+   * the trigger reopens at once). An inert aria-hidden copy, made by
+   * highlightMarker.tsx (exitGhost), plays the exit in its place.
+   */
+  :is([data-ds='dropdown-menu'], [data-ds='context-menu'])[data-state='closed'][inert] {
     animation: ds-menu-out var(--_menu-duration-out) var(--_menu-ease-out) forwards;
     pointer-events: none;
   }
@@ -452,29 +528,45 @@
 
   /* The submenu chevron leans toward its submenu while its row is lit or its submenu open, and comes back faster. */
   :is([data-ds='dropdown-menu'], [data-ds='context-menu']) [data-part='sub-trigger'] > [data-part='end'] {
-    transition: transform var(--ds-duration-quick) var(--ds-ease-exit);
+    transition: transform var(--_menu-nudge-duration-out) var(--ds-ease-exit);
   }
 
   :is([data-ds='dropdown-menu'], [data-ds='context-menu']) [data-part='sub-trigger']:is([data-highlighted], [data-state='open']) > [data-part='end'] {
     transform: translateX(var(--_menu-nudge));
-    transition: transform var(--ds-duration-spring-bouncy) var(--ds-ease-spring-bouncy);
+    transition: transform var(--_menu-nudge-duration-in) var(--ds-ease-spring-bouncy);
   }
 
   :is([data-ds='dropdown-menu'], [data-ds='context-menu']) [data-part='sub-trigger']:is([data-highlighted], [data-state='open']):dir(rtl) > [data-part='end'] {
     transform: translateX(calc(var(--_menu-nudge) * -1));
   }
 
+  /* The surface opens from its trigger side: the clip reveals it while it travels, grows and fades in. */
   @keyframes ds-menu-in {
     from {
       opacity: 0;
       transform: translate(var(--_menu-enter-x), var(--_menu-enter-y)) scale(var(--_menu-enter-scale));
+      clip-path: var(--_menu-clip-from);
+    }
+
+    /* Readable early: full opacity at 40%, the clip and the transform carry the rest. */
+    40% {
+      opacity: 1;
+    }
+
+    to {
+      clip-path: var(--_menu-clip-to);
     }
   }
 
   @keyframes ds-menu-out {
+    from {
+      clip-path: var(--_menu-clip-to);
+    }
+
     to {
       opacity: 0;
       transform: translate(var(--_menu-enter-x), var(--_menu-enter-y)) scale(var(--_menu-enter-scale));
+      clip-path: var(--_menu-clip-from);
     }
   }
 
@@ -490,8 +582,23 @@
     }
   }
 
-  /* Reduced motion: the system setting and the page's own setting (data-motion="reduce" on the root element). */
+  /*
+   * Reduced motion: the system setting and the page's own setting
+   * (data-motion="reduce" on the root element). Review B2 and B3: the private
+   * durations and the lean are zeroed on the root, so no rule of higher
+   * specificity can keep a transition or a shifted chevron, and nothing
+   * relies on the tokens being zeroed.
+   */
   @media (prefers-reduced-motion: reduce) {
+    :is([data-ds='dropdown-menu'], [data-ds='context-menu']) {
+      --_menu-nudge: 0px;
+      --_menu-nudge-duration-in: 0s;
+      --_menu-nudge-duration-out: 0s;
+      --_menu-highlight-duration: 0s;
+      --_menu-duration-in: 0s;
+      --_menu-duration-out: 0s;
+    }
+
     :is([data-ds='dropdown-menu'], [data-ds='context-menu'])[data-state],
     :is([data-ds='dropdown-menu'], [data-ds='context-menu'])[data-state] :is([data-part='item'], [data-part='checkbox-item'], [data-part='radio-item'], [data-part='sub-trigger']) > *,
     :is([data-ds='dropdown-menu'], [data-ds='context-menu'])[data-state] > :is([data-part='label'], [data-part='separator']),
@@ -499,9 +606,19 @@
       animation: none;
     }
 
-    :is([data-ds='dropdown-menu'], [data-ds='context-menu']) [data-part='sub-trigger'] > [data-part='end'] {
+    :is([data-ds='dropdown-menu'], [data-ds='context-menu']) [data-part='sub-trigger'] > [data-part='end'],
+    :is([data-ds='dropdown-menu'], [data-ds='context-menu']) > [data-part='highlight'] {
       transition: none;
     }
+  }
+
+  :root[data-motion='reduce'] :is([data-ds='dropdown-menu'], [data-ds='context-menu']) {
+    --_menu-nudge: 0px;
+    --_menu-nudge-duration-in: 0s;
+    --_menu-nudge-duration-out: 0s;
+    --_menu-highlight-duration: 0s;
+    --_menu-duration-in: 0s;
+    --_menu-duration-out: 0s;
   }
 
   :root[data-motion='reduce'] :is([data-ds='dropdown-menu'], [data-ds='context-menu'])[data-state],
@@ -512,6 +629,10 @@
   }
 
   :root[data-motion='reduce'] :is([data-ds='dropdown-menu'], [data-ds='context-menu']) [data-part='sub-trigger'] > [data-part='end'] {
+    transition: none;
+  }
+
+  :root[data-motion='reduce'] :is([data-ds='dropdown-menu'], [data-ds='context-menu']) > [data-part='highlight'] {
     transition: none;
   }
 
@@ -561,6 +682,10 @@
 
     :is([data-ds='dropdown-menu'], [data-ds='context-menu']) [data-part='item'][data-tone='danger'] {
       --_menu-item-fg: CanvasText;
+    }
+
+    :is([data-ds='dropdown-menu'], [data-ds='context-menu']) > [data-part='highlight'] {
+      display: none;
     }
   }
 }

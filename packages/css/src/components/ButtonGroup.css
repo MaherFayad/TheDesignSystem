@@ -7,6 +7,10 @@
  *
  *   --_button-group-gap       the space between spaced children
  *   --_button-group-divider   the 1px seam between attached children
+ *   --_button-group-release-ease, -release-duration
+ *                             the curve and time an attached segment's parts
+ *                             rise back on after a press (order 1.23): the
+ *                             bouncy spring, so the key bounces back up
  *
  * The group has no parts of its own. Its children are Button and IconButton
  * roots (and later ToggleButton and SplitButton), styled by their own files.
@@ -119,21 +123,45 @@
    * start, label, end) dip to scale.anticipate while it is held and spring
    * back on release on Button's snappy spring. A spaced group keeps the
    * whole button press.
+   *
+   * Round 3 (order 1.23, proposed): the parts also sink by Button's
+   * --_button-press-y and Button's press shade (an inner shadow at the top
+   * edge of the pressed segment) comes in, so the segment reads as a key
+   * pushed into the row while its neighbors stay up. The box, the seam and
+   * the neighbors never move.
    */
   [data-ds='button-group'][data-attached] > :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button'], [data-ds='copy-button'], [data-ds='close-button']) {
     --_button-press-scale: 1;
     --_button-part-press: var(--ds-scale-anticipate);
+    --_button-release-ease: var(--_button-group-release-ease);
+    --_button-release-duration: var(--_button-group-release-duration);
   }
 
+  /*
+   * Round 3: the key comes back up with a bounce. The parts of the released
+   * segment rise on the bouncy spring, so they pass rest and settle, while
+   * the shade fades; a style sets a plain curve here for a dead key, or the
+   * snappy spring for a short one.
+   */
+  [data-ds='button-group'] {
+    --_button-group-release-ease: var(--ds-ease-spring-bouncy);
+    --_button-group-release-duration: var(--ds-duration-spring-bouncy);
+  }
+
+  /* Reduced: no dip, no sink, and every duration of the segment 0s. The still shade and the pressed fill carry the state. */
   @media (prefers-reduced-motion: reduce) {
     [data-ds='button-group'][data-attached] > :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button'], [data-ds='copy-button'], [data-ds='close-button']) {
       --_button-part-press: 1;
+      --_button-press-y: 0px;
+      --_button-motion: 0;
     }
   }
 
   /* The page's own reduced motion setting (data-motion="reduce" on the root) gets the same reduced form. */
   :root[data-motion='reduce'] [data-ds='button-group'][data-attached] > :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button'], [data-ds='copy-button'], [data-ds='close-button']) {
     --_button-part-press: 1;
+    --_button-press-y: 0px;
+    --_button-motion: 0;
   }
 
   /*

@@ -17,6 +17,10 @@
  *   --_hover-card-enter-x, -enter-y, -enter-scale (enter-x is the inline twin of enter-y)
  *   --_hover-card-shift        how far the card travels in from its trigger side
  *   --_hover-card-item-shift   how far each piece of the preview rises as it arrives
+ *   --_hover-card-enter-stretch   order 1.23: the scale along the axis away from the trigger
+ *                                  (the cross axis keeps -enter-scale), so the surface unfolds
+ *                                  out of its trigger instead of growing evenly
+ *   --_hover-card-enter-sx, -enter-sy   working values: the two scales per side (data-side)
  *   --_hover-card-duration-in, -duration-out, -ease-in, -ease-out
  *
  * Motion, interaction "popover-spring" (pattern "menu-scale"), order 1.22,
@@ -49,6 +53,9 @@
     --_hover-card-enter-x: 0px;
     --_hover-card-enter-y: 0px;
     --_hover-card-enter-scale: var(--ds-scale-enter);
+    --_hover-card-enter-stretch: calc(var(--_hover-card-enter-scale) * var(--ds-scale-anticipate));
+    --_hover-card-enter-sx: var(--_hover-card-enter-scale);
+    --_hover-card-enter-sy: var(--_hover-card-enter-stretch);
     --_hover-card-shift: var(--ds-distance-shift);
     --_hover-card-item-shift: var(--ds-distance-shift);
     --_hover-card-duration-in: var(--ds-duration-spring-bouncy);
@@ -93,10 +100,14 @@
   }
 
   [data-ds='hover-card'][data-side='right'] {
+    --_hover-card-enter-sx: var(--_hover-card-enter-stretch);
+    --_hover-card-enter-sy: var(--_hover-card-enter-scale);
     --_hover-card-enter-x: calc(var(--_hover-card-shift) * -1);
   }
 
   [data-ds='hover-card'][data-side='left'] {
+    --_hover-card-enter-sx: var(--_hover-card-enter-stretch);
+    --_hover-card-enter-sy: var(--_hover-card-enter-scale);
     --_hover-card-enter-x: var(--_hover-card-shift);
   }
 
@@ -155,7 +166,7 @@
   @keyframes ds-hover-card-in {
     from {
       opacity: 0;
-      transform: translate(var(--_hover-card-enter-x), var(--_hover-card-enter-y)) scale(var(--_hover-card-enter-scale));
+      transform: translate(var(--_hover-card-enter-x), var(--_hover-card-enter-y)) scale(var(--_hover-card-enter-sx), var(--_hover-card-enter-sy));
     }
   }
 
@@ -174,7 +185,7 @@
   @keyframes ds-hover-card-out {
     to {
       opacity: 0;
-      transform: translate(var(--_hover-card-enter-x), var(--_hover-card-enter-y)) scale(var(--_hover-card-enter-scale));
+      transform: translate(var(--_hover-card-enter-x), var(--_hover-card-enter-y)) scale(var(--_hover-card-enter-sx), var(--_hover-card-enter-sy));
     }
   }
 

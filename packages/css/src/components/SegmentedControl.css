@@ -30,9 +30,21 @@
  * proposed): it slides on the snappy spring, stretched along its travel, and
  * keeps the default transform origin the slide is worked out for. It jumps
  * under reduced motion.
+ *
+ * Round 3 (order 1.23): --_segmented-control-indicator-filter, a
+ * backdrop-filter for the thumb (a glass lens in a style), default none; a
+ * name outside the list in anatomy.md. It drops to none where
+ * backdrop-filter is unsupported, under reduced transparency and under more
+ * contrast. While the thumb slides, the text under it takes the selected
+ * colour where the thumb is (Tabs/ink.ts, part label-ink).
+ *
+ * Round 3 (order 1.23): --_segmented-control-ink, 1 or 0, whether the text under the
+ * sliding mark changes colour with it (Tabs/ink.ts); a style sets 0 to keep
+ * the colours changing at once. A name outside the list in anatomy.md.
  */
 @layer ds.base {
   [data-ds='segmented-control'] {
+    --_segmented-control-ink: 1;
     --_segmented-control-height: var(--ds-size-control-md);
     --_segmented-control-inset: var(--ds-space-4xs);
     --_segmented-control-gap: var(--ds-space-4xs);
@@ -41,6 +53,7 @@
     --_segmented-control-border-color: var(--ds-color-border-default);
     --_segmented-control-thumb-bg: var(--ds-color-bg-overlay-20);
     --_segmented-control-thumb-shadow: inset 0 0 0 var(--ds-border-width-strong) var(--ds-color-bg-overlay-50);
+    --_segmented-control-indicator-filter: none;
     --_segmented-control-item-height: calc(
       var(--_segmented-control-height) - 2 * (var(--_segmented-control-inset) + var(--ds-border-width-default))
     );
@@ -125,6 +138,8 @@
     border-radius: var(--_segmented-control-item-radius);
     background-color: var(--_segmented-control-thumb-bg);
     box-shadow: var(--_segmented-control-thumb-shadow);
+    -webkit-backdrop-filter: var(--_segmented-control-indicator-filter);
+    backdrop-filter: var(--_segmented-control-indicator-filter);
     pointer-events: none;
   }
 
@@ -234,5 +249,22 @@
     [data-ds='segmented-control'] {
       border-color: CanvasText;
     }
+  }
+
+  /* The thumb filter falls back to a plain fill. */
+  @supports not ((backdrop-filter: none) or (-webkit-backdrop-filter: none)) {
+    [data-ds='segmented-control'] {
+      --_segmented-control-indicator-filter: none;
+    }
+  }
+
+  @media (prefers-reduced-transparency: reduce), (prefers-contrast: more) {
+    [data-ds='segmented-control'] {
+      --_segmented-control-indicator-filter: none;
+    }
+  }
+
+  [data-contrast='more'] [data-ds='segmented-control'] {
+    --_segmented-control-indicator-filter: none;
   }
 }

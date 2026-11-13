@@ -100,6 +100,13 @@
     "rootProps": {
       "type": "object",
       "description": "Props for the root box. className and style also go to the root; every other native prop and the ref go to the input."
+    },
+    "variant": {
+      "type": [
+        "outlined",
+        "filled"
+      ],
+      "description": "outlined: a border all round. filled: a tinted box. Stamped as data-variant only when passed, so a style or platform can follow it."
     }
   },
   "states": [

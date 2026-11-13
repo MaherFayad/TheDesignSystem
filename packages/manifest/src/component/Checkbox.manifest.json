@@ -23,6 +23,7 @@
     "root",
     "control",
     "indicator",
+    "mark",
     "label",
     "description"
   ],
@@ -145,7 +146,8 @@
       "The box is 16px inside a 24px target. The label is a native label bound to the control, so it extends the target.",
       "A checked box shows a check and an indeterminate box a minus, so the state never relies on color alone.",
       "Read only is not part of Radix: clicks are prevented, aria-readonly is set and the box draws dashed.",
-      "Indeterminate is a display state. The next click checks the box."
+      "Indeterminate is a display state. The next click checks the box.",
+      "Motion, round 3 (check-draw and check-mixed, proposed): the fill grows from the centre of the box (clip-path) and the mark part, an aria-hidden svg of two strokes, is drawn with stroke-dashoffset, the short arm then the long arm; unchecking retracts it faster. The dash and the check are the same strokes (data-glyph check or minus on the mark), so mixed and checked bend into each other. Reduced motion: the fill and the mark change at once."
     ]
   },
   "content": {
@@ -192,9 +194,15 @@
     "focus.shadow.ring",
     "duration.base",
     "ease.default",
-    "opacity.disabled"
+    "opacity.disabled",
+    "duration.morph",
+    "duration.quick",
+    "ease.in",
+    "ease.exit",
+    "ease.spring-snappy",
+    "delay.stagger"
   ],
-  "motion": "fade",
+  "motion": "chart-draw",
   "frameworks": {
     "react": {
       "status": "ready",

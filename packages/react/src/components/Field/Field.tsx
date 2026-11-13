@@ -30,6 +30,15 @@ export interface FieldProps extends Omit<ComponentProps<'div'>, 'title'> {
   description?: ReactNode;
   /** One line API: renders a FieldError with this text after the children. */
   error?: ReactNode;
+  /**
+   * A floating label (order 1.23): the `label` rests inside the control's box
+   * while the control is empty and has no focus, and rises to its place
+   * above the box on focus or once there is a value. The label renders after
+   * the control in the DOM (its paint order) and is drawn first; the
+   * root carries `data-floating`, and `data-filled` while the control has a
+   * value. Use it with the `label` prop and one single line control.
+   */
+  floating?: boolean;
 }
 
 /**
@@ -49,9 +58,21 @@ export function Field({
   label,
   description,
   error,
+  floating = false,
   children,
+  onInput,
   ...rest
 }: FieldProps) {
+  const rootRef = useRef<HTMLDivElement | null>(null);
+  const [filled, setFilled] = useState(false);
+  // A floating label rests in the box only while the control is empty: read the value after every render
+  // (a controlled value changes without an input event) and on every input.
+  useLayoutEffect(() => {
+    if (!floating) return;
+    const control = rootRef.current?.querySelector<HTMLInputElement | HTMLTextAreaElement>('input, textarea, select');
+    const next = Boolean(control?.value);
+    setFilled((f) => (f === next ? f : next));
+  });
   const base = useId();
   const [ownControlId, setOwnControlId] = useState<string | undefined>(undefined);
   const [counts, setCounts] = useState({ description: 0, error: 0 });
@@ -91,14 +112,27 @@ export function Field({
     <FieldContext value={value}>
       <div
         {...rest}
+        ref={(node: HTMLDivElement | null) => {
+          rootRef.current = node;
+          const r = (rest as { ref?: unknown }).ref;
+          if (typeof r === 'function') r(node);
+          else if (r && typeof r === 'object') (r as { current: HTMLDivElement | null }).current = node;
+        }}
+        onInput={(event) => {
+          onInput?.(event);
+          if (floating) setFilled(Boolean((event.target as HTMLInputElement).value));
+        }}
         data-ds="field"
         data-orientation={orientation}
+        data-floating={floating ? '' : undefined}
+        data-filled={floating && filled ? '' : undefined}
         data-invalid={value.invalid ? '' : undefined}
         data-disabled={disabled ? '' : undefined}
         data-readonly={readOnly ? '' : undefined}
       >
-        {label !== undefined && label !== null && <FieldLabel>{label}</FieldLabel>}
+        {!floating && label !== undefined && label !== null && <FieldLabel>{label}</FieldLabel>}
         {children}
+        {floating && label !== undefined && label !== null && <FieldLabel>{label}</FieldLabel>}
         {description !== undefined && description !== null && <FieldDescription>{description}</FieldDescription>}
         {error !== undefined && error !== null && <FieldError>{error}</FieldError>}
       </div>

@@ -339,7 +339,7 @@ describe('motion (order 1.22): Popover.css and HoverCard.css', () => {
     }
   });
   it('staggers the parts; a part with focus is there at once', () => {
-    expect(popover).toContain("> :is([data-part='title'], [data-part='body'], [data-part='footer']):not(:focus-within) {");
+    expect(popover).toContain("> :is([data-part='title'], [data-part='body'], [data-part='footer']):focus-within {\n    animation-duration: 0s;");
   });
   it('review B2: the reduced forms apply under data-motion="reduce" too', () => {
     expect(popover).toContain(":root[data-motion='reduce'] [data-ds='popover'][data-state],");

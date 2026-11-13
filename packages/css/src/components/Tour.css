@@ -109,17 +109,28 @@
   }
 
   /* The title, body and footer arrive in order after the panel. A part with focus is there at once. */
-  [data-ds='tour'] [data-part='panel'][data-state='open'] > :is([data-part='title'], [data-part='body'], [data-part='footer']):not(:focus-within) {
+  [data-ds='tour'] [data-part='panel'][data-state='open'] > :is([data-part='title'], [data-part='body'], [data-part='footer']) {
     animation: ds-tour-part-in var(--ds-duration-spring-soft) var(--ds-ease-spring-soft) backwards;
     animation-delay: var(--ds-delay-stagger);
   }
 
-  [data-ds='tour'] [data-part='panel'][data-state='open'] > [data-part='body']:not(:focus-within) {
+  [data-ds='tour'] [data-part='panel'][data-state='open'] > [data-part='body'] {
     animation-delay: min(calc(var(--ds-delay-stagger) * 2), var(--ds-duration-base));
   }
 
-  [data-ds='tour'] [data-part='panel'][data-state='open'] > [data-part='footer']:not(:focus-within) {
+  [data-ds='tour'] [data-part='panel'][data-state='open'] > [data-part='footer'] {
     animation-delay: min(calc(var(--ds-delay-stagger) * 3), var(--ds-duration-base));
+  }
+
+  /*
+   * A part that holds focus is there at once: its runs take no time. The
+   * animation keeps its name whether or not the part holds focus, so focus
+   * leaving it later (a refused press, a click elsewhere) never plays the
+   * arrival again.
+   */
+  [data-ds='tour'] [data-part='panel'][data-state='open'] > :is([data-part='title'], [data-part='body'], [data-part='footer']):focus-within {
+    animation-duration: 0s;
+    animation-delay: 0s;
   }
 
   /* ------------------------------------------------------------ panel */

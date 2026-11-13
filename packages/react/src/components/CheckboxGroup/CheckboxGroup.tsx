@@ -90,12 +90,13 @@ export function CheckboxGroup({
     [valueProp, onValueChange],
   );
 
-  // check-draw stagger (capped at three steps, as list-stagger, so every mark shows within about 200ms): select all draws the boxes one delay.stagger apart (capped); one box alone draws at once.
+  // check-draw stagger (orders 1.22 and 1.23), capped at three steps as list-stagger so every mark shows within about 200ms: select all draws the boxes one delay.stagger apart, from the last box when it unchecks; one box alone draws at once.
   const itemsRef = useRef<HTMLDivElement>(null);
-  const setSteps = useCallback((run: boolean) => {
+  const setSteps = useCallback((run: boolean, reverse = false) => {
     const boxes = itemsRef.current?.querySelectorAll<HTMLElement>("[data-ds='checkbox']:not([data-part='select-all'])") ?? [];
     boxes.forEach((box, i) => {
-      if (run) box.style.setProperty('--_checkbox-step', String(Math.min(i + 1, CASCADE_MAX_STEPS)));
+      const order = reverse ? boxes.length - i : i + 1;
+      if (run) box.style.setProperty('--_checkbox-step', String(Math.min(order, CASCADE_MAX_STEPS)));
       else box.style.removeProperty('--_checkbox-step');
     });
   }, []);
@@ -124,7 +125,8 @@ export function CheckboxGroup({
     checkedCount === 0 ? false : checkedCount === registered.length ? true : 'indeterminate';
 
   const onSelectAll = () => {
-    setSteps(true);
+    // Checking cascades in reading order; unchecking runs back from the last box.
+    setSteps(true, allState === true);
     if (allState === true) commit(value.filter((v) => !registered.includes(v)));
     else commit([...value, ...registered.filter((v) => !value.includes(v))]);
   };

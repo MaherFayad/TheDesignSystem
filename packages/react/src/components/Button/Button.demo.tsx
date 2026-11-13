@@ -250,6 +250,27 @@ export default function ButtonDemo() {
         </DemoRow>
       </DemoCase>
 
+      <DemoCase id="error" title="Result: success and error">
+        <DemoRow>
+          <Button result="success" resultLabel="Saved" tone="accent" emphasis="solid">
+            Save changes
+          </Button>
+          <Button result="error" resultLabel="Could not save">
+            Save changes
+          </Button>
+          <Theme lang="ar" as="span">
+            <Button result="success" resultLabel="تم الحفظ" tone="accent" emphasis="solid">
+              حفظ التغييرات
+            </Button>
+          </Theme>
+          <Theme lang="ar" as="span">
+            <Button result="error" resultLabel="تعذر الحفظ" size="lg">
+              حفظ التغييرات
+            </Button>
+          </Theme>
+        </DemoRow>
+      </DemoCase>
+
       <DemoCase id="disabled" title="Disabled">
         <DemoRow>
           <Button disabled tone="accent" emphasis="solid">

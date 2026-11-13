@@ -10,6 +10,10 @@
  *   --_form-wizard-gap          space between the steps, the panel and its parts
  *   --_form-wizard-font-size    the step heading
  *   --_form-wizard-ring         the focus ring of the title, which takes focus on a step change
+ *   --_form-wizard-mark         the success mark of the done title (order 1.23)
+ *   --_form-wizard-mark-wait    the time between its ring and its tick
+ *   --_form-wizard-mark-duration, --_form-wizard-mark-ease   the draw of the ring and the tick
+ *   --_form-wizard-mark-land    the size the mark lands from; 1 turns the landing off
  *
  * Bodies that are not current carry the hidden attribute and stay in the
  * DOM, so their values are kept. The current body fades in (motion pattern
@@ -28,6 +32,11 @@
     --_form-wizard-gap: var(--ds-space-2xl);
     --_form-wizard-font-size: var(--ds-font-size-xl);
     --_form-wizard-ring: var(--ds-focus-shadow-ring);
+    --_form-wizard-mark: var(--ds-color-state-success-border);
+    --_form-wizard-mark-wait: var(--ds-duration-quick);
+    --_form-wizard-mark-duration: var(--ds-duration-morph);
+    --_form-wizard-mark-ease: var(--ds-ease-standard);
+    --_form-wizard-mark-land: var(--ds-scale-morph);
 
     display: flex;
     flex-direction: column;
@@ -79,6 +88,70 @@
   }
 
   /* The transparent outline is set only here, so forced colors draws it on focus and nowhere else. */
+  /*
+   * wizard-done (order 1.23, proposed): the success mark before the done
+   * title draws its ring over duration.morph, then its tick, with
+   * stroke-dashoffset; the mark lands from scale.morph on the bouncy spring.
+   * It sits in the title's line, the size of a large icon.
+   */
+  [data-ds='form-wizard'] > [data-part='panel'] > [data-part='title'] > [data-part='success-mark'] {
+    display: inline-block;
+    inline-size: var(--ds-size-icon-lg);
+    block-size: var(--ds-size-icon-lg);
+    margin-inline-end: var(--ds-space-xs);
+    vertical-align: middle;
+    color: var(--_form-wizard-mark);
+    fill: none;
+    stroke: currentColor;
+    stroke-width: var(--ds-border-width-strong);
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    animation: ds-form-wizard-mark-land var(--ds-duration-spring-bouncy) var(--ds-ease-spring-bouncy) backwards;
+  }
+
+  [data-ds='form-wizard'] > [data-part='panel'] > [data-part='title'] > [data-part='success-mark'] > * {
+    stroke-dasharray: 1;
+    animation: ds-form-wizard-mark-draw var(--_form-wizard-mark-duration) var(--_form-wizard-mark-ease) backwards;
+  }
+
+  [data-ds='form-wizard'] > [data-part='panel'] > [data-part='title'] > [data-part='success-mark'] > path {
+    animation-delay: var(--_form-wizard-mark-wait);
+  }
+
+  @keyframes ds-form-wizard-mark-draw {
+    from {
+      stroke-dashoffset: 1;
+    }
+
+    to {
+      stroke-dashoffset: 0;
+    }
+  }
+
+  @keyframes ds-form-wizard-mark-land {
+    from {
+      transform: scale(var(--_form-wizard-mark-land));
+      opacity: 0;
+    }
+
+    to {
+      transform: none;
+      opacity: 1;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    [data-ds='form-wizard'] > [data-part='panel'] > [data-part='title'] > [data-part='success-mark'],
+    [data-ds='form-wizard'] > [data-part='panel'] > [data-part='title'] > [data-part='success-mark'] > * {
+      animation: none;
+    }
+  }
+
+  :root[data-motion='reduce'] [data-ds='form-wizard'] > [data-part='panel'] > [data-part='title'] > [data-part='success-mark'],
+  :root[data-motion='reduce'] [data-ds='form-wizard'] > [data-part='panel'] > [data-part='title'] > [data-part='success-mark'] > * {
+    animation: none;
+  }
+
   [data-ds='form-wizard'] > [data-part='panel'] > [data-part='title']:focus-visible {
     outline: var(--ds-border-width-strong) solid transparent;
     outline-offset: var(--ds-border-width-strong);

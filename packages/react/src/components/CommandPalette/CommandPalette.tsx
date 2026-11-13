@@ -84,7 +84,7 @@ import { SearchField } from '../SearchField';
 import { hasCommandModifier, isEditableTarget, matchShortcut } from './matchShortcut';
 import { flipPlay, flipSnapshot, staggerGroup, type FlipSnapshot } from '@the-system/motion';
 import { useMotion } from '../../internal/motion';
-import { slideHighlight } from '../DropdownMenu/menuShared';
+import { HighlightMarker, useHighlightMarker } from '../ListBox/highlightMarker';
 
 /** The most rows that stagger in; the rest of a long list is there at once. */
 const STAGGER_ROWS = 8;
@@ -399,18 +399,18 @@ export function CommandPalette({
     listRef.current?.querySelector<HTMLElement>(`#${CSS.escape(rowId(highlighted))}`)?.scrollIntoView?.({ block: 'nearest' });
   }, [highlighted, rowId]);
 
-  // Interaction "command-palette-row-slide": the lit fill slides from the old row to the new one.
+  // Interaction "highlight-marker" (order 1.23; it replaces the ::after slide of command-palette-row-slide):
+  // one marker in the list draws the lit fill and slides from row to row, and follows the lit row on a new query.
   const motion = useMotion();
-  const litBefore = useRef<string | null>(null);
-  useLayoutEffect(() => {
-    const list = listRef.current;
-    const before = litBefore.current;
-    litBefore.current = highlighted;
-    if (!list || before === null || highlighted === null || before === highlighted) return;
-    const from = list.querySelector(`#${CSS.escape(rowId(before))}`);
-    const to = list.querySelector(`#${CSS.escape(rowId(highlighted))}`);
-    if (to) slideHighlight(from, to, motion.mode('command-palette-row-slide'));
-  }, [highlighted, rowId, motion]);
+  const markerRef = useHighlightMarker({ rows: '[data-part="item"]', interaction: 'command-palette-row-slide' });
+  // Stable, so the marker keeps watching the list across renders.
+  const setListRef = useCallback(
+    (node: HTMLDivElement | null) => {
+      listRef.current = node;
+      markerRef(node);
+    },
+    [markerRef],
+  );
 
   // Interaction "command-palette-results": the rows arrive in order on open
   // and on a new list; rows that stay slide from where they were. The
@@ -634,9 +634,7 @@ export function CommandPalette({
         </RadixDialog.Close>
         {hasRows ? (
           <div
-            ref={(node) => {
-              listRef.current = node;
-            }}
+            ref={setListRef}
             id={listId}
             role="listbox"
             data-part="list"
@@ -654,6 +652,7 @@ export function CommandPalette({
                 </div>
               ),
             )}
+            <HighlightMarker />
           </div>
         ) : (
           <div data-part="empty">{loading ? (loadingLabel ?? words.loading) : (empty ?? words.empty)}</div>

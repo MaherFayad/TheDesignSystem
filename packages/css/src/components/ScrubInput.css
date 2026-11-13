@@ -32,6 +32,15 @@
  * The handle's cursor is
  * ew-resize, which points both ways, so it needs no flip in RTL; the drag
  * direction flips in the component.
+ *
+ * Order 1.23 (focus-glow, round 3, proposed). The glow layer also blooms:
+ *   --_scrub-input-bloom          the color of the bloom, a soft halo outside the ring
+ *   --_scrub-input-bloom-invalid  the bloom while invalid (the danger tint)
+ *   --_scrub-input-bloom-spread   how far the bloom reaches; 0px turns it off
+ *   --_scrub-input-bloom-now      the working spread the focus rule sets
+ *   --_scrub-input-border-duration, --_scrub-input-border-ease   the border color change (focus, hover, invalid)
+ * On focus the bloom's box shadow spreads from 0 on the in timing; on blur it
+ * draws back on the out timing. The ring is not on this layer and shows at once.
  */
 @layer ds.base {
   [data-ds='scrub-input'] {
@@ -53,6 +62,12 @@
     --_scrub-input-ease-in: var(--ds-ease-spring-soft);
     --_scrub-input-ease-out: var(--ds-ease-exit);
     --_scrub-input-enter-scale: var(--ds-scale-enter);
+    --_scrub-input-bloom: var(--ds-color-primary-tint-hover);
+    --_scrub-input-bloom-invalid: var(--ds-color-state-danger-tint-10);
+    --_scrub-input-bloom-spread: var(--ds-space-s);
+    --_scrub-input-bloom-now: 0px;
+    --_scrub-input-border-duration: var(--ds-duration-base);
+    --_scrub-input-border-ease: var(--ds-ease-out);
     --_scrub-input-lift: var(--ds-scale-pop);
     --_scrub-input-duration: var(--ds-duration-spring-bouncy);
     --_scrub-input-ease: var(--ds-ease-spring-bouncy);
@@ -69,6 +84,7 @@
     padding-block: 0;
     padding-inline: 0 var(--_scrub-input-padding-inline);
     border: var(--ds-border-width-default) solid var(--_scrub-input-border-color);
+    transition: border-color var(--_scrub-input-border-duration) var(--_scrub-input-border-ease);
     border-radius: var(--_scrub-input-radius);
     background-color: var(--_scrub-input-bg);
     color: var(--_scrub-input-fg);
@@ -83,13 +99,16 @@
     position: absolute;
     inset: calc(var(--ds-border-width-default) * -1);
     border-radius: inherit;
-    box-shadow: var(--_scrub-input-shadow-focus);
+    box-shadow:
+      var(--_scrub-input-shadow-focus),
+      0 0 0 var(--_scrub-input-bloom-now) var(--_scrub-input-bloom);
     opacity: 0;
     transform: scale(var(--_scrub-input-enter-scale));
     pointer-events: none;
     transition:
       opacity var(--_scrub-input-duration-out) var(--_scrub-input-ease-out),
-      transform var(--_scrub-input-duration-out) var(--_scrub-input-ease-out);
+      transform var(--_scrub-input-duration-out) var(--_scrub-input-ease-out),
+      box-shadow var(--_scrub-input-duration-out) var(--_scrub-input-ease-out);
   }
 
   /* The hover veil, over the fill. */
@@ -235,6 +254,8 @@
 
   [data-ds='scrub-input']:focus-within::before,
   [data-ds='scrub-input'][data-dragging]::before {
+    --_scrub-input-bloom-now: var(--_scrub-input-bloom-spread);
+
     opacity: 1;
     transform: none;
     transition-duration: var(--_scrub-input-duration-in);
@@ -283,6 +304,11 @@
     cursor: not-allowed;
   }
 
+  /* Invalid: the bloom takes the danger tint, so focus on a field in error still reads as an error. */
+  [data-ds='scrub-input'][data-invalid] {
+    --_scrub-input-bloom: var(--_scrub-input-bloom-invalid);
+  }
+
   /* Reduced motion: no transitions, the glow does not grow and the handle does not lift. */
   @media (prefers-reduced-motion: reduce) {
     [data-ds='scrub-input'] {
@@ -325,5 +351,25 @@
 
       color: GrayText;
     }
+  }
+
+  /*
+   * Reduced motion (order 1.23, review B1): the component's own timings go to
+   * 0s here, so nothing moves even where a motion token keeps its value.
+   */
+  @media (prefers-reduced-motion: reduce) {
+    [data-ds='scrub-input'] {
+      --_scrub-input-border-duration: 0s;
+      --_scrub-input-duration: 0s;
+      --_scrub-input-duration-in: 0s;
+      --_scrub-input-duration-out: 0s;
+    }
+  }
+
+  :root[data-motion='reduce'] [data-ds='scrub-input'] {
+    --_scrub-input-border-duration: 0s;
+    --_scrub-input-duration: 0s;
+    --_scrub-input-duration-in: 0s;
+    --_scrub-input-duration-out: 0s;
   }
 }

@@ -30,7 +30,8 @@
 // from the inline end on the soft spring. Going back reverses both; RTL
 // flips both. A mark that turned complete lands its check past full size
 // (the new current mark answers in Stepper's own motion). When the
-// form is sent (wizard-done), the marks take one short wave. The title,
+// form is sent (wizard-done), the marks take one short wave, and since order
+// 1.23 a success mark before the done title draws its ring, then its tick. The title,
 // which takes focus, never moves, so its ring shows at once.
 import { useCallback, useId, useLayoutEffect, useRef, useState, type ComponentProps, type FormEvent, type ReactNode, type Ref } from 'react';
 import {
@@ -505,6 +506,13 @@ export function FormWizard({
         onSubmit={handleSubmit}
       >
         <h2 ref={titleRef} id={titleId} data-part="title" tabIndex={-1}>
+          {state === 'done' && (
+            // wizard-done (order 1.23): a ring and a tick that draw themselves before the title, decorative.
+            <svg data-part="success-mark" aria-hidden="true" focusable="false" viewBox="0 0 24 24">
+              <circle cx="12" cy="12" r="10" pathLength={1} />
+              <path d="M7.5 12.5l3 3 6-6.5" pathLength={1} />
+            </svg>
+          )}
           {state === 'done' ? (doneTitle ?? labels.done) : step?.title}
         </h2>
         {steps.map((s, i) => (

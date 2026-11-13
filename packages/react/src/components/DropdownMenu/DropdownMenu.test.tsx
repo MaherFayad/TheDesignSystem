@@ -113,7 +113,8 @@ describe('DropdownMenu', () => {
     render(<Basic />);
     const menu = await openWithKeyboard(user);
     const parts = Array.from(menu.children).map((c) => c.getAttribute('data-part'));
-    expect(parts).toEqual(['label', 'item', 'item', 'item', 'separator', 'item']);
+    // The highlight marker (order 1.23) is the last child.
+    expect(parts).toEqual(['label', 'item', 'item', 'item', 'separator', 'item', 'highlight']);
     const rename = screen.getByRole('menuitem', { name: /Rename board/ });
     expect(Array.from(rename.children).map((c) => c.getAttribute('data-part'))).toEqual(['start', 'text', 'shortcut']);
     expect(rename.querySelector('[data-part="shortcut"]')?.textContent).toBe('F2');

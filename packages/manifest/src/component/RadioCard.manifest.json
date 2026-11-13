@@ -25,6 +25,7 @@
     "root",
     "item",
     "indicator",
+    "badge",
     "icon",
     "title",
     "description",
@@ -161,7 +162,8 @@
       "A card holds text only. No link, button or input inside a card: the card is a button.",
       "Disabled uses native disabled: a disabled card leaves the arrow order and draws with opacity.disabled.",
       "Read only does not apply: show the chosen card as text instead.",
-      "The group has no legend part: put a heading above it and point aria-labelledby at it, or use aria-label."
+      "The group has no legend part: put a heading above it and point aria-labelledby at it, or use aria-label.",
+      "Motion, round 3 (radio-card-lift, proposed): the border, the inner line and the fill cross to the checked look; the indicator fills inward and the badge part, an aria-hidden svg check, is drawn with stroke-dashoffset; the card it leaves crosses back faster and its check retracts. Reduced motion: no lift, no dip, no draw."
     ]
   },
   "content": {
@@ -217,9 +219,14 @@
     "opacity.disabled",
     "duration.base",
     "duration.fast",
-    "ease.default"
+    "ease.default",
+    "duration.morph",
+    "duration.quick",
+    "duration.spring-snappy",
+    "ease.exit",
+    "ease.in"
   ],
-  "motion": "fade",
+  "motion": "press",
   "frameworks": {
     "react": {
       "status": "ready",

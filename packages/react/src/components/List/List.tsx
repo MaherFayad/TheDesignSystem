@@ -38,7 +38,9 @@ import {
 import { Icon, type IconName } from '@the-system/icons/react';
 import type { Size } from '@the-system/shared';
 import { useMotion } from '../../internal/motion';
+import { staggerGroup } from '@the-system/motion';
 import { useFlipGroup, useRowGlide } from '../ListBox/selectionMotion';
+import { setPressPoint } from '../ListBox/highlightMarker';
 
 /** The rows of a list element. */
 const rowsOf = (list: Element) => Array.from(list.querySelectorAll(":scope > [data-part='item']"));
@@ -95,12 +97,11 @@ function useFirstPaintStagger(hasRows: boolean, ref: Ref<HTMLElement> | undefine
     played.current = true;
     const el = node.current;
     if (!fresh.current || !el) return;
-    let index = 0;
-    for (const item of Array.from(el.children)) {
-      if (item.getAttribute('data-part') !== 'item') continue;
-      motion.play(item, 'list-stagger', 'list-stagger', { index });
-      index += 1;
-    }
+    // Order 1.23: the stagger primitive (rise and fade on the soft spring, one delay.stagger apart, the
+    // steps inside the stagger budget, each row readable early), so Neutral cascades briefly and Studio,
+    // whose stagger step is 0ms, lands its rows together with a short rise instead of the same plain fade.
+    const items = Array.from(el.children).filter((item) => item.getAttribute('data-part') === 'item');
+    staggerGroup(items, { phase: 'enter', spring: 'soft', mode: motion.mode('list-stagger') });
   }, [hasRows, motion]);
   return useCallback(
     (el: HTMLElement | null) => {
@@ -190,6 +191,11 @@ export function ListItem({
   return (
     <li
       {...rest}
+      // Platform hook: where the press landed in the row, for a ripple from the touch point.
+      onPointerDown={(event) => {
+        setPressPoint(event.currentTarget, 'list', event.clientX, event.clientY);
+        rest.onPointerDown?.(event);
+      }}
       data-part="item"
       data-active={active ? '' : undefined}
       data-disabled={disabled ? '' : undefined}

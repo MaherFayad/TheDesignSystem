@@ -22,6 +22,9 @@
  */
 @layer ds.base {
   [data-ds='chip'] {
+    /* Platform hook (order 1.23): where a press landed, from the inline and block start; the component writes it on pointerdown. */
+    --_chip-press-x: 50%;
+    --_chip-press-y: 50%;
     --_chip-height: var(--ds-size-control-md);
     --_chip-padding-inline: var(--ds-space-m);
     --_chip-gap: var(--ds-space-3xs);

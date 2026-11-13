@@ -18,8 +18,21 @@
 // their Overlay and Content, so the behavior of each primitive stays its own
 // (AlertDialog never closes on an outside click, whatever is passed here).
 //
-// Motion is CSS only. Under reduced motion every animation is none, so Radix
-// unmounts at once and nothing here waits for an animationend.
+// Motion is CSS, but for one beat. Under reduced motion every animation is
+// none, so Radix unmounts at once and nothing here waits for an
+// animationend.
+//
+// Refused (order 1.23, interaction "dialog-refuse"): a press on the backdrop
+// of an AlertDialog (which never closes on an outside click) or of a dialog
+// with dismissible false, and Escape on a dialog with dismissible false, do
+// not close it. The panel nudges instead: a shake along the inline axis
+// (the catalog pattern "shake" in its shape: out, back past its place, a
+// smaller swing, rest) of --_dialog-refuse-shift (space.m, a panel is large,
+// so the catalog's space.3xs would not read) inside duration.roll on
+// ease.out, no change of light, played with the Web Animations API. The
+// style's mode for "dialog-refuse" (useMotion) applies: none or reduced
+// motion leaves it still. A second refusal cancels the first
+// and plays again, so a rapid series never stacks or sticks.
 import {
   createContext,
   use,
@@ -45,6 +58,8 @@ import {
 } from '@the-system/shared';
 import { Theme } from '../../theme/Theme';
 import { useTheme } from '../../theme/hooks';
+import { durationMs, readDuration, readEasing } from '@the-system/motion';
+import { useMotion } from '../../internal/motion';
 import { isInsideToaster } from '../Toast/isInsideToaster';
 
 /** Sets a ref of any kind. */
@@ -191,6 +206,29 @@ export function DialogBase({
   }, [state.open, settle]);
 
   const panelRef = useRef<HTMLDivElement | null>(null);
+
+  // The refused nudge: one at a time, the newest wins.
+  const motion = useMotion();
+  const refusal = useRef<Animation | null>(null);
+  const refuse = useCallback(() => {
+    refusal.current?.cancel();
+    refusal.current = null;
+    const panel = panelRef.current;
+    if (!panel || typeof panel.animate !== 'function' || motion.mode('dialog-refuse') !== 'full') return;
+    // Without the token (a page with no token CSS) the base value; under reduced motion the token is 0.
+    const set = typeof getComputedStyle === 'function' && getComputedStyle(panel).getPropertyValue('--ds-duration-roll').trim() !== '';
+    const duration = set ? readDuration(panel, 'duration.roll') : durationMs['duration.roll'];
+    if (duration <= 0) return;
+    const sign = theme.dir === 'rtl' ? -1 : 1;
+    const at = (k: number) => ({ transform: `translateX(calc(var(--_dialog-refuse-shift) * ${sign * k}))` });
+    refusal.current = panel.animate([{ transform: 'none' }, at(1), at(-0.7), at(0.35), { transform: 'none' }], {
+      duration,
+      easing: readEasing(panel, 'ease.out'),
+      id: 'ds-motion:dialog-refuse',
+    });
+  }, [motion, theme.dir]);
+  const refusesOutside = kind === 'alert-dialog' || !state.dismissible;
+
   // Where focus goes back (packages/shared dialog-focus.ts), captured on open.
   const returnTo = useRef<{ active: FocusReturn; trigger: FocusReturn } | null>(null);
   const { triggerRef } = state;
@@ -244,6 +282,12 @@ export function DialogBase({
         style={style}
         data-ds={kind}
         data-state={state.open ? 'open' : 'closed'}
+        onPointerDown={(event) => {
+          rootProps?.onPointerDown?.(event);
+          // A press on the backdrop that will not close the overlay: the panel nudges.
+          if (event.button !== 0 || !refusesOutside || !state.open) return;
+          if ((event.target as Element | null)?.getAttribute?.('data-part') === 'backdrop') refuse();
+        }}
       >
         {Backdrop ? <Backdrop {...backdropProps} ref={setBackdropRef} data-part="backdrop" /> : null}
         <Panel
@@ -286,7 +330,10 @@ export function DialogBase({
           }}
           onEscapeKeyDown={(event: KeyboardEvent) => {
             onEscapeKeyDown?.(event);
-            if (!state.dismissible) event.preventDefault();
+            if (!state.dismissible) {
+              event.preventDefault();
+              refuse();
+            }
           }}
           onKeyDown={(event: ReactKeyboardEvent<HTMLDivElement>) => {
             onKeyDown?.(event);

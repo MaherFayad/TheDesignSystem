@@ -36,8 +36,9 @@
 // - Under breakpoint.phone the compact form keeps the ends and the current
 //   page and the last page (CSS), with a compact-only ellipsis (data-compact)
 //   between them when pages are hidden, and the summary wraps above.
-import { useCallback, useLayoutEffect, useMemo, useRef, type HTMLAttributes, type MouseEvent, type ReactElement, type Ref } from 'react';
+import { useCallback, useLayoutEffect, useMemo, useRef, type HTMLAttributes, type MouseEvent, type PointerEvent, type ReactElement, type Ref } from 'react';
 import { rollDigits } from '@the-system/motion';
+import { pressOrigin } from '../TabBar/pressOrigin';
 import type { IconName } from '@the-system/icons/react';
 import { clampPage, isEllipsis, itemRange, pageCount as countPages, pageRange, type Shape, type Size } from '@the-system/shared';
 import { useTheme } from '../../theme';
@@ -164,7 +165,9 @@ export function Pagination({
     if (!root) return;
     const mode = motion.mode('pagination-roll');
     const pages = Array.from(root.querySelectorAll<HTMLElement>(PAGE));
-    const texts = pages.map((el) => el.querySelector(HOST)?.textContent ?? '');
+    // Round 3 (review B5): the text of each slot comes from the data, never from the
+    // DOM, which holds a roll's columns and leaving copies while it plays.
+    const texts = range.filter((item) => !isEllipsis(item)).map((item) => n(item as number));
     const before = slots.current;
     if (before && before.page !== page && before.texts.length === texts.length) {
       const direction = page > before.page ? 'up' : 'down';
@@ -255,8 +258,9 @@ export function Pagination({
             </span>
           ) : null;
         // The number is drawn in an aria-hidden host the roll owns; aria-label names the page.
+        // Keyed by its text, so React replaces the host instead of writing into one the roll owns (review B5).
         const digitsHost = (
-          <span aria-hidden="true">
+          <span key={text} aria-hidden="true">
             {text}
           </span>
         );
@@ -276,6 +280,7 @@ export function Pagination({
             disabled={disabled}
             tabIndex={disabled && link !== undefined ? 0 : undefined}
             onClick={go(item)}
+            onPointerDown={(event: PointerEvent<HTMLElement>) => pressOrigin(event, 'pagination')}
             asChild={link !== undefined}
             render={(content) => (
               <>

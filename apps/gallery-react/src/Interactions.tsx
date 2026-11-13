@@ -20,10 +20,11 @@ import { stages as inputs } from './interactions/inputs';
 import { stages as navigation } from './interactions/navigation';
 import { stages as overlays } from './interactions/overlays';
 import { stages as selection } from './interactions/selection';
+import { stages as toggles } from './interactions/toggles';
 import './interactions.css';
 
 /** Live stages by interaction id, from every family file. */
-const stages: Record<string, () => ReactNode> = { ...actions, ...inputs, ...selection, ...overlays, ...navigation, ...feedback };
+const stages: Record<string, () => ReactNode> = { ...actions, ...toggles, ...inputs, ...selection, ...overlays, ...navigation, ...feedback };
 
 /** The recipes that turn off the CSS interactions each style plays reduced or not at all. */
 const recipes = [interactionRecipes('studio', studio), interactionRecipes('desk', desk), interactionRecipes('neutral', neutral)].join('\n');
@@ -74,7 +75,21 @@ function PointerDot() {
   return <div data-gallery="pointer-dot" ref={ref} aria-hidden="true" />;
 }
 
-/** The largest zoom, at most 2.5, at which the stage fits the viewport with a margin. */
+/**
+ * `&zoom=<n>` sets the CSS zoom of the focus stage. The round 3 recorder
+ * passes `zoom=1` and zooms the whole page instead, so portaled overlays and
+ * the control share one scale. Without the parameter the stage takes the
+ * largest zoom, at most 2.5, at which it fits the viewport with a margin.
+ */
+function focusZoom(): number | undefined {
+  try {
+    const z = Number(new URLSearchParams(window.location.search).get('zoom'));
+    return Number.isFinite(z) && z > 0 ? z : undefined;
+  } catch {
+    return undefined;
+  }
+}
+
 const FOCUS_ZOOM = 2.5;
 
 function FocusStage({ id }: { id: string }) {
@@ -83,6 +98,11 @@ function FocusStage({ id }: { id: string }) {
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
+    const fixed = focusZoom();
+    if (fixed) {
+      el.style.zoom = String(fixed);
+      return;
+    }
     const fit = () => {
       el.style.zoom = '1';
       const r = el.getBoundingClientRect();

@@ -12,21 +12,24 @@
 // toggle is an IconButton with aria-pressed; its name also says what a
 // press does, as the order asks.
 //
-// Motion (orders 1.21 and 1.22): a press on the toggle morphs the eye into
-// the eye off glyph or back (password-reveal, the icon morph primitive): the
-// old glyph turns and shrinks out while the new one turns in and lands past
-// full size on the bouncy spring, in one grid cell so the button keeps its
-// size. The field text fades back in. The type changes at once; the motion
+// Motion (orders 1.21 to 1.23): a press on the toggle morphs the eye into
+// the eye off glyph or back (password-reveal). Since order 1.23 the two
+// glyphs of the style's icon set trade places along a diagonal line (a
+// clip-path wipe over duration.morph): showing draws the slash across the
+// eye from the top left, hiding wipes it off from the bottom right. Both
+// sit in one grid cell so the button keeps its size. The field text fades
+// back in. The type changes at once; the motion
 // only decorates it. The box shakes when the field turns invalid
 // (error-shake).
 import { flushSync } from 'react-dom';
 import { useCallback, useEffect, useId, useLayoutEffect, useRef, useState, type ComponentProps, type MouseEvent, type Ref } from 'react';
-import { iconMorph, settled } from '@the-system/motion';
+import { settled } from '@the-system/motion';
 import { Icon } from '@the-system/icons/react';
 import type { Shape, Size } from '@the-system/shared';
 import { useField } from '../Field/Field';
 import { IconButton } from '../IconButton/IconButton';
 import { Input, type InputProps } from '../Input/Input';
+import { diagonalWipe, fadeOutBeat, playBeat } from '../Input/fieldMotion';
 import { useErrorShake, type ShakeBox } from '../Input/useErrorShake';
 import { useMotion } from '../../internal/motion';
 
@@ -116,12 +119,13 @@ export function PasswordField({
     const input = inner.current;
     const part = input?.closest("[data-ds='password-field']")?.querySelector(":scope > [data-part='toggle'] > [data-part='icon']");
     const mode = motion.mode('password-reveal');
-    const anims = iconMorph({
-      from: part?.querySelector(':scope > span[aria-hidden="true"]'),
-      to: part?.firstElementChild,
-      turn: shown ? 90 : -90,
-      mode,
-    });
+    // Order 1.23: the glyphs trade places along a diagonal line, so showing
+    // draws the slash across the eye and hiding wipes it off the other way.
+    const back = !shown;
+    const anims = [
+      playBeat(part?.querySelector(':scope > span[aria-hidden="true"]'), diagonalWipe('ahead', back), 'password-reveal-out', mode, fadeOutBeat),
+      playBeat(part?.firstElementChild, diagonalWipe('behind', back), 'password-reveal-in', mode),
+    ].filter((a): a is Animation => a !== null);
     motion.play(input, 'fade', 'password-reveal');
     const id = morphs.current;
     let live = true;

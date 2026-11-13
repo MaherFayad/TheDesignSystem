@@ -204,13 +204,28 @@ describe('Link', () => {
 describe('Link underline draw (interaction link-underline)', () => {
   const css = readFileSync(join(process.cwd(), 'packages/css/src/components/Link.css'), 'utf8');
 
-  it('draws a decorative layer of a standalone link from the inline start, flipping in right to left text', () => {
+  it('draws a decorative layer of a standalone link with a clip from the inline start, flipping in right to left text (round 3)', () => {
     expect(css).toContain("[data-ds='link'][data-standalone] > [data-part='label']::after {");
-    expect(css).toContain('transform: scaleX(var(--_link-draw));');
-    const hover = css.indexOf("[data-ds='link'][data-standalone]:is(:hover, :focus-visible):not([data-disabled]) {");
-    expect(css.slice(hover, css.indexOf('}', hover))).toContain('--_link-draw-origin: 0% 50%;');
-    const rtl = css.indexOf("[data-ds='link'][data-standalone]:dir(rtl):is(:hover, :focus-visible):not([data-disabled]) {");
-    expect(css.slice(rtl, css.indexOf('}', rtl))).toContain('--_link-draw-origin: 100% 50%;');
+    expect(css).toContain('clip-path: var(--_link-clip-now);');
+    expect(css).not.toContain('scaleX(');
+    const root = css.indexOf("[data-ds='link'] {");
+    const rest = css.slice(root, css.indexOf('}', root));
+    expect(rest).toContain('--_link-clip-start: inset(0 100% 0 0);');
+    expect(rest).toContain('--_link-clip-end: inset(0 0 0 100%);');
+    const rtl = css.indexOf("[data-ds='link']:dir(rtl) {");
+    const flipped = css.slice(rtl, css.indexOf('}', rtl));
+    expect(flipped).toContain('--_link-clip-start: inset(0 0 0 100%);');
+    expect(flipped).toContain('--_link-clip-end: inset(0 100% 0 0);');
+    const draw = css.indexOf('@keyframes ds-link-draw');
+    expect(css.slice(draw, css.indexOf('}', draw))).toContain('clip-path: var(--_link-clip-start);');
+  });
+
+  it('draws on press too and keeps hover behind a hover capable device, so a tap leaves no hover look (round 3)', () => {
+    const press = css.indexOf("[data-ds='link'][data-standalone]:is(:focus-visible, :active):not([data-disabled]) {");
+    expect(css.slice(press, css.indexOf('}', press))).toContain('--_link-clip-now: inset(0);');
+    const media = css.indexOf('@media (hover: hover)');
+    expect(media).toBeGreaterThan(0);
+    expect(css.slice(media)).toContain("[data-ds='link'][data-standalone]:hover:not([data-disabled]) {");
   });
 
   it('keeps the rest underline on a standalone link, so it never relies on color alone', () => {

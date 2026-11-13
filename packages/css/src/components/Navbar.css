@@ -37,9 +37,14 @@
  * under the open trigger. Only transform and opacity animate. Under reduced
  * motion the animations are none, so Radix removes the closed viewport at
  * once and never waits for an animationend.
+ *
+ * Round 3 (order 1.23): --_navbar-ink, 1 or 0, whether the text under the
+ * sliding mark changes colour with it (Tabs/ink.ts); a style sets 0 to keep
+ * the colours changing at once. A name outside the list in anatomy.md.
  */
 @layer ds.base {
   [data-ds='navbar'] {
+    --_navbar-ink: 1;
     --_navbar-control-height: var(--ds-size-control-md);
     --_navbar-height: calc(var(--_navbar-control-height) + 2 * var(--ds-space-s));
     --_navbar-padding-inline: var(--ds-space-xl);

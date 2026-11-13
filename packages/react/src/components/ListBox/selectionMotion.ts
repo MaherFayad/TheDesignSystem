@@ -25,6 +25,7 @@
 import { useCallback, useEffect, useLayoutEffect, useRef, type RefObject } from 'react';
 import { flipExit, flipPlay, rectOf, settled, staggerGroup, type PatternMode } from '@the-system/motion';
 import { useMotion } from '../../internal/motion';
+import { exitGhost } from './highlightMarker';
 
 /** The glide layer of a row: its first unnamed aria-hidden span. */
 export const GLIDE_LAYER = ":scope > span[aria-hidden='true']:not([data-part])";
@@ -183,6 +184,12 @@ export interface FlipGroupOptions {
   interaction?: string;
   /** Draw a removed item shrinking out. Default true. */
   ghosts?: boolean;
+  /**
+   * An item that moved farther than the container is tall (it was out of
+   * view in a list that scrolls) arrives like a new item instead of flying
+   * across the list. Default false.
+   */
+  nearOnly?: boolean;
 }
 
 /**
@@ -190,7 +197,7 @@ export interface FlipGroupOptions {
  * commit that changed them (FLIP). The first commit only measures, so a
  * first paint plays nothing.
  */
-export function useFlipGroup(container: RefObject<Element | null>, { items, interaction = 'collection-flip', ghosts = true }: FlipGroupOptions): void {
+export function useFlipGroup(container: RefObject<Element | null>, { items, interaction = 'collection-flip', ghosts = true, nearOnly = false }: FlipGroupOptions): void {
   const motion = useMotion();
   const last = useRef<Map<Element, Spot> | null>(null);
   useLayoutEffect(() => {
@@ -218,7 +225,12 @@ export function useFlipGroup(container: RefObject<Element | null>, { items, inte
     if (ghosts) for (const item of gone) ghostOut(el, item, before.get(item)!, mode);
     const o = origin(el);
     const rects = new Map<Element, { x: number; y: number; width: number; height: number }>();
-    for (const [item, s] of before) if (spots.has(item)) rects.set(item, { x: s.x + o.x, y: s.y + o.y, width: s.width, height: s.height });
+    const far = nearOnly ? el.clientHeight : Infinity;
+    for (const [item, s] of before) {
+      const now = spots.get(item);
+      if (!now || Math.abs(now.y - s.y) > far) continue;
+      rects.set(item, { x: s.x + o.x, y: s.y + o.y, width: s.width, height: s.height });
+    }
     flipPlay({ rects }, { items: now, mode, spring: 'snappy', enter: 'pop' });
   });
 }
@@ -250,4 +262,39 @@ export function useStaggerOnOpen(rows: string, forward?: (node: HTMLElement | nu
     },
     [rows, interaction],
   );
+}
+
+/** The option rows of the ListBox inside a picker popup. */
+const POPUP_OPTIONS = "[data-ds='list-box'] [data-part='option']";
+
+/**
+ * The rows of a picker popup (Combobox, Autocomplete, MultiSelect, TagField):
+ * they stagger in after the surface when it opens (menu-rows), and when the
+ * results change while it stays open (a query), the rows that stay slide to
+ * their new place and the new ones rise in one short stagger step apart
+ * (interaction "combobox-results", order 1.23). The highlight marker of the
+ * ListBox follows the lit row on its own. Returns the ref callback for the
+ * popup content; `forward` gets the node too.
+ */
+export function usePopupRows(forward?: (node: HTMLElement | null) => void) {
+  const popup = useRef<HTMLElement | null>(null);
+  const ref = useStaggerOnOpen(POPUP_OPTIONS, (node) => {
+    // Review B6: the popup leaves at once on close and a copy plays the exit.
+    if (!node) exitGhost(popup.current);
+    popup.current = node;
+    forward?.(node);
+  });
+  // The list, not the popup, so a scroll of the list is not read as a move.
+  const list = useRef<{ readonly current: Element | null }>({
+    get current() {
+      return popup.current?.querySelector("[data-ds='list-box']") ?? null;
+    },
+  });
+  useFlipGroup(list.current, {
+    items: (el) => Array.from(el.querySelectorAll("[data-part='option']")),
+    interaction: 'combobox-results',
+    ghosts: false,
+    nearOnly: true,
+  });
+  return ref;
 }
