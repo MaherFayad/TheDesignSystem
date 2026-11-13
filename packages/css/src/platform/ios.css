@@ -11,7 +11,7 @@
  * recipes (ds.recipes, the layer after this one) still paint over it.
  *
  * Conventions followed, from the public iOS interface guidelines: a 44pt
- * least target, button sizes 28, 32, 44 and 52, a 51 by 31 capsule switch
+ * least target, button sizes 28, 32, 44 and 52, a 62 by 31 capsule switch
  * whose thumb widens while held, a segmented control with a lifted sliding
  * segment, inset grouped lists with 44pt rows and a disclosure chevron, a
  * compact centred alert about 270pt wide with equal width actions split by
@@ -138,7 +138,9 @@
   }
 
   /*
-   * switch: 51 by 31. A solid thumb with a soft shadow at rest. Held, it
+   * switch: 62 by 31 with a capsule thumb 1.5 times as long as it is tall
+   * (order 1.29; the round thumb's track was 51 by 31, too short for the
+   * capsule to travel or stretch). A solid thumb with a soft shadow at rest. Held, it
    * widens (the only press change: no growth, no track dip) and turns into
    * a clear lens: its color thins out so the track shows through, the
    * backdrop under it brightens and saturates, and a highlight and a rim
@@ -150,7 +152,7 @@
   [data-platform='ios'] [data-ds='switch'] {
     --_switch-target: var(--ds-size-touch-ios);
     --_switch-height: calc(var(--ds-size-touch-ios) * 0.7);
-    --_switch-width: calc(var(--_switch-height) * 1.65);
+    --_switch-width: calc(var(--_switch-height) * 2);
     --_switch-inset: var(--ds-border-width-strong);
     --_switch-bg: var(--ds-color-bg-overlay-20);
     --_switch-stretch: 1.3;
@@ -165,6 +167,8 @@
     --_switch-thumb-highlight: radial-gradient(circle at 50% 0%, var(--ds-color-glass-highlight), transparent 70%);
     --_switch-thumb-highlight-opacity: 0;
     --_switch-thumb-highlight-opacity-pressed: 1;
+    /* The capsule: Switch.css subtracts its length from the travel (17px here). */
+    --_switch-thumb-width: calc(var(--_switch-thumb-size) * 1.5);
   }
 
   [data-platform='ios'] [data-ds='switch'][data-state='checked'] {

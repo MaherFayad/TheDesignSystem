@@ -147,6 +147,10 @@ describe('DsToggleGroup', () => {
       expect(calls[0]![0][0]?.transform).toBe('translate(-60px, 0px) scale(1, 1)');
       expect(calls[0]![1]).toMatchObject({ id: 'ds-motion:indicator-slide' });
       expect(calls.some(([, o]) => o.id === 'ds-motion:indicator-answer')).toBe(false);
+      // The label is kept outside the track, as React (order 1.29): no label or icon of an item moves (no dip and pop); the ink only holds its color.
+      const animated = animate.mock.contexts as unknown as HTMLElement[];
+      const moved = animated.filter((el, i) => el.matches?.('[data-part="item"] > :is([data-part="label"], [data-part="icon"])') && calls[i]![0].some((f) => 'transform' in f));
+      expect(moved).toHaveLength(0);
       const group = items('single')[0]!.parentElement!;
       const twins = group.querySelectorAll<HTMLElement>('[data-part="label-ink"]');
       expect(twins.length).toBeGreaterThan(0);
@@ -171,6 +175,15 @@ describe('DsToggleGroup', () => {
         else delete (HTMLElement.prototype as unknown as Record<string, unknown>)[k];
       }
     }
+  });
+
+  it('an item holds the same parts in the same order as React: the pill span, the label or icon, the hit area', async () => {
+    const { items } = await setup();
+    const parts = (el: HTMLElement) => Array.from(el.children).map((c) => c.getAttribute('data-part'));
+    // React ToggleGroup.tsx with ButtonRoot: [pill, label, hit] and [pill, icon, hit] in a single group; no pill in a multiple one.
+    expect(parts(items('views')[0]!)).toEqual([null, 'label', 'hit']);
+    expect(parts(items('icon')[0]!)).toEqual([null, 'icon', 'hit']);
+    expect(parts(items('style')[0]!)).toEqual(['label', 'hit']);
   });
 
   it('renders the Radix root and items; single is a radiogroup of radios, with no stray attributes', async () => {

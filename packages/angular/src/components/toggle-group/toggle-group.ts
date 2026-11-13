@@ -31,10 +31,10 @@
 // item it leaves to the item it reaches on the snappy spring, stretched
 // along its travel. Round 3 (order 1.23): the labels no longer dip and pop;
 // the text under the pill takes the on color where the pill is, with the
-// aria-hidden `label-ink` twins of nav-ink.ts in @the-system/motion. React's ToggleGroup
-// still dips the label it leaves (its track keeps the label, so
-// followIndicator answers it); that is a leftover of round 2 and is not
-// copied here. A multiple group has no pill. It plays from
+// aria-hidden `label-ink` twins of nav-ink.ts in @the-system/motion. As in
+// React (order 1.29, angular-sync-3 section 6 item 2), the label under the
+// pill is kept outside the track: followIndicator gets the pill alone, so it
+// never dips and pops a label. A multiple group has no pill. It plays from
 // afterRenderEffect, after the items show the new state.
 //
 // Names that differ from React: `onValueChange` is the `valueChange` output

@@ -68,11 +68,24 @@
     );
     --_switch-thumb-highlight-opacity: 0.55;
     --_switch-thumb-highlight-opacity-pressed: 0.9;
+    /*
+     * The glass edge rim sits just inside the thumb's ring, so the ball's own
+     * color meets the track (order 1.29, B3: a white rim on the edge read
+     * about 2.9:1 against the light track).
+     */
     --_switch-thumb-shadow:
-      inset 0 0 0 var(--ds-border-width-default) var(--ds-color-material-glass-edge),
+      inset 0 0 0 var(--_switch-thumb-ring-width) currentColor,
+      inset 0 0 0 calc(var(--_switch-thumb-ring-width) + var(--ds-border-width-default)) var(--ds-color-material-glass-edge),
       var(--ds-elevation-tooltip);
     --_switch-thumb-backdrop: blur(var(--ds-blur-backdrop)) saturate(var(--ds-blur-window-saturation));
     --_switch-thumb-solid-pressed: 0.45;
+  }
+
+  /* Held, the ball casts no shadow: it darkened the track round the clear lens (order 1.29, B3). */
+  [data-style='desk'] [data-ds='switch']:not([data-disabled], [data-readonly]) > [data-part='control']:active {
+    --_switch-thumb-shadow:
+      inset 0 0 0 var(--_switch-thumb-ring-width) currentColor,
+      inset 0 0 0 calc(var(--_switch-thumb-ring-width) + var(--ds-border-width-default)) var(--ds-color-material-glass-edge);
   }
 
   /* The spot rolls: half a turn on the travel, along the reading direction. */

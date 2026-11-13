@@ -45,6 +45,32 @@
     --_switch-thumb-size-pressed: 1;
   }
 
+  /*
+   * ios: on the fill, the held lens keeps a rim in the thumb's own color. The
+   * platform's rim is glass-highlight, which Neutral maps to a dark divider: on
+   * the dark scheme's blue fill it read 2.7:1 (order 1.29, B3). Off, the dark
+   * rim stays: it is what edges the white lens on the gray track, which the
+   * hover lifts to border-control-hover. The held highlight is off: Neutral
+   * has no glass, and the same dark color over the top of the lens hid the
+   * ring there.
+   */
+  [data-style='neutral'][data-platform='ios'] [data-ds='switch'] {
+    --_switch-thumb-highlight-opacity-pressed: 0;
+  }
+
+  [data-style='neutral'][data-platform='ios'] [data-ds='switch'][data-state='checked']:not([data-disabled], [data-readonly]) > [data-part='control']:active {
+    --_switch-thumb-shadow: inset 0 0 0 var(--ds-border-width-default) currentColor;
+  }
+
+  /*
+   * android: the off dot's edge is the surface color, so the white dot keeps
+   * 3:1 on the gray track under the 12% state layer of the dark scheme
+   * (order 1.29, B4). On the light scheme the edge matches the white dot.
+   */
+  [data-style='neutral'][data-platform='android'] [data-ds='switch'][data-state='unchecked'] {
+    --_switch-thumb-edge: var(--ds-color-bg-surface);
+  }
+
   @media (prefers-reduced-motion: reduce) {
     [data-style='neutral'] [data-ds='switch'] {
       --_switch-stretch: 1;

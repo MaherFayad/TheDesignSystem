@@ -124,6 +124,8 @@
     --_switch-stretch: var(--ds-scale-stretch);
     /* A longer capsule than Neutral's 1.75: the lens has room to glide (order 1.28). */
     --_switch-width: calc(var(--_switch-height) * 2);
+    /* A capsule lens, 1.5 times as long as it is tall (order 1.29); ios sets the same, android keeps its dot. */
+    --_switch-thumb-width: calc(var(--_switch-thumb-size) * 1.5);
   }
 
 }
