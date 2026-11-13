@@ -27,6 +27,10 @@
     --_popover-shadow: var(--ds-elevation-menu), inset 0 var(--ds-border-width-default) 0 0 var(--ds-color-material-glass-edge),
       inset var(--ds-border-width-default) 0 0 0 var(--ds-color-material-glass-edge);
     --_popover-enter-scale: var(--ds-scale-menu-enter);
+    /* A soft unfold (order 1.23): the panel grows out of its trigger along the axis away from it, from scale.morph of its size, on the soft spring. */
+    --_popover-enter-stretch: calc(var(--_popover-enter-scale) * var(--ds-scale-morph));
+    --_popover-duration-in: var(--ds-duration-spring-soft);
+    --_popover-ease-in: var(--ds-ease-spring-soft);
 
     -webkit-backdrop-filter: blur(var(--ds-blur-glass)) saturate(var(--ds-blur-window-saturation));
     backdrop-filter: blur(var(--ds-blur-glass)) saturate(var(--ds-blur-window-saturation));

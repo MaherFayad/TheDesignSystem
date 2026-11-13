@@ -4,7 +4,7 @@
  * tokens alone: SegmentedControl.css draws the track as an overlay with a
  * hairline and the thumb as an overlay with a 2px ring, and the lens is a
  * translucent fill, a bright rim, a soft shadow and a backdrop filter on the
- * indicator part. The slide on the snappy spring and the stretch by
+ * indicator part (--_segmented-control-indicator-filter, order 1.23). The slide on the snappy spring and the stretch by
  * scale.stretch come from the tokens through the shared pill.
  *
  * Glass is never the only signal: the items that are not selected take the
@@ -19,11 +19,7 @@
     --_segmented-control-border-color: transparent;
     --_segmented-control-thumb-bg: var(--ds-color-glass-lens);
     --_segmented-control-thumb-shadow: inset 0 0 0 var(--ds-border-width-default) var(--ds-color-glass-highlight), var(--ds-elevation-tooltip);
-  }
-
-  [data-style='liquid'] [data-ds='segmented-control'] > [data-part='indicator'] {
-    -webkit-backdrop-filter: brightness(1.12) saturate(1.6);
-    backdrop-filter: brightness(1.12) saturate(1.6);
+    --_segmented-control-indicator-filter: brightness(1.12) saturate(1.6);
   }
 
   [data-style='liquid'] [data-ds='segmented-control'] > [data-part='item']:not([data-state='on']) {
@@ -35,11 +31,13 @@
   @media (prefers-reduced-transparency: reduce), (prefers-contrast: more), (forced-colors: active) {
     [data-style='liquid'] [data-ds='segmented-control'] {
       --_segmented-control-thumb-shadow: var(--ds-elevation-tooltip);
+      --_segmented-control-indicator-filter: none;
     }
+  }
 
-    [data-style='liquid'] [data-ds='segmented-control'] > [data-part='indicator'] {
-      -webkit-backdrop-filter: none;
-      backdrop-filter: none;
+  @supports not ((backdrop-filter: blur(0)) or (-webkit-backdrop-filter: blur(0))) {
+    [data-style='liquid'] [data-ds='segmented-control'] {
+      --_segmented-control-indicator-filter: none;
     }
   }
 
@@ -51,11 +49,7 @@
 
   [data-style='liquid'][data-contrast='more'] [data-ds='segmented-control'] {
     --_segmented-control-thumb-shadow: inset 0 0 0 var(--ds-border-width-default) var(--ds-color-border-control);
-  }
-
-  [data-style='liquid'][data-contrast='more'] [data-ds='segmented-control'] > [data-part='indicator'] {
-    -webkit-backdrop-filter: none;
-    backdrop-filter: none;
+    --_segmented-control-indicator-filter: none;
   }
 
   /* Forced colors: SegmentedControl.css hides the indicator and draws the track border; the system takes the fills. */

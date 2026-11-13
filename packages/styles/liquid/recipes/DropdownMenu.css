@@ -4,8 +4,10 @@
  * for the lit row. Why not tokens alone: the menu takes its fill, edge,
  * filter and padding from private properties, the glass is a blur plus a
  * saturation boost with a light edge on the top and start sides, and the lit
- * row is a lens (a fill, a bright rim, a small lift) drawn on the row's
- * ::after, which tokens cannot shape.
+ * row is a lens: the menu's sliding highlight marker (order 1.23) takes the
+ * glass hover fill (--_menu-highlight-bg), a bright top rim over a small
+ * lift (--_menu-item-shadow) and glides from row to row on the soft spring
+ * (--_menu-highlight-ease), so the lens flows between rows.
  *
  * Radius: radius.panel (22px) outside, menu.item.radius (16px) on the rows,
  * so the padding is the difference: inner equals outer minus padding.
@@ -24,6 +26,9 @@
     --_menu-backdrop: blur(var(--ds-blur-glass)) saturate(var(--ds-blur-window-saturation));
     --_menu-item-bg-highlight: var(--ds-color-material-glass-hover);
     --_menu-separator-color: var(--ds-color-material-glass-border);
+    --_menu-highlight-bg: var(--ds-color-material-glass-hover);
+    --_menu-item-shadow: var(--ds-elevation-card), inset 0 var(--ds-border-width-default) 0 0 var(--ds-color-glass-highlight);
+    --_menu-highlight-ease: var(--ds-ease-spring-soft);
   }
 
   /* The start side edge follows the text direction. */
@@ -38,33 +43,9 @@
 
   /* Clear glass is for bars over pictures. A menu holds reading text, so the clear level keeps the regular glass. */
 
-  /* The lit row is a lens: it lifts a touch on the snappy spring, with a bright rim on its top edge. */
-  [data-style='liquid'] :is([data-ds='dropdown-menu'], [data-ds='context-menu']) :is([data-part='item'], [data-part='checkbox-item'], [data-part='radio-item'], [data-part='sub-trigger']) {
-    transition: transform var(--ds-duration-spring-snappy) var(--ds-ease-spring-snappy);
-  }
-
-  [data-style='liquid'] :is([data-ds='dropdown-menu'], [data-ds='context-menu']) :is([data-part='item'], [data-part='checkbox-item'], [data-part='radio-item'], [data-part='sub-trigger']):is([data-highlighted], [data-state='open']) {
-    transform: scale(var(--ds-scale-lift));
-  }
-
-  [data-style='liquid'] :is([data-ds='dropdown-menu'], [data-ds='context-menu']) :is([data-part='item'], [data-part='checkbox-item'], [data-part='radio-item'], [data-part='sub-trigger']):is([data-highlighted], [data-state='open'])::after {
-    box-shadow: var(--ds-elevation-card), inset 0 var(--ds-border-width-default) 0 0 var(--ds-color-glass-highlight);
-  }
-
   /* A checked row keeps the tint text, lit or not; the check mark stays as well. */
   [data-style='liquid'] :is([data-ds='dropdown-menu'], [data-ds='context-menu']) :is([data-part='checkbox-item'], [data-part='radio-item'])[data-state='checked'] {
     --_menu-item-fg: var(--ds-color-primary-on-surface);
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    [data-style='liquid'] :is([data-ds='dropdown-menu'], [data-ds='context-menu']) :is([data-part='item'], [data-part='checkbox-item'], [data-part='radio-item'], [data-part='sub-trigger']) {
-      transition: none;
-    }
-  }
-
-  :root[data-motion='reduce'] [data-style='liquid'] :is([data-ds='dropdown-menu'], [data-ds='context-menu']) :is([data-part='item'], [data-part='checkbox-item'], [data-part='radio-item'], [data-part='sub-trigger']),
-  :root[data-motion='reduce'][data-style='liquid'] :is([data-ds='dropdown-menu'], [data-ds='context-menu']) :is([data-part='item'], [data-part='checkbox-item'], [data-part='radio-item'], [data-part='sub-trigger']) {
-    transition: none;
   }
 
   /* ------------------------------------------------------------ fallbacks: solid glass, no filter, no edge */
@@ -80,6 +61,7 @@
     [data-style='liquid'] :is([data-ds='dropdown-menu'], [data-ds='context-menu']):dir(rtl) {
       --_menu-shadow: var(--ds-elevation-menu);
       --_menu-backdrop: none;
+      --_menu-item-shadow: none;
     }
   }
 
@@ -94,6 +76,7 @@
   [data-style='liquid'][data-contrast='more'] :is([data-ds='dropdown-menu'], [data-ds='context-menu']):dir(rtl) {
     --_menu-shadow: var(--ds-elevation-menu);
     --_menu-backdrop: none;
+    --_menu-item-shadow: none;
     --_menu-border-color: var(--ds-color-border-strong);
     --_menu-separator-color: var(--ds-color-border-strong);
   }
@@ -104,6 +87,7 @@
       --_menu-border-color: CanvasText;
       --_menu-separator-color: CanvasText;
       --_menu-item-bg-highlight: Highlight;
+      --_menu-highlight-bg: Highlight;
       --_menu-item-fg-highlight: HighlightText;
     }
 

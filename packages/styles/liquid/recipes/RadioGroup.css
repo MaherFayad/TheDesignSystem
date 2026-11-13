@@ -2,9 +2,17 @@
  * Liquid recipe for RadioGroup: a solid circle inside the control border;
  * checked fills with the tint and shows a white dot; the circle sinks to
  * scale.press while pressed (PLAN.md 3.7, Liquid). Why not tokens alone:
- * RadioGroup.css takes its neutral checked fill from the text color and its
- * press from scale.anticipate, and neither is a Liquid token to change. No
- * glass: a radio sits in content.
+ * RadioGroup.css takes its neutral checked fill from the text color, its
+ * press from scale.anticipate and its dot and land from the bouncy spring,
+ * and none of those is a Liquid token to change. No glass: a radio sits in
+ * content.
+ *
+ * Motion (RadioGroup.css's order 1.23 hooks): the tint closes in on the
+ * soft spring (--_radio-group-fill-ease), the dot slides in from the side
+ * of the item that was chosen before, a drop that runs over, and settles on
+ * the soft spring with no overshoot (--_radio-group-dot-ease); the circle
+ * comes back from the dip on the soft spring too. Reduced motion is RadioGroup.css's own
+ * (--_radio-group-motion 0); the dip goes here as well.
  */
 @layer ds.recipes {
   [data-style='liquid'] [data-ds='radio-group'] {
@@ -13,6 +21,9 @@
     --_radio-group-border-color-checked: var(--ds-color-primary-border);
     --_radio-group-dot: var(--ds-color-primary-text);
     --_radio-group-press-scale: var(--ds-scale-press);
+    --_radio-group-fill-ease: var(--ds-ease-spring-soft);
+    --_radio-group-dot-ease: var(--ds-ease-spring-soft);
+    --_radio-group-land-ease: var(--ds-ease-spring-soft);
   }
 
   /* Reduced motion, from the media query or the page setting: no dip. */
