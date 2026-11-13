@@ -304,7 +304,7 @@ describe('AlertDialog optional parts (order 1.29)', () => {
   it('renders no title bar when the style does not turn it on', async () => {
     const user = userEvent.setup();
     render(
-      <Theme style="desk">
+      <Theme style="neutral">
         <Basic />
       </Theme>,
     );

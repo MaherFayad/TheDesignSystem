@@ -332,6 +332,37 @@ them:
 - N22 is fixed in the base with `min()` over tokens, so no style can exit
   slower than it enters.
 
+## Proof
+
+Final run after a container restart, with the lint fixes in place:
+
+- Lint: the detent handle is `ButtonRoot` (no bare `<button>` in
+  `Sheet.tsx`, gate `ds/button-primitive` passes); the Drawer handle's
+  `z-index` in `Dialog.css` is `var(--ds-z-raised)` (gate `ds/no-raw-value`
+  passes). Both gate tests pass.
+- `npx vitest run` on the lane (Sheet, Dialog, AlertDialog, Drawer,
+  Popover, Tooltip, HoverCard, Toast, `packages/motion/src/helpers`):
+  20 files, 251 tests pass. The lead's snapshot turned on Desk's
+  `optionalParts` (as proposed above), so the two "no title bar" tests in
+  `AlertDialog.test.tsx` and `Popover.test.tsx` now use Neutral, which has
+  none; 98 of 98 pass in Popover, AlertDialog, Sheet and Dialog after that.
+- `npx tsc --noEmit -p tsconfig.json`: clean.
+- `npm run contract -- --framework react --component Dialog,AlertDialog,Sheet,Drawer,Popover,Tooltip,HoverCard,Toast`:
+  436 passed, 0 failed (57 each, Tooltip 37).
+- B9 probe: 120 of 120 (`overlays-toasts.b9-after.json`).
+- Detents probe rerun with the new handle: 4 of 4. The handle on ios in 4
+  styles measures a 36 by 5 bar in a 24px strip, transparent, no shadow.
+- `npm run check`: tokens build, gen, typecheck, manifests, angular,
+  native, docs, gallery native and both consumers pass. Red, none in this
+  lane's files:
+  - eslint: `packages/angular/src/components/select/select.motion.spec.ts:87`
+    unused `items`.
+  - gallery-angular: TS2339 `shownState` does not exist on `DsSwitch`.
+  - vitest: `packages/lint/src/gates/no-tailwind.test.ts` and
+    `no-native-title.test.ts` time out at 5s (they take 15s to 16s alone
+    at a load of 23 on this machine; no finding). The other two failures
+    were the lane's title bar tests, fixed above.
+
 ## Not done
 
 - The N44 frame target (under 50ms at 4x) is not proven on this machine

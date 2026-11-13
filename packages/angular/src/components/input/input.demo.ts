@@ -150,6 +150,21 @@ const longValue =
         </div>
       </div>
     </section>
+
+    <!-- variant: a platform may draw a field filled or outlined (Android draws filled when no variant is passed). -->
+    <section data-demo="case" data-demo-case="variant" heading="Outlined and filled">
+      <div data-demo="grid" style="grid-template-columns: repeat(auto-fill, minmax(min(14rem, 100%), 1fr));">
+        <div dsField label="Board name">
+          <div dsInput variant="outlined" value="Spring launch"></div>
+        </div>
+        <div dsField label="Team name">
+          <div dsInput variant="filled" value="Design"></div>
+        </div>
+        <div dsField label="اسم اللوحة" lang="ar" dir="rtl">
+          <div dsInput variant="filled" value="إطلاق الربيع"></div>
+        </div>
+      </div>
+    </section>
   `,
 })
 export default class InputDemo {

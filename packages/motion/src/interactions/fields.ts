@@ -77,7 +77,7 @@ export const fieldsInteractions = [
     feedback:
       'Rest, focus, blur. The label rises by distance.shift on the snappy spring and its color eases to the primary text color (--_field-fg-focus) while the field holds focus; on blur both return. An invalid field turns its label the danger text color. With a floating label (Field floating) the label lies in the box while the control is empty and rises to its place above it on focus or with a value.',
     beats: [
-      'Action: translateY(-distance.shift) (Neutral 4px, Desk 6px; Studio, whose distances are 0px, lifts space.3xs, 2px, through its Field recipe) on ease.spring-snappy over duration.spring-snappy (Neutral 158ms, Desk 300ms with about 10% overshoot, Studio 70ms).',
+      'Action: translateY(-distance.shift) (Neutral 4px, Desk 6px; Studio, whose distances are 0px, lifts space.fixed-4xs, 2px, through its Field recipe) on ease.spring-snappy over duration.spring-snappy (Neutral 158ms, Desk 300ms with about 10% overshoot, Studio 70ms).',
       'Color: the label color eases from text.default to primary.on-surface over the same duration on ease.out.',
       'Floating: from inside the box (--_field-float-drop down, --_field-float-inset in) to its place, on the same spring.',
     ],

@@ -364,7 +364,7 @@ function WithParts({ parts, children }: { parts: string[]; children: ReactNode }
 describe('Popover optional parts (order 1.29)', () => {
   it('renders no title bar unless the style turns it on', () => {
     render(
-      <Theme style="desk">
+      <Theme style="neutral">
         <Basic defaultOpen />
       </Theme>,
     );

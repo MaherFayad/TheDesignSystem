@@ -133,6 +133,42 @@ describe('switch-drag on the control', () => {
     expect(host.changes).toEqual([true]);
   });
 
+  // Order 1.29 (B4 and N1), as React's Switch.drag.test.tsx.
+  it('while dragging the root shows the side the thumb is on; the control keeps aria-checked (B4)', async () => {
+    const { root, control, settle } = await setup();
+    const c = control('plain');
+    pointer(c, 'pointerdown', 10, { time: 3000 });
+    pointer(c, 'pointermove', 18);
+    await settle();
+    expect(root('plain').getAttribute('data-state')).toBe('unchecked');
+    pointer(c, 'pointermove', 24);
+    await settle();
+    // Past the middle (14 of 24): the root steps to checked; the control still says what it is.
+    expect(root('plain').getAttribute('data-state')).toBe('checked');
+    expect(c.getAttribute('aria-checked')).toBe('false');
+    expect(c.getAttribute('data-state')).toBe('unchecked');
+    pointer(c, 'pointermove', 12);
+    await settle();
+    expect(root('plain').getAttribute('data-state')).toBe('unchecked');
+    pointer(c, 'pointercancel', 12);
+    await settle();
+    expect(root('plain').getAttribute('data-state')).toBe('unchecked');
+  });
+
+  it('a release marks the root data-released until the next press or key (N1)', async () => {
+    const { root, control } = await setup();
+    const c = control('plain');
+    pointer(c, 'pointerdown', 10, { time: 4000 });
+    expect(root('plain').hasAttribute('data-released')).toBe(false);
+    pointer(c, 'pointerup', 10);
+    expect(root('plain').hasAttribute('data-released')).toBe(true);
+    pointer(c, 'pointerdown', 10, { time: 4100 });
+    expect(root('plain').hasAttribute('data-released')).toBe(false);
+    pointer(c, 'pointerup', 10);
+    c.dispatchEvent(new KeyboardEvent('keydown', { key: ' ', bubbles: true }));
+    expect(root('plain').hasAttribute('data-released')).toBe(false);
+  });
+
   it('rubber bands past the end, at most 12 percent of the travel', async () => {
     const { root, control } = await setup();
     const c = control('plain');
