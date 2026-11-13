@@ -574,6 +574,12 @@ Known weak spots in the evidence, not in the behaviour:
   reach.
 - `window-settle` is still a fade in Studio and Neutral; that comes from
   their motion presets in `packages/styles`.
+- In Desk the button label rolls on hover from the Desk recipe
+  (`packages/styles/desk/recipes/Button.css`). Its label `transform` sits in
+  the recipe layer, so it takes the place of the press sink on the label in
+  Desk; the root dip, shade and glow still play. If Desk wants the sink as
+  well, the recipe can add `translate: 0 var(--_button-part-y)` to its
+  label rule.
 
 ## Recorder
 
