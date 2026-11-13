@@ -26,8 +26,17 @@ The fixes:
   (`--_switch-thumb-ring-width`) keeps a clear lens readable while held.
 - Android: the fill fell about 1px short of the dot, because the track
   border there is 2dp. A new hook, `--_switch-fill-reach`, fixes it.
-- Android: the off dot keeps a 1dp inner edge in the track border color, 1dp
-  at any dot scale. Without it, a light handle on a light track had no edge.
+- Android: the off dot keeps a 1dp inner edge in the platform's handle
+  color (`border-control-hover`), 1dp at any dot scale. It is drawn through a
+  new hook, `--_switch-thumb-edge` and `--_switch-thumb-edge-width`: an inset
+  ring in the thumb's box-shadow, under the style's shadows. A first version
+  used a transparent `outline`, which the forced-colors gate rejects.
+- A drag draws the thumb at its own size (at most 1) and stops its drawn
+  travel at the ends. The rubber band stays in the progress the snap reads.
+  Before, the held growth (Liquid `scale.pop`) and the rubber band carried
+  the lens past the track's end, and its white rim met the page (Liquid
+  light web, 2.13 at progress 1). This also holds for a capsule thumb
+  (`--_switch-thumb-width`).
 - iOS: a held lens no longer casts the drop shadow. The shadow darkened the
   fill around the thumb in dark schemes. It comes back on release.
 
@@ -68,6 +77,9 @@ Tests that fail before and pass after:
 
 - `Switch.drag.test.tsx`, "Switch thumb contrast on every frame": the
   timing, ring, drag-step and hook rules.
+- "B4: a drag draws the thumb at its own size and stops it at the ends" and
+  "B3: draws an edge hook inside the thumb": both fail on the snapshot
+  without them, checked by swapping Switch.css.
 - `Switch.drag.test.tsx`, "B4 ... the root shows the side the thumb is on".
 - `switch-drag.test.ts`, `dragOnSide`.
 
@@ -140,6 +152,7 @@ passes.
 | `--_switch-thumb-radius` | thumb | `radius.pill` | styles |
 | `--_switch-thumb-width` | thumb inline size, read by the travel, the stretch and the cut | `--_switch-thumb-size` | styles (capsule lens) |
 | `--_switch-thumb-ring-width` | ring inside the thumb's edge, in the thumb color | `border-width.strong` | styles (0 to drop) |
+| `--_switch-thumb-edge`, `--_switch-thumb-edge-width` (new) | inset ring inside the thumb's edge, its width divided by the thumb scale | `transparent`, `0px` | platforms (Android off: `border-control-hover`, 1dp) |
 | `--_switch-fill-reach` (new this round) | how far the fill clip reaches past the thumb | `--_switch-inset` | platforms (Android: strong plus default) |
 | `--_switch-color-ease`, `--_switch-bg-ease` | working, not for styles | | Switch.css |
 | `--_radio-group-radius`, `--_radio-group-dot-radius` | radio circle with its ring and veil; the dot | `radius.pill` | styles |
@@ -159,6 +172,9 @@ No hook or part was renamed or removed.
 - **Checkbox mark `data-enter`.** Set when the mark draws from an empty box
   (React `Checkbox.tsx`).
 - **ToggleGroup.** The ink label is held outside the indicator track.
+- The lead reports Angular already ported `data-enter`, the drag `data-state`
+  and `data-released`. No DOM change came after those: the drag clamp, the
+  edge hook and the fill reach are CSS only.
 - **ToggleButton and ToggleGroup items.** The last child is
   `<span data-part="hit" aria-hidden="true">`, from the actions lane's
   ButtonBase.
@@ -174,7 +190,14 @@ No hook or part was renamed or removed.
 - `packages/react/src/components/Switch/drag.ts` and
   `Switch.drag.test.tsx`: the flag, `onKeyDown`, the N1 tests.
 - `docs/reports/fixes/interactions-3/switch-contrast.cjs`: the tap in held
-  mode.
+  mode, and `--css "<rules>"` to try a hook (a capsule thumb) before a style
+  sets it.
+- `switch-contrast.capsule.json`: a run with
+  `--_switch-thumb-width: calc(var(--_switch-thumb-size) * 1.5)` on Liquid
+  and iOS.
+- `packages/motion/src/interactions/toggles.ts`: switch-drag text (the thumb
+  stops at the ends and drops its growth once a drag starts).
+- `ToggleGroup.manifest.json`: `hit` taken out of `anatomy`.
 - `switch-contrast.after.json`: rerun.
 
 The first agent's files are listed in `8aeb19b`.
@@ -207,7 +230,13 @@ The first agent's files are listed in `8aeb19b`.
   RadioCard, ToggleButton, ToggleGroup, Select, DropdownMenu and ListBox: all
   10 pass. Each has 37 cases, Select and DropdownMenu 57. ToggleGroup passed
   only after the anatomy fix above.
-- `npm run check`: see the summary returned to the lead.
+- `npm run check` (before the Liquid round): tokens, gen, typecheck,
+  manifests, and the Angular, native, docs and consumer checks pass. eslint
+  fails on `packages/angular/src/components/select/select.motion.spec.ts:87`
+  (an unused `items`, Angular lane). vitest fails in the no-tailwind,
+  no-native-title and doctor gates (5s timeouts under load, no findings) and
+  in `PhoneField.test.tsx` "renders the demo ..." (fields lane). None of
+  these is in my files.
 - Lint gates: two gates (`no-tailwind`, `no-native-title`) timed out at 5s
   under machine load. They report no findings.
 
