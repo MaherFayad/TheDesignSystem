@@ -6,11 +6,11 @@ Made by `npm run shots -- --compare react angular`. pixelmatch threshold 0.1; a 
 
 | File | Result | Differing pixels | Where | Diff |
 | --- | --- | --- | --- | --- |
-| alert/desk-dark-ltr-comfortable.png | pass | 0 (0.000 percent) |  | none |
+| alert/desk-dark-ltr-comfortable.png | pass | 2 (0.000 percent) | x 73 to 127, y 894 to 894 | [diff](alert/desk-dark-ltr-comfortable.png) |
 | alert/desk-dark-ltr-compact.png | pass | 0 (0.000 percent) |  | none |
 | alert/desk-dark-ltr.png | pass | 0 (0.000 percent) |  | none |
-| alert/desk-dark-rtl.png | pass | 0 (0.000 percent) |  | none |
-| alert/desk-light-ltr.png | pass | 0 (0.000 percent) |  | none |
+| alert/desk-dark-rtl.png | pass | 4 (0.000 percent) | x 1144 to 1222, y 904 to 909 | [diff](alert/desk-dark-rtl.png) |
+| alert/desk-light-ltr.png | pass | 27 (0.002 percent) | x 943 to 983, y 97 to 360 | [diff](alert/desk-light-ltr.png) |
 | alert/desk-light-rtl.png | pass | 0 (0.000 percent) |  | none |
 | alert/liquid-dark-ltr-comfortable.png | pass | 0 (0.000 percent) |  | none |
 | alert/liquid-dark-ltr-compact.png | pass | 0 (0.000 percent) |  | none |
@@ -46,16 +46,16 @@ Made by `npm run shots -- --compare react angular`. pixelmatch threshold 0.1; a 
 | autocomplete/studio-dark-rtl.png | pass | 0 (0.000 percent) |  | none |
 | autocomplete/studio-light-ltr.png | pass | 0 (0.000 percent) |  | none |
 | autocomplete/studio-light-rtl.png | pass | 0 (0.000 percent) |  | none |
-| banner/desk-dark-ltr.png | pass | 0 (0.000 percent) |  | none |
+| banner/desk-dark-ltr.png | pass | 1 (0.000 percent) | x 1104 to 1104, y 719 to 719 | [diff](banner/desk-dark-ltr.png) |
 | banner/desk-dark-rtl.png | pass | 0 (0.000 percent) |  | none |
 | banner/desk-light-ltr.png | pass | 0 (0.000 percent) |  | none |
 | banner/desk-light-rtl.png | pass | 0 (0.000 percent) |  | none |
-| banner/liquid-dark-ltr.png | pass | 0 (0.000 percent) |  | none |
-| banner/liquid-dark-rtl.png | pass | 0 (0.000 percent) |  | none |
+| banner/liquid-dark-ltr.png | pass | 1 (0.000 percent) | x 32 to 32, y 302 to 302 | [diff](banner/liquid-dark-ltr.png) |
+| banner/liquid-dark-rtl.png | pass | 2 (0.000 percent) | x 1240 to 1241, y 434 to 434 | [diff](banner/liquid-dark-rtl.png) |
 | banner/liquid-light-ltr.png | pass | 0 (0.000 percent) |  | none |
 | banner/liquid-light-rtl.png | pass | 0 (0.000 percent) |  | none |
 | banner/neutral-dark-ltr.png | pass | 0 (0.000 percent) |  | none |
-| banner/neutral-dark-rtl.png | pass | 0 (0.000 percent) |  | none |
+| banner/neutral-dark-rtl.png | pass | 1 (0.000 percent) | x 1244 to 1244, y 185 to 185 | [diff](banner/neutral-dark-rtl.png) |
 | banner/neutral-light-ltr.png | pass | 0 (0.000 percent) |  | none |
 | banner/neutral-light-rtl.png | pass | 0 (0.000 percent) |  | none |
 | banner/studio-dark-ltr.png | pass | 0 (0.000 percent) |  | none |
@@ -86,12 +86,12 @@ Made by `npm run shots -- --compare react angular`. pixelmatch threshold 0.1; a 
 | button-group/studio-dark-rtl.png | pass | 0 (0.000 percent) |  | none |
 | button-group/studio-light-ltr.png | pass | 0 (0.000 percent) |  | none |
 | button-group/studio-light-rtl.png | pass | 0 (0.000 percent) |  | none |
-| button/desk-dark-ltr-comfortable.png | pass | 0 (0.000 percent) |  | none |
-| button/desk-dark-ltr-compact.png | pass | 0 (0.000 percent) |  | none |
+| button/desk-dark-ltr-comfortable.png | pass | 4 (0.000 percent) | x 327 to 968, y 269 to 1243 | [diff](button/desk-dark-ltr-comfortable.png) |
+| button/desk-dark-ltr-compact.png | pass | 3 (0.000 percent) | x 146 to 1174, y 253 to 993 | [diff](button/desk-dark-ltr-compact.png) |
 | button/desk-dark-ltr.png | pass | 0 (0.000 percent) |  | none |
 | button/desk-dark-rtl.png | pass | 0 (0.000 percent) |  | none |
-| button/desk-light-ltr.png | pass | 0 (0.000 percent) |  | none |
-| button/desk-light-rtl.png | pass | 0 (0.000 percent) |  | none |
+| button/desk-light-ltr.png | pass | 6 (0.000 percent) | x 387 to 905, y 194 to 1063 | [diff](button/desk-light-ltr.png) |
+| button/desk-light-rtl.png | pass | 13 (0.001 percent) | x 750 to 1109, y 182 to 1243 | [diff](button/desk-light-rtl.png) |
 | button/liquid-dark-ltr-comfortable.png | pass | 0 (0.000 percent) |  | none |
 | button/liquid-dark-ltr-compact.png | pass | 0 (0.000 percent) |  | none |
 | button/liquid-dark-ltr.png | pass | 0 (0.000 percent) |  | none |
@@ -254,12 +254,12 @@ Made by `npm run shots -- --compare react angular`. pixelmatch threshold 0.1; a 
 | consent-field/studio-dark-rtl.png | pass | 0 (0.000 percent) |  | none |
 | consent-field/studio-light-ltr.png | pass | 0 (0.000 percent) |  | none |
 | consent-field/studio-light-rtl.png | pass | 0 (0.000 percent) |  | none |
-| copy-button/desk-dark-ltr-comfortable.png | pass | 0 (0.000 percent) |  | none |
-| copy-button/desk-dark-ltr-compact.png | pass | 0 (0.000 percent) |  | none |
-| copy-button/desk-dark-ltr.png | pass | 0 (0.000 percent) |  | none |
+| copy-button/desk-dark-ltr-comfortable.png | pass | 1 (0.000 percent) | x 357 to 357, y 216 to 216 | [diff](copy-button/desk-dark-ltr-comfortable.png) |
+| copy-button/desk-dark-ltr-compact.png | pass | 2 (0.000 percent) | x 278 to 312, y 208 to 209 | [diff](copy-button/desk-dark-ltr-compact.png) |
+| copy-button/desk-dark-ltr.png | pass | 5 (0.000 percent) | x 180 to 389, y 147 to 244 | [diff](copy-button/desk-dark-ltr.png) |
 | copy-button/desk-dark-rtl.png | pass | 0 (0.000 percent) |  | none |
-| copy-button/desk-light-ltr.png | pass | 0 (0.000 percent) |  | none |
-| copy-button/desk-light-rtl.png | pass | 0 (0.000 percent) |  | none |
+| copy-button/desk-light-ltr.png | pass | 9 (0.001 percent) | x 133 to 576, y 139 to 348 | [diff](copy-button/desk-light-ltr.png) |
+| copy-button/desk-light-rtl.png | pass | 4 (0.000 percent) | x 995 to 1147, y 139 to 142 | [diff](copy-button/desk-light-rtl.png) |
 | copy-button/liquid-dark-ltr-comfortable.png | pass | 0 (0.000 percent) |  | none |
 | copy-button/liquid-dark-ltr-compact.png | pass | 0 (0.000 percent) |  | none |
 | copy-button/liquid-dark-ltr.png | pass | 0 (0.000 percent) |  | none |
@@ -550,30 +550,30 @@ Made by `npm run shots -- --compare react angular`. pixelmatch threshold 0.1; a 
 | inline-edit/studio-dark-rtl.png | pass | 0 (0.000 percent) |  | none |
 | inline-edit/studio-light-ltr.png | pass | 0 (0.000 percent) |  | none |
 | inline-edit/studio-light-rtl.png | pass | 0 (0.000 percent) |  | none |
-| input-group/desk-dark-ltr-comfortable.png | pass | 0 (0.000 percent) |  | none |
-| input-group/desk-dark-ltr-compact.png | pass | 0 (0.000 percent) |  | none |
-| input-group/desk-dark-ltr.png | pass | 0 (0.000 percent) |  | none |
-| input-group/desk-dark-rtl.png | pass | 0 (0.000 percent) |  | none |
-| input-group/desk-light-ltr.png | pass | 0 (0.000 percent) |  | none |
-| input-group/desk-light-rtl.png | pass | 0 (0.000 percent) |  | none |
-| input-group/liquid-dark-ltr-comfortable.png | pass | 0 (0.000 percent) |  | none |
-| input-group/liquid-dark-ltr-compact.png | pass | 0 (0.000 percent) |  | none |
-| input-group/liquid-dark-ltr.png | pass | 0 (0.000 percent) |  | none |
-| input-group/liquid-dark-rtl.png | pass | 0 (0.000 percent) |  | none |
-| input-group/liquid-light-ltr.png | pass | 0 (0.000 percent) |  | none |
-| input-group/liquid-light-rtl.png | pass | 0 (0.000 percent) |  | none |
-| input-group/neutral-dark-ltr-comfortable.png | pass | 0 (0.000 percent) |  | none |
-| input-group/neutral-dark-ltr-compact.png | pass | 0 (0.000 percent) |  | none |
-| input-group/neutral-dark-ltr.png | pass | 0 (0.000 percent) |  | none |
-| input-group/neutral-dark-rtl.png | pass | 0 (0.000 percent) |  | none |
-| input-group/neutral-light-ltr.png | pass | 0 (0.000 percent) |  | none |
-| input-group/neutral-light-rtl.png | pass | 0 (0.000 percent) |  | none |
-| input-group/studio-dark-ltr-comfortable.png | pass | 0 (0.000 percent) |  | none |
-| input-group/studio-dark-ltr-compact.png | pass | 0 (0.000 percent) |  | none |
-| input-group/studio-dark-ltr.png | pass | 0 (0.000 percent) |  | none |
-| input-group/studio-dark-rtl.png | pass | 0 (0.000 percent) |  | none |
-| input-group/studio-light-ltr.png | pass | 0 (0.000 percent) |  | none |
-| input-group/studio-light-rtl.png | pass | 0 (0.000 percent) |  | none |
+| input-group/desk-dark-ltr-comfortable.png | pass | 1231 (0.120 percent) | x 103 to 1207, y 314 to 326 | [diff](input-group/desk-dark-ltr-comfortable.png) |
+| input-group/desk-dark-ltr-compact.png | pass | 1218 (0.119 percent) | x 87 to 1225, y 254 to 266 | [diff](input-group/desk-dark-ltr-compact.png) |
+| input-group/desk-dark-ltr.png | pass | 1230 (0.120 percent) | x 95 to 1216, y 283 to 295 | [diff](input-group/desk-dark-ltr.png) |
+| input-group/desk-dark-rtl.png | pass | 1230 (0.120 percent) | x 95 to 1216, y 290 to 302 | [diff](input-group/desk-dark-rtl.png) |
+| input-group/desk-light-ltr.png | pass | 1073 (0.105 percent) | x 96 to 1216, y 283 to 295 | [diff](input-group/desk-light-ltr.png) |
+| input-group/desk-light-rtl.png | pass | 1073 (0.105 percent) | x 96 to 1216, y 290 to 302 | [diff](input-group/desk-light-rtl.png) |
+| input-group/liquid-dark-ltr-comfortable.png | pass | 564 (0.055 percent) | x 107 to 1211, y 311 to 324 | [diff](input-group/liquid-dark-ltr-comfortable.png) |
+| input-group/liquid-dark-ltr-compact.png | pass | 564 (0.055 percent) | x 91 to 1227, y 253 to 266 | [diff](input-group/liquid-dark-ltr-compact.png) |
+| input-group/liquid-dark-ltr.png | pass | 564 (0.055 percent) | x 107 to 1211, y 311 to 324 | [diff](input-group/liquid-dark-ltr.png) |
+| input-group/liquid-dark-rtl.png | pass | 561 (0.055 percent) | x 107 to 1211, y 318 to 331 | [diff](input-group/liquid-dark-rtl.png) |
+| input-group/liquid-light-ltr.png | pass | 544 (0.053 percent) | x 107 to 1211, y 311 to 324 | [diff](input-group/liquid-light-ltr.png) |
+| input-group/liquid-light-rtl.png | pass | 544 (0.053 percent) | x 107 to 1211, y 318 to 331 | [diff](input-group/liquid-light-rtl.png) |
+| input-group/neutral-dark-ltr-comfortable.png | pass | 549 (0.054 percent) | x 103 to 1211, y 307 to 318 | [diff](input-group/neutral-dark-ltr-comfortable.png) |
+| input-group/neutral-dark-ltr-compact.png | pass | 549 (0.054 percent) | x 87 to 1227, y 249 to 260 | [diff](input-group/neutral-dark-ltr-compact.png) |
+| input-group/neutral-dark-ltr.png | pass | 549 (0.054 percent) | x 103 to 1211, y 307 to 318 | [diff](input-group/neutral-dark-ltr.png) |
+| input-group/neutral-dark-rtl.png | pass | 547 (0.053 percent) | x 103 to 1211, y 314 to 325 | [diff](input-group/neutral-dark-rtl.png) |
+| input-group/neutral-light-ltr.png | pass | 543 (0.053 percent) | x 103 to 1211, y 307 to 318 | [diff](input-group/neutral-light-ltr.png) |
+| input-group/neutral-light-rtl.png | pass | 543 (0.053 percent) | x 103 to 1211, y 314 to 325 | [diff](input-group/neutral-light-rtl.png) |
+| input-group/studio-dark-ltr-comfortable.png | pass | 471 (0.046 percent) | x 99 to 1212, y 303 to 313 | [diff](input-group/studio-dark-ltr-comfortable.png) |
+| input-group/studio-dark-ltr-compact.png | pass | 471 (0.046 percent) | x 83 to 1228, y 245 to 255 | [diff](input-group/studio-dark-ltr-compact.png) |
+| input-group/studio-dark-ltr.png | pass | 471 (0.046 percent) | x 91 to 1220, y 273 to 283 | [diff](input-group/studio-dark-ltr.png) |
+| input-group/studio-dark-rtl.png | pass | 471 (0.046 percent) | x 91 to 1220, y 280 to 290 | [diff](input-group/studio-dark-rtl.png) |
+| input-group/studio-light-ltr.png | pass | 453 (0.044 percent) | x 91 to 1220, y 273 to 283 | [diff](input-group/studio-light-ltr.png) |
+| input-group/studio-light-rtl.png | pass | 453 (0.044 percent) | x 91 to 1220, y 280 to 290 | [diff](input-group/studio-light-rtl.png) |
 | input/desk-dark-ltr-comfortable.png | pass | 0 (0.000 percent) |  | none |
 | input/desk-dark-ltr-compact.png | pass | 0 (0.000 percent) |  | none |
 | input/desk-dark-ltr.png | pass | 0 (0.000 percent) |  | none |
@@ -1110,14 +1110,14 @@ Made by `npm run shots -- --compare react angular`. pixelmatch threshold 0.1; a 
 | spinner/studio-dark-rtl.png | pass | 0 (0.000 percent) |  | none |
 | spinner/studio-light-ltr.png | pass | 0 (0.000 percent) |  | none |
 | spinner/studio-light-rtl.png | pass | 0 (0.000 percent) |  | none |
-| split-button/desk-dark-ltr-open.png | pass | 0 (0.000 percent) |  | none |
-| split-button/desk-dark-ltr.png | pass | 0 (0.000 percent) |  | none |
-| split-button/desk-dark-rtl-open.png | pass | 0 (0.000 percent) |  | none |
-| split-button/desk-dark-rtl.png | pass | 0 (0.000 percent) |  | none |
-| split-button/desk-light-ltr-open.png | pass | 0 (0.000 percent) |  | none |
-| split-button/desk-light-ltr.png | pass | 0 (0.000 percent) |  | none |
-| split-button/desk-light-rtl-open.png | pass | 0 (0.000 percent) |  | none |
-| split-button/desk-light-rtl.png | pass | 0 (0.000 percent) |  | none |
+| split-button/desk-dark-ltr-open.png | pass | 4 (0.000 percent) | x 500 to 757, y 144 to 150 | [diff](split-button/desk-dark-ltr-open.png) |
+| split-button/desk-dark-ltr.png | pass | 5 (0.000 percent) | x 752 to 812, y 143 to 150 | [diff](split-button/desk-dark-ltr.png) |
+| split-button/desk-dark-rtl-open.png | pass | 2 (0.000 percent) | x 783 to 802, y 153 to 155 | [diff](split-button/desk-dark-rtl-open.png) |
+| split-button/desk-dark-rtl.png | pass | 17 (0.002 percent) | x 404 to 480, y 145 to 158 | [diff](split-button/desk-dark-rtl.png) |
+| split-button/desk-light-ltr-open.png | pass | 1 (0.000 percent) | x 762 to 762, y 285 to 285 | [diff](split-button/desk-light-ltr-open.png) |
+| split-button/desk-light-ltr.png | pass | 6 (0.001 percent) | x 880 to 960, y 94 to 210 | [diff](split-button/desk-light-ltr.png) |
+| split-button/desk-light-rtl-open.png | pass | 1 (0.000 percent) | x 314 to 314, y 103 to 103 | [diff](split-button/desk-light-rtl-open.png) |
+| split-button/desk-light-rtl.png | pass | 3 (0.000 percent) | x 266 to 431, y 103 to 154 | [diff](split-button/desk-light-rtl.png) |
 | split-button/liquid-dark-ltr-open.png | pass | 0 (0.000 percent) |  | none |
 | split-button/liquid-dark-ltr.png | pass | 0 (0.000 percent) |  | none |
 | split-button/liquid-dark-rtl-open.png | pass | 0 (0.000 percent) |  | none |
@@ -1243,9 +1243,9 @@ Made by `npm run shots -- --compare react angular`. pixelmatch threshold 0.1; a 
 | toast/desk-dark-rtl-open.png | pass | 0 (0.000 percent) |  | none |
 | toast/desk-dark-rtl.png | pass | 0 (0.000 percent) |  | none |
 | toast/desk-light-ltr-open.png | pass | 0 (0.000 percent) |  | none |
-| toast/desk-light-ltr.png | pass | 0 (0.000 percent) |  | none |
-| toast/desk-light-rtl-open.png | pass | 0 (0.000 percent) |  | none |
-| toast/desk-light-rtl.png | pass | 0 (0.000 percent) |  | none |
+| toast/desk-light-ltr.png | pass | 1 (0.000 percent) | x 23 to 23, y 263 to 263 | [diff](toast/desk-light-ltr.png) |
+| toast/desk-light-rtl-open.png | pass | 1 (0.000 percent) | x 651 to 651, y 184 to 184 | [diff](toast/desk-light-rtl-open.png) |
+| toast/desk-light-rtl.png | pass | 1 (0.000 percent) | x 651 to 651, y 184 to 184 | [diff](toast/desk-light-rtl.png) |
 | toast/liquid-dark-ltr-open.png | pass | 0 (0.000 percent) |  | none |
 | toast/liquid-dark-ltr.png | pass | 0 (0.000 percent) |  | none |
 | toast/liquid-dark-rtl-open.png | pass | 0 (0.000 percent) |  | none |
@@ -1270,12 +1270,12 @@ Made by `npm run shots -- --compare react angular`. pixelmatch threshold 0.1; a 
 | toast/studio-light-ltr.png | pass | 0 (0.000 percent) |  | none |
 | toast/studio-light-rtl-open.png | pass | 0 (0.000 percent) |  | none |
 | toast/studio-light-rtl.png | pass | 0 (0.000 percent) |  | none |
-| toggle-button/desk-dark-ltr-comfortable.png | pass | 0 (0.000 percent) |  | none |
+| toggle-button/desk-dark-ltr-comfortable.png | pass | 9 (0.001 percent) | x 186 to 1048, y 162 to 1052 | [diff](toggle-button/desk-dark-ltr-comfortable.png) |
 | toggle-button/desk-dark-ltr-compact.png | pass | 0 (0.000 percent) |  | none |
-| toggle-button/desk-dark-ltr.png | pass | 0 (0.000 percent) |  | none |
-| toggle-button/desk-dark-rtl.png | pass | 0 (0.000 percent) |  | none |
-| toggle-button/desk-light-ltr.png | pass | 0 (0.000 percent) |  | none |
-| toggle-button/desk-light-rtl.png | pass | 0 (0.000 percent) |  | none |
+| toggle-button/desk-dark-ltr.png | pass | 4 (0.000 percent) | x 176 to 563, y 224 to 257 | [diff](toggle-button/desk-dark-ltr.png) |
+| toggle-button/desk-dark-rtl.png | pass | 1 (0.000 percent) | x 604 to 604, y 150 to 150 | [diff](toggle-button/desk-dark-rtl.png) |
+| toggle-button/desk-light-ltr.png | pass | 4 (0.000 percent) | x 163 to 211, y 146 to 148 | [diff](toggle-button/desk-light-ltr.png) |
+| toggle-button/desk-light-rtl.png | pass | 1 (0.000 percent) | x 635 to 635, y 150 to 150 | [diff](toggle-button/desk-light-rtl.png) |
 | toggle-button/liquid-dark-ltr-comfortable.png | pass | 0 (0.000 percent) |  | none |
 | toggle-button/liquid-dark-ltr-compact.png | pass | 0 (0.000 percent) |  | none |
 | toggle-button/liquid-dark-ltr.png | pass | 0 (0.000 percent) |  | none |
