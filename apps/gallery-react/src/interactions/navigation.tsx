@@ -132,6 +132,10 @@ function TabSlide() {
             <TabsTrigger value="members">Members</TabsTrigger>
             <TabsTrigger value="history">History</TabsTrigger>
           </TabsList>
+          {/* Review B8: every tab controls a panel. */}
+          <TabsPanel value="general">Name the board.</TabsPanel>
+          <TabsPanel value="members">Invite people.</TabsPanel>
+          <TabsPanel value="history">Every saved version.</TabsPanel>
         </Tabs>
         <SegmentedControl
           aria-label="Range"
