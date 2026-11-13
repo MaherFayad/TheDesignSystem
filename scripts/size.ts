@@ -1,4 +1,5 @@
 // npm run size (or npx tsx scripts/size.ts) [--out docs/reports/size-wave-1.md] [--json file]
+//                                         [--baseline old.json] [--baseline-label "first run"]
 //
 // The size report. Every package in this repo exports source (TypeScript and
 // CSS), so this script builds each public entry the way a consumer bundler
@@ -44,22 +45,26 @@ interface Measured extends Entry {
   error?: string;
 }
 
-function parseArgs(argv: string[]): { out: string; json: string } {
+function parseArgs(argv: string[]): { out: string; json: string; baseline?: string; baselineLabel: string } {
   let out = join(repo, 'docs/reports/size-wave-1.md');
   let json = join(repo, 'docs/reports/size-wave-1.json');
+  let baseline: string | undefined;
+  let baselineLabel = 'the baseline';
   for (let i = 0; i < argv.length; i += 1) {
     const a = argv[i];
     if (a === '--out') out = resolve(argv[++i] ?? out);
     else if (a === '--json') json = resolve(argv[++i] ?? json);
+    else if (a === '--baseline') baseline = resolve(argv[++i] ?? '');
+    else if (a === '--baseline-label') baselineLabel = argv[++i] ?? baselineLabel;
     else if (a === '--help' || a === '-h') {
-      console.log('npx tsx scripts/size.ts [--out file.md] [--json file.json]');
+      console.log('npx tsx scripts/size.ts [--out file.md] [--json file.json] [--baseline old.json] [--baseline-label text]');
       process.exit(0);
     } else {
       console.error(`Unknown argument: ${a}`);
       process.exit(2);
     }
   }
-  return { out, json };
+  return { out, json, baseline, baselineLabel };
 }
 
 /** Each exports value as a list of [key, target] with the default condition picked. */
@@ -210,6 +215,41 @@ function table(rows: Measured[], withPkg = false): string[] {
   ];
 }
 
+/** The change since an earlier JSON report of this script: app totals, the largest moves, and entries added or gone. */
+function changeSince(results: Measured[], file: string, label: string): string[] {
+  if (!existsSync(file)) return [`No baseline at \`${relative(repo, file)}\`.`];
+  const old = (JSON.parse(readFileSync(file, 'utf8')) as { results: Measured[] }).results;
+  const before = new Map(old.map((r) => [r.entry, r]));
+  const now = new Map(results.map((r) => [r.entry, r]));
+  const sign = (n: number) => `${n > 0 ? '+' : ''}${kb(n)}`;
+  const appSum = (rs: Measured[], barrel: string, icons: string) => {
+    const names = [barrel, icons, '@the-system/css', '@the-system/tokens/css', '@the-system/styles', '@the-system/shared', '@the-system/motion', '@the-system/icons'];
+    return names.reduce((n, e) => n + (rs.find((r) => r.entry === e && !r.error)?.gzip ?? 0), 0);
+  };
+  const lines = [`Against ${label}. Gzip KB; a plus sign is growth.`, '', '| What | Before | Now | Change |', '| --- | ---: | ---: | ---: |'];
+  for (const [name, barrel, icons] of [['React app', '@the-system/react', '@the-system/icons/react'], ['Angular app', '@the-system/angular', '@the-system/icons/angular']] as const) {
+    const a = appSum(old, barrel, icons);
+    const b = appSum(results, barrel, icons);
+    lines.push(`| ${name} | ${kb(a)} | ${kb(b)} | ${sign(b - a)} |`);
+  }
+  const sumGroup = (rs: Measured[], g: Entry['group']) => rs.filter((r) => r.group === g).reduce((n, r) => n + r.gzip, 0);
+  for (const [name, g] of [['Component CSS files, summed', 'component'], ['Style recipe files, summed', 'recipe']] as const) {
+    lines.push(`| ${name} | ${kb(sumGroup(old, g))} | ${kb(sumGroup(results, g))} | ${sign(sumGroup(results, g) - sumGroup(old, g))} |`);
+  }
+  const moves = results
+    .filter((r) => before.has(r.entry))
+    .map((r) => ({ r, d: r.gzip - (before.get(r.entry)?.gzip ?? 0) }))
+    .filter((m) => Math.abs(m.d) >= 51)
+    .sort((a, b) => Math.abs(b.d) - Math.abs(a.d))
+    .slice(0, 25);
+  lines.push('', 'The largest moves (0.05 KB gzip or more), at most 25:', '', '| Entry | Before | Now | Change |', '| --- | ---: | ---: | ---: |');
+  for (const { r, d } of moves) lines.push(`| \`${r.entry}\` | ${kb(before.get(r.entry)?.gzip ?? 0)} | ${kb(r.gzip)} | ${sign(d)} |`);
+  const added = results.filter((r) => !before.has(r.entry));
+  const gone = old.filter((r) => !now.has(r.entry));
+  lines.push('', `New since then: ${added.length ? added.map((r) => `\`${r.entry}\` (${kb(r.gzip)})`).join(', ') : 'none'}.`, '', `Gone since then: ${gone.length ? gone.map((r) => `\`${r.entry}\``).join(', ') : 'none'}.`);
+  return lines;
+}
+
 async function main(): Promise<number> {
   const args = parseArgs(process.argv.slice(2));
   const entries = findEntries();
@@ -246,6 +286,7 @@ async function main(): Promise<number> {
     '',
     ...appCost(results),
     '',
+    ...(args.baseline ? ['## Change since ' + args.baselineLabel, '', ...changeSince(results, args.baseline, args.baselineLabel), ''] : []),
     '## The ten largest, by gzip',
     '',
     ...table(top, true),

@@ -222,8 +222,9 @@ export function trapsFocus(m: Manifest): boolean {
  * docs/reports. A run narrowed with --component writes a partial report under
  * packages/contract-tests/.out/<pid>/, so it never clobbers the full one.
  */
-export function reportFile(repo: string, framework: string, partial: boolean, pid: number): string {
-  return partial ? join(repo, 'packages/contract-tests/.out', String(pid), `contract-${framework}.partial.json`) : join(repo, 'docs/reports', `contract-${framework}.json`);
+export function reportFile(repo: string, framework: string, partial: boolean, pid: number, suffix = ''): string {
+  const tag = suffix ? `${framework}-${suffix}` : framework;
+  return partial ? join(repo, 'packages/contract-tests/.out', String(pid), `contract-${tag}.partial.json`) : join(repo, 'docs/reports', `contract-${tag}.json`);
 }
 
 /** Class names that look like a state written as a class. */
@@ -380,6 +381,8 @@ export interface Axes {
   scheme?: string;
   /** compact, default or comfortable. Left out of the URL when not set. */
   density?: string;
+  /** web, ios or android. Left out of the URL when not set (the gallery reads web). */
+  platform?: string;
   dir: 'ltr' | 'rtl';
   lang: 'en' | 'ar';
   case?: string;
@@ -391,6 +394,7 @@ export function demoPath(kebab: string, axes: Axes): string {
   if (axes.style) q.set('style', axes.style);
   if (axes.scheme) q.set('scheme', axes.scheme);
   if (axes.density) q.set('density', axes.density);
+  if (axes.platform) q.set('platform', axes.platform);
   q.set('dir', axes.dir);
   q.set('lang', axes.lang);
   if (axes.case) q.set('case', axes.case);

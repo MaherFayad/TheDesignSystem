@@ -1,6 +1,7 @@
 // npm run a11y -- [--framework react|angular] [--url http://...] [--component a,b] [--page /,/all] [--workers n]
 //
-// axe on every gallery page: `/`, `/all` and `/c/<kebab>` for every
+// axe on every gallery page: `/`, `/all`, `/interactions`, `/platforms`
+// (React only) and `/c/<kebab>` for every
 // component with a gallery route, in every style and scheme from
 // packages/styles/*/style.json, in English ltr and Arabic rtl, with the
 // tags wcag2a, wcag2aa, wcag21aa and wcag22aa, minus the manifest's
@@ -161,6 +162,14 @@ async function run(browser: Browser, url: string, job: Job): Promise<Result> {
       await page.waitForFunction(() => document.querySelector('[data-gallery="loading"]') === null, undefined, { timeout: 120_000 });
     } else if (job.page === '/') {
       await page.locator('[data-gallery="index"], main').first().waitFor({ state: 'attached', timeout: 120_000 });
+    } else if (job.page === '/interactions') {
+      await page.locator('article[data-interaction]').first().waitFor({ state: 'attached', timeout: 120_000 });
+      // First paint motion is off under reduced motion; give lazy stages a moment.
+      await page.waitForTimeout(500);
+    } else if (job.page === '/platforms') {
+      await page.locator('[data-gallery="platforms-phone"] iframe').first().waitFor({ state: 'attached', timeout: 120_000 });
+      await page.waitForLoadState('load');
+      await page.waitForTimeout(1500);
     } else {
       await page.locator('[data-demo-case]').first().waitFor({ state: 'attached', timeout: 20_000 });
     }
@@ -332,6 +341,8 @@ async function main(): Promise<number> {
     const wanted = args.components.map((c) => c.toLowerCase());
     const manifests = loadManifests(repo)
       .filter((m) => m.kind === 'component')
+      // Only components ready for the framework: the route probe waits 20s on each page that is missing.
+      .filter((m) => m.frameworks?.[args.framework]?.status === 'ready')
       .filter((m) => wanted.length === 0 || wanted.includes(m.name.toLowerCase()) || wanted.includes(kebabCase(m.name)))
       .sort((a, b) => a.name.localeCompare(b.name));
     const routes = await probeRoutes(browser, url, manifests.map((m) => kebabCase(m.name)));
@@ -345,13 +356,16 @@ async function main(): Promise<number> {
       ]),
     );
     const jobs: Job[] = [];
-    const shellPages = args.pages.filter((p) => p === '/' || p === '/all');
+    // The gallery pages with their shell. /platforms exists in React only.
+    const SHELL = args.framework === 'react' ? ['/', '/all', '/interactions', '/platforms'] : ['/', '/all', '/interactions'];
+    const shellPages = args.pages.filter((p) => SHELL.includes(p));
     const wantedPages = args.pages.filter((p) => p.startsWith('/c/')).map((p) => p.slice(3));
     if (args.components.length === 0 && (args.pages.length === 0 || shellPages.length > 0)) {
       const allSkips = [...new Set(routed.flatMap((m) => m.contract?.skipAxeRules ?? []))];
       for (const mode of modes) {
         if (args.pages.length === 0 || shellPages.includes('/')) jobs.push({ page: '/', path: `/?${query(mode, true)}`, mode, skip: [] });
         if (args.pages.length === 0 || shellPages.includes('/all')) jobs.push({ page: '/all', path: `/all?${query(mode, true)}`, mode, skip: allSkips });
+        for (const extra of SHELL.slice(2)) if (args.pages.length === 0 || shellPages.includes(extra)) jobs.push({ page: extra, path: `${extra}?${query(mode, true)}`, mode, skip: allSkips });
       }
     }
     // With --page, only the component pages it names run.

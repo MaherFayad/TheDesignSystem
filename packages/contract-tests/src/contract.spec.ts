@@ -72,8 +72,17 @@ const repo = resolve(dirname(fileURLToPath(import.meta.url)), '../../..');
 const framework = process.env.DS_FRAMEWORK ?? 'react';
 const only = (process.env.DS_COMPONENT ?? '').split(',').map((s) => s.trim()).filter(Boolean);
 const manifests = loadManifests(repo);
-const styles = discoverStyles(repo);
-const base = defaultStyle(manifests, styles);
+// DS_STYLES (comma list) narrows the per style loops; DS_STYLE sets the style
+// of the checks that run once (variants, states, keys, reflow); DS_PLATFORM
+// (web, ios, android) is added to every URL. run.ts sets them from --styles,
+// --style and --platform.
+const onlyStyles = (process.env.DS_STYLES ?? '').split(',').map((s) => s.trim()).filter(Boolean);
+const allStyles = discoverStyles(repo);
+const styles = onlyStyles.length ? allStyles.filter((s) => onlyStyles.includes(s.id)) : allStyles;
+const base = (process.env.DS_STYLE ? allStyles.find((s) => s.id === process.env.DS_STYLE) : undefined) ?? defaultStyle(manifests, styles);
+const platform = process.env.DS_PLATFORM || undefined;
+/** The minimum target size in CSS px. 24 is WCAG 2.5.8; DS_TARGET_MIN raises it for a platform pass (44 ios, 48 android). */
+const targetMin = Number(process.env.DS_TARGET_MIN || 24);
 const baseAxes: Axes = {
   style: base?.id,
   scheme: base ? (base.schemes.includes('dark') ? 'dark' : base.defaultScheme) : undefined,
@@ -90,7 +99,7 @@ function note(text: string): void {
 
 /** Opens a demo. Skips the test when the URL renders no demo case. */
 async function open(page: Page, kebab: string, axes: Axes): Promise<void> {
-  const path = demoPath(kebab, axes);
+  const path = demoPath(kebab, { ...axes, platform: axes.platform ?? platform });
   await page.goto(path);
   const found = await page
     .locator('[data-demo-case]')
@@ -317,13 +326,13 @@ async function targetFailures(page: Page, small: TargetProbe[]): Promise<string[
       const p = await page.evaluate(probePoint, t.id);
       if (p) {
         await page.mouse.click(p.x, p.y);
-        if ((await page.evaluate(probeFocused, t.id)) && p.rootW >= 24 && p.rootH >= 24) {
+        if ((await page.evaluate(probeFocused, t.id)) && p.rootW >= targetMin && p.rootH >= targetMin) {
           note(`${t.what} is ${t.w} by ${t.h} px; its root is ${p.rootW} by ${p.rootH} px and a click there focuses it`);
           continue;
         }
       }
     }
-    failures.push(`${t.what} (owner ${t.owner}) is ${t.w} by ${t.h} px, under 24 by 24`);
+    failures.push(`${t.what} (owner ${t.owner}) is ${t.w} by ${t.h} px, under ${targetMin} by ${targetMin}`);
   }
   return failures;
 }
@@ -543,7 +552,7 @@ for (const m of components) {
       test(`${name}: target size, ${style.id} ${density}`, async ({ page }) => {
         await open(page, kebab, axes);
         await page.evaluate(finiteAnimationsDone);
-        const failures = await targetFailures(page, await page.evaluate(undersizedTargets, {}));
+        const failures = await targetFailures(page, await page.evaluate(undersizedTargets, { min: targetMin }));
         expect(failures, `${name} target size on ${page.url()}`).toEqual([]);
       });
     }
@@ -560,7 +569,7 @@ for (const m of components) {
           ...(await eachOpened(page, m, target, async () => {
             opened += 1;
             await page.evaluate(finiteAnimationsDone);
-            const small = await page.evaluate(undersizedTargets, { scope: `[data-ds="${target}"]:not([data-contract-seen])` });
+            const small = await page.evaluate(undersizedTargets, { scope: `[data-ds="${target}"]:not([data-contract-seen])`, min: targetMin });
             failures.push(...(await targetFailures(page, small)).map((f) => `opened by trigger ${opened}: ${f}`));
           })),
         );

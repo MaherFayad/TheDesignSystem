@@ -23,6 +23,18 @@ interface Args {
   framework: string;
   url?: string;
   components: string[];
+  /** The style of the checks that run once (DS_STYLE). */
+  style?: string;
+  /** Narrows the per style loops (DS_STYLES). */
+  styles?: string;
+  /** web, ios or android, added to every URL (DS_PLATFORM). */
+  platform?: string;
+  /** Minimum target size in px (DS_TARGET_MIN), default 24. */
+  targetMin?: string;
+  /** Passed to playwright --grep: run only the tests whose title matches. */
+  grep?: string;
+  /** A name for the report file, in place of the one built from the options. */
+  tag?: string;
 }
 
 function parseArgs(argv: string[]): Args {
@@ -34,8 +46,14 @@ function parseArgs(argv: string[]): Args {
     if (flag === '--framework') out.framework = value();
     else if (flag === '--url') out.url = value().replace(/\/+$/, '');
     else if (flag === '--component') out.components.push(...value().split(',').map((s) => s.trim()).filter(Boolean));
+    else if (flag === '--style') out.style = value();
+    else if (flag === '--styles') out.styles = value();
+    else if (flag === '--platform') out.platform = value();
+    else if (flag === '--target-min') out.targetMin = value();
+    else if (flag === '--grep') out.grep = value();
+    else if (flag === '--tag') out.tag = value();
     else if (flag === '--help' || flag === '-h') {
-      console.log('npm run contract -- --framework react|angular [--url http://host:port] [--component Button[,Input]]');
+      console.log('npm run contract -- --framework react|angular [--url http://host:port] [--component Button[,Input]] [--style liquid] [--styles liquid,neutral] [--platform ios] [--target-min 44] [--grep "target size"] [--tag name]');
       process.exit(0);
     } else {
       console.error(`Unknown argument: ${a}`);
@@ -96,11 +114,15 @@ function summary(file: string): void {
 
 async function main(): Promise<number> {
   const args = parseArgs(process.argv.slice(2));
-  const partial = args.components.length > 0;
+  const partial = args.components.length > 0 && !args.tag;
   const runDir = join(here, '.out', String(process.pid));
-  const report = reportFile(repo, args.framework, partial, process.pid);
+  // A run on another style, style list, platform or target size writes its own
+  // report (contract-react-liquid.json, contract-react-ios.json), never the base one.
+  const suffix = args.tag ?? [args.style, args.styles && args.styles !== args.style ? args.styles.replace(/,/g, '-') : undefined, args.platform, args.targetMin ? `min${args.targetMin}` : undefined].filter(Boolean).join('-');
+  const report = reportFile(repo, args.framework, partial, process.pid, suffix);
+  const tag = suffix ? `${args.framework}-${suffix}` : args.framework;
   // Playwright writes into the run folder; a full run then moves the JSON into place.
-  const runJson = join(runDir, partial ? `contract-${args.framework}.partial.json` : `contract-${args.framework}.json`);
+  const runJson = join(runDir, partial ? `contract-${tag}.partial.json` : `contract-${tag}.json`);
 
   if (args.framework === 'angular' && !args.url && !galleryExists(repo, 'angular')) {
     console.log('Angular gallery: not available yet. apps/gallery-angular has no package.json, so the contract suite is skipped for angular.');
@@ -146,9 +168,13 @@ async function main(): Promise<number> {
       DS_ROUTES: JSON.stringify(routes),
       DS_CONTRACT_JSON: runJson,
       DS_CONTRACT_OUT: runDir,
+      DS_STYLE: args.style ?? '',
+      DS_STYLES: args.styles ?? '',
+      DS_PLATFORM: args.platform ?? '',
+      DS_TARGET_MIN: args.targetMin ?? '',
     };
     const status = await new Promise<number>((ok) => {
-      const pw = spawn('npx', ['playwright', 'test', '--config', join(here, 'playwright.config.ts')], { cwd: repo, env, stdio: 'inherit' });
+      const pw = spawn('npx', ['playwright', 'test', '--config', join(here, 'playwright.config.ts'), ...(args.grep ? ['--grep', args.grep] : [])], { cwd: repo, env, stdio: 'inherit' });
       pw.on('exit', (code) => ok(code ?? 1));
     });
     if (existsSync(runJson) && runJson !== report) {

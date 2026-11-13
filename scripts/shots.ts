@@ -18,8 +18,9 @@
 // whole matrix goes to a work folder outside git (--work, default
 // node_modules/.cache/ds-shots/<framework>). Only a kept subset is copied to
 // docs/reports/shots/matrix/<framework>/: with --keep subset (the default)
-// Neutral light, Studio dark and Desk dark rtl, in every case the matrix takes
-// for them (opens and densities included); --keep all copies everything and
+// five base shots per component (Neutral light, Studio dark, Desk dark and
+// Liquid light in en ltr, Neutral light in ar rtl), as palette PNGs; opens and
+// densities are captured and hashed, not kept; --keep all copies everything and
 // --keep none copies no image. captured.json and index.md always list every
 // shot with its size and sha256, so a shot that is not kept can still be
 // compared by hash. --ready limits the run to components whose manifest says
@@ -110,11 +111,34 @@ const matrixRoot = join(repo, 'docs/reports/shots/matrix');
 const defaultOut = (framework: string) => join(matrixRoot, framework);
 const defaultWork = (framework: string) => join(repo, 'node_modules/.cache/ds-shots', framework);
 
-/** The subset whose images are committed: Neutral light, Studio dark, Desk dark rtl. */
-function kept(s: Pick<Shot, 'style' | 'scheme' | 'dir'>, keep: Args['keep']): boolean {
+/**
+ * The subset whose images are committed, five per component: the base shot
+ * (closed, density default) in Neutral light, Studio dark, Desk dark and
+ * Liquid light, en ltr, and Neutral light in ar rtl. Opens and densities are
+ * captured and hashed but not kept.
+ */
+function kept(s: Pick<Shot, 'style' | 'scheme' | 'dir' | 'open' | 'density'>, keep: Args['keep']): boolean {
   if (keep === 'all') return true;
   if (keep === 'none') return false;
-  return (s.style === 'neutral' && s.scheme === 'light') || (s.style === 'studio' && s.scheme === 'dark') || (s.style === 'desk' && s.scheme === 'dark' && s.dir === 'rtl');
+  if (s.open || (s.density && s.density !== 'default')) return false;
+  if (s.dir === 'rtl') return s.style === 'neutral' && s.scheme === 'light';
+  return (s.style === 'neutral' && s.scheme === 'light') || (s.style === 'studio' && s.scheme === 'dark') || (s.style === 'desk' && s.scheme === 'dark') || (s.style === 'liquid' && s.scheme === 'light');
+}
+
+/**
+ * The committed copy of a kept shot: a palette PNG (256 colors, dithered off)
+ * when sharp loads, so the repository stays light. The hash in captured.json
+ * is always the lossless capture's; the work folder keeps the lossless file.
+ */
+async function committedCopy(lossless: Buffer): Promise<Buffer> {
+  try {
+    const name = 'sharp';
+    const mod = (await import(name)) as { default: (b: Buffer) => { png: (o: object) => { toBuffer: () => Promise<Buffer> } } };
+    const small = await mod.default(lossless).png({ palette: true, quality: 90, dither: 0, compressionLevel: 9, effort: 10 }).toBuffer();
+    return small.length < lossless.length ? small : lossless;
+  } catch {
+    return lossless;
+  }
 }
 
 type Recompress = (png: Buffer) => Promise<Buffer>;
@@ -470,7 +494,7 @@ async function runCapture(args: Args, framework: string, out: string): Promise<n
         codecs.set(codec, (codecs.get(codec) ?? 0) + 1);
         const keep = kept(s, args.keep);
         if (writeIfChanged(join(work, s.file), bytes)) written += 1;
-        if (keep) writeIfChanged(join(out, s.file), bytes);
+        if (keep) writeIfChanged(join(out, s.file), await committedCopy(bytes));
         else if (existsSync(join(out, s.file))) rmSync(join(out, s.file));
         const png = PNG.sync.read(first);
         const { file: _f, ...rest } = s;
@@ -577,6 +601,8 @@ async function runCompare(args: Args, a: string, b: string): Promise<number> {
     ...(onlyB.length ? [`Only in ${b}: ${onlyB.join(', ')}`, ''] : []),
   ];
   writeFileSync(join(out, 'index.md'), lines.join('\n'));
+  // Diff images are a guide for the eye, so they go in as palette PNGs too.
+  for (const f of pngsIn(out)) writeFileSync(join(out, f), await committedCopy(readFileSync(join(out, f))));
   console.log(`Compare ${a} with ${b}: ${both.length} pairs, ${fails} over the limit. Only in ${a}: ${onlyA.length}, only in ${b}: ${onlyB.length}. Table: ${relative(repo, join(out, 'index.md'))}`);
   return fails > 0 ? 1 : 0;
 }

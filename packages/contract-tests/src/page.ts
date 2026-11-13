@@ -208,8 +208,8 @@ export interface TargetProbe {
  * inside it (the roots a trigger opened, which may render in a portal)
  * instead of the demo cases.
  */
-export function undersizedTargets(arg: { scope?: string } = {}): TargetProbe[] {
-  const MIN = 24;
+export function undersizedTargets(arg: { scope?: string; min?: number } = {}): TargetProbe[] {
+  const MIN = arg.min ?? 24;
   const SELECTOR = 'a[href], button, input:not([type="hidden"]), select, textarea, summary, [role="button"], [tabindex], [contenteditable=""], [contenteditable="true"]';
   const NATIVE = /^(A|BUTTON|INPUT|SELECT|TEXTAREA|SUMMARY)$/;
   const describe = (el: Element) => {
@@ -234,6 +234,27 @@ export function undersizedTargets(arg: { scope?: string } = {}): TargetProbe[] {
       top = Math.min(top, r.top + y);
       right = Math.max(right, r.left + x + w);
       bottom = Math.max(bottom, r.top + y + h);
+    }
+    // The button family's `hit` part (anatomy.md): an empty last child that a
+    // platform grows to 44 or 48px. It counts when a press on it reaches the
+    // control: the middle of each band it adds outside the box is hit tested.
+    const hit = Array.from(el.children).find((c) => c.getAttribute('data-part') === 'hit');
+    if (hit && getComputedStyle(hit).display !== 'none' && getComputedStyle(hit).pointerEvents !== 'none') {
+      const h = hit.getBoundingClientRect();
+      const reaches = (x: number, y: number) => {
+        if (x < 0 || y < 0 || x >= innerWidth || y >= innerHeight) return true;
+        const at = document.elementFromPoint(x, y);
+        return at !== null && (at === el || el.contains(at));
+      };
+      const cx = (h.left + h.right) / 2;
+      const cy = (h.top + h.bottom) / 2;
+      const ok = (h.top < r.top - 0.5 ? reaches(cx, (h.top + r.top) / 2) : true) && (h.bottom > r.bottom + 0.5 ? reaches(cx, (h.bottom + r.bottom) / 2) : true) && (h.left < r.left - 0.5 ? reaches((h.left + r.left) / 2, cy) : true) && (h.right > r.right + 0.5 ? reaches((h.right + r.right) / 2, cy) : true);
+      if (ok && h.width > 0 && h.height > 0) {
+        left = Math.min(left, h.left);
+        top = Math.min(top, h.top);
+        right = Math.max(right, h.right);
+        bottom = Math.max(bottom, h.bottom);
+      }
     }
     return { left, top, right, bottom, width: right - left, height: bottom - top };
   };
