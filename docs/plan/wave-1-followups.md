@@ -662,3 +662,20 @@ manifest note; an Angular motion order for the round 1 and round 2
 interactions; `labelOf` reading `aria-labelledby`, once, in
 `packages/shared/src/form.ts`; contract suite cases that submit a form and
 open an empty Select; a full shots refresh for both frameworks.
+
+# Round 5: found by the fix round's proofs (2026-11-13)
+
+1. Done by the lead: the gallery, the Vite consumer and the docs build set a
+   CSS target that supports `:dir()`. Before, the minifier rewrote
+   `:dir(rtl)` into a `:lang(ar, he, ...)` list (109 rewrites), which is
+   wrong for a `dir="ltr"` island on an Arabic page. Still open: a test that
+   builds the gallery and fails if the output holds fewer `:dir(rtl)` than
+   the source, and a line in the frameworks docs telling consumers to set
+   the same target.
+2. `tab-slide` long task is 237 to 268ms at 4x CPU, down from 821 to 1030ms,
+   still over 50ms. ToggleGroup calls `followIndicator` directly: move it
+   onto `inFrame` with `planFollow` and `planInk`, in React and Angular.
+3. Angular has no Sheet or Drawer, so detents and swipe to dismiss exist in
+   React only.
+4. The TabsPanel doc comment and manifest say inactive panels are hidden
+   with `forceMount`; correct both.

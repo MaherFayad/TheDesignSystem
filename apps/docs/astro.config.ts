@@ -10,6 +10,9 @@ export default defineConfig({
   devToolbar: { enabled: false },
   trailingSlash: 'ignore',
   build: { format: 'directory' },
+  // Keep `:dir(rtl)` in the system CSS as written: an older CSS target makes
+  // the minifier rewrite it into a `:lang()` list.
+  vite: { build: { cssTarget: ['chrome120', 'edge120', 'firefox115', 'safari16.4'] } },
   markdown: {
     // Smart punctuation turns -- into an en dash, which the no dash gate forbids.
     smartypants: false,

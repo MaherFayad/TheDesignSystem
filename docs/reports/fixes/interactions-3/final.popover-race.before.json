@@ -1,0 +1,262 @@
+{
+ "note": "Order 1.29 final fixes, before the Popover focus return fix (HEAD sources of Popover.tsx and Tabs.tsx). React gallery production build (vite build, served with vite preview), 1280x800, CPU throttled 6x, every style dark en ltr, 2 page loads per style per run, 3 runs",
+ "loadavg_start": "1.02 1.23 3.43 1/244 31823",
+ "loadavg_end": "1.78 1.46 3.10 1/239 32386",
+ "opens": 216,
+ "misses": 6,
+ "runs": [
+  {
+   "base": "http://127.0.0.1:5193",
+   "cpuRate": 6,
+   "opens": 72,
+   "misses": 3,
+   "maxOpenMs": 867,
+   "miss": [
+    {
+     "style": "studio",
+     "rep": 0,
+     "i": 6,
+     "label": "Open popover on start",
+     "openMs": -1,
+     "info": {
+      "roots": [],
+      "active": "<button type=\"button\" data-demo-trigger=\"Open popover on bottom\" aria-haspopup=\"dialog\" aria-expanded=\"false\" data-state",
+      "log": [
+       "2488 focus Open popover on bottom",
+       "2493 click Open popover on bottom",
+       "2614 focus INPUT",
+       "2620 remove popover",
+       "2620 add popover",
+       "2785 popover state closed",
+       "2921 focus Open popover on start",
+       "2924 click Open popover on start",
+       "3032 focus INPUT",
+       "3035 remove popover",
+       "3035 add popover",
+       "3132 focus Open popover on bottom",
+       "3191 popover state closed",
+       "3284 remove popover"
+      ],
+      "expanded": [
+       "false",
+       "false",
+       "false",
+       "false",
+       "false",
+       "false",
+       "false",
+       "false",
+       "false"
+      ]
+     }
+    },
+    {
+     "style": "desk",
+     "rep": 0,
+     "i": 6,
+     "label": "Open popover on start",
+     "openMs": -1,
+     "info": {
+      "roots": [],
+      "active": "<button type=\"button\" data-demo-trigger=\"Open popover on bottom\" aria-haspopup=\"dialog\" aria-expanded=\"false\" data-state",
+      "log": [
+       "3890 focus Open popover on top",
+       "3987 focus Open popover on bottom",
+       "3993 click Open popover on bottom",
+       "4164 focus INPUT",
+       "4169 add popover",
+       "4459 popover state closed",
+       "4676 focus Open popover on start",
+       "4683 click Open popover on start",
+       "4824 focus INPUT",
+       "4832 remove popover",
+       "4832 add popover",
+       "4969 focus Open popover on bottom",
+       "5029 popover state closed",
+       "5261 remove popover"
+      ],
+      "expanded": [
+       "false",
+       "false",
+       "false",
+       "false",
+       "false",
+       "false",
+       "false",
+       "false",
+       "false"
+      ]
+     }
+    },
+    {
+     "style": "desk",
+     "rep": 1,
+     "i": 2,
+     "label": "Open medium popover",
+     "openMs": -1,
+     "info": {
+      "roots": [],
+      "active": "<button type=\"button\" data-demo-trigger=\"Open small popover\" aria-haspopup=\"dialog\" aria-expanded=\"false\" data-state=\"cl",
+      "log": [
+       "271 focus Open small popover",
+       "279 click Open small popover",
+       "523 focus INPUT",
+       "535 add popover",
+       "861 popover state closed",
+       "1105 focus Open medium popover",
+       "1111 click Open medium popover",
+       "1276 focus INPUT",
+       "1277 remove popover",
+       "1277 add popover",
+       "1303 focus Open small popover",
+       "1391 popover state closed",
+       "1619 remove popover"
+      ],
+      "expanded": [
+       "false",
+       "false",
+       "false",
+       "false",
+       "false",
+       "false",
+       "false",
+       "false",
+       "false"
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "base": "http://127.0.0.1:5193",
+   "cpuRate": 6,
+   "opens": 72,
+   "misses": 2,
+   "maxOpenMs": 774,
+   "miss": [
+    {
+     "style": "desk",
+     "rep": 1,
+     "i": 7,
+     "label": "Open popover on end",
+     "openMs": -1,
+     "info": {
+      "roots": [],
+      "active": "<button type=\"button\" data-demo-trigger=\"Open popover on start\" aria-haspopup=\"dialog\" aria-expanded=\"false\" data-state=",
+      "log": [
+       "3937 focus Open popover on bottom",
+       "4001 focus Open popover on start",
+       "4005 click Open popover on start",
+       "4163 focus INPUT",
+       "4170 add popover",
+       "4407 popover state closed",
+       "4613 focus Open popover on end",
+       "4617 click Open popover on end",
+       "4740 focus INPUT",
+       "4745 remove popover",
+       "4745 add popover",
+       "4854 focus Open popover on start",
+       "4923 popover state closed",
+       "5116 remove popover"
+      ],
+      "expanded": [
+       "false",
+       "false",
+       "false",
+       "false",
+       "false",
+       "false",
+       "false",
+       "false",
+       "false"
+      ]
+     }
+    },
+    {
+     "style": "neutral",
+     "rep": 1,
+     "i": 7,
+     "label": "Open popover on end",
+     "openMs": -1,
+     "info": {
+      "roots": [],
+      "active": "<button type=\"button\" data-demo-trigger=\"Open popover on start\" aria-haspopup=\"dialog\" aria-expanded=\"false\" data-state=",
+      "log": [
+       "3328 focus Open popover on start",
+       "3331 click Open popover on start",
+       "3496 focus INPUT",
+       "3502 remove popover",
+       "3502 add popover",
+       "3745 popover state closed",
+       "3946 focus Open popover on end",
+       "3950 click Open popover on end",
+       "4086 focus INPUT",
+       "4091 remove popover",
+       "4091 add popover",
+       "4206 focus Open popover on start",
+       "4270 popover state closed",
+       "4471 remove popover"
+      ],
+      "expanded": [
+       "false",
+       "false",
+       "false",
+       "false",
+       "false",
+       "false",
+       "false",
+       "false",
+       "false"
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "base": "http://127.0.0.1:5193",
+   "cpuRate": 6,
+   "opens": 72,
+   "misses": 1,
+   "maxOpenMs": 839,
+   "miss": [
+    {
+     "style": "desk",
+     "rep": 0,
+     "i": 2,
+     "label": "Open medium popover",
+     "openMs": -1,
+     "info": {
+      "roots": [],
+      "active": "<button type=\"button\" data-demo-trigger=\"Open small popover\" aria-haspopup=\"dialog\" aria-expanded=\"false\" data-state=\"cl",
+      "log": [
+       "207 focus Open small popover",
+       "214 click Open small popover",
+       "417 focus INPUT",
+       "426 add popover",
+       "743 popover state closed",
+       "954 focus Open medium popover",
+       "955 click Open medium popover",
+       "1145 focus INPUT",
+       "1153 remove popover",
+       "1153 add popover",
+       "1314 focus Open small popover",
+       "1435 popover state closed",
+       "1661 remove popover"
+      ],
+      "expanded": [
+       "false",
+       "false",
+       "false",
+       "false",
+       "false",
+       "false",
+       "false",
+       "false",
+       "false"
+      ]
+     }
+    }
+   ]
+  }
+ ]
+}

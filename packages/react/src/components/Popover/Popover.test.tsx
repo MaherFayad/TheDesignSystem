@@ -1,6 +1,6 @@
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
-import { render, screen, waitFor } from '@testing-library/react';
+import { act, fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 import { useState, type ReactNode } from 'react';
 import { describe, expect, it, vi } from 'vitest';
@@ -289,6 +289,50 @@ describe('Popover', () => {
     await user.keyboard('{Escape}');
     await waitFor(() => expect(rootEl()).toBeNull());
     expect(document.activeElement).toBe(opener);
+  });
+
+  it('order 1.29 race: a popover closed by Escape does not take focus back from a popover opened since', async () => {
+    function Two() {
+      return (
+        <>
+          <Popover>
+            <PopoverTrigger>
+              <Button>Open first</Button>
+            </PopoverTrigger>
+            <PopoverContent title="First">
+              <PopoverBody>
+                <Input aria-label="First field" />
+              </PopoverBody>
+            </PopoverContent>
+          </Popover>
+          <Popover>
+            <PopoverTrigger>
+              <Button>Open second</Button>
+            </PopoverTrigger>
+            <PopoverContent title="Second">
+              <PopoverBody>
+                <Input aria-label="Second field" />
+              </PopoverBody>
+            </PopoverContent>
+          </Popover>
+        </>
+      );
+    }
+    render(<Two />);
+    const first = screen.getByRole('button', { name: 'Open first' });
+    const second = screen.getByRole('button', { name: 'Open second' });
+    act(() => fireEvent.click(first));
+    await waitFor(() => expect(document.activeElement).toBe(screen.getByRole('textbox', { name: 'First field' })));
+    // Escape closes the first; the second opens before the first's deferred focus return runs.
+    act(() => {
+      fireEvent.keyDown(document.activeElement ?? document.body, { key: 'Escape' });
+      fireEvent.click(second);
+    });
+    await act(() => new Promise((resolve) => setTimeout(resolve, 30)));
+    const roots = Array.from(document.body.querySelectorAll<HTMLElement>('[data-ds="popover"]'));
+    expect(roots.map((r) => r.getAttribute('data-state'))).toEqual(['open']);
+    expect(second.getAttribute('aria-expanded')).toBe('true');
+    expect(document.activeElement).toBe(screen.getByRole('textbox', { name: 'Second field' }));
   });
 
   it('maps logical sides to physical sides by direction', () => {

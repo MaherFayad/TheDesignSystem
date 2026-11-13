@@ -374,7 +374,15 @@ export function PopoverContent({
           const doc = rootRef.current?.ownerDocument ?? document;
           const back = openedFrom.current;
           openedFrom.current = null;
-          if (doc.activeElement && doc.activeElement !== doc.body) return;
+          // Focus moved on while this popover closed (another popover opened, or the person
+          // went on): leave it there. Radix runs this after the exit, and returning focus to
+          // the trigger then would close the other popover (order 1.29 race). Escape on a lone
+          // popover leaves focus on the body, so it still goes back (WCAG 2.4.3).
+          const active = doc.activeElement;
+          if (active && active !== doc.body && !rootRef.current?.contains(active)) {
+            event.preventDefault();
+            return;
+          }
           if (back?.isConnected) {
             event.preventDefault();
             back.focus();
