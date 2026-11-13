@@ -75,6 +75,7 @@ No adb. No iOS build.
 | 1.28 | Hook wiring: styles and platforms set the round 3 hooks; styles pushed further apart | claude/ds-order-1-28 | session_01ErLBsZAvcFqWeBUty3dBLn | merged and deployed, proposed |
 | A-sync3 | Angular level with round 3 | claude/ds-angular-sync-3 | session_01ErLBsdRDi2p6xndw4JgxHT | merged, not reviewed |
 | 1.29 | Fix round after the round 3 review: 14 blockers, missing hooks, shared motion helpers, Angular parity | claude/ds-order-1-29 | session_01ErLBsafVMhGAxNKtGV2vm2 | running |
+| 1.30 | Docs site takes the chosen style; styled switch menus | claude/ds-order-1-30 | session_01ErLBsd6gEHaL8mwVmuAyxH | running |
 | A-motion | Angular motion for rounds 1 and 2, Form merge cleanup, recheck of Angular review 2 | claude/ds-angular-motion | session_01ErLBsda6FTx4PoGDqs1QU7 | merged |
 | 1.17 | Full matrix | ds-qa | all | open | |
 | 1.18 | Consumer apps on wave 1 components | ds-docs | react | open | |
@@ -227,6 +228,7 @@ again: commit the tree as wip, push, and resume the agents by id.
    for demo copy unless told otherwise.
 
 ## Owner answers
+- 2026-11-13 09:05 UTC: the style switch in the docs top bar must restyle the whole docs site, not only the previews. Order 1.30.
 - 2026-11-12 22:52 UTC: make the docs site clean and clear, with the FlyonUI docs as a good first example (structure and feel only). Order 1.27.
 - 2026-11-12 22:50 UTC, after testing the live site: checkbox and toggle need much better interactions (glass thumb, growing dot, drawn check); improve every interaction and its feedback (copy animates from icon to "Copied"); toasts and popups need a better look in every style; Studio and Desk are far too close; iOS, Android and web show no difference. Orders 1.23 to 1.26 in `docs/plan/wave-1.md`. The lead took this as a ruling that motion may use paint properties (see DECISIONS.md).
 - 2026-11-12 18:20 UTC: after the round 1 videos, the interactions are acceptable but need a further round of richer animations and micro interactions. Order 1.22 added.

@@ -752,6 +752,16 @@ motion helpers in `packages/motion`). Accept: `npm run check` green; both
 contract suites green; each blocker has a test; report
 `docs/reports/fixes/interactions-3.md`. This is fix round 1 of 3 for round 3.
 
+### 1.30 Docs site follows the chosen style (ds-docs)
+
+Added on 2026-11-13 at the owner's request. The style switch in the docs top
+bar restyles the whole site: `data-style` on `<html>`, chrome built on
+semantic tokens and the system CSS, styled switch menus in place of native
+lists, the choice kept across pages and passed to previews. Owns
+`apps/docs/**`. Accept: `npm run check` green; axe clean in four styles,
+dark and light; screenshots in `docs/reports/shots/docs-styles/`; report
+`docs/reports/docs-styles.md`. The lead deploys.
+
 ## Schedule
 
 At most four agents at once. Never two installing orders at once (installs
