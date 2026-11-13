@@ -119,6 +119,7 @@ describe('manifest reading', () => {
   it('writes a partial run away from the main report', () => {
     expect(reportFile('/r', 'react', false, 7)).toBe('/r/docs/reports/contract-react.json');
     expect(reportFile('/r', 'react', true, 7)).toBe('/r/packages/contract-tests/.out/7/contract-react.partial.json');
+    expect(reportFile('/r', 'react', false, 7, 'liquid')).toBe('/r/docs/reports/contract-react-liquid.json');
   });
 
   it('keeps components ready for a framework', () => {
@@ -228,6 +229,7 @@ describe('styles and urls', () => {
   it('builds the gallery url from the url contract', () => {
     expect(demoPath('icon-button', { style: 'desk', scheme: 'light', dir: 'rtl', lang: 'ar' })).toBe('/c/icon-button?style=desk&scheme=light&dir=rtl&lang=ar&chrome=0');
     expect(demoPath('input', { style: 'studio', density: 'compact', dir: 'ltr', lang: 'en', case: 'variants' })).toBe('/c/input?style=studio&density=compact&dir=ltr&lang=en&case=variants&chrome=0');
+    expect(demoPath('switch', { style: 'liquid', platform: 'ios', dir: 'ltr', lang: 'en' })).toBe('/c/switch?style=liquid&platform=ios&dir=ltr&lang=en&chrome=0');
   });
 
   it('tells controls from other components with a size prop', () => {

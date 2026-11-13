@@ -208,8 +208,8 @@ export interface TargetProbe {
  * inside it (the roots a trigger opened, which may render in a portal)
  * instead of the demo cases.
  */
-export function undersizedTargets(arg: { scope?: string } = {}): TargetProbe[] {
-  const MIN = 24;
+export function undersizedTargets(arg: { scope?: string; min?: number } = {}): TargetProbe[] {
+  const MIN = arg.min ?? 24;
   const SELECTOR = 'a[href], button, input:not([type="hidden"]), select, textarea, summary, [role="button"], [tabindex], [contenteditable=""], [contenteditable="true"]';
   const NATIVE = /^(A|BUTTON|INPUT|SELECT|TEXTAREA|SUMMARY)$/;
   const describe = (el: Element) => {
