@@ -286,7 +286,11 @@ module.exports = {
     },
   },
 
+  // The rows, not only the button that paints them again, must be in the crop.
+  'list-stagger': { region: "[data-interaction-stage] [data-ds='list']" },
+
   'collection-flip': {
+    region: '[data-interaction-stage]',
     drive: async (a) => {
       const { page, at } = a;
       await a.press(at, 90);

@@ -136,7 +136,7 @@ describe('ListBox motion and focus (order 1.22)', () => {
   });
 
   it('platform hook: a press writes where it landed', () => {
-    const el = document.createElement('button');
+    const el = document.createElement('span');
     document.body.append(el);
     const rect = vi.spyOn(el, 'getBoundingClientRect').mockReturnValue(new DOMRect(10, 20, 100, 40));
     try {

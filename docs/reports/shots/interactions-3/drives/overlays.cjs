@@ -56,7 +56,7 @@ const TOAST_REGION = { region: '[data-toast-stage]', noOverlay: true };
  */
 const WHOLE = { region: 'body', noOverlay: true };
 
-module.exports = {
+const drives = {
   // The default path, with the toaster on the dock: press, wait, press again.
   'toast-enter': {
     ...TOAST_REGION,
@@ -256,3 +256,16 @@ module.exports = {
     },
   },
 };
+
+// Under load the clip can come out shorter than the clock says, so every
+// drive ends with a still second: the last band never runs past the end.
+for (const spec of Object.values(drives)) {
+  if (!spec.drive) continue;
+  const run = spec.drive;
+  spec.drive = async (a) => {
+    await run(a);
+    await a.wait(1200);
+  };
+}
+
+module.exports = drives;
