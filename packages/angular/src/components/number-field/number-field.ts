@@ -22,6 +22,12 @@
 // It implements ControlValueAccessor, so ngModel, formControl and
 // formControlName work on the host. With `name`, a hidden input after the
 // root carries the number for a native form, as in React.
+//
+// Motion (orders 1.21 and 1.22), as in React: a step from a button or a key
+// rolls the value digit by digit (field-step) in a decorative layer over the
+// input, an unnamed aria-hidden span after it, empty at rest (digitLayer in
+// internal/motion-fields.ts). Typing never rolls and empties the layer at
+// once. The box shakes when the value turns invalid (error-shake).
 import { LiveAnnouncer } from '@angular/cdk/a11y';
 import { NgTemplateOutlet } from '@angular/common';
 import {
@@ -63,6 +69,8 @@ import {
   type Size,
 } from '@the-system/shared';
 import { consumeHostAttributes } from '../../internal/host';
+import { injectMotion } from '../../internal/motion';
+import { digitLayer, errorShake } from '../../internal/motion-fields';
 import { optionalBoolean } from '../../internal/optional-boolean';
 import { DsThemeService } from '../../theme/theme';
 import { DsFieldContext, fieldControl } from '../field/field-context';
@@ -196,6 +204,8 @@ type StepperSlot = 'increment' | 'decrement';
       (keydown)="onKeyDown($event)"
       (blur)="onBlur()"
     />
+    <!-- The digit roll layer (field-step): decorative, empty at rest. -->
+    <span aria-hidden="true" #layer></span>
     <ng-container *ngTemplateOutlet="adornment; context: { $implicit: end(), part: 'end' }" />
     @if (showSteppers()) {
       <ng-container *ngTemplateOutlet="stepper; context: { $implicit: 'increment' }" />
@@ -289,6 +299,12 @@ export class DsNumberField implements ControlValueAccessor {
   private readonly announcer = inject(LiveAnnouncer);
   private readonly host = consumeHostAttributes(NUMBER_FIELD_ATTRIBUTES);
   private readonly controlRef = viewChild.required<ElementRef<HTMLInputElement>>('native');
+  private readonly layerRef = viewChild.required<ElementRef<HTMLSpanElement>>('layer');
+  private readonly motion = injectMotion();
+  private readonly digits = digitLayer(
+    () => this.layerRef().nativeElement,
+    () => this.nativeInput,
+  );
   private readonly formDisabled = signal(false);
   private onChange: (value: number | null) => void = () => undefined;
   private onTouched: () => void = () => undefined;
@@ -383,6 +399,7 @@ export class DsNumberField implements ControlValueAccessor {
   protected readonly isText = (content: unknown): content is string => typeof content === 'string';
 
   constructor() {
+    errorShake(() => this.nativeInput, () => Boolean(this.state().invalid));
     // The native value is written only when it differs, so the caret stays where it is while typing.
     afterRenderEffect(() => {
       const next = this.text();
@@ -503,9 +520,20 @@ export class DsNumberField implements ControlValueAccessor {
     if (after !== before && after !== '') void this.announcer.announce(after, 'assertive');
   }
 
-  /** Sets a stepped value and announces it while the input has focus. */
-  private stepTo(next: number): void {
+  /**
+   * Sets a stepped value and announces it while the input has focus. A step
+   * from a key or a stepper (`direction`) rolls the new text in digit by digit
+   * from the text drawn before it (field-step); a held run rolls on from the
+   * digits as drawn.
+   */
+  private stepTo(next: number, direction?: 'up' | 'down'): void {
+    const before = this.value() ?? null;
+    const from = this.nativeInput.value;
     this.setValue(next);
+    const after = this.value() ?? null;
+    if (direction && !Object.is(before, after)) {
+      this.digits.roll(this.nativeInput, from, this.nativeInput.value, { mode: this.motion.mode('field-step'), direction });
+    }
     if (this.isFocused()) void this.announcer.announce(this.text().replace('-', '−'), 'assertive');
   }
 
@@ -530,11 +558,11 @@ export class DsNumberField implements ControlValueAccessor {
   }
 
   protected increment(): void {
-    if (this.canIncrement()) this.stepTo(this.nextStep(1));
+    if (this.canIncrement()) this.stepTo(this.nextStep(1), 'up');
   }
 
   protected decrement(): void {
-    if (this.canDecrement()) this.stepTo(this.nextStep(-1));
+    if (this.canDecrement()) this.stepTo(this.nextStep(-1), 'down');
   }
 
   // Events of the input.
@@ -638,7 +666,7 @@ export class DsNumberField implements ControlValueAccessor {
     const next = Number.isNaN(from)
       ? snapToStep((up ? min : max) ?? 0, step, min, max)
       : snapToStep(clamp(from + (up ? 10 : -10) * step, min, max), step, min, max);
-    this.stepTo(next);
+    this.stepTo(next, up ? 'up' : 'down');
   }
 
   protected onBlur(): void {

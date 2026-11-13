@@ -12,6 +12,8 @@
 import { ChangeDetectionStrategy, Component, booleanAttribute, computed, input, linkedSignal, model } from '@angular/core';
 import { NgTemplateOutlet } from '@angular/common';
 import { DsIcon } from '@the-system/icons/angular';
+import { play } from '@the-system/motion';
+import { TOGGLE_POP_PARTS, toggleLandSpec } from '../../internal/motion-actions';
 import { ownAttribute } from '../../internal/own-attribute';
 import { consumeHostAttributes } from '../../internal/host';
 import { listenAfterCallers } from '../../internal/late-listener';
@@ -91,5 +93,16 @@ export class DsToggleButton extends DsButtonBase {
     const next = !this.on();
     this.on.set(next);
     this.pressed.set(next);
+    this.pop(next);
+  }
+
+  /**
+   * The pressed pop (interaction toggle-pop): on a change from the person,
+   * the content pops past rest when on, or sinks a little when off, one
+   * stagger step apart. Only the parts move. The state never waits for it.
+   */
+  private pop(on: boolean): void {
+    if (this.motion.mode('toggle-pop') !== 'full') return;
+    this.host.querySelectorAll(TOGGLE_POP_PARTS).forEach((part, i) => play(part, toggleLandSpec(on, i), 'toggle-pop'));
   }
 }

@@ -22,6 +22,8 @@ import {
   Component,
   DestroyRef,
   Directive,
+  ElementRef,
+  afterNextRender,
   booleanAttribute,
   forwardRef,
   computed,
@@ -31,9 +33,11 @@ import {
   type TemplateRef,
 } from '@angular/core';
 import { consumeHostAttributes } from '../../internal/host';
+import { injectMotion } from '../../internal/motion';
+import { playBeat, slideIn } from '../../internal/motion-fields';
 import { DsFieldError } from '../field-error/field-error';
 import { DsLabel } from '../label/label';
-import { DsFieldContext, type FieldPart } from './field-context';
+import { DsFieldContext, settleAfterFirstRender, type FieldPart } from './field-context';
 
 export type FieldOrientation = 'vertical' | 'horizontal';
 /** Text of the one line API: a string, or a template for richer content (a bidi span in Arabic). */
@@ -41,7 +45,14 @@ export type FieldText = string | TemplateRef<unknown>;
 
 let nextId = 0;
 
-/** A hint that helps fill the control. Joins aria-describedby. */
+/** The interaction id of the description entrance in the registry. */
+export const FIELD_MESSAGE_ENTER = 'field-message-enter';
+
+/**
+ * A hint that helps fill the control. Joins aria-describedby. One created
+ * after the field's first render slides in from distance.shift above and
+ * fades in on the soft spring (interaction field-message-enter).
+ */
 @Directive({
   selector: 'p[dsFieldDescription]',
   exportAs: 'dsFieldDescription',
@@ -59,6 +70,11 @@ export class DsFieldDescription {
     consumeHostAttributes(['dsFieldDescription', 'id']);
     const unregister = this.field?.register('description');
     if (unregister) inject(DestroyRef).onDestroy(unregister);
+    if (this.field?.settled) {
+      const motion = injectMotion();
+      const el = inject<ElementRef<HTMLElement>>(ElementRef).nativeElement;
+      afterNextRender(() => playBeat(el, slideIn(), FIELD_MESSAGE_ENTER, motion.mode(FIELD_MESSAGE_ENTER)));
+    }
   }
 }
 
@@ -142,6 +158,7 @@ export class DsField extends DsFieldContext {
 
   constructor() {
     super();
+    settleAfterFirstRender(this);
     consumeHostAttributes(['dsField', 'invalid', 'disabled', 'readOnly', 'required', 'orientation', 'label', 'description', 'error']);
   }
 

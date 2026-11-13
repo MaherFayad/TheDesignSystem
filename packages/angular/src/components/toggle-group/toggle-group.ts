@@ -24,6 +24,14 @@
 // React does not tell Radix about disabled items. Focus alone does not
 // toggle; Space and Enter toggle through the native button click.
 //
+// Motion, interaction "tab-slide" (order 1.22, proposed): in a single choice
+// group every item holds an empty aria-hidden span, inside the item part,
+// that draws the on fill of the on item (ToggleGroup.css). When the value
+// changes, the shared pill (internal/indicator.ts) slides that fill from the
+// item it leaves to the item it reaches on the snappy spring, stretched
+// along its travel, and the labels dip and pop. A multiple group has no
+// pill. It plays from afterRenderEffect, after the items show the new state.
+//
 // Names that differ from React: `onValueChange` is the `valueChange` output
 // of `[(value)]`. `start`, `end` and `icon` take an icon name or a
 // TemplateRef. Works with reactive and template forms
@@ -32,6 +40,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   Directive,
+  afterRenderEffect,
   forwardRef,
   inject,
   input,
@@ -49,6 +58,8 @@ import { DsIcon } from '@the-system/icons/angular';
 import type { Emphasis, Shape, Size } from '@the-system/shared';
 import { RovingRadioGroup, type RovingRadioItem } from '../../behavior/roving-radio';
 import { consumeHostAttributes } from '../../internal/host';
+import { createTrack, followIndicator } from '../../internal/indicator';
+import { injectMotion } from '../../internal/motion';
 import { DS_BUTTON_GROUP, type ButtonGroupAxes } from '../button-group/button-group-context';
 import type { ButtonEmphasis, ButtonSlotContent } from '../button/button-base';
 import { DS_TOGGLE_ITEM_GROUP, DsGroupItemBase, type ToggleItemGroup } from './group-item';
@@ -172,6 +183,36 @@ export class DsToggleGroup implements ControlValueAccessor {
 
   private onChange: (value: ToggleGroupValue) => void = () => {};
   private onTouched: () => void = () => {};
+  /** Where the on fill was last drawn, so the next change slides from there. */
+  private readonly track = createTrack();
+  private readonly motion = injectMotion();
+
+  constructor() {
+    // Interaction "tab-slide": after the items show the new value, the on
+    // fill slides from the item it left.
+    afterRenderEffect(() => {
+      const single = this.type() === 'single';
+      const key = this.current()[0] ?? '';
+      this.items();
+      untracked(() => this.follow(single, key));
+    });
+  }
+
+  private follow(single: boolean, key: string): void {
+    const root = this.host;
+    if (!single) return;
+    const item = root.querySelector<HTMLElement>(':scope > [data-part="item"][data-state="on"]');
+    const pill = item?.querySelector(':scope > span[aria-hidden="true"]:not([data-part])');
+    if (!item || !pill) {
+      this.track.key = null;
+      return;
+    }
+    followIndicator(this.track, key, { el: pill }, {
+      mode: this.motion.mode('tab-slide'),
+      anchor: root,
+      label: item.querySelector(':scope > [data-part="label"], :scope > [data-part="icon"]'),
+    });
+  }
 
   /** Turns an item on or off, as Radix onItemActivate and onItemDeactivate. */
   private press(value: string): void {
@@ -227,6 +268,9 @@ export class DsToggleGroup implements ControlValueAccessor {
         <ng-container [ngTemplateOutlet]="content" />
       }
     </ng-template>
+    @if (single()) {
+      <span aria-hidden="true"></span>
+    }
     @if (icon(); as content) {
       <span data-part="icon"><ng-container [ngTemplateOutlet]="slot" [ngTemplateOutletContext]="{ $implicit: content }" /></span>
     } @else {

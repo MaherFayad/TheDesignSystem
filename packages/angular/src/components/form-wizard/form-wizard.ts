@@ -26,6 +26,12 @@
 //   action, autocomplete). `formRef` has no input: read `formElement` through
 //   `exportAs: 'dsFormWizard'`.
 // - `done` takes a string or a TemplateRef.
+//
+// Motion (order 1.22, proposed), as React: wizard-step plays on a step
+// change once the new step is drawn (a decorative copy of the old step
+// leaves toward the inline start, the new step arrives from the end, back
+// reverses, RTL flips, a mark that turned complete lands its check), and
+// wizard-done plays one short wave over every mark once the form is sent.
 import { NgTemplateOutlet } from '@angular/common';
 import {
   ChangeDetectionStrategy,
@@ -58,6 +64,8 @@ import {
   type StepperState,
 } from '@the-system/shared';
 import { consumeHostAttributes } from '../../internal/host';
+import { injectMotion } from '../../internal/motion';
+import { dipPop, dropAfter, inlineSign, landPop, leavingCopy, playBeat, runStep, slideIn, snapshot, token, type Snapshot } from '../../internal/motion-fields';
 import { DsThemeService } from '../../theme/theme';
 import { DsButton } from '../button/button';
 import { DsStepper, type StepperOrientation, type StepperStep } from '../stepper/stepper';
@@ -312,6 +320,8 @@ export class DsFormWizard {
   private started = false;
   /** Set on destroy, so work after an await does not touch a destroyed view. */
   private destroyed = false;
+  private readonly motion = injectMotion();
+  private readonly root = inject<ElementRef<HTMLElement>>(ElementRef).nativeElement;
 
   protected readonly pick = (index: number) => void this.go(index);
   protected readonly isText = (v: unknown): v is string => typeof v === 'string';
@@ -402,7 +412,9 @@ export class DsFormWizard {
       this.stepper.set(next);
       return;
     }
+    const leave = { snap: snapshot(this.bodyOf(this.stepper().current) as HTMLElement | null, this.formElement), from: this.stepper().current, forward: next.current > this.stepper().current };
     this.stepper.set(next);
+    this.playStep(leave, next.current);
     this.focusAfterRender({ kind: 'title' });
     const title = this.steps()[next.current]?.title ?? '';
     this.announce.set(`${formatStepPosition(next.current, next.count, this.ar() ? 'ar' : 'en')}${this.words().separator}${title}`);
@@ -481,6 +493,7 @@ export class DsFormWizard {
         if (this.destroyed) return;
         this.focusAfterRender({ kind: 'title' });
         this.state.set('done');
+        this.playDone();
         this.announce.set(this.doneTitle() ?? this.words().done);
       } catch {
         if (this.destroyed) return;
@@ -502,5 +515,54 @@ export class DsFormWizard {
     if (!this.idle()) return;
     this.values.set(readFormValues(this.formElement));
     this.moveTo(stepBack(this.stepper()));
+  }
+
+  /** wizard-step: plays on the step just drawn. */
+  private playStep(leave: { snap: Snapshot | null; from: number; forward: boolean }, current: number): void {
+    afterNextRender(
+      () => {
+        if (this.destroyed) return;
+        const panel = this.formElement;
+        const mode = this.motion.mode('wizard-step');
+        const sign = inlineSign(panel) * (leave.forward ? 1 : -1);
+        const along = (k: number) => `translateX(calc(${k * sign} * ${token.enter}))`;
+        if (leave.snap && mode !== 'none') {
+          const copy = leavingCopy(leave.snap, panel);
+          const out = playBeat(
+            copy.el,
+            {
+              keyframes: [
+                { transform: 'none', opacity: 1 },
+                { transform: along(-1), opacity: 0 },
+              ],
+              duration: 'duration.quick',
+              easing: 'ease.exit',
+              fill: 'forwards',
+            },
+            'wizard-step-out',
+            mode,
+            { keyframes: [{ opacity: 1 }, { opacity: 0 }], duration: 'duration.quick', easing: 'ease.exit', fill: 'forwards' },
+          );
+          dropAfter(out, copy);
+        }
+        playBeat(this.bodyOf(current), slideIn({}, along(1)), 'wizard-step', mode);
+        const steps = this.root.querySelectorAll(':scope > [data-part="steps"] [data-part="step"]');
+        // The new current mark answers in Stepper itself (its own indicator motion); the wizard adds only the check that lands.
+        if (leave.forward) playBeat(steps[leave.from]?.querySelector(':scope > [data-part="indicator"] > *'), landPop(), 'wizard-step-check', mode, null);
+      },
+      { injector: this.injector },
+    );
+  }
+
+  /** wizard-done: every mark takes one short wave once the form is sent. */
+  private playDone(): void {
+    afterNextRender(
+      () => {
+        const marks = [...this.root.querySelectorAll(':scope > [data-part="steps"] [data-part="indicator"]')];
+        const mode = this.motion.mode('wizard-done');
+        marks.forEach((el, i) => playBeat(el, dipPop({ delay: 'delay.stagger', steps: runStep(i, marks.length) }), 'wizard-done', mode, null));
+      },
+      { injector: this.injector },
+    );
   }
 }

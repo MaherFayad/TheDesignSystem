@@ -57,6 +57,11 @@ describe('DsSwitch', () => {
     expect(c.getAttribute('aria-required')).toBe('false');
     expect(c.getAttribute('value')).toBe('on');
     const thumb = c.querySelector(':scope > [data-part="track"] > [data-part="thumb"]');
+    // The on tint of switch-stretch: an aria-hidden span, the first child of the track, as React.
+    const tint = c.querySelector(':scope > [data-part="track"]')?.firstElementChild;
+    expect(tint?.tagName).toBe('SPAN');
+    expect(Array.from(tint?.attributes ?? []).map((a) => `${a.name}=${a.value}`)).toEqual(['aria-hidden=true']);
+    expect(tint?.nextElementSibling).toBe(thumb);
     expect(thumb?.getAttribute('data-state')).toBe('unchecked');
     expect(el.querySelector('label[data-part="label"]')?.getAttribute('for')).toBe(c.id);
     expect(c.getAttribute('aria-describedby')).toBe(el.querySelector('[data-part="description"]')?.id);

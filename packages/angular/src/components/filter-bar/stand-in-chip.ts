@@ -6,9 +6,14 @@
 // icon while selected, the label) on the shared Button base, and Chip.css
 // applies as is. Swap it for the Chip port when it lands: the DOM stays the
 // same.
-import { ChangeDetectionStrategy, Component, booleanAttribute, input } from '@angular/core';
+//
+// chip-check-pop, as React's PressableChip: a new selected state turns its
+// glyph in past its size and back (iconMorph). Not on first paint.
+import { ChangeDetectionStrategy, Component, ElementRef, afterRenderEffect, booleanAttribute, input, untracked, viewChild } from '@angular/core';
 import { DsIcon } from '@the-system/icons/angular';
+import { iconMorph } from '@the-system/motion';
 import { consumeHostAttributes } from '../../internal/host';
+import { injectMotion } from '../../internal/motion';
 import { DsButtonBase, type ButtonEmphasis, type ButtonShape } from '../button/button-base';
 
 @Component({
@@ -22,7 +27,7 @@ import { DsButtonBase, type ButtonEmphasis, type ButtonShape } from '../button/b
   },
   template: `
     @if (selected()) {
-      <span data-part="icon" aria-hidden="true"><svg dsIcon name="check" [size]="resolvedSize() === 'xs' ? 'sm' : 'md'"></svg></span>
+      <span #icon data-part="icon" aria-hidden="true"><svg dsIcon name="check" [size]="resolvedSize() === 'xs' ? 'sm' : 'md'"></svg></span>
     }
     <span data-part="label"><ng-content /></span>
   `,
@@ -37,8 +42,23 @@ export class StandInChip extends DsButtonBase {
     transform: (v: unknown) => (v === undefined ? undefined : booleanAttribute(v)),
   });
 
+  private readonly icon = viewChild<ElementRef<HTMLSpanElement>>('icon');
+
   constructor() {
     super();
     consumeHostAttributes(['dsStandInChip', 'selected']);
+    const motion = injectMotion();
+    let lastSelected: boolean | undefined;
+    let painted = false;
+    afterRenderEffect(() => {
+      const selected = this.selected();
+      const icon = this.icon()?.nativeElement;
+      untracked(() => {
+        const changed = painted && lastSelected !== selected;
+        painted = true;
+        lastSelected = selected;
+        if (changed) iconMorph({ to: icon?.firstElementChild, turn: 45, mode: motion.mode('chip-check-pop') });
+      });
+    });
   }
 }

@@ -10,16 +10,45 @@
 // Node props (`title`, `emptyTitle`, `emptyBody`, an item's `title` and
 // `body`) take a string or a template. `onMarkAllRead` is a function input:
 // the mark-all Button renders only with a handler while any item is unread.
-import { ChangeDetectionStrategy, Component, ElementRef, HostAttributeToken, computed, inject, input, viewChild, type TemplateRef } from '@angular/core';
+//
+// Motion (order 1.22, notification-change), as React plays it
+// (internal/motion-feedback.ts): new entries pop in, removed ones shrink
+// away as a ghost, the rest slide to their place (FLIP), and the number in
+// the unread count rolls digit by digit while the count pops. The entries
+// are measured in an effect, which runs before this view's template is
+// refreshed, and the moves play after the render, before the paint.
+import {
+  ChangeDetectionStrategy,
+  Component,
+  ElementRef,
+  HostAttributeToken,
+  afterNextRender,
+  afterRenderEffect,
+  computed,
+  effect,
+  inject,
+  input,
+  untracked,
+  viewChild,
+  Injector,
+  type TemplateRef,
+} from '@angular/core';
 import { NgTemplateOutlet } from '@angular/common';
 import { _IdGenerator } from '@angular/cdk/a11y';
 import { DsIcon } from '@the-system/icons/angular';
 import type { IconName } from '@the-system/icons';
 import type { Size, Tone } from '@the-system/shared';
 import { consumeHostAttributes } from '../../internal/host';
+import { injectMotion } from '../../internal/motion';
+import { DigitRoller, FlipList, popMark } from '../../internal/motion-feedback';
 import { DsThemeService } from '../../theme/theme';
 import { DsButton } from '../button/button';
 import { dayGroup, formatRelativeTime, notificationLanguage, toDate, type DayGroup } from './time';
+
+/** What moves when the list changes: the group labels and the entries, never a ghost on its way out. */
+const movers = (root: HTMLElement): Element[] => [
+  ...root.querySelectorAll('[data-part="group-label"]:not([inert] *), li[data-entry]:not([inert])'),
+];
 
 export type NotificationCenterSize = Extract<Size, 'sm' | 'md'>;
 export type NotificationTone = Tone;
@@ -130,7 +159,17 @@ interface ViewGroup {
     <div data-part="header" #header>
       <ng-container *ngTemplateOutlet="heading; context: { level: headingLevel(), id: titleId, part: 'title', c: title() ?? words().title, focusable: true }" />
       @if (unread() > 0) {
-        <span data-part="count">{{ words().count(unread()) }}</span>
+        @let countText = words().count(unread());
+        @let num = '' + unread();
+        @let at = countText.indexOf(num);
+        <span data-part="count">
+          <span data-visually-hidden="">{{ countText }}</span>
+          @if (at < 0) {
+            <span aria-hidden="true">{{ countText }}</span>
+          } @else {
+            <span aria-hidden="true">{{ countText.slice(0, at) }}<span #digits>{{ num }}</span>{{ countText.slice(at + num.length) }}</span>
+          }
+        </span>
       }
       @if (onMarkAllRead() !== undefined && unread() > 0) {
         <button dsButton data-part="mark-all" size="sm" emphasis="ghost" start="check-double" (click)="markAll()">{{ markAllLabel() ?? words().markAll }}</button>
@@ -201,6 +240,8 @@ export class DsNotificationCenter {
   private readonly itemIds = new Map<string, string>();
   private readonly theme = inject(DsThemeService);
   private readonly header = viewChild.required<ElementRef<HTMLElement>>('header');
+  private readonly digits = viewChild<ElementRef<HTMLElement>>('digits');
+  private readonly motion = injectMotion();
 
   /** Words and times follow the input, else the theme. lang and dir are set only from the input. */
   protected readonly language = computed(() => notificationLanguage(this.lang() ?? this.theme.value().lang));
@@ -238,7 +279,40 @@ export class DsNotificationCenter {
   });
   protected readonly isText = (v: unknown): v is string => typeof v === 'string';
 
+  /** The groups and entries by key: a change means entries moved, came or went. */
+  private readonly signature = computed(() =>
+    this.groups()
+      .map((g) => `${g.key}:${g.items.map((v) => v.item.id).join(',')}`)
+      .join('|'),
+  );
+
   constructor() {
+    const host = inject<ElementRef<HTMLElement>>(ElementRef).nativeElement;
+    const injector = inject(Injector);
+    // notification-change: measure while the old entries are still drawn, play after the render.
+    const flip = new FlipList();
+    let committed: string | undefined;
+    effect(() => {
+      const signature = this.signature();
+      if (committed === undefined || committed === signature) {
+        committed = signature;
+        return;
+      }
+      committed = signature;
+      untracked(() => {
+        flip.measure(movers(host));
+        afterNextRender({ write: () => flip.play(host, movers, this.motion.mode('notification-change')) }, { injector });
+      });
+    });
+    // Only the number rolls: the words stay whole, so Arabic letters keep their joins.
+    const roller = new DigitRoller();
+    afterRenderEffect(() => {
+      const unread = this.unread();
+      const mode = this.motion.mode('notification-change');
+      roller.update(this.digits()?.nativeElement, unread > 0 ? String(unread) : undefined, mode, unread, (_d, el) =>
+        popMark(el.closest('[data-part="count"]'), mode),
+      );
+    });
     consumeHostAttributes(['dsNotificationCenter', 'items', 'title', 'headingLevel', 'onMarkAllRead', 'markAllLabel', 'size', 'emptyTitle', 'emptyBody', 'now']);
   }
 

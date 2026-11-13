@@ -17,6 +17,7 @@
 //           <div data-part="scroll-up">                        while the list can scroll up
 //           <div data-part="viewport" role="presentation" data-radix-select-viewport>
 //             <div data-part="item" role="option" data-state="checked|unchecked" data-highlighted? data-disabled?>
+//               <span aria-hidden>  the row fill that glides from the last lit row (row-glide), no part name
 //               <span data-part="indicator">  <span data-part="item-icon">  <span data-part="item-label" id>  <span data-part="item-description">
 //             <div data-part="separator">  <div data-part="group" role="group"> <div data-part="label">
 //           <div data-part="scroll-down">
@@ -33,6 +34,11 @@
 // Aria Select would replace the hand built keys once order A3.0 installs
 // @angular/aria.
 //
+// Motion, as React: the rows arrive one stagger step after the surface each
+// time the list opens (menu-rows); the lit row's fill travels from the row lit
+// before (row-glide); a new value rolls up into the trigger, not on first
+// paint (picker-value-roll); the chevron turn is CSS (picker-chevron-turn).
+//
 // Names that differ from React: `onValueChange` is the `valueChange` output
 // of `[(value)]`, `onOpenChange` the `openChange` output of `[(open)]`.
 // `empty` takes text or a TemplateRef. aria-label, aria-labelledby and
@@ -45,6 +51,8 @@ import {
   Injector,
   TemplateRef,
   afterNextRender,
+  afterRenderEffect,
+  type ElementRef,
   computed,
   effect,
   forwardRef,
@@ -62,6 +70,9 @@ import { DsSpinner } from '../spinner/spinner';
 import { createTypeahead, edgeEnabledIndex, nextEnabledIndex, typeaheadIndex, type Shape, type Size } from '@the-system/shared';
 import { hideOthers, lockScroll } from '../../behavior/dialog-behavior';
 import { consumeHostAttributes } from '../../internal/host';
+import { staggerGroup } from '@the-system/motion';
+import { injectMotion } from '../../internal/motion';
+import { injectRowGlide, staggerRows } from '../../internal/motion-selection';
 import { optionalBoolean } from '../../internal/optional-boolean';
 import { PopupLayer } from '../../internal/popper';
 import { DsThemeService } from '../../theme';
@@ -142,7 +153,7 @@ let nextId = 0;
     '(keydown)': 'onTriggerKeydown($event)',
     '(blur)': 'onTriggerBlur($event)',
   },
-  template: `<span data-part="value" style="pointer-events: none;">@if (current() === null) {{{ placeholderText() }}} @else {<span data-part="item-label">{{ selectedLabel() }}</span>}</span><span aria-hidden="true" data-part="icon">@if (loading()) {<span dsSpinner size="sm" decorative></span>} @else {<svg dsIcon name="chevrons-up-down" size="md"></svg>}</span>
+  template: `<span #valueEl data-part="value" style="pointer-events: none;">@if (current() === null) {{{ placeholderText() }}} @else {<span data-part="item-label">{{ selectedLabel() }}</span>}</span><span aria-hidden="true" data-part="icon">@if (loading()) {<span dsSpinner size="sm" decorative></span>} @else {<svg dsIcon name="chevrons-up-down" size="md"></svg>}</span>
 <ng-template #content><div data-ds="select" data-part="content" role="listbox" [attr.id]="contentId" data-state="open" [attr.dir]="dir()"
   [attr.data-side]="layer.side()" [attr.data-align]="layer.align()" [attr.data-size]="listSize()"
   [attr.aria-labelledby]="listLabelledBy() ?? null" [attr.aria-label]="ariaLabel() ?? null"
@@ -164,7 +175,7 @@ let nextId = 0;
   (pointerleave)="onItemPointerLeave($event)"
   (pointerup)="onItemPointerUp(option, off)"
   (click)="onItemClick(option, off)"
-  (keydown)="onItemKeydown($event, option, off)"><span data-part="indicator" aria-hidden="true">@if (checked) {<svg dsIcon name="check" size="md"></svg>}</span>@if (option.start !== undefined) {<span data-part="item-icon" aria-hidden="true">@if (isIconContent(option.start)) {<svg dsIcon [name]="option.start" size="md"></svg>} @else {<ng-container [ngTemplateOutlet]="option.start" />}</span>}<span data-part="item-label" [attr.id]="baseId + '-text-' + index">{{ option.label }}</span>@if (option.description !== undefined) {<span data-part="item-description" [attr.id]="idOf(option.value) + '-description'">{{ option.description }}</span>}</div></ng-template>`,
+  (keydown)="onItemKeydown($event, option, off)"><span aria-hidden="true"></span><span data-part="indicator" aria-hidden="true">@if (checked) {<svg dsIcon name="check" size="md"></svg>}</span>@if (option.start !== undefined) {<span data-part="item-icon" aria-hidden="true">@if (isIconContent(option.start)) {<svg dsIcon [name]="option.start" size="md"></svg>} @else {<ng-container [ngTemplateOutlet]="option.start" />}</span>}<span data-part="item-label" [attr.id]="baseId + '-text-' + index">{{ option.label }}</span>@if (option.description !== undefined) {<span data-part="item-description" [attr.id]="idOf(option.value) + '-description'">{{ option.description }}</span>}</div></ng-template>`,
 })
 export class DsSelect implements ControlValueAccessor {
   /** The options, plain or in titled groups, as ListBox takes them. */
@@ -208,6 +219,10 @@ export class DsSelect implements ControlValueAccessor {
     'aria-labelledby', 'aria-describedby',
   ]) as HTMLButtonElement;
   private readonly contentTemplate = viewChild.required<TemplateRef<unknown>>('content');
+  private readonly valueEl = viewChild.required<ElementRef<HTMLSpanElement>>('valueEl');
+  private readonly motion = injectMotion();
+  /** row-glide: the lit row's fill travels from the row lit before. */
+  private readonly glide = injectRowGlide("[data-part='item']");
 
   protected readonly baseId = `ds-select-${++nextId}`;
   readonly contentId = `${this.baseId}-content`;
@@ -336,6 +351,24 @@ export class DsSelect implements ControlValueAccessor {
     effect(() => {
       const open = this.isOpen();
       untracked(() => (open ? this.mount() : this.unmount(true)));
+    });
+
+    // picker-value-roll: a new value rolls up into the trigger. Not on first paint.
+    let lastValue: string | null | undefined;
+    let painted = false;
+    afterRenderEffect(() => {
+      const value = this.current();
+      const el = this.valueEl().nativeElement;
+      untracked(() => {
+        const first = !painted;
+        painted = true;
+        if (first || lastValue === value) {
+          lastValue = value;
+          return;
+        }
+        lastValue = value;
+        staggerGroup([el], { from: 'block', spring: 'snappy', mode: this.motion.mode('picker-value-roll') });
+      });
     });
 
     // The anchor carries the placed side and alignment, as the Radix PopperAnchor does.
@@ -550,6 +583,9 @@ export class DsSelect implements ControlValueAccessor {
     // Radix renders the style next to the viewport, after the scroll up button.
     content.insertBefore(style, viewport);
     this.viewport.set(viewport);
+    // menu-rows: the rows arrive one stagger step after the surface. row-glide: the lit row's fill travels.
+    this.glide(content);
+    staggerRows(content, "[data-part='viewport'] [data-part='item']", this.motion.mode('menu-rows'));
     const body = this.doc.body;
     const pointerEvents = body.style.pointerEvents;
     body.style.pointerEvents = 'none';
@@ -626,6 +662,7 @@ export class DsSelect implements ControlValueAccessor {
     this.stopAutoScroll();
     this.focusedIndex.set(-1);
     this.viewport.set(null);
+    this.glide(null);
     this.layer.dispose();
     this.resetTypeahead();
     if (returnFocus) this.host.focus({ preventScroll: true });

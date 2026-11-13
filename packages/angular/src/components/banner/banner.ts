@@ -27,6 +27,8 @@ import { DsIcon } from '@the-system/icons/angular';
 import type { IconName } from '@the-system/icons';
 import type { Emphasis, Tone } from '@the-system/shared';
 import { consumeHostAttributes } from '../../internal/host';
+import { injectMotion } from '../../internal/motion';
+import { dismissWithExit } from '../../internal/motion-feedback';
 import { DsThemeService } from '../../theme/theme';
 import { DsCloseButton } from '../close-button/close-button';
 import { messageIcons, wordsFor } from '../alert/message';
@@ -134,6 +136,7 @@ export class DsBanner {
   private readonly ownLabelledBy = inject(new HostAttributeToken('aria-labelledby'), { optional: true });
   private readonly ownLabel = inject(new HostAttributeToken('aria-label'), { optional: true });
   private readonly theme = inject(DsThemeService);
+  private readonly motion = injectMotion();
   private readonly words = computed(() => wordsFor(bannerLabels, this.lang() ?? this.theme.value().lang));
   protected readonly regionName = computed(() =>
     this.ownLabelledBy !== null ? null : (this.label() ?? this.ownLabel ?? this.words().region),
@@ -166,6 +169,9 @@ export class DsBanner {
 
   protected dismiss(): void {
     focusTarget(this.host.ownerDocument, this.returnFocus());
-    this.onDismiss()?.();
+    const done = this.onDismiss();
+    if (!done) return;
+    // alert-dismiss (order 1.22): the banner goes at once; a ghost of it shrinks away while the page slides up.
+    dismissWithExit(this.host, this.motion.mode('alert-dismiss'), done);
   }
 }

@@ -56,6 +56,8 @@ import { consumeHostAttributes } from '../../internal/host';
 import { ListHighlight } from '../../internal/list-highlight';
 import { optionalBoolean } from '../../internal/optional-boolean';
 import { PopupLayer } from '../../internal/popper';
+import { injectMotion } from '../../internal/motion';
+import { POPUP_LIST_ROWS, openStaggered } from '../../internal/motion-selection';
 import { DsThemeService } from '../../theme';
 import { DsFieldContext, fieldControl } from '../field/field-context';
 import {
@@ -283,6 +285,7 @@ export abstract class DsComboboxBase implements OnInit {
   );
   readonly status = signal('');
 
+  protected readonly motion = injectMotion();
   protected readonly layer = new PopupLayer({
     template: () => this.popupTemplate(),
     anchor: () => this.host,
@@ -361,7 +364,8 @@ export abstract class DsComboboxBase implements OnInit {
     // The popup layer follows the shown state; the exit plays before it leaves.
     effect(() => {
       const shown = this.popupOpen();
-      untracked(() => (shown ? this.layer.open() : this.layer.close()));
+      // menu-rows: the options arrive one stagger step after the popup surface, each time it opens.
+      untracked(() => (shown ? openStaggered(this.layer, POPUP_LIST_ROWS, () => this.motion.mode('menu-rows')) : this.layer.close()));
     });
 
     // The anchor carries the placed side and alignment, as the Radix PopperAnchor does.

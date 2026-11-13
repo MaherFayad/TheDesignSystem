@@ -10,6 +10,7 @@
 //
 //   <div data-ds="list-box" role="listbox" data-size data-orientation aria-multiselectable?>   the host
 //     <div data-part="option" role="option" id aria-selected data-highlighted? data-selected? data-disabled?>
+//       <span aria-hidden>  the row fill that glides from the last lit row (row-glide), no part name
 //       <span data-part="indicator">  <span data-part="option-icon">
 //       <span data-part="option-label">  (the match in a <mark>)  <span data-part="option-description">
 //     <div data-part="separator" aria-hidden>
@@ -65,6 +66,7 @@ import {
 } from '@the-system/shared';
 import { consumeHostAttributes } from '../../internal/host';
 import { ListHighlight } from '../../internal/list-highlight';
+import { injectRowGlide } from '../../internal/motion-selection';
 import { optionalBoolean } from '../../internal/optional-boolean';
 
 /** Row sizes: sm 24px rows, md list.row.height (28px at default density). */
@@ -212,7 +214,7 @@ let nextId = 0;
   (focus)="onOptionFocus(option)"
   (pointermove)="onOptionPointer(option, off, isHighlighted)"
   (mousedown)="onOptionMousedown($event)"
-  (click)="choose(option)"><span data-part="indicator" aria-hidden="true">@if (isSelected) {<svg dsIcon name="check" size="md"></svg>}</span>@if (option.start !== undefined) {<span data-part="option-icon" aria-hidden="true">@if (isIconContent(option.start)) {<svg dsIcon [name]="option.start" size="md"></svg>} @else {<ng-container [ngTemplateOutlet]="option.start" />}</span>}<span data-part="option-label" [id]="optionId + '-label'">@if (marked) {{{ marked.before }}<mark>{{ marked.match }}</mark>{{ marked.after }}} @else {{{ option.label }}}</span>@if (option.description !== undefined) {<span data-part="option-description" [id]="optionId + '-description'">{{ option.description }}</span>}</div></ng-template>`,
+  (click)="choose(option)"><span aria-hidden="true"></span><span data-part="indicator" aria-hidden="true">@if (isSelected) {<svg dsIcon name="check" size="md"></svg>}</span>@if (option.start !== undefined) {<span data-part="option-icon" aria-hidden="true">@if (isIconContent(option.start)) {<svg dsIcon [name]="option.start" size="md"></svg>} @else {<ng-container [ngTemplateOutlet]="option.start" />}</span>}<span data-part="option-label" [id]="optionId + '-label'">@if (marked) {{{ marked.before }}<mark>{{ marked.match }}</mark>{{ marked.after }}} @else {{{ option.label }}}</span>@if (option.description !== undefined) {<span data-part="option-description" [id]="optionId + '-description'">{{ option.description }}</span>}</div></ng-template>`,
 })
 export class DsListBox implements ControlValueAccessor {
   /** The options, plain or in titled groups. A separator is drawn between groups. */
@@ -290,6 +292,8 @@ export class DsListBox implements ControlValueAccessor {
 
   constructor() {
     inject(DestroyRef).onDestroy(() => this.highlight.destroy());
+    // row-glide: the fill of the highlighted row travels from the row lit before.
+    injectRowGlide("[data-part='option']")(this.host);
     // Keep the highlighted option in view when the keys move it (the list scrolls inside).
     afterRenderEffect(() => {
       const h = this.highlighted();

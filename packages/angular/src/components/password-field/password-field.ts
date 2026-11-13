@@ -12,6 +12,12 @@
 // React's visible and defaultVisible are the visible model (`[(visible)]`),
 // onVisibleChange its visibleChange output. defaultValue is value. Native
 // props of the inner input are inputs, as on dsInput.
+//
+// Motion (orders 1.21 and 1.22), as in React: a press on the toggle morphs
+// the eye into the eye off glyph or back (password-reveal, iconMorph). The
+// leaving glyph stays for one morph in an unnamed aria-hidden span inside
+// the toggle icon. The field text fades back in. The type changes at once.
+// The box shakes when the field turns invalid (error-shake).
 import {
   ChangeDetectionStrategy,
   Component,
@@ -24,11 +30,16 @@ import {
   input,
   model,
   signal,
+  untracked,
   viewChild,
 } from '@angular/core';
 import { NG_VALUE_ACCESSOR, type ControlValueAccessor } from '@angular/forms';
+import { DsIcon } from '@the-system/icons/angular';
+import { iconMorph, settled } from '@the-system/motion';
 import type { Shape, Size } from '@the-system/shared';
 import { consumeHostAttributes } from '../../internal/host';
+import { injectMotion } from '../../internal/motion';
+import { errorShake, type ShakeBox } from '../../internal/motion-fields';
 import { DsFieldContext } from '../field/field-context';
 import { DsIconButton } from '../icon-button/icon-button';
 import { DsInputGroupContext } from '../input-group/input-group-context';
@@ -38,6 +49,12 @@ export type PasswordFieldSize = Size;
 export type PasswordFieldShape = Extract<Shape, 'default' | 'pill'>;
 
 const INTERACTIVE = 'a[href], button, input, select, textarea, [tabindex], [contenteditable="true"]';
+
+/** The bordered box: the root, around the nested Input. */
+const fieldBox: ShakeBox = (input) => input.closest("[data-ds='password-field']");
+
+/** The interaction id of the toggle morph in the registry and the style presets. */
+const PASSWORD_REVEAL = 'password-reveal';
 
 function optionalBoolean(value: unknown): boolean | undefined {
   return value === undefined || value === null ? undefined : booleanAttribute(value);
@@ -74,7 +91,7 @@ const ATTRIBUTES = [
 @Component({
   selector: 'div[dsPasswordField]',
   exportAs: 'dsPasswordField',
-  imports: [DsIconButton, DsInput],
+  imports: [DsIcon, DsIconButton, DsInput],
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [{ provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => DsPasswordField), multi: true }],
   // The inner Input is this field's control, never the control of a group around it.
@@ -123,15 +140,21 @@ const ATTRIBUTES = [
     <button
       dsIconButton
       data-part="toggle"
-      [icon]="visible() ? 'eye-off' : 'eye'"
+      [icon]="toggleIcon"
       [label]="visible() ? hideLabel() : showLabel()"
       [attr.aria-pressed]="visible() ? 'true' : 'false'"
       [attr.aria-controls]="controls()"
       [size]="resolvedSize() === 'lg' ? 'sm' : 'xs'"
       shape="pill"
       [disabled]="isDisabled()"
-      (click)="visible.set(!visible())"
+      (click)="toggle()"
     ></button>
+    <ng-template #toggleIcon>
+      <svg dsIcon [name]="visible() ? 'eye-off' : 'eye'" size="md"></svg>
+      @for (l of leaving(); track l.id) {
+        <span aria-hidden="true"><svg dsIcon [name]="l.icon" size="md"></svg></span>
+      }
+    </ng-template>
   `,
 })
 export class DsPasswordField implements ControlValueAccessor {
@@ -167,7 +190,13 @@ export class DsPasswordField implements ControlValueAccessor {
 
   private readonly field = inject(DsFieldContext, { optional: true });
   protected readonly group = inject(DsInputGroupContext, { optional: true, skipSelf: true });
-  private readonly _consumed = consumeHostAttributes(ATTRIBUTES);
+  private readonly host = consumeHostAttributes(ATTRIBUTES);
+  private readonly motion = injectMotion();
+  /** The glyph that leaves, kept for one morph in an aria-hidden span after the new one. A list, so each morph gets a new span. */
+  protected readonly leaving = signal<readonly { id: number; icon: 'eye' | 'eye-off' }[]>([]);
+  private morphs = 0;
+  /** Set by a press on the toggle, read once the new type is drawn. */
+  private toggled = false;
   private readonly inputRef = viewChild.required(DsInput);
   private readonly generated = `ds-password-field-${++nextId}`;
   private readonly formDisabled = signal(false);
@@ -190,6 +219,30 @@ export class DsPasswordField implements ControlValueAccessor {
   );
 
   constructor() {
+    errorShake(() => this.nativeInput, () => this.isInvalid(), fieldBox);
+    // password-reveal: after the type changed, the eye morphs and the text fades back in.
+    afterRenderEffect((onCleanup) => {
+      const shown = this.visible();
+      if (!this.toggled) return;
+      this.toggled = false;
+      untracked(() => {
+        const input = this.nativeInput;
+        const part = this.host.querySelector(":scope > [data-part='toggle'] > [data-part='icon']");
+        const anims = iconMorph({
+          from: part?.querySelector(':scope > span[aria-hidden="true"]'),
+          to: part?.firstElementChild,
+          turn: shown ? 90 : -90,
+          mode: this.motion.mode(PASSWORD_REVEAL),
+        });
+        this.motion.play(input, 'fade', PASSWORD_REVEAL);
+        const id = this.morphs;
+        let live = true;
+        onCleanup(() => (live = false));
+        void Promise.all(anims.map((a) => settled(a))).then(() => {
+          if (live) this.leaving.update((l) => (l[0]?.id === id ? [] : l));
+        });
+      });
+    });
     // Hide the value again when the form submits.
     let form: HTMLFormElement | null = null;
     const hide = () => {
@@ -211,6 +264,16 @@ export class DsPasswordField implements ControlValueAccessor {
   /** The native input. */
   get nativeInput(): HTMLInputElement {
     return this.inputRef().nativeInput;
+  }
+
+  protected toggle(): void {
+    const shown = this.visible();
+    this.toggled = true;
+    if (typeof this.nativeInput.animate === 'function' && this.motion.mode(PASSWORD_REVEAL) !== 'none') {
+      this.morphs += 1;
+      this.leaving.set([{ id: this.morphs, icon: shown ? 'eye-off' : 'eye' }]);
+    }
+    this.visible.set(!shown);
   }
 
   focus(options?: FocusOptions): void {
