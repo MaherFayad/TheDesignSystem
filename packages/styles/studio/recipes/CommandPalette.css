@@ -1,0 +1,37 @@
+/*
+ * Studio recipe for CommandPalette (order 1.24, proposed): square and
+ * flat, a 1px hairline, no shadow, on a flat scrim with no blur. The search
+ * band sits one tone step off over a hairline, the rows are dense and
+ * square, the lit row inverted (the bright fill, body colored text). It
+ * appears by an opacity step in place. Colors swap only where forced
+ * colors are off.
+ */
+@layer ds.recipes {
+  [data-style='studio'] [data-ds='command-palette'] {
+    --_command-palette-radius: var(--ds-radius-xs);
+    --_command-palette-shadow: none;
+    --_command-palette-backdrop: none;
+    --_command-palette-scrim-filter: none;
+    --_command-palette-padding: 0;
+    --_command-palette-item-height: var(--ds-size-control-sm);
+    --_command-palette-item-radius: 0;
+    --_command-palette-enter-y: 0px;
+    --_command-palette-enter-scale: 1;
+    --_command-palette-shift: 0px;
+    --_command-palette-duration-in: var(--ds-duration-instant);
+
+    font-variant-numeric: tabular-nums;
+  }
+
+  @media (forced-colors: none) {
+    [data-style='studio'] [data-ds='command-palette'] {
+      --_command-palette-bg: var(--ds-color-bg-surface);
+      --_command-palette-border-color: var(--ds-color-border-strong);
+      --_command-palette-band-bg: var(--ds-color-bg-surface-2);
+      --_command-palette-divider-color: var(--ds-color-border-default);
+      --_command-palette-item-bg-highlight: var(--ds-color-text-bright);
+      --_command-palette-item-fg-highlight: var(--ds-color-bg-body);
+      --_command-palette-meta-fg-highlight: var(--ds-color-bg-body);
+    }
+  }
+}

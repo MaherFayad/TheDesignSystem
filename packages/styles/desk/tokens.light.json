@@ -290,11 +290,11 @@
         "$type": "color",
         "$value": {
           "colorSpace": "srgb",
-          "components": [0, 0, 0],
-          "alpha": 0.36,
-          "hex": "#000000"
+          "components": [0.102, 0.1137, 0.1412],
+          "alpha": 0.28,
+          "hex": "#1a1d24"
         },
-        "$description": "Modal scrim under a dialog or a window that opens over the page. Light: 36% instead of 65%. A light page needs less to recede; the window over it stays the brightest thing on screen. Proposed, Desk Light."
+        "$description": "The dim behind a modal window in light: a cool ink at 28%, the desk stays visible, blurred, under it. Order 1.24, proposed."
       },
       "inverse": {
         "$type": "color",
@@ -317,11 +317,11 @@
         "$type": "color",
         "$value": {
           "colorSpace": "srgb",
-          "components": [0.9922, 0.9922, 0.9882],
-          "alpha": 0.88,
-          "hex": "#fdfdfc"
+          "components": [1, 1, 1],
+          "alpha": 0.9,
+          "hex": "#ffffff"
         },
-        "$description": "Dense glass: toasts, notifications, menus. Light: near white at 88%, the same alpha as dark. Proposed, Desk Light."
+        "$description": "Strong glass for overlays that carry text: white at 90%, a sheet of frosted glass lifted off the warm desk. Order 1.24, proposed."
       },
       "glass-clear": {
         "$type": "color",
@@ -367,11 +367,11 @@
         "$type": "color",
         "$value": {
           "colorSpace": "srgb",
-          "components": [0, 0, 0],
-          "alpha": 0.06,
-          "hex": "#000000"
+          "components": [1, 1, 1],
+          "alpha": 0.9,
+          "hex": "#ffffff"
         },
-        "$description": "Divider inside glass, for example under a title bar. Light: black at 6% (dark: white at 7%). Proposed, Desk Light."
+        "$description": "The light edge of glass in light: a near white 1px inner top highlight. Order 1.24, proposed."
       },
       "glass-border": {
         "$type": "color",
@@ -1914,12 +1914,9 @@
       "$description": "Tile cards, context menus, canvas top-start corner, notch. Same as Desk dark. Proposed, Desk Light."
     },
     "control": {
-      "$type": "number",
-      "$value": 1,
-      "$extensions": {
-        "ds.unit": "em"
-      },
-      "$description": "Pill inputs and sm/md/lg buttons. Same as Desk dark. Proposed, Desk Light."
+      "$type": "dimension",
+      "$value": "{radius.pill}",
+      "$description": "Desk controls are full pills: inputs, selects and buttons. Order 1.24, proposed."
     },
     "window": {
       "$type": "dimension",
@@ -2024,32 +2021,8 @@
         {
           "color": {
             "colorSpace": "srgb",
-            "components": [0.102, 0.1137, 0.1412],
-            "alpha": 0.14,
-            "hex": "#1a1d24"
-          },
-          "offsetX": {
-            "value": 0,
-            "unit": "px"
-          },
-          "offsetY": {
-            "value": 4,
-            "unit": "px"
-          },
-          "blur": {
-            "value": 16,
-            "unit": "px"
-          },
-          "spread": {
-            "value": 0,
-            "unit": "px"
-          }
-        },
-        {
-          "color": {
-            "colorSpace": "srgb",
             "components": [1, 1, 1],
-            "alpha": 0.6,
+            "alpha": 0.9,
             "hex": "#ffffff"
           },
           "offsetX": {
@@ -2069,18 +2042,12 @@
             "unit": "px"
           },
           "inset": true
-        }
-      ],
-      "$description": "Tooltip shadow. Light: a cool drop and a white top highlight. Proposed, Desk Light."
-    },
-    "card-hover": {
-      "$type": "shadow",
-      "$value": [
+        },
         {
           "color": {
             "colorSpace": "srgb",
             "components": [0.102, 0.1137, 0.1412],
-            "alpha": 0.06,
+            "alpha": 0.08,
             "hex": "#1a1d24"
           },
           "offsetX": {
@@ -2088,15 +2055,15 @@
             "unit": "px"
           },
           "offsetY": {
-            "value": 2,
+            "value": 0,
             "unit": "px"
           },
           "blur": {
-            "value": 4,
+            "value": 0,
             "unit": "px"
           },
           "spread": {
-            "value": 0,
+            "value": 1,
             "unit": "px"
           }
         },
@@ -2104,7 +2071,7 @@
           "color": {
             "colorSpace": "srgb",
             "components": [0.102, 0.1137, 0.1412],
-            "alpha": 0.1,
+            "alpha": 0.16,
             "hex": "#1a1d24"
           },
           "offsetX": {
@@ -2112,20 +2079,75 @@
             "unit": "px"
           },
           "offsetY": {
-            "value": 8,
+            "value": 6,
             "unit": "px"
           },
           "blur": {
-            "value": 20,
+            "value": 16,
+            "unit": "px"
+          },
+          "spread": {
+            "value": -4,
+            "unit": "px"
+          }
+        }
+      ],
+      "$description": "A glass chip on the light desk. Order 1.24, proposed."
+    },
+    "card-hover": {
+      "$type": "shadow",
+      "$value": [
+        {
+          "color": {
+            "colorSpace": "srgb",
+            "components": [1, 1, 1],
+            "alpha": 0.9,
+            "hex": "#ffffff"
+          },
+          "offsetX": {
+            "value": 0,
+            "unit": "px"
+          },
+          "offsetY": {
+            "value": 1,
+            "unit": "px"
+          },
+          "blur": {
+            "value": 0,
             "unit": "px"
           },
           "spread": {
             "value": 0,
             "unit": "px"
+          },
+          "inset": true
+        },
+        {
+          "color": {
+            "colorSpace": "srgb",
+            "components": [0.102, 0.1137, 0.1412],
+            "alpha": 0.18,
+            "hex": "#1a1d24"
+          },
+          "offsetX": {
+            "value": 0,
+            "unit": "px"
+          },
+          "offsetY": {
+            "value": 16,
+            "unit": "px"
+          },
+          "blur": {
+            "value": 36,
+            "unit": "px"
+          },
+          "spread": {
+            "value": -12,
+            "unit": "px"
           }
         }
       ],
-      "$description": "Card lift on hover. Light: cool ink, soft. Proposed, Desk Light."
+      "$description": "A card lifted by the pointer: the shadow grows. Order 1.24, proposed."
     },
     "input-focus": {
       "$type": "shadow",
@@ -2209,35 +2231,135 @@
     },
     "card": {
       "$type": "shadow",
-      "$value": {
-        "color": {
-          "colorSpace": "srgb",
-          "components": [0, 0, 0],
-          "alpha": 0,
-          "hex": "#000000"
+      "$value": [
+        {
+          "color": {
+            "colorSpace": "srgb",
+            "components": [1, 1, 1],
+            "alpha": 0.9,
+            "hex": "#ffffff"
+          },
+          "offsetX": {
+            "value": 0,
+            "unit": "px"
+          },
+          "offsetY": {
+            "value": 1,
+            "unit": "px"
+          },
+          "blur": {
+            "value": 0,
+            "unit": "px"
+          },
+          "spread": {
+            "value": 0,
+            "unit": "px"
+          },
+          "inset": true
         },
-        "offsetX": {
-          "value": 0,
-          "unit": "px"
-        },
-        "offsetY": {
-          "value": 0,
-          "unit": "px"
-        },
-        "blur": {
-          "value": 0,
-          "unit": "px"
-        },
-        "spread": {
-          "value": 0,
-          "unit": "px"
+        {
+          "color": {
+            "colorSpace": "srgb",
+            "components": [0.102, 0.1137, 0.1412],
+            "alpha": 0.12,
+            "hex": "#1a1d24"
+          },
+          "offsetX": {
+            "value": 0,
+            "unit": "px"
+          },
+          "offsetY": {
+            "value": 10,
+            "unit": "px"
+          },
+          "blur": {
+            "value": 24,
+            "unit": "px"
+          },
+          "spread": {
+            "value": -12,
+            "unit": "px"
+          }
         }
-      },
-      "$description": "Cards are flat tiles: no shadow at rest. Same as Desk dark. Proposed, Desk Light."
+      ],
+      "$description": "A card is an object lying on the desk: a light edge and a short shadow under it. Order 1.24, proposed."
     },
     "window": {
       "$type": "shadow",
       "$value": [
+        {
+          "color": {
+            "colorSpace": "srgb",
+            "components": [1, 1, 1],
+            "alpha": 0.9,
+            "hex": "#ffffff"
+          },
+          "offsetX": {
+            "value": 0,
+            "unit": "px"
+          },
+          "offsetY": {
+            "value": 1,
+            "unit": "px"
+          },
+          "blur": {
+            "value": 0,
+            "unit": "px"
+          },
+          "spread": {
+            "value": 0,
+            "unit": "px"
+          },
+          "inset": true
+        },
+        {
+          "color": {
+            "colorSpace": "srgb",
+            "components": [0.102, 0.1137, 0.1412],
+            "alpha": 0.1,
+            "hex": "#1a1d24"
+          },
+          "offsetX": {
+            "value": 0,
+            "unit": "px"
+          },
+          "offsetY": {
+            "value": 0,
+            "unit": "px"
+          },
+          "blur": {
+            "value": 0,
+            "unit": "px"
+          },
+          "spread": {
+            "value": 1,
+            "unit": "px"
+          }
+        },
+        {
+          "color": {
+            "colorSpace": "srgb",
+            "components": [0.102, 0.1137, 0.1412],
+            "alpha": 0.12,
+            "hex": "#1a1d24"
+          },
+          "offsetX": {
+            "value": 0,
+            "unit": "px"
+          },
+          "offsetY": {
+            "value": 8,
+            "unit": "px"
+          },
+          "blur": {
+            "value": 24,
+            "unit": "px"
+          },
+          "spread": {
+            "value": -6,
+            "unit": "px"
+          }
+        },
         {
           "color": {
             "colorSpace": "srgb",
@@ -2261,12 +2383,43 @@
             "value": -20,
             "unit": "px"
           }
+        }
+      ],
+      "$description": "A window on the light desk: the light edge, an ink ring and the deep window shadow in a cool ink at about a third of dark. Order 1.24, proposed."
+    },
+    "window-soft": {
+      "$type": "shadow",
+      "$value": [
+        {
+          "color": {
+            "colorSpace": "srgb",
+            "components": [1, 1, 1],
+            "alpha": 0.9,
+            "hex": "#ffffff"
+          },
+          "offsetX": {
+            "value": 0,
+            "unit": "px"
+          },
+          "offsetY": {
+            "value": 1,
+            "unit": "px"
+          },
+          "blur": {
+            "value": 0,
+            "unit": "px"
+          },
+          "spread": {
+            "value": 0,
+            "unit": "px"
+          },
+          "inset": true
         },
         {
           "color": {
             "colorSpace": "srgb",
             "components": [0.102, 0.1137, 0.1412],
-            "alpha": 0.06,
+            "alpha": 0.08,
             "hex": "#1a1d24"
           },
           "offsetX": {
@@ -2285,37 +2438,33 @@
             "value": 1,
             "unit": "px"
           }
+        },
+        {
+          "color": {
+            "colorSpace": "srgb",
+            "components": [0.102, 0.1137, 0.1412],
+            "alpha": 0.2,
+            "hex": "#1a1d24"
+          },
+          "offsetX": {
+            "value": 0,
+            "unit": "px"
+          },
+          "offsetY": {
+            "value": 16,
+            "unit": "px"
+          },
+          "blur": {
+            "value": 40,
+            "unit": "px"
+          },
+          "spread": {
+            "value": -12,
+            "unit": "px"
+          }
         }
       ],
-      "$description": "Shadow under a desk window. Light: the dark shape (30px down, 80px blur) in a cool ink at 26%, then a 1px ring at 6%. Softer, so a window floats without a dark halo on the light desk. Proposed, Desk Light."
-    },
-    "window-soft": {
-      "$type": "shadow",
-      "$value": {
-        "color": {
-          "colorSpace": "srgb",
-          "components": [0.102, 0.1137, 0.1412],
-          "alpha": 0.22,
-          "hex": "#1a1d24"
-        },
-        "offsetX": {
-          "value": 0,
-          "unit": "px"
-        },
-        "offsetY": {
-          "value": 12,
-          "unit": "px"
-        },
-        "blur": {
-          "value": 32,
-          "unit": "px"
-        },
-        "spread": {
-          "value": -12,
-          "unit": "px"
-        }
-      },
-      "$description": "Soft window shadow: menus, toasts. Light: cool ink at 22% (dark: black at 80%). Proposed, Desk Light."
+      "$description": "A small window (menu, popover, toast) on the light desk. Order 1.24, proposed."
     },
     "glass": {
       "$type": "shadow",
@@ -2384,10 +2533,10 @@
     "backdrop": {
       "$type": "dimension",
       "$value": {
-        "value": 10,
+        "value": 8,
         "unit": "px"
       },
-      "$description": "Blur behind a window that opens over the page. Same as Desk dark. Proposed, Desk Light."
+      "$description": "The soft blur of the desk behind a modal window. Order 1.24, proposed."
     },
     "window": {
       "$type": "dimension",
@@ -2487,6 +2636,40 @@
           "ds.unit": "em"
         },
         "$description": "Display headings on the desk. Same as Desk dark. Proposed, Desk Light."
+      }
+    },
+    "size": {
+      "s": {
+        "$type": "dimension",
+        "$value": {
+          "value": 13,
+          "unit": "px"
+        },
+        "$description": "Small text and control labels: 13px (Studio 12px). Desk reads roomy. Order 1.24, proposed."
+      },
+      "m": {
+        "$type": "dimension",
+        "$value": {
+          "value": 14,
+          "unit": "px"
+        },
+        "$description": "Body text: 14px (Studio 13px). Order 1.24, proposed."
+      },
+      "l": {
+        "$type": "dimension",
+        "$value": {
+          "value": 15,
+          "unit": "px"
+        },
+        "$description": "Dialog and panel text: 15px (Studio 14px). Order 1.24, proposed."
+      },
+      "xl": {
+        "$type": "dimension",
+        "$value": {
+          "value": 17,
+          "unit": "px"
+        },
+        "$description": "Titles of dialogs, sheets and toasts: 17px (Studio 16px). Order 1.24, proposed."
       }
     }
   },
@@ -2911,9 +3094,10 @@
     "spring-bouncy": {
       "$type": "duration",
       "$value": {
-        "value": 440,
+        "value": 380,
         "unit": "ms"
-      }
+      },
+      "$description": "Settle time of the Desk bouncy spring, inside the 240 to 380ms Desk range. Order 1.24, proposed."
     },
     "morph": {
       "$type": "duration",
@@ -2950,7 +3134,7 @@
     },
     "spring-bouncy": {
       "$type": "string",
-      "$value": "linear(0, 0.146, 0.469, 0.814, 1.079, 1.222, 1.251, 1.201, 1.115, 1.031, 0.97, 0.94, 0.938, 0.953, 0.976, 0.996, 1.01, 1.016, 1.015, 1.011, 1)"
+      "$value": "linear(0, 0.142, 0.452, 0.78, 1.034, 1.177, 1.215, 1.182, 1.115, 1.044, 0.991, 0.961, 0.954, 0.961, 0.976, 0.991, 1.002, 1.009, 1.01, 1.008, 1)"
     }
   },
   "spring": {
@@ -2985,11 +3169,12 @@
     "bouncy": {
       "stiffness": {
         "$type": "number",
-        "$value": 733
+        "$value": 960,
+        "$description": "Desk bouncy spring: passes its target by about a fifth and settles in 380ms. Order 1.24, proposed."
       },
       "damping": {
         "$type": "number",
-        "$value": 21.7
+        "$value": 27.2
       },
       "mass": {
         "$type": "number",
@@ -3021,6 +3206,16 @@
     "morph": {
       "$type": "number",
       "$value": 0.3
+    },
+    "dialog-enter": {
+      "$type": "number",
+      "$value": 0.92,
+      "$description": "A dialog is a window: it grows from 92%, as windows do. Order 1.24, proposed."
+    },
+    "menu-enter": {
+      "$type": "number",
+      "$value": 0.92,
+      "$description": "Menus and popovers grow out of their trigger from 92%, like small windows. Order 1.24, proposed."
     }
   },
   "distance": {

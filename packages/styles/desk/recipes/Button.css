@@ -8,9 +8,66 @@
  * child, so the descendant selector below always finds it.
  */
 @layer ds.recipes {
-  /* Desk controls are pills (the source `.roll-btn`). The other shapes still apply. */
+  /* Desk controls are pills (the source `.roll-btn`). The other shapes still apply. Labels close up to the display tracking (none in Arabic). */
   [data-style='desk'] :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button'], [data-ds='close-button'], [data-ds='copy-button'], [data-ds='floating-action-button'])[data-shape='default'] {
     --_button-radius: var(--ds-radius-pill);
+  }
+
+  [data-style='desk'] :is([data-ds='button'], [data-ds='toggle-button'], [data-ds='copy-button'], [data-ds='floating-action-button']) {
+    letter-spacing: var(--ds-font-tracking-display);
+  }
+
+  /*
+   * Order 1.24 (proposed). The neutral button is an object on the desk, not
+   * Studio's flat gray pill: a filled glass pill, lit from above. The fill
+   * is the control fill with a faint light falling from the top (a
+   * gradient of overlay-5 to nothing), the light edge is a 1px inner top
+   * highlight (material.glass-edge) and the hairline is the glass border,
+   * both inset so the pill keeps its size.
+   */
+  [data-style='desk'] :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button'], [data-ds='copy-button'])[data-tone='neutral']:is([data-emphasis='soft'], [data-emphasis='solid']) {
+    --_button-bg: var(--ds-control-fill-default);
+    --_button-bg-hover: var(--ds-control-fill-hover);
+    --_button-bg-active: var(--ds-color-bg-overlay-20);
+    --_button-fg: var(--ds-color-text-default);
+    --_button-fg-hover: var(--ds-color-text-bright);
+    --_button-shadow:
+      inset 0 var(--ds-border-width-default) 0 var(--ds-color-material-glass-edge),
+      inset 0 0 0 var(--ds-border-width-default) var(--ds-color-material-glass-border);
+
+    background-image: linear-gradient(var(--ds-color-bg-overlay-5), transparent);
+  }
+
+  /* Solid is the brighter pill of the two. */
+  [data-style='desk'] :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button'], [data-ds='copy-button'])[data-tone='neutral'][data-emphasis='solid'] {
+    --_button-bg: var(--ds-control-fill-hover);
+    --_button-bg-hover: var(--ds-color-bg-overlay-20);
+    --_button-bg-active: var(--ds-color-bg-overlay-30);
+    --_button-fg: var(--ds-color-text-bright);
+  }
+
+  /* The yellow primary: the same light edge on the fill. */
+  [data-style='desk'] :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button'], [data-ds='copy-button'], [data-ds='floating-action-button'])[data-tone='accent'][data-emphasis='solid'] {
+    --_button-shadow: inset 0 var(--ds-border-width-default) 0 var(--ds-color-material-glass-edge);
+  }
+
+  /* The outline button keeps the glass hairline instead of the control border, so it reads as glass too. */
+  [data-style='desk'] :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button'], [data-ds='copy-button'])[data-tone='neutral'][data-emphasis='outline'] {
+    --_button-shadow: inset 0 var(--ds-border-width-default) 0 var(--ds-color-material-glass-edge);
+  }
+
+  @media (prefers-contrast: more), (forced-colors: active) {
+    [data-style='desk'] :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button'], [data-ds='copy-button'])[data-tone='neutral']:is([data-emphasis='soft'], [data-emphasis='solid']) {
+      --_button-shadow: inset 0 0 0 var(--ds-border-width-default) var(--ds-color-border-control);
+
+      background-image: none;
+    }
+  }
+
+  [data-style='desk'][data-contrast='more'] :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button'], [data-ds='copy-button'])[data-tone='neutral']:is([data-emphasis='soft'], [data-emphasis='solid']) {
+    --_button-shadow: inset 0 0 0 var(--ds-border-width-default) var(--ds-color-border-control);
+
+    background-image: none;
   }
 
   /*

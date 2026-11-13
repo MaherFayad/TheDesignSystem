@@ -1,0 +1,54 @@
+/*
+ * Neutral recipe for Lightbox (order 1.24, proposed): photos are seen on a
+ * dark stage in both schemes, with white buttons. Why not a token:
+ * Lightbox.css puts the panel on the page color, which is a light gray in
+ * Neutral light, and the toolbar IconButtons are ghosts that read the text
+ * color.
+ *
+ * - Light: the panel takes the inverse ink (color.bg.inverse, the blue
+ *   black #0f1729), the counter and the caption the surface white and
+ *   surface-4 (12:1 and more). Dark keeps the page color, already near
+ *   black.
+ * - The zoom and close buttons in the toolbar are white squares (surface,
+ *   the default border, 6px corners), like the previous and next buttons
+ *   Lightbox.css already draws on surface. Their hover and press swaps are
+ *   repeated here, since this layer wins over the ones in Button.css.
+ */
+@layer ds.recipes {
+  [data-style='neutral'][data-scheme='light'] [data-ds='lightbox'] {
+    --_lightbox-bg: var(--ds-color-bg-inverse);
+    --_lightbox-fg: var(--ds-color-bg-surface);
+    --_lightbox-meta-fg: var(--ds-color-bg-surface-4);
+  }
+
+  [data-style='neutral'] [data-ds='lightbox'] > [data-part='panel'] > [data-part='toolbar'] [data-ds='icon-button'] {
+    --_button-bg: var(--ds-color-bg-surface);
+    --_button-fg: var(--ds-color-text-default);
+    --_button-border-color: var(--ds-color-border-default);
+    --_button-border-color-hover: var(--ds-color-border-strong);
+    --_button-bg-hover: var(--ds-color-bg-surface-3);
+    --_button-fg-hover: var(--ds-color-text-bright);
+    --_button-bg-active: var(--ds-color-bg-surface-4);
+    --_button-fg-active: var(--ds-color-text-bright);
+    --_button-radius: var(--ds-radius-sm);
+  }
+
+  [data-style='neutral'] [data-ds='lightbox'] > [data-part='panel'] > [data-part='toolbar'] [data-ds='icon-button']:hover:not([data-disabled], [data-loading]) {
+    --_button-bg: var(--_button-bg-hover);
+    --_button-fg: var(--_button-fg-hover);
+    --_button-border-color: var(--_button-border-color-hover);
+  }
+
+  [data-style='neutral'] [data-ds='lightbox'] > [data-part='panel'] > [data-part='toolbar'] [data-ds='icon-button']:active:not([data-disabled], [data-loading]) {
+    --_button-bg: var(--_button-bg-active);
+    --_button-fg: var(--_button-fg-active);
+  }
+
+  @media (forced-colors: active) {
+    [data-style='neutral'][data-scheme='light'] [data-ds='lightbox'] {
+      --_lightbox-bg: Canvas;
+      --_lightbox-fg: CanvasText;
+      --_lightbox-meta-fg: CanvasText;
+    }
+  }
+}

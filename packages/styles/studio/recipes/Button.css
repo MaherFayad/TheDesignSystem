@@ -1,0 +1,42 @@
+/*
+ * Studio recipe for Button and the controls on its base (order 1.24,
+ * proposed). Studio controls are bordered transparent pills: the neutral
+ * button at rest is no fill and a 1px control border, the primary is the
+ * flat white pill (black in light, from the primary tokens). Labels are
+ * medium weight with tabular figures, a tool's type, not a poster's. Every
+ * size stays a pill: the base gives xs the field radius, which is small
+ * and square in Studio.
+ */
+@layer ds.recipes {
+  [data-style='studio'] :is([data-ds='button'], [data-ds='toggle-button'], [data-ds='copy-button'], [data-ds='floating-action-button']) {
+    font-weight: var(--ds-font-weight-medium);
+    font-variant-numeric: tabular-nums;
+  }
+
+  [data-style='studio'] :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button'], [data-ds='copy-button'])[data-size='xs'][data-shape='default'] {
+    --_button-radius: var(--ds-radius-pill);
+  }
+
+  /* The neutral soft button, the default one: transparent, a 1px control border. */
+  [data-style='studio'] :is([data-ds='button'], [data-ds='copy-button'])[data-tone='neutral'][data-emphasis='soft'] {
+    --_button-bg: transparent;
+    --_button-fg: var(--ds-color-text-default);
+    --_button-border-color: var(--ds-color-border-control);
+    --_button-border-color-hover: var(--ds-color-border-control-hover);
+    --_button-bg-hover: var(--ds-color-bg-overlay-5);
+    --_button-bg-active: var(--ds-color-bg-overlay-10);
+  }
+
+  /*
+   * This layer wins over the base state rules, so the swaps are repeated
+   * here for the properties set above.
+   */
+  [data-style='studio'] :is([data-ds='button'], [data-ds='copy-button'])[data-tone='neutral'][data-emphasis='soft']:hover:not([data-disabled], [data-loading]) {
+    --_button-bg: var(--_button-bg-hover);
+    --_button-border-color: var(--_button-border-color-hover);
+  }
+
+  [data-style='studio'] :is([data-ds='button'], [data-ds='copy-button'])[data-tone='neutral'][data-emphasis='soft']:active:not([data-disabled], [data-loading]) {
+    --_button-bg: var(--_button-bg-active);
+  }
+}

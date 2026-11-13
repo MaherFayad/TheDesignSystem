@@ -1,0 +1,36 @@
+/*
+ * Desk recipe for Tabs. Order 1.24 (proposed): the selected tab is marked
+ * in the yellow primary. The line under the active tab is the primary edge
+ * color (the yellow in dark, the gold in light, 3:1 on the light desk); in
+ * the soft emphasis the active tab is a yellow pill with dark ink, its gold
+ * edge keeping 3:1 against the track. The active tab stays heavier as well
+ * (never color alone), and labels close up to the display tracking.
+ */
+@layer ds.recipes {
+  [data-style='desk'] [data-ds='tabs'] {
+    --_tabs-indicator-bg: var(--ds-color-primary-border);
+  }
+
+  [data-style='desk'] [data-ds='tabs'] > [data-part='list'] > [data-part='trigger'] {
+    letter-spacing: var(--ds-font-tracking-display);
+  }
+
+  [data-style='desk'] [data-ds='tabs'][data-emphasis='soft'] {
+    --_tabs-radius: var(--ds-radius-pill);
+    --_tabs-list-bg: var(--ds-control-fill-default);
+    --_tabs-indicator-bg: var(--ds-color-primary-fill);
+    --_tabs-indicator-border-color: var(--ds-color-primary-border);
+    --_tabs-fg-active: var(--ds-color-primary-text);
+  }
+
+  @media (forced-colors: active) {
+    [data-style='desk'] [data-ds='tabs'] {
+      --_tabs-indicator-bg: Highlight;
+    }
+
+    [data-style='desk'] [data-ds='tabs'][data-emphasis='soft'] {
+      --_tabs-indicator-bg: Highlight;
+      --_tabs-fg-active: HighlightText;
+    }
+  }
+}

@@ -1,24 +1,126 @@
 /*
- * Desk recipe for Toast: notifications are glass, as the desk notification
- * stack in GoBanana (`app/(site)/_components/desktop/NotificationStack.tsx`
- * and the "notification stack" rules in desktop.css): the strong glass fill,
- * the glass border, the window blur, the window radius and the soft window
- * shadow.
+ * Desk recipe for Toast: a notification is a small glass card dropped on
+ * the desk, as the desk notification stack in GoBanana
+ * (`app/(site)/_components/desktop/NotificationStack.tsx` and the
+ * "notification stack" rules in desktop.css): the strong glass fill, the
+ * glass hairline, the window blur with saturation, the panel radius and the
+ * soft window shadow with its light edge (elevation.window-soft).
+ *
+ * Order 1.24 (proposed), what tokens cannot say:
+ * - the tone is an accent edge: a bar in the tone color on the inline start,
+ *   drawn as an inset shadow so it follows the rounded corner (mirrored in
+ *   right to left text); the base border edge takes the hairline color;
+ * - the icon sits in an icon tile: a small rounded square tinted with the
+ *   tone at 18%, the icon in the tone color;
+ * - the title is medium and closes up to the display tracking, the
+ *   description stays muted;
+ * - the action is a small yellow pill, the close a small round glass button;
+ * - stacked toasts overlap a little, so they read as cards lying on each
+ *   other; the overlap stays inside the padding and never covers text.
  *
  * Glass turns solid by itself: under prefers-reduced-transparency,
  * prefers-contrast more and data-contrast more the material tokens resolve
- * to the solid glass color, and Toast.css and the rules below drop the blur.
- *
- * Only the private --_toast-* properties are declared here, so the toast markup and the base
- * rules stay the same in every style.
+ * to the solid glass color, and the rules below drop the blur.
  */
 @layer ds.recipes {
   [data-style='desk'] [data-ds='toast'] {
     --_toast-bg: var(--ds-color-material-glass-strong);
     --_toast-border-color: var(--ds-color-material-glass-border);
-    --_toast-radius: var(--ds-radius-window);
-    --_toast-shadow: var(--ds-elevation-window-soft);
+    --_toast-radius: var(--ds-radius-panel);
     --_toast-blur: var(--ds-blur-window);
+    --_toast-shadow: inset calc(var(--ds-border-width-strong) * 1.5) 0 0 var(--_toast-edge), var(--ds-elevation-window-soft);
+
+    grid-template-columns: var(--ds-size-control-xs) minmax(0, 1fr) auto;
+    align-items: center;
+    column-gap: var(--ds-space-m);
+    padding-block: var(--ds-space-m);
+    padding-inline: var(--ds-space-l) var(--ds-space-s);
+    border-inline-start-width: var(--ds-border-width-default);
+    border-inline-start-color: var(--_toast-border-color);
+    -webkit-backdrop-filter: blur(var(--_toast-blur)) saturate(var(--ds-blur-window-saturation));
+    backdrop-filter: blur(var(--_toast-blur)) saturate(var(--ds-blur-window-saturation));
+  }
+
+  /* The neutral tone's edge: a quiet light bar, not the gray of a disabled line. */
+  [data-style='desk'] [data-ds='toast']:not([data-tone='info'], [data-tone='success'], [data-tone='warning'], [data-tone='danger']) {
+    --_toast-edge: var(--ds-color-bg-overlay-40);
+    --_toast-icon: var(--ds-color-text-bright);
+  }
+
+  [data-style='desk'] [data-ds='toast']:dir(rtl) {
+    --_toast-shadow: inset calc(var(--ds-border-width-strong) * -1.5) 0 0 var(--_toast-edge), var(--ds-elevation-window-soft);
+  }
+
+  /* The icon tile: the tone at 18% under the icon in the tone color. */
+  [data-style='desk'] [data-ds='toast'] > [data-part='icon'] {
+    align-self: start;
+    inline-size: var(--ds-size-control-xs);
+    block-size: var(--ds-size-control-xs);
+    border-radius: var(--ds-radius-field);
+    background-color: color-mix(in srgb, var(--_toast-icon) 18%, transparent);
+    box-shadow: inset 0 var(--ds-border-width-default) 0 var(--ds-color-material-glass-edge);
+  }
+
+  [data-style='desk'] [data-ds='toast'] > [data-part='title'] {
+    font-size: var(--ds-font-size-m);
+    font-weight: var(--ds-font-weight-medium);
+    letter-spacing: var(--ds-font-tracking-display);
+  }
+
+  /* A title alone sits on the middle of the tile; with a description both lines start at its top. */
+  [data-style='desk'] [data-ds='toast'] > [data-part='title']:has(+ [data-part='description']) {
+    align-self: end;
+  }
+
+  [data-style='desk'] [data-ds='toast'] > [data-part='description'] {
+    align-self: start;
+  }
+
+  /* The action: a small yellow pill. */
+  [data-style='desk'] [data-ds='toast'] > [data-ds='button'][data-part='action'] {
+    --_button-height: var(--ds-size-control-xs);
+    --_button-padding-inline: var(--ds-space-m);
+    --_button-radius: var(--ds-radius-pill);
+    --_button-bg: var(--ds-color-primary-fill);
+    --_button-fg: var(--ds-color-primary-text);
+    --_button-border-color: var(--ds-color-primary-border);
+    --_button-border-color-hover: var(--ds-color-primary-border);
+    --_button-bg-hover: var(--ds-color-primary-fill-hover);
+    --_button-fg-hover: var(--ds-color-primary-text);
+    --_button-bg-active: var(--ds-color-primary-fill-pressed);
+    --_button-fg-active: var(--ds-color-primary-text);
+    --_button-ring: var(--ds-focus-shadow-primary);
+    --_button-shadow: inset 0 var(--ds-border-width-default) 0 var(--ds-color-material-glass-edge);
+
+    background-image: none;
+  }
+
+  /* The close: a small round glass button. */
+  [data-style='desk'] [data-ds='toast'] > [data-part='close'] {
+    --_button-radius: var(--ds-radius-pill);
+    --_button-bg: var(--ds-control-fill-default);
+    --_button-bg-hover: var(--ds-control-fill-hover);
+    --_button-fg: var(--ds-color-text-muted);
+    --_button-fg-hover: var(--ds-color-text-bright);
+    --_button-shadow:
+      inset 0 var(--ds-border-width-default) 0 var(--ds-color-material-glass-edge),
+      inset 0 0 0 var(--ds-border-width-default) var(--ds-color-material-glass-border);
+
+    align-self: start;
+    margin-block: 0;
+  }
+
+  /* Stacked cards: each toast tucks a little under the one after it. The newest is drawn on top. */
+  [data-style='desk'] [data-ds='toaster'] {
+    gap: 0;
+  }
+
+  [data-style='desk'] [data-ds='toaster']:not([data-position^='top']) > [data-ds='toast'] + [data-ds='toast'] {
+    margin-block-start: calc(-1 * var(--ds-space-3xs));
+  }
+
+  [data-style='desk'] [data-ds='toaster'][data-position^='top'] > [data-ds='toast'] + [data-ds='toast'] {
+    margin-block-end: calc(-1 * var(--ds-space-3xs));
   }
 
   /*
@@ -31,8 +133,34 @@
     }
   }
 
+  @media (prefers-contrast: more) {
+    [data-style='desk'] [data-ds='toast'] {
+      --_toast-border-color: var(--ds-color-border-strong);
+    }
+  }
+
   [data-style='desk'][data-contrast='more'] [data-ds='toast'],
   [data-style='desk'] [data-contrast='more'] [data-ds='toast'] {
     --_toast-blur: 0;
+    --_toast-border-color: var(--ds-color-border-strong);
+  }
+
+  /* Forced colors draw no shadow: the tone edge goes back to the base border, in the system color. */
+  @media (forced-colors: active) {
+    [data-style='desk'] [data-ds='toast'] {
+      border-inline-start-width: var(--ds-border-width-strong);
+      border-inline-start-color: CanvasText;
+    }
+
+    [data-style='desk'] [data-ds='toast'] > [data-part='icon'] {
+      background-color: Canvas;
+    }
+  }
+
+  /* No backdrop filter in the browser: the solid material, never glass it cannot blur. */
+  @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+    [data-style='desk'] [data-ds='toast'] {
+      --_toast-bg: var(--ds-color-material-glass-solid);
+    }
   }
 }

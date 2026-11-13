@@ -66,9 +66,9 @@
         "$type": "color",
         "$value": {
           "colorSpace": "srgb",
-          "components": [0.3765, 0.3725, 0.3725],
+          "components": [0.3765, 0.3765, 0.3765],
           "alpha": 1,
-          "hex": "#605f5f"
+          "hex": "#606060"
         }
       },
       "overlay-solid": {
@@ -264,7 +264,8 @@
       },
       "scrim": {
         "$type": "color",
-        "$value": "{color.bg.scrim-60}"
+        "$value": "{color.bg.scrim-70}",
+        "$description": "A flat scrim, no blur behind it. Order 1.24, proposed."
       },
       "inverse": {
         "$type": "color",
@@ -389,11 +390,11 @@
         "$type": "color",
         "$value": {
           "colorSpace": "srgb",
-          "components": [0.9569, 0.9569, 0.9608],
+          "components": [0.9608, 0.9608, 0.9608],
           "alpha": 1,
-          "hex": "#f4f4f5"
+          "hex": "#f5f5f5"
         },
-        "$description": "Text. Five tones are the whole text palette (docs/design.md)"
+        "$description": "Achromatic. Order 1.24, proposed."
       },
       "default": {
         "$type": "color",
@@ -408,10 +409,11 @@
         "$type": "color",
         "$value": {
           "colorSpace": "srgb",
-          "components": [0.6314, 0.6314, 0.6667],
+          "components": [0.6392, 0.6392, 0.6392],
           "alpha": 1,
-          "hex": "#a1a1aa"
-        }
+          "hex": "#a3a3a3"
+        },
+        "$description": "Achromatic (was zinc #a1a1aa). Order 1.24, proposed."
       },
       "subtle": {
         "$type": "color",
@@ -427,11 +429,11 @@
         "$type": "color",
         "$value": {
           "colorSpace": "srgb",
-          "components": [0.3216, 0.3216, 0.3569],
+          "components": [0.3216, 0.3216, 0.3216],
           "alpha": 1,
-          "hex": "#52525b"
+          "hex": "#525252"
         },
-        "$description": "Disabled controls only (exempt from SC 1.4.3). Never for placeholders."
+        "$description": "Achromatic. Order 1.24, proposed."
       },
       "placeholder": {
         "$type": "color",
@@ -452,9 +454,9 @@
         "$type": "color",
         "$value": {
           "colorSpace": "srgb",
-          "components": [0.0667, 0.0941, 0.1529],
+          "components": [0.0392, 0.0392, 0.0392],
           "alpha": 1,
-          "hex": "#111827"
+          "hex": "#0a0a0a"
         },
         "$description": "Ink on a pastel accent fill."
       },
@@ -467,32 +469,38 @@
     "primary": {
       "fill": {
         "$type": "color",
-        "$value": "{color.bg.overlay-20}",
-        "$description": "Studio primary is neutral: an overlay fill (FK2 Button variant primary)."
+        "$value": "{color.text.bright}",
+        "$description": "Neutral primary: a flat white fill with black text. Order 1.24, proposed."
       },
       "fill-hover": {
         "$type": "color",
         "$value": {
           "colorSpace": "srgb",
-          "components": [1, 1, 1],
-          "alpha": 0.28,
-          "hex": "#ffffff"
+          "components": [0.8314, 0.8314, 0.8314],
+          "alpha": 1,
+          "hex": "#d4d4d4"
         },
-        "$description": "A11y change. FK2 hovers at overlay-30; the label measured 4.23:1 over surface-3. 28% white is the closest step that reaches 4.5:1 (4.55:1)."
+        "$description": "One flat step down from the white fill. Order 1.24, proposed."
       },
       "fill-pressed": {
         "$type": "color",
-        "$value": "{color.bg.overlay-20}",
-        "$description": "FK2 returns to the resting fill on press."
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [0.7412, 0.7412, 0.7412],
+          "alpha": 1,
+          "hex": "#bdbdbd"
+        },
+        "$description": "Two flat steps down. Order 1.24, proposed."
       },
       "text": {
         "$type": "color",
-        "$value": "{color.text.default}"
+        "$value": "{color.bg.body}",
+        "$description": "Black on the white primary. Order 1.24, proposed."
       },
       "border": {
         "$type": "color",
-        "$value": "{color.border.control}",
-        "$description": "Carries SC 1.4.11 for the translucent fill."
+        "$value": "{color.text.bright}",
+        "$description": "The primary outline is the white line. Order 1.24, proposed."
       },
       "tint": {
         "$type": "color",
@@ -773,9 +781,9 @@
           "$type": "color",
           "$value": {
             "colorSpace": "srgb",
-            "components": [0.0667, 0.0941, 0.1529],
+            "components": [0.0392, 0.0392, 0.0392],
             "alpha": 1,
-            "hex": "#111827"
+            "hex": "#0a0a0a"
           },
           "$description": "Text and icons on the solid fill, 4.5:1 or more on solid and solid-hover."
         }
@@ -848,9 +856,9 @@
           "$type": "color",
           "$value": {
             "colorSpace": "srgb",
-            "components": [0.0667, 0.0941, 0.1529],
+            "components": [0.0392, 0.0392, 0.0392],
             "alpha": 1,
-            "hex": "#111827"
+            "hex": "#0a0a0a"
           }
         }
       },
@@ -922,9 +930,9 @@
           "$type": "color",
           "$value": {
             "colorSpace": "srgb",
-            "components": [0.0667, 0.0941, 0.1529],
+            "components": [0.0392, 0.0392, 0.0392],
             "alpha": 1,
-            "hex": "#111827"
+            "hex": "#0a0a0a"
           }
         }
       },
@@ -951,9 +959,9 @@
           "$type": "color",
           "$value": {
             "colorSpace": "srgb",
-            "components": [0.0667, 0.0941, 0.1529],
+            "components": [0.0392, 0.0392, 0.0392],
             "alpha": 1,
-            "hex": "#111827"
+            "hex": "#0a0a0a"
           }
         },
         "fill": {
@@ -1008,11 +1016,11 @@
         "$type": "color",
         "$value": {
           "colorSpace": "srgb",
-          "components": [0.9569, 0.9569, 0.9608],
+          "components": [0.9608, 0.9608, 0.9608],
           "alpha": 1,
-          "hex": "#f4f4f5"
+          "hex": "#f5f5f5"
         },
-        "$description": "Focus. Studio: 1px --overlay-20 ring (about 1.9:1). Changed to a 2px solid achromatic ring plus halo (SC 2.4.7, 2.4.13 spirit, 1.4.11)"
+        "$description": "2px white ring, no glow. Order 1.24, proposed."
       },
       "halo": {
         "$type": "color",
@@ -1036,9 +1044,9 @@
         "$type": "color",
         "$value": {
           "colorSpace": "srgb",
-          "components": [0.9569, 0.9569, 0.9608],
+          "components": [0.9608, 0.9608, 0.9608],
           "alpha": 1,
-          "hex": "#f4f4f5"
+          "hex": "#f5f5f5"
         }
       }
     },
@@ -1622,42 +1630,42 @@
     "xs": {
       "$type": "dimension",
       "$value": {
+        "value": 2,
+        "unit": "px"
+      },
+      "$description": "Small and hard. Order 1.24, proposed."
+    },
+    "sm": {
+      "$type": "dimension",
+      "$value": {
         "value": 3,
         "unit": "px"
       },
-      "$description": "Chips, badges, keycaps, swatch dots."
+      "$description": "Small and hard. Order 1.24, proposed."
     },
-    "sm": {
+    "field": {
+      "$type": "dimension",
+      "$value": {
+        "value": 4,
+        "unit": "px"
+      },
+      "$description": "Small and hard. Order 1.24, proposed."
+    },
+    "panel": {
+      "$type": "dimension",
+      "$value": {
+        "value": 4,
+        "unit": "px"
+      },
+      "$description": "Panels and overlays near square. Order 1.24, proposed."
+    },
+    "card": {
       "$type": "dimension",
       "$value": {
         "value": 6,
         "unit": "px"
       },
-      "$description": "Editor controls, tooltips, frame corners."
-    },
-    "field": {
-      "$type": "dimension",
-      "$value": {
-        "value": 8,
-        "unit": "px"
-      },
-      "$description": "Dense filled fields; xs buttons."
-    },
-    "panel": {
-      "$type": "dimension",
-      "$value": {
-        "value": 12,
-        "unit": "px"
-      },
-      "$description": "Floating panels, dialogs, toasts, spotlight."
-    },
-    "card": {
-      "$type": "dimension",
-      "$value": {
-        "value": 16,
-        "unit": "px"
-      },
-      "$description": "Tile cards, context menus, canvas top-start corner, notch."
+      "$description": "Tiles and cards: a small radius. Order 1.24, proposed."
     },
     "control": {
       "$type": "number",
@@ -1674,7 +1682,11 @@
     },
     "sheet": {
       "$type": "dimension",
-      "$value": "{radius.card}"
+      "$value": {
+        "value": 0,
+        "unit": "px"
+      },
+      "$description": "Sheets and drawers run edge to edge, square. Order 1.24, proposed."
     },
     "pill": {
       "$type": "dimension",
@@ -1688,312 +1700,21 @@
     "item": {
       "radius": {
         "$type": "dimension",
-        "$value": "{radius.panel}"
+        "$value": {
+          "value": 0,
+          "unit": "px"
+        },
+        "$description": "Square rows: a tight tile list. Order 1.24, proposed."
       }
     }
   },
   "elevation": {
     "panel": {
       "$type": "shadow",
-      "$value": [
-        {
-          "color": {
-            "colorSpace": "srgb",
-            "components": [0, 0, 0],
-            "alpha": 0.4,
-            "hex": "#000000"
-          },
-          "offsetX": {
-            "value": 0,
-            "unit": "px"
-          },
-          "offsetY": {
-            "value": -1,
-            "unit": "px"
-          },
-          "blur": {
-            "value": 0,
-            "unit": "px"
-          },
-          "spread": {
-            "value": 0,
-            "unit": "px"
-          },
-          "inset": true
-        },
-        {
-          "color": {
-            "colorSpace": "srgb",
-            "components": [0, 0, 0],
-            "alpha": 0.65,
-            "hex": "#000000"
-          },
-          "offsetX": {
-            "value": 0,
-            "unit": "px"
-          },
-          "offsetY": {
-            "value": 12,
-            "unit": "px"
-          },
-          "blur": {
-            "value": 40,
-            "unit": "px"
-          },
-          "spread": {
-            "value": 0,
-            "unit": "px"
-          }
-        }
-      ],
-      "$description": "Panel: an inset bottom edge, then a drop shadow."
-    },
-    "menu": {
-      "$type": "shadow",
       "$value": {
         "color": {
           "colorSpace": "srgb",
-          "components": [0, 0, 0],
-          "alpha": 0.5,
-          "hex": "#000000"
-        },
-        "offsetX": {
-          "value": 0,
-          "unit": "px"
-        },
-        "offsetY": {
-          "value": 12,
-          "unit": "px"
-        },
-        "blur": {
-          "value": 28,
-          "unit": "px"
-        },
-        "spread": {
-          "value": 0,
-          "unit": "px"
-        }
-      }
-    },
-    "dialog": {
-      "$type": "shadow",
-      "$value": {
-        "color": {
-          "colorSpace": "srgb",
-          "components": [0, 0, 0],
-          "alpha": 0.28,
-          "hex": "#000000"
-        },
-        "offsetX": {
-          "value": 0,
-          "unit": "px"
-        },
-        "offsetY": {
-          "value": 18,
-          "unit": "px"
-        },
-        "blur": {
-          "value": 48,
-          "unit": "px"
-        },
-        "spread": {
-          "value": 0,
-          "unit": "px"
-        }
-      }
-    },
-    "tooltip": {
-      "$type": "shadow",
-      "$value": [
-        {
-          "color": {
-            "colorSpace": "srgb",
-            "components": [0, 0, 0],
-            "alpha": 0.5,
-            "hex": "#000000"
-          },
-          "offsetX": {
-            "value": 0,
-            "unit": "px"
-          },
-          "offsetY": {
-            "value": 4,
-            "unit": "px"
-          },
-          "blur": {
-            "value": 16,
-            "unit": "px"
-          },
-          "spread": {
-            "value": 0,
-            "unit": "px"
-          }
-        },
-        {
-          "color": {
-            "colorSpace": "srgb",
-            "components": [1, 1, 1],
-            "alpha": 0.05,
-            "hex": "#ffffff"
-          },
-          "offsetX": {
-            "value": 0,
-            "unit": "px"
-          },
-          "offsetY": {
-            "value": 1,
-            "unit": "px"
-          },
-          "blur": {
-            "value": 0,
-            "unit": "px"
-          },
-          "spread": {
-            "value": 0,
-            "unit": "px"
-          },
-          "inset": true
-        }
-      ]
-    },
-    "card-hover": {
-      "$type": "shadow",
-      "$value": [
-        {
-          "color": {
-            "colorSpace": "srgb",
-            "components": [0, 0, 0],
-            "alpha": 0.3,
-            "hex": "#000000"
-          },
-          "offsetX": {
-            "value": 0,
-            "unit": "px"
-          },
-          "offsetY": {
-            "value": 2,
-            "unit": "px"
-          },
-          "blur": {
-            "value": 4,
-            "unit": "px"
-          },
-          "spread": {
-            "value": 0,
-            "unit": "px"
-          }
-        },
-        {
-          "color": {
-            "colorSpace": "srgb",
-            "components": [0, 0, 0],
-            "alpha": 0.4,
-            "hex": "#000000"
-          },
-          "offsetX": {
-            "value": 0,
-            "unit": "px"
-          },
-          "offsetY": {
-            "value": 8,
-            "unit": "px"
-          },
-          "blur": {
-            "value": 20,
-            "unit": "px"
-          },
-          "spread": {
-            "value": 0,
-            "unit": "px"
-          }
-        }
-      ]
-    },
-    "input-focus": {
-      "$type": "shadow",
-      "$value": [
-        {
-          "color": {
-            "colorSpace": "srgb",
-            "components": [1, 1, 1],
-            "alpha": 0.06,
-            "hex": "#ffffff"
-          },
-          "offsetX": {
-            "value": 0,
-            "unit": "px"
-          },
-          "offsetY": {
-            "value": 0,
-            "unit": "px"
-          },
-          "blur": {
-            "value": 5,
-            "unit": "px"
-          },
-          "spread": {
-            "value": 0,
-            "unit": "px"
-          },
-          "inset": true
-        },
-        {
-          "color": {
-            "colorSpace": "srgb",
-            "components": [1, 1, 1],
-            "alpha": 0.09,
-            "hex": "#ffffff"
-          },
-          "offsetX": {
-            "value": 0,
-            "unit": "px"
-          },
-          "offsetY": {
-            "value": -5,
-            "unit": "px"
-          },
-          "blur": {
-            "value": 8,
-            "unit": "px"
-          },
-          "spread": {
-            "value": 0,
-            "unit": "px"
-          },
-          "inset": true
-        },
-        {
-          "color": {
-            "colorSpace": "srgb",
-            "components": [0, 0, 0],
-            "alpha": 0.24,
-            "hex": "#000000"
-          },
-          "offsetX": {
-            "value": 0,
-            "unit": "px"
-          },
-          "offsetY": {
-            "value": 0,
-            "unit": "px"
-          },
-          "blur": {
-            "value": 5,
-            "unit": "px"
-          },
-          "spread": {
-            "value": 0,
-            "unit": "px"
-          }
-        }
-      ]
-    },
-    "card": {
-      "$type": "shadow",
-      "$value": {
-        "color": {
-          "colorSpace": "srgb",
-          "components": [0, 0, 0],
+          "components": [0.0, 0.0, 0.0],
           "alpha": 0,
           "hex": "#000000"
         },
@@ -2014,7 +1735,175 @@
           "unit": "px"
         }
       },
-      "$description": "Studio cards are flat tiles: no shadow at rest."
+      "$description": "Studio is flat: no shadow. Overlays carry a hairline and a hard edge in their recipes instead. Order 1.24, proposed."
+    },
+    "menu": {
+      "$type": "shadow",
+      "$value": {
+        "color": {
+          "colorSpace": "srgb",
+          "components": [0.0, 0.0, 0.0],
+          "alpha": 0,
+          "hex": "#000000"
+        },
+        "offsetX": {
+          "value": 0,
+          "unit": "px"
+        },
+        "offsetY": {
+          "value": 0,
+          "unit": "px"
+        },
+        "blur": {
+          "value": 0,
+          "unit": "px"
+        },
+        "spread": {
+          "value": 0,
+          "unit": "px"
+        }
+      },
+      "$description": "Studio is flat: no shadow. Overlays carry a hairline and a hard edge in their recipes instead. Order 1.24, proposed."
+    },
+    "dialog": {
+      "$type": "shadow",
+      "$value": {
+        "color": {
+          "colorSpace": "srgb",
+          "components": [0.0, 0.0, 0.0],
+          "alpha": 0,
+          "hex": "#000000"
+        },
+        "offsetX": {
+          "value": 0,
+          "unit": "px"
+        },
+        "offsetY": {
+          "value": 0,
+          "unit": "px"
+        },
+        "blur": {
+          "value": 0,
+          "unit": "px"
+        },
+        "spread": {
+          "value": 0,
+          "unit": "px"
+        }
+      },
+      "$description": "Studio is flat: no shadow. Overlays carry a hairline and a hard edge in their recipes instead. Order 1.24, proposed."
+    },
+    "tooltip": {
+      "$type": "shadow",
+      "$value": {
+        "color": {
+          "colorSpace": "srgb",
+          "components": [0.0, 0.0, 0.0],
+          "alpha": 0,
+          "hex": "#000000"
+        },
+        "offsetX": {
+          "value": 0,
+          "unit": "px"
+        },
+        "offsetY": {
+          "value": 0,
+          "unit": "px"
+        },
+        "blur": {
+          "value": 0,
+          "unit": "px"
+        },
+        "spread": {
+          "value": 0,
+          "unit": "px"
+        }
+      },
+      "$description": "Studio is flat: no shadow. Overlays carry a hairline and a hard edge in their recipes instead. Order 1.24, proposed."
+    },
+    "card-hover": {
+      "$type": "shadow",
+      "$value": {
+        "color": {
+          "colorSpace": "srgb",
+          "components": [0.0, 0.0, 0.0],
+          "alpha": 0,
+          "hex": "#000000"
+        },
+        "offsetX": {
+          "value": 0,
+          "unit": "px"
+        },
+        "offsetY": {
+          "value": 0,
+          "unit": "px"
+        },
+        "blur": {
+          "value": 0,
+          "unit": "px"
+        },
+        "spread": {
+          "value": 0,
+          "unit": "px"
+        }
+      },
+      "$description": "Studio is flat: no shadow. Overlays carry a hairline and a hard edge in their recipes instead. Order 1.24, proposed."
+    },
+    "input-focus": {
+      "$type": "shadow",
+      "$value": {
+        "color": {
+          "colorSpace": "srgb",
+          "components": [0.0, 0.0, 0.0],
+          "alpha": 0,
+          "hex": "#000000"
+        },
+        "offsetX": {
+          "value": 0,
+          "unit": "px"
+        },
+        "offsetY": {
+          "value": 0,
+          "unit": "px"
+        },
+        "blur": {
+          "value": 0,
+          "unit": "px"
+        },
+        "spread": {
+          "value": 0,
+          "unit": "px"
+        }
+      },
+      "$description": "Studio is flat: no shadow. Overlays carry a hairline and a hard edge in their recipes instead. Order 1.24, proposed."
+    },
+    "card": {
+      "$type": "shadow",
+      "$value": {
+        "color": {
+          "colorSpace": "srgb",
+          "components": [0.0, 0.0, 0.0],
+          "alpha": 0,
+          "hex": "#000000"
+        },
+        "offsetX": {
+          "value": 0,
+          "unit": "px"
+        },
+        "offsetY": {
+          "value": 0,
+          "unit": "px"
+        },
+        "blur": {
+          "value": 0,
+          "unit": "px"
+        },
+        "spread": {
+          "value": 0,
+          "unit": "px"
+        }
+      },
+      "$description": "Studio is flat: no shadow. Overlays carry a hairline and a hard edge in their recipes instead. Order 1.24, proposed."
     },
     "window": {
       "$type": "shadow",
@@ -2022,7 +1911,7 @@
     },
     "window-soft": {
       "$type": "shadow",
-      "$value": "{elevation.menu}"
+      "$value": "{elevation.panel}"
     },
     "glass": {
       "$type": "shadow",
@@ -2033,17 +1922,18 @@
     "panel": {
       "$type": "dimension",
       "$value": {
-        "value": 24,
+        "value": 0,
         "unit": "px"
-      }
+      },
+      "$description": "Studio never blurs: nothing to see through. Order 1.24, proposed."
     },
     "backdrop": {
       "$type": "dimension",
       "$value": {
-        "value": 8,
+        "value": 0,
         "unit": "px"
       },
-      "$description": "Behind spotlight and modal shells."
+      "$description": "Studio never blurs: nothing to see through. Order 1.24, proposed."
     },
     "window": {
       "$type": "dimension",
@@ -2052,10 +1942,10 @@
     "window-strong": {
       "$type": "dimension",
       "$value": {
-        "value": 40,
+        "value": 0,
         "unit": "px"
       },
-      "$description": "Strong blur for small chrome. No Studio source; matches Desk."
+      "$description": "Studio never blurs: nothing to see through. Order 1.24, proposed."
     },
     "glass": {
       "$type": "dimension",
@@ -2307,9 +2197,9 @@
         "$type": "color",
         "$value": {
           "colorSpace": "srgb",
-          "components": [0.2627, 0.2627, 0.2627],
+          "components": [0.1961, 0.1961, 0.1961],
           "alpha": 1,
-          "hex": "#434343"
+          "hex": "#323232"
         },
         "$description": "Keycap (Kbd)"
       },
@@ -2317,9 +2207,9 @@
         "$type": "color",
         "$value": {
           "colorSpace": "srgb",
-          "components": [0.1843, 0.1843, 0.1843],
+          "components": [0.1961, 0.1961, 0.1961],
           "alpha": 1,
-          "hex": "#2f2f2f"
+          "hex": "#323232"
         }
       }
     },
@@ -2409,11 +2299,11 @@
         "$type": "color",
         "$value": {
           "colorSpace": "srgb",
-          "components": [0.1294, 0.1412, 0.149],
+          "components": [0.1294, 0.1294, 0.1294],
           "alpha": 1,
-          "hex": "#212426"
+          "hex": "#212121"
         },
-        "$description": "Filled inspector field."
+        "$description": "Achromatic. Order 1.24, proposed."
       },
       "bg-hover": {
         "$type": "color",
@@ -2429,11 +2319,11 @@
         "$type": "color",
         "$value": {
           "colorSpace": "srgb",
-          "components": [0.5608, 0.6157, 0.6392],
+          "components": [0.6, 0.6, 0.6],
           "alpha": 1,
-          "hex": "#8f9da3"
+          "hex": "#999999"
         },
-        "$description": "Muted uppercase section header label."
+        "$description": "Achromatic. Order 1.24, proposed."
       }
     }
   },
@@ -2506,7 +2396,7 @@
     "spring-snappy": {
       "$type": "duration",
       "$value": {
-        "value": 80,
+        "value": 70,
         "unit": "ms"
       }
     },
@@ -2530,6 +2420,64 @@
         "value": 120,
         "unit": "ms"
       }
+    },
+    "window-open": {
+      "$type": "duration",
+      "$value": {
+        "value": 120,
+        "unit": "ms"
+      },
+      "$description": "Studio motion, 70 to 220ms. Order 1.24, proposed."
+    },
+    "window-close": {
+      "$type": "duration",
+      "$value": {
+        "value": 70,
+        "unit": "ms"
+      },
+      "$description": "Studio motion, 70 to 220ms. Order 1.24, proposed."
+    },
+    "window-minimize": {
+      "$type": "duration",
+      "$value": {
+        "value": 140,
+        "unit": "ms"
+      },
+      "$description": "Studio motion, 70 to 220ms. Order 1.24, proposed."
+    },
+    "window-zoom": {
+      "$type": "duration",
+      "$value": {
+        "value": 140,
+        "unit": "ms"
+      },
+      "$description": "Studio motion, 70 to 220ms. Order 1.24, proposed."
+    },
+    "reveal": {
+      "$type": "duration",
+      "$value": {
+        "value": 220,
+        "unit": "ms"
+      },
+      "$description": "Studio motion, 70 to 220ms. Order 1.24, proposed."
+    },
+    "roll": {
+      "$type": "duration",
+      "$value": {
+        "value": 140,
+        "unit": "ms"
+      },
+      "$description": "Studio motion, 70 to 220ms. Order 1.24, proposed."
+    },
+    "toast-enter": {
+      "$type": "duration",
+      "$value": "{duration.fast}",
+      "$description": "An opacity step. Order 1.24, proposed."
+    },
+    "toast-exit": {
+      "$type": "duration",
+      "$value": "{duration.instant}",
+      "$description": "An opacity step. Order 1.24, proposed."
     }
   },
   "delay": {
@@ -2544,15 +2492,18 @@
   "ease": {
     "spring-soft": {
       "$type": "string",
-      "$value": "cubic-bezier(0, 0, 0.2, 1)"
+      "$value": "steps(2, jump-end)",
+      "$description": "Hard cuts: two steps. Order 1.24, proposed."
     },
     "spring-snappy": {
       "$type": "string",
-      "$value": "steps(2, jump-end)"
+      "$value": "steps(2, jump-end)",
+      "$description": "Hard cuts: two steps. Order 1.24, proposed."
     },
     "spring-bouncy": {
       "$type": "string",
-      "$value": "steps(3, jump-end)"
+      "$value": "steps(3, jump-end)",
+      "$description": "Hard cuts: three steps, no overshoot. Order 1.24, proposed."
     }
   },
   "spring": {
@@ -2602,57 +2553,87 @@
   "scale": {
     "pop": {
       "$type": "number",
-      "$value": 1
+      "$value": 1,
+      "$description": "No scale: nothing grows, shrinks or overshoots. Order 1.24, proposed."
     },
     "stretch": {
       "$type": "number",
-      "$value": 1.08
+      "$value": 1,
+      "$description": "No scale: nothing grows, shrinks or overshoots. Order 1.24, proposed."
     },
     "lift": {
       "$type": "number",
-      "$value": 1
+      "$value": 1,
+      "$description": "No scale: nothing grows, shrinks or overshoots. Order 1.24, proposed."
     },
     "anticipate": {
       "$type": "number",
-      "$value": 0.97
+      "$value": 1,
+      "$description": "No scale: nothing grows, shrinks or overshoots. Order 1.24, proposed."
     },
     "enter": {
       "$type": "number",
-      "$value": 1
+      "$value": 1,
+      "$description": "No scale: nothing grows, shrinks or overshoots. Order 1.24, proposed."
     },
     "morph": {
       "$type": "number",
-      "$value": 0.8
+      "$value": 1,
+      "$description": "No scale: nothing grows, shrinks or overshoots. Order 1.24, proposed."
+    },
+    "press": {
+      "$type": "number",
+      "$value": 1,
+      "$description": "No scale: nothing grows, shrinks or overshoots. Order 1.24, proposed."
+    },
+    "menu-enter": {
+      "$type": "number",
+      "$value": 1,
+      "$description": "No scale: nothing grows, shrinks or overshoots. Order 1.24, proposed."
+    },
+    "dialog-enter": {
+      "$type": "number",
+      "$value": 1,
+      "$description": "No scale: nothing grows, shrinks or overshoots. Order 1.24, proposed."
+    },
+    "window-enter": {
+      "$type": "number",
+      "$value": 1,
+      "$description": "No scale: nothing grows, shrinks or overshoots. Order 1.24, proposed."
     }
   },
   "distance": {
     "nudge": {
       "$type": "dimension",
       "$value": {
-        "value": 1,
+        "value": 0,
         "unit": "px"
-      }
+      },
+      "$description": "No travel: things appear in place. Order 1.24, proposed."
     },
     "shift": {
       "$type": "dimension",
       "$value": {
-        "value": 2,
+        "value": 0,
         "unit": "px"
-      }
+      },
+      "$description": "No travel: things appear in place. Order 1.24, proposed."
     },
     "enter": {
       "$type": "dimension",
       "$value": {
-        "value": 4,
+        "value": 0,
         "unit": "px"
-      }
+      },
+      "$description": "No travel: things appear in place. Order 1.24, proposed."
     },
     "lift": {
       "$type": "dimension",
       "$value": {
         "value": 0,
         "unit": "px"
-      }
+      },
+      "$description": "No travel: things appear in place. Order 1.24, proposed."
     }
   }
 }

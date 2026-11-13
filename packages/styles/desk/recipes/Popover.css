@@ -1,9 +1,10 @@
 /*
- * Desk recipe for Popover: floating surfaces on the desk are glass (the
- * dials table of PLAN.md 3.7, depth "glass"), the same material as the Desk
- * toasts: the strong glass fill, the glass border, the window blur and the
- * soft window shadow. The radius stays the panel radius: a popover is
- * smaller than a window.
+ * Desk recipe for Popover: a popover is a small glass window on the desk
+ * (the dials table of PLAN.md 3.7, depth "glass"), the same material as the
+ * Desk toasts and menus: the strong glass fill, the glass hairline, the
+ * window blur with saturation and the soft window shadow with its light
+ * edge (elevation.window-soft). Order 1.24 (proposed): the window radius
+ * (1rem), and the title closes up to the display tracking.
  *
  * Glass turns solid by itself: under prefers-reduced-transparency,
  * prefers-contrast more and data-contrast more the material tokens resolve
@@ -18,6 +19,11 @@
     --_popover-border-color: var(--ds-color-material-glass-border);
     --_popover-shadow: var(--ds-elevation-window-soft);
     --_popover-blur: var(--ds-blur-window);
+    --_popover-radius: var(--ds-radius-window);
+  }
+
+  [data-style='desk'] [data-ds='popover'] > [data-part='title'] {
+    letter-spacing: var(--ds-font-tracking-display);
   }
 
   /* The recipe layer wins over the base layer, so the blur is dropped here again where the glass turns solid. */
@@ -44,5 +50,12 @@
   [data-style='desk'] [data-contrast='more'] [data-ds='popover'] {
     --_popover-blur: 0;
     --_popover-border-color: var(--ds-color-border-strong);
+  }
+
+  /* No backdrop filter in the browser: the solid material, never glass it cannot blur. */
+  @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+    [data-style='desk'] [data-ds='popover'] {
+      --_popover-bg: var(--ds-color-material-glass-solid);
+    }
   }
 }

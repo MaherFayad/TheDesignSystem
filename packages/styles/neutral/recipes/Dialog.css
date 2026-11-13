@@ -1,0 +1,173 @@
+/*
+ * Neutral recipe for Dialog and the family on DialogBase (AlertDialog,
+ * Drawer, Sheet), order 1.24, proposed. A dialog is a white card: 12px
+ * corners (radius.panel), a 1px border, the soft dialog shadow, roomy 24px
+ * padding, a semibold title on the white panel with no band and no line,
+ * and a footer band on surface-2 under a 1px line. The scrim is the soft
+ * slate dim of the token file, with no blur.
+ *
+ * What tokens cannot say:
+ * - the header band and the line under the title go (the title part keeps
+ *   its padding at the top only), while the footer keeps its band and line:
+ *   Dialog.css draws both bands from the same private properties;
+ * - the footer buttons: the main action is a filled blue on the inline end,
+ *   the other one the white outline secondary, whatever emphasis a page
+ *   passes, and a destructive main action is the filled red. The footer
+ *   Buttons are nested components, so this file sets their --_button-*
+ *   properties (Button.css names them; every rest color with its hover);
+ * - the AlertDialog icon sits in a disc tinted in the tone color (blue for
+ *   neutral, red for danger), and the danger title stays in the ink: the
+ *   icon and the red action carry the tone;
+ * - the close control is a small ghost square (radius.sm);
+ * - Drawer is a square edged panel with a border on its inner edge; Sheet
+ *   keeps radius.sheet at its top corners.
+ */
+@layer ds.recipes {
+  [data-style='neutral'] :is([data-ds='dialog'], [data-ds='alert-dialog'], [data-ds='drawer'], [data-ds='sheet']) {
+    --_dialog-border-color: var(--ds-color-border-default);
+    --_dialog-header-bg: var(--ds-color-bg-surface);
+    --_dialog-footer-bg: var(--ds-color-bg-surface-2);
+    --_dialog-divider-color: var(--ds-color-border-default);
+    --_dialog-padding: var(--ds-space-4xl);
+    --_dialog-band-padding-block: var(--ds-space-4xl);
+    --_dialog-band-padding-inline: var(--ds-space-4xl);
+    --_dialog-scrim-filter: none;
+  }
+
+  /* The question stays in the ink in every tone: the icon and the red action say danger. */
+  [data-style='neutral'] :is([data-ds='dialog'], [data-ds='alert-dialog'], [data-ds='drawer'], [data-ds='sheet'])[data-tone='danger'] {
+    --_dialog-title-fg: var(--ds-color-text-bright);
+  }
+
+  /* Phones: the panel keeps 16px padding, as Dialog.css gives it under breakpoint.phone. */
+  @media (width < 30rem) { /* breakpoint.phone */
+    [data-style='neutral'] :is([data-ds='dialog'], [data-ds='alert-dialog'], [data-ds='drawer'], [data-ds='sheet']) {
+      --_dialog-padding: var(--ds-space-xl);
+      --_dialog-band-padding-block: var(--ds-space-xl);
+      --_dialog-band-padding-inline: var(--ds-space-xl);
+    }
+  }
+
+  /* ------------------------------------------------------------ title on the panel, no band */
+
+  [data-style='neutral'] [data-ds='dialog'] > [data-part='panel'] > [data-part='title'] {
+    padding-block-end: var(--ds-space-2xs);
+    border-block-end-color: transparent;
+  }
+
+  [data-style='neutral'] [data-ds='dialog'] > [data-part='panel'] > [data-part='title'] ~ [data-part='description'] {
+    padding-block-start: 0;
+  }
+
+  [data-style='neutral'] [data-ds='dialog'] > [data-part='panel'] > [data-part='title'] ~ [data-part='body'] {
+    padding-block-start: var(--ds-space-l);
+  }
+
+  /* ------------------------------------------------------------ footer band */
+
+  [data-style='neutral'] :is([data-ds='dialog'], [data-ds='alert-dialog'], [data-ds='drawer'], [data-ds='sheet']) > [data-part='panel'] > [data-part='footer'] {
+    padding-block: var(--ds-space-xl);
+  }
+
+  @media (width < 30rem) { /* breakpoint.phone */
+    [data-style='neutral'] :is([data-ds='dialog'], [data-ds='alert-dialog'], [data-ds='drawer'], [data-ds='sheet']) > [data-part='panel'] > [data-part='footer'] {
+      padding-block: var(--ds-space-m);
+    }
+  }
+
+  /* Every footer button starts as the secondary: white, the strong border, the tiny shadow. */
+  [data-style='neutral'] :is([data-ds='dialog'], [data-ds='alert-dialog'], [data-ds='drawer'], [data-ds='sheet']) > [data-part='panel'] > [data-part='footer'] [data-ds='button']:not([data-emphasis='link']) {
+    --_button-bg: var(--ds-color-bg-surface);
+    --_button-fg: var(--ds-color-text-default);
+    --_button-border-color: var(--ds-color-border-strong);
+    --_button-border-color-hover: var(--ds-color-border-strong);
+    --_button-bg-hover: var(--ds-color-bg-surface-3);
+    --_button-fg-hover: var(--ds-color-text-bright);
+    --_button-bg-active: var(--ds-color-bg-surface-4);
+    --_button-fg-active: var(--ds-color-text-bright);
+    --_button-shadow: var(--ds-elevation-card);
+    --_button-ring: var(--ds-focus-shadow-ring);
+  }
+
+  /* The main action: an accent button, or the AlertDialog action, is the filled blue. */
+  [data-style='neutral'] :is([data-ds='dialog'], [data-ds='alert-dialog'], [data-ds='drawer'], [data-ds='sheet']) > [data-part='panel'] > [data-part='footer'] [data-ds='button']:is([data-tone='accent'], [data-part='action']):not([data-emphasis='link']) {
+    --_button-bg: var(--ds-color-primary-fill);
+    --_button-fg: var(--ds-color-primary-text);
+    --_button-border-color: var(--ds-color-primary-border);
+    --_button-border-color-hover: var(--ds-color-primary-fill-hover);
+    --_button-bg-hover: var(--ds-color-primary-fill-hover);
+    --_button-fg-hover: var(--ds-color-primary-text);
+    --_button-bg-active: var(--ds-color-primary-fill-pressed);
+    --_button-fg-active: var(--ds-color-primary-text);
+    --_button-ring: var(--ds-focus-shadow-primary);
+  }
+
+  /* A destructive main action is the filled red. */
+  [data-style='neutral'] :is([data-ds='dialog'], [data-ds='alert-dialog'], [data-ds='drawer'], [data-ds='sheet']) > [data-part='panel'] > [data-part='footer'] [data-ds='button'][data-tone='danger']:not([data-emphasis='link']) {
+    --_button-bg: var(--ds-color-state-danger-solid);
+    --_button-fg: var(--ds-color-state-danger-on-solid);
+    --_button-border-color: var(--ds-color-state-danger-solid);
+    --_button-border-color-hover: var(--ds-color-state-danger-solid-hover);
+    --_button-bg-hover: var(--ds-color-state-danger-solid-hover);
+    --_button-fg-hover: var(--ds-color-state-danger-on-solid);
+    --_button-bg-active: var(--ds-color-state-danger-solid-hover);
+    --_button-fg-active: var(--ds-color-state-danger-on-solid);
+    --_button-ring: var(--ds-focus-shadow-primary);
+  }
+
+  /* The hover and press swaps of Button.css, repeated in this layer so the footer values above still change on hover. */
+  [data-style='neutral'] :is([data-ds='dialog'], [data-ds='alert-dialog'], [data-ds='drawer'], [data-ds='sheet']) > [data-part='panel'] > [data-part='footer'] [data-ds='button']:not([data-emphasis='link']):hover:not([data-disabled], [data-loading]) {
+    --_button-bg: var(--_button-bg-hover);
+    --_button-fg: var(--_button-fg-hover);
+    --_button-border-color: var(--_button-border-color-hover);
+  }
+
+  [data-style='neutral'] :is([data-ds='dialog'], [data-ds='alert-dialog'], [data-ds='drawer'], [data-ds='sheet']) > [data-part='panel'] > [data-part='footer'] [data-ds='button']:not([data-emphasis='link']):active:not([data-disabled], [data-loading]) {
+    --_button-bg: var(--_button-bg-active);
+    --_button-fg: var(--_button-fg-active);
+  }
+
+  /* ------------------------------------------------------------ close: a small ghost square */
+
+  [data-style='neutral'] :is([data-ds='dialog'], [data-ds='drawer'], [data-ds='sheet']) > [data-part='panel'] [data-part='close'] {
+    --_button-radius: var(--ds-radius-sm);
+  }
+
+  /* ------------------------------------------------------------ alert dialog icon */
+
+  [data-style='neutral'] [data-ds='alert-dialog'] {
+    --_dialog-icon-bg: var(--ds-color-primary-tint);
+    --_dialog-icon-fg: var(--ds-color-primary-on-surface);
+  }
+
+  [data-style='neutral'] [data-ds='alert-dialog'][data-tone='danger'] {
+    --_dialog-icon-bg: var(--ds-color-state-danger-tint-10);
+    --_dialog-icon-fg: var(--ds-color-state-danger-text);
+  }
+
+  /* ------------------------------------------------------------ drawer and sheet */
+
+  /* The header is on the white panel; the line under it stays. */
+  [data-style='neutral'] [data-ds='drawer'] {
+    --_dialog-radius: 0;
+  }
+
+  @media (forced-colors: active) {
+    [data-style='neutral'] :is([data-ds='dialog'], [data-ds='alert-dialog'], [data-ds='drawer'], [data-ds='sheet']) {
+      --_dialog-border-color: CanvasText;
+      --_dialog-divider-color: CanvasText;
+    }
+  }
+
+  @media (prefers-contrast: more) {
+    [data-style='neutral'] :is([data-ds='dialog'], [data-ds='alert-dialog'], [data-ds='drawer'], [data-ds='sheet']) {
+      --_dialog-border-color: var(--ds-color-border-strong);
+      --_dialog-divider-color: var(--ds-color-border-strong);
+    }
+  }
+
+  [data-style='neutral'][data-contrast='more'] :is([data-ds='dialog'], [data-ds='alert-dialog'], [data-ds='drawer'], [data-ds='sheet']) {
+    --_dialog-border-color: var(--ds-color-border-strong);
+    --_dialog-divider-color: var(--ds-color-border-strong);
+  }
+}

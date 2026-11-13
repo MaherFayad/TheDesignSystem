@@ -1,0 +1,43 @@
+/*
+ * Desk roominess, order 1.24 (proposed). Desk keeps the default density
+ * (style.json) so the density axis still works; it is roomy through its own
+ * recipes instead: the default size of every control and row is one step
+ * of space.3xs taller than the shared size, with more room at the sides.
+ * Each value adds to the density token, so [data-density] still moves it,
+ * and the xs, sm and lg sizes keep their own rules.
+ */
+@layer ds.recipes {
+  [data-style='desk'] :is([data-ds='button'], [data-ds='toggle-button'], [data-ds='copy-button']):not([data-size='xs'], [data-size='sm'], [data-size='lg']) {
+    --_button-height: calc(var(--ds-size-control-md) + var(--ds-space-3xs));
+    --_button-padding-inline: var(--ds-space-2xl);
+  }
+
+  [data-style='desk'] [data-ds='icon-button']:not([data-size='xs'], [data-size='sm'], [data-size='lg']) {
+    --_button-height: calc(var(--ds-size-control-md) + var(--ds-space-3xs));
+  }
+
+  [data-style='desk'] [data-ds='input']:not([data-part], [data-size='xs'], [data-size='sm'], [data-size='lg']) {
+    --_input-height: calc(var(--ds-size-control-md) + var(--ds-space-3xs));
+  }
+
+  [data-style='desk'] [data-ds='select']:not([data-part], [data-size='sm'], [data-size='lg']) {
+    --_select-height: calc(var(--ds-size-control-md) + var(--ds-space-3xs));
+  }
+
+  [data-style='desk'] :is([data-ds='combobox'], [data-ds='autocomplete']):not([data-part], [data-size='sm'], [data-size='lg']) {
+    --_combobox-height: calc(var(--ds-size-control-md) + var(--ds-space-3xs));
+  }
+
+  /* Rows: menus, lists and the Select list. */
+  [data-style='desk'] :is([data-ds='dropdown-menu'], [data-ds='context-menu']):not([data-size='sm']) {
+    --_menu-item-height: calc(var(--ds-menu-item-height) + var(--ds-space-3xs));
+  }
+
+  [data-style='desk'] [data-ds='select'][data-part='content']:not([data-size='sm']) {
+    --_select-item-height: calc(var(--ds-list-row-height) + var(--ds-space-3xs));
+  }
+
+  [data-style='desk'] [data-ds='list-box']:not([data-size='sm']) {
+    --_list-box-option-height: calc(var(--ds-list-row-height) + var(--ds-space-3xs));
+  }
+}

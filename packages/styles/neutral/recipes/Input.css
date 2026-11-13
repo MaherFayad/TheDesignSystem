@@ -1,11 +1,14 @@
 /*
- * Neutral recipe for Input. Why not a token: Input.css sets the field fill
- * to `transparent` with no token behind it, so no token can make a Neutral
- * field white on the gray page. The focus border takes the brand edge so
- * the boundary and the ring agree; the border token for focus is shared
- * with hover (border.control-hover), so a token cannot split the two.
+ * Neutral recipe for Input and the field boxes built like it: the Select,
+ * MultiSelect, Combobox and Autocomplete triggers. Why not a token: each
+ * file sets the field fill to `transparent` with no token behind it, so no
+ * token can make a Neutral field white on the gray page. The focus border
+ * takes the brand edge so the boundary and the ring agree; the border token
+ * for focus is shared with hover (border.control-hover), so a token cannot
+ * split the two.
  *
- * Read only keeps its own quiet fill from Input.css, so it is left out here.
+ * Read only keeps its own quiet fill from each file, so it is left out
+ * here.
  */
 @layer ds.recipes {
   [data-style='neutral'] [data-ds='input']:not([data-readonly]) {
@@ -14,5 +17,29 @@
 
   [data-style='neutral'] [data-ds='input'] {
     --_input-border-color-focus: var(--ds-color-primary-border);
+  }
+
+  [data-style='neutral'] [data-ds='select']:not([data-part], [data-readonly]) {
+    --_select-bg: var(--ds-color-bg-surface);
+  }
+
+  [data-style='neutral'] [data-ds='select']:not([data-part]) {
+    --_select-border-color-focus: var(--ds-color-primary-border);
+  }
+
+  [data-style='neutral'] [data-ds='multi-select']:not([data-part], [data-readonly]) {
+    --_multi-select-bg: var(--ds-color-bg-surface);
+  }
+
+  [data-style='neutral'] [data-ds='multi-select']:not([data-part]) {
+    --_multi-select-border-color-focus: var(--ds-color-primary-border);
+  }
+
+  [data-style='neutral'] :is([data-ds='combobox'], [data-ds='autocomplete']):not([data-part='popup'], [data-readonly]) {
+    --_combobox-bg: var(--ds-color-bg-surface);
+  }
+
+  [data-style='neutral'] :is([data-ds='combobox'], [data-ds='autocomplete']):not([data-part='popup']) {
+    --_combobox-border-color-focus: var(--ds-color-primary-border);
   }
 }
