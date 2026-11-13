@@ -2770,7 +2770,8 @@
 
   @media (prefers-reduced-motion: reduce) {
     :root,
-    [data-style] {
+    [data-style],
+    [data-style][data-scheme] {
       --ds-delay-reveal-step: 0ms;
       --ds-delay-stagger: 0ms;
       --ds-duration-base: 0ms;

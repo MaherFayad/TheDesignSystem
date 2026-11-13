@@ -599,10 +599,17 @@ function renderCss(r: BuildResult, modes: Mode[]): string {
 
   // Reduced motion: every duration and delay goes to zero, except timing that
   // is not motion (hover intent), marked $extensions["ds.motion"]: false.
-  const motion = sortedPaths(base).filter((p) => (p.startsWith('duration.') || p.startsWith('delay.')) && base.get(p)!.extensions?.['ds.motion'] !== false);
+  // A style may set its own durations in its mode block, which is more
+  // specific than `[data-style]`, so the zeroes are also written for
+  // `[data-style][data-scheme]`: the same specificity, later in the file.
+  const isMotion = (p: string, map: TokenMap) =>
+    (p.startsWith('duration.') || p.startsWith('delay.')) && map.get(p)!.extensions?.['ds.motion'] !== false && base.get(p)?.extensions?.['ds.motion'] !== false;
+  const motionSet = new Set(sortedPaths(base).filter((p) => isMotion(p, base)));
+  for (const m of modes) for (const p of sortedPaths(m.own)) if (isMotion(p, m.own)) motionSet.add(p);
+  const motion = [...motionSet].sort();
   if (motion.length) {
     const lines = motion.map((p) => `      ${cssVar(prefix, p)}: 0ms;`);
-    blocks.push(`  @media (prefers-reduced-motion: reduce) {\n    :root,\n    [data-style] {\n${lines.join('\n')}\n    }\n  }`);
+    blocks.push(`  @media (prefers-reduced-motion: reduce) {\n    :root,\n    [data-style],\n    [data-style][data-scheme] {\n${lines.join('\n')}\n    }\n  }`);
   }
 
   // Reduced transparency and more contrast: every material becomes the solid glass.
