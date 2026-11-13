@@ -33,7 +33,7 @@ describe('DsIconButton', () => {
     const fixture = TestBed.createComponent(Host);
     await fixture.whenStable();
     const el = fixture.nativeElement.querySelector('#busy') as HTMLElement;
-    expect(Array.from(el.children).map((c) => c.getAttribute('data-part'))).toEqual(['icon', 'spinner', 'status']);
+    expect(Array.from(el.children).map((c) => c.getAttribute('data-part'))).toEqual(['icon', 'spinner', 'status', 'hit']);
     el.click();
     expect(fixture.componentInstance.clicks()).toBe(0);
   });

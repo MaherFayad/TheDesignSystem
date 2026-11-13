@@ -47,8 +47,8 @@
  * --_pagination-press-*; until a press it is the centre. The press shade,
  * the sink and the pointer glow of order 1.23 are off: the ripple is the
  * only press feedback. Checkbox and radio get a 40dp state layer that the
- * same circle grows into on a touch. The hit area of a control drawn under
- * 48dp is a transparent ::before (the glow's layer, emptied). Durations
+ * same circle grows into on a touch. The hit area of a button drawn under
+ * 48dp is its hit part (a chip's, its ::before). Durations
  * are tokens only, so the component's reduced zeroing and the reduced
  * tokens still hold. Under reduced motion the ripple shows whole at once.
  * Under forced colors the ripple and the state layers are hidden.
@@ -111,7 +111,7 @@
 
   /*
    * Press feedback is the ripple alone: no inner shade, no sink, no pointer
-   * glow (the glow's ::before layer is the 48dp hit area here), and the
+   * glow (the 48dp hit area is the hit part, not the glow layer), and the
    * ToggleButton's own pool and flood give way to the same ripple.
    */
   [data-platform='android'] :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button'], [data-ds='close-button'], [data-ds='copy-button'], [data-ds='floating-action-button']) {
@@ -126,14 +126,26 @@
     --_toggle-button-flood: 0;
   }
 
-  /* The 48dp hit area of a control drawn smaller: a transparent layer around it (the target size check counts it). */
-  [data-platform='android'] :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button'], [data-ds='close-button'], [data-ds='copy-button'], [data-ds='chip'])::before {
-    content: '';
+  /*
+   * The 48dp hit area of a control drawn smaller: a transparent layer around
+   * it (the target size check counts it) that takes the press. For the
+   * button family it is the hit part (order 1.29, review B10): ::before is
+   * the glow there, which has no pointer and keeps the control's box. Chip,
+   * with no glow, keeps its ::before.
+   */
+  [data-platform='android'] :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button'], [data-ds='close-button'], [data-ds='copy-button'], [data-ds='floating-action-button']) > [data-part='hit'],
+  [data-platform='android'] [data-ds='chip']::before {
     position: absolute;
-    background-image: none;
+    display: block;
     /* Each axis grows only when the control is shorter than the target; percentages read the control's own box. */
     inset-block: min(0px, calc((100% - var(--ds-size-touch-android)) / 2));
     inset-inline: min(0px, calc((100% - var(--ds-size-touch-android)) / 2));
+    pointer-events: auto;
+  }
+
+  [data-platform='android'] [data-ds='chip']::before {
+    content: '';
+    background-image: none;
   }
 
   /* ------------------------------------------------------------ the ripple: press feedback on every control that presses */
@@ -274,7 +286,10 @@
      */
     --_switch-inset: var(--ds-border-width-default);
     --_switch-thumb-size: calc(var(--_switch-height) - var(--ds-border-width-strong) * 2);
-    --_switch-travel-max: calc(var(--_switch-width) - var(--_switch-height));
+    /* A capsule thumb (--_switch-thumb-width wider than the dot box) travels less by its extra width, so it stays in the track (order 1.29). */
+    --_switch-travel-max: calc(var(--_switch-width) - var(--_switch-height) - (var(--_switch-thumb-width) - var(--_switch-thumb-size)));
+    /* The fill layer sits 1px inside the 2dp outline, so its clip reaches 1dp past the dot's far edge only with both (order 1.29, B3). */
+    --_switch-fill-reach: calc(var(--ds-border-width-strong) + var(--ds-border-width-default));
     /* With the thumbIcon part: a check in the on dot. */
     --_switch-thumb-icon-opacity: 1;
   }
@@ -285,6 +300,18 @@
 
   [data-platform='android'] [data-ds='switch'] > [data-part='control'] > [data-part='track'] {
     border-width: var(--ds-border-width-strong);
+  }
+
+  /*
+   * The off dot keeps a 1dp edge in the platform's off handle color
+   * (border-control-hover) inside its own edge, 1dp whatever the dot's scale
+   * (Switch.css --_switch-thumb-edge), so a light handle a style sets keeps
+   * 3:1 against a light track (order 1.29, B3). On the platform's gray handle
+   * it does not show; the thumb's own ring inside it keeps the edge on the fill.
+   */
+  [data-platform='android'] [data-ds='switch'][data-state='unchecked'] {
+    --_switch-thumb-edge: var(--ds-color-border-control-hover);
+    --_switch-thumb-edge-width: var(--ds-border-width-default);
   }
 
   /*
@@ -541,8 +568,13 @@
     border-start-end-radius: var(--ds-radius-xs);
   }
 
+  /*
+   * Focus thickens the active indicator to 2dp without moving the text
+   * (review N19): the border stays 1dp and the second dp is an inset shadow
+   * under the ring, so the content box keeps its size.
+   */
   [data-platform='android'] [data-ds='input']:not([data-variant='outlined']):focus-within {
-    border-block-end-width: var(--ds-border-width-strong);
+    --_input-ring: var(--ds-focus-shadow-ring), inset 0 calc(var(--ds-border-width-default) - var(--ds-border-width-strong)) 0 0 var(--_input-border-color);
   }
 
   [data-platform='android'] [data-ds='input'][data-variant='outlined'] {
@@ -551,7 +583,7 @@
   }
 
   [data-platform='android'] [data-ds='input'][data-variant='outlined']:focus-within {
-    border-width: var(--ds-border-width-strong);
+    --_input-ring: var(--ds-focus-shadow-ring), inset 0 0 0 calc(var(--ds-border-width-strong) - var(--ds-border-width-default)) var(--_input-border-color);
   }
 
   /* A floating label rests in the 56dp box at its 16dp side, and rises on focus or with a value. */
@@ -574,7 +606,7 @@
   }
 
   [data-platform='android'] [data-ds='textarea']:focus-within {
-    border-block-end-width: var(--ds-border-width-strong);
+    --_textarea-ring: var(--ds-focus-shadow-ring), inset 0 calc(var(--ds-border-width-default) - var(--ds-border-width-strong)) 0 0 var(--_textarea-border-color);
   }
 
   [data-platform='android'] [data-ds='select']:not([data-part]) {
@@ -835,9 +867,11 @@
     --_dialog-ease-in: var(--ds-ease-emphasized);
   }
 
+  /* Order 1.29: the bottom sheet rises and grows from scale.window-enter (0.92), as the android dialog does; Dialog.css honours the scale on the Sheet. */
   [data-platform='android'] [data-ds='sheet'] {
     --_dialog-radius: calc(var(--ds-radius-card) + var(--ds-radius-panel));
     --_dialog-handle-radius: var(--ds-radius-pill);
+    --_dialog-enter-scale: var(--ds-scale-window-enter);
   }
 
   [data-platform='android'] [data-ds='drawer'] {

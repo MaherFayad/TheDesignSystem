@@ -4,7 +4,7 @@
 import { Component, signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { emerge, landPop } from '../../internal/motion-fields';
+import { emerge, landPop } from '@the-system/motion';
 import { DsFieldset } from './fieldset';
 
 interface Call {

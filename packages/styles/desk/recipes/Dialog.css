@@ -16,9 +16,7 @@
  *   pill whatever its emphasis, a danger action the red pill, and every
  *   other button the quiet glass pill (the Button recipe), so two soft
  *   buttons passed by a page still read as main and secondary;
- * - AlertDialog has no title bar part yet: its icon sits in a title band
- *   drawn on the panel (the title bar material and a hairline under it),
- *   and the icon is a rounded tile, as the toast icons are;
+ * - the AlertDialog icon is a rounded tile, as the toast icons are;
  * - titles close up to the display tracking (-0.04em, none in Arabic);
  * - the window grows from 92% on the soft spring (a small overshoot).
  *
@@ -27,12 +25,20 @@
  *   than the shared one); the direct scrim filter is gone, so the base
  *   fallbacks hold, and the blur goes to 0px again below where this layer
  *   would win over them;
- * - the title bar and the AlertDialog band are yellow glass (the primary
- *   tint over the panel's glass), so a Desk window is told by its chrome;
+ * - the title bar is yellow glass (the primary tint over the panel's
+ *   glass), so a Desk window is told by its chrome;
  *   the Sheet's grip is the yellow pill;
  * - the window grows on the bouncy spring and its parts land one stagger
  *   step apart on the same spring: an overshoot and a settle, where Liquid
  *   floats in on the soft spring.
+ *
+ * Order 1.29 (proposed), the hooks of order 1.29:
+ * - AlertDialog and Sheet draw a true title bar with the lights (style.json
+ *   `optionalParts`), so the band this file painted on the AlertDialog panel
+ *   is gone;
+ * - the scrim saturates the desk through --_dialog-scrim-saturate, which
+ *   goes back to 1 wherever the blur goes; under reduced transparency the
+ *   scrim is the solid 80% one.
  */
 @layer ds.recipes {
   [data-style='desk'] :is([data-ds='dialog'], [data-ds='alert-dialog'], [data-ds='drawer'], [data-ds='sheet']) {
@@ -50,6 +56,7 @@
     --_dialog-footer-bg: transparent;
     --_dialog-divider-color: var(--ds-color-material-glass-border);
     --_dialog-backdrop-blur: var(--ds-blur-window);
+    --_dialog-scrim-saturate: var(--ds-blur-window-saturation);
     --_dialog-band-padding-block: var(--ds-space-m);
     --_dialog-band-padding-inline: var(--ds-space-xl);
     --_dialog-handle-color: var(--ds-color-primary-fill);
@@ -79,8 +86,8 @@
     --_dialog-radius: var(--ds-radius-sheet);
   }
 
-  /* The title bar of a window: yellow glass and a hairline under it, as the AlertDialog band below. */
-  [data-style='desk'] [data-ds='dialog'] > [data-part='panel'] > [data-part='titlebar'] {
+  /* The title bar of a window: yellow glass and a hairline under it. */
+  [data-style='desk'] :is([data-ds='dialog'], [data-ds='alert-dialog'], [data-ds='sheet']) > [data-part='panel'] > [data-part='titlebar'] {
     --_title-bar-bg: var(--ds-color-primary-tint);
     --_title-bar-border-color: var(--ds-color-material-glass-border);
   }
@@ -90,12 +97,7 @@
     letter-spacing: var(--ds-font-tracking-display);
   }
 
-  /*
-   * AlertDialog: the title band. The icon sits in a band of yellow glass
-   * (the title bar color) across the top of the panel, with a hairline under it, so the
-   * alert reads as a window like the Dialog. The band is a background layer
-   * on the panel: its height is the icon tile and the padding around it.
-   */
+  /* AlertDialog: the icon is a rounded glass tile under the title bar. */
   [data-style='desk'] [data-ds='alert-dialog'] {
     --_dialog-icon-bg: var(--ds-color-bg-overlay-10);
     --_dialog-icon-fg: var(--ds-color-text-bright);
@@ -106,32 +108,11 @@
     --_dialog-icon-fg: var(--ds-color-state-danger-text);
   }
 
-  [data-style='desk'] [data-ds='alert-dialog'] > [data-part='panel']:has(> [data-part='icon']) {
-    background-image:
-      linear-gradient(var(--ds-color-material-glass-border), var(--ds-color-material-glass-border)),
-      linear-gradient(var(--ds-color-primary-tint), var(--ds-color-primary-tint));
-    background-repeat: no-repeat;
-    /* The band scrolls with the icon when the whole panel scrolls (a short viewport). */
-    background-attachment: local;
-    background-position:
-      0 calc(var(--ds-size-control-sm) + 2 * var(--ds-space-xs)),
-      0 0;
-    background-size:
-      100% var(--ds-border-width-default),
-      100% calc(var(--ds-size-control-sm) + 2 * var(--ds-space-xs));
-  }
-
   [data-style='desk'] [data-ds='alert-dialog'] > [data-part='panel'] > [data-part='icon'] {
     inline-size: var(--ds-size-control-sm);
     block-size: var(--ds-size-control-sm);
-    margin-block-start: var(--ds-space-xs);
-    margin-inline-start: var(--ds-space-xl);
     border-radius: var(--ds-radius-field);
     box-shadow: inset 0 var(--ds-border-width-default) 0 var(--ds-color-material-glass-edge);
-  }
-
-  [data-style='desk'] [data-ds='alert-dialog'] > [data-part='panel'] > [data-part='icon'] + [data-part='title'] {
-    padding-block-start: calc(var(--ds-space-xs) + var(--_dialog-padding) * 0.75);
   }
 
   /*
@@ -173,6 +154,8 @@
     [data-style='desk'] :is([data-ds='dialog'], [data-ds='alert-dialog'], [data-ds='drawer'], [data-ds='sheet']) {
       --_dialog-backdrop: none;
       --_dialog-backdrop-blur: 0px;
+      --_dialog-scrim-saturate: 1;
+      --_dialog-scrim: var(--ds-color-bg-scrim-80);
     }
   }
 
@@ -180,6 +163,7 @@
     [data-style='desk'] :is([data-ds='dialog'], [data-ds='alert-dialog'], [data-ds='drawer'], [data-ds='sheet']) {
       --_dialog-backdrop: none;
       --_dialog-backdrop-blur: 0px;
+      --_dialog-scrim-saturate: 1;
       --_dialog-border-color: var(--ds-color-border-strong);
       --_dialog-divider-color: var(--ds-color-border-strong);
     }
@@ -188,6 +172,7 @@
   [data-style='desk'][data-contrast='more'] :is([data-ds='dialog'], [data-ds='alert-dialog'], [data-ds='drawer'], [data-ds='sheet']) {
     --_dialog-backdrop: none;
     --_dialog-backdrop-blur: 0px;
+    --_dialog-scrim-saturate: 1;
     --_dialog-border-color: var(--ds-color-border-strong);
     --_dialog-divider-color: var(--ds-color-border-strong);
   }
@@ -197,13 +182,10 @@
       --_dialog-bg: Canvas;
       --_dialog-backdrop: none;
       --_dialog-backdrop-blur: 0px;
+      --_dialog-scrim-saturate: 1;
       --_dialog-handle-color: CanvasText;
       --_dialog-border-color: CanvasText;
       --_dialog-divider-color: CanvasText;
-    }
-
-    [data-style='desk'] [data-ds='alert-dialog'] > [data-part='panel']:has(> [data-part='icon']) {
-      background-image: none;
     }
   }
 
@@ -212,6 +194,7 @@
     [data-style='desk'] :is([data-ds='dialog'], [data-ds='alert-dialog'], [data-ds='drawer'], [data-ds='sheet']) {
       --_dialog-bg: var(--ds-color-material-glass-solid);
       --_dialog-backdrop-blur: 0px;
+      --_dialog-scrim-saturate: 1;
     }
   }
 }

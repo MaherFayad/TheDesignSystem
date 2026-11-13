@@ -47,7 +47,8 @@ import { NG_VALUE_ACCESSOR, type ControlValueAccessor } from '@angular/forms';
 import { codeInputHints, codeSeparatorIndexes, parseCode, type CodeCharset, type Shape, type Size } from '@the-system/shared';
 import { consumeHostAttributes } from '../../internal/host';
 import { injectMotion } from '../../internal/motion';
-import { errorShake, landPop, playBeat, runStep, token } from '../../internal/motion-fields';
+import { landPop, playBeat, runStep, token } from '@the-system/motion';
+import { errorShake } from '../../internal/motion-fields';
 import { DsFieldContext, fieldControl } from '../field/field-context';
 
 export type OTPFieldSize = Size;

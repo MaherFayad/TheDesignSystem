@@ -37,7 +37,7 @@
 // - The indicator moves with transform only; its length is set at once.
 //   Interaction "toc-travel" (order 1.22, proposed): the CSS transition runs
 //   on the snappy spring, and the bar stretches along its travel with its
-//   trailing edge still (stretchAlong, react/src/internal/indicator.ts), so
+//   trailing edge still (stretchAlong, motion/src/helpers/indicator.ts), so
 //   it travels with the direction of the change. Under reduced motion the
 //   duration tokens are 0ms and nothing stretches.
 import {
@@ -55,8 +55,7 @@ import {
 } from 'react';
 import { activeHeading, buildTree, type TocHeading, type TocNode, type Size } from '@the-system/shared';
 import { useTheme } from '../../theme';
-import { readDuration, readEasing, type PatternMode } from '@the-system/motion';
-import { scaleOf } from '../../internal/indicator';
+import { readDuration, readEasing, scaleOf, type PatternMode } from '@the-system/motion';
 
 /**
  * Round 3 (review N18): the bar travels with the Web Animations API, from

@@ -17,7 +17,7 @@
 // private properties. The indicator is measured from the selected item and
 // placed with logical private properties, so RTL needs nothing more. It
 // moves with `transform` only: interaction "tab-slide" (order 1.22,
-// proposed), the shared pill of react/src/internal/indicator.ts, slides it
+// proposed), the shared pill of motion/src/helpers/indicator.ts, slides it
 // from where it is drawn (a second change mid travel starts there) on the
 // snappy spring, stretched along its travel, and the label it leaves dips
 // while the one it reaches pops. No motion under reduced motion, where it
@@ -36,9 +36,7 @@ import {
   type Ref,
 } from 'react';
 import { ToggleGroup as RadixToggleGroup } from 'radix-ui';
-import { settle } from '@the-system/motion';
-import { slideTo } from '../../internal/indicator';
-import { playInk } from '../Tabs/ink';
+import { inFrame, planInk, planSlide, startSlide } from '@the-system/motion';
 import { useMotion } from '../../internal/motion';
 import type { Shape, Size } from '@the-system/shared';
 import { ButtonGroupContext, type ButtonGroupContextValue } from '../ButtonGroup/ButtonGroupContext';
@@ -106,6 +104,8 @@ function measure(root: HTMLElement, item: HTMLElement) {
     top: (ir.top - rr.top) / sy - borderTop,
     inline: ir.width / sx,
     block: ir.height / sy,
+    /** The box the thumb rests in once placed, in viewport px: the item's (order 1.29, so nothing is read after the writes). */
+    rect: { x: ir.x, y: ir.y, width: ir.width, height: ir.height },
   };
 }
 
@@ -150,48 +150,55 @@ export function SegmentedControl({
 
   // Puts the thumb under the selected item. Slides from where it was when
   // the value changed and the thumb was already placed; jumps otherwise.
+  // Order 1.29 (review B14): it reads, then returns its writes, so a slide
+  // can read with every other list of the commit (inFrame) and write after.
   const place = useCallback(
-    (slide: boolean) => {
+    (slide: boolean): (() => void) | undefined => {
       const root = rootRef.current;
       const thumb = indicatorRef.current;
-      if (!root || !thumb) return;
+      if (!root || !thumb || !root.isConnected) return undefined;
       const item = Array.from(root.querySelectorAll<HTMLElement>(ITEM)).find((el) => el.getAttribute('data-state') === 'on');
       if (!item) {
-        thumb.hidden = true;
-        frame.current = '';
-        return;
+        return () => {
+          thumb.hidden = true;
+          frame.current = '';
+        };
       }
       const f = measure(root, item);
       const key = `${f.start} ${f.top} ${f.inline} ${f.block}`;
       // Same frame and no slide asked: leave a running slide alone.
-      if (!slide && key === frame.current && !thumb.hidden) return;
+      if (!slide && key === frame.current && !thumb.hidden) return undefined;
       frame.current = key;
       const from = slide && !thumb.hidden ? thumb.getBoundingClientRect() : null;
-      settle(thumb);
-      thumb.style.setProperty('--_segmented-control-indicator-start', `${f.start}px`);
-      thumb.style.setProperty('--_segmented-control-indicator-top', `${f.top}px`);
-      thumb.style.setProperty('--_segmented-control-indicator-inline-size', `${f.inline}px`);
-      thumb.style.setProperty('--_segmented-control-indicator-block-size', `${f.block}px`);
-      thumb.hidden = false;
       const label = item.querySelector(':scope > [data-part="label"], :scope > [data-part="icon"]');
-      if (from) {
-        const mode = modeRef.current('tab-slide');
-        const to = thumb.getBoundingClientRect();
-        const anim = slideTo({ el: thumb }, from, to, { mode, axis: 'x' });
-        // Round 3: the text under the thumb takes the selected color where the thumb is (Tabs/ink.ts).
-        playInk({
-          switch: '--_segmented-control-ink',
-          slide: anim,
-          to,
-          anchor: root,
-          parts: Array.from(root.querySelectorAll(INKED)),
-          reaching: Array.from(item.querySelectorAll(INKED_OWN)),
-          restFrom: lastLabel.current,
-          inkFrom: label,
-          axis: 'x',
-        });
-      }
-      lastLabel.current = label;
+      // Read here: getAnimations updates style, so after the writes of another list it would cost a style pass.
+      const running = typeof thumb.getAnimations === 'function' ? thumb.getAnimations() : [];
+      const plan = from ? planSlide({ el: thumb }, from, f.rect, { mode: modeRef.current('tab-slide'), axis: 'x' }) : null;
+      // Round 3: the text under the thumb takes the selected color where the thumb is (helpers/nav-ink.ts in @the-system/motion).
+      const ink = from
+        ? planInk({
+            switch: '--_segmented-control-ink',
+            slide: plan,
+            to: f.rect,
+            anchor: root,
+            parts: Array.from(root.querySelectorAll(INKED)),
+            reaching: Array.from(item.querySelectorAll(INKED_OWN)),
+            restFrom: lastLabel.current,
+            inkFrom: label,
+            axis: 'x',
+            indicator: thumb,
+          })
+        : null;
+      return () => {
+        for (const a of running) a.cancel();
+        thumb.style.setProperty('--_segmented-control-indicator-start', `${f.start}px`);
+        thumb.style.setProperty('--_segmented-control-indicator-top', `${f.top}px`);
+        thumb.style.setProperty('--_segmented-control-indicator-inline-size', `${f.inline}px`);
+        thumb.style.setProperty('--_segmented-control-indicator-block-size', `${f.block}px`);
+        thumb.hidden = false;
+        ink?.(startSlide({ el: thumb }, plan));
+        lastLabel.current = label;
+      };
     },
     [],
   );
@@ -199,7 +206,8 @@ export function SegmentedControl({
   // On every value change: slide when it changed after the first placing.
   useLayoutEffect(() => {
     const slide = placed.current !== null && placed.current !== current;
-    place(slide);
+    if (slide) inFrame(() => place(true));
+    else place(false)?.();
     placed.current = current;
   }, [current, place]);
 
@@ -207,7 +215,7 @@ export function SegmentedControl({
   useLayoutEffect(() => {
     const root = rootRef.current;
     if (!root || typeof ResizeObserver === 'undefined') return;
-    const ro = new ResizeObserver(() => place(false));
+    const ro = new ResizeObserver(() => place(false)?.());
     ro.observe(root);
     for (const item of root.querySelectorAll<HTMLElement>(ITEM)) ro.observe(item);
     return () => ro.disconnect();

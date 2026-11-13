@@ -4,17 +4,36 @@
 // themed portal, the focus rule and return, toasts above, Dialog.css).
 //
 // No source: designed from the dials table (PLAN.md 3.7) and Dialog, with
-// radius.sheet. Detents are wave 2. The handle can be dragged down to close
-// the sheet; the close control and Escape are its key path (WCAG 2.5.7), so
-// the handle itself is hidden from assistive tech and out of the tab order.
+// radius.sheet. The handle can be dragged down to close the sheet; the close
+// control and Escape are its key path (WCAG 2.5.7), so with no detents the
+// handle itself is hidden from assistive tech and out of the tab order.
+//
+// Detents (order 1.29). With the `detents` prop (fractions of the viewport
+// height, or px, smallest first) the sheet rests at one of those heights:
+// the root carries data-detent (the index of the current one) and the
+// working values --_dialog-detent-height (its height) and --_dialog-detent-max
+// (the largest). The panel is as tall as the largest; a smaller detent moves
+// it down by transform, so motion stays on transform. The handle is then a
+// native button in the tab order (still part `handle`): ArrowUp and ArrowDown
+// step through the detents, Home and End go to the ends, Enter, Space and a
+// click take the next one, round to the smallest (the button path for the
+// drag, WCAG 2.5.7). A drag follows the pointer between the detents, gives a
+// rubber band past the largest (into --_dialog-drag-y), and on release
+// settles on the detent nearest to where it would coast, by position and
+// speed (helpers/sheet-detents.ts in @the-system/motion, shared with
+// Angular). When the sheet may close, a flick or a drag well below the
+// smallest detent closes it.
 //
 //   <body>
 //     <div data-ds="theme" data-dialog-layer>
-//       <div data-ds="sheet" data-size data-state data-dragging>   style --_sheet-toast-end while top toasts show
+//       <div data-ds="sheet" data-size data-state data-dragging data-detent>   style --_sheet-toast-end while top toasts show
 //         <div data-part="backdrop">                  Radix Overlay
 //         <div data-part="panel" role="dialog">       Radix Content
-//           <div data-part="handle" aria-hidden>
+//           <div data-part="handle" aria-hidden>       no detents: a pointer path only
+//           <button data-part="handle" type="button" aria-label>   with detents: the button path
 //             <span data-part="handle-bar">            order 1.23: the drawn bar, so it can take a radius
+//           <div data-part="titlebar" data-ds="title-bar">   order 1.29, optional part: replaces the header
+//             <div data-part="controls"><WindowControls/></div>   optional part
 //           <div data-part="header">
 //             <h2 data-part="title">
 //             <p data-part="description">
@@ -28,6 +47,9 @@
 // transition off. On release past a quarter of the panel's height, or on a
 // quick flick down, the sheet closes and its exit plays from where it is;
 // otherwise it snaps back. With dismissible false it always snaps back.
+// The speed is read over the last 100ms with the release as the last sample
+// (order 1.29, review 3 N28), so a drag that pauses before the release has
+// no speed left and never counts as a flick.
 // Order 1.23: a rubber band. Above its open place the panel follows a
 // third of the pointer travel (RUBBER_SHARE), so the sheet gives a little
 // and springs back instead of not moving; with dismissible false, a drag
@@ -37,6 +59,7 @@ import {
   use,
   useCallback,
   useEffect,
+  useLayoutEffect,
   useMemo,
   useRef,
   useState,
@@ -48,27 +71,49 @@ import {
 } from 'react';
 import { Dialog as RadixDialog } from 'radix-ui';
 import type { OverlaySize } from '@the-system/shared';
-import { useTheme } from '../../theme/hooks';
+import { useOptionalPart, useTheme } from '../../theme/hooks';
+import { ButtonRoot } from '../Button/ButtonBase';
+import { TitleBar } from '../TitleBar';
+import { WindowControls } from '../WindowControls';
 import { DialogBody, DialogFooter, type DialogBodyProps, type DialogFooterProps } from '../Dialog';
 import { DialogBase, assignRef, usePanelElement, type DialogBaseState } from '../Dialog/DialogBase';
 import { isArabic, splitHeader } from '../Drawer/Drawer';
 import { useControllable } from '../../internal/useControllable';
+import {
+  detentDragOffset,
+  detentForKey,
+  detentHeights,
+  dragCloses,
+  dragVelocity,
+  settleDetent,
+  type Detent,
+  type DragSample,
+} from '@the-system/motion';
 
 export type SheetSize = Extract<OverlaySize, 'sm' | 'md' | 'lg'>;
 
 const sheetLabels = {
-  en: { close: 'Close sheet' },
-  ar: { close: 'إغلاق النافذة السفلية' },
+  en: {
+    close: 'Close sheet',
+    size: (n: number, of: number) => `Sheet size, ${n} of ${of}`,
+    controls: 'Sheet controls',
+    minimize: 'Minimize sheet',
+    zoom: 'Zoom sheet',
+  },
+  ar: {
+    close: 'إغلاق النافذة السفلية',
+    size: (n: number, of: number) => `حجم النافذة السفلية، ${n} من ${of}`,
+    controls: 'أزرار النافذة السفلية',
+    minimize: 'تصغير النافذة السفلية',
+    zoom: 'تكبير النافذة السفلية',
+  },
 } as const;
-
-/** Past this share of the panel's height, a release closes the sheet. */
-const DISMISS_SHARE = 0.25;
-/** A flick: px per ms downward, over at least a few px. */
-const FLICK_SPEED = 0.5;
-const FLICK_MIN = 8;
 
 interface SheetContextValue extends DialogBaseState {
   size: SheetSize;
+  detents: readonly Detent[] | undefined;
+  detent: number;
+  setDetent: (index: number) => void;
 }
 
 const SheetContext = createContext<SheetContextValue | null>(null);
@@ -92,16 +137,41 @@ export interface SheetProps {
   size?: SheetSize;
   /** false: only the sheet's own actions close it; Escape, the backdrop and a drag do nothing. Default true. */
   dismissible?: boolean;
+  /**
+   * The heights the sheet rests at, smallest first: a fraction of the
+   * viewport height (0.5 is half) or px (320). With detents the size only
+   * names the sizing family; the largest detent sets the panel's height,
+   * clamped to the room under the top gap. Default none.
+   */
+  detents?: readonly Detent[];
+  /** Controlled detent, an index into detents, with onDetentChange. */
+  detent?: number;
+  /** The detent it opens at. Default 0, the smallest. */
+  defaultDetent?: number;
+  /** Called with the index of the detent the sheet settles at. */
+  onDetentChange?: (index: number) => void;
   children?: ReactNode;
 }
 
 /** The root: state and the size. Renders no element of its own. */
-export function Sheet({ open: openProp, defaultOpen = false, onOpenChange, size = 'md', dismissible = true, children }: SheetProps) {
+export function Sheet({
+  open: openProp,
+  defaultOpen = false,
+  onOpenChange,
+  size = 'md',
+  dismissible = true,
+  detents,
+  detent: detentProp,
+  defaultDetent = 0,
+  onDetentChange,
+  children,
+}: SheetProps) {
   const [open, setOpen] = useControllable(openProp, defaultOpen, onOpenChange);
+  const [detent, setDetent] = useControllable(detentProp, defaultDetent, onDetentChange);
   const triggerRef = useRef<HTMLElement | null>(null);
   const value = useMemo<SheetContextValue>(
-    () => ({ open, setOpen, size, dismissible, triggerRef }),
-    [open, setOpen, size, dismissible],
+    () => ({ open, setOpen, size, dismissible, triggerRef, detents, detent, setDetent }),
+    [open, setOpen, size, dismissible, detents, detent, setDetent],
   );
   return (
     <RadixDialog.Root open={open} onOpenChange={setOpen}>
@@ -152,10 +222,28 @@ export function SheetClose({ children, ...rest }: SheetCloseProps) {
 
 export type SheetTitleProps = Omit<ComponentProps<'h2'>, 'title'>;
 
+/** Where a title renders: in the header, or inside the optional title bar's heading. */
+const SheetTitleSlot = createContext<'header' | 'titlebar'>('header');
+
 /** The title. It names the sheet. Put it as a direct child of SheetContent, or use the title prop. */
-export function SheetTitle(props: SheetTitleProps) {
-  return <RadixDialog.Title {...props} data-part="title" />;
+export function SheetTitle({ children, ...props }: SheetTitleProps) {
+  if (use(SheetTitleSlot) === 'titlebar') {
+    // Inside the optional title bar heading (TitleBar renders the h2 and its part).
+    return (
+      <RadixDialog.Title asChild>
+        <span {...(props as ComponentProps<'span'>)} data-dialog-title="">
+          {children}
+        </span>
+      </RadixDialog.Title>
+    );
+  }
+  return (
+    <RadixDialog.Title {...props} data-part="title">
+      {children}
+    </RadixDialog.Title>
+  );
 }
+
 
 export type SheetDescriptionProps = ComponentProps<'p'>;
 
@@ -180,74 +268,152 @@ export function SheetFooter(props: SheetFooterProps) {
 
 // ------------------------------------------------------------------ handle
 
-/** The share of the pointer travel the panel follows past where it may go. */
+/** The share of the pointer travel the panel follows past where it may go (no detents). */
 export const RUBBER_SHARE = 1 / 3;
+
+/** Movement before a press on the detent handle counts as a drag, not a click, in px. */
+const CLICK_SLOP = 4;
 
 interface Drag {
   id: number;
   startY: number;
+  /** The drawn offset, px down. */
   dy: number;
-  /** The last move, for the speed of a flick at the end of the drag. */
-  lastY: number;
-  lastTime: number;
-  speed: number;
+  /** The gesture, for its speed at the release (helpers/sheet-detents.ts). */
+  samples: DragSample[];
+  moved: boolean;
 }
 
-/** The drag handle: a pointer path only (the close control and Escape are the key path). */
-function SheetHandle({ onDragging, dismissible, onDismiss }: { onDragging: (on: boolean) => void; dismissible: boolean; onDismiss: () => void }) {
+interface DetentHandle {
+  /** The detent heights in px, smallest first. */
+  heights: readonly number[];
+  index: number;
+  label: string;
+  onSettle: (index: number) => void;
+}
+
+/**
+ * The drag handle. With no detents a pointer path only (the close control
+ * and Escape are the key path). With detents a native button: the keys and
+ * a click move between the detents (the button path).
+ */
+function SheetHandle({
+  onDragging,
+  dismissible,
+  onDismiss,
+  detents,
+}: {
+  onDragging: (on: boolean) => void;
+  dismissible: boolean;
+  onDismiss: () => void;
+  detents?: DetentHandle;
+}) {
   const panelRef = usePanelElement();
   const drag = useRef<Drag | null>(null);
+  /** Set by a drag that moved, so the click that follows its release does not also step. */
+  const dragged = useRef(false);
 
   const reset = () => panelRef?.current?.style.removeProperty('--_dialog-drag-y');
 
-  const end = (event: ReactPointerEvent<HTMLDivElement>, cancelled: boolean) => {
+  const end = (event: ReactPointerEvent<HTMLElement>, cancelled: boolean) => {
     const d = drag.current;
     if (!d || d.id !== event.pointerId) return;
     drag.current = null;
     onDragging(false);
+    dragged.current = d.moved;
     const panel = panelRef?.current;
     if (!panel) return;
-    const height = panel.getBoundingClientRect().height;
-    const far = d.dy > height * DISMISS_SHARE;
-    const flick = d.speed > FLICK_SPEED && d.dy > FLICK_MIN;
-    if (!cancelled && dismissible && (far || flick)) {
+    // The release is the last sample: a pointer that rested before it lifted has no speed left (N28).
+    d.samples.push({ t: event.timeStamp, y: d.samples[d.samples.length - 1]?.y ?? d.startY });
+    const velocity = dragVelocity(d.samples);
+    const close = () => {
       // The offset stays while it closes, so the exit plays from where the
       // panel is. A controlled parent that keeps it open gets it back in place.
       onDismiss();
       queueMicrotask(() => {
         if (panel.isConnected && panel.getAttribute('data-state') === 'open') reset();
       });
-    } else reset();
+    };
+    if (cancelled) return reset();
+    if (detents && detents.heights.length > 0) {
+      const rest = detents.heights[detents.index] ?? detents.heights[0] ?? 0;
+      const to = settleDetent(detents.heights, rest, d.dy, velocity, dismissible);
+      if (to.kind === 'close') return close();
+      reset();
+      detents.onSettle(to.index);
+      return;
+    }
+    const height = panel.getBoundingClientRect().height;
+    if (dismissible && dragCloses(d.dy, velocity, height)) close();
+    else reset();
   };
 
-  return (
-    <div
-      data-part="handle"
-      aria-hidden="true"
-      onPointerDown={(event) => {
-        if (event.button !== 0 || !panelRef?.current) return;
-        event.currentTarget.setPointerCapture?.(event.pointerId);
-        drag.current = { id: event.pointerId, startY: event.clientY, dy: 0, lastY: event.clientY, lastTime: event.timeStamp, speed: 0 };
-        onDragging(true);
-      }}
-      onPointerMove={(event) => {
-        const d = drag.current;
-        if (!d || d.id !== event.pointerId) return;
+  const pointerProps = {
+    onPointerDown: (event: ReactPointerEvent<HTMLElement>) => {
+      if (event.button !== 0 || !panelRef?.current) return;
+      event.currentTarget.setPointerCapture?.(event.pointerId);
+      drag.current = { id: event.pointerId, startY: event.clientY, dy: 0, samples: [{ t: event.timeStamp, y: event.clientY }], moved: false };
+      dragged.current = false;
+      onDragging(true);
+    },
+    onPointerMove: (event: ReactPointerEvent<HTMLElement>) => {
+      const d = drag.current;
+      if (!d || d.id !== event.pointerId) return;
+      const raw = event.clientY - d.startY;
+      if (Math.abs(raw) > CLICK_SLOP) d.moved = true;
+      if (detents && detents.heights.length > 0) {
+        const rest = detents.heights[detents.index] ?? detents.heights[0] ?? 0;
+        d.dy = detentDragOffset(raw, rest, detents.heights, dismissible);
+      } else {
         // Down follows the pointer; up, and down on a sheet that will not close, give a third (the rubber band).
-        const raw = event.clientY - d.startY;
         d.dy = raw < 0 || !dismissible ? raw * RUBBER_SHARE : raw;
-        // Speed over the last move only: a slow start and a quick flick still count as a flick.
-        d.speed = (event.clientY - d.lastY) / Math.max(1, event.timeStamp - d.lastTime);
-        d.lastY = event.clientY;
-        d.lastTime = event.timeStamp;
-        panelRef?.current?.style.setProperty('--_dialog-drag-y', `${d.dy}px`);
+      }
+      d.samples.push({ t: event.timeStamp, y: event.clientY });
+      if (d.samples.length > 16) d.samples.shift();
+      panelRef?.current?.style.setProperty('--_dialog-drag-y', `${d.dy}px`);
+    },
+    onPointerUp: (event: ReactPointerEvent<HTMLElement>) => end(event, false),
+    onPointerCancel: (event: ReactPointerEvent<HTMLElement>) => end(event, true),
+    onLostPointerCapture: (event: ReactPointerEvent<HTMLElement>) => end(event, true),
+  };
+
+  if (!detents) {
+    return (
+      <div data-part="handle" aria-hidden="true" {...pointerProps}>
+        <span data-part="handle-bar" />
+      </div>
+    );
+  }
+
+  const count = detents.heights.length;
+  // The system button base (lint ds/button-primitive), as CloseButton and
+  // the Pagination pages use it: ghost, the bar its only content, so no
+  // label part wraps it. Dialog.css keeps the handle look over the Button one.
+  return (
+    <ButtonRoot
+      ds="button"
+      defaultEmphasis="ghost"
+      data-part="handle"
+      aria-label={detents.label}
+      render={() => <span data-part="handle-bar" />}
+      {...pointerProps}
+      onClick={() => {
+        // A drag that moved is not a click; a press without one, Enter and Space step.
+        if (dragged.current) {
+          dragged.current = false;
+          return;
+        }
+        const next = detentForKey('Enter', detents.index, count);
+        if (next !== null) detents.onSettle(next);
       }}
-      onPointerUp={(event) => end(event, false)}
-      onPointerCancel={(event) => end(event, true)}
-      onLostPointerCapture={(event) => end(event, true)}
-    >
-      <span data-part="handle-bar" />
-    </div>
+      onKeyDown={(event) => {
+        if (event.key === 'Enter' || event.key === ' ') return;
+        const next = detentForKey(event.key, detents.index, count);
+        if (next === null) return;
+        event.preventDefault();
+        detents.onSettle(next);
+      }}
+    />
   );
 }
 
@@ -333,7 +499,8 @@ export interface SheetContentProps
 
 /**
  * The portal, the backdrop and the panel. The root (`data-ds="sheet"`)
- * carries data-size, data-state and data-dragging. `ref` and the Radix
+ * carries data-size, data-state, data-dragging and, with detents,
+ * data-detent. `ref` and the Radix
  * Content props go to the panel; className, style and rootProps go to the
  * root.
  */
@@ -343,8 +510,27 @@ export function SheetContent({ title, description, closeLabel, children, classNa
   const words = isArabic(theme.lang) ? sheetLabels.ar : sheetLabels.en;
   const [dragging, setDragging] = useState(false);
   const toastEnd = useTopToastEnd(ctx.open);
-  const rootStyle = toastEnd > 0 ? ({ ...style, '--_sheet-toast-end': `${toastEnd}px` } as CSSProperties) : style;
-  const { header, others } = splitHeader({
+  // The panel as state, so the detents are measured again once the portal has mounted it.
+  const [panelEl, setPanelEl] = useState<HTMLDivElement | null>(null);
+  const setPanel = useCallback(
+    (node: HTMLDivElement | null) => {
+      setPanelEl(node);
+      assignRef(ref, node);
+    },
+    [ref],
+  );
+  const heights = useDetentHeights(ctx.open ? ctx.detents : undefined, panelEl);
+  const detentIndex = heights.length > 0 ? Math.max(0, Math.min(heights.length - 1, ctx.detent)) : -1;
+  const detentStyle: Record<string, string> = {};
+  if (detentIndex >= 0) {
+    detentStyle['--_dialog-detent-height'] = `${heights[detentIndex]}px`;
+    detentStyle['--_dialog-detent-max'] = `${heights[heights.length - 1]}px`;
+  }
+  if (toastEnd > 0) detentStyle['--_sheet-toast-end'] = `${toastEnd}px`;
+  const rootStyle = Object.keys(detentStyle).length > 0 ? ({ ...style, ...detentStyle } as CSSProperties) : style;
+  const titlebarOn = useOptionalPart('sheet', 'titlebar');
+  const controlsOn = useOptionalPart('sheet', 'controls');
+  const split = splitHeader({
     children,
     title,
     description,
@@ -353,17 +539,48 @@ export function SheetContent({ title, description, closeLabel, children, classNa
     closeLabel: closeLabel ?? words.close,
     closeDisabled: !ctx.dismissible,
   });
+  const { others } = split;
+  // With the style's title bar (order 1.29, Dialog's pattern): the bar with the title, then the description.
+  const header = titlebarOn ? (
+    <>
+      <TitleBar
+        data-part="titlebar"
+        as={split.titleNode ? 'h2' : 'div'}
+        title={<SheetTitleSlot value="titlebar">{split.titleNode}</SheetTitleSlot>}
+        controls={
+          controlsOn ? (
+            <WindowControls
+              label={words.controls}
+              closeLabel={closeLabel ?? words.close}
+              minimizeLabel={words.minimize}
+              zoomLabel={words.zoom}
+              onClose={() => ctx.setOpen(false)}
+              closeDisabled={!ctx.dismissible}
+            />
+          ) : undefined
+        }
+        actions={controlsOn ? undefined : split.closeButton}
+      />
+      {split.descriptionNode}
+    </>
+  ) : (
+    split.header
+  );
   const { onOpenAutoFocus, onCloseAutoFocus, onEscapeKeyDown, onPointerDownOutside, onInteractOutside, onFocusOutside, onKeyDown, ...panelProps } = rest;
   return (
     <DialogBase
       state={ctx}
       kind="sheet"
       devName="Sheet"
-      rootAttributes={{ 'data-size': ctx.size, 'data-dragging': dragging }}
+      rootAttributes={{
+        'data-size': ctx.size,
+        'data-dragging': dragging,
+        'data-detent': detentIndex >= 0 ? String(detentIndex) : undefined,
+      }}
       Backdrop={RadixDialog.Overlay}
       Panel={RadixDialog.Content}
       panelProps={panelProps}
-      panelRef={ref}
+      panelRef={setPanel}
       className={className}
       style={rootStyle}
       rootProps={rootProps}
@@ -375,9 +592,58 @@ export function SheetContent({ title, description, closeLabel, children, classNa
       onFocusOutside={onFocusOutside}
       onKeyDown={onKeyDown}
     >
-      <SheetHandle onDragging={setDragging} dismissible={ctx.dismissible} onDismiss={() => ctx.setOpen(false)} />
+      <SheetHandle
+        onDragging={setDragging}
+        dismissible={ctx.dismissible}
+        onDismiss={() => ctx.setOpen(false)}
+        detents={
+          ctx.detents
+            ? {
+                heights,
+                index: Math.max(0, detentIndex),
+                label: words.size(Math.max(0, detentIndex) + 1, Math.max(1, heights.length)),
+                onSettle: ctx.setDetent,
+              }
+            : undefined
+        }
+      />
       {header}
       {others}
     </DialogBase>
   );
+}
+
+// ------------------------------------------------------------------ detent heights
+
+/**
+ * The detent heights in px, smallest first, from the viewport height and the
+ * room under the root's top gap (helpers/sheet-detents.ts). Measured when
+ * the panel mounts and on every resize; empty with no detents.
+ */
+function useDetentHeights(detents: readonly Detent[] | undefined, panel: HTMLDivElement | null): number[] {
+  const [heights, setHeights] = useState<number[]>([]);
+  const key = detents?.join(',') ?? '';
+  useLayoutEffect(() => {
+    if (!key) {
+      setHeights([]);
+      return;
+    }
+    const list = key.split(',').map(Number);
+    const measure = () => {
+      const root = panel?.parentElement;
+      const viewport = window.innerHeight;
+      let room = viewport;
+      if (root) {
+        const cs = getComputedStyle(root);
+        const inner = root.clientHeight - (Number.parseFloat(cs.paddingTop) || 0) - (Number.parseFloat(cs.paddingBottom) || 0);
+        if (inner > 0) room = inner;
+      }
+      const next = detentHeights(list, viewport, room);
+      setHeights((prev) => (prev.length === next.length && prev.every((h, i) => h === next[i]) ? prev : next));
+    };
+    measure();
+    window.addEventListener('resize', measure);
+    return () => window.removeEventListener('resize', measure);
+  }, [key, panel]);
+  return heights;
 }

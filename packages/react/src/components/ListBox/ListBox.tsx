@@ -71,7 +71,8 @@ import {
 } from '@the-system/shared';
 import { useTheme } from '../../theme/hooks';
 import { useControllable } from '../../internal/useControllable';
-import { HighlightMarker, drawCheck, useHighlightMarker, CHECK_DRAW_ID } from './highlightMarker';
+import { CHECK_DRAW_ID, drawCheck } from '@the-system/motion';
+import { HighlightMarker, useHighlightMarker } from './highlightMarker';
 import { useMotion } from '../../internal/motion';
 
 /** Row sizes: sm 24px rows, md list.row.height (28px at default density). */

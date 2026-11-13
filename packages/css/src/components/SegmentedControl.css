@@ -246,6 +246,15 @@
       visibility: hidden;
     }
 
+    /*
+     * Order 1.29 (review B2): the items swap to Highlight and HighlightText
+     * at once. A cross fade of the fill and the text between system colors
+     * passes 1.6:1 halfway; the press scale keeps its transition.
+     */
+    [data-ds='segmented-control'] > [data-ds='toggle-button'][data-part='item'][data-size][data-shape] {
+      transition-property: transform;
+    }
+
     [data-ds='segmented-control'] {
       border-color: CanvasText;
     }

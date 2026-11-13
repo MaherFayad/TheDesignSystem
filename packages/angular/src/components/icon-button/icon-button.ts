@@ -39,6 +39,7 @@ export type IconButtonEmphasis = Exclude<ButtonEmphasis, 'link'>;
     @if (spinnerLeaving()) {
       <span data-part="spinner" aria-hidden="true"></span>
     }
+    <span data-part="hit" aria-hidden="true"></span>
   `,
 })
 export class DsIconButton extends DsButtonBase {

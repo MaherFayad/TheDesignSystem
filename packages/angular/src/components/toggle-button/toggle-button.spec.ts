@@ -39,7 +39,7 @@ describe('DsToggleButton', () => {
     expect(el.getAttribute('data-emphasis')).toBe('soft');
     expect(el.getAttribute('type')).toBe('button');
     expect(el.hasAttribute('dstogglebutton')).toBe(false);
-    expect(Array.from(el.children).map((c) => c.getAttribute('data-part'))).toEqual(['state-layer', 'label']);
+    expect(Array.from(el.children).map((c) => c.getAttribute('data-part'))).toEqual(['state-layer', 'label', 'hit']);
   });
 
   it('starts pressed with defaultPressed and renders start, label, end', async () => {
@@ -48,7 +48,7 @@ describe('DsToggleButton', () => {
     expect(el.getAttribute('aria-pressed')).toBe('true');
     expect(el.getAttribute('data-state')).toBe('on');
     expect(el.hasAttribute('defaultpressed')).toBe(false);
-    expect(Array.from(el.children).map((c) => c.getAttribute('data-part'))).toEqual(['state-layer', 'start', 'label', 'end']);
+    expect(Array.from(el.children).map((c) => c.getAttribute('data-part'))).toEqual(['state-layer', 'start', 'label', 'end', 'hit']);
   });
 
   it('toggles on click and writes back through [(pressed)]', async () => {
@@ -69,7 +69,7 @@ describe('DsToggleButton', () => {
     const el = q('icon');
     expect(el.getAttribute('aria-label')).toBe('Show guides');
     expect(el.hasAttribute('label')).toBe(false);
-    expect(Array.from(el.children).map((c) => c.getAttribute('data-part'))).toEqual(['state-layer', 'icon']);
+    expect(Array.from(el.children).map((c) => c.getAttribute('data-part'))).toEqual(['state-layer', 'icon', 'hit']);
   });
 
   it('keeps a caller aria-label on the text form', async () => {

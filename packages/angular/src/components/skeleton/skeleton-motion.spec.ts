@@ -10,9 +10,10 @@
 import { Component, signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
+import { wipeAway } from '@the-system/motion';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { DsTheme } from '../../theme/theme';
-import { DsSkeleton, wipeAway } from './skeleton';
+import { DsSkeleton } from './skeleton';
 
 interface Call {
   target: Element;
@@ -69,11 +70,13 @@ class Host {
 }
 
 /** Runs the leave as Angular does, then the swap. Returns whether the removal was let go at once. */
-async function swap() {
+async function swap(off = false) {
   const fixture = TestBed.createComponent(Host);
   await fixture.whenStable();
   const debug = fixture.debugElement.query(By.directive(DsSkeleton));
   const el = debug.nativeElement as HTMLElement;
+  // The skeleton-swap off row of a style (review N31).
+  if (off) el.style.setProperty('--_skeleton-swap', 'none');
   let completed = false;
   (debug.componentInstance as unknown as { leave(e: { target: Element; animationComplete(): void }): void }).leave({
     target: el,
@@ -113,6 +116,14 @@ describe('DsSkeleton motion', () => {
   it('reduced motion: no ghost at all, the content is there at once (review B1)', async () => {
     document.documentElement.setAttribute('data-motion', 'reduce');
     const { fixture, completed } = await swap();
+    expect(completed).toBe(true);
+    s.flush();
+    expect(s.take()).toEqual([]);
+    expect(fixture.nativeElement.querySelector('#box [data-ds="skeleton"]')).toBeNull();
+  });
+
+  it('the skeleton-swap off row (--_skeleton-swap: none) swaps at once with no ghost, as React (order 1.29, N31)', async () => {
+    const { fixture, completed } = await swap(true);
     expect(completed).toBe(true);
     s.flush();
     expect(s.take()).toEqual([]);

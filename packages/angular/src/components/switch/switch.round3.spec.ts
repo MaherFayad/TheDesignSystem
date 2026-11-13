@@ -4,7 +4,7 @@ import { Component, signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import { rubberBand, snapChecked } from '../../internal/toggles-switch-drag';
+import { snapChecked, switchRubberBand } from '@the-system/motion';
 import { DsSwitch } from './switch';
 
 @Component({
@@ -72,10 +72,10 @@ describe('Switch round 3 anatomy', () => {
 
 describe('switch-drag math', () => {
   it('damps the thumb past either end', () => {
-    expect(rubberBand(0.4)).toBe(0.4);
-    expect(rubberBand(1.2)).toBeCloseTo(1.06);
-    expect(rubberBand(3)).toBeCloseTo(1.12);
-    expect(rubberBand(-0.2)).toBeCloseTo(-0.06);
+    expect(switchRubberBand(0.4)).toBe(0.4);
+    expect(switchRubberBand(1.2)).toBeCloseTo(1.06);
+    expect(switchRubberBand(3)).toBeCloseTo(1.12);
+    expect(switchRubberBand(-0.2)).toBeCloseTo(-0.06);
   });
 
   it('snaps by velocity first, else by the nearer end', () => {
@@ -131,6 +131,42 @@ describe('switch-drag on the control', () => {
     expect(root('plain').style.getPropertyValue('--_switch-drag-progress')).toBe('');
     expect(c.getAttribute('aria-checked')).toBe('true');
     expect(host.changes).toEqual([true]);
+  });
+
+  // Order 1.29 (B4 and N1), as React's Switch.drag.test.tsx.
+  it('while dragging the root shows the side the thumb is on; the control keeps aria-checked (B4)', async () => {
+    const { root, control, settle } = await setup();
+    const c = control('plain');
+    pointer(c, 'pointerdown', 10, { time: 3000 });
+    pointer(c, 'pointermove', 18);
+    await settle();
+    expect(root('plain').getAttribute('data-state')).toBe('unchecked');
+    pointer(c, 'pointermove', 24);
+    await settle();
+    // Past the middle (14 of 24): the root steps to checked; the control still says what it is.
+    expect(root('plain').getAttribute('data-state')).toBe('checked');
+    expect(c.getAttribute('aria-checked')).toBe('false');
+    expect(c.getAttribute('data-state')).toBe('unchecked');
+    pointer(c, 'pointermove', 12);
+    await settle();
+    expect(root('plain').getAttribute('data-state')).toBe('unchecked');
+    pointer(c, 'pointercancel', 12);
+    await settle();
+    expect(root('plain').getAttribute('data-state')).toBe('unchecked');
+  });
+
+  it('a release marks the root data-released until the next press or key (N1)', async () => {
+    const { root, control } = await setup();
+    const c = control('plain');
+    pointer(c, 'pointerdown', 10, { time: 4000 });
+    expect(root('plain').hasAttribute('data-released')).toBe(false);
+    pointer(c, 'pointerup', 10);
+    expect(root('plain').hasAttribute('data-released')).toBe(true);
+    pointer(c, 'pointerdown', 10, { time: 4100 });
+    expect(root('plain').hasAttribute('data-released')).toBe(false);
+    pointer(c, 'pointerup', 10);
+    c.dispatchEvent(new KeyboardEvent('keydown', { key: ' ', bubbles: true }));
+    expect(root('plain').hasAttribute('data-released')).toBe(false);
   });
 
   it('rubber bands past the end, at most 12 percent of the travel', async () => {

@@ -19,7 +19,7 @@
 // Motion (order 1.22). alert-entrance is CSS (Alert.css). alert-dismiss:
 // the close button calls onClose at once, and a ghost of the alert shrinks
 // away while the content under it slides up into the gap, as React plays it
-// (internal/motion-feedback.ts, dismissWithExit).
+// (dismissWithExit in @the-system/motion).
 import { ChangeDetectionStrategy, Component, HostAttributeToken, booleanAttribute, computed, inject, input, type TemplateRef } from '@angular/core';
 import { NgTemplateOutlet } from '@angular/common';
 import { DsIcon } from '@the-system/icons/angular';
@@ -27,7 +27,7 @@ import type { IconName } from '@the-system/icons';
 import type { Emphasis, Size, Tone } from '@the-system/shared';
 import { consumeHostAttributes } from '../../internal/host';
 import { injectMotion } from '../../internal/motion';
-import { dismissWithExit } from '../../internal/motion-feedback';
+import { dismissWithExit } from '@the-system/motion';
 import { DsThemeService } from '../../theme/theme';
 import { DsCloseButton } from '../close-button/close-button';
 import { DsFilledPart, messageIcons, wordsFor } from './message';

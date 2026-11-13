@@ -4,7 +4,8 @@ import { isIconName, type IconName } from '@the-system/icons';
 import { Icon } from '@the-system/icons/react';
 import type { Shape, Size } from '@the-system/shared';
 import { useFieldControl } from '../Field/Field';
-import { useErrorShake, type ShakeBox } from './useErrorShake';
+import type { ShakeBox } from '@the-system/motion';
+import { useErrorShake } from './useErrorShake';
 
 export type InputSize = Size;
 export type InputShape = Extract<Shape, 'default' | 'pill'>;

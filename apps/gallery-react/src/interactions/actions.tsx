@@ -66,7 +66,7 @@ function ResultStage({ lang = 'en' }: { lang?: 'en' | 'ar' }) {
   const words =
     lang === 'ar'
       ? { label: 'حفظ التغييرات', loading: 'جار الحفظ', success: 'تم الحفظ', error: 'تعذر الحفظ' }
-      : { label: 'Save changes', loading: 'Saving', success: 'Saved', error: 'Could not save' };
+      : { label: 'Save changes', loading: 'Saving', success: 'Saved', error: 'Not saved' };
   const run = () => {
     if (loading || result) return;
     const ending: ButtonResult = turn.current % 2 === 0 ? 'success' : 'error';

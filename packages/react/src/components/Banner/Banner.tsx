@@ -19,12 +19,12 @@
 // being sticky.
 import { useLayoutEffect, useRef, type HTMLAttributes, type ReactElement, type ReactNode, type Ref } from 'react';
 import { Icon } from '@the-system/icons/react';
+import { dismissWithExit } from '@the-system/motion';
 import type { IconName } from '@the-system/icons';
 import type { Emphasis, Tone } from '@the-system/shared';
 import { useTheme } from '../../theme/hooks';
 import { useMotion } from '../../internal/motion';
 import { CloseButton } from '../CloseButton';
-import { dismissWithExit } from '../Alert/ghost';
 import { messageIcons, wordsFor } from '../Alert/messageTones';
 
 export type BannerTone = Tone;

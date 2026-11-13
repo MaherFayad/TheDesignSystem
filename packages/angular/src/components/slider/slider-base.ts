@@ -27,7 +27,7 @@
 //   drags, the fill and the thumb follow it at once. Any other change (a key,
 //   a press on the track, a new controlled value) glides the fill's clip-path
 //   and the thumb's wrapper (composite add on its own transform) on the
-//   snappy spring (internal/slider-fill.ts).
+//   snappy spring (slider-fill.ts in @the-system/motion).
 // - slider-rubber-band: a drag past an end pulls the outer thumb, and the
 //   fill with it, with resistance 1 - 1/(1 + d/thumb), times
 //   --_slider-pull-max; on release both spring back on the bouncy spring.
@@ -51,12 +51,24 @@ import {
   type WritableSignal,
 } from '@angular/core';
 import { Directionality } from '@angular/cdk/bidi';
-import { readDuration, renderDigits, rollDigits } from '@the-system/motion';
+import {
+  KEY_BUMP,
+  NO_PULL,
+  SLIDER_ROLL_GAP,
+  readDuration,
+  renderDigits,
+  rollDigits,
+  sliderGlide,
+  sliderKeyEnd,
+  sliderRubberBand,
+  type SliderEnd,
+  type SliderGlideState,
+  type SliderPull,
+} from '@the-system/motion';
 import type { Size, Tone } from '@the-system/shared';
 import { BubbleEvent } from '../../internal/bubble-event';
 import { injectMotion } from '../../internal/motion';
 import { optionalBoolean } from '../../internal/optional-boolean';
-import { KEY_BUMP, NO_PULL, glide, rubberBand, type GlideState, type SliderPull } from '../../internal/slider-fill';
 import type { OrderedStyle } from '../../internal/ordered-style';
 import { DsThemeService } from '../../theme/theme';
 import { DsFieldContext, fieldControl } from '../field/field-context';
@@ -186,20 +198,6 @@ function hasMinStepsBetween(values: readonly number[], distance: number): boolea
   return Math.min(...steps) >= distance;
 }
 
-type SliderEnd = 'start' | 'end';
-
-/** The end a key moves a thumb toward, as Radix reads the keys (horizontal only). */
-function keyEnd(key: string, dir: 'ltr' | 'rtl'): SliderEnd | null {
-  if (key === 'Home' || key === 'PageDown' || key === 'ArrowDown') return 'start';
-  if (key === 'End' || key === 'PageUp' || key === 'ArrowUp') return 'end';
-  if (key === 'ArrowLeft') return dir === 'rtl' ? 'end' : 'start';
-  if (key === 'ArrowRight') return dir === 'rtl' ? 'start' : 'end';
-  return null;
-}
-
-/** The least time between two rolls of the bubble, in ms (a behavior gap, not a motion timing). */
-const ROLL_GAP = 120;
-
 const now = (): number => (typeof performance === 'undefined' ? Date.now() : performance.now());
 
 function toMark(mark: number | SliderMark): SliderMark {
@@ -284,7 +282,7 @@ export abstract class DsSliderBase {
   /** slider-nudge: the timer that lets go of a key pull. */
   private bumpTimer: ReturnType<typeof setTimeout> | null = null;
   /** slider-fill: what the glide saw at the last render. */
-  private glideState: GlideState | null = null;
+  private glideState: SliderGlideState | null = null;
   /** slider-bubble: the value and text each bubble shows, and when the last roll started. */
   private shownDigits: { value: number; text: string }[] = [];
   private lastRoll = -Infinity;
@@ -467,7 +465,7 @@ export abstract class DsSliderBase {
         style.setProperty('--_slider-pull-end', String(pull.end));
         if (!control) return;
         const places = values.map((v) => (v - min) / span);
-        this.glideState = glide(control, this.following, places, pull.start > 0 || pull.end > 0, this.glideState, this.motion.mode);
+        this.glideState = sliderGlide(control, this.following, places, pull.start > 0 || pull.end > 0, this.glideState, this.motion.mode);
       });
     });
     destroyRef.onDestroy(() => {
@@ -483,9 +481,9 @@ export abstract class DsSliderBase {
       const last = this.shownDigits[i];
       this.shownDigits[i] = { value, text };
       if (last && last.text === text && host.childElementCount > 0) return;
-      // A fast drag changes the value every frame: a roll starts at most once per ROLL_GAP, the steps between are written still.
+      // A fast drag changes the value every frame: a roll starts at most once per SLIDER_ROLL_GAP, the steps between are written still.
       const t = now();
-      if (!last || !dragging || t - this.lastRoll < ROLL_GAP) {
+      if (!last || !dragging || t - this.lastRoll < SLIDER_ROLL_GAP) {
         renderDigits(host, text);
         return;
       }
@@ -588,7 +586,7 @@ export abstract class DsSliderBase {
     const max = this.max();
     const step = this.step();
     // slider-nudge: a key that pushes a thumb past the minimum or the maximum.
-    const end = this.orientation() === 'horizontal' && !event.repeat && !this.isDisabled() ? keyEnd(event.key, this.dir()) : null;
+    const end = this.orientation() === 'horizontal' && !event.repeat && !this.isDisabled() ? sliderKeyEnd(event.key, this.dir()) : null;
     const found = end ? this.focusedThumb() : null;
     if (end && found && values[found[1]] === (end === 'start' ? min : max) && this.motion.mode('slider-nudge') !== 'none') this.bump(end);
     // React SliderBase: with two thumbs, Home and End move the focused thumb as far as the other allows.
@@ -693,7 +691,7 @@ export abstract class DsSliderBase {
     // The resistance scale is the thumb's own target, so a larger slider pulls further. Measured in the
     // same space as the pointer (a zoomed ancestor scales both), so the pull does not change with zoom.
     const scale = found?.[0] ? found[0].getBoundingClientRect().width : 0;
-    const amount = outer ? rubberBand(Math.max(beforeLeft, pastRight), scale) : 0;
+    const amount = outer ? sliderRubberBand(Math.max(beforeLeft, pastRight), scale) : 0;
     const next = { start: end === 'start' ? amount : 0, end: end === 'end' ? amount : 0 };
     const p = this.pull();
     if (p.start !== next.start || p.end !== next.end) this.pull.set(next);

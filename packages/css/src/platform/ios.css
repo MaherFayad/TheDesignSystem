@@ -11,7 +11,7 @@
  * recipes (ds.recipes, the layer after this one) still paint over it.
  *
  * Conventions followed, from the public iOS interface guidelines: a 44pt
- * least target, button sizes 28, 32, 44 and 52, a 51 by 31 capsule switch
+ * least target, button sizes 28, 32, 44 and 52, a 62 by 31 capsule switch
  * whose thumb widens while held, a segmented control with a lifted sliding
  * segment, inset grouped lists with 44pt rows and a disclosure chevron, a
  * compact centred alert about 270pt wide with equal width actions split by
@@ -68,8 +68,8 @@
   /*
    * Every member of the family, parts and attached ones included: the press
    * is the dim alone. No sink of the content, no inner shade and no glow
-   * (the glow layer is ::before, which this file widens into the 44pt hit
-   * area). A style that wants its glow back sets --_button-glow in its
+   * (the glow layer is ::before; the 44pt hit area is the hit part, so the
+   * glow keeps the control's box). A style that wants its glow back sets --_button-glow in its
    * recipe, which comes after this layer.
    */
   [data-platform='ios'] :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button'], [data-ds='close-button'], [data-ds='copy-button'], [data-ds='floating-action-button']) {
@@ -105,14 +105,23 @@
 
   /*
    * The hit area of a control drawn smaller than 44pt: a transparent layer
-   * that reaches 44 by 44 around it (the target size check counts it).
+   * that reaches 44 by 44 around it (the target size check counts it) and
+   * takes the press. For the button family it is the hit part (order 1.29,
+   * review B10): ::before is the glow there, which has no pointer and keeps
+   * the control's box. Chip, with no glow, keeps its ::before.
    */
-  [data-platform='ios'] :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button'], [data-ds='close-button'], [data-ds='copy-button'], [data-ds='chip'])::before {
-    content: '';
+  [data-platform='ios'] :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button'], [data-ds='close-button'], [data-ds='copy-button'], [data-ds='floating-action-button']) > [data-part='hit'],
+  [data-platform='ios'] [data-ds='chip']::before {
     position: absolute;
+    display: block;
     /* Each axis grows only when the control is shorter than the target; percentages read the control's own box. */
     inset-block: min(0px, calc((100% - var(--ds-size-touch-ios)) / 2));
     inset-inline: min(0px, calc((100% - var(--ds-size-touch-ios)) / 2));
+    pointer-events: auto;
+  }
+
+  [data-platform='ios'] [data-ds='chip']::before {
+    content: '';
   }
 
   [data-platform='ios'] :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button'], [data-ds='close-button'], [data-ds='copy-button'], [data-ds='floating-action-button']):active:not([data-disabled], [data-loading], [aria-disabled='true']) {
@@ -129,7 +138,9 @@
   }
 
   /*
-   * switch: 51 by 31. A solid thumb with a soft shadow at rest. Held, it
+   * switch: 62 by 31 with a capsule thumb 1.5 times as long as it is tall
+   * (order 1.29; the round thumb's track was 51 by 31, too short for the
+   * capsule to travel or stretch). A solid thumb with a soft shadow at rest. Held, it
    * widens (the only press change: no growth, no track dip) and turns into
    * a clear lens: its color thins out so the track shows through, the
    * backdrop under it brightens and saturates, and a highlight and a rim
@@ -141,7 +152,7 @@
   [data-platform='ios'] [data-ds='switch'] {
     --_switch-target: var(--ds-size-touch-ios);
     --_switch-height: calc(var(--ds-size-touch-ios) * 0.7);
-    --_switch-width: calc(var(--_switch-height) * 1.65);
+    --_switch-width: calc(var(--_switch-height) * 2);
     --_switch-inset: var(--ds-border-width-strong);
     --_switch-bg: var(--ds-color-bg-overlay-20);
     --_switch-stretch: 1.3;
@@ -156,15 +167,21 @@
     --_switch-thumb-highlight: radial-gradient(circle at 50% 0%, var(--ds-color-glass-highlight), transparent 70%);
     --_switch-thumb-highlight-opacity: 0;
     --_switch-thumb-highlight-opacity-pressed: 1;
+    /* The capsule: Switch.css subtracts its length from the travel (17px here). */
+    --_switch-thumb-width: calc(var(--_switch-thumb-size) * 1.5);
   }
 
   [data-platform='ios'] [data-ds='switch'][data-state='checked'] {
     --_switch-bg: var(--_switch-fill);
   }
 
-  /* Held: a rim of light around the lens, over the same soft shadow. */
+  /*
+   * Held: a rim of light around the lens. A clear lens casts no shadow: the
+   * soft shadow darkened the fill round the thumb to under 3:1 against its
+   * edge in dark schemes (order 1.29, B3, B4); it comes back on release.
+   */
   [data-platform='ios'] [data-ds='switch']:not([data-disabled], [data-readonly]) > [data-part='control']:active {
-    --_switch-thumb-shadow: inset 0 0 0 var(--ds-border-width-default) var(--ds-color-glass-highlight), var(--ds-elevation-card-hover);
+    --_switch-thumb-shadow: inset 0 0 0 var(--ds-border-width-default) var(--ds-color-glass-highlight);
   }
 
   /*
@@ -360,6 +377,12 @@
 
   [data-platform='ios'] [data-ds='field'] {
     --_field-gap: var(--ds-space-s);
+  }
+
+  /* A floating label rests in the 44pt box at the field's side inset, and rises on focus or with a value (review B6). */
+  [data-platform='ios'] [data-ds='field'][data-floating] {
+    --_field-float-box: var(--ds-size-touch-ios);
+    --_field-float-inset: calc(var(--ds-space-3xl) + var(--ds-border-width-default));
   }
 
   /* ------------------------------------------------------------ list: inset grouped rows, 44pt, a chevron on rows that go somewhere */
@@ -693,9 +716,11 @@
 
   /*
    * Rises on the bouncy spring: it passes its rest place a little and
-   * settles, the nearest thing to a rubber band the Sheet offers (detents
-   * and the drag overshoot are not hooks yet). A drag let go settles on the
-   * same curve.
+   * settles. A drag let go settles on the same curve. Order 1.29: the Sheet
+   * takes detents (the `detents` prop, data-detent on the root) and a rubber
+   * band past the largest; the platform does not set default detents,
+   * because detents are behavior (the handle becomes a button with a key
+   * path) an app picks: the gallery passes half and all of the room on ios.
    */
   [data-platform='ios'] :is([data-ds='sheet'], [data-ds='drawer']) {
     --_dialog-radius: var(--ds-radius-card);
@@ -713,6 +738,11 @@
     inline-size: calc(var(--ds-size-touch-ios) - var(--ds-space-fixed-m));
     block-size: var(--ds-space-fixed-xs);
     padding-block: calc((var(--ds-size-target-min) - var(--ds-space-fixed-xs)) / 2);
+  }
+
+  /* With detents the handle is on the Button base: the grabber does not take the button dim while it is pressed or dragged. */
+  [data-platform='ios'] [data-ds='sheet'] > [data-part='panel'] > button[data-part='handle']:active {
+    opacity: 1;
   }
 
   /* The Drawer leaves its side and rises like a sheet. */
@@ -744,21 +774,31 @@
   }
 
   /* The Drawer has no handle part: its grabber is drawn on the panel, 36 by 5 and round, at the top centre. */
-  [data-platform='ios'] [data-ds='drawer'] > [data-part='panel']::before {
-    content: '';
-    position: absolute;
-    inset-block-start: var(--ds-space-fixed-xs);
-    inset-inline-start: 50%;
+  /*
+   * Order 1.29: the grabber is the Drawer's handle part, so it takes the
+   * swipe down to dismiss (Drawer.tsx). The strip spans the top of the
+   * panel at the target height; the bar draws where the old grabber was,
+   * 36 by 5 and round, at the top centre.
+   */
+  [data-platform='ios'] [data-ds='drawer'] {
+    --_dialog-drawer-handle-color: var(--ds-color-border-strong);
+  }
+
+  [data-platform='ios'] [data-ds='drawer'] > [data-part='panel'] > [data-part='handle'],
+  [data-platform='ios'] [data-ds='drawer'][data-side='start'] > [data-part='panel'] > [data-part='handle'] {
+    inset-block: 0 auto;
+    inset-inline: 0;
+    align-items: flex-start;
+    inline-size: auto;
+    block-size: var(--ds-size-target-min);
+    padding-block-start: var(--ds-space-fixed-xs);
+    box-sizing: border-box;
+  }
+
+  [data-platform='ios'] [data-ds='drawer'] > [data-part='panel'] > [data-part='handle'] > [data-part='handle-bar'] {
     inline-size: calc(var(--ds-size-touch-ios) - var(--ds-space-fixed-m));
     block-size: var(--ds-space-fixed-xs);
     border-radius: var(--ds-radius-pill);
-    background-color: var(--ds-color-border-strong);
-    transform: translateX(-50%);
-    pointer-events: none;
-  }
-
-  [data-platform='ios'] [data-ds='drawer'] > [data-part='panel']:dir(rtl)::before {
-    transform: translateX(50%);
   }
 
   /* ------------------------------------------------------------ toast: a banner that drops from the top, under the safe area */
@@ -854,8 +894,12 @@
       border-color: CanvasText;
     }
 
-    [data-platform='ios'] [data-ds='drawer'] > [data-part='panel']::before {
-      background-color: CanvasText;
+    [data-platform='ios'] [data-ds='drawer'] {
+      --_dialog-drawer-handle-color: CanvasText;
+    }
+
+    [data-platform='ios'] [data-ds='drawer'] > [data-part='panel'] > [data-part='handle'] > [data-part='handle-bar'] {
+      forced-color-adjust: none;
     }
 
     [data-platform='ios'] [data-ds='sheet'] {

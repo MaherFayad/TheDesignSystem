@@ -170,6 +170,28 @@ const formFields: [string, string][] = [
         </div>
       </div>
     </section>
+
+    <!-- Floating labels: empty fields rest the label in the box at every size; a filled one and an invalid one show it above. -->
+    <section data-demo="case" data-demo-case="floating" heading="Floating label">
+      <div dsTheme [lang]="'en'" data-demo="content">
+        <div data-demo="grid" style="grid-template-columns: repeat(auto-fill, minmax(min(14rem, 100%), 1fr));">
+          <div dsField label="Team name" floating><div dsInput size="sm"></div></div>
+          <div dsField label="Board name" floating description="Shown on the board card."><div dsInput></div></div>
+          <div dsField label="Work email" floating><div dsInput size="lg" type="email"></div></div>
+          <div dsField label="City" floating><div dsInput value="Riyadh"></div></div>
+          <div dsField label="Email" floating error="Enter an email address, like name@example.com."><div dsInput type="email" value="sara@"></div></div>
+        </div>
+      </div>
+    </section>
+
+    <section data-demo="case" data-demo-case="floating-arabic" heading="عنوان عائم">
+      <div dsTheme [lang]="'ar'" data-demo="content">
+        <div data-demo="grid" style="grid-template-columns: repeat(auto-fill, minmax(min(14rem, 100%), 1fr));">
+          <div dsField label="اسم الفريق" floating><div dsInput></div></div>
+          <div dsField label="المدينة" floating><div dsInput value="الرياض"></div></div>
+        </div>
+      </div>
+    </section>
   `,
 })
 export default class FieldDemo {

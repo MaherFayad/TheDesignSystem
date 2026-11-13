@@ -33,7 +33,7 @@ import {
 import { DOCUMENT, NgTemplateOutlet } from '@angular/common';
 import { Directionality } from '@angular/cdk/bidi';
 import { ComponentPortal, DomPortalOutlet } from '@angular/cdk/portal';
-import { exitGhost } from './selection-marker';
+import { exitGhost } from '@the-system/motion';
 import { DsThemeScope, DsThemeService, attributesOf, syncDirectionality, themeScopeProviders } from '../theme';
 import type { ThemeValue } from '../theme';
 

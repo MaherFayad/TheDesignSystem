@@ -93,7 +93,7 @@ let nextId = 0;
       data-part="control"
       (click)="onClick($event)"
       (keydown)="onKeydown($event)"
-      (blur)="onTouched()"><span data-part="indicator" [attr.data-state]="state()" [attr.data-disabled]="isDisabled() ? '' : null" style="pointer-events: none;"><span aria-hidden="true"></span><svg data-part="mark" [attr.data-glyph]="glyph()" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M-4.25 0H0" pathLength="1" /><path d="M0 0H8.85" pathLength="1" /></svg></span></button>@if (isFormControl()) {<input #bubble
+      (blur)="onTouched()"><span data-part="indicator" [attr.data-state]="state()" [attr.data-disabled]="isDisabled() ? '' : null" style="pointer-events: none;"><span aria-hidden="true"></span><svg data-part="mark" [attr.data-glyph]="glyph()" [attr.data-enter]="enter() ? '' : null" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M-4.25 0H0" pathLength="1" /><path d="M0 0H8.85" pathLength="1" /></svg></span></button>@if (isFormControl()) {<input #bubble
       type="checkbox"
       aria-hidden="true"
       tabindex="-1"
@@ -175,6 +175,20 @@ export class DsCheckbox implements ControlValueAccessor {
   protected readonly glyph = linkedSignal<CheckboxState, 'check' | 'minus'>({
     source: this.state,
     computation: (state, previous) => (state === 'checked' ? 'check' : state === 'indeterminate' ? 'minus' : (previous?.value ?? 'check')),
+  });
+  /**
+   * B5 (order 1.29), as React: the state before the last change. A mark drawn
+   * from an empty box carries data-enter, so it takes its glyph's angles at
+   * once and only draws: from unchecked to mixed no part of the last check shows.
+   */
+  private readonly from = linkedSignal<CheckboxState, CheckboxState>({
+    source: this.state,
+    computation: (state, previous) => (previous === undefined ? state : previous.source),
+  });
+  // from() is read first and on every render, so it sees each state, the unchecked ones too.
+  protected readonly enter = computed(() => {
+    const from = this.from();
+    return this.state() !== 'unchecked' && from === 'unchecked';
   });
   /** The Field wiring merged with the box's own values and its group, as React's useFieldControl. */
   private readonly fieldState = fieldControl(this.field, () => ({

@@ -37,11 +37,11 @@ import {
 } from '@angular/core';
 import { NG_VALUE_ACCESSOR, type ControlValueAccessor } from '@angular/forms';
 import { DsIcon } from '@the-system/icons/angular';
-import { settled } from '@the-system/motion';
+import { diagonalWipe, fadeOutBeat, playBeat, settled, type Beat, type ShakeBox } from '@the-system/motion';
 import type { Shape, Size } from '@the-system/shared';
 import { consumeHostAttributes } from '../../internal/host';
 import { injectMotion } from '../../internal/motion';
-import { diagonalWipe, errorShake, fadeOutBeat, playBeat, type ShakeBox } from '../../internal/motion-fields';
+import { errorShake } from '../../internal/motion-fields';
 import { DsFieldContext } from '../field/field-context';
 import { DsIconButton } from '../icon-button/icon-button';
 import { DsInputGroupContext } from '../input-group/input-group-context';
@@ -57,6 +57,12 @@ const fieldBox: ShakeBox = (input) => input.closest("[data-ds='password-field']"
 
 /** The interaction id of the toggle morph in the registry and the style presets. */
 const PASSWORD_REVEAL = 'password-reveal';
+/** password-reveal: the characters change at once; the text eases back from 0.6 so a frame is never blank (review N11). */
+const TEXT_RETURN: Beat = {
+  keyframes: [{ opacity: 0.6 }, { opacity: 1 }],
+  duration: 'duration.base',
+  easing: 'ease.out',
+};
 
 function optionalBoolean(value: unknown): boolean | undefined {
   return value === undefined || value === null ? undefined : booleanAttribute(value);
@@ -238,7 +244,8 @@ export class DsPasswordField implements ControlValueAccessor {
           playBeat(part?.querySelector(':scope > span[aria-hidden="true"]'), diagonalWipe('ahead', back), `${PASSWORD_REVEAL}-out`, mode, fadeOutBeat),
           playBeat(part?.firstElementChild, diagonalWipe('behind', back), `${PASSWORD_REVEAL}-in`, mode),
         ].filter((a): a is Animation => a !== null);
-        this.motion.play(input, 'fade', PASSWORD_REVEAL);
+        // Review N11: the text comes back from 0.6, never blank, in full and reduced motion alike.
+        playBeat(input, TEXT_RETURN, PASSWORD_REVEAL, mode, TEXT_RETURN);
         const id = this.morphs;
         let live = true;
         onCleanup(() => (live = false));

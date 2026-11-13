@@ -13,10 +13,9 @@
 // paint. Platform hook: a press writes --_chip-press-x and -press-y.
 import { ChangeDetectionStrategy, Component, ElementRef, afterRenderEffect, booleanAttribute, input, untracked, viewChild } from '@angular/core';
 import { DsIcon } from '@the-system/icons/angular';
-import { ANIMATION_ID_PREFIX, iconMorph, readDuration, readEasing } from '@the-system/motion';
+import { ANIMATION_ID_PREFIX, drawCheck, drawnScale, iconMorph, readDuration, readEasing, setPressPoint } from '@the-system/motion';
 import { consumeHostAttributes } from '../../internal/host';
 import { injectMotion } from '../../internal/motion';
-import { drawCheck, drawnScale, setPressPoint } from '../../internal/selection-marker';
 import { DsButtonBase, type ButtonEmphasis, type ButtonShape } from '../button/button-base';
 
 @Component({

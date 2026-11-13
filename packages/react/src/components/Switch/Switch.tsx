@@ -116,6 +116,8 @@ export function Switch({
 
   // switch-drag (order 1.23): the thumb follows a drag and snaps on release. A tap still toggles through the click.
   const drag = useSwitchDrag({ checked, disabled: Boolean(control.disabled) || isReadOnly, onToggle: onChange });
+  // While a drag runs the root shows the side the thumb is on (order 1.29, B4); the control keeps aria-checked.
+  const shownState = drag.dragging ? (drag.onSide ? 'checked' : 'unchecked') : state;
 
   const onControlClick = (event: MouseEvent<HTMLButtonElement>) => {
     onClick?.(event);
@@ -139,7 +141,7 @@ export function Switch({
       data-ds="switch"
       data-size={size}
       data-tone={tone}
-      data-state={state}
+      data-state={shownState}
       data-invalid={control['aria-invalid'] ? '' : undefined}
       data-disabled={control.disabled ? '' : undefined}
       data-readonly={isReadOnly ? '' : undefined}

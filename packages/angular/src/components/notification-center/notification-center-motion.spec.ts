@@ -5,7 +5,7 @@ import { Component, signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { DsTheme } from '../../theme/theme';
-import { popMark } from '../../internal/motion-feedback';
+import { popMark } from '@the-system/motion';
 import { DsNotificationCenter, type NotificationItem } from './notification-center';
 
 interface Call {

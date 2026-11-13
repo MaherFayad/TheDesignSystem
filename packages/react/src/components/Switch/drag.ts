@@ -17,57 +17,27 @@
 // toggle). Space and Enter never pass through here. The progress is measured
 // against the track's own box on screen, so page zoom and right to left text
 // need no special case.
-import { useRef, useState, type PointerEvent, type PointerEventHandler } from 'react';
-
-/** How far the pointer moves, in screen px, before a press becomes a drag. */
-export const DRAG_SLOP = 3;
-/** Past either end the thumb moves this fraction of the pointer's overshoot. */
-export const RUBBER_BAND = 0.3;
-/** The rubber band stops at this fraction of the travel past either end. */
-export const RUBBER_BAND_MAX = 0.12;
-/** A release faster than this, in travels per ms, snaps the way the pointer moved. */
-export const FLICK_SPEED = 0.006;
-/** A pointer that rested longer than this before release has no velocity. */
-const STILL_MS = 90;
-
-/** The thumb's progress for the pointer's progress: the same inside the track, damped past its ends. */
-export function rubberBand(raw: number): number {
-  if (raw > 1) return 1 + Math.min(RUBBER_BAND_MAX, (raw - 1) * RUBBER_BAND);
-  if (raw < 0) return -Math.min(RUBBER_BAND_MAX, -raw * RUBBER_BAND);
-  return raw;
-}
-
-/** On or off after a release: a flick goes its way, else the nearer end wins. */
-export function snapChecked(progress: number, speed: number): boolean {
-  if (speed > FLICK_SPEED) return true;
-  if (speed < -FLICK_SPEED) return false;
-  return progress >= 0.5;
-}
-
-interface DragRun {
-  pointerId: number;
-  x0: number;
-  from: number;
-  /** The thumb's travel on screen, in px. */
-  travel: number;
-  dir: 1 | -1;
-  root: HTMLElement;
-  moved: boolean;
-  raw: number;
-  last: { p: number; t: number };
-  prev: { p: number; t: number };
-}
-
-/** The thumb's travel on screen: the track's width on screen times the share of it the thumb travels. */
-function measureTravel(control: HTMLElement): number {
-  const track = control.querySelector<HTMLElement>("[data-part='track']");
-  const thumb = track?.querySelector<HTMLElement>("[data-part='thumb']");
-  if (!track || !thumb || track.offsetWidth === 0) return 0;
-  const cs = getComputedStyle(track);
-  const pad = (parseFloat(cs.paddingInlineStart) || 0) + (parseFloat(cs.paddingInlineEnd) || 0);
-  const share = (track.clientWidth - pad - thumb.offsetWidth) / track.offsetWidth;
-  return Math.max(0, track.getBoundingClientRect().width * share);
-}
+//
+// From a pointer release to the next press (a pointerdown or a key) the root
+// carries `data-released` (order 1.29, review N1): on touch `:active` stays on
+// after a tap, and Switch.css then times the travel on the state's spring, not
+// on the press.
+//
+// The run itself (the slop, the rubber band, the snap) is the switch drag
+// core of @the-system/motion (helpers/switch-drag.ts), one copy for both
+// frameworks; this hook keeps the pointer wiring and the `dragging` flag.
+import { useRef, useState, type KeyboardEvent, type KeyboardEventHandler, type PointerEvent, type PointerEventHandler } from 'react';
+import {
+  SWALLOW_CLICK_MS,
+  beginSwitchDrag,
+  clearDragProgress,
+  dragOnSide,
+  followPointer,
+  markReleased,
+  pastSlop,
+  releaseChecked,
+  type SwitchDragRun,
+} from '@the-system/motion';
 
 type Handlers = {
   onPointerDown?: PointerEventHandler<HTMLButtonElement>;
@@ -75,11 +45,18 @@ type Handlers = {
   onPointerUp?: PointerEventHandler<HTMLButtonElement>;
   onPointerCancel?: PointerEventHandler<HTMLButtonElement>;
   onLostPointerCapture?: PointerEventHandler<HTMLButtonElement>;
+  onKeyDown?: KeyboardEventHandler<HTMLButtonElement>;
 };
 
 export interface SwitchDrag {
   /** True while the thumb follows the pointer. */
   dragging: boolean;
+  /**
+   * While dragging, true when the thumb is at or past the middle (order 1.29,
+   * B4): Switch shows this side as the root's data-state, so the fill, the
+   * thumb color and a style's state swaps step there.
+   */
+  onSide: boolean;
   /** The pointer handlers for the control, wrapping the caller's own. */
   handlers: (own: Handlers) => Required<Handlers>;
   /** True once for the click that ends a drag: prevent it. */
@@ -96,76 +73,66 @@ export function useSwitchDrag({
   onToggle: (next: boolean) => void;
 }): SwitchDrag {
   const [dragging, setDragging] = useState(false);
-  const run = useRef<DragRun | null>(null);
+  const [onSide, setOnSide] = useState(false);
+  const run = useRef<SwitchDragRun | null>(null);
   const swallowUntil = useRef(0);
 
   const finish = (commit: boolean, timeStamp: number) => {
     const r = run.current;
     run.current = null;
     if (!r || !r.moved) return;
-    r.root.style.removeProperty('--_switch-drag-progress');
+    clearDragProgress(r);
     setDragging(false);
     // The click that ends this drag comes right after the release.
-    swallowUntil.current = performance.now() + 400;
+    swallowUntil.current = performance.now() + SWALLOW_CLICK_MS;
     if (!commit) return;
-    const still = timeStamp - r.last.t > STILL_MS;
-    const dt = r.last.t - r.prev.t;
-    const speed = still || dt <= 0 ? 0 : (r.last.p - r.prev.p) / dt;
-    const next = snapChecked(Math.min(1, Math.max(0, r.raw)), speed);
+    const next = releaseChecked(r, timeStamp);
     if (next !== checked) onToggle(next);
   };
 
   const handlers = (own: Handlers): Required<Handlers> => ({
     onPointerDown: (e: PointerEvent<HTMLButtonElement>) => {
       own.onPointerDown?.(e);
+      // A new press: the press timing carries the growth and the stretch again (N1).
+      markReleased(e.currentTarget, false);
       swallowUntil.current = 0;
       if (disabled || e.defaultPrevented || e.button !== 0 || !e.isPrimary) return;
-      const control = e.currentTarget;
-      const root = control.parentElement;
-      const travel = measureTravel(control);
-      if (!root || travel <= 0) return;
-      const from = checked ? 1 : 0;
-      run.current = {
-        pointerId: e.pointerId,
-        x0: e.clientX,
-        from,
-        travel,
-        dir: getComputedStyle(root).direction === 'rtl' ? -1 : 1,
-        root,
-        moved: false,
-        raw: from,
-        last: { p: from, t: e.timeStamp },
-        prev: { p: from, t: e.timeStamp },
-      };
+      run.current = beginSwitchDrag(e.currentTarget, checked, e.pointerId, e.clientX, e.timeStamp);
     },
     onPointerMove: (e: PointerEvent<HTMLButtonElement>) => {
       own.onPointerMove?.(e);
       const r = run.current;
       if (!r || e.pointerId !== r.pointerId) return;
-      const dx = (e.clientX - r.x0) * r.dir;
       if (!r.moved) {
-        if (Math.abs(dx) < DRAG_SLOP) return;
+        if (!pastSlop(r, e.clientX)) return;
         r.moved = true;
         e.currentTarget.setPointerCapture?.(e.pointerId);
         setDragging(true);
       }
-      r.raw = r.from + dx / r.travel;
-      r.prev = r.last;
-      r.last = { p: r.raw, t: e.timeStamp };
-      r.root.style.setProperty('--_switch-drag-progress', rubberBand(r.raw).toFixed(4));
+      followPointer(r, e.clientX, e.timeStamp);
+      // A render only when the thumb crosses the middle.
+      setOnSide(dragOnSide(r));
     },
     onPointerUp: (e: PointerEvent<HTMLButtonElement>) => {
       own.onPointerUp?.(e);
+      // On touch `:active` outlasts the tap: from here the travel keeps the state's spring (N1).
+      markReleased(e.currentTarget, true);
       if (run.current && e.pointerId === run.current.pointerId) finish(true, e.timeStamp);
     },
     onPointerCancel: (e: PointerEvent<HTMLButtonElement>) => {
       own.onPointerCancel?.(e);
+      markReleased(e.currentTarget, true);
       if (run.current && e.pointerId === run.current.pointerId) finish(false, e.timeStamp);
     },
     onLostPointerCapture: (e: PointerEvent<HTMLButtonElement>) => {
       own.onLostPointerCapture?.(e);
       // Capture is lost after the release too; by then the run is over.
       if (run.current && e.pointerId === run.current.pointerId && run.current.moved) finish(false, e.timeStamp);
+    },
+    onKeyDown: (e: KeyboardEvent<HTMLButtonElement>) => {
+      own.onKeyDown?.(e);
+      // Space presses the control too: the press timing applies again.
+      markReleased(e.currentTarget, false);
     },
   });
 
@@ -176,5 +143,5 @@ export function useSwitchDrag({
     return hit;
   };
 
-  return { dragging, handlers, consumeClick };
+  return { dragging, onSide, handlers, consumeClick };
 }

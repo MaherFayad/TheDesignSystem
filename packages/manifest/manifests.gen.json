@@ -536,6 +536,8 @@
       "root",
       "backdrop",
       "panel",
+      "titlebar",
+      "controls",
       "icon",
       "title",
       "description",
@@ -549,7 +551,9 @@
       "AlertDialogDescription": "description",
       "AlertDialogFooter": "footer",
       "AlertDialogCancel": "cancel",
-      "AlertDialogAction": "action"
+      "AlertDialogAction": "action",
+      "TitleBar": "titlebar",
+      "WindowControls": "controls"
     },
     "slots": {
       "title": {
@@ -653,7 +657,9 @@
         "Toasts sit above it and stay readable and clickable, as with Dialog.",
         "The icon is decoration and hidden from assistive tech; the title carries the meaning.",
         "No native title attribute.",
-        "Order 1.23 motion: a backdrop press never closes an alert dialog; the panel nudges once along the inline axis to say so (interaction dialog-refuse), and stays still under reduced motion. The backdrop blurs the page in and the parts read within 200ms."
+        "Order 1.23 motion: a backdrop press never closes an alert dialog; the panel nudges once along the inline axis to say so (interaction dialog-refuse), and stays still under reduced motion. The backdrop blurs the page in and the parts read within 200ms.",
+        "Order 1.29, optional parts titlebar and controls (the Dialog pattern): rendered only when the active style lists them under optionalParts[\"alert-dialog\"] in its style.json. The title bar holds the title (a direct AlertDialogTitle child or the title prop, still the accessible name); with controls it starts with WindowControls, whose close light cancels (as Escape and Cancel do), and minimize and zoom are idle and out of the tab order. No style turns them on yet.",
+        "Order 1.29, review 3 B8: a refused backdrop press keeps focus where it was (WCAG 2.4.3): its pointerdown and mousedown defaults are prevented, so focus never falls to the body."
       ],
       "native": {
         "accessibilityRole": "alert",
@@ -780,7 +786,10 @@
       "trigger": "[data-demo-trigger]",
       "optionalParts": [
         "icon",
-        "description"
+        "description",
+        "titlebar",
+        "controls",
+        "title"
       ]
     },
     "since": "0.1.0"
@@ -2526,7 +2535,8 @@
       "end",
       "spinner",
       "status",
-      "result"
+      "result",
+      "hit"
     ],
     "slots": {
       "label": {
@@ -3660,7 +3670,8 @@
         "A checked box shows a check and an indeterminate box a minus, so the state never relies on color alone.",
         "Read only is not part of Radix: clicks are prevented, aria-readonly is set and the box draws dashed.",
         "Indeterminate is a display state. The next click checks the box.",
-        "Motion, round 3 (check-draw and check-mixed, proposed): the fill grows from the centre of the box (clip-path) and the mark part, an aria-hidden svg of two strokes, is drawn with stroke-dashoffset, the short arm then the long arm; unchecking retracts it faster. The dash and the check are the same strokes (data-glyph check or minus on the mark), so mixed and checked bend into each other. Reduced motion: the fill and the mark change at once."
+        "Motion, round 3 (check-draw and check-mixed, proposed): the fill grows from the centre of the box (clip-path) and the mark part, an aria-hidden svg of two strokes, is drawn with stroke-dashoffset, the short arm then the long arm; unchecking retracts it faster. The dash and the check are the same strokes (data-glyph check or minus on the mark), so mixed and checked bend into each other. Reduced motion: the fill and the mark change at once.",
+        "Order 1.29: a mark drawn from an empty box carries data-enter on the mark part; it takes the new glyph's angles at once and only draws, so unchecked to mixed shows no part of a check. An uncheck fades the fill as it closes, so it ends on no centre dot."
       ]
     },
     "content": {
@@ -4291,7 +4302,8 @@
     },
     "anatomy": [
       "root",
-      "icon"
+      "icon",
+      "hit"
     ],
     "props": {
       "size": {
@@ -5970,7 +5982,8 @@
       "icon",
       "label",
       "status",
-      "bubble"
+      "bubble",
+      "hit"
     ],
     "props": {
       "value": {
@@ -6970,6 +6983,8 @@
       "root",
       "backdrop",
       "panel",
+      "handle",
+      "handle-bar",
       "header",
       "title",
       "description",
@@ -7077,7 +7092,8 @@
     },
     "states": [
       "open",
-      "closed"
+      "closed",
+      "data-dragging"
     ],
     "a11y": {
       "role": "dialog (the panel). Modal by default: Radix hides the rest of the page from assistive tech and keeps focus inside. With modal false it is not modal: the page stays reachable. Named by the title, described by the description.",
@@ -7094,7 +7110,8 @@
         "Toasts sit above an open drawer and stay readable and clickable, as with Dialog.",
         "Non modal: Tab leaves the drawer for the page, as for any region. Escape from inside the drawer closes it; an Escape in a page field stays with that field. When the drawer closes while the person works on the page, focus stays where it is.",
         "No native title attribute.",
-        "Order 1.23 motion: the backdrop blurs the page in as a dialog does. Swipe to dismiss is not built: the close control and Escape close it."
+        "Order 1.23 motion: the backdrop blurs the page in as a dialog does. Order 1.29 adds the swipe to dismiss (below).",
+        "Order 1.29, swipe to dismiss: the handle part, a strip on the panel edge that faces the page (at the top on platform ios), takes a drag toward the edge the drawer sits on. The panel follows the pointer by transform, gives a rubber band against the edge (and toward it when dismissible is false), and closes on release past a quarter of its width or on a flick; otherwise it springs back. The handle is hidden from assistive tech: the close control (the button path) and Escape (the key path) are the same action (WCAG 2.5.7). The math is shared with Angular (packages/motion helpers/drawer-swipe.ts)."
       ]
     },
     "content": {
@@ -7206,7 +7223,8 @@
         "backdrop",
         "description",
         "body",
-        "footer"
+        "footer",
+        "handle-bar"
       ]
     },
     "since": "0.1.0"
@@ -8864,7 +8882,8 @@
       "icon",
       "label",
       "spinner",
-      "status"
+      "status",
+      "hit"
     ],
     "contract": {
       "optionalParts": [
@@ -10287,7 +10306,8 @@
       "root",
       "icon",
       "spinner",
-      "status"
+      "status",
+      "hit"
     ],
     "slots": {
       "icon": {
@@ -15777,6 +15797,8 @@
     },
     "anatomy": [
       "root",
+      "titlebar",
+      "controls",
       "arrow",
       "title",
       "close",
@@ -15787,7 +15809,9 @@
       "PopoverContent": "root",
       "PopoverTitle": "title",
       "PopoverBody": "body",
-      "PopoverFooter": "footer"
+      "PopoverFooter": "footer",
+      "TitleBar": "titlebar",
+      "WindowControls": "controls"
     },
     "slots": {
       "title": {
@@ -15906,6 +15930,7 @@
       },
       "announce": "The trigger says it opens a dialog and whether it is expanded. On open the title is read as the name of the dialog, then the focused field.",
       "notes": [
+        "Order 1.29, optional parts titlebar and controls (the Dialog pattern): rendered only when the active style lists them under optionalParts[\"popover\"] in its style.json. The title bar holds the title (a direct PopoverTitle child or the title prop, still the accessible name) and, without controls, the close control at its end; with controls it starts with WindowControls, whose close light closes the popover, and minimize and zoom are idle and out of the tab order. No style turns them on yet.",
         "Not modal: a click outside closes the popover and the page keeps working. Use Dialog for a decision that blocks the page.",
         "The popover never runs past the viewport: it flips to the other side, shifts along the trigger, and its body scrolls inside the height left.",
         "A popover opened from inside a Dialog sits above it (z.menu over z.dialog) and below the toasts.",
@@ -16021,7 +16046,9 @@
         "arrow",
         "title",
         "close",
-        "footer"
+        "footer",
+        "titlebar",
+        "controls"
       ]
     },
     "since": "0.1.0"
@@ -16554,7 +16581,8 @@
         "Disabled uses native disabled: a disabled card leaves the arrow order and draws with opacity.disabled.",
         "Read only does not apply: show the chosen card as text instead.",
         "The group has no legend part: put a heading above it and point aria-labelledby at it, or use aria-label.",
-        "Motion, round 3 (radio-card-lift, proposed): the border, the inner line and the fill cross to the checked look; the indicator fills inward and the badge part, an aria-hidden svg check, is drawn with stroke-dashoffset; the card it leaves crosses back faster and its check retracts. Reduced motion: no lift, no dip, no draw."
+        "Motion, round 3 (radio-card-lift, proposed): the border, the inner line and the fill cross to the checked look; the indicator fills inward and the badge part, an aria-hidden svg check, is drawn with stroke-dashoffset; the card it leaves crosses back faster and its check retracts. Reduced motion: no lift, no dip, no draw.",
+        "Order 1.29: the card a change leaves empties its badge at once, so two cards never show a filled badge. Under forced colors the chosen badge is Highlight with its check in HighlightText. Hook for styles: --_radio-card-indicator-radius, radius.pill by default."
       ]
     },
     "content": {
@@ -16857,7 +16885,8 @@
         "The checked state is a filled circle with a dot, never color alone. Invalid adds the danger border to the unchecked circles and an error with an icon.",
         "The error is not a live region. On submit, move focus to the checked option or the first option.",
         "data-invalid is on the root and on each item; the unchecked circles take the danger border.",
-        "Motion, round 3 (radio-pop, proposed): the checked fill, an inset box-shadow, closes from the border to the dot, which springs in from the side of the old option while the old dot shrinks and leaves toward the new one, one move along the group. Reduced motion: the fill and the dot change at once."
+        "Motion, round 3 (radio-pop, proposed): the checked fill, an inset box-shadow, closes from the border to the dot, which springs in from the side of the old option while the old dot shrinks and leaves toward the new one, one move along the group. Reduced motion: the fill and the dot change at once.",
+        "Order 1.29: the option a change leaves drops its fill at once, so two options never look chosen. Hooks for styles: --_radio-group-radius (the circle, its ring and its veil) and --_radio-group-dot-radius, radius.pill by default."
       ]
     },
     "content": {
@@ -19440,7 +19469,8 @@
         "An option description is read through aria-describedby on the item.",
         "Contract: the variants case marks one trigger with data-demo-trigger. Enter, Space and ArrowDown on the trigger are checked as state changes (aria-expanded), because Radix opens on keydown and prevents the click. The closed trigger stamps no data-state (it reads as open through aria-expanded); data-state open is on the content root.",
         "contract.skipAxeRules aria-hidden-focus: while the list is open, Radix Select hides the rest of the page with aria-hidden and traps focus in the list (a focus scope, and pointer events off outside it), so the other triggers on the page cannot be reached until it closes. Axe flags those hidden triggers by shape. The closed pages passed axe with the rule on in the lane run before it was skipped (docs/reports/lanes/lane-3d.md).",
-        "States: open is data-state on the content root; when closed the content is not in the DOM (Radix Select has no exit presence), so no element stamps closed. closed stays in states because the contract suite treats a component as an overlay, and opens it, only when states lists both open and closed. checked and unchecked are data-state on each item."
+        "States: open is data-state on the content root; when closed the content is not in the DOM (Radix Select has no exit presence), so no element stamps closed. closed stays in states because the contract suite treats a component as an overlay, and opens it, only when states lists both open and closed. checked and unchecked are data-state on each item.",
+        "Order 1.29: the chevron flips on its block axis (scaleY of the cosine of --_select-turn) instead of turning through a sideways shape. The placeholder reads --_select-placeholder-fg, text-muted by default, which keeps 4.5:1 on each style's field fill."
       ]
     },
     "content": {
@@ -19777,6 +19807,8 @@
       "panel",
       "handle",
       "handle-bar",
+      "titlebar",
+      "controls",
       "header",
       "title",
       "description",
@@ -19789,7 +19821,9 @@
       "SheetTitle": "title",
       "SheetDescription": "description",
       "SheetBody": "body",
-      "SheetFooter": "footer"
+      "SheetFooter": "footer",
+      "TitleBar": "titlebar",
+      "WindowControls": "controls"
     },
     "slots": {
       "title": {
@@ -19838,6 +19872,24 @@
         "default": true,
         "description": "false: Escape, a backdrop click and a drag do nothing, and the close control is aria-disabled."
       },
+      "detents": {
+        "type": "readonly number[]",
+        "default": "none",
+        "description": "Order 1.29. The heights the sheet rests at, smallest first: a fraction of the viewport height (0 < n <= 1) or px (n > 1). The largest sets the panel's height, clamped to the room under the top gap; a smaller one moves the panel down by transform. The root carries data-detent and the handle becomes a button in the tab order."
+      },
+      "detent": {
+        "type": "number",
+        "description": "Controlled detent: an index into detents, with onDetentChange."
+      },
+      "defaultDetent": {
+        "type": "number",
+        "default": 0,
+        "description": "The detent it opens at, an index into detents. Default the smallest."
+      },
+      "onDetentChange": {
+        "type": "(index: number) => void",
+        "description": "Called with the index of the detent the sheet settles at, after a drag, a key or a press on the handle."
+      },
       "title": {
         "type": "node",
         "description": "SheetContent: the title for the common case, the same as a SheetTitle child."
@@ -19871,7 +19923,8 @@
     "states": [
       "open",
       "closed",
-      "data-dragging"
+      "data-dragging",
+      "data-detent"
     ],
     "a11y": {
       "role": "dialog (the panel), modal: Radix hides the rest of the page from assistive tech and keeps focus inside. Named by the title, described by the description.",
@@ -19879,17 +19932,25 @@
       "keys": {
         "Escape": "Closes the sheet, unless dismissible is false. The key path for the drag down.",
         "Tab": "Moves to the next control inside the sheet and wraps from the last to the first",
-        "Shift+Tab": "Moves to the previous control inside the sheet and wraps from the first to the last"
+        "Shift+Tab": "Moves to the previous control inside the sheet and wraps from the first to the last",
+        "ArrowUp": "With detents, on the handle: the next larger detent; stays at the largest.",
+        "ArrowDown": "With detents, on the handle: the next smaller detent; stays at the smallest.",
+        "Home": "With detents, on the handle: the smallest detent.",
+        "End": "With detents, on the handle: the largest detent.",
+        "Enter": "With detents, on the handle: the next larger detent, round to the smallest after the largest.",
+        "Space": "With detents, on the handle: the same as Enter."
       },
-      "announce": "The title and the description are read when the sheet opens. The handle is hidden from assistive tech: the close control is the same action.",
+      "announce": "The title and the description are read when the sheet opens. With no detents the handle is hidden from assistive tech: the close control is the same action. With detents the handle is a button named for the detent it is at (Sheet size, 1 of 2).",
       "notes": [
-        "The drag to dismiss has a button path, the close control, and a key path, Escape (WCAG 2.5.7). The handle is a pointer target only, out of the tab order.",
+        "The drag to dismiss has a button path, the close control, and a key path, Escape (WCAG 2.5.7). With no detents the handle is a pointer target only, out of the tab order.",
         "A release past a quarter of the panel's height, or a quick flick down, closes it; a shorter drag snaps back. The panel never rises above its open place.",
         "The panel keeps clear of the home bar with env(safe-area-inset-bottom).",
-        "Detents are wave 2.",
         "No native title attribute.",
         "When the whole panel scrolls (a short viewport, 400% zoom) the handle scrolls away; the close control stays.",
-        "Order 1.23: the handle holds a handle-bar part that draws the bar and takes --_dialog-handle-radius. Dragged above its place, or down on a sheet with dismissible false, the panel follows a third of the pointer (a rubber band) and springs back. Detents are not built yet."
+        "Order 1.23: the handle holds a handle-bar part that draws the bar and takes --_dialog-handle-radius. Dragged above its place, or down on a sheet with dismissible false, the panel follows a third of the pointer (a rubber band) and springs back.",
+        "Order 1.29, detents: the handle is a native button (part handle) with the keys above and a press that takes the next detent, the button path for the drag (WCAG 2.5.7). A drag follows the pointer between the detents, gives a rubber band past the largest, and on release settles on the detent nearest to where it would coast, by position and speed; a flick or a drag well below the smallest closes it when dismissible. The math is shared with Angular (packages/motion helpers/sheet-detents.ts). Motion is transform only.",
+        "Order 1.29, review 3 N28: the drag speed is read over the last 100ms with the release as the last sample, so a drag that pauses before the release never counts as a flick.",
+        "Order 1.29, optional parts titlebar and controls (the Dialog pattern): rendered only when the active style lists them under optionalParts[\"sheet\"] in its style.json. The title bar holds the title (a direct SheetTitle child or the title prop, still the accessible name); the description follows the bar as a part of the panel; with controls it starts with WindowControls, whose close light closes the sheet (as the close control does), and minimize and zoom are idle and out of the tab order. No style turns them on yet."
       ]
     },
     "content": {
@@ -20003,7 +20064,12 @@
         "description",
         "body",
         "footer",
-        "handle-bar"
+        "handle-bar",
+        "titlebar",
+        "controls",
+        "header",
+        "title",
+        "close"
       ]
     },
     "since": "0.1.0"
@@ -22859,7 +22925,8 @@
         "Read only is not part of Radix: clicks are prevented, aria-readonly is set and the track draws dashed.",
         "A switch applies its setting at once. If the change fails, set it back and say why in a Toast.",
         "Motion, round 3 (switch-stretch and switch-drag, proposed): the thumb leans on hover, grows and stretches while pressed and travels on the bouncy spring; the on fill sweeps behind it with a clip that rides the thumb, so the track under the thumb is filled on every frame. A drag moves the thumb with the pointer (data-dragging) and snaps on release; the click that ends a drag toggles nothing; Space and Enter still toggle. Reduced motion: the thumb jumps and the fill shows at once.",
-        "The thumb-lens part is an aria-hidden layer inside the thumb. A style makes a glass thumb with --_switch-thumb-backdrop, --_switch-thumb-highlight and --_switch-thumb-solid-pressed, or a growing dot with --_switch-thumb-size-rest, -on and -pressed (transform only). The glass falls back to a solid thumb without backdrop-filter, under reduced transparency and under more contrast."
+        "The thumb-lens part is an aria-hidden layer inside the thumb. A style makes a glass thumb with --_switch-thumb-backdrop, --_switch-thumb-highlight and --_switch-thumb-solid-pressed, or a growing dot with --_switch-thumb-size-rest, -on and -pressed (transform only). The glass falls back to a solid thumb without backdrop-filter, under reduced transparency and under more contrast.",
+        "Order 1.29: every frame of a toggle and of a drag keeps the thumb at 3:1 against what is behind it (WCAG 1.4.11). The thumb takes its on color at once; turning off, the fill stays opaque and steps off with the thumb's on color at the middle of the travel; a drag steps both at progress 0.5, and while a drag runs the root's data-state shows the side the thumb is on (the control keeps aria-checked). The travel is the thumb's translate, so a press that lingers after a tap does not carry it. Hooks for styles and platforms: --_switch-radius (the control, ring, track and fill corners), --_switch-thumb-radius, --_switch-thumb-width (the thumb's inline size apart from --_switch-thumb-size, for a capsule lens) and --_switch-thumb-ring-width (a ring of the solid thumb color inside its edge that keeps a clear lens readable), all defaulting to today's look."
       ]
     },
     "content": {
@@ -25138,7 +25205,8 @@
       "start",
       "label",
       "end",
-      "icon"
+      "icon",
+      "hit"
     ],
     "slots": {
       "label": {

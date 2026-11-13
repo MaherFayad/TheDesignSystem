@@ -73,7 +73,7 @@ let nextId = 0;
     'data-ds': 'switch',
     '[attr.data-size]': 'size()',
     '[attr.data-tone]': 'tone()',
-    '[attr.data-state]': 'state()',
+    '[attr.data-state]': 'shownState()',
     '[attr.data-invalid]': 'isInvalid() ? "" : null',
     '[attr.data-disabled]': 'isDisabled() ? "" : null',
     '[attr.data-readonly]': 'isReadOnly() ? "" : null',
@@ -101,6 +101,7 @@ let nextId = 0;
       (pointerup)="drag.pointerUp($event)"
       (pointercancel)="drag.pointerCancel($event)"
       (lostpointercapture)="drag.lostPointerCapture($event)"
+      (keydown)="drag.keyDown($event)"
       (blur)="onTouched()"><span data-part="track"><span aria-hidden="true"></span><span [attr.data-state]="state()" [attr.data-disabled]="isDisabled() ? '' : null" data-part="thumb"><span data-part="thumb-lens" aria-hidden="true"></span>@if (thumbIcon()) {<svg data-part="thumb-icon" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M4.5 8.25 7 10.75 11.5 5.5" pathLength="1" /><path d="M5.5 5.5 10.5 10.5M10.5 5.5 5.5 10.5" /></svg>}</span></span></button>@if (isFormControl()) {<input #bubble
       type="checkbox"
       aria-hidden="true"
@@ -193,6 +194,8 @@ export class DsSwitch implements ControlValueAccessor {
     disabled: () => Boolean(this.isDisabled()) || Boolean(this.isReadOnly()),
     onToggle: (next) => this.commit(next),
   });
+  /** While a drag runs the root shows the side the thumb is on (order 1.29, B4); the control keeps aria-checked. */
+  protected readonly shownState = computed(() => (this.drag.dragging() ? (this.drag.onSide() ? 'checked' : 'unchecked') : this.state()));
 
   constructor() {
     // A control with its own id tells the Field, so the Field label points at it, as React's useFieldControl.

@@ -195,15 +195,20 @@ export function ButtonRoot({
   // browser draws no :active for it, so the press pattern plays here. It
   // decorates only: the click has already happened.
   // The spinner that leaves after loading ends, for its exit only. Decorative.
-  const withLeaving = (parts: ReactNode) =>
-    spinnerLeaving ? (
-      <>
-        {parts}
-        <span data-part="spinner" aria-hidden="true" />
-      </>
-    ) : (
-      parts
-    );
+  // One fragment shape in both cases, so the parts are not remounted when the
+  // spinner leaves (order 1.29, angular-sync-3 section 6 item 5).
+  // The hit part (order 1.29, review B10): the platform hit area (44pt on
+  // iOS, 48dp on Android) of a control drawn smaller, an empty span that
+  // takes presses for the root. Its own layer, so the glow (::before) keeps
+  // the control's box. Drawn only by the platform rules. Chip keeps its
+  // ::before hit area: it has no glow.
+  const withLeaving = (parts: ReactNode) => (
+    <>
+      {parts}
+      {spinnerLeaving && <span data-part="spinner" aria-hidden="true" />}
+      {ds !== 'chip' && <span data-part="hit" aria-hidden="true" />}
+    </>
+  );
   const pressable = PRESS_DS.has(ds) && !inert && rest['aria-disabled'] !== true && rest['aria-disabled'] !== 'true';
   const pressed = useRef(false);
   const release = (el: Element) => {

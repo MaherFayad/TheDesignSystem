@@ -38,6 +38,7 @@ import {
   Tile,
   TileLink,
   TileTitle,
+  useTheme,
   type AvatarStatusTone,
 } from '@the-system/react';
 
@@ -47,9 +48,10 @@ const row = { display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 'var
 function StatStage() {
   const [value, setValue] = useState(1240);
   const [delta, setDelta] = useState(0.12);
+  const ar = useTheme().lang === 'ar';
   return (
     <>
-      <Stat label="Live visitors" value={value} delta={delta} hint="Since 9:00" />
+      <Stat label={ar ? 'الزوار الحين' : 'Live visitors'} value={value} delta={delta} hint={ar ? 'من الساعة 9:00' : 'Since 9:00'} />
       <div style={row}>
         <Button
           size="sm"

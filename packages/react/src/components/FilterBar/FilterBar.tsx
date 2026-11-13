@@ -222,8 +222,23 @@ export function FilterBar({
     .join(lang === 'ar' ? '، ' : ', ');
 
   // collection-flip: the bar's parts and the chips make room as clear, the count and checks come and go.
-  useFlipGroup(rootRef, { items: barPartsOf });
-  useFlipGroup(stripRef, { items: chipsOf, ghosts: false });
+  // Nothing plays on mount (angular-sync-3 section 6 item 4): the renders and the layout of the first
+  // frames (the theme, fonts, the count) are a first paint, not a change. The groups see no items until
+  // the bar has settled for two frames; one render then records the settled places, and only a later
+  // change plays.
+  const [flipReady, setFlipReady] = useState(false);
+  useEffect(() => {
+    if (typeof requestAnimationFrame !== 'function') {
+      setFlipReady(true);
+      return undefined;
+    }
+    let id = requestAnimationFrame(() => {
+      id = requestAnimationFrame(() => setFlipReady(true));
+    });
+    return () => cancelAnimationFrame(id);
+  }, []);
+  useFlipGroup(rootRef, { items: (root) => (flipReady ? barPartsOf(root) : []) });
+  useFlipGroup(stripRef, { items: (strip) => (flipReady ? chipsOf(strip) : []), ghosts: false });
 
   // filter-count-roll: the count rolls digit by digit in a decorative copy; the real text is visually hidden beside it.
   const motion = useMotion();

@@ -85,6 +85,101 @@
           "target": "@components/ds/motion/core.ts"
         },
         {
+          "path": "packages/motion/src/helpers/celebrate.ts",
+          "type": "registry:lib",
+          "target": "@components/ds/motion/helpers/celebrate.ts"
+        },
+        {
+          "path": "packages/motion/src/helpers/digit-roller.ts",
+          "type": "registry:lib",
+          "target": "@components/ds/motion/helpers/digit-roller.ts"
+        },
+        {
+          "path": "packages/motion/src/helpers/drawer-swipe.ts",
+          "type": "registry:lib",
+          "target": "@components/ds/motion/helpers/drawer-swipe.ts"
+        },
+        {
+          "path": "packages/motion/src/helpers/exit-ghost.ts",
+          "type": "registry:lib",
+          "target": "@components/ds/motion/helpers/exit-ghost.ts"
+        },
+        {
+          "path": "packages/motion/src/helpers/field-motion.ts",
+          "type": "registry:lib",
+          "target": "@components/ds/motion/helpers/field-motion.ts"
+        },
+        {
+          "path": "packages/motion/src/helpers/flip-list.ts",
+          "type": "registry:lib",
+          "target": "@components/ds/motion/helpers/flip-list.ts"
+        },
+        {
+          "path": "packages/motion/src/helpers/index.ts",
+          "type": "registry:lib",
+          "target": "@components/ds/motion/helpers/index.ts"
+        },
+        {
+          "path": "packages/motion/src/helpers/indicator.ts",
+          "type": "registry:lib",
+          "target": "@components/ds/motion/helpers/indicator.ts"
+        },
+        {
+          "path": "packages/motion/src/helpers/meter-value.ts",
+          "type": "registry:lib",
+          "target": "@components/ds/motion/helpers/meter-value.ts"
+        },
+        {
+          "path": "packages/motion/src/helpers/nav-ink.ts",
+          "type": "registry:lib",
+          "target": "@components/ds/motion/helpers/nav-ink.ts"
+        },
+        {
+          "path": "packages/motion/src/helpers/selection-marker.ts",
+          "type": "registry:lib",
+          "target": "@components/ds/motion/helpers/selection-marker.ts"
+        },
+        {
+          "path": "packages/motion/src/helpers/selection-motion.ts",
+          "type": "registry:lib",
+          "target": "@components/ds/motion/helpers/selection-motion.ts"
+        },
+        {
+          "path": "packages/motion/src/helpers/sheet-detents.ts",
+          "type": "registry:lib",
+          "target": "@components/ds/motion/helpers/sheet-detents.ts"
+        },
+        {
+          "path": "packages/motion/src/helpers/slider-fill.ts",
+          "type": "registry:lib",
+          "target": "@components/ds/motion/helpers/slider-fill.ts"
+        },
+        {
+          "path": "packages/motion/src/helpers/step-check.ts",
+          "type": "registry:lib",
+          "target": "@components/ds/motion/helpers/step-check.ts"
+        },
+        {
+          "path": "packages/motion/src/helpers/switch-drag.ts",
+          "type": "registry:lib",
+          "target": "@components/ds/motion/helpers/switch-drag.ts"
+        },
+        {
+          "path": "packages/motion/src/helpers/toast-stack.ts",
+          "type": "registry:lib",
+          "target": "@components/ds/motion/helpers/toast-stack.ts"
+        },
+        {
+          "path": "packages/motion/src/helpers/toast-swipe.ts",
+          "type": "registry:lib",
+          "target": "@components/ds/motion/helpers/toast-swipe.ts"
+        },
+        {
+          "path": "packages/motion/src/helpers/toggle-layer.ts",
+          "type": "registry:lib",
+          "target": "@components/ds/motion/helpers/toggle-layer.ts"
+        },
+        {
           "path": "packages/motion/src/index.ts",
           "type": "registry:lib",
           "target": "@components/ds/motion/index.ts"
@@ -443,6 +538,11 @@
           "path": "packages/styles/desk/style.json",
           "type": "registry:lib",
           "target": "@components/ds/styles/desk/style.json"
+        },
+        {
+          "path": "packages/styles/liquid/motion.ts",
+          "type": "registry:lib",
+          "target": "@components/ds/styles/liquid/motion.ts"
         },
         {
           "path": "packages/styles/liquid/style.json",
@@ -1102,6 +1202,11 @@
           "target": "@components/ds/styles/studio/recipes/DropdownMenu.css"
         },
         {
+          "path": "packages/styles/studio/recipes/Field.css",
+          "type": "registry:file",
+          "target": "@components/ds/styles/studio/recipes/Field.css"
+        },
+        {
           "path": "packages/styles/studio/recipes/Lightbox.css",
           "type": "registry:file",
           "target": "@components/ds/styles/studio/recipes/Lightbox.css"
@@ -1208,11 +1313,6 @@
           "target": "@components/ds/react/components/Alert/Alert.tsx"
         },
         {
-          "path": "packages/react/src/components/Alert/ghost.ts",
-          "type": "registry:ui",
-          "target": "@components/ds/react/components/Alert/ghost.ts"
-        },
-        {
           "path": "packages/react/src/components/Alert/index.ts",
           "type": "registry:ui",
           "target": "@components/ds/react/components/Alert/index.ts"
@@ -1249,7 +1349,9 @@
         "@ds/core",
         "@ds/dialog",
         "@ds/icon",
-        "@ds/theme"
+        "@ds/theme",
+        "@ds/title-bar",
+        "@ds/window-controls"
       ],
       "files": [
         {
@@ -1355,7 +1457,6 @@
       ],
       "registryDependencies": [
         "@ds/core",
-        "@ds/stat",
         "@ds/status-dot",
         "@ds/theme"
       ],
@@ -1391,7 +1492,6 @@
       "title": "AvatarGroup",
       "description": "A few overlapping avatars and a +N count for the rest, named as one group.",
       "registryDependencies": [
-        "@ds/alert",
         "@ds/avatar",
         "@ds/button",
         "@ds/core",
@@ -1848,7 +1948,6 @@
         "@ds/button",
         "@ds/close-button",
         "@ds/core",
-        "@ds/list-box",
         "@ds/theme"
       ],
       "files": [
@@ -2018,7 +2117,6 @@
         "@ds/field",
         "@ds/field-error",
         "@ds/form",
-        "@ds/input",
         "@ds/link",
         "@ds/switch",
         "@ds/theme"
@@ -2437,8 +2535,8 @@
       "title": "Field",
       "description": "Wires one label, one description and one error message to one form control, and passes the invalid, disabled, read only and required state to it.",
       "registryDependencies": [
+        "@ds/core",
         "@ds/field-error",
-        "@ds/input",
         "@ds/label",
         "@ds/theme"
       ],
@@ -2481,7 +2579,6 @@
       "registryDependencies": [
         "@ds/core",
         "@ds/field",
-        "@ds/input",
         "@ds/theme"
       ],
       "files": [
@@ -2640,7 +2737,6 @@
         "@ds/button",
         "@ds/core",
         "@ds/field",
-        "@ds/input",
         "@ds/link",
         "@ds/theme"
       ],
@@ -2678,7 +2774,6 @@
       "registryDependencies": [
         "@ds/button",
         "@ds/core",
-        "@ds/input",
         "@ds/stepper",
         "@ds/theme"
       ],
@@ -2896,11 +2991,6 @@
         "@ds/theme"
       ],
       "files": [
-        {
-          "path": "packages/react/src/components/Input/fieldMotion.ts",
-          "type": "registry:ui",
-          "target": "@components/ds/react/components/Input/fieldMotion.ts"
-        },
         {
           "path": "packages/react/src/components/Input/index.ts",
           "type": "registry:ui",
@@ -3375,7 +3465,6 @@
         "@ds/drawer",
         "@ds/icon-button",
         "@ds/sidebar",
-        "@ds/tabs",
         "@ds/theme"
       ],
       "files": [
@@ -3692,7 +3781,9 @@
       "registryDependencies": [
         "@ds/close-button",
         "@ds/core",
-        "@ds/theme"
+        "@ds/theme",
+        "@ds/title-bar",
+        "@ds/window-controls"
       ],
       "files": [
         {
@@ -3735,7 +3826,6 @@
       ],
       "registryDependencies": [
         "@ds/core",
-        "@ds/stat",
         "@ds/theme"
       ],
       "files": [
@@ -3969,7 +4059,6 @@
       ],
       "registryDependencies": [
         "@ds/core",
-        "@ds/input",
         "@ds/theme"
       ],
       "files": [
@@ -4197,7 +4286,6 @@
         "@ds/button",
         "@ds/button-group",
         "@ds/core",
-        "@ds/tabs",
         "@ds/theme",
         "@ds/toggle-group"
       ],
@@ -4319,10 +4407,13 @@
         "radix-ui@^1.8.1"
       ],
       "registryDependencies": [
+        "@ds/button",
         "@ds/core",
         "@ds/dialog",
         "@ds/drawer",
-        "@ds/theme"
+        "@ds/theme",
+        "@ds/title-bar",
+        "@ds/window-controls"
       ],
       "files": [
         {
@@ -4392,7 +4483,6 @@
       "title": "Skeleton",
       "description": "A placeholder shape that stands where content will appear while it loads: a text line, a circle or a rectangle.",
       "registryDependencies": [
-        "@ds/alert",
         "@ds/core",
         "@ds/theme"
       ],
@@ -4946,11 +5036,6 @@
           "target": "@components/ds/react/components/Tabs/index.ts"
         },
         {
-          "path": "packages/react/src/components/Tabs/ink.ts",
-          "type": "registry:ui",
-          "target": "@components/ds/react/components/Tabs/ink.ts"
-        },
-        {
           "path": "packages/react/src/components/Tabs/Tabs.tsx",
           "type": "registry:ui",
           "target": "@components/ds/react/components/Tabs/Tabs.tsx"
@@ -5151,16 +5236,6 @@
           "target": "@components/ds/react/components/Toast/isInsideToaster.ts"
         },
         {
-          "path": "packages/react/src/components/Toast/stack.ts",
-          "type": "registry:ui",
-          "target": "@components/ds/react/components/Toast/stack.ts"
-        },
-        {
-          "path": "packages/react/src/components/Toast/swipe.ts",
-          "type": "registry:ui",
-          "target": "@components/ds/react/components/Toast/swipe.ts"
-        },
-        {
           "path": "packages/react/src/components/Toast/Toast.tsx",
           "type": "registry:ui",
           "target": "@components/ds/react/components/Toast/Toast.tsx"
@@ -5236,7 +5311,6 @@
         "@ds/button",
         "@ds/button-group",
         "@ds/core",
-        "@ds/tabs",
         "@ds/theme"
       ],
       "files": [

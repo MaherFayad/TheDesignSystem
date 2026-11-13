@@ -44,7 +44,7 @@ describe('DsCopyButton', () => {
     expect(el.getAttribute('data-state')).toBe('idle');
     expect(el.getAttribute('data-emphasis')).toBe('ghost');
     expect(el.hasAttribute('value')).toBe(false);
-    expect(Array.from(el.children).map((c) => c.getAttribute('data-part'))).toEqual(['icon', 'label', 'status']);
+    expect(Array.from(el.children).map((c) => c.getAttribute('data-part'))).toEqual(['icon', 'label', 'status', 'hit']);
     const glyphs = Array.from(el.querySelectorAll('[data-part="icon"] > [data-copy-glyph]'));
     expect(glyphs.map((g) => g.getAttribute('data-copy-glyph'))).toEqual(['idle', 'copied', 'failed']);
     expect(glyphs.map((g) => g.querySelector('[data-ds="icon"]')?.getAttribute('data-icon'))).toEqual(['copy', 'check', 'warning']);

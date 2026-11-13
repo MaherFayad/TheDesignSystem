@@ -6,7 +6,7 @@ import { Component, signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { DsTheme } from '../../theme/theme';
-import { haloBurst, popMark } from '../../internal/motion-feedback';
+import { haloBurst, popMark } from '@the-system/motion';
 import { DsProgressCircle } from './progress-circle';
 
 interface Call {
@@ -94,6 +94,18 @@ describe('DsProgressCircle motion', () => {
     expect(played[1]).toEqual(halo);
     expect(played[1]!.target).toBe(indicator);
     expect(played.some((p) => p.options.id === 'ds-motion:progress-sweep')).toBe(false);
+  });
+
+  it('the progress-spring off row (--_progress-circle-duration: 0s) changes the text with no roll, as React (order 1.29, N31)', async () => {
+    const fixture = TestBed.createComponent(Host);
+    await fixture.whenStable();
+    s.take();
+    const value = fixture.nativeElement.querySelector('[data-ds="progress-circle"] [data-part="value"]') as HTMLElement;
+    value.style.setProperty('--_progress-circle-duration', '0s');
+    fixture.componentInstance.v.set(60);
+    await fixture.whenStable();
+    expect(s.take().filter((p) => String(p.options.id).startsWith('ds-motion:digit-roll'))).toEqual([]);
+    expect(value.textContent).toBe('60%');
   });
 
   it('reduced motion: no turn and no pop; the value fades in', async () => {

@@ -1,7 +1,7 @@
 'use client';
 import { useCallback, useEffect, useId, useLayoutEffect, useMemo, useRef, useState, type ComponentProps, type ReactNode } from 'react';
 import { useMotion } from '../../internal/motion';
-import { playBeat, slideIn } from '../Input/fieldMotion';
+import { FollowGlide, placeFloatingLabel, playBeat, slideIn } from '@the-system/motion';
 import { FieldError } from '../FieldError/FieldError';
 import { Label, type LabelProps } from '../Label/Label';
 import { FieldContext, useField, type FieldContextValue } from './context';
@@ -72,7 +72,28 @@ export function Field({
     const control = rootRef.current?.querySelector<HTMLInputElement | HTMLTextAreaElement>('input, textarea, select');
     const next = Boolean(control?.value);
     setFilled((f) => (f === next ? f : next));
+    // The resting label sits in the control's box: read its height and text inset (review B6).
+    placeFloatingLabel(rootRef.current);
   });
+  // A style, a platform or a density that resizes the box after the first paint moves the label with it.
+  useEffect(() => {
+    const root = rootRef.current;
+    if (!floating || !root || typeof ResizeObserver === 'undefined') return undefined;
+    const ro = new ResizeObserver(() => placeFloatingLabel(root));
+    for (const child of Array.from(root.children)) ro.observe(child);
+    return () => {
+      ro.disconnect();
+      root.style.removeProperty('--_field-float-box');
+      root.style.removeProperty('--_field-float-inset');
+    };
+  }, [floating]);
+  // A message that enters or leaves resizes the field: what follows it glides to its new place, no jump (review N12).
+  useEffect(() => {
+    const root = rootRef.current;
+    // A Field in a Form: the Form glides all of its rows at once.
+    if (!root || root.parentElement?.closest('[data-ds="form"]')) return undefined;
+    return new FollowGlide().watch(root);
+  }, []);
   const base = useId();
   const [ownControlId, setOwnControlId] = useState<string | undefined>(undefined);
   const [counts, setCounts] = useState({ description: 0, error: 0 });

@@ -28,7 +28,7 @@ import type { IconName } from '@the-system/icons';
 import type { Emphasis, Tone } from '@the-system/shared';
 import { consumeHostAttributes } from '../../internal/host';
 import { injectMotion } from '../../internal/motion';
-import { dismissWithExit } from '../../internal/motion-feedback';
+import { dismissWithExit } from '@the-system/motion';
 import { DsThemeService } from '../../theme/theme';
 import { DsCloseButton } from '../close-button/close-button';
 import { messageIcons, wordsFor } from '../alert/message';

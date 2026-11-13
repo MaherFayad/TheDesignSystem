@@ -7,9 +7,8 @@
 import { Component, signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { renderDigits, rollDigits } from '@the-system/motion';
+import { drawCheck, renderDigits, rollDigits } from '@the-system/motion';
 import { injectMotion } from '../../internal/motion';
-import { drawCheck } from '../../internal/selection-marker';
 import { DsFilterBar } from './filter-bar';
 
 interface Call {
@@ -129,10 +128,20 @@ describe('filter bar motion, order 1.22', () => {
 
   it('collection-flip: clear comes in and pops, a first paint plays nothing', async () => {
     const { root, settle, chips } = await setup();
+    // Order 1.29 (as React): the groups record their places only once the bar has settled for two frames.
+    await new Promise<void>((r) => requestAnimationFrame(() => requestAnimationFrame(() => r())));
+    await settle();
     expect(ids(take(), 'flip')).toEqual([]);
     chips()[0]!.click();
     await settle();
     const clear = root.querySelector(':scope > [data-part="clear"]');
     expect(ids(take(), 'flip').map((c) => c.el)).toContain(clear);
+  });
+
+  it('collection-flip: a change in the first two frames plays nothing (order 1.29, as React)', async () => {
+    const { settle, chips } = await setup();
+    chips()[0]!.click();
+    await settle();
+    expect(ids(take(), 'flip')).toEqual([]);
   });
 });

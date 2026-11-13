@@ -1,9 +1,12 @@
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
-import { createEvent, fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { act, createEvent, fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
+import type { ReactNode } from 'react';
 import { describe, expect, it } from 'vitest';
 import { Theme } from '../../theme/Theme';
+import { ThemeContext } from '../../theme/context';
+import { resolveTheme } from '../../theme/resolve';
 import { Button } from '../Button';
 import SheetDemo from './Sheet.demo';
 import { Sheet, SheetBody, SheetClose, SheetContent, SheetDescription, SheetFooter, SheetTitle, SheetTrigger, type SheetProps } from './index';
@@ -121,6 +124,21 @@ describe('Sheet', () => {
     await waitFor(() => expect(rootEl()).toBeNull());
   });
 
+  it('a quick drag that pauses before the release has no speed left and snaps back (review 3, N28)', async () => {
+    render(<Basic defaultOpen />);
+    await screen.findByRole('dialog');
+    const panel = part('panel') as HTMLElement;
+    panel.getBoundingClientRect = () => ({ height: 400, width: 400, top: 0, left: 0, right: 400, bottom: 400, x: 0, y: 0, toJSON: () => ({}) });
+    const handle = part('handle') as HTMLElement;
+    pointer(handle, 'pointerDown', 100, 1);
+    pointer(handle, 'pointerMove', 120, 16);
+    pointer(handle, 'pointerMove', 140, 32);
+    // The finger rests, then lifts where it was.
+    pointer(handle, 'pointerUp', 140, 200);
+    expect(rootEl()?.getAttribute('data-state')).toBe('open');
+    expect(panel.style.getPropertyValue('--_dialog-drag-y')).toBe('');
+  });
+
   it('snaps back on a short slow drag, and above its place gives only a third (rubber band)', async () => {
     render(<Basic defaultOpen />);
     await screen.findByRole('dialog');
@@ -177,7 +195,7 @@ describe('Sheet', () => {
   it('renders the demo with a trigger per case', () => {
     const { container } = render(<SheetDemo />);
     const cases = Array.from(container.querySelectorAll('[data-demo-case]')).map((c) => c.getAttribute('data-demo-case'));
-    expect(cases).toEqual(['variants', 'empty', 'one', 'many', 'too-many', 'long-text', 'long-arabic', 'loading', 'error', 'disabled']);
+    expect(cases).toEqual(['variants', 'empty', 'one', 'many', 'too-many', 'long-text', 'long-arabic', 'loading', 'error', 'detents', 'detents-arabic', 'disabled']);
     for (const section of Array.from(container.querySelectorAll('[data-demo-case]'))) {
       expect(section.querySelector('[data-demo-trigger]')).not.toBeNull();
     }
@@ -248,5 +266,126 @@ describe('Sheet', () => {
     const at = css.indexOf("  [data-ds='sheet'] {");
     const rule = css.slice(at, css.indexOf('\n  }', at));
     expect(rule).toMatch(/padding-block: max\(calc\(var\(--ds-space-5xl\) \+ env\(safe-area-inset-top, 0px\)\), calc\(var\(--_sheet-toast-end\) \+ var\(--ds-space-s\)\)\) 0;/);
+  });
+});
+
+describe('Sheet detents (order 1.29)', () => {
+  function Detents(props: SheetProps) {
+    return <Basic defaultOpen detents={[0.5, 1]} {...props} />;
+  }
+  const handle = () => part('handle') as HTMLElement;
+  const vh = () => window.innerHeight;
+
+  it('rests at a detent: data-detent and the working heights on the root, the handle a named button', async () => {
+    render(<Detents />);
+    await screen.findByRole('dialog');
+    await waitFor(() => expect(rootEl()?.getAttribute('data-detent')).toBe('0'));
+    expect(rootEl()?.style.getPropertyValue('--_dialog-detent-height')).toBe(`${Math.round(vh() / 2)}px`);
+    expect(rootEl()?.style.getPropertyValue('--_dialog-detent-max')).toBe(`${vh()}px`);
+    expect(handle().tagName).toBe('BUTTON');
+    expect(handle().getAttribute('type')).toBe('button');
+    expect(handle().hasAttribute('aria-hidden')).toBe(false);
+    expect(screen.getByRole('button', { name: 'Sheet size, 1 of 2' })).toBe(handle());
+  });
+
+  it('moves between detents with the keys and the button (WCAG 2.5.7)', async () => {
+    const user = userEvent.setup();
+    const changes: number[] = [];
+    render(<Detents onDetentChange={(i) => changes.push(i)} />);
+    await screen.findByRole('dialog');
+    await waitFor(() => expect(rootEl()?.getAttribute('data-detent')).toBe('0'));
+    handle().focus();
+    await user.keyboard('{ArrowUp}');
+    expect(rootEl()?.getAttribute('data-detent')).toBe('1');
+    expect(screen.getByRole('button', { name: 'Sheet size, 2 of 2' })).toBe(handle());
+    await user.keyboard('{ArrowUp}');
+    expect(rootEl()?.getAttribute('data-detent')).toBe('1');
+    await user.keyboard('{Home}');
+    expect(rootEl()?.getAttribute('data-detent')).toBe('0');
+    await user.keyboard('{Enter}');
+    expect(rootEl()?.getAttribute('data-detent')).toBe('1');
+    await user.keyboard(' ');
+    expect(rootEl()?.getAttribute('data-detent')).toBe('0');
+    await user.click(handle());
+    expect(rootEl()?.getAttribute('data-detent')).toBe('1');
+    expect(changes).toEqual([1, 0, 1, 0, 1]);
+  });
+
+  it('settles on the nearest detent by position and speed, gives a rubber band past the largest, and closes on a flick down', async () => {
+    render(<Detents />);
+    await screen.findByRole('dialog');
+    await waitFor(() => expect(rootEl()?.getAttribute('data-detent')).toBe('0'));
+    const panel = part('panel') as HTMLElement;
+    // A quick drag up by 80px carries on to the largest detent.
+    pointer(handle(), 'pointerDown', 500, 1);
+    pointer(handle(), 'pointerMove', 460, 16);
+    pointer(handle(), 'pointerMove', 420, 32);
+    pointer(handle(), 'pointerUp', 420, 40);
+    expect(rootEl()?.getAttribute('data-detent')).toBe('1');
+    expect(panel.style.getPropertyValue('--_dialog-drag-y')).toBe('');
+    // Past the largest: less than the pointer, and back on release.
+    pointer(handle(), 'pointerDown', 500, 100);
+    pointer(handle(), 'pointerMove', 300, 1100);
+    const over = Number.parseFloat(panel.style.getPropertyValue('--_dialog-drag-y'));
+    expect(over).toBeLessThan(0);
+    expect(over).toBeGreaterThan(-48);
+    pointer(handle(), 'pointerUp', 300, 2100);
+    expect(rootEl()?.getAttribute('data-detent')).toBe('1');
+    // A flick down from the smallest closes it.
+    act(() => handle().focus());
+    fireEvent.keyDown(handle(), { key: 'Home' });
+    expect(rootEl()?.getAttribute('data-detent')).toBe('0');
+    pointer(handle(), 'pointerDown', 500, 3000);
+    pointer(handle(), 'pointerMove', 540, 3016);
+    pointer(handle(), 'pointerMove', 580, 3032);
+    pointer(handle(), 'pointerUp', 580, 3040);
+    await waitFor(() => expect(rootEl()).toBeNull());
+  });
+
+  it('with dismissible false a flick down settles on the smallest detent', async () => {
+    render(<Detents dismissible={false} />);
+    await screen.findByRole('dialog');
+    await waitFor(() => expect(rootEl()?.getAttribute('data-detent')).toBe('0'));
+    pointer(handle(), 'pointerDown', 500, 1);
+    pointer(handle(), 'pointerMove', 540, 16);
+    pointer(handle(), 'pointerMove', 580, 32);
+    pointer(handle(), 'pointerUp', 580, 40);
+    expect(rootEl()?.getAttribute('data-state')).toBe('open');
+    expect(rootEl()?.getAttribute('data-detent')).toBe('0');
+  });
+});
+
+/** A Desk theme whose style.json would turn on these optional parts (order 1.29: no style does yet). */
+function WithParts({ ds, parts, children }: { ds: string; parts: string[]; children: ReactNode }) {
+  const base = resolveTheme({ style: 'desk' });
+  const value = { ...base, styleData: { ...base.styleData, optionalParts: { ...base.styleData.optionalParts, [ds]: parts } } };
+  return <ThemeContext value={value}>{children}</ThemeContext>;
+}
+
+describe('Sheet optional parts (order 1.29)', () => {
+  it('a title bar replaces the header: the title inside, the close control at its end, the description after it', async () => {
+    render(
+      <WithParts ds="sheet" parts={['titlebar']}>
+        <Basic defaultOpen />
+      </WithParts>,
+    );
+    const panel = await screen.findByRole('dialog', { name: 'Share Spring launch' });
+    expect(Array.from(panel.children).map((c) => c.getAttribute('data-part'))).toEqual(['handle', 'titlebar', 'description', 'body', 'footer']);
+    const bar = part('titlebar');
+    expect(bar?.querySelector('[data-part="title"]')?.textContent).toBe('Share Spring launch');
+    expect(bar?.querySelector('[data-part="close"]')?.getAttribute('aria-label')).toBe('Close sheet');
+  });
+
+  it('with controls, the close light closes the sheet', async () => {
+    const user = userEvent.setup();
+    render(
+      <WithParts ds="sheet" parts={['titlebar', 'controls']}>
+        <Basic defaultOpen />
+      </WithParts>,
+    );
+    await screen.findByRole('dialog');
+    expect(part('titlebar')?.querySelector('[data-ds="window-controls"]')?.getAttribute('aria-label')).toBe('Sheet controls');
+    await user.click(screen.getByRole('button', { name: 'Close sheet' }));
+    await waitFor(() => expect(rootEl()).toBeNull());
   });
 });

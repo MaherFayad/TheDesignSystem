@@ -37,7 +37,7 @@ import { NgTemplateOutlet } from '@angular/common';
 import type { Size, Tone } from '@the-system/shared';
 import { consumeHostAttributes } from '../../internal/host';
 import { injectMotion } from '../../internal/motion';
-import { Celebrate } from '../../internal/motion-feedback';
+import { Celebrate } from '@the-system/motion';
 import { DsThemeService } from '../../theme';
 import { clampValue, formatPercent, loadingLabelFor, progressState, validMax } from './format';
 

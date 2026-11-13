@@ -21,7 +21,7 @@
 //   size.touch.ios (44pt) and size.touch.android (48dp) for touch templates.
 // - `start` and `end` hold the brand and the account or settings items, at
 //   the block start and the block end of the column.
-// - Motion of order 1.22 (proposed), from react/src/internal/indicator.ts:
+// - Motion of order 1.22 (proposed), from motion/src/helpers/indicator.ts:
 //   "nav-current-slide": when another item becomes current, its edge bar
 //   (the item's ::before) slides from the old one along the column on the
 //   snappy spring, stretched on the way, and the labels dip and pop.
@@ -49,10 +49,10 @@ import {
 } from 'react';
 import { Slot } from 'radix-ui';
 import { Icon, type IconName } from '@the-system/icons/react';
-import { flipPlay, staggerGroup, type MotionRect } from '@the-system/motion';
+import { flipPlay, followIndicator, fromLocal, layerRect, staggerGroup, toLocal, type IndicatorTrack, type MotionRect } from '@the-system/motion';
 import type { Size } from '@the-system/shared';
 import { Tooltip, TooltipProvider } from '../Tooltip';
-import { followIndicator, fromLocal, layerRect, toLocal, useHoverFollow, useIndicatorTrack, type IndicatorTrack } from '../../internal/indicator';
+import { useHoverFollow, useIndicatorTrack } from '../../internal/indicator';
 import { useMotion } from '../../internal/motion';
 
 export type RailSize = Extract<Size, 'sm' | 'md'>;

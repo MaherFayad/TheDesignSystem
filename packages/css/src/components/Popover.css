@@ -8,6 +8,8 @@
  *
  *   [data-ds='theme'][data-popover-layer]   the portal Theme, draws no box
  *   [data-ds='popover']                     root: the surface
+ *     > [data-part='titlebar']              order 1.29, optional part: a TitleBar with the
+ *                                           title and the close (or the controls)
  *     > [data-part='title']
  *     > [data-part='close']                 the CloseButton
  *     > [data-part='body']                  scrolls inside
@@ -78,7 +80,8 @@
     --_popover-enter-y: 0px;
     --_popover-item-shift: var(--ds-distance-shift);
     --_popover-duration-in: var(--ds-duration-spring-bouncy);
-    --_popover-duration-out: var(--ds-duration-quick);
+    /* Order 1.29 (review 3, N22): never slower than the entrance, in any style. */
+    --_popover-duration-out: min(var(--ds-duration-quick), var(--_popover-duration-in));
     --_popover-ease-in: var(--ds-ease-spring-bouncy);
     --_popover-ease-out: var(--ds-ease-exit);
 
@@ -208,6 +211,24 @@
   /* No title: the body leaves the same room so the close control never covers the first line. */
   [data-ds='popover'] > [data-part='close'] + [data-part='body'] {
     padding-inline-end: calc(var(--ds-size-control-xs) + var(--ds-space-s));
+  }
+
+  /*
+   * Order 1.29: the optional title bar (a TitleBar, when a style turns it on
+   * in style.json). It holds the title and the close control, so neither
+   * needs the room above; its title takes the popover's title color.
+   */
+  [data-ds='popover'] > [data-part='titlebar'] {
+    --_title-bar-fg: var(--_popover-title-fg);
+
+    flex: none;
+    align-items: start;
+  }
+
+  [data-ds='popover'] > [data-part='titlebar'] > [data-part='title'] {
+    overflow-wrap: anywhere;
+    white-space: normal;
+    text-wrap: balance;
   }
 
   /* ------------------------------------------------------------ body and footer */

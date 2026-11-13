@@ -360,6 +360,16 @@
     }
   }
 
+  /*
+   * The hit part (order 1.29, review B10): an empty layer that the platform
+   * files (platform/ios.css, platform/android.css) grow into the 44pt or
+   * 48dp target around a control drawn smaller, so a press there reaches the
+   * root. The glow (::before) stays the control's own box. Off elsewhere.
+   */
+  :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button'], [data-ds='close-button'], [data-ds='copy-button'], [data-ds='floating-action-button']) > [data-part='hit'] {
+    display: none;
+  }
+
   /* The loading status: read by screen readers, not drawn. */
   :is([data-ds='button'], [data-ds='icon-button'], [data-ds='toggle-button'], [data-ds='close-button'], [data-ds='copy-button'], [data-ds='floating-action-button']) > [data-part='status'] {
     position: absolute;
@@ -800,17 +810,89 @@
    * The result part stays (aria-hidden, at opacity 0) once it has shown, so
    * the way back plays too. Nothing waits for the motion.
    */
+  /*
+   * Order 1.29 (review N7): the result part holds the glyph and the result
+   * word (data-result-label) side by side; the word ends in an ellipsis
+   * inside the button, so the width still holds. On the way back the glyph
+   * fades on duration.fast with ease.out, so it is nearly gone before the
+   * label is back.
+   */
   [data-ds='button'] > [data-part='result'] {
     position: absolute;
     inset: 0;
-    display: grid;
-    place-items: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--_button-gap);
+    padding-inline: var(--ds-space-xs);
     opacity: 0;
     transform: scale(var(--ds-scale-morph));
     transition:
-      opacity calc(var(--ds-duration-quick) * var(--_button-motion)) var(--ds-ease-exit),
+      opacity calc(var(--ds-duration-fast) * var(--_button-motion)) var(--ds-ease-out),
       transform calc(var(--ds-duration-quick) * var(--_button-motion)) var(--ds-ease-exit);
     pointer-events: none;
+  }
+
+  [data-ds='button'] > [data-part='result'] > svg {
+    flex: none;
+  }
+
+  [data-ds='button'] > [data-part='result'] > [data-result-label] {
+    min-inline-size: 0;
+    overflow-x: clip;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  /*
+   * The tone of the ending (review N7): success or danger, in the button's
+   * own emphasis, while the result shows. The colors swap at once, as every
+   * tone swap does; the glyph and the word carry the meaning too.
+   */
+  [data-ds='button'][data-result='success'] {
+    --_button-tone-solid: var(--ds-color-state-success-solid);
+    --_button-tone-solid-hover: var(--ds-color-state-success-solid-hover);
+    --_button-tone-on-solid: var(--ds-color-state-success-on-solid);
+    --_button-tone-text: var(--ds-color-state-success-text);
+    --_button-tone-on-tint: var(--ds-color-state-success-on-tint);
+    --_button-tone-border: var(--ds-color-state-success-border);
+    --_button-tone-tint: var(--ds-color-state-success-tint-10);
+    --_button-tone-tint-strong: var(--ds-color-state-success-tint-20);
+  }
+
+  [data-ds='button'][data-result='error'] {
+    --_button-tone-solid: var(--ds-color-state-danger-solid);
+    --_button-tone-solid-hover: var(--ds-color-state-danger-solid-hover);
+    --_button-tone-on-solid: var(--ds-color-state-danger-on-solid);
+    --_button-tone-text: var(--ds-color-state-danger-text);
+    --_button-tone-on-tint: var(--ds-color-state-danger-on-tint);
+    --_button-tone-border: var(--ds-color-state-danger-border);
+    --_button-tone-tint: var(--ds-color-state-danger-tint-10);
+    --_button-tone-tint-strong: var(--ds-color-state-danger-tint-20);
+  }
+
+  [data-ds='button'][data-result][data-emphasis='solid'] {
+    --_button-bg: var(--_button-tone-solid);
+    --_button-fg: var(--_button-tone-on-solid);
+    --_button-bg-hover: var(--_button-tone-solid-hover);
+    --_button-fg-hover: var(--_button-tone-on-solid);
+    --_button-bg-active: var(--_button-tone-solid-hover);
+    --_button-fg-active: var(--_button-tone-on-solid);
+  }
+
+  [data-ds='button'][data-result][data-emphasis='soft'] {
+    --_button-bg: var(--_button-tone-tint);
+    --_button-fg: var(--_button-tone-on-tint);
+    --_button-bg-hover: var(--_button-tone-tint-strong);
+    --_button-fg-hover: var(--_button-tone-on-tint);
+    --_button-bg-active: var(--_button-tone-tint-strong);
+    --_button-fg-active: var(--_button-tone-on-tint);
+  }
+
+  [data-ds='button'][data-result]:is([data-emphasis='outline'], [data-emphasis='ghost'], [data-emphasis='link']) {
+    --_button-fg: var(--_button-tone-text);
+    --_button-fg-hover: var(--_button-tone-on-tint);
+    --_button-fg-active: var(--_button-tone-on-tint);
   }
 
   [data-ds='button'] > [data-part='result'] > svg {
@@ -855,9 +937,17 @@
     animation: ds-button-draw calc(var(--ds-duration-morph) * var(--_button-motion) * var(--_button-draw)) var(--_button-draw-ease) calc(var(--ds-delay-stagger) * var(--_button-motion) * var(--_button-draw)) backwards;
   }
 
-  /* The second stroke of the error cross follows the first. */
+  /*
+   * The error cross draws its two strokes in the time of one (review N7: in
+   * Desk and Liquid two whole strokes ended at 685ms): each takes half of
+   * duration.morph, the second right after the first.
+   */
+  [data-ds='button'][data-result='error'] > [data-part='result'] > svg > * {
+    animation-duration: calc(var(--ds-duration-morph) / 2 * var(--_button-motion) * var(--_button-draw));
+  }
+
   [data-ds='button'][data-result] > [data-part='result'] > svg > :nth-child(2) {
-    animation-delay: calc((var(--ds-duration-morph) + var(--ds-delay-stagger)) * var(--_button-motion) * var(--_button-draw));
+    animation-delay: calc((var(--ds-duration-morph) / 2 + var(--ds-delay-stagger)) * var(--_button-motion) * var(--_button-draw));
   }
 
   @keyframes ds-button-draw {

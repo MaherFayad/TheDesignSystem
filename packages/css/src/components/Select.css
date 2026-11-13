@@ -62,6 +62,15 @@
  *   -highlight-ease (the marker).
  *   --_select-turn is a name beyond the convention's list: the angle of the
  *   icon while open.
+ *
+ * Order 1.29 (fix round 1 of the round 3 review):
+ * - picker-chevron-turn flips the icon on its block axis (scaleY of the
+ *   cosine of --_select-turn: -1 at 180deg, 1 at 0deg) instead of turning it,
+ *   so the up and down chevrons never pass through a sideways shape (N27).
+ *   Where cos() is missing it still turns.
+ * - --_select-placeholder-fg: the placeholder's color, text-muted, which
+ *   keeps 4.5:1 on each style's field fill (N46: the placeholder token is
+ *   4.12:1 on the Desk light fill).
  */
 @layer ds.base {
   /* ------------------------------------------------------------ the trigger */
@@ -82,6 +91,7 @@
     --_select-border-width: var(--ds-border-width-default);
     --_select-border-style: solid;
     --_select-turn: 180deg;
+    --_select-placeholder-fg: var(--ds-color-text-muted);
 
     position: relative;
     box-sizing: border-box;
@@ -148,7 +158,7 @@
   }
 
   [data-ds='select'][data-placeholder] > [data-part='value'] {
-    color: var(--ds-color-text-placeholder);
+    color: var(--_select-placeholder-fg);
   }
 
   [data-ds='select'] > [data-part='icon'] {
@@ -160,9 +170,15 @@
     transition: transform var(--ds-duration-spring-snappy) var(--ds-ease-spring-snappy);
   }
 
-  /* picker-chevron-turn: half a turn while open. */
+  /* picker-chevron-turn: a flip on the block axis while open (N27); a half turn where cos() is missing. */
   [data-ds='select']:not([data-part])[aria-expanded='true'] > [data-part='icon'] {
     transform: rotate(var(--_select-turn));
+  }
+
+  @supports (transform: scaleY(cos(180deg))) {
+    [data-ds='select']:not([data-part])[aria-expanded='true'] > [data-part='icon'] {
+      transform: scaleY(cos(var(--_select-turn)));
+    }
   }
 
   [data-ds='select']:not([data-part]):hover:not([data-disabled], [data-readonly], [data-invalid], :focus-visible) {

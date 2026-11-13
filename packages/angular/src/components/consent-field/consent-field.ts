@@ -57,7 +57,7 @@ import { NG_VALUE_ACCESSOR, type ControlValueAccessor } from '@angular/forms';
 import type { Size } from '@the-system/shared';
 import { consumeHostAttributes } from '../../internal/host';
 import { injectMotion } from '../../internal/motion';
-import { landPop, playBeat, token } from '../../internal/motion-fields';
+import { landPop, playBeat, token } from '@the-system/motion';
 import { DsThemeService } from '../../theme/theme';
 import { DsFieldContext, settleAfterFirstRender } from '../field/field-context';
 import { DsFieldError } from '../field-error/field-error';

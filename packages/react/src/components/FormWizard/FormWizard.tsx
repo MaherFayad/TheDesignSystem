@@ -48,7 +48,7 @@ import {
 } from '@the-system/shared';
 import { Icon } from '@the-system/icons/react';
 import { useMotion } from '../../internal/motion';
-import { dipPop, dropAfter, slideIn, inlineSign, landPop, leavingCopy, playBeat, runStep, snapshot, token, type Snapshot } from '../Input/fieldMotion';
+import { dipPop, dropAfter, inlineSign, landPop, leavingCopy, playBeat, runStep, slideIn, snapshot, token, type Snapshot } from '@the-system/motion';
 import { useTheme } from '../../theme';
 import { Button } from '../Button';
 import { Stepper, type StepperOrientation } from '../Stepper';
@@ -377,6 +377,23 @@ export function FormWizard({
     onStepChange?.(nextState.current);
   };
 
+  /**
+   * Marks the wizard checking only when a check is still pending one frame
+   * after it starts (review N13): a check that answers at once moves the step
+   * with no dip, spinner or label morph. Returns the cancel.
+   */
+  const checkingAfterFrame = () => {
+    let live = true;
+    const show = () => {
+      if (live) setChecking(true);
+    };
+    const raf = typeof requestAnimationFrame === 'function' ? requestAnimationFrame : (cb: () => void) => window.setTimeout(cb, 16);
+    raf(() => raf(show));
+    return () => {
+      live = false;
+    };
+  };
+
   /** Runs one async task at a time. A call while another runs does nothing. */
   const exclusive = async (task: () => Promise<void>) => {
     if (busy.current) return;
@@ -404,8 +421,9 @@ export function FormWizard({
         return;
       }
       const token = run.current;
-      setChecking(true);
+      const settle = checkingAfterFrame();
       const found = await check(current, all);
+      settle();
       if (token !== run.current) return;
       if (!isValid(found)) {
         setStepper((s) => setStepComplete(s, current, false));
@@ -422,7 +440,7 @@ export function FormWizard({
       const all = readFormValues(el);
       setValues(all);
       setSubmitFailed(false);
-      setChecking(true);
+      const settle = checkingAfterFrame();
       // Every step again, so a step reached in free mode or changed later cannot slip through.
       let firstBad: { index: number; found: FormWizardErrors } | undefined;
       let next = stepper;
@@ -431,6 +449,7 @@ export function FormWizard({
         next = setStepComplete(next, i, isValid(found));
         if (!isValid(found) && firstBad === undefined) firstBad = { index: i, found };
       }
+      settle();
       setChecking(false);
       if (firstBad !== undefined) {
         if (firstBad.index === current) {

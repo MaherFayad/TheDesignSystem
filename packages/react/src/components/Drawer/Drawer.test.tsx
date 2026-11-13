@@ -1,4 +1,4 @@
-import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { createEvent, fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 import { useState } from 'react';
 import { describe, expect, it } from 'vitest';
@@ -71,7 +71,10 @@ describe('Drawer', () => {
     expect(root?.getAttribute('data-state')).toBe('open');
     expect(Array.from(root?.children ?? []).map((c) => c.getAttribute('data-part'))).toEqual(['backdrop', 'panel']);
     expect(part('panel')).toBe(panel);
-    expect(Array.from(panel.children).map((c) => c.getAttribute('data-part'))).toEqual(['header', 'body', 'footer']);
+    // Order 1.29: the handle first, the swipe to dismiss (a pointer path, hidden from assistive tech).
+    expect(Array.from(panel.children).map((c) => c.getAttribute('data-part'))).toEqual(['handle', 'header', 'body', 'footer']);
+    expect(part('handle')?.getAttribute('aria-hidden')).toBe('true');
+    expect(part('handle')?.firstElementChild?.getAttribute('data-part')).toBe('handle-bar');
     expect(Array.from(part('header')?.children ?? []).map((c) => c.getAttribute('data-part'))).toEqual(['title', 'description', 'close']);
     // The close part is the system CloseButton, the same control as Toast and Alert.
     expect(part('close')?.getAttribute('data-ds')).toBe('close-button');
@@ -189,5 +192,75 @@ describe('Drawer', () => {
       expect(section.querySelector('[data-demo-trigger]')).not.toBeNull();
     }
     expect(container.querySelector('[title]')).toBeNull();
+  });
+});
+
+describe('Drawer swipe to dismiss (order 1.29)', () => {
+  const proto = Element.prototype as unknown as Record<string, unknown>;
+  proto.setPointerCapture ??= () => undefined;
+  proto.releasePointerCapture ??= () => undefined;
+  proto.hasPointerCapture ??= () => false;
+
+  function swipe(dx: number, dy: number, ms: number) {
+    const panel = part('panel') as HTMLElement;
+    panel.getBoundingClientRect = () => ({ height: 600, width: 400, top: 0, left: 0, right: 400, bottom: 600, x: 0, y: 0, toJSON: () => ({}) });
+    const handle = part('handle') as HTMLElement;
+    const at = (type: 'pointerDown' | 'pointerMove' | 'pointerUp', x: number, y: number, t: number) => {
+      const event = createEvent[type](handle, { button: 0 });
+      for (const [k, v] of Object.entries({ pointerId: 1, clientX: x, clientY: y, timeStamp: t })) Object.defineProperty(event, k, { value: v });
+      fireEvent(handle, event);
+    };
+    at('pointerDown', 100, 100, 1);
+    expect(rootEl()?.hasAttribute('data-dragging')).toBe(true);
+    at('pointerMove', 100 + dx, 100 + dy, 1 + ms / 2);
+    const drawn = { x: panel.style.getPropertyValue('--_dialog-drag-x'), y: panel.style.getPropertyValue('--_dialog-drag-y') };
+    at('pointerUp', 100 + dx, 100 + dy, 1 + ms);
+    return drawn;
+  }
+
+  it('follows toward its edge and closes past a quarter of its width', async () => {
+    render(<Basic defaultOpen />);
+    await screen.findByRole('dialog');
+    const drawn = swipe(150, 0, 1000);
+    expect(drawn.x).toBe('150px');
+    await waitFor(() => expect(rootEl()).toBeNull());
+  });
+
+  it('springs back on a short slow swipe and gives a rubber band against its edge', async () => {
+    render(<Basic defaultOpen />);
+    await screen.findByRole('dialog');
+    swipe(40, 0, 1000);
+    expect(rootEl()?.getAttribute('data-state')).toBe('open');
+    expect(rootEl()?.hasAttribute('data-dragging')).toBe(false);
+    expect(part('panel')?.style.getPropertyValue('--_dialog-drag-x')).toBe('');
+    const against = swipe(-200, 0, 1000);
+    expect(Number.parseFloat(against.x)).toBeGreaterThan(-48);
+    expect(Number.parseFloat(against.x)).toBeLessThan(0);
+    expect(rootEl()?.getAttribute('data-state')).toBe('open');
+  });
+
+  it('goes left in Arabic, down on ios, and never closes with dismissible false', async () => {
+    const rtl = render(
+      <Theme dir="rtl" lang="ar">
+        <Basic defaultOpen />
+      </Theme>,
+    );
+    await screen.findByRole('dialog');
+    expect(swipe(-150, 0, 1000).x).toBe('-150px');
+    await waitFor(() => expect(rootEl()).toBeNull());
+    rtl.unmount();
+    const ios = render(
+      <Theme platform="ios">
+        <Basic defaultOpen />
+      </Theme>,
+    );
+    await screen.findByRole('dialog');
+    expect(swipe(0, 200, 1000).y).toBe('200px');
+    await waitFor(() => expect(rootEl()).toBeNull());
+    ios.unmount();
+    render(<Basic defaultOpen dismissible={false} />);
+    await screen.findByRole('dialog');
+    swipe(300, 0, 1000);
+    expect(rootEl()?.getAttribute('data-state')).toBe('open');
   });
 });

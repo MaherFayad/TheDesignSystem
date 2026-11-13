@@ -236,7 +236,7 @@ describe('DsSegmentedControl', () => {
     expect(grid!.getAttribute('data-size')).toBe('lg');
     expect(grid!.getAttribute('data-shape')).toBe('default');
     expect(grid!.getAttribute('aria-label')).toBe('Grid view');
-    expect(Array.from(grid!.children).map((c) => c.getAttribute('data-part'))).toEqual(['icon']);
+    expect(Array.from(grid!.children).map((c) => c.getAttribute('data-part'))).toEqual(['icon', 'hit']);
   });
 
   it('a caller (click) that prevents the default keeps the selection, decided in the same click', async () => {
@@ -308,8 +308,9 @@ describe('DsSegmentedControl', () => {
       const total = calls.length;
       const [frames, options] = calls[0]!;
       expect(options.id).toBe('ds-motion:indicator-slide');
-      expect(frames[0]?.transform).toBe('translate(-120px, 0px) scale(1, 1)');
-      expect(frames[1]?.transform).toBe('translate(-60px, 0px) scale(1.15, 1)');
+      // Order 1.29 (B14): the slide ends on the item's box, read before the writes; this fake thumb sits 1px past it.
+      expect(frames[0]?.transform).toBe('translate(-119px, 0px) scale(1, 1)');
+      expect(frames[1]?.transform).toBe('translate(-59.5px, 0px) scale(1.15, 1)');
       expect(frames.flatMap((f) => Object.keys(f)).every((k) => k === 'transform' || k === 'offset')).toBe(true);
       expect(calls.some(([, o]) => o.id === 'ds-motion:indicator-answer')).toBe(false);
       // Reduced: the thumb jumps and no label moves.

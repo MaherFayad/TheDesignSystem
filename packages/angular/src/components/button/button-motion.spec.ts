@@ -120,9 +120,9 @@ describe('DsButton motion', () => {
     host.loading.set(false);
     await fixture.whenStable();
     const save = q('save');
-    expect(parts(save)).toEqual(['label', 'spinner']);
-    expect(parts(q('refresh'))).toEqual(['icon', 'spinner']);
-    expect(parts(q('fab'))).toEqual(['icon', 'spinner']);
+    expect(parts(save)).toEqual(['label', 'spinner', 'hit']);
+    expect(parts(q('refresh'))).toEqual(['icon', 'spinner', 'hit']);
+    expect(parts(q('fab'))).toEqual(['icon', 'spinner', 'hit']);
     const spinner = save.querySelector(':scope > [data-part="spinner"]');
     expect(spinner?.getAttribute('aria-hidden')).toBe('true');
     expect(save.hasAttribute('aria-busy')).toBe(false);
@@ -136,9 +136,9 @@ describe('DsButton motion', () => {
     for (const r of records) r.finish();
     await flush();
     await fixture.whenStable();
-    expect(parts(save)).toEqual(['label']);
-    expect(parts(q('refresh'))).toEqual(['icon']);
-    expect(parts(q('fab'))).toEqual(['icon']);
+    expect(parts(save)).toEqual(['label', 'hit']);
+    expect(parts(q('refresh'))).toEqual(['icon', 'hit']);
+    expect(parts(q('fab'))).toEqual(['icon', 'hit']);
   });
 
   it('reduced motion cross fades the parts and does not move the button', async () => {
@@ -164,7 +164,7 @@ describe('DsButton motion', () => {
     await fixture.whenStable();
     host.loading.set(false);
     await fixture.whenStable();
-    expect(parts(q('save'))).toEqual(['label']);
+    expect(parts(q('save'))).toEqual(['label', 'hit']);
   });
 
   it('Enter plays the press pattern enter on key down and exit on key up, as ButtonRoot', async () => {

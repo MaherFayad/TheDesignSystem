@@ -7,9 +7,8 @@
 import { Component, signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { readDuration } from '@the-system/motion';
+import { CHECK_DRAW_ID, drawCheck, readDuration } from '@the-system/motion';
 import { injectMotion } from '../../internal/motion';
-import { CHECK_DRAW_ID, drawCheck } from '../../internal/selection-marker';
 import { DsTheme } from '../../theme/theme';
 import { DsButton } from '../button/button';
 import { DS_DROPDOWN_MENU } from './dropdown-menu';

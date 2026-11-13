@@ -26,7 +26,7 @@ import type { Size } from '@the-system/shared';
 import { DsIcon } from '@the-system/icons/angular';
 import { consumeHostAttributes } from '../../internal/host';
 import { injectMotion } from '../../internal/motion';
-import { emerge, landPop, playBeat } from '../../internal/motion-fields';
+import { emerge, landPop, playBeat } from '@the-system/motion';
 import { DsFieldContext } from '../field/field-context';
 
 export type FieldErrorSize = Extract<Size, 'sm' | 'md'>;

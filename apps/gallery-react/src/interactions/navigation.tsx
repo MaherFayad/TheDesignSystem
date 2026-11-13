@@ -41,6 +41,7 @@ import {
   ToolbarSeparator,
   ToolbarToggleGroup,
   ToolbarToggleItem,
+  useTheme,
 } from "@the-system/react";
 
 const column: CSSProperties = {
@@ -71,13 +72,21 @@ function useCycle<T>(
   ];
 }
 
+/**
+ * The replay control of a stage. `ar` is its label on an Arabic page
+ * (order 1.29, review N41): white Saudi dialect, a verbal noun, no
+ * diacritics.
+ */
 function Play({
   children,
+  ar,
   onClick,
 }: {
   children: ReactNode;
+  ar: string;
   onClick: () => void;
 }) {
+  const { lang } = useTheme();
   return (
     <Button
       size="sm"
@@ -86,7 +95,7 @@ function Play({
       onClick={onClick}
       data-interaction-trigger=""
     >
-      {children}
+      {lang === "ar" ? ar : children}
     </Button>
   );
 }
@@ -111,7 +120,7 @@ function TabSlide() {
   };
   return (
     <div style={column}>
-      <Play onClick={play}>Move every pill</Play>
+      <Play onClick={play} ar="تحريك كل المؤشرات">Move every pill</Play>
       <Tabs value={tab} onValueChange={setTab}>
         <TabsList aria-label="Board settings">
           <TabsTrigger value="general">General</TabsTrigger>
@@ -173,7 +182,7 @@ function NavCurrentSlide() {
   const [current, next, set] = useCycle(pages.map((p) => p.href));
   return (
     <div style={column}>
-      <Play onClick={next}>Go to the next page</Play>
+      <Play onClick={next} ar="الانتقال للصفحة التالية">Go to the next page</Play>
       <Navbar
         label="Site"
         items={pages.map((p) => ({
@@ -259,7 +268,7 @@ function PaginationRoll() {
   const [page, setPage] = useState(8);
   return (
     <div style={column}>
-      <Play onClick={() => setPage((p) => (p >= 24 ? 1 : p + 3))}>
+      <Play onClick={() => setPage((p) => (p >= 24 ? 1 : p + 3))} ar="تخطي ثلاث صفحات">
         Jump three pages
       </Play>
       <Pagination
@@ -283,7 +292,7 @@ function SidebarCollapse() {
   const [collapsed, setCollapsed] = useState(false);
   return (
     <div style={column}>
-      <Play onClick={() => setCollapsed((c) => !c)}>
+      <Play onClick={() => setCollapsed((c) => !c)} ar={collapsed ? "توسيع اللوحات" : "طي اللوحات"}>
         {collapsed ? "Expand the panels" : "Collapse the panels"}
       </Play>
       <div style={row} onClickCapture={stay}>
@@ -336,7 +345,7 @@ function StepperTravel() {
   return (
     <div style={{ ...column, justifyItems: "stretch" }}>
       <div style={row}>
-        <Play onClick={() => setCurrent((c) => (c + 1) % steps.length)}>
+        <Play onClick={() => setCurrent((c) => (c + 1) % steps.length)} ar="الخطوة التالية">
           Next step
         </Play>
         <Button
@@ -370,7 +379,7 @@ function TocTravel() {
   const [active, next, set] = useCycle<string>(sections.map((s) => s.id));
   return (
     <div style={column}>
-      <Play onClick={next}>Read the next section</Play>
+      <Play onClick={next} ar="قراءة القسم التالي">Read the next section</Play>
       <TableOfContents
         items={sections}
         active={active}
@@ -391,7 +400,7 @@ function TabBarPop() {
   const [current, next, set] = useCycle(tabs.map((t) => t.label));
   return (
     <div style={{ ...column, justifyItems: "stretch", maxInlineSize: "24rem" }}>
-      <Play onClick={next}>Go to the next tab</Play>
+      <Play onClick={next} ar="الانتقال للتبويب التالي">Go to the next tab</Play>
       <TabBar aria-label="Phone">
         {tabs.map((t) => (
           <TabBarItem
@@ -421,7 +430,7 @@ function DockLift() {
   const [current, next, set] = useCycle(apps.map((a) => a.label));
   return (
     <div style={column}>
-      <Play onClick={next}>Open the next app</Play>
+      <Play onClick={next} ar="فتح التطبيق التالي">Open the next app</Play>
       <p>Move the pointer along the dock.</p>
       <div style={{ paddingBlockStart: "var(--ds-space-4xl)" }}>
         <Dock aria-label="Apps">
@@ -478,6 +487,7 @@ function LanguageRoll() {
           next();
           nextPair();
         }}
+        ar="تبديل اللغة"
       >
         Switch the language
       </Play>

@@ -301,4 +301,43 @@ describe('Pagination', () => {
       proto.getAnimations = saved.getAnimations;
     }
   });
+
+  // Order 1.29 (review N35): across wrapped lines the pill fades in at its new place instead of flying.
+  it('pagination-roll: the pill fades in place when the new page sits on another line, and slides on the same line', async () => {
+    const calls: [Keyframe[], KeyframeAnimationOptions][] = [];
+    const proto = Element.prototype as unknown as { animate?: unknown; getAnimations?: unknown };
+    const saved = { animate: proto.animate, getAnimations: proto.getAnimations };
+    proto.animate = function (frames: Keyframe[], options: KeyframeAnimationOptions) {
+      calls.push([frames, options]);
+      return { finished: Promise.resolve(), cancel() {}, playState: 'running', currentTime: 0, effect: null } as unknown as Animation;
+    };
+    proto.getAnimations = () => [];
+    // Pages 1 to 3 on the first line, 4 and on wrapped to a second line, 40px apart.
+    const rects = vi.spyOn(Element.prototype, 'getBoundingClientRect').mockImplementation(function (this: Element) {
+      const button = this.closest('[data-part="page"]');
+      const name = button?.getAttribute('aria-label') ?? '';
+      const n = Number(/(\d+)/.exec(name)?.[1] ?? 0);
+      if (!button || n === 0) return new DOMRect(0, 0, 300, 80);
+      const line = n <= 3 ? 0 : 1;
+      return new DOMRect((n - 1 - line * 3) * 40, line * 40, 32, 32);
+    });
+    try {
+      render(
+        <Theme style="neutral">
+          <Pagination pageCount={7} defaultPage={2} />
+        </Theme>,
+      );
+      await userEvent.click(screen.getByRole('button', { name: 'Page 3' }));
+      expect(calls.filter(([, o]) => o.id === 'ds-motion:indicator-slide')).toHaveLength(1);
+      calls.length = 0;
+      await userEvent.click(screen.getByRole('button', { name: 'Page 4' }));
+      expect(calls.filter(([, o]) => o.id === 'ds-motion:indicator-slide')).toHaveLength(0);
+      expect(calls.filter(([f, o]) => o.id === 'ds-motion:pagination-fade' && f[0]?.opacity === 0)).toHaveLength(1);
+    } finally {
+      proto.animate = saved.animate;
+      proto.getAnimations = saved.getAnimations;
+      rects.mockRestore();
+    }
+  });
 });
+

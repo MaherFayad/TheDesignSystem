@@ -1,11 +1,13 @@
-// The field motion helpers, as React's fieldMotion.ts and useErrorShake.ts
-// give them: the beats, the shake with a settle, the run spread, and the
-// error shake wiring of errorShake().
+// The Angular wiring of the field motion: errorShake(), as React's
+// useErrorShake.ts. The beats, the shake and the run spread are framework
+// free and tested once in packages/motion/src/helpers/field-motion.test.ts
+// (order 1.29).
 import { Component, ElementRef, signal, viewChild } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { afterEach, describe, expect, it } from 'vitest';
 import { DsTheme } from '../theme/theme';
-import { diagonalWipe, emerge, errorShake, fadeOutBeat, landPop, playBeat, runStep, shakeBeat, token } from './motion-fields';
+import { shakeBeat } from '@the-system/motion';
+import { errorShake } from './motion-fields';
 
 interface Recorded {
   target: Element;
@@ -81,61 +83,6 @@ class ShakeHost {
 
 describe('motion-fields', () => {
   afterEach(() => document.documentElement.removeAttribute('data-motion'));
-
-  it('swings toward the inline end first, with a settle, from rest to rest (React shakeBeat)', () => {
-    const beat = shakeBeat(1);
-    expect(beat.duration).toBe('duration.spring-bouncy');
-    expect(beat.easing).toBe('ease.out');
-    expect(beat.keyframes.map((k) => k.offset)).toEqual([0, 0.14, 0.34, 0.54, 0.74, 1]);
-    expect(beat.keyframes[1]?.transform).toBe(`translateX(calc(1 * ${token.shift}))`);
-    expect(shakeBeat(-1).keyframes[1]?.transform).toBe(`translateX(calc(-1 * ${token.shift}))`);
-  });
-
-  it('emerges from under the control on the soft spring, as React emerge() (order 1.23)', () => {
-    const beat = emerge();
-    expect(beat.keyframes).toEqual([
-      { transform: 'translateY(-100%)', clipPath: 'inset(100% 0 0 0)', opacity: 0, offset: 0 },
-      { opacity: 1, offset: 0.3 },
-      { transform: 'none', clipPath: 'inset(0 0 0 0)', opacity: 1, offset: 1 },
-    ]);
-    expect(beat.duration).toBe('duration.spring-soft');
-    expect(beat.easing).toBe('ease.spring-soft');
-    expect(fadeOutBeat.keyframes).toEqual([{ opacity: 1 }, { opacity: 0 }]);
-  });
-
-  it('wipes along a 45 degree line with five point polygons, as React diagonalWipe() (order 1.23)', () => {
-    const into = diagonalWipe('behind');
-    expect(into.duration).toBe('duration.morph');
-    expect(into.easing).toBe('ease.standard');
-    expect(into.keyframes.map((f) => f['offset'])).toEqual([0, 0.5, 1]);
-    expect(into.keyframes[1]?.['clipPath']).toBe('polygon(0% 0%, 100% 0%, 100% 0%, 0% 100%, 0% 100%)');
-    expect(diagonalWipe('ahead').keyframes[0]?.['clipPath']).toBe('polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%, 0% 0%)');
-    // back runs from the bottom right corner.
-    expect(diagonalWipe('behind', true).keyframes[1]?.['clipPath']).toBe('polygon(100% 100%, 0% 100%, 0% 100%, 100% 0%, 100% 0%)');
-  });
-
-  it('spreads a run over two stagger steps', () => {
-    expect([0, 1, 2, 3, 4].map((i) => runStep(i, 5))).toEqual([0, 0.5, 1, 1.5, 2]);
-    expect(runStep(0, 1)).toBe(0);
-  });
-
-  it('plays a beat with its id, its origin and the reduced beat, and nothing for none', () => {
-    const rec = recordAnimate();
-    try {
-      const el = document.createElement('span');
-      playBeat(el, landPop(), 'otp-fill', 'full');
-      expect(rec.calls[0]?.options.id).toBe('ds-motion:otp-fill');
-      expect(el.style.transformOrigin).toBe('50% 50%');
-      expect(rec.calls[0]?.keyframes[0]).toEqual({ transform: `scale(${token.morph})`, opacity: 0, offset: 0 });
-      playBeat(el, landPop(), 'otp-fill', 'reduced');
-      expect(rec.calls[1]?.keyframes).toEqual([{ opacity: 0 }, { opacity: 1 }]);
-      expect(playBeat(el, shakeBeat(1), 'error-shake', 'reduced', null)).toBeNull();
-      expect(playBeat(el, landPop(), 'otp-fill', 'none')).toBeNull();
-      expect(rec.calls).toHaveLength(2);
-    } finally {
-      rec.restore();
-    }
-  });
 
   it('shakes once when invalid turns on, never on first paint, and on the native invalid event', async () => {
     const rec = recordAnimate();

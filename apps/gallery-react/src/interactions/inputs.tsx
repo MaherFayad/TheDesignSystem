@@ -172,9 +172,21 @@ export const stages: Record<string, () => ReactNode> = {
   ),
   'error-shake': () => <InvalidToggle>{(invalid) => <Input aria-label="Email" defaultValue="sara@" invalid={invalid} />}</InvalidToggle>,
   'field-label-focus': () => (
-    <Field label="Project name" description="Shown in the sidebar.">
-      <Input defaultValue="Spring launch" data-interaction-trigger="" />
-    </Field>
+    <>
+      <Field label="Project name" description="Shown in the sidebar.">
+        <Input defaultValue="Spring launch" data-interaction-trigger="" />
+      </Field>
+      {/* Floating labels (review B6): empty, so each label rests inside its box at sm, md and lg. */}
+      <Field label="Team name" floating data-stage-floating="sm">
+        <Input size="sm" />
+      </Field>
+      <Field label="Board name" floating data-stage-floating="md">
+        <Input />
+      </Field>
+      <Field label="Work email" floating data-stage-floating="lg">
+        <Input size="lg" type="email" />
+      </Field>
+    </>
   ),
   'field-message-enter': () => <HintStage />,
   'field-error-enter': () => <ErrorStage />,
@@ -312,10 +324,12 @@ export const stages: Record<string, () => ReactNode> = {
       <RangeSlider label="Price" unit="SAR" min={0} max={1000} step={50} defaultValue={[200, 800]} thumbLabels={['Minimum price', 'Maximum price']} />
     </div>
   ),
+  // The bubble is the readout of a slider with no value output (review N15); a slider that shows its output keeps the bubble hidden.
   'slider-bubble': () => (
     <div style={stack}>
-      <Slider label="Zoom" unit="%" min={10} max={400} defaultValue={120} data-interaction-trigger="" />
-      <RangeSlider label="Budget" unit="SAR" min={0} max={5000} step={10} defaultValue={[900, 3200]} thumbLabels={['Lowest budget', 'Highest budget']} />
+      <Slider aria-label="Zoom" unit="%" min={10} max={400} defaultValue={120} data-interaction-trigger="" data-stage-bubble="" />
+      <RangeSlider label="Budget" showValue={false} unit="SAR" min={0} max={5000} step={10} defaultValue={[900, 3200]} thumbLabels={['Lowest budget', 'Highest budget']} />
+      <Slider label="Volume" unit="%" defaultValue={40} data-stage-output="" />
     </div>
   ),
   'slider-fill': () => (

@@ -7,91 +7,25 @@
 // Here the input keeps its text for editing, always. The roll plays in a
 // decorative layer: an unnamed span with aria-hidden="true", a child of the
 // root, laid over the input's box while a roll runs and empty at rest.
-// While the layer holds digits, the component CSS draws the input text
-// transparent (the caret keeps its color), and the layer clips the roll to
-// the input's box. When the roll settles, or the person types, the layer
-// empties and the input text shows again. Assistive technology reads the
-// input; the layer is never read.
+// Assistive technology reads the input; the layer is never read.
 //
-// The roll is `rollDigits` from @the-system/motion: each changed digit
-// rolls in its own column, from below when the value grew and from above
-// when it fell, one stagger step apart from the last digit.
-import { useCallback, useEffect, useRef, type RefObject } from 'react';
-import { rollDigits, type PatternMode } from '@the-system/motion';
+// The placement, the roll and the clear are `digitLayerControl` from
+// @the-system/motion (helpers/field-motion.ts), one copy for both
+// frameworks; this hook holds the layer's ref and empties the layer when
+// the person types.
+import { useEffect, useRef, type RefObject } from 'react';
+import { digitLayerControl, type DigitLayerControl } from '@the-system/motion';
 
-export interface DigitLayer {
+export interface DigitLayer extends DigitLayerControl {
   /** The ref for the layer span. Render `<span aria-hidden="true" ref={layer} />` as a child of the root. */
   layer: RefObject<HTMLSpanElement | null>;
-  /** Rolls the layer from one text to the next over `input`. Plays nothing for mode `none` or without the Web Animations API. */
-  roll: (input: HTMLInputElement | null, from: string, to: string, opts: { mode: PatternMode; direction?: 'up' | 'down' }) => void;
-  /** Empties the layer at once, so the input text shows. */
-  clear: () => void;
-}
-
-/**
- * The layer over an input: its box, as logical offsets from the root's
- * padding box. Read from layout offsets, not from the drawn box: under a
- * zoom or a transform on an ancestor (a page zoom, a dialog that scales in)
- * the drawn box is scaled and the layer would land off the input.
- */
-function place(layer: HTMLElement, input: HTMLElement, root: HTMLElement): void {
-  const s = layer.style;
-  // The input's offsets are from the root's padding box when the root is its
-  // offset parent (the component CSS positions the root); otherwise subtract the root's own.
-  const own = input.offsetParent === root;
-  const left = input.offsetLeft - (own ? 0 : root.offsetLeft + root.clientLeft);
-  const top = input.offsetTop - (own ? 0 : root.offsetTop + root.clientTop);
-  // Physical sides: the layer is direction ltr (digits read left to right),
-  // so a logical inset would resolve against its own direction, not the root's.
-  s.left = `${left}px`;
-  s.top = `${top}px`;
-  s.inlineSize = `${input.offsetWidth}px`;
-  s.blockSize = `${input.offsetHeight}px`;
-  // rollDigits keeps a display it finds; the layer centers its columns on the input's line.
-  s.display = 'flex';
 }
 
 export function useDigitLayer(input: { readonly current: HTMLInputElement | null }): DigitLayer {
   const layer = useRef<HTMLSpanElement | null>(null);
-  const run = useRef(0);
-
-  const clear = useCallback(() => {
-    run.current += 1;
-    const el = layer.current;
-    if (!el || el.childElementCount === 0) return;
-    for (const a of el.getAnimations?.({
-      subtree: true,
-    } as GetAnimationsOptions) ?? [])
-      a.cancel();
-    el.replaceChildren();
-    el.style.display = '';
-  }, []);
-
-  const roll = useCallback<DigitLayer['roll']>(
-    (target, from, to, { mode, direction }) => {
-      const el = layer.current;
-      const root = el?.parentElement;
-      if (!el || !root || !target || mode === 'none' || typeof target.animate !== 'function') return;
-      if (from === to || from.trim() === '' || to.trim() === '') {
-        clear();
-        return;
-      }
-      run.current += 1;
-      const token = run.current;
-      place(el, target, root);
-      // The digits drawn now are where the roll starts: a quick second step rolls on from them.
-      const anims = rollDigits(el, from, to, { mode, direction });
-      if (anims.length === 0) {
-        el.replaceChildren();
-        return;
-      }
-      const done = () => {
-        if (token === run.current) clear();
-      };
-      void Promise.all(anims.map((a) => a.finished)).then(done, done);
-    },
-    [clear],
-  );
+  const control = useRef<DigitLayerControl | null>(null);
+  control.current ??= digitLayerControl(() => layer.current);
+  const { roll, clear } = control.current;
 
   // Typing, a paste or a cut shows the real text at once.
   useEffect(() => {

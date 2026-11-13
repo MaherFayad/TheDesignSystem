@@ -68,7 +68,8 @@ import {
 import { consumeHostAttributes } from '../../internal/host';
 import { ListHighlight } from '../../internal/list-highlight';
 import { injectMotion } from '../../internal/motion';
-import { CHECK_DRAW_ID, drawCheck, injectHighlightMarker } from '../../internal/selection-marker';
+import { CHECK_DRAW_ID, drawCheck } from '@the-system/motion';
+import { injectHighlightMarker } from '../../internal/selection-marker';
 import { optionalBoolean } from '../../internal/optional-boolean';
 
 /** Row sizes: sm 24px rows, md list.row.height (28px at default density). */

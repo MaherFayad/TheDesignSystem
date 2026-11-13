@@ -86,7 +86,7 @@ export function ProgressCircle({
   const motion = useMotion();
   const mode = motion.mode('progress-spring');
   const root = useCelebrate<HTMLDivElement>(value !== null && value >= max, 'both', ':scope > [data-part="indicator"]');
-  const valueRef = useDigitRoll<HTMLSpanElement>(visibleValue ? text : undefined, mode, undefined, value ?? undefined);
+  const valueRef = useDigitRoll<HTMLSpanElement>(visibleValue ? text : undefined, mode, undefined, value ?? undefined, '--_progress-circle-duration');
 
   return (
     <Progress.Root

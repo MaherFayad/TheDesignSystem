@@ -1,0 +1,23 @@
+/*
+ * Studio recipe for Field (order 1.29, proposed). Studio's distance tokens
+ * are all 0px (things appear in place), so the label of a focused field did
+ * not rise at all, where field-label-focus promises a 2px step and a color
+ * cut. The lift is the one place Studio keeps a travel: space.fixed-4xs (2px), landing
+ * in the two hard steps of Studio's ease.spring-snappy.
+ */
+@layer ds.recipes {
+  [data-style='studio'] [data-ds='field'] {
+    --_field-lift: var(--ds-space-fixed-4xs);
+  }
+
+  /* Reduced motion, the system setting and the page's own: the label does not move (this layer wins over Field.css). */
+  @media (prefers-reduced-motion: reduce) {
+    [data-style='studio'] [data-ds='field'] {
+      --_field-lift: 0px;
+    }
+  }
+
+  :root[data-motion='reduce'] [data-style='studio'] [data-ds='field'] {
+    --_field-lift: 0px;
+  }
+}

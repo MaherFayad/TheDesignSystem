@@ -5,7 +5,7 @@
 import { Component, signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { landPop, shakeBeat, token } from '../../internal/motion-fields';
+import { landPop, shakeBeat, token } from '@the-system/motion';
 import { DsTheme } from '../../theme/theme';
 import { DsOTPField } from './otp-field';
 

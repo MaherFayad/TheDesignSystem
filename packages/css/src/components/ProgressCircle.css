@@ -27,6 +27,8 @@
  *
  *   --_progress-circle-duration, -ease   the arc's draw (motion names);
  *                                        a style turns it off with 0s
+ *   --_progress-circle-ease-full         the draw that lands on full (order
+ *                                        1.29): ease.out, no overshoot
  *   --_progress-circle-dash              the dash of the reduced busy ring;
  *                                        a name outside the list in
  *                                        anatomy.md: stroke-dasharray
@@ -44,6 +46,8 @@
     --_progress-circle-fraction: 0;
     --_progress-circle-duration: var(--ds-duration-spring-soft);
     --_progress-circle-ease: var(--ds-ease-spring-soft);
+    /* The draw to full: a spring would carry the arc past 12 o'clock and open a gap there (review N38). */
+    --_progress-circle-ease-full: var(--ds-ease-out);
     --_progress-circle-dash: var(--ds-space-fixed-2xs) var(--ds-space-fixed-2xs);
 
     position: relative;
@@ -100,6 +104,11 @@
 
   [data-ds='progress-circle'] > [data-part='indicator'] {
     border-color: transparent;
+  }
+
+  /* Complete: the arc lands on full without an overshoot, so its ends meet at 12 o'clock with no gap (review N38). */
+  [data-ds='progress-circle'][data-state='complete'] > [data-part='indicator'] > [data-part='arc'] > circle {
+    transition-timing-function: var(--_progress-circle-ease-full);
   }
 
   /* The arc: an SVG circle on the middle line of the track, turned to start at 12 o'clock. */

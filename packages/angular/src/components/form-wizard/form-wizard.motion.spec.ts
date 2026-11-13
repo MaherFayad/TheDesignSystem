@@ -4,7 +4,7 @@
 import { Component, viewChild, type TemplateRef } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { landPop, slideIn, token } from '../../internal/motion-fields';
+import { landPop, slideIn, token } from '@the-system/motion';
 import { DsTheme } from '../../theme/theme';
 import { DsField } from '../field/field';
 import { DsInput } from '../input/input';

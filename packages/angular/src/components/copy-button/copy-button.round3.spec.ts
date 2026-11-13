@@ -120,6 +120,6 @@ describe('DsCopyButton confirmation (copy-swap, copy-bubble, round 3)', () => {
     expect(bubble()?.textContent).toBe('Could not copy');
     // Keyed by the count, so the rise replays.
     expect(bubble()).not.toBe(before);
-    expect(Array.from(el.children).map((c) => c.getAttribute('data-part'))).toEqual(['icon', 'bubble', 'status']);
+    expect(Array.from(el.children).map((c) => c.getAttribute('data-part'))).toEqual(['icon', 'bubble', 'status', 'hit']);
   });
 });

@@ -95,6 +95,14 @@
     --_toggle-button-flood: 0;
   }
 
+  /*
+   * On: the inner ring is the brand border, so on reads 3:1 or more against
+   * the off fill in both schemes (order 1.29, N5: the gray ring read about 2.8).
+   */
+  [data-style='neutral'] [data-ds='toggle-button'][data-state='on'][data-tone='neutral'] {
+    --_toggle-on-ring: var(--ds-color-primary-border);
+  }
+
   [data-style='neutral'] [data-ds='split-button'] {
     --_split-button-drop-press: var(--ds-distance-nudge);
   }

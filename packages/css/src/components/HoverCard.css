@@ -59,7 +59,8 @@
     --_hover-card-shift: var(--ds-distance-shift);
     --_hover-card-item-shift: var(--ds-distance-shift);
     --_hover-card-duration-in: var(--ds-duration-spring-bouncy);
-    --_hover-card-duration-out: var(--ds-duration-fast);
+    /* Order 1.29 (review 3, N22): never slower than the entrance, in any style. */
+    --_hover-card-duration-out: min(var(--ds-duration-fast), var(--_hover-card-duration-in));
     --_hover-card-ease-in: var(--ds-ease-spring-bouncy);
     --_hover-card-ease-out: var(--ds-ease-exit);
 
@@ -200,6 +201,13 @@
   :root[data-motion='reduce'] [data-ds='hover-card'][data-state],
   :root[data-motion='reduce'] [data-ds='hover-card'][data-state] > [data-part='body'] > * {
     animation: none;
+  }
+
+  /* Order 1.29 (review 3, N23): nothing to see through, as the Popover; the tokens make the materials solid. */
+  @media (prefers-reduced-transparency: reduce) {
+    [data-ds='hover-card'] {
+      --_hover-card-blur: 0;
+    }
   }
 
   @media (prefers-contrast: more) {

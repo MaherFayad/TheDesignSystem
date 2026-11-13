@@ -50,6 +50,7 @@ import {
   WindowControls,
   WindowLayer,
   toast,
+  useTheme,
   type LightboxImage,
   type NotificationItem,
   type TourStep,
@@ -119,6 +120,43 @@ function WindowStage() {
     </div>
   );
 }
+
+/**
+ * The Sheet and the Drawer. On platform ios the Sheet rests at two detents,
+ * half and all of the room (order 1.29): the platform's medium and large.
+ * The gallery passes them because detents are behavior an app picks (the
+ * handle turns into a button with a key path), not a look a platform file
+ * can set.
+ */
+function SheetStage() {
+  const { platform } = useTheme();
+  return (
+    <>
+      <Sheet detents={platform === 'ios' ? IOS_DETENTS : undefined}>
+        <SheetTrigger>
+          <Button data-interaction-trigger="sheet">Open sheet</Button>
+        </SheetTrigger>
+        <SheetContent>
+          <SheetTitle>Board settings</SheetTitle>
+          <SheetBody>Name the board and pick who sees it first.</SheetBody>
+        </SheetContent>
+      </Sheet>
+      <Drawer>
+        <DrawerTrigger>
+          <Button emphasis="soft" data-interaction-trigger="drawer">
+            Open drawer
+          </Button>
+        </DrawerTrigger>
+        <DrawerContent>
+          <DrawerTitle>Filters</DrawerTitle>
+          <DrawerBody>Pick the boards to show.</DrawerBody>
+        </DrawerContent>
+      </Drawer>
+    </>
+  );
+}
+
+const IOS_DETENTS = [0.5, 1] as const;
 
 /** Live stages by interaction id. */
 /** Each press shows a toast with its own title, so the stack grows instead of updating one toast. */
@@ -296,30 +334,7 @@ export const stages: Record<string, () => ReactNode> = {
       </AlertDialog>
     </>
   ),
-  'sheet-spring': () => (
-    <>
-      <Sheet>
-        <SheetTrigger>
-          <Button data-interaction-trigger="sheet">Open sheet</Button>
-        </SheetTrigger>
-        <SheetContent>
-          <SheetTitle>Board settings</SheetTitle>
-          <SheetBody>Name the board and pick who sees it first.</SheetBody>
-        </SheetContent>
-      </Sheet>
-      <Drawer>
-        <DrawerTrigger>
-          <Button emphasis="soft" data-interaction-trigger="drawer">
-            Open drawer
-          </Button>
-        </DrawerTrigger>
-        <DrawerContent>
-          <DrawerTitle>Filters</DrawerTitle>
-          <DrawerBody>Pick the boards to show.</DrawerBody>
-        </DrawerContent>
-      </Drawer>
-    </>
-  ),
+  'sheet-spring': () => <SheetStage />,
   'lightbox-zoom': () => (
     <Lightbox images={photos}>
       {photos.map((photo, i) => (

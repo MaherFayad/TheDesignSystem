@@ -7,7 +7,7 @@ import { TestBed } from '@angular/core/testing';
 import { play } from '@the-system/motion';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { DsTheme } from '../../theme/theme';
-import { toggleLayerSpec } from '../../internal/toggles-motion';
+import { toggleLayerSpec } from '@the-system/motion';
 import { DsToggleButton } from './toggle-button';
 
 /** Records every el.animate call. */
@@ -61,8 +61,8 @@ describe('DsToggleButton motion', () => {
       expect(layer?.getAttribute('aria-hidden')).toBe('true');
       expect(layer?.childElementCount).toBe(0);
     }
-    expect(Array.from(el.children).map((c) => c.getAttribute('data-part'))).toEqual(['state-layer', 'start', 'label', 'end']);
-    expect(Array.from(eye.children).map((c) => c.getAttribute('data-part'))).toEqual(['state-layer', 'icon']);
+    expect(Array.from(el.children).map((c) => c.getAttribute('data-part'))).toEqual(['state-layer', 'start', 'label', 'end', 'hit']);
+    expect(Array.from(eye.children).map((c) => c.getAttribute('data-part'))).toEqual(['state-layer', 'icon', 'hit']);
   });
 
   it('on floods the state layer, off drains it, with React spec, and nothing else moves', async () => {

@@ -37,14 +37,14 @@
 //   page and the last page (CSS), with a compact-only ellipsis (data-compact)
 //   between them when pages are hidden, and the summary wraps above.
 import { useCallback, useLayoutEffect, useMemo, useRef, type HTMLAttributes, type MouseEvent, type PointerEvent, type ReactElement, type Ref } from 'react';
-import { rollDigits } from '@the-system/motion';
+import { followIndicator, inlineSign, readDuration, readEasing, rollDigits, toLocal, windUp } from '@the-system/motion';
 import { pressOrigin } from '../TabBar/pressOrigin';
 import type { IconName } from '@the-system/icons/react';
 import { clampPage, isEllipsis, itemRange, pageCount as countPages, pageRange, type Shape, type Size } from '@the-system/shared';
 import { useTheme } from '../../theme';
 import { ButtonRoot } from '../Button/ButtonBase';
 import { IconButton } from '../IconButton';
-import { followIndicator, inlineSign, useIndicatorTrack, windUp } from '../../internal/indicator';
+import { useIndicatorTrack } from '../../internal/indicator';
 import { useMotion } from '../../internal/motion';
 import { useControllable } from '../../internal/useControllable';
 
@@ -181,7 +181,16 @@ export function Pagination({
     const current = pages.find((el) => el.hasAttribute('data-active'));
     const pill = current?.querySelector(':scope > span[aria-hidden="true"]:not([data-part])');
     if (!current || !pill) return;
-    followIndicator(track, String(page), { el: pill }, { mode, anchor: root, label: current.querySelector(':scope > [data-part="label"]'), axis: 'x' });
+    // Order 1.29 (review N35): when the list wraps and the new page sits on
+    // another line, the pill does not fly across the lines: it fades in at
+    // its new place (the track still takes the new box).
+    const to = toLocal(pill.getBoundingClientRect(), root);
+    const last = track.key !== null && track.key !== String(page) ? track.rect : null;
+    const otherLine = last !== null && Math.abs(last.y + last.height / 2 - (to.y + to.height / 2)) > to.height / 2;
+    followIndicator(track, String(page), { el: pill }, { mode, anchor: root, label: current.querySelector(':scope > [data-part="label"]'), axis: 'x', slide: !otherLine });
+    if (otherLine && mode === 'full' && typeof pill.animate === 'function') {
+      pill.animate([{ opacity: 0 }, { opacity: 1 }], { id: 'ds-motion:pagination-fade', duration: readDuration(pill, 'duration.base'), easing: readEasing(pill, 'ease.out') });
+    }
   }, [page, range, motion, track]);
 
   const go = (to: number) => (event: MouseEvent<HTMLElement>) => {

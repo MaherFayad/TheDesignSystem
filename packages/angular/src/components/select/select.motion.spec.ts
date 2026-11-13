@@ -7,7 +7,7 @@
 import { Component, signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { staggerGroup } from '@the-system/motion';
+import { staggerRows } from '@the-system/motion';
 import { injectMotion } from '../../internal/motion';
 import { DsSelect } from './select';
 
@@ -82,15 +82,16 @@ async function setup() {
 
 describe('select motion, order 1.22', () => {
   for (const reduced of [false, true]) {
-    it(`menu-rows: the rows stagger in after the surface with React's staggerGroup arguments${reduced ? ' (reduced)' : ''}`, async () => {
+    it(`menu-rows: the rows stagger in after the surface with React's staggerRows arguments${reduced ? ' (reduced)' : ''}`, async () => {
       if (reduced) document.documentElement.setAttribute('data-motion', 'reduce');
       const { host, settle, items, motion } = await setup();
       expect(ids(take(), 'stagger')).toEqual([]);
       host.open.set(true);
       await settle();
       const got = ids(take(), 'stagger');
-      expect(got).toHaveLength(3);
-      staggerGroup(items(), { phase: 'enter', offset: 1, spring: 'soft', mode: motion.mode('menu-rows') });
+      expect(got).toHaveLength(items().length * (motion.mode('menu-rows') === 'full' ? 2 : 1));
+      // Order 1.29 (ten weakest #9): every row fades with the surface and only the rise staggers (staggerRows).
+      staggerRows(document.querySelector('[data-menu-layer]'), "[data-part='viewport'] [data-part='item']", motion.mode('menu-rows'));
       expect(got).toEqual(take());
     });
   }

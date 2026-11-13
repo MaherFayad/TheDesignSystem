@@ -159,7 +159,8 @@
       "The checked state is a filled circle with a dot, never color alone. Invalid adds the danger border to the unchecked circles and an error with an icon.",
       "The error is not a live region. On submit, move focus to the checked option or the first option.",
       "data-invalid is on the root and on each item; the unchecked circles take the danger border.",
-      "Motion, round 3 (radio-pop, proposed): the checked fill, an inset box-shadow, closes from the border to the dot, which springs in from the side of the old option while the old dot shrinks and leaves toward the new one, one move along the group. Reduced motion: the fill and the dot change at once."
+      "Motion, round 3 (radio-pop, proposed): the checked fill, an inset box-shadow, closes from the border to the dot, which springs in from the side of the old option while the old dot shrinks and leaves toward the new one, one move along the group. Reduced motion: the fill and the dot change at once.",
+      "Order 1.29: the option a change leaves drops its fill at once, so two options never look chosen. Hooks for styles: --_radio-group-radius (the circle, its ring and its veil) and --_radio-group-dot-radius, radius.pill by default."
     ]
   },
   "content": {

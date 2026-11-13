@@ -4,7 +4,10 @@
  * Desk toasts and menus: the strong glass fill, the glass hairline, the
  * window blur with saturation and the soft window shadow with its light
  * edge (elevation.window-soft). Order 1.24 (proposed): the window radius
- * (1rem), and the title closes up to the display tracking.
+ * (1rem), and the title closes up to the display tracking. Order 1.29
+ * (proposed): a true title bar (style.json `optionalParts.popover`) in the
+ * yellow glass of a Desk window replaces the yellow edge order 1.28 drew
+ * along the top as an inset shadow.
  *
  * Glass turns solid by itself: under prefers-reduced-transparency,
  * prefers-contrast more and data-contrast more the material tokens resolve
@@ -17,14 +20,29 @@
   [data-style='desk'] [data-ds='popover'] {
     --_popover-bg: var(--ds-color-material-glass-strong);
     --_popover-border-color: var(--ds-color-material-glass-border);
-    /* Order 1.28 (proposed): a yellow edge along the top, the title bar color of a Desk window in one line. */
-    --_popover-shadow: inset 0 calc(var(--ds-border-width-strong) * 1.5) 0 var(--ds-color-primary-border), var(--ds-elevation-window-soft);
+    --_popover-shadow: var(--ds-elevation-window-soft);
     --_popover-blur: var(--ds-blur-window);
     --_popover-radius: var(--ds-radius-window);
   }
 
-  [data-style='desk'] [data-ds='popover'] > [data-part='title'] {
+  [data-style='desk'] [data-ds='popover'] > :is([data-part='title'], [data-part='titlebar'] > [data-part='title']) {
     letter-spacing: var(--ds-font-tracking-display);
+  }
+
+  /* The title bar: yellow glass and a hairline under it, edge to edge across the top, as on a Desk window. */
+  [data-style='desk'] [data-ds='popover'] > [data-part='titlebar'] {
+    --_title-bar-bg: var(--ds-color-primary-tint);
+    --_title-bar-border-color: var(--ds-color-material-glass-border);
+
+    margin-block-start: calc(var(--_popover-padding) * -1);
+    margin-inline: calc(var(--_popover-padding) * -1);
+    border-start-start-radius: inherit;
+    border-start-end-radius: inherit;
+  }
+
+  /* The title sits in the middle of the bar, as Dialog.css places a dialog's title bar title. */
+  [data-style='desk'] [data-ds='popover'] > [data-part='titlebar'] > [data-part='title'] {
+    padding-block: var(--ds-space-s);
   }
 
   /* The recipe layer wins over the base layer, so the blur is dropped here again where the glass turns solid. */

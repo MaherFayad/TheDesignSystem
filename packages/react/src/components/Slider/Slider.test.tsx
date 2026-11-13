@@ -7,7 +7,7 @@ import { Theme } from '../../theme/Theme';
 import { Field } from '../Field/Field';
 import SliderDemo from './Slider.demo';
 import { formatSliderValue, Slider } from './index';
-import { KEY_BUMP, rubberBand } from './Slider';
+import { KEY_BUMP } from '@the-system/motion';
 import { RangeSlider } from '../RangeSlider';
 
 // jsdom has no ResizeObserver; Radix Slider measures the thumb with it.
@@ -246,13 +246,6 @@ describe('Slider', () => {
         rect.mockRestore();
         capture.mockRestore();
       }
-    });
-
-    it('slider-rubber-band: the pull rises with the distance and stays under 1', () => {
-      expect(rubberBand(0, 24)).toBe(0);
-      expect(rubberBand(24, 24)).toBe(0.5);
-      expect(rubberBand(72, 24)).toBe(0.75);
-      expect(rubberBand(10, 0)).toBe(0);
     });
 
     it('slider-fill: the root carries where the fill starts and ends', () => {

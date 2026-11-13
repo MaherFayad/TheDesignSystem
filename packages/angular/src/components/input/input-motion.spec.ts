@@ -4,7 +4,7 @@
 import { Component, signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { afterEach, describe, expect, it } from 'vitest';
-import { shakeBeat } from '../../internal/motion-fields';
+import { shakeBeat } from '@the-system/motion';
 import { DsTheme } from '../../theme/theme';
 import { DsInput } from './input';
 

@@ -16,8 +16,8 @@ export const selectionInteractions = [
     pattern: 'swap',
     drive: 'css',
     trigger: 'The list of a picker opens or closes.',
-    feedback: 'The chevron of the trigger turns half a turn while the list is open and back when it closes, on the snappy spring.',
-    beats: ['Action and overshoot: the icon turns to 180deg on ease.spring-snappy over duration.spring-snappy (Neutral 180ms, Desk 300ms, Studio 80ms in steps), a little past and back.'],
+    feedback: 'The chevron of the trigger flips on its block axis while the list is open and back when it closes, on the snappy spring, so it never shows a sideways shape (order 1.29; a half turn where cos() is missing).',
+    beats: ['Action and overshoot: the icon scales on the block axis to the cosine of the open angle (-1 at 180deg) on ease.spring-snappy over duration.spring-snappy (Neutral 158ms, Desk 300ms, Studio 70ms in steps).'],
     styles: { neutral: 'a quick turn', desk: 'a longer turn with a small overshoot', studio: 'a cut in steps' },
     reduced: 'The icon turns at once.',
     off: {
@@ -37,10 +37,10 @@ export const selectionInteractions = [
     primitive: 'stagger',
     trigger: 'The list of a picker opens.',
     feedback:
-      'After the surface starts to open from the field, the rows rise by distance.enter and fade in one delay.stagger apart, starting one step after the surface, with every delay inside the 120ms stagger budget (stepsWithin), and each row at full opacity early in its run (readableEnter), so every row reads at full contrast within about 200ms. Every row is in the DOM and can be picked from the first frame, and the highlight marker is on the lit row at once. Results that change while it stays open play combobox-results instead.',
+      'Every row fades in with the surface, on the snappy spring with no delay (full opacity at 40 percent), so no empty card shows; only the rise by distance.enter is staggered, one delay.stagger apart starting one step after the surface, with every delay inside the 120ms stagger budget (stepsWithin) (order 1.29). Every row is in the DOM and can be picked from the first frame, and the highlight marker is on the lit row at once. Results that change while it stays open play combobox-results instead.',
     beats: [
       'Action: the popup surface opens from the field (menu-origin).',
-      'Secondary: row n rises from distance.enter (6, 12, 4px) and fades in on ease.spring-soft over duration.spring-soft (220, 340, 100ms), after n plus 1 delay.stagger (24, 45, 0ms), the steps capped so the last delay stays within 120ms; it is at full opacity by READABLE_AT of its run.',
+      'Secondary: every row fades in over duration.spring-snappy with no delay; row n rises from distance.enter (4, 12, 0px) on ease.spring-soft over duration.spring-soft (200, 340, 100ms), after n plus 1 delay.stagger (24, 45, 0ms), the steps capped so the last delay stays within 120ms.',
     ],
     styles: { neutral: 'a short cascade', desk: 'a slow cascade', studio: 'all rows at once, a short rise' },
     reduced: 'The rows fade in together with no delay.',
@@ -58,7 +58,7 @@ export const selectionInteractions = [
     beats: [
       'Anticipation: none; the list closes at once (Radix Select has no exit).',
       'Exit: the old label rises one line (translateY minus 100%) and fades over duration.quick (100ms) on ease.exit, clipped by the value box.',
-      'Action and overshoot: the new label rises from one line below to its place on ease.spring-snappy over duration.spring-snappy (180, 300, 80ms), a little past and back.',
+      'Action and overshoot: the new label rises from one line below to its place on ease.spring-snappy over duration.spring-snappy (158, 300, 70ms), a little past and back.',
     ],
     styles: { neutral: 'a short drum roll', desk: 'a taller roll that swings past', studio: 'a cut in steps' },
     reduced: 'The new label fades in; the old one is gone at once.',
@@ -75,7 +75,7 @@ export const selectionInteractions = [
     feedback:
       'The fill of the new row travels from where the old row was lit and stretches along its travel, so the hover follows the pointer. Only a decorative layer inside the row moves: the rows, the hit areas and the focus ring stay still, and the new row is lit from the first frame. Order 1.23: the option lists and the pickers moved to highlight-marker.',
     beats: [
-      'Action: the layer travels from the old row on ease.spring-snappy over duration.spring-snappy (Neutral 180ms, Desk 300ms, Studio 80ms in steps).',
+      'Action: the layer travels from the old row on ease.spring-snappy over duration.spring-snappy (Neutral 158ms, Desk 300ms, Studio 70ms in steps).',
       'Overshoot: it stretches to scale.stretch on the block axis at the middle of the travel (1.15, 1.3, 1.08) and settles a little past its row.',
     ],
     styles: { neutral: 'a short glide', desk: 'a stretchy glide', studio: 'a hop in steps' },
@@ -93,8 +93,8 @@ export const selectionInteractions = [
     feedback:
       'Items that change place travel from their old box; a new item rises and pops in; a removed item is drawn once more in its old place by an inert clone that shrinks out, while the rest close the gap. Focus moves first, as the anatomy rule asks. A first paint plays nothing.',
     beats: [
-      'Action: moved items travel on ease.spring-snappy over duration.spring-snappy (180, 300, 80ms).',
-      'Overshoot: new items rise from distance.shift and grow from scale.enter on ease.spring-bouncy over duration.spring-bouncy (220, 440, 120ms), one delay.stagger apart.',
+      'Action: moved items travel on ease.spring-snappy over duration.spring-snappy (158, 300, 70ms).',
+      'Overshoot: new items rise from distance.shift and grow from scale.enter on ease.spring-bouncy over duration.spring-bouncy (200, 380, 120ms), one delay.stagger apart.',
       'Exit: a removed item shrinks to scale.enter and fades over duration.quick (100ms) on ease.exit, faster than an entrance.',
     ],
     styles: { neutral: 'short moves', desk: 'bouncy pops and long moves', studio: 'hops in steps' },
@@ -113,8 +113,8 @@ export const selectionInteractions = [
       'Selecting: the check is drawn in the icon part (a stroked check draws from its short arm with stroke-dashoffset, a filled pixel check wipes in with clip-path in steps) while it pops from 0.6 past its size and back, and the label slides over to make room instead of jumping; the chips after it make room (collection-flip in a FilterBar). Clearing: the start glyph turns back in from minus 45 degrees, or the label slides back. The pressed state, aria-pressed and the fill change at once; the press itself is the button press.',
     beats: [
       'Action: the fill and aria-pressed change at once.',
-      'Draw: the check draws over duration.spring-snappy (180, 300, 80ms) on ease.out.',
-      'Overshoot: the check grows from 0.6 past its size on ease.spring-bouncy over duration.spring-bouncy (220, 440, 120ms).',
+      'Draw: the check draws over duration.spring-snappy (158, 300, 70ms) on ease.out.',
+      'Overshoot: the check grows from 0.6 past its size on ease.spring-bouncy over duration.spring-bouncy (200, 380, 120ms).',
       'React: the label slides from its old place on ease.spring-snappy over duration.spring-snappy.',
     ],
     styles: { neutral: 'a quick draw and a small pop', desk: 'a slower draw and a bouncy pop', studio: 'a pixel wipe in steps' },
@@ -130,7 +130,7 @@ export const selectionInteractions = [
     primitive: 'digit-roll',
     trigger: 'The active filter count or the result count of a FilterBar changes.',
     feedback: 'The count text rolls digit by digit, up when the number grows and down when it falls, in an aria-hidden copy; the real text sits beside it visually hidden, and the polite announcement is unchanged.',
-    beats: ['Action: each changed character rolls in its own column on ease.spring-snappy over duration.spring-snappy (180, 300, 80ms), columns one delay.stagger apart from the last.'],
+    beats: ['Action: each changed character rolls in its own column on ease.spring-snappy over duration.spring-snappy (158, 300, 70ms), columns one delay.stagger apart from the last.'],
     styles: { neutral: 'a short roll', desk: 'a rippling roll', studio: 'hard flips' },
     reduced: 'The changed characters fade in.',
     round: 2,
@@ -147,7 +147,7 @@ export const selectionInteractions = [
     feedback:
       'Each row rises by distance.enter and fades in on the soft spring, one delay.stagger after the row before, the steps kept inside the 120ms stagger budget; each row is at full opacity early in its run, so every row reads at full contrast within about 200ms. Every row is in the DOM and read at once. It never plays on a re-render, an added row (collection-flip plays then), a reorder or rows hydrated from server HTML.',
     beats: [
-      'Action: row n rises from distance.enter (6, 12, 4px) and fades in on ease.spring-soft over duration.spring-soft (220, 340, 100ms), after n delay.stagger (24, 45, 0ms), capped within 120ms.',
+      'Action: row n rises from distance.enter (4, 12, 0px) and fades in on ease.spring-soft over duration.spring-soft (200, 340, 100ms), after n delay.stagger (24, 45, 0ms), capped within 120ms.',
       'Settle: the soft spring lands each row without a bounce.',
     ],
     styles: { neutral: 'a short cascade', desk: 'a slow cascade', studio: 'the rows rise together, a short lift' },
@@ -163,13 +163,13 @@ export const selectionInteractions = [
     trigger: 'Open a menu or a picker list from its trigger (a press, a right click, a title of the menu bar, a field, or the keys), then close it.',
     feedback:
       'The surface comes out of its trigger side, read from the Radix side and origin: it travels distance.shift from the trigger, grows from scale.menu-enter out of the trigger corner, fades in, and a clip-path opens it from the trigger edge (the top edge for a list below its trigger, the inline start edge for a submenu), on the snappy spring. ' +
-      'Then the inside of each menu row (icon, text, shortcut, chevron), the labels and the separators rise distance.shift one delay.stagger step apart, capped at six steps; picker rows play menu-rows. ' +
+      'Then the inside of each menu row (icon, text, shortcut, chevron), the labels and the separators rise distance.shift one delay.stagger step apart, capped at six steps; they fade with the surface and never on their own, so the last row is readable when the surface is (order 1.29); picker rows play menu-rows. ' +
       'The row itself, the highlight marker and the focus ring are there from the first frame. Closing is faster and all at once: the real content leaves the DOM at once (a press on the trigger reopens at once, review B6) and an inert aria-hidden copy plays the exit: the clip closes back toward the trigger while it shrinks and fades. ' +
       'In right to left layouts the menu grows from the corner at its trigger (the Radix origin is mirrored in DropdownMenu.css). Radix Select has no exit presence: its list leaves at once.',
     beats: [
       'Closed: nothing drawn.',
-      'Opening: the surface travels distance.shift (Neutral 4px, Desk 6px, Studio 2px) out of the trigger side, grows from scale.menu-enter (0.97), fades in (full by 40%) and is revealed by the clip from the trigger edge, on ease.spring-snappy over duration.spring-snappy (Neutral 180ms with a 1.5% overshoot, Desk 300ms with 10%, Studio 80ms in two steps). The clip keeps --_menu-clip-room around the box for the shadow.',
-      'Stagger: the inside of each row, each label and each separator rises distance.shift and fades in on ease.spring-soft over duration.spring-soft (Neutral 220ms, Desk 340ms, Studio 100ms), the first one step after the surface and each next one delay.stagger later (Neutral 24ms, Desk 45ms, Studio 0ms), capped at six steps: all readable within 200ms in Neutral.',
+      'Opening: the surface travels distance.shift (Neutral 4px, Desk 6px, Studio 0px) out of the trigger side, grows from scale.menu-enter (0.97), fades in (full by 40%) and is revealed by the clip from the trigger edge, on ease.spring-snappy over duration.spring-snappy (Neutral 158ms with a 1.5% overshoot, Desk 300ms with 10%, Studio 70ms in two steps). The clip keeps --_menu-clip-room around the box for the shadow.',
+      'Stagger: the inside of each row, each label and each separator rises distance.shift and fades in on ease.spring-soft over duration.spring-soft (Neutral 200ms, Desk 340ms, Studio 100ms), the first one step after the surface and each next one delay.stagger later (Neutral 24ms, Desk 45ms, Studio 0ms), capped at six steps: all readable within 200ms in Neutral.',
       'Open: the surface passes its size a little (Neutral and Desk) and settles while the last rows land.',
       'Closing: the clip closes toward the trigger while the surface shrinks back and fades over duration.quick (100ms) on ease.exit, all at once, about half the time of the entrance.',
     ],
@@ -201,7 +201,7 @@ export const selectionInteractions = [
       'The open fill of a menu bar title (its ::after) slides from title to title on the snappy spring. The open state, the text color and the focus ring change at once; only the decorative fill travels. A second move while the fill travels hands over from where it is. Order 1.23: the rows inside the menus moved to highlight-marker.',
     beats: [
       'Action: the new title is open at once (data-state, the focus ring).',
-      'Travel: the fill moves from the old title to the new one on ease.spring-snappy over duration.spring-snappy (Neutral 180ms, Desk 300ms passing the title by 10% and coming back, Studio 80ms in two steps).',
+      'Travel: the fill moves from the old title to the new one on ease.spring-snappy over duration.spring-snappy (Neutral 158ms, Desk 300ms passing the title by 10% and coming back, Studio 70ms in two steps).',
     ],
     styles: {
       studio: 'a two step hop from title to title',
@@ -221,7 +221,7 @@ export const selectionInteractions = [
     feedback:
       'The chevron at the end of the row leans distance.shift toward its submenu on the bouncy spring, mirrored in right to left layouts, and comes back over duration.quick when the row goes dark. The submenu then opens from that side with menu-origin.',
     beats: [
-      'Action: the chevron moves distance.nudge (Neutral 2px, Desk 3px, Studio 1px) toward the submenu on ease.spring-bouncy over duration.spring-bouncy (Neutral 220ms, Desk 440ms passing its place by 25%, Studio 120ms in three steps).',
+      'Action: the chevron moves distance.nudge (Neutral 2px, Desk 3px, Studio 0px) toward the submenu on ease.spring-bouncy over duration.spring-bouncy (Neutral 200ms, Desk 380ms passing its place by 25%, Studio 120ms in three steps).',
       'React: the submenu opens from its trigger side, its rows staggered.',
       'Exit: the chevron comes back over duration.quick on ease.exit.',
     ],
@@ -247,7 +247,7 @@ export const selectionInteractions = [
     feedback:
       'The backdrop fades and the panel rises distance.enter and grows from scale.dialog-enter on the snappy spring, at full opacity within the first third, so the search box, which has focus, is readable at once. The footer of key hints follows one delay.stagger step later. Closing is faster and all at once.',
     beats: [
-      'Action: the panel rises and grows on ease.spring-snappy over duration.spring-snappy (Neutral 180ms, Desk 300ms with a 10% overshoot, Studio 80ms in two steps).',
+      'Action: the panel rises and grows on ease.spring-snappy over duration.spring-snappy (Neutral 158ms, Desk 300ms with a 10% overshoot, Studio 70ms in two steps).',
       'Stagger: the result rows follow (command-palette-results), the key hints one step after the panel.',
       'Exit: over duration.quick on ease.exit, all at once.',
     ],
@@ -298,7 +298,7 @@ export const selectionInteractions = [
       'The palette plays highlight-marker: one aria-hidden marker in the list draws the lit fill and slides to the new row, on the snappy spring for the pointer and over duration.fast for the keys, and follows the lit row when a new query moves it. The active descendant, the text color and the announcement change at once.',
     beats: [
       'Action: the new row is the active descendant at once.',
-      'Travel: the marker moves on ease.spring-snappy over duration.spring-snappy (Neutral 180ms, Desk 300ms with a 10% swing, Studio 80ms in two steps), or over duration.fast (80ms) for the keys.',
+      'Travel: the marker moves on ease.spring-snappy over duration.spring-snappy (Neutral 158ms, Desk 300ms with a 10% swing, Studio 70ms in two steps), or over duration.fast (80ms) for the keys.',
     ],
     styles: {
       studio: 'a two step hop',
@@ -323,7 +323,7 @@ export const selectionInteractions = [
     beats: [
       'Closed: no marker.',
       'Open, first lit row: the marker jumps to the row at once and fades in over duration.fast (80ms).',
-      'Highlighted row moving, pointer: transform travels on ease.spring-snappy over duration.spring-snappy (Neutral 180ms with a small overshoot, Desk 300ms passing the row and back, Studio 80ms in two steps).',
+      'Highlighted row moving, pointer: transform travels on ease.spring-snappy over duration.spring-snappy (Neutral 158ms with a small overshoot, Desk 300ms passing the row and back, Studio 70ms in two steps).',
       'Highlighted row moving, keys: the same travel over duration.fast (80ms), so a held arrow key reads as a marker that keeps up.',
       'Picked: the check of the row draws (check-draw-pick) and a picker closes (menu-origin closing).',
       'Nothing lit: the marker fades out over duration.fast.',
@@ -349,8 +349,8 @@ export const selectionInteractions = [
       'The check of the row just chosen draws itself: a stroked glyph (the line icon set) draws from its short arm to the tip of its long arm with stroke-dashoffset, a filled glyph (the pixel set) is wiped in from the inline start with clip-path, in four steps. It lands with a pop from 0.6 past its size and back. aria-selected and aria-checked change at once. A check that is there when a list opens does not draw.',
     beats: [
       'Picked: the selected state changes at once.',
-      'Draw: the stroke (or the wipe) runs over duration.spring-snappy (180, 300, 80ms) on ease.out.',
-      'Overshoot: the glyph grows from 0.6 past its size on ease.spring-bouncy over duration.spring-bouncy (220, 440, 120ms).',
+      'Draw: the stroke (or the wipe) runs over duration.spring-snappy (158, 300, 70ms) on ease.out.',
+      'Overshoot: the glyph grows from 0.6 past its size on ease.spring-bouncy over duration.spring-bouncy (200, 380, 120ms).',
     ],
     styles: { neutral: 'a quick draw', desk: 'a slower draw with a bouncy landing', studio: 'a pixel wipe in steps' },
     reduced: 'The check fades in over duration.base.',
@@ -368,7 +368,7 @@ export const selectionInteractions = [
       'The rows that stay slide from their old place to the new one, the new rows rise and pop in one short delay.stagger step apart, and the highlight marker follows the lit row to its new place. Typing is never held back: the list renders at once and only its drawing moves. A first paint plays nothing, and a scroll of the list is not read as a move.',
     beats: [
       'Action: the new results render at once; the lit row is lit at once.',
-      'React: rows that stay travel on ease.spring-snappy over duration.spring-snappy (180, 300, 80ms).',
+      'React: rows that stay travel on ease.spring-snappy over duration.spring-snappy (158, 300, 70ms).',
       'Stagger: new rows rise distance.shift and grow from scale.enter on ease.spring-bouncy over duration.spring-bouncy, one delay.stagger apart (24, 45, 0ms).',
       'Follow: the highlight marker slides to the lit row (highlight-marker).',
     ],

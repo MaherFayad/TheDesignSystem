@@ -67,7 +67,7 @@ import {
 } from '@the-system/shared';
 import { consumeHostAttributes } from '../../internal/host';
 import { injectMotion } from '../../internal/motion';
-import { dipPop, dropAfter, inlineSign, landPop, leavingCopy, playBeat, runStep, slideIn, snapshot, token, type Snapshot } from '../../internal/motion-fields';
+import { dipPop, dropAfter, inlineSign, landPop, leavingCopy, playBeat, runStep, slideIn, snapshot, token, type Snapshot } from '@the-system/motion';
 import { DsThemeService } from '../../theme/theme';
 import { DsButton } from '../button/button';
 import { DsStepper, type StepperOrientation, type StepperStep } from '../stepper/stepper';
@@ -423,6 +423,24 @@ export class DsFormWizard {
     this.stepChange.emit(next.current);
   }
 
+  /**
+   * Marks the wizard checking only when a check is still pending two frames
+   * after it starts (review N13), as checkingAfterFrame in React: a check
+   * that answers at once moves the step with no dip, spinner or label morph.
+   * Returns the cancel.
+   */
+  private checkingAfterFrame(): () => void {
+    let live = true;
+    const show = () => {
+      if (live && !this.destroyed) this.checking.set(true);
+    };
+    const raf = typeof requestAnimationFrame === 'function' ? requestAnimationFrame : (cb: () => void) => setTimeout(cb, 16);
+    raf(() => raf(show));
+    return () => {
+      live = false;
+    };
+  }
+
   /** Runs one async task at a time. A call while another runs does nothing. */
   private async exclusive(task: () => Promise<void>): Promise<void> {
     if (this.busy) return;
@@ -447,8 +465,9 @@ export class DsFormWizard {
         return;
       }
       const token = this.run;
-      this.checking.set(true);
+      const settle = this.checkingAfterFrame();
       const found = await this.check(current, all);
+      settle();
       if (token !== this.run || this.destroyed) return;
       if (Object.keys(found).length > 0) {
         this.stepper.update((s) => setStepComplete(s, current, false));
@@ -466,7 +485,7 @@ export class DsFormWizard {
       const all = readFormValues(el);
       this.values.set(all);
       this.submitFailed.set(false);
-      this.checking.set(true);
+      const settle = this.checkingAfterFrame();
       // Every step again, so a step reached in free mode or changed later cannot slip through.
       let firstBad: { index: number; found: FormWizardErrors } | undefined;
       let next = this.stepper();
@@ -476,6 +495,7 @@ export class DsFormWizard {
         next = setStepComplete(next, i, valid);
         if (!valid && firstBad === undefined) firstBad = { index: i, found };
       }
+      settle();
       if (this.destroyed) return;
       this.checking.set(false);
       const current = this.stepper().current;

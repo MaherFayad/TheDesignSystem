@@ -57,7 +57,8 @@ import { ListHighlight } from '../../internal/list-highlight';
 import { optionalBoolean } from '../../internal/optional-boolean';
 import { PopupLayer } from '../../internal/popper';
 import { injectMotion } from '../../internal/motion';
-import { POPUP_LIST_ROWS, injectPopupResults, openStaggered } from '../../internal/motion-selection';
+import { POPUP_LIST_ROWS } from '@the-system/motion';
+import { injectPopupResults, openStaggered } from '../../internal/motion-selection';
 import { DsThemeService } from '../../theme';
 import { DsFieldContext, fieldControl } from '../field/field-context';
 import {

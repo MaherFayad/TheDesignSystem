@@ -147,7 +147,8 @@
       "A checked box shows a check and an indeterminate box a minus, so the state never relies on color alone.",
       "Read only is not part of Radix: clicks are prevented, aria-readonly is set and the box draws dashed.",
       "Indeterminate is a display state. The next click checks the box.",
-      "Motion, round 3 (check-draw and check-mixed, proposed): the fill grows from the centre of the box (clip-path) and the mark part, an aria-hidden svg of two strokes, is drawn with stroke-dashoffset, the short arm then the long arm; unchecking retracts it faster. The dash and the check are the same strokes (data-glyph check or minus on the mark), so mixed and checked bend into each other. Reduced motion: the fill and the mark change at once."
+      "Motion, round 3 (check-draw and check-mixed, proposed): the fill grows from the centre of the box (clip-path) and the mark part, an aria-hidden svg of two strokes, is drawn with stroke-dashoffset, the short arm then the long arm; unchecking retracts it faster. The dash and the check are the same strokes (data-glyph check or minus on the mark), so mixed and checked bend into each other. Reduced motion: the fill and the mark change at once.",
+      "Order 1.29: a mark drawn from an empty box carries data-enter on the mark part; it takes the new glyph's angles at once and only draws, so unchecked to mixed shows no part of a check. An uncheck fades the fill as it closes, so it ends on no centre dot."
     ]
   },
   "content": {

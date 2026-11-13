@@ -18,15 +18,15 @@
 // arrives, the icon pops one stagger step later, the text settles after it.
 // alert-dismiss, here: the close button calls onClose at once, and a ghost
 // of the alert shrinks away faster than it came while the content under it
-// slides up into the gap (./ghost.ts).
+// slides up into the gap (helpers/exit-ghost.ts in @the-system/motion).
 import { useRef, type HTMLAttributes, type ReactElement, type ReactNode, type Ref } from 'react';
 import { Icon } from '@the-system/icons/react';
+import { dismissWithExit } from '@the-system/motion';
 import type { IconName } from '@the-system/icons';
 import type { Emphasis, Size, Tone } from '@the-system/shared';
 import { useTheme } from '../../theme/hooks';
 import { useMotion } from '../../internal/motion';
 import { CloseButton } from '../CloseButton';
-import { dismissWithExit } from './ghost';
 import { messageIcons, wordsFor } from './messageTones';
 
 export type AlertTone = Tone;

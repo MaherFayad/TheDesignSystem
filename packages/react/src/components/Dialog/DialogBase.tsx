@@ -32,7 +32,9 @@
 // ease.out, no change of light, played with the Web Animations API. The
 // style's mode for "dialog-refuse" (useMotion) applies: none or reduced
 // motion leaves it still. A second refusal cancels the first
-// and plays again, so a rapid series never stacks or sticks.
+// and plays again, so a rapid series never stacks or sticks. A refused
+// press keeps focus where it was (order 1.29, review 3 B8): its pointerdown
+// and mousedown defaults are prevented, so focus never falls to the body.
 import {
   createContext,
   use,
@@ -284,9 +286,19 @@ export function DialogBase({
         data-state={state.open ? 'open' : 'closed'}
         onPointerDown={(event) => {
           rootProps?.onPointerDown?.(event);
-          // A press on the backdrop that will not close the overlay: the panel nudges.
+          // A press on the backdrop that will not close the overlay: the panel nudges,
+          // and focus stays where it was (review 3, B8; WCAG 2.4.3): the default focus
+          // change of the press is prevented, so it never falls to the body.
           if (event.button !== 0 || !refusesOutside || !state.open) return;
-          if ((event.target as Element | null)?.getAttribute?.('data-part') === 'backdrop') refuse();
+          if ((event.target as Element | null)?.getAttribute?.('data-part') !== 'backdrop') return;
+          event.preventDefault();
+          refuse();
+        }}
+        onMouseDown={(event) => {
+          rootProps?.onMouseDown?.(event);
+          // A touch press still sends a compatibility mousedown, whose default moves focus.
+          if (!refusesOutside || !state.open) return;
+          if ((event.target as Element | null)?.getAttribute?.('data-part') === 'backdrop') event.preventDefault();
         }}
       >
         {Backdrop ? <Backdrop {...backdropProps} ref={setBackdropRef} data-part="backdrop" /> : null}

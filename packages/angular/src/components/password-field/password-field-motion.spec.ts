@@ -6,7 +6,7 @@
 import { Component, signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { afterEach, describe, expect, it } from 'vitest';
-import { diagonalWipe, shakeBeat } from '../../internal/motion-fields';
+import { diagonalWipe, shakeBeat } from '@the-system/motion';
 import { DsTheme } from '../../theme/theme';
 import { DsPasswordField } from './password-field';
 
@@ -97,7 +97,10 @@ describe('PasswordField motion', () => {
       expect(String(into[0]?.keyframes[2]?.['clipPath'])).toBe('polygon(0% 0%, 100% 0%, 100% 100%, 100% 100%, 0% 100%)');
       expect(into[0]?.options.duration).toBeTypeOf('number');
       for (const c of rec.calls) expect(JSON.stringify(c.keyframes)).not.toContain('rotate');
-      expect(byId(rec.calls, 'fade').map((c) => c.target)).toEqual([input]);
+      // Review N11 (order 1.29): the text eases back from 0.6, never blank, as React's TEXT_RETURN.
+      const back = byId(rec.calls, 'password-reveal');
+      expect(back.map((c) => c.target)).toEqual([input]);
+      expect(back[0]?.keyframes).toEqual([{ opacity: 0.6 }, { opacity: 1 }]);
       // The leaving glyph goes once the morph settles.
       for (const c of rec.calls) c.finish();
       await new Promise((r) => setTimeout(r));

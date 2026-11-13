@@ -30,9 +30,8 @@ import type { Emphasis, Shape, Size, Tone } from '@the-system/shared';
 import { useTheme } from '../../theme/hooks';
 import { ButtonRoot } from '../Button/ButtonBase';
 import { CloseButton } from '../CloseButton';
-import { ANIMATION_ID_PREFIX, iconMorph, readDuration, readEasing } from '@the-system/motion';
+import { ANIMATION_ID_PREFIX, drawCheck, drawnScale, iconMorph, readDuration, readEasing, setPressPoint } from '@the-system/motion';
 import { useMotion } from '../../internal/motion';
-import { drawCheck, drawnScale, setPressPoint } from '../ListBox/highlightMarker';
 
 /** The words of the default remove name by language. Arabic: a noun form. */
 const chipRemoveLabels = { en: 'Remove', ar: 'إزالة' } as const;

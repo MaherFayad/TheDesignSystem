@@ -40,7 +40,7 @@
 // Motion (order 1.23), as React's Toaster.tsx. The toasts share one grid
 // cell and stack with depth (data-stacked on the list): the newest in front,
 // the older ones behind it, peeking past it, smaller, clipped to the strip
-// that shows. internal/toast-stack.ts (React's stack.ts) measures the toasts
+// that shows. toast-stack.ts in @the-system/motion measures the toasts
 // and writes their place; Toast.css draws it with translate, scale and
 // clip-path and transitions them. While the pointer is over the toasts or
 // focus is inside them the list carries data-expanded and the stack opens
@@ -49,7 +49,7 @@
 // toast (its `progress` part, a CSS animation over the toast's duration)
 // pauses on it, so the line and the store's timer move together (WCAG
 // 2.2.1); a repeat or an update (a new version) starts both again. The swipe
-// is React's (internal/toast-swipe.ts): the toast follows the finger toward
+// is React's (toast-swipe.ts in @the-system/motion): the toast follows the finger toward
 // its edge, gives a little against the other way, and closes past a distance
 // or on a fast flick; let go short, it springs back. Layout never animates
 // and the store never waits.
@@ -76,38 +76,44 @@ import { DOCUMENT } from '@angular/common';
 import { ComponentPortal, DomPortalOutlet } from '@angular/cdk/portal';
 import { toastStore, toastUrgency, type ToastAction, type ToastItem, type ToastSnapshot, type ToastStore } from '@the-system/shared';
 import { consumeHostAttributes } from '../../internal/host';
-import { watchStack } from '../../internal/toast-stack';
 import {
   START_BUFFER,
-  rubberBand,
   swipeAxis,
   swipeCloses,
   swipeOffset,
+  swipeRubberBand,
   swipeSign,
   swipeVelocity,
-  type SwipeDirection,
+  toasterPlacement,
+  toasterSwipe,
+  watchStack,
   type SwipeSample,
-} from '../../internal/toast-swipe';
+  type ToasterPlacement,
+} from '@the-system/motion';
 import { animationsDone } from '../../behavior';
 import { DsThemeScope, DsThemeService, attributesOf, themeScopeProviders } from '../../theme';
 import type { ThemeValue } from '../../theme';
 import { TOAST_PARTS_IMPORTS, TOAST_PARTS_TEMPLATE, toastDirFor, toastIcons, toastLabelsFor, type ToastPartsData } from './toast';
 
 /** Where the toasts sit. end is the inline end: right in English, left in Arabic. */
-export type ToasterPosition = 'bottom-end' | 'bottom-center' | 'top-end' | 'top-center';
+export type ToasterPosition = ToasterPlacement;
 
 /**
  * The positions a toaster takes: one of `ToasterPosition`, or `auto`, which
  * follows the platform axis of the theme: top-center on ios (a banner from
  * the top), bottom-end elsewhere (android.css then places the snackbar at
  * the start). The list carries the resolved value in data-position.
+ *
+ * On platform ios every position resolves to top-center (review 3, B7):
+ * ios.css moves every toaster to the top centre, so data-position, the
+ * stack direction and the swipe (up, toward the top edge) follow where the
+ * toaster really is.
  */
 export type ToasterPositionProp = ToasterPosition | 'auto';
 
-/** The position `auto` resolves to on a platform. */
+/** The position a toaster takes on a platform: `auto` resolves, and ios moves every position to the top centre. */
 export function resolveToasterPosition(position: ToasterPositionProp, platform: string | undefined): ToasterPosition {
-  if (position !== 'auto') return position;
-  return platform === 'ios' ? 'top-center' : 'bottom-end';
+  return toasterPlacement(position, platform);
 }
 
 /** The text a screen reader hears for a toast, after the label. */
@@ -120,12 +126,8 @@ export function toastAnnouncement(item: Pick<ToastItem, 'title' | 'description' 
     .join(' ');
 }
 
-/** The swipe that closes a toast: toward the edge it sits on. */
-function swipeFor(position: ToasterPosition, dir: 'ltr' | 'rtl'): SwipeDirection {
-  if (position === 'bottom-center') return 'down';
-  if (position === 'top-center') return 'up';
-  return dir === 'rtl' ? 'left' : 'right';
-}
+/** The swipe that closes a toast: toward the edge it sits on (helpers/toast-swipe.ts). */
+const swipeFor = toasterSwipe;
 
 /** Radix's tab stops inside a toast: tabIndex 0 or more, not disabled or hidden. */
 function tabbableCandidates(container: HTMLElement): HTMLElement[] {
@@ -246,7 +248,9 @@ export class DsToaster {
     '(pointercancel)': 'end($event, true)',
   },
   // The progress line is keyed by version: a repeat or an update restarts the store's timer, and the line with it.
-  template: `${TOAST_PARTS_TEMPLATE}@for (life of life(); track life.version) {<span data-part="progress" aria-hidden="true" [style.--_toast-life]="life.duration + 'ms'"></span>}`,
+  // It mounts as far along as the store's timer already is (order 1.29, review 3 N29): the time since the
+  // store showed this version, as a negative animation-delay.
+  template: `${TOAST_PARTS_TEMPLATE}@for (life of life(); track life.version) {<span data-part="progress" aria-hidden="true" [style.--_toast-life]="life.duration + 'ms'" [style.animation-delay]="life.delay"></span>}`,
 })
 export class DsToasterItem {
   readonly item = input.required<ToastItem>();
@@ -262,8 +266,16 @@ export class DsToasterItem {
   /** The timed toast's line, one entry per version; none for a toast that stays until closed. */
   protected readonly life = computed(() => {
     const item = this.item();
-    return Number.isFinite(item.duration) ? [{ version: item.version, duration: item.duration }] : [];
+    if (!Number.isFinite(item.duration)) return [];
+    // Worked out once per version, when the line mounts: a later change of the item (it closes) keeps it.
+    if (this.lineDelay?.version !== item.version) {
+      const at = this.layer.shownAt.get(`${item.id}:${item.version}`);
+      const behind = at === undefined ? 0 : Math.min(item.duration, Math.max(0, Date.now() - at));
+      this.lineDelay = { version: item.version, delay: behind > 0 ? `${-behind}ms` : null };
+    }
+    return [{ version: item.version, duration: item.duration, delay: this.lineDelay.delay }];
   });
+  private lineDelay: { version: number; delay: string | null } | null = null;
 
   protected readonly parts = computed<ToastPartsData>(() => {
     const item = this.item();
@@ -357,7 +369,7 @@ export class DsToasterItem {
     g.along = main * swipeSign(direction);
     g.samples.push({ t: event.timeStamp, along: g.along });
     if (g.samples.length > 12) g.samples.shift();
-    const { x, y } = swipeOffset(direction, rubberBand(g.along));
+    const { x, y } = swipeOffset(direction, swipeRubberBand(g.along));
     el.setAttribute('data-swipe', 'move');
     el.style.setProperty('--radix-toast-swipe-move-x', `${x}px`);
     el.style.setProperty('--radix-toast-swipe-move-y', `${y}px`);
@@ -485,6 +497,8 @@ export class DsToasterLayer {
   protected readonly polite = computed(() => this.lines().filter((l) => !l.urgent));
   protected readonly assertive = computed(() => this.lines().filter((l) => l.urgent));
 
+  /** When the store showed each toast version (Date.now), so its line starts with its timer (N29). */
+  readonly shownAt = new Map<string, number>();
   private readonly members = new Set<DsToasterItem>();
   private readonly seen = new Map<string, number>();
   private pending: Line[] = [];
@@ -496,8 +510,22 @@ export class DsToasterLayer {
   constructor() {
     effect((onCleanup) => {
       const store = this.store();
-      this.snapshot.set(store.getSnapshot());
-      onCleanup(store.subscribe(() => this.snapshot.set(store.getSnapshot())));
+      // The store calls its listeners in the same call that starts a toast's timer: note the time then.
+      const note = () => {
+        const snap = store.getSnapshot();
+        const live = new Set<string>();
+        for (const t of snap.visible) {
+          if (t.state !== 'open' || !Number.isFinite(t.duration)) continue;
+          const key = `${t.id}:${t.version}`;
+          live.add(key);
+          // A paused store does not run the timer yet: the line starts from its beginning.
+          if (!this.shownAt.has(key) && !store.isPaused()) this.shownAt.set(key, Date.now());
+        }
+        for (const key of [...this.shownAt.keys()]) if (!live.has(key)) this.shownAt.delete(key);
+        this.snapshot.set(snap);
+      };
+      untracked(note);
+      onCleanup(store.subscribe(note));
     });
 
     // Pause while hovered, focused, or the window is away; the store keeps the time left.
@@ -519,7 +547,7 @@ export class DsToasterLayer {
       untracked(() => this.announce(snapshot, label));
     });
 
-    // The stack: each toast's place, written before the next paint (internal/toast-stack.ts).
+    // The stack: each toast's place, written before the next paint (toast-stack.ts in @the-system/motion).
     let stopStack: (() => void) | null = null;
     afterNextRender(() => {
       const viewport = this.viewport()?.nativeElement;

@@ -131,6 +131,8 @@
     overscroll-behavior-inline: contain;
     scrollbar-width: thin;
     scrollbar-color: var(--ds-scrollbar-thumb) transparent;
+    /* Its own stacking context, so the indicator can sit under every label of the list (review B1). */
+    isolation: isolate;
   }
 
   [data-ds='tabs'][data-emphasis='soft'] > [data-part='list'] {
@@ -240,8 +242,11 @@
   /* ------------------------------------------------------------ indicator */
 
   /*
-   * The first child of the active trigger, painted under the label because
-   * the label, the icon and the count are positioned after it. ghost: a line
+   * The first child of the active trigger, painted under the labels of
+   * every trigger: a negative z-index (minus z.raised) inside the isolated list puts it above the
+   * list fill and under every trigger and its parts. Order 1.29, review B1:
+   * before, it painted in tree order, so a pill sliding back to an earlier
+   * tab covered that tab's label and its ink twin. ghost: a line
    * on the block end edge, just inside the list hairline (the list clips
    * its overflow, so the line cannot overlap the border). soft: the pill.
    */
@@ -255,6 +260,7 @@
     border-radius: var(--ds-radius-pill);
     background-color: var(--_tabs-indicator-bg);
     pointer-events: none;
+    z-index: calc(0 - var(--ds-z-raised));
   }
 
   [data-ds='tabs'][data-orientation='vertical'][data-emphasis='ghost'] > [data-part='list'] > [data-part='trigger'] > [data-part='indicator'] {
@@ -327,6 +333,15 @@
     [data-ds='tabs'][data-emphasis='soft'] > [data-part='list'] > [data-part='trigger'] > [data-part='indicator'] {
       border: var(--ds-border-width-strong) solid Highlight;
       background-color: transparent;
+    }
+
+    /*
+     * The soft pill is a frame on Canvas here, so the active label is
+     * CanvasText. Order 1.29 (review B2): a style that set the active text
+     * to HighlightText for a filled pill drew it white on white.
+     */
+    [data-ds='tabs'][data-emphasis='soft'] > [data-part='list'] > [data-part='trigger'][data-state='active'] {
+      color: CanvasText;
     }
 
     [data-ds='tabs'] > [data-part='list'] > [data-part='trigger'][data-disabled] {

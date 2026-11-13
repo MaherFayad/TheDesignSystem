@@ -35,9 +35,8 @@ import type { Shape, Size } from '@the-system/shared';
 import { useField } from '../Field/Field';
 import { IconButton } from '../IconButton/IconButton';
 import { Input, type InputProps } from '../Input/Input';
-import { iconMorph } from '@the-system/motion';
+import { dropAfter, iconMorph, leavingCopy, playBeat, snapshot, token, type Snapshot } from '@the-system/motion';
 import { useMotion } from '../../internal/motion';
-import { dropAfter, leavingCopy, playBeat, snapshot, token, type Snapshot } from '../Input/fieldMotion';
 
 export type SearchFieldSize = Size;
 export type SearchFieldShape = Extract<Shape, 'default' | 'pill'>;

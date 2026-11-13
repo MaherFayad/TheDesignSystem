@@ -49,7 +49,10 @@ describe('PasswordField motion', () => {
       expect(String(wipeIn?.frames[2]?.clipPath)).toBe('polygon(0% 0%, 100% 0%, 100% 100%, 100% 100%, 0% 100%)');
       expect(String(calls.find((c) => c.el === leaving)?.frames[2]?.clipPath)).toBe('polygon(100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%)');
       for (const c of calls) expect(JSON.stringify(c.frames)).not.toContain('rotate');
-      expect(calls.find((c) => c.el === input)?.frames).toEqual([{ opacity: 0 }, { opacity: 1 }]);
+      // Review N11: the text never blanks; it comes back from 0.6, so the first frame keeps it readable.
+      const fade = calls.find((c) => c.el === input)?.frames ?? [];
+      expect(Number(fade[0]?.opacity)).toBeGreaterThanOrEqual(0.6);
+      expect(Number(fade[fade.length - 1]?.opacity)).toBe(1);
       // Hiding again wipes from the other corner.
       calls.length = 0;
       fireEvent.click(screen.getByRole('button', { name: 'Hide password' }));

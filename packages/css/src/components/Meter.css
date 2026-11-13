@@ -28,8 +28,10 @@
  * Motion (order 1.22, interaction meter-fill, proposed): the first time a
  * meter is seen (on mount, or when it scrolls into view), Meter.tsx plays the
  * fill from the inline start to the value once, on ease.spring-soft over
- * duration.reveal. Until then an inline scaleX(0) holds the fill empty;
- * with no script it shows the value.
+ * duration.reveal. Until then the indicator's data-held holds the fill
+ * empty; with no script, and in print, it shows the value. data-revealing
+ * carries the reveal timing until the next value change (order 1.29,
+ * review N33).
  *
  *   --_meter-duration, -ease   a value change (motion names)
  *
@@ -138,13 +140,32 @@
     transform-origin: 100% 50%;
   }
 
+  /* meter-fill: held empty until first seen, then filled once on the reveal timing (set by the component). */
+  [data-ds='meter'] [data-part='indicator'][data-held] {
+    transform: scaleX(0);
+    transition: none;
+  }
+
+  [data-ds='meter'] [data-part='indicator'][data-revealing] {
+    transition: transform var(--_meter-reveal-duration) var(--_meter-reveal-ease);
+  }
+
+  /* Print shows every value, seen or not. */
+  @media print {
+    [data-ds='meter'] [data-part='indicator'][data-held] {
+      transform: scaleX(var(--_meter-fraction));
+    }
+  }
+
   @media (prefers-reduced-motion: reduce) {
-    [data-ds='meter'] [data-part='indicator'] {
+    [data-ds='meter'] [data-part='indicator'],
+    [data-ds='meter'] [data-part='indicator'][data-revealing] {
       transition: none;
     }
   }
 
-  :root[data-motion='reduce'] [data-ds='meter'] [data-part='indicator'] {
+  :root[data-motion='reduce'] [data-ds='meter'] [data-part='indicator'],
+  :root[data-motion='reduce'] [data-ds='meter'] [data-part='indicator'][data-revealing] {
     transition: none;
   }
 

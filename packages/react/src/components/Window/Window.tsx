@@ -50,7 +50,7 @@ import { useOptionalPart, useTheme } from '../../theme/hooks';
 import { IconButton } from '../IconButton';
 import { TitleBar, type TitleBarHeading } from '../TitleBar';
 import { WindowControls } from '../WindowControls';
-import { windowMotionMode } from './styleMotion';
+import { windowMotionMode, windowMotionPreset } from './styleMotion';
 import { settleWindow } from './windowSettle';
 import { useMotion } from '../../internal/motion';
 import { useControllable } from '../../internal/useControllable';
@@ -338,7 +338,7 @@ export function Window({
     if (isOpen) {
       if (!el || minimizedRef.current) return;
       const to = el.getBoundingClientRect();
-      animateWindow(el, 'grow', { mode, from: rectOf(origin), to });
+      animateWindow(el, 'grow', { mode, preset: windowMotionPreset(theme.styleData.motionPreset, 'grow'), from: rectOf(origin), to });
       settleWindow(el, 'land', 'duration.window-open', mode, settleMode);
       // Focus moves in when the window opens after mount, or on mount when its origin has focus (it was just pressed).
       const originEl = elementOf(origin);
@@ -349,7 +349,7 @@ export function Window({
       return;
     }
     if (first || !el) return;
-    const anim = animateWindow(el, 'close', { mode, from: el.getBoundingClientRect(), to: rectOf(origin) });
+    const anim = animateWindow(el, 'close', { mode, preset: windowMotionPreset(theme.styleData.motionPreset, 'close'), from: el.getBoundingClientRect(), to: rectOf(origin) });
     settleWindow(el, 'gather', 'duration.window-close', mode, settleMode);
     void settled(anim).then(() => {
       if (isOpenRef.current) return;
@@ -382,7 +382,7 @@ export function Window({
     }
     const from = zoomFrom.current ?? lastRect.current;
     zoomFrom.current = null;
-    animateWindow(el, 'zoom', { mode, from, to: el.getBoundingClientRect() });
+    animateWindow(el, 'zoom', { mode, preset: windowMotionPreset(theme.styleData.motionPreset, 'zoom'), from, to: el.getBoundingClientRect() });
     settleWindow(el, 'land', 'duration.window-zoom', mode, settleMode);
   }, [zoomed]);
 
@@ -400,7 +400,7 @@ export function Window({
     if (minimized) {
       manager.minimize(windowId);
       if (!el) return;
-      const anim = animateWindow(el, 'minimize', { mode, from: el.getBoundingClientRect(), to: target });
+      const anim = animateWindow(el, 'minimize', { mode, preset: windowMotionPreset(theme.styleData.motionPreset, 'minimize'), from: el.getBoundingClientRect(), to: target });
       settleWindow(el, 'gather', 'duration.window-minimize', mode, settleMode);
       void settled(anim).then(() => {
         if (!minimizedRef.current) return;
@@ -411,7 +411,7 @@ export function Window({
     }
     manager.restore(windowId);
     if (!el) return;
-    animateWindow(el, 'grow', { mode, from: target, to: el.getBoundingClientRect() });
+    animateWindow(el, 'grow', { mode, preset: windowMotionPreset(theme.styleData.motionPreset, 'grow'), from: target, to: el.getBoundingClientRect() });
     settleWindow(el, 'land', 'duration.window-open', mode, settleMode);
     el.focus({ preventScroll: true });
   }, [minimized]);

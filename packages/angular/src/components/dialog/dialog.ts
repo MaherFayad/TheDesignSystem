@@ -307,7 +307,7 @@ const stack: DsDialogLayer[] = [];
   template: `
     <div data-ds="dialog" [attr.data-size]="dialog.size()" [attr.data-tone]="dialog.tone()" [attr.data-state]="state()">
       <div #backdrop [attr.data-state]="state()" data-part="backdrop" aria-hidden="true"
-        (pointerdown)="onBackdropPointerDown($event)" (click)="onBackdropClick()"></div>
+        (pointerdown)="onBackdropPointerDown($event)" (mousedown)="onBackdropMouseDown($event)" (click)="onBackdropClick()"></div>
       <div #panel role="dialog" [id]="dialog.panelId" [attr.data-state]="state()" data-part="panel" tabindex="-1"
         aria-modal="true" [attr.aria-labelledby]="hasTitle() ? dialog.titleId : null"
         [attr.aria-describedby]="hasDescription() ? dialog.descriptionId : null">
@@ -376,11 +376,23 @@ export class DsDialogLayer {
     this.dialog.setOpen(false);
   }
 
-  /** A press on the backdrop that will not close the dialog: the panel nudges. */
+  /**
+   * A press on the backdrop that will not close the dialog: the panel nudges,
+   * and focus stays where it was (order 1.29, review 3 B8; WCAG 2.4.3): the
+   * default focus change of the press is prevented, so it never falls to the
+   * body.
+   */
   protected onBackdropPointerDown(event: PointerEvent): void {
     this.pressedBackdrop = true;
     if (event.button !== 0 || this.dialog.dismissible() || this.state() !== 'open') return;
+    event.preventDefault();
     this.refuse();
+  }
+
+  /** A touch press still sends a compatibility mousedown, whose default moves focus. */
+  protected onBackdropMouseDown(event: MouseEvent): void {
+    if (this.dialog.dismissible() || this.state() !== 'open') return;
+    event.preventDefault();
   }
 
   /** The refused nudge (interaction "dialog-refuse"), React's DialogBase refuse(). */

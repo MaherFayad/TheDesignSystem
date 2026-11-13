@@ -330,4 +330,49 @@ describe('Sidebar', () => {
     rerender(<Basic collapsed />);
     expect(document.activeElement).toBe(home);
   });
+
+  // Order 1.29 (review N34): with Desk's long tokens, every label is whole by 400ms on expand.
+  it('wipes every label in by 400ms when it expands, even with long springs', () => {
+    const proto = HTMLElement.prototype as unknown as { animate?: unknown };
+    const original = proto.animate;
+    const animate = vi.fn(() => ({ finished: Promise.resolve(), cancel() {}, effect: null }) as unknown as Animation);
+    proto.animate = animate;
+    const real = window.getComputedStyle.bind(window);
+    const desk: Record<string, string> = { '--ds-duration-spring-soft': '340ms', '--ds-delay-stagger': '45ms', '--ds-ease-spring-soft': 'ease-out' };
+    const gcs = vi.spyOn(window, 'getComputedStyle').mockImplementation((el, pseudo) => {
+      const cs = real(el, pseudo);
+      return new Proxy(cs, {
+        get(target, key) {
+          if (key === 'getPropertyValue') return (name: string) => desk[name] ?? target.getPropertyValue(name);
+          const v = Reflect.get(target, key) as unknown;
+          return typeof v === 'function' ? (v as (...a: unknown[]) => unknown).bind(target) : v;
+        },
+      });
+    });
+    try {
+      const view = (collapsed: boolean) => (
+        <Sidebar label="Main" collapsed={collapsed}>
+          <SidebarGroup label="Workspace">
+            {['Home', 'Inbox', 'Projects', 'Reports', 'Team', 'Billing', 'Settings'].map((name) => (
+              <SidebarItem key={name} href={`#${name}`} start="home">
+                {name}
+              </SidebarItem>
+            ))}
+          </SidebarGroup>
+        </Sidebar>
+      );
+      const { rerender } = render(view(true));
+      rerender(view(false));
+      const wipes = (animate.mock.calls as unknown as [Keyframe[], KeyframeAnimationOptions][]).filter(([, o]) => o.id === 'ds-motion:sidebar-labels');
+      expect(wipes.length).toBeGreaterThan(5);
+      const ends = wipes.map(([, o]) => Number(o.delay ?? 0) + Number(o.duration ?? 0));
+      expect(Math.max(...ends)).toBeLessThanOrEqual(400);
+      // Still a stagger: the labels do not all start together.
+      expect(new Set(wipes.map(([, o]) => o.delay)).size).toBeGreaterThan(1);
+    } finally {
+      proto.animate = original;
+      gcs.mockRestore();
+    }
+  });
 });
+

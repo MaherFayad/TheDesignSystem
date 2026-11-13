@@ -28,7 +28,7 @@
 //   is never hidden (WCAG 2.4.11) and no footer link covers part of an item.
 // - The width never animates (only transform and opacity may), so collapse
 //   is instant. An opened group fades in (pattern "fade-rise").
-// - Motion of order 1.22 (proposed), from react/src/internal/indicator.ts:
+// - Motion of order 1.22 (proposed), from motion/src/helpers/indicator.ts:
 //   "nav-current-slide": when another item becomes current, its edge bar
 //   (the item's ::before) slides from the old one along the column on the
 //   snappy spring, stretched on the way, and the labels dip and pop.
@@ -58,10 +58,10 @@ import {
 } from 'react';
 import { Collapsible, Slot } from 'radix-ui';
 import { Icon, type IconName } from '@the-system/icons/react';
-import { readDuration, readEasing, staggerGroup, type PatternMode } from '@the-system/motion';
+import { followIndicator, popIn, readDuration, readEasing, staggerGroup, type IndicatorTrack, type PatternMode } from '@the-system/motion';
 import type { Size } from '@the-system/shared';
 import { useTheme } from '../../theme';
-import { followIndicator, popIn, useHoverFollow, useIndicatorTrack, type IndicatorTrack } from '../../internal/indicator';
+import { useHoverFollow, useIndicatorTrack } from '../../internal/indicator';
 import { useMotion } from '../../internal/motion';
 import { Button } from '../Button';
 import { IconButton } from '../IconButton';
@@ -141,18 +141,34 @@ function revealPanel(root: HTMLElement, from: number, to: number, mode: PatternM
   });
 }
 
-/** Round 3: each label wipes in from the inline start with clip-path, delay.stagger apart after two steps, at most six steps. */
+/**
+ * The time by which every label of an expanding sidebar is whole (order
+ * 1.29, review N34: in Desk the last label began at 270ms and was whole at
+ * 610ms). The stagger takes at most 40% of it and the wipe the rest, so a
+ * style with long springs compresses and a quick one keeps its own timing.
+ */
+const LABELS_WHOLE_BY_MS = 400;
+
+/** Round 3: each label wipes in from the inline start with clip-path, delay.stagger apart after two steps, at most six steps, all whole by LABELS_WHOLE_BY_MS. */
 function wipeLabels(labels: NodeListOf<Element>, mode: PatternMode): void {
   if (mode !== 'full') return;
+  const first = labels[0];
+  if (!first || typeof first.animate !== 'function') return;
+  // One read for the whole list: the tokens are the same on every label.
+  const rtl = getComputedStyle(first).direction === 'rtl';
+  const step = readDuration(first, 'delay.stagger');
+  const easing = readEasing(first, 'ease.spring-soft');
+  const steps = Math.min(6, labels.length + 1);
+  const maxDelay = Math.min(step * steps, LABELS_WHOLE_BY_MS * 0.4);
+  const gap = steps > 0 ? maxDelay / steps : 0;
+  const duration = Math.min(readDuration(first, 'duration.spring-soft'), LABELS_WHOLE_BY_MS - maxDelay);
   labels.forEach((el, i) => {
     if (typeof el.animate !== 'function') return;
-    const rtl = getComputedStyle(el).direction === 'rtl';
-    const step = readDuration(el, 'delay.stagger');
     el.animate([{ clipPath: rtl ? 'inset(0 0 0 100%)' : 'inset(0 100% 0 0)' }, { clipPath: 'inset(0)' }], {
       id: 'ds-motion:sidebar-labels',
-      duration: readDuration(el, 'duration.spring-soft'),
-      easing: readEasing(el, 'ease.spring-soft'),
-      delay: step * Math.min(6, i + 2),
+      duration,
+      easing,
+      delay: gap * Math.min(6, i + 2),
       fill: 'backwards',
     });
   });

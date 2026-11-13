@@ -13,8 +13,9 @@
  * tight list 1px apart. The stack and a swipe exit move in steps. The time
  * left is a 1px hairline on the block end edge, in the tone color.
  *
- * The one line row is a layout no private property says (the base grid
- * is three rows), so this file sets the toast's grid directly.
+ * The one line row is the hooks --_toast-columns and --_toast-areas
+ * (order 1.29), so a platform's own toast layout (the android snackbar)
+ * still wins over this file.
  */
 @layer ds.recipes {
   [data-style='studio'] [data-ds='toaster'] {
@@ -36,9 +37,9 @@
     --_toast-stack-ease: var(--ds-ease-spring-snappy);
     --_toast-swipe-ease-out: var(--ds-ease-spring-snappy);
 
-    grid-template-columns: var(--ds-size-icon-md) minmax(0, max-content) minmax(0, 1fr) auto auto;
-    grid-template-areas: 'icon title description action close';
-    grid-template-rows: auto;
+    --_toast-columns: var(--ds-size-icon-md) minmax(0, max-content) minmax(0, 1fr) auto auto;
+    --_toast-areas: 'icon title description action close';
+
     align-items: center;
     column-gap: var(--ds-space-s);
     min-block-size: var(--ds-size-control-md);

@@ -30,10 +30,9 @@ import { Avatar as RadixAvatar } from 'radix-ui';
 import { Icon, type IconName } from '@the-system/icons/react';
 import { hasArabic, initials, toneIndex, type Shape, type Size, type Tone } from '@the-system/shared';
 import { useTheme } from '../../theme/hooks';
-import { play } from '@the-system/motion';
+import { play, popMark, styleTurnsOff } from '@the-system/motion';
 import { useMotion } from '../../internal/motion';
 import { StatusDot } from '../StatusDot';
-import { popMark } from '../Stat/useDigitRoll';
 
 export type AvatarSize = Extract<Size, 'xs' | 'sm' | 'md' | 'lg'>;
 export type AvatarShape = Extract<Shape, 'default' | 'square'>;
@@ -136,7 +135,8 @@ export function Avatar({
     const before = lastStatus.current;
     lastStatus.current = status;
     const dot = statusRef.current;
-    if (!dot || !status || before === status || mode !== 'full') return;
+    // The status-pulse off row (--_status-dot-loops: 0 on the status part) stops the pop and the ping too (review N31).
+    if (!dot || !status || before === status || mode !== 'full' || styleTurnsOff(dot, '--_status-dot-loops')) return;
     popMark(dot, mode);
     const ring = dot.querySelector(':scope > [data-part="dot"]');
     if (ring) {

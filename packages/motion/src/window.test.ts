@@ -111,6 +111,46 @@ describe('web helper', () => {
     vi.unstubAllGlobals();
   });
 
+  it('plays the timing of the style preset row in the full form only (order 1.29)', () => {
+    const animate = vi.fn(() => ({ finished: Promise.resolve() }) as unknown as Animation);
+    const el = { animate, getAnimations: () => [], style: {} as CSSStyleDeclaration } as unknown as HTMLElement;
+    const vars: Record<string, string> = {
+      '--ds-duration-window-open': '300ms',
+      '--ds-ease-window': 'cubic-bezier(0.2, 0.8, 0.2, 1)',
+      '--ds-duration-spring-bouncy': '140ms',
+      '--ds-ease-spring-bouncy': 'steps(3, end)',
+      '--ds-duration-slow': '180ms',
+      '--ds-ease-out': 'cubic-bezier(0, 0, 0.2, 1)',
+      '--ds-duration-moderate': '150ms',
+      '--ds-ease-exit': 'cubic-bezier(0.4, 0, 1, 1)',
+      '--ds-duration-base': '120ms',
+    };
+    vi.stubGlobal('getComputedStyle', () => ({ getPropertyValue: (name: string) => vars[name] ?? '' }));
+    const last = () => (animate.mock.calls.at(-1) as unknown as [Keyframe[], KeyframeAnimationOptions])[1];
+
+    // Studio: one ease for both phases, the window duration kept.
+    animateWindow(el, 'grow', { from: trigger, to: win, reduced: false, preset: { mode: 'full', easing: 'ease.spring-bouncy' } });
+    expect(last()).toMatchObject({ duration: 300, easing: 'steps(3, end)' });
+
+    // Neutral: enter and exit timing; close is the exit phase.
+    const neutralGrow = { mode: 'full', enter: { duration: 'duration.slow', easing: 'ease.out' }, exit: { duration: 'duration.moderate', easing: 'ease.exit' } } as const;
+    animateWindow(el, 'grow', { from: trigger, to: win, reduced: false, preset: neutralGrow });
+    expect(last()).toMatchObject({ duration: 180, easing: 'cubic-bezier(0, 0, 0.2, 1)' });
+    animateWindow(el, 'close', { from: win, to: trigger, reduced: false, preset: neutralGrow });
+    expect(last()).toMatchObject({ duration: 150, easing: 'cubic-bezier(0.4, 0, 1, 1)' });
+
+    // The reduced form, and the fade mode, keep their own timing.
+    animateWindow(el, 'grow', { from: trigger, to: win, reduced: true, preset: neutralGrow });
+    expect(last()).toMatchObject({ duration: 120 });
+    animateWindow(el, 'grow', { from: trigger, to: win, reduced: false, mode: 'fade', preset: neutralGrow });
+    expect(last()).toMatchObject({ duration: 120 });
+
+    // No preset: the pattern's own tokens, as before.
+    animateWindow(el, 'grow', { from: trigger, to: win, reduced: false });
+    expect(last()).toMatchObject({ duration: 300, easing: 'cubic-bezier(0.2, 0.8, 0.2, 1)' });
+    vi.unstubAllGlobals();
+  });
+
   it('settled resolves for null, a finished and a cancelled animation', async () => {
     await expect(settled(null)).resolves.toBeUndefined();
     await expect(settled({ finished: Promise.resolve() } as unknown as Animation)).resolves.toBeUndefined();

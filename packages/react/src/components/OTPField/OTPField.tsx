@@ -17,7 +17,7 @@ import {
 import { codeInputHints, codeSeparatorIndexes, parseCode, type CodeCharset, type Shape, type Size } from '@the-system/shared';
 import { useMotion } from '../../internal/motion';
 import { useFieldControl } from '../Field/Field';
-import { landPop, playBeat, runStep, token } from '../Input/fieldMotion';
+import { landPop, playBeat, runStep, token } from '@the-system/motion';
 import { useErrorShake } from '../Input/useErrorShake';
 
 export type OTPFieldSize = Size;

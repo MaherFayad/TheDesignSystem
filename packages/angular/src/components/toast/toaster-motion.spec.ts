@@ -1,16 +1,15 @@
 // Order 1.23 in the toaster, as React's Toaster.tsx: the stack (stack.ts,
-// here internal/toast-stack.ts) with data-stacked and the place values,
+// toast-stack.ts in @the-system/motion) with data-stacked and the place values,
 // toast-expand (data-expanded on hover or focus inside), toast-timer (the
 // progress line and data-paused from the boolean that pauses the store),
-// toast-swipe (internal/toast-swipe.ts), and position auto.
+// toast-swipe (toast-swipe.ts in @the-system/motion), and position auto.
 import { Component, signal } from '@angular/core';
 import { TestBed, type ComponentFixture } from '@angular/core/testing';
 import { createToastStore, type ToastClock, type ToastStore } from '@the-system/shared';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { DsTheme } from '../../theme/theme';
 import { DsButton } from '../button/button';
-import { stackLayout } from '../../internal/toast-stack';
-import { RUBBER_MAX, rubberBand, swipeCloses, swipeVelocity } from '../../internal/toast-swipe';
+import { RUBBER_MAX, stackLayout, swipeCloses, swipeRubberBand, swipeVelocity } from '@the-system/motion';
 import { DsToaster, resolveToasterPosition, type ToasterPositionProp } from './toaster';
 
 /** A clock that never fires on its own, so toasts stay until a test closes them. */
@@ -215,7 +214,8 @@ describe('toast-expand and toast-timer', () => {
     expect(line.getAttribute('data-part')).toBe('progress');
     expect(line.tagName).toBe('SPAN');
     expect(line.getAttribute('aria-hidden')).toBe('true');
-    expect(line.getAttribute('style')).toBe(`--_toast-life: ${store.getSnapshot().visible[0]!.duration}ms;`);
+    // Order 1.29 (N29): the line may mount a few milliseconds behind the store's timer, as a negative delay.
+    expect(line.getAttribute('style')).toMatch(new RegExp(`^--_toast-life: ${store.getSnapshot().visible[0]!.duration}ms;( animation-delay: -\\d+ms;)?$`));
     expect(danger!.querySelector('[data-part="progress"]')).toBeNull();
     expect(action!.querySelector('[data-part="progress"]')).toBeNull();
   });
@@ -236,9 +236,9 @@ describe('toast-expand and toast-timer', () => {
 
 describe('toast-swipe', () => {
   it('the pure rules: rubber band capped, distance and flick close', () => {
-    expect(rubberBand(30)).toBe(30);
-    expect(rubberBand(-24)).toBe(-12);
-    expect(rubberBand(-10000)).toBeGreaterThan(-RUBBER_MAX);
+    expect(swipeRubberBand(30)).toBe(30);
+    expect(swipeRubberBand(-24)).toBe(-12);
+    expect(swipeRubberBand(-10000)).toBeGreaterThan(-RUBBER_MAX);
     expect(swipeCloses(50, 0)).toBe(true);
     expect(swipeCloses(49, 0)).toBe(false);
     expect(swipeCloses(10, 0.31)).toBe(true);
@@ -319,7 +319,10 @@ describe('position auto', () => {
   it('resolves top-center on ios and bottom-end elsewhere', async () => {
     expect(resolveToasterPosition('auto', 'ios')).toBe('top-center');
     expect(resolveToasterPosition('auto', 'android')).toBe('bottom-end');
-    expect(resolveToasterPosition('top-end', 'ios')).toBe('top-end');
+    // Order 1.29 (review 3, B7): ios.css moves every toaster to the top centre, so every position resolves there.
+    expect(resolveToasterPosition('top-end', 'ios')).toBe('top-center');
+    expect(resolveToasterPosition('bottom-end', 'ios')).toBe('top-center');
+    expect(resolveToasterPosition('top-end', 'android')).toBe('top-end');
     const { host, store } = await setup();
     host.position.set('auto');
     await settle();
@@ -329,5 +332,46 @@ describe('position auto', () => {
     await settle();
     expect(list().getAttribute('data-position')).toBe('top-center');
     expect(toasts()[0]!.getAttribute('data-swipe-direction')).toBe('up');
+  });
+});
+
+// Order 1.29 (review 3, B7 and N29), as React's Toast.test.tsx.
+describe('order 1.29 toaster parity', () => {
+  it('on ios an explicit position sits at the top centre and swipes up (B7)', async () => {
+    const { host, store } = await setup();
+    host.position.set('bottom-end');
+    host.platform.set('ios');
+    store.add({ title: 'Draft saved' });
+    await settle();
+    expect(list().getAttribute('data-position')).toBe('top-center');
+    expect(toasts()[0]!.getAttribute('data-swipe-direction')).toBe('up');
+  });
+
+  it('the progress line mounts as far along as the store timer (N29)', async () => {
+    const { store } = await setup();
+    const real = Date.now;
+    let now = 10000;
+    Date.now = () => now;
+    try {
+      store.add({ title: 'Board duplicated', duration: 5000 });
+      // A slow commit: the toast renders 300ms after the store started its timer.
+      now += 300;
+      await settle();
+    } finally {
+      Date.now = real;
+    }
+    const line = toasts()[0]!.querySelector<HTMLElement>(':scope > [data-part="progress"]')!;
+    expect(line.style.getPropertyValue('--_toast-life')).toBe('5000ms');
+    expect(line.style.animationDelay).toBe('-300ms');
+  });
+
+  it('a line that renders with its timer has no delay (N29)', async () => {
+    const { store } = await setup();
+    store.add({ title: 'Board duplicated', duration: 5000 });
+    await settle();
+    const line = toasts()[0]!.querySelector<HTMLElement>(':scope > [data-part="progress"]')!;
+    // Rendered in the same few milliseconds: at most a small negative delay, never a positive one.
+    const delay = line.style.animationDelay;
+    expect(delay === '' || /^-\d+ms$/.test(delay)).toBe(true);
   });
 });

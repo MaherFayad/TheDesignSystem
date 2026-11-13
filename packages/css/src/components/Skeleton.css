@@ -40,6 +40,8 @@
  */
 @layer ds.base {
   [data-ds='skeleton'] {
+    /* The swap to content (skeleton-swap): wipe draws the ghost off; none swaps at once, read by the code that plays it (review N31). */
+    --_skeleton-swap: wipe;
     --_skeleton-bg: var(--ds-color-bg-overlay-10);
     --_skeleton-highlight: var(--ds-color-bg-overlay-10);
     --_skeleton-radius: var(--ds-radius-xs);

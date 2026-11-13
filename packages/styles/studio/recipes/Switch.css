@@ -7,10 +7,9 @@
  * changes instead of sweeping behind it (--_switch-sweep: 0). Press does
  * not grow or stretch the thumb: scale.pop and scale.stretch are 1 here.
  *
- * The component draws its track, thumb and fill with radius.pill and has
- * no radius property, so the corners are set on the parts here, and the
- * fill's rounded clip is turned off (the sweep is off, so it clips nothing).
- * Colors swap only where forced colors are off. The track rule keeps the
+ * Order 1.29: the corners are the hooks --_switch-radius (the control, its
+ * ring, the track and the fill, whose clip follows it) and
+ * --_switch-thumb-radius, not rules on the parts. Colors swap only where forced colors are off. The track rule keeps the
  * component's state swaps (this layer would win over them), so only the
  * hover rule and the off thumb are set.
  */
@@ -22,6 +21,8 @@
     --_switch-thumb-backdrop: none;
     --_switch-thumb-highlight: none;
     --_switch-track-press: 1;
+    --_switch-radius: var(--ds-radius-xs);
+    --_switch-thumb-radius: 0;
 
     font-variant-numeric: tabular-nums;
   }
@@ -38,19 +39,6 @@
     }
   }
 
-  [data-style='studio'] [data-ds='switch'] > [data-part='control'],
-  [data-style='studio'] [data-ds='switch'] > [data-part='control']::before,
-  [data-style='studio'] [data-ds='switch'] > [data-part='control'] > [data-part='track'] {
-    border-radius: var(--ds-radius-xs);
-  }
-
-  [data-style='studio'] [data-ds='switch'] > [data-part='control'] > [data-part='track'] > :is(span:not([data-part]), [data-part='thumb']) {
-    border-radius: 0;
-  }
-
-  [data-style='studio'] [data-ds='switch'] > [data-part='control'] > [data-part='track'] > span:not([data-part]) {
-    clip-path: none;
-  }
   /* The press shape is the platform's on ios and android (packages/css/src/platform),
      and recipes beat that layer, so the style sets it only on the web platform. */
   [data-style='studio'][data-platform='web'] [data-ds='switch'] {

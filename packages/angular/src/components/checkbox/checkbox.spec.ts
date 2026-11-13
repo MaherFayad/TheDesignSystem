@@ -107,6 +107,28 @@ describe('DsCheckbox', () => {
     expect(mark('sized')?.getAttribute('style')).toBeNull();
   });
 
+  // Order 1.29 (B5), as React's Checkbox.motion.test.tsx: a mark drawn from an empty box carries data-enter.
+  it('marks data-enter on a mark drawn from an empty box, and only then', async () => {
+    const { root, host, settle } = await setup();
+    const mark = (id: string) => root(id).querySelector('[data-part="indicator"] > [data-part="mark"]');
+    // At rest from the first render: no change, no enter.
+    expect(mark('sized')?.hasAttribute('data-enter')).toBe(false);
+    expect(mark('bound')?.hasAttribute('data-enter')).toBe(false);
+    host.checked.set('indeterminate');
+    await settle();
+    expect(mark('bound')?.getAttribute('data-enter')).toBe('');
+    host.checked.set(true);
+    await settle();
+    // From mixed to checked the strokes morph: not an enter.
+    expect(mark('bound')?.hasAttribute('data-enter')).toBe(false);
+    host.checked.set(false);
+    await settle();
+    expect(mark('bound')?.hasAttribute('data-enter')).toBe(false);
+    host.checked.set(true);
+    await settle();
+    expect(mark('bound')?.getAttribute('data-enter')).toBe('');
+  });
+
   it('a click on the indeterminate box checks it', async () => {
     const { root, control, settle } = await setup();
     control('sized').click();

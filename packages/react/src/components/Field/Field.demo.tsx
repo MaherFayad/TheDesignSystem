@@ -139,6 +139,38 @@ export default function FieldDemo() {
           <Input defaultValue="ws_4f9a21" />
         </Field>
       </DemoCase>
+
+      {/* Floating labels: empty fields rest the label in the box at every size; a filled one and an invalid one show it above. */}
+      <DemoCase id="floating" title="Floating label" lang="en">
+        <DemoGrid min="14rem">
+          <Field label="Team name" floating>
+            <Input size="sm" />
+          </Field>
+          <Field label="Board name" floating description="Shown on the board card.">
+            <Input />
+          </Field>
+          <Field label="Work email" floating>
+            <Input size="lg" type="email" />
+          </Field>
+          <Field label="City" floating>
+            <Input defaultValue="Riyadh" />
+          </Field>
+          <Field label="Email" floating error="Enter an email address, like name@example.com.">
+            <Input type="email" defaultValue="sara@" />
+          </Field>
+        </DemoGrid>
+      </DemoCase>
+
+      <DemoCase id="floating-arabic" title="عنوان عائم" lang="ar">
+        <DemoGrid min="14rem">
+          <Field label="اسم الفريق" floating>
+            <Input />
+          </Field>
+          <Field label="المدينة" floating>
+            <Input defaultValue="الرياض" />
+          </Field>
+        </DemoGrid>
+      </DemoCase>
     </DemoPage>
   );
 }

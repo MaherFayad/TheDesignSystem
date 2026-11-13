@@ -36,8 +36,17 @@
 // Clips and frames go to a scratch folder (RECORD_TMP, default a folder in
 // the OS temp dir). Results next to this file: clips/<family>.<style>.webm
 // and sheets/<id>.<style>.png. A log line per interaction goes to stdout.
+//
+// Order 1.29 (B13): `SHEETS_ONLY=1` writes the sheets and no video next to
+// this file (raw clips stay in RECORD_TMP). The sheet size is set by
+// `SHEET_TILE_W` (default 480), `SHEET_FRAMES` per band (default 12, taken
+// `SHEET_STEP_MS` apart, default 40), `SHEET_PER_ROW` (default 6),
+// `SHEET_BANDS` (default 5) and `SHEET_COLORS` (0 keeps full colour; 2 to
+// 256 writes a palette PNG with that many colours). `SKIP_FAMILY=a,b` leaves
+// families out. Each clip is held 1.5s still at its end so a band never runs
+// past it; a band that still would is cut to the frames that exist.
 const { chromium } = require('playwright');
-const { execFileSync } = require('node:child_process');
+const { execFileSync, spawnSync } = require('node:child_process');
 const fs = require('node:fs');
 const os = require('node:os');
 const path = require('node:path');
@@ -47,11 +56,15 @@ const OUT = __dirname;
 const TMP = process.env.RECORD_TMP || path.join(os.tmpdir(), 'ds-record-3');
 const FRAME = { width: 960, height: 540 };
 const MIN_REGION = { width: 120, height: 68 };
-const TILE_W = 480;
-const STEP_MS = 40;
-const PER_BAND = 12;
-const PER_ROW = 6;
-const MAX_BANDS = 5;
+const env = (k, d) => (process.env[k] ? Number(process.env[k]) : d);
+const SHEETS_ONLY = process.env.SHEETS_ONLY === '1';
+const SKIP = (process.env.SKIP_FAMILY || '').split(',').filter(Boolean);
+const TILE_W = env('SHEET_TILE_W', 480);
+const STEP_MS = env('SHEET_STEP_MS', 40);
+const PER_BAND = env('SHEET_FRAMES', 12);
+const PER_ROW = env('SHEET_PER_ROW', 6);
+const MAX_BANDS = env('SHEET_BANDS', 5);
+const COLORS = env('SHEET_COLORS', 0);
 const wait = (p, ms) => p.waitForTimeout(ms);
 
 const OVERLAYS = [
@@ -286,6 +299,20 @@ async function recordOne(browser, row, spec) {
   }
   await page.mouse.move(8, viewport.height - 8);
   await wait(page, 400);
+  // A black frame over everything for 240ms: the sheet finds it in the video
+  // and aligns the wall clock marks to video time (the first video frame is
+  // not at t0, and the gap changes from run to run).
+  const flash = await page.evaluate(() => {
+    const d = document.createElement('div');
+    d.id = 'ds-record-sync';
+    d.style.cssText = 'position:fixed;inset:-10px;background:#000;z-index:2147483647;zoom:1';
+    document.body.appendChild(d);
+    return new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(() => r(Date.now()))));
+  });
+  const flashAt = flash - t0;
+  await wait(page, 240);
+  await page.evaluate(() => document.getElementById('ds-record-sync')?.remove());
+  await wait(page, 300);
   const b = loc ? await loc.boundingBox() : null;
   const at = b ? centreOf(b) : null;
   if (at) {
@@ -297,6 +324,8 @@ async function recordOne(browser, row, spec) {
     }
     await page.mouse.move(8, viewport.height - 8, { steps: 10 });
     await wait(page, 400);
+    // Hold still so the last band never runs past the end of the clip.
+    await wait(page, Math.max(1500, PER_BAND * STEP_MS + 300));
   } else {
     await wait(page, 2000);
   }
@@ -308,20 +337,31 @@ async function recordOne(browser, row, spec) {
   const cw = Math.min(FRAME.width, Math.round(region.width * z));
   const ch = Math.min(FRAME.height, Math.round(region.height * z));
   const crop = { w: cw - (cw % 2), h: ch - (ch % 2), x: Math.round((FRAME.width - cw) / 2), y: Math.round((FRAME.height - ch) / 2) };
-  return { ...row, file, marks, errs, found: Boolean(at), z, crop, opened: m ? m.opened : 0 };
+  return { ...row, file, marks, errs, found: Boolean(at), z, crop, opened: m ? m.opened : 0, flashAt };
+}
+
+/** Video time minus wall clock, in ms, from the black sync frame. */
+function syncOffset(rec) {
+  const res = spawnSync('ffmpeg', ['-v', 'info', '-i', rec.file, '-t', String(rec.flashAt / 1000 + 6), '-vf', 'scale=96:-2,blackframe=amount=95:threshold=24', '-an', '-f', 'null', '-'], { encoding: 'utf8' });
+  const m = String(res.stderr || '').match(/blackframe.* t:([0-9.]+)/);
+  if (!m) return null;
+  return Math.round(Number(m[1]) * 1000 - rec.flashAt);
 }
 
 function sheet(rec) {
   const dir = path.join(TMP, style, 'bands', rec.id);
   fs.mkdirSync(dir, { recursive: true });
   const { crop } = rec;
+  const off = rec.flashAt != null ? syncOffset(rec) : null;
+  rec.offset = off;
   const tileH = Math.round((crop.h * TILE_W) / crop.w / 2) * 2;
   const bands = [];
   rec.marks.slice(0, MAX_BANDS).forEach((mk, i) => {
     const f = path.join(dir, `${i}.png`);
-    const vf = `crop=${crop.w}:${crop.h}:${crop.x}:${crop.y},scale=${TILE_W}:${tileH}:flags=lanczos,fps=25,tile=${PER_ROW}x${PER_BAND / PER_ROW}:padding=4:color=gray`;
+    const rows = Math.ceil(PER_BAND / PER_ROW);
+    const vf = `crop=${crop.w}:${crop.h}:${crop.x}:${crop.y},scale=${TILE_W}:${tileH}:flags=lanczos,fps=${Math.round(1000 / STEP_MS)},tile=${PER_ROW}x${rows}:padding=4:color=gray`;
     try {
-      execFileSync('ffmpeg', ['-v', 'error', '-y', '-ss', (mk / 1000).toFixed(3), '-i', rec.file, '-t', ((PER_BAND * STEP_MS) / 1000).toFixed(3), '-vf', vf, '-frames:v', '1', f]);
+      execFileSync('ffmpeg', ['-v', 'error', '-y', '-ss', (Math.max(0, mk + (off || 0)) / 1000).toFixed(3), '-i', rec.file, '-t', ((PER_BAND * STEP_MS) / 1000).toFixed(3), '-vf', vf, '-frames:v', '1', f]);
       bands.push(f);
     } catch {
       /* past the end */
@@ -331,13 +371,17 @@ function sheet(rec) {
   const outDir = path.join(OUT, 'sheets');
   fs.mkdirSync(outDir, { recursive: true });
   const out = path.join(outDir, `${rec.id}.${style}.png`);
-  if (bands.length === 1) execFileSync('ffmpeg', ['-v', 'error', '-y', '-i', bands[0], out]);
-  else {
-    const args = ['-v', 'error', '-y'];
-    for (const f of bands) args.push('-i', f);
-    args.push('-filter_complex', `${bands.map((_, i) => `[${i}:v]pad=iw:ih+12:0:0:black[b${i}]`).join(';')};${bands.map((_, i) => `[b${i}]`).join('')}vstack=inputs=${bands.length}`, '-frames:v', '1', out);
-    execFileSync('ffmpeg', args);
-  }
+  const args = ['-v', 'error', '-y'];
+  for (const f of bands) args.push('-i', f);
+  // Bands of different widths (a band cut short) are padded to the widest.
+  const W = Math.max(...bands.map((f) => Number(execFileSync('ffprobe', ['-v', 'error', '-select_streams', 'v:0', '-show_entries', 'stream=width', '-of', 'csv=p=0', f]).toString().trim())));
+  const graph =
+    bands.length === 1
+      ? '[0:v]null[s]'
+      : `${bands.map((_, i) => `[${i}:v]pad=${W}:ih+12:0:0:black[b${i}]`).join(';')};${bands.map((_, i) => `[b${i}]`).join('')}vstack=inputs=${bands.length}[s]`;
+  const quant = COLORS >= 2 ? `;[s]split[q1][q2];[q1]palettegen=max_colors=${Math.min(256, COLORS)}:stats_mode=full[p];[q2][p]paletteuse=dither=none[o]` : ';[s]null[o]';
+  args.push('-filter_complex', graph + quant, '-map', '[o]', '-frames:v', '1', '-compression_level', '9', out);
+  execFileSync('ffmpeg', args);
   return out;
 }
 
@@ -371,17 +415,23 @@ function stitch(family, recs) {
   let rows = await listInteractions(browser);
   if (onlyFamily) rows = rows.filter((r) => r.family === onlyFamily);
   if (onlyIds) rows = rows.filter((r) => onlyIds.split(',').includes(r.id));
+  if (SKIP.length) rows = rows.filter((r) => !SKIP.includes(r.family));
   const recs = [];
   for (const row of rows) {
     const spec = loadDrives(row.family)[row.id] || {};
     const rec = await recordOne(browser, row, spec);
-    rec.sheet = sheet(rec);
-    rec.cropped = cropClip(rec);
+    try {
+      rec.sheet = sheet(rec);
+    } catch (e) {
+      rec.errs.push(`sheet: ${String(e.message).slice(0, 200)}`);
+    }
+    if (!SHEETS_ONLY) rec.cropped = cropClip(rec);
+    else fs.rmSync(rec.file, { force: true });
     recs.push(rec);
-    console.log(JSON.stringify({ id: rec.id, family: rec.family, found: rec.found, z: rec.z, crop: rec.crop, opened: rec.opened, marks: rec.marks, errs: rec.errs.slice(0, 2) }));
+    console.log(JSON.stringify({ id: rec.id, family: rec.family, style, found: rec.found, offset: rec.offset, z: rec.z, crop: rec.crop, opened: rec.opened, marks: rec.marks, sheet: rec.sheet ? path.basename(rec.sheet) : null, bytes: rec.sheet ? fs.statSync(rec.sheet).size : 0, errs: rec.errs.slice(0, 2) }));
   }
   await browser.close();
-  if (!onlyIds) {
+  if (!onlyIds && !SHEETS_ONLY) {
     const families = [...new Set(recs.map((r) => r.family))];
     for (const f of families) {
       const out = stitch(f, recs.filter((r) => r.family === f));

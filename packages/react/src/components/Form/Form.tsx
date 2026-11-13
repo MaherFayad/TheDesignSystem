@@ -54,14 +54,13 @@ import {
   type FormValues,
   type Size,
 } from '@the-system/shared';
-import { staggerGroup } from '@the-system/motion';
+import { FollowGlide, playBeat, runStep, staggerGroup, token } from '@the-system/motion';
 import { useMotion } from '../../internal/motion';
 import { useTheme } from '../../theme';
 import { Alert } from '../Alert/Alert';
 import { Button, type ButtonProps } from '../Button';
 import { Field, type FieldOrientation, type FieldProps } from '../Field/Field';
 import { Link } from '../Link/Link';
-import { playBeat, runStep, token } from '../Input/fieldMotion';
 
 export type FormSize = Extract<Size, 'sm' | 'md' | 'lg'>;
 export type FormState = 'idle' | 'submitting' | 'submitted';
@@ -547,6 +546,13 @@ export function Form({
         mode: motion.mode('form-summary-enter'),
       });
   }, [shownRun, motion]);
+
+  // Review N12: a summary or a message that enters moves what is under it; each row glides there, no jump.
+  useEffect(() => {
+    const form = formRef.current;
+    if (!form) return undefined;
+    return new FollowGlide().watchChildren(form);
+  }, []);
 
   // form-submit-success: when a submit passes, the actions take one celebrate beat: each button
   // rises to scale.pop and springs back, as one short run from the first. The form is already sent.

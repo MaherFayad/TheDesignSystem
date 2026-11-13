@@ -27,7 +27,7 @@
 //   Drawer gives the focus trap, Escape and the return to the button.
 // - The chevron of a trigger is Button's own `end` part; the Navbar turns
 //   it over, it does not own it.
-// - Motion of order 1.22 (proposed), from react/src/internal/indicator.ts:
+// - Motion of order 1.22 (proposed), from motion/src/helpers/indicator.ts:
 //   "nav-current-slide": when another link of the bar becomes current, its
 //   bar (the link's ::before) slides from the old one on the snappy spring,
 //   stretched on the way. "nav-hover-follow": the hover veil (::after)
@@ -43,8 +43,8 @@ import { Button } from '../Button';
 import { IconButton } from '../IconButton';
 import { Drawer, DrawerBody, DrawerContent, DrawerFooter, DrawerTrigger } from '../Drawer';
 import { Sidebar, SidebarGroup, SidebarItem } from '../Sidebar';
-import { followIndicator, fromLocal, useHoverFollow, useIndicatorTrack } from '../../internal/indicator';
-import { playInk } from '../Tabs/ink';
+import { inFrame, planFollow, planInk } from '@the-system/motion';
+import { useHoverFollow, useIndicatorTrack } from '../../internal/indicator';
 import { useMotion } from '../../internal/motion';
 
 /** The links of the bar itself, not those in a panel. */
@@ -132,30 +132,38 @@ export function Navbar({
   useHoverFollow(rootRef, { item: BAR_LINK, pseudo: '::after', mode: () => motion.mode('nav-hover-follow') });
 
   // The current link of the bar: its bar (::before) slides from the link that was current (nav-current-slide).
+  // Order 1.29 (review B14): read with every other list of the commit, write after (inFrame).
   useLayoutEffect(() => {
-    const root = rootRef.current;
-    const current = root?.querySelectorAll<HTMLElement>(`${BAR_LINK}[data-active]`);
-    if (!root || !current || current.length !== 1) {
-      track.key = null;
-      return;
-    }
-    const link = current[0]!;
-    const left = track.el;
-    const slide = followIndicator(track, link.getAttribute('href') ?? '', { el: link, pseudo: '::before' }, { mode: motion.mode('nav-current-slide'), anchor: root, axis: 'x' });
-    // Round 3: the link text takes the current color where the bar is (Tabs/ink.ts).
-    if (slide && track.rect) {
-      playInk({
-        switch: '--_navbar-ink',
-        slide,
-        to: fromLocal(track.rect, root),
-        anchor: root,
-        parts: Array.from(root.querySelectorAll(BAR_LINK)),
-        reaching: [link],
-        restFrom: left !== link ? left : null,
-        inkFrom: link,
-        axis: 'x',
-      });
-    }
+    const mode = motion.mode('nav-current-slide');
+    inFrame(() => {
+      const root = rootRef.current;
+      const current = root?.querySelectorAll<HTMLElement>(`${BAR_LINK}[data-active]`);
+      if (!root || !root.isConnected || !current || current.length !== 1) {
+        track.key = null;
+        return;
+      }
+      const link = current[0]!;
+      const left = track.el;
+      const plan = planFollow(track, link.getAttribute('href') ?? '', { el: link, pseudo: '::before' }, { mode, anchor: root, axis: 'x' });
+      // Round 3: the link text takes the current color where the bar is (helpers/nav-ink.ts in @the-system/motion).
+      const ink = plan.slide
+        ? planInk({
+            switch: '--_navbar-ink',
+            slide: plan.slide,
+            to: plan.to,
+            anchor: root,
+            parts: Array.from(root.querySelectorAll(BAR_LINK)),
+            reaching: [link],
+            restFrom: left !== link ? left : null,
+            inkFrom: link,
+            axis: 'x',
+          })
+        : null;
+      return () => {
+        const slide = plan.write();
+        ink?.(slide);
+      };
+    });
   });
   // Radix builds element ids from item values, so values are indexes, never labels with spaces.
   const openIndex = defaultOpenMenu === undefined ? -1 : items.findIndex((item) => item.label === defaultOpenMenu);

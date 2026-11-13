@@ -55,7 +55,7 @@ describe('Button', () => {
     );
     const el = root(container);
     const parts = Array.from(el.children).map((c) => c.getAttribute('data-part'));
-    expect(parts).toEqual(['start', 'label', 'end']);
+    expect(parts).toEqual(['start', 'label', 'end', 'hit']);
     const start = el.querySelector('[data-part="start"] [data-ds="icon"]');
     expect(start?.getAttribute('data-icon')).toBe('plus');
     expect(start?.getAttribute('aria-hidden')).toBe('true');
@@ -529,4 +529,44 @@ describe('Button press and layers CSS (order 1.23)', () => {
     for (const line of ['--_button-glow: 0;', '--_button-press-y: 0px;', '--_button-shake: 0px;', '--_button-draw: 0;']) expect(block).toContain(line);
     expect(css).toContain("[data-contrast='more'] :is(");
   });
+
+  // Order 1.29 (angular-sync-3 section 6 item 5): one fragment shape while the spinner leaves and after it.
+  it('keeps the label element while the spinner leaves and after it has gone', async () => {
+    const proto = HTMLElement.prototype as unknown as { animate?: unknown };
+    const original = proto.animate;
+    proto.animate = vi.fn(() => ({ finished: Promise.resolve(), cancel() {}, effect: null }) as unknown as Animation);
+    try {
+      const { container, rerender } = render(<Button loading>Save draft</Button>);
+      const label = container.querySelector('[data-part="label"]');
+      expect(label).not.toBeNull();
+      rerender(<Button>Save draft</Button>);
+      expect(container.querySelector('[data-part="spinner"]')).not.toBeNull();
+      expect(container.querySelector('[data-part="label"]')).toBe(label);
+      await act(async () => {
+        await Promise.resolve();
+      });
+      expect(container.querySelector('[data-part="spinner"]')).toBeNull();
+      expect(container.querySelector('[data-part="label"]')).toBe(label);
+    } finally {
+      proto.animate = original;
+    }
+  });
+
+  // Order 1.29 (review B10): the platform hit area is its own part, so the glow (::before) keeps the control's box.
+  it('renders the hit part last, hidden from assistive tech, and the platforms grow it, not the glow', () => {
+    const { container } = render(<Button>Save draft</Button>);
+    const hit = container.querySelector('button > [data-part="hit"]');
+    expect(hit?.getAttribute('aria-hidden')).toBe('true');
+    expect(hit?.parentElement?.lastElementChild).toBe(hit);
+    const css = (f: string) => readFileSync(join(process.cwd(), 'packages/css/src', f), 'utf8');
+    expect(css('components/Button.css')).toMatch(/> \[data-part='hit'\] \{\s*display: none;/);
+    for (const [file, token] of [['platform/ios.css', 'touch-ios'], ['platform/android.css', 'touch-android']] as const) {
+      const rule = new RegExp(`\\[data-ds='copy-button'\\], \\[data-ds='floating-action-button'\\]\\) > \\[data-part='hit'\\],[^{]*\\{([^}]*)\\}`).exec(css(file))?.[1] ?? '';
+      expect(rule).toContain('pointer-events: auto');
+      expect(rule).toContain(`var(--ds-size-${token})`);
+      // The glow layer is never grown by a platform: only Chip's ::before is.
+      expect(css(file)).not.toMatch(/'copy-button'\], \[data-ds='chip'\]\)::before/);
+    }
+  });
 });
+

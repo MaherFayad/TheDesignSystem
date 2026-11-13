@@ -516,8 +516,11 @@
 
   /*
    * The rows arrive in order: the inside of each row (never the row, its
-   * fill or its ring), the labels and the separators. The first one follows
-   * the surface by one step.
+   * fill or its ring), the labels and the separators. They fade in with the
+   * surface (its own opacity, full at 40% of its run) and never on their
+   * own, so no empty card shows and the last row is readable when the
+   * surface is; only the rise is staggered, the first one step after the
+   * surface (order 1.29, review N25 and ten weakest #9).
    */
   :is([data-ds='dropdown-menu'], [data-ds='context-menu'])[data-state='open'] :is([data-part='item'], [data-part='checkbox-item'], [data-part='radio-item'], [data-part='sub-trigger']) > *,
   :is([data-ds='dropdown-menu'], [data-ds='context-menu'])[data-state='open'] > :is([data-part='label'], [data-part='separator']),
@@ -570,13 +573,17 @@
     }
   }
 
+  /*
+   * The rise of a row, staggered. A row does not fade on its own (order
+   * 1.29): it is at full opacity on every frame, and the surface's fade
+   * carries it in.
+   */
   @keyframes ds-menu-row-in {
     from {
-      opacity: 0;
+      opacity: 1;
       transform: translateY(var(--_menu-item-shift));
     }
 
-    /* Readable early: full opacity at 30%, the transform carries the rest. */
     30% {
       opacity: 1;
     }

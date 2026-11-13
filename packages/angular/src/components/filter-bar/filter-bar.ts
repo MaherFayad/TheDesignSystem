@@ -28,6 +28,7 @@ import {
   Component,
   DestroyRef,
   ElementRef,
+  afterNextRender,
   afterRenderEffect,
   computed,
   effect,
@@ -273,9 +274,24 @@ export class DsFilterBar {
     });
 
     // collection-flip: the bar's parts and the chips make room as clear, the count and checks come and go.
-    const flipBar = injectFlipGroup({ items: barPartsOf });
-    const flipChips = injectFlipGroup({ items: chipsOf, ghosts: false });
+    // Nothing plays on mount (order 1.29, as React): the renders and the layout of the first frames (the
+    // theme, fonts, the count) are a first paint, not a change. The groups see no items until the bar has
+    // settled for two frames; one render then records the settled places, and only a later change plays.
+    const flipReady = signal(false);
+    let flipFrame = 0;
+    afterNextRender(() => {
+      if (typeof requestAnimationFrame !== 'function') return flipReady.set(true);
+      flipFrame = requestAnimationFrame(() => {
+        flipFrame = requestAnimationFrame(() => flipReady.set(true));
+      });
+    });
+    inject(DestroyRef).onDestroy(() => {
+      if (flipFrame && typeof cancelAnimationFrame === 'function') cancelAnimationFrame(flipFrame);
+    });
+    const flipBar = injectFlipGroup({ items: (root) => (untracked(flipReady) ? barPartsOf(root) : []) });
+    const flipChips = injectFlipGroup({ items: (strip) => (untracked(flipReady) ? chipsOf(strip) : []), ghosts: false });
     afterRenderEffect(() => {
+      flipReady();
       this.current();
       this.query();
       this.countText();

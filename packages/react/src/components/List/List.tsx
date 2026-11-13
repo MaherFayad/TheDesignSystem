@@ -38,9 +38,8 @@ import {
 import { Icon, type IconName } from '@the-system/icons/react';
 import type { Size } from '@the-system/shared';
 import { useMotion } from '../../internal/motion';
-import { staggerGroup } from '@the-system/motion';
+import { setPressPoint, staggerGroup } from '@the-system/motion';
 import { useFlipGroup, useRowGlide } from '../ListBox/selectionMotion';
-import { setPressPoint } from '../ListBox/highlightMarker';
 
 /** The rows of a list element. */
 const rowsOf = (list: Element) => Array.from(list.querySelectorAll(":scope > [data-part='item']"));

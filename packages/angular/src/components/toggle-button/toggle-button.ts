@@ -21,7 +21,7 @@ import { ChangeDetectionStrategy, Component, booleanAttribute, computed, input, 
 import { NgTemplateOutlet } from '@angular/common';
 import { DsIcon } from '@the-system/icons/angular';
 import { play } from '@the-system/motion';
-import { pressShare, toggleLayerSpec } from '../../internal/toggles-motion';
+import { pressShare, toggleLayerSpec } from '@the-system/motion';
 import { ownAttribute } from '../../internal/own-attribute';
 import { consumeHostAttributes } from '../../internal/host';
 import { listenAfterCallers } from '../../internal/late-listener';
@@ -59,6 +59,7 @@ import { DsButtonBase, isIconName, type ButtonEmphasis, type ButtonSlotContent }
         <span data-part="end"><ng-container [ngTemplateOutlet]="slot" [ngTemplateOutletContext]="{ $implicit: content }" /></span>
       }
     }
+    <span data-part="hit" aria-hidden="true"></span>
   `,
 })
 export class DsToggleButton extends DsButtonBase {

@@ -44,9 +44,18 @@
  *                             and how each one turns; the check or the dash by data-glyph
  *   --_checkbox-short-cut, -long-cut   working: the stroke-dashoffset of each stroke,
  *                             0 drawn, 1.05 retracted, a part for the dash
+ *
+ * Order 1.29 (fix round 1 of the round 3 review) adds:
+ *   --_checkbox-morph-now     working, on the mark: 1 the strokes turn between the check and
+ *                             the dash, 0 they take the glyph's angles at once (B5: a mark
+ *                             drawn from an empty box, marked data-enter, only draws)
+ *   --_checkbox-fill-shown    working, on the fill: 1 shown, 0 faded; the fill fades on
+ *                             ease.in as it closes, so an uncheck ends on no centre dot (N9)
  * The parts: the indicator holds the unnamed fill span and the mark part, an
  * aria-hidden svg with two strokes. `data-glyph` on the mark is `check` or
  * `minus`: the last mark shown, so an uncheck retracts the one that was there.
+ * `data-enter` on the mark (order 1.29) marks a change from unchecked: the
+ * strokes take the new glyph's angles at once and only draw.
  * --_checkbox-mark-scale is kept for recipes; the round 3 draw does not read it.
  *
  * `-border-color-invalid` is a state suffix beyond the convention's list:
@@ -109,6 +118,7 @@
     --_checkbox-fill-now: 0%;
     --_checkbox-short-cut: 1.05;
     --_checkbox-long-cut: 1.05;
+    --_checkbox-fill-shown: 1;
 
     display: inline-grid;
     grid-template-columns: var(--_checkbox-target) minmax(0, auto);
@@ -221,7 +231,10 @@
     border-radius: inherit;
     background-color: var(--_checkbox-fill);
     clip-path: circle(var(--_checkbox-fill-now) at 50% 50%);
-    transition: clip-path calc(var(--_checkbox-duration) * 0.5) var(--_checkbox-fill-ease) calc(var(--_checkbox-stagger) * var(--_checkbox-step) * var(--_checkbox-motion));
+    opacity: var(--_checkbox-fill-shown);
+    transition:
+      clip-path calc(var(--_checkbox-duration) * 0.5) var(--_checkbox-fill-ease) calc(var(--_checkbox-stagger) * var(--_checkbox-step) * var(--_checkbox-motion)),
+      opacity calc(var(--_checkbox-duration) * 0.5) step-start calc(var(--_checkbox-stagger) * var(--_checkbox-step) * var(--_checkbox-motion));
   }
 
   /* The mark: two strokes in a 16 unit box, turned about their joint. */
@@ -236,6 +249,15 @@
     stroke-width: var(--_checkbox-stroke-width);
     stroke-linecap: round;
     stroke-linejoin: round;
+  }
+
+  [data-ds='checkbox'] [data-part='mark'] {
+    --_checkbox-morph-now: 1;
+  }
+
+  /* B5 (order 1.29): drawn from an empty box, the strokes take the glyph's angles at once and only draw. */
+  [data-ds='checkbox'] [data-part='mark'][data-enter] {
+    --_checkbox-morph-now: 0;
   }
 
   [data-ds='checkbox'] [data-part='mark'] > path {
@@ -282,14 +304,16 @@
     transition:
       stroke-dashoffset calc(var(--_checkbox-duration) * 0.4) var(--_checkbox-ease)
         calc(var(--_checkbox-duration) * 0.25 + var(--_checkbox-stagger) * var(--_checkbox-step) * var(--_checkbox-motion)),
-      transform var(--_checkbox-duration) var(--_checkbox-morph-ease) calc(var(--_checkbox-stagger) * var(--_checkbox-step) * var(--_checkbox-motion));
+      transform calc(var(--_checkbox-duration) * var(--_checkbox-morph-now)) var(--_checkbox-morph-ease)
+        calc(var(--_checkbox-stagger) * var(--_checkbox-step) * var(--_checkbox-motion));
   }
 
   [data-ds='checkbox'][data-state='checked'] [data-part='mark'] > path:last-child {
     transition:
       stroke-dashoffset calc(var(--_checkbox-duration) * 0.6) var(--_checkbox-ease)
         calc(var(--_checkbox-duration) * 0.65 + var(--_checkbox-stagger) * var(--_checkbox-step) * var(--_checkbox-motion)),
-      transform var(--_checkbox-duration) var(--_checkbox-morph-ease) calc(var(--_checkbox-stagger) * var(--_checkbox-step) * var(--_checkbox-motion));
+      transform calc(var(--_checkbox-duration) * var(--_checkbox-morph-now)) var(--_checkbox-morph-ease)
+        calc(var(--_checkbox-stagger) * var(--_checkbox-step) * var(--_checkbox-motion));
   }
 
   /* Mixed: the dash, drawn from its centre out; from the check, the arms fold flat. */
@@ -302,7 +326,8 @@
   [data-ds='checkbox'][data-state='indeterminate'] [data-part='mark'] > path {
     transition:
       stroke-dashoffset calc(var(--_checkbox-duration) * 0.6) var(--_checkbox-ease) calc(var(--_checkbox-stagger) * var(--_checkbox-step) * var(--_checkbox-motion)),
-      transform var(--_checkbox-duration) var(--_checkbox-morph-ease) calc(var(--_checkbox-stagger) * var(--_checkbox-step) * var(--_checkbox-motion));
+      transform calc(var(--_checkbox-duration) * var(--_checkbox-morph-now)) var(--_checkbox-morph-ease)
+        calc(var(--_checkbox-stagger) * var(--_checkbox-step) * var(--_checkbox-motion));
   }
 
   /*
@@ -312,6 +337,7 @@
    */
   [data-ds='checkbox'][data-state='unchecked'] {
     --_checkbox-fill-now: 0%;
+    --_checkbox-fill-shown: 0;
     --_checkbox-short-cut: 1.05;
     --_checkbox-long-cut: 1.05;
   }
@@ -320,9 +346,13 @@
     --_checkbox-short-cut: -1.05;
   }
 
+  /* N9 (order 1.29): the fill fades on ease.in as it closes, so the last frames show no centre dot. */
   [data-ds='checkbox'][data-state='unchecked'] > [data-part='control'] > [data-part='indicator'] > span {
-    transition: clip-path var(--_checkbox-duration-out) var(--ds-ease-exit)
-      calc(var(--_checkbox-duration-out) * 0.3 + var(--_checkbox-stagger) * var(--_checkbox-step) * var(--_checkbox-motion));
+    transition:
+      clip-path var(--_checkbox-duration-out) var(--ds-ease-exit)
+        calc(var(--_checkbox-duration-out) * 0.3 + var(--_checkbox-stagger) * var(--_checkbox-step) * var(--_checkbox-motion)),
+      opacity var(--_checkbox-duration-out) var(--ds-ease-in)
+        calc(var(--_checkbox-duration-out) * 0.3 + var(--_checkbox-stagger) * var(--_checkbox-step) * var(--_checkbox-motion));
   }
 
   [data-ds='checkbox'][data-state='unchecked'] [data-part='mark'] > path:first-child {

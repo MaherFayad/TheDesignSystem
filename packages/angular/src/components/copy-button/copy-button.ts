@@ -103,6 +103,7 @@ const STATES: readonly CopyButtonState[] = ['idle', 'copied', 'failed'];
         }
       }
     </span>
+    <span data-part="hit" aria-hidden="true"></span>
   `,
 })
 export class DsCopyButton extends DsButtonBase {

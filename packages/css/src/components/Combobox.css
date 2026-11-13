@@ -34,7 +34,8 @@
  * - picker-chevron-turn: the trigger's chevron turns half a turn while the
  *   list is open, on the snappy spring, and back on close.
  *   --_combobox-turn is the open angle (0deg turns it off), a name beyond
- *   the convention's list.
+ *   the convention's list. Order 1.29: it flips on the block axis (scaleY
+ *   of the cosine of the angle) instead of turning (review N27).
  * - menu-rows (ComboboxBase.tsx): the options arrive one stagger step after
  *   the surface each time the popup opens. row-glide (ListBox): the lit
  *   row's fill travels from the last lit row.
@@ -149,6 +150,13 @@
 
   :is([data-ds='combobox'], [data-ds='autocomplete']) > [data-part='trigger'][aria-expanded='true'] [data-ds='icon'] {
     transform: rotate(var(--_combobox-turn));
+  }
+
+  /* Order 1.29 (review N27): a flip on the block axis, not a turn through a sideways shape; a turn where cos() is missing. */
+  @supports (transform: scaleY(cos(180deg))) {
+    :is([data-ds='combobox'], [data-ds='autocomplete']) > [data-part='trigger'][aria-expanded='true'] [data-ds='icon'] {
+      transform: scaleY(cos(var(--_combobox-turn)));
+    }
   }
 
   /* The result count: read by screen readers, not drawn. */

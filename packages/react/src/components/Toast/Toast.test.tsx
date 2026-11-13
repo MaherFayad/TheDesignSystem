@@ -7,8 +7,7 @@ import { Button } from '../Button';
 import { Dialog as SystemDialog, DialogContent } from '../Dialog';
 import ToastDemo from './Toast.demo';
 import { Toast, Toaster, isInsideToaster, createToastFunction, createToastStore, type ToastStoreOptions } from './index';
-import { stackLayout, watchStack } from './stack';
-import { RUBBER_MAX, SWIPE_DISTANCE, rubberBand, swipeCloses, swipeOffset, swipeVelocity } from './swipe';
+import { RUBBER_MAX } from '@the-system/motion';
 
 // jsdom has no pointer capture, which Radix Toast calls on pointer up.
 const proto = Element.prototype as unknown as Record<string, unknown>;
@@ -470,66 +469,7 @@ describe('Toast', () => {
   });
 });
 
-/** Gives every toast a height by hand: jsdom has no layout. */
-function fakeHeights(height = 40) {
-  const li = HTMLLIElement.prototype;
-  Object.defineProperty(li, 'offsetHeight', { configurable: true, get: () => height });
-  return () => {
-    delete (li as unknown as Record<string, unknown>).offsetHeight;
-  };
-}
-
 describe('the toast stack (interaction toast-stack)', () => {
-  it('orders the open toasts from the newest and sums the expanded offsets', () => {
-    const els = [0, 1, 2, 3].map(() => document.createElement('li'));
-    const layout = stackLayout(
-      [
-        { el: els[0] as HTMLElement, height: 40, open: true },
-        { el: els[1] as HTMLElement, height: 60, open: true },
-        { el: els[2] as HTMLElement, height: 50, open: false },
-        { el: els[3] as HTMLElement, height: 30, open: true },
-      ],
-      8,
-    );
-    expect(layout.places.get(els[3] as HTMLElement)).toEqual({ index: 0, offset: 0 });
-    expect(layout.places.get(els[1] as HTMLElement)).toEqual({ index: 1, offset: 38 });
-    expect(layout.places.get(els[0] as HTMLElement)).toEqual({ index: 2, offset: 106 });
-    // A closing toast keeps no place.
-    expect(layout.places.has(els[2] as HTMLElement)).toBe(false);
-    expect(layout.front).toBe(30);
-    expect(layout.total).toBe(146);
-    expect(stackLayout([], 8)).toMatchObject({ front: 0, total: 0 });
-  });
-
-  it('writes each toast its place, and a closing toast keeps its last one', async () => {
-    const restore = fakeHeights(40);
-    const viewport = document.createElement('ol');
-    document.body.append(viewport);
-    const add = () => {
-      const li = document.createElement('li');
-      li.setAttribute('data-ds', 'toast');
-      li.setAttribute('data-state', 'open');
-      viewport.append(li);
-      return li;
-    };
-    const first = add();
-    const stop = watchStack(viewport);
-    expect(first.style.getPropertyValue('--_toast-index')).toBe('0');
-    const second = add();
-    await Promise.resolve();
-    expect(second.style.getPropertyValue('--_toast-index')).toBe('0');
-    expect(first.style.getPropertyValue('--_toast-index')).toBe('1');
-    expect(first.style.getPropertyValue('--_toast-height')).toBe('40px');
-    expect(viewport.style.getPropertyValue('--_toaster-front-height')).toBe('40px');
-    second.setAttribute('data-state', 'closed');
-    await Promise.resolve();
-    expect(first.style.getPropertyValue('--_toast-index')).toBe('0');
-    expect(second.style.getPropertyValue('--_toast-index')).toBe('0');
-    stop();
-    viewport.remove();
-    restore();
-  });
-
   it('marks the toaster stacked, and expanded and paused while the pointer is over a toast', async () => {
     const { store, toast, fire } = setup();
     render(
@@ -590,25 +530,6 @@ describe('the progress line (interaction toast-timer)', () => {
 });
 
 describe('the swipe (interaction toast-swipe)', () => {
-  it('gives less and less against the edge and never passes the most', () => {
-    expect(rubberBand(30)).toBe(30);
-    expect(rubberBand(-24)).toBeCloseTo(-12);
-    expect(rubberBand(-10_000)).toBeGreaterThan(-RUBBER_MAX);
-    expect(Math.abs(rubberBand(-100))).toBeLessThan(Math.abs(rubberBand(-200)));
-  });
-
-  it('closes past the distance or on a fast flick, and reads the speed of the last moments', () => {
-    expect(swipeCloses(SWIPE_DISTANCE, 0)).toBe(true);
-    expect(swipeCloses(20, 0)).toBe(false);
-    expect(swipeCloses(20, 1)).toBe(true);
-    expect(swipeCloses(-20, 5)).toBe(false);
-    expect(swipeVelocity([{ t: 0, along: 0 }, { t: 50, along: 25 }])).toBe(0.5);
-    // A finger that stopped before it lifted has no speed left.
-    expect(swipeVelocity([{ t: 0, along: 0 }, { t: 50, along: 25 }, { t: 300, along: 25 }])).toBe(0);
-    expect(swipeOffset('left', 10)).toEqual({ x: -10, y: 0 });
-    expect(swipeOffset('down', 10)).toEqual({ x: 0, y: 10 });
-  });
-
   it('follows the finger, springs back when let go short, and closes on a swipe past the distance', async () => {
     const { store, toast, fire } = setup();
     render(
@@ -638,5 +559,68 @@ describe('the swipe (interaction toast-swipe)', () => {
     expect(el.getAttribute('data-swipe')).toBe('end');
     expect(el.style.getPropertyValue('--radix-toast-swipe-end-x')).toBe('80px');
     expect(store.getSnapshot().visible[0]?.state).toBe('closed');
+  });
+});
+
+describe('the platform placement (review 3, B7)', () => {
+  it('on ios any position resolves to the top centre, and the swipe goes up', async () => {
+    for (const position of [undefined, 'bottom-end', 'bottom-center', 'top-end', 'auto'] as const) {
+      const { store, toast, fire } = setup();
+      const view = render(
+        <Theme platform="ios">
+          <Toaster store={store} position={position} />
+        </Theme>,
+      );
+      const viewport = await waitFor(() => {
+        const el = document.body.querySelector<HTMLElement>('[data-ds="toaster"]');
+        if (!el) throw new Error('no viewport');
+        return el;
+      });
+      expect(viewport.getAttribute('data-position')).toBe('top-center');
+      fire(() => toast('Board duplicated'));
+      expect(toasts()[0]?.getAttribute('data-swipe-direction')).toBe('up');
+      view.unmount();
+    }
+  });
+
+  it('keeps the position it is given off ios', async () => {
+    const { store } = setup();
+    render(
+      <Theme platform="android">
+        <Toaster store={store} position="top-end" />
+      </Theme>,
+    );
+    const viewport = await waitFor(() => {
+      const el = document.body.querySelector<HTMLElement>('[data-ds="toaster"]');
+      if (!el) throw new Error('no viewport');
+      return el;
+    });
+    expect(viewport.getAttribute('data-position')).toBe('top-end');
+  });
+});
+
+describe('the line and the timer start together (review 3, N29)', () => {
+  it('starts the line as far along as the time between the store starting the timer and the mount', async () => {
+    const { store, toast, fire } = setup();
+    render(
+      <Theme>
+        <Toaster store={store} />
+      </Theme>,
+    );
+    await waitFor(() => expect(document.body.querySelector('[data-ds="toaster"]')).not.toBeNull());
+    let wall = 10_000;
+    const now = vi.spyOn(Date, 'now').mockImplementation(() => wall);
+    // A slow main thread: 150ms pass between the store change and the mount.
+    const unsubscribe = store.subscribe(() => {
+      wall += 150;
+    });
+    try {
+      fire(() => toast.warning('Storage almost full'));
+      const line = toasts()[0]?.querySelector<HTMLElement>('[data-part="progress"]');
+      expect(line?.style.animationDelay).toBe('-150ms');
+    } finally {
+      unsubscribe();
+      now.mockRestore();
+    }
   });
 });

@@ -28,7 +28,7 @@
 // mid travel starts there) on the snappy spring, stretched along its
 // travel. Round 3 (order 1.23): the labels no longer dip and pop; the text
 // under the thumb takes the selected color where the thumb is, with the
-// aria-hidden `label-ink` twins of internal/nav-ink.ts. No motion under
+// aria-hidden `label-ink` twins of nav-ink.ts in @the-system/motion. No motion under
 // reduced motion, where it jumps. A ResizeObserver on the root
 // and the items places it again (a jump) when sizes change.
 //
@@ -56,12 +56,10 @@ import { NgTemplateOutlet } from '@angular/common';
 import { Directionality } from '@angular/cdk/bidi';
 import { NG_VALUE_ACCESSOR, type ControlValueAccessor } from '@angular/forms';
 import { DsIcon } from '@the-system/icons/angular';
-import { settle } from '@the-system/motion';
+import { inFrame, planInk, planSlide, startSlide } from '@the-system/motion';
 import type { Shape, Size } from '@the-system/shared';
 import { RovingRadioGroup, type RovingRadioItem } from '../../behavior/roving-radio';
 import { consumeHostAttributes } from '../../internal/host';
-import { slideTo } from '../../internal/indicator';
-import { playInk } from '../../internal/nav-ink';
 import { injectMotion } from '../../internal/motion';
 import { DS_BUTTON_GROUP, type ButtonGroupAxes } from '../button-group/button-group-context';
 import type { ButtonEmphasis } from '../button/button-base';
@@ -96,6 +94,8 @@ function measure(root: HTMLElement, item: HTMLElement) {
     top: (ir.top - rr.top) / sy - borderTop,
     inline: ir.width / sx,
     block: ir.height / sy,
+    /** The box the thumb rests in once placed, in viewport px: the item's (order 1.29, so nothing is read after the writes). */
+    rect: { x: ir.x, y: ir.y, width: ir.width, height: ir.height },
   };
 }
 
@@ -202,7 +202,10 @@ export class DsSegmentedControl implements ControlValueAccessor {
       const value = this.current();
       untracked(() => {
         const slide = this.placed !== null && this.placed !== value;
-        this.place(slide);
+        // Order 1.29 (review B14): a slide reads with every other list of
+        // the render (inFrame) and writes after, as React.
+        if (slide) inFrame(() => this.place(true));
+        else this.place(false)?.();
         this.placed = value;
       });
     });
@@ -214,7 +217,7 @@ export class DsSegmentedControl implements ControlValueAccessor {
       untracked(() => {
         observer?.disconnect();
         if (typeof ResizeObserver === 'undefined') return;
-        observer = new ResizeObserver(() => this.place(false));
+        observer = new ResizeObserver(() => this.place(false)?.());
         observer.observe(this.host);
         for (const item of items) observer.observe(item.element);
       });
@@ -222,46 +225,56 @@ export class DsSegmentedControl implements ControlValueAccessor {
     destroyRef.onDestroy(() => observer?.disconnect());
   }
 
-  /** Puts the thumb under the selected item. Slides from where it was when asked and already placed; jumps otherwise. */
-  private place(slide: boolean): void {
+  /**
+   * Puts the thumb under the selected item. Slides from where it was when
+   * asked and already placed; jumps otherwise. It reads, then returns its
+   * writes (order 1.29, review B14), as place in React's SegmentedControl.
+   */
+  private place(slide: boolean): (() => void) | undefined {
     const thumb = this.indicator().nativeElement;
+    if (!this.host.isConnected) return undefined;
     const item = Array.from(this.host.querySelectorAll<HTMLElement>(ITEM)).find((el) => el.getAttribute('data-state') === 'on');
     if (!item) {
-      thumb.hidden = true;
-      this.frame = '';
-      return;
+      return () => {
+        thumb.hidden = true;
+        this.frame = '';
+      };
     }
     const f = measure(this.host, item);
     const key = `${f.start} ${f.top} ${f.inline} ${f.block}`;
     // Same frame and no slide asked: leave a running slide alone.
-    if (!slide && key === this.frame && !thumb.hidden) return;
+    if (!slide && key === this.frame && !thumb.hidden) return undefined;
     this.frame = key;
     const from = slide && !thumb.hidden ? thumb.getBoundingClientRect() : null;
-    settle(thumb);
-    thumb.style.setProperty('--_segmented-control-indicator-start', `${f.start}px`);
-    thumb.style.setProperty('--_segmented-control-indicator-top', `${f.top}px`);
-    thumb.style.setProperty('--_segmented-control-indicator-inline-size', `${f.inline}px`);
-    thumb.style.setProperty('--_segmented-control-indicator-block-size', `${f.block}px`);
-    thumb.hidden = false;
     const label = item.querySelector(':scope > [data-part="label"], :scope > [data-part="icon"]');
-    if (from) {
-      const mode = this.motion.mode('tab-slide');
-      const to = thumb.getBoundingClientRect();
-      const anim = slideTo({ el: thumb }, from, to, { mode, axis: 'x' });
-      // Round 3: the text under the thumb takes the selected color where the thumb is.
-      playInk({
-        switch: '--_segmented-control-ink',
-        slide: anim,
-        to,
-        anchor: this.host,
-        parts: Array.from(this.host.querySelectorAll(INKED)),
-        reaching: Array.from(item.querySelectorAll(INKED_OWN)),
-        restFrom: this.lastLabel,
-        inkFrom: label,
-        axis: 'x',
-      });
-    }
-    this.lastLabel = label;
+    // Read here: getAnimations updates style, so after the writes of another list it would cost a style pass.
+    const running = typeof thumb.getAnimations === 'function' ? thumb.getAnimations() : [];
+    const plan = from ? planSlide({ el: thumb }, from, f.rect, { mode: this.motion.mode('tab-slide'), axis: 'x' }) : null;
+    // Round 3: the text under the thumb takes the selected color where the thumb is.
+    const ink = from
+      ? planInk({
+          switch: '--_segmented-control-ink',
+          slide: plan,
+          to: f.rect,
+          anchor: this.host,
+          parts: Array.from(this.host.querySelectorAll(INKED)),
+          reaching: Array.from(item.querySelectorAll(INKED_OWN)),
+          restFrom: this.lastLabel,
+          inkFrom: label,
+          axis: 'x',
+          indicator: thumb,
+        })
+      : null;
+    return () => {
+      for (const a of running) a.cancel();
+      thumb.style.setProperty('--_segmented-control-indicator-start', `${f.start}px`);
+      thumb.style.setProperty('--_segmented-control-indicator-top', `${f.top}px`);
+      thumb.style.setProperty('--_segmented-control-indicator-inline-size', `${f.inline}px`);
+      thumb.style.setProperty('--_segmented-control-indicator-block-size', `${f.block}px`);
+      thumb.hidden = false;
+      ink?.(startSlide({ el: thumb }, plan));
+      this.lastLabel = label;
+    };
   }
 
   /** A press or a focus on an item that is not inert. A press on the selected item would empty the value: ignored. */
@@ -319,6 +332,7 @@ export class DsSegmentedControl implements ControlValueAccessor {
       }
       <span data-part="label"><ng-content /></span>
     }
+    <span data-part="hit" aria-hidden="true"></span>
   `,
 })
 export class DsSegmentedControlItem extends DsGroupItemBase {

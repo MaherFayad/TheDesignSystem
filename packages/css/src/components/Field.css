@@ -105,9 +105,20 @@
 
   /* ------------------------------------------------------------ floating label */
 
-  /* The label comes after the control in the DOM, so it paints over the box; order draws it first. */
+  /*
+   * The label comes after the control in the DOM; order lays it out above the
+   * box. Order also moves it first in paint order, under the positioned box,
+   * so the label is raised (review B6, WCAG 3.3.2): the field isolates the
+   * raise, so it never climbs over a popup or a sticky bar.
+   */
+  [data-ds='field'][data-floating] {
+    isolation: isolate;
+  }
+
   [data-ds='field'][data-floating] > [data-part='label'] {
     order: -1;
+    position: relative;
+    z-index: var(--ds-z-raised);
     align-self: start;
     pointer-events: none;
     transform-origin: 0 50%;
@@ -126,6 +137,27 @@
 
   [data-ds='field'][data-floating]:dir(rtl) {
     --_field-float-dir: -1;
+  }
+
+  /*
+   * The box and its inset follow the control's size (review B6), so the
+   * resting label is centred at sm, md and lg. The inset adds the box's
+   * border, so the label starts where the control's text starts. Platforms
+   * set the same two values with their own field heights (platform/*.css);
+   * a recipe that changes an Input's height or inline padding sets them too.
+   */
+  [data-ds='field'][data-floating] {
+    --_field-float-inset: calc(var(--ds-space-m) + var(--ds-border-width-default));
+  }
+
+  [data-ds='field'][data-floating]:has([data-ds='input'][data-size='sm']) {
+    --_field-float-box: var(--ds-size-control-sm);
+    --_field-float-inset: calc(var(--ds-space-s) + var(--ds-border-width-default));
+  }
+
+  [data-ds='field'][data-floating]:has([data-ds='input'][data-size='lg']) {
+    --_field-float-box: var(--ds-size-control-lg);
+    --_field-float-inset: calc(var(--ds-space-2xl) + var(--ds-border-width-default));
   }
 
   [data-ds='field'][data-floating]:not([data-filled], :focus-within) [data-part='control']::placeholder {

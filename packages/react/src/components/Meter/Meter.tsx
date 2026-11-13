@@ -19,7 +19,7 @@
 // value change before that cancels it. Reduced and none: the value at once.
 import { useId, useLayoutEffect, useRef, type CSSProperties, type HTMLAttributes, type ReactNode, type Ref } from 'react';
 import { meterLevel, meterLevelLabelsFor, meterTone, type MeterLevel, type MeterTone, type Size } from '@the-system/shared';
-import { readDuration, readEasing } from '@the-system/motion';
+import { landValue } from '@the-system/motion';
 import { useTheme } from '../../theme';
 import { useMotion } from '../../internal/motion';
 import { formatPercent, validMax } from '../ProgressBar/format';
@@ -126,33 +126,18 @@ export function Meter({
 /**
  * meter-fill: fills the indicator once on first view. Returns its ref.
  *
- * The hold is an inline scaleX(0) with no transition, set before the first
- * paint; it is a style, not a paused animation, so nothing waits on a
- * finite animation that never ends. On view the inline transform goes and
- * the indicator's transition, set inline to ease.spring-soft over
- * duration.reveal for that one change, plays the fill. The inline
- * transition is dropped after that duration, so later changes use the CSS.
+ * The hold is the indicator's `data-held` attribute, set before the first
+ * paint; Meter.css draws it empty with no transition, and print draws the
+ * value (review N33: never an inline transform that outlives the view). On
+ * view the attribute goes and `data-revealing` comes, so the fill plays on
+ * --_meter-reveal-duration and --_meter-reveal-ease, a style's own timing.
+ * `data-revealing` stays until the next value change, which drops it in a
+ * layout effect before the browser styles the change, so that change uses
+ * the CSS timing. No timer: a longer reveal is never cut, and a StrictMode
+ * rerun leaves nothing behind (angular-sync-3 section 6 item 3). The value
+ * text lands with the fill (`landValue`, helpers/meter-value.ts in
+ * @the-system/motion, round 3 review N28).
  */
-/**
- * Round 3 (review N28): the second beat of meter-fill. As the fill nears
- * its value (at --_meter-value-at of the reveal), the value text settles
- * from distance.nudge below and its colour comes up from the muted text, so
- * the number lands with the fill instead of sitting there from the start.
- * Opaque at once: only its place and colour move. Full mode only.
- */
-function landValue(value: Element | null | undefined, fill: HTMLElement): void {
-  if (!value || typeof value.animate !== 'function') return;
-  const total = readDuration(fill, 'duration.reveal');
-  const at = Number.parseFloat(getComputedStyle(fill).getPropertyValue('--_meter-value-at')) || 0.6;
-  value.animate([{ transform: 'translateY(var(--ds-distance-nudge))', color: 'var(--ds-color-text-muted)' }, { transform: 'none' }], {
-    id: 'ds-motion:meter-value',
-    duration: readDuration(fill, 'duration.spring-bouncy'),
-    easing: readEasing(fill, 'ease.spring-bouncy'),
-    delay: total * at,
-    fill: 'backwards',
-  });
-}
-
 function useFillOnView(fraction: number) {
   const ref = useRef<HTMLSpanElement>(null);
   const motion = useMotion();
@@ -165,22 +150,15 @@ function useFillOnView(fraction: number) {
       seen.current = true;
       return;
     }
-    el.style.transition = 'none';
-    el.style.transform = 'scaleX(0)';
-    let timer: ReturnType<typeof setTimeout> | undefined;
+    el.setAttribute('data-held', '');
     const show = (animate: boolean) => {
       seen.current = true;
       observer.disconnect();
       // Flush the held frame, so the change below starts a transition from it.
       void getComputedStyle(el).transform;
-      // Round 3 (review N28): the timing is private, so a style changes its kind (--_meter-reveal-duration, -reveal-ease).
-      el.style.transition = animate ? 'transform var(--_meter-reveal-duration) var(--_meter-reveal-ease)' : '';
-      el.style.removeProperty('transform');
-      if (animate) {
-        const ms = readDuration(el, 'duration.reveal');
-        timer = setTimeout(() => el.style.removeProperty('transition'), ms + 50);
-        landValue(el.closest('[data-ds="meter"]')?.querySelector(':scope > [data-part="value"]'), el);
-      }
+      if (animate) el.setAttribute('data-revealing', '');
+      el.removeAttribute('data-held');
+      if (animate) landValue(el.closest('[data-ds="meter"]')?.querySelector(':scope > [data-part="value"]'), el);
     };
     release.current = () => show(false);
     const observer = new IntersectionObserver((entries) => {
@@ -191,18 +169,17 @@ function useFillOnView(fraction: number) {
     else observer.observe(el);
     return () => {
       observer.disconnect();
-      if (timer) clearTimeout(timer);
-      if (!seen.current) {
-        el.style.removeProperty('transform');
-        el.style.removeProperty('transition');
-      }
+      if (!seen.current) el.removeAttribute('data-held');
     };
   }, [mode]);
-  // A new value before the first view: show it, the fill is no longer news.
+  // A new value: before the first view, show it (the fill is no longer news);
+  // after it, the change takes the CSS timing, not the reveal's.
   const first = useRef(fraction);
   useLayoutEffect(() => {
-    if (fraction === first.current || seen.current) return;
-    release.current();
+    if (fraction === first.current) return;
+    first.current = fraction;
+    if (!seen.current) release.current();
+    else ref.current?.removeAttribute('data-revealing');
   }, [fraction]);
   return ref;
 }

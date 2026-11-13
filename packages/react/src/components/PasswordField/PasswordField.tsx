@@ -23,14 +23,13 @@
 // (error-shake).
 import { flushSync } from 'react-dom';
 import { useCallback, useEffect, useId, useLayoutEffect, useRef, useState, type ComponentProps, type MouseEvent, type Ref } from 'react';
-import { settled } from '@the-system/motion';
+import { diagonalWipe, fadeOutBeat, playBeat, settled, type Beat, type ShakeBox } from '@the-system/motion';
 import { Icon } from '@the-system/icons/react';
 import type { Shape, Size } from '@the-system/shared';
 import { useField } from '../Field/Field';
 import { IconButton } from '../IconButton/IconButton';
 import { Input, type InputProps } from '../Input/Input';
-import { diagonalWipe, fadeOutBeat, playBeat } from '../Input/fieldMotion';
-import { useErrorShake, type ShakeBox } from '../Input/useErrorShake';
+import { useErrorShake } from '../Input/useErrorShake';
 import { useMotion } from '../../internal/motion';
 
 export type PasswordFieldSize = Size;
@@ -70,6 +69,13 @@ const fieldBox: ShakeBox = (input) => input.closest("[data-ds='password-field']"
  * the toggle. Paste is never blocked. The value hides again when the form
  * around it submits, so it is not left on screen.
  */
+/** password-reveal: the characters change at once; the text eases back from 0.6 so a frame is never blank (review N11). */
+const TEXT_RETURN: Beat = {
+  keyframes: [{ opacity: 0.6 }, { opacity: 1 }],
+  duration: 'duration.base',
+  easing: 'ease.out',
+};
+
 export function PasswordField({
   size = 'md',
   shape = 'default',
@@ -126,7 +132,8 @@ export function PasswordField({
       playBeat(part?.querySelector(':scope > span[aria-hidden="true"]'), diagonalWipe('ahead', back), 'password-reveal-out', mode, fadeOutBeat),
       playBeat(part?.firstElementChild, diagonalWipe('behind', back), 'password-reveal-in', mode),
     ].filter((a): a is Animation => a !== null);
-    motion.play(input, 'fade', 'password-reveal');
+    // Review N11: the text comes back from 0.6, never blank, in full and reduced motion alike.
+    playBeat(input, TEXT_RETURN, 'password-reveal', mode, TEXT_RETURN);
     const id = morphs.current;
     let live = true;
     void Promise.all(anims.map((a) => settled(a))).then(() => {
