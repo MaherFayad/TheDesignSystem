@@ -33,24 +33,24 @@ const members = [
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <section data-demo="case" data-demo-case="variants" heading="Variants: the tone follows the thresholds, the level is in words">
-      <div data-demo="grid" style="grid-template-columns: repeat(auto-fill, minmax(min(20rem, 100%), 1fr))">
+      <div data-demo="grid" style="grid-template-columns: repeat(auto-fill, minmax(min(min(20rem, 100%), 100%), 1fr))">
         @for (v of [32, 72, 94]; track v) {
           <div dsMeter [value]="v" [max]="100" [low]="60" [high]="85" [optimum]="0" [valueText]="gb" [levelLabels]="storageLevels" label="Storage used"></div>
         }
       </div>
-      <div data-demo="grid" style="grid-template-columns: repeat(auto-fill, minmax(min(20rem, 100%), 1fr))">
+      <div data-demo="grid" style="grid-template-columns: repeat(auto-fill, minmax(min(min(20rem, 100%), 100%), 1fr))">
         @for (v of [9, 5, 2]; track v) {
           <div dsMeter [value]="v" [max]="10" [low]="4" [high]="7" [optimum]="10" [valueText]="outOf10" [levelLabels]="scoreLevels" label="Accessibility score"></div>
         }
       </div>
-      <div data-demo="grid" style="grid-template-columns: repeat(auto-fill, minmax(min(20rem, 100%), 1fr))">
+      <div data-demo="grid" style="grid-template-columns: repeat(auto-fill, minmax(min(min(20rem, 100%), 100%), 1fr))">
         @for (size of sizes; track size) {
           <div dsMeter [size]="size" [value]="46" [label]="'Size ' + size + ', no thresholds'"></div>
         }
       </div>
       <h3 data-demo="title">Variants in Arabic</h3>
       <div dsTheme [lang]="'ar'" data-demo="content">
-        <div data-demo="grid" style="grid-template-columns: repeat(auto-fill, minmax(min(20rem, 100%), 1fr))">
+        <div data-demo="grid" style="grid-template-columns: repeat(auto-fill, minmax(min(min(20rem, 100%), 100%), 1fr))">
           @for (v of [32, 72, 94]; track v) {
             <div dsMeter [value]="v" [max]="100" [low]="60" [high]="85" [optimum]="0" [valueText]="gbAr" [levelLabels]="storageLevelsAr" label="المساحة المستخدمة"></div>
           }
@@ -69,7 +69,7 @@ const members = [
     </section>
 
     <section data-demo="case" data-demo-case="many" heading="Many meters, one per team">
-      <div data-demo="grid" style="grid-template-columns: repeat(auto-fill, minmax(min(20rem, 100%), 1fr))">
+      <div data-demo="grid" style="grid-template-columns: repeat(auto-fill, minmax(min(min(20rem, 100%), 100%), 1fr))">
         @for (member of members; track member[0]) {
           <div dsMeter size="sm" [value]="member[1]" [max]="100" [low]="60" [high]="85" [optimum]="0" [valueText]="gb" [levelLabels]="storageLevels" [label]="member[0]"></div>
         }

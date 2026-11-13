@@ -10,13 +10,14 @@
 //
 //   <div data-ds="list-box" role="listbox" data-size data-orientation aria-multiselectable?>   the host
 //     <div data-part="option" role="option" id aria-selected data-highlighted? data-selected? data-disabled?>
-//       <span aria-hidden>  the row fill that glides from the last lit row (row-glide), no part name
 //       <span data-part="indicator">  <span data-part="option-icon">
 //       <span data-part="option-label">  (the match in a <mark>)  <span data-part="option-description">
 //     <div data-part="separator" aria-hidden>
 //     <div data-part="group" role="group" aria-labelledby>
 //       <div data-part="group-label" role="presentation">
 //     <div data-part="empty">
+//     <span data-part="highlight" aria-hidden>   the one marker that draws the lit row's fill and slides
+//                                                from row to row (order 1.23, internal/selection-marker.ts)
 //
 // Two focus models, as in React: alone, a roving tabindex (the highlighted
 // option is the one tab stop); with virtualFocus, an owner keeps focus and
@@ -66,7 +67,8 @@ import {
 } from '@the-system/shared';
 import { consumeHostAttributes } from '../../internal/host';
 import { ListHighlight } from '../../internal/list-highlight';
-import { injectRowGlide } from '../../internal/motion-selection';
+import { injectMotion } from '../../internal/motion';
+import { CHECK_DRAW_ID, drawCheck, injectHighlightMarker } from '../../internal/selection-marker';
 import { optionalBoolean } from '../../internal/optional-boolean';
 
 /** Row sizes: sm 24px rows, md list.row.height (28px at default density). */
@@ -180,6 +182,9 @@ function toArray(v: ListBoxValue | undefined): readonly string[] | undefined {
 
 let nextId = 0;
 
+/** The marker's colors when the list holds focus itself: the lit fill, and the hover veil. */
+const MARKER_COLORS = { lit: 'var(--_list-box-highlight-bg)', hover: 'var(--_list-box-option-bg-hover)' };
+
 @Component({
   selector: 'div[dsListBox]',
   exportAs: 'dsListBox',
@@ -214,7 +219,7 @@ let nextId = 0;
   (focus)="onOptionFocus(option)"
   (pointermove)="onOptionPointer(option, off, isHighlighted)"
   (mousedown)="onOptionMousedown($event)"
-  (click)="choose(option)"><span aria-hidden="true"></span><span data-part="indicator" aria-hidden="true">@if (isSelected) {<svg dsIcon name="check" size="md"></svg>}</span>@if (option.start !== undefined) {<span data-part="option-icon" aria-hidden="true">@if (isIconContent(option.start)) {<svg dsIcon [name]="option.start" size="md"></svg>} @else {<ng-container [ngTemplateOutlet]="option.start" />}</span>}<span data-part="option-label" [id]="optionId + '-label'">@if (marked) {{{ marked.before }}<mark>{{ marked.match }}</mark>{{ marked.after }}} @else {{{ option.label }}}</span>@if (option.description !== undefined) {<span data-part="option-description" [id]="optionId + '-description'">{{ option.description }}</span>}</div></ng-template>`,
+  (click)="choose(option)"><span data-part="indicator" aria-hidden="true">@if (isSelected) {<svg dsIcon name="check" size="md"></svg>}</span>@if (option.start !== undefined) {<span data-part="option-icon" aria-hidden="true">@if (isIconContent(option.start)) {<svg dsIcon [name]="option.start" size="md"></svg>} @else {<ng-container [ngTemplateOutlet]="option.start" />}</span>}<span data-part="option-label" [id]="optionId + '-label'">@if (marked) {{{ marked.before }}<mark>{{ marked.match }}</mark>{{ marked.after }}} @else {{{ option.label }}}</span>@if (option.description !== undefined) {<span data-part="option-description" [id]="optionId + '-description'">{{ option.description }}</span>}</div></ng-template>@if (!isEmpty()) {<span data-part="highlight" aria-hidden="true"></span>}`,
 })
 export class DsListBox implements ControlValueAccessor {
   /** The options, plain or in titled groups. A separator is drawn between groups. */
@@ -292,8 +297,35 @@ export class DsListBox implements ControlValueAccessor {
 
   constructor() {
     inject(DestroyRef).onDestroy(() => this.highlight.destroy());
-    // row-glide: the fill of the highlighted row travels from the row lit before.
-    injectRowGlide("[data-part='option']")(this.host);
+    // highlight-marker: one marker draws the lit row's fill and slides from row to row.
+    // Alone, the list lights a row on focus only, so the marker also follows the pointer.
+    const marker = injectHighlightMarker(() => ({
+      rows: "[data-part='option']",
+      hover: !this.virtualFocus(),
+      colors: this.virtualFocus() ? undefined : MARKER_COLORS,
+    }));
+    afterRenderEffect(() => {
+      // Tracked: an empty list has no marker, and the options change with virtualFocus.
+      this.isEmpty();
+      this.virtualFocus();
+      untracked(() => marker(this.host));
+    });
+    // check-draw-pick: the check of an option chosen now draws itself. Not on first paint.
+    const motion = injectMotion();
+    let selectedBefore: readonly string[] | null = null;
+    afterRenderEffect(() => {
+      const selected = this.selected();
+      untracked(() => {
+        const before = selectedBefore;
+        selectedBefore = selected;
+        if (!before) return;
+        const mode = motion.mode(CHECK_DRAW_ID);
+        for (const v of selected) {
+          if (before.includes(v)) continue;
+          drawCheck(this.host.querySelector(`#${CSS.escape(listBoxOptionId(this.listId(), v))} > [data-part='indicator']`), mode);
+        }
+      });
+    });
     // Keep the highlighted option in view when the keys move it (the list scrolls inside).
     afterRenderEffect(() => {
       const h = this.highlighted();

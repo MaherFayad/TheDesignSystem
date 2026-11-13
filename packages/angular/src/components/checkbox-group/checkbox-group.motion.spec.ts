@@ -39,12 +39,28 @@ describe('checkbox group motion, order 1.22', () => {
     expect(steps()).toEqual(['', '', '', '']);
   });
 
-  it('check-draw: each box keeps the draw span inside the indicator', async () => {
+  it('check-draw (order 1.23): select all off runs back from the last box', async () => {
+    const fixture = TestBed.createComponent(Host);
+    await fixture.whenStable();
+    const root = fixture.nativeElement as HTMLElement;
+    const items = Array.from(root.querySelectorAll<HTMLElement>("[data-ds='checkbox']:not([data-part='select-all'])"));
+    const steps = () => items.map((b) => b.style.getPropertyValue('--_checkbox-step'));
+    const all = root.querySelector("[data-part='select-all'] button") as HTMLElement;
+    all.click();
+    await fixture.whenStable();
+    expect(steps()).toEqual(['1', '2', '3', '3']);
+    all.click();
+    await fixture.whenStable();
+    expect(steps()).toEqual(['3', '3', '2', '1']);
+    expect(items.every((b) => b.querySelector('button')?.getAttribute('aria-checked') === 'false')).toBe(true);
+  });
+
+  it('check-draw: each box keeps the fill span and the mark inside the indicator', async () => {
     const fixture = TestBed.createComponent(Host);
     await fixture.whenStable();
     for (const indicator of Array.from((fixture.nativeElement as HTMLElement).querySelectorAll("[data-part='indicator']"))) {
       expect(indicator.firstElementChild?.getAttribute('aria-hidden')).toBe('true');
-      expect(indicator.firstElementChild?.querySelector('svg')).not.toBeNull();
+      expect(indicator.firstElementChild?.nextElementSibling?.getAttribute('data-part')).toBe('mark');
     }
   });
 });

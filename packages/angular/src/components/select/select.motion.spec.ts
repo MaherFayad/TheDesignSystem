@@ -1,6 +1,7 @@
-// Order 1.22 motion of Select: menu-rows (the rows stagger in on open),
-// row-glide (each item holds the fill layer) and picker-value-roll (a new
-// value rolls into the trigger, not on first paint), with React's arguments.
+// Motion of Select: menu-rows (the rows stagger in on open, order 1.22),
+// highlight-marker (order 1.23: one marker in the viewport replaces the
+// row-glide layer) and picker-value-roll (order 1.23: a drum roll, the old
+// label on an inert copy, not on first paint), with React's arguments.
 // jsdom has no Web Animations API, so Element.animate records each call; a
 // replay of the primitive with React's arguments must record the same calls.
 import { Component, signal } from '@angular/core';
@@ -94,26 +95,59 @@ describe('select motion, order 1.22', () => {
     });
   }
 
-  it('row-glide: each item holds the fill layer as its first child', async () => {
+  it('highlight-marker: items hold no fill layer; the viewport holds one aria-hidden marker as its last child', async () => {
     const { host, settle, items } = await setup();
     host.open.set(true);
     await settle();
-    for (const item of items()) {
-      expect(item.firstElementChild?.getAttribute('aria-hidden')).toBe('true');
-      expect(item.firstElementChild?.hasAttribute('data-part')).toBe(false);
-    }
+    for (const item of items()) expect(item.querySelector(":scope > span[aria-hidden='true']:not([data-part])")).toBeNull();
+    const viewport = document.querySelector('[data-menu-layer] [data-part="viewport"]')!;
+    const marker = viewport.lastElementChild as HTMLElement;
+    expect(marker.getAttribute('data-part')).toBe('highlight');
+    expect(marker.getAttribute('aria-hidden')).toBe('true');
+    // The chosen item is focused, so lit, on open: the marker shows there.
+    expect(marker.style.opacity).toBe('1');
   });
 
-  it("picker-value-roll: a new value rolls up into the trigger with React's arguments, not on first paint", async () => {
-    const { host, settle, trigger, motion } = await setup();
+  it("picker-value-roll: the new label rolls in from below and an inert copy of the old one rolls out, with React's arguments, not on first paint", async () => {
+    const { host, settle, trigger } = await setup();
     const value = trigger.querySelector('[data-part="value"]') as HTMLElement;
-    expect(ids(take(), 'stagger').filter((c) => c.el === value)).toEqual([]);
+    expect(ids(take(), 'picker-value-roll')).toEqual([]);
     host.value.set('cherry');
     await settle();
     expect(value.textContent).toContain('Cherry');
-    const got = take().filter((c) => c.el === value);
-    expect(got).toHaveLength(1);
-    staggerGroup([value], { from: 'block', spring: 'snappy', mode: motion.mode('picker-value-roll') });
-    expect(got).toEqual(take());
+    const got = ids(take(), 'picker-value-roll');
+    expect(got).toHaveLength(2);
+    expect(got[0]!.el).toBe(value);
+    expect(got[0]!.frames).toEqual([
+      { transform: 'translateY(100%)', clipPath: 'inset(0 0 100% 0)' },
+      { transform: 'none', clipPath: 'inset(0 0 0 0)' },
+    ]);
+    const ghost = got[1]!.el as HTMLElement;
+    expect(ghost.parentElement).toBe(trigger);
+    expect(ghost.textContent).toBe('Apple');
+    expect(ghost.getAttribute('aria-hidden')).toBe('true');
+    expect(ghost.hasAttribute('inert')).toBe(true);
+    expect(got[1]!.frames).toEqual([
+      { transform: 'none', clipPath: 'inset(0 0 0 0)', opacity: 1 },
+      { transform: 'translateY(-100%)', clipPath: 'inset(100% 0 0 0)', opacity: 0 },
+    ]);
+    expect(got[1]!.opts.fill).toBe('forwards');
+  });
+
+  it('picker-value-roll: the old label of no value is the placeholder; reduced is a fade with no copy', async () => {
+    const { host, settle, trigger } = await setup();
+    host.value.set(null);
+    await settle();
+    const ghost = ids(take(), 'picker-value-roll')[1]!.el;
+    expect(ghost.textContent).toBe('Apple');
+    host.value.set('banana');
+    await settle();
+    expect(ids(take(), 'picker-value-roll')[1]!.el.textContent).toBe('Choose an option');
+    document.documentElement.setAttribute('data-motion', 'reduce');
+    host.value.set('cherry');
+    await settle();
+    const reduced = ids(take(), 'picker-value-roll');
+    expect(reduced.map((c) => c.frames)).toEqual([[{ opacity: 0 }, { opacity: 1 }]]);
+    expect(reduced[0]!.el).toBe(trigger.querySelector('[data-part="value"]'));
   });
 });

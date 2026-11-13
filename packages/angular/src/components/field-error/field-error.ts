@@ -14,9 +14,10 @@
 // `error` input of dsField does that already, and also follows
 // `[invalid]="false"`.
 //
-// Motion (interaction field-error-enter, order 1.22, proposed): an error
-// created after its field's first render slides down from distance.shift
-// above and fades in on the soft spring; one stagger step later its icon
+// Motion (interaction field-error-enter, order 1.23, proposed): an error
+// created after its field's first render slides down a full line from
+// behind its own top edge (a clip-path holds the edge still), so it comes
+// out from under the control, and fades in on the soft spring; one stagger step later its icon
 // lands from scale.morph past full size on the bouncy spring. Alone, with no
 // field, it does not move: the caller's `@if` creates it, so there is no
 // first render to tell apart from a later one.
@@ -25,7 +26,7 @@ import type { Size } from '@the-system/shared';
 import { DsIcon } from '@the-system/icons/angular';
 import { consumeHostAttributes } from '../../internal/host';
 import { injectMotion } from '../../internal/motion';
-import { landPop, playBeat, slideIn } from '../../internal/motion-fields';
+import { emerge, landPop, playBeat } from '../../internal/motion-fields';
 import { DsFieldContext } from '../field/field-context';
 
 export type FieldErrorSize = Extract<Size, 'sm' | 'md'>;
@@ -64,7 +65,7 @@ export class DsFieldError {
       const root = inject<ElementRef<HTMLElement>>(ElementRef).nativeElement;
       afterNextRender(() => {
         const mode = motion.mode(FIELD_ERROR_ENTER);
-        playBeat(root, slideIn(), FIELD_ERROR_ENTER, mode);
+        playBeat(root, emerge(), FIELD_ERROR_ENTER, mode);
         playBeat(root.querySelector(':scope > [data-part="icon"]'), landPop(undefined, { delay: 'delay.stagger' }), `${FIELD_ERROR_ENTER}-icon`, mode, null);
       });
     }

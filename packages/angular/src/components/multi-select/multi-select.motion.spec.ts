@@ -90,7 +90,8 @@ describe('multi-select motion, order 1.22', () => {
       expect(got).toHaveLength(rows().length);
       staggerGroup(rows(), { phase: 'enter', offset: 1, spring: 'soft', mode: motion.mode('menu-rows') });
       expect(got).toEqual(take());
-      for (const row of rows()) expect(row.firstElementChild?.getAttribute('aria-hidden')).toBe('true');
+      // Order 1.23: no fill layer in the rows; the list's highlight marker is its last child.
+      for (const row of rows()) expect(row.querySelector(":scope > span[aria-hidden='true']:not([data-part])")).toBeNull();
     });
   }
 

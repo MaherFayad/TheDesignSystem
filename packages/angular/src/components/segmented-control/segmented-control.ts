@@ -26,8 +26,10 @@
 // "tab-slide" (order 1.22, proposed), the shared pill of
 // internal/indicator.ts, slides it from where it is drawn (a second change
 // mid travel starts there) on the snappy spring, stretched along its
-// travel, and the label it leaves dips while the one it reaches pops. No
-// motion under reduced motion, where it jumps. A ResizeObserver on the root
+// travel. Round 3 (order 1.23): the labels no longer dip and pop; the text
+// under the thumb takes the selected color where the thumb is, with the
+// aria-hidden `label-ink` twins of internal/nav-ink.ts. No motion under
+// reduced motion, where it jumps. A ResizeObserver on the root
 // and the items places it again (a jump) when sizes change.
 //
 // Names that differ from React: `onValueChange` is the `valueChange` output
@@ -58,7 +60,8 @@ import { settle } from '@the-system/motion';
 import type { Shape, Size } from '@the-system/shared';
 import { RovingRadioGroup, type RovingRadioItem } from '../../behavior/roving-radio';
 import { consumeHostAttributes } from '../../internal/host';
-import { answerLabels, slideTo } from '../../internal/indicator';
+import { slideTo } from '../../internal/indicator';
+import { playInk } from '../../internal/nav-ink';
 import { injectMotion } from '../../internal/motion';
 import { DS_BUTTON_GROUP, type ButtonGroupAxes } from '../button-group/button-group-context';
 import type { ButtonEmphasis } from '../button/button-base';
@@ -68,6 +71,9 @@ export type SegmentedControlSize = Extract<Size, 'xs' | 'sm' | 'md' | 'lg'>;
 export type SegmentedControlShape = Extract<Shape, 'default' | 'pill' | 'square'>;
 
 const ITEM = ":scope > [data-part='item']";
+/** The parts whose color crosses under the thumb, of one item and of the whole control. */
+const INKED_OWN = ':scope > :is([data-part="label"], [data-part="start"], [data-part="icon"])';
+const INKED = `${ITEM} > :is([data-part="label"], [data-part="start"], [data-part="icon"])`;
 
 /**
  * The frame of the selected item inside the root, in logical px from the
@@ -186,7 +192,7 @@ export class DsSegmentedControl implements ControlValueAccessor {
   private placed: string | null = null;
   /** The last frame written, so a resize with the same frame leaves a running slide alone. */
   private frame = '';
-  /** The label under the thumb, which dips when the thumb leaves it. */
+  /** The label under the thumb: its color is the rest color once the thumb leaves it. */
   private lastLabel: Element | null = null;
   private readonly motion = injectMotion();
 
@@ -240,8 +246,20 @@ export class DsSegmentedControl implements ControlValueAccessor {
     const label = item.querySelector(':scope > [data-part="label"], :scope > [data-part="icon"]');
     if (from) {
       const mode = this.motion.mode('tab-slide');
-      slideTo({ el: thumb }, from, thumb.getBoundingClientRect(), { mode, axis: 'x' });
-      answerLabels(this.lastLabel, label, mode);
+      const to = thumb.getBoundingClientRect();
+      const anim = slideTo({ el: thumb }, from, to, { mode, axis: 'x' });
+      // Round 3: the text under the thumb takes the selected color where the thumb is.
+      playInk({
+        switch: '--_segmented-control-ink',
+        slide: anim,
+        to,
+        anchor: this.host,
+        parts: Array.from(this.host.querySelectorAll(INKED)),
+        reaching: Array.from(item.querySelectorAll(INKED_OWN)),
+        restFrom: this.lastLabel,
+        inkFrom: label,
+        axis: 'x',
+      });
     }
     this.lastLabel = label;
   }

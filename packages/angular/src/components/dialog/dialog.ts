@@ -34,11 +34,21 @@
 // CDK overlay container, wrapper or pane, and no cdk-dialog-container. The
 // reasons are in behavior/dialog-behavior.ts.
 //
-// Motion is CSS only (Dialog.css, pattern "dialog"). On close the root,
+// Motion is CSS, but for one beat (Dialog.css, pattern "dialog"). On close the root,
 // the backdrop and the panel switch to data-state="closed"; after that
 // render the layer waits for the running animations (getAnimations, the
 // Web Animations API `finished` promise) and then disposes the portal. With
 // no animation (reduced motion, a 0ms duration) it disposes at once.
+//
+// Refused (order 1.23, interaction "dialog-refuse"), as React's
+// DialogBase.tsx: a press on the backdrop of a dialog with dismissible
+// false, and Escape on it, do not close it. The panel nudges instead: a
+// shake along the inline axis (out, back past its place, a smaller swing,
+// rest) of --_dialog-refuse-shift inside duration.roll on ease.out, played
+// with the Web Animations API. The style's mode for "dialog-refuse"
+// (injectMotion) applies: none or reduced motion leaves it still. A second
+// refusal cancels the first and plays again. The Angular port has no
+// AlertDialog, so the alert form of the refusal has no host here.
 import {
   ApplicationRef,
   ChangeDetectionStrategy,
@@ -76,7 +86,9 @@ import {
   type OverlaySize,
   type Tone,
 } from '@the-system/shared';
+import { durationMs, readDuration, readEasing } from '@the-system/motion';
 import { consumeHostAttributes } from '../../internal/host';
+import { injectMotion } from '../../internal/motion';
 import { animationsDone, hideOthers, lockScroll, tabbables, wrapTab } from '../../behavior';
 import { DsThemeScope, DsThemeService, attributesOf, syncDirectionality, themeScopeProviders } from '../../theme';
 import type { ThemeValue } from '../../theme';
@@ -295,7 +307,7 @@ const stack: DsDialogLayer[] = [];
   template: `
     <div data-ds="dialog" [attr.data-size]="dialog.size()" [attr.data-tone]="dialog.tone()" [attr.data-state]="state()">
       <div #backdrop [attr.data-state]="state()" data-part="backdrop" aria-hidden="true"
-        (pointerdown)="pressedBackdrop = true" (click)="onBackdropClick()"></div>
+        (pointerdown)="onBackdropPointerDown($event)" (click)="onBackdropClick()"></div>
       <div #panel role="dialog" [id]="dialog.panelId" [attr.data-state]="state()" data-part="panel" tabindex="-1"
         aria-modal="true" [attr.aria-labelledby]="hasTitle() ? dialog.titleId : null"
         [attr.aria-describedby]="hasDescription() ? dialog.descriptionId : null">
@@ -352,6 +364,9 @@ export class DsDialogLayer {
   );
   protected pressedBackdrop = false;
   protected readonly closeFn = () => this.close();
+  private readonly motion = injectMotion();
+  /** The refused nudge playing now: one at a time, the newest wins. */
+  private refusal: Animation | null = null;
 
   constructor() {
     syncDirectionality(inject(Directionality), this.theme.value);
@@ -359,6 +374,32 @@ export class DsDialogLayer {
 
   close(): void {
     this.dialog.setOpen(false);
+  }
+
+  /** A press on the backdrop that will not close the dialog: the panel nudges. */
+  protected onBackdropPointerDown(event: PointerEvent): void {
+    this.pressedBackdrop = true;
+    if (event.button !== 0 || this.dialog.dismissible() || this.state() !== 'open') return;
+    this.refuse();
+  }
+
+  /** The refused nudge (interaction "dialog-refuse"), React's DialogBase refuse(). */
+  refuse(): void {
+    this.refusal?.cancel();
+    this.refusal = null;
+    const panel = this.panel().nativeElement;
+    if (typeof panel.animate !== 'function' || this.motion.mode('dialog-refuse') !== 'full') return;
+    // Without the token (a page with no token CSS) the base value; under reduced motion the token is 0.
+    const set = typeof getComputedStyle === 'function' && getComputedStyle(panel).getPropertyValue('--ds-duration-roll').trim() !== '';
+    const duration = set ? readDuration(panel, 'duration.roll') : durationMs['duration.roll'];
+    if (duration <= 0) return;
+    const sign = this.theme.value().dir === 'rtl' ? -1 : 1;
+    const at = (k: number) => ({ transform: `translateX(calc(var(--_dialog-refuse-shift) * ${sign * k}))` });
+    this.refusal = panel.animate([{ transform: 'none' }, at(1), at(-0.7), at(0.35), { transform: 'none' }], {
+      duration,
+      easing: readEasing(panel, 'ease.out'),
+      id: 'ds-motion:dialog-refuse',
+    });
   }
 
   protected onBackdropClick(): void {
@@ -380,6 +421,7 @@ export class DsDialogLayer {
       if (event.defaultPrevented) return;
       event.preventDefault();
       if (this.dialog.dismissible()) this.close();
+      else this.refuse();
       return;
     }
     wrapTab(event, this.panel().nativeElement, this.checker);

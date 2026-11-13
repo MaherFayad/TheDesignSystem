@@ -2,7 +2,11 @@
 // mixed children. The twin of packages/react/src/components/Checkbox/Checkbox.tsx.
 // The host is the root (`div[dsCheckbox]`); the template renders the parts in
 // the React order: the control (the Radix button with role checkbox) with the
-// indicator inside, then the label and the description.
+// indicator inside, then the label and the description. The indicator holds
+// an aria-hidden fill span that grows from the centre and the `mark` svg: two
+// strokes that meet at a joint, which Checkbox.css draws as the check or the
+// dash (`data-glyph`) and morphs between them (interactions check-draw and
+// check-mixed, order 1.23).
 //
 //   <div dsCheckbox label="Show rulers" [(checked)]="rulers"></div>
 //   <div dsCheckbox label="Snap frames to the grid" [formControl]="snap"></div>
@@ -36,7 +40,6 @@ import {
   viewChild,
 } from '@angular/core';
 import { NG_VALUE_ACCESSOR, type ControlValueAccessor } from '@angular/forms';
-import { DsIcon } from '@the-system/icons/angular';
 import type { Size, Tone } from '@the-system/shared';
 import { consumeHostAttributes } from '../../internal/host';
 import { DsOrderedStyle, type OrderedStyle } from '../../internal/ordered-style';
@@ -60,12 +63,12 @@ let nextId = 0;
 @Component({
   selector: 'div[dsCheckbox]',
   exportAs: 'dsCheckbox',
-  imports: [DsIcon, DsNativeButton, DsOrderedStyle],
+  imports: [DsNativeButton, DsOrderedStyle],
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [{ provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => DsCheckbox), multi: true }],
   host: {
     'data-ds': 'checkbox',
-    '[attr.data-size]': 'iconSize()',
+    '[attr.data-size]': 'boxSize()',
     '[attr.data-tone]': 'tone()',
     '[attr.data-state]': 'state()',
     '[attr.data-invalid]': 'isInvalid() ? "" : null',
@@ -81,16 +84,16 @@ let nextId = 0;
       [attr.data-disabled]="isDisabled() ? '' : null"
       [disabled]="isDisabled()"
       [attr.value]="value() ?? 'on'"
-      [attr.id]="controlId()"
       [attr.aria-label]="ariaLabel() ?? null"
       [attr.aria-labelledby]="ariaLabelledby() ?? null"
+      [attr.id]="controlId()"
       [attr.aria-describedby]="describedBy() ?? null"
       [attr.aria-invalid]="isInvalid() ? 'true' : null"
       [attr.aria-readonly]="isReadOnly() ? 'true' : null"
       data-part="control"
       (click)="onClick($event)"
       (keydown)="onKeydown($event)"
-      (blur)="onTouched()"><span data-part="indicator" [attr.data-state]="state()" [attr.data-disabled]="isDisabled() ? '' : null"><span aria-hidden="true"><svg dsIcon [name]="glyph()" [size]="iconSize()"></svg></span></span></button>@if (isFormControl()) {<input #bubble
+      (blur)="onTouched()"><span data-part="indicator" [attr.data-state]="state()" [attr.data-disabled]="isDisabled() ? '' : null" style="pointer-events: none;"><span aria-hidden="true"></span><svg data-part="mark" [attr.data-glyph]="glyph()" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M-4.25 0H0" pathLength="1" /><path d="M0 0H8.85" pathLength="1" /></svg></span></button>@if (isFormControl()) {<input #bubble
       type="checkbox"
       aria-hidden="true"
       tabindex="-1"
@@ -163,7 +166,7 @@ export class DsCheckbox implements ControlValueAccessor {
     const c = this.current();
     return c === 'indeterminate' ? 'mixed' : String(c);
   });
-  protected readonly iconSize = computed<CheckboxSize>(() => this.size() ?? this.group?.size() ?? 'md');
+  protected readonly boxSize = computed<CheckboxSize>(() => this.size() ?? this.group?.size() ?? 'md');
   // The select all box has no value, so it takes no group name and posts nothing, as React.
   protected readonly itemName = computed(() => this.name() ?? (this.inGroup() ? this.group?.name() : undefined));
   // The glyph stays in the box while unchecked, hidden, so the next check can

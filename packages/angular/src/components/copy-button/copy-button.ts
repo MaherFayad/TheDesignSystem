@@ -1,7 +1,6 @@
 // CopyButton: copies a value to the clipboard and confirms it. On the Button
-// base. The icon swaps from copy to check (or to warning after a failure), a
-// visually hidden status says the result once, and after the hold time the
-// button returns to idle.
+// base. A visually hidden status says the result once, and after the hold
+// time (delay.feedback) the button returns to idle.
 //
 //   <button dsCopyButton [value]="command" label="Copy command"></button>
 //   <button dsCopyButton [value]="command" iconOnly target="command-text"></button>
@@ -9,27 +8,36 @@
 // The twin of packages/react/src/components/CopyButton/CopyButton.tsx.
 // `onCopied` and `onCopyFailed` are the `copied` and `copyFailed` outputs.
 //
-// The result morph (interaction copy-swap, primitive buttonMorph): when the
-// icon changes, the old icon stays for one morph in an unnamed aria-hidden
-// span after the new one, inside the icon part. The span rests at opacity 0
-// (Button.css) and goes when its exit settles. The clipboard write, the
-// state and the status are never held back by it. With no Web Animations
-// API, or a style that turns the morph off, no span is added.
+// The confirmation (interaction copy-swap) is CSS in CopyButton.css, driven
+// by data-state. Every glyph and every word is in the DOM from the first
+// paint, so nothing mounts or waits:
+//
+//   - The icon part holds the copy, check and warning glyphs stacked in one
+//     grid cell.
+//   - The label part holds the three words stacked in one grid cell, so the
+//     width never moves. The others are aria-hidden, and the button's
+//     aria-label is the idle word, so the accessible name never changes.
+//   - The icon only form shows a small aria-hidden bubble with the result
+//     word (interaction copy-bubble).
+//   - The status (role status, polite) gets the result word once per copy:
+//     each copy renders a new text node, so a second copy is heard again,
+//     and going back to idle empties it.
+//
+// A second copy while the result shows restarts the hold time, renders the
+// check and the bubble again (so their animations replay) and never leaves a
+// stuck state.
 import {
   ChangeDetectionStrategy,
   Component,
   DestroyRef,
-  afterRenderEffect,
   booleanAttribute,
   computed,
   inject,
   input,
   output,
   signal,
-  untracked,
 } from '@angular/core';
 import type { IconName } from '@the-system/icons';
-import { buttonMorph, settled, type MorphParts, type MorphState } from '@the-system/motion';
 import { DsIcon } from '@the-system/icons/angular';
 import { consumeHostAttributes } from '../../internal/host';
 import { listenAfterCallers } from '../../internal/late-listener';
@@ -45,23 +53,16 @@ export const copyButtonLabels = {
   ar: { label: 'نسخ', copied: 'تم النسخ', failed: 'تعذر النسخ' },
 } as const;
 
-/** How long the result shows (delay.feedback, 2s). Timing, not motion, so it is kept under reduced motion. */
+/**
+ * How long the result shows before the button returns to idle
+ * (delay.feedback, 2s). Timing, not motion, so it is kept under reduced
+ * motion.
+ */
 const HOLD_TOKEN = '--ds-delay-feedback';
 
+/** The glyph of each state, in the order they stack. */
 const icons: Record<CopyButtonState, IconName> = { idle: 'copy', copied: 'check', failed: 'warning' };
-
-/** The icon that leaves during a morph, and the states the morph goes between. */
-interface Leaving {
-  id: number;
-  icon: IconName;
-  from: CopyButtonState;
-  to: CopyButtonState;
-}
-
-/** The morph state of each copy state. */
-const morphStates: Record<CopyButtonState, MorphState> = { idle: 'idle', copied: 'success', failed: 'error' };
-/** The morph part that shows in each copy state. */
-const morphSlots: Record<CopyButtonState, 'label' | 'success' | 'error'> = { idle: 'label', copied: 'success', failed: 'error' };
+const STATES: readonly CopyButtonState[] = ['idle', 'copied', 'failed'];
 
 @Component({
   selector: 'button[dsCopyButton]',
@@ -71,19 +72,37 @@ const morphSlots: Record<CopyButtonState, 'label' | 'success' | 'error'> = { idl
   host: {
     'data-ds': 'copy-button',
     '[attr.data-state]': 'state()',
-    '[attr.aria-label]': 'iconOnly() ? name() : null',
+    '[attr.aria-label]': 'words().idle',
   },
   template: `
     <span data-part="icon">
-      <svg dsIcon [name]="icon()" size="md"></svg>
-      @for (l of leavingList(); track l.id) {
-        <span aria-hidden="true"><svg dsIcon [name]="l.icon" size="md"></svg></span>
+      @for (g of glyphs(); track g.key) {
+        <span [attr.data-copy-glyph]="g.state"><svg dsIcon [name]="g.icon" size="md"></svg></span>
       }
     </span>
     @if (!iconOnly()) {
-      <span data-part="label">{{ name() }}</span>
+      <span data-part="label">
+        @for (s of states; track s) {
+          <span
+            [attr.data-copy-label]="s"
+            [attr.data-roll]="rolls(s) ? '' : null"
+            [attr.aria-hidden]="s === 'idle' ? null : 'true'"
+            >{{ words()[s] }}</span
+          >
+        }
+      </span>
+    } @else {
+      @for (c of [count()]; track c) {
+        <span data-part="bubble" aria-hidden="true">{{ words()[last()] }}</span>
+      }
     }
-    <span data-part="status" role="status">{{ status() }}</span>
+    <span data-part="status" role="status">
+      @if (status()) {
+        @for (c of [count()]; track c) {
+          <span>{{ status() }}</span>
+        }
+      }
+    </span>
   `,
 })
 export class DsCopyButton extends DsButtonBase {
@@ -93,9 +112,9 @@ export class DsCopyButton extends DsButtonBase {
   readonly label = input<string | undefined>(undefined);
   /** Shows only the icon; label becomes the accessible name. Default false. */
   readonly iconOnly = input(false, { transform: booleanAttribute });
-  /** What the status says after a copy. Default "Copied" ("تم النسخ"). */
+  /** What the label rolls to and the status says after a copy. Default "Copied" ("تم النسخ"). */
   readonly copiedLabel = input<string | undefined>(undefined);
-  /** What the status says after a failure. Default "Could not copy" ("تعذر النسخ"). */
+  /** What the label rolls to and the status says after a failure. Default "Could not copy" ("تعذر النسخ"). */
   readonly failedLabel = input<string | undefined>(undefined);
   /** The id of the element that shows the value. A failed copy selects its text. */
   readonly target = input<string | undefined>(undefined);
@@ -107,25 +126,32 @@ export class DsCopyButton extends DsButtonBase {
   readonly copyFailed = output<string>();
 
   protected readonly defaultEmphasis: ButtonEmphasis = 'ghost';
+  protected readonly states = STATES;
   readonly state = signal<CopyButtonState>('idle');
+  /**
+   * Counts the results. It keys the check, the bubble and the status text,
+   * so a second copy renders them again; 0 means nothing has happened yet,
+   * so the idle word does not roll in on the first paint.
+   */
+  protected readonly count = signal(0);
+  /** The last result, so the bubble keeps its word while it fades out. */
+  protected readonly last = signal<Exclude<CopyButtonState, 'idle'>>('copied');
   private readonly theme = inject(DsThemeService);
-  private readonly words = computed(() => (this.theme.value().lang.startsWith('ar') ? copyButtonLabels.ar : copyButtonLabels.en));
-  protected readonly name = computed(() => this.label() ?? this.words().label);
-  protected readonly icon = computed(() => icons[this.state()]);
+  private readonly defaults = computed(() => (this.theme.value().lang.startsWith('ar') ? copyButtonLabels.ar : copyButtonLabels.en));
+  protected readonly words = computed<Record<CopyButtonState, string>>(() => ({
+    idle: this.label() ?? this.defaults().label,
+    copied: this.copiedLabel() ?? this.defaults().copied,
+    failed: this.failedLabel() ?? this.defaults().failed,
+  }));
+  /** The glyphs in stack order. The check and the warning are keyed by the count, as React's key. */
+  protected readonly glyphs = computed(() => {
+    const n = this.count();
+    return STATES.map((s) => ({ state: s, icon: icons[s], key: s === 'idle' ? s : `${s}-${n}` }));
+  });
   protected readonly status = computed(() => {
     const s = this.state();
-    if (s === 'copied') return this.copiedLabel() ?? this.words().copied;
-    if (s === 'failed') return this.failedLabel() ?? this.words().failed;
-    return '';
+    return s === 'idle' ? '' : this.words()[s];
   });
-  /** The old icon of the running morph, or none. */
-  private readonly leaving = signal<Leaving | null>(null);
-  /** The leaving icon as a list, so each swap renders a new span, as React's key. */
-  protected readonly leavingList = computed(() => {
-    const l = this.leaving();
-    return l ? [l] : [];
-  });
-  private swaps = 0;
   private timer: ReturnType<typeof setTimeout> | undefined;
   private destroyed = false;
 
@@ -137,36 +163,11 @@ export class DsCopyButton extends DsButtonBase {
       this.destroyed = true;
       clearTimeout(this.timer);
     });
-    // Plays the morph on the rendered icons: the new icon is the first child
-    // of the icon part, the leaving copy the last.
-    afterRenderEffect({
-      write: () => {
-        const leaving = this.leaving();
-        const part = this.host.querySelector(':scope > [data-part="icon"]');
-        if (!leaving || !part) return;
-        const incoming = part.firstElementChild;
-        const outgoing = part.lastElementChild;
-        const parts: MorphParts = { root: this.host };
-        if (outgoing && outgoing !== incoming) parts[morphSlots[leaving.from]] = outgoing;
-        if (incoming) parts[morphSlots[leaving.to]] = incoming;
-        const mode = untracked(() => this.motion.mode('copy-swap'));
-        const played = buttonMorph(parts, morphStates[leaving.from], morphStates[leaving.to], { mode });
-        const exit = played.find((a) => (a.effect as KeyframeEffect | null)?.target === outgoing) ?? null;
-        void settled(exit).then(() => {
-          if (!this.destroyed) this.leaving.update((l) => (l?.id === leaving.id ? null : l));
-        });
-      },
-    });
   }
 
-  /** Sets the state at once and, when the icon changes and motion can play, keeps the old icon for the swap. */
-  private change(next: CopyButtonState): void {
-    const prev = this.state();
-    if (icons[prev] !== icons[next] && typeof this.host.animate === 'function' && this.motion.mode('copy-swap') !== 'none') {
-      this.swaps += 1;
-      this.leaving.set({ id: this.swaps, icon: icons[prev], from: prev, to: next });
-    }
-    this.state.set(next);
+  /** The word that shows now rolls in, except the idle word on the first paint. */
+  protected rolls(s: CopyButtonState): boolean {
+    return s === this.state() && (s !== 'idle' || this.count() > 0);
   }
 
   protected override isIconOnly(): boolean {
@@ -188,8 +189,11 @@ export class DsCopyButton extends DsButtonBase {
       selectTextOf(this.target());
       this.copyFailed.emit(value);
     }
-    this.change(ok ? 'copied' : 'failed');
+    const next = ok ? 'copied' : 'failed';
+    this.state.set(next);
+    this.last.set(next);
+    this.count.update((n) => n + 1);
     clearTimeout(this.timer);
-    this.timer = setTimeout(() => this.change('idle'), readTimeToken(this.host, HOLD_TOKEN));
+    this.timer = setTimeout(() => this.state.set('idle'), readTimeToken(this.host, HOLD_TOKEN));
   }
 }

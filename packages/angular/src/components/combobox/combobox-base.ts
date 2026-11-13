@@ -57,7 +57,7 @@ import { ListHighlight } from '../../internal/list-highlight';
 import { optionalBoolean } from '../../internal/optional-boolean';
 import { PopupLayer } from '../../internal/popper';
 import { injectMotion } from '../../internal/motion';
-import { POPUP_LIST_ROWS, openStaggered } from '../../internal/motion-selection';
+import { POPUP_LIST_ROWS, injectPopupResults, openStaggered } from '../../internal/motion-selection';
 import { DsThemeService } from '../../theme';
 import { DsFieldContext, fieldControl } from '../field/field-context';
 import {
@@ -367,6 +367,8 @@ export abstract class DsComboboxBase implements OnInit {
       // menu-rows: the options arrive one stagger step after the popup surface, each time it opens.
       untracked(() => (shown ? openStaggered(this.layer, POPUP_LIST_ROWS, () => this.motion.mode('menu-rows')) : this.layer.close()));
     });
+    // combobox-results: on a new query the rows that stay slide and new rows rise. The exit copy is the layer's (B6).
+    injectPopupResults(this.layer);
 
     // The anchor carries the placed side and alignment, as the Radix PopperAnchor does.
     effect(() => {

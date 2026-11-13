@@ -196,6 +196,19 @@ const actionsAr = [
         </div>
       </section>
 
+      <section data-demo="case" data-demo-case="error" heading="Result: success and error">
+        <div data-demo="row">
+          <button dsButton result="success" resultLabel="Saved" tone="accent" emphasis="solid">Save changes</button>
+          <button dsButton result="error" resultLabel="Could not save">Save changes</button>
+          <span dsTheme [lang]="'ar'">
+            <button dsButton result="success" resultLabel="تم الحفظ" tone="accent" emphasis="solid">حفظ التغييرات</button>
+          </span>
+          <span dsTheme [lang]="'ar'">
+            <button dsButton result="error" resultLabel="تعذر الحفظ" size="lg">حفظ التغييرات</button>
+          </span>
+        </div>
+      </section>
+
       <section data-demo="case" data-demo-case="disabled" heading="Disabled">
         <div data-demo="row">
           <button dsButton disabled tone="accent" emphasis="solid">Publish page</button>

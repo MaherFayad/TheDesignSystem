@@ -76,21 +76,35 @@ describe('DsCheckbox', () => {
     expect(el.hasAttribute('aria-label')).toBe(false);
     expect(control('sized').getAttribute('aria-label')).toBe('Select the row');
     expect(control('sized').getAttribute('aria-checked')).toBe('mixed');
-    expect(el.querySelector('[data-icon="minus"]')).not.toBeNull();
+    expect(el.querySelector('[data-part="indicator"] > [data-part="mark"]')?.getAttribute('data-glyph')).toBe('minus');
   });
 
-  it('keeps the indicator and a hidden span with the last glyph while unchecked, for the check draw, as React', async () => {
+  it('draws the mark as two strokes after a fill span and keeps the last glyph, so an uncheck retracts it (check-draw, check-mixed)', async () => {
     const { root, control, settle } = await setup();
-    const glyph = (id: string) => root(id).querySelector('[data-part="indicator"] > span[aria-hidden="true"] > svg');
-    expect(glyph('plain')?.getAttribute('data-icon')).toBe('check');
-    expect(glyph('sized')?.getAttribute('data-icon')).toBe('minus');
+    const indicator = root('sized').querySelector('[data-part="indicator"]');
+    expect(indicator?.getAttribute('style')).toBe('pointer-events: none;');
+    const fill = indicator?.querySelector(':scope > span');
+    expect(fill?.getAttribute('aria-hidden')).toBe('true');
+    expect(fill?.hasAttribute('data-part')).toBe(false);
+    expect(fill?.childElementCount).toBe(0);
+    const mark = (id: string) => root(id).querySelector('[data-part="indicator"] > span + [data-part="mark"]');
+    expect(mark('sized')?.getAttribute('aria-hidden')).toBe('true');
+    expect(mark('sized')?.getAttribute('focusable')).toBe('false');
+    expect(mark('sized')?.getAttribute('viewBox')).toBe('0 0 16 16');
+    const paths = Array.from(mark('sized')?.querySelectorAll('path') ?? []);
+    expect(paths.map((p) => p.getAttribute('d'))).toEqual(['M-4.25 0H0', 'M0 0H8.85']);
+    for (const path of paths) expect(path.getAttribute('pathLength')).toBe('1');
+    expect(mark('plain')?.getAttribute('data-glyph')).toBe('check');
+    expect(mark('sized')?.getAttribute('data-glyph')).toBe('minus');
     control('sized').click();
     await settle();
-    expect(glyph('sized')?.getAttribute('data-icon')).toBe('check');
+    expect(mark('sized')?.getAttribute('data-glyph')).toBe('check');
     control('sized').click();
     await settle();
     expect(root('sized').getAttribute('data-state')).toBe('unchecked');
-    expect(glyph('sized')?.getAttribute('data-icon')).toBe('check');
+    expect(mark('sized')?.getAttribute('data-glyph')).toBe('check');
+    // CSS draws it: no inline style from code.
+    expect(mark('sized')?.getAttribute('style')).toBeNull();
   });
 
   it('a click on the indeterminate box checks it', async () => {
@@ -98,7 +112,7 @@ describe('DsCheckbox', () => {
     control('sized').click();
     await settle();
     expect(root('sized').getAttribute('data-state')).toBe('checked');
-    expect(root('sized').querySelector('[data-icon="check"]')).not.toBeNull();
+    expect(root('sized').querySelector('[data-part="mark"]')?.getAttribute('data-glyph')).toBe('check');
   });
 
   it('toggles on click and on the label, writes the model back, and ignores Enter', async () => {

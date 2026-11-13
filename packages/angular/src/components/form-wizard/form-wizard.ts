@@ -32,6 +32,8 @@
 // leaves toward the inline start, the new step arrives from the end, back
 // reverses, RTL flips, a mark that turned complete lands its check), and
 // wizard-done plays one short wave over every mark once the form is sent.
+// Since order 1.23 a decorative success mark before the done title draws its
+// ring, then its tick (FormWizard.css).
 import { NgTemplateOutlet } from '@angular/common';
 import {
   ChangeDetectionStrategy,
@@ -209,7 +211,7 @@ let nextId = 0;
       [size]="size()" [orientation]="orientation()" [aria-label]="stepsLabel()" [onStepSelect]="idle() ? pick : undefined"></ol>
     <form #form data-part="panel" novalidate [attr.aria-labelledby]="titleId" [attr.aria-describedby]="submitFailed() ? errorId : null"
       [attr.aria-busy]="state() === 'submitting' || checking() ? 'true' : null" (submit)="handleSubmit($event)">
-      <h2 #title [attr.id]="titleId" data-part="title" tabindex="-1">{{ state() === 'done' ? (doneTitle() ?? words().done) : step()?.title }}</h2>
+      <h2 #title [attr.id]="titleId" data-part="title" tabindex="-1">@if (state() === 'done') {<svg data-part="success-mark" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" pathLength="1" /><path d="M7.5 12.5l3 3 6-6.5" pathLength="1" /></svg>}{{ state() === 'done' ? (doneTitle() ?? words().done) : step()?.title }}</h2>
       @for (s of steps(); track s.id; let i = $index) {
         <div data-part="body" [attr.data-step]="i" [attr.hidden]="state() === 'done' || i !== stepper().current ? '' : null">
           <ng-container *ngTemplateOutlet="s.content; context: contextFor(i)" />

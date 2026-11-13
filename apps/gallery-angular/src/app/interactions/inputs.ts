@@ -1,5 +1,5 @@
 // Stages of the Angular /interactions page for the inputs family (orders
-// 1.21 and 1.22), the twin of apps/gallery-react/src/interactions/inputs.tsx.
+// 1.21 to 1.23), the twin of apps/gallery-react/src/interactions/inputs.tsx.
 // One standalone component per interaction id. Each stage marks the control
 // that plays it with data-interaction-trigger, so the page's replay control
 // can press it again. Same copy as React.
@@ -8,7 +8,7 @@
 // Angular dsInput keeps its attributes on the root, so the stage stamps the
 // mark on the native input after first render, to keep the DOM the same.
 import { ChangeDetectionStrategy, Component, afterNextRender, signal, viewChild, type Type } from '@angular/core';
-import { DsButton, DsField, DsInput, DsNumberField, DsOTPField, DsPasswordField, DsScrubInput, DsSearchField, DsTextarea } from '@the-system/angular';
+import { DsButton, DsField, DsInlineEdit, DsInput, DsNumberField, DsOTPField, DsPasswordField, DsScrubInput, DsSearchField, DsTextarea } from '@the-system/angular';
 
 /** The stage around a trigger. */
 const stageOf = (el: EventTarget | null): HTMLElement | null => (el instanceof Element ? el.closest('[data-interaction-stage]') : null);
@@ -235,6 +235,25 @@ class ScrubRollStage {
   }
 }
 
+@Component({
+  selector: 'ds-stage-inline-edit-morph',
+  imports: [DsButton, DsInlineEdit],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  host: { style: 'display: contents' },
+  template: `
+    <div dsInlineEdit label="Board name" value="Spring launch"></div>
+    <button dsButton size="sm" emphasis="soft" data-interaction-trigger="" (click)="act($event)">Edit or save the name</button>
+  `,
+})
+class InlineEditMorphStage {
+  protected act(event: Event): void {
+    play(event, (s) => {
+      if (s.querySelector('[data-part="save"]')) click(s, '[data-part="save"]');
+      else click(s, '[data-part="display"]');
+    });
+  }
+}
+
 /** Live stages by interaction id. */
 export const stages: Record<string, Type<unknown>> = {
   'focus-glow': FocusGlowStage,
@@ -248,4 +267,5 @@ export const stages: Record<string, Type<unknown>> = {
   'otp-complete': OtpCompleteStage,
   'field-step': FieldStepStage,
   'scrub-roll': ScrubRollStage,
+  'inline-edit-morph': InlineEditMorphStage,
 };

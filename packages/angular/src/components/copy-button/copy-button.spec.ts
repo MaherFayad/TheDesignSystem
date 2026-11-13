@@ -45,7 +45,16 @@ describe('DsCopyButton', () => {
     expect(el.getAttribute('data-emphasis')).toBe('ghost');
     expect(el.hasAttribute('value')).toBe(false);
     expect(Array.from(el.children).map((c) => c.getAttribute('data-part'))).toEqual(['icon', 'label', 'status']);
-    expect(el.querySelector('[data-part="label"]')?.textContent).toBe('Copy');
+    const glyphs = Array.from(el.querySelectorAll('[data-part="icon"] > [data-copy-glyph]'));
+    expect(glyphs.map((g) => g.getAttribute('data-copy-glyph'))).toEqual(['idle', 'copied', 'failed']);
+    expect(glyphs.map((g) => g.querySelector('[data-ds="icon"]')?.getAttribute('data-icon'))).toEqual(['copy', 'check', 'warning']);
+    // Every word sits in the label, so the width is the widest; only the idle word is read.
+    const words = Array.from(el.querySelectorAll('[data-part="label"] > [data-copy-label]'));
+    expect(words.map((w) => w.textContent)).toEqual(['Copy', 'Copied', 'Could not copy']);
+    expect(words.map((w) => w.getAttribute('aria-hidden'))).toEqual([null, 'true', 'true']);
+    expect(words.some((w) => w.hasAttribute('data-roll'))).toBe(false);
+    expect(el.querySelector('[data-part="bubble"]')).toBeNull();
+    expect(el.getAttribute('aria-label')).toBe('Copy');
     expect(el.querySelector('[data-part="status"]')?.textContent).toBe('');
   });
 
@@ -68,7 +77,7 @@ describe('DsCopyButton', () => {
     expect(host.copied()).toBe('npx the-system add button');
     expect(el.getAttribute('data-state')).toBe('copied');
     expect(el.querySelector('[data-part="status"]')?.textContent).toBe('Copied');
-    expect(el.querySelector('svg')?.getAttribute('data-icon')).toBe('check');
+    expect(el.querySelector('[data-copy-label="copied"]')?.hasAttribute('data-roll')).toBe(true);
   });
 
   it('a failed copy says so and emits copyFailed', async () => {
@@ -114,6 +123,7 @@ describe('DsCopyButton', () => {
 
   it('uses the Arabic words under an Arabic dsTheme', async () => {
     const { q } = await setup();
-    expect(q('ar').querySelector('[data-part="label"]')?.textContent).toBe('نسخ');
+    expect(q('ar').querySelector('[data-copy-label="idle"]')?.textContent).toBe('نسخ');
+    expect(q('ar').getAttribute('aria-label')).toBe('نسخ');
   });
 });

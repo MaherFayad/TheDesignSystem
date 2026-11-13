@@ -1,6 +1,7 @@
 // meter-fill, as React's useFillOnView plays it: a meter on screen at mount
-// fills at once on ease.spring-soft over duration.reveal; one off screen
-// holds an inline scaleX(0) until an IntersectionObserver sees it.
+// fills at once on --_meter-reveal-ease over --_meter-reveal-duration (round
+// 3); one off screen holds an inline scaleX(0) until an IntersectionObserver
+// sees it. Round 3: the value text lands at --_meter-value-at of the reveal.
 import { Component, signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
@@ -53,7 +54,7 @@ function stage() {
   };
 }
 
-const FILL = 'transform var(--ds-duration-reveal) var(--ds-ease-spring-soft)';
+const FILL = 'transform var(--_meter-reveal-duration) var(--_meter-reveal-ease)';
 let seen: ((entries: { isIntersecting: boolean }[]) => void) | null = null;
 class FakeObserver {
   constructor(cb: (entries: { isIntersecting: boolean }[]) => void) {
@@ -86,12 +87,26 @@ describe('DsMeter motion', () => {
 
   const indicator = (f: { nativeElement: HTMLElement }) => f.nativeElement.querySelector('[data-part="indicator"]') as HTMLElement;
 
-  it('on screen at mount: the fill transitions from 0 on the soft spring over duration.reveal', async () => {
-    const fixture = TestBed.createComponent(Host);
-    await fixture.whenStable();
-    const el = indicator(fixture);
-    expect(el.style.transition).toBe(FILL);
-    expect(el.style.transform).toBe('');
+  it('on screen at mount: the fill transitions from 0 on the private reveal timing, and the value lands on the bouncy spring', async () => {
+    const root = document.documentElement.style;
+    root.setProperty('--ds-duration-reveal', '640ms');
+    root.setProperty('--ds-duration-spring-bouncy', '220ms');
+    try {
+      const fixture = TestBed.createComponent(Host);
+      await fixture.whenStable();
+      const el = indicator(fixture);
+      expect(el.style.transition).toBe(FILL);
+      expect(el.style.transform).toBe('');
+      const [land, ...rest] = s.take();
+      expect(rest).toEqual([]);
+      expect(land!.target).toBe(fixture.nativeElement.querySelector('[data-ds="meter"] > [data-part="value"]'));
+      expect(land!.keyframes).toEqual([{ transform: 'translateY(var(--ds-distance-nudge))', color: 'var(--ds-color-text-muted)' }, { transform: 'none' }]);
+      // --_meter-value-at is 0.6 by default (the CSS is not loaded here): the beat waits 60% of the reveal.
+      expect(land!.options).toMatchObject({ id: 'ds-motion:meter-value', duration: 220, delay: 384, fill: 'backwards' });
+    } finally {
+      root.removeProperty('--ds-duration-reveal');
+      root.removeProperty('--ds-duration-spring-bouncy');
+    }
   });
 
   it('off screen: held at scaleX(0) until seen, then fills', async () => {
@@ -116,5 +131,6 @@ describe('DsMeter motion', () => {
     const el = indicator(fixture);
     expect(el.style.transform).toBe('');
     expect(el.style.transition).toBe('');
+    expect(s.take()).toEqual([]);
   });
 });

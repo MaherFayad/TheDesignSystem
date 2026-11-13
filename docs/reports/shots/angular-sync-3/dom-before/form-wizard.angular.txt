@@ -1,0 +1,1231 @@
+<section data-demo="case" data-demo-case="variants">
+  <h2 data-demo="title">
+    "Variants: size and Stepper orientation"
+  <div data-demo="row">
+    <span data-demo="label">
+      "md, horizontal"
+    <div data-ds="form-wizard" data-size="md" data-state="editing">
+      <ol aria-label="Checkout steps, md" data-ds="stepper" data-orientation="horizontal" data-part="steps" data-size="md">
+        <li aria-current="step" data-part="step" data-state="current">
+          <span aria-hidden="true" data-part="indicator">
+            "1"
+          <span data-part="title">
+            "Account"
+            <span data-part="status">
+              ","
+              "current step"
+          <span data-part="description">
+            "Where we send the receipt"
+          <span aria-hidden="true" data-part="connector">
+        <li data-part="step" data-state="upcoming">
+          <span aria-hidden="true" data-part="indicator">
+            "2"
+          <span data-part="title">
+            "Address"
+          <span data-part="description">
+            "Where we deliver the order"
+          <span aria-hidden="true" data-part="connector">
+        <li data-part="step" data-state="upcoming">
+          <span aria-hidden="true" data-part="indicator">
+            "3"
+          <span data-part="title">
+            "Delivery"
+          <span data-part="description">
+            "A note for the driver"
+          <span aria-hidden="true" data-part="connector">
+        <li data-part="step" data-state="upcoming">
+          <span aria-hidden="true" data-part="indicator">
+            "4"
+          <span data-part="title">
+            "Review"
+          <span data-part="description">
+            "Check the order before you place it"
+      <form aria-labelledby="ID0" autocomplete="on" data-part="panel" novalidate="">
+        <h2 data-part="title" id="ID0" tabindex="-1">
+          "Account"
+        <div data-part="body" data-step="0">
+          <div data-ds="field" data-orientation="vertical">
+            <label data-ds="label" data-part="label" data-size="md" for="ID2" id="ID1">
+              "Full name"
+              <span aria-hidden="true" data-part="required">
+                "*"
+            <div data-ds="input" data-shape="default" data-size="md">
+              <input aria-required="true" autocomplete="name" data-part="control" id="ID2" name="ID3" type="text">
+          <div data-ds="field" data-orientation="vertical">
+            <label data-ds="label" data-part="label" data-size="md" for="ID5" id="ID4">
+              "Email"
+              <span aria-hidden="true" data-part="required">
+                "*"
+            <div data-ds="input" data-shape="default" data-size="md">
+              <input aria-required="true" autocomplete="email" data-part="control" id="ID5" name="ID6" type="email">
+        <div data-part="body" data-step="1" hidden="">
+          <div data-ds="field" data-orientation="vertical">
+            <label data-ds="label" data-part="label" data-size="md" for="ID8" id="ID7">
+              "Street and building"
+              <span aria-hidden="true" data-part="required">
+                "*"
+            <div data-ds="input" data-shape="default" data-size="md">
+              <input aria-required="true" autocomplete="address-line1" data-part="control" id="ID8" name="ID9" type="text">
+          <div data-ds="field" data-orientation="vertical">
+            <label data-ds="label" data-part="label" data-size="md" for="ID11" id="ID10">
+              "City"
+              <span aria-hidden="true" data-part="required">
+                "*"
+            <div data-ds="input" data-shape="default" data-size="md">
+              <input aria-required="true" autocomplete="address-level2" data-part="control" id="ID11" name="ID12" type="text">
+          <div data-ds="field" data-orientation="vertical">
+            <label data-ds="label" data-part="label" data-size="md" for="ID14" id="ID13">
+              "Postal code"
+              <span aria-hidden="true" data-part="required">
+                "*"
+            <div data-ds="input" data-shape="default" data-size="md">
+              <input aria-describedby="ID16" aria-required="true" autocomplete="postal-code" data-part="control" id="ID14" inputmode="numeric" name="ID15" type="text">
+            <p data-part="description" id="ID16">
+              "Five digits"
+        <div data-part="body" data-step="2" hidden="">
+          <div data-ds="field" data-orientation="vertical">
+            <label data-ds="label" data-part="label" data-size="md" for="ID18" id="ID17">
+              "Note for the driver"
+            <div data-ds="input" data-shape="default" data-size="md">
+              <input aria-describedby="ID20" data-part="control" id="ID18" name="ID19" type="text">
+            <p data-part="description" id="ID20">
+              "Optional. A gate code or a landmark."
+        <div data-part="body" data-step="3" hidden="">
+          <dl style="display: grid; gap: var(--ds-space-s); margin: 0px;">
+            <div style="display: grid; gap: var(--ds-space-3xs);">
+              <dt style="color: var(--ds-color-text-muted); font-size: var(--ds-font-size-xs);">
+                "Full name"
+              <dd style="margin: 0px;">
+                "None"
+            <div style="display: grid; gap: var(--ds-space-3xs);">
+              <dt style="color: var(--ds-color-text-muted); font-size: var(--ds-font-size-xs);">
+                "Email"
+              <dd style="margin: 0px;">
+                "None"
+            <div style="display: grid; gap: var(--ds-space-3xs);">
+              <dt style="color: var(--ds-color-text-muted); font-size: var(--ds-font-size-xs);">
+                "Street and building"
+              <dd style="margin: 0px;">
+                "None"
+            <div style="display: grid; gap: var(--ds-space-3xs);">
+              <dt style="color: var(--ds-color-text-muted); font-size: var(--ds-font-size-xs);">
+                "City"
+              <dd style="margin: 0px;">
+                "None"
+            <div style="display: grid; gap: var(--ds-space-3xs);">
+              <dt style="color: var(--ds-color-text-muted); font-size: var(--ds-font-size-xs);">
+                "Postal code"
+              <dd style="margin: 0px;">
+                "None"
+            <div style="display: grid; gap: var(--ds-space-3xs);">
+              <dt style="color: var(--ds-color-text-muted); font-size: var(--ds-font-size-xs);">
+                "Note for the driver"
+              <dd style="margin: 0px;">
+                "None"
+        <div data-part="actions">
+          <button data-ds="button" data-emphasis="solid" data-part="next" data-shape="default" data-size="md" data-tone="accent" type="submit">
+            <span data-part="label">
+              "Save account"
+      <div data-part="status" role="status">
+  <div data-demo="row">
+    <span data-demo="label">
+      "sm, vertical"
+    <div data-ds="form-wizard" data-size="sm" data-state="editing">
+      <ol aria-label="Checkout steps, sm vertical" data-ds="stepper" data-orientation="vertical" data-part="steps" data-size="sm">
+        <li aria-current="step" data-part="step" data-state="current">
+          <span aria-hidden="true" data-part="indicator">
+            "1"
+          <span data-part="title">
+            "Account"
+            <span data-part="status">
+              ","
+              "current step"
+          <span data-part="description">
+            "Where we send the receipt"
+          <span aria-hidden="true" data-part="connector">
+        <li data-part="step" data-state="upcoming">
+          <span aria-hidden="true" data-part="indicator">
+            "2"
+          <span data-part="title">
+            "Address"
+          <span data-part="description">
+            "Where we deliver the order"
+          <span aria-hidden="true" data-part="connector">
+        <li data-part="step" data-state="upcoming">
+          <span aria-hidden="true" data-part="indicator">
+            "3"
+          <span data-part="title">
+            "Delivery"
+          <span data-part="description">
+            "A note for the driver"
+          <span aria-hidden="true" data-part="connector">
+        <li data-part="step" data-state="upcoming">
+          <span aria-hidden="true" data-part="indicator">
+            "4"
+          <span data-part="title">
+            "Review"
+          <span data-part="description">
+            "Check the order before you place it"
+      <form aria-labelledby="ID21" autocomplete="on" data-part="panel" novalidate="">
+        <h2 data-part="title" id="ID21" tabindex="-1">
+          "Account"
+        <div data-part="body" data-step="0">
+          <div data-ds="field" data-orientation="vertical">
+            <label data-ds="label" data-part="label" data-size="md" for="ID23" id="ID22">
+              "Full name"
+              <span aria-hidden="true" data-part="required">
+                "*"
+            <div data-ds="input" data-shape="default" data-size="md">
+              <input aria-required="true" autocomplete="name" data-part="control" id="ID23" name="ID3" type="text">
+          <div data-ds="field" data-orientation="vertical">
+            <label data-ds="label" data-part="label" data-size="md" for="ID25" id="ID24">
+              "Email"
+              <span aria-hidden="true" data-part="required">
+                "*"
+            <div data-ds="input" data-shape="default" data-size="md">
+              <input aria-required="true" autocomplete="email" data-part="control" id="ID25" name="ID6" type="email">
+        <div data-part="body" data-step="1" hidden="">
+          <div data-ds="field" data-orientation="vertical">
+            <label data-ds="label" data-part="label" data-size="md" for="ID27" id="ID26">
+              "Street and building"
+              <span aria-hidden="true" data-part="required">
+                "*"
+            <div data-ds="input" data-shape="default" data-size="md">
+              <input aria-required="true" autocomplete="address-line1" data-part="control" id="ID27" name="ID9" type="text">
+          <div data-ds="field" data-orientation="vertical">
+            <label data-ds="label" data-part="label" data-size="md" for="ID29" id="ID28">
+              "City"
+              <span aria-hidden="true" data-part="required">
+                "*"
+            <div data-ds="input" data-shape="default" data-size="md">
+              <input aria-required="true" autocomplete="address-level2" data-part="control" id="ID29" name="ID12" type="text">
+          <div data-ds="field" data-orientation="vertical">
+            <label data-ds="label" data-part="label" data-size="md" for="ID31" id="ID30">
+              "Postal code"
+              <span aria-hidden="true" data-part="required">
+                "*"
+            <div data-ds="input" data-shape="default" data-size="md">
+              <input aria-describedby="ID32" aria-required="true" autocomplete="postal-code" data-part="control" id="ID31" inputmode="numeric" name="ID15" type="text">
+            <p data-part="description" id="ID32">
+              "Five digits"
+        <div data-part="body" data-step="2" hidden="">
+          <div data-ds="field" data-orientation="vertical">
+            <label data-ds="label" data-part="label" data-size="md" for="ID34" id="ID33">
+              "Note for the driver"
+            <div data-ds="input" data-shape="default" data-size="md">
+              <input aria-describedby="ID35" data-part="control" id="ID34" name="ID19" type="text">
+            <p data-part="description" id="ID35">
+              "Optional. A gate code or a landmark."
+        <div data-part="body" data-step="3" hidden="">
+          <dl style="display: grid; gap: var(--ds-space-s); margin: 0px;">
+            <div style="display: grid; gap: var(--ds-space-3xs);">
+              <dt style="color: var(--ds-color-text-muted); font-size: var(--ds-font-size-xs);">
+                "Full name"
+              <dd style="margin: 0px;">
+                "None"
+            <div style="display: grid; gap: var(--ds-space-3xs);">
+              <dt style="color: var(--ds-color-text-muted); font-size: var(--ds-font-size-xs);">
+                "Email"
+              <dd style="margin: 0px;">
+                "None"
+            <div style="display: grid; gap: var(--ds-space-3xs);">
+              <dt style="color: var(--ds-color-text-muted); font-size: var(--ds-font-size-xs);">
+                "Street and building"
+              <dd style="margin: 0px;">
+                "None"
+            <div style="display: grid; gap: var(--ds-space-3xs);">
+              <dt style="color: var(--ds-color-text-muted); font-size: var(--ds-font-size-xs);">
+                "City"
+              <dd style="margin: 0px;">
+                "None"
+            <div style="display: grid; gap: var(--ds-space-3xs);">
+              <dt style="color: var(--ds-color-text-muted); font-size: var(--ds-font-size-xs);">
+                "Postal code"
+              <dd style="margin: 0px;">
+                "None"
+            <div style="display: grid; gap: var(--ds-space-3xs);">
+              <dt style="color: var(--ds-color-text-muted); font-size: var(--ds-font-size-xs);">
+                "Note for the driver"
+              <dd style="margin: 0px;">
+                "None"
+        <div data-part="actions">
+          <button data-ds="button" data-emphasis="solid" data-part="next" data-shape="default" data-size="sm" data-tone="accent" type="submit">
+            <span data-part="label">
+              "Save account"
+      <div data-part="status" role="status">
+  <h3 data-demo="title">
+    "Variants in Arabic"
+  <div data-contrast="default" data-demo="content" data-density="comfortable" data-ds="theme" data-glass="regular" data-platform="web" data-scheme="light" data-style="neutral" dir="rtl" lang="ar">
+    <div data-demo="row">
+      <span data-demo="label">
+        "md, horizontal"
+      <div data-ds="form-wizard" data-size="md" data-state="editing">
+        <ol aria-label="خطوات الطلب" data-ds="stepper" data-orientation="horizontal" data-part="steps" data-size="md">
+          <li aria-current="step" data-part="step" data-state="current">
+            <span aria-hidden="true" data-part="indicator">
+              "1"
+            <span data-part="title">
+              "الحساب"
+              <span data-part="status">
+                "،"
+                "الخطوة الحالية"
+            <span data-part="description">
+              "وين نرسل الفاتورة"
+            <span aria-hidden="true" data-part="connector">
+          <li data-part="step" data-state="upcoming">
+            <span aria-hidden="true" data-part="indicator">
+              "2"
+            <span data-part="title">
+              "العنوان"
+            <span data-part="description">
+              "وين نوصل الطلب"
+            <span aria-hidden="true" data-part="connector">
+          <li data-part="step" data-state="upcoming">
+            <span aria-hidden="true" data-part="indicator">
+              "3"
+            <span data-part="title">
+              "التوصيل"
+            <span data-part="description">
+              "ملاحظة للمندوب"
+            <span aria-hidden="true" data-part="connector">
+          <li data-part="step" data-state="upcoming">
+            <span aria-hidden="true" data-part="indicator">
+              "4"
+            <span data-part="title">
+              "المراجعة"
+            <span data-part="description">
+              "تأكد من الطلب قبل إرساله"
+        <form aria-labelledby="ID36" autocomplete="on" data-part="panel" novalidate="">
+          <h2 data-part="title" id="ID36" tabindex="-1">
+            "الحساب"
+          <div data-part="body" data-step="0">
+            <div data-ds="field" data-orientation="vertical">
+              <label data-ds="label" data-part="label" data-size="md" for="ID38" id="ID37">
+                "الاسم الكامل"
+                <span aria-hidden="true" data-part="required">
+                  "*"
+              <div data-ds="input" data-shape="default" data-size="md">
+                <input aria-required="true" autocomplete="name" data-part="control" id="ID38" name="ID3" type="text">
+            <div data-ds="field" data-orientation="vertical">
+              <label data-ds="label" data-part="label" data-size="md" for="ID40" id="ID39">
+                "الإيميل"
+                <span aria-hidden="true" data-part="required">
+                  "*"
+              <div data-ds="input" data-shape="default" data-size="md">
+                <input aria-required="true" autocomplete="email" data-part="control" id="ID40" name="ID6" type="email">
+          <div data-part="body" data-step="1" hidden="">
+            <div data-ds="field" data-orientation="vertical">
+              <label data-ds="label" data-part="label" data-size="md" for="ID42" id="ID41">
+                "الشارع والمبنى"
+                <span aria-hidden="true" data-part="required">
+                  "*"
+              <div data-ds="input" data-shape="default" data-size="md">
+                <input aria-required="true" autocomplete="address-line1" data-part="control" id="ID42" name="ID9" type="text">
+            <div data-ds="field" data-orientation="vertical">
+              <label data-ds="label" data-part="label" data-size="md" for="ID44" id="ID43">
+                "المدينة"
+                <span aria-hidden="true" data-part="required">
+                  "*"
+              <div data-ds="input" data-shape="default" data-size="md">
+                <input aria-required="true" autocomplete="address-level2" data-part="control" id="ID44" name="ID12" type="text">
+            <div data-ds="field" data-orientation="vertical">
+              <label data-ds="label" data-part="label" data-size="md" for="ID46" id="ID45">
+                "الرمز البريدي"
+                <span aria-hidden="true" data-part="required">
+                  "*"
+              <div data-ds="input" data-shape="default" data-size="md">
+                <input aria-describedby="ID47" aria-required="true" autocomplete="postal-code" data-part="control" id="ID46" inputmode="numeric" name="ID15" type="text">
+              <p data-part="description" id="ID47">
+                "خمسة أرقام"
+          <div data-part="body" data-step="2" hidden="">
+            <div data-ds="field" data-orientation="vertical">
+              <label data-ds="label" data-part="label" data-size="md" for="ID49" id="ID48">
+                "ملاحظة للمندوب"
+              <div data-ds="input" data-shape="default" data-size="md">
+                <input aria-describedby="ID50" data-part="control" id="ID49" name="ID19" type="text">
+              <p data-part="description" id="ID50">
+                "اختياري. رمز البوابة أو معلم قريب."
+          <div data-part="body" data-step="3" hidden="">
+            <dl style="display: grid; gap: var(--ds-space-s); margin: 0px;">
+              <div style="display: grid; gap: var(--ds-space-3xs);">
+                <dt style="color: var(--ds-color-text-muted); font-size: var(--ds-font-size-xs);">
+                  "الاسم الكامل"
+                <dd style="margin: 0px;">
+                  "لا يوجد"
+              <div style="display: grid; gap: var(--ds-space-3xs);">
+                <dt style="color: var(--ds-color-text-muted); font-size: var(--ds-font-size-xs);">
+                  "الإيميل"
+                <dd style="margin: 0px;">
+                  "لا يوجد"
+              <div style="display: grid; gap: var(--ds-space-3xs);">
+                <dt style="color: var(--ds-color-text-muted); font-size: var(--ds-font-size-xs);">
+                  "الشارع والمبنى"
+                <dd style="margin: 0px;">
+                  "لا يوجد"
+              <div style="display: grid; gap: var(--ds-space-3xs);">
+                <dt style="color: var(--ds-color-text-muted); font-size: var(--ds-font-size-xs);">
+                  "المدينة"
+                <dd style="margin: 0px;">
+                  "لا يوجد"
+              <div style="display: grid; gap: var(--ds-space-3xs);">
+                <dt style="color: var(--ds-color-text-muted); font-size: var(--ds-font-size-xs);">
+                  "الرمز البريدي"
+                <dd style="margin: 0px;">
+                  "لا يوجد"
+              <div style="display: grid; gap: var(--ds-space-3xs);">
+                <dt style="color: var(--ds-color-text-muted); font-size: var(--ds-font-size-xs);">
+                  "ملاحظة للمندوب"
+                <dd style="margin: 0px;">
+                  "لا يوجد"
+          <div data-part="actions">
+            <button data-ds="button" data-emphasis="solid" data-part="next" data-shape="default" data-size="md" data-tone="accent" type="submit">
+              <span data-part="label">
+                "حفظ الحساب"
+        <div data-part="status" role="status">
+<section data-demo="case" data-demo-case="many">
+  <h2 data-demo="title">
+    "Many steps, on the review step"
+  <div data-demo="row">
+    <div data-ds="form-wizard" data-size="md" data-state="editing">
+      <ol aria-label="Checkout steps, review" data-ds="stepper" data-orientation="horizontal" data-part="steps" data-size="md">
+        <li data-part="step" data-state="complete">
+          <span aria-hidden="true" data-part="indicator">
+            <svg aria-hidden="true" data-ds="icon" data-icon="check" data-set="line" data-size="md" fill="none" focusable="false" height="16" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="16" xmlns="http://www.w3.org/2000/svg">
+              <path d="M20 6 9 17l-5-5">
+          <button data-ds="button" data-emphasis="ghost" data-part="title" data-shape="default" data-size="xs" data-tone="neutral" data-wrap="" type="button">
+            <span data-part="label">
+              "Account"
+              <span data-part="status">
+                ","
+                "complete"
+          <span data-part="description">
+            "Where we send the receipt"
+          <span aria-hidden="true" data-part="connector">
+        <li data-part="step" data-state="complete">
+          <span aria-hidden="true" data-part="indicator">
+            <svg aria-hidden="true" data-ds="icon" data-icon="check" data-set="line" data-size="md" fill="none" focusable="false" height="16" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="16" xmlns="http://www.w3.org/2000/svg">
+              <path d="M20 6 9 17l-5-5">
+          <button data-ds="button" data-emphasis="ghost" data-part="title" data-shape="default" data-size="xs" data-tone="neutral" data-wrap="" type="button">
+            <span data-part="label">
+              "Address"
+              <span data-part="status">
+                ","
+                "complete"
+          <span data-part="description">
+            "Where we deliver the order"
+          <span aria-hidden="true" data-part="connector">
+        <li data-part="step" data-state="complete">
+          <span aria-hidden="true" data-part="indicator">
+            <svg aria-hidden="true" data-ds="icon" data-icon="check" data-set="line" data-size="md" fill="none" focusable="false" height="16" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="16" xmlns="http://www.w3.org/2000/svg">
+              <path d="M20 6 9 17l-5-5">
+          <button data-ds="button" data-emphasis="ghost" data-part="title" data-shape="default" data-size="xs" data-tone="neutral" data-wrap="" type="button">
+            <span data-part="label">
+              "Delivery"
+              <span data-part="status">
+                ","
+                "complete"
+          <span data-part="description">
+            "A note for the driver"
+          <span aria-hidden="true" data-part="connector">
+        <li aria-current="step" data-part="step" data-state="current">
+          <span aria-hidden="true" data-part="indicator">
+            "4"
+          <span data-part="title">
+            "Review"
+            <span data-part="status">
+              ","
+              "current step"
+          <span data-part="description">
+            "Check the order before you place it"
+      <form aria-labelledby="ID51" autocomplete="on" data-part="panel" novalidate="">
+        <h2 data-part="title" id="ID51" tabindex="-1">
+          "Review"
+        <div data-part="body" data-step="0" hidden="">
+          <div data-ds="field" data-orientation="vertical">
+            <label data-ds="label" data-part="label" data-size="md" for="ID53" id="ID52">
+              "Full name"
+              <span aria-hidden="true" data-part="required">
+                "*"
+            <div data-ds="input" data-shape="default" data-size="md">
+              <input aria-required="true" autocomplete="name" data-part="control" id="ID53" name="ID3" type="text" value="Sara Alharbi">
+          <div data-ds="field" data-orientation="vertical">
+            <label data-ds="label" data-part="label" data-size="md" for="ID55" id="ID54">
+              "Email"
+              <span aria-hidden="true" data-part="required">
+                "*"
+            <div data-ds="input" data-shape="default" data-size="md">
+              <input aria-required="true" autocomplete="email" data-part="control" id="ID55" name="ID6" type="email" value="sara@example.com">
+        <div data-part="body" data-step="1" hidden="">
+          <div data-ds="field" data-orientation="vertical">
+            <label data-ds="label" data-part="label" data-size="md" for="ID57" id="ID56">
+              "Street and building"
+              <span aria-hidden="true" data-part="required">
+                "*"
+            <div data-ds="input" data-shape="default" data-size="md">
+              <input aria-required="true" autocomplete="address-line1" data-part="control" id="ID57" name="ID9" type="text" value="12 King Fahd Road, building 4">
+          <div data-ds="field" data-orientation="vertical">
+            <label data-ds="label" data-part="label" data-size="md" for="ID59" id="ID58">
+              "City"
+              <span aria-hidden="true" data-part="required">
+                "*"
+            <div data-ds="input" data-shape="default" data-size="md">
+              <input aria-required="true" autocomplete="address-level2" data-part="control" id="ID59" name="ID12" type="text" value="Riyadh">
+          <div data-ds="field" data-orientation="vertical">
+            <label data-ds="label" data-part="label" data-size="md" for="ID61" id="ID60">
+              "Postal code"
+              <span aria-hidden="true" data-part="required">
+                "*"
+            <div data-ds="input" data-shape="default" data-size="md">
+              <input aria-describedby="ID62" aria-required="true" autocomplete="postal-code" data-part="control" id="ID61" inputmode="numeric" name="ID15" type="text" value="12271">
+            <p data-part="description" id="ID62">
+              "Five digits"
+        <div data-part="body" data-step="2" hidden="">
+          <div data-ds="field" data-orientation="vertical">
+            <label data-ds="label" data-part="label" data-size="md" for="ID64" id="ID63">
+              "Note for the driver"
+            <div data-ds="input" data-shape="default" data-size="md">
+              <input aria-describedby="ID65" data-part="control" id="ID64" name="ID19" type="text" value="Gate code 4410">
+            <p data-part="description" id="ID65">
+              "Optional. A gate code or a landmark."
+        <div data-part="body" data-step="3">
+          <dl style="display: grid; gap: var(--ds-space-s); margin: 0px;">
+            <div style="display: grid; gap: var(--ds-space-3xs);">
+              <dt style="color: var(--ds-color-text-muted); font-size: var(--ds-font-size-xs);">
+                "Full name"
+              <dd style="margin: 0px;">
+                "Sara Alharbi"
+            <div style="display: grid; gap: var(--ds-space-3xs);">
+              <dt style="color: var(--ds-color-text-muted); font-size: var(--ds-font-size-xs);">
+                "Email"
+              <dd style="margin: 0px;">
+                "sara@example.com"
+            <div style="display: grid; gap: var(--ds-space-3xs);">
+              <dt style="color: var(--ds-color-text-muted); font-size: var(--ds-font-size-xs);">
+                "Street and building"
+              <dd style="margin: 0px;">
+                "12 King Fahd Road, building 4"
+            <div style="display: grid; gap: var(--ds-space-3xs);">
+              <dt style="color: var(--ds-color-text-muted); font-size: var(--ds-font-size-xs);">
+                "City"
+              <dd style="margin: 0px;">
+                "Riyadh"
+            <div style="display: grid; gap: var(--ds-space-3xs);">
+              <dt style="color: var(--ds-color-text-muted); font-size: var(--ds-font-size-xs);">
+                "Postal code"
+              <dd style="margin: 0px;">
+                "12271"
+            <div style="display: grid; gap: var(--ds-space-3xs);">
+              <dt style="color: var(--ds-color-text-muted); font-size: var(--ds-font-size-xs);">
+                "Note for the driver"
+              <dd style="margin: 0px;">
+                "Gate code 4410"
+        <div data-part="actions">
+          <button data-ds="button" data-emphasis="ghost" data-part="back" data-shape="default" data-size="md" data-tone="neutral" type="button">
+            <span data-part="start">
+              <svg aria-hidden="true" data-ds="icon" data-icon="chevron-back" data-mirror="" data-set="line" data-size="md" fill="none" focusable="false" height="16" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="16" xmlns="http://www.w3.org/2000/svg">
+                <path d="m15 18-6-6 6-6">
+            <span data-part="label">
+              "Edit delivery"
+          <button data-ds="button" data-emphasis="solid" data-part="submit" data-shape="default" data-size="md" data-tone="accent" type="submit">
+            <span data-part="label">
+              "Place order"
+      <div data-part="status" role="status">
+  <div data-contrast="default" data-demo="content" data-density="comfortable" data-ds="theme" data-glass="regular" data-platform="web" data-scheme="light" data-style="neutral" dir="rtl" lang="ar">
+    <div data-demo="row">
+      <span data-demo="label">
+        "Arabic"
+      <div data-ds="form-wizard" data-size="md" data-state="editing">
+        <ol aria-label="خطوات الطلب" data-ds="stepper" data-orientation="vertical" data-part="steps" data-size="md">
+          <li data-part="step" data-state="complete">
+            <span aria-hidden="true" data-part="indicator">
+              <svg aria-hidden="true" data-ds="icon" data-icon="check" data-set="line" data-size="md" fill="none" focusable="false" height="16" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="16" xmlns="http://www.w3.org/2000/svg">
+                <path d="M20 6 9 17l-5-5">
+            <button data-ds="button" data-emphasis="ghost" data-part="title" data-shape="default" data-size="xs" data-tone="neutral" data-wrap="" type="button">
+              <span data-part="label">
+                "الحساب"
+                <span data-part="status">
+                  "،"
+                  "مكتملة"
+            <span data-part="description">
+              "وين نرسل الفاتورة"
+            <span aria-hidden="true" data-part="connector">
+          <li data-part="step" data-state="complete">
+            <span aria-hidden="true" data-part="indicator">
+              <svg aria-hidden="true" data-ds="icon" data-icon="check" data-set="line" data-size="md" fill="none" focusable="false" height="16" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="16" xmlns="http://www.w3.org/2000/svg">
+                <path d="M20 6 9 17l-5-5">
+            <button data-ds="button" data-emphasis="ghost" data-part="title" data-shape="default" data-size="xs" data-tone="neutral" data-wrap="" type="button">
+              <span data-part="label">
+                "العنوان"
+                <span data-part="status">
+                  "،"
+                  "مكتملة"
+            <span data-part="description">
+              "وين نوصل الطلب"
+            <span aria-hidden="true" data-part="connector">
+          <li data-part="step" data-state="complete">
+            <span aria-hidden="true" data-part="indicator">
+              <svg aria-hidden="true" data-ds="icon" data-icon="check" data-set="line" data-size="md" fill="none" focusable="false" height="16" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="16" xmlns="http://www.w3.org/2000/svg">
+                <path d="M20 6 9 17l-5-5">
+            <button data-ds="button" data-emphasis="ghost" data-part="title" data-shape="default" data-size="xs" data-tone="neutral" data-wrap="" type="button">
+              <span data-part="label">
+                "التوصيل"
+                <span data-part="status">
+                  "،"
+                  "مكتملة"
+            <span data-part="description">
+              "ملاحظة للمندوب"
+            <span aria-hidden="true" data-part="connector">
+          <li aria-current="step" data-part="step" data-state="current">
+            <span aria-hidden="true" data-part="indicator">
+              "4"
+            <span data-part="title">
+              "المراجعة"
+              <span data-part="status">
+                "،"
+                "الخطوة الحالية"
+            <span data-part="description">
+              "تأكد من الطلب قبل إرساله"
+        <form aria-labelledby="ID66" autocomplete="on" data-part="panel" novalidate="">
+          <h2 data-part="title" id="ID66" tabindex="-1">
+            "المراجعة"
+          <div data-part="body" data-step="0" hidden="">
+            <div data-ds="field" data-orientation="vertical">
+              <label data-ds="label" data-part="label" data-size="md" for="ID68" id="ID67">
+                "الاسم الكامل"
+                <span aria-hidden="true" data-part="required">
+                  "*"
+              <div data-ds="input" data-shape="default" data-size="md">
+                <input aria-required="true" autocomplete="name" data-part="control" id="ID68" name="ID3" type="text" value="سارة الحربي">
+            <div data-ds="field" data-orientation="vertical">
+              <label data-ds="label" data-part="label" data-size="md" for="ID70" id="ID69">
+                "الإيميل"
+                <span aria-hidden="true" data-part="required">
+                  "*"
+              <div data-ds="input" data-shape="default" data-size="md">
+                <input aria-required="true" autocomplete="email" data-part="control" id="ID70" name="ID6" type="email" value="sara@example.com">
+          <div data-part="body" data-step="1" hidden="">
+            <div data-ds="field" data-orientation="vertical">
+              <label data-ds="label" data-part="label" data-size="md" for="ID72" id="ID71">
+                "الشارع والمبنى"
+                <span aria-hidden="true" data-part="required">
+                  "*"
+              <div data-ds="input" data-shape="default" data-size="md">
+                <input aria-required="true" autocomplete="address-line1" data-part="control" id="ID72" name="ID9" type="text" value="طريق الملك فهد 12، مبنى 4">
+            <div data-ds="field" data-orientation="vertical">
+              <label data-ds="label" data-part="label" data-size="md" for="ID74" id="ID73">
+                "المدينة"
+                <span aria-hidden="true" data-part="required">
+                  "*"
+              <div data-ds="input" data-shape="default" data-size="md">
+                <input aria-required="true" autocomplete="address-level2" data-part="control" id="ID74" name="ID12" type="text" value="الرياض">
+            <div data-ds="field" data-orientation="vertical">
+              <label data-ds="label" data-part="label" data-size="md" for="ID76" id="ID75">
+                "الرمز البريدي"
+                <span aria-hidden="true" data-part="required">
+                  "*"
+              <div data-ds="input" data-shape="default" data-size="md">
+                <input aria-describedby="ID77" aria-required="true" autocomplete="postal-code" data-part="control" id="ID76" inputmode="numeric" name="ID15" type="text" value="12271">
+              <p data-part="description" id="ID77">
+                "خمسة أرقام"
+          <div data-part="body" data-step="2" hidden="">
+            <div data-ds="field" data-orientation="vertical">
+              <label data-ds="label" data-part="label" data-size="md" for="ID79" id="ID78">
+                "ملاحظة للمندوب"
+              <div data-ds="input" data-shape="default" data-size="md">
+                <input aria-describedby="ID80" data-part="control" id="ID79" name="ID19" type="text" value="رمز البوابة 4410">
+              <p data-part="description" id="ID80">
+                "اختياري. رمز البوابة أو معلم قريب."
+          <div data-part="body" data-step="3">
+            <dl style="display: grid; gap: var(--ds-space-s); margin: 0px;">
+              <div style="display: grid; gap: var(--ds-space-3xs);">
+                <dt style="color: var(--ds-color-text-muted); font-size: var(--ds-font-size-xs);">
+                  "الاسم الكامل"
+                <dd style="margin: 0px;">
+                  "سارة الحربي"
+              <div style="display: grid; gap: var(--ds-space-3xs);">
+                <dt style="color: var(--ds-color-text-muted); font-size: var(--ds-font-size-xs);">
+                  "الإيميل"
+                <dd style="margin: 0px;">
+                  "sara@example.com"
+              <div style="display: grid; gap: var(--ds-space-3xs);">
+                <dt style="color: var(--ds-color-text-muted); font-size: var(--ds-font-size-xs);">
+                  "الشارع والمبنى"
+                <dd style="margin: 0px;">
+                  "طريق الملك فهد 12، مبنى 4"
+              <div style="display: grid; gap: var(--ds-space-3xs);">
+                <dt style="color: var(--ds-color-text-muted); font-size: var(--ds-font-size-xs);">
+                  "المدينة"
+                <dd style="margin: 0px;">
+                  "الرياض"
+              <div style="display: grid; gap: var(--ds-space-3xs);">
+                <dt style="color: var(--ds-color-text-muted); font-size: var(--ds-font-size-xs);">
+                  "الرمز البريدي"
+                <dd style="margin: 0px;">
+                  "12271"
+              <div style="display: grid; gap: var(--ds-space-3xs);">
+                <dt style="color: var(--ds-color-text-muted); font-size: var(--ds-font-size-xs);">
+                  "ملاحظة للمندوب"
+                <dd style="margin: 0px;">
+                  "رمز البوابة 4410"
+          <div data-part="actions">
+            <button data-ds="button" data-emphasis="ghost" data-part="back" data-shape="default" data-size="md" data-tone="neutral" type="button">
+              <span data-part="start">
+                <svg aria-hidden="true" data-ds="icon" data-icon="chevron-back" data-mirror="" data-set="line" data-size="md" fill="none" focusable="false" height="16" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="16" xmlns="http://www.w3.org/2000/svg">
+                  <path d="m15 18-6-6 6-6">
+              <span data-part="label">
+                "تعديل التوصيل"
+            <button data-ds="button" data-emphasis="solid" data-part="submit" data-shape="default" data-size="md" data-tone="accent" type="submit">
+              <span data-part="label">
+                "إرسال الطلب"
+        <div data-part="status" role="status">
+<section data-demo="case" data-demo-case="long-text">
+  <h2 data-demo="title">
+    "Long text"
+  <div data-demo="row">
+    <div data-ds="form-wizard" data-size="md" data-state="editing">
+      <ol aria-label="Checkout steps, long titles" data-ds="stepper" data-orientation="horizontal" data-part="steps" data-size="md">
+        <li aria-current="step" data-part="step" data-state="current">
+          <span aria-hidden="true" data-part="indicator">
+            "1"
+          <span data-part="title">
+            "Account and the contact details we use for the receipt and updates"
+            <span data-part="status">
+              ","
+              "current step"
+          <span data-part="description">
+            "Where we send the receipt"
+          <span aria-hidden="true" data-part="connector">
+        <li data-part="step" data-state="upcoming">
+          <span aria-hidden="true" data-part="indicator">
+            "2"
+          <span data-part="title">
+            "Address"
+          <span data-part="description">
+            "Where we deliver the order"
+          <span aria-hidden="true" data-part="connector">
+        <li data-part="step" data-state="upcoming">
+          <span aria-hidden="true" data-part="indicator">
+            "3"
+          <span data-part="title">
+            "Delivery"
+          <span data-part="description">
+            "A note for the driver"
+          <span aria-hidden="true" data-part="connector">
+        <li data-part="step" data-state="upcoming">
+          <span aria-hidden="true" data-part="indicator">
+            "4"
+          <span data-part="title">
+            "Review"
+          <span data-part="description">
+            "Check the order before you place it"
+      <form aria-labelledby="ID81" autocomplete="on" data-part="panel" novalidate="">
+        <h2 data-part="title" id="ID81" tabindex="-1">
+          "Account and the contact details we use for the receipt and updates"
+        <div data-part="body" data-step="0">
+          <div data-ds="field" data-orientation="vertical">
+            <label data-ds="label" data-part="label" data-size="md" for="ID83" id="ID82">
+              "Full name"
+              <span aria-hidden="true" data-part="required">
+                "*"
+            <div data-ds="input" data-shape="default" data-size="md">
+              <input aria-required="true" autocomplete="name" data-part="control" id="ID83" name="ID3" type="text">
+          <div data-ds="field" data-orientation="vertical">
+            <label data-ds="label" data-part="label" data-size="md" for="ID85" id="ID84">
+              "Email"
+              <span aria-hidden="true" data-part="required">
+                "*"
+            <div data-ds="input" data-shape="default" data-size="md">
+              <input aria-required="true" autocomplete="email" data-part="control" id="ID85" name="ID6" type="email">
+        <div data-part="body" data-step="1" hidden="">
+          <div data-ds="field" data-orientation="vertical">
+            <label data-ds="label" data-part="label" data-size="md" for="ID87" id="ID86">
+              "Street and building"
+              <span aria-hidden="true" data-part="required">
+                "*"
+            <div data-ds="input" data-shape="default" data-size="md">
+              <input aria-required="true" autocomplete="address-line1" data-part="control" id="ID87" name="ID9" type="text">
+          <div data-ds="field" data-orientation="vertical">
+            <label data-ds="label" data-part="label" data-size="md" for="ID89" id="ID88">
+              "City"
+              <span aria-hidden="true" data-part="required">
+                "*"
+            <div data-ds="input" data-shape="default" data-size="md">
+              <input aria-required="true" autocomplete="address-level2" data-part="control" id="ID89" name="ID12" type="text">
+          <div data-ds="field" data-orientation="vertical">
+            <label data-ds="label" data-part="label" data-size="md" for="ID91" id="ID90">
+              "Postal code"
+              <span aria-hidden="true" data-part="required">
+                "*"
+            <div data-ds="input" data-shape="default" data-size="md">
+              <input aria-describedby="ID92" aria-required="true" autocomplete="postal-code" data-part="control" id="ID91" inputmode="numeric" name="ID15" type="text">
+            <p data-part="description" id="ID92">
+              "Five digits"
+        <div data-part="body" data-step="2" hidden="">
+          <div data-ds="field" data-orientation="vertical">
+            <label data-ds="label" data-part="label" data-size="md" for="ID94" id="ID93">
+              "Note for the driver"
+            <div data-ds="input" data-shape="default" data-size="md">
+              <input aria-describedby="ID95" data-part="control" id="ID94" name="ID19" type="text">
+            <p data-part="description" id="ID95">
+              "Optional. A gate code or a landmark."
+        <div data-part="body" data-step="3" hidden="">
+          <dl style="display: grid; gap: var(--ds-space-s); margin: 0px;">
+            <div style="display: grid; gap: var(--ds-space-3xs);">
+              <dt style="color: var(--ds-color-text-muted); font-size: var(--ds-font-size-xs);">
+                "Full name"
+              <dd style="margin: 0px;">
+                "None"
+            <div style="display: grid; gap: var(--ds-space-3xs);">
+              <dt style="color: var(--ds-color-text-muted); font-size: var(--ds-font-size-xs);">
+                "Email"
+              <dd style="margin: 0px;">
+                "None"
+            <div style="display: grid; gap: var(--ds-space-3xs);">
+              <dt style="color: var(--ds-color-text-muted); font-size: var(--ds-font-size-xs);">
+                "Street and building"
+              <dd style="margin: 0px;">
+                "None"
+            <div style="display: grid; gap: var(--ds-space-3xs);">
+              <dt style="color: var(--ds-color-text-muted); font-size: var(--ds-font-size-xs);">
+                "City"
+              <dd style="margin: 0px;">
+                "None"
+            <div style="display: grid; gap: var(--ds-space-3xs);">
+              <dt style="color: var(--ds-color-text-muted); font-size: var(--ds-font-size-xs);">
+                "Postal code"
+              <dd style="margin: 0px;">
+                "None"
+            <div style="display: grid; gap: var(--ds-space-3xs);">
+              <dt style="color: var(--ds-color-text-muted); font-size: var(--ds-font-size-xs);">
+                "Note for the driver"
+              <dd style="margin: 0px;">
+                "None"
+        <div data-part="actions">
+          <button data-ds="button" data-emphasis="solid" data-part="next" data-shape="default" data-size="md" data-tone="accent" type="submit">
+            <span data-part="label">
+              "Save account"
+      <div data-part="status" role="status">
+<section data-demo="case" data-demo-case="long-arabic">
+  <h2 data-demo="title">
+    "Long Arabic text"
+  <div data-contrast="default" data-demo="content" data-density="comfortable" data-ds="theme" data-glass="regular" data-platform="web" data-scheme="light" data-style="neutral" dir="rtl" lang="ar">
+    <div data-demo="row">
+      <div data-ds="form-wizard" data-size="md" data-state="editing">
+        <ol aria-label="خطوات الطلب" data-ds="stepper" data-orientation="vertical" data-part="steps" data-size="md">
+          <li aria-current="step" data-part="step" data-state="current">
+            <span aria-hidden="true" data-part="indicator">
+              "1"
+            <span data-part="title">
+              "الحساب وبيانات التواصل اللي نستخدمها للفاتورة والتحديثات"
+              <span data-part="status">
+                "،"
+                "الخطوة الحالية"
+            <span data-part="description">
+              "وين نرسل الفاتورة"
+            <span aria-hidden="true" data-part="connector">
+          <li data-part="step" data-state="upcoming">
+            <span aria-hidden="true" data-part="indicator">
+              "2"
+            <span data-part="title">
+              "العنوان"
+            <span data-part="description">
+              "وين نوصل الطلب"
+            <span aria-hidden="true" data-part="connector">
+          <li data-part="step" data-state="upcoming">
+            <span aria-hidden="true" data-part="indicator">
+              "3"
+            <span data-part="title">
+              "التوصيل"
+            <span data-part="description">
+              "ملاحظة للمندوب"
+            <span aria-hidden="true" data-part="connector">
+          <li data-part="step" data-state="upcoming">
+            <span aria-hidden="true" data-part="indicator">
+              "4"
+            <span data-part="title">
+              "المراجعة"
+            <span data-part="description">
+              "تأكد من الطلب قبل إرساله"
+        <form aria-labelledby="ID96" autocomplete="on" data-part="panel" novalidate="">
+          <h2 data-part="title" id="ID96" tabindex="-1">
+            "الحساب وبيانات التواصل اللي نستخدمها للفاتورة والتحديثات"
+          <div data-part="body" data-step="0">
+            <div data-ds="field" data-orientation="vertical">
+              <label data-ds="label" data-part="label" data-size="md" for="ID98" id="ID97">
+                "الاسم الكامل"
+                <span aria-hidden="true" data-part="required">
+                  "*"
+              <div data-ds="input" data-shape="default" data-size="md">
+                <input aria-required="true" autocomplete="name" data-part="control" id="ID98" name="ID3" type="text">
+            <div data-ds="field" data-orientation="vertical">
+              <label data-ds="label" data-part="label" data-size="md" for="ID100" id="ID99">
+                "الإيميل"
+                <span aria-hidden="true" data-part="required">
+                  "*"
+              <div data-ds="input" data-shape="default" data-size="md">
+                <input aria-required="true" autocomplete="email" data-part="control" id="ID100" name="ID6" type="email">
+          <div data-part="body" data-step="1" hidden="">
+            <div data-ds="field" data-orientation="vertical">
+              <label data-ds="label" data-part="label" data-size="md" for="ID102" id="ID101">
+                "الشارع والمبنى"
+                <span aria-hidden="true" data-part="required">
+                  "*"
+              <div data-ds="input" data-shape="default" data-size="md">
+                <input aria-required="true" autocomplete="address-line1" data-part="control" id="ID102" name="ID9" type="text">
+            <div data-ds="field" data-orientation="vertical">
+              <label data-ds="label" data-part="label" data-size="md" for="ID104" id="ID103">
+                "المدينة"
+                <span aria-hidden="true" data-part="required">
+                  "*"
+              <div data-ds="input" data-shape="default" data-size="md">
+                <input aria-required="true" autocomplete="address-level2" data-part="control" id="ID104" name="ID12" type="text">
+            <div data-ds="field" data-orientation="vertical">
+              <label data-ds="label" data-part="label" data-size="md" for="ID106" id="ID105">
+                "الرمز البريدي"
+                <span aria-hidden="true" data-part="required">
+                  "*"
+              <div data-ds="input" data-shape="default" data-size="md">
+                <input aria-describedby="ID107" aria-required="true" autocomplete="postal-code" data-part="control" id="ID106" inputmode="numeric" name="ID15" type="text">
+              <p data-part="description" id="ID107">
+                "خمسة أرقام"
+          <div data-part="body" data-step="2" hidden="">
+            <div data-ds="field" data-orientation="vertical">
+              <label data-ds="label" data-part="label" data-size="md" for="ID109" id="ID108">
+                "ملاحظة للمندوب"
+              <div data-ds="input" data-shape="default" data-size="md">
+                <input aria-describedby="ID110" data-part="control" id="ID109" name="ID19" type="text">
+              <p data-part="description" id="ID110">
+                "اختياري. رمز البوابة أو معلم قريب."
+          <div data-part="body" data-step="3" hidden="">
+            <dl style="display: grid; gap: var(--ds-space-s); margin: 0px;">
+              <div style="display: grid; gap: var(--ds-space-3xs);">
+                <dt style="color: var(--ds-color-text-muted); font-size: var(--ds-font-size-xs);">
+                  "الاسم الكامل"
+                <dd style="margin: 0px;">
+                  "لا يوجد"
+              <div style="display: grid; gap: var(--ds-space-3xs);">
+                <dt style="color: var(--ds-color-text-muted); font-size: var(--ds-font-size-xs);">
+                  "الإيميل"
+                <dd style="margin: 0px;">
+                  "لا يوجد"
+              <div style="display: grid; gap: var(--ds-space-3xs);">
+                <dt style="color: var(--ds-color-text-muted); font-size: var(--ds-font-size-xs);">
+                  "الشارع والمبنى"
+                <dd style="margin: 0px;">
+                  "لا يوجد"
+              <div style="display: grid; gap: var(--ds-space-3xs);">
+                <dt style="color: var(--ds-color-text-muted); font-size: var(--ds-font-size-xs);">
+                  "المدينة"
+                <dd style="margin: 0px;">
+                  "لا يوجد"
+              <div style="display: grid; gap: var(--ds-space-3xs);">
+                <dt style="color: var(--ds-color-text-muted); font-size: var(--ds-font-size-xs);">
+                  "الرمز البريدي"
+                <dd style="margin: 0px;">
+                  "لا يوجد"
+              <div style="display: grid; gap: var(--ds-space-3xs);">
+                <dt style="color: var(--ds-color-text-muted); font-size: var(--ds-font-size-xs);">
+                  "ملاحظة للمندوب"
+                <dd style="margin: 0px;">
+                  "لا يوجد"
+          <div data-part="actions">
+            <button data-ds="button" data-emphasis="solid" data-part="next" data-shape="default" data-size="md" data-tone="accent" type="submit">
+              <span data-part="label">
+                "حفظ الحساب"
+        <div data-part="status" role="status">
+<section data-demo="case" data-demo-case="error">
+  <h2 data-demo="title">
+    "Errors sent back by the server"
+  <div data-demo="row">
+    <div data-ds="form-wizard" data-size="md" data-state="editing">
+      <ol aria-label="Checkout steps with an error" data-ds="stepper" data-orientation="horizontal" data-part="steps" data-size="md">
+        <li data-part="step" data-state="complete">
+          <span aria-hidden="true" data-part="indicator">
+            <svg aria-hidden="true" data-ds="icon" data-icon="check" data-set="line" data-size="md" fill="none" focusable="false" height="16" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="16" xmlns="http://www.w3.org/2000/svg">
+              <path d="M20 6 9 17l-5-5">
+          <button data-ds="button" data-emphasis="ghost" data-part="title" data-shape="default" data-size="xs" data-tone="neutral" data-wrap="" type="button">
+            <span data-part="label">
+              "Account"
+              <span data-part="status">
+                ","
+                "complete"
+          <span data-part="description">
+            "Where we send the receipt"
+          <span aria-hidden="true" data-part="connector">
+        <li aria-current="step" data-invalid="" data-part="step" data-state="current">
+          <span aria-hidden="true" data-part="indicator">
+            <svg aria-hidden="true" data-ds="icon" data-icon="danger" data-set="line" data-size="md" fill="none" focusable="false" height="16" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="16" xmlns="http://www.w3.org/2000/svg">
+              <path d="M12 16h.01">
+              <path d="M12 8v4">
+              <path d="M15.312 2a2 2 0 0 1 1.414.586l4.688 4.688A2 2 0 0 1 22 8.688v6.624a2 2 0 0 1-.586 1.414l-4.688 4.688a2 2 0 0 1-1.414.586H8.688a2 2 0 0 1-1.414-.586l-4.688-4.688A2 2 0 0 1 2 15.312V8.688a2 2 0 0 1 .586-1.414l4.688-4.688A2 2 0 0 1 8.688 2z">
+          <span data-part="title">
+            "Address"
+            <span data-part="status">
+              ","
+              "current step, has errors"
+          <span data-part="description">
+            "Where we deliver the order"
+          <span aria-hidden="true" data-part="connector">
+        <li data-part="step" data-state="upcoming">
+          <span aria-hidden="true" data-part="indicator">
+            "3"
+          <span data-part="title">
+            "Delivery"
+          <span data-part="description">
+            "A note for the driver"
+          <span aria-hidden="true" data-part="connector">
+        <li data-part="step" data-state="upcoming">
+          <span aria-hidden="true" data-part="indicator">
+            "4"
+          <span data-part="title">
+            "Review"
+          <span data-part="description">
+            "Check the order before you place it"
+      <form aria-labelledby="ID111" autocomplete="on" data-part="panel" novalidate="">
+        <h2 data-part="title" id="ID111" tabindex="-1">
+          "Address"
+        <div data-part="body" data-step="0" hidden="">
+          <div data-ds="field" data-orientation="vertical">
+            <label data-ds="label" data-part="label" data-size="md" for="ID113" id="ID112">
+              "Full name"
+              <span aria-hidden="true" data-part="required">
+                "*"
+            <div data-ds="input" data-shape="default" data-size="md">
+              <input aria-required="true" autocomplete="name" data-part="control" id="ID113" name="ID3" type="text" value="Sara Alharbi">
+          <div data-ds="field" data-orientation="vertical">
+            <label data-ds="label" data-part="label" data-size="md" for="ID115" id="ID114">
+              "Email"
+              <span aria-hidden="true" data-part="required">
+                "*"
+            <div data-ds="input" data-shape="default" data-size="md">
+              <input aria-required="true" autocomplete="email" data-part="control" id="ID115" name="ID6" type="email" value="sara@example.com">
+        <div data-part="body" data-step="1">
+          <div data-ds="field" data-orientation="vertical">
+            <label data-ds="label" data-part="label" data-size="md" for="ID117" id="ID116">
+              "Street and building"
+              <span aria-hidden="true" data-part="required">
+                "*"
+            <div data-ds="input" data-shape="default" data-size="md">
+              <input aria-required="true" autocomplete="address-line1" data-part="control" id="ID117" name="ID9" type="text" value="12 King Fahd Road, building 4">
+          <div data-ds="field" data-orientation="vertical">
+            <label data-ds="label" data-part="label" data-size="md" for="ID119" id="ID118">
+              "City"
+              <span aria-hidden="true" data-part="required">
+                "*"
+            <div data-ds="input" data-shape="default" data-size="md">
+              <input aria-required="true" autocomplete="address-level2" data-part="control" id="ID119" name="ID12" type="text" value="Riyadh">
+          <div data-ds="field" data-invalid="" data-orientation="vertical">
+            <label data-ds="label" data-invalid="" data-part="label" data-size="md" for="ID121" id="ID120">
+              "Postal code"
+              <span aria-hidden="true" data-part="required">
+                "*"
+            <div data-ds="input" data-invalid="" data-shape="default" data-size="md">
+              <input aria-describedby="ID122 ID123" aria-invalid="true" aria-required="true" autocomplete="postal-code" data-part="control" id="ID121" inputmode="numeric" name="ID15" type="text" value="12271">
+            <p data-part="description" id="ID122">
+              "Five digits"
+            <p data-ds="field-error" data-part="error" data-size="md" id="ID123">
+              <svg aria-hidden="true" data-ds="icon" data-icon="danger" data-part="icon" data-set="line" data-size="md" fill="none" focusable="false" height="16" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="16" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 16h.01">
+                <path d="M12 8v4">
+                <path d="M15.312 2a2 2 0 0 1 1.414.586l4.688 4.688A2 2 0 0 1 22 8.688v6.624a2 2 0 0 1-.586 1.414l-4.688 4.688a2 2 0 0 1-1.414.586H8.688a2 2 0 0 1-1.414-.586l-4.688-4.688A2 2 0 0 1 2 15.312V8.688a2 2 0 0 1 .586-1.414l4.688-4.688A2 2 0 0 1 8.688 2z">
+              <span data-part="message">
+                "We do not deliver to this postal code yet. Pick another address."
+        <div data-part="body" data-step="2" hidden="">
+          <div data-ds="field" data-orientation="vertical">
+            <label data-ds="label" data-part="label" data-size="md" for="ID125" id="ID124">
+              "Note for the driver"
+            <div data-ds="input" data-shape="default" data-size="md">
+              <input aria-describedby="ID126" data-part="control" id="ID125" name="ID19" type="text" value="Gate code 4410">
+            <p data-part="description" id="ID126">
+              "Optional. A gate code or a landmark."
+        <div data-part="body" data-step="3" hidden="">
+          <dl style="display: grid; gap: var(--ds-space-s); margin: 0px;">
+            <div style="display: grid; gap: var(--ds-space-3xs);">
+              <dt style="color: var(--ds-color-text-muted); font-size: var(--ds-font-size-xs);">
+                "Full name"
+              <dd style="margin: 0px;">
+                "Sara Alharbi"
+            <div style="display: grid; gap: var(--ds-space-3xs);">
+              <dt style="color: var(--ds-color-text-muted); font-size: var(--ds-font-size-xs);">
+                "Email"
+              <dd style="margin: 0px;">
+                "sara@example.com"
+            <div style="display: grid; gap: var(--ds-space-3xs);">
+              <dt style="color: var(--ds-color-text-muted); font-size: var(--ds-font-size-xs);">
+                "Street and building"
+              <dd style="margin: 0px;">
+                "12 King Fahd Road, building 4"
+            <div style="display: grid; gap: var(--ds-space-3xs);">
+              <dt style="color: var(--ds-color-text-muted); font-size: var(--ds-font-size-xs);">
+                "City"
+              <dd style="margin: 0px;">
+                "Riyadh"
+            <div style="display: grid; gap: var(--ds-space-3xs);">
+              <dt style="color: var(--ds-color-text-muted); font-size: var(--ds-font-size-xs);">
+                "Postal code"
+              <dd style="margin: 0px;">
+                "12271"
+            <div style="display: grid; gap: var(--ds-space-3xs);">
+              <dt style="color: var(--ds-color-text-muted); font-size: var(--ds-font-size-xs);">
+                "Note for the driver"
+              <dd style="margin: 0px;">
+                "Gate code 4410"
+        <div data-part="actions">
+          <button data-ds="button" data-emphasis="ghost" data-part="back" data-shape="default" data-size="md" data-tone="neutral" type="button">
+            <span data-part="start">
+              <svg aria-hidden="true" data-ds="icon" data-icon="chevron-back" data-mirror="" data-set="line" data-size="md" fill="none" focusable="false" height="16" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="16" xmlns="http://www.w3.org/2000/svg">
+                <path d="m15 18-6-6 6-6">
+            <span data-part="label">
+              "Edit account"
+          <button data-ds="button" data-emphasis="solid" data-part="next" data-shape="default" data-size="md" data-tone="accent" type="submit">
+            <span data-part="label">
+              "Save address"
+      <div data-part="status" role="status">
+  <div data-contrast="default" data-demo="content" data-density="comfortable" data-ds="theme" data-glass="regular" data-platform="web" data-scheme="light" data-style="neutral" dir="rtl" lang="ar">
+    <div data-demo="row">
+      <span data-demo="label">
+        "Arabic"
+      <div data-ds="form-wizard" data-size="md" data-state="editing">
+        <ol aria-label="خطوات الطلب" data-ds="stepper" data-orientation="horizontal" data-part="steps" data-size="md">
+          <li data-part="step" data-state="complete">
+            <span aria-hidden="true" data-part="indicator">
+              <svg aria-hidden="true" data-ds="icon" data-icon="check" data-set="line" data-size="md" fill="none" focusable="false" height="16" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="16" xmlns="http://www.w3.org/2000/svg">
+                <path d="M20 6 9 17l-5-5">
+            <button data-ds="button" data-emphasis="ghost" data-part="title" data-shape="default" data-size="xs" data-tone="neutral" data-wrap="" type="button">
+              <span data-part="label">
+                "الحساب"
+                <span data-part="status">
+                  "،"
+                  "مكتملة"
+            <span data-part="description">
+              "وين نرسل الفاتورة"
+            <span aria-hidden="true" data-part="connector">
+          <li aria-current="step" data-invalid="" data-part="step" data-state="current">
+            <span aria-hidden="true" data-part="indicator">
+              <svg aria-hidden="true" data-ds="icon" data-icon="danger" data-set="line" data-size="md" fill="none" focusable="false" height="16" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="16" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 16h.01">
+                <path d="M12 8v4">
+                <path d="M15.312 2a2 2 0 0 1 1.414.586l4.688 4.688A2 2 0 0 1 22 8.688v6.624a2 2 0 0 1-.586 1.414l-4.688 4.688a2 2 0 0 1-1.414.586H8.688a2 2 0 0 1-1.414-.586l-4.688-4.688A2 2 0 0 1 2 15.312V8.688a2 2 0 0 1 .586-1.414l4.688-4.688A2 2 0 0 1 8.688 2z">
+            <span data-part="title">
+              "العنوان"
+              <span data-part="status">
+                "،"
+                "الخطوة الحالية، فيها أخطاء"
+            <span data-part="description">
+              "وين نوصل الطلب"
+            <span aria-hidden="true" data-part="connector">
+          <li data-part="step" data-state="upcoming">
+            <span aria-hidden="true" data-part="indicator">
+              "3"
+            <span data-part="title">
+              "التوصيل"
+            <span data-part="description">
+              "ملاحظة للمندوب"
+            <span aria-hidden="true" data-part="connector">
+          <li data-part="step" data-state="upcoming">
+            <span aria-hidden="true" data-part="indicator">
+              "4"
+            <span data-part="title">
+              "المراجعة"
+            <span data-part="description">
+              "تأكد من الطلب قبل إرساله"
+        <form aria-labelledby="ID127" autocomplete="on" data-part="panel" novalidate="">
+          <h2 data-part="title" id="ID127" tabindex="-1">
+            "العنوان"
+          <div data-part="body" data-step="0" hidden="">
+            <div data-ds="field" data-orientation="vertical">
+              <label data-ds="label" data-part="label" data-size="md" for="ID129" id="ID128">
+                "الاسم الكامل"
+                <span aria-hidden="true" data-part="required">
+                  "*"
+              <div data-ds="input" data-shape="default" data-size="md">
+                <input aria-required="true" autocomplete="name" data-part="control" id="ID129" name="ID3" type="text" value="سارة الحربي">
+            <div data-ds="field" data-orientation="vertical">
+              <label data-ds="label" data-part="label" data-size="md" for="ID131" id="ID130">
+                "الإيميل"
+                <span aria-hidden="true" data-part="required">
+                  "*"
+              <div data-ds="input" data-shape="default" data-size="md">
+                <input aria-required="true" autocomplete="email" data-part="control" id="ID131" name="ID6" type="email" value="sara@example.com">
+          <div data-part="body" data-step="1">
+            <div data-ds="field" data-orientation="vertical">
+              <label data-ds="label" data-part="label" data-size="md" for="ID133" id="ID132">
+                "الشارع والمبنى"
+                <span aria-hidden="true" data-part="required">
+                  "*"
+              <div data-ds="input" data-shape="default" data-size="md">
+                <input aria-required="true" autocomplete="address-line1" data-part="control" id="ID133" name="ID9" type="text" value="طريق الملك فهد 12، مبنى 4">
+            <div data-ds="field" data-orientation="vertical">
+              <label data-ds="label" data-part="label" data-size="md" for="ID135" id="ID134">
+                "المدينة"
+                <span aria-hidden="true" data-part="required">
+                  "*"
+              <div data-ds="input" data-shape="default" data-size="md">
+                <input aria-required="true" autocomplete="address-level2" data-part="control" id="ID135" name="ID12" type="text" value="الرياض">
+            <div data-ds="field" data-invalid="" data-orientation="vertical">
+              <label data-ds="label" data-invalid="" data-part="label" data-size="md" for="ID137" id="ID136">
+                "الرمز البريدي"
+                <span aria-hidden="true" data-part="required">
+                  "*"
+              <div data-ds="input" data-invalid="" data-shape="default" data-size="md">
+                <input aria-describedby="ID138 ID139" aria-invalid="true" aria-required="true" autocomplete="postal-code" data-part="control" id="ID137" inputmode="numeric" name="ID15" type="text" value="12271">
+              <p data-part="description" id="ID138">
+                "خمسة أرقام"
+              <p data-ds="field-error" data-part="error" data-size="md" id="ID139">
+                <svg aria-hidden="true" data-ds="icon" data-icon="danger" data-part="icon" data-set="line" data-size="md" fill="none" focusable="false" height="16" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="16" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M12 16h.01">
+                  <path d="M12 8v4">
+                  <path d="M15.312 2a2 2 0 0 1 1.414.586l4.688 4.688A2 2 0 0 1 22 8.688v6.624a2 2 0 0 1-.586 1.414l-4.688 4.688a2 2 0 0 1-1.414.586H8.688a2 2 0 0 1-1.414-.586l-4.688-4.688A2 2 0 0 1 2 15.312V8.688a2 2 0 0 1 .586-1.414l4.688-4.688A2 2 0 0 1 8.688 2z">
+                <span data-part="message">
+                  "ما نوصل لهذا الرمز البريدي حاليا. اختر عنوان ثاني."
+          <div data-part="body" data-step="2" hidden="">
+            <div data-ds="field" data-orientation="vertical">
+              <label data-ds="label" data-part="label" data-size="md" for="ID141" id="ID140">
+                "ملاحظة للمندوب"
+              <div data-ds="input" data-shape="default" data-size="md">
+                <input aria-describedby="ID142" data-part="control" id="ID141" name="ID19" type="text" value="رمز البوابة 4410">
+              <p data-part="description" id="ID142">
+                "اختياري. رمز البوابة أو معلم قريب."
+          <div data-part="body" data-step="3" hidden="">
+            <dl style="display: grid; gap: var(--ds-space-s); margin: 0px;">
+              <div style="display: grid; gap: var(--ds-space-3xs);">
+                <dt style="color: var(--ds-color-text-muted); font-size: var(--ds-font-size-xs);">
+                  "الاسم الكامل"
+                <dd style="margin: 0px;">
+                  "سارة الحربي"
+              <div style="display: grid; gap: var(--ds-space-3xs);">
+                <dt style="color: var(--ds-color-text-muted); font-size: var(--ds-font-size-xs);">
+                  "الإيميل"
+                <dd style="margin: 0px;">
+                  "sara@example.com"
+              <div style="display: grid; gap: var(--ds-space-3xs);">
+                <dt style="color: var(--ds-color-text-muted); font-size: var(--ds-font-size-xs);">
+                  "الشارع والمبنى"
+                <dd style="margin: 0px;">
+                  "طريق الملك فهد 12، مبنى 4"
+              <div style="display: grid; gap: var(--ds-space-3xs);">
+                <dt style="color: var(--ds-color-text-muted); font-size: var(--ds-font-size-xs);">
+                  "المدينة"
+                <dd style="margin: 0px;">
+                  "الرياض"
+              <div style="display: grid; gap: var(--ds-space-3xs);">
+                <dt style="color: var(--ds-color-text-muted); font-size: var(--ds-font-size-xs);">
+                  "الرمز البريدي"
+                <dd style="margin: 0px;">
+                  "12271"
+              <div style="display: grid; gap: var(--ds-space-3xs);">
+                <dt style="color: var(--ds-color-text-muted); font-size: var(--ds-font-size-xs);">
+                  "ملاحظة للمندوب"
+                <dd style="margin: 0px;">
+                  "رمز البوابة 4410"
+          <div data-part="actions">
+            <button data-ds="button" data-emphasis="ghost" data-part="back" data-shape="default" data-size="md" data-tone="neutral" type="button">
+              <span data-part="start">
+                <svg aria-hidden="true" data-ds="icon" data-icon="chevron-back" data-mirror="" data-set="line" data-size="md" fill="none" focusable="false" height="16" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="16" xmlns="http://www.w3.org/2000/svg">
+                  <path d="m15 18-6-6 6-6">
+              <span data-part="label">
+                "تعديل الحساب"
+            <button data-ds="button" data-emphasis="solid" data-part="next" data-shape="default" data-size="md" data-tone="accent" type="submit">
+              <span data-part="label">
+                "حفظ العنوان"
+        <div data-part="status" role="status">

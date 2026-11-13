@@ -1,6 +1,7 @@
-// skeleton-swap, as React's Skeleton.tsx plays it (Alert/ghost.ts,
-// fadeAway): the skeleton leaves at once and, before the next paint, a
-// ghost of it fades out over duration.morph on ease.exit.
+// skeleton-swap, as React's Skeleton.tsx plays it (round 3, wipeAway): the
+// skeleton leaves at once and, before the next paint, a ghost of it is
+// wiped off toward the inline end over duration.morph on ease.reveal.
+// Reduced motion draws no ghost.
 //
 // Angular calls the host's animate.leave only where the document has
 // getAnimations (a browser, not jsdom), so these tests call the leave
@@ -11,7 +12,7 @@ import { TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { DsTheme } from '../../theme/theme';
-import { DsSkeleton } from './skeleton';
+import { DsSkeleton, wipeAway } from './skeleton';
 
 interface Call {
   target: Element;
@@ -89,7 +90,7 @@ describe('DsSkeleton motion', () => {
   beforeEach(() => (s = stage()));
   afterEach(() => s.restore());
 
-  it('the skeleton leaves at once and its ghost fades out over duration.morph, as React', async () => {
+  it('the skeleton leaves at once and its ghost is wiped off toward the inline end over duration.morph, as React (round 3)', async () => {
     const { fixture, completed } = await swap();
     expect(completed).toBe(true);
     s.take();
@@ -100,17 +101,36 @@ describe('DsSkeleton motion', () => {
     expect(ghost.getAttribute('data-ds')).toBe('skeleton');
     expect(ghost.hasAttribute('inert')).toBe(true);
     expect(ghost.parentElement).toBe(fixture.nativeElement.querySelector('#box'));
-    expect(played[0]!.options.id).toBe('ds-motion:ghost-fade');
-    expect(played[0]!.keyframes.map((k) => k.opacity)).toEqual([1, 0]);
+    expect(played[0]!.options.id).toBe('ds-motion:skeleton-wipe');
+    expect(played[0]!.keyframes.map((k) => k.clipPath)).toEqual(['inset(0)', 'inset(0 0 0 100%)']);
     expect(played[0]!.options.fill).toBe('forwards');
+    // The ghost goes when the wipe ends.
+    await Promise.resolve();
+    await Promise.resolve();
+    expect(ghost.isConnected).toBe(false);
   });
 
-  it('reduced motion: the ghost only fades, never moves', async () => {
+  it('reduced motion: no ghost at all, the content is there at once (review B1)', async () => {
     document.documentElement.setAttribute('data-motion', 'reduce');
-    const { completed } = await swap();
+    const { fixture, completed } = await swap();
     expect(completed).toBe(true);
-    s.take();
     s.flush();
-    expect(s.take().every((p) => !p.keyframes.some((k) => k.transform !== undefined))).toBe(true);
+    expect(s.take()).toEqual([]);
+    expect(fixture.nativeElement.querySelector('#box [data-ds="skeleton"]')).toBeNull();
+  });
+
+  it('wipeAway mirrors in RTL and drops the ghost in any mode but full', () => {
+    const ghost = document.createElement('span');
+    ghost.style.direction = 'rtl';
+    document.body.append(ghost);
+    wipeAway(ghost, 'full');
+    const [call] = s.take();
+    expect(call!.keyframes.map((k) => k.clipPath)).toEqual(['inset(0)', 'inset(0 100% 0 0)']);
+    const other = document.createElement('span');
+    document.body.append(other);
+    wipeAway(other, 'reduced');
+    expect(other.isConnected).toBe(false);
+    expect(s.take()).toEqual([]);
+    ghost.remove();
   });
 });

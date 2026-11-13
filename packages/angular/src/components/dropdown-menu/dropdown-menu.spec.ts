@@ -123,35 +123,23 @@ describe('DsDropdownMenu', () => {
     expect(animate).not.toHaveBeenCalled();
   });
 
-  it('menu-row-slide: the layer slides the fill when focus moves to the next row, and not under reduced motion', async () => {
+  it('menu-row-slide gives way to the highlight marker (order 1.23): rows of a menu with a marker do not slide their own fill', async () => {
     const { byId, press } = await setup();
     byId('trigger').focus();
     await press('Enter');
     const rename = byId('rename');
     const duplicate = byId('duplicate');
-    const share = byId('share');
-    for (const [el, top] of [[rename, 30], [duplicate, 58], [share, 114]] as const) {
+    for (const [el, top] of [[rename, 30], [duplicate, 58]] as const) {
       el.style.setProperty('--ds-duration-spring-snappy', '180ms');
-      el.style.setProperty('--ds-ease-spring-snappy', 'linear(0, 1)');
       el.getBoundingClientRect = () => DOMRect.fromRect({ x: 4, y: top, width: 200, height: 28 });
     }
     const animate = vi.fn(() => ({}) as Animation);
     (duplicate as unknown as { animate: typeof animate }).animate = animate;
-    (share as unknown as { animate: typeof animate }).animate = animate;
     await press('ArrowDown');
     expect(document.activeElement).toBe(duplicate);
-    expect(animate).toHaveBeenCalledTimes(1);
-    const [frames, options] = animate.mock.calls[0] as unknown as [Keyframe[], KeyframeAnimationOptions & { pseudoElement: string }];
-    expect(frames[0]?.transform).toBe('translate(0px, -28px) scale(1, 1)');
-    expect(options.pseudoElement).toBe('::after');
-    document.documentElement.setAttribute('data-motion', 'reduce');
-    try {
-      await press('ArrowDown');
-      expect(document.activeElement).toBe(share);
-      expect(animate).toHaveBeenCalledTimes(1);
-    } finally {
-      document.documentElement.removeAttribute('data-motion');
-    }
+    expect(animate).not.toHaveBeenCalled();
+    // The slide itself still plays where no marker is (the menu bar titles in React).
+    expect(slideHighlight(rename, duplicate, 'full')).toBeNull();
   });
 
   it('renders the closed trigger as React does and nothing in body', async () => {

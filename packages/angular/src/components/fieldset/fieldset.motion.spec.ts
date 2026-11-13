@@ -4,7 +4,7 @@
 import { Component, signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { landPop, slideIn } from '../../internal/motion-fields';
+import { emerge, landPop } from '../../internal/motion-fields';
 import { DsFieldset } from './fieldset';
 
 interface Call {
@@ -60,7 +60,7 @@ describe('fieldset motion, order 1.22', () => {
     await fixture.whenStable();
     const error = root.querySelector('[data-ds="field-error"]');
     expect(ids('field-error-enter')[0]?.el).toBe(error);
-    expect(ids('field-error-enter')[0]?.frames).toEqual(slideIn().keyframes);
+    expect(ids('field-error-enter')[0]?.frames).toEqual(emerge().keyframes);
     expect(ids('field-error-enter-icon')[0]?.frames).toEqual(landPop().keyframes);
   });
 

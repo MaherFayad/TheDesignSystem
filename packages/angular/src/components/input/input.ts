@@ -52,6 +52,8 @@ import { DsInputGroupContext } from '../input-group/input-group-context';
 
 export type InputSize = Size;
 export type InputShape = Extract<Shape, 'default' | 'pill'>;
+/** The box: outlined (a border) or filled (a tint). Unset, the active style and platform choose. */
+export type InputVariant = 'outlined' | 'filled';
 /** Text types only. A checkbox, a date or a file is its own component. */
 export type InputType = 'text' | 'email' | 'url' | 'tel' | 'number' | 'password' | 'search';
 /** An icon name, a short text such as "px" or "$", or a template. */
@@ -74,6 +76,7 @@ const INPUT_ATTRIBUTES = [
   'dsInput',
   'size',
   'shape',
+  'variant',
   'type',
   'placeholder',
   'value',
@@ -111,6 +114,7 @@ const INPUT_ATTRIBUTES = [
     '[attr.data-part]': 'group ? "control" : ownPart',
     '[attr.data-size]': 'resolvedSize()',
     '[attr.data-shape]': 'resolvedShape()',
+    '[attr.data-variant]': 'variant() ?? null',
     '[attr.data-invalid]': 'state().invalid ? "" : null',
     '[attr.data-disabled]': 'state().disabled ? "" : null',
     '[attr.data-readonly]': 'state().readOnly ? "" : null',
@@ -170,6 +174,12 @@ export class DsInput implements ControlValueAccessor {
   readonly size = input<InputSize | undefined>(undefined);
   /** default: radius.control of the style. pill: always fully round. Inside an InputGroup it follows the group. */
   readonly shape = input<InputShape | undefined>(undefined);
+  /**
+   * outlined: a border all round. filled: a tinted box. Stamped as
+   * data-variant only when set, so a platform (Android draws filled fields)
+   * can follow it. Default unset.
+   */
+  readonly variant = input<InputVariant | undefined>(undefined);
   /** Text types only. Default text. */
   readonly type = input<InputType>('text');
   readonly placeholder = input<string | undefined>(undefined);

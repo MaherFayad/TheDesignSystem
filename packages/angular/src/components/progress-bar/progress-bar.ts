@@ -15,8 +15,10 @@
 // Behavior: hand built (Radix Progress is attributes only). The state words
 // are the Radix ones: indeterminate, loading, complete.
 //
-// Motion (order 1.22): progress-spring is CSS (ProgressBar.css);
-// progress-celebrate pops the track once per completion, as React plays it.
+// Motion (order 1.22): progress-spring is CSS (ProgressBar.css; round 3
+// cuts the fill with clip-path, no DOM change); progress-celebrate pops the
+// track once per completion and (round 3) sends a halo from it, as React
+// plays it.
 import {
   ChangeDetectionStrategy,
   Component,
@@ -138,7 +140,7 @@ export class DsProgressBar {
   );
 
   constructor() {
-    // progress-celebrate (order 1.22): the track dips and pops on the block axis once per completion, never on a first paint at max.
+    // progress-celebrate (order 1.22): the track dips and pops on the block axis once per completion, never on a first paint at max; round 3 adds the halo.
     const celebrate = new Celebrate();
     afterRenderEffect(() => {
       const value = this.clamped();

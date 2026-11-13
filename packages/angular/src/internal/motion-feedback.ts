@@ -7,6 +7,8 @@
 // - the stack shift: packages/react/src/components/Toast/stackShift.ts
 // - the digit roll and the pop: packages/react/src/components/Stat/useDigitRoll.ts
 //   (the hook state is a small class here, `DigitRoller`)
+// - the completion beat: useCelebrate and haloBurst of
+//   packages/react/src/components/ProgressBar/ProgressBar.tsx (`Celebrate`)
 // - the FLIP list: packages/react/src/components/AvatarGroup/useFlipList.ts
 //   (the measure and the play are split, `FlipList`, since Angular measures
 //   in an effect before the template refresh and plays after the render)
@@ -39,9 +41,13 @@ export interface LeavingPlace {
   next: Node | null;
 }
 
-/** Records where an element is drawn now. */
+/**
+ * Records where an element is drawn now. The next sibling is the next
+ * element: Angular puts a comment anchor after a block's element, which
+ * leaves with it, so the ghost lands before the same element as in React.
+ */
 export function placeOf(el: Element): LeavingPlace {
-  return { el, rect: rectOf(el), parent: el.parentNode, next: el.nextSibling };
+  return { el, rect: rectOf(el), parent: el.parentNode, next: el.nextElementSibling };
 }
 
 const canAnimate = (el: Element | null | undefined): el is HTMLElement => Boolean(el && typeof (el as HTMLElement).animate === 'function');
@@ -99,7 +105,8 @@ export function shrinkAway(ghost: HTMLElement | null, mode: PatternMode): void {
 /** The ghost fades out over duration.morph (a cross fade with what took its place). */
 export function fadeAway(ghost: HTMLElement | null, mode: PatternMode): void {
   if (!ghost) return;
-  if (mode === 'none') {
+  // Round 3 (review B1), as React: reduced motion drops the ghost at once.
+  if (mode !== 'full') {
     ghost.remove();
     return;
   }
@@ -127,7 +134,8 @@ export function neighboursOf(el: Element): Element[] {
  * registered first, or its timer fires first).
  */
 export function dismissWithExit(el: Element | null, mode: PatternMode, close: () => void): void {
-  if (!el || mode === 'none' || !canAnimate(el) || typeof requestAnimationFrame !== 'function') {
+  // Round 3 (review B1), as React: reduced motion is checked here, not left to tokens: no ghost, no slide.
+  if (!el || mode !== 'full' || !canAnimate(el) || typeof requestAnimationFrame !== 'function') {
     close();
     return;
   }
@@ -140,87 +148,6 @@ export function dismissWithExit(el: Element | null, mode: PatternMode, close: ()
     shrinkAway(ghostOf(place), mode);
     flipPlay(snap, { items: others.filter((o) => o.isConnected), spring: 'snappy', mode, enter: 'none' });
   });
-}
-
-// ------------------------------------------------------------------ toast stack shift (Toast/stackShift.ts)
-
-/** Plays the shift of one toast from `from` to `to` (its new box). Returns the Animation, or null. */
-export type ShiftPlayer = (el: HTMLElement, from: MotionRect, to: MotionRect) => Animation | null;
-
-const TOASTS = ':scope > [data-ds="toast"]';
-
-/** The block offset a running transform gives an element now, in px. 0 when there is none. */
-export function liveOffsetY(el: Element): number {
-  if (typeof getComputedStyle !== 'function') return 0;
-  const t = getComputedStyle(el).transform;
-  const m = /^matrix(3d)?\(([^)]+)\)$/.exec(t ?? '');
-  if (!m) return 0;
-  const values = (m[2] ?? '').split(',').map((v) => Number.parseFloat(v));
-  const y = m[1] ? values[13] : values[5];
-  return Number.isFinite(y) ? (y as number) : 0;
-}
-
-/** Where each toast of the viewport sits on the block axis, in viewport px, transforms left out. */
-function measure(viewport: HTMLElement): Map<HTMLElement, number> {
-  const top = viewport.getBoundingClientRect().top;
-  const out = new Map<HTMLElement, number>();
-  for (const el of viewport.querySelectorAll<HTMLElement>(TOASTS)) out.set(el, top + el.offsetTop);
-  return out;
-}
-
-/**
- * Watches a toaster viewport and plays `play` on each toast that the
- * arrival or the departure of another toast moved. A shift that is still
- * running when the stack changes again starts from where the toast is drawn.
- * Returns the function that stops watching.
- */
-export function watchStackShift(viewport: HTMLElement, play: ShiftPlayer): () => void {
-  if (typeof MutationObserver === 'undefined') return () => undefined;
-  let last = measure(viewport);
-  const running = new WeakMap<HTMLElement, Animation>();
-
-  const mutations = new MutationObserver(() => {
-    const now = measure(viewport);
-    for (const [el, y] of now) {
-      const before = last.get(el);
-      if (before === undefined || before === y) continue;
-      let carry = 0;
-      const prev = running.get(el);
-      if (prev && (prev.playState === 'running' || prev.playState === 'paused')) {
-        carry = liveOffsetY(el);
-        prev.cancel();
-      }
-      const box = { width: el.offsetWidth, height: el.offsetHeight };
-      const animation = play(el, { x: 0, y: before + carry - y, ...box }, { x: 0, y: 0, ...box });
-      if (animation) running.set(el, animation);
-      else running.delete(el);
-    }
-    last = now;
-  });
-  mutations.observe(viewport, { childList: true });
-
-  const resizes =
-    typeof ResizeObserver === 'undefined'
-      ? null
-      : new ResizeObserver(() => {
-          last = measure(viewport);
-        });
-  resizes?.observe(viewport);
-
-  return () => {
-    mutations.disconnect();
-    resizes?.disconnect();
-  };
-}
-
-/** The Toaster's player: the flip primitive on the snappy spring, as React's Toaster plays it. */
-export function shiftToast(el: HTMLElement, from: MotionRect, to: MotionRect, mode: PatternMode): Animation | null {
-  const now = rectOf(el);
-  const snap = { rects: new Map([[el as Element, { ...now, y: now.y + from.y - to.y }]]) };
-  const [animation] = flipPlay(snap, { items: [el], spring: 'snappy', enter: 'none', mode });
-  // The shift does not scale, so its origin does not matter; the toast's own exit scales from its center.
-  el.style.removeProperty('transform-origin');
-  return animation ?? null;
 }
 
 // ------------------------------------------------------------------ digit roll and pop (Stat/useDigitRoll.ts)
@@ -300,25 +227,45 @@ export function popMark(el: Element | null | undefined, mode: PatternMode, axis:
 
 /**
  * progress-celebrate: the state of useCelebrate for one element. `update`
- * pops the element once each time `done` turns true after the first call.
+ * pops the element once each time `done` turns true after the first call,
+ * and (round 3) sends out one halo from the element, or from its descendant
+ * that `halo` selects (ProgressCircle: its indicator).
  */
 export class Celebrate {
   private was: boolean | undefined;
 
-  update(el: Element | null | undefined, done: boolean, mode: PatternMode, axis: 'both' | 'block' = 'block'): Animation | null {
+  update(el: Element | null | undefined, done: boolean, mode: PatternMode, axis: 'both' | 'block' = 'block', halo?: string): Animation | null {
     const before = this.was ?? done;
     this.was = done;
-    return done && !before ? popMark(el, mode, axis) : null;
+    if (!done || before) return null;
+    const pop = popMark(el, mode, axis);
+    const ring = halo ? el?.querySelector(halo) : el;
+    haloBurst(ring, mode);
+    return pop;
   }
 }
 
-/** The turn of a ProgressCircle ring from the old fraction to the new one, as React plays it (progress-sweep). */
-export function sweepRing(indicator: Element, before: number, after: number): Animation | null {
-  const turn = Math.round((before - after) * 360);
+/**
+ * Round 3 (ProgressBar.tsx haloBurst): the completion beat's halo. A
+ * box-shadow ring in the fill color grows from the element by
+ * distance.shift and fades, once, over duration.celebrate on ease.out. Full
+ * mode only.
+ */
+export function haloBurst(el: Element | null | undefined, mode: PatternMode): Animation | null {
+  if (!el || mode !== 'full') return null;
   return play(
-    indicator,
-    { keyframes: [{ transform: `rotate(${turn}deg)` }, { transform: 'none' }], duration: 'duration.spring-soft', easing: 'ease.spring-soft', fill: 'none', origin: '50% 50%' },
-    'progress-sweep',
+    el,
+    {
+      keyframes: [
+        { boxShadow: '0 0 0 0 var(--_progress-bar-fill, var(--_progress-circle-fill))' },
+        { boxShadow: '0 0 0 var(--ds-distance-shift) transparent' },
+      ],
+      duration: 'duration.celebrate',
+      easing: 'ease.out',
+      fill: 'none',
+      origin: '50% 50%',
+    },
+    'progress-halo',
   );
 }
 

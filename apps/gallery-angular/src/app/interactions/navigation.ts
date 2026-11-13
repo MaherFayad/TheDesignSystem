@@ -1,5 +1,5 @@
 // Stages of the Angular /interactions page for the navigation family (orders
-// 1.21 and 1.22), the twin of apps/gallery-react/src/interactions/navigation.tsx.
+// 1.21 to 1.23), the twin of apps/gallery-react/src/interactions/navigation.tsx.
 // One standalone component per interaction id. Each stage marks the control
 // that plays it with data-interaction-trigger, so the page's replay control
 // can press it again. Same copy as React.
@@ -21,15 +21,18 @@ const alignValues = ['start', 'center', 'end'] as const;
   template: `
     <div style="display: grid; gap: var(--ds-space-l); justify-items: start">
       <button dsButton size="sm" emphasis="soft" end="arrow-forward" data-interaction-trigger="" (click)="play()">Move every pill</button>
-      <div dsSegmentedControl aria-label="Range" [(value)]="range">
-        <button dsSegmentedControlItem value="day">Day</button>
-        <button dsSegmentedControlItem value="week">Week</button>
-        <button dsSegmentedControlItem value="month">Month</button>
-      </div>
-      <div dsToggleGroup type="single" aria-label="Text alignment" [value]="align()" (valueChange)="setAlign($event)" attached>
-        <button dsToggleGroupItem value="start">Start</button>
-        <button dsToggleGroupItem value="center">Center</button>
-        <button dsToggleGroupItem value="end">End</button>
+      <!-- Round 3: the crop of the recorder holds the pill lists, where the ink crosses (React also has the soft Tabs here). -->
+      <div style="display: grid; gap: var(--ds-space-l); justify-items: start" data-stage-region="">
+        <div dsSegmentedControl aria-label="Range" [(value)]="range">
+          <button dsSegmentedControlItem value="day">Day</button>
+          <button dsSegmentedControlItem value="week">Week</button>
+          <button dsSegmentedControlItem value="month">Month</button>
+        </div>
+        <div dsToggleGroup type="single" aria-label="Text alignment" [value]="align()" (valueChange)="setAlign($event)" attached>
+          <button dsToggleGroupItem value="start">Start</button>
+          <button dsToggleGroupItem value="center">Center</button>
+          <button dsToggleGroupItem value="end">End</button>
+        </div>
       </div>
     </div>
   `,

@@ -28,11 +28,14 @@
 // merges them with its own ids. The text after the stars, React's children,
 // is the projected content; it is read once, after the first render.
 //
-// Motion (interaction rating-fill, order 1.22, proposed), as React: after a
-// pick, only the stars whose state changed move. Stars that fill land from
-// scale.morph past full size as one run over two stagger steps (the chosen
-// star on the bouncy spring); stars that empty dip and spring back. The
-// hover preview (rating-preview) is the shared CSS.
+// Motion (interaction rating-fill, order 1.23, proposed), as React: after a
+// pick, the chosen star and every star before it pop as one run from the
+// first, over two stagger steps: stars that were filled dip and bounce,
+// stars that fill land from scale.morph (the chosen star on the bouncy
+// spring). Stars that empty dip and spring back, together. The hover
+// preview (rating-preview) is a color sweep in the shared CSS: each star
+// holds a decorative filled glyph (part fill) and `--_rating-index` sets
+// its delay.
 import {
   ChangeDetectionStrategy,
   Component,
@@ -148,10 +151,11 @@ let nextId = 0;
       [attr.aria-label]="itemLabel(score)"
       data-part="item"
       [attr.data-filled]="score <= whole() ? '' : null"
+      [style.--_rating-index]="i"
       (mousedown)="roving.onItemMousedown(itemAt(i), $event)"
       (focus)="roving.onItemFocus(itemAt(i))"
       (keydown)="roving.onItemKeydown(itemAt(i), $event)"
-      (click)="roving.onItemClick(itemAt(i))"><svg dsIcon [name]="score <= whole() ? 'star-filled' : 'star'" [size]="iconSize()" data-part="icon"></svg></button>@if (isFormControl()) {<input
+      (click)="roving.onItemClick(itemAt(i))"><svg dsIcon [name]="score <= whole() ? 'star-filled' : 'star'" [size]="iconSize()" data-part="icon"></svg><svg dsIcon name="star-filled" [size]="iconSize()" data-part="fill"></svg></button>@if (isFormControl()) {<input
       #bubble
       type="radio"
       aria-hidden="true"
@@ -328,10 +332,11 @@ export class DsRating implements ControlValueAccessor {
   }
 
   /**
-   * rating-fill: only the stars whose state changed move. Stars that fill
-   * land from scale.morph past full size, as one run spread over two stagger
-   * steps from the first; the chosen star lands on the bouncy spring. Stars
-   * that empty dip and spring back. A new pick restarts the run.
+   * rating-fill: the chosen star and every star before it pop as one run
+   * spread over two stagger steps from the first. Stars that were filled dip
+   * and bounce; stars that fill land from scale.morph past full size, the
+   * chosen star on the bouncy spring. Stars that empty dip and spring back,
+   * together. A new pick restarts the run.
    */
   private playFill(): void {
     const before = this.pickedFrom;
@@ -340,20 +345,19 @@ export class DsRating implements ControlValueAccessor {
     if (before === null || before === whole) return;
     const mode = this.motion.mode('rating-fill');
     const stars = this.stars();
-    const lo = Math.min(before, whole);
-    const hi = Math.max(before, whole);
-    const n = hi - lo;
-    for (let score = lo + 1; score <= hi; score++) {
-      const icon = stars[score - 1]?.nativeElement.querySelector('[data-part="icon"]');
-      const i = score - lo - 1;
-      const wait = { delay: 'delay.stagger' as const, steps: runStep(i, n) };
-      if (whole > before) {
+    const iconOf = (score: number) => stars[score - 1]?.nativeElement.querySelector('[data-part="icon"]');
+    // The chosen star and every star before it pop as one run from the first.
+    for (let score = 1; score <= whole; score++) {
+      const wait = { delay: 'delay.stagger' as const, steps: runStep(score - 1, whole) };
+      if (score > before) {
         const timing = score === whole ? {} : { duration: 'duration.spring-snappy' as const, easing: 'ease.spring-snappy' as const };
-        playBeat(icon, landPop(undefined, { ...timing, ...wait }), 'rating-fill', mode);
+        playBeat(iconOf(score), landPop(undefined, { ...timing, ...wait }), 'rating-fill', mode);
       } else {
-        playBeat(icon, dipPop(wait), 'rating-fill', mode, null);
+        playBeat(iconOf(score), dipPop(wait), 'rating-fill', mode, null);
       }
     }
+    // Stars that empty dip and spring back, together.
+    for (let score = whole + 1; score <= before; score++) playBeat(iconOf(score), dipPop(), 'rating-fill', mode, null);
   }
 
   protected onRootKeydown(event: KeyboardEvent): void {

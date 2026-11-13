@@ -42,6 +42,8 @@ function drawnAfter(el: Element): { x: number; y: number; sx: number; sy: number
  */
 export function slideHighlight(from: Element | null | undefined, to: Element, mode: PatternMode): Animation | null {
   if (mode !== 'full' || !from || from === to || !from.isConnected || typeof to.animate !== 'function') return null;
+  // A menu with a highlight marker (order 1.23) slides the marker instead.
+  if (to.parentElement?.closest('[role="menu"]')?.querySelector(":scope > [data-part='highlight']")) return null;
   const a = from.getBoundingClientRect();
   const b = to.getBoundingClientRect();
   if (b.width < 1 || b.height < 1) return null;

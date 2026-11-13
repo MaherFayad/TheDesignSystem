@@ -1,4 +1,4 @@
-export { DsButton } from './button';
+export { DsButton, type ButtonResult } from './button';
 export {
   DsButtonBase,
   type ButtonEmphasis,

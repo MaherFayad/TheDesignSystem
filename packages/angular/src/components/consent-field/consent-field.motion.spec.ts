@@ -4,7 +4,7 @@
 import { Component, signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { slideIn, token } from '../../internal/motion-fields';
+import { emerge, token } from '../../internal/motion-fields';
 import { DsTheme } from '../../theme/theme';
 import { DsConsentField } from './consent-field';
 
@@ -63,7 +63,8 @@ describe('consent field motion, order 1.22', () => {
     box.click();
     await fixture.whenStable();
     const [call] = ids('consent-check');
-    expect(call?.el).toBe(root.querySelector('[data-ds="consent-field"] > [data-part="control"] [data-part="indicator"] [data-ds="icon"]'));
+    expect(call?.el).toBe(root.querySelector('[data-ds="consent-field"] > [data-part="control"] [data-part="indicator"] > svg[data-part="mark"]'));
+    expect(call?.el).not.toBeNull();
     expect(call?.frames).toEqual([{ transform: `scale(${token.morph})` }, { transform: 'scale(1)' }]);
     expect(call?.opts.composite).toBe('add');
     box.click();
@@ -86,11 +87,11 @@ describe('consent field motion, order 1.22', () => {
     expect(ids('consent-check')).toHaveLength(0);
   });
 
-  it('field-error-enter: an error after the first render slides in', async () => {
+  it('field-error-enter: an error after the first render emerges from under the control (order 1.23)', async () => {
     const { fixture, host, root } = await setup();
     host.error.set('Give the consent to get the news.');
     await fixture.whenStable();
     expect(ids('field-error-enter')[0]?.el).toBe(root.querySelector('[data-ds="field-error"]'));
-    expect(ids('field-error-enter')[0]?.frames).toEqual(slideIn().keyframes);
+    expect(ids('field-error-enter')[0]?.frames).toEqual(emerge().keyframes);
   });
 });

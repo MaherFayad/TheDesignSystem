@@ -1,5 +1,7 @@
 // Stages of the Angular /interactions page for the feedback family (orders
-// 1.21 and 1.22), the twin of apps/gallery-react/src/interactions/feedback.tsx.
+// 1.21 to 1.23), the twin of apps/gallery-react/src/interactions/feedback.tsx.
+// Round 3 moved the toast and notification stages to the overlays file, as
+// React did.
 // One standalone component per interaction id. Each stage marks the control
 // that plays it with data-interaction-trigger, so the page's replay control
 // can press it again. Same copy as React.
@@ -18,15 +20,12 @@ import {
   DsCallout,
   DsErrorState,
   DsMeter,
-  DsNotificationCenter,
   DsProgressBar,
   DsProgressCircle,
   DsSkeleton,
   DsSpinner,
   DsStatusDot,
-  type NotificationItem,
 } from '@the-system/angular';
-import { toast } from '@the-system/shared';
 
 const column = 'display: grid; gap: var(--ds-space-s); inline-size: 100%;';
 const row = 'display: flex; flex-wrap: wrap; align-items: center; gap: var(--ds-space-s);';
@@ -58,7 +57,8 @@ const host = { style: 'display: contents' };
   `,
 })
 class AlertStage {
-  protected readonly shown = signal(false);
+  /** Round 3: the messages show from the start, as React's stage. */
+  protected readonly shown = signal(true);
   protected readonly n = signal(0);
   protected show(): void {
     this.shown.set(true);
@@ -160,81 +160,6 @@ class SkeletonStage {
 }
 
 @Component({
-  selector: 'ds-stage-toast-enter',
-  imports: [DsButton],
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  host,
-  template: `<button dsButton data-interaction-trigger="" (click)="show()">Show a toast</button>`,
-})
-class ToastEnterStage {
-  protected show(): void {
-    toast({ lang: 'en', tone: 'info', title: 'New version ready', description: 'Reload the page to get it.' });
-  }
-}
-
-/** Each press shows a toast with its own title, so the stack grows instead of updating one toast. */
-@Component({
-  selector: 'ds-stage-toast-stack',
-  imports: [DsButton],
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  host,
-  template: `<button dsButton data-interaction-trigger="" (click)="show()">Show a toast</button>`,
-})
-class ToastStackStage {
-  private n = 1;
-  protected show(): void {
-    toast({ lang: 'en', tone: 'success', title: `Draft ${this.n} saved`, description: 'Saved a moment ago.' });
-    this.n += 1;
-  }
-}
-
-@Component({
-  selector: 'ds-stage-toast-swipe',
-  imports: [DsButton],
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  host,
-  template: `<button dsButton data-interaction-trigger="" (click)="show()">Show a toast</button>`,
-})
-class ToastSwipeStage {
-  protected show(): void {
-    toast({ lang: 'en', title: 'Board duplicated', description: 'Swipe it away or wait.' });
-  }
-}
-
-const now = new Date();
-const base: NotificationItem[] = [
-  { id: 'n1', title: 'Omar commented on Brand review', time: now, unread: true },
-  { id: 'n2', title: 'Lina invited you to Launch plan', time: now, unread: false, tone: 'info' },
-];
-
-@Component({
-  selector: 'ds-stage-notification-change',
-  imports: [DsButton, DsNotificationCenter],
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  host,
-  template: `
-    <div style="${column}">
-      <div style="${row}">
-        <button dsButton size="sm" data-interaction-trigger="" (click)="add()">Add a notification</button>
-        <button dsButton size="sm" emphasis="soft" (click)="items.set(items().slice(1))">Remove the newest</button>
-      </div>
-      <section dsNotificationCenter size="sm" [items]="items()" [now]="now" [onMarkAllRead]="markAll"></section>
-    </div>
-  `,
-})
-class NotificationStage {
-  protected readonly items = signal(base);
-  protected readonly now = now;
-  private n = 3;
-  protected readonly markAll = (): void => this.items.update((v) => v.map((x) => ({ ...x, unread: false })));
-  protected add(): void {
-    const n = this.n;
-    this.items.update((v) => [{ id: `n${n}`, title: `Build ${n} passed`, time: new Date(), unread: true, tone: 'success' }, ...v]);
-    this.n += 1;
-  }
-}
-
-@Component({
   selector: 'ds-stage-progress',
   imports: [DsButton, DsProgressBar, DsProgressCircle],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -320,10 +245,6 @@ export const stages: Record<string, Type<unknown>> = {
   'state-illustration': StateStage,
   'error-state-details': ErrorDetailsStage,
   'skeleton-swap': SkeletonStage,
-  'toast-enter': ToastEnterStage,
-  'toast-stack': ToastStackStage,
-  'toast-swipe': ToastSwipeStage,
-  'notification-change': NotificationStage,
   'progress-spring': ProgressStage,
   'progress-celebrate': ProgressStage,
   'meter-fill': MeterStage,

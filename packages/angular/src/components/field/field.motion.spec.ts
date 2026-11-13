@@ -4,7 +4,7 @@
 import { Component, signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { landPop, slideIn } from '../../internal/motion-fields';
+import { emerge, landPop, slideIn } from '../../internal/motion-fields';
 import { DsInput } from '../input/input';
 import { DsField, DsFieldDescription } from './field';
 
@@ -82,7 +82,7 @@ describe('field motion, order 1.22', () => {
     expect(ids('field-message-enter')[0]?.frames).toEqual([{ opacity: 0 }, { opacity: 1 }]);
   });
 
-  it('field-error-enter: a later error slides in and its icon lands one stagger step later; one there at first does not move', async () => {
+  it('field-error-enter: a later error comes out from under the control and its icon lands one stagger step later; one there at first does not move', async () => {
     const first = await setup({ error: 'Enter a board name.' });
     expect(ids('field-error-enter')).toHaveLength(0);
     first.fixture.destroy();
@@ -94,7 +94,10 @@ describe('field motion, order 1.22', () => {
     const [msg] = ids('field-error-enter');
     const [icon] = ids('field-error-enter-icon');
     expect(msg?.el).toBe(error);
-    expect(msg?.frames).toEqual(slideIn().keyframes);
+    // Order 1.23: it comes out from under the control, behind a clip-path that holds its top edge.
+    expect(msg?.frames).toEqual(emerge().keyframes);
+    expect(msg?.frames[0]).toMatchObject({ transform: 'translateY(-100%)', clipPath: 'inset(100% 0 0 0)' });
+    expect(msg?.frames[msg.frames.length - 1]).toMatchObject({ transform: 'none', clipPath: 'inset(0 0 0 0)' });
     expect(icon?.el).toBe(error?.querySelector(':scope > [data-part="icon"]'));
     expect(icon?.frames).toEqual(landPop().keyframes);
   });

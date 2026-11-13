@@ -66,7 +66,7 @@ import { consumeHostAttributes } from '../../internal/host';
 import { optionalBoolean } from '../../internal/optional-boolean';
 import { PopupLayer } from '../../internal/popper';
 import { injectMotion } from '../../internal/motion';
-import { POPUP_LIST_ROWS, injectFlipGroup, openStaggered } from '../../internal/motion-selection';
+import { POPUP_LIST_ROWS, injectFlipGroup, injectPopupResults, openStaggered } from '../../internal/motion-selection';
 import { DsThemeService } from '../../theme';
 import { DsButton } from '../button/button';
 import { DsFieldContext, fieldControl } from '../field/field-context';
@@ -324,6 +324,8 @@ export class DsMultiSelect implements ControlValueAccessor {
       const el = this.valueEl()?.nativeElement;
       untracked(() => flip.update(el));
     });
+    // combobox-results: on a new query the rows that stay slide and new rows rise. The exit copy is the layer's (B6).
+    injectPopupResults(this.layer);
     for (const [name] of this.triggerAttrs) this.host.removeAttribute(name);
     // The field root is the Radix Anchor, which renders class="".
     if (!this.host.hasAttribute('class')) this.host.setAttribute('class', '');

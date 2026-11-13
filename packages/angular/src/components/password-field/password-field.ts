@@ -13,10 +13,12 @@
 // onVisibleChange its visibleChange output. defaultValue is value. Native
 // props of the inner input are inputs, as on dsInput.
 //
-// Motion (orders 1.21 and 1.22), as in React: a press on the toggle morphs
-// the eye into the eye off glyph or back (password-reveal, iconMorph). The
-// leaving glyph stays for one morph in an unnamed aria-hidden span inside
-// the toggle icon. The field text fades back in. The type changes at once.
+// Motion (orders 1.21 to 1.23), as in React: a press on the toggle morphs
+// the eye into the eye off glyph or back (password-reveal). Since order 1.23
+// the two glyphs trade places along a 45 degree line (a clip-path wipe over
+// duration.morph): showing draws the slash from the top left, hiding wipes
+// it off from the bottom right. The leaving glyph stays for one morph in an
+// unnamed aria-hidden span inside the toggle icon. The field text fades back in. The type changes at once.
 // The box shakes when the field turns invalid (error-shake).
 import {
   ChangeDetectionStrategy,
@@ -35,11 +37,11 @@ import {
 } from '@angular/core';
 import { NG_VALUE_ACCESSOR, type ControlValueAccessor } from '@angular/forms';
 import { DsIcon } from '@the-system/icons/angular';
-import { iconMorph, settled } from '@the-system/motion';
+import { settled } from '@the-system/motion';
 import type { Shape, Size } from '@the-system/shared';
 import { consumeHostAttributes } from '../../internal/host';
 import { injectMotion } from '../../internal/motion';
-import { errorShake, type ShakeBox } from '../../internal/motion-fields';
+import { diagonalWipe, errorShake, fadeOutBeat, playBeat, type ShakeBox } from '../../internal/motion-fields';
 import { DsFieldContext } from '../field/field-context';
 import { DsIconButton } from '../icon-button/icon-button';
 import { DsInputGroupContext } from '../input-group/input-group-context';
@@ -228,12 +230,14 @@ export class DsPasswordField implements ControlValueAccessor {
       untracked(() => {
         const input = this.nativeInput;
         const part = this.host.querySelector(":scope > [data-part='toggle'] > [data-part='icon']");
-        const anims = iconMorph({
-          from: part?.querySelector(':scope > span[aria-hidden="true"]'),
-          to: part?.firstElementChild,
-          turn: shown ? 90 : -90,
-          mode: this.motion.mode(PASSWORD_REVEAL),
-        });
+        const mode = this.motion.mode(PASSWORD_REVEAL);
+        // Order 1.23: the glyphs trade places along a diagonal line, so showing
+        // draws the slash across the eye and hiding wipes it off the other way.
+        const back = !shown;
+        const anims = [
+          playBeat(part?.querySelector(':scope > span[aria-hidden="true"]'), diagonalWipe('ahead', back), `${PASSWORD_REVEAL}-out`, mode, fadeOutBeat),
+          playBeat(part?.firstElementChild, diagonalWipe('behind', back), `${PASSWORD_REVEAL}-in`, mode),
+        ].filter((a): a is Animation => a !== null);
         this.motion.play(input, 'fade', PASSWORD_REVEAL);
         const id = this.morphs;
         let live = true;

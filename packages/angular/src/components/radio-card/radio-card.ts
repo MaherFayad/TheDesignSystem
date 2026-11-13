@@ -202,7 +202,8 @@ export type RadioCardIcon = IconName | (string & {}) | TemplateRef<unknown>;
 
 /**
  * One card: the indicator, an optional icon, the title and description, and
- * optional end content. The host is the card, the button with role radio.
+ * optional end content. The indicator holds the `badge` part, a check that
+ * draws in the filled circle (radio-card-lift, order 1.23). The host is the card, the button with role radio.
  */
 @Component({
   selector: 'button[dsRadioCardItem]',
@@ -227,7 +228,7 @@ export type RadioCardIcon = IconName | (string & {}) | TemplateRef<unknown>;
     '(keydown)': 'group.roving.onItemKeydown(item, $event)',
     '(click)': 'group.roving.onItemClick(item)',
   },
-  template: `<span data-part="indicator" [attr.data-state]="state()" [attr.data-disabled]="isDisabled() ? '' : null"><span aria-hidden="true"></span></span>@if (icon(); as i) {<span data-part="icon" aria-hidden="true">@if (isTemplate(i)) {<ng-container [ngTemplateOutlet]="i" />} @else if (isIcon(i)) {<svg dsIcon [name]="i" [size]="iconSize()"></svg>} @else {{{ i }}}</span>}<span [id]="titleId" data-part="title">{{ title() }}</span>@if (description() !== undefined) {<span [id]="descriptionId" data-part="description">{{ description() }}</span>}@if (end(); as e) {<span [id]="endId" data-part="end">@if (isTemplate(e)) {<ng-container [ngTemplateOutlet]="e" />} @else {{{ e }}}</span>}`,
+  template: `<span data-part="indicator" [attr.data-state]="state()" [attr.data-disabled]="isDisabled() ? '' : null"><svg data-part="badge" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M4.5 8.25 7 10.75 11.5 5.5" pathLength="1" /></svg></span>@if (icon(); as i) {<span data-part="icon" aria-hidden="true">@if (isTemplate(i)) {<ng-container [ngTemplateOutlet]="i" />} @else if (isIcon(i)) {<svg dsIcon [name]="i" [size]="iconSize()"></svg>} @else {{{ i }}}</span>}<span [id]="titleId" data-part="title">{{ title() }}</span>@if (description() !== undefined) {<span [id]="descriptionId" data-part="description">{{ description() }}</span>}@if (end(); as e) {<span [id]="endId" data-part="end">@if (isTemplate(e)) {<ng-container [ngTemplateOutlet]="e" />} @else {{{ e }}}</span>}`,
 })
 export class DsRadioCardItem {
   /** The value this card sets. */

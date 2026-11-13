@@ -7,8 +7,9 @@
 import { Component, signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { iconMorph, renderDigits, rollDigits } from '@the-system/motion';
+import { renderDigits, rollDigits } from '@the-system/motion';
 import { injectMotion } from '../../internal/motion';
+import { drawCheck } from '../../internal/selection-marker';
 import { DsFilterBar } from './filter-bar';
 
 interface Call {
@@ -91,17 +92,18 @@ describe('filter bar motion, order 1.22', () => {
   });
 
   for (const reduced of [false, true]) {
-    it(`chip-check-pop and filter-count-roll play React's iconMorph and rollDigits${reduced ? ' (reduced)' : ''}`, async () => {
+    it(`chip-check-pop (order 1.23: the check draws) and filter-count-roll play React's drawCheck and rollDigits${reduced ? ' (reduced)' : ''}`, async () => {
       if (reduced) document.documentElement.setAttribute('data-motion', 'reduce');
       const { settle, chips, roll, motion } = await setup();
       take();
       chips()[1]!.click();
       await settle();
       const got = take();
-      const glyph = chips()[1]!.querySelector('[data-part="icon"]')?.firstElementChild;
-      const pop = ids(got, 'icon-morph-in');
-      expect(pop.map((c) => c.el)).toEqual([glyph]);
-      iconMorph({ to: glyph, turn: 45, mode: motion.mode('chip-check-pop') });
+      const icon = chips()[1]!.querySelector('[data-part="icon"]')!;
+      const pop = ids(got, 'check-draw-pick');
+      expect(pop.length).toBeGreaterThan(0);
+      expect(pop.every((c) => icon.contains(c.el))).toBe(true);
+      drawCheck(icon, motion.mode('chip-check-pop'));
       expect(pop).toEqual(take());
       const rolled = ids(got, 'digit-roll');
       expect(roll().textContent).toBe('1 filter on, 91 results');
@@ -115,6 +117,15 @@ describe('filter bar motion, order 1.22', () => {
       if (reduced) expect(got.every((c) => c.frames.every((f) => f['transform'] === undefined))).toBe(true);
     });
   }
+
+  it('chip-check-pop: a press writes the press point for a ripple, as React (platform hook)', async () => {
+    const { chips } = await setup();
+    const chip = chips()[0]!;
+    chip.getBoundingClientRect = () => DOMRect.fromRect({ x: 10, y: 20, width: 80, height: 32 });
+    chip.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, clientX: 30, clientY: 28 }));
+    expect(chip.style.getPropertyValue('--_chip-press-x')).toBe('20px');
+    expect(chip.style.getPropertyValue('--_chip-press-y')).toBe('8px');
+  });
 
   it('collection-flip: clear comes in and pops, a first paint plays nothing', async () => {
     const { root, settle, chips } = await setup();

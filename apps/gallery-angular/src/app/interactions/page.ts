@@ -41,9 +41,24 @@ import { stages as inputsForms } from './inputs-forms';
 import { stages as navigation } from './navigation';
 import { stages as overlays } from './overlays';
 import { stages as selection } from './selection';
+import { stages as sliders } from './sliders';
+import { stages as toggles } from './toggles';
 
 /** Live stages by interaction id, from every family file. */
-export const stages: Record<string, Type<unknown>> = { ...actions, ...inputs, ...inputsForms, ...selection, ...overlays, ...navigation, ...feedback };
+// toggles and sliders come last: round 3 moved Switch, Checkbox, Radio and
+// ToggleButton stages to toggles.ts and the Slider and Rating stages to
+// sliders.ts, and an id there wins over the same id in an older file.
+export const stages: Record<string, Type<unknown>> = {
+  ...actions,
+  ...inputs,
+  ...inputsForms,
+  ...selection,
+  ...overlays,
+  ...navigation,
+  ...feedback,
+  ...toggles,
+  ...sliders,
+};
 
 /** The recipes that turn off the CSS interactions each style plays reduced or not at all. */
 const recipes = [interactionRecipes('studio', studio), interactionRecipes('desk', desk), interactionRecipes('neutral', neutral)].join('\n');

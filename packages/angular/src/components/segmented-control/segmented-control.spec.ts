@@ -247,7 +247,19 @@ describe('DsSegmentedControl', () => {
   });
 
   it('places the indicator under the selected item and slides it with tab-slide on a change, as React', async () => {
-    const animate = vi.fn(() => ({ finished: Promise.resolve(), cancel: vi.fn() }) as unknown as Animation);
+    // A slide carries its keyframes and timing, so the ink can read them; finished never settles, so twins stay to be read.
+    const animate = vi.fn(
+      (frames: Keyframe[], opts?: KeyframeAnimationOptions) =>
+        ({
+          startTime: 0,
+          finished: new Promise(() => undefined),
+          cancel: vi.fn(),
+          effect: {
+            getKeyframes: () => frames.map((f, i) => ({ ...f, computedOffset: f.offset ?? i / Math.max(1, frames.length - 1) })),
+            getTiming: () => ({ duration: opts?.duration ?? 0, easing: opts?.easing ?? 'linear' }),
+          },
+        }) as unknown as Animation,
+    );
     const proto = HTMLElement.prototype as unknown as { animate?: unknown; getAnimations?: unknown };
     // Own descriptors, so cleanup removes the stubs instead of leaving own properties that hide later stubs on Element.prototype.
     const own = (['animate', 'getAnimations', 'getBoundingClientRect'] as const).map((k) => [k, Object.getOwnPropertyDescriptor(HTMLElement.prototype, k)] as const);
@@ -269,30 +281,47 @@ describe('DsSegmentedControl', () => {
     try {
       const { root, items, settle } = await setup();
       const indicator = root('range').querySelector<HTMLElement>('[data-part="indicator"]');
+      // The spring time the slide reads (the token CSS is not loaded here), so the ink has a duration to follow.
+      document.documentElement.style.setProperty('--ds-duration-spring-snappy', '180ms');
+      // Two colors, as the CSS gives the off and on labels, so the ink has something to cross.
+      const labels = items('range').map((i) => i.querySelector<HTMLElement>(':scope > [data-part="label"]')!);
+      labels.forEach((l, i) => (l.style.color = i === 2 ? 'rgb(2, 2, 2)' : 'rgb(1, 1, 1)'));
       expect(indicator?.hidden).toBe(false);
       expect(indicator?.style.getPropertyValue('--_segmented-control-indicator-inline-size')).toBe('60px');
       expect(animate).not.toHaveBeenCalled();
       items('range')[2]!.click();
       await settle();
       expect(indicator?.style.getPropertyValue('--_segmented-control-indicator-start')).toBe('123px');
-      // The thumb slides (shared pill, x axis), then the label it leaves dips and the one it reaches pops.
-      expect(animate).toHaveBeenCalledTimes(3);
+      // The thumb slides (shared pill, x axis). Round 3: no label dip or pop; an aria-hidden ink twin per label is cut to the thumb.
       const calls = animate.mock.calls as unknown as [Keyframe[], KeyframeAnimationOptions][];
+      const twins = root('range').querySelectorAll<HTMLElement>('[data-part="label-ink"]');
+      expect(twins).toHaveLength(labels.length);
+      for (const t of twins) {
+        expect(t.getAttribute('aria-hidden')).toBe('true');
+        expect(t.style.color).toBe('rgb(2, 2, 2)');
+      }
+      const inks = calls.filter(([, o]) => o.id === 'ds-motion:indicator-ink');
+      expect(inks.filter(([f]) => 'clipPath' in (f[0] ?? {}))).toHaveLength(labels.length);
+      expect(inks.find(([f]) => 'clipPath' in (f[0] ?? {}))?.[1]).toMatchObject({ duration: calls[0]![1].duration, easing: calls[0]![1].easing, fill: 'forwards' });
+      // The reached label holds the rest color under its twin.
+      expect(inks.find(([f]) => 'color' in (f[0] ?? {}))?.[0][0]?.color).toBe('rgb(1, 1, 1)');
+      const total = calls.length;
       const [frames, options] = calls[0]!;
       expect(options.id).toBe('ds-motion:indicator-slide');
       expect(frames[0]?.transform).toBe('translate(-120px, 0px) scale(1, 1)');
       expect(frames[1]?.transform).toBe('translate(-60px, 0px) scale(1.15, 1)');
       expect(frames.flatMap((f) => Object.keys(f)).every((k) => k === 'transform' || k === 'offset')).toBe(true);
-      expect(calls[1]![1]).toMatchObject({ id: 'ds-motion:indicator-answer', composite: 'add' });
-      expect(calls[2]![0]).toEqual([{ transform: 'scale(0.95)' }, { transform: 'none' }]);
+      expect(calls.some(([, o]) => o.id === 'ds-motion:indicator-answer')).toBe(false);
       // Reduced: the thumb jumps and no label moves.
       document.documentElement.setAttribute('data-motion', 'reduce');
       items('range')[0]!.click();
       await settle();
       expect(indicator?.style.getPropertyValue('--_segmented-control-indicator-start')).toBe('3px');
-      expect(animate).toHaveBeenCalledTimes(3);
+      expect(animate).toHaveBeenCalledTimes(total);
+      expect(root('range').querySelectorAll('[data-part="label-ink"]')).toHaveLength(0);
     } finally {
       document.documentElement.removeAttribute('data-motion');
+      document.documentElement.style.removeProperty('--ds-duration-spring-snappy');
       for (const [k, d] of own) {
         if (d) Object.defineProperty(HTMLElement.prototype, k, d);
         else delete (HTMLElement.prototype as unknown as Record<string, unknown>)[k];
