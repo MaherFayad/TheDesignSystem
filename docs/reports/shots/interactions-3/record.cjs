@@ -20,8 +20,11 @@
 //
 //   node docs/reports/shots/interactions-3/record.cjs <base url> <style> <scheme> [family] [id,id]
 //
-// Drives: `drives/<family>.cjs` may export `{ [id]: { region?, drive? } }`.
-// `region` is a CSS selector for what the crop must hold. `drive(api)` plays
+// Drives: `drives/<family>.cjs` may export
+// `{ [id]: { region?, drive?, zoom?, noOverlay? } }`.
+// `region` is a CSS selector for what the crop must hold. `zoom` fixes the
+// CSS zoom (1 for popper overlays, which misplace under zoom; the crop is
+// then scaled up). `noOverlay` leaves opened overlays out of the region. `drive(api)` plays
 // the interaction and calls `api.mark()` at the start of each beat that the
 // sheet should show; without it the default drive approaches, hovers,
 // presses twice and takes the keyboard path. The api:
@@ -233,7 +236,11 @@ async function measure(browser, row, spec) {
 async function recordOne(browser, row, spec) {
   const m = await measure(browser, row, spec);
   const region = m ? m.region : { x: 0, y: 0, width: FRAME.width, height: FRAME.height };
-  const z = Math.max(1, Math.min(4, Math.floor(Math.min(FRAME.width / region.width, FRAME.height / region.height) * 4) / 4));
+  // `zoom` in a drive fixes the CSS zoom. Use 1 for a stage whose overlays a
+  // positioning library places (Radix popper): under root zoom they land away
+  // from their trigger. The crop is then scaled up by ffmpeg instead.
+  const fit = Math.max(1, Math.min(4, Math.floor(Math.min(FRAME.width / region.width, FRAME.height / region.height) * 4) / 4));
+  const z = spec.zoom ? Math.max(1, Math.min(4, spec.zoom)) : fit;
   const viewport = FRAME;
   const dir = path.join(TMP, style, 'raw');
   fs.mkdirSync(dir, { recursive: true });

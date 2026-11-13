@@ -4,7 +4,6 @@
 // Popper overlays (menus, picker lists) land away from their trigger when the
 // recorder draws the page with CSS zoom above 1 (the positioning reads zoomed
 // boxes and applies them again), so their drives crop the whole frame at zoom 1.
-const WHOLE = 'body';
 
 const centre = (b) => ({ x: b.x + b.width / 2, y: b.y + b.height / 2 });
 
@@ -78,10 +77,10 @@ async function pickerDrive(a) {
 }
 
 module.exports = {
-  'highlight-marker': { region: WHOLE, drive: menuMarker },
+  'highlight-marker': { zoom: 1, drive: menuMarker },
 
   'menu-origin': {
-    region: WHOLE,
+    zoom: 1,
     drive: async (a) => {
       const { page, at } = a;
       await a.hover(at, 10);
@@ -105,7 +104,7 @@ module.exports = {
   },
 
   'menu-submenu-nudge': {
-    region: WHOLE,
+    zoom: 1,
     drive: async (a) => {
       const { page, at } = a;
       await a.press(at, 90);
@@ -128,7 +127,7 @@ module.exports = {
   },
 
   'menu-row-slide': {
-    region: WHOLE,
+    zoom: 1,
     drive: async (a) => {
       const { page, at } = a;
       await a.press(at, 90);
@@ -171,8 +170,8 @@ module.exports = {
     },
   },
 
-  'picker-chevron-turn': { region: WHOLE, drive: pickerDrive },
-  'menu-rows': { region: WHOLE, drive: pickerDrive },
+  'picker-chevron-turn': { zoom: 1, drive: pickerDrive },
+  'menu-rows': { zoom: 1, drive: pickerDrive },
 
   'check-draw-pick': {
     drive: async (a) => {
@@ -199,7 +198,7 @@ module.exports = {
   },
 
   'combobox-results': {
-    region: WHOLE,
+    zoom: 1,
     drive: async (a) => {
       const { page, at } = a;
       await a.press(at, 90);
