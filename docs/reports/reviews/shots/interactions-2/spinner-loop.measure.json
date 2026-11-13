@@ -1,0 +1,1102 @@
+{
+ "id": "spinner-loop",
+ "family": "feedback",
+ "drive": "css",
+ "pattern": "spinner",
+ "reducedSays": "No motion: a still ring with its arc; the label still says what is busy.",
+ "styles": {
+  "studio": {
+   "focus": {
+    "at0": {
+     "el": "button[button]",
+     "outline": "solid 2px rgba(0, 0, 0, 0)",
+     "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgb(244, 244, 245) 0px 0px 0px 2px",
+     "focusVisible": true,
+     "opacity": 1,
+     "anims": []
+    },
+    "at300": {
+     "el": "button[button]",
+     "outline": "solid 2px rgba(0, 0, 0, 0)",
+     "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgb(244, 244, 245) 0px 0px 0px 2px",
+     "focusVisible": true,
+     "opacity": 1,
+     "anims": []
+    },
+    "ringAtOnce": true
+   },
+   "transitionSweep": [],
+   "seek": {
+    "animations": 2,
+    "startOffsets": [
+     0,
+     0
+    ],
+    "hit": {
+     "checked": 1,
+     "missed": [],
+     "maxShift": 0
+    },
+    "parts": [
+     {
+      "part": "span[spinner]",
+      "scale": [
+       1,
+       1
+      ],
+      "travelPx": 0,
+      "opacityMin": 0,
+      "scaleOvershoot": 0,
+      "travelOvershootPx": 0,
+      "movesUntil": 80
+     }
+    ],
+    "readable": [
+     {
+      "text": "span[label]:Loading files",
+      "readableAt": 80,
+      "appearedAt": 0
+     }
+    ]
+   },
+   "transitionSweepAfter": [],
+   "full": {
+    "anims": [
+     {
+      "kind": "keyframes",
+      "name": "ds-spinner-turn",
+      "target": "span[spinner]",
+      "props": [
+       "transform"
+      ],
+      "duration": 800,
+      "delay": 0,
+      "iterations": null,
+      "easing": "linear",
+      "fill": "none",
+      "kf": [
+       {
+        "offset": 0,
+        "transform": "none"
+       },
+       {
+        "offset": 1,
+        "transform": "rotate(360deg)"
+       }
+      ],
+      "first": 0,
+      "last": 27,
+      "playState": "running"
+     },
+     {
+      "kind": "keyframes",
+      "name": "ds-spinner-in",
+      "target": "span[spinner]",
+      "props": [
+       "opacity"
+      ],
+      "duration": 100,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "linear",
+      "kfEasing": [
+       "ease.out"
+      ],
+      "fill": "none",
+      "kf": [
+       {
+        "offset": 0,
+        "opacity": "0"
+       },
+       {
+        "offset": 1,
+        "opacity": "1"
+       }
+      ],
+      "first": 44,
+      "last": 130,
+      "playState": "running"
+     },
+     {
+      "kind": "keyframes",
+      "name": "ds-spinner-turn",
+      "target": "span[spinner]",
+      "props": [
+       "transform"
+      ],
+      "duration": 800,
+      "delay": 0,
+      "iterations": null,
+      "easing": "linear",
+      "fill": "none",
+      "kf": [
+       {
+        "offset": 0,
+        "transform": "none"
+       },
+       {
+        "offset": 1,
+        "transform": "rotate(360deg)"
+       }
+      ],
+      "first": 44,
+      "last": 5610,
+      "playState": "running"
+     }
+    ],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 800,
+    "infinite": [
+     "span[spinner] ds-spinner-turn",
+     "span[spinner] ds-spinner-turn"
+    ],
+    "stateAt": null,
+    "firstMotionAt": 0,
+    "focusAfter": "button[button]",
+    "frames": 338,
+    "animCount": 3
+   },
+   "rapid": {
+    "left": [],
+    "held": [],
+    "inline": [],
+    "ghosts": 0,
+    "nodes": 5,
+    "indicators": "0 ok",
+    "custom": null,
+    "nodesBefore": 5
+   },
+   "interrupt": null,
+   "tenFast": null,
+   "flash": {
+    "stepMs": 50,
+    "maxChangedPixels": 276,
+    "stageArea": 118148,
+    "changePeaksPerSecond": 5,
+    "curve": "0:0.0573:0 100:0.0589:276 200:0.059:161 300:0.0589:155 400:0.059:161 500:0.0589:158 600:0.059:161 700:0.0589:157 800:0.059:161 900:0.0589:156 1000:0.059:161 1100:0.0589:155 1200:0.059:161 1300:0.0589:158 1400:0.059:161 1500:0.0589:157 1600:0.059:161 1700:0.0589:156 1800:0.059:161 1900:0.0589:155 2000:0.059:161 2100:0.0589:158 2200:0.059:161 2300:0.0589:157 2400:0.059:161 2500:0.0589:156 2600:0.059:161 2700:0.0589:155 2800:0.059:161 2900:0.0589:158 3000:0.059:161 3100:0.0589:157 3200:0.059:161 3300:0.0589:156 3400:0.059:161 3500:0.0589:155 3600:0.059:161 3700:0.0589:158 3800:0.059:161 3900:0.0589:157 4000:0.059:161 4100:0.0589:156 4200:0.059:161 4300:0.0589:155 4400:0.059:161 4500:0.0589:158 4600:0.059:161"
+   },
+   "pause": {
+    "loopsBefore": [
+     "span[spinner] ds-spinner-turn xInfinity"
+    ],
+    "paused": 1,
+    "runningAfterPause": [],
+    "timesAdvancedWhilePaused": 1,
+    "resumedRunning": 1
+   },
+   "off": {
+    "injected": "@layer ds.recipes {[data-style='studio'] [data-ds='spinner'] {--_spinner-duration-in: 0s;}}",
+    "animations": 1,
+    "moving": [],
+    "fading": []
+   },
+   "full.rtl": {
+    "anims": [
+     {
+      "kind": "keyframes",
+      "name": "ds-spinner-turn",
+      "target": "span[spinner]",
+      "props": [
+       "transform"
+      ],
+      "duration": 800,
+      "delay": 0,
+      "iterations": null,
+      "easing": "linear",
+      "fill": "none",
+      "kf": [
+       {
+        "offset": 0,
+        "transform": "none"
+       },
+       {
+        "offset": 1,
+        "transform": "rotate(360deg)"
+       }
+      ],
+      "first": 0,
+      "last": 31,
+      "playState": "running"
+     },
+     {
+      "kind": "keyframes",
+      "name": "ds-spinner-in",
+      "target": "span[spinner]",
+      "props": [
+       "opacity"
+      ],
+      "duration": 100,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "linear",
+      "kfEasing": [
+       "ease.out"
+      ],
+      "fill": "none",
+      "kf": [
+       {
+        "offset": 0,
+        "opacity": "0"
+       },
+       {
+        "offset": 1,
+        "opacity": "1"
+       }
+      ],
+      "first": 52,
+      "last": 131,
+      "playState": "running"
+     },
+     {
+      "kind": "keyframes",
+      "name": "ds-spinner-turn",
+      "target": "span[spinner]",
+      "props": [
+       "transform"
+      ],
+      "duration": 800,
+      "delay": 0,
+      "iterations": null,
+      "easing": "linear",
+      "fill": "none",
+      "kf": [
+       {
+        "offset": 0,
+        "transform": "none"
+       },
+       {
+        "offset": 1,
+        "transform": "rotate(360deg)"
+       }
+      ],
+      "first": 52,
+      "last": 3014,
+      "playState": "running"
+     }
+    ],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 800,
+    "infinite": [
+     "span[spinner] ds-spinner-turn",
+     "span[spinner] ds-spinner-turn"
+    ],
+    "stateAt": null,
+    "firstMotionAt": 0,
+    "focusAfter": "button[button]",
+    "frames": 181,
+    "animCount": 3,
+    "rapid": {
+     "left": [],
+     "held": [],
+     "inline": [],
+     "ghosts": 0,
+     "nodes": 5,
+     "indicators": "0 ok",
+     "custom": null,
+     "nodesBefore": 5
+    }
+   },
+   "media.ltr": {
+    "anims": [],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 0,
+    "infinite": [],
+    "stateAt": null,
+    "firstMotionAt": null,
+    "focusAfter": "button[button]",
+    "frames": 176,
+    "animCount": 0,
+    "restOffTransforms": []
+   },
+   "media.rtl": {
+    "anims": [],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 0,
+    "infinite": [],
+    "stateAt": null,
+    "firstMotionAt": null,
+    "focusAfter": "button[button]",
+    "frames": 181,
+    "animCount": 0,
+    "restOffTransforms": []
+   },
+   "attr.ltr": {
+    "anims": [],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 0,
+    "infinite": [],
+    "stateAt": null,
+    "firstMotionAt": null,
+    "focusAfter": "button[button]",
+    "frames": 179,
+    "animCount": 0,
+    "restOffTransforms": []
+   },
+   "attr.rtl": {
+    "anims": [],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 0,
+    "infinite": [],
+    "stateAt": null,
+    "firstMotionAt": null,
+    "focusAfter": "button[button]",
+    "frames": 180,
+    "animCount": 0,
+    "restOffTransforms": []
+   }
+  },
+  "desk": {
+   "focus": {
+    "at0": {
+     "el": "button[button]",
+     "outline": "solid 2px rgba(0, 0, 0, 0)",
+     "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgb(244, 244, 245) 0px 0px 0px 2px",
+     "focusVisible": true,
+     "opacity": 1,
+     "anims": [
+      "transform 300"
+     ]
+    },
+    "at300": {
+     "el": "button[button]",
+     "outline": "solid 2px rgba(0, 0, 0, 0)",
+     "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgb(244, 244, 245) 0px 0px 0px 2px",
+     "focusVisible": true,
+     "opacity": 1,
+     "anims": []
+    },
+    "ringAtOnce": true
+   },
+   "transitionSweep": [],
+   "seek": {
+    "animations": 2,
+    "startOffsets": [
+     0,
+     0
+    ],
+    "hit": {
+     "checked": 1,
+     "missed": [],
+     "maxShift": 0
+    },
+    "parts": [
+     {
+      "part": "span[spinner]",
+      "scale": [
+       1,
+       1
+      ],
+      "travelPx": 0,
+      "opacityMin": 0,
+      "scaleOvershoot": 0,
+      "travelOvershootPx": 0,
+      "movesUntil": 300
+     }
+    ],
+    "readable": [
+     {
+      "text": "span[label]:Loading files",
+      "readableAt": 260,
+      "appearedAt": 0
+     }
+    ]
+   },
+   "transitionSweepAfter": [],
+   "full": {
+    "anims": [
+     {
+      "kind": "keyframes",
+      "name": "ds-spinner-turn",
+      "target": "span[spinner]",
+      "props": [
+       "transform"
+      ],
+      "duration": 800,
+      "delay": 0,
+      "iterations": null,
+      "easing": "linear",
+      "fill": "none",
+      "kf": [
+       {
+        "offset": 0,
+        "transform": "none"
+       },
+       {
+        "offset": 1,
+        "transform": "rotate(360deg)"
+       }
+      ],
+      "first": 0,
+      "last": 25,
+      "playState": "running"
+     },
+     {
+      "kind": "keyframes",
+      "name": "ds-spinner-in",
+      "target": "span[spinner]",
+      "props": [
+       "opacity"
+      ],
+      "duration": 340,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "linear",
+      "kfEasing": [
+       "ease.out"
+      ],
+      "fill": "none",
+      "kf": [
+       {
+        "offset": 0,
+        "opacity": "0"
+       },
+       {
+        "offset": 1,
+        "opacity": "1"
+       }
+      ],
+      "first": 42,
+      "last": 376,
+      "playState": "running"
+     },
+     {
+      "kind": "keyframes",
+      "name": "ds-spinner-turn",
+      "target": "span[spinner]",
+      "props": [
+       "transform"
+      ],
+      "duration": 800,
+      "delay": 0,
+      "iterations": null,
+      "easing": "linear",
+      "fill": "none",
+      "kf": [
+       {
+        "offset": 0,
+        "transform": "none"
+       },
+       {
+        "offset": 1,
+        "transform": "rotate(360deg)"
+       }
+      ],
+      "first": 42,
+      "last": 5609,
+      "playState": "running"
+     }
+    ],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 800,
+    "infinite": [
+     "span[spinner] ds-spinner-turn",
+     "span[spinner] ds-spinner-turn"
+    ],
+    "stateAt": null,
+    "firstMotionAt": 0,
+    "focusAfter": "button[button]",
+    "frames": 331,
+    "animCount": 3
+   },
+   "rapid": {
+    "left": [],
+    "held": [],
+    "inline": [],
+    "ghosts": 0,
+    "nodes": 5,
+    "indicators": "0 ok",
+    "custom": null,
+    "nodesBefore": 5
+   },
+   "interrupt": null,
+   "tenFast": null,
+   "flash": {
+    "stepMs": 50,
+    "maxChangedPixels": 251,
+    "stageArea": 115890,
+    "changePeaksPerSecond": 5,
+    "curve": "0:0.0568:0 100:0.057:34 200:0.0576:251 300:0.058:237 400:0.0582:150 500:0.0581:139 600:0.0582:150 700:0.0581:140 800:0.0582:150 900:0.0581:139 1000:0.0582:151 1100:0.0581:139 1200:0.0582:150 1300:0.0581:139 1400:0.0582:150 1500:0.0581:140 1600:0.0582:150 1700:0.0581:139 1800:0.0582:151 1900:0.0581:139 2000:0.0582:150 2100:0.0581:139 2200:0.0582:150 2300:0.0581:140 2400:0.0582:150 2500:0.0581:139 2600:0.0582:151 2700:0.0581:139 2800:0.0582:150 2900:0.0581:139 3000:0.0582:150 3100:0.0581:140 3200:0.0582:150 3300:0.0581:139 3400:0.0582:151 3500:0.0581:139 3600:0.0582:150 3700:0.0581:139 3800:0.0582:150 3900:0.0581:140 4000:0.0582:150 4100:0.0581:139 4200:0.0582:151 4300:0.0581:139 4400:0.0582:150 4500:0.0581:139 4600:0.0582:150"
+   },
+   "pause": {
+    "loopsBefore": [
+     "span[spinner] ds-spinner-turn xInfinity"
+    ],
+    "paused": 1,
+    "runningAfterPause": [],
+    "timesAdvancedWhilePaused": 2,
+    "resumedRunning": 1
+   },
+   "off": {
+    "injected": "@layer ds.recipes {[data-style='desk'] [data-ds='spinner'] {--_spinner-duration-in: 0s;}}",
+    "animations": 1,
+    "moving": [],
+    "fading": []
+   },
+   "full.rtl": {
+    "anims": [
+     {
+      "kind": "keyframes",
+      "name": "ds-spinner-turn",
+      "target": "span[spinner]",
+      "props": [
+       "transform"
+      ],
+      "duration": 800,
+      "delay": 0,
+      "iterations": null,
+      "easing": "linear",
+      "fill": "none",
+      "kf": [
+       {
+        "offset": 0,
+        "transform": "none"
+       },
+       {
+        "offset": 1,
+        "transform": "rotate(360deg)"
+       }
+      ],
+      "first": 0,
+      "last": 37,
+      "playState": "running"
+     },
+     {
+      "kind": "transition",
+      "name": "transform",
+      "target": "span[label]",
+      "props": [
+       "transform"
+      ],
+      "duration": 300,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.reveal",
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "transform": "scale(1)"
+       },
+       {
+        "offset": 1,
+        "transform": "translateY(-70px)"
+       }
+      ],
+      "first": 71,
+      "last": 371,
+      "playState": "running"
+     },
+     {
+      "kind": "keyframes",
+      "name": "ds-spinner-in",
+      "target": "span[spinner]",
+      "props": [
+       "opacity"
+      ],
+      "duration": 340,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "linear",
+      "kfEasing": [
+       "ease.out"
+      ],
+      "fill": "none",
+      "kf": [
+       {
+        "offset": 0,
+        "opacity": "0"
+       },
+       {
+        "offset": 1,
+        "opacity": "1"
+       }
+      ],
+      "first": 71,
+      "last": 421,
+      "playState": "running"
+     },
+     {
+      "kind": "keyframes",
+      "name": "ds-spinner-turn",
+      "target": "span[spinner]",
+      "props": [
+       "transform"
+      ],
+      "duration": 800,
+      "delay": 0,
+      "iterations": null,
+      "easing": "linear",
+      "fill": "none",
+      "kf": [
+       {
+        "offset": 0,
+        "transform": "none"
+       },
+       {
+        "offset": 1,
+        "transform": "rotate(360deg)"
+       }
+      ],
+      "first": 71,
+      "last": 3004,
+      "playState": "running"
+     }
+    ],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 800,
+    "infinite": [
+     "span[spinner] ds-spinner-turn",
+     "span[spinner] ds-spinner-turn"
+    ],
+    "stateAt": null,
+    "firstMotionAt": 0,
+    "focusAfter": "button[button]",
+    "frames": 181,
+    "animCount": 4,
+    "rapid": {
+     "left": [],
+     "held": [],
+     "inline": [],
+     "ghosts": 0,
+     "nodes": 5,
+     "indicators": "0 ok",
+     "custom": null,
+     "nodesBefore": 5
+    }
+   },
+   "media.ltr": {
+    "anims": [],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 0,
+    "infinite": [],
+    "stateAt": null,
+    "firstMotionAt": null,
+    "focusAfter": "button[button]",
+    "frames": 183,
+    "animCount": 0,
+    "restOffTransforms": []
+   },
+   "media.rtl": {
+    "anims": [],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 0,
+    "infinite": [],
+    "stateAt": null,
+    "firstMotionAt": null,
+    "focusAfter": "button[button]",
+    "frames": 183,
+    "animCount": 0,
+    "restOffTransforms": []
+   },
+   "attr.ltr": {
+    "anims": [],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 0,
+    "infinite": [],
+    "stateAt": null,
+    "firstMotionAt": null,
+    "focusAfter": "button[button]",
+    "frames": 183,
+    "animCount": 0,
+    "restOffTransforms": []
+   },
+   "attr.rtl": {
+    "anims": [],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 0,
+    "infinite": [],
+    "stateAt": null,
+    "firstMotionAt": null,
+    "focusAfter": "button[button]",
+    "frames": 180,
+    "animCount": 0,
+    "restOffTransforms": []
+   }
+  },
+  "neutral": {
+   "focus": {
+    "at0": {
+     "el": "button[button]",
+     "outline": "solid 2px rgba(0, 0, 0, 0)",
+     "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgb(255, 255, 255) 0px 0px 0px 2px, rgb(37, 99, 235) 0px 0px 0px 4px",
+     "focusVisible": true,
+     "opacity": 1,
+     "anims": []
+    },
+    "at300": {
+     "el": "button[button]",
+     "outline": "solid 2px rgba(0, 0, 0, 0)",
+     "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgb(255, 255, 255) 0px 0px 0px 2px, rgb(37, 99, 235) 0px 0px 0px 4px",
+     "focusVisible": true,
+     "opacity": 1,
+     "anims": []
+    },
+    "ringAtOnce": true
+   },
+   "transitionSweep": [],
+   "seek": {
+    "animations": 2,
+    "startOffsets": [
+     0,
+     0
+    ],
+    "hit": {
+     "checked": 1,
+     "missed": [],
+     "maxShift": 0
+    },
+    "parts": [
+     {
+      "part": "span[spinner]",
+      "scale": [
+       1,
+       1
+      ],
+      "travelPx": 0,
+      "opacityMin": 0,
+      "scaleOvershoot": 0,
+      "travelOvershootPx": 0,
+      "movesUntil": 180
+     }
+    ],
+    "readable": [
+     {
+      "text": "span[label]:Loading files",
+      "readableAt": 180,
+      "appearedAt": 0
+     }
+    ]
+   },
+   "transitionSweepAfter": [],
+   "full": {
+    "anims": [
+     {
+      "kind": "keyframes",
+      "name": "ds-spinner-turn",
+      "target": "span[spinner]",
+      "props": [
+       "transform"
+      ],
+      "duration": 800,
+      "delay": 0,
+      "iterations": null,
+      "easing": "linear",
+      "fill": "none",
+      "kf": [
+       {
+        "offset": 0,
+        "transform": "none"
+       },
+       {
+        "offset": 1,
+        "transform": "rotate(360deg)"
+       }
+      ],
+      "first": 0,
+      "last": 54,
+      "playState": "running"
+     },
+     {
+      "kind": "transition",
+      "name": "transform",
+      "target": "button[button]",
+      "props": [
+       "transform"
+      ],
+      "duration": 70,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.out",
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "transform": "scale(1)"
+       },
+       {
+        "offset": 1,
+        "transform": "scale(0.97)"
+       }
+      ],
+      "first": 54,
+      "last": 54,
+      "playState": "running"
+     },
+     {
+      "kind": "keyframes",
+      "name": "ds-spinner-in",
+      "target": "span[spinner]",
+      "props": [
+       "opacity"
+      ],
+      "duration": 220,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "linear",
+      "kfEasing": [
+       "ease.out"
+      ],
+      "fill": "none",
+      "kf": [
+       {
+        "offset": 0,
+        "opacity": "0"
+       },
+       {
+        "offset": 1,
+        "opacity": "1"
+       }
+      ],
+      "first": 83,
+      "last": 302,
+      "playState": "running"
+     },
+     {
+      "kind": "keyframes",
+      "name": "ds-spinner-turn",
+      "target": "span[spinner]",
+      "props": [
+       "transform"
+      ],
+      "duration": 800,
+      "delay": 0,
+      "iterations": null,
+      "easing": "linear",
+      "fill": "none",
+      "kf": [
+       {
+        "offset": 0,
+        "transform": "none"
+       },
+       {
+        "offset": 1,
+        "transform": "rotate(360deg)"
+       }
+      ],
+      "first": 83,
+      "last": 5601,
+      "playState": "running"
+     }
+    ],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 800,
+    "infinite": [
+     "span[spinner] ds-spinner-turn",
+     "span[spinner] ds-spinner-turn"
+    ],
+    "stateAt": null,
+    "firstMotionAt": 0,
+    "focusAfter": "button[button]",
+    "frames": 329,
+    "animCount": 4
+   },
+   "rapid": {
+    "left": [],
+    "held": [],
+    "inline": [],
+    "ghosts": 0,
+    "nodes": 5,
+    "indicators": "0 ok",
+    "custom": null,
+    "nodesBefore": 5
+   },
+   "interrupt": null,
+   "tenFast": null,
+   "flash": {
+    "stepMs": 50,
+    "maxChangedPixels": 767,
+    "stageArea": 133219,
+    "changePeaksPerSecond": 4.78,
+    "curve": "0:0.79:0 100:0.7878:334 200:0.787:194 300:0.7869:163 400:0.787:172 500:0.7869:164 600:0.787:172 700:0.7869:165 800:0.787:173 900:0.7869:163 1000:0.787:171 1100:0.7869:163 1200:0.787:172 1300:0.7869:164 1400:0.787:172 1500:0.7869:165 1600:0.787:173 1700:0.7869:163 1800:0.787:171 1900:0.7869:163 2000:0.787:172 2100:0.7869:164 2200:0.787:172 2300:0.7869:165 2400:0.787:173 2500:0.7869:163 2600:0.787:171 2700:0.7869:163 2800:0.787:172 2900:0.7869:164 3000:0.787:172 3100:0.7869:165 3200:0.787:173 3300:0.7869:163 3400:0.787:171 3500:0.7869:163 3600:0.787:172 3700:0.7869:164 3800:0.787:172 3900:0.7869:165 4000:0.787:173 4100:0.7869:163 4200:0.787:171 4300:0.7869:163 4400:0.787:172 4500:0.7869:164 4600:0.787:172"
+   },
+   "pause": {
+    "loopsBefore": [
+     "span[spinner] ds-spinner-turn xInfinity"
+    ],
+    "paused": 1,
+    "runningAfterPause": [],
+    "timesAdvancedWhilePaused": 1,
+    "resumedRunning": 1
+   },
+   "off": {
+    "injected": "@layer ds.recipes {[data-style='neutral'] [data-ds='spinner'] {--_spinner-duration-in: 0s;}}",
+    "animations": 1,
+    "moving": [],
+    "fading": []
+   },
+   "full.rtl": {
+    "anims": [
+     {
+      "kind": "keyframes",
+      "name": "ds-spinner-turn",
+      "target": "span[spinner]",
+      "props": [
+       "transform"
+      ],
+      "duration": 800,
+      "delay": 0,
+      "iterations": null,
+      "easing": "linear",
+      "fill": "none",
+      "kf": [
+       {
+        "offset": 0,
+        "transform": "none"
+       },
+       {
+        "offset": 1,
+        "transform": "rotate(360deg)"
+       }
+      ],
+      "first": 0,
+      "last": 39,
+      "playState": "running"
+     },
+     {
+      "kind": "keyframes",
+      "name": "ds-spinner-in",
+      "target": "span[spinner]",
+      "props": [
+       "opacity"
+      ],
+      "duration": 220,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "linear",
+      "kfEasing": [
+       "ease.out"
+      ],
+      "fill": "none",
+      "kf": [
+       {
+        "offset": 0,
+        "opacity": "0"
+       },
+       {
+        "offset": 1,
+        "opacity": "1"
+       }
+      ],
+      "first": 57,
+      "last": 272,
+      "playState": "running"
+     },
+     {
+      "kind": "keyframes",
+      "name": "ds-spinner-turn",
+      "target": "span[spinner]",
+      "props": [
+       "transform"
+      ],
+      "duration": 800,
+      "delay": 0,
+      "iterations": null,
+      "easing": "linear",
+      "fill": "none",
+      "kf": [
+       {
+        "offset": 0,
+        "transform": "none"
+       },
+       {
+        "offset": 1,
+        "transform": "rotate(360deg)"
+       }
+      ],
+      "first": 57,
+      "last": 3005,
+      "playState": "running"
+     }
+    ],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 800,
+    "infinite": [
+     "span[spinner] ds-spinner-turn",
+     "span[spinner] ds-spinner-turn"
+    ],
+    "stateAt": null,
+    "firstMotionAt": 0,
+    "focusAfter": "button[button]",
+    "frames": 178,
+    "animCount": 3,
+    "rapid": {
+     "left": [],
+     "held": [],
+     "inline": [],
+     "ghosts": 0,
+     "nodes": 5,
+     "indicators": "0 ok",
+     "custom": null,
+     "nodesBefore": 5
+    }
+   },
+   "media.ltr": {
+    "anims": [],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 0,
+    "infinite": [],
+    "stateAt": null,
+    "firstMotionAt": null,
+    "focusAfter": "button[button]",
+    "frames": 183,
+    "animCount": 0,
+    "restOffTransforms": []
+   },
+   "media.rtl": {
+    "anims": [],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 0,
+    "infinite": [],
+    "stateAt": null,
+    "firstMotionAt": null,
+    "focusAfter": "button[button]",
+    "frames": 182,
+    "animCount": 0,
+    "restOffTransforms": []
+   },
+   "attr.ltr": {
+    "anims": [],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 0,
+    "infinite": [],
+    "stateAt": null,
+    "firstMotionAt": null,
+    "focusAfter": "button[button]",
+    "frames": 179,
+    "animCount": 0,
+    "restOffTransforms": []
+   },
+   "attr.rtl": {
+    "anims": [],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 0,
+    "infinite": [],
+    "stateAt": null,
+    "firstMotionAt": null,
+    "focusAfter": "button[button]",
+    "frames": 181,
+    "animCount": 0,
+    "restOffTransforms": []
+   }
+  }
+ },
+ "sheet": "spinner-loop.sheet.png"
+}

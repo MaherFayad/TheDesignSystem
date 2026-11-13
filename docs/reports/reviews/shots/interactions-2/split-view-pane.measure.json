@@ -1,0 +1,883 @@
+{
+ "id": "split-view-pane",
+ "family": "feedback",
+ "drive": "css",
+ "pattern": "sheet",
+ "reducedSays": "No motion: the pane is there at once.",
+ "styles": {
+  "studio": {
+   "focus": {
+    "at0": {
+     "el": "button[button]",
+     "outline": "solid 2px rgba(0, 0, 0, 0)",
+     "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgb(244, 244, 245) 0px 0px 0px 2px",
+     "focusVisible": true,
+     "opacity": 1,
+     "anims": []
+    },
+    "at300": {
+     "el": "button[button]",
+     "outline": "solid 2px rgba(0, 0, 0, 0)",
+     "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgb(244, 244, 245) 0px 0px 0px 2px",
+     "focusVisible": true,
+     "opacity": 1,
+     "anims": []
+    },
+    "ringAtOnce": true
+   },
+   "transitionSweep": [],
+   "seek": {
+    "animations": 1,
+    "startOffsets": [
+     0
+    ],
+    "hit": {
+     "checked": 2,
+     "missed": [],
+     "maxShift": 10
+    },
+    "parts": [
+     {
+      "part": "div[secondary]",
+      "scale": [
+       1,
+       1
+      ],
+      "travelPx": 4,
+      "opacityMin": 1,
+      "scaleOvershoot": 0,
+      "travelOvershootPx": 0,
+      "movesUntil": 40
+     }
+    ],
+    "readable": []
+   },
+   "transitionSweepAfter": [],
+   "full": {
+    "anims": [
+     {
+      "kind": "keyframes",
+      "name": "ds-split-view-from-start",
+      "target": "div[primary]",
+      "props": [
+       "transform"
+      ],
+      "duration": 100,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "linear",
+      "kfEasing": [
+       "ease.spring-soft"
+      ],
+      "fill": "none",
+      "kf": [
+       {
+        "offset": 0,
+        "transform": "translateX(-4px)"
+       },
+       {
+        "offset": 1,
+        "transform": "none"
+       }
+      ],
+      "first": 50,
+      "last": 149,
+      "playState": "running"
+     }
+    ],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 100,
+    "infinite": [],
+    "stateAt": 50,
+    "firstMotionAt": 50,
+    "focusAfter": "button[button]",
+    "frames": 93,
+    "animCount": 1
+   },
+   "rapid": {
+    "left": [],
+    "held": [],
+    "inline": [],
+    "ghosts": 0,
+    "nodes": 14,
+    "indicators": "0 ok",
+    "custom": null,
+    "nodesBefore": 14
+   },
+   "interrupt": {
+    "left": [],
+    "held": [],
+    "inline": [],
+    "ghosts": 0,
+    "nodes": 14,
+    "indicators": "0 ok",
+    "custom": null
+   },
+   "tenFast": null,
+   "off": {
+    "injected": "@layer ds.recipes {[data-style='studio'] [data-ds='split-view'] {--_split-view-shift: 0px;}}",
+    "animations": 1,
+    "moving": [],
+    "fading": []
+   },
+   "full.rtl": {
+    "anims": [
+     {
+      "kind": "keyframes",
+      "name": "ds-split-view-from-end",
+      "target": "div[secondary]",
+      "props": [
+       "transform"
+      ],
+      "duration": 100,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "linear",
+      "kfEasing": [
+       "ease.spring-soft"
+      ],
+      "fill": "none",
+      "kf": [
+       {
+        "offset": 0,
+        "transform": "translateX(-4px)"
+       },
+       {
+        "offset": 1,
+        "transform": "none"
+       }
+      ],
+      "first": 39,
+      "last": 139,
+      "playState": "running"
+     }
+    ],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 100,
+    "infinite": [],
+    "stateAt": 39,
+    "firstMotionAt": 39,
+    "focusAfter": "div[secondary]",
+    "frames": 75,
+    "animCount": 1,
+    "rapid": {
+     "left": [],
+     "held": [],
+     "inline": [],
+     "ghosts": 0,
+     "nodes": 14,
+     "indicators": "0 ok",
+     "custom": null,
+     "nodesBefore": 14
+    }
+   },
+   "media.ltr": {
+    "anims": [
+     {
+      "kind": "keyframes",
+      "name": "ds-split-view-from-end",
+      "target": "div[secondary]",
+      "props": [
+       "transform"
+      ],
+      "duration": 100,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "linear",
+      "kfEasing": [
+       "ease.spring-soft"
+      ],
+      "fill": "none",
+      "kf": [
+       {
+        "offset": 0,
+        "transform": "translateX(4px)"
+       },
+       {
+        "offset": 1,
+        "transform": "none"
+       }
+      ],
+      "first": 50,
+      "last": 136,
+      "playState": "running"
+     }
+    ],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 100,
+    "infinite": [],
+    "stateAt": 50,
+    "firstMotionAt": 50,
+    "focusAfter": "div[secondary]",
+    "frames": 74,
+    "animCount": 1,
+    "restOffTransforms": []
+   },
+   "media.rtl": {
+    "anims": [
+     {
+      "kind": "keyframes",
+      "name": "ds-split-view-from-end",
+      "target": "div[secondary]",
+      "props": [
+       "transform"
+      ],
+      "duration": 100,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "linear",
+      "kfEasing": [
+       "ease.spring-soft"
+      ],
+      "fill": "none",
+      "kf": [
+       {
+        "offset": 0,
+        "transform": "translateX(-4px)"
+       },
+       {
+        "offset": 1,
+        "transform": "none"
+       }
+      ],
+      "first": 49,
+      "last": 130,
+      "playState": "running"
+     }
+    ],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 100,
+    "infinite": [],
+    "stateAt": 49,
+    "firstMotionAt": 49,
+    "focusAfter": "div[secondary]",
+    "frames": 75,
+    "animCount": 1,
+    "restOffTransforms": []
+   },
+   "attr.ltr": {
+    "anims": [],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 0,
+    "infinite": [],
+    "stateAt": 39,
+    "firstMotionAt": null,
+    "focusAfter": "div[secondary]",
+    "frames": 75,
+    "animCount": 0,
+    "restOffTransforms": []
+   },
+   "attr.rtl": {
+    "anims": [],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 0,
+    "infinite": [],
+    "stateAt": 56,
+    "firstMotionAt": null,
+    "focusAfter": "div[secondary]",
+    "frames": 75,
+    "animCount": 0,
+    "restOffTransforms": []
+   }
+  },
+  "desk": {
+   "focus": {
+    "at0": {
+     "el": "button[button]",
+     "outline": "solid 2px rgba(0, 0, 0, 0)",
+     "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgb(244, 244, 245) 0px 0px 0px 2px",
+     "focusVisible": true,
+     "opacity": 1,
+     "anims": [
+      "transform 300"
+     ]
+    },
+    "at300": {
+     "el": "button[button]",
+     "outline": "solid 2px rgba(0, 0, 0, 0)",
+     "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgb(244, 244, 245) 0px 0px 0px 2px",
+     "focusVisible": true,
+     "opacity": 1,
+     "anims": [
+      "transform 300"
+     ]
+    },
+    "ringAtOnce": true
+   },
+   "transitionSweep": [],
+   "seek": {
+    "animations": 1,
+    "startOffsets": [
+     0
+    ],
+    "hit": {
+     "checked": 2,
+     "missed": [],
+     "maxShift": 30
+    },
+    "parts": [
+     {
+      "part": "div[secondary]",
+      "scale": [
+       1,
+       1
+      ],
+      "travelPx": 12,
+      "opacityMin": 1,
+      "scaleOvershoot": 0,
+      "travelOvershootPx": 0.2,
+      "movesUntil": 160
+     }
+    ],
+    "readable": []
+   },
+   "transitionSweepAfter": [],
+   "full": {
+    "anims": [
+     {
+      "kind": "keyframes",
+      "name": "ds-split-view-from-start",
+      "target": "div[primary]",
+      "props": [
+       "transform"
+      ],
+      "duration": 340,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "linear",
+      "kfEasing": [
+       "ease.spring-soft"
+      ],
+      "fill": "none",
+      "kf": [
+       {
+        "offset": 0,
+        "transform": "translateX(-12px)"
+       },
+       {
+        "offset": 1,
+        "transform": "none"
+       }
+      ],
+      "first": 52,
+      "last": 385,
+      "playState": "running"
+     }
+    ],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 340,
+    "infinite": [],
+    "stateAt": 52,
+    "firstMotionAt": 52,
+    "focusAfter": "button[button]",
+    "frames": 92,
+    "animCount": 1
+   },
+   "rapid": {
+    "left": [],
+    "held": [],
+    "inline": [],
+    "ghosts": 0,
+    "nodes": 14,
+    "indicators": "0 ok",
+    "custom": null,
+    "nodesBefore": 14
+   },
+   "interrupt": {
+    "left": [],
+    "held": [],
+    "inline": [],
+    "ghosts": 0,
+    "nodes": 14,
+    "indicators": "0 ok",
+    "custom": null
+   },
+   "tenFast": null,
+   "off": {
+    "injected": "@layer ds.recipes {[data-style='desk'] [data-ds='split-view'] {--_split-view-shift: 0px;}}",
+    "animations": 1,
+    "moving": [],
+    "fading": []
+   },
+   "full.rtl": {
+    "anims": [
+     {
+      "kind": "transition",
+      "name": "transform",
+      "target": "span[label]",
+      "props": [
+       "transform"
+      ],
+      "duration": 300,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.reveal",
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "transform": "scale(1)"
+       },
+       {
+        "offset": 1,
+        "transform": "translateY(-70px)"
+       }
+      ],
+      "first": 49,
+      "last": 349,
+      "playState": "running"
+     },
+     {
+      "kind": "keyframes",
+      "name": "ds-split-view-from-end",
+      "target": "div[secondary]",
+      "props": [
+       "transform"
+      ],
+      "duration": 340,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "linear",
+      "kfEasing": [
+       "ease.spring-soft"
+      ],
+      "fill": "none",
+      "kf": [
+       {
+        "offset": 0,
+        "transform": "translateX(-12px)"
+       },
+       {
+        "offset": 1,
+        "transform": "none"
+       }
+      ],
+      "first": 49,
+      "last": 382,
+      "playState": "running"
+     }
+    ],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 340,
+    "infinite": [],
+    "stateAt": 49,
+    "firstMotionAt": 49,
+    "focusAfter": "div[secondary]",
+    "frames": 75,
+    "animCount": 2,
+    "rapid": {
+     "left": [],
+     "held": [],
+     "inline": [],
+     "ghosts": 0,
+     "nodes": 14,
+     "indicators": "0 ok",
+     "custom": null,
+     "nodesBefore": 14
+    }
+   },
+   "media.ltr": {
+    "anims": [
+     {
+      "kind": "keyframes",
+      "name": "ds-split-view-from-end",
+      "target": "div[secondary]",
+      "props": [
+       "transform"
+      ],
+      "duration": 340,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "linear",
+      "kfEasing": [
+       "ease.spring-soft"
+      ],
+      "fill": "none",
+      "kf": [
+       {
+        "offset": 0,
+        "transform": "translateX(12px)"
+       },
+       {
+        "offset": 1,
+        "transform": "none"
+       }
+      ],
+      "first": 83,
+      "last": 418,
+      "playState": "running"
+     }
+    ],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 340,
+    "infinite": [],
+    "stateAt": 83,
+    "firstMotionAt": 83,
+    "focusAfter": "div[secondary]",
+    "frames": 71,
+    "animCount": 1,
+    "restOffTransforms": []
+   },
+   "media.rtl": {
+    "anims": [
+     {
+      "kind": "keyframes",
+      "name": "ds-split-view-from-end",
+      "target": "div[secondary]",
+      "props": [
+       "transform"
+      ],
+      "duration": 340,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "linear",
+      "kfEasing": [
+       "ease.spring-soft"
+      ],
+      "fill": "none",
+      "kf": [
+       {
+        "offset": 0,
+        "transform": "translateX(-12px)"
+       },
+       {
+        "offset": 1,
+        "transform": "none"
+       }
+      ],
+      "first": 54,
+      "last": 387,
+      "playState": "running"
+     }
+    ],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 340,
+    "infinite": [],
+    "stateAt": 54,
+    "firstMotionAt": 54,
+    "focusAfter": "div[secondary]",
+    "frames": 75,
+    "animCount": 1,
+    "restOffTransforms": []
+   },
+   "attr.ltr": {
+    "anims": [],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 0,
+    "infinite": [],
+    "stateAt": 54,
+    "firstMotionAt": null,
+    "focusAfter": "div[secondary]",
+    "frames": 75,
+    "animCount": 0,
+    "restOffTransforms": []
+   },
+   "attr.rtl": {
+    "anims": [],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 0,
+    "infinite": [],
+    "stateAt": 54,
+    "firstMotionAt": null,
+    "focusAfter": "div[secondary]",
+    "frames": 75,
+    "animCount": 0,
+    "restOffTransforms": []
+   }
+  },
+  "neutral": {
+   "focus": {
+    "at0": {
+     "el": "button[button]",
+     "outline": "solid 2px rgba(0, 0, 0, 0)",
+     "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgb(255, 255, 255) 0px 0px 0px 2px, rgb(37, 99, 235) 0px 0px 0px 4px",
+     "focusVisible": true,
+     "opacity": 1,
+     "anims": []
+    },
+    "at300": {
+     "el": "button[button]",
+     "outline": "solid 2px rgba(0, 0, 0, 0)",
+     "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgb(255, 255, 255) 0px 0px 0px 2px, rgb(37, 99, 235) 0px 0px 0px 4px",
+     "focusVisible": true,
+     "opacity": 1,
+     "anims": []
+    },
+    "ringAtOnce": true
+   },
+   "transitionSweep": [],
+   "seek": {
+    "animations": 1,
+    "startOffsets": [
+     0
+    ],
+    "hit": {
+     "checked": 2,
+     "missed": [],
+     "maxShift": 15
+    },
+    "parts": [
+     {
+      "part": "div[secondary]",
+      "scale": [
+       1,
+       1
+      ],
+      "travelPx": 6,
+      "opacityMin": 1,
+      "scaleOvershoot": 0,
+      "travelOvershootPx": 0,
+      "movesUntil": 120
+     }
+    ],
+    "readable": []
+   },
+   "transitionSweepAfter": [],
+   "full": {
+    "anims": [
+     {
+      "kind": "keyframes",
+      "name": "ds-split-view-from-start",
+      "target": "div[primary]",
+      "props": [
+       "transform"
+      ],
+      "duration": 220,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "linear",
+      "kfEasing": [
+       "ease.spring-soft"
+      ],
+      "fill": "none",
+      "kf": [
+       {
+        "offset": 0,
+        "transform": "translateX(-6px)"
+       },
+       {
+        "offset": 1,
+        "transform": "none"
+       }
+      ],
+      "first": 47,
+      "last": 275,
+      "playState": "running"
+     }
+    ],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 220,
+    "infinite": [],
+    "stateAt": 47,
+    "firstMotionAt": 47,
+    "focusAfter": "button[button]",
+    "frames": 92,
+    "animCount": 1
+   },
+   "rapid": {
+    "left": [],
+    "held": [],
+    "inline": [],
+    "ghosts": 0,
+    "nodes": 14,
+    "indicators": "0 ok",
+    "custom": null,
+    "nodesBefore": 14
+   },
+   "interrupt": {
+    "left": [],
+    "held": [],
+    "inline": [],
+    "ghosts": 0,
+    "nodes": 14,
+    "indicators": "0 ok",
+    "custom": null
+   },
+   "tenFast": null,
+   "off": {
+    "injected": "@layer ds.recipes {[data-style='neutral'] [data-ds='split-view'] {--_split-view-shift: 0px;}}",
+    "animations": 1,
+    "moving": [],
+    "fading": []
+   },
+   "full.rtl": {
+    "anims": [
+     {
+      "kind": "keyframes",
+      "name": "ds-split-view-from-end",
+      "target": "div[secondary]",
+      "props": [
+       "transform"
+      ],
+      "duration": 220,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "linear",
+      "kfEasing": [
+       "ease.spring-soft"
+      ],
+      "fill": "none",
+      "kf": [
+       {
+        "offset": 0,
+        "transform": "translateX(-6px)"
+       },
+       {
+        "offset": 1,
+        "transform": "none"
+       }
+      ],
+      "first": 48,
+      "last": 264,
+      "playState": "running"
+     }
+    ],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 220,
+    "infinite": [],
+    "stateAt": 48,
+    "firstMotionAt": 48,
+    "focusAfter": "div[secondary]",
+    "frames": 75,
+    "animCount": 1,
+    "rapid": {
+     "left": [],
+     "held": [],
+     "inline": [],
+     "ghosts": 0,
+     "nodes": 14,
+     "indicators": "0 ok",
+     "custom": null,
+     "nodesBefore": 14
+    }
+   },
+   "media.ltr": {
+    "anims": [
+     {
+      "kind": "keyframes",
+      "name": "ds-split-view-from-end",
+      "target": "div[secondary]",
+      "props": [
+       "transform"
+      ],
+      "duration": 220,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "linear",
+      "kfEasing": [
+       "ease.spring-soft"
+      ],
+      "fill": "none",
+      "kf": [
+       {
+        "offset": 0,
+        "transform": "translateX(6px)"
+       },
+       {
+        "offset": 1,
+        "transform": "none"
+       }
+      ],
+      "first": 51,
+      "last": 268,
+      "playState": "running"
+     }
+    ],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 220,
+    "infinite": [],
+    "stateAt": 51,
+    "firstMotionAt": 51,
+    "focusAfter": "div[secondary]",
+    "frames": 74,
+    "animCount": 1,
+    "restOffTransforms": []
+   },
+   "media.rtl": {
+    "anims": [
+     {
+      "kind": "keyframes",
+      "name": "ds-split-view-from-end",
+      "target": "div[secondary]",
+      "props": [
+       "transform"
+      ],
+      "duration": 220,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "linear",
+      "kfEasing": [
+       "ease.spring-soft"
+      ],
+      "fill": "none",
+      "kf": [
+       {
+        "offset": 0,
+        "transform": "translateX(-6px)"
+       },
+       {
+        "offset": 1,
+        "transform": "none"
+       }
+      ],
+      "first": 38,
+      "last": 255,
+      "playState": "running"
+     }
+    ],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 220,
+    "infinite": [],
+    "stateAt": 38,
+    "firstMotionAt": 38,
+    "focusAfter": "div[secondary]",
+    "frames": 75,
+    "animCount": 1,
+    "restOffTransforms": []
+   },
+   "attr.ltr": {
+    "anims": [],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 0,
+    "infinite": [],
+    "stateAt": 51,
+    "firstMotionAt": null,
+    "focusAfter": "div[secondary]",
+    "frames": 74,
+    "animCount": 0,
+    "restOffTransforms": []
+   },
+   "attr.rtl": {
+    "anims": [],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 0,
+    "infinite": [],
+    "stateAt": 43,
+    "firstMotionAt": null,
+    "focusAfter": "div[secondary]",
+    "frames": 75,
+    "animCount": 0,
+    "restOffTransforms": []
+   }
+  }
+ },
+ "sheet": "split-view-pane.sheet.png"
+}

@@ -1,0 +1,1018 @@
+{
+ "id": "card-lift",
+ "family": "feedback",
+ "drive": "css",
+ "pattern": "press",
+ "reducedSays": "No motion: the card changes tone only and no highlight is drawn.",
+ "styles": {
+  "studio": {
+   "focus": {
+    "at0": {
+     "el": "a[link]",
+     "outline": "none",
+     "boxShadow": "none",
+     "focusVisible": true,
+     "opacity": 1,
+     "anims": []
+    },
+    "at300": {
+     "el": "a[link]",
+     "outline": "none",
+     "boxShadow": "none",
+     "focusVisible": true,
+     "opacity": 1,
+     "anims": []
+    },
+    "ringAtOnce": false
+   },
+   "transitionSweep": [],
+   "seek": {
+    "animations": 3,
+    "startOffsets": [
+     0,
+     0,
+     0
+    ],
+    "hit": {
+     "checked": 2,
+     "missed": [],
+     "maxShift": 0
+    },
+    "parts": [
+     {
+      "part": "div[card]::after",
+      "scale": [
+       1,
+       1
+      ],
+      "travelPx": 0,
+      "opacityMin": 0,
+      "scaleOvershoot": 0,
+      "travelOvershootPx": 0,
+      "movesUntil": 60
+     },
+     {
+      "part": "span",
+      "scale": [
+       1,
+       1
+      ],
+      "travelPx": 0,
+      "opacityMin": 0,
+      "scaleOvershoot": 0,
+      "travelOvershootPx": 0,
+      "movesUntil": 120
+     }
+    ],
+    "readable": []
+   },
+   "transitionSweepAfter": [],
+   "full": {
+    "anims": [
+     {
+      "kind": "transition",
+      "name": "transform",
+      "target": "div[card]",
+      "props": [
+       "transform"
+      ],
+      "duration": 100,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.spring-soft",
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "transform": "none"
+       },
+       {
+        "offset": 1,
+        "transform": "translateY(0px) scale(1)"
+       }
+      ],
+      "first": 30,
+      "last": 128,
+      "playState": "running"
+     },
+     {
+      "kind": "transition",
+      "name": "opacity",
+      "target": "div[card]::after",
+      "props": [
+       "opacity"
+      ],
+      "duration": 80,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.default",
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "opacity": "0"
+       },
+       {
+        "offset": 1,
+        "opacity": "1"
+       }
+      ],
+      "first": 30,
+      "last": 94,
+      "playState": "running"
+     },
+     {
+      "kind": "transition",
+      "name": "opacity",
+      "target": "span",
+      "props": [
+       "opacity"
+      ],
+      "duration": 150,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.out",
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "opacity": "0"
+       },
+       {
+        "offset": 1,
+        "opacity": "1"
+       }
+      ],
+      "first": 30,
+      "last": 177,
+      "playState": "running"
+     }
+    ],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 150,
+    "infinite": [],
+    "stateAt": null,
+    "firstMotionAt": 30,
+    "focusAfter": "a[link]",
+    "frames": 90,
+    "animCount": 3
+   },
+   "rapid": {
+    "left": [],
+    "held": [],
+    "inline": [],
+    "ghosts": 0,
+    "nodes": 11,
+    "indicators": "0 ok",
+    "custom": null,
+    "nodesBefore": 11
+   },
+   "interrupt": null,
+   "tenFast": null,
+   "off": {
+    "injected": "@layer ds.recipes {[data-style='studio'] [data-ds='card'] {--_card-lift: 0px; --_card-lift-scale: 1; --_card-glow: transparent;}\n[data-style='studio'] [data-ds='tile'] {--_tile-lift: 0px; --_tile-lift-scale: 1; --_tile-glow: transparent;}}",
+    "animations": 3,
+    "moving": [],
+    "fading": [
+     "div[card]::after",
+     "span"
+    ]
+   },
+   "full.rtl": {
+    "anims": [
+     {
+      "kind": "transition",
+      "name": "transform",
+      "target": "div[card]",
+      "props": [
+       "transform"
+      ],
+      "duration": 100,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.spring-soft",
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "transform": "none"
+       },
+       {
+        "offset": 1,
+        "transform": "translateY(0px) scale(1)"
+       }
+      ],
+      "first": 40,
+      "last": 118,
+      "playState": "running"
+     },
+     {
+      "kind": "transition",
+      "name": "opacity",
+      "target": "div[card]::after",
+      "props": [
+       "opacity"
+      ],
+      "duration": 80,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.default",
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "opacity": "0"
+       },
+       {
+        "offset": 1,
+        "opacity": "1"
+       }
+      ],
+      "first": 40,
+      "last": 101,
+      "playState": "running"
+     },
+     {
+      "kind": "transition",
+      "name": "opacity",
+      "target": "span",
+      "props": [
+       "opacity"
+      ],
+      "duration": 150,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.out",
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "opacity": "0"
+       },
+       {
+        "offset": 1,
+        "opacity": "1"
+       }
+      ],
+      "first": 40,
+      "last": 179,
+      "playState": "running"
+     }
+    ],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 150,
+    "infinite": [],
+    "stateAt": null,
+    "firstMotionAt": 40,
+    "focusAfter": "body",
+    "frames": 71,
+    "animCount": 3,
+    "rapid": {
+     "left": [],
+     "held": [],
+     "inline": [],
+     "ghosts": 0,
+     "nodes": 11,
+     "indicators": "0 ok",
+     "custom": null,
+     "nodesBefore": 11
+    }
+   },
+   "media.ltr": {
+    "anims": [],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 0,
+    "infinite": [],
+    "stateAt": null,
+    "firstMotionAt": null,
+    "focusAfter": "body",
+    "frames": 74,
+    "animCount": 0,
+    "restOffTransforms": []
+   },
+   "media.rtl": {
+    "anims": [],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 0,
+    "infinite": [],
+    "stateAt": null,
+    "firstMotionAt": null,
+    "focusAfter": "body",
+    "frames": 75,
+    "animCount": 0,
+    "restOffTransforms": []
+   },
+   "attr.ltr": {
+    "anims": [],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 0,
+    "infinite": [],
+    "stateAt": null,
+    "firstMotionAt": null,
+    "focusAfter": "body",
+    "frames": 70,
+    "animCount": 0,
+    "restOffTransforms": []
+   },
+   "attr.rtl": {
+    "anims": [],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 0,
+    "infinite": [],
+    "stateAt": null,
+    "firstMotionAt": null,
+    "focusAfter": "body",
+    "frames": 73,
+    "animCount": 0,
+    "restOffTransforms": []
+   }
+  },
+  "desk": {
+   "focus": {
+    "at0": {
+     "el": "a[link]",
+     "outline": "none",
+     "boxShadow": "none",
+     "focusVisible": true,
+     "opacity": 1,
+     "anims": []
+    },
+    "at300": {
+     "el": "a[link]",
+     "outline": "none",
+     "boxShadow": "none",
+     "focusVisible": true,
+     "opacity": 1,
+     "anims": []
+    },
+    "ringAtOnce": false
+   },
+   "transitionSweep": [],
+   "seek": {
+    "animations": 3,
+    "startOffsets": [
+     0,
+     0,
+     0
+    ],
+    "hit": {
+     "checked": 2,
+     "missed": [],
+     "maxShift": 11.8
+    },
+    "parts": [
+     {
+      "part": "div[card]",
+      "scale": [
+       1,
+       1.031
+      ],
+      "travelPx": 4,
+      "opacityMin": 1,
+      "scaleOvershoot": 0.001,
+      "travelOvershootPx": 0.1,
+      "movesUntil": 120
+     },
+     {
+      "part": "div[card]::after",
+      "scale": [
+       1,
+       1
+      ],
+      "travelPx": 0,
+      "opacityMin": 0,
+      "scaleOvershoot": 0,
+      "travelOvershootPx": 0,
+      "movesUntil": 60
+     },
+     {
+      "part": "span",
+      "scale": [
+       1,
+       1
+      ],
+      "travelPx": 0,
+      "opacityMin": 0,
+      "scaleOvershoot": 0,
+      "travelOvershootPx": 0,
+      "movesUntil": 120
+     }
+    ],
+    "readable": []
+   },
+   "transitionSweepAfter": [],
+   "full": {
+    "anims": [
+     {
+      "kind": "transition",
+      "name": "transform",
+      "target": "div[card]",
+      "props": [
+       "transform"
+      ],
+      "duration": 340,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.spring-soft",
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "transform": "none"
+       },
+       {
+        "offset": 1,
+        "transform": "translateY(-10px) scale(1.03)"
+       }
+      ],
+      "first": 39,
+      "last": 367,
+      "playState": "running"
+     },
+     {
+      "kind": "transition",
+      "name": "opacity",
+      "target": "div[card]::after",
+      "props": [
+       "opacity"
+      ],
+      "duration": 80,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.default",
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "opacity": "0"
+       },
+       {
+        "offset": 1,
+        "opacity": "1"
+       }
+      ],
+      "first": 39,
+      "last": 91,
+      "playState": "running"
+     },
+     {
+      "kind": "transition",
+      "name": "opacity",
+      "target": "span",
+      "props": [
+       "opacity"
+      ],
+      "duration": 150,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.out",
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "opacity": "0"
+       },
+       {
+        "offset": 1,
+        "opacity": "1"
+       }
+      ],
+      "first": 39,
+      "last": 178,
+      "playState": "running"
+     }
+    ],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 340,
+    "infinite": [],
+    "stateAt": null,
+    "firstMotionAt": 39,
+    "focusAfter": "a[link]",
+    "frames": 87,
+    "animCount": 3
+   },
+   "rapid": {
+    "left": [],
+    "held": [],
+    "inline": [],
+    "ghosts": 0,
+    "nodes": 11,
+    "indicators": "0 ok",
+    "custom": null,
+    "nodesBefore": 11
+   },
+   "interrupt": null,
+   "tenFast": null,
+   "off": {
+    "injected": "@layer ds.recipes {[data-style='desk'] [data-ds='card'] {--_card-lift: 0px; --_card-lift-scale: 1; --_card-glow: transparent;}\n[data-style='desk'] [data-ds='tile'] {--_tile-lift: 0px; --_tile-lift-scale: 1; --_tile-glow: transparent;}}",
+    "animations": 3,
+    "moving": [],
+    "fading": [
+     "div[card]::after",
+     "span"
+    ]
+   },
+   "full.rtl": {
+    "anims": [
+     {
+      "kind": "transition",
+      "name": "transform",
+      "target": "div[card]",
+      "props": [
+       "transform"
+      ],
+      "duration": 340,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.spring-soft",
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "transform": "none"
+       },
+       {
+        "offset": 1,
+        "transform": "translateY(-10px) scale(1.03)"
+       }
+      ],
+      "first": 46,
+      "last": 370,
+      "playState": "running"
+     },
+     {
+      "kind": "transition",
+      "name": "opacity",
+      "target": "div[card]::after",
+      "props": [
+       "opacity"
+      ],
+      "duration": 80,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.default",
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "opacity": "0"
+       },
+       {
+        "offset": 1,
+        "opacity": "1"
+       }
+      ],
+      "first": 46,
+      "last": 106,
+      "playState": "running"
+     },
+     {
+      "kind": "transition",
+      "name": "opacity",
+      "target": "span",
+      "props": [
+       "opacity"
+      ],
+      "duration": 150,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.out",
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "opacity": "0"
+       },
+       {
+        "offset": 1,
+        "opacity": "1"
+       }
+      ],
+      "first": 46,
+      "last": 170,
+      "playState": "running"
+     }
+    ],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 340,
+    "infinite": [],
+    "stateAt": null,
+    "firstMotionAt": 46,
+    "focusAfter": "body",
+    "frames": 71,
+    "animCount": 3,
+    "rapid": {
+     "left": [],
+     "held": [],
+     "inline": [],
+     "ghosts": 0,
+     "nodes": 11,
+     "indicators": "0 ok",
+     "custom": null,
+     "nodesBefore": 11
+    }
+   },
+   "media.ltr": {
+    "anims": [],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 0,
+    "infinite": [],
+    "stateAt": null,
+    "firstMotionAt": null,
+    "focusAfter": "body",
+    "frames": 73,
+    "animCount": 0,
+    "restOffTransforms": []
+   },
+   "media.rtl": {
+    "anims": [],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 0,
+    "infinite": [],
+    "stateAt": null,
+    "firstMotionAt": null,
+    "focusAfter": "body",
+    "frames": 73,
+    "animCount": 0,
+    "restOffTransforms": []
+   },
+   "attr.ltr": {
+    "anims": [],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 0,
+    "infinite": [],
+    "stateAt": null,
+    "firstMotionAt": null,
+    "focusAfter": "body",
+    "frames": 75,
+    "animCount": 0,
+    "restOffTransforms": []
+   },
+   "attr.rtl": {
+    "anims": [],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 0,
+    "infinite": [],
+    "stateAt": null,
+    "firstMotionAt": null,
+    "focusAfter": "body",
+    "frames": 74,
+    "animCount": 0,
+    "restOffTransforms": []
+   }
+  },
+  "neutral": {
+   "focus": {
+    "at0": {
+     "el": "a[link]",
+     "outline": "none",
+     "boxShadow": "none",
+     "focusVisible": true,
+     "opacity": 1,
+     "anims": []
+    },
+    "at300": {
+     "el": "a[link]",
+     "outline": "none",
+     "boxShadow": "none",
+     "focusVisible": true,
+     "opacity": 1,
+     "anims": []
+    },
+    "ringAtOnce": false
+   },
+   "transitionSweep": [],
+   "seek": {
+    "animations": 3,
+    "startOffsets": [
+     0,
+     0,
+     0
+    ],
+    "hit": {
+     "checked": 2,
+     "missed": [],
+     "maxShift": 5.6
+    },
+    "parts": [
+     {
+      "part": "div[card]",
+      "scale": [
+       1,
+       1.01
+      ],
+      "travelPx": 2,
+      "opacityMin": 1,
+      "scaleOvershoot": 0,
+      "travelOvershootPx": 0,
+      "movesUntil": 80
+     },
+     {
+      "part": "div[card]::after",
+      "scale": [
+       1,
+       1
+      ],
+      "travelPx": 0,
+      "opacityMin": 0,
+      "scaleOvershoot": 0,
+      "travelOvershootPx": 0,
+      "movesUntil": 60
+     },
+     {
+      "part": "span",
+      "scale": [
+       1,
+       1
+      ],
+      "travelPx": 0,
+      "opacityMin": 0,
+      "scaleOvershoot": 0,
+      "travelOvershootPx": 0,
+      "movesUntil": 120
+     }
+    ],
+    "readable": []
+   },
+   "transitionSweepAfter": [],
+   "full": {
+    "anims": [
+     {
+      "kind": "transition",
+      "name": "transform",
+      "target": "div[card]",
+      "props": [
+       "transform"
+      ],
+      "duration": 220,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.spring-soft",
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "transform": "none"
+       },
+       {
+        "offset": 1,
+        "transform": "translateY(-5px) scale(1.01)"
+       }
+      ],
+      "first": 32,
+      "last": 244,
+      "playState": "running"
+     },
+     {
+      "kind": "transition",
+      "name": "opacity",
+      "target": "div[card]::after",
+      "props": [
+       "opacity"
+      ],
+      "duration": 80,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.default",
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "opacity": "0"
+       },
+       {
+        "offset": 1,
+        "opacity": "1"
+       }
+      ],
+      "first": 32,
+      "last": 94,
+      "playState": "running"
+     },
+     {
+      "kind": "transition",
+      "name": "opacity",
+      "target": "span",
+      "props": [
+       "opacity"
+      ],
+      "duration": 150,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.out",
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "opacity": "0"
+       },
+       {
+        "offset": 1,
+        "opacity": "1"
+       }
+      ],
+      "first": 32,
+      "last": 164,
+      "playState": "running"
+     }
+    ],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 220,
+    "infinite": [],
+    "stateAt": null,
+    "firstMotionAt": 32,
+    "focusAfter": "a[link]",
+    "frames": 93,
+    "animCount": 3
+   },
+   "rapid": {
+    "left": [],
+    "held": [],
+    "inline": [],
+    "ghosts": 0,
+    "nodes": 11,
+    "indicators": "0 ok",
+    "custom": null,
+    "nodesBefore": 11
+   },
+   "interrupt": null,
+   "tenFast": null,
+   "off": {
+    "injected": "@layer ds.recipes {[data-style='neutral'] [data-ds='card'] {--_card-lift: 0px; --_card-lift-scale: 1; --_card-glow: transparent;}\n[data-style='neutral'] [data-ds='tile'] {--_tile-lift: 0px; --_tile-lift-scale: 1; --_tile-glow: transparent;}}",
+    "animations": 3,
+    "moving": [],
+    "fading": [
+     "div[card]::after",
+     "span"
+    ]
+   },
+   "full.rtl": {
+    "anims": [
+     {
+      "kind": "transition",
+      "name": "transform",
+      "target": "div[card]",
+      "props": [
+       "transform"
+      ],
+      "duration": 220,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.spring-soft",
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "transform": "none"
+       },
+       {
+        "offset": 1,
+        "transform": "translateY(-5px) scale(1.01)"
+       }
+      ],
+      "first": 44,
+      "last": 258,
+      "playState": "running"
+     },
+     {
+      "kind": "transition",
+      "name": "opacity",
+      "target": "div[card]::after",
+      "props": [
+       "opacity"
+      ],
+      "duration": 80,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.default",
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "opacity": "0"
+       },
+       {
+        "offset": 1,
+        "opacity": "1"
+       }
+      ],
+      "first": 44,
+      "last": 108,
+      "playState": "running"
+     },
+     {
+      "kind": "transition",
+      "name": "opacity",
+      "target": "span",
+      "props": [
+       "opacity"
+      ],
+      "duration": 150,
+      "delay": 0,
+      "iterations": 1,
+      "easing": "ease.out",
+      "fill": "backwards",
+      "kf": [
+       {
+        "offset": 0,
+        "opacity": "0"
+       },
+       {
+        "offset": 1,
+        "opacity": "1"
+       }
+      ],
+      "first": 44,
+      "last": 191,
+      "playState": "running"
+     }
+    ],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 220,
+    "infinite": [],
+    "stateAt": null,
+    "firstMotionAt": 44,
+    "focusAfter": "body",
+    "frames": 75,
+    "animCount": 3,
+    "rapid": {
+     "left": [],
+     "held": [],
+     "inline": [],
+     "ghosts": 0,
+     "nodes": 11,
+     "indicators": "0 ok",
+     "custom": null,
+     "nodesBefore": 11
+    }
+   },
+   "media.ltr": {
+    "anims": [],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 0,
+    "infinite": [],
+    "stateAt": null,
+    "firstMotionAt": null,
+    "focusAfter": "body",
+    "frames": 70,
+    "animCount": 0,
+    "restOffTransforms": []
+   },
+   "media.rtl": {
+    "anims": [],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 0,
+    "infinite": [],
+    "stateAt": null,
+    "firstMotionAt": null,
+    "focusAfter": "body",
+    "frames": 75,
+    "animCount": 0,
+    "restOffTransforms": []
+   },
+   "attr.ltr": {
+    "anims": [],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 0,
+    "infinite": [],
+    "stateAt": null,
+    "firstMotionAt": null,
+    "focusAfter": "body",
+    "frames": 74,
+    "animCount": 0,
+    "restOffTransforms": []
+   },
+   "attr.rtl": {
+    "anims": [],
+    "zeroDurationAnims": 0,
+    "badProps": [],
+    "longest": 0,
+    "infinite": [],
+    "stateAt": null,
+    "firstMotionAt": null,
+    "focusAfter": "body",
+    "frames": 74,
+    "animCount": 0,
+    "restOffTransforms": []
+   }
+  }
+ },
+ "sheet": "card-lift.sheet.png"
+}
